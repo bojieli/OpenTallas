@@ -41,596 +41,26 @@
  },
  "cases": [
   {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "fp8_wq_a_whole_rows",
-   "XF": 4,
-   "model_depth": 83,
-   "model_prediction": 251,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
-   "fault": 0,
-   "cycles_last_row": 234,
-   "t_phase_pred": 168,
-   "t_rounds_scheduled": 168,
-   "fill": 66,
-   "words": 320,
-   "segments_per_element": [
-    1,
-    1
-   ],
-   "split": {
-    "m0": [
-     5120
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.attn.wq_a",
-     "fmt": "fp8",
-     "rows": [
-      0,
-      2
-     ],
-     "cols": [
-      0,
-      5120
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "fp8_wq_a_ksplit",
-   "XF": 4,
-   "model_depth": 88,
-   "model_prediction": 216,
-   "rows": 1,
-   "rows_out": 1,
-   "fp32_exact": 1,
-   "bf16_exact": 1,
-   "fault": 0,
-   "cycles_last_row": 210,
-   "t_phase_pred": 128,
-   "t_rounds_scheduled": 128,
-   "fill": 82,
-   "words": 160,
-   "segments_per_element": [
-    1,
-    1
-   ],
-   "split": {
-    "m0": [
-     4096,
-     1024
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.attn.wq_a",
-     "fmt": "fp8",
-     "rows": [
-      64,
-      65
-     ],
-     "cols": [
-      0,
-      5120
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "fp8_wq_b",
-   "XF": 4,
-   "model_depth": 88,
-   "model_prediction": 128,
-   "rows": 1,
-   "rows_out": 1,
-   "fp32_exact": 1,
-   "bf16_exact": 1,
-   "fault": 0,
-   "cycles_last_row": 105,
-   "t_phase_pred": 40,
-   "t_rounds_scheduled": 40,
-   "fill": 65,
-   "words": 40,
-   "segments_per_element": [
-    1,
-    1
-   ],
-   "split": {
-    "m0": [
-     1024,
-     256
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.attn.wq_b",
-     "fmt": "fp8",
-     "rows": [
-      4096,
-      4097
-     ],
-     "cols": [
-      0,
-      1280
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "fp8_wo_b_kquarter",
-   "XF": 4,
-   "model_depth": 88,
-   "model_prediction": 128,
-   "rows": 1,
-   "rows_out": 1,
-   "fp32_exact": 1,
-   "bf16_exact": 1,
-   "fault": 0,
-   "cycles_last_row": 107,
-   "t_phase_pred": 40,
-   "t_rounds_scheduled": 40,
-   "fill": 67,
-   "words": 64,
-   "segments_per_element": [
-    1,
-    1
-   ],
-   "split": {
-    "m0": [
-     1024,
-     1024
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.attn.wo_b",
-     "fmt": "fp8",
-     "rows": [
-      100,
-      101
-     ],
-     "cols": [
-      2048,
-      4096
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "fp4_expert_w1",
-   "XF": 4,
-   "model_depth": 88,
-   "model_prediction": 168,
-   "rows": 1,
-   "rows_out": 1,
-   "fp32_exact": 1,
-   "bf16_exact": 1,
-   "fault": 0,
-   "cycles_last_row": 146,
-   "t_phase_pred": 80,
-   "t_rounds_scheduled": 80,
-   "fill": 66,
-   "words": 80,
-   "segments_per_element": [
-    1,
-    1
-   ],
-   "split": {
-    "m0": [
-     4096,
-     1024
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.ffn.experts.7.w1",
-     "fmt": "fp4",
-     "rows": [
-      1728,
-      1729
-     ],
-     "cols": [
-      0,
-      5120
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "fp8_wq_b_two_rows_per_element",
-   "XF": 4,
-   "model_depth": 83,
-   "model_prediction": 163,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
-   "fault": 0,
-   "cycles_last_row": 150,
-   "t_phase_pred": 80,
-   "t_rounds_scheduled": 80,
-   "fill": 70,
-   "words": 160,
-   "segments_per_element": [
-    2,
-    2
-   ],
-   "split": {
-    "m0": [
-     1280
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.attn.wq_b",
-     "fmt": "fp8",
-     "rows": [
-      8000,
-      8004
-     ],
-     "cols": [
-      0,
-      1280
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "fp4_two_experts_w1_w3",
-   "XF": 4,
-   "model_depth": 88,
-   "model_prediction": 168,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
-   "fault": 0,
-   "cycles_last_row": 157,
-   "t_phase_pred": 80,
-   "t_rounds_scheduled": 80,
-   "fill": 77,
-   "words": 160,
-   "segments_per_element": [
-    2,
-    2
-   ],
-   "split": {
-    "m0": [
-     4096,
-     1024
-    ],
-    "m1": [
-     4096,
-     1024
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.ffn.experts.7.w1",
-     "fmt": "fp4",
-     "rows": [
-      0,
-      1
-     ],
-     "cols": [
-      0,
-      5120
-     ]
-    },
-    {
-     "name": "layers.2.ffn.experts.301.w3",
-     "fmt": "fp4",
-     "rows": [
-      500,
-      501
-     ],
-     "cols": [
-      0,
-      5120
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "bf16_router_gate",
-   "XF": 8,
-   "model_depth": 88,
-   "model_prediction": 344,
-   "rows": 1,
-   "rows_out": 1,
-   "fp32_exact": 1,
-   "bf16_exact": 1,
-   "fault": 0,
-   "cycles_last_row": 342,
-   "t_phase_pred": 256,
-   "t_rounds_scheduled": 256,
-   "fill": 86,
-   "words": 320,
-   "segments_per_element": [
-    1,
-    1
-   ],
-   "split": {
-    "m0": [
-     4096,
-     1024
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.ffn.gate",
-     "fmt": "bf16",
-     "rows": [
-      288,
-      289
-     ],
-     "cols": [
-      0,
-      5120
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "bf16_compressor_wkv_ksplit",
-   "XF": 8,
-   "model_depth": 88,
-   "model_prediction": 344,
-   "rows": 1,
-   "rows_out": 1,
-   "fp32_exact": 1,
-   "bf16_exact": 1,
-   "fault": 0,
-   "cycles_last_row": 342,
-   "t_phase_pred": 256,
-   "t_rounds_scheduled": 256,
-   "fill": 86,
-   "words": 320,
-   "segments_per_element": [
-    1,
-    1
-   ],
-   "split": {
-    "m0": [
-     4096,
-     1024
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.attn.compressor.wkv",
-     "fmt": "bf16",
-     "rows": [
-      384,
-      385
-     ],
-     "cols": [
-      0,
-      5120
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "bf16_wkv_4096_whole_rows",
-   "XF": 8,
-   "model_depth": 83,
-   "model_prediction": 339,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
-   "fault": 0,
-   "cycles_last_row": 335,
-   "t_phase_pred": 256,
-   "t_rounds_scheduled": 256,
-   "fill": 79,
-   "words": 512,
-   "segments_per_element": [
-    1,
-    1
-   ],
-   "split": {
-    "m0": [
-     4096
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.attn.compressor.wkv",
-     "fmt": "bf16",
-     "rows": [
-      130,
-      132
-     ],
-     "cols": [
-      512,
-      4608
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "bf16_indexer_wk",
-   "XF": 8,
-   "model_depth": 83,
-   "model_prediction": 123,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
-   "fault": 0,
-   "cycles_last_row": 117,
-   "t_phase_pred": 40,
-   "t_rounds_scheduled": 40,
-   "fill": 77,
-   "words": 64,
-   "segments_per_element": [
-    1,
-    1
-   ],
-   "split": {
-    "m0": [
-     512
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.attn.indexer.wk",
-     "fmt": "bf16",
-     "rows": [
-      0,
-      2
-     ],
-     "cols": [
-      0,
-      512
-     ]
-    }
-   ]
-  },
-  {
-   "N": 2,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
-   "placement": "lpt",
-   "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
-   "XF": 4,
-   "model_depth": 88,
-   "model_prediction": 152,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
-   "fault": 0,
-   "cycles_last_row": 141,
-   "t_phase_pred": 64,
-   "t_rounds_scheduled": 64,
-   "fill": 77,
-   "words": 112,
-   "segments_per_element": [
-    1,
-    3
-   ],
-   "split": {
-    "m0": [
-     2048,
-     256
-    ],
-    "m1": [
-     2048,
-     256
-    ]
-   },
-   "tensors": [
-    {
-     "name": "layers.2.ffn.experts.7.w2",
-     "fmt": "fp4",
-     "rows": [
-      3840,
-      3841
-     ],
-     "cols": [
-      0,
-      2304
-     ]
-    },
-    {
-     "name": "layers.2.ffn.shared_experts.w2",
-     "fmt": "fp8",
-     "rows": [
-      3840,
-      3841
-     ],
-     "cols": [
-      0,
-      2304
-     ]
-    }
-   ]
-  },
-  {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp8_wq_a_whole_rows",
    "XF": 4,
    "model_depth": 84,
-   "model_prediction": 252,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
+   "model_prediction": 1092,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
    "fault": 0,
-   "cycles_last_row": 243,
-   "t_phase_pred": 168,
-   "t_rounds_scheduled": 168,
-   "fill": 75,
-   "words": 640,
+   "cycles_last_row": 1075,
+   "t_phase_pred": 1008,
+   "t_rounds_scheduled": 1008,
+   "fill": 67,
+   "words": 320,
    "segments_per_element": [
-    1,
-    1,
     1,
     1
    ],
@@ -656,27 +86,25 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp8_wq_a_ksplit",
    "XF": 4,
    "model_depth": 89,
-   "model_prediction": 217,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
+   "model_prediction": 857,
+   "rows": 12,
+   "rows_out": 12,
+   "fp32_exact": 12,
+   "bf16_exact": 12,
    "fault": 0,
-   "cycles_last_row": 220,
-   "t_phase_pred": 128,
-   "t_rounds_scheduled": 128,
-   "fill": 92,
-   "words": 320,
+   "cycles_last_row": 846,
+   "t_phase_pred": 768,
+   "t_rounds_scheduled": 768,
+   "fill": 78,
+   "words": 160,
    "segments_per_element": [
-    1,
-    1,
     1,
     1
    ],
@@ -703,27 +131,25 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp8_wq_b",
    "XF": 4,
    "model_depth": 89,
-   "model_prediction": 129,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
+   "model_prediction": 329,
+   "rows": 12,
+   "rows_out": 12,
+   "fp32_exact": 12,
+   "bf16_exact": 12,
    "fault": 0,
-   "cycles_last_row": 114,
-   "t_phase_pred": 40,
-   "t_rounds_scheduled": 40,
-   "fill": 74,
-   "words": 80,
+   "cycles_last_row": 297,
+   "t_phase_pred": 240,
+   "t_rounds_scheduled": 240,
+   "fill": 57,
+   "words": 40,
    "segments_per_element": [
-    1,
-    1,
     1,
     1
    ],
@@ -750,36 +176,32 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp8_wo_b_kquarter",
    "XF": 4,
-   "model_depth": 94,
-   "model_prediction": 134,
-   "rows": 1,
-   "rows_out": 1,
-   "fp32_exact": 1,
-   "bf16_exact": 1,
+   "model_depth": 89,
+   "model_prediction": 329,
+   "rows": 6,
+   "rows_out": 6,
+   "fp32_exact": 6,
+   "bf16_exact": 6,
    "fault": 0,
-   "cycles_last_row": 113,
-   "t_phase_pred": 40,
-   "t_rounds_scheduled": 40,
-   "fill": 73,
+   "cycles_last_row": 294,
+   "t_phase_pred": 240,
+   "t_rounds_scheduled": 240,
+   "fill": 54,
    "words": 64,
    "segments_per_element": [
-    1,
-    1,
     1,
     1
    ],
    "split": {
     "m0": [
-     512,
-     512,
-     512,
-     512
+     1024,
+     1024
     ]
    },
    "tensors": [
@@ -799,27 +221,25 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp4_expert_w1",
    "XF": 4,
    "model_depth": 89,
-   "model_prediction": 169,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
+   "model_prediction": 569,
+   "rows": 12,
+   "rows_out": 12,
+   "fp32_exact": 12,
+   "bf16_exact": 12,
    "fault": 0,
-   "cycles_last_row": 155,
-   "t_phase_pred": 80,
-   "t_rounds_scheduled": 80,
-   "fill": 75,
-   "words": 160,
+   "cycles_last_row": 543,
+   "t_phase_pred": 480,
+   "t_rounds_scheduled": 480,
+   "fill": 63,
+   "words": 80,
    "segments_per_element": [
-    1,
-    1,
     1,
     1
    ],
@@ -846,27 +266,25 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp8_wq_b_two_rows_per_element",
    "XF": 4,
    "model_depth": 84,
-   "model_prediction": 164,
-   "rows": 8,
-   "rows_out": 8,
-   "fp32_exact": 8,
-   "bf16_exact": 8,
+   "model_prediction": 564,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
    "fault": 0,
-   "cycles_last_row": 161,
-   "t_phase_pred": 80,
-   "t_rounds_scheduled": 80,
-   "fill": 81,
-   "words": 320,
+   "cycles_last_row": 541,
+   "t_phase_pred": 480,
+   "t_rounds_scheduled": 480,
+   "fill": 61,
+   "words": 160,
    "segments_per_element": [
-    2,
-    2,
     2,
     2
    ],
@@ -892,27 +310,25 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp4_two_experts_w1_w3",
    "XF": 4,
    "model_depth": 89,
-   "model_prediction": 169,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
+   "model_prediction": 569,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
    "fault": 0,
-   "cycles_last_row": 171,
-   "t_phase_pred": 80,
-   "t_rounds_scheduled": 80,
-   "fill": 91,
-   "words": 320,
+   "cycles_last_row": 545,
+   "t_phase_pred": 480,
+   "t_rounds_scheduled": 480,
+   "fill": 65,
+   "words": 160,
    "segments_per_element": [
-    2,
-    2,
     2,
     2
    ],
@@ -955,27 +371,25 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "bf16_router_gate",
    "XF": 8,
    "model_depth": 89,
-   "model_prediction": 345,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
+   "model_prediction": 1625,
+   "rows": 12,
+   "rows_out": 12,
+   "fp32_exact": 12,
+   "bf16_exact": 12,
    "fault": 0,
-   "cycles_last_row": 352,
-   "t_phase_pred": 256,
-   "t_rounds_scheduled": 256,
-   "fill": 96,
-   "words": 640,
+   "cycles_last_row": 1624,
+   "t_phase_pred": 1536,
+   "t_rounds_scheduled": 1536,
+   "fill": 88,
+   "words": 320,
    "segments_per_element": [
-    1,
-    1,
     1,
     1
    ],
@@ -1002,27 +416,25 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "bf16_compressor_wkv_ksplit",
    "XF": 8,
    "model_depth": 89,
-   "model_prediction": 345,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
+   "model_prediction": 1625,
+   "rows": 12,
+   "rows_out": 12,
+   "fp32_exact": 12,
+   "bf16_exact": 12,
    "fault": 0,
-   "cycles_last_row": 352,
-   "t_phase_pred": 256,
-   "t_rounds_scheduled": 256,
-   "fill": 96,
-   "words": 640,
+   "cycles_last_row": 1624,
+   "t_phase_pred": 1536,
+   "t_rounds_scheduled": 1536,
+   "fill": 88,
+   "words": 320,
    "segments_per_element": [
-    1,
-    1,
     1,
     1
    ],
@@ -1049,27 +461,25 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "bf16_wkv_4096_whole_rows",
    "XF": 8,
    "model_depth": 84,
-   "model_prediction": 340,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
+   "model_prediction": 1620,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
    "fault": 0,
-   "cycles_last_row": 344,
-   "t_phase_pred": 256,
-   "t_rounds_scheduled": 256,
-   "fill": 88,
-   "words": 1024,
+   "cycles_last_row": 1616,
+   "t_phase_pred": 1536,
+   "t_rounds_scheduled": 1536,
+   "fill": 80,
+   "words": 512,
    "segments_per_element": [
-    1,
-    1,
     1,
     1
    ],
@@ -1095,27 +505,25 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "bf16_indexer_wk",
    "XF": 8,
    "model_depth": 84,
-   "model_prediction": 124,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
+   "model_prediction": 324,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
    "fault": 0,
-   "cycles_last_row": 126,
-   "t_phase_pred": 40,
-   "t_rounds_scheduled": 40,
-   "fill": 86,
-   "words": 128,
+   "cycles_last_row": 300,
+   "t_phase_pred": 240,
+   "t_rounds_scheduled": 240,
+   "fill": 60,
+   "words": 64,
    "segments_per_element": [
-    1,
-    1,
     1,
     1
    ],
@@ -1141,28 +549,26 @@
   },
   {
    "N": 4,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
    "XF": 4,
    "model_depth": 89,
-   "model_prediction": 153,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
+   "model_prediction": 473,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
    "fault": 0,
-   "cycles_last_row": 157,
-   "t_phase_pred": 64,
-   "t_rounds_scheduled": 64,
-   "fill": 93,
-   "words": 224,
+   "cycles_last_row": 449,
+   "t_phase_pred": 384,
+   "t_rounds_scheduled": 384,
+   "fill": 65,
+   "words": 112,
    "segments_per_element": [
     1,
-    1,
-    3,
     3
    ],
    "split": {
@@ -1204,29 +610,25 @@
   },
   {
    "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp8_wq_a_whole_rows",
    "XF": 4,
    "model_depth": 85,
-   "model_prediction": 253,
-   "rows": 8,
-   "rows_out": 8,
-   "fp32_exact": 8,
-   "bf16_exact": 8,
+   "model_prediction": 1093,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
    "fault": 0,
-   "cycles_last_row": 254,
-   "t_phase_pred": 168,
-   "t_rounds_scheduled": 168,
-   "fill": 86,
-   "words": 1280,
+   "cycles_last_row": 1082,
+   "t_phase_pred": 1008,
+   "t_rounds_scheduled": 1008,
+   "fill": 74,
+   "words": 640,
    "segments_per_element": [
-    1,
-    1,
-    1,
-    1,
     1,
     1,
     1,
@@ -1254,29 +656,25 @@
   },
   {
    "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp8_wq_a_ksplit",
    "XF": 4,
    "model_depth": 90,
-   "model_prediction": 218,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
+   "model_prediction": 858,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
    "fault": 0,
-   "cycles_last_row": 232,
-   "t_phase_pred": 128,
-   "t_rounds_scheduled": 128,
-   "fill": 104,
-   "words": 640,
+   "cycles_last_row": 856,
+   "t_phase_pred": 768,
+   "t_rounds_scheduled": 768,
+   "fill": 88,
+   "words": 320,
    "segments_per_element": [
-    1,
-    1,
-    1,
-    1,
     1,
     1,
     1,
@@ -1305,29 +703,25 @@
   },
   {
    "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp8_wq_b",
    "XF": 4,
    "model_depth": 90,
-   "model_prediction": 130,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
+   "model_prediction": 330,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
    "fault": 0,
-   "cycles_last_row": 125,
-   "t_phase_pred": 40,
-   "t_rounds_scheduled": 40,
-   "fill": 85,
-   "words": 160,
+   "cycles_last_row": 307,
+   "t_phase_pred": 240,
+   "t_rounds_scheduled": 240,
+   "fill": 67,
+   "words": 80,
    "segments_per_element": [
-    1,
-    1,
-    1,
-    1,
     1,
     1,
     1,
@@ -1356,29 +750,25 @@
   },
   {
    "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp8_wo_b_kquarter",
    "XF": 4,
    "model_depth": 95,
-   "model_prediction": 135,
-   "rows": 2,
-   "rows_out": 2,
-   "fp32_exact": 2,
-   "bf16_exact": 2,
+   "model_prediction": 335,
+   "rows": 12,
+   "rows_out": 12,
+   "fp32_exact": 12,
+   "bf16_exact": 12,
    "fault": 0,
-   "cycles_last_row": 122,
-   "t_phase_pred": 40,
-   "t_rounds_scheduled": 40,
-   "fill": 82,
-   "words": 128,
+   "cycles_last_row": 294,
+   "t_phase_pred": 240,
+   "t_rounds_scheduled": 240,
+   "fill": 54,
+   "words": 64,
    "segments_per_element": [
-    1,
-    1,
-    1,
-    1,
     1,
     1,
     1,
@@ -1409,29 +799,25 @@
   },
   {
    "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp4_expert_w1",
    "XF": 4,
    "model_depth": 90,
-   "model_prediction": 170,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
+   "model_prediction": 570,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
    "fault": 0,
-   "cycles_last_row": 166,
-   "t_phase_pred": 80,
-   "t_rounds_scheduled": 80,
-   "fill": 86,
-   "words": 320,
+   "cycles_last_row": 552,
+   "t_phase_pred": 480,
+   "t_rounds_scheduled": 480,
+   "fill": 72,
+   "words": 160,
    "segments_per_element": [
-    1,
-    1,
-    1,
-    1,
     1,
     1,
     1,
@@ -1460,29 +846,25 @@
   },
   {
    "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp8_wq_b_two_rows_per_element",
    "XF": 4,
    "model_depth": 85,
-   "model_prediction": 165,
-   "rows": 16,
-   "rows_out": 16,
-   "fp32_exact": 16,
-   "bf16_exact": 16,
+   "model_prediction": 565,
+   "rows": 96,
+   "rows_out": 96,
+   "fp32_exact": 96,
+   "bf16_exact": 96,
    "fault": 0,
-   "cycles_last_row": 176,
-   "t_phase_pred": 80,
-   "t_rounds_scheduled": 80,
-   "fill": 96,
-   "words": 640,
+   "cycles_last_row": 552,
+   "t_phase_pred": 480,
+   "t_rounds_scheduled": 480,
+   "fill": 72,
+   "words": 320,
    "segments_per_element": [
-    2,
-    2,
-    2,
-    2,
     2,
     2,
     2,
@@ -1510,29 +892,25 @@
   },
   {
    "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp4_two_experts_w1_w3",
    "XF": 4,
    "model_depth": 90,
-   "model_prediction": 170,
-   "rows": 8,
-   "rows_out": 8,
-   "fp32_exact": 8,
-   "bf16_exact": 8,
+   "model_prediction": 570,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
    "fault": 0,
-   "cycles_last_row": 191,
-   "t_phase_pred": 80,
-   "t_rounds_scheduled": 80,
-   "fill": 111,
-   "words": 640,
+   "cycles_last_row": 560,
+   "t_phase_pred": 480,
+   "t_rounds_scheduled": 480,
+   "fill": 80,
+   "words": 320,
    "segments_per_element": [
-    2,
-    2,
-    2,
-    2,
     2,
     2,
     2,
@@ -1577,23 +955,645 @@
   },
   {
    "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "bf16_router_gate",
+   "XF": 8,
+   "model_depth": 90,
+   "model_prediction": 1626,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
+   "fault": 0,
+   "cycles_last_row": 1634,
+   "t_phase_pred": 1536,
+   "t_rounds_scheduled": 1536,
+   "fill": 98,
+   "words": 640,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.gate",
+     "fmt": "bf16",
+     "rows": [
+      288,
+      292
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "bf16_compressor_wkv_ksplit",
+   "XF": 8,
+   "model_depth": 90,
+   "model_prediction": 1626,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
+   "fault": 0,
+   "cycles_last_row": 1634,
+   "t_phase_pred": 1536,
+   "t_rounds_scheduled": 1536,
+   "fill": 98,
+   "words": 640,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.compressor.wkv",
+     "fmt": "bf16",
+     "rows": [
+      384,
+      388
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "bf16_wkv_4096_whole_rows",
+   "XF": 8,
+   "model_depth": 85,
+   "model_prediction": 1621,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
+   "fault": 0,
+   "cycles_last_row": 1623,
+   "t_phase_pred": 1536,
+   "t_rounds_scheduled": 1536,
+   "fill": 87,
+   "words": 1024,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.compressor.wkv",
+     "fmt": "bf16",
+     "rows": [
+      130,
+      138
+     ],
+     "cols": [
+      512,
+      4608
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "bf16_indexer_wk",
+   "XF": 8,
+   "model_depth": 85,
+   "model_prediction": 325,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
+   "fault": 0,
+   "cycles_last_row": 307,
+   "t_phase_pred": 240,
+   "t_rounds_scheduled": 240,
+   "fill": 67,
+   "words": 128,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     512
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.indexer.wk",
+     "fmt": "bf16",
+     "rows": [
+      0,
+      8
+     ],
+     "cols": [
+      0,
+      512
+     ]
+    }
+   ]
+  },
+  {
+   "N": 8,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
+   "XF": 4,
+   "model_depth": 90,
+   "model_prediction": 474,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
+   "fault": 0,
+   "cycles_last_row": 463,
+   "t_phase_pred": 384,
+   "t_rounds_scheduled": 384,
+   "fill": 79,
+   "words": 224,
+   "segments_per_element": [
+    1,
+    1,
+    3,
+    3
+   ],
+   "split": {
+    "m0": [
+     2048,
+     256
+    ],
+    "m1": [
+     2048,
+     256
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w2",
+     "fmt": "fp4",
+     "rows": [
+      3840,
+      3844
+     ],
+     "cols": [
+      0,
+      2304
+     ]
+    },
+    {
+     "name": "layers.2.ffn.shared_experts.w2",
+     "fmt": "fp8",
+     "rows": [
+      3840,
+      3844
+     ],
+     "cols": [
+      0,
+      2304
+     ]
+    }
+   ]
+  },
+  {
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "fp8_wq_a_whole_rows",
+   "XF": 4,
+   "model_depth": 87,
+   "model_prediction": 1095,
+   "rows": 96,
+   "rows_out": 96,
+   "fp32_exact": 96,
+   "bf16_exact": 96,
+   "fault": 0,
+   "cycles_last_row": 1093,
+   "t_phase_pred": 1008,
+   "t_rounds_scheduled": 1008,
+   "fill": 85,
+   "words": 1280,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     5120
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_a",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      16
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "fp8_wq_a_ksplit",
+   "XF": 4,
+   "model_depth": 92,
+   "model_prediction": 860,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
+   "fault": 0,
+   "cycles_last_row": 866,
+   "t_phase_pred": 768,
+   "t_rounds_scheduled": 768,
+   "fill": 98,
+   "words": 640,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_a",
+     "fmt": "fp8",
+     "rows": [
+      64,
+      72
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "fp8_wq_b",
+   "XF": 4,
+   "model_depth": 92,
+   "model_prediction": 332,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
+   "fault": 0,
+   "cycles_last_row": 309,
+   "t_phase_pred": 240,
+   "t_rounds_scheduled": 240,
+   "fill": 69,
+   "words": 160,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     1024,
+     256
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_b",
+     "fmt": "fp8",
+     "rows": [
+      4096,
+      4104
+     ],
+     "cols": [
+      0,
+      1280
+     ]
+    }
+   ]
+  },
+  {
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "fp8_wo_b_kquarter",
+   "XF": 4,
+   "model_depth": 97,
+   "model_prediction": 337,
+   "rows": 24,
+   "rows_out": 24,
+   "fp32_exact": 24,
+   "bf16_exact": 24,
+   "fault": 0,
+   "cycles_last_row": 301,
+   "t_phase_pred": 240,
+   "t_rounds_scheduled": 240,
+   "fill": 61,
+   "words": 128,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     512,
+     512,
+     512,
+     512
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wo_b",
+     "fmt": "fp8",
+     "rows": [
+      100,
+      104
+     ],
+     "cols": [
+      2048,
+      4096
+     ]
+    }
+   ]
+  },
+  {
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "fp4_expert_w1",
+   "XF": 4,
+   "model_depth": 92,
+   "model_prediction": 572,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
+   "fault": 0,
+   "cycles_last_row": 555,
+   "t_phase_pred": 480,
+   "t_rounds_scheduled": 480,
+   "fill": 75,
+   "words": 320,
+   "segments_per_element": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w1",
+     "fmt": "fp4",
+     "rows": [
+      1728,
+      1736
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "fp8_wq_b_two_rows_per_element",
+   "XF": 4,
+   "model_depth": 87,
+   "model_prediction": 567,
+   "rows": 192,
+   "rows_out": 192,
+   "fp32_exact": 192,
+   "bf16_exact": 192,
+   "fault": 0,
+   "cycles_last_row": 571,
+   "t_phase_pred": 480,
+   "t_rounds_scheduled": 480,
+   "fill": 91,
+   "words": 640,
+   "segments_per_element": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ],
+   "split": {
+    "m0": [
+     1280
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.attn.wq_b",
+     "fmt": "fp8",
+     "rows": [
+      8000,
+      8032
+     ],
+     "cols": [
+      0,
+      1280
+     ]
+    }
+   ]
+  },
+  {
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
+   "placement": "lpt",
+   "case": "fp4_two_experts_w1_w3",
+   "XF": 4,
+   "model_depth": 92,
+   "model_prediction": 572,
+   "rows": 96,
+   "rows_out": 96,
+   "fp32_exact": 96,
+   "bf16_exact": 96,
+   "fault": 0,
+   "cycles_last_row": 589,
+   "t_phase_pred": 480,
+   "t_rounds_scheduled": 480,
+   "fill": 109,
+   "words": 640,
+   "segments_per_element": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ],
+   "split": {
+    "m0": [
+     4096,
+     1024
+    ],
+    "m1": [
+     4096,
+     1024
+    ]
+   },
+   "tensors": [
+    {
+     "name": "layers.2.ffn.experts.7.w1",
+     "fmt": "fp4",
+     "rows": [
+      0,
+      8
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    },
+    {
+     "name": "layers.2.ffn.experts.301.w3",
+     "fmt": "fp4",
+     "rows": [
+      500,
+      508
+     ],
+     "cols": [
+      0,
+      5120
+     ]
+    }
+   ]
+  },
+  {
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "fp4_six_experts_w1_plus_shared_fp8_split8",
    "XF": 4,
-   "model_depth": 100,
-   "model_prediction": 180,
-   "rows": 7,
-   "rows_out": 7,
-   "fp32_exact": 7,
-   "bf16_exact": 7,
+   "model_depth": 102,
+   "model_prediction": 582,
+   "rows": 42,
+   "rows_out": 42,
+   "fp32_exact": 42,
+   "bf16_exact": 42,
    "fault": 0,
-   "cycles_last_row": 230,
-   "t_phase_pred": 80,
-   "t_rounds_scheduled": 80,
-   "fill": 150,
+   "cycles_last_row": 600,
+   "t_phase_pred": 480,
+   "t_rounds_scheduled": 480,
+   "fill": 120,
    "words": 640,
    "segments_per_element": [
     4,
@@ -1744,24 +1744,24 @@
    ]
   },
   {
-   "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "bf16_router_gate",
    "XF": 8,
-   "model_depth": 90,
-   "model_prediction": 346,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
+   "model_depth": 92,
+   "model_prediction": 1628,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
    "fault": 0,
-   "cycles_last_row": 366,
-   "t_phase_pred": 256,
-   "t_rounds_scheduled": 256,
-   "fill": 110,
+   "cycles_last_row": 1649,
+   "t_phase_pred": 1536,
+   "t_rounds_scheduled": 1536,
+   "fill": 113,
    "words": 1280,
    "segments_per_element": [
     1,
@@ -1785,7 +1785,7 @@
      "fmt": "bf16",
      "rows": [
       288,
-      292
+      296
      ],
      "cols": [
       0,
@@ -1795,24 +1795,24 @@
    ]
   },
   {
-   "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "bf16_compressor_wkv_ksplit",
    "XF": 8,
-   "model_depth": 90,
-   "model_prediction": 346,
-   "rows": 4,
-   "rows_out": 4,
-   "fp32_exact": 4,
-   "bf16_exact": 4,
+   "model_depth": 92,
+   "model_prediction": 1628,
+   "rows": 48,
+   "rows_out": 48,
+   "fp32_exact": 48,
+   "bf16_exact": 48,
    "fault": 0,
-   "cycles_last_row": 366,
-   "t_phase_pred": 256,
-   "t_rounds_scheduled": 256,
-   "fill": 110,
+   "cycles_last_row": 1649,
+   "t_phase_pred": 1536,
+   "t_rounds_scheduled": 1536,
+   "fill": 113,
    "words": 1280,
    "segments_per_element": [
     1,
@@ -1836,7 +1836,7 @@
      "fmt": "bf16",
      "rows": [
       384,
-      388
+      392
      ],
      "cols": [
       0,
@@ -1846,24 +1846,24 @@
    ]
   },
   {
-   "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "bf16_wkv_4096_whole_rows",
    "XF": 8,
-   "model_depth": 85,
-   "model_prediction": 341,
-   "rows": 8,
-   "rows_out": 8,
-   "fp32_exact": 8,
-   "bf16_exact": 8,
+   "model_depth": 87,
+   "model_prediction": 1623,
+   "rows": 96,
+   "rows_out": 96,
+   "fp32_exact": 96,
+   "bf16_exact": 96,
    "fault": 0,
-   "cycles_last_row": 355,
-   "t_phase_pred": 256,
-   "t_rounds_scheduled": 256,
-   "fill": 99,
+   "cycles_last_row": 1634,
+   "t_phase_pred": 1536,
+   "t_rounds_scheduled": 1536,
+   "fill": 98,
    "words": 2048,
    "segments_per_element": [
     1,
@@ -1886,7 +1886,7 @@
      "fmt": "bf16",
      "rows": [
       130,
-      138
+      146
      ],
      "cols": [
       512,
@@ -1896,24 +1896,24 @@
    ]
   },
   {
-   "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "bf16_indexer_wk",
    "XF": 8,
-   "model_depth": 85,
-   "model_prediction": 125,
-   "rows": 8,
-   "rows_out": 8,
-   "fp32_exact": 8,
-   "bf16_exact": 8,
+   "model_depth": 87,
+   "model_prediction": 327,
+   "rows": 96,
+   "rows_out": 96,
+   "fp32_exact": 96,
+   "bf16_exact": 96,
    "fault": 0,
-   "cycles_last_row": 137,
-   "t_phase_pred": 40,
-   "t_rounds_scheduled": 40,
-   "fill": 97,
+   "cycles_last_row": 318,
+   "t_phase_pred": 240,
+   "t_rounds_scheduled": 240,
+   "fill": 78,
    "words": 256,
    "segments_per_element": [
     1,
@@ -1936,7 +1936,7 @@
      "fmt": "bf16",
      "rows": [
       0,
-      8
+      16
      ],
      "cols": [
       0,
@@ -1946,24 +1946,24 @@
    ]
   },
   {
-   "N": 8,
-   "NB": 1,
-   "positions": 1,
-   "fill_cuts": false,
+   "N": 16,
+   "NB": 2,
+   "positions": 6,
+   "fill_cuts": true,
    "placement": "lpt",
    "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
    "XF": 4,
-   "model_depth": 90,
-   "model_prediction": 154,
-   "rows": 8,
-   "rows_out": 8,
-   "fp32_exact": 8,
-   "bf16_exact": 8,
+   "model_depth": 92,
+   "model_prediction": 476,
+   "rows": 96,
+   "rows_out": 96,
+   "fp32_exact": 96,
+   "bf16_exact": 96,
    "fault": 0,
-   "cycles_last_row": 183,
-   "t_phase_pred": 64,
-   "t_rounds_scheduled": 64,
-   "fill": 119,
+   "cycles_last_row": 552,
+   "t_phase_pred": 384,
+   "t_rounds_scheduled": 384,
+   "fill": 168,
    "words": 448,
    "segments_per_element": [
     1,
@@ -1991,7 +1991,7 @@
      "fmt": "fp4",
      "rows": [
       3840,
-      3844
+      3848
      ],
      "cols": [
       0,
@@ -2003,7 +2003,7 @@
      "fmt": "fp8",
      "rows": [
       3840,
-      3844
+      3848
      ],
      "cols": [
       0,

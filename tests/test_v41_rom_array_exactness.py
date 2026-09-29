@@ -26,3 +26,14 @@ def test_record_is_source_current():
     rec = json.loads(REC.read_text())
     for p, h in rec["source_sha256"].items():
         assert hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h, p
+
+
+def test_pair_mtp6_fillcut_exact():
+    rec = json.loads((ROOT / "results/uarch/v41_rom_array_exactness_pair_mtp6_fillcut.json").read_text())
+    assert rec["verdict"] == "PASS"
+    assert {c["N"] for c in rec["cases"]} == {4, 8, 16}
+    for c in rec["cases"]:
+        assert c["NB"] == 2 and c["positions"] == 6 and c["fill_cuts"]
+        assert c["rows_out"] == c["rows"] == c["fp32_exact"] == c["bf16_exact"], c["case"]
+    for p, h in rec["source_sha256"].items():
+        assert hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h, p
