@@ -18,7 +18,8 @@
 module ot_gpu_xstore #(
     parameter integer NM    = 16,
     parameter integer FRAGW = 32768,
-    parameter integer AW    = 10
+    parameter integer AW    = 10,
+    parameter integer XWM   = 8         // macros written per x-broadcast beat (256 B = the model's X_BCAST_BPC)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -32,7 +33,8 @@ module ot_gpu_xstore #(
     output wire [FRAGW-1:0]  frag,
     input  wire              w_en,
     input  wire [AW-1:0]     w_addr,
-    input  wire [NM*256-1:0] w_data
+    input  wire [((NM + XWM - 1) / XWM > 1 ? $clog2((NM + XWM - 1) / XWM) : 1)-1:0] w_grp,
+    input  wire [XWM*256-1:0] w_data
 );
     localparam integer SUBS = FRAGW / (NM * 256);
     localparam integer SW = (SUBS <= 1) ? 1 : $clog2(SUBS);
@@ -56,7 +58,8 @@ module ot_gpu_xstore #(
     generate for (m = 0; m < NM; m = m + 1) begin : g_m
         ot_sram_1r1w_1024x256_m2_r2c2 u_sram (
             .clk(clk), .r_ce_in(rd_go), .r_addr_in(raddr), .rd_out(rd[256*m +: 256]),
-            .w_ce_in(w_en), .w_addr_in(w_addr), .wd_in(w_data[256*m +: 256]), .w_mask_in({256{1'b1}}),
+            .w_ce_in(w_en && (w_grp == m / XWM)), .w_addr_in(w_addr), .wd_in(w_data[256*(m % XWM) +: 256]),
+            .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     assign ready = bvalid[head] || (rd_v && rd_last && rd_slot == head);

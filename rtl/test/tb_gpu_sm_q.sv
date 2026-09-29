@@ -17,7 +17,7 @@ module tb_gpu_sm_q;
     reg d_valid = 0; wire d_ready; reg [31:0] d_base = 0; reg [23:0] d_lines;
     wire req_v; wire [31:0] req_addr; wire [9:0] req_tag;
     reg rsp_v = 0; reg [9:0] rsp_tag; reg [L*8-1:0] rsp_data;
-    reg xw_en = 0; reg [9:0] xw_addr; reg [NXM*256-1:0] xw_data;
+    reg xw_en = 0; reg [9:0] xw_addr; reg [7:0] xw_grp; reg [8*256-1:0] xw_data; integer gg;
     reg sw_en = 0; reg [RW-1:0] sw_addr; reg [15:0] sw_data;
     wire rv; wire [RW-1:0] rrow; wire [NC*32-1:0] rdata; wire fault; wire arrive; wire released;
     reg release_in = 0;
@@ -25,11 +25,11 @@ module tb_gpu_sm_q;
         .clk(clk), .rst_n(rst_n), .start(start), .op_rows(op_rows), .op_c(op_c), .op_g(op_g),
         .op_scale(op_scale), .busy(busy), .d_valid(d_valid), .d_ready(d_ready), .d_base(d_base),
         .d_lines(d_lines), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr), .req_tag(req_tag),
-        .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr),
+        .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp),
         .xw_data(xw_data), .sw_en(sw_en), .sw_addr(sw_addr), .sw_data(sw_data), .rv(rv), .rrow(rrow),
         .rdata(rdata), .fault(fault), .arrive(arrive), .release_in(release_in), .released(released));
     reg [L*8-1:0] lines [0:65535];
-    reg [FRAGW-1:0] xwords [0:XDEPTH-1];
+    reg [FRAGW+2047:0] xwords [0:XDEPTH-1];   // padded so the last beat's slice stays in range
     reg [15:0] scales [0:RMAX-1];
     reg [31:0] cfg [0:7];
     // behavioural HBM share: pending reads
@@ -70,9 +70,11 @@ module tb_gpu_sm_q;
         rst_n = 1;
         @(posedge clk);
         for (ii = 0; ii < XDEPTH; ii = ii + 1)
-            for (kk = 0; kk < SUBS; kk = kk + 1) begin
-                @(negedge clk); xw_en = 1; xw_addr = ii * SUBS + kk; xw_data = xwords[ii][kk * NXM * 256 +: NXM * 256];
-            end
+            for (kk = 0; kk < SUBS; kk = kk + 1)
+                for (gg = 0; gg < (NXM + 7) / 8; gg = gg + 1) begin
+                    @(negedge clk); xw_en = 1; xw_addr = ii * SUBS + kk; xw_grp = gg;
+                    xw_data = xwords[ii][(kk * NXM + gg * 8) * 256 +: 8 * 256];
+                end
         @(negedge clk); xw_en = 0;
         for (ii = 0; ii < op_rows; ii = ii + 1) begin
             @(negedge clk); sw_en = 1; sw_addr = ii; sw_data = scales[ii];

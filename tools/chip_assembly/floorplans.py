@@ -228,6 +228,25 @@ BLOCKS.update({
                       f"{_ABS}/ot_gpu_tc_col/ot_gpu_tc_col_typ.lib"),
                      _sram("ot_sram_1r1w_1024x256_m2_r2c2"), _sram("ot_sram_1r1w_256x256_m2_r2c2")],
         max_layer="M9", pdn="pdn_sm.tcl", notes="Qwen HBM SM element (tools/uarch_model.hbm_gpu_design('qwen'))", peak_gb=60.0),
+    # W13: the hardened SM element of the V4.1 HBM die: 32 block-dot + 32 BF16 column macros (4 x 8 each),
+    # 99 shallow x-store SRAMs (a whole 8-column fragment a cycle: group-slot issue), the 5-macro staging ring.
+    "ot_gpu_sm_v": Block(
+        "ot_gpu_sm_v",
+        GPU_FP + ["rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv",
+                  "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bd_col.sv",
+                  "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_sm_v.sv",
+                  f"{_MEM}/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+                  f"{_MEM}/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"],
+        1800.0, 1900.0,
+        [(r"^(req_|rsp_|d_)", "N"), (r"^xw_", "W"), (r"^(rv|rrow|rdata|fault)$", "E")],
+        params={"NC": 8}, default_edge="S", place_density=0.55,
+        orfs_extra={"NUM_CORES": 12, "MACRO_PLACE_HALO": "4 4"},
+        hard_macros=[("ot_gpu_tc16", f"{_ABS}/ot_gpu_tc16/ot_gpu_tc16.lef", f"{_ABS}/ot_gpu_tc16/ot_gpu_tc16_typ.lib"),
+                     ("ot_gpu_bd_col", f"{_ABS}/ot_gpu_bd_col/ot_gpu_bd_col.lef",
+                      f"{_ABS}/ot_gpu_bd_col/ot_gpu_bd_col_typ.lib"),
+                     _sram("ot_sram_1r1w_1024x256_m2_r2c2"), _sram("ot_sram_1r1w_128x256_m1_r2c2")],
+        max_layer="M9", pdn="pdn_sm.tcl", notes="V4.1 HBM SM element (tools/uarch_model.hbm_gpu_design('v41'))",
+        peak_gb=60.0),
 })
 
 

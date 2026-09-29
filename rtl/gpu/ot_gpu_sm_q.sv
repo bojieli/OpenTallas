@@ -49,7 +49,8 @@ module ot_gpu_sm_q #(
     // x store and row-scale store writes (from the x broadcast / L2)
     input  wire                    xw_en,
     input  wire [9:0]              xw_addr,
-    input  wire [NXM*256-1:0]      xw_data,
+    input  wire [((NXM + 7) / 8 > 1 ? $clog2((NXM + 7) / 8) : 1)-1:0] xw_grp,   // which 8 macros this beat writes
+    input  wire [8*256-1:0]        xw_data,     // one 256-B x-broadcast beat
     input  wire                    sw_en,
     input  wire [$clog2(RMAX)-1:0] sw_addr,
     input  wire [15:0]             sw_data,
@@ -97,10 +98,10 @@ module ot_gpu_sm_q #(
         .iss_row_ok(row_ok), .iss_slot(si), .iss_row(row_now), .iss_first(i_first), .iss_last(i_last),
         .iss_glast(i_glast), .iss_rev_end(rev_end), .xa(), .arrive(arrive), .release_in(release_in),
         .released(released));
-    ot_gpu_xstore #(.NM(NXM), .FRAGW(FRAGW)) u_x (
+    ot_gpu_xstore #(.NM(NXM), .FRAGW(FRAGW), .XWM(8)) u_x (
         .clk(clk), .rst_n(rst_n), .start(start && !busy), .op_nfrag(op_c * op_g),
         .op_blocks((op_rows + IL - 1) / IL), .pop(rev_end), .ready(x_rdy), .head_sel(head_sel),
-        .rsel(s1_rsel), .frag(frag), .w_en(xw_en), .w_addr(xw_addr), .w_data(xw_data));
+        .rsel(s1_rsel), .frag(frag), .w_en(xw_en), .w_addr(xw_addr), .w_grp(xw_grp), .w_data(xw_data));
 
     // ---------------- stage 1: the line, the tag and the fragment's buffer ----------------
     function automatic [15:0] i8_bf16(input [7:0] code);

@@ -122,7 +122,7 @@
     },
     "xw_data": {
      "direction": "input",
-     "width": 4096,
+     "width": 2048,
      "internal_budget_ps": 300.0,
      "external_ps": 560.0,
      "status": "fits",
@@ -254,6 +254,14 @@
      "status": "static",
      "internal_budget_ps": null,
      "external_ps": null
+    },
+    "xw_grp": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 560.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
     }
    }
   }

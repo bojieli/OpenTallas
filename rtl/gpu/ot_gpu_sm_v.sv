@@ -52,7 +52,8 @@ module ot_gpu_sm_v #(
     input  wire [1087:0]           rsp_data,
     input  wire                    xw_en,
     input  wire [$clog2(XD)-1:0]   xw_addr,
-    input  wire [NC*(SUB*LBS*266+SUB*LSB*16)-1:0] xw_data,
+    input  wire [6:0]              xw_grp,      // which 8 x-store macros this beat writes
+    input  wire [8*256-1:0]        xw_data,     // one 256-B x-broadcast beat
     output reg                     rv,
     output reg  [$clog2(RMAX)-1:0] rrow,
     output reg  [NC*32-1:0]        rdata,
@@ -99,12 +100,12 @@ module ot_gpu_sm_v #(
 
     // ---------------- x store: XM macros, one fragment a read ----------------
     wire [XM*256-1:0] xrd;
-    wire [XM*256-1:0] xwd = {{(XM*256-FRAGW){1'b0}}, xw_data};
     genvar m;
     generate for (m = 0; m < XM; m = m + 1) begin : g_xm
         ot_sram_1r1w_128x256_m1_r2c2 u_x (
             .clk(clk), .r_ce_in(adv && row_ok), .r_addr_in(xa), .rd_out(xrd[256*m +: 256]),
-            .w_ce_in(xw_en), .w_addr_in(xw_addr), .wd_in(xwd[256*m +: 256]), .w_mask_in({256{1'b1}}),
+            .w_ce_in(xw_en && (xw_grp == m / 8)), .w_addr_in(xw_addr), .wd_in(xw_data[256*(m % 8) +: 256]),
+            .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
 
