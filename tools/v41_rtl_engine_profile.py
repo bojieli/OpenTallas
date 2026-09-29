@@ -545,7 +545,7 @@ def cross_check_inventory(nl: Netlist, inv: dict) -> list[dict]:
     out = []
     mapping = {"u_tile.u_core": ("die.u_tile.u_core", "ot_hdc_core_v41x"),
                "g_hbm.u_hbm": ("die.g_hbm[*].u_hbm", "ot_chip_v41x_hbm3e_phy"),
-               "g_hbm.u_arb": ("die.g_hbm[*].u_arb", "ot_chip_v41x_hbm_karb"),
+               "g_hbm.u_arb": ("die.g_hbm[*].g_karb.u_arb", "ot_chip_v41x_hbm_karb"),  # KARB_LOCAL=0 arm (claude/w2-karb-local)
                "u_coll": ("die.u_coll", "ot_rom_oneshot_die_px"),
                "u_cdma": ("die.u_cdma", "ot_chip_v41x_coll_dma"),
                "u_ctrl": ("die.u_ctrl", "ot_rom_pkg_ctrl_x"),

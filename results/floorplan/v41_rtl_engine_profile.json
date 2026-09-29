@@ -29,6 +29,15 @@
   "IDX_SHARDED": 0,
   "WINDOW_RETAIN_L0": 0,
   "WINDOW_HBM_ATTENTION": 0,
+  "KARB_LOCAL": 0,
+  "KARB_FENCE": 1,
+  "WINDOW_REFILL_CREDITS": 1,
+  "WINDOW_STREAM_II1": 0,
+  "X_HE": 1,
+  "X_ME": 1,
+  "X_IDX": 2,
+  "X_SEL": 1,
+  "X_EG": 1,
   "K_HAW": 30,
   "KEY_USERS": 1,
   "IKH_SLICE": 262144,
@@ -131,7 +140,7 @@
    "<scratch>/die.json",
    "<source_files[:-includes] in order>"
   ],
-  "json_bytes": 143743947,
+  "json_bytes": 144137141,
   "returncode": 0,
   "message_counts": {
    "Warning-SELRANGE": 10
@@ -140,6 +149,7 @@
  },
  "source_files": [
   "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
   "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv",
   "rtl/chip/ot_chip_v41x_attn_row_merge.sv",
@@ -148,6 +158,14 @@
   "rtl/chip/ot_chip_v41x_die.sv",
   "rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
   "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+  "rtl/chip/ot_chip_v41x_hbm_karb_local.sv",
+  "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv",
+  "rtl/chip/ot_chip_v41x_karb_q2.sv",
+  "rtl/chip/ot_chip_v41x_karb_qn.sv",
+  "rtl/chip/ot_chip_v41x_karb_region.sv",
+  "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+  "rtl/chip/ot_chip_v41x_karb_slice.sv",
+  "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
   "rtl/chip/ot_chip_v41x_kv_prefetch.sv",
   "rtl/chip/ot_chip_v41x_kv_reqmux.sv",
   "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv",
@@ -215,6 +233,8 @@
   "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv",
   "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv",
   "rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv",
   "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
   "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
@@ -239,21 +259,30 @@
  ],
  "source_sha256": {
   "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
   "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
   "rtl/chip/ot_chip_v41x_attn_row_merge.sv": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
   "rtl/chip/ot_chip_v41x_coll_dma.sv": "2e5f33b74ef8f59996287e82f86b9cf238380b5da432c5c903a0bd191e6eede3",
   "rtl/chip/ot_chip_v41x_coll_transpose.sv": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
-  "rtl/chip/ot_chip_v41x_die.sv": "e45c4ff3d64e3e3c879c05daba46ef043dc699ddd03eb2f7cf56b801eea861cb",
+  "rtl/chip/ot_chip_v41x_die.sv": "e6614aa917eaa140d068eeeb6dc5fbfd40363a98c44f26e39d2193e86b5983fb",
   "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b",
-  "rtl/chip/ot_chip_v41x_hbm_karb.sv": "72e06e1fe533c491c13260ddea0462254a32821af44a2ad3726fbd553fd19f74",
+  "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+  "rtl/chip/ot_chip_v41x_hbm_karb_local.sv": "73a9c0ea0eeb49d286a6e964e2f0f4ba5704a347be5c1ff67003059cc57dd558",
+  "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a",
+  "rtl/chip/ot_chip_v41x_karb_q2.sv": "90c16f6e5ccce13ea45af4d36cc91dcdaebe2de88b5d0e59da1caf1cedbc3b47",
+  "rtl/chip/ot_chip_v41x_karb_qn.sv": "2e7ff8700db4d25f0d68d3d096d1f151e12e84778816f162b9126c4d545990a0",
+  "rtl/chip/ot_chip_v41x_karb_region.sv": "9a4b691956eac1dd272ccb5f357d835c6e4c9a87a24546d832e8561db1c98477",
+  "rtl/chip/ot_chip_v41x_karb_region_kq.sv": "ffbdd286d3e21ff309f4636763e4d9d8fa0a989bb664ece3149ccfa004475eb7",
+  "rtl/chip/ot_chip_v41x_karb_slice.sv": "4b72f689c543f9d35cf8bd6a88b34e1737f36ac7419e72dbf746959fef7a614b",
+  "rtl/chip/ot_chip_v41x_karb_stack_ep.sv": "4d0e4b88b7fd66d517f3057ac1c1715fb1fadd969d1bf2d6389662771f199528",
   "rtl/chip/ot_chip_v41x_kv_prefetch.sv": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d",
   "rtl/chip/ot_chip_v41x_kv_reqmux.sv": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
   "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c",
   "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv": "18a90665039d2f6b87d312e11496c47262383c9801d9edbf60d34b7cd4f37dee",
   "rtl/chip/ot_chip_v41x_rope_region_guard.sv": "239c4a1f6ffa3f62022d27da2ecdbf9e6d406e190c0e0ab253c56bf593f1fbcb",
   "rtl/chip/ot_chip_v41x_rope_su_word.sv": "5a3c4176cefdc05f9f837c1f093ff31a12d903b527bf6097caafd3f10b34c12c",
-  "rtl/chip/ot_chip_v41x_tile.sv": "69ad54bd0534cedffb025838c944ddeed88e0acb8c8519bf25a8698b4d7fc648",
+  "rtl/chip/ot_chip_v41x_tile.sv": "359a430097899dfcb4b097b24ba7e2bcd5d3d3d72c59d4fabdb53c074363f703",
   "rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
   "rtl/chip/ot_chip_v41x_window_block_guard.sv": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791",
   "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
@@ -272,7 +301,7 @@
   "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
   "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
   "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
-  "rtl/hdc/v41/ot_hdc_blockdot.sv": "de168a33a74404c21f0de7ed4fd43f7732754d43eb16b66bb40f93e10f6d393c",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
   "rtl/hdc/v41/ot_hdc_chunk8_stack.sv": "0860ac77c1868da11452a7368afec9a2bf320744b09719e676c57160c6c4312b",
   "rtl/hdc/v41/ot_hdc_engram_hash.sv": "d12ad14278510d75ace0b0c078320dd69e2e3bd0f0b0937e28cf59f41fee3c91",
   "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
@@ -287,10 +316,10 @@
   "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
   "rtl/hdc/v41/ot_hdc_v41_hcproj.sv": "c3f6ef57f8d2025dd2d4170462ec55fa427f90bd5b0d04b0540bbbf4098f13f0",
   "rtl/hdc/v41/ot_hdc_v41_matvec.sv": "907b2979b89f324a32bf8de9b8b1ecc4281346cfce221c2d0123ca6cb2d8d8fc",
-  "rtl/hdc/v41/ot_hdc_v41_qe.sv": "57a05fd92b950bb6daa8e41918a336bee855e2758bd89880c7e00cde08cca6a7",
+  "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
   "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
   "rtl/hdc/v41/ot_hdc_v41_xu.sv": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566",
-  "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "4d2fc7666016345fe896d943dda5584519002e9140fe28bb229be8ebc4539a40",
+  "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "4b58c624046838efe7c0399c3d704c10a7798aca80a265379d550d88757c5341",
   "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "1c71b11df5ec918b55bbb5706a80dda65e8470144ec08f27afc46523be57066b",
   "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "ed2a13a5fd91fa94ef02dc48098c16b3587e74047a67655c9b4533af9f777758",
   "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd",
@@ -305,15 +334,17 @@
   "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv": "9d0638579b17a9f2323cf623d7f9e6330fd13a5ba8bdd358080cacebb3c2d676",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv": "a2c4e44ff1d581b6d2e5cfe8e221e2c4553e4cbedd750e20819d6d7b29f30136",
-  "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "6a3ddc746cd5985d376bf893127877212034581e46defa893da59c3b2bb539e5",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "c21e96fa6601d198dbdff534acd4138fb73cdaa5b99709f31cfd2798a046fd8e",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv": "156c67e8101b2d10ebf69a771b6599b8f7c3a707688d14d110121652bf15f5c2",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv": "c3c4b2f36875e44daf75818b5355aad5ad3cb4803acd6b1c1d5fccf49070c37c",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
-  "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "a4ce9d82f1489d14824b7ef5ebea200c31af86859a80fbad3bbe421f5790eafd",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "6e6ed8fe1927de57b531ab97345511939da3459672e90aef3ca6d7777216cd6e",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv": "6025df0bda8d70e63a7675816382399c24075edb61258c9145e52b23e56e0cba",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": "bd4c590c30acb6d1b113853e3a1b4faca2d9f7f6b78ef7c2cd2c80df65dc6420",
-  "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a",
+  "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
+  "rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv": "fce7c6df29e1be29ee2103f529c17debd7ba35f282dfb002e5cbaa009cb4fb67",
+  "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": "f5064de72493a39023c97bb1152d4ae54659091e25769e8c4323a5c0c382628b",
   "rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv": "6068c69a7a201eb8efcd5378fd5f1d402983314f121cd26caafca3a8702597d2",
   "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
   "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
@@ -335,7 +366,7 @@
   "rtl/rom/ot_rom_oneshot_px.sv": "ae8fbfdf6a478e10d20325ebdbaac060bdf6fd9c970f293a80dd5bdedc17ca37",
   "rtl/rom/ot_rom_pkg_ctrl_x.sv": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2",
   "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh": "138edb11cd58f3d7d69cc9b8a383a86653c583198a87965a3de656ca22a069c4",
-  "tools/v41_rtl_engine_profile.py": "40f3083ccb7c8bfb34e61360f681cddd27799b3853862105d52a8b3435097c7e",
+  "tools/v41_rtl_engine_profile.py": "ef59a23fd8305f1176b2ccd67fb4b590de57c1a6540683904177219c49560c3e",
   "results/floorplan/v41_resource_inventory.json": "322133dcf94653b095e5cfaec9c4019eb7ea915667a6c8717a07f3d4192f0acc"
  },
  "source_resolution": "module/package definition closure from the top over rtl/ (excluding rtl/test) and physical/asap7_memory_macros (behavioural .v preferred over *_bb.v); includes via rtl/hdc/v41",
@@ -346,7 +377,7 @@
   "collapsed_instance_paths": 1040,
   "memory_arrays": 345,
   "memory_arrays_class_memory": 54,
-  "behavioural_memory_bytes_total": 284910921,
+  "behavioural_memory_bytes_total": 284910793,
   "sram_or_rom_macro_instances": 0,
   "mac_lanes_per_cycle": {
    "qe_blockdot": 512,
@@ -392,8 +423,8 @@
     "hcp_fp32"
    ],
    "memory_arrays": 270,
-   "memory_bits": 1264339940,
-   "memory_bytes": 158042492
+   "memory_bits": 1264338916,
+   "memory_bytes": 158042364
   },
   "VM": {
    "instances": 6801,
@@ -532,6 +563,7 @@
      "IL": 8,
      "NBMAX": 192,
      "CHUNK8": 1,
+     "WEIGHT_STALL": 0,
      "QLB": 272,
      "MP": 1
     }
@@ -3335,7 +3367,9 @@
       "TAGW": 16,
       "LENW": 4,
       "BEATW": 4,
-      "DW": 256
+      "DW": 256,
+      "PIPE_OUT": 0,
+      "PIPE_RSP": 0
      }
     }
    ]
@@ -3808,6 +3842,15 @@
       "IDX_SHARDED": 0,
       "WINDOW_RETAIN_L0": 0,
       "WINDOW_HBM_ATTENTION": 0,
+      "KARB_LOCAL": 0,
+      "KARB_FENCE": 1,
+      "WINDOW_REFILL_CREDITS": 1,
+      "WINDOW_STREAM_II1": 0,
+      "X_HE": 1,
+      "X_ME": 1,
+      "X_IDX": 2,
+      "X_SEL": 1,
+      "X_EG": 1,
       "K_HAW": 30,
       "KEY_USERS": 1,
       "IKH_SLICE": 262144,
@@ -3961,6 +4004,8 @@
       "X_IDX": 2,
       "PIKH_HAW": 30,
       "IDX_SHARDED": 0,
+      "IDX_MULTIUSER": 0,
+      "IDX_KEY_SLICE_SECTORS": 0,
       "X_SEL": 1,
       "X_EG": 1,
       "X_SU": 1,
@@ -4101,10 +4146,13 @@
       "MP": 1,
       "X_HE": 1,
       "X_ME": 1,
+      "X_ME_XBANK": 0,
       "X_ATT": 1,
       "X_IDX": 2,
       "PIKH_HAW": 30,
       "IDX_SHARDED": 0,
+      "IDX_MULTIUSER": 0,
+      "IDX_KEY_SLICE_SECTORS": 0,
       "X_SEL": 1,
       "X_EG": 1,
       "XSQ": 4,
@@ -4377,6 +4425,7 @@
       "IL": 8,
       "NBMAX": 192,
       "CHUNK8": 1,
+      "WEIGHT_STALL": 0,
       "QLB": 272,
       "MP": 1
      }
@@ -4614,7 +4663,8 @@
       "HLENW": 4,
       "HTAGW": 16,
       "HBEATW": 4,
-      "SHARDED": 0
+      "SHARDED": 0,
+      "SLICE_SECTORS": 0
      }
     }
    ]
@@ -4697,7 +4747,8 @@
       "NW": 21,
       "NL": 16,
       "HAW": 30,
-      "SHARDED": 0
+      "SHARDED": 0,
+      "SLICE_SECTORS": 0
      }
     }
    ]
@@ -4725,7 +4776,9 @@
       "LB": 7,
       "BAW": 18,
       "KMAX": 5120,
-      "RL": 2
+      "RL": 2,
+      "XBANK": 0,
+      "SHARED_XBANK": 0
      }
     }
    ]
@@ -5070,7 +5123,7 @@
    "region": "DIE_TOP_GLUE"
   },
   {
-   "path": "die.g_hbm[*].u_arb",
+   "path": "die.g_hbm[*].g_karb.u_arb",
    "module": "ot_chip_v41x_hbm_karb",
    "instances": 4,
    "region": "HBM_SERVICE"
@@ -12311,7 +12364,7 @@
   {
    "module": "ot_hdc_v41x_me_adapt",
    "specialisation": "ot_hdc_v41x_me_adapt__pi15",
-   "generate_scope": null,
+   "generate_scope": ".g_xflat",
    "name": "xb",
    "word_bits": 16,
    "dims": [
@@ -15609,32 +15662,6 @@
    "class": "register_array"
   },
   {
-   "module": "ot_hdc_v41x_me_adapt",
-   "specialisation": "ot_hdc_v41x_me_adapt__pi15",
-   "generate_scope": null,
-   "name": "xr",
-   "word_bits": 1024,
-   "dims": [
-    2
-   ],
-   "words": 2,
-   "bits": 2048,
-   "instances": 1,
-   "total_bits": 2048,
-   "kind": "ram_or_register_array",
-   "dynamic_read_sites": 1,
-   "dynamic_write_sites": 1,
-   "constant_index_read_sites": 0,
-   "constant_index_write_sites": 1,
-   "dynamic_sites_inside_procedural_loops": 2,
-   "initial_block_sites": 0,
-   "whole_array_refs": 0,
-   "regions": {
-    "ROM_MAC": 1
-   },
-   "class": "register_array"
-  },
-  {
    "module": "ot_rom_oneshot_die_px",
    "specialisation": "ot_rom_oneshot_die_px__pi7",
    "generate_scope": null,
@@ -16282,6 +16309,32 @@
    "whole_array_refs": 0,
    "regions": {
     "ROM_MAC": 16
+   },
+   "class": "register_array"
+  },
+  {
+   "module": "ot_hdc_v41x_me_adapt",
+   "specialisation": "ot_hdc_v41x_me_adapt__pi15",
+   "generate_scope": "...g_xr_more",
+   "name": "xr",
+   "word_bits": 1024,
+   "dims": [
+    1
+   ],
+   "words": 1,
+   "bits": 1024,
+   "instances": 1,
+   "total_bits": 1024,
+   "kind": "ram_or_register_array",
+   "dynamic_read_sites": 0,
+   "dynamic_write_sites": 0,
+   "constant_index_read_sites": 1,
+   "constant_index_write_sites": 1,
+   "dynamic_sites_inside_procedural_loops": 0,
+   "initial_block_sites": 0,
+   "whole_array_refs": 0,
+   "regions": {
+    "ROM_MAC": 1
    },
    "class": "register_array"
   },
@@ -20850,7 +20903,7 @@
    "inventory_path": "g_hbm.u_arb",
    "inventory_region": "HBM_SERVICE",
    "inventory_count": 4,
-   "elaborated_path": "die.g_hbm[*].u_arb",
+   "elaborated_path": "die.g_hbm[*].g_karb.u_arb",
    "elaborated_module": "ot_chip_v41x_hbm_karb",
    "elaborated_count": 4,
    "profile_region": "HBM_SERVICE",
