@@ -26,11 +26,11 @@
    "boundaries": 289
   },
   {
-   "design": "qwen_hbm_gpu_grid_sync",
-   "T_us": 1570.2,
-   "tokens_s": 636.8,
+   "design": "qwen_hbm_gpu_grid_sync_v100",
+   "T_us": 1648.3,
+   "tokens_s": 606.7,
    "supply_frac": 1.0,
-   "barrier_us_per_token": 433.5,
+   "barrier_us_per_token": 511.5,
    "boundaries": 289
   },
   {
@@ -82,9 +82,9 @@
    }
   },
   {
-   "design": "v41_hbm_gpu_grid_sync",
-   "T_us": 1222.9,
-   "tokens_s": 817.7,
+   "design": "v41_hbm_gpu_grid_sync_v100",
+   "T_us": 1392.7,
+   "tokens_s": 718.0,
    "supply_frac": 1.0,
    "boundaries": 629,
    "breakdown_us": {
@@ -94,13 +94,13 @@
     "collective_bytes": 1.5,
     "pipeline_hops": 0.9,
     "control": 2.0,
-    "barrier": 943.5
+    "barrier": 1113.3
    }
   }
  ],
  "gpu": {
   "barrier_cycles_hw": 200,
-  "barrier_ns_grid": 1500.0,
+  "barrier_ns_grid": 1770.0,
   "seq_gap_cycles": 7,
   "adapter_measured_Bpc": 39.0,
   "sustained_frac": 1.0

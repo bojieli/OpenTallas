@@ -76,10 +76,14 @@ def node_key(name: str) -> str:
     return ""
 
 
-def wire_cycles(um: float, clock_hz: float) -> int:
+WIRE_PS_PER_UM_LOADED = 0.76  # W3 real-technology channel runs: 0.72-0.81 ps/um under 300-1,500 routed wires
+                              # (branch claude/w3-v41-die-assembly 01ef74dc, v41_corridor records)
+
+
+def wire_cycles(um: float, clock_hz: float, ps_per_um: float = WIRE_PS_PER_UM) -> int:
     """One-way cycles to cross `um` of registered wire (W1 rule: registers = ceil(L/seg) - 1, +1 cycle)."""
     period_ps = 1e12 / clock_hz
-    seg = (period_ps - UNCERTAINTY_PS - WIRE_OVERHEAD_PS) / WIRE_PS_PER_UM
+    seg = (period_ps - UNCERTAINTY_PS - WIRE_OVERHEAD_PS) / ps_per_um
     regs = max(0, math.ceil(um / seg) - 1)
     return regs + 1 if regs > 0 else (1 if um > 0 else 0)
 
@@ -99,7 +103,9 @@ BASE = dict(
     mac_lanes_per_macro=None,     # None: one word per cycle per macro (lanes sized to the word); else a cap
     weight_macs_die=None,         # optional die-wide MAC cap (as-built: 512 QE block-dot lanes)
     bf16_macs_die=None,
-    elem_fill=55,                 # weight tile descriptor -> row group (W8: 3+1+RL+CL+3plg+1+3nlev+2 = 45-60)
+    elem_fill=78,                 # measured: W2 QE ROM/MAC neighbourhood accept -> first result 78 cycles
+                                  # (claude/w2-rommac, qe_romac_exactness.json; the formula gave 45-60)
+    wire_ps_per_um=WIRE_PS_PER_UM_LOADED,
     # vector memory ports (elements of 32 bit per cycle)
     vm_read_elems=4,              # x operand path: G4 = 4 FP32 elements/cycle (V41_FLOORPLAN_CONNECTIVITY 2)
     vm_write_elems=64,            # collective/result write: 4 x 512-bit words (W1 handoff 1)
@@ -202,7 +208,7 @@ def price_matvec(nd, name, d, clock, c):
                key=lambda kv: kv[1])[0]
     leaves = holding if d["return_leaf_elems"] is None else d["return_leaf_elems"]
     tree = math.ceil(math.log(max(2, leaves), d["return_fanin"]))
-    wire = 2 * wire_cycles(d["bcast_um"][region], clock)
+    wire = 2 * wire_cycles(d["bcast_um"][region], clock, d.get("wire_ps_per_um", WIRE_PS_PER_UM))
     depth_c = d["elem_fill"] + wire + tree
     return dict(key=key, fmt=fmt, K=K, rows=rows, words=words, holding=holding, region=region,
                 t_read=t_read, t_mac=t_mac, t_x=t_x, t_ret=t_ret, issue=issue_c, bind=bind,
@@ -382,15 +388,20 @@ def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192):
     import hdc_timing as T
     Q.CLOCK[0] = Q.clock_hz()
     k0 = dict(T.K)
+    # W5 derived its wire terms with the unloaded fit (0.5997 ps/um); re-derive the x broadcast from its
+    # 27.0 mm distance with the loaded channel constant and scale the tree/UCIe wire terms by the same ratio
+    x_extra = wire_cycles(27000.0, Q.clock_hz(), WIRE_PS_PER_UM_LOADED) - 1
+    wscale = x_extra / QWEN_WIRE["x_stages_extra"]
     try:
         if wires:
-            T.K["me_lat"] = k0["me_lat"] + QWEN_WIRE["x_stages_extra"] + QWEN_WIRE["vm_conflict_reg"] \
+            T.K["me_lat"] = k0["me_lat"] + x_extra + QWEN_WIRE["vm_conflict_reg"] \
                 + QWEN_WIRE["result_write_extra"]
         r = Q.as_built(ctx, groups=G, su_width=su_width)
     finally:
         T.K.clear()
         T.K.update(k0)
-    cycles = r["cycles"] + ((QWEN_WIRE["tree_extra_per_token"] + QWEN_WIRE["ucie_wire_per_token"]) if wires else 0)
+    cycles = r["cycles"] + (round((QWEN_WIRE["tree_extra_per_token"] + QWEN_WIRE["ucie_wire_per_token"]) * wscale)
+                            if wires else 0)
     a = QWEN_AREA
     tiles = G / 4
     macros_tile = a["code_macros"] / tiles
@@ -432,7 +443,11 @@ def qwen_rows():
 #            a GPU grid barrier through L2 pays more (ASSUMED 200 cycles with a hardware barrier network;
 #            1,500 ns is the cooperative-groups grid.sync class -- ASSUMED, to be cited).
 #   compute  SMs sized to bandwidth (W9: 32 SMs x 4,096 INT8 MAC/clk per Qwen die) never bind at batch 1.
-GPU = dict(barrier_cycles_hw=200, barrier_ns_grid=1500.0, seq_gap_cycles=7,
+GPU = dict(barrier_cycles_hw=200,           # ASSUMED dedicated hardware barrier network
+           barrier_ns_grid=1770.0,           # measured: V100 cooperative-groups grid sync, 1 block/SM
+                                             # (L. Zhang et al., "A Study of Single and Multi-device
+                                             # Synchronization Methods in Nvidia GPUs", IPDPS 2020, Fig. 5)
+           seq_gap_cycles=7,
            adapter_measured_Bpc=39.0, sustained_frac=1.0)
 
 
@@ -449,7 +464,7 @@ def qwen_hbm_rows():
             ("qwen_hbm_ideal", 1.0, 0.0),
             ("qwen_hbm_adapter_as_built", GPU["adapter_measured_Bpc"] / per_die_Bpc, GPU["seq_gap_cycles"] / clock),
             ("qwen_hbm_gpu_hw_barrier", 1.0, GPU["barrier_cycles_hw"] / clock),
-            ("qwen_hbm_gpu_grid_sync", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
+            ("qwen_hbm_gpu_grid_sync_v100", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
         T = t_hbm / supply + boundaries * barrier_s + tp
         rows.append(dict(design=tag, T_us=round(T * 1e6, 1), tokens_s=round(1 / T, 1), supply_frac=supply,
                          barrier_us_per_token=round(boundaries * barrier_s * 1e6, 1), boundaries=boundaries))
@@ -476,7 +491,7 @@ def v41_hbm_rows():
             ("v41_hbm_published", 1.0, 0.0),
             ("v41_hbm_adapter_as_built", GPU["adapter_measured_Bpc"] / per_die_Bpc, 0.0),
             ("v41_hbm_gpu_hw_barrier", 1.0, (GPU["barrier_cycles_hw"] - GPU["seq_gap_cycles"]) / clock),
-            ("v41_hbm_gpu_grid_sync", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
+            ("v41_hbm_gpu_grid_sync_v100", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
         parts = dict(base, weight_sweep=base["weight_sweep"] / supply,
                      barrier=boundaries * barrier_s * 1e6)
         T = sum(parts.values())

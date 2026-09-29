@@ -32,10 +32,10 @@ Two ledgers accompany every design:
 | Design | tok/s | What binds | Area fit |
 |---|---:|---|---|
 | As built: RTL engines (512 QE lanes, 64 BF16, 4-element VM, 16-lane SU, 1,024 indexer MACs, measured attention and reader) | **56.8** | `wo_a` alone 5.1 ms, experts 2.7 ms, index scan 2.6 ms, lm_head 2.5 ms | trivially |
-| Spec widths, W1 contiguous bank map | **402** | Every matrix is read from its own bank set: about 8,000 cycles each | yes |
-| Spec widths, rows striped over every macro | **2,178** | VM read port: 4 elements/cycle, so 1,280 cycles per 5,120-wide projection | **no**: 184 of 132 mm² of strip |
-| + VM 64/128 elements, BF16 on every macro | 4,941 | | **no**: 184 mm² |
-| **Proposal:** striped rows, VM 64 read / 128 write, BF16 lanes on 4,096 macros, dedicated units at spec | **4,549** | fixed per-phase fill (compute chain), wo_a | **yes**: 104.8 of 132 mm² strip, 51.8 of 233.7 mm² hub |
+| Spec widths, W1 contiguous bank map | **400** | Every matrix is read from its own bank set: about 8,000 cycles each | yes |
+| Spec widths, rows striped over every macro | **2,137** | VM read port: 4 elements/cycle, so 1,280 cycles per 5,120-wide projection | **no**: 184 of 132 mm² of strip |
+| + VM 64/128 elements, BF16 on every macro | 4,761 | | **no**: 184 mm² |
+| **Proposal:** striped rows, VM 64 read / 128 write, BF16 lanes on 4,096 macros, dedicated units at spec | **4,396** | fixed per-phase fill (compute chain), wo_a | **yes**: 104.8 of 132 mm² strip, 51.8 of 233.7 mm² hub |
 | Proposal weight path with the dedicated units as built | 320 | index scan at 1,024 MACs: 2.6 ms; softmax at 16 lanes: 127 µs | |
 
 Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#sweep`) decide the physical design point.
@@ -62,6 +62,12 @@ Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#
 
 ## Calibration and limits
 
+Calibrated 2026-09-29:
+- **Element fill:** 78 cycles, measured by W2's QE ROM/MAC exact bench (the formula gave 45–60).
+- **Long-crossing wire:** 0.76 ps/µm, from W3's real-technology channel runs (0.72–0.81 under load). The fit's 0.60 is unloaded.
+- **GPU grid sync:** 1.77 µs, measured on a V100 (L. Zhang et al., "A Study of Single and Multi-device Synchronization Methods in Nvidia GPUs", IPDPS 2020, Fig. 5).
+- **Still ASSUMED:** the 200-cycle hardware barrier.
+
 - Calibrated against measurements: the as-built engines, the index reader's sector rate, the attention and softmax jobs, and the collective cycles.
 - Not yet calibrated against a routed element:
   - the element fill (55 cycles, from the weight-tile formula);
@@ -85,13 +91,13 @@ It also checks tile area against the 560 mm² tile array. The area model is cali
 |---|---:|---|
 | As built (scalar stream unit, no wire registers) | 179 | 682 (no fit) |
 | Architecture (G = 6,144, stream unit 1,024 wide, ideal wires) | 11,193 | 682 (no fit) |
-| + floorplan wires | 10,206 | 682 (no fit) |
-| + pruned logic | 10,206 | 583 (**no fit**) |
-| **G = 5,120, pruned, with wires** | **9,260** | **540 (fits)** |
-| G = 4,096, pruned | 8,551 | 496 (fits) |
+| + floorplan wires | 9,968 | 682 (no fit) |
+| + pruned logic | 9,968 | 583 (**no fit**) |
+| **G = 5,120, pruned, with wires** | **9,063** | **540 (fits)** |
+| G = 4,096, pruned | 8,383 | 496 (fits) |
 
 **Decisions:**
-- The largest group count that fits with wires is **5,120 groups with pruned logic**, giving 9,260 tok/s.
+- The largest group count that fits with wires is **5,120 groups with pruned logic**, giving 9,063 tok/s.
 - The published 10,874 assumes 6,144 groups, which do not fit, and free wires.
 - Two area levers could restore 6,144 groups, and both must be priced:
   - scale-ROM remap (11.8 → 0.77 mm², W5);
@@ -114,22 +120,22 @@ At batch 1 an HBM die is bandwidth-bound, so the element count is sized to bandw
 | Qwen HBM ideal (8.18 GB at 7.2 TB/s) | 880 |
 | Qwen HBM, today's adapter | **10.5** |
 | Qwen HBM, GPU bulk-copy supply, hardware barrier network (200 cycles, ASSUMED) | **841** |
-| Qwen HBM, GPU grid sync (1.5 µs, ASSUMED) | 637 |
+| Qwen HBM, GPU grid sync (1.77 µs, V100 measured) | 607 |
 | V4.1 HBM published (no barrier cost) | 3,579 |
 | V4.1 HBM, today's adapter | **279** |
 | V4.1 HBM, GPU supply + hardware barrier | **2,520** |
-| V4.1 HBM, GPU grid sync | 818 |
+| V4.1 HBM, GPU grid sync (1.77 µs) | 718 |
 
 **Decisions:**
 1. The HBM weight path must be a GPU-style bulk-copy engine with at least 1.8 MB per die in flight. Today's adapter is 90× short of that.
-2. The comparator needs a hardware barrier network. Grid sync through L2 would cost V4.1 4.4× and Qwen 1.4×.
+2. The comparator needs a hardware barrier network. Grid sync through L2 (1.77 µs measured on V100) would cost V4.1 5.0× and Qwen 1.45×.
 3. **The published V4.1 HBM figure of 3,579 omits synchronisation and must be restated.** A 200-cycle barrier gives 2,520; the barrier cost needs a cited or measured number.
 
 ## Summary: what the model changed
 
 | Design | Previous figure | Microarchitecture model (fits die) | Largest lever |
 |---|---:|---:|---|
-| V4.1 ROM, 1M | 4,933 (architecture) | 4,549 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
-| Qwen ROM, 8K | 10,874 (published) | 9,260 | G = 5,120 pruned; wires +9.7%; vector stream unit |
+| V4.1 ROM, 1M | 4,933 (architecture) | 4,396 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
+| Qwen ROM, 8K | 10,874 (published) | 9,063 | G = 5,120 pruned; wires +12%; vector stream unit |
 | Qwen HBM, 8K | 881 | 841 | bulk-copy weight supply; hardware barrier |
 | V4.1 HBM, 1M | 3,579 | 2,520 | synchronisation cost; bulk-copy supply |

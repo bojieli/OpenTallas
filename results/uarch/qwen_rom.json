@@ -69,9 +69,9 @@
    "wires": true,
    "pruned": false,
    "ctx": 8192,
-   "cycles": 107642,
-   "arch_cycles": 104016,
-   "tokens_s": 10206.425001393509,
+   "cycles": 110219,
+   "arch_cycles": 105535,
+   "tokens_s": 9967.791397127537,
    "clock_hz": 1098640000.0,
    "tile_um2": 451267,
    "tiles": 1536.0,
@@ -86,11 +86,11 @@
     "lm_head": 3168
    },
    "stalls": {
-    "chase": 32857,
+    "chase": 33361,
     "wait_su": 14370,
-    "barrier_me": 33444,
+    "barrier_me": 34200,
     "unit_busy": 9216,
-    "wait_me": 7452
+    "wait_me": 7704
    },
    "design": "qwen_arch_plus_wires"
   },
@@ -100,9 +100,9 @@
    "wires": true,
    "pruned": true,
    "ctx": 8192,
-   "cycles": 107642,
-   "arch_cycles": 104016,
-   "tokens_s": 10206.425001393509,
+   "cycles": 110219,
+   "arch_cycles": 105535,
+   "tokens_s": 9967.791397127537,
    "clock_hz": 1098640000.0,
    "tile_um2": 385771,
    "tiles": 1536.0,
@@ -117,11 +117,11 @@
     "lm_head": 3168
    },
    "stalls": {
-    "chase": 32857,
+    "chase": 33361,
     "wait_su": 14370,
-    "barrier_me": 33444,
+    "barrier_me": 34200,
     "unit_busy": 9216,
-    "wait_me": 7452
+    "wait_me": 7704
    },
    "design": "qwen_pruned_plus_wires"
   },
@@ -131,9 +131,9 @@
    "wires": true,
    "pruned": false,
    "ctx": 8192,
-   "cycles": 161170,
-   "arch_cycles": 157544,
-   "tokens_s": 6816.6532233045855,
+   "cycles": 163747,
+   "arch_cycles": 159063,
+   "tokens_s": 6709.374828241128,
    "clock_hz": 1098640000.0,
    "tile_um2": 672142,
    "tiles": 768.0,
@@ -148,11 +148,11 @@
     "lm_head": 6336
    },
    "stalls": {
-    "chase": 45241,
+    "chase": 45745,
     "wait_su": 14370,
-    "barrier_me": 60660,
+    "barrier_me": 61416,
     "unit_busy": 16992,
-    "wait_me": 10440
+    "wait_me": 10692
    },
    "design": "qwen_G3072"
   },
@@ -162,9 +162,9 @@
    "wires": true,
    "pruned": true,
    "ctx": 8192,
-   "cycles": 161170,
-   "arch_cycles": 157544,
-   "tokens_s": 6816.6532233045855,
+   "cycles": 163747,
+   "arch_cycles": 159063,
+   "tokens_s": 6709.374828241128,
    "clock_hz": 1098640000.0,
    "tile_um2": 606646,
    "tiles": 768.0,
@@ -179,11 +179,11 @@
     "lm_head": 6336
    },
    "stalls": {
-    "chase": 45241,
+    "chase": 45745,
     "wait_su": 14370,
-    "barrier_me": 60660,
+    "barrier_me": 61416,
     "unit_busy": 16992,
-    "wait_me": 10440
+    "wait_me": 10692
    },
    "design": "qwen_G3072_pruned"
   },
@@ -193,9 +193,9 @@
    "wires": true,
    "pruned": false,
    "ctx": 8192,
-   "cycles": 128482,
-   "arch_cycles": 124856,
-   "tokens_s": 8550.925421459815,
+   "cycles": 131059,
+   "arch_cycles": 126375,
+   "tokens_s": 8382.78943071441,
    "clock_hz": 1098640000.0,
    "tile_um2": 561704,
    "tiles": 1024.0,
@@ -210,11 +210,11 @@
     "lm_head": 4752
    },
    "stalls": {
-    "chase": 38329,
+    "chase": 38833,
     "wait_su": 14370,
-    "barrier_me": 44532,
+    "barrier_me": 45288,
     "unit_busy": 10656,
-    "wait_me": 8712
+    "wait_me": 8964
    },
    "design": "qwen_G4096"
   },
@@ -224,9 +224,9 @@
    "wires": true,
    "pruned": true,
    "ctx": 8192,
-   "cycles": 128482,
-   "arch_cycles": 124856,
-   "tokens_s": 8550.925421459815,
+   "cycles": 131059,
+   "arch_cycles": 126375,
+   "tokens_s": 8382.78943071441,
    "clock_hz": 1098640000.0,
    "tile_um2": 496208,
    "tiles": 1024.0,
@@ -241,11 +241,11 @@
     "lm_head": 4752
    },
    "stalls": {
-    "chase": 38329,
+    "chase": 38833,
     "wait_su": 14370,
-    "barrier_me": 44532,
+    "barrier_me": 45288,
     "unit_busy": 10656,
-    "wait_me": 8712
+    "wait_me": 8964
    },
    "design": "qwen_G4096_pruned"
   },
@@ -255,9 +255,9 @@
    "wires": true,
    "pruned": false,
    "ctx": 8192,
-   "cycles": 125978,
-   "arch_cycles": 122352,
-   "tokens_s": 8720.887774055787,
+   "cycles": 128555,
+   "arch_cycles": 123871,
+   "tokens_s": 8546.069775582435,
    "clock_hz": 1098640000.0,
    "tile_um2": 524892,
    "tiles": 1152.0,
@@ -272,11 +272,11 @@
     "lm_head": 4224
    },
    "stalls": {
-    "chase": 38617,
+    "chase": 39121,
     "wait_su": 14370,
-    "barrier_me": 42660,
+    "barrier_me": 43416,
     "unit_busy": 10368,
-    "wait_me": 8604
+    "wait_me": 8856
    },
    "design": "qwen_G4608"
   },
@@ -286,9 +286,9 @@
    "wires": true,
    "pruned": true,
    "ctx": 8192,
-   "cycles": 125978,
-   "arch_cycles": 122352,
-   "tokens_s": 8720.887774055787,
+   "cycles": 128555,
+   "arch_cycles": 123871,
+   "tokens_s": 8546.069775582435,
    "clock_hz": 1098640000.0,
    "tile_um2": 459396,
    "tiles": 1152.0,
@@ -303,11 +303,11 @@
     "lm_head": 4224
    },
    "stalls": {
-    "chase": 38617,
+    "chase": 39121,
     "wait_su": 14370,
-    "barrier_me": 42660,
+    "barrier_me": 43416,
     "unit_busy": 10368,
-    "wait_me": 8604
+    "wait_me": 8856
    },
    "design": "qwen_G4608_pruned"
   },
@@ -317,9 +317,9 @@
    "wires": true,
    "pruned": false,
    "ctx": 8192,
-   "cycles": 118650,
-   "arch_cycles": 115024,
-   "tokens_s": 9259.502739148757,
+   "cycles": 121227,
+   "arch_cycles": 116543,
+   "tokens_s": 9062.66755755731,
    "clock_hz": 1098640000.0,
    "tile_um2": 495442,
    "tiles": 1280.0,
@@ -334,11 +334,11 @@
     "lm_head": 3808
    },
    "stalls": {
-    "chase": 36313,
+    "chase": 36817,
     "wait_su": 14370,
-    "barrier_me": 39204,
+    "barrier_me": 39960,
     "unit_busy": 9792,
-    "wait_me": 8028
+    "wait_me": 8280
    },
    "design": "qwen_G5120"
   },
@@ -348,9 +348,9 @@
    "wires": true,
    "pruned": true,
    "ctx": 8192,
-   "cycles": 118650,
-   "arch_cycles": 115024,
-   "tokens_s": 9259.502739148757,
+   "cycles": 121227,
+   "arch_cycles": 116543,
+   "tokens_s": 9062.66755755731,
    "clock_hz": 1098640000.0,
    "tile_um2": 429946,
    "tiles": 1280.0,
@@ -365,11 +365,11 @@
     "lm_head": 3808
    },
    "stalls": {
-    "chase": 36313,
+    "chase": 36817,
     "wait_su": 14370,
-    "barrier_me": 39204,
+    "barrier_me": 39960,
     "unit_busy": 9792,
-    "wait_me": 8028
+    "wait_me": 8280
    },
    "design": "qwen_G5120_pruned"
   },
@@ -379,9 +379,9 @@
    "wires": true,
    "pruned": false,
    "ctx": 8192,
-   "cycles": 113114,
-   "arch_cycles": 109488,
-   "tokens_s": 9712.679243948583,
+   "cycles": 115691,
+   "arch_cycles": 111007,
+   "tokens_s": 9496.330743100154,
    "clock_hz": 1098640000.0,
    "tile_um2": 471346,
    "tiles": 1408.0,
@@ -396,11 +396,11 @@
     "lm_head": 3456
    },
    "stalls": {
-    "chase": 34009,
+    "chase": 34513,
     "wait_su": 14370,
-    "barrier_me": 36900,
+    "barrier_me": 37656,
     "unit_busy": 9504,
-    "wait_me": 7740
+    "wait_me": 7992
    },
    "design": "qwen_G5632"
   },
@@ -410,9 +410,9 @@
    "wires": true,
    "pruned": true,
    "ctx": 8192,
-   "cycles": 113114,
-   "arch_cycles": 109488,
-   "tokens_s": 9712.679243948583,
+   "cycles": 115691,
+   "arch_cycles": 111007,
+   "tokens_s": 9496.330743100154,
    "clock_hz": 1098640000.0,
    "tile_um2": 405850,
    "tiles": 1408.0,
@@ -427,11 +427,11 @@
     "lm_head": 3456
    },
    "stalls": {
-    "chase": 34009,
+    "chase": 34513,
     "wait_su": 14370,
-    "barrier_me": 36900,
+    "barrier_me": 37656,
     "unit_busy": 9504,
-    "wait_me": 7740
+    "wait_me": 7992
    },
    "design": "qwen_G5632_pruned"
   },
@@ -441,9 +441,9 @@
    "wires": true,
    "pruned": false,
    "ctx": 8192,
-   "cycles": 107642,
-   "arch_cycles": 104016,
-   "tokens_s": 10206.425001393509,
+   "cycles": 110219,
+   "arch_cycles": 105535,
+   "tokens_s": 9967.791397127537,
    "clock_hz": 1098640000.0,
    "tile_um2": 451267,
    "tiles": 1536.0,
@@ -458,11 +458,11 @@
     "lm_head": 3168
    },
    "stalls": {
-    "chase": 32857,
+    "chase": 33361,
     "wait_su": 14370,
-    "barrier_me": 33444,
+    "barrier_me": 34200,
     "unit_busy": 9216,
-    "wait_me": 7452
+    "wait_me": 7704
    },
    "design": "qwen_G6144"
   },
@@ -472,9 +472,9 @@
    "wires": true,
    "pruned": true,
    "ctx": 8192,
-   "cycles": 107642,
-   "arch_cycles": 104016,
-   "tokens_s": 10206.425001393509,
+   "cycles": 110219,
+   "arch_cycles": 105535,
+   "tokens_s": 9967.791397127537,
    "clock_hz": 1098640000.0,
    "tile_um2": 385771,
    "tiles": 1536.0,
@@ -489,11 +489,11 @@
     "lm_head": 3168
    },
    "stalls": {
-    "chase": 32857,
+    "chase": 33361,
     "wait_su": 14370,
-    "barrier_me": 33444,
+    "barrier_me": 34200,
     "unit_busy": 9216,
-    "wait_me": 7452
+    "wait_me": 7704
    },
    "design": "qwen_G6144_pruned"
   }
