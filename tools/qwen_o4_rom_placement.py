@@ -72,11 +72,14 @@ def drafter_fc(base):
             'idle_groups': G - per_round * split}
 
 
-def image():
+def image(drafter=False):
     target = FP.placement()
     mats = [dict(m) for m in target['matrices_per_die']]
     base = target['matrix_code_words_per_die']
     sbase = target['matrix_scale_words_per_die']
+    if not drafter:
+        # USER DECISION 2026-09-29: the Qwen3-8B ROM die is autoregressive only (no DFlash drafter)
+        return target, mats, base, sbase
     fc = drafter_fc(base)
     fc['scale_base'], fc['scale_end'] = sbase, sbase + fc['scale_words']
     mats.append(fc)
@@ -115,6 +118,8 @@ def port_scale_words(mats):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--output', type=Path, default=OUT)
+    ap.add_argument('--drafter', action='store_true',
+                    help='also place the DFlash drafter (fc + 5 layers); the ROM die is AR-only by default')
     args = ap.parse_args()
 
     cat = json.loads(MACROS.read_text())['macros']
@@ -127,7 +132,7 @@ def main():
             for n in (code_m, dense_m, narrow_m)}
     depth = {code_m: 4096, dense_m: 8192, narrow_m: 4096}
 
-    target, mats, code_words, scale_words = image()
+    target, mats, code_words, scale_words = image(args.drafter)
     target_words = target['matrix_code_words_per_die']
     drafter_words = code_words - target_words
     columns = G // 2                                        # group-pair word columns
