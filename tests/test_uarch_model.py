@@ -50,3 +50,24 @@ def test_proposal_reprices_to_record():
     import uarch_model as U
     got = U.evaluate(copy.deepcopy(U.PRESETS["proposal"]), 1048576)
     assert abs(got["tokens_s"] - _rows()["proposal"]["tokens_s"]) < 1.0
+
+
+def test_hbm_gpu_record_w13():
+    rec = json.loads((ROOT / "results/uarch/hbm_gpu.json").read_text())
+    r = {x["design"]: x for x in rec["rows"]}
+    # the prefetching bulk copy hides the boundaries the additive form charges
+    assert r["qwen_hbm_gpu"]["tokens_s"] >= r["qwen_hbm_gpu_derived_barrier_no_prefetch"]["tokens_s"]
+    assert r["qwen_hbm_gpu"]["boundaries"] == 181
+    for m in ("qwen", "v41"):
+        d = rec["designs"][m]
+        assert d["barrier"]["boundary_cycles"] < 200
+        assert d["barrier"]["source"].startswith("results/floorplan/hbm_gpu/")
+        assert d["die_fit"]["fits"]
+        assert d["sm_count"] == 32
+
+
+def test_hbm_gpu_floorplans_legal():
+    for m in ("qwen", "v41"):
+        fp = json.loads((ROOT / f"results/floorplan/hbm_gpu/{m}_hbm_die.json").read_text())
+        assert fp["legality"]["legal"] and fp["fits"]
+        assert fp["macro_counts"]["ot_hbm3e_phy"] == 4

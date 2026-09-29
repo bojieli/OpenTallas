@@ -651,61 +651,391 @@ def qwen_rows():
 #            a GPU grid barrier through L2 pays more (ASSUMED 200 cycles with a hardware barrier network;
 #            1,500 ns is the cooperative-groups grid.sync class -- ASSUMED, to be cited).
 #   compute  SMs sized to bandwidth (W9: 32 SMs x 4,096 INT8 MAC/clk per Qwen die) never bind at batch 1.
-GPU = dict(barrier_cycles_hw=200,           # ASSUMED dedicated hardware barrier network
-           barrier_ns_grid=1770.0,           # measured: V100 cooperative-groups grid sync, 1 block/SM
+GPU = dict(barrier_cycles_hw=200,           # superseded: the pre-W13 ASSUMED hardware barrier (kept for the
+                                             # labelled comparison row); W13 derives it from the floorplan
+                                             # and measures it in RTL (hbm_gpu_design()["barrier"])
+           barrier_ns_grid=1430.0,           # measured: V100 cooperative-groups grid sync, 1 block/SM, 32 threads
                                              # (L. Zhang et al., "A Study of Single and Multi-device
                                              # Synchronization Methods in Nvidia GPUs", IPDPS 2020, Fig. 5)
+           barrier_ns_grid_sensitivity=dict(p100_1_block_per_sm=1770.0, v100_1024_threads=2210.0),
+           barrier_cycles_dsmem_ref=(181, 213),  # H800 SM-to-SM DSMEM latency, cluster 2..16 (Luo et al.,
+                                             # arXiv 2501.12084 7.1): the reference for an on-die hardware barrier
            seq_gap_cycles=7,
            adapter_measured_Bpc=39.0, sustained_frac=1.0)
 
 
 def qwen_hbm_rows():
+    """Qwen3-8B HBM die token.  Headline: the W13 prefetching bulk-copy model (stream_overlap over the program's
+    ops; a boundary is exposed only when the SMEM staging cannot hide it).  The additive rows (T = t_hbm +
+    boundaries x barrier + tp) are the pre-W13 form, kept and labelled no-prefetch."""
     import arch_budget_qwen3 as Q
     clock = Q.clock_hz()
     hc = json.loads((ROOT / "results/arch/qwen3_budget.json").read_text())["hbm_comparator"]["8192"]["rom_format_int8"]
     t_hbm = hc["token_s"]                                        # 8.175 GB at 7.2 TB/s sustained (8 stacks)
     per_die_Bpc = hc["hbm_bytes_per_cycle"] / 2                  # 3,277 B/cycle per die
-    boundaries = 217 + 2 * 36                                    # ME ops + two norm barriers per layer (one die)
+    # global barriers: one after every MMA op (qkv, attention pv, o, gate_up, down x 36, lm_head); heads are
+    # SM-local and the norms run redundantly on the replicated x, so they need none (W13; was 217 + 2 x 36)
+    boundaries = 5 * 36 + 1
     tp = Q.tp_exchanges(clock)["cycles"] / clock
-    rows = []
+    dq = hbm_gpu_design("qwen")
+    bnd = dq["barrier"]["boundary_cycles"]
+    rows = [dict(design="qwen_hbm_ideal", T_us=round(t_hbm * 1e6, 1), tokens_s=round(1 / t_hbm, 1), supply_frac=1.0,
+                 boundaries=boundaries, form="bandwidth only")]
+    t = dq["token"]
+    rows.append(dict(design="qwen_hbm_gpu", T_us=round(t["cycles"] / clock * 1e6, 1), tokens_s=t["tokens_s"],
+                     supply_frac=1.0, boundaries=t["boundaries"], barrier_cycles=bnd,
+                     exposed_over_hbm_cycles=t["exposed_over_hbm_cycles"],
+                     form="prefetching bulk copy (stream_overlap); barrier derived from the floorplan"))
     for tag, supply, barrier_s in (
-            ("qwen_hbm_ideal", 1.0, 0.0),
-            ("qwen_hbm_adapter_as_built", GPU["adapter_measured_Bpc"] / per_die_Bpc, GPU["seq_gap_cycles"] / clock),
-            ("qwen_hbm_gpu_hw_barrier", 1.0, GPU["barrier_cycles_hw"] / clock),
-            ("qwen_hbm_gpu_grid_sync_v100", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
+            ("qwen_hbm_adapter_as_built_no_prefetch", GPU["adapter_measured_Bpc"] / per_die_Bpc, GPU["seq_gap_cycles"] / clock),
+            ("qwen_hbm_gpu_derived_barrier_no_prefetch", 1.0, bnd / clock),
+            ("qwen_hbm_gpu_assumed200_no_prefetch", 1.0, GPU["barrier_cycles_hw"] / clock),
+            ("qwen_hbm_gpu_grid_sync_v100_no_prefetch", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
         T = t_hbm / supply + boundaries * barrier_s + tp
         rows.append(dict(design=tag, T_us=round(T * 1e6, 1), tokens_s=round(1 / T, 1), supply_frac=supply,
-                         barrier_us_per_token=round(boundaries * barrier_s * 1e6, 1), boundaries=boundaries))
+                         barrier_us_per_token=round(boundaries * barrier_s * 1e6, 1), boundaries=boundaries,
+                         form="additive (pre-W13)"))
+    # grid sync with prefetch: the boundary cost enters the stream model
+    ops = qwen_hbm_ops(dq["element"], GPU["barrier_ns_grid"] * 1e-9 * clock, dq["drain_cycles"])
+    tg, _ = stream_overlap(ops, dq["hbm_Bpc"], dq["sm_count"] * dq["element"]["ingest_Bpc"],
+                           dq["staging_kb_per_sm"] * 1024 * dq["sm_count"])
+    rows.append(dict(design="qwen_hbm_gpu_grid_sync_v100", T_us=round(tg / clock * 1e6, 1),
+                     tokens_s=round(clock / tg, 1), supply_frac=1.0, boundaries=boundaries,
+                     form="prefetching bulk copy, V100 grid sync 1.43 us per boundary"))
     return rows
+
+
+def v41_boundaries(path, nodes):
+    """Global barriers on the V4.1 critical path under the W13 SM mapping: one after every matvec (its rows
+    are spread over the SMs), one per attention layer (scores -> softmax -> pv is head-local in the
+    dedicated attention unit), one per indexer final top-k, and the argmax.  Norms and the router top-6 run
+    redundantly on the replicated x and need none."""
+    n = 0
+    for x in path:
+        k = nodes[x]["kind"]
+        if k == "matvec" or x.endswith((".attn.scores", ".idx.topk_final")) or x == "argmax":
+            n += 1
+    return n
 
 
 def v41_hbm_rows():
-    v = json.loads((ROOT / "results/arch/v41_hbm_switched.json").read_text())
-    cfg = v["configs"][v["headline_config"]] if isinstance(v["configs"], dict) else None
-    # the published comparator breakdown (docs: G=96, 1M): compute chain 111.7, weight sweep 37.4,
-    # collective latency 125.9, bytes 1.5, hops 0.9, control 2.0 us (W9 handoff 8)
+    """V4.1 HBM die token (G=96, 1M).  The published breakdown (W9 handoff 8) is additive: compute chain 111.7,
+    weight sweep 37.4, collective latency 125.9, bytes 1.5, hops 0.9, control 2.0 us.  With the prefetching
+    bulk copy the weight sweep streams under the dependent chain (T = max(sweep, chain + barriers)); the
+    additive rows are kept, labelled no-prefetch.  OPEN: the chain was priced at die-pooled widths; the SM's
+    per-op latency on 1/96-die row slices is not yet in it."""
     base = dict(compute_chain=111.7, weight_sweep=37.4, collective_latency=125.9, collective_bytes=1.5,
                 pipeline_hops=0.9, control=2.0)
     clock = 1.0339e9
-    # dependent boundaries on the V4.1 critical path: the arch DAG's path nodes per token (priced below)
     arch, b = arch_graph(1048576)
     path = b.g.path(b.sink)
-    # elementwise ('vector') ops fuse into a neighbouring kernel's prologue/epilogue; a matvec, scan, select,
-    # Sinkhorn or reduction needs every SM's result before its consumer starts: a global barrier
-    boundaries = sum(1 for n in path if b.g.nodes[n]["kind"] in ("matvec", "kvscan", "reduce", "select", "sinkhorn"))
+    boundaries = v41_boundaries(path, b.g.nodes)
     per_die_Bpc = 3.6e12 / clock
+    bnd = hbm_gpu_design("v41")["barrier"]["boundary_cycles"]
     rows = []
-    for tag, supply, barrier_s in (
-            ("v41_hbm_published", 1.0, 0.0),
-            ("v41_hbm_adapter_as_built", GPU["adapter_measured_Bpc"] / per_die_Bpc, 0.0),
-            ("v41_hbm_gpu_hw_barrier", 1.0, (GPU["barrier_cycles_hw"] - GPU["seq_gap_cycles"]) / clock),
-            ("v41_hbm_gpu_grid_sync_v100", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
-        parts = dict(base, weight_sweep=base["weight_sweep"] / supply,
-                     barrier=boundaries * barrier_s * 1e6)
-        T = sum(parts.values())
+    for tag, supply, barrier_s, prefetch in (
+            ("v41_hbm_published", 1.0, 0.0, False),
+            ("v41_hbm_gpu", 1.0, (bnd - GPU["seq_gap_cycles"]) / clock, True),
+            ("v41_hbm_gpu_grid_sync_v100", 1.0, GPU["barrier_ns_grid"] * 1e-9, True),
+            ("v41_hbm_adapter_as_built_no_prefetch", GPU["adapter_measured_Bpc"] / per_die_Bpc, 0.0, False),
+            ("v41_hbm_gpu_derived_barrier_no_prefetch", 1.0, (bnd - GPU["seq_gap_cycles"]) / clock, False),
+            ("v41_hbm_gpu_assumed200_no_prefetch", 1.0, (GPU["barrier_cycles_hw"] - GPU["seq_gap_cycles"]) / clock, False)):
+        parts = dict(base, weight_sweep=base["weight_sweep"] / supply, barrier=boundaries * barrier_s * 1e6)
+        if prefetch:
+            chain = sum(v for k, v in parts.items() if k != "weight_sweep")
+            T = max(parts["weight_sweep"], chain)
+            parts["weight_sweep_exposed"] = round(T - chain, 3)
+        else:
+            T = sum(parts.values())
         rows.append(dict(design=tag, T_us=round(T, 1), tokens_s=round(1e6 / T, 1), supply_frac=round(supply, 4),
-                         boundaries=boundaries, breakdown_us={k: round(x, 1) for k, x in parts.items()}))
+                         boundaries=boundaries, form="prefetching bulk copy" if prefetch else "additive",
+                         breakdown_us={k: round(x, 1) for k, x in parts.items()}))
     return rows
+
+
+# ---------------------------------------------------------------------------------------------------------
+# GPU-organised HBM die, microarchitecture (W13).  The rows above price the token with two free parameters
+# (supply fraction, barrier cycles).  This section sizes the element and the networks that set them:
+#   element   the SM: 4 sub-partitions of an exact Tensor-Core-style MMA (lanes x columns), its x store and
+#             weight staging in SMEM, SIMT FP32 lanes for the stream-unit work, one fixed pairwise FP32 tree
+#             per column across the SM's lanes and a streaming pairwise stack behind it, so a row's whole K
+#             and its golden tree stay inside one SM (rtl/gpu/ot_gpu_mma.sv).
+#   count     the smallest symmetric SM count whose token is within 0.5% of an unbounded SM array, with the
+#             weight stream overlapping every dependent boundary through the SMEM staging.
+#   bulk copy HBM bandwidth x loaded latency in flight (Little's law), split over the SMs, in 64 B sectors.
+#   staging   SMEM that keeps the prefetching stream running through a boundary (fluid simulation below).
+#   barrier   arrival tree + release broadcast over the floorplan distances (tools/hbm_gpu_floorplan.py),
+#             at the loaded wire constant, plus the node registers, plus the x-broadcast tail.
+# ---------------------------------------------------------------------------------------------------------
+HBM_DIE = dict(
+    w_um=31800.0, h_um=815e6 / 31800.0,          # 815 mm2 outline shared with W1/W5 (qwen_o4_floorplan.DIE_W)
+    stacks=4, phy_um=(12000.096, 833.49),        # ot_hbm3e_phy LEF: two on each long (north/south) edge = 48 mm
+    core=(1213.488, 1555.2, 31780.0, 24078.0),   # W5 hbm_die.frame core after PHY rows, service bands, UCIe
+    src="results/floorplan/qwen_o4/floorplan.json designs['hbm_die.frame']",
+)
+HBM_LOADED_LAT_NS = 500.0     # ASSUMED loaded HBM read latency incl. controller queue: the model's 1.8 MB in
+                              # flight at 3.6 TB/s (v41 first-access 1 us is the data-dependent gather case)
+SECTOR_B = 64                 # HBM3E pseudo-channel access (BL8 x 64 bit)
+GPU_UNIT_UM2 = dict(
+    lane=8449.0 / 16,         # ot_hdc_lane_copy: exact BF16 mul -> circulating FP32 add (IL 8), 16 lanes 8,449 um2,
+                              # closed 0.9 ns (results/physical_abi3/asap7/hdc/ot_hdc_lane_copy/physical.json)
+    int8_decode=40.0,         # ASSUMED registered INT8 -> BF16 decode per lane (replaced by the hardened TC)
+    fp32_add=UNIT["fp32_add_um2"], fp32_mul=UNIT["fp32_mul_um2"], blockdot=UNIT["blockdot_um2"],
+    simt_lane=UNIT["fp32_mac_um2"],
+    sram32k=SRAM_256B_MACRO["um2"],
+    dff=DFF_UM2,
+)
+GPU_LOGIC_UTIL = 0.5          # std-cell placement density (W5 convention; replaced by the hardened macro)
+GPU_MACRO_PACK = 1.31         # macro footprint / macro area (W5 tile calibration)
+
+SM_ELEM = {
+    # Qwen3-8B: INT8 weight codes, 128 B/clk of weights = 128 lanes; 16 columns = the DFlash b16 verify block
+    # (design point block 5) and batch <= 16 without re-streaming weights
+    "qwen": dict(subparts=4, int8_lanes=128, bf16_lanes=0, blockdot_lanes=0, cols=16, il=8, ingest_Bpc=128,
+                 k_max=12288, x_bytes=2, simt_lanes=128, scratch_kb=64, stack_levels=5),
+    # DeepSeek-V4.1: FP4 routed experts (8 block-dot lanes = 256 FP4 weights = 128 B/clk), FP8 dense at the same
+    # 128 B/clk on 4 of them, BF16 matrices on 64 lanes; 16 columns cover MTP (m+1 = 7) and batch 16
+    "v41": dict(subparts=4, int8_lanes=0, bf16_lanes=64, blockdot_lanes=8, cols=16, il=8, ingest_Bpc=128,
+                k_max=5120, x_bytes=2, simt_lanes=128, scratch_kb=64, stack_levels=3),
+}
+
+
+def sm_area(e: dict, staging_kb: float):
+    """SM element area (mm2) by resource; logic placed at GPU_LOGIC_UTIL, SRAM at GPU_MACRO_PACK."""
+    u = GPU_UNIT_UM2
+    c = e["cols"]
+    lanes = e["int8_lanes"] + e["bf16_lanes"]
+    logic = dict(
+        mma_lanes=c * (e["int8_lanes"] * (u["lane"] + u["int8_decode"]) + e["bf16_lanes"] * u["lane"]),
+        blockdot=c * e["blockdot_lanes"] * (u["blockdot"] + u["fp32_add"] + 8 * 32 * u["dff"]),
+        # one fixed pairwise tree per column over the widest lane set, output-registered adders
+        tree=c * (max(lanes, e["blockdot_lanes"]) - 1) * (u["fp32_add"] + 32 * u["dff"]),
+        stack=c * e["stack_levels"] * (u["fp32_add"] + 2 * 34 * u["dff"]),
+        row_scale=c * u["fp32_mul"],
+        simt=e["simt_lanes"] * u["simt_lane"],
+        x_operand_regs=2 * max(lanes * 16, e["blockdot_lanes"] * 264) * c * u["dff"],   # double-buffered x fragment
+    )
+    x_kb = e["k_max"] * c * e["x_bytes"] / 1024
+    sram_kb = dict(x_store=x_kb, staging=staging_kb, scratch=e["scratch_kb"])
+    macros = {k: math.ceil(v / 32) for k, v in sram_kb.items()}
+    logic_mm2 = sum(logic.values()) / 1e6
+    sram_mm2 = sum(macros.values()) * u["sram32k"] * GPU_MACRO_PACK / 1e6
+    return dict(logic_um2={k: round(v) for k, v in logic.items()}, logic_mm2=round(logic_mm2, 3),
+                footprint_logic_mm2=round(logic_mm2 / GPU_LOGIC_UTIL, 3), sram_kb=sram_kb, sram_macros=macros,
+                sram_mm2=round(sram_mm2, 3), total_mm2=round(logic_mm2 / GPU_LOGIC_UTIL + sram_mm2, 3),
+                macs_per_clk=c * (lanes + 32 * e["blockdot_lanes"]))
+
+
+def stream_overlap(ops, r_hbm, r_sm, staging_B, chunk_B=262144):
+    """Fluid simulation of one token: a prefetching bulk-copy stream (rate r_hbm B/cycle) filling SMEM staging
+    of staging_B bytes, consumed by the SMs (rate r_sm) op by op; each op's first byte waits for the previous
+    op's dependent latency.  ops: [(bytes, latency_after_cycles)].  Returns (cycles, peak staging bytes)."""
+    deliver, consume = [], []
+    t_free = 0.0            # consumer ready time
+    last_d = 0.0
+    peak = 0.0
+    slots = max(1, int(staging_B // chunk_B))
+    for by, lat in ops:
+        n = max(0, math.ceil(by / chunk_B))
+        start = t_free
+        for i in range(n):
+            c = min(chunk_B, by - i * chunk_B)
+            j = len(consume)
+            d = last_d + c / r_hbm
+            if j >= slots:
+                d = max(d, consume[j - slots])
+            last_d = d
+            deliver.append(d)
+            t = max((consume[-1] if consume and i else start) + c / r_sm, d + 1)
+            consume.append(t)
+        end = consume[-1] if n else start
+        t_free = end + lat
+        # occupancy: chunks delivered but not consumed at the op's end
+        k = len(consume)
+        occ = sum(1 for x in deliver[max(0, k - slots):] if x <= end) * chunk_B if k else 0
+        peak = max(peak, occ)
+    return t_free, peak
+
+
+def qwen_hbm_ops(e: dict, boundary_cycles: float, drain_cycles: float, cols: int = 1, ctx: int = 8192):
+    """The Qwen3-8B token on one TP-2 die as (bytes, dependent latency after) in program order.  Stream-unit
+    latencies are the reference graph's (qwen3_budget dependency_chain 8192/spec_widths_reference_graph);
+    every MMA op ends with its drain and a global boundary (barrier + x broadcast tail)."""
+    import arch_budget_qwen3 as Q
+    rec = json.loads((ROOT / "results/arch/qwen3_budget.json").read_text())
+    st = {s["stage"] + (f"#{i}" if s["stage"] == "residual+sumsq" else ""): s["exposed_latency"] + s["throughput"]
+          for i, s in enumerate(rec["dependency_chain"][f"{ctx}/spec_widths_reference_graph"]["stages"])}
+    exch = Q.tp_exchanges(Q.clock_hz())["per_exchange_cycles"]
+    H, KV, HD, NH, FF = 4096, 8, 128, 32, 12288
+    kv_bytes = 2 * (KV // 2) * HD * ctx            # FP8 K and V of one layer, this die's 4 KV heads
+    sc = 2                                          # BF16 row scale per weight row
+    b = boundary_cycles + drain_cycles
+    su = lambda *names: sum(v for k, v in st.items() if k.split("#")[0] in names)   # noqa: E731
+    res = [v for k, v in st.items() if k.startswith("residual+sumsq")]
+    ops = []
+    for _ in range(36):
+        ops.append((0, su("attn_norm.rsqrt", "attn_norm.scale")))
+        ops.append(((NH + 2 * KV) // 2 * HD * (H + sc), b + su("qk_norm.sumsq", "qk_norm.rsqrt", "qk_norm.scale", "rope")))
+        # heads are SM-local: scores -> softmax -> pv inside the SM pair of a head; one boundary after pv
+        ops.append((kv_bytes // 2, drain_cycles + su("softmax.max", "softmax.exp_sum", "softmax.recip", "softmax.scale")))
+        ops.append((kv_bytes // 2, b))
+        ops.append((H * (H // 2 + sc), b + exch + res[0] + su("ffn_norm.rsqrt", "ffn_norm.scale")))
+        ops.append((2 * (FF // 2) * (H + sc), b + su("silu_mul")))
+        ops.append((H * (FF // 2 + sc), b + exch + res[1]))
+    ops.append((151936 // 2 * (H + sc), b))        # lm_head slice (row-split vocabulary) + argmax
+    return ops
+
+
+def hbm_floorplan_record(model: str):
+    p = ROOT / f"results/floorplan/hbm_gpu/{model}_hbm_die.json"
+    return json.loads(p.read_text()) if p.exists() else None
+
+
+def barrier_network(model: str, clock: float, n_sm: int):
+    """Barrier latency derived from the floorplan: SM -> quadrant node -> root (arrival AND-tree) and back
+    (release), every wire segment registered at the loaded channel constant, one register per tree node.
+    Uses the placed floorplan record when present; otherwise the analytical central-island geometry."""
+    fp = hbm_floorplan_record(model)
+    if fp:
+        g = fp["barrier_network"]
+        src = f"results/floorplan/hbm_gpu/{model}_hbm_die.json"
+        leaf_um, trunk_um, levels = g["max_leaf_um"], g["max_trunk_um"], g["levels"]
+    else:
+        src = "analytical: 8 x 4 SM island centred on the die, node per quadrant, root at the centre"
+        sm_mm2 = 3.0
+        side = math.sqrt(sm_mm2) * 1e3
+        leaf_um = 2 * side + 1.5 * side                          # farthest SM of a 4 x 2 quadrant to its node
+        trunk_um = 2 * side + 1 * side                           # quadrant node to root
+        levels = 2
+    w = lambda um: wire_cycles(um, clock, WIRE_PS_PER_UM_LOADED)  # noqa: E731
+    arrive = w(leaf_um) + w(trunk_um) + levels + 1               # + the SM's local all-subpartitions-done flop
+    release = w(leaf_um) + w(trunk_um) + levels
+    return dict(arrive_cycles=arrive, release_cycles=release, round_trip_cycles=arrive + release,
+                max_leaf_um=round(leaf_um, 1), max_trunk_um=round(trunk_um, 1), levels=levels, source=src)
+
+
+GPU_MEASURED = dict(
+    # RTL measurements that replace formula terms (rtl/gpu, results/rtl/gpu_sm_exact.json); None = formula
+    qwen_drain_cycles=None, v41_drain_cycles=None, barrier_node_cycles=None,
+)
+
+
+def mma_drain_cycles(e: dict):
+    """Last weight into the MMA -> row result written to SMEM, from the element's pipeline: decode 1,
+    multiply 5, circulating add 5, then log2(lanes) tree levels and the stack levels at 5, row scale 5,
+    output register 2.  Replaced by the RTL measurement when recorded."""
+    lanes = max(e["int8_lanes"] + e["bf16_lanes"], e["blockdot_lanes"])
+    front = 16 if e["blockdot_lanes"] and not e["int8_lanes"] else 11      # block-dot P0..P8 + add, or lane
+    return front + 5 * math.ceil(math.log2(lanes)) + 5 * e["stack_levels"] + 5 + 2
+
+
+def hbm_gpu_design(model: str):
+    """Size the GPU-organised HBM die for `model` ('qwen' | 'v41')."""
+    import arch_budget_qwen3 as Q
+    e = dict(SM_ELEM[model])
+    if model == "qwen":
+        clock = Q.clock_hz()
+        r_hbm = 3.6e12 / clock                   # 4 stacks x 0.9 TB/s sustained per die
+    else:
+        clock = 1.0339e9
+        r_hbm = 3.6e12 / clock
+    in_flight_B = 3.6e12 * HBM_LOADED_LAT_NS * 1e-9
+    drain = GPU_MEASURED[f"{model}_drain_cycles"] or mma_drain_cycles(e)
+    out = dict(model=model, clock_hz=clock, hbm_Bpc=round(r_hbm, 1), element=e, drain_cycles=drain)
+    # ---- SM count: smallest multiple of the stack count within 0.5% of an unbounded array (Qwen token) ----
+    rows = []
+    n_choice = None
+    if model == "qwen":
+        bn = barrier_network(model, clock, 32)
+        x_tail = math.ceil(H_X_TAIL_B / X_BCAST_BPC)
+        boundary = bn["round_trip_cycles"] + x_tail
+        ops = qwen_hbm_ops(e, boundary, drain)
+        t_inf, _ = stream_overlap(ops, r_hbm, 1e12, 1e15)
+        for n in range(8, 65, 4):
+            t, _ = stream_overlap(ops, r_hbm, n * e["ingest_Bpc"], 1e15)
+            rows.append(dict(n_sm=n, cycles=round(t), tokens_s_pkg=round(clock / t, 1)))
+            if n_choice is None and t <= 1.005 * t_inf:
+                n_choice = n
+        out["sm_count_sweep"] = rows
+        out["sm_count_min"] = n_choice
+    # symmetric choice: 8 SMs per HBM stack quadrant (4 x 2 per quadrant), power of two for the barrier tree
+    n_sm = 32
+    out["sm_count"] = n_sm
+    out["sm_count_basis"] = ("8 per stack quadrant; >= the 0.5%-of-unbounded minimum" if model == "qwen" else
+                             "same element count as Qwen: HBM ingest 3,482 B/clk / 128 B/clk = 27.2 -> 32")
+    # ---- bulk copy: Little's law in flight, per SM, in sectors ----
+    out["bulk_copy"] = dict(in_flight_B_die=in_flight_B, in_flight_B_sm=in_flight_B / n_sm,
+                            outstanding_sectors_sm=math.ceil(in_flight_B / n_sm / SECTOR_B),
+                            descriptor_bytes=4096,
+                            outstanding_descriptors_sm=math.ceil(in_flight_B / n_sm / 4096),
+                            basis=f"3.6 TB/s x {HBM_LOADED_LAT_NS:.0f} ns (ASSUMED loaded latency)")
+    bn = barrier_network(model, clock, n_sm)
+    x_tail = math.ceil(H_X_TAIL_B / X_BCAST_BPC)
+    out["barrier"] = dict(bn, x_broadcast_tail_cycles=x_tail,
+                          boundary_cycles=bn["round_trip_cycles"] + x_tail,
+                          measured_node_cycles=GPU_MEASURED["barrier_node_cycles"])
+    boundary = out["barrier"]["boundary_cycles"]
+    if model == "qwen":
+        ops = qwen_hbm_ops(e, boundary, drain)
+        t_inf, _ = stream_overlap(ops, r_hbm, n_sm * e["ingest_Bpc"], 1e15)
+        st = []
+        s_choice = None
+        for kb in (16, 32, 64, 128, 256, 512, 1024):
+            S = kb * 1024 * n_sm
+            t, pk = stream_overlap(ops, r_hbm, n_sm * e["ingest_Bpc"], S)
+            st.append(dict(staging_kb_per_sm=kb, cycles=round(t), tokens_s=round(clock / t, 1)))
+            if s_choice is None and t <= 1.005 * t_inf:
+                s_choice = kb
+        out["staging_sweep"] = st
+        staging_kb = max(s_choice or 1024, math.ceil(in_flight_B / n_sm / 1024 / 32) * 32)
+        t_hbm = sum(b for b, _ in ops) / r_hbm
+        t_chain = sum(b for b, _ in ops) / (n_sm * e["ingest_Bpc"]) + sum(lat for _, lat in ops)
+        t_tok, _ = stream_overlap(ops, r_hbm, n_sm * e["ingest_Bpc"], staging_kb * 1024 * n_sm)
+        boundaries = 5 * 36 + 1          # qkv, attention (pv), o, gate_up, down per layer + lm_head (qwen_hbm_ops)
+        out["token"] = dict(
+            cycles=round(t_tok), tokens_s=round(clock / t_tok, 1), hbm_cycles=round(t_hbm),
+            chain_cycles_if_serial=round(t_chain), boundaries=boundaries,
+            exposed_over_hbm_cycles=round(t_tok - t_hbm),
+            additive_model_tokens_s=round(clock / (t_hbm + boundaries * boundary + Q.tp_exchanges(clock)["cycles"]), 1),
+            note="the stream prefetches through every boundary; only what the SMEM staging cannot absorb and the "
+                 "last op's tail are exposed")
+    else:
+        staging_kb = math.ceil(in_flight_B / n_sm / 1024 / 32) * 32
+    out["staging_kb_per_sm"] = staging_kb
+    out["sm_area"] = sm_area(e, staging_kb)
+    # ---- L2 slices and NoC ----
+    out["l2"] = dict(slices=HBM_DIE["stacks"], mb_per_slice=2, macros=HBM_DIE["stacks"] * 64,
+                     mm2=round(HBM_DIE["stacks"] * 64 * GPU_UNIT_UM2["sram32k"] * GPU_MACRO_PACK / 1e6, 2),
+                     role="x/result gather and broadcast, TP-exchange staging, KV-write coalescing; weights "
+                          "bypass it (bulk copy lands in SM SMEM, no reuse at decode)")
+    out["noc"] = dict(weight_port_bits_per_sm=e["ingest_Bpc"] * 8 + 64,
+                      weight_wires_per_quadrant=(n_sm // 4) * (e["ingest_Bpc"] * 8 + 64),
+                      x_broadcast_bits=X_BCAST_BPC * 8, result_gather_bits_per_sm=256,
+                      mapping="each SM's weight rows live in its own quadrant's stack: no weight byte crosses "
+                              "the die")
+    if model == "v41":
+        pr = area_ledger(copy.deepcopy(PRESETS["proposal"]))
+        units = dict(indexer=pr["indexer"], attention=pr["attention"], su=pr["su_lanes"], sfu=pr["sfu_lanes"],
+                     hc_fp32_lanes=5120 * UNIT["fp32_mac_um2"] / 1e6,
+                     sinkhorn_select_engram=(UNIT["sinkhorn_um2"] + UNIT["select_k512_um2"]
+                                             + UNIT["engram_hash_um2"] + UNIT["tselect16_um2"]) / 1e6)
+        out["dedicated_units_mm2"] = {k: round(v, 3) for k, v in units.items()}
+        out["dedicated_units_footprint_mm2"] = round(sum(units.values()) / GPU_LOGIC_UTIL, 2)
+        out["dedicated_units_source"] = "spec widths as in results/uarch/v41_rom.json proposal hub (W11 builds them)"
+    sm_fp = out["sm_area"]["total_mm2"]
+    out["die_fit"] = dict(sm_array_mm2=round(n_sm * sm_fp, 2), l2_mm2=out["l2"]["mm2"],
+                          dedicated_mm2=out.get("dedicated_units_footprint_mm2", 0.0),
+                          core_avail_mm2=round((HBM_DIE["core"][2] - HBM_DIE["core"][0])
+                                               * (HBM_DIE["core"][3] - HBM_DIE["core"][1]) / 1e6, 2))
+    f = out["die_fit"]
+    f["used_mm2"] = round(f["sm_array_mm2"] + f["l2_mm2"] + f["dedicated_mm2"], 2)
+    f["fits"] = f["used_mm2"] <= f["core_avail_mm2"]
+    return out
+
+
+H_X_TAIL_B = 16 * 128 * 2     # the last SM's last row block (8 rows x 16 cols... bounded by one 16-col x 128-row
+                              # BF16 block) that every SM must receive before the next op's first MMA
+X_BCAST_BPC = 256             # x broadcast network width (2,048 wires), root -> every SM, pipelined with release
 
 
 def sweep(ctx: int):
@@ -740,11 +1070,13 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.hbm:
         rows = qwen_hbm_rows() + v41_hbm_rows()
+        dq = hbm_gpu_design("qwen")
         for r in rows:
-            print(f"{r['design']:28s} {r['tokens_s']:9.1f} tok/s  T {r['T_us']:9.1f} us  supply {r['supply_frac']}")
+            print(f"{r['design']:30s} {r['tokens_s']:9.1f} tok/s  T {r['T_us']:9.1f} us  supply {r['supply_frac']}")
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
-            Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.hbm_gpu.v1", rows=rows, gpu=GPU),
+            Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.hbm_gpu.v2", rows=rows, gpu=GPU,
+                                                   designs=dict(qwen=dq, v41=hbm_gpu_design("v41"))),
                                               indent=1, default=str) + "\n")
         return
     if a.qwen:
