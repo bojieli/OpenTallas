@@ -16,3 +16,13 @@ L = 200 ps (lower bound of the 212-234 ps routed target latencies of the
 earlier full-width transpose route): input min delay 0.25 ns (L + 50 ps
 clock-to-q of an adjacent trunk flop), input max delay 0.43 ns (L + the
 25% = 230 ps external budget). Outputs keep the 25% ideal-clock budget.
+
+`transpose_fo12_balio_cts_bufcap_failure.json` (historical, failed): with the
+balanced-clock input delays the input paths are no longer the limiter, but
+21,235 endpoints still violate hold at CTS (initial WNS -78.8 ps): the
+16,384 transpose tile cells are loaded straight from in_data_q, and each of
+these direct flop-to-flop paths must absorb the 60 ps hold uncertainty plus
+the 20 ps margin. repair_timing hit its default 20% buffer cap (RSZ-0060,
+20,776 cells) at -45.1 ps. Later routes raise only the cap
+(`physical/abi3/w2d_repair_buffer_cap.tcl`, -max_buffer_percent 60, at
+PRE_CTS and PRE_GLOBAL_ROUTE); the hold-cell area is priced by the route.
