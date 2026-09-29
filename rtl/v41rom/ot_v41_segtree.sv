@@ -24,11 +24,13 @@ module ot_v41_segtree #(
     input  wire                     rst_n,
     input  wire                     in_v,
     input  wire [$clog2(NT)-1:0]    in_tree,
+    input  wire [2:0]               in_pos,     // position (MTP) of the tree's nodes; leaves with its value
     input  wire [31:0]              in_val,
     input  wire                     in_final,
     input  wire                     in_err,
     output reg                      ov,
     output reg  [$clog2(NT)-1:0]    otree,
+    output reg  [2:0]               opos,
     output reg  [31:0]              oval,
     output reg                      oerr,
     output reg                      fault
@@ -40,6 +42,8 @@ module ot_v41_segtree #(
     reg [31:0] qv [0:QD-1];
     reg [PW-1:0] qt [0:QD-1];
     reg qf [0:QD-1], qe [0:QD-1];
+    reg [2:0] qp [0:QD-1];
+    reg [2:0] tpos [0:NT-1];
     reg [QW-1:0] qr, qw;
     reg [QW:0] qc;
     // held left operands
@@ -101,7 +105,9 @@ module ot_v41_segtree #(
         end
     end
     always @(posedge clk) begin
-        if (in_v) begin qv[qw] <= in_val; qt[qw] <= in_tree; qf[qw] <= in_final; qe[qw] <= in_err; end
+        if (in_v) begin qv[qw] <= in_val; qt[qw] <= in_tree; qf[qw] <= in_final; qe[qw] <= in_err; qp[qw] <= in_pos; end
+        if (use_q) tpos[qt[qr]] <= qp[qr];
+        opos <= use_q ? qp[qr] : tpos[e_t];
         if (hold) held[hidx] <= e_d;
         oval <= e_d;
         otree <= e_t;

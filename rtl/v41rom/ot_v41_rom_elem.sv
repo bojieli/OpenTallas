@@ -255,7 +255,7 @@ module ot_v41_rom_elem #(
     wire n_more = n_pos != plast;
     wire w_more = w_pos != plast;
     wire w_restart = issue && w_cls_last && !w_nx[UW-1] && w_more;
-    reg [2:0] bank_pos [0:1];
+
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -264,7 +264,7 @@ module ot_v41_rom_elem #(
             hz_v <= {hz_v[3:0], issue};
             if (go) begin
                 n_run <= !go_bf; n_q <= 3'd0; n_b <= 3'd0; n_c <= c_first; n_j <= 3'd0;
-                n_pos <= 3'd0; bn_pos <= 3'd0; w_pos <= 3'd0; bank_pos[0] <= 3'd0;
+                n_pos <= 3'd0; bn_pos <= 3'd0; w_pos <= 3'd0;
                 bn_run <= go_bf; bn_q <= 3'd0; bn_b <= 3'd0; bn_cnt <= 7'd0; fam <= go_bf;
                 w_run <= 1'b1; w_q <= 3'd0; w_b <= 3'd0; w_c <= c_first; w_j <= 3'd0;
                 w_s <= s0_first; w_h <= h_go; w_cnt <= 0;
@@ -287,7 +287,6 @@ module ot_v41_rom_elem #(
                         w_q <= 3'd0; w_b <= 3'd0; w_c <= c_live; w_j <= 3'd0;
                         w_s <= s0_live; w_h <= h_live; w_cnt <= {HW{1'b0}};
                         w_pos <= w_pos + 3'd1;
-                        bank_pos[~w_pos[0]] <= w_pos + 3'd1;
                     end else begin
                         {w_run, w_q, w_b, w_c, w_j} <= w_nx;
                         w_s <= s0_nx;
@@ -329,7 +328,8 @@ module ot_v41_rom_elem #(
     reg         i1_v, i2_v;
     reg [255:0] i1_q0, i1_q1, i2_q0, i2_q1;
     reg [9:0]   i1_e0, i1_e1, i2_e0, i2_e1;
-    localparam integer TW = HW + TRW + 6;  // {slot, tree, first, last, final, ok0, ok1, fp4}
+    localparam integer TW = HW + 3 + TRW + 6;  // {slot, position, tree, first, last, final, ok0, ok1, fp4}
+    localparam integer TG = 3 + TRW;           // {position, tree}: follows a term to its segment tree
     wire [TRW-1:0] w_tree;
     if (MTP != 0) begin : g_tpos
         assign w_tree = {w_pos[0], w_s};
@@ -348,7 +348,7 @@ module ot_v41_rom_elem #(
         i1_q0 <= use_hi ? f_q1[f_rd] : f_q0[f_rd];
         i1_e0 <= use_hi ? f_e1[f_rd] : f_e0[f_rd];
         i1_q1 <= f_q1[f_rd]; i1_e1 <= f_e1[f_rd];
-        i1_t <= {w_cnt, w_tree, w_b == 3'd0, w_b == 3'd7, w_b == 3'd7 && w_lastu && w_seg_last,
+        i1_t <= {w_cnt, w_pos, w_tree, w_b == 3'd0, w_b == 3'd7, w_b == 3'd7 && w_lastu && w_seg_last,
                  !w_bf && (w_fp4 ? hv[0] : 1'b1), !w_bf && w_fp4 && hv[1], w_fp4};
         i1_bf <= w_bf;
         i2_bf <= i1_bf;
@@ -392,18 +392,18 @@ module ot_v41_rom_elem #(
         .xq(i2_q1), .xe(i2_e1), .wq(w1q), .we(we1), .tag(i2_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     wire c0_v, c1_v, c0_f, c1_f, c0_fault, c1_fault, t_fault, b_fault;
     wire [31:0] c0_s, c1_s;
-    wire [TRW:0] c0_t, c1_t;   // {tree, final}
-    ot_v41_chain #(.NCH(NCH), .TW(TRW + 1)) u_c0 (.clk(clk), .rst_n(rst_n), .v(l0_v),
+    wire [TG:0] c0_t, c1_t;   // {position, tree, final}
+    ot_v41_chain #(.NCH(NCH), .TW(TG + 1)) u_c0 (.clk(clk), .rst_n(rst_n), .v(l0_v),
         .slot(l0_t[TW-1 -: HW]), .first(l0_t[5]), .last(l0_t[4]), .term(l0_y), .term_f(l0_f),
-        .tag({l0_t[TW-HW-1 -: TRW], l0_t[3]}), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
-    ot_v41_chain #(.NCH(NCH), .TW(TRW + 1)) u_c1 (.clk(clk), .rst_n(rst_n), .v(l1_v),
+        .tag({l0_t[TW-HW-1 -: TG], l0_t[3]}), .ov(c0_v), .osum(c0_s), .of(c0_f), .otag(c0_t), .fault(c0_fault));
+    ot_v41_chain #(.NCH(NCH), .TW(TG + 1)) u_c1 (.clk(clk), .rst_n(rst_n), .v(l1_v),
         .slot(l1_t[TW-1 -: HW]), .first(l1_t[5]), .last(l1_t[4]), .term(l1_y), .term_f(l1_f),
-        .tag({l1_t[TW-HW-1 -: TRW], l1_t[3]}), .ov(c1_v), .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
+        .tag({l1_t[TW-HW-1 -: TG], l1_t[3]}), .ov(c1_v), .osum(c1_s), .of(c1_f), .otag(c1_t), .fault(c1_fault));
 
     // ---------------- sibling-chunk pair (FP4): chunk 2p + chunk 2p+1, or the one present ------------------
     wire both = c0_v && c1_v;
     wire any = c0_v || c1_v;
-    wire [TRW:0] ct = c0_v ? c0_t : c1_t;
+    wire [TG:0] ct = c0_v ? c0_t : c1_t;
     wire [31:0] one = c0_v ? c0_s : c1_s;
     wire one_f = c0_v ? c0_f : c1_f;
     wire [31:0] pr_sum, pr_pass;
@@ -412,8 +412,8 @@ module ot_v41_rom_elem #(
     ot_fp32_add_rne_pipe u_pair (.clk(clk), .rst_n(rst_n), .valid_in(both), .a(c0_s), .b(c1_s),
         .y(pr_sum), .err(pr_err), .valid_out(pr_vo));
     ot_hdc_delay #(.W(32), .D(5)) u_pp (.clk(clk), .rst_n(rst_n), .d(one), .q(pr_pass));
-    wire [TRW+2:0] pr_t;   // {tree, final, both, err}
-    ot_hdc_delay #(.W(TRW + 3), .D(5)) u_pt (.clk(clk), .rst_n(rst_n),
+    wire [TG+2:0] pr_t;   // {position, tree, final, both, err}
+    ot_hdc_delay #(.W(TG + 3), .D(5)) u_pt (.clk(clk), .rst_n(rst_n),
         .d({ct, both, both ? (c0_f | c1_f) : one_f}), .q(pr_t));
     reg [4:0] pr_vp;
     always @(posedge clk or negedge rst_n)
@@ -425,11 +425,11 @@ module ot_v41_rom_elem #(
     // ---------------- optional BF16 lanes -------------------------------------------------------------------
     wire bf_v, bf_err, bf_final;
     wire [31:0] bf_val;
-    wire [TRW-1:0] bf_tree;
+    wire [TG-1:0] bf_tree;
     if (BF16 != 0) begin : g_bf
-        ot_v41_bf16_lanes #(.NCHB(NCHB), .TRW(TRW)) u_bf (.clk(clk), .rst_n(rst_n), .v(i2_v && i2_bf),
+        ot_v41_bf16_lanes #(.NCHB(NCHB), .TRW(TG)) u_bf (.clk(clk), .rst_n(rst_n), .v(i2_v && i2_bf),
             .w(cap[255:0]), .x(i2_q0), .slot(i2_t[TW-HW +: $clog2(NCHB)]), .first(i2_t[5]), .last(i2_t[4]),
-            .tree(i2_t[TW-HW-1 -: TRW]), .final_i(i2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
+            .tree(i2_t[TW-HW-1 -: TG]), .final_i(i2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
             .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));
     end else begin : g_nobf
         assign bf_v = 1'b0; assign bf_val = 32'd0; assign bf_tree = '0; assign bf_final = 1'b0;
@@ -438,16 +438,19 @@ module ot_v41_rom_elem #(
     wire        b_v = q_v | bf_v;
     wire [31:0] b_val = bf_v ? bf_val : q_val;
     wire        b_err = bf_v ? bf_err : q_err;
-    wire [TRW-1:0] b_tree = bf_v ? bf_tree : pr_t[TRW+2:3];
+    wire [TG-1:0] b_tag = bf_v ? bf_tree : pr_t[TG+2:3];
+    wire [TRW-1:0] b_tree = b_tag[TRW-1:0];
+    wire [2:0]     b_pos = b_tag[TG-1 -: 3];
     wire        b_final = bf_v ? bf_final : pr_t[2];
 
     // ---------------- segment tree -> partial ---------------------------------------------------------------------
     wire t_v, t_err;
     wire [TRW-1:0] t_tree;
+    wire [2:0]     t_pos;
     wire [31:0] t_val;
     ot_v41_segtree #(.NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY)) u_tree (.clk(clk), .rst_n(rst_n), .in_v(b_v),
-        .in_tree(b_tree), .in_val(b_val), .in_final(b_final), .in_err(b_err),
-        .ov(t_v), .otree(t_tree), .oval(t_val), .oerr(t_err), .fault(t_fault));
+        .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
+        .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     reg o_v, o_err;
     reg [31:0] o_val;
     reg [15:0] o_row;
@@ -460,7 +463,7 @@ module ot_v41_rom_elem #(
     end
     always @(posedge clk) begin
         o_val <= t_val; o_row <= s_row[mb * NSEG + t_seg]; o_seg <= s_idx[t_seg]; o_n <= s_n[t_seg]; o_err <= t_err;
-        o_pos <= (MTP != 0) ? bank_pos[t_tree[TRW-1]] : 3'd0;
+        o_pos <= (MTP != 0) ? t_pos : 3'd0;
     end
     assign pv[mb] = o_v; assign pval[32*mb +: 32] = o_val; assign prow[16*mb +: 16] = o_row;
     assign pseg[5*mb +: 5] = o_seg; assign pnseg[5*mb +: 5] = o_n; assign perr[mb] = o_err;

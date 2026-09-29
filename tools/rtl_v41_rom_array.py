@@ -408,7 +408,7 @@ def run_case(exe: Path, work: Path, ph: dict):
     return rows, done
 
 
-def cases(ck: Ckpt, N: int):
+def cases(ck: Ckpt, N: int, nb: int = 1):
     L = f"layers.{LAYER}."
     half = max(1, N // 2)
     E = 7
@@ -427,7 +427,7 @@ def cases(ck: Ckpt, N: int):
             Mat(ck, L + f"ffn.experts.{e}.w1", "fp4", 1, 5120, r0=64 * i, phase="experts_gu")
             for i, e in enumerate((3, 57, 121, 200, 288, 377))]
             + [Mat(ck, L + "ffn.shared_experts.w1", "fp8", 1, 5120, r0=32, phase="experts_gu")]
-        if N >= 8 else None,
+        if N >= 8 * nb else None,
         "bf16_router_gate": [Mat(ck, L + "ffn.gate", "bf16", half, 5120, r0=96 * 3, phase="router")],
         "bf16_compressor_wkv_ksplit": [Mat(ck, L + "attn.compressor.wkv", "bf16", half, 5120, r0=384,
                                            phase="router")],
@@ -458,7 +458,7 @@ def main(argv=None):
     out = []
     for nb, N in [(nb, N) for nb in a.nb for N in a.n]:
         a.work.mkdir(parents=True, exist_ok=True)
-        for name, mats in cases(ck, N).items():
+        for name, mats in cases(ck, N, nb).items():
             if mats is None or (a.only and a.only not in name):
                 continue
             wd = a.work / f"n{N}_nb{nb}{'_sib' if a.sibling else ''}_p{a.mtp}{'_fc' if a.fillcut else ''}_{name}"
