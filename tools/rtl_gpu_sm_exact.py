@@ -231,6 +231,10 @@ def lanes_campaign(args):
         (("v_bf16_k5120_gs_r1", "v41_bf16", 1, 5120, 0, NC, 4, 16), dict(kw, gs=True)),
         (("v_bf16_k1004_gs_r3", "v41_bf16", 3, 1004, 0, NC, 4, 16), dict(kw, gs=True, gap=25)),
         (("q_kc4_gs_r2", "qwen_int8", 2, 2048, 512, NC, SUB, LS), dict(kw, gs=True)),
+        # the SM macro top (ot_gpu_sm_q): weights through its own bulk copy and SRAM ring, x from its SRAM store
+        (("smq_kc1_tree", "qwen_int8", 16, 512, 512, NC, SUB, LS), dict(kw, bench="sm_q")),
+        (("smq_kc3_down", "qwen_int8", 9, 768, 256, NC, SUB, LS), dict(kw, bench="sm_q")),
+        (("smq_kc32_gateup", "qwen_int8", 8, 4096, 128, NC, SUB, LS), dict(kw, bench="sm_q", xdepth=32)),
     ]
     return _run_specs(lane_case, specs, args.jobs, 20260929)
 
