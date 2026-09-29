@@ -1347,7 +1347,13 @@ def main():
                                       mixed_classes=perf_mix(e, N, M, scratch, rng))
         print(key, json.dumps(rec[f"perf_N{N}_M{M}"]["hc_post"].get("sequence")), flush=True)
     rec["spec"] = spec_rows(rec)
-    rec["input_sha256"] = {str(p.relative_to(ROOT)): sha(p) for p in RTL + [TB, TB_SFU, FIELDS_SVH] + TOOLS}
+    rec["input_sha256"] = {str(p.relative_to(ROOT)): sha(p) for p in LIB + RTL + [TB, TB_SFU, FIELDS_SVH, HARNESS] + TOOLS}
+    head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True)
+    dirty = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain", "--untracked-files=no"],
+                           capture_output=True, text=True)
+    rec["git_head"] = head.stdout.strip()
+    rec["git_dirty_tracked_files"] = [ln[3:] for ln in dirty.stdout.splitlines()]
+    rec["verilator"] = VERILATOR
     out = Path(args.out) if args.out else OUT
     out.write_text(json.dumps(rec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)) + "\n")
     print("wrote", out)
