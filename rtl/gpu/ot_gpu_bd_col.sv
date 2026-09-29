@@ -56,8 +56,21 @@ module ot_gpu_bd_col #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) sticky <= 1'b0;
         else sticky <= sticky | (|lf) | (lov[0] != ll[LAT]) | (lov != {LB{lov[0]}});
-    wire tf;
+    wire tf, t_ov;
+    wire [31:0] t_y;
+    wire [TAGW-1:0] t_tag;
     ot_gpu_tree #(.N(LB), .TAGW(TAGW)) u_tree (.clk(clk), .rst_n(rst_n), .v(lov[0]), .d(acc), .tag(tag_d),
-                                              .ov(ov), .y(y), .otag(otag), .fault(tf));
-    assign fault = sticky | tf;
+                                              .ov(t_ov), .y(t_y), .otag(t_tag), .fault(tf));
+    // output registers: the hardened macro's outputs leave flops
+    reg ov_q, fault_q;
+    reg [31:0] y_q;
+    reg [TAGW-1:0] otag_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin ov_q <= 1'b0; fault_q <= 1'b0; end
+        else begin ov_q <= t_ov; fault_q <= sticky | tf; end
+    always @(posedge clk) begin y_q <= t_y; otag_q <= t_tag; end
+    assign ov = ov_q;
+    assign y = y_q;
+    assign otag = otag_q;
+    assign fault = fault_q;
 endmodule
