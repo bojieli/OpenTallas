@@ -1807,6 +1807,7 @@ def _v41_graph(d, positions=1):
                     nd["issue"] *= p
             elif k == "matvec" and name.endswith("hc.fn"):
                 nd["issue"] *= p
+        g.solve(True)                               # re-time the path (contrib, fin) for the verify pass
     return r, g
 
 
@@ -2334,6 +2335,281 @@ ECON_SOURCES = ("tools/uarch_model.py", "tools/arch_budget_v41.py", "tools/arch_
                 "results/rtl/gpu_supply_barrier.json", "configs/models/candidates/deepseek-v4.1-flash.json")
 
 
+# ---------------------------------------------------------------------------------------------------------
+# Economics levers (W14b; root 2026-09-29): V4.1 ROM static-power reduction, the adaptive MTP policy, and
+# via-programmable ROM mask cost.  Calls the sections above; changes none of them.
+# ---------------------------------------------------------------------------------------------------------
+# Power-state constants.  ReGate = Y. Xue and J. Huang, "ReGate: Enabling Power Gating in Neural Processing Units",
+# MICRO 2025 (arXiv 2508.02536): 7 nm prototype, Table 3 and section 6.1.
+PG = dict(
+    logic_residual=0.03,          # ReGate 6.1: power-gated logic leaks 3% of its ON static power
+    sram_sleep_residual=0.25,     # ReGate 6.1: sleep-mode (retention) SRAM 25%
+    sram_off_residual=0.002,      # ReGate 6.1: powered-off SRAM 0.2%
+    rom_residual=0.03,            # ASSUMED: a mask ROM holds no state, so its array and periphery gate like logic
+    hbm_if_residual=0.03,         # ReGate 3/4: HBM controller + PHY low-power mode (the DRAM self-refreshes); gated
+                                  # like logic
+    serdes_lpi_residual=0.10,     # ASSUMED: 112G PAM4 SerDes in low-power idle keeps ~10% (CDR/bias kept warm)
+    cg_residual=0.10,             # ASSUMED: clock power left when a region's ICGs are closed (global spine, enables)
+    stage_wake_s=1e-6,            # ASSUMED: an 815 mm2 stage domain woken as ~100 staggered sub-domains of ReGate's
+                                  # 10-cycle SA-class domains to bound rush current (di/dt): ~1,000 cycles
+    stage_wake_s_c6=133e-6,       # sensitivity: Haswell C6 worst-case wake (Schoene et al., "Wake-up latencies for
+                                  # processor idle states on current x86 processors", 2015) -- includes state
+                                  # save/restore a stateless ROM stage does not need; an upper bound
+    stage_bet_s=0.5e-6,           # ASSUMED: break-even time at die scale ~ ReGate Table 3's 412-469 cycles (HBM, ICI,
+                                  # whole SA) at 1 GHz; the gating overhead energy is leakage x BET (its definition)
+    hbm_wake_cycles=60,           # ReGate Table 3: HBM controller & PHY power on/off delay 60 cycles
+    serdes_wake_s=5e-6,           # IEEE 802.3bj EEE: Tw_PHY targeted at ~5 us for a 100 Gb/s PHY
+)
+
+
+def _stage_windows(g):
+    """Per-stage time on the single-user critical path (the stage's active window at batch 1; the head stage
+    carries the embed and argmax), and each stage's start time on the path."""
+    sink = [n for n in g.nodes if n.endswith("token.return")][0]
+    lps = 40 / V41_STAGES
+    win, start, t = {}, {}, 0.0
+    for n in g.path(sink):
+        L = g.nodes[n]["layer"]
+        c = sum(g.contrib[n].values())
+        s = V41_STAGES if (L is None or L < 0) else int(L / lps)
+        win[s] = win.get(s, 0.0) + c
+        start.setdefault(s, t)
+        t += c
+    return win, start, t
+
+
+def _region_busy(g):
+    """Per-stage, per-die busy time of the ROM field (weight matvecs) and the hub (every other issued unit)."""
+    lps = 40 / V41_STAGES
+    out = {}
+    for n, nd in g.nodes.items():
+        L = nd["layer"]
+        if L is None or L < 0 or nd["kind"] in ("collective", "hop"):
+            continue
+        s = int(L / lps)
+        b = out.setdefault(s, dict(field=0.0, hub=0.0))
+        b["field" if nd.get("_uarch") else "hub"] += nd["issue"]
+    return out
+
+
+def v41_die_static_parts(d):
+    """One layer die's static power by region and class, from the area ledger and the uarch constants (their sum is
+    the economics section's ungated die static)."""
+    E = A._env()
+    clock = E["clock"]
+    a = area_ledger(d)
+    rack = json.loads((ROOT / "results/arch/v41_rack.json").read_text())["power"]["per_die"]["static_w"]
+    cl = CLOCK_J_MM2 * clock
+    return dict(
+        field=dict(clock=cl * (a["rom_field_strip_used_mm2"] + 0.15 * a["rom_macros"]),
+                   leak_logic=a["rom_field_strip_used_mm2"] * LEAK["logic"], leak_rom=a["rom_macros"] * LEAK["rom_array"]),
+        hub=dict(clock=cl * (a["hub_logic_mm2"] + 0.15 * a["vm_ports"]),
+                 leak_logic=a["hub_logic_mm2"] * LEAK["logic"], leak_sram=a["vm_ports"] * LEAK["sram_array"]),
+        hbm_if=4 * HBM_IDLE_W_STACK, serdes=rack["serdes_always_on"], ucie=rack["ucie_idle"])
+
+
+def _die_energy(p, period, window, busy, policy, wake_s, pg_ok):
+    """Static energy of one die over one token period: `window` s active (at batch 1 the critical-path window, at
+    saturation the stage's occupancy), `busy` = region busy times inside it, the rest idle.
+    policies: 0 ungated; 1 stage clock gating; 2 + region clock gating inside the window; 3 + power gating of the
+    idle stage (retention SRAM, gated logic and ROM, HBM PHY power-down, SerDes / UCIe low-power idle) when the
+    idle gap fits the wake-up and the break-even time."""
+    r = PG["cg_residual"]
+    idle = max(0.0, period - window)
+    clk = p["field"]["clock"] + p["hub"]["clock"]
+    leak = p["field"]["leak_logic"] + p["field"]["leak_rom"] + p["hub"]["leak_logic"] + p["hub"]["leak_sram"]
+    io = p["hbm_if"] + p["serdes"] + p["ucie"]
+    if policy == 0:
+        return (clk + leak + io) * period
+    if policy == 1:
+        e_clk = clk * (window + r * idle)
+    else:
+        e_clk = sum(p[k]["clock"] * (min(busy[k], window) + r * (window - min(busy[k], window))) for k in ("field", "hub")) \
+            + r * clk * idle
+    if policy < 3 or not pg_ok:
+        return e_clk + (leak + io) * period
+    on = window + wake_s                      # the wake-up runs with the stage leaking at its ON level
+    off = max(0.0, period - on)
+    leak_off = (p["field"]["leak_logic"] * PG["logic_residual"] + p["field"]["leak_rom"] * PG["rom_residual"]
+                + p["hub"]["leak_logic"] * PG["logic_residual"] + p["hub"]["leak_sram"] * PG["sram_sleep_residual"])
+    io_off = p["hbm_if"] * PG["hbm_if_residual"] + (p["serdes"] + p["ucie"]) * PG["serdes_lpi_residual"]
+    serdes_on = min(period, window + PG["serdes_wake_s"])
+    e_io = p["hbm_if"] * on + p["hbm_if"] * PG["hbm_if_residual"] * off \
+        + (p["serdes"] + p["ucie"]) * (serdes_on + PG["serdes_lpi_residual"] * (period - serdes_on))
+    e_clk -= r * clk * off                    # a power-gated stage has no clock at all
+    return e_clk + leak * on + leak_off * off + leak * PG["stage_bet_s"] + e_io
+
+
+POLICIES = ("ungated", "stage clock gating", "+ region clock gating", "+ stage power gating (retention)")
+
+
+def v41_static_power(ec=None):
+    """V4.1 ROM array static energy per token under the four policies, at batch 1 (AR and MTP m = 1) and at
+    saturation, with the wake-up schedule check (no wake may land on the single-user token path)."""
+    ec = ec or economics()
+    v = ec["v41_rom"]
+    d = copy.deepcopy(PRESETS["proposal"])
+    p = v41_die_static_parts(d)
+    rack = json.loads((ROOT / "results/arch/v41_rack.json").read_text())["power"]
+    ungated_die = sum(p["field"].values()) + sum(p["hub"].values()) + p["hbm_if"] + p["serdes"] + p["ucie"]
+    assert abs(ungated_die * V41_ROM_SYSTEM["layer_dies"] / v["energy"]["static_w"]["layer_dies"] - 1) < 0.005
+    table_leak = rack["per_die"]["table_leakage_w"]
+    table_other = rack["per_die"]["table_static_w"] - table_leak
+    head_w = rack["static"]["head_dies"] / V41_ROM_SYSTEM["head_dies"]
+    out = {}
+    for mode, P in (("ar", 1), ("mtp_m1", V41_POSITIONS)):
+        _, g = _v41_graph(d, P)
+        win, start, T = _stage_windows(g)
+        busy = _region_busy(g)
+        if P > 1:                                   # the MTP step adds the draft on the head dies
+            Td = V41_DRAFT_FRACTION * v["ar"]["rows"][0]["per_user_ms_per_token"] * 1e-3
+            win[V41_STAGES] += Td
+            T += Td
+        tau = V41_TAU if P > 1 else 1.0
+        dyn = (v["energy"]["mtp_dynamic_mJ_per_token"] if P > 1 else
+               v["energy"]["dynamic_mJ_per_token_die"] + v["energy"]["stack_mJ_per_token"]) * 1e-3
+        occ = dict(v41_rom_ledger(g)["stage_occupancy_s"])
+        if P > 1:
+            occ[max(occ)] += Td
+        per_sat = max(occ.values())
+        res = {}
+        for label, wake in (("wake_1us", PG["stage_wake_s"]), ("wake_c6_133us", PG["stage_wake_s_c6"])):
+            pts = {}
+            for point, period, act in (("batch1", T, win), ("saturated", per_sat, occ)):
+                rows = []
+                for pol in range(4):
+                    e_layer = e_head = e_tab = 0.0
+                    gated = 0
+                    for s in range(V41_STAGES + 1):
+                        w = act.get(s, 0.0)
+                        b = busy.get(s, dict(field=w, hub=w))
+                        ok = period - w >= wake + PG["stage_bet_s"]
+                        gated += bool(ok and pol == 3)
+                        e = _die_energy(p, period, w, b, pol, wake, ok)
+                        if s < V41_STAGES:
+                            e_layer += V41_TP * e
+                        else:                       # head dies: the rack's static, scaled by the layer-die policy ratio
+                            e_head += V41_ROM_SYSTEM["head_dies"] * head_w * period * e / (ungated_die * period)
+                    # Engram table dies: ROM tables, no state; active for the gathers (L1, L14) + wake, else gated
+                    tw = 2 * 0.5e-6 * (P if point == "saturated" else 1)
+                    t_on = min(period, tw + wake) if pol == 3 else period
+                    e_tab = V41_ROM_SYSTEM["table_dies"] * (
+                        table_other * period + table_leak * (t_on + PG["logic_residual"] * (period - t_on)))
+                    e_static = e_layer + e_head + e_tab
+                    rate_tokens = tau / period
+                    rows.append(dict(policy=POLICIES[pol], static_mJ_per_token=round(e_static / tau * 1e3, 2),
+                                     energy_mJ_per_token=round((e_static / tau + dyn) * 1e3, 2),
+                                     static_w=round(e_static / period, 0), stages_power_gated=gated,
+                                     tokens_s=round(rate_tokens, 1)))
+                pts[point] = rows
+            # the wake schedule: every stage is woken `wake` before its window opens.  At batch 1 the schedule is
+            # static and periodic, so a wake never lands on the token path while wake + BET <= the stage's idle
+            idle_min = min(T - w for s, w in win.items())
+            pts["wake_on_token_path_us"] = 0.0 if idle_min >= wake + PG["stage_bet_s"] else round((wake + PG["stage_bet_s"] - idle_min) * 1e6, 2)
+            pts["min_idle_batch1_us"] = round(idle_min * 1e6, 2)
+            pts["serdes_prewake_fits"] = bool(idle_min >= PG["serdes_wake_s"])
+            res[label] = pts
+        out[mode] = dict(period_batch1_us=round(T * 1e6, 2), period_saturated_us=round(per_sat * 1e6, 3),
+                         dynamic_mJ_per_token=round(dyn * 1e3, 3),
+                         window_us={str(k): round(x * 1e6, 2) for k, x in sorted(win.items())},
+                         start_us={str(k): round(x * 1e6, 2) for k, x in sorted(start.items())}, **res)
+    return dict(policies=POLICIES, constants=PG, die_static_w={k: (round(x, 3) if not isinstance(x, dict) else
+                                                                {kk: round(vv, 3) for kk, vv in x.items()})
+                                                            for k, x in p.items()},
+                basis="per layer die: the area ledger's clock and leakage by region (ROM field = strip logic + ROM "
+                      "macros; hub = dedicated units + VM ports), HBM interface idle, always-on SerDes and UCIe from "
+                      "results/arch/v41_rack.json; head dies at the rack's static scaled by the layer-die policy "
+                      "ratio; Engram table dies at the rack's leakage, gated outside their gathers; dynamic "
+                      "energy unchanged from the economics section", **out)
+
+
+def adaptive_mtp(ec=None):
+    """MTP while it gives the larger aggregate (few users), AR beyond: the per-batch best of the two curves."""
+    ec = ec or economics()
+    out = {}
+    for key, ar, mtp in (("v41_rom", ec["v41_rom"]["ar"]["rows"], ec["v41_rom"]["mtp_m1"]["rows"]),
+                         ("v41_hbm", ec["v41_hbm"]["ar"]["rows"], ec["v41_hbm"]["mtp"]["rows"])):
+        A_ = {r["batch"]: r for r in ar}
+        M_ = {r["batch"]: r for r in mtp}
+        rows = []
+        for B in sorted(A_):
+            a, m = A_[B], M_[B]
+            pick, mode = (m, "MTP") if m["aggregate_tokens_s"] > a["aggregate_tokens_s"] else (a, "AR")
+            rows.append(dict(batch=B, mode=mode, per_user_tokens_s=pick["per_user_tokens_s"],
+                             aggregate_tokens_s=pick["aggregate_tokens_s"],
+                             per_user_ms_per_token=pick["per_user_ms_per_token"],
+                             energy_mJ_per_token=pick["energy_mJ_per_token"],
+                             ar_aggregate_tokens_s=a["aggregate_tokens_s"], mtp_aggregate_tokens_s=m["aggregate_tokens_s"]))
+        # the exact switch: MTP's aggregate B x r_mtp (until it saturates) against AR's B x r_ar
+        r_ar, s_ar = ar[0]["per_user_tokens_s"], max(r["aggregate_tokens_s"] for r in ar)
+        r_m, s_m = mtp[0]["per_user_tokens_s"], max(r["aggregate_tokens_s"] for r in mtp)
+        # AR's per-user rate is flat until its own saturation on the ROM array, so the crossing is exact there
+        # (B x r_ar = MTP's saturated aggregate); where AR's per-user rate falls with batch (the HBM chain) the
+        # sweep brackets it
+        flat = all(abs(r["per_user_tokens_s"] - r_ar) < 0.5 for r in ar if r["batch"] * r_ar <= s_m)
+        switch = s_m / r_ar if (s_m < s_ar and flat) else None
+        first_ar = next((r["batch"] for r in rows if r["mode"] == "AR"), None)
+        prev = max([r["batch"] for r in rows if first_ar and r["batch"] < first_ar], default=None)
+        out[key] = dict(rows=rows, switch_users=round(switch, 2) if switch else None,
+                        switch_bracket=[prev, first_ar],
+                        rule="MTP while batch < switch_users, AR at and above it", ar_b1=r_ar, mtp_b1=r_m,
+                        ar_saturated=s_ar, mtp_saturated=s_m)
+    return out
+
+
+MASK = dict(
+    full_set_usd=COST["mask_set_usd"],
+    single_mask_usd=(0.5e6, 1.0e6),   # a single EUV mask $0.5-1M (SemiEngineering, "Mask Complexity, Cost, And Change";
+                                      # siliconmasters.co 2025 guide); a coding via/metal layer at the lower metals is EUV
+    coding_masks_per_die=(1, 2),      # Taalas HC1: a model changes TWO metal masks (EE Times, "Taalas Specializes to
+                                      # Extremes for Extraordinary Token Speed"); one via mask is the lower bound
+    v41_base_designs=3,               # layer, head (+DSpark), Engram table dies: each a shared base mask set
+    qwen_base_designs=1,              # both Qwen dies share one base
+)
+
+
+def rom_mask_sensitivity(ec=None):
+    """ROM mask NRE and V4.1 / Qwen ROM $ per tok/s under via-programmable ROM: shared base masks per die role plus
+    1-2 coding masks per distinct die, against the economics section's full-set and 10%-coding cases."""
+    ec = ec or economics()
+    c = {r["design"]: r for r in ec["cost"]}
+    out = []
+    for name, dies, bases in (("V4.1 ROM array (AR / MTP m = 1)", V41_ROM_SYSTEM["dies"], MASK["v41_base_designs"]),
+                              ("Qwen ROM (AR, G = 6,144)", 2, MASK["qwen_base_designs"])):
+        r = c[name]
+        hw = r["hardware_usd_iso_package"]
+        cases = [("full mask set per die (economics high)", dies * MASK["full_set_usd"], None),
+                 ("10% of a set per die (economics low)", dies * MASK["full_set_usd"] * COST["rom_coding_fraction"], None)]
+        for n in MASK["coding_masks_per_die"]:
+            for pm in MASK["single_mask_usd"]:
+                cases.append((f"via-programmable: {n} coding mask(s) x ${pm / 1e6:.1f}M per die + shared bases",
+                              bases * MASK["full_set_usd"] + dies * n * pm, bases * MASK["full_set_usd"]))
+        for label, nre, base in cases:
+            per_sys = nre / COST["production_units"]
+            per_sys_nb = (nre - base) / COST["production_units"] if base is not None else None
+            tot = hw + per_sys
+            out.append(dict(design=name, case=label, nre_usd=nre, nre_per_system_usd=round(per_sys),
+                            capex_per_system_usd=round(tot),
+                            usd_per_tokens_s_b1=round(tot / r["tokens_s_b1"], 2),
+                            usd_per_tokens_s_saturated=round(tot / r["tokens_s_saturated"], 2),
+                            usd_per_tokens_s_saturated_base_excluded=(round((hw + per_sys_nb) / r["tokens_s_saturated"], 2)
+                                                                      if per_sys_nb is not None else None)))
+    g = c["V4.1 8x B200 (tier 2, AR)"]
+    return dict(rows=out, inputs=MASK, production_units=COST["production_units"],
+                gpu_reference=dict(design=g["design"], usd_per_tokens_s_saturated=g["usd_per_tokens_s_saturated"]["low"],
+                                   usd_per_tokens_s_at_slo=g["usd_per_tokens_s_at_slo"]["low"]),
+                note="base_excluded: the shared base masks amortised over later models (a new model re-spins only the "
+                     "coding masks)")
+
+
+def economics_levers():
+    ec = economics()
+    return dict(static_power=v41_static_power(ec), adaptive_mtp=adaptive_mtp(ec), rom_masks=rom_mask_sensitivity(ec))
+
+
+LEVER_SOURCES = ECON_SOURCES
+
+
 def sweep(ctx: int):
     """Design-point search over the microarchitecture knobs that the evaluation shows binding."""
     rows = []
@@ -2367,7 +2643,31 @@ def main(argv=None):
     ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
     ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
     ap.add_argument("--economics", action="store_true", help="batch, energy and cost of every design and GPU tier")
+    ap.add_argument("--levers", action="store_true", help="V4.1 static-power gating, adaptive MTP, ROM mask cost")
     a = ap.parse_args(argv)
+    if a.levers:
+        import hashlib
+        lv = economics_levers()
+        sp = lv["static_power"]
+        for mode in ("ar", "mtp_m1"):
+            for wk in ("wake_1us", "wake_c6_133us"):
+                for pt in ("batch1", "saturated"):
+                    for r in sp[mode][wk][pt]:
+                        print(f"{mode:6s} {wk:14s} {pt:9s} {r['policy']:34s} static {r['static_mJ_per_token']:9.2f} mJ  "
+                              f"total {r['energy_mJ_per_token']:9.2f} mJ  {r['static_w']:8.0f} W  gated {r['stages_power_gated']}")
+                print(f"   wake on token path {sp[mode][wk]['wake_on_token_path_us']} us, min idle {sp[mode][wk]['min_idle_batch1_us']} us")
+        for k, v in lv["adaptive_mtp"].items():
+            print(k, "switch", v["switch_users"], [(r["batch"], r["mode"], r["per_user_tokens_s"], r["aggregate_tokens_s"]) for r in v["rows"]])
+        for r in lv["rom_masks"]["rows"]:
+            print(f"{r['design'][:10]:10s} {r['case']:70s} NRE {r['nre_usd'] / 1e6:8.1f}M  capex {r['capex_per_system_usd']:>10,}  "
+                  f"$/tok/s b1 {r['usd_per_tokens_s_b1']:8.2f} sat {r['usd_per_tokens_s_saturated']:7.2f} "
+                  f"(base excl. {r['usd_per_tokens_s_saturated_base_excluded']})")
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            pins = {q: hashlib.sha256((ROOT / q).read_bytes()).hexdigest() for q in LEVER_SOURCES}
+            Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.economics_levers.v1", **lv, source_sha256=pins),
+                                              indent=1, default=str) + "\n")
+        return
     if a.economics:
         import hashlib
         ec = economics()

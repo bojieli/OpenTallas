@@ -1,6 +1,6 @@
 # Microarchitecture analytical model
 
-Tool: `tools/uarch_model.py`. Records: `results/uarch/v41_rom.json`, `results/uarch/qwen_rom.json`, `results/uarch/hbm_gpu.json`, `results/uarch/economics.json`. Tests: `tests/test_uarch_model.py`, `tests/test_uarch_economics.py`. The binding method is in [AGENTS.md](../AGENTS.md) rule 1.
+Tool: `tools/uarch_model.py`. Records: `results/uarch/v41_rom.json`, `results/uarch/qwen_rom.json`, `results/uarch/hbm_gpu.json`, `results/uarch/economics.json`, `results/uarch/economics_levers.json`. Tests: `tests/test_uarch_model.py`, `tests/test_uarch_economics.py`. The binding method is in [AGENTS.md](../AGENTS.md) rule 1.
 
 It covers all four designs: DeepSeek-V4.1 ROM (first), Qwen3-8B ROM, and the two GPU-organised HBM comparators.
 
@@ -450,3 +450,91 @@ Each system is costed at its best mode for each point: its fastest single-user m
    - At a ≥ 100 tok/s/user floor it is 0.7–1.3× the GPU.
 4. **MTP m = 1 is a single-user lever on the ROM array.** It lowers the saturated aggregate by 34%. Run MTP only while the stages are not yet full (below about 12 users) and AR beyond.
 5. **Static power sets the energy of both V4.1 designs.** V4.1 ROM runs at 3.1 J per token at batch 1 and 0.21 J saturated, against 19.9 and 0.42 J for 8× B200. Stage clock gating and SerDes idle states are the next energy levers.
+
+## Economics levers: static power, adaptive MTP, ROM masks (`--levers`, `results/uarch/economics_levers.json`)
+
+These are root's follow-ups to the economics findings (2026-09-29). The test is in `tests/test_uarch_economics.py`.
+
+### V4.1 ROM static-power reduction
+
+At batch 1 the token visits the 28 stages one after another. Each stage is on the critical path for 4.7–20.4 µs of the 240 µs token and idle for the rest; the shortest idle is 219.6 µs. The model prices each layer die's static power by region and class from the area ledger:
+
+| Component | W per layer die |
+|---|---:|
+| ROM field (strip logic + ROM macros): clock / leakage | 13.1 / 13.2 |
+| Hub (dedicated units + VM ports): clock / leakage | 5.0 / 5.7 |
+| HBM interface idle (4 stacks) | 11.2 |
+| Always-on 112G SerDes | 30.6 |
+| UCIe idle | 2.5 |
+
+**The SerDes are the largest static item on a layer die.** The model then applies four cumulative policies:
+
+1. **Stage clock gating.** A stage's clock runs only during its window. The rest of the period keeps an ASSUMED 10% clock residual (the global spine and the ICG enables).
+2. **Region clock gating.** Inside the window, the ROM field and the hub each clock only while they are busy.
+3. **Stage power gating** in the idle time, with these residuals:
+   - logic and ROM leak 3% (ReGate, MICRO 2025, §6.1; a mask ROM holds no state, so it needs no retention);
+   - the VM SRAM sleeps with retention at 25%;
+   - the HBM controller and PHY are in power-down at 3%, with the DRAM self-refreshing (ReGate Table 3: 60-cycle wake);
+   - SerDes and UCIe are in low-power idle at an ASSUMED 10%.
+4. **Wake schedule.** The stage wakes an ASSUMED 1 µs ahead of its window: ~100 staggered sub-domains of ReGate's 10-cycle domains, to bound the rush current. The SerDes wake 5 µs ahead (IEEE 802.3bj EEE Tw target for 100 Gb/s).
+   - Each gating event costs the stage's leakage × an ASSUMED 0.5 µs break-even time, from ReGate's 412–469-cycle BETs for the HBM, ICI and whole-array domains.
+   - Wake is only scheduled where the idle gap fits the wake-up plus the break-even time.
+
+**Engram table dies** (ROM tables, no state) stay awake only for their two gathers and the wake-up. Head dies scale by the layer-die policy ratio. Dynamic energy is unchanged from the economics section.
+
+**No wake lands on the single-user token path.** At batch 1 the schedule is static and periodic, and the shortest idle (219.6 µs AR, 531.2 µs MTP) exceeds every wake-up, including the 133 µs sensitivity: the Haswell C6 worst case (Schöne et al. 2015), which includes a state restore that a ROM stage does not need.
+
+| V4.1 ROM system (1M) | Static W | mJ/token, AR, B = 1 | mJ/token, AR, saturated | mJ/token, MTP, B = 1 | mJ/token, MTP, saturated |
+|---|---:|---:|---:|---:|---:|
+| Ungated (economics section) | 12,902 | 3,137 | 208 | 2,168 | 294 |
+| Stage clock gating | 11,073 | 2,698 | 190 | 1,866 | 267 |
+| + region clock gating | 11,020 | 2,686 | 187 | 1,860 | 261 |
+| **+ stage power gating, 1 µs wake** | **1,194** (B = 1) / 4,977 (saturated) | **328** | **106** | **228** | **112** |
+| + stage power gating, 133 µs wake | 4,888 (B = 1) | 1,214 | 187 | 471 | 261 |
+
+- **Power gating, not clock gating, is the lever.**
+  - Clock gating saves 14%: clock is only 18 of the 81 W on a layer die.
+  - Power gating the idle stages cuts batch-1 energy 9.6× (AR) and 9.5× (MTP), to 328 and 228 mJ/token. The 8× B200 AR figure is 19,852.
+- **At saturation the gaps are short.** The period is 13.0 µs (AR) and 72 µs (MTP).
+  - With a 1 µs wake, 28 of 29 stages still gate between tokens, and energy falls to 106 mJ (AR) and 112 mJ (MTP).
+  - With a C6-class wake, no stage gates at saturation.
+- **Build requirements:**
+  - power switches per stage domain, with staggered wake;
+  - retention only on the VM;
+  - HBM PHY power-down;
+  - SerDes low-power idle with a 5 µs pre-wake scheduled from the static token schedule.
+- The HBM comparator (tier 3) is still priced ungated. Its dies are busy for most of the token, so this lever is mainly the ROM array's.
+
+### Adaptive MTP
+
+Use MTP while its aggregate exceeds AR's, and AR beyond. On the ROM array, AR's per-user rate stays flat until its own saturation, so the crossing is exact: MTP's saturated 50,708 / AR's 4,167 = **12.2 users**. On the HBM comparator the AR chain slows with every column-batched user, and the sweep brackets the crossing between 8 and 16 users.
+
+| Batch | V4.1 ROM mode | Per-user tok/s | Aggregate tok/s | V4.1 HBM tier 3 mode | Per-user tok/s | Aggregate tok/s |
+|---:|---|---:|---:|---|---:|---:|
+| 1 | MTP | 6,063 | 6,063 | MTP | 5,673 | 5,673 |
+| 2 | MTP | 6,063 | 12,126 | MTP | 5,673 | 11,346 |
+| 4 | MTP | 6,063 | 24,252 | MTP | 3,031 | 12,122 |
+| 8 | MTP | 6,063 | 48,504 | MTP | 1,515 | 12,122 |
+| 16 | AR | 4,167 | 66,668 | AR | 1,362 | 21,792 |
+| 32 | AR | 2,407 | 77,022 | AR | 681 | 21,792 |
+| 866 / 811 (capacity) | AR | 88.9 | 77,022 | AR | 26.7 | 21,658 |
+
+### ROM mask cost: via-programmable ROM
+
+A via-programmable ROM shares base masks between dies of the same role and codes each die's weights in 1–2 masks:
+- Taalas HC1 changes two metal masks per model (EE Times).
+- A single EUV mask costs $0.5–1M (SemiEngineering, "Mask Complexity, Cost, And Change").
+- V4.1 has 3 base designs (layer, head + DSpark, Engram table) at a full $15M each. Qwen has 1.
+- NRE is amortised over 1,000 production units, as in the economics section.
+
+| V4.1 ROM array (188 dies) | NRE | Capex per system | $ per tok/s, B = 1 | $ per tok/s, saturated | Saturated, base masks excluded |
+|---|---:|---:|---:|---:|---:|
+| Full mask set per die (economics high) | $2,820M | $5.17M | 853 | 67.1 | — |
+| 10% of a set per die (economics low) | $282M | $2.63M | 434 | 34.2 | — |
+| Via-programmable, 1 × $0.5M | $139M | $2.49M | 411 | 32.3 | 31.7 |
+| Via-programmable, 2 × $0.5M or 1 × $1M | $233M | $2.58M | 426 | 33.5 | 33.0 |
+| Via-programmable, 2 × $1M | $421M | $2.77M | 457 | 36.0 | 35.4 |
+
+- **Via-programmable ROM removes the high case.** The V4.1 array costs $32–36 per saturated tok/s against the earlier $34–67, and against $15.4 for 8× B200 at saturation (whose users then get 15.5 tok/s each) and $51.4 at the ≥ 100 tok/s/user floor.
+- **The packages, not the masks, set V4.1 ROM cost.** 94 packages at the iso-package price make up $2.35M of the $2.49–2.77M.
+- **Qwen ROM:** $16–19M of NRE, $3.44–3.69 per saturated tok/s ($2.18–2.43 with the base excluded).
