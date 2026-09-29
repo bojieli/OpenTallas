@@ -9,7 +9,7 @@ Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured block
 | Owner | Current work / next acceptance |
 | --- | --- |
 | Root | [~] [Physical floorplan](docs/V41_PHYSICAL_FLOORPLAN.md): geometric reservations, locality and dependency budgets; integrate agent evidence and publish. Macro fit remains unverified. |
-| floorplan_inventory | [~] Actual ROM macro capacity/area lower bound and integer placement feasibility; source-pinned inventory complete. |
+| floorplan_inventory | [~] ROM capacity/area screening complete; integer tensor placement and complete bank/logic fit remain open. |
 | floorplan_connectivity | [x] Eleven-edge ledger complete; physical distance and service closure pending root placement. |
 | ds_attention_elaboration | [~] Full-geometry real arithmetic on PVE2: 128-row and mixed 640-row cases pass; remaining numeric cases and HBM-connected consumer integration running. Synthetic inputs, not full token. |
 | qwen_execution_compile | [~] PVE1 G64 reference compiled; fixed-kernel builds and runtime differential execution next. No G64 exact verdict yet. |

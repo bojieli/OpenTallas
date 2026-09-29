@@ -27,6 +27,10 @@ The outer die dimensions come from the historical assembly. Internal edge and ch
 
 Do not stretch the packed KV interface or collective bank interface across the die as flat buses. Keep them inside their consumer group, and use an explicit transport endpoint for a long crossing. The connectivity ledger records widths and units; absent routed distance limits remain unknown.
 
+## ROM capacity screening
+
+The [executable capacity bound](../results/floorplan/v41_rom_capacity.json) uses actual predictive-library macro geometry. For the rounded-up adopted average ROM allocation, 264 useful bits per macro word requires 10,041 macros and 150.640 mm² before logic, muxes, channels or port replication. Repeating the observed local-bank occupancy requires 203.313 mm². These are capacity screens, not tensor placement or complete fit. They cannot replace the separate N5 analytical density assumption. The densest macro also misses the proposed period, so density alone cannot select the memory.
+
 ## Latency budgets before utilization
 
 Build a timestamped dependency schedule from actual execution: ROM access and compute, reduction/rounding, collectives, index scan and selected fetch where required, packed KV refill, QK, normalization/probability preload, PV, output projection and layer handoff. Charge startup, drain, backpressure, pipeline registers and clock crossings. The longest dependency path determines single-user latency; peak bandwidth alone does not.
