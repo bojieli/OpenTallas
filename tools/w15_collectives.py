@@ -238,6 +238,12 @@ CONFIGS = {
     "v41p14_r0d256": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=14, X_WIRE=14), "l0"),
     "v41p17_r0d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "sweep"),
     "v41p17_r0d1024_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep"),
+    # 2x engine: 32 FP32 lanes (128 B records), adopted placement / direct T1 / depth 1,024 (in 128 B words: 512)
+    "v41p17_r0d512_w32": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32, X_NL=1),
+                          "l0w32"),
+    "v41p17_r0d512_w32_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32,
+                                                       X_NL=1), "sweepw32"),
+    "v41p17_r0d1024_even_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep_even"),
     # payload sweep (bandwidth and the latency fit) on the same binaries
     "v41_r1d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=256), "sweep"),
     "v41_r0d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256), "sweep"),
@@ -258,6 +264,8 @@ def verilator_version():
 
 
 def binary_name(name):
+    if name.endswith("_even_sweep"):
+        return name[:-len("_even_sweep")]
     return name[:-len("_sweep")] if name.endswith("_sweep") else name
 
 
@@ -432,14 +440,14 @@ def fit(rows):
 SWEEP_WORDS = (1, 8, 36, 80, 160, 320)
 
 
-def v41_sweep_fixture(outdir: Path) -> dict:
+def v41_sweep_fixture(outdir: Path, sweep_words=SWEEP_WORDS) -> dict:
     """12 descriptors for the payload sweep: all-gathers and all-reduces of 1..320 words per rank, operands and
     golden built exactly as tools/rtl_v41_tp_layer0_collectives.prepare builds the layer-0 fixture (pairwise
     ((r0+r1)+(r2+r3)) FP32 RNE, BF16 RNE on rnd)."""
     import hdc_golden as G
     import rtl_v41_tp_layer0_collectives as L0
     outdir.mkdir(parents=True, exist_ok=True)
-    ds = [dict(mode=1, rnd=0, words=w) for w in SWEEP_WORDS] + [dict(mode=0, rnd=1, words=w) for w in SWEEP_WORDS]
+    ds = [dict(mode=1, rnd=0, words=w) for w in sweep_words] + [dict(mode=0, rnd=1, words=w) for w in sweep_words]
     OPS, RANKS, MAXW, LANES = 12, 4, L0.MAXW, L0.LANES
     part = np.zeros((OPS, RANKS, MAXW, LANES), dtype=np.uint32)
     exp = np.zeros((OPS, RANKS * MAXW, LANES), dtype=np.uint32)
@@ -509,7 +517,7 @@ def config_record(c):
     top, gen, fix = CONFIGS[name]
     clock = CLOCK[top]
     cal, meas = c["calibration"], c["measured"]
-    rec = dict(top=top, parameters=gen, fixture=fix, fixture_manifest_sha256=sha(VEC / fix / "manifest.json"),
+    rec = dict(top=top, parameters=gen, fixture=fix, record_bytes=4 * gen.get("LANES", 16), fixture_manifest_sha256=sha(VEC / fix / "manifest.json"),
                binary=binary_name(name), clock_hz=clock, release_guard_cycles=GUARD,
                arrival_hub_to_hub_cycles={k: dict(min=v[0], max=v[1]) for k, v in c["arrival_cycles"].items()},
                release_delay_cycles=c["drel"],
@@ -580,6 +588,38 @@ def campaign(names, ncal, nmeas, out: Path):
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rec, indent=1, sort_keys=True, default=str) + "\n")
     return rec
+
+
+SWEEP_WORDS_EVEN = (2, 8, 36, 80, 160, 320)
+
+
+def widen_fixture(src: Path, dst: Path, k: int = 2) -> dict:
+    """The same operands and golden images for a k-times wider engine: k consecutive 16-lane words (64 B) of a rank
+    become one 16k-lane word (element e keeps its value: lane l of wide word w is element (w*k*16 + l)), descriptor
+    word counts divide by k.  Every count in the source must be a multiple of k."""
+    dst.mkdir(parents=True, exist_ok=True)
+    desc = [int(x, 16) for x in (src / "desc.hex").read_text().split()]
+    OPS, RANKS, MAXW = 12, 4, 320
+    new_desc = []
+    for d in desc:
+        n = d & 0x7FFF
+        assert n % k == 0, (d, k)
+        new_desc.append((d & ~0x7FFF) | (n // k))
+    (dst / "desc.hex").write_text("".join(f"{x:08x}\n" for x in new_desc))
+    for name in ("part.hex", "expected.hex"):
+        lines = (src / name).read_text().split()
+        assert len(lines) == OPS * RANKS * MAXW
+        out = []
+        for blk in range(OPS * RANKS):
+            b = lines[blk * MAXW:(blk + 1) * MAXW]
+            w = ["".join(b[i * k + j] for j in reversed(range(k))) for i in range(MAXW // k)]
+            out += w + ["0" * len(w[0])] * (MAXW - len(w))
+        (dst / name).write_text("\n".join(out) + "\n")
+    meta = dict(schema="w15_v41_widened_fixture_v1", widen=k, source_manifest_sha256=sha(src / "manifest.json"),
+                images_sha256={p: sha(dst / p) for p in ("part.hex", "expected.hex", "desc.hex")},
+                note="element values and golden identical to the source fixture; only the word packing changes")
+    (dst / "manifest.json").write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n")
+    return meta
 
 
 def main(argv=None):

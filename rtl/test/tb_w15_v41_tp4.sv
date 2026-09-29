@@ -31,13 +31,17 @@ module tb_w15_v41_tp4 #(
     // 112G board link
     parameter real    X_T = 0.93405,
     parameter integer X_WIRE = 29, X_ENC = 4, X_DEC = 59, X_FC = 2,
-    parameter integer T0 = 64, GAP = 2
+    parameter integer T0 = 64, GAP = 2,
+    // engine width (FP32 lanes per record) and link-layer bundles per link cycle; a 32-lane engine carries
+    // 128 B records, so the board frame (one RS(272,257) codeword payload) takes X_NL = 1 bundle a PCS cycle,
+    // two per codeword = 256 B, the same 4 x 64 B the 16-lane frame carries
+    parameter integer LANES = 16, U_NL = 2, X_NL = 2
 );
-    localparam integer N=4, FW=512, PW=547, RB=2, WA=15, GW=4, TSW=16, NL=2;
+    localparam integer N=4, FW=32*LANES, PW=FW+35, RB=2, WA=15, GW=4, TSW=16;
     localparam integer OPS=12, MAXW=320, MEMW=32768;
     localparam integer UNVC = RELAY ? 3 : 1;
-    localparam integer UBW = TSW + UNVC + 2 + UNVC*PW, UFRW = U_FC*NL*(UBW+1) + 32;
-    localparam integer XBW = TSW + 1 + 2 + PW,        XFRW = X_FC*NL*(XBW+1) + 32;
+    localparam integer UBW = TSW + UNVC + 2 + UNVC*PW, UFRW = U_FC*U_NL*(UBW+1) + 32;
+    localparam integer XBW = TSW + 1 + 2 + PW,        XFRW = X_FC*X_NL*(XBW+1) + 32;
     localparam integer U_AWTX = 6, X_AWTX = 6, U_AWRX = 5, X_AWRX = 5;
 
     integer seed, seed0, DET, U_DREL, X_DREL;
@@ -137,7 +141,7 @@ module tb_w15_v41_tp4 #(
             .e_mode(em[s]),.e_tag(etag[s*32+:32]),.o_valid(ov[s]),.o_ready(ory[s]),
             .o_data(od[s*GW*FW+:GW*FW]),.o_last(ol[s]),.o_rank(orank[s*RB+:RB]),
             .o_err(oerr[s]),.engine_fault(efault[s]));
-        ot_rom_oneshot_die_px #(.N(N),.RANK(s),.LANES(16),.TAGW(32),.DEPTH(DEPTH),
+        ot_rom_oneshot_die_px #(.N(N),.RANK(s),.LANES(LANES),.TAGW(32),.DEPTH(DEPTH),
                                 .PKG_DIES(2),.RELAY(RELAY),.ADD_LAT(3),.PAIRWISE(1),.GW(4),.OUT_BP(1)) u_coll (
             .clk(clk[s]),.rst_n(rst_n[s]),.in_valid(ev[s]),.in_ready(er[s]),.in_data(ed[s*FW+:FW]),
             .in_last(el[s]),.in_mode(em[s]),.in_tag(etag[s*32+:32]),
@@ -232,7 +236,7 @@ module tb_w15_v41_tp4 #(
                     assign rec = txrec[s*PW+:PW];
                 end
                 assign txready[s*N+t] = rdy[0];
-                ot_link_tx #(.NVC(UNVC), .PW(PW), .CW(2), .TSW(TSW), .WIRE(U_WIRE), .AW(U_AWTX), .NL(NL),
+                ot_link_tx #(.NVC(UNVC), .PW(PW), .CW(2), .TSW(TSW), .WIRE(U_WIRE), .AW(U_AWTX), .NL(U_NL),
                              .FRAME_CYCLES(U_FC), .ENC_STAGES(U_ENC), .GATED({{(UNVC-1){1'b0}}, 1'b1})) u_tx (
                     .clk(clk[s]), .rst_n(rst_n[s]), .now(now[s]), .vc_valid(vv), .vc_ready(rdy), .vc_rec(rec),
                     .cr_pulse(crout[2*(s*N+t)+:2]), .lclk(lu[s]), .lrst_n(rst_u[s]), .f_valid(fv), .f_data(fd),
@@ -242,7 +246,7 @@ module tb_w15_v41_tp4 #(
                     .rclk(rclk), .rf_valid(rfv), .rf_data(rfd));
                 reg rr = 0;
                 always @(posedge rclk) rr <= ($realtime > 40.0);
-                ot_link_rx #(.NVC(UNVC), .PW(PW), .CW(2), .TSW(TSW), .WIRE(U_WIRE), .AW(U_AWRX), .NL(NL),
+                ot_link_rx #(.NVC(UNVC), .PW(PW), .CW(2), .TSW(TSW), .WIRE(U_WIRE), .AW(U_AWRX), .NL(U_NL),
                              .FRAME_CYCLES(U_FC), .DEC_STAGES(U_DEC)) u_rx (
                     .rclk(rclk), .rrst_n(rr), .f_valid(rfv), .f_data(rfd), .clk(clk[t]), .rst_n(rst_n[t]),
                     .now(now[t]), .det(DET[0]), .drel(TSW'(U_DREL)), .vc_valid(ovv), .vc_rec(orec), .cr_pulse(crin[2*(t*N+s)+:2]),
@@ -262,7 +266,7 @@ module tb_w15_v41_tp4 #(
                 wire [15:0] wmax;
                 assign vv = txv[s*N+t];
                 assign txready[s*N+t] = rdy;
-                ot_link_tx #(.NVC(1), .PW(PW), .CW(2), .TSW(TSW), .WIRE(X_WIRE), .AW(X_AWTX), .NL(NL),
+                ot_link_tx #(.NVC(1), .PW(PW), .CW(2), .TSW(TSW), .WIRE(X_WIRE), .AW(X_AWTX), .NL(X_NL),
                              .FRAME_CYCLES(X_FC), .ENC_STAGES(X_ENC)) u_tx (
                     .clk(clk[s]), .rst_n(rst_n[s]), .now(now[s]), .vc_valid(vv), .vc_ready(rdy),
                     .vc_rec(txrec[s*PW+:PW]), .cr_pulse(crout[2*(s*N+t)+:2]), .lclk(lx[s]), .lrst_n(rst_x[s]),
@@ -272,7 +276,7 @@ module tb_w15_v41_tp4 #(
                     .rclk(rclk), .rf_valid(rfv), .rf_data(rfd));
                 reg rr = 0;
                 always @(posedge rclk) rr <= ($realtime > 40.0);
-                ot_link_rx #(.NVC(1), .PW(PW), .CW(2), .TSW(TSW), .WIRE(X_WIRE), .AW(X_AWRX), .NL(NL),
+                ot_link_rx #(.NVC(1), .PW(PW), .CW(2), .TSW(TSW), .WIRE(X_WIRE), .AW(X_AWRX), .NL(X_NL),
                              .FRAME_CYCLES(X_FC), .DEC_STAGES(X_DEC)) u_rx (
                     .rclk(rclk), .rrst_n(rr), .f_valid(rfv), .f_data(rfd), .clk(clk[t]), .rst_n(rst_n[t]),
                     .now(now[t]), .det(DET[0]), .drel(TSW'(X_DREL)), .vc_valid(ovv), .vc_rec(orec), .cr_pulse(crin[2*(t*N+s)+:2]),
@@ -313,7 +317,7 @@ module tb_w15_v41_tp4 #(
             for (o = 0; o < OPS; o = o + 1) begin
                 cnt = desc[o][31] ? 4*integer'(desc[o][14:0]) : integer'(desc[o][14:0]);
                 for (j = 0; j < cnt; j = j + 1) begin
-                    $fwrite(fd, "%0d %0d %0d %0128h\n", d, o, j, vm_word(d, 8192 + o*1536 + j));
+                    $fwrite(fd, "%0d %0d %0d %h\n", d, o, j, vm_word(d, 8192 + o*1536 + j));
                     if (vm_word(d, 8192 + o*1536 + j) !== expected[(o*N)*MAXW+j])
                         $display("W15FINALMISMATCH die=%0d op=%0d j=%0d", d, o, j);
                 end
