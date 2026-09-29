@@ -858,8 +858,219 @@
   },
   "note": "base_excluded: the shared base masks amortised over later models (a new model re-spins only the coding masks)"
  },
+ "gated_alike": {
+  "rows": [
+   {
+    "design": "Qwen ROM AR (G = 6,144)",
+    "point": "batch1",
+    "tokens_s": 9967.8,
+    "ungated_static_w": 101.5,
+    "ungated_mJ_per_token": 86.41,
+    "clock_gated_static_w": 83.7,
+    "clock_gated_mJ_per_token": 84.62,
+    "clock_and_power_gated_static_w": 83.4,
+    "clock_and_power_gated_mJ_per_token": 84.59
+   },
+   {
+    "design": "Qwen ROM AR (G = 6,144)",
+    "point": "saturated",
+    "tokens_s": 11920.9,
+    "ungated_static_w": 101.5,
+    "ungated_mJ_per_token": 84.74,
+    "clock_gated_static_w": 87.3,
+    "clock_gated_mJ_per_token": 83.55,
+    "clock_and_power_gated_static_w": 87.3,
+    "clock_and_power_gated_mJ_per_token": 83.55
+   },
+   {
+    "design": "Qwen HBM tier 3 AR",
+    "point": "batch1",
+    "tokens_s": 880.6,
+    "ungated_static_w": 69.3,
+    "ungated_mJ_per_token": 982.78,
+    "clock_gated_static_w": 65.1,
+    "clock_gated_mJ_per_token": 978.03,
+    "clock_and_power_gated_static_w": 63.7,
+    "clock_and_power_gated_mJ_per_token": 976.43
+   },
+   {
+    "design": "Qwen HBM tier 3 AR",
+    "point": "saturated",
+    "tokens_s": 6683.6,
+    "ungated_static_w": 69.3,
+    "ungated_mJ_per_token": 133.05,
+    "clock_gated_static_w": 65.1,
+    "clock_gated_mJ_per_token": 132.43,
+    "clock_and_power_gated_static_w": 62.0,
+    "clock_and_power_gated_mJ_per_token": 131.96
+   },
+   {
+    "design": "Qwen HBM tier 3 DFlash",
+    "point": "batch1",
+    "tokens_s": 2671.0,
+    "ungated_static_w": 69.3,
+    "ungated_mJ_per_token": 358.12,
+    "clock_gated_static_w": 65.1,
+    "clock_gated_mJ_per_token": 356.55,
+    "clock_and_power_gated_static_w": 63.5,
+    "clock_and_power_gated_mJ_per_token": 355.94
+   },
+   {
+    "design": "Qwen HBM tier 3 DFlash",
+    "point": "saturated",
+    "tokens_s": 7100.8,
+    "ungated_static_w": 69.3,
+    "ungated_mJ_per_token": 129.12,
+    "clock_gated_static_w": 65.1,
+    "clock_gated_mJ_per_token": 128.53,
+    "clock_and_power_gated_static_w": 62.4,
+    "clock_and_power_gated_mJ_per_token": 128.15
+   },
+   {
+    "design": "V4.1 HBM tier 3 AR",
+    "point": "batch1",
+    "tokens_s": 2919.8,
+    "ungated_static_w": 6513.0,
+    "ungated_mJ_per_token": 3692.0,
+    "clock_gated_static_w": 5858.2,
+    "clock_gated_mJ_per_token": 3467.74,
+    "clock_and_power_gated_static_w": 5209.8,
+    "clock_and_power_gated_mJ_per_token": 3245.69
+   },
+   {
+    "design": "V4.1 HBM tier 3 AR",
+    "point": "saturated",
+    "tokens_s": 21791.8,
+    "ungated_static_w": 6513.0,
+    "ungated_mJ_per_token": 913.16,
+    "clock_gated_static_w": 6122.2,
+    "clock_gated_mJ_per_token": 895.23,
+    "clock_and_power_gated_static_w": 3066.9,
+    "clock_and_power_gated_mJ_per_token": 755.03
+   },
+   {
+    "design": "V4.1 HBM tier 3 MTP",
+    "point": "batch1",
+    "tokens_s": 5673.0,
+    "ungated_static_w": 6513.0,
+    "ungated_mJ_per_token": 2286.84,
+    "clock_gated_static_w": 5929.2,
+    "clock_gated_mJ_per_token": 2183.93,
+    "clock_and_power_gated_static_w": 4443.9,
+    "clock_and_power_gated_mJ_per_token": 1922.11
+   },
+   {
+    "design": "V4.1 HBM tier 3 MTP",
+    "point": "saturated",
+    "tokens_s": 12122.1,
+    "ungated_static_w": 6513.0,
+    "ungated_mJ_per_token": 1676.05,
+    "clock_gated_static_w": 6248.7,
+    "clock_gated_mJ_per_token": 1654.25,
+    "clock_and_power_gated_static_w": 4080.7,
+    "clock_and_power_gated_mJ_per_token": 1475.41
+   },
+   {
+    "design": "V4.1 ROM AR",
+    "point": "batch1",
+    "tokens_s": 4166.8,
+    "ungated_static_w": 12902.0,
+    "ungated_mJ_per_token": 3137.2,
+    "clock_gated_static_w": 11020.0,
+    "clock_gated_mJ_per_token": 2685.54,
+    "clock_and_power_gated_static_w": 1194.0,
+    "clock_and_power_gated_mJ_per_token": 327.54
+   },
+   {
+    "design": "V4.1 ROM AR",
+    "point": "saturated",
+    "tokens_s": 77021.9,
+    "ungated_static_w": 12902.0,
+    "ungated_mJ_per_token": 208.39,
+    "clock_gated_static_w": 11223.0,
+    "clock_gated_mJ_per_token": 186.6,
+    "clock_and_power_gated_static_w": 4977.0,
+    "clock_and_power_gated_mJ_per_token": 105.5
+   },
+   {
+    "design": "V4.1 ROM MTP m = 1",
+    "point": "batch1",
+    "tokens_s": 6063.0,
+    "ungated_static_w": 12902.0,
+    "ungated_mJ_per_token": 2167.78,
+    "clock_gated_static_w": 11035.0,
+    "clock_gated_mJ_per_token": 1859.99,
+    "clock_and_power_gated_static_w": 1141.0,
+    "clock_and_power_gated_mJ_per_token": 228.07
+   },
+   {
+    "design": "V4.1 ROM MTP m = 1",
+    "point": "saturated",
+    "tokens_s": 50708.4,
+    "ungated_static_w": 12902.0,
+    "ungated_mJ_per_token": 294.29,
+    "clock_gated_static_w": 11237.0,
+    "clock_gated_mJ_per_token": 261.47,
+    "clock_and_power_gated_static_w": 3641.0,
+    "clock_and_power_gated_mJ_per_token": 111.66
+   },
+   {
+    "design": "Qwen 1x B200 AR (tier 2)",
+    "point": "batch1",
+    "tokens_s": 331.0,
+    "ungated_mJ_per_token": 2081.44,
+    "clock_gated_mJ_per_token": 2081.44,
+    "clock_and_power_gated_mJ_per_token": 2081.44,
+    "measured": "1 x 689 W measured decode power"
+   },
+   {
+    "design": "Qwen 1x B200 AR (tier 2)",
+    "point": "saturated",
+    "tokens_s": 7907.0,
+    "ungated_mJ_per_token": 87.14,
+    "clock_gated_mJ_per_token": 87.14,
+    "clock_and_power_gated_mJ_per_token": 87.14,
+    "measured": "1 x 689 W measured decode power"
+   },
+   {
+    "design": "V4.1 8x B200 AR (tier 2)",
+    "point": "batch1",
+    "tokens_s": 277.7,
+    "ungated_mJ_per_token": 19851.78,
+    "clock_gated_mJ_per_token": 19851.78,
+    "clock_and_power_gated_mJ_per_token": 19851.78,
+    "measured": "8 x 689 W measured decode power"
+   },
+   {
+    "design": "V4.1 8x B200 AR (tier 2)",
+    "point": "saturated",
+    "tokens_s": 13018.3,
+    "ungated_mJ_per_token": 423.4,
+    "clock_gated_mJ_per_token": 423.4,
+    "clock_and_power_gated_mJ_per_token": 423.4,
+    "measured": "8 x 689 W measured decode power"
+   }
+  ],
+  "policies": [
+   "ungated",
+   "clock gated (ICG residual 10%)",
+   "clock + power gated (cited residuals, wake only into gaps >= wake + BET)"
+  ],
+  "domains": {
+   "core": {
+    "wake": 1e-06,
+    "bet": 5e-07
+   },
+   "links": {
+    "wake": 5e-06,
+    "bet": 5e-07
+   },
+   "hbm": "ReGate Table 3: 60-cycle wake, 412-cycle BET"
+  },
+  "basis": "per domain: clock and leakage from its area by class (technology.json via the uarch constants), interface power (HBM idle, SerDes / UCIe); busy time and idle gaps from each design's own schedule: the V4.1 HBM chain walked node by node; Qwen dies with their ops' gaps split evenly (181 op boundaries, 36 KV streams, 73 UCIe exchanges); at saturation one contiguous idle gap per pass or token, as the ROM array's rule"
+ },
  "source_sha256": {
-  "tools/uarch_model.py": "ea56edd94d5dea41c1c12e9e5349bbe395b55e03c6458ce744be9badbea3c82e",
+  "tools/uarch_model.py": "7b5f8103333510bf31ca42e8645eca1c5d930afe114090a66ff14ff3a0f3e5de",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",

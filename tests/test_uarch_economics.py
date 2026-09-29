@@ -153,3 +153,34 @@ def test_via_programmable_masks_bound_the_rom_nre():
     assert len(via) == 4
     assert all(r["nre_usd"] < full["nre_usd"] / 5 for r in via)
     assert all(r["usd_per_tokens_s_saturated_base_excluded"] <= r["usd_per_tokens_s_saturated"] for r in via)
+
+
+def test_every_design_is_gated_alike():
+    ga = _lev()["gated_alike"]
+    designs = {r["design"] for r in ga["rows"]}
+    for d in ("Qwen ROM AR (G = 6,144)", "Qwen HBM tier 3 AR", "Qwen HBM tier 3 DFlash", "V4.1 HBM tier 3 AR",
+              "V4.1 HBM tier 3 MTP", "V4.1 ROM AR", "V4.1 ROM MTP m = 1"):
+        assert d in designs
+    summ = {r["design"]: r for r in _rec()["summary"]}
+    for r in ga["rows"]:
+        # gating only ever saves; the ungated column is the economics section's figure
+        assert r["clock_and_power_gated_mJ_per_token"] <= r["clock_gated_mJ_per_token"] + 1e-6 <= r["ungated_mJ_per_token"] + 2e-6
+        s = summ.get(r["design"])
+        if s:
+            ref = s["energy_mJ_b1"] if r["point"] == "batch1" else s["energy_mJ_sat"]
+            assert abs(r["ungated_mJ_per_token"] - ref) < 2.0, r["design"]
+
+
+def test_v41_hbm_timeline_reproduces_the_chain():
+    import uarch_model as U
+    for P, T_us in ((1, 342.5), (U.V41_POSITIONS, 617.5)):
+        segs, _, _ = U.v41_hbm_timeline(P)
+        assert abs(sum(d for d, _ in segs) * 1e6 - T_us) < 0.5
+
+
+def test_gating_never_places_a_wake_in_a_short_gap():
+    import uarch_model as U
+    dm = U._domain(logic=10.0, clock=1e9, **U.CORE_WAKE)
+    short = U.CORE_WAKE["wake"] + U.CORE_WAKE["bet"] - 1e-9
+    # a gap shorter than wake + BET is only clock gated: power gating changes nothing there
+    assert U._domain_energy(dm, 1e-5, 0.0, [short], 2) == U._domain_energy(dm, 1e-5, 0.0, [short], 1)
