@@ -108,6 +108,10 @@ module ot_hdc_v41x_idx_hbm #(
     parameter integer RSP_PS   = 10000,       // PHY + controller, response path (assumed)
     parameter integer REFPB    = 0,           // 1: per-bank refresh (REFpb), one bank every REFI / NB
     parameter integer RFCPB_PS = 200000,      // tRFCpb, JESD238 Table 93 (16 Gb/die), via Ramulator 2 72427a1
+    // Opt-in experimental shared K/W sector reservation. Tag MSB is W.
+    // Clients must occupy disjoint regions; legacy scheduling unchanged at zero.
+    parameter integer SHARE_W_NUM = 0,
+    parameter integer SHARE_DEN = 5,
     parameter integer MEM_MODE = 1,
     parameter         MEMFILE  = ""
 ) (
@@ -128,6 +132,16 @@ module ot_hdc_v41x_idx_hbm #(
     output reg  [NPC*BEATW-1:0] rsp_beat,
     output reg  [NPC*DW-1:0]    rsp_data
 );
+    initial begin
+        if (SHARE_W_NUM < 0 || SHARE_W_NUM >= SHARE_DEN || SHARE_DEN < 2)
+            $fatal(1,"invalid shared service reservation");
+    end
+    integer share_phase [0:NPC-1];
+    integer share_w_services [0:NPC-1];
+    integer share_k_services [0:NPC-1];
+    integer share_both_services [0:NPC-1];
+    reg share_both [0:NPC-1];
+    integer pick_w, pick_k;
     localparam integer LPC = (NPC > 1) ? $clog2(NPC) : 0;
     localparam integer NB = 32;
     localparam integer ROW_SHIFT = 2 + LPC + 5 + 3;
@@ -345,6 +359,7 @@ module ot_hdc_v41x_idx_hbm #(
             cyc <= 0; rsp_v <= 0; wr_done <= 0;
             for (p = 0; p < NPC; p = p + 1) q_free[p] <= 0;
             for (p = 0; p < NPC; p = p + 1) begin
+                share_phase[p]=0; share_w_services[p]=0; share_k_services[p]=0; share_both_services[p]=0; share_both[p]=0;
                 q_rp[p] = 0; q_n[p] = 0; r_rp[p] = 0; r_n[p] = 0; h_sched[p] = 1'b0; h_skip[p] = 0;
                 last_act[p] = -1000000; last_col[p] = -1000000; last_rd[p] = -1; last_wr[p] = -1;
                 last_wr_bg_valid[p] = 1'b0;
@@ -414,6 +429,20 @@ module ot_hdc_v41x_idx_hbm #(
                                             if (est < best) begin best = est; sel = i; end
                                         end
                                     end
+                            if (SHARE_W_NUM != 0) begin
+                                // Reserve at the actual timing owner, per sector, rather
+                                // than counting frontend burst grants as service.
+                                pick_w=-1; pick_k=-1;
+                                for (i=0;i<QD;i=i+1) if (i<q_n[p]) begin
+                                    e=(q_rp[p]+i)%QD;
+                                    if(q_tag[p][e][TAGW-1] && pick_w<0) pick_w=i;
+                                    if(!q_tag[p][e][TAGW-1] && pick_k<0) pick_k=i;
+                                end
+                                share_both[p]=(pick_w>=0 && pick_k>=0);
+                                if(share_phase[p]<SHARE_W_NUM)
+                                    sel=(pick_w>=0)?pick_w:pick_k;
+                                else sel=(pick_k>=0)?pick_k:pick_w;
+                            end
                             if (sel != 0) begin
                                 h_skip[p] = h_skip[p] + 1;
                                 e = (q_rp[p] + sel) % QD;
@@ -437,6 +466,15 @@ module ot_hdc_v41x_idx_hbm #(
                         end
                         if (h_tcol[p] <= now) begin
                             slot = q_rp[p];
+                            if(SHARE_W_NUM != 0) begin
+                                if(share_both[p] &&
+                                   (q_tag[p][slot][TAGW-1] != (share_phase[p]<SHARE_W_NUM)))
+                                    $fatal(1,"shared sector reservation violated");
+                                if(q_tag[p][slot][TAGW-1]) share_w_services[p]=share_w_services[p]+1;
+                                else share_k_services[p]=share_k_services[p]+1;
+                                if(share_both[p]) share_both_services[p]=share_both_services[p]+1;
+                                share_phase[p]=(share_phase[p]+1)%SHARE_DEN;
+                            end
                             if (q_we[p][slot]) begin
                                 for (integer byte_i=0; byte_i<DW/8; byte_i=byte_i+1)
                                     if (q_strb[p][slot][byte_i])
