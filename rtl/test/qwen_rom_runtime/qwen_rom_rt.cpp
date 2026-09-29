@@ -326,6 +326,7 @@ int main(int argc, char** argv) {
             Fabric& f = *fab[d];
             vmw[d].clear(); kvw[d].clear();
             me_en[d] = t.me_clk_en;
+            if (t.wrom_re) fatal("stream-unit weight-ROM read (the simulation core narrows that port)");
             r.prog = t.prog_re;
             if (t.prog_re) {
                 size_t a = (size_t(t.prog_base) + t.prog_addr) & 4095;

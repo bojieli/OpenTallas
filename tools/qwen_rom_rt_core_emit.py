@@ -40,6 +40,14 @@ def emit(text: str) -> str:
 
     text = sub1(r"module ot_hdc_core_vector_weight #\(", "module ot_qwen_rom_core #(", text)
     text = sub1(r"ot_hdc_vstream #\(", "ot_hdc_vstream_rt #(", text)
+    # The stream unit's weight-ROM port serves only the BF16 embedding read, which the O4 die does not use
+    # (INT8 matrices; the embedding row is preloaded).  The simulation copy gives it one ROM word of W
+    # lanes (WR = W) instead of G*W, so the 1,024 lanes do not each elaborate a 98,304-way select; the
+    # host fails closed if the stream unit ever reads the weight ROM (die output wrom_re).
+    text = sub1(r"ot_hdc_vstream_rt #\(\.SW\(SW\), \.LV\(LV\), \.WR\(G \* W\),",
+                "ot_hdc_vstream_rt #(.SW(SW), .LV(LV), .WR(W),", text)
+    text = sub1(r"(\.wrom_re\(su_wrom_re\), \.wrom_addr\(su_wrom_addr\), )\.wrom_q\(wrom_q\),",
+                r"\1.wrom_q(wrom_q[W*16-1:0]),", text)
     text = sub1(r"(    parameter integer EMB_ADDR_BASE = 0)( //[^\n]*)\n\) \(",
                 r"\1,\2\n" + ",\n".join(f"    parameter integer {p} = 0" for p in SPINE_PARAMS) + "\n) (", text)
     for name in REMOVE:

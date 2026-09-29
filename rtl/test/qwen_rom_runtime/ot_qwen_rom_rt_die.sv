@@ -66,6 +66,7 @@ module ot_qwen_rom_rt_die #(
     output wire [7:0]        s_vwaddr,
     output wire [511:0]      s_vwdata,
     // core memories
+    output wire              wrom_re,         // the stream unit's weight-ROM read (must never assert)
     output wire              int8_wrom_re,
     output wire [23:0]       int8_wrom_addr,
     output wire              scale_re,
@@ -131,7 +132,7 @@ module ot_qwen_rom_rt_die #(
         .done(core_done),.next_token(core_ntok_c),.next_val(core_nval),
         .cycles(core_cycles),.fault(core_fault),
         .prog_re(prog_re),.prog_addr(prog_addr),.prog_q(prog_q),
-        .wrom_re(),.wrom_addr(),.wrom_q({(G*W*16){1'b0}}),
+        .wrom_re(wrom_re),.wrom_addr(),.wrom_q({(G*W*16){1'b0}}),
         .int8_wrom_re(int8_wrom_re),.int8_wrom_addr(int8_wrom_addr),
         .scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr),.scale_q(scale_q),
         .embed_code_re(),.embed_code_addr(),.embed_code_q(512'd0),
