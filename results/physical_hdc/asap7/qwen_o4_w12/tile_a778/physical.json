@@ -1,0 +1,226 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-29T19:21:19.735613+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_qwen_rom_tile",
+    "clock_port": "clk",
+    "clock_uncertainty_ns": 0.06,
+    "clock_uncertainty_setup_only": true,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "size_bytes": 10519
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fpu.sv",
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "size_bytes": 5251
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_sfu.sv",
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "size_bytes": 7751
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_matvec.sv",
+        "sha256": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454",
+        "size_bytes": 46015
+      },
+      {
+        "path": "rtl/hdc/ot_qwen_me_array.sv",
+        "sha256": "17ef6b5f40353fc5d35e4402cf428391e3636a3b90e3e8e944bae52e64098388",
+        "size_bytes": 18962
+      },
+      {
+        "path": "rtl/hdc/ot_qwen_rom_tile.sv",
+        "sha256": "37d04eb158322a7a5dfe925891f764d8122362c1ad439968140dde274319488e",
+        "size_bytes": 13302
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+        "sha256": "c23844e60690a83f36e7fb4fc508e91cb4f3354352299a0b13f7eb90e1b41788",
+        "size_bytes": 409
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "sha256": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+        "size_bytes": 661
+      }
+    ],
+    "top": "ot_qwen_rom_tile"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n    32.63%\n---------------------------------------------------------------\n\n[INFO GRT-0101] Running extra iterations to remove congestion.\n[INFO GRT-0102] Start extra iteration 1/30\n[INFO GRT-0102] Start extra iteration 2/30\n[INFO GRT-0102] Start extra iteration 3/30\n[INFO GRT-0102] Start extra iteration 4/30\n[INFO GRT-0102] Start extra iteration 5/30\n[INFO GRT-0102] Start extra iteration 6/30\n[INFO GRT-0102] Start extra iteration 7/30\n[INFO GRT-0102] Start extra iteration 8/30\n[INFO GRT-0102] Start extra iteration 9/30\n[INFO GRT-0102] Start extra iteration 10/30\n[INFO GRT-0102] Start extra iteration 11/30\n[INFO GRT-0102] Start extra iteration 12/30\n[INFO GRT-0102] Start extra iteration 13/30\n[INFO GRT-0102] Start extra iteration 14/30\n[INFO GRT-0102] Start extra iteration 15/30\n[INFO GRT-0102] Start extra iteration 16/30\n[INFO GRT-0102] Start extra iteration 17/30\n[INFO GRT-0102] Start extra iteration 18/30\n[INFO GRT-0102] Start extra iteration 19/30\n[INFO GRT-0102] Start extra iteration 20/30\n[INFO GRT-0102] Start extra iteration 21/30\n[INFO GRT-0102] Start extra iteration 22/30\n[INFO GRT-0102] Start extra iteration 23/30\n[INFO GRT-0102] Start extra iteration 24/30\n[INFO GRT-0102] Start extra iteration 25/30\n[INFO GRT-0102] Start extra iteration 26/30\n[INFO GRT-0102] Start extra iteration 27/30\n[INFO GRT-0102] Start extra iteration 28/30\n[INFO GRT-0102] Start extra iteration 29/30\n[INFO GRT-0102] Start extra iteration 30/30\n[INFO GRT-0197] Via related to pin nodes: 2905751\n[INFO GRT-0198] Via related Steiner nodes: 57988\n[INFO GRT-0199] Via filling finished.\n[INFO GRT-0111] Final number of vias: 3926892\n[INFO GRT-0112] Final usage 3D: 18380128\n\n[INFO GRT-0096] Final congestion report:\nLayer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion\n---------------------------------------------------------------------------------------\nM1                   0             0            0.00%             0 /  0 /  0\nM2             3999994       1662222           41.56%             0 /  0 /  0\nM3             4855843       1880531           38.73%             0 /  0 /  0\nM4             3739256       1063473           28.44%             0 /  0 /  0\nM5             5335648        802580           15.04%             0 /  0 /  0\nM6             4919119        810183           16.47%             1 /  0 /  2\nM7             5541922        380463            6.87%             0 /  0 /  0\n---------------------------------------------------------------------------------------\nTotal         28391782       6599452           23.24%             1 /  0 /  2\n\n[INFO GRT-0018] Total wirelength: 4491556 um\n[INFO GRT-0014] Routed nets: 466683\n[WARNING GRT-0704] Try reduce the layer adjustment from 25% to 12%\n[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.\nwrite_db /work/results/asap7/opentallas_ot_qwen_rom_tile_asap7_w12_tile_a778/base/5_1_grt-failed.odb\nError: global_route.tcl, 175 GRT-0116\n\nElapsed time: 0:12.70[h:]min:sec. CPU time: user 11.79 sys 0.91 (100%). Peak memory: 1189892KB.\nElapsed time: 10:44.93[h:]min:sec. CPU time: user 672.11 sys 45.55 (111%). Peak memory: 1965004KB.\nElapsed time: 4:14.23[h:]min:sec. CPU time: user 367.03 sys 92.61 (180%). Peak memory: 2223168KB.\nElapsed time: 0:03.70[h:]min:sec. CPU time: user 3.12 sys 0.59 (99%). Peak memory: 643444KB.\nElapsed time: 0:13.70[h:]min:sec. CPU time: user 12.73 sys 0.95 (99%). Peak memory: 1175984KB.\nElapsed time: 2:17.54[h:]min:sec. CPU time: user 792.05 sys 2.17 (577%). Peak memory: 1597220KB.\nElapsed time: 0:04.66[h:]min:sec. CPU time: user 3.90 sys 0.76 (100%). Peak memory: 953640KB.\nElapsed time: 23:15.85[h:]min:sec. CPU time: user 4384.71 sys 158.55 (325%). Peak memory: 5569664KB.\nElapsed time: 6:31.89[h:]min:sec. CPU time: user 478.36 sys 59.35 (137%). Peak memory: 2434256KB.\nElapsed time: 8:27.10[h:]min:sec. CPU time: user 589.16 sys 67.74 (129%). Peak memory: 3795340KB.\nElapsed time: 19:21.34[h:]min:sec. CPU time: user 1526.94 sys 158.64 (145%). Peak memory: 4816680KB.\nElapsed time: 35:06.39[h:]min:sec. CPU time: user 7162.85 sys 212.77 (350%). Peak memory: 8077356KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/opentallas_ot_qwen_rom_tile_asap7_w12_tile_a778/base/5_1_grt.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-29T17:01:04.316495+00:00",
+  "git": {
+    "commit": "1d384957c0ca05d63b79453a163e5f8e6c426ba4",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/physical_hdc/asap7/qwen_o4_w12/tile_a778/"
+    ],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_qwen_rom_tile",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_matvec.sv",
+      "--source",
+      "rtl/hdc/ot_qwen_me_array.sv",
+      "--source",
+      "rtl/hdc/ot_qwen_rom_tile.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+      "--source",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "--clock-period-ns",
+      "0.910216",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-setup-only",
+      "--stages",
+      "pnr",
+      "--corner",
+      "TT",
+      "--max-transition-ns",
+      "--max-fanout",
+      "32",
+      "--macro-place-halo",
+      "4.32",
+      "2.16",
+      "--macro-view",
+      "ot_rom_4096x266_m8=physical/asap7_memory_macros/ot_rom_4096x266_m8",
+      "--macro-view",
+      "ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "--nickname-tag",
+      "w12_tile_a778",
+      "--output",
+      "results/physical_hdc/asap7/qwen_o4_w12/tile_a778/physical.json",
+      "--die-area",
+      "0",
+      "0",
+      "777.6",
+      "386.64",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "775.44",
+      "384.48",
+      "--io-delay-fraction",
+      "0.2",
+      "--place-density",
+      "0.6",
+      "--force"
+    ],
+    "driver": {
+      "commit": "1d384957c0ca05d63b79453a163e5f8e6c426ba4",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/claude-1000/wt/w12/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "8888a3fcda7bb1271550e4510d232d3fe17f44cd973a56d574213f97a1e59532",
+      "tree": "/tmp/claude-1000/wt/w12"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/claude-1000/wt/w12"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.910216,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
