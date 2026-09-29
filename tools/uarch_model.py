@@ -630,7 +630,7 @@ DEDICATED = dict(
         q_bits=512 * 16, kv_row_bits=16 * 265, p_word_bits=32 * 16, pv_out_bits_per_tile=16 * 32,
         area_est_um2=16 * 32 * UNIT["mac_bf16_um2"],
         area_basis="ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
-        hardened_record="results/physical_abi3/asap7/hdc/v41x/w11/attn_tile_td32_nb4/physical.json",
+        hardened_record="results/physical_abi3/asap7/hdc/v41x/w11/attn_tile/physical.json",
         hardened_scale=1,
         measured_record="results/rtl/v41_full_attention_numeric/result.json",
         measured_job_cycles_pwords1=609, measured_pv_window_pwords1=(248, 559),
@@ -642,8 +642,8 @@ DEDICATED = dict(
         area_est_light_um2=UNIT["su_light_lane_um2"], area_est_sfu_um2=UNIT["su_lane_um2"],
         area_basis="ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the "
                    "synthesis-only ot_hdc_v41_su_lane",
-        hardened_record_light="results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024/physical.json",
-        hardened_record_sfu="results/physical_abi3/asap7/hdc/v41x/w11/vec_sfu1024/physical.json",
+        hardened_record_light="results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.json",
+        hardened_record_sfu="results/physical_abi3/asap7/hdc/v41x/w11/vec_sfu1024r/physical.json",
         measured_record="results/rtl/v41x_su_softmax.json", measured_softmax_t640_n16_m8=3280,
     ),
 )
