@@ -31,7 +31,10 @@
 //   region    the KV region lies above the index keys and inside the stacks.
 // At the end the HBM KV region is compared with the golden (write-through).
 // ---------------------------------------------------------------------------
-module tb_chip_v41x_kv_prefetch;
+module tb_chip_v41x_kv_prefetch #(
+    parameter bit KARB_LOCAL = 1'b0,   // 1: ot_chip_v41x_hbm_karb_local (opt-in local K partition)
+    parameter bit KARB_FENCE = 1'b1
+);
     localparam integer G = 4, W = 16, SW = 8, SUN = 16, AW = 24, HAW = 28, NPC = 32;
     localparam integer STG = 1024, SAW = 10;
     localparam integer KEY_SECTORS = 1 << 18;          // index-key region [0, KEY_SECTORS)
@@ -92,6 +95,21 @@ module tb_chip_v41x_kv_prefetch;
         wire [NPC*HAW-1:0] h_addr; wire [NPC*4-1:0] h_len, r_beat; wire [NPC*(TAGW+1)-1:0] h_tag, r_tag;
         wire [NPC*256-1:0] h_wdata, r_data; wire [NPC*32-1:0] h_wstrb;
         wire [31:0] kg, bg, ct;
+        if (KARB_LOCAL) begin : g_local
+        ot_chip_v41x_hbm_karb_local #(.NPC(NPC), .AW(HAW), .TAGW(TAGW), .K_RD_FENCE(KARB_FENCE)) u_arb (
+            .clk(clk), .rst_n(rst_n),
+            .b_v(b_v), .b_rdy(b_rdy), .b_addr(b_addr), .b_len(b_len), .b_tag(b_tag), .b_we(b_we), .b_wdata(b_wdata),
+            .b_wstrb(b_wstrb), .b_wr_done(b_wr_done), .b_rsp_v(b_rsp_v), .b_rsp_rdy({NPC{1'b1}}),
+            .b_rsp_tag(b_rsp_tag), .b_rsp_beat(b_rsp_beat), .b_rsp_data(b_rsp_data),
+            .k_v(m_v[s]), .k_rdy(m_rdy[s]), .k_addr(m_addr[s*HAW +: HAW]), .k_len(m_len[s*4 +: 4]),
+            .k_tag(m_tag[s*TAGW +: TAGW]), .k_we(m_we[s]), .k_wdata(m_wdata[s*256 +: 256]),
+            .k_wstrb(m_wstrb[s*32 +: 32]), .k_wr_done(kwd[s]),
+            .k_rsp_v(a_v[s]), .k_rsp_rdy(s_rdy[s] && !hold_rsp[s]), .k_rsp_tag(s_tag[s*TAGW +: TAGW]),
+            .k_rsp_beat(s_beat[s*4 +: 4]), .k_rsp_data(s_data[s*256 +: 256]),
+            .h_v(h_v), .h_rdy(h_rdy), .h_addr(h_addr), .h_len(h_len), .h_tag(h_tag), .h_we(h_we), .h_wdata(h_wdata),
+            .h_wstrb(h_wstrb), .h_wr_done(h_wr_done), .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag), .r_beat(r_beat),
+            .r_data(r_data), .k_grants(kg), .b_grants(bg), .contended(ct));
+        end else begin : g_mono
         ot_chip_v41x_hbm_karb #(.NPC(NPC), .AW(HAW), .TAGW(TAGW)) u_arb (
             .clk(clk), .rst_n(rst_n),
             .b_v(b_v), .b_rdy(b_rdy), .b_addr(b_addr), .b_len(b_len), .b_tag(b_tag), .b_we(b_we), .b_wdata(b_wdata),
@@ -105,6 +123,8 @@ module tb_chip_v41x_kv_prefetch;
             .h_v(h_v), .h_rdy(h_rdy), .h_addr(h_addr), .h_len(h_len), .h_tag(h_tag), .h_we(h_we), .h_wdata(h_wdata),
             .h_wstrb(h_wstrb), .h_wr_done(h_wr_done), .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag), .r_beat(r_beat),
             .r_data(r_data), .k_grants(kg), .b_grants(bg), .contended(ct));
+        end
+
         ot_chip_v41x_hbm3e_phy #(.NPC(NPC), .K_MEM(K_MEM), .W_PORT(0), .KTAGW(TAGW + 1)) u_hbm (
             .clk(clk), .rst_n(rst_n),
             .k_v(h_v), .k_rdy(h_rdy), .k_addr(h_addr), .k_len(h_len), .k_tag(h_tag), .k_we(h_we),
