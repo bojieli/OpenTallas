@@ -95,8 +95,25 @@ def sm_tile(design):
                 footprint_mm2=round(w * h / 1e6, 3), model_mm2=a["total_mm2"])
 
 
+SM_MACRO = {"qwen": "ot_gpu_sm_q", "v41": "ot_gpu_sm_v"}
+
+
+def sm_abstract(model):
+    """The hardened SM element's LEF abstract (tools/chip_assembly/harden.py), if it exists: (name, w, h)."""
+    name = SM_MACRO[model]
+    lef = ROOT / f"results/physical_abi3/asap7/chip/abstracts/{name}/{name}.lef"
+    if not lef.is_file():
+        return None
+    import re
+    m = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", lef.read_text())
+    return (name, float(m.group(1)), float(m.group(2)), str(lef.relative_to(ROOT)))
+
+
 def place_sm(p, name, x, y, tile):
     p.region(name, "sm", x, y, tile["w"], tile["h"])
+    if tile.get("abstract"):
+        p.macro(name, tile["abstract"], snap(x, QF.SNAP_X), snap(y, QF.SNAP_Y), "R0", name)
+        return
     for i, (macro, dx, dy) in enumerate(tile["macros"]):
         p.macro(f"{name}_sram{i}", macro, snap(x + dx + QF.HALO_X, QF.SNAP_X),
                 snap(y + tile["logic_h"] + dy + QF.HALO_Y, QF.SNAP_Y), "R0", name)
@@ -121,6 +138,14 @@ def build(model):
     d = U.hbm_gpu_design(model)
     clock = d["clock_hz"]
     tile = sm_tile(d)
+    ab = sm_abstract(model)
+    if ab:
+        # the hardened SM element replaces the model-sized tile: placed as its macro, at its abstract's size
+        name, aw, ah, lef = ab
+        QF.MV[name] = (aw, ah)
+        tile = dict(w=snap(aw + 2 * QF.HALO_X, QF.SNAP_X), h=snap(ah + 2 * QF.HALO_Y, QF.SNAP_Y), abstract=name,
+                    abstract_lef=lef, abstract_um=[aw, ah], footprint_mm2=round(aw * ah / 1e6, 3),
+                    model_mm2=d["sm_area"]["total_mm2"], sram=0, macros=[], logic_h=0.0)
     p = QF.Plan(f"{model}_hbm_gpu_die")
     p.region("die", "die", 0, 0, DIE_W, DIE_H)
     QF.MV.setdefault("ot_hbm3e_phy", (12000.096, 833.49))
