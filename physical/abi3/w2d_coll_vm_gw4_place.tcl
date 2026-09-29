@@ -37,7 +37,8 @@ set n 0
 foreach inst [$block getInsts] {
     set name [$inst getName]
     if {![string match *u_sram $name]} { continue }
-    if {![regexp {g_bank\[(\d+)\].*g_group\[(\d+)\].*g_col\[(\d+)\]} $name -> b g c]} {
+    set clean [string map [list "\\" ""] $name]
+    if {![regexp {g_bank\[(\d+)\].*g_group\[(\d+)\].*g_col\[(\d+)\]} $clean -> b g c]} {
         error "unexpected macro name $name"
     }
     if {$g != 0} { error "hook supports DEPTH_GROUPS=1 only ($name)" }
