@@ -1,0 +1,1090 @@
+{
+ "schema": "opentallas.uarch.economics_levers.v1",
+ "static_power": {
+  "policies": [
+   "ungated",
+   "stage clock gating",
+   "+ region clock gating",
+   "+ stage power gating (retention)"
+  ],
+  "constants": {
+   "logic_residual": 0.03,
+   "sram_sleep_residual": 0.25,
+   "sram_off_residual": 0.002,
+   "rom_residual": 0.03,
+   "hbm_if_residual": 0.03,
+   "serdes_lpi_residual": 0.1,
+   "cg_residual": 0.1,
+   "stage_wake_s": 1e-06,
+   "stage_wake_s_c6": 0.000133,
+   "stage_bet_s": 5e-07,
+   "hbm_wake_cycles": 60,
+   "serdes_wake_s": 5e-06
+  },
+  "die_static_w": {
+   "field": {
+    "clock": 13.078,
+    "leak_logic": 11.776,
+    "leak_rom": 1.387
+   },
+   "hub": {
+    "clock": 4.974,
+    "leak_logic": 5.656,
+    "leak_sram": 0.001
+   },
+   "hbm_if": 11.2,
+   "serdes": 30.576,
+   "ucie": 2.52
+  },
+  "basis": "per layer die: the area ledger's clock and leakage by region (ROM field = strip logic + ROM macros; hub = dedicated units + VM ports), HBM interface idle, always-on SerDes and UCIe from results/arch/v41_rack.json; head dies at the rack's static scaled by the layer-die policy ratio; Engram table dies at the rack's leakage, gated outside their gathers; dynamic energy unchanged from the economics section",
+  "ar": {
+   "period_batch1_us": 262.55,
+   "period_saturated_us": 12.983,
+   "dynamic_mJ_per_token": 40.885,
+   "window_us": {
+    "0": 10.74,
+    "1": 12.03,
+    "2": 10.63,
+    "3": 5.5,
+    "4": 10.63,
+    "5": 12.03,
+    "6": 5.13,
+    "7": 11.0,
+    "8": 5.13,
+    "9": 17.96,
+    "10": 5.13,
+    "11": 11.0,
+    "12": 5.13,
+    "13": 5.5,
+    "14": 21.99,
+    "15": 5.13,
+    "16": 13.15,
+    "17": 5.13,
+    "18": 11.0,
+    "19": 7.27,
+    "20": 5.5,
+    "21": 10.63,
+    "22": 7.65,
+    "23": 10.63,
+    "24": 5.5,
+    "25": 12.77,
+    "26": 5.5,
+    "27": 5.5,
+    "28": 7.66
+   },
+   "start_us": {
+    "0": 0.04,
+    "1": 10.78,
+    "2": 22.81,
+    "3": 33.44,
+    "4": 38.94,
+    "5": 49.57,
+    "6": 61.61,
+    "7": 66.74,
+    "8": 77.74,
+    "9": 82.87,
+    "10": 100.82,
+    "11": 105.95,
+    "12": 116.95,
+    "13": 122.08,
+    "14": 127.58,
+    "15": 149.57,
+    "16": 154.7,
+    "17": 167.84,
+    "18": 172.97,
+    "19": 183.97,
+    "20": 191.25,
+    "21": 196.75,
+    "22": 207.38,
+    "23": 215.02,
+    "24": 225.65,
+    "25": 231.15,
+    "26": 243.93,
+    "27": 249.43,
+    "28": 0.0
+   },
+   "wake_1us": {
+    "batch1": [
+     {
+      "policy": "ungated",
+      "static_mJ_per_token": 3387.31,
+      "energy_mJ_per_token": 3428.19,
+      "static_w": 12902.0,
+      "stages_power_gated": 0,
+      "tokens_s": 3808.8
+     },
+     {
+      "policy": "stage clock gating",
+      "static_mJ_per_token": 2907.28,
+      "energy_mJ_per_token": 2948.16,
+      "static_w": 11073.0,
+      "stages_power_gated": 0,
+      "tokens_s": 3808.8
+     },
+     {
+      "policy": "+ region clock gating",
+      "static_mJ_per_token": 2892.94,
+      "energy_mJ_per_token": 2933.83,
+      "static_w": 11019.0,
+      "stages_power_gated": 0,
+      "tokens_s": 3808.8
+     },
+     {
+      "policy": "+ stage power gating (retention)",
+      "static_mJ_per_token": 310.65,
+      "energy_mJ_per_token": 351.54,
+      "static_w": 1183.0,
+      "stages_power_gated": 29,
+      "tokens_s": 3808.8
+     }
+    ],
+    "saturated": [
+     {
+      "policy": "ungated",
+      "static_mJ_per_token": 167.51,
+      "energy_mJ_per_token": 208.39,
+      "static_w": 12902.0,
+      "stages_power_gated": 0,
+      "tokens_s": 77021.9
+     },
+     {
+      "policy": "stage clock gating",
+      "static_mJ_per_token": 149.26,
+      "energy_mJ_per_token": 190.14,
+      "static_w": 11496.0,
+      "stages_power_gated": 0,
+      "tokens_s": 77021.9
+     },
+     {
+      "policy": "+ region clock gating",
+      "static_mJ_per_token": 145.71,
+      "energy_mJ_per_token": 186.6,
+      "static_w": 11223.0,
+      "stages_power_gated": 0,
+      "tokens_s": 77021.9
+     },
+     {
+      "policy": "+ stage power gating (retention)",
+      "static_mJ_per_token": 64.61,
+      "energy_mJ_per_token": 105.5,
+      "static_w": 4977.0,
+      "stages_power_gated": 28,
+      "tokens_s": 77021.9
+     }
+    ],
+    "wake_on_token_path_us": 0.0,
+    "min_idle_batch1_us": 240.56,
+    "serdes_prewake_fits": true
+   },
+   "wake_c6_133us": {
+    "batch1": [
+     {
+      "policy": "ungated",
+      "static_mJ_per_token": 3387.31,
+      "energy_mJ_per_token": 3428.19,
+      "static_w": 12902.0,
+      "stages_power_gated": 0,
+      "tokens_s": 3808.8
+     },
+     {
+      "policy": "stage clock gating",
+      "static_mJ_per_token": 2907.28,
+      "energy_mJ_per_token": 2948.16,
+      "static_w": 11073.0,
+      "stages_power_gated": 0,
+      "tokens_s": 3808.8
+     },
+     {
+      "policy": "+ region clock gating",
+      "static_mJ_per_token": 2892.94,
+      "energy_mJ_per_token": 2933.83,
+      "static_w": 11019.0,
+      "stages_power_gated": 0,
+      "tokens_s": 3808.8
+     },
+     {
+      "policy": "+ stage power gating (retention)",
+      "static_mJ_per_token": 1197.09,
+      "energy_mJ_per_token": 1237.97,
+      "static_w": 4559.0,
+      "stages_power_gated": 29,
+      "tokens_s": 3808.8
+     }
+    ],
+    "saturated": [
+     {
+      "policy": "ungated",
+      "static_mJ_per_token": 167.51,
+      "energy_mJ_per_token": 208.39,
+      "static_w": 12902.0,
+      "stages_power_gated": 0,
+      "tokens_s": 77021.9
+     },
+     {
+      "policy": "stage clock gating",
+      "static_mJ_per_token": 149.26,
+      "energy_mJ_per_token": 190.14,
+      "static_w": 11496.0,
+      "stages_power_gated": 0,
+      "tokens_s": 77021.9
+     },
+     {
+      "policy": "+ region clock gating",
+      "static_mJ_per_token": 145.71,
+      "energy_mJ_per_token": 186.6,
+      "static_w": 11223.0,
+      "stages_power_gated": 0,
+      "tokens_s": 77021.9
+     },
+     {
+      "policy": "+ stage power gating (retention)",
+      "static_mJ_per_token": 145.71,
+      "energy_mJ_per_token": 186.6,
+      "static_w": 11223.0,
+      "stages_power_gated": 0,
+      "tokens_s": 77021.9
+     }
+    ],
+    "wake_on_token_path_us": 0.0,
+    "min_idle_batch1_us": 240.56,
+    "serdes_prewake_fits": true
+   }
+  },
+  "mtp_m1": {
+   "period_batch1_us": 623.06,
+   "period_saturated_us": 71.96,
+   "dynamic_mJ_per_token": 39.866,
+   "window_us": {
+    "0": 19.35,
+    "1": 37.25,
+    "2": 21.36,
+    "3": 10.86,
+    "4": 21.36,
+    "5": 37.25,
+    "6": 10.5,
+    "7": 21.72,
+    "8": 10.5,
+    "9": 48.76,
+    "10": 10.5,
+    "11": 21.72,
+    "12": 10.5,
+    "13": 10.86,
+    "14": 71.88,
+    "15": 10.5,
+    "16": 25.01,
+    "17": 10.5,
+    "18": 21.72,
+    "19": 13.79,
+    "20": 10.86,
+    "21": 21.36,
+    "22": 14.15,
+    "23": 21.36,
+    "24": 10.86,
+    "25": 24.66,
+    "26": 10.86,
+    "27": 10.86,
+    "28": 52.13
+   },
+   "start_us": {
+    "0": 0.04,
+    "1": 19.39,
+    "2": 56.64,
+    "3": 78.0,
+    "4": 88.86,
+    "5": 110.23,
+    "6": 147.48,
+    "7": 157.98,
+    "8": 179.71,
+    "9": 190.21,
+    "10": 238.97,
+    "11": 249.47,
+    "12": 271.19,
+    "13": 281.7,
+    "14": 292.56,
+    "15": 364.44,
+    "16": 374.94,
+    "17": 399.96,
+    "18": 410.46,
+    "19": 432.18,
+    "20": 445.98,
+    "21": 456.84,
+    "22": 478.2,
+    "23": 492.36,
+    "24": 513.72,
+    "25": 524.58,
+    "26": 549.24,
+    "27": 560.1,
+    "28": 0.0
+   },
+   "wake_1us": {
+    "batch1": [
+     {
+      "policy": "ungated",
+      "static_mJ_per_token": 2202.93,
+      "energy_mJ_per_token": 2242.79,
+      "static_w": 12902.0,
+      "stages_power_gated": 0,
+      "tokens_s": 5856.6
+     },
+     {
+      "policy": "stage clock gating",
+      "static_mJ_per_token": 1890.83,
+      "energy_mJ_per_token": 1930.69,
+      "static_w": 11074.0,
+      "stages_power_gated": 0,
+      "tokens_s": 5856.6
+     },
+     {
+      "policy": "+ region clock gating",
+      "static_mJ_per_token": 1884.12,
+      "energy_mJ_per_token": 1923.99,
+      "static_w": 11035.0,
+      "stages_power_gated": 0,
+      "tokens_s": 5856.6
+     },
+     {
+      "policy": "+ stage power gating (retention)",
+      "static_mJ_per_token": 194.4,
+      "energy_mJ_per_token": 234.27,
+      "static_w": 1139.0,
+      "stages_power_gated": 29,
+      "tokens_s": 5856.6
+     }
+    ],
+    "saturated": [
+     {
+      "policy": "ungated",
+      "static_mJ_per_token": 254.43,
+      "energy_mJ_per_token": 294.29,
+      "static_w": 12902.0,
+      "stages_power_gated": 0,
+      "tokens_s": 50708.4
+     },
+     {
+      "policy": "stage clock gating",
+      "static_mJ_per_token": 227.63,
+      "energy_mJ_per_token": 267.5,
+      "static_w": 11543.0,
+      "stages_power_gated": 0,
+      "tokens_s": 50708.4
+     },
+     {
+      "policy": "+ region clock gating",
+      "static_mJ_per_token": 221.6,
+      "energy_mJ_per_token": 261.47,
+      "static_w": 11237.0,
+      "stages_power_gated": 0,
+      "tokens_s": 50708.4
+     },
+     {
+      "policy": "+ stage power gating (retention)",
+      "static_mJ_per_token": 71.92,
+      "energy_mJ_per_token": 111.79,
+      "static_w": 3647.0,
+      "stages_power_gated": 28,
+      "tokens_s": 50708.4
+     }
+    ],
+    "wake_on_token_path_us": 0.0,
+    "min_idle_batch1_us": 551.18,
+    "serdes_prewake_fits": true
+   },
+   "wake_c6_133us": {
+    "batch1": [
+     {
+      "policy": "ungated",
+      "static_mJ_per_token": 2202.93,
+      "energy_mJ_per_token": 2242.79,
+      "static_w": 12902.0,
+      "stages_power_gated": 0,
+      "tokens_s": 5856.6
+     },
+     {
+      "policy": "stage clock gating",
+      "static_mJ_per_token": 1890.83,
+      "energy_mJ_per_token": 1930.69,
+      "static_w": 11074.0,
+      "stages_power_gated": 0,
+      "tokens_s": 5856.6
+     },
+     {
+      "policy": "+ region clock gating",
+      "static_mJ_per_token": 1884.12,
+      "energy_mJ_per_token": 1923.99,
+      "static_w": 11035.0,
+      "stages_power_gated": 0,
+      "tokens_s": 5856.6
+     },
+     {
+      "policy": "+ stage power gating (retention)",
+      "static_mJ_per_token": 437.33,
+      "energy_mJ_per_token": 477.19,
+      "static_w": 2561.0,
+      "stages_power_gated": 29,
+      "tokens_s": 5856.6
+     }
+    ],
+    "saturated": [
+     {
+      "policy": "ungated",
+      "static_mJ_per_token": 254.43,
+      "energy_mJ_per_token": 294.29,
+      "static_w": 12902.0,
+      "stages_power_gated": 0,
+      "tokens_s": 50708.4
+     },
+     {
+      "policy": "stage clock gating",
+      "static_mJ_per_token": 227.63,
+      "energy_mJ_per_token": 267.5,
+      "static_w": 11543.0,
+      "stages_power_gated": 0,
+      "tokens_s": 50708.4
+     },
+     {
+      "policy": "+ region clock gating",
+      "static_mJ_per_token": 221.6,
+      "energy_mJ_per_token": 261.47,
+      "static_w": 11237.0,
+      "stages_power_gated": 0,
+      "tokens_s": 50708.4
+     },
+     {
+      "policy": "+ stage power gating (retention)",
+      "static_mJ_per_token": 221.6,
+      "energy_mJ_per_token": 261.47,
+      "static_w": 11237.0,
+      "stages_power_gated": 0,
+      "tokens_s": 50708.4
+     }
+    ],
+    "wake_on_token_path_us": 0.0,
+    "min_idle_batch1_us": 551.18,
+    "serdes_prewake_fits": true
+   }
+  }
+ },
+ "adaptive_mtp": {
+  "v41_rom": {
+   "rows": [
+    {
+     "batch": 1,
+     "mode": "MTP",
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 5856.5,
+     "per_user_ms_per_token": 0.1707,
+     "energy_mJ_per_token": 2243.349,
+     "ar_aggregate_tokens_s": 3808.8,
+     "mtp_aggregate_tokens_s": 5856.5
+    },
+    {
+     "batch": 2,
+     "mode": "MTP",
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 11713.1,
+     "per_user_ms_per_token": 0.1707,
+     "energy_mJ_per_token": 1141.608,
+     "ar_aggregate_tokens_s": 7617.6,
+     "mtp_aggregate_tokens_s": 11713.1
+    },
+    {
+     "batch": 4,
+     "mode": "MTP",
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 23426.2,
+     "per_user_ms_per_token": 0.1707,
+     "energy_mJ_per_token": 590.737,
+     "ar_aggregate_tokens_s": 15235.3,
+     "mtp_aggregate_tokens_s": 23426.2
+    },
+    {
+     "batch": 8,
+     "mode": "MTP",
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 46852.4,
+     "per_user_ms_per_token": 0.1707,
+     "energy_mJ_per_token": 315.302,
+     "ar_aggregate_tokens_s": 30470.5,
+     "mtp_aggregate_tokens_s": 46852.4
+    },
+    {
+     "batch": 16,
+     "mode": "AR",
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 60941.1,
+     "per_user_ms_per_token": 0.2625,
+     "energy_mJ_per_token": 252.643,
+     "ar_aggregate_tokens_s": 60941.1,
+     "mtp_aggregate_tokens_s": 50708.4
+    },
+    {
+     "batch": 32,
+     "mode": "AR",
+     "per_user_tokens_s": 2406.9,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 0.4155,
+     "energy_mJ_per_token": 208.432,
+     "ar_aggregate_tokens_s": 77021.9,
+     "mtp_aggregate_tokens_s": 50708.4
+    },
+    {
+     "batch": 64,
+     "mode": "AR",
+     "per_user_tokens_s": 1203.5,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 0.8309,
+     "energy_mJ_per_token": 208.432,
+     "ar_aggregate_tokens_s": 77021.9,
+     "mtp_aggregate_tokens_s": 50708.4
+    },
+    {
+     "batch": 128,
+     "mode": "AR",
+     "per_user_tokens_s": 601.7,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 1.6619,
+     "energy_mJ_per_token": 208.432,
+     "ar_aggregate_tokens_s": 77021.9,
+     "mtp_aggregate_tokens_s": 50708.4
+    },
+    {
+     "batch": 256,
+     "mode": "AR",
+     "per_user_tokens_s": 300.9,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 3.3237,
+     "energy_mJ_per_token": 208.432,
+     "ar_aggregate_tokens_s": 77021.9,
+     "mtp_aggregate_tokens_s": 50708.4
+    },
+    {
+     "batch": 512,
+     "mode": "AR",
+     "per_user_tokens_s": 150.4,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 6.6475,
+     "energy_mJ_per_token": 208.432,
+     "ar_aggregate_tokens_s": 77021.9,
+     "mtp_aggregate_tokens_s": 50708.4
+    },
+    {
+     "batch": 866,
+     "mode": "AR",
+     "per_user_tokens_s": 88.9,
+     "aggregate_tokens_s": 77021.9,
+     "per_user_ms_per_token": 11.2436,
+     "energy_mJ_per_token": 208.432,
+     "ar_aggregate_tokens_s": 77021.9,
+     "mtp_aggregate_tokens_s": 50708.4
+    }
+   ],
+   "switch_users": 13.31,
+   "switch_bracket": [
+    8,
+    16
+   ],
+   "rule": "MTP while batch < switch_users, AR at and above it",
+   "ar_b1": 3808.8,
+   "mtp_b1": 5856.5,
+   "ar_saturated": 77021.9,
+   "mtp_saturated": 50708.4
+  },
+  "v41_hbm": {
+   "rows": [
+    {
+     "batch": 1,
+     "mode": "MTP",
+     "per_user_tokens_s": 5673.0,
+     "aggregate_tokens_s": 5673.0,
+     "per_user_ms_per_token": 0.1763,
+     "energy_mJ_per_token": 2286.842,
+     "ar_aggregate_tokens_s": 2919.8,
+     "mtp_aggregate_tokens_s": 5673.0
+    },
+    {
+     "batch": 2,
+     "mode": "MTP",
+     "per_user_tokens_s": 5673.0,
+     "aggregate_tokens_s": 11346.0,
+     "per_user_ms_per_token": 0.1763,
+     "energy_mJ_per_token": 1712.81,
+     "ar_aggregate_tokens_s": 5031.5,
+     "mtp_aggregate_tokens_s": 11346.0
+    },
+    {
+     "batch": 4,
+     "mode": "MTP",
+     "per_user_tokens_s": 3030.5,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 0.33,
+     "energy_mJ_per_token": 1676.057,
+     "ar_aggregate_tokens_s": 7881.5,
+     "mtp_aggregate_tokens_s": 12122.1
+    },
+    {
+     "batch": 8,
+     "mode": "MTP",
+     "per_user_tokens_s": 1515.3,
+     "aggregate_tokens_s": 12122.1,
+     "per_user_ms_per_token": 0.6599,
+     "energy_mJ_per_token": 1676.057,
+     "ar_aggregate_tokens_s": 10995.7,
+     "mtp_aggregate_tokens_s": 12122.1
+    },
+    {
+     "batch": 16,
+     "mode": "AR",
+     "per_user_tokens_s": 1362.0,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 0.7342,
+     "energy_mJ_per_token": 913.166,
+     "ar_aggregate_tokens_s": 21791.8,
+     "mtp_aggregate_tokens_s": 12122.1
+    },
+    {
+     "batch": 32,
+     "mode": "AR",
+     "per_user_tokens_s": 681.0,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 1.4684,
+     "energy_mJ_per_token": 913.166,
+     "ar_aggregate_tokens_s": 21791.8,
+     "mtp_aggregate_tokens_s": 12122.1
+    },
+    {
+     "batch": 64,
+     "mode": "AR",
+     "per_user_tokens_s": 340.5,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 2.9369,
+     "energy_mJ_per_token": 913.166,
+     "ar_aggregate_tokens_s": 21791.8,
+     "mtp_aggregate_tokens_s": 12122.1
+    },
+    {
+     "batch": 128,
+     "mode": "AR",
+     "per_user_tokens_s": 170.2,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 5.8738,
+     "energy_mJ_per_token": 913.166,
+     "ar_aggregate_tokens_s": 21791.8,
+     "mtp_aggregate_tokens_s": 12122.1
+    },
+    {
+     "batch": 256,
+     "mode": "AR",
+     "per_user_tokens_s": 85.1,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 11.7476,
+     "energy_mJ_per_token": 913.166,
+     "ar_aggregate_tokens_s": 21791.8,
+     "mtp_aggregate_tokens_s": 12122.1
+    },
+    {
+     "batch": 512,
+     "mode": "AR",
+     "per_user_tokens_s": 42.6,
+     "aggregate_tokens_s": 21791.8,
+     "per_user_ms_per_token": 23.4951,
+     "energy_mJ_per_token": 913.166,
+     "ar_aggregate_tokens_s": 21791.8,
+     "mtp_aggregate_tokens_s": 12122.1
+    },
+    {
+     "batch": 811,
+     "mode": "AR",
+     "per_user_tokens_s": 26.7,
+     "aggregate_tokens_s": 21658.2,
+     "per_user_ms_per_token": 37.4453,
+     "energy_mJ_per_token": 918.632,
+     "ar_aggregate_tokens_s": 21658.2,
+     "mtp_aggregate_tokens_s": 12122.1
+    }
+   ],
+   "switch_users": null,
+   "switch_bracket": [
+    8,
+    16
+   ],
+   "rule": "MTP while batch < switch_users, AR at and above it",
+   "ar_b1": 2919.8,
+   "mtp_b1": 5673.0,
+   "ar_saturated": 21791.8,
+   "mtp_saturated": 12122.1
+  }
+ },
+ "rom_masks": {
+  "rows": [
+   {
+    "design": "V4.1 ROM array (AR / MTP m = 1)",
+    "case": "full mask set per die (economics high)",
+    "nre_usd": 2820000000.0,
+    "nre_per_system_usd": 2820000,
+    "capex_per_system_usd": 5170000,
+    "usd_per_tokens_s_b1": 882.78,
+    "usd_per_tokens_s_saturated": 67.12,
+    "usd_per_tokens_s_saturated_base_excluded": null
+   },
+   {
+    "design": "V4.1 ROM array (AR / MTP m = 1)",
+    "case": "10% of a set per die (economics low)",
+    "nre_usd": 282000000.0,
+    "nre_per_system_usd": 282000,
+    "capex_per_system_usd": 2632000,
+    "usd_per_tokens_s_b1": 449.42,
+    "usd_per_tokens_s_saturated": 34.17,
+    "usd_per_tokens_s_saturated_base_excluded": null
+   },
+   {
+    "design": "V4.1 ROM array (AR / MTP m = 1)",
+    "case": "via-programmable: 1 coding mask(s) x $0.5M per die + shared bases",
+    "nre_usd": 139000000.0,
+    "nre_per_system_usd": 139000,
+    "capex_per_system_usd": 2489000,
+    "usd_per_tokens_s_b1": 425.0,
+    "usd_per_tokens_s_saturated": 32.32,
+    "usd_per_tokens_s_saturated_base_excluded": 31.73
+   },
+   {
+    "design": "V4.1 ROM array (AR / MTP m = 1)",
+    "case": "via-programmable: 1 coding mask(s) x $1.0M per die + shared bases",
+    "nre_usd": 233000000.0,
+    "nre_per_system_usd": 233000,
+    "capex_per_system_usd": 2583000,
+    "usd_per_tokens_s_b1": 441.05,
+    "usd_per_tokens_s_saturated": 33.54,
+    "usd_per_tokens_s_saturated_base_excluded": 32.95
+   },
+   {
+    "design": "V4.1 ROM array (AR / MTP m = 1)",
+    "case": "via-programmable: 2 coding mask(s) x $0.5M per die + shared bases",
+    "nre_usd": 233000000.0,
+    "nre_per_system_usd": 233000,
+    "capex_per_system_usd": 2583000,
+    "usd_per_tokens_s_b1": 441.05,
+    "usd_per_tokens_s_saturated": 33.54,
+    "usd_per_tokens_s_saturated_base_excluded": 32.95
+   },
+   {
+    "design": "V4.1 ROM array (AR / MTP m = 1)",
+    "case": "via-programmable: 2 coding mask(s) x $1.0M per die + shared bases",
+    "nre_usd": 421000000.0,
+    "nre_per_system_usd": 421000,
+    "capex_per_system_usd": 2771000,
+    "usd_per_tokens_s_b1": 473.15,
+    "usd_per_tokens_s_saturated": 35.98,
+    "usd_per_tokens_s_saturated_base_excluded": 35.39
+   },
+   {
+    "design": "Qwen ROM (AR, G = 6,144)",
+    "case": "full mask set per die (economics high)",
+    "nre_usd": 30000000.0,
+    "nre_per_system_usd": 30000,
+    "capex_per_system_usd": 55000,
+    "usd_per_tokens_s_b1": 5.58,
+    "usd_per_tokens_s_saturated": 4.61,
+    "usd_per_tokens_s_saturated_base_excluded": null
+   },
+   {
+    "design": "Qwen ROM (AR, G = 6,144)",
+    "case": "10% of a set per die (economics low)",
+    "nre_usd": 3000000.0,
+    "nre_per_system_usd": 3000,
+    "capex_per_system_usd": 28000,
+    "usd_per_tokens_s_b1": 2.84,
+    "usd_per_tokens_s_saturated": 2.35,
+    "usd_per_tokens_s_saturated_base_excluded": null
+   },
+   {
+    "design": "Qwen ROM (AR, G = 6,144)",
+    "case": "via-programmable: 1 coding mask(s) x $0.5M per die + shared bases",
+    "nre_usd": 16000000.0,
+    "nre_per_system_usd": 16000,
+    "capex_per_system_usd": 41000,
+    "usd_per_tokens_s_b1": 4.16,
+    "usd_per_tokens_s_saturated": 3.44,
+    "usd_per_tokens_s_saturated_base_excluded": 2.18
+   },
+   {
+    "design": "Qwen ROM (AR, G = 6,144)",
+    "case": "via-programmable: 1 coding mask(s) x $1.0M per die + shared bases",
+    "nre_usd": 17000000.0,
+    "nre_per_system_usd": 17000,
+    "capex_per_system_usd": 42000,
+    "usd_per_tokens_s_b1": 4.26,
+    "usd_per_tokens_s_saturated": 3.52,
+    "usd_per_tokens_s_saturated_base_excluded": 2.26
+   },
+   {
+    "design": "Qwen ROM (AR, G = 6,144)",
+    "case": "via-programmable: 2 coding mask(s) x $0.5M per die + shared bases",
+    "nre_usd": 17000000.0,
+    "nre_per_system_usd": 17000,
+    "capex_per_system_usd": 42000,
+    "usd_per_tokens_s_b1": 4.26,
+    "usd_per_tokens_s_saturated": 3.52,
+    "usd_per_tokens_s_saturated_base_excluded": 2.26
+   },
+   {
+    "design": "Qwen ROM (AR, G = 6,144)",
+    "case": "via-programmable: 2 coding mask(s) x $1.0M per die + shared bases",
+    "nre_usd": 19000000.0,
+    "nre_per_system_usd": 19000,
+    "capex_per_system_usd": 44000,
+    "usd_per_tokens_s_b1": 4.47,
+    "usd_per_tokens_s_saturated": 3.69,
+    "usd_per_tokens_s_saturated_base_excluded": 2.43
+   }
+  ],
+  "inputs": {
+   "full_set_usd": 15000000.0,
+   "single_mask_usd": [
+    500000.0,
+    1000000.0
+   ],
+   "coding_masks_per_die": [
+    1,
+    2
+   ],
+   "v41_base_designs": 3,
+   "qwen_base_designs": 1
+  },
+  "production_units": 1000,
+  "gpu_reference": {
+   "design": "V4.1 8x B200 (tier 2, AR)",
+   "usd_per_tokens_s_saturated": 15.36,
+   "usd_per_tokens_s_at_slo": 51.36
+  },
+  "note": "base_excluded: the shared base masks amortised over later models (a new model re-spins only the coding masks)"
+ },
+ "gated_alike": {
+  "rows": [
+   {
+    "design": "Qwen ROM AR (G = 6,144)",
+    "point": "batch1",
+    "tokens_s": 9851.1,
+    "ungated_static_w": 101.5,
+    "ungated_mJ_per_token": 86.53,
+    "clock_gated_static_w": 83.4,
+    "clock_gated_mJ_per_token": 84.7,
+    "clock_and_power_gated_static_w": 82.8,
+    "clock_and_power_gated_mJ_per_token": 84.63
+   },
+   {
+    "design": "Qwen ROM AR (G = 6,144)",
+    "point": "saturated",
+    "tokens_s": 11920.9,
+    "ungated_static_w": 101.5,
+    "ungated_mJ_per_token": 84.74,
+    "clock_gated_static_w": 87.3,
+    "clock_gated_mJ_per_token": 83.55,
+    "clock_and_power_gated_static_w": 87.3,
+    "clock_and_power_gated_mJ_per_token": 83.55
+   },
+   {
+    "design": "Qwen HBM tier 3 AR",
+    "point": "batch1",
+    "tokens_s": 880.6,
+    "ungated_static_w": 69.3,
+    "ungated_mJ_per_token": 982.78,
+    "clock_gated_static_w": 65.1,
+    "clock_gated_mJ_per_token": 978.03,
+    "clock_and_power_gated_static_w": 63.7,
+    "clock_and_power_gated_mJ_per_token": 976.43
+   },
+   {
+    "design": "Qwen HBM tier 3 AR",
+    "point": "saturated",
+    "tokens_s": 6683.6,
+    "ungated_static_w": 69.3,
+    "ungated_mJ_per_token": 133.05,
+    "clock_gated_static_w": 65.1,
+    "clock_gated_mJ_per_token": 132.43,
+    "clock_and_power_gated_static_w": 62.0,
+    "clock_and_power_gated_mJ_per_token": 131.96
+   },
+   {
+    "design": "Qwen HBM tier 3 DFlash",
+    "point": "batch1",
+    "tokens_s": 2671.0,
+    "ungated_static_w": 69.3,
+    "ungated_mJ_per_token": 358.12,
+    "clock_gated_static_w": 65.1,
+    "clock_gated_mJ_per_token": 356.55,
+    "clock_and_power_gated_static_w": 63.5,
+    "clock_and_power_gated_mJ_per_token": 355.94
+   },
+   {
+    "design": "Qwen HBM tier 3 DFlash",
+    "point": "saturated",
+    "tokens_s": 7100.8,
+    "ungated_static_w": 69.3,
+    "ungated_mJ_per_token": 129.12,
+    "clock_gated_static_w": 65.1,
+    "clock_gated_mJ_per_token": 128.53,
+    "clock_and_power_gated_static_w": 62.4,
+    "clock_and_power_gated_mJ_per_token": 128.15
+   },
+   {
+    "design": "V4.1 HBM tier 3 AR",
+    "point": "batch1",
+    "tokens_s": 2919.8,
+    "ungated_static_w": 6513.0,
+    "ungated_mJ_per_token": 3692.0,
+    "clock_gated_static_w": 5858.2,
+    "clock_gated_mJ_per_token": 3467.74,
+    "clock_and_power_gated_static_w": 5209.8,
+    "clock_and_power_gated_mJ_per_token": 3245.69
+   },
+   {
+    "design": "V4.1 HBM tier 3 AR",
+    "point": "saturated",
+    "tokens_s": 21791.8,
+    "ungated_static_w": 6513.0,
+    "ungated_mJ_per_token": 913.16,
+    "clock_gated_static_w": 6122.2,
+    "clock_gated_mJ_per_token": 895.23,
+    "clock_and_power_gated_static_w": 3066.9,
+    "clock_and_power_gated_mJ_per_token": 755.03
+   },
+   {
+    "design": "V4.1 HBM tier 3 MTP",
+    "point": "batch1",
+    "tokens_s": 5673.0,
+    "ungated_static_w": 6513.0,
+    "ungated_mJ_per_token": 2286.84,
+    "clock_gated_static_w": 5929.2,
+    "clock_gated_mJ_per_token": 2183.93,
+    "clock_and_power_gated_static_w": 4443.9,
+    "clock_and_power_gated_mJ_per_token": 1922.11
+   },
+   {
+    "design": "V4.1 HBM tier 3 MTP",
+    "point": "saturated",
+    "tokens_s": 12122.1,
+    "ungated_static_w": 6513.0,
+    "ungated_mJ_per_token": 1676.05,
+    "clock_gated_static_w": 6248.7,
+    "clock_gated_mJ_per_token": 1654.25,
+    "clock_and_power_gated_static_w": 4080.7,
+    "clock_and_power_gated_mJ_per_token": 1475.41
+   },
+   {
+    "design": "V4.1 ROM AR",
+    "point": "batch1",
+    "tokens_s": 3808.8,
+    "ungated_static_w": 12902.0,
+    "ungated_mJ_per_token": 3428.19,
+    "clock_gated_static_w": 11019.0,
+    "clock_gated_mJ_per_token": 2933.83,
+    "clock_and_power_gated_static_w": 1183.0,
+    "clock_and_power_gated_mJ_per_token": 351.54
+   },
+   {
+    "design": "V4.1 ROM AR",
+    "point": "saturated",
+    "tokens_s": 77021.9,
+    "ungated_static_w": 12902.0,
+    "ungated_mJ_per_token": 208.39,
+    "clock_gated_static_w": 11223.0,
+    "clock_gated_mJ_per_token": 186.6,
+    "clock_and_power_gated_static_w": 4977.0,
+    "clock_and_power_gated_mJ_per_token": 105.5
+   },
+   {
+    "design": "V4.1 ROM MTP m = 1",
+    "point": "batch1",
+    "tokens_s": 5856.5,
+    "ungated_static_w": 12902.0,
+    "ungated_mJ_per_token": 2242.79,
+    "clock_gated_static_w": 11035.0,
+    "clock_gated_mJ_per_token": 1923.99,
+    "clock_and_power_gated_static_w": 1139.0,
+    "clock_and_power_gated_mJ_per_token": 234.27
+   },
+   {
+    "design": "V4.1 ROM MTP m = 1",
+    "point": "saturated",
+    "tokens_s": 50708.4,
+    "ungated_static_w": 12902.0,
+    "ungated_mJ_per_token": 294.29,
+    "clock_gated_static_w": 11237.0,
+    "clock_gated_mJ_per_token": 261.47,
+    "clock_and_power_gated_static_w": 3647.0,
+    "clock_and_power_gated_mJ_per_token": 111.79
+   },
+   {
+    "design": "Qwen 1x B200 AR (tier 2)",
+    "point": "batch1",
+    "tokens_s": 331.0,
+    "ungated_mJ_per_token": 2081.44,
+    "clock_gated_mJ_per_token": 2081.44,
+    "clock_and_power_gated_mJ_per_token": 2081.44,
+    "measured": "1 x 689 W measured decode power"
+   },
+   {
+    "design": "Qwen 1x B200 AR (tier 2)",
+    "point": "saturated",
+    "tokens_s": 7907.0,
+    "ungated_mJ_per_token": 87.14,
+    "clock_gated_mJ_per_token": 87.14,
+    "clock_and_power_gated_mJ_per_token": 87.14,
+    "measured": "1 x 689 W measured decode power"
+   },
+   {
+    "design": "V4.1 8x B200 AR (tier 2)",
+    "point": "batch1",
+    "tokens_s": 277.7,
+    "ungated_mJ_per_token": 19851.78,
+    "clock_gated_mJ_per_token": 19851.78,
+    "clock_and_power_gated_mJ_per_token": 19851.78,
+    "measured": "8 x 689 W measured decode power"
+   },
+   {
+    "design": "V4.1 8x B200 AR (tier 2)",
+    "point": "saturated",
+    "tokens_s": 13018.3,
+    "ungated_mJ_per_token": 423.4,
+    "clock_gated_mJ_per_token": 423.4,
+    "clock_and_power_gated_mJ_per_token": 423.4,
+    "measured": "8 x 689 W measured decode power"
+   }
+  ],
+  "policies": [
+   "ungated",
+   "clock gated (ICG residual 10%)",
+   "clock + power gated (cited residuals, wake only into gaps >= wake + BET)"
+  ],
+  "domains": {
+   "core": {
+    "wake": 1e-06,
+    "bet": 5e-07
+   },
+   "links": {
+    "wake": 5e-06,
+    "bet": 5e-07
+   },
+   "hbm": "ReGate Table 3: 60-cycle wake, 412-cycle BET"
+  },
+  "basis": "per domain: clock and leakage from its area by class (technology.json via the uarch constants), interface power (HBM idle, SerDes / UCIe); busy time and idle gaps from each design's own schedule: the V4.1 HBM chain walked node by node; Qwen dies with their ops' gaps split evenly (181 op boundaries, 36 KV streams, 73 UCIe exchanges); at saturation one contiguous idle gap per pass or token, as the ROM array's rule"
+ },
+ "source_sha256": {
+  "tools/uarch_model.py": "1d066cca2a2f9c02ddb3caa9f3f9f0030785f4d75c12c061681c70161bff83d7",
+  "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+  "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
+  "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+  "configs/hardware/architectures.json": "fd3b286eebe534f52547ff7fe9e23b1d9c3024e7afb72e15f8b1824511b7d04e",
+  "configs/hardware/technology_inputs.json": "ffdfebb683709790aafb33dc8e45b207072dd81cb111fcf5bd75429cebbd56f9",
+  "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
+  "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
+  "results/arch/v41_rack.json": "98ffbb563a56131b0b1f550ffbce499b6dffce085bf93bd3943712c225f10523",
+  "results/arch/qwen_gpu_calibration.json": "6ae77c9ccad72c915cb8903ee2c61843265248b9dbbdce96a2f88a7c63676ee9",
+  "results/arch/v41_hbm_region_preflight.json": "1e29595e85ec85424ca44587f7eb23dd75d5098a800e5063cd2db4c02213b434",
+  "results/speculative/dflash_block_acceptance.json": "b1b92957d24db13ea7f80ce27bc526d17f8a81cc839498faeb5697681bd5e31c",
+  "results/rtl/gpu_sm_exact.json": "5fb4cf5887208d4b0095ecf37e4d1ac59ff5413e6498d1186c91933c7d04043b",
+  "results/rtl/gpu_sm_blockdot_exact.json": "8e0de931aca545d4e6ecf7ea3c52984cac1b829500d296e8e3778268e908f071",
+  "results/rtl/gpu_supply_barrier.json": "7ae98d4bc918b9bef4734fb8f5770f42856bbb4660231d9d34904b9d45d0ee48",
+  "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6"
+ }
+}

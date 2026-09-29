@@ -34,6 +34,7 @@ module ot_gpu_issue #(
     input  wire [7:0]            op_g,
     input  wire                  op_gs,          // group-slot issue
     input  wire                  w_valid,
+    input  wire                  x_rdy,          // the x fragment the next issue needs is there (1 = no x store gate)
     output wire                  w_ready,
     input  wire                  rdone,          // one row result retired this cycle
     output reg                   busy,
@@ -44,6 +45,7 @@ module ot_gpu_issue #(
     output wire                  iss_first,
     output wire                  iss_last,
     output wire                  iss_glast,
+    output wire                  iss_rev_end,    // this issue ends a slot revolution (the x fragment is done)
     output wire [$clog2(XDEPTH)-1:0] xa,
     output reg                   arrive,
     input  wire                  release_in,
@@ -80,7 +82,7 @@ module ot_gpu_issue #(
     wire [XW-1:0] gs_xb = (ti == 0) ? cxb : s_xb[si];
     wire [RW:0] row_now = gs_q ? gs_row : rb + si;
     wire        row_ok = gs_q ? gs_ok : (row_now < rows_q);
-    wire        my_turn = issuing && (ph == si);
+    wire        my_turn = issuing && (ph == si) && x_rdy;
     wire        need_line = my_turn && row_ok;
     wire        adv = my_turn && (!row_ok || w_valid);
     assign w_ready = need_line;
@@ -94,6 +96,7 @@ module ot_gpu_issue #(
     assign iss_first = (ti == 0);
     assign iss_last = last_t;
     assign iss_glast = last_g;
+    assign iss_rev_end = adv && last_si;
     assign xa = gs_q ? gs_xb + ti[XW-1:0] : xa_r;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

@@ -634,13 +634,13 @@
  "schema": "opentallas.floorplan.hbm_gpu.v1",
  "tool": "tools/hbm_gpu_floorplan.py",
  "source_sha256": {
-  "tools/uarch_model.py": "af53f65c4ee3f980198330319034595be42848b0b3f029506b853608a1bb6b8e",
+  "tools/uarch_model.py": "df25fc378180f1fe79d567a85aa7977b3fc156ffc1115fa09a24a5f2aea3a7bb",
   "tools/qwen_o4_floorplan.py": "2fa9633b32441d3e8a7a2154d6badce118522b2dff2105319df73849dfa95bb5",
   "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
   "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.lef": "4d671aba6f1110d9dd74e6452499197e2dbe52f0fda448108b93d534c56b8b12",
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
-  "tools/hbm_gpu_floorplan.py": "6727ad2278fe24bdd39543ebaea3f1df899039adcfbaedc72d20eacd99218ed3"
+  "tools/hbm_gpu_floorplan.py": "8b4a1729323eefff4865d51abcdbb2a40ddd5c219e72ed2fa85c9305605bd27c"
  },
  "claim_boundary": "placement legality, fit and priced distances only; no route, timing or power claim"
 }

@@ -1,6 +1,6 @@
 # Microarchitecture analytical model
 
-Tool: `tools/uarch_model.py`. Records: `results/uarch/v41_rom.json`, `results/uarch/qwen_rom.json`, `results/uarch/hbm_gpu.json`. Test: `tests/test_uarch_model.py`. The binding method is in [AGENTS.md](../AGENTS.md) rule 1.
+Tool: `tools/uarch_model.py`. Records: `results/uarch/v41_rom.json`, `results/uarch/qwen_rom.json`, `results/uarch/hbm_gpu.json`, `results/uarch/economics.json`, `results/uarch/economics_levers.json`. Tests: `tests/test_uarch_model.py`, `tests/test_uarch_economics.py`. The binding method is in [AGENTS.md](../AGENTS.md) rule 1.
 
 It covers all four designs: DeepSeek-V4.1 ROM (first), Qwen3-8B ROM, and the two GPU-organised HBM comparators.
 
@@ -162,22 +162,24 @@ The SM has four sub-partitions of an exact Tensor-Core-style MMA:
 | | Qwen3-8B die | DeepSeek-V4.1 die |
 |---|---|---|
 | Lanes | 128 INT8 (decoded exactly to BF16) | 8 block-dot (k32 FP8/FP4, exact, one rounding) + 64 BF16 |
-| Columns | 16 (DFlash block 16, batch ≤ 16) | 16 (MTP m + 1 = 7, batch ≤ 16) |
-| MAC/clk per SM | 2,048 | 5,120 |
+| Columns | 16 (DFlash block 16, batch ≤ 16) | 8 (MTP m + 1 = 7 positions; batch > 8 runs a second pass) |
+| MAC/clk per SM | 2,048 | 2,560 |
 | Weight ingest | 128 B/clk | 128 B/clk |
-| SMEM | 512 KB x store (16 × 32 KB macros, read one fragment per slot revolution) + 128 KB staging + 64 KB scratch | x store 99 × 4 KB macros (a new fragment of up to 8 columns every cycle for group-slot issue) + 128 KB staging + 64 KB scratch |
-| Area (logic at 50% density + SRAM) | 4.71 mm² | 3.64 mm² |
-| Measured drain (last weight line → last row result) | 65 cycles | 70 cycles |
+| SMEM | 512 KB x store (16 × 32 KB macros, one fragment per slot revolution into a double-buffered register) + 128 KB staging ring + 64 KB scratch | x store 99 × 4 KB macros (a whole 8-column fragment every cycle, for group-slot issue) + 128 KB staging ring + 64 KB scratch |
+| Area (logic at 50% density + SRAM) | 4.71 mm² | 2.27 mm² |
+| Measured drain (last weight line → last row result) | 66 cycles | 70 cycles |
 
 **Exactness (Icarus, every output bit against the golden):**
-- `results/rtl/gpu_sm_exact.json`: 12/12 cases.
+- `results/rtl/gpu_sm_exact.json`: 15/15 cases.
   - Qwen INT8 on 128 lanes: split = K (a pure tree), kc = 3, 4 and 32, split < lanes, and stream underflow. The golden is `hdc_golden.matvec`, then the BF16 row scale.
   - V4.1 BF16 chunk-8 `csum` on 64 lanes: K = 512, 1,004 (tail and padding) and 5,120.
   - Group-slot issue: 1-, 2- and 3-row slices (BF16 K = 5,120 and 1,004, Qwen INT8 K = 2,048).
-- `results/rtl/gpu_sm_blockdot_exact.json`: 8/8 cases.
+  - The Qwen SM macro top `ot_gpu_sm_q` (3 cases): weights through its own bulk copy and SRAM staging ring from an out-of-order HBM model, x from its SRAM x store.
+- `results/rtl/gpu_sm_blockdot_exact.json`: 12/12 cases.
   - V4.1 `linear_q` FP4 at K = 2,304 and 5,120.
   - V4.1 `linear_q` FP8 at K = 544, 1,280 and 5,120.
   - Group-slot issue on 1–3-row slices (FP8 K = 5,120 and 2,048, FP4 K = 5,120).
+  - The V4.1 SM macro top `ot_gpu_sm_v` (4 cases): packed 136-B lines (FP4, FP8, BF16) through its bulk copy, per-cycle SRAM x store.
 
 **Group-slot issue** (`op_gs` in `rtl/gpu/ot_gpu_issue.sv`) puts consecutive (row, group) items on the 8 accumulator slots instead of 8 rows.
 - Why it is needed: on a 1/96 row slice, row-slot issue walks a row's groups one after another, which makes the op a K-chain.
@@ -186,7 +188,7 @@ The SM has four sub-partitions of an exact Tensor-Core-style MMA:
   - The stack is keyed by row mod 8.
   - The golden order is unchanged, so the result is exact by construction (and checked above).
 - Measured: an FP8 K = 5,120 single-row op takes 117 cycles, against 689 for 9 rows issued row-slot.
-- Cost: the x store must deliver a new fragment every cycle. Sized for 8 columns, that is 99 shallow macros (0.5 mm² per SM, +0.1 mm² over row-slot).
+- Cost: the x store must deliver a new fragment every cycle. Sized for the 8 columns, that is 99 shallow 128 × 256 macros (0.5 mm² per SM).
 
 ### Count, supply and barrier
 
@@ -196,8 +198,8 @@ The SM has four sub-partitions of an exact Tensor-Core-style MMA:
 | Bulk copy in flight | 512 lines of 128 B per SM | same | Little's law gives 440. Measured in RTL, 512 reaches the SM's full share (102.5 of 102.4 B/clk) under ±50 ns jitter; 7 outstanding gives 1.6 B/clk |
 | SMEM staging | 128 KB/SM | 128 KB/SM | The fluid model's knee: 64 KB loses 0.7% on Qwen |
 | Global barriers per token | 181 | 329 | One per matrix op and one per attention layer (V4.1 also one per index top-k and one for the argmax). Heads are SM-local; norms and the router top-6 run redundantly on the replicated x. The earlier 289 and 629 counted those |
-| Barrier round trip | 30 cycles | 40 cycles | Floorplan: leaf 4.3 mm / trunk 6.8 mm (Qwen), 3.9 / 11.8 mm (V4.1). RTL bench: 32 SMs at 8 × 4 fan-in |
-| Boundary cost | 46 cycles | 56 cycles | Round trip plus the x-broadcast tail |
+| Barrier round trip | 30 cycles | 38 cycles | Floorplan: leaf 4.3 mm / trunk 6.8 mm (Qwen), 3.5 / 11.4 mm (V4.1). RTL bench: 32 SMs at 8 × 4 fan-in |
+| Boundary cost | 46 cycles | 54 cycles | Round trip plus the x-broadcast tail |
 | L2 | 4 slices × 2 MB | same | Holds x and result gather, TP staging and KV-write coalescing. Weights bypass L2: each SM's rows live in its own quadrant's stack |
 
 ### Token
@@ -212,9 +214,9 @@ The bulk copy prefetches the static weight stream through every boundary. A boun
 | Qwen HBM, ASSUMED 200-cycle barrier, no prefetch | 854.9 |
 | Qwen HBM, V100 grid sync 1.43 µs, with prefetch / without | 758.5 / 716.6 |
 | Qwen HBM, today's adapter | 10.5 |
-| **V4.1 HBM, GPU die, K-chain-aware, group-slot issue** | **2,981** |
-| V4.1 HBM, same, row-slot issue | 2,578 |
-| V4.1 HBM, group-slot, V100 grid sync | 1,269 |
+| **V4.1 HBM, GPU die, K-chain-aware, group-slot issue (adopted)** | **2,920** |
+| V4.1 HBM, same, row-slot issue (sensitivity) | 2,533 |
+| V4.1 HBM, group-slot, V100 grid sync | 1,257 |
 | V4.1 HBM published (additive, pooled widths, no barrier) | 3,579 |
 | V4.1 HBM, pooled-width chain with prefetch (superseded upper bound) | 3,882 |
 
@@ -222,13 +224,14 @@ The bulk copy prefetches the static weight stream through every boundary. A boun
 - It walks the arch DAG's critical path at 1M.
 - Each matvec is an SM op on its 1/96 row slice (`sm_op_cycles`, calibrated on the RTL SM).
 - The dedicated units' nodes are at their arch price (W11 spec widths).
-- Barriers are at 56 cycles.
+- Barriers are at 54 cycles.
+- Every SM needs the whole x after each collective: the die's 256 B/cycle x broadcast fills the 32 x stores (K × positions × 2 B / 256 cycles per matvec).
 - The comparator's switched-fabric terms are 125.9 + 1.5 + 0.9 + 2.0 µs.
 - The weight sweep (37.4 µs) streams under the chain.
 
-Group-slot breakdown: SM matvecs 66.9 µs (row-slot: 119.3), dedicated units and stream unit 120.4, barriers 17.8, fabric 130.3.
+Group-slot breakdown: SM matvecs 66.9 µs (row-slot: 119.3), x-broadcast fill 7.6, dedicated units and stream unit 120.4, barriers 17.3, fabric 130.3.
 
-### Speculation on the SM design (`speculation` in the record)
+### Speculation on the SM design (`speculation` in the record): MODEL ONLY
 
 Verify positions ride the MMA columns: 16 are built, one weight fetch serves the whole block, and each column keeps its own golden order.
 
@@ -237,12 +240,12 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
 | Qwen HBM AR | 1 | 880.6 | 1.0× |
 | Qwen HBM DFlash, block 5 | 2.859 | 2,089 | 2.37× |
 | **Qwen HBM DFlash, block 16** (best; step cost is flat up to 16 columns) | 3.656 | **2,671** | **3.03×** |
-| V4.1 HBM AR (group-slot) | 1 | 2,981 | 1.0× |
-| **V4.1 HBM DSpark MTP, γ = 5, 6 positions** | 3.649 | **6,106** | **2.05×** |
+| V4.1 HBM AR (group-slot) | 1 | 2,920 | 1.0× |
+| **V4.1 HBM DSpark MTP, γ = 5, 6 positions** | 3.649 | **5,673** | **1.94×** |
 
 - **Qwen:** a step streams the target's bytes plus the drafter's 1.05 B parameters (INT8, ASSUMED) and a re-read of the shared lm_head over the draft slots. tau is measured per block (`results/speculative/dflash_block_acceptance.json`).
-- **V4.1:** verify runs the matvecs once, on the columns. The dedicated units issue every position's work, which adds 229 µs. Collective bytes scale with positions. The draft is 3/40 of an AR token (ASSUMED, as in the ROM rows).
-- **RTL:** the column-parallel verify is built and exact per column. The other parts need units that are not easy for this workstream, so they were not built:
+- **V4.1:** verify runs the matvecs once, on the columns. The dedicated units issue every position's work, which adds 229 µs. Collective bytes and the x-broadcast fill scale with positions. The draft is 3/40 of an AR token (ASSUMED, as in the ROM rows).
+- **RTL (user rule: build only if easy; root decision 2026-09-29): the speculation figures are model-only.** The column-parallel verify is built and exact per column. The other parts need units that are not easy for this workstream, so they were not built, and the token-level greedy check waits for a whole-die HBM RTL:
   - causal attention inside the verify block: the Qwen die's attention is not in the SM RTL, and V4.1 attention is W11's unit;
   - the KV commit and rollback pointer;
   - a token-level check against greedy non-speculative tokens, which needs a whole-die HBM RTL that does not exist.
@@ -253,8 +256,8 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
 3. **The Qwen HBM die is bandwidth-bound at 880.6 tok/s.** The barrier and SM terms are hidden under the stream.
 4. **The floorplans fit** (`results/floorplan/hbm_gpu/*.json`, legal, macro-placed SRAMs, 4 PHYs on 48 mm of the long edges):
    - Qwen: 160 of 688 mm² core used (SM array 155.6, L2 5.0).
-   - V4.1: 240 mm², including the 112.7 mm² dedicated-unit hub between the SM half-arrays.
-5. **V4.1 SMs issue group-slot on small slices.** This takes the HBM token from 2,578 to 2,981 tok/s for about 3 mm² of x-store SRAM per die.
+   - V4.1: 196 mm², including the 112.7 mm² dedicated-unit hub between the SM half-arrays.
+5. **V4.1 SMs issue group-slot on small slices.** This takes the HBM token from 2,533 to 2,920 tok/s. The x store that delivers a whole 8-column fragment every cycle is 99 shallow macros per SM.
 
 ## Summary: what the model changed
 
@@ -263,7 +266,7 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
 | V4.1 ROM, 1M | 4,933 (architecture) | 4,167 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
 | Qwen ROM, 8K | 10,874 (published) | 9,968 | AR only (no drafter ROM) lets G = 6,144 pruned fit; wires +12%; vector stream unit |
 | Qwen HBM, 8K | 881 | 880.6 (DFlash b16 2,671) | bulk-copy weight supply prefetching through boundaries; hardware barrier (30 cycles) |
-| V4.1 HBM, 1M | 3,579 | 2,981 (MTP 6,106) | SM op latency on 1/96 row slices (group-slot issue); hardware barrier (40 cycles); bulk-copy supply |
+| V4.1 HBM, 1M | 3,579 | 2,920 (MTP 5,673) | SM op latency on 1/96 row slices (group-slot issue); hardware barrier (40 cycles); bulk-copy supply |
 
 ## Speculation (`--spec`, `results/uarch/speculation.json`)
 
@@ -286,3 +289,313 @@ The lane multiplier m counts the positions that multiply one ROM weight word in 
 Removing the drafter frees about 12% of Qwen code ROM. Target-only banks are 10 per column at G = 6,144, and **G = 6,144 pruned then fits** (552.9 / 560 mm², 9,968 tok/s). The scale-ROM remap adds about 11 mm² of margin.
 
 The V4.1 draft cost is ASSUMED at 3/40 of an AR token (3 draft blocks of 40 layers). The HBM comparators' DFlash and MTP rows come from W13's SM model.
+
+## Fabric sensitivity and GPU tiers (`--fabric`, `results/uarch/fabric.json`)
+
+Every multi-die design here assumes deterministic hardware collectives at link latency:
+- **V4.1 ROM array:** direct UCIe/board links inside its TP-4 groups (the architecture prices 145–165 cycles, about 0.15 µs).
+- **V4.1 HBM comparator:** TP-96 through an NVL-class switch (0.668 µs).
+- **Qwen pair:** 73 UCIe exchanges per token (about 17.5 ns each).
+
+### Collective latency sweep (tok/s, single user, 1M context for V4.1, 8K for Qwen)
+
+| Collective / exchange latency | V4.1 ROM (AR) | V4.1 HBM (GPU org., AR) | Qwen ROM (AR, G = 6,144) | Qwen HBM (AR) |
+|---|---:|---:|---:|---:|
+| own baseline | **4,167** (~0.15 µs links) | **2,920** (0.668 µs switch) | **9,968** (17.5 ns UCIe) | **881** |
+| 0.1–0.15 µs | 3,752 | 4,084 | 9,404 | 876 |
+| 0.5–0.668 µs | 2,785 | 2,920 | 7,378 | 854 |
+| 1 µs | 2,390 | 2,469 | 5,813 | 828 |
+| 5 µs | 881 | 863 | 2,155 | 667 |
+| 10 µs | 493 | 476 | — | — |
+
+**At equal collective latency, V4.1 ROM and V4.1 HBM have almost the same single-user speed.** Both are latency-bound, not bandwidth-bound.
+- The ROM array's advantage (4,167 against 2,920) is structural. Its weights are local, so small TP-4 groups on direct links suffice.
+- The HBM machine must spread every matrix over 96 dies to reach its bandwidth, which needs a switched fabric.
+- Qwen ROM stays about 11× faster than Qwen HBM at every latency, because the Qwen HBM machine is bandwidth-bound.
+- Every headline depends strongly on deterministic hardware collectives. At NCCL-class latency (5–10 µs) both V4.1 designs fall to 500–900 tok/s.
+
+### GPU tiers
+
+Tier 1 is measured. Tier 2 is a projection calibrated on B200 measurements. Tier 3 is the idealised HBM machine with OpenTallas control.
+
+| Tier | Design | tok/s AR | with speculation |
+|---|---|---:|---:|
+| 1 | Qwen3-8B-class, H200 NIM FP8 | 235 | — |
+| 1 | Qwen3-8B, RTX PRO 6000 (this lab), FP8 | 151 | 390 (DFlash, τ 3.72, reasoning mix) |
+| 1 | Qwen3-8B, 1× B200, SGLang FA4, BF16 (DFlash paper, Table 3) | 230 | **1,175** Math500 (τ 8.01, 5.1×) / 955 HumanEval (τ 6.50, 4.2×) |
+| 1 | DeepSeek-R1 (V4.1-class anchor), 8× B200, TensorRT-LLM min-latency | — | 368 (3 MTP layers, relaxed acceptance) |
+| 2 | Qwen3-8B, 1× B200, FP8, 8K (per-byte cost fitted to the B200 BF16 230; H200 fixed cost) | 331 | 853 (reasoning mix) / 1,390–1,690 (math/code τ 6.5–8.0) |
+| 2 | DeepSeek-V4.1-Flash, 8× B200 (+ NCCL-class 8 µs all-reduce, ASSUMED) | 278 | 539 |
+| 3 | Qwen HBM, idealised | 881 | 2,671 (τ 3.66) / 4,749 (τ 6.50) / 5,852 (τ 8.01) |
+| 3 | V4.1 HBM, idealised | 2,920 | 5,673 |
+
+**Acceptance is strongly workload-dependent.** Every speculative row must name its τ and workload:
+- DFlash τ is 6.5–8.0 on math and code with thinking disabled (paper).
+- It is 3.66 on this lab's reasoning mix of 264 turns.
+
+**Tier 2 matches tier 1 in order of magnitude.** V4.1 on 8× B200 projects 539 with MTP against DeepSeek-R1's measured 368, a larger model with lossy acceptance.
+
+**Against the best measured GPU result,** Qwen ROM AR (9,968) is 8.5× B200 DFlash on Math500 (1,175) and 43× B200 AR (230).
+
+Against GPUs (tier 2), the ROM designs are:
+- **Qwen:** about 30× in AR; 6–12× against GPU DFlash, depending on τ.
+- **V4.1:** about 15× in AR and 11× with MTP.
+
+Against the idealised HBM control (tier 3), the V4.1 ROM advantage is 1.4× in AR and about 1.07× with MTP, and it is structural (small TP groups on direct links).
+
+## Economics: batch, energy, cost (`--economics`, `results/uarch/economics.json`)
+
+User positioning (2026-09-29): the paper claims single-user speed against GPUs (tier 1 measured, tier 2 calibrated), makes energy per token and cost first-class, and reports aggregate throughput under batching. The idealised HBM machine (tier 3) is the architectural control. This section prices every design on those three axes. It calls the sections above and changes none of them. The record pins the sha256 of every source it reads. Test: `tests/test_uarch_economics.py`.
+
+### How each design batches
+
+- **V4.1 ROM array:** users fill the 28 pipeline stages.
+  - The per-user rate stays at the single-user rate until the busiest stage is full. That stage's occupancy is the sum of its nodes' issue on one die, the same basis as the power ledger: 77,022 tok/s.
+  - Capacity is 866 users at 1M (`arch_budget_v41` capacity, the layer-20 group's KV and index keys in 4 HBM3E stacks per die). The RTL key layout holds 551 (`results/arch/v41_hbm_region_preflight.json`, status `capacity_mismatch`).
+  - MTP m = 1 re-issues all 6 positions on the same lanes. It raises the single-user rate but lowers the saturated aggregate (50,708 against 77,022). The draft is charged to the head dies.
+- **Qwen ROM package:** m = 1, so batching reuses no weight word. The lanes (ME busy 54,432 of 110,219 cycles per die, from the calibrated replay's `unit_busy`), the stream unit and the KV stream each cap the aggregate:
+
+  | Bound | Aggregate tok/s |
+  |---|---:|
+  | Lanes | 20,184 |
+  | Stream unit | 101,641 |
+  | **KV stream** (8 stacks at 0.9 TB/s; 604 MB of 8K FP8 KV per user-token) | **11,921** |
+
+  **The KV stream binds from batch 2, not the lanes.** `arch_budget_qwen3.batch_model` gives the same 11,921.
+- **HBM tier 3:** users ride the SM's MMA columns on one weight fetch (16 on the Qwen die, 8 on the V4.1 die). Beyond the columns, the weights are streamed again.
+  - Qwen DFlash shares the columns between users and block positions, and takes the best block at each batch.
+  - V4.1 at 8 users or fewer re-prices the W13 chain with that many columns; the dedicated-unit issue repeats per user.
+  - Beyond 8 users, column passes interleave. The busiest of SM time, dedicated-unit issue and the weight sweep bounds each pass: 367 µs per 8-user pass (AR), 275 µs per 1-user MTP pass. Each pass's weight bytes are the union of its tokens' routed experts.
+- **GPU tier 2:** the tier-2 step at batch 1, plus (B − 1) times a per-user increment.
+  - A line fitted to the DFlash paper's B200 concurrency baselines (1/4/8/16/32 users: 230/861/1,666/3,133/5,694 tok/s) reproduces them within 3%. Its per-user increment is 38.5 µs.
+  - At 8K the increment is one user's FP8 KV at the fitted B200 byte rate: 115 µs. The code takes the larger of the two, which is GPU-favourable because the paper's increment already contains its own shorter-context KV.
+  - V4.1 on 8× B200 reads the routed-expert union and each user's index keys every step.
+  - Capacity is 180 GB × 0.9 per GPU, less the weights.
+
+### Batch, energy and capacity (8K Qwen, 1M V4.1)
+
+| Design | tok/s, B = 1 | mJ/token, B = 1 | Saturated batch | Aggregate tok/s | Per-user tok/s | mJ/token, saturated | Users that fit |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Qwen ROM AR (G = 6,144) | 9,968 | 86.4 | 2 | 11,921 | 5,960 | 84.7 | 268 |
+| Qwen HBM tier 3, AR | 881 | 983 | 16 | 6,684 | 418 | 133 | 255 |
+| Qwen HBM tier 3, DFlash | 2,671 | 358 | 8 | 7,101 | 888 | 129 | 255 |
+| Qwen 1× B200, AR (tier 2) | 331 | 2,081 | 255 | 7,907 | 31.0 | 87.1 | 255 |
+| V4.1 ROM, AR | 4,167 | 3,138 | 32 | 77,022 | 2,407 | 208 | 866 |
+| V4.1 ROM, MTP m = 1 | 6,063 | 2,168 | 16 | 50,708 | 3,169 | 294 | 866 |
+| V4.1 HBM tier 3, AR | 2,920 | 3,692 | 16 | 21,792 | 1,362 | 913 | 811 |
+| V4.1 HBM tier 3, MTP | 5,673 | 2,287 | 4 | 12,122 | 3,030 | 1,676 | 811 |
+| V4.1 8× B200, AR (tier 2) | 278 | 19,852 | 839 | 13,018 | 15.5 | 423 | 839 |
+
+Per-batch rows (per-user rate, aggregate, per-user latency, energy, system power) are in the record. Measured anchors, at 689 W:
+- B200 AR at 1 to 32 users: 2,996 to 121 mJ/token.
+- B200 DFlash at batch 1: 586 mJ (Math500) and 722 mJ (HumanEval).
+- DeepSeek-R1 on 8× B200: 14,978 mJ.
+
+### Energy basis
+
+- **V4.1 ROM:** the power ledger's terms (MACs by format, ROM words, x network, stream unit, the on-die HBM share, links), summed over every stage and multiplied by the 4 TP dies, plus the stacks' share of the index and KV reads.
+  - Dynamic energy is 21.6 mJ on the dies and 19.3 mJ in the stacks per token.
+  - Static power is 12.9 kW:
+    - 112 layer dies at the ledger's ungated clock + leakage + HBM interface idle (48.1 W), plus the rack's always-on SerDes and UCIe (33.1 W);
+    - head and Engram-table dies at the rack record's static.
+  - **Static power dominates at every batch.** Stage clock gating is the energy lever.
+- **Qwen ROM:** its own ledger with the same constants, both dies.
+  - Dynamic energy is 76.2 mJ/token, of which 59.5 mJ is the HBM stack share of the KV read and 7.1 mJ its on-die share.
+  - Static power is 101.5 W. The areas are the W12 ROM (265 mm²), the pruned group logic plus PHYs (173.8 mm²) and the KV ring (23.9 mm²).
+- **HBM tier 3:** SM MACs; every weight and KV byte over the whole HBM path (104.9 pJ/B); SMEM staging write and read; stream elements; and, for V4.1, the dedicated units' energy per token taken from the ROM ledger and fabric bytes over two switch hops.
+  - Static power per package: 69 W (Qwen); 6.5 kW for the 96 V4.1 dies.
+  - The NVL-class switch is not charged.
+- **GPU:** 689 W measured decode power per B200 (`technology.json` `power.gpu_reference_power`) × step time. The record also carries the rows at the 1,200 W TDP.
+- MAC energy is 2 operations per MAC in this section, as in `technology.json` and `arch_budget_v41`. The V4.1 power ledger above charges 1 per MAC, which changes its busiest die by under 1%. The test checks that this section's ledger reproduces the power ledger's busiest stage when run at 1 operation per MAC.
+- HBM background (refresh) power is not charged on any design.
+
+### Cost
+
+**The repository has no dollar model** (`docs/ANALYTICAL_REPORT.md`: "Mask cost and model churn are outside the model"). Every dollar figure below is ASSUMED.
+- **Basis:**
+  - **Iso-package.** Every two-reticle, 8-stack CoWoS-L-class package costs the repository's B200 device price, $25,000 (`configs/hardware/architectures.json`, graded assumed). That covers the ROM packages, the HBM comparator packages and a B200.
+  - **ROM mask NRE,** amortised over the 1,000 production units of `technology_inputs.json`:
+    - high case: a full 5 nm-class mask set per distinct ROM die, $15M (SemiAnalysis);
+    - low case: the weight-coding (via/metal) layers only, ASSUMED 10% of a set.
+  - Every V4.1 ROM die holds different weights, so there are 188 sets.
+- **Component cross-check** (silicon at the wafer-device assumption of $2.16/mm², plus HBM3E at an ASSUMED $360 a stack; excludes packaging, test and margin):
+
+  | Design | Silicon + stacks |
+  |---|---:|
+  | Qwen package | $6.4k |
+  | V4.1 ROM array | $499k |
+  | V4.1 HBM tier 3 | $307k |
+  | 8× B200 | $51k |
+
+| System | Packages | Dies | HBM stacks | ROM mask sets | Capex | $ per tok/s, B = 1 | $ per tok/s, saturated | $ per tok/s at ≥ 100 tok/s/user |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Qwen ROM (AR, G = 6,144) | 1 | 2 | 8 | 2 | $28k–55k | 2.81–5.52 | 2.35–4.61 | 2.35–4.61 |
+| Qwen HBM tier 3 (AR / DFlash) | 1 | 2 | 8 | 0 | $25k | 9.36 | 3.52 | 3.52 |
+| Qwen 1× B200 (tier 2, AR) | 1 | 2 | 8 | 0 | $25k | 75.53 | 3.16 | 5.15 |
+| V4.1 ROM array (AR / MTP m = 1) | 94 | 188 | 464 | 188 | $2.63M–5.17M | 434–853 | 34.2–67.1 | 34.2–67.1 |
+| V4.1 HBM tier 3 (AR / MTP) | 48 | 96 | 384 | 0 | $1.20M | 212 | 55.1 | 55.1 |
+| V4.1 8× B200 (tier 2, AR) | 8 | 16 | 64 | 0 | $200k | 720 | 15.4 | 51.4 |
+
+Each system is costed at its best mode for each point: its fastest single-user mode at B = 1, and its largest aggregate within capacity when saturated. The ≥ 100 tok/s/user column is an ASSUMED illustrative interactivity floor.
+
+### What the economics show
+
+1. **Single-user speed is where ROM wins.**
+   - At batch 1 the Qwen ROM package is 30× a B200 in tok/s, 24× in energy per token and 14–27× in $ per tok/s.
+   - The V4.1 ROM array against 8× B200, both AR, is 15× in tok/s and 6.3× in energy per token. With MTP on both it is 11× in tok/s.
+2. **Batching does not help the Qwen ROM package.** Its 8 HBM stacks must stream every user's 604 MB of 8K KV per token, so the aggregate saturates at 11,921 tok/s from batch 2. A B200, with the same 8 stacks, saturates at 7,907, and only at 31 tok/s per user. At saturation all three Qwen machines spend 85–133 mJ per token, dominated by the KV read. Cost per aggregate tok/s is then within 2× across them.
+3. **V4.1 ROM has the largest aggregate** (77,022 tok/s against 21,792 for tier 3 and 13,018 for 8× B200) **and the lowest saturated energy** (208 mJ against 913 and 423).
+   - Its capex is the highest: 94 packages plus 188 ROM mask sets, where the NRE is 0.3–2.8 M$ per system at 1,000 units.
+   - Per aggregate tok/s it therefore costs 2–4× 8× B200 at saturation, where the GPU serves 15.5 tok/s per user.
+   - At a ≥ 100 tok/s/user floor it is 0.7–1.3× the GPU.
+4. **MTP m = 1 is a single-user lever on the ROM array.** It lowers the saturated aggregate by 34%. Run MTP only while the stages are not yet full (below about 12 users) and AR beyond.
+5. **Static power sets the energy of both V4.1 designs.** V4.1 ROM runs at 3.1 J per token at batch 1 and 0.21 J saturated, against 19.9 and 0.42 J for 8× B200. Stage clock gating and SerDes idle states are the next energy levers.
+
+## Economics levers: static power, adaptive MTP, ROM masks (`--levers`, `results/uarch/economics_levers.json`)
+
+These are root's follow-ups to the economics findings (2026-09-29). The test is in `tests/test_uarch_economics.py`.
+
+### V4.1 ROM static-power reduction
+
+At batch 1 the token visits the 28 stages one after another. Each stage is on the critical path for 4.7–20.4 µs of the 240 µs token and idle for the rest; the shortest idle is 219.6 µs. The model prices each layer die's static power by region and class from the area ledger:
+
+| Component | W per layer die |
+|---|---:|
+| ROM field (strip logic + ROM macros): clock / leakage | 13.1 / 13.2 |
+| Hub (dedicated units + VM ports): clock / leakage | 5.0 / 5.7 |
+| HBM interface idle (4 stacks) | 11.2 |
+| Always-on 112G SerDes | 30.6 |
+| UCIe idle | 2.5 |
+
+**The SerDes are the largest static item on a layer die.** The model then applies four cumulative policies:
+
+1. **Stage clock gating.** A stage's clock runs only during its window. The rest of the period keeps an ASSUMED 10% clock residual (the global spine and the ICG enables).
+2. **Region clock gating.** Inside the window, the ROM field and the hub each clock only while they are busy.
+3. **Stage power gating** in the idle time, with these residuals:
+   - logic and ROM leak 3% (ReGate, MICRO 2025, §6.1; a mask ROM holds no state, so it needs no retention);
+   - the VM SRAM sleeps with retention at 25%;
+   - the HBM controller and PHY are in power-down at 3%, with the DRAM self-refreshing (ReGate Table 3: 60-cycle wake);
+   - SerDes and UCIe are in low-power idle at an ASSUMED 10%.
+4. **Wake schedule.** The stage wakes an ASSUMED 1 µs ahead of its window: ~100 staggered sub-domains of ReGate's 10-cycle domains, to bound the rush current. The SerDes wake 5 µs ahead (IEEE 802.3bj EEE Tw target for 100 Gb/s).
+   - Each gating event costs the stage's leakage × an ASSUMED 0.5 µs break-even time, from ReGate's 412–469-cycle BETs for the HBM, ICI and whole-array domains.
+   - Wake is only scheduled where the idle gap fits the wake-up plus the break-even time.
+
+**Engram table dies** (ROM tables, no state) stay awake only for their two gathers and the wake-up. Head dies scale by the layer-die policy ratio. Dynamic energy is unchanged from the economics section.
+
+**No wake lands on the single-user token path.** At batch 1 the schedule is static and periodic, and the shortest idle (219.6 µs AR, 531.2 µs MTP) exceeds every wake-up, including the 133 µs sensitivity: the Haswell C6 worst case (Schöne et al. 2015), which includes a state restore that a ROM stage does not need.
+
+| V4.1 ROM system (1M) | Static W | mJ/token, AR, B = 1 | mJ/token, AR, saturated | mJ/token, MTP, B = 1 | mJ/token, MTP, saturated |
+|---|---:|---:|---:|---:|---:|
+| Ungated (economics section) | 12,902 | 3,137 | 208 | 2,168 | 294 |
+| Stage clock gating | 11,073 | 2,698 | 190 | 1,866 | 267 |
+| + region clock gating | 11,020 | 2,686 | 187 | 1,860 | 261 |
+| **+ stage power gating, 1 µs wake** | **1,194** (B = 1) / 4,977 (saturated) | **328** | **106** | **228** | **112** |
+| + stage power gating, 133 µs wake | 4,888 (B = 1) | 1,214 | 187 | 471 | 261 |
+
+- **Power gating, not clock gating, is the lever.**
+  - Clock gating saves 14%: clock is only 18 of the 81 W on a layer die.
+  - Power gating the idle stages cuts batch-1 energy 9.6× (AR) and 9.5× (MTP), to 328 and 228 mJ/token. The 8× B200 AR figure is 19,852.
+- **At saturation the gaps are short.** The period is 13.0 µs (AR) and 72 µs (MTP).
+  - With a 1 µs wake, 28 of 29 stages still gate between tokens, and energy falls to 106 mJ (AR) and 112 mJ (MTP).
+  - With a C6-class wake, no stage gates at saturation.
+- **Build requirements:**
+  - power switches per stage domain, with staggered wake;
+  - retention only on the VM;
+  - HBM PHY power-down;
+  - SerDes low-power idle with a 5 µs pre-wake scheduled from the static token schedule.
+- The HBM comparator (tier 3) is still priced ungated. Its dies are busy for most of the token, so this lever is mainly the ROM array's.
+
+### Adaptive MTP
+
+Use MTP while its aggregate exceeds AR's, and AR beyond. On the ROM array, AR's per-user rate stays flat until its own saturation, so the crossing is exact: MTP's saturated 50,708 / AR's 4,167 = **12.2 users**. On the HBM comparator the AR chain slows with every column-batched user, and the sweep brackets the crossing between 8 and 16 users.
+
+| Batch | V4.1 ROM mode | Per-user tok/s | Aggregate tok/s | V4.1 HBM tier 3 mode | Per-user tok/s | Aggregate tok/s |
+|---:|---|---:|---:|---|---:|---:|
+| 1 | MTP | 6,063 | 6,063 | MTP | 5,673 | 5,673 |
+| 2 | MTP | 6,063 | 12,126 | MTP | 5,673 | 11,346 |
+| 4 | MTP | 6,063 | 24,252 | MTP | 3,031 | 12,122 |
+| 8 | MTP | 6,063 | 48,504 | MTP | 1,515 | 12,122 |
+| 16 | AR | 4,167 | 66,668 | AR | 1,362 | 21,792 |
+| 32 | AR | 2,407 | 77,022 | AR | 681 | 21,792 |
+| 866 / 811 (capacity) | AR | 88.9 | 77,022 | AR | 26.7 | 21,658 |
+
+### ROM mask cost: via-programmable ROM
+
+A via-programmable ROM shares base masks between dies of the same role and codes each die's weights in 1–2 masks:
+- Taalas HC1 changes two metal masks per model (EE Times).
+- A single EUV mask costs $0.5–1M (SemiEngineering, "Mask Complexity, Cost, And Change").
+- V4.1 has 3 base designs (layer, head + DSpark, Engram table) at a full $15M each. Qwen has 1.
+- NRE is amortised over 1,000 production units, as in the economics section.
+
+| V4.1 ROM array (188 dies) | NRE | Capex per system | $ per tok/s, B = 1 | $ per tok/s, saturated | Saturated, base masks excluded |
+|---|---:|---:|---:|---:|---:|
+| Full mask set per die (economics high) | $2,820M | $5.17M | 853 | 67.1 | — |
+| 10% of a set per die (economics low) | $282M | $2.63M | 434 | 34.2 | — |
+| Via-programmable, 1 × $0.5M | $139M | $2.49M | 411 | 32.3 | 31.7 |
+| Via-programmable, 2 × $0.5M or 1 × $1M | $233M | $2.58M | 426 | 33.5 | 33.0 |
+| Via-programmable, 2 × $1M | $421M | $2.77M | 457 | 36.0 | 35.4 |
+
+- **Via-programmable ROM removes the high case.** The V4.1 array costs $32–36 per saturated tok/s against the earlier $34–67, and against $15.4 for 8× B200 at saturation (whose users then get 15.5 tok/s each) and $51.4 at the ≥ 100 tok/s/user floor.
+- **The packages, not the masks, set V4.1 ROM cost.** 94 packages at the iso-package price make up $2.35M of the $2.49–2.77M.
+- **Qwen ROM:** $16–19M of NRE, $3.44–3.69 per saturated tok/s ($2.18–2.43 with the base excluded).
+
+### Every design gated alike (`gated_alike` in the record)
+
+This is root's fairness follow-up (2026-09-29). The same policies and cited constants now apply to every design:
+- **Clock gating:** a domain clocks only while it is busy. When idle it keeps the 10% ICG residual.
+- **Power gating:** a domain power-gates in every idle gap that fits its wake-up plus break-even time, with ReGate's residuals.
+- **Wake constants:**
+  - core domains (SMs, dedicated units, lanes, stream unit, L2): 1 µs wake, 0.5 µs break-even;
+  - HBM controller and PHY: 60-cycle wake, 412-cycle break-even (ReGate Table 3);
+  - SerDes and UCIe: 5 µs wake, 10% low-power-idle residual.
+- **No wake on the token path.** Each wake finishes at the end of its gap, from the static schedule.
+- **Busy time and gaps** come from each design's own schedule:
+  - **V4.1 HBM comparator:** the W13 chain walked node by node (`v41_hbm_timeline`, which reproduces 342.5 µs AR and 617.5 µs MTP).
+  - **Qwen dies:** their op boundaries (181), KV streams (36) and UCIe exchanges (73), with the gaps split evenly.
+  - **At saturation,** each domain gets one contiguous idle gap per pass or token, the ROM array's rule.
+- **GPU rows** stay at measured board power, which already contains whatever the GPU gates.
+
+This table supersedes the energy columns of "Batch, energy and capacity" above.
+
+| Design | Point | tok/s | Ungated mJ/token | Clock-gated | Clock + power gated | Static W, ungated → gated |
+|---|---|---:|---:|---:|---:|---:|
+| Qwen ROM AR (G = 6,144) | B = 1 | 9,968 | 86.4 | 84.6 | **84.6** | 102 → 83.4 |
+| Qwen ROM AR (G = 6,144) | saturated | 11,921 | 84.7 | 83.5 | **83.5** | 102 → 87.3 |
+| Qwen HBM tier 3 AR | B = 1 | 881 | 983 | 978 | **976** | 69.3 → 63.7 |
+| Qwen HBM tier 3 AR | saturated | 6,684 | 133 | 132 | **132** | 69.3 → 62.0 |
+| Qwen HBM tier 3 DFlash | B = 1 | 2,671 | 358 | 357 | **356** | 69.3 → 63.5 |
+| Qwen HBM tier 3 DFlash | saturated | 7,101 | 129 | 129 | **128** | 69.3 → 62.4 |
+| Qwen 1× B200 AR (tier 2) | B = 1 | 331 | 2,081 | — | **2,081** | measured |
+| Qwen 1× B200 AR (tier 2) | saturated | 7,907 | 87.1 | — | **87.1** | measured |
+| V4.1 ROM AR | B = 1 | 4,167 | 3,137 | 2,686 | **328** | 12,902 → 1,194 |
+| V4.1 ROM AR | saturated | 77,022 | 208 | 187 | **106** | 12,902 → 4,977 |
+| V4.1 ROM MTP m = 1 | B = 1 | 6,063 | 2,168 | 1,860 | **228** | 12,902 → 1,141 |
+| V4.1 ROM MTP m = 1 | saturated | 50,708 | 294 | 261 | **112** | 12,902 → 3,641 |
+| V4.1 HBM tier 3 AR | B = 1 | 2,920 | 3,692 | 3,468 | **3,246** | 6,513 → 5,210 |
+| V4.1 HBM tier 3 AR | saturated | 21,792 | 913 | 895 | **755** | 6,513 → 3,067 |
+| V4.1 HBM tier 3 MTP | B = 1 | 5,673 | 2,287 | 2,184 | **1,922** | 6,513 → 4,444 |
+| V4.1 HBM tier 3 MTP | saturated | 12,122 | 1,676 | 1,654 | **1,475** | 6,513 → 4,081 |
+| V4.1 8× B200 AR (tier 2) | B = 1 | 278 | 19,852 | — | **19,852** | measured |
+| V4.1 8× B200 AR (tier 2) | saturated | 13,018 | 423 | — | **423** | measured |
+
+- **Gating does not change the Qwen rows.** Their energy is dynamic: the ROM package's KV read and the HBM die's weight stream. Their idle gaps (under 1 µs between ops) are shorter than a core wake plus break-even. Gated or not, Qwen ROM uses 84.6 mJ/token against 356 for HBM tier 3 DFlash and 2,081 for a B200.
+- **The V4.1 HBM comparator gains 12–16% at batch 1 and 12–17% at saturation.**
+  - Its 96 TP dies are all on every token. Their idle comes in short gaps between phases: the SMs have 281 gaps within the 253 µs they are idle, and only 91 µs of them are long enough to gate.
+  - The SerDes idle between collectives mostly in gaps under 5 µs.
+- **The V4.1 ROM pipeline idles each stage in one long gap per token,** and power gating takes its batch-1 energy down 9.6×.
+- **Gated alike, V4.1 ROM uses 9.9× less energy per token than the HBM comparator at batch 1 in AR, 8.4× with MTP, and 7.1× at saturation.** The advantage is structural: a pipeline of weight-local stages idles in long gaps; a TP-96 machine does not.
+
+### Adopted power and cost requirements (root, 2026-09-29)
+
+1. **Stage power gating on the V4.1 ROM array.**
+   - Power switches per stage domain, with a 1 µs staggered wake (about 100 sub-domains, to bound di/dt).
+   - Retention only on the VM SRAM; the mask ROM and the logic hold no state across tokens.
+   - HBM controller and PHY power-down, with the DRAM self-refreshing.
+   - SerDes and UCIe low-power idle, with a 5 µs pre-wake.
+   - Every wake is scheduled from the static token schedule into an idle gap that fits wake + break-even. No wake may land on the single-user token path.
+2. **Adaptive MTP.** Run MTP while the batch is below the switch point and AR at or above it. The switch is 12.2 users on the V4.1 ROM array (exact) and between 8 and 16 users on the HBM comparator.
+3. **Via-programmable ROM is the cost basis.**
+   - Shared base mask sets per die role: 3 for V4.1 (layer, head + DSpark, Engram table), 1 for Qwen.
+   - 1–2 EUV coding masks per die at $0.5–1M each.
+   - V4.1 NRE is $139–421M, against $2,820M with full mask sets.
+4. **Every energy comparison uses the gated-alike table above.** The same policies and cited constants apply to every design; GPU rows are at measured board power.
