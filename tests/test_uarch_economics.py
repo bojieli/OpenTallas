@@ -42,9 +42,10 @@ def test_batch_curves_are_physical():
 
 def test_batch_one_matches_the_single_user_sections():
     e = _rec()
-    assert abs(e["v41_rom"]["ar"]["tokens_s_b1"] - 4166.8) < 1.0
-    assert abs(e["v41_rom"]["mtp_m1"]["tokens_s_b1"] - 6063.0) < 1.0
-    assert abs(e["qwen_rom"]["ar"]["tokens_s_b1"] - 9967.8) < 1.0
+    # W15 (2026-09-29): V4.1 collectives and the Qwen TP-2 exchanges priced from the RTL measurement
+    assert abs(e["v41_rom"]["ar"]["tokens_s_b1"] - 3808.8) < 1.0
+    assert abs(e["v41_rom"]["mtp_m1"]["tokens_s_b1"] - 5856.5) < 1.0
+    assert abs(e["qwen_rom"]["ar"]["tokens_s_b1"] - 9851.1) < 1.0
     assert abs(e["qwen_hbm"]["ar"]["tokens_s_b1"] - 880.6) < 1.0
     assert abs(e["qwen_hbm"]["dflash"]["tokens_s_b1"] - 2671.0) < 1.0
     assert abs(e["v41_hbm"]["ar"]["tokens_s_b1"] - 2919.8) < 1.0
@@ -135,7 +136,7 @@ def test_static_power_policies_only_ever_save_and_never_touch_the_token_path():
         assert sp[mode]["wake_1us"]["saturated"][3]["stages_power_gated"] >= 27
 
 
-def test_adaptive_mtp_takes_the_better_mode_and_switches_near_twelve_users():
+def test_adaptive_mtp_takes_the_better_mode_and_switches_near_thirteen_users():
     ad = _lev()["adaptive_mtp"]
     for k, v in ad.items():
         for r in v["rows"]:
@@ -143,7 +144,7 @@ def test_adaptive_mtp_takes_the_better_mode_and_switches_near_twelve_users():
         assert v["rows"][0]["mode"] == "MTP" and v["rows"][-1]["mode"] == "AR"
     rom = ad["v41_rom"]
     assert abs(rom["switch_users"] - rom["mtp_saturated"] / rom["ar_b1"]) < 0.01
-    assert 11 < rom["switch_users"] < 13
+    assert 12 < rom["switch_users"] < 14      # 13.3 with the W15-measured collectives (12.0 before)
 
 
 def test_via_programmable_masks_bound_the_rom_nre():
