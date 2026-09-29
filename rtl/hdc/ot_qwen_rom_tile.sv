@@ -4,7 +4,7 @@
 //
 // ot_qwen_rom_tile_logic is everything of one tile that is not a memory macro;
 // ot_qwen_rom_tile binds it to its macros and is the hardened, replicated
-// element (1,280 per die at G = 5,120).  The array (ot_qwen_me_array) and the
+// element (1,536 per die at G = 6,144; 1,280 at 5,120).  The array (ot_qwen_me_array) and the
 // runtime composition use the logic module, so the verified logic is the
 // hardened logic.
 //
@@ -39,10 +39,10 @@ module ot_qwen_rom_tile_logic #(
     parameter integer IL = 8,
     parameter integer AW = 24,
     parameter integer NW = 18,
-    parameter integer GT = 5120,
+    parameter integer GT = 6144,
     parameter integer TG = 4,
-    parameter integer SMIN = 7,
-    parameter integer CODE_BANKS = 14,
+    parameter integer SMIN = 6,
+    parameter integer CODE_BANKS = 10,
     parameter integer IREG = 1,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
@@ -51,8 +51,7 @@ module ot_qwen_rom_tile_logic #(
     parameter integer KV_HB = 16,         // words per head: 2^KV_HB
     parameter integer KV_NH = 4,          // KV heads per die
     parameter integer KV_SK = 7,          // scores split (log2)
-    parameter integer KV_SV = 9,          // weighted-sum split (log2)
-    parameter integer KV_KL = 52          // K words per group: ceil(512 / (GT >> KV_SK)) * KV_NH
+    parameter integer KV_SV = 9           // weighted-sum split (log2)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -176,6 +175,8 @@ module ot_qwen_rom_tile_logic #(
     endfunction
     generate if (KV_LOCAL != 0) begin : g_kv_local
         localparam [KV_AW-1:0] PRK = GT >> KV_SK;
+        //: K words a group holds: ceil(512 position tiles / (GT >> SK)) rounds x NH heads (44 at G = 6,144)
+        localparam integer KV_KL = ((512 + (GT >> KV_SK) - 1) / (GT >> KV_SK)) * KV_NH;
         wire [AW-1:0] a = me_kv_addr[AW-1:0];            // every group of the tile maps to the same word
         wire          is_v = (a >= KV_VB);
         wire [AW-1:0] w = a - KV_VB;
@@ -205,9 +206,9 @@ endmodule
 // registered masked port from the die's KV fill network).
 module ot_qwen_rom_tile #(
     parameter integer NW = 18,
-    parameter integer GT = 5120,
-    parameter integer SMIN = 7,
-    parameter integer CODE_BANKS = 14
+    parameter integer GT = 6144,
+    parameter integer SMIN = 6,
+    parameter integer CODE_BANKS = 10
 ) (
     input  wire              clk,
     input  wire              rst_n,
