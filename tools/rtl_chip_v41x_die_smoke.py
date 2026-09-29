@@ -56,6 +56,9 @@ KVTB = ROOT / "rtl/test/tb_chip_v41x_kv_prefetch.sv"
 KVTB_SOURCES = [ROOT / p for p in ("rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv", "rtl/hdc/kv/ot_hdc_hbm_model.sv",
                                    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
                                    "rtl/chip/ot_chip_v41x_kv_prefetch.sv")]
+KV_GROUP_SOURCES = [ROOT / p for p in ("rtl/chip/ot_chip_v41x_hbm_karb_group4.sv",
+                                      "rtl/chip/ot_chip_v41x_hbm_karb_pc_local.sv",
+                                      "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv")]
 TOOLS_ROOT = Path(os.environ.get("OPENTALLAS_TOOLS_ROOT", Path.home() / ".local/opentallas-tools"))
 VERILATOR = os.environ.get("OT_VERILATOR", str(TOOLS_ROOT / "verilator-5.050/bin/verilator"))
 YOSYS = os.environ.get("OT_YOSYS", str(TOOLS_ROOT / "yosys-0.68/bin/yosys"))
@@ -198,14 +201,17 @@ KVHBM = re.compile(r"KVHBM ops=(\d+) words=(\d+) sectors_written=(\d+) refetches
                    r"hold_cycles=(\d+) grants=(\d+) code=([01]+) att_issue=(\d+) att_held_cycles=(\d+)")
 
 
-def kvtest(scratch: Path) -> dict:
+def kvtest(scratch: Path, pipe_out: bool = False, group4: bool = False) -> dict:
     """The focused KV prefetch bench: gate, read-after-write, max descriptor, user slice, eviction, the shared
     K ports under indexer traffic, the region check, and the HBM KV region against the golden at the end."""
-    obj = scratch / "kvobj"
+    obj = scratch / ("kvobj_group4" if group4 else ("kvobj_pipe" if pipe_out else "kvobj"))
     obj.mkdir(parents=True, exist_ok=True)
     cmd = [VERILATOR, "--binary", "--timing", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-TIMESCALEMOD",
            "-Wno-BLKSEQ", "-Wno-MULTIDRIVEN", "--top-module", "tb_chip_v41x_kv_prefetch", "-Mdir", str(obj),
-           *map(str, KVTB_SOURCES), str(KVTB), "-j", "8"]
+           *(["-DHDC_KARB_GROUP4"] if group4 else (["-DHDC_KARB_PIPE_OUT"] if pipe_out else [])),
+           *map(str, KVTB_SOURCES),
+           *map(str, KV_GROUP_SOURCES if group4 else []),
+           str(KVTB), "-j", "8"]
     b = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if b.returncode:
         return {"pass": False, "build_returncode": b.returncode, "build_tail": (b.stdout + b.stderr)[-3000:]}
@@ -214,6 +220,8 @@ def kvtest(scratch: Path) -> dict:
     log = r.stdout + r.stderr
     m, c, k, g = KVPF.search(log), KVCASES.search(log), KEYS.search(log), REGION.search(log)
     rec = {"pass": "PASS" in log and r.returncode == 0 and all((m, c, k, g)),
+           "karb_pipe_out": pipe_out,
+           "karb_group4": group4,
            "log_sha256": hashlib.sha256(log.encode()).hexdigest(), "log_tail": log[-1500:]}
     if m:
         rec["kv"] = dict(zip(("ops", "words_read", "word_mismatches", "min_hold_cycles", "held_ops", "raw_checks",
@@ -321,6 +329,8 @@ def main() -> int:
     ap.add_argument("--image-dir", type=Path, required=False)
     ap.add_argument("--scratch", type=Path, default=Path(os.environ.get("OT_SCRATCH", "/tmp")) / "v41x_die_smoke")
     ap.add_argument("--steps", default="lint,synth,kvtest,smoke")
+    ap.add_argument("--kv-pipe-out", action="store_true", help="run the KV/index gate with registered arbiter outputs")
+    ap.add_argument("--kv-group4", action="store_true", help="run the KV/index gate with the four-PC hierarchy")
     ap.add_argument("--obj", type=Path, help="the smoke's Verilator object directory (default <scratch>/obj)")
     ap.add_argument("--reuse-executable", action="store_true")
     ap.add_argument("--reference", type=Path, help="the adopted gate's record on the same images")
@@ -339,7 +349,7 @@ def main() -> int:
     if "synth" in steps:
         rec["synth"] = synth(a.scratch / "synth")
     if "kvtest" in steps:
-        rec["kvtest"] = kvtest(a.scratch)
+        rec["kvtest"] = kvtest(a.scratch, a.kv_pipe_out, a.kv_group4)
     if "smoke" in steps:
         rec["smoke"] = smoke(a.image_dir, a.obj or a.scratch / "obj", a.reuse_executable)
         rec["smoke"]["image_sha256"] = {n: sha(a.image_dir / n) for n in sorted(os.listdir(a.image_dir))
@@ -348,7 +358,8 @@ def main() -> int:
         rec["reference_comparison"] = compare(rec["smoke"], a.reference)
     ok = {k: rec[k]["pass"] if k != "smoke" else rec[k]["status"] == "pass"
           for k in ("lint", "synth", "kvtest", "smoke") if k in rec}
-    srcs = sorted(set(sources("rtl") + sources("dpi", build=True) + KVTB_SOURCES + [KVTB]), key=str)
+    srcs = sorted(set(sources("rtl") + sources("dpi", build=True) + KVTB_SOURCES +
+                      (KV_GROUP_SOURCES if a.kv_group4 else []) + [KVTB]), key=str)
     rec.update({
         "schema": "opentallas.rtl.hdc_v41x_die_top_smoke.v1",
         "tops": {"die": "rtl/chip/ot_chip_v41x_die.sv", "tile": "rtl/chip/ot_chip_v41x_tile.sv"},

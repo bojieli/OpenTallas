@@ -13,7 +13,7 @@ module tb_hdc_v41x_idx_pool_kwr;
     wire [2:0] w_sslot;
     wire [31:0] w_scales,dbg_keys;
     ot_hdc_v41x_idx_pool_kwr dut(
-        .clk(clk),.rst_n(rst_n),.cfg_ik_base(24'd0),.su_go(su_go),
+        .clk(clk),.rst_n(rst_n),.cfg_ik_base(24'd0),.i_user_base_sec(28'd0),.su_go(su_go),
         .i_dst(2'd3),.i_obase(24'd0),.i_orow(24'd0),.i_nout(16'd1),.i_kdim(kd),
         .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),
         .w_v(w_v),.w_rdy(1'b1),.w_stack_mask(w_stack_mask),.w_csec(w_csec),.w_codes(w_codes),

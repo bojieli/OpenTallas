@@ -118,3 +118,76 @@ def test_karb_bank4_m9_is_an_independent_routing_sensitivity():
     assert m9["floorplan"] == base["floorplan"]
     assert m9["nickname"] != base["nickname"]
     assert m9["output"] != base["output"]
+
+
+def test_karb_bank4_pipe_m9_keeps_the_same_boundary():
+    direct = pnr.CASES["karb_bank4_m9"]()
+    piped = pnr.CASES["karb_bank4_pipe_m9"]()
+    assert piped["floorplan"] == direct["floorplan"]
+    assert [piped["args"][i + 1] for i, x in enumerate(piped["args"]) if x == "--param"] == ["NPC=4", "PIPE_OUT=1"]
+    assert piped["nickname"] != direct["nickname"]
+    assert piped["output"] != direct["output"]
+
+
+def test_karb_bank4_pipe_wide_pins_stay_inside_each_phy_pc_window():
+    narrow = pnr.CASES["karb_bank4_pipe_m9"]()
+    wide = pnr.CASES["karb_bank4_pipe_wide_m9"]()
+    assert wide["floorplan"]["die_um"] == narrow["floorplan"]["die_um"]
+    assert wide["floorplan"]["pc_pin_span_um"] == (10.0, 350.0)
+    assert wide["floorplan"]["pc_pin_span_um"][1] < wide["floorplan"]["pc_window_um"]
+    assert "--false-path-io" in wide["args"]
+    assert "--false-path-io" not in narrow["args"]
+    assert wide["nickname"] != narrow["nickname"]
+
+
+def test_karb_bank4_low_density_retries_the_same_wide_pin_boundary():
+    wide = pnr.CASES["karb_bank4_pipe_wide_m9"]()
+    low = pnr.CASES["karb_bank4_pipe_wide_lowdens_m9"]()
+    assert low["floorplan"] == wide["floorplan"]
+    assert low["args"][low["args"].index("--place-density") + 1] == "0.40"
+    assert wide["args"][wide["args"].index("--place-density") + 1] == "0.60"
+    assert low["nickname"] != wide["nickname"]
+
+
+def test_karb_single_pc_partition_covers_all_local_pins():
+    case = pnr.CASES["karb_pc1_pipe_m9"]()
+    args = case["args"]
+    assert case["floorplan"]["die_um"] == [375.0, 30.24]
+    assert [args[i + 1] for i, x in enumerate(args) if x == "--param"] == ["NPC=1", "PIPE_OUT=1"]
+    regions = [args[i + 1] for i, x in enumerate(args) if x == "--pin-region"]
+    ports = rtl_ports(ROOT / "rtl/chip/ot_chip_v41x_hbm_karb.sv", "ot_chip_v41x_hbm_karb", {"NPC": 1})
+    all_bits = [n if w == 1 else f"{n}[{i}]" for n, (_, w) in ports.items() for i in range(w)]
+    pats = [re.compile(r.rpartition("=")[0]) for r in regions]
+    for b in all_bits:
+        assert sum(1 for p in pats if p.search(b)) == 1, b
+
+
+def test_karb_single_pc_slew_repair_keeps_same_boundary_and_clock():
+    base = pnr.CASES["karb_pc1_pipe_m9"]()
+    repair = pnr.CASES["karb_pc1_pipe_slew_m9"]()
+    assert repair["floorplan"] == base["floorplan"]
+    i = base["args"].index("--pin-region")
+    assert repair["args"] == base["args"][:i] + ["--max-transition-ns"] + base["args"][i:]
+    assert repair["output"] != base["output"]
+
+
+def test_karb_group4_composes_four_local_slices_on_the_same_phy_windows():
+    flat = pnr.CASES["karb_bank4_m9"]()
+    group = pnr.CASES["karb_group4_m9"]()
+    assert group["floorplan"]["die_um"] == flat["floorplan"]["die_um"]
+    assert group["floorplan"]["pc_pin_span_um"] == flat["floorplan"]["pc_pin_span_um"]
+    args = group["args"]
+    assert args[args.index("--top") + 1] == "ot_chip_v41x_hbm_karb_group4"
+    assert "--param" not in args  # top defaults avoid a Yosys 0.68 reprocessing bug
+    assert "--max-transition-ns" in args
+    assert group["output"] != flat["output"]
+
+
+def test_collective_fifo128_physical_case_is_the_measured_engine_configuration():
+    case = pnr.CASES["collective_fifo128"]()
+    args = case["args"]
+    params = [args[i + 1] for i, x in enumerate(args) if x == "--param"]
+    assert {"N=4", "LANES=16", "DEPTH=128", "RELAY=1", "ADD_LAT=3",
+            "PAIRWISE=1", "GW=1", "FW=512", "TAGW=32"} <= set(params)
+    assert args[args.index("--clock-period-ns") + 1] == "0.92"
+    assert case["floorplan"]["scope"].startswith("one standalone")

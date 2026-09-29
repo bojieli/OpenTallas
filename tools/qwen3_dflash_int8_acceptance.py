@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from tools import qwen3_deployment_quality as Q
 from tools.measure_speculative_acceptance import _render
+from tools.qwen3_o4_tp2_acceptance_adapter import bind_tp2_target
 
 
 def sha(path):
@@ -75,12 +76,18 @@ class W8DraftLinear(nn.Module):
     yet frozen; the target verifier below is the exact deployment contract.
     """
 
-    def __init__(self, source, groups):
+    def __init__(self, source, groups, tp2_mode=None):
         super().__init__()
         q, s, _ = Q.quantize_w8(source.weight.detach())
         self.register_buffer("qT", q.t().contiguous())
         self.register_buffer("sT", s.t().contiguous())
-        self.splits = Q.split_for(source.out_features, source.in_features, groups)
+        self.tp2_mode = tp2_mode
+        if tp2_mode == "column":
+            self.splits = Q.split_for(source.out_features // 2, source.in_features, groups)
+        elif tp2_mode == "row":
+            self.splits = Q.split_for(source.out_features, source.in_features // 2, groups)
+        else:
+            self.splits = Q.split_for(source.out_features, source.in_features, groups)
         self.out_features = source.out_features
         self.in_features = source.in_features
         if source.bias is not None:
@@ -90,19 +97,33 @@ class W8DraftLinear(nn.Module):
 
     def forward(self, x):
         shape = x.shape[:-1]
-        y = Q.int8_mv_t(x.reshape(-1, self.in_features).to(Q.F32),
-                         self.qT, self.sT, self.splits).to(Q.BF16)
+        xf = x.reshape(-1, self.in_features).to(Q.F32)
+        if self.tp2_mode == "row":
+            half = self.in_features // 2
+            xb = Q.to_bf16(xf)
+            def partial(xh, wh):
+                if xh.is_cuda:
+                    return Q.chunk_tree_dot_t(xh.t().contiguous()[None], wh[None], self.splits)[0]
+                return Q._chunk_tree_dot_ref(xh, wh.t(), self.splits)
+            p0 = partial(xb[:, :half], self.qT[:half])
+            p1 = partial(xb[:, half:], self.qT[half:])
+            y = Q.mul(Q.add(p0, p1), self.sT.to(Q.F32).reshape(1, -1)).to(Q.BF16)
+        else:
+            y = Q.int8_mv_t(xf, self.qT, self.sT, self.splits).to(Q.BF16)
         if self.bias is not None:
             y = (y + self.bias).to(Q.BF16)
         return y.reshape(*shape, self.out_features)
 
 
-def quantize_drafter(draft, groups):
+def quantize_drafter(draft, groups, tp2=False):
     names = [name for name, module in draft.named_modules() if isinstance(module, nn.Linear)]
     for name in names:
         parent_name, attr = name.rsplit(".", 1) if "." in name else ("", name)
         parent = draft.get_submodule(parent_name) if parent_name else draft
-        setattr(parent, attr, W8DraftLinear(getattr(parent, attr), groups))
+        mode = None
+        if tp2:
+            mode = "row" if name.endswith(("o_proj", "down_proj")) else "column"
+        setattr(parent, attr, W8DraftLinear(getattr(parent, attr), groups, mode))
     return names
 
 
@@ -180,10 +201,14 @@ def main():
     ap.add_argument("--block", type=int, default=5)
     ap.add_argument("--groups", type=int, default=6144)
     ap.add_argument("--draft-weights", choices=("bf16", "w8"), default="bf16")
+    ap.add_argument("--tp2-target", action="store_true")
+    ap.add_argument("--draft-tp2", action="store_true")
     ap.add_argument("--gpu-memory-fraction", type=float, default=0.55)
     args = ap.parse_args()
     if not 2 <= args.block <= 16 or args.max_new < 2:
         ap.error("block must be 2..16 and max-new >= 2")
+    if args.draft_tp2 and args.draft_weights != "w8":
+        ap.error("--draft-tp2 requires --draft-weights w8")
     sys.path.insert(0, args.dflash_repo)
     from dflash.model import DFlashDraftModel
     from transformers import AutoTokenizer
@@ -192,19 +217,23 @@ def main():
     draft_snap = next((Path.home() / ".cache/huggingface/hub/models--z-lab--Qwen3-8B-DFlash-b16/snapshots").iterdir())
     tok = AutoTokenizer.from_pretrained(str(snap))
     target = Q.Qwen3(snap, "contract", "w8", "fp8", groups=args.groups)
+    if args.tp2_target:
+        bind_tp2_target(target, args.groups)
     draft = DFlashDraftModel.from_pretrained(str(draft_snap), attn_implementation="sdpa",
                                               dtype=torch.bfloat16).to("cuda").eval()
-    quantized_draft_matrices = quantize_drafter(draft, args.groups) if args.draft_weights == "w8" else []
+    quantized_draft_matrices = quantize_drafter(draft, args.groups, args.draft_tp2) if args.draft_weights == "w8" else []
     rec = {"schema": "opentallas.qwen3-dflash-int8-acceptance.v1",
            "scope": "bounded deployed-arithmetic acceptance; no TP-2 RTL cycle or final DFlash rate claim",
            "source_commit": subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip(),
            "source_sha256": {p: sha(ROOT / p) for p in
-                             ("tools/qwen3_dflash_int8_acceptance.py", "tools/qwen3_deployment_quality.py")},
+                             ("tools/qwen3_dflash_int8_acceptance.py", "tools/qwen3_deployment_quality.py",
+                              "tools/qwen3_o4_tp2_acceptance_adapter.py")},
            "dflash_commit": subprocess.check_output(["git", "-C", args.dflash_repo, "rev-parse", "HEAD"], text=True).strip(),
            "target_checkpoint": snap.name, "drafter_checkpoint": draft_snap.name,
            "prompts_sha256": sha(args.prompts), "bf16_reference_sha256": sha(args.bf16_reference),
            "mode": "e_full_w8", "groups": args.groups,
            "draft_weights": args.draft_weights,
+           "tp2_target": args.tp2_target, "draft_tp2": args.draft_tp2,
            "drafter_quantized_matrices": quantized_draft_matrices,
            "block": args.block, "max_new": args.max_new,
            "environment": {"host": platform.node(), "torch": torch.__version__,

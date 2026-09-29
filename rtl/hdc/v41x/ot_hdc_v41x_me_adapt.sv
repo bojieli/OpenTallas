@@ -35,11 +35,14 @@ module ot_hdc_v41x_me_adapt #(
     parameter integer LB   = 7,
     parameter integer BAW  = 17,           // weight bank word address
     parameter integer KMAX = 512,          // largest K
-    parameter integer RL   = 2
+    parameter integer RL   = 2,
+    parameter integer XBANK = 0,           // local SRAM-bank activation store; default keeps reduced gate
+    parameter integer SHARED_XBANK = 0     // external registered store plus one registered multicast stage
 ) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              go,
+    input  wire              i_preloaded,    // complete selected K span is already in shared store
     output wire              ready,
     output reg               idle,
     input  wire [NW-1:0]     i_nout,
@@ -67,6 +70,17 @@ module ot_hdc_v41x_me_adapt #(
     output reg  [MP*G-1:0]   x_re,
     output reg  [MP*G*AW-1:0] x_addr,
     input  wire [MP*G*32-1:0] x_q,
+    // Optional cluster store interface.  The external `shared_xr0` is the
+    // registered SRAM read followed by one registered multicast stage; RL=3
+    // is required.  Only lockstep adapters may connect to one shared store.
+    output wire                  shared_wr_v,
+    output wire [$clog2(MP+1)-1:0] shared_wr_p,
+    output wire [$clog2(KMAX+1)-1:0] shared_wr_e,
+    output wire [G*16-1:0]       shared_wr_d,
+    output wire [7:0]            shared_rq_v,
+    output wire [8*14-1:0]       shared_rq_q,
+    output wire [8*4-1:0]        shared_rq_plg,
+    input  wire [8*MG*MP*16-1:0] shared_xr0,
     output reg               ov,
     output reg  [MP*G-1:0]   o_we,
     output reg  [MP*G*AW-1:0] o_addr,
@@ -139,7 +153,10 @@ module ot_hdc_v41x_me_adapt #(
             d_v <= 1'b0;
             case (st)
                 A_IDLE: if (go) begin st <= A_SUB; sj <= 0; end
-                A_SUB: begin st <= A_LOAD; lp <= 0; le <= 0; got <= 0; end
+                A_SUB: begin
+                    st <= (SHARED_XBANK != 0 && i_preloaded) ? A_DESC : A_LOAD;
+                    lp <= 0; le <= 0; got <= 0;
+                end
                 A_LOAD: begin
                     x_re[G-1:0] <= {G{1'b1}};
                     l_v <= 1'b1;
@@ -173,18 +190,6 @@ module ot_hdc_v41x_me_adapt #(
         l_p <= lp; l_e <= le; l2_p <= l_p; l2_e <= l_e;
     end
 
-    // ---- activation buffer (BF16, RNE of the element as the as-built me_round), per position
-    reg  [15:0] xb [0:MP*KMAX-1];
-    reg  [32:0] rb;
-    integer b;
-    always @(posedge clk)
-        if (l2_v)
-            for (b = 0; b < G; b = b + 1)
-                if (l2_e + b < K) begin
-                    rb = {1'b0, x_q[32*b +: 32]} + 33'h7FFF + {32'd0, x_q[32*b + 16]};
-                    xb[l2_p * KMAX + l2_e + b] <= rb[31:16];
-                end
-
     // ---- the tile
     wire [7:0]        rq_v;
     wire [8*BAW-1:0]  rq_a;
@@ -204,20 +209,108 @@ module ot_hdc_v41x_me_adapt #(
     generate for (wi = 0; wi < 8*MG; wi = wi + 1) begin : g_wfmt
         assign wb_fmt[34*wi +: 34] = {2'b00, wb_q[32*wi +: 32]};
     end endgenerate
-    // activation broadcast: lane b = 8u + c takes term q*8P + (b mod 8P) of each position, RL cycles later
-    reg  [8*MG*MP*16-1:0] xr [0:RL-1];
-    integer u, cc, pp, rr;
-    reg  [NBW+8:0] term;
-    always @(posedge clk) begin
-        for (u = 0; u < MG; u = u + 1)
-            for (cc = 0; cc < 8; cc = cc + 1) begin
-                term = ({9'd0, rq_q[cc*NBW +: NBW]} << (3 + rq_plg[cc*4 +: 4])) +
-                       ((8 * u + cc) & ((8 << rq_plg[cc*4 +: 4]) - 1));
-                for (pp = 0; pp < MP; pp = pp + 1)
-                    xr[0][((8*u + cc)*MP + pp)*16 +: 16] <= xb[pp * KMAX + term[KAW-1:0]];
-            end
-        for (rr = 1; rr < RL; rr = rr + 1) xr[rr] <= xr[rr-1];
+    // Activation broadcast: lane b = 8u+c takes term q*8P+(b mod 8P).
+    // Both memories register the read on the rq cycle.  The remaining RL-1
+    // registers are exactly the original tile-facing latency, no added beat.
+    localparam integer XBW = 8*MG*MP*16;
+    wire [XBW-1:0] xr0;
+    wire [XBW-1:0] xr_last;
+    assign shared_rq_v=rq_v;
+    assign shared_rq_q=rq_q;
+    assign shared_rq_plg=rq_plg;
+    assign shared_wr_v=l2_v;
+    assign shared_wr_p=l2_p[$clog2(MP+1)-1:0];
+    assign shared_wr_e=l2_e[$clog2(KMAX+1)-1:0];
+    for (genvar sc=0;sc<G;sc=sc+1) begin : g_shared_round
+        wire [32:0] rb={1'b0,x_q[32*sc +:32]}+33'h7fff+{32'd0,x_q[32*sc+16]};
+        assign shared_wr_d[16*sc +:16]=rb[31:16];
     end
+    generate if (SHARED_XBANK != 0) begin : g_shared_xbank
+        assign xr0=shared_xr0;
+    end else if (XBANK != 0) begin : g_xbank
+        localparam integer EW = $clog2(KMAX+1);
+        localparam integer PW = $clog2(MP+1);
+        wire [G*16-1:0] wr_bf;
+        for (genvar bc=0; bc<G; bc=bc+1) begin : g_round
+            wire [32:0] rb = {1'b0,x_q[32*bc +:32]} + 33'h7fff + {32'd0,x_q[32*bc+16]};
+            assign wr_bf[16*bc +:16] = rb[31:16];
+        end
+        if (XBANK == 2) begin : g_macro
+            ot_hdc_v41x_me_xbank_macro #(.MG(MG),.MP(MP),.G(G),.KMAX(KMAX),.NBW(NBW),.EW(EW)) u_xbank (
+                .clk(clk),.wr_v(l2_v),.wr_p(l2_p[PW-1:0]),.wr_e(l2_e[EW-1:0]),.wr_d(wr_bf),
+                .pre_v(1'b0),.pre_p(PW'(0)),.pre_e(EW'(0)),.pre_d(XBW'(0)),.rd_rot(2'd0),
+                .rq_v(rq_v),.rq_q(rq_q),.rq_plg(rq_plg),.rd_x(xr0));
+        end else begin : g_local
+            ot_hdc_v41x_me_xbank #(.MG(MG),.MP(MP),.G(G),.KMAX(KMAX),.NBW(NBW),.EW(EW)) u_xbank (
+                .clk(clk),.wr_v(l2_v),.wr_p(l2_p[PW-1:0]),.wr_e(l2_e[EW-1:0]),.wr_d(wr_bf),
+                .pre_v(1'b0),.pre_p(PW'(0)),.pre_e(EW'(0)),.pre_d(XBW'(0)),.rd_rot(2'd0),
+                .rq_v(rq_v),.rq_q(rq_q),.rd_x(xr0),.rq_plg(rq_plg));
+        end
+    end else begin : g_xflat
+        reg [15:0] xb [0:MP*KMAX-1];
+        reg [32:0] rb;
+        reg [XBW-1:0] xr_reg;
+        integer b,u,cc,pp;
+        reg [NBW+8:0] term;
+        always @(posedge clk)
+            if (l2_v)
+                for (b=0;b<G;b=b+1)
+                    if (l2_e+b<K) begin
+                        rb={1'b0,x_q[32*b +:32]}+33'h7fff+{32'd0,x_q[32*b+16]};
+                        xb[l2_p*KMAX+l2_e+b] <= rb[31:16];
+                    end
+        always @(posedge clk)
+            for (u=0;u<MG;u=u+1)
+                for (cc=0;cc<8;cc=cc+1) begin
+                    term=({9'd0,rq_q[cc*NBW +:NBW]} << (3+rq_plg[cc*4 +:4]))+
+                         ((8*u+cc)&((8 << rq_plg[cc*4 +:4])-1));
+                    for(pp=0;pp<MP;pp=pp+1)
+                        xr_reg[((8*u+cc)*MP+pp)*16 +:16] <= xb[pp*KMAX+term[KAW-1:0]];
+                end
+        assign xr0=xr_reg;
+    end endgenerate
+    // The input-registered SRAM adds one request edge before its registered
+    // read.  Reuse that edge as one of the tile latency stages; otherwise the
+    // activation would arrive one beat after the weight on RL=4.
+    generate if (SHARED_XBANK == 5 && RL >= 5) begin : g_xr_shared_readreg
+        reg [XBW-1:0] xr [1:RL-4];
+        for (genvar ri=1;ri<RL-3;ri=ri+1) begin : g_stage
+            if (ri==1) always @(posedge clk) xr[ri] <= xr0;
+            else always @(posedge clk) xr[ri] <= xr[ri-1];
+        end
+        assign xr_last=xr[RL-4];
+    end else if (SHARED_XBANK == 3 && RL >= 4) begin : g_xr_shared_inreg
+        reg [XBW-1:0] xr [1:RL-3];
+        for (genvar ri=1;ri<RL-2;ri=ri+1) begin : g_stage
+            if (ri==1) always @(posedge clk) xr[ri] <= xr0;
+            else always @(posedge clk) xr[ri] <= xr[ri-1];
+        end
+        assign xr_last=xr[RL-3];
+    end else if (SHARED_XBANK != 0 && RL >= 3) begin : g_xr_shared
+        reg [XBW-1:0] xr [1:RL-2];
+        for (genvar ri=1;ri<RL-1;ri=ri+1) begin : g_stage
+            if (ri==1) always @(posedge clk) xr[ri] <= xr0;
+            else always @(posedge clk) xr[ri] <= xr[ri-1];
+        end
+        assign xr_last=xr[RL-2];
+    end else if (RL == 1) begin : g_xr1
+        assign xr_last=xr0;
+    end else begin : g_xr_more
+        reg [XBW-1:0] xr [1:RL-1];
+        for (genvar ri=1;ri<RL;ri=ri+1) begin : g_stage
+            if (ri==1) always @(posedge clk) xr[ri] <= xr0;
+            else always @(posedge clk) xr[ri] <= xr[ri-1];
+        end
+        assign xr_last=xr[RL-1];
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (SHARED_XBANK != 0 && RL < 3)
+        $fatal(1,"shared store requires RL>=3 including multicast register");
+    initial if (SHARED_XBANK == 3 && RL < 4)
+        $fatal(1,"input-registered shared store requires RL>=4");
+    initial if (SHARED_XBANK == 5 && RL < 5)
+        $fatal(1,"bank-output-registered shared store requires RL>=5");
+`endif
     assign wb_re = rq_v;
     assign wb_addr = rq_a;
     ot_hdc_v41x_wgt_tile #(.KIND(1), .G(MG), .M(MP), .LB(LB), .PMIN_LG(PMIN_LG), .AW(BAW), .NBW(NBW), .RWW(RWW),
@@ -227,7 +320,7 @@ module ot_hdc_v41x_me_adapt #(
         .d_fp4(1'b0), .d_tag(4'd0), .d_src(1'b0), .d_split(1'b0),
         .rq_v(rq_v), .rq_a(rq_a), .rq_q(rq_q), .rq_plg(rq_plg), .rq_tag(),
         .rq_src(), .rq_split(), .rq_rg(),
-        .rd_w(wb_fmt), .rd_k('0), .rd_x(xr[RL-1]),
+        .rd_w(wb_fmt), .rd_k('0), .rd_x(xr_last),
         .o_cr(t_ov), .o_v(t_ov), .o_rg(t_rg), .o_tag(), .o_mask(t_mask), .o_y(t_y), .o_bf(t_bf), .o_f(t_f),
         .o_smask(), .o_ys(), .o_bfs(), .o_fs(),
         .o_cnt_rom(), .o_cnt_stream(), .o_cnt_split(),
@@ -249,7 +342,7 @@ module ot_hdc_v41x_me_adapt #(
     reg                 fl;
     integer s, p;
     always @(*) begin
-        n_we = 0; n_addr = 0; n_mask = 0; n_data = 0; fl = 1'b0;
+        n_we = 0; n_addr = 0; n_mask = 0; n_data = 0; fl = 1'b0; key = 0;
         b_idx = am_idx; b_val = am_val; b_key = am_key; b_any = am_any;
         for (s = 0; s < NC; s = s + 1) begin
             rho = ({5'd0, t_rg} << (LMG - plg)) + s;

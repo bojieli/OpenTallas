@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.rtl.v41x_karb_group4_kv_gate.v1",
+  "source_commit": "c456febb160ece8ddaa414c2d22ada38ebd2e7a6",
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_hbm_karb_group4.sv": "1d75c36de55f19c0f7f90e846f037f37f0ab210ccbfe796bd1fcd991d6c3e855",
+    "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a",
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "4db1866158de8b8bb377631a0ec6fda53e6eb512a84b81ee049788534d523f14",
+    "rtl/chip/ot_chip_v41x_kv_prefetch.sv": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d",
+    "rtl/test/tb_chip_v41x_kv_prefetch.sv": "41d77ec451652c68cbd59c1e9510eaa22f84ce8169e8edec196f25e822433ed3",
+    "tools/rtl_chip_v41x_die_smoke.py": "f4ca63a38f176aef1a11180b59bec1ff1056b674aa8629cb39b5d476901fff57"
+  },
+  "claim_boundary": "Four stacks, four pseudo-channels per stack, grouped registered K ingress and per-PC HBM request outputs, grouped one-entry K response buffering, concurrent reduced KV/index simulation. This is not the full NPC32 die or a shipped-shape token.",
+  "kvtest": {
+    "pass": true,
+    "karb_pipe_out": false,
+    "karb_group4": true,
+    "log_sha256": "ab25197f660c1c3f83c63b15de5baafc3369f0e2e5198381c64a6f0a1942d984",
+    "log_tail": "KVPF_CASES max_descriptor_ops=2 max_words=640 user_slice_ops=3 slice_base=4096\nKVPF_WRAP done=1 writes=6 hits=10 mismatches=0\nKVPF ops=38 words_read=4456 bad=0 held_min=162 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=7 hbm_kv_mismatch=0 fault=0 code=00000\nKEYS reads=74679 bad=0 writes=663 wr_done=660 contended=2167 kv_grants=5937\nREGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1\nPASS\n- /tmp/opentallas-v41-die-physical-next/rtl/test/tb_chip_v41x_kv_prefetch.sv:418: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 48us; walltime 0.248 s; speed 195.214 us/s\n- Verilator: cpu 0.238 s on 1 threads; allocated 80 MB\n",
+    "kv": {
+      "ops": 38,
+      "words_read": 4456,
+      "word_mismatches": 0,
+      "min_hold_cycles": 162,
+      "held_ops": 38,
+      "raw_checks": 16,
+      "refetches": 22,
+      "sectors_written": 155,
+      "write_queue_high": 7,
+      "hbm_kv_mismatches": 0,
+      "fault": 0,
+      "fault_code": "00000"
+    },
+    "cases": {
+      "max_descriptor_ops": 2,
+      "max_descriptor_words": 640,
+      "user_slice_ops": 3,
+      "slice_base_word": 4096
+    },
+    "generation_wrap": {
+      "done": 1,
+      "row_writes": 6,
+      "write_hits": 10,
+      "mismatches": 0,
+      "negative_control": "with the drain condition removed from the restart (sout == 0), the same bench does not pass: the stale responses are taken and the op never completes (TIMEOUT)"
+    },
+    "indexer_traffic": {
+      "key_reads": 74679,
+      "key_mismatches": 0,
+      "key_writes": 663,
+      "key_wr_done": 660,
+      "contended_cycles": 2167,
+      "kv_grants": 5937
+    },
+    "region": {
+      "key_sectors": 262144,
+      "kv_sbase": 262144,
+      "kv_end": 266240,
+      "k_mem": 524288,
+      "disjoint": 1,
+      "inside": 1
+    }
+  },
+  "pass": true
+}

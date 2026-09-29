@@ -27,7 +27,12 @@ module ot_chip_v41x_hbm_karb #(
     parameter integer TAGW = 16,
     parameter integer LENW = 4,
     parameter integer BEATW = 4,
-    parameter integer DW   = 256
+    parameter integer DW   = 256,
+    // One registered request per pseudo-channel.  Ready acknowledges enqueue;
+    // the HBM handshake may occur a cycle later.  Default keeps the reduced
+    // die's previously verified combinational timing and cycle counts.
+    parameter integer PIPE_OUT = 0,
+    parameter integer PIPE_RSP = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -89,7 +94,7 @@ module ot_chip_v41x_hbm_karb #(
     wire [LPC-1:0] kpc = pc_of(k_addr);
     reg  [NPC-1:0] rr;                              // 1: K has priority on the next contention
     reg  [7:0]     bw_out [0:NPC-1], kw_out [0:NPC-1];
-    wire [NPC-1:0] gk, gb;
+    wire [NPC-1:0] gk, gb, room;
     // K response select: lowest channel holding a K response
     reg  [LPC-1:0] ksel; reg kany;
     integer i;
@@ -105,19 +110,54 @@ module ot_chip_v41x_hbm_karb #(
         wire b_ok = b_v[p] && !(b_we[p] && kw_out[p] != 0);
         assign gk[p] = k_ok && (!b_ok || rr[p]);
         assign gb[p] = b_ok && !gk[p];
-        assign h_v[p] = gk[p] || gb[p];
-        assign h_addr[p*AW +: AW] = gk[p] ? k_addr : b_addr[p*AW +: AW];
-        assign h_len[p*LENW +: LENW] = gk[p] ? k_len : b_len[p*LENW +: LENW];
-        assign h_tag[p*(TAGW+1) +: TAGW+1] = gk[p] ? {1'b1, k_tag} : {1'b0, b_tag[p*TAGW +: TAGW]};
-        assign h_we[p] = gk[p] ? k_we : b_we[p];
-        assign h_wdata[p*DW +: DW] = gk[p] ? k_wdata : b_wdata[p*DW +: DW];
-        assign h_wstrb[p*DW/8 +: DW/8] = gk[p] ? k_wstrb : b_wstrb[p*DW/8 +: DW/8];
-        assign b_rdy[p] = h_rdy[p] && gb[p];
+        wire [AW-1:0] req_addr = gk[p] ? k_addr : b_addr[p*AW +: AW];
+        wire [LENW-1:0] req_len = gk[p] ? k_len : b_len[p*LENW +: LENW];
+        wire [TAGW:0] req_tag = gk[p] ? {1'b1, k_tag} : {1'b0, b_tag[p*TAGW +: TAGW]};
+        wire req_we = gk[p] ? k_we : b_we[p];
+        wire [DW-1:0] req_wdata = gk[p] ? k_wdata : b_wdata[p*DW +: DW];
+        wire [DW/8-1:0] req_wstrb = gk[p] ? k_wstrb : b_wstrb[p*DW/8 +: DW/8];
+        if (PIPE_OUT != 0) begin : g_pipe
+            reg v_q, we_q;
+            reg [AW-1:0] addr_q;
+            reg [LENW-1:0] len_q;
+            reg [TAGW:0] tag_q;
+            reg [DW-1:0] wdata_q;
+            reg [DW/8-1:0] wstrb_q;
+            assign room[p] = !v_q || h_rdy[p];
+            assign h_v[p] = v_q;
+            assign h_addr[p*AW +: AW] = addr_q;
+            assign h_len[p*LENW +: LENW] = len_q;
+            assign h_tag[p*(TAGW+1) +: TAGW+1] = tag_q;
+            assign h_we[p] = we_q;
+            assign h_wdata[p*DW +: DW] = wdata_q;
+            assign h_wstrb[p*DW/8 +: DW/8] = wstrb_q;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin
+                    v_q <= 1'b0;
+                    addr_q <= '0; len_q <= '0; tag_q <= '0;
+                    we_q <= 1'b0; wdata_q <= '0; wstrb_q <= '0;
+                end else if (room[p]) begin
+                    v_q <= gk[p] || gb[p];
+                    if (gk[p] || gb[p]) begin
+                        addr_q <= req_addr; len_q <= req_len; tag_q <= req_tag;
+                        we_q <= req_we; wdata_q <= req_wdata; wstrb_q <= req_wstrb;
+                    end
+                end
+        end else begin : g_direct
+            assign room[p] = h_rdy[p];
+            assign h_v[p] = gk[p] || gb[p];
+            assign h_addr[p*AW +: AW] = req_addr;
+            assign h_len[p*LENW +: LENW] = req_len;
+            assign h_tag[p*(TAGW+1) +: TAGW+1] = req_tag;
+            assign h_we[p] = req_we;
+            assign h_wdata[p*DW +: DW] = req_wdata;
+            assign h_wstrb[p*DW/8 +: DW/8] = req_wstrb;
+        end
+        assign b_rdy[p] = room[p] && gb[p];
         assign b_wr_done[p] = h_wr_done[p] && bw_out[p] != 0;
         // responses
         wire mine_k = r_tag[p*(TAGW+1) + TAGW];
         assign b_rsp_v[p] = r_v[p] && !mine_k;
-        assign r_rdy[p] = mine_k ? (kany && ksel == p && k_rsp_rdy) : b_rsp_rdy[p];
         assign b_rsp_tag[p*TAGW +: TAGW] = r_tag[p*(TAGW+1) +: TAGW];
         assign b_rsp_beat[p*BEATW +: BEATW] = r_beat[p*BEATW +: BEATW];
         assign b_rsp_data[p*DW +: DW] = r_data[p*DW +: DW];
@@ -125,26 +165,38 @@ module ot_chip_v41x_hbm_karb #(
             if (!rst_n) begin
                 rr[p] <= 1'b0; bw_out[p] <= 8'd0; kw_out[p] <= 8'd0;
             end else begin
-                if (k_ok && b_ok && h_rdy[p]) rr[p] <= !gk[p];
-                bw_out[p] <= bw_out[p] + {7'd0, gb[p] && h_rdy[p] && b_we[p]}
+                if (k_ok && b_ok && room[p]) rr[p] <= !gk[p];
+                bw_out[p] <= bw_out[p] + {7'd0, gb[p] && room[p] && b_we[p]}
                              - {7'd0, h_wr_done[p] && bw_out[p] != 0};
-                kw_out[p] <= kw_out[p] + {7'd0, gk[p] && h_rdy[p] && k_we}
+                kw_out[p] <= kw_out[p] + {7'd0, gk[p] && room[p] && k_we}
                              - {7'd0, h_wr_done[p] && bw_out[p] == 0 && kw_out[p] != 0};
             end
     end endgenerate
-    assign k_rdy = h_rdy[kpc] && gk[kpc];
+    assign k_rdy = room[kpc] && gk[kpc];
     reg [NPC-1:0] kwd;
     always @(*) for (i = 0; i < NPC; i = i + 1) kwd[i] = h_wr_done[i] && bw_out[i] == 0 && kw_out[i] != 0;
     assign k_wr_done = |kwd;
-    assign k_rsp_v = kany;
-    assign k_rsp_tag = r_tag[ksel*(TAGW+1) +: TAGW];
-    assign k_rsp_beat = r_beat[ksel*BEATW +: BEATW];
-    assign k_rsp_data = r_data[ksel*DW +: DW];
+    generate if (PIPE_RSP != 0) begin : g_rsp_pipe
+        ot_chip_v41x_hbm_rsp_pipe #(.NPC(NPC), .TAGW(TAGW), .BEATW(BEATW), .DW(DW)) u_rsp (
+            .clk(clk), .rst_n(rst_n), .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag),
+            .r_beat(r_beat), .r_data(r_data), .b_rsp_rdy(b_rsp_rdy),
+            .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_tag(k_rsp_tag),
+            .k_rsp_beat(k_rsp_beat), .k_rsp_data(k_rsp_data));
+    end else begin : g_rsp_direct
+        for (genvar q = 0; q < NPC; q = q + 1) begin : g_pc
+            wire mine_k = r_tag[q*(TAGW+1) + TAGW];
+            assign r_rdy[q] = mine_k ? (kany && ksel == q && k_rsp_rdy) : b_rsp_rdy[q];
+        end
+        assign k_rsp_v = kany;
+        assign k_rsp_tag = r_tag[ksel*(TAGW+1) +: TAGW];
+        assign k_rsp_beat = r_beat[ksel*BEATW +: BEATW];
+        assign k_rsp_data = r_data[ksel*DW +: DW];
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin k_grants <= 0; b_grants <= 0; contended <= 0; end
         else begin
             if (k_v && k_rdy) k_grants <= k_grants + 1;
-            b_grants <= b_grants + 32'($countones(gb & h_rdy));
+            b_grants <= b_grants + 32'($countones(gb & room));
             contended <= contended + {31'd0, k_v && b_v[kpc]};
         end
 endmodule

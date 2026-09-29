@@ -145,6 +145,182 @@ functional or timing result.
 measuring whether the die's upper layers relieve congestion. Its result
 cannot be transferred to the original case's narrower routing stack.
 
+The completed `karb_strip_fit` attempt is recorded as an **error** in
+`results/asap7_physical/v41x_die_karb_fit/physical.json`: synthesis and pin
+placement passed, but global placement exited during routability repair. Its
+17.28 µm strip is already 0.08 µm taller than the entire modeled 17.2 µm
+streamer-and-staging band, so this cannot be counted as a die fit. The
+four-channel M2–M9 bank case in
+`results/asap7_physical/v41x_die_karb_bank4_m9/physical.json` reached CTS
+with −623 ps setup WNS and failed global route (`GRT-0116` local congestion).
+The four-channel M2–M7 case also failed `GRT-0116` local congestion in
+`results/asap7_physical/v41x_die_karb_bank4/physical.json`; the added M8/M9
+layers improved CTS setup WNS but did not make the original pin pattern
+routable.
+
+The arbiter now offers `PIPE_OUT=1`, a registered one-entry request output per
+pseudo-channel with ready/valid replacement in the acceptance cycle. A queued
+write counts as outstanding when its source handshakes, so write ownership
+remains exclusive until `h_wr_done`. The default remains the previous direct
+path. `results/rtl/v41x_karb_pipe_kv_gate.json` pins both modes of the reduced
+four-stack KV/index bench: 38 attention ops, no KV or index mismatches, and the
+generation-wrap case passing in each mode. This is a functional reduced bench,
+not a shipped-shape token or clock verdict. The registered case with the
+original 20%-clock I/O delays failed CTS hold repair at the maximum buffer
+count (`RSZ-0060`), recorded in
+`results/asap7_physical/v41x_die_karb_bank4_pipe_m9/physical.json`. A wider
+pin-window case characterizes internal register timing with I/O paths
+excluded; its first 0.60-density run failed global placement numerical
+convergence (`GPL-0305`), recorded in
+`results/asap7_physical/v41x_die_karb_bank4_pipe_wide_m9/physical.json`.
+A 0.40-density retry and a single-pseudo-channel partition are under test.
+Even a pass with I/O paths excluded cannot establish the HBM PHY interface
+timing. The required 0.92 ns full-boundary route remains open.
+
+The first single-PC registered slice completed detailed route in
+`results/asap7_physical/v41x_die_karb_pc1_pipe_m9/physical.json`. With real
+I/O timing (one-fifth-cycle delay), its extracted setup WNS is +233.428 ps
+and hold WNS is +57.832 ps at 0.92 ns, with zero DRC and antenna violations.
+The routed standard cells occupy 639.566 µm². The engineering verdict is
+**not met** because 39 max-slew violations remain. Its `NPC=1` hash and
+response path omit the full 32-way composition, and its 30.24 µm strip is
+taller than the die budget. It proves a local route can reach detailed
+routing and leaves hierarchy, signal integrity and floorplan fit open.
+
+An explicit max-transition repair rerun reached detailed route in
+`results/asap7_physical/v41x_die_karb_pc1_pipe_slew_m9/physical.json`.
+It reduced max-slew violations from 39 to 15 without an RTL cycle change;
+setup and hold WNS were +232.664 ps and +57.490 ps, and routed cell area
+was 641.797 µm². DRC and antenna counts remained zero. The result is still
+**not met**. The remaining transition paths need a stronger local drive or
+shorter wire before this slice can be declared closed.
+With a 25% slew-repair margin,
+`results/asap7_physical/v41x_die_karb_pc1_pipe_slewmargin_m9/physical.json`
+reaches detailed route at +213.576 ps setup, +56.998 ps hold and zero
+DRC/antenna errors. Two pins still exceed the 320 ps library transition
+limit, so this more aggressive 651.595 µm² slice is also **not met**.
+At a 40% repair margin, the slice has one remaining max-slew violation on
+`k_rsp_beat[0]` (361.25 ps against 320 ps); its detailed-route setup/hold
+WNS are +205.849/+57.227 ps and its standard-cell area is 661.436 µm²,
+as pinned in
+`results/asap7_physical/v41x_die_karb_pc1_pipe_slewmargin40_m9/physical.json`.
+That direct HBM-response-to-K output is absent from the actual grouped
+request slice: `ot_chip_v41x_hbm_karb_pc_local` leaves response selection to
+the group's registered receive path. The refactored four-PC RTL still passes
+the concurrent exact KV/index gate in
+`results/rtl/v41x_karb_group4_local_kv_gate.json`. A near-budget physical
+route of that request-only child completed in
+`results/asap7_physical/v41x_die_karb_pc_local_fit_m9/physical.json`:
+at 375 by 17.28 µm, the 0.92 ns detailed route **passes** with +118.752 ps
+setup and +41.713 ps hold WNS, zero DRC/antenna/slew/cap/fanout
+violations, and 568.430 µm² of routed standard cells. Its Fmax is 1.24805
+GHz in this predictive ASAP7 view. This is one local request slice; it
+excludes the group response buffers, K trunk, clock distribution across
+adjacent slices and the full four-stack die. Its 17.28 µm height is 0.08 µm
+above the modeled streamer-and-staging band. The following case tightens the
+local height, while composed group placement remains open.
+
+The 375 by 17.01 µm local-child sensitivity fits inside the 17.2 µm
+band height and completed detailed route, but
+`results/asap7_physical/v41x_die_karb_pc_local_budget_m9/physical.json`
+is **not met**: `h_wstrb[28]` has 326.74 ps slew against the 320 ps limit.
+Setup/hold WNS remain positive at +144.753/+66.322 ps, with zero
+DRC/antenna violations and 564.611 µm² of routed standard cells. A stronger
+slew-repair rerun **passes** in
+`results/asap7_physical/v41x_die_karb_pc_local_budget_slew50_m9/physical.json`:
+at the same 375 by 17.01 µm footprint, extracted setup/hold WNS are
++134.180/+66.181 ps at 0.92 ns, with zero DRC, antenna, slew, capacitance
+and fanout violations. Its 4,882 routed cells occupy 578.680 µm² and have
+1.27256 GHz Fmax in the predictive ASAP7 view. The local slice is physically
+closed within the modeled height. The shared group response, K trunk and
+multi-PC clock/routing composition are still outside this result.
+The retained routed ODB and SPEF were probed at the same 0.92 ns TT corner
+in `results/asap7_physical/v41x_die_karb_pc_local_budget_slew50_m9/timing_probe/record.json`.
+Among 23 sequential and direct path groups, the request outputs have extracted
+arrival times of 337.918 ps (`h_wstrb`), 313.662 ps (`h_wdata`), 270.387 ps
+(`h_addr`) and 301.937 ps (`h_v`), including propagated local clock. With
+the 184 ps output allowance, the worst request output leaves 398.083 ps for
+the external request trunk at 0.92 ns. The local `b_rdy` output is tighter:
+601.820 ps arrival and 134.180 ps margin. These are extracted path probes,
+not complete sequential Liberty arcs for a reusable hard macro; the group
+response and clock trunks still need extraction. The directly coupled
+`h_rdy`→`b_rdy` path has 535.995 ps arrival and 200.005 ps margin; the
+`h_wr_done`→`k_wr_done` path has 379.633 ps arrival and 356.367 ps margin.
+The earlier unspecialized one-PC top also detailed-routed at 375 by 17.28 µm
+in `results/asap7_physical/v41x_die_karb_pc1_pipe_fit_slewmargin40_m9/physical.json`.
+It has +161.847 ps setup and +55.333 ps hold WNS with zero DRC and antenna
+violations, but one direct response output still exceeds the 320 ps slew
+limit by 10.20 ps. Its standard cells occupy 642.322 µm². The strip is
+0.08 µm above the modeled band, and this top is **not met**.
+
+Four adjacent local one-PC slices, a registered K ingress and grouped K
+response buffers pass the concurrent reduced KV/index gate, pinned in
+`results/rtl/v41x_karb_group4_kv_gate.json`. The first 1.5 mm by 30.24 µm
+composition passed synthesis and pin placement, but clock tree synthesis
+stopped at its hold-buffer cap after inserting 7,716 buffers; its record is
+`results/asap7_physical/v41x_die_karb_group4_m9/physical.json`. The group
+therefore has no routed timing verdict. A further registered K response
+output passes the exact gate in
+`results/rtl/v41x_karb_group4_outpipe_kv_gate.json`; its separate physical
+run also stopped at the CTS hold-buffer cap, after 7,528 insertions, in
+`results/asap7_physical/v41x_die_karb_group4_outpipe_m9/physical.json`.
+A two-entry registered K input buffer now isolates its ready signal from the
+four local arbiters and passes the exact gate in
+`results/rtl/v41x_karb_group4_tailpipe_kv_gate.json`. Its physical run is
+recorded in
+`results/asap7_physical/v41x_die_karb_group4_tailpipe_m9/physical.json`:
+it also stops at the CTS hold-buffer cap, after 8,157 insertions with a
+−306 ps remaining hold path. The standard flow has no four-PC routed result.
+None of these four-PC cases
+yet fits the 17.2 µm budgeted band.
+
+The bounded 100%-buffer-cap sensitivity, source-pinned in
+`results/asap7_physical/v41x_die_karb_group4_cts100_m9/cts_diagnostic.json`,
+inserted 38,702 hold buffers and still left CTS setup WNS −897 ps and hold
+WNS −493 ps. Global routing showed persistent congestion through iteration
+15; the diagnostic was stopped because the CTS timing and area cost already
+ruled it out. Its `physical.json` is an incomplete-flow error record, with
+the CTS report and log retained beside it. This is evidence against simply
+raising the buffer limit, not a routed timing result.
+
+The four-child hard-macro composition uses the exact passing routed PC LEF
+at 375 by 17.01 µm. It synthesizes and places all four fixed macros at
+x=5.040, 390.000, 775.008 and 1160.016 µm inside a 1550 by 30.24 µm
+study floorplan, with a shared registered K ingress and response trunk. Its
+`results/asap7_physical/v41x_die_karb_group4_macro_m9/physical.json` is an
+incomplete-flow **error** record: the M6 power pins from the routed child
+have no legal shapes/vias under the extracted upper-layer obstructions, so
+OpenROAD stops at PDN-0233. The custom M6 macro grid also fails at that
+boundary. Power access must be reserved in the child's physical design
+before composition can proceed to pin placement, CTS or routing. The
+composition Liberty intentionally has no timing arcs, so even a later
+geometry route with this view cannot establish full-group frequency. This
+30.24 µm study floorplan also exceeds the modeled 17.2 µm strip budget.
+
+A new one-PC child route reserves M7/M8/M9 power access during its own
+physical flow, resolving the prior M6-only power-grid design error. The
+source-pinned result in
+`results/asap7_physical/v41x_die_karb_pc_local_power_m9/physical.json`
+completes PDN, CTS and detailed routing inside the same 375 by 17.01 µm
+site. It has +132.516 ps setup, +65.966 ps hold, 1.26987 GHz path Fmax,
+4,886 cells / 579.672 µm² and zero DRC/antenna errors. Its engineering
+verdict is still **not met**: `h_wstrb[28]` has 337.19 ps transition against
+the 320 ps limit, the only max-slew violation. The routed child therefore
+cannot yet replace the old geometry view for a closure claim. A bounded
+slew-repair reroute, refreshed LEF/power access and then four-PC composition
+remain required.
+
+A representative full-width, depth-128 one-shot collective FIFO/engine was
+also attempted at 0.92 ns with 16 lanes and 512-bit flits. The source-pinned
+partial record in `results/asap7_physical/v41x_collective_fifo128/physical.json`
+reports 1,268,591 synthesized cells and 176,184.631 µm² before layout. It
+completed power-grid and pin placement, but timing-driven global placement
+was stopped after reaching 17.5 GiB RSS on a 31 GiB VM shared with another
+route; only 3.3 GiB remained available. The retained placement log ends at
+iteration 442 with 1,685,961 nets left for timing repair. This is neither a
+placed nor routed timing result. The physical boundary needs FIFO SRAM macros
+or a narrower local block before an eight-engine die claim is credible.
+
 `ot_hbm3e_phy_v41x` is a generated physical *abstract* whose blackbox, LEF
 and Liberty views have the adopted 32-K-plus-W RTL port list. The focused
 `test_v41x_die_pnr` checks every port width, the LEF pin count and window

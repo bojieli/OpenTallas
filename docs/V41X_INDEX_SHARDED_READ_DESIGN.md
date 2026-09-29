@@ -57,13 +57,21 @@ records 18 read-stall cycles. This validates the paired compact layout at
 reduced shape. The reader is still serial and the full pooled adapter/token
 path has not yet been exercised.
 
+A second paired gate writes distinct keys into two compact user slices and
+reads both back through four timed HBM stacks. It passes 32 exact rows and
+exercises read-after-write stalls. The physical user-base sector must enter
+the reader before pseudo-channel selection; an offset applied to an already
+selected per-channel request can send a sector to the wrong channel. The
+writer and adapter have matching early-base ports. The die still ties the
+tile port low, so this gate establishes the two-slice address contract only.
+
 `ot_hdc_v41x_idx_pool_adapt` has an opt-in `SHARDED=1` selection for this
 reader. `SHARDED=0` keeps the replicated streamer and merge unchanged. The
 adapter's four-stack HBM request and response bus and its batch-facing
 `merge_*` interface are unchanged; the new reader supplies its own busy,
-fault and read counters. The per-user compact base-sector mapping remains an
-external array/die integration requirement, so this switch does not establish
-a multi-user token gate.
+fault and read counters. The per-user compact base-sector mapping is exposed
+at the tile boundary but its controller-to-die connection remains open, so
+this switch does not establish a multi-user token gate.
 
 ## Scheduler and collector required for a token gate
 

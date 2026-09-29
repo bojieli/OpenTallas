@@ -43,8 +43,18 @@ def build() -> dict:
     assert "IDX_KEY_B = 68" in budget and "CKV_ROW_B = 288" in budget
     assert "b0=((rbase>>4)-cfg_ik_base)/128*17" in writer
     assert "ik_off=wbase-cfg_ik_base" in scanner
-    assert "user_base" not in writer and "user_base" not in scanner
-    assert "HDR_USER = 32" in controller and "HDR_POS = 40, HDR_IDX = 56" in controller
+    assert "i_user_base_sec" in writer and "i_user_base_sec" in scanner
+    assert "physical_csec" in writer and "key_base_sec" in scanner
+    # The die still ties the tile's new per-user key base low.  This preflight
+    # must not promote the standalone two-user gate to a full die claim.
+    assert ".idx_user_base_sec('0)" in die
+    assert re.search(r"HDR_USER\s*=\s*32,\s*HDR_POS\s*=\s*40,\s*HDR_IDX\s*=\s*HDR_POS\s*\+\s*NW", controller)
+    assert "HDR_USER_HI = HDR_ADDR + 16" in controller
+    assert "parameter integer USER_W       = 8" in controller
+    assert "header[HDR_USER_HI +: UHIW]" in controller
+    assert "output wire [USER_W-1:0]  core_user" in controller
+    # The adopted die sizes the controller user width by FULL_SHAPE.
+    assert ".MAXU(MAXU)" in die and ".USER_W(FULL_SHAPE ? 10 : 8)" in die
     assert "localparam integer KV_SECTORS  = 2 * ((KV_USERS << KV_AW) / 4)" in die
 
     tech = json.loads(source_text[SOURCES[1]])
@@ -83,10 +93,11 @@ def build() -> dict:
     return {
         "schema": "v41_hbm_region_preflight_v1",
         "status": "capacity_mismatch",
-        "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; active default key writer/reader replicated; opt-in serial sharded writer/reader has exact reduced roundtrip but no full-token or throughput claim",
+        "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; active default key writer/reader replicated; opt-in sharded writer/reader has exact two-user timed-HBM roundtrip but no controller namespace, full-token or throughput claim",
         "sharding": {"writer_opt_in_available": True, "read_address_mapper_available": True,
                      "correctness_reader_opt_in_available": True,
-                     "read_scheduler_integrated": False, "multiuser_slice_integrated": False},
+                     "read_scheduler_integrated": False, "multiuser_slice_integrated": False,
+                     "two_user_physical_gate": True, "controller_namespace_integrated": False},
         "source_sha256": {p: hashlib.sha256(source_text[p].encode()).hexdigest() for p in SOURCES},
         "inputs": {"context": context, "tp_dies": tp_dies, "stacks_per_die": stacks,
                    "stack_capacity_bytes": stack_bytes, "capacity_efficiency": reserve,
@@ -110,7 +121,8 @@ def build() -> dict:
                      "key_sectors_for_current_layout_users_per_stack": users_rtl * key_sectors_per_user,
                      "max_replicated_users_with_28_bit_key_window": (1 << 28) // key_sectors_per_user},
         "isolation": {"multiuser_key_address_isolation": False,
-                      "reason": "writer and scanner derive sectors from layer-local bases with no user slice offset"},
+                      "standalone_two_user_key_address_isolation": True,
+                      "reason": "writer and scanner accept an early physical user base and a standalone two-user gate passes, but the die still ties that base low and no full-token namespace gate exists"},
         "region_arithmetic": {"current_kv_sector_formula_uses_32_bit_integer": True,
                               "unpacked_example_users": users_model,
                               "unpacked_example_kv_aw": 26,
@@ -119,11 +131,14 @@ def build() -> dict:
         "widths": {"user_id_bits_for_model_users": user_id_bits_model,
                    "user_id_bits_for_current_layout_users": user_id_bits_rtl,
                    "current_controller_user_id_bits": 8,
+                   "historical_reduced_controller_user_id_bits": 8,
+                   "controller_full_profile_user_id_bits": 10,
+                   "controller_full_profile_header_overlap_bits": 0,
                    "current_index_sector_address_bits": 28,
                    "index_sector_bits_for_current_layout_users": (users_rtl * key_sectors_per_user - 1).bit_length(),
-                   "full_mode_header_pos_idx_overlap_bits": 5,
-                   "full_mode_header_idx_val_overlap_bits": 5,
-                   "full_mode_header_tok_addr_overlap_bits": 1},
+                   "full_mode_header_pos_idx_overlap_bits": 0,
+                   "full_mode_header_idx_val_overlap_bits": 0,
+                   "full_mode_header_tok_addr_overlap_bits": 0},
     }
 
 

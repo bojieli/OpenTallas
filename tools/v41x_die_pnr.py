@@ -46,7 +46,8 @@ def pin_regex(pins: list[str]) -> str:
     for p in pins:
         n, _, rest = p.partition("[")
         by_bus.setdefault(n, []).append(rest.rstrip("]"))
-    alts = [f"^{n}\\[({'|'.join(ix)})\\]$" for n, ix in by_bus.items()]
+    alts = [f"^{n}$" if ix == [""] else f"^{n}\\[({'|'.join(ix)})\\]$"
+            for n, ix in by_bus.items()]
     return "|".join(alts)
 
 
@@ -94,7 +95,8 @@ def karb_strip(height_um: float = 30.24) -> dict:
             "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM, "pc_pin_span_um": PC_PIN_SPAN}}
 
 
-def karb_bank4(height_um: float = 30.24, high_layers: bool = False) -> dict:
+def karb_bank4(height_um: float = 30.24, high_layers: bool = False, pipe_out: bool = False,
+               wide_pins: bool = False, low_density: bool = False) -> dict:
     """A four-PC local arbitration partition for a bounded physical route.
 
     This uses the real parameterized arbiter RTL with NPC=4. Its K address-to-PC
@@ -105,9 +107,10 @@ def karb_bank4(height_um: float = 30.24, high_layers: bool = False) -> dict:
     w, h = npc * PHY_PC_WINDOW_UM, height_um
     m = 8 * ROW_UM
     regions = []
+    pin_span = (10.0, 350.0) if wide_pins else PC_PIN_SPAN
     for p in range(npc):
         x0 = p * PHY_PC_WINDOW_UM
-        span = f"{x0 + PC_PIN_SPAN[0]:g}-{x0 + PC_PIN_SPAN[1]:g}"
+        span = f"{x0 + pin_span[0]:g}-{x0 + pin_span[1]:g}"
         regions.append(f"{pin_regex(karb_pc_pins(p, 'h'))}=bottom:{span}")
         regions.append(f"{pin_regex(karb_pc_pins(p, 'b'))}=top:{span}")
     k = r"^k_(v|rdy|we|wr_done|rsp_v|rsp_rdy)$|^k_(addr|len|tag|wdata|wstrb|rsp_tag|rsp_beat|rsp_data)\[\d+\]$"
@@ -117,16 +120,222 @@ def karb_bank4(height_um: float = 30.24, high_layers: bool = False) -> dict:
     args = ["--view", "asap7", "--top", "ot_chip_v41x_hbm_karb", "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
             "--param", f"NPC={npc}", "--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2",
             "--stages", "synth,pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
-            "--core-area", f"{m:g}", f"{m:g}", f"{w - m:g}", f"{h - m:g}", "--place-density", "0.60"]
+            "--core-area", f"{m:g}", f"{m:g}", f"{w - m:g}", f"{h - m:g}",
+            "--place-density", "0.40" if low_density else "0.60"]
     if high_layers:
         args += ["--routing-layers", "M2", "M9"]
+    if pipe_out:
+        args += ["--param", "PIPE_OUT=1"]
+    if wide_pins:
+        # Characterize the new internal register boundary separately.  The
+        # original 0.2-T IO case above remains the external-timing gate.
+        args += ["--false-path-io"]
     for r in regions:
         args += ["--pin-region", r]
-    return {"args": args, "nickname": "codex_v41x_karb_bank4_m9" if high_layers else "codex_v41x_karb_bank4",
-            "output": "results/asap7_physical/v41x_die_karb_bank4_m9/physical.json" if high_layers
-                      else "results/asap7_physical/v41x_die_karb_bank4/physical.json",
+    if pipe_out and high_layers and wide_pins and low_density:
+        name = "karb_bank4_pipe_wide_lowdens_m9"
+    elif pipe_out and high_layers and wide_pins:
+        name = "karb_bank4_pipe_wide_m9"
+    elif pipe_out and high_layers:
+        name = "karb_bank4_pipe_m9"
+    else:
+        name = "karb_bank4_m9" if high_layers else "karb_bank4"
+    return {"args": args, "nickname": f"codex_v41x_{name}",
+            "output": f"results/asap7_physical/v41x_die_{name}/physical.json",
             "floorplan": {"die_um": [w, h], "npc": npc, "pc_window_um": PHY_PC_WINDOW_UM,
-                          "pc_pin_span_um": PC_PIN_SPAN, "scope": "local bank characterization only"}}
+                          "pc_pin_span_um": pin_span, "scope": "local bank characterization only"}}
+
+
+def collective_fifo128() -> dict:
+    """Representative routed collective boundary with the measured depth-128 receive FIFO.
+
+    This is one engine, not the eight-engine die assembly.  The generous
+    850-um square exposes its actual standard-cell cost and 0.92-ns timing
+    before a die floorplan credits it.
+    """
+    args = ["--view", "asap7", "--top", "ot_rom_oneshot_die_px",
+            "--source", "rtl/rom/ot_rom_oneshot_px.sv",
+            "--source", "rtl/hdc/ot_hdc_fastfp.sv",
+            "--source", "rtl/proto/ot_fp32_add_rne_pipe.sv",
+            "--param", "N=4", "--param", "RANK=0", "--param", "LANES=16",
+            "--param", "DEPTH=128", "--param", "RELAY=1", "--param", "ADD_LAT=3",
+            "--param", "PAIRWISE=1", "--param", "GW=1", "--param", "FW=512",
+            "--param", "TAGW=32", "--clock-period-ns", f"{CLOCK_NS:g}",
+            "--io-delay-fraction", "0.2", "--stages", "synth,pnr",
+            "--die-area", "0", "0", "850", "850",
+            "--core-area", "20", "20", "830", "830", "--place-density", "0.60",
+            "--routing-layers", "M2", "M9"]
+    return {"args": args, "nickname": "codex_v41x_collective_fifo128",
+            "output": "results/asap7_physical/v41x_collective_fifo128/physical.json",
+            "floorplan": {"die_um": [850.0, 850.0], "core_um": [20.0, 20.0, 830.0, 830.0],
+                          "scope": "one standalone 16-lane engine; no eight-engine die placement"}}
+
+
+def karb_pc1_pipe_m9(slew_repair: bool = False, slew_margin: bool = False,
+                     slew_margin40: bool = False, fit_height: bool = False) -> dict:
+    """One-PC local request/response slice, with its own registered HBM output.
+
+    This physical boundary is a partition study.  NPC=1 removes the 32-way K
+    demux/response select and therefore cannot certify the parent arbiter.
+    """
+    w, h = PHY_PC_WINDOW_UM, 17.28 if fit_height else 30.24
+    m = 8 * ROW_UM
+    scalar = {"b_v", "b_rdy", "b_we", "b_wr_done", "b_rsp_v", "b_rsp_rdy",
+              "h_v", "h_rdy", "h_we", "h_wr_done", "r_v", "r_rdy"}
+    def local_pins(side: str) -> list[str]:
+        return [x[:-3] if x.endswith("[0]") and x[:-3] in scalar else x
+                for x in karb_pc_pins(0, side)]
+    regions = [f"{pin_regex(local_pins('h'))}=bottom:20-195",
+               f"{pin_regex(local_pins('b'))}=top:20-195",
+               r"^k_(v|rdy|we|wr_done|rsp_v|rsp_rdy)$|^k_(addr|len|tag|wdata|wstrb|rsp_tag|rsp_beat|rsp_data)\[\d+\]$=top:210-370",
+               r"^(k_grants|b_grants|contended)\[\d+\]$=bottom:210-370",
+               r"^(clk|rst_n)$=left:5-12" if fit_height else r"^(clk|rst_n)$=left:10-20"]
+    args = ["--view", "asap7", "--top", "ot_chip_v41x_hbm_karb",
+            "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+            "--param", "NPC=1", "--param", "PIPE_OUT=1",
+            "--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2",
+            "--stages", "synth,pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
+            "--core-area", f"{m:g}", f"{m:g}", f"{w-m:g}", f"{h-m:g}",
+            "--place-density", "0.40", "--routing-layers", "M2", "M9"]
+    if slew_repair or slew_margin or slew_margin40:
+        args += ["--max-transition-ns"]
+    if slew_margin or slew_margin40:
+        args += ["--slew-margin-percent", "40" if slew_margin40 else "25"]
+    for r in regions:
+        args += ["--pin-region", r]
+    name = ("karb_pc1_pipe_fit_slewmargin40_m9" if fit_height else
+            "karb_pc1_pipe_slewmargin40_m9" if slew_margin40 else
+            "karb_pc1_pipe_slewmargin_m9" if slew_margin else
+            "karb_pc1_pipe_slew_m9" if slew_repair else "karb_pc1_pipe_m9")
+    return {"args": args, "nickname": f"codex_v41x_{name}",
+            "output": f"results/asap7_physical/v41x_die_{name}/physical.json",
+            "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM,
+                          "scope": "one PC with NPC=1; excludes full 32-way K demux/response mux"}}
+
+
+def karb_pc_local_fit_m9(height_um: float = 17.28, slew_margin_percent: int = 40) -> dict:
+    """The actual request-only PC child used in the exact four-PC group RTL."""
+    w, h = PHY_PC_WINDOW_UM, height_um
+    m = 8 * ROW_UM
+    args = ["--view", "asap7", "--top", "ot_chip_v41x_hbm_karb_pc_local",
+            "--source", "rtl/chip/ot_chip_v41x_hbm_karb_pc_local.sv",
+            "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+            "--clock-period-ns", f"{CLOCK_NS:g}", "--io-delay-fraction", "0.2",
+            "--stages", "synth,pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
+            "--core-area", f"{m:g}", f"{m:g}", f"{w-m:g}", f"{h-m:g}",
+            "--place-density", "0.40", "--routing-layers", "M2", "M9",
+            "--max-transition-ns", "--slew-margin-percent", str(slew_margin_percent),
+            "--pin-region", "^h_.*=bottom:20-195",
+            "--pin-region", "^b_(v|rdy|addr|len|tag|we|wdata|wstrb|wr_done).*=top:20-195",
+            "--pin-region", "^k_(v|rdy|addr|len|tag|we|wdata|wstrb|wr_done).*=top:210-370",
+            "--pin-region", r"^(k_grants|b_grants|contended)\[\d+\]$=bottom:210-370",
+            "--pin-region", r"^(clk|rst_n)$=left:5-12"]
+    name = ("karb_pc_local_budget_slew50_m9" if h <= 17.01 and slew_margin_percent == 50 else
+            "karb_pc_local_budget_m9" if h <= 17.01 else "karb_pc_local_fit_m9")
+    return {"args": args, "nickname": f"codex_v41x_{name}",
+            "output": f"results/asap7_physical/v41x_die_{name}/physical.json",
+            "floorplan": {"die_um": [w, h], "pc_window_um": PHY_PC_WINDOW_UM,
+                          "scope": "one request-only PC child; group response and trunk omitted"}}
+
+
+def karb_pc_local_power_m9() -> dict:
+    """Within-band PC child with reserved M9 macro power access."""
+    c = karb_pc_local_fit_m9(height_um=17.01, slew_margin_percent=50)
+    c["args"] += ["--orfs-var", "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_v41x_karb_pc_power.tcl"]
+    c["nickname"] = "codex_v41x_karb_pc_local_power_m9"
+    c["output"] = "results/asap7_physical/v41x_die_karb_pc_local_power_m9/physical.json"
+    c["floorplan"]["scope"] = "request-only PC child with full-height M8/M9 power access"
+    return c
+
+
+def karb_group4_m9(height_um: float = 30.24, outpipe: bool = False,
+                   tailpipe: bool = False) -> dict:
+    """Four adjacent PC slices with registered K ingress/return and local PHY pins."""
+    c = karb_bank4(height_um=height_um, high_layers=True)
+    args = c["args"].copy()
+    args[args.index("--top") + 1] = "ot_chip_v41x_hbm_karb_group4"
+    i = args.index("--source")
+    args[i + 1:i + 2] = ["rtl/chip/ot_chip_v41x_hbm_karb_group4.sv",
+                         "--source", "rtl/chip/ot_chip_v41x_hbm_karb_pc_local.sv",
+                         "--source", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+                         "--source", "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv"]
+    # Yosys 0.68 hits an RTLIL duplicate-module assertion when `hierarchy`
+    # reprocesses this parameterized top with -chparam.  The top's defaults
+    # are NPC=4, PIPE_OUT=1 and PIPE_RSP=1, checked by the exact RTL gate.
+    j = args.index("NPC=4")
+    assert args[j - 1] == "--param"
+    del args[j - 1:j + 1]
+    args += ["--max-transition-ns"]
+    args[args.index("--place-density") + 1] = "0.40"
+    name = ("karb_group4_tailpipe_m9" if tailpipe else
+            "karb_group4_fit_m9" if height_um <= 17.28 else
+            "karb_group4_outpipe_m9" if outpipe else "karb_group4_m9")
+    return {"args": args, "nickname": f"codex_v41x_{name}",
+            "output": f"results/asap7_physical/v41x_die_{name}/physical.json",
+            "floorplan": {**c["floorplan"], "scope": "four local PC slices and registered K group boundary"}}
+
+
+def karb_group4_cts100_m9() -> dict:
+    """Diagnose whether CTS's hold-buffer cap alone blocks four-PC routing.
+
+    This is an area-cost sensitivity, not an adopted implementation.  The
+    standard ORFS CTS helper is replaced only at PRE_CTS, and the hook is
+    captured by the physical record.
+    """
+    c = karb_group4_m9(tailpipe=True)
+    c["nickname"] = "codex_v41x_karb_group4_cts100_m9"
+    c["output"] = "results/asap7_physical/v41x_die_karb_group4_cts100_m9/physical.json"
+    c["hook"] = ("PRE_CTS", """# Source-pinned hold-repair cap sensitivity, not the standard CTS flow.
+rename repair_timing_helper ot_original_repair_timing_helper
+proc repair_timing_helper {args} {
+    log_cmd repair_timing -max_buffer_percent 100 {*}$args -verbose
+}
+""")
+    c["floorplan"]["scope"] = "four-PC CTS 100%-buffer-cap sensitivity; not adopted"
+    return c
+
+
+def karb_group4_macro_m9() -> dict:
+    """Four routed one-PC macros plus real group K trunk and receive logic.
+
+    The macro's Liberty view has no arcs, so this case probes composed
+    geometry and top-level interconnect only, never end-to-end Fmax.
+    """
+    c = karb_group4_m9(tailpipe=True)
+    args = c["args"].copy()
+    args[args.index("--stages") + 1] = "pnr"
+    i = args.index("--source")
+    while i < len(args) and args[i] == "--source":
+        del args[i:i+2]
+    pcdir = "physical/asap7_v41x_karb_pc_budget/ot_chip_v41x_hbm_karb_pc_local"
+    args[i:i] = ["--source", "rtl/chip/ot_chip_v41x_hbm_karb_group4.sv",
+                 "--source", "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv",
+                 "--source", f"{pcdir}/ot_chip_v41x_hbm_karb_pc_local_bb.v"]
+    args += ["--macro-view", f"ot_chip_v41x_hbm_karb_pc_local={pcdir}",
+             "--macro-place-halo", "2", "2",
+             "--orfs-var", "VERILOG_DEFINES=-D HDC_KARB_MACRO",
+             "--orfs-var", "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_v41x_karb_group4.tcl"]
+    args[args.index("--die-area") + 3] = "1550"
+    args[args.index("--core-area") + 3] = "1547.84"
+    hook = [
+        "# Geometry-only hierarchy from the routed 375 x 17.01 um PC LEF.",
+        "proc ot_place {want x y} {",
+        "  foreach inst [[ord::get_db_block] getInsts] {",
+        "    set n [$inst getName]",
+        "    if {[string map {\\\\ {}} $n] eq $want} {",
+        "      place_macro -macro_name $n -location [list $x $y] -orientation R0",
+        "      return",
+        "    }",
+        "  }",
+        "  error \"macro placement: no instance $want\"",
+        "}",
+        *[f"ot_place {{g_pc[{p}].u_local}} {5+385*p:g} 6.48" for p in range(4)],
+    ]
+    return {"args": args, "nickname": "codex_v41x_karb_group4_macro_m9",
+            "hook": ("PRE_MACRO_PLACE", "\n".join(hook) + "\n"),
+            "output": "results/asap7_physical/v41x_die_karb_group4_macro_m9/physical.json",
+            "floorplan": {"die_um": [1550.0, 30.24], "macro_um": [375.0, 17.01],
+                          "scope": "four real routed PC macros; macro timing arcs deliberately absent"}}
 
 
 # ------------------------------------------------------------------------------------------------ physical tile
@@ -500,6 +709,26 @@ CASES = {"karb_strip": karb_strip,
          "karb_strip_fit": lambda: karb_strip(height_um=17.28),
          "karb_bank4": karb_bank4,
          "karb_bank4_m9": lambda: karb_bank4(high_layers=True),
+         "karb_bank4_pipe_m9": lambda: karb_bank4(high_layers=True, pipe_out=True),
+         "karb_bank4_pipe_wide_m9": lambda: karb_bank4(high_layers=True, pipe_out=True, wide_pins=True),
+         "karb_bank4_pipe_wide_lowdens_m9": lambda: karb_bank4(high_layers=True, pipe_out=True,
+                                                                  wide_pins=True, low_density=True),
+         "collective_fifo128": collective_fifo128,
+         "karb_pc1_pipe_m9": karb_pc1_pipe_m9,
+         "karb_pc1_pipe_slew_m9": lambda: karb_pc1_pipe_m9(slew_repair=True),
+         "karb_pc1_pipe_slewmargin_m9": lambda: karb_pc1_pipe_m9(slew_margin=True),
+         "karb_pc1_pipe_slewmargin40_m9": lambda: karb_pc1_pipe_m9(slew_margin40=True),
+         "karb_pc1_pipe_fit_slewmargin40_m9": lambda: karb_pc1_pipe_m9(slew_margin40=True, fit_height=True),
+         "karb_pc_local_fit_m9": karb_pc_local_fit_m9,
+         "karb_pc_local_budget_m9": lambda: karb_pc_local_fit_m9(height_um=17.01),
+         "karb_pc_local_budget_slew50_m9": lambda: karb_pc_local_fit_m9(height_um=17.01, slew_margin_percent=50),
+         "karb_pc_local_power_m9": karb_pc_local_power_m9,
+         "karb_group4_m9": karb_group4_m9,
+         "karb_group4_outpipe_m9": lambda: karb_group4_m9(outpipe=True),
+         "karb_group4_tailpipe_m9": lambda: karb_group4_m9(tailpipe=True),
+         "karb_group4_cts100_m9": karb_group4_cts100_m9,
+         "karb_group4_macro_m9": karb_group4_macro_m9,
+         "karb_group4_fit_m9": lambda: karb_group4_m9(height_um=17.28),
          "die_s4": die_s4,
          "die_s4_rt": lambda: die_s4(tile_rt=True),
          "tile_q2_u68": lambda: ptile(2, 0, 2, 0.68),

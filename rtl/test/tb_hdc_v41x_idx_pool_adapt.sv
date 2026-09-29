@@ -24,7 +24,7 @@ module tb_hdc_v41x_idx_pool_adapt #(parameter integer MP=2)(input wire clk);
     wire [47:0] dbg_keys,dbg_beats,dbg_scored,dbg_sums;
     ot_hdc_v41x_idx_pool_adapt #(.NPC(NPC),.MP(MP)) dut (
         .clk(clk),.rst_n(rst_n),.go(go),.ready(ready),.idle(idle),
-        .cfg_ik_base(24'd0),.i_nout(16'(nout)),.i_k(16'(kd)),
+        .cfg_ik_base(24'd0),.i_user_base_sec(28'd0),.i_nout(16'(nout)),.i_k(16'(kd)),
         .i_wbase(24'd0),.i_xbase(24'd0),.i_xks(24'd1),.i_xjs(24'd32),.i_xcs(24'd256),
         .i_hg(2'd2),.i_round(1'b0),.i_obase(24'd0),.i_mmode(1'b1),
         .i_oen(1'b1),.i_fuse(1'b1),.i_wts(24'd1024),

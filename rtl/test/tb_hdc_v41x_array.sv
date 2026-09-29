@@ -60,6 +60,9 @@
 `ifndef HDC_W_HBM
 `define HDC_W_HBM 0
 `endif
+`ifndef HDC_KV_HBM
+`define HDC_KV_HBM 0
+`endif
 module tb_hdc_v41x_array #(
     parameter integer USERS = 2,
     parameter integer STALL = 0
@@ -80,6 +83,8 @@ module tb_hdc_v41x_array #(
     localparam integer LINK_CH_MAX = FABRIC ? 228 : 60;
     integer link_ch = FABRIC ? 30 : 60;
     initial begin
+        if (`HDC_KV_HBM && `HDC_X_IDX != 2)
+            $fatal(1, "HDC_KV_HBM requires pooled index HBM to exercise shared K stacks");
         if ($value$plusargs("LINK_CH=%d", link_ch)) begin
             if (link_ch < 1 || link_ch > LINK_CH_MAX)
                 $fatal(1, "LINK_CH=%0d outside 1..%0d", link_ch, LINK_CH_MAX);
@@ -110,6 +115,9 @@ module tb_hdc_v41x_array #(
     wire [NODES*FLIT-1:0] tx_d, rx_d;
     wire [NODES-1:0] fault_w, pfault_w, busy_w;
     wire [NODES-1:0] qs_fault_w;
+    wire [NODES-1:0] kv_fault_w;
+    wire [NODES*32-1:0] kv_ops_w, kv_words_w, kv_writes_w, kv_holds_w;
+    wire [NODES*4*32-1:0] kv_hbm_state_bad_w;
     wire [NODES*32-1:0] qs_bad_w, qs_words_w, qs_hbm_reads_w;
     wire [NODES*32-1:0] idx_records_w, idx_writes_w, idx_stalls_w;
     wire [NODES*USERS-1:0] idx_user_read_w, idx_user_record_w;
@@ -202,8 +210,14 @@ module tb_hdc_v41x_array #(
             wire erom_re; wire [AW-1:0] erom_addr; reg [263:0] erom_q;
             wire [4*SW-1:0] crom_re; wire [4*SW*AW-1:0] crom_addr; reg [4*SW*64-1:0] crom_q;
             wire xcrom_re; wire [AW-1:0] xcrom_addr; reg [63:0] xcrom_q;
-            wire kv_re; wire [G*AW-1:0] kv_raddr; reg [G*W*32-1:0] kv_q;
+            wire kv_re; wire [G*AW-1:0] kv_raddr;
+            reg [G*W*32-1:0] kv_q_local;
+            wire [G*W*32-1:0] kv_q_hbm, kv_q;
+            assign kv_q = `HDC_KV_HBM ? kv_q_hbm : kv_q_local;
             wire [SW-1:0] kv_we; wire [SW*AW-1:0] kv_waddr; wire [SW*32-1:0] kv_wdata;
+            wire kvd_v, kv_ok; wire [AW-1:0] kvd_wbase, kvd_ts, kvd_ks, kvd_js;
+            wire [NW-1:0] kvd_tiles, kvd_k, kvd_nout, kvd_pos;
+            wire [1:0] kvd_hg; wire kvd_mmode;
             wire [G-1:0] vx_re; wire [G*AW-1:0] vx_addr; reg [G*32-1:0] vx_q;
             wire [4*SW-1:0] vs_re; wire [4*SW*AW-1:0] vs_addr; reg [4*SW*32-1:0] vs_q;
             wire [SW-1:0] vi_re; wire [SW*AW-1:0] vi_addr; reg [SW*32-1:0] vi_q;
@@ -265,7 +279,7 @@ module tb_hdc_v41x_array #(
             assign c_done = PRIME ? (done && sh_st == 3'd0) : done;
             wire [7:0]    cur_u = kv_base / KVW;
 
-            ot_hdc_core_v41x #(.SW(SW), .HS(HS), .W_HBM(`HDC_W_HBM),
+            ot_hdc_core_v41x #(.SW(SW), .HS(HS), .W_HBM(`HDC_W_HBM), .KV_HBM(`HDC_KV_HBM),
                                    .X_HE(`HDC_X_HE), .X_ME(`HDC_X_ME), .X_ATT(`HDC_X_ATT),
                                    .X_IDX(`HDC_X_IDX), .X_SEL(`HDC_X_SEL), .X_EG(`HDC_X_EG),
                                    .X_SU(`HDC_X_SU), .SUN(SUN), .SUM(SUM),
@@ -278,7 +292,7 @@ module tb_hdc_v41x_array #(
                 .ewrom_re(ewrom_re), .ewrom_addr(ewrom_addr), .ewrom_q(ewrom_q),
                 .qrom_re(qrom_re), .qrom_addr(qrom_addr), .qrom_q(qrom_q),
                 .hrom_re(hrom_re), .hrom_addr(hrom_addr), .hrom_q(hrom_q),
-                .cfg_ik_base(cfg[0]), .cfg_me_xs(cfg[1][3:0]),
+                .cfg_ik_base(cfg[0]), .idx_user_base_sec(28'd0), .cfg_me_xs(cfg[1][3:0]),
                 .mb_re(mb_re), .mb_addr(mb_addr), .mb_q(mb_p[ML-1]),
                 .pikh_req_v(pikh_req_v), .pikh_req_rdy(pikh_req_rdy),
                 .pikh_req_addr(pikh_req_addr), .pikh_req_len(pikh_req_len),
@@ -315,7 +329,10 @@ module tb_hdc_v41x_array #(
                 .me_ov(me_ov), .me_oaddr(me_oaddr), .me_omask(me_omask), .me_odata(me_odata),
                 .unit_busy(unit_busy), .issue_unit(issue_unit),
                 .qd_v(qd_v), .qd_wbase(qd_wbase), .qd_nb(qd_nb), .qd_tiles(qd_tiles),
-                .q_ok(q_ok), .wrel_v(wrel_v));
+                .q_ok(q_ok), .wrel_v(wrel_v),
+                .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks),
+                .kvd_js(kvd_js), .kvd_tiles(kvd_tiles), .kvd_k(kvd_k), .kvd_nout(kvd_nout),
+                .kvd_pos(kvd_pos), .kvd_hg(kvd_hg), .kvd_mmode(kvd_mmode), .kv_ok(kv_ok));
 
             // Each package has its own QE fetch list and weight window. The HBM
             // sectors are a common read-only image; the list follows this
@@ -411,12 +428,20 @@ module tb_hdc_v41x_array #(
             // The bridge holds complete K128 records until all sector writes
             // commit; its read arbitration also covers the pooled selector.
             if (`HDC_X_IDX == 2) begin : g_pooled_idx
+                localparam integer KV_SBASE = USERS*IKH_WORDS;
+                localparam integer KV_SECTORS = USERS*KVW/2;
                 wire [127:0] h_v, h_rdy, h_we, h_wr_done;
                 wire [128*28-1:0] h_addr;
                 wire [128*4-1:0] h_len;
                 wire [128*16-1:0] h_tag;
                 wire [128*256-1:0] h_wdata;
                 wire [128*32-1:0] h_wstrb;
+                wire [3:0] km_v, km_rdy, km_we, ks_v, ks_rdy;
+                wire [4*28-1:0] km_addr;
+                wire [4*4-1:0] km_len, ks_beat;
+                wire [4*16-1:0] km_tag, ks_tag;
+                wire [4*256-1:0] km_wdata, ks_data;
+                wire [4*32-1:0] km_wstrb;
                 wire bridge_busy;
                 wire [4*64-1:0] stack_refs;
                 wire [27:0] user_sector_base = {cur_u, {IKH_USER_SHIFT{1'b0}}};
@@ -478,7 +503,108 @@ module tb_hdc_v41x_array #(
                     .dbg_fifo_highwater(idxwr_highwater),
                     .dbg_read_stalls(idxwr_read_stalls),
                     .dbg_writer_stalls(idxwr_writer_stalls));
+                if (`HDC_KV_HBM) begin : g_kv_hbm
+                    wire [4:0] fault_code;
+                    wire [31:0] refetches, highwater;
+                    ot_chip_v41x_kv_prefetch #(.G(G), .W(W), .SW(SW), .SUN(SUN), .AW(AW),
+                        .STG(2048), .SAW(11), .KV_SBASE(KV_SBASE), .KV_SECTORS(KV_SECTORS),
+                        .HAW(28), .TAGW(16)) u_kv (
+                        .clk(clk), .rst_n(rst_n), .base(kv_base),
+                        .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts),
+                        .kvd_ks(kvd_ks), .kvd_js(kvd_js), .kvd_tiles(kvd_tiles),
+                        .kvd_k(kvd_k), .kvd_hg(kvd_hg), .kv_ok(kv_ok),
+                        .re(kv_re), .raddr(kv_raddr), .q(kv_q_hbm),
+                        .we(kv_we), .waddr(kv_waddr), .wdata(kv_wdata),
+                        .xwe(xs_kv_we), .xwaddr(xs_kv_waddr), .xwdata(xs_kv_wdata),
+                        .m_v(km_v), .m_rdy(km_rdy), .m_addr(km_addr),
+                        .m_len(km_len), .m_tag(km_tag), .m_we(km_we),
+                        .m_wdata(km_wdata), .m_wstrb(km_wstrb),
+                        .s_v(ks_v), .s_rdy(ks_rdy), .s_tag(ks_tag),
+                        .s_beat(ks_beat), .s_data(ks_data),
+                        .fault(kv_fault_w[n]), .fault_code(fault_code),
+                        .st_ops(kv_ops_w[n*32 +: 32]), .st_words(kv_words_w[n*32 +: 32]),
+                        .st_sectors_written(kv_writes_w[n*32 +: 32]),
+                        .st_refetches(refetches), .st_wq_high(highwater),
+                        .st_hold_cycles(kv_holds_w[n*32 +: 32]));
+                end else begin : g_no_kv_hbm
+                    assign kv_ok = 1'b1;
+                    assign kv_q_hbm = '0;
+                    assign km_v = '0; assign km_addr = '0; assign km_len = '0;
+                    assign km_tag = '0; assign km_we = '0;
+                    assign km_wdata = '0; assign km_wstrb = '0;
+                    assign ks_rdy = '1;
+                    assign kv_fault_w[n] = 1'b0;
+                    assign kv_ops_w[n*32 +: 32] = '0;
+                    assign kv_words_w[n*32 +: 32] = '0;
+                    assign kv_writes_w[n*32 +: 32] = '0;
+                    assign kv_holds_w[n*32 +: 32] = '0;
+                end
                 for (genvar s = 0; s < 4; s = s + 1) begin : g_stack
+                    if (`HDC_KV_HBM) begin : g_shared
+                        wire [31:0] sh_v, sh_rdy, sh_we, sh_wr_done, sr_v, sr_rdy;
+                        wire [32*28-1:0] sh_addr;
+                        wire [32*4-1:0] sh_len, sr_beat;
+                        wire [32*17-1:0] sh_tag, sr_tag;
+                        wire [32*256-1:0] sh_wdata, sr_data;
+                        wire [32*32-1:0] sh_wstrb;
+                        ot_chip_v41x_hbm_karb #(.NPC(32), .AW(28), .TAGW(16)) u_arb (
+                            .clk(clk), .rst_n(rst_n),
+                            .b_v(h_v[s*32 +: 32]), .b_rdy(h_rdy[s*32 +: 32]),
+                            .b_addr(h_addr[s*32*28 +: 32*28]), .b_len(h_len[s*32*4 +: 32*4]),
+                            .b_tag(h_tag[s*32*16 +: 32*16]), .b_we(h_we[s*32 +: 32]),
+                            .b_wdata(h_wdata[s*32*256 +: 32*256]),
+                            .b_wstrb(h_wstrb[s*32*32 +: 32*32]),
+                            .b_wr_done(h_wr_done[s*32 +: 32]),
+                            .b_rsp_v(pikh_rsp_v[s*32 +: 32]),
+                            .b_rsp_rdy(pikh_rsp_rdy[s*32 +: 32]),
+                            .b_rsp_tag(pikh_rsp_tag[s*32*16 +: 32*16]),
+                            .b_rsp_beat(pikh_rsp_beat[s*32*4 +: 32*4]),
+                            .b_rsp_data(pikh_rsp_data[s*32*256 +: 32*256]),
+                            .k_v(km_v[s]), .k_rdy(km_rdy[s]),
+                            .k_addr(km_addr[s*28 +: 28]), .k_len(km_len[s*4 +: 4]),
+                            .k_tag(km_tag[s*16 +: 16]), .k_we(km_we[s]),
+                            .k_wdata(km_wdata[s*256 +: 256]),
+                            .k_wstrb(km_wstrb[s*32 +: 32]), .k_wr_done(),
+                            .k_rsp_v(ks_v[s]), .k_rsp_rdy(ks_rdy[s]),
+                            .k_rsp_tag(ks_tag[s*16 +: 16]),
+                            .k_rsp_beat(ks_beat[s*4 +: 4]),
+                            .k_rsp_data(ks_data[s*256 +: 256]),
+                            .h_v(sh_v), .h_rdy(sh_rdy), .h_addr(sh_addr),
+                            .h_len(sh_len), .h_tag(sh_tag), .h_we(sh_we),
+                            .h_wdata(sh_wdata), .h_wstrb(sh_wstrb),
+                            .h_wr_done(sh_wr_done), .r_v(sr_v), .r_rdy(sr_rdy),
+                            .r_tag(sr_tag), .r_beat(sr_beat), .r_data(sr_data),
+                            .k_grants(), .b_grants(), .contended());
+                        ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(28), .DW(256),
+                            .MEM_WORDS(KV_SBASE + KV_SECTORS), .TAGW(17),
+                            .LENW(4), .BEATW(4), .QD(64), .REFPB(3), .MEM_MODE(0)) hm (
+                            .clk(clk), .rst_n(rst_n), .req_v(sh_v), .req_rdy(sh_rdy),
+                            .req_addr(sh_addr), .req_len(sh_len), .req_tag(sh_tag),
+                            .req_we(sh_we), .req_wdata(sh_wdata), .req_wstrb(sh_wstrb),
+                            .wr_done(sh_wr_done), .rsp_v(sr_v), .rsp_rdy(sr_rdy),
+                            .rsp_tag(sr_tag), .rsp_beat(sr_beat), .rsp_data(sr_data));
+                        reg [63:0] refresh_count;
+                        always @(*) begin
+                            refresh_count = 0;
+                            for (integer p = 0; p < 32; p = p + 1)
+                                refresh_count = refresh_count + hm.st_ref[p];
+                        end
+                        assign stack_refs[s*64 +: 64] = refresh_count;
+                        initial for (integer i = 0; i < KV_SBASE + KV_SECTORS; i = i + 1)
+                            hm.mem[i] = 256'd0;
+                        reg [31:0] state_bad = 0;
+                        assign kv_hbm_state_bad_w[(n*4+s)*32 +: 32] = state_bad;
+                        always @(posedge clk) if (checking && !printed) begin
+                            state_bad = 0;
+                            for (integer i = 0; i < USERS*KVW/4; i = i + 1)
+                                if ({hm.mem[KV_SBASE+2*i+1], hm.mem[KV_SBASE+2*i]} !== kv[4*i+s]) begin
+                                    if (state_bad < 3)
+                                        $display("KVHBM_STATE pkg=%0d stack=%0d word=%0d", n, s, i);
+                                    state_bad = state_bad + 1;
+                                end
+                        end
+                    end else begin : g_idx_only
+                    assign kv_hbm_state_bad_w[(n*4+s)*32 +: 32] = '0;
                     ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(28), .DW(256),
                         .MEM_WORDS(USERS*IKH_WORDS), .TAGW(16), .LENW(4), .BEATW(4),
                         .QD(64), .REFPB(3), .MEM_MODE(0)) hm (
@@ -505,8 +631,17 @@ module tb_hdc_v41x_array #(
                     assign stack_refs[s*64 +: 64] = refresh_count;
                     initial for (integer i = 0; i < USERS*IKH_WORDS; i = i + 1)
                         hm.mem[i] = 256'd0;
+                    end
                 end
             end else begin : g_pooled_idx_n
+                assign kv_hbm_state_bad_w[n*4*32 +: 4*32] = '0;
+                assign kv_ok = 1'b1;
+                assign kv_q_hbm = '0;
+                assign kv_fault_w[n] = 1'b0;
+                assign kv_ops_w[n*32 +: 32] = '0;
+                assign kv_words_w[n*32 +: 32] = '0;
+                assign kv_writes_w[n*32 +: 32] = '0;
+                assign kv_holds_w[n*32 +: 32] = '0;
                 assign idx_user_read_w[n*USERS +: USERS] = '0;
                 assign idx_user_record_w[n*USERS +: USERS] = '0;
                 assign pikh_req_rdy = 0;
@@ -644,7 +779,9 @@ module tb_hdc_v41x_array #(
                 if (erom_re) erom_q <= erom[erom_addr[18:0]];
                 for (q = 0; q < 4*SW; q = q + 1) if (crom_re[q]) crom_q[64*q +: 64] <= crom[crom_addr[q*AW +: 15]];
                 if (xcrom_re) xcrom_q <= crom[xcrom_addr[14:0]];
-                for (q = 0; q < G; q = q + 1) if (kv_re) kv_q[q*W*32 +: W*32] <= kv[kv_raddr[q*AW +: 15] + kv_base];
+                if (!`HDC_KV_HBM)
+                    for (q = 0; q < G; q = q + 1) if (kv_re)
+                        kv_q_local[q*W*32 +: W*32] <= kv[kv_raddr[q*AW +: 15] + kv_base];
                 for (q = 0; q < HS; q = q + 1) if (vh_re[q]) vh_q[32*q +: 32] <= vm[pa(vh_addr[q*AW +: AW], cur_u)];
                 for (q = 0; q < G; q = q + 1) if (vx_re[q]) vx_q[32*q +: 32] <= vm[pa(vx_addr[q*AW +: AW], cur_u)];
                 for (q = 0; q < 4*SW; q = q + 1) if (vs_re[q]) vs_q[32*q +: 32] <= vm[pa(vs_addr[q*AW +: AW], cur_u)];
@@ -788,11 +925,14 @@ module tb_hdc_v41x_array #(
 
     reg [31:0] l_stall_sum;
     reg [31:0] q_bad_sum, q_words_sum, q_reads_sum, idx_records_sum, idx_writes_sum;
+    reg [31:0] kv_ops_sum, kv_words_sum, kv_writes_sum, kv_holds_sum, kv_state_bad_sum;
     reg [USERS-1:0] idx_users_read, idx_users_wrote;
     always @(*) begin
         l_stall_sum = 0;
         for (i = 0; i < NLINKS; i = i + 1) l_stall_sum = l_stall_sum + l_stalls[i*32 +: 32];
         q_bad_sum = 0; q_words_sum = 0; q_reads_sum = 0; idx_records_sum = 0; idx_writes_sum = 0;
+        kv_ops_sum = 0; kv_words_sum = 0; kv_writes_sum = 0;
+        kv_holds_sum = 0; kv_state_bad_sum = 0;
         idx_users_read = 0; idx_users_wrote = 0;
         for (i = 0; i < NODES; i = i + 1) begin
             q_bad_sum = q_bad_sum + qs_bad_w[i*32 +: 32];
@@ -800,9 +940,15 @@ module tb_hdc_v41x_array #(
             q_reads_sum = q_reads_sum + qs_hbm_reads_w[i*32 +: 32];
             idx_records_sum = idx_records_sum + idx_records_w[i*32 +: 32];
             idx_writes_sum = idx_writes_sum + idx_writes_w[i*32 +: 32];
+            kv_ops_sum = kv_ops_sum + kv_ops_w[i*32 +: 32];
+            kv_words_sum = kv_words_sum + kv_words_w[i*32 +: 32];
+            kv_writes_sum = kv_writes_sum + kv_writes_w[i*32 +: 32];
+            kv_holds_sum = kv_holds_sum + kv_holds_w[i*32 +: 32];
             idx_users_read = idx_users_read | idx_user_read_w[i*USERS +: USERS];
             idx_users_wrote = idx_users_wrote | idx_user_record_w[i*USERS +: USERS];
         end
+        for (i = 0; i < 4*NODES; i = i + 1)
+            kv_state_bad_sum = kv_state_bad_sum + kv_hbm_state_bad_w[i*32 +: 32];
     end
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
@@ -829,12 +975,23 @@ module tb_hdc_v41x_array #(
     end
 
     reg [63:0] end_cyc = 0;
+    reg [14:0] kv_drain_wait = 0;
     always @(posedge clk) begin
         cyc <= cyc + 1;
         if (hb > 0 && cyc != 0 && cyc % hb == 0)
             $display("HEARTBEAT cycle=%0d finished=%0d", cyc, finished);
         if (cyc == 5) rst_n <= 1'b1;
-        if (finished == n_users && !checking) begin checking <= 1'b1; end_cyc <= cyc; end
+        if (finished == n_users && !checking) begin
+            if (end_cyc == 0) end_cyc <= cyc;
+            // The final KV element writes can still be in the bounded sector
+            // queue after the controller reports the token. Keep the token
+            // cycle separate from this observation window, then compare the
+            // physical HBM sectors with the exact KV shadow.
+            if (`HDC_KV_HBM && kv_drain_wait < 15'd16384)
+                kv_drain_wait <= kv_drain_wait + 1'b1;
+            else
+                checking <= 1'b1;
+        end
         if (checking && checked_pkgs == NODES) begin
             if (fault_w != 0 || pfault_w != 0 || r_overflow) begin
                 bad = bad + 1;
@@ -844,6 +1001,16 @@ module tb_hdc_v41x_array #(
                 bad = bad + 1;
                 $display("QSTREAM_FAIL fault=%b bad=%0d words=%0d reads=%0d", qs_fault_w,
                          q_bad_sum, q_words_sum, q_reads_sum);
+            end
+            if (`HDC_KV_HBM) begin
+                $display("KVHBM ops=%0d words=%0d writes=%0d holds=%0d state_bad=%0d fault=%b",
+                         kv_ops_sum, kv_words_sum, kv_writes_sum, kv_holds_sum,
+                         kv_state_bad_sum, kv_fault_w);
+                if (kv_fault_w != 0 || kv_ops_sum == 0 || kv_words_sum == 0 ||
+                    kv_writes_sum == 0 || kv_state_bad_sum != 0) begin
+                    bad = bad + 1;
+                    $display("KVHBM_FAIL");
+                end
             end
             if (`HDC_X_IDX == 2 && (idx_records_sum == 0 || idx_writes_sum != 12 * idx_records_sum)) begin
                 bad = bad + 1;

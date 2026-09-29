@@ -54,8 +54,8 @@ DFlash, inside the 474.6 W liquid limit, so both design rates are uncapped.
 Both are above the 374.6 W air limit: **O4 needs liquid cooling to reach its
 design rates.** The measured lane (A) is capped in either class.
 
-**The 8-bit weights meet the quality threshold.** In the deployment
-arithmetic with FP8 E4M3 KV, the exact RTL weight contract (signed INT8, one
+**The 8-bit weights meet the quality threshold in the measured deployment arithmetic.** The exact 6,144-group, two-die K-split has separate BF16 numeric differences and still needs a full-model quality verdict. In the deployment
+arithmetic with FP8 E4M3 KV, the tested row-scale weight contract (signed INT8, one
 BF16 scale per output row applied after the FP32 sum, plain round-to-nearest
 with a per-row clip) changes WikiText-2 perplexity by **−1.59%** <!-- figure: -1.59 src="results/quality/qwen3_8b_weight_format_search.json#modes.e_full_w8_o4_contract_25288d25.wikitext2_2048.rel_delta_ppl" scale="100" name="Qwen3-8B INT8 per-row weights WikiText-2 2K perplexity change %" -->
 at 2K, by **−1.03%** <!-- figure: 1.03 src="results/quality/qwen3_8b_weight_format_search.json#modes.e_full_w8_o4_contract_25288d25.wikitext2_8192.rel_delta_ppl" scale="-100" name="Qwen3-8B INT8 per-row weights WikiText-2 8K perplexity decrease %" -->
@@ -583,7 +583,7 @@ Scenario B / scenario A. Die W is one die; package W is both dies and the
   plain decoding once capped (6,680 against 7,859 in liquid, 4,804 against
   5,766 in air): its extra MACs cost more power than the KV bytes they save.
 * **The HBM path is the dies' energy.** At batch 1 on the ROM package
-  (scenario B), 16.7 mJ of the 96.7 mJ is in the stacks and 79.8 mJ on the
+  (scenario B), 16.7 mJ of the 96.7 mJ is in the stacks and 80.0 mJ on the
   dies:
   * the dies' share of the HBM path 49.2 (604 MB of FP8 KV at 10.19 pJ/bit);
   * leakage 9.9;
@@ -604,7 +604,7 @@ Scenario B / scenario A. Die W is one die; package W is both dies and the
     package; an illustration only, since its workload and context are not
     matched.
 
-  At batch 128 the gap closes to 96.7 mJ (ROM) against 110.5 mJ (HBM,
+  At batch 128 the gap closes to 96.4 mJ (ROM) against 110.5 mJ (HBM,
   scenario B), at totals of 11,921 and 10,858 tok/s. The comparator's dies
   spend 1,058.6 mJ of its 1,284.2 (B) at batch 1: 666.4 on their share of the
   HBM path (weights and KV), and 383.3 of leakage, clock and stack idle over a

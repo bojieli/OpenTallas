@@ -38,6 +38,53 @@ lanes.  The read takes the same one registered cycle as the adapter's former
 words per bank, or 10 KiB per position.  MTP with six positions needs 60 KiB
 at this boundary, with each position's banks local to its MAC lanes.
 
+`ot_hdc_v41x_me_xbank_macro` groups the eight `b=8u+c` banks of one position
+and one chain index `c` into one 128-bit SRAM word.  A tile request reads one
+row per `(position,c)`; all lanes active on that chain index use that row,
+including the 8/16/32/64-element segment cases.  This takes **16 one-read,
+one-write macros** for the two-position ME adapter, since both positions
+must be read on the same cycle.  The repository's analytical ASAP7
+`ot_sram_1r1w_128x256_m1_r2c2` abstract has a bit write mask, so the legacy
+four-element write writes one 16-bit slice without reading or rewriting the
+other slices.  The 64-element ingress writes one full 128-bit word in each of
+eight macros for the selected position.  The macro model checks the same
+two groups, wide ingress, and 128,000 two-position segment readbacks.  Its
+16 outlines sum to 62,265 µm² and carry 13,104 *internal* signal pins;
+these counts are placement inputs, not die-level pins.  Local macro placement
+near the MAC lanes and a routed macro-bearing tile remain necessary.
+The ME adapter selects the original flat buffer with `XBANK=0` (the
+unchanged reduced default), the 64-bank register model with `XBANK=1`, and
+the grouped analytical SRAM model with `XBANK=2`.  Checkpoint-backed TP4
+rank-0 layer-0 `wo_a` runs pass all 2,048 raw FP32 output rows with the
+same 131,108 weight-bank reads and 133,259 cycles in both banked modes.
+This matches the flat gate's cycle count; the wide VM ingress is still tied
+off at the adapter, so no rate gain is yet implemented.
+
+### Die-width replication constraint
+
+The gate above is a 64-MAC `MG=8` slice.  The adopted MTP design-point
+ledger (`results/arch/v41_die_assembly.json`) prices **83,328 BF16 MACs per
+die** and **3.41 mm² total SRAM**.  Independent copies of this exact two-
+position macro store for 83,328/64 = 1,302 slices would occupy about
+**81.07 mm² of macro outlines** and provide 25.43 MiB of useful activation
+storage.  The die ledger does not include that replication.  This is an
+explicit area and routing mismatch, even though a single slice is exact.
+An implementable die needs a small number of shared activation banks with
+registered, physically local multicast to output-row MAC tiles, or a new
+area/power budget.  For scale only, 16 and 32 copies of the current abstract
+occupy 1.00 and 1.99 mm² respectively; each would drive roughly 81 or 41
+64-MAC slices.  Neither fanout, wire energy, nor timing is validated yet.
+The SRAM candidate is therefore a **bank and cluster boundary**, not an
+instruction to replicate one bank per 64 MACs.
+For the checkpoint-backed `wo_a` groups, output rows in a group share the
+same 4,096-element activation and can issue the same `q/plg` schedule in
+lockstep, so one SRAM read may feed a registered multicast tree.  That
+lockstep and single-read condition is not established for compressor,
+router, shared expert, multiple-user, or sparse-expert schedules; those may
+require separate banks or a different issue schedule.  Each registered
+multicast stage adds a fill/tail cycle and its weight-data path must be
+delayed by the same amount before an exact arithmetic claim.
+
 `ot_hdc_v41x_he_xslice` is a local 128-bit by 80-word SRAM slice for eight
 HCP lanes at the design HW=256 and PMAX=8.  A full HCP has 32 slices in each
 of eight term banks, or 256 slices and 320 KiB of BF16 activation storage.
@@ -46,6 +93,17 @@ placed next to the associated eight MAC lanes: exposing the entire
 32,768-bit operand as a single die-level port recreates the pin/routing
 problem.  HW=8 uses a different, deeper image and remains the first
 full-shape numerical profile until an HW=256 weight-bank image is generated.
+
+`ot_hdc_v41x_he_xslice_macro` maps one such slice to one analytical 128x256
+SRAM abstract, with bit-masked legacy writes and full-word preload.  Its
+80-word real-data preload and 640 readbacks pass the macro simulation model.
+At HW=256 and PMAX=8 the 256 slices would occupy about 0.996 mm² of these
+macro outlines, before wiring and whitespace.  This is a floorplan estimate
+for local memories, not a routed HCP or measured SRAM area.
+One such local slice has now been routed with the analytical macro abstract
+in ASAP7: 300 I/O pins had 4,516 available sites; the 0.92 ns run reports
+1,507.71 MHz routed Fmax, zero DRC, zero antenna violations, 29,971 µm of
+wire and 9,633 vias.  This characterises the local 128-bit bank port only.
 
 The two ME `wo_a` groups can be loaded once each through the existing four
 VM ports, as the corrected no-`splitj` program does.  The stand-alone xbank
@@ -82,12 +140,18 @@ These are memory-order and one-cycle read gates.  They do
 not exercise the ME/HCP arithmetic, whole layer, or multi-die execution.
 
 ASAP7 representative slice routes are run as **standard-cell memory**
-characterisations because the currently pinned platform does not provide a
-matching 16x80 or 128x80 SRAM macro view.  Their area and timing cannot be
-extrapolated to a foundry SRAM macro or to the full lane array.  A macro LEF,
-liberty, and pin contract are required before claiming full HCP/ME physical
-closure.  Before placement, synthesis maps the 16x80 ME slice to 6,933 cells,
+characterisations.  Their area and timing cannot be extrapolated to a
+foundry SRAM macro or to the full lane array.  The repository does have an
+analytical 128x256 SRAM LEF/liberty/Verilog view, now used by the grouped ME
+prototype; it has not been routed inside the ME tile.  The HCP slice now has
+a local macro-backed simulation model, but still needs integration with the
+full HCP and physical closure.  Before placement, synthesis
+maps the 16x80 ME slice to 6,933 cells,
 861.9 µm² and -462 ps setup slack at 0.92 ns.  The 128x80 HE slice maps to
 6,960 µm² with -9,546 ps setup slack.  These negative standard-cell results
-are physical evidence that an SRAM macro is necessary, not a routed clock
-claim; routed records will supersede them when the runs finish.
+are physical evidence that an SRAM macro is necessary.  The 16x80
+standard-cell ME slice subsequently routed with no DRC or antenna violation;
+its routed Fmax is 1,633 MHz, but the combined run remains `NOT_MET` because
+the separate pre-route static-timing stage reports -462 ps at 0.92 ns.
+This tiny surrogate is not the complete ME tile or the grouped SRAM boundary.
+The larger 128x80 HE standard-cell route remains in progress.

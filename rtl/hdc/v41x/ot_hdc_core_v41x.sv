@@ -76,10 +76,13 @@ module ot_hdc_core_v41x #(
     // re-specified units (1) or the as-built unit (0), per unit: the bring-up switches
     parameter integer X_HE  = 1,
     parameter integer X_ME  = 0,           // ME weight ops -> the BF16/FP32 weight engine
+    parameter integer X_ME_XBANK = 0,     // banked activation SRAM inside the ME adapter
     parameter integer X_ATT = 0,           // ME KV-sourced attention ops -> the attention engine
     parameter integer X_IDX = 0,           // ME KV-sourced index-key ops -> the indexer engine
     parameter integer PIKH_HAW = FULL_SHAPE ? 30 : 28, // pooled index physical HBM sector address
     parameter integer IDX_SHARDED = 0,      // opt-in paired compact key writer and reader
+    parameter integer IDX_MULTIUSER = 0,    // per-user sector base is applied before PC selection
+    parameter integer IDX_KEY_SLICE_SECTORS = 0,
     parameter integer X_SEL = 0,           // XU index-score SELECT -> the streaming-filter select
     parameter integer X_EG  = 0,           // XU EGATHER -> the per-bank Engram gather
     parameter integer XSQ   = 4,           // select: quarters
@@ -95,7 +98,7 @@ module ot_hdc_core_v41x #(
     parameter integer HBAW  = 16,          // HCP weight-bank word address
     // ME weight ops: ot_hdc_v41x_wgt_tile KIND 1 geometry
     parameter integer MG    = 8,           // chunk units (8 x MG BF16/FP32 MAC lanes)
-    parameter integer MBAW  = 17           // weight-bank word address
+    parameter integer MBAW  = FULL_SHAPE ? 18 : 17 // weight-bank word address
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -131,6 +134,7 @@ module ot_hdc_core_v41x #(
     input  wire [HS*HNL*32-1:0] hrom_q,
     // the KV word address where the index keys start (the ME slot's class of a KV-sourced op)
     input  wire [AW-1:0]     cfg_ik_base,
+    input  wire [PIKH_HAW-1:0] idx_user_base_sec,
     // the ME weight-tile base shift (tools/hdc_images_v41x.py me_xs)
     input  wire [3:0]        cfg_me_xs,
     // BF16/FP32 weight-tile banks (X_ME): 8 request buses, bank b = 8u + c of chain position c
@@ -848,7 +852,7 @@ module ot_hdc_core_v41x #(
     // engine 1: the BF16/FP32 weight engine (X_ME)
     generate if (X_ME != 0) begin : g_me_x
         ot_hdc_v41x_me_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .MG(MG), .BAW(MBAW),
-                                 .KMAX(FULL_SHAPE ? 5120 : 512)) u_mw (
+                                 .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
             .clk(clk), .rst_n(rst_n), .go(e_go[1]), .ready(e_ready[1]), .idle(e_idle[1]),
             .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase),
             .i_xjs(me_xjs), .i_split(me_split), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots),
@@ -920,8 +924,10 @@ module ot_hdc_core_v41x #(
         end
         if (X_IDX == 2) begin : g_pool
             ot_hdc_v41x_idx_pool_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP),
-                                           .HAW(PIKH_HAW), .SHARDED(IDX_SHARDED)) u_idx (
+                                           .HAW(PIKH_HAW), .SHARDED(IDX_SHARDED),
+                                           .SLICE_SECTORS(IDX_KEY_SLICE_SECTORS)) u_idx (
                 .clk(clk), .rst_n(rst_n), .go(e_go[3]), .ready(e_ready[3]), .idle(e_idle[3]), .cfg_ik_base(cfg_ik_base),
+                .i_user_base_sec(IDX_MULTIUSER ? idx_user_base_sec : PIKH_HAW'(0)),
                 .i_nout(me_nout), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
                 .i_xcs(me_xcs), .i_hg(me_hg), .i_round(me_round), .i_obase(me_obase), .i_mmode(me_mmode),
                 .i_oen(me_oen), .i_fuse(me_fuse), .i_wts(me_wts),
@@ -934,8 +940,10 @@ module ot_hdc_core_v41x #(
                 .dbg_ops(), .dbg_elems(), .dbg_keys_streamed(), .dbg_hbm_beats(), .dbg_keys_scored(),
                 .dbg_headsums_fused());
             ot_hdc_v41x_idx_pool_kwr #(.AW(AW), .NW(NW), .NL(KNL), .HAW(PIKH_HAW),
-                                         .SHARDED(IDX_SHARDED)) u_kwr (
-                .clk(clk), .rst_n(rst_n), .cfg_ik_base(cfg_ik_base), .su_go(su_go), .i_dst(dst), .i_obase(o_base),
+                                         .SHARDED(IDX_SHARDED), .SLICE_SECTORS(IDX_KEY_SLICE_SECTORS)) u_kwr (
+                .clk(clk), .rst_n(rst_n), .cfg_ik_base(cfg_ik_base),
+                .i_user_base_sec(IDX_MULTIUSER ? idx_user_base_sec : PIKH_HAW'(0)),
+                .su_go(su_go), .i_dst(dst), .i_obase(o_base),
                 .i_orow(o_row), .i_nout(su_nout), .i_kdim(su_nin), .kv_we(kwr_kv_we),
                 .kv_waddr(kwr_kv_waddr), .kv_wdata(kwr_kv_wdata), .w_v(pikw_v), .w_rdy(pikw_rdy),
                 .w_stack_mask(pikw_stack_mask), .w_csec(pikw_csec), .w_codes(pikw_codes),

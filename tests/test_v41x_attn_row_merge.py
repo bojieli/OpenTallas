@@ -13,5 +13,8 @@ def test_packed_attention_merge_exact_record_is_current():
     assert rec["full_beats"] == 3 and rec["partial_beats"] == 1
     assert rec["remote_rows"] == rec["tag_faults_checked"] == 1
     assert rec["range_faults_checked"] == 1
+    assert rec["four_bank_batches"] == 1
+    assert rec["four_bank_tag_faults_checked"] == 1
+    assert rec["banked_scalar_rows_checked"] == 1
     assert all(hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
                for path, digest in rec["sources"].items())

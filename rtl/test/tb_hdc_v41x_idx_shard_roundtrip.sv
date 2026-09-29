@@ -14,7 +14,7 @@ module tb_hdc_v41x_idx_shard_roundtrip;
     wire [2:0] sslot;
     wire [31:0] scales,written_keys;
     ot_hdc_v41x_idx_pool_kwr #(.SHARDED(1)) writer (
-        .clk(clk),.rst_n(rst_n),.cfg_ik_base(24'd0),.su_go(su_go),
+        .clk(clk),.rst_n(rst_n),.cfg_ik_base(24'd0),.i_user_base_sec(28'd0),.su_go(su_go),
         .i_dst(2'd3),.i_obase(24'd0),.i_orow(row),.i_nout(16'd1),.i_kdim(16'd32),
         .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),
         .w_v(w_v),.w_rdy(w_rdy),.w_stack_mask(mask),.w_csec(csec),

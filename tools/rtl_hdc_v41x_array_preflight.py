@@ -24,11 +24,15 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--scratch", type=Path, required=True)
     ap.add_argument("--all-unit", action="store_true", required=True)
+    ap.add_argument("--kv-hbm", action="store_true", help="lint attention KV prefetch on shared K stacks")
+    ap.add_argument("--config", choices=("b2_p2p", "b2_p2p_u2", "b3_h2_switch_stall"),
+                    default="b3_h2_switch_stall")
     args = ap.parse_args()
     assert C.ALL_UNIT
+    assert C.KV_HBM == args.kv_hbm
     scratch = args.scratch.resolve()
     scratch.mkdir(parents=True, exist_ok=True)
-    name = "b3_h2_switch_stall"
+    name = args.config
     body, hp, hmc, shared, fabric, users, _, stall, plen, ngen, _ = C.CONFIGS[name]
     model = C.V.Model()
     lay = C.P.Layout(model)
@@ -64,11 +68,12 @@ def main() -> None:
     defines = [f"+define+HDC_SW={C.I.SU_LANES}"] + [
         f"+define+HDC_X_{x}={2 if x == 'IDX' else 1}"
         for x in ("HE", "ME", "ATT", "IDX", "SEL", "EG", "SU")
-    ] + ["+define+HDC_W_HBM=1"]
+    ] + ["+define+HDC_W_HBM=1"] + (["+define+HDC_KV_HBM=1"] if C.KV_HBM else [])
     rtl = [str(p) for p in C.core.rtl_sources(True) if p.suffix == ".sv"]
     cmd = ["verilator", "--lint-only", *flags, "--top-module", "tb_hdc_v41x_array",
            f"-GUSERS={users}", f"-GSTALL={stall}", f"-I{obj}", f"-I{C.core.SVH.parent}",
            str(C.core.VLT), *defines, *rtl, *map(str, C.BENCH_AUX_RTL),
+           *map(str, C.KV_HBM_RTL if C.KV_HBM else []),
            str(C.LINK), str(C.ROUTER), str(C.CTRL), str(C.TB)]
     log = scratch / "lint.log"
     with log.open("w") as fh:
@@ -77,11 +82,13 @@ def main() -> None:
     sources = {str(p.relative_to(ROOT)): sha(p) for p in [*C.sources(), Path(__file__)]}
     fixture = ROOT / "build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors"
     result = {
-        "schema": "opentallas.rtl.v41x_allunit_switched_preflight.v1",
+        "schema": ("opentallas.rtl.v41x_array_kv_hbm_preflight.v1" if C.KV_HBM else
+                   "opentallas.rtl.v41x_allunit_switched_preflight.v1"),
         "status": "pass" if rc == 0 else "fail", "verilator_exit_code": rc,
         "config": name, "packages": plan.n, "users": users, "steps": steps,
         "all_unit_parameters": {"X_HE": 1, "X_ME": 1, "X_ATT": 1, "X_IDX": 2,
-                                "X_SEL": 1, "X_EG": 1, "X_SU": 1, "W_HBM": 1},
+                                "X_SEL": 1, "X_EG": 1, "X_SU": 1, "W_HBM": 1,
+                                "KV_HBM": int(C.KV_HBM)},
         "isa_pipeline": recs, "source_sha256": sources, "image_sha256": images,
         "model_fixture_sha256": sha(fixture), "config_svh_sha256": sha(svh),
         "lint_log_sha256": sha(log), "lint_command": cmd,

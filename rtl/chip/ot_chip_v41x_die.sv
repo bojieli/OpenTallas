@@ -434,7 +434,7 @@ module ot_chip_v41x_die #(
         .win_blk_kvt_base(win_blk_kvt_base), .win_blk_row(win_blk_row),
         .win_blk_kvt_row(win_blk_kvt_row), .win_blk_idx(win_blk_idx),
         .win_blk_first_elem(win_blk_first_elem), .win_blk_codes(win_blk_codes), .win_blk_scale(win_blk_scale),
-        .cfg_ik_base(cfg_ik_base), .cfg_me_xs(cfg_me_xs), .cfg_q_base(cfg_q_base), .cfg_q_lbase(cfg_q_lbase),
+        .cfg_ik_base(cfg_ik_base), .idx_user_base_sec('0), .cfg_me_xs(cfg_me_xs), .cfg_q_base(cfg_q_base), .cfg_q_lbase(cfg_q_lbase),
         .cfg_q_lead(cfg_q_lead), .cfg_q_rate(cfg_q_rate),
         .qr_compact_re(qr_compact_re), .qr_compact_addr(qr_compact_addr),
         .qr_compact_valid(qr_compact_valid), .qr_compact_fp4(qr_compact_fp4),

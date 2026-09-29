@@ -1,0 +1,37 @@
+// Placeholder macro (routed_pc_request) written by tools/chip_assembly/macros.py
+(* blackbox *)
+module ot_chip_v41x_hbm_karb_pc_local #(parameter integer AW=28, TAGW=16, LENW=4, BEATW=4, DW=256) (
+    input  wire clk,
+    input  wire rst_n,
+    input  wire b_v,
+    output wire b_rdy,
+    input  wire [27:0] b_addr,
+    input  wire [3:0] b_len,
+    input  wire [15:0] b_tag,
+    input  wire b_we,
+    input  wire [255:0] b_wdata,
+    input  wire [31:0] b_wstrb,
+    output wire b_wr_done,
+    input  wire k_v,
+    output wire k_rdy,
+    input  wire [27:0] k_addr,
+    input  wire [3:0] k_len,
+    input  wire [15:0] k_tag,
+    input  wire k_we,
+    input  wire [255:0] k_wdata,
+    input  wire [31:0] k_wstrb,
+    output wire k_wr_done,
+    output wire h_v,
+    input  wire h_rdy,
+    output wire [27:0] h_addr,
+    output wire [3:0] h_len,
+    output wire [16:0] h_tag,
+    output wire h_we,
+    output wire [255:0] h_wdata,
+    output wire [31:0] h_wstrb,
+    input  wire h_wr_done,
+    output wire [31:0] k_grants,
+    output wire [31:0] b_grants,
+    output wire [31:0] contended
+);
+endmodule

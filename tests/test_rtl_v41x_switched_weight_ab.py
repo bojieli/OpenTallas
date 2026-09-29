@@ -39,6 +39,12 @@ def test_switched_parser_checks_all_users_and_package_state():
     assert not c.parse(sample(1).replace("1918", "1919"), 1, man)["pass_"]
 
 
+def test_build_command_uses_actual_o0_for_generated_cpp(tmp_path):
+    cmd = campaign().build_cmd(tmp_path, 0, 8)
+    assert cmd[cmd.index("-CFLAGS") + 1] == "-O0"
+    assert cmd[cmd.index("-MAKEFLAGS") + 1] == "OPT_FAST=-O0 OPT_GLOBAL=-O0"
+
+
 def test_switched_combine_normalises_remote_paths(tmp_path):
     import json
     c = campaign()
@@ -46,16 +52,16 @@ def test_switched_combine_normalises_remote_paths(tmp_path):
     for path in (images, aa, bb):
         path.mkdir()
     man = dict(source_sha256={"x": "a"}, image_sha256={"x": "b"},
-               weight_equivalence={"pass_": True}, packages=5)
+               weight_equivalence={"pass_": True}, packages=5, steps_per_user=2)
     (images / "manifest.json").write_text(json.dumps(man))
     base = dict(source_sha256=man["source_sha256"], image_sha256=man["image_sha256"],
                 verilator_version="Verilator 5.050", **{"pass": True},
-                result={"total_cycles": 100}, checks={"exact": True})
+                result={"total_cycles": 100, "lm_head_steps_checked": 8}, checks={"exact": True})
     for scratch, root, whbm in ((aa, "/src/a", 0), (bb, "/remote/src/b", 1)):
         rec = dict(base, whbm=whbm,
                    build_command=["verilator", "-Mdir", str(scratch / "obj"),
                                   root + "/rtl/test/tb_hdc_v41x_array.sv",
-                                  f"+define+HDC_W_HBM={whbm}"],
+                                  f"+define+HDC_W_HBM={whbm}", "-j", str(10 + 6 * whbm)],
                    run_command=["stdbuf", "-oL", str(scratch / "obj/Vtop"),
                                 "+DIR=" + str(scratch / "images/cfg_b3_h2_switch_stall"),
                                 "+ROMS=" + str(scratch / "images/roms"), "+NUSERS=2"])
