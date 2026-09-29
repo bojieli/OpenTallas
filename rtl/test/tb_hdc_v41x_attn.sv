@@ -7,6 +7,10 @@
 // BUB > 0 inserts random bubbles on every input stream and random credit-return delays (flow-control test).
 // Files (+dir=<path>): jobs.hex {pv_off, sc_off, p_off, kv_off, T} x 32 bits, q.hex, kv.hex, p.hex, sc.hex, pv.hex.
 // Prints per job  V41XJOB ...  and a summary  V41XATTN ...
+// PWORDS = 2: each probability handshake carries min(2, words left) consecutive words (low word first); an unused
+// high word is filled with all-ones (NaN BF16) so a write from it would be visible.  +psup=<n> (default PWORDS)
+// models the upstream producer: with n < PWORDS the words arrive n per cycle into a PWORDS-word buffer (it holds at
+// most PWORDS words not yet accepted) and a handshake is offered only once its words have been supplied.  PWORDS = 1 at the default +psup drives exactly as before.
 module tb_hdc_v41x_attn (input wire clk);
     parameter integer H = 16;
     parameter integer D = 512;
@@ -23,6 +27,7 @@ module tb_hdc_v41x_attn (input wire clk);
     parameter integer P_DELAY = 0;
     parameter integer BUB = 0;             // percent
     parameter integer MAXCYC = 200000;
+    parameter integer PWORDS = 1;          // probability words per handshake
     localparam integer S = D / TD;
     localparam integer NT = NL * S;
     localparam integer DPT = D / NT;
@@ -39,10 +44,12 @@ module tb_hdc_v41x_attn (input wire clk);
     reg [H*33-1:0]   pvm  [0:NPV-1];
     reg [1023:0] dir;
     integer seed = 1;
+    integer psup = PWORDS;                 // upstream words supplied per cycle
     initial begin
         if (!$value$plusargs("dir=%s", dir)) begin $display("+dir missing"); $finish; end
         if ($value$plusargs("seed=%d", seed)) ;
         if ($value$plusargs("njob=%d", NJOB)) ;
+        if ($value$plusargs("psup=%d", psup)) ;
         $readmemh({dir, "/jobs.hex"}, jobs);
         $readmemh({dir, "/q.hex"}, qm);
         $readmemh({dir, "/kv.hex"}, kvm);
@@ -65,12 +72,12 @@ module tb_hdc_v41x_attn (input wire clk);
     reg kv_v = 0; reg [NL-1:0] kv_m = 0; reg [NL*ROWW-1:0] kv_w = 0; wire kv_ready;
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
     reg sc_cr = 0;
-    reg p_v = 0; reg [TD*16-1:0] p_w = 0; wire p_ready;
+    reg p_v = 0; reg [PWORDS*TD*16-1:0] p_w = 0; wire p_ready;
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
     reg pv_cr = 0;
     wire qk_iss, pv_iss;
     ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS),
-                        .SRAM_MACRO(SRAM_MACRO != 0)) dut (
+                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS)) dut (
         .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(job_t), .job_ready(job_ready),
         .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
@@ -80,7 +87,7 @@ module tb_hdc_v41x_attn (input wire clk);
     // ---- driver state ----
     integer dj = 0;             // job being driven
     integer st = 0;             // 0 wait job_ready, 1 q, 2 kv, 3 wait scores, 4 p, 5 done-driving
-    integer qn = 0, kvr = 0, pn = 0, pwait = 0;
+    integer qn = 0, kvr = 0, pn = 0, pwait = 0, psupplied = 0, pnw = 0, pstep = 0, pw;
     integer enter [0:65535];    // entry cycle of each row of the job being driven (by row)
     integer sc_last_cyc [0:63];
     integer p_last_cyc [0:63];
@@ -111,7 +118,10 @@ module tb_hdc_v41x_attn (input wire clk);
             for (l = 0; l < NL; l = l + 1) if (kv_m[l]) enter[kvr + l] = cyc;
             kvr = kvr + NL; kv_v <= 1'b0;
         end
-        if (p_v && p_ready) begin pn = pn + 1; p_v <= 1'b0; p_last_cyc[dj] = cyc; end
+        if (p_v && p_ready) begin
+            pnw = (jT(dj) + R - 1) / R;
+            pn = pn + ((pnw - pn < PWORDS) ? pnw - pn : PWORDS); p_v <= 1'b0; p_last_cyc[dj] = cyc;
+        end
         if (rst_n && dj < NJOB) begin
             case (st)
                 0: if (job_ready && !job_v) begin
@@ -136,11 +146,17 @@ module tb_hdc_v41x_attn (input wire clk);
                 end
                 // probabilities after the job's last score + P_DELAY
                 if (sj > dj && pwait < P_DELAY) pwait = pwait + 1;
-                if (sj > dj && pwait >= P_DELAY && pn < (jT(dj) + R - 1) / R && !bub()) begin
-                    p_v <= 1'b1; p_w <= pm[jP(dj) + pn];
+                pnw = (jT(dj) + R - 1) / R;
+                pstep = (pnw - pn < PWORDS) ? pnw - pn : PWORDS;
+                if (psup < PWORDS && sj > dj && pwait >= P_DELAY && psupplied < pnw && psupplied - pn < PWORDS) psupplied = psupplied + psup;
+                if (sj > dj && pwait >= P_DELAY && pn < pnw && (psup >= PWORDS || psupplied >= pn + pstep) && !bub()) begin
+                    p_v <= 1'b1;
+                    if (PWORDS == 1) p_w <= pm[jP(dj) + pn];
+                    else for (pw = 0; pw < PWORDS; pw = pw + 1)
+                        p_w[pw*TD*16 +: TD*16] <= (pw < pstep) ? pm[jP(dj) + pn + pw] : {TD*16{1'b1}};
                 end
-                if (pn >= (jT(dj) + R - 1) / R && qn >= H && kvr >= jT(dj)) begin
-                    dj = dj + 1; st = 0; pwait = 0;
+                if (pn >= pnw && qn >= H && kvr >= jT(dj)) begin
+                    dj = dj + 1; st = 0; pwait = 0; psupplied = 0;
                 end
             end
         end
