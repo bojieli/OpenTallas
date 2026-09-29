@@ -176,10 +176,18 @@ module ot_gpu_sm_v #(
                 .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
                 .wq(iwq[sp*LBS*256 +: LBS*256]), .we(iwe[sp*LBS*10 +: LBS*10]), .xq(xq_s), .xe(xe_s),
                 .ov(bov[sp]), .y(by[32*sp +: 32]), .otag(btag[TAGW*sp +: TAGW]), .fault(bfault[sp]));
-            ot_gpu_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (
-                .clk(clk), .rst_n(rst_n), .v(iv_f), .first(ifirst), .last(ilast), .tag(itag),
-                .w(iwf[sp*LSB*16 +: LSB*16]), .x(xf_s),
-                .ov(fov[sp]), .y(fy[32*sp +: 32]), .otag(ftag[TAGW*sp +: TAGW]), .fault(ffault[sp]));
+            if (LSB == 16 && TAGW == 16 && IL == 8) begin : g_hard
+                // the hardened 16-lane macro (full-shape SM: 4,096 rows, 8 slots)
+                ot_gpu_tc16 u_tc (
+                    .clk(clk), .rst_n(rst_n), .v(iv_f), .first(ifirst), .last(ilast), .tag(itag),
+                    .w(iwf[sp*LSB*16 +: LSB*16]), .x(xf_s),
+                    .ov(fov[sp]), .y(fy[32*sp +: 32]), .otag(ftag[TAGW*sp +: TAGW]), .fault(ffault[sp]));
+            end else begin : g_soft
+                ot_gpu_tc_col #(.L(LSB), .IL(IL), .TAGW(TAGW)) u_tc (
+                    .clk(clk), .rst_n(rst_n), .v(iv_f), .first(ifirst), .last(ilast), .tag(itag),
+                    .w(iwf[sp*LSB*16 +: LSB*16]), .x(xf_s),
+                    .ov(fov[sp]), .y(fy[32*sp +: 32]), .otag(ftag[TAGW*sp +: TAGW]), .fault(ffault[sp]));
+            end
         end
         // the two column types never run in one op: one combine tree takes whichever retires
         wire          tin_v = bov[0] | fov[0];

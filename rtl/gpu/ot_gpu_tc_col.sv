@@ -83,3 +83,23 @@ module ot_gpu_tc_col #(
         else lane_fault <= lane_fault | (|lf);
     assign fault = lane_fault | tf;
 endmodule
+
+// The V4.1 SM's BF16 column as a fixed macro (16 lanes, the 16-bit tag of a 4,096-row SM): a distinct
+// module name so the V4.1 SM can place it beside the Qwen SM's 32-lane ot_gpu_tc_col macro.
+module ot_gpu_tc16 (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          v,
+    input  wire          first,
+    input  wire          last,
+    input  wire [15:0]   tag,
+    input  wire [255:0]  w,
+    input  wire [255:0]  x,
+    output wire          ov,
+    output wire [31:0]   y,
+    output wire [15:0]   otag,
+    output wire          fault
+);
+    ot_gpu_tc_col #(.L(16), .IL(8), .TAGW(16)) u (.clk(clk), .rst_n(rst_n), .v(v), .first(first), .last(last),
+        .tag(tag), .w(w), .x(x), .ov(ov), .y(y), .otag(otag), .fault(fault));
+endmodule
