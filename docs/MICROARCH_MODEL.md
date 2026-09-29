@@ -1,6 +1,6 @@
 # Microarchitecture analytical model
 
-Tool: `tools/uarch_model.py`. Records: `results/uarch/v41_rom.json`, `results/uarch/qwen_rom.json`, `results/uarch/hbm_gpu.json`. Test: `tests/test_uarch_model.py`. The binding method is in [AGENTS.md](../AGENTS.md) rule 1.
+Tool: `tools/uarch_model.py`. Records: `results/uarch/v41_rom.json`, `results/uarch/qwen_rom.json`, `results/uarch/hbm_gpu.json`, `results/uarch/economics.json`. Tests: `tests/test_uarch_model.py`, `tests/test_uarch_economics.py`. The binding method is in [AGENTS.md](../AGENTS.md) rule 1.
 
 It covers all four designs: DeepSeek-V4.1 ROM (first), Qwen3-8B ROM, and the two GPU-organised HBM comparators.
 
@@ -342,3 +342,111 @@ Against GPUs (tier 2), the ROM designs are:
 - **V4.1:** about 15× in AR and 11× with MTP.
 
 Against the idealised HBM control (tier 3), the V4.1 ROM advantage is 1.4× in AR and about 1.07× with MTP, and it is structural (small TP groups on direct links).
+
+## Economics: batch, energy, cost (`--economics`, `results/uarch/economics.json`)
+
+User positioning (2026-09-29): the paper claims single-user speed against GPUs (tier 1 measured, tier 2 calibrated), makes energy per token and cost first-class, and reports aggregate throughput under batching. The idealised HBM machine (tier 3) is the architectural control. This section prices every design on those three axes. It calls the sections above and changes none of them. The record pins the sha256 of every source it reads. Test: `tests/test_uarch_economics.py`.
+
+### How each design batches
+
+- **V4.1 ROM array:** users fill the 28 pipeline stages.
+  - The per-user rate stays at the single-user rate until the busiest stage is full. That stage's occupancy is the sum of its nodes' issue on one die, the same basis as the power ledger: 77,022 tok/s.
+  - Capacity is 866 users at 1M (`arch_budget_v41` capacity, the layer-20 group's KV and index keys in 4 HBM3E stacks per die). The RTL key layout holds 551 (`results/arch/v41_hbm_region_preflight.json`, status `capacity_mismatch`).
+  - MTP m = 1 re-issues all 6 positions on the same lanes. It raises the single-user rate but lowers the saturated aggregate (50,708 against 77,022). The draft is charged to the head dies.
+- **Qwen ROM package:** m = 1, so batching reuses no weight word. The lanes (ME busy 54,432 of 110,219 cycles per die, from the calibrated replay's `unit_busy`), the stream unit and the KV stream each cap the aggregate:
+
+  | Bound | Aggregate tok/s |
+  |---|---:|
+  | Lanes | 20,184 |
+  | Stream unit | 101,641 |
+  | **KV stream** (8 stacks at 0.9 TB/s; 604 MB of 8K FP8 KV per user-token) | **11,921** |
+
+  **The KV stream binds from batch 2, not the lanes.** `arch_budget_qwen3.batch_model` gives the same 11,921.
+- **HBM tier 3:** users ride the SM's MMA columns on one weight fetch (16 on the Qwen die, 8 on the V4.1 die). Beyond the columns, the weights are streamed again.
+  - Qwen DFlash shares the columns between users and block positions, and takes the best block at each batch.
+  - V4.1 at 8 users or fewer re-prices the W13 chain with that many columns; the dedicated-unit issue repeats per user.
+  - Beyond 8 users, column passes interleave. The busiest of SM time, dedicated-unit issue and the weight sweep bounds each pass: 367 µs per 8-user pass (AR), 275 µs per 1-user MTP pass. Each pass's weight bytes are the union of its tokens' routed experts.
+- **GPU tier 2:** the tier-2 step at batch 1, plus (B − 1) times a per-user increment.
+  - A line fitted to the DFlash paper's B200 concurrency baselines (1/4/8/16/32 users: 230/861/1,666/3,133/5,694 tok/s) reproduces them within 3%. Its per-user increment is 38.5 µs.
+  - At 8K the increment is one user's FP8 KV at the fitted B200 byte rate: 115 µs. The code takes the larger of the two, which is GPU-favourable because the paper's increment already contains its own shorter-context KV.
+  - V4.1 on 8× B200 reads the routed-expert union and each user's index keys every step.
+  - Capacity is 180 GB × 0.9 per GPU, less the weights.
+
+### Batch, energy and capacity (8K Qwen, 1M V4.1)
+
+| Design | tok/s, B = 1 | mJ/token, B = 1 | Saturated batch | Aggregate tok/s | Per-user tok/s | mJ/token, saturated | Users that fit |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Qwen ROM AR (G = 6,144) | 9,968 | 86.4 | 2 | 11,921 | 5,960 | 84.7 | 268 |
+| Qwen HBM tier 3, AR | 881 | 983 | 16 | 6,684 | 418 | 133 | 255 |
+| Qwen HBM tier 3, DFlash | 2,671 | 358 | 8 | 7,101 | 888 | 129 | 255 |
+| Qwen 1× B200, AR (tier 2) | 331 | 2,081 | 255 | 7,907 | 31.0 | 87.1 | 255 |
+| V4.1 ROM, AR | 4,167 | 3,138 | 32 | 77,022 | 2,407 | 208 | 866 |
+| V4.1 ROM, MTP m = 1 | 6,063 | 2,168 | 16 | 50,708 | 3,169 | 294 | 866 |
+| V4.1 HBM tier 3, AR | 2,920 | 3,692 | 16 | 21,792 | 1,362 | 913 | 811 |
+| V4.1 HBM tier 3, MTP | 5,673 | 2,287 | 4 | 12,122 | 3,030 | 1,676 | 811 |
+| V4.1 8× B200, AR (tier 2) | 278 | 19,852 | 839 | 13,018 | 15.5 | 423 | 839 |
+
+Per-batch rows (per-user rate, aggregate, per-user latency, energy, system power) are in the record. Measured anchors, at 689 W:
+- B200 AR at 1 to 32 users: 2,996 to 121 mJ/token.
+- B200 DFlash at batch 1: 586 mJ (Math500) and 722 mJ (HumanEval).
+- DeepSeek-R1 on 8× B200: 14,978 mJ.
+
+### Energy basis
+
+- **V4.1 ROM:** the power ledger's terms (MACs by format, ROM words, x network, stream unit, the on-die HBM share, links), summed over every stage and multiplied by the 4 TP dies, plus the stacks' share of the index and KV reads.
+  - Dynamic energy is 21.6 mJ on the dies and 19.3 mJ in the stacks per token.
+  - Static power is 12.9 kW:
+    - 112 layer dies at the ledger's ungated clock + leakage + HBM interface idle (48.1 W), plus the rack's always-on SerDes and UCIe (33.1 W);
+    - head and Engram-table dies at the rack record's static.
+  - **Static power dominates at every batch.** Stage clock gating is the energy lever.
+- **Qwen ROM:** its own ledger with the same constants, both dies.
+  - Dynamic energy is 76.2 mJ/token, of which 59.5 mJ is the HBM stack share of the KV read and 7.1 mJ its on-die share.
+  - Static power is 101.5 W. The areas are the W12 ROM (265 mm²), the pruned group logic plus PHYs (173.8 mm²) and the KV ring (23.9 mm²).
+- **HBM tier 3:** SM MACs; every weight and KV byte over the whole HBM path (104.9 pJ/B); SMEM staging write and read; stream elements; and, for V4.1, the dedicated units' energy per token taken from the ROM ledger and fabric bytes over two switch hops.
+  - Static power per package: 69 W (Qwen); 6.5 kW for the 96 V4.1 dies.
+  - The NVL-class switch is not charged.
+- **GPU:** 689 W measured decode power per B200 (`technology.json` `power.gpu_reference_power`) × step time. The record also carries the rows at the 1,200 W TDP.
+- MAC energy is 2 operations per MAC in this section, as in `technology.json` and `arch_budget_v41`. The V4.1 power ledger above charges 1 per MAC, which changes its busiest die by under 1%. The test checks that this section's ledger reproduces the power ledger's busiest stage when run at 1 operation per MAC.
+- HBM background (refresh) power is not charged on any design.
+
+### Cost
+
+**The repository has no dollar model** (`docs/ANALYTICAL_REPORT.md`: "Mask cost and model churn are outside the model"). Every dollar figure below is ASSUMED.
+- **Basis:**
+  - **Iso-package.** Every two-reticle, 8-stack CoWoS-L-class package costs the repository's B200 device price, $25,000 (`configs/hardware/architectures.json`, graded assumed). That covers the ROM packages, the HBM comparator packages and a B200.
+  - **ROM mask NRE,** amortised over the 1,000 production units of `technology_inputs.json`:
+    - high case: a full 5 nm-class mask set per distinct ROM die, $15M (SemiAnalysis);
+    - low case: the weight-coding (via/metal) layers only, ASSUMED 10% of a set.
+  - Every V4.1 ROM die holds different weights, so there are 188 sets.
+- **Component cross-check** (silicon at the wafer-device assumption of $2.16/mm², plus HBM3E at an ASSUMED $360 a stack; excludes packaging, test and margin):
+
+  | Design | Silicon + stacks |
+  |---|---:|
+  | Qwen package | $6.4k |
+  | V4.1 ROM array | $499k |
+  | V4.1 HBM tier 3 | $307k |
+  | 8× B200 | $51k |
+
+| System | Packages | Dies | HBM stacks | ROM mask sets | Capex | $ per tok/s, B = 1 | $ per tok/s, saturated | $ per tok/s at ≥ 100 tok/s/user |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Qwen ROM (AR, G = 6,144) | 1 | 2 | 8 | 2 | $28k–55k | 2.81–5.52 | 2.35–4.61 | 2.35–4.61 |
+| Qwen HBM tier 3 (AR / DFlash) | 1 | 2 | 8 | 0 | $25k | 9.36 | 3.52 | 3.52 |
+| Qwen 1× B200 (tier 2, AR) | 1 | 2 | 8 | 0 | $25k | 75.53 | 3.16 | 5.15 |
+| V4.1 ROM array (AR / MTP m = 1) | 94 | 188 | 464 | 188 | $2.63M–5.17M | 434–853 | 34.2–67.1 | 34.2–67.1 |
+| V4.1 HBM tier 3 (AR / MTP) | 48 | 96 | 384 | 0 | $1.20M | 212 | 55.1 | 55.1 |
+| V4.1 8× B200 (tier 2, AR) | 8 | 16 | 64 | 0 | $200k | 720 | 15.4 | 51.4 |
+
+Each system is costed at its best mode for each point: its fastest single-user mode at B = 1, and its largest aggregate within capacity when saturated. The ≥ 100 tok/s/user column is an ASSUMED illustrative interactivity floor.
+
+### What the economics show
+
+1. **Single-user speed is where ROM wins.**
+   - At batch 1 the Qwen ROM package is 30× a B200 in tok/s, 24× in energy per token and 14–27× in $ per tok/s.
+   - The V4.1 ROM array against 8× B200, both AR, is 15× in tok/s and 6.3× in energy per token. With MTP on both it is 11× in tok/s.
+2. **Batching does not help the Qwen ROM package.** Its 8 HBM stacks must stream every user's 604 MB of 8K KV per token, so the aggregate saturates at 11,921 tok/s from batch 2. A B200, with the same 8 stacks, saturates at 7,907, and only at 31 tok/s per user. At saturation all three Qwen machines spend 85–133 mJ per token, dominated by the KV read. Cost per aggregate tok/s is then within 2× across them.
+3. **V4.1 ROM has the largest aggregate** (77,022 tok/s against 21,792 for tier 3 and 13,018 for 8× B200) **and the lowest saturated energy** (208 mJ against 913 and 423).
+   - Its capex is the highest: 94 packages plus 188 ROM mask sets, where the NRE is 0.3–2.8 M$ per system at 1,000 units.
+   - Per aggregate tok/s it therefore costs 2–4× 8× B200 at saturation, where the GPU serves 15.5 tok/s per user.
+   - At a ≥ 100 tok/s/user floor it is 0.7–1.3× the GPU.
+4. **MTP m = 1 is a single-user lever on the ROM array.** It lowers the saturated aggregate by 34%. Run MTP only while the stages are not yet full (below about 12 users) and AR beyond.
+5. **Static power sets the energy of both V4.1 designs.** V4.1 ROM runs at 3.1 J per token at batch 1 and 0.21 J saturated, against 19.9 and 0.42 J for 8× B200. Stage clock gating and SerDes idle states are the next energy levers.
