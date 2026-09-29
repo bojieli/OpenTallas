@@ -71,3 +71,12 @@ prevents repeating the known costly flat-reference elaboration. G64 emission and
 a bounded controller-only resource probe are available, but no G64 exact verdict
 is claimed. The current whole-matvec gate uses NW16 and the reduced default scale
 base selection; NW18 and `INT8_SCALE_WCS_BASE=1` require additional qualification.
+
+## Scale-address mode follow-up
+
+The `--scale-wcs-base 1` gate rebuilds both controller and safe reference with
+`INT8_SCALE_WCS_BASE=1`, while retaining identical compiled arithmetic kernels.
+It passes 24 cases / 5,520 cycles / 412 write cycles and rejects the wrong-edge
+mutant. This validates the full-shape scale-base **selection mode** at G4; it is
+not a full-shape matrix or token result. The record is
+`g4_scale_wcs_base1_exact.json`. NW remains 16 in this gate.

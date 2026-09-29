@@ -10,6 +10,7 @@ ap=argparse.ArgumentParser()
 ap.add_argument('--workdir',type=pathlib.Path,required=True)
 ap.add_argument('--controller-only',action='store_true')
 ap.add_argument('--verilator',default='verilator')
+ap.add_argument('--scale-wcs-base',type=int,choices=(0,1),default=0)
 args=ap.parse_args();out=args.workdir.resolve()
 parameters=json.loads((out/'parameters.json').read_text());G=parameters['groups']
 if G!=4 and not args.controller_only:
@@ -30,7 +31,7 @@ tops=['replay_controller'] if args.controller_only else ['replay_controller','re
 for top in tops:
  if top in ('replay_controller','replay_matvec_ref'):
   files=[('controller.sv' if top=='replay_controller' else 'reference.sv'),*common]
-  params=[f'-GG={G}','-GW=16','-GINT8_WEIGHT=1']
+  params=[f'-GG={G}','-GW=16','-GINT8_WEIGHT=1',f'-GINT8_SCALE_WCS_BASE={args.scale_wcs_base}']
  else:
   files=['kernels.sv',*([f'bank{top[-1]}.sv'] if top.startswith('replay_bank') else []),*common];params=[]
  directory=out/top
@@ -50,5 +51,5 @@ mutant=subprocess.run([str(out/'gate'),'--wrong-edge'],cwd=out,capture_output=Tr
 (out/'mutant.log').write_text(mutant.stdout+mutant.stderr)
 assert mutant.returncode!=0 and 'FAIL case=' in mutant.stdout
 pins={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.is_file() and p.suffix in ('.sv','.cpp')}
-result={'status':'pass','parameters':parameters,'steps':records,'source_sha256':pins,'runner_sha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),'verilator_version':subprocess.check_output([args.verilator,'--version'],text=True).strip(),'verdict':(out/'simulate.log').read_text().strip(),'negative_control':mutant.stdout.strip(),'claim_boundary':'Synthetic complete G4 matvec interface equivalence, no fullshape token or physical performance proof.'}
+result={'status':'pass','scale_wcs_base':args.scale_wcs_base,'parameters':parameters,'steps':records,'source_sha256':pins,'runner_sha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),'verilator_version':subprocess.check_output([args.verilator,'--version'],text=True).strip(),'verdict':(out/'simulate.log').read_text().strip(),'negative_control':mutant.stdout.strip(),'claim_boundary':'Synthetic complete G4 matvec interface equivalence, no fullshape token or physical performance proof.'}
 (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(result['verdict'])
