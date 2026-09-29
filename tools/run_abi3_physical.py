@@ -960,6 +960,8 @@ def sdc_lines(
         f"create_clock -name core_clk -period $clk_period [get_ports {block['clock_port']}]",
         *([f"create_clock -name ingress_clk -period $clk_period [get_ports {block['ingress_clock_port']}]"]
           if block.get("ingress_clock_port") else []),
+        *([f"set_clock_uncertainty {block['clock_uncertainty_ns'] / view['time_unit_ns']:g} [all_clocks]"]
+          if block.get("clock_uncertainty_ns") is not None else []),
         "set non_clock_inputs [all_inputs -no_clocks]",
         *([f"set core_inputs [get_ports {{{' '.join(block['core_input_ports'])}}}]"]
           if block.get("core_input_ports") else []),
@@ -2783,6 +2785,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--corner", default=None, help="corner name within the view")
     parser.add_argument("--clock-period-ns", type=float, required=True)
+    parser.add_argument("--clock-uncertainty-ns", type=float, default=None,
+                        help="nonnegative clock uncertainty applied to all clocks in the source-pinned SDC")
     parser.add_argument("--stages", default="synth,sta", help="comma list of synth,sta,pnr")
     parser.add_argument(
         "--fmax-search",
@@ -3181,6 +3185,11 @@ def main(argv: list[str] | None = None) -> int:
         block["ingress_input_delay_max_ns"] = args.ingress_input_delay_max_ns
     if args.io_delay_fraction is not None:
         block["io_delay_fraction"] = args.io_delay_fraction
+    if args.clock_uncertainty_ns is not None:
+        if args.clock_uncertainty_ns < 0:
+            print("--clock-uncertainty-ns must be nonnegative", file=sys.stderr)
+            return 2
+        block["clock_uncertainty_ns"] = args.clock_uncertainty_ns
     if args.false_path_io:
         block["false_path_io"] = True
 
