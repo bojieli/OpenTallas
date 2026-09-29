@@ -66,11 +66,10 @@ objects; they are not a fresh scaling benchmark. The final generic coordinator
 passes 24 cases, 5,520 cycles and 412 write cycles, with clock-low convergence in
 at most three passes. Peak process RSS is 18,176 KiB on this local run.
 
-The runner supports Verilator 4.x and 5.x runtime linkage. Its G64 full-run guard
-prevents repeating the known costly flat-reference elaboration. G64 emission and
-a bounded controller-only resource probe are available, but no G64 exact verdict
-is claimed. The current whole-matvec gate uses NW16 and the reduced default scale
-base selection; NW18 and `INT8_SCALE_WCS_BASE=1` require additional qualification.
+The runner supports Verilator 4.x and 5.x runtime linkage. Its G64 guard prevents repeating the known costly flat-reference elaboration.
+G64 full equivalence now passes with the qualified leaf-hierarchy reference
+(see the result below). The current whole-matvec gate uses NW16 and the reduced default scale
+base selection; NW18 remains unqualified; scale-base mode 1 has the G4 follow-up below.
 
 ## Scale-address mode follow-up
 
@@ -80,3 +79,38 @@ It passes 24 cases / 5,520 cycles / 412 write cycles and rejects the wrong-edge
 mutant. This validates the full-shape scale-base **selection mode** at G4; it is
 not a full-shape matrix or token result. The record is
 `g4_scale_wcs_base1_exact.json`. NW remains 16 in this gate.
+
+
+## G64 complete runtime equivalence
+
+On ot-pve1, Verilator 5.050, the safe reference uses only the previously qualified
+fmul/qadd leaf hierarchy. The runtime candidate uses 64 MAC objects and 96 fixed
+B4 reduction-bank objects. Root's previously built G64 controller archive is
+reused after byte-for-byte controller source verification. No hardware
+partition, latency or queue is changed.
+
+The exact gate passes **56 cases, 12,880 cycles and 956 write cycles**, comparing
+every public port. Clock-low settling converges within three passes. Runtime
+is 34.60 seconds wall / 34.59 seconds CPU and 42,552 KiB peak RSS. The wrong-edge
+mutant fails on case 0, tick 46, o_data. Result and compiled archive/binary pins
+are `results/rtl/qwen_runtime_composition/g64_exact.json`.
+
+Fresh hierarchical reference front-end: 53.32 seconds, 1,460,376 KiB peak RSS.
+C++ reference compilation: 10 minutes 24 seconds at make -j8, 579,456 KiB maximum
+individual child RSS. This is not total concurrent build memory. Full reference
+build is deliberately allowed to finish; the former six-minute wall limit is
+replaced by a configurable one-hour default. Kernel builds are independent and
+compiled once per ADDS variant. Earlier link failure was missing hierarchy DPI
+headers/runtime and was fixed without modifying RTL or source test data.
+
+Reproduce with Verilator 5.050:
+
+```bash
+python3 tools/qwen_matvec_runtime_emit.py --groups 64 --out /tmp/qwen-runtime-g64
+python3 tools/qwen_matvec_runtime_run.py --workdir /tmp/qwen-runtime-g64 \
+  --hier-reference --verilator /path/to/verilator-5.050/bin/verilator --jobs 8
+```
+
+G64 used NW16 and scale-base mode 0. The separate G4 gate covers scale-base mode 1.
+Neither is checkpoint execution, complete core composition, or full-shape token
+performance. G512 is not accepted by the runner and requires another root gate.

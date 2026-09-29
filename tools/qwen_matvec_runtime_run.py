@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """Run emitted bounded Qwen runtime composition; G4 is the qualified size.
 
-G64 controller-only resource probe is allowed. Full G64 requires a separately
-qualified reference build; this tool deliberately rejects a fresh flat G64
-reference compilation rather than repeating its known memory failure.
+G64 requires the qualified Verilator 5 leaf-hierarchy reference. The flat
+G64 reference is rejected rather than repeating its known memory failure.
 """
 import argparse,hashlib,json,pathlib,resource,subprocess,time,re
 ap=argparse.ArgumentParser()
 ap.add_argument('--workdir',type=pathlib.Path,required=True)
 ap.add_argument('--controller-only',action='store_true')
+ap.add_argument('--hier-reference',action='store_true')
+ap.add_argument('--wall-seconds',type=int,default=3600)
+ap.add_argument('--jobs',type=int,default=2)
 ap.add_argument('--verilator',default='verilator')
 ap.add_argument('--scale-wcs-base',type=int,choices=(0,1),default=0)
 args=ap.parse_args();out=args.workdir.resolve()
 parameters=json.loads((out/'parameters.json').read_text());G=parameters['groups']
-if G!=4 and not args.controller_only:
+if G!=4 and not args.controller_only and not args.hier_reference:
  raise SystemExit('Full G64 requires qualified bounded reference compilation; do not rerun flat G64')
 def limits():
  resource.setrlimit(resource.RLIMIT_AS,(2*1024**3,2*1024**3))
@@ -21,7 +23,7 @@ def limits():
 records=[]
 def run(name,cmd):
  start=time.monotonic()
- p=subprocess.run(['/usr/bin/time','-f','%M','-o',str(out/(name+'.rss')),*map(str,cmd)],cwd=out,capture_output=True,text=True,timeout=360,preexec_fn=limits)
+ p=subprocess.run(['/usr/bin/time','-f','%M','-o',str(out/(name+'.rss')),*map(str,cmd)],cwd=out,capture_output=True,text=True,timeout=args.wall_seconds,preexec_fn=limits)
  (out/(name+'.log')).write_text(p.stdout+p.stderr)
  records.append({'name':name,'command':list(map(str,cmd)),'seconds':time.monotonic()-start,'returncode':p.returncode,'max_child_rss_kib':(out/(name+'.rss')).read_text().strip()})
  (out/'result.json').write_text(json.dumps({'status':'running' if not p.returncode else 'fail','steps':records},indent=2)+'\n')
@@ -35,8 +37,12 @@ for top in tops:
  else:
   files=['kernels.sv',*([f'bank{top[-1]}.sv'] if top.startswith('replay_bank') else []),*common];params=[]
  directory=out/top
- run('verilate_'+top,[args.verilator,'--cc','-Wno-fatal','-Wno-TIMESCALEMOD','--top-module',top,'--Mdir',directory,*params,*files])
- run('build_'+top,['make','-C',directory,'-f',f'V{top}.mk','-j2',f'V{top}__ALL.a'])
+ hier=[]
+ if top=='replay_matvec_ref' and args.hier_reference:
+  (out/'leaf.vlt').write_text('`verilator_config\nhier_block -module "ot_hdc_fmul"\nhier_block -module "ot_hdc_qadd"\n')
+  hier=['--hierarchical','leaf.vlt','-O1','--unroll-count','131072','--unroll-limit','131072']
+ run('verilate_'+top,[args.verilator,'--cc','-Wno-fatal','-Wno-TIMESCALEMOD','--top-module',top,'--Mdir',directory,*params,*files,*hier])
+ run('build_'+top,['make','-C',directory,'-f',f'V{top}.mk',f'-j{args.jobs}',f'V{top}__ALL.a'])
 if args.controller_only:
  (out/'result.json').write_text(json.dumps({'status':'controller_build_only','groups':G,'steps':records},indent=2)+'\n');raise SystemExit(0)
 version=subprocess.check_output([args.verilator,'-V'],text=True)
@@ -44,12 +50,21 @@ vroot=re.search(r'VERILATOR_ROOT\s*=\s*(\S+)',version).group(1)
 runtime=[vroot+'/include/verilated.cpp']
 major=int(re.search(r'Verilator (\d+)',subprocess.check_output([args.verilator,'--version'],text=True)).group(1))
 if major>=5:runtime.append(vroot+'/include/verilated_threads.cpp')
-run('link',['g++','-std=c++14','-O0','-pthread','-I'+vroot+'/include',*['-I'+str(out/t) for t in tops],out/'main.cpp',*[out/t/f'V{t}__ALL.a' for t in tops],*runtime,'-o',out/'gate'])
+includes=['-I'+str(out/t) for t in tops]
+archives=[]
+for top in tops:
+ for p in (out/top).rglob('*.a'):
+  if p.name not in [a.name for a in archives]:archives.append(p)
+if args.hier_reference:
+ runtime.append(vroot+'/include/verilated_dpi.cpp')
+ includes.append('-I'+vroot+'/include/vltstd')
+ includes.extend('-I'+str(p.parent) for p in (out/'replay_matvec_ref').rglob('V*.h'))
+run('link',['g++','-std=c++17','-O0','-pthread','-I'+vroot+'/include',*sorted(set(includes)),out/'main.cpp','-Wl,--start-group',*archives,'-Wl,--end-group',*runtime,'-o',out/'gate'])
 run('simulate',[out/'gate'])
 assert 'PASS generic runtime composition' in (out/'simulate.log').read_text()
 mutant=subprocess.run([str(out/'gate'),'--wrong-edge'],cwd=out,capture_output=True,text=True,timeout=10)
 (out/'mutant.log').write_text(mutant.stdout+mutant.stderr)
 assert mutant.returncode!=0 and 'FAIL case=' in mutant.stdout
 pins={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.is_file() and p.suffix in ('.sv','.cpp')}
-result={'status':'pass','scale_wcs_base':args.scale_wcs_base,'parameters':parameters,'steps':records,'source_sha256':pins,'runner_sha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),'verilator_version':subprocess.check_output([args.verilator,'--version'],text=True).strip(),'verdict':(out/'simulate.log').read_text().strip(),'negative_control':mutant.stdout.strip(),'claim_boundary':'Synthetic complete G4 matvec interface equivalence, no fullshape token or physical performance proof.'}
+result={'status':'pass','scale_wcs_base':args.scale_wcs_base,'parameters':parameters,'steps':records,'source_sha256':pins,'runner_sha256':hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest(),'verilator_version':subprocess.check_output([args.verilator,'--version'],text=True).strip(),'verdict':(out/'simulate.log').read_text().strip(),'negative_control':mutant.stdout.strip(),'claim_boundary':f'Synthetic complete G{G} matvec interface equivalence, no fullshape token or physical performance proof.'}
 (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(result['verdict'])
