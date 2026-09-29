@@ -59,6 +59,7 @@ foreach {name mx my orient capture} $ot_macros {
     set inst [ot_find $block $name]
     set px [ot_snap_joint $mx $xgrid0 $xpitch 0.0 0.054]
     set py [ot_snap_joint $my $ygrid0 $ypitch 0.0 0.048]
+    $inst setPlacementStatus PLACED
     place_inst -name [$inst getName] -location [format "%.3f %.3f" $px $py] -orientation $orient -status FIRM
     if {!$capture} { continue }
     set box [$inst getBBox]
