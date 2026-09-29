@@ -111,6 +111,7 @@ module ot_chip_v41x_die #(
     parameter integer NPC_W   = 8,
     parameter integer W_HBM   = 1,
     parameter integer IDX_SHARDED = 0, // opt-in; reader and writer must share one layout
+    parameter bit WINDOW_RETAIN_L0 = 0, // opt-in single-use QK->PV packed-stage retention
     parameter bit WINDOW_HBM_ATTENTION = 0, // opt-in L0 WINDOW-only internal source
     // HBM address map and KV prefetch
     parameter integer K_HAW   = FULL_SHAPE ? 30 : 28, // HBM sector address
@@ -374,7 +375,7 @@ module ot_chip_v41x_die #(
     wire kvd_v, kv_ok, kvd_mmode; wire [AW-1:0] kvd_wbase, kvd_ts, kvd_ks, kvd_js;
     wire [NW-1:0] kvd_tiles, kvd_k, kvd_nout, kvd_pos; wire [1:0] kvd_hg;
     wire win_service_v, win_service_staged, win_service_done, win_service_fault;
-    wire win_service_busy, tile_packed_ready;
+    wire win_service_busy, win_service_start_ready, tile_packed_ready;
     wire [3:0] win_service_m;
     wire [4*16*265-1:0] win_service_w;
     reg [15:0] win_service_gen;
@@ -488,7 +489,7 @@ module ot_chip_v41x_die #(
     assign win_service_v=1'b0; assign win_service_m=4'd0;
     assign win_service_w=16960'd0; assign win_service_staged=1'b0;
     assign win_service_done=1'b0; assign win_service_fault=1'b0;
-    assign win_service_busy=1'b0; assign window_prime_ready=1'b0;
+    assign win_service_busy=1'b0; assign win_service_start_ready=1'b1; assign window_prime_ready=1'b0;
         assign att_packed_desc_accept = 1'b0;
         assign att_packed_desc_gen = 16'd0;
         assign att_packed_desc_rows = 11'd0;
@@ -516,7 +517,7 @@ module ot_chip_v41x_die #(
     end else begin : g_packed_kv
         wire [10:0] life_beats;
         ot_chip_v41x_attn_desc_lifecycle #(.AW(AW), .NW(NW), .L0_ONLY(1)) u_desc_life (
-            .clk(clk), .rst_n(rn), .desc_v(kvd_v), .desc_user(step_user),
+            .clk(clk), .rst_n(rn), .desc_v(kvd_v && (!WINDOW_RETAIN_L0 || !WINDOW_HBM_ATTENTION || win_service_start_ready || win_service_busy)), .desc_user(step_user),
             .desc_pos(kvd_pos), .desc_tiles(kvd_tiles), .desc_k(kvd_k), .desc_nout(kvd_nout),
             .desc_wbase(kvd_wbase), .desc_ts(kvd_ts), .desc_ks(kvd_ks), .desc_js(kvd_js),
             .desc_hg(kvd_hg), .desc_mmode(kvd_mmode),
@@ -587,12 +588,21 @@ module ot_chip_v41x_die #(
         if (WINDOW_HBM_ATTENTION) begin : g_window_hbm_attention
         wire source_fault;
         wire source_prime_ready;
+        wire retention_shape = kvd_mmode && kvd_wbase==0 && kvd_js==0 && kvd_hg==1;
+        wire retention_qk=retention_shape && kvd_ts==512 && kvd_ks==1 &&
+                          kvd_k==512 && kvd_nout==128 && kvd_tiles==4;
+        wire retention_pv=retention_shape && kvd_ts==1 && kvd_ks==32 &&
+                          kvd_k==128 && kvd_nout==512 && kvd_tiles==16;
         assign window_prime_ready = window_region_ok && source_prime_ready;
         assign win_service_fault = source_fault ||
             (att_packed_desc_accept && !window_region_ok);
         ot_chip_v41x_window_attn_source #(.POS_W(NW), .SEC_W(K_HAW),
-            .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_source (
+            .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK), .RETAIN_L0(WINDOW_RETAIN_L0)) u_source (
             .clk(clk), .rst_n(rn),
+            .retain_qk(retention_qk),.retain_pv(retention_pv),
+            .retain_generation(att_packed_desc_gen),
+            .retain_complete(att_packed_desc_done && att_packed_idle),
+            .retain_invalidate(t_start || !window_region_ok),
             .region_base_sector(window_region_base),
             .region_sector_count(window_region_count),
             .prime_v(window_prime_v && window_region_ok),
@@ -602,7 +612,7 @@ module ot_chip_v41x_die #(
             .blk_ready(win_blk_ready), .blk_user(win_blk_user),
             .blk_row(win_blk_row), .blk_idx(win_blk_idx),
             .blk_codes(win_blk_codes), .blk_scale(win_blk_scale),
-            .start_v(window_source_start), .start_ready(),
+            .start_v(window_source_start), .start_ready(win_service_start_ready),
             .start_user(step_user), .start_first(kvd_pos - NW'(127)),
             .start_count(8'd128), .staged_v(win_service_staged),
             .stream_go(att_packed_issue),
@@ -623,7 +633,7 @@ module ot_chip_v41x_die #(
         assign win_service_v=1'b0; assign win_service_m=4'd0;
         assign win_service_w=16960'd0; assign win_service_staged=1'b0;
         assign win_service_done=1'b0; assign win_service_fault=1'b0;
-        assign win_service_busy=1'b0; assign window_prime_ready=1'b0;
+        assign win_service_busy=1'b0; assign win_service_start_ready=1'b1; assign window_prime_ready=1'b0;
         ot_chip_v41x_window_kv_prefetch #(.POS_W(NW), .SEC_W(K_HAW),
             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
             .clk(clk), .rst_n(rn),

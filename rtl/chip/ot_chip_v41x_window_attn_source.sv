@@ -5,9 +5,14 @@
 // ordered packed beats. Selected FP4 CKV and remote rows are unsupported.
 module ot_chip_v41x_window_attn_source #(
     parameter integer POS_W=21, USER_W=10, SEC_W=30, HAW=30, TAGW=16,
+    parameter bit RETAIN_L0=0,
     parameter integer WIN_STACK=0, STREAM_II1=0, REFILL_CREDITS=1
 ) (
     input wire clk,rst_n,
+    // Opt-in only: caller validates exact L0 QK/PV signatures. New lifecycle
+    // generation for every operation; completion means engine AND replay drained.
+    input wire retain_qk, retain_pv, retain_complete, retain_invalidate,
+    input wire [15:0] retain_generation,
     input wire [SEC_W-1:0] region_base_sector,region_sector_count,
     input wire prime_v,
     output wire prime_ready,
@@ -76,16 +81,85 @@ module ot_chip_v41x_window_attn_source #(
         else if (start_v && start_ready) staged_sent<=1'b0;
         else if (staged_v) staged_sent<=1'b1;
 
-    ot_chip_v41x_window_refill_schedule #(.POS_W(POS_W),.USER_W(USER_W)) u_schedule (
-        .clk(clk),.rst_n(rst_n),.start_v(start_v),.start_ready(start_ready),
-        .start_user(start_user),.start_first(start_first),.start_count(start_count),
+    wire schedule_ready, schedule_busy, schedule_start, retained_dispatch;
+    wire [USER_W-1:0] schedule_user;
+    wire [POS_W-1:0] schedule_first;
+    wire [7:0] schedule_count;
+    wire retention_pending;
+    generate if (RETAIN_L0) begin : g_retention
+        reg pending;
+        reg [USER_W-1:0] user_q;
+        reg [POS_W-1:0] first_q;
+        reg [7:0] count_q;
+        reg [319:0] active_key;
+        reg active_qk;
+        reg [15:0] active_gen;
+        reg [31:0] content_epoch;
+        reg [SEC_W-1:0] region_base_q, region_count_q;
+        wire config_changed=region_base_q!=region_base_sector || region_count_q!=region_sector_count;
+        wire mutation=(blk_v && blk_ready) || (prime_v && prime_ready) ||
+                      retain_invalidate || config_changed || fault;
+        wire accept=start_v && start_ready;
+        wire [319:0] incoming_key=320'({16'h0100,content_epoch,2'(WIN_STACK),
+                            region_base_sector,region_sector_count,start_user,start_first,start_count});
+        wire response_v, response_hit;
+        wire [15:0] response_gen;
+        wire storage_drained=pf_ready && !schedule_busy;
+        assign start_ready=!pending && schedule_ready && pf_ready && !retain_invalidate && !config_changed;
+        assign schedule_start=pending && response_v;
+        assign schedule_user=user_q;
+        assign schedule_first=first_q;
+        assign schedule_count=count_q;
+        assign retained_dispatch=response_hit;
+        assign retention_pending=pending;
+        ot_chip_v41x_window_retention #(.ENABLE(1)) u_retention (
+            .clk(clk),.rst_n(rst_n),.invalidate(mutation),
+            .drained(storage_drained),.mutation_pending(!pf_ready),
+            .qk_complete(retain_complete && active_qk),
+            .qk_cacheable(active_qk),.all_rows_valid(count_q==128),
+            .qk_content_key(active_key),.qk_generation(active_gen),
+            .pv_request(accept),.pv_cacheable(retain_pv && start_count==128),
+            .pv_content_key(incoming_key),.pv_generation(retain_generation),
+            .generation_wrap(retain_generation==16'd1),
+            .response_valid(response_v),.retained_hit(response_hit),
+            .response_generation(response_gen),.armed());
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin
+                pending<=0; user_q<=0; first_q<=0; count_q<=0;
+                active_key<=0;active_qk<=0;active_gen<=0;content_epoch<=0;
+                region_base_q<=0;region_count_q<=0;
+            end else begin
+                region_base_q<=region_base_sector;region_count_q<=region_sector_count;
+                if (mutation) begin content_epoch<=content_epoch+1'b1;active_qk<=0;end
+                if (accept) begin
+                    pending<=1;user_q<=start_user;first_q<=start_first;count_q<=start_count;
+                    active_key<=incoming_key;active_qk<=retain_qk && start_count==128;
+                    active_gen<=retain_generation;
+                end
+                if (schedule_start && schedule_ready) pending<=0;
+            end
+        end
+    end else begin : g_no_retention
+        assign start_ready=schedule_ready;
+        assign schedule_start=start_v;
+        assign schedule_user=start_user;
+        assign schedule_first=start_first;
+        assign schedule_count=start_count;
+        assign retained_dispatch=1'b0;
+        assign retention_pending=1'b0;
+    end endgenerate
+    assign busy=schedule_busy || retention_pending;
+    ot_chip_v41x_window_refill_schedule #(.POS_W(POS_W),.USER_W(USER_W),.ALLOW_RETAIN(RETAIN_L0)) u_schedule (
+        .clk(clk),.rst_n(rst_n),.start_v(schedule_start),.start_ready(schedule_ready),
+        .retain_hit(retained_dispatch),
+        .start_user(schedule_user),.start_first(schedule_first),.start_count(schedule_count),
         .prefetch_v(pf_v),.prefetch_ready(pf_ready),
         .prefetch_user(pf_user),.prefetch_row(pf_row),
         .prefetch_ok(pf_ok),.prefetch_fault(pf_fault),
         .issue_v(issue_v),.issue_ready(issue_ready),
         .issue_user(issue_user),.issue_first(issue_first),.issue_count(issue_count),
         .issue_done(merge_done),.issue_fault(merge_fault),
-        .busy(busy),.done(done),.fault(schedule_fault),
+        .busy(schedule_busy),.done(done),.fault(schedule_fault),
         .refill_cycles(refill_cycles),.rows_refilled(rows_refilled));
 
     ot_chip_v41x_window_kv_prefetch #(.POS_W(POS_W),.USER_W(USER_W),

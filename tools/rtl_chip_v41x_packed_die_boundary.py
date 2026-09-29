@@ -30,7 +30,7 @@ SOURCES = [
         "ot_chip_v41x_window_attn_source", "ot_chip_v41x_attn_row_merge",
         "ot_chip_v41x_attn_desc_lifecycle", "ot_chip_v41x_rope_region_guard",
         "ot_chip_v41x_rope_hbm_cache", "ot_chip_v41x_kv_rope_reqmux",
-        "ot_chip_v41x_window_block_guard",
+        "ot_chip_v41x_window_block_guard", "ot_chip_v41x_window_retention",
         "ot_chip_v41x_kv_reqmux", "ot_chip_v41x_kv_prefetch",
         "ot_chip_v41x_hbm_karb", "ot_chip_v41x_coll_dma",
         "ot_chip_v41x_coll_transpose",
@@ -85,17 +85,18 @@ def run() -> dict:
         rtl = [scratch / "ot_chip_v41x_tile.sv", scratch / "ot_chip_v41x_hbm3e_phy.sv"]
         rtl += [p for p in SOURCES if p.name not in {
             "ot_chip_v41x_tile.sv", "ot_chip_v41x_hbm3e_phy.sv"}]
-        for full, window in ((0, 0), (1, 0), (1, 1)):
+        for full, window, retain in ((0, 0, 0), (1, 0, 0), (1, 1, 0), (1, 1, 1)):
             cmd = [
                 die.VERILATOR, "--lint-only", *die.LINT_FLAGS,
                 "-Wno-PINMISSING", "-Wno-UNDRIVEN",
                 "--top-module", "ot_chip_v41x_die", f"-GFULL_SHAPE={full}",
-                f"-GWINDOW_HBM_ATTENTION={window}",
+                f"-GWINDOW_HBM_ATTENTION={window}", f"-GWINDOW_RETAIN_L0={retain}",
                 "-GK_MEM=524288", *map(str, rtl),
             ]
             result = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,
                                     timeout=90, check=False)
             mode = "reduced" if not full else ("full_window_hbm" if window else "full")
+            if retain: mode += "_retained"
             results[mode] = {
                 "returncode": result.returncode,
                 "diagnostics": [line.replace(str(ROOT) + "/", "")

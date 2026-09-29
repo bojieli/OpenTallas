@@ -81,3 +81,30 @@ write/prime/config invalidation, pending write, incomplete rows, wrong shape,
 un-drained service, stale generation and wrap. These are controller tests;
 **source-scheduler hookup and real QK→VM-ops→PV numerical replay remain pending**.
 No prefetch/source file was changed; refill owner retains that scope.
+
+## Opt-in source integration
+
+`WINDOW_RETAIN_L0=0` remains the die default. When enabled, the die validates the
+exact L0 QK/PV signatures above and supplies the lifecycle generation/completion.
+The source latches canonical user/origin/count, stack/region and a32-bit mutation
+epoch in a320-bit local key; format/layout is fixed by this L0-only implementation.
+New step invalidates the entry; arbitrary layer reuse is not exposed. Every
+accepted block/prime and region change increments the mutation epoch and clears
+both retained validity and pending QK eligibility. No external HBM writer may
+mutate this region without a corresponding invalidate; present L0 source assumes
+exclusive region ownership.
+
+An accepted descriptor receives one registered lookup. A hit skips all row
+prefetch requests and transitions the existing schedule directly to ISSUE with
+128 rows. It still publishes one staged event for the new generation, waits for
+explicit core issue, streams from real existing row SRAM and drains the real
+lifecycle. Neither HBM responses nor output beats are replayed from a test cache.
+The prefetch module is untouched, preserving the independent multi-credit work.
+
+The matched producer/HBM gate includes delayed writes, actual QK/PV descriptor
+shapes and two lifecycle generations. It inserts seven elapsed VM-only slots,
+with the no-KV-write property separately checked against emitted PC25–31; it does
+not execute those numeric SU instructions. Baseline reads4352 sectors; the hit
+reads2176. Write/prime/config/step invalidation and generation wrap require both
+refills. Changed user or position faults without leaking retained PV beats.
+Final attention arithmetic and complete die execution remain separate gates.

@@ -5,11 +5,13 @@
 module ot_chip_v41x_window_refill_schedule #(
     parameter integer POS_W = 21,
     parameter integer USER_W = 10,
-    parameter integer MAX_CONTEXT = 1048576
+    parameter integer MAX_CONTEXT = 1048576,
+    parameter bit ALLOW_RETAIN = 0
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
     input  wire                  start_v,
+    input  wire                  retain_hit,
     output wire                  start_ready,
     input  wire [USER_W-1:0]     start_user,
     input  wire [POS_W-1:0]      start_first,
@@ -66,6 +68,8 @@ module ot_chip_v41x_window_refill_schedule #(
                     rows_refilled <= 0; refill_cycles <= 0; fault <= 0;
                     if (start_count > 8'd128 || end_pos > (POS_W+1)'(MAX_CONTEXT)) begin
                         fault <= 1; state <= FAILED;
+                    end else if (ALLOW_RETAIN && retain_hit) begin
+                        rows_refilled <= start_count; state <= ISSUE;
                     end else state <= start_count == 0 ? ISSUE : SEND;
                 end
                 SEND: if (prefetch_ready) state <= WAIT;
