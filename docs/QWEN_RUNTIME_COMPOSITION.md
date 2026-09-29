@@ -114,3 +114,28 @@ python3 tools/qwen_matvec_runtime_run.py --workdir /tmp/qwen-runtime-g64 \
 G64 used NW16 and scale-base mode 0. The separate G4 gate covers scale-base mode 1.
 Neither is checkpoint execution, complete core composition, or full-shape token
 performance. G512 is not accepted by the runner and requires another root gate.
+
+## Full-core integration boundary (generated and linted, not connected yet)
+
+`tools/qwen_runtime_core_emit.py` removes only `u_me` from a generated copy of
+`ot_hdc_core_vector_weight` and exports its 54 non-clock ports. Instructions,
+SU/reduction, embedding control and completion stay in RTL. The emitted G4
+NW18/scale-base1 controller lints; the complete core-runtime composition has not
+yet executed. Production RTL is untouched.
+
+The actual checkpoint loader is `tools/runtime/qwen_runtime_memory.hpp`.
+`tools/qwen_runtime_checkpoint_memory_gate.py` verifies input hashes against the
+existing layer0 oracle, loads 36,569,088 packed code words and 404,928 scale words,
+checks 72 independently decoded words (including groups 0/63/511/6143), and checks
+read-before-write, held read responses and ordered write priority. This does not
+by itself establish RTL/memory composition.
+
+The full-core host must first snapshot memory requests and old-data reads, clock
+all RTL objects simultaneously using prior read responses, then commit the new
+memory responses and ordered writes. The original TB write order is increasing
+ME group/lane, MX, SU, RD, TP. No memory transaction may bypass this edge boundary.
+
+The current shipped layer0 TB leaves SU_VEC=0/SW=1 defaults. The first full-core
+exact run must explicitly retain and label that scalar-SU reference profile.
+It cannot establish the modeled SW1024 cycle rate; a full-throughput profile
+requires separately approved resource/physical budgets.
