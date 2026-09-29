@@ -14,10 +14,10 @@ footprints. Each input carries its evidence class, and the gaps are named.
   `results/arch/arch_budget_v41.json` `power`); routed blocks (`results/physical_abi3/asap7/**`); memory macros
   (`physical/asap7_memory_macros/`); the rack (`results/arch/v41_rack.json`).
 
-**Answer.** The layer die closes **conditionally**. It fits 815 mm² with **9.2 mm²** of whitespace <!-- figure: 9.2 src="results/arch/v41_die_assembly.json#ledger.layer.whitespace_mm2" name="layer die whitespace mm2" -->,
+**Historical analytical result; not physical closure.** See [the current physical floorplan contract](V41_PHYSICAL_FLOORPLAN.md) and its resource discrepancies. The analytical layer-die estimate fits **conditionally**. It fits 815 mm² with **9.2 mm²** of whitespace <!-- figure: 9.2 src="results/arch/v41_die_assembly.json#ledger.layer.whitespace_mm2" name="layer die whitespace mm2" -->,
 but only if the logic places at 0.68 utilisation or better <!-- figure: 0.68 src="results/arch/v41_die_assembly.json#ledger.sensitivities.break_even_utilisation" name="break-even placement utilisation" -->,
-and the MTP lane multiplier (m = 2) is what fills it. Every long wire closes timing once it is pipelined, and
-the design point now charges the latency that costs: **21.1 µs** <!-- figure: 21.1 src="results/arch/v41_die_assembly.json#long_wires.by_model.asap7_routed_fit.exposed_us_per_token" name="on-die wire us per token, ASAP7 fit" -->
+and the MTP lane multiplier (m = 2) is what fills it. The model assumes pipelined long wires; actual routed timing, clock crossings and pipeline placement remain unverified.
+The historical design point charges its modeled latency: **21.1 µs** <!-- figure: 21.1 src="results/arch/v41_die_assembly.json#long_wires.by_model.asap7_routed_fit.exposed_us_per_token" name="on-die wire us per token, ASAP7 fit" -->
 of the 142.7 µs token at 1M on the ASAP7 routed-wire model, which takes the headline from 8,246 to **7,049** tokens/s per user <!-- figure: 7,049 src="results/arch/v41_die_assembly.json#long_wires.by_model.asap7_routed_fit.rate" name="1M rate with ASAP7 on-die wire charged" -->.
 Power closes on **liquid**, the V4.1 baseline cooling (user decision 2026-09-28), at every operating point:
 checked at the hottest die, with the adopted stage rebalancing spreading layer 20's index scan over S14, S13 and

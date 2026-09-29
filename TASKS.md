@@ -1,56 +1,36 @@
 # OpenTallas critical-path tracker
 
-Updated 2026-09-29. Published baseline last verified locally: `49797307`; newer source integration below is uncommitted. The goal is four **full-shape, bit-exact, source-pinned end-to-end** ROM/HBM results, with physical evidence for the implemented blocks and a rate model calibrated from those results. A reduced test, design-point model, or placed block cannot be promoted to a full-chip throughput claim. The paper is [`docs/ARCHITECTURE_ATLAS.html`](docs/ARCHITECTURE_ATLAS.html); this file tracks its remaining proof obligations.
+Updated 2026-09-29. Last published baseline: `8f6925ba`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
 
-**Statuses:** `[x]` published and passed at the stated scope; `[~]` assigned/in progress; `[ ]` queued; `[!]` a measured blocker. Owner names below identify responsibility; their branch/worktree is the handoff location, not evidence until merged. The live assignment table below supersedes older agent activity descriptions. Completed agents resume only for a concrete, nonoverlapping critical-path task. Optional sweeps and superseded routes stay stopped. Root stopped the old DEPTH32 non-px collective detailed route (checkpoint retained), recovering about 30 GiB locally; large new gates run remotely with memory caps. The root agent integrates and pushes main. On every substantive merge, the owner of that item updates its gate, source-pinned record and next blocker here. Old campaign details belong in their records.
+Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
-## Active critical-path assignments — 2026-09-29
+## Current critical path and owners
 
-Root owns architecture budgets, source integration and publication. Six subagents are assigned distinct final-result blockers; remaining slots are intentionally unused pending interface decisions. This table supersedes older live-roster snapshots.
+| Owner | Current work / next acceptance |
+| --- | --- |
+| Root | [~] [Physical floorplan](docs/V41_PHYSICAL_FLOORPLAN.md): geometric reservations, locality and dependency budgets; integrate agent evidence and publish. Macro fit remains unverified. |
+| floorplan_inventory | [~] Actual ROM macro capacity/area lower bound and integer placement feasibility; source-pinned inventory complete. |
+| floorplan_connectivity | [x] Eleven-edge ledger complete; physical distance and service closure pending root placement. |
+| ds_attention_elaboration | [~] Full-geometry real arithmetic on PVE2: 128-row and mixed 640-row cases pass; remaining numeric cases and HBM-connected consumer integration running. Synthetic inputs, not full token. |
+| qwen_execution_compile | [~] PVE1 G64 reference compiled; fixed-kernel builds and runtime differential execution next. No G64 exact verdict yet. |
+| ds_physical_locality | [!] PVE3 VM/ME route had zero DRC but failed physical power connectivity. Row-orientation correction rerun active; early VM VDD check passes. Final closure pending. |
+| ds_window_integration | [x] Opt-in finite-credit replay II1 implemented and tested. [ ] Actual numeric consumer composition; serial refill remains exposed. |
+| ds_fetch_integration | [x] Full-profile tile/die W address and count hookup; actual PHY rejects overflow before aliasing. [ ] Shared K/W timing and large-region service. |
+| ds_pv_producer_budget | [x] Actual producer contract: scalar preload floor identified. [ ] Root decision on producer redesign after measured composed schedule. |
 
-| Owner | Acceptance deliverable | Boundary |
-| --- | --- | --- |
-| ds_layer_execution | Actual descriptor/producer/window-HBM/replay composition | Isolated service harness; coordinates numeric engine owner |
-| ds_attention_elaboration | Feasible full-shape attention numeric engine compilation and exactness strategy | Arithmetic/elaboration only; no duplicated service harness |
-| qwen_execution_compile | Bounded exact compilation decomposition for full-shape Qwen | No repeated unchanged full-width launch or unapproved production RTL |
-| ds_weight_hbm_integration | Real-weight bounded HBM service and high-address acceptance | New weight-side adapter/tests, no shared core/die edits |
-| ds_physical_locality | Approved macro/register microblock placement and timing-budget acceptance | No unconstrained neighborhood reroute or relaxed historical verdict |
-| ds_index_global_ids | Exact local/global ID transform and cross-die selection contract | Reference/checker and interface proposal before fabric RTL |
+## Current architecture blockers
 
-All work remains source-pinned and scope-limited. Agents use isolated files; root reviews architectural changes. Root has restored Git/network access and performs remote dispatch and publication; some resumed agents retain restricted execution contexts.
+- [!] Historical analytical die resource counts differ from RTL; no complete physical bank/logic packing. Floorplan reservations do not establish fit.
+- [!] Full token through actual compute, collectives, HBM and index service has not passed. L0 window coverage cannot establish indexed layers.
+- [!] Probability preload and serial KV refill are exposed latency; isolated replay/engine bandwidth gains do not remove them.
+- [!] Local physical power connectivity, complete PHY/package map, regional channel capacity and full-die clocks/PDN remain acceptance gates.
+- [ ] Calibrate end-to-end ROM/HBM rates only after exact connected execution and physical budgets agree.
 
-## Active continuation owners — 2026-09-29
+## Integration ledger for this publication
 
-Six agents now own unfinished critical-path work: `qwen_execution_compile` (existing G64 exact run), `ds_attention_elaboration` (existing full-geometry numeric run and consumer integration), `ds_physical_locality` (existing joint-grid route verdicts), `ds_window_integration` (II1 WINDOW replay production option), `ds_fetch_integration` (full-profile fetch tile hookup), and `ds_pv_producer_budget` (actual probability producer bandwidth). No duplicate large builds are authorized. Root owns architecture approvals, integration and publication; older roster snapshots are historical.
-
-## Latest execution — 2026-09-29
-
-- Qwen G64 controller C++ archive completed successfully on PVE1. Complete G64 runtime-vs-RTL differential now running at `/home/ubuntu/qwen-runtime-exact-g64`, reusing the verified controller. G4 tools/records integrated; no G64 numerical verdict yet.
-- Full-shape QE fetch descriptor candidate integrated with explicit 160-bit profile, 30-bit addresses/21-bit counts and overflow checks; seven tests pass. Tile/die migration remains open.
-- Physical ODB confirms macro/tapcells 6nm off site lattice and two cells 1nm off. Corrected joint-grid/canonical-coordinate rerun dispatched on PVE3 with same immutable tool image; previous failures preserved.
-- DeepSeek full-shape attention C++ build continues on PVE2 after successful front-end. Root owns monitoring and subsequent numeric execution.
-
-## Integration publication — 2026-09-29
-
-- Packed attention lifecycle, WINDOW HBM source, full-mode core/compact-ROM interfaces and four-stack tag fix are integrated with current scoped reruns. Lifecycle/bypass records are regenerated by `tools/refresh_v41_packed_integration_evidence.py`; no full numeric layer claim.
-- Three earlier array records retain their original attention-adapter hashes as historical results. The headline bundle explicitly records these additional stale pins; their measurements were not rewritten or promoted to the new adapter.
-- DeepSeek full-shape attention front-end passed on PVE2 in 391.9 seconds, peak 12,937,200 KiB; C++ build continues. Qwen G64 controller front-end passed in 48.7 seconds; C++ build resumed without the obsolete six-minute timeout. Neither is a numerical verdict.
-
-## Fleet dispatch — 2026-09-29
-
-- PVE2: `/home/ubuntu/ds-attention-full-20260929` actual H16/D512/T640 Verilator front-end running without RLIMIT_AS; root confirmed source pins and process. This is not a numeric verdict.
-- PVE1: `/home/ubuntu/qwen-runtime-g64-20260929` G64 controller compile started with Verilator5.050 after correcting PATH. Full G4 runtime-composition already passed 24 cases/5,520 cycles locally; larger exactness remains open.
-- PVE3: `/home/ubuntu/v41-microblocks-tracks-20260929` corrected-origin microblock launch dispatched with immutable ORFS image `sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29`. Historical baseline image is unknown; no single-variable comparative claim until baseline reruns with the same toolchain.
-- Agents implement separate WINDOW replay bandwidth, PV probability bandwidth and full-shape weight-descriptor fixes. Root reviews storage/latency costs before adoption.
-- Integration verifier reports 22 tests passing and two historical die-source hash failures; functional checks pass, affected evidence must be validated before the source batch is published.
-
-## Current session recovery — 2026-09-29
-
-- [!] Git and network access have been restored. Pending source integration must pass refreshed evidence checks before publication. Shared dirty source tree is preserved. Root prepares source-only integration in `/tmp/opentallas-publish-e2e-now`.
-- [~] Root composed the tested `8b6722a7` core/ROM integration with `552cec05` opt-in L0 WINDOW HBM path. Packed stage/merger/service tests pass. Descriptor and adapter functional tests pass; two historical source-pin checks fail after composition and must be renewed only after affected gates run.
-- [~] Root integrated the four-stack tag truncation fix: die WINDOW/RoPE request/response tags now retain all 64 bits. Eight focused tests pass, including rejection of the old narrow declarations; reduced/full/full-window boundary elaboration passes with an independent tag-width gate. Prior stack-0-only exactness did not cover this. Source changes remain uncommitted.
-- [~] `qwen_resume_gate` recovers frozen verdicts and image/source completeness. Recovered full-width HBM compile was killed with no exact verdict; the older reduced 8K run timed out despite process exit zero. Neither may be listed as running or passed.
-- [ ] Full-token numbers remain blocked; component tests and source-only integration do not establish them.
+- Prior main contains packed attention lifecycle, WINDOW source, compact-ROM core interfaces, stack tag-width fix and Qwen G4 runtime qualification.
+- New integrations: source-pinned floorplan inventory/connectivity; PV producer contract; opt-in WINDOW II1; full-shape weight fetch tile/die/PHY boundary and range tests.
+- Previous failed/limited records retain their original scope and source pins. New topology does not retroactively validate historical rates.
 
 ## Latest integration and architecture decisions
 
