@@ -1,6 +1,6 @@
 # V4.1 common HBM service: proposal for root approval
 
-Baseline: `9ac1d9be`. This is an architecture proposal, not implemented shared-HBM evidence.
+Baseline: `9ac1d9be`. Root approved an opt-in shared-service prototype on 2026-09-29 with the bounds below. It is not implemented shared-HBM evidence or an approved service guarantee.
 
 ## Existing interfaces and failure mechanism
 
@@ -44,4 +44,4 @@ Run identical actual-model workloads: W only; K only; combined; combined with co
 
 For every real QE descriptor, replay its exact request/consumption trace and report the required head start against the 1024-word window. Sweep candidate reservations with the same addresses and timing constants. Include the WINDOW eight-credit trace and actual index trace simultaneously. Accepted result must show exact data, no starvation under the defined bounded-stall assumptions, no underflow, and achievable required service. If the reservation cannot satisfy all clients, send root the deficit and options: change placement/PC allocation, increase local capacity within physical budget, alter scheduling with its real latency cost, or add explicit QE stall/replay. Do not silently serialize away the throughput objective.
 
-No implementation or rate is approved by this document alone.
+Root authorizes implementation of the common timing-owner prototype and contention acceptance tests. Historical separate mode remains explicit. Reservation fractions are experiments; full-shape fixed-latency admission remains unproved until the service deficit fits the window. No achieved rate is approved.

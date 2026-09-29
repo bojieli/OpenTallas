@@ -1,6 +1,6 @@
 # OpenTallas critical-path tracker
 
-Updated 2026-09-29. Last published baseline: `9ac1d9be`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
+Updated 2026-09-29. Last published baseline: `6cabbb2b`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
 
 Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
@@ -9,14 +9,14 @@ Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured block
 | Owner | Current work / next acceptance |
 | --- | --- |
 | Root | [~] [Physical floorplan](docs/V41_PHYSICAL_FLOORPLAN.md): geometric reservations, locality and dependency budgets; integrate agent evidence and publish. Macro fit remains unverified. |
-| floorplan_inventory | [~] ROM capacity screening complete; building exact integer tensor/expert bank placement for a worst-capacity adopted die. |
-| floorplan_connectivity | [x] Eleven-edge ledger complete; physical distance and service closure pending root placement. |
+| floorplan_inventory | [~] ROM capacity screening complete; candidate stage17 expert bank map complete (not adopted); binding dense tensors/spill before complete fit. |
+| floorplan_connectivity | [~] Approved opt-in L0 retained-stage reuse across QK/PV with new lifecycle generation and source-write invalidation; implementation coordinated with refill owner. |
 | ds_attention_elaboration | [~] Full-geometry real arithmetic on PVE2: All four standalone numeric cases pass; actual HBM-connected consumer integration now running. Synthetic inputs, not full token. |
 | qwen_execution_compile | [~] PVE1 G64 exact differential passed 56 cases; full-shape NW18/scale-base1 and checkpoint-backed core composition next. |
 | ds_physical_locality | [!] PVE3 VM/ME physical power and DRC pass. Hold misses remain (6.831/3.357 ps), plus VM clock fanout33>32. Approved hold20ps/VM CTScluster16 repair running with unchanged constraints. |
 | ds_window_integration | [~] II1 replay passed; approved opt-in eight outstanding refill requests per row under existing stage/scale barrier. Same-service exact and fault tests next. |
-| ds_fetch_integration | [~] Full-profile W hookup passed; proposing shared per-PC K/W service accounting before implementation. Large-region service remains open. |
-| ds_pv_producer_budget | [x] Actual producer contract: scalar preload floor identified. [ ] Root decision on producer redesign after measured composed schedule. |
+| ds_fetch_integration | [~] Full-profile W hookup passed; approved opt-in common32-PC K/W timing owner, bounded queues and sector reservations; implementing contention/admission tests. Large-region service remains open. |
+| ds_pv_producer_budget | [~] Qwen physical neighborhood: bind actual ROM/scale/VM traffic to finite banks before route; proposal approved for experiment only. |
 
 ## Latest integrated evidence
 
