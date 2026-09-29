@@ -42,8 +42,6 @@ HARNESS = ROOT / "rtl/test/chip_v41x_die_ring_harness.cpp"
 RING_RTL = [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in (
     "ot_hdc_v41x_idx_kstream_ring", "ot_hdc_v41x_idx_ring_ranges", "ot_hdc_v41x_idx_ring_kwr",
     "ot_hdc_v41x_idx_ring_port", "ot_hdc_v41x_idx_quarter_join")]
-# module search path: the die's present hierarchy includes modules the die smoke's explicit list predates
-SEARCH = ("rtl/chip", "rtl/hdc/v41x", "rtl/hdc/v41", "rtl/hdc", "rtl/hdc/kv", "rtl/hdc/hbm", "rtl/rom", "rtl/proto")
 IMAGES = {"pos7": ("--hbm",), "ctx64": ("--hbm", "--context", "64")}
 IDXRING = re.compile(r"IDXRING regions=(\d+) preloaded_keys=(\d+) max_region_keys=(\d+) migrations=(\d+) "
                      r"copied_sectors=(\d+)")
@@ -63,7 +61,6 @@ def build(obj: Path, ring: int) -> Path:
     cmd = [ds.VERILATOR, "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
            "-Wno-IMPORTSTAR", "-Wno-MODDUP", "-Wno-TIMESCALEMOD", "-Wno-VARHIDDEN", "-Wno-UNOPTFLAT",
            "--top-module", "tb_chip_v41x_die_ring", f"-GRING={ring}", "-Mdir", str(obj), f"-I{core.SVH.parent}",
-           *[x for d in SEARCH for x in ("-y", str(ROOT / d))],
            str(core.VLT), *map(str, src_list(True)), str(TB), str(HARNESS), "-CFLAGS", "-O1", "-j", "8"]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if r.returncode:

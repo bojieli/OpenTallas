@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results/rtl/w11_die_ring_pin_ledger.json"
-BASE = "15636e59"
+BASE = "4b1ac1dd"
 FILES = ["rtl/chip/ot_chip_v41x_die.sv", "rtl/chip/ot_chip_v41x_tile.sv", "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
          "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv"]
 DIE_GATE = "results/rtl/w11_die_idx_ring_gate.json"
