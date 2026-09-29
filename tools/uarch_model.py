@@ -147,7 +147,12 @@ PRESETS["proposal"] = dict(PRESETS["spec_striped"], name="proposal", vm_read_ele
                            # W11 decisions (2026-09-29): indexer = 16 NK=4 score slices, 64 keys/cycle (beat-aligned
                            # with the reader; reader-bound); attention NL=4 tiles (32,768 products) + PWORDS=2
                            # loader; SU per the RTL layout rule (+14 cycles/layer) with its own VM ports (~6 mm2)
-                           idx_macs=262144, att_macs=32768, su_layout_extra_cycles=14, su_vm_ports_mm2=6.0)
+                           idx_macs=262144, att_macs=32768, su_layout_extra_cycles=14, su_vm_ports_mm2=6.0,
+                           # ROOT DECISION 2026-09-29 (W15): collectives priced from the RTL measurement of the
+                           # adopted design -- endpoint at the die centre (W3 placement, 17 wire stages to the link
+                           # PHYs), direct T1 links (no relay), receive depth 1,024 (results/rtl/w15_collectives.json
+                           # v41p17_r0d1024_sweep fit); collective_cycles is then unused
+                           collective_w15="v41p17_r0d1024")
 PRESETS["proposal_whole"] = dict(PRESETS["proposal"], name="proposal_whole", row_split="whole")
 PRESETS["proposal_ksplit"] = dict(PRESETS["proposal"], name="proposal_ksplit", row_split="ksplit")
 PRESETS["prop_vm256_measured"] = dict(PRESETS["prop_vm256"], name="prop_vm256_measured", su_lanes=16, sfu_lanes=8,
@@ -341,11 +346,11 @@ def evaluate(d: dict, ctx: int = 1048576):
                 nd["depth"] = 0.0
             elif d["use_measured_attention"] and name.endswith(".pv"):
                 nd["issue"] = 0.0      # the measured job covers scores + PV
+        elif k == "collective" and d.get("collective_latency_s") is not None:
+            nd["depth"] = d["collective_latency_s"] + (d["collective_cycles"] or 0) * cyc
         elif k == "collective" and d.get("collective_w15"):
             nd["depth"] = w15_collective_s(d["collective_w15"], nd["op"], nd["payload"], nd.get("span") or 4)
             nd["issue"] = 0.0          # the measured issue -> last commit latency includes the payload stream
-        elif k == "collective" and d.get("collective_latency_s") is not None:
-            nd["depth"] = d["collective_latency_s"] + (d["collective_cycles"] or 0) * cyc
         elif k == "collective" and d["collective_cycles"]:
             nd["depth"] = max(nd["depth"], d["collective_cycles"] * cyc)
     if d.get("su_layout_extra_cycles"):
@@ -850,8 +855,13 @@ QWEN_AREA = dict(
 )
 
 
+QWEN_EXCHANGE = "q256d64"   # ROOT DECISION 2026-09-29 (W15): the TP-2 oneshot at 256 lanes / depth 64, measured
+                            # 71 cycles per all-reduce end to end (results/rtl/w15_collectives.json)
+QWEN_EXCHANGE_AS_BUILT = "q16d16"   # ot_qwen_tp_host_binding's engine (16 lanes, depth 16)
+
+
 def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192, drafter=False, wire_model="w5",
-              x_read_elems=None):
+              x_read_elems=None, exchange="default"):
     """wire_model "w5": W5's per-op x/conflict/write terms plus per-token tree and UCIe terms; "w12": the W12
     floorplan's per-op engine latency (QWEN_WIRE_W12, tree included) plus the UCIe term.  x_read_elems: the VM's
     x-read width (None: unconstrained, as the RTL's per-group x ports); stalls are added per token."""
@@ -881,6 +891,15 @@ def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192, drafter
         per_token = 0
     x_stall = qwen_x_read_stall(G, su_width, ctx, x_read_elems)[0] if x_read_elems else 0
     cycles = r["cycles"] + per_token + x_stall
+    exch_measured = None
+    if exchange == "default":        # the measured exchange includes its die wires: ideal-wire rows keep the priced one
+        exchange = QWEN_EXCHANGE if wires else None
+    if exchange:
+        # W15: replace the priced 73 exchanges (hop + transfer + add each) and their die-wire term with the RTL
+        # measurement of the token's 73 exchanges, issue -> last result, wires and link layer included
+        ucie_w = round(QWEN_WIRE["ucie_wire_per_token"] * wscale) if wires else 0
+        exch_measured = w15_record()["configs"][exchange]["exchanges"]["token_exchange_cycles"]
+        cycles += exch_measured - Q.tp_exchanges(Q.CLOCK[0])["exchange_cycles"] - ucie_w
     a = QWEN_AREA
     tiles = G / 4
     # integer banking (W12): a group-pair column holds its words in whole 4096-deep banks; 11 at G=6144,
@@ -901,6 +920,7 @@ def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192, drafter
     need_mm2 = (tiles - port_tiles) * tile_um2 / 1e6          # port tiles sit in the spine (W5)
     avail = a["array_mm2"] + (a["port_tiles"] - port_tiles) * tile_um2 / 1e6  # spine area freed by fewer ports
     return dict(G=G, su_width=su_width, wires=wires, pruned=pruned, ctx=ctx, drafter=drafter, cycles=cycles,
+                exchange=exchange, exchange_cycles_measured=exch_measured,
                 arch_cycles=r["cycles"], tokens_s=Q.CLOCK[0] / cycles, clock_hz=Q.CLOCK[0],
                 tile_um2=round(tile_um2), tiles=tiles, array_need_mm2=round(need_mm2, 1),
                 array_avail_mm2=round(avail, 1), fits=need_mm2 <= avail, banks_per_column=banks,
@@ -910,7 +930,7 @@ def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192, drafter
 
 
 def qwen_rows():
-    rows = [qwen_eval(6144, 1, wires=False) | dict(design="qwen_as_built_rtl_no_wires"),
+    rows = [qwen_eval(6144, 1, wires=False, exchange=QWEN_EXCHANGE_AS_BUILT) | dict(design="qwen_as_built_rtl_no_wires"),
             qwen_eval(6144, 1024, wires=False) | dict(design="qwen_arch"),
             qwen_eval(6144, 1024) | dict(design="qwen_arch_plus_wires"),
             qwen_eval(6144, 1024, pruned=True) | dict(design="qwen_pruned_plus_wires")]
@@ -1690,6 +1710,7 @@ W15_V41 = (("v41_r1d256", "as-built placement (hub collective, edge PHYs 22/29 w
                              "depth 256"),
            ("v41p17_r0d1024", "W3 proposed placement, direct T1, depth 1024"))
 W15_QWEN = (("q16d16", "host binding: 16 lanes, depth 16"), ("q16d128", "16 lanes, depth 128"),
+            ("q256d64", "256 lanes, depth 64 (ADOPTED)"),
             ("q256d16", "256 lanes, depth 16"), ("q256d128", "256 lanes, depth 128"),
             ("q1024", "1,024 lanes (UCIe rate), depth 16"))
 
@@ -1711,7 +1732,6 @@ def w15_rows():
                          T_us=round(r["T_us"], 3)))
     import arch_budget_qwen3 as Q
     clock = Q.clock_hz()
-    qr = qwen_eval(6144, 1024, pruned=True)
     x = wire_cycles(27000.0, clock, WIRE_PS_PER_UM_LOADED) - 1
     ucie_wire = round(QWEN_WIRE["ucie_wire_per_token"] * x / QWEN_WIRE["x_stages_extra"])
     assumed = Q.tp_exchanges(clock)["exchange_cycles"] + ucie_wire     # 73 x 19.27 + the wire term
@@ -1719,7 +1739,7 @@ def w15_rows():
         if cfg not in cf:
             continue
         meas = cf[cfg]["exchanges"]["token_exchange_cycles"]
-        cyc = qr["cycles"] - assumed + meas
+        cyc = qwen_eval(6144, 1024, pruned=True, exchange=cfg)["cycles"]
         rows.append(dict(design="qwen_rom_ar_G6144", w15_config=cfg, what=what, tokens_s=round(clock / cyc, 1),
                          exchange_cycles_per_token_measured=meas, exchange_cycles_per_token_assumed=assumed,
                          per_allreduce_cycles=cf[cfg]["exchanges"]["allreduce_cycles_mean"]))
@@ -1732,7 +1752,7 @@ def fabric_sweep():
     d = copy.deepcopy(PRESETS["proposal"])
     r0 = evaluate(copy.deepcopy(d), 1048576)
     r0.pop("_g", None)
-    rows.append(dict(design="v41_rom_ar", collective_latency_us="baseline (arch-priced links)",
+    rows.append(dict(design="v41_rom_ar", collective_latency_us="baseline (W15 measured, adopted placement)",
                      tokens_s=round(r0["tokens_s"], 1)))
     for L in FABRIC_SWEEP_S:
         r = evaluate(dict(d, collective_latency_s=L), 1048576)
@@ -1748,7 +1768,7 @@ def fabric_sweep():
     # Qwen ROM and HBM: 73 serial UCIe exchanges per token on the TP-2 pair
     import arch_budget_qwen3 as Q
     clock = Q.clock_hz()
-    qr = qwen_eval(6144, 1024, pruned=True)
+    qr = qwen_eval(6144, 1024, pruned=True, exchange=None)   # the sweep prices exchanges at L
     qh = [r for r in qwen_hbm_rows() if r["design"] == "qwen_hbm_gpu"][0]
     for L in QWEN_UCIE_SWEEP_S:
         add = 73 * (L - 19.27 / clock)

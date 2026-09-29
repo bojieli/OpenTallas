@@ -3,8 +3,8 @@
  "summary": [
   {
    "design": "Qwen ROM AR (G = 6,144)",
-   "tokens_s_b1": 9967.8,
-   "energy_mJ_b1": 86.409,
+   "tokens_s_b1": 9851.1,
+   "energy_mJ_b1": 86.529,
    "sat_batch": 2,
    "sat_aggregate_tokens_s": 11920.9,
    "sat_per_user_tokens_s": 5960.5,
@@ -43,8 +43,8 @@
   },
   {
    "design": "V4.1 ROM AR",
-   "tokens_s_b1": 4166.8,
-   "energy_mJ_b1": 3137.956,
+   "tokens_s_b1": 3808.8,
+   "energy_mJ_b1": 3429.023,
    "sat_batch": 32,
    "sat_aggregate_tokens_s": 77021.9,
    "sat_per_user_tokens_s": 2406.9,
@@ -53,8 +53,8 @@
   },
   {
    "design": "V4.1 ROM MTP m = 1",
-   "tokens_s_b1": 6063.0,
-   "energy_mJ_b1": 2168.304,
+   "tokens_s_b1": 5856.5,
+   "energy_mJ_b1": 2243.349,
    "sat_batch": 16,
    "sat_aggregate_tokens_s": 50708.4,
    "sat_per_user_tokens_s": 3169.3,
@@ -100,17 +100,17 @@
    "stacks": 8
   },
   "ar": {
-   "tokens_s_b1": 9967.8,
+   "tokens_s_b1": 9851.1,
    "saturated_tokens_s": 11920.9,
    "rows": [
     {
      "batch": 1,
-     "per_user_tokens_s": 9967.8,
-     "aggregate_tokens_s": 9967.8,
-     "per_user_ms_per_token": 0.1003,
+     "per_user_tokens_s": 9851.1,
+     "aggregate_tokens_s": 9851.1,
+     "per_user_ms_per_token": 0.1015,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 86.409,
-     "package_w": 861.3
+     "energy_mJ_per_token": 86.529,
+     "package_w": 852.4
     },
     {
      "batch": 2,
@@ -209,7 +209,7 @@
    "attn_pv": 9216,
    "lm_head": 3168
   },
-  "token_cycles": 110219,
+  "token_cycles": 111525,
   "capacity_users": 268,
   "capacity_basis": "8 HBM3E stacks x 22.5 GB x 0.90 over the FP8 KV of one 8K user (604.0 MB)",
   "energy": {
@@ -481,53 +481,53 @@
    "src": "results/arch/v41_rack.json comparison[0] and logical.roles"
   },
   "ar": {
-   "tokens_s_b1": 4166.8,
+   "tokens_s_b1": 3808.8,
    "saturated_tokens_s": 77021.9,
    "rows": [
     {
      "batch": 1,
-     "per_user_tokens_s": 4166.8,
-     "aggregate_tokens_s": 4166.8,
-     "per_user_ms_per_token": 0.24,
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 3808.8,
+     "per_user_ms_per_token": 0.2625,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 3137.956,
-     "system_w": 13075.0
+     "energy_mJ_per_token": 3429.023,
+     "system_w": 13061.0
     },
     {
      "batch": 2,
-     "per_user_tokens_s": 4166.8,
-     "aggregate_tokens_s": 8333.5,
-     "per_user_ms_per_token": 0.24,
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 7617.6,
+     "per_user_ms_per_token": 0.2625,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 1589.421,
-     "system_w": 13246.0
+     "energy_mJ_per_token": 1734.954,
+     "system_w": 13216.0
     },
     {
      "batch": 4,
-     "per_user_tokens_s": 4166.8,
-     "aggregate_tokens_s": 16667.1,
-     "per_user_ms_per_token": 0.24,
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 15235.3,
+     "per_user_ms_per_token": 0.2625,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 815.153,
-     "system_w": 13586.0
+     "energy_mJ_per_token": 887.919,
+     "system_w": 13528.0
     },
     {
      "batch": 8,
-     "per_user_tokens_s": 4166.8,
-     "aggregate_tokens_s": 33334.2,
-     "per_user_ms_per_token": 0.24,
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 30470.5,
+     "per_user_ms_per_token": 0.2625,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 428.019,
-     "system_w": 14268.0
+     "energy_mJ_per_token": 464.402,
+     "system_w": 14151.0
     },
     {
      "batch": 16,
-     "per_user_tokens_s": 4166.8,
-     "aggregate_tokens_s": 66668.4,
-     "per_user_ms_per_token": 0.24,
+     "per_user_tokens_s": 3808.8,
+     "aggregate_tokens_s": 60941.1,
+     "per_user_ms_per_token": 0.2625,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 234.452,
-     "system_w": 15631.0
+     "energy_mJ_per_token": 252.643,
+     "system_w": 15396.0
     },
     {
      "batch": 32,
@@ -587,44 +587,44 @@
    "sat_batch": 32
   },
   "mtp_m1": {
-   "tokens_s_b1": 6063.0,
+   "tokens_s_b1": 5856.5,
    "saturated_tokens_s": 50708.4,
    "rows": [
     {
      "batch": 1,
-     "per_user_tokens_s": 6063.0,
-     "aggregate_tokens_s": 6063.0,
-     "per_user_ms_per_token": 0.1649,
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 5856.5,
+     "per_user_ms_per_token": 0.1707,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 2168.304,
-     "system_w": 13147.0
+     "energy_mJ_per_token": 2243.349,
+     "system_w": 13138.0
     },
     {
      "batch": 2,
-     "per_user_tokens_s": 6063.0,
-     "aggregate_tokens_s": 12126.1,
-     "per_user_ms_per_token": 0.1649,
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 11713.1,
+     "per_user_ms_per_token": 0.1707,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 1104.085,
-     "system_w": 13388.0
+     "energy_mJ_per_token": 1141.608,
+     "system_w": 13372.0
     },
     {
      "batch": 4,
-     "per_user_tokens_s": 6063.0,
-     "aggregate_tokens_s": 24252.2,
-     "per_user_ms_per_token": 0.1649,
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 23426.2,
+     "per_user_ms_per_token": 0.1707,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 571.976,
-     "system_w": 13872.0
+     "energy_mJ_per_token": 590.737,
+     "system_w": 13839.0
     },
     {
      "batch": 8,
-     "per_user_tokens_s": 6063.0,
-     "aggregate_tokens_s": 48504.3,
-     "per_user_ms_per_token": 0.1649,
+     "per_user_tokens_s": 5856.5,
+     "aggregate_tokens_s": 46852.4,
+     "per_user_ms_per_token": 0.1707,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 305.921,
-     "system_w": 14838.0
+     "energy_mJ_per_token": 315.302,
+     "system_w": 14773.0
     },
     {
      "batch": 16,
@@ -693,8 +693,8 @@
    "sat_batch": 16,
    "tau": 3.649,
    "positions": 6,
-   "verify_us": 583.8,
-   "draft_us": 18.0
+   "verify_us": 603.4,
+   "draft_us": 19.7
   },
   "capacity_users": 866,
   "capacity_basis": "results/arch/arch_budget_v41.json capacity[1048576].rom_users (KV + index keys of the busiest layer-20 group in its 4 HBM3E stacks per die, 90% usable)",
@@ -1364,11 +1364,11 @@
     "low": 28000,
     "high": 55000
    },
-   "tokens_s_b1": 9967.8,
+   "tokens_s_b1": 9851.1,
    "tokens_s_saturated": 11920.9,
    "usd_per_tokens_s_b1": {
-    "low": 2.81,
-    "high": 5.52
+    "low": 2.84,
+    "high": 5.58
    },
    "usd_per_tokens_s_saturated": {
     "low": 2.35,
@@ -1485,11 +1485,11 @@
     "low": 2632000,
     "high": 5170000
    },
-   "tokens_s_b1": 6063.0,
+   "tokens_s_b1": 5856.5,
    "tokens_s_saturated": 77021.9,
    "usd_per_tokens_s_b1": {
-    "low": 434.11,
-    "high": 852.71
+    "low": 449.42,
+    "high": 882.78
    },
    "usd_per_tokens_s_saturated": {
     "low": 34.17,
@@ -1601,7 +1601,7 @@
  "slo_tokens_s_per_user": 100.0,
  "cost_rule": "best mode of each design at each point: b1 = its fastest single-user mode, saturated = its largest aggregate within the per-user state capacity; capex = packages at the iso-package price + ROM mask NRE / production units (low: coding layers only; high: full mask sets)",
  "source_sha256": {
-  "tools/uarch_model.py": "7b5f8103333510bf31ca42e8645eca1c5d930afe114090a66ff14ff3a0f3e5de",
+  "tools/uarch_model.py": "f5b553b607a4dd1292835784122dd7318f6ee8e6882ee83037201a2035ed29d4",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
