@@ -347,6 +347,144 @@ def network_ledger(d: dict, clock: float):
                 register_mm2=round(reg_bits * DFF_UM2 / 1e6, 3), stages_trunk=wire_cycles(trunk_um, clock))
 
 
+# ---------------------------------------------------------------------------------------------------------
+# Qwen3-8B ROM die (O4: two reticles, TP-2, INT8 weights, G weight-lane groups of 16 lanes per die)
+# ---------------------------------------------------------------------------------------------------------
+# The element is already weight-stationary: a group owns its ROM column and 16 lanes; W5 hardens a tile of
+# 4 groups (22 code macros ot_rom_4096x266_m8, 4 KV-slice SRAMs).  The architecture replay
+# (tools/arch_budget_qwen3.as_built -> tools/hdc_timing.simulate, calibrated 32,191 vs 32,196 RTL cycles) has
+# single-cycle wires.  The microarchitecture adds, from W5's floorplan (docs/QWEN_O4_FLOORPLAN.md,
+# results/floorplan/qwen_o4/floorplan.json on claude/w5-qwen-physical e93d75ef):
+QWEN_WIRE = dict(
+    x_stages_extra=24,        # VM -> farthest group 27.0 mm: 25 register stages vs the RTL's 1
+    vm_conflict_reg=1,        # registered conflict/bank decode in the 8-bank VM (W5 VM cut: -699 ps without)
+    result_write_extra=2,     # result write path (434 cycles / 217 ME ops)
+    tree_extra_per_token=1728,  # split-tree compaction beyond the RTL's levels (o/down 1440 + qkv 252 + gu 36)
+    ucie_wire_per_token=1898,   # farthest tile -> west UCIe and back, 13 stages each way, 146 crossings
+)
+QWEN_AREA = dict(
+    array_mm2=560.0,          # tile array area after PHYs, UCIe, spine, corridors (W5: 1,225 x 0.4512 mm2 as
+                              # instantiated, 1,470 x 0.3857 pruned)
+    code_macros=33792,        # 11 banks of 4096x266 per group-pair column at G=6144 (W5 rung 2)
+    macro_um2=121.824 * 62.91,
+    macro_pack=1.31,          # tile macro footprint / macro area: W5 tile 976.3 x 462.2 um = 22 code + 4 KV
+                              # macros x pack + 4 x 26,250 / 0.5 of logic
+    logic_group_um2=26250.0,  # W5 tile logic ESTIMATE 105,000 um2 / 4 groups, placed at 50% utilisation
+    logic_group_pruned_um2=18063.0,  # without unreachable fmul / tree registers (calibrated to W5 pruned tile)
+    kv_sram_group_um2=94.824 * 41.04,
+    util=0.5,
+    port_tiles=24,
+)
+
+
+def qwen_eval(G=6144, su_width=1024, wires=True, pruned=False, ctx=8192):
+    import arch_budget_qwen3 as Q
+    import hdc_timing as T
+    Q.CLOCK[0] = Q.clock_hz()
+    k0 = dict(T.K)
+    try:
+        if wires:
+            T.K["me_lat"] = k0["me_lat"] + QWEN_WIRE["x_stages_extra"] + QWEN_WIRE["vm_conflict_reg"] \
+                + QWEN_WIRE["result_write_extra"]
+        r = Q.as_built(ctx, groups=G, su_width=su_width)
+    finally:
+        T.K.clear()
+        T.K.update(k0)
+    cycles = r["cycles"] + ((QWEN_WIRE["tree_extra_per_token"] + QWEN_WIRE["ucie_wire_per_token"]) if wires else 0)
+    a = QWEN_AREA
+    tiles = G / 4
+    macros_tile = a["code_macros"] / tiles
+    logic = a["logic_group_pruned_um2"] if pruned else a["logic_group_um2"]
+    tile_um2 = macros_tile * a["macro_um2"] * a["macro_pack"] + 4 * (logic / a["util"]
+                                                                     + a["kv_sram_group_um2"] * a["macro_pack"])
+    need_mm2 = (tiles - a["port_tiles"]) * tile_um2 / 1e6      # port tiles sit in the spine (W5)
+    return dict(G=G, su_width=su_width, wires=wires, pruned=pruned, ctx=ctx, cycles=cycles,
+                arch_cycles=r["cycles"], tokens_s=Q.CLOCK[0] / cycles, clock_hz=Q.CLOCK[0],
+                tile_um2=round(tile_um2), tiles=tiles, array_need_mm2=round(need_mm2, 1),
+                array_avail_mm2=a["array_mm2"], fits=need_mm2 <= a["array_mm2"],
+                unit_busy=r["unit_busy"], stalls=r["sequencer_stalls"])
+
+
+def qwen_rows():
+    rows = [qwen_eval(6144, 1, wires=False) | dict(design="qwen_as_built_rtl_no_wires"),
+            qwen_eval(6144, 1024, wires=False) | dict(design="qwen_arch"),
+            qwen_eval(6144, 1024) | dict(design="qwen_arch_plus_wires"),
+            qwen_eval(6144, 1024, pruned=True) | dict(design="qwen_pruned_plus_wires")]
+    for G in (3072, 4096, 4608, 5120, 5632, 6144):
+        for pr in (False, True):
+            rows.append(qwen_eval(G, 1024, pruned=pr) | dict(design=f"qwen_G{G}{'_pruned' if pr else ''}"))
+    for r in rows:
+        print(f"{r['design']:28s} {r['tokens_s']:8.0f} tok/s  cycles {r['cycles']:>9}  array {r['array_need_mm2']:6.1f}"
+              f"/{r['array_avail_mm2']}  fits={r['fits']}")
+    return rows
+
+
+# ---------------------------------------------------------------------------------------------------------
+# HBM comparators: a replicated GPU organisation (AGENTS.md rule 3; W9 handoff /tmp/claude-1000/handoff_w9.md)
+# ---------------------------------------------------------------------------------------------------------
+# Element: an SM-like cluster (4 sub-partitions, Tensor-Core-style exact MMA with golden accumulation order,
+# 256 KB RF, ~228 KB SMEM, a bulk-copy port from L2/NoC).  At batch 1 the die is HBM-bound, so the
+# microarchitecture terms that decide the token are:
+#   supply   the fraction of sustained HBM bandwidth the weight path achieves.  It needs bandwidth x latency
+#            bytes in flight (3.6 TB/s x ~0.5 us = 1.8 MB per die); the measured ROM-style QE adapter keeps
+#            ~7 words in flight and delivers 39 B/cycle (W4, results/rtl/v41_qe_shared_stall.json).
+#   barrier  every dependent operation boundary synchronises the SMs; a hardwired sequencer pays ~7 cycles,
+#            a GPU grid barrier through L2 pays more (ASSUMED 200 cycles with a hardware barrier network;
+#            1,500 ns is the cooperative-groups grid.sync class -- ASSUMED, to be cited).
+#   compute  SMs sized to bandwidth (W9: 32 SMs x 4,096 INT8 MAC/clk per Qwen die) never bind at batch 1.
+GPU = dict(barrier_cycles_hw=200, barrier_ns_grid=1500.0, seq_gap_cycles=7,
+           adapter_measured_Bpc=39.0, sustained_frac=1.0)
+
+
+def qwen_hbm_rows():
+    import arch_budget_qwen3 as Q
+    clock = Q.clock_hz()
+    hc = json.loads((ROOT / "results/arch/qwen3_budget.json").read_text())["hbm_comparator"]["8192"]["rom_format_int8"]
+    t_hbm = hc["token_s"]                                        # 8.175 GB at 7.2 TB/s sustained (8 stacks)
+    per_die_Bpc = hc["hbm_bytes_per_cycle"] / 2                  # 3,277 B/cycle per die
+    boundaries = 217 + 2 * 36                                    # ME ops + two norm barriers per layer (one die)
+    tp = Q.tp_exchanges(clock)["cycles"] / clock
+    rows = []
+    for tag, supply, barrier_s in (
+            ("qwen_hbm_ideal", 1.0, 0.0),
+            ("qwen_hbm_adapter_as_built", GPU["adapter_measured_Bpc"] / per_die_Bpc, GPU["seq_gap_cycles"] / clock),
+            ("qwen_hbm_gpu_hw_barrier", 1.0, GPU["barrier_cycles_hw"] / clock),
+            ("qwen_hbm_gpu_grid_sync", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
+        T = t_hbm / supply + boundaries * barrier_s + tp
+        rows.append(dict(design=tag, T_us=round(T * 1e6, 1), tokens_s=round(1 / T, 1), supply_frac=supply,
+                         barrier_us_per_token=round(boundaries * barrier_s * 1e6, 1), boundaries=boundaries))
+    return rows
+
+
+def v41_hbm_rows():
+    v = json.loads((ROOT / "results/arch/v41_hbm_switched.json").read_text())
+    cfg = v["configs"][v["headline_config"]] if isinstance(v["configs"], dict) else None
+    # the published comparator breakdown (docs: G=96, 1M): compute chain 111.7, weight sweep 37.4,
+    # collective latency 125.9, bytes 1.5, hops 0.9, control 2.0 us (W9 handoff 8)
+    base = dict(compute_chain=111.7, weight_sweep=37.4, collective_latency=125.9, collective_bytes=1.5,
+                pipeline_hops=0.9, control=2.0)
+    clock = 1.0339e9
+    # dependent boundaries on the V4.1 critical path: the arch DAG's path nodes per token (priced below)
+    arch, b = arch_graph(1048576)
+    path = b.g.path(b.sink)
+    # elementwise ('vector') ops fuse into a neighbouring kernel's prologue/epilogue; a matvec, scan, select,
+    # Sinkhorn or reduction needs every SM's result before its consumer starts: a global barrier
+    boundaries = sum(1 for n in path if b.g.nodes[n]["kind"] in ("matvec", "kvscan", "reduce", "select", "sinkhorn"))
+    per_die_Bpc = 3.6e12 / clock
+    rows = []
+    for tag, supply, barrier_s in (
+            ("v41_hbm_published", 1.0, 0.0),
+            ("v41_hbm_adapter_as_built", GPU["adapter_measured_Bpc"] / per_die_Bpc, 0.0),
+            ("v41_hbm_gpu_hw_barrier", 1.0, (GPU["barrier_cycles_hw"] - GPU["seq_gap_cycles"]) / clock),
+            ("v41_hbm_gpu_grid_sync", 1.0, GPU["barrier_ns_grid"] * 1e-9)):
+        parts = dict(base, weight_sweep=base["weight_sweep"] / supply,
+                     barrier=boundaries * barrier_s * 1e6)
+        T = sum(parts.values())
+        rows.append(dict(design=tag, T_us=round(T, 1), tokens_s=round(1e6 / T, 1), supply_frac=round(supply, 4),
+                         boundaries=boundaries, breakdown_us={k: round(x, 1) for k, x in parts.items()}))
+    return rows
+
+
 def sweep(ctx: int):
     """Design-point search over the microarchitecture knobs that the evaluation shows binding."""
     rows = []
@@ -374,7 +512,25 @@ def main(argv=None):
     ap.add_argument("--preset", action="append")
     ap.add_argument("--sweep", action="store_true")
     ap.add_argument("--out")
+    ap.add_argument("--qwen", action="store_true", help="the Qwen3-8B ROM die rows only")
+    ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM comparators only")
     a = ap.parse_args(argv)
+    if a.hbm:
+        rows = qwen_hbm_rows() + v41_hbm_rows()
+        for r in rows:
+            print(f"{r['design']:28s} {r['tokens_s']:9.1f} tok/s  T {r['T_us']:9.1f} us  supply {r['supply_frac']}")
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.hbm_gpu.v1", rows=rows, gpu=GPU),
+                                              indent=1, default=str) + "\n")
+        return
+    if a.qwen:
+        rows = qwen_rows()
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.qwen_rom.v1", rows=rows,
+                                                   wire=QWEN_WIRE, area=QWEN_AREA), indent=1, default=str) + "\n")
+        return
     names = a.preset or list(PRESETS)
     rows = []
     for n in names:

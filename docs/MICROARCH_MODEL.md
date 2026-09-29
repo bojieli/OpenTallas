@@ -1,8 +1,8 @@
 # Microarchitecture analytical model
 
-Tool: `tools/uarch_model.py`. Record: `results/uarch/v41_rom.json`. Test: `tests/test_uarch_model.py`. The binding method is in [AGENTS.md](../AGENTS.md) rule 1.
+Tool: `tools/uarch_model.py`. Records: `results/uarch/v41_rom.json`, `results/uarch/qwen_rom.json`, `results/uarch/hbm_gpu.json`. Test: `tests/test_uarch_model.py`. The binding method is in [AGENTS.md](../AGENTS.md) rule 1.
 
-This document covers the **DeepSeek-V4.1 ROM layer die**. Qwen3-8B ROM, Qwen3-8B HBM and V4.1 HBM follow in the same schema.
+It covers all four designs: DeepSeek-V4.1 ROM (first), Qwen3-8B ROM, and the two GPU-organised HBM comparators.
 
 ## What this model adds
 
@@ -69,3 +69,67 @@ Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#
   - the burst factor of 4 on column return (ASSUMED).
 - One die's layer set: the busiest die (13,798 macros) is used for every layer.
 - MTP verify, batch occupancy and power are not yet in this model. The architecture budget still carries them.
+
+## Qwen3-8B ROM die (`--qwen`, `results/uarch/qwen_rom.json`)
+
+The Qwen element is already weight-stationary: a group owns its ROM column and 16 lanes, and W5's tile holds 4 groups. The architecture replay (`arch_budget_qwen3.as_built`, RTL-calibrated) has single-cycle wires. The model adds W5's floorplan wire terms:
+- **x broadcast:** 25 register stages versus the RTL's 1.
+- **VM conflict register:** +1 cycle.
+- **Result write:** +2 cycles.
+- **Split-tree compaction:** +1,728 cycles per token.
+- **UCIe crossings:** +1,898 cycles per token.
+
+It also checks tile area against the 560 mm² tile array. The area model is calibrated to W5's two tile variants: pruned (without the unreachable post-scale multipliers and tree registers) at 18,063 µm² per group, and unpruned at 26,250.
+
+| Design (8K context, one die of the TP-2 pair) | tok/s | Array need / 560 mm² |
+|---|---:|---|
+| As built (scalar stream unit, no wire registers) | 179 | 682 (no fit) |
+| Architecture (G = 6,144, stream unit 1,024 wide, ideal wires) | 11,193 | 682 (no fit) |
+| + floorplan wires | 10,206 | 682 (no fit) |
+| + pruned logic | 10,206 | 583 (**no fit**) |
+| **G = 5,120, pruned, with wires** | **9,260** | **540 (fits)** |
+| G = 4,096, pruned | 8,551 | 496 (fits) |
+
+**Decisions:**
+- The largest group count that fits with wires is **5,120 groups with pruned logic**, giving 9,260 tok/s.
+- The published 10,874 assumes 6,144 groups, which do not fit, and free wires.
+- Two area levers could restore 6,144 groups, and both must be priced:
+  - scale-ROM remap (11.8 → 0.77 mm², W5);
+  - a denser code macro, which the timing rejects today.
+
+**Build requirements the RTL lacks:**
+- the vector stream unit (the shipped scalar one deadlocks layer 0, W6);
+- a group-offset slice parameter and pruning parameters in `ot_hdc_matvec`;
+- a registered VM conflict stage.
+
+## GPU-organised HBM comparators (`--hbm`, `results/uarch/hbm_gpu.json`)
+
+At batch 1 an HBM die is bandwidth-bound, so the element count is sized to bandwidth: 32 SMs per Qwen die, 131k INT8 MAC/clk (W9). Three microarchitecture terms decide the token:
+- **Weight-supply fraction.** Bandwidth × latency must be in flight: 1.8 MB per die. The measured ROM-style QE adapter keeps about 7 words in flight and delivers 39 of 3,482 B/cycle.
+- **Global barriers.** Needed at every non-fusable dependent boundary on the critical path: 289 per Qwen die token, 629 per V4.1 token.
+- **The architecture's TP and collective terms.**
+
+| Design | tok/s |
+|---|---:|
+| Qwen HBM ideal (8.18 GB at 7.2 TB/s) | 880 |
+| Qwen HBM, today's adapter | **10.5** |
+| Qwen HBM, GPU bulk-copy supply, hardware barrier network (200 cycles, ASSUMED) | **841** |
+| Qwen HBM, GPU grid sync (1.5 µs, ASSUMED) | 637 |
+| V4.1 HBM published (no barrier cost) | 3,579 |
+| V4.1 HBM, today's adapter | **279** |
+| V4.1 HBM, GPU supply + hardware barrier | **2,520** |
+| V4.1 HBM, GPU grid sync | 818 |
+
+**Decisions:**
+1. The HBM weight path must be a GPU-style bulk-copy engine with at least 1.8 MB per die in flight. Today's adapter is 90× short of that.
+2. The comparator needs a hardware barrier network. Grid sync through L2 would cost V4.1 4.4× and Qwen 1.4×.
+3. **The published V4.1 HBM figure of 3,579 omits synchronisation and must be restated.** A 200-cycle barrier gives 2,520; the barrier cost needs a cited or measured number.
+
+## Summary: what the model changed
+
+| Design | Previous figure | Microarchitecture model (fits die) | Largest lever |
+|---|---:|---:|---|
+| V4.1 ROM, 1M | 4,933 (architecture) | 4,549 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
+| Qwen ROM, 8K | 10,874 (published) | 9,260 | G = 5,120 pruned; wires +9.7%; vector stream unit |
+| Qwen HBM, 8K | 881 | 841 | bulk-copy weight supply; hardware barrier |
+| V4.1 HBM, 1M | 3,579 | 2,520 | synchronisation cost; bulk-copy supply |

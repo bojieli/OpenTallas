@@ -1,0 +1,108 @@
+{
+ "schema": "opentallas.uarch.hbm_gpu.v1",
+ "rows": [
+  {
+   "design": "qwen_hbm_ideal",
+   "T_us": 1136.7,
+   "tokens_s": 879.7,
+   "supply_frac": 1.0,
+   "barrier_us_per_token": 0.0,
+   "boundaries": 289
+  },
+  {
+   "design": "qwen_hbm_adapter_as_built",
+   "T_us": 95409.4,
+   "tokens_s": 10.5,
+   "supply_frac": 0.01190112908147696,
+   "barrier_us_per_token": 1.8,
+   "boundaries": 289
+  },
+  {
+   "design": "qwen_hbm_gpu_hw_barrier",
+   "T_us": 1189.3,
+   "tokens_s": 840.8,
+   "supply_frac": 1.0,
+   "barrier_us_per_token": 52.6,
+   "boundaries": 289
+  },
+  {
+   "design": "qwen_hbm_gpu_grid_sync",
+   "T_us": 1570.2,
+   "tokens_s": 636.8,
+   "supply_frac": 1.0,
+   "barrier_us_per_token": 433.5,
+   "boundaries": 289
+  },
+  {
+   "design": "v41_hbm_published",
+   "T_us": 279.4,
+   "tokens_s": 3579.1,
+   "supply_frac": 1.0,
+   "boundaries": 629,
+   "breakdown_us": {
+    "compute_chain": 111.7,
+    "weight_sweep": 37.4,
+    "collective_latency": 125.9,
+    "collective_bytes": 1.5,
+    "pipeline_hops": 0.9,
+    "control": 2.0,
+    "barrier": 0.0
+   }
+  },
+  {
+   "design": "v41_hbm_adapter_as_built",
+   "T_us": 3581.1,
+   "tokens_s": 279.2,
+   "supply_frac": 0.0112,
+   "boundaries": 629,
+   "breakdown_us": {
+    "compute_chain": 111.7,
+    "weight_sweep": 3339.1,
+    "collective_latency": 125.9,
+    "collective_bytes": 1.5,
+    "pipeline_hops": 0.9,
+    "control": 2.0,
+    "barrier": 0.0
+   }
+  },
+  {
+   "design": "v41_hbm_gpu_hw_barrier",
+   "T_us": 396.8,
+   "tokens_s": 2520.1,
+   "supply_frac": 1.0,
+   "boundaries": 629,
+   "breakdown_us": {
+    "compute_chain": 111.7,
+    "weight_sweep": 37.4,
+    "collective_latency": 125.9,
+    "collective_bytes": 1.5,
+    "pipeline_hops": 0.9,
+    "control": 2.0,
+    "barrier": 117.4
+   }
+  },
+  {
+   "design": "v41_hbm_gpu_grid_sync",
+   "T_us": 1222.9,
+   "tokens_s": 817.7,
+   "supply_frac": 1.0,
+   "boundaries": 629,
+   "breakdown_us": {
+    "compute_chain": 111.7,
+    "weight_sweep": 37.4,
+    "collective_latency": 125.9,
+    "collective_bytes": 1.5,
+    "pipeline_hops": 0.9,
+    "control": 2.0,
+    "barrier": 943.5
+   }
+  }
+ ],
+ "gpu": {
+  "barrier_cycles_hw": 200,
+  "barrier_ns_grid": 1500.0,
+  "seq_gap_cycles": 7,
+  "adapter_measured_Bpc": 39.0,
+  "sustained_frac": 1.0
+ }
+}
