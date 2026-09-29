@@ -1,5 +1,7 @@
 # V4.1 full-shape HBM region preflight
 
+> **Historical record (ported from Codex 2026-09-28 by `claude/w0-codex-reconcile`).** Written against a pre-`9be3f0f1` source state; several gaps it reports (die `W_HBM`, 30-bit `wq_addr`, `kv_ok`) have since been closed, and its tool no longer passes its source checks. Regenerate before citing.
+
 `tools/v41_fullshape_region_preflight.py` reads the current die, tile, packed window, pooled index, RoPE guard, PHY, technology and budget sources. Its source hashes and 200K/1M arithmetic are in `results/arch/v41_fullshape_region_preflight.json`. It is a static **necessary** capacity check, not an implemented full-shape layout or token gate.
 
 For an executable gate, run `python3 tools/v41_fullshape_region_preflight.py --require-ready`. It exits with status 2 while physical region placement or the selected CKV path remains unresolved. The focused test checks this blocked verdict.

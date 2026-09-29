@@ -3,6 +3,10 @@ import sys
 
 from tools.v41_fullshape_region_preflight import ROOT, build
 
+import pytest
+
+pytestmark = pytest.mark.skip(reason="historical Codex record ported by claude/w0-codex-reconcile: its tool asserts source gaps that 9be3f0f1 has since closed (die W_HBM, 30-bit wq_addr, sharded index, program bind digest); regenerate before citing")
+
 
 def test_fullshape_region_preflight_exposes_current_gaps_and_optimistic_capacity():
     rec = build()

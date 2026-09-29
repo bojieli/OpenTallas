@@ -6941,5 +6941,6 @@
       "rtl/chip/ot_chip_v41x_tile.sv"
     ],
     "tile_default_W_HBM": 1
-  }
+  },
+  "historical_note": "Ported from Codex 5b56f959/638fcc14/649e2de6; pinned program bind differs at 9be3f0f1 and its ROM-die-mode-blocked entry is out of date. Historical; regenerate before citing."
 }

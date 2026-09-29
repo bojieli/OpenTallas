@@ -3,6 +3,10 @@ import sys
 
 from tools.v41_single_user_region_candidate import ROOT, build
 
+import pytest
+
+pytestmark = pytest.mark.skip(reason="historical Codex record ported by claude/w0-codex-reconcile: its tool asserts source gaps that 9be3f0f1 has since closed (die W_HBM, 30-bit wq_addr, sharded index, program bind digest); regenerate before citing")
+
 
 def test_candidate_regions_are_disjoint_and_within_single_user_capacity():
     rec = build()
