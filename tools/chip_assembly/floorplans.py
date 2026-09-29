@@ -103,6 +103,10 @@ class Block:
     extra_sdc: list[str] = field(default_factory=list)   # block-internal constraints
     peak_gb: float = 10.0          # expected peak memory of its route
     orfs_extra: dict[str, Any] = field(default_factory=dict)   # extra ORFS config
+    # hard macros this block instantiates: (module, lef, liberty), repository-relative; blackboxed in synthesis
+    hard_macros: list[tuple] = field(default_factory=list)
+    max_layer: str = "M6"
+    pdn: str = "pdn_block.tcl"
 
     @property
     def core_area_um2(self) -> float:
@@ -196,6 +200,34 @@ BLOCKS.update({
         params={"LB": 2, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6},
         record="results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json",
         notes="V4.1 SM block-dot column: 2 exact k32 FP8/FP4 lanes + tree", peak_gb=12.0),
+})
+
+_ABS = "results/physical_abi3/asap7/chip/abstracts"
+_MEM = "physical/asap7_memory_macros"
+
+
+def _sram(name):
+    return (name, f"{_MEM}/{name}/{name}.lef", f"{_MEM}/{name}/{name}_tt.lib")
+
+
+BLOCKS.update({
+    # W13: the hardened SM element of the Qwen HBM die: 64 ot_gpu_tc_col macros (4 sub-partitions x 16 columns),
+    # 16 x-store + 4 staging-ring SRAMs, the row-scale SRAM, and the glue (issue, decode, fragment buffers,
+    # combine trees, stacks, row-scale multipliers, bulk-copy tracker).  Routed over the column macros on M7-M9.
+    "ot_gpu_sm_q": Block(
+        "ot_gpu_sm_q",
+        GPU_FP + ["rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv",
+                  "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_xstore.sv", "rtl/gpu/ot_gpu_sm_q.sv",
+                  f"{_MEM}/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+                  f"{_MEM}/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"],
+        2200.0, 2500.0,
+        [(r"^(req_|rsp_|d_)", "N"), (r"^(xw_|sw_)", "W"), (r"^(rv|rrow|rdata|fault)$", "E")],
+        params={"NC": 16}, default_edge="S", place_density=0.55,
+        orfs_extra={"NUM_CORES": 12, "MACRO_PLACE_HALO": "6 6"},
+        hard_macros=[("ot_gpu_tc_col", f"{_ABS}/ot_gpu_tc_col/ot_gpu_tc_col.lef",
+                      f"{_ABS}/ot_gpu_tc_col/ot_gpu_tc_col_typ.lib"),
+                     _sram("ot_sram_1r1w_1024x256_m2_r2c2"), _sram("ot_sram_1r1w_256x256_m2_r2c2")],
+        max_layer="M9", pdn="pdn_sm.tcl", notes="Qwen HBM SM element (tools/uarch_model.hbm_gpu_design('qwen'))", peak_gb=60.0),
 })
 
 
