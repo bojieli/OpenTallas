@@ -18,8 +18,8 @@ module ot_hdc_v41x_vec_red1024 (
     ot_hdc_v41x_vec_red #(.N(1024), .MW(9)) u (.*);
 endmodule
 
-// ot_hdc_v41x_vec_lane1024r: one lane of the N = 1,024 unit (LN = 10) with the leaf register of the
-// controller's broadcast network at its boundary.  At spec width the controller's per-vector fields and
+// ot_hdc_v41x_vec_lane1024r: one lane of the N = 1,024 unit (LN = 10, LEAF = 1) driven from a register that stands
+// for the broadcast tree's stage BCAST_STAGES - 1 (the lane's own leaf register is the last stage).  At spec width the controller's per-vector fields and
 // per-stage control reach 1,024 lanes over ~6 mm, so every lane (or lane group) takes them from a local
 // register of the broadcast tree; the element is hardened with that register (KIND 0 light, 1 SFU).
 module ot_hdc_v41x_vec_lane1024r #(
@@ -59,15 +59,18 @@ module ot_hdc_v41x_vec_lane1024r #(
             r_aibase, r_aind, r_gsh, r_cpair, r_dst, r_srcs, r_arnd, r_arelu, r_amin, r_cclip, r_imm3, r_pm1, r_pimm1,
             r_mm1, r_m2, r_qm, r_mimm1, r_ad, r_aimm2, r_isfu, r_ssfu, r_e1, r_simm2, r_e2, r_eimm1, r_rnd,
             r_odst} = b_q;
-    ot_hdc_v41x_vec_lane64 #(.KIND(KIND), .LANE(LANE), .LN(10)) u (
-        .clk(clk), .rst_n(rst_n), .ld(r_ld), .ld_bank(r_ld_bank), .ld_c(r_ld_c), .emit(r_emit), .bank(r_bank),
-        .o_v(r_o_v), .i_v(r_i_v), .no(r_no), .ni(r_ni), .ls(r_ls), .lvw(r_lvw), .vb(r_vb), .krow(r_krow),
-        .obase(r_obase), .aibase(r_aibase), .aind(r_aind), .gsh(r_gsh), .cpair(r_cpair), .dst(r_dst), .srcs(r_srcs),
-        .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_addr(rd_addr), .rd_re(rd_re), .rd_src(rd_src), .rd_q(rd_q),
-        .cx_arnd(r_arnd), .cx_arelu(r_arelu), .cx_amin(r_amin), .cx_cclip(r_cclip), .cx_imm3(r_imm3),
-        .cp_m1(r_pm1), .cp_imm1(r_pimm1), .cm_m1(r_mm1), .cm_m2(r_m2), .cm_qm(r_qm), .cm_imm1(r_mimm1),
-        .ca_ad(r_ad), .ca_imm2(r_aimm2), .ci_sfu(r_isfu), .cs_sfu(r_ssfu), .cs_e1(r_e1), .cs_imm2(r_simm2),
-        .ce_e2(r_e2), .ce_imm1(r_eimm1), .co_rnd(r_rnd), .co_dst(r_odst),
+    // the lane with LEAF = 1: its own register is the broadcast tree's last stage (claude/w11-su d734e304);
+    // b_q above stands for the tree's stage BCAST_STAGES - 1
+    ot_hdc_v41x_vec_lane #(.AW(24), .LN(10), .KIND(KIND), .LEAF(1)) u (
+        .clk(clk), .rst_n(rst_n), .lane_id(LANE[10:0]), .ld(r_ld), .ld_bank(r_ld_bank), .ld_c(r_ld_c), .emit(r_emit),
+        .bank(r_bank), .o_v(r_o_v), .i_v(r_i_v), .no(r_no), .ni(r_ni), .ls(r_ls), .lvw(r_lvw), .vb(r_vb),
+        .krow(r_krow), .obase(r_obase), .aibase(r_aibase), .aind(r_aind), .gsh(r_gsh), .cpair(r_cpair), .dst(r_dst),
+        .srcs(r_srcs), .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q), .rd_addr(rd_addr), .rd_re(rd_re),
+        .rd_src(rd_src), .rd_q(rd_q), .cx_srcs(8'd0), .cx_arnd(r_arnd), .cx_arelu(r_arelu), .cx_amin(r_amin),
+        .cx_cclip(r_cclip), .cx_imm3(r_imm3), .cp_m1(r_pm1), .cp_imm1(r_pimm1), .cm_m1(r_mm1), .cm_m2(r_m2),
+        .cm_qm(r_qm), .cm_imm1(r_mimm1), .ca_ad(r_ad), .ca_imm2(r_aimm2), .ci_sfu(r_isfu), .cs_sfu(r_ssfu),
+        .cs_e1(r_e1), .cs_imm2(r_simm2), .ce_e2(r_e2), .ce_imm1(r_eimm1), .co_rnd(r_rnd), .co_dst(r_odst),
+        .side_v(), .side_x(), .side_y(32'd0),
         .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .kv_we(kv_we), .kv_waddr(kv_waddr),
         .kv_wdata(kv_wdata), .ro_v(ro_v), .ro_x(ro_x), .fault(fault), .coll(coll));
 endmodule
