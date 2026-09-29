@@ -152,3 +152,9 @@ def test_pdn_negative_records_preserved():
     assert full["verdict"].startswith("FAILED_OOM") and not full["pdn_generated"]
     win = json.loads((ROOT / "results/floorplan/v41_pack_orfs_pdn_window_blocks_expanded_woa.json").read_text())
     assert win["pdn"].startswith("status=PASS") and "PSM-0069" in win["psm"][0]
+
+
+def test_window_power_grid_connected():
+    rec = json.loads((ROOT / "results/floorplan/v41_pack_orfs_pdn_window_expanded_woa.json").read_text())
+    assert rec["placement_legal"] and rec["pdn_generated"] and rec["power_grid_connected"]
+    assert rec["pdn_tcl"].endswith("pdn_v41_rom_die.tcl") and rec["tapcell_result"].startswith("status=PASS")

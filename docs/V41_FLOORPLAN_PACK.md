@@ -97,7 +97,7 @@ The large hub (the analytical BF16 and SU pools) sets most of these distances. D
   - pdngen PASS;
   - **PSM-0069 FAIL**: the macro M4 VDD straps are unconnected, because the platform ElementGrid connects only M5-M6.
   - Record: `v41_pack_orfs_pdn_window_blocks_expanded_woa.json`.
-- **Same window with `tools/chip_assembly/tcl/pdn_v41_rom_die.tcl`** (the platform strategy plus an ElementGrid M4-M5 connect): pdngen PASS (11.05 M shapes). Its PSM verdict is in `v41_pack_orfs_pdn_window_expanded_woa.json` if present. The run was frozen by the root halt, and anything missing there was not finished.
+- **Same window with `tools/chip_assembly/tcl/pdn_v41_rom_die.tcl`** (the platform strategy plus an ElementGrid M4-M5 connect): pdngen PASS (11.05 M shapes). **`check_power_grid` VDD and VSS both PASS**: the packed ROM/MAC neighborhood is power-connectable. Record: `v41_pack_orfs_pdn_window_expanded_woa.json`.
 - **The repo's `pdn_v41x_pdie.tcl`** fails PDN-0179 (M6 channel repair) on the same window.
 
 **HBM PHY abstract fix (W3, `tools/mem_compiler/hbm_phy_gen.py` `write_lef_v41x`).**
