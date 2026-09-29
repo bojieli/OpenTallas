@@ -68,3 +68,30 @@ it cannot inherit free extra ports.
 3. Add actual checkpoint-issued and concurrentSU/collective traffic or retain narrow scope.
 4. Approve placement and timing constraints with source-pinned macro LEF/Liberty.
 5. Route the combined neighborhood only after these checks. No duplicate route started.
+
+## Candidate hardware model acceptance
+
+`rtl/physical/ot_qwen_g4_vm_skew_candidate.sv` instantiates all32 unmodified
+physical SRAM models (including their real bit-mask and repair ports, repairs off).
+The Icarus gate writes4096 complete words with distinguishable nonzero data and
+checks16384 lane reads. It also verifies disjoint same-word mask merging,
+same-address read-before-write, sticky fault, no modification on overlapping writes,
+and explicit rejection of same-bank distinct-word reads. The wrapper suppresses
+all requests atomically on an illegal conflict; it never picks a hidden winner.
+
+Read address is sampled on a rising edge, macro output/selector registers become
+visible afterward; the existing matvec mq_x capture would consume that response
+on the following edge. This verifies macro behavioral latency, not extracted timing.
+The full-capacity bank/row mapping is bijective. Production core hookup is absent.
+
+Trace correction: the storedCSV now contains **direct pre-edge samples** from the
+execution owner's revised harness; edge=1 samples are accepted, edge=0 ignored.
+The prior file was post-edge, unsuitable for transaction timing alignment. The revised
+trace reproduces the same conflict counts and candidate result; hashes are renewed.
+No latency claim is taken from the old post-edge snapshots.
+
+The macro harness also replays all5208 accepted direct-pre-edge trace cycles through
+the32 actual SRAM models, with generated distinguishable nonzero write data and an
+independent scalar-memory scoreboard. All reads match; no bank fault occurs. The
+payload is synthetic, not checkpoint arithmetic. This proves the proposed bank
+steering/masks and macro-model latency for the recorded addresses, not a core result.

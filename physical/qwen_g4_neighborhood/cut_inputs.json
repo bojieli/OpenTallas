@@ -10,7 +10,11 @@
     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.json": "da05b0fef4aa9283ecdba8bfcedc49e4dff706dba5f21af2fbc36f7e8bac0794",
     "rtl/hdc/ot_hdc_matvec.sv": "8d2b8fe92887e1b7475ea9a31ef24dbd49d76856f7dbfd5d8af81cb802241a53",
-    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef": "0e4ae008aab89e2e44247b134494ddf9902b9a065db6ed6dad3c381122c7ccde",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib": "d9f3087065c69688adcf23efa793fc8adc20e284692241622ad4bf6fdd3e87eb",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.json": "4749acc7f92350b8d1ec05baebec1a0f75de1bbc0cb8dee29eb63b5cd382eec3"
   },
   "geometry": {
     "G": 4,
@@ -40,10 +44,19 @@
     "fallback": "any additional capture requires root latency revision and exact replay"
   },
   "vm": {
-    "status": "unallocated_pending_trace",
-    "candidate": "four word-address banks each with two256bit1R1W macros per512bitword, scalar read extracts lane; conflicts need replay or changed banking",
-    "capture": "one-cycle request to returned data assumed by RTL, must be physically verified",
-    "unresolved": "same-cycle group conflict, read-during-write semantics, total depth, write masking, SU/collective overlap"
+    "status": "candidate_macro_model_pass_not_core_integrated",
+    "module": "rtl/physical/ot_qwen_g4_vm_skew_candidate.sv",
+    "banks": 8,
+    "bank": "(word ^ (word >> 2)) & 7",
+    "row": "word >> 3",
+    "macros": 32,
+    "macro": "ot_sram_1r1w_512x128_m4_r2c2",
+    "capacity_bytes": 262144,
+    "latency": "request sampled at rising edge, synchronous rd_out after same edge; matvec mq_x captures at next edge",
+    "read_write": "old value returned for same-address read/write",
+    "multiwrite": "disjoint lanes merge; overlapping lane writes or distinct words same bank fault atomically; no priority/drop",
+    "production_trace": false,
+    "physical_timing": "not measured"
   },
   "physical": {
     "clock_ns": 0.92,
