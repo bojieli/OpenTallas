@@ -191,6 +191,8 @@ def main():
     ap.add_argument("--tokens", type=int, nargs="+", default=[128, 640])
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--reuse", action="store_true")
+    ap.add_argument("--builds-from", type=Path,
+                    help="with --reuse: a record whose 'builds' made the reused benches (copied, marked reused)")
     ap.add_argument("--vflags", default="", help="extra Verilator flags, e.g. '-fno-inline' (recorded)")
     ap.add_argument("--build-parallel", type=int, default=2, help="benches built at once (memory)")
     ap.add_argument("--out", type=Path, default=OUT)
@@ -203,6 +205,10 @@ def main():
                model_issue=dict(vectors_H16_T640_N1024_M256=dict(zip(OP_NAMES, MODEL_VECTORS_T640_N1024)),
                                 depths=MODEL_DEPTHS),
                builds={}, configs={})
+    if args.reuse and args.builds_from:
+        prev = json.loads(args.builds_from.read_text())
+        rec["builds"] = {k: dict(v, reused_from=dict(record=str(args.builds_from), git_head=prev.get("git_head")))
+                         for k, v in prev["builds"].items()}
     for cfg in args.configs:
         N, M = map(int, cfg.split("x"))
         exes = {}
