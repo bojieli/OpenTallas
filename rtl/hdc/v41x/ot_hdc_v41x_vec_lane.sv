@@ -162,7 +162,11 @@ module ot_hdc_v41x_vec_lane #(
     // then one add / compare level (the liveness compares, the transposed-KV address, the gather index
     // address) instead of two adds feeding a three-input add.  Same cycle, same values: bit-exact.
     // Cost: 8 x 24-bit partials + 1 in-use bit, plus the fields F0 still reads (emit, no, ni, obase,
-    // aibase, aind, gsh, cpair, dst, srcs: 105 bits) and the offset load (ld, ld_bank, ld_c).
+    // aibase, aind, gsh, cpair, dst, srcs: 115 bits): 308 flops a lane.
+    // The offset load is NOT registered here: the bank loads from the tree's stage one cycle before the
+    // leaf would.  That is safe because the leaf's sums read a bank one cycle before F0 used to: the load
+    // lands >= 3 cycles before the op's first vector reaches the leaf, and >= 3 cycles after the last vector
+    // of the op two back (the same bank) has left it -- both one cycle earlier than with no leaf.
     reg [AW-1:0] off0 [0:4];
     reg [AW-1:0] off1 [0:4];
     wire [CW-1:0] lid = {{(CW-11){1'b0}}, lane_id};
@@ -192,26 +196,25 @@ module ot_hdc_v41x_vec_lane #(
         assign {no_e, ni_e, obase_e, aibase_e, aind_e, dst_e, gsh_e, srcs_e, cpair_e} =
                {no, ni, obase, aibase, aind, dst, gsh, srcs, cpair};
     end else begin : g_leaf
-        reg              r_emit, r_ld;
-        reg              r_ldbank, r_lin, r_cpair;
+        reg              r_emit;
+        reg              r_lin, r_cpair;
         reg [CW-1:0]     r_ol, r_il, r_no, r_ni;
         reg [AW-1:0]     r_row, r_obase, r_aibase;
         reg [5*AW-1:0]   r_sum;
         reg [1:0]        r_aind, r_dst;
         reg [4:0]        r_gsh;
         reg [7:0]        r_srcs;
-        reg [5*LN*AW-1:0] r_ldc;
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin r_emit <= 1'b0; r_ld <= 1'b0; end
-            else begin r_emit <= emit; r_ld <= ld; end
+            if (!rst_n) r_emit <= 1'b0;
+            else r_emit <= emit;
         end
         always @(posedge clk) begin
-            r_ldbank <= ld_bank; r_ldc <= ld_c;
             r_ol <= ol_c; r_il <= il_c; r_row <= row_c; r_lin <= lin_c; r_sum <= sum_c;
             r_no <= no; r_ni <= ni; r_obase <= obase; r_aibase <= aibase; r_aind <= aind; r_dst <= dst;
             r_gsh <= gsh; r_srcs <= srcs; r_cpair <= cpair;
         end
-        assign {emit_e, ld_e, ldbank_e, ldc_e} = {r_emit, r_ld, r_ldbank, r_ldc};
+        assign emit_e = r_emit;
+        assign {ld_e, ldbank_e, ldc_e} = {ld, ld_bank, ld_c};
         assign {ol_e, il_e, row_e, lin_e, sum_e} = {r_ol, r_il, r_row, r_lin, r_sum};
         assign {no_e, ni_e, obase_e, aibase_e, aind_e, dst_e, gsh_e, srcs_e, cpair_e} =
                {r_no, r_ni, r_obase, r_aibase, r_aind, r_dst, r_gsh, r_srcs, r_cpair};

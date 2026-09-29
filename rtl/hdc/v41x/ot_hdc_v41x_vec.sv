@@ -73,7 +73,9 @@
 // per lane tile physically; one copy here, identical contents).  The tree's LAST
 // stage is inside each lane (ot_hdc_v41x_vec_lane LEAF = 1): it registers the
 // lane's partial addresses (position, transposed-KV row, base + offset of every
-// stream), so the lane's first stage is one add / compare level.  RET_STAGES
+// stream), so the lane's first stage is one add / compare level; the offset
+// loads go to the lanes' offset banks from the tree's stage before it (308 leaf
+// flops a lane).  RET_STAGES
 // register stages carry every write back to the vector memory: the element
 // writes (vm_*, kv_*) and the reducer's results (res_*).  Every vector crosses
 // both, so every depth grows by BCAST_STAGES + RET_STAGES and nothing reorders:
