@@ -160,7 +160,8 @@ def main():
     scale_macros = ports_dense * scale_banks_port
     emb = rp['embedding_rom']['macros'] + rp['embedding_rom']['scale_macros']
     crom = rp['constant_rom']['macros']
-    vm_macros = 96                                  # W5 VM: 8 skew banks x 4 slices x 3 rows of 512x128
+    vm_bank = U.vm_banking(512)                     # adopted: a 512-FP32 x read a cycle (root, 2026-09-29)
+    vm_macros = vm_bank['macros']
     su_mm2 = budget['area']['stream_unit_spill_mm2']
     fmul_um2, qadd_um2, dff = 514.4, 180.5, U.DFF_UM2
     ports = NB
@@ -183,7 +184,7 @@ def main():
                  f'ot_qwen_me_spine: issue loop, x network root, split-tree levels {TCUT + 1}..13, '
                  f'{ports} result-port groups (post-scale, argmax, result write), sequencer, TP seq'),
                 ('spine_vm', 'vm', 'ot_sram_1r1w_512x128_m4_r2c2', vm_macros, 0.4,
-                 'vector memory (177,808 FP32) with the registered conflict stage (XVM = 1)'),
+                 f'vector memory (177,808 FP32), {vm_macros} x 512x128 for a 512-element x read, registered conflict stage (XVM = 1)'),
                 ('spine_stream_unit', 'su', None, 0, su_mm2, 'SW = 1,024 vector stream unit (ledger reservation)'),
                 ('spine_embedding_rom_b', 'rom', 'ot_rom_4096x266_m8', emb - emb_a, 0.0, 'INT8 embedding (second half) + scales')):
             h = 0.0
