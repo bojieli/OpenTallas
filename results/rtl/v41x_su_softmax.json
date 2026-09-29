@@ -1,4 +1,5 @@
 {
+  "historical": "built with LV=8 (tools/rtl_v41x_su_softmax_campaign.py at b674827f), which the reducer now refuses at elaboration (l_in is 3 bits: LV must be 1..7). Harmless here: the deepest segment had exactly 7 levels. Its cycles (3,280 at T640) are reproduced at LV=7 on current sources in results/rtl/w11_su_spec.json (N16_M8).",
   "contract": "unnormalized FP32 exp scores; BF16 at PV operand boundary; sink DEN; post-PV divide then BF16",
   "score_source": "deterministic fixture",
   "pv_acc_source": "deterministic fixture",

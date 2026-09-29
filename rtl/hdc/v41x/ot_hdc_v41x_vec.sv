@@ -14,6 +14,13 @@
 // Engram gate, one element a cycle.  The die's spec is N = 1,024, M = 256 at
 // 1.034 GHz.
 //
+// OUT OF RANGE IS REFUSED, NOT COMPUTED.  An operand outside an operator's
+// domain raises `fault`; the word written for it is unspecified and must not be
+// read.  rsqrt of +0 or -0 is one such case: the golden gives NaN (and the
+// campaign reference refuses the op), while the RTL raises fault and writes
+// 0x601AB3D4 (4.46e19) for +0 and 0x201AB3D4 for -0.  Programs never issue it:
+// the RMSNorm operands are mean-square + eps > 0.
+//
 // ELEMENT SEMANTICS.  Those of Machine.su for every field (A..D sources,
 // gather, pair mode, PRE / M1 / M2 / Q / AD / S / E1 / E2 / RND, the element
 // writes, KV and transposed-KV).  An op's element results do not depend on how
@@ -108,7 +115,7 @@
 module ot_hdc_v41x_vec #(
     parameter integer N  = 64,          // light lanes (elements a cycle), a power of two >= 8
     parameter integer M  = 16,          // SFU lanes, a power of two, 8 <= M <= N
-    parameter integer LV = 6,           // reducer time levels
+    parameter integer LV = 6,           // reducer time levels, 1..7 (l_in is 3 bits; elaboration fails otherwise)
     parameter integer AW = 24,
     parameter integer NW = 16,
     parameter integer KVT_SH = 9
@@ -180,6 +187,14 @@ module ot_hdc_v41x_vec #(
     output wire              dbg_res,        // this cycle: results of op dbg_sseq are written
     output wire [7:0]        dbg_sseq
 );
+    // LV is bounded by the 3-bit TIME-level field (l_in): an LV above 7 would let an 8-level segment pass
+    // the controller's c_L > LV check and be clamped to 7 levels, a silently wrong sum.  Fail closed at
+    // elaboration: the trap instantiates a module that does not exist, which Verilator (even under
+    // -Wno-fatal), Icarus and Yosys (hierarchy -check, as synth runs it) all reject.
+    generate if (LV < 1 || LV > 7) begin : g_lv_out_of_range
+        ot_hdc_v41x_vec_LV_must_be_1_to_7 u_trap ();
+    end endgenerate
+
     localparam integer LN = $clog2(N);
     localparam integer LM = $clog2(M);
     localparam integer NR = N / 8;

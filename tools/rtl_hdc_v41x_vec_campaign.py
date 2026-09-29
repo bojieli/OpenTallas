@@ -24,6 +24,11 @@ side pipe, an R-ARITH (chunk8) reducer and vector chaining.  This tool runs:
 * Performance figures from the bench trace (emit / retire / result cycles per
   op), graded against the spec row.
 
+Out-of-range operands are refused, not compared: the reference drops an op whose result is nonfinite
+(e.g. rsqrt(+/-0), where the golden gives NaN) and the unit raises `fault` for it (its written word is
+unspecified: 0x601AB3D4 for rsqrt(+0)).  Stimulus that must not be refused (divisors, rsqrt operands)
+is drawn from 'posnz'.
+
 Writes results/rtl/hdc_v41x_vec_campaign.json.
     python3 tools/rtl_hdc_v41x_vec_campaign.py [--quick] [--no-1024]
 """
@@ -1262,7 +1267,9 @@ def spec_rows(rec):
              measured=min(o["elements_per_cycle"] for o in hp["ops"]), meets=None),
         dict(item="light lanes: sustained over 4 back-to-back chained hc_post ops (81,920 elements)",
              required=1024, measured=hp["sequence"]["elements_per_cycle"], meets=None,
-             note="the first op's vector 0 of each consumer waits for the producer's vector 0 to be written"),
+             note="the first op's vector 0 of each consumer waits for the producer's vector 0 to be written; "
+                  "ACCEPTED below the row (root, 2026-09-29): measured 952.6 of 1,024 at N = 1,024, the bubbles "
+                  "are not chased", accepted_measured=952.6),
         dict(item="SFU lanes: elements/cycle of an exp op", required=256, measured=exp_rate, meets=None),
         dict(item="linear op depth (emit -> write, every stage used)", required=21,
              measured=d["linear (M1, M2, Q, AD, E1, E2 all used)"]["emit_to_write"], meets=None, le=True),
@@ -1292,7 +1299,7 @@ def spec_rows(rec):
     rows[7]["meets"] = bool(exact)
     rows[7]["graded"] = True
     for r in rows:
-        r["expected_meets"] = r is not rows[8]
+        r["expected_meets"] = r is not rows[8] and r is not rows[1]   # rows[1]: accepted at the measured rate
     return dict(clock_ghz=CLOCK_GHZ, rows=rows)
 
 

@@ -36,7 +36,7 @@
 module ot_hdc_v41x_su_adapt #(
     parameter integer N  = 16,          // vector-unit light lanes
     parameter integer M  = 8,           // SFU lanes
-    parameter integer LV = 8,           // reducer time levels (a reduced segment spans <= 2^LV vectors)
+    parameter integer LV = 7,           // reducer time levels (a reduced segment spans <= 2^LV vectors), 1..7
     parameter integer AW = 24,
     parameter integer NW = 16,
     parameter integer CLS_DRAIN = 0,

@@ -91,7 +91,7 @@ module ot_hdc_core_v41x #(
     // SU: ot_hdc_v41x_vec geometry
     parameter integer SUN   = 16,          // light lanes (elements a cycle)
     parameter integer SUM   = 8,           // SFU lanes
-    parameter integer SULV  = 8,           // reducer time levels
+    parameter integer SULV  = 7,           // reducer time levels, 1..7 (was 8: silently clamped to 7)
     // HE: ot_hdc_v41x_hcp geometry
     parameter integer HHW   = 8,           // HCP lanes per group (8 x HHW FP32 MAC lanes)
     parameter integer HTL   = 9,           // HCP tail levels
