@@ -17,7 +17,8 @@ module ot_v41_rom_array #(
     parameter integer BST = 2,
     parameter integer RST = 1,
     parameter integer LV = 5,
-    parameter integer RD = 16
+    parameter integer RD = 16,
+    parameter integer BF16 = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -26,6 +27,7 @@ module ot_v41_rom_array #(
     input  wire [3:0]   cfg_a,
     input  wire [47:0]  cfg_d,
     input  wire         go,
+    input  wire         go_bf,
     input  wire         xs_v,
     input  wire [7:0]   xs_p,
     input  wire [2:0]   xs_b,
@@ -34,6 +36,11 @@ module ot_v41_rom_array #(
     input  wire [9:0]   xs_e0,
     input  wire [255:0] xs_q1,
     input  wire [9:0]   xs_e1,
+    input  wire         xb_v,
+    input  wire [2:0]   xb_b,
+    input  wire [3:0]   xb_sv,
+    input  wire [31:0]  xb_u,
+    input  wire [1023:0] xb_d,
     output wire         r_v,
     output wire [15:0]  r_row,
     output wire [31:0]  r_fp32,
@@ -48,6 +55,14 @@ module ot_v41_rom_array #(
     wire [XBW-1:0] xb_in = {xs_v, xs_p, xs_b, xs_sv, xs_q0, xs_e0, xs_q1, xs_e1};
     wire [XBW-1:0] xb;
     ot_hdc_delay #(.W(XBW), .D(BST)) u_xb (.clk(clk), .rst_n(rst_n), .d(xb_in), .q(xb));
+    // BF16 x broadcast (1,024-bit slices + tags), same register stages
+    localparam integer BBW = 3 + 4 + 32 + 1024;
+    wire [BBW-1:0] bb;
+    ot_hdc_delay #(.W(BBW), .D(BST)) u_bb (.clk(clk), .rst_n(rst_n), .d({xb_b, xb_sv, xb_u, xb_d}), .q(bb));
+    wire [BST:0] bv_d;
+    assign bv_d[0] = xb_v;
+    wire [BST:0] gb_d;
+    assign gb_d[0] = go_bf;
     wire [BST:0] go_d;
     assign go_d[0] = go;
     genvar g, l;
@@ -55,6 +70,13 @@ module ot_v41_rom_array #(
         reg r;
         always @(posedge clk or negedge rst_n) if (!rst_n) r <= 1'b0; else r <= go_d[g];
         assign go_d[g+1] = r;
+    end endgenerate
+    generate for (g = 0; g < BST; g = g + 1) begin : g_bv
+        reg r, f;
+        always @(posedge clk or negedge rst_n) if (!rst_n) begin r <= 1'b0; f <= 1'b0; end
+                                               else begin r <= bv_d[g]; f <= gb_d[g]; end
+        assign bv_d[g+1] = r;
+        assign gb_d[g+1] = f;
     end endgenerate
     // x valid must reset: carry it on its own reset line
     wire [BST:0] xv_d;
@@ -77,9 +99,10 @@ module ot_v41_rom_array #(
         wire [31:0] pval;
         wire [15:0] prow;
         wire [4:0] pseg, pnseg;
-        ot_v41_rom_elem #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .INSTANCE($sformatf("e%0d", g))) u_e (
+        ot_v41_rom_elem #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .INSTANCE($sformatf("e%0d", g))) u_e (
             .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v && cfg_e == g), .cfg_a(cfg_a), .cfg_d(cfg_d),
-            .go(go_d[BST]), .xs_v(xv_d[BST]), .xs_p(xb[XBW-2 -: 8]), .xs_b(xb[XBW-10 -: 3]),
+            .go(go_d[BST]), .go_bf(gb_d[BST]), .xb_v(bv_d[BST]), .xb_b(bb[BBW-1 -: 3]), .xb_sv(bb[BBW-4 -: 4]),
+            .xb_u(bb[1055:1024]), .xb_d(bb[1023:0]), .xs_v(xv_d[BST]), .xs_p(xb[XBW-2 -: 8]), .xs_b(xb[XBW-10 -: 3]),
             .xs_sv(xb[XBW-13 -: 2]), .xs_q0(xb[XBW-15 -: 256]), .xs_e0(xb[XBW-271 -: 10]),
             .xs_q1(xb[XBW-281 -: 256]), .xs_e1(xb[9:0]),
             .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr),

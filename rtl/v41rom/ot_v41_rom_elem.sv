@@ -31,15 +31,18 @@
 //   cfg_a = 0 .. NSEG-1      segment s: [15:0] row, [20:16] segment index, [25:21] segments in row, [26] fp4,
 //                            [27] low half of its first unit present, [28] high half of its last unit
 //                            present, [41:29] base address
-//   cfg_a = NSEG .. 2NSEG-1  class c:   [0] valid, [8:1] first unit (pair), [13:9] units, [15:14] first
-//                            segment, [17:16] last segment
-//   cfg_a = 2NSEG            [0] some class spans two sub-blocks (> 8 units)
+//   cfg_a = NSEG .. 2NSEG-1  class c:   [0] valid, [8:1] first unit (pair / BF16 lane group), [15:9] units,
+//                            [17:16] first segment, [19:18] last segment, [20] BF16 family
+//   cfg_a = 2NSEG            [2:0] sub-blocks - 1 (a class of u units spans ceil(u / 8) sub-blocks)
+//   segment [42]             BF16
 // ---------------------------------------------------------------------------
 module ot_v41_rom_elem #(
     parameter integer NSEG = 4,
     parameter integer NCH = 16,
     parameter integer XF = 4,
     parameter integer LV = 4,
+    parameter integer BF16 = 0,       // 1: the 16-lane BF16 path (ot_v41_bf16_lanes) and its x port
+    parameter integer NCHB = 8,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -48,6 +51,7 @@ module ot_v41_rom_elem #(
     input  wire [3:0]   cfg_a,
     input  wire [47:0]  cfg_d,
     input  wire         go,
+    input  wire         go_bf,        // the phase's family: 0 = FP8/FP4 (shared FP8 x stream), 1 = BF16
     input  wire         xs_v,
     input  wire [7:0]   xs_p,
     input  wire [2:0]   xs_b,
@@ -56,6 +60,12 @@ module ot_v41_rom_elem #(
     input  wire [9:0]   xs_e0,
     input  wire [255:0] xs_q1,
     input  wire [9:0]   xs_e1,
+    // BF16 x stream beat: 4 lane-group slices {unit, 16 BF16} for block b
+    input  wire         xb_v,
+    input  wire [2:0]   xb_b,
+    input  wire [3:0]   xb_sv,
+    input  wire [31:0]  xb_u,
+    input  wire [1023:0] xb_d,
     output reg          pv,
     output reg  [31:0]  pval,
     output reg  [15:0]  prow,
@@ -75,13 +85,16 @@ module ot_v41_rom_elem #(
     reg        s_fp4 [0:NSEG-1];
     reg        s_lo  [0:NSEG-1];
     reg        s_hi  [0:NSEG-1];
+    reg        s_bf  [0:NSEG-1];
+    reg        c_bf  [0:NSEG-1];
+    reg        fam;
     reg [12:0] s_base [0:NSEG-1];
     reg        c_v   [0:NSEG-1];
     reg [7:0]  c_u0  [0:NSEG-1];
-    reg [4:0]  c_nu  [0:NSEG-1];
+    reg [6:0]  c_nu  [0:NSEG-1];
     reg [SW-1:0] c_s0 [0:NSEG-1];
     reg [SW-1:0] c_s1 [0:NSEG-1];
-    reg        two_q;
+    reg [2:0]  qlast;               // sub-blocks - 1
     always @(posedge clk) if (cfg_v) begin
         if ({28'd0, cfg_a} < NSEG) begin
             s_row[cfg_a[SW-1:0]]  <= cfg_d[15:0];
@@ -91,44 +104,75 @@ module ot_v41_rom_elem #(
             s_lo[cfg_a[SW-1:0]]   <= cfg_d[27];
             s_hi[cfg_a[SW-1:0]]   <= cfg_d[28];
             s_base[cfg_a[SW-1:0]] <= cfg_d[41:29];
+            s_bf[cfg_a[SW-1:0]]   <= cfg_d[42];
         end else if ({28'd0, cfg_a} < 2 * NSEG) begin
             c_v[cfg_a[SW-1:0]]  <= cfg_d[0];
             c_u0[cfg_a[SW-1:0]] <= cfg_d[8:1];
-            c_nu[cfg_a[SW-1:0]] <= cfg_d[13:9];
-            c_s0[cfg_a[SW-1:0]] <= cfg_d[14 +: SW];
-            c_s1[cfg_a[SW-1:0]] <= cfg_d[16 +: SW];
+            c_nu[cfg_a[SW-1:0]] <= cfg_d[15:9];
+            c_s0[cfg_a[SW-1:0]] <= cfg_d[16 +: SW];
+            c_s1[cfg_a[SW-1:0]] <= cfg_d[18 +: SW];
+            c_bf[cfg_a[SW-1:0]] <= cfg_d[20];
         end else begin
-            two_q <= cfg_d[0];
+            qlast <= cfg_d[2:0];
         end
     end
 
-    // per class: units in sub-block 0 and 1 (a class has at most 16 units), as packed vectors
-    reg [4*NSEG-1:0] nun0, nun1;
-    reg [NSEG-1:0] live0, live1;
+    // per class: unit count and whether it belongs to the running family, packed for the walkers
+    reg [7*NSEG-1:0] nu_p;
+    reg [NSEG-1:0] base_live, base_go;
     integer ci;
     always @* begin
         for (ci = 0; ci < NSEG; ci = ci + 1) begin
-            nun0[4*ci +: 4] = (c_nu[ci] > 5'd8) ? 4'd8 : c_nu[ci][3:0];
-            nun1[4*ci +: 4] = (c_nu[ci] > 5'd8) ? c_nu[ci][3:0] - 4'd8 + 4'd0 : 4'd0;
-            if (c_nu[ci] == 5'd16) nun1[4*ci +: 4] = 4'd8;
-            live0[ci] = c_v[ci] && nun0[4*ci +: 4] != 4'd0;
-            live1[ci] = c_v[ci] && nun1[4*ci +: 4] != 4'd0;
+            nu_p[7*ci +: 7] = c_nu[ci];
+            base_live[ci] = c_v[ci] && c_bf[ci] == fam;
+            base_go[ci] = c_v[ci] && c_bf[ci] == go_bf;
         end
     end
-    localparam integer UW = 1 + 1 + 3 + SW + 3;     // {run, q, b, c, j}
+    localparam integer UW = 1 + 3 + 3 + SW + 3;     // {run, q, b, c, j}
     wire [SW-1:0] c_first;
     wire          c_first_ok;
-    ot_v41_first #(.N(NSEG)) u_first (.live(live0), .c(c_first), .ok(c_first_ok));
+    ot_v41_first #(.N(NSEG)) u_first (.live(base_go), .c(c_first), .ok(c_first_ok));
 
     // ---------------- x-need walker: one (pair, b) per class unit per round ------------------------------
-    reg        n_run, n_q;
+    reg        n_run;
+    reg [2:0]  n_q;
     reg [2:0]  n_b, n_j;
     reg [SW-1:0] n_c;
-    wire [7:0] n_pair = c_u0[n_c] + {4'd0, n_q, n_j};
+    wire [7:0] n_pair = c_u0[n_c] + {2'd0, n_q, n_j};
     wire [UW-1:0] n_nx;
-    ot_v41_walk #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .nun0(nun0), .nun1(nun1), .live0(live0),
-                                   .live1(live1), .two_q(two_q), .nx(n_nx));
-    wire hit = n_run && xs_v && xs_p == n_pair && xs_b == n_b;
+    ot_v41_walk #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .nu(nu_p), .base(base_live),
+                                   .qlast(qlast), .nx(n_nx));
+    wire hit_q = n_run && !fam && xs_v && xs_p == n_pair && xs_b == n_b;
+    // BF16: capture, in slot order, every slice of this round (b) whose unit lies in a live class's sub-block
+    reg        bn_run;
+    reg [2:0]  bn_q;
+    reg [2:0]  bn_b;
+    reg [6:0]  bn_cnt, bn_tot;
+    reg [3:0]  bm;
+    reg [6:0]  q8, rem, nq;
+    integer bk, bc;
+    always @* begin
+        bn_tot = 7'd0;
+        q8 = {bn_q, 3'd0};
+        for (bc = 0; bc < NSEG; bc = bc + 1) begin
+            rem = (c_nu[bc] > q8) ? c_nu[bc] - q8 : 7'd0;
+            nq = (rem > 7'd8) ? 7'd8 : rem;
+            if (base_live[bc]) bn_tot = bn_tot + nq;
+        end
+        for (bk = 0; bk < 4; bk = bk + 1) begin
+            bm[bk] = 1'b0;
+            for (bc = 0; bc < NSEG; bc = bc + 1) begin
+                rem = (c_nu[bc] > q8) ? c_nu[bc] - q8 : 7'd0;
+                nq = (rem > 7'd8) ? 7'd8 : rem;
+                if (base_live[bc] && {1'b0, xb_u[8*bk +: 8]} >= {1'b0, c_u0[bc]} + {2'd0, q8} &&
+                    {1'b0, xb_u[8*bk +: 8]} < {1'b0, c_u0[bc]} + {2'd0, q8} + {2'd0, nq})
+                    bm[bk] = 1'b1;
+            end
+            bm[bk] = bm[bk] && (BF16 != 0) && bn_run && fam && xb_v && xb_sv[bk] && xb_b == bn_b;
+        end
+    end
+    wire [2:0] bnum = {2'd0, bm[0]} + {2'd0, bm[1]} + {2'd0, bm[2]} + {2'd0, bm[3]};
+    wire hit = hit_q;
 
     // ---------------- x FIFO (pair slices) ------------------------------------------------------------------
     localparam integer XW = $clog2(XF);
@@ -138,27 +182,37 @@ module ot_v41_rom_elem #(
     reg [9:0]   f_e1 [0:XF-1];
     reg [XW-1:0] f_wr, f_rd;
     reg [XW:0]  f_cnt;
+    wire [2:0] npush = hit_q ? 3'd1 : bnum;
+    reg [XW-1:0] bpre [0:3];
+    always @* begin
+        bpre[0] = '0;
+        bpre[1] = {{(XW-1){1'b0}}, bm[0]};
+        bpre[2] = bpre[1] + {{(XW-1){1'b0}}, bm[1]};
+        bpre[3] = bpre[2] + {{(XW-1){1'b0}}, bm[2]};
+    end
 
     // ---------------- word walker -------------------------------------------------------------------------------
-    reg        w_run, w_q, w_h;
+    reg        w_run, w_h;
+    reg [2:0]  w_q;
     reg [2:0]  w_b, w_j;
     reg [SW-1:0] w_c, w_s;
     reg [HW-1:0] w_cnt;
     reg [12:0] w_ptr [0:NSEG-1];
-    wire [4:0] w_uabs = {1'b0, w_q, w_j};
-    wire w_firstu = w_uabs == 5'd0;
-    wire w_lastu  = w_uabs + 5'd1 == c_nu[w_c];
+    wire [6:0] w_uabs = {1'b0, w_q, w_j};
+    wire w_firstu = w_uabs == 7'd0;
+    wire w_lastu  = w_uabs + 7'd1 == c_nu[w_c];
     wire [1:0] hv = {!(w_lastu && !s_hi[w_s]), !(w_firstu && !s_lo[w_s])};
     wire w_fp4 = s_fp4[w_s];
-    wire w_seg_last = w_fp4 || w_h || !hv[1];          // the segment's last word for this unit
+    wire w_bf = s_bf[w_s];
+    wire w_seg_last = w_fp4 || w_bf || w_h || !hv[1];          // the segment's last word for this unit
     wire w_cls_last = w_seg_last && w_s == c_s1[w_c];
     wire [UW-1:0] w_nx;
-    ot_v41_walk #(.N(NSEG)) u_ww (.q(w_q), .b(w_b), .c(w_c), .j(w_j), .nun0(nun0), .nun1(nun1), .live0(live0),
-                                   .live1(live1), .two_q(two_q), .nx(w_nx));
-    wire w_round_end = !w_nx[UW-1] || w_nx[UW-3 -: 3] != w_b;
+    ot_v41_walk #(.N(NSEG)) u_ww (.q(w_q), .b(w_b), .c(w_c), .j(w_j), .nu(nu_p), .base(base_live),
+                                   .qlast(qlast), .nx(w_nx));
+    wire w_round_end = !w_nx[UW-1] || w_nx[UW-5 -: 3] != w_b;
     wire [SW-1:0] w_nx_c = w_nx[3 +: SW];
     wire [SW-1:0] s_next = w_s + 1'b1;
-    wire [4:0] nx_uabs = {1'b0, w_nx[UW-2], w_nx[2:0]};
+    wire [6:0] nx_uabs = {1'b0, w_nx[UW-2 -: 3], w_nx[2:0]};
 
     reg [4:0] hz_v;
     reg [HW-1:0] hz_s [0:4];
@@ -170,23 +224,24 @@ module ot_v41_rom_elem #(
     end
     wire issue = w_run && f_cnt != 0 && !hazard;
     wire pop = issue && w_cls_last;
-    wire c0_fault, c1_fault, t_fault;
+    wire c0_fault, c1_fault, t_fault, b_fault;
 
     // an FP8 segment whose first unit lacks the low chunk starts at half 1
     wire [SW-1:0] s0_first = c_s0[c_first];
     wire [SW-1:0] s0_nx = c_s0[w_nx_c];
-    wire h_go   = !s_fp4[s0_first] && !s_lo[s0_first];
-    wire h_next = !s_fp4[s_next] && w_firstu && !s_lo[s_next];
-    wire h_nx   = !s_fp4[s0_nx] && nx_uabs == 5'd0 && !s_lo[s0_nx];
+    wire h_go   = !s_fp4[s0_first] && !s_bf[s0_first] && !s_lo[s0_first];
+    wire h_next = !s_fp4[s_next] && !s_bf[s_next] && w_firstu && !s_lo[s_next];
+    wire h_nx   = !s_fp4[s0_nx] && !s_bf[s0_nx] && nx_uabs == 7'd0 && !s_lo[s0_nx];
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            n_run <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= 5'd0; fault <= 1'b0;
+            n_run <= 1'b0; bn_run <= 1'b0; fam <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= 5'd0; fault <= 1'b0;
         end else begin
             hz_v <= {hz_v[3:0], issue};
             if (go) begin
-                n_run <= 1'b1; n_q <= 1'b0; n_b <= 3'd0; n_c <= c_first; n_j <= 3'd0;
-                w_run <= 1'b1; w_q <= 1'b0; w_b <= 3'd0; w_c <= c_first; w_j <= 3'd0;
+                n_run <= !go_bf; n_q <= 3'd0; n_b <= 3'd0; n_c <= c_first; n_j <= 3'd0;
+                bn_run <= go_bf; bn_q <= 3'd0; bn_b <= 3'd0; bn_cnt <= 7'd0; fam <= go_bf;
+                w_run <= 1'b1; w_q <= 3'd0; w_b <= 3'd0; w_c <= c_first; w_j <= 3'd0;
                 w_s <= s0_first; w_h <= h_go; w_cnt <= 0;
                 f_cnt <= 0; f_wr <= 0; f_rd <= 0;
             end else begin
@@ -206,10 +261,18 @@ module ot_v41_rom_elem #(
                         w_cnt <= w_round_end ? {HW{1'b0}} : w_cnt + 1'b1;
                     end
                 end
-                f_cnt <= f_cnt + (hit ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
-                if (hit) f_wr <= f_wr + 1'b1;
+                f_cnt <= f_cnt + npush - (pop ? 1'b1 : 1'b0);
+                f_wr <= f_wr + npush[XW-1:0];
+                if (bnum != 0) begin
+                    if (bn_cnt + {4'd0, bnum} == bn_tot) begin
+                        bn_cnt <= 7'd0;
+                        if (bn_b == 3'd7 && bn_q == qlast) bn_run <= 1'b0;
+                        else begin bn_b <= bn_b + 3'd1; if (bn_b == 3'd7) bn_q <= bn_q + 3'd1; end
+                    end else bn_cnt <= bn_cnt + {4'd0, bnum};
+                end
                 if (pop) f_rd <= f_rd + 1'b1;
-                if ((hit && !pop && f_cnt == XF) || c0_fault || c1_fault || t_fault) fault <= 1'b1;
+                if ({1'b0, f_cnt} + {2'b0, npush} > XF + (pop ? 1 : 0) || c0_fault || c1_fault || t_fault || b_fault)
+                    fault <= 1'b1;
             end
         end
     end
@@ -220,6 +283,8 @@ module ot_v41_rom_elem #(
         if (hit) begin
             f_q0[f_wr] <= xs_q0; f_e0[f_wr] <= xs_e0; f_q1[f_wr] <= xs_q1; f_e1[f_wr] <= xs_e1;
         end
+        for (bk = 0; bk < 4; bk = bk + 1)
+            if (bm[bk]) f_q0[f_wr + bpre[bk]] <= xb_d[256*bk +: 256];
         hz_s[0] <= w_cnt;
         for (k = 1; k < 5; k = k + 1) hz_s[k] <= hz_s[k-1];
     end
@@ -237,18 +302,21 @@ module ot_v41_rom_elem #(
     reg [9:0]   i1_e0, i1_e1, i2_e0, i2_e1;
     localparam integer TW = HW + SW + 6;   // {slot, tree, first, last, final, ok0, ok1, fp4}
     reg [TW-1:0] i1_t, i2_t;
+    reg i1_bf, i2_bf;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin i1_v <= 1'b0; i2_v <= 1'b0; end
         else begin i1_v <= issue; i2_v <= i1_v; end
     end
     // FP8 word of half h uses slice h on lane 0; FP4 uses slice 0 on lane 0 and slice 1 on lane 1
-    wire use_hi = !w_fp4 && w_h;
+    wire use_hi = !w_fp4 && !w_bf && w_h;
     always @(posedge clk) begin
         i1_q0 <= use_hi ? f_q1[f_rd] : f_q0[f_rd];
         i1_e0 <= use_hi ? f_e1[f_rd] : f_e0[f_rd];
         i1_q1 <= f_q1[f_rd]; i1_e1 <= f_e1[f_rd];
         i1_t <= {w_cnt, w_s, w_b == 3'd0, w_b == 3'd7, w_b == 3'd7 && w_lastu && w_seg_last,
-                 w_fp4 ? hv[0] : 1'b1, w_fp4 && hv[1], w_fp4};
+                 !w_bf && (w_fp4 ? hv[0] : 1'b1), !w_bf && w_fp4 && hv[1], w_fp4};
+        i1_bf <= w_bf;
+        i2_bf <= i1_bf;
         cap <= rd;
         i2_q0 <= i1_q0; i2_e0 <= i1_e0; i2_q1 <= i1_q1; i2_e1 <= i1_e1; i2_t <= i1_t;
     end
@@ -303,16 +371,35 @@ module ot_v41_rom_elem #(
     reg [4:0] pr_vp;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) pr_vp <= 5'd0; else pr_vp <= {pr_vp[3:0], any};
-    wire        b_v = pr_vp[4];
-    wire [31:0] b_val = pr_t[1] ? pr_sum : pr_pass;
-    wire        b_err = pr_t[0] | (pr_t[1] && pr_err != 2'd0);
+    wire        q_v = pr_vp[4];
+    wire [31:0] q_val = pr_t[1] ? pr_sum : pr_pass;
+    wire        q_err = pr_t[0] | (pr_t[1] && pr_err != 2'd0);
+
+    // ---------------- optional BF16 lanes -------------------------------------------------------------------
+    wire bf_v, bf_err, bf_final;
+    wire [31:0] bf_val;
+    wire [SW-1:0] bf_tree;
+    generate if (BF16 != 0) begin : g_bf
+        ot_v41_bf16_lanes #(.NCHB(NCHB), .TRW(SW)) u_bf (.clk(clk), .rst_n(rst_n), .v(i2_v && i2_bf),
+            .w(cap[255:0]), .x(i2_q0), .slot(i2_t[TW-HW +: $clog2(NCHB)]), .first(i2_t[5]), .last(i2_t[4]),
+            .tree(i2_t[TW-HW-1 -: SW]), .final_i(i2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
+            .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));
+    end else begin : g_nobf
+        assign bf_v = 1'b0; assign bf_val = 32'd0; assign bf_tree = '0; assign bf_final = 1'b0;
+        assign bf_err = 1'b0; assign b_fault = 1'b0;
+    end endgenerate
+    wire        b_v = q_v | bf_v;
+    wire [31:0] b_val = bf_v ? bf_val : q_val;
+    wire        b_err = bf_v ? bf_err : q_err;
+    wire [SW-1:0] b_tree = bf_v ? bf_tree : pr_t[SW+2:3];
+    wire        b_final = bf_v ? bf_final : pr_t[2];
 
     // ---------------- segment tree -> partial ---------------------------------------------------------------------
     wire t_v, t_err;
     wire [SW-1:0] t_tree;
     wire [31:0] t_val;
     ot_v41_segtree #(.NT(NSEG), .LV(LV)) u_tree (.clk(clk), .rst_n(rst_n), .in_v(b_v),
-        .in_tree(pr_t[SW+2:3]), .in_val(b_val), .in_final(pr_t[2]), .in_err(b_err),
+        .in_tree(b_tree), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .oval(t_val), .oerr(t_err), .fault(t_fault));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) pv <= 1'b0;
@@ -322,6 +409,7 @@ module ot_v41_rom_elem #(
         pval <= t_val; prow <= s_row[t_tree]; pseg <= s_idx[t_tree]; pnseg <= s_n[t_tree]; perr <= t_err;
     end
     assign busy = w_run | i1_v | i2_v;
+    // slot field of the tag is HW bits; BF16 chains use its low log2(NCHB) bits (words per round <= NCHB)
 endmodule
 
 // first live class
@@ -338,35 +426,44 @@ module ot_v41_first #(parameter integer N = 4) (
 endmodule
 
 // next (q, b, class, unit) of the element's round walk: next unit of the class, else the next live class of
-// the sub-block, else the next round (b, then sub-block q), else done (run = 0).
+// the sub-block, else the next round (b, then sub-block q), else done (run = 0).  A class of nu units has
+// min(8, nu - 8q) units in sub-block q.
 module ot_v41_walk #(parameter integer N = 4) (
-    input  wire q,
+    input  wire [2:0] q,
     input  wire [2:0] b,
     input  wire [$clog2(N)-1:0] c,
     input  wire [2:0] j,
-    input  wire [4*N-1:0] nun0,
-    input  wire [4*N-1:0] nun1,
-    input  wire [N-1:0] live0,
-    input  wire [N-1:0] live1,
-    input  wire two_q,
-    output reg  [1+1+3+$clog2(N)+3-1:0] nx
+    input  wire [7*N-1:0] nu,
+    input  wire [N-1:0] base,
+    input  wire [2:0] qlast,
+    output reg  [1+3+3+$clog2(N)+3-1:0] nx
 );
     localparam integer SW = $clog2(N);
-    wire [N-1:0] live = q ? live1 : live0;
-    wire [3:0] cur = q ? nun1[4*c +: 4] : nun0[4*c +: 4];
     reg [SW-1:0] nc, fc;
     reg nf, ff;
-    reg nq;
+    reg [2:0] nq;
+    reg [6:0] rem, q8, nq8;
+    reg [3:0] cur;
+    reg [N-1:0] live, livn;
     integer k;
     always @* begin
+        q8 = {1'b0, q, 3'd0};
+        nq = (b == 3'd7) ? q + 3'd1 : q;
+        nq8 = {1'b0, nq, 3'd0};
+        cur = 4'd0;
+        for (k = 0; k < N; k = k + 1) begin
+            rem = (nu[7*k +: 7] > q8) ? nu[7*k +: 7] - q8 : 7'd0;
+            live[k] = base[k] && rem != 7'd0;
+            if (k == c) cur = (rem > 7'd8) ? 4'd8 : rem[3:0];
+            livn[k] = base[k] && nu[7*k +: 7] > nq8;
+        end
         nf = 1'b0; nc = '0;
         for (k = N - 1; k >= 0; k = k - 1) if (live[k] && k > c) begin nc = k[SW-1:0]; nf = 1'b1; end
-        nq = (b == 3'd7) ? 1'b1 : q;
         ff = 1'b0; fc = '0;
-        for (k = N - 1; k >= 0; k = k - 1) if ((nq ? live1[k] : live0[k])) begin fc = k[SW-1:0]; ff = 1'b1; end
-        if ({1'b0, j} + 4'd1 < cur)            nx = {1'b1, q, b, c, j + 3'd1};
-        else if (nf)                           nx = {1'b1, q, b, nc, 3'd0};
-        else if (b == 3'd7 && (q || !two_q))   nx = '0;
-        else                                   nx = {1'b1, nq, b + 3'd1, fc, 3'd0};
+        for (k = N - 1; k >= 0; k = k - 1) if (livn[k]) begin fc = k[SW-1:0]; ff = 1'b1; end
+        if ({1'b0, j} + 4'd1 < cur)              nx = {1'b1, q, b, c, j + 3'd1};
+        else if (nf)                             nx = {1'b1, q, b, nc, 3'd0};
+        else if (b == 3'd7 && q == qlast)        nx = '0;
+        else                                     nx = {1'b1, nq, b + 3'd1, fc, 3'd0};
     end
 endmodule

@@ -35,10 +35,12 @@ import v41_rom_ksplit_bankmap as S  # noqa: E402
 VERILATOR = Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"
 RTL = ["rtl/v41rom/ot_v41_ret.sv", "rtl/v41rom/ot_v41_rom_array.sv", "rtl/v41rom/ot_v41_rom_elem.sv",
        "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_chain.sv", "rtl/v41rom/ot_v41_segtree.sv",
+       "rtl/v41rom/ot_v41_bf16_lanes.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "rtl/hdc/ot_hdc_delay.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
        "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v"]
 TB = "rtl/test/tb_v41_rom_array.sv"
-NSEG, NCH, XF = 4, 16, 4
+NSEG, NCH = 4, 16
+XF_Q, XF_BF = 4, 8          # x FIFO depth: FP8/FP4 element, BF16-capable element
 LAYER = 2
 SEED = 20260929
 
@@ -98,6 +100,13 @@ class Mat:
 
     def __init__(self, ck: Ckpt, name: str, fmt: str, rows: int, K: int, r0: int = 0, k0: int = 0, phase="wq_b"):
         self.name, self.fmt, self.rows, self.K, self.r0, self.k0, self.phase = name, fmt, rows, K, r0, k0, phase
+        if fmt == "bf16":
+            dt, sh, buf = ck.raw(name + ".weight")
+            assert dt == "BF16", dt
+            u16 = np.frombuffer(buf, dtype=np.uint16).reshape(sh)[r0:r0 + rows, k0:k0 + K]
+            self.u16 = u16
+            self.wf = G.from_bits(u16.astype(np.uint32) << 16)
+            return
         if fmt == "fp8":
             codes, sc = ck.fp8(name)
             self.codes = codes[r0:r0 + rows, k0:k0 + K]
@@ -126,8 +135,22 @@ class Mat:
         return v | (e << 128)
 
 
+def bf16_word(m: Mat, row: int, h: int, b: int) -> int:
+    """Word b of BF16 lane group h: lane l holds element h*128 + l*8 + b."""
+    v = 0
+    for lane in range(16):
+        v |= int(m.u16[row, h * 128 + lane * 8 + b]) << (16 * lane)
+    return v
+
+
 def golden_rows(m: Mat, x: np.ndarray):
-    """FP32 accumulator bits and BF16 output of every row (golden linear_q, chunk8)."""
+    """FP32 accumulator bits and BF16 output of every row (golden linear_q or linear_bf16, chunk8)."""
+    if m.fmt == "bf16":
+        xb = G.to_bf16(x)
+        acc = G.csum(G.mul(np.asarray(m.wf, dtype=G.F), xb[None, :]))
+        y = G.linear_bf16(m.wf, x)
+        assert np.array_equal(G.bits(G.to_bf16(acc)), G.bits(y))
+        return G.bits(acc).astype(np.uint32), (G.bits(y) >> 16).astype(np.uint32), None, None
     xq, xe = G.quant_fp8(x)
     n, k = m.w.q.shape
     blocks = [np.ldexp((m.w.q[:, b * 32:(b + 1) * 32] @ xq[b * 32:(b + 1) * 32]).astype(G.F),
@@ -178,9 +201,12 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng):
         for r in range(m.rows):
             exp_fp32[mi * 1024 + r] = int(f[r])
             exp_bf16[mi * 1024 + r] = int(bf[r])
-    xc = x_codes(xq)
-    # placement with the bank-map rules on an N-macro die (no BF16 subset needed here)
-    die = S.Die(N, 0)
+    bf = mats[0].fmt == "bf16"
+    assert all((m.fmt == "bf16") == bf for m in mats), "one x family per phase"
+    xc = None if bf else x_codes(xq)
+    xbits = (G.bits(G.to_bf16(x)) >> 16).astype(np.uint32)
+    # placement with the bank-map rules on an N-macro die (every element carries BF16 lanes here)
+    die = S.Die(N, N)
     specs = [dict(tensor=f"m{mi}", phase=m.phase, fmt=m.fmt, rows=m.rows, K=m.K) for mi, m in enumerate(mats)]
     res, info = S.place_dense(die, specs, 0)
     (ph, r), = res.items()
@@ -218,10 +244,12 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng):
             lo = e0 <= u0 * 512
             hi = (u1 * 512 - 256) < e0 + el
             d = ((mi * 1024 + sg["row"]) | (sg["seg"] << 16) | (nseg << 21) | (int(sg["fmt"] == "fp4") << 26)
-                 | (int(lo) << 27) | (int(hi) << 28) | (sg["base"] << 29))
+                 | (int(lo) << 27) | (int(hi) << 28) | (sg["base"] << 29) | (int(sg["fmt"] == "bf16") << 42))
             cfg.append((e, slot, d))
             for k, (u, b, h) in enumerate(S.segment_order(sg["fmt"], e0, el)):
-                if sg["fmt"] == "fp8":
+                if sg["fmt"] == "bf16":
+                    w = bf16_word(m, sg["row"], u, b)
+                elif sg["fmt"] == "fp8":
                     w = m.block_word(sg["row"], 2 * u + h, b)
                 else:
                     w = 0
@@ -232,11 +260,11 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng):
                 words[sg["base"] + k] = w
             n_words += len(S.segment_order(sg["fmt"], e0, el))
         for c, (u0, nu, s0, s1) in enumerate(centries):
-            cfg.append((e, NSEG + c, 1 | (u0 << 1) | (nu << 9) | (s0 << 14) | (s1 << 16)))
+            cfg.append((e, NSEG + c, 1 | (u0 << 1) | (nu << 9) | (s0 << 16) | (s1 << 18) | (int(bf) << 20)))
         for c in range(len(centries), NSEG):
             cfg.append((e, NSEG + c, 0))
-        two_q = any(nu > 8 for _, nu, _, _ in centries)
-        cfg.append((e, 2 * NSEG, int(two_q)))
+        nsub = max([-(-nu // 8) for _, nu, _, _ in centries] + [1])
+        cfg.append((e, 2 * NSEG, nsub - 1))
         viamap(words, work / f"e{e}.viamap.hex")
         # stream needs and demand of this element, round by round (element_order)
         for (i, u, b, h) in S.element_order(segs):
@@ -252,6 +280,25 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng):
         units = sorted(rounds[(q, b)])
         dmax = max(v for (qq, bb, _), v in demand.items() if (qq, bb) == (q, b))
         rl = max(S.FADD_REC, len(units), dmax)
+        if bf:
+            groups = [units[i:i + 4] for i in range(0, len(units), 4)]
+            rl = max(S.FADD_REC, len(groups), dmax)
+            slots = [None] * rl
+            for i, g in enumerate(groups):
+                slots[(i * rl) // len(groups)] = g
+            for g in slots:
+                if g is None:
+                    beats.append(0)
+                    continue
+                v = (1 << 1063) | (b << 1060)
+                for k, u in enumerate(g):
+                    d = 0
+                    for lane in range(16):
+                        d |= int(xbits[u * 128 + lane * 8 + b]) << (16 * lane)
+                    v |= (1 << (1056 + k)) | (u << (1024 + 8 * k)) | (d << (256 * k))
+                beats.append(v)
+            t_rounds += rl
+            continue
         slots = [None] * rl
         for i, u in enumerate(units):
             slots[(i * rl) // len(units)] = u
@@ -268,23 +315,23 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng):
                     e10 = int(xe[blk]) & 0x3FF
                     v |= 1 << (532 + half)
                     v |= (q8 << 276 | e10 << 266) if half == 0 else (q8 << 10 | e10)
-            beats.append(v)
+            beats.append(v << 1064)
         t_rounds += rl
     assert 8 * 0 + t_rounds == t_pred or True
     (work / "cfg.hex").write_text("".join(f"{(e << 52) | (a << 48) | d:015x}\n" for e, a, d in cfg))
-    (work / "stream.hex").write_text("".join(f"{v:0137x}\n" for v in beats))
-    return dict(ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32), exp_fp32=exp_fp32, exp_bf16=exp_bf16,
+    (work / "stream.hex").write_text("".join(f"{v:0403x}\n" for v in beats))
+    return dict(bf=bf, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32), exp_fp32=exp_fp32, exp_bf16=exp_bf16,
                 t_pred=t_pred, t_rounds=t_rounds, words=n_words, split=info,
                 elements=[len(by_e.get(e, [])) for e in range(N)])
 
 
-def build_sim(N: int, work: Path) -> Path:
-    out = work / f"obj_n{N}"
+def build_sim(N: int, work: Path, xf: int) -> Path:
+    out = work / f"obj_n{N}_xf{xf}"
     exe = out / "Vtb_v41_rom_array"
     if exe.exists():
         return exe
     cmd = [str(VERILATOR), "--binary", "--timing", "-j", "8", "-Wno-fatal", "-Wno-lint", "-Wno-style",
-           "-O2", f"-GN={N}", "--top-module", "tb_v41_rom_array", "-Mdir", str(out), str(ROOT / TB)]
+           "-O2", f"-GN={N}", f"-GXF={xf}", "--top-module", "tb_v41_rom_array", "-Mdir", str(out), str(ROOT / TB)]
     cmd += [str(ROOT / p) for p in RTL]
     subprocess.run(cmd, check=True, cwd=work, stdout=subprocess.DEVNULL)
     return exe
@@ -292,7 +339,8 @@ def build_sim(N: int, work: Path) -> Path:
 
 def run_case(exe: Path, work: Path, ph: dict):
     r = subprocess.run([str(exe), f"+DIR={work}", f"+OT_ROM_DIR={work}", f"+NROWS={ph['nrows']}",
-                        f"+NCFG={ph['ncfg']}", f"+NST={ph['nst']}"], capture_output=True, text=True, check=True)
+                        f"+NCFG={ph['ncfg']}", f"+NST={ph['nst']}"] + (["+BF"] if ph["bf"] else []),
+                       capture_output=True, text=True, check=True)
     rows, done = {}, None
     for line in r.stdout.splitlines():
         t = line.split()
@@ -316,6 +364,12 @@ def cases(ck: Ckpt, N: int):
         "fp8_wq_b_two_rows_per_element": [Mat(ck, L + "attn.wq_b", "fp8", 2 * N, 1280, r0=8000, phase="wq_b")],
         "fp4_two_experts_w1_w3": [Mat(ck, L + f"ffn.experts.{E}.w1", "fp4", half, 5120, r0=0, phase="experts_gu"),
                                   Mat(ck, L + "ffn.experts.301.w3", "fp4", half, 5120, r0=500, phase="experts_gu")],
+        "bf16_router_gate": [Mat(ck, L + "ffn.gate", "bf16", half, 5120, r0=96 * 3, phase="router")],
+        "bf16_compressor_wkv_ksplit": [Mat(ck, L + "attn.compressor.wkv", "bf16", half, 5120, r0=384,
+                                           phase="router")],
+        "bf16_wkv_4096_whole_rows": [Mat(ck, L + "attn.compressor.wkv", "bf16", N, 4096, r0=130, k0=512,
+                                         phase="wo_a")],
+        "bf16_indexer_wk": [Mat(ck, L + "attn.indexer.wk", "bf16", N, 512, r0=0, phase="cmp.wk")],
         "mixed_down_fp4_expert_w2_fp8_shared_w2": [
             Mat(ck, L + f"ffn.experts.{E}.w2", "fp4", half, 2304, r0=3840, phase="down"),
             Mat(ck, L + "ffn.shared_experts.w2", "fp8", half, 2304, r0=3840, phase="down")],
@@ -336,13 +390,14 @@ def main(argv=None):
     out = []
     for N in a.n:
         a.work.mkdir(parents=True, exist_ok=True)
-        exe = build_sim(N, a.work)
         for name, mats in cases(ck, N).items():
             if a.only and a.only not in name:
                 continue
             wd = a.work / f"n{N}_{name}"
             wd.mkdir(exist_ok=True)
             ph = build_phase(mats, N, wd, rng)
+            xf = XF_BF if ph["bf"] else XF_Q
+            exe = build_sim(N, a.work, xf)
             rows, done = run_case(exe, wd, ph)
             ok_fp32 = sum(rows.get(t, (None,))[0] == v for t, v in ph["exp_fp32"].items())
             ok_bf16 = sum(rows.get(t, (None, None))[1] == v for t, v in ph["exp_bf16"].items())
@@ -354,7 +409,7 @@ def main(argv=None):
             # level, LEAD 1)
             L = int(math.log2(N))
             model_depth = 78 + math.ceil(math.log(max(2, N), 8)) + 5 * adders + 2 + L * 1 + 1
-            rec = dict(N=N, case=name, model_depth=model_depth,
+            rec = dict(N=N, case=name, XF=xf, model_depth=model_depth,
                        model_prediction=ph["t_pred"] + model_depth, rows=ph["nrows"], rows_out=len(rows), fp32_exact=ok_fp32, bf16_exact=ok_bf16,
                        fault=done[1] if done else None, cycles_last_row=last, t_phase_pred=ph["t_pred"],
                        t_rounds_scheduled=ph["t_rounds"], fill=(last - ph["t_pred"]) if last is not None else None,
@@ -373,7 +428,7 @@ def main(argv=None):
                    golden="tools/hdc_golden_v41.py linear_q, HDC_V41_ARITH=chunk8",
                    checkpoint_revision=a.snapshot.name, checkpoint_header_sha256=ck.pins, seed=SEED,
                    simulator=f"verilator 5.050 ({VERILATOR})",
-                   params=dict(NSEG=NSEG, NCH=NCH, XF=XF, BST=2, RST=1, LV=5, RD=16, root_D=16),
+                   params=dict(NSEG=NSEG, NCH=NCH, XF_Q=XF_Q, XF_BF=XF_BF, BST=2, RST=1, LV=5, RD=16, root_D=16, BF16=1, NCHB=8),
                    source_sha256={p: sha(ROOT / p) for p in srcs}, cases=out)
         a.output.parent.mkdir(parents=True, exist_ok=True)
         a.output.write_text(json.dumps(rec, indent=1) + "\n")
