@@ -2,7 +2,7 @@
  "schema": "opentallas.w11-idx-array.v1",
  "block": "V4.1 indexer scoring array (dedicated unit), spec NS=16 x NK=4 = 64 keys/cycle per die",
  "tool": "tools/rtl_w11_idx_array.py",
- "git_head": "fb9c46b3f5ef9cbdb85e02f1a76efd018e399d1f",
+ "git_head": "a6dd8163914ea36da09d1a51e24e44aca190220e",
  "sources_dirty_at_run": false,
  "source_sha256": {
   "rtl/hdc/v41x/ot_hdc_v41x_idx_array.sv": "c87111e7cf50669a4e3a4e3985a5d31c12dbf929f04bd4c04831a3851bf8216e",
@@ -83,6 +83,15 @@
    "configs": [
     "2x4",
     "4x1"
+   ]
+  },
+  {
+   "file": "sims_4x4.json",
+   "host": "ot-pve2",
+   "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+   "driver_sha256": "b4a4977fca79bb82c9f58c1879735243dca0b9cba0d5f5cee27765b807d2ca3b",
+   "configs": [
+    "4x4"
    ]
   }
  ],
@@ -374,10 +383,110 @@
    "expected_faults": 67,
    "expected_refused": 13,
    "expected_masked": 250,
-   "runs": [],
-   "build": null,
-   "exact": null,
-   "status": "not simulated: no sim-phase result for this configuration"
+   "runs": [
+    {
+     "key": [
+      "small",
+      4,
+      4,
+      3
+     ],
+     "slots": 1552,
+     "checked": 1436,
+     "errors": 0,
+     "faults_expected_and_raised": 67,
+     "refused": 13,
+     "masked": 250,
+     "beats_in": 97,
+     "beats_out": 97,
+     "span": 118,
+     "in_stall": 20,
+     "out_stall": 51,
+     "lat_min": 48,
+     "lat_max": 61,
+     "tok_cycles": 822,
+     "cycles": 836,
+     "per_slice": [
+      {
+       "slice": 0,
+       "checked": 376,
+       "errors": 0
+      },
+      {
+       "slice": 1,
+       "checked": 364,
+       "errors": 0
+      },
+      {
+       "slice": 2,
+       "checked": 348,
+       "errors": 0
+      },
+      {
+       "slice": 3,
+       "checked": 348,
+       "errors": 0
+      }
+     ],
+     "mismatch_lines": [],
+     "bubble_16ths": 4,
+     "sink_refuse_16ths": 6,
+     "seed": 3,
+     "wall_s": 42.6
+    },
+    {
+     "key": [
+      "small",
+      4,
+      4,
+      5
+     ],
+     "slots": 1552,
+     "checked": 1436,
+     "errors": 0,
+     "faults_expected_and_raised": 67,
+     "refused": 13,
+     "masked": 250,
+     "beats_in": 97,
+     "beats_out": 97,
+     "span": 97,
+     "in_stall": 24,
+     "out_stall": 0,
+     "lat_min": 48,
+     "lat_max": 48,
+     "tok_cycles": 769,
+     "cycles": 783,
+     "per_slice": [
+      {
+       "slice": 0,
+       "checked": 376,
+       "errors": 0
+      },
+      {
+       "slice": 1,
+       "checked": 364,
+       "errors": 0
+      },
+      {
+       "slice": 2,
+       "checked": 348,
+       "errors": 0
+      },
+      {
+       "slice": 3,
+       "checked": 348,
+       "errors": 0
+      }
+     ],
+     "mismatch_lines": [],
+     "bubble_16ths": 0,
+     "sink_refuse_16ths": 0,
+     "seed": 5,
+     "wall_s": 42.4
+    }
+   ],
+   "build": 9557.493390083313,
+   "exact": true
   }
  ],
  "element_timing_from_small_n": [
@@ -399,6 +508,17 @@
    "lat_max": 48,
    "beats": 162,
    "span": 162,
+   "in_stall": 24,
+   "query_settle_stalls": 24,
+   "ii": 1.0
+  },
+  {
+   "ns": 4,
+   "nk": 4,
+   "lat_min": 48,
+   "lat_max": 48,
+   "beats": 97,
+   "span": 97,
    "in_stall": 24,
    "query_settle_stalls": 24,
    "ii": 1.0
