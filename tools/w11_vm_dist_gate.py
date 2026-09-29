@@ -121,12 +121,37 @@ def su_flags(vd, st):
     return f"-GVM_DIST={vd} -GSU_RES_STAGES={st['SU_RES_STAGES']} -GRET_SCATTER_STAGES={st['RET_SCATTER_STAGES']}"
 
 
+def reusable(obj: Path, exe: Path, flags, sources) -> bool:
+    """A build in obj made with every flag in `flags` (Verilator records its command line in *__verFiles.dat)
+    and newer than every source it read."""
+    dat = next(iter(obj.glob("*__verFiles.dat")), None)
+    if not exe.exists() or dat is None:
+        return False
+    cmdline = dat.read_text(errors="replace").splitlines()[1] if len(dat.read_text().splitlines()) > 1 else ""
+    built = exe.stat().st_mtime
+    return all(f in cmdline.split() for f in flags) and all(Path(p).stat().st_mtime < built for p in sources)
+
+
 def su_build(N, M, obj, vd, st):
-    os.environ["OT_VFLAGS"] = su_flags(vd, st)
-    try:
-        return C.build(N, M, obj)
-    finally:
-        os.environ.pop("OT_VFLAGS", None)
+    """rtl_hdc_v41x_vec_campaign.build with the VM_DIST flags passed explicitly (its OT_VFLAGS environment
+    variable is process-wide: parallel builds with different flags race on it)."""
+    C.write_fields_svh()
+    obj.mkdir(parents=True, exist_ok=True)
+    flags = su_flags(vd, st).split()
+    srcs = [*C.LIB, *C.RTL, C.TB, C.HARNESS, C.FIELDS_SVH]
+    exe = obj / "Vtb"
+    if reusable(obj, exe, flags + [f"-GN={N}", f"-GM={M}"], srcs):
+        return exe, 0.0
+    cmd = [C.VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
+           "-Wno-UNOPTFLAT", "-Wno-MULTIDRIVEN", *flags, "--top-module", "tb_hdc_v41x_vec", "--prefix", "Vtb",
+           "-Mdir", str(obj), f"-GN={N}", f"-GM={M}", "-GPMAX=4096", f"-GVMA={C.VMA}", f"-GKVA={C.KVA}",
+           f"-GCRA={C.CRA}", f"-GWRA={C.WRA}", f"-GXBA={C.XBA}", f"-I{ROOT / 'rtl/test'}",
+           *map(str, C.LIB), *map(str, C.RTL), str(C.TB), str(C.HARNESS), "-CFLAGS", "-O1", "-j", "8"]
+    t0 = time.time()
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    if r.returncode:
+        raise RuntimeError(r.stdout[-4000:] + r.stderr[-4000:])
+    return exe, time.time() - t0
 
 
 def su_part(scratch: Path, st, n1024: bool, jobs: int):
@@ -225,6 +250,9 @@ def die_sources():
 def die_build(obj: Path, vd: int, st: dict) -> Path:
     obj.mkdir(parents=True, exist_ok=True)
     exe = obj / "Vtb_chip_v41x_die_vmdist"
+    flags = [f"-GVM_DIST={vd}", *[f"-G{k}={v}" for k, v in st.items()]]
+    if reusable(obj, exe, flags, die_sources() + [TB_DIE, HARNESS_DIE, core.SVH, core.VLT]):
+        return exe
     cmd = ["/usr/bin/time", "-v", ds.VERILATOR, "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH",
            "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "-Wno-MODDUP", "-Wno-TIMESCALEMOD", "-Wno-VARHIDDEN",
            "-Wno-UNOPTFLAT", "-Wno-MULTIDRIVEN", "--top-module", "tb_chip_v41x_die_vmdist", f"-GVM_DIST={vd}",
