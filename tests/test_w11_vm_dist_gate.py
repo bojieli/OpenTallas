@@ -1,5 +1,5 @@
 """W11: the distributed vector memory's exactness / cycle gate (tools/w11_vm_dist_gate.py,
-results/rtl/w11_vm_dist_gate.json).  Fast: reads the committed record only."""
+results/rtl/w11_vm_dist_gate_{su,die,su1024}.json).  Fast: reads the committed records only."""
 import hashlib
 import json
 from pathlib import Path
@@ -7,12 +7,18 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-REC = ROOT / "results/rtl/w11_vm_dist_gate.json"
+RECS = {p: ROOT / f"results/rtl/w11_vm_dist_gate_{p}.json" for p in ("su", "die", "su1024")}
 
 
-@pytest.fixture(scope="module")
-def rec():
-    return json.loads(REC.read_text())
+def load(part):
+    if not RECS[part].exists():
+        pytest.skip(f"{RECS[part].name} not committed")
+    return json.loads(RECS[part].read_text())
+
+
+@pytest.fixture(scope="module", params=[p for p in RECS if RECS[p].exists()])
+def rec(request):
+    return load(request.param)
 
 
 def test_record_is_source_pinned(rec):
@@ -35,7 +41,12 @@ def test_stage_sets_are_the_spec_and_the_model(rec):
     assert (m["X_GATHER_STAGES"], m["RET_SCATTER_STAGES"], m["COLL_WRITE_STAGES"], m["SU_RES_STAGES"]) == (6, 6, 11, 4)
 
 
-def test_su_campaigns_exact_with_and_without_vm_dist(rec):
+def test_record_passes(rec):
+    assert rec["status"] == "pass"
+
+
+def test_su_campaigns_exact_with_and_without_vm_dist():
+    rec = load("su")
     s = rec["su_summary"]
     assert s["all_pass"] and s["cases"] > 100
     for camp in rec["su"]["campaigns"].values():
@@ -46,7 +57,16 @@ def test_su_campaigns_exact_with_and_without_vm_dist(rec):
         assert m["faults"] == 0
 
 
-def test_die_decode_exact_and_token_identical(rec):
+def test_su_n1024_exact_with_and_without_vm_dist():
+    rec = load("su1024")
+    s = rec["su_summary"]
+    assert s["all_pass"]
+    for m in s["monitors"].values():
+        assert m["faults"] == 0
+
+
+def test_die_decode_exact_and_token_identical():
+    rec = load("die")
     runs = rec["die"]["runs"]
     assert set(runs) >= {"vm_dist_0", "vm_dist_1_spec", "vm_dist_1_model"}
     for k, r in runs.items():

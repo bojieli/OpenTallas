@@ -16,15 +16,15 @@ Parts (each run with VM_DIST = 0, the reference on the same programs, and VM_DIS
          memory is ot_v41_vm_dist, the external producer's writes and credits cross the scatter tree):
          tools/rtl_hdc_v41x_vec_campaign.py random (N16/M8 x 24 seeds, N64/M16 x 16 seeds), vehicle (N64/M16,
          every stream op of the reduced vehicle) and perf64; the attention softmax chain of
-         tools/w11_su_softmax_spec.py (serial_vec and chained, T128 / T640) at N16/M8 and, with --n1024,
-         N1024/M256.  Every case: the whole vector memory and KV against the reference, no fault.
+         tools/w11_su_softmax_spec.py (serial_vec and chained, T128 / T640) at N16/M8.
+  su1024 the same at N1024/M256: random (16-op programs that fit), perf and the softmax chain.  Every case: the whole vector memory and KV against the reference, no fault.
   die    the reduced V4.1 decode step through the die top (rtl/test/tb_chip_v41x_die_vmdist.sv: the smoke
          bench with the die's VM_DIST): token against the golden and every logit, the whole vector memory and
          the whole KV cache against the ISA model; cycles against VM_DIST = 0 on the same image.  Stage sets:
          `spec` (this repo's spec record) and `model` (tools/uarch_model.VM_DIST, as the spec record carries it).
 
-Writes results/rtl/w11_vm_dist_gate.json (a new record; an existing one is never overwritten).
-    python3 tools/w11_vm_dist_gate.py --scratch DIR [--parts su,die] [--n1024]
+Writes results/rtl/w11_vm_dist_gate_<parts>.json (new records; an existing one is never overwritten).
+    python3 tools/w11_vm_dist_gate.py --scratch DIR [--parts su,su1024,die]
 """
 from __future__ import annotations
 
@@ -157,11 +157,11 @@ def su_build(N, M, obj, vd, st):
     return exe, time.time() - t0
 
 
-def su_part(scratch: Path, st, n1024: bool, jobs: int):
+def su_part(scratch: Path, st, n1024: bool, jobs: int, small: bool = True):
     su_setup()
     out = dict(stages=dict(SU_RES_STAGES=st["SU_RES_STAGES"], RET_SCATTER_STAGES=st["RET_SCATTER_STAGES"]),
                builds={}, campaigns={}, softmax={})
-    cfgs = [(16, 8), (64, 16)] + ([(1024, 256)] if n1024 else [])
+    cfgs = ([(16, 8), (64, 16)] if small else []) + ([(1024, 256)] if n1024 else [])
     exes = {}
     with cf.ThreadPoolExecutor(6) as ex:
         futs = {(N, M, vd): ex.submit(su_build, N, M, scratch / f"vec_vd{vd}_N{N}_M{M}", vd, st)
@@ -169,23 +169,24 @@ def su_part(scratch: Path, st, n1024: bool, jobs: int):
         for k, f in futs.items():
             exes[k], secs = f.result()
             out["builds"][f"vec_N{k[0]}_M{k[1]}_vd{k[2]}"] = round(secs, 1)
-    recs, cr, wrom, meta = C.vehicle_records()
+    recs, cr, wrom, meta = C.vehicle_records() if small else (None, None, None, None)
     rng_seed = 20260926
     for vd in (0, 1):
         tag = f"vm_dist_{vd}"
         res = {}
-        res["random_N16_M8"] = C.random_campaign(exes[(16, 8, vd)], 16, 8, list(range(1, 25)), 40,
-                                                 scratch / f"r16_vd{vd}")
-        res["random_N64_M16"] = C.random_campaign(exes[(64, 16, vd)], 64, 16, list(range(101, 117)), 40,
-                                                  scratch / f"r64_vd{vd}")
-        res["vehicle_N64_M16"] = C.vehicle_campaign(exes[(64, 16, vd)], 64, 16, scratch / f"veh_vd{vd}", recs, cr,
-                                                    wrom)
-        rng = np.random.default_rng(rng_seed)
-        e = exes[(64, 16, vd)]
-        res["perf_N64_M16"] = dict(hc_post=C.perf_hcpost(e, 64, 16, scratch / f"p64_vd{vd}", rng),
-                                   depths=C.perf_depths(e, 64, 16, scratch / f"p64_vd{vd}", rng),
-                                   chain_ext=C.perf_chain_ext(e, 64, 16, scratch / f"p64_vd{vd}", rng),
-                                   mixed_classes=C.perf_mix(e, 64, 16, scratch / f"p64_vd{vd}", rng))
+        if small:
+            res["random_N16_M8"] = C.random_campaign(exes[(16, 8, vd)], 16, 8, list(range(1, 25)), 40,
+                                                     scratch / f"r16_vd{vd}")
+            res["random_N64_M16"] = C.random_campaign(exes[(64, 16, vd)], 64, 16, list(range(101, 117)), 40,
+                                                      scratch / f"r64_vd{vd}")
+            res["vehicle_N64_M16"] = C.vehicle_campaign(exes[(64, 16, vd)], 64, 16, scratch / f"veh_vd{vd}", recs, cr,
+                                                        wrom)
+            rng = np.random.default_rng(rng_seed)
+            e = exes[(64, 16, vd)]
+            res["perf_N64_M16"] = dict(hc_post=C.perf_hcpost(e, 64, 16, scratch / f"p64_vd{vd}", rng),
+                                       depths=C.perf_depths(e, 64, 16, scratch / f"p64_vd{vd}", rng),
+                                       chain_ext=C.perf_chain_ext(e, 64, 16, scratch / f"p64_vd{vd}", rng),
+                                       mixed_classes=C.perf_mix(e, 64, 16, scratch / f"p64_vd{vd}", rng))
         if n1024:
             e = exes[(1024, 256, vd)]
             # 16-op random programs that fit the bench's 2^18-word memory at N = 1,024 (the campaign's rule)
@@ -205,9 +206,10 @@ def su_part(scratch: Path, st, n1024: bool, jobs: int):
         out["campaigns"][tag] = res
         print("su campaigns", tag, {k: (sum(x["pass_"] for x in v), len(v)) for k, v in res.items()
                                     if isinstance(v, list)}, flush=True)
-    out["vehicle_meta"] = meta
+    if small:
+        out["vehicle_meta"] = meta
     # softmax chain (tools/w11_su_softmax_spec.py fixture), vec-bench variants
-    sm_cfgs = [(16, 8)] + ([(1024, 256)] if n1024 else [])
+    sm_cfgs = ([(16, 8)] if small else []) + ([(1024, 256)] if n1024 else [])
     for N, M in sm_cfgs:
         for vd in (0, 1):
             vflags = su_flags(vd, st).split() + (["--unroll-count", "4", "-fno-dfg"] if N >= 1024 else [])
@@ -361,12 +363,16 @@ def die_part(scratch: Path, sets: dict, reuse_images: bool):
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--scratch", type=Path, required=True)
-    ap.add_argument("--parts", default="su,die")
-    ap.add_argument("--n1024", action="store_true", help="also the softmax chain at N1024/M256 (~31 GiB a build)")
+    ap.add_argument("--parts", default="su,die",
+                    help="su (N16/M8, N64/M16 campaigns, N16 softmax), su1024 (N1024/M256 random, perf, softmax: "
+                         "~31 GiB a build), die")
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--reuse-images", action="store_true")
-    ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--out", type=Path, default=None,
+                    help="default results/rtl/w11_vm_dist_gate_<parts>.json")
     a = ap.parse_args()
+    if a.out is None:
+        a.out = OUT.with_name(f"w11_vm_dist_gate_{'_'.join(sorted(a.parts.split(',')))}.json")
     if a.out.exists():
         raise SystemExit(f"{a.out} exists; records are never overwritten")
     a.scratch.mkdir(parents=True, exist_ok=True)
@@ -378,7 +384,8 @@ def main() -> int:
                host=os.uname().nodename, simulator=ds.tool_version(ds.VERILATOR))
     t0 = time.time()
     with cf.ThreadPoolExecutor(2) as ex:
-        fs = ex.submit(su_part, a.scratch / "su", sets["spec"], a.n1024, a.jobs) if "su" in parts else None
+        fs = (ex.submit(su_part, a.scratch / "su", sets["spec"], "su1024" in parts, a.jobs, "su" in parts)
+              if parts & {"su", "su1024"} else None)
         fd = ex.submit(die_part, a.scratch / "die", sets, a.reuse_images) if "die" in parts else None
         if fs is not None:
             rec["su"] = fs.result()
