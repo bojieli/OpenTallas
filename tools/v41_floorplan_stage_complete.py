@@ -5,8 +5,8 @@ from pathlib import Path
 import v41_floorplan_stage_bankmap as B
 ROOT=B.ROOT
 
-def build(snapshot):
-    x=B.derive(snapshot,17,0); macros=json.loads((ROOT/'physical/asap7_memory_macros/index.json').read_text())['macros']; macro=macros['ot_rom_8192x274_m8']; dense=[]; seen=set(); total=0; nextbank=x['reservation']['macros']
+def build(snapshot, stage=17):
+    x=B.derive(snapshot,stage,0); macros=json.loads((ROOT/'physical/asap7_memory_macros/index.json').read_text())['macros']; macro=macros['ot_rom_8192x274_m8']; dense=[]; seen=set(); total=0; nextbank=x['reservation']['macros']
     ts={t['tensor']:t for t in x['unbound_dense_tensors']}
     for name,t in ts.items():
         if name in seen:continue
@@ -39,7 +39,7 @@ def build(snapshot):
         tables.append(dict(tensor=n,rows=w['shape'][0],row_bytes=264,header_sha256=h,scale_header_sha256=hs))
     table_rows=sum(t['rows'] for t in tables);eg_dies=placement['counts']['engram']; dedicated_rows=eg_dies*(cap//264)
     headroom=placement['head_die_spare_bytes'];head_rows=max(0,math.floor(headroom/264))*4
-    residual=table_rows-dedicated_rows-head_rows;q,rem=divmod(residual,112); ordinal=17*4
+    residual=table_rows-dedicated_rows-head_rows;q,rem=divmod(residual,112); ordinal=stage*4
     start=dedicated_rows+head_rows+ordinal*q+min(ordinal,rem);nrows=q+(ordinal<rem);intervals=[];base=0
     for t in tables:
         lo=max(start,base);hi=min(start+nrows,base+t['rows'])
