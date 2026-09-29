@@ -79,6 +79,7 @@ module ot_chip_v41x_tile #(
     parameter integer NPC_W = 8,             // weight-region pseudo-channels
     parameter integer LWIN  = 10,
     parameter integer LAW   = 12,
+    parameter integer QLIST_BITS = FULL_SHAPE ? 160 : 128,
     // memory depths (address bits); the defaults are the reduced vehicle's bench sizes
     parameter integer PROG_AW = 14,
     parameter integer WROM_AW = 19,
@@ -108,7 +109,7 @@ module ot_chip_v41x_tile #(
     input  wire [3:0]        cfg_me_xs,
     input  wire [AW-1:0]     cfg_q_base,      // HBM sector of the quantised weight region
     input  wire [LAW-1:0]    cfg_q_lbase,
-    input  wire [15:0]       cfg_q_lead,
+    input  wire [NW-1:0]     cfg_q_lead,
     input  wire [15:0]       cfg_q_rate,
     // W_HBM=0 QE ROM service. The request is sampled on clk; the external
     // macro returns one compact word and its format on the following cycle.
@@ -256,7 +257,7 @@ module ot_chip_v41x_tile #(
     reg [31:0]           mbank [0:8*MG*(1<<MBAW)-1];
     reg [263:0]          erom  [0:(1<<EROM_AW)-1];
     reg [63:0]           crom  [0:(1<<CROM_AW)-1];
-    reg [127:0]          qlist [0:(1<<LAW)-1];
+    reg [QLIST_BITS-1:0] qlist [0:(1<<LAW)-1];
     /* verilator lint_on UNDRIVEN */
     reg [255:0]          qwin  [0:SPW-1][0:(1<<LWIN)-1];
     reg [31:0]           vm    [0:(1<<VM_AW)-1];
@@ -405,12 +406,13 @@ module ot_chip_v41x_tile #(
         .kvd_mmode(kvd_mmode), .kv_ok(kv_ok));
 
     // -- QE weight streamer: the QE's weight port served from an HBM window ----------------
-    wire l_re; wire [LAW-1:0] l_addr; reg [127:0] l_q;
+    wire l_re; wire [LAW-1:0] l_addr; reg [QLIST_BITS-1:0] l_q;
     wire xi_re; wire [AW-1:0] xi_addr; reg [31:0] xi_q;
     wire [SPW-1:0] qw_we; wire [SPW*LWIN-1:0] qw_waddr; wire [BL*QLB-1:0] qw_wdata;
     wire qw_re; wire [LWIN-1:0] qw_raddr; reg [BL*QLB-1:0] qw_q;
     generate if (W_HBM != 0) begin : g_qstream
-    ot_hdc_qstream #(.BL(BL), .QLB(QLB), .AW(AW), .HAW(24), .NW(NW), .LWIN(LWIN),
+    ot_hdc_qstream #(.FULL_SHAPE(FULL_SHAPE), .LIST_BITS(QLIST_BITS),
+        .BL(BL), .QLB(QLB), .AW(AW), .HAW(AW), .NW(NW), .LWIN(LWIN),
                      .NPC(NPC_W), .LENW(6), .BEATW(5), .LAW(LAW)) u_qs (
         .clk(clk), .rst_n(rst_n), .cfg_base(cfg_q_base), .cfg_lbase(cfg_q_lbase),
         .cfg_lead(cfg_q_lead), .cfg_rate(cfg_q_rate), .tok_start(start), .pos(pos),

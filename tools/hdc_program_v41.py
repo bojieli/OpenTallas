@@ -1956,11 +1956,13 @@ def encode_list(ents, profile="reduced"):
     return encode_fetch_list(ents, profile)
 
 
-def write_hbm_images(out, lay, prog):
+def write_hbm_images(out, lay, prog, profile="reduced"):
+    from hdc_qstream_descriptor import BITS as FETCH_BITS
+    list_bits = FETCH_BITS[profile]
     sectors, first = qe_hbm_image(lay)
     ents = qe_fetch_list(lay, prog, first)
     (out / "hbm_q.hex").write_text(hexwords(sectors, QSEC))
-    (out / "qlist.hex").write_text(hexwords(encode_list(ents), LIST_BITS))
+    (out / "qlist.hex").write_text(hexwords(encode_list(ents, profile=profile), list_bits))
     fmt = qe_word_formats(lay)
     meta = {"qrom_words": len(lay.qcodes), "fp4_words": int(fmt.sum()), "hbm_sectors": len(sectors),
             "list_entries": len(ents), "indexed_entries": sum(e["ind"] for e in ents),
