@@ -260,6 +260,15 @@ def build_die(design, cfg):
     p.region('collective', 'logic', EDGE_KEEP + ucie_w, DIE_H / 2 - 6000, coll_w, 12000,
              holds='ot_rom_oneshot_allreduce die engine (16 FP32 adders), link flow control')
     west = snap(EDGE_KEEP + ucie_w + coll_w + CORRIDOR_UM, SNAP_X)
+    if cfg.get('frame_only'):
+        east = DIE_W - EDGE_KEEP
+        p.region('compute_array_reserved_for_W9', 'reservation', west, core_y0, east - west, core_y1 - core_y0,
+                 note='GPU-style SM / tensor-core array owned by W9 (user design rule 2026-09-29); '
+                      'W5 supplies only the frame: shoreline, stacks, service bands, UCIe')
+        return p, dict(core_y0=core_y0, core_y1=core_y1, west=west, east=east,
+                       compute_area_mm2=round((east - west) * (core_y1 - core_y0) / 1e6, 2),
+                       service_band_mm2=round(2 * (DIE_W - 2 * EDGE_KEEP) * depth_s / 1e6, 2),
+                       fits=None, tiles_needed=None, tiles_capacity=None, spine_used=0.0)
     # --- central spine: the narrowest multiple of the port-tile width whose blocks fit the core height
     core_h = core_y1 - core_y0
     spine = None
@@ -547,6 +556,7 @@ def main():
     rp, inv, cs, ua, cat, budget = (json.loads((ROOT / f).read_text()) for f in INPUTS[:6])
     for n, m in cat['macros'].items():
         MV_CAP[n] = m['capacity_bits']
+    globals()['cs'] = cs
     d = designs((rp, inv, cs, ua, cat, budget))
     args.out_dir.mkdir(parents=True, exist_ok=True)
     wm = CAF.wire_delay_model()
@@ -554,7 +564,30 @@ def main():
     records = {}
     for design in ('rom_die', 'hbm_die'):
         for prof, pv in d['profiles'].items():
-            if design == 'hbm_die' and prof == 'm5_ledger_copies':
+            if design == 'hbm_die':
+                if prof != 'rtl_as_instantiated':
+                    continue
+                p, geom = build_die('qwen_o4_hbm_die_frame', dict(
+                    frame_only=True, service_srams=0, service_logic_um2=2 * 10e6,
+                    service_holds='HBM3E controllers\' fabric, per-PC arbiters and weight/KV stream heads for '
+                                  '128 PCs (reservation 10 mm2 a band)',
+                    ucie_mm2=budget['ucie']['link']['phy_mm2_per_die']))
+                leg = legality(p)
+                rec = dict(design='hbm_die', profile='frame', profile_note='die frame only (W9 owns compute)',
+                           geometry=geom, legality=leg,
+                           macro_counts={mn: sum(1 for m in p.macros if m['macro'] == mn)
+                                         for mn in sorted({m['macro'] for m in p.macros})},
+                           shoreline=dict(stacks=4, phy_edge_mm=4 * 12.0, free_edge_mm=round(2 * DIE_W / 1e3 + DIE_H / 1e3, 2),
+                                          edges='two PHY+controller abstracts on each long (north/south) edge; '
+                                                'the west edge faces the other die (UCIe)'),
+                           weight_supply=dict(bytes_per_cycle=3277, bytes_consumed_per_cycle_by_rom_engine=98304,
+                                              window_mib_per_die=48,
+                                              note='docs/QWEN_O4_HBM_WEIGHT_SUPPLY.md; the consumer is W9\'s array'),
+                           regions=p.regions)
+                records['hbm_die.frame'] = rec
+                stem = args.out_dir / 'hbm_die_frame'
+                rec['def_sha256'] = write_def(p, str(stem) + '_macros.def')
+                write_svg(p, str(stem) + '.svg')
                 continue
             logic = pv['tile_logic_um2']
             if design == 'rom_die':
@@ -693,8 +726,6 @@ def main():
             rec['def_sha256'] = write_def(p, str(stem) + '_macros.def')
             write_svg(p, str(stem) + '.svg')
             if design == 'rom_die' and prof == 'rtl_as_instantiated':
-                neighbourhood_tcl(rom_tile(d['port'], scale_macros=4), args.out_dir / 'g4_rommac_port_macro_place.tcl')
-                neighbourhood_tcl(tile, args.out_dir / 'g4_rommac_plain_macro_place.tcl')
                 rec['route_cut'] = dict(port=dict((k, v) for k, v in rom_tile(d['port'], scale_macros=4).items()
                                                   if k != 'macros'))
     # power density of the HBM service (qwen-die-cooling-binds): controller/PHY energy per token
@@ -712,6 +743,8 @@ def main():
                              liquid_capped_tokens_s=x['cooling']['liquid']['capped_tokens_s'])
     summary = dict(
         schema='opentallas.qwen-o4-floorplan.v1', tool='tools/qwen_o4_floorplan.py',
+        status=('PARTIAL_tile_logic_area_is_an_estimate' if cs.get('status', '').startswith('ESTIMATE')
+                else 'macro_packed_floorplan'),
         tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         source_sha256={f: sha(f) for f in INPUTS},
         clock=dict(adopted_ns=round(CLOCK_NS, 6), uncertainty_ns=UNC_NS,
@@ -720,11 +753,13 @@ def main():
         logic_util=LOGIC_UTIL, corridor_um=CORRIDOR_UM, reach_um_per_cycle=round(reach, 1),
         power_density=power,
         fit={k: dict(fits=v['geometry']['fits'], tiles_needed=v['geometry']['tiles_needed'],
-                     tiles_capacity=v['geometry']['tiles_capacity'], tile_um=[v['tile']['w'], v['tile']['h']],
+                     tiles_capacity=v['geometry']['tiles_capacity'],
+                     tile_um=[v['tile']['w'], v['tile']['h']] if 'tile' in v else None,
                      spine_used_um=round(v['geometry']['spine_used'], 1),
                      core_height_um=round(v['geometry']['core_y1'] - v['geometry']['core_y0'], 1),
+                     compute_area_mm2=v['geometry'].get('compute_area_mm2'),
                      legal=v['legality']['legal'], macros=v['legality']['macros'],
-                     added_cycles_per_token=v['wire_budget']['added_cycles_per_token'])
+                     added_cycles_per_token=v['wire_budget']['added_cycles_per_token'] if 'wire_budget' in v else None)
              for k, v in records.items()},
         designs=records,
         claim_boundary='macro-packed placement and distance pricing only: no die route, no timing, no '

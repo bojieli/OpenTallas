@@ -1,4 +1,5 @@
 """W5 Qwen O4 floorplan records: integer placement, RTL inventory, macro-packed dies."""
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -56,13 +57,15 @@ def test_floorplans_are_legal_and_account_every_macro():
     for key, d in f['designs'].items():
         assert d['legality']['legal'], (key, d['legality']['errors'])
         assert d['legality']['overlaps_including_halo'] == 0
-        defp = ROOT / 'results/floorplan/qwen_o4' / f"{d['design']}_{d['profile']}_macros.def"
-        assert hashlib.sha256(defp.read_bytes()).hexdigest() == d['def_sha256']
+        defp = ROOT / 'results/floorplan/qwen_o4' / f"{d['design']}_{d['profile']}_macros.def.gz"
+        assert hashlib.sha256(gzip.decompress(defp.read_bytes())).hexdigest() == d['def_sha256']
         assert d['macro_counts'].get('ot_hbm3e_phy') == 4
         if d['design'] == 'rom_die' and d['geometry']['fits']:
             want = (rp['code_rom']['macros'] + rp['scale_rom']['rtl_compatible']['macros']
                     + rp['embedding_rom']['macros'] + rp['embedding_rom']['scale_macros'])
             assert d['macro_counts']['ot_rom_4096x266_m8'] == want
+        if 'wire_budget' not in d:
+            continue
         wb = d['wire_budget']
         assert wb['reach_um_per_cycle'] > 0
         for c in wb['connections']:
