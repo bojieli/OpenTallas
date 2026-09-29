@@ -99,10 +99,14 @@ def main() -> None:
     core_sv = out / "gen" / "ot_qwen_rom_core.sv"
     core_sv.parent.mkdir(exist_ok=True)
     core_sv.write_text(qwen_rom_rt_core_emit.emit(qwen_rom_rt_core_emit.CORE.read_text()))
+    vs_sv = out / "gen" / "ot_hdc_vstream_rt.sv"
+    vs_sv.write_text(qwen_rom_rt_core_emit.emit_vstream(qwen_rom_rt_core_emit.VSTREAM.read_text()))
+    hier = out / "gen" / "hier.vlt"
+    hier.write_text('`verilator_config\nhier_block -module "ot_hdc_vstream_lane"\n')
     spine = [f"-GSMIN={args.smin}", f"-GSMAX={args.smax}", f"-GTCUT={args.tcut}", f"-GBD={args.bd}",
              f"-GXVM={args.xvm}", f"-GNWS={args.nws}", f"-GTWS={args.tws}", f"-GORD={args.ord}"]
     models = [
-        ("die", "ot_qwen_rom_rt_die", [str(core_sv), *map(str, DIE_RTL)],
+        ("die", "ot_qwen_rom_rt_die", [str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1",
           f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", *spine]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
@@ -118,18 +122,22 @@ def main() -> None:
             continue
         run(f"verilate_{prefix}", [args.verilator, "--cc", "-O3", "-Wno-fatal", "-Wno-TIMESCALEMOD", "-Wno-WIDTH",
                                    "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-PINMISSING", f"-I{C.ISA_SVH.parent}",
-                                   "--top-module", top, "--prefix", f"V{prefix}", "--Mdir", mdir, *params, *files])
+                                   "--top-module", top, "--prefix", f"V{prefix}", "--Mdir", mdir, *params, *files,
+                                   *(["--hierarchical", str(hier)] if prefix == "die" else [])])
         run(f"build_{prefix}", ["make", "-C", mdir, "-f", f"V{prefix}.mk", f"-j{args.jobs}", f"V{prefix}__ALL.a",
                                 "OPT_FAST=-O2", "OPT_SLOW=-O1"])
     archives, includes = [], {f"-I{vroot}/include", f"-I{vroot}/include/vltstd", f"-I{RT}", f"-I{RR}"}
     for prefix, *_ in models:
-        archives += sorted((out / prefix).glob("*.a"))
+        archives += sorted((out / prefix).rglob("*.a"))
         includes.add(f"-I{out / prefix}")
+        for h in (out / prefix).rglob("V*.h"):
+            includes.add(f"-I{h.parent}")
     binary = out / "qwen_rom_rt"
     run("link", ["g++", "-std=c++20", "-O2", "-pthread", f"-DGROUPS={G}", f"-DCOUNTWIDTH={NW}",
                  f"-DSWIDTH={args.su_width}", f"-DSMAXB={args.smax}", f"-DTCUTL={args.tcut}", f"-DNWSD={args.nws}",
                  f"-DXVMD={args.xvm}", f"-DCBANKS={args.code_banks}", f"-DSMINV={args.smin}", *sorted(includes), RR / "qwen_rom_rt.cpp", "-Wl,--start-group", *archives,
                  "-Wl,--end-group", f"{vroot}/include/verilated.cpp", f"{vroot}/include/verilated_threads.cpp",
+                 f"{vroot}/include/verilated_dpi.cpp",
                  "-o", binary])
     if args.build_only:
         print("built", binary)
