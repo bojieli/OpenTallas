@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.rtl.v41_l0_live_chain.v1",
+  "status": "partial_not_executed",
+  "scope": "PARTIAL. Bench, image generator and die opt-in parameters for the live L0 attention chain (production PC24,30-34,END through ot_chip_v41x_die FULL_SHAPE WINDOW HBM source -> attention -> SU -> VM). Frozen by root directive before any simulation: no bit-exact verdict, no cycles.",
+  "program_defects": [
+    {
+      "pc": 30,
+      "field": "imm1",
+      "production_value": 0,
+      "required": "float32(512**-0.5)=0x3d3504f3",
+      "source": "tools/hdc_replay_v41.py line ~535 emits imm1=0 placeholder for the softmax scale; results/rtl/hdc_v41x_fullshape_l0_program.hex PC30 inherits it (as encoded, every score is multiplied by 0)"
+    }
+  ],
+  "build_facts": {
+    "lint_full_die_allunit_no_unroll_flags": "killed at 108 GB RSS after 6 min (local), not converged",
+    "lint_att_adapt_alone_fullshape": "63 GB after 10 min without --unroll-count 1; the attention engine flattens",
+    "hierarchical_build_attn_only_hier": "top root.h 120 MB, 1,626 C++ files 2.6 GB; ~6-8 min per file at -O1 (infeasible)",
+    "hierarchical_build_plus_fmul_qadd_hier": "top root.h 30 MB, 296 C++ files 0.45 GB, frontend ~20 min, 14 GB RSS; C++ at -O0 ~100 files/10 min on 12 jobs",
+    "host": "ot-pve2:/home/ubuntu/w4/obj_red8 (CREDITS=8 STREAM_II1=1 RETAIN=1, X_HE/X_ME/X_IDX/X_SEL/X_EG=0)"
+  },
+  "vectors_t127": {
+    "pos": 127,
+    "first_row": 0,
+    "seed": 20260929,
+    "heads": 16,
+    "head_dim": 512,
+    "rows": 128,
+    "program_sha256": "c49245cf38ea0149325b7a5045aa3b86a994c70095f2e217c6816a58831c60c2",
+    "pcs": [
+      24,
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "end_pc": 112,
+    "patches": [
+      {
+        "pc": 30,
+        "field": "imm1",
+        "production": 0,
+        "gate": 1026884851,
+        "reason": "production PC30 multiplies scores by imm1=0 (hdc_replay_v41 placeholder)"
+      }
+    ],
+    "sink": "float32(h/16 - 0.5)",
+    "vm_regions": {
+      "q": 55744,
+      "scores": 63936,
+      "maxima": 74176,
+      "sums": 74208,
+      "den": 74240,
+      "out": 74272
+    },
+    "images": {
+      "crom.hex": "dd9298d7a62549e5a250b5151a70f327895de0af72cfa602e53aca6ccb8c714c",
+      "expect_acc.hex": "e8bf39de8af37ba1a85f640306073f3b9411013a61083e59a1cc0f2888f42a78",
+      "expect_scores.hex": "e4b400998871bb35374104bfda36e1c531d759147d3fbbe82f8fad93066394fe",
+      "expect_vm.hex": "04c52ef3183f153ee40f7a34f2aebfb6dcd1d920d15f4516e8210f54f3b76003",
+      "hbm_window.hex": "4befbc8d6a0af1a58de80d7ffff98000a1ee99d2e676080b8fd9030547be2eb1",
+      "prog.hex": "d096d4dd9429f1e1f5ef5c13a94c68bdfe697f80a655c1b118834864cea6ea84",
+      "vm_init.hex": "b4ecdb72e4d5fcc5a59dff3b1375fcd23c3b05afc0e3966d31f006ff46e6e338"
+    },
+    "golden_sources": {
+      "tools/v41_l0_live_chain.py": "7717b653320889d8c22bb39e7ae1e124a90dce3af2969b2b5bc7915ce4374d43",
+      "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+      "tools/rtl_hdc_v41x_attn_campaign.py": "40997353c2e0375e728335580b9f8f87198c08c78a87988b6834dc032a487d2f",
+      "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
+      "results/rtl/hdc_v41x_fullshape_l0_program.hex": "c49245cf38ea0149325b7a5045aa3b86a994c70095f2e217c6816a58831c60c2"
+    }
+  },
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_die.sv": "35557174f7ee6266775a0be9961d3d69238f73ffa2a77ed4a44d950d7d1e9304",
+    "rtl/chip/ot_chip_v41x_tile.sv": "69ad54bd0534cedffb025838c944ddeed88e0acb8c8519bf25a8698b4d7fc648",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "4d2fc7666016345fe896d943dda5584519002e9140fe28bb229be8ebc4539a40",
+    "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "1c71b11df5ec918b55bbb5706a80dda65e8470144ec08f27afc46523be57066b",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "ed2a13a5fd91fa94ef02dc48098c16b3587e74047a67655c9b4533af9f777758",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "8eb0873a911d875a85048fbad1c496b391f019396f4c626a616c95e6ff1d16b2",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd",
+    "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": "50b064308d64bacd94be46ab6888c218749d4f75fe4007f73907740f1069dd1b",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "87a3ae848a137aabbab8354563cc5acd7c1bfdcde0e471a7ce37f70198223c02",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+    "rtl/chip/ot_chip_v41x_window_retention.sv": "9c6b58ccbab8de37346fbf6e5b4353e115489f2f37af8e4533ec0d48f0336dee",
+    "rtl/chip/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+    "rtl/chip/ot_chip_v41x_window_stage4.sv": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+    "rtl/chip/ot_chip_v41x_window_stream.sv": "4fd641d75c1c49dac14e27b22138e4b31be0ec20f2046c4e63d9069114c7da89",
+    "rtl/chip/ot_chip_v41x_attn_row_merge.sv": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv": "72e06e1fe533c491c13260ddea0462254a32821af44a2ad3726fbd553fd19f74",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/test/tb_v41_l0_live_chain.sv": "f623ee396f7416133bf3d9379bcfd7c252c83e39c921c31dcc4c0cef0eb42357",
+    "rtl/test/tb_v41_l0_live_chain_harness.cpp": "0791c005d074a1d16df8a815e72b4a8ee86e8099db6971a8d9df600b9e371eca",
+    "tools/v41_l0_live_chain_build.sh": "ff10be402eaa2a3661d20ee4a191c6383eafb3254cff5ccafb7a4066196e9daa",
+    "tools/v41_l0_live_chain_files.txt": "694c88bedd024ebb1b6a7f73ce2e20168d3133587f585bbc059f4aec7bbfdbfe",
+    "tools/v41_l0_live_chain.py": "09cc9509ecafdab1db75d39221a06f41420c125e60992862f113871cbe60bfd4"
+  }
+}
