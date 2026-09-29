@@ -241,7 +241,13 @@ module ot_hdc_v41x_vec_lane #(
     wire [31:0] a_r = cx_arnd ? bf16(x_a) : x_a;
     wire [31:0] a_l = (cx_arelu && a_r[31]) ? 32'd0 : a_r;
     wire [31:0] a_m = cx_amin ? fmin(a_l, cx_imm3) : a_l;
-    wire [31:0] c_m = cx_cclip ? fmin(fmax(x_c, {1'b1, cx_imm3[30:0]}), cx_imm3) : x_c;
+    // clip(C, -imm3, imm3) = fmin(fmax(C, lo), hi) with its three comparisons side by side (bit-identical,
+    // ties included: proven by tools/w11_equiv_clip.ys; the chained form was the lane's critical path, W11)
+    wire [31:0] c_lo = {1'b1, cx_imm3[30:0]};
+    wire        c_ge_lo = okey(x_c) >= okey(c_lo);
+    wire        c_le_hi = okey(x_c) <= okey(cx_imm3);
+    wire        c_lohi  = okey(c_lo) <= okey(cx_imm3);
+    wire [31:0] c_m = !cx_cclip ? x_c : c_ge_lo ? (c_le_hi ? x_c : cx_imm3) : (c_lohi ? c_lo : cx_imm3);
     reg  [31:0] p_a, p_b, p_c, p_d;
     reg  [AW-1:0] p_o;
     reg         p_v, p_par;
