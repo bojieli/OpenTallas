@@ -538,3 +538,64 @@ A via-programmable ROM shares base masks between dies of the same role and codes
 - **Via-programmable ROM removes the high case.** The V4.1 array costs $32–36 per saturated tok/s against the earlier $34–67, and against $15.4 for 8× B200 at saturation (whose users then get 15.5 tok/s each) and $51.4 at the ≥ 100 tok/s/user floor.
 - **The packages, not the masks, set V4.1 ROM cost.** 94 packages at the iso-package price make up $2.35M of the $2.49–2.77M.
 - **Qwen ROM:** $16–19M of NRE, $3.44–3.69 per saturated tok/s ($2.18–2.43 with the base excluded).
+
+### Every design gated alike (`gated_alike` in the record)
+
+This is root's fairness follow-up (2026-09-29). The same policies and cited constants now apply to every design:
+- **Clock gating:** a domain clocks only while it is busy. When idle it keeps the 10% ICG residual.
+- **Power gating:** a domain power-gates in every idle gap that fits its wake-up plus break-even time, with ReGate's residuals.
+- **Wake constants:**
+  - core domains (SMs, dedicated units, lanes, stream unit, L2): 1 µs wake, 0.5 µs break-even;
+  - HBM controller and PHY: 60-cycle wake, 412-cycle break-even (ReGate Table 3);
+  - SerDes and UCIe: 5 µs wake, 10% low-power-idle residual.
+- **No wake on the token path.** Each wake finishes at the end of its gap, from the static schedule.
+- **Busy time and gaps** come from each design's own schedule:
+  - **V4.1 HBM comparator:** the W13 chain walked node by node (`v41_hbm_timeline`, which reproduces 342.5 µs AR and 617.5 µs MTP).
+  - **Qwen dies:** their op boundaries (181), KV streams (36) and UCIe exchanges (73), with the gaps split evenly.
+  - **At saturation,** each domain gets one contiguous idle gap per pass or token, the ROM array's rule.
+- **GPU rows** stay at measured board power, which already contains whatever the GPU gates.
+
+This table supersedes the energy columns of "Batch, energy and capacity" above.
+
+| Design | Point | tok/s | Ungated mJ/token | Clock-gated | Clock + power gated | Static W, ungated → gated |
+|---|---|---:|---:|---:|---:|---:|
+| Qwen ROM AR (G = 6,144) | B = 1 | 9,968 | 86.4 | 84.6 | **84.6** | 102 → 83.4 |
+| Qwen ROM AR (G = 6,144) | saturated | 11,921 | 84.7 | 83.5 | **83.5** | 102 → 87.3 |
+| Qwen HBM tier 3 AR | B = 1 | 881 | 983 | 978 | **976** | 69.3 → 63.7 |
+| Qwen HBM tier 3 AR | saturated | 6,684 | 133 | 132 | **132** | 69.3 → 62.0 |
+| Qwen HBM tier 3 DFlash | B = 1 | 2,671 | 358 | 357 | **356** | 69.3 → 63.5 |
+| Qwen HBM tier 3 DFlash | saturated | 7,101 | 129 | 129 | **128** | 69.3 → 62.4 |
+| Qwen 1× B200 AR (tier 2) | B = 1 | 331 | 2,081 | — | **2,081** | measured |
+| Qwen 1× B200 AR (tier 2) | saturated | 7,907 | 87.1 | — | **87.1** | measured |
+| V4.1 ROM AR | B = 1 | 4,167 | 3,137 | 2,686 | **328** | 12,902 → 1,194 |
+| V4.1 ROM AR | saturated | 77,022 | 208 | 187 | **106** | 12,902 → 4,977 |
+| V4.1 ROM MTP m = 1 | B = 1 | 6,063 | 2,168 | 1,860 | **228** | 12,902 → 1,141 |
+| V4.1 ROM MTP m = 1 | saturated | 50,708 | 294 | 261 | **112** | 12,902 → 3,641 |
+| V4.1 HBM tier 3 AR | B = 1 | 2,920 | 3,692 | 3,468 | **3,246** | 6,513 → 5,210 |
+| V4.1 HBM tier 3 AR | saturated | 21,792 | 913 | 895 | **755** | 6,513 → 3,067 |
+| V4.1 HBM tier 3 MTP | B = 1 | 5,673 | 2,287 | 2,184 | **1,922** | 6,513 → 4,444 |
+| V4.1 HBM tier 3 MTP | saturated | 12,122 | 1,676 | 1,654 | **1,475** | 6,513 → 4,081 |
+| V4.1 8× B200 AR (tier 2) | B = 1 | 278 | 19,852 | — | **19,852** | measured |
+| V4.1 8× B200 AR (tier 2) | saturated | 13,018 | 423 | — | **423** | measured |
+
+- **Gating does not change the Qwen rows.** Their energy is dynamic: the ROM package's KV read and the HBM die's weight stream. Their idle gaps (under 1 µs between ops) are shorter than a core wake plus break-even. Gated or not, Qwen ROM uses 84.6 mJ/token against 356 for HBM tier 3 DFlash and 2,081 for a B200.
+- **The V4.1 HBM comparator gains 12–16% at batch 1 and 12–17% at saturation.**
+  - Its 96 TP dies are all on every token. Their idle comes in short gaps between phases: the SMs have 281 gaps within the 253 µs they are idle, and only 91 µs of them are long enough to gate.
+  - The SerDes idle between collectives mostly in gaps under 5 µs.
+- **The V4.1 ROM pipeline idles each stage in one long gap per token,** and power gating takes its batch-1 energy down 9.6×.
+- **Gated alike, V4.1 ROM uses 9.9× less energy per token than the HBM comparator at batch 1 in AR, 8.4× with MTP, and 7.1× at saturation.** The advantage is structural: a pipeline of weight-local stages idles in long gaps; a TP-96 machine does not.
+
+### Adopted power and cost requirements (root, 2026-09-29)
+
+1. **Stage power gating on the V4.1 ROM array.**
+   - Power switches per stage domain, with a 1 µs staggered wake (about 100 sub-domains, to bound di/dt).
+   - Retention only on the VM SRAM; the mask ROM and the logic hold no state across tokens.
+   - HBM controller and PHY power-down, with the DRAM self-refreshing.
+   - SerDes and UCIe low-power idle, with a 5 µs pre-wake.
+   - Every wake is scheduled from the static token schedule into an idle gap that fits wake + break-even. No wake may land on the single-user token path.
+2. **Adaptive MTP.** Run MTP while the batch is below the switch point and AR at or above it. The switch is 12.2 users on the V4.1 ROM array (exact) and between 8 and 16 users on the HBM comparator.
+3. **Via-programmable ROM is the cost basis.**
+   - Shared base mask sets per die role: 3 for V4.1 (layer, head + DSpark, Engram table), 1 for Qwen.
+   - 1–2 EUV coding masks per die at $0.5–1M each.
+   - V4.1 NRE is $139–421M, against $2,820M with full mask sets.
+4. **Every energy comparison uses the gated-alike table above.** The same policies and cited constants apply to every design; GPU rows are at measured board power.

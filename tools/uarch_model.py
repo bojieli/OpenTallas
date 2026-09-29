@@ -2602,12 +2602,241 @@ def rom_mask_sensitivity(ec=None):
                      "coding masks)")
 
 
-def economics_levers():
-    ec = economics()
-    return dict(static_power=v41_static_power(ec), adaptive_mtp=adaptive_mtp(ec), rom_masks=rom_mask_sensitivity(ec))
+def economics_levers(ec=None, gated=True):
+    ec = ec or economics()
+    lv = dict(static_power=v41_static_power(ec), adaptive_mtp=adaptive_mtp(ec), rom_masks=rom_mask_sensitivity(ec))
+    if gated:
+        lv["gated_alike"] = gated_energy_table(ec, lv)
+    return lv
 
 
 LEVER_SOURCES = ECON_SOURCES
+
+
+# ---------------------------------------------------------------------------------------------------------
+# Gated alike (W14c; root 2026-09-29 fairness follow-up): the adopted gating policies (clock gating with the
+# ICG residual; power gating of idle domains with the cited residuals; a wake scheduled from the static schedule
+# only into idle gaps that fit wake + break-even, so no wake lands on the token path) applied to every design:
+# the tier-3 HBM comparators (SMs, dedicated units, L2, HBM PHY, SerDes / UCIe) and the Qwen ROM package, beside
+# the V4.1 ROM array's stage gating.  The same PG constants; GPU rows stay measured.
+# ---------------------------------------------------------------------------------------------------------
+CORE_WAKE = dict(wake=PG["stage_wake_s"], bet=PG["stage_bet_s"])          # SM array, dedicated units, lanes, SU, L2
+LINK_WAKE = dict(wake=PG["serdes_wake_s"], bet=PG["stage_bet_s"])          # SerDes and UCIe low-power idle
+
+
+def _hbm_wake(clock):
+    return dict(wake=PG["hbm_wake_cycles"] / clock, bet=412 / clock)      # ReGate Table 3 (HBM ctrl + PHY)
+
+
+def _domain(logic=0.0, rom=0.0, sram=0.0, io_w=0.0, io_res=None, clock=1e9, sram_retain=True, **wk):
+    """A power domain's static parts from its area by class (uarch constants) plus interface power io_w."""
+    cl = CLOCK_J_MM2 * clock
+    leak = logic * LEAK["logic"] + rom * LEAK["rom_array"] + sram * LEAK["sram_array"]
+    leak_off = (logic * LEAK["logic"] * PG["logic_residual"] + rom * LEAK["rom_array"] * PG["rom_residual"]
+                + sram * LEAK["sram_array"] * (PG["sram_sleep_residual"] if sram_retain else PG["sram_off_residual"]))
+    return dict(clock=cl * (logic + 0.15 * (rom + sram)), leak=leak, leak_off=leak_off, io=io_w,
+                io_off=io_w * (PG["logic_residual"] if io_res is None else io_res), **wk)
+
+
+def _domain_energy(dm, period, busy, gaps, policy):
+    """Static energy of one domain over `period` with `busy` s active and the idle split into `gaps`.
+    policy 0 ungated; 1 clock gating (ICG residual in idle); 2 + power gating of every gap >= wake + BET (the
+    wake completes at the gap's end, so it never delays the next busy phase; overhead = static x BET)."""
+    r = PG["cg_residual"]
+    on = dm["leak"] + dm["io"]
+    if policy == 0:
+        return (dm["clock"] + on) * period
+    e = (dm["clock"] + on) * busy
+    for g in gaps:
+        if policy == 2 and g >= dm["wake"] + dm["bet"]:
+            off = g - dm["wake"]
+            e += (r * dm["clock"] + on) * dm["wake"] + (dm["leak_off"] + dm["io_off"]) * off + on * dm["bet"]
+        else:
+            e += (r * dm["clock"] + on) * g
+    return e
+
+
+def _even_gaps(period, busy, n):
+    idle = max(0.0, period - busy)
+    return [idle / n] * n if n and idle > 0 else []
+
+
+def _gaps_of(segs, dom, T):
+    """Idle gaps of `dom` in an ordered segment list [(duration, {busy domains})] over one period T (the gap
+    that wraps across the token boundary is one gap)."""
+    gaps, cur, busy, first = [], 0.0, 0.0, None
+    for dur, doms in segs:
+        if dom in doms:
+            if first is None:
+                first = cur
+            elif cur > 0:
+                gaps.append(cur)
+            busy += dur
+            cur = 0.0
+        else:
+            cur += dur
+    if first is None:
+        return 0.0, [T]
+    gaps.append(cur + first + max(0.0, T - sum(d for d, _ in segs)))
+    return busy, [g for g in gaps if g > 0]
+
+
+def v41_hbm_timeline(positions=1):
+    """The V4.1 HBM chain (v41_hbm_chain, group-slot) as an ordered segment list: each matvec an SM op (+ its x
+    fill and barrier; the HBM streams its weights), each dedicated-unit node its path time (+ the other
+    positions' issue; an index scan also holds HBM), each collective its share of the fabric terms (SerDes)."""
+    dv = hbm_gpu_design("v41")
+    clock = dv["clock_hz"]
+    _, b = arch_graph(1048576)
+    g = b.g
+    path = g.path(b.sink)
+    bc = dv["barrier"]["boundary_cycles"] / clock
+    ncoll = sum(1 for x in path if g.nodes[x]["kind"] in ("collective", "hop"))
+    fab = sum(V41_HBM_FABRIC_US.values()) + V41_HBM_FABRIC_US["collective_bytes"] * (positions - 1)
+    segs = []
+    for x in path:
+        nd = g.nodes[x]
+        k = node_key(x) if nd["kind"] == "matvec" else ""
+        if nd["kind"] == "matvec" and k and k != "hc.fn":
+            rows = nd["sweep"]["macs"] / NODE_K[k] / V41_HBM_DIES
+            t = sm_op_cycles(rows, NODE_K[k], NODE_FMT[k], dv["drain_cycles"], True) / clock
+            t += math.ceil(NODE_K[k] * positions * 2 / X_BCAST_BPC) / clock + bc
+            segs.append((t, {"sm", "hbm", "l2"}))
+        elif nd["kind"] in ("collective", "hop"):
+            segs.append((fab * 1e-6 / ncoll, {"links", "l2"}))
+        else:
+            t = sum(g.contrib[x].values()) + (positions - 1) * nd.get("issue", 0.0)
+            if x.endswith((".attn.scores", ".idx.topk_final")) or x == "argmax":
+                t += bc
+            segs.append((t, {"du", "hbm"} if x.endswith("idx.score") else {"du"}))
+    return segs, clock, dv
+
+
+def gated_energy_table(ec=None, lv=None):
+    ec = ec or economics()
+    lv = lv or economics_levers(ec, gated=False)
+    import arch_budget_qwen3 as Q
+    rows = []
+
+    def add(design, point, tokens_s, dyn_J, parts):
+        """parts: [(count, domain, period_s, busy_s, gaps)] for one period that emits tokens_s x period tokens."""
+        out = dict(design=design, point=point, tokens_s=round(tokens_s, 1))
+        for pol, name in ((0, "ungated"), (1, "clock_gated"), (2, "clock_and_power_gated")):
+            e = sum(n * _domain_energy(dm, T, busy, gaps, pol) for n, dm, T, busy, gaps in parts)
+            T0 = parts[0][2]
+            out[f"{name}_static_w"] = round(e / T0, 1)
+            out[f"{name}_mJ_per_token"] = round((e / (tokens_s * T0) + dyn_J) * 1e3, 2)
+        rows.append(out)
+
+    # ---- Qwen ROM package (2 dies): lanes + ROM + KV ring, stream unit, HBM PHY, UCIe ----
+    qr = ec["qwen_rom"]
+    qe = qwen_eval(6144, 1024, pruned=True)
+    clock = qe["clock_hz"]
+    ub = qe["unit_busy"]
+    wl, kvb = _qwen_wl()
+    a = QWEN_ROM_AREA_DIE
+    grp = 6144 * 18063.0 / 1e6
+    dq = dict(lanes=_domain(logic=grp, rom=a["rom"], sram=a["sram"], clock=clock, **CORE_WAKE),
+              su=_domain(logic=12.8, clock=clock, **CORE_WAKE),
+              hbm=_domain(logic=40.0, io_w=4 * HBM_IDLE_W_STACK, clock=clock, **_hbm_wake(clock)),
+              ucie=_domain(logic=10.0, clock=clock, **LINK_WAKE))
+    tpx = Q.tp_exchanges(clock)
+    ops = 5 * 36 + 1
+    for point, T, tok in (("batch1", qe["cycles"] / clock, 1.0), ("saturated", 1 / qr["ar"]["saturated_tokens_s"], 1.0)):
+        busy = dict(lanes=(ub["weights"] + ub["attn_scores"] + ub["attn_pv"] + ub["lm_head"]) / clock,
+                    su=ub["stream"] / clock, hbm=min(T, kvb / 2 / (4 * HBM_STACK_BPS)), ucie=tpx["cycles"] / clock)
+        gaps = dict(lanes=ops, su=ops, hbm=36, ucie=tpx["exchanges"])
+        dyn = qr["energy"]["dynamic_mJ_per_token"] * 1e-3
+        add("Qwen ROM AR (G = 6,144)", point, tok / T, dyn,
+            [(2, dq[k], T, min(T, busy[k]), _even_gaps(T, min(T, busy[k]), gaps[k])) for k in dq])
+    # ---- Qwen HBM tier 3 (2 dies): SMs, L2, HBM PHY, UCIe ----
+    qh = ec["qwen_hbm"]
+    dh = hbm_gpu_design("qwen")
+    clock = dh["clock_hz"]
+    sa, n = dh["sm_area"], dh["sm_count"]
+    dm = dict(sm=_domain(logic=n * sa["logic_mm2"], sram=n * sa["sram_mm2"] , clock=clock, **CORE_WAKE),
+              l2=_domain(sram=dh["l2"]["mm2"], clock=clock, **CORE_WAKE),
+              hbm=_domain(logic=40.0, io_w=4 * HBM_IDLE_W_STACK, clock=clock, **_hbm_wake(clock)),
+              ucie=_domain(logic=10.0, clock=clock, **LINK_WAKE))
+    qops = qwen_hbm_ops(dh["element"], dh["barrier"]["boundary_cycles"], dh["drain_cycles"])
+    ar_bytes = sum(b_ for b_, _ in qops)
+    kv_die = kvb / 2
+    w_die = ar_bytes - kv_die
+    spec = {x["block"]: x for x in hbm_speculation_rows() if x["design"].startswith("qwen_hbm_dflash_b")}
+    for mode, rws in (("AR", qh["ar"]["rows"]), ("DFlash", qh["dflash"]["rows"])):
+        for point, r_ in (("batch1", rws[0]), ("saturated", _sat_batch(rws))):
+            B, blk = r_["batch"], r_.get("block", 1)
+            tau = r_.get("tau", 1.0)
+            T = B * tau / r_["aggregate_tokens_s"]
+            draft = spec[blk]["draft_bytes_per_die"] if mode == "DFlash" else 0.0
+            passes = math.ceil(B * blk / dh["element"]["cols"])
+            byt = passes * (w_die + draft) + B * kv_die
+            busy = dict(sm=byt / (n * dh["element"]["ingest_Bpc"]) / clock, hbm=byt / dh["hbm_Bpc"] / clock,
+                        l2=ops * dh["barrier"]["boundary_cycles"] / clock, ucie=Q.tp_exchanges(clock)["cycles"] / clock)
+            gaps = dict(sm=ops, hbm=ops, l2=ops, ucie=Q.tp_exchanges(clock)["exchanges"])
+            dyn = r_["energy_mJ_per_token"] * 1e-3 - qh["energy"]["static_w_total"] / r_["aggregate_tokens_s"]
+            add(f"Qwen HBM tier 3 {mode}", point, r_["aggregate_tokens_s"], dyn,
+                [(2, dm[k], T, min(T, busy[k]), _even_gaps(T, min(T, busy[k]), gaps[k])) for k in dm])
+    # ---- V4.1 HBM tier 3 (96 dies): SMs, dedicated units, L2, HBM PHY, SerDes + UCIe ----
+    vh = ec["v41_hbm"]
+    rack = json.loads((ROOT / "results/arch/v41_rack.json").read_text())["power"]["per_die"]["static_w"]
+    for mode, P, tau, rws in (("AR", 1, 1.0, vh["ar"]["rows"]), ("MTP", V41_POSITIONS, V41_TAU, vh["mtp"]["rows"])):
+        segs, clock, dv = v41_hbm_timeline(P)
+        sa = dv["sm_area"]
+        dm = dict(sm=_domain(logic=dv["sm_count"] * sa["logic_mm2"], sram=dv["sm_count"] * sa["sram_mm2"], clock=clock,
+                             **CORE_WAKE),
+                  du=_domain(logic=dv["dedicated_units_footprint_mm2"] * GPU_LOGIC_UTIL, clock=clock, **CORE_WAKE),
+                  l2=_domain(sram=dv["l2"]["mm2"], clock=clock, **CORE_WAKE),
+                  hbm=_domain(logic=40.0, io_w=4 * HBM_IDLE_W_STACK, clock=clock, **_hbm_wake(clock)),
+                  links=_domain(io_w=rack["serdes_always_on"] + rack["ucie_idle"], io_res=PG["serdes_lpi_residual"],
+                                clock=clock, **LINK_WAKE))
+        Tseg = sum(d_ for d_, _ in segs)
+        for point, r_ in (("batch1", rws[0]), ("saturated", _sat_batch(rws))):
+            T = r_["batch"] * tau / r_["aggregate_tokens_s"]
+            if point == "batch1":
+                parts = [(V41_HBM_DIES, dm[k], T) + _gaps_of(segs, k, T) for k in dm]
+            else:
+                # one column pass per period, each domain's idle one contiguous gap (as the ROM's saturation rule)
+                per = max(1, dv["element"]["cols"] // P)
+                npass = math.ceil(r_["batch"] / per)
+                Tp = T / npass
+                frac = {k: _gaps_of(segs, k, Tseg)[0] / Tseg for k in dm}
+                occ = vh["occupancy_us_per_pass"]
+                sm_busy = min(Tp, frac["sm"] * Tseg)
+                du_busy = min(Tp, per * P * occ["dedicated_issue_per_user"] * 1e-6)
+                busy = dict(sm=sm_busy, du=du_busy, l2=min(Tp, frac["l2"] * Tseg), hbm=min(Tp, frac["hbm"] * Tseg),
+                            links=min(Tp, frac["links"] * Tseg))
+                parts = [(V41_HBM_DIES, dm[k], Tp, busy[k], _even_gaps(Tp, busy[k], 1)) for k in dm]
+                T = Tp
+            dyn = r_["energy_mJ_per_token"] * 1e-3 - vh["energy"]["static_w_total"] / r_["aggregate_tokens_s"]
+            add(f"V4.1 HBM tier 3 {mode}", point, r_["aggregate_tokens_s"], dyn, parts)
+    # ---- V4.1 ROM array: the adopted stage policies (economics_levers) ----
+    sp = lv["static_power"]
+    for mode, key in (("AR", "ar"), ("MTP m = 1", "mtp_m1")):
+        for point in ("batch1", "saturated"):
+            p_ = sp[key]["wake_1us"][point]
+            summ = {x["design"]: x for x in ec["summary"]}[f"V4.1 ROM {mode}"]
+            tok = summ["tokens_s_b1"] if point == "batch1" else summ["sat_aggregate_tokens_s"]
+            rows.append(dict(design=f"V4.1 ROM {mode}", point=point, tokens_s=tok,
+                             ungated_static_w=p_[0]["static_w"], ungated_mJ_per_token=p_[0]["energy_mJ_per_token"],
+                             clock_gated_static_w=p_[2]["static_w"], clock_gated_mJ_per_token=p_[2]["energy_mJ_per_token"],
+                             clock_and_power_gated_static_w=p_[3]["static_w"],
+                             clock_and_power_gated_mJ_per_token=p_[3]["energy_mJ_per_token"]))
+    # ---- GPUs: measured board power (whatever the GPU gates is already inside it) ----
+    for name, blk, n_gpu in (("Qwen 1x B200 AR (tier 2)", ec["gpu"]["qwen"], 1), ("V4.1 8x B200 AR (tier 2)", ec["gpu"]["v41"], 8)):
+        for point, r_ in (("batch1", blk["rows"][0]), ("saturated", _sat_batch(blk["rows"]))):
+            e = r_["energy_mJ_per_token"]
+            rows.append(dict(design=name, point=point, tokens_s=r_["aggregate_tokens_s"], ungated_mJ_per_token=e,
+                             clock_gated_mJ_per_token=e, clock_and_power_gated_mJ_per_token=e,
+                             measured=f"{n_gpu} x {B200_W_DECODE:.0f} W measured decode power"))
+    return dict(rows=rows, policies=("ungated", "clock gated (ICG residual 10%)",
+                                     "clock + power gated (cited residuals, wake only into gaps >= wake + BET)"),
+                domains=dict(core=CORE_WAKE, links=LINK_WAKE, hbm="ReGate Table 3: 60-cycle wake, 412-cycle BET"),
+                basis="per domain: clock and leakage from its area by class (technology.json via the uarch constants), "
+                      "interface power (HBM idle, SerDes / UCIe); busy time and idle gaps from each design's own "
+                      "schedule: the V4.1 HBM chain walked node by node; Qwen dies with their ops' gaps split evenly "
+                      "(181 op boundaries, 36 KV streams, 73 UCIe exchanges); at saturation one contiguous idle gap "
+                      "per pass or token, as the ROM array's rule")
 
 
 def sweep(ctx: int):
@@ -2656,6 +2885,9 @@ def main(argv=None):
                         print(f"{mode:6s} {wk:14s} {pt:9s} {r['policy']:34s} static {r['static_mJ_per_token']:9.2f} mJ  "
                               f"total {r['energy_mJ_per_token']:9.2f} mJ  {r['static_w']:8.0f} W  gated {r['stages_power_gated']}")
                 print(f"   wake on token path {sp[mode][wk]['wake_on_token_path_us']} us, min idle {sp[mode][wk]['min_idle_batch1_us']} us")
+        for r in lv["gated_alike"]["rows"]:
+            print(f"GATED {r['design']:28s} {r['point']:9s} {r['tokens_s']:9.1f} tok/s  ungated {r['ungated_mJ_per_token']:9.2f}"
+                  f"  clock {r['clock_gated_mJ_per_token']:9.2f}  clock+power {r['clock_and_power_gated_mJ_per_token']:9.2f} mJ")
         for k, v in lv["adaptive_mtp"].items():
             print(k, "switch", v["switch_users"], [(r["batch"], r["mode"], r["per_user_tokens_s"], r["aggregate_tokens_s"]) for r in v["rows"]])
         for r in lv["rom_masks"]["rows"]:
