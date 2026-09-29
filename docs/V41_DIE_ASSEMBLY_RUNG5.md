@@ -1,5 +1,7 @@
 # V4.1 die assembly (rung 5): first die-level global route
 
+**Status: partial, frozen 2026-09-29.** The cluster abstracts are placeholders, and there is no detailed route, extracted timing or IR analysis. The new user design rule supersedes the HBM-die model: W9 will model that die as N SM-like elements plus L2/NoC. The ROM die's compute becomes N copies of W8's array element in W1's slots. The flow takes any cluster list, so that change touches only the inventory.
+
 Workstream W3 of [INTEGRATED_PHYSICAL_PLAN.md](INTEGRATED_PHYSICAL_PLAN.md). This page asks whether the V4.1 ROM layer die and the V4.1 HBM-only comparator die compose on one 815 mm² die. It checks that the clusters fit the root reservation plan, that the channel nets between them route, and what each crossing costs in registered cycles. It is the first die-level result for V4.1. The clusters are **placeholders** sized from source-pinned ledgers. W1's bank map and W2's hardened abstracts will replace them, so no rate or headline changes here.
 
 ## Method
@@ -38,10 +40,11 @@ Records are in `results/physical_abi3/asap7/chip/dies/v41_{rom,hbm}_<variant>_gr
 
 | Design / variant | Bundle nets (wires) | GRT overflow | Worst window utilisation (layer) | Windows > 0.8 | Peak RSS |
 |---|---|---|---|---|---|
-AS_BUILT_ROWS
-| ROM, proposal (2 attention, 1 collective at channel crossing) | 2,396 (76,672) | **0** | 1.0 (M4–M8, tile-gap pin windows) | M4 214 · M5 370 · M6 291 · M7 375 · M8 171 | 2.8 GB |
-| HBM comparator, proposal | 3,260 (103,168) | **0** | 1.0 (M4–M7) | see record | 2.8 GB |
-| ROM, 2 attention + 2 collectives at the link strips | 2,428 (77,696) | **0** | see record | see record | 2.8 GB |
+| ROM, as-built (1 attention, 1 collective at the east strip) | 2,368 (75,776) | **0** | 1.0 (M3–M8) | M4 770 · M6 785 · M8 358 | 2.9 GB |
+| HBM comparator, as-built | 3,232 (102,272) | **0** | 1.0 (M5–M8) | M4 221 · M6 436 · M8 278 | 2.9 GB |
+| ROM, proposal (2 attention, 1 collective at channel crossing) | 2,396 (76,672) | **0** | 1.0 (M4–M8, tile-gap pin windows) | M4 214 · M5 379 · M6 291 · M7 375 · M8 171 | 2.8 GB |
+| HBM comparator, proposal | 3,260 (103,168) | **0** | 1.0 (M4–M8) | M4 175 · M6 348 · M8 172 | 2.9 GB |
+| ROM, 2 attention + 2 collectives at the link strips | 2,428 (77,696) | **0** | 1.0 (M4–M8) | M4 536 · M6 620 · M8 252 | 2.8 GB |
 
 Per-edge crossing cost for the proposal variant, from worst routed length to cycles at 1.118 mm per cycle, against the analytical charged cycles:
 
@@ -49,24 +52,46 @@ Per-edge crossing cost for the proposal variant, from worst routed length to cyc
 |---|---|---|---|---|
 | hub → tile operands (`vm_me`+`vm_he`) | 18,432 | 11.62 → 11 | 11.53 → 11 | pool_operand_in, 20 |
 | tile → hub results (ASSUMED 512) | 24,576 | 11.72 → 11 | 11.61 → 11 | pool_result_out, 20 |
-| HBM stack → tile weights (HBM only) | 26,496 | – | 10.79 → 10 | none in the analytical ROM model (kv_static_rows 14 used) |
+| HBM stack → tile weights (HBM only) | 26,496 | – | 18.94 → 17 | none in the analytical ROM model (kv_static_rows 14 used) |
 | hub ↔ collective (`vm_collective`, `collective_vm`) | 10,240 | 0.43 → 1 | 0.43 → 1 | collective_edge, 13 |
 | collective ↔ UCIe / SerDes (512 each way) | 2,048 | 14.62 → 14 | 14.62 → 14 | collective_edge / stage_hop_edge, 13 |
-| HBM → attention (`hbm_window`, index keys, `selected_kv`) | 17,536 | 0.32 → 1 | 0.32 → 1 | kv_static_rows 14 / kv_gather_request 16 |
-| hub → attention (`vm_pv_preload`, q) and output | 1,792 | 2.91 → 3 | 2.91 → 3 | pool_operand_in / pool_result_out, 20 |
+| HBM → attention (`hbm_window`, index keys, `selected_kv`) | 17,536 | 0.59 → 1 (optimistic†) | 0.59 → 1 (optimistic†) | kv_static_rows 14 / kv_gather_request 16 |
+| hub → attention (`vm_pv_preload`, q) and output | 1,792 | 2.89 → 3 | 2.89 → 3 | pool_operand_in / pool_result_out, 20 |
 
-AS_BUILT_TIMING
+† The attention cluster sits beside the service strip's short end, so the service pins landed on that 0.3 mm end. Pseudo-channel data originates along the whole 12 mm PHY edge, so the far channel adds up to about 12 mm (≤ 11 cycles, still inside 14). The HBM-comparator weight row does include the spread across the edge.
 
-CORRIDOR_RESULTS
+As-built (the RTL's counts, placed at the ledger's positions), worst crossing in cycles against the analytical budget:
+- hub → tile operands and results: 11 (20).
+- hub ↔ collective: 18 (13).
+- collective ↔ link PHYs: **28** (13).
+- North-stack HBM → south attention (`hbm_window`, index keys, `selected_kv`), 35 mm: **32** (14/16).
+- HBM die weights: 18.
 
-K16_CHECK
+Station registers (bits × registers): ROM 670,688, HBM 940,768. Proposal: ROM 250,112, HBM 538,984. Routed wire: ROM 728 m as-built and 307 m in the proposal; HBM 963 m and 548 m.
+
+Real-technology corridors (worst setup slack of the station-to-station segments, at 920 ps and 60 ps uncertainty):
+
+| Corridor | Wires | Signal layers | 0.9 mm | 1.118 mm | 1.26 / 1.4 mm | Reach |
+|---|---|---|---|---|---|---|
+| 140 µm × 3.4 mm | 300 | M2–M9 | +114 ps | −44 ps | 1.4: −265 ps | ≈ 1.06 mm (long wires land on M2) |
+| 140 µm × 3.4 mm | 300 | M4–M9 | +226 ps | +94 ps | 1.4: −90 ps | ≈ 1.26 mm |
+| 136 µm × 3.9 mm (tile gap) | 1,500 | M4–M9 | +150 ps | −27 ps (10 of 1,500 segments) | 1.26: −122 ps | ≈ 1.10 mm |
+| 136 µm tile gap | 3,000 | M2–M9 and M4–M9 | – | – | – | global route did not converge in about 75 min; stopped at the freeze |
+
+- A loaded channel therefore reaches **1.06–1.10 mm per cycle**, slightly under the fit's 1.118. The marginal buffered-wire cost under load is 0.72–0.81 ps/µm, against the fit's 0.60.
+- The cycle counts above are about one cycle optimistic on the longest crossings.
+- A 136 µm gap carries 1,500 registered wires cleanly: M4 82 %, M6 59 %, M8 13 %, zero overflow.
+- A 136 µm gap does not carry 3,000 wires.
+- Station flops need M4/M5 pin access: an M6–M9-only corridor fails global route.
+
+Bundling check: the proposal ROM case at k = 16 (GCell 9.3 µm, 10.8 GB) routes with zero overflow and 304 m of wire (307 m at k = 32). Its worst crossings move by at most 2 cycles (operands 13 vs 11, link 13 vs 14).
 
 ## What composes and what does not
 
 - **Routability is not the constraint.** Neither design overflows. Die-level wire demand is 1–3 % of the free resource. The only saturated windows sit at tile-gap pin-access points (136–149 µm gaps between tiles), which the corridor runs check in real technology. The 75–105 k inter-cluster wires fit in the reservation plan's channels and over-the-cluster M8/M9.
 - **Tiles fit, with thin gaps.** The tiles fit the reservation regions at 91.6–91.9 % slot fill. That leaves 131–149 µm gaps between tiles, and those gaps carry the operand and result buses. The UCIe-A published depth (1.043 mm) overruns the 1.0 mm east link strip by 43 µm, so the strip must widen.
 - **Latency is placement-bound, not wire-bound.**
-  - With the RTL's counts placed as-built (one attention path, one collective at the east link strip), the north stacks' KV and index traffic crosses the die, and every collective and link path detours to the east edge. The as-built rows above give the cycle costs.
+  - With the RTL's counts placed as-built, the north stacks' KV and index traffic crosses the die: 32 cycles against a budget of 14. The link flits detour through the east-edge collective: 28 against 13.
   - Moving the collective to the transport-channel crossing and giving each HBM edge its own attention+index cluster brings every KV edge to 1 cycle and every hub↔collective edge to 1 cycle. The remaining long paths are the link flits (14 cycles, 1 over the analytical 13) and the hub→far-tile operand and result paths (11 cycles, under the analytical 20).
 - **The collective is pin-limited when it sits at an edge.** Four hubs × 2,560 wires enter one 0.44 mm-tall cluster. It must grow to 0.547 mm, and its approach through the 100 µm gap to the region-3 tiles is the as-built congestion site. At the channel crossing the same wires arrive on four sides, at 0.43 mm.
 - **Not yet shown:**
