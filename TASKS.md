@@ -19,6 +19,10 @@ Root owns architecture budgets, source integration and publication. Six subagent
 
 All work remains source-pinned and scope-limited. Agents use isolated files; root reviews architectural changes. Root has restored Git/network access and performs remote dispatch and publication; some resumed agents retain restricted execution contexts.
 
+## Active continuation owners — 2026-09-29
+
+Six agents now own unfinished critical-path work: `qwen_execution_compile` (existing G64 exact run), `ds_attention_elaboration` (existing full-geometry numeric run and consumer integration), `ds_physical_locality` (existing joint-grid route verdicts), `ds_window_integration` (II1 WINDOW replay production option), `ds_fetch_integration` (full-profile fetch tile hookup), and `ds_pv_producer_budget` (actual probability producer bandwidth). No duplicate large builds are authorized. Root owns architecture approvals, integration and publication; older roster snapshots are historical.
+
 ## Latest execution — 2026-09-29
 
 - Qwen G64 controller C++ archive completed successfully on PVE1. Complete G64 runtime-vs-RTL differential now running at `/home/ubuntu/qwen-runtime-exact-g64`, reusing the verified controller. G4 tools/records integrated; no G64 numerical verdict yet.
