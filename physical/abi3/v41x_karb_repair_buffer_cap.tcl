@@ -6,6 +6,6 @@
 if { [info procs repair_timing_helper] ne "" && [info procs ot_orig_repair_timing_helper] eq "" } {
   rename repair_timing_helper ot_orig_repair_timing_helper
   proc repair_timing_helper { args } {
-    ot_orig_repair_timing_helper {*}$args -max_buffer_percent 400
+    ot_orig_repair_timing_helper {*}$args -max_buffer_percent 100
   }
 }
