@@ -182,7 +182,43 @@ TB_SRC = {
     "tb_w15_qwen_tp2": ["rtl/test/tb_w15_qwen_tp2.sv", *LINK_SRC, "rtl/rom/ot_rom_oneshot_allreduce.sv",
                         "rtl/proto/ot_fp32_add_rne_pipe.sv"],
     "tb_w15_link_unit": ["rtl/test/tb_w15_link_unit.sv", *LINK_SRC],
+    "tb_w15_crc32": ["rtl/test/tb_w15_crc32.sv", "rtl/link/ot_link_crc32.sv"],
 }
+UNIT = {   # name -> (top, -G overrides): the link direction alone, both link classes; the CRC equivalence
+    "unit_ucie": ("tb_w15_link_unit", dict(WIRE_TX=22, WIRE_RX=22, DREL=58, AW_TX=6)),
+    "unit_board": ("tb_w15_link_unit", dict(FRAME_CYCLES=2, ENC_STAGES=4, DEC_STAGES=59, T_LINK=0.93407,
+                                            DLY_NS=56.868, JSTATIC_NS=3.0, WANDER_NS=0.2, WIRE_TX=29, WIRE_RX=29,
+                                            DREL=199, AW_TX=6)),
+    "crc_par": ("tb_w15_crc32", dict(W=2300)),
+    "crc_ser": ("tb_w15_crc32", dict(W=2300, MASK_MAX_W=16)),
+}
+
+
+def unit_checks():
+    out = {}
+    for name, (top, gen) in UNIT.items():
+        d = BUILD / name
+        subprocess.run(["rm", "-rf", str(d)], check=True)
+        r = subprocess.run([str(VERILATOR), *VFLAGS, "-j", "8", "--top-module", top, "-Mdir", str(d),
+                            *[f"-G{k}={v}" for k, v in gen.items()], *TB_SRC[top]], cwd=ROOT, capture_output=True,
+                           text=True)
+        assert r.returncode == 0, r.stderr[-2000:]
+        exe = str(d / f"V{top}")
+        if top == "tb_w15_crc32":
+            out[name] = dict(parameters=gen, line=[l for l in subprocess.run([exe], capture_output=True, text=True)
+                                                   .stdout.splitlines() if "CRCCHK" in l][0])
+            continue
+        lines = []
+        for seed in range(1, 9):
+            lines += [l for l in subprocess.run([exe, f"+SEED={seed}"], capture_output=True, text=True)
+                      .stdout.splitlines() if l.startswith("LINKUNIT")]
+        flip = [l for l in subprocess.run([exe, "+SEED=3", "+FLIP=500"], capture_output=True, text=True)
+                .stdout.splitlines() if l.startswith("LINKUNIT")]
+        dig = {re.search(r"digest=(\w+)", l)[1] for l in lines}
+        out[name] = dict(parameters=gen, runs=lines, distinct_digests=len(dig),
+                         all_pass=all(l.endswith("PASS") for l in lines), crc_flip=flip)
+    return out
+
 VFLAGS = ["--binary", "--timing", "-CFLAGS", "-O0", "-Wno-fatal", "-Wno-WIDTH", "-Wno-TIMESCALEMOD", "-Wno-lint",
           "-Wno-style", "-Wno-MULTIDRIVEN"]
 # bench configurations: name -> (top, verilator -G overrides, fixture)
@@ -538,7 +574,7 @@ def campaign(names, ncal, nmeas, out: Path):
                               "operands are the synthetic arithmetic stress fixture, not a model token.",
                git=git_state(), source_sha256=pins(), verilator=verilator_version(), verilator_flags=VFLAGS,
                links=dict(LINKS, board_stages=board_stages()), configs=cfgs)
-    for k in ("model_feed", "physical"):
+    for k in ("model_feed", "physical", "unit_checks", "unit_checks_source_sha256"):
         if k in old:
             rec[k] = old[k]
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -561,6 +597,8 @@ def main(argv=None):
     cp.add_argument("--ncal", type=int, default=24)
     cp.add_argument("--nmeas", type=int, default=12)
     cp.add_argument("--out", type=Path, default=OUT)
+    uc = sub.add_parser("unit")
+    uc.add_argument("--out", type=Path, default=OUT)
     a = ap.parse_args(argv)
     if a.cmd == "qwen-fixture":
         print(json.dumps(qwen_fixture(a.dir, a.lanes, a.h), indent=1))
@@ -568,6 +606,14 @@ def main(argv=None):
         print(json.dumps(v41_sweep_fixture(a.dir)["images_sha256"]))
     elif a.cmd == "campaign":
         campaign(a.config or list(CONFIGS), a.ncal, a.nmeas, a.out)
+    elif a.cmd == "unit":
+        rec = json.loads(a.out.read_text())
+        rec["unit_checks"] = unit_checks()
+        rec["unit_checks_source_sha256"] = {p: sha(ROOT / p) for p in sorted({*TB_SRC["tb_w15_link_unit"],
+                                                                             *TB_SRC["tb_w15_crc32"]})}
+        a.out.write_text(json.dumps(rec, indent=1, sort_keys=True, default=str) + "\n")
+        print(json.dumps({k: {kk: vv for kk, vv in v.items() if kk != "runs"} for k, v in rec["unit_checks"].items()},
+                         indent=1))
     elif a.cmd == "links":
         print(json.dumps(dict(LINKS, board_stages=board_stages()), indent=1))
 
