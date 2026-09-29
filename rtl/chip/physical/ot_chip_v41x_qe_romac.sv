@@ -168,19 +168,19 @@ module ot_chip_v41x_qe_romac #(
     reg  [15:0]      bank_re;
     reg  [16*13-1:0] bank_addr;
     reg  [7:0]       l_fp4;
-    reg  [4*8-1:0]   l_bank;
+    reg  [7:0]       l_par;
     reg              c_conflict, c_address;
     reg  [19:0]      beat, row;
     reg  [3:0]       bank;
     integer c;
     always @(*) begin
-        bank_re = '0; bank_addr = '0; c_conflict = 1'b0; c_address = 1'b0; l_fp4 = '0; l_bank = '0;
+        bank_re = '0; bank_addr = '0; c_conflict = 1'b0; c_address = 1'b0; l_fp4 = '0; l_par = '0;
         for (c = 0; c < 8; c = c + 1) begin
             l_fp4[c] = fmt[rq_tag[c*4 +: 4]];
             beat = rq_a[c*20 +: 20];
             row = l_fp4[c] ? beat >> 1 : beat;
             bank = l_fp4[c] ? (4'd8 + {beat[0], 2'b00} + 4'(c >> 1)) : 4'(c);
-            l_bank[c*4 +: 4] = bank;
+            l_par[c] = beat[0];
             if (rq_v[c]) begin
                 if (row >= 20'd8192) c_address = 1'b1;
                 if (bank_re[bank] && bank_addr[bank*13 +: 13] != row[12:0]) c_conflict = 1'b1;
@@ -201,12 +201,12 @@ module ot_chip_v41x_qe_romac #(
     always @(posedge clk) cap_q <= rom_q;      // no enable, no reset: the D pin is the macro pin's net
 
     // lane controls to the capture cycle: stage 1 at the macro read edge, stage 2 at capture
-    reg [7:0]     v1, v2, f1, f2;
-    reg [4*8-1:0] k1, k2;
+    // (a lane's bank is c for FP8, or 8 + 4 * parity + c/2 for FP4: only format and parity travel)
+    reg [7:0]     v1, v2, f1, f2, p1, p2;
     always @(posedge clk) begin
         if (!rst_n) begin v1 <= 0; v2 <= 0; end
         else begin v1 <= rq_v; v2 <= v1; end
-        f1 <= l_fp4; f2 <= f1; k1 <= l_bank; k2 <= k1;
+        f1 <= l_fp4; f2 <= f1; p1 <= l_par; p2 <= p1;
     end
 
     // lane select / FP4 expansion (combinational into the lane's P0 register)
@@ -217,7 +217,7 @@ module ot_chip_v41x_qe_romac #(
     always @(*) begin
         r_res = 1'b0;
         for (k = 0; k < 8; k = k + 1) begin
-            sel = cap_q[k2[k*4 +: 4]*274 +: 274];
+            sel = !f2[k] ? cap_q[k*274 +: 274] : p2[k] ? cap_q[(12 + k/2)*274 +: 274] : cap_q[(8 + k/2)*274 +: 274];
             compact = k[0] ? sel[271:136] : sel[135:0];
             if (f2[k]) begin
                 rd_w[k*264 +: 264] = {compact[135:128], 128'b0, compact[127:0]};
