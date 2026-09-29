@@ -509,6 +509,13 @@ DEDICATED = dict(
 )
 
 
+SU_OP_ACCEPT = 6          # measured: SU accept -> first emit per op (results/rtl/w11_su_spec.json, claude/w11-su)
+SU_FARTHEST_LANE_UM = 3500.0   # HUB_SU_VECTOR 6.15 x 12.42 mm: controller at the lane array's centre, farthest lane
+                                # ~3.5 mm (half the diagonal of the ~28 mm2 lane array, W11 estimate)
+SU_BCAST_STAGES_W1 = wire_cycles(SU_FARTHEST_LANE_UM, 1e12 / 920,
+                                 WIRE_PS_PER_UM_LOADED)   # = 4
+
+
 def _hardened_um2(rel):
     p = ROOT / rel
     if not p.exists():
@@ -620,6 +627,7 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20, positions: in
     u = DEDICATED["stream_unit"]
     N, M = d["su_lanes"], d["sfu_lanes"]
     sm = _su_softmax_ops(N, M, T=T)
+    bst, rst = d.get("su_bcast_stages", 0), d.get("su_ret_stages", d.get("su_bcast_stages", 0))
     for v in sm.values():
         v["vectors"] *= positions
     aL, qL = _hardened_um2(u["hardened_record_light"])
@@ -637,6 +645,10 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20, positions: in
         area_mm2=round(((N - M) * light + M * sfu) / 1e6, 3),
         ops={f"L{layer}.attn.softmax.{k}": v for k, v in sm.items()},
         softmax_issue_vectors=sum(v["vectors"] for v in sm.values()),
+        # a dependent op pays its issue, its pipeline depth, the broadcast tree to the farthest lane and the
+        # result return to the VM (su_bcast_stages / su_ret_stages, from the W1 hub placement; root 2026-09-29)
+        su_bcast_stages=bst, su_ret_stages=rst,
+        softmax_chain_cycles=sum(v["vectors"] + v["depth"] + bst + rst + SU_OP_ACCEPT for v in sm.values()),
         measured=dict(record=u["measured_record"], t640_n16_m8=u["measured_softmax_t640_n16_m8"]))
     hub = sum(out[k]["area_mm2"] for k in ("indexer", "attention", "stream_unit"))
     return dict(design=d["name"], ctx=ctx, layer=layer, T=T, positions=positions, keys_per_die=keys, units=out,
@@ -825,7 +837,8 @@ def main(argv=None):
         rows = [dedicated_ledger(copy.deepcopy(PRESETS[n]), a.ctx) for n in (a.preset or ("as_built", "proposal"))]
         # root decisions of 2026-09-29 (W11): 16 NK=4 index slices, NL=4 attention with the two-word loader;
         # single position and the MTP verify pass (6 positions, m = 1)
-        w11 = dict(copy.deepcopy(PRESETS["proposal"]), idx_macs=262144, att_macs=32768, att_pwords=2)
+        w11 = dict(copy.deepcopy(PRESETS["proposal"]), idx_macs=262144, att_macs=32768, att_pwords=2,
+                   su_bcast_stages=SU_BCAST_STAGES_W1)
         for P in (1, 6):
             rows.append(dedicated_ledger(dict(w11, name=f"proposal_w11_p{P}"), a.ctx, positions=P))
         for r in rows:

@@ -169,6 +169,9 @@
       }
      },
      "softmax_issue_vectors": 2946,
+     "su_bcast_stages": 0,
+     "su_ret_stages": 0,
+     "softmax_chain_cycles": 3262,
      "measured": {
       "record": "results/rtl/v41x_su_softmax.json",
       "t640_n16_m8": 3280
@@ -348,6 +351,9 @@
       }
      },
      "softmax_issue_vectors": 97,
+     "su_bcast_stages": 0,
+     "su_ret_stages": 0,
+     "softmax_chain_cycles": 413,
      "measured": {
       "record": "results/rtl/v41x_su_softmax.json",
       "t640_n16_m8": 3280
@@ -528,6 +534,9 @@
       }
      },
      "softmax_issue_vectors": 97,
+     "su_bcast_stages": 4,
+     "su_ret_stages": 4,
+     "softmax_chain_cycles": 445,
      "measured": {
       "record": "results/rtl/v41x_su_softmax.json",
       "t640_n16_m8": 3280
@@ -705,6 +714,9 @@
       }
      },
      "softmax_issue_vectors": 582,
+     "su_bcast_stages": 4,
+     "su_ret_stages": 4,
+     "softmax_chain_cycles": 930,
      "measured": {
       "record": "results/rtl/v41x_su_softmax.json",
       "t640_n16_m8": 3280
@@ -777,7 +789,7 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "dd5d487f8c56a961a65afb52e087ff0c80fd1865f0687cf09e836b6a7f8136d0",
+  "tools/uarch_model.py": "c235cdbed1a7e44db264ba602f127ec2bdb8957df06a140331dda01595ff9db8",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/rtl_hdc_v41x_vec_campaign.py": "f8d647d83af611e2557323f55c60d93634ff8f541c8b035c0e42eacf82e769ec",
   "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
