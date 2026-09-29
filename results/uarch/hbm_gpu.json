@@ -15,8 +15,8 @@
    "tokens_s": 880.6,
    "supply_frac": 1.0,
    "boundaries": 181,
-   "barrier_cycles": 47,
-   "exposed_over_hbm_cycles": 126,
+   "barrier_cycles": 46,
+   "exposed_over_hbm_cycles": 112,
    "form": "prefetching bulk copy (stream_overlap); barrier derived from the floorplan"
   },
   {
@@ -30,10 +30,10 @@
   },
   {
    "design": "qwen_hbm_gpu_derived_barrier_no_prefetch",
-   "T_us": 1144.5,
-   "tokens_s": 873.8,
+   "T_us": 1144.3,
+   "tokens_s": 873.9,
    "supply_frac": 1.0,
-   "barrier_us_per_token": 7.7,
+   "barrier_us_per_token": 7.6,
    "boundaries": 181,
    "form": "additive (pre-W13)"
   },
@@ -57,8 +57,8 @@
   },
   {
    "design": "qwen_hbm_gpu_grid_sync_v100",
-   "T_us": 1318.4,
-   "tokens_s": 758.5,
+   "T_us": 1315.9,
+   "tokens_s": 760.0,
    "supply_frac": 1.0,
    "boundaries": 181,
    "form": "prefetching bulk copy, V100 grid sync 1.43 us per boundary"
@@ -82,8 +82,8 @@
   },
   {
    "design": "v41_hbm_gpu",
-   "T_us": 257.3,
-   "tokens_s": 3886.9,
+   "T_us": 257.6,
+   "tokens_s": 3882.1,
    "supply_frac": 1.0,
    "boundaries": 329,
    "form": "prefetching bulk copy",
@@ -94,7 +94,7 @@
     "collective_bytes": 1.5,
     "pipeline_hops": 0.9,
     "control": 2.0,
-    "barrier": 15.3,
+    "barrier": 15.6,
     "weight_sweep_exposed": 0.0
    }
   },
@@ -135,8 +135,8 @@
   },
   {
    "design": "v41_hbm_gpu_derived_barrier_no_prefetch",
-   "T_us": 294.7,
-   "tokens_s": 3393.6,
+   "T_us": 295.0,
+   "tokens_s": 3389.9,
    "supply_frac": 1.0,
    "boundaries": 329,
    "form": "additive",
@@ -147,7 +147,7 @@
     "collective_bytes": 1.5,
     "pipeline_hops": 0.9,
     "control": 2.0,
-    "barrier": 15.3
+    "barrier": 15.6
    }
   },
   {
@@ -202,81 +202,95 @@
     "scratch_kb": 64,
     "stack_levels": 5
    },
-   "drain_cycles": 78,
+   "drain_cycles": 65,
+   "drain_basis": "measured (RTL)",
+   "drain_formula_cycles": 78,
+   "measured": {
+    "qwen_drain_cycles": 65,
+    "v41_drain_cycles": 70,
+    "qwen_barrier_cycles": 30,
+    "v41_barrier_cycles": 40,
+    "sources": [
+     "results/rtl/gpu_sm_exact.json",
+     "results/rtl/gpu_sm_exact.json",
+     "results/rtl/gpu_sm_blockdot_exact.json",
+     "results/rtl/gpu_supply_barrier.json"
+    ]
+   },
    "sm_count_sweep": [
     {
      "n_sm": 8,
-     "cycles": 4075597,
-     "tokens_s_pkg": 269.6
+     "cycles": 4072595,
+     "tokens_s_pkg": 269.8
     },
     {
      "n_sm": 12,
-     "cycles": 2744905,
-     "tokens_s_pkg": 400.2
+     "cycles": 2741903,
+     "tokens_s_pkg": 400.7
     },
     {
      "n_sm": 16,
-     "cycles": 2079559,
-     "tokens_s_pkg": 528.3
+     "cycles": 2076557,
+     "tokens_s_pkg": 529.1
     },
     {
      "n_sm": 20,
-     "cycles": 1680351,
-     "tokens_s_pkg": 653.8
+     "cycles": 1677349,
+     "tokens_s_pkg": 655.0
     },
     {
      "n_sm": 24,
-     "cycles": 1414213,
-     "tokens_s_pkg": 776.9
+     "cycles": 1411211,
+     "tokens_s_pkg": 778.5
     },
     {
      "n_sm": 28,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s_pkg": 880.6
     },
     {
      "n_sm": 32,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s_pkg": 880.6
     },
     {
      "n_sm": 36,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s_pkg": 880.6
     },
     {
      "n_sm": 40,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s_pkg": 880.6
     },
     {
      "n_sm": 44,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s_pkg": 880.6
     },
     {
      "n_sm": 48,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s_pkg": 880.6
     },
     {
      "n_sm": 52,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s_pkg": 880.6
     },
     {
      "n_sm": 56,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s_pkg": 880.6
     },
     {
      "n_sm": 60,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s_pkg": 880.6
     },
     {
      "n_sm": 64,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s_pkg": 880.6
     }
    ],
@@ -289,7 +303,42 @@
     "outstanding_sectors_sm": 879,
     "descriptor_bytes": 4096,
     "outstanding_descriptors_sm": 14,
-    "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)"
+    "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)",
+    "measured": [
+     {
+      "outstanding_lines": 7,
+      "B_per_cycle": 1.6,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 16,
+      "B_per_cycle": 3.7,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 64,
+      "B_per_cycle": 14.9,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 256,
+      "B_per_cycle": 59.5,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 440,
+      "B_per_cycle": 101.0,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 512,
+      "B_per_cycle": 102.5,
+      "share_B_per_cycle": 102.4
+     }
+    ],
+    "measured_source": "results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy, 128 B lines, 500 ns +- 50 ns loaded latency)",
+    "outstanding_lines_sm": 512,
+    "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512"
    },
    "barrier": {
     "arrive_cycles": 16,
@@ -300,54 +349,55 @@
     "levels": 2,
     "source": "results/floorplan/hbm_gpu/qwen_hbm_die.json",
     "x_broadcast_tail_cycles": 16,
-    "boundary_cycles": 47,
-    "measured_node_cycles": null
+    "measured_round_trip_cycles": 30,
+    "boundary_cycles": 46,
+    "basis": "derived from the floorplan, measured in RTL (tb_gpu_barrier)"
    },
    "staging_sweep": [
     {
      "staging_kb_per_sm": 16,
-     "cycles": 1294933,
-     "tokens_s": 848.4
+     "cycles": 1292435,
+     "tokens_s": 850.1
     },
     {
      "staging_kb_per_sm": 32,
-     "cycles": 1270422,
-     "tokens_s": 864.8
+     "cycles": 1268442,
+     "tokens_s": 866.1
     },
     {
      "staging_kb_per_sm": 64,
-     "cycles": 1255830,
-     "tokens_s": 874.8
+     "cycles": 1254844,
+     "tokens_s": 875.5
     },
     {
      "staging_kb_per_sm": 128,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s": 880.6
     },
     {
      "staging_kb_per_sm": 256,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s": 880.6
     },
     {
      "staging_kb_per_sm": 512,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s": 880.6
     },
     {
      "staging_kb_per_sm": 1024,
-     "cycles": 1247658,
+     "cycles": 1247644,
      "tokens_s": 880.6
     }
    ],
    "token": {
-    "cycles": 1247658,
+    "cycles": 1247644,
     "tokens_s": 880.6,
     "hbm_cycles": 1247532,
-    "chain_cycles_if_serial": 1081540,
+    "chain_cycles_if_serial": 1078538,
     "boundaries": 181,
-    "exposed_over_hbm_cycles": 126,
-    "additive_model_tokens_s": 873.7,
+    "exposed_over_hbm_cycles": 112,
+    "additive_model_tokens_s": 873.8,
     "note": "the stream prefetches through every boundary; only what the SMEM staging cannot absorb and the last op's tail are exposed"
    },
    "staging_kb_per_sm": 128,
@@ -418,7 +468,21 @@
     "scratch_kb": 64,
     "stack_levels": 3
    },
-   "drain_cycles": 68,
+   "drain_cycles": 70,
+   "drain_basis": "measured (RTL)",
+   "drain_formula_cycles": 68,
+   "measured": {
+    "qwen_drain_cycles": 65,
+    "v41_drain_cycles": 70,
+    "qwen_barrier_cycles": 30,
+    "v41_barrier_cycles": 40,
+    "sources": [
+     "results/rtl/gpu_sm_exact.json",
+     "results/rtl/gpu_sm_exact.json",
+     "results/rtl/gpu_sm_blockdot_exact.json",
+     "results/rtl/gpu_supply_barrier.json"
+    ]
+   },
    "sm_count": 32,
    "sm_count_basis": "same element count as Qwen: HBM ingest 3,482 B/clk / 128 B/clk = 27.2 -> 32",
    "bulk_copy": {
@@ -427,21 +491,57 @@
     "outstanding_sectors_sm": 879,
     "descriptor_bytes": 4096,
     "outstanding_descriptors_sm": 14,
-    "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)"
+    "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)",
+    "measured": [
+     {
+      "outstanding_lines": 7,
+      "B_per_cycle": 1.6,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 16,
+      "B_per_cycle": 3.7,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 64,
+      "B_per_cycle": 14.9,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 256,
+      "B_per_cycle": 59.5,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 440,
+      "B_per_cycle": 101.0,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 512,
+      "B_per_cycle": 102.5,
+      "share_B_per_cycle": 102.4
+     }
+    ],
+    "measured_source": "results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy, 128 B lines, 500 ns +- 50 ns loaded latency)",
+    "outstanding_lines_sm": 512,
+    "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512"
    },
    "barrier": {
-    "arrive_cycles": 20,
-    "release_cycles": 19,
-    "round_trip_cycles": 39,
-    "max_leaf_um": 3749.8,
-    "max_trunk_um": 11793.2,
+    "arrive_cycles": 21,
+    "release_cycles": 20,
+    "round_trip_cycles": 41,
+    "max_leaf_um": 3787.6,
+    "max_trunk_um": 11868.8,
     "levels": 2,
     "source": "results/floorplan/hbm_gpu/v41_hbm_die.json",
     "x_broadcast_tail_cycles": 16,
-    "boundary_cycles": 55,
-    "measured_node_cycles": null
+    "measured_round_trip_cycles": 40,
+    "boundary_cycles": 56,
+    "basis": "derived from the floorplan, measured in RTL (tb_gpu_barrier)"
    },
-   "staging_kb_per_sm": 64,
+   "staging_kb_per_sm": 128,
    "sm_area": {
     "logic_um2": {
      "mma_lanes": 540736,
@@ -456,16 +556,16 @@
     "footprint_logic_mm2": 3.041,
     "sram_kb": {
      "x_store": 160.0,
-     "staging": 64,
+     "staging": 128,
      "scratch": 64
     },
     "sram_macros": {
      "x_store": 5,
-     "staging": 2,
+     "staging": 4,
      "scratch": 2
     },
-    "sram_mm2": 0.145,
-    "total_mm2": 3.186,
+    "sram_mm2": 0.177,
+    "total_mm2": 3.218,
     "macs_per_clk": 5120
    },
    "l2": {
@@ -483,21 +583,21 @@
     "mapping": "each SM's weight rows live in its own quadrant's stack: no weight byte crosses the die"
    },
    "dedicated_units_mm2": {
-    "indexer": 19.525,
-    "attention": 18.94,
+    "indexer": 20.57,
+    "attention": 16.69,
     "su": 4.183,
     "sfu": 8.819,
     "hc_fp32_lanes": 5.984,
     "sinkhorn_select_engram": 0.103
    },
-   "dedicated_units_footprint_mm2": 115.11,
+   "dedicated_units_footprint_mm2": 112.7,
    "dedicated_units_source": "spec widths as in results/uarch/v41_rom.json proposal hub (W11 builds them)",
    "die_fit": {
-    "sm_array_mm2": 101.95,
+    "sm_array_mm2": 102.98,
     "l2_mm2": 4.13,
-    "dedicated_mm2": 115.11,
+    "dedicated_mm2": 112.7,
     "core_avail_mm2": 688.44,
-    "used_mm2": 221.19,
+    "used_mm2": 219.81,
     "fits": true
    }
   }

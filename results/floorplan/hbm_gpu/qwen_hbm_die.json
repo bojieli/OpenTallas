@@ -146,21 +146,21 @@
    "name": "barrier_leaf",
    "distance_um": 4186.1,
    "bits": 2,
-   "per_token_crossings": 434,
+   "per_token_crossings": 362,
    "cycles_one_way": 5
   },
   {
    "name": "barrier_trunk",
    "distance_um": 6611.1,
    "bits": 2,
-   "per_token_crossings": 434,
+   "per_token_crossings": 362,
    "cycles_one_way": 8
   },
   {
    "name": "x_broadcast_root_to_sm",
    "distance_um": 10797.2,
    "bits": 2048,
-   "per_token_crossings": 217,
+   "per_token_crossings": 181,
    "cycles_one_way": 13
   },
   {
@@ -524,7 +524,7 @@
  "schema": "opentallas.floorplan.hbm_gpu.v1",
  "tool": "tools/hbm_gpu_floorplan.py",
  "source_sha256": {
-  "tools/uarch_model.py": "6464b3d1caea5c1c7e51c1fcfd230a06a846cc9bbe5a8ba7fac13fc32017f041",
+  "tools/uarch_model.py": "26f64f5b539d81d612a4df5d0e57ce719df835380dc18cd847ca332e99be7e79",
   "tools/qwen_o4_floorplan.py": "2fa9633b32441d3e8a7a2154d6badce118522b2dff2105319df73849dfa95bb5",
   "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
   "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.lef": "4d671aba6f1110d9dd74e6452499197e2dbe52f0fda448108b93d534c56b8b12",

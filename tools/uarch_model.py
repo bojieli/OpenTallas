@@ -914,10 +914,32 @@ def barrier_network(model: str, clock: float, n_sm: int):
                 max_leaf_um=round(leaf_um, 1), max_trunk_um=round(trunk_um, 1), levels=levels, source=src)
 
 
-GPU_MEASURED = dict(
-    # RTL measurements that replace formula terms (rtl/gpu, results/rtl/gpu_sm_exact.json); None = formula
-    qwen_drain_cycles=None, v41_drain_cycles=None, barrier_node_cycles=None,
-)
+def gpu_measured():
+    """RTL measurements that replace formula terms, read from the committed records when present:
+    the SM drain (last weight line -> last row result; max over the exactness campaign's cases of the
+    element's format) and the barrier round trip on the floorplan's wire stages."""
+    out = dict(qwen_drain_cycles=None, v41_drain_cycles=None, qwen_barrier_cycles=None, v41_barrier_cycles=None,
+               sources=[])
+    for rec, key, pred in (("results/rtl/gpu_sm_exact.json", "qwen_drain_cycles", lambda c: c["fmt"] == "qwen_int8"),
+                           ("results/rtl/gpu_sm_exact.json", "v41_drain_cycles", lambda c: c["fmt"] == "v41_bf16"),
+                           ("results/rtl/gpu_sm_blockdot_exact.json", "v41_drain_cycles", lambda c: True)):
+        p = ROOT / rec
+        if p.exists():
+            r = json.loads(p.read_text())
+            if r.get("status") == "pass":
+                d = [c["rtl"].get("drain_last_line_to_last_result") for c in r["cases"] if pred(c)]
+                d = [x for x in d if x is not None]
+                if d:
+                    out[key] = max(d + [out[key] or 0])
+                    out["sources"].append(rec)
+    p = ROOT / "results/rtl/gpu_supply_barrier.json"
+    if p.exists():
+        r = json.loads(p.read_text())
+        if r.get("status") == "pass":
+            for b in r["barrier"]:
+                out[f"{b['model']}_barrier_cycles"] = b["max"]
+            out["sources"].append("results/rtl/gpu_supply_barrier.json")
+    return out
 
 
 def mma_drain_cycles(e: dict):
@@ -940,15 +962,18 @@ def hbm_gpu_design(model: str):
         clock = 1.0339e9
         r_hbm = 3.6e12 / clock
     in_flight_B = 3.6e12 * HBM_LOADED_LAT_NS * 1e-9
-    drain = GPU_MEASURED[f"{model}_drain_cycles"] or mma_drain_cycles(e)
-    out = dict(model=model, clock_hz=clock, hbm_Bpc=round(r_hbm, 1), element=e, drain_cycles=drain)
+    meas = gpu_measured()
+    drain = meas[f"{model}_drain_cycles"] or mma_drain_cycles(e)
+    out = dict(model=model, clock_hz=clock, hbm_Bpc=round(r_hbm, 1), element=e, drain_cycles=drain,
+               drain_basis="measured (RTL)" if meas[f"{model}_drain_cycles"] else "formula",
+               drain_formula_cycles=mma_drain_cycles(e), measured=meas)
     # ---- SM count: smallest multiple of the stack count within 0.5% of an unbounded array (Qwen token) ----
     rows = []
     n_choice = None
     if model == "qwen":
         bn = barrier_network(model, clock, 32)
         x_tail = math.ceil(H_X_TAIL_B / X_BCAST_BPC)
-        boundary = bn["round_trip_cycles"] + x_tail
+        boundary = (meas["qwen_barrier_cycles"] or bn["round_trip_cycles"]) + x_tail
         ops = qwen_hbm_ops(e, boundary, drain)
         t_inf, _ = stream_overlap(ops, r_hbm, 1e12, 1e15)
         for n in range(8, 65, 4):
@@ -969,11 +994,26 @@ def hbm_gpu_design(model: str):
                             descriptor_bytes=4096,
                             outstanding_descriptors_sm=math.ceil(in_flight_B / n_sm / 4096),
                             basis=f"3.6 TB/s x {HBM_LOADED_LAT_NS:.0f} ns (ASSUMED loaded latency)")
+    sp = ROOT / "results/rtl/gpu_supply_barrier.json"
+    if sp.exists():
+        sr = json.loads(sp.read_text())
+        if sr.get("status") == "pass":
+            m = [dict(outstanding_lines=x["max_out"], B_per_cycle=x["B_per_cycle"],
+                      share_B_per_cycle=x["share_B_per_cycle"]) for x in sr["supply"]]
+            full = [x for x in m if x["B_per_cycle"] >= 0.995 * x["share_B_per_cycle"]]
+            out["bulk_copy"].update(
+                measured=m, measured_source="results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy, 128 B lines, "
+                                             "500 ns +- 50 ns loaded latency)",
+                outstanding_lines_sm=min(x["outstanding_lines"] for x in full) if full else None,
+                note="Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512")
     bn = barrier_network(model, clock, n_sm)
     x_tail = math.ceil(H_X_TAIL_B / X_BCAST_BPC)
+    rt_meas = meas[f"{model}_barrier_cycles"]
     out["barrier"] = dict(bn, x_broadcast_tail_cycles=x_tail,
-                          boundary_cycles=bn["round_trip_cycles"] + x_tail,
-                          measured_node_cycles=GPU_MEASURED["barrier_node_cycles"])
+                          measured_round_trip_cycles=rt_meas,
+                          boundary_cycles=(rt_meas or bn["round_trip_cycles"]) + x_tail,
+                          basis=("derived from the floorplan, measured in RTL (tb_gpu_barrier)" if rt_meas
+                                 else "derived from the floorplan"))
     boundary = out["barrier"]["boundary_cycles"]
     if model == "qwen":
         ops = qwen_hbm_ops(e, boundary, drain)
@@ -1000,7 +1040,9 @@ def hbm_gpu_design(model: str):
             note="the stream prefetches through every boundary; only what the SMEM staging cannot absorb and the "
                  "last op's tail are exposed")
     else:
-        staging_kb = math.ceil(in_flight_B / n_sm / 1024 / 32) * 32
+        # no op-level stream model for V4.1 yet: the measured in-flight need (512 lines = 64 KB) plus the same
+        # again to run through a boundary, as the Qwen sweep requires
+        staging_kb = 2 * 64
     out["staging_kb_per_sm"] = staging_kb
     out["sm_area"] = sm_area(e, staging_kb)
     # ---- L2 slices and NoC ----

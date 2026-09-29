@@ -15,21 +15,21 @@
  },
  "sm_tile": {
   "w": 1652.4,
-  "h": 1918.08,
+  "h": 1993.68,
   "logic_h": 1842.48,
-  "sram": 9,
+  "sram": 11,
   "per_row": 9,
   "px": 183.6,
   "py": 75.6,
-  "footprint_mm2": 3.169,
-  "model_mm2": 3.186
+  "footprint_mm2": 3.294,
+  "model_mm2": 3.218
  },
  "sm_count": 32,
  "array": {
   "x": 2516.4,
-  "y": 8540.64,
+  "y": 8389.44,
   "w": 26100.576,
-  "h": 8553.6
+  "h": 8856.0
  },
  "channels_um": {
   "x": 110.16,
@@ -82,8 +82,8 @@
   ]
  },
  "barrier_network": {
-  "max_leaf_um": 3749.8,
-  "max_trunk_um": 11793.2,
+  "max_leaf_um": 3787.6,
+  "max_trunk_um": 11868.8,
   "levels": 2,
   "fan_in": [
    8,
@@ -92,26 +92,26 @@
   "nodes": {
    "0": [
     5986.4,
-    10605.6
+    10530.0
    ],
    "1": [
     25146.9,
-    10605.6
+    10530.0
    ],
    "2": [
     5986.4,
-    15029.3
+    15104.9
    ],
    "3": [
     25146.9,
-    15029.3
+    15104.9
    ]
   },
   "root": [
    15566.7,
    12816.4
   ],
-  "leaf_cycles": 4,
+  "leaf_cycles": 5,
   "trunk_cycles": 13
  },
  "l2_slices": {
@@ -142,35 +142,35 @@
  },
  "dedicated_hub": {
   "x": 9566.64,
-  "y": 8022.24,
+  "y": 8121.6,
   "w": 12000.096,
-  "h": 9592.5
+  "h": 9391.666666666666
  },
  "crossings": [
   {
    "name": "barrier_leaf",
-   "distance_um": 3749.8,
+   "distance_um": 3787.6,
    "bits": 2,
    "per_token_crossings": 1258,
-   "cycles_one_way": 4
+   "cycles_one_way": 5
   },
   {
    "name": "barrier_trunk",
-   "distance_um": 11793.2,
+   "distance_um": 11868.8,
    "bits": 2,
    "per_token_crossings": 1258,
    "cycles_one_way": 13
   },
   {
    "name": "x_broadcast_root_to_sm",
-   "distance_um": 15542.9,
+   "distance_um": 15656.3,
    "bits": 2048,
    "per_token_crossings": 629,
    "cycles_one_way": 17
   },
   {
    "name": "weight_phy_to_sm",
-   "distance_um": 15394.9,
+   "distance_um": 15357.1,
    "bits": 1088,
    "per_token_crossings": 0,
    "note": "prefetched stream: adds to the bulk-copy loaded latency (in-flight bytes), not to the token",
@@ -185,7 +185,7 @@
   },
   {
    "name": "sm_to_dedicated_hub_edge",
-   "distance_um": 9542.8,
+   "distance_um": 9655.2,
    "bits": 1024,
    "per_token_crossings": 0,
    "note": "activation exchange with attention / SU / indexer",
@@ -193,20 +193,20 @@
   }
  ],
  "area_used": {
-  "sm_array_mm2": 101.42,
+  "sm_array_mm2": 105.42,
   "l2_mm2": 4.96,
-  "hub_mm2": 115.11
+  "hub_mm2": 112.7
  },
  "fits": true,
  "legality": {
-  "macros": 548,
+  "macros": 612,
   "overlaps_including_halo": 0,
   "errors": [],
   "legal": true
  },
  "macro_counts": {
   "ot_hbm3e_phy": 4,
-  "ot_sram_1r1w_1024x256_m2_r2c2": 544
+  "ot_sram_1r1w_1024x256_m2_r2c2": 608
  },
  "regions": [
   {
@@ -257,139 +257,139 @@
    "name": "dedicated_hub",
    "kind": "logic",
    "x": 9566.64,
-   "y": 8022.24,
+   "y": 8121.6,
    "w": 12000.096,
-   "h": 9592.5,
-   "holds": "indexer 19.525 mm2, attention 18.94 mm2, su 4.183 mm2, sfu 8.819 mm2, hc_fp32_lanes 5.984 mm2, sinkhorn_select_engram 0.103 mm2",
+   "h": 9391.667,
+   "holds": "indexer 20.57 mm2, attention 16.69 mm2, su 4.183 mm2, sfu 8.819 mm2, hc_fp32_lanes 5.984 mm2, sinkhorn_select_engram 0.103 mm2",
    "note": "W11 dedicated units at the model's spec widths, logic at the model density"
   },
   {
    "name": "sm0",
    "kind": "sm",
    "x": 2516.4,
-   "y": 8540.64,
+   "y": 8389.44,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm1",
    "kind": "sm",
    "x": 4278.96,
-   "y": 8540.64,
+   "y": 8389.44,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm2",
    "kind": "sm",
    "x": 6041.52,
-   "y": 8540.64,
+   "y": 8389.44,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm3",
    "kind": "sm",
    "x": 7804.08,
-   "y": 8540.64,
+   "y": 8389.44,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm4",
    "kind": "sm",
    "x": 21676.896,
-   "y": 8540.64,
+   "y": 8389.44,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm5",
    "kind": "sm",
    "x": 23439.456,
-   "y": 8540.64,
+   "y": 8389.44,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm6",
    "kind": "sm",
    "x": 25202.016,
-   "y": 8540.64,
+   "y": 8389.44,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm7",
    "kind": "sm",
    "x": 26964.576,
-   "y": 8540.64,
+   "y": 8389.44,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm8",
    "kind": "sm",
    "x": 2516.4,
-   "y": 10752.48,
+   "y": 10676.88,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm9",
    "kind": "sm",
    "x": 4278.96,
-   "y": 10752.48,
+   "y": 10676.88,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm10",
    "kind": "sm",
    "x": 6041.52,
-   "y": 10752.48,
+   "y": 10676.88,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm11",
    "kind": "sm",
    "x": 7804.08,
-   "y": 10752.48,
+   "y": 10676.88,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm12",
    "kind": "sm",
    "x": 21676.896,
-   "y": 10752.48,
+   "y": 10676.88,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm13",
    "kind": "sm",
    "x": 23439.456,
-   "y": 10752.48,
+   "y": 10676.88,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm14",
    "kind": "sm",
    "x": 25202.016,
-   "y": 10752.48,
+   "y": 10676.88,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm15",
    "kind": "sm",
    "x": 26964.576,
-   "y": 10752.48,
+   "y": 10676.88,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm16",
@@ -397,7 +397,7 @@
    "x": 2516.4,
    "y": 12964.32,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm17",
@@ -405,7 +405,7 @@
    "x": 4278.96,
    "y": 12964.32,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm18",
@@ -413,7 +413,7 @@
    "x": 6041.52,
    "y": 12964.32,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm19",
@@ -421,7 +421,7 @@
    "x": 7804.08,
    "y": 12964.32,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm20",
@@ -429,7 +429,7 @@
    "x": 21676.896,
    "y": 12964.32,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm21",
@@ -437,7 +437,7 @@
    "x": 23439.456,
    "y": 12964.32,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm22",
@@ -445,7 +445,7 @@
    "x": 25202.016,
    "y": 12964.32,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm23",
@@ -453,71 +453,71 @@
    "x": 26964.576,
    "y": 12964.32,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm24",
    "kind": "sm",
    "x": 2516.4,
-   "y": 15176.16,
+   "y": 15251.76,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm25",
    "kind": "sm",
    "x": 4278.96,
-   "y": 15176.16,
+   "y": 15251.76,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm26",
    "kind": "sm",
    "x": 6041.52,
-   "y": 15176.16,
+   "y": 15251.76,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm27",
    "kind": "sm",
    "x": 7804.08,
-   "y": 15176.16,
+   "y": 15251.76,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm28",
    "kind": "sm",
    "x": 21676.896,
-   "y": 15176.16,
+   "y": 15251.76,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm29",
    "kind": "sm",
    "x": 23439.456,
-   "y": 15176.16,
+   "y": 15251.76,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm30",
    "kind": "sm",
    "x": 25202.016,
-   "y": 15176.16,
+   "y": 15251.76,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "sm31",
    "kind": "sm",
    "x": 26964.576,
-   "y": 15176.16,
+   "y": 15251.76,
    "w": 1652.4,
-   "h": 1918.08
+   "h": 1993.68
   },
   {
    "name": "l2_s0",
@@ -552,11 +552,11 @@
    "h": 422.4
   }
  ],
- "def_sha256": "1c06f84fc8e05a23d88e045590aa0adfd5bde3b5d53fab15a3071866843fbadd",
+ "def_sha256": "abf978e49b42efd48fc075ce0447bbb53ca6185ab9ed0e96d977eb71bdf522b4",
  "schema": "opentallas.floorplan.hbm_gpu.v1",
  "tool": "tools/hbm_gpu_floorplan.py",
  "source_sha256": {
-  "tools/uarch_model.py": "6464b3d1caea5c1c7e51c1fcfd230a06a846cc9bbe5a8ba7fac13fc32017f041",
+  "tools/uarch_model.py": "26f64f5b539d81d612a4df5d0e57ce719df835380dc18cd847ca332e99be7e79",
   "tools/qwen_o4_floorplan.py": "2fa9633b32441d3e8a7a2154d6badce118522b2dff2105319df73849dfa95bb5",
   "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
   "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.lef": "4d671aba6f1110d9dd74e6452499197e2dbe52f0fda448108b93d534c56b8b12",
