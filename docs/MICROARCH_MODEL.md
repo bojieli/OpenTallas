@@ -316,19 +316,29 @@ Every multi-die design here assumes deterministic hardware collectives at link l
 
 ### GPU tiers
 
+Tier 1 is measured. Tier 2 is a projection calibrated on B200 measurements. Tier 3 is the idealised HBM machine with OpenTallas control.
+
 | Tier | Design | tok/s AR | with speculation |
 |---|---|---:|---:|
-| 1 measured | Qwen3-8B-class, H200 NIM FP8 | 235 | — |
-| 1 measured | Qwen3-8B, RTX PRO 6000 (this lab) FP8 | 151 | 390 (DFlash) |
-| 1 measured | DeepSeek-R1 (V4.1-class anchor), 8× B200 TensorRT-LLM min-latency | — | 368 (3 MTP layers, relaxed acceptance) |
-| 2 calibrated | Qwen3-8B on 1× B200 (H200-fitted per-byte and per-layer costs scaled to 8 TB/s) | 299 | 771 |
-| 2 calibrated | DeepSeek-V4.1-Flash on 8× B200 (+ NCCL-class 8 µs all-reduce, ASSUMED, 5 per layer) | 272 | 527 |
-| 3 idealised HBM (OpenTallas control) | Qwen HBM / V4.1 HBM (sections above) | 881 / 2,920 | 2,671 / 5,673 |
+| 1 | Qwen3-8B-class, H200 NIM FP8 | 235 | — |
+| 1 | Qwen3-8B, RTX PRO 6000 (this lab), FP8 | 151 | 390 (DFlash, τ 3.72, reasoning mix) |
+| 1 | Qwen3-8B, 1× B200, SGLang FA4, BF16 (DFlash paper, Table 3) | 230 | **1,175** Math500 (τ 8.01, 5.1×) / 955 HumanEval (τ 6.50, 4.2×) |
+| 1 | DeepSeek-R1 (V4.1-class anchor), 8× B200, TensorRT-LLM min-latency | — | 368 (3 MTP layers, relaxed acceptance) |
+| 2 | Qwen3-8B, 1× B200, FP8, 8K (per-byte cost fitted to the B200 BF16 230; H200 fixed cost) | 331 | 853 (reasoning mix) / 1,390–1,690 (math/code τ 6.5–8.0) |
+| 2 | DeepSeek-V4.1-Flash, 8× B200 (+ NCCL-class 8 µs all-reduce, ASSUMED) | 278 | 539 |
+| 3 | Qwen HBM, idealised | 881 | 2,671 (τ 3.66) / 4,749 (τ 6.50) / 5,852 (τ 8.01) |
+| 3 | V4.1 HBM, idealised | 2,920 | 5,673 |
 
-**Tier 2 matches tier 1 in order of magnitude.** V4.1 on 8× B200 projects 527 with MTP against DeepSeek-R1's measured 368, a larger model with lossy acceptance.
+**Acceptance is strongly workload-dependent.** Every speculative row must name its τ and workload:
+- DFlash τ is 6.5–8.0 on math and code with thinking disabled (paper).
+- It is 3.66 on this lab's reasoning mix of 264 turns.
+
+**Tier 2 matches tier 1 in order of magnitude.** V4.1 on 8× B200 projects 539 with MTP against DeepSeek-R1's measured 368, a larger model with lossy acceptance.
+
+**Against the best measured GPU result,** Qwen ROM AR (9,968) is 8.5× B200 DFlash on Math500 (1,175) and 43× B200 AR (230).
 
 Against GPUs (tier 2), the ROM designs are:
-- **Qwen:** about 33× in AR.
+- **Qwen:** about 30× in AR; 6–12× against GPU DFlash, depending on τ.
 - **V4.1:** about 15× in AR and 11× with MTP.
 
 Against the idealised HBM control (tier 3), the V4.1 ROM advantage is 1.4× in AR and about 1.07× with MTP, and it is structural (small TP groups on direct links).

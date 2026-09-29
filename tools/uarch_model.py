@@ -1587,6 +1587,8 @@ GPU_FIT = GPU_CAL["fit"]              # t = fixed + seconds_per_weight_byte x by
 H200_BW = 4.8e12
 B200_BW = 8.0e12                       # per GPU (NVIDIA B200 datasheet)
 NCCL_ALLREDUCE_S = 8e-6                # ASSUMED NCCL-class small-message all-reduce inside an 8-GPU NVLink node
+DFLASH_PAPER = ("Z. Chen, Liang, Liu, 'DFlash: Block Diffusion for Flash Speculative Decoding', arXiv 2602.06036, "
+                "Table 3 (SGLang, FA4 backend, single B200, thinking disabled, temperature 0)")
 TIER1 = [
     dict(tier=1, design="Qwen3-8B-class, H200, NIM FP8, AR", tokens_s=GPU_CAL["nim_h200"]["fp8_tok_s"],
          source=GPU_CAL["nim_h200"]["source"]),
@@ -1596,6 +1598,12 @@ TIER1 = [
     dict(tier=1, design="Qwen3-8B, RTX PRO 6000 (this lab), FP8 DFlash",
          tokens_s=GPU_CAL["local_gpu_rtx_pro_6000"]["concurrency_1"]["fp8"]["dflash_tok_s"],
          source="results/gpu/qwen3_rtx_pro_6000_decode.json"),
+    dict(tier=1, design="Qwen3-8B, 1x B200, SGLang FA4, BF16, AR (DFlash paper Table 3, Math500)", tokens_s=230.0,
+         source=DFLASH_PAPER),
+    dict(tier=1, design="Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, Math500 (tau 8.01, 5.1x)", tokens_s=1175.0,
+         source=DFLASH_PAPER),
+    dict(tier=1, design="Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, HumanEval (tau 6.50, 4.2x)", tokens_s=955.0,
+         source=DFLASH_PAPER),
     dict(tier=1, design="DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers "
                         "(relaxed acceptance)", tokens_s=368.0,
          source="https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/"
@@ -1604,26 +1612,43 @@ TIER1 = [
 
 
 def gpu_tier2():
-    """GPU-calibrated projection: the H200-fitted per-byte and per-layer fixed costs, scaled to B200 bandwidth.
-    Qwen3-8B on one B200; V4.1 on an 8x B200 node (TP 8) adding NCCL-class collectives (5 per layer) and its
-    index-key reads.  Speculative gains use this lab's measured GPU DFlash ratio (Qwen) and the model's V4.1
-    MTP ratio on an HBM machine (1.94x)."""
-    s_per_B = GPU_FIT["seconds_per_weight_byte"] * H200_BW / B200_BW
-    fixed_layer = GPU_FIT["fixed_seconds_qwen"] / 36
+    """GPU-calibrated projection, anchored on B200 measurements.
+    Qwen3-8B: the per-token fixed cost keeps the H200 fit (1.464 ms: launches and syncs, 36 layers), and the per-byte
+    cost is re-fitted so that BF16 weights reproduce the measured B200 SGLang AR rate (230 tok/s, DFlash paper
+    Table 3); FP8 weights and 8K FP8 KV then project the FP8 rate.  Speculation multiplies by the measured GPU
+    speedup at two acceptance regimes: this lab's reasoning mix (tau ~3.7, 2.58x on the RTX PRO 6000) and the
+    paper's math/code (tau 6.5-8.0, 4.2-5.1x on B200).
+    V4.1-Flash: 8x B200 (TP 8), the same per-layer fixed cost and per-byte cost, NCCL-class all-reduce (5 per layer)
+    and its 1M index-key reads; MTP at the HBM machine's modelled 1.94x.  Check: DeepSeek-R1 on 8x B200 measures
+    368 tok/s/user with 3 MTP layers (tier 1)."""
+    fixed = GPU_FIT["fixed_seconds_qwen"]
+    bf16_bytes = 2 * GPU_FIT["qwen_fp8_weight_bytes"]
+    s_per_B = (1 / 230.0 - fixed) / bf16_bytes                   # B200 per-byte cost, fitted
     q_bytes = GPU_FIT["qwen_fp8_weight_bytes"] + GPU_FIT["qwen_fp8_kv_bytes_8k"]
-    tq = GPU_FIT["fixed_seconds_qwen"] + s_per_B * q_bytes
+    tq = fixed + s_per_B * q_bytes
     loc = GPU_CAL["local_gpu_rtx_pro_6000"]["concurrency_1"]["fp8"]
-    q_spec = loc["dflash_tok_s"] / loc["ar_tok_s"]
+    spec_lab = loc["dflash_tok_s"] / loc["ar_tok_s"]
+    fixed_layer = fixed / 36
     v_bytes = 13.03e9 / 8 + 262144 * A.IDX_KEY_B * 4 * 38 / 8   # weights + 1M index keys (38 scanning layers)
     tv = 40 * fixed_layer + s_per_B * v_bytes + 40 * 5 * NCCL_ALLREDUCE_S
-    return [dict(tier=2, design="Qwen3-8B on 1x B200, calibrated", tokens_s=round(1 / tq, 1),
-                 spec_tokens_s=round(q_spec / tq, 1),
-                 terms_us=dict(fixed=round(GPU_FIT["fixed_seconds_qwen"] * 1e6), bytes=round(s_per_B * q_bytes * 1e6))),
+    return [dict(tier=2, design="Qwen3-8B on 1x B200, FP8 weights, 8K, calibrated", tokens_s=round(1 / tq, 1),
+                 spec_tokens_s_reasoning_mix=round(spec_lab / tq, 1),
+                 spec_tokens_s_math_code=[round(4.2 / tq, 1), round(5.1 / tq, 1)],
+                 effective_bandwidth_TBps=round(1 / s_per_B / 1e12, 2),
+                 terms_us=dict(fixed=round(fixed * 1e6), bytes=round(s_per_B * q_bytes * 1e6))),
             dict(tier=2, design="DeepSeek-V4.1-Flash on 8x B200, calibrated", tokens_s=round(1 / tv, 1),
                  spec_tokens_s=round(1.94 / tv, 1),
                  terms_us=dict(fixed=round(40 * fixed_layer * 1e6), bytes=round(s_per_B * v_bytes * 1e6),
                                collectives=round(40 * 5 * NCCL_ALLREDUCE_S * 1e6)),
                  check="DeepSeek-R1 on 8x B200 measures 368 tok/s/user with MTP (tier 1)")]
+
+
+def qwen_hbm_tau_sensitivity():
+    """Tier 3 (idealised HBM) Qwen DFlash at the paper's acceptance: the SM verify cost is flat to 16 columns, so the
+    step rate scales with tau (W13 model: block 16 at tau 3.656 -> 2,671 tok/s)."""
+    base_tau, base = 3.656, 2671.0
+    return [dict(tier=3, design=f"Qwen HBM (idealised) DFlash b16 at tau {t}", tokens_s=round(base * t / base_tau, 1),
+                 tau=t) for t in (3.656, 6.50, 8.01)]
 
 
 FABRIC_SWEEP_S = (0.15e-6, 0.668e-6, 1e-6, 2e-6, 5e-6, 10e-6)   # 0.15 us ~ the ROM array's own board/UCIe links
@@ -1702,12 +1727,14 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.fabric:
         t2 = gpu_tier2()
-        for r in TIER1 + t2:
+        t3 = qwen_hbm_tau_sensitivity()
+        for r in TIER1 + t2 + t3:
             print(r)
         rows = fabric_sweep()
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.fabric.v1", tier1=TIER1, tier2=t2,
+                                                   tier3_qwen_tau=t3,
                                                    sweep=rows, nccl_allreduce_s_assumed=NCCL_ALLREDUCE_S),
                                               indent=1, default=str) + "\n")
         return

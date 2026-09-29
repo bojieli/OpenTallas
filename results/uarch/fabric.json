@@ -21,6 +21,24 @@
   },
   {
    "tier": 1,
+   "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR (DFlash paper Table 3, Math500)",
+   "tokens_s": 230.0,
+   "source": "Z. Chen, Liang, Liu, 'DFlash: Block Diffusion for Flash Speculative Decoding', arXiv 2602.06036, Table 3 (SGLang, FA4 backend, single B200, thinking disabled, temperature 0)"
+  },
+  {
+   "tier": 1,
+   "design": "Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, Math500 (tau 8.01, 5.1x)",
+   "tokens_s": 1175.0,
+   "source": "Z. Chen, Liang, Liu, 'DFlash: Block Diffusion for Flash Speculative Decoding', arXiv 2602.06036, Table 3 (SGLang, FA4 backend, single B200, thinking disabled, temperature 0)"
+  },
+  {
+   "tier": 1,
+   "design": "Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, HumanEval (tau 6.50, 4.2x)",
+   "tokens_s": 955.0,
+   "source": "Z. Chen, Liang, Liu, 'DFlash: Block Diffusion for Flash Speculative Decoding', arXiv 2602.06036, Table 3 (SGLang, FA4 backend, single B200, thinking disabled, temperature 0)"
+  },
+  {
+   "tier": 1,
    "design": "DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance)",
    "tokens_s": 368.0,
    "source": "https://nvidia.github.io/TensorRT-LLM/blogs/tech_blog/blog1_Pushing_Latency_Boundaries_Optimizing_DeepSeek-R1_Performance_on_NVIDIA_B200_GPUs.html"
@@ -29,25 +47,50 @@
  "tier2": [
   {
    "tier": 2,
-   "design": "Qwen3-8B on 1x B200, calibrated",
-   "tokens_s": 298.9,
-   "spec_tokens_s": 770.6,
+   "design": "Qwen3-8B on 1x B200, FP8 weights, 8K, calibrated",
+   "tokens_s": 331.0,
+   "spec_tokens_s_reasoning_mix": 853.3,
+   "spec_tokens_s_math_code": [
+    1390.3,
+    1688.2
+   ],
+   "effective_bandwidth_TBps": 5.25,
    "terms_us": {
     "fixed": 1464,
-    "bytes": 1881
+    "bytes": 1557
    }
   },
   {
    "tier": 2,
    "design": "DeepSeek-V4.1-Flash on 8x B200, calibrated",
-   "tokens_s": 271.8,
-   "spec_tokens_s": 527.2,
+   "tokens_s": 277.7,
+   "spec_tokens_s": 538.7,
    "terms_us": {
     "fixed": 1627,
-    "bytes": 453,
+    "bytes": 375,
     "collectives": 1600
    },
    "check": "DeepSeek-R1 on 8x B200 measures 368 tok/s/user with MTP (tier 1)"
+  }
+ ],
+ "tier3_qwen_tau": [
+  {
+   "tier": 3,
+   "design": "Qwen HBM (idealised) DFlash b16 at tau 3.656",
+   "tokens_s": 2671.0,
+   "tau": 3.656
+  },
+  {
+   "tier": 3,
+   "design": "Qwen HBM (idealised) DFlash b16 at tau 6.5",
+   "tokens_s": 4748.8,
+   "tau": 6.5
+  },
+  {
+   "tier": 3,
+   "design": "Qwen HBM (idealised) DFlash b16 at tau 8.01",
+   "tokens_s": 5851.9,
+   "tau": 8.01
   }
  ],
  "sweep": [
