@@ -39,11 +39,14 @@ def main() -> None:
     ap.add_argument("--param", action="append", default=[], help="NAME=VALUE bench parameter")
     ap.add_argument("--verilator", default=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"))
     ap.add_argument("--jobs", type=int, default=8)
+    ap.add_argument("--ref-file", type=Path, help="the original ot_hdc_matvec.sv (when this tree has no git)")
+    ap.add_argument("--cflags", default="-O0", help="C++ optimisation of the bench (compile time dominates)")
     ap.add_argument("--result", type=Path, required=True)
     a = ap.parse_args()
     out = a.workdir.resolve()
     out.mkdir(parents=True, exist_ok=True)
-    orig = subprocess.check_output(["git", "-C", str(ROOT), "show", f"{ORIG_COMMIT}:rtl/hdc/ot_hdc_matvec.sv"], text=True)
+    orig = a.ref_file.read_text() if a.ref_file else subprocess.check_output(
+        ["git", "-C", str(ROOT), "show", f"{ORIG_COMMIT}:rtl/hdc/ot_hdc_matvec.sv"], text=True)
     ref = out / "ot_hdc_matvec_ref.sv"
     ref.write_text(orig.replace("module ot_hdc_matvec #(", "module ot_hdc_matvec_ref #(", 1))
     pins = {str(p.relative_to(ROOT)): sha(p) for p in [TB, *RTL, Path(__file__)]}
@@ -54,7 +57,8 @@ def main() -> None:
         mdir = out / tag
         t0 = time.monotonic()
         p = subprocess.run([a.verilator, "--binary", "--timing", "-j", str(a.jobs), "-O2", "-Wno-fatal", "-Wno-lint",
-                            "-Wno-style", "-Wno-TIMESCALEMOD", "--top-module", "tb_qwen_me_partition", *params, *extra,
+                            "-Wno-style", "-Wno-TIMESCALEMOD", "-CFLAGS", a.cflags, "--top-module", "tb_qwen_me_partition",
+                            *params, *extra,
                             "--Mdir", str(mdir), str(TB), *map(str, RTL), str(ref)], capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(p.stdout + p.stderr)
         steps.append({"step": f"build_{tag}", "seconds": round(time.monotonic() - t0, 1), "rc": p.returncode})
