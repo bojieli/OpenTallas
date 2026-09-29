@@ -49,6 +49,7 @@ foreach n $order {
     set master [$inst getMaster]
     set w [expr {double([$master getWidth])/$dbu}]
     set h [expr {double([$master getHeight])/$dbu}]
+    $inst setPlacementStatus PLACED
     set x [ot_snap_joint [expr {($diew-$w)/2.0}] $xgrid0 $xpitch 0.0 0.048]
     set ys [ot_snap_joint $y $ygrid0 $ypitch 0.0 0.048]
     place_inst -name $n -location [format "%.3f %.3f" $x $ys] -orientation R0 -status FIRM
