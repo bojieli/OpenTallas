@@ -1,5 +1,6 @@
 {
  "schema": "opentallas.rtl.w11_su_checkpoint/1",
+ "historical": "FAILED verdict kept as recorded (the hazard before the fix). Its pinned sources have since changed (the tap fix, lane PRE/clip timing, the SU wire stages BCAST_STAGES/RET_STAGES); the current record is results/rtl/w11_su_checkpoint_fix.json.",
  "label": "bug",
  "generated_at": "2026-09-29T16:01:30Z",
  "hazard": "a non-spanning reducing op followed by a spanning reducing op with a shallower tap: both items leave through the reducer's one tap; checkpoint T was armed by spanning ops only",

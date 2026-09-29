@@ -14,6 +14,13 @@
 // Engram gate, one element a cycle.  The die's spec is N = 1,024, M = 256 at
 // 1.034 GHz.
 //
+// OUT OF RANGE IS REFUSED, NOT COMPUTED.  An operand outside an operator's
+// domain raises `fault`; the word written for it is unspecified and must not be
+// read.  rsqrt of +0 or -0 is one such case: the golden gives NaN (and the
+// campaign reference refuses the op), while the RTL raises fault and writes
+// 0x601AB3D4 (4.46e19) for +0 and 0x201AB3D4 for -0.  Programs never issue it:
+// the RMSNorm operands are mean-square + eps > 0.
+//
 // ELEMENT SEMANTICS.  Those of Machine.su for every field (A..D sources,
 // gather, pair mode, PRE / M1 / M2 / Q / AD / S / E1 / E2 / RND, the element
 // writes, KV and transposed-KV).  An op's element results do not depend on how
@@ -49,12 +56,40 @@
 //     reductions write VW/S results a vector; this needs r_so to be a power
 //     of two, and otherwise a vector holds one row.
 //
-// PIPELINE DEPTHS (emit -> element write; ot_hdc_v41x_vec_lane):
+// PIPELINE DEPTHS (emit -> element write; ot_hdc_v41x_vec_lane), with no wire stages:
 //   broadcast 1, fetch 3 (5 gathered), PRE 1, M1 3 (19 divide), M2 3, AD 3,
 //   S 0 | exp 49 | sigmoid, silu 71 | rsqrt 37 | sqrt 31 | sqrt(softplus) 162 |
 //   gate 104, E1 3, E2 3, OUT 1.  A linear op takes 21 cycles.
 // Reducer (ot_hdc_v41x_vec_red): a result leaves 26 + 3*log2(S/8)
 // (+ 3*ceil(log2 vectors) when spanning) cycles after the vector retires.
+//
+// WIRE STAGES (BCAST_STAGES, RET_STAGES; 0 and 0 are the unit as it was, cycle for
+// cycle).  At N = 1,024 the lanes span millimetres of the hub, so the controller
+// cannot drive them from one register.  BCAST_STAGES register stages form the
+// pipelined broadcast tree: the lanes take the vector fields (position, bases,
+// bank, layout, sources), the op-set-up offset loads (ld, ld_bank, ld_c) and the
+// control word of the vector (op selects, immediates, emit / bank / retire meta)
+// from its leaf, and the control pipe the lanes read starts at the leaf (one copy
+// per lane tile physically; one copy here, identical contents).  The tree's LAST
+// stage is inside each lane (ot_hdc_v41x_vec_lane LEAF = 1): it registers the
+// lane's partial addresses (position, transposed-KV row, base + offset of every
+// stream), so the lane's first stage is one add / compare level; the offset
+// loads go to the lanes' offset banks from the tree's stage before it (308 leaf
+// flops a lane).  RET_STAGES
+// register stages carry every write back to the vector memory: the element
+// writes (vm_*, kv_*) and the reducer's results (res_*).  Every vector crosses
+// both, so every depth grows by BCAST_STAGES + RET_STAGES and nothing reorders:
+//   * the checkpoints compare depths of ops that all cross the same stages, so
+//     cp_X and d_X are unchanged (both would gain the same constant);
+//   * the published chaining state (cr_seq / cr_cnt / cr_dseq / cr_rseq) counts
+//     writes when they LAND, RET_STAGES after they leave the lanes, so "written"
+//     keeps its meaning for every consumer;
+//   * this unit's own consumers (ch_src SELF / SELF_RES) read BCAST_STAGES after
+//     their emit, so their credits may lead the landing by BCAST_STAGES: they
+//     use the retire / result events delayed by max(0, RET_STAGES -
+//     BCAST_STAGES), which keeps the 0-stage margin between a write landing and
+//     the read of it;
+//   * idle waits for both stage lines to drain.
 //
 // ORDER WITHOUT DRAINS (the checkpoint rule).  Ops overlap in the pipeline.
 // Elements must leave each variable-depth stage in emit order: the fetch, M1
@@ -108,10 +143,12 @@
 module ot_hdc_v41x_vec #(
     parameter integer N  = 64,          // light lanes (elements a cycle), a power of two >= 8
     parameter integer M  = 16,          // SFU lanes, a power of two, 8 <= M <= N
-    parameter integer LV = 6,           // reducer time levels
+    parameter integer LV = 6,           // reducer time levels, 1..7 (l_in is 3 bits; elaboration fails otherwise)
     parameter integer AW = 24,
     parameter integer NW = 16,
-    parameter integer KVT_SH = 9
+    parameter integer KVT_SH = 9,
+    parameter integer BCAST_STAGES = 0, // register stages of the pipelined controller -> lane broadcast tree
+    parameter integer RET_STAGES = 0    // register stages of the lane / reducer -> vector-memory write path
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -180,10 +217,20 @@ module ot_hdc_v41x_vec #(
     output wire              dbg_res,        // this cycle: results of op dbg_sseq are written
     output wire [7:0]        dbg_sseq
 );
+    // LV is bounded by the 3-bit TIME-level field (l_in): an LV above 7 would let an 8-level segment pass
+    // the controller's c_L > LV check and be clamped to 7 levels, a silently wrong sum.  Fail closed at
+    // elaboration: the trap instantiates a module that does not exist, which Verilator (even under
+    // -Wno-fatal), Icarus and Yosys (hierarchy -check, as synth runs it) all reject.
+    generate if (LV < 1 || LV > 7) begin : g_lv_out_of_range
+        ot_hdc_v41x_vec_LV_must_be_1_to_7 u_trap ();
+    end endgenerate
+
     localparam integer LN = $clog2(N);
     localparam integer LM = $clog2(M);
     localparam integer NR = N / 8;
     localparam integer CW = 24;
+    // this unit's own consumers read BCAST_STAGES after their emit: their credits lead the landing by that much
+    localparam integer DI = (RET_STAGES > BCAST_STAGES) ? RET_STAGES - BCAST_STAGES : 0;
     localparam [1:0] IND_NONE = 0, IND_I = 1, IND_O = 2;
     localparam [1:0] DST_NONE = 0, DST_KVT = 3;
     localparam [2:0] M1_DIVB = 4, M1_DIVIMM = 5;
@@ -390,7 +437,12 @@ module ot_hdc_v41x_vec #(
     reg [15:0]       pv_mark, pv_nv;
     reg [7:0]        pv_seq;
     // counters
-    reg [15:0]       e_tot, r_tot;
+    reg [15:0]       e_tot, r_tot;       // r_tot: vectors whose writes this unit's consumers may read (DI)
+    reg [15:0]       rp_tot;             // vectors whose writes have landed (published)
+    reg [7:0]        i_dseq, i_rseq;     // cr_dseq / cr_rseq at the internal credit timing (DI)
+    wire             ret_i, ret_p, res_i, res_p;
+    wire [7:0]       ret_i_seq, ret_p_seq, res_i_seq, res_p_seq;
+    wire             ret_i_last, ret_p_last, res_i_last, res_p_last;
     reg [9:0]        cpF, cpM, cpS, cpT, cpR;
     reg [7:0]        rseq_r;
 
@@ -406,10 +458,10 @@ module ot_hdc_v41x_vec #(
     wire [15:0] need = a_chlead + a_acc[23:8];
     wire [15:0] pv_cnt = r_tot - pv_mark;
     wire        pv_neg = pv_cnt[15];
-    wire [7:0]  ds = cr_dseq - a_chseq;
+    wire [7:0]  ds = i_dseq - a_chseq;
     wire        pv_ok  = !ds[7] || (pv_v && pv_seq == a_chseq && !pv_neg && pv_cnt >= need);
     wire [7:0]  dx = x_dseq - a_chseq;
-    wire [7:0]  dr = cr_rseq - a_chseq;
+    wire [7:0]  dr = i_rseq - a_chseq;
     wire ch_ok = (a_chsrc == CH_NONE) ? 1'b1 :
                  (a_chsrc == CH_SELF) ? pv_ok :
                  (a_chsrc == CH_RES)  ? !dr[7] :
@@ -433,11 +485,12 @@ module ot_hdc_v41x_vec #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            a_v <= 1'b0; a_started <= 1'b0; pv_v <= 1'b0; e_tot <= 0; r_tot <= 0;
+            a_v <= 1'b0; a_started <= 1'b0; pv_v <= 1'b0; e_tot <= 0; r_tot <= 0; rp_tot <= 0;
             cpF <= 0; cpM <= 0; cpS <= 0; cpT <= 0; cpR <= 0;
         end else begin
             e_tot <= e_tot + (emit ? 16'd1 : 16'd0);
-            r_tot <= r_tot + (retire ? 16'd1 : 16'd0);
+            r_tot <= r_tot + (ret_i ? 16'd1 : 16'd0);
+            rp_tot <= rp_tot + (ret_p ? 16'd1 : 16'd0);
             cpF <= emit ? a_dF : (cpF != 0) ? cpF - 10'd1 : 10'd0;
             cpM <= emit ? a_dM : (cpM != 0) ? cpM - 10'd1 : 10'd0;
             cpS <= emit ? a_dS : (cpS != 0) ? cpS - 10'd1 : 10'd0;
@@ -502,7 +555,7 @@ module ot_hdc_v41x_vec #(
     // published chaining state
     reg [7:0]  lst_seq;
     reg [15:0] lst_mark;
-    wire [15:0] lst_cnt = r_tot - lst_mark;
+    wire [15:0] lst_cnt = rp_tot - lst_mark;
     assign cr_cnt = lst_cnt[15] ? 16'd0 : lst_cnt;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin lst_seq <= 8'hFF; lst_mark <= 0; cr_seq <= 8'hFF; end
@@ -548,11 +601,64 @@ module ot_hdc_v41x_vec #(
         b_aibase <= a_aibase; b_aind <= a_aind; b_dst <= a_dst; b_gsh <= a_gsh;
         b_srcs <= {a_dsrc, a_csrc, a_bsrc, a_asrc}; b_cw <= cw0;
     end
+    // BROADCAST TREE: BCAST_STAGES register stages from the broadcast register to the lanes' leaf register.
+    // Everything that travels to the lanes crosses it together: the vector, its control word (the control
+    // pipe below starts at the leaf) and the op set-up's offset loads, so the lanes see the same sequence as
+    // with no stages, BCAST_STAGES cycles later.  The first BCAST_STAGES - 1 stages are the tree (tr_*, here);
+    // the LAST stage is each lane's own leaf register (ot_hdc_v41x_vec_lane LEAF = 1), which holds the lane's
+    // partial addresses instead of the raw fields.  The control pipe takes the same last stage here (t_*).
+    localparam integer WB = 3 + 4 * CW + 8 + 8 * AW + 4 + 5 + 8 + WC;
+    localparam integer WL = 1 + 5 * LN * AW;
+    localparam integer BT = (BCAST_STAGES > 0) ? BCAST_STAGES - 1 : 0;     // stages outside the lanes
+    wire [WB-1:0]    b_bus = {b_bank, b_gather, b_cpair, b_ov, b_iv, b_no, b_ni, b_ls, b_lvw, b_vb, b_krow, b_obase,
+                              b_aibase, b_aind, b_dst, b_gsh, b_srcs, b_cw};
+    wire [WB-1:0]    tr_bus;
+    wire [WL-1:0]    tr_lbus;
+    wire             tr_emit, tr_ld, t_emit, t_gather, bt_live;
+    wire             tr_bank, tr_gather, tr_cpair;
+    wire [CW-1:0]    tr_ov, tr_iv, tr_no, tr_ni;
+    wire [3:0]       tr_ls, tr_lvw;
+    wire [5*AW-1:0]  tr_vb;
+    wire [AW-1:0]    tr_krow, tr_obase, tr_aibase;
+    wire [1:0]       tr_aind, tr_dst;
+    wire [4:0]       tr_gsh;
+    wire [7:0]       tr_srcs;
+    wire [WC-1:0]    tr_cw, t_cw;
+    wire             tr_ldbank;
+    wire [5*LN*AW-1:0] tr_ldc;
+    ot_hdc_delay #(.W(WB), .D(BT)) u_bt (.clk(clk), .rst_n(rst_n), .d(b_bus), .q(tr_bus));
+    ot_hdc_delay #(.W(WL), .D(BT)) u_bl (.clk(clk), .rst_n(rst_n), .d({q_bank, p_terms}), .q(tr_lbus));
+    assign {tr_bank, tr_gather, tr_cpair, tr_ov, tr_iv, tr_no, tr_ni, tr_ls, tr_lvw, tr_vb, tr_krow, tr_obase, tr_aibase, tr_aind,
+            tr_dst, tr_gsh, tr_srcs, tr_cw} = tr_bus;
+    assign {tr_ldbank, tr_ldc} = tr_lbus;
+    generate if (BCAST_STAGES == 0) begin : g_bt0
+        assign {tr_emit, tr_ld} = {b_emit, lane_ld};
+        assign {t_emit, t_gather, t_cw} = {b_emit, b_gather, b_cw};
+        assign bt_live = 1'b0;
+    end else begin : g_bt
+        reg [BCAST_STAGES-1:0] bt_e, bt_l;      // valid of every stage, the leaf's included
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin bt_e <= {BCAST_STAGES{1'b0}}; bt_l <= {BCAST_STAGES{1'b0}}; end
+            else begin
+                bt_e <= (bt_e << 1) | {{(BCAST_STAGES-1){1'b0}}, b_emit};
+                bt_l <= (bt_l << 1) | {{(BCAST_STAGES-1){1'b0}}, lane_ld};
+            end
+        end
+        assign tr_emit = (BCAST_STAGES > 1) ? bt_e[BT > 0 ? BT - 1 : 0] : b_emit;
+        assign tr_ld   = (BCAST_STAGES > 1) ? bt_l[BT > 0 ? BT - 1 : 0] : lane_ld;
+        assign t_emit = bt_e[BCAST_STAGES-1];
+        reg          t_g;
+        reg [WC-1:0] t_c;
+        always @(posedge clk) begin t_g <= tr_gather; t_c <= tr_cw; end
+        assign t_gather = t_g;
+        assign t_cw = t_c;
+        assign bt_live = |{bt_e, bt_l};
+    end endgenerate
     // F-line: depth 3 or 5
     wire [WC-1:0] cwx;
     wire          vx, col_f, bz_f, bz_m, bz_s;
     ot_hdc_v41x_ins #(.W(WC), .K(2), .DEPTHS({16'd5, 16'd3}), .DMAX(5)) u_cf (.clk(clk), .rst_n(rst_n),
-        .v(b_emit), .sel({b_gather, !b_gather}), .d(b_cw), .vo(vx), .q(cwx), .coll(col_f), .busy(bz_f));
+        .v(t_emit), .sel({t_gather, !t_gather}), .d(t_cw), .vo(vx), .q(cwx), .coll(col_f), .busy(bz_f));
     `define CW_SRCS(w)  w[WC-1 -: 8]
     `define CW_ARND(w)  w[WC-9]
     `define CW_ARELU(w) w[WC-10]
@@ -632,15 +738,18 @@ module ot_hdc_v41x_vec #(
     wire            side_f;
     wire [N-1:0]    l_sv;
     wire [N*32-1:0] l_sx;
+    wire [N-1:0]    l_vm_we, l_kv_we;
+    wire [N*AW-1:0] l_vm_waddr, l_kv_waddr;
+    wire [N*32-1:0] l_vm_wdata, l_kv_wdata;
     genvar l;
     generate for (l = 0; l < N; l = l + 1) begin : g_lane
         ot_hdc_v41x_vec_lane #(.AW(AW), .CW(CW), .LN(LN), .KIND((l == 0) ? 2 : (l < M) ? 1 : 0),
-                               .KVT_SH(KVT_SH)) u_lane (
+                               .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0)) u_lane (
             .clk(clk), .rst_n(rst_n), .lane_id(l[10:0]),
-            .ld(lane_ld), .ld_bank(q_bank), .ld_c(p_terms),
-            .emit(b_emit), .bank(b_bank), .o_v(b_ov), .i_v(b_iv), .no(b_no), .ni(b_ni), .ls(b_ls), .lvw(b_lvw),
-            .vb(b_vb), .krow(b_krow), .obase(b_obase), .aibase(b_aibase), .aind(b_aind), .gsh(b_gsh),
-            .cpair(b_cpair), .dst(b_dst), .srcs(b_srcs),
+            .ld(tr_ld), .ld_bank(tr_ldbank), .ld_c(tr_ldc),
+            .emit(tr_emit), .bank(tr_bank), .o_v(tr_ov), .i_v(tr_iv), .no(tr_no), .ni(tr_ni), .ls(tr_ls), .lvw(tr_lvw),
+            .vb(tr_vb), .krow(tr_krow), .obase(tr_obase), .aibase(tr_aibase), .aind(tr_aind), .gsh(tr_gsh),
+            .cpair(tr_cpair), .dst(tr_dst), .srcs(tr_srcs),
             .vi_re(vi_re[l]), .vi_addr(vi_addr[l*AW +: AW]), .vi_q(vi_q[l*32 +: 32]),
             .rd_addr(rd_addr[4*l*AW +: 4*AW]), .rd_re(rd_re[4*l +: 4]), .rd_src(rd_src[8*l +: 8]),
             .rd_q(rd_q[4*l*32 +: 4*32]),
@@ -654,8 +763,8 @@ module ot_hdc_v41x_vec #(
             .ce_e2(`CW_E2(cwe)), .ce_imm1(`CW_IMM1(cwe)),
             .co_rnd(`CW_RND(cwo)), .co_dst(`CW_DST(cwo)),
             .side_v(l_sv[l]), .side_x(l_sx[l*32 +: 32]), .side_y(side_y),
-            .vm_we(vm_we[l]), .vm_waddr(vm_waddr[l*AW +: AW]), .vm_wdata(vm_wdata[l*32 +: 32]),
-            .kv_we(kv_we[l]), .kv_waddr(kv_waddr[l*AW +: AW]), .kv_wdata(kv_wdata[l*32 +: 32]),
+            .vm_we(l_vm_we[l]), .vm_waddr(l_vm_waddr[l*AW +: AW]), .vm_wdata(l_vm_wdata[l*32 +: 32]),
+            .kv_we(l_kv_we[l]), .kv_waddr(l_kv_waddr[l*AW +: AW]), .kv_wdata(l_kv_wdata[l*32 +: 32]),
             .ro_v(l_rov[l]), .ro_x(l_rox[l*32 +: 32]), .fault(l_fault[l]), .coll(l_coll[l]));
     end endgenerate
     assign side_v = l_sv[0];
@@ -668,34 +777,86 @@ module ot_hdc_v41x_vec #(
     // =========================================================================================
     wire [7:0] red_seq;
     wire       red_lastres, red_ev, red_busy, red_f;
+    wire [NR-1:0]    l_res_we;
+    wire [NR*AW-1:0] l_res_addr;
+    wire [NR*32-1:0] l_res_data;
     ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(9)) u_red (.clk(clk), .rst_n(rst_n),
         .v_in(retire && r_red != RED_NONE), .x_in(l_rox), .live_in(l_rov), .mx_in(r_red == RED_MAX),
         .sq_in(r_sq), .lt_in(r_lt), .span_in(r_span), .l_in(r_L), .last_in(r_wrap), .nres_in(r_nres),
         .rnd_in(r_rnd), .rbase_in(r_rbase), .rsh_in(r_rsh), .meta_in({r_seq, r_lastres}),
-        .o_we(res_we), .o_addr(res_addr), .o_data(res_data), .o_meta({red_seq, red_lastres}), .o_ev(red_ev),
+        .o_we(l_res_we), .o_addr(l_res_addr), .o_data(l_res_data), .o_meta({red_seq, red_lastres}), .o_ev(red_ev),
         .busy(red_busy), .fault(red_f));
+
+    // =========================================================================================
+    // RETURN: RET_STAGES register stages from the lanes and the reducer to the vector memory.  The
+    // write events travel beside them: at RET_STAGES (the write lands: published state, the bench trace)
+    // and at DI (this unit's own consumers, which read BCAST_STAGES after their emit)
+    // =========================================================================================
+    ot_hdc_delay #(.W(2 * N), .D(RET_STAGES), .RESET(1)) u_rwe (.clk(clk), .rst_n(rst_n),
+        .d({l_vm_we, l_kv_we}), .q({vm_we, kv_we}));
+    ot_hdc_delay #(.W(N * (2 * AW + 64)), .D(RET_STAGES)) u_rwd (.clk(clk), .rst_n(rst_n),
+        .d({l_vm_waddr, l_vm_wdata, l_kv_waddr, l_kv_wdata}), .q({vm_waddr, vm_wdata, kv_waddr, kv_wdata}));
+    ot_hdc_delay #(.W(NR), .D(RET_STAGES), .RESET(1)) u_rre (.clk(clk), .rst_n(rst_n), .d(l_res_we), .q(res_we));
+    ot_hdc_delay #(.W(NR * (AW + 32)), .D(RET_STAGES)) u_rrd (.clk(clk), .rst_n(rst_n),
+        .d({l_res_addr, l_res_data}), .q({res_addr, res_data}));
+    wire rt_live;
+    generate if (RET_STAGES == 0) begin : g_rt0
+        assign {ret_p, ret_p_seq, ret_p_last} = {retire, r_seq, r_lastv};
+        assign {res_p, res_p_seq, res_p_last} = {red_ev, red_seq, red_lastres};
+        assign rt_live = 1'b0;
+    end else begin : g_rt
+        reg [RET_STAGES-1:0] rt_v, rs_v;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin rt_v <= {RET_STAGES{1'b0}}; rs_v <= {RET_STAGES{1'b0}}; end
+            else begin
+                rt_v <= (rt_v << 1) | {{(RET_STAGES-1){1'b0}}, retire};
+                rs_v <= (rs_v << 1) | {{(RET_STAGES-1){1'b0}}, red_ev};
+            end
+        end
+        wire [8:0] rt_m, rs_m;
+        ot_hdc_delay #(.W(9), .D(RET_STAGES)) u_rtm (.clk(clk), .rst_n(rst_n), .d({r_seq, r_lastv}), .q(rt_m));
+        ot_hdc_delay #(.W(9), .D(RET_STAGES)) u_rsm (.clk(clk), .rst_n(rst_n), .d({red_seq, red_lastres}), .q(rs_m));
+        assign {ret_p, ret_p_seq, ret_p_last} = {rt_v[RET_STAGES-1], rt_m};
+        assign {res_p, res_p_seq, res_p_last} = {rs_v[RET_STAGES-1], rs_m};
+        assign rt_live = |{rt_v, rs_v};
+    end endgenerate
+    generate if (DI == 0) begin : g_di0
+        assign {ret_i, ret_i_seq, ret_i_last} = {retire, r_seq, r_lastv};
+        assign {res_i, res_i_seq, res_i_last} = {red_ev, red_seq, red_lastres};
+    end else begin : g_di
+        wire [9:0] di_r, di_s;
+        ot_hdc_delay #(.W(1), .D(DI), .RESET(1)) u_dirv (.clk(clk), .rst_n(rst_n), .d(retire), .q(di_r[9]));
+        ot_hdc_delay #(.W(9), .D(DI)) u_dirm (.clk(clk), .rst_n(rst_n), .d({r_seq, r_lastv}), .q(di_r[8:0]));
+        ot_hdc_delay #(.W(1), .D(DI), .RESET(1)) u_disv (.clk(clk), .rst_n(rst_n), .d(red_ev), .q(di_s[9]));
+        ot_hdc_delay #(.W(9), .D(DI)) u_dism (.clk(clk), .rst_n(rst_n), .d({red_seq, red_lastres}), .q(di_s[8:0]));
+        assign {ret_i, ret_i_seq, ret_i_last} = di_r;
+        assign {res_i, res_i_seq, res_i_last} = di_s;
+    end endgenerate
 
     assign dbg_emit = emit;
     assign dbg_eseq = a_seq;
-    assign dbg_ret = retire;
-    assign dbg_rseq = r_seq;
-    assign dbg_res = red_ev;
-    assign dbg_sseq = red_seq;
-    // published completion
+    assign dbg_ret = ret_p;             // the trace records writes when they land
+    assign dbg_rseq = ret_p_seq;
+    assign dbg_res = res_p;
+    assign dbg_sseq = res_p_seq;
+    // published completion (writes landed) and the internal credit copies
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin cr_dseq <= 8'hFF; cr_rseq <= 8'hFF; emitted <= 0; retire_o <= 1'b0; end
-        else begin
-            if (retire && r_lastv) cr_dseq <= r_seq;
-            if (red_ev && red_lastres) cr_rseq <= red_seq;
+        if (!rst_n) begin
+            cr_dseq <= 8'hFF; cr_rseq <= 8'hFF; i_dseq <= 8'hFF; i_rseq <= 8'hFF; emitted <= 0; retire_o <= 1'b0;
+        end else begin
+            if (ret_p && ret_p_last) cr_dseq <= ret_p_seq;
+            if (res_p && res_p_last) cr_rseq <= res_p_seq;
+            if (ret_i && ret_i_last) i_dseq <= ret_i_seq;
+            if (res_i && res_i_last) i_rseq <= res_i_seq;
             emitted <= emitted + (emit ? 16'd1 : 16'd0);
-            retire_o <= retire;
+            retire_o <= ret_p;
         end
     end
 
     // =========================================================================================
     // Status
     // =========================================================================================
-    wire pipe_live = b_emit || bz_f || vp || bz_m || (|vml) || bz_s || (|vsl);
+    wire pipe_live = b_emit || bt_live || rt_live || bz_f || vp || bz_m || (|vml) || bz_s || (|vsl);
     wire idle_c = (pst == 2'd0) && !a_v && !pipe_live && !red_busy;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin idle <= 1'b1; fault <= 1'b0; order_fault <= 1'b0; end

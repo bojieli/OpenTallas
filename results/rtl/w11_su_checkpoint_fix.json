@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.rtl.w11_su_checkpoint/1",
  "label": "fix",
- "generated_at": "2026-09-29T17:25:18Z",
+ "generated_at": "2026-09-29T18:09:56Z",
  "hazard": "a non-spanning reducing op followed by a spanning reducing op with a shallower tap: both items leave through the reducer's one tap; checkpoint T was armed by spanning ops only",
  "cases": [
   {
@@ -297,11 +297,14 @@
    }
   }
  ],
- "builds": {},
+ "builds": {
+  "N16": 149.09840202331543,
+  "N64": 565.045312166214
+ },
  "all_pass": true,
  "hazard_reproduced": false,
  "controls_pass": true,
- "git_head": "d7528b769a2aeb5249897032c5c4aeb32e8a2970",
+ "git_head": "451aea1c479026693daf8c55a66ba095f78d99cd",
  "git_dirty_tracked_files": [],
  "input_sha256": {
   "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
@@ -314,15 +317,15 @@
   "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
   "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "5a88f2536d8e4f1e54bc9ea6c969af33ed1ae4b4c914aae561cb6601715745a6",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "94d0d16aff5cb5d366fd189b64058c18f02aec242e1b414084eef5de1806eeb0",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "a7d53fd88299766bd6a71df7623ed260a1424a4bf2fa7610d8e150f2d50f3a9f",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "0ba8c77b349a8116958f09f3948116c8183f558f10b3228b55bcb55f1108b315",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "caa46eb92238986b91b67615df7a30a1f17b5b27ddee84284e06cd58f6a9b528",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "fa4f7bf762971004ffa7c7df253ef6789a9e0dd9c351ee3b71fc8d8d4150ae99",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "cc9aad507db760a2d7086558c1fde3cb4bd0062730fd4c2447d9634e43b4b00a",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "210daaef448c065c86d704cd242c8d308c1f56b38e33815ebdec8d5e2560f04a",
   "rtl/test/tb_hdc_v41x_vec.sv": "c636a367b5d0192a03cc25252dbcd3d7d8ee2c7743bab90cc5a9c1bfd1ddab88",
   "rtl/test/tb_hdc_v41x_vec_fields.svh": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
   "rtl/test/hdc_v41_harness.cpp": "f2a82a2ea843a1f8b04fd94e94adea61037a9fa6aef45f6b0c8550abe5a6dce1",
   "tools/w11_su_checkpoint_repro.py": "1cfea0654ab41bb2a08e9139cf427cf75deceb4179f708c6277cc977874354b6",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "ca1c02361bc218863e01dd9d8128aceb62369672645612952095c624f6780747",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "9f565b0b92f633331198b24ff564331049fe43ea3507a1cdbbd3d46b1ee84733",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
   "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",

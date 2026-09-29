@@ -76,7 +76,7 @@ endmodule
 
 module ot_hdc_v41x_vec_red #(
     parameter integer N  = 64,          // lanes, a power of two >= 8
-    parameter integer LV = 6,           // time levels: spanning segments of up to 2^LV vectors
+    parameter integer LV = 6,           // time levels: spanning segments of up to 2^LV vectors (1..7)
     parameter integer AW = 24,
     parameter integer MW = 64           // meta carried with an item (opaque here, returned with its result)
 ) (
@@ -104,6 +104,13 @@ module ot_hdc_v41x_vec_red #(
     output wire            busy,
     output reg             fault
 );
+    // LV is bounded by the 3-bit TIME-level field (l_in): an LV above 7 would let an 8-level segment pass
+    // the controller's c_L > LV check and be clamped to 7 levels, a silently wrong sum.  Fail closed at
+    // elaboration: the trap instantiates a module that does not exist, which Verilator (even under
+    // -Wno-fatal), Icarus and Yosys (hierarchy -check, as synth runs it) all reject.
+    generate if (LV < 1 || LV > 7) begin : g_lv_out_of_range
+        ot_hdc_v41x_vec_LV_must_be_1_to_7 u_trap ();
+    end endgenerate
     localparam integer NC = N / 8;
     localparam integer LC = $clog2(NC);          // tree levels
     localparam integer TAG = 1 + 4 + 1 + 3 + 1 + 8 + 1 + AW + 5 + MW;
