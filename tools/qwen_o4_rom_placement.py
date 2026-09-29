@@ -36,7 +36,7 @@ SOURCES = [Path('tools/hdc_qwen_fullshape_placement.py'), Path('tools/hdc_golden
            Path('rtl/test/tb_hdc_qwen_layer0_tp2.sv'), Path('rtl/hdc/ot_hdc_matvec.sv'),
            Path('rtl/physical/ot_qwen_o4_g4_rommac.sv'), Path('results/arch/qwen3_budget.json')]
 
-G, W, IL = 6144, 16, 8
+G, W, IL = FP.GROUPS, 16, 8    # QWEN_O4_GROUPS (tools/hdc_qwen_fullshape_placement.py)
 PAIR_BITS = 2 * W * 8                 # a group pair's 256-bit slice of the 786,432-bit code word
 TP = 2
 # DFlash drafter: fc 4096 x 20480 (5 target taps), 5 Qwen3-shaped layers (qwen3_o4_rtl_gaps.py)
@@ -58,7 +58,9 @@ def drafter_fc(base):
     (x_re / e_gm masks). Words = rounds x kc x IL, the matvec's own count.
     """
     n, k = DRAFTER_FC[0] // TP, DRAFTER_FC[1]
-    split = GOLD.split_for(n, k, G, W, IL)
+    # G = 6,144 keeps the golden S = 4,096 of the published record; other group
+    # counts use the engine's floor(G/S) rule (FP.rtl_split).
+    split = GOLD.split_for(n, k, G, W, IL) if G == 6144 else FP.rtl_split(n, k, G)
     kc = k // split
     per_round = G // split
     tiles = -(-n // (W * IL))
@@ -173,7 +175,7 @@ def main():
             words_total=sum(per_port), macros=sum(exact_banks),
             area_mm2=sum(exact_banks) * geom[code_m]['area_um2'] / 1e6),
         rtl_as_instantiated_note='ot_hdc_matvec instantiates scale_q and an ot_hdc_fmul for all 6,144 x 16 '
-                                 'lanes; at G = 6144 the smallest split is 64 (gate/up), so only groups '
+                                 f'lanes; at G = {G} only groups '
                                  f'0..{ports - 1} can ever raise scale_gre')
     # embedding: TP-2 splits the vocabulary (spec D5): 75,968 rows a die, 4,096 INT8 codes + one BF16 scale
     vocab_die = 151936 // TP
