@@ -81,7 +81,8 @@ def hook_tcl(p: dict) -> str:
             .replace("OT_W2_ROMAC_PLACE", "OT_W10_ELEM_PLACE")
 
 
-def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), stop=None) -> list[str]:
+def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), stop=None,
+         setup_only=False) -> list[str]:
     w, h = p["die_um"]
     top = "ot_v41_rom_elem_q" if p["wrapped"] else p["top"]      # an FP8/FP4 macro has no BF16 x port
     params = [q for q in params if not (p["wrapped"] and q.startswith("BF16="))]
@@ -103,6 +104,8 @@ def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), s
         a += ["--param", q]
     if stop:
         a += ["--pnr-stop-after", stop]
+    if setup_only:
+        a += ["--clock-uncertainty-setup-only"]
     return a
 
 
@@ -118,6 +121,9 @@ def main() -> None:
     ap.add_argument("--param", action="append", default=[], help="RTL parameter, e.g. BF16=1")
     ap.add_argument("--pair", action="store_true", help="a W1 macro pair sharing one front end (NB=2)")
     ap.add_argument("--stop-after", choices=["cts", "finish"], help="timing iteration: stop the flow after CTS")
+    ap.add_argument("--setup-only-uncertainty", action="store_true",
+                    help="60 ps uncertainty on setup only (W5 semantics); the unified default also times hold "
+                         "with it, which costs ~16k hold buffers per element")
     ap.add_argument("--no-wrap", dest="wrap", action="store_false",
                     help="FP8/FP4: harden ot_v41_rom_elem itself (with the unused BF16 x port) instead of ot_v41_rom_elem_q")
     a = ap.parse_args()
@@ -127,7 +133,8 @@ def main() -> None:
     if a.write_hook or a.print:
         (ROOT / hook_name(p)).write_text(hook_tcl(p))      # the hook always matches the plan it is run with
     if a.print:
-        print(json.dumps({"plan": p, "argv": argv(p, a.tag, a.keep, a.output, a.density, a.param, a.stop_after)}, indent=1))
+        print(json.dumps({"plan": p, "argv": argv(p, a.tag, a.keep, a.output, a.density, a.param, a.stop_after,
+                                                     a.setup_only_uncertainty)}, indent=1))
 
 
 if __name__ == "__main__":
