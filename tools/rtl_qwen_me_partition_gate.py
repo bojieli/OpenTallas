@@ -57,7 +57,9 @@ def main() -> None:
         mdir = out / tag
         t0 = time.monotonic()
         p = subprocess.run([a.verilator, "--binary", "--timing", "-j", str(a.jobs), "-O2", "-Wno-fatal", "-Wno-lint",
-                            "-Wno-style", "-Wno-TIMESCALEMOD", "-CFLAGS", a.cflags, "--top-module", "tb_qwen_me_partition",
+                            "-Wno-style", "-Wno-TIMESCALEMOD", "-CFLAGS", a.cflags, "--output-split", "20000",
+                            "--output-split-cfuncs", "2000", "--x-assign", "fast", "--x-initial", "fast",
+                            "--top-module", "tb_qwen_me_partition",
                             *params, *extra,
                             "--Mdir", str(mdir), str(TB), *map(str, RTL), str(ref)], capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(p.stdout + p.stderr)

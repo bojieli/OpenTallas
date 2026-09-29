@@ -41,7 +41,7 @@ module tb_qwen_me_partition;
         end
     endfunction
     function automatic [7:0] rom(input [31:0] addr, input [31:0] lane);
-        rom = mix(addr, lane, 32'h1111)[7:0];
+        rom = mix(addr, lane, 32'h1111);
     endfunction
     // finite BF16 in [2^-3, 2^3), either sign
     function automatic [15:0] bf16v(input [31:0] h);
