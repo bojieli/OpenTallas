@@ -65,3 +65,19 @@ beats. Negative gates: user/position/layer/config/format changes, pending/partia
 write, sourceepoch wrap, late old response, invalid rowmask, incomplete fill,
 and backpressure across final QK/first PV. The Python contract covers identity
 and hazard decisions; the connected numeric test belongs to the attention owner.
+
+## Standalone control implementation
+
+`ot_chip_v41x_window_retention` implements the opt-in metadata decision, default
+ENABLE=0. A320-bit canonical identity is supplied by the integrating wrapper;
+it must bind all fields above and exact QK/PV shape validation. Storage is320-bit
+key plus two16-bit generation registers and three control bits (355 bits), not
+extra KV payload. One registered response cycle is explicit. Concurrent or
+response-cycle invalidation suppresses hits; wrap always misses. This conservative
+module never reuses a descriptor generation and consumes each entry once.
+
+The standalone RTL test flips every one of320 key bits and checks single-use,
+write/prime/config invalidation, pending write, incomplete rows, wrong shape,
+un-drained service, stale generation and wrap. These are controller tests;
+**source-scheduler hookup and real QK→VM-ops→PV numerical replay remain pending**.
+No prefetch/source file was changed; refill owner retains that scope.

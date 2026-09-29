@@ -36,3 +36,13 @@ def test_partial_fill_does_not_arm():
 
 def test_actual_intervening_instructions_do_not_write_kv():
     d=r.build();assert d['qk']['pc']==24 and d['pv']['pc']==32
+
+def test_retention_rtl_identity_and_hazards(tmp_path):
+    import shutil, subprocess
+    if not shutil.which('iverilog'):
+        pytest.skip('Icarus unavailable')
+    root=Path(__file__).resolve().parents[1]
+    output=tmp_path/'retention.vvp'
+    subprocess.run(['iverilog','-g2012','-s','tb_v41x_window_retention','-o',str(output),str(root/'rtl/chip/ot_chip_v41x_window_retention.sv'),str(root/'rtl/test/tb_v41x_window_retention.sv')],check=True,capture_output=True,text=True)
+    result=subprocess.run(['vvp',str(output)],check=True,capture_output=True,text=True)
+    assert 'RETENTION_PASS identity_bits=320 hazards=9 single_use=1 late_invalidate=1' in result.stdout
