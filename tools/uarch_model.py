@@ -825,6 +825,10 @@ def sm_area(e: dict, staging_kb: float):
     x_kb = e["k_max"] * c * e["x_bytes"] / 1024
     sram_kb = dict(x_store=x_kb, staging=staging_kb, scratch=e["scratch_kb"])
     macros = {k: math.ceil(v / 32) for k, v in sram_kb.items()}
+    # the x store must also deliver one x fragment (every lane, every column) per slot revolution (IL cycles):
+    # 256-bit macros read every cycle into a double-buffered fragment register
+    frag_bits = c * (lanes * 16 + e["blockdot_lanes"] * 266)
+    macros["x_store"] = max(macros["x_store"], math.ceil(frag_bits / e["il"] / 256))
     logic_mm2 = sum(logic.values()) / 1e6
     sram_mm2 = sum(macros.values()) * u["sram32k"] * GPU_MACRO_PACK / 1e6
     return dict(logic_um2={k: round(v) for k, v in logic.items()}, logic_mm2=round(logic_mm2, 3),
