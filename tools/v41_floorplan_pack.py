@@ -746,6 +746,13 @@ def crossings(B: dict) -> dict:
                    key=lambda q: abs(q[0] - src[0]) + abs(q[1] - src[1]))
 
     vm_c = ctr(parts["VM"])
+    if REFIT and REFIT.get("xroot") in parts:
+        # distributed VM (W11): the ROM field's x-broadcast root / result-return sink sits at the middle of the
+        # named hub region's edge nearest the core centre (lane-group-local VM banks live inside it)
+        _, rx, ry, rw, rh, _ = parts[REFIT["xroot"]]
+        c0x, c0y, c1x, c1y = B["core"]
+        cxc = (c0x + c1x) / 2
+        vm_c = (rx + rw if rx + rw / 2 < cxc else rx, ry + rh / 2)
     att = parts["ATTENTION"]
     for m in P.hard:
         if m["group"] == "HBM_PHY":

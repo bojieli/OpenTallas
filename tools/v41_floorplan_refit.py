@@ -69,6 +69,8 @@ def main(argv=None):
     ap.add_argument("--bf-pair", type=Path, required=True)
     ap.add_argument("--hub", type=Path, default=ROOT / "results/uarch/v41_dedicated_units.json")
     ap.add_argument("--hub-row", default="proposal_w11_p6")
+    ap.add_argument("--xroot", default="SU_VECTOR",
+                    help="hub region holding the x-broadcast root (distributed VM in the SU region, W11); '' = VM")
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--svg-dir", type=Path, default=ROOT / "results/floorplan")
     a = ap.parse_args(argv)
@@ -83,6 +85,7 @@ def main(argv=None):
                          replicas=u[k].get("replicas")) for k in ("indexer", "attention", "stream_unit")}
     P.REFIT = dict(strip_q_um=q["strip_um"] * g, strip_bf_um=b["strip_um"] * g, bf_pairs=BF16_PAIRS,
                    hub_mm2=hub, hub_scale={"HC": g, "GATHER": g}, hub_add_mm2={"VM": AON_MM2},
+                   xroot=a.xroot or None,
                    basis="W10 placed pairs + model hub + power switches + always-on island")
     rec = P.run("expanded_woa", a.svg_dir, write_views=False)
     rec["schema"] = "opentallas.v41.floorplan_pack_refit.v1"
