@@ -4,7 +4,7 @@
 Loads the 16 source-pinned QE local-tile checkpoint bank images
 (results/rtl/v41x_qe_local_tile_bank_l0.json) into the DUT's behavioural
 ot_rom_8192x274_m8 via masks and into the reference's ideal bank array, then runs
-wq_a (FP8), exp110.w1 (paired FP4) and wq_a again through both the DUT (RL = 3,
+wq_a (FP8), exp110.w1 (paired FP4) and wq_a again through both the DUT (RL = 2,
 per-macro capture, activation SRAMs, spine-edge pipes) and the reference
 (routed qtile RL = 2 + ot_chip_v41x_qtile_pair_bank).  Every result must match.
 Activations are deterministic pseudo-random finite E4M3 blocks (seeded).
@@ -115,17 +115,17 @@ def main() -> None:
         x["ref_accept_to_first_result"] = x["ref_first"] - x["ref_accept"]
     record = {
         "schema": "opentallas.rtl.v41x_qe_romac_exactness.v1", "status": "pass",
-        "claim_scope": ("Hardening candidate ot_chip_v41x_qe_romac (RL=3, unconditional per-macro capture, "
+        "claim_scope": ("Hardening candidate ot_chip_v41x_qe_romac (RL=2 kept: unconditional per-macro capture feeding the lane P0 register, "
                         "per-tag format, activation SRAMs, NP=2 spine pipes) produces every result of three "
                         "back-to-back checkpoint ops (wq_a FP8, exp110.w1 paired FP4, wq_a) bit-identical and in "
                         "order to the routed qtile RL=2 + pinned pair bank over the same bank images. "
                         "Activations are seeded synthetic finite E4M3 blocks, not checkpoint activations."),
         "rows": int(m.group(1)), "fault_rows": int(m.group(2)), "activation_seed": SEED,
         "latency_cycles": lat,
-        "latency_note": ("dut_accept is the spine-edge handshake (NP=2 input stages + queue), results are "
-                         "counted at the spine edge (NP=2 output stages); the tile-internal cost of the "
-                         "capture-beside-macro read pipeline is RL 2 -> 3, one cycle per op, no throughput "
-                         "change."),
+        "latency_note": ("dut_accept is the spine-edge handshake (NP=2 input stages + 1 queue cycle) and DUT "
+                         "results are counted after NP=2 output stages: +5 cycles, all spine-edge registers. The "
+                         "tile-internal read latency is unchanged (RL=2): the macro-side capture replaces the pair "
+                         "bank's rd_w register, the lane's P0 register takes the combinational lane select."),
         "last_result_cycle": {"dut": int(end.group(1)), "ref_with_format_drains": int(end.group(2))},
         "simulator": subprocess.run([str(VERILATOR), "--version"], capture_output=True, text=True).stdout.strip(),
         "source_sha256": {str(p.relative_to(ROOT)): digest(p) for p in [*RTL, TB, RECORD, Path(__file__)]},

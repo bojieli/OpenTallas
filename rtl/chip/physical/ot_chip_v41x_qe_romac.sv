@@ -4,7 +4,7 @@
 //
 //   * one block-dot lane group: ot_hdc_v41x_wgt_tile KIND 0, G = 1 (8 lanes x
 //     32-MAC FP8/FP4 block dots, 256 MACs/cycle), the same parameters as the
-//     routed ot_hdc_v41x_wgt_qtile except RL = 3 (see READ PIPELINE);
+//     routed ot_hdc_v41x_wgt_qtile (RL = 2);
 //   * the bank-local weight ROM of the source-pinned QE local tile witness
 //     (results/rtl/v41x_qe_local_tile_bank_l0.json): 16 ot_rom_8192x274_m8,
 //     banks 0-7 one FP8 264-bit {UE8M0, codes} lane each, banks 8-15 two
@@ -17,14 +17,15 @@
 //     pipes.
 //
 // READ PIPELINE.  The ROM macro's TT clock-to-q is ~792 ps; a 0.92 ns cycle
-// with 60 ps uncertainty leaves no room for the pair-bank's 16:1 bank-set mux
-// and FP4 half select between the macro and its capture.  So every macro
-// output is captured UNCONDITIONALLY by a register beside its pins (cap_q:
-// nothing between the macro pin and the flop D), and the lane select / FP4
-// expansion runs in the next cycle into rd_w.  Request (tile rq, edge n) ->
-// macro samples (edge n+1) -> cap_q (n+2) -> rd_w (n+3): RL = 3 instead of the
-// pair bank's 2.  The activation path is delayed to the same RL.  RL is a
-// parameter of the tile: the cost is one cycle of op latency, not throughput.
+// with 60 ps uncertainty leaves no room for the pair bank's 16:1 bank-set mux
+// and FP4 half select between the macro and a register.  So every macro output
+// is captured UNCONDITIONALLY by a register beside its pins (cap_q: nothing
+// between the macro pin and the flop D).  The lane select / FP4 expansion then
+// runs combinationally in the next cycle and lands in the block-dot lane's own
+// P0 input register (ot_hdc_v41x_wgt_bdot), where the pair bank's registered
+// rd_w used to land: request (tile rq, edge n) -> macro samples (n+1) ->
+// cap_q (n+2) -> P0 (n+3).  The tile's RL = 2 contract is unchanged, so the
+// capture costs no cycle; the activation SRAMs are captured the same way.
 //
 // FORMAT PER LANE.  Lanes of different chain positions are skewed, so two ops
 // of different formats can be in flight on different lanes; each lane's format
@@ -71,7 +72,7 @@ module ot_chip_v41x_qe_romac #(
     output reg               f_reserved,
     output reg               idle
 );
-    localparam integer RL = 3;
+    localparam integer RL = 2;
     integer i;
     // ------------------------------------------------------------ spine edge
     // descriptor: NP-stage registered pipe into a 4-entry queue; s_d_rdy is a
@@ -134,8 +135,8 @@ module ot_chip_v41x_qe_romac #(
     wire [8*20-1:0] rq_a;
     wire [8*10-1:0] rq_q;
     wire [8*4-1:0]  rq_tag;
-    reg  [8*264-1:0] rd_w;
-    reg  [8*264-1:0] rd_x;
+    reg  [8*264-1:0] rd_w;             // combinational: lane select of the captures
+    wire [8*264-1:0] rd_x;
     wire t_o_v, t_o_f, t_o_mask, t_idle;
     wire [15:0] t_o_rg, t_o_bf;
     wire [3:0]  t_o_tag;
@@ -208,24 +209,26 @@ module ot_chip_v41x_qe_romac #(
         f1 <= l_fp4; f2 <= f1; k1 <= l_bank; k2 <= k1;
     end
 
-    // lane select / FP4 expansion into rd_w (RL = 3)
+    // lane select / FP4 expansion (combinational into the lane's P0 register)
     reg [273:0] sel;
     reg [135:0] compact;
     reg         r_res;
     integer k;
-    always @(posedge clk) begin
+    always @(*) begin
         r_res = 1'b0;
         for (k = 0; k < 8; k = k + 1) begin
             sel = cap_q[k2[k*4 +: 4]*274 +: 274];
+            compact = k[0] ? sel[271:136] : sel[135:0];
             if (f2[k]) begin
-                compact = k[0] ? sel[271:136] : sel[135:0];
-                rd_w[k*264 +: 264] <= {compact[135:128], 128'b0, compact[127:0]};
+                rd_w[k*264 +: 264] = {compact[135:128], 128'b0, compact[127:0]};
                 if (v2[k] && sel[273:272] != 2'b00) r_res = 1'b1;
             end else begin
-                rd_w[k*264 +: 264] <= sel[263:0];
+                rd_w[k*264 +: 264] = sel[263:0];
                 if (v2[k] && sel[273:264] != 10'b0) r_res = 1'b1;
             end
         end
+    end
+    always @(posedge clk) begin
         if (!rst_n) begin f_conflict <= 1'b0; f_address <= 1'b0; f_reserved <= 1'b0; end
         else begin
             if (c_conflict) f_conflict <= 1'b1;
@@ -234,7 +237,7 @@ module ot_chip_v41x_qe_romac #(
         end
     end
 
-    // ------------------------------------------------------------ activation buffer, same RL
+    // ------------------------------------------------------------ activation buffer, captured beside the SRAM
     wire [8*512-1:0] act_q;
     reg  [8*264-1:0] act_cap;
     generate for (b = 0; b < 8; b = b + 1) begin : g_act
@@ -244,7 +247,7 @@ module ot_chip_v41x_qe_romac #(
             .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
         always @(posedge clk) act_cap[b*264 +: 264] <= act_q[b*512 +: 264];
     end endgenerate
-    always @(posedge clk) rd_x <= act_cap;
+    assign rd_x = act_cap;
 
     // ------------------------------------------------------------ results
     localparam integer RW = 1 + 16 + 4 + 1 + 32 + 16 + 1;
