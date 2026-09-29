@@ -610,10 +610,12 @@ def widen_fixture(src: Path, dst: Path, k: int = 2) -> dict:
         lines = (src / name).read_text().split()
         assert len(lines) == OPS * RANKS * MAXW
         out = []
-        for blk in range(OPS * RANKS):
-            b = lines[blk * MAXW:(blk + 1) * MAXW]
-            w = ["".join(b[i * k + j] for j in reversed(range(k))) for i in range(MAXW // k)]
-            out += w + ["0" * len(w[0])] * (MAXW - len(w))
+        # part: one MAXW block per (op, rank); expected: one contiguous RANKS x MAXW region per op
+        bs = MAXW if name == "part.hex" else RANKS * MAXW
+        for blk in range(OPS * RANKS * MAXW // bs):
+            b = lines[blk * bs:(blk + 1) * bs]
+            w = ["".join(b[i * k + j] for j in reversed(range(k))) for i in range(bs // k)]
+            out += w + ["0" * len(w[0])] * (bs - len(w))
         (dst / name).write_text("\n".join(out) + "\n")
     meta = dict(schema="w15_v41_widened_fixture_v1", widen=k, source_manifest_sha256=sha(src / "manifest.json"),
                 images_sha256={p: sha(dst / p) for p in ("part.hex", "expected.hex", "desc.hex")},
