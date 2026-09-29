@@ -184,7 +184,9 @@ module ot_hdc_matvec_part #(
     // (port-local scale ROM): word  wcs + round*IL + slot, where the program's
     // wcs is the matrix's port-local base (sum of the earlier matrices'
     // rounds*IL).  0: the dense image  wcs + round*(GT/S)*IL + q*IL + slot.
-    parameter integer SCALE_LOCAL = 0
+    parameter integer SCALE_LOCAL = 0,
+    // GOUT: result and scale ports provided (the result-port groups a pruned top has; default G)
+    parameter integer GOUT = G
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -222,9 +224,9 @@ module ot_hdc_matvec_part #(
     // One independent scale read per group. Row-word address is the matrix's
     // weight base plus output-row-word offset. Non-INT8 mode ties requests low.
     output reg               scale_re,
-    output reg  [G-1:0]      scale_gre,  // active group read enables; scale_re is their OR
-    output reg  [G*AW-1:0]  scale_addr,
-    input  wire [G*W*16-1:0] scale_q,
+    output reg  [GOUT-1:0]   scale_gre,  // active group read enables; scale_re is their OR
+    output reg  [GOUT*AW-1:0] scale_addr,
+    input  wire [GOUT*W*16-1:0] scale_q,
     // KV SRAM: one port per group, W lanes (BF16 values in 32-bit words) per word
     output reg               kv_re,
     output reg  [G*AW-1:0]   kv_addr,
@@ -235,10 +237,10 @@ module ot_hdc_matvec_part #(
     input  wire [G*32-1:0]   x_q,
     // result words, one port per group
     output wire              ov,          // a result round-slot (whether or not written)
-    output wire [G-1:0]      o_we,
-    output wire [G*AW-1:0]   o_addr,
-    output wire [G*W-1:0]    o_mask,
-    output wire [G*W*32-1:0] o_data,
+    output wire [GOUT-1:0]   o_we,
+    output wire [GOUT*AW-1:0] o_addr,
+    output wire [GOUT*W-1:0] o_mask,
+    output wire [GOUT*W*32-1:0] o_data,
     // argmax
     output reg  [NW-1:0]     am_idx,
     output reg  [31:0]       am_val,
@@ -274,6 +276,11 @@ module ot_hdc_matvec_part #(
     localparam integer NPX = (NX < G) ? NX : G;
     localparam integer LANES = (PART != 2);
     localparam integer PORTS = (PART != 1);
+    //: internal widths: the lanes' (GL), the split tree's (GI: the top holds only the positions of
+    //: its input level) and the result path's (GR: the result-port groups when pruned)
+    localparam integer GL = LANES ? G : 1;
+    localparam integer GI = (PART == 2) ? (G >> TCUT) : G;
+    localparam integer GR = PRUNE ? NPG : G;
     function automatic [15:0] int8_bf16(input [7:0] code);
         reg [7:0] mag, norm;
         reg [2:0] msb;
@@ -455,11 +462,11 @@ module ot_hdc_matvec_part #(
     //: Memory read data is registered once as it arrives (MEM_PIPE): the
     //: weight word is 2,048 bits wide and its lanes span the whole engine, so a
     //: pin-to-lane wire gets a cycle of its own.
-    reg [G*W*((INT8_WEIGHT != 0) ? 8 : 16)-1:0] mq_wrom;
-    reg [G*W*32-1:0] mq_kv;
-    reg [G*32-1:0]   mq_x;
-    reg [G*W*32-1:0] s2_w, s3_w;
-    reg [G*32-1:0]   s2_x, s3_x;
+    reg [GL*W*((INT8_WEIGHT != 0) ? 8 : 16)-1:0] mq_wrom;
+    reg [GL*W*32-1:0] mq_kv;
+    reg [GL*32-1:0]   mq_x;
+    reg [GL*W*32-1:0] s2_w, s3_w;
+    reg [GL*32-1:0]   s2_x, s3_x;
     reg [G-1:0]      s1_gm, s1b_gm, s2_gm;
     integer l;
     generate if (LANES) begin : g_operand
@@ -497,7 +504,7 @@ module ot_hdc_matvec_part #(
     ot_hdc_delay #(.W(4), .D(10 + TL * LV0 + XDD)) u_ts (.clk(clk), .rst_n(rst_n), .d(s3_tag[TW-6 -: 4]), .q(t_split));
 
     // -- lanes -------------------------------------------------------------------
-    wire [G*W*32-1:0] sum;
+    wire [GL*W*32-1:0] sum;
     wire [G*W-1:0]    lfault;
     genvar g, gl;
     generate if (LANES) begin : g_lanes
@@ -525,7 +532,7 @@ module ot_hdc_matvec_part #(
             end
         end
     end else begin : g_no_lanes
-        assign sum = {G*W*32{1'b0}};
+        assign sum = {GL*W*32{1'b0}};
         assign lfault = {G*W{1'b0}};
     end endgenerate
 
@@ -535,12 +542,12 @@ module ot_hdc_matvec_part #(
     //: exponent alignment (me_iter12: -91 ps on that path).
     //: Pruned (SMIN): a level <= SMIN always adds and holds nothing; above it,
     //: only positions below NPG are held.
-    wire [G*W*32-1:0] lvl [0:LG];
+    wire [GI*W*32-1:0] lvl [0:LG];
     wire [LG:0]       tfault;
     genvar lv, p;
     generate
         if (PART == 2) begin : g_tin
-            assign lvl[LV0] = {{((G - (G >> LV0)) * W * 32){1'b0}}, t_in[(G >> LV0)*W*32-1:0]};
+            assign lvl[LV0] = t_in[GI*W*32-1:0];
         end else begin : g_tsum
             assign lvl[0] = sum;
         end
@@ -565,15 +572,15 @@ module ot_hdc_matvec_part #(
             localparam integer R1 = ALWAYS ? R0 : ((HOLD_TO > R0) ? HOLD_TO : R0);
             localparam integer RW = (R1 > 0) ? R1 : 1;
             reg  [RW*W*32-1:0] lq;
-            wire [G*W*32-1:0] held;
+            wire [GI*W*32-1:0] held;
             if (!ALWAYS && HOLD_TO > 0) begin : g_hold
                 ot_hdc_delay #(.W(HOLD_TO*W*32), .D(TA)) u_hold (.clk(clk), .rst_n(rst_n),
                     .d(lvl[lv-1][HOLD_TO*W*32-1:0]), .q(held[HOLD_TO*W*32-1:0]));
-                if (HOLD_TO < G) begin : g_hz
-                    assign held[G*W*32-1:HOLD_TO*W*32] = 0;
+                if (HOLD_TO < GI) begin : g_hz
+                    assign held[GI*W*32-1:HOLD_TO*W*32] = 0;
                 end
             end else begin : g_nohold
-                assign held = {G*W*32{1'b0}};
+                assign held = {GI*W*32{1'b0}};
             end
             for (p = 0; p < PAIRS; p = p + 1) begin : g_add
                 localparam integer PW = p / W, PL = p % W;
@@ -591,9 +598,9 @@ module ot_hdc_matvec_part #(
                 always @(posedge clk) lq[R1*W*32-1 : R0*W*32] <= held[R1*W*32-1 : R0*W*32];
             end
             if (R1 == 0) begin : g_lz
-                assign lvl[lv] = {G*W*32{1'b0}};
-            end else if (R1 < G) begin : g_lp
-                assign lvl[lv] = {{((G - R1) * W * 32){1'b0}}, lq};
+                assign lvl[lv] = {GI*W*32{1'b0}};
+            end else if (R1 < GI) begin : g_lp
+                assign lvl[lv] = {{((GI - R1) * W * 32){1'b0}}, lq};
             end else begin : g_lf
                 assign lvl[lv] = lq;
             end
@@ -603,7 +610,7 @@ module ot_hdc_matvec_part #(
     // PART 1: the tile's top level and its valid, towards the tree above
     assign t_out = lvl[LG][W*32-1:0];
     assign t_vout = vline[10 + OD];
-    wire [G*W*32-1:0] raw_res = lvl[LG];
+    wire [GI*W*32-1:0] raw_res = lvl[LG];
     wire raw_v = vline[10 + OD + XDD];
     wire raw_last, raw_oen, raw_amax, raw_wsrc, raw_mmode;
     wire [3:0] raw_split;
@@ -614,10 +621,10 @@ module ot_hdc_matvec_part #(
     assign {raw_last, raw_oen, raw_amax, raw_wsrc, raw_mmode, raw_split,
             raw_oa, raw_ots, raw_nb, raw_lb, raw_nout,
             raw_rmax, raw_j, raw_opend, raw_mbase, raw_sbase} = a_tag;
-    wire [G*W*32-1:0] res;
+    wire [GR*W*32-1:0] res;
     wire [TW-1:0] result_tag;
     wire result_v;
-    wire [G*W-1:0] scale_faults;
+    wire [GR*W-1:0] scale_faults;
     wire [7:0] post_pending;
     generate if (INT8_WEIGHT != 0 && PORTS) begin : g_post_scale
         wire [TW-1:0] tag_d5, pre_tag;
@@ -629,7 +636,7 @@ module ot_hdc_matvec_part #(
         wire [NW:0] pre_nb, pre_lb, pre_nout;
         wire pre_rmax, pre_opend;
         wire [2:0] pre_j;
-        wire [G*W*32-1:0] scaled;
+        wire [GR*W*32-1:0] scaled;
         ot_hdc_delay #(.W(TW), .D(5)) u_tag (.clk(clk), .rst_n(rst_n), .d(a_tag), .q(tag_d5));
         ot_hdc_vline #(.D(5)) u_v (.clk(clk), .rst_n(rst_n), .v(raw_v), .vd(vd));
         ot_hdc_delay #(.W(TW), .D(8+OD+XDD)) u_pretag (.clk(clk), .rst_n(rst_n),
@@ -645,7 +652,7 @@ module ot_hdc_matvec_part #(
         assign {pre_last, pre_oen, pre_amax, pre_wsrc, pre_mmode, pre_split,
                 pre_oa, pre_ots, pre_nb, pre_lb, pre_nout,
                 pre_rmax, pre_j, pre_opend, pre_mbase, pre_sbase} = pre_tag;
-        wire [G-1:0] pre_scale_active;
+        wire [GOUT-1:0] pre_scale_active;
         genvar pg;
         for (pg = 0; pg < NPG; pg = pg + 1) begin : g_scale_request_mask
             // A group with no output rows cannot need a scale word. This also
@@ -655,8 +662,8 @@ module ot_hdc_matvec_part #(
                 (pre_mmode ? (pre_lb + (gb + pg)*W < pre_nout) :
                              (pre_nb + (gb + pg)*(W*IL) < pre_nout));
         end
-        if (NPG < G) begin : g_scale_request_pruned
-            assign pre_scale_active[G-1:NPG] = 0;
+        if (NPG < GOUT) begin : g_scale_request_pruned
+            assign pre_scale_active[GOUT-1:NPG] = 0;
         end
         // pre_tag precedes a_tag by two cycles. The registered request becomes
         // visible to the synchronous ROM at the next edge, and scale_q is
@@ -686,9 +693,9 @@ module ot_hdc_matvec_part #(
                 .y(scaled[32*si +: 32]), .fault(scale_faults[si])
             );
         end
-        if (NPG < G) begin : g_scale_pruned
-            assign scaled[G*W*32-1:NPG*W*32] = 0;
-            assign scale_faults[G*W-1:NPG*W] = 0;
+        if (NPG < GR) begin : g_scale_pruned
+            assign scaled[GR*W*32-1:NPG*W*32] = 0;
+            assign scale_faults[GR*W-1:NPG*W] = 0;
         end
         assign res = scaled;
         assign result_tag = tag_d5;
@@ -699,7 +706,7 @@ module ot_hdc_matvec_part #(
         assign scale_gre = 0;
         assign scale_addr = 0;
         assign scale_faults = 0;
-        assign res = raw_res;
+        assign res = raw_res[GR*W*32-1:0];
         assign result_tag = a_tag;
         assign result_v = PORTS ? raw_v : 1'b0;
         assign post_pending = 0;
@@ -719,10 +726,10 @@ module ot_hdc_matvec_part #(
 
     // -- results -------------------------------------------------------------------
     reg           ov1, ov2;
-    reg  [G-1:0]  o_we1, o_we2;
-    reg  [G*AW-1:0] o_addr1, o_addr2;
-    reg  [G*W-1:0]  o_mask1, o_mask2;
-    reg  [G*W*32-1:0] o_data1, o_data2;
+    reg  [GR-1:0]  o_we1, o_we2;
+    reg  [GR*AW-1:0] o_addr1, o_addr2;
+    reg  [GR*W-1:0]  o_mask1, o_mask2;
+    reg  [GR*W*32-1:0] o_data1, o_data2;
     wire          r_v = result_v;
     wire          r_last, r_oen, r_amax, r_wsrc, r_mmode;
     wire [3:0]    r_split;
@@ -734,10 +741,10 @@ module ot_hdc_matvec_part #(
     assign {r_last, r_oen, r_amax, r_wsrc, r_mmode, r_split, r_oa, r_ots, r_nb, r_lb, r_nout,
             r_rmax, r_j, r_opend, r_mbase, r_sbase} = result_tag;
     wire [$clog2(GT):0] r_ports = GT >> r_split;
-    reg  [G*W-1:0] r_mask;
+    reg  [GR*W-1:0] r_mask;
     integer q, ql;
     always @(*) begin
-        r_mask = {G*W{1'b0}};
+        r_mask = {GR*W{1'b0}};
         for (q = 0; q < NPG; q = q + 1)
             for (ql = 0; ql < W; ql = ql + 1)
                 r_mask[q*W + ql] = (gb + q < r_ports) &&
@@ -748,7 +755,7 @@ module ot_hdc_matvec_part #(
             ov1 <= 1'b0; o_we1 <= 0;
         end else begin
             ov1 <= r_v && r_last;
-            for (q = 0; q < G; q = q + 1)
+            for (q = 0; q < GR; q = q + 1)
                 o_we1[q] <= (q < NPG) && r_v && r_last && r_oen && (gb + q < r_ports);
         end
     end
@@ -772,14 +779,27 @@ module ot_hdc_matvec_part #(
     //: (a line of ORD + 2 >= 2 stages: ot_hdc_vline needs D >= 2; stages above ORD are unused)
     wire [ORD+2:0] ov_line;
     ot_hdc_vline #(.D(ORD + 2)) u_ovl (.clk(clk), .rst_n(rst_n), .v(ov2), .vd(ov_line));
+    wire [GR-1:0]      o_we_r;
+    wire [GR*AW-1:0]   o_addr_r;
+    wire [GR*W-1:0]    o_mask_r;
+    wire [GR*W*32-1:0] o_data_r;
     generate if (ORD > 0) begin : g_ord
-        ot_hdc_delay #(.W(G), .D(ORD), .RESET(1)) u_owe (.clk(clk), .rst_n(rst_n), .d(o_we2), .q(o_we));
-        ot_hdc_delay #(.W(G*AW + G*W + G*W*32), .D(ORD)) u_od (.clk(clk), .rst_n(rst_n),
-            .d({o_addr2, o_mask2, o_data2}), .q({o_addr, o_mask, o_data}));
+        ot_hdc_delay #(.W(GR), .D(ORD), .RESET(1)) u_owe (.clk(clk), .rst_n(rst_n), .d(o_we2), .q(o_we_r));
+        ot_hdc_delay #(.W(GR*AW + GR*W + GR*W*32), .D(ORD)) u_od (.clk(clk), .rst_n(rst_n),
+            .d({o_addr2, o_mask2, o_data2}), .q({o_addr_r, o_mask_r, o_data_r}));
         assign ov = ov_line[ORD];
     end else begin : g_no_ord
-        assign ov = ov2; assign o_we = o_we2;
-        assign o_addr = o_addr2; assign o_mask = o_mask2; assign o_data = o_data2;
+        assign ov = ov2; assign o_we_r = o_we2;
+        assign o_addr_r = o_addr2; assign o_mask_r = o_mask2; assign o_data_r = o_data2;
+    end endgenerate
+    //: groups above the result ports never write (their ports are constant)
+    generate if (GR < GOUT) begin : g_ozx
+        assign o_we = {{(GOUT - GR){1'b0}}, o_we_r};
+        assign o_addr = {{((GOUT - GR) * AW){1'b0}}, o_addr_r};
+        assign o_mask = {{((GOUT - GR) * W){1'b0}}, o_mask_r};
+        assign o_data = {{((GOUT - GR) * W * 32){1'b0}}, o_data_r};
+    end else begin : g_ofull
+        assign o_we = o_we_r; assign o_addr = o_addr_r; assign o_mask = o_mask_r; assign o_data = o_data_r;
     end endgenerate
 
     // -- argmax: a registered compare tree over the round-slot, then a running best --

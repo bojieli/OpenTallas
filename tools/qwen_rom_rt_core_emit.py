@@ -73,6 +73,17 @@ def emit(text: str) -> str:
         inst = inst.replace(old, new)
     text = text[:start] + inst + text[end:]
     text = sub1(r"\n    assign me_oaddr = vw_me_addr;\n    assign me_omask = vw_me_mask;\n    assign me_odata = vw_me_data;", "", text)
+    # the engine's result and scale ports serve only the G >> SMIN result-port groups
+    for pat, rep in ((r"output wire \[G-1:0\]      scale_gre,", "output wire [(G >> SMIN)-1:0] scale_gre,"),
+                     (r"output wire \[G\*AW-1:0\]   scale_addr,", "output wire [(G >> SMIN)*AW-1:0] scale_addr,"),
+                     (r"input  wire \[G\*W\*16-1:0\] scale_q,", "input  wire [(G >> SMIN)*W*16-1:0] scale_q,"),
+                     (r"output wire \[G-1:0\]      vw_me_we,", "output wire [(G >> SMIN)-1:0] vw_me_we,"),
+                     (r"output wire \[G\*AW-1:0\]   vw_me_addr,", "output wire [(G >> SMIN)*AW-1:0] vw_me_addr,"),
+                     (r"output wire \[G\*W-1:0\]    vw_me_mask,", "output wire [(G >> SMIN)*W-1:0] vw_me_mask,"),
+                     (r"output wire \[G\*W\*32-1:0\] vw_me_data,", "output wire [(G >> SMIN)*W*32-1:0] vw_me_data,"),
+                     (r"wire \[G-1:0\] me_o_we;", "wire [(G >> SMIN)-1:0] me_o_we;"),
+                     (r"assign vw_me_we = me_o_we & \{G\{me_en\}\};", "assign vw_me_we = me_o_we & {(G >> SMIN){me_en}};")):
+        text = sub1(pat, rep, text)
     for name in ("int8_wrom_q", "kv_raddr", "me_oaddr", "me_omask", "me_odata", "me_wrom_q"):
         if re.search(rf"\b{name}\b", text):
             raise SystemExit(f"removed net {name} still referenced")

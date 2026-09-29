@@ -274,7 +274,7 @@ int main(int argc, char** argv) {
         auto& r = rs[d];
         r.cr.assign(SW, 0); r.va.assign(SW, 0); r.vb.assign(SW, 0); r.vc.assign(SW, 0);
         r.cr_q.assign(SW, 0); r.va_q.assign(SW, 0); r.vb_q.assign(SW, 0); r.vc_q.assign(SW, 0);
-        r.sc.assign(G, 0); r.sc_addr.assign(G, 0); r.vx.assign(NXC, 0); r.vx_q.assign(NXC, 0);
+        r.sc.assign(NPORT, 0); r.sc_addr.assign(NPORT, 0); r.vx.assign(NXC, 0); r.vx_q.assign(NXC, 0);
         r.xpipe_q.assign(XVM, std::vector<uint32_t>(NXC, 0)); r.xpipe_v.assign(XVM, std::vector<uint8_t>(NXC, 0));
         r.rom_bank.assign(NT, -1); r.rom_addr.assign(NT, 0); r.kvr.assign(NT, 0); r.kv_q.assign(size_t(G) * W, 0);
     }
@@ -344,7 +344,7 @@ int main(int argc, char** argv) {
             if (me_en[d]) {
                 me_busy[d]++;
                 // spine: scale ROM (result-port groups) and the x chunk port
-                pool.run(G, [&](size_t g) {
+                pool.run(NPORT, [&](size_t g) {
                     r.sc[g] = getb(t.scale_gre, g, 1);
                     if (r.sc[g]) { uint32_t a = getb(t.scale_addr, g * 24, 24); if (a >= m.scale_words) fatal("scale ROM address", a, long(g)); r.sc_addr[g] = a; }
                 });
@@ -367,7 +367,7 @@ int main(int argc, char** argv) {
                         }
                 });
                 // result writes of the port groups (the core gates vw_me_we with the engine enable)
-                for (int g = 0; g < G; g++)
+                for (int g = 0; g < NPORT; g++)
                     if (getb(t.vw_me_we, g, 1)) {
                         uint32_t a = getb(t.vw_me_addr, g * 24, 24); uint32_t msk = getb(t.vw_me_mask, g * 16, 16);
                         for (int l = 0; l < W; l++) if ((msk >> l) & 1) vmw[d].push_back({(a << 4) + l, t.vw_me_data[g * 16 + l]});
@@ -411,7 +411,7 @@ int main(int argc, char** argv) {
             }
             if (me_en[d]) {
                 const bool sl = scale_local();
-                for (int g = 0; g < G; g++)
+                for (int g = 0; g < NPORT; g++)
                     if (r.sc[g]) {
                         if (sl && g >= NPORT) fatal("scale read beyond the port groups", g);
                         size_t w = sl ? size_t(g) * m.scale_words + r.sc_addr[g] : size_t(r.sc_addr[g]);

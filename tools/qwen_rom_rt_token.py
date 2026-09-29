@@ -102,7 +102,8 @@ def main() -> None:
     vs_sv = out / "gen" / "ot_hdc_vstream_rt.sv"
     vs_sv.write_text(qwen_rom_rt_core_emit.emit_vstream(qwen_rom_rt_core_emit.VSTREAM.read_text()))
     hier = out / "gen" / "hier.vlt"
-    hier.write_text('`verilator_config\nhier_block -module "ot_hdc_vstream_lane"\n')
+    hier.write_text('`verilator_config\n' + ''.join(f'hier_block -module "{m}"\n' for m in
+                    ("ot_hdc_vstream_lane", "ot_hdc_fmul", "ot_hdc_qadd")))
     spine = [f"-GSMIN={args.smin}", f"-GSMAX={args.smax}", f"-GTCUT={args.tcut}", f"-GBD={args.bd}",
              f"-GXVM={args.xvm}", f"-GNWS={args.nws}", f"-GTWS={args.tws}", f"-GORD={args.ord}"]
     models = [

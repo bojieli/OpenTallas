@@ -111,6 +111,11 @@ module ot_qwen_me_array #(
     wire [NXC*32-1:0] xl_d;
     wire [NPT*W*32-1:0] t_lvl;
     wire              fab_fault;
+    localparam integer NPG = GT >> SMIN;
+    wire [NPG-1:0]      sp_scale_gre, sp_o_we;
+    wire [NPG*AW-1:0]   sp_scale_addr, sp_o_addr;
+    wire [NPG*W-1:0]    sp_o_mask;
+    wire [NPG*W*32-1:0] sp_o_data;
     ot_qwen_me_spine #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
         .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL)) u_spine (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
@@ -120,14 +125,25 @@ module ot_qwen_me_array #(
         .i_jsh(i_jsh), .i_split(i_split), .i_wcs(i_wcs), .i_round(i_round),
         .i_obase(i_obase), .i_ots(i_ots), .i_ojs(i_ojs),
         .i_mmode(i_mmode), .i_oen(i_oen), .i_amax(i_amax), .i_rmax(i_rmax), .i_mbase(i_mbase),
-        .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr), .scale_q(scale_q),
+        .scale_re(scale_re), .scale_gre(sp_scale_gre), .scale_addr(sp_scale_addr), .scale_q(scale_q[NPG*W*16-1:0]),
         .x_re(x_re), .x_addr(x_addr), .x_q(x_q),
         .wrom_re(), .wrom_addr(), .kv_re(),
         .tgo(tgo), .tb(tb), .xl_d(xl_d), .t_lvl(t_lvl), .fab_fault(fab_fault),
-        .ov(ov), .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask), .o_data(o_data),
+        .ov(ov), .o_we(sp_o_we), .o_addr(sp_o_addr), .o_mask(sp_o_mask), .o_data(sp_o_data),
         .am_idx(am_idx), .am_val(am_val), .am_any(am_any),
         .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
         .progress(progress), .fault(fault));
+    generate if (NPG < GT) begin : g_zx
+        assign scale_gre = {{(GT - NPG){1'b0}}, sp_scale_gre};
+        assign scale_addr = {{((GT - NPG) * AW){1'b0}}, sp_scale_addr};
+        assign o_we = {{(GT - NPG){1'b0}}, sp_o_we};
+        assign o_addr = {{((GT - NPG) * AW){1'b0}}, sp_o_addr};
+        assign o_mask = {{((GT - NPG) * W){1'b0}}, sp_o_mask};
+        assign o_data = {{((GT - NPG) * W * 32){1'b0}}, sp_o_data};
+    end else begin : g_full
+        assign scale_gre = sp_scale_gre; assign scale_addr = sp_scale_addr;
+        assign o_we = sp_o_we; assign o_addr = sp_o_addr; assign o_mask = sp_o_mask; assign o_data = sp_o_data;
+    end endgenerate
 
     // -- tiles and the tree above them -------------------------------------------------
     // Level LT position p is tile p's t_out.  The node of level lv > LT,
@@ -224,9 +240,9 @@ module ot_qwen_me_spine #(
     input  wire [AW-1:0]     i_mbase,
     // result-port scale ROM (spine)
     output wire              scale_re,
-    output wire [GT-1:0]     scale_gre,
-    output wire [GT*AW-1:0]  scale_addr,
-    input  wire [GT*W*16-1:0] scale_q,
+    output wire [(GT >> SMIN)-1:0]     scale_gre,
+    output wire [(GT >> SMIN)*AW-1:0]  scale_addr,
+    input  wire [(GT >> SMIN)*W*16-1:0] scale_q,
     // vector-memory x read port: one element per chunk
     output wire [(1<<SMAX)-1:0]    x_re,
     output wire [(1<<SMAX)*AW-1:0] x_addr,
@@ -243,10 +259,10 @@ module ot_qwen_me_spine #(
     input  wire              fab_fault,
     // results (port groups only)
     output wire              ov,
-    output wire [GT-1:0]     o_we,
-    output wire [GT*AW-1:0]  o_addr,
-    output wire [GT*W-1:0]   o_mask,
-    output wire [GT*W*32-1:0] o_data,
+    output wire [(GT >> SMIN)-1:0]     o_we,
+    output wire [(GT >> SMIN)*AW-1:0]  o_addr,
+    output wire [(GT >> SMIN)*W-1:0]   o_mask,
+    output wire [(GT >> SMIN)*W*32-1:0] o_data,
     output wire [NW-1:0]     am_idx,
     output wire [31:0]       am_val,
     output wire              am_any,
@@ -277,7 +293,7 @@ module ot_qwen_me_spine #(
     reg                 range_fault;
     ot_hdc_matvec_part #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1),
         .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .PART(2), .GT(GT), .SMIN(SMIN), .TCUT(TCUT),
-        .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL)) u_top (
+        .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN)) u_top (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
