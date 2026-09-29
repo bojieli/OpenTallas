@@ -47,3 +47,26 @@ global solution.
 
 The audit changes no RTL, ownership or capacity. It intentionally refuses to
 invent a destination or silently increase logical ROM capacity.
+
+## Program-declared partition refinement
+
+The source-pinned emitter declares `engram.wkv` output quarters and indexer
+`weights_proj` output quarters. Applying those shapes reduces the conservative
+layer-die total excess from 2,234,824,496 to **1,253,750,576 bytes**. There is
+still no positive per-die headroom under the equal-row spill proposal. This
+refinement is recorded separately in `v41_spill_resolved_dense.json`; it does
+not silently overwrite the earlier conservative observation.
+
+The HC projections are correctly replicated. Indexer wq_b and wk are also
+replicated. Compressor wkv/wgate remain conservatively replicated: although
+the emitter allocates a smaller cwkv shape, complete collective/reduction and
+consumer semantics across full compressor layers have not been demonstrated.
+No memory credit is taken just because an address allocation is smaller.
+
+As a **non-adopted sensitivity**, compact wo_a with row-local scales yields
+718,324 bytes spare at stage17/rank0; across layer dies it gives 231,980,096
+positive bytes and 185,496,432 bytes of deficits elsewhere. The aggregate
+surplus does not itself prove a legal redistribution: physical banks, source
+formats, gather destinations and actual link latency still need binding.
+Root must approve the decoder timing and ME alignment before using this
+representation for either capacity acceptance or rates.

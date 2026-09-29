@@ -6,7 +6,7 @@ import argparse,hashlib,json,math,struct
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 
-def derive(snapshot):
+def derive(snapshot, compact_woa=False):
     ip=snapshot/'model.safetensors.index.json';idx=json.loads(ip.read_text())['weight_map'];hs={};pins={}
     def meta(k):
         f=idx[k]
@@ -37,16 +37,19 @@ def derive(snapshot):
                 if m['dtype']=='F8_E4M3' and name.endswith('.weight') and len(r)==2:
                     rows,cols=r;scale=name[:-7]+'.scale';sm=meta(scale);sources.append(scale);used.add(scale)
                     local=name.split(f'layers.{layer}.')[1]
-                    if local in ['attn.wq_a.weight','attn.wkv.weight','attn.wq_b.weight','ffn.shared_experts.w1.weight','ffn.shared_experts.w3.weight','ffn.shared_experts.w2.weight']:
-                        assert rows%4==0;rows//=4;mode='validated_output_row_quarter'
-                    elif local=='attn.wo_b.weight':assert cols%4==0;cols//=4;mode='validated_K_quarter'
-                    if local=='attn.wo_a.weight':rows//=4;size=rows*cols*2;mode='BF16_expanded_output_groups_quarter'
+                    if local in ['attn.wq_a.weight','attn.wkv.weight','attn.wq_b.weight','ffn.shared_experts.w1.weight','ffn.shared_experts.w3.weight','ffn.shared_experts.w2.weight','engram.wkv.weight']:
+                        assert rows%4==0;rows//=4;mode='program_declared_output_row_quarter'
+                    elif local=='attn.wo_b.weight':assert cols%4==0;cols//=4;mode='program_declared_K_quarter'
+                    if local=='attn.wo_a.weight':
+                        rows//=4
+                        size=rows*(cols+cols//32) if compact_woa else rows*cols*2
+                        mode='candidate_compact_woa_output_groups_quarter' if compact_woa else 'BF16_expanded_output_groups_quarter'
                     else:
                         assert cols%32==0
                         size=rows*(cols+cols//32)
                         mode+=' with repeated_per_row_scales'
-                elif name.endswith('ffn.gate.weight') or name.endswith('attn.attn_sink'):
-                    assert size%4==0;size//=4;mode='validated_output_row_quarter'
+                elif name.endswith('ffn.gate.weight') or name.endswith('attn.attn_sink') or name.endswith('attn.indexer.weights_proj.weight'):
+                    assert size%4==0;size//=4;mode='program_declared_output_row_quarter'
                 entries.append(dict(tensor=name,source_tensors=sources,payload_upper_bound_bytes=size,mode=mode));used.update(sources)
         dense=sum(e['payload_upper_bound_bytes'] for e in entries);expert=exp*4700160
         # Four rank-specific spill rows avoid losing the remainder rows.
@@ -62,7 +65,7 @@ def derive(snapshot):
         for r in s['ranks']:
             if s['stage']==17:continue
             rowcap=max(0,r['free_bytes']//264)
-            if rowcap>=remove:
+            if remove > 0 and rowcap>=remove:
                 choices.append(dict(stage=s['stage'],rank=r['rank'],rows=remove,destination_free_before_bytes=r['free_bytes'],destination_free_after_bytes=r['free_bytes']-remove*264,stage_distance=abs(s['stage']-17)))
     choices.sort(key=lambda c:(c['stage_distance'],c['stage'],c['rank']))
     proposed=choices[0] if choices else None
@@ -70,9 +73,9 @@ def derive(snapshot):
         interval=complete['spill_proposal']['intervals'][0];end=interval['row_end'];proposed.update(table=interval['tensor'],row_begin=end-remove,row_end=end,bytes_moved=remove*264,
             added_request_response_bytes_per_access=0,forwarded_row_bytes_per_access=264,route_timing_claim=False,
             routing='Update gather ownership lookup; request goes directly to destination. Stage distance is a heuristic, not actual routed latency.')
-    return dict(schema='opentallas.v41.spill_relocation.v1',status='candidate_capacity_audit_not_physical_binding',index_sha256=hashlib.sha256(ip.read_bytes()).hexdigest(),checkpoint_header_sha256=pins,owner_sha256=hashlib.sha256(ownerpath.read_bytes()).hexdigest(),capacity_bytes=cap,expert_matrix_headers_checked=expert_headers_checked,stages=stages,source_stage=17,source_rank=0,required_rows_to_move=remove,eligible_destinations=choices,proposed_move=proposed,
+    return dict(schema='opentallas.v41.spill_relocation.v1',status='candidate_capacity_audit_not_physical_binding',index_sha256=hashlib.sha256(ip.read_bytes()).hexdigest(),checkpoint_header_sha256=pins,owner_sha256=hashlib.sha256(ownerpath.read_bytes()).hexdigest(),representation_profile='candidate_compact_woa_not_adopted' if compact_woa else 'expanded_woa_resolved_dense_splits',program_sha256=hashlib.sha256((ROOT/'tools/hdc_replay_v41.py').read_bytes()).hexdigest(),capacity_bytes=cap,expert_matrix_headers_checked=expert_headers_checked,stages=stages,source_stage=17,source_rank=0,required_rows_to_move=remove,eligible_destinations=choices,proposed_move=proposed,
         all_layer_stages_fit_before=all(r['free_bytes']>=0 for s in stages for r in s['ranks']),total_layer_deficit_bytes=sum(max(0,-r['free_bytes']) for s in stages for r in s['ranks']),total_conservative_layer_spare_bytes=sum(max(0,r['free_bytes']) for s in stages for r in s['ranks']),
         unresolved=['unknown dense splits conservatively replicated; macro port/physical binding remains unproved','head allocation retained from mean model: exact head image capacity still required','full layer-stage spill redistribution required if other stages fail','actual gather endpoint/route timing unavailable, cannot prove minimum added critical-path latency'])
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();a.output.write_text(json.dumps(derive(a.snapshot),indent=2)+'\n')
+    p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--compact-woa',action='store_true');a=p.parse_args();a.output.write_text(json.dumps(derive(a.snapshot,a.compact_woa),indent=2)+'\n')
