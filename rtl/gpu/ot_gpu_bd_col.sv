@@ -15,9 +15,9 @@
 // Latency: input -> chunk sum 15 cycles (block-dot P0..P8 + adder + output).
 // ---------------------------------------------------------------------------
 module ot_gpu_bd_col #(
-    parameter integer LB   = 8,
+    parameter integer LB   = 2,         // defaults = the hardened macro (V4.1 SM: 2 lanes, 16-bit tag)
     parameter integer IL   = 8,
-    parameter integer TAGW = 12
+    parameter integer TAGW = 16
 ) (
     input  wire              clk,
     input  wire              rst_n,

@@ -24,9 +24,9 @@
 // not L x 16 gates) and every output leaves one.
 // ---------------------------------------------------------------------------
 module ot_gpu_tc_col #(
-    parameter integer L    = 32,
+    parameter integer L    = 32,        // defaults = the hardened macro (Qwen SM: 32 lanes, 16-bit tag)
     parameter integer IL   = 8,
-    parameter integer TAGW = 12
+    parameter integer TAGW = 16
 ) (
     input  wire            clk,
     input  wire            rst_n,

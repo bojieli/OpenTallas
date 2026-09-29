@@ -157,10 +157,18 @@ module ot_gpu_sm_q #(
             for (q = 0; q < LS; q = q + 1) begin : g_x
                 assign xs[16*q +: 16] = ix[(col * L + sp * LS + q) * 16 +: 16];
             end
-            ot_gpu_tc_col #(.L(LS), .IL(IL), .TAGW(TAGW)) u_tc (
-                .clk(clk), .rst_n(rst_n), .v(iv), .first(ifirst), .last(ilast), .tag(itag),
-                .w(iw[sp*LS*16 +: LS*16]), .x(xs),
-                .ov(sov[sp]), .y(sy[32*sp +: 32]), .otag(stag[TAGW*sp +: TAGW]), .fault(sfault[sp]));
+            if (LS == 32 && IL == 8 && TAGW == 16) begin : g_hard
+                // the hardened macro (its defaults): no parameter overrides on a blackboxed instance
+                ot_gpu_tc_col u_tc (
+                    .clk(clk), .rst_n(rst_n), .v(iv), .first(ifirst), .last(ilast), .tag(itag),
+                    .w(iw[sp*LS*16 +: LS*16]), .x(xs),
+                    .ov(sov[sp]), .y(sy[32*sp +: 32]), .otag(stag[TAGW*sp +: TAGW]), .fault(sfault[sp]));
+            end else begin : g_soft
+                ot_gpu_tc_col #(.L(LS), .IL(IL), .TAGW(TAGW)) u_tc (
+                    .clk(clk), .rst_n(rst_n), .v(iv), .first(ifirst), .last(ilast), .tag(itag),
+                    .w(iw[sp*LS*16 +: LS*16]), .x(xs),
+                    .ov(sov[sp]), .y(sy[32*sp +: 32]), .otag(stag[TAGW*sp +: TAGW]), .fault(sfault[sp]));
+            end
         end
         wire tv, tf;
         wire [31:0] ty;

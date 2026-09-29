@@ -173,10 +173,17 @@ module ot_gpu_sm_v #(
             for (q = 0; q < LSB; q = q + 1) begin : g_f
                 assign xf_s[16*q +: 16] = ix[col*XC + LB*266 + (sp*LSB + q)*16 +: 16];
             end
-            ot_gpu_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
+            if (LBS == 2 && IL == 8 && TAGW == 16) begin : g_hbd
+                ot_gpu_bd_col u_bd (
                 .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
                 .wq(iwq[sp*LBS*256 +: LBS*256]), .we(iwe[sp*LBS*10 +: LBS*10]), .xq(xq_s), .xe(xe_s),
                 .ov(bov[sp]), .y(by[32*sp +: 32]), .otag(btag[TAGW*sp +: TAGW]), .fault(bfault[sp]));
+            end else begin : g_sbd
+                ot_gpu_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
+                .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
+                .wq(iwq[sp*LBS*256 +: LBS*256]), .we(iwe[sp*LBS*10 +: LBS*10]), .xq(xq_s), .xe(xe_s),
+                .ov(bov[sp]), .y(by[32*sp +: 32]), .otag(btag[TAGW*sp +: TAGW]), .fault(bfault[sp]));
+            end
             if (LSB == 16 && TAGW == 16 && IL == 8) begin : g_hard
                 // the hardened 16-lane macro (full-shape SM: 4,096 rows, 8 slots)
                 ot_gpu_tc16 u_tc (
