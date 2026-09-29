@@ -104,6 +104,162 @@ module ot_qwen_me_array #(
     localparam integer IREG = (BD > XVM && BD > 0) ? 1 : 0;   // the tile's own input stage is one of BD
     localparam integer NREG = (NWS > 0) ? 1 : 0;
 
+    // -- spine: engine top, instruction broadcast, x network ------------------------
+    wire              tgo;
+    wire [IBW-1:0]    tb;
+    wire [NXC*32-1:0] xl_d;
+    wire [NPT*W*32-1:0] t_lvl;
+    wire              fab_fault;
+    ot_qwen_me_spine #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
+        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD)) u_spine (
+        .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+        .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
+        .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
+        .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs),
+        .i_jsh(i_jsh), .i_split(i_split), .i_wcs(i_wcs), .i_round(i_round),
+        .i_obase(i_obase), .i_ots(i_ots), .i_ojs(i_ojs),
+        .i_mmode(i_mmode), .i_oen(i_oen), .i_amax(i_amax), .i_rmax(i_rmax), .i_mbase(i_mbase),
+        .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr), .scale_q(scale_q),
+        .x_re(x_re), .x_addr(x_addr), .x_q(x_q),
+        .tgo(tgo), .tb(tb), .xl_d(xl_d), .t_lvl(t_lvl), .fab_fault(fab_fault),
+        .ov(ov), .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask), .o_data(o_data),
+        .am_idx(am_idx), .am_val(am_val), .am_any(am_any),
+        .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
+        .progress(progress), .fault(fault));
+
+    // -- tiles and the tree above them -------------------------------------------------
+    // Level LT position p is tile p's t_out.  The node of level lv > LT,
+    // position p (k = lv - LT) lives in tile host = p*2^k + 2^(k-1) - 1: one
+    // node per tile at most (hosts of different levels differ mod 2^k).
+    function automatic integer host_level(input integer tt);
+        integer kk;
+        begin
+            host_level = 0;
+            for (kk = 1; kk <= TCUT - LT; kk = kk + 1)
+                if ((tt % (1 << kk)) == (1 << (kk - 1)) - 1 && (tt >> kk) < (GT >> (LT + kk)) && host_level == 0)
+                    host_level = LT + kk;
+        end
+    endfunction
+    wire [NT*W*32-1:0] lw [LT:TCUT];
+    wire [NT-1:0]      lvv [LT:TCUT];
+    wire [NT-1:0]      tile_fault;
+    genvar t, lv, p;
+    generate
+        for (lv = LT + 1; lv <= TCUT; lv = lv + 1) begin : g_lz
+            for (p = (GT >> lv); p < NT; p = p + 1) begin : g_z
+                assign lw[lv][p*W*32 +: W*32] = {W*32{1'b0}};
+                assign lvv[lv][p] = 1'b0;
+            end
+        end
+        for (t = 0; t < NT; t = t + 1) begin : g_tile
+            localparam integer HL = host_level(t);
+            localparam integer HK = HL - LT;
+            localparam integer HP = (HL > 0) ? (t >> HK) : 0;
+            wire [W*32-1:0] na, nb, ny;
+            wire            nva, nvy;
+            if (HL > 0) begin : g_host
+                ot_hdc_delay #(.W(2*W*32), .D(NWS - NREG)) u_nw (.clk(clk), .rst_n(rst_n),
+                    .d({lw[HL-1][(2*HP)*W*32 +: W*32], lw[HL-1][(2*HP+1)*W*32 +: W*32]}), .q({na, nb}));
+                ot_hdc_delay #(.W(1), .D(NWS - NREG), .RESET(1)) u_nv (.clk(clk), .rst_n(rst_n),
+                    .d(lvv[HL-1][2*HP]), .q(nva));
+                assign lw[HL][HP*W*32 +: W*32] = ny;
+                assign lvv[HL][HP] = nvy;
+            end else begin : g_nohost
+                assign na = {W*32{1'b0}}; assign nb = {W*32{1'b0}}; assign nva = 1'b0;
+            end
+            wire [TG*W*32-1:0] kvq = t_kv_q[t*TG*W*32 +: TG*W*32];
+            ot_qwen_rom_tile_logic #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
+                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL)) u_t (
+                .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
+                .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),
+                .t_out(lw[LT][t*W*32 +: W*32]), .t_vout(lvv[LT][t]),
+                .n_a(na), .n_b(nb), .n_va(nva), .n_y(ny), .n_vy(nvy), .fault(tile_fault[t]),
+                .rom_ce(t_rom_ce[t*CODE_BANKS +: CODE_BANKS]), .rom_addr(t_rom_addr[t*12 +: 12]),
+                .rom_rd(t_rom_rd[t*2*CODE_BANKS*266 +: 2*CODE_BANKS*266]),
+                .kvs_r_ce(), .kvs_r_addr(), .kvs_rd({TG*W*8{1'b0}}),
+                .kv_re(t_kv_re[t]), .kv_addr(t_kv_addr[t*TG*AW +: TG*AW]), .kv_q(kvq));
+        end
+    endgenerate
+    assign t_lvl = lw[TCUT][NPT*W*32-1:0];
+    assign fab_fault = |tile_fault;     // lanes, tile tree levels and hosted nodes
+endmodule
+
+// The spine part of the array: the engine top (ot_hdc_matvec_part PART 2), the
+// instruction broadcast and the x network, facing the tile fabric.
+module ot_qwen_me_spine #(
+    parameter integer W  = 16,
+    parameter integer IL = 8,
+    parameter integer AW = 24,
+    parameter integer NW = 16,
+    parameter integer INT8_SCALE_WCS_BASE = 1,
+    parameter integer GT = 80,
+    parameter integer TG = 4,
+    parameter integer SMIN = 3,
+    parameter integer SMAX = 5,
+    parameter integer TCUT = 3,
+    parameter integer BD = 0,
+    parameter integer XVM = 0,
+    parameter integer NWS = 0,
+    parameter integer TWS = 0,
+    parameter integer ORD = 0
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire              go,
+    output wire              ready,
+    output wire              idle,
+    input  wire [NW-1:0]     i_nout, i_tiles, i_k,
+    input  wire              i_wsrc,
+    input  wire [AW-1:0]     i_wbase, i_ts, i_ks, i_js,
+    input  wire [AW-1:0]     i_xbase, i_xks, i_xjs, i_xcs,
+    input  wire [2:0]        i_jsh,
+    input  wire [3:0]        i_split,
+    input  wire [AW-1:0]     i_wcs,
+    input  wire              i_round,
+    input  wire [AW-1:0]     i_obase, i_ots, i_ojs,
+    input  wire              i_mmode, i_oen, i_amax, i_rmax,
+    input  wire [AW-1:0]     i_mbase,
+    // result-port scale ROM (spine)
+    output wire              scale_re,
+    output wire [GT-1:0]     scale_gre,
+    output wire [GT*AW-1:0]  scale_addr,
+    input  wire [GT*W*16-1:0] scale_q,
+    // vector-memory x read port: one element per chunk
+    output wire [(1<<SMAX)-1:0]    x_re,
+    output wire [(1<<SMAX)*AW-1:0] x_addr,
+    input  wire [(1<<SMAX)*32-1:0] x_q,
+    // fabric side (tiles and tree nodes)
+    output wire              tgo,
+    output wire [3*NW+13*AW+13-1:0] tb,
+    output wire [(1<<SMAX)*32-1:0] xl_d,
+    input  wire [(GT >> TCUT)*W*32-1:0] t_lvl,
+    input  wire              fab_fault,
+    // results (port groups only)
+    output wire              ov,
+    output wire [GT-1:0]     o_we,
+    output wire [GT*AW-1:0]  o_addr,
+    output wire [GT*W-1:0]   o_mask,
+    output wire [GT*W*32-1:0] o_data,
+    output wire [NW-1:0]     am_idx,
+    output wire [31:0]       am_val,
+    output wire              am_any,
+    output wire              mx_we,
+    output wire [AW-1:0]     mx_addr,
+    output wire [W-1:0]      mx_mask,
+    output wire [W*32-1:0]   mx_data,
+    output wire [15:0]       progress,
+    output wire              fault
+);
+    localparam integer NT  = GT / TG;
+    localparam integer LT  = $clog2(TG);
+    localparam integer NXC = 1 << SMAX;
+    localparam integer NXL = NXC / TG;
+    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS;
+    localparam integer NPT = GT >> TCUT;                  // tree words into the top
+    localparam integer IBW = 3 * NW + 13 * AW + 13;       // the i_* fields
+    localparam integer IREG = (BD > XVM && BD > 0) ? 1 : 0;   // the tile's own input stage is one of BD
+    localparam integer NREG = (NWS > 0) ? 1 : 0;
+
     // -- spine top --------------------------------------------------------------
     wire [GT-1:0]    x_re_full;
     wire [GT*AW-1:0] x_addr_full;
@@ -161,17 +317,8 @@ module ot_qwen_me_array #(
     wire [IBW-1:0] ib = {i_nout, i_tiles, i_k, i_wsrc, i_wbase, i_ts, i_ks, i_js, i_xbase, i_xks, i_xjs, i_xcs,
                          i_jsh, i_split, i_wcs, i_round, i_obase, i_ots, i_ojs, i_mmode, i_oen, i_amax, i_rmax,
                          i_mbase};
-    wire [IBW-1:0] tb;
-    wire           tgo;
     ot_hdc_delay #(.W(IBW), .D(BD - IREG)) u_ib (.clk(clk), .rst_n(rst_n), .d(ib), .q(tb));
     ot_hdc_delay #(.W(1), .D(BD - IREG), .RESET(1)) u_go (.clk(clk), .rst_n(rst_n), .d(go && ready), .q(tgo));
-    wire [NW-1:0] b_nout, b_tiles, b_k;
-    wire          b_wsrc, b_round, b_mmode, b_oen, b_amax, b_rmax;
-    wire [AW-1:0] b_wbase, b_ts, b_ks, b_js, b_xbase, b_xks, b_xjs, b_xcs, b_wcs, b_obase, b_ots, b_ojs, b_mbase;
-    wire [2:0]    b_jsh;
-    wire [3:0]    b_split;
-    assign {b_nout, b_tiles, b_k, b_wsrc, b_wbase, b_ts, b_ks, b_js, b_xbase, b_xks, b_xjs, b_xcs,
-            b_jsh, b_split, b_wcs, b_round, b_obase, b_ots, b_ojs, b_mmode, b_oen, b_amax, b_rmax, b_mbase} = tb;
 
     // -- x network: quad lines built at the vector memory, BD - XVM stages out ----
     //: the split of the element whose x arrives now: the op's split, two edges
@@ -184,7 +331,7 @@ module ot_qwen_me_array #(
     //: may still be in flight; ops are issued back to back only after the
     //: previous issue loop ends, and the two cycles of read latency are covered
     //: because x_split is delayed from the issue-time value (see the gate).
-    wire [NXL*TG*32-1:0] xl, xl_d;
+    wire [NXL*TG*32-1:0] xl;
     genvar r, i;
     generate
         for (r = 0; r < NXL; r = r + 1) begin : g_line
@@ -197,66 +344,13 @@ module ot_qwen_me_array #(
     endgenerate
     ot_hdc_delay #(.W(NXL*TG*32), .D(BD - XVM - IREG)) u_xnet (.clk(clk), .rst_n(rst_n), .d(xl), .q(xl_d));
 
-    // -- tiles and the tree above them -------------------------------------------------
-    // Level LT position p is tile p's t_out.  The node of level lv > LT,
-    // position p (k = lv - LT) lives in tile host = p*2^k + 2^(k-1) - 1: one
-    // node per tile at most (hosts of different levels differ mod 2^k).
-    function automatic integer host_level(input integer tt);
-        integer kk;
-        begin
-            host_level = 0;
-            for (kk = 1; kk <= TCUT - LT; kk = kk + 1)
-                if ((tt % (1 << kk)) == (1 << (kk - 1)) - 1 && (tt >> kk) < (GT >> (LT + kk)) && host_level == 0)
-                    host_level = LT + kk;
-        end
-    endfunction
-    wire [NT*W*32-1:0] lw [LT:TCUT];
-    wire [NT-1:0]      lvv [LT:TCUT];
-    wire [NT-1:0]      tile_fault;
-    genvar t, lv, p;
-    generate
-        for (lv = LT + 1; lv <= TCUT; lv = lv + 1) begin : g_lz
-            for (p = (GT >> lv); p < NT; p = p + 1) begin : g_z
-                assign lw[lv][p*W*32 +: W*32] = {W*32{1'b0}};
-                assign lvv[lv][p] = 1'b0;
-            end
-        end
-        for (t = 0; t < NT; t = t + 1) begin : g_tile
-            localparam integer HL = host_level(t);
-            localparam integer HK = HL - LT;
-            localparam integer HP = (HL > 0) ? (t >> HK) : 0;
-            wire [W*32-1:0] na, nb, ny;
-            wire            nva, nvy;
-            if (HL > 0) begin : g_host
-                ot_hdc_delay #(.W(2*W*32), .D(NWS - NREG)) u_nw (.clk(clk), .rst_n(rst_n),
-                    .d({lw[HL-1][(2*HP)*W*32 +: W*32], lw[HL-1][(2*HP+1)*W*32 +: W*32]}), .q({na, nb}));
-                ot_hdc_delay #(.W(1), .D(NWS - NREG), .RESET(1)) u_nv (.clk(clk), .rst_n(rst_n),
-                    .d(lvv[HL-1][2*HP]), .q(nva));
-                assign lw[HL][HP*W*32 +: W*32] = ny;
-                assign lvv[HL][HP] = nvy;
-            end else begin : g_nohost
-                assign na = {W*32{1'b0}}; assign nb = {W*32{1'b0}}; assign nva = 1'b0;
-            end
-            wire [TG*W*32-1:0] kvq = t_kv_q[t*TG*W*32 +: TG*W*32];
-            ot_qwen_rom_tile_logic #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
-                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL)) u_t (
-                .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
-                .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),
-                .t_out(lw[LT][t*W*32 +: W*32]), .t_vout(lvv[LT][t]),
-                .n_a(na), .n_b(nb), .n_va(nva), .n_y(ny), .n_vy(nvy), .fault(tile_fault[t]),
-                .rom_ce(t_rom_ce[t*CODE_BANKS +: CODE_BANKS]), .rom_addr(t_rom_addr[t*12 +: 12]),
-                .rom_rd(t_rom_rd[t*2*CODE_BANKS*266 +: 2*CODE_BANKS*266]),
-                .kvs_r_ce(), .kvs_r_addr(), .kvs_rd({TG*W*8{1'b0}}),
-                .kv_re(t_kv_re[t]), .kv_addr(t_kv_addr[t*TG*AW +: TG*AW]), .kv_q(kvq));
-        end
-    endgenerate
-    ot_hdc_delay #(.W(NPT*W*32), .D(TWS)) u_tws (.clk(clk), .rst_n(rst_n), .d(lw[TCUT][NPT*W*32-1:0]), .q(t_in));
-    wire any_f = |tile_fault;           // lanes, tile tree levels and hosted nodes
+    ot_hdc_delay #(.W(NPT*W*32), .D(TWS)) u_tws (.clk(clk), .rst_n(rst_n), .d(t_lvl), .q(t_in));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault_in <= 1'b0;
-        else fault_in <= any_f;
+        else fault_in <= fab_fault;
     end
 endmodule
+
 
 // One upper split-tree node: the pair sum of two tree words (ot_hdc_qadd, then
 // the level's output register: TL = 4 cycles), after WS wire stages.
