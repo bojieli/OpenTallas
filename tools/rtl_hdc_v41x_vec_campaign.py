@@ -574,7 +574,7 @@ def schedule(ops, mem0, N, M, chain=True):
 def rand_vals(rng, n, kind="any"):
     if kind == "exp":
         v = rng.uniform(-20, 20, n)
-    elif kind == "pos":
+    elif kind in ("pos", "posnz"):      # posnz: no sprinkled zeros (a divisor, an rsqrt operand)
         v = np.exp(rng.uniform(-8, 8, n))
     elif kind == "small":
         v = rng.uniform(-3, 3, n)
@@ -583,7 +583,7 @@ def rand_vals(rng, n, kind="any"):
     v = v.astype(F)
     # sprinkle exact zeros, BF16-exact values and ties
     z = rng.random(n)
-    v[z < 0.02] = F(0)
+    v[(z < 0.02) & (kind != "posnz")] = F(0)
     t = (z >= 0.02) & (z < 0.06)
     v[t] = G.to_bf16(v[t])
     return v
@@ -806,8 +806,11 @@ def read_hex(path):
 def build(N, M, obj: Path, pmax=4096):
     write_fields_svh()
     obj.mkdir(parents=True, exist_ok=True)
+    if os.environ.get("OT_REUSE_BUILD") and (obj / "Vtb").exists():
+        return obj / "Vtb", 0.0          # a bench built earlier from these sources (the record says so)
     cmd = [VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
-           "-Wno-UNOPTFLAT", "--top-module", "tb_hdc_v41x_vec", "--prefix", "Vtb", "-Mdir", str(obj),
+           "-Wno-UNOPTFLAT", *os.environ.get("OT_VFLAGS", "").split(), "--top-module", "tb_hdc_v41x_vec", "--prefix", "Vtb",
+           "-Mdir", str(obj),
            f"-GN={N}", f"-GM={M}", f"-GPMAX={pmax}", f"-GVMA={VMA}", f"-GKVA={KVA}", f"-GCRA={CRA}", f"-GWRA={WRA}", f"-GXBA={XBA}", f"-I{ROOT / 'rtl/test'}",
            *map(str, LIB), *map(str, RTL), str(TB), str(HARNESS), "-CFLAGS", "-O1", "-j", "8"]
     t0 = time.time()
@@ -1113,7 +1116,7 @@ def depth_ops(N, rng, al, init):
     src = al.get(n)
     init.append((src, rand_vals(rng, n, "small")))
     pos = al.get(n)
-    init.append((pos, rand_vals(rng, n, "pos")))
+    init.append((pos, rand_vals(rng, n, "posnz")))
     idx = al.get(n)
     init.append((idx, ffrom(np.arange(n, dtype=np.uint32))))
     b = op_defaults()
@@ -1172,6 +1175,7 @@ def perf_chain_ext(exe, N, M, scratch, rng, nv=24, per=3):
     """Vector chaining behind an EXTERNAL producer: it writes one N-element vector every `per` cycles into a
     region that holds poison (NaN) until then; the consumer op (ch_src = EXT, lead 1, mul 1) reads each vector
     as soon as its credit arrives.  Latency = the consumer's emit of vector v - the producer's write of v."""
+    nv = min(nv, (1 << XBA) // N)       # the producer's data fits the bench's 2^XBA-word XB memory
     al = Alloc(64, (1 << VMA) - 64)
     X = al.get(nv * N)
     O = al.get(nv * N)
@@ -1205,7 +1209,7 @@ def perf_mix(exe, N, M, scratch, rng):
         a = al.get(n)
         init.append((a, rand_vals(rng, n, "small")))
         bb = al.get(n)
-        init.append((bb, rand_vals(rng, n, "pos")))
+        init.append((bb, rand_vals(rng, n, "posnz")))
         f = op_defaults()
         f.update(nout=1, nin=n, abase=a, asi=1, bbase=bb, bsi=1, dst=I.DST_VM, obase=al.get(n), osi=1, **kw)
         ops.append(f)
@@ -1303,6 +1307,7 @@ def main():
     ap.add_argument("--scratch", default=None)
     ap.add_argument("--only", default=None, help="comma list: sfu,random,vehicle,perf64,perf1024")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--random1024", type=int, default=0, help="also run this many random seeds at N = 1,024")
     args = ap.parse_args()
     scratch = Path(args.scratch or tempfile.mkdtemp(prefix="v41xvec_"))
     scratch.mkdir(parents=True, exist_ok=True)
@@ -1331,6 +1336,20 @@ def main():
                                   (64, 16, range(101, 103 if args.quick else 117), 40)):
             rr[f"N{N}_M{M}"] = random_campaign(exe_for(N, M), N, M, list(seeds), nops, scratch)
             print("random", N, sum(x["pass_"] for x in rr[f"N{N}_M{M}"]), "/", len(rr[f"N{N}_M{M}"]), flush=True)
+        if args.random1024 and "perf1024" in only:
+            N, M = 1024, 256
+            # 16 ops: at N = 1,024 a 40-op random program outgrows the bench's 2^18-word vector memory;
+            # a seed whose program still does not fit is skipped and listed
+            fits, skipped = [], []
+            for sd in range(1001, 1001 + args.random1024):
+                try:
+                    random_program(np.random.default_rng(sd), N, M, 16, Alloc(64, (1 << VMA) - 64))
+                    fits.append(sd)
+                except AssertionError:
+                    skipped.append(sd)
+            rr[f"N{N}_M{M}"] = random_campaign(exe_for(N, M), N, M, fits, 16, scratch)
+            rec["random_N1024_skipped_seeds"] = skipped
+            print("random", N, sum(x["pass_"] for x in rr[f"N{N}_M{M}"]), "/", len(rr[f"N{N}_M{M}"]), flush=True)
         rec["random"] = rr
     if "vehicle" in only:
         recs, cr, wrom, meta = vehicle_records()
@@ -1347,7 +1366,17 @@ def main():
                                       mixed_classes=perf_mix(e, N, M, scratch, rng))
         print(key, json.dumps(rec[f"perf_N{N}_M{M}"]["hc_post"].get("sequence")), flush=True)
     rec["spec"] = spec_rows(rec)
-    rec["input_sha256"] = {str(p.relative_to(ROOT)): sha(p) for p in RTL + [TB, TB_SFU, FIELDS_SVH] + TOOLS}
+    rec["input_sha256"] = {str(p.relative_to(ROOT)): sha(p) for p in LIB + RTL + [TB, TB_SFU, FIELDS_SVH, HARNESS] + TOOLS}
+    head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True)
+    dirty = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain", "--untracked-files=no"],
+                           capture_output=True, text=True)
+    # a remote run (rsync of the tree without .git) passes the commit it copied in OT_GIT_HEAD
+    rec["git_head"] = head.stdout.strip() if head.returncode == 0 else os.environ.get("OT_GIT_HEAD", "")
+    rec["git_dirty_tracked_files"] = [ln[3:] for ln in dirty.stdout.splitlines()] if dirty.returncode == 0 else \
+        "unknown: run outside a git checkout (sources are pinned by sha256)"
+    rec["verilator"] = VERILATOR
+    rec["verilator_extra_flags"] = os.environ.get("OT_VFLAGS", "")
+    rec["reused_builds"] = bool(os.environ.get("OT_REUSE_BUILD"))
     out = Path(args.out) if args.out else OUT
     out.write_text(json.dumps(rec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)) + "\n")
     print("wrote", out)

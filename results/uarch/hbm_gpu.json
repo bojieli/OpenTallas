@@ -1,44 +1,132 @@
 {
- "schema": "opentallas.uarch.hbm_gpu.v1",
+ "schema": "opentallas.uarch.hbm_gpu.v2",
  "rows": [
   {
    "design": "qwen_hbm_ideal",
-   "T_us": 1136.7,
-   "tokens_s": 879.7,
+   "T_us": 1135.4,
+   "tokens_s": 880.7,
    "supply_frac": 1.0,
-   "barrier_us_per_token": 0.0,
-   "boundaries": 289
+   "boundaries": 181,
+   "form": "bandwidth only"
   },
   {
-   "design": "qwen_hbm_adapter_as_built",
-   "T_us": 95409.4,
+   "design": "qwen_hbm_gpu",
+   "T_us": 1135.6,
+   "tokens_s": 880.6,
+   "supply_frac": 1.0,
+   "boundaries": 181,
+   "barrier_cycles": 46,
+   "exposed_over_hbm_cycles": 113,
+   "form": "prefetching bulk copy (stream_overlap); barrier derived from the floorplan"
+  },
+  {
+   "design": "qwen_hbm_adapter_as_built_no_prefetch",
+   "T_us": 95408.7,
    "tokens_s": 10.5,
    "supply_frac": 0.01190112908147696,
-   "barrier_us_per_token": 1.8,
-   "boundaries": 289
+   "barrier_us_per_token": 1.2,
+   "boundaries": 181,
+   "form": "additive (pre-W13)"
   },
   {
-   "design": "qwen_hbm_gpu_hw_barrier",
-   "T_us": 1189.3,
-   "tokens_s": 840.8,
+   "design": "qwen_hbm_gpu_derived_barrier_no_prefetch",
+   "T_us": 1144.3,
+   "tokens_s": 873.9,
    "supply_frac": 1.0,
-   "barrier_us_per_token": 52.6,
-   "boundaries": 289
+   "barrier_us_per_token": 7.6,
+   "boundaries": 181,
+   "form": "additive (pre-W13)"
+  },
+  {
+   "design": "qwen_hbm_gpu_assumed200_no_prefetch",
+   "T_us": 1169.7,
+   "tokens_s": 854.9,
+   "supply_frac": 1.0,
+   "barrier_us_per_token": 32.9,
+   "boundaries": 181,
+   "form": "additive (pre-W13)"
+  },
+  {
+   "design": "qwen_hbm_gpu_grid_sync_v100_no_prefetch",
+   "T_us": 1395.6,
+   "tokens_s": 716.6,
+   "supply_frac": 1.0,
+   "barrier_us_per_token": 258.8,
+   "boundaries": 181,
+   "form": "additive (pre-W13)"
   },
   {
    "design": "qwen_hbm_gpu_grid_sync_v100",
-   "T_us": 1648.3,
-   "tokens_s": 606.7,
+   "T_us": 1316.1,
+   "tokens_s": 759.8,
    "supply_frac": 1.0,
-   "barrier_us_per_token": 511.5,
-   "boundaries": 289
+   "boundaries": 181,
+   "form": "prefetching bulk copy, V100 grid sync 1.43 us per boundary"
+  },
+  {
+   "design": "v41_hbm_gpu_rowslot",
+   "T_us": 394.9,
+   "tokens_s": 2532.6,
+   "supply_frac": 1.0,
+   "boundaries": 329,
+   "form": "K-chain-aware SM chain, prefetching bulk copy",
+   "breakdown_us": {
+    "sm_matvec": 119.3,
+    "x_broadcast_fill": 7.6,
+    "dedicated_and_su": 120.4,
+    "verify_extra_issue": 0.0,
+    "barrier": 17.2,
+    "collective_latency": 125.9,
+    "collective_bytes": 1.5,
+    "pipeline_hops": 0.9,
+    "control": 2.0
+   }
+  },
+  {
+   "design": "v41_hbm_gpu_groupslot",
+   "T_us": 342.5,
+   "tokens_s": 2919.8,
+   "supply_frac": 1.0,
+   "boundaries": 329,
+   "form": "K-chain-aware SM chain, prefetching bulk copy",
+   "breakdown_us": {
+    "sm_matvec": 66.9,
+    "x_broadcast_fill": 7.6,
+    "dedicated_and_su": 120.4,
+    "verify_extra_issue": 0.0,
+    "barrier": 17.2,
+    "collective_latency": 125.9,
+    "collective_bytes": 1.5,
+    "pipeline_hops": 0.9,
+    "control": 2.0
+   }
+  },
+  {
+   "design": "v41_hbm_gpu_groupslot_grid_sync_v100",
+   "T_us": 795.8,
+   "tokens_s": 1256.6,
+   "supply_frac": 1.0,
+   "boundaries": 329,
+   "form": "K-chain-aware SM chain, prefetching bulk copy",
+   "breakdown_us": {
+    "sm_matvec": 66.9,
+    "x_broadcast_fill": 7.6,
+    "dedicated_and_su": 120.4,
+    "verify_extra_issue": 0.0,
+    "barrier": 470.5,
+    "collective_latency": 125.9,
+    "collective_bytes": 1.5,
+    "pipeline_hops": 0.9,
+    "control": 2.0
+   }
   },
   {
    "design": "v41_hbm_published",
    "T_us": 279.4,
    "tokens_s": 3579.1,
    "supply_frac": 1.0,
-   "boundaries": 629,
+   "boundaries": 329,
+   "form": "additive",
    "breakdown_us": {
     "compute_chain": 111.7,
     "weight_sweep": 37.4,
@@ -50,11 +138,30 @@
    }
   },
   {
-   "design": "v41_hbm_adapter_as_built",
+   "design": "v41_hbm_pooled_chain_prefetch",
+   "T_us": 257.0,
+   "tokens_s": 3891.7,
+   "supply_frac": 1.0,
+   "boundaries": 329,
+   "form": "pooled-width chain (superseded upper bound)",
+   "breakdown_us": {
+    "compute_chain": 111.7,
+    "weight_sweep": 37.4,
+    "collective_latency": 125.9,
+    "collective_bytes": 1.5,
+    "pipeline_hops": 0.9,
+    "control": 2.0,
+    "barrier": 15.0,
+    "weight_sweep_exposed": 0.0
+   }
+  },
+  {
+   "design": "v41_hbm_adapter_as_built_no_prefetch",
    "T_us": 3581.1,
    "tokens_s": 279.2,
    "supply_frac": 0.0112,
-   "boundaries": 629,
+   "boundaries": 329,
+   "form": "additive",
    "breakdown_us": {
     "compute_chain": 111.7,
     "weight_sweep": 3339.1,
@@ -66,11 +173,12 @@
    }
   },
   {
-   "design": "v41_hbm_gpu_hw_barrier",
-   "T_us": 396.8,
-   "tokens_s": 2520.1,
+   "design": "v41_hbm_gpu_derived_barrier_no_prefetch",
+   "T_us": 294.4,
+   "tokens_s": 3397.2,
    "supply_frac": 1.0,
-   "boundaries": 629,
+   "boundaries": 329,
+   "form": "additive",
    "breakdown_us": {
     "compute_chain": 111.7,
     "weight_sweep": 37.4,
@@ -78,15 +186,16 @@
     "collective_bytes": 1.5,
     "pipeline_hops": 0.9,
     "control": 2.0,
-    "barrier": 117.4
+    "barrier": 15.0
    }
   },
   {
-   "design": "v41_hbm_gpu_grid_sync_v100",
-   "T_us": 1392.7,
-   "tokens_s": 718.0,
+   "design": "v41_hbm_gpu_assumed200_no_prefetch",
+   "T_us": 340.8,
+   "tokens_s": 2934.1,
    "supply_frac": 1.0,
-   "boundaries": 629,
+   "boundaries": 329,
+   "form": "additive",
    "breakdown_us": {
     "compute_chain": 111.7,
     "weight_sweep": 37.4,
@@ -94,15 +203,568 @@
     "collective_bytes": 1.5,
     "pipeline_hops": 0.9,
     "control": 2.0,
-    "barrier": 1113.3
+    "barrier": 61.4
    }
   }
  ],
  "gpu": {
   "barrier_cycles_hw": 200,
-  "barrier_ns_grid": 1770.0,
+  "barrier_ns_grid": 1430.0,
+  "barrier_ns_grid_sensitivity": {
+   "p100_1_block_per_sm": 1770.0,
+   "v100_1024_threads": 2210.0
+  },
+  "barrier_cycles_dsmem_ref": [
+   181,
+   213
+  ],
   "seq_gap_cycles": 7,
   "adapter_measured_Bpc": 39.0,
   "sustained_frac": 1.0
+ },
+ "speculation": [
+  {
+   "design": "qwen_hbm_ar",
+   "block": 1,
+   "tau": 1.0,
+   "step_cycles": 1247637,
+   "tokens_s": 880.6
+  },
+  {
+   "design": "qwen_hbm_dflash_b2",
+   "block": 2,
+   "tau": 1.7361,
+   "step_cycles": 1503778,
+   "tokens_s": 1268.4,
+   "speedup": 1.44,
+   "draft_bytes_per_die": 835630080.0,
+   "verify_bytes_per_die": 4087886208
+  },
+  {
+   "design": "qwen_hbm_dflash_b3",
+   "block": 3,
+   "tau": 2.2654,
+   "step_cycles": 1503778,
+   "tokens_s": 1655.1,
+   "speedup": 1.88,
+   "draft_bytes_per_die": 835630080.0,
+   "verify_bytes_per_die": 4087886208
+  },
+  {
+   "design": "qwen_hbm_dflash_b4",
+   "block": 4,
+   "tau": 2.6256,
+   "step_cycles": 1503778,
+   "tokens_s": 1918.2,
+   "speedup": 2.178,
+   "draft_bytes_per_die": 835630080.0,
+   "verify_bytes_per_die": 4087886208
+  },
+  {
+   "design": "qwen_hbm_dflash_b5",
+   "block": 5,
+   "tau": 2.8591,
+   "step_cycles": 1503778,
+   "tokens_s": 2088.8,
+   "speedup": 2.372,
+   "draft_bytes_per_die": 835630080.0,
+   "verify_bytes_per_die": 4087886208
+  },
+  {
+   "design": "qwen_hbm_dflash_b6",
+   "block": 6,
+   "tau": 3.0335,
+   "step_cycles": 1503778,
+   "tokens_s": 2216.2,
+   "speedup": 2.517,
+   "draft_bytes_per_die": 835630080.0,
+   "verify_bytes_per_die": 4087886208
+  },
+  {
+   "design": "qwen_hbm_dflash_b8",
+   "block": 8,
+   "tau": 3.2956,
+   "step_cycles": 1503778,
+   "tokens_s": 2407.7,
+   "speedup": 2.734,
+   "draft_bytes_per_die": 835630080.0,
+   "verify_bytes_per_die": 4087886208
+  },
+  {
+   "design": "qwen_hbm_dflash_b12",
+   "block": 12,
+   "tau": 3.4927,
+   "step_cycles": 1503778,
+   "tokens_s": 2551.7,
+   "speedup": 2.898,
+   "draft_bytes_per_die": 835630080.0,
+   "verify_bytes_per_die": 4087886208
+  },
+  {
+   "design": "qwen_hbm_dflash_b16",
+   "block": 16,
+   "tau": 3.6559,
+   "step_cycles": 1503778,
+   "tokens_s": 2671.0,
+   "speedup": 3.033,
+   "draft_bytes_per_die": 835630080.0,
+   "verify_bytes_per_die": 4087886208
+  },
+  {
+   "design": "qwen_hbm_dflash_best",
+   "block": 16,
+   "tau": 3.6559,
+   "step_cycles": 1503778,
+   "tokens_s": 2671.0,
+   "speedup": 3.033,
+   "draft_bytes_per_die": 835630080.0,
+   "verify_bytes_per_die": 4087886208
+  },
+  {
+   "design": "v41_hbm_ar",
+   "tokens_s": 2919.8,
+   "T_us": 342.5
+  },
+  {
+   "design": "v41_hbm_mtp",
+   "positions": 6,
+   "tau": 3.649,
+   "verify_us": 617.5,
+   "draft_us": 25.7,
+   "tokens_s": 5673.0,
+   "speedup": 1.943,
+   "verify_breakdown_us": {
+    "sm_matvec": 66.9,
+    "x_broadcast_fill": 45.7,
+    "dedicated_and_su": 120.4,
+    "verify_extra_issue": 229.4,
+    "barrier": 17.2,
+    "collective_latency": 125.9,
+    "collective_bytes": 9.0,
+    "pipeline_hops": 0.9,
+    "control": 2.0
+   }
+  }
+ ],
+ "designs": {
+  "qwen": {
+   "model": "qwen",
+   "clock_hz": 1098640000.0,
+   "hbm_Bpc": 3276.8,
+   "element": {
+    "subparts": 4,
+    "int8_lanes": 128,
+    "bf16_lanes": 0,
+    "blockdot_lanes": 0,
+    "cols": 16,
+    "il": 8,
+    "ingest_Bpc": 128,
+    "k_max": 12288,
+    "x_bytes": 2,
+    "simt_lanes": 128,
+    "scratch_kb": 64,
+    "stack_levels": 5
+   },
+   "drain_cycles": 66,
+   "drain_basis": "measured (RTL)",
+   "drain_formula_cycles": 78,
+   "measured": {
+    "qwen_drain_cycles": 66,
+    "v41_drain_cycles": 70,
+    "qwen_barrier_cycles": 30,
+    "v41_barrier_cycles": 38,
+    "sources": [
+     "results/rtl/gpu_sm_exact.json",
+     "results/rtl/gpu_sm_exact.json",
+     "results/rtl/gpu_sm_blockdot_exact.json",
+     "results/rtl/gpu_supply_barrier.json"
+    ]
+   },
+   "sm_count_sweep": [
+    {
+     "n_sm": 8,
+     "cycles": 4072812,
+     "tokens_s_pkg": 269.7
+    },
+    {
+     "n_sm": 12,
+     "cycles": 2742120,
+     "tokens_s_pkg": 400.7
+    },
+    {
+     "n_sm": 16,
+     "cycles": 2076774,
+     "tokens_s_pkg": 529.0
+    },
+    {
+     "n_sm": 20,
+     "cycles": 1677566,
+     "tokens_s_pkg": 654.9
+    },
+    {
+     "n_sm": 24,
+     "cycles": 1411428,
+     "tokens_s_pkg": 778.4
+    },
+    {
+     "n_sm": 28,
+     "cycles": 1247645,
+     "tokens_s_pkg": 880.6
+    },
+    {
+     "n_sm": 32,
+     "cycles": 1247645,
+     "tokens_s_pkg": 880.6
+    },
+    {
+     "n_sm": 36,
+     "cycles": 1247645,
+     "tokens_s_pkg": 880.6
+    },
+    {
+     "n_sm": 40,
+     "cycles": 1247645,
+     "tokens_s_pkg": 880.6
+    },
+    {
+     "n_sm": 44,
+     "cycles": 1247645,
+     "tokens_s_pkg": 880.6
+    },
+    {
+     "n_sm": 48,
+     "cycles": 1247645,
+     "tokens_s_pkg": 880.6
+    },
+    {
+     "n_sm": 52,
+     "cycles": 1247645,
+     "tokens_s_pkg": 880.6
+    },
+    {
+     "n_sm": 56,
+     "cycles": 1247645,
+     "tokens_s_pkg": 880.6
+    },
+    {
+     "n_sm": 60,
+     "cycles": 1247645,
+     "tokens_s_pkg": 880.6
+    },
+    {
+     "n_sm": 64,
+     "cycles": 1247645,
+     "tokens_s_pkg": 880.6
+    }
+   ],
+   "sm_count_min": 28,
+   "sm_count": 32,
+   "sm_count_basis": "8 per stack quadrant; >= the 0.5%-of-unbounded minimum",
+   "bulk_copy": {
+    "in_flight_B_die": 1800000.0,
+    "in_flight_B_sm": 56250.0,
+    "outstanding_sectors_sm": 879,
+    "descriptor_bytes": 4096,
+    "outstanding_descriptors_sm": 14,
+    "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)",
+    "measured": [
+     {
+      "outstanding_lines": 7,
+      "B_per_cycle": 1.6,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 16,
+      "B_per_cycle": 3.7,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 64,
+      "B_per_cycle": 14.9,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 256,
+      "B_per_cycle": 59.5,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 440,
+      "B_per_cycle": 101.0,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 512,
+      "B_per_cycle": 102.5,
+      "share_B_per_cycle": 102.4
+     }
+    ],
+    "measured_source": "results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy, 128 B lines, 500 ns +- 50 ns loaded latency)",
+    "outstanding_lines_sm": 512,
+    "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512"
+   },
+   "barrier": {
+    "arrive_cycles": 16,
+    "release_cycles": 15,
+    "round_trip_cycles": 31,
+    "max_leaf_um": 4261.7,
+    "max_trunk_um": 6762.3,
+    "levels": 2,
+    "source": "results/floorplan/hbm_gpu/qwen_hbm_die.json",
+    "x_broadcast_tail_cycles": 16,
+    "measured_round_trip_cycles": 30,
+    "boundary_cycles": 46,
+    "basis": "derived from the floorplan, measured in RTL (tb_gpu_barrier)"
+   },
+   "staging_sweep": [
+    {
+     "staging_kb_per_sm": 16,
+     "cycles": 1292616,
+     "tokens_s": 849.9
+    },
+    {
+     "staging_kb_per_sm": 32,
+     "cycles": 1268586,
+     "tokens_s": 866.0
+    },
+    {
+     "staging_kb_per_sm": 64,
+     "cycles": 1254917,
+     "tokens_s": 875.5
+    },
+    {
+     "staging_kb_per_sm": 128,
+     "cycles": 1247645,
+     "tokens_s": 880.6
+    },
+    {
+     "staging_kb_per_sm": 256,
+     "cycles": 1247645,
+     "tokens_s": 880.6
+    },
+    {
+     "staging_kb_per_sm": 512,
+     "cycles": 1247645,
+     "tokens_s": 880.6
+    },
+    {
+     "staging_kb_per_sm": 1024,
+     "cycles": 1247645,
+     "tokens_s": 880.6
+    }
+   ],
+   "token": {
+    "cycles": 1247645,
+    "tokens_s": 880.6,
+    "hbm_cycles": 1247532,
+    "chain_cycles_if_serial": 1078755,
+    "boundaries": 181,
+    "exposed_over_hbm_cycles": 113,
+    "additive_model_tokens_s": 873.8,
+    "note": "the stream prefetches through every boundary; only what the SMEM staging cannot absorb and the last op's tail are exposed"
+   },
+   "staging_kb_per_sm": 128,
+   "sm_area": {
+    "logic_um2": {
+     "mma_lanes": 1163392,
+     "blockdot": 0,
+     "tree": 802346,
+     "stack": 32428,
+     "row_scale": 12532,
+     "simt": 149605,
+     "x_operand_regs": 19110
+    },
+    "logic_mm2": 2.179,
+    "footprint_logic_mm2": 4.359,
+    "sram_kb": {
+     "x_store": 384.0,
+     "staging": 128,
+     "scratch": 64
+    },
+    "sram_macros": {
+     "x_store": 16,
+     "staging": 4,
+     "scratch": 2
+    },
+    "sram_mm2": 0.355,
+    "total_mm2": 4.714,
+    "macs_per_clk": 2048
+   },
+   "l2": {
+    "slices": 4,
+    "mb_per_slice": 2,
+    "macros": 256,
+    "mm2": 4.13,
+    "role": "x/result gather and broadcast, TP-exchange staging, KV-write coalescing; weights bypass it (bulk copy lands in SM SMEM, no reuse at decode)"
+   },
+   "noc": {
+    "weight_port_bits_per_sm": 1088,
+    "weight_wires_per_quadrant": 8704,
+    "x_broadcast_bits": 2048,
+    "result_gather_bits_per_sm": 256,
+    "mapping": "each SM's weight rows live in its own quadrant's stack: no weight byte crosses the die"
+   },
+   "die_fit": {
+    "sm_array_mm2": 150.85,
+    "l2_mm2": 4.13,
+    "dedicated_mm2": 0.0,
+    "core_avail_mm2": 688.44,
+    "used_mm2": 154.98,
+    "fits": true
+   }
+  },
+  "v41": {
+   "model": "v41",
+   "clock_hz": 1033900000.0,
+   "hbm_Bpc": 3482.0,
+   "element": {
+    "subparts": 4,
+    "int8_lanes": 0,
+    "bf16_lanes": 64,
+    "blockdot_lanes": 8,
+    "cols": 8,
+    "il": 8,
+    "ingest_Bpc": 128,
+    "k_max": 5120,
+    "x_bytes": 2,
+    "simt_lanes": 128,
+    "scratch_kb": 64,
+    "stack_levels": 3,
+    "group_slot": true,
+    "gs_cols": 8
+   },
+   "drain_cycles": 70,
+   "drain_basis": "measured (RTL)",
+   "drain_formula_cycles": 68,
+   "measured": {
+    "qwen_drain_cycles": 66,
+    "v41_drain_cycles": 70,
+    "qwen_barrier_cycles": 30,
+    "v41_barrier_cycles": 38,
+    "sources": [
+     "results/rtl/gpu_sm_exact.json",
+     "results/rtl/gpu_sm_exact.json",
+     "results/rtl/gpu_sm_blockdot_exact.json",
+     "results/rtl/gpu_supply_barrier.json"
+    ]
+   },
+   "sm_count": 32,
+   "sm_count_basis": "same element count as Qwen: HBM ingest 3,482 B/clk / 128 B/clk = 27.2 -> 32",
+   "bulk_copy": {
+    "in_flight_B_die": 1800000.0,
+    "in_flight_B_sm": 56250.0,
+    "outstanding_sectors_sm": 879,
+    "descriptor_bytes": 4096,
+    "outstanding_descriptors_sm": 14,
+    "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)",
+    "measured": [
+     {
+      "outstanding_lines": 7,
+      "B_per_cycle": 1.6,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 16,
+      "B_per_cycle": 3.7,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 64,
+      "B_per_cycle": 14.9,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 256,
+      "B_per_cycle": 59.5,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 440,
+      "B_per_cycle": 101.0,
+      "share_B_per_cycle": 102.4
+     },
+     {
+      "outstanding_lines": 512,
+      "B_per_cycle": 102.5,
+      "share_B_per_cycle": 102.4
+     }
+    ],
+    "measured_source": "results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy, 128 B lines, 500 ns +- 50 ns loaded latency)",
+    "outstanding_lines_sm": 512,
+    "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512"
+   },
+   "barrier": {
+    "arrive_cycles": 20,
+    "release_cycles": 19,
+    "round_trip_cycles": 39,
+    "max_leaf_um": 3530.5,
+    "max_trunk_um": 11354.7,
+    "levels": 2,
+    "source": "results/floorplan/hbm_gpu/v41_hbm_die.json",
+    "x_broadcast_tail_cycles": 16,
+    "measured_round_trip_cycles": 38,
+    "boundary_cycles": 54,
+    "basis": "derived from the floorplan, measured in RTL (tb_gpu_barrier)"
+   },
+   "staging_kb_per_sm": 128,
+   "sm_area": {
+    "logic_um2": {
+     "mma_lanes": 270368,
+     "blockdot": 190151,
+     "tree": 199007,
+     "stack": 9728,
+     "row_scale": 6266,
+     "simt": 149605,
+     "x_operand_regs": 9854
+    },
+    "logic_mm2": 0.835,
+    "footprint_logic_mm2": 1.67,
+    "sram_kb": {
+     "x_store": 80.0,
+     "staging": 128,
+     "scratch": 64
+    },
+    "sram_macros": {
+     "x_store": 99,
+     "staging": 4,
+     "scratch": 2
+    },
+    "sram_mm2": 0.601,
+    "total_mm2": 2.271,
+    "macs_per_clk": 2560
+   },
+   "l2": {
+    "slices": 4,
+    "mb_per_slice": 2,
+    "macros": 256,
+    "mm2": 4.13,
+    "role": "x/result gather and broadcast, TP-exchange staging, KV-write coalescing; weights bypass it (bulk copy lands in SM SMEM, no reuse at decode)"
+   },
+   "noc": {
+    "weight_port_bits_per_sm": 1088,
+    "weight_wires_per_quadrant": 8704,
+    "x_broadcast_bits": 2048,
+    "result_gather_bits_per_sm": 256,
+    "mapping": "each SM's weight rows live in its own quadrant's stack: no weight byte crosses the die"
+   },
+   "dedicated_units_mm2": {
+    "indexer": 20.57,
+    "attention": 16.69,
+    "su": 4.183,
+    "sfu": 8.819,
+    "hc_fp32_lanes": 5.984,
+    "sinkhorn_select_engram": 0.103
+   },
+   "dedicated_units_footprint_mm2": 112.7,
+   "dedicated_units_source": "spec widths as in results/uarch/v41_rom.json proposal hub (W11 builds them)",
+   "die_fit": {
+    "sm_array_mm2": 72.67,
+    "l2_mm2": 4.13,
+    "dedicated_mm2": 112.7,
+    "core_avail_mm2": 688.44,
+    "used_mm2": 189.5,
+    "fits": true
+   }
+  }
  }
 }
