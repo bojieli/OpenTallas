@@ -115,6 +115,16 @@ module ot_chip_v41x_die #(
     parameter bit WINDOW_HBM_ATTENTION = 0, // opt-in L0 WINDOW-only internal source
     parameter bit KARB_LOCAL = 0,  // opt-in: per-PC local K arbitration (ot_chip_v41x_hbm_karb_local)
     parameter bit KARB_FENCE = 1,  // with KARB_LOCAL: explicit same-PC K read-after-write fence
+    parameter integer WINDOW_REFILL_CREDITS = 1, // opt-in bounded tagged WINDOW refill (8: results/rtl/v41x_window_refill_credits.json)
+    parameter bit WINDOW_STREAM_II1 = 0,  // opt-in one-beat-a-cycle packed WINDOW stream
+    // Tile engine selection. Defaults are the adopted all-unit tile; focused
+    // connected-execution gates may select the as-built units of engines their
+    // program slice never issues (the tile's own X_* meanings).
+    parameter integer X_HE  = 1,
+    parameter integer X_ME  = 1,
+    parameter integer X_IDX = 2,
+    parameter integer X_SEL = 1,
+    parameter integer X_EG  = 1,
     // HBM address map and KV prefetch
     parameter integer K_HAW   = FULL_SHAPE ? 30 : 28, // HBM sector address
     parameter integer KEY_USERS = 1,          // index-key user slices (the pooled indexer's)
@@ -423,7 +433,7 @@ module ot_chip_v41x_die #(
     wire [7:0] core_coll_seq;
     wire die_coll_fault;
 
-    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
+    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
                         .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
                         .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW)) u_tile (
         .clk(clk), .rst_n(rn),
@@ -599,7 +609,8 @@ module ot_chip_v41x_die #(
         assign win_service_fault = source_fault ||
             (att_packed_desc_accept && !window_region_ok);
         ot_chip_v41x_window_attn_source #(.POS_W(NW), .SEC_W(K_HAW),
-            .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK), .RETAIN_L0(WINDOW_RETAIN_L0)) u_source (
+            .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK), .RETAIN_L0(WINDOW_RETAIN_L0),
+            .REFILL_CREDITS(WINDOW_REFILL_CREDITS), .STREAM_II1(WINDOW_STREAM_II1)) u_source (
             .clk(clk), .rst_n(rn),
             .retain_qk(retention_qk),.retain_pv(retention_pv),
             .retain_generation(att_packed_desc_gen),
