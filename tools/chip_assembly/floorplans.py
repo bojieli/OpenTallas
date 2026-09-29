@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -39,7 +40,7 @@ from typing import Any
 from . import macros as mc
 
 ROOT = Path(__file__).resolve().parents[2]
-CLOCK_PERIOD_NS = 1.0
+CLOCK_PERIOD_NS = float(os.environ.get("OT_CHIP_PERIOD_NS", "1.0"))   # hierarchical flow's clock (default 1.0 ns)
 
 
 # --------------------------------------------------------------------------
@@ -170,6 +171,20 @@ BLOCKS.update({
         420.0, 420.0,
         [(r"^qr_", "N"), (r"^(vi_|xr_|w_)", "S")],
         notes="V4.1 quantised block-dot engine; 53.8k um2 of cells after synthesis"),
+})
+
+GPU_FP = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_fpu.sv",
+          "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/gpu/ot_gpu_tree.sv"]
+BLOCKS.update({
+    # W13: the replicated MMA macro of the GPU-organised HBM comparator's SM (32 lanes x 1 column + its
+    # 32-leaf tree); the SM holds 4 sub-partitions x 16 columns of it.  Harden with OT_CHIP_PERIOD_NS=0.92.
+    "ot_gpu_tc_col": Block(
+        "ot_gpu_tc_col", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 250.0, 250.0,
+        [(r"^w$", "N"), (r"^x$", "W"), (r"^(ov|y|otag|fault)$", "E")],
+        params={"L": 32, "TAGW": 16}, default_edge="S",
+        record="results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l32_092/physical.json",
+        notes="exact tensor-core column: 32 BF16 x BF16 -> FP32 lanes, circulating IL-8 adders, 32-leaf tree",
+        peak_gb=16.0),
 })
 
 

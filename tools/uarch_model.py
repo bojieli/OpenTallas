@@ -925,14 +925,68 @@ def v41_boundaries(path, nodes):
     return n
 
 
+def sm_op_cycles(rows_die: float, K: int, fmt: str, drain: int, group_slot: bool, n_sm: int = 32):
+    """One matvec on the SM array: rows_die rows split over n_sm SMs, each row's K inside one SM.  Row-slot
+    issue holds IL rows in flight, each walking its G groups x c k-steps (a single row is a K-chain);
+    group-slot issue spreads a row's (row, group) items over the IL slots.  Calibrated: the RTL SM
+    (results/rtl/gpu_sm_blockdot_exact.json) takes 689 cycles for 9 rows at FP8 K = 5,120 row-slot."""
+    rows_sm = math.ceil(max(1.0, rows_die) / n_sm)
+    if fmt in ("fp8", "fp4"):
+        C, la = math.ceil(K / 256), (8 if fmt == "fp4" else 4)
+    else:
+        C, la = math.ceil(K / 8), 64
+    G, c = math.ceil(C / la), 8
+    if group_slot:
+        return math.ceil(rows_sm * G / 8) * c * 8 + drain
+    return math.ceil(rows_sm / 8) * G * c * 8 + drain
+
+
+V41_HBM_FABRIC_US = dict(collective_latency=125.9, collective_bytes=1.5, pipeline_hops=0.9, control=2.0)
+V41_HBM_DIES = 96          # G = 96: every matrix 1/96 per die (W9 handoff 8)
+
+
+def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
+    """V4.1 HBM token on the SM design, K-chain aware: the arch DAG's critical path at 1M with every matvec
+    re-priced as an SM op on its 1/96 row slice (sm_op_cycles), the dedicated units' nodes (W11 spec widths)
+    at their arch price, one barrier per global boundary, and the comparator's switched-fabric terms.  The
+    weight sweep streams under the chain.  With speculation, `positions` verify positions ride the MMA
+    columns (one weight fetch); the dedicated units issue each position's work (their issue time repeats,
+    their depth is paid once)."""
+    d = hbm_gpu_design("v41")
+    clock = d["clock_hz"]
+    arch, b = arch_graph(1048576)
+    g = b.g
+    path = g.path(b.sink)
+    mv = other = extra = 0.0
+    for x in path:
+        nd = g.nodes[x]
+        t = sum(g.contrib[x].values())
+        k = node_key(x) if nd["kind"] == "matvec" else ""
+        if nd["kind"] == "matvec" and k and k != "hc.fn":
+            rows = nd["sweep"]["macs"] / NODE_K[k] / V41_HBM_DIES
+            mv += sm_op_cycles(rows, NODE_K[k], NODE_FMT[k], d["drain_cycles"], group_slot) / clock
+        elif nd["kind"] in ("collective", "hop"):
+            continue                                   # replaced by the comparator's fabric terms
+        else:
+            other += t
+            if positions > 1:
+                extra += (positions - 1) * nd.get("issue", 0.0)
+    nb = v41_boundaries(path, g.nodes)
+    bc = d["barrier"]["boundary_cycles"] if barrier_cycles is None else barrier_cycles
+    parts = dict(sm_matvec=mv * 1e6, dedicated_and_su=other * 1e6, verify_extra_issue=extra * 1e6,
+                 barrier=nb * bc / clock * 1e6, **V41_HBM_FABRIC_US)
+    parts["collective_bytes"] *= positions             # every position's activations cross the fabric
+    chain = sum(parts.values())
+    T = max(chain, 37.4)
+    return T, parts, nb
+
+
 def v41_hbm_rows():
-    """V4.1 HBM die token (G=96, 1M).  The published breakdown (W9 handoff 8) is additive: compute chain 111.7,
-    weight sweep 37.4, collective latency 125.9, bytes 1.5, hops 0.9, control 2.0 us.  With the prefetching
-    bulk copy the weight sweep streams under the dependent chain (T = max(sweep, chain + barriers)); the
-    additive rows are kept, labelled no-prefetch.  OPEN: the chain was priced at die-pooled widths; the SM's
-    per-op latency on 1/96-die row slices is not yet in it."""
-    base = dict(compute_chain=111.7, weight_sweep=37.4, collective_latency=125.9, collective_bytes=1.5,
-                pipeline_hops=0.9, control=2.0)
+    """V4.1 HBM die token (G=96, 1M).  Headline: the K-chain-aware SM chain (v41_hbm_chain), row-slot and
+    group-slot issue.  Kept for reference, labelled: the published additive breakdown (W9 handoff 8: compute
+    chain 111.7, weight sweep 37.4, collective latency 125.9, bytes 1.5, hops 0.9, control 2.0 us, priced at
+    die-pooled widths), and the no-prefetch forms."""
+    base = dict(compute_chain=111.7, weight_sweep=37.4, **V41_HBM_FABRIC_US)
     clock = 1.0339e9
     arch, b = arch_graph(1048576)
     path = b.g.path(b.sink)
@@ -940,10 +994,15 @@ def v41_hbm_rows():
     per_die_Bpc = 3.6e12 / clock
     bnd = hbm_gpu_design("v41")["barrier"]["boundary_cycles"]
     rows = []
+    for tag, gs, bc in (("v41_hbm_gpu_rowslot", False, None), ("v41_hbm_gpu_groupslot", True, None),
+                        ("v41_hbm_gpu_groupslot_grid_sync_v100", True, GPU["barrier_ns_grid"] * 1e-9 * clock)):
+        T, parts, nb = v41_hbm_chain(gs, 1, bc)
+        rows.append(dict(design=tag, T_us=round(T, 1), tokens_s=round(1e6 / T, 1), supply_frac=1.0, boundaries=nb,
+                         form="K-chain-aware SM chain, prefetching bulk copy",
+                         breakdown_us={k: round(x, 1) for k, x in parts.items()}))
     for tag, supply, barrier_s, prefetch in (
             ("v41_hbm_published", 1.0, 0.0, False),
-            ("v41_hbm_gpu", 1.0, (bnd - GPU["seq_gap_cycles"]) / clock, True),
-            ("v41_hbm_gpu_grid_sync_v100", 1.0, GPU["barrier_ns_grid"] * 1e-9, True),
+            ("v41_hbm_pooled_chain_prefetch", 1.0, (bnd - GPU["seq_gap_cycles"]) / clock, True),
             ("v41_hbm_adapter_as_built_no_prefetch", GPU["adapter_measured_Bpc"] / per_die_Bpc, 0.0, False),
             ("v41_hbm_gpu_derived_barrier_no_prefetch", 1.0, (bnd - GPU["seq_gap_cycles"]) / clock, False),
             ("v41_hbm_gpu_assumed200_no_prefetch", 1.0, (GPU["barrier_cycles_hw"] - GPU["seq_gap_cycles"]) / clock, False)):
@@ -955,7 +1014,8 @@ def v41_hbm_rows():
         else:
             T = sum(parts.values())
         rows.append(dict(design=tag, T_us=round(T, 1), tokens_s=round(1e6 / T, 1), supply_frac=round(supply, 4),
-                         boundaries=boundaries, form="prefetching bulk copy" if prefetch else "additive",
+                         boundaries=boundaries, form=("pooled-width chain (superseded upper bound)" if prefetch
+                                                      else "additive"),
                          breakdown_us={k: round(x, 1) for k, x in parts.items()}))
     return rows
 
@@ -992,6 +1052,7 @@ GPU_UNIT_UM2 = dict(
     sram32k=SRAM_256B_MACRO["um2"],
     dff=DFF_UM2,
 )
+SRAM_128X256_UM2 = 94.824 * 41.04   # ot_sram_1r1w_128x256_m1_r2c2 (physical/asap7_memory_macros)
 GPU_LOGIC_UTIL = 0.5          # std-cell placement density (W5 convention; replaced by the hardened macro)
 GPU_MACRO_PACK = 1.31         # macro footprint / macro area (W5 tile calibration)
 
@@ -1003,7 +1064,10 @@ SM_ELEM = {
     # DeepSeek-V4.1: FP4 routed experts (8 block-dot lanes = 256 FP4 weights = 128 B/clk), FP8 dense at the same
     # 128 B/clk on 4 of them, BF16 matrices on 64 lanes; 16 columns cover MTP (m+1 = 7) and batch 16
     "v41": dict(subparts=4, int8_lanes=0, bf16_lanes=64, blockdot_lanes=8, cols=16, il=8, ingest_Bpc=128,
-                k_max=5120, x_bytes=2, simt_lanes=128, scratch_kb=64, stack_levels=3),
+                k_max=5120, x_bytes=2, simt_lanes=128, scratch_kb=64, stack_levels=3,
+                # group-slot issue: a row's K groups on different accumulator slots, so a 1-2-row slice is not a
+                # K-chain; the x store must then deliver a new fragment every cycle for up to gs_cols columns
+                group_slot=True, gs_cols=8),
 }
 
 
@@ -1025,8 +1089,19 @@ def sm_area(e: dict, staging_kb: float):
     x_kb = e["k_max"] * c * e["x_bytes"] / 1024
     sram_kb = dict(x_store=x_kb, staging=staging_kb, scratch=e["scratch_kb"])
     macros = {k: math.ceil(v / 32) for k, v in sram_kb.items()}
+    # the x store must also deliver one x fragment (every lane, every column) per slot revolution (IL cycles):
+    # 256-bit macros read every cycle into a double-buffered fragment register
+    frag_bits = c * (lanes * 16 + e["blockdot_lanes"] * 266)
+    macros["x_store"] = max(macros["x_store"], math.ceil(frag_bits / e["il"] / 256))
+    sram_um2 = {k: u["sram32k"] for k in macros}
+    if e.get("group_slot"):
+        # group-slot reads a whole gs_cols-column fragment every cycle: shallow 128 x 256 macros (4 KB each)
+        per_col = lanes * 16 + e["blockdot_lanes"] * 266
+        bw = math.ceil(e["gs_cols"] * per_col / 256)
+        macros["x_store"] = max(bw, math.ceil(x_kb / 4))
+        sram_um2["x_store"] = SRAM_128X256_UM2
     logic_mm2 = sum(logic.values()) / 1e6
-    sram_mm2 = sum(macros.values()) * u["sram32k"] * GPU_MACRO_PACK / 1e6
+    sram_mm2 = sum(macros[k] * sram_um2[k] for k in macros) * GPU_MACRO_PACK / 1e6
     return dict(logic_um2={k: round(v) for k, v in logic.items()}, logic_mm2=round(logic_mm2, 3),
                 footprint_logic_mm2=round(logic_mm2 / GPU_LOGIC_UTIL, 3), sram_kb=sram_kb, sram_macros=macros,
                 sram_mm2=round(sram_mm2, 3), total_mm2=round(logic_mm2 / GPU_LOGIC_UTIL + sram_mm2, 3),
@@ -1364,6 +1439,57 @@ def speculation_rows():
     return rows
 
 
+def hbm_speculation_rows():
+    """Speculation on the GPU-organised HBM dies (user decision 2026-09-29).  The verify positions ride the
+    SM's MMA columns (16 built), so one weight fetch serves the whole block with each column in its own
+    golden order.
+    Qwen DFlash (z-lab/Qwen3-8B-DFlash-b16): step = draft + verify + commit on the prefetching stream.  Draft
+    bytes per die: the drafter's 1.05 B parameters (INT8, ASSUMED the target's format) and the shared lm_head
+    over the draft slots (re-read, 311 MB); verify bytes are the AR token's (weights + one KV read); the
+    in-block causal attention and the accept compare add no bytes.  tau is measured per block
+    (results/speculative/dflash_block_acceptance.json, primary, cycle-weighted).
+    V4.1 DSpark MTP (gamma 5, 6 positions, tau 3.649): verify = the K-chain-aware SM chain with 6 positions
+    (matvecs once on the columns, the dedicated units' issue repeated); draft = V41_DRAFT_FRACTION of an AR
+    token (ASSUMED, as the ROM rows)."""
+    import arch_budget_qwen3 as Q
+    rows = []
+    dq = hbm_gpu_design("qwen")
+    clock = dq["clock_hz"]
+    budget = json.loads((ROOT / "results/arch/qwen3_budget.json").read_text())
+    acc = json.loads((ROOT / "results/speculative/dflash_block_acceptance.json").read_text())["blocks"]
+    ops = qwen_hbm_ops(dq["element"], dq["barrier"]["boundary_cycles"], dq["drain_cycles"])
+    ar_bytes = sum(b for b, _ in ops)
+    t_ar, _ = stream_overlap(ops, dq["hbm_Bpc"], dq["sm_count"] * 128, dq["staging_kb_per_sm"] * 1024 * dq["sm_count"])
+    draft_B = budget["dflash"]["drafter_parameters"] / 2 + 151936 // 2 * (4096 + 2)
+    rows.append(dict(design="qwen_hbm_ar", block=1, tau=1.0, step_cycles=round(t_ar), tokens_s=round(clock / t_ar, 1)))
+    best = None
+    for b, v in sorted(acc.items(), key=lambda kv: int(kv[0])):
+        b = int(b)
+        if b > dq["element"]["cols"]:
+            continue
+        tau = v["pooled"]["primary"]["tau_direct_cycle_weighted"]
+        # the draft precedes the verify (it needs the previous verify's hidden states): its stream is one more
+        # op sequence; the weight streams of both prefetch, so the step is their bytes at the stream rate plus
+        # the same exposed boundaries
+        t_step = t_ar * (ar_bytes + draft_B) / ar_bytes + 2 * 12 * dq["barrier"]["boundary_cycles"]
+        r = dict(design=f"qwen_hbm_dflash_b{b}", block=b, tau=tau, step_cycles=round(t_step),
+                 tokens_s=round(tau * clock / t_step, 1), speedup=round(tau * t_ar / t_step, 3),
+                 draft_bytes_per_die=draft_B, verify_bytes_per_die=ar_bytes)
+        rows.append(r)
+        if best is None or r["tokens_s"] > best["tokens_s"]:
+            best = r
+    rows.append(dict(best, design="qwen_hbm_dflash_best"))
+    T_ar, parts_ar, _ = v41_hbm_chain(True, 1)
+    T_v, parts_v, _ = v41_hbm_chain(True, V41_POSITIONS)
+    Td = V41_DRAFT_FRACTION * T_ar
+    rows.append(dict(design="v41_hbm_ar", tokens_s=round(1e6 / T_ar, 1), T_us=round(T_ar, 1)))
+    rows.append(dict(design="v41_hbm_mtp", positions=V41_POSITIONS, tau=V41_TAU, verify_us=round(T_v, 1),
+                     draft_us=round(Td, 1), tokens_s=round(V41_TAU * 1e6 / (T_v + Td), 1),
+                     speedup=round(V41_TAU * T_ar / (T_v + Td), 3),
+                     verify_breakdown_us={k: round(x, 1) for k, x in parts_v.items()}))
+    return rows
+
+
 def sweep(ctx: int):
     """Design-point search over the microarchitecture knobs that the evaluation shows binding."""
     rows = []
@@ -1434,11 +1560,15 @@ def main(argv=None):
     if a.hbm:
         rows = qwen_hbm_rows() + v41_hbm_rows()
         dq = hbm_gpu_design("qwen")
+        spec = hbm_speculation_rows()
+        for r in spec:
+            print(f"   spec {r['design']:24s} {r['tokens_s']:9.1f} tok/s  tau {r.get('tau', 1.0)}  speedup {r.get('speedup', 1.0)}")
         for r in rows:
             print(f"{r['design']:30s} {r['tokens_s']:9.1f} tok/s  T {r['T_us']:9.1f} us  supply {r['supply_frac']}")
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.hbm_gpu.v2", rows=rows, gpu=GPU,
+                                                   speculation=spec,
                                                    designs=dict(qwen=dq, v41=hbm_gpu_design("v41"))),
                                               indent=1, default=str) + "\n")
         return

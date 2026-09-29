@@ -36,6 +36,26 @@ import hdc_golden_v41 as V  # noqa: E402
 
 F = np.float32
 IL = 8
+
+
+def issue_order(R, Gn, c, gs):
+    """The SM's lockstep weight-line order (rtl/gpu/ot_gpu_issue.sv): row-slot  rb, g, t, s  with slot s =
+    row rb + s; group-slot  wave, t, s  over (row, group) items in row-major order.  Yields (row, g, t)."""
+    if not gs:
+        for rb in range(0, R, IL):
+            for g in range(Gn):
+                for t in range(c):
+                    for s in range(IL):
+                        if rb + s < R:
+                            yield rb + s, g, t
+    else:
+        items = [(r, g) for r in range(R) for g in range(Gn)]
+        for wb in range(0, len(items), IL):
+            for t in range(c):
+                for s in range(IL):
+                    if wb + s < len(items):
+                        r, g = items[wb + s]
+                        yield r, g, t
 LANE_SRC = ["rtl/gpu/ot_gpu_tree.sv", "rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv", "rtl/gpu/ot_gpu_sm.sv",
             "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
             "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/test/tb_gpu_sm.sv"]
@@ -89,7 +109,7 @@ def run_sim(exe, d, gap):
 # ---------------------------------------------------------------------------------------------------------
 # lane SM (Qwen INT8, V4.1 BF16)
 # ---------------------------------------------------------------------------------------------------------
-def lane_case(name, fmt, R, K, split, NC, SUB, LS, rng=None, gap=0, xdepth=96, rmax=256, lev=5, workdir=None,
+def lane_case(name, fmt, R, K, split, NC, SUB, LS, rng=None, gap=0, gs=False, xdepth=96, rmax=256, lev=5, workdir=None,
               exe_cache={}):
     L = SUB * LS
     if fmt == "qwen_int8":
@@ -115,13 +135,8 @@ def lane_case(name, fmt, R, K, split, NC, SUB, LS, rng=None, gap=0, xdepth=96, r
     assert c * Gn <= xdepth, (c, Gn)
     # weight lines in the lockstep order rb, g, t, s (rows past R are bubbles: no line)
     lines = []
-    for rb in range(0, R, IL):
-        for g in range(Gn):
-            for t in range(c):
-                for s in range(IL):
-                    r = rb + s
-                    if r >= R:
-                        continue
+    if True:
+        for r, g, t in issue_order(R, Gn, c, gs):
                     vals = []
                     for j in range(L):
                         ch = g * L + j
@@ -144,7 +159,7 @@ def lane_case(name, fmt, R, K, split, NC, SUB, LS, rng=None, gap=0, xdepth=96, r
     (d / "x.hex").write_text("\n".join(xw) + "\n")
     (d / "scale.hex").write_text("\n".join(f"{int(v):04x}" for v in bf16_bits(scale)) + "\n")
     (d / "cfg.hex").write_text("\n".join(f"{v:08x}" for v in (R, c, Gn, 1 if fmt == "qwen_int8" else 0,
-                                                                len(lines), 0, 0, 0)) + "\n")
+                                                                len(lines), int(gs), 0, 0)) + "\n")
     params = dict(SUB=SUB, LS=LS, NC=NC, XDEPTH=xdepth, RMAX=rmax, LEV=lev, INT8=1 if fmt == "qwen_int8" else 0)
     key = tuple(sorted(params.items()))
     if key not in exe_cache:
@@ -161,7 +176,8 @@ def lane_case(name, fmt, R, K, split, NC, SUB, LS, rng=None, gap=0, xdepth=96, r
             got = (v >> (32 * n)) & 0xFFFFFFFF
             if got != int(G.bits(gold[n][r])):
                 mism += 1
-    return dict(case=name, fmt=fmt, rows=R, K=K, chunk_len=c, chunks=C, split=split, groups=Gn, lanes=L,
+    return dict(case=name, fmt=fmt, issue="group_slot" if gs else "row_slot", rows=R, K=K, chunk_len=c,
+                chunks=C, split=split, groups=Gn, lanes=L,
                 sub_partitions=SUB, cols=NC, stream_gap_pct=gap, weight_lines=len(lines), results=len(res),
                 mismatches=mism, exact=(mism == 0 and len(res) == R and not meta.get("timeout")
                                         and meta.get("fault", 1) == 0), rtl=meta)
@@ -197,6 +213,10 @@ def lanes_campaign(args):
         (("v_bf16_k512", "v41_bf16", 16, 512, 0, NC, 4, 16), kw),
         (("v_bf16_k1004_pad", "v41_bf16", 11, 1004, 0, NC, 4, 16), kw),        # tail chunk + pow2 pad
         (("v_bf16_k5120", "v41_bf16", 8, 5120, 0, NC, 4, 16), kw),             # lm_head/router K: G = 10 -> 16
+        # group-slot issue (a row's groups on different slots): 1-3-row slices, the V4.1 per-die case
+        (("v_bf16_k5120_gs_r1", "v41_bf16", 1, 5120, 0, NC, 4, 16), dict(kw, gs=True)),
+        (("v_bf16_k1004_gs_r3", "v41_bf16", 3, 1004, 0, NC, 4, 16), dict(kw, gs=True, gap=25)),
+        (("q_kc4_gs_r2", "qwen_int8", 2, 2048, 512, NC, SUB, LS), dict(kw, gs=True)),
     ]
     return _run_specs(lane_case, specs, args.jobs, 20260929)
 
@@ -209,7 +229,7 @@ def _codes():
     return BC.e4m3_codes, BC.e2m1_codes
 
 
-def bd_case(name, fmt, R, K, NC, rng=None, SUB=4, LBS=2, gap=0, xdepth=64, rmax=256, lev=3, workdir=None,
+def bd_case(name, fmt, R, K, NC, rng=None, SUB=4, LBS=2, gap=0, gs=False, xdepth=64, rmax=256, lev=3, workdir=None,
             exe_cache={}):
     e4m3_codes, e2m1_codes = _codes()
     LB = SUB * LBS
@@ -246,13 +266,8 @@ def bd_case(name, fmt, R, K, NC, rng=None, SUB=4, LBS=2, gap=0, xdepth=64, rmax=
             v |= (int(cd) & 0xFF) << (8 * i)
         return v | ((int(e) & 0x3FF) << 256)
     lines = []
-    for rb in range(0, R, IL):
-        for g in range(Gn):
-            for t in range(c):
-                for s in range(IL):
-                    r = rb + s
-                    if r >= R:
-                        continue
+    if True:
+        for r, g, t in issue_order(R, Gn, c, gs):
                     word = 0
                     for j in range(LB):
                         ch = g * LA + j
@@ -275,7 +290,7 @@ def bd_case(name, fmt, R, K, NC, rng=None, SUB=4, LBS=2, gap=0, xdepth=64, rmax=
     d = Path(tempfile.mkdtemp(prefix=f"gbd_{name}_", dir=workdir))
     (d / "lines.hex").write_text("\n".join(lines) + "\n")
     (d / "x.hex").write_text("\n".join(xw) + "\n")
-    (d / "cfg.hex").write_text("\n".join(f"{v:08x}" for v in (R, c, Gn, 1 if fp4 else 0, len(lines), 0, 0, 0)) + "\n")
+    (d / "cfg.hex").write_text("\n".join(f"{v:08x}" for v in (R, c, Gn, 1 if fp4 else 0, len(lines), int(gs), 0, 0)) + "\n")
     params = dict(SUB=SUB, LBS=LBS, NC=NC, XDEPTH=xdepth, RMAX=rmax, LEV=lev)
     key = ("bd",) + tuple(sorted(params.items()))
     if key not in exe_cache:
@@ -291,7 +306,7 @@ def bd_case(name, fmt, R, K, NC, rng=None, SUB=4, LBS=2, gap=0, xdepth=64, rmax=
         for n in range(NC):
             if ((v >> (32 * n)) & 0xFFFFFFFF) != int(G.bits(gold[n][r])):
                 mism += 1
-    return dict(case=name, fmt=fmt, rows=R, K=K, blocks=nb, chunk_len=c, chunks=C, active_lanes=LA, groups=Gn,
+    return dict(case=name, fmt=fmt, issue="group_slot" if gs else "row_slot", rows=R, K=K, blocks=nb, chunk_len=c, chunks=C, active_lanes=LA, groups=Gn,
                 lanes=LB, sub_partitions=SUB, cols=NC, stream_gap_pct=gap, weight_lines=len(lines),
                 results=len(res), mismatches=mism,
                 exact=(mism == 0 and len(res) == R and not meta.get("timeout") and meta.get("fault", 1) == 0),
@@ -308,6 +323,10 @@ def bd_campaign(args):
         (("fp8_k5120_dense", "v41_fp8", 9, 5120, NC), kw),      # dense FP8: 4 active lanes
         (("fp8_k1280_wqb", "v41_fp8", 8, 1280, NC), kw),        # wq_b: 40 blocks, 5 chunks
         (("fp8_k544_tail", "v41_fp8", 5, 544, NC), dict(kw, gap=30)),  # 17 blocks: short tail chunk, gaps
+        # group-slot issue on 1-2-row slices (the V4.1 1/96 die slice)
+        (("fp8_k5120_gs_r1", "v41_fp8", 1, 5120, NC), dict(kw, gs=True)),
+        (("fp4_k5120_gs_r2", "v41_fp4", 2, 5120, NC), dict(kw, gs=True)),
+        (("fp8_k2048_gs_r3", "v41_fp8", 3, 2048, NC), dict(kw, gs=True, gap=25)),
     ]
     return _run_specs(bd_case, specs, args.jobs, 20260930)
 

@@ -115,8 +115,8 @@
    "mean_x100": 3000,
    "early_release_errors": 0,
    "model": "qwen",
-   "floorplan_leaf_um": 4186.1,
-   "floorplan_trunk_um": 6611.1
+   "floorplan_leaf_um": 4261.7,
+   "floorplan_trunk_um": 6762.3
   },
   {
    "n": 32,
@@ -130,13 +130,13 @@
    "mean_x100": 4000,
    "early_release_errors": 0,
    "model": "v41",
-   "floorplan_leaf_um": 3787.6,
-   "floorplan_trunk_um": 11868.8
+   "floorplan_leaf_um": 3946.3,
+   "floorplan_trunk_um": 11751.3
   }
  ],
  "source_sha256": {
-  "results/floorplan/hbm_gpu/qwen_hbm_die.json": "bf04bb5b0b310c0bb4c2f0c9a4fb086481fc7b2cd34895e3ac8672ff2a54fd96",
-  "results/floorplan/hbm_gpu/v41_hbm_die.json": "8359627b95cd6994f7ef69329ea943f46a833abe2d52b782f00f5f88670c80a1",
+  "results/floorplan/hbm_gpu/qwen_hbm_die.json": "c12cf48f7e595bcb9aaaea05aa192dc7d335e00b966153062b7f5dafe7ff1cdf",
+  "results/floorplan/hbm_gpu/v41_hbm_die.json": "9f4ea3731ddfee6111101a2073c2ed93343ce997152b2c4bf80fd608e0056324",
   "rtl/gpu/ot_gpu_barrier_node.sv": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
   "rtl/gpu/ot_gpu_bulk_copy.sv": "35d8d2f025e44fe134bb30c39e547b8707fdff4e21903575c4fa941bf85615c1",
   "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",

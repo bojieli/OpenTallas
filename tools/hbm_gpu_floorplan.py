@@ -47,6 +47,7 @@ FABRIC_SERDES_MM2 = 18.0      # ASSUMED: V4.1 switched-fabric SerDes (NVL-class,
 UPPER_TRACKS_V = sum(1000.0 / QF.UPPER_PITCH_NM[l] for l in ("M5", "M7", "M9")) * QF.SIGNAL_SHARE  # per um
 UPPER_TRACKS_H = sum(1000.0 / QF.UPPER_PITCH_NM[l] for l in ("M6", "M8")) * QF.SIGNAL_SHARE
 INPUTS = ["tools/uarch_model.py", "tools/qwen_o4_floorplan.py", "physical/asap7_memory_macros/index.json",
+          "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
           "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.lef",
           f"physical/asap7_memory_macros/{SRAM}/{SRAM}.lef"]
 
@@ -66,27 +67,39 @@ def snap(v, q):
     return QF.snap(v, q)
 
 
+SRAM_SMALL = "ot_sram_1r1w_128x256_m1_r2c2"
+
+
 def sm_tile(design):
-    """SM tile: its SRAM macros in rows along the tile's north edge, logic below at the model density."""
+    """SM tile: its SRAM macros in rows along the tile's north edge (32 KB macros for staging/scratch and a
+    capacity-bound x store; 4 KB macros for a group-slot x store), logic below at the model density."""
     a = design["sm_area"]
-    n_sram = sum(a["sram_macros"].values())
-    mw, mh = QF.MV[SRAM]
-    px, py = snap(mw + 2 * QF.HALO_X, QF.SNAP_X), snap(mh + 2 * QF.HALO_Y, QF.SNAP_Y)
-    per_row = 9
-    rows = -(-n_sram // per_row)
-    w = snap(per_row * px, QF.SNAP_X)
+    e = design["element"]
+    kinds = []
+    for k, n in a["sram_macros"].items():
+        kinds.append((SRAM_SMALL if (k == "x_store" and e.get("group_slot")) else SRAM, n))
+    w = snap(9 * snap(QF.MV[SRAM][0] + 2 * QF.HALO_X, QF.SNAP_X), QF.SNAP_X)
+    rows, y, n_sram = [], 0.0, 0
+    for macro, n in kinds:
+        mw, mh = QF.MV[macro]
+        px, py = snap(mw + 2 * QF.HALO_X, QF.SNAP_X), snap(mh + 2 * QF.HALO_Y, QF.SNAP_Y)
+        per_row = max(1, int(w // px))
+        for i in range(n):
+            r, cidx = divmod(i, per_row)
+            rows.append((macro, cidx * px, y + r * py))
+        y += -(-n // per_row) * py
+        n_sram += n
     logic_h = snap(a["footprint_logic_mm2"] * 1e6 / w, QF.SNAP_Y)
-    h = snap(logic_h + rows * py, QF.SNAP_Y)
-    return dict(w=w, h=h, logic_h=logic_h, sram=n_sram, per_row=per_row, px=px, py=py,
+    h = snap(logic_h + y, QF.SNAP_Y)
+    return dict(w=w, h=h, logic_h=logic_h, sram=n_sram, macros=rows, sram_band_um=round(y, 2),
                 footprint_mm2=round(w * h / 1e6, 3), model_mm2=a["total_mm2"])
 
 
 def place_sm(p, name, x, y, tile):
     p.region(name, "sm", x, y, tile["w"], tile["h"])
-    for i in range(tile["sram"]):
-        r, c = divmod(i, tile["per_row"])
-        p.macro(f"{name}_sram{i}", SRAM, snap(x + c * tile["px"] + QF.HALO_X, QF.SNAP_X),
-                snap(y + tile["logic_h"] + r * tile["py"] + QF.HALO_Y, QF.SNAP_Y), "R0", name)
+    for i, (macro, dx, dy) in enumerate(tile["macros"]):
+        p.macro(f"{name}_sram{i}", macro, snap(x + dx + QF.HALO_X, QF.SNAP_X),
+                snap(y + tile["logic_h"] + dy + QF.HALO_Y, QF.SNAP_Y), "R0", name)
 
 
 def place_l2(p, name, cx, y0, north, n_macros=64, per_row=16):
