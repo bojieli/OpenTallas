@@ -1,0 +1,77 @@
+{
+  "status": "executable_contract_model_not_rtl_measurement",
+  "source_pins": {
+    "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "1c71b11df5ec918b55bbb5706a80dda65e8470144ec08f27afc46523be57066b",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "4d2fc7666016345fe896d943dda5584519002e9140fe28bb229be8ebc4539a40",
+    "tools/hdc_replay_v41.py": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852"
+  },
+  "current": {
+    "rows": 640,
+    "heads": 16,
+    "groups": 4,
+    "pwords": 1,
+    "row_banks": 4,
+    "preload_issue_cycles": 2560,
+    "preload_bank_conflicts": 0,
+    "stream_bank_conflicts": 0,
+    "accepted_beats": 320,
+    "stream_elapsed_cycles": 320,
+    "exact_nonzero_elements": 10240,
+    "lower_bound_preload_plus_stream": 2880
+  },
+  "proposed_banked_xbuf": {
+    "rows": 640,
+    "heads": 16,
+    "groups": 4,
+    "pwords": 2,
+    "row_banks": 4,
+    "preload_issue_cycles": 2560,
+    "preload_bank_conflicts": 0,
+    "stream_bank_conflicts": 0,
+    "accepted_beats": 160,
+    "stream_elapsed_cycles": 160,
+    "exact_nonzero_elements": 10240,
+    "lower_bound_preload_plus_stream": 2720
+  },
+  "insufficient_two_row_banks": {
+    "rows": 640,
+    "heads": 16,
+    "groups": 4,
+    "pwords": 2,
+    "row_banks": 2,
+    "preload_issue_cycles": 2560,
+    "preload_bank_conflicts": 5120,
+    "stream_bank_conflicts": 5120,
+    "accepted_beats": 160,
+    "stream_elapsed_cycles": 160,
+    "exact_nonzero_elements": 10240,
+    "lower_bound_preload_plus_stream": 2720
+  },
+  "backpressure": {
+    "rows": 640,
+    "heads": 16,
+    "groups": 4,
+    "pwords": 2,
+    "row_banks": 4,
+    "preload_issue_cycles": 2560,
+    "preload_bank_conflicts": 0,
+    "stream_bank_conflicts": 0,
+    "accepted_beats": 160,
+    "stream_elapsed_cycles": 240,
+    "exact_nonzero_elements": 10240,
+    "lower_bound_preload_plus_stream": 2720
+  },
+  "assumptions": [
+    "all SU probability writes complete before A_LDX",
+    "G scalar FP32 VM operands accepted every cycle: optimistic VM service bound",
+    "proposed xbuf uses head x (row modulo 4) banks, one port per bank",
+    "preload and stream do not overlap; no refill or overwrite until operation completes",
+    "stream always ready except separately reported backpressure case"
+  ],
+  "unresolved": [
+    "actual SU latency and shared VM arbitration",
+    "physical xbuf banking/register mux implementation",
+    "stationary engine four-bank lifetime guard and numerical verification"
+  ],
+  "architectural_conclusion": "PWORDS2 widens local preloaded xbuf gather, not sustained SU/VM bandwidth; G4 preload is 2560 issue cycles before streaming. No full-layer rate claimed."
+}
