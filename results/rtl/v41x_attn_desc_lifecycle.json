@@ -2,7 +2,7 @@
   "base_commit": "ddee7a29",
   "current_integration_check": {
     "boundary_record": "results/rtl/chip_v41x_packed_die_boundary.json",
-    "boundary_sha256": "091de2ac3108dccb1b786f5463be6ab600d29948b00150580fe2eba2760f8edd",
+    "boundary_sha256": "f89dcc1f8b9217f821462488f4c2258da942eb232dd7725deb58eef5f2c345fe",
     "generator": "tools/refresh_v41_packed_integration_evidence.py",
     "generator_sha256": "c5619cec114d52519507f7f1d494495368e6b6d8aac22f1b0d7f5b64739d4c1f",
     "scope": "standalone lifecycle/forwarding simulations plus separate header checks; no numerical engine or token claim"
@@ -10,7 +10,7 @@
   "scope": "L0 descriptor lifecycle and QK/PV 128-row tagged beat replay; standalone service stimulus only, no HBM source or numeric engine claim",
   "sources": {
     "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
-    "rtl/chip/ot_chip_v41x_die.sv": "dc1534a92aa7465ae500df00e031016f103421d0240e42b111f9bc75285494bc",
+    "rtl/chip/ot_chip_v41x_die.sv": "e45c4ff3d64e3e3c879c05daba46ef043dc699ddd03eb2f7cf56b801eea861cb",
     "rtl/chip/ot_chip_v41x_tile.sv": "69ad54bd0534cedffb025838c944ddeed88e0acb8c8519bf25a8698b4d7fc648",
     "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "4d2fc7666016345fe896d943dda5584519002e9140fe28bb229be8ebc4539a40",
     "rtl/test/tb_v41x_attn_desc_lifecycle.sv": "f20dc5a5621144e740d743b62fd1ef6c00d9dc3e8d23d29d5bf0cde235d93a3c"

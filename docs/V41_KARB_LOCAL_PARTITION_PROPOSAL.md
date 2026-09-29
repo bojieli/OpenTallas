@@ -1,6 +1,6 @@
 # Local HBM K arbitration proposal
 
-Status: proposal for root review, not an adopted timing change. Base revision: `86b85fc480db8171ddd4a4057d04c8b4ca220424`. No RTL changes or physical jobs accompany this document. Machine-readable dimensions and source hashes: `results/physical_abi3/asap7/chip/v41x_hbm_karb/local_partition_proposal.json`.
+Status: root approved an opt-in functional prototype and slice characterization on 2026-09-29; not an adopted production timing change. Base revision: `86b85fc480db8171ddd4a4057d04c8b4ca220424`. No RTL changes or physical jobs accompany this document. Machine-readable dimensions and source hashes: `results/physical_abi3/asap7/chip/v41x_hbm_karb/local_partition_proposal.json`.
 
 ## Failure and actual scope
 
@@ -51,3 +51,7 @@ Physical views needed: synthesizable local slice and regional wrapper; exact por
 Root must approve the four-cycle minimum K traversal change, explicit same-PC K write-completion fence, queued cross-PC ordering, status latency, 375 x 64 um study envelope, and shared-controller assumption before RTL implementation or launch. No existing selector, VM or ME physical runs are part of this proposal.
 
 After approval: (1) check the global hash exhaustively over its 17 influencing address bits and all PCs, and prove ownership, masked writes, stable stalls, per-PC ordering and finite queues; (2) run actual KV generation/restart and pooled-index writer consumers with simultaneous reads/writes, reset, and backpressure; (3) synthesize one AW30 slice, verify legal pins against the actual PHY window, then place/route only that slice; (4) build one four-PC regional selector and prove throughput with finite credits before routing; (5) route the longest root-to-region boundary at full-size distance with neighbouring obstructions; (6) feed measured cycles, latency bounds, area and power into the shared HBM ledger before replicating four stacks. Require congestion convergence and routed setup/hold/DRC evidence at each step. Stop and return to root on a failed physical gate; no automatic giant-strip retry.
+
+## Root prototype decision
+
+Implement globally hashed PC slices, two request and two response stages, explicit same-PC write-completion fences, and bounded queues. Use round-robin eligible K capture at regional and stack levels to avoid starvation; cross-PC response order may change while tagged identity and per-PC order remain intact. B service stays direct. The proposed per-slice envelope is authorized for characterization only; its full-stack area and four-cycle minimum traversal must be priced before adoption. Functional ordering/credit tests precede route.
