@@ -141,6 +141,16 @@ module ot_hdc_v41x_vec_lane #(
     function automatic [31:0] fmax(input [31:0] a, input [31:0] b);
         fmax = (okey(a) >= okey(b)) ? a : b;
     endfunction
+    // relu then min: the two compares (v and +0 against imm) run side by side
+    function automatic [31:0] pre_a(input [31:0] v, input relu, input amin, input [31:0] imm);
+        reg zero, le_v, le_0;
+        begin
+            zero = relu && v[31];
+            le_v = okey(v) <= okey(imm);
+            le_0 = okey(32'd0) <= okey(imm);
+            pre_a = !amin ? (zero ? 32'd0 : v) : zero ? (le_0 ? 32'd0 : imm) : (le_v ? v : imm);
+        end
+    endfunction
 
     // ---- offsets: two banks, loaded by the op set-up --------------------------------------------
     reg [AW-1:0] off0 [0:4];
@@ -238,9 +248,16 @@ module ot_hdc_v41x_vec_lane #(
         x_a <= rd_q[31:0]; x_b <= rd_q[63:32]; x_c <= rd_q[95:64]; x_d <= rd_q[127:96];
     end
     // ---- PRE ------------------------------------------------------------------------------------------
-    wire [31:0] a_r = cx_arnd ? bf16(x_a) : x_a;
-    wire [31:0] a_l = (cx_arelu && a_r[31]) ? 32'd0 : a_r;
-    wire [31:0] a_m = cx_amin ? fmin(a_l, cx_imm3) : a_l;
+    // A' = min(relu(rnd?(A)), imm3), evaluated for the three values rnd?(A) can take (A itself, A truncated to
+    // BF16, and truncated + one BF16 ulp) side by side and selected by the rounding decision, so no compare
+    // waits for the rounding carry (bit-identical for all inputs: tools/w11_equiv_clip.ys; W11 timing fix)
+    wire [31:0] a_t  = {x_a[31:16], 16'd0};
+    wire [31:0] a_u  = {x_a[31:16] + 16'd1, 16'd0};
+    wire        a_up = x_a[15] & ((|x_a[14:0]) | x_a[16]);
+    wire [31:0] a_mx = pre_a(x_a, cx_arelu, cx_amin, cx_imm3);
+    wire [31:0] a_mt = pre_a(a_t, cx_arelu, cx_amin, cx_imm3);
+    wire [31:0] a_mu = pre_a(a_u, cx_arelu, cx_amin, cx_imm3);
+    wire [31:0] a_m  = !cx_arnd ? a_mx : a_up ? a_mu : a_mt;
     // clip(C, -imm3, imm3) = fmin(fmax(C, lo), hi) with its three comparisons side by side (bit-identical,
     // ties included: proven by tools/w11_equiv_clip.ys; the chained form was the lane's critical path, W11)
     wire [31:0] c_lo = {1'b1, cx_imm3[30:0]};
