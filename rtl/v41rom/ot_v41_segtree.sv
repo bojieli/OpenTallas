@@ -1,15 +1,22 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // ot_v41_segtree: the golden csum padded pairwise tree over one segment's chunk sums, for up to NT
-// segments (trees) in flight.  Base nodes of a tree arrive IN ORDER (chunk sums for FP8, chunk-pair
-// sums for FP4); `final` marks a tree's last base node.  Per level a held left operand waits for its
-// right sibling; a final node with no held sibling passes up unchanged (the golden's +0 padding is
-// an identity: no zero here is -0).  The tree logic is ot_hdc_chunk8_stack's (rtl/hdc/v41), keyed by
-// tree instead of row slot.  A tree's value leaves as ov at level LV after 5 * LV (+1) cycles.
+// segments (trees) in flight, on ONE pipelined binary32 adder (ot_fp32_add_rne_pipe, 5 cycles).
+//
+// Base nodes of a tree arrive IN ORDER (FP8 chunk sums, FP4 chunk-pair sums); `final` marks the tree's last.
+// An event {tree, level, value, final} at level l either pairs with the tree's held left operand of level l
+// (held + value, left first) or, if none is held, is held -- unless it is final, when it is promoted to
+// level l+1 by adding +0 (the golden's padding; x + 0 = x here, since no zero is -0).  Both go through the
+// adder, so every event at level l+1 leaves the adder in the order its level-l inputs entered it, and a
+// promoted final can never overtake an in-flight sum of its own tree.  A final event at level LV leaves as
+// the segment's partial.  Base nodes queue in a QD-entry FIFO while the adder serves its own results first.
+// Adds per tree: (base nodes - 1) + at most LV promotions -- under one per cycle for any base-node rate the
+// element can produce, so one adder replaces LV.
 // ---------------------------------------------------------------------------
 module ot_v41_segtree #(
     parameter integer NT = 4,
-    parameter integer LV = 4
+    parameter integer LV = 5,
+    parameter integer QD = 8
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -21,65 +28,63 @@ module ot_v41_segtree #(
     output reg                      ov,
     output reg  [$clog2(NT)-1:0]    otree,
     output reg  [31:0]              oval,
-    output reg                      oerr
+    output reg                      oerr,
+    output reg                      fault
 );
     localparam integer PW = $clog2(NT);
-    wire [31:0] value [0:LV];
-    wire [PW-1:0] slot [0:LV];
-    wire [LV:0] event_v, final_v, error_v;
-    assign value[0] = in_val;
-    assign slot[0] = in_tree;
-    assign event_v[0] = in_v;
-    assign final_v[0] = in_final;
-    assign error_v[0] = in_err;
-    genvar level;
-    generate for (level = 0; level < LV; level = level + 1) begin : g_tree
-        reg [31:0] held [0:NT-1];
-        reg [NT-1:0] have, held_error;
-        wire pair = event_v[level] && have[slot[level]];
-        wire pass = event_v[level] && !have[slot[level]] && final_v[level];
-        wire [31:0] added, passed;
-        wire [1:0] aerr;
-        wire avo;
-        ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(pair),
-            .a(held[slot[level]]), .b(value[level]), .y(added), .err(aerr), .valid_out(avo));
-        ot_hdc_delay #(.W(32), .D(5)) u_pass (.clk(clk), .rst_n(rst_n), .d(value[level]), .q(passed));
-        wire [PW+3:0] tag;
-        ot_hdc_delay #(.W(PW+4), .D(5)) u_tag (.clk(clk), .rst_n(rst_n),
-            .d({slot[level], pair, final_v[level],
-                error_v[level] | (pair && held_error[slot[level]]), pair | pass}), .q(tag));
-        reg [4:0] valid_pipe;
-        always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin
-                have <= '0;
-                held_error <= '0;
-                valid_pipe <= 0;
-            end else begin
-                valid_pipe <= {valid_pipe[3:0], pair | pass};
-                if (pair) have[slot[level]] <= 1'b0;
-                else if (event_v[level] && !pass) begin
-                    have[slot[level]] <= 1'b1;
-                    held_error[slot[level]] <= error_v[level];
-                end
-            end
-        end
-        always @(posedge clk) if (event_v[level] && !have[slot[level]] && !pass)
-            held[slot[level]] <= value[level];
-        assign slot[level+1] = tag[PW+3:4];
-        assign event_v[level+1] = valid_pipe[4];
-        assign final_v[level+1] = tag[2];
-        assign error_v[level+1] = tag[1] | (tag[3] && (aerr != 2'd0));
-        assign value[level+1] = tag[3] ? added : passed;
-    end endgenerate
+    localparam integer LW = $clog2(LV + 1);
+    localparam integer QW = $clog2(QD);
+    // base-node queue
+    reg [31:0] qv [0:QD-1];
+    reg [PW-1:0] qt [0:QD-1];
+    reg qf [0:QD-1], qe [0:QD-1];
+    reg [QW-1:0] qr, qw;
+    reg [QW:0] qc;
+    // held left operands
+    reg [31:0] held [0:NT*LV-1];
+    reg [NT*LV-1:0] have, herr;
+    // adder result (event at level + 1)
+    wire [31:0] sum;
+    wire [1:0] err;
+    wire sv;
+    wire [PW+LW+1:0] st;     // {tree, level, final, err}
+    // the event considered this cycle: adder result first, else the queue head
+    wire use_q = !sv && qc != 0;
+    wire        e_v = sv || qc != 0;
+    wire [PW-1:0] e_t = sv ? st[PW+LW+1 -: PW] : qt[qr];
+    wire [LW-1:0] e_l = sv ? st[LW+1 -: LW] : {LW{1'b0}};
+    wire        e_f = sv ? st[1] : qf[qr];
+    wire        e_e = sv ? (st[0] | err != 2'd0) : qe[qr];
+    wire [31:0] e_d = sv ? sum : qv[qr];
+    wire [PW+LW-1:0] hidx = e_t * LV + e_l;
+    wire top = e_l == LV[LW-1:0];
+    wire pair = e_v && !top && have[hidx];
+    wire promote = e_v && !top && !have[hidx] && e_f;
+    wire hold = e_v && !top && !have[hidx] && !e_f;
+    wire [31:0] add_a = pair ? held[hidx] : e_d;
+    wire [31:0] add_b = pair ? e_d : 32'd0;
+    ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(pair | promote), .a(add_a), .b(add_b),
+                                .y(sum), .err(err), .valid_out(sv));
+    ot_hdc_delay #(.W(PW + LW + 2), .D(5)) u_t (.clk(clk), .rst_n(rst_n),
+        .d({e_t, e_l + 1'b1, e_f, e_e | (pair && herr[hidx])}), .q(st));
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin ov <= 1'b0; oerr <= 1'b0; end
-        else begin
-            ov <= event_v[LV] && final_v[LV];
-            oerr <= event_v[LV] && final_v[LV] && error_v[LV];
+        if (!rst_n) begin
+            qr <= 0; qw <= 0; qc <= 0; have <= '0; herr <= '0; ov <= 1'b0; oerr <= 1'b0; fault <= 1'b0;
+        end else begin
+            if (in_v) qw <= qw + 1'b1;
+            if (use_q) qr <= qr + 1'b1;
+            qc <= qc + (in_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);
+            if (in_v && qc == QD && !use_q) fault <= 1'b1;
+            if (pair) have[hidx] <= 1'b0;
+            if (hold) begin have[hidx] <= 1'b1; herr[hidx] <= e_e; end
+            ov <= e_v && top;
+            oerr <= e_v && top && e_e;
         end
     end
     always @(posedge clk) begin
-        oval <= value[LV];
-        otree <= slot[LV];
+        if (in_v) begin qv[qw] <= in_val; qt[qw] <= in_tree; qf[qw] <= in_final; qe[qw] <= in_err; end
+        if (hold) held[hidx] <= e_d;
+        oval <= e_d;
+        otree <= e_t;
     end
 endmodule
