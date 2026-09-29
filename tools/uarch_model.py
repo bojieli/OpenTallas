@@ -143,7 +143,9 @@ PRESETS = {
 PRESETS["prop_vm64"] = dict(PRESETS["spec_striped"], name="prop_vm64", vm_read_elems=64, vm_write_elems=128)
 PRESETS["prop_vm256"] = dict(PRESETS["spec_striped"], name="prop_vm256", vm_read_elems=256, vm_write_elems=512)
 PRESETS["proposal"] = dict(PRESETS["spec_striped"], name="proposal", vm_read_elems=64, vm_write_elems=128,
-                           bf16_stripe_macros=4096, collective_cycles=232)
+                           bf16_stripe_macros=4096, collective_cycles=232, row_split="ksplit")
+PRESETS["proposal_whole"] = dict(PRESETS["proposal"], name="proposal_whole", row_split="whole")
+PRESETS["proposal_ksplit"] = dict(PRESETS["proposal"], name="proposal_ksplit", row_split="ksplit")
 PRESETS["prop_vm256_measured"] = dict(PRESETS["prop_vm256"], name="prop_vm256_measured", su_lanes=16, sfu_lanes=8,
                                       att_macs=32768, use_measured_attention=True, idx_reader_Bpc=60 * 32,
                                       idx_macs=1024, collective_cycles=232)
@@ -171,6 +173,26 @@ def arch_graph(ctx: int):
     return dict(r), copy.deepcopy(b)
 
 
+EXPERT_ROWS = {"experts_gu": 1152, "down": 1280}   # rows of ONE expert's slice per die (w1|w3 2 x 576; w2 1280)
+FADD_PIPE = 5                                       # ot_fp32_add_rne_pipe latency (closed 0.7 ns)
+
+
+def expected_max_load(balls: int, bins: int, trials: int = 4000, seed: int = 7) -> float:
+    """E[max bin occupancy] of `balls` placed uniformly at random in `bins` (Monte Carlo, fixed seed)."""
+    import random
+    if bins <= 1:
+        return float(balls)
+    rng = random.Random(seed)
+    tot = 0
+    for _ in range(trials):
+        cnt = {}
+        for _b in range(balls):
+            k = rng.randrange(bins)
+            cnt[k] = cnt.get(k, 0) + 1
+        tot += max(cnt.values())
+    return tot / trials
+
+
 def price_matvec(nd, name, d, clock, c):
     key = node_key(name)
     if not key or key == "hc.fn":
@@ -184,12 +206,34 @@ def price_matvec(nd, name, d, clock, c):
     wpw = WEIGHTS_PER_WORD[fmt]
     words = macs / wpw
     region = NODE_REGION[key]
+    ksplit = 1
+    adder_levels = 0
     if d["mapping"] == "striped":
         n = d["macros"]
         if fmt == "bf16" and d.get("bf16_stripe_macros"):
             n = min(n, d["bf16_stripe_macros"])
-        holding = min(n, words)
-        t_read = math.ceil(words / n)
+        seg_words = math.ceil(K / wpw)
+        if d.get("row_split", "whole") == "ksplit":
+            # split each row's K over s macros in power-of-two-aligned runs of golden chunks (8 blocks of 32 =
+            # 256 elements): exact under the golden csum's padded pairwise tree (W10 finding, f02e4600); the
+            # partials are added in the return tree in the same tree order (FP32 adders, one level per x2)
+            chunks = math.ceil(K / 256)
+            while ksplit < chunks and rows * ksplit < n:
+                ksplit *= 2
+            ksplit = min(ksplit, chunks)
+            seg_words = math.ceil(math.ceil(K / ksplit) / wpw)
+            adder_levels = math.ceil(math.log2(ksplit)) if ksplit > 1 else 0
+        segs = rows * ksplit
+        holding = min(n, segs)
+        if key in EXPERT_ROWS and segs < n:
+            # whole expert slices occupy tiles of e_rows x ksplit macros; the active experts land on tiles at
+            # random (static expert -> tile map, data-dependent routing): reads on a shared tile serialise
+            e_rows = EXPERT_ROWS[key] * ksplit
+            active = max(1, round(rows / EXPERT_ROWS[key]))
+            tiles = max(1, n // e_rows)
+            t_read = expected_max_load(active, tiles) * seg_words
+        else:
+            t_read = math.ceil(segs / n) * seg_words
     else:
         depth_rows = d["expert_fill_rows"] if region == "expert" else ROM_DEPTH
         holding = max(1, math.ceil(words / depth_rows))
@@ -209,10 +253,10 @@ def price_matvec(nd, name, d, clock, c):
     leaves = holding if d["return_leaf_elems"] is None else d["return_leaf_elems"]
     tree = math.ceil(math.log(max(2, leaves), d["return_fanin"]))
     wire = 2 * wire_cycles(d["bcast_um"][region], clock, d.get("wire_ps_per_um", WIRE_PS_PER_UM))
-    depth_c = d["elem_fill"] + wire + tree
+    depth_c = d["elem_fill"] + wire + tree + adder_levels * FADD_PIPE
     return dict(key=key, fmt=fmt, K=K, rows=rows, words=words, holding=holding, region=region,
                 t_read=t_read, t_mac=t_mac, t_x=t_x, t_ret=t_ret, issue=issue_c, bind=bind,
-                depth=depth_c, wire=wire, tree=tree)
+                depth=depth_c, wire=wire, tree=tree, ksplit=ksplit, adder_levels=adder_levels)
 
 
 def evaluate(d: dict, ctx: int = 1048576):
@@ -310,6 +354,8 @@ def area_ledger(d: dict):
         bf16_lanes=(nb * 16 * UNIT["mac_bf16_um2"]) if striped else (d.get("bf16_macs_die") or 41664) * UNIT["mac_bf16_um2"],
         capture_regs=n * 274 * DFF_UM2,
         chunk_partials=(n * 8 * 32 * DFF_UM2) if striped else 0.0,   # 8 rows x FP32 chunk partial per element
+        # K-split partials meet in the return tree: about one FP32 adder per macro pair (UNIT fp32_add_um2)
+        return_adders=(n / 2 * UNIT["fp32_add_um2"]) if striped and d.get("row_split") == "ksplit" else 0.0,
         indexer=d["idx_macs"] / 32 * UNIT["blockdot_um2"],
         attention=d["att_macs"] * UNIT["mac_bf16_um2"],
         su_lanes=d["su_lanes"] * UNIT["su_light_lane_um2"],
@@ -318,7 +364,8 @@ def area_ledger(d: dict):
         * SRAM_256B_MACRO["um2"],
     )
     out = {k: v / 1e6 for k, v in out.items()}
-    strip = out["blockdot_lanes"] + out["bf16_lanes"] + out["capture_regs"] + out["chunk_partials"]
+    strip = out["blockdot_lanes"] + out["bf16_lanes"] + out["capture_regs"] + out["chunk_partials"] \
+        + out["return_adders"]
     hub = out["indexer"] + out["attention"] + out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"]
     out["rom_field_strip_used_mm2"] = strip
     out["rom_field_strip_avail_mm2"] = FLOORPLAN["rom_field_strip_mm2"]

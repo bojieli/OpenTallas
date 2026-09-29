@@ -35,7 +35,8 @@ Two ledgers accompany every design:
 | Spec widths, W1 contiguous bank map | **400** | Every matrix is read from its own bank set: about 8,000 cycles each | yes |
 | Spec widths, rows striped over every macro | **2,137** | VM read port: 4 elements/cycle, so 1,280 cycles per 5,120-wide projection | **no**: 184 of 132 mm² of strip |
 | + VM 64/128 elements, BF16 on every macro | 4,761 | | **no**: 184 mm² |
-| **Proposal:** striped rows, VM 64 read / 128 write, BF16 lanes on 4,096 macros, dedicated units at spec | **4,396** | fixed per-phase fill (compute chain), wo_a | **yes**: 104.8 of 132 mm² strip, 51.8 of 233.7 mm² hub |
+| Striped whole rows, VM 64/128, BF16 lanes on 4,096 macros | 4,015 | whole-row reads (a BF16 row at K = 5,120 is 320 words in one macro) and expert tile collisions | yes: 104.8 mm² |
+| **Proposal:** the same with each row's K split over macros in golden-aligned chunk runs, FP32 adders in the return tree | **4,336** | fixed per-phase fill (compute chain), index scan | **yes**: 107.5 of 132 mm² strip, 51.8 of 233.7 mm² hub |
 | Proposal weight path with the dedicated units as built | 320 | index scan at 1,024 MACs: 2.6 ms; softmax at 16 lanes: 127 µs | |
 
 Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#sweep`) decide the physical design point.
@@ -47,18 +48,23 @@ Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#
 1. **Rows are striped over the whole ROM field, not given a bank set per matrix.**
    - The contiguous map caps every matrix at about 8,000 cycles, a 12× loss.
    - Consequences for W1's bank map: every matrix's rows interleave over all macros; a macro owns whole output rows (golden `csum` exactness is geometry-independent); expert sums happen in the element in id order.
-2. **The element is one ROM macro, 2 FP4 block-dot lanes (64 MACs), a 274-bit capture register and 8 FP32 chunk partials.**
+2. **Rows are K-split over macros, not owned whole.** W10's striped bank map (`f02e4600`) measured whole-row ownership.
+   - A macro reads one word per cycle, so a matrix with fewer rows than macros takes K / (weights per word) cycles per row, not words / macros.
+   - Active experts also collide on shared tiles.
+   - Whole-row ownership gives 4,015 tok/s. Splitting each row's K over up to 2^n macros, in power-of-two-aligned runs of golden chunks, gives 4,336 tok/s. That split is exact under the golden `csum` padded tree, with the partials added in the return tree in the same order.
+   - It costs log2(split) FP32 adder levels (5 cycles each) and about 2.7 mm² of adders, and it also removes the routing-dependent collision variance.
+3. **The element is one ROM macro, 2 FP4 block-dot lanes (64 MACs), a 274-bit capture register and 8 FP32 chunk partials.**
    - BF16 lanes (16 per macro) go on 4,096 of the 13,798 macros only.
    - Putting BF16 everywhere does not fit (+79 mm²) and gains only 2%.
-3. **VM ports: 64 FP32 elements/cycle read (the x broadcast leaves as FP8, 512 bits) and 128 elements/cycle write.**
+4. **VM ports: 64 FP32 elements/cycle read (the x broadcast leaves as FP8, 512 bits) and 128 elements/cycle write.**
    - These are up from 4 read and 64 write.
    - This is a banked-VM design task: 8 + 16 banks of 256-bit SRAM.
-4. **Dedicated units must be built at the spec widths; this is the largest remaining gap to the as-built RTL.**
+5. **Dedicated units must be built at the spec widths; this is the largest remaining gap to the as-built RTL.**
    - **Indexer:** 248,832 FP4 MACs against 1,024 built (243×).
    - **Index reader:** at the HBM rate of 3,482 B/cycle against 1,920 measured.
    - **Stream unit:** 1,024 linear and 256 SFU lanes against 16/8.
    - **Attention probability loader:** the measured 609-cycle job against 141 cycles of issue.
-5. **After these, the fixed per-phase fill of the compute chain binds** (125 µs of 220 µs). The next levers are fewer serial phases per layer and shorter pipelines, not more MACs. This matches W8's finding of about 530 fill cycles per layer against a 229-cycle read floor.
+6. **After these, the fixed per-phase fill of the compute chain binds** (about 125 µs of 231 µs). The next levers are fewer serial phases per layer and shorter pipelines, not more MACs. This matches W8's finding of about 530 fill cycles per layer against a 229-cycle read floor.
 
 ## Calibration and limits
 
@@ -135,7 +141,7 @@ At batch 1 an HBM die is bandwidth-bound, so the element count is sized to bandw
 
 | Design | Previous figure | Microarchitecture model (fits die) | Largest lever |
 |---|---:|---:|---|
-| V4.1 ROM, 1M | 4,933 (architecture) | 4,396 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
+| V4.1 ROM, 1M | 4,933 (architecture) | 4,336 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
 | Qwen ROM, 8K | 10,874 (published) | 9,063 | G = 5,120 pruned; wires +12%; vector stream unit |
 | Qwen HBM, 8K | 881 | 841 | bulk-copy weight supply; hardware barrier |
 | V4.1 HBM, 1M | 3,579 | 2,520 | synchronisation cost; bulk-copy supply |

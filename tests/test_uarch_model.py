@@ -29,6 +29,8 @@ def test_record_orders_designs_as_documented():
     # striping alone does not fit the ROM-field strips; the proposal does
     assert not r["spec_striped"]["area"]["fits"]
     assert r["proposal"]["area"]["fits"]
+    # K-split rows beat whole-row ownership (W10's measured whole-row reads and expert collisions)
+    assert r["proposal_whole"]["tokens_s"] < r["proposal_ksplit"]["tokens_s"]
     # the proposal's VM ports are routable over the ROM field
     assert r["proposal"]["network"]["column_utilisation"] < 1.0
 
