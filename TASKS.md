@@ -1,6 +1,6 @@
 # OpenTallas critical-path tracker
 
-Updated 2026-09-29. Last published baseline: `6cabbb2b`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
+Updated 2026-09-29. Last published baseline: `a99feb7f`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
 
 Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
@@ -9,21 +9,27 @@ Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured block
 | Owner | Current work / next acceptance |
 | --- | --- |
 | Root | [~] [Physical floorplan](docs/V41_PHYSICAL_FLOORPLAN.md): geometric reservations, locality and dependency budgets; integrate agent evidence and publish. Macro fit remains unverified. |
-| floorplan_inventory | [~] ROM capacity screening complete; candidate stage17 expert bank map complete (not adopted); binding dense tensors/spill before complete fit. |
+| floorplan_inventory | [~] ROM capacity screening complete; complete candidate stage17 payload exceeds logical capacity by7,408,140B; no proved spill receiver. Resolving exact dense partitions and compact wo_a representation before adoption. |
 | floorplan_connectivity | [~] Approved opt-in L0 retained-stage reuse across QK/PV with new lifecycle generation and source-write invalidation; implementation coordinated with refill owner. |
 | ds_attention_elaboration | [~] Full-geometry real arithmetic on PVE2: All four standalone numeric cases pass; actual HBM-connected consumer integration now running. Synthetic inputs, not full token. |
 | qwen_execution_compile | [~] PVE1 G64 exact differential passed 56 cases; full-shape NW18/scale-base1 and checkpoint-backed core composition next. |
-| ds_physical_locality | [!] PVE3 VM/ME physical power and DRC pass. Hold misses remain (6.831/3.357 ps), plus VM clock fanout33>32. Approved hold20ps/VM CTScluster16 repair running with unchanged constraints. |
-| ds_window_integration | [~] II1 replay passed; approved opt-in eight outstanding refill requests per row under existing stage/scale barrier. Same-service exact and fault tests next. |
+| ds_physical_locality | [!] PVE3 VM/ME physical power and DRC pass. VM repaired cut now passes extracted setup/hold/electrical/PG at unchanged constraints; MP1 repair running. Source-pinned VM result integrated with buffer/area costs; complete VM still open. |
+| ds_window_integration | [~] II1 replay passed; approved opt-in eight outstanding refill requests per row under existing stage/scale barrier. Same-service exact and fault tests passed; producer option integrated, numeric composition pending. |
 | ds_fetch_integration | [~] Full-profile W hookup passed; approved opt-in common32-PC K/W timing owner, bounded queues and sector reservations; implementing contention/admission tests. Large-region service remains open. |
-| ds_pv_producer_budget | [~] Qwen physical neighborhood: bind actual ROM/scale/VM traffic to finite banks before route; proposal approved for experiment only. |
+| ds_pv_producer_budget | [~] Qwen finitebank audit rejected4modulobanks; approved8skewbanks candidate passes suppliedsynthetictraffic. Data replay/checkpointcoverage and route pending. |
+
+Additional active owners: `ds_softmax_composition` closes actual SU exp/SUM and post-PV divide; `fleet_route_recovery` preserved and stopped nonconverging karb strip GP, releasing48GiB onPVE2. Selector experiments retained. No route result inferred from stopped job.
 
 ## Latest integrated evidence
+
+- Actual SU softmax and output division pass H16/T128 and T640 against full-VM golden. Live QK/SU/PV chain is next; fixture PV input is not end-to-end evidence.
 
 - DeepSeek attention H16/D512/T640: four synthetic cases, 24,592 scores and 32,768 PV outputs exact; expected fault and negative-checker coverage. Not HBM/SU/full-token execution.
 - Qwen G64 simulator composition: 56 cases, 12,880 cycles, 956 writes exact against RTL; wrong-edge scheduling rejected. Not full-checkpoint execution.
 - Physical microblocks: pin/site/rail alignment resolved in both cuts; extracted hold and clock-fanout violations remain recorded as NOT_MET.
 - L0 dependency schedule distinguishes Q preload2,048 cycles and probability preload512 cycles at T128. Probability preload2,560 applies to T640. Unmeasured complete durations remain null.
+
+Three historical array records now explicitly retain pre-shared-scheduler HBM model pins; their results are not promoted to the new timing owner. Packed lifecycle/forwarding/header gates were actually rerun before current record refresh.
 
 ## Current architecture blockers
 

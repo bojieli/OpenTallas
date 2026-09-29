@@ -32,13 +32,13 @@
   "records": 38,
   "records_with_source_pins": 27,
   "pins_by_status": {
-   "current": 503,
+   "current": 500,
    "path-only": 3,
-   "stale": 132
+   "stale": 135
   },
   "findings_by_kind": {
    "commit-outside-head": 4,
-   "stale-pin": 132
+   "stale-pin": 135
   }
  },
  "headlines": [
@@ -9478,7 +9478,7 @@
      "key": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
      "pinned": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "provenance.source_sha256",
@@ -9727,8 +9727,8 @@
     }
    ],
    "pin_counts": {
-    "current": 60,
-    "stale": 14
+    "current": 59,
+    "stale": 15
    },
    "commits": [
     {
@@ -10115,7 +10115,7 @@
      "key": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
      "pinned": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "input_sha256",
@@ -10245,8 +10245,8 @@
     }
    ],
    "pin_counts": {
-    "current": 52,
-    "stale": 19
+    "current": 51,
+    "stale": 20
    },
    "commits": [
     {
@@ -10535,7 +10535,7 @@
      "key": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
      "pinned": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
-     "status": "current"
+     "status": "stale"
     },
     {
      "field": "source_sha256",
@@ -10854,8 +10854,8 @@
     }
    ],
    "pin_counts": {
-    "current": 62,
-    "stale": 22
+    "current": 61,
+    "stale": 23
    },
    "commits": [
     {
@@ -11602,6 +11602,12 @@
    "detail": "source_sha256[rtl/hdc/v41x/ot_hdc_v41x_attn.sv] -> rtl/hdc/v41x/ot_hdc_v41x_attn.sv is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json",
+   "detail": "source_sha256[rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv] -> rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json",
@@ -11726,6 +11732,12 @@
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json",
    "detail": "input_sha256[rtl/hdc/v41x/ot_hdc_v41x_attn.sv] -> rtl/hdc/v41x/ot_hdc_v41x_attn.sv is stale"
+  },
+  {
+   "key": "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json",
+   "detail": "input_sha256[rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv] -> rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv is stale"
   },
   {
    "key": "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
@@ -11896,6 +11908,12 @@
    "detail": "provenance.source_sha256[rtl/hdc/v41x/ot_hdc_v41x_attn.sv] -> rtl/hdc/v41x/ot_hdc_v41x_attn.sv is stale"
   },
   {
+   "key": "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+   "kind": "stale-pin",
+   "record": "results/rtl/hdc_v41x_whbm_pooled_multi.json",
+   "detail": "provenance.source_sha256[rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv] -> rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv is stale"
+  },
+  {
    "key": "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
    "kind": "stale-pin",
    "record": "results/rtl/hdc_v41x_whbm_pooled_multi.json",
@@ -12009,6 +12027,7 @@
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_core_v41x.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+  "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
   "stale-pin:results/rtl/hdc_v41x_array_allunit_b2_o1fast_full.json:rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
@@ -12030,6 +12049,7 @@
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41x/ot_hdc_core_v41x.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+  "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/rom/ot_rom_fabric_router.sv",
   "stale-pin:results/rtl/hdc_v41x_array_b2_6afcfba3_campaign.json:rtl/rom/ot_rom_pkg_ctrl_x.sv",
@@ -12058,6 +12078,7 @@
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_core_v41x.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+  "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
   "stale-pin:results/rtl/hdc_v41x_whbm_pooled_multi.json:rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
