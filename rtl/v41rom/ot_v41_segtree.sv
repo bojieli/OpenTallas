@@ -57,12 +57,18 @@ module ot_v41_segtree #(
     wire [PW+LW+1:0] st;     // {tree, level, final, err}
     // the event considered this cycle: adder result first, else the queue head
     wire use_q = !sv && qc != 0;
+    // the queue head is held in registers (loaded from the entry the pop will expose, or the incoming node when
+    // that entry is being written now), so the event select is a 2-way choice, not a QD-way read
+    reg [31:0] h_v;
+    reg [PW-1:0] h_t;
+    reg h_f, h_e;
+    reg [2:0] h_p;
     wire        e_v = sv || qc != 0;
-    wire [PW-1:0] e_t = sv ? st[PW+LW+1 -: PW] : qt[qr];
+    wire [PW-1:0] e_t = sv ? st[PW+LW+1 -: PW] : h_t;
     wire [LW-1:0] e_l = sv ? st[LW+1 -: LW] : {LW{1'b0}};
-    wire        e_f = sv ? st[1] : qf[qr];
-    wire        e_e = sv ? (st[0] | err != 2'd0) : qe[qr];
-    wire [31:0] e_d = sv ? sum : qv[qr];
+    wire        e_f = sv ? st[1] : h_f;
+    wire        e_e = sv ? (st[0] | err != 2'd0) : h_e;
+    wire [31:0] e_d = sv ? sum : h_v;
     wire [PW+LW-1:0] hidx = e_t * LV + e_l;
     // trees' events inside the adder, and whether a tree holds anything above level e_l
     reg [2:0] infl [0:NT-1];
@@ -115,8 +121,15 @@ module ot_v41_segtree #(
     end
     always @(posedge clk) begin
         if (in_v) begin qv[qw] <= in_val; qt[qw] <= in_tree; qf[qw] <= in_final; qe[qw] <= in_err; qp[qw] <= in_pos; end
-        if (use_q) tpos[qt[qr]] <= qp[qr];
-        opos <= use_q ? qp[qr] : tpos[e_t];
+        if (use_q) tpos[h_t] <= h_p;
+        opos <= use_q ? h_p : tpos[e_t];
+        if (qr + (use_q ? 1'b1 : 1'b0) == qw) begin      // the head-to-be is the node arriving now (if any)
+            h_v <= in_val; h_t <= in_tree; h_f <= in_final; h_e <= in_err; h_p <= in_pos;
+        end else begin
+            h_v <= qv[qr + (use_q ? 1'b1 : 1'b0)]; h_t <= qt[qr + (use_q ? 1'b1 : 1'b0)];
+            h_f <= qf[qr + (use_q ? 1'b1 : 1'b0)]; h_e <= qe[qr + (use_q ? 1'b1 : 1'b0)];
+            h_p <= qp[qr + (use_q ? 1'b1 : 1'b0)];
+        end
         if (hold) held[hidx] <= e_d;
         oval <= e_d;
         otree <= e_t;
