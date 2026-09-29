@@ -214,17 +214,23 @@ def striped_read(d, key, rows, K, fmt):
     s = 1
     seg_words = math.ceil(K / wpw)
     unit_rows = EXPERT_ROWS[key] if key in EXPERT_ROWS else rows
+    seg_per_row = 1
     if d.get("row_split", "whole") == "ksplit":
         while s < C and unit_rows * s < n:
             s *= 2
         s = min(s, next_pow2(C))
+        if fmt == "fp4":                     # an FP4 word carries block b of two sibling chunks: segments are
+            s = min(s, max(1, next_pow2(C) // 2))   # whole chunk pairs (W10 generator rule)
         if s > 1:
-            seg_words = math.ceil(min(K, next_pow2(math.ceil(C / s)) * 256) / wpw)
-    segs = rows * s
+            c_seg = next_pow2(math.ceil(C / s))      # golden-aligned chunks per segment
+            seg_words = math.ceil(min(K, c_seg * 256) / wpw)
+            seg_per_row = math.ceil(C / c_seg)       # a row has ceil(C/c) segments, fewer than s when C is not
+                                                     # a power of two (W10: C=20, c=2 -> 10 segments)
+    segs = rows * seg_per_row
     holding = min(n, segs)
-    if key in EXPERT_ROWS and EXPERT_ROWS[key] * s < n:
+    if key in EXPERT_ROWS and EXPERT_ROWS[key] * seg_per_row < n:
         active = max(1, round(rows / EXPERT_ROWS[key]))
-        tiles = max(1, n // (EXPERT_ROWS[key] * s))
+        tiles = max(1, n // (EXPERT_ROWS[key] * seg_per_row))
         t = expected_max_load(active, tiles) * seg_words
     else:
         t = math.ceil(segs / n) * seg_words
@@ -260,7 +266,7 @@ def price_matvec(nd, name, d, clock, c):
             bf_rows = ((c["index_heads"] if mode.get("scans_index") else 0)
                        + ((2 if r == 2 else 1) * c["head_dim"] if L in c["kv_source_layer_ids"] else 0)) / 4
             parts = [(max(1.0, rows - bf_rows), "fp8")] + ([(bf_rows, "bf16")] if bf_rows else [])
-            t_x *= len(parts)
+            t_x *= len(parts)                # FP8/FP4 share one FP8 x stream; only BF16 needs a second (W10)
         else:
             parts = [(rows, fmt)]
         t_read, holding = 0.0, 0
