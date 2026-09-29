@@ -45,8 +45,8 @@ def emit(text: str) -> str:
     for name in GWIDE:
         text = must_sub(rf"\n    (input|output)\s+wire\s+\[[^\]]*G[^\]]*\]\s+{name},[^\n]*", "", text)
     ports = "".join(f"\n    {d} wire {w} {n}," for d, w, n in BROADCAST)
-    text = must_sub(r"\n    input  wire              w_ok, emb_ok\n\);",
-                    ports + "\n    input  wire              w_ok, emb_ok\n);", text)
+    text = must_sub(r"\n    input  wire              w_ok, emb_ok,",
+                    ports + "\n    input  wire              w_ok, emb_ok,", text)
     # the INT8/BF16 matrix-word select only fed u_me's G-wide wrom_q
     text = must_sub(r"\n    wire \[G\*W\*\(\(INT8_WEIGHT != 0\) \? 8 : 16\)-1:0\] me_wrom_q;\n    generate if .*?end endgenerate",
                     "", text, flags=re.S)
@@ -63,6 +63,9 @@ def emit(text: str) -> str:
         raise SystemExit("u_me am_idx anchor")
     inst = inst.replace(".am_idx(", ", ".join(f".{n}({n})" for _, _, n in BROADCAST) + ",\n        .am_idx(", 1)
     text = text[:start] + inst + text[end:]
+    # ME_STALL write gating of the G-wide strobe moves to the host (slice o_we & me_clk_en)
+    text = must_sub(r"\n    wire \[G-1:0\] me_o_we;", "", text)
+    text = must_sub(r"\n    assign vw_me_we = me_o_we & \{G\{me_en\}\};", "", text)
     text = must_sub(r"\n    assign me_oaddr = vw_me_addr;\n    assign me_omask = vw_me_mask;\n    assign me_odata = vw_me_data;", "", text)
     for name in GWIDE:
         if re.search(rf"\b{name}\b", text):

@@ -14,6 +14,9 @@
 #include "Vcella.h"
 #include "Vamaxlo.h"
 #include "Vamaxhi.h"
+#ifdef RT_DEBUG_CORE
+#include "Vdie___024root.h"
+#endif
 #include "qwen_rt_matvec.hpp"
 #include "qwen_rt_memory.hpp"
 #include <chrono>
@@ -40,6 +43,49 @@ static std::vector<uint64_t> as64(const std::vector<uint32_t>& w) {
 }
 
 struct Stage { std::string name, dir[D]; bool kv_reset; };
+
+// HBM weight supply of one die (RT_HBM=bytes_per_cycle,window_words,stream_dir).
+// The token's code-word stream (tools/qwen_rt_wstream.py: the static read order
+// of every stage, concatenated) is fetched in order at a sustained byte rate
+// into a ring window of WIN words; the stage's row-scale bytes are fetched ahead
+// of its first word.  Fetch runs on every clock edge, through stream-unit phases
+// and across stage boundaries, while the window has room.  The engine's
+// presented code read is served (me_mem_ok) only when resident; otherwise the
+// ME_STALL core holds the engine for that edge.  Every read is checked against
+// the stream (fail closed).
+struct HbmSupply {
+    bool on = false;
+    double rate = 0, acc = 0;
+    size_t win = 0, word_bytes = 0;
+    std::vector<uint32_t> addr;            // global stream
+    std::vector<double> cost;              // bytes to fetch word i (incl. stage scale bytes)
+    std::vector<size_t> stage_first;       // first global index of each stage
+    size_t f = 0, c = 0;                   // fetched words; head (word being read)
+    size_t stage = 0;                      // current stage (read-side)
+    long stall = 0, fetch_idle = 0;
+    bool ok(bool re, uint32_t a) const {
+        if (!re) return true;
+        if (c < addr.size() && addr[c] == a) return c < f;
+        if (c + 1 < addr.size() && addr[c + 1] == a) return c + 1 < f;
+        return false;
+    }
+    void check(bool re, uint32_t a) const {
+        if (!re) return;
+        if ((c < addr.size() && addr[c] == a) || (c + 1 < addr.size() && addr[c + 1] == a)) return;
+        printf("FATAL HBM stream mismatch head=%zu addr=%u expected=%u\n", c, a, c < addr.size() ? addr[c] : 0);
+        fflush(stdout); exit(2);
+    }
+    // an engine edge consumed read a
+    void consume(bool re, uint32_t a) { if (re && c + 1 < addr.size() && addr[c + 1] == a && !(addr[c] == a)) c++; }
+    void fetch_edge() {
+        if (f >= addr.size()) return;
+        size_t head = (c < f) ? c : f;
+        if (f - head >= win) { fetch_idle++; return; }
+        acc += rate;
+        while (f < addr.size() && acc >= cost[f] && f - head < win) { acc -= cost[f]; f++; }
+        if (f - head >= win && acc > rate) acc = rate;     // no banking of bandwidth while full
+    }
+};
 
 // Load one die's stage images.  pad_* > 0 reproduce the layer-0 bench's
 // memory depths (reads past an image but inside the bench memory return 0);
@@ -91,6 +137,29 @@ int main(int argc, char** argv) {
         if (stages.empty()) fatal("no stages");
     } else {
         stages.push_back({"layer0", {dir + "/die0", dir + "/die1"}, true});
+    }
+    HbmSupply hbm[D];
+    if (const char* h = getenv("RT_HBM")) {
+        double rate; size_t win; char sdir[1024];
+        if (sscanf(h, "%lf,%zu,%1023s", &rate, &win, sdir) != 3) fatal("RT_HBM=bytes_per_cycle,window_words,stream_dir");
+        for (int d = 0; d < D; d++) {
+            auto& x = hbm[d];
+            x.on = true; x.rate = rate; x.win = win; x.word_bytes = size_t(GROUPS) * W;
+            for (auto& st : stages) {
+                FILE* f = fopen((std::string(sdir) + "/" + st.name + "_d" + char('0' + d) + ".wstream").c_str(), "r");
+                if (!f) fatal("stream file");
+                long sb; unsigned a; bool first = true;
+                if (fscanf(f, "%ld", &sb) != 1) fatal("stream header");
+                x.stage_first.push_back(x.addr.size());
+                while (fscanf(f, "%u", &a) == 1) {
+                    x.addr.push_back(a);
+                    x.cost.push_back(double(x.word_bytes) + (first ? double(sb) : 0.0));
+                    first = false;
+                }
+                fclose(f);
+            }
+            printf("die%d HBM supply: %.1f B/cycle, window %zu words, stream %zu words\n", d, rate, win, x.addr.size());
+        }
     }
     // bench parameters (tb_hdc_qwen_layer0_tp2 defaults) apply to the replay only
     const size_t PAD_CODE = token_mode ? 0 : 1488, PAD_SCALE = token_mode ? 0 : 50616, PAD_CROM = token_mode ? 0 : 543233;
@@ -161,20 +230,28 @@ int main(int argc, char** argv) {
             if (n > 64) fatal("settle did not converge");
             passes++;
             auto a = now();
-            for (int d = 0; d < D; d++) die[d]->eval();
+            bool okch = false;
+            for (int d = 0; d < D; d++) {
+                uint8_t ok = hbm[d].on ? uint8_t(hbm[d].ok(die[d]->int8_wrom_re, die[d]->int8_wrom_addr)) : 1;
+                if (die[d]->me_mem_ok != ok) { die[d]->me_mem_ok = ok; okch = true; }
+                die[d]->eval();
+                if (hbm[d].on && uint8_t(hbm[d].ok(die[d]->int8_wrom_re, die[d]->int8_wrom_addr)) != die[d]->me_mem_ok) okch = true;
+            }
             coll.eval();
             auto b = now();
             for (int d = 0; d < D; d++) mv[d]->eval_models();
             auto c = now();
-            bool ch = wire_coll();
+            bool ch = wire_coll() | okch;
             for (int d = 0; d < D; d++) ch |= mv[d]->propagate();
             auto e = now();
             t_top += dt(a, b); t_models += dt(b, c); t_prop += dt(c, e);
             if (!ch) { max_settle = std::max(max_settle, n + 1); return; }
         }
     };
+    uint8_t me_en[D] = {1, 1};
     auto set_clk = [&](uint8_t c) {
-        for (int d = 0; d < D; d++) { die[d]->clk = c; mv[d]->set_clk(c); }
+        // a held engine's external models keep their clock low for the edge
+        for (int d = 0; d < D; d++) { die[d]->clk = c; if (!c || me_en[d]) mv[d]->set_clk(c); }
         coll.clk = c;
     };
 
@@ -192,7 +269,7 @@ int main(int argc, char** argv) {
         rs[d].sc.assign(G, 0); rs[d].kvr.assign(G, 0); rs[d].vx.assign(G, 0);
         rs[d].sc_addr.assign(G, 0); rs[d].kv_addr.assign(G, 0); rs[d].vx_q.assign(G, 0); rs[d].kv_q.assign(size_t(G) * W, 0);
     }
-    long me_busy[D] = {0, 0}, edges = 0;
+    long me_busy[D] = {0, 0}, me_hold[D] = {0, 0}, edges = 0;
     auto dump = [&](int d) {
         std::string p = dir + "/die" + char('0' + d) + "/";
         auto& m = mem[d];
@@ -211,7 +288,7 @@ int main(int argc, char** argv) {
 
     long progress_every = getenv("RT_PROGRESS") ? atol(getenv("RT_PROGRESS")) : 1024;
     bool finished = false, stage_done = false, next_stage = false;
-    size_t cur = 0; long stage_start = 7, busy0[D] = {0, 0};
+    size_t cur = 0; long stage_start = 7, busy0[D] = {0, 0}, hold0[D] = {0, 0};
     auto tstart = std::chrono::steady_clock::now();
     for (long tick = 0;; tick++) {
         set_clk(0);
@@ -243,9 +320,10 @@ int main(int argc, char** argv) {
                 uint8_t lf = coll.fault;
                 double sec = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
                 printf("STAGE %s done cycles=%ld start_cyc=%ld end_cyc=%u me_busy=%ld/%ld next_token=%u/%u next_val=%08x/%08x "
-                       "seq_fault=%d core_fault=%d coll_fault=%d wall=%.0fs\n", stages[cur].name.c_str(), long(cyc) - stage_start,
+                       "seq_fault=%d core_fault=%d coll_fault=%d me_hold=%ld/%ld hbm_head=%zu/%zu hbm_fetched=%zu/%zu wall=%.0fs\n", stages[cur].name.c_str(), long(cyc) - stage_start,
                        stage_start, cyc, me_busy[0] - busy0[0], me_busy[1] - busy0[1], die[0]->seq_ntok, die[1]->seq_ntok,
-                       die[0]->seq_nval, die[1]->seq_nval, sf, cf, lf, sec);
+                       die[0]->seq_nval, die[1]->seq_nval, sf, cf, lf, me_hold[0] - hold0[0], me_hold[1] - hold0[1],
+                       hbm[0].c, hbm[1].c, hbm[0].f, hbm[1].f, sec);
                 for (int d = 0; d < D; d++) {
                     FILE* fp = fopen((dir + "/" + stages[cur].name + "_die" + char('0' + d) + "_x.hex").c_str(), "w");
                     for (int i = 0; i < H; i++) fprintf(fp, "%08x\n", mem[d].vm[X_BASE + i]);
@@ -258,6 +336,8 @@ int main(int argc, char** argv) {
                     printf("QWEN_TOKEN_TP2 PASS stages=%zu token=%u val=%08x die1_token=%u cycles=%u edges=%ld "
                            "settle_max=%d wall_s=%.1f RSS_KiB=%ld threads=%d\n", stages.size(), die[0]->seq_ntok,
                            die[0]->seq_nval, die[1]->seq_ntok, cyc, edges, max_settle, sec, ru.ru_maxrss, threads);
+                    printf("RT_HBM me_hold=%ld/%ld fetch_idle=%ld/%ld stream=%zu/%zu\n", me_hold[0], me_hold[1],
+                           hbm[0].fetch_idle, hbm[1].fetch_idle, hbm[0].addr.size(), hbm[1].addr.size());
                     return 0;
                 }
                 next_stage = true;
@@ -308,7 +388,7 @@ int main(int argc, char** argv) {
             });
             for (int g = 0; g < G; g++) {
                 auto& s = *e.s[g];
-                if (s.o_we)
+                if (s.o_we && die[d]->me_clk_en)
                     for (int l = 0; l < W; l++)
                         if ((s.o_mask >> l) & 1) vmw[d].push_back({uint32_t((uint64_t(s.o_addr) << 4) + l), s.o_data[l]});
             }
@@ -333,12 +413,21 @@ int main(int argc, char** argv) {
         }
         t_mem += dt(tm0, now());
         // ---- rising edge: every model sees only pre-edge inputs -------------------
+        for (int d = 0; d < D; d++) {
+            me_en[d] = die[d]->me_clk_en;       // pre-edge enable: what the core's ICG latched
+            if (!me_en[d]) me_hold[d]++;
+            if (hbm[d].on) {
+                hbm[d].check(die[d]->int8_wrom_re, die[d]->int8_wrom_addr);
+                if (me_en[d]) hbm[d].consume(die[d]->int8_wrom_re, die[d]->int8_wrom_addr);
+                hbm[d].fetch_edge();
+            }
+        }
         set_clk(1);
         auto te0 = now();
         for (int d = 0; d < D; d++) die[d]->eval();
         coll.eval();
         auto te1 = now();
-        for (int d = 0; d < D; d++) mv[d]->eval_edge();
+        for (int d = 0; d < D; d++) if (me_en[d]) mv[d]->eval_edge();
         t_top += dt(te0, te1); t_edge += dt(te1, now());
         auto tc0 = now();
         edges++;
@@ -360,7 +449,10 @@ int main(int argc, char** argv) {
             if (r.vc) t.vc_q = r.vc_q;
             if (r.svr) for (int l = 0; l < W; l++) t.s_vrq[l] = r.svr_q[l];
             const bool code = r.code; const size_t ca = r.code_addr;
-            pool.run(G, [&](size_t g) {
+            if (me_en[d] && (code || std::find(r.sc.begin(), r.sc.end(), 1) != r.sc.end() ||
+                             std::find(r.kvr.begin(), r.kvr.end(), 1) != r.kvr.end() ||
+                             std::find(r.vx.begin(), r.vx.end(), 1) != r.vx.end())) e.mark_all();
+            if (me_en[d]) pool.run(G, [&](size_t g) {
                 auto& s = *e.s[g];
                 if (code) for (int j = 0; j < WPG; j++) s.wrom_q[j] = m.codes[(ca * G + g) * WPG + j];
                 if (r.sc[g]) for (int j = 0; j < 8; j++) s.scale_q[j] = m.scales[size_t(r.sc_addr[g]) * 8 + j];
@@ -376,7 +468,7 @@ int main(int argc, char** argv) {
                 load_images(mem[d], stages[cur].dir[d], G, 0, 0, 0);
                 if (stages[cur].kv_reset) std::fill(mem[d].kv.begin(), mem[d].kv.end(), 0u);
                 die[d]->h_start = 1;
-                busy0[d] = me_busy[d];
+                busy0[d] = me_busy[d]; hold0[d] = me_hold[d];
             }
             stage_start = long(die[0]->cyc);
             printf("stage %s loaded: code_words=%zu scale_words=%zu crom_words=%zu\n", stages[cur].name.c_str(),
@@ -389,6 +481,19 @@ int main(int argc, char** argv) {
             double sec = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
             printf("progress tick=%ld cyc=%u pc_base=%u/%u me_busy=%ld/%ld wall=%.0fs top=%.1f models=%.1f prop=%.1f mem=%.1f edge=%.1f passes=%ld\n", tick, die[0]->cyc,
                    die[0]->prog_base, die[1]->prog_base, me_busy[0], me_busy[1], sec, t_top, t_models, t_prop, t_mem, t_edge, passes);
+#ifdef RT_DEBUG_CORE
+            for (int d = 0; d < D; d++) {
+                auto* rp = die[d]->rootp;
+#define RC(x) unsigned(rp->ot_qwen_rt_die__DOT__core__DOT__##x)
+                printf("  die%d pc=%u st=%u d_unit=%u su_active=%u me_en=%u nx_v=%u barrier=%u chase=%u chase_n=%u chase_rows=%u "
+                       "wait_me=%u wait_su=%u su_prog=%u me_prog=%u me_idle=%u su_idle=%u drained=%u me_go=%u me_k=%u me_tiles=%u me_nout=%u\n",
+                       d, RC(pc), RC(st), RC(d_unit), unsigned(rp->ot_qwen_rt_die__DOT__core__DOT__g_ssu__DOT__u_su__DOT__active),
+                       unsigned(die[d]->me_clk_en), RC(nx_v), RC(d_barrier), RC(d_chase), RC(d_chase_n), RC(d_chase_rows),
+                       RC(d_wait_me), RC(d_wait_su), RC(su_progress), RC(me_progress), RC(me_idle), RC(su_idle), RC(drained),
+                       RC(me_go), RC(me_k), RC(me_tiles), RC(me_nout));
+#undef RC
+            }
+#endif
             fflush(stdout);
         }
     }

@@ -142,6 +142,7 @@ int main(int argc, char** argv) {
                 } else x = (bt % 4 == 0 ? 0x3f800000u : (g % 2 ? 0xbf800000u : 0x3f000000u));
                 putword(r.x_q, g, x); mv.s[g]->x_q = x;
             }
+            mv.mark_all();
             r.clk = 0; c.clk = 0; mv.set_clk(0);
             settle(LG + 8);
             r.eval();

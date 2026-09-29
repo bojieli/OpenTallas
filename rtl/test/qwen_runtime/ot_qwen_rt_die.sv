@@ -13,6 +13,8 @@ module ot_qwen_rt_die #(
     parameter integer NW = 16,
     parameter integer SNW = 16,        // TP sequencer token width
     parameter integer QWEN_FULLSHAPE = 0,
+    parameter integer ME_STALL = 0,
+    parameter integer ME_IDLE_GATE = 0,
     parameter integer D = 2
 ) (
     input  wire              clk,
@@ -21,7 +23,9 @@ module ot_qwen_rt_die #(
     output reg               start,
     input  wire [SNW-1:0]    tp_token,
     input  wire [SNW-1:0]    tp_pos,
-    input  wire              h_start,          // host stage controller (0 in the layer-0 bench replay)
+    input  wire              h_start,
+    input  wire              me_mem_ok,        // ME_STALL: weight supply serves the engine's current reads
+    output wire              me_clk_en,        // ME_STALL: this edge clocks the engine (slices follow it)          // host stage controller (0 in the layer-0 bench replay)
     // sequencer status
     output wire              s_done,
     output wire              s_fault,
@@ -130,7 +134,8 @@ module ot_qwen_rt_die #(
     assign core_ntok = core_ntok_c;             // zero-extended when SNW > NW
 
     ot_qwen_rt_core #(.W(W),.G(G),.AW(AW),.NW(NW),.PAW(PAW),
-        .INT8_WEIGHT(1),.INT8_SCALE_WCS_BASE(1),.INT8_EMBED(0),.QWEN_FULLSHAPE(QWEN_FULLSHAPE)) core (
+        .INT8_WEIGHT(1),.INT8_SCALE_WCS_BASE(1),.INT8_EMBED(0),.QWEN_FULLSHAPE(QWEN_FULLSHAPE),
+        .ME_STALL(ME_STALL),.ME_IDLE_GATE(ME_IDLE_GATE)) core (
         .clk(clk),.rst_n(rst_n),.start(core_start),.token(core_tok[NW-1:0]),.pos(core_pos[NW-1:0]),
         .done(core_done),.next_token(core_ntok_c),.next_val(core_nval),
         .cycles(core_cycles),.fault(core_fault),
@@ -150,6 +155,7 @@ module ot_qwen_rt_die #(
         .vw_rd_we(vw_rd_we),.vw_rd_addr(vw_rd_addr),.vw_rd_data(vw_rd_data),
         .me_ov(me_ov),
         .kv_ok(1'b1),.kv_write_drained(1'b1),.w_ok(1'b1),.emb_ok(1'b1),
+        .me_mem_ok(me_mem_ok),.me_clk_en(me_clk_en),
         .b_active(b_active),.b_cur(b_cur),.b_split_r(b_split_r),.b_ts_r(b_ts_r),.b_wcs_r(b_wcs_r),
         .b_xc(b_xc),.b_xcs_r(b_xcs_r),.b_wsrc_r(b_wsrc_r),.b_k(b_k),.b_ktot_r(b_ktot_r),
         .b_s1b_wsrc(b_s1b_wsrc),.b_s2_round(b_s2_round),.b_s3_v(b_s3_v),.b_fl_first4(b_fl_first4),

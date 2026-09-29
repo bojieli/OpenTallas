@@ -24,6 +24,7 @@
 #include <stdexcept>
 #include <thread>
 #include <type_traits>
+#include <algorithm>
 #include <vector>
 
 template <class A> static inline bool rt_set(A& d, const A& s) {
@@ -153,6 +154,8 @@ struct RtMatvec {
     const Vec& prev_out(int lv, int p) const { return lv == 1 ? s[p]->sum : cell_y(lv - 1, p); }
 
     void set_clk(uint8_t c) {
+        if (clk_known_ && c == clk_) return;   // unchanged clock: nothing to re-evaluate
+        clk_known_ = true; clk_ = c;
         for (auto& p : s) p->clk = c;
         for (size_t i : addidx) ca[i]->clk = c;
         for (auto& a : alo) a->clk = c;
@@ -160,10 +163,15 @@ struct RtMatvec {
         std::fill(dirty.begin(), dirty.end(), 1);
     }
 
+    // The host wrote model inputs directly (memory responses): re-evaluate all.
+    void mark_all() { std::fill(dirty.begin(), dirty.end(), 1); }
+
     // Evaluate the models whose inputs (or clock) changed since their last
     // evaluation; an evaluation with unchanged inputs is a no-op.
     void eval_models(bool all = false) {
         size_t ns = s.size(), na = addidx.size(), nl = alo.size();
+        if (!all && std::find(dirty.begin(), dirty.end(), 1) == dirty.end()) return;
+        evaluated_ = true;
         pool.run(ns + na + nl, [&](size_t i) {
             if (!all && !dirty[i]) return;
             dirty[i] = 0;
@@ -178,6 +186,7 @@ struct RtMatvec {
     // level first, so each reads the level below before it moves), then every
     // Verilated model evaluates with its pre-edge inputs.
     void eval_edge() {
+        evaluated_ = true;
         for (int lv = LG; lv >= 1; lv--) {
             pool.run(size_t(G), [&](size_t q) {
                 size_t i = size_t(lv) * G + q;
@@ -191,6 +200,28 @@ struct RtMatvec {
 
     // Copy producer outputs to consumer inputs; returns true if anything moved.
     bool propagate() {
+        // Fast path: no engine model evaluated since the last propagation and
+        // the sequencer's broadcast and reset unchanged -> no wire can move.
+        {
+            bool same = !evaluated_ && have_shadow_;
+            same &= !rt_set(sh_.b_active, top.b_active); same &= !rt_set(sh_.b_cur, top.b_cur);
+            same &= !rt_set(sh_.b_split_r, top.b_split_r); same &= !rt_set(sh_.b_ts_r, top.b_ts_r);
+            same &= !rt_set(sh_.b_wcs_r, top.b_wcs_r); same &= !rt_set(sh_.b_xc, top.b_xc);
+            same &= !rt_set(sh_.b_xcs_r, top.b_xcs_r); same &= !rt_set(sh_.b_wsrc_r, top.b_wsrc_r);
+            same &= !rt_set(sh_.b_k, top.b_k); same &= !rt_set(sh_.b_ktot_r, top.b_ktot_r);
+            same &= !rt_set(sh_.b_s1b_wsrc, top.b_s1b_wsrc); same &= !rt_set(sh_.b_s2_round, top.b_s2_round);
+            same &= !rt_set(sh_.b_s3_v, top.b_s3_v); same &= !rt_set(sh_.b_fl_first4, top.b_fl_first4);
+            same &= !rt_set(sh_.b_vline5, top.b_vline5); same &= !rt_set(sh_.b_pre_v, top.b_pre_v);
+            same &= !rt_set(sh_.b_pre, top.b_pre); same &= !rt_set(sh_.b_raw_v, top.b_raw_v);
+            same &= !rt_set(sh_.b_raw, top.b_raw); same &= !rt_set(sh_.b_r_v, top.b_r_v);
+            same &= !rt_set(sh_.b_r, top.b_r);
+            same &= !rt_set(sh_.b_reduce_valid, top.b_reduce_valid);
+            same &= !rt_set(sh_.b_reduce_select, top.b_reduce_select);
+            uint8_t r0 = rst(); same &= !rt_set(sh_rst_, r0);
+            have_shadow_ = true;
+            if (same) return false;
+            evaluated_ = false;
+        }
         std::atomic<bool> any{false};
         uint8_t r = rst();
         const uint32_t rv = top.b_reduce_valid, rs = top.b_reduce_select;
@@ -263,6 +294,16 @@ struct RtMatvec {
     void set_nw(int nw) { nw_ = nw; }
 
   private:
+    struct Shadow {
+#define RT_SH(f) std::remove_cv_t<std::remove_reference_t<decltype(std::declval<T&>().f)>> f{};
+        RT_SH(b_active) RT_SH(b_cur) RT_SH(b_split_r) RT_SH(b_ts_r) RT_SH(b_wcs_r) RT_SH(b_xc) RT_SH(b_xcs_r)
+        RT_SH(b_wsrc_r) RT_SH(b_k) RT_SH(b_ktot_r) RT_SH(b_s1b_wsrc) RT_SH(b_s2_round) RT_SH(b_s3_v)
+        RT_SH(b_fl_first4) RT_SH(b_vline5) RT_SH(b_pre_v) RT_SH(b_pre) RT_SH(b_raw_v) RT_SH(b_raw) RT_SH(b_r_v)
+        RT_SH(b_r) RT_SH(b_reduce_valid) RT_SH(b_reduce_select)
+#undef RT_SH
+    } sh_;
+    uint8_t sh_rst_ = 0, clk_ = 0;
+    bool have_shadow_ = false, evaluated_ = true, clk_known_ = false;
     int nw_ = 16, nthr_ = 1;
     std::vector<uint8_t> red_;
     static void zero(Vec& v) { for (auto& w : v.m_storage) w = 0; }

@@ -1,0 +1,22 @@
+{
+  "claim": "Decomposed controller build only; not fullshape arithmetic/token or cycle verdict",
+  "count_width": 18,
+  "current_stage": "frontend",
+  "groups": 6144,
+  "historical": true,
+  "observed": "Verilator front end (hierarchical, -O1, unroll 131072) killed by the memory cgroup at 134,217,728 KiB (128 GiB) after 2 h 55 min CPU, PVE1 2026-09-29 09:09:38 UTC (journal: qwen-runtime-controller-g6144.service Failed with result oom-kill); the result.json on PVE1 still said running.",
+  "recorded_by": "w6 (Claude) from PVE1 /home/ubuntu/qwen-runtime-controller-g6144 and journalctl",
+  "scale_wcs_base": 1,
+  "source_sha256": {
+    "controller.sv": "465b05c09f767da3d0c4e1ad76431dde539bb935d8ca2926702a3b17ab3c41c9",
+    "leaf.vlt": "c6d9645051ea40e3506ee1860652be0748d257f9e4d25f14776221b088e2304b",
+    "ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+  },
+  "status": "fail_oom",
+  "steps": []
+}

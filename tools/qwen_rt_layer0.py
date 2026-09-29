@@ -31,7 +31,7 @@ COMMON = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe
                                             "ot_hdc_delay", "ot_hdc_sfu")] + [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv"]
 DIE_RTL = [*[p for p in C.HDC if p.name not in ("ot_hdc_matvec.sv", "ot_hdc_core.sv")], *C.PIPES,
            *(ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_dyn_ttiles", "ot_hdc_qwen_int8_arith",
-                                               "ot_hdc_qwen_int8_embed_decode", "ot_hdc_core_vector_weight")),
+                                               "ot_hdc_qwen_int8_embed_decode", "ot_hdc_core_vector_weight", "ot_hdc_cg")),
            *(ROOT / f"rtl/rom/{n}.sv" for n in ("ot_rom_pkg_link", "ot_rom_pkg_ctrl", "ot_rom_tp_seq")),
            RT / "ot_qwen_rt_matvec_seq.sv", RT / "ot_qwen_rt_die.sv"]
 COLL_RTL = [ROOT / f"rtl/rom/{n}.sv" for n in ("ot_rom_pkg_link", "ot_rom_pkg_ctrl", "ot_rom_oneshot_allreduce")]
@@ -39,7 +39,8 @@ SOURCES = sorted(set([*DIE_RTL, *COLL_RTL, *COMMON, RT / "ot_qwen_rt_matvec_slic
                       RT / "qwen_rt_matvec.hpp", RT / "qwen_rt_memory.hpp", RT / "qwen_rt_tp2.cpp",
                       ROOT / "rtl/test/tb_hdc_qwen_layer0_tp2.sv", C.ISA_SVH, Path(__file__),
                       ROOT / "tools/qwen_rt_core_emit.py", ROOT / "tools/qwen_rt_matvec_gate.py",
-                      ROOT / "tools/qwen_o4_token_oracle.py", ROOT / "tools/qwen_o4_head_rom.py"]))
+                      ROOT / "tools/qwen_o4_token_oracle.py", ROOT / "tools/qwen_o4_head_rom.py",
+                      ROOT / "tools/qwen_rt_wstream.py"]))
 
 
 def sha(p: Path) -> str:
@@ -60,6 +61,11 @@ def main() -> None:
     ap.add_argument("--stages", type=Path, help="token mode: stage file (name die0dir die1dir kv_reset)")
     ap.add_argument("--token-oracle", type=Path, help="token mode: tools/qwen_o4_token_oracle.py output directory")
     ap.add_argument("--build-only", action="store_true")
+    ap.add_argument("--me-stall", type=int, choices=(0, 1), default=0,
+                    help="build the core with ME_STALL (per-edge engine hold for HBM continuation)")
+    ap.add_argument("--me-idle-gate", type=int, choices=(0, 1), default=0,
+                    help="build the core with ME_IDLE_GATE (engine clock stopped while idle; lets the host skip it)")
+    ap.add_argument("--hbm", help="token mode HBM arm: BYTES_PER_CYCLE,WINDOW_WORDS (needs --me-stall 1)")
     ap.add_argument("--count-width", type=int, choices=(16, 18), default=16)
     ap.add_argument("--fullshape", type=int, choices=(0, 1), default=0,
                     help="QWEN_FULLSHAPE core/sequencer overlay (18-bit rows); the token run uses 1")
@@ -91,7 +97,7 @@ def main() -> None:
     common = [str(p) for p in COMMON]
     pc = [f"-GG={G}", "-GW=16", f"-GNW={NW}", "-GINT8_WEIGHT=1"]
     models = [
-        ("die", "ot_qwen_rt_die", [str(core_sv), *map(str, DIE_RTL)], [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", f"-GQWEN_FULLSHAPE={args.fullshape}"]),
+        ("die", "ot_qwen_rt_die", [str(core_sv), *map(str, DIE_RTL)], [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", f"-GQWEN_FULLSHAPE={args.fullshape}", f"-GME_STALL={args.me_stall}", f"-GME_IDLE_GATE={args.me_idle_gate}"]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *common],
          ["-GN=2", "-GLANES=16", "-GTAGW=32", "-GDEPTH=16", "-GLAT=11", "-GBPC_NUM=3600"]),
         ("slice", "ot_qwen_rt_matvec_slice", [str(RT / "ot_qwen_rt_matvec_slice.sv"), *common], pc),
@@ -178,18 +184,31 @@ def run_token(args, out, binary, start_pins, core_sv, steps) -> None:
             for f in L0.IMAGE_FILES:
                 stage_pins[f"{name}/die{d}/{f}"] = sha(Path(path) / f)
     preload = args.preload_dir / "vm_x_fp32.hex"
+    env = dict(os.environ, RT_THREADS=str(args.threads))
+    hbm = None
+    if args.hbm:
+        if not args.me_stall:
+            raise SystemExit("--hbm needs --me-stall 1")
+        rate, win = args.hbm.split(",")
+        sdir = out / "wstream"
+        subprocess.run([sys.executable, str(ROOT / "tools/qwen_rt_wstream.py"), "--stages", str(args.stages),
+                        "--out", str(sdir)], check=True, cwd=ROOT / "tools", capture_output=True)
+        env["RT_HBM"] = f"{float(rate)},{int(win)},{sdir}"
+        hbm = {"bytes_per_cycle_per_die": float(rate), "window_words": int(win),
+               "word_bytes": args.groups * 16, "stream_sha256": {p_.name: sha(p_) for p_ in sorted(sdir.glob("*.wstream"))}}
     t0 = time.monotonic()
-    with open(out / "token.log", "w") as log:
+    log_name = "token_hbm.log" if hbm else "token.log"
+    with open(out / log_name, "w") as log:
         p = subprocess.run([str(binary), "--stages", str(args.stages), str(out), str(preload)], cwd=out,
-                           stdout=log, stderr=subprocess.STDOUT, env=dict(os.environ, RT_THREADS=str(args.threads)))
+                           stdout=log, stderr=subprocess.STDOUT, env=env)
     wall = time.monotonic() - t0
-    text = (out / "token.log").read_text()
+    text = (out / log_name).read_text()
     stage_lines = {m.group(1): m.group(0) for m in re.finditer(r"STAGE (\S+) done .*", text)}
     per_stage = {}
     for name, line in stage_lines.items():
         kv = dict(item.split("=", 1) for item in line.split()[3:])
         per_stage[name] = {"cycles": int(kv["cycles"]), "me_busy": kv["me_busy"], "next_token": kv["next_token"],
-                           "next_val": kv["next_val"]}
+                           "next_val": kv["next_val"], "me_hold": kv.get("me_hold")}
     oracle = json.loads((args.token_oracle / "oracle.json").read_text()) if args.token_oracle else None
     checks = {}
     for name, *_ in stages:
@@ -216,6 +235,8 @@ def run_token(args, out, binary, start_pins, core_sv, steps) -> None:
     result = {
         "schema": "opentallas.qwen-rt-token-tp2.v1", "status": "pass" if good else "fail",
         "groups": args.groups, "count_width": args.count_width, "fullshape": args.fullshape,
+        "me_stall": args.me_stall, "me_idle_gate": args.me_idle_gate, "weight_supply": hbm or "rom",
+        "hbm_summary": (re.search(r"RT_HBM (.*)", text).group(1) if re.search(r"RT_HBM (.*)", text) else None),
         "rtl_token": token, "rtl_logit_bits": m.group(3) if m else None,
         "oracle_token": oracle.get("next_token") if oracle else None,
         "oracle_logit_bits": oracle.get("next_logit_bits") if oracle else None,
