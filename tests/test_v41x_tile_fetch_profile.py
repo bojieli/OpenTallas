@@ -61,3 +61,21 @@ def test_image_writer_selects_fetch_abi(tmp_path, monkeypatch, profile):
     assert all(len(line)==D.BITS[profile]//4 for line in lines)
     assert [int(line,16) for line in lines]==D.encode_list([entry],profile)
     assert D.decode(int(lines[0],16),profile)==entry
+
+@pytest.mark.parametrize('full',[0,1])
+def test_die_weight_wire_widths(tmp_path,full):
+    die=(ROOT/'rtl/chip/ot_chip_v41x_die.sv').read_text()
+    addr=re.search(r'wire\s*\[[^;]+\]\s*wq_addr;',die).group()
+    lead=re.search(r'input\s+wire\s*(\[[^\n]+\])\s*cfg_q_lead,',die).group(1)
+    source=f'''module test;
+localparam FULL_SHAPE={full};
+{addr}
+wire {lead} lead;
+initial begin
+if($bits(wq_addr)!=(FULL_SHAPE?30:24) || $bits(lead)!=(FULL_SHAPE?21:16)) $fatal;
+$finish;end
+endmodule
+'''
+    (tmp_path/'test.sv').write_text(source)
+    subprocess.run(['iverilog','-g2012','-s','test','-o',str(tmp_path/'sim'),str(tmp_path/'test.sv')],check=True,capture_output=True)
+    subprocess.run(['vvp',str(tmp_path/'sim')],check=True,capture_output=True)

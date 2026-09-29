@@ -30,6 +30,7 @@ module ot_chip_v41x_hbm3e_phy #(
     parameter integer K_AW      = 28,          // full-shape packed regions need 30
     parameter integer K_MEM     = 1 << 18,     // K port sectors
     parameter integer W_PORT    = 0,
+    parameter integer W_AW      = 24,          // full-shape weight-sector address is 30 bits
     parameter integer NPC_W     = 8,
     parameter integer W_MEM     = 1 << 20,     // W port sectors
     parameter integer LWIN      = 10,          // W port tag bits
@@ -56,7 +57,7 @@ module ot_chip_v41x_hbm3e_phy #(
     // W port
     input  wire                 w_v,
     output wire                 w_rdy,
-    input  wire [23:0]          w_addr,
+    input  wire [W_AW-1:0]      w_addr,
     input  wire [5:0]           w_len,
     input  wire [LWIN-1:0]      w_tag,
     output wire [NPC_W-1:0]     w_room,
@@ -67,6 +68,7 @@ module ot_chip_v41x_hbm3e_phy #(
     output wire [NPC_W*256-1:0] wr_data,
     // status
     output reg                  k_oor,         // sticky: a K request reached past K_MEM (the model would wrap)
+    output wire                 w_oor,         // sticky: invalid W request blocked before model modulo
     output wire [63:0]          refreshes,     // K port refresh events
     output wire [31:0]          w_reads        // W port sector reads
 );
@@ -96,9 +98,18 @@ module ot_chip_v41x_hbm3e_phy #(
     assign refreshes = ref_n;
 
     generate if (W_PORT) begin : g_w
-        ot_hdc_hbm_model #(.NPC(NPC_W), .AW(24), .DW(256), .MEM_WORDS(W_MEM), .TAGW(LWIN), .LENW(6), .BEATW(5),
+        wire model_ready;
+        wire range_ok = (w_len != 0) &&
+            ((64'(w_addr) + 64'(w_len)) <= 64'(W_MEM));
+        assign w_rdy = model_ready && range_ok;
+        reg w_oor_r;
+        assign w_oor = w_oor_r;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) w_oor_r <= 1'b0;
+            else if (w_v && !range_ok) w_oor_r <= 1'b1;
+        ot_hdc_hbm_model #(.NPC(NPC_W), .AW(W_AW), .DW(256), .MEM_WORDS(W_MEM), .TAGW(LWIN), .LENW(6), .BEATW(5),
                            .CLK_PS(CLK_PS), .PC_RDY(1), .PC_ROOM(16)) u_w (
-            .clk(clk), .rst_n(rst_n), .req_v(w_v), .req_rdy(w_rdy), .pc_room(w_room), .req_we(1'b0),
+            .clk(clk), .rst_n(rst_n), .req_v(w_v && range_ok), .req_rdy(model_ready), .pc_room(w_room), .req_we(1'b0),
             .req_addr(w_addr), .req_len(w_len), .req_tag(w_tag), .req_wdata(256'd0),
             .rsp_v(wr_v), .rsp_rdy(wr_rdy), .rsp_tag(wr_tag), .rsp_beat(wr_beat), .rsp_data(wr_data));
         reg [31:0] rd_n;
@@ -109,6 +120,7 @@ module ot_chip_v41x_hbm3e_phy #(
         end
         assign w_reads = rd_n;
     end else begin : g_nw
+        assign w_oor = 1'b0;
         assign w_rdy = 1'b0; assign w_room = {NPC_W{1'b0}}; assign wr_v = {NPC_W{1'b0}};
         assign wr_tag = {NPC_W*LWIN{1'b0}}; assign wr_beat = {NPC_W*5{1'b0}}; assign wr_data = {NPC_W*256{1'b0}};
         assign w_reads = 32'd0;

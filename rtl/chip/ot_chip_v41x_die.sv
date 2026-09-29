@@ -224,7 +224,7 @@ module ot_chip_v41x_die #(
     input  wire [3:0]        cfg_me_xs,
     input  wire [(FULL_SHAPE ? 30 : 24)-1:0] cfg_q_base,
     input  wire [LAW-1:0]    cfg_q_lbase,
-    input  wire [15:0]       cfg_q_lead,
+    input  wire [(FULL_SHAPE ? 21 : 16)-1:0] cfg_q_lead,
     input  wire [15:0]       cfg_q_rate,
     // External logical QE ROM service when W_HBM=0. The physical 274-bit
     // qtile bank mapping is a separate implementation boundary.
@@ -365,7 +365,7 @@ module ot_chip_v41x_die #(
     wire kv_re; wire [G*AW-1:0] kv_raddr; wire [G*W*32-1:0] kv_q;
     wire [SW-1:0] kv_we; wire [SW*AW-1:0] kv_waddr; wire [SW*32-1:0] kv_wdata;
     wire [SUN-1:0] xs_kv_we; wire [SUN*AW-1:0] xs_kv_waddr; wire [SUN*32-1:0] xs_kv_wdata;
-    wire wq_v, wq_rdy; wire [23:0] wq_addr; wire [5:0] wq_len; wire [LWIN-1:0] wq_tag;
+    wire wq_v, wq_rdy; wire [(FULL_SHAPE ? 30 : 24)-1:0] wq_addr; wire [5:0] wq_len; wire [LWIN-1:0] wq_tag;
     wire [NPC_W-1:0] wq_room, wr_v, wr_rdy; wire [NPC_W*LWIN-1:0] wr_tag;
     wire [NPC_W*5-1:0] wr_beat; wire [NPC_W*256-1:0] wr_data;
     wire [127:0] kh_v, kh_rdy, kh_we, kh_wr_done, kr_v, kr_rdy;
@@ -728,7 +728,7 @@ module ot_chip_v41x_die #(
 
     // -- four HBM3E stacks: K ports shared by the pooled indexer (pseudo-channels [32s, 32s + 32) of
     //    u_tile's key bridge) and the KV prefetch through a per-stack arbiter; W_STACK the weights --------
-    wire [4*64-1:0] refs; wire [4*32-1:0] wreads; wire [3:0] oor;
+    wire [4*64-1:0] refs; wire [4*32-1:0] wreads; wire [3:0] oor, w_oor;
     wire [4-1:0] s_w_rdy; wire [4*NPC_W-1:0] s_w_room, s_wr_v; wire [4*NPC_W*LWIN-1:0] s_wr_tag;
     wire [4*NPC_W*5-1:0] s_wr_beat; wire [4*NPC_W*256-1:0] s_wr_data;
     wire [4*32-1:0] kgr;
@@ -754,7 +754,7 @@ module ot_chip_v41x_die #(
             .h_wdata(h_wdata), .h_wstrb(h_wstrb), .h_wr_done(h_wr_done),
             .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag), .r_beat(r_beat), .r_data(r_data),
             .k_grants(kgr[s*32 +: 32]), .b_grants(), .contended());
-        ot_chip_v41x_hbm3e_phy #(.NPC(32), .K_AW(K_HAW), .K_MEM(K_MEM), .W_PORT(s == W_STACK), .NPC_W(NPC_W), .W_MEM(W_MEM),
+        ot_chip_v41x_hbm3e_phy #(.NPC(32), .K_AW(K_HAW), .K_MEM(K_MEM), .W_PORT(s == W_STACK), .W_AW(FULL_SHAPE ? 30 : 24), .NPC_W(NPC_W), .W_MEM(W_MEM),
                                  .LWIN(LWIN), .KTAGW(17), .CLK_PS(CLK_PS)) u_hbm (
             .clk(clk), .rst_n(rn),
             .k_v(h_v), .k_rdy(h_rdy), .k_addr(h_addr), .k_len(h_len), .k_tag(h_tag), .k_we(h_we),
@@ -765,7 +765,7 @@ module ot_chip_v41x_die #(
             .wr_rdy(s == W_STACK ? wr_rdy : {NPC_W{1'b0}}),
             .wr_tag(s_wr_tag[s*NPC_W*LWIN +: NPC_W*LWIN]), .wr_beat(s_wr_beat[s*NPC_W*5 +: NPC_W*5]),
             .wr_data(s_wr_data[s*NPC_W*256 +: NPC_W*256]),
-            .k_oor(oor[s]), .refreshes(refs[s*64 +: 64]), .w_reads(wreads[s*32 +: 32]));
+            .k_oor(oor[s]), .w_oor(w_oor[s]), .refreshes(refs[s*64 +: 64]), .w_reads(wreads[s*32 +: 32]));
     end endgenerate
     assign kv_hbm_grants = kgr[0 +: 32] + kgr[32 +: 32] + kgr[64 +: 32] + kgr[96 +: 32];
     assign wq_rdy  = s_w_rdy[W_STACK];
@@ -910,7 +910,7 @@ module ot_chip_v41x_die #(
     reg [7:0] fault_r;
     always @(posedge clk or negedge rn)
         if (!rn) fault_r <= 8'd0;
-        else fault_r <= fault_r | {|oor, kv_fault, rtr_overflow, die_coll_fault, proto_fault, qs_fault, 1'b0, t_fault};
+        else fault_r <= fault_r | {(|oor || |w_oor), kv_fault, rtr_overflow, die_coll_fault, proto_fault, qs_fault, 1'b0, t_fault};
     assign kv_fault_code = kv_code;
     assign fault = fault_r;
 
