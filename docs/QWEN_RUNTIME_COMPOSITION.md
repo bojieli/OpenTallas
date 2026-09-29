@@ -139,3 +139,33 @@ The current shipped layer0 TB leaves SU_VEC=0/SW=1 defaults. The first full-core
 exact run must explicitly retain and label that scalar-SU reference profile.
 It cannot establish the modeled SW1024 cycle rate; a full-throughput profile
 requires separately approved resource/physical budgets.
+
+## Full-shape width/scale contract at G64
+
+The NW18, INT8_SCALE_WCS_BASE=1 gate passes 56 cases, **14,220 cycles and
+1,262 write cycles**. Final cases use nout=151,936 and require actual output
+writes beyond row 65,535. Every public port agrees with the safe configured RTL
+reference; the wrong-edge mutant fails. Peak runtime RSS is 41,892 KiB and CPU
+runtime 45.27 seconds for the first successful replay. The current reproduction
+record pins the final emitted source and executable.
+
+When both controller and reference use separate hierarchical Verilator builds,
+their leaf libraries must have unique simulation names. The first unscoped
+attempt correctly stopped on a DPI-library hash mismatch before data execution.
+The generated controller now uses ctl_hdc_fmul/ctl_hdc_qadd identifiers; arithmetic,
+latency and hardware module structure are unchanged. `--hier-controller` applies
+this simulation-only namespace automatically.
+
+```bash
+python3 tools/qwen_matvec_runtime_emit.py --groups 64 --count-width 18 \\
+  --out /tmp/qwen-runtime-g64-full-contract
+python3 tools/qwen_matvec_runtime_run.py --workdir /tmp/qwen-runtime-g64-full-contract \\
+  --hier-reference --hier-controller --scale-wcs-base 1 \\
+  --verilator /path/to/verilator-5.050/bin/verilator --jobs 8
+```
+
+Root approved the **changed decomposed G6144 controller** compile after this gate,
+with MemoryMax=128GiB, CPUQuota=800%, and at least 160GiB host MemAvailable. It
+started on ot-pve1 with 233GiB available. The build has no address-space limit and
+no arbitrary six-minute cutoff. A successful controller build will still not be
+a checkpoint or token verdict.

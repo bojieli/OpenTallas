@@ -9,6 +9,7 @@ ap=argparse.ArgumentParser()
 ap.add_argument('--workdir',type=pathlib.Path,required=True)
 ap.add_argument('--controller-only',action='store_true')
 ap.add_argument('--hier-reference',action='store_true')
+ap.add_argument('--hier-controller',action='store_true')
 ap.add_argument('--wall-seconds',type=int,default=3600)
 ap.add_argument('--jobs',type=int,default=2)
 ap.add_argument('--verilator',default='verilator')
@@ -33,11 +34,18 @@ tops=['replay_controller'] if args.controller_only else ['replay_controller','re
 for top in tops:
  if top in ('replay_controller','replay_matvec_ref'):
   files=[('controller.sv' if top=='replay_controller' else 'reference.sv'),*common]
-  params=[f'-GG={G}','-GW=16','-GINT8_WEIGHT=1',f'-GINT8_SCALE_WCS_BASE={args.scale_wcs_base}']
+  params=[f'-GG={G}','-GW=16',f'-GNW={parameters.get("count_width",16)}','-GINT8_WEIGHT=1',f'-GINT8_SCALE_WCS_BASE={args.scale_wcs_base}']
  else:
   files=['kernels.sv',*([f'bank{top[-1]}.sv'] if top.startswith('replay_bank') else []),*common];params=[]
  directory=out/top
  hier=[]
+ if top=='replay_controller' and args.hier_controller:
+  for name in files:
+   data=(out/name).read_text().replace('ot_hdc_fmul','ctl_hdc_fmul').replace('ot_hdc_qadd','ctl_hdc_qadd')
+   (out/('ctl_'+name)).write_text(data)
+  files=['ctl_'+name for name in files]
+  (out/'ctl_leaf.vlt').write_text('`verilator_config\nhier_block -module "ctl_hdc_fmul"\nhier_block -module "ctl_hdc_qadd"\n')
+  hier=['--hierarchical','ctl_leaf.vlt','-O1','--unroll-count','131072','--unroll-limit','131072']
  if top=='replay_matvec_ref' and args.hier_reference:
   (out/'leaf.vlt').write_text('`verilator_config\nhier_block -module "ot_hdc_fmul"\nhier_block -module "ot_hdc_qadd"\n')
   hier=['--hierarchical','leaf.vlt','-O1','--unroll-count','131072','--unroll-limit','131072']
@@ -55,10 +63,11 @@ archives=[]
 for top in tops:
  for p in (out/top).rglob('*.a'):
   if p.name not in [a.name for a in archives]:archives.append(p)
-if args.hier_reference:
+if args.hier_reference or args.hier_controller:
  runtime.append(vroot+'/include/verilated_dpi.cpp')
  includes.append('-I'+vroot+'/include/vltstd')
- includes.extend('-I'+str(p.parent) for p in (out/'replay_matvec_ref').rglob('V*.h'))
+ for top in ['replay_controller','replay_matvec_ref']:
+  includes.extend('-I'+str(p.parent) for p in (out/top).rglob('V*.h'))
 run('link',['g++','-std=c++17','-O0','-pthread','-I'+vroot+'/include',*sorted(set(includes)),out/'main.cpp','-Wl,--start-group',*archives,'-Wl,--end-group',*runtime,'-o',out/'gate'])
 run('simulate',[out/'gate'])
 assert 'PASS generic runtime composition' in (out/'simulate.log').read_text()

@@ -10,6 +10,7 @@ import argparse,pathlib,json,hashlib,subprocess
 ap=argparse.ArgumentParser()
 ap.add_argument('--groups',type=int,choices=(4,64),required=True)
 ap.add_argument('--out',type=pathlib.Path,required=True)
+ap.add_argument('--count-width',type=int,choices=(16,18),default=16)
 ap.add_argument('--source-root',type=pathlib.Path,default=pathlib.Path(__file__).resolve().parents[1])
 args=ap.parse_args();root=args.source_root;out=args.out
 out.mkdir(parents=True,exist_ok=True)
@@ -92,7 +93,7 @@ template<class T>struct Bank:BankBase{
 std::unique_ptr<BankBase> make_bank(int adds){switch(adds){BANK_CASES default:std::abort();}}
 int main(int argc,char**argv){
  Verilated::commandArgs(argc,argv);
- constexpr int G=GROUPS,LG=LEVELS,NB=G/4;
+ constexpr int G=GROUPS,LG=LEVELS,NB=G/4,NW=COUNTWIDTH;
  Vreplay_controller c;Vreplay_matvec_ref r;
  std::unique_ptr<Vot_hdc_matvec_mac_group> m[G];for(auto&p:m)p.reset(new Vot_hdc_matvec_mac_group);
  std::vector<std::unique_ptr<BankBase>> banks;
@@ -134,7 +135,13 @@ int main(int argc,char**argv){
   c.i_split=r.i_split=test%(LG+1);c.i_wsrc=r.i_wsrc=(test/(LG+1))%2;
   c.i_nout=r.i_nout=(test%4==0?1:(test%4==1?127:(test%4==2?G*16:G*16*8-1)));
   c.i_mmode=r.i_mmode=(test/(2*(LG+1)))%2;c.i_rmax=r.i_rmax=test>=4*(LG+1);
-  for(int tick=0;tick<230;tick++){
+  bool high_count=(NW==18 && test>=(LG+1)*8-2);
+  int tile_count=high_count?std::max(20,(151936+G*16*8-1)/(G*16*8)):2;
+  c.i_tiles=r.i_tiles=tile_count;
+  if(high_count){c.i_nout=r.i_nout=151936;c.i_split=r.i_split=0;c.i_mmode=r.i_mmode=0;}
+  bool high_write=false;
+  int limit=high_count?tile_count*26+380:230;
+  for(int tick=0;tick<limit;tick++){
    c.rst_n=r.rst_n=tick>=4;c.go=r.go=tick==5;
    for(int j=0;j<G*4;j++)c.wrom_q[j]=r.wrom_q[j]=(test%4==0?0x01010101u:(0x807fff01u^(j*0x10001u)));
    for(int j=0;j<G*8;j++)c.scale_q[j]=r.scale_q[j]=(j%3==0?0x3f003f00u:(j%3==1?0x3f803f80u:0x40004000u));
@@ -151,7 +158,14 @@ int main(int argc,char**argv){
    }
    if(tick>8){CHECKS}
    if(c.o_we)writes++;
-   if(tick==229 && (!r.idle || r.progress==0)){printf("FAIL no completion case%d\n",test);return 3;}
+   for(int group=0;group<G;group++)if((uint64_t(c.o_we)>>group)&1){
+    int bit=group*24;uint64_t address=c.o_addr[bit/32];
+    if(bit%32+24>32)address|=uint64_t(c.o_addr[bit/32+1])<<32;
+    address=(address>>(bit%32))&0xffffff;
+    if(address*16>=65536)high_write=true;
+   }
+   if(tick==limit-1 && high_count && !high_write){printf("FAIL high-count test never wrote high rows\n");return 5;}
+   if(tick==limit-1 && (!r.idle || r.progress==0)){printf("FAIL no completion case%d\n",test);return 3;}
    cycles++;
   }
  }
@@ -159,10 +173,10 @@ int main(int argc,char**argv){
  printf("PASS generic runtime composition G%d cases%d cycles%d writes%d settle%d RSS_KiB%ld\n",G,(LG+1)*8,cycles,writes,max_settle,ru.ru_maxrss);
 }
 '''
-cpp=cpp.replace('BANK_INCLUDES','\n'.join(f'#include "Vreplay_bank{n}.h"' for n in adds)).replace('BANK_CASES','\n'.join(f'case {n}:return std::unique_ptr<BankBase>(new Bank<Vreplay_bank{n}>);' for n in adds)).replace('GROUPS',str(G)).replace('LEVELS',str(LG)).replace('INITIAL',initial).replace('CHECKS',checks)
+cpp=cpp.replace('BANK_INCLUDES','\n'.join(f'#include "Vreplay_bank{n}.h"' for n in adds)).replace('BANK_CASES','\n'.join(f'case {n}:return std::unique_ptr<BankBase>(new Bank<Vreplay_bank{n}>);' for n in adds)).replace('COUNTWIDTH',str(args.count_width)).replace('GROUPS',str(G)).replace('LEVELS',str(LG)).replace('INITIAL',initial).replace('CHECKS',checks)
 cpp=cpp.replace('ZERO_FAULT','c.ext_lfault=0;' if G==4 else f'for(int j=0;j<{G//2};j++)c.ext_lfault[j]=0;').replace('SET_FAULT','c.ext_lfault|=uint64_t(m[g]->fault)<<(g*16);' if G==4 else 'c.ext_lfault[g/2]|=uint32_t(m[g]->fault)<<((g%2)*16);')
 # o_we is 64-bit at G64, so scalar activity remains well defined.
 (out/'main.cpp').write_text(cpp)
-(out/'parameters.json').write_text(json.dumps({'groups':G,'levels':LG,'bank_groups':4,'banks':LG*N,'bank_add_variants':adds,'source_reference':'a4870d3b','simulation_candidate':'a80d6a30'},indent=2)+'\n')
+(out/'parameters.json').write_text(json.dumps({'count_width':args.count_width,'groups':G,'levels':LG,'bank_groups':4,'banks':LG*N,'bank_add_variants':adds,'source_reference':'a4870d3b','simulation_candidate':'a80d6a30'},indent=2)+'\n')
 (out/'manifest.json').write_text(json.dumps({p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir() if p.is_file()},indent=2)+'\n')
 print(out)
