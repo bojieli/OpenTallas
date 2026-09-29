@@ -3,7 +3,7 @@
  "arch": "hbm_gpu_v41",
  "period_ps": 920.0,
  "uncertainty_ps": 60.0,
- "method": "W13: registered-boundary budget (columns register every input and output)",
+ "method": "W13: registered-boundary budget (columns register every input and output); outputs 450 ps (clock-to-out incl. insertion), inputs 300 ps",
  "blocks": {
   "ot_gpu_tc16": {
    "instance": "g_col[*].g_sub[*].g_hard.u_tc",
@@ -59,34 +59,34 @@
     "ov": {
      "direction": "output",
      "width": 1,
-     "internal_budget_ps": 300.0,
-     "external_ps": 560.0,
+     "internal_budget_ps": 450.0,
+     "external_ps": 410.0,
      "status": "fits",
-     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one"
+     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
     },
     "y": {
      "direction": "output",
      "width": 32,
-     "internal_budget_ps": 300.0,
-     "external_ps": 560.0,
+     "internal_budget_ps": 450.0,
+     "external_ps": 410.0,
      "status": "fits",
-     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one"
+     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
     },
     "otag": {
      "direction": "output",
      "width": 16,
-     "internal_budget_ps": 300.0,
-     "external_ps": 560.0,
+     "internal_budget_ps": 450.0,
+     "external_ps": 410.0,
      "status": "fits",
-     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one"
+     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
     },
     "fault": {
      "direction": "output",
      "width": 1,
-     "internal_budget_ps": 300.0,
-     "external_ps": 560.0,
+     "internal_budget_ps": 450.0,
+     "external_ps": 410.0,
      "status": "fits",
-     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one"
+     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
     },
     "rst_n": {
      "direction": "input",
@@ -175,34 +175,34 @@
     "ov": {
      "direction": "output",
      "width": 1,
-     "internal_budget_ps": 300.0,
-     "external_ps": 560.0,
+     "internal_budget_ps": 450.0,
+     "external_ps": 410.0,
      "status": "fits",
-     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one"
+     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
     },
     "y": {
      "direction": "output",
      "width": 32,
-     "internal_budget_ps": 300.0,
-     "external_ps": 560.0,
+     "internal_budget_ps": 450.0,
+     "external_ps": 410.0,
      "status": "fits",
-     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one"
+     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
     },
     "otag": {
      "direction": "output",
      "width": 16,
-     "internal_budget_ps": 300.0,
-     "external_ps": 560.0,
+     "internal_budget_ps": 450.0,
+     "external_ps": 410.0,
      "status": "fits",
-     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one"
+     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
     },
     "fault": {
      "direction": "output",
      "width": 1,
-     "internal_budget_ps": 300.0,
-     "external_ps": 560.0,
+     "internal_budget_ps": 450.0,
+     "external_ps": 410.0,
      "status": "fits",
-     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one"
+     "note": "W13 SM glue budget: every column input lands in a register, every output leaves one; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
     },
     "rst_n": {
      "direction": "input",
