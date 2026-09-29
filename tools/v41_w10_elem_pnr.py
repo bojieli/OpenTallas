@@ -60,7 +60,7 @@ def hook_tcl(p: dict) -> str:
             .replace("OT_W2_ROMAC_PLACE", "OT_W10_ELEM_PLACE")
 
 
-def argv(p: dict, tag: str, keep: str, output: str, density: float) -> list[str]:
+def argv(p: dict, tag: str, keep: str, output: str, density: float, params=()) -> list[str]:
     w, h = p["die_um"]
     a = ["tools/run_abi3_physical.py", "--view", "asap7", "--top", p["top"]]
     for s in p["sources"]:
@@ -76,6 +76,8 @@ def argv(p: dict, tag: str, keep: str, output: str, density: float) -> list[str]
           "--nickname-tag", tag, "--keep-workdir", keep, "--output", output]
     for m in p["macro_views"]:
         a += ["--macro-view", f"{m}={MACRO_DIR}/{m}"]
+    for q in params:
+        a += ["--param", q]
     return a
 
 
@@ -88,12 +90,13 @@ def main() -> None:
     ap.add_argument("--tag", default="w10_elem")
     ap.add_argument("--keep", default="/tmp/claude-1000/w10out/w10_elem_work")
     ap.add_argument("--output", default="results/physical_abi3/asap7/chip/v41_w10_elem/elem_physical.json")
+    ap.add_argument("--param", action="append", default=[], help="RTL parameter, e.g. BF16=1")
     a = ap.parse_args()
     p = plan(a.logic_w)
     if a.write_hook:
         (ROOT / "physical/abi3/v41_w10_elem_place.tcl").write_text(hook_tcl(p))
     if a.print:
-        print(json.dumps({"plan": p, "argv": argv(p, a.tag, a.keep, a.output, a.density)}, indent=1))
+        print(json.dumps({"plan": p, "argv": argv(p, a.tag, a.keep, a.output, a.density, a.param)}, indent=1))
 
 
 if __name__ == "__main__":
