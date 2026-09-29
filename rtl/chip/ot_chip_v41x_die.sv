@@ -113,6 +113,8 @@ module ot_chip_v41x_die #(
     parameter integer IDX_SHARDED = 0, // opt-in; reader and writer must share one layout
     parameter bit WINDOW_RETAIN_L0 = 0, // opt-in single-use QK->PV packed-stage retention
     parameter bit WINDOW_HBM_ATTENTION = 0, // opt-in L0 WINDOW-only internal source
+    parameter bit KARB_LOCAL = 0,  // opt-in: per-PC local K arbitration (ot_chip_v41x_hbm_karb_local)
+    parameter bit KARB_FENCE = 1,  // with KARB_LOCAL: explicit same-PC K read-after-write fence
     // HBM address map and KV prefetch
     parameter integer K_HAW   = FULL_SHAPE ? 30 : 28, // HBM sector address
     parameter integer KEY_USERS = 1,          // index-key user slices (the pooled indexer's)
@@ -747,6 +749,25 @@ module ot_chip_v41x_die #(
         wire [31:0] h_v, h_rdy, h_we, h_wr_done, r_v, r_rdy;
         wire [32*K_HAW-1:0] h_addr; wire [32*4-1:0] h_len, r_beat; wire [32*17-1:0] h_tag, r_tag;
         wire [32*256-1:0] h_wdata, r_data; wire [32*32-1:0] h_wstrb;
+        if (KARB_LOCAL) begin : g_karb_local
+        ot_chip_v41x_hbm_karb_local #(.NPC(32), .AW(K_HAW), .TAGW(16), .K_RD_FENCE(KARB_FENCE)) u_arb (
+            .clk(clk), .rst_n(rn),
+            .b_v(kh_v[s*32 +: 32]), .b_rdy(kh_rdy[s*32 +: 32]), .b_addr(kh_addr[s*32*K_HAW +: 32*K_HAW]),
+            .b_len(kh_len[s*32*4 +: 32*4]), .b_tag(kh_tag[s*32*16 +: 32*16]), .b_we(kh_we[s*32 +: 32]),
+            .b_wdata(kh_wdata[s*32*256 +: 32*256]), .b_wstrb(kh_wstrb[s*32*32 +: 32*32]),
+            .b_wr_done(kh_wr_done[s*32 +: 32]),
+            .b_rsp_v(kr_v[s*32 +: 32]), .b_rsp_rdy(kr_rdy[s*32 +: 32]), .b_rsp_tag(kr_tag[s*32*16 +: 32*16]),
+            .b_rsp_beat(kr_beat[s*32*4 +: 32*4]), .b_rsp_data(kr_data[s*32*256 +: 32*256]),
+            .k_v(pm_v[s]), .k_rdy(pm_rdy[s]), .k_addr(pm_addr[s*K_HAW +: K_HAW]), .k_len(pm_len[s*4 +: 4]),
+            .k_tag(pm_tag[s*16 +: 16]), .k_we(pm_we[s]), .k_wdata(pm_wdata[s*256 +: 256]),
+            .k_wstrb(pm_wstrb[s*32 +: 32]), .k_wr_done(pk_wd[s]),
+            .k_rsp_v(ps_v[s]), .k_rsp_rdy(ps_rdy[s]), .k_rsp_tag(ps_tag[s*16 +: 16]),
+            .k_rsp_beat(ps_beat[s*4 +: 4]), .k_rsp_data(ps_data[s*256 +: 256]),
+            .h_v(h_v), .h_rdy(h_rdy), .h_addr(h_addr), .h_len(h_len), .h_tag(h_tag), .h_we(h_we),
+            .h_wdata(h_wdata), .h_wstrb(h_wstrb), .h_wr_done(h_wr_done),
+            .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag), .r_beat(r_beat), .r_data(r_data),
+            .k_grants(kgr[s*32 +: 32]), .b_grants(), .contended());
+        end else begin : g_karb
         ot_chip_v41x_hbm_karb #(.NPC(32), .AW(K_HAW), .TAGW(16)) u_arb (
             .clk(clk), .rst_n(rn),
             .b_v(kh_v[s*32 +: 32]), .b_rdy(kh_rdy[s*32 +: 32]), .b_addr(kh_addr[s*32*K_HAW +: 32*K_HAW]),
@@ -764,6 +785,8 @@ module ot_chip_v41x_die #(
             .h_wdata(h_wdata), .h_wstrb(h_wstrb), .h_wr_done(h_wr_done),
             .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag), .r_beat(r_beat), .r_data(r_data),
             .k_grants(kgr[s*32 +: 32]), .b_grants(), .contended());
+        end
+
         ot_chip_v41x_hbm3e_phy #(.NPC(32), .K_AW(K_HAW), .K_MEM(K_MEM), .W_PORT(s == W_STACK), .W_AW(FULL_SHAPE ? 30 : 24), .NPC_W(NPC_W), .W_MEM(W_MEM),
                                  .LWIN(LWIN), .KTAGW(17), .CLK_PS(CLK_PS)) u_hbm (
             .clk(clk), .rst_n(rn),

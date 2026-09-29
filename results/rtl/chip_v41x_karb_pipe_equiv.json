@@ -1,0 +1,2380 @@
+{
+ "record": "V4.1 local K arbitration partition: transaction equivalence against the monolithic arbiter",
+ "proposal": "docs/V41_KARB_LOCAL_PARTITION_PROPOSAL.md (Codex 796726ad, main 2bdb0c4a)",
+ "sources": {
+  "rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv": "8e3ee1fba61f867dac2a8ad83abe703962c1902913bafe99c40e63e7905f0b84",
+  "rtl/chip/ot_chip_v41x_karb_proot.sv": "d1251c4ba195c2067cb3f791882a1280c6d95459d9f120d1b87493182be0b4fa",
+  "rtl/chip/ot_chip_v41x_karb_pregion.sv": "ed08eee316d62b8f06b92f10d061f6acb7a9a3a619bc7d8ac75a06f84d2b560b",
+  "rtl/chip/ot_chip_v41x_karb_pslice.sv": "d4d61d37bd2ee97096b36d85ab11f6d29d447fb869631fac66848e840ab58386",
+  "rtl/chip/ot_chip_v41x_karb_pipe.sv": "378fd81d0de101435aa662bb59d2aa18ec19585adb6c8e0bd570dab9da9ae0f0",
+  "rtl/chip/ot_chip_v41x_hbm_karb_local.sv": "73a9c0ea0eeb49d286a6e964e2f0f4ba5704a347be5c1ff67003059cc57dd558",
+  "rtl/chip/ot_chip_v41x_karb_stack_ep.sv": "4d0e4b88b7fd66d517f3057ac1c1715fb1fadd969d1bf2d6389662771f199528",
+  "rtl/chip/ot_chip_v41x_karb_region.sv": "9a4b691956eac1dd272ccb5f357d835c6e4c9a87a24546d832e8561db1c98477",
+  "rtl/chip/ot_chip_v41x_karb_region_kq.sv": "ffbdd286d3e21ff309f4636763e4d9d8fa0a989bb664ece3149ccfa004475eb7",
+  "rtl/chip/ot_chip_v41x_karb_slice.sv": "4b72f689c543f9d35cf8bd6a88b34e1737f36ac7419e72dbf746959fef7a614b",
+  "rtl/chip/ot_chip_v41x_karb_q2.sv": "90c16f6e5ccce13ea45af4d36cc91dcdaebe2de88b5d0e59da1caf1cedbc3b47",
+  "rtl/chip/ot_chip_v41x_karb_qn.sv": "2e7ff8700db4d25f0d68d3d096d1f151e12e84778816f162b9126c4d545990a0",
+  "rtl/chip/ot_chip_v41x_hbm_karb.sv": "72e06e1fe533c491c13260ddea0462254a32821af44a2ad3726fbd553fd19f74",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+  "rtl/test/tb_chip_v41x_karb_local_equiv.sv": "121af2a3e4694ebff7332dd30057d461f9895bf23035f38cdcaf3f66d25ff007",
+  "tools/rtl_chip_v41x_karb_local.py": "d08c2609faf75fc9e50ea51c6fd2d502098f40a197655d53245598f6c88ae890",
+  "rtl/test/tb_chip_v41x_kv_prefetch.sv": "e0e125475e66cff26e04cf1417177adac1110f17570cd6458a512dc383987dec",
+  "rtl/test/tb_chip_v41x_karb_local_hash.sv": "3d25404d926ff489054b21db8bb6ace08b0004a2a66b6a391f9074098c57985e",
+  "rtl/chip/ot_chip_v41x_kv_prefetch.sv": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d",
+  "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b",
+  "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+ },
+ "simulator": "Icarus Verilog version 11.0 (stable) ()",
+ "shape": {
+  "NPC": 32,
+  "AW": 28,
+  "TAGW": 16,
+  "DW": 256,
+  "model_mem_sectors": 16384,
+  "regions": 8,
+  "local_pcs_per_region": 4
+ },
+ "equivalence_basis": "transaction equivalence: each K tag's beats and each (PC, B tag)'s beats identical in both arms and equal to a sequential golden (K in acceptance order, B per PC in order, masked writes); final memory image identical and golden. B and K address disjoint regions, as index keys and KV do on the die. Cross-PC K response order may differ.",
+ "runs": [
+  {
+   "scenario": "k_single_read_idle",
+   "seed": 11,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 69,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 41.5,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_read_stream",
+   "seed": 12,
+   "k_requests": 512,
+   "k_read_beats": 931,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 987,
+   "cycles_local": 991,
+   "cycles_pipe": 997,
+   "first_k_latency_pipe": 63,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 66.1,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "kv_prefetch_like_write_then_read",
+   "seed": 13,
+   "k_requests": 512,
+   "k_read_beats": 1280,
+   "k_writes": 192,
+   "b_requests": 1024,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 2094,
+   "cycles_local": 2097,
+   "cycles_pipe": 1682,
+   "first_k_latency_pipe": 257,
+   "first_k_latency_mono": 811,
+   "first_k_latency_local": 709,
+   "k_wr_done_events": {
+    "mono": 164,
+    "local": 162,
+    "pipe": 119
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 1024,
+    "local": 1024,
+    "pipe": 1024
+   },
+   "sim_seconds": 89.2,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_raw_full_ready",
+   "seed": 14,
+   "k_requests": 512,
+   "k_read_beats": 632,
+   "k_writes": 153,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1872,
+   "cycles_local": 2643,
+   "cycles_pipe": 1530,
+   "first_k_latency_pipe": 68,
+   "first_k_latency_mono": 58,
+   "first_k_latency_local": 79,
+   "k_wr_done_events": {
+    "mono": 141,
+    "local": 149,
+    "pipe": 144
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 95.7,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_raw_backpressure",
+   "seed": 15,
+   "k_requests": 512,
+   "k_read_beats": 599,
+   "k_writes": 176,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 40,
+   "b_rsp_ready_percent": 50,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 2607,
+   "cycles_local": 2169,
+   "cycles_pipe": 1667,
+   "first_k_latency_pipe": 61,
+   "first_k_latency_mono": 60,
+   "first_k_latency_local": 61,
+   "k_wr_done_events": {
+    "mono": 165,
+    "local": 165,
+    "pipe": 162
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 88.4,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "contended_b_heavy",
+   "seed": 16,
+   "k_requests": 512,
+   "k_read_beats": 815,
+   "k_writes": 48,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 70,
+   "b_rsp_ready_percent": 30,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 2068,
+   "cycles_local": 2044,
+   "cycles_pipe": 1907,
+   "first_k_latency_pipe": 60,
+   "first_k_latency_mono": 55,
+   "first_k_latency_local": 58,
+   "k_wr_done_events": {
+    "mono": 47,
+    "local": 47,
+    "pipe": 48
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 70.1,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_write_heavy",
+   "seed": 17,
+   "k_requests": 512,
+   "k_read_beats": 253,
+   "k_writes": 349,
+   "b_requests": 1024,
+   "k_rsp_ready_percent": 90,
+   "b_rsp_ready_percent": 90,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1288,
+   "cycles_local": 1726,
+   "cycles_pipe": 1267,
+   "first_k_latency_pipe": 96,
+   "first_k_latency_mono": 101,
+   "first_k_latency_local": 104,
+   "k_wr_done_events": {
+    "mono": 300,
+    "local": 313,
+    "pipe": 283
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 1024,
+    "local": 1024,
+    "pipe": 1024
+   },
+   "sim_seconds": 54.2,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_100",
+   "seed": 100,
+   "k_requests": 512,
+   "k_read_beats": 653,
+   "k_writes": 134,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 60,
+   "b_rsp_ready_percent": 80,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1848,
+   "cycles_local": 2014,
+   "cycles_pipe": 1605,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 59,
+   "first_k_latency_local": 60,
+   "k_wr_done_events": {
+    "mono": 128,
+    "local": 128,
+    "pipe": 129
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 66.1,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_101",
+   "seed": 101,
+   "k_requests": 512,
+   "k_read_beats": 680,
+   "k_writes": 133,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 61,
+   "b_rsp_ready_percent": 87,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 2007,
+   "cycles_local": 2281,
+   "cycles_pipe": 1716,
+   "first_k_latency_pipe": 68,
+   "first_k_latency_mono": 103,
+   "first_k_latency_local": 105,
+   "k_wr_done_events": {
+    "mono": 125,
+    "local": 125,
+    "pipe": 117
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 56.6,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_102",
+   "seed": 102,
+   "k_requests": 512,
+   "k_read_beats": 692,
+   "k_writes": 115,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 62,
+   "b_rsp_ready_percent": 94,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1742,
+   "cycles_local": 2149,
+   "cycles_pipe": 1368,
+   "first_k_latency_pipe": 68,
+   "first_k_latency_mono": 80,
+   "first_k_latency_local": 86,
+   "k_wr_done_events": {
+    "mono": 110,
+    "local": 109,
+    "pipe": 108
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 54.7,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_103",
+   "seed": 103,
+   "k_requests": 512,
+   "k_read_beats": 696,
+   "k_writes": 121,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 63,
+   "b_rsp_ready_percent": 21,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1932,
+   "cycles_local": 2023,
+   "cycles_pipe": 1718,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 80,
+   "first_k_latency_local": 63,
+   "k_wr_done_events": {
+    "mono": 115,
+    "local": 118,
+    "pipe": 116
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 58.5,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_104",
+   "seed": 104,
+   "k_requests": 512,
+   "k_read_beats": 709,
+   "k_writes": 125,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 64,
+   "b_rsp_ready_percent": 28,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1795,
+   "cycles_local": 2257,
+   "cycles_pipe": 1500,
+   "first_k_latency_pipe": 70,
+   "first_k_latency_mono": 61,
+   "first_k_latency_local": 63,
+   "k_wr_done_events": {
+    "mono": 121,
+    "local": 123,
+    "pipe": 119
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 59.8,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_105",
+   "seed": 105,
+   "k_requests": 512,
+   "k_read_beats": 697,
+   "k_writes": 132,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 65,
+   "b_rsp_ready_percent": 35,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 2162,
+   "cycles_local": 1970,
+   "cycles_pipe": 1488,
+   "first_k_latency_pipe": 76,
+   "first_k_latency_mono": 74,
+   "first_k_latency_local": 77,
+   "k_wr_done_events": {
+    "mono": 122,
+    "local": 130,
+    "pipe": 126
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 61.5,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_106",
+   "seed": 106,
+   "k_requests": 512,
+   "k_read_beats": 650,
+   "k_writes": 140,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 66,
+   "b_rsp_ready_percent": 42,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1943,
+   "cycles_local": 1991,
+   "cycles_pipe": 1513,
+   "first_k_latency_pipe": 71,
+   "first_k_latency_mono": 55,
+   "first_k_latency_local": 58,
+   "k_wr_done_events": {
+    "mono": 129,
+    "local": 136,
+    "pipe": 129
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 60.3,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_107",
+   "seed": 107,
+   "k_requests": 512,
+   "k_read_beats": 689,
+   "k_writes": 120,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 67,
+   "b_rsp_ready_percent": 49,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1937,
+   "cycles_local": 2090,
+   "cycles_pipe": 1766,
+   "first_k_latency_pipe": 71,
+   "first_k_latency_mono": 55,
+   "first_k_latency_local": 58,
+   "k_wr_done_events": {
+    "mono": 108,
+    "local": 116,
+    "pipe": 116
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 61.5,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_108",
+   "seed": 108,
+   "k_requests": 512,
+   "k_read_beats": 652,
+   "k_writes": 118,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 68,
+   "b_rsp_ready_percent": 56,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1919,
+   "cycles_local": 2079,
+   "cycles_pipe": 1520,
+   "first_k_latency_pipe": 69,
+   "first_k_latency_mono": 77,
+   "first_k_latency_local": 80,
+   "k_wr_done_events": {
+    "mono": 115,
+    "local": 115,
+    "pipe": 112
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 64.4,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_109",
+   "seed": 109,
+   "k_requests": 512,
+   "k_read_beats": 664,
+   "k_writes": 127,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 69,
+   "b_rsp_ready_percent": 63,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1733,
+   "cycles_local": 2065,
+   "cycles_pipe": 1428,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 60,
+   "first_k_latency_local": 64,
+   "k_wr_done_events": {
+    "mono": 121,
+    "local": 124,
+    "pipe": 117
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 63.5,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_110",
+   "seed": 110,
+   "k_requests": 512,
+   "k_read_beats": 646,
+   "k_writes": 142,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 70,
+   "b_rsp_ready_percent": 70,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1910,
+   "cycles_local": 2257,
+   "cycles_pipe": 1508,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 55,
+   "first_k_latency_local": 59,
+   "k_wr_done_events": {
+    "mono": 131,
+    "local": 138,
+    "pipe": 133
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 65.7,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "mixed_random_111",
+   "seed": 111,
+   "k_requests": 512,
+   "k_read_beats": 654,
+   "k_writes": 131,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 71,
+   "b_rsp_ready_percent": 77,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1872,
+   "cycles_local": 2046,
+   "cycles_pipe": 1520,
+   "first_k_latency_pipe": 68,
+   "first_k_latency_mono": 56,
+   "first_k_latency_local": 59,
+   "k_wr_done_events": {
+    "mono": 120,
+    "local": 124,
+    "pipe": 122
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 63.8,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_idle_region_0",
+   "seed": 900,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 73,
+   "first_k_latency_pipe": 70,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 31.2,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_idle_region_1",
+   "seed": 901,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 69,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 31.7,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_idle_region_2",
+   "seed": 902,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 67,
+   "first_k_latency_pipe": 64,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 31.3,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_idle_region_3",
+   "seed": 903,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 63,
+   "first_k_latency_pipe": 60,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 31.5,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_idle_region_4",
+   "seed": 904,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 63,
+   "first_k_latency_pipe": 60,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 32.6,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_idle_region_5",
+   "seed": 905,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 67,
+   "first_k_latency_pipe": 64,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 32.5,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_idle_region_6",
+   "seed": 906,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 69,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 31.2,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_idle_region_7",
+   "seed": 907,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 73,
+   "first_k_latency_pipe": 70,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 29.3,
+   "pass": true,
+   "k_rd_fence": 1
+  },
+  {
+   "scenario": "k_single_read_idle",
+   "seed": 11,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 69,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 31.6,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "k_read_stream",
+   "seed": 12,
+   "k_requests": 512,
+   "k_read_beats": 931,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 987,
+   "cycles_local": 991,
+   "cycles_pipe": 997,
+   "first_k_latency_pipe": 63,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 43.5,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "kv_prefetch_like_write_then_read",
+   "seed": 13,
+   "k_requests": 512,
+   "k_read_beats": 1280,
+   "k_writes": 192,
+   "b_requests": 1024,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 2094,
+   "cycles_local": 1992,
+   "cycles_pipe": 1673,
+   "first_k_latency_pipe": 246,
+   "first_k_latency_mono": 811,
+   "first_k_latency_local": 709,
+   "k_wr_done_events": {
+    "mono": 164,
+    "local": 162,
+    "pipe": 119
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 1024,
+    "local": 1024,
+    "pipe": 1024
+   },
+   "sim_seconds": 55.9,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_raw_full_ready",
+   "seed": 14,
+   "k_requests": 512,
+   "k_read_beats": 632,
+   "k_writes": 153,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1872,
+   "cycles_local": 1790,
+   "cycles_pipe": 1377,
+   "first_k_latency_pipe": 68,
+   "first_k_latency_mono": 58,
+   "first_k_latency_local": 79,
+   "k_wr_done_events": {
+    "mono": 141,
+    "local": 142,
+    "pipe": 139
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 59.6,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_raw_backpressure",
+   "seed": 15,
+   "k_requests": 512,
+   "k_read_beats": 599,
+   "k_writes": 176,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 40,
+   "b_rsp_ready_percent": 50,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 2607,
+   "cycles_local": 2020,
+   "cycles_pipe": 1920,
+   "first_k_latency_pipe": 61,
+   "first_k_latency_mono": 60,
+   "first_k_latency_local": 61,
+   "k_wr_done_events": {
+    "mono": 165,
+    "local": 160,
+    "pipe": 162
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 64.7,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "contended_b_heavy",
+   "seed": 16,
+   "k_requests": 512,
+   "k_read_beats": 815,
+   "k_writes": 48,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 70,
+   "b_rsp_ready_percent": 30,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 2068,
+   "cycles_local": 1842,
+   "cycles_pipe": 1941,
+   "first_k_latency_pipe": 60,
+   "first_k_latency_mono": 55,
+   "first_k_latency_local": 58,
+   "k_wr_done_events": {
+    "mono": 47,
+    "local": 47,
+    "pipe": 45
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 59.2,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "k_write_heavy",
+   "seed": 17,
+   "k_requests": 512,
+   "k_read_beats": 253,
+   "k_writes": 349,
+   "b_requests": 1024,
+   "k_rsp_ready_percent": 90,
+   "b_rsp_ready_percent": 90,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1288,
+   "cycles_local": 1290,
+   "cycles_pipe": 1065,
+   "first_k_latency_pipe": 96,
+   "first_k_latency_mono": 101,
+   "first_k_latency_local": 83,
+   "k_wr_done_events": {
+    "mono": 300,
+    "local": 301,
+    "pipe": 261
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 1024,
+    "local": 1024,
+    "pipe": 1024
+   },
+   "sim_seconds": 50.2,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_100",
+   "seed": 100,
+   "k_requests": 512,
+   "k_read_beats": 653,
+   "k_writes": 134,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 60,
+   "b_rsp_ready_percent": 80,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1848,
+   "cycles_local": 1624,
+   "cycles_pipe": 1263,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 59,
+   "first_k_latency_local": 60,
+   "k_wr_done_events": {
+    "mono": 128,
+    "local": 125,
+    "pipe": 126
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 57.2,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_101",
+   "seed": 101,
+   "k_requests": 512,
+   "k_read_beats": 680,
+   "k_writes": 133,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 61,
+   "b_rsp_ready_percent": 87,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 2007,
+   "cycles_local": 1776,
+   "cycles_pipe": 1393,
+   "first_k_latency_pipe": 68,
+   "first_k_latency_mono": 103,
+   "first_k_latency_local": 105,
+   "k_wr_done_events": {
+    "mono": 125,
+    "local": 125,
+    "pipe": 126
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 58.9,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_102",
+   "seed": 102,
+   "k_requests": 512,
+   "k_read_beats": 692,
+   "k_writes": 115,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 62,
+   "b_rsp_ready_percent": 94,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1742,
+   "cycles_local": 1625,
+   "cycles_pipe": 1255,
+   "first_k_latency_pipe": 68,
+   "first_k_latency_mono": 80,
+   "first_k_latency_local": 86,
+   "k_wr_done_events": {
+    "mono": 110,
+    "local": 102,
+    "pipe": 105
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 57.2,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_103",
+   "seed": 103,
+   "k_requests": 512,
+   "k_read_beats": 696,
+   "k_writes": 121,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 63,
+   "b_rsp_ready_percent": 21,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1932,
+   "cycles_local": 1519,
+   "cycles_pipe": 1338,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 80,
+   "first_k_latency_local": 63,
+   "k_wr_done_events": {
+    "mono": 115,
+    "local": 119,
+    "pipe": 110
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 60.8,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_104",
+   "seed": 104,
+   "k_requests": 512,
+   "k_read_beats": 709,
+   "k_writes": 125,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 64,
+   "b_rsp_ready_percent": 28,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1795,
+   "cycles_local": 1738,
+   "cycles_pipe": 1251,
+   "first_k_latency_pipe": 70,
+   "first_k_latency_mono": 61,
+   "first_k_latency_local": 63,
+   "k_wr_done_events": {
+    "mono": 121,
+    "local": 119,
+    "pipe": 118
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 57.6,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_105",
+   "seed": 105,
+   "k_requests": 512,
+   "k_read_beats": 697,
+   "k_writes": 132,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 65,
+   "b_rsp_ready_percent": 35,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 2162,
+   "cycles_local": 1469,
+   "cycles_pipe": 1412,
+   "first_k_latency_pipe": 76,
+   "first_k_latency_mono": 74,
+   "first_k_latency_local": 77,
+   "k_wr_done_events": {
+    "mono": 122,
+    "local": 126,
+    "pipe": 124
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 60.8,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_106",
+   "seed": 106,
+   "k_requests": 512,
+   "k_read_beats": 650,
+   "k_writes": 140,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 66,
+   "b_rsp_ready_percent": 42,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1943,
+   "cycles_local": 1718,
+   "cycles_pipe": 1401,
+   "first_k_latency_pipe": 71,
+   "first_k_latency_mono": 55,
+   "first_k_latency_local": 58,
+   "k_wr_done_events": {
+    "mono": 129,
+    "local": 127,
+    "pipe": 133
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 57.3,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_107",
+   "seed": 107,
+   "k_requests": 512,
+   "k_read_beats": 689,
+   "k_writes": 120,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 67,
+   "b_rsp_ready_percent": 49,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1937,
+   "cycles_local": 1789,
+   "cycles_pipe": 1274,
+   "first_k_latency_pipe": 71,
+   "first_k_latency_mono": 55,
+   "first_k_latency_local": 58,
+   "k_wr_done_events": {
+    "mono": 108,
+    "local": 112,
+    "pipe": 110
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 57.5,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_108",
+   "seed": 108,
+   "k_requests": 512,
+   "k_read_beats": 652,
+   "k_writes": 118,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 68,
+   "b_rsp_ready_percent": 56,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1919,
+   "cycles_local": 1571,
+   "cycles_pipe": 1352,
+   "first_k_latency_pipe": 69,
+   "first_k_latency_mono": 77,
+   "first_k_latency_local": 80,
+   "k_wr_done_events": {
+    "mono": 115,
+    "local": 113,
+    "pipe": 111
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 54.9,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_109",
+   "seed": 109,
+   "k_requests": 512,
+   "k_read_beats": 664,
+   "k_writes": 127,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 69,
+   "b_rsp_ready_percent": 63,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1733,
+   "cycles_local": 1818,
+   "cycles_pipe": 1332,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 60,
+   "first_k_latency_local": 64,
+   "k_wr_done_events": {
+    "mono": 121,
+    "local": 123,
+    "pipe": 118
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 58.3,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_110",
+   "seed": 110,
+   "k_requests": 512,
+   "k_read_beats": 646,
+   "k_writes": 142,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 70,
+   "b_rsp_ready_percent": 70,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1910,
+   "cycles_local": 1511,
+   "cycles_pipe": 1284,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 55,
+   "first_k_latency_local": 59,
+   "k_wr_done_events": {
+    "mono": 131,
+    "local": 131,
+    "pipe": 134
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 58.3,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "mixed_random_111",
+   "seed": 111,
+   "k_requests": 512,
+   "k_read_beats": 654,
+   "k_writes": 131,
+   "b_requests": 2048,
+   "k_rsp_ready_percent": 71,
+   "b_rsp_ready_percent": 77,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 1872,
+   "cycles_local": 1416,
+   "cycles_pipe": 1247,
+   "first_k_latency_pipe": 68,
+   "first_k_latency_mono": 56,
+   "first_k_latency_local": 59,
+   "k_wr_done_events": {
+    "mono": 120,
+    "local": 122,
+    "pipe": 121
+   },
+   "k_grants": {
+    "mono": 512,
+    "local": 512,
+    "pipe": 512
+   },
+   "b_grants": {
+    "mono": 2048,
+    "local": 2048,
+    "pipe": 2048
+   },
+   "sim_seconds": 54.2,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "k_idle_region_0",
+   "seed": 900,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 73,
+   "first_k_latency_pipe": 70,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 28.3,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "k_idle_region_1",
+   "seed": 901,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 69,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 28.6,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "k_idle_region_2",
+   "seed": 902,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 67,
+   "first_k_latency_pipe": 64,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 25.5,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "k_idle_region_3",
+   "seed": 903,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 63,
+   "first_k_latency_pipe": 60,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 28.3,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "k_idle_region_4",
+   "seed": 904,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 63,
+   "first_k_latency_pipe": 60,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 25.2,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "k_idle_region_5",
+   "seed": 905,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 67,
+   "first_k_latency_pipe": 64,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 26.2,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "k_idle_region_6",
+   "seed": 906,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 69,
+   "first_k_latency_pipe": 66,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 26.1,
+   "pass": true,
+   "k_rd_fence": 0
+  },
+  {
+   "scenario": "k_idle_region_7",
+   "seed": 907,
+   "k_requests": 1,
+   "k_read_beats": 1,
+   "k_writes": 0,
+   "b_requests": 0,
+   "k_rsp_ready_percent": 100,
+   "b_rsp_ready_percent": 100,
+   "stdout_tail": [
+    "DONE"
+   ],
+   "mono_errors": [],
+   "local_errors": [],
+   "pipe_errors": [],
+   "arms_identical": true,
+   "cycles_mono": 56,
+   "cycles_local": 60,
+   "cycles_pipe": 73,
+   "first_k_latency_pipe": 70,
+   "first_k_latency_mono": 53,
+   "first_k_latency_local": 57,
+   "k_wr_done_events": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "k_grants": {
+    "mono": 1,
+    "local": 1,
+    "pipe": 1
+   },
+   "b_grants": {
+    "mono": 0,
+    "local": 0,
+    "pipe": 0
+   },
+   "sim_seconds": 23.6,
+   "pass": true,
+   "k_rd_fence": 0
+  }
+ ],
+ "kv_prefetch_bench": [
+  {
+   "arbiter": "monolithic",
+   "k_rd_fence": null,
+   "pass": true,
+   "summary": [
+    "KVPF_CASES max_descriptor_ops=2 max_words=640 user_slice_ops=3 slice_base=4096",
+    "KVPF_WRAP done=1 writes=6 hits=10 mismatches=0",
+    "KVPF ops=38 words_read=4383 bad=0 held_min=166 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=2 hbm_kv_mismatch=0 fault=0 code=00000",
+    "KEYS reads=608012 bad=0 writes=593 wr_done=593 contended=1385 kv_grants=5925",
+    "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
+    "PASS"
+   ],
+   "sim_seconds": 3.2,
+   "log_sha256": "59caa5b7634982c3a6c10a8aed6e02bcbc3117071126e3612b5eb63ab8e9da42"
+  },
+  {
+   "arbiter": "local",
+   "k_rd_fence": 1,
+   "pass": true,
+   "summary": [
+    "KVPF_CASES max_descriptor_ops=2 max_words=640 user_slice_ops=3 slice_base=4096",
+    "KVPF_WRAP done=1 writes=6 hits=10 mismatches=0",
+    "KVPF ops=38 words_read=4343 bad=0 held_min=213 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=7 hbm_kv_mismatch=0 fault=0 code=00000",
+    "KEYS reads=640684 bad=0 writes=616 wr_done=614 contended=1268 kv_grants=5846",
+    "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
+    "PASS"
+   ],
+   "sim_seconds": 3.8,
+   "log_sha256": "0e973fc5af4c44ec5264e4d917811a9bfe0bacc7896655ed894964ddd0c2217d"
+  },
+  {
+   "arbiter": "local",
+   "k_rd_fence": 0,
+   "pass": true,
+   "summary": [
+    "KVPF_CASES max_descriptor_ops=2 max_words=640 user_slice_ops=3 slice_base=4096",
+    "KVPF_WRAP done=1 writes=6 hits=10 mismatches=0",
+    "KVPF ops=38 words_read=4406 bad=0 held_min=161 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=2 hbm_kv_mismatch=0 fault=0 code=00000",
+    "KEYS reads=616291 bad=0 writes=580 wr_done=578 contended=1244 kv_grants=5949",
+    "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
+    "PASS"
+   ],
+   "sim_seconds": 3.1,
+   "log_sha256": "556df61098e9514869d61d09d80cdc8182d798eecfdeee4b5fb1ab327324b9cf"
+  },
+  {
+   "arbiter": "pipelined local",
+   "k_rd_fence": 1,
+   "pass": true,
+   "summary": [
+    "KVPF_CASES max_descriptor_ops=2 max_words=640 user_slice_ops=3 slice_base=4096",
+    "KVPF_WRAP done=1 writes=6 hits=10 mismatches=0",
+    "KVPF ops=38 words_read=4356 bad=0 held_min=184 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=2 hbm_kv_mismatch=0 fault=0 code=00000",
+    "KEYS reads=639622 bad=0 writes=621 wr_done=618 contended=1357 kv_grants=5870",
+    "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
+    "PASS"
+   ],
+   "sim_seconds": 4.9,
+   "log_sha256": "5c8a89e642445ae95a0ab7f3adb1c918c712bea0df857b3d6309fadc5dccf1c7"
+  },
+  {
+   "arbiter": "pipelined local",
+   "k_rd_fence": 0,
+   "pass": true,
+   "summary": [
+    "KVPF_CASES max_descriptor_ops=2 max_words=640 user_slice_ops=3 slice_base=4096",
+    "KVPF_WRAP done=1 writes=6 hits=10 mismatches=0",
+    "KVPF ops=38 words_read=4259 bad=0 held_min=234 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=2 hbm_kv_mismatch=0 fault=0 code=00000",
+    "KEYS reads=634469 bad=0 writes=608 wr_done=606 contended=1277 kv_grants=5695",
+    "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
+    "PASS"
+   ],
+   "sim_seconds": 4.3,
+   "log_sha256": "336272c505c098b3453faa9824d0256e7e65a522a5ab0ce821424b26a82d07de"
+  }
+ ],
+ "hash_steering_exhaustive": {
+  "summary": "KARB_HASH n=131072 got=131072 pipe_got=131072 bad=0 multi=25364 ingress_stalls=0",
+  "pass": false
+ },
+ "pass": false,
+ "added_uncontended_k_round_trip_cycles": [
+  4
+ ],
+ "pipe_added_uncontended_k_round_trip_cycles_by_region": {
+  "0": 17,
+  "1": 13,
+  "2": 11,
+  "3": 7,
+  "4": 7,
+  "5": 11,
+  "6": 13,
+  "7": 17
+ },
+ "cycle_summary": {
+  "local": {
+   "fence_1": {
+    "scenarios": 18,
+    "drain_ratio_min": 0.832,
+    "max": 1.412,
+    "mean": 1.106
+   },
+   "fence_0": {
+    "scenarios": 18,
+    "drain_ratio_min": 0.679,
+    "max": 1.049,
+    "mean": 0.885
+   }
+  },
+  "pipe": {
+   "fence_1": {
+    "scenarios": 18,
+    "drain_ratio_min": 0.639,
+    "max": 1.01,
+    "mean": 0.834
+   },
+   "fence_0": {
+    "scenarios": 18,
+    "drain_ratio_min": 0.653,
+    "max": 1.01,
+    "mean": 0.743
+   }
+  }
+ },
+ "verdict_note": "PARTIAL / criterion artifact: every trace scenario (3 arms, fence on/off) and all 5 KV-prefetch bench arms pass; the exhaustive steering check delivered all 131,072 requests to the correct PC with the correct payload in both local arms (bad=0, no ingress stall) but its 'multi' criterion (at most one PHY request per cycle) is only valid for the one-stage local partition: the pipelined arm legitimately issues to several PCs in one cycle because regions sit at different trunk depths. Not re-run (root halt 2026-09-29). pass=false is kept as recorded."
+}
