@@ -487,7 +487,7 @@ DEDICATED = dict(
         element="ot_hdc_v41x_attn_tile #(H=16, TD=32): 16 heads x 32 BF16 products per cycle, stationary banks; "
                 "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
         products_per_element=16 * 32, H=16, D=512, TD=32,
-        q_bits=512 * 16, kv_row_bits=16 * 265, p_word_bits=32 * 16, pv_out_bits_per_tile=8 * 16 * 32,
+        q_bits=512 * 16, kv_row_bits=16 * 265, p_word_bits=32 * 16, pv_out_bits_per_tile=16 * 32,
         area_est_um2=16 * 32 * UNIT["mac_bf16_um2"],
         area_basis="ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
         hardened_record="results/physical_abi3/asap7/hdc/v41x/w11/attn_tile_td32_nb4/physical.json",
@@ -535,13 +535,15 @@ def _su_softmax_ops(N, M, heads=16, T=640, hd=512):
     out = {}
     for k, f in ops.items():
         lay = C.layout(f, N, M)
-        out[k] = dict(vectors=lay["nv"], depth=lay["dR"] if f["red"] else lay["dP"], vw=lay["vw"],
+        out[k] = dict(vectors_per_row_set=lay["nv"], vectors=lay["nv"], depth=lay["dR"] if f["red"] else lay["dP"], vw=lay["vw"],
                       span=bool(lay["span"]), bad=bool(lay["bad"]))
     return out
 
 
-def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20):
-    """Element, replicas, ports, area and per-op cycles of the four dedicated units of design `d`."""
+def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20, positions: int = 1):
+    """Element, replicas, ports, area and per-op cycles of the four dedicated units of design `d`.
+    positions > 1: an MTP verify pass time-multiplexed on the same lanes (m = 1): the index keys, KV rows and
+    probabilities of the block are read once, every position's MACs and stream elements are issued in turn."""
     E = A._env()
     c, clock = E["c"], E["clock"]
     ops, meta = A.ops_of_layer(c, layer, ctx)
@@ -558,7 +560,7 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20):
     a_h, q_h = _hardened_um2(u["hardened_record"])
     a_el = a_h * u["hardened_scale"] if a_h else u["area_est_um2"]
     reader_Bpc = d["idx_reader_Bpc"] or min(A.ROM_DIE_HBM_BPS / clock, 1e18)
-    t_mac = math.ceil(keys / kpc) if keys else 0
+    t_mac = positions * math.ceil(keys / kpc) if keys else 0
     t_rd = keys * A.IDX_KEY_B / reader_Bpc if keys else 0.0
     out["indexer"] = dict(
         element=u["element"], sub_element=u["sub_element"], replicas=rep_i, keys_per_cycle=kpc,
@@ -568,7 +570,7 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20):
         storage_bits=rep_i * (u["query_bits"] + u["meta_fifo_bits"]),
         area_element_um2=round(a_el), area_basis="hardened x16 chunks" if a_h else u["area_basis"],
         hardened=q_h, area_mm2=round(rep_i * a_el / 1e6, 3),
-        ops={f"L{layer}.attn.idx.score": dict(keys=keys, t_mac=t_mac, t_reader=round(t_rd, 1),
+        ops={f"L{layer}.attn.idx.score": dict(keys=keys, positions=positions, t_mac=t_mac, t_reader=round(t_rd, 1),
                                                issue=round(max(t_mac, t_rd), 1), latency=u["latency"],
                                                bind="reader" if t_rd > t_mac else "mac")})
     # -- index reader
@@ -607,9 +609,10 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20):
         stationary_banks=4 if pwords == 2 else 3,
         area_element_um2=round(a_el), area_basis="hardened" if a_h else u["area_basis"], hardened=q_h,
         area_mm2=round(tiles * a_el / 1e6, 3),
-        ops={f"L{layer}.attn.scores": dict(beats=beats, issue=beats, tile_latency=27 + 3 * lvt),
+        ops={f"L{layer}.attn.scores": dict(beats=beats, positions=positions, issue=positions * beats,
+                                           tile_latency=27 + 3 * lvt),
              f"L{layer}.attn.pv": dict(beats=beats, p_words=math.ceil(T * u["H"] * 16 / u["p_word_bits"]),
-                                       pwords_per_cycle=pwords, issue=pv_cycles,
+                                       pwords_per_cycle=pwords, positions=positions, issue=positions * pv_cycles,
                                        note="p.v issue = blocks x max(beats/block, p-load cycles/block)")},
         measured=dict(record=u["measured_record"], job_cycles_pwords1=u["measured_job_cycles_pwords1"],
                       pv_window_pwords1=u["measured_pv_window_pwords1"]))
@@ -617,6 +620,8 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20):
     u = DEDICATED["stream_unit"]
     N, M = d["su_lanes"], d["sfu_lanes"]
     sm = _su_softmax_ops(N, M, T=T)
+    for v in sm.values():
+        v["vectors"] *= positions
     aL, qL = _hardened_um2(u["hardened_record_light"])
     aS, qS = _hardened_um2(u["hardened_record_sfu"])
     light = aL or u["area_est_light_um2"]
@@ -634,7 +639,7 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20):
         softmax_issue_vectors=sum(v["vectors"] for v in sm.values()),
         measured=dict(record=u["measured_record"], t640_n16_m8=u["measured_softmax_t640_n16_m8"]))
     hub = sum(out[k]["area_mm2"] for k in ("indexer", "attention", "stream_unit"))
-    return dict(design=d["name"], ctx=ctx, layer=layer, T=T, keys_per_die=keys, units=out,
+    return dict(design=d["name"], ctx=ctx, layer=layer, T=T, positions=positions, keys_per_die=keys, units=out,
                 hub_logic_mm2=round(hub, 3), hub_avail_mm2=FLOORPLAN["hub_mm2"], discrepancies=flags)
 
 
