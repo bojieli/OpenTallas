@@ -13,7 +13,9 @@
 // KPER cycles), KCRED (outstanding K reads per PC), LEAD, RATE (the no-stall
 // admission), STALL (bench build parameter).
 // ---------------------------------------------------------------------------
-module tb_v41_qe_shared_stall #(parameter integer STALL = 1, LWIN = 10);
+module tb_v41_qe_shared_stall #(parameter integer STALL = 1, LWIN = 10,
+    // in-flight sweep (defaults: the qualified qstream look-ahead and weight-adapter geometry)
+    parameter integer LA = 8, W_ND = 8, W_DEPTH = 16, W_ROOM = 16);
     localparam integer NB = 160, TILES = 3, NOUT = 320, IL = 8, BL = 16;
     localparam integer WORDS = TILES * NB * IL, SPW = 17, WBASE = 65536, WIN = 1 << LWIN;
     localparam integer MEMW = 131072;
@@ -45,6 +47,21 @@ module tb_v41_qe_shared_stall #(parameter integer STALL = 1, LWIN = 10);
     integer kout [0:31];
     integer w_sectors = 0;
     integer ky;
+    // limiter attribution while the stream still has words to request (w_st == W_REQ)
+    integer lim_req = 0, lim_issue = 0, lim_none = 0, lim_window = 0, lim_room = 0, lim_bp = 0, lim_slot = 0;
+    integer inflight_max = 0, inflight_sum = 0;
+    always @(posedge clk) if (rst_n && stream.w_st == 8 && qe_end < 0) begin
+        lim_req <= lim_req + 1;
+        if (hv && hr) lim_issue <= lim_issue + 1;
+        if (hv && !hr) begin lim_bp <= lim_bp + 1; if (hbm.u_w.slot < 0) lim_slot <= lim_slot + 1; end
+        if (!hv && !stream.la_any) begin
+            lim_none <= lim_none + 1;
+            if (stream.la_g[0] - stream.cons >= WIN) lim_window <= lim_window + 1;
+            else lim_room <= lim_room + 1;
+        end
+        inflight_sum <= inflight_sum + (stream.e_g0 + stream.e_i - stream.cp);
+        if (stream.e_g0 + stream.e_i - stream.cp > inflight_max) inflight_max <= stream.e_g0 + stream.e_i - stream.cp;
+    end
 
     initial begin
         $readmemh("x.mem", xmem);
@@ -96,6 +113,8 @@ module tb_v41_qe_shared_stall #(parameter integer STALL = 1, LWIN = 10);
                 $display("V41QEHBM reads=%0d acts=%0d row_hits=%0d row_conflicts=%0d lat_sum_ps=%0d lat_max_ps=%0d bp_cycles=%0d",
                          rd, act, hit, conf, hbm.u_mem.st_rd_lat_sum, hbm.u_mem.st_rd_lat_max, hbm.u_mem.st_bp_cycles);
             end
+            $display("V41QELIM req_cycles=%0d issue=%0d adapter_bp=%0d adapter_no_slot=%0d la_blocked=%0d la_window_full=%0d la_pc_room=%0d inflight_max=%0d inflight_sum=%0d",
+                     lim_req, lim_issue, lim_bp, lim_slot, lim_none, lim_window, lim_room, inflight_max, inflight_sum);
             $finish;
         end
         if (cycles > 400000) begin $display("V41QESHARED status=timeout seen=%0d", seen); $finish; end
@@ -147,7 +166,7 @@ module tb_v41_qe_shared_stall #(parameter integer STALL = 1, LWIN = 10);
         .w_we(outwe), .w_addr(outaddr), .w_mask(mask), .w_data(outdata),
         .kvb_v(), .kvb_src_addr(), .kvb_codes(), .kvb_scale(), .kvb_fault(),
         .qr_re(qr_re), .qr_addr(qr_addr), .qr_q(qr_q), .qr_issue_ready(STALL ? qr_ready : 1'b1), .fault(qe_fault));
-    ot_hdc_qstream #(.FULL_SHAPE(1), .ALLOW_QE_STALL(STALL), .NPC(32), .LWIN(LWIN)) stream (
+    ot_hdc_qstream #(.FULL_SHAPE(1), .ALLOW_QE_STALL(STALL), .NPC(32), .LWIN(LWIN), .LA(LA)) stream (
         .clk(clk), .rst_n(rst_n), .cfg_base(30'(WBASE)), .cfg_lbase(12'b0), .cfg_lead(21'(lead)),
         .cfg_rate(16'(rate)), .tok_start(start), .pos(21'd1),
         .l_re(lr), .l_addr(la), .l_q(lq), .vi_re(), .vi_addr(), .vi_q(32'b0), .wrel_v(1'b0),
@@ -157,7 +176,7 @@ module tb_v41_qe_shared_stall #(parameter integer STALL = 1, LWIN = 10);
         .hq_v(hv), .hq_rdy(hr), .hq_addr(ha), .hq_len(hl), .hq_tag(ht), .hq_room(room),
         .hr_v(rv), .hr_rdy(rr), .hr_tag(rt), .hr_beat(rb), .hr_data(rd),
         .fault(qs_fault), .fault_why(qs_why), .st_fetched(qs_fetched), .st_consumed(qs_consumed));
-    ot_chip_v41x_shared_hbm_model #(.MEM_WORDS(MEMW), .WTAGW(LWIN)) hbm (
+    ot_chip_v41x_shared_hbm_model #(.MEM_WORDS(MEMW), .WTAGW(LWIN), .W_ND(W_ND), .W_DEPTH(W_DEPTH), .W_ROOM(W_ROOM)) hbm (
         .clk(clk), .rst_n(rst_n), .kbase(30'b0), .kcount(30'd65536), .wbase(30'(WBASE)), .wcount(30'd65536),
         .k_v(kv), .k_rdy(krdy), .k_addr(ka), .k_len(kl), .k_tag(544'b0), .k_we(32'b0), .k_data(8192'b0),
         .k_strb(1024'b0), .k_done(kdone), .kr_v(krv), .kr_rdy(32'hffffffff), .kr_tag(krtag), .kr_beat(krbeat),
