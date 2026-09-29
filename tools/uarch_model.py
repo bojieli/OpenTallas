@@ -444,6 +444,201 @@ def network_ledger(d: dict, clock: float):
 
 
 # ---------------------------------------------------------------------------------------------------------
+# Dedicated units (W11): each unit is ONE element replicated to the count the design needs.  Same schema for
+# every unit: element (RTL module + parameters), replica count (must be whole), ports per element and in total,
+# storage, area per element (a hardened element when one exists, else a marked estimate), and the per-op cycles
+# of the L20 (busiest scanning layer) ops at the design's context, which is what evaluate() prices.
+# Shared by the V4.1 ROM and V4.1 HBM dies (the hub region of the W1 floorplan).
+# ---------------------------------------------------------------------------------------------------------
+HBM_PC_SECTORS_PER_CYCLE = (1e12 / 1.0339e9) / 1024.0
+                                                # one 32-B burst per 1,024 ps per pseudo-channel (HBM3E 1 TB/s over
+                                                # 32 PCs; rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv) at 967.2 ps/cycle
+HBM_PCS_DIE = 4 * 32                            # four stacks x 32 pseudo-channels
+SECTOR_B = 32
+DEDICATED = dict(
+    indexer=dict(
+        element="ot_hdc_v41x_idx_score_slice #(NK=4, NB=4, IH=32): 4 keys x 32 heads x 128 FP4 dims per cycle "
+                "(16 x ot_hdc_v41x_idx_chunk + 4 x ot_hdc_v41x_idx_tail); rtl/hdc/v41x/ot_hdc_v41x_idx_score_slice.sv",
+        sub_element="ot_hdc_v41x_idx_chunk #(NB=4, NKT=1): 8 heads x 1 key, 32 exact FP4 32-block dots = 1,024 MACs",
+        macs_per_element=4 * 32 * 128, keys_per_element=4,
+        key_bits_in=4 * 544,                    # 4 keys x (512 FP4 code bits + 4 UE8M0 scales + pad) per cycle
+        query_bits=17920,                       # 32 heads x (128 FP4 + 4 scales + BF16 weight), one copy per slice
+        meta_fifo_bits=64 * 35,                 # score-metadata FIFO (index, mask, last), IW=30
+        out_bits=4 * (16 + 30),                 # BF16 score + global index per key
+        latency=48,                             # first score after the key beat (results/rtl/v41_idx_score_slice.json)
+        area_est_um2=16 * 32 * UNIT["blockdot_um2"] + 4 * 17310.0,
+        area_basis="ESTIMATE until hardened: 512 FP4 block dots at the closed FP8/FP4 weight lane's area "
+                   "(ot_hdc_blockdot, 2,511 um2 per 32-product lane) + the per-key head-sum (idx_hsum 17,310 um2 "
+                   "closed, per key of 4)",
+        hardened_record="results/physical_abi3/asap7/hdc/v41x/w11/idx_chunk/physical.json",
+        hardened_scale=16,                      # 16 chunks per NK=4 slice (+ 4 tails, 1% of a chunk)
+    ),
+    idx_reader=dict(
+        element="per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / "
+                "_kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
+        replicas_fixed=HBM_PCS_DIE,
+        bytes_per_key=A.IDX_KEY_B, sector_B=SECTOR_B,
+        peak_sectors_per_cycle=HBM_PCS_DIE * HBM_PC_SECTORS_PER_CYCLE,
+        collector_out_bits=64 * 544,
+        measured_record="results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json",
+        measured_sectors_per_cycle=60.04,       # 557,056 sectors in 9,278 cycles (262,144 keys)
+    ),
+    attention=dict(
+        element="ot_hdc_v41x_attn_tile #(H=16, TD=32): 16 heads x 32 BF16 products per cycle, stationary banks; "
+                "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+        products_per_element=16 * 32, H=16, D=512, TD=32,
+        q_bits=512 * 16, kv_row_bits=16 * 265, p_word_bits=32 * 16, pv_out_bits_per_tile=8 * 16 * 32,
+        area_est_um2=16 * 32 * UNIT["mac_bf16_um2"],
+        area_basis="ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
+        hardened_record="results/physical_abi3/asap7/hdc/v41x/w11/attn_tile_td32_nb4/physical.json",
+        hardened_scale=1,
+        measured_record="results/rtl/v41_full_attention_numeric/result.json",
+        measured_job_cycles_pwords1=609, measured_pv_window_pwords1=(248, 559),
+    ),
+    stream_unit=dict(
+        element="ot_hdc_v41x_vec_lane (KIND 0 light / 1 SFU / 2 full lane 0) under ONE controller and ONE "
+                "chunk8 reducer (ot_hdc_v41x_vec, ot_hdc_v41x_vec_red); rtl/hdc/v41x/ot_hdc_v41x_vec*.sv",
+        read_streams=4, AW=24,
+        area_est_light_um2=UNIT["su_light_lane_um2"], area_est_sfu_um2=UNIT["su_lane_um2"],
+        area_basis="ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the "
+                   "synthesis-only ot_hdc_v41_su_lane",
+        hardened_record_light="results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024/physical.json",
+        hardened_record_sfu="results/physical_abi3/asap7/hdc/v41x/w11/vec_sfu1024/physical.json",
+        measured_record="results/rtl/v41x_su_softmax.json", measured_softmax_t640_n16_m8=3280,
+    ),
+)
+
+
+def _hardened_um2(rel):
+    p = ROOT / rel
+    if not p.exists():
+        return None, None
+    dsg = json.loads(p.read_text()).get("design", {})
+    return dsg.get("area_um2"), dict(fmax_mhz=round((dsg.get("fmax_hz") or 0) / 1e6, 1), closed=dsg.get("closed"))
+
+
+def _su_softmax_ops(N, M, heads=16, T=640, hd=512):
+    """The attention softmax chain as SU ops (tools/rtl_v41x_su_softmax_campaign.fixture), laid out by the RTL's
+    own layout rule (tools/rtl_hdc_v41x_vec_campaign.layout): vectors per op and emit->result depth."""
+    import rtl_hdc_v41x_vec_campaign as C
+    import hdc_isa_v41 as I
+    base = C.op_defaults()
+    common = dict(nout=heads, nin=T, abase=0, aso=T, asi=1, dst=I.DST_VM, obase=0, oso=T, osi=1)
+    ops = dict(
+        max=dict(base, **common, m1=I.M1_AIMM, red=I.RED_MAX, rbase=16384, rso=1),
+        exp_sum=dict(base, **common, bbase=16384, bso=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM, rbase=16400,
+                     rso=1),
+        sink=dict(base, nout=1, nin=heads, asrc=I.SRC_CLO, asi=1, bbase=16384, bsi=1, ad=I.AD_NEGB, sfu=I.SFU_EXP,
+                  cbase=16400, csi=1, e1=I.E1_ADDC, dst=I.DST_VM, obase=16416, osi=1),
+        divide=dict(base, nout=heads, nin=hd, abase=17408, aso=hd, asi=1, bbase=16416, bso=1, m1=I.M1_DIVB, rnd=1,
+                    dst=I.DST_VM, obase=17408, oso=hd, osi=1))
+    out = {}
+    for k, f in ops.items():
+        lay = C.layout(f, N, M)
+        out[k] = dict(vectors=lay["nv"], depth=lay["dR"] if f["red"] else lay["dP"], vw=lay["vw"],
+                      span=bool(lay["span"]), bad=bool(lay["bad"]))
+    return out
+
+
+def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20):
+    """Element, replicas, ports, area and per-op cycles of the four dedicated units of design `d`."""
+    E = A._env()
+    c, clock = E["c"], E["clock"]
+    ops, meta = A.ops_of_layer(c, layer, ctx)
+    keys = int(meta["n_scan"] / 4) if meta["n_scan"] else 0          # keys per die (tensor group 4)
+    T = meta["T"]
+    out, flags = {}, []
+    # -- indexer
+    u = DEDICATED["indexer"]
+    rep = d["idx_macs"] / u["macs_per_element"]
+    if abs(rep - round(rep)) > 1e-9:
+        flags.append(f"indexer: idx_macs {d['idx_macs']} is {rep:.3f} NK=4 slices (not whole)")
+    rep_i = math.ceil(rep)
+    kpc = rep_i * u["keys_per_element"]
+    a_h, q_h = _hardened_um2(u["hardened_record"])
+    a_el = a_h * u["hardened_scale"] if a_h else u["area_est_um2"]
+    reader_Bpc = d["idx_reader_Bpc"] or min(A.ROM_DIE_HBM_BPS / clock, 1e18)
+    t_mac = math.ceil(keys / kpc) if keys else 0
+    t_rd = keys * A.IDX_KEY_B / reader_Bpc if keys else 0.0
+    out["indexer"] = dict(
+        element=u["element"], sub_element=u["sub_element"], replicas=rep_i, keys_per_cycle=kpc,
+        macs_per_cycle=rep_i * u["macs_per_element"],
+        ports_per_element=dict(key_in_bits=u["key_bits_in"], score_out_bits=u["out_bits"], query_bits=u["query_bits"]),
+        ports_total=dict(key_in_bits=rep_i * u["key_bits_in"], score_out_bits=rep_i * u["out_bits"]),
+        storage_bits=rep_i * (u["query_bits"] + u["meta_fifo_bits"]),
+        area_element_um2=round(a_el), area_basis="hardened x16 chunks" if a_h else u["area_basis"],
+        hardened=q_h, area_mm2=round(rep_i * a_el / 1e6, 3),
+        ops={f"L{layer}.attn.idx.score": dict(keys=keys, t_mac=t_mac, t_reader=round(t_rd, 1),
+                                               issue=round(max(t_mac, t_rd), 1), latency=u["latency"],
+                                               bind="reader" if t_rd > t_mac else "mac")})
+    # -- index reader
+    u = DEDICATED["idx_reader"]
+    need_spc = reader_Bpc / u["sector_B"]
+    out["idx_reader"] = dict(
+        element=u["element"], replicas=u["replicas_fixed"], target_bytes_per_cycle=round(reader_Bpc, 1),
+        target_sectors_per_cycle=round(need_spc, 2), hbm_peak_sectors_per_cycle=round(u["peak_sectors_per_cycle"], 2),
+        per_pc_target_sectors_per_cycle=round(need_spc / u["replicas_fixed"], 4),
+        measured_sectors_per_cycle=u["measured_sectors_per_cycle"], measured_record=u["measured_record"],
+        collector_out_bits=u["collector_out_bits"],
+        ops={f"L{layer}.attn.idx.score(read)": dict(sectors=keys * A.IDX_KEY_B // u["sector_B"],
+                                                     cycles_at_target=round(keys * A.IDX_KEY_B / reader_Bpc, 1),
+                                                     cycles_measured=round(keys * A.IDX_KEY_B / u["sector_B"]
+                                                                           / u["measured_sectors_per_cycle"], 1))})
+    # -- attention
+    u = DEDICATED["attention"]
+    per_row = u["H"] * u["D"]
+    NL = d["att_macs"] / per_row
+    if abs(NL - round(NL)) > 1e-9:
+        flags.append(f"attention: att_macs {d['att_macs']} is NL={NL:.3f} rows/cycle (not whole)")
+    NL = max(1, round(NL))
+    tiles = NL * u["D"] // u["TD"]
+    pwords = d.get("att_pwords", 1)           # 2 = the two-word probability loader (W11)
+    PB, DPT = u["H"], u["D"] // tiles                 # p words per TD-row block; p.v beats per block
+    beats = math.ceil(T / NL)
+    load_per_blk = math.ceil(PB / pwords)
+    pv_cycles = math.ceil(T / u["TD"]) * max(DPT, load_per_blk)
+    a_h, q_h = _hardened_um2(u["hardened_record"])
+    a_el = a_h if a_h else u["area_est_um2"]
+    lvt = int(math.log2(u["TD"] // 8))
+    out["attention"] = dict(
+        element=u["element"], replicas=tiles, rows_per_cycle=NL, products_per_cycle=tiles * u["products_per_element"],
+        ports_total=dict(q_bits=u["q_bits"], kv_in_bits=NL * u["kv_row_bits"], p_in_bits=pwords * u["p_word_bits"],
+                         pv_out_bits=tiles * u["pv_out_bits_per_tile"]),
+        stationary_banks=4 if pwords == 2 else 3,
+        area_element_um2=round(a_el), area_basis="hardened" if a_h else u["area_basis"], hardened=q_h,
+        area_mm2=round(tiles * a_el / 1e6, 3),
+        ops={f"L{layer}.attn.scores": dict(beats=beats, issue=beats, tile_latency=27 + 3 * lvt),
+             f"L{layer}.attn.pv": dict(beats=beats, p_words=math.ceil(T * u["H"] * 16 / u["p_word_bits"]),
+                                       pwords_per_cycle=pwords, issue=pv_cycles,
+                                       note="p.v issue = blocks x max(beats/block, p-load cycles/block)")},
+        measured=dict(record=u["measured_record"], job_cycles_pwords1=u["measured_job_cycles_pwords1"],
+                      pv_window_pwords1=u["measured_pv_window_pwords1"]))
+    # -- stream unit
+    u = DEDICATED["stream_unit"]
+    N, M = d["su_lanes"], d["sfu_lanes"]
+    sm = _su_softmax_ops(N, M, T=T)
+    aL, qL = _hardened_um2(u["hardened_record_light"])
+    aS, qS = _hardened_um2(u["hardened_record_sfu"])
+    light = aL or u["area_est_light_um2"]
+    sfu = aS or u["area_est_sfu_um2"]
+    ports = dict(read_bits=u["read_streams"] * N * 32, gather_bits=N * 32, write_bits=N * 32, kv_write_bits=N * 32,
+                 result_bits=N // 8 * 32)
+    banks = {k: math.ceil(v / 256) for k, v in ports.items()}
+    out["stream_unit"] = dict(
+        element=u["element"], replicas=dict(light=N - M, sfu=M - 1, full=1), lanes=N, sfu_lanes=M,
+        ports_total=ports, vm_banks_256b=banks,
+        area_element_um2=dict(light=round(light), sfu=round(sfu)),
+        area_basis=("hardened" if aL and aS else u["area_basis"]), hardened=dict(light=qL, sfu=qS),
+        area_mm2=round(((N - M) * light + M * sfu) / 1e6, 3),
+        ops={f"L{layer}.attn.softmax.{k}": v for k, v in sm.items()},
+        softmax_issue_vectors=sum(v["vectors"] for v in sm.values()),
+        measured=dict(record=u["measured_record"], t640_n16_m8=u["measured_softmax_t640_n16_m8"]))
+    hub = sum(out[k]["area_mm2"] for k in ("indexer", "attention", "stream_unit"))
+    return dict(design=d["name"], ctx=ctx, layer=layer, T=T, keys_per_die=keys, units=out,
+                hub_logic_mm2=round(hub, 3), hub_avail_mm2=FLOORPLAN["hub_mm2"], discrepancies=flags)
+
+
+# ---------------------------------------------------------------------------------------------------------
 # Qwen3-8B ROM die (O4: two reticles, TP-2, INT8 weights, G weight-lane groups of 16 lanes per die)
 # ---------------------------------------------------------------------------------------------------------
 # The element is already weight-stationary: a group owns its ROM column and 16 lanes; W5 hardens a tile of
@@ -619,7 +814,19 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--qwen", action="store_true", help="the Qwen3-8B ROM die rows only")
     ap.add_argument("--hbm", action="store_true", help="the GPU-organised HBM comparators only")
+    ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
     a = ap.parse_args(argv)
+    if a.dedicated:
+        rows = [dedicated_ledger(copy.deepcopy(PRESETS[n]), a.ctx) for n in (a.preset or ("as_built", "proposal"))]
+        for r in rows:
+            print(f"{r['design']:14s} hub {r['hub_logic_mm2']:7.2f}/{r['hub_avail_mm2']} mm2  "
+                  + "  ".join(f"{k}:{v['area_mm2'] if 'area_mm2' in v else '-'}" for k, v in r["units"].items())
+                  + (f"  DISCREPANCIES {r['discrepancies']}" if r["discrepancies"] else ""))
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.v41_dedicated.v1", ctx=a.ctx, rows=rows,
+                                                   elements=DEDICATED), indent=1, default=str) + "\n")
+        return
     if a.hbm:
         rows = qwen_hbm_rows() + v41_hbm_rows()
         for r in rows:
