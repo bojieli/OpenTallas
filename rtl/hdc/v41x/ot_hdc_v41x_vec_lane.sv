@@ -44,7 +44,8 @@ module ot_hdc_v41x_vec_lane #(
     parameter integer CW = 24,          // internal count width
     parameter integer LN = 3,           // log2 lanes (offset terms)
     parameter integer KIND = 0,         // 0 light, 1 SFU, 2 full (lane 0)
-    parameter integer KVT_SH = 9
+    parameter integer KVT_SH = 9,
+    parameter integer LEAF = 0          // 1: the broadcast tree's LAST stage is this lane's own leaf register (below)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -152,56 +153,107 @@ module ot_hdc_v41x_vec_lane #(
         end
     endfunction
 
-    // ---- offsets: two banks, loaded by the op set-up --------------------------------------------
+    // ---- LEAF: the broadcast's last register stage --------------------------------------------------
+    // LEAF = 0: the lane uses its inputs as they arrive (the controller's broadcast register, or the tree's
+    // leaf outside the lane).  LEAF = 1 (ot_hdc_v41x_vec with BCAST_STAGES > 0): the tree's last stage is
+    // this lane's own register, and it holds the lane-local partials of the vector instead of the raw
+    // fields: the position (o_v + d_o, i_v + d_i), the transposed-KV row (krow + d_o), whether the lane is in
+    // use, and the four stream addresses and the output address (vector base + this lane's offset).  F0 is
+    // then one add / compare level (the liveness compares, the transposed-KV address, the gather index
+    // address) instead of two adds feeding a three-input add.  Same cycle, same values: bit-exact.
+    // Cost: 8 x 24-bit partials + 1 in-use bit, plus the fields F0 still reads (emit, no, ni, obase,
+    // aibase, aind, gsh, cpair, dst, srcs: 105 bits) and the offset load (ld, ld_bank, ld_c).
     reg [AW-1:0] off0 [0:4];
     reg [AW-1:0] off1 [0:4];
+    wire [CW-1:0] lid = {{(CW-11){1'b0}}, lane_id};
+    //: slot (outer) and in-slot (inner) offsets of this lane for a slot size 2^ls
+    wire [CW-1:0] d_o = lid >> ls;
+    wire [CW-1:0] d_i = lid & ((1 << ls) - 1);
+    wire [CW-1:0] ol_c = o_v + d_o, il_c = i_v + d_i;
+    wire [AW-1:0] row_c = krow + d_o[AW-1:0];
+    wire          lin_c = (lid < (1 << lvw));
+    wire [5*AW-1:0] sum_c;
+    genvar gs;
+    generate for (gs = 0; gs < 5; gs = gs + 1) begin : g_sum
+        assign sum_c[gs*AW +: AW] = vb[gs*AW +: AW] + (bank ? off1[gs] : off0[gs]);
+    end endgenerate
+    // what F0 and the offset bank read: the partials and fields at the leaf
+    wire             emit_e, ld_e, ldbank_e, lin_e, cpair_e;
+    wire [CW-1:0]    ol_e, il_e, no_e, ni_e;
+    wire [AW-1:0]    row_e, obase_e, aibase_e;
+    wire [5*AW-1:0]  sum_e;
+    wire [1:0]       aind_e, dst_e;
+    wire [4:0]       gsh_e;
+    wire [7:0]       srcs_e;
+    wire [5*LN*AW-1:0] ldc_e;
+    generate if (LEAF == 0) begin : g_noleaf
+        assign {emit_e, ld_e, ldbank_e, ldc_e} = {emit, ld, ld_bank, ld_c};
+        assign {ol_e, il_e, row_e, lin_e, sum_e} = {ol_c, il_c, row_c, lin_c, sum_c};
+        assign {no_e, ni_e, obase_e, aibase_e, aind_e, dst_e, gsh_e, srcs_e, cpair_e} =
+               {no, ni, obase, aibase, aind, dst, gsh, srcs, cpair};
+    end else begin : g_leaf
+        reg              r_emit, r_ld;
+        reg              r_ldbank, r_lin, r_cpair;
+        reg [CW-1:0]     r_ol, r_il, r_no, r_ni;
+        reg [AW-1:0]     r_row, r_obase, r_aibase;
+        reg [5*AW-1:0]   r_sum;
+        reg [1:0]        r_aind, r_dst;
+        reg [4:0]        r_gsh;
+        reg [7:0]        r_srcs;
+        reg [5*LN*AW-1:0] r_ldc;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin r_emit <= 1'b0; r_ld <= 1'b0; end
+            else begin r_emit <= emit; r_ld <= ld; end
+        end
+        always @(posedge clk) begin
+            r_ldbank <= ld_bank; r_ldc <= ld_c;
+            r_ol <= ol_c; r_il <= il_c; r_row <= row_c; r_lin <= lin_c; r_sum <= sum_c;
+            r_no <= no; r_ni <= ni; r_obase <= obase; r_aibase <= aibase; r_aind <= aind; r_dst <= dst;
+            r_gsh <= gsh; r_srcs <= srcs; r_cpair <= cpair;
+        end
+        assign {emit_e, ld_e, ldbank_e, ldc_e} = {r_emit, r_ld, r_ldbank, r_ldc};
+        assign {ol_e, il_e, row_e, lin_e, sum_e} = {r_ol, r_il, r_row, r_lin, r_sum};
+        assign {no_e, ni_e, obase_e, aibase_e, aind_e, dst_e, gsh_e, srcs_e, cpair_e} =
+               {r_no, r_ni, r_obase, r_aibase, r_aind, r_dst, r_gsh, r_srcs, r_cpair};
+    end endgenerate
+
+    // ---- offsets: two banks, loaded by the op set-up --------------------------------------------
     integer s, k;
     reg [AW-1:0] acc;
     always @(posedge clk) begin
-        if (ld) begin
+        if (ld_e) begin
             for (s = 0; s < 5; s = s + 1) begin
                 acc = {AW{1'b0}};
                 for (k = 0; k < LN; k = k + 1)
-                    if (lane_id[k]) acc = acc + ld_c[(s*LN + k)*AW +: AW];
-                if (ld_bank) off1[s] <= acc; else off0[s] <= acc;
+                    if (lane_id[k]) acc = acc + ldc_e[(s*LN + k)*AW +: AW];
+                if (ldbank_e) off1[s] <= acc; else off0[s] <= acc;
             end
         end
     end
 
-    // ---- F0: position, liveness, addresses ------------------------------------------------------
-    //: slot (outer) and in-slot (inner) offsets of this lane for a slot size 2^ls
-    wire [CW-1:0] lid = {{(CW-11){1'b0}}, lane_id};
-    wire [CW-1:0] d_o = lid >> ls;
-    wire [CW-1:0] d_i = lid & ((1 << ls) - 1);
-    wire [CW-1:0] ol = o_v + d_o, il = i_v + d_i;
-    wire lane_in = (lid < (1 << lvw));
-    wire live0 = emit && lane_in && (ol < no) && (il < ni);
-    wire [AW-1:0] a_off = bank ? off1[0] : off0[0];
-    wire [AW-1:0] b_off = bank ? off1[1] : off0[1];
-    wire [AW-1:0] c_off = bank ? off1[2] : off0[2];
-    wire [AW-1:0] d_off = bank ? off1[3] : off0[3];
-    wire [AW-1:0] o_off = bank ? off1[4] : off0[4];
-    wire [AW-1:0] row = krow + d_o[AW-1:0];
-    wire [AW-1:0] kvt = obase + ((row >> 4) << KVT_SH) + (il[AW-1:0] << 4) + {{(AW-4){1'b0}}, row[3:0]};
+    // ---- F0: liveness, addresses ------------------------------------------------------------------
+    wire live0 = emit_e && lin_e && (ol_e < no_e) && (il_e < ni_e);
+    // (il << 4) + row[3:0] is the concatenation {il, row[3:0]}
+    wire [AW-1:0] kvt = obase_e + ((row_e >> 4) << KVT_SH) + {il_e[AW-5:0], row_e[3:0]};
     reg          f_v, f_g, f_par;
     reg [AW-1:0] f_a, f_b, f_c, f_d, f_o;
     reg [7:0]    f_src;
     reg          f_cpair;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin f_v <= 1'b0; vi_re <= 1'b0; end
-        else begin f_v <= live0; vi_re <= live0 && (aind != IND_NONE); end
+        else begin f_v <= live0; vi_re <= live0 && (aind_e != IND_NONE); end
     end
     always @(posedge clk) begin
-        f_g <= (aind != IND_NONE);
-        f_a <= vb[0 +: AW] + a_off;
-        f_b <= vb[AW +: AW] + b_off;
-        f_c <= vb[2*AW +: AW] + c_off;
-        f_d <= vb[3*AW +: AW] + d_off;
-        f_o <= (dst == DST_KVT) ? kvt : vb[4*AW +: AW] + o_off;
-        f_par <= il[0];
-        f_src <= srcs;
-        f_cpair <= cpair;
-        vi_addr <= aibase + ((aind == IND_I) ? il[AW-1:0] : ol[AW-1:0]);
+        f_g <= (aind_e != IND_NONE);
+        f_a <= sum_e[0 +: AW];
+        f_b <= sum_e[AW +: AW];
+        f_c <= sum_e[2*AW +: AW];
+        f_d <= sum_e[3*AW +: AW];
+        f_o <= (dst_e == DST_KVT) ? kvt : sum_e[4*AW +: AW];
+        f_par <= il_e[0];
+        f_src <= srcs_e;
+        f_cpair <= cpair_e;
+        vi_addr <= aibase_e + ((aind_e == IND_I) ? il_e[AW-1:0] : ol_e[AW-1:0]);
     end
     // ---- G1, G2: a gathered A (index from the vector memory, scaled by a power of two) ---------------
     reg          g1_v, g2_v, g1_par, g2_par, g1_cpair, g2_cpair;
@@ -213,7 +265,7 @@ module ot_hdc_v41x_vec_lane #(
         else begin g1_v <= f_v && f_g; g2_v <= g1_v; end
     end
     reg [4:0] f_sh;
-    always @(posedge clk) f_sh <= gsh;
+    always @(posedge clk) f_sh <= gsh_e;
     always @(posedge clk) begin
         g1_a <= f_a; g1_b <= f_b; g1_c <= f_c; g1_d <= f_d; g1_o <= f_o; g1_par <= f_par; g1_src <= f_src;
         g1_cpair <= f_cpair; g1_sh <= f_sh;

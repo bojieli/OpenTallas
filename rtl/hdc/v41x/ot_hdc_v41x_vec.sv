@@ -70,7 +70,10 @@
 // bank, layout, sources), the op-set-up offset loads (ld, ld_bank, ld_c) and the
 // control word of the vector (op selects, immediates, emit / bank / retire meta)
 // from its leaf, and the control pipe the lanes read starts at the leaf (one copy
-// per lane tile physically; one copy here, identical contents).  RET_STAGES
+// per lane tile physically; one copy here, identical contents).  The tree's LAST
+// stage is inside each lane (ot_hdc_v41x_vec_lane LEAF = 1): it registers the
+// lane's partial addresses (position, transposed-KV row, base + offset of every
+// stream), so the lane's first stage is one add / compare level.  RET_STAGES
 // register stages carry every write back to the vector memory: the element
 // writes (vm_*, kv_*) and the reducer's results (res_*).  Every vector crosses
 // both, so every depth grows by BCAST_STAGES + RET_STAGES and nothing reorders:
@@ -597,38 +600,41 @@ module ot_hdc_v41x_vec #(
         b_srcs <= {a_dsrc, a_csrc, a_bsrc, a_asrc}; b_cw <= cw0;
     end
     // BROADCAST TREE: BCAST_STAGES register stages from the broadcast register to the lanes' leaf register.
-    // Everything that travels to the lanes crosses it together: the vector (t_*), its control word (the
-    // control pipe below starts at the leaf) and the op set-up's offset loads (t_ld*), so the lanes see the
-    // same sequence as with no stages, BCAST_STAGES cycles later.
+    // Everything that travels to the lanes crosses it together: the vector, its control word (the control
+    // pipe below starts at the leaf) and the op set-up's offset loads, so the lanes see the same sequence as
+    // with no stages, BCAST_STAGES cycles later.  The first BCAST_STAGES - 1 stages are the tree (tr_*, here);
+    // the LAST stage is each lane's own leaf register (ot_hdc_v41x_vec_lane LEAF = 1), which holds the lane's
+    // partial addresses instead of the raw fields.  The control pipe takes the same last stage here (t_*).
     localparam integer WB = 3 + 4 * CW + 8 + 8 * AW + 4 + 5 + 8 + WC;
     localparam integer WL = 1 + 5 * LN * AW;
+    localparam integer BT = (BCAST_STAGES > 0) ? BCAST_STAGES - 1 : 0;     // stages outside the lanes
     wire [WB-1:0]    b_bus = {b_bank, b_gather, b_cpair, b_ov, b_iv, b_no, b_ni, b_ls, b_lvw, b_vb, b_krow, b_obase,
                               b_aibase, b_aind, b_dst, b_gsh, b_srcs, b_cw};
-    wire [WB-1:0]    t_bus;
-    wire [WL-1:0]    t_lbus;
-    wire             t_emit, t_ld, bt_live;
-    wire             t_bank, t_gather, t_cpair;
-    wire [CW-1:0]    t_ov, t_iv, t_no, t_ni;
-    wire [3:0]       t_ls, t_lvw;
-    wire [5*AW-1:0]  t_vb;
-    wire [AW-1:0]    t_krow, t_obase, t_aibase;
-    wire [1:0]       t_aind, t_dst;
-    wire [4:0]       t_gsh;
-    wire [7:0]       t_srcs;
-    wire [WC-1:0]    t_cw;
-    wire             t_ldbank;
-    wire [5*LN*AW-1:0] t_ldc;
-    ot_hdc_delay #(.W(WB), .D(BCAST_STAGES)) u_bt (.clk(clk), .rst_n(rst_n), .d(b_bus), .q(t_bus));
-    ot_hdc_delay #(.W(WL), .D(BCAST_STAGES)) u_bl (.clk(clk), .rst_n(rst_n), .d({q_bank, p_terms}), .q(t_lbus));
-    assign {t_bank, t_gather, t_cpair, t_ov, t_iv, t_no, t_ni, t_ls, t_lvw, t_vb, t_krow, t_obase, t_aibase, t_aind,
-            t_dst, t_gsh, t_srcs, t_cw} = t_bus;
-    assign {t_ldbank, t_ldc} = t_lbus;
+    wire [WB-1:0]    tr_bus;
+    wire [WL-1:0]    tr_lbus;
+    wire             tr_emit, tr_ld, t_emit, t_gather, bt_live;
+    wire             tr_bank, tr_gather, tr_cpair;
+    wire [CW-1:0]    tr_ov, tr_iv, tr_no, tr_ni;
+    wire [3:0]       tr_ls, tr_lvw;
+    wire [5*AW-1:0]  tr_vb;
+    wire [AW-1:0]    tr_krow, tr_obase, tr_aibase;
+    wire [1:0]       tr_aind, tr_dst;
+    wire [4:0]       tr_gsh;
+    wire [7:0]       tr_srcs;
+    wire [WC-1:0]    tr_cw, t_cw;
+    wire             tr_ldbank;
+    wire [5*LN*AW-1:0] tr_ldc;
+    ot_hdc_delay #(.W(WB), .D(BT)) u_bt (.clk(clk), .rst_n(rst_n), .d(b_bus), .q(tr_bus));
+    ot_hdc_delay #(.W(WL), .D(BT)) u_bl (.clk(clk), .rst_n(rst_n), .d({q_bank, p_terms}), .q(tr_lbus));
+    assign {tr_bank, tr_gather, tr_cpair, tr_ov, tr_iv, tr_no, tr_ni, tr_ls, tr_lvw, tr_vb, tr_krow, tr_obase, tr_aibase, tr_aind,
+            tr_dst, tr_gsh, tr_srcs, tr_cw} = tr_bus;
+    assign {tr_ldbank, tr_ldc} = tr_lbus;
     generate if (BCAST_STAGES == 0) begin : g_bt0
-        assign t_emit = b_emit;
-        assign t_ld = lane_ld;
+        assign {tr_emit, tr_ld} = {b_emit, lane_ld};
+        assign {t_emit, t_gather, t_cw} = {b_emit, b_gather, b_cw};
         assign bt_live = 1'b0;
     end else begin : g_bt
-        reg [BCAST_STAGES-1:0] bt_e, bt_l;
+        reg [BCAST_STAGES-1:0] bt_e, bt_l;      // valid of every stage, the leaf's included
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) begin bt_e <= {BCAST_STAGES{1'b0}}; bt_l <= {BCAST_STAGES{1'b0}}; end
             else begin
@@ -636,8 +642,14 @@ module ot_hdc_v41x_vec #(
                 bt_l <= (bt_l << 1) | {{(BCAST_STAGES-1){1'b0}}, lane_ld};
             end
         end
+        assign tr_emit = (BCAST_STAGES > 1) ? bt_e[BT > 0 ? BT - 1 : 0] : b_emit;
+        assign tr_ld   = (BCAST_STAGES > 1) ? bt_l[BT > 0 ? BT - 1 : 0] : lane_ld;
         assign t_emit = bt_e[BCAST_STAGES-1];
-        assign t_ld = bt_l[BCAST_STAGES-1];
+        reg          t_g;
+        reg [WC-1:0] t_c;
+        always @(posedge clk) begin t_g <= tr_gather; t_c <= tr_cw; end
+        assign t_gather = t_g;
+        assign t_cw = t_c;
         assign bt_live = |{bt_e, bt_l};
     end endgenerate
     // F-line: depth 3 or 5
@@ -730,12 +742,12 @@ module ot_hdc_v41x_vec #(
     genvar l;
     generate for (l = 0; l < N; l = l + 1) begin : g_lane
         ot_hdc_v41x_vec_lane #(.AW(AW), .CW(CW), .LN(LN), .KIND((l == 0) ? 2 : (l < M) ? 1 : 0),
-                               .KVT_SH(KVT_SH)) u_lane (
+                               .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0)) u_lane (
             .clk(clk), .rst_n(rst_n), .lane_id(l[10:0]),
-            .ld(t_ld), .ld_bank(t_ldbank), .ld_c(t_ldc),
-            .emit(t_emit), .bank(t_bank), .o_v(t_ov), .i_v(t_iv), .no(t_no), .ni(t_ni), .ls(t_ls), .lvw(t_lvw),
-            .vb(t_vb), .krow(t_krow), .obase(t_obase), .aibase(t_aibase), .aind(t_aind), .gsh(t_gsh),
-            .cpair(t_cpair), .dst(t_dst), .srcs(t_srcs),
+            .ld(tr_ld), .ld_bank(tr_ldbank), .ld_c(tr_ldc),
+            .emit(tr_emit), .bank(tr_bank), .o_v(tr_ov), .i_v(tr_iv), .no(tr_no), .ni(tr_ni), .ls(tr_ls), .lvw(tr_lvw),
+            .vb(tr_vb), .krow(tr_krow), .obase(tr_obase), .aibase(tr_aibase), .aind(tr_aind), .gsh(tr_gsh),
+            .cpair(tr_cpair), .dst(tr_dst), .srcs(tr_srcs),
             .vi_re(vi_re[l]), .vi_addr(vi_addr[l*AW +: AW]), .vi_q(vi_q[l*32 +: 32]),
             .rd_addr(rd_addr[4*l*AW +: 4*AW]), .rd_re(rd_re[4*l +: 4]), .rd_src(rd_src[8*l +: 8]),
             .rd_q(rd_q[4*l*32 +: 4*32]),
