@@ -13,7 +13,8 @@
 // eight-block chunks plus a pairwise tree in full-shape mode, BF16 out. The
 // lane's slot counter (`phase`) runs free, so the
 // op starts its word stream on the cycle that lines slot 0 up with phase 0 and
-// then issues one word per cycle without a stall.  Results leave in slot
+// then issues one word per cycle by default. WEIGHT_STALL supports
+// bounded-memory supply gaps without changing the slot or accumulation order.  Results leave in slot
 // order: the k-th result is rows k*BL .. k*BL+BL-1, written as one masked word.
 //
 // The weight base may add an expert id (read from the vector memory) times a
@@ -42,6 +43,7 @@ module ot_hdc_v41_qe #(
     parameter integer IL = 8,
     parameter integer NBMAX = 32,
     parameter integer CHUNK8 = 0,
+    parameter integer WEIGHT_STALL = 0,
     parameter integer QLB = 272,             // bits per lane in a weight word: 32 codes, 16-bit exponent
     parameter integer MP = 1                 // lane multiplier: positions per weight read
 ) (
@@ -87,6 +89,9 @@ module ot_hdc_v41_qe #(
     output reg               qr_re,
     output reg  [AW-1:0]     qr_addr,
     input  wire [BL*QLB-1:0] qr_q,
+    // Reservation for the registered read emitted at this edge, consumed next
+    // edge. Provider must subtract the currently asserted qr_re from credits.
+    input  wire             qr_issue_ready,
     output reg               fault
 );
     localparam [1:0] LINQ = 0, QDQ8 = 1, QDQ4 = 2, QDQ4E = 3;
@@ -109,6 +114,11 @@ module ot_hdc_v41_qe #(
     assign ready = (st == S_IDLE);
     wire accept = go && ready;
     wire [PW-1:0] phase;
+    // Never freeze arithmetic pipelines: let issued products drain. A stalled
+    // logical slot resumes only on its original circulating-lane phase.
+    wire phase_match = ((integer'(phase) + 3) % IL) == integer'(j_c);
+    wire issue_fire = st == S_ROWS &&
+        ((WEIGHT_STALL == 0) || (qr_issue_ready && phase_match));
 
     // -- control --------------------------------------------------------------------------
     wire aq_vo, fq_vo;
@@ -145,7 +155,7 @@ module ot_hdc_v41_qe #(
                 //: the word issued at cycle c reaches the lanes at c+3, which must be phase 0:
                 //: leave on phase IL-4, so the first word issues on phase IL-3
                 S_ALIGN: if (phase == IL - 4) st <= S_ROWS;
-                S_ROWS: begin
+                S_ROWS: if (issue_fire) begin
                     qr_re <= 1'b1; qr_addr <= wbase + wn[AW-1:0]; wn <= wn + 1;
                     if (wn + 1 == wtotal) st <= S_DRAIN;
                 end
@@ -201,11 +211,11 @@ module ot_hdc_v41_qe #(
     reg [7:0]    kb0, kb1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin iv0 <= 0; iv1 <= 0; end
-        else begin iv0 <= (st == S_ROWS); iv1 <= iv0; end
+        else begin iv0 <= issue_fire; iv1 <= iv0; end
     end
     always @(posedge clk) begin
         if (st == S_ALIGN) begin kb_c <= 0; j_c <= 0; end
-        else if (st == S_ROWS) begin
+        else if (issue_fire) begin
             j_c <= j_c + 1'b1;
             if (j_c == IL - 1) kb_c <= (kb_c + 1 == nb) ? 8'd0 : kb_c + 1'b1;
         end

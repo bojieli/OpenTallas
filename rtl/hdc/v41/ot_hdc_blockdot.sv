@@ -359,8 +359,8 @@ module ot_hdc_blockdot #(
     // -- sequential FP32 accumulation on a circulating ring of IL slots -----------------------------
     wire [31:0] fb, sum, hold;
     wire        fbf, holdf, addf;
-    wire [31:0] acc_in = p8_first ? 32'd0 : fb;
-    wire        accf_in = p8_first ? 1'b0 : fbf;
+    wire [31:0] acc_in = (p8_v && p8_first) ? 32'd0 : fb;
+    wire        accf_in = (p8_v && p8_first) ? 1'b0 : fbf;
     ot_hdc_fadd u_add (.clk(clk), .rst_n(rst_n), .v(p8_v), .a(acc_in), .b(p8_y), .y(sum), .fault(addf));
     reg [4:0] av;                                           // valid alongside the adder
     always @(posedge clk or negedge rst_n) begin
