@@ -1,0 +1,334 @@
+{
+ "schema": "opentallas.rtl.w11_su_checkpoint/1",
+ "label": "fix",
+ "generated_at": "2026-09-29T16:10:46Z",
+ "hazard": "a non-spanning reducing op followed by a spanning reducing op with a shallower tap: both items leave through the reducer's one tap; checkpoint T was armed by spanning ops only",
+ "cases": [
+  {
+   "N": 16,
+   "M": 8,
+   "seed": 11,
+   "ops": [
+    37,
+    38
+   ],
+   "first": {
+    "fields": {
+     "nout": 10,
+     "nin": 12,
+     "red": 1,
+     "redsq": 1,
+     "redwhole": 0,
+     "redtree": 0,
+     "sfu": 0,
+     "m1": 2,
+     "dst": 1
+    },
+    "span": false,
+    "packed": true,
+    "wnf": false,
+    "S": 16,
+    "tap_level": 1,
+    "time_levels": 0,
+    "vectors": 10,
+    "model_emit_to_result": 50
+   },
+   "second": {
+    "fields": {
+     "nout": 3,
+     "nin": 8,
+     "red": 1,
+     "redsq": 0,
+     "redwhole": 0,
+     "redtree": 1,
+     "sfu": 0,
+     "m1": 1,
+     "dst": 1
+    },
+    "span": true,
+    "packed": false,
+    "wnf": true,
+    "S": 8,
+    "tap_level": 0,
+    "time_levels": 2,
+    "vectors": 3,
+    "model_emit_to_result": 53
+   },
+   "between": [],
+   "chained": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 89,
+    "pass_": true,
+    "second_first_emit_after_first_last_emit": 4,
+    "first_last_result": 70,
+    "second_results": [
+     79
+    ]
+   },
+   "idle": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 142,
+    "pass_": true,
+    "second_first_emit_after_first_last_emit": 57,
+    "first_last_result": 70,
+    "second_results": [
+     132
+    ]
+   },
+   "whole_seed": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 1080,
+    "pass_": true,
+    "ops": 39
+   }
+  },
+  {
+   "N": 16,
+   "M": 8,
+   "seed": 20,
+   "ops": [
+    25,
+    26
+   ],
+   "first": {
+    "fields": {
+     "nout": 11,
+     "nin": 11,
+     "red": 2,
+     "redsq": 0,
+     "redwhole": 0,
+     "redtree": 0,
+     "sfu": 0,
+     "m1": 6,
+     "dst": 2
+    },
+    "span": false,
+    "packed": true,
+    "wnf": false,
+    "S": 16,
+    "tap_level": 1,
+    "time_levels": 0,
+    "vectors": 11,
+    "model_emit_to_result": 50
+   },
+   "second": {
+    "fields": {
+     "nout": 2,
+     "nin": 8,
+     "red": 1,
+     "redsq": 0,
+     "redwhole": 0,
+     "redtree": 1,
+     "sfu": 0,
+     "m1": 1,
+     "dst": 2
+    },
+    "span": true,
+    "packed": false,
+    "wnf": true,
+    "S": 8,
+    "tap_level": 0,
+    "time_levels": 1,
+    "vectors": 2,
+    "model_emit_to_result": 50
+   },
+   "between": [],
+   "chained": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 86,
+    "pass_": true,
+    "second_first_emit_after_first_last_emit": 4,
+    "first_last_result": 71,
+    "second_results": [
+     76
+    ]
+   },
+   "idle": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 139,
+    "pass_": true,
+    "second_first_emit_after_first_last_emit": 57,
+    "first_last_result": 71,
+    "second_results": [
+     129
+    ]
+   },
+   "whole_seed": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 989,
+    "pass_": true,
+    "ops": 38
+   }
+  },
+  {
+   "N": 64,
+   "M": 16,
+   "seed": 116,
+   "ops": [
+    22,
+    24
+   ],
+   "first": {
+    "fields": {
+     "nout": 5,
+     "nin": 54,
+     "red": 2,
+     "redsq": 0,
+     "redwhole": 0,
+     "redtree": 0,
+     "sfu": 0,
+     "m1": 6,
+     "dst": 1
+    },
+    "span": false,
+    "packed": true,
+    "wnf": false,
+    "S": 64,
+    "tap_level": 3,
+    "time_levels": 0,
+    "vectors": 5,
+    "model_emit_to_result": 58
+   },
+   "second": {
+    "fields": {
+     "nout": 3,
+     "nin": 144,
+     "red": 1,
+     "redsq": 1,
+     "redwhole": 0,
+     "redtree": 1,
+     "sfu": 0,
+     "m1": 1,
+     "dst": 2
+    },
+    "span": true,
+    "packed": false,
+    "wnf": true,
+    "S": 16,
+    "tap_level": 1,
+    "time_levels": 5,
+    "vectors": 27,
+    "model_emit_to_result": 65
+   },
+   "between": [
+    {
+     "fields": {
+      "nout": 5,
+      "nin": 20,
+      "red": 0,
+      "redsq": 0,
+      "redwhole": 0,
+      "redtree": 0,
+      "sfu": 0,
+      "m1": 0,
+      "dst": 1
+     },
+     "span": false,
+     "packed": false,
+     "wnf": false,
+     "S": 64,
+     "tap_level": 0,
+     "time_levels": 0,
+     "vectors": 2,
+     "model_emit_to_result": 47
+    }
+   ],
+   "chained": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 125,
+    "pass_": true,
+    "second_first_emit_after_first_last_emit": 9,
+    "first_last_result": 73,
+    "second_results": [
+     115
+    ]
+   },
+   "idle": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 181,
+    "pass_": true,
+    "second_first_emit_after_first_last_emit": 65,
+    "first_last_result": 73,
+    "second_results": [
+     171
+    ]
+   },
+   "whole_seed": {
+    "ended": true,
+    "vm_mismatch_words": 0,
+    "kv_mismatch_words": 0,
+    "faults": 0,
+    "order_faults": 0,
+    "cycles": 1300,
+    "pass_": true,
+    "ops": 36
+   }
+  }
+ ],
+ "builds": {
+  "N16": 68.23215126991272,
+  "N64": 203.84414339065552
+ },
+ "all_pass": true,
+ "hazard_reproduced": false,
+ "controls_pass": true,
+ "git_head": "bdcab9480e2f3bc4ed63db99c7808342614e52e8",
+ "git_dirty_tracked_files": [],
+ "input_sha256": {
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+  "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "5a88f2536d8e4f1e54bc9ea6c969af33ed1ae4b4c914aae561cb6601715745a6",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "94d0d16aff5cb5d366fd189b64058c18f02aec242e1b414084eef5de1806eeb0",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "0ba8c77b349a8116958f09f3948116c8183f558f10b3228b55bcb55f1108b315",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "caa46eb92238986b91b67615df7a30a1f17b5b27ddee84284e06cd58f6a9b528",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "fa4f7bf762971004ffa7c7df253ef6789a9e0dd9c351ee3b71fc8d8d4150ae99",
+  "rtl/test/tb_hdc_v41x_vec.sv": "c636a367b5d0192a03cc25252dbcd3d7d8ee2c7743bab90cc5a9c1bfd1ddab88",
+  "rtl/test/tb_hdc_v41x_vec_fields.svh": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
+  "rtl/test/hdc_v41_harness.cpp": "f2a82a2ea843a1f8b04fd94e94adea61037a9fa6aef45f6b0c8550abe5a6dce1",
+  "tools/w11_su_checkpoint_repro.py": "1cfea0654ab41bb2a08e9139cf427cf75deceb4179f708c6277cc977874354b6",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "20195f05add07acdac3b25b473b0985c1e2898afca742b3fe753240a8ae2985c",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+  "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692"
+ }
+}
