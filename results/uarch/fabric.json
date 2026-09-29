@@ -96,8 +96,8 @@
  "sweep": [
   {
    "design": "v41_rom_ar",
-   "collective_latency_us": "baseline (arch-priced links)",
-   "tokens_s": 4166.8
+   "collective_latency_us": "baseline (W15 measured, adopted placement)",
+   "tokens_s": 3808.8
   },
   {
    "design": "v41_rom_ar",
@@ -272,6 +272,16 @@
    "exchange_cycles_per_token_measured": 22445,
    "exchange_cycles_per_token_assumed": 3859,
    "per_allreduce_cycles": 311.0,
+   "source": "W15 measured (results/rtl/w15_collectives.json)"
+  },
+  {
+   "design": "qwen_rom_ar_G6144",
+   "w15_config": "q256d64",
+   "what": "256 lanes, depth 64 (ADOPTED)",
+   "tokens_s": 9851.1,
+   "exchange_cycles_per_token_measured": 5165,
+   "exchange_cycles_per_token_assumed": 3859,
+   "per_allreduce_cycles": 71.0,
    "source": "W15 measured (results/rtl/w15_collectives.json)"
   },
   {
