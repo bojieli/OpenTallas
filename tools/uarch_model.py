@@ -1037,7 +1037,7 @@ def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
     arch, b = arch_graph(1048576)
     g = b.g
     path = g.path(b.sink)
-    mv = other = extra = 0.0
+    mv = other = extra = xfill = 0.0
     for x in path:
         nd = g.nodes[x]
         t = sum(g.contrib[x].values())
@@ -1045,6 +1045,9 @@ def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
         if nd["kind"] == "matvec" and k and k != "hc.fn":
             rows = nd["sweep"]["macs"] / NODE_K[k] / V41_HBM_DIES
             mv += sm_op_cycles(rows, NODE_K[k], NODE_FMT[k], d["drain_cycles"], group_slot) / clock
+            # every SM needs the whole x (its rows span all of K): after the collective gathers it, the
+            # die's x broadcast (X_BCAST_BPC) fills the 32 SM x stores -- BF16, every verify position
+            xfill += math.ceil(NODE_K[k] * positions * 2 / X_BCAST_BPC) / clock
         elif nd["kind"] in ("collective", "hop"):
             continue                                   # replaced by the comparator's fabric terms
         else:
@@ -1053,8 +1056,8 @@ def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
                 extra += (positions - 1) * nd.get("issue", 0.0)
     nb = v41_boundaries(path, g.nodes)
     bc = d["barrier"]["boundary_cycles"] if barrier_cycles is None else barrier_cycles
-    parts = dict(sm_matvec=mv * 1e6, dedicated_and_su=other * 1e6, verify_extra_issue=extra * 1e6,
-                 barrier=nb * bc / clock * 1e6, **V41_HBM_FABRIC_US)
+    parts = dict(sm_matvec=mv * 1e6, x_broadcast_fill=xfill * 1e6, dedicated_and_su=other * 1e6,
+                 verify_extra_issue=extra * 1e6, barrier=nb * bc / clock * 1e6, **V41_HBM_FABRIC_US)
     parts["collective_bytes"] *= positions             # every position's activations cross the fabric
     chain = sum(parts.values())
     T = max(chain, 37.4)
@@ -1142,8 +1145,9 @@ SM_ELEM = {
     "qwen": dict(subparts=4, int8_lanes=128, bf16_lanes=0, blockdot_lanes=0, cols=16, il=8, ingest_Bpc=128,
                  k_max=12288, x_bytes=2, simt_lanes=128, scratch_kb=64, stack_levels=5),
     # DeepSeek-V4.1: FP4 routed experts (8 block-dot lanes = 256 FP4 weights = 128 B/clk), FP8 dense at the same
-    # 128 B/clk on 4 of them, BF16 matrices on 64 lanes; 16 columns cover MTP (m+1 = 7) and batch 16
-    "v41": dict(subparts=4, int8_lanes=0, bf16_lanes=64, blockdot_lanes=8, cols=16, il=8, ingest_Bpc=128,
+    # 128 B/clk on 4 of them, BF16 matrices on 64 lanes; 8 columns cover MTP (m+1 = 7 positions); the group-slot
+    # x store delivers all 8 columns' fragment every cycle (16 columns would double it to 197 macros)
+    "v41": dict(subparts=4, int8_lanes=0, bf16_lanes=64, blockdot_lanes=8, cols=8, il=8, ingest_Bpc=128,
                 k_max=5120, x_bytes=2, simt_lanes=128, scratch_kb=64, stack_levels=3,
                 # group-slot issue: a row's K groups on different accumulator slots, so a 1-2-row slice is not a
                 # K-chain; the x store must then deliver a new fragment every cycle for up to gs_cols columns

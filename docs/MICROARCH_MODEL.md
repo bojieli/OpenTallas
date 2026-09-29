@@ -162,22 +162,24 @@ The SM has four sub-partitions of an exact Tensor-Core-style MMA:
 | | Qwen3-8B die | DeepSeek-V4.1 die |
 |---|---|---|
 | Lanes | 128 INT8 (decoded exactly to BF16) | 8 block-dot (k32 FP8/FP4, exact, one rounding) + 64 BF16 |
-| Columns | 16 (DFlash block 16, batch ≤ 16) | 16 (MTP m + 1 = 7, batch ≤ 16) |
-| MAC/clk per SM | 2,048 | 5,120 |
+| Columns | 16 (DFlash block 16, batch ≤ 16) | 8 (MTP m + 1 = 7 positions; batch > 8 runs a second pass) |
+| MAC/clk per SM | 2,048 | 2,560 |
 | Weight ingest | 128 B/clk | 128 B/clk |
-| SMEM | 512 KB x store (16 × 32 KB macros, read one fragment per slot revolution) + 128 KB staging + 64 KB scratch | x store 99 × 4 KB macros (a new fragment of up to 8 columns every cycle for group-slot issue) + 128 KB staging + 64 KB scratch |
-| Area (logic at 50% density + SRAM) | 4.71 mm² | 3.64 mm² |
-| Measured drain (last weight line → last row result) | 65 cycles | 70 cycles |
+| SMEM | 512 KB x store (16 × 32 KB macros, one fragment per slot revolution into a double-buffered register) + 128 KB staging ring + 64 KB scratch | x store 99 × 4 KB macros (a whole 8-column fragment every cycle, for group-slot issue) + 128 KB staging ring + 64 KB scratch |
+| Area (logic at 50% density + SRAM) | 4.71 mm² | 2.27 mm² |
+| Measured drain (last weight line → last row result) | 66 cycles | 70 cycles |
 
 **Exactness (Icarus, every output bit against the golden):**
-- `results/rtl/gpu_sm_exact.json`: 12/12 cases.
+- `results/rtl/gpu_sm_exact.json`: 15/15 cases.
   - Qwen INT8 on 128 lanes: split = K (a pure tree), kc = 3, 4 and 32, split < lanes, and stream underflow. The golden is `hdc_golden.matvec`, then the BF16 row scale.
   - V4.1 BF16 chunk-8 `csum` on 64 lanes: K = 512, 1,004 (tail and padding) and 5,120.
   - Group-slot issue: 1-, 2- and 3-row slices (BF16 K = 5,120 and 1,004, Qwen INT8 K = 2,048).
-- `results/rtl/gpu_sm_blockdot_exact.json`: 8/8 cases.
+  - The Qwen SM macro top `ot_gpu_sm_q` (3 cases): weights through its own bulk copy and SRAM staging ring from an out-of-order HBM model, x from its SRAM x store.
+- `results/rtl/gpu_sm_blockdot_exact.json`: 12/12 cases.
   - V4.1 `linear_q` FP4 at K = 2,304 and 5,120.
   - V4.1 `linear_q` FP8 at K = 544, 1,280 and 5,120.
   - Group-slot issue on 1–3-row slices (FP8 K = 5,120 and 2,048, FP4 K = 5,120).
+  - The V4.1 SM macro top `ot_gpu_sm_v` (4 cases): packed 136-B lines (FP4, FP8, BF16) through its bulk copy, per-cycle SRAM x store.
 
 **Group-slot issue** (`op_gs` in `rtl/gpu/ot_gpu_issue.sv`) puts consecutive (row, group) items on the 8 accumulator slots instead of 8 rows.
 - Why it is needed: on a 1/96 row slice, row-slot issue walks a row's groups one after another, which makes the op a K-chain.
@@ -186,7 +188,7 @@ The SM has four sub-partitions of an exact Tensor-Core-style MMA:
   - The stack is keyed by row mod 8.
   - The golden order is unchanged, so the result is exact by construction (and checked above).
 - Measured: an FP8 K = 5,120 single-row op takes 117 cycles, against 689 for 9 rows issued row-slot.
-- Cost: the x store must deliver a new fragment every cycle. Sized for 8 columns, that is 99 shallow macros (0.5 mm² per SM, +0.1 mm² over row-slot).
+- Cost: the x store must deliver a new fragment every cycle. Sized for the 8 columns, that is 99 shallow 128 × 256 macros (0.5 mm² per SM).
 
 ### Count, supply and barrier
 
@@ -196,8 +198,8 @@ The SM has four sub-partitions of an exact Tensor-Core-style MMA:
 | Bulk copy in flight | 512 lines of 128 B per SM | same | Little's law gives 440. Measured in RTL, 512 reaches the SM's full share (102.5 of 102.4 B/clk) under ±50 ns jitter; 7 outstanding gives 1.6 B/clk |
 | SMEM staging | 128 KB/SM | 128 KB/SM | The fluid model's knee: 64 KB loses 0.7% on Qwen |
 | Global barriers per token | 181 | 329 | One per matrix op and one per attention layer (V4.1 also one per index top-k and one for the argmax). Heads are SM-local; norms and the router top-6 run redundantly on the replicated x. The earlier 289 and 629 counted those |
-| Barrier round trip | 30 cycles | 40 cycles | Floorplan: leaf 4.3 mm / trunk 6.8 mm (Qwen), 3.9 / 11.8 mm (V4.1). RTL bench: 32 SMs at 8 × 4 fan-in |
-| Boundary cost | 46 cycles | 56 cycles | Round trip plus the x-broadcast tail |
+| Barrier round trip | 30 cycles | 38 cycles | Floorplan: leaf 4.3 mm / trunk 6.8 mm (Qwen), 3.5 / 11.4 mm (V4.1). RTL bench: 32 SMs at 8 × 4 fan-in |
+| Boundary cost | 46 cycles | 54 cycles | Round trip plus the x-broadcast tail |
 | L2 | 4 slices × 2 MB | same | Holds x and result gather, TP staging and KV-write coalescing. Weights bypass L2: each SM's rows live in its own quadrant's stack |
 
 ### Token
@@ -212,9 +214,9 @@ The bulk copy prefetches the static weight stream through every boundary. A boun
 | Qwen HBM, ASSUMED 200-cycle barrier, no prefetch | 854.9 |
 | Qwen HBM, V100 grid sync 1.43 µs, with prefetch / without | 758.5 / 716.6 |
 | Qwen HBM, today's adapter | 10.5 |
-| **V4.1 HBM, GPU die, K-chain-aware, group-slot issue** | **2,981** |
-| V4.1 HBM, same, row-slot issue | 2,578 |
-| V4.1 HBM, group-slot, V100 grid sync | 1,269 |
+| **V4.1 HBM, GPU die, K-chain-aware, group-slot issue (adopted)** | **2,920** |
+| V4.1 HBM, same, row-slot issue (sensitivity) | 2,533 |
+| V4.1 HBM, group-slot, V100 grid sync | 1,257 |
 | V4.1 HBM published (additive, pooled widths, no barrier) | 3,579 |
 | V4.1 HBM, pooled-width chain with prefetch (superseded upper bound) | 3,882 |
 
@@ -222,13 +224,14 @@ The bulk copy prefetches the static weight stream through every boundary. A boun
 - It walks the arch DAG's critical path at 1M.
 - Each matvec is an SM op on its 1/96 row slice (`sm_op_cycles`, calibrated on the RTL SM).
 - The dedicated units' nodes are at their arch price (W11 spec widths).
-- Barriers are at 56 cycles.
+- Barriers are at 54 cycles.
+- Every SM needs the whole x after each collective: the die's 256 B/cycle x broadcast fills the 32 x stores (K × positions × 2 B / 256 cycles per matvec).
 - The comparator's switched-fabric terms are 125.9 + 1.5 + 0.9 + 2.0 µs.
 - The weight sweep (37.4 µs) streams under the chain.
 
-Group-slot breakdown: SM matvecs 66.9 µs (row-slot: 119.3), dedicated units and stream unit 120.4, barriers 17.8, fabric 130.3.
+Group-slot breakdown: SM matvecs 66.9 µs (row-slot: 119.3), x-broadcast fill 7.6, dedicated units and stream unit 120.4, barriers 17.3, fabric 130.3.
 
-### Speculation on the SM design (`speculation` in the record)
+### Speculation on the SM design (`speculation` in the record): MODEL ONLY
 
 Verify positions ride the MMA columns: 16 are built, one weight fetch serves the whole block, and each column keeps its own golden order.
 
@@ -237,12 +240,12 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
 | Qwen HBM AR | 1 | 880.6 | 1.0× |
 | Qwen HBM DFlash, block 5 | 2.859 | 2,089 | 2.37× |
 | **Qwen HBM DFlash, block 16** (best; step cost is flat up to 16 columns) | 3.656 | **2,671** | **3.03×** |
-| V4.1 HBM AR (group-slot) | 1 | 2,981 | 1.0× |
-| **V4.1 HBM DSpark MTP, γ = 5, 6 positions** | 3.649 | **6,106** | **2.05×** |
+| V4.1 HBM AR (group-slot) | 1 | 2,920 | 1.0× |
+| **V4.1 HBM DSpark MTP, γ = 5, 6 positions** | 3.649 | **5,673** | **1.94×** |
 
 - **Qwen:** a step streams the target's bytes plus the drafter's 1.05 B parameters (INT8, ASSUMED) and a re-read of the shared lm_head over the draft slots. tau is measured per block (`results/speculative/dflash_block_acceptance.json`).
-- **V4.1:** verify runs the matvecs once, on the columns. The dedicated units issue every position's work, which adds 229 µs. Collective bytes scale with positions. The draft is 3/40 of an AR token (ASSUMED, as in the ROM rows).
-- **RTL:** the column-parallel verify is built and exact per column. The other parts need units that are not easy for this workstream, so they were not built:
+- **V4.1:** verify runs the matvecs once, on the columns. The dedicated units issue every position's work, which adds 229 µs. Collective bytes and the x-broadcast fill scale with positions. The draft is 3/40 of an AR token (ASSUMED, as in the ROM rows).
+- **RTL (user rule: build only if easy; root decision 2026-09-29): the speculation figures are model-only.** The column-parallel verify is built and exact per column. The other parts need units that are not easy for this workstream, so they were not built, and the token-level greedy check waits for a whole-die HBM RTL:
   - causal attention inside the verify block: the Qwen die's attention is not in the SM RTL, and V4.1 attention is W11's unit;
   - the KV commit and rollback pointer;
   - a token-level check against greedy non-speculative tokens, which needs a whole-die HBM RTL that does not exist.
@@ -253,8 +256,8 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
 3. **The Qwen HBM die is bandwidth-bound at 880.6 tok/s.** The barrier and SM terms are hidden under the stream.
 4. **The floorplans fit** (`results/floorplan/hbm_gpu/*.json`, legal, macro-placed SRAMs, 4 PHYs on 48 mm of the long edges):
    - Qwen: 160 of 688 mm² core used (SM array 155.6, L2 5.0).
-   - V4.1: 240 mm², including the 112.7 mm² dedicated-unit hub between the SM half-arrays.
-5. **V4.1 SMs issue group-slot on small slices.** This takes the HBM token from 2,578 to 2,981 tok/s for about 3 mm² of x-store SRAM per die.
+   - V4.1: 196 mm², including the 112.7 mm² dedicated-unit hub between the SM half-arrays.
+5. **V4.1 SMs issue group-slot on small slices.** This takes the HBM token from 2,533 to 2,920 tok/s. The x store that delivers a whole 8-column fragment every cycle is 99 shallow macros per SM.
 
 ## Summary: what the model changed
 
@@ -263,7 +266,7 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
 | V4.1 ROM, 1M | 4,933 (architecture) | 4,167 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
 | Qwen ROM, 8K | 10,874 (published) | 9,968 | AR only (no drafter ROM) lets G = 6,144 pruned fit; wires +12%; vector stream unit |
 | Qwen HBM, 8K | 881 | 880.6 (DFlash b16 2,671) | bulk-copy weight supply prefetching through boundaries; hardware barrier (30 cycles) |
-| V4.1 HBM, 1M | 3,579 | 2,981 (MTP 6,106) | SM op latency on 1/96 row slices (group-slot issue); hardware barrier (40 cycles); bulk-copy supply |
+| V4.1 HBM, 1M | 3,579 | 2,920 (MTP 5,673) | SM op latency on 1/96 row slices (group-slot issue); hardware barrier (40 cycles); bulk-copy supply |
 
 ## Speculation (`--spec`, `results/uarch/speculation.json`)
 
