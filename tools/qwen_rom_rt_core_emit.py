@@ -38,8 +38,8 @@ def emit(text: str) -> str:
         return out
 
     text = sub1(r"module ot_hdc_core_vector_weight #\(", "module ot_qwen_rom_core #(", text)
-    text = sub1(r"(    parameter integer EMB_ADDR_BASE = 0[^\n]*)\n\) \(",
-                r"\1,\n" + ",\n".join(f"    parameter integer {p} = 0" for p in SPINE_PARAMS) + "\n) (", text)
+    text = sub1(r"(    parameter integer EMB_ADDR_BASE = 0)( //[^\n]*)\n\) \(",
+                r"\1,\2\n" + ",\n".join(f"    parameter integer {p} = 0" for p in SPINE_PARAMS) + "\n) (", text)
     for name in REMOVE:
         text = sub1(rf"\n    (input|output)\s+wire\s+\[[^\]]*\]\s+{name},[^\n]*", "", text)
     ports = ("\n    // W12 array spine: the vector memory's x chunk port and the tile fabric"
