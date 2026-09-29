@@ -308,6 +308,11 @@ def build(variant: str) -> dict:
     }
     if REFIT and REFIT.get("hub_mm2"):
         need_mm2.update(REFIT["hub_mm2"])          # hub parts sized from the model / hardened units
+    if REFIT:
+        for k, f in REFIT.get("hub_scale", {}).items():    # power-switch area on gated partitions
+            need_mm2[k] *= f
+        for k, v in REFIT.get("hub_add_mm2", {}).items():  # always-on island in the VM column
+            need_mm2[k] += v
     hub_area = sum(need_mm2.values()) * 1e6 * HUB_SLACK
     core_w, core_h = core_x1 - core_x0, core_y1 - core_y0
     # Equal ROM/MAC ring depth d on all sides: (W - 2d)(H - 2d) = hub_area.

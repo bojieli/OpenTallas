@@ -78,7 +78,8 @@ def main(argv=None):
     hub = {"ATTENTION": (ar["attention"] + ar["indexer"]) * g,
            "SU_VECTOR": (ar["su_lanes"] + ar["sfu_lanes"]) * g}
     P.REFIT = dict(strip_q_um=q["strip_um"] * g, strip_bf_um=b["strip_um"] * g, bf_pairs=BF16_PAIRS,
-                   hub_mm2=hub, basis="W10 placed pairs + model hub + power switches")
+                   hub_mm2=hub, hub_scale={"HC": g, "GATHER": g}, hub_add_mm2={"VM": AON_MM2},
+                   basis="W10 placed pairs + model hub + power switches + always-on island")
     rec = P.run("expanded_woa", a.svg_dir, write_views=False)
     rec["schema"] = "opentallas.v41.floorplan_pack_refit.v1"
     rec["refit"] = dict(
