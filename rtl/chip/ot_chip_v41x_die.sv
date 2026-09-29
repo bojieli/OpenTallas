@@ -111,6 +111,11 @@ module ot_chip_v41x_die #(
     parameter integer NPC_W   = 8,
     parameter integer W_HBM   = 1,
     parameter integer IDX_SHARDED = 0, // opt-in; reader and writer must share one layout
+    parameter integer IDX_RING = 0,    // opt-in W11 quarter-per-stack ring key layout (replaces the replicated
+                                       // key images: ot_hdc_v41x_idx_ring_port in the tile, ring readers in
+                                       // the pooled adapter); regions are rings of IDX_RING_RSB super-blocks
+    parameter integer IDX_RING_RSB = 1,   // + an IDX_RING_RTAIL-key tail at the legacy region base
+    parameter integer IDX_RING_RTAIL = 0,
     parameter bit WINDOW_RETAIN_L0 = 0, // opt-in single-use QK->PV packed-stage retention
     parameter bit WINDOW_HBM_ATTENTION = 0, // opt-in L0 WINDOW-only internal source
     parameter bit KARB_LOCAL = 0,  // opt-in: per-PC local K arbitration (ot_chip_v41x_hbm_karb_local)
@@ -433,7 +438,7 @@ module ot_chip_v41x_die #(
     wire [7:0] core_coll_seq;
     wire die_coll_fault;
 
-    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
+    ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
                         .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
                         .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW)) u_tile (
         .clk(clk), .rst_n(rn),
