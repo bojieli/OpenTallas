@@ -1,6 +1,6 @@
 # OpenTallas critical-path tracker
 
-Updated 2026-09-29. Last published baseline: `de0ea64f`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
+Updated 2026-09-29. Last published baseline: `4a82ce47`; current tested integrations and floorplan work are being published from `/tmp/opentallas-publish-e2e-now`. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.** Root owns architecture, budgets, integration and publication.
 
 Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
@@ -9,7 +9,7 @@ Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured block
 | Owner | Current work / next acceptance |
 | --- | --- |
 | Root | [~] [Physical floorplan](docs/V41_PHYSICAL_FLOORPLAN.md): geometric reservations, locality and dependency budgets; integrate agent evidence and publish. Macro fit remains unverified. |
-| floorplan_inventory | [~] ROM capacity screening complete; complete candidate stage17 payload exceeds logical capacity by7,408,140B; no proved spill receiver. Resolved emitter-declared dense quarters still leave no proved receiver. Approved compact wo_a ME integration experiment; standalone exact decode passed, adoption/placement pending. |
+| floorplan_inventory | [~] ROM capacity screening complete; complete candidate stage17 payload exceeds logical capacity by7,408,140B; no proved spill receiver. Resolved emitter-declared dense quarters still leave no proved receiver. Approved compact wo_a ME integration experiment; compact-bank plus unchanged ME checkpoint slice passed equal4235cycles; split code/scale mapping validation and physical capacity pending. |
 | floorplan_connectivity | [~] Opt-in L0 retention integrated and fixture exact:2,176 reads vs4,352 with fresh generation; real numeric composition pending. |
 | ds_attention_elaboration | [~] Full-geometry real arithmetic on PVE2: All four standalone numeric cases pass; actual HBM-connected consumer integration now running. Synthetic inputs, not full token. |
 | qwen_execution_compile | [~] PVE1 G64 exact differential passed 56 cases; full-shape NW18/scale-base1 and checkpoint-backed core composition next. |
@@ -20,7 +20,7 @@ Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured block
 
 Additional active owners: `ds_softmax_composition` closes actual SU exp/SUM and post-PV divide; `fleet_route_recovery` preserved and stopped nonconverging karb strip GP, releasing48GiB onPVE2. Selector experiments retained. No route result inferred from stopped job.
 
-Additional Qwen helper `qwen_tp_host_binding` owns TP sequencer/collective runtime binding; main execution owner keeps controller/MAC/memory integration. Local per-PC K arbiter prototype approved with explicit four-cycle minimum traversal and finite queues; no die-fit approval.
+Additional Qwen helper `qwen_tp_host_binding` owns TP sequencer/collective runtime binding; main execution owner keeps controller/MAC/memory integration. TP/collective standalone host binding passed and is integrated. Local per-PC K arbiter prototype approved with explicit four-cycle minimum traversal and finite queues; no die-fit approval.
 
 ## Latest integrated evidence
 
