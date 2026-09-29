@@ -27,7 +27,7 @@ module tb_gpu_sm_bd;
         .fault(fault), .arrive(arrive), .release_in(release_in), .released(released));
     reg [L*NC*266-1:0] xwords [0:XDEPTH-1];
     reg [31:0] cfg [0:7];
-    integer nlines, i, fo, gap_pct, seed, pos, t0, t_first, t_last, nres, stall_cycles;
+    integer nlines, i, fo, gap_pct, seed, pos, t0, t_first, t_last, nres, stall_cycles, t_lastline;
     reg [1023:0] dir;
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
@@ -61,7 +61,7 @@ module tb_gpu_sm_bd;
         end
     end
     always @(posedge clk) begin
-        if (w_valid && w_ready) pos <= pos + 1;
+        if (w_valid && w_ready) begin pos <= pos + 1; t_lastline = $time; end
         if (w_ready && !w_valid) stall_cycles <= stall_cycles + 1;
     end
     always @(posedge clk) if (rv) begin
@@ -80,8 +80,8 @@ module tb_gpu_sm_bd;
         wait (busy);
         wait (!busy);
         repeat (4) @(posedge clk);
-        $fwrite(fo, "# cycles_start_to_done %0d first_result %0d last_result %0d lines %0d consumed %0d fault %0d stall_waits %0d released %0d\n",
-                ($time - t0), t_first - t0, t_last - t0, nlines, pos, fault, stall_cycles, released);
+        $fwrite(fo, "# cycles_start_to_done %0d first_result %0d last_result %0d lines %0d consumed %0d fault %0d stall_waits %0d released %0d drain_last_line_to_last_result %0d\n",
+                ($time - t0), t_first - t0, t_last - t0, nlines, pos, fault, stall_cycles, released, t_last - t_lastline);
         $fclose(fo);
         $finish;
     end

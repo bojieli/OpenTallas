@@ -55,7 +55,7 @@ def main(argv=None):
         barrier.append(r)
         print("barrier", model, r)
     ok = all(s.get("bad", 1) == 0 and not s.get("timeout") for s in supply) and \
-        all(b["early_release_errors"] == 0 and b["last_arrive_to_all_released_min"] == b["last_arrive_to_all_released_max"]
+        all(b["early_release_errors"] == 0 and b["last_arrive_to_all_released_min"] == b["max"]
             for b in barrier)
     rec = dict(schema="opentallas.rtl.gpu_supply_barrier.v1", tool="tools/rtl_gpu_supply_barrier.py",
                status="pass" if ok else "fail", clock_hz=clock, loaded_latency_cycles=lat, supply=supply,
