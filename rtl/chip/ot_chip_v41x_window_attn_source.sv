@@ -5,7 +5,7 @@
 // ordered packed beats. Selected FP4 CKV and remote rows are unsupported.
 module ot_chip_v41x_window_attn_source #(
     parameter integer POS_W=21, USER_W=10, SEC_W=30, HAW=30, TAGW=16,
-    parameter integer WIN_STACK=0, STREAM_II1=0
+    parameter integer WIN_STACK=0, STREAM_II1=0, REFILL_CREDITS=1
 ) (
     input wire clk,rst_n,
     input wire [SEC_W-1:0] region_base_sector,region_sector_count,
@@ -89,7 +89,7 @@ module ot_chip_v41x_window_attn_source #(
         .refill_cycles(refill_cycles),.rows_refilled(rows_refilled));
 
     ot_chip_v41x_window_kv_prefetch #(.POS_W(POS_W),.USER_W(USER_W),
-        .SEC_W(SEC_W),.HAW(HAW),.TAGW(TAGW),.WIN_STACK(WIN_STACK),
+        .SEC_W(SEC_W),.HAW(HAW),.TAGW(TAGW),.WIN_STACK(WIN_STACK),.REFILL_CREDITS(REFILL_CREDITS),
         .BANKED_STAGE(1)) u_window (
         .clk(clk),.rst_n(rst_n),
         .region_base_sector(region_base_sector),

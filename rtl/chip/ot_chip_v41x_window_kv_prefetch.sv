@@ -9,7 +9,10 @@
 // absolute-position tag prevents a stale ring slot from being read after wrap.
 //
 // The HBM port is the K side of one per-stack arbiter.  This version has one
-// outstanding read or write at a time, so its functional result does not
+// outstanding read or write by default. Opt-in REFILL_CREDITS allows bounded
+// code-sector reads within one row; scales publish only after code completion.
+// Epochs advance only after the previous row drains (reset also requires drain).
+// The functional result does not
 // establish the bandwidth/rate of the 640-row mixed attention path.
 module ot_chip_v41x_window_kv_prefetch #(
     parameter integer POS_W = 21,
@@ -19,6 +22,7 @@ module ot_chip_v41x_window_kv_prefetch #(
     parameter integer USER_W = 10,
     parameter bit BANKED_STAGE = 0,
     parameter integer WIN_STACK = 0,
+    parameter integer REFILL_CREDITS = 1,
     parameter integer WINDOW_SLOTS = 128,
     parameter integer MAX_CONTEXT = 1048576
 ) (
@@ -100,6 +104,20 @@ module ot_chip_v41x_window_kv_prefetch #(
     localparam [2:0] IDLE = 0, WC = 1, WC_DONE = 2, WS = 3,
                      WS_DONE = 4, FR = 5, FR_DONE = 6;
     reg [2:0] state;
+    localparam [2:0] FR_PIPE = 7;
+    localparam integer EPOCH_W = TAGW > 5 ? TAGW-5 : 1;
+    reg [EPOCH_W-1:0] refill_epoch;
+    reg [16:0] refill_issued, refill_received;
+    reg [4:0] refill_next, refill_pending;
+    wire [4:0] reply_sector = s_tag[WIN_STACK*TAGW +: 5];
+    wire reply_epoch_ok = (s_tag[WIN_STACK*TAGW +: TAGW] >> 5) == refill_epoch;
+    wire pipe_reply_ok = state == FR_PIPE && !fault && response &&
+        reply_sector <= 16 && reply_epoch_ok &&
+        refill_issued[reply_sector] && !refill_received[reply_sector] &&
+        s_beat[WIN_STACK*4 +: 4] == 0 && !response_poison;
+    wire pipe_issue = state == FR_PIPE && !fault && refill_pending < REFILL_CREDITS &&
+        (refill_next < 16 || (refill_next == 16 && refill_received[15:0] == 16'hffff));
+    wire [4:0] fill_sector_index = state == FR_PIPE ? reply_sector : sec;
     reg [USER_W-1:0] user_id, active_user;
     reg [POS_W-1:0] row;
     reg [3:0] bidx;
@@ -137,9 +155,9 @@ module ot_chip_v41x_window_kv_prefetch #(
     assign packed_codes = packed_valid ? stage[pslot][256*packed_ridx +: 256] : '0;
     assign packed_scale = packed_valid ? stage[pslot][4096+8*packed_ridx +: 8] : '0;
     generate if (BANKED_STAGE) begin : g_bank_stage
-        wire fill_ok = state == FR_DONE && response && !response_poison &&
+        wire fill_ok = pipe_reply_ok || (state == FR_DONE && response && !response_poison &&
             s_tag[WIN_STACK*TAGW +: TAGW] == TAGW'(sec) &&
-            s_beat[WIN_STACK*4 +: 4] == 0;
+            s_beat[WIN_STACK*4 +: 4] == 0);
         ot_chip_v41x_window_stage4 #(.POS_W(POS_W), .USER_W(USER_W),
             .MAX_CONTEXT(MAX_CONTEXT)) u_stage4 (
             .clk(clk), .rst_n(rst_n),
@@ -148,8 +166,8 @@ module ot_chip_v41x_window_kv_prefetch #(
             .inv_row((blk_v && blk_ready) ? blk_row :
                      (prime_v && prime_ready) ? prime_row : prefetch_row),
             .fill_v(fill_ok), .fill_user(user_id), .fill_row(row),
-            .fill_sector(sec), .fill_data(s_data[WIN_STACK*256 +: 256]),
-            .fill_last(sec == 5'd16),
+            .fill_sector(fill_sector_index), .fill_data(s_data[WIN_STACK*256 +: 256]),
+            .fill_last(fill_sector_index == 5'd16),
             .req_v(bank_req_v), .req_ready(bank_req_ready),
             .req_user(bank_req_user), .req_first_row(bank_req_first),
             .req_mask(bank_req_mask), .rsp_v(bank_rsp_v),
@@ -179,7 +197,7 @@ module ot_chip_v41x_window_kv_prefetch #(
                 if (s[8*z +: 8] == 8'hff) poison_scales = 1'b1;
         end
     endfunction
-    wire response_poison = (sec < 5'd16) ?
+    wire response_poison = (fill_sector_index < 5'd16) ?
         poison_codes(s_data[WIN_STACK*256 +: 256]) :
         poison_scales(s_data[WIN_STACK*256 +: 128]);
     wire [31:0] decoded;
@@ -191,10 +209,10 @@ module ot_chip_v41x_window_kv_prefetch #(
         .region_sector_count(region_sector_count), .sector_index(5'd0),
         .sector_address(), .sector_data(), .sector_strobe(), .address_fault(),
         .element_index(relem), .element_fp32(decoded), .element_fault(dec_fault));
-    assign blk_ready = state == IDLE;
-    assign prime_ready = state == IDLE && !blk_v;
-    assign prefetch_ready = state == IDLE && !blk_v && !prime_v;
-    assign kv_ok = state == IDLE && stage_valid[aslot] &&
+    assign blk_ready = state == IDLE && (REFILL_CREDITS == 1 || !fault);
+    assign prime_ready = state == IDLE && (REFILL_CREDITS == 1 || !fault) && !blk_v;
+    assign prefetch_ready = state == IDLE && (REFILL_CREDITS == 1 || !fault) && !blk_v && !prime_v;
+    assign kv_ok = (REFILL_CREDITS == 1 || !fault) && state == IDLE && stage_valid[aslot] &&
                    stage_tag[aslot] == active_row && stage_user[aslot] == active_user;
     assign s_rdy = 4'hf;
     wire grant = m_rdy[WIN_STACK] && m_v[WIN_STACK];
@@ -204,7 +222,8 @@ module ot_chip_v41x_window_kv_prefetch #(
 `ifndef SYNTHESIS
     initial begin
         if (WIN_STACK < 0 || WIN_STACK > 3 || WINDOW_SLOTS != 128 ||
-            POS_W < 21 || SEC_W < 30 || HAW < SEC_W || TAGW < 5)
+            POS_W < 21 || SEC_W < 30 || HAW < SEC_W || TAGW < 5 || (REFILL_CREDITS > 1 && TAGW < 6) ||
+            REFILL_CREDITS < 1 || REFILL_CREDITS > 16)
             $fatal(1, "packed window KV parameter contract failed");
     end
 `endif
@@ -226,9 +245,17 @@ module ot_chip_v41x_window_kv_prefetch #(
                 m_wstrb[WIN_STACK*32 +: 32] = 32'h1 << bidx;
             end
         end
+        if (pipe_issue && !addr_bad) begin
+            m_v[WIN_STACK] = 1'b1;
+            m_addr[WIN_STACK*HAW +: HAW] = HAW'(addr_wide - (SEC_W+1)'(sec) + (SEC_W+1)'(refill_next));
+            m_len[WIN_STACK*4 +: 4] = 1;
+            m_tag[WIN_STACK*TAGW +: TAGW] = TAGW'({refill_epoch, refill_next});
+        end
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
+            refill_epoch <= 0; refill_issued <= 0; refill_received <= 0;
+            refill_next <= 0; refill_pending <= 0;
             state <= IDLE; row <= 0; bidx <= 0; sec <= 0; codes <= 0; scale <= 0;
             user_id <= 0; active_row <= 0; active_user <= 0; q <= 0; fault <= 0; fault_code <= 0;
             st_rows_fetched <= 0; st_blocks_written <= 0;
@@ -304,7 +331,12 @@ module ot_chip_v41x_window_kv_prefetch #(
                             stage_tag[prefetch_row[6:0]] == prefetch_row &&
                             stage_user[prefetch_row[6:0]] == prefetch_user)) begin
                             stage_valid[prefetch_row[6:0]] <= 0;
-                            state <= FR;
+                            if (REFILL_CREDITS > 1) begin
+                                refill_epoch <= refill_epoch + 1'b1;
+                                refill_issued <= 0; refill_received <= 0;
+                                refill_next <= 0; refill_pending <= 0;
+                                state <= FR_PIPE;
+                            end else state <= FR;
                         end
                     end
                 end
@@ -343,6 +375,36 @@ module ot_chip_v41x_window_kv_prefetch #(
                             st_rows_fetched <= st_rows_fetched + 1;
                             state <= IDLE;
                         end else begin sec <= sec + 1'b1; state <= FR; end
+                    end
+                end
+                FR_PIPE: if (!fault) begin
+                    if (addr_bad) begin fault <= 1; fault_code[0] <= 1; end
+                    else begin
+                        case ({grant, pipe_reply_ok})
+                            2'b10: refill_pending <= refill_pending + 1'b1;
+                            2'b01: refill_pending <= refill_pending - 1'b1;
+                            default: begin end
+                        endcase
+                        if (grant) begin
+                            refill_issued[refill_next] <= 1'b1;
+                            refill_next <= refill_next + 1'b1;
+                        end
+                        if (response) begin
+                            if (!pipe_reply_ok) begin fault <= 1; fault_code[2] <= 1; end
+                            else begin
+                                refill_received[reply_sector] <= 1'b1;
+                                st_sectors_read <= st_sectors_read + 1;
+                                if (!BANKED_STAGE) begin
+                                    if (reply_sector < 16) stage[slot][256*reply_sector +: 256] <= s_data[WIN_STACK*256 +: 256];
+                                    else stage[slot][4096 +: 128] <= s_data[WIN_STACK*256 +: 128];
+                                end
+                                if (reply_sector == 16) begin
+                                    stage_tag[slot] <= row; stage_user[slot] <= user_id;
+                                    stage_valid[slot] <= 1; st_rows_fetched <= st_rows_fetched + 1;
+                                    state <= IDLE;
+                                end
+                            end
+                        end
                     end
                 end
                 default: state <= IDLE;
