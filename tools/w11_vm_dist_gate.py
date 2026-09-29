@@ -132,12 +132,15 @@ def reusable(obj: Path, exe: Path, flags, sources) -> bool:
     return all(f in cmdline.split() for f in flags) and all(Path(p).stat().st_mtime < built for p in sources)
 
 
+BIG = ["--unroll-count", "4", "-fno-dfg"]      # N = 1,024: the flags that keep Verilator near 31 GiB
+
+
 def su_build(N, M, obj, vd, st):
     """rtl_hdc_v41x_vec_campaign.build with the VM_DIST flags passed explicitly (its OT_VFLAGS environment
     variable is process-wide: parallel builds with different flags race on it)."""
     C.write_fields_svh()
     obj.mkdir(parents=True, exist_ok=True)
-    flags = su_flags(vd, st).split()
+    flags = su_flags(vd, st).split() + (BIG if N >= 1024 else [])
     srcs = [*C.LIB, *C.RTL, C.TB, C.HARNESS, C.FIELDS_SVH]
     exe = obj / "Vtb"
     if reusable(obj, exe, flags + [f"-GN={N}", f"-GM={M}"], srcs):
@@ -158,9 +161,9 @@ def su_part(scratch: Path, st, n1024: bool, jobs: int):
     su_setup()
     out = dict(stages=dict(SU_RES_STAGES=st["SU_RES_STAGES"], RET_SCATTER_STAGES=st["RET_SCATTER_STAGES"]),
                builds={}, campaigns={}, softmax={})
-    cfgs = [(16, 8), (64, 16)]
+    cfgs = [(16, 8), (64, 16)] + ([(1024, 256)] if n1024 else [])
     exes = {}
-    with cf.ThreadPoolExecutor(4) as ex:
+    with cf.ThreadPoolExecutor(6) as ex:
         futs = {(N, M, vd): ex.submit(su_build, N, M, scratch / f"vec_vd{vd}_N{N}_M{M}", vd, st)
                 for N, M in cfgs for vd in (0, 1)}
         for k, f in futs.items():
@@ -183,6 +186,22 @@ def su_part(scratch: Path, st, n1024: bool, jobs: int):
                                    depths=C.perf_depths(e, 64, 16, scratch / f"p64_vd{vd}", rng),
                                    chain_ext=C.perf_chain_ext(e, 64, 16, scratch / f"p64_vd{vd}", rng),
                                    mixed_classes=C.perf_mix(e, 64, 16, scratch / f"p64_vd{vd}", rng))
+        if n1024:
+            e = exes[(1024, 256, vd)]
+            # 16-op random programs that fit the bench's 2^18-word memory at N = 1,024 (the campaign's rule)
+            fits = []
+            for sd in range(1001, 1009):
+                try:
+                    C.random_program(np.random.default_rng(sd), 1024, 256, 16, C.Alloc(64, (1 << C.VMA) - 64))
+                    fits.append(sd)
+                except AssertionError:
+                    pass
+            res["random_N1024_M256"] = C.random_campaign(e, 1024, 256, fits, 16, scratch / f"r1024_vd{vd}")
+            rng = np.random.default_rng(rng_seed)
+            res["perf_N1024_M256"] = dict(hc_post=C.perf_hcpost(e, 1024, 256, scratch / f"p1024_vd{vd}", rng),
+                                          depths=C.perf_depths(e, 1024, 256, scratch / f"p1024_vd{vd}", rng),
+                                          chain_ext=C.perf_chain_ext(e, 1024, 256, scratch / f"p1024_vd{vd}", rng),
+                                          mixed_classes=C.perf_mix(e, 1024, 256, scratch / f"p1024_vd{vd}", rng))
         out["campaigns"][tag] = res
         print("su campaigns", tag, {k: (sum(x["pass_"] for x in v), len(v)) for k, v in res.items()
                                     if isinstance(v, list)}, flush=True)
@@ -214,7 +233,9 @@ def su_summary(out):
     """Exactness of every case and the VM_DIST = 1 - VM_DIST = 0 cycle deltas on the same programs."""
     c0, c1 = out["campaigns"]["vm_dist_0"], out["campaigns"]["vm_dist_1"]
     s = dict(all_pass=True, cases=0, deltas={}, monitors={})
-    for key in ("random_N16_M8", "random_N64_M16", "vehicle_N64_M16"):
+    for key in ("random_N16_M8", "random_N64_M16", "vehicle_N64_M16", "random_N1024_M256"):
+        if key not in c0:
+            continue
         a, b = c0[key], c1[key]
         s["cases"] += len(a) + len(b)
         s["all_pass"] &= all(x["pass_"] for x in a + b)
@@ -231,6 +252,20 @@ def su_summary(out):
             write_buffer_occupancy_max=max((m["write_buffer_occupancy_max"] for m in mons), default=0),
             write_rows_max_bank_cycle=max((m["write_rows_max_bank_cycle"] for m in mons), default=0),
             faults=sum(m["fault"] for m in mons))
+    s["perf"] = {}
+    for tag, camp in out["campaigns"].items():
+        for key, perf in camp.items():
+            if not key.startswith("perf_"):
+                continue
+            for part, v in perf.items():
+                ok = bool(v["check"]["pass_"])
+                s["cases"] += 1
+                s["all_pass"] &= ok
+                s["perf"][f"{tag}.{key}.{part}"] = dict(pass_=ok, cycles=v["check"]["cycles"])
+        s["perf_chain_ext_write_to_emit"] = s.get("perf_chain_ext_write_to_emit", {})
+        for key, perf in camp.items():
+            if key.startswith("perf_"):
+                s["perf_chain_ext_write_to_emit"][f"{tag}.{key}"] = perf["chain_ext"]["max_write_to_emit"]
     for k, v in out["softmax"].items():
         for case, r in v.items():
             s["cases"] += 1
