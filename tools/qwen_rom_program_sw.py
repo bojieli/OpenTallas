@@ -29,7 +29,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--src', type=Path, required=True)
     ap.add_argument('--dst', type=Path, required=True)
-    ap.add_argument('--head-die', type=int, choices=(0, 1), help='the source is an lm_head stage of this die')
+    ap.add_argument('--head-die', type=int, choices=range(4), help='the source is an lm_head stage of this die')
     ap.add_argument('--head-geometry', type=Path, help='head_rom.json of that die (geometry)')
     a = ap.parse_args()
     a.dst.mkdir(parents=True, exist_ok=True)
