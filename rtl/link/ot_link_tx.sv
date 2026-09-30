@@ -95,7 +95,7 @@ module ot_link_tx #(
     wire [NL-1:0]  lovf;
     reg  [CRW-1:0] hub_cr;
     wire [CRW-1:0] ret;                                   // entries freed at the edge, after the return wire
-    // pacing bucket (PACE_NUM > 0): capped at one bundle, so an idle link banks no burst
+    // pacing bucket (PACE_NUM > 0): capacity DEN + NUM - 1, so an idle link banks at most one extra bundle
     localparam integer PB = $clog2(PACE_DEN + PACE_NUM + 1) + 1;
     reg  [PB-1:0]  pace;
     wire           slot = (PACE_NUM == 0) || (pace >= PACE_DEN);
@@ -137,7 +137,9 @@ module ot_link_tx #(
         end else begin
             cwait <= (bv || !cpend) ? 4'd0 : (cwait == 4'hF ? cwait : cwait + 1'b1);
             if (PACE_NUM != 0) begin
-                pace <= ((bv ? pace - PACE_DEN : pace) + PACE_NUM > PACE_DEN) ? PACE_DEN
+                // capacity DEN + NUM - 1: a smaller cap drops the fractional refill (capped at DEN, 7/8 pacing
+                // gave one slot every 2 cycles) -- the same bucket rule as ot_rom_ucie_link
+                pace <= ((bv ? pace - PACE_DEN : pace) + PACE_NUM > PACE_DEN + PACE_NUM - 1) ? PACE_DEN + PACE_NUM - 1
                         : (bv ? pace - PACE_DEN : pace) + PACE_NUM;
                 for (c = 0; c < CW; c = c + 1) ccnt[c] <= bv ? 0 : cfield[c*CNTW +: CNTW];
                 if (covf || ((|(dv & ~GATED)) && !slot)) fault <= 1'b1;   // count overflow / ungated off-slot
