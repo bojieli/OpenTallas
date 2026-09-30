@@ -1,0 +1,1204 @@
+{
+  "schema": "opentallas.qwen-o4-fulltoken-binding.v1",
+  "status": "source_and_program_preflight",
+  "tp": 4,
+  "groups": 6144,
+  "layers": 36,
+  "stage_count": 38,
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+  "config_sha256": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+  "checkpoint_index_sha256": "f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc",
+  "source_tensor_shapes_checked": 399,
+  "source_sha256": {
+    "tools/qwen_o4_fulltoken_binding.py": "48a8ed233029e40b5d5255640cb58330ff0cb5b8b307abcab254984ba5b515db",
+    "tools/hdc_qwen_fullshape_isa.py": "c200a26cdf8766b4ececb23aad66a1ca45afad4b7c7159fd0fbce2a71b14a957",
+    "tools/hdc_qwen_fullshape_program.py": "dc08c0715fa24ad6f0cbfc414c648e805f5fa5397203f4afe516164b1bbbab10",
+    "tools/hdc_qwen_layer0_rom.py": "2afed7d5b644aeccf5b9906481f423b302828a930137b37260264a7658caed32",
+    "tools/hdc_qwen_int8_image.py": "22498c68d20ebffdf0f6282d325215f75a9f1ad3af00f26665f5725fa8990875",
+    "tools/hdc_qwen_vocab_rom.py": "dd11349664484cf0bf9d358ab362ca3de86a90227f2c3b9e9f21dd3633a8244d",
+    "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+    "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542"
+  },
+  "program_sha256": {
+    "embed_program.hex": "c92bd0fc153bf85778ecddf6509d3c66b37434a0e6b38f0cf43bb347ce4644b4",
+    "embed_segments.hex": "b1e74676141c99cb63d241a9217e64329de2f73a09e02875f00c97069f0ac916",
+    "layer_program.hex": "b8137ab3660073ae8bde145a03e9292bdfb1b3a1eed2dd9fac5fb5ea9bab587d",
+    "layer_segments.hex": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+    "head_program_d0.hex": "9a4414176f9459e1742373ecaa0082e8d8c99bbd19fb90dc046f5b2298d3d0ae",
+    "head_segments_d0.hex": "5199e0ce362202a5f6dd77a246106964fb7d8265b66ef4136b53bd7809c8a18d",
+    "head_program_d1.hex": "9a4414176f9459e1742373ecaa0082e8d8c99bbd19fb90dc046f5b2298d3d0ae",
+    "head_segments_d1.hex": "e1f9468b87875d6e27a1e5f360abbf5d375487089796bc716b1f6964113b203b",
+    "head_program_d2.hex": "9a4414176f9459e1742373ecaa0082e8d8c99bbd19fb90dc046f5b2298d3d0ae",
+    "head_segments_d2.hex": "febdb9f2a58fcb0682323a02faa1b6e8eff71a755aa2271111e626e196f35e3c",
+    "head_program_d3.hex": "9a4414176f9459e1742373ecaa0082e8d8c99bbd19fb90dc046f5b2298d3d0ae",
+    "head_segments_d3.hex": "14853a94d9b9e69aa8efdb4eb82f900405ecd638ea71a64f457b7ed5c274e4c7",
+    "head_final_norm_crom.hex": "e55eb37f3097d7af4c18b8dee82db880758834e789c9a731b84d7c6c749dd72b"
+  },
+  "requirements": {
+    "core_token_bits": 18,
+    "core_address_bits": 24,
+    "me_row0_high_bits": [
+      899,
+      898
+    ],
+    "tp_descriptor_row0_high_bits": [
+      19,
+      18
+    ],
+    "independent_scale_base": "INT8_SCALE_WCS_BASE=1",
+    "embedding_code_address": "token*64 + in_row_word",
+    "embedding_rows": "replicated 4096 INT8 codes and one BF16 scale per token per die",
+    "head_argmax": "18-bit vocabulary row index from 75968-row die halves",
+    "code_and_scale_banks": "stage-local compact, rebased per invocation",
+    "kv": "page one 8192-token layer window before each layer",
+    "control": "invoke stages in order, preserve VM X and select image bank"
+  },
+  "vm_elems": 97136,
+  "kv_window_elems": 8388608,
+  "compact_layer_matrix_layout": [
+    {
+      "name": "qkv",
+      "base": 0,
+      "end": 64,
+      "words": 64,
+      "rows": 1536,
+      "columns": 4096,
+      "split": 512,
+      "k_per_split": 8,
+      "tiles_per_round": 12,
+      "rounds": 1,
+      "scale_rows": 1536,
+      "scale_words": 96,
+      "scale_base": 0,
+      "scale_span_words": 96,
+      "code_span_words": 64
+    },
+    {
+      "name": "o",
+      "base": 64,
+      "end": 112,
+      "words": 48,
+      "rows": 4096,
+      "columns": 1024,
+      "split": 512,
+      "k_per_split": 2,
+      "tiles_per_round": 12,
+      "rounds": 3,
+      "scale_rows": 4096,
+      "scale_words": 256,
+      "scale_base": 96,
+      "scale_span_words": 288,
+      "code_span_words": 48
+    },
+    {
+      "name": "gu",
+      "base": 112,
+      "end": 368,
+      "words": 256,
+      "rows": 6144,
+      "columns": 4096,
+      "split": 128,
+      "k_per_split": 32,
+      "tiles_per_round": 48,
+      "rounds": 1,
+      "scale_rows": 6144,
+      "scale_words": 384,
+      "scale_base": 384,
+      "scale_span_words": 384,
+      "code_span_words": 256
+    },
+    {
+      "name": "down",
+      "base": 368,
+      "end": 512,
+      "words": 144,
+      "rows": 4096,
+      "columns": 3072,
+      "split": 512,
+      "k_per_split": 6,
+      "tiles_per_round": 12,
+      "rounds": 3,
+      "scale_rows": 4096,
+      "scale_words": 256,
+      "scale_base": 768,
+      "scale_span_words": 288,
+      "code_span_words": 144
+    }
+  ],
+  "stages": [
+    {
+      "kind": "embedding",
+      "index": 0,
+      "program": "embed_program.hex",
+      "descriptors": "embed_segments.hex",
+      "code_word_count": 9723904,
+      "scale_row_count": 151936,
+      "image_source": "model.embed_tokens.weight"
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 1,
+      "layer": 0,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L00/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "0",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L00/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 2,
+      "layer": 1,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L01/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "1",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L01/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 3,
+      "layer": 2,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L02/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "2",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L02/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 4,
+      "layer": 3,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L03/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "3",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L03/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 5,
+      "layer": 4,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L04/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "4",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L04/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 6,
+      "layer": 5,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L05/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "5",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L05/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 7,
+      "layer": 6,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L06/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "6",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L06/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 8,
+      "layer": 7,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L07/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "7",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L07/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 9,
+      "layer": 8,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L08/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "8",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L08/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 10,
+      "layer": 9,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L09/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "9",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L09/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 11,
+      "layer": 10,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L10/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "10",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L10/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 12,
+      "layer": 11,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L11/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "11",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L11/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 13,
+      "layer": 12,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L12/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "12",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L12/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 14,
+      "layer": 13,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L13/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "13",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L13/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 15,
+      "layer": 14,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L14/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "14",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L14/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 16,
+      "layer": 15,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L15/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "15",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L15/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 17,
+      "layer": 16,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L16/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "16",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L16/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 18,
+      "layer": 17,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L17/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "17",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L17/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 19,
+      "layer": 18,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L18/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "18",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L18/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 20,
+      "layer": 19,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L19/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "19",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L19/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 21,
+      "layer": 20,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L20/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "20",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L20/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 22,
+      "layer": 21,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L21/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "21",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L21/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 23,
+      "layer": 22,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L22/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "22",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L22/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 24,
+      "layer": 23,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L23/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "23",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L23/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 25,
+      "layer": 24,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L24/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "24",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L24/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 26,
+      "layer": 25,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L25/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "25",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L25/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 27,
+      "layer": 26,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L26/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "26",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L26/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 28,
+      "layer": 27,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L27/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "27",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L27/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 29,
+      "layer": 28,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L28/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "28",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L28/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 30,
+      "layer": 29,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L29/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "29",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L29/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 31,
+      "layer": 30,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L30/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "30",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L30/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 32,
+      "layer": 31,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L31/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "31",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L31/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 33,
+      "layer": 32,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L32/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "32",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L32/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 34,
+      "layer": 33,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L33/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "33",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L33/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 35,
+      "layer": 34,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L34/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "34",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L34/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "decoder_layer",
+      "index": 36,
+      "layer": 35,
+      "program": "layer_program.hex",
+      "descriptors": "layer_segments.hex",
+      "image_directory": "layers/L35/d{die}",
+      "image_generator_argv": [
+        "python3",
+        "tools/hdc_qwen_layer0_rom.py",
+        "--snapshot",
+        "{snapshot}",
+        "--layer",
+        "35",
+        "--compact-banks",
+        "--die",
+        "{die}",
+        "--out",
+        "layers/L35/d{die}"
+      ],
+      "code_words_per_die": 512,
+      "scale_words_per_die": 1056,
+      "crom_words": 543233,
+      "post_tp_scale_bases": [
+        533761,
+        537857
+      ],
+      "allreduce_half_segments": 4
+    },
+    {
+      "kind": "lm_head",
+      "index": 37,
+      "program_by_die": [
+        "head_program_d0.hex",
+        "head_program_d1.hex"
+      ],
+      "descriptors_by_die": [
+        "head_segments_d0.hex",
+        "head_segments_d1.hex"
+      ],
+      "image_source": "lm_head.weight",
+      "final_norm_source": "model.norm.weight",
+      "final_norm_crom": "head_final_norm_crom.hex",
+      "rows_per_die": 37984,
+      "code_words_per_die": 1584,
+      "scale_words_per_die": 2376,
+      "chunks_per_die": 4
+    }
+  ],
+  "claim_boundary": "All-stage source/ISA/image address binding only; full payloads, RTL layer execution and token exactness unproved."
+}

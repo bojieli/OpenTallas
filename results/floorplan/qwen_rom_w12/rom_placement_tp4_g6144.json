@@ -1,0 +1,1440 @@
+{
+ "schema": "opentallas.qwen-o4-rom-placement.v1",
+ "status": "integer_placement_closed_on_predictive_asap7_views",
+ "tool": "tools/qwen_o4_rom_placement.py",
+ "source_sha256": {
+  "tools/hdc_qwen_fullshape_placement.py": "003d186f7ace98fa90e12d5ba51278a89fb252e5c29cfd36e163396b693dbc92",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+  "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+  "rtl/test/tb_hdc_qwen_layer0_tp2.sv": "a3f0b98249aab1aa5a5db849812511b948b7668d26b6e38fe14280512bde3df3",
+  "rtl/hdc/ot_hdc_matvec.sv": "a405904d794687047077208a7d3a8d2e1de88024303151e58b5909e093adec18",
+  "rtl/physical/ot_qwen_o4_g4_rommac.sv": "d9f5a4f643c3bad47a9e4f7756e4564f82c63e792b704d83cb31e94de43da6cd",
+  "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3"
+ },
+ "tool_sha256": "3343ddcaaed7dbde9df9d61d344043672de037bb8c02bac1cd6623d77d602281",
+ "clock": {
+  "adopted_ns": 0.910216,
+  "basis": "results/arch/qwen3_budget.json clock_hz 1,098,640,000 Hz; the 0.92 ns of earlier cuts is 1.07% slower and is not adopted",
+  "uncertainty_ns": 0.06
+ },
+ "die": {
+  "groups": 6144,
+  "lanes": 98304,
+  "tp": 4,
+  "code_word_bits": 786432
+ },
+ "macro_views": {
+  "ot_rom_4096x266_m8": {
+   "width_um": 121.824,
+   "height_um": 62.91,
+   "area_um2": 7663.948,
+   "capacity_bits": 1089536,
+   "clk_to_q_tt_ps": 585.8,
+   "min_period_tt_ps": 559.0
+  },
+  "ot_rom_8192x266_m8": {
+   "width_um": 122.256,
+   "height_um": 119.34,
+   "area_um2": 14590.031,
+   "capacity_bits": 2179072,
+   "clk_to_q_tt_ps": 787.2,
+   "min_period_tt_ps": 770.4
+  },
+  "ot_rom_4096x72_m8": {
+   "width_um": 38.016,
+   "height_um": 62.91,
+   "area_um2": 2391.587,
+   "capacity_bits": 294912,
+   "clk_to_q_tt_ps": 513.7,
+   "min_period_tt_ps": 486.8
+  }
+ },
+ "code_rom": {
+  "macro": "ot_rom_4096x266_m8",
+  "word_columns": 3072,
+  "useful_bits_per_macro_word": 256,
+  "spare_bits_per_macro_word": 10,
+  "words_per_column": 20016,
+  "target_words": 20016,
+  "drafter_words": 0,
+  "banks_per_column": 5,
+  "bank_depth": 4096,
+  "padding_words_per_column": 464,
+  "macros": 15360,
+  "area_mm2": 117.71824128,
+  "bank_select": "bank b holds words 4096b..4096b+4095; ce only for its own addresses; the registered select ORs the enabled bank into the matvec MEM_PIPE capture (rtl/physical/ot_qwen_o4_g4_rommac.sv): zero added cycles"
+ },
+ "code_rom_alternative": {
+  "macro": "ot_rom_8192x266_m8",
+  "banks_per_column": 3,
+  "macros": 9216,
+  "area_mm2": 134.461725696,
+  "rejected_because": "clk-to-q 787.2 ps + setup leaves 34.7 ps at 0.910216 ns with 60 ps uncertainty for the pin-to-capture wire and the 3-bank select; a per-bank capture would add one cycle to the matvec contract"
+ },
+ "code_segments": [
+  {
+   "name": "L00.qkv",
+   "first_word": 0,
+   "last_word": 63,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L00.o",
+   "first_word": 64,
+   "last_word": 111,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L00.gu",
+   "first_word": 112,
+   "last_word": 367,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L00.down",
+   "first_word": 368,
+   "last_word": 511,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L01.qkv",
+   "first_word": 512,
+   "last_word": 575,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L01.o",
+   "first_word": 576,
+   "last_word": 623,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L01.gu",
+   "first_word": 624,
+   "last_word": 879,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L01.down",
+   "first_word": 880,
+   "last_word": 1023,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L02.qkv",
+   "first_word": 1024,
+   "last_word": 1087,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L02.o",
+   "first_word": 1088,
+   "last_word": 1135,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L02.gu",
+   "first_word": 1136,
+   "last_word": 1391,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L02.down",
+   "first_word": 1392,
+   "last_word": 1535,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L03.qkv",
+   "first_word": 1536,
+   "last_word": 1599,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L03.o",
+   "first_word": 1600,
+   "last_word": 1647,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L03.gu",
+   "first_word": 1648,
+   "last_word": 1903,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L03.down",
+   "first_word": 1904,
+   "last_word": 2047,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L04.qkv",
+   "first_word": 2048,
+   "last_word": 2111,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L04.o",
+   "first_word": 2112,
+   "last_word": 2159,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L04.gu",
+   "first_word": 2160,
+   "last_word": 2415,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L04.down",
+   "first_word": 2416,
+   "last_word": 2559,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L05.qkv",
+   "first_word": 2560,
+   "last_word": 2623,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L05.o",
+   "first_word": 2624,
+   "last_word": 2671,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L05.gu",
+   "first_word": 2672,
+   "last_word": 2927,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L05.down",
+   "first_word": 2928,
+   "last_word": 3071,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L06.qkv",
+   "first_word": 3072,
+   "last_word": 3135,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L06.o",
+   "first_word": 3136,
+   "last_word": 3183,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L06.gu",
+   "first_word": 3184,
+   "last_word": 3439,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L06.down",
+   "first_word": 3440,
+   "last_word": 3583,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L07.qkv",
+   "first_word": 3584,
+   "last_word": 3647,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L07.o",
+   "first_word": 3648,
+   "last_word": 3695,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L07.gu",
+   "first_word": 3696,
+   "last_word": 3951,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L07.down",
+   "first_word": 3952,
+   "last_word": 4095,
+   "first_bank": 0,
+   "last_bank": 0,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L08.qkv",
+   "first_word": 4096,
+   "last_word": 4159,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L08.o",
+   "first_word": 4160,
+   "last_word": 4207,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L08.gu",
+   "first_word": 4208,
+   "last_word": 4463,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L08.down",
+   "first_word": 4464,
+   "last_word": 4607,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L09.qkv",
+   "first_word": 4608,
+   "last_word": 4671,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L09.o",
+   "first_word": 4672,
+   "last_word": 4719,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L09.gu",
+   "first_word": 4720,
+   "last_word": 4975,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L09.down",
+   "first_word": 4976,
+   "last_word": 5119,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L10.qkv",
+   "first_word": 5120,
+   "last_word": 5183,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L10.o",
+   "first_word": 5184,
+   "last_word": 5231,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L10.gu",
+   "first_word": 5232,
+   "last_word": 5487,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L10.down",
+   "first_word": 5488,
+   "last_word": 5631,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L11.qkv",
+   "first_word": 5632,
+   "last_word": 5695,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L11.o",
+   "first_word": 5696,
+   "last_word": 5743,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L11.gu",
+   "first_word": 5744,
+   "last_word": 5999,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L11.down",
+   "first_word": 6000,
+   "last_word": 6143,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L12.qkv",
+   "first_word": 6144,
+   "last_word": 6207,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L12.o",
+   "first_word": 6208,
+   "last_word": 6255,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L12.gu",
+   "first_word": 6256,
+   "last_word": 6511,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L12.down",
+   "first_word": 6512,
+   "last_word": 6655,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L13.qkv",
+   "first_word": 6656,
+   "last_word": 6719,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L13.o",
+   "first_word": 6720,
+   "last_word": 6767,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L13.gu",
+   "first_word": 6768,
+   "last_word": 7023,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L13.down",
+   "first_word": 7024,
+   "last_word": 7167,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L14.qkv",
+   "first_word": 7168,
+   "last_word": 7231,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L14.o",
+   "first_word": 7232,
+   "last_word": 7279,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L14.gu",
+   "first_word": 7280,
+   "last_word": 7535,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L14.down",
+   "first_word": 7536,
+   "last_word": 7679,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L15.qkv",
+   "first_word": 7680,
+   "last_word": 7743,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L15.o",
+   "first_word": 7744,
+   "last_word": 7791,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L15.gu",
+   "first_word": 7792,
+   "last_word": 8047,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L15.down",
+   "first_word": 8048,
+   "last_word": 8191,
+   "first_bank": 1,
+   "last_bank": 1,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L16.qkv",
+   "first_word": 8192,
+   "last_word": 8255,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L16.o",
+   "first_word": 8256,
+   "last_word": 8303,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L16.gu",
+   "first_word": 8304,
+   "last_word": 8559,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L16.down",
+   "first_word": 8560,
+   "last_word": 8703,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L17.qkv",
+   "first_word": 8704,
+   "last_word": 8767,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L17.o",
+   "first_word": 8768,
+   "last_word": 8815,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L17.gu",
+   "first_word": 8816,
+   "last_word": 9071,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L17.down",
+   "first_word": 9072,
+   "last_word": 9215,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L18.qkv",
+   "first_word": 9216,
+   "last_word": 9279,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L18.o",
+   "first_word": 9280,
+   "last_word": 9327,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L18.gu",
+   "first_word": 9328,
+   "last_word": 9583,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L18.down",
+   "first_word": 9584,
+   "last_word": 9727,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L19.qkv",
+   "first_word": 9728,
+   "last_word": 9791,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L19.o",
+   "first_word": 9792,
+   "last_word": 9839,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L19.gu",
+   "first_word": 9840,
+   "last_word": 10095,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L19.down",
+   "first_word": 10096,
+   "last_word": 10239,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L20.qkv",
+   "first_word": 10240,
+   "last_word": 10303,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L20.o",
+   "first_word": 10304,
+   "last_word": 10351,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L20.gu",
+   "first_word": 10352,
+   "last_word": 10607,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L20.down",
+   "first_word": 10608,
+   "last_word": 10751,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L21.qkv",
+   "first_word": 10752,
+   "last_word": 10815,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L21.o",
+   "first_word": 10816,
+   "last_word": 10863,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L21.gu",
+   "first_word": 10864,
+   "last_word": 11119,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L21.down",
+   "first_word": 11120,
+   "last_word": 11263,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L22.qkv",
+   "first_word": 11264,
+   "last_word": 11327,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L22.o",
+   "first_word": 11328,
+   "last_word": 11375,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L22.gu",
+   "first_word": 11376,
+   "last_word": 11631,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L22.down",
+   "first_word": 11632,
+   "last_word": 11775,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L23.qkv",
+   "first_word": 11776,
+   "last_word": 11839,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L23.o",
+   "first_word": 11840,
+   "last_word": 11887,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L23.gu",
+   "first_word": 11888,
+   "last_word": 12143,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L23.down",
+   "first_word": 12144,
+   "last_word": 12287,
+   "first_bank": 2,
+   "last_bank": 2,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L24.qkv",
+   "first_word": 12288,
+   "last_word": 12351,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L24.o",
+   "first_word": 12352,
+   "last_word": 12399,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L24.gu",
+   "first_word": 12400,
+   "last_word": 12655,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L24.down",
+   "first_word": 12656,
+   "last_word": 12799,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L25.qkv",
+   "first_word": 12800,
+   "last_word": 12863,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L25.o",
+   "first_word": 12864,
+   "last_word": 12911,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L25.gu",
+   "first_word": 12912,
+   "last_word": 13167,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L25.down",
+   "first_word": 13168,
+   "last_word": 13311,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L26.qkv",
+   "first_word": 13312,
+   "last_word": 13375,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L26.o",
+   "first_word": 13376,
+   "last_word": 13423,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L26.gu",
+   "first_word": 13424,
+   "last_word": 13679,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L26.down",
+   "first_word": 13680,
+   "last_word": 13823,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L27.qkv",
+   "first_word": 13824,
+   "last_word": 13887,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L27.o",
+   "first_word": 13888,
+   "last_word": 13935,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L27.gu",
+   "first_word": 13936,
+   "last_word": 14191,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L27.down",
+   "first_word": 14192,
+   "last_word": 14335,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L28.qkv",
+   "first_word": 14336,
+   "last_word": 14399,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L28.o",
+   "first_word": 14400,
+   "last_word": 14447,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L28.gu",
+   "first_word": 14448,
+   "last_word": 14703,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L28.down",
+   "first_word": 14704,
+   "last_word": 14847,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L29.qkv",
+   "first_word": 14848,
+   "last_word": 14911,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L29.o",
+   "first_word": 14912,
+   "last_word": 14959,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L29.gu",
+   "first_word": 14960,
+   "last_word": 15215,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L29.down",
+   "first_word": 15216,
+   "last_word": 15359,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L30.qkv",
+   "first_word": 15360,
+   "last_word": 15423,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L30.o",
+   "first_word": 15424,
+   "last_word": 15471,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L30.gu",
+   "first_word": 15472,
+   "last_word": 15727,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L30.down",
+   "first_word": 15728,
+   "last_word": 15871,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L31.qkv",
+   "first_word": 15872,
+   "last_word": 15935,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L31.o",
+   "first_word": 15936,
+   "last_word": 15983,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L31.gu",
+   "first_word": 15984,
+   "last_word": 16239,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L31.down",
+   "first_word": 16240,
+   "last_word": 16383,
+   "first_bank": 3,
+   "last_bank": 3,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L32.qkv",
+   "first_word": 16384,
+   "last_word": 16447,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L32.o",
+   "first_word": 16448,
+   "last_word": 16495,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L32.gu",
+   "first_word": 16496,
+   "last_word": 16751,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L32.down",
+   "first_word": 16752,
+   "last_word": 16895,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L33.qkv",
+   "first_word": 16896,
+   "last_word": 16959,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L33.o",
+   "first_word": 16960,
+   "last_word": 17007,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L33.gu",
+   "first_word": 17008,
+   "last_word": 17263,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L33.down",
+   "first_word": 17264,
+   "last_word": 17407,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L34.qkv",
+   "first_word": 17408,
+   "last_word": 17471,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L34.o",
+   "first_word": 17472,
+   "last_word": 17519,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L34.gu",
+   "first_word": 17520,
+   "last_word": 17775,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L34.down",
+   "first_word": 17776,
+   "last_word": 17919,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L35.qkv",
+   "first_word": 17920,
+   "last_word": 17983,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 1
+  },
+  {
+   "name": "L35.o",
+   "first_word": 17984,
+   "last_word": 18031,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "L35.gu",
+   "first_word": 18032,
+   "last_word": 18287,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 128,
+   "rounds": 1
+  },
+  {
+   "name": "L35.down",
+   "first_word": 18288,
+   "last_word": 18431,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 512,
+   "rounds": 3
+  },
+  {
+   "name": "lm_head",
+   "first_word": 18432,
+   "last_word": 20015,
+   "first_bank": 4,
+   "last_bank": 4,
+   "split": 2048,
+   "rounds": 99
+  }
+ ],
+ "scale_rom": {
+  "macro": "ot_rom_4096x266_m8",
+  "words_per_die": 38086,
+  "rows_per_die": 609376,
+  "result_port_groups": 48,
+  "rtl_compatible": {
+   "organization": "each result-port group holds the whole dense scale image (the RTL scale_addr is the global dense address sbase + row word + q*IL)",
+   "banks_per_port_group": 10,
+   "macros": 480,
+   "area_mm2": 3.67869504
+  },
+  "exact_subset_needs_rtl_remap": {
+   "organization": "each port group holds only the words it reads; needs a per-matrix local base in the scale request (an ot_hdc_matvec change, not made)",
+   "words_per_port_group_max": 3096,
+   "words_per_port_group_min": 288,
+   "words_total": 38088,
+   "macros": 48,
+   "area_mm2": 0.367869504
+  },
+  "rtl_as_instantiated_note": "ot_hdc_matvec instantiates scale_q and an ot_hdc_fmul for all 6,144 x 16 lanes; at G = 6144 only groups 0..47 can ever raise scale_gre"
+ },
+ "embedding_rom": {
+  "macro": "ot_rom_4096x266_m8",
+  "rows": 37984,
+  "words": 2430976,
+  "word_bits": 512,
+  "macros_per_word": 2,
+  "banks": 594,
+  "macros": 1188,
+  "area_mm2": 9.112434171999999,
+  "scale_words": 2374,
+  "scale_macros": 1,
+  "note": "fullshape_placement computes the full vocabulary (9,723,904 words) per die; under TP-2 each die holds half and hands one row across UCIe a token (spec D5)"
+ },
+ "constant_rom": {
+  "macro": "ot_rom_4096x72_m8",
+  "words": 543233,
+  "word_bits": 64,
+  "macros": 133,
+  "area_mm2": 0.318081071,
+  "basis": "tb_hdc_qwen_layer0_tp2 CROM_WORDS (layer-0 gate sizing; full-token constants not audited)"
+ },
+ "totals": {
+  "macros": 17162,
+  "area_mm2": 130.827,
+  "stored_bits": 17031007296,
+  "placed_capacity_useful_bits": 17891065856,
+  "padding_fraction": 0.04807,
+  "ledger_rom_mm2_n6": 253.41,
+  "ledger_note": "the N6 ledger ROM figure is an analytical density, not a macro view; it is quoted, never substituted"
+ },
+ "excluded": [
+  "ROM contents and via maps (no checkpoint read)",
+  "ECC (none on the O4 path)",
+  "program ROM (64 x 1,024 bits: flops)",
+  "KV ring and VM SRAM (see qwen_o4_floorplan.py)",
+  "macro manufacturing qualification; predictive ASAP7 views only"
+ ]
+}

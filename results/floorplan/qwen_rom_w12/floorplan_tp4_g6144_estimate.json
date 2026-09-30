@@ -1,0 +1,257 @@
+{
+ "schema": "opentallas.qwen-rom-floorplan-w12.v1",
+ "tool": "tools/qwen_rom_floorplan_w12.py",
+ "tool_sha256": "db7c257cd213588fff1c3e45a8c1905a22d2144baa5f86eac778c20d1d9c84de",
+ "source_sha256": {
+  "tools/qwen_o4_floorplan.py": "2fa9633b32441d3e8a7a2154d6badce118522b2dff2105319df73849dfa95bb5",
+  "tools/uarch_model.py": "6e2638f9fe1f268e0e30442e9182322bb808f09cd0802cc63587bbbcb863e62e",
+  "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+  "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3"
+ },
+ "rom_placement_sha256": "a445cb0afef3413a6854bc253584710c4452d45972f1ee15f7f1bb8ff1d660bd",
+ "tile_outline_source": "argument (estimate)",
+ "design": {
+  "groups": 6144,
+  "tiles": 1536,
+  "tile_groups": 4,
+  "smin": 7,
+  "tree_cut": 7,
+  "blocks": 48,
+  "tiles_per_block": 32,
+  "code_banks_per_column": 5,
+  "tile_macros": 12,
+  "ports": 48,
+  "scale_local": true
+ },
+ "clock_hz": 1098640000.0,
+ "wire": {
+  "ps_per_um": 0.76,
+  "overhead_ps": 189.5,
+  "reach_um": 869.4
+ },
+ "die_um": [
+  31800.0,
+  25628.931
+ ],
+ "tile_um": [
+  518.4,
+  386.64
+ ],
+ "tile_mm2": 0.20043,
+ "core": {
+  "y0": 1239.84,
+  "y1": 24393.36,
+  "west": 1213.488,
+  "east": 31780.0
+ },
+ "spine": {
+  "x": 15200.352,
+  "width_um": 1400.112,
+  "used_um": 22803.1,
+  "core_height_um": 23153.5,
+  "blocks": [
+   {
+    "name": "spine_embedding_rom_a",
+    "kind": "rom",
+    "height_um": 4147.2,
+    "macros": 594,
+    "holds": "INT8 embedding (first half)"
+   },
+   {
+    "name": "spine_constants",
+    "kind": "seq",
+    "height_um": 345.6,
+    "macros": 133,
+    "holds": "constant ROM"
+   },
+   {
+    "name": "spine_scale_rom",
+    "kind": "rom",
+    "height_um": 345.6,
+    "macros": 48,
+    "holds": "port-local scale ROM (SCALE_LOCAL): 48 dense ports x 1 banks (3096 words a port; the exact subset would be 48 macros)"
+   },
+   {
+    "name": "spine_engine_top",
+    "kind": "ports",
+    "height_um": 3730.32,
+    "macros": 0,
+    "holds": "ot_qwen_me_spine: issue loop, x network root, split-tree levels 8..13, 48 result-port groups (post-scale, argmax, result write), sequencer, TP seq"
+   },
+   {
+    "name": "spine_vm",
+    "kind": "vm",
+    "height_um": 943.92,
+    "macros": 128,
+    "holds": "vector memory (177,808 FP32), 128 x 512x128 for a 512-element x read, registered conflict stage (XVM = 1)"
+   },
+   {
+    "name": "spine_stream_unit",
+    "kind": "su",
+    "height_um": 9143.28,
+    "macros": 0,
+    "holds": "SW = 1,024 vector stream unit (ledger reservation)"
+   },
+   {
+    "name": "spine_embedding_rom_b",
+    "kind": "rom",
+    "height_um": 4147.2,
+    "macros": 595,
+    "holds": "INT8 embedding (second half) + scales"
+   }
+  ]
+ },
+ "arrays": [
+  {
+   "side": "west",
+   "x0": 1213.488,
+   "x1": 15140.352,
+   "cols": 26,
+   "rows": 58,
+   "tiles": 1508
+  },
+  {
+   "side": "east",
+   "x0": 16660.464,
+   "x1": 31780.0,
+   "cols": 28,
+   "rows": 58,
+   "tiles": 1624
+  }
+ ],
+ "block_capacity": 94,
+ "blocks_needed": 48,
+ "tiles_needed": 1536,
+ "tiles_capacity_grid": 3132,
+ "tiles_capacity_in_blocks": 3008,
+ "array_area_mm2": 672.5,
+ "tiles_area_mm2": 307.9,
+ "fits": true,
+ "margin_blocks": 46,
+ "margin_fraction": 0.4894,
+ "margin_fraction_grid": 0.5096,
+ "legality": {
+  "macros": 3038,
+  "overlaps_including_halo": 0,
+  "errors": [],
+  "legal": true
+ },
+ "macro_counts": {
+  "ot_hbm3e_phy": 4,
+  "ot_qwen_rom_tile": 1536,
+  "ot_rom_4096x266_m8": 1237,
+  "ot_rom_4096x72_m8": 133,
+  "ot_sram_1r1w_512x128_m4_r2c2": 128,
+  "ot_rom_4096x266_m8 (in tiles)": 15360,
+  "ot_sram_1r1w_128x256_m1_r2c2 (in tiles)": 3072
+ },
+ "wire_stages": {
+  "BD": 24,
+  "XVM": 1,
+  "NWS": 3,
+  "TWS": 22,
+  "ORD": 4,
+  "XD": 61,
+  "engine_latency_added": 65,
+  "per_level": {
+   "3": {
+    "worst_um": 970.9,
+    "stages": 2
+   },
+   "4": {
+    "worst_um": 1357.6,
+    "stages": 2
+   },
+   "5": {
+    "worst_um": 1936.0,
+    "stages": 3
+   },
+   "6": {
+    "worst_um": 2322.6,
+    "stages": 3
+   },
+   "7": {
+    "worst_um": 1225.8,
+    "stages": 2
+   }
+  }
+ },
+ "connections": [
+  {
+   "name": "instruction broadcast + x network: spine -> farthest tile",
+   "distance_um": 20518.2,
+   "stages": 24,
+   "rtl_param": "BD (includes the tile input register and XVM = 1)",
+   "bits": 65916,
+   "note": "512 quad lines of 128 bits leave the VM; line r feeds tiles t = r mod 512"
+  },
+  {
+   "name": "split-tree level 3: child -> node host",
+   "distance_um": 970.9,
+   "stages": 2,
+   "rtl_param": "NWS (uniform: the max over levels)",
+   "bits": 786432
+  },
+  {
+   "name": "split-tree level 4: child -> node host",
+   "distance_um": 1357.6,
+   "stages": 2,
+   "rtl_param": "NWS (uniform: the max over levels)",
+   "bits": 393216
+  },
+  {
+   "name": "split-tree level 5: child -> node host",
+   "distance_um": 1936.0,
+   "stages": 3,
+   "rtl_param": "NWS (uniform: the max over levels)",
+   "bits": 196608
+  },
+  {
+   "name": "split-tree level 6: child -> node host",
+   "distance_um": 2322.6,
+   "stages": 3,
+   "rtl_param": "NWS (uniform: the max over levels)",
+   "bits": 98304
+  },
+  {
+   "name": "split-tree level 7: child -> node host",
+   "distance_um": 1225.8,
+   "stages": 2,
+   "rtl_param": "NWS (uniform: the max over levels)",
+   "bits": 49152
+  },
+  {
+   "name": "split-tree level 7 words -> spine top",
+   "distance_um": 18971.6,
+   "stages": 22,
+   "rtl_param": "TWS",
+   "bits": 24576
+  },
+  {
+   "name": "result write: port groups -> VM",
+   "distance_um": 3037.2,
+   "stages": 4,
+   "rtl_param": "ORD",
+   "bits": 24576
+  },
+  {
+   "name": "TP exchange: spine -> UCIe PHY (one way)",
+   "distance_um": 14347.0,
+   "stages": 17,
+   "rtl_param": "not in the RTL (ot_rom_oneshot_allreduce LAT 11 is the link hop); priced per crossing",
+   "bits": 512
+  }
+ ],
+ "bisection": {
+  "tracks_per_um": 14.06,
+  "cut_um": 23153.5,
+  "capacity_wires": 325596,
+  "west_demand_wires": 91312,
+  "utilisation": 0.2804
+ },
+ "vm_x_read": {
+  "note": "the x chunk port reads up to 2^SMAX = 2048 elements in a cycle when a K step starts (o/down at S = 2,048; the weighted sum reads 512 a cycle every cycle); the W5 VM (96 x 512x128) serves 128 FP32 a cycle. A VM x-read bandwidth gap, not modelled."
+ },
+ "claim_boundary": "macro-level floorplan: tile outline from its P&R record (or an estimate), spine blocks from macro views and estimated logic; distances priced with the model wire constant; no die route, no timing closure of the spine, no power integrity",
+ "def_sha256": "b032bcf7b7462d089f8c6214e23c006b8f46955dbf8238ed359c59b846ff4ef9"
+}
