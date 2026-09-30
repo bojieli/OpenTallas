@@ -1,0 +1,386 @@
+{
+ "schema": "opentallas.v41.w18_pair_abstract.v1",
+ "element": "W10 ROM-array element pair ot_v41_rom_elem_q (NB=2, MTP=1, EARLY=1), run p5 (results/physical_abi3/asap7/chip/v41_w10_elem/pair_final_physical_p5.json): routed, NOT closed (setup WNS -209 ps at 0.92 ns, 1 DRC)",
+ "sources": {
+  "odb_sha256": "3583bcc856bea120bcce2524b7d35dfe48927cabe08783947bc14ca80bc348c9",
+  "spef_sha256": "5d317a9a82aebb1d454d720c6066317d1b15bedb6f6645eb23b3837a6606d989",
+  "sdc_sha256": "d5aa3eb4358450a326023873407b8c188daa8c666c7964160873251a3ccad45e",
+  "w10_record_sha256": "4ddaf275d54096663c6918776405dbd6ffdc21e576de9a00cb67323eba7b29c7"
+ },
+ "abstract": {
+  "dir": "results/physical_abi3/asap7/chip/abstracts/ot_v41_rom_elem_q_w10p5",
+  "files": {
+   "ot_v41_rom_elem_q.lef": "095c8a664be086d87d942abbf3792a1c1a6abfe96d512082d3920cfaef6a951a",
+   "ot_v41_rom_elem_q_exact.lef": "a0df5f2e1330bfdd837e36705218d700f95c3ec2b3acd0db7cfc3fc125ceeab9",
+   "ot_v41_rom_elem_q_typ.lib": "cf249cb3e9206d53a8eb9cb2e88e1a53a801ab89ffc141646cabc665b1c2a7c6"
+  },
+  "generator": "ORFS do-generate_abstract (write_abstract_lef -bloat_occupied_layers, write_timing_model) + write_abstract_lef without bloat (exact)",
+  "size_um": [
+   513.756,
+   131.76
+  ],
+  "signal_pins": 734,
+  "pin_edges": {
+   "S": 734,
+   "N": 0,
+   "W": 0,
+   "E": 0
+  },
+  "power_pin_layers": [
+   "M6"
+  ],
+  "obs_layers_bloated": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "M7"
+  ],
+  "m7_signal_route_fraction": 0.1851
+ },
+ "defects": [
+  "VDD/VSS are M6 straps under the bloated M7 OBS: a parent cannot drop vias onto them (the PDN-0006 class of the v1 PHY). Fix at re-harden: expose M7 power straps as pins (or keep M7 power channels).",
+  "All 734 signal pins sit on the south edge: stacked rows need a pin channel under every pair; abutment requires pins that meet the neighbour (root's hard budget for W10 p9/q7: 485 x 121 um, abutment pins)."
+ ],
+ "tiling": {
+  "die_floorplan_ch17.28": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/die_floorplan_ch17.28.json",
+   "sha256": "8cf520c97a9440a628af3586742ab718f23261ee0a18e2ae131c5ffde3c48091",
+   "rule": {
+    "rows": 16,
+    "row_channel_um": 17.28,
+    "col_gap_um": 8.64,
+    "spine_h_um": 32.400000000000006,
+    "row_pitch_um": 149.04,
+    "col_pitch_um": 522.72,
+    "columns": 56,
+    "bands": 10
+   },
+   "pitch_um": [
+    522.72,
+    149.04
+   ],
+   "pack_pitch_um": [
+    485.13599999999997,
+    120.96000000000001
+   ],
+   "pitch_vs_pack": [
+    1.0775,
+    1.2321
+   ],
+   "area_vs_pack": 1.3276,
+   "capacity": {
+    "pairs_needed": 7102,
+    "pair_slots": 7112,
+    "closes": true,
+    "short": 0,
+    "clusters_used": 493,
+    "clusters_total": 494,
+    "full_clusters_used": 410
+   },
+   "vm_to_farthest_cluster": {
+    "L_um": 26009.6,
+    "cycles": 24,
+    "cluster": "cl_c0_b0_y1436",
+    "model_cycles": 16
+   }
+  },
+  "die_floorplan_ch4.32": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/die_floorplan_ch4.32.json",
+   "sha256": "97fb54545a62014836db5317cd3da309b9e555ffa2f52cbf9d34daf57c3e6f4c",
+   "rule": {
+    "rows": 16,
+    "row_channel_um": 4.32,
+    "col_gap_um": 8.64,
+    "spine_h_um": 32.400000000000006,
+    "row_pitch_um": 136.08,
+    "col_pitch_um": 522.72,
+    "columns": 56,
+    "bands": 11
+   },
+   "pitch_um": [
+    522.72,
+    136.08
+   ],
+   "pack_pitch_um": [
+    485.13599999999997,
+    120.96000000000001
+   ],
+   "pitch_vs_pack": [
+    1.0775,
+    1.125
+   ],
+   "area_vs_pack": 1.2122,
+   "capacity": {
+    "pairs_needed": 7102,
+    "pair_slots": 7820,
+    "closes": true,
+    "short": 0,
+    "clusters_used": 492,
+    "clusters_total": 550,
+    "full_clusters_used": 399
+   },
+   "vm_to_farthest_cluster": {
+    "L_um": 22182.1,
+    "cycles": 20,
+    "cluster": "cl_c6_b9_y21323",
+    "model_cycles": 16
+   }
+  },
+  "die_floorplan_ch8.64": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/die_floorplan_ch8.64.json",
+   "sha256": "a81dcc667cdfeb2f4046e4a78690801abaefd8cacdd04e0d3499ef14bf379c64",
+   "rule": {
+    "rows": 16,
+    "row_channel_um": 8.64,
+    "col_gap_um": 8.64,
+    "spine_h_um": 32.400000000000006,
+    "row_pitch_um": 140.4,
+    "col_pitch_um": 522.72,
+    "columns": 56,
+    "bands": 10
+   },
+   "pitch_um": [
+    522.72,
+    140.4
+   ],
+   "pack_pitch_um": [
+    485.13599999999997,
+    120.96000000000001
+   ],
+   "pitch_vs_pack": [
+    1.0775,
+    1.1607
+   ],
+   "area_vs_pack": 1.2507,
+   "capacity": {
+    "pairs_needed": 7102,
+    "pair_slots": 7628,
+    "closes": true,
+    "short": 0,
+    "clusters_used": 464,
+    "clusters_total": 496,
+    "full_clusters_used": 407
+   },
+   "vm_to_farthest_cluster": {
+    "L_um": 22873.3,
+    "cycles": 21,
+    "cluster": "cl_c6_b0_y1436",
+    "model_cycles": 16
+   }
+  }
+ },
+ "power_w_per_pair": {
+  "scenarios": {
+   "default": 0.2388403,
+   "busy_in0p5": 0.2295605,
+   "busy_in0p25": 0.2273594,
+   "idle_clock_on": 0.08352097,
+   "idle_clock_gated": 0.08215447
+  },
+  "breakdown": {
+   "default": {
+    "sequential": {
+     "internal_w": 0.04106685,
+     "switching_w": 0.005328631,
+     "leakage_w": 4.825981e-06,
+     "total_w": 0.04640031
+    },
+    "combinational": {
+     "internal_w": 0.05603672,
+     "switching_w": 0.07987681,
+     "leakage_w": 1.622025e-05,
+     "total_w": 0.1359298
+    },
+    "clock": {
+     "internal_w": 0.01289975,
+     "switching_w": 0.01082833,
+     "leakage_w": 8.886897e-07,
+     "total_w": 0.02372896
+    },
+    "macro": {
+     "internal_w": 0.0325451,
+     "switching_w": 0.0,
+     "leakage_w": 0.0002010331,
+     "total_w": 0.03274614
+    },
+    "total": {
+     "internal_w": 0.1425871,
+     "switching_w": 0.09603022,
+     "leakage_w": 0.0002230157,
+     "total_w": 0.2388403
+    }
+   },
+   "busy_in0p5": {
+    "sequential": {
+     "internal_w": 0.0401614,
+     "switching_w": 0.0049365,
+     "leakage_w": 4.82008e-06,
+     "total_w": 0.04510272
+    },
+    "combinational": {
+     "internal_w": 0.05368226,
+     "switching_w": 0.07429681,
+     "leakage_w": 1.640995e-05,
+     "total_w": 0.1279955
+    },
+    "clock": {
+     "internal_w": 0.01289975,
+     "switching_w": 0.01082833,
+     "leakage_w": 8.886897e-07,
+     "total_w": 0.02372896
+    },
+    "macro": {
+     "internal_w": 0.0325451,
+     "switching_w": 0.0,
+     "leakage_w": 0.0002010331,
+     "total_w": 0.03274614
+    },
+    "total": {
+     "internal_w": 0.1392787,
+     "switching_w": 0.09005854,
+     "leakage_w": 0.0002232073,
+     "total_w": 0.2295605
+    }
+   },
+   "busy_in0p25": {
+    "sequential": {
+     "internal_w": 0.04028888,
+     "switching_w": 0.004920441,
+     "leakage_w": 4.820228e-06,
+     "total_w": 0.04521415
+    },
+    "combinational": {
+     "internal_w": 0.05266685,
+     "switching_w": 0.0729778,
+     "leakage_w": 1.640405e-05,
+     "total_w": 0.1256611
+    },
+    "clock": {
+     "internal_w": 0.01289975,
+     "switching_w": 0.01082833,
+     "leakage_w": 8.886897e-07,
+     "total_w": 0.02372896
+    },
+    "macro": {
+     "internal_w": 0.0325451,
+     "switching_w": 0.0,
+     "leakage_w": 0.0002010331,
+     "total_w": 0.03274614
+    },
+    "total": {
+     "internal_w": 0.1384124,
+     "switching_w": 0.08872385,
+     "leakage_w": 0.0002232015,
+     "total_w": 0.2273594
+    }
+   },
+   "idle_clock_on": {
+    "sequential": {
+     "internal_w": 0.02702353,
+     "switching_w": 0.0,
+     "leakage_w": 4.824263e-06,
+     "total_w": 0.02702836
+    },
+    "combinational": {
+     "internal_w": 0.0,
+     "switching_w": 0.0,
+     "leakage_w": 1.610629e-05,
+     "total_w": 1.610629e-05
+    },
+    "clock": {
+     "internal_w": 0.01289975,
+     "switching_w": 0.01082833,
+     "leakage_w": 8.886897e-07,
+     "total_w": 0.02372896
+    },
+    "macro": {
+     "internal_w": 0.0325451,
+     "switching_w": 0.0,
+     "leakage_w": 0.0002010331,
+     "total_w": 0.03274614
+    },
+    "total": {
+     "internal_w": 0.07246975,
+     "switching_w": 0.01082833,
+     "leakage_w": 0.0002229027,
+     "total_w": 0.08352097
+    }
+   },
+   "idle_clock_gated": {
+    "sequential": {
+     "internal_w": 0.02566852,
+     "switching_w": 0.0,
+     "leakage_w": 5.128091e-06,
+     "total_w": 0.02567365
+    },
+    "combinational": {
+     "internal_w": 0.0,
+     "switching_w": 0.0,
+     "leakage_w": 9.32611e-06,
+     "total_w": 9.32611e-06
+    },
+    "clock": {
+     "internal_w": 0.01289975,
+     "switching_w": 0.01082833,
+     "leakage_w": 8.886897e-07,
+     "total_w": 0.02372896
+    },
+    "macro": {
+     "internal_w": 0.0325451,
+     "switching_w": 0.0,
+     "leakage_w": 0.0002010331,
+     "total_w": 0.03274614
+    },
+    "total": {
+     "internal_w": 0.07110961,
+     "switching_w": 0.01082833,
+     "leakage_w": 0.0002165384,
+     "total_w": 0.08215447
+    }
+   }
+  },
+  "ideal_icg_idle_w": 0.0002230157,
+  "die_x7102_w": {
+   "default": 1696.2,
+   "busy_in0p5": 1630.3,
+   "busy_in0p25": 1614.7,
+   "idle_clock_on": 593.2,
+   "idle_clock_gated": 583.5,
+   "ideal_icg_idle": 1.58
+  },
+  "basis": "OpenSTA report_power on the routed odb + SPEF, TT 0.7 V, 1.087 GHz; idle_clock_gated could not stop the clock in STA (same as idle_clock_on): ideal ICG idle = leakage only",
+  "model_comparison": {
+   "model_rom_field_clock_w": 13.1,
+   "model_rom_field_leakage_w": 13.2,
+   "measured_ungated_idle_w": 593.2,
+   "measured_leakage_w": 1.58
+  }
+ },
+ "ir": {
+  "VDD": {
+   "worst_ir_drop_v": 0.0225,
+   "average_ir_drop_v": 0.00126,
+   "percentage": 3.21
+  },
+  "VSS": {
+   "worst_ir_drop_v": 0.022,
+   "average_ir_drop_v": 0.00125,
+   "percentage": 3.15
+  },
+  "check_power_grid": [
+   [
+    "VDD",
+    "PASS"
+   ],
+   [
+    "VSS",
+    "PASS"
+   ]
+  ],
+  "basis": "PSM analyze_power_grid on the routed pair, sources = its M6 straps (STRAPS), ORFS default activity power (0.239 W)"
+ },
+ "tool_sha256": "c94ba2d791df79d569b3f81857c2d2e1cf468ce76363ddeb8bb074c3b30f0024"
+}
