@@ -2,8 +2,8 @@
  "schema": "opentallas.rtl.w17_l0_fullshape_isa.v1",
  "status": "pass",
  "claim_boundary": "ISA-level execution of the encoded full-shape TP-4 layer-0 program on four ranks (program dataflow, addresses, strides, counts, DYN, constants, collectives) against the released-checkpoint golden on synthetic golden-consistent KV state. Weight-engine arithmetic is the golden's on the rank's image slice; no engine microarchitecture, RTL, cycle or physical verdict.",
- "generated_utc": "2026-09-30T02:55:15Z",
- "source_commit": "ae9d7083ae93bedeeec9131be7c59b7612275f52",
+ "generated_utc": "2026-09-30T03:26:37Z",
+ "source_commit": "cc4b051570466bf3e056dc59d53e98c5016933c3",
  "arith": "chunk8",
  "program": "results/rtl/hdc_v41x_fullshape_l0_program.hex",
  "program_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
@@ -1845,7 +1845,7 @@
   }
  },
  "source_sha256": {
-  "tools/v41_fullshape_isa.py": "fc357d14325ea117a764bff1d43fd96a28c410253039192a90c04ad7fd17fd58",
+  "tools/v41_fullshape_isa.py": "b3174c49b7efbcff01b76992b6ebc5c7eebfc52efdf5f5bf5131be8e371840db",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
   "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
   "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
@@ -1858,7 +1858,7 @@
   "results/rtl/v41_program_constants.json": "0ef0b72b91f52ec48f694671f06b828e828ab7e992d835cc68d5c19aeda380f1",
   "results/rtl/hdc_v41x_fullshape_l0_program.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
   "results/rtl/hdc_v41x_fullshape_l0_program.json": "100ef5ee4c1927a5ee728a2e24cd96d4aee1a95139d779a4bd195e3db43f1dcd",
-  "results/rtl/hdc_v41x_fullshape_golden.json": "1c329cf169f21eae9298c0fde71e756cdda2060de9757a20b7741b86e685859b",
+  "results/rtl/hdc_v41x_fullshape_golden.json": "7736dad12d1ad49dd316b7d1947017c01c7d8be585ac6a408d504e21b7efe8c3",
   "results/rtl/v41x_rope_hbm_cache.json": "655549cf3f704668cf526fffa79886915ad22e105ddeae8a490ec0961cead484",
   "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
   "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "1c71b11df5ec918b55bbb5706a80dda65e8470144ec08f27afc46523be57066b",

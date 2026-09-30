@@ -264,6 +264,7 @@ class Rank:
         self.vm = np.zeros(VM_ELEMS, dtype=F)
         self.ok = np.zeros(VM_ELEMS, dtype=bool)
         self.unwritten = []                     # (pc, operand, first address, count)
+        self.log = []                           # this rank's engine log (weight ops: matrix, expert)
         self.dyn = full_dyn(pos)
         self.rope_tab, self.rope_held = rope, {}
         self.consts = consts
@@ -686,7 +687,10 @@ def checkpoints(bind):
             ("pre_out", "pre_out", "PF", 4, end)]
 
 
-def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=print, snap=None) -> dict:
+def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=print, snap=None,
+                on_pc=None, ranks_out=None) -> dict:
+    """snap: {pc: None} filled with every rank's VM after pc; on_pc(pc, ranks): called after every PC;
+    ranks_out: a list that receives the four Rank objects (final VM, per-rank weight-op logs `rk.log`)."""
     golden = load_golden(ctx, scratch)
     pos = golden["position"]
     lay = BoundLayout(bind_path)
@@ -747,7 +751,7 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
                 collective(ranks, f, pc, trace)
             else:
                 for rk in ranks:
-                    lg = trace if rk.r == 0 else []
+                    lg = rk.log
                     {I.UNIT_CTL: lambda: rk.ctl(f, pc), I.UNIT_ME: lambda: rk.me(f, pc, lg),
                      I.UNIT_SU: lambda: rk.su(f, pc, lg), I.UNIT_QE: lambda: rk.qe(f, pc, lg),
                      I.UNIT_XU: lambda: rk.xu(f, pc, lg), I.UNIT_HE: lambda: rk.he(f, pc, lg)}[unit]()
@@ -755,6 +759,8 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
             defects.append(dict(pc=pc, tag=f["_tag"], defect=str(exc)))
             log_fn(f"ctx {ctx} DEFECT {exc}")
             break
+        if on_pc is not None:
+            on_pc(pc, ranks)
         if snap is not None and pc in snap:
             snap[pc] = [rk.vm.copy() for rk in ranks]
         for name, gkey, reg, cnt, at in cps:
@@ -776,6 +782,9 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
                                 golden_sha256=LC.digest(want), per_rank=per_rank))
             log_fn(f"ctx {ctx} PC {at:3d} {name:13s} {'BIT-EXACT' if ok else 'MISMATCH'} "
                    f"{[x['mismatches'] for x in per_rank]}")
+    if ranks_out is not None:
+        ranks_out.extend(ranks)
+    trace = [x for x in sorted(trace + ranks[0].log, key=lambda x: x["pc"])]
     unwritten = {str(rk.r): rk.unwritten for rk in ranks if rk.unwritten}
     exact = bool(results) and all(x["bit_exact"] for x in results) and not defects and not unwritten \
         and len(results) == len(cps)
