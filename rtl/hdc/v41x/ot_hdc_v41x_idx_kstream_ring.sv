@@ -84,6 +84,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
     localparam integer UW = BW - SW;  // tag bits above the ROB entry
 
     reg            run;
+    (* keep *) reg [NPC-1:0] bsy_g;            // per-generator copies of busy (fanout)
     reg [9:0]      first_skip;
     wire [HW+9:0] cmd_span=cmd_nkeys+{{HW{1'b0}},cmd_skip};
     // segment 2 follows segment 1's (possibly partial) last super-block
@@ -285,7 +286,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
     end
     // left[p][tag entry] read a cycle ahead of its count, with this edge's writes forwarded:
     // the issue (wins, as in the main block) and the counted response
-    wire           run_upd = run;              // run implies busy, so no command is accepted then
+    wire           run_upd = 1'b1;             // iss_w is 0 whenever no scan runs (nx_v is 0 then)
     integer pl;
     always @(posedge clk)
         for (pl = 0; pl < NPC; pl = pl + 1) begin
@@ -300,14 +301,15 @@ module ot_hdc_v41x_idx_kctl_ring #(
             // idle: the command-derived state tracks the command inputs every cycle, so the
             // edge that accepts a command loads it without cmd_v in its select (run implies
             // busy: the run branch never overlaps an accepted command)
-            if (!busy) begin
-                for (pf = 0; pf < NPC; pf = pf + 1) begin
+            // (a generator neither prepares nor issues once its scan is done -- run implies
+            // busy, and after the last block g_more and nx_v are 0 -- so its updates need not
+            // wait for run; the select is the generator's own copy of busy)
+            begin
+                for (pf = 0; pf < NPC; pf = pf + 1) if (!bsy_g[pf]) begin
                     g_more[pf] <= c_more; g_wrapn[pf] <= 1'b0;
                     g_first[pf] <= c_nz1; g_lo16[pf] <= 1'b1;
                     eg[pf] <= 0; dl[pf] <= 0; ga_ok[pf] <= 1'b1;
-                end
-            end else if (run) begin
-                for (pf = 0; pf < NPC; pf = pf + 1) begin
+                end else begin
                     // lookahead: dl' = nx_hi' - d_hi', eg' = g_hi' - d_hi'
                     // (the late selects pick among values precomputed from registers)
                     if (prep_w[pf]) begin
@@ -343,7 +345,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
     end
     always @(posedge clk) begin
         if (!rst_n) begin
-            run <= 1'b0; busy <= 1'b0; ph <= 2'd0; req_v <= 0; nx_v <= 0; rr_v <= 0; adv <= 1'b0;
+            run <= 1'b0; busy <= 1'b0; bsy_g <= '0; ph <= 2'd0; req_v <= 0; nx_v <= 0; rr_v <= 0; adv <= 1'b0;
             dr_scale <= 1'b0; dr_quarter <= 1'b0;
             for (p = 0; p < NPC; p = p + 1) begin cc[p] <= 0; g_hi[p] <= 0; end
         end else begin
@@ -369,7 +371,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
             if (!busy) begin
                 if (cmd_v) begin
                     // (d_hi, th, d_hu1 set the return gate, an output: they move only on a command)
-                    run <= 1'b1; busy <= 1'b1; ph <= 2'd1;
+                    run <= 1'b1; busy <= 1'b1; bsy_g <= '1; ph <= 2'd1;
                     d_hi <= 0; d_oh <= WB'(1); th <= '0; d_hu1 <= 1;
                 end
                 first_skip<=cmd_skip;
@@ -386,14 +388,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                 t_1[4] <= c_hz1 && c_bs1 == 4;
                 r_hi1 <= cmd_span[HW+9:10]; r_sm1 <= bsmall(cmd_span[9:0]);
                 r_hi2 <= cmd_nkeys2[HW+9:10]; r_sm2 <= bsmall(cmd_nkeys2[9:0]);
-                nx_v <= 0;
-                for (p = 0; p < NPC; p = p + 1) begin
-                    g_hi[p] <= 0; g_hi1[p] <= 1; g_abs[p] <= cmd_base; g_bidx[p] <= 0;
-                    g_m[p] <= c_m; g_col[p] <= p[4:0] ^ fold(cmd_base);
-                    g_need[p] <= need(5'd0, c_m);
-                    g_low[p] <= c_nz1 ? lower(5'd0, cmd_skip) : 8'd0;
-                end
-            end else if (run) begin
+            end else begin
                 if (ph != 0) ph <= (ph == 3) ? 2'd0 : ph + 2'd1;
                 if (ph == 1) begin
                     // no prep / step in the first run cycle moves g_rem / d_rem (block 0 is a scale block)
@@ -406,7 +401,15 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     d_left <= d_step ? l_n[d_hi[1:0] + 2'd1] : l_n[d_hi[1:0]];
                     d_l1 <= d_step ? l_1[d_hi[1:0] + 2'd1] : l_1[d_hi[1:0]];
                 end
-                for (p = 0; p < NPC; p = p + 1) begin
+            end
+            // generators: idle loads / scan updates under the generator's own copy of busy
+            for (p = 0; p < NPC; p = p + 1) if (!bsy_g[p]) begin
+                nx_v[p] <= 1'b0;
+                    g_hi[p] <= 0; g_hi1[p] <= 1; g_abs[p] <= cmd_base; g_bidx[p] <= 0;
+                    g_m[p] <= c_m; g_col[p] <= p[4:0] ^ fold(cmd_base);
+                    g_need[p] <= need(5'd0, c_m);
+                    g_low[p] <= c_nz1 ? lower(5'd0, cmd_skip) : 8'd0;
+                            end else begin
                     if (req_v[p] && req_rdy[p]) req_v[p] <= 1'b0;
                     // issue the prepared request
                     iss = iss_w[p];
@@ -459,7 +462,8 @@ module ot_hdc_v41x_idx_kctl_ring #(
                         g_low[p] <= nf ? lower(nb, first_skip) : 8'd0;
                     end
                     nx_v[p] <= prep || (nx_v[p] && !iss);
-                end
+                            end
+            if (busy) begin
                 // drain
                 if (do_scale) begin
                     dr_scale <= 1'b1;
@@ -505,7 +509,8 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     end
                 end
                 if (!d_live) run <= 1'b0;
-            end else if (busy && !dr_quarter) busy <= 1'b0;
+                if (!run && !dr_quarter) begin busy <= 1'b0; bsy_g <= '0; end
+            end
         end
     end
 endmodule
