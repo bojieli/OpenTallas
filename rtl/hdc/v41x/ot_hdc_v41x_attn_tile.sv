@@ -23,6 +23,12 @@
 // BF16 per cycle into bank ld_bank, group ld_grp (0 .. H-1):
 //   ld_mode 0 (q)  A[ld_grp][k]        = ld_w[k]                (one head)
 //   ld_mode 1 (p)  A[h][R*ld_grp + j]   = ld_w[j*H + h], R = TD/H (R rows x H heads)
+// PWORDS = 2 (p mode only): ld_w carries two words, the low TD*16 bits the
+// group ld_grp, the high TD*16 bits the group ld_grp + 1 when ld_w2v is set.
+// The two groups are disjoint stationary rows, so each position still has one
+// write source per cycle (no double write of a cell); ld_w2v = 0 leaves the
+// rows of group ld_grp + 1 untouched whatever the high bits hold.  q mode uses
+// the low word only.  PWORDS = 1 is the original single-word port.
 // The bank a beat reads travels with the beat (per chunk position, skewed as
 // its operands are), so a bank may be reloaded while late positions of an
 // earlier beat still read another bank; the engine's controller keeps the
@@ -334,7 +340,8 @@ module ot_hdc_v41x_attn_tile #(
     parameter integer H = 16,          // heads
     parameter integer TD = 64,         // products per head per beat (multiple of 8, TD/8 a power of two)
     parameter integer NBANK = 3,       // stationary-operand banks
-    parameter integer BW = 2           // bank index width
+    parameter integer BW = 2,          // bank index width
+    parameter integer PWORDS = 1       // p-mode words per load (1 or 2)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -343,7 +350,8 @@ module ot_hdc_v41x_attn_tile #(
     input  wire              ld_mode,
     input  wire [BW-1:0]     ld_bank,
     input  wire [7:0]        ld_grp,
-    input  wire [TD*16-1:0]  ld_w,
+    input  wire [PWORDS*TD*16-1:0] ld_w,
+    input  wire              ld_w2v,   // second p word valid (PWORDS = 2)
     // issue
     input  wire              iv,
     input  wire [BW-1:0]     ibank,
@@ -362,7 +370,8 @@ module ot_hdc_v41x_attn_tile #(
     reg              r_ld_v, r_ld_mode;
     reg [BW-1:0]     r_ld_bank;
     reg [7:0]        r_ld_grp;
-    reg [TD*16-1:0]  r_ld_w;
+    reg [PWORDS*TD*16-1:0] r_ld_w;
+    reg              r_ld_w2v;
     reg              r_iv;
     reg [BW-1:0]     r_ibank;
     reg [TD*18-1:0]  r_ib;
@@ -371,7 +380,7 @@ module ot_hdc_v41x_attn_tile #(
         else begin r_ld_v <= ld_v; r_iv <= iv; end
     end
     always @(posedge clk) begin
-        r_ld_mode <= ld_mode; r_ld_bank <= ld_bank; r_ld_grp <= ld_grp; r_ld_w <= ld_w;
+        r_ld_mode <= ld_mode; r_ld_bank <= ld_bank; r_ld_grp <= ld_grp; r_ld_w <= ld_w; r_ld_w2v <= ld_w2v;
         r_ibank <= ibank; r_ib <= ib;
     end
 
@@ -414,8 +423,18 @@ module ot_hdc_v41x_attn_tile #(
             wire [TD-1:0]    we;
             wire [TD*16-1:0] wd;
             for (gk = 0; gk < TD; gk = gk + 1) begin : g_w
-                assign wd[gk*16 +: 16] = r_ld_mode ? r_ld_w[((gk % R) * H + gh) * 16 +: 16] : r_ld_w[gk * 16 +: 16];
-                assign we[gk] = r_ld_v && (r_ld_mode ? (r_ld_grp == (gk / R)) : (r_ld_grp == gh));
+                if (PWORDS == 1) begin : g_w1
+                    assign wd[gk*16 +: 16] = r_ld_mode ? r_ld_w[((gk % R) * H + gh) * 16 +: 16] : r_ld_w[gk * 16 +: 16];
+                    assign we[gk] = r_ld_v && (r_ld_mode ? (r_ld_grp == (gk / R)) : (r_ld_grp == gh));
+                end else begin : g_w2
+                    // row gk is in group gk / R: the low word's group or (ld_w2v) the next one
+                    wire lo = (r_ld_grp == (gk / R));
+                    wire hi = r_ld_w2v && ((r_ld_grp + 8'd1) == (gk / R));
+                    assign wd[gk*16 +: 16] = !r_ld_mode ? r_ld_w[gk * 16 +: 16] :
+                                             hi ? r_ld_w[TD * 16 + ((gk % R) * H + gh) * 16 +: 16] :
+                                                  r_ld_w[((gk % R) * H + gh) * 16 +: 16];
+                    assign we[gk] = r_ld_v && (r_ld_mode ? (lo || hi) : (r_ld_grp == gh));
+                end
             end
             wire [31:0] y;
             wire f;

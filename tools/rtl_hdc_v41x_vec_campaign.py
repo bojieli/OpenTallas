@@ -24,8 +24,17 @@ side pipe, an R-ARITH (chunk8) reducer and vector chaining.  This tool runs:
 * Performance figures from the bench trace (emit / retire / result cycles per
   op), graded against the spec row.
 
-Writes results/rtl/hdc_v41x_vec_campaign.json.
-    python3 tools/rtl_hdc_v41x_vec_campaign.py [--quick] [--no-1024]
+Out-of-range operands are refused, not compared: the reference drops an op whose result is nonfinite
+(e.g. rsqrt(+/-0), where the golden gives NaN) and the unit raises `fault` for it (its written word is
+unspecified: 0x601AB3D4 for rsqrt(+0)).  Stimulus that must not be refused (divisors, rsqrt operands)
+is drawn from 'posnz'.
+
+Wire stages (--bcast B --ret R): the unit's BCAST_STAGES (controller -> lanes broadcast tree) and
+RET_STAGES (lanes / reducer -> vector memory).  Every depth grows by B + R; the spec rows grade the
+depths without them (they are wire, listed separately).  0 / 0 is the unit as it was.
+
+Writes results/rtl/hdc_v41x_vec_campaign.json (--out for another record).
+    python3 tools/rtl_hdc_v41x_vec_campaign.py [--quick] [--no-1024] [--bcast B --ret R]
 """
 from __future__ import annotations
 
@@ -74,6 +83,9 @@ VERILATOR = str(_PINNED) if _PINNED.exists() else "verilator"
 
 # depths the RTL implements (ot_hdc_v41x_vec_lane / _red): emit -> write, per stage
 D_FETCH, D_FETCH_G, D_PRE, D_M1, D_DIV, D_STAGE, D_OUT = 4, 6, 1, 3, 19, 3, 1   # fetch includes the broadcast reg
+# the unit's wire stages (ot_hdc_v41x_vec BCAST_STAGES / RET_STAGES) the benches are built with; every depth
+# (emit -> write, emit -> result) grows by BCAST + RET
+BCAST, RET = 0, 0
 SFU_DEPTH = {I.SFU_NONE: 0, I.SFU_EXP: 49, I.SFU_SIGM: 71, I.SFU_SILU: 71, I.SFU_RSQRT: 37, I.SFU_SQRT: 31,
              I.SFU_SPSQRT: 162, I.SFU_EGATE: 104}
 SCALAR_SFU = (I.SFU_RSQRT, I.SFU_SQRT, I.SFU_SPSQRT, I.SFU_EGATE)
@@ -479,10 +491,10 @@ def layout(f, N, M):
         else:
             i_v += S
     gather = f["aind"] != 0
-    dF = D_FETCH_G if gather else D_FETCH
+    dF = (D_FETCH_G if gather else D_FETCH) + BCAST
     dM = dF + D_PRE + (D_DIV if f["m1"] in (I.M1_DIVB, I.M1_DIVIMM) else D_M1)
     dS = dM + 2 * D_STAGE + SFU_DEPTH[f["sfu"]]
-    dP = dS + 2 * D_STAGE + D_OUT
+    dP = dS + 2 * D_STAGE + D_OUT + RET
     lt = ls - 3 if red else 0
     dR = dP + 26 + 3 * lt + (3 * L if span else 0)
     return dict(flat=flat, wnf=wnf, bad=bad, vw=vw, ls=ls, S=S, nsh=nsh, packed=packed, span=span, L=L, lt=lt, vecs=vecs,
@@ -811,7 +823,7 @@ def build(N, M, obj: Path, pmax=4096):
     cmd = [VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
            "-Wno-UNOPTFLAT", *os.environ.get("OT_VFLAGS", "").split(), "--top-module", "tb_hdc_v41x_vec", "--prefix", "Vtb",
            "-Mdir", str(obj),
-           f"-GN={N}", f"-GM={M}", f"-GPMAX={pmax}", f"-GVMA={VMA}", f"-GKVA={KVA}", f"-GCRA={CRA}", f"-GWRA={WRA}", f"-GXBA={XBA}", f"-I{ROOT / 'rtl/test'}",
+           f"-GN={N}", f"-GM={M}", f"-GBCAST_STAGES={BCAST}", f"-GRET_STAGES={RET}", f"-GPMAX={pmax}", f"-GVMA={VMA}", f"-GKVA={KVA}", f"-GCRA={CRA}", f"-GWRA={WRA}", f"-GXBA={XBA}", f"-I{ROOT / 'rtl/test'}",
            *map(str, LIB), *map(str, RTL), str(TB), str(HARNESS), "-CFLAGS", "-O1", "-j", "8"]
     t0 = time.time()
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -1252,6 +1264,7 @@ def spec_rows(rec):
         return None
     d = P["depths"]["classes"]
     copy = d["linear (copy)"]["emit_to_write"]
+    wire = BCAST + RET          # wire stages: graded separately (the spec depths are the unit's own)
     sdepth = lambda k: d[k]["emit_to_write"] - copy
     hp = P["hc_post"]
     ex = [o for o in P["mixed_classes"]["ops"] if o["cls"] == "sfu1"][0]
@@ -1262,10 +1275,13 @@ def spec_rows(rec):
              measured=min(o["elements_per_cycle"] for o in hp["ops"]), meets=None),
         dict(item="light lanes: sustained over 4 back-to-back chained hc_post ops (81,920 elements)",
              required=1024, measured=hp["sequence"]["elements_per_cycle"], meets=None,
-             note="the first op's vector 0 of each consumer waits for the producer's vector 0 to be written"),
+             note="the first op's vector 0 of each consumer waits for the producer's vector 0 to be written; "
+                  "ACCEPTED below the row (root, 2026-09-29): measured 952.6 of 1,024 at N = 1,024, the bubbles "
+                  "are not chased", accepted_measured=952.6),
         dict(item="SFU lanes: elements/cycle of an exp op", required=256, measured=exp_rate, meets=None),
         dict(item="linear op depth (emit -> write, every stage used)", required=21,
-             measured=d["linear (M1, M2, Q, AD, E1, E2 all used)"]["emit_to_write"], meets=None, le=True),
+             measured=d["linear (M1, M2, Q, AD, E1, E2 all used)"]["emit_to_write"] - wire, meets=None, le=True,
+             wire_stages_excluded=wire),
         dict(item="exp (S stage)", required=49, measured=sdepth("exp"), meets=None, le=True),
         dict(item="sigmoid (S stage: exp, +1, IEEE divide)", required=80, measured=sdepth("sigmoid"), meets=None,
              le=True),
@@ -1292,8 +1308,8 @@ def spec_rows(rec):
     rows[7]["meets"] = bool(exact)
     rows[7]["graded"] = True
     for r in rows:
-        r["expected_meets"] = r is not rows[8]
-    return dict(clock_ghz=CLOCK_GHZ, rows=rows)
+        r["expected_meets"] = r is not rows[8] and r is not rows[1]   # rows[1]: accepted at the measured rate
+    return dict(clock_ghz=CLOCK_GHZ, wire_stages=dict(bcast=BCAST, ret=RET), rows=rows)
 
 
 def sha(p: Path):
@@ -1308,7 +1324,11 @@ def main():
     ap.add_argument("--only", default=None, help="comma list: sfu,random,vehicle,perf64,perf1024")
     ap.add_argument("--out", default=None)
     ap.add_argument("--random1024", type=int, default=0, help="also run this many random seeds at N = 1,024")
+    ap.add_argument("--bcast", type=int, default=0, help="ot_hdc_v41x_vec BCAST_STAGES")
+    ap.add_argument("--ret", type=int, default=0, help="ot_hdc_v41x_vec RET_STAGES")
     args = ap.parse_args()
+    global BCAST, RET
+    BCAST, RET = args.bcast, args.ret
     scratch = Path(args.scratch or tempfile.mkdtemp(prefix="v41xvec_"))
     scratch.mkdir(parents=True, exist_ok=True)
     only = set(args.only.split(",")) if args.only else {"sfu", "random", "vehicle", "perf64", "perf1024"}
@@ -1316,14 +1336,15 @@ def main():
         only.discard("perf1024")
     print("scratch", scratch, flush=True)
     rec = dict(schema="opentallas.rtl.hdc_v41x_vec_campaign/1",
-               generated_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
+               generated_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+               wire_stages=dict(BCAST_STAGES=BCAST, RET_STAGES=RET))
     rng = np.random.default_rng(20260926)
     exes = {}
 
     def exe_for(N, M):
         if (N, M) not in exes:
             t0 = time.time()
-            exes[(N, M)] = build(N, M, scratch / f"obj_{N}_{M}")[0]
+            exes[(N, M)] = build(N, M, scratch / f"obj_{N}_{M}_b{BCAST}r{RET}")[0]
             rec.setdefault("verilator_build_seconds", {})[f"N{N}_M{M}"] = round(time.time() - t0, 1)
             print(f"built N={N} M={M}", flush=True)
         return exes[(N, M)]

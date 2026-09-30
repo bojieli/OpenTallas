@@ -76,3 +76,40 @@ def test_hbm_gpu_floorplans_legal():
         fp = json.loads((ROOT / f"results/floorplan/hbm_gpu/{m}_hbm_die.json").read_text())
         assert fp["legality"]["legal"] and fp["fits"]
         assert fp["macro_counts"]["ot_hbm3e_phy"] == 4
+
+
+def test_rom_field_power_is_the_measured_pair():
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    import uarch_model as U
+    pw = _rows()["proposal"]["power"]
+    f = _rows()["proposal"]["clock_hz"]
+    N = U.PAIR_W["placed_pairs"]
+    # W18: 83.5 mW idle with the clock running, 0.22 mW with the per-pair ICG, at 1.087 GHz (scaled to the clock)
+    assert abs(pw["field"]["clock_w"] - N * (0.0835 - 0.00022) * f / 1.087e9) < 0.5
+    assert abs(pw["field"]["leakage_w"] - N * 0.00022) < 0.01
+    # ungated, the field clock alone exceeds the liquid-cooling budget: the per-pair ICG is a requirement
+    assert pw["field"]["clock_w"] > U.COOLING_LIMIT_W
+    assert not pw["ungated"]["fits_cooling_saturated"]
+    assert pw["per_pair_icg"]["fits_cooling_saturated"]
+    assert pw["per_pair_icg"]["static_w"] < pw["ungated"]["static_w"] / 10
+    # a whole-field op busies every pair it holds: the instantaneous peak is a PDN load, above the thermal budget
+    assert pw["field"]["peak_busy_pairs"] <= N
+    assert pw["per_pair_icg"]["peak_w_saturated"] > pw["per_pair_icg"]["total_w_saturated"]
+
+
+def test_power_clock_sensitivity_scales_dynamic_power():
+    s = json.loads(REC.read_text())["power_clock_sensitivity"]
+    base = _rows()["proposal"]
+    prev_t, prev_clk = base["tokens_s"], base["power"]["field"]["clock_w"]
+    for r in s["rows"]:
+        # a faster clock buys less than the clock ratio (wires, HBM and collectives keep their times)
+        assert prev_t < r["tokens_s"] < base["tokens_s"] * r["clock_hz"] / base["clock_hz"]
+        assert r["power"]["field"]["clock_w"] > prev_clk
+        prev_t, prev_clk = r["tokens_s"], r["power"]["field"]["clock_w"]
+
+
+def test_switch_rings_fit_the_refit_spare_slots():
+    sr = _rows()["proposal"]["power"]["switch_rings"]
+    assert 23.0 < sr["switch_ring_mm2"] < 25.0          # W18: 5% of the cluster area for a 10 mV budget
+    assert sr["fits_spare_slots"] and sr["pair_slots_needed"] <= sr["pair_slots"]

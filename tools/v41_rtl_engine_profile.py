@@ -258,7 +258,7 @@ REGION_RULES = [
     (r"^die\.g_packed_kv\b", "ATTENTION"),
     (r"^die\.u_tile\.u_core\.(g_att_x|g_packed_window_write)\b", "ATTENTION"),
     (r"^die\.u_tile\.u_core\.g_idx_x\b", "INDEX"),
-    (r"^die\.u_tile\.u_kb\b", "INDEX"),
+    (r"^die\.u_tile\.(g_kb_bridge\.|g_kb_ring\.)?u_kb\b", "INDEX"),  # IDX_RING generate arms (W11)
     (r"^die\.u_tile\.u_core\.(g_me_x|u_me|u_qe|g_he_x)\b", "ROM_MAC"),
     (r"^die\.u_tile\.u_qrom_decode\b", "ROM_MAC"),
     (r"^die\.u_tile\.u_core\.(g_su_x|g_xu_x)\b", "VM"),
@@ -553,7 +553,7 @@ def cross_check_inventory(nl: Netlist, inv: dict) -> list[dict]:
                "u_kv": ("die.g_packed_kv.u_kv_mux.u_kv", "ot_chip_v41x_kv_reqmux"),
                "window source and packed staging": ("die.g_packed_kv.g_window_external_attention.u_window",
                                                     "ot_chip_v41x_window_kv_prefetch"),
-               "u_tile.u_kb": ("die.u_tile.u_kb", "ot_hdc_v41x_idx_pool_hbm_bridge")}
+               "u_tile.u_kb": ("die.u_tile.g_kb_bridge.u_kb", "ot_hdc_v41x_idx_pool_hbm_bridge")}  # IDX_RING=0 arm
     for r in inv["rtl_instances"]:
         p, mod = mapping[r["path"]]
         n = nl.paths.get(p, 0)

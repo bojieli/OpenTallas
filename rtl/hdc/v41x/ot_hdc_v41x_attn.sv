@@ -47,13 +47,21 @@
 //           with a credit (SC_CRED initial); the consumer returns one per sc_cr.
 //   probs   p_v/p_ready, p_w = R rows x H heads BF16 (word j*H + h), rows in
 //           order from 0; the last word of a job may be partial.
+//           PWORDS = 2: p_w carries two consecutive words per handshake (low
+//           TD*16 bits the earlier), never across a block; the engine consumes
+//           min(2, words left in the block), so the high word of a block's
+//           odd last pair is ignored and writes no row.
 //   pv      pv_v, pv_c (dim offset: tile k's value is dim k*DPT + pv_c), pv_y
 //           (NT x H FP32), pv_f.  Credit per final-block beat (PV_CRED).
 //
-// Stationary banks: NBANK = 3, allocated round robin to the q set and every
-// p block.  A bank is reloaded only when the last read of its previous set has
-// passed (GUARD_P after a p.v issue: exact for the skewed chunk positions, so
-// the p.v stream runs at one block per DPT cycles with 3 banks).
+// Stationary banks: NBANK = 3 (PWORDS = 1) or 4 (PWORDS = 2), allocated round
+// robin to the q set and every p block.  A bank is reloaded only when the last
+// read of its previous set has passed (GUARD_P after a p.v issue: exact for the
+// skewed chunk positions, with word g of a block loaded floor(g/PWORDS) cycles
+// after its first).  PWORDS = 2 halves the block load time (H/2 cycles) so the
+// p.v stream is not load-bound when H/PWORDS <= DPT; the fourth bank covers the
+// longer guard (results/rtl/v41_attention_elaboration_archive/
+// PV_TWO_WORD_PROPOSAL.md, pv-bank-lifetime.json).
 //
 // Faults fail closed (see the tile): sc_f / pv_f mark every value whose golden
 // value is not finite.
@@ -145,7 +153,8 @@ module ot_hdc_v41x_attn #(
     parameter integer TROWS = 640,     // staging buffer rows
     parameter integer SC_CRED = 64,     // score-beat credits
     parameter integer PV_CRED = 64,    // pv-beat credits
-    parameter bit SRAM_MACRO = 0       // ASAP7 packed-row staging macro boundary
+    parameter bit SRAM_MACRO = 0,      // ASAP7 packed-row staging macro boundary
+    parameter integer PWORDS = 1       // probability words per p handshake (1 or 2)
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -171,7 +180,7 @@ module ot_hdc_v41x_attn #(
     input  wire                   sc_cr,
     // probabilities
     input  wire                   p_v,
-    input  wire [TD*16-1:0]       p_w,
+    input  wire [PWORDS*TD*16-1:0] p_w,
     output wire                   p_ready,
     // pv
     output reg                    pv_v,
@@ -196,7 +205,7 @@ module ot_hdc_v41x_attn #(
     localparam integer AW = $clog2(DEPTH);
     localparam integer NBLKMAX = (TROWS + TD - 1) / TD;
     localparam integer MLEV = (NBLKMAX <= 1) ? 1 : $clog2(NBLKMAX);
-    localparam integer NBANK = 3;
+    localparam integer NBANK = (PWORDS >= 2) ? 4 : 3;
     localparam integer BW = 2;
     localparam integer LVT = $clog2(TD / 8);
     localparam integer TLAT = 27 + 3 * LVT;            // tile: input -> ov
@@ -214,7 +223,7 @@ module ot_hdc_v41x_attn #(
                 m = 0;
                 for (j = 0; j < R; j = j + 1)
                     if (skew((R * g + j) % 8) > m) m = skew((R * g + j) % 8);
-                if (m - g > best) best = m - g;
+                if (m - g / PWORDS > best) best = m - g / PWORDS;
             end
             guard_p = best + 1;
         end
@@ -222,6 +231,11 @@ module ot_hdc_v41x_attn #(
     localparam integer GUARD_P = guard_p(0);
     localparam integer GUARD_Q = 20;
     localparam integer CNTW = 5;
+    generate
+        if (!(PWORDS == 1 || (PWORDS == 2 && (PB % 2) == 0))) begin : g_bad_pwords
+            initial $error("ot_hdc_v41x_attn: PWORDS must be 1, or 2 with an even word count per block");
+        end
+    endgenerate
 
     // ================= controller =================
     reg  [15:0]   fill_blk_d;
@@ -268,7 +282,8 @@ module ot_hdc_v41x_attn #(
     // p words: a new block needs a free bank and at most 3 blocks between the issuing and the loading one
     assign p_ready = act && (q_cnt == H) && (pl_blk < nblk) && ((pl_word != 0) || (p_bank_ok && (pl_blk < iss_blk + 3)));
     wire p_go = p_v && p_ready;
-    wire p_last_word = p_go && (pl_word + 1 == words_blk);
+    wire p_last_word = p_go && ((PWORDS == 1) ? (pl_word + 1 == words_blk) : ({8'd0, pl_word} + PWORDS >= words_blk));
+    wire p_w2v = (PWORDS > 1) && ({8'd0, pl_word} + 1 < words_blk);   // second word of the pair is live
 
     // q.k issue
     wire qk_rows_ok = (wptr >= T) || (qk_row + NL <= wptr);
@@ -336,7 +351,7 @@ module ot_hdc_v41x_attn #(
                     pl_blk <= pl_blk + 1'b1;
                     pl_word <= 8'd0;
                 end else begin
-                    pl_word <= pl_word + 1'b1;
+                    pl_word <= pl_word + PWORDS;
                 end
             end
             // fills
@@ -402,10 +417,10 @@ module ot_hdc_v41x_attn #(
     endfunction
 
     // ================= tile inputs (E1 register) =================
-    reg              e_ld_v, e_ld_mode;
+    reg              e_ld_v, e_ld_mode, e_ld_w2v;
     reg [BW-1:0]     e_ld_bank;
     reg [7:0]        e_ld_grp;
-    reg [TD*16-1:0]  e_p_w;
+    reg [PWORDS*TD*16-1:0] e_p_w;
     reg [D*16-1:0]   e_q_w;
     reg              e_iv, e_pv;
     reg [BW-1:0]     e_ibank;
@@ -460,6 +475,7 @@ module ot_hdc_v41x_attn #(
     integer li;
     always @(posedge clk) begin
         e_ld_mode <= p_go;
+        e_ld_w2v <= p_go && p_w2v;
         e_ld_bank <= p_go ? ((pl_word == 0) ? next_bank : pl_bank) : ((q_cnt == 0) ? next_bank : q_bank);
         e_ld_grp <= p_go ? pl_word : q_cnt;
         e_p_w <= p_w;
@@ -480,10 +496,10 @@ module ot_hdc_v41x_attn #(
     generate
         for (gk = 0; gk < NT; gk = gk + 1) begin : g_t
             localparam integer SL = gk % S;
-            wire [TD*16-1:0] ldw = e_ld_mode ? e_p_w : e_q_w[SL*TD*16 +: TD*16];
-            ot_hdc_v41x_attn_tile #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW)) u_t (
+            wire [PWORDS*TD*16-1:0] ldw = e_ld_mode ? e_p_w : (PWORDS*TD*16)'(e_q_w[SL*TD*16 +: TD*16]);
+            ot_hdc_v41x_attn_tile #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS)) u_t (
                 .clk(clk), .rst_n(rst_n), .ld_v(e_ld_v), .ld_mode(e_ld_mode), .ld_bank(e_ld_bank),
-                .ld_grp(e_ld_grp), .ld_w(ldw), .iv(e_iv), .ibank(e_ibank), .ib(e_ib[gk*TD*18 +: TD*18]),
+                .ld_grp(e_ld_grp), .ld_w(ldw), .ld_w2v(e_ld_w2v), .iv(e_iv), .ibank(e_ibank), .ib(e_ib[gk*TD*18 +: TD*18]),
                 .ov(t_ov[gk]), .oy(t_y[gk*H*32 +: H*32]), .oflt(t_f[gk*H +: H]));
         end
     endgenerate
