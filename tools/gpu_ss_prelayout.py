@@ -29,7 +29,7 @@ def main(argv=None):
     work.mkdir(parents=True, exist_ok=True)
     sdc = f"create_clock -name clk -period {a.period_ps:g} [get_ports clk]\nset_false_path -from [all_inputs]\nset_false_path -to [all_outputs]\n"
     spec = cs.CaseSpec(nickname=f"ss_{a.top}", top=a.top, sources=a.source, die_um=(400.0, 400.0), sdc=sdc,
-                       params=params, extra={"CORNER": "WC", "ABC_AREA": 0})
+                       params=params, extra={"CORNER": "WC", "ABC_AREA": 0, "ADDER_MAP_FILE": ""})
     cs.write_case(work, spec)
     net = orfs.results_dir(work, spec.nickname) / "1_2_yosys.v"
     if not net.is_file():

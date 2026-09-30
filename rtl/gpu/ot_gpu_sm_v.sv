@@ -204,10 +204,10 @@ module ot_gpu_sm_v #(
         wire tv, tf;
         wire [31:0] ty;
         wire [TAGW-1:0] tt;
-        ot_gpu_tree #(.N(SUB), .TAGW(TAGW)) u_comb (.clk(clk), .rst_n(rst_n), .v(tin_v), .d(tin),
+        ot_gpu_tree #(.N(SUB), .TAGW(TAGW), .ALAT(7)) u_comb (.clk(clk), .rst_n(rst_n), .v(tin_v), .d(tin),
                                                   .tag(tin_tag), .ov(tv), .y(ty), .otag(tt), .fault(tf));
         wire kf;
-        ot_gpu_stack #(.LEV(LEV), .IL(IL), .TAGW(RW)) u_stack (
+        ot_gpu_stack #(.LEV(LEV), .IL(IL), .TAGW(RW), .ALAT(7)) u_stack (
             .clk(clk), .rst_n(rst_n), .iv(tv), .d(ty), .ilast(tt[SW]), .islot(tt[SW-1:0]),
             .itag(tt[TAGW-1:SW+1]), .ov(cv[col]), .y(cy[32*col +: 32]), .otag(crow[RW*col +: RW]), .fault(kf));
         assign cf[col] = (|bfault) | (|ffault) | tf | kf | (bov[0] & fov[0]);

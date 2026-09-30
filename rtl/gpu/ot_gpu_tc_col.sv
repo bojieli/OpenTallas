@@ -26,7 +26,8 @@
 module ot_gpu_tc_col #(
     parameter integer L    = 32,        // defaults = the hardened macro (Qwen SM: 32 lanes, 16-bit tag)
     parameter integer IL   = 8,
-    parameter integer TAGW = 16
+    parameter integer TAGW = 16,
+    parameter integer ALAT = 7          // adder latency: the IL-slot ring needs ALAT <= IL - 1
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -41,7 +42,7 @@ module ot_gpu_tc_col #(
     output wire [TAGW-1:0] otag,
     output wire            fault
 );
-    localparam integer FB = IL - 5;
+    localparam integer FB = IL - ALAT;          // ring = acc register + adder + (FB - 1) delay = IL
     reg            v_q, first_q, last_q;
     reg [L-1:0]    v_ql;                // per-lane copy of v for the bubble gate
     reg [TAGW-1:0] tag_q;
@@ -58,10 +59,11 @@ module ot_gpu_tc_col #(
     wire [5:0] fl;
     ot_hdc_vline #(.D(5)) u_f (.clk(clk), .rst_n(rst_n), .v(first_q), .vd(fl));
     // chunk end: the lane's final sum leaves the adder 5 (mul) + 5 (add) cycles after the input register
-    wire [10:0] ll;
-    ot_hdc_vline #(.D(10)) u_l (.clk(clk), .rst_n(rst_n), .v(last_q), .vd(ll));
+    localparam integer LL = 5 + ALAT;
+    wire [LL:0] ll;
+    ot_hdc_vline #(.D(LL)) u_l (.clk(clk), .rst_n(rst_n), .v(last_q), .vd(ll));
     wire [TAGW-1:0] tag_d;
-    ot_hdc_delay #(.W(TAGW), .D(10)) u_t (.clk(clk), .rst_n(rst_n), .d(tag_q), .q(tag_d));
+    ot_hdc_delay #(.W(TAGW), .D(LL)) u_t (.clk(clk), .rst_n(rst_n), .d(tag_q), .q(tag_d));
     wire [5:0] vl;
     ot_hdc_vline #(.D(5)) u_v (.clk(clk), .rst_n(rst_n), .v(v_q), .vd(vl));
     wire [L*32-1:0] sum;
@@ -76,14 +78,14 @@ module ot_gpu_tc_col #(
         ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(v_q), .a({wg, 16'd0}),
                            .b({x_q[16*l +: 16], 16'd0}), .y(prod), .fault(f0));
         always @(posedge clk) acc_q <= fl[4] ? 32'd0 : fb_pre;
-        ot_hdc_fadd u_add (.clk(clk), .rst_n(rst_n), .v(vl[5]), .a(acc_q), .b(prod), .y(sum[32*l +: 32]), .fault(f1));
+        ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(vl[5]), .a(acc_q), .b(prod), .y(sum[32*l +: 32]), .fault(f1));
         ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*l +: 32]), .q(fb_pre));
         assign lf[l] = f0 | f1;
     end endgenerate
     wire tf, t_ov;
     wire [31:0] t_y;
     wire [TAGW-1:0] t_tag;
-    ot_gpu_tree #(.N(L), .TAGW(TAGW)) u_tree (.clk(clk), .rst_n(rst_n), .v(ll[10]), .d(sum), .tag(tag_d),
+    ot_gpu_tree #(.N(L), .TAGW(TAGW), .ALAT(ALAT)) u_tree (.clk(clk), .rst_n(rst_n), .v(ll[LL]), .d(sum), .tag(tag_d),
                                              .ov(t_ov), .y(t_y), .otag(t_tag), .fault(tf));
     reg lane_fault, ov_q, fault_q;
     reg [31:0] y_q;
@@ -118,6 +120,6 @@ module ot_gpu_tc16 (
     output wire [15:0]   otag,
     output wire          fault
 );
-    ot_gpu_tc_col #(.L(16), .IL(8), .TAGW(16)) u (.clk(clk), .rst_n(rst_n), .v(v), .first(first), .last(last),
+    ot_gpu_tc_col #(.L(16), .IL(8), .TAGW(16), .ALAT(7)) u (.clk(clk), .rst_n(rst_n), .v(v), .first(first), .last(last),
         .tag(tag), .w(w), .x(x), .ov(ov), .y(y), .otag(otag), .fault(fault));
 endmodule

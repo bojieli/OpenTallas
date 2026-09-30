@@ -59,7 +59,7 @@ module ot_gpu_bd_col #(
     wire tf, t_ov;
     wire [31:0] t_y;
     wire [TAGW-1:0] t_tag;
-    ot_gpu_tree #(.N(LB), .TAGW(TAGW)) u_tree (.clk(clk), .rst_n(rst_n), .v(lov[0]), .d(acc), .tag(tag_d),
+    ot_gpu_tree #(.N(LB), .TAGW(TAGW), .ALAT(7)) u_tree (.clk(clk), .rst_n(rst_n), .v(lov[0]), .d(acc), .tag(tag_d),
                                               .ov(t_ov), .y(t_y), .otag(t_tag), .fault(tf));
     // output registers: the hardened macro's outputs leave flops
     reg ov_q, fault_q;
