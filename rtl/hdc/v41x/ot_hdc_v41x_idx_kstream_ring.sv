@@ -54,35 +54,57 @@ module ot_hdc_v41x_idx_kctl_ring #(
     output reg  [4:0]           dr_nkeys,     // keys in the quarter (1..16)
     input  wire                 dr_ready      // the datapath can take a quarter this cycle
 );
-    // Pipelined for 1.034 GHz: every per-cycle decision reads registers only --
+    // Every per-cycle decision reads registers only --
     //   * each generator prepares its next request one cycle ahead (address,
     //     length, block) and issues it the cycle its channel and the lookahead
     //     allow;
     //   * a response is registered, then counted (left: beats still to come per
     //     bank and ROB entry; cc: the entry's column is complete);
-    //   * the drain reads the completion rows of the head entry and the next one
-    //     from registers sampled a cycle earlier (a completion is seen one cycle
-    //     late, never early: a bit is only cleared by the drain of its own entry).
+    //   * the drain reads the completion of the head entry and the next one per
+    //     group of 8 banks from registers sampled a cycle earlier (a completion is
+    //     seen one cycle late, never early: a bit is only cleared by the drain of
+    //     its own entry).
+    // W11 1.2 GHz form (cycle- and bit-identical at the ports to the compare form
+    // it replaces, commit 7361f422): no wide compare sits on a decision path.
+    //   * 'more' (block < nblk) and 'wrap next' (block + 1 == nblk1) of every
+    //     generator and of the drain are registered flags kept by down-counters
+    //     (left = nblk - block, l1 = nblk1 - 1 - block, both mod 2^HW);
+    //   * the lookahead (nx_hi - d_hi) < GA is a registered flag kept from two
+    //     running differences (eg = g_hi - d_hi, dl = nx_hi - d_hi, mod 2^HW);
+    //   * a generator's next block's column, sector need and first-super-block
+    //     lower bound are prepared one step ahead (registered);
+    //   * the drain's head fold and the head/next completion per 8-bank group are
+    //     registered (a quarter's 8 columns are the 8 banks b with
+    //     b[4:3] == q ^ fold[4:3], so no 32-way permutation is needed);
+    //   * the return-queue gate (tag - d_hi) mod 2^BW < WB compares the tag's
+    //     entry bits against d_hi's and its upper bits against d_hi's upper
+    //     bits and their registered increment.
     localparam integer SW = $clog2(WB);
     localparam integer BW = TAGW - 4; // high tag bits hold the first sector's offset in its 4-sector column
+    localparam integer UW = BW - SW;  // tag bits above the ROB entry
 
-    reg [HW-1:0]   base;
-    reg [HW-1:0]   nblk;                      // blocks in the scan
     reg            run;
     reg [9:0]      first_skip;
     wire [HW+9:0] cmd_span=cmd_nkeys+{{HW{1'b0}},cmd_skip};
     // segment 2 follows segment 1's (possibly partial) last super-block
-    reg [HW-1:0]   nblk1, base2;
+    reg [HW-1:0]   base2;
     reg [HW+9:0]   span2;
+    reg [10:0]     m2;                         // sbkeys(span2)
     function automatic [HW-1:0] blocks(input [HW+9:0] span);
         blocks = 17 * (span >> 10) + ((span[9:0] != 0) ? (1 + ((span[9:0] + 10'd63) >> 6)) : 0);
     endfunction
+    wire [HW-1:0]  c_nblk1 = blocks(cmd_span);
+    wire [HW-1:0]  c_nblk = blocks(cmd_span) + blocks(cmd_nkeys2);
 
     function automatic [4:0] fold(input [HW-1:0] b);
         fold = b[4:0] ^ b[9:5];
     endfunction
     function automatic [10:0] sbkeys(input [HW+9:0] rem);
         sbkeys = (rem >= 1024) ? 11'd1024 : rem[10:0];
+    endfunction
+    // sbkeys(rem - 1024) without the subtraction
+    function automatic [10:0] sbkeys_dec(input [HW+9:0] rem);
+        sbkeys_dec = (rem[HW+9:10] != 1) ? 11'd1024 : {1'b0, rem[9:0]};
     endfunction
     // sectors a block needs: scale block ceil(m/8); code block b (1..16) 2 x keys
     function automatic [7:0] need(input [4:0] bidx, input [10:0] m);
@@ -113,55 +135,74 @@ module ot_hdc_v41x_idx_kctl_ring #(
     reg [WB-1:0] cc   [0:NPC-1];
 
     // -- generators: g_* is the next block to prepare; nx_* the prepared request -------
-    reg [HW-1:0]   g_hi   [0:NPC-1];
+    reg [BW-1:0]   g_hi   [0:NPC-1];          // block (relative), low BW bits
     reg [4:0]      g_bidx [0:NPC-1];
     reg [HW+9:0]   g_rem  [0:NPC-1];
+    reg [10:0]     g_m    [0:NPC-1];          // sbkeys(g_rem)
     reg [HW-1:0]   g_abs  [0:NPC-1];
+    reg [4:0]      g_col  [0:NPC-1];          // p ^ fold(g_abs)
+    reg [7:0]      g_need [0:NPC-1];          // need(g_bidx, g_m)
+    reg [7:0]      g_low  [0:NPC-1];          // first-super-block lower bound (0 elsewhere)
+    reg [HW-1:0]   g_left [0:NPC-1];          // nblk - g_hi
+    reg [HW-1:0]   g_l1   [0:NPC-1];          // nblk1 - 1 - g_hi
+    reg [NPC-1:0]  g_more, g_wrapn, g_first, g_lo16;
+    reg [HW-1:0]   eg     [0:NPC-1];          // g_hi - d_hi
+    reg [HW-1:0]   dl     [0:NPC-1];          // nx_hi - d_hi
+    reg [NPC-1:0]  ga_ok;                     // dl < GA
     reg [NPC-1:0]  nx_v;
-    reg [HW-1:0]   nx_hi  [0:NPC-1];
+    reg [BW-1:0]   nx_hi  [0:NPC-1];
     reg [2:0]      nx_len [0:NPC-1];
     reg [1:0]      nx_off [0:NPC-1];
     reg [AW-1:0]   nx_addr[0:NPC-1];
 
     // -- drain state ------------------------------------------------------------------
-    reg [HW-1:0]   d_hi;                      // head block (relative)
+    reg [BW-1:0]   d_hi;                      // head block (relative), low BW bits
+    reg [UW-1:0]   d_hu1;                     // d_hi[BW-1:SW] + 1
     reg [HW-1:0]   d_abs;                     // base + d_hi
+    reg [4:0]      d_fold;                    // fold(d_abs)
     reg [4:0]      d_bidx;                    // block within its super-block (0 = scales)
     reg [HW+9:0]   d_rem;                     // keys from the head super-block's start
+    reg [10:0]     d_m;                       // sbkeys(d_rem)
     reg [1:0]      d_q;
     reg [6:0]      d_kb;                      // keys of the head code block (0..64)
+    reg [HW-1:0]   d_left, d_l1;              // nblk - d_hi, nblk1 - 1 - d_hi
+    reg            d_more, d_wrapn;
     reg            adv;                       // the head moved at the last edge
-    reg [NPC-1:0]  row_a, row_b;              // cc[*][d_slot], cc[*][d_slot + 1] as of last cycle; after a
-                                              // step the head is last cycle's d_slot + 1: row_b
+    reg [3:0]      grp_a, grp_b;              // per 8-bank group: cc[*][d_slot], cc[*][d_slot + 1] complete,
+                                              // as of last cycle; after a step the head is last cycle's
+                                              // d_slot + 1: grp_b
     wire [SW-1:0]  d_slot = d_hi[SW-1:0];
-    wire [4:0]     d_fold = fold(d_abs);
-    wire [NPC-1:0] row = adv ? row_b : row_a;
-    reg  [NPC-1:0] prow;                      // row permuted: bit c = bank c ^ fold
+    wire [3:0]     grp = adv ? grp_b : grp_a;
+    wire [1:0]     d_qg = d_q ^ d_fold[4:3];  // the 8-bank group of quarter d_q
     integer b, c;
-    always @* begin
-        for (c = 0; c < NPC; c = c + 1) prow[c] = row[c[4:0] ^ d_fold];
-    end
-    wire           all_in = &row;
-    wire           q_in = &prow[8 * d_q +: 8];
+    wire           all_in = &grp;
+    wire           q_in = grp[d_qg];
     wire [6:0]     d_qk = (d_kb > {d_q, 4'd0}) ? d_kb - {d_q, 4'd0} : 7'd0;   // keys left from this quarter
-    wire           d_live = run && (d_hi < nblk);
+    wire           d_live = run && d_more;
     wire           do_scale = d_live && (d_bidx == 0) && all_in;
     wire           do_q = d_live && (d_bidx != 0) && q_in && (d_qk == 0 || dr_ready);
     wire           d_step = do_scale || (do_q && d_q == 3);
-    // keys of the code block after the head (the head's next d_bidx / d_rem)
+    // keys of the code block after the head (the head's next d_bidx); a scale block
+    // (n_bidx 0) has none, so the head's own d_m serves
     wire [4:0]     n_bidx = (d_bidx == 16) ? 5'd0 : d_bidx + 5'd1;
-    wire [HW+9:0]  n_rem = (d_bidx == 16) ? d_rem - 1024 : d_rem;
-    wire [10:0]    n_m = sbkeys(n_rem);
     wire [11:0]    n_off = {n_bidx - 5'd1, 6'd0};
-    wire [6:0]     n_kb = (n_bidx == 0 || n_m <= n_off) ? 7'd0 : ((n_m - n_off >= 64) ? 7'd64 : n_m - n_off);
+    wire [6:0]     n_kb = (n_bidx == 0 || d_m <= n_off) ? 7'd0 : ((d_m - n_off >= 64) ? 7'd64 : d_m - n_off);
+    wire [HW-1:0]  d_abs1 = d_abs + 1'b1;
+    wire [BW-1:0]  d_hi1 = d_hi + 1'b1;
 
-    // a beat is taken only when its block has a ROB entry (within WB of the head);
-    // otherwise its channel's return queue holds it and that channel alone stops
+    // a beat is taken only when its block has a ROB entry (within WB of the head):
+    // (tag - d_hi) mod 2^BW < WB; otherwise its channel's return queue holds it and
+    // that channel alone stops
     genvar gq;
     generate
         for (gq = 0; gq < NPC; gq = gq + 1) begin : g_rr
-            wire [BW-1:0] ahead = rsp_tag[gq*TAGW +: BW] - d_hi[BW-1:0];
-            assign rsp_rdy[gq] = (ahead < WB);
+            wire [BW-1:0] t = rsp_tag[gq*TAGW +: BW];
+            wire          bor = t[SW-1:0] < d_hi[SW-1:0];
+            if (UW > 0) begin : g_u
+                assign rsp_rdy[gq] = bor ? (t[BW-1:SW] == d_hu1) : (t[BW-1:SW] == d_hi[BW-1:SW]);
+            end else begin : g_n
+                assign rsp_rdy[gq] = 1'b1;
+            end
         end
     endgenerate
     // registered responses
@@ -169,11 +210,13 @@ module ot_hdc_v41x_idx_kctl_ring #(
     reg [SW-1:0]   rr_s [0:NPC-1];
 
     integer p, s;
-    reg [4:0]    gc;
+    reg [4:0]    gc, nb;
     reg [7:0]    gn,glo;
     reg [8:0]    ge,lo_sec,hi_sec,col_sec;
     reg [2:0]    gl;
-    reg          iss, prep;
+    reg [10:0]   nm;
+    reg [HW-1:0] na;
+    reg          iss, prep, nf;
     always @(posedge clk) begin
         if (!rst_n) begin
             run <= 1'b0; busy <= 1'b0; req_v <= 0; nx_v <= 0; rr_v <= 0; adv <= 1'b0;
@@ -182,10 +225,14 @@ module ot_hdc_v41x_idx_kctl_ring #(
         end else begin
             dr_scale <= 1'b0;
             dr_quarter <= 1'b0;
-            // completion rows for the next cycle
-            for (b = 0; b < NPC; b = b + 1) begin
-                row_a[b] <= cc[b][d_slot];
-                row_b[b] <= cc[b][d_slot + 1'b1];
+            // group completion for the next cycle
+            for (b = 0; b < 4; b = b + 1) begin
+                grp_a[b] <= 1'b1;
+                grp_b[b] <= 1'b1;
+                for (c = 0; c < 8; c = c + 1) begin
+                    if (!cc[8 * b + c][d_slot]) grp_a[b] <= 1'b0;
+                    if (!cc[8 * b + c][d_slot + 1'b1]) grp_b[b] <= 1'b0;
+                end
             end
             adv <= 1'b0;
             // responses: registered, then counted
@@ -198,23 +245,29 @@ module ot_hdc_v41x_idx_kctl_ring #(
                 end
             end
             if (cmd_v && !busy) begin
-                base <= cmd_base;
                 first_skip<=cmd_skip;
-                // 17 blocks per full super-block; a partial one: 1 + ceil(m / 64)
-                nblk1 <= blocks(cmd_span);
-                nblk <= blocks(cmd_span) + blocks(cmd_nkeys2);
-                base2 <= cmd_base2; span2 <= cmd_nkeys2;
+                base2 <= cmd_base2; span2 <= cmd_nkeys2; m2 <= sbkeys(cmd_nkeys2);
                 run <= 1'b1; busy <= 1'b1;
-                d_hi <= 0; d_abs <= cmd_base; d_bidx <= 0; d_rem <= cmd_span; d_q <= 0; d_kb <= 0;
+                d_hi <= 0; d_hu1 <= 1; d_abs <= cmd_base; d_fold <= fold(cmd_base); d_bidx <= 0; d_rem <= cmd_span;
+                d_m <= sbkeys(cmd_span); d_q <= 0; d_kb <= 0;
+                d_left <= c_nblk; d_more <= (c_nblk != 0);
+                d_l1 <= c_nblk1 - 1'b1; d_wrapn <= (c_nblk1 == 1);
                 nx_v <= 0;
                 for (p = 0; p < NPC; p = p + 1) begin
                     g_hi[p] <= 0; g_abs[p] <= cmd_base; g_bidx[p] <= 0; g_rem[p] <= cmd_span;
+                    g_m[p] <= sbkeys(cmd_span); g_col[p] <= p[4:0] ^ fold(cmd_base);
+                    g_need[p] <= need(5'd0, sbkeys(cmd_span));
+                    g_low[p] <= (c_nblk1 != 0) ? lower(5'd0, cmd_skip) : 8'd0;
+                    g_left[p] <= c_nblk; g_more[p] <= (c_nblk != 0);
+                    g_l1[p] <= c_nblk1 - 1'b1; g_wrapn[p] <= (c_nblk1 == 1);
+                    g_first[p] <= (c_nblk1 != 0); g_lo16[p] <= 1'b1;
+                    eg[p] <= 0; dl[p] <= 0; ga_ok[p] <= 1'b1;
                 end
             end else if (run) begin
                 for (p = 0; p < NPC; p = p + 1) begin
                     if (req_v[p] && req_rdy[p]) req_v[p] <= 1'b0;
                     // issue the prepared request
-                    iss = nx_v[p] && (!req_v[p] || req_rdy[p]) && ((nx_hi[p] - d_hi) < GA);
+                    iss = nx_v[p] && (!req_v[p] || req_rdy[p]) && ga_ok[p];
                     if (iss) begin
                         s = nx_hi[p] % WB;
                         left[p * WB + s] <= nx_len[p];
@@ -223,15 +276,24 @@ module ot_hdc_v41x_idx_kctl_ring #(
                             req_v[p] <= 1'b1;
                             req_addr[p*AW +: AW] <= nx_addr[p];
                             req_len[p*LENW +: LENW] <= nx_len[p];
-                            req_tag[p*TAGW +: TAGW] <= {nx_off[p],2'b00,nx_hi[p][BW-1:0]};
+                            req_tag[p*TAGW +: TAGW] <= {nx_off[p],2'b00,nx_hi[p]};
                         end
                     end
                     // prepare the next one
-                    prep = (!nx_v[p] || iss) && (g_hi[p] < nblk);
+                    prep = (!nx_v[p] || iss) && g_more[p];
+                    // lookahead: dl' = nx_hi' - d_hi', eg' = g_hi' - d_hi'
                     if (prep) begin
-                        gc = p[4:0] ^ fold(g_abs[p]);
-                        gn = need(g_bidx[p], sbkeys(g_rem[p]));
-                        glo = (g_hi[p]<17 && g_hi[p]<nblk1) ? lower(g_bidx[p],first_skip) : 8'd0;
+                        dl[p] <= eg[p] - d_step;
+                        ga_ok[p] <= d_step ? (eg[p] != 0 && eg[p] <= GA) : (eg[p] < GA);
+                    end else if (d_step) begin
+                        dl[p] <= dl[p] - 1'b1;
+                        ga_ok[p] <= (dl[p] != 0 && dl[p] <= GA);
+                    end
+                    eg[p] <= eg[p] + prep - d_step;
+                    if (prep) begin
+                        gc = g_col[p];
+                        gn = g_need[p];
+                        glo = g_low[p];
                         col_sec={2'b00,gc,2'b00};
                         lo_sec=({1'b0,glo}>col_sec) ? {1'b0,glo} : col_sec;
                         hi_sec=({1'b0,gn}<col_sec+4) ? {1'b0,gn} : col_sec+4;
@@ -240,18 +302,32 @@ module ot_hdc_v41x_idx_kctl_ring #(
                         nx_hi[p] <= g_hi[p];
                         nx_len[p] <= gl;
                         nx_off[p]<=2'(lo_sec-col_sec);
-                        nx_addr[p] <= {g_abs[p], gc, 2'b00}+AW'(lo_sec-col_sec);
-                        g_hi[p] <= g_hi[p] + 1;
-                        if (g_hi[p] + 1'b1 == nblk1) begin
+                        // lo_sec - col_sec < 4 whenever the length is nonzero, the only case
+                        // the address leaves the unit
+                        nx_addr[p] <= {g_abs[p], gc, 2'(lo_sec-col_sec)};
+                        g_hi[p] <= g_hi[p] + 1'b1;
+                        g_left[p] <= g_left[p] - 1'b1; g_more[p] <= (g_left[p] != 1);
+                        g_l1[p] <= g_l1[p] - 1'b1; g_wrapn[p] <= (g_l1[p] == 1);
+                        nf = g_first[p] && g_lo16[p] && !g_wrapn[p];
+                        g_first[p] <= nf;
+                        g_lo16[p] <= g_lo16[p] && (g_hi[p][3:0] != 4'd15);
+                        if (g_wrapn[p]) begin
                             // wrap: continue at the ring's first super-block
-                            g_abs[p] <= base2; g_bidx[p] <= 0; g_rem[p] <= span2;
+                            na = base2; nb = 5'd0; nm = m2;
+                            g_rem[p] <= span2;
                         end else begin
-                            g_abs[p] <= g_abs[p] + 1;
+                            na = g_abs[p] + 1'b1;
                             if (g_bidx[p] == 16) begin
-                                g_bidx[p] <= 0;
+                                nb = 5'd0; nm = sbkeys_dec(g_rem[p]);
                                 g_rem[p] <= g_rem[p] - 1024;
-                            end else g_bidx[p] <= g_bidx[p] + 1;
+                            end else begin
+                                nb = g_bidx[p] + 5'd1; nm = g_m[p];
+                            end
                         end
+                        g_abs[p] <= na; g_bidx[p] <= nb; g_m[p] <= nm;
+                        g_col[p] <= p[4:0] ^ fold(na);
+                        g_need[p] <= need(nb, nm);
+                        g_low[p] <= nf ? lower(nb, first_skip) : 8'd0;
                     end
                     nx_v[p] <= prep || (nx_v[p] && !iss);
                 end
@@ -270,19 +346,26 @@ module ot_hdc_v41x_idx_kctl_ring #(
                         dr_sidx <= {d_bidx[3:0] - 4'd1, d_q};
                         dr_nkeys <= (d_qk >= 16) ? 5'd16 : d_qk[4:0];
                     end
-                    for (c = 0; c < 8; c = c + 1) cc[{d_q, c[2:0]} ^ d_fold][d_slot] <= 1'b0;
+                    for (p = 0; p < NPC; p = p + 1) if (p[4:3] == d_qg) cc[p][d_slot] <= 1'b0;
                     d_q <= d_q + 1;
                 end
                 if (d_step) begin
                     adv <= 1'b1;
-                    d_hi <= d_hi + 1;
-                    if (d_hi + 1'b1 == nblk1) begin
-                        d_abs <= base2; d_bidx <= 0; d_rem <= span2; d_kb <= 0;
+                    d_hi <= d_hi1;
+                    d_hu1 <= d_hi1[BW-1:SW] + 1'b1;
+                    d_left <= d_left - 1'b1; d_more <= (d_left != 1);
+                    d_l1 <= d_l1 - 1'b1; d_wrapn <= (d_l1 == 1);
+                    if (d_wrapn) begin
+                        d_abs <= base2; d_fold <= fold(base2); d_bidx <= 0; d_rem <= span2; d_m <= m2; d_kb <= 0;
                     end else begin
-                        d_abs <= d_abs + 1;
+                        d_abs <= d_abs1;
+                        d_fold <= fold(d_abs1);
                         d_bidx <= n_bidx;
-                        d_rem <= n_rem;
                         d_kb <= n_kb;
+                        if (d_bidx == 16) begin
+                            d_rem <= d_rem - 1024;
+                            d_m <= sbkeys_dec(d_rem);
+                        end
                     end
                 end
                 if (!d_live) run <= 1'b0;

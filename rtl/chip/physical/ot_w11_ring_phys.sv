@@ -166,3 +166,45 @@ module ot_w11_kdata_m_x2_phys (
     output wire dr_ready, o_valid, input wire o_ready, output wire [15:0] o_kv, output wire busy);
     ot_w11_kdata_m_phys #(.XP(2)) u (.*);
 endmodule
+
+// the reader's control (ot_hdc_v41x_idx_kctl_ring: 32 request generators, entry state, drain) at the
+// die configuration: 30-bit sectors, 23-bit blocks, ROB 128, lookahead 120.  Every port is a top-level
+// pin except the return-queue handshake: rsp_v / rsp_tag are captured from and rsp_rdy is captured
+// into flip-flops (the ring port's return-queue head and pop registers), so the combinational
+// rsp_tag -> rsp_rdy gate is timed register to register instead of from an unbudgeted input to an
+// unbudgeted output.  rsp_beat is not read by the control.
+module ot_w11_kctl_ring_phys (
+    input  wire clk, rst_n,
+    input  wire cmd_v,
+    input  wire [22:0] cmd_base, cmd_base2,
+    input  wire [9:0] cmd_skip,
+    input  wire [32:0] cmd_nkeys, cmd_nkeys2,
+    output wire busy,
+    output wire [31:0] req_v,
+    input  wire [31:0] req_rdy,
+    output wire [32*30-1:0] req_addr,
+    output wire [32*4-1:0] req_len,
+    output wire [32*16-1:0] req_tag,
+    input  wire [31:0] rsp_v,
+    output reg  [31:0] rsp_rdy_q,
+    input  wire [32*16-1:0] rsp_tag,
+    output wire dr_scale, dr_quarter,
+    output wire [6:0] dr_slot,
+    output wire [1:0] dr_q,
+    output wire [4:0] dr_fold, dr_nkeys,
+    output wire [5:0] dr_sidx,
+    input  wire dr_ready
+);
+    reg  [31:0] rsp_v_q;
+    reg  [32*16-1:0] rsp_tag_q;
+    wire [31:0] rsp_rdy;
+    always @(posedge clk) begin
+        rsp_v_q <= rsp_v; rsp_tag_q <= rsp_tag; rsp_rdy_q <= rsp_rdy;
+    end
+    ot_hdc_v41x_idx_kctl_ring #(.NPC(32), .WB(128), .GA(120), .AW(30), .HW(23), .TAGW(16), .LENW(4), .BEATW(4)) dut (
+        .clk(clk), .rst_n(rst_n), .cmd_v(cmd_v), .cmd_base(cmd_base), .cmd_skip(cmd_skip), .cmd_nkeys(cmd_nkeys),
+        .cmd_base2(cmd_base2), .cmd_nkeys2(cmd_nkeys2), .busy(busy), .req_v(req_v), .req_rdy(req_rdy),
+        .req_addr(req_addr), .req_len(req_len), .req_tag(req_tag), .rsp_v(rsp_v_q), .rsp_rdy(rsp_rdy),
+        .rsp_tag(rsp_tag_q), .rsp_beat('0), .dr_scale(dr_scale), .dr_quarter(dr_quarter), .dr_slot(dr_slot),
+        .dr_q(dr_q), .dr_fold(dr_fold), .dr_sidx(dr_sidx), .dr_nkeys(dr_nkeys), .dr_ready(dr_ready));
+endmodule
