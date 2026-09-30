@@ -716,6 +716,8 @@ def crossings(B: dict) -> dict:
     wd = FP.wire_delay_model()
     budget = CLOCK_PS - UNCERTAINTY_PS - wd["overhead_ps"]
     seg_um = budget / wd["ps_per_um"]
+    if REFIT and REFIT.get("reach_um"):
+        seg_um = REFIT["reach_um"]              # measured register-to-register reach (e.g. W15 at SS, 0.833 ns)
     parts = {p[0]: p for p in B["hub_parts"]}
 
     def ctr(p):
@@ -798,6 +800,7 @@ def crossings(B: dict) -> dict:
         add("GATHER -> farthest Engram spill macro", ctr(g_), fs, 264, "one 264-bit gather word per read", None)
     rows.sort(key=lambda r: -r["manhattan_um"])
     return dict(wire_model=wd, clock_ps=CLOCK_PS, uncertainty_ps=UNCERTAINTY_PS,
+                reach_basis=(REFIT or {}).get("reach_basis", "TT wire model at the adopted period"),
                 register_segment_um=round(seg_um, 1),
                 rule="registers = ceil(L / segment) - 1; segment = (period - uncertainty - flop overhead) / ps_per_um; "
                      "one-way added cycles = registers + 1 when registers > 0 (a register-to-register hop is 1 cycle)",

@@ -72,6 +72,10 @@ def main(argv=None):
     ap.add_argument("--label", default="", help="status label recorded in the re-fit (e.g. interim)")
     ap.add_argument("--xroot", default="SU_VECTOR",
                     help="hub region holding the x-broadcast root (distributed VM in the SU region, W11); '' = VM")
+    ap.add_argument("--clock-ps", type=float, default=None, help="clock period (ps); default the pack's 920")
+    ap.add_argument("--reach-um", type=float, default=None,
+                    help="measured register-to-register wire reach per stage (um), e.g. 504 at SS / 0.833 ns (W15)")
+    ap.add_argument("--reach-basis", default="W15 SS measurement: period = 261 ps + 1.135 ps/um x L at 0.833 ns")
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--svg-dir", type=Path, default=ROOT / "results/floorplan")
     a = ap.parse_args(argv)
@@ -87,7 +91,10 @@ def main(argv=None):
     P.REFIT = dict(strip_q_um=q["strip_um"] * g, strip_bf_um=b["strip_um"] * g, bf_pairs=BF16_PAIRS,
                    hub_mm2=hub, hub_scale={"HC": g, "GATHER": g}, hub_add_mm2={"VM": AON_MM2},
                    xroot=a.xroot or None,
+                   reach_um=a.reach_um, reach_basis=a.reach_basis if a.reach_um else None,
                    basis="W10 placed pairs + model hub + power switches + always-on island")
+    if a.clock_ps:
+        P.CLOCK_PS = a.clock_ps
     import shutil
     import tempfile
     with tempfile.TemporaryDirectory() as td:
