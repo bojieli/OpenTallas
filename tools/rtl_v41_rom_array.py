@@ -415,13 +415,18 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
         for (e, mb), lst in pp_words.items():
             for bk in (0, 1):
                 viamap(lst[bk], work / f"e{e}{'b' if mb else ''}_{bk}.viamap.hex", 4096)
+    base_nodes = 0
+    for sg in die.segs[seg0:]:
+        u0, u1 = S.unit_range(sg["fmt"], sg["e0"], sg["elems"])
+        base_nodes = max(base_nodes, (u1 - u0) * (4 if (sg["fmt"] == "bf16" and S.BF16_PAIR) else
+                                                   (2 if sg["fmt"] == "fp8" else 1)))
     chain_slots = 0
     if bf and S.BF16_PAIR:
         per_e = {}
         for (q, b, e), v in demand.items():
             per_e[e] = max(per_e.get(e, 0), v)
         chain_slots = max(per_e.values(), default=0) * S.BF16_WORD_CYCLES
-    return dict(bf=bf, chain_slots=chain_slots, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32), nsent=nsent, npos=npos, exp_fp32=exp_fp32, exp_bf16=exp_bf16,
+    return dict(bf=bf, chain_slots=chain_slots, base_nodes=base_nodes, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32), nsent=nsent, npos=npos, exp_fp32=exp_fp32, exp_bf16=exp_bf16,
                 t_pred=t_pred, t_rounds=t_rounds, words=n_words, split=info,
                 elements=[len(by_e.get(e, [])) for e in range(NE)])
 
@@ -616,10 +621,12 @@ def main(argv=None):
             wd.mkdir(exist_ok=True)
             ph = build_phase(mats, N, wd, rng, split=8 if "split8" in name else None, nb=nb, sibling=a.sibling,
                              npos=a.mtp, pp=a.pp)
-            if a.bp and ph["bf"] and ph["chain_slots"] > 24:
-                print(json.dumps(dict(N=N, NB=nb, case=name, skipped="placement needs %d chain slots per lane; the "
-                                      "element has 24 and the full-die bank map never needs more" % ph["chain_slots"])))
-                out.append(dict(N=N, NB=nb, case=name, skipped=True, chain_slots=ph["chain_slots"], rows=0,
+            if a.bp and ph["bf"] and (ph["chain_slots"] > 24 or ph["base_nodes"] > 32):
+                print(json.dumps(dict(N=N, NB=nb, case=name, skipped="placement needs %d chain slots per lane and %d "
+                                      "segment-tree base nodes; the element has 24 and 32 (LV 5), and the full-die "
+                                      "bank map never needs more" % (ph["chain_slots"], ph["base_nodes"]))))
+                out.append(dict(N=N, NB=nb, case=name, skipped=True, chain_slots=ph["chain_slots"],
+                                base_nodes=ph["base_nodes"], rows=0,
                                 fp32_exact=0, bf16_exact=0, fault=0))
                 continue
             xf = XF_BF if ph["bf"] else XF_Q

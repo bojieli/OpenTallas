@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // ot_v41_segtree2: ot_v41_segtree on the LAT-stage ot_v41_fadd with the adder result registered before it is
-// an event (W10, 1.2 GHz at SS): LAT + 2 cycles per level (was 6).  Same order and results.
+// an event and a 2-stage event pipeline (select + one-hot decode | decide) (W10, 1.2 GHz at SS): LAT + 3
+// cycles per level (was 6).  Same order and results.
 // ot_v41_segtree: the golden csum padded pairwise tree over one segment's chunk sums, for up to NT
 // segments (trees) in flight, on ONE pipelined binary32 adder (ot_fp32_add_rne_pipe, 5 cycles).
 //
@@ -66,10 +67,12 @@ module ot_v41_segtree2 #(
     reg  [PW+LW+1:0] st;     // {tree, level, final, err}
     always @(posedge clk or negedge rst_n) if (!rst_n) sv <= 1'b0; else sv <= sv_a;
     always @(posedge clk) begin sum <= sum_a; err <= err_a; st <= st_a; end
-    // the event considered this cycle: adder result first, else the queue head
+    // STAGE 1 -- the event considered this cycle: adder result first, else the queue head.  It is registered
+    // (x_*) with its held-operand index decoded one-hot and the mask of its tree's levels above it, so the
+    // decision stage below is a few AND-OR levels over registers (1.2 GHz at SS).  An event spends one cycle in
+    // each stage; the decision stage reads and writes the held operands in the same cycle, so consecutive
+    // events of one tree see each other's updates.
     wire use_q = !sv && qc != 0;
-    // the queue head is held in registers (loaded from the entry the pop will expose, or the incoming node when
-    // that entry is being written now), so the event select is a 2-way choice, not a QD-way read
     reg [31:0] h_v;
     reg [PW-1:0] h_t;
     reg h_f, h_e;
@@ -80,39 +83,59 @@ module ot_v41_segtree2 #(
     wire        e_f = sv ? st[1] : h_f;
     wire        e_e = sv ? (st[0] | err != 2'd0) : h_e;
     wire [31:0] e_d = sv ? sum : h_v;
-    wire [PW+LW-1:0] hidx = e_t * LV + e_l;
-    // trees' events inside the adder, and whether a tree holds anything above level e_l
-    localparam integer IW = $clog2(LAT + 3);
-    reg [IW-1:0] infl [0:NT-1];
-    reg above;
-    integer li, ti;
+    localparam integer NH = NT * LV;
+    reg [NH-1:0] e_oh, e_above;
+    integer li, ti, hi;
     always @* begin
-        above = 1'b0;
-        for (li = 0; li < LV; li = li + 1)
-            if (li > e_l && have[e_t * LV + li]) above = 1'b1;
+        e_oh = '0; e_above = '0;
+        for (hi = 0; hi < NH; hi = hi + 1) begin
+            if (hi / LV == e_t && hi % LV == e_l) e_oh[hi] = 1'b1;
+            if (hi / LV == e_t && hi % LV > e_l) e_above[hi] = 1'b1;
+        end
     end
-    wire mine_out = sv;                               // the event leaving the adder now is e_t's own
-    wire idle_tree = infl[e_t] == (mine_out ? {{(IW-1){1'b0}}, 1'b1} : {IW{1'b0}});
-    wire early = (EARLY != 0) && e_v && e_f && !have[hidx] && !above && idle_tree;
-    wire top = e_l == LV[LW-1:0] || early;
-    wire pair = e_v && !top && have[hidx];
-    wire promote = e_v && !top && !have[hidx] && e_f;
-    wire hold = e_v && !top && !have[hidx] && !e_f;
-    wire [PW-1:0] out_t = st[PW+LW+1 -: PW];
-    // the operands are registered before the adder (the event select and the held-operand lookup would
-    // otherwise sit in front of the adder's first stage); an add takes 6 cycles from its decision
+    reg          x_v, x_f, x_e, x_add;
+    reg [PW-1:0] x_t;
+    reg [LW-1:0] x_l;
+    reg [31:0]   x_d;
+    reg [NH-1:0] x_oh, x_above;
+    reg [2:0]    x_pos;
+    always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= e_v;
+    always @(posedge clk) begin
+        x_t <= e_t; x_l <= e_l; x_f <= e_f; x_e <= e_e; x_d <= e_d; x_add <= sv;
+        x_oh <= e_oh; x_above <= e_above;
+        x_pos <= use_q ? h_p : tpos[e_t];
+    end
+    // STAGE 2 -- decide: pair with the held left operand, promote a final node (+0), hold it, or emit at the top
+    localparam integer IW = $clog2(LAT + 4);
+    reg [IW-1:0] infl [0:NT-1];
+    wire x_have = |(have & x_oh);
+    wire above = |(have & x_above);
+    wire idle_tree = infl[x_t] == (x_add ? {{(IW-1){1'b0}}, 1'b1} : {IW{1'b0}});
+    wire early = (EARLY != 0) && x_v && x_f && !x_have && !above && idle_tree;
+    wire top = x_l == LV[LW-1:0] || early;
+    wire pair = x_v && !top && x_have;
+    wire promote = x_v && !top && !x_have && x_f;
+    wire hold = x_v && !top && !x_have && !x_f;
+    reg [31:0] x_held;
+    reg        x_herr;
+    always @* begin
+        x_held = 32'd0; x_herr = 1'b0;
+        for (hi = 0; hi < NH; hi = hi + 1)
+            if (x_oh[hi]) begin x_held = x_held | held[hi]; x_herr = x_herr | herr[hi]; end
+    end
+    wire [PW-1:0] out_t = x_t;
     reg [31:0] add_a, add_b;
     reg        add_v;
     always @(posedge clk) begin
-        add_a <= pair ? held[hidx] : e_d;
-        add_b <= pair ? e_d : 32'd0;
+        add_a <= pair ? x_held : x_d;
+        add_b <= pair ? x_d : 32'd0;
     end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) add_v <= 1'b0; else add_v <= pair | promote;
     ot_v41_fadd #(.CUT(CUT)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(add_v), .a(add_a), .b(add_b),
                                      .y(sum_a), .err(err_a), .valid_out(sv_a));
     ot_hdc_delay #(.W(PW + LW + 2), .D(LAT + 1)) u_t (.clk(clk), .rst_n(rst_n),
-        .d({e_t, e_l + 1'b1, e_f, e_e | (pair && herr[hidx])}), .q(st_a));
+        .d({x_t, x_l + 1'b1, x_f, x_e | (pair && x_herr)}), .q(st_a));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             qr <= 0; qw <= 0; qc <= 0; have <= '0; herr <= '0; ov <= 1'b0; oerr <= 1'b0; fault <= 1'b0;
@@ -122,19 +145,20 @@ module ot_v41_segtree2 #(
             if (use_q) qr <= qr + 1'b1;
             qc <= qc + (in_v ? 1'b1 : 1'b0) - (use_q ? 1'b1 : 1'b0);
             if (in_v && qc == QD && !use_q) fault <= 1'b1;
+            if (x_v && x_l == LV[LW-1:0] && !x_f) fault <= 1'b1;    // more base nodes than 2^LV: not the root
             for (ti = 0; ti < NT; ti = ti + 1)
-                infl[ti] <= infl[ti] + (((pair | promote) && e_t == ti) ? 1'b1 : 1'b0)
-                                     - ((sv && out_t == ti) ? 1'b1 : 1'b0);
-            if (pair) have[hidx] <= 1'b0;
-            if (hold) begin have[hidx] <= 1'b1; herr[hidx] <= e_e; end
-            ov <= e_v && top;
-            oerr <= e_v && top && e_e;
+                infl[ti] <= infl[ti] + (((pair | promote) && x_t == ti) ? 1'b1 : 1'b0)
+                                     - ((x_v && x_add && out_t == ti) ? 1'b1 : 1'b0);
+            if (pair) have <= have & ~x_oh;
+            if (hold) begin have <= have | x_oh; herr <= (herr & ~x_oh) | (x_e ? x_oh : '0); end
+            ov <= x_v && top;
+            oerr <= x_v && top && x_e;
         end
     end
     always @(posedge clk) begin
         if (in_v) begin qv[qw] <= in_val; qt[qw] <= in_tree; qf[qw] <= in_final; qe[qw] <= in_err; qp[qw] <= in_pos; end
         if (use_q) tpos[h_t] <= h_p;
-        opos <= use_q ? h_p : tpos[e_t];
+        opos <= x_pos;
         if (qr + (use_q ? 1'b1 : 1'b0) == qw) begin      // the head-to-be is the node arriving now (if any)
             h_v <= in_val; h_t <= in_tree; h_f <= in_final; h_e <= in_err; h_p <= in_pos;
         end else begin
@@ -142,8 +166,8 @@ module ot_v41_segtree2 #(
             h_f <= qf[qr + (use_q ? 1'b1 : 1'b0)]; h_e <= qe[qr + (use_q ? 1'b1 : 1'b0)];
             h_p <= qp[qr + (use_q ? 1'b1 : 1'b0)];
         end
-        if (hold) held[hidx] <= e_d;
-        oval <= e_d;
-        otree <= e_t;
+        for (hi = 0; hi < NH; hi = hi + 1) if (hold && x_oh[hi]) held[hi] <= x_d;
+        oval <= x_d;
+        otree <= x_t;
     end
 endmodule

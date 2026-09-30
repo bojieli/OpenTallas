@@ -194,6 +194,23 @@ module ot_v41_rom_elem #(
     wire [1:0] sbs_go = (BP != 0 && go_bf) ? 2'd1 : 2'd3;
     wire [8:0] sbn = 9'd1 << sbs;
     wire [8:0] sbn_go = 9'd1 << sbs_go;
+    // FAST walkers: the per-class sub-block facts (class live in sub-block q, its units there) depend only on q and
+    // the op, so they are held in registers for q and q + 1 (A, B) instead of being recomputed inside the walk
+    // loop; A <= B and B <= f(q + 2) when q advances, both <= f(0), f(1) at go and at an MTP restart.
+    function automatic [5*NSEG-1:0] sbf(input [3:0] q, input [1:0] sh, input [7*NSEG-1:0] nu, input [NSEG-1:0] base);
+        integer k;
+        reg [6:0] q8, rem;
+        begin
+            q8 = {3'd0, q} << sh;
+            for (k = 0; k < NSEG; k = k + 1) begin
+                rem = (nu[7*k +: 7] > q8) ? nu[7*k +: 7] - q8 : 7'd0;
+                sbf[k] = base[k] && rem != 7'd0;                                  // live
+                sbf[NSEG + 4*k +: 4] = (rem > (7'd1 << sh)) ? (4'd1 << sh) : rem[3:0];   // units in sub-block
+            end
+        end
+    endfunction
+    wire [5*NSEG-1:0] f0_go = sbf(4'd0, sbs_go, nu_p, base_go);
+    wire [5*NSEG-1:0] f1_go = sbf(4'd1, sbs_go, nu_p, base_go);
     // ---------------- x-need walker: one (pair, b) per class unit per round ------------------------------
     reg        n_run;
     reg [2:0]  n_q, n_pos, bn_pos, w_pos;
@@ -201,8 +218,14 @@ module ot_v41_rom_elem #(
     reg [SW-1:0] n_c;
     wire [7:0] n_pair = c_u0[n_c] + {2'd0, n_q, n_j};
     wire [UW-1:0] n_nx;
-    ot_v41_walk #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .nu(nu_p), .base(base_live),
-                                   .qlast(qlast), .sbs(2'd3), .nx(n_nx));
+    reg [5*NSEG-1:0] nA, nB, wA, wB, fF0, fF1;
+    if (FAST != 0) begin : g_nw2
+        ot_v41_walk2 #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .live(nA[NSEG-1:0]),
+            .livq1(nB[NSEG-1:0]), .cur(nA[5*NSEG-1:NSEG]), .qlast(qlast), .nx(n_nx));
+    end else begin : g_nw1
+        ot_v41_walk #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .nu(nu_p), .base(base_live),
+                                       .qlast(qlast), .sbs(2'd3), .nx(n_nx));
+    end
     wire hit_q = n_run && !fam && xs_v && xs_p == n_pair && xs_b == n_b && xs_pos == n_pos;
     // BF16: capture, in slot order, every slice of this round (b) whose unit lies in a live class's sub-block
     reg        bn_run;
@@ -263,7 +286,15 @@ module ot_v41_rom_elem #(
     reg [9:0]   f_e1 [0:XF-1];
     reg [XW-1:0] f_wr, f_rd;
     reg [XW:0]  f_cnt;
-    wire [2:0] npush = hit_q ? 3'd1 : bnum;
+    // FAST: a captured FP8/FP4 beat is written into the FIFO one cycle after the match (the walker loop and the
+    // 532-bit FIFO write enables are not in one cycle)
+    reg          fw_v;
+    reg [255:0]  fw_q0, fw_q1;
+    reg [9:0]    fw_e0, fw_e1;
+    always @(posedge gclk or negedge rst_n) if (!rst_n) fw_v <= 1'b0; else fw_v <= (FAST != 0) && hit_q && !go;
+    always @(posedge gclk) if (hit_q) begin fw_q0 <= xs_q0; fw_q1 <= xs_q1; fw_e0 <= xs_e0; fw_e1 <= xs_e1; end
+    wire         qpush = (FAST != 0) ? fw_v : hit_q;
+    wire [2:0] npush = qpush ? 3'd1 : bnum;
     reg [XW-1:0] bpre [0:3];
     always @* begin
         bpre[0] = '0;
@@ -288,8 +319,13 @@ module ot_v41_rom_elem #(
     wire w_seg_last = w_fp4 || w_bf || w_h || !hv[1];          // the segment's last word for this unit
     wire w_cls_last = w_seg_last && w_s == c_s1[w_c];
     wire [UW-1:0] w_nx;
-    ot_v41_walk #(.N(NSEG)) u_ww (.q(w_q), .b(w_b), .c(w_c), .j(w_j), .nu(nu_p), .base(base_live),
-                                   .qlast(qlast), .sbs(sbs), .nx(w_nx));
+    if (FAST != 0) begin : g_ww2
+        ot_v41_walk2 #(.N(NSEG)) u_ww (.q(w_q), .b(w_b), .c(w_c), .j(w_j), .live(wA[NSEG-1:0]),
+            .livq1(wB[NSEG-1:0]), .cur(wA[5*NSEG-1:NSEG]), .qlast(qlast), .nx(w_nx));
+    end else begin : g_ww1
+        ot_v41_walk #(.N(NSEG)) u_ww (.q(w_q), .b(w_b), .c(w_c), .j(w_j), .nu(nu_p), .base(base_live),
+                                       .qlast(qlast), .sbs(sbs), .nx(w_nx));
+    end
     wire w_round_end = !w_nx[UW-1] || w_nx[UW-5 -: 3] != w_b;
     wire [SW-1:0] w_nx_c = w_nx[3 +: SW];
     wire [SW-1:0] s_next = w_s + 1'b1;
@@ -399,14 +435,34 @@ module ot_v41_rom_elem #(
             end
         end
     end
+    // walker sub-block registers (FAST): see sbf above
+    wire n_step = hit;
+    wire n_rst = n_step && !n_nx[UW-1] && n_more;
+    wire w_step = issue && w_seg_last && w_s == c_s1[w_c];
+    always @(posedge gclk) begin
+        if (go) begin
+            fF0 <= f0_go; fF1 <= f1_go; nA <= sbf(4'd0, 2'd3, nu_p, base_go); nB <= sbf(4'd1, 2'd3, nu_p, base_go);
+            wA <= f0_go; wB <= f1_go;
+        end else begin
+            if (n_rst) begin nA <= sbf(4'd0, 2'd3, nu_p, base_live); nB <= sbf(4'd1, 2'd3, nu_p, base_live); end
+            else if (n_step && n_nx[UW-1] && n_nx[UW-2 -: 3] != n_q) begin
+                nA <= nB; nB <= sbf({1'b0, n_q} + 4'd2, 2'd3, nu_p, base_live);
+            end
+            if (w_restart) begin wA <= fF0; wB <= fF1; end
+            else if (w_step && w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q) begin
+                wA <= wB; wB <= sbf({1'b0, w_q} + 4'd2, sbs, nu_p, base_live);
+            end
+        end
+    end
     integer si;
     always @(posedge gclk) begin
         if (go || w_restart) for (si = 0; si < NSEG; si = si + 1) w_ptr[si] <= s_base[si];
         else if (issue) w_ptr[w_s] <= w_ptr[w_s] + 13'd1;
         if (go || w_restart) a_ctr <= pbase;
         else if (issue) a_ctr <= a_ctr + 14'd1;
-        if (hit) begin
-            f_q0[f_wr] <= xs_q0; f_e0[f_wr] <= xs_e0; f_q1[f_wr] <= xs_q1; f_e1[f_wr] <= xs_e1;
+        if (FAST != 0 ? fw_v : hit) begin
+            f_q0[f_wr] <= FAST != 0 ? fw_q0 : xs_q0; f_e0[f_wr] <= FAST != 0 ? fw_e0 : xs_e0;
+            f_q1[f_wr] <= FAST != 0 ? fw_q1 : xs_q1; f_e1[f_wr] <= FAST != 0 ? fw_e1 : xs_e1;
         end
         for (bk = 0; bk < 4; bk = bk + 1)
             if (bm[bk]) f_q0[f_wr + bpre[bk]] <= xb_d[256*bk +: 256];
@@ -744,6 +800,40 @@ module ot_v41_rom_elem #(
     assign busy = w_run | i1_v | i2_v | drain != 8'd0;
     assign walk_busy = w_run | n_run | bn_run | i1_v | i2_v | (BP != 0 && bp_hold != 2'd0);
     // slot field of the tag is HW bits; BF16 chains use its low log2(NCHB) bits (words per round <= NCHB)
+endmodule
+
+
+// ot_v41_walk with the sub-block facts precomputed (FAST): live (classes with units in sub-block q), livq1 (in
+// sub-block q + 1) and cur (units of each class in sub-block q) come from registers.
+module ot_v41_walk2 #(parameter integer N = 4) (
+    input  wire [2:0] q,
+    input  wire [2:0] b,
+    input  wire [$clog2(N)-1:0] c,
+    input  wire [2:0] j,
+    input  wire [N-1:0] live,
+    input  wire [N-1:0] livq1,
+    input  wire [4*N-1:0] cur,
+    input  wire [2:0] qlast,
+    output reg  [1+3+3+$clog2(N)+3-1:0] nx
+);
+    localparam integer SW = $clog2(N);
+    reg [SW-1:0] nc, fc;
+    reg nf, ff;
+    reg [N-1:0] livn;
+    reg [3:0] curc;
+    integer k;
+    always @* begin
+        curc = cur[4*c +: 4];
+        livn = (b == 3'd7) ? livq1 : live;
+        nf = 1'b0; nc = '0;
+        for (k = N - 1; k >= 0; k = k - 1) if (live[k] && k > c) begin nc = k[SW-1:0]; nf = 1'b1; end
+        ff = 1'b0; fc = '0;
+        for (k = N - 1; k >= 0; k = k - 1) if (livn[k]) begin fc = k[SW-1:0]; ff = 1'b1; end
+        if ({1'b0, j} + 4'd1 < curc)             nx = {1'b1, q, b, c, j + 3'd1};
+        else if (nf)                             nx = {1'b1, q, b, nc, 3'd0};
+        else if (b == 3'd7 && q == qlast)        nx = '0;
+        else                                     nx = {1'b1, (b == 3'd7) ? q + 3'd1 : q, b + 3'd1, fc, 3'd0};
+    end
 endmodule
 
 

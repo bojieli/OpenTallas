@@ -178,9 +178,8 @@ module ot_v41_bterm2 #(
         if (nm[40] == 1'b0)     begin nm = nm << 1;  lz = lz + 6'd1;  end
     end
     reg               p5_v, p5_first, p5_last, p5_nan, p5_s, p5_z;
-    reg signed [11:0] p5_eb;
+    reg signed [11:0] p5_ebl;           // exponent of the normalised leading bit (eb - lz), formed here
     reg [40:0]        p5_nm;
-    reg [5:0]         p5_lz;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p5_v <= 1'b0;
         else p5_v <= p5a_v;
@@ -188,7 +187,7 @@ module ot_v41_bterm2 #(
     always @(posedge clk) begin
         p5_nan <= p5a_nan; p5_s <= p5a_s;
         p5_z <= p5a_z;
-        p5_eb <= p5a_eb; p5_nm <= nm; p5_lz <= lz;
+        p5_ebl <= p5a_eb - $signed({6'd0, lz}); p5_nm <= nm;
     end
 
     // -- P6: round to 24 bits (the golden's float32 of the exact dot) -----------------------------
@@ -209,7 +208,7 @@ module ot_v41_bterm2 #(
     end
     always @(posedge clk) begin
         p6_first <= p5_first; p6_last <= p5_last; p6_nan <= p5_nan; p6_s <= p5_s; p6_z <= p5_z;
-        p6_b <= p5_eb - $signed({6'd0, p5_lz}) + $signed({11'd0, mr[24]});
+        p6_b <= p5_ebl + $signed({11'd0, mr[24]});
         p6_f <= mr[24] ? 23'd0 : mr[22:0];
     end
 

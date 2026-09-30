@@ -100,6 +100,7 @@ PHASE = {
 # the model's a_proj is output-split (tools/decode_critical_path.py "... compressor wkv, wgate, output-split");
 # W1's macromap keeps these conservatively replicated.  The model's partition is used here.
 MODEL_QUARTER = {"attn.compressor.wkv.weight", "attn.compressor.wgate.weight"}
+PERM = None                          # baseline: slot index -> an arbitrary pair position (seeded permutation)
 PHASES = ("a_proj", "wq_b", "cmp.wk", "wo_a", "wo_b", "router", "shared_gu", "experts_gu", "down")
 
 
@@ -236,7 +237,7 @@ def element_needs(segs_fmt: dict[str, list[tuple[int, int, int, int]]]) -> dict:
             cls.setdefault(unit_range(fmt, e0, el), []).append((fmt, e0, el))
             nodes = -(-el // 256) if fmt == "fp8" else seg_units(fmt, e0, el)
             if BF16_PAIR and fmt == "bf16":
-                nodes *= 8                       # BF16_PAIR: chunk-pair base nodes, 8 per 128-element unit
+                nodes *= BF16_WORD_CYCLES        # BF16_PAIR: 16 / multipliers chunks per base node
             out["base_nodes"] = max(out["base_nodes"], nodes)
         out["classes"] = max(out["classes"], len(cls))
         # words in the first round (the largest: sub-block 0 holds min(8, units) of every class)
@@ -368,16 +369,73 @@ def lpt(die: Die, allowed: np.ndarray, load: np.ndarray, count: int, w: int, blo
     return out
 
 
+# ---------------------------------------------------------------------------------------------------------
+# distance-aware placement (root 2026-09-30, a free fix: ROM contents only).  Slot j of a die is the j-th nearest
+# pair to the x-broadcast root / return sink (the floorplan's distributed-VM port).  A latency-critical low-work
+# phase is confined to the nearest M slots, M the smallest power-of-two fraction of the die whose stream-round
+# time equals the whole-die placement's, so its farthest pair (the op's wire latency) shrinks at no issue cost.
+# ---------------------------------------------------------------------------------------------------------
+NEAR = False
+CRITICAL = ("a_proj", "wq_b", "cmp.wk", "wo_b", "router")
+REACH_UM = 504.0                     # W15: SS register-to-register reach at 0.833 ns
+GATHER_SCATTER = 12                  # the model's VM x-gather + return-scatter stages (6 + 6)
+SLOT_DIST = None                     # np.array: distance (um) of the j-th nearest pair slot
+
+
+def wire_cycles_um(L: float) -> int:
+    return 2 * math.ceil(L / REACH_UM) + GATHER_SCATTER
+
+
+def load_geometry(path: Path):
+    """Pair-slot distances from a floorplan pack record: every ROM_MAC.* macro pair, Manhattan distance from the
+    x-broadcast root (the far-expert crossing's source) to the pair's centre, ascending."""
+    r = json.loads(path.read_text())
+    root = next(c for c in r["latency_crossings"]["crossings"] if "ROM_MAC.expert" in c["crossing"])["from_um"]
+    ms = [i for i in r["instances"] if i[5].startswith("ROM_MAC.")]
+    w = 125.712
+    d = sorted(abs(i[2] + w / 2 - root[0]) + abs(i[3] + 60 - root[1]) for i in ms)
+    return np.array(d[1::2]), root                    # one distance per pair (the farther half)
+
+
 def place_dense(die: Die, mats: list[dict], layer: int):
     res, info = {}, {}
     for ph in PHASES:
         ms = [m for m in mats if m["phase"] == ph]
         if not ms:
             continue
+        if NEAR and ph in CRITICAL and SLOT_DIST is not None:
+            snap = (die.fill.copy(), len(die.segs), len(die.regions))
+            full, _ = _place_phase(die, ms, layer, ph, die.n, {})
+            best = die.n
+            # candidates: sixteenths of the die, then powers of two below; keep the smallest that costs nothing
+            cands = sorted({die.n * k // 16 for k in range(1, 16)} | {die.n >> k for k in range(5, 10)}, reverse=True)
+            for M in cands:
+                if M < 32:
+                    continue
+                die.fill[:] = snap[0]; del die.segs[snap[1]:]; del die.regions[snap[2]:]
+                try:
+                    trial, _ = _place_phase(die, ms, layer, ph, M, {})
+                except AssertionError:
+                    continue
+                if trial["t_phase"] <= full["t_phase"] and int(die.fill[:M].max()) <= DEPTH:
+                    best = min(best, M)
+            die.fill[:] = snap[0]; del die.segs[snap[1]:]; del die.regions[snap[2]:]
+            r_, inf = _place_phase(die, ms, layer, ph, best, info)
+            r_["near_slots"] = best
+            res[ph] = r_
+            continue
+        r_, _ = _place_phase(die, ms, layer, ph, die.n, info)
+        res[ph] = r_
+    return res, info
+
+
+def _place_phase(die: Die, ms: list[dict], layer: int, ph: str, M: int, info: dict):
+    if True:
         load = np.zeros(die.n, dtype=np.int64)
         items = []
         for m in ms:
             n_set = len(die.bf) if m["fmt"] == "bf16" else die.n
+            n_set = min(n_set, M)
             if BF16_PAIR and m["fmt"] == "bf16":
                 n_set *= BF16_WORD_CYCLES if BF16_SPLIT_BOOST else 1     # a BF16 word costs 8 read cycles: split further
             s = model_split(m["rows"], m["K"], n_set, m["fmt"])
@@ -392,6 +450,7 @@ def place_dense(die: Die, mats: list[dict], layer: int):
         held = {}                                # unit range -> macros holding it in this phase
         for w, m, si, e0, el in items:
             allowed = die.bf if m["fmt"] == "bf16" else np.arange(die.n)
+            allowed = allowed[allowed < M]
             rng = (family(m["fmt"]),) + unit_range(m["fmt"], e0, el)
             blocked = np.zeros(die.n, dtype=bool)
             for (f2, a0, a1), ms_ in held.items():
@@ -409,8 +468,15 @@ def place_dense(die: Die, mats: list[dict], layer: int):
         for i in ids:
             s = die.segs[i]
             by_fmt.setdefault(s["fmt"], []).append((s["macro"], s["e0"], s["elems"], 0))
-        res[ph] = dict(t_read=int(load.max()), t_phase=phase_cycles(by_fmt), segs=by_fmt, needs=element_needs(by_fmt))
-    return res, info
+        used = sorted({x[0] for lst in by_fmt.values() for x in lst})
+        far = None
+        if SLOT_DIST is not None:
+            dd = SLOT_DIST[np.minimum(np.array(used), len(SLOT_DIST) - 1)] if NEAR else \
+                SLOT_DIST[np.minimum(PERM[np.array(used)], len(SLOT_DIST) - 1)]
+            far = float(dd.max())
+        return dict(t_read=int(load.max()), t_phase=phase_cycles(by_fmt), segs=by_fmt, needs=element_needs(by_fmt),
+                    slots_used=len(used), farthest_um=far,
+                    wire_cycles=None if far is None else wire_cycles_um(far)), info
 
 
 def expert_tiles(die: Die, ranges: list[dict]):
@@ -557,7 +623,10 @@ def derive(snapshot: Path, draws: int, seed: int, only=None, keep=None):
                 expect.update({m["tensor"]: (m["rows"], m["K"]) for m in mats})
                 per_layer.append(dict(layer=L, t_read={p: v["t_read"] for p, v in res.items()},
                                       t_phase={p: v["t_phase"] for p, v in res.items()},
-                                      needs={p: v["needs"] for p, v in res.items()}, split=info))
+                                      needs={p: v["needs"] for p, v in res.items()}, split=info,
+                                      wire={p: dict(slots_used=v.get("slots_used"), near_slots=v.get("near_slots"),
+                                                    farthest_um=v.get("farthest_um"),
+                                                    wire_cycles=v.get("wire_cycles")) for p, v in res.items()}))
             tables, espec = expert_tiles(die, ranges)
             for t in tables:
                 for e in t["ids"]:
@@ -594,6 +663,11 @@ def compare(dies, model):
         ph["experts_gu"] = max(ph.get("experts_gu", 0), e["model_six"]["gu_phase"])
         rd["down"] = max(rd.get("down", 0), e["model_six"]["down_read"])
         ph["down"] = max(ph.get("down", 0), e["model_six"]["down_phase"])
+    wr = {}
+    for L in busiest["dense"]:
+        for p_, v in L.get("wire", {}).items():
+            if v.get("wire_cycles") is not None:
+                wr[p_] = v if p_ not in wr or v["wire_cycles"] > wr[p_]["wire_cycles"] else wr[p_]
     rows = {}
     for p in PHASES:
         mv = model[p]
@@ -601,7 +675,8 @@ def compare(dies, model):
         trf = None if tr is None else max(tr, 8 * FADD_REC)
         tp = ph.get(p)
         binds_here = mv["bind"] in ("rom_read", "vm_read_x")
-        rows[p] = dict(model_t_read=mv["t_read"], model_ksplit=mv["ksplit"],
+        rows[p] = dict(wire=wr.get(p), model_wire=mv.get("wire"), model_depth=mv.get("depth"),
+                       model_t_read=mv["t_read"], model_ksplit=mv["ksplit"],
                        model_issue=mv["issue"], model_bind=mv["bind"],
                        t_read=tr, t_read_with_chain_floor=trf, t_phase=tp,
                        t_read_equal=bool(trf is not None and abs(trf - mv["t_read"]) < 1e-6),
@@ -636,15 +711,19 @@ def element_needs_all(dies):
                                 and allm.get("units_per_class", 0) <= 64))
 
 
-def price(rows, field):
+def price(rows, field, with_wire=False):
     """The model's proposal with each phase's issue replaced by the measured `field` where larger."""
     import copy
     import uarch_model as U
     meas = {p: r[field] for p, r in rows.items() if r[field] is not None}
+    wires = {p: r["wire"]["wire_cycles"] for p, r in rows.items() if r.get("wire") and with_wire}
     orig = U.price_matvec
 
     def patched(nd, name, d, clock, c):
         r = orig(nd, name, d, clock, c)
+        if r is not None and r["key"] in wires:
+            r["depth"] = r["depth"] - r["wire"] + wires[r["key"]]
+            r["wire"] = wires[r["key"]]
         if r is not None and r["key"] in meas:
             if field == "t_read":
                 r["t_read"] = meas[r["key"]]
@@ -673,9 +752,21 @@ def main(argv=None):
     p.add_argument("--bf16-split", action="store_true", help="BF16_PAIR: split BF16 rows for 8-cycle words")
     p.add_argument("--bf16-cap", type=int, default=0, help="BF16_PAIR: max BF16 words in flight per element")
     p.add_argument("--bf16-hold", type=int, default=8, help="BF16_PAIR: cycles a BF16 word is held (16 / multipliers)")
+    p.add_argument("--near", action="store_true", help="distance-aware placement of the critical low-work phases")
+    p.add_argument("--geometry", type=Path, default=ROOT / "results/floorplan/v41_pack_refit_w10_ss833_interim.json",
+                   help="floorplan pack record giving pair-slot distances (with --near or --wire)")
+    p.add_argument("--wire", action="store_true", help="measure each phase's farthest pair and wire cycles")
+    p.add_argument("--critical", nargs="*", default=None, help="phases confined to the nearest slots (with --near)")
     p.add_argument("--fadd-rec", type=int, default=None, help="FP32 adder recurrence (chain latency) in cycles")
     a = p.parse_args(argv)
-    global BF16_PAIR, FADD_REC
+    global BF16_PAIR, FADD_REC, NEAR, SLOT_DIST, PERM
+    if a.near or a.wire:
+        SLOT_DIST, _root = load_geometry(a.geometry)
+        PERM = np.random.default_rng(a.seed).permutation(len(SLOT_DIST))
+    NEAR = bool(a.near)
+    global CRITICAL
+    if a.critical is not None:
+        CRITICAL = tuple(a.critical)
     BF16_PAIR = bool(a.bf16_pair)
     global BF16_SPLIT_BOOST
     BF16_SPLIT_BOOST = int(a.bf16_split)
@@ -712,7 +803,8 @@ def main(argv=None):
         draws=a.draws, seed=a.seed, busiest_die=bus, phase_vs_model=rows,
         priced=None if a.no_price else dict(
             model_tokens_s=round(U.evaluate(dict(U.PRESETS["proposal"]))["tokens_s"], 1),
-            with_measured_t_read=price(rows, "t_read"), with_measured_t_phase=price(rows, "t_phase")),
+            with_measured_t_read=price(rows, "t_read"), with_measured_t_phase=price(rows, "t_phase"),
+            with_measured_t_phase_and_wire=price(rows, "t_phase", True) if (a.near or a.wire) else None),
         all_capacity_ok=all(d["capacity_ok"] for d in dies),
         element_needs=element_needs_all(dies), dies=dies)
     a.output.parent.mkdir(parents=True, exist_ok=True)
