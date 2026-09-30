@@ -117,13 +117,25 @@ module ot_link_tx #(
             if (cfield[c*CNTW +: CNTW] != 0) cpend = 1'b1;
         end
     end
-    wire           bv = slot && ((|dv) || cpend);
+    // paced: a credit-only bundle would take a data slot, so pending credits ride the next data bundle and go
+    // alone only when they have waited CAGE cycles or a count is near its limit (deterministic: a function of
+    // the local cycle stream only)
+    localparam integer CAGE = 8;
+    reg  [3:0]     cwait;
+    reg            cfull;
+    always @(*) begin
+        cfull = 1'b0;
+        for (c = 0; c < CW; c = c + 1) if (cfield[c*CNTW +: CNTW] >= {1'b1, {(CNTW-1){1'b0}}}) cfull = 1'b1;
+    end
+    wire           cgo = (PACE_NUM == 0) ? cpend : (cpend && (cwait >= CAGE - 1 || cfull));
+    wire           bv = slot && ((|dv) || cgo);
     wire [BW-1:0]  bundle = {now, dv, cfield, vc_rec};
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            hub_cr <= CAP; fault <= 1'b0; stat_bundles <= 0; stat_gated_stall <= 0; pace <= PACE_DEN;
+            hub_cr <= CAP; fault <= 1'b0; stat_bundles <= 0; stat_gated_stall <= 0; pace <= PACE_DEN; cwait <= 0;
             for (c = 0; c < CW; c = c + 1) ccnt[c] <= 0;
         end else begin
+            cwait <= (bv || !cpend) ? 4'd0 : (cwait == 4'hF ? cwait : cwait + 1'b1);
             if (PACE_NUM != 0) begin
                 pace <= ((bv ? pace - PACE_DEN : pace) + PACE_NUM > PACE_DEN) ? PACE_DEN
                         : (bv ? pace - PACE_DEN : pace) + PACE_NUM;
