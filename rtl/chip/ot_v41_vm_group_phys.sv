@@ -22,7 +22,11 @@ module ot_v41_vm_group_phys #(
     parameter integer NB  = 2,
     parameter integer RA  = 8,              // row address bits (256 rows)
     parameter integer K   = 2,              // row writes a bank a cycle
-    parameter integer WQD = 8               // write-queue rows a bank
+    parameter integer WQD = 8,              // write-queue rows a bank
+    // RDREG = 1: the macros' outputs (and the forwarding snapshot) are registered before the forward / select,
+    // so the macro's clock-to-q (511 ps at SS) and the select sit in different cycles: rd_q follows the read by
+    // two cycles instead of one
+    parameter integer RDREG = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -163,16 +167,39 @@ module ot_v41_vm_group_phys #(
 
     // ---- forwarding: the queue as it stood at the read edge (entry 0 was being written: the macro's
     // read-during-write returns the old word, so it is forwarded too) ------------------------------------------
-    reg [NB*WQD-1:0]      f_v;
-    reg [NB*WQD*RA-1:0]   f_row;
-    reg [NB*WQD*256-1:0]  f_d;
-    reg [NB*WQD*8-1:0]    f_m;
-    reg [RC*NB*RA-1:0]    r_row;
-    reg [RC*8*4-1:0]      r_sel;
+    reg [NB*WQD-1:0]      f_v0;
+    reg [NB*WQD*RA-1:0]   f_row0;
+    reg [NB*WQD*256-1:0]  f_d0;
+    reg [NB*WQD*8-1:0]    f_m0;
+    reg [RC*NB*RA-1:0]    r_row0;
+    reg [RC*8*4-1:0]      r_sel0;
     always @(posedge clk) begin
-        r_row <= rd_row; r_sel <= rd_sel; f_row <= q_row; f_d <= q_d; f_m <= q_m;
+        r_row0 <= rd_row; r_sel0 <= rd_sel; f_row0 <= q_row; f_d0 <= q_d; f_m0 <= q_m;
     end
-    always @(posedge clk or negedge rst_n) if (!rst_n) f_v <= 0; else f_v <= q_v;
+    always @(posedge clk or negedge rst_n) if (!rst_n) f_v0 <= 0; else f_v0 <= q_v;
+    wire [NB*WQD-1:0]      f_v;
+    wire [NB*WQD*RA-1:0]   f_row;
+    wire [NB*WQD*256-1:0]  f_d;
+    wire [NB*WQD*8-1:0]    f_m;
+    wire [RC*NB*RA-1:0]    r_row;
+    wire [RC*8*4-1:0]      r_sel;
+    wire [RC*NB*256-1:0]   mqs;
+    generate if (RDREG != 0) begin : g_rdreg
+        reg [NB*WQD-1:0]      a_v;
+        reg [NB*WQD*RA-1:0]   a_row;
+        reg [NB*WQD*256-1:0]  a_d;
+        reg [NB*WQD*8-1:0]    a_m;
+        reg [RC*NB*RA-1:0]    a_rr;
+        reg [RC*8*4-1:0]      a_rs;
+        reg [RC*NB*256-1:0]   a_q;
+        always @(posedge clk) begin
+            a_row <= f_row0; a_d <= f_d0; a_m <= f_m0; a_rr <= r_row0; a_rs <= r_sel0; a_q <= mq;
+        end
+        always @(posedge clk or negedge rst_n) if (!rst_n) a_v <= 0; else a_v <= f_v0;
+        assign {f_v, f_row, f_d, f_m, r_row, r_sel, mqs} = {a_v, a_row, a_d, a_m, a_rr, a_rs, a_q};
+    end else begin : g_rd0
+        assign {f_v, f_row, f_d, f_m, r_row, r_sel, mqs} = {f_v0, f_row0, f_d0, f_m0, r_row0, r_sel0, mq};
+    end endgenerate
     // per class, per bank: the row as read, with every queued write to that row applied oldest to newest
     // (fixed indices only: a bank's forwarding is one priority chain over its WQD entries)
     wire [RC*NB*256-1:0] fwd;
@@ -181,7 +208,7 @@ module ot_v41_vm_group_phys #(
         for (b = 0; b < NB; b = b + 1) begin : g_fb
             wire [RA-1:0] rr = r_row[(c*NB + b)*RA +: RA];
             wire [255:0] ch [0:WQD];
-            assign ch[0] = mq[(c*NB + b)*256 +: 256];
+            assign ch[0] = mqs[(c*NB + b)*256 +: 256];
             for (q2 = 0; q2 < WQD; q2 = q2 + 1) begin : g_q
                 wire hit = f_v[b*WQD + q2] && f_row[(b*WQD + q2)*RA +: RA] == rr;
                 genvar t2;
