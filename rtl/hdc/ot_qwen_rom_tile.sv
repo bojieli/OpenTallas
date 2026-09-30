@@ -204,7 +204,9 @@ module ot_qwen_rom_tile_logic #(
     generate if (KV_LOCAL != 0) begin : g_kv_local
         localparam [KV_AW-1:0] PRK = GT >> KV_SK;
         //: K words a group holds: ceil(512 position tiles / (GT >> SK)) rounds x NH heads (44 at G = 6,144)
-        localparam integer KV_KL = ((512 + (GT >> KV_SK) - 1) / (GT >> KV_SK)) * KV_NH;
+        //: 2^(KV_HB-7) position tiles a head (512 at the 8K window); a literal 512 overlaps V onto K above 8K
+        localparam integer KV_PT = 1 << (KV_HB - 7);
+        localparam integer KV_KL = ((KV_PT + (GT >> KV_SK) - 1) / (GT >> KV_SK)) * KV_NH;
         wire [AW-1:0] a = me_kv_addr[AW-1:0];            // every group of the tile maps to the same word
         wire          is_v = (a >= KV_VB);
         wire [AW-1:0] w = a - KV_VB;
