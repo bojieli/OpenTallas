@@ -267,7 +267,7 @@ def verify_sample(snapshot: Path, out: Path, die: int, rows_per_matrix=8, layer:
             offset = 4 * (W - 1 - lane)
             return int(scale_word(address)[offset:offset + 4], 16)
 
-        offsets = {'q': ('qkv', 0), 'k': ('qkv', 2048), 'v': ('qkv', 2560),
+        offsets = {'q': ('qkv', 0), 'k': ('qkv', 32 // TP * 128), 'v': ('qkv', (32 // TP + 8 // TP) * 128),
                    'o': ('o', 0), 'gate': ('gu', 0), 'up': ('gu', 128), 'down': ('down', 0)}
         for name, (mapped, row0) in offsets.items():
             item, meta = source[name], layout[mapped]
