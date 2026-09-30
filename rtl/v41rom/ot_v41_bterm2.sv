@@ -6,7 +6,12 @@
 // increment as a ripple of ORs).  Arithmetic bit-identical to ot_v41_bterm; LATENCY = 11 (was 9).
 // ---------------------------------------------------------------------------
 module ot_v41_bterm2 #(
-    parameter integer TW = 8
+    parameter integer TW = 8,
+    // DEC_P0 = 1 (W13 SM block-dot column): the E2M1 -> E4M3 weight decode moves ahead of the P0 input
+    // register, so P1 sees E4M3 codes only and the format flop's fanout leaves the P1 product cycle
+    // (the -51.6 ps SS path of the ot_gpu_bd_col route at 0.833 ns).  Arithmetic and latency are unchanged;
+    // the default (0) is the W10 element's netlist.
+    parameter integer DEC_P0 = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -32,8 +37,13 @@ module ot_v41_bterm2 #(
 
     integer i;
 
+    reg [255:0] wq_dec;
+    integer b;
+    always @(*) for (b = 0; b < 32; b = b + 1) wq_dec[8*b +: 8] = fp4 ? e2m1(wq[8*b +: 4]) : wq[8*b +: 8];
+
     // -- P0: input register -----------------------------------------------------------
-    reg              p0_v, p0_first, p0_last, p0_fp4;
+    reg              p0_v, p0_first, p0_last;
+    (* keep *) reg   p0_fp4;              // never merged with another lane's (W13: a merged fp4 flop drove 2 lanes' decoders)
     reg [255:0]      p0_xq, p0_wq;
     reg signed [9:0] p0_xe, p0_we;
     always @(posedge clk or negedge rst_n) begin
@@ -42,7 +52,7 @@ module ot_v41_bterm2 #(
     end
     always @(posedge clk) begin
         p0_first <= first; p0_last <= last; p0_fp4 <= fp4;
-        p0_xq <= xq; p0_wq <= wq; p0_xe <= xe; p0_we <= we;
+        p0_xq <= xq; p0_wq <= DEC_P0 ? wq_dec : wq; p0_xe <= xe; p0_we <= we;
     end
 
     // -- P1: decode, signed 4x4 products, shift amounts -----------------------------------
@@ -64,7 +74,7 @@ module ot_v41_bterm2 #(
         nan = 1'b0;
         for (i = 0; i < 32; i = i + 1) begin
             xc = p0_xq[8*i +: 8];
-            wc = p0_fp4 ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8];
+            wc = (p0_fp4 && DEC_P0 == 0) ? e2m1(p0_wq[8*i +: 4]) : p0_wq[8*i +: 8];
             nan = nan | (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
             xs = {(xc[6:3] != 4'd0), xc[2:0]};
             ws = {(wc[6:3] != 4'd0), wc[2:0]};

@@ -48,6 +48,8 @@ module ot_gpu_bd_col #(
     generate for (l = 0; l < LB; l = l + 1) begin : g_bt
         // one registered fp4 per lane, kept, so synthesis cannot merge the lanes' format flops into one net
         // driving every lane's decoders (the -71 ps SS path of the first 1.2 GHz route)
+        // (and the block term decodes E2M1 ahead of its P0 register, DEC_P0 = 1: the -51.6 ps P1 path of the
+        // second route was this flop's fanout into the decode + 4x4 product)
         (* keep *) reg fp4_l;
         always @(posedge clk) fp4_l <= fp4;
         reg [255:0] xq_l, wq_l;
@@ -55,7 +57,7 @@ module ot_gpu_bd_col #(
         reg         v_l;
         always @(posedge clk) begin xq_l <= xq[256*l +: 256]; wq_l <= wq[256*l +: 256]; xe_l <= xe[10*l +: 10]; we_l <= we[10*l +: 10]; end
         always @(posedge clk or negedge rst_n) if (!rst_n) v_l <= 1'b0; else v_l <= v;
-        ot_v41_bterm2 #(.TW(1)) u_bt (.clk(clk), .rst_n(rst_n), .v(v_l), .fp4(fp4_l),
+        ot_v41_bterm2 #(.TW(1), .DEC_P0(1)) u_bt (.clk(clk), .rst_n(rst_n), .v(v_l), .fp4(fp4_l),
             .xq(xq_l), .xe(xe_l), .wq(wq_l), .we(we_l),
             .tag(1'b0), .ov(tv_l[l]), .y(term[32*l +: 32]), .f(tf_l[l]), .otag());
     end endgenerate
