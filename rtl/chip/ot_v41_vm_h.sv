@@ -48,7 +48,10 @@ module ot_v41_vm_h #(
     parameter integer RQD   = 16,            // return-root queue / pending partials (ot_v41_ret_root D, QD)
     parameter integer NB    = 2,
     parameter integer NOVF  = 48,
-    parameter integer NWP   = 32
+    parameter integer NWP   = 32,
+    // wr_* entries WRT0 .. WRT0+NG-1 are the element array's finished rows written by root j at entry WRT0 + j
+    // (die spine option (b)); their address must be in group j (counted in wr_nonlocal).  -1: none.
+    parameter integer WRT0  = -1
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -73,6 +76,7 @@ module ot_v41_vm_h #(
     output reg  [31:0]          ret_rows,
     output reg  [31:0]          ret_nonlocal,
     output reg                  ret_e,      // an element-array exception flag reached a written row
+    output reg  [31:0]          wr_nonlocal,// root-row entries (WRT0) whose address is not in their root's group
     // ---- simulation backdoor and status
     input  wire                 bd_load,
     input  wire                 bd_dump,
@@ -110,6 +114,15 @@ module ot_v41_vm_h #(
             t_far[q] = r_v[q] && (NG > 1) && ((32'(ta[VMA-1:0]) % NG) != (q % NG));
         end
     end
+    integer wq;
+    reg [31:0] wfar;
+    always @(*) begin
+        wfar = 0;
+        if (WRT0 >= 0)
+            for (wq = 0; wq < NG; wq = wq + 1)
+                if (wr_we[WRT0 + wq] && (NG > 1) && ((32'(wr_addr[(WRT0 + wq)*VMA +: VMA]) % NG) != wq)) wfar = wfar + 1;
+    end
+    always @(posedge clk or negedge rst_n) if (!rst_n) wr_nonlocal <= 0; else wr_nonlocal <= wr_nonlocal + wfar;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin ret_rows <= 0; ret_nonlocal <= 0; ret_e <= 1'b0; end
         else begin
@@ -131,6 +144,7 @@ module ot_v41_vm_h #(
     assign fault = vfault | rf;
     task report;
         u_vmd.report();
-        $display("VMH roots=%0d rows=%0d nonlocal=%0d e=%0d", NROOT, ret_rows, ret_nonlocal, ret_e);
+        $display("VMH roots=%0d rows=%0d nonlocal=%0d e=%0d wr_nonlocal=%0d", NROOT, ret_rows, ret_nonlocal, ret_e,
+                 wr_nonlocal);
     endtask
 endmodule

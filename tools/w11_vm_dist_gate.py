@@ -111,9 +111,10 @@ def vmdist_fields(text: str):
 # ---- the vector unit ---------------------------------------------------------------------------------------
 _orig_parse, _orig_compare = C.parse_trace, C.compare
 _orig_write, _orig_run = C.write_case, C.run_case
-VROT_RE = VROT = re.compile(r"VROT seq=(\d+) hold=(\d+) b=(\d) g=(\d) r=(\d) w=(\d)")
+VROT_RE = VROT = re.compile(r"VROT seq=(\d+) hold=(\d+) u=(\d) b=(\d) x=(\d) r=(\d) wr=(\d) wx=(\d)")
 _CASES = {}                 # case dir -> (ops, memory image) as written
 CUR = dict(N=None, M=None)  # the bench width of the campaign running (option H's rule check)
+HCFG = dict(rot=17, gath=18, scal=8)      # the H bench's network stages (set by su_part)
 
 
 def _parse(text):
@@ -141,18 +142,22 @@ def h_check(tr):
         return None
     ops, mem = tr["case"]
     N, M = CUR["N"], CUR["M"]
-    mism = unsafe = flagged = 0
+    mism = unsafe = flagged = unpacked = 0
     hold = 0
-    for (seq, h, b, g, r, w), f in zip(tr["vrot"], ops):
+    for (seq, h, u, b, x, r, wr, wx), f in zip(tr["vrot"], ops):
         fl = HR.rule(f, N, M)
-        mism += int(tuple(bool(x) for x in (b, g, r, w)) != fl)
+        lay_u = HR.unpacked(f, N, M)
+        mism += int(tuple(bool(v) for v in (b, x, r, wr, wx)) != fl or bool(u) != lay_u or h != HR.hold(
+            fl, rot=HCFG["rot"], gath=HCFG["gath"], scal=HCFG["scal"]))
         cl = HR.classify(f, N, M)
-        rem, multi = HR.truth(f, mem.vm, N, M)
-        unsafe += int(any((v == "L" and rem[c]) or (v == "B" and multi[c]) for c, v in cl.items()))
-        flagged += int(g or r or w)
+        rem, multi, norot = HR.truth(f, mem.vm, N, M, None, cl)
+        unsafe += int(any((v == "L" and rem[c]) or (v == "B" and multi[c]) or (v in ("R", "P") and norot[c])
+                          for c, v in cl.items()))
+        flagged += int(x or r or wr or wx)
+        unpacked += int(u)
         hold += h
     return dict(ops=len(tr["vrot"]), ops_written=len(ops), rule_mismatches=mism, unsafe_ops=unsafe,
-                network_ops=flagged, hold_cycles=hold)
+                network_ops=flagged, unpacked_ops=unpacked, hold_cycles=hold)
 
 
 def _compare(tr, mref):
@@ -221,6 +226,12 @@ def su_build(N, M, obj, vd, st):
 
 def su_part(scratch: Path, st, n1024: bool, jobs: int, small: bool = True):
     su_setup()
+    HCFG.update(rot=st.get("SU_ROT_STAGES", 17), gath=st.get("SU_GATH_STAGES", 18), scal=st.get("SU_SCAL_STAGES", 8))
+
+    def setw(N, M, vd):
+        # the bench's width for the rule check, and option H's layout for the schedule's chaining credits
+        CUR.update(N=N, M=M)
+        C.VMD_NG = N // 8 if (vd and st.get("VM_DIST_H")) else 0
     out = dict(stages=dict(st), vm_align=os.environ.get("HDC_V41_VM_ALIGN", "32"),
                builds={}, campaigns={}, softmax={})
     cfgs = ([(16, 8), (64, 16)] if small else []) + ([(1024, 256)] if n1024 else [])
@@ -237,10 +248,10 @@ def su_part(scratch: Path, st, n1024: bool, jobs: int, small: bool = True):
         tag = f"vm_dist_{vd}"
         res = {}
         if small:
-            CUR.update(N=16, M=8)
+            setw(16, 8, vd)
             res["random_N16_M8"] = C.random_campaign(exes[(16, 8, vd)], 16, 8, list(range(1, 25)), 40,
                                                      scratch / f"r16_vd{vd}")
-            CUR.update(N=64, M=16)
+            setw(64, 16, vd)
             res["random_N64_M16"] = C.random_campaign(exes[(64, 16, vd)], 64, 16, list(range(101, 117)), 40,
                                                       scratch / f"r64_vd{vd}")
             res["vehicle_N64_M16"] = C.vehicle_campaign(exes[(64, 16, vd)], 64, 16, scratch / f"veh_vd{vd}", recs, cr,
@@ -252,7 +263,7 @@ def su_part(scratch: Path, st, n1024: bool, jobs: int, small: bool = True):
                                        chain_ext=C.perf_chain_ext(e, 64, 16, scratch / f"p64_vd{vd}", rng),
                                        mixed_classes=C.perf_mix(e, 64, 16, scratch / f"p64_vd{vd}", rng))
         if n1024:
-            CUR.update(N=1024, M=256)
+            setw(1024, 256, vd)
             e = exes[(1024, 256, vd)]
             # 16-op random programs that fit the bench's 2^18-word memory at N = 1,024 (the campaign's rule)
             fits = []
@@ -276,8 +287,8 @@ def su_part(scratch: Path, st, n1024: bool, jobs: int, small: bool = True):
     # softmax chain (tools/w11_su_softmax_spec.py fixture), vec-bench variants
     sm_cfgs = ([(16, 8)] if small else []) + ([(1024, 256)] if n1024 else [])
     for N, M in sm_cfgs:
-        CUR.update(N=N, M=M)
         for vd in (0, 1):
+            setw(N, M, vd)
             vflags = su_flags(vd, st).split() + (["--unroll-count", "4", "-fno-dfg"] if N >= 1024 else [])
             exe, info = SM.build("vec", N, M, 7, scratch / f"sm_vd{vd}_N{N}", jobs, vflags)
             out["builds"][f"softmax_vec_N{N}_M{M}_vd{vd}"] = info

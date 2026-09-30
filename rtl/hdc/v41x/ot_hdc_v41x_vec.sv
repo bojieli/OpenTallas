@@ -367,7 +367,9 @@ module ot_hdc_v41x_vec #(
     wire [3:0] c_ls = (c_lsz > c_lvw) ? c_lvw : c_lsz[3:0];
     wire c_packed = !s_wnf && (s_ni <= (1 << c_ls));
     wire c_rpow = pow2(q_rso);
-    wire [3:0] c_nsh = (c_packed && (!red_on || c_rpow)) ? (c_lvw - c_ls) : 4'd0;
+    wire [3:0] c_nsh0 = (c_packed && (!red_on || c_rpow)) ? (c_lvw - c_ls) : 4'd0;
+    wire       h_seg;                    // option H: lay the op out one row a vector (below)
+    wire [3:0] c_nsh = h_seg ? 4'd0 : c_nsh0;
     wire [CW-1:0] c_nvs = s_wnf ? s_no * (s_ni >> c_ls) : (s_ni + (1 << c_ls) - 1) >> c_ls;
     wire [4:0] c_L = log2c(c_nvs);
     wire c_span = red_on && !c_packed;
@@ -408,56 +410,86 @@ module ot_hdc_v41x_vec #(
                                   si_s[s] << c_ls;
         end
     end
-    // ---- VMD_NG > 0: the op's streams against the lane groups (option H) -------------------------------------
-    // A unit-stride stream (si = 1) is LOCAL when its base is in group 0 and every row starts where its lanes
-    // do: one row, or rows packed VW/S a vector with so = S, or a row a vector with so = 0; a row that spans
-    // vectors of S < NG lanes is never local (all mod NG).  BROADCAST: si = 0 and one row a vector
-    // (or so = 0).  Anything else, a half (B / D) or pair (C) stream, and a gathered A are RESIDUAL.
+    // ---- VMD_NG > 0: the op's streams against the lane groups (option H; tools/w11_vm_h.py mirrors it) ------
+    // Element e and lane l are in groups e, l mod NG.  Per stream (on the op's layout):
+    //   L  local     unit stride (or one element a row), base in group 0, every row starting where its lanes
+    //                do (one row; rows packed with so = S; a row a vector with so = 0), no row spanning
+    //                vectors of S < NG lanes
+    //   B  broadcast one element a vector (si = 0 with one row a vector, or so = 0): the per-row scalar,
+    //                fetched from its group to the broadcast tree's root
+    //   R  rotate    unit stride whose rows all start at one rotation (one row, a row a vector, so = S):
+    //                one rotation a vector through the residual rotate (ot_v41_vm_rot)
+    //   P  pair      C = A ^ 1: the rotate and its xor-1 level
+    //   X  other     gathered A, half streams, other strides: the permutation network
+    // SEGMENTED: rows packed several a vector whose streams would need a different rotation per row slot (unit
+    // stride with so != S, per-row scalar with so != 0) are laid out one row a vector (h_seg), which makes
+    // every such stream R or B at the cost of vectors.
     localparam integer VNG = (VMD_NG > 0) ? VMD_NG : 1;
     localparam [AW-1:0] VMK = VNG - 1;
+    localparam [2:0] HK_L = 0, HK_B = 1, HK_R = 2, HK_P = 3, HK_X = 4;
     wire [CW-1:0] h_S = 1 << c_ls;
-    function automatic h_loc(input [AW-1:0] base, input [AW-1:0] so, input [AW-1:0] si, input [3:0] nsh,
-                             input [CW-1:0] S, input [CW-1:0] no, input [CW-1:0] ni);
-        h_loc = (si == 1 || ni == 1) && ((base & VMK) == 0) &&
-                ((no == 1) || ((nsh != 0) ? (((so - S[AW-1:0]) & VMK) == 0) : ((so & VMK) == 0))) &&
-                !(nsh == 0 && S < VNG && ni > S);
+    function automatic h_unit(input [AW-1:0] si, input [CW-1:0] ni);
+        h_unit = (si == 1) || (ni == 1);
     endfunction
-    function automatic h_bc(input [AW-1:0] so, input [AW-1:0] si, input [3:0] nsh);
-        h_bc = (si == 0) && (nsh == 0 || so == 0);
+    function automatic [2:0] h_kind(input [AW-1:0] base, input [AW-1:0] so, input [AW-1:0] si, input [3:0] nsh,
+                                    input [CW-1:0] S, input [CW-1:0] no, input [CW-1:0] ni);
+        reg unit, bc, loc, fits;
+        begin
+            unit = h_unit(si, ni);
+            bc = (si == 0) && (nsh == 0 || so == 0);
+            loc = unit && ((base & VMK) == 0) &&
+                  ((no == 1) || ((nsh != 0) ? (((so - S[AW-1:0]) & VMK) == 0) : ((so & VMK) == 0))) &&
+                  !(nsh == 0 && S < VNG && ni > S);
+            fits = (no == 1) || (nsh == 0) || (((so - S[AW-1:0]) & VMK) == 0);
+            h_kind = (bc && !unit) ? HK_B : loc ? HK_L : bc ? HK_B : (unit && fits) ? HK_R : HK_X;
+        end
     endfunction
-    reg h_rr, h_g, h_w, h_b;              // residual read, gathered read, residual write, broadcast read
+    // segmented: judged on the natural layout (c_nsh0)
+    function automatic h_segs(input [AW-1:0] so, input [AW-1:0] si, input [CW-1:0] S, input [CW-1:0] ni);
+        h_segs = (h_unit(si, ni) && (((so - S[AW-1:0]) & VMK) != 0)) || (si == 0 && ni > 1 && so != 0);
+    endfunction
+    reg h_sg;
     always @(*) begin
-        h_rr = 1'b0; h_g = 1'b0; h_w = 1'b0; h_b = 1'b0;
-        if (q_asrc == 2'd0) begin
-            if (q_aind != IND_NONE) h_g = 1'b1;
-            else if (h_bc(q_aso, q_asi, c_nsh)) h_b = 1'b1;
-            else if (!h_loc(q_abase, q_aso, q_asi, c_nsh, h_S, s_no, s_ni)) h_rr = 1'b1;
+        h_sg = 1'b0;
+        if (VMD_NG > 0 && c_nsh0 != 0 && s_no > 1) begin
+            if (q_asrc == 2'd0 && q_aind == IND_NONE && h_segs(q_aso, q_asi, h_S, s_ni)) h_sg = 1'b1;
+            if (q_bsrc == 2'd0 && !(q_bhalf && q_bsi != 0) && h_segs(q_bso, q_bsi, h_S, s_ni)) h_sg = 1'b1;
+            if (q_csrc == 2'd0 && !q_cpair && h_segs(q_cso, q_csi, h_S, s_ni)) h_sg = 1'b1;
+            if (q_dsrc == 2'd0 && !(q_bhalf && q_dsi != 0) && h_segs(q_dso, q_dsi, h_S, s_ni)) h_sg = 1'b1;
+            if (q_aind == IND_I && h_segs({AW{1'b0}}, {{(AW-1){1'b0}}, 1'b1}, h_S, s_ni)) h_sg = 1'b1;
+            if (q_aind == IND_O && h_segs({{(AW-1){1'b0}}, 1'b1}, {AW{1'b0}}, h_S, s_ni)) h_sg = 1'b1;
+            if (q_dst == 2'd1 && h_segs(q_oso, q_osi, h_S, s_ni)) h_sg = 1'b1;
         end
-        if (q_bsrc == 2'd0) begin
-            if (h_bc(q_bso, q_bsi, c_nsh)) h_b = 1'b1;
-            else if (q_bhalf || !h_loc(q_bbase, q_bso, q_bsi, c_nsh, h_S, s_no, s_ni)) h_rr = 1'b1;
+    end
+    assign h_seg = h_sg;
+    reg [2:0] hk_a, hk_b, hk_c, hk_d, hk_g, hk_e;
+    reg h_b, h_x, h_r, h_wr, h_wx;
+    always @(*) begin
+        hk_a = HK_L; hk_b = HK_L; hk_c = HK_L; hk_d = HK_L; hk_g = HK_L; hk_e = HK_L;
+        if (q_asrc == 2'd0) hk_a = (q_aind != IND_NONE) ? HK_X : h_kind(q_abase, q_aso, q_asi, c_nsh, h_S, s_no, s_ni);
+        if (q_bsrc == 2'd0) hk_b = (q_bhalf && q_bsi != 0) ? HK_X : h_kind(q_bbase, q_bso, q_bsi, c_nsh, h_S, s_no, s_ni);
+        if (q_csrc == 2'd0) hk_c = q_cpair ? ((q_asrc == 2'd0 && hk_a == HK_X) ? HK_X : HK_P) :
+                                   h_kind(q_cbase, q_cso, q_csi, c_nsh, h_S, s_no, s_ni);
+        if (q_dsrc == 2'd0) hk_d = (q_bhalf && q_dsi != 0) ? HK_X : h_kind(q_dbase, q_dso, q_dsi, c_nsh, h_S, s_no, s_ni);
+        if (q_aind == IND_I) hk_g = h_kind(q_aibase, {AW{1'b0}}, {{(AW-1){1'b0}}, 1'b1}, c_nsh, h_S, s_no, s_ni);
+        else if (q_aind == IND_O) hk_g = h_kind(q_aibase, {{(AW-1){1'b0}}, 1'b1}, {AW{1'b0}}, c_nsh, h_S, s_no, s_ni);
+        if (q_dst == 2'd1) begin
+            hk_e = h_kind(q_obase, q_oso, q_osi, c_nsh, h_S, s_no, s_ni);
+            if (hk_e == HK_B) hk_e = HK_X;
         end
-        if (q_csrc == 2'd0) begin
-            if (q_cpair) h_rr = 1'b1;
-            else if (h_bc(q_cso, q_csi, c_nsh)) h_b = 1'b1;
-            else if (!h_loc(q_cbase, q_cso, q_csi, c_nsh, h_S, s_no, s_ni)) h_rr = 1'b1;
-        end
-        if (q_dsrc == 2'd0) begin
-            if (h_bc(q_dso, q_dsi, c_nsh)) h_b = 1'b1;
-            else if (q_bhalf || !h_loc(q_dbase, q_dso, q_dsi, c_nsh, h_S, s_no, s_ni)) h_rr = 1'b1;
-        end
-        if (q_aind == IND_I) begin
-            if (!h_loc(q_aibase, {AW{1'b0}}, {{(AW-1){1'b0}}, 1'b1}, c_nsh, h_S, s_no, s_ni)) h_rr = 1'b1;
-        end else if (q_aind == IND_O) begin
-            if (h_bc({{(AW-1){1'b0}}, 1'b1}, {AW{1'b0}}, c_nsh)) h_b = 1'b1; else h_rr = 1'b1;
-        end
-        if (q_dst == 2'd1 && !h_loc(q_obase, q_oso, q_osi, c_nsh, h_S, s_no, s_ni)) h_w = 1'b1;
+        h_b = (hk_a == HK_B) || (hk_b == HK_B) || (hk_c == HK_B) || (hk_d == HK_B) || (hk_g == HK_B);
+        h_x = (hk_a == HK_X) || (hk_b == HK_X) || (hk_c == HK_X) || (hk_d == HK_X) || (hk_g == HK_X);
+        h_r = (hk_a == HK_R) || (hk_b == HK_R) || (hk_c == HK_R) || (hk_c == HK_P) || (hk_d == HK_R) ||
+              (hk_g == HK_R);
+        h_wr = (hk_e == HK_R);
+        h_wx = (hk_e == HK_X);
     end
     wire [7:0] c_hold = (VMD_NG == 0) ? 8'd0 :
-                        8'((h_b ? SCAL_STAGES : 0) + (h_g ? GATH_STAGES : h_rr ? ROT_STAGES : 0) + (h_w ? ROT_STAGES : 0));
+                        8'((h_b ? SCAL_STAGES : 0) + (h_x ? GATH_STAGES : h_r ? ROT_STAGES : 0) +
+                           (h_wx ? GATH_STAGES : h_wr ? ROT_STAGES : 0));
     reg [7:0] p_hold;
-    reg [3:0] p_hfl;
-    always @(posedge clk) if (s2_go) begin p_hold <= c_hold; p_hfl <= {h_b, h_g, h_rr, h_w}; end
+    reg [5:0] p_hfl;
+    always @(posedge clk) if (s2_go) begin p_hold <= c_hold; p_hfl <= {h_seg, h_b, h_x, h_r, h_wr, h_wx}; end
 
     // registered set-up results (the pending op)
     reg [CW-1:0]      p_no, p_ni;
@@ -602,8 +634,8 @@ module ot_hdc_v41x_vec #(
             a_seq <= q_seq; a_chseq <= q_chseq; a_chlead <= q_chlead; a_chmul <= q_chmul;
             a_nv <= 0; a_acc <= 0; a_hold <= p_hold;
 `ifndef SYNTHESIS
-            if (VMD_NG > 0) $display("VROT seq=%0d hold=%0d b=%0d g=%0d r=%0d w=%0d", q_seq, p_hold, p_hfl[3], p_hfl[2],
-                                     p_hfl[1], p_hfl[0]);
+            if (VMD_NG > 0) $display("VROT seq=%0d hold=%0d u=%0d b=%0d x=%0d r=%0d wr=%0d wx=%0d", q_seq, p_hold,
+                                     p_hfl[5], p_hfl[4], p_hfl[3], p_hfl[2], p_hfl[1], p_hfl[0]);
 `endif
         end else if (emit) begin
             if (!a_started) a_mark <= e_tot;

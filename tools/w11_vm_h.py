@@ -41,60 +41,104 @@ def phys_lanes(f, lay, oo, ii):
     return ((oo - oo.min()) * lay["S"] + (ii - ii.min())).astype(np.int64)
 
 
+class _ng:
+    """Lay ops out with option H's rule for `ng` groups (rtl_hdc_v41x_vec_campaign.VMD_NG) inside the block."""
+
+    def __init__(self, ng):
+        self.ng = ng
+
+    def __enter__(self):
+        self.prev, C.VMD_NG = C.VMD_NG, self.ng
+
+    def __exit__(self, *a):
+        C.VMD_NG = self.prev
+
+
+def layout_h(f, N, M, ng=None):
+    with _ng(ng or N // 8):
+        return C.layout(f, N, M)
+
+
+def unpacked(f, N, M, ng=None):
+    """Option H lays the op out one row a vector where the natural layout packs rows."""
+    with _ng(0):
+        n0 = C.layout(f, N, M)["nsh"]
+    return layout_h(f, N, M, ng)["nsh"] != n0
+
+
 def classify(f, N, M, ng=None):
-    """Per class the RTL's decision: L local, B broadcast, R residual (rotate), G gathered."""
+    """Per class the RTL's decision on the H layout: L local, B broadcast (one element a vector), R one rotation
+    a vector (the residual rotate), P the pair stream (C = A ^ 1: the rotate's xor-1 level), X anything else
+    (gathered A, half streams, strides other than 0 / 1: the permutation network)."""
     ng = ng or N // 8
-    lay = C.layout(f, N, M)
+    lay = layout_h(f, N, M, ng)
     ls, nsh = lay["ls"], lay["nsh"]
     S = 1 << ls
     s_no, s_ni = (1, f["nout"] * f["nin"]) if lay["flat"] else (f["nout"], f["nin"])
     mk = ng - 1
 
+    def unit(si):
+        return si == 1 or s_ni == 1
+
+    def fits(so):          # every row of a vector starts at the same rotation (or one row / one row a vector)
+        return s_no == 1 or nsh == 0 or (((so - S) & MK24) & mk) == 0
+
     def loc(base, so, si):
-        return ((si == 1 or s_ni == 1) and (base & mk) == 0 and
-                (s_no == 1 or ((((so - S) & MK24) & mk) == 0 if nsh != 0 else (so & mk) == 0)) and
-                not (nsh == 0 and S < ng and s_ni > S))
+        return unit(si) and (base & mk) == 0 and \
+            (s_no == 1 or ((((so - S) & MK24) & mk) == 0 if nsh != 0 else (so & mk) == 0)) and \
+            not (nsh == 0 and S < ng and s_ni > S)
 
     def bc(so, si):
         return si == 0 and (nsh == 0 or so == 0)
 
+    def kind(base, so, si):
+        if bc(so, si) and not unit(si):
+            return "B"
+        if loc(base, so, si):
+            return "L"
+        if bc(so, si):
+            return "B"
+        return "R" if unit(si) and fits(so) else "X"
+
     cl = {}
     if f["asrc"] == I.SRC_VM:
-        cl["A"] = "G" if f["aind"] else "B" if bc(f["aso"], f["asi"]) else \
-            "L" if loc(f["abase"], f["aso"], f["asi"]) else "R"
+        cl["A"] = "X" if f["aind"] else kind(f["abase"], f["aso"], f["asi"])
     for s in "bd":
         if f[f"{s}src"] == I.SRC_VM:
-            cl[s.upper()] = "B" if bc(f[f"{s}so"], f[f"{s}si"]) else \
-                "R" if f["bhalf"] or not loc(f[f"{s}base"], f[f"{s}so"], f[f"{s}si"]) else "L"
+            cl[s.upper()] = "X" if (f["bhalf"] and f[f"{s}si"] != 0) else \
+                kind(f[f"{s}base"], f[f"{s}so"], f[f"{s}si"])
     if f["csrc"] == I.SRC_VM:
-        cl["C"] = "R" if f["cpair"] else "B" if bc(f["cso"], f["csi"]) else \
-            "L" if loc(f["cbase"], f["cso"], f["csi"]) else "R"
+        cl["C"] = ("X" if cl.get("A") == "X" else "P") if f["cpair"] else kind(f["cbase"], f["cso"], f["csi"])
     if f["aind"] == I.IND_I:
-        cl["G"] = "L" if loc(f["aibase"], 0, 1) else "R"
+        cl["G"] = kind(f["aibase"], 0, 1)
     elif f["aind"] == I.IND_O:
-        cl["G"] = "B" if bc(1, 0) else "R"
+        cl["G"] = kind(f["aibase"], 1, 0)
     if f["dst"] == I.DST_VM:
-        cl["E"] = "L" if loc(f["obase"], f["oso"], f["osi"]) else "R"
+        k = kind(f["obase"], f["oso"], f["osi"])
+        cl["E"] = "X" if k == "B" else k        # a write of one element from many lanes: not a rotation
     return cl
 
 
 def rule(f, N, M, ng=None):
-    """(b, g, r, w): broadcast read, gathered read, residual read, residual write -- the RTL's h_* flags."""
+    """(b, x, r, wr, wx): broadcast read, permutation read, rotate read (R / P), rotate write, permutation
+    write -- the RTL's h_* flags."""
     cl = classify(f, N, M, ng)
-    return (any(v == "B" for c, v in cl.items() if c != "E"), cl.get("A") == "G",
-            any(v == "R" for c, v in cl.items() if c != "E"), cl.get("E") == "R")
+    rd = [v for c, v in cl.items() if c != "E"]
+    return ("B" in rd, "X" in rd, any(v in ("R", "P") for v in rd), cl.get("E") == "R", cl.get("E") == "X")
 
 
 def hold(flags, rot=17, gath=18, scal=8):
-    b, g, r, w = flags
-    return (scal if b else 0) + (gath if g else rot if r else 0) + (rot if w else 0)
+    b, x, r, wr, wx = flags
+    return (scal if b else 0) + (gath if x else rot if r else 0) + (gath if wx else rot if wr else 0)
 
 
-def truth(f, vm, N, M, ng=None):
-    """Per class: non-local lanes (a vector whose lanes all read one element is a broadcast, not counted),
-    and the classes with a broadcast vector."""
+def truth(f, vm, N, M, ng=None, cl=None):
+    """On the H layout, per class: non-local lanes, vectors that read more than one element (a broadcast
+    class must read one), and vectors whose lanes do not all need one rotation (R) / one rotation then the
+    pair swap (P) -- the rotate network could not serve them."""
     ng = ng or N // 8
-    lay = C.layout(f, N, M)
+    lay = layout_h(f, N, M, ng)
+    cl = cl or {}
     no, ni = f["nout"], f["nin"]
     idx = None
     if f["aind"]:
@@ -111,7 +155,7 @@ def truth(f, vm, N, M, ng=None):
         st["G"] = (f["aibase"] + (i if f["aind"] == I.IND_I else o)).reshape(-1).astype(np.int64)
     if f["dst"] == I.DST_VM:
         st["E"] = C.out_addrs(f).astype(np.int64)
-    rem, multi = collections.Counter(), collections.Counter()
+    rem, multi, norot = collections.Counter(), collections.Counter(), collections.Counter()
     for oo, ii in lay["vecs"]:
         e = C.elem_index(f, oo, ii)
         lanes = phys_lanes(f, lay, oo, ii)
@@ -120,44 +164,57 @@ def truth(f, vm, N, M, ng=None):
             if len(np.unique(x)) > 1:
                 multi[cls] += 1               # a vector that is not one element for every lane
             rem[cls] += int(np.count_nonzero((x % ng) != (lanes % ng)))
-    return rem, multi
+            if cl.get(cls) in ("R", "P"):
+                g = (x % ng) ^ (1 if cl[cls] == "P" else 0)
+                if len(np.unique((g - lanes) % ng)) > 1:
+                    norot[cls] += 1
+    return rem, multi, norot
 
 
 def check(ops, N, M, ng=None):
-    out = dict(ops=0, flagged=collections.Counter(), unsafe=[], residual_ops=0, flagged_any=0, over_flagged=0,
-               hold_cycles=0, holds=collections.Counter())
+    ng = ng or N // 8
+    out = dict(ops=0, flagged=collections.Counter(), unsafe=[], unsafe_count=0, residual_ops=0, flagged_any=0,
+               over_flagged=0, hold_cycles=0, holds=collections.Counter(), classes=collections.Counter(),
+               unpacked_ops=0, vectors=0, vectors_packed=0)
     for k, (tag, f, vm) in enumerate(ops):
         if f["nout"] == 0 or f["nin"] == 0:
             continue
-        lay = C.layout(f, N, M)
+        lay = layout_h(f, N, M, ng)
+        with _ng(0):
+            lay0 = C.layout(f, N, M)
         if lay["bad"]:
             continue
         out["ops"] += 1
+        out["vectors"] += lay["nv"]
+        out["vectors_packed"] += lay0["nv"]
+        out["unpacked_ops"] += int(lay["nsh"] != lay0["nsh"])
         cl = classify(f, N, M, ng)
+        out["classes"].update(f"{c}{v}" for c, v in cl.items())
         fl = rule(f, N, M, ng)
-        b, g, r, w = fl
-        rem, multi = truth(f, vm, N, M, ng)
-        # a LOCAL class has no non-local lane; a BROADCAST class reads one element a vector
-        bad = {c: v for c, v in cl.items() if (v == "L" and rem[c]) or (v == "B" and multi[c])}
+        b, x, r, wr, wx = fl
+        rem, multi, norot = truth(f, vm, N, M, ng, cl)
+        # LOCAL: no non-local lane; BROADCAST: one element a vector; R / P: one rotation a vector
+        bad = {c: v for c, v in cl.items()
+               if (v == "L" and rem[c]) or (v == "B" and multi[c]) or (v in ("R", "P") and norot[c])}
         rd = any(rem[c] and cl.get(c) != "B" for c in "ABCDG")
-        wr = bool(rem["E"])
-        out["residual_ops"] += int(rd or wr)
-        for nm, v in zip("bgrw", fl):
+        wrem = bool(rem["E"])
+        out["residual_ops"] += int(rd or wrem)
+        for nm, v in zip(("b", "x", "r", "wr", "wx"), fl):
             out["flagged"][nm] += int(v)
-        out["flagged_any"] += int(g or r or w)
+        net = x or r or wr or wx
+        out["flagged_any"] += int(net)
         if bad:
+            out["unsafe_count"] += 1
             if len(out["unsafe"]) < 20:
                 out["unsafe"].append(dict(op=k, tag=tag, classes=cl, remote={c: rem[c] for c in rem if rem[c]},
-                                          multi={c: multi[c] for c in multi}))
-            out.setdefault("unsafe_count", 0)
-            out["unsafe_count"] = out.get("unsafe_count", 0) + 1
-        if (g or r or w) and not (rd or wr):
+                                          multi=dict(multi), norot=dict(norot)))
+        if net and not (rd or wrem):
             out["over_flagged"] += 1
         h = hold(fl)
         out["hold_cycles"] += h
         out["holds"][h] += 1
-    out["unsafe_count"] = out.get("unsafe_count", 0)
     out["flagged"] = dict(out["flagged"])
+    out["classes"] = dict(out["classes"])
     out["holds"] = {str(k): v for k, v in sorted(out["holds"].items())}
     return out
 
