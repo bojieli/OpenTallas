@@ -24,7 +24,11 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
     parameter integer PWORDS = 2;
     parameter integer ENGINE = 1;
     parameter integer NSLOT = 64;
-    parameter integer SCAN = 0;            // 1: fetch scans the whole rank table instead of its owned list
+    parameter integer SCAN = 0;
+    parameter integer WIDE = 0;            // 1: ot_chip_v41x_ckv_pc_fetch (PPS ports per stack, SPP slots per port)
+    parameter integer PPS = 4;
+    parameter integer SPP = 16;
+    parameter integer SRAM_MACRO = 0;            // 1: fetch scans the whole rank table instead of its owned list
     parameter integer NSEL = 512;          // capacity of sel.hex
     parameter integer NHBM = 8192;         // capacity of the HBM image
     parameter integer MAXCYC = 400000;
@@ -36,7 +40,9 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
     localparam integer G = D / 32;
     localparam integer ROWW = G * 265;
     localparam integer R = TD / H;
-    localparam integer SW = $clog2(NSLOT), TAGW = SW + 4;
+    localparam integer NPD = WIDE ? 4 * PPS : 4;          // HBM ports per die
+    localparam integer NQ = 4 * NPD;
+    localparam integer SW = WIDE ? ((SPP > 1) ? $clog2(SPP) : 1) : $clog2(NSLOT), TAGW = SW + 4;
 
     // ---------------- vectors ----------------
     reg [31:0] cfg [0:31];
@@ -114,9 +120,9 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
     wire [3:0] f_ready, f_done, f_fault, f_ov;
     wire [4*KW-1:0] f_rank; wire [4*POS_W-1:0] f_gid; wire [4*2304-1:0] f_row;
     reg [3:0] f_or;
-    wire [16-1:0] mv; reg [16-1:0] mrdy; wire [16*HAW-1:0] maddr; wire [16*TAGW-1:0] mtag;
-    reg [16-1:0] sv; reg [16*TAGW-1:0] stag; reg [16*256-1:0] sdata;
-    wire [4*32-1:0] f_owned; wire [4*2-1:0] f_fc;
+    wire [NQ-1:0] mv; reg [NQ-1:0] mrdy = 0; wire [NQ*HAW-1:0] maddr; wire [NQ*TAGW-1:0] mtag;
+    reg [NQ-1:0] sv = 0; reg [NQ*TAGW-1:0] stag; reg [NQ*256-1:0] sdata;
+    wire [4*32-1:0] f_owned; wire [4*3-1:0] f_fc;
     genvar d;
     generate for (d = 0; d < 4; d = d + 1) begin : g_die
         wire [KW-1:0] fidx;
@@ -124,26 +130,42 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
         wire [POS_W-1:0] fgid = SCAN ? rd_gid[d*POS_W +: POS_W] : own_gid[d*POS_W +: POS_W];
         assign rd_rank[d*KW +: KW] = fidx;
         assign own_idx[d*KW +: KW] = fidx;
-        ot_chip_v41x_ckv_sel_fetch #(.DIE_ID(d), .NSLOT(NSLOT)) u_f (
-            .clk(clk), .rst_n(rst_n), .job_v(job_go), .job_ready(f_ready[d]),
-            .window_count(8'(wcount)), .published_source_count(POS_W'(npub)),
-            .region_base_sector(rbase), .region_sector_count(rcount),
-            .id_count(SCAN ? id_count : own_count[d*KW +: KW]), .id_done(id_done), .id_idx(fidx),
-            .id_rank_in(frank), .id_gid(fgid), .id_die(fgid[5:4]),
-            .o_v(f_ov[d]), .o_ready(f_or[d]), .o_rank(f_rank[d*KW +: KW]), .o_gid(f_gid[d*POS_W +: POS_W]),
-            .o_row(f_row[d*2304 +: 2304]), .done(f_done[d]), .fault(f_fault[d]), .fault_code(f_fc[d*2 +: 2]),
-            .st_owned_rows(f_owned[d*32 +: 32]),
-            .m_v(mv[d*4 +: 4]), .m_rdy(mrdy[d*4 +: 4]), .m_addr(maddr[d*4*HAW +: 4*HAW]),
-            .m_tag(mtag[d*4*TAGW +: 4*TAGW]), .s_v(sv[d*4 +: 4]), .s_tag(stag[d*4*TAGW +: 4*TAGW]),
-            .s_beat(16'd0), .s_data(sdata[d*4*256 +: 4*256]));
+        if (WIDE) begin : g_w
+            ot_chip_v41x_ckv_pc_fetch #(.DIE_ID(d), .P(PPS), .S(SPP), .SRAM_MACRO(SRAM_MACRO != 0)) u_f (
+                .clk(clk), .rst_n(rst_n), .job_v(job_go), .job_ready(f_ready[d]),
+                .window_count(8'(wcount)), .published_source_count(POS_W'(npub)),
+                .region_base_sector(rbase), .region_sector_count(rcount),
+                .id_count(SCAN ? id_count : own_count[d*KW +: KW]), .id_done(id_done), .id_idx(fidx),
+                .id_rank_in(frank), .id_gid(fgid),
+                .o_v(f_ov[d]), .o_ready(f_or[d]), .o_rank(f_rank[d*KW +: KW]), .o_gid(f_gid[d*POS_W +: POS_W]),
+                .o_row(f_row[d*2304 +: 2304]), .done(f_done[d]), .fault(f_fault[d]), .fault_code(f_fc[d*3 +: 3]),
+                .st_owned_rows(f_owned[d*32 +: 32]),
+                .m_v(mv[d*NPD +: NPD]), .m_rdy(mrdy[d*NPD +: NPD]), .m_addr(maddr[d*NPD*HAW +: NPD*HAW]),
+                .m_tag(mtag[d*NPD*TAGW +: NPD*TAGW]), .s_v(sv[d*NPD +: NPD]), .s_tag(stag[d*NPD*TAGW +: NPD*TAGW]),
+                .s_beat({NPD*4{1'b0}}), .s_data(sdata[d*NPD*256 +: NPD*256]));
+        end else begin : g_n
+            assign f_fc[d*3 + 2] = 1'b0;
+            ot_chip_v41x_ckv_sel_fetch #(.DIE_ID(d), .NSLOT(NSLOT)) u_f (
+                .clk(clk), .rst_n(rst_n), .job_v(job_go), .job_ready(f_ready[d]),
+                .window_count(8'(wcount)), .published_source_count(POS_W'(npub)),
+                .region_base_sector(rbase), .region_sector_count(rcount),
+                .id_count(SCAN ? id_count : own_count[d*KW +: KW]), .id_done(id_done), .id_idx(fidx),
+                .id_rank_in(frank), .id_gid(fgid), .id_die(fgid[5:4]),
+                .o_v(f_ov[d]), .o_ready(f_or[d]), .o_rank(f_rank[d*KW +: KW]), .o_gid(f_gid[d*POS_W +: POS_W]),
+                .o_row(f_row[d*2304 +: 2304]), .done(f_done[d]), .fault(f_fault[d]), .fault_code(f_fc[d*3 +: 2]),
+                .st_owned_rows(f_owned[d*32 +: 32]),
+                .m_v(mv[d*4 +: 4]), .m_rdy(mrdy[d*4 +: 4]), .m_addr(maddr[d*4*HAW +: 4*HAW]),
+                .m_tag(mtag[d*4*TAGW +: 4*TAGW]), .s_v(sv[d*4 +: 4]), .s_tag(stag[d*4*TAGW +: 4*TAGW]),
+                .s_beat(16'd0), .s_data(sdata[d*4*256 +: 4*256]));
+        end
     end endgenerate
 
     // behavioural HBM: per (die, stack) one request accepted per cycle, response lat cycles later, in order
     localparam integer HQ = 1024;
-    integer hq_t [0:15][0:HQ-1];
-    reg [TAGW-1:0] hq_tag [0:15][0:HQ-1];
-    reg [255:0] hq_dat [0:15][0:HQ-1];
-    integer hq_h [0:15], hq_n [0:15];
+    integer hq_t [0:NQ-1][0:HQ-1];
+    reg [TAGW-1:0] hq_tag [0:NQ-1][0:HQ-1];
+    reg [255:0] hq_dat [0:NQ-1][0:HQ-1];
+    integer hq_h [0:NQ-1], hq_n [0:NQ-1];
     integer hbm_reads = 0, hbm_missing = 0, hbm_max_q = 0;
     longint hk;
     integer p, e;
@@ -226,7 +248,7 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
                 qsent[qq] = 0;
                 qbase[qq] = (qq == 0) ? 0 : qbase[qq - 1] + qcnt[qq - 1];
             end
-            for (p = 0; p < 16; p = p + 1) begin hq_h[p] = 0; hq_n[p] = 0; end
+            for (p = 0; p < NQ; p = p + 1) begin hq_h[p] = 0; hq_n[p] = 0; end
             for (p = 1; p < 4; p = p + 1) begin lk_h[p] = 0; lk_n[p] = 0; lk_free[p] = 0; end
             phase = 1;
         end
@@ -251,7 +273,7 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
                 end
             if (id_done && t_last_id < 0) t_last_id = cyc;
             // ---- HBM stacks ----
-            for (p = 0; p < 16; p = p + 1) begin
+            for (p = 0; p < NQ; p = p + 1) begin
                 // response (registered)
                 sv[p] <= 1'b0;
                 if (hq_n[p] > 0 && hq_t[p][hq_h[p]] <= cyc) begin
@@ -261,14 +283,14 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
                     hq_h[p] = (hq_h[p] + 1) % HQ; hq_n[p] = hq_n[p] - 1;
                 end
                 if (mv[p] && mrdy[p]) begin
-                    hk = {26'd0, 2'(p / 4), 2'(p % 4), maddr[p*HAW +: 30]};
+                    hk = {26'd0, 2'(p / NPD), 2'((p % NPD) / (NPD / 4)), maddr[p*HAW +: 30]};
                     e = (hq_h[p] + hq_n[p]) % HQ;
                     hq_t[p][e] = cyc + lat; hq_tag[p][e] = mtag[p*TAGW +: TAGW];
                     if (hbm.exists(hk)) hq_dat[p][e] = hbm[hk];
                     else begin
                         hq_dat[p][e] = {256{1'b1}};
                         hbm_missing = hbm_missing + 1;
-                        if (hbm_missing < 5) $display("HBM MISSING die %0d stack %0d addr %0d", p / 4, p % 4, maddr[p*HAW +: 30]);
+                        if (hbm_missing < 5) $display("HBM MISSING port %0d addr %0d", p, maddr[p*HAW +: 30]);
                     end
                     hq_n[p] = hq_n[p] + 1; hbm_reads = hbm_reads + 1;
                     if (hq_n[p] > hbm_max_q) hbm_max_q = hq_n[p];
@@ -390,8 +412,8 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
         end
         if ((phase == 1 && ((ENGINE != 0) ? (vdims >= D) : (kvr >= T && m_done === 1'b1 || (kvr >= T && t_last_staged >= 0)))
              && cyc > t_job + 2) || cyc >= MAXCYC) begin
-            $display("CKVSEL T=%0d wcount=%0d nsel=%0d npub=%0d nslot=%0d lat=%0d llink=%0d lucie=%0d ri=%0d seldelay=%0d t_job=%0d t_first_id=%0d t_last_id=%0d t_first_row=%0d t_all_rows=%0d t_first_ckv_staged=%0d t_last_staged=%0d t_first_qk=%0d t_last_qk=%0d t_last_score=%0d t_last_p=%0d t_last_pv=%0d qk_beats=%0d qk_beats_before_last_staged=%0d fetch_latency=%0d owned0=%0d owned1=%0d owned2=%0d owned3=%0d hbm_reads=%0d hbm_missing=%0d hbm_max_q=%0d link_max_q=%0d collect_max_ahead=%0d faults=%0d",
-                     T, wcount, nsel, npub, NSLOT, lat, llink, lucie, ri, seldelay, t_job, t_first_id, t_last_id, t_first_row,
+            $display("CKVSEL T=%0d wcount=%0d nsel=%0d npub=%0d nslot=%0d wide=%0d pps=%0d spp=%0d lat=%0d llink=%0d lucie=%0d ri=%0d seldelay=%0d t_job=%0d t_first_id=%0d t_last_id=%0d t_first_row=%0d t_all_rows=%0d t_first_ckv_staged=%0d t_last_staged=%0d t_first_qk=%0d t_last_qk=%0d t_last_score=%0d t_last_p=%0d t_last_pv=%0d qk_beats=%0d qk_beats_before_last_staged=%0d fetch_latency=%0d owned0=%0d owned1=%0d owned2=%0d owned3=%0d hbm_reads=%0d hbm_missing=%0d hbm_max_q=%0d link_max_q=%0d collect_max_ahead=%0d faults=%0d",
+                     T, wcount, nsel, npub, NSLOT, WIDE, PPS, SPP, lat, llink, lucie, ri, seldelay, t_job, t_first_id, t_last_id, t_first_row,
                      t_all_rows, t_first_ckv_staged, t_last_staged, t_first_qk, t_last_qk, t_last_score, t_last_p, t_last_pv,
                      qk_beats, qk_beats_before_last_staged, t_last_staged - t_last_id,
                      f_owned[0 +: 32], f_owned[32 +: 32], f_owned[64 +: 32], f_owned[96 +: 32],
