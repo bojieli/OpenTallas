@@ -91,7 +91,15 @@ module ot_chip_v41x_tile #(
     parameter integer HROM_AW = 16,
     parameter integer EROM_AW = 19,
     parameter integer CROM_AW = 15,
-    parameter integer VM_AW   = FULL_SHAPE ? 19 : 16
+    parameter integer VM_AW   = FULL_SHAPE ? 19 : 16,
+    // X_ROM (W17): weight ops on the adopted ROM field; the field is outside the tile (rom_fb / rom_fr)
+    parameter integer X_ROM   = 0,
+    parameter integer ROM_R   = 128,
+    parameter integer ROM_PHW = 6,
+    parameter integer ROM_SAW = 16,
+    parameter integer ROM_BST = 17,
+    parameter integer ROM_FBW = 1 + ROM_PHW + 3 + 1 + 1 + 1 + 8 + 3 + 2 + 256 + 10 + 256 + 10 + 3 + 3 + 1 + 3 + 4 + 32 + 1024,
+    parameter integer ROM_FRW = ROM_R * 69
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -100,6 +108,12 @@ module ot_chip_v41x_tile #(
     input  wire [NW-1:0]     token,
     input  wire [NW-1:0]     pos,
     input  wire [13:0]       entry,
+    // -- X_ROM: the ROM field (composed outside the tile) ------------------------------
+    output wire [ROM_FBW-1:0] rom_fb,
+    input  wire [ROM_FRW-1:0] rom_fr,
+    input  wire              rom_ffault,
+    output wire [1 + 16 + 1 + (FULL_SHAPE ? 512 : 32)*16 + 1 + 4 + 4*((FULL_SHAPE ? 512 : 32)/32)*265 + 1 + 1 + 32*16 + 1 - 1:0] att_to,
+    input  wire [4 + 16 + 4 + 4*16*32 + 4*16 + 2 + 8 + 4*((FULL_SHAPE ? 512 : 32)/32)*16*32 + 4*((FULL_SHAPE ? 512 : 32)/32)*16 - 1:0] att_from,
     output wire              done,
     output wire [NW-1:0]     next_token,
     output wire [31:0]       next_val,
@@ -356,14 +370,26 @@ module ot_chip_v41x_tile #(
     // (main carried two drivers of fault and two core_fault declarations here).
     assign fault = core_fault | rope_read_fault | qrom_rom_fault | idx_user_fault | kb_ring_fault;
 
+    // X_ROM vector-memory ports: the spine's x read (64 consecutive elements) and one row write per region root
+    wire                rom_xre, rom_vre;
+    wire [AW-1:0]       rom_xaddr, rom_vaddr;
+    reg  [64*32-1:0]    rom_xq;
+    reg  [31:0]         rom_vq;
+    wire [ROM_R-1:0]    rom_we;
+    wire [ROM_R*AW-1:0] rom_waddr;
+    wire [ROM_R*32-1:0] rom_wdata;
     ot_hdc_core_v41x #(.FULL_SHAPE(FULL_SHAPE), .AW(AW), .NW(NW), .INSTR_BITS(INSTR_BITS),
                        .SW(SW), .HS(HS), .W_HBM(W_HBM), .KV_HBM(KV_HBM), .X_HE(X_HE), .X_ME(X_ME), .X_ATT(X_ATT), .X_IDX(X_IDX),
                        .X_SEL(X_SEL), .X_EG(X_EG), .XSQ(XSQ), .XSW(XSW), .X_SU(X_SU), .SUN(SUN), .SUM(SUM),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW),
                        .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_MULTIUSER(IDX_MULTIUSER),
                        .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS), .IDX_RING(IDX_RING),
-                       .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL)) u_core (
+                       .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL),
+                       .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
+        .rom_xre(rom_xre), .rom_xaddr(rom_xaddr), .rom_xq(rom_xq), .rom_we(rom_we), .rom_waddr(rom_waddr),
+        .rom_wdata(rom_wdata), .rom_vre(rom_vre), .rom_vaddr(rom_vaddr), .rom_vq(rom_vq), .rom_fb(rom_fb),
+        .rom_fr(rom_fr), .rom_ffault(rom_ffault), .att_to(att_to), .att_from(att_from),
         .done(done), .acc_n(acc_n), .acc_tok(), .next_token(next_token), .next_val(next_val), .cycles(cycles),
         .fault(core_fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
         .rope_pf_v(rope_pf_v), .rope_pf_rdy(rope_pf_rdy),
@@ -522,6 +548,11 @@ module ot_chip_v41x_tile #(
         for (q = 0; q < 4*SW; q = q + 1) if (vs_re[q]) vs_q[32*q +: 32] <= vm[vs_addr[q*AW +: VM_AW]];
         for (q = 0; q < SW; q = q + 1) if (vi_re[q]) vi_q[32*q +: 32] <= vm[vi_addr[q*AW +: VM_AW]];
         if (vq_re) vq_q <= vm[vq_addr[VM_AW-1:0]];
+        if (X_ROM != 0) begin
+            if (rom_xre) for (q = 0; q < 64; q = q + 1) rom_xq[32*q +: 32] <= vm[rom_xaddr[VM_AW-1:0] + VM_AW'(q)];
+            if (rom_vre) rom_vq <= vm[rom_vaddr[VM_AW-1:0]];
+            for (q = 0; q < ROM_R; q = q + 1) if (rom_we[q]) vm[rom_waddr[q*AW +: VM_AW]] <= rom_wdata[32*q +: 32];
+        end
         if (vr_re) vr_q <= vm[vr_addr[VM_AW-1:0]];
         if (wqr_re) for (q = 0; q < 32; q = q + 1) wqr_q[32*q +: 32] <= vm[wqr_addr[VM_AW-1:0] + q];
         if (wxr_re) for (q = 0; q < 32; q = q + 1) wxr_q[32*q +: 32] <= vm[wxr_addr[VM_AW-1:0] + q];

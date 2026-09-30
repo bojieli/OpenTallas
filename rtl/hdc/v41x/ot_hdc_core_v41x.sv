@@ -107,7 +107,20 @@ module ot_hdc_core_v41x #(
     parameter integer HBAW  = 16,          // HCP weight-bank word address
     // ME weight ops: ot_hdc_v41x_wgt_tile KIND 1 geometry
     parameter integer MG    = 8,           // chunk units (8 x MG BF16/FP32 MAC lanes)
-    parameter integer MBAW  = FULL_SHAPE ? 18 : 17 // weight-bank word address
+    parameter integer MBAW  = FULL_SHAPE ? 18 : 17, // weight-bank word address
+    // X_ROM = 1 (W17): every weight op (QE LINQ and the ME weight class) runs on the adopted ROM field through
+    // ot_v41_rom_adapt + ot_v41_spine (rtl/v41die); the field itself is outside the core (rom_fb / rom_fr).
+    parameter integer X_ROM = 0,
+    parameter integer ROM_R = 128,         // field return regions (roots = VM write ports)
+    parameter integer ROM_PHW = 6,         // phases the field holds (log2)
+    parameter integer ROM_SAW = 16,        // spine stream ROM words (log2)
+    parameter integer ROM_BST = 17,        // x broadcast wire register stages (W18 routed, 2026-09-30)
+    parameter integer ROM_VRD = 64,        // x elements read a cycle (the model's vm_read_elems)
+    parameter integer ROM_FBW = 1 + ROM_PHW + 3 + 1 + 1 + 1 + 8 + 3 + 2 + 256 + 10 + 256 + 10 + 3 + 3 + 1 + 3 + 4 + 32 + 1024,
+    parameter integer ROM_FRW = ROM_R * 69,
+    // the attention engine's runtime-composition cut (`define V41_ATT_CUT; ot_hdc_v41x_att_adapt ATW / AFW)
+    parameter integer ATT_TW = 1 + 16 + 1 + HDIM*16 + 1 + 4 + 4*(HDIM/32)*265 + 1 + 1 + 32*16 + 1,
+    parameter integer ATT_FW = 4 + 16 + 4 + 4*16*32 + 4*16 + 2 + 8 + 4*(HDIM/32)*16*32 + 4*(HDIM/32)*16
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -122,6 +135,21 @@ module ot_hdc_core_v41x #(
     output reg  [31:0]       next_val,
     output reg  [31:0]       cycles,
     output reg               fault,
+    // X_ROM: ROM field front end ports (tied off when X_ROM = 0)
+    output wire              rom_xre,          // x read: ROM_VRD consecutive elements, registered response
+    output wire [AW-1:0]     rom_xaddr,
+    input  wire [ROM_VRD*32-1:0] rom_xq,
+    output wire [ROM_R-1:0]  rom_we,           // finished rows, one port per return region
+    output wire [ROM_R*AW-1:0] rom_waddr,
+    output wire [ROM_R*32-1:0] rom_wdata,
+    output wire              rom_vre,          // expert id read
+    output wire [AW-1:0]     rom_vaddr,
+    input  wire [31:0]       rom_vq,
+    output wire [ROM_FBW-1:0] rom_fb,          // field broadcast (after the wire stages)
+    input  wire [ROM_FRW-1:0] rom_fr,          // field return: per region {v, row, pos, fp32, bf16, e}
+    input  wire              rom_ffault,
+    output wire [ATT_TW-1:0] att_to,           // attention engine cut (V41_ATT_CUT; zero otherwise)
+    input  wire [ATT_FW-1:0] att_from,
     // Engram hash history priming (single-step tests)
     input  wire              prime_v,
     input  wire              prime_first,
@@ -796,7 +824,7 @@ module ot_hdc_core_v41x #(
     localparam [1:0] MC_W = 2'd0, MC_A = 2'd1, MC_I = 2'd2;
     wire [1:0] me_cls = !me_wsrc ? MC_W : (me_wbase >= cfg_ik_base) ? MC_I : MC_A;
     //: which engine takes each class: 0 the as-built engine, 1 its re-specified one
-    wire [1:0] me_eng = (me_cls == MC_W) ? ((X_ME != 0) ? 2'd1 : 2'd0) :
+    wire [1:0] me_eng = (me_cls == MC_W) ? ((X_ME != 0 || X_ROM != 0) ? 2'd1 : 2'd0) :
                         (me_cls == MC_A) ? ((X_ATT != 0) ? 2'd2 : 2'd0) : ((X_IDX != 0) ? 2'd3 : 2'd0);
     reg  [1:0] me_own;                          // engine of the op issued last
     always @(posedge clk or negedge rst_n) if (!rst_n) me_own <= 2'd0; else if (me_go) me_own <= me_eng;
@@ -858,8 +886,19 @@ module ot_hdc_core_v41x #(
         .am_idx(e_am_idx[0 +: MP*NW]), .am_val(e_am_val[0 +: MP*32]), .am_any(e_am_any[0 +: MP]),
         .progress(me_progress), .fault(e_fault[0]));
 
-    // engine 1: the BF16/FP32 weight engine (X_ME)
-    generate if (X_ME != 0) begin : g_me_x
+    // engine 1: the BF16/FP32 weight engine (X_ME), or the ROM field (X_ROM: the op goes to ot_v41_rom_adapt, which
+    // writes its rows through the rom_* ports; this slot only carries its handshake)
+    wire rom_m_go = e_go[1];
+    wire rom_ready_w, rom_idle_w, rom_fault_w;
+    generate if (X_ROM != 0) begin : g_me_rom
+        assign mb_re = 8'd0; assign mb_addr = 0;
+        assign e_ready[1] = rom_ready_w; assign e_idle[1] = rom_idle_w; assign e_fault[1] = 1'b0; assign e_kv_re[1] = 1'b0;
+        assign e_kv_raddr[1*G*AW +: G*AW] = 0; assign e_vx_re[1*MP*G +: MP*G] = 0;
+        assign e_vx_addr[1*MP*G*AW +: MP*G*AW] = 0; assign e_ov[1] = 1'b0; assign e_we[1*MP*G +: MP*G] = 0;
+        assign e_addr[1*MP*G*AW +: MP*G*AW] = 0; assign e_mask[1*MP*G*W +: MP*G*W] = 0;
+        assign e_data[1*MP*G*W*32 +: MP*G*W*32] = 0; assign e_am_idx[1*MP*NW +: MP*NW] = 0;
+        assign e_am_val[1*MP*32 +: MP*32] = 0; assign e_am_any[1*MP +: MP] = 0;
+    end else if (X_ME != 0) begin : g_me_x
         ot_hdc_v41x_me_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP), .MG(MG), .BAW(MBAW),
                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
             .clk(clk), .rst_n(rst_n), .go(e_go[1]), .ready(e_ready[1]), .idle(e_idle[1]),
@@ -900,10 +939,11 @@ module ot_hdc_core_v41x #(
             .packed_kv_fault(att_packed_kv_fault),
             .x_re(e_vx_re[2*MP*G +: MP*G]), .x_addr(e_vx_addr[2*MP*G*AW +: MP*G*AW]), .x_q(vx_q),
             .o_we(e_we[2*MP*G +: MP*G]), .o_addr(e_addr[2*MP*G*AW +: MP*G*AW]), .o_mask(e_mask[2*MP*G*W +: MP*G*W]),
-            .o_data(e_data[2*MP*G*W*32 +: MP*G*W*32]), .fault(e_fault[2]));
+            .o_data(e_data[2*MP*G*W*32 +: MP*G*W*32]), .fault(e_fault[2]), .att_to(att_to), .att_from(att_from));
         assign e_ov[2] = 1'b0;
         assign e_am_idx[2*MP*NW +: MP*NW] = 0; assign e_am_val[2*MP*32 +: MP*32] = 0; assign e_am_any[2*MP +: MP] = 0;
     end else begin : g_att_n
+        assign att_to = '0;
         assign att_packed_kv_ready = 1'b0;
         assign e_ready[2] = 1'b1; assign e_idle[2] = 1'b1; assign e_fault[2] = 1'b0; assign e_kv_re[2] = 1'b0;
         assign e_kv_raddr[2*G*AW +: G*AW] = 0; assign e_vx_re[2*MP*G +: MP*G] = 0;
@@ -1087,10 +1127,61 @@ module ot_hdc_core_v41x #(
         assign xs_res_data = 0;
     end endgenerate
 
+    // X_ROM: a LINQ op runs on the ROM field; the QE keeps its QDQ modes.  Both share the unit's ready/idle.
+    wire qe_rom = (X_ROM != 0) && qe_mode == 2'd0;
+    wire qe_go_e = qe_go && !qe_rom;
+    wire rom_q_go = qe_go && qe_rom;
+    wire qe_ready_e, qe_idle_e;
+    assign qe_ready = qe_rom ? rom_ready_w : qe_ready_e;
+    assign qe_idle = qe_idle_e && ((X_ROM == 0) || rom_idle_w);
+    generate if (X_ROM != 0) begin : g_rom
+        wire              s_go, s_ready, s_idle;
+        wire [ROM_PHW-1:0] s_ph;
+        wire [2:0]        s_np;
+        wire [AW-1:0]     s_xbase, s_xps, s_obase, s_ops;
+        wire [1:0]        s_fmt;
+        wire              a_fault, sp_fault;
+        wire [31:0]       sp_cycles;
+        ot_v41_rom_adapt #(.AW(AW), .NW(NW), .W(W), .IL(IL), .PHW(ROM_PHW), .VAW(AW)) u_radapt (
+            .clk(clk), .rst_n(rst_n),
+            .q_go(rom_q_go), .q_xbase(qe_xbase), .q_nb(qe_nb), .q_wbase(qe_wbase), .q_ind(qe_ind), .q_ibase(qe_ibase),
+            .q_istride(qe_istride), .q_obase(qe_obase), .q_unrounded(qe_unrounded),
+            .m_go(rom_m_go), .m_k(me_k), .m_split(me_split), .m_wbase(me_wbase), .m_xbase(me_xbase), .m_xks(me_xks),
+            .m_xcs(me_xcs), .m_xjs(me_xjs), .m_obase(me_obase), .m_ots(me_ots), .m_ojs(me_ojs), .m_round(me_round),
+            .m_amax(me_amax), .m_mmode(me_mmode),
+            .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops), .ready(rom_ready_w), .idle(rom_idle_w),
+            .vi_re(rom_vre), .vi_addr(rom_vaddr), .vi_q(rom_vq),
+            .s_go(s_go), .s_ph(s_ph), .s_np(s_np), .s_xbase(s_xbase), .s_xps(s_xps), .s_obase(s_obase), .s_ops(s_ops),
+            .s_fmt(s_fmt), .s_ready(s_ready), .s_idle(s_idle), .fault(a_fault));
+        wire [ROM_R-1:0] r_v, r_e;
+        wire [16*ROM_R-1:0] r_row, r_bf16;
+        wire [3*ROM_R-1:0] r_pos;
+        wire [32*ROM_R-1:0] r_fp32;
+        genvar gr;
+        for (gr = 0; gr < ROM_R; gr = gr + 1) begin : g_fr
+            assign {r_v[gr], r_row[16*gr +: 16], r_pos[3*gr +: 3], r_fp32[32*gr +: 32], r_bf16[16*gr +: 16], r_e[gr]} =
+                rom_fr[69*gr +: 69];
+        end
+        ot_v41_spine #(.PHW(ROM_PHW), .SAW(ROM_SAW), .R(ROM_R), .VAW(AW), .VRD(ROM_VRD), .KMAX(6144), .BST(ROM_BST)) u_spine (
+            .clk(clk), .rst_n(rst_n), .go(s_go), .i_ph(s_ph), .i_np(s_np), .i_xbase(s_xbase), .i_xps(s_xps),
+            .i_obase(s_obase), .i_ops(s_ops), .i_fmt(s_fmt), .ready(s_ready), .idle(s_idle),
+            .x_re(rom_xre), .x_addr(rom_xaddr), .x_q(rom_xq), .w_we(rom_we), .w_addr(rom_waddr), .w_data(rom_wdata),
+            .f_cfg_go(), .f_cfg_ph(), .f_cfg_np(), .f_go(), .f_go_bf(), .f_xs_v(), .f_xs_p(), .f_xs_b(), .f_xs_sv(),
+            .f_xs_q0(), .f_xs_e0(), .f_xs_q1(), .f_xs_e1(), .f_xs_pos(), .f_xb_pos(), .f_xb_v(), .f_xb_b(), .f_xb_sv(),
+            .f_xb_u(), .f_xb_d(), .f_bus(rom_fb),
+            .r_v(r_v), .r_row(r_row), .r_pos(r_pos), .r_fp32(r_fp32), .r_bf16(r_bf16), .r_e(r_e), .f_fault(rom_ffault),
+            .fault(sp_fault), .phase_cycles(sp_cycles));
+        assign rom_fault_w = a_fault | sp_fault;
+    end else begin : g_norom
+        assign rom_ready_w = 1'b1; assign rom_idle_w = 1'b1; assign rom_fault_w = 1'b0;
+        assign rom_xre = 1'b0; assign rom_xaddr = '0; assign rom_we = '0; assign rom_waddr = '0; assign rom_wdata = '0;
+        assign rom_vre = 1'b0; assign rom_vaddr = '0; assign rom_fb = '0;
+    end endgenerate
+
     ot_hdc_v41_qe #(.AW(AW), .NW(NW), .BL(BL), .IL(IL), .NBMAX(FULL_SHAPE ? 192 : 32),
                      .CHUNK8(FULL_SHAPE),
                      .QLB(QLB), .MP(MP)) u_qe (
-        .clk(clk), .rst_n(rst_n), .go(qe_go), .ready(qe_ready), .idle(qe_idle),
+        .clk(clk), .rst_n(rst_n), .go(qe_go_e), .ready(qe_ready_e), .idle(qe_idle_e),
         .i_mode(qe_mode), .i_fp4(qe_fp4), .i_unrounded(qe_unrounded),
         .i_xbase(qe_xbase), .i_nb(qe_nb), .i_nout(qe_nout), .i_tiles(qe_tiles),
         .i_wbase(qe_wbase), .i_ind(qe_ind), .i_ibase(qe_ibase), .i_istride(qe_istride), .i_obase(qe_obase),
@@ -1200,7 +1291,7 @@ module ot_hdc_core_v41x #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
         else if (start && st == S_IDLE) fault <= 1'b0;
-        else if (me_fault || su_fault || qe_fault || xu_fault || he_fault ||
+        else if (me_fault || su_fault || qe_fault || xu_fault || he_fault || rom_fault_w ||
                  (FULL_SHAPE && KV_HBM && (win_fault || win_capture_fault)) ||
                  (FULL_SHAPE && (coll_fault || rope_pf_fault ||
                   (st == S_ISSUE && d_unit == 3'd0 &&

@@ -34,6 +34,7 @@ import v41_rom_ksplit_bankmap as S  # noqa: E402
 from rtl_v41_rom_array import Mat, bf16_word, viamap  # noqa: E402,F401
 
 NSEG = 8
+NCH, NCHB = 16, 8
 CW = 3 * NSEG + 1
 SENT = 0x8000
 
@@ -43,13 +44,30 @@ def bf16_pairs(np_: int, nbf: int) -> np.ndarray:
 
 
 class Field:
-    """NP pairs, R return regions, BF16 lanes on bf16_pairs(NP, NBF); per-macro ROM fill (words)."""
+    """NP pair slots (a power of two: the return tree's leaves), R return regions, of which `active` slots hold an
+    element (None: all; the die floorplan's pair count); BF16 lanes on `nbf` active pairs, spread evenly over each
+    region's active pairs; per-macro ROM depth `depth` words (a parameter: the macro may become 4,096 deep)."""
 
-    def __init__(self, np_: int, r: int, nbf: int, depth: int = 8192):
+    def __init__(self, np_: int, r: int, nbf: int, depth: int = 8192, active: int | None = None):
         assert np_ & (np_ - 1) == 0 and r & (r - 1) == 0 and 2 * np_ >= 2 * r
         self.np, self.r, self.nbf, self.depth = np_, r, nbf, depth
+        per = np_ // r
+        self.act = np.ones(np_, dtype=bool)
+        if active is not None and active < np_:
+            # region j keeps its first a_j slots; the remainder spread one per region from region 0
+            base, extra = divmod(active, r)
+            self.act[:] = False
+            for j in range(r):
+                self.act[j * per: j * per + base + (1 if j < extra else 0)] = True
         self.bf = np.zeros(np_, dtype=bool)
-        self.bf[bf16_pairs(np_, nbf)] = True
+        if active is None or active >= np_:
+            self.bf[bf16_pairs(np_, nbf)] = True
+        else:
+            bper, bext = divmod(nbf, r)
+            for j in range(r):
+                a = np.flatnonzero(self.act[j * per:(j + 1) * per]) + j * per
+                k = bper + (1 if j < bext else 0)
+                self.bf[a[(np.arange(k) * len(a)) // k]] = True
         self.fill = np.zeros(np_, dtype=np.int64)          # pair slot fill (both macros share the structure)
         self.words = [dict() for _ in range(2 * np_)]      # macro -> {address: word}
         self.cfg = []                                      # per phase: [pair][25] words
@@ -58,7 +76,8 @@ class Field:
 
     def region_pairs(self, reg: int) -> np.ndarray:
         n = self.np // self.r
-        return np.arange(reg * n, (reg + 1) * n)
+        a = np.arange(reg * n, (reg + 1) * n)
+        return a[self.act[a]]
 
 
 def _place(field: Field, mats: list[Mat]):
@@ -69,8 +88,13 @@ def _place(field: Field, mats: list[Mat]):
     info = []
     for mi, m in enumerate(mats):
         srows = -(-m.rows // 2)
-        n_set = int(field.bf.sum()) if m.fmt == "bf16" else field.np
-        s = S.model_split(srows, m.K, n_set, m.fmt)
+        # every super row lives in one region (its rows' VM group), so the K split is chosen per region: the
+        # region's super rows share its (BF16-capable) pairs, as the model splits a matrix over the field
+        per_reg = len(field.region_pairs(0))
+        if m.fmt == "bf16":
+            per_reg = int(field.bf[field.region_pairs(0)].sum())
+        rows_reg = -(-srows // field.r)
+        s = S.model_split(rows_reg, m.K, per_reg, m.fmt)
         segs = S.segments(m.K, s)
         info.append(dict(off=off, srows=srows, s=s, segs=segs))
         for si, (e0, el) in enumerate(segs):
@@ -180,6 +204,11 @@ def add_phase(field: Field, mats: list[Mat], fmt_fp32=(False, False), rsplit: in
             q = (u - S.unit_range(sg["fmt"], sg["e0"], sg["elems"])[0]) // S.IL
             rounds.setdefault((q, b), set()).add(u)
             demand[(q, b, p)] = demand.get((q, b, p), 0) + 1
+    # element round capacity (W10 frozen interface): an element reads at most NCH (FP8/FP4) or NCHB (BF16)
+    # words per round -- one chain register per word position of the round
+    cap = NCHB if bf else NCH
+    over = {k: v for k, v in demand.items() if v > cap}
+    assert not over, ("element round capacity exceeded (words per round > %d)" % cap, sorted(over.items())[:4])
     # stream (one position)
     C = K // 256
     beats = []
@@ -263,7 +292,10 @@ def write_field(field: Field, out: Path, phw: int, flat_viamaps: bool = True) ->
     (address word pairs for the runtime host) and e<p>[b].viamap.hex (the via ROM of the flat build);
     spine_phase.hex, spine_stream.hex."""
     out.mkdir(parents=True, exist_ok=True)
-    for p in range(field.np):
+    act = [int(p) for p in np.flatnonzero(field.act)]
+    (out / "field.txt").write_text(f"np {field.np}\nr {field.r}\nactive {' '.join(map(str, act))}\n"
+                                   f"bf16 {' '.join(str(int(p)) for p in np.flatnonzero(field.bf))}\n")
+    for p in act:
         lines = []
         for ph in range(1 << phw):
             ws = field.cfg[ph][p] if ph < len(field.cfg) else [0] * CW

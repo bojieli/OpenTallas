@@ -181,6 +181,15 @@ module ot_chip_v41x_die #(
     parameter integer COMBINE_IN   = 0,
     parameter integer ROW0         = 0,
     parameter integer FWD_TOKEN    = 1,
+    // X_ROM (W17): weight ops on the adopted ROM field, composed outside the die model (rom_fb / rom_fr)
+    parameter integer X_ROM   = 0,
+    parameter integer X_ATT   = 1,           // passed to the tile (its default)
+    parameter integer ROM_R   = 128,
+    parameter integer ROM_PHW = 6,
+    parameter integer ROM_SAW = 16,
+    parameter integer ROM_BST = 17,
+    parameter integer ROM_FBW = 1 + ROM_PHW + 3 + 1 + 1 + 1 + 8 + 3 + 2 + 256 + 10 + 256 + 10 + 3 + 3 + 1 + 3 + 4 + 32 + 1024,
+    parameter integer ROM_FRW = ROM_R * 69,
     // derived
     parameter integer CL_FW   = 32 * CL_LANES,
     parameter integer CL_PW   = CL_FW + 3 + CL_TAGW
@@ -188,6 +197,12 @@ module ot_chip_v41x_die #(
     input  wire              clk,
     input  wire              rst_n,            // asynchronous assert, synchronised release
     // -- host / CSR ----------------------------------------------------------------------
+    // -- X_ROM: the ROM field (runtime-composed; tools/v41_die_rt.py) ---------------------------
+    output wire [ROM_FBW-1:0] rom_fb,
+    input  wire [ROM_FRW-1:0] rom_fr,
+    input  wire              rom_ffault,
+    output wire [1 + 16 + 1 + (FULL_SHAPE ? 512 : 32)*16 + 1 + 4 + 4*((FULL_SHAPE ? 512 : 32)/32)*265 + 1 + 1 + 32*16 + 1 - 1:0] att_to,
+    input  wire [4 + 16 + 4 + 4*16*32 + 4*16 + 2 + 8 + 4*((FULL_SHAPE ? 512 : 32)/32)*16*32 + 4*((FULL_SHAPE ? 512 : 32)/32)*16 - 1:0] att_from,
     input  wire              host_mode,        // 1: the host drives the core's step port; 0: u_ctrl does
     input  wire              host_start,
     input  wire [(FULL_SHAPE ? 21 : 16)-1:0] host_token,
@@ -455,8 +470,9 @@ module ot_chip_v41x_die #(
 
     ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL), .IDX_MULTIUSER(IDX_RING_MU), .IDX_KEY_SLICE_SECTORS((IDX_RING_MU != 0) ? IKH_SLICE : 0), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
                         .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
-                        .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW)) u_tile (
-        .clk(clk), .rst_n(rn),
+                        .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW),
+                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .X_ATT(X_ATT)) u_tile (
+        .clk(clk), .rst_n(rn), .rom_fb(rom_fb), .rom_fr(rom_fr), .rom_ffault(rom_ffault), .att_to(att_to), .att_from(att_from),
         .start(t_start), .token(t_token), .pos(t_pos), .entry(host_mode ? host_entry : 14'd0),
         .done(core_done), .next_token(core_next_token), .next_val(core_next_val), .cycles(core_cycles),
         .fault(t_fault), .acc_n(core_acc_n),

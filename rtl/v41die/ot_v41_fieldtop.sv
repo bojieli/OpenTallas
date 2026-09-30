@@ -108,12 +108,12 @@ module ot_v41_fieldtop #(
     wire              f_fault;
     ot_v41_spine #(.PHW(PHW), .SAW(SAW), .R(R), .VAW(VAW), .VRD(VRD), .KMAX(KMAX), .BST(BST)) u_sp (
         .clk(clk), .rst_n(rst_n), .go(go), .i_ph(i_ph), .i_np(i_np), .i_xbase(i_xbase), .i_xps(i_xps),
-        .i_obase(i_obase), .i_ops(i_ops), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_q(x_q),
+        .i_obase(i_obase), .i_ops(i_ops), .i_fmt(2'd0), .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_q(x_q),
         .w_we(w_we), .w_addr(w_addr), .w_data(w_data),
         .f_cfg_go(c_cfg), .f_cfg_ph(c_ph), .f_cfg_np(c_np), .f_go(c_go), .f_go_bf(c_gobf), .f_xs_v(c_xs_v),
         .f_xs_p(c_xs_p), .f_xs_b(c_xs_b), .f_xs_sv(c_xs_sv), .f_xs_q0(c_xs_q0), .f_xs_e0(c_xs_e0),
         .f_xs_q1(c_xs_q1), .f_xs_e1(c_xs_e1), .f_xs_pos(c_xs_pos), .f_xb_pos(c_xb_pos), .f_xb_v(c_xb_v),
-        .f_xb_b(c_xb_b), .f_xb_sv(c_xb_sv), .f_xb_u(c_xb_u), .f_xb_d(c_xb_d),
+        .f_xb_b(c_xb_b), .f_xb_sv(c_xb_sv), .f_xb_u(c_xb_u), .f_xb_d(c_xb_d), .f_bus(),
         .r_v(r_v), .r_row(r_row), .r_pos(r_pos), .r_fp32(r_fp32), .r_bf16(r_bf16), .r_e(r_e),
         .f_fault(f_fault), .fault(fault), .phase_cycles(phase_cycles));
 `ifdef RT_CUT
