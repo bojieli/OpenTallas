@@ -281,3 +281,15 @@ def test_w11_measured_serial_step():
     assert (new["stages"], new["dies"]) == (old["stages"], old["dies"])
     h = r["headline_table"]["v41"][0]
     assert abs(h["per_user_ar"] - new["ar_tokens_s_b1"]) < 0.5 and abs(h["per_user_mtp"] - new["mtp_tokens_s_b1"]) < 0.5
+
+
+def test_die_shrink_crossing_sensitivity():
+    """Root ruling 2026-09-30: shrink the layer die to the owner file's pairs + ~10%; the sensitivity scales the
+    on-die crossings by sqrt(area ratio) and can only speed the token up."""
+    import math
+    import uarch_model as U
+    own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
+    assert U.DIE_SHRINK["pairs_needed"] == max(own["pairs_per_die_by_stage"])
+    ds = _rec()["v41_rom"]["die_shrink_sensitivity"]
+    assert ds["role"] == "sensitivity" and abs(ds["crossing_scale"] - math.sqrt(ds["area_ratio"])) < 1e-12
+    assert ds["area_ratio"] < 1 and ds["ar_tokens_s_b1"] >= ds["product_ar"] and ds["mtp_tokens_s_b1"] >= ds["product_mtp"]
