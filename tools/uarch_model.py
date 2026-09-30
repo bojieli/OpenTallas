@@ -360,7 +360,8 @@ def evaluate(d: dict, ctx: int = 1048576):
                 macs = n_keys * c["index_heads"] * c["index_head_dim"]
                 nd["issue"] = max(nd["issue"], macs / d["idx_macs"] * cyc)
             elif d["use_measured_attention"] and name.endswith(".scores"):
-                nd["issue"] = d["att_measured_job_cycles"] * cyc
+                # PWORDS=2 loader: measured 449 cycles at T640 (claude/w11-attn c80877d8); else the PWORDS=1 job
+                nd["issue"] = (449 if d.get("att_pwords") == 2 else d["att_measured_job_cycles"]) * cyc
                 nd["depth"] = 0.0
             elif d["use_measured_attention"] and name.endswith(".pv"):
                 nd["issue"] = 0.0      # the measured job covers scores + PV
@@ -634,6 +635,10 @@ DEDICATED = dict(
         hardened_scale=1,
         measured_record="results/rtl/v41_full_attention_numeric/result.json",
         measured_job_cycles_pwords1=609, measured_pv_window_pwords1=(248, 559),
+        # the two-word probability loader (claude/w11-attn c80877d8, results/rtl/w11_attn_ploader.json): exact on all
+        # four full-geometry cases; with 2 probability words/cycle upstream (1/cycle gives back the PWORDS=1 cycles)
+        measured_job_cycles_pwords2={640: 449, 128: 193}, measured_pv_window_pwords2=(240, 399),
+        measured_verify6_cycles={1: 3389, 2: 2429},
     ),
     stream_unit=dict(
         element="ot_hdc_v41x_vec_lane (KIND 0 light / 1 SFU / 2 full lane 0) under ONE controller and ONE "
@@ -764,7 +769,11 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20, positions: in
              f"L{layer}.attn.pv": dict(beats=beats, p_words=math.ceil(T * u["H"] * 16 / u["p_word_bits"]),
                                        pwords_per_cycle=pwords, positions=positions, issue=positions * pv_cycles,
                                        note="p.v issue = blocks x max(beats/block, p-load cycles/block)")},
-        measured=dict(record=u["measured_record"], job_cycles_pwords1=u["measured_job_cycles_pwords1"],
+        measured_job_cycles=(u["measured_job_cycles_pwords2"].get(T) if pwords == 2
+                             else (u["measured_job_cycles_pwords1"] if T == 640 else None)),
+        measured=dict(record=u["measured_record"], record_pwords2="results/rtl/w11_attn_ploader.json",
+                      job_cycles_pwords2=u["measured_job_cycles_pwords2"], verify6=u["measured_verify6_cycles"],
+                      job_cycles_pwords1=u["measured_job_cycles_pwords1"],
                       pv_window_pwords1=u["measured_pv_window_pwords1"]))
     # -- stream unit
     u = DEDICATED["stream_unit"]

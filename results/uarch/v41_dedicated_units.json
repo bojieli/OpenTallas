@@ -92,8 +92,18 @@
        "note": "p.v issue = blocks x max(beats/block, p-load cycles/block)"
       }
      },
+     "measured_job_cycles": 609,
      "measured": {
       "record": "results/rtl/v41_full_attention_numeric/result.json",
+      "record_pwords2": "results/rtl/w11_attn_ploader.json",
+      "job_cycles_pwords2": {
+       "640": 449,
+       "128": 193
+      },
+      "verify6": {
+       "1": 3389,
+       "2": 2429
+      },
       "job_cycles_pwords1": 609,
       "pv_window_pwords1": [
        248,
@@ -277,8 +287,18 @@
        "note": "p.v issue = blocks x max(beats/block, p-load cycles/block)"
       }
      },
+     "measured_job_cycles": 609,
      "measured": {
       "record": "results/rtl/v41_full_attention_numeric/result.json",
+      "record_pwords2": "results/rtl/w11_attn_ploader.json",
+      "job_cycles_pwords2": {
+       "640": 449,
+       "128": 193
+      },
+      "verify6": {
+       "1": 3389,
+       "2": 2429
+      },
       "job_cycles_pwords1": 609,
       "pv_window_pwords1": [
        248,
@@ -460,8 +480,18 @@
        "note": "p.v issue = blocks x max(beats/block, p-load cycles/block)"
       }
      },
+     "measured_job_cycles": 449,
      "measured": {
       "record": "results/rtl/v41_full_attention_numeric/result.json",
+      "record_pwords2": "results/rtl/w11_attn_ploader.json",
+      "job_cycles_pwords2": {
+       "640": 449,
+       "128": 193
+      },
+      "verify6": {
+       "1": 3389,
+       "2": 2429
+      },
       "job_cycles_pwords1": 609,
       "pv_window_pwords1": [
        248,
@@ -643,8 +673,18 @@
        "note": "p.v issue = blocks x max(beats/block, p-load cycles/block)"
       }
      },
+     "measured_job_cycles": 449,
      "measured": {
       "record": "results/rtl/v41_full_attention_numeric/result.json",
+      "record_pwords2": "results/rtl/w11_attn_ploader.json",
+      "job_cycles_pwords2": {
+       "640": 449,
+       "128": 193
+      },
+      "verify6": {
+       "1": 3389,
+       "2": 2429
+      },
       "job_cycles_pwords1": 609,
       "pv_window_pwords1": [
        248,
@@ -782,7 +822,19 @@
    "measured_pv_window_pwords1": [
     248,
     559
-   ]
+   ],
+   "measured_job_cycles_pwords2": {
+    "640": 449,
+    "128": 193
+   },
+   "measured_pv_window_pwords2": [
+    240,
+    399
+   ],
+   "measured_verify6_cycles": {
+    "1": 3389,
+    "2": 2429
+   }
   },
   "stream_unit": {
    "element": "ot_hdc_v41x_vec_lane (KIND 0 light / 1 SFU / 2 full lane 0) under ONE controller and ONE chunk8 reducer (ot_hdc_v41x_vec, ot_hdc_v41x_vec_red); rtl/hdc/v41x/ot_hdc_v41x_vec*.sv",
@@ -798,7 +850,7 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "4c6417edace2c685f9b45bb11fb34f659b6f9254bf36398e5d071840503d7994",
+  "tools/uarch_model.py": "904ae42f1b8f2639022bd9879401862c6dfb89c2ee70dde87b78a2c6d7cbf44d",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/rtl_hdc_v41x_vec_campaign.py": "7d05b86774dd90c4f4d8ed6665f87796ee61ef7569c9642c05a8f05630dc72a7",
   "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
