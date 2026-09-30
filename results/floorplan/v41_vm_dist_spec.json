@@ -329,27 +329,27 @@
      "G": 15328
     },
     "remote_elements": {
-     "A": 443459,
-     "B": 507135,
-     "C": 343908,
-     "D": 505398,
-     "E": 297811,
+     "A": 432691,
+     "B": 506847,
+     "C": 433140,
+     "D": 504784,
+     "E": 413443,
      "G": 15212
     },
     "remote_share": {
-     "A": 0.8317,
-     "B": 0.9877,
-     "C": 0.663,
-     "D": 0.9865,
-     "E": 0.5833,
+     "A": 0.8115,
+     "B": 0.9871,
+     "C": 0.835,
+     "D": 0.9853,
+     "E": 0.8098,
      "G": 0.9924
     },
     "remote_share_excluding_broadcasts": {
-     "A": 0.8317,
-     "B": 0.5339,
-     "C": 0.2985,
-     "D": 0.0993,
-     "E": 0.5833,
+     "A": 0.8115,
+     "B": 0.5334,
+     "C": 0.4706,
+     "D": 0.0992,
+     "E": 0.8098,
      "G": 0.9924
     },
     "broadcast_vectors": {
@@ -2118,7 +2118,7 @@
    "stages": 10,
    "model_distance_um": 5187,
    "model_rule_stages": 6,
-   "model_stages": 6
+   "model_stages": 10
   },
   "ret_scatter": {
    "client": "matvec result write (model vm_write_elems)",
@@ -2131,7 +2131,7 @@
    "stages": 10,
    "model_distance_um": 5187,
    "model_rule_stages": 6,
-   "model_stages": 6
+   "model_stages": 10
   },
   "coll_write": {
    "client": "collective DMA write from HUB_COLLECTIVE (4 x 512-bit words)",
@@ -2144,7 +2144,7 @@
    "stages": 15,
    "model_distance_um": 9103,
    "model_rule_stages": 11,
-   "model_stages": 11
+   "model_stages": 10
   },
   "su_results": {
    "client": "SU chunk8 reducer results (N/8 = 128 slots)",
@@ -2157,7 +2157,7 @@
    "stages": 7,
    "model_distance_um": 3458,
    "model_rule_stages": 4,
-   "model_stages": 4
+   "model_stages": 7
   }
  },
  "geometry": {
@@ -2233,7 +2233,7 @@
   {
    "item": "SU operand reads and element writes are not lane-group-local",
    "model": "VM_DIST prices 0 stages for SU reads / element writes ('element writes are local'); the stream_unit ledger has no network between lanes and banks",
-   "measured": "2,112,923 of 2,603,621 SU element accesses of the vehicle at N = 1,024 (81.2%) name an element in another group (base not a multiple of 128, packed rows, pair / half streams, broadcasts)",
+   "measured": "2,306,117 of 2,603,621 SU element accesses of the vehicle at N = 1,024 (88.6%) name an element in another group (base not a multiple of 128, packed rows, pair / half streams, broadcasts)",
    "consequence": "a group-to-lane network per read class (rotation + broadcast at least) and a lane-to-group network for element writes; its stages add to the SU fetch / write depth"
   },
   {
@@ -2458,14 +2458,14 @@
    "consequence": "such a vector needs one extra array cycle per extra row in a bank: the SU must split it (issue cost) or stall; neither exists in ot_hdc_v41x_vec"
   }
  ],
- "created_utc": "2026-09-29T20:34:05.388614+00:00",
- "source_commit": "0856a89255042ca3bb4426e247ba9b4d0b4fdfe2",
+ "created_utc": "2026-09-30T03:26:29.398363+00:00",
+ "source_commit": "2c8fcf8956032441ed5ceb0d8a9f887f01c63cb2",
  "source_sha256": {
-  "tools/w11_vm_dist_spec.py": "b79600c4e4da1ad147ffd92a109e1e9198e7c9a443815d2e3827a48fafb5f990",
-  "tools/uarch_model.py": "bb9f1b16fee63e3e4a6f8f7babd8bbeb089743462087b9efbaffcad10e5115c5",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "ca1c02361bc218863e01dd9d8128aceb62369672645612952095c624f6780747",
+  "tools/w11_vm_dist_spec.py": "ffb114db8415e567366447751091c6587bda3026efb2fabfa21720f3b4467920",
+  "tools/uarch_model.py": "db4085d646f338f8594ca8d0dd9cbb56d3f6f80cf4c3b289ac358f4d1285edb0",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
-  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+  "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
   "results/floorplan/v41_pack_expanded_woa.json": "6c36746d55fa21650355b10a1316b7938b408f4167e6eba529a80c3e1dc1cb58",
