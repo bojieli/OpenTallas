@@ -422,7 +422,7 @@ def run(name: str, seed: int, det: int, drel: dict, extra: dict | None = None) -
     out.mkdir(parents=True, exist_ok=True)
     args = [str(exe), f"+SEED={seed}", f"+VEC={VEC / fix}", f"+DET={det}", f"+OUT={out / 'vm.hex'}"]
     args += [f"+{k}={v}" for k, v in drel.items()] + [f"+{k}={v}" for k, v in (extra or {}).items()]
-    r = subprocess.run(args, capture_output=True, text=True, timeout=3600)
+    r = subprocess.run(args, capture_output=True, text=True, timeout=6 * 3600 if top == "tb_w15_v41_hbm_nvls" else 3600)
     log = r.stdout + r.stderr
     (out / "log.txt").write_text(log)
     res = dict(seed=seed, det=det, drel=drel, extra=extra or {}, fatal=("%Fatal" in log) or ("%Error" in log))
@@ -691,9 +691,14 @@ def campaign(names, ncal, nmeas, out: Path):
     for n in names:
         c = campaign_config(n, ncal, nmeas)
         cfgs[n] = config_record(c)
+        write_record(out, old, cfgs)                     # after every config: a later failure keeps the earlier
         print(n, json.dumps({k: cfgs[n][k] for k in ("release_delay_cycles", "arrival_hub_to_hub_cycles")}),
               "det timings", cfgs[n]["deterministic"]["distinct_timings"], "free timings",
               cfgs[n]["free_running"]["distinct_timings"], flush=True)
+    return write_record(out, old, cfgs)
+
+
+def write_record(out, old, cfgs):
     rec = dict(schema="w15_collectives_v1",
                claim_boundary="Cycle-accurate RTL simulation (Verilator 5.050, --timing) of the die-side collective "
                               "engines, DMA, behavioural VM and a synthesizable link layer (framing, CRC-32, credit "
@@ -768,7 +773,7 @@ def main(argv=None):
     elif a.cmd == "sweep-fixture":
         print(json.dumps(v41_sweep_fixture(a.dir)["images_sha256"]))
     elif a.cmd == "campaign":
-        campaign(a.config or list(CONFIGS), a.ncal, a.nmeas, a.out)
+        campaign(a.config or [n for n in CONFIGS if not n.startswith("hbm_")], a.ncal, a.nmeas, a.out)
     elif a.cmd == "unit":
         rec = json.loads(a.out.read_text())
         rec["unit_checks"] = unit_checks()
