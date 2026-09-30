@@ -35,27 +35,63 @@ module ot_gpu_bd_col #(
     output wire [TAGW-1:0]   otag,
     output wire              fault
 );
-    localparam integer LAT = 15;
-    wire [LB-1:0] lov, lf;
-    wire [LB*32-1:0] acc;
+    // 1.2 GHz at SS: the block term is W10's ot_v41_bterm2 (ot_hdc_blockdot's P0..P8 re-cut, bit-identical,
+    // LATENCY 11), accumulated per golden chunk on an IL-slot circulating ring around the LAT-7 FP32 adder
+    // (ot_gpu_fadd): the term of slot s arrives BT cycles after its issue, so the ring runs BT cycles late and
+    // keeps the slot rotation; a bubble adds +0 (the slot's sum holds, bit for bit).
+    localparam integer BT = 11;
+    localparam integer ALAT = 7;
+    localparam integer FB = IL - ALAT;
+    wire [LB-1:0] tv_l, tf_l;
+    wire [LB*32-1:0] term;
     genvar l;
-    generate for (l = 0; l < LB; l = l + 1) begin : g_lane
-        wire [$clog2(IL)-1:0] ph;
-        wire [15:0] yb;
-        ot_hdc_blockdot #(.IL(IL), .CHUNK8(0)) u_bd (
-            .clk(clk), .rst_n(rst_n), .v(v), .first(first), .last(last), .fp4(fp4),
+    generate for (l = 0; l < LB; l = l + 1) begin : g_bt
+        ot_v41_bterm2 #(.TW(1)) u_bt (.clk(clk), .rst_n(rst_n), .v(v), .fp4(fp4),
             .xq(xq[256*l +: 256]), .xe(xe[10*l +: 10]), .wq(wq[256*l +: 256]), .we(we[10*l +: 10]),
-            .phase(ph), .ov(lov[l]), .y(yb), .acc(acc[32*l +: 32]), .fault(lf[l]));
+            .tag(1'b0), .ov(tv_l[l]), .y(term[32*l +: 32]), .f(tf_l[l]), .otag());
     end endgenerate
-    // the chunk's tag leaves with its sums; lanes retire together, so lane 0's ov times the tree
-    wire [LAT:0] ll;
-    ot_hdc_vline #(.D(LAT)) u_l (.clk(clk), .rst_n(rst_n), .v(v && last), .vd(ll));
+    // first / last / tag aligned with the terms
+    wire [BT:0] fl_d, ll_d;
+    ot_hdc_vline #(.D(BT)) u_fd (.clk(clk), .rst_n(rst_n), .v(v && first), .vd(fl_d));
+    ot_hdc_vline #(.D(BT)) u_ld (.clk(clk), .rst_n(rst_n), .v(v && last), .vd(ll_d));
+    wire [TAGW-1:0] tag_t;
+    ot_hdc_delay #(.W(TAGW), .D(BT)) u_tt (.clk(clk), .rst_n(rst_n), .d(tag), .q(tag_t));
+    // ring: acc register (1) + adder (ALAT) + feedback delay (FB - 1) = IL
+    reg  [LB*32-1:0] tm_q;
+    reg              first_q, last_q, tv_q;
+    reg  [TAGW-1:0]  tag_q;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin first_q <= 1'b0; last_q <= 1'b0; tv_q <= 1'b0; end
+        else begin first_q <= fl_d[BT]; last_q <= ll_d[BT]; tv_q <= tv_l[0]; end
+    end
+    integer k;
+    always @(posedge clk) begin
+        tag_q <= tag_t;
+        for (k = 0; k < LB; k = k + 1) tm_q[32*k +: 32] <= tv_l[k] ? term[32*k +: 32] : 32'd0;
+    end
+    wire [LB*32-1:0] acc;
+    wire [LB-1:0] af;
+    generate for (l = 0; l < LB; l = l + 1) begin : g_ring
+        wire [31:0] sum, fb_pre;
+        reg  [31:0] acc_q;
+        always @(posedge clk) acc_q <= first_q ? 32'd0 : fb_pre;
+        reg [31:0] tm_d;
+        always @(posedge clk) tm_d <= tm_q[32*l +: 32];
+        ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(acc_q), .b(tm_d), .y(sum), .fault(af[l]));
+        ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum), .q(fb_pre));
+        assign acc[32*l +: 32] = sum;
+    end endgenerate
+    // the chunk's final sum leaves the adder 1 + ALAT cycles after its last term is registered
+    localparam integer LS = 1 + ALAT;
+    wire [LS:0] lo;
+    ot_hdc_vline #(.D(LS)) u_lo (.clk(clk), .rst_n(rst_n), .v(last_q), .vd(lo));
     wire [TAGW-1:0] tag_d;
-    ot_hdc_delay #(.W(TAGW), .D(LAT)) u_t (.clk(clk), .rst_n(rst_n), .d(tag), .q(tag_d));
+    ot_hdc_delay #(.W(TAGW), .D(LS)) u_td (.clk(clk), .rst_n(rst_n), .d(tag_q), .q(tag_d));
+    wire [LB-1:0] lov = {LB{lo[LS]}};
     reg sticky;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) sticky <= 1'b0;
-        else sticky <= sticky | (|lf) | (lov[0] != ll[LAT]) | (lov != {LB{lov[0]}});
+        else sticky <= sticky | (|(tf_l & tv_l)) | (|af);
     wire tf, t_ov;
     wire [31:0] t_y;
     wire [TAGW-1:0] t_tag;

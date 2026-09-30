@@ -198,7 +198,7 @@ BLOCKS.update({
         default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25, "CORNER": "WC", "ADDER_MAP_FILE": ""},
         notes="V4.1 SM BF16 column: 16 exact lanes + 16-leaf tree (ot_gpu_tc_col L=16)", peak_gb=12.0),
     "ot_gpu_bd_col": Block(
-        "ot_gpu_bd_col", GPU_FP + ["rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bd_col.sv"], 104.0, 104.0,
+        "ot_gpu_bd_col", GPU_FP + ["rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/gpu/ot_gpu_bd_col.sv"], 104.0, 104.0,
         [(r"^(wq|we)$", "N"), (r"^(xq|xe)$", "W"), (r"^(ov|y|otag|fault)$", "E")],
         params={"LB": 2, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25, "CORNER": "WC", "ADDER_MAP_FILE": ""},
         record="results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json",
@@ -297,7 +297,7 @@ BLOCKS.update({
     "ot_gpu_sm_v": Block(
         "ot_gpu_sm_v",
         GPU_FP + ["rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv",
-                  "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bd_col.sv",
+                  "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/gpu/ot_gpu_bd_col.sv",
                   "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_sm_v.sv",
                   f"{_MEM}/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
                   f"{_MEM}/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"],
