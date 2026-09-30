@@ -14,7 +14,7 @@ def _rows():
 
 
 def test_light_lane_closes_in_the_serial_domain():
-    r = _rows()["sc_l5"]
+    r = _rows()["sc_l5b"]
     assert r["closed"] and r["status"] == "pass" and r["clock_period_ns"] == 1.111
     assert r["setup_wns_ps"] >= 0 and r["hold_wns_ps"] >= 0 and r["drc"] == 0 and r["signal_integrity_clean"]
     assert r["uncertainty_setup_hold_ps"] == [60, 25] and r["parameters"] == {"MLAT": 5, "ALAT": 4}

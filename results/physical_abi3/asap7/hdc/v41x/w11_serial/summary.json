@@ -35,6 +35,36 @@
    "currency": "stale"
   },
   {
+   "run": "sc_l5b",
+   "note": "sc_l5 re-routed on the current source layout (ot_hdc_fastfp_lat.sv split)",
+   "top": "ot_hdc_v41x_vec_light1024r",
+   "parameters": {
+    "ALAT": 4,
+    "MLAT": 5
+   },
+   "status": "pass",
+   "closed": true,
+   "clock_period_ns": 1.111,
+   "ss_fmax_mhz": 929.0,
+   "setup_wns_ps": 34.6,
+   "hold_wns_ps": 2.5,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": [
+    "M2 M9"
+   ],
+   "cell_area_um2": 9535.82,
+   "die_area_um2": 30454.4,
+   "drc": 0,
+   "signal_integrity_clean": true,
+   "commit": "56b815469f2c1fa8dbe26ebb3ef5ddab5ebf4382",
+   "worktree_dirty": false,
+   "currency": "current"
+  },
+  {
    "run": "sc_r5",
    "note": "the reducer, first attempt: yosys OOM-killed at a 32 GB floor",
    "top": "ot_hdc_v41x_vec_red1024",
