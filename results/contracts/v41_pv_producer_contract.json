@@ -3,7 +3,7 @@
   "source_pins": {
     "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "1c71b11df5ec918b55bbb5706a80dda65e8470144ec08f27afc46523be57066b",
     "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "4d2fc7666016345fe896d943dda5584519002e9140fe28bb229be8ebc4539a40",
-    "tools/hdc_replay_v41.py": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852"
+    "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d"
   },
   "current": {
     "rows": 640,
@@ -73,5 +73,17 @@
     "physical xbuf banking/register mux implementation",
     "stationary engine four-bank lifetime guard and numerical verification"
   ],
-  "architectural_conclusion": "PWORDS2 widens local preloaded xbuf gather, not sustained SU/VM bandwidth; G4 preload is 2560 issue cycles before streaming. No full-layer rate claimed."
+  "architectural_conclusion": "PWORDS2 widens local preloaded xbuf gather, not sustained SU/VM bandwidth; G4 preload is 2560 issue cycles before streaming. No full-layer rate claimed.",
+  "repin_20260930": {
+    "label": "pins moved: source edited outside this record's path",
+    "reason": "Tools this record pins were edited on claude/w17-isa (hdc_replay_v41 immediates from the constants manifest; die_slices attn_sink per rank; qe-stream/layout tools generalised to the 1M shard). None of those edits touches the path this record used; not re-run.",
+    "rerun": false,
+    "changed_pins": {
+      "tools/hdc_replay_v41.py": {
+        "old": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
+        "new": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d"
+      }
+    },
+    "historical_copy": null
+  }
 }

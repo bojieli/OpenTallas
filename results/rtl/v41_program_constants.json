@@ -1,0 +1,317 @@
+{
+  "schema": "opentallas.v41.program_constants.v1",
+  "claim_boundary": "Emitter constants and their provenance; no execution verdict.",
+  "golden": "tools/hdc_golden_v41.py",
+  "golden_sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tool_sha256": "3289aac34f35967fc1aa33158657786b859b656856a4dd1c5007e2890f878a26",
+  "models": {
+    "deepseek-v4.1-flash": {
+      "config": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+      "config_sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+      "constants": {
+        "norm_eps": {
+          "value": 9.999999682655225e-21,
+          "f32_bits": "0x1e3ce508",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "norm_eps",
+          "derivation": "F(c['norm_eps']) (Model.__init__ self.eps)",
+          "used_by": "every RMS statistic's +eps (rms_r imm2; the HC mix rstd and the Engram norms included)"
+        },
+        "hc_eps": {
+          "value": 9.999999974752427e-07,
+          "f32_bits": "0x358637bd",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "hc_eps",
+          "derivation": "F(c['hc_eps']) (Model.__init__ self.hc_eps)",
+          "used_by": "HC pre-mix sigmoid(...) + hc_eps (imm2, E1_ADDIMM); XU Sinkhorn unit parameter EPS"
+        },
+        "swiglu_limit": {
+          "value": 10.0,
+          "f32_bits": "0x41200000",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "swiglu_limit",
+          "derivation": "F(c['swiglu_limit']) (Model.__init__ self.limit)",
+          "used_by": "SwiGLU gate min / up clip (imm3, a_min + c_clip)"
+        },
+        "route_scale": {
+          "value": 1.5,
+          "f32_bits": "0x3fc00000",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "route_scale",
+          "derivation": "F(c['route_scale']) (Model.__init__ self.route_scale)",
+          "used_by": "routed expert weight scale (imm1, M2_IMM)"
+        },
+        "attn_scale": {
+          "value": 0.04419417306780815,
+          "f32_bits": "0x3d3504f3",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "head_dim",
+          "derivation": "F(head_dim ** -0.5) (Model.__init__ self.attn_scale)",
+          "used_by": "softmax score scale (imm1, M1_AIMM)"
+        },
+        "index_w_scale": {
+          "value": 0.015625,
+          "f32_bits": "0x3c800000",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "index_head_dim,index_n_heads",
+          "derivation": "F(index_head_dim ** -0.5 * index_n_heads ** -0.5) (Model.__init__ self.index_w_scale)",
+          "used_by": "indexer head weight scale (imm1, M1_AIMM)"
+        },
+        "engram_scale": {
+          "value": 0.013975424692034721,
+          "f32_bits": "0x3c64f92e",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "dim",
+          "derivation": "F(dim ** -0.5) (Model.__init__ self.engram_scale)",
+          "used_by": "Engram gate dot scale (imm2, E1_MULIMM)"
+        },
+        "hc_post_scale": {
+          "value": 2.0,
+          "f32_bits": "0x40000000",
+          "source_file": "tools/hdc_golden_v41.py",
+          "source_key": "Model.hc_mixes: post = mul(sigmoid(...), F(<literal>))",
+          "derivation": "release code literal (2 * sigmoid), parsed from the golden source",
+          "used_by": "HC post-mix multiplier (imm2, E1_MULIMM)"
+        },
+        "router_den_eps": {
+          "value": 9.999999682655225e-21,
+          "f32_bits": "0x1e3ce508",
+          "source_file": "tools/hdc_golden_v41.py",
+          "source_key": "Model.moe: den = add(total, F(<literal>))",
+          "derivation": "release code literal, parsed from the golden source",
+          "used_by": "router weight denominator (imm2, AD_IMM)"
+        },
+        "count_hc_dim": {
+          "value": 20480.0,
+          "f32_bits": "0x46a00000",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "hc_mult*dim",
+          "derivation": "float32(hc_mult*dim) exactly",
+          "used_by": "DIVIMM mean count (imm1): HC mix rstd mean over the 4-copy residual"
+        },
+        "count_dim": {
+          "value": 5120.0,
+          "f32_bits": "0x45a00000",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "dim",
+          "derivation": "float32(dim) exactly",
+          "used_by": "DIVIMM mean count (imm1): sublayer norms (attn_norm, ffn_norm, final norm) and Engram norms"
+        },
+        "count_q_rank": {
+          "value": 1280.0,
+          "f32_bits": "0x44a00000",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "q_lora_rank",
+          "derivation": "float32(q_lora_rank) exactly",
+          "used_by": "DIVIMM mean count (imm1): q_norm"
+        },
+        "count_head_dim": {
+          "value": 512.0,
+          "f32_bits": "0x44000000",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "head_dim",
+          "derivation": "float32(head_dim) exactly",
+          "used_by": "DIVIMM mean count (imm1): kv_norm, compressor norm"
+        },
+        "count_index_head_dim": {
+          "value": 128.0,
+          "f32_bits": "0x43000000",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "index_head_dim",
+          "derivation": "float32(index_head_dim) exactly",
+          "used_by": "DIVIMM mean count (imm1): indexer k_norm"
+        }
+      },
+      "unit_parameters": {
+        "sinkhorn_iters": {
+          "value": 20,
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "hc_sinkhorn_iters",
+          "rtl_parameter": "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv ITERS"
+        },
+        "sinkhorn_eps": {
+          "value": 9.999999974752427e-07,
+          "f32_bits": "0x358637bd",
+          "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+          "source_key": "hc_eps",
+          "rtl_parameter": "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv EPS"
+        }
+      }
+    },
+    "reduced-v2": {
+      "config": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+      "config_sha256": "3981625600c458d98afefb214cf374b9fcd73982e1da3dcb95025431cae1a90d",
+      "constants": {
+        "norm_eps": {
+          "value": 9.999999682655225e-21,
+          "f32_bits": "0x1e3ce508",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "norm_eps",
+          "derivation": "F(c['norm_eps']) (Model.__init__ self.eps)",
+          "used_by": "every RMS statistic's +eps (rms_r imm2; the HC mix rstd and the Engram norms included)"
+        },
+        "hc_eps": {
+          "value": 9.999999974752427e-07,
+          "f32_bits": "0x358637bd",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "hc_eps",
+          "derivation": "F(c['hc_eps']) (Model.__init__ self.hc_eps)",
+          "used_by": "HC pre-mix sigmoid(...) + hc_eps (imm2, E1_ADDIMM); XU Sinkhorn unit parameter EPS"
+        },
+        "swiglu_limit": {
+          "value": 10.0,
+          "f32_bits": "0x41200000",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "swiglu_limit",
+          "derivation": "F(c['swiglu_limit']) (Model.__init__ self.limit)",
+          "used_by": "SwiGLU gate min / up clip (imm3, a_min + c_clip)"
+        },
+        "route_scale": {
+          "value": 1.5,
+          "f32_bits": "0x3fc00000",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "route_scale",
+          "derivation": "F(c['route_scale']) (Model.__init__ self.route_scale)",
+          "used_by": "routed expert weight scale (imm1, M2_IMM)"
+        },
+        "attn_scale": {
+          "value": 0.1767766922712326,
+          "f32_bits": "0x3e3504f3",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "head_dim",
+          "derivation": "F(head_dim ** -0.5) (Model.__init__ self.attn_scale)",
+          "used_by": "softmax score scale (imm1, M1_AIMM)"
+        },
+        "index_w_scale": {
+          "value": 0.03125,
+          "f32_bits": "0x3d000000",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "index_head_dim,index_n_heads",
+          "derivation": "F(index_head_dim ** -0.5 * index_n_heads ** -0.5) (Model.__init__ self.index_w_scale)",
+          "used_by": "indexer head weight scale (imm1, M1_AIMM)"
+        },
+        "engram_scale": {
+          "value": 0.07905694097280502,
+          "f32_bits": "0x3da1e89b",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "dim",
+          "derivation": "F(dim ** -0.5) (Model.__init__ self.engram_scale)",
+          "used_by": "Engram gate dot scale (imm2, E1_MULIMM)"
+        },
+        "hc_post_scale": {
+          "value": 2.0,
+          "f32_bits": "0x40000000",
+          "source_file": "tools/hdc_golden_v41.py",
+          "source_key": "Model.hc_mixes: post = mul(sigmoid(...), F(<literal>))",
+          "derivation": "release code literal (2 * sigmoid), parsed from the golden source",
+          "used_by": "HC post-mix multiplier (imm2, E1_MULIMM)"
+        },
+        "router_den_eps": {
+          "value": 9.999999682655225e-21,
+          "f32_bits": "0x1e3ce508",
+          "source_file": "tools/hdc_golden_v41.py",
+          "source_key": "Model.moe: den = add(total, F(<literal>))",
+          "derivation": "release code literal, parsed from the golden source",
+          "used_by": "router weight denominator (imm2, AD_IMM)"
+        },
+        "count_hc_dim": {
+          "value": 640.0,
+          "f32_bits": "0x44200000",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "hc_mult*dim",
+          "derivation": "float32(hc_mult*dim) exactly",
+          "used_by": "DIVIMM mean count (imm1): HC mix rstd mean over the 4-copy residual"
+        },
+        "count_dim": {
+          "value": 160.0,
+          "f32_bits": "0x43200000",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "dim",
+          "derivation": "float32(dim) exactly",
+          "used_by": "DIVIMM mean count (imm1): sublayer norms (attn_norm, ffn_norm, final norm) and Engram norms"
+        },
+        "count_q_rank": {
+          "value": 32.0,
+          "f32_bits": "0x42000000",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "q_lora_rank",
+          "derivation": "float32(q_lora_rank) exactly",
+          "used_by": "DIVIMM mean count (imm1): q_norm"
+        },
+        "count_head_dim": {
+          "value": 32.0,
+          "f32_bits": "0x42000000",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "head_dim",
+          "derivation": "float32(head_dim) exactly",
+          "used_by": "DIVIMM mean count (imm1): kv_norm, compressor norm"
+        },
+        "count_index_head_dim": {
+          "value": 32.0,
+          "f32_bits": "0x42000000",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "index_head_dim",
+          "derivation": "float32(index_head_dim) exactly",
+          "used_by": "DIVIMM mean count (imm1): indexer k_norm"
+        }
+      },
+      "unit_parameters": {
+        "sinkhorn_iters": {
+          "value": 20,
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "hc_sinkhorn_iters",
+          "rtl_parameter": "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv ITERS"
+        },
+        "sinkhorn_eps": {
+          "value": 9.999999974752427e-07,
+          "f32_bits": "0x358637bd",
+          "source_file": "compiler/models/deepseek-v4.1-flash-reduced-v2/inference_config.json",
+          "source_key": "hc_eps",
+          "rtl_parameter": "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv EPS"
+        }
+      }
+    }
+  },
+  "release_config_crosscheck": {
+    "file": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277/config.json",
+    "sha256": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+    "checks": {
+      "norm_eps": {
+        "release_key": "text_config.rms_norm_eps",
+        "release": 1e-20,
+        "inference_config": 1e-20,
+        "agree": true
+      },
+      "swiglu_limit": {
+        "release_key": "text_config.swiglu_limit",
+        "release": 10.0,
+        "inference_config": 10.0,
+        "agree": true
+      },
+      "route_scale": {
+        "release_key": "text_config.routed_scaling_factor",
+        "release": 1.5,
+        "inference_config": 1.5,
+        "agree": true
+      },
+      "head_dim": {
+        "release_key": "text_config.head_dim",
+        "release": 512,
+        "inference_config": 512,
+        "agree": true
+      },
+      "dim": {
+        "release_key": "text_config.hidden_size",
+        "release": 5120,
+        "inference_config": 5120,
+        "agree": true
+      },
+      "q_lora_rank": {
+        "release_key": "text_config.q_lora_rank",
+        "release": 1280,
+        "inference_config": 1280,
+        "agree": true
+      }
+    }
+  }
+}

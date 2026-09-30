@@ -36,9 +36,9 @@
       "sha256": "1e862a4492423ffe1663b101267ac4710ba72ec0cea51b1396ea5c9c0a1fa682"
     },
     "w.attn_sink": {
-      "bytes": 256,
+      "bytes": 64,
       "file": "w.attn_sink.bin",
-      "sha256": "8017bf7692016398f5b28fee5afe99d3f2f3a54cb68fc66d86a5b7a58c241457"
+      "sha256": "f74e25574e1ccf42358789db986e8e8ecdc6e2778bab5e4370e2a9f6141baa2d"
     },
     "w.exp110.w1": {
       "bytes": 1474560,
@@ -427,26 +427,26 @@
         "sha256": "a1cdf4b9dadcf5a721e81c3c7439bc96548da81672ea903191733fad49d90c22"
       },
       {
-        "bytes": 512,
-        "end_word_exclusive": 12192,
+        "bytes": 128,
+        "end_word_exclusive": 12144,
         "file": "attn_sink.crom.bin",
         "first_word": 12128,
         "name": "attn_sink",
-        "sha256": "528a53fe874896051bc145e41bc5407573e872bff90664e9a46d225899d863e7"
+        "sha256": "832dc5cbce3770b5b4dddcd8393e0d53ee65eee016ea6b6b4e11f6a859598d05"
       },
       {
         "bytes": 3072,
-        "end_word_exclusive": 12576,
+        "end_word_exclusive": 12528,
         "file": "gate.bias.crom.bin",
-        "first_word": 12192,
+        "first_word": 12144,
         "name": "gate.bias",
         "sha256": "d8def311cf5748da7c29e3a70f15d2642f16690e8d7ccccb9be699be4129947c"
       },
       {
         "bytes": 32,
-        "end_word_exclusive": 12580,
+        "end_word_exclusive": 12532,
         "file": "pre0.crom.bin",
-        "first_word": 12576,
+        "first_word": 12528,
         "name": "pre0",
         "sha256": "66b7057e198043f4acfb86f84717e34610811559714e63c9484bde10fb7cbe06"
       }
@@ -700,9 +700,9 @@
     361
   ],
   "source_sha256": {
-    "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
-    "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json": "e049806a52898fad344f4b8fcc30def1d082ada2cde86569271167aa4bed59e6",
-    "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
+    "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901",
+    "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json": "f069de06f0cae6e64404d56dd6542394bdcf19961643543e1731ba663ec546fb",
+    "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "62923ec77d9663bd5b90c14d693ea41815c9bcb64db5782bc230c6219e2ff6b2",
     "tools/rtl_v41x_fullshape_l0_inputs.py": "206934499a35188622c613b5cf7f5319f59804b3ecbe649e42fc5b336b9f72b5"
   },
   "status": "input_only"

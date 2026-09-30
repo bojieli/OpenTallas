@@ -1,10 +1,10 @@
 {
   "schema": "opentallas.v41x.fullshape.weight_rtl_preflight.v1",
   "status": "source_pinned_parameter_preflight",
-  "source_layout_sha256": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
-  "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
-  "source_commit": "3ee08d355f2244774fc0c2dda11c9746b4459b9e",
-  "layout_tool_sha256": "da4834be065a7b2b9f6ece6f43157aa9e62116f54634b06a815fc8fab0a18fa8",
+  "source_layout_sha256": "62923ec77d9663bd5b90c14d693ea41815c9bcb64db5782bc230c6219e2ff6b2",
+  "source_image_manifest_sha256": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901",
+  "source_commit": "56bf3ba12bede2116afdf640f1fead198d788a94",
+  "layout_tool_sha256": "083fd31df8515de35899faad7a1a0db51c8583d10a94faee903bdc1e988fd45b",
   "rtl_engine_preflight": {
     "status": "rtl_parameter_gap",
     "required": {
@@ -14,16 +14,12 @@
       "he_kcmax": 2560
     },
     "current_defaults": {
-      "me_bank_aw": 17,
+      "me_bank_aw": 18,
       "me_kmax": 512,
       "he_bank_aw": 16,
       "he_kcmax": 128
     },
     "gaps": {
-      "me_bank_aw": {
-        "required": 18,
-        "current": 17
-      },
       "me_kmax": {
         "required": 5120,
         "current": 512
@@ -34,8 +30,8 @@
       }
     },
     "source_sha256": {
-      "core": "7b041eff5208f9e523f43816f299d2b388d5ea68665a704bafc512370b456fb0",
-      "me": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a",
+      "core": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
+      "me": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
       "he": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c"
     },
     "claim_boundary": "Static parameter check only; sufficient widths would still need elaboration, exact shard simulation and physical closure."
