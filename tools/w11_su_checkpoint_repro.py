@@ -13,7 +13,8 @@ This tool replays, for each failing seed, the random program's ops (k-1, k) alon
   chained   the campaign's schedule (no wait between the two ops): the hazard
   idle      op k waits for the unit to be idle: the control
 and the whole failing seeds.  Writes results/rtl/w11_su_checkpoint_<label>.json.
-    python3 tools/w11_su_checkpoint_repro.py --label bug --scratch /tmp/.../repro
+--bcast / --ret build the benches with the unit's wire stages (BCAST_STAGES / RET_STAGES).
+    python3 tools/w11_su_checkpoint_repro.py --label bug --scratch /tmp/.../repro [--bcast B --ret R]
 """
 from __future__ import annotations
 
@@ -69,12 +70,16 @@ def main():
     ap.add_argument("--scratch", type=Path, required=True)
     ap.add_argument("--exe16", type=Path, help="a built tb_hdc_v41x_vec at N16/M8 of these sources")
     ap.add_argument("--exe64", type=Path)
+    ap.add_argument("--bcast", type=int, default=0)
+    ap.add_argument("--ret", type=int, default=0)
+    ap.add_argument("--out", type=Path, help="default results/rtl/w11_su_checkpoint_<label>.json")
     args = ap.parse_args()
+    C.BCAST, C.RET = args.bcast, args.ret
     args.scratch.mkdir(parents=True, exist_ok=True)
     exes, builds = {16: args.exe16, 64: args.exe64}, {}
     for N, M in ((16, 8), (64, 16)):
         if not exes[N]:
-            exes[N], builds[f"N{N}"] = C.build(N, M, args.scratch / f"obj_{N}_{M}")
+            exes[N], builds[f"N{N}"] = C.build(N, M, args.scratch / f"obj_{N}_{M}_b{C.BCAST}r{C.RET}")
     rows = []
     for N, M, seed, lo, k in CASES:
         keep, mem0 = program(seed, N, M)
@@ -99,7 +104,7 @@ def main():
                generated_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                hazard="a non-spanning reducing op followed by a spanning reducing op with a shallower tap: both "
                       "items leave through the reducer's one tap; checkpoint T was armed by spanning ops only",
-               cases=rows, builds=builds,
+               wire_stages=dict(BCAST_STAGES=C.BCAST, RET_STAGES=C.RET), cases=rows, builds=builds,
                all_pass=all(r["chained"]["pass_"] and r["idle"]["pass_"] and r["whole_seed"]["pass_"] for r in rows),
                hazard_reproduced=any(not r["chained"]["pass_"] for r in rows),
                controls_pass=all(r["idle"]["pass_"] for r in rows))
@@ -109,7 +114,7 @@ def main():
     rec["git_head"] = h.stdout.strip() if h.returncode == 0 else os.environ.get("OT_GIT_HEAD", "")
     rec["git_dirty_tracked_files"] = [x[3:] for x in d.stdout.splitlines()] if d.returncode == 0 else "unknown"
     rec["input_sha256"] = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SOURCES}
-    out = ROOT / f"results/rtl/w11_su_checkpoint_{args.label}.json"
+    out = args.out or ROOT / f"results/rtl/w11_su_checkpoint_{args.label}.json"
     out.write_text(json.dumps(rec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)) + "\n")
     print("wrote", out, "all_pass", rec["all_pass"], "reproduced", rec["hazard_reproduced"])
 

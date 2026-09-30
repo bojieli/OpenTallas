@@ -1,0 +1,15 @@
+# W11: the stream-unit lane's C clip (rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv, PRE stage) in its side-by-side
+# form is bit-identical to fmin(fmax(C, -|imm3|), imm3) for every 32-bit C and imm3 (SAT, all inputs).
+#   yosys -s tools/w11_equiv_clip.ys      (run from the repository root; "SUCCESS" or an error)
+read_verilog -sv rtl/test/w11_equiv_clip.sv
+prep
+miter -equiv -flatten -make_assert clip_gold clip_gate miter
+hierarchy -top miter
+sat -verify -prove-asserts miter
+# the A operand's PRE: min(relu(rnd?(A)), imm3), chained vs side by side
+design -reset
+read_verilog -sv rtl/test/w11_equiv_clip.sv
+prep
+miter -equiv -flatten -make_assert prea_gold prea_gate miter2
+hierarchy -top miter2
+sat -verify -prove-asserts miter2
