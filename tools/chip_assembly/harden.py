@@ -106,6 +106,16 @@ def pin_groups(block: fp.Block, ports: dict[str, Any]) -> list[dict[str, Any]]:
     return [{"edge": e, "names": n} for e, n in by_edge.items() if n]
 
 
+def corner_lib(block: fp.Block, lib: str) -> str:
+    """A hard macro's liberty at the block's flow corner: WC (SS) uses the _ss model where it exists."""
+    if block.orfs_extra.get("CORNER") == "WC":
+        cand = lib.replace("_tt.lib", "_ss.lib").replace("_typ.lib", "_ss.lib")
+        if (orfs.ROOT / cand).is_file():
+            return cand
+        raise SystemExit(f"{block.name}: flow corner WC needs {cand} (run the child's corners phase first)")
+    return lib
+
+
 def spec_for(block: fp.Block, sdc: str, ports: dict[str, Any] | None) -> cs.CaseSpec:
     return cs.CaseSpec(
         nickname=f"chip_{block.name}",
@@ -117,8 +127,10 @@ def spec_for(block: fp.Block, sdc: str, ports: dict[str, Any] | None) -> cs.Case
         pin_groups=pin_groups(block, ports) if ports else [],
         pdn_tcl=cs.TCL_DIR / block.pdn,
         max_layer=block.max_layer,
-        macros=[cs.MacroView(n, orfs.ROOT / lef, orfs.ROOT / lib) for n, lef, lib in block.hard_macros],
+        macros=[cs.MacroView(n, orfs.ROOT / lef, orfs.ROOT / corner_lib(block, lib)) for n, lef, lib in block.hard_macros],
         blackboxes=[n for n, _, _ in block.hard_macros],
+        macro_placement_tcl=fp.macro_placement_tcl(block.macro_grid()) if block.macro_grid else None,
+        macro_halo_um=(4.0, 4.0),
         place_density=block.place_density,
         extra={"SLEW_MARGIN": 40, "HOLD_SLACK_MARGIN": 5, "SETUP_SLACK_MARGIN": 15, **block.orfs_extra},
     )
@@ -274,15 +286,117 @@ def block_record(block, spec, budget, budget_path, m, lef, lib, work, elapsed) -
     }
 
 
+CORNER_LIBS = {
+    "SS": ["asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz", "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+           "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz", "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+           "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz", "asap7sc7p5t_DFFHQNH2V2X_RVT_SS_nldm_FAKE.lib",
+           "asap7sc7p5t_DFFHQNV2X_RVT_SS_nldm_FAKE.lib"],
+}
+CORNER_LIBS["FF"] = [f.replace("_SS_", "_FF_") for f in CORNER_LIBS["SS"]]
+CORNER_SEQ_FF = {"asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"}
+
+
+def phase_corners(block: fp.Block, work: Path, timeout: int) -> dict[str, Any]:
+    """Sign-off corner STA on the routed block (AGENTS.md, user decision 2026-09-30): setup at SS with 60 ps
+    uncertainty, hold at FF with 25 ps, on the kept 6_final odb/sdc/spef.  Hard macros are timed with their own
+    corner models where they exist (memory-compiler _ss/_ff libs; a hardened child's <name>_ss/_ff.lib written by
+    this phase); a child without one is flagged.  Also writes this block's SS/FF timing models, and the hold
+    buffers' count and area."""
+    nick = f"chip_{block.name}"
+    res = f"/work/results/asap7/{nick}/base"
+    out = {}
+    for corner in ("SS", "FF"):
+        tag = corner.lower()
+        libdir = "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM"
+        libs = [f"{libdir}/{f}" for f in CORNER_LIBS[corner]]
+        flags = []
+        for n, lef, lib in block.hard_macros:
+            if lib.endswith("_tt.lib"):
+                cand = lib.replace("_tt.lib", f"_{tag}.lib")
+            else:
+                cand = lib.replace("_typ.lib", f"_{tag}.lib")
+            if (orfs.ROOT / cand).is_file():
+                libs.append(f"/src/{cand}")
+            else:
+                libs.append(f"/src/{lib}")
+                flags.append(n)
+        unc = "set_clock_uncertainty -setup 60 [all_clocks]" if corner == "SS" else \
+            "set_clock_uncertainty -hold 25 [all_clocks]"
+        tcl = "\n".join([f"read_liberty {l}" for l in libs] + [
+            f"read_db {res}/6_final.odb", f"read_sdc {res}/6_final.sdc", f"read_spef {res}/6_final.spef",
+            "set_propagated_clock [all_clocks]", "set_clock_uncertainty 0 [all_clocks]", unc,
+            f'puts "OTC setup_wns [sta::worst_slack_cmd max]"',
+            f'puts "OTC hold_wns [sta::worst_slack_cmd min]"',
+            f'puts "OTC setup_tns [sta::total_negative_slack_cmd max]"',
+            f'puts "OTC hold_tns [sta::total_negative_slack_cmd min]"',
+            "report_checks -path_delay max -digits 1 -fields {slew cap} > /work/corner_" + tag + "_max.rpt",
+            "report_checks -path_delay min -digits 1 > /work/corner_" + tag + "_min.rpt",
+            "set n 0; set a 0.0",
+            "foreach i [[ord::get_db_block] getInsts] { if {[string match hold* [$i getName]]} {"
+            " incr n; set m [$i getMaster]; set a [expr {$a + [$m getWidth] * [$m getHeight]}] } }",
+            'puts "OTC hold_buffers $n"',
+            'puts "OTC hold_buffer_dbu2 $a"',
+            f'puts "OTC dbu [[ord::get_db_tech] getDbUnitsPerMicron]"',
+            f"write_timing_model -library_name {block.name}_{tag} /work/{block.name}_{tag}.lib",
+        ]) + "\n"
+        (work / f"corner_{tag}.tcl").write_text(tcl, encoding="utf-8")
+        proc = orfs.docker_openroad(work, f"/work/corner_{tag}.tcl", f"corner_{tag}.log", timeout)
+        vals = {}
+        for line in (work / f"corner_{tag}.log").read_text(errors="replace").splitlines():
+            if line.startswith("OTC "):
+                k, v = line.split()[1:3]
+                vals[k] = float(v)
+        dbu = vals.get("dbu", 1000.0)
+        for k in ("setup_wns", "setup_tns", "hold_wns", "hold_tns"):
+            if k in vals:
+                vals[k] = round(vals[k] * 1e12, 2)          # OpenSTA's Tcl slack commands report seconds
+        rec = dict(rc=proc.returncode, macros_at_tt=flags,
+                   setup_wns_ps=vals.get("setup_wns"), setup_tns_ps=vals.get("setup_tns"),
+                   hold_wns_ps=vals.get("hold_wns"), hold_tns_ps=vals.get("hold_tns"),
+                   hold_buffers=int(vals.get("hold_buffers", 0)),
+                   hold_buffer_um2=round(vals.get("hold_buffer_dbu2", 0.0) / dbu / dbu, 1))
+        lib = work / f"{block.name}_{tag}.lib"
+        if lib.is_file():
+            views = RESULTS / "abstracts" / block.name
+            views.mkdir(parents=True, exist_ok=True)
+            (views / lib.name).write_bytes(lib.read_bytes())
+            rec["timing_model"] = f"results/physical_abi3/asap7/chip/abstracts/{block.name}/{lib.name}"
+        out[corner] = rec
+    ss = out["SS"].get("setup_wns_ps")
+    period = PERIOD_PS
+    record = {
+        "schema": "opentallas-chip-block-corners-v1", "block": block.name, "clock_period_ps": period,
+        "policy": "setup at SS with 60 ps uncertainty, hold at FF with 25 ps (AGENTS.md sign-off corners)",
+        "corners": out,
+        "ss_fmax_hz": None if ss is None else round(1e12 / (period - ss), 0),
+        "closed_signoff": (ss is not None and ss >= 0 and out["FF"].get("hold_wns_ps") is not None
+                           and out["FF"]["hold_wns_ps"] >= 0 and not out["SS"]["macros_at_tt"]
+                           and not out["FF"]["macros_at_tt"]),
+        "note": ("macros_at_tt lists hard macros timed with their TT model (no corner model yet): their "
+                 "paths are not valid sign-off; the ss_fmax includes the 60 ps uncertainty"),
+        "sources": orfs.source_digests(block.sources), "git": orfs.git_identity(),
+        "work_dir": str(work),
+    }
+    dst = RESULTS / "corners" / f"{block.name}.json"
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    dst.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return record
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--block", required=True, choices=sorted(fp.BLOCKS))
     ap.add_argument("--work", required=True, type=Path)
-    ap.add_argument("--phase", required=True, choices=["synth", "pnr", "record"])
+    ap.add_argument("--phase", required=True, choices=["synth", "pnr", "record", "corners"])
     ap.add_argument("--budget", type=Path)
     args = ap.parse_args(argv)
     timeout = int(os.environ.get("OT_FLOW_TIMEOUT_SECONDS", "86400"))
     block = fp.BLOCKS[args.block]
+    if args.phase == "corners":
+        rec = phase_corners(block, args.work.resolve(), timeout)
+        print(json.dumps({"block": block.name, "ss_fmax_hz": rec["ss_fmax_hz"], "closed_signoff": rec["closed_signoff"],
+                          "SS": rec["corners"]["SS"], "FF": rec["corners"]["FF"]}))
+        return 0
     if args.phase == "synth":
         char = phase_synth(block, args.work.resolve(), timeout)
         print(json.dumps({"block": block.name, "ports": len(char["ports"])}))

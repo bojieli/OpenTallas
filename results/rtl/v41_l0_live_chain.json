@@ -25,7 +25,7 @@
     "heads": 16,
     "head_dim": 512,
     "rows": 128,
-    "program_sha256": "c49245cf38ea0149325b7a5045aa3b86a994c70095f2e217c6816a58831c60c2",
+    "program_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
     "pcs": [
       24,
       30,
@@ -68,7 +68,7 @@
       "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
       "tools/rtl_hdc_v41x_attn_campaign.py": "40997353c2e0375e728335580b9f8f87198c08c78a87988b6834dc032a487d2f",
       "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
-      "results/rtl/hdc_v41x_fullshape_l0_program.hex": "c49245cf38ea0149325b7a5045aa3b86a994c70095f2e217c6816a58831c60c2"
+      "results/rtl/hdc_v41x_fullshape_l0_program.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a"
     }
   },
   "source_sha256": {
@@ -97,11 +97,28 @@
     "rtl/test/tb_v41_l0_live_chain_harness.cpp": "0791c005d074a1d16df8a815e72b4a8ee86e8099db6971a8d9df600b9e371eca",
     "tools/v41_l0_live_chain_build.sh": "ff10be402eaa2a3661d20ee4a191c6383eafb3254cff5ccafb7a4066196e9daa",
     "tools/v41_l0_live_chain_files.txt": "694c88bedd024ebb1b6a7f73ce2e20168d3133587f585bbc059f4aec7bbfdbfe",
-    "tools/v41_l0_live_chain.py": "09cc9509ecafdab1db75d39221a06f41420c125e60992862f113871cbe60bfd4"
+    "tools/v41_l0_live_chain.py": "bd5e0e1f650ea00408f68d3ad9d14ac916b61b398ddf5bf2721d8d31f687d034"
   },
   "landing_20260929": {
     "integration_branch": "claude/land-frozen-20260929",
     "action": "labelled_pins_moved",
     "reason": "partial_not_executed. Main advanced the die/tile/core RTL the bench pins (and the merge added opt-in die parameters and fixed main's duplicate core_fault/fault drivers in ot_chip_v41x_tile.sv); tools/v41_l0_live_chain.py was already past its pin on the branch. Nothing was executed, so nothing is re-run."
+  },
+  "repin_20260930": {
+    "label": "stale: program changed",
+    "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+    "rerun": false,
+    "changed_pins": {
+      "results/rtl/hdc_v41x_fullshape_l0_program.hex": {
+        "old": "c49245cf38ea0149325b7a5045aa3b86a994c70095f2e217c6816a58831c60c2",
+        "new": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a"
+      },
+      "tools/v41_l0_live_chain.py": {
+        "old": "09cc9509ecafdab1db75d39221a06f41420c125e60992862f113871cbe60bfd4",
+        "new": "bd5e0e1f650ea00408f68d3ad9d14ac916b61b398ddf5bf2721d8d31f687d034"
+      }
+    },
+    "historical_copy": null,
+    "program_defects_now": "PC30 imm1 is 0x3d3504f3 in the current program (fixed by claude/w17-isa); the gate's local patch is no longer applied (tools/v41_l0_live_chain.py)"
   }
 }

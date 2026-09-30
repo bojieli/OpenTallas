@@ -1,10 +1,10 @@
 {
   "schema": "opentallas.v41x.fullshape.hbm_sector_map.v1",
   "status": "same_payload_sector_map_only",
-  "source_layout_sha256": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
-  "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
-  "source_commit": "3ee08d355f2244774fc0c2dda11c9746b4459b9e",
-  "layout_tool_sha256": "5a3173598a437360ae3ee8faeaee052f8dfe5a53415bd48d8908c466259847b3",
+  "source_layout_sha256": "62923ec77d9663bd5b90c14d693ea41815c9bcb64db5782bc230c6219e2ff6b2",
+  "source_image_manifest_sha256": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901",
+  "source_commit": "56bf3ba12bede2116afdf640f1fead198d788a94",
+  "layout_tool_sha256": "083fd31df8515de35899faad7a1a0db51c8583d10a94faee903bdc1e988fd45b",
   "hbm_weight_layout": {
     "status": "same_payload_sector_map_only",
     "claim_boundary": "HBM sectors hold byte-identical bank words, but full-shape HBM weight fetch RTL is not yet implemented; existing LENW4 window cannot request 34/66-sector QE words.",

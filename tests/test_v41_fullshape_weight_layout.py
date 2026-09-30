@@ -186,4 +186,6 @@ def test_full_shape_image_flags_current_me_he_rtl_parameter_gaps():
     assert pre["required"]["me_kmax"] == 5120
     assert pre["required"]["he_kcmax"] == 2560
     assert pre["required"]["he_bank_aw"] <= pre["current_defaults"]["he_bank_aw"]
-    assert {"me_bank_aw", "me_kmax", "he_kcmax"} <= set(pre["gaps"])
+    # the core's MBAW is now FULL_SHAPE ? 18 : 17, so the ME bank address width is no longer a gap
+    assert pre["current_defaults"]["me_bank_aw"] == 18 and "me_bank_aw" not in pre["gaps"]
+    assert {"me_kmax", "he_kcmax"} <= set(pre["gaps"])
