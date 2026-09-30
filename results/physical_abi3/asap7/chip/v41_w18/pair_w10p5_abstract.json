@@ -44,6 +44,7 @@
   "VDD/VSS are M6 straps under the bloated M7 OBS: a parent cannot drop vias onto them (the PDN-0006 class of the v1 PHY). Fix at re-harden: expose M7 power straps as pins (or keep M7 power channels).",
   "All 734 signal pins sit on the south edge: stacked rows need a pin channel under every pair; abutment requires pins that meet the neighbour (root's hard budget for W10 p9/q7: 485 x 121 um, abutment pins)."
  ],
+ "icg_requirement": "per-pair clock gating (adopted, root 2026-09-30) must gate the ROM macro clock pins too: of the 83.5 mW idle-with-clock power 32.7 mW is the two ROM macros' clock/read power, 23.7 mW the clock tree and 27.0 mW the flop clock pins; gating only the flops leaves 33 mW x 7,102 = 233 W",
  "tiling": {
   "die_floorplan_ch17.28": {
    "record": "results/physical_abi3/asap7/chip/v41_w18/die_floorplan_ch17.28.json",
@@ -382,5 +383,5 @@
   ],
   "basis": "PSM analyze_power_grid on the routed pair, sources = its M6 straps (STRAPS), ORFS default activity power (0.239 W)"
  },
- "tool_sha256": "c94ba2d791df79d569b3f81857c2d2e1cf468ce76363ddeb8bb074c3b30f0024"
+ "tool_sha256": "2bb863680dec4cdb0329d0b4249c22007a7e4759c8afb5fccfbbe799fb5767f0"
 }

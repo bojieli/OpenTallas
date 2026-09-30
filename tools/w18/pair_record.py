@@ -96,6 +96,9 @@ def main(argv=None):
             "abutment requires pins that meet the neighbour (root's hard budget for W10 p9/q7: 485 x 121 um, "
             "abutment pins).",
         ],
+        icg_requirement=("per-pair clock gating (adopted, root 2026-09-30) must gate the ROM macro clock pins too: of the "
+                         "83.5 mW idle-with-clock power 32.7 mW is the two ROM macros' clock/read power, 23.7 mW the clock "
+                         "tree and 27.0 mW the flop clock pins; gating only the flops leaves 33 mW x 7,102 = 233 W"),
         tiling=tiling,
         power_w_per_pair=dict(
             scenarios=scen, breakdown=pw,
