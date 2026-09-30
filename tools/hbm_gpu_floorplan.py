@@ -103,7 +103,11 @@ def sm_abstract(model):
     name = SM_MACRO[model]
     lef = ROOT / f"results/physical_abi3/asap7/chip/abstracts/{name}/{name}.lef"
     if not lef.is_file():
-        return None
+        # the SM element is being hardened: place its fixed die (tools/chip_assembly/floorplans.BLOCKS) as the
+        # macro footprint until the abstract lands
+        from chip_assembly import floorplans as CF
+        b = CF.BLOCKS[name]
+        return (name, b.width_um, b.height_um, "pending: harden die " + f"{b.width_um:g} x {b.height_um:g} um")
     import re
     m = re.search(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", lef.read_text())
     return (name, float(m.group(1)), float(m.group(2)), str(lef.relative_to(ROOT)))
@@ -144,6 +148,7 @@ def build(model):
         name, aw, ah, lef = ab
         QF.MV[name] = (aw, ah)
         tile = dict(w=snap(aw + 2 * QF.HALO_X, QF.SNAP_X), h=snap(ah + 2 * QF.HALO_Y, QF.SNAP_Y), abstract=name,
+                    placed_vs_model=round(aw * ah / 1e6 / d["sm_area"]["total_mm2"], 3),
                     abstract_lef=lef, abstract_um=[aw, ah], footprint_mm2=round(aw * ah / 1e6, 3),
                     model_mm2=d["sm_area"]["total_mm2"], sram=0, macros=[], logic_h=0.0)
     p = QF.Plan(f"{model}_hbm_gpu_die")
