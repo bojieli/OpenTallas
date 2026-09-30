@@ -77,7 +77,7 @@ module ot_chip_v41x_karb_pslice #(
     wire [AW-1:0] k_addr; wire [LENW-1:0] k_len; wire [TAGW-1:0] k_tag; wire k_we;
     wire [DW-1:0] k_wdata; wire [DW/8-1:0] k_wstrb;
     assign {k_addr, k_len, k_tag, k_we, k_wdata, k_wstrb} = q_d;
-    ot_chip_v41x_karb_qn #(.W(QW), .DEPTH(KQ)) u_kq (
+    ot_chip_v41x_karb_qh #(.W(QW), .DEPTH(KQ)) u_kq (   // W18: registered head (1.2 GHz SS)
         .clk(clk), .rst_n(rst_n), .in_v(kin_v), .in_rdy(q_rdy),
         .in_d({kin_addr, kin_len, kin_tag, kin_we, kin_wdata, kin_wstrb}),
         .out_v(q_v), .out_rdy(k_pop), .out_d(q_d));

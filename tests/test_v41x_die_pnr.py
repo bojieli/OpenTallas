@@ -53,7 +53,7 @@ def test_full_k_address_phy_abstract_matches_full_mode(tmp_path):
     assert sheet["interface"]["parameters"]["K_AW"] == 30
     lef = (d / f"{name}.lef").read_text()
     assert lef.count("\n  PIN ") == sum(w for _, w in bb.values()) + 2
-    assert sheet["pins"]["signal_pins"] == 22237
+    assert sheet["pins"]["signal_pins"] == 22238
 
 
 def test_karb_strip_windows_face_the_phy_windows():

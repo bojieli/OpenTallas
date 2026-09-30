@@ -1,0 +1,710 @@
+{
+ "schema": "opentallas.v41.w18_die_route_congestion.v1",
+ "cases": {
+  "np0": {
+   "manifest": {
+    "k": 32,
+    "congestion_iterations": 20,
+    "obs_top": "M7",
+    "m8_m9_reserve": 0.3,
+    "m2_m7_adjustment": 0.25,
+    "growth": [],
+    "bundle_nets": 1214,
+    "wires": 38246,
+    "instances": 540,
+    "buses": 65
+   },
+   "congestion": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 4845771,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 5254388,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 3951875,
+     "demand": 108294,
+     "usage_pct": 2.74,
+     "overflow": 18040
+    },
+    "M5": {
+     "resource": 3939950,
+     "demand": 127997,
+     "usage_pct": 3.25,
+     "overflow": 2873
+    },
+    "M6": {
+     "resource": 2655628,
+     "demand": 209401,
+     "usage_pct": 7.89,
+     "overflow": 76709
+    },
+    "M7": {
+     "resource": 2615458,
+     "demand": 94357,
+     "usage_pct": 3.61,
+     "overflow": 672
+    },
+    "M8": {
+     "resource": 10052328,
+     "demand": 252037,
+     "usage_pct": 2.51,
+     "overflow": 36356
+    },
+    "M9": {
+     "resource": 10053027,
+     "demand": 167461,
+     "usage_pct": 1.67,
+     "overflow": 164
+    },
+    "Total": {
+     "resource": 43368425,
+     "demand": 959547,
+     "usage_pct": 2.21,
+     "overflow": 134814
+    }
+   },
+   "case": "no probes, baseline"
+  },
+  "np4": {
+   "manifest": {
+    "k": 32,
+    "congestion_iterations": 20,
+    "obs_top": "M7",
+    "m8_m9_reserve": 0.3,
+    "m2_m7_adjustment": 0.25,
+    "growth": [
+     {
+      "inst": "xsub0",
+      "edge": "E",
+      "bundle_pins": 58,
+      "need_um": 95.2,
+      "have_um": 40.0
+     },
+     {
+      "inst": "xsub0",
+      "edge": "S",
+      "bundle_pins": 78,
+      "need_um": 126.0,
+      "have_um": 120.0
+     },
+     {
+      "inst": "xsub1",
+      "edge": "E",
+      "bundle_pins": 104,
+      "need_um": 165.9,
+      "have_um": 40.0
+     },
+     {
+      "inst": "xsub2",
+      "edge": "E",
+      "bundle_pins": 58,
+      "need_um": 95.2,
+      "have_um": 40.0
+     },
+     {
+      "inst": "xsub2",
+      "edge": "N",
+      "bundle_pins": 78,
+      "need_um": 126.0,
+      "have_um": 120.0
+     },
+     {
+      "inst": "xsub3",
+      "edge": "E",
+      "bundle_pins": 104,
+      "need_um": 165.9,
+      "have_um": 40.0
+     }
+    ],
+    "bundle_nets": 1446,
+    "wires": 45562,
+    "instances": 544,
+    "buses": 73
+   },
+   "congestion": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 4844871,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 5253084,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 3951281,
+     "demand": 103862,
+     "usage_pct": 2.63,
+     "overflow": 12952
+    },
+    "M5": {
+     "resource": 3939236,
+     "demand": 125047,
+     "usage_pct": 3.17,
+     "overflow": 2997
+    },
+    "M6": {
+     "resource": 2655136,
+     "demand": 243324,
+     "usage_pct": 9.16,
+     "overflow": 91064
+    },
+    "M7": {
+     "resource": 2614794,
+     "demand": 95381,
+     "usage_pct": 3.65,
+     "overflow": 1831
+    },
+    "M8": {
+     "resource": 10052328,
+     "demand": 244451,
+     "usage_pct": 2.43,
+     "overflow": 44157
+    },
+    "M9": {
+     "resource": 10053027,
+     "demand": 177653,
+     "usage_pct": 1.77,
+     "overflow": 457
+    },
+    "Total": {
+     "resource": 43363757,
+     "demand": 989718,
+     "usage_pct": 2.28,
+     "overflow": 153458
+    }
+   },
+   "case": "no probes, 4 x sub-roots at the hub edge"
+  },
+  "ni100": {
+   "manifest": {
+    "k": 32,
+    "congestion_iterations": 20,
+    "obs_top": "M7",
+    "m8_m9_reserve": 0.3,
+    "m2_m7_adjustment": 0.25,
+    "growth": [],
+    "bundle_nets": 1214,
+    "wires": 38246,
+    "instances": 540,
+    "buses": 65
+   },
+   "congestion": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 4962957,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 5386405,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 4048207,
+     "demand": 108595,
+     "usage_pct": 2.68,
+     "overflow": 18030
+    },
+    "M5": {
+     "resource": 4038800,
+     "demand": 126025,
+     "usage_pct": 3.12,
+     "overflow": 2585
+    },
+    "M6": {
+     "resource": 2720422,
+     "demand": 207763,
+     "usage_pct": 7.64,
+     "overflow": 62473
+    },
+    "M7": {
+     "resource": 2682378,
+     "demand": 96347,
+     "usage_pct": 3.59,
+     "overflow": 804
+    },
+    "M8": {
+     "resource": 10052328,
+     "demand": 253452,
+     "usage_pct": 2.52,
+     "overflow": 30722
+    },
+    "M9": {
+     "resource": 10053027,
+     "demand": 170553,
+     "usage_pct": 1.7,
+     "overflow": 569
+    },
+    "Total": {
+     "resource": 43944524,
+     "demand": 962735,
+     "usage_pct": 2.19,
+     "overflow": 115183
+    }
+   },
+   "case": "no probes, hub ring +100 um"
+  },
+  "ni200": {
+   "manifest": {
+    "k": 32,
+    "congestion_iterations": 20,
+    "obs_top": "M7",
+    "m8_m9_reserve": 0.3,
+    "m2_m7_adjustment": 0.25,
+    "growth": [],
+    "bundle_nets": 1214,
+    "wires": 38246,
+    "instances": 540,
+    "buses": 65
+   },
+   "congestion": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 5084207,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 5508479,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 4147169,
+     "demand": 107772,
+     "usage_pct": 2.6,
+     "overflow": 16640
+    },
+    "M5": {
+     "resource": 4130278,
+     "demand": 125209,
+     "usage_pct": 3.03,
+     "overflow": 2160
+    },
+    "M6": {
+     "resource": 2786100,
+     "demand": 206269,
+     "usage_pct": 7.4,
+     "overflow": 57398
+    },
+    "M7": {
+     "resource": 2743824,
+     "demand": 96666,
+     "usage_pct": 3.52,
+     "overflow": 768
+    },
+    "M8": {
+     "resource": 10052328,
+     "demand": 255742,
+     "usage_pct": 2.54,
+     "overflow": 26957
+    },
+    "M9": {
+     "resource": 10053027,
+     "demand": 176309,
+     "usage_pct": 1.75,
+     "overflow": 553
+    },
+    "Total": {
+     "resource": 44505412,
+     "demand": 967967,
+     "usage_pct": 2.17,
+     "overflow": 104476
+    }
+   },
+   "case": "no probes, hub ring +200 um"
+  },
+  "nh5": {
+   "manifest": {
+    "k": 32,
+    "congestion_iterations": 20,
+    "hub_obs_top": 5,
+    "obs_top": "M7",
+    "m8_m9_reserve": 0.3,
+    "m2_m7_adjustment": 0.25,
+    "growth": [],
+    "bundle_nets": 1214,
+    "wires": 38246,
+    "instances": 540,
+    "buses": 65
+   },
+   "congestion": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 4845771,
+     "demand": 92004,
+     "usage_pct": 1.9,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 5254388,
+     "demand": 49879,
+     "usage_pct": 0.95,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 3951875,
+     "demand": 163035,
+     "usage_pct": 4.13,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 3939950,
+     "demand": 107902,
+     "usage_pct": 2.74,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 3992524,
+     "demand": 144228,
+     "usage_pct": 3.61,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 3952156,
+     "demand": 83978,
+     "usage_pct": 2.12,
+     "overflow": 0
+    },
+    "M8": {
+     "resource": 10052328,
+     "demand": 165584,
+     "usage_pct": 1.65,
+     "overflow": 0
+    },
+    "M9": {
+     "resource": 10053027,
+     "demand": 136144,
+     "usage_pct": 1.35,
+     "overflow": 0
+    },
+    "Total": {
+     "resource": 46042019,
+     "demand": 942754,
+     "usage_pct": 2.05,
+     "overflow": 0
+    }
+   },
+   "case": "no probes, hub blocks obstruct M1-M5 only (W11/VM-H re-harden plan)"
+  },
+  "p0": {
+   "manifest": {
+    "k": 32,
+    "congestion_iterations": 20,
+    "obs_top": "M7",
+    "m8_m9_reserve": 0.3,
+    "m2_m7_adjustment": 0.25,
+    "growth": [],
+    "bundle_nets": 2142,
+    "wires": 38246,
+    "instances": 540,
+    "buses": 993
+   },
+   "congestion": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 4845771,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 5254388,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 3952453,
+     "demand": 184544,
+     "usage_pct": 4.67,
+     "overflow": 32551
+    },
+    "M5": {
+     "resource": 3941008,
+     "demand": 164328,
+     "usage_pct": 4.17,
+     "overflow": 3931
+    },
+    "M6": {
+     "resource": 2655628,
+     "demand": 251348,
+     "usage_pct": 9.46,
+     "overflow": 86750
+    },
+    "M7": {
+     "resource": 2615458,
+     "demand": 118908,
+     "usage_pct": 4.55,
+     "overflow": 2928
+    },
+    "M8": {
+     "resource": 10052328,
+     "demand": 474262,
+     "usage_pct": 4.72,
+     "overflow": 53299
+    },
+    "M9": {
+     "resource": 10053027,
+     "demand": 323434,
+     "usage_pct": 3.22,
+     "overflow": 693
+    },
+    "Total": {
+     "resource": 43370061,
+     "demand": 1516824,
+     "usage_pct": 3.5,
+     "overflow": 180152
+    }
+   },
+   "case": "probes, baseline"
+  },
+  "p4": {
+   "manifest": {
+    "k": 32,
+    "congestion_iterations": 20,
+    "obs_top": "M7",
+    "m8_m9_reserve": 0.3,
+    "m2_m7_adjustment": 0.25,
+    "growth": [
+     {
+      "inst": "xsub0",
+      "edge": "E",
+      "bundle_pins": 58,
+      "need_um": 95.2,
+      "have_um": 40.0
+     },
+     {
+      "inst": "xsub0",
+      "edge": "S",
+      "bundle_pins": 78,
+      "need_um": 126.0,
+      "have_um": 120.0
+     },
+     {
+      "inst": "xsub1",
+      "edge": "E",
+      "bundle_pins": 104,
+      "need_um": 165.9,
+      "have_um": 40.0
+     },
+     {
+      "inst": "xsub2",
+      "edge": "E",
+      "bundle_pins": 58,
+      "need_um": 95.2,
+      "have_um": 40.0
+     },
+     {
+      "inst": "xsub2",
+      "edge": "N",
+      "bundle_pins": 78,
+      "need_um": 126.0,
+      "have_um": 120.0
+     },
+     {
+      "inst": "xsub3",
+      "edge": "E",
+      "bundle_pins": 104,
+      "need_um": 165.9,
+      "have_um": 40.0
+     }
+    ],
+    "bundle_nets": 2374,
+    "wires": 45562,
+    "instances": 544,
+    "buses": 1001
+   },
+   "congestion": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 4844871,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 5253084,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 3951859,
+     "demand": 179580,
+     "usage_pct": 4.54,
+     "overflow": 29905
+    },
+    "M5": {
+     "resource": 3940282,
+     "demand": 182118,
+     "usage_pct": 4.62,
+     "overflow": 3800
+    },
+    "M6": {
+     "resource": 2655136,
+     "demand": 260716,
+     "usage_pct": 9.82,
+     "overflow": 91068
+    },
+    "M7": {
+     "resource": 2614794,
+     "demand": 104767,
+     "usage_pct": 4.01,
+     "overflow": 3291
+    },
+    "M8": {
+     "resource": 10052328,
+     "demand": 487825,
+     "usage_pct": 4.85,
+     "overflow": 54782
+    },
+    "M9": {
+     "resource": 10053027,
+     "demand": 318503,
+     "usage_pct": 3.17,
+     "overflow": 982
+    },
+    "Total": {
+     "resource": 43365381,
+     "demand": 1533509,
+     "usage_pct": 3.54,
+     "overflow": 183828
+    }
+   },
+   "case": "probes, 4 sub-roots"
+  },
+  "ph5": {
+   "manifest": {
+    "k": 32,
+    "congestion_iterations": 20,
+    "hub_obs_top": 5,
+    "obs_top": "M7",
+    "m8_m9_reserve": 0.3,
+    "m2_m7_adjustment": 0.25,
+    "growth": [],
+    "bundle_nets": 2142,
+    "wires": 38246,
+    "instances": 540,
+    "buses": 993
+   },
+   "congestion": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 4845771,
+     "demand": 140173,
+     "usage_pct": 2.89,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 5254388,
+     "demand": 64758,
+     "usage_pct": 1.23,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 3952453,
+     "demand": 190363,
+     "usage_pct": 4.82,
+     "overflow": 0
+    },
+    "M5": {
+     "resource": 3941008,
+     "demand": 132788,
+     "usage_pct": 3.37,
+     "overflow": 0
+    },
+    "M6": {
+     "resource": 3992524,
+     "demand": 223232,
+     "usage_pct": 5.59,
+     "overflow": 0
+    },
+    "M7": {
+     "resource": 3952156,
+     "demand": 127511,
+     "usage_pct": 3.23,
+     "overflow": 0
+    },
+    "M8": {
+     "resource": 10052328,
+     "demand": 341162,
+     "usage_pct": 3.39,
+     "overflow": 0
+    },
+    "M9": {
+     "resource": 10053027,
+     "demand": 232960,
+     "usage_pct": 2.32,
+     "overflow": 0
+    },
+    "Total": {
+     "resource": 46043655,
+     "demand": 1452947,
+     "usage_pct": 3.16,
+     "overflow": 0
+    }
+   },
+   "case": "probes, hub OBS M1-M5"
+  }
+ },
+ "conclusion": "hub-edge M6/M8 overflow is removed only when the hub blocks leave M6/M7 open (nh5: 0 overflow); sub-roots and a wider ring do not remove it"
+}

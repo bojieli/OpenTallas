@@ -46,6 +46,7 @@ SOURCES = (
     "rtl/chip/ot_chip_v41x_karb_slice.sv",
     "rtl/chip/ot_chip_v41x_karb_q2.sv",
     "rtl/chip/ot_chip_v41x_karb_qn.sv",
+    "rtl/chip/ot_chip_v41x_karb_qh.sv",
     "rtl/chip/ot_chip_v41x_hbm_karb.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
     "rtl/test/tb_chip_v41x_karb_local_equiv.sv",
@@ -61,7 +62,7 @@ KARB_RTL = ["rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv", "rtl/chip/ot_chip_v41x_kar
             "rtl/chip/ot_chip_v41x_karb_pipe.sv", "rtl/chip/ot_chip_v41x_hbm_karb_local.sv", "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
             "rtl/chip/ot_chip_v41x_karb_region.sv", "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
             "rtl/chip/ot_chip_v41x_karb_slice.sv", "rtl/chip/ot_chip_v41x_karb_q2.sv",
-            "rtl/chip/ot_chip_v41x_karb_qn.sv", "rtl/chip/ot_chip_v41x_hbm_karb.sv"]
+            "rtl/chip/ot_chip_v41x_karb_qn.sv", "rtl/chip/ot_chip_v41x_karb_qh.sv", "rtl/chip/ot_chip_v41x_hbm_karb.sv"]
 TOOLS_ROOT = Path(os.environ.get("OPENTALLAS_TOOLS_ROOT", Path.home() / ".local/opentallas-tools"))
 VERILATOR = os.environ.get("OT_VERILATOR", str(TOOLS_ROOT / "verilator-5.050/bin/verilator"))
 OUTPUT = ROOT / "results/rtl/chip_v41x_karb_local_equiv.json"

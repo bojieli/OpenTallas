@@ -1,0 +1,102 @@
+{
+ "schema": "opentallas.v41.w18_ir_stack.v1",
+ "scenarios": {
+  "peak_all_busy_1p2": {
+   "note": "every holding pair busy at once (field-wide op, no cap)",
+   "element_mv": {
+    "VDD": 25.09,
+    "VSS": 24.53
+   },
+   "switch_ring_mv": {
+    "10mV_design": 10.0,
+    "20mV_design": 20.0
+   },
+   "cluster_mv": {
+    "VDD": 16.0,
+    "VSS": 18.9
+   },
+   "die_mv": {
+    "VDD": 32.28,
+    "VSS": 32.28,
+    "mean": 12.157
+   },
+   "total_vdd_mv": 83.4,
+   "total_vss_mv": 75.7,
+   "rail_to_rail_mv": 159.1,
+   "pct_of_vdd": 22.7,
+   "within_ss_budget": false,
+   "die_record": "results/physical_abi3/asap7/chip/v41_w18/ir/die_mesh_peak_all_busy_1p2.json",
+   "die_record_sha256": "d548434c5a8483a1f81803194246994d0bbd8d703922a582ff8ba32719a7b09c"
+  },
+  "peak_cap50_1p2": {
+   "note": "50% checkerboard cap: a pair still draws its full current on its beats (element level unchanged); cluster and die carry half",
+   "element_mv": {
+    "VDD": 25.09,
+    "VSS": 24.53
+   },
+   "switch_ring_mv": {
+    "10mV_design": 5.0,
+    "20mV_design": 10.0
+   },
+   "cluster_mv": {
+    "VDD": 8.0,
+    "VSS": 9.45
+   },
+   "die_mv": {
+    "VDD": 16.14,
+    "VSS": 16.14,
+    "mean": 6.329
+   },
+   "total_vdd_mv": 54.2,
+   "total_vss_mv": 50.1,
+   "rail_to_rail_mv": 104.3,
+   "pct_of_vdd": 14.9,
+   "within_ss_budget": false,
+   "die_record": "results/physical_abi3/asap7/chip/v41_w18/ir/die_mesh_peak_cap50_1p2.json",
+   "die_record_sha256": "da1e5104e8c325e16262c3a1055dd7847e3774384244cb31b98264cf854973af"
+  },
+  "saturation_duty_1p2": {
+   "note": "model saturation duty (busy pair-equivalents 543 / 7,102) as an average; the peak of an op inside it is the peak case",
+   "element_mv": {
+    "VDD": 25.09,
+    "VSS": 24.53
+   },
+   "switch_ring_mv": {
+    "10mV_design": 0.77,
+    "20mV_design": 1.53
+   },
+   "cluster_mv": {
+    "VDD": 1.22,
+    "VSS": 1.45
+   },
+   "die_mv": {
+    "VDD": 12.69,
+    "VSS": 12.69,
+    "mean": 1.402
+   },
+   "total_vdd_mv": 39.8,
+   "total_vss_mv": 38.7,
+   "rail_to_rail_mv": 78.4,
+   "pct_of_vdd": 11.2,
+   "within_ss_budget": false,
+   "die_record": "results/physical_abi3/asap7/chip/v41_w18/ir/die_mesh_saturation_duty_1p2.json",
+   "die_record_sha256": "d5bdd0edd4c1ee677a6aa4bb4b11699211e4fc921d1b4f38fec50743ac3d49b7"
+  }
+ },
+ "budget": {
+  "ss_signoff_v": 0.63,
+  "budget_mv": 70.0,
+  "basis": "ASAP7 SS libraries are characterised at 0.63 V (-10%); static IR, first droop and regulator tolerance all spend it"
+ },
+ "levers": [
+  "element: the W10 pair's grid is M5/M6 only (5.4 um per net) and its worst node is 22.5 mV at 0.239 W -- the largest term; re-harden with M7 power straps (also needed for abutment and a reachable abstract)",
+  "die: ASAP7 M8/M9 are thin (0.34 ohm/sq); a production 5 nm-class stack has thick top metals and an RDL, roughly an order of magnitude lower, so the die term here is pessimistic (ASSUMED ratio, PDK-limited)",
+  "bump pitch 40 um with 1/3 VDD (ASSUMED); a denser power-bump share lowers the die term directly",
+  "the 50% cap halves the cluster and die terms; saturation duty is an average, not a peak"
+ ],
+ "sources": {
+  "pair_record": "2218b6efbff9cf7bba5d7984014352f3d26ffdf75a8a481b33706cf7f5cd3f04",
+  "cluster": "22860007e92d101865973e66afdb39f6c82437b512cc5d95f1e9aeccf2c58050"
+ },
+ "tool_sha256": "b2331f2124069c61a8995b9803824f07649e049bf35e4b1071277339668fb57f"
+}
