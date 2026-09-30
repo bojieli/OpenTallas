@@ -268,7 +268,7 @@
    "ranks": {
     "0": {
      "dir": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r0",
-     "manifest_sha256": "de8900a9139503a4a02eac36d1d7a3b08fd5ec5e4549df61813edf5b6738166f",
+     "manifest_sha256": "3d6019feb715258f452a9b1ac30746a2eea86e9b2315e094ac54c7db677e52be",
      "images": {
       "crom.hex": "00624168cc5d115e8fd55e165d7e2080c7ff3c8ecb74dd854dcb51867e25a7a5",
       "expect_vm.hex": "a8cfdb6c56f1ad511666888cdce03f2598eba55a0c1a52fe12f5aeceb508671d",
@@ -287,7 +287,7 @@
     },
     "1": {
      "dir": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r1",
-     "manifest_sha256": "fc6a2946dabdcd12236d3ceb4a9af9ece23bf5160b00bbcc12f46d0555628381",
+     "manifest_sha256": "b9eb674b51f5f79698cebb94a5dd7d68835e549ed721911918921f1913d6eedb",
      "images": {
       "crom.hex": "297012ec20c9e0a41b4b4753df9503b52d8f01f206aecd4753bf0857f1c22c6e",
       "expect_vm.hex": "a2abf67c02765b285e0cfd898f2fbd3cfe4b3dd454e50edd3862690238432795",
@@ -306,7 +306,7 @@
     },
     "2": {
      "dir": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r2",
-     "manifest_sha256": "d717f8e7fa71977fedd41c24fbb26f30a54eddf5584617c44f07d7f81d7c25a2",
+     "manifest_sha256": "6aa28481e6353de03169859ea8082fb5f93b6db1289f0318d92f64999bbb0009",
      "images": {
       "crom.hex": "59a85634d7db638df267c1e5bd5ea95272fc3086ab7a0c48a91d1c46a0ef0b62",
       "expect_vm.hex": "e36ea9196e0ea9b18a65e81dfe56ddfda5adf0deab94f4561f7c05809d693882",
@@ -325,7 +325,7 @@
     },
     "3": {
      "dir": "/home/ubuntu/w17work/die/ctx1048576_s20260930_r3",
-     "manifest_sha256": "5eb72d943360e4e3295e7612e257d77cd01b850488c89e8ccd3cfe22fdd0f6c2",
+     "manifest_sha256": "6a4b018c4186e7f88eeebc8c96c17929b2d93fb9761f228128dfafd0c714e0d7",
      "images": {
       "crom.hex": "94932791048130c97261b53f73be148593c7c34962467614a2ecaa6aeb264a10",
       "expect_vm.hex": "a6d774d274e57bcd421cfededb79d82e6de326ab91a184e50bcb5b178c76bfdc",
@@ -351,7 +351,7 @@
     "X_ATT": 1,
     "SUN": 16,
     "VM_AW": 19,
-    "K_MEM": 4194304,
+    "K_MEM": 16777216,
     "WIN_STACK": 0,
     "WINDOW_HBM_ATTENTION": 1,
     "ROPE_MAX_POS": 1048576,
@@ -376,7 +376,7 @@
  },
  "headline": "1048576_seed20260930",
  "source_sha256": {
-  "tools/v41_die_l0_images.py": "417cc448fdab23aa44aad31c08cbee7bcd59c8170602a08ad4fc9f983d335f73",
+  "tools/v41_die_l0_images.py": "d36bfbf834daae0c2634287740839ff7879333a941d0429082c15c9880c6b227",
   "tools/v41_fullshape_isa.py": "3a99c3c64a657097f8f956ede00144dbbe0d0820e512d8fa9faac9ec78430c49",
   "tools/rtl_hdc_v41x_attn_campaign.py": "40997353c2e0375e728335580b9f8f87198c08c78a87988b6834dc032a487d2f",
   "tools/v41_fullshape_weight_layout.py": "083fd31df8515de35899faad7a1a0db51c8583d10a94faee903bdc1e988fd45b",

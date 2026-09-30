@@ -54,7 +54,8 @@ import rtl_v41_fullshape_layer_campaign as LC  # noqa: E402
 OUT = Path("/home/ubuntu/w17work/die")
 SCHEMA = "opentallas.rtl.w17_die_l0_images.v1"
 # die / bench contract (manifest)
-K_MEM = 1 << 22            # a 2^21-sector read-only RoPE table must fit under the 0.9 usable cap
+K_MEM = 1 << 24            # the runtime wrapper's stack model (ot_v41_rt_die.sv); a 2^21-sector RoPE table fits
+                           # under the 0.9 usable cap
 WIN_STACK, WIN_BASE, WIN_PITCH = 0, 1 << 18, 17
 WIN_COUNT = 128 * WIN_PITCH
 RESERVED_END = 1 << 19      # first free sector after the window ring (and every default state region)
@@ -169,6 +170,87 @@ def weight_ops(rk, slices: dict) -> list[dict]:
     return out
 
 
+def dense_vm(vm: np.ndarray, ok: np.ndarray) -> str:
+    bits = np.where(ok, G.bits(vm), 0).astype(np.uint32)
+    return "".join(f"{int(b):08x}\n" for b in bits)
+
+
+def rt_weights(wops: list[dict]) -> list[dict]:
+    """The runtime wrapper's ROM-field list: QE LINQ and ME weight ops in program order (HE ops use hbank)."""
+    out = []
+    for o in wops:
+        if o["unit"] == "HE":
+            continue
+        rows = o["rows"] or [0, None]
+        cols = o["cols"] or [0, None]
+        full_cols = {"F8_E4M3": 1, "I8": 2, "BF16": 0.5}[o["format"]] * o["stored_shape"][1]
+        full_rows = o["stored_shape"][0]
+        r0, r1 = (rows if o["rows"] else [0, full_rows])
+        c0, c1 = (cols if o["cols"] else [0, int(full_cols)])
+        if o["unit"] == "QE":
+            key = o["wbase"] + (o["expert"] or 0) * (o["istride"] if o["expert"] is not None else 0)
+            ent = dict(pc=o["pc"], kind="qe", key=key, tensor=o["tensor"],
+                       fmt="fp4" if o["format"] == "I8" else "fp8", rows=[r0, r1], cols=[c0, c1],
+                       out="fp32" if o["unrounded"] else "bf16", scale_tensor=o["tensor"][:-len("weight")] + "scale")
+        else:
+            if "group" in o:
+                r0, r1 = r0 + o["group_rows"][0], r0 + o["group_rows"][1]
+            ent = dict(pc=o["pc"], kind="me", key=o["wbase"], tensor=o["tensor"], fmt="bf16", rows=[r0, r1],
+                       cols=[c0, c1], out="fp32")
+            if o["format"] == "F8_E4M3":
+                ent.update(source_fmt="fp8", scale_tensor=o["tensor"][:-len("weight")] + "scale",
+                           note="wo_a ships FP8 (32x32 UE8M0); the golden dequantises it to BF16 "
+                                "(to_bf16(Q8.dense())) -- the ME weight is that BF16 matrix")
+        ent.update(tag=o["tag"], expert=o.get("expert"), nout=o["out_rows"], k=o["k"])
+        out.append(ent)
+    return out
+
+
+def write_rt(rd: Path, rk, d: Path, pos, rows, ring, ring_cur, rope, wops, golden):
+    """The runtime wrapper's contract (rtl/test/v41_runtime/ot_v41_rt_die.sv on claude/w17-fullshape)."""
+    import shutil
+    rd.mkdir(parents=True, exist_ok=True)
+    for n in ("prog.hex", "crom.hex", "hbank.hex"):
+        shutil.copyfile(d / n, rd / n)
+    V_ = rk.V
+    init = np.zeros(1 << 19, dtype=np.float32)
+    ok = np.zeros(1 << 19, dtype=bool)
+    h = golden["z"]["h_in"].reshape(-1).astype(np.float32)
+    for base, vals in ((V_["H"], h), (V_["PF"], golden["z"]["pre_in"].astype(np.float32)),
+                       (V_["SSX"], np.array([V.csum(G.mul(h, h))], dtype=np.float32))):
+        init[base:base + len(vals)] = vals
+        ok[base:base + len(vals)] = True
+    (rd / "vm_init.hex").write_text(dense_vm(init, ok))
+    (rd / "expect_vm.hex").write_text(dense_vm(rk.vm, rk.ok))
+    end = WIN_BASE + WIN_COUNT
+    for name, rg in (("hbm0.hex", ring_cur), ("hbm0_without_current_row.hex", ring)):
+        words = [0] * end
+        for a, w in rg.items():
+            words[a] = w
+        (rd / name).write_text("".join(f"{w:064x}\n" for w in words))
+    for k in range(4):
+        (rd / f"hbmsparse{k}.hex").write_text("".join(f"{a:x} {w:064x}\n" for a, w in sorted(rope[k].items())))
+    cfg = dict(token=golden["token_history"][-1], pos=pos, user=0, cfg_ik_base=1 << 29, window_region_valid=1,
+               window_region_base=WIN_BASE, window_region_count=WIN_COUNT, window_prime_user=0,
+               rope_table_present=1)
+    for k in range(4):
+        cfg.update({f"rope_reserved_end{k}": RESERVED_END, f"rope_plain_base{k}": ROPE_PLAIN_BASE,
+                    f"rope_yarn_base{k}": 0})
+    (rd / "cfg.txt").write_text("".join(f"{k} {v if isinstance(v, int) and v < 4096 else hex(v)}\n"
+                                        for k, v in cfg.items()))
+    # the 128 absolute row tags of the window ring (tb_v41_l0_live_chain primes the same 128: pos-127 .. pos)
+    (rd / "prime.txt").write_text("".join(f"{r}\n" for r in range(pos - 127, pos + 1)))
+    (rd / "weights.json").write_text(json.dumps(rt_weights(wops), indent=1) + "\n")
+    (rd / "README.txt").write_text(
+        "hbm0.hex: stack 0 K memory from sector 0 through the window ring (window_region_base + 128*17); the ring "
+        "holds rows pos-127 .. pos-1 (synthetic golden state) AND row pos (the golden's own FP8 window row, which "
+        "the ISA executor proves equal to the program's KVQ at PC20): the packed-KV die path reads the ring, it "
+        "does not take the SU's PC21/PC22 KV writes. hbm0_without_current_row.hex omits row pos (use it only if "
+        "the die writes that row itself). hbmsparse<s>.hex: the plain RoPE entry of pos (stack s: pairs 8s..8s+7, "
+        "sectors rope_plain_base + 2*pos + {0,1}, pair = {sin, cos}). prime.txt: window_prime_row pulses "
+        "(user 0) before start, one per line. vm_init/expect_vm: dense 2^19 x 32-bit.\n")
+
+
 def build(ctx: int, out_root: Path, snapshots: bool, log=print, seed: int = LC.SEED) -> dict:
     bind, scratch = X.case(ctx, seed)
     tag = f"ctx{ctx}" if seed == LC.SEED else f"ctx{ctx}_s{seed}"
@@ -251,6 +333,7 @@ def build(ctx: int, out_root: Path, snapshots: bool, log=print, seed: int = LC.S
             seed=seed, image_dir=str(scratch / "images" / f"ctx{ctx}_L00_r{rk.r}"),
             image_manifest_sha256=X.sha(scratch / "images" / f"ctx{ctx}_L00_r{rk.r}" / "manifest.json"),
             ops=wops), indent=1) + "\n")
+        write_rt(out_root / tag / f"r{rk.r}", rk, d, pos, rows, ring, ring_cur, rope, wops, golden)
         man = dict(
             schema=SCHEMA + ".rank", context=ctx, position=pos, seed=seed, rank=rk.r,
             die_parameters=dict(params, RANK=rk.r),
