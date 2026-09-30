@@ -94,9 +94,9 @@ def region_case(h: float = ENV_H, tag: str = "") -> dict:
         regions.append(f"{pin_regex(karb_pc_pins(p, 'h', aw=AW))}=bottom:{span(x0, *PC_PIN_SPAN)}")
         regions.append(f"{pin_regex(karb_pc_pins(p, 'b', aw=AW))}=top:{span(x0, *PC_PIN_SPAN)}")
     regions.append(r"^(kq_v|kq_rdy|kq_we|clk|rst_n)$|^(kq_lpc|kq_addr|kq_len|kq_tag|kq_wdata|kq_wstrb)\[\d+\]$"
-                   + f"=top:{span(PHY_PC_WINDOW_UM, 200, 370)}")
+                   + f"=top:{span(PHY_PC_WINDOW_UM, *K_SPAN)}")
     regions.append(r"^(ks_v|ks_cr|k_wr_done)$|^(ks_tag|ks_beat|ks_data|b_grant_n|contend_n)\[\d+\]$"
-                   + f"=top:{span(2 * PHY_PC_WINDOW_UM, 200, 370)}")
+                   + f"=top:{span(2 * PHY_PC_WINDOW_UM, *K_SPAN)}")
     srcs = ["rtl/chip/ot_chip_v41x_karb_region.sv", "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
             "rtl/chip/ot_chip_v41x_karb_slice.sv", *KARB]
     args = common("ot_chip_v41x_karb_region", srcs, w, h, [f"AW={AW}"])
@@ -182,9 +182,9 @@ def pregion_case() -> dict:
         regions.append(f"{pin_regex(karb_pc_pins(p, 'h', aw=AW))}=bottom:{span(x0, *PC_PIN_SPAN)}")
         regions.append(f"{pin_regex(karb_pc_pins(p, 'b', aw=AW))}=top:{span(x0, *PC_PIN_SPAN)}")
     regions.append(r"^(t_v|t_we|clk|rst_n)$|^(t_lpc|t_addr|t_len|t_tag|t_wdata|t_wstrb|kcr)\[\d+\]$"
-                   + f"=top:{span(PHY_PC_WINDOW_UM, 200, 370)}")
+                   + f"=top:{span(PHY_PC_WINDOW_UM, *K_SPAN)}")
     regions.append(r"^(s_v|s_cr|k_wr_done)$|^(s_tag|s_beat|s_data|b_grant_n|contend_n)\[\d+\]$"
-                   + f"=top:{span(2 * PHY_PC_WINDOW_UM, 200, 370)}")
+                   + f"=top:{span(2 * PHY_PC_WINDOW_UM, *K_SPAN)}")
     srcs = ["rtl/chip/ot_chip_v41x_karb_pregion.sv", "rtl/chip/ot_chip_v41x_karb_pslice.sv",
             "rtl/chip/ot_chip_v41x_karb_slice.sv", *KARB]
     # EPC: the outermost region's credits (2 * 6 + 2)
