@@ -28,6 +28,7 @@ import v41_w2_romac_pnr as W2  # noqa: E402
 
 MACRO_DIR = "physical/asap7_memory_macros"
 ROM = ("ot_rom_8192x274_m8", 125.712, 119.340)
+ROM_PP = ("ot_rom_4096x274_m8", 125.712, 59.670)
 ROM4K = ("ot_rom_4096x274_m8", 125.28, 62.91)          # PP: two per macro slot, read alternately (ping-pong)
 PP_GAP = 0.0                                          # stacked 4096-word macros abut (a sub-halo sliver cannot be legalised)
 SOURCES_FAST = ["rtl/v41rom/ot_v41_fadd.sv", "rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/v41rom/ot_v41_chain2.sv",
@@ -39,6 +40,7 @@ SOURCES = ["rtl/v41rom/ot_v41_rom_elem_q.sv", "rtl/v41rom/ot_v41_rom_elem.sv", "
            "rtl/v41rom/ot_v41_segtree.sv", "rtl/v41rom/ot_v41_bf16_lanes.sv", "rtl/hdc/ot_hdc_fpu.sv",
            "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_cg.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
            f"{MACRO_DIR}/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v"]
+SOURCES_FAST = ["rtl/v41rom/ot_v41_fadd.sv", "rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/v41rom/ot_v41_chain2.sv", "rtl/v41rom/ot_v41_segtree2.sv", "rtl/v41rom/ot_v41_bf16_lanes2.sv", f"{MACRO_DIR}/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v"]
 
 
 def plan(logic_w: float, pair: bool = False, wrapped: bool = False, outline=None, ch_o: float = 5.4,
