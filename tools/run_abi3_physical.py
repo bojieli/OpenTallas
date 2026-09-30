@@ -2268,24 +2268,27 @@ def run_pnr(
     # wrapper, so the killed run kept burning cores on a result nobody would read.
     reports_dir = case / "reports" / platform_name / nickname / "base"
     logs_dir = case / "logs" / platform_name / nickname / "base"
-    if stop_after == "cts":
-        # through clock-tree synthesis and its setup/hold repair only; the
-        # record carries that stage's own metrics (ORFS 4_1_cts.json)
-        proc = orfs_make("cts", "orfs_flow.log", flow_timeout_seconds())
-        require_success(proc, "ORFS place-and-route through CTS")
-        cts_json = logs_dir / "4_1_cts.json"
+    if stop_after in ("cts", "floorplan"):
+        # through clock-tree synthesis and its setup/hold repair only (or through
+        # floorplan: the synthesised netlist timed at the run's ORFS corner before
+        # placement, a fast path-finding pass); the record carries that stage's own
+        # metrics (ORFS 4_1_cts.json / 2_1_floorplan.json)
+        st = stop_after
+        proc = orfs_make(st, "orfs_flow.log", flow_timeout_seconds())
+        require_success(proc, f"ORFS place-and-route through {st}")
+        cts_json = logs_dir / ("4_1_cts.json" if st == "cts" else "2_1_floorplan.json")
         if not cts_json.is_file():
-            raise FlowError(f"ORFS produced no CTS metrics at {cts_json}")
+            raise FlowError(f"ORFS produced no {st} metrics at {cts_json}")
         cts = json.loads(cts_json.read_text(encoding="utf-8"))
         errors = {k: v for k, v in cts.items() if k.endswith("__flow__errors__count")}
         if any(int(v) != 0 for v in errors.values()):
             raise FlowError(f"ORFS reported flow errors: {errors}")
-        fmax_info = conservative_fmax_metrics(cts, "cts")
+        fmax_info = conservative_fmax_metrics(cts, st)
         fmax = fmax_info["fmax_hz"]
         return {
             "platform": platform_name,
             "design_nickname": nickname,
-            "stopped_after": "cts",
+            "stopped_after": st,
             "core_utilization_percent": core_utilization,
             "synth_memory_max_bits": synth_memory_max_bits(),
             "place_density": place_density,
@@ -2295,22 +2298,22 @@ def run_pnr(
             "sdc_clock_period_library_units": period_lib,
             **({"signal_integrity_constraints": constraints} if constraints else {}),
             "metrics": {
-                "stage": "cts (placement-estimated parasitics)",
-                "setup_wns_ns": float(cts["cts__timing__setup__ws"]) * time_unit_ns,
-                "hold_wns_ns": float(cts["cts__timing__hold__ws"]) * time_unit_ns,
-                "setup_tns_ns": float(cts["cts__timing__setup__tns"]) * time_unit_ns,
-                "hold_tns_ns": float(cts["cts__timing__hold__tns"]) * time_unit_ns,
-                "setup_violations": cts.get("cts__timing__drv__setup_violation_count"),
-                "hold_violations": cts.get("cts__timing__drv__hold_violation_count"),
+                "stage": "cts (placement-estimated parasitics)" if st == "cts" else "floorplan (synthesised netlist, no placement parasitics)",
+                "setup_wns_ns": float(cts[f"{st}__timing__setup__ws"]) * time_unit_ns,
+                "hold_wns_ns": float(cts[f"{st}__timing__hold__ws"]) * time_unit_ns,
+                "setup_tns_ns": float(cts[f"{st}__timing__setup__tns"]) * time_unit_ns,
+                "hold_tns_ns": float(cts[f"{st}__timing__hold__tns"]) * time_unit_ns,
+                "setup_violations": cts.get(f"{st}__timing__drv__setup_violation_count"),
+                "hold_violations": cts.get(f"{st}__timing__drv__hold_violation_count"),
                 "fmax_mhz": float(fmax) / 1e6 if fmax is not None else None,
                 **fmax_info,
-                "hold_buffers": cts.get("cts__design__instance__count__hold_buffer"),
-                "setup_buffers": cts.get("cts__design__instance__count__setup_buffer"),
-                "instance_count": cts.get("cts__design__instance__count"),
-                "instance_area_um2": cts.get("cts__design__instance__area"),
-                "clock_skew_setup_ps": cts.get("cts__clock__skew__setup"),
-                "clock_skew_hold_ps": cts.get("cts__clock__skew__hold"),
-                "vectorless_power_total_w": cts.get("cts__power__total"),
+                "hold_buffers": cts.get(f"{st}__design__instance__count__hold_buffer"),
+                "setup_buffers": cts.get(f"{st}__design__instance__count__setup_buffer"),
+                "instance_count": cts.get(f"{st}__design__instance__count"),
+                "instance_area_um2": cts.get(f"{st}__design__instance__area"),
+                "clock_skew_setup_ps": cts.get(f"{st}__clock__skew__setup"),
+                "clock_skew_hold_ps": cts.get(f"{st}__clock__skew__hold"),
+                "vectorless_power_total_w": cts.get(f"{st}__power__total"),
                 "orfs_cts_metrics": cts,
             },
             "toolchain": orfs_identity(),
@@ -2962,7 +2965,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--pnr-stop-after",
         default="finish",
-        choices=["finish", "cts"],
+        choices=["finish", "cts", "floorplan"],
         help=(
             "cts: run ORFS through clock-tree synthesis (with its setup/hold repair) "
             "and record the CTS-stage metrics, for a block whose global route does "
