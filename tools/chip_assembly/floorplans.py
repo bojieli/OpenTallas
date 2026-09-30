@@ -184,19 +184,19 @@ BLOCKS.update({
     # W13: the replicated MMA macro of the GPU-organised HBM comparator's SM (32 lanes x 1 column + its
     # 32-leaf tree); the SM holds 4 sub-partitions x 16 columns of it.  Harden with OT_CHIP_PERIOD_NS=0.92.
     "ot_gpu_tc_col": Block(
-        "ot_gpu_tc_col", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 250.0, 250.0,
+        "ot_gpu_tc_col", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 220.0, 220.0,
         [(r"^w$", "N"), (r"^x$", "W"), (r"^(ov|y|otag|fault)$", "E")],
         params={"L": 32, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25},
         record="results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l32_092/physical.json",
         notes="exact tensor-core column: 32 BF16 x BF16 -> FP32 lanes, circulating IL-8 adders, 32-leaf tree",
         peak_gb=16.0),
     "ot_gpu_tc16": Block(
-        "ot_gpu_tc16", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 180.0, 180.0,
+        "ot_gpu_tc16", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 164.0, 164.0,
         [(r"^w$", "N"), (r"^x$", "W"), (r"^(ov|y|otag|fault)$", "E")],
         default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25},
         notes="V4.1 SM BF16 column: 16 exact lanes + 16-leaf tree (ot_gpu_tc_col L=16)", peak_gb=12.0),
     "ot_gpu_bd_col": Block(
-        "ot_gpu_bd_col", GPU_FP + ["rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bd_col.sv"], 150.0, 150.0,
+        "ot_gpu_bd_col", GPU_FP + ["rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bd_col.sv"], 104.0, 104.0,
         [(r"^(wq|we)$", "N"), (r"^(xq|xe)$", "W"), (r"^(ov|y|otag|fault)$", "E")],
         params={"LB": 2, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25},
         record="results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json",
@@ -247,9 +247,9 @@ def grid_sm_q():
     """64 column macros (250 um) in 8 x 8 (row r = column pair), the 20 x-store/staging SRAMs and the scale SRAM
     in a band above; glue in the channels and the top band."""
     names = [f"g_col[{c}].g_sub[{s}].g_hard.u_tc" for c in range(16) for s in range(4)]
-    e, y = _rows(names, 250.0, 250.0, 20.0, 20.0, 8 * 262.0, 12.0)
+    e, y = _rows(names, 220.0, 220.0, 12.0, 12.0, 8 * 228.0, 8.0)
     srams = [f"u_x.g_m[{m}].u_sram" for m in range(16)] + [f"u_bc.g_sram.g_mb[{m}].u_ring" for m in range(4)] + ["u_scale"]
-    e2, _ = _rows(srams, 174.744, 70.47, 20.0, y + 10.0, 2150.0, 12.0)
+    e2, _ = _rows(srams, 174.744, 70.47, 12.0, y + 6.0, 1860.0, 8.0)
     return e + e2
 
 
@@ -260,11 +260,11 @@ def grid_sm_v():
     for r in range(4):
         bd = [f"g_col[{c}].g_sub[{s}].g_hbd.u_bd" for c in range(2 * r, 2 * r + 2) for s in range(4)]
         tc = [f"g_col[{c}].g_sub[{s}].g_hard.u_tc" for c in range(2 * r, 2 * r + 2) for s in range(4)]
-        a, y = _rows(bd, 150.0, 150.0, 20.0, y, 8 * 196.0, 10.0)
-        b, y = _rows(tc, 180.0, 180.0, 20.0, y, 8 * 196.0, 10.0)
+        a, y = _rows(bd, 104.0, 104.0, 12.0, y, 8 * 170.0, 6.0)
+        b, y = _rows(tc, 164.0, 164.0, 12.0, y, 8 * 170.0, 6.0)
         e += a + b
-    xs, y = _rows([f"g_xm[{m}].u_x" for m in range(99)], 94.824, 41.04, 20.0, y + 6.0, 1760.0, 8.0)
-    rg, _ = _rows([f"u_bc.g_sram.g_mb[{m}].u_ring" for m in range(5)], 174.744, 70.47, 20.0, y + 4.0, 1760.0, 12.0)
+    xs, y = _rows([f"g_xm[{m}].u_x" for m in range(99)], 94.824, 41.04, 12.0, y + 4.0, 1370.0, 6.0)
+    rg, _ = _rows([f"u_bc.g_sram.g_mb[{m}].u_ring" for m in range(5)], 174.744, 70.47, 12.0, y + 4.0, 1370.0, 8.0)
     return e + xs + rg
 
 
@@ -282,7 +282,7 @@ BLOCKS.update({
                   "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_xstore.sv", "rtl/gpu/ot_gpu_sm_q.sv",
                   f"{_MEM}/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
                   f"{_MEM}/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"],
-        2200.0, 2500.0,
+        1900.0, 2150.0,
         [(r"^(req_|rsp_|d_)", "N"), (r"^(xw_|sw_)", "W"), (r"^(rv|rrow|rdata|fault)$", "E")],
         params={"NC": 16}, default_edge="S", place_density=0.55,
         orfs_extra={"NUM_CORES": 8, "MACRO_PLACE_HALO": "6 6", "HOLD_SLACK_MARGIN": 25, "REMOVE_ABC_BUFFERS": 1},
@@ -299,7 +299,7 @@ BLOCKS.update({
                   "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_sm_v.sv",
                   f"{_MEM}/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
                   f"{_MEM}/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"],
-        1800.0, 1900.0,
+        1400.0, 1640.0,
         [(r"^(req_|rsp_|d_)", "N"), (r"^xw_", "W"), (r"^(rv|rrow|rdata|fault)$", "E")],
         params={"NC": 8}, default_edge="S", place_density=0.55,
         orfs_extra={"NUM_CORES": 8, "MACRO_PLACE_HALO": "4 4", "HOLD_SLACK_MARGIN": 25, "REMOVE_ABC_BUFFERS": 1},
