@@ -74,6 +74,9 @@ def main() -> None:
     ap.add_argument("--scale-local", type=int, choices=(0, 1), default=0,
                     help="port-local scale ROM (stage dirs from tools/qwen_rom_scale_local.py)")
     ap.add_argument("--code-banks", type=int, default=10)
+    ap.add_argument("--vflags", default="", help="extra Verilator flags for the die model (e.g. W11's "
+                    "'--unroll-count 4 -fno-dfg' for an SW=1,024 stream unit)")
+    ap.add_argument("--hier-su", action="store_true", help="compile the stream unit as its own hierarchical block")
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--build-only", action="store_true")
@@ -103,7 +106,8 @@ def main() -> None:
     vs_sv.write_text(qwen_rom_rt_core_emit.emit_vstream(qwen_rom_rt_core_emit.VSTREAM.read_text()))
     hier = out / "gen" / "hier.vlt"
     hier.write_text('`verilator_config\n' + ''.join(f'hier_block -module "{m}"\n' for m in
-                    ("ot_hdc_vstream_lane", "ot_hdc_fmul", "ot_hdc_qadd")))
+                    ("ot_hdc_vstream_lane", "ot_hdc_fmul", "ot_hdc_qadd")
+                    + (("ot_hdc_vstream_rt",) if args.hier_su else ())))
     spine = [f"-GSMIN={args.smin}", f"-GSMAX={args.smax}", f"-GTCUT={args.tcut}", f"-GBD={args.bd}",
              f"-GXVM={args.xvm}", f"-GNWS={args.nws}", f"-GTWS={args.tws}", f"-GORD={args.ord}"]
     models = [
@@ -124,7 +128,7 @@ def main() -> None:
         run(f"verilate_{prefix}", [args.verilator, "--cc", "-O3", "-Wno-fatal", "-Wno-TIMESCALEMOD", "-Wno-WIDTH",
                                    "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-PINMISSING", f"-I{C.ISA_SVH.parent}",
                                    "--top-module", top, "--prefix", f"V{prefix}", "--Mdir", mdir, *params, *files,
-                                   *(["--hierarchical", str(hier)] if prefix == "die" else [])])
+                                   *(["--hierarchical", str(hier), *args.vflags.split()] if prefix == "die" else [])])
         run(f"build_{prefix}", ["make", "-C", mdir, "-f", f"V{prefix}.mk", f"-j{args.jobs}", f"V{prefix}__ALL.a",
                                 "OPT_FAST=-O2", "OPT_SLOW=-O1"])
     archives, includes = [], {f"-I{vroot}/include", f"-I{vroot}/include/vltstd", f"-I{RT}", f"-I{RR}"}
@@ -186,6 +190,7 @@ def main() -> None:
         "wire_stages": {"broadcast_and_x_network_bd": args.bd, "vm_conflict_register_xvm": args.xvm,
                         "upper_tree_level_nws": args.nws, "tree_to_spine_tws": args.tws, "result_write_ord": args.ord,
                         "engine_latency_added_xd_plus_ord": args.bd + (args.tcut - 2) * args.nws + args.tws + args.ord},
+        "verilator_die_flags": args.vflags, "hier_su": args.hier_su,
         "stages_run": [s[0] for s in stages], "rtl_token": token, "rtl_logit_bits": m.group(3) if m else None,
         "oracle_token": oracle.get("next_token"), "oracle_logit_bits": oracle.get("next_logit_bits"),
         "total_cycles": int(m.group(5)) if m else None, "stages": per_stage, "layer_x_checks": checks,
