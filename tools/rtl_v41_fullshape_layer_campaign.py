@@ -337,18 +337,19 @@ def rss_gb():
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1048576
 
 
-def golden_token(ctx, layers, out_dir: Path, head=True, log=print):
+def golden_token(ctx, layers, out_dir: Path, head=True, log=print, seed=SEED):
     """One decode token at position ctx - 1 through `layers` (consecutive from 0 unless a shard input is given),
-    layer by layer, saving every shard's input and output."""
+    layer by layer, saving every shard's input and output.  `seed` drives the synthetic state and the token
+    history (the default SEED reproduces the existing records)."""
     t0 = time.time()
     ck = Checkpoint()
     m, init_sha = build_model(ck, engram=any(L in (1, 14) for L in layers))
     t_build = time.time() - t0
     t0 = time.time()
-    st, sdesc = synthetic_state(m, ctx, layers=layers)
+    st, sdesc = synthetic_state(m, ctx, seed=seed, layers=layers)
     t_state = time.time() - t0
     log(f"ctx {ctx}: model {t_build:.1f} s, state {t_state:.1f} s, rss {rss_gb():.1f} GB")
-    hist = token_history(ctx)
+    hist = token_history(ctx, seed=seed)
     st["tokens"] = list(hist)
     tok = hist[-1]
     first = layers[0]
@@ -413,7 +414,7 @@ def golden_token(ctx, layers, out_dir: Path, head=True, log=print):
         shards.append(rec)
         log(f"ctx {ctx} L{L:02d} {rec['kind']}: {rec['golden_wall_s']} s, experts {rec['experts']}, "
             f"rss {rec['rss_gb_after']} GB")
-    out = {"context": ctx, "position": ctx - 1, "token": tok, "history": hist, "state": sdesc,
+    out = {"context": ctx, "position": ctx - 1, "seed": seed, "token": tok, "history": hist, "state": sdesc,
            "model_build_s": round(t_build, 1), "state_build_s": round(t_state, 1), "layers": shards,
            "golden_init_source_sha256": init_sha, "golden": pin, "arith": V.ARITH, "fuse": sorted(V.FUSE)}
     if head and layers[-1] == m.L - 1:
@@ -421,7 +422,8 @@ def golden_token(ctx, layers, out_dir: Path, head=True, log=print):
         xf = V.rmsnorm_fold(m.hc_pre(cx["h"], cx["pre"]), m.w["norm.weight"], m.eps)
         logits = V.mv(m.w["head.weight"], xf)
         nxt = int(np.argmax(logits))
-        out["head"] = {"next_token": nxt, "logits_sha256": digest(logits), "wall_s": round(time.time() - t1, 1),
+        top5 = [int(i) for i in np.argsort(-logits.astype(np.float64), kind="stable")[:5]]
+        out["head"] = {"next_token": nxt, "top5": [[i, float(logits[i])] for i in top5], "logits_sha256": digest(logits), "wall_s": round(time.time() - t1, 1),
                        "margin": float(V.margin(logits))}
         np.savez_compressed(out_dir / f"ctx{ctx}_head.npz", logits=logits, xf=xf)
     out["peak_rss_gb"] = round(rss_gb(), 2)
@@ -1260,6 +1262,8 @@ def main() -> int:
     ap.add_argument("--layers", default="0-39")
     ap.add_argument("--scratch", type=Path, default=Path(os.environ.get("OT_SCRATCH", "/tmp")) / "v41_fullshape")
     ap.add_argument("--output", type=Path, default=OUT)
+    ap.add_argument("--seed", type=int, default=SEED,
+                    help="golden: seed of the synthetic state and token history (default reproduces existing records)")
     ap.add_argument("--rank", type=int, default=0, help="images: the die's rank in its tensor group")
     ap.add_argument("--all-experts", action="store_true", help="images: every routed expert, not only the token's")
     ap.add_argument("--constraints-md", type=Path, default=Path("/tmp/claude-1000/v41_fullshape_layer0_constraints.md"))
@@ -1268,7 +1272,7 @@ def main() -> int:
     a.scratch.mkdir(parents=True, exist_ok=True)
     if "golden" in steps:
         for ctx in map(int, a.contexts.split(",")):
-            r = golden_token(ctx, parse_layers(a.layers), a.scratch)
+            r = golden_token(ctx, parse_layers(a.layers), a.scratch, seed=a.seed)
             (a.scratch / f"golden_ctx{ctx}_{a.layers}.json").write_text(json.dumps(r, indent=1) + "\n")
     if "images" in steps:
         for ctx in map(int, a.contexts.split(",")):
