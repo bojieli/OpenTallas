@@ -33,7 +33,8 @@ module ot_v41_attn_eng_ctl_phys #(
     parameter integer BREG = 0,
     parameter integer REPL = 0,
     parameter integer D = 64,
-    parameter integer PHYS = 0
+    parameter integer PHYS = 0,
+    parameter integer NSTAGE = 1
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -100,7 +101,7 @@ module ot_v41_attn_eng_ctl_phys #(
     end endgenerate
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
-    ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS), .PWORDS(PWORDS), .ILV(1), .REPL(REPL), .PHYS(PHYS)) u_eng (
+    ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS), .PWORDS(PWORDS), .ILV(1), .REPL(REPL), .PHYS(PHYS), .NSTAGE(NSTAGE)) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(e_job_v), .job_t(e_job_t), .job_ready(e_job_ready),
         .q_v(e_q_v), .q_w(q_w), .q_ready(e_q_ready), .kv_v(e_kv_v), .kv_m(e_kv_m), .kv_w(kv_w), .kv_ready(e_kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(e_sc_cr),
