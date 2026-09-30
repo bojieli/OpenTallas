@@ -9,6 +9,7 @@
 //   B2  normalise: sentinel LZC, shift, exponent adjust
 //   C1  round increment (prefix adder)                          | cut C_C  (LAT >= 6)
 //   C2  encode, subnormal, overflow, canonical zero -> y
+//   (B2 is cut after the sentinel LZC when LAT >= 7)
 // LAT 3 has the cuts of ot_hdc_fp32_add_fast (after A, after B, after C).
 // ---------------------------------------------------------------------------
 module ot_hdc_fp32_add_lat #(
@@ -26,6 +27,7 @@ module ot_hdc_fp32_add_lat #(
     localparam integer CUT_A = (LAT >= 5) ? 1 : 0;
     localparam integer CUT_B = (LAT >= 4) ? 1 : 0;
     localparam integer CUT_C = (LAT >= 6) ? 1 : 0;
+    localparam integer CUT_D = (LAT >= 7) ? 1 : 0;     // inside B2: after the sentinel LZC
     localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
 
     // ---- A1 ----------------------------------------------------------------------------------------
@@ -119,13 +121,26 @@ module ot_hdc_fp32_add_lat #(
     wire [26:0] add_val = carry ? {sum[27:2], sum[1] | sum[0]} : sum[26:0];
     wire [7:0]  room = t_exp - 8'd1;
     wire [26:0] sentinel = (room <= 8'd26) ? (27'd1 << (5'd26 - room[4:0])) : 27'd0;
+    wire [5:0]  lz_w;
+    ot_hdc_lzc32 u_lzc (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz_w));
+    // B2a -> B2b boundary (LAT >= 7)
+    localparam integer WD = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27 + 28 + 6 + 1;
+    wire [WD-1:0] d2_in;
+    ot_hdc_w11_cut #(.W(WD), .CUT(CUT_D)) u_cd (.clk(clk), .rst_n(rst_n),
+        .d({t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, add_val, dif, lz_w, carry}), .q(d2_in));
+    wire        w_v, w_byp, w_sub, w_sign, w_carry;
+    wire [1:0]  w_err;
+    wire [31:0] w_code;
+    wire [7:0]  w_exp;
+    wire [26:0] w_add;
+    wire [27:0] w_dif;
     wire [5:0]  lz;
-    ot_hdc_lzc32 u_lzc (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz));
-    wire [26:0] sub_val = dif[26:0] << lz[4:0];
+    assign {w_v, w_byp, w_sub, w_sign, w_err, w_code, w_exp, w_add, w_dif, lz, w_carry} = d2_in;
+    wire [26:0] sub_val = w_dif[26:0] << lz[4:0];
     wire [7:0]  exp_sub, exp_add;
     wire exp_sub_c, exp_add_c;
-    ot_hdc_ksa #(.W(8)) u_esub (.a(t_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
-    ot_hdc_ksa #(.W(8)) u_eadd (.a(t_exp), .b(8'd0), .cin(carry), .s(exp_add), .cout(exp_add_c));
+    ot_hdc_ksa #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
+    ot_hdc_ksa #(.W(8)) u_eadd (.a(w_exp), .b(8'd0), .cin(w_carry), .s(exp_add), .cout(exp_add_c));
 
     reg        s2_v, s2_byp, s2_sign, s2_zero;
     reg [1:0]  s2_err;
@@ -134,13 +149,13 @@ module ot_hdc_fp32_add_lat #(
     reg [26:0] s2_val;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s2_v <= 1'b0;
-        else s2_v <= t_v;
+        else s2_v <= w_v;
     end
     always @(posedge clk) begin
-        s2_byp <= t_byp; s2_err <= t_err; s2_code <= t_code; s2_sign <= t_sign;
-        s2_zero <= t_sub && (dif == 28'd0);
-        s2_exp <= t_sub ? exp_sub : exp_add;
-        s2_val <= t_sub ? sub_val : add_val;
+        s2_byp <= w_byp; s2_err <= w_err; s2_code <= w_code; s2_sign <= w_sign;
+        s2_zero <= w_sub && (w_dif == 28'd0);
+        s2_exp <= w_sub ? exp_sub : exp_add;
+        s2_val <= w_sub ? sub_val : w_add;
     end
 
     // ---- C1 ----------------------------------------------------------------------------------------
@@ -208,4 +223,8 @@ endmodule
 module ot_hdc_fp32_add_lat6 (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
                              output wire [1:0] err, output wire valid_out);
     ot_hdc_fp32_add_lat #(.LAT(6)) u (.*);
+endmodule
+module ot_hdc_fp32_add_lat7 (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
+                             output wire [1:0] err, output wire valid_out);
+    ot_hdc_fp32_add_lat #(.LAT(7)) u (.*);
 endmodule
