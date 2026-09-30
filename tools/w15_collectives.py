@@ -179,12 +179,13 @@ SRAM_SRC = ["rtl/link/ot_fifo_sram_fwft.sv",
             "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
             "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
             "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"]
+FPLAT_SRC = ["rtl/hdc/ot_hdc_fp32_add_lat.sv"]
 TB_SRC = {
     "tb_w15_v41_tp4": ["rtl/test/tb_w15_v41_tp4.sv", *LINK_SRC, "rtl/chip/ot_chip_v41x_coll_dma.sv",
                        "rtl/chip/ot_chip_v41x_coll_transpose.sv", "rtl/rom/ot_rom_oneshot_px.sv",
-                       "rtl/hdc/ot_hdc_fastfp.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC],
+                       "rtl/hdc/ot_hdc_fastfp.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC, *FPLAT_SRC],
     "tb_w15_qwen_tp2": ["rtl/test/tb_w15_qwen_tp2.sv", *LINK_SRC, "rtl/rom/ot_rom_oneshot_allreduce.sv",
-                        "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC],
+                        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fastfp.sv", *SRAM_SRC, *FPLAT_SRC],
     "tb_w15_link_unit": ["rtl/test/tb_w15_link_unit.sv", *LINK_SRC],
     "tb_w15_crc32": ["rtl/test/tb_w15_crc32.sv", "rtl/link/ot_link_crc32.sv"],
     "tb_w15_v41_hbm_nvls": ["rtl/test/tb_w15_v41_hbm_nvls.sv", *LINK_SRC, "rtl/link/ot_link_nvls_switch.sv",
@@ -354,6 +355,17 @@ CONFIGS = {
     "q256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64), "q256"),
     "q256d16": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=16), "q256"),
     "q256d128": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=128), "q256"),
+    # 1.2 GHz @ SS (AGENTS.md 2026-09-30): 0.833 ns core, wire stages from the SS segment sweep (504 um per stage,
+    # results/rtl/w15_collectives.json physical.wire_reach), engine tree adders ot_hdc_fp32_add_lat LAT 7
+    "v41ss_p30_w32": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
+                                             FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833), "l0w32"),
+    "v41ss_p30_w32_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
+                                                   FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833),
+                            "sweepw32"),
+    "v41ss_p30_w32_d1024": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
+                                                   FIFO_SRAM=0, FPLAT=1, ADD_LAT=7, T_CORE=0.833), "l0w32"),
+    "qss_256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0, FPLAT=1, ADD_LAT=7,
+                                           T_CORE=0.833, U_WIRE=29), "q256"),
     "hbm_p48": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48), X_WIRE=16, U_WIRE=16), "hbm48"),
     "hbm_p6": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6), X_WIRE=16, U_WIRE=16), "hbm6"),
     "q256d64_sram": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0), "q256"),
@@ -621,7 +633,7 @@ CLOCK = {"tb_w15_v41_tp4": 1 / 0.92e-9, "tb_w15_qwen_tp2": 1 / 0.9102e-9, "tb_w1
 def config_record(c):
     name = c["name"]
     top, gen, fix = CONFIGS[name]
-    clock = CLOCK[top]
+    clock = 1 / (gen["T_CORE"] * 1e-9) if "T_CORE" in gen else CLOCK[top]
     cal, meas = c["calibration"], c["measured"]
     rec = dict(top=top, parameters=gen, fixture=fix, record_bytes=4 * gen.get("LANES", 16), fixture_manifest_sha256=sha(VEC / fix / "manifest.json"),
                binary=binary_name(name), clock_hz=clock, release_guard_cycles=GUARD,

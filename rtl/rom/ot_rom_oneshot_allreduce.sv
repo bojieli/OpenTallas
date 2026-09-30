@@ -50,6 +50,7 @@ module ot_rom_oneshot_die #(
     parameter integer TAGW    = 32,
     parameter integer DEPTH   = 16,           // receive FIFO words per source (power of two)
     parameter integer ADD_LAT = 5,            // ot_fp32_add_rne_pipe latency
+    parameter integer FPLAT = 0,              // 1: ot_hdc_fp32_add_lat #(ADD_LAT) (3..7 stages) in place of the rne pipe
     parameter integer FIFO_SRAM = 0,          // 1: receive FIFOs in 1R1W SRAM macros (rtl/link/ot_fifo_sram_fwft.sv)
     parameter integer SRAM_MACRO = 0,         //    macro kind (0 64x512, 1 256x256, 2 128x256); DEPTH <= its words
     parameter integer FW      = 32 * LANES,
@@ -235,10 +236,17 @@ module ot_rom_oneshot_die #(
             wire [2*LANES-1:0] le;
             genvar l;
             for (l = 0; l < LANES; l = l + 1) begin : g_lane
-                ot_fp32_add_rne_pipe u_add (
-                    .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
-                    .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
-                    .y(sum[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
+                if (FPLAT != 0) begin : g_lat
+                    ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_add (
+                        .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
+                        .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
+                        .y(sum[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
+                end else begin : g_pipe
+                    ot_fp32_add_rne_pipe u_add (
+                        .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
+                        .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
+                        .y(sum[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
+                end
             end
             assign sv[g] = lv[0];
             assign serr[g] = (|le) || edl[ADD_LAT-1];
