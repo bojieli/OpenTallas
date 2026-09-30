@@ -150,6 +150,14 @@ def main(argv=None):
                budget_note=("ASAP7 SS sign-off is at 0.63 V (-10%): IR + droop + regulator tolerance must stay within "
                             "70 mV; 35 mV is the droop share if IR and tolerance take the rest"),
                inputs=dict(pair_record=str(PAIR_REC.relative_to(ROOT)), pair_record_sha256=sha(PAIR_REC)),
+               package_spec=dict(
+                   requirement="effective package + bump loop inductance seen by one die L_eff <= 2 pH with the adopted "
+                               "50% cap + 256-cycle schedule-driven pre-ramp (<= 0.5 pH with the pre-ramp alone), for a "
+                               "first droop <= 35 mV at 1.2 GHz; per-die decap >= 5 uF (the swept minimum)",
+                   b200_class_reference=("no public L_eff figure for B200/GB200-class packages is known to this project; "
+                                         "the requirement is ASSUMED feasible for a 2.5D CoWoS-class package with "
+                                         "land-side / interposer capacitors and must be confirmed by the package owner"),
+                   grade="assumed"),
                claim_boundary="lumped L-C-R first-droop model with assumed L, C, R and detector; no package model",
                tool_sha256=sha(Path(__file__)))
     a.output.write_text(json.dumps(rec, indent=1) + "\n")

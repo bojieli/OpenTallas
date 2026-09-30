@@ -2492,6 +2492,11 @@
   "pair_record": "results/physical_abi3/asap7/chip/v41_w18/pair_w10p5_abstract.json",
   "pair_record_sha256": "2218b6efbff9cf7bba5d7984014352f3d26ffdf75a8a481b33706cf7f5cd3f04"
  },
+ "package_spec": {
+  "requirement": "effective package + bump loop inductance seen by one die L_eff <= 2 pH with the adopted 50% cap + 256-cycle schedule-driven pre-ramp (<= 0.5 pH with the pre-ramp alone), for a first droop <= 35 mV at 1.2 GHz; per-die decap >= 5 uF (the swept minimum)",
+  "b200_class_reference": "no public L_eff figure for B200/GB200-class packages is known to this project; the requirement is ASSUMED feasible for a 2.5D CoWoS-class package with land-side / interposer capacitors and must be confirmed by the package owner",
+  "grade": "assumed"
+ },
  "claim_boundary": "lumped L-C-R first-droop model with assumed L, C, R and detector; no package model",
- "tool_sha256": "1ab49e48705cbc796be4cd0944e93eafb12fb4bbd73ccf4d940c62c5c7822b58"
+ "tool_sha256": "62e9b7ff12073962590105fe0907b29c72b1e12d07a934b125c11b0680834b22"
 }

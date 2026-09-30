@@ -50,7 +50,7 @@ def sha(p) -> str:
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def model(fp: dict, pk: dict, probes: bool = True) -> dict:
+def model(fp: dict, pk: dict, probes: bool = True, subroots: int = 0) -> dict:
     C = D.Cluster
     mm = lambda v: round(v / 1000.0, 6)  # noqa: E731
     cl, buses = [], []
@@ -87,11 +87,36 @@ def model(fp: dict, pk: dict, probes: bool = True) -> dict:
     for c in (c for c in cl if c.kind == "tile"):
         side = "w" if c.cx < xr.cx else "e"
         groups.setdefault(f"{c.region}{side}", []).append(c)
+    roots = []
+    if subroots:
+        # distributed x root: sub-roots in the hub halo on its north and south edges at 1/4 and 3/4 of its width
+        hr = fp["hub"]["rect"]
+        halo = 43.2
+        for k in range(subroots):
+            fx = (0.25 if k % 2 == 0 else 0.75)
+            north = k >= subroots // 2
+            x = hr[0] + fx * hr[2] - 60.0
+            y = hr[1] + hr[3] + 1.0 if north else hr[1] - halo + 1.0
+            r = C(f"xsub{k}", "w18_xsub", "xsub", mm(x), mm(y), mm(120.0), mm(40.0),
+                  basis="ASSUMED distributed x sub-root / result collector (registered fan-out)")
+            cl.append(r)
+            roots.append(r)
+            buses.append(dict(id=f"xfeed.{k}", src=xr.inst, dst=[r.inst], bits=PAIR_X_BITS,
+                              basis="SU x root -> sub-root", cls="xfeed"))
     for g, members in sorted(groups.items()):
-        buses.append(dict(id=f"xb.{g}", src=xr.inst, dst=[m.inst for m in members], bits=PAIR_X_BITS,
+        gx_ = sum(m.cx for m in members) / len(members)
+        gy_ = sum(m.cy for m in members) / len(members)
+        src = min(roots, key=lambda r: abs(r.cx - gx_) + abs(r.cy - gy_)) if roots else xr
+        sink = src if roots else vm
+        buses.append(dict(id=f"xb.{g}", src=src.inst, dst=[m.inst for m in members], bits=PAIR_X_BITS,
                           basis="x broadcast trunk (pair xs_* width)", cls="xb"))
-        buses.append(dict(id=f"rs.{g}", src=vm.inst, dst=[m.inst for m in members], bits=RESULT_BITS,
+        buses.append(dict(id=f"rs.{g}", src=sink.inst, dst=[m.inst for m in members], bits=RESULT_BITS,
                           basis="ASSUMED result return trunk", cls="rs"))
+    for r in roots:
+        n = sum(1 for b in buses if b["cls"] == "rs" and b["src"] == r.inst)
+        if n:
+            buses.append(dict(id=f"rcol.{r.inst}", src=r.inst, dst=[vm.inst], bits=RESULT_BITS * n,
+                              basis="sub-root result collector -> VM", cls="rcol"))
     for c in (c for c in cl if c.kind == "tile" and probes):
         buses.append(dict(id=f"px.{c.inst}", src=xr.inst, dst=[c.inst], bits=1, basis="probe", cls="px"))
         buses.append(dict(id=f"pr.{c.inst}", src=c.inst, dst=[vm.inst], bits=1, basis="probe", cls="pr"))
@@ -363,6 +388,7 @@ def main(argv=None):
     ap.add_argument("--low-adjust", type=float, default=0.25)
     ap.add_argument("--iters", type=int, default=50)
     ap.add_argument("--no-probes", action="store_true", help="congestion case without the 1-bundle path probes")
+    ap.add_argument("--subroots", type=int, default=0, help="distribute the x root / result sink into N sub-roots")
     ap.add_argument("--host", default="")
     ap.add_argument("--memory-gb", type=int, default=100)
     ap.add_argument("--output", type=Path)
@@ -371,7 +397,7 @@ def main(argv=None):
     if a.mode == "run":
         return run(work, a.host, a.memory_gb)
     fp, pk = json.loads(a.floorplan.read_text()), json.loads(a.pack.read_text())
-    mdl = model(fp, pk, probes=not a.no_probes)
+    mdl = model(fp, pk, probes=not a.no_probes, subroots=a.subroots)
     if a.mode == "write":
         print(json.dumps(write(mdl, work, a.k, a.obs_top, a.m89_reserve, a.low_adjust, a.iters), indent=1))
         return 0
