@@ -1,19 +1,13 @@
 {
+  "historical_note": "HISTORICAL (2026-09-30, claude/w17-isa): the program as bound before the emitter's placeholder immediates were replaced by tools/v41_program_constants.py values (PC30 softmax scale imm1=0, HC pre/post imm2=0, SwiGLU clip imm3=0, router imm1/imm2=0, RMS eps 1e-6 instead of norm_eps 1e-20). Superseded by the record of the same name without the _historical_placeholder_imm suffix; kept unmodified otherwise.",
   "schema": "opentallas.v41x.fullshape.program_bind.v1",
   "status": "blocked",
   "layer": 0,
   "rank": 0,
-  "layout_path": "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json",
   "layout_sha256": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
-  "shard_path": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
   "shard_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
-  "qe_stream_path": "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json",
   "qe_stream_sha256": "e049806a52898fad344f4b8fcc30def1d082ada2cde86569271167aa4bed59e6",
   "rope_mode": "hbm_cache",
-  "context": 200000,
-  "position": 199999,
-  "constants_manifest": "results/rtl/v41_program_constants.json",
-  "constants_manifest_sha256": "0ef0b72b91f52ec48f694671f06b828e828ab7e992d835cc68d5c19aeda380f1",
   "rope_patch_sha256": null,
   "rope_token_patch": null,
   "rope_hbm_table": {
@@ -22,7 +16,7 @@
     "position": 199999,
     "pair_count": 32,
     "bytes_per_position": 256,
-    "capacity_record_sha256": "ca4c77670e46fa6aee548f8ee02ff431946282eb1bd7eb5fdd8b0d274421627c",
+    "capacity_record_sha256": "808b5b7402443ee10e80e7ab4d4a346954384542b8663c64796f2c357e242e4a",
     "cache_record_sha256": "655549cf3f704668cf526fffa79886915ad22e105ddeae8a490ec0961cead484",
     "physical_region_base_sector": null,
     "full_table_image_sha256": null,
@@ -46,13 +40,11 @@
     "packed_requires_fp4_port_adapter": true
   },
   "source_sha256": {
-    "tools/v41_fullshape_program_bind.py": "a16feef80ee81197a970e71be080d131d9a89cb7eb89d3b4f06a0de0174597f0",
-    "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
+    "tools/v41_fullshape_program_bind.py": "aed2475713168878300dadbae6c24bd6e555aa99448e7bffea8b25ec84df4872",
+    "tools/hdc_replay_v41.py": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
     "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
-    "tools/v41_program_constants.py": "3289aac34f35967fc1aa33158657786b859b656856a4dd1c5007e2890f878a26",
-    "results/rtl/v41_program_constants.json": "0ef0b72b91f52ec48f694671f06b828e828ab7e992d835cc68d5c19aeda380f1",
-    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
-    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259"
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "57a05fd92b950bb6daa8e41918a336bee855e2758bd89880c7e00cde08cca6a7",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a"
   },
   "source_experts": [
     110,
@@ -84,7 +76,7 @@
         "m1": 5,
         "imm1": 1184890880,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 40992,
@@ -92,10 +84,6 @@
         "su_vec": 0,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_hc_dim",
-        "imm2": "norm_eps"
       }
     },
     {
@@ -241,7 +229,7 @@
         "m1": 5,
         "imm1": 1168113664,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 51616,
@@ -249,10 +237,6 @@
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_dim",
-        "imm2": "norm_eps"
       }
     },
     {
@@ -431,7 +415,7 @@
         "m1": 5,
         "imm1": 1151336448,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 51616,
@@ -439,10 +423,6 @@
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_q_rank",
-        "imm2": "norm_eps"
       }
     },
     {
@@ -551,7 +531,7 @@
         "m1": 5,
         "imm1": 1140850688,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 51616,
@@ -559,10 +539,6 @@
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_head_dim",
-        "imm2": "norm_eps"
       }
     },
     {
@@ -828,7 +804,7 @@
         "d_base": 12056,
         "sfu": 4,
         "e1": 4,
-        "imm2": 897988541,
+        "imm2": 0,
         "o_base": 41056,
         "a_si": 1,
         "b_base": 40992,
@@ -846,9 +822,6 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm2": "hc_eps"
       }
     },
     {
@@ -869,7 +842,7 @@
         "d_base": 12060,
         "sfu": 4,
         "e1": 3,
-        "imm2": 1073741824,
+        "imm2": 0,
         "o_base": 41088,
         "a_si": 1,
         "b_base": 40992,
@@ -887,9 +860,6 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm2": "hc_post_scale"
       }
     },
     {
@@ -998,7 +968,7 @@
       ],
       "fields": {
         "m1": 3,
-        "imm1": 1026884851,
+        "imm1": 0,
         "red": 2,
         "r_base": 74176,
         "r_so": 1,
@@ -1016,9 +986,6 @@
         "su_vec": 2,
         "wait": 1,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "attn_scale"
       }
     },
     {
@@ -1514,7 +1481,7 @@
         "m1": 5,
         "imm1": 1184890880,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 40992,
@@ -1522,10 +1489,6 @@
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_hc_dim",
-        "imm2": "norm_eps"
       }
     },
     {
@@ -1671,7 +1634,7 @@
         "m1": 5,
         "imm1": 1168113664,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 51616,
@@ -1679,10 +1642,6 @@
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_dim",
-        "imm2": "norm_eps"
       }
     },
     {
@@ -1817,7 +1776,7 @@
         "a_base": 416768,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 417344,
         "c_si": 1,
         "c_clip": 1,
@@ -1831,9 +1790,6 @@
         "su_vec": 1,
         "wait": 4,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
@@ -2021,16 +1977,13 @@
         "su_nin": 1,
         "a_base": 366720,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 0,
         "dst": 1,
         "o_base": 366752,
         "unit": 2,
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm2": "router_den_eps"
       }
     },
     {
@@ -2055,7 +2008,7 @@
         "b_base": 366752,
         "m1": 4,
         "m2": 2,
-        "imm1": 1069547520,
+        "imm1": 0,
         "dst": 1,
         "o_base": 366784,
         "o_si": 1,
@@ -2063,9 +2016,6 @@
         "su_vec": 1,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "route_scale"
       }
     },
     {
@@ -2197,7 +2147,7 @@
         "a_base": 398720,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 399296,
         "c_si": 1,
         "c_clip": 1,
@@ -2213,9 +2163,6 @@
         "su_vec": 1,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
@@ -2315,7 +2262,7 @@
         "d_base": 12104,
         "sfu": 4,
         "e1": 4,
-        "imm2": 897988541,
+        "imm2": 0,
         "o_base": 41152,
         "a_si": 1,
         "b_base": 40992,
@@ -2333,9 +2280,6 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm2": "hc_eps"
       }
     },
     {
@@ -2356,7 +2300,7 @@
         "d_base": 12108,
         "sfu": 4,
         "e1": 3,
-        "imm2": 1073741824,
+        "imm2": 0,
         "o_base": 41184,
         "a_si": 1,
         "b_base": 40992,
@@ -2374,9 +2318,6 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm2": "hc_post_scale"
       }
     },
     {
@@ -2517,7 +2458,7 @@
         "a_base": 401728,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 402304,
         "c_si": 1,
         "c_clip": 1,
@@ -2533,9 +2474,6 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
@@ -2662,7 +2600,7 @@
         "a_base": 404736,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 405312,
         "c_si": 1,
         "c_clip": 1,
@@ -2678,9 +2616,6 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
@@ -2807,7 +2742,7 @@
         "a_base": 407744,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 408320,
         "c_si": 1,
         "c_clip": 1,
@@ -2823,9 +2758,6 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
@@ -2952,7 +2884,7 @@
         "a_base": 410752,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 411328,
         "c_si": 1,
         "c_clip": 1,
@@ -2968,9 +2900,6 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
@@ -3041,7 +2970,7 @@
         "a_base": 413760,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 414336,
         "c_si": 1,
         "c_clip": 1,
@@ -3057,9 +2986,6 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {

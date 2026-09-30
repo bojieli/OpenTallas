@@ -1,40 +1,25 @@
 {
+  "historical_note": "HISTORICAL (2026-09-30, claude/w17-isa): the program as bound before the emitter's placeholder immediates were replaced by tools/v41_program_constants.py values (PC30 softmax scale imm1=0, HC pre/post imm2=0, SwiGLU clip imm3=0, router imm1/imm2=0, RMS eps 1e-6 instead of norm_eps 1e-20). Superseded by the record of the same name without the _historical_placeholder_imm suffix; kept unmodified otherwise.",
   "schema": "opentallas.v41x.fullshape.program_bind.v1",
   "status": "blocked",
   "layer": 0,
   "rank": 0,
-  "layout_path": "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json",
   "layout_sha256": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
-  "shard_path": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
   "shard_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
-  "qe_stream_path": "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json",
   "qe_stream_sha256": "e049806a52898fad344f4b8fcc30def1d082ada2cde86569271167aa4bed59e6",
-  "rope_mode": "hbm_cache",
-  "context": 200000,
-  "position": 199999,
-  "constants_manifest": "results/rtl/v41_program_constants.json",
-  "constants_manifest_sha256": "0ef0b72b91f52ec48f694671f06b828e828ab7e992d835cc68d5c19aeda380f1",
-  "rope_patch_sha256": null,
-  "rope_token_patch": null,
-  "rope_hbm_table": {
-    "storage": "hbm_read_only_table",
-    "kind": "plain",
+  "rope_mode": "sparse_fixture",
+  "rope_patch_sha256": "2a32391fd9d5c505e66cea7e199b049f6512bd1778631d3f2163ad932e48b45c",
+  "rope_token_patch": {
+    "storage": "sparse_crom_fixture",
     "position": 199999,
-    "pair_count": 32,
-    "bytes_per_position": 256,
-    "capacity_record_sha256": "ca4c77670e46fa6aee548f8ee02ff431946282eb1bd7eb5fdd8b0d274421627c",
-    "cache_record_sha256": "655549cf3f704668cf526fffa79886915ad22e105ddeae8a490ec0961cead484",
-    "physical_region_base_sector": null,
-    "full_table_image_sha256": null,
-    "claim_boundary": "HBM capacity plus one-position cache proof; full table image and physical HBM region not yet bound",
-    "prefetch_pc": 18,
-    "release_pc": 36,
-    "su_read_pcs": [
-      19,
-      23,
-      35
-    ]
+    "base_word": 12580,
+    "absolute_first_word": 6412548,
+    "absolute_last_word": 6412579,
+    "file": "results/rtl/v41_rope_plain_ctx200000_token_patch.bin",
+    "sha256": "9745343dc1b7a72ee053530588f7a0df5c3e42c1f2587afbf64909946030eeb8",
+    "claim_boundary": "one-position input fixture only"
   },
+  "rope_hbm_table": null,
   "resource_trace": {
     "qe_logical_qrom_words": 7191680,
     "qe_direct_expanded_bytes": 3912273920,
@@ -46,13 +31,11 @@
     "packed_requires_fp4_port_adapter": true
   },
   "source_sha256": {
-    "tools/v41_fullshape_program_bind.py": "a16feef80ee81197a970e71be080d131d9a89cb7eb89d3b4f06a0de0174597f0",
-    "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
+    "tools/v41_fullshape_program_bind.py": "aed2475713168878300dadbae6c24bd6e555aa99448e7bffea8b25ec84df4872",
+    "tools/hdc_replay_v41.py": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
     "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
-    "tools/v41_program_constants.py": "3289aac34f35967fc1aa33158657786b859b656856a4dd1c5007e2890f878a26",
-    "results/rtl/v41_program_constants.json": "0ef0b72b91f52ec48f694671f06b828e828ab7e992d835cc68d5c19aeda380f1",
-    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
-    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259"
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "57a05fd92b950bb6daa8e41918a336bee855e2758bd89880c7e00cde08cca6a7",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "8d1bae62cddf4da246efa32a009299bfea6dc0cb30922bba460fa3863a35093a"
   },
   "source_experts": [
     110,
@@ -64,7 +47,7 @@
   ],
   "matrix_count": 29,
   "constant_count": 11,
-  "instruction_count": 113,
+  "instruction_count": 111,
   "instruction_trace": [
     {
       "pc": 0,
@@ -84,7 +67,7 @@
         "m1": 5,
         "imm1": 1184890880,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 40992,
@@ -92,10 +75,6 @@
         "su_vec": 0,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_hc_dim",
-        "imm2": "norm_eps"
       }
     },
     {
@@ -241,7 +220,7 @@
         "m1": 5,
         "imm1": 1168113664,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 51616,
@@ -249,10 +228,6 @@
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_dim",
-        "imm2": "norm_eps"
       }
     },
     {
@@ -431,7 +406,7 @@
         "m1": 5,
         "imm1": 1151336448,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 51616,
@@ -439,10 +414,6 @@
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_q_rank",
-        "imm2": "norm_eps"
       }
     },
     {
@@ -551,7 +522,7 @@
         "m1": 5,
         "imm1": 1140850688,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 51616,
@@ -559,10 +530,6 @@
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_head_dim",
-        "imm2": "norm_eps"
       }
     },
     {
@@ -600,20 +567,6 @@
     },
     {
       "pc": 18,
-      "unit": 0,
-      "tag": "L0.attn.rope_prefetch",
-      "reads": [],
-      "writes": [],
-      "fields": {
-        "unit": 0,
-        "ctl": 5,
-        "ctl_slot": 0,
-        "ctl_lane": 0,
-        "wait": 0
-      }
-    },
-    {
-      "pc": 19,
       "unit": 2,
       "tag": "L0.attn",
       "reads": [
@@ -631,12 +584,12 @@
         "a_si": 1,
         "c_pair": 1,
         "b_src": 1,
-        "b_base": 536870912,
+        "b_base": 12580,
         "b_d": 2,
         "b_si": 1,
         "b_half": 1,
         "d_src": 2,
-        "d_base": 536870912,
+        "d_base": 12580,
         "d_d": 2,
         "d_si": 1,
         "m1": 1,
@@ -654,7 +607,7 @@
       }
     },
     {
-      "pc": 20,
+      "pc": 19,
       "unit": 3,
       "tag": "L0.attn",
       "reads": [
@@ -675,7 +628,7 @@
       }
     },
     {
-      "pc": 21,
+      "pc": 20,
       "unit": 2,
       "tag": "L0.attn",
       "reads": [
@@ -700,7 +653,7 @@
       }
     },
     {
-      "pc": 22,
+      "pc": 21,
       "unit": 2,
       "tag": "L0.attn",
       "reads": [
@@ -725,7 +678,7 @@
       }
     },
     {
-      "pc": 23,
+      "pc": 22,
       "unit": 2,
       "tag": "L0.attn",
       "reads": [
@@ -743,12 +696,12 @@
         "a_si": 1,
         "c_pair": 1,
         "b_src": 1,
-        "b_base": 536870912,
+        "b_base": 12580,
         "b_d": 2,
         "b_si": 1,
         "b_half": 1,
         "d_src": 2,
-        "d_base": 536870912,
+        "d_base": 12580,
         "d_d": 2,
         "d_si": 1,
         "m1": 1,
@@ -766,7 +719,7 @@
       }
     },
     {
-      "pc": 24,
+      "pc": 23,
       "unit": 1,
       "tag": "L0.scores",
       "reads": [
@@ -811,7 +764,7 @@
       }
     },
     {
-      "pc": 25,
+      "pc": 24,
       "unit": 2,
       "tag": "L0.hc_attn",
       "reads": [
@@ -828,7 +781,7 @@
         "d_base": 12056,
         "sfu": 4,
         "e1": 4,
-        "imm2": 897988541,
+        "imm2": 0,
         "o_base": 41056,
         "a_si": 1,
         "b_base": 40992,
@@ -846,13 +799,10 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm2": "hc_eps"
       }
     },
     {
-      "pc": 26,
+      "pc": 25,
       "unit": 2,
       "tag": "L0.hc_attn",
       "reads": [
@@ -869,7 +819,7 @@
         "d_base": 12060,
         "sfu": 4,
         "e1": 3,
-        "imm2": 1073741824,
+        "imm2": 0,
         "o_base": 41088,
         "a_si": 1,
         "b_base": 40992,
@@ -887,13 +837,10 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm2": "hc_post_scale"
       }
     },
     {
-      "pc": 27,
+      "pc": 26,
       "unit": 2,
       "tag": "L0.hc_attn",
       "reads": [
@@ -936,7 +883,7 @@
       }
     },
     {
-      "pc": 28,
+      "pc": 27,
       "unit": 2,
       "tag": "L0.hc_attn",
       "reads": [
@@ -967,7 +914,7 @@
       }
     },
     {
-      "pc": 29,
+      "pc": 28,
       "unit": 4,
       "tag": "L0.hc_attn",
       "reads": [
@@ -986,7 +933,7 @@
       }
     },
     {
-      "pc": 30,
+      "pc": 29,
       "unit": 2,
       "tag": "L0.softmax",
       "reads": [
@@ -998,7 +945,7 @@
       ],
       "fields": {
         "m1": 3,
-        "imm1": 1026884851,
+        "imm1": 0,
         "red": 2,
         "r_base": 74176,
         "r_so": 1,
@@ -1016,13 +963,10 @@
         "su_vec": 2,
         "wait": 1,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "attn_scale"
       }
     },
     {
-      "pc": 31,
+      "pc": 30,
       "unit": 2,
       "tag": "L0.softmax",
       "reads": [
@@ -1058,7 +1002,7 @@
       }
     },
     {
-      "pc": 32,
+      "pc": 31,
       "unit": 1,
       "tag": "L0.pv",
       "reads": [
@@ -1097,7 +1041,7 @@
       }
     },
     {
-      "pc": 33,
+      "pc": 32,
       "unit": 2,
       "tag": "L0.softmax",
       "reads": [
@@ -1130,7 +1074,7 @@
       }
     },
     {
-      "pc": 34,
+      "pc": 33,
       "unit": 2,
       "tag": "L0.softmax",
       "reads": [
@@ -1161,7 +1105,7 @@
       }
     },
     {
-      "pc": 35,
+      "pc": 34,
       "unit": 2,
       "tag": "L0.softmax",
       "reads": [
@@ -1179,12 +1123,12 @@
         "a_si": 1,
         "c_pair": 1,
         "b_src": 1,
-        "b_base": 536870912,
+        "b_base": 12580,
         "b_d": 2,
         "b_si": 1,
         "b_half": 1,
         "d_src": 2,
-        "d_base": 536870912,
+        "d_base": 12580,
         "d_d": 2,
         "d_si": 1,
         "m1": 1,
@@ -1202,21 +1146,7 @@
       }
     },
     {
-      "pc": 36,
-      "unit": 0,
-      "tag": "L0.attn.rope_release",
-      "reads": [],
-      "writes": [],
-      "fields": {
-        "unit": 0,
-        "ctl": 6,
-        "ctl_slot": 0,
-        "ctl_lane": 0,
-        "wait": 2
-      }
-    },
-    {
-      "pc": 37,
+      "pc": 35,
       "unit": 1,
       "tag": "L0.out",
       "reads": [
@@ -1244,11 +1174,11 @@
         "me_oen": 1,
         "me_xcs": 4096,
         "me_split": 0,
-        "wait": 0
+        "wait": 2
       }
     },
     {
-      "pc": 38,
+      "pc": 36,
       "unit": 1,
       "tag": "L0.out",
       "reads": [
@@ -1280,7 +1210,7 @@
       }
     },
     {
-      "pc": 39,
+      "pc": 37,
       "unit": 2,
       "tag": "L0.out",
       "reads": [
@@ -1306,7 +1236,7 @@
       }
     },
     {
-      "pc": 40,
+      "pc": 38,
       "unit": 3,
       "tag": "L0.out",
       "reads": [
@@ -1331,7 +1261,7 @@
       }
     },
     {
-      "pc": 41,
+      "pc": 39,
       "unit": 6,
       "tag": "L0.out.wo_b_reduce",
       "reads": [
@@ -1354,7 +1284,7 @@
       }
     },
     {
-      "pc": 42,
+      "pc": 40,
       "unit": 2,
       "tag": "L0.hc_post",
       "reads": [
@@ -1389,7 +1319,7 @@
       }
     },
     {
-      "pc": 43,
+      "pc": 41,
       "unit": 2,
       "tag": "L0.hc_post",
       "reads": [
@@ -1423,7 +1353,7 @@
       }
     },
     {
-      "pc": 44,
+      "pc": 42,
       "unit": 2,
       "tag": "L0.hc_post",
       "reads": [
@@ -1457,7 +1387,7 @@
       }
     },
     {
-      "pc": 45,
+      "pc": 43,
       "unit": 2,
       "tag": "L0.hc_post",
       "reads": [
@@ -1497,7 +1427,7 @@
       }
     },
     {
-      "pc": 46,
+      "pc": 44,
       "unit": 2,
       "tag": "L0.hc_ffn",
       "reads": [
@@ -1514,7 +1444,7 @@
         "m1": 5,
         "imm1": 1184890880,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 40992,
@@ -1522,14 +1452,10 @@
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_hc_dim",
-        "imm2": "norm_eps"
       }
     },
     {
-      "pc": 47,
+      "pc": 45,
       "unit": 5,
       "tag": "L0.hc_ffn",
       "reads": [
@@ -1549,7 +1475,7 @@
       }
     },
     {
-      "pc": 48,
+      "pc": 46,
       "unit": 2,
       "tag": "L0.ffn_norm",
       "reads": [
@@ -1581,7 +1507,7 @@
       }
     },
     {
-      "pc": 49,
+      "pc": 47,
       "unit": 2,
       "tag": "L0.ffn_norm",
       "reads": [
@@ -1612,7 +1538,7 @@
       }
     },
     {
-      "pc": 50,
+      "pc": 48,
       "unit": 2,
       "tag": "L0.ffn_norm",
       "reads": [
@@ -1654,7 +1580,7 @@
       }
     },
     {
-      "pc": 51,
+      "pc": 49,
       "unit": 2,
       "tag": "L0.ffn_norm",
       "reads": [
@@ -1671,7 +1597,7 @@
         "m1": 5,
         "imm1": 1168113664,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 897988541,
         "sfu": 2,
         "dst": 1,
         "o_base": 51616,
@@ -1679,14 +1605,10 @@
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "count_dim",
-        "imm2": "norm_eps"
       }
     },
     {
-      "pc": 52,
+      "pc": 50,
       "unit": 2,
       "tag": "L0.ffn_norm",
       "reads": [
@@ -1719,7 +1641,7 @@
       }
     },
     {
-      "pc": 53,
+      "pc": 51,
       "unit": 3,
       "tag": "L0.shared",
       "reads": [
@@ -1744,7 +1666,7 @@
       }
     },
     {
-      "pc": 54,
+      "pc": 52,
       "unit": 3,
       "tag": "L0.shared",
       "reads": [
@@ -1769,7 +1691,7 @@
       }
     },
     {
-      "pc": 55,
+      "pc": 53,
       "unit": 1,
       "tag": "L0.router",
       "reads": [
@@ -1801,7 +1723,7 @@
       }
     },
     {
-      "pc": 56,
+      "pc": 54,
       "unit": 2,
       "tag": "L0.shared",
       "reads": [
@@ -1817,7 +1739,7 @@
         "a_base": 416768,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 417344,
         "c_si": 1,
         "c_clip": 1,
@@ -1831,13 +1753,10 @@
         "su_vec": 1,
         "wait": 4,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
-      "pc": 57,
+      "pc": 55,
       "unit": 6,
       "tag": "L0.shared.act6_gather",
       "reads": [
@@ -1860,7 +1779,7 @@
       }
     },
     {
-      "pc": 58,
+      "pc": 56,
       "unit": 3,
       "tag": "L0.shared",
       "reads": [
@@ -1885,7 +1804,7 @@
       }
     },
     {
-      "pc": 59,
+      "pc": 57,
       "unit": 2,
       "tag": "L0.router",
       "reads": [
@@ -1910,7 +1829,7 @@
       }
     },
     {
-      "pc": 60,
+      "pc": 58,
       "unit": 6,
       "tag": "L0.router.router_gather",
       "reads": [
@@ -1933,7 +1852,7 @@
       }
     },
     {
-      "pc": 61,
+      "pc": 59,
       "unit": 2,
       "tag": "L0.router",
       "reads": [
@@ -1961,7 +1880,7 @@
       }
     },
     {
-      "pc": 62,
+      "pc": 60,
       "unit": 4,
       "tag": "L0.router",
       "reads": [
@@ -1981,7 +1900,7 @@
       }
     },
     {
-      "pc": 63,
+      "pc": 61,
       "unit": 2,
       "tag": "L0.router",
       "reads": [
@@ -2007,7 +1926,7 @@
       }
     },
     {
-      "pc": 64,
+      "pc": 62,
       "unit": 2,
       "tag": "L0.router",
       "reads": [
@@ -2021,20 +1940,17 @@
         "su_nin": 1,
         "a_base": 366720,
         "ad": 4,
-        "imm2": 507307272,
+        "imm2": 0,
         "dst": 1,
         "o_base": 366752,
         "unit": 2,
         "su_vec": 0,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm2": "router_den_eps"
       }
     },
     {
-      "pc": 65,
+      "pc": 63,
       "unit": 2,
       "tag": "L0.router",
       "reads": [
@@ -2055,7 +1971,7 @@
         "b_base": 366752,
         "m1": 4,
         "m2": 2,
-        "imm1": 1069547520,
+        "imm1": 0,
         "dst": 1,
         "o_base": 366784,
         "o_si": 1,
@@ -2063,13 +1979,10 @@
         "su_vec": 1,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm1": "route_scale"
       }
     },
     {
-      "pc": 66,
+      "pc": 64,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2097,7 +2010,7 @@
       }
     },
     {
-      "pc": 67,
+      "pc": 65,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2125,7 +2038,7 @@
       }
     },
     {
-      "pc": 68,
+      "pc": 66,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2153,7 +2066,7 @@
       }
     },
     {
-      "pc": 69,
+      "pc": 67,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2181,7 +2094,7 @@
       }
     },
     {
-      "pc": 70,
+      "pc": 68,
       "unit": 2,
       "tag": "L0.experts",
       "reads": [
@@ -2197,7 +2110,7 @@
         "a_base": 398720,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 399296,
         "c_si": 1,
         "c_clip": 1,
@@ -2213,13 +2126,10 @@
         "su_vec": 1,
         "wait": 2,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
-      "pc": 71,
+      "pc": 69,
       "unit": 6,
       "tag": "L0.experts.act0_gather",
       "reads": [
@@ -2242,7 +2152,7 @@
       }
     },
     {
-      "pc": 72,
+      "pc": 70,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2270,7 +2180,7 @@
       }
     },
     {
-      "pc": 73,
+      "pc": 71,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2298,7 +2208,7 @@
       }
     },
     {
-      "pc": 74,
+      "pc": 72,
       "unit": 2,
       "tag": "L0.hc_ffn",
       "reads": [
@@ -2315,7 +2225,7 @@
         "d_base": 12104,
         "sfu": 4,
         "e1": 4,
-        "imm2": 897988541,
+        "imm2": 0,
         "o_base": 41152,
         "a_si": 1,
         "b_base": 40992,
@@ -2333,13 +2243,10 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm2": "hc_eps"
       }
     },
     {
-      "pc": 75,
+      "pc": 73,
       "unit": 2,
       "tag": "L0.hc_ffn",
       "reads": [
@@ -2356,7 +2263,7 @@
         "d_base": 12108,
         "sfu": 4,
         "e1": 3,
-        "imm2": 1073741824,
+        "imm2": 0,
         "o_base": 41184,
         "a_si": 1,
         "b_base": 40992,
@@ -2374,13 +2281,10 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm2": "hc_post_scale"
       }
     },
     {
-      "pc": 76,
+      "pc": 74,
       "unit": 2,
       "tag": "L0.hc_ffn",
       "reads": [
@@ -2423,7 +2327,7 @@
       }
     },
     {
-      "pc": 77,
+      "pc": 75,
       "unit": 2,
       "tag": "L0.hc_ffn",
       "reads": [
@@ -2454,7 +2358,7 @@
       }
     },
     {
-      "pc": 78,
+      "pc": 76,
       "unit": 4,
       "tag": "L0.hc_ffn",
       "reads": [
@@ -2473,7 +2377,7 @@
       }
     },
     {
-      "pc": 79,
+      "pc": 77,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2501,7 +2405,7 @@
       }
     },
     {
-      "pc": 80,
+      "pc": 78,
       "unit": 2,
       "tag": "L0.experts",
       "reads": [
@@ -2517,7 +2421,7 @@
         "a_base": 401728,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 402304,
         "c_si": 1,
         "c_clip": 1,
@@ -2533,13 +2437,10 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
-      "pc": 81,
+      "pc": 79,
       "unit": 6,
       "tag": "L0.experts.act1_gather",
       "reads": [
@@ -2562,7 +2463,7 @@
       }
     },
     {
-      "pc": 82,
+      "pc": 80,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2590,7 +2491,7 @@
       }
     },
     {
-      "pc": 83,
+      "pc": 81,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2618,7 +2519,7 @@
       }
     },
     {
-      "pc": 84,
+      "pc": 82,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2646,7 +2547,7 @@
       }
     },
     {
-      "pc": 85,
+      "pc": 83,
       "unit": 2,
       "tag": "L0.experts",
       "reads": [
@@ -2662,7 +2563,7 @@
         "a_base": 404736,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 405312,
         "c_si": 1,
         "c_clip": 1,
@@ -2678,13 +2579,10 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
-      "pc": 86,
+      "pc": 84,
       "unit": 6,
       "tag": "L0.experts.act2_gather",
       "reads": [
@@ -2707,7 +2605,7 @@
       }
     },
     {
-      "pc": 87,
+      "pc": 85,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2735,7 +2633,7 @@
       }
     },
     {
-      "pc": 88,
+      "pc": 86,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2763,7 +2661,7 @@
       }
     },
     {
-      "pc": 89,
+      "pc": 87,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2791,7 +2689,7 @@
       }
     },
     {
-      "pc": 90,
+      "pc": 88,
       "unit": 2,
       "tag": "L0.experts",
       "reads": [
@@ -2807,7 +2705,7 @@
         "a_base": 407744,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 408320,
         "c_si": 1,
         "c_clip": 1,
@@ -2823,13 +2721,10 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
-      "pc": 91,
+      "pc": 89,
       "unit": 6,
       "tag": "L0.experts.act3_gather",
       "reads": [
@@ -2852,7 +2747,7 @@
       }
     },
     {
-      "pc": 92,
+      "pc": 90,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2880,7 +2775,7 @@
       }
     },
     {
-      "pc": 93,
+      "pc": 91,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2908,7 +2803,7 @@
       }
     },
     {
-      "pc": 94,
+      "pc": 92,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -2936,7 +2831,7 @@
       }
     },
     {
-      "pc": 95,
+      "pc": 93,
       "unit": 2,
       "tag": "L0.experts",
       "reads": [
@@ -2952,7 +2847,7 @@
         "a_base": 410752,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 411328,
         "c_si": 1,
         "c_clip": 1,
@@ -2968,13 +2863,10 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
-      "pc": 96,
+      "pc": 94,
       "unit": 6,
       "tag": "L0.experts.act4_gather",
       "reads": [
@@ -2997,7 +2889,7 @@
       }
     },
     {
-      "pc": 97,
+      "pc": 95,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -3025,7 +2917,7 @@
       }
     },
     {
-      "pc": 98,
+      "pc": 96,
       "unit": 2,
       "tag": "L0.experts",
       "reads": [
@@ -3041,7 +2933,7 @@
         "a_base": 413760,
         "a_si": 1,
         "a_min": 1,
-        "imm3": 1092616192,
+        "imm3": 0,
         "c_base": 414336,
         "c_si": 1,
         "c_clip": 1,
@@ -3057,13 +2949,10 @@
         "su_vec": 1,
         "wait": 0,
         "su_chase": 0
-      },
-      "imm_sources": {
-        "imm3": "swiglu_limit"
       }
     },
     {
-      "pc": 99,
+      "pc": 97,
       "unit": 6,
       "tag": "L0.experts.act5_gather",
       "reads": [
@@ -3086,7 +2975,7 @@
       }
     },
     {
-      "pc": 100,
+      "pc": 98,
       "unit": 3,
       "tag": "L0.experts",
       "reads": [
@@ -3114,7 +3003,7 @@
       }
     },
     {
-      "pc": 101,
+      "pc": 99,
       "unit": 2,
       "tag": "L0.moe_sum",
       "reads": [
@@ -3143,7 +3032,7 @@
       }
     },
     {
-      "pc": 102,
+      "pc": 100,
       "unit": 2,
       "tag": "L0.moe_sum",
       "reads": [
@@ -3172,7 +3061,7 @@
       }
     },
     {
-      "pc": 103,
+      "pc": 101,
       "unit": 2,
       "tag": "L0.moe_sum",
       "reads": [
@@ -3201,7 +3090,7 @@
       }
     },
     {
-      "pc": 104,
+      "pc": 102,
       "unit": 2,
       "tag": "L0.moe_sum",
       "reads": [
@@ -3230,7 +3119,7 @@
       }
     },
     {
-      "pc": 105,
+      "pc": 103,
       "unit": 2,
       "tag": "L0.moe_sum",
       "reads": [
@@ -3259,7 +3148,7 @@
       }
     },
     {
-      "pc": 106,
+      "pc": 104,
       "unit": 2,
       "tag": "L0.moe_sum",
       "reads": [
@@ -3288,7 +3177,7 @@
       }
     },
     {
-      "pc": 107,
+      "pc": 105,
       "unit": 6,
       "tag": "L0.moe_sum.y_gather",
       "reads": [
@@ -3311,7 +3200,7 @@
       }
     },
     {
-      "pc": 108,
+      "pc": 106,
       "unit": 2,
       "tag": "L0.hc_post",
       "reads": [
@@ -3346,7 +3235,7 @@
       }
     },
     {
-      "pc": 109,
+      "pc": 107,
       "unit": 2,
       "tag": "L0.hc_post",
       "reads": [
@@ -3380,7 +3269,7 @@
       }
     },
     {
-      "pc": 110,
+      "pc": 108,
       "unit": 2,
       "tag": "L0.hc_post",
       "reads": [
@@ -3414,7 +3303,7 @@
       }
     },
     {
-      "pc": 111,
+      "pc": 109,
       "unit": 2,
       "tag": "L0.hc_post",
       "reads": [
@@ -3454,7 +3343,7 @@
       }
     },
     {
-      "pc": 112,
+      "pc": 110,
       "unit": 0,
       "tag": "end",
       "reads": [],
@@ -3494,7 +3383,7 @@
       "backed": true
     },
     {
-      "pc": 40,
+      "pc": 38,
       "matrix": "wo_b",
       "expert_id": null,
       "start_word": 25600,
@@ -3503,7 +3392,7 @@
       "backed": true
     },
     {
-      "pc": 53,
+      "pc": 51,
       "matrix": "shared.w1",
       "expert_id": null,
       "start_word": 46080,
@@ -3512,7 +3401,7 @@
       "backed": true
     },
     {
-      "pc": 54,
+      "pc": 52,
       "matrix": "shared.w3",
       "expert_id": null,
       "start_word": 52480,
@@ -3521,7 +3410,7 @@
       "backed": true
     },
     {
-      "pc": 58,
+      "pc": 56,
       "matrix": "shared.w2",
       "expert_id": null,
       "start_word": 58880,
@@ -3530,6 +3419,114 @@
       "backed": true
     },
     {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 110,
+      "start_word": 768640,
+      "end_word_exclusive": 775040,
+      "image_end_word_exclusive": 775040,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 112,
+      "start_word": 781440,
+      "end_word_exclusive": 787840,
+      "image_end_word_exclusive": 787840,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 141,
+      "start_word": 967040,
+      "end_word_exclusive": 973440,
+      "image_end_word_exclusive": 973440,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 144,
+      "start_word": 986240,
+      "end_word_exclusive": 992640,
+      "image_end_word_exclusive": 992640,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 357,
+      "start_word": 2349440,
+      "end_word_exclusive": 2355840,
+      "image_end_word_exclusive": 2355840,
+      "backed": true
+    },
+    {
+      "pc": 64,
+      "matrix": "exp.w1",
+      "expert_id": 361,
+      "start_word": 2375040,
+      "end_word_exclusive": 2381440,
+      "image_end_word_exclusive": 2381440,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 110,
+      "start_word": 3226240,
+      "end_word_exclusive": 3232640,
+      "image_end_word_exclusive": 3232640,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 112,
+      "start_word": 3239040,
+      "end_word_exclusive": 3245440,
+      "image_end_word_exclusive": 3245440,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 141,
+      "start_word": 3424640,
+      "end_word_exclusive": 3431040,
+      "image_end_word_exclusive": 3431040,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 144,
+      "start_word": 3443840,
+      "end_word_exclusive": 3450240,
+      "image_end_word_exclusive": 3450240,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 357,
+      "start_word": 4807040,
+      "end_word_exclusive": 4813440,
+      "image_end_word_exclusive": 4813440,
+      "backed": true
+    },
+    {
+      "pc": 65,
+      "matrix": "exp.w3",
+      "expert_id": 361,
+      "start_word": 4832640,
+      "end_word_exclusive": 4839040,
+      "image_end_word_exclusive": 4839040,
+      "backed": true
+    },
+    {
       "pc": 66,
       "matrix": "exp.w1",
       "expert_id": 110,
@@ -3638,7 +3635,7 @@
       "backed": true
     },
     {
-      "pc": 68,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 110,
       "start_word": 768640,
@@ -3647,7 +3644,7 @@
       "backed": true
     },
     {
-      "pc": 68,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 112,
       "start_word": 781440,
@@ -3656,7 +3653,7 @@
       "backed": true
     },
     {
-      "pc": 68,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 141,
       "start_word": 967040,
@@ -3665,7 +3662,7 @@
       "backed": true
     },
     {
-      "pc": 68,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 144,
       "start_word": 986240,
@@ -3674,7 +3671,7 @@
       "backed": true
     },
     {
-      "pc": 68,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 357,
       "start_word": 2349440,
@@ -3683,7 +3680,7 @@
       "backed": true
     },
     {
-      "pc": 68,
+      "pc": 70,
       "matrix": "exp.w1",
       "expert_id": 361,
       "start_word": 2375040,
@@ -3692,7 +3689,7 @@
       "backed": true
     },
     {
-      "pc": 69,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 110,
       "start_word": 3226240,
@@ -3701,7 +3698,7 @@
       "backed": true
     },
     {
-      "pc": 69,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 112,
       "start_word": 3239040,
@@ -3710,7 +3707,7 @@
       "backed": true
     },
     {
-      "pc": 69,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 141,
       "start_word": 3424640,
@@ -3719,7 +3716,7 @@
       "backed": true
     },
     {
-      "pc": 69,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 144,
       "start_word": 3443840,
@@ -3728,7 +3725,7 @@
       "backed": true
     },
     {
-      "pc": 69,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 357,
       "start_word": 4807040,
@@ -3737,7 +3734,7 @@
       "backed": true
     },
     {
-      "pc": 69,
+      "pc": 71,
       "matrix": "exp.w3",
       "expert_id": 361,
       "start_word": 4832640,
@@ -3746,115 +3743,7 @@
       "backed": true
     },
     {
-      "pc": 72,
-      "matrix": "exp.w1",
-      "expert_id": 110,
-      "start_word": 768640,
-      "end_word_exclusive": 775040,
-      "image_end_word_exclusive": 775040,
-      "backed": true
-    },
-    {
-      "pc": 72,
-      "matrix": "exp.w1",
-      "expert_id": 112,
-      "start_word": 781440,
-      "end_word_exclusive": 787840,
-      "image_end_word_exclusive": 787840,
-      "backed": true
-    },
-    {
-      "pc": 72,
-      "matrix": "exp.w1",
-      "expert_id": 141,
-      "start_word": 967040,
-      "end_word_exclusive": 973440,
-      "image_end_word_exclusive": 973440,
-      "backed": true
-    },
-    {
-      "pc": 72,
-      "matrix": "exp.w1",
-      "expert_id": 144,
-      "start_word": 986240,
-      "end_word_exclusive": 992640,
-      "image_end_word_exclusive": 992640,
-      "backed": true
-    },
-    {
-      "pc": 72,
-      "matrix": "exp.w1",
-      "expert_id": 357,
-      "start_word": 2349440,
-      "end_word_exclusive": 2355840,
-      "image_end_word_exclusive": 2355840,
-      "backed": true
-    },
-    {
-      "pc": 72,
-      "matrix": "exp.w1",
-      "expert_id": 361,
-      "start_word": 2375040,
-      "end_word_exclusive": 2381440,
-      "image_end_word_exclusive": 2381440,
-      "backed": true
-    },
-    {
-      "pc": 73,
-      "matrix": "exp.w3",
-      "expert_id": 110,
-      "start_word": 3226240,
-      "end_word_exclusive": 3232640,
-      "image_end_word_exclusive": 3232640,
-      "backed": true
-    },
-    {
-      "pc": 73,
-      "matrix": "exp.w3",
-      "expert_id": 112,
-      "start_word": 3239040,
-      "end_word_exclusive": 3245440,
-      "image_end_word_exclusive": 3245440,
-      "backed": true
-    },
-    {
-      "pc": 73,
-      "matrix": "exp.w3",
-      "expert_id": 141,
-      "start_word": 3424640,
-      "end_word_exclusive": 3431040,
-      "image_end_word_exclusive": 3431040,
-      "backed": true
-    },
-    {
-      "pc": 73,
-      "matrix": "exp.w3",
-      "expert_id": 144,
-      "start_word": 3443840,
-      "end_word_exclusive": 3450240,
-      "image_end_word_exclusive": 3450240,
-      "backed": true
-    },
-    {
-      "pc": 73,
-      "matrix": "exp.w3",
-      "expert_id": 357,
-      "start_word": 4807040,
-      "end_word_exclusive": 4813440,
-      "image_end_word_exclusive": 4813440,
-      "backed": true
-    },
-    {
-      "pc": 73,
-      "matrix": "exp.w3",
-      "expert_id": 361,
-      "start_word": 4832640,
-      "end_word_exclusive": 4839040,
-      "image_end_word_exclusive": 4839040,
-      "backed": true
-    },
-    {
-      "pc": 79,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 5613440,
@@ -3863,7 +3752,7 @@
       "backed": true
     },
     {
-      "pc": 79,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 5624960,
@@ -3872,7 +3761,7 @@
       "backed": true
     },
     {
-      "pc": 79,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 5792000,
@@ -3881,7 +3770,7 @@
       "backed": true
     },
     {
-      "pc": 79,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 5809280,
@@ -3890,7 +3779,7 @@
       "backed": true
     },
     {
-      "pc": 79,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 7036160,
@@ -3899,7 +3788,7 @@
       "backed": true
     },
     {
-      "pc": 79,
+      "pc": 77,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 7059200,
@@ -3908,7 +3797,7 @@
       "backed": true
     },
     {
-      "pc": 82,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 110,
       "start_word": 768640,
@@ -3917,7 +3806,7 @@
       "backed": true
     },
     {
-      "pc": 82,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 112,
       "start_word": 781440,
@@ -3926,7 +3815,7 @@
       "backed": true
     },
     {
-      "pc": 82,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 141,
       "start_word": 967040,
@@ -3935,7 +3824,7 @@
       "backed": true
     },
     {
-      "pc": 82,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 144,
       "start_word": 986240,
@@ -3944,7 +3833,7 @@
       "backed": true
     },
     {
-      "pc": 82,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 357,
       "start_word": 2349440,
@@ -3953,7 +3842,7 @@
       "backed": true
     },
     {
-      "pc": 82,
+      "pc": 80,
       "matrix": "exp.w1",
       "expert_id": 361,
       "start_word": 2375040,
@@ -3962,7 +3851,7 @@
       "backed": true
     },
     {
-      "pc": 83,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 110,
       "start_word": 3226240,
@@ -3971,7 +3860,7 @@
       "backed": true
     },
     {
-      "pc": 83,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 112,
       "start_word": 3239040,
@@ -3980,7 +3869,7 @@
       "backed": true
     },
     {
-      "pc": 83,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 141,
       "start_word": 3424640,
@@ -3989,7 +3878,7 @@
       "backed": true
     },
     {
-      "pc": 83,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 144,
       "start_word": 3443840,
@@ -3998,7 +3887,7 @@
       "backed": true
     },
     {
-      "pc": 83,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 357,
       "start_word": 4807040,
@@ -4007,7 +3896,7 @@
       "backed": true
     },
     {
-      "pc": 83,
+      "pc": 81,
       "matrix": "exp.w3",
       "expert_id": 361,
       "start_word": 4832640,
@@ -4016,7 +3905,7 @@
       "backed": true
     },
     {
-      "pc": 84,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 5613440,
@@ -4025,7 +3914,7 @@
       "backed": true
     },
     {
-      "pc": 84,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 5624960,
@@ -4034,7 +3923,7 @@
       "backed": true
     },
     {
-      "pc": 84,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 5792000,
@@ -4043,7 +3932,7 @@
       "backed": true
     },
     {
-      "pc": 84,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 5809280,
@@ -4052,7 +3941,7 @@
       "backed": true
     },
     {
-      "pc": 84,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 7036160,
@@ -4061,7 +3950,7 @@
       "backed": true
     },
     {
-      "pc": 84,
+      "pc": 82,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 7059200,
@@ -4070,7 +3959,7 @@
       "backed": true
     },
     {
-      "pc": 87,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 110,
       "start_word": 768640,
@@ -4079,7 +3968,7 @@
       "backed": true
     },
     {
-      "pc": 87,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 112,
       "start_word": 781440,
@@ -4088,7 +3977,7 @@
       "backed": true
     },
     {
-      "pc": 87,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 141,
       "start_word": 967040,
@@ -4097,7 +3986,7 @@
       "backed": true
     },
     {
-      "pc": 87,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 144,
       "start_word": 986240,
@@ -4106,7 +3995,7 @@
       "backed": true
     },
     {
-      "pc": 87,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 357,
       "start_word": 2349440,
@@ -4115,7 +4004,7 @@
       "backed": true
     },
     {
-      "pc": 87,
+      "pc": 85,
       "matrix": "exp.w1",
       "expert_id": 361,
       "start_word": 2375040,
@@ -4124,7 +4013,7 @@
       "backed": true
     },
     {
-      "pc": 88,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 110,
       "start_word": 3226240,
@@ -4133,7 +4022,7 @@
       "backed": true
     },
     {
-      "pc": 88,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 112,
       "start_word": 3239040,
@@ -4142,7 +4031,7 @@
       "backed": true
     },
     {
-      "pc": 88,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 141,
       "start_word": 3424640,
@@ -4151,7 +4040,7 @@
       "backed": true
     },
     {
-      "pc": 88,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 144,
       "start_word": 3443840,
@@ -4160,7 +4049,7 @@
       "backed": true
     },
     {
-      "pc": 88,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 357,
       "start_word": 4807040,
@@ -4169,7 +4058,7 @@
       "backed": true
     },
     {
-      "pc": 88,
+      "pc": 86,
       "matrix": "exp.w3",
       "expert_id": 361,
       "start_word": 4832640,
@@ -4178,7 +4067,7 @@
       "backed": true
     },
     {
-      "pc": 89,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 5613440,
@@ -4187,7 +4076,7 @@
       "backed": true
     },
     {
-      "pc": 89,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 5624960,
@@ -4196,7 +4085,7 @@
       "backed": true
     },
     {
-      "pc": 89,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 5792000,
@@ -4205,7 +4094,7 @@
       "backed": true
     },
     {
-      "pc": 89,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 5809280,
@@ -4214,7 +4103,7 @@
       "backed": true
     },
     {
-      "pc": 89,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 7036160,
@@ -4223,7 +4112,7 @@
       "backed": true
     },
     {
-      "pc": 89,
+      "pc": 87,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 7059200,
@@ -4232,7 +4121,7 @@
       "backed": true
     },
     {
-      "pc": 92,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 110,
       "start_word": 768640,
@@ -4241,7 +4130,7 @@
       "backed": true
     },
     {
-      "pc": 92,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 112,
       "start_word": 781440,
@@ -4250,7 +4139,7 @@
       "backed": true
     },
     {
-      "pc": 92,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 141,
       "start_word": 967040,
@@ -4259,7 +4148,7 @@
       "backed": true
     },
     {
-      "pc": 92,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 144,
       "start_word": 986240,
@@ -4268,7 +4157,7 @@
       "backed": true
     },
     {
-      "pc": 92,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 357,
       "start_word": 2349440,
@@ -4277,7 +4166,7 @@
       "backed": true
     },
     {
-      "pc": 92,
+      "pc": 90,
       "matrix": "exp.w1",
       "expert_id": 361,
       "start_word": 2375040,
@@ -4286,7 +4175,7 @@
       "backed": true
     },
     {
-      "pc": 93,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 110,
       "start_word": 3226240,
@@ -4295,7 +4184,7 @@
       "backed": true
     },
     {
-      "pc": 93,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 112,
       "start_word": 3239040,
@@ -4304,7 +4193,7 @@
       "backed": true
     },
     {
-      "pc": 93,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 141,
       "start_word": 3424640,
@@ -4313,7 +4202,7 @@
       "backed": true
     },
     {
-      "pc": 93,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 144,
       "start_word": 3443840,
@@ -4322,7 +4211,7 @@
       "backed": true
     },
     {
-      "pc": 93,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 357,
       "start_word": 4807040,
@@ -4331,7 +4220,7 @@
       "backed": true
     },
     {
-      "pc": 93,
+      "pc": 91,
       "matrix": "exp.w3",
       "expert_id": 361,
       "start_word": 4832640,
@@ -4340,7 +4229,7 @@
       "backed": true
     },
     {
-      "pc": 94,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 5613440,
@@ -4349,7 +4238,7 @@
       "backed": true
     },
     {
-      "pc": 94,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 5624960,
@@ -4358,7 +4247,7 @@
       "backed": true
     },
     {
-      "pc": 94,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 5792000,
@@ -4367,7 +4256,7 @@
       "backed": true
     },
     {
-      "pc": 94,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 5809280,
@@ -4376,7 +4265,7 @@
       "backed": true
     },
     {
-      "pc": 94,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 7036160,
@@ -4385,7 +4274,7 @@
       "backed": true
     },
     {
-      "pc": 94,
+      "pc": 92,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 7059200,
@@ -4394,7 +4283,7 @@
       "backed": true
     },
     {
-      "pc": 97,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 5613440,
@@ -4403,7 +4292,7 @@
       "backed": true
     },
     {
-      "pc": 97,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 5624960,
@@ -4412,7 +4301,7 @@
       "backed": true
     },
     {
-      "pc": 97,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 5792000,
@@ -4421,7 +4310,7 @@
       "backed": true
     },
     {
-      "pc": 97,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 5809280,
@@ -4430,7 +4319,7 @@
       "backed": true
     },
     {
-      "pc": 97,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 7036160,
@@ -4439,7 +4328,7 @@
       "backed": true
     },
     {
-      "pc": 97,
+      "pc": 95,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 7059200,
@@ -4448,7 +4337,7 @@
       "backed": true
     },
     {
-      "pc": 100,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 110,
       "start_word": 5613440,
@@ -4457,7 +4346,7 @@
       "backed": true
     },
     {
-      "pc": 100,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 112,
       "start_word": 5624960,
@@ -4466,7 +4355,7 @@
       "backed": true
     },
     {
-      "pc": 100,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 141,
       "start_word": 5792000,
@@ -4475,7 +4364,7 @@
       "backed": true
     },
     {
-      "pc": 100,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 144,
       "start_word": 5809280,
@@ -4484,7 +4373,7 @@
       "backed": true
     },
     {
-      "pc": 100,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 357,
       "start_word": 7036160,
@@ -4493,7 +4382,7 @@
       "backed": true
     },
     {
-      "pc": 100,
+      "pc": 98,
       "matrix": "exp.w2",
       "expert_id": 361,
       "start_word": 7059200,
@@ -4504,7 +4393,7 @@
   ],
   "me_wo_a_trace": [
     {
-      "pc": 37,
+      "pc": 35,
       "group": 0,
       "output_first_row": 0,
       "output_last_row_exclusive": 1024,
@@ -4520,7 +4409,7 @@
       "xjs": 0
     },
     {
-      "pc": 38,
+      "pc": 36,
       "group": 1,
       "output_first_row": 1024,
       "output_last_row_exclusive": 2048,
@@ -4538,7 +4427,7 @@
   ],
   "blockers": [
     "packed FP4 QE words require a sector-to-16-lane port adapter; no exact RTL adapter gate",
-    "production HBM RoPE full-position table image and physical region not bound"
+    "sparse token-position RoPE fixture only; production RoPE storage/prefetch unproved"
   ],
   "claim_boundary": "Descriptor and source image address check; no RTL token or throughput verdict."
 }
