@@ -312,6 +312,8 @@ int main(int argc, char** argv) {
     const bool trace = getenv("RT_TRACE") != nullptr;
     long progress_every = getenv("RT_PROGRESS") ? atol(getenv("RT_PROGRESS")) : 4096;
     bool stage_done = false, next_stage = false;
+    // a new stage's done is armed only once every die's sequencer has dropped the previous one
+    bool done_armed = true;
     size_t cur = 0; long stage_start = 7, busy0[D] = {};
     auto tstart = std::chrono::steady_clock::now();
     bool live_all[D];
@@ -324,6 +326,12 @@ int main(int argc, char** argv) {
             uint32_t cyc = die[0]->cyc;
             uint8_t all_done = 1;
             for (int d = 0; d < D; d++) all_done &= die[d]->s_done;
+            if (!done_armed) {
+                bool any_done = false;
+                for (int d = 0; d < D; d++) any_done |= die[d]->s_done;
+                if (!any_done) done_armed = true;
+                all_done = 0;
+            }
             if (cyc > 8 && all_done && !stage_done) {
                 stage_done = true;
                 uint8_t sf = 0, cf = 0;
@@ -488,7 +496,7 @@ int main(int argc, char** argv) {
         // host stage controller: one-cycle start after an image-bank switch
         for (int d = 0; d < D; d++) die[d]->h_start = 0;
         if (next_stage) {
-            next_stage = false; stage_done = false; cur++;
+            next_stage = false; stage_done = false; done_armed = false; cur++;
             for (int d = 0; d < D; d++) {
                 load_images(mem[d], stages[cur].dir[d]);
                 if (stages[cur].kv_reset) std::fill(mem[d].kv.begin(), mem[d].kv.end(), 0u);
