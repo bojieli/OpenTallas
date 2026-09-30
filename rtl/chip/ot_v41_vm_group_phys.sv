@@ -173,22 +173,36 @@ module ot_v41_vm_group_phys #(
         r_row <= rd_row; r_sel <= rd_sel; f_row <= q_row; f_d <= q_d; f_m <= q_m;
     end
     always @(posedge clk or negedge rst_n) if (!rst_n) f_v <= 0; else f_v <= q_v;
-    integer cc, ll, bb, qq;
-    reg [3:0]    sl;
-    reg [31:0]   w;
-    reg [RA-1:0] rr;
-    always @(*) begin
-        rd_q = 0;
-        for (cc = 0; cc < RC; cc = cc + 1)
-            for (ll = 0; ll < 8; ll = ll + 1) begin
-                sl = r_sel[(cc*8 + ll)*4 +: 4];
-                bb = sl[3];
-                rr = r_row[(cc*NB + bb)*RA +: RA];
-                w = mq[(cc*NB + bb)*256 + 32*sl[2:0] +: 32];
-                for (qq = 0; qq < WQD; qq = qq + 1)      // oldest to newest: the newest write wins
-                    if (f_v[bb*WQD + qq] && f_row[(bb*WQD + qq)*RA +: RA] == rr && f_m[(bb*WQD + qq)*8 + sl[2:0]])
-                        w = f_d[(bb*WQD + qq)*256 + 32*sl[2:0] +: 32];
-                rd_q[(cc*8 + ll)*32 +: 32] = w;
+    // per class, per bank: the row as read, with every queued write to that row applied oldest to newest
+    // (fixed indices only: a bank's forwarding is one priority chain over its WQD entries)
+    wire [RC*NB*256-1:0] fwd;
+    genvar q2;
+    generate for (c = 0; c < RC; c = c + 1) begin : g_fc
+        for (b = 0; b < NB; b = b + 1) begin : g_fb
+            wire [RA-1:0] rr = r_row[(c*NB + b)*RA +: RA];
+            wire [255:0] ch [0:WQD];
+            assign ch[0] = mq[(c*NB + b)*256 +: 256];
+            for (q2 = 0; q2 < WQD; q2 = q2 + 1) begin : g_q
+                wire hit = f_v[b*WQD + q2] && f_row[(b*WQD + q2)*RA +: RA] == rr;
+                genvar t2;
+                for (t2 = 0; t2 < 8; t2 = t2 + 1) begin : g_w
+                    assign ch[q2+1][32*t2 +: 32] = (hit && f_m[(b*WQD + q2)*8 + t2]) ?
+                        f_d[(b*WQD + q2)*256 + 32*t2 +: 32] : ch[q2][32*t2 +: 32];
+                end
             end
-    end
+            assign fwd[(c*NB + b)*256 +: 256] = ch[WQD];
+        end
+        // per lane: bank, then word
+        genvar l2;
+        for (l2 = 0; l2 < 8; l2 = l2 + 1) begin : g_l
+            wire [3:0] sl = r_sel[(c*8 + l2)*4 +: 4];
+            wire [255:0] rowv = (NB > 1 && sl[3]) ? fwd[(c*NB + (NB > 1 ? 1 : 0))*256 +: 256] : fwd[(c*NB)*256 +: 256];
+            wire [31:0] wv [0:7];
+            genvar t3;
+            for (t3 = 0; t3 < 8; t3 = t3 + 1) begin : g_t
+                assign wv[t3] = rowv[32*t3 +: 32];
+            end
+            always @(*) rd_q[(c*8 + l2)*32 +: 32] = wv[sl[2:0]];
+        end
+    end endgenerate
 endmodule
