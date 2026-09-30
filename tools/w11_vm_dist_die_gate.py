@@ -20,6 +20,7 @@ Writes results/rtl/w11_vm_dist_gate_die.json (a new record; never overwrites).
 from __future__ import annotations
 
 import argparse
+import collections
 import concurrent.futures as cf
 import hashlib
 import json
@@ -41,6 +42,8 @@ def build(obj: Path, vd: int, st: dict, jobs: int) -> tuple[Path, dict]:
     obj.mkdir(parents=True, exist_ok=True)
     exe = obj / "Vtb_chip_v41x_die_vmdist"
     flags = [f"-GVM_DIST={vd}", *[f"-G{k}={v}" for k, v in st.items()]]
+    if not vd:
+        flags = ["-GVM_DIST=0"]
     srcs = G.die_sources() + [G.TB_DIE, G.HARNESS_DIE, core.SVH, core.VLT]
     if G.reusable(obj, exe, flags + ["-O0"], srcs):
         return exe, dict(reused=True)
@@ -61,7 +64,11 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--scratch", type=Path, required=True)
     ap.add_argument("--image", type=Path, required=True, help="the smoke image (tools/hdc_program_v41.py --hbm)")
-    ap.add_argument("--variants", default="vm_dist_0,vm_dist_1_spec,vm_dist_1_model")
+    ap.add_argument("--image-a128", type=Path, default=None,
+                    help="the same image built with HDC_V41_VM_ALIGN=128 (option H's layout rule)")
+    ap.add_argument("--variants", default="vm_dist_0,vm_dist_1_spec,vm_dist_1_model",
+                    help="vm_dist_0, vm_dist_1_<set>; option H: flat_a128 (VM_DIST 0 on the aligned image), "
+                         "h (the h set on the aligned image), h_free (the same with VM_DIST_H = 0)")
     ap.add_argument("--jobs", type=int, default=12)
     ap.add_argument("--parallel-builds", type=int, default=3)
     ap.add_argument("--out", type=Path, default=OUT)
@@ -71,17 +78,43 @@ def main() -> int:
     ds.setup("dpi")
     sets = G.stage_sets()
     names = a.variants.split(",")
-    variants = {}
+    variants, images = {}, {}
     for n in names:
-        variants[n] = (0, sets["spec"]) if n == "vm_dist_0" else (1, sets[n.rsplit("_", 1)[1]])
+        if n in ("vm_dist_0", "flat_a128"):
+            variants[n] = (0, sets["spec"])
+        elif n == "h":
+            variants[n] = (1, sets["h"])
+        elif n == "h_free":
+            variants[n] = (1, dict(sets["h"], VM_DIST_H=0))
+        else:
+            variants[n] = (1, sets[n.rsplit("_", 1)[1]])
+        images[n] = a.image_a128 if n in ("flat_a128", "h", "h_free") else a.image
+    # one build serves every variant with the same parameters (flat on both images)
+    bkey = {n: ("flat" if variants[n][0] == 0 else n) for n in names}
     t0 = time.time()
     with cf.ThreadPoolExecutor(a.parallel_builds) as ex:
-        futs = {k: ex.submit(build, a.scratch / f"obj_{k}", vd, st, a.jobs) for k, (vd, st) in variants.items()}
-        built = {k: f.result() for k, f in futs.items()}
+        uniq = {bkey[k]: variants[k] for k in names}
+        futs = {b: ex.submit(build, a.scratch / f"obj_{b}", vd, st, a.jobs) for b, (vd, st) in uniq.items()}
+        bb = {b: f.result() for b, f in futs.items()}
+    built = {k: bb[bkey[k]] for k in names}
     exes = {k: v[0] for k, v in built.items()}
     with cf.ThreadPoolExecutor(len(exes)) as ex:
-        res = dict(zip(exes, ex.map(lambda k: G.die_run(exes[k], a.image), exes)))
+        res = dict(zip(exes, ex.map(lambda k: G.die_run(exes[k], images[k]), exes)))
     base = res.get("vm_dist_0")
+    for k, r in res.items():
+        r["image"] = str(images[k].name)
+        vr = [tuple(map(int, m.groups())) for m in G.VROT_RE.finditer(r.pop("_log", ""))]
+        if vr:
+            r["h_ops"] = dict(ops=len(vr), network_ops=sum(1 for x in vr if x[3] or x[4] or x[5]),
+                              broadcast_ops=sum(1 for x in vr if x[2]), hold_cycles=sum(x[1] for x in vr),
+                              holds={str(h): c for h, c in sorted(collections.Counter(x[1] for x in vr).items())})
+    fa, h, hf = res.get("flat_a128"), res.get("h"), res.get("h_free")
+    if h and hf and h.get("status") == "pass" and hf.get("status") == "pass":
+        # the networks' cost on this token: the same design and image with the networks free
+        h["network_cycles_vs_h_free"] = h["step"]["cycles"] - hf["step"]["cycles"]
+    if fa and h and fa.get("status") == "pass" and h.get("status") == "pass":
+        h["cycle_delta_vs_flat_a128"] = h["step"]["cycles"] - fa["step"]["cycles"]
+        h["token_identical_to_flat_a128"] = h["step"]["next_token"] == fa["step"]["next_token"]
     for k, r in res.items():
         r["build"] = built[k][1]
         r["stages"] = variants[k][1] if variants[k][0] else None
@@ -110,6 +143,10 @@ def main() -> int:
         host=os.uname().nodename, simulator=ds.tool_version(ds.VERILATOR), stage_sets=sets,
         die=dict(image=dict(args=["--hbm"], sha256={n: G.sha(a.image / n) for n in sorted(os.listdir(a.image))
                                                     if n.endswith((".hex", ".json", ".args"))}),
+                 image_a128=None if a.image_a128 is None else dict(
+                     args=["--hbm"], env={"HDC_V41_VM_ALIGN": "128"},
+                     sha256={n: G.sha(a.image_a128 / n) for n in sorted(os.listdir(a.image_a128))
+                             if n.endswith((".hex", ".json", ".args"))}),
                  runs=res),
         wall_seconds=round(time.time() - t0),
         claim_boundary=("One reduced V4.1 decode step (token 3582, position 7) through the die top in host mode "

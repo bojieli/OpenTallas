@@ -259,7 +259,13 @@ def measure(ops, geoms, with_vm):
         wr = C.out_addrs(f) if f["dst"] == I.DST_VM else None
         for oo, ii in lay["vecs"]:
             e = C.elem_index(f, oo, ii)
-            lanes = np.arange(len(e))
+            # the physical lane of each live element: lane l takes (o_v + l / S, i_v + l mod S); a slot's dead
+            # lanes (i >= ni) are skipped, not compacted
+            if lay["flat"]:
+                g_ = oo * f["nin"] + ii
+                lanes = g_ - g_.min()
+            else:
+                lanes = (oo - oo.min()) * lay["S"] + (ii - ii.min())
             for cls, a in st.items():
                 if a is None:
                     t.unknown += 1

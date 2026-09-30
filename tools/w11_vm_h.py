@@ -30,58 +30,59 @@ import rtl_hdc_v41x_vec_campaign as C      # noqa: E402
 MK24 = (1 << 24) - 1
 
 
-def rule(f, N, M, ng=None):
-    """(b, g, r, w): broadcast read, gathered read, residual read, residual write -- the RTL's h_* flags."""
+def phys_lanes(f, lay, oo, ii):
+    """The physical lane of each live element of a vector: lane l takes element (o_v + l / S, i_v + l mod S)
+    (ot_hdc_v41x_vec LAYOUT); dead lanes (i >= ni) are skipped by the layout's live mask, not compacted."""
+    if len(oo) == 0:
+        return np.zeros(0, dtype=np.int64)
+    if lay["flat"]:
+        g = oo * f["nin"] + ii
+        return (g - g.min()).astype(np.int64)
+    return ((oo - oo.min()) * lay["S"] + (ii - ii.min())).astype(np.int64)
+
+
+def classify(f, N, M, ng=None):
+    """Per class the RTL's decision: L local, B broadcast, R residual (rotate), G gathered."""
     ng = ng or N // 8
     lay = C.layout(f, N, M)
     ls, nsh = lay["ls"], lay["nsh"]
     S = 1 << ls
-    if lay["flat"]:
-        s_no, s_ni = 1, f["nout"] * f["nin"]
-    else:
-        s_no, s_ni = f["nout"], f["nin"]
+    s_no, s_ni = (1, f["nout"] * f["nin"]) if lay["flat"] else (f["nout"], f["nin"])
     mk = ng - 1
 
     def loc(base, so, si):
-        return (si == 1 and (base & mk) == 0 and
-                ((((so - S) & MK24) & mk) == 0 if nsh != 0 else (s_no == 1 or (so & mk) == 0)) and
+        return ((si == 1 or s_ni == 1) and (base & mk) == 0 and
+                (s_no == 1 or ((((so - S) & MK24) & mk) == 0 if nsh != 0 else (so & mk) == 0)) and
                 not (nsh == 0 and S < ng and s_ni > S))
 
     def bc(so, si):
         return si == 0 and (nsh == 0 or so == 0)
 
-    b = g = r = w = False
+    cl = {}
     if f["asrc"] == I.SRC_VM:
-        if f["aind"]:
-            g = True
-        elif bc(f["aso"], f["asi"]):
-            b = True
-        elif not loc(f["abase"], f["aso"], f["asi"]):
-            r = True
+        cl["A"] = "G" if f["aind"] else "B" if bc(f["aso"], f["asi"]) else \
+            "L" if loc(f["abase"], f["aso"], f["asi"]) else "R"
     for s in "bd":
         if f[f"{s}src"] == I.SRC_VM:
-            if bc(f[f"{s}so"], f[f"{s}si"]):
-                b = True
-            elif f["bhalf"] or not loc(f[f"{s}base"], f[f"{s}so"], f[f"{s}si"]):
-                r = True
+            cl[s.upper()] = "B" if bc(f[f"{s}so"], f[f"{s}si"]) else \
+                "R" if f["bhalf"] or not loc(f[f"{s}base"], f[f"{s}so"], f[f"{s}si"]) else "L"
     if f["csrc"] == I.SRC_VM:
-        if f["cpair"]:
-            r = True
-        elif bc(f["cso"], f["csi"]):
-            b = True
-        elif not loc(f["cbase"], f["cso"], f["csi"]):
-            r = True
+        cl["C"] = "R" if f["cpair"] else "B" if bc(f["cso"], f["csi"]) else \
+            "L" if loc(f["cbase"], f["cso"], f["csi"]) else "R"
     if f["aind"] == I.IND_I:
-        if not loc(f["aibase"], 0, 1):
-            r = True
+        cl["G"] = "L" if loc(f["aibase"], 0, 1) else "R"
     elif f["aind"] == I.IND_O:
-        if bc(1, 0):
-            b = True
-        else:
-            r = True
-    if f["dst"] == I.DST_VM and not loc(f["obase"], f["oso"], f["osi"]):
-        w = True
-    return b, g, r, w
+        cl["G"] = "B" if bc(1, 0) else "R"
+    if f["dst"] == I.DST_VM:
+        cl["E"] = "L" if loc(f["obase"], f["oso"], f["osi"]) else "R"
+    return cl
+
+
+def rule(f, N, M, ng=None):
+    """(b, g, r, w): broadcast read, gathered read, residual read, residual write -- the RTL's h_* flags."""
+    cl = classify(f, N, M, ng)
+    return (any(v == "B" for c, v in cl.items() if c != "E"), cl.get("A") == "G",
+            any(v == "R" for c, v in cl.items() if c != "E"), cl.get("E") == "R")
 
 
 def hold(flags, rot=17, gath=18, scal=8):
@@ -110,17 +111,16 @@ def truth(f, vm, N, M, ng=None):
         st["G"] = (f["aibase"] + (i if f["aind"] == I.IND_I else o)).reshape(-1).astype(np.int64)
     if f["dst"] == I.DST_VM:
         st["E"] = C.out_addrs(f).astype(np.int64)
-    rem, bcv = collections.Counter(), set()
+    rem, multi = collections.Counter(), collections.Counter()
     for oo, ii in lay["vecs"]:
         e = C.elem_index(f, oo, ii)
-        lanes = np.arange(len(e))
+        lanes = phys_lanes(f, lay, oo, ii)
         for cls, a in st.items():
             x = a[e] & MK24
-            if len(x) > 1 and len(np.unique(x)) == 1:
-                bcv.add(cls)
-                continue
+            if len(np.unique(x)) > 1:
+                multi[cls] += 1               # a vector that is not one element for every lane
             rem[cls] += int(np.count_nonzero((x % ng) != (lanes % ng)))
-    return rem, bcv
+    return rem, multi
 
 
 def check(ops, N, M, ng=None):
@@ -133,18 +133,22 @@ def check(ops, N, M, ng=None):
         if lay["bad"]:
             continue
         out["ops"] += 1
+        cl = classify(f, N, M, ng)
         fl = rule(f, N, M, ng)
         b, g, r, w = fl
-        rem, bcv = truth(f, vm, N, M, ng)
-        rd = any(rem[c] for c in "ABCDG")
+        rem, multi = truth(f, vm, N, M, ng)
+        # a LOCAL class has no non-local lane; a BROADCAST class reads one element a vector
+        bad = {c: v for c, v in cl.items() if (v == "L" and rem[c]) or (v == "B" and multi[c])}
+        rd = any(rem[c] and cl.get(c) != "B" for c in "ABCDG")
         wr = bool(rem["E"])
         out["residual_ops"] += int(rd or wr)
         for nm, v in zip("bgrw", fl):
             out["flagged"][nm] += int(v)
         out["flagged_any"] += int(g or r or w)
-        if (rd and not (g or r)) or (wr and not w):
+        if bad:
             if len(out["unsafe"]) < 20:
-                out["unsafe"].append(dict(op=k, tag=tag, remote={c: rem[c] for c in rem if rem[c]}, flags=fl))
+                out["unsafe"].append(dict(op=k, tag=tag, classes=cl, remote={c: rem[c] for c in rem if rem[c]},
+                                          multi={c: multi[c] for c in multi}))
             out.setdefault("unsafe_count", 0)
             out["unsafe_count"] = out.get("unsafe_count", 0) + 1
         if (g or r or w) and not (rd or wr):

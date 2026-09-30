@@ -410,16 +410,16 @@ module ot_hdc_v41x_vec #(
     end
     // ---- VMD_NG > 0: the op's streams against the lane groups (option H) -------------------------------------
     // A unit-stride stream (si = 1) is LOCAL when its base is in group 0 and every row starts where its lanes
-    // do: rows packed VW/S a vector need so = S, a row a vector needs so = 0 (or one row), and a row that
-    // spans vectors of S < NG lanes is never local (all mod NG).  BROADCAST: si = 0 and one row a vector
+    // do: one row, or rows packed VW/S a vector with so = S, or a row a vector with so = 0; a row that spans
+    // vectors of S < NG lanes is never local (all mod NG).  BROADCAST: si = 0 and one row a vector
     // (or so = 0).  Anything else, a half (B / D) or pair (C) stream, and a gathered A are RESIDUAL.
     localparam integer VNG = (VMD_NG > 0) ? VMD_NG : 1;
     localparam [AW-1:0] VMK = VNG - 1;
     wire [CW-1:0] h_S = 1 << c_ls;
     function automatic h_loc(input [AW-1:0] base, input [AW-1:0] so, input [AW-1:0] si, input [3:0] nsh,
                              input [CW-1:0] S, input [CW-1:0] no, input [CW-1:0] ni);
-        h_loc = (si == 1) && ((base & VMK) == 0) &&
-                ((nsh != 0) ? (((so - S[AW-1:0]) & VMK) == 0) : ((no == 1) || ((so & VMK) == 0))) &&
+        h_loc = (si == 1 || ni == 1) && ((base & VMK) == 0) &&
+                ((no == 1) || ((nsh != 0) ? (((so - S[AW-1:0]) & VMK) == 0) : ((so & VMK) == 0))) &&
                 !(nsh == 0 && S < VNG && ni > S);
     endfunction
     function automatic h_bc(input [AW-1:0] so, input [AW-1:0] si, input [3:0] nsh);

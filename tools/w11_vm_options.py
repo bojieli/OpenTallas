@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import os
 import copy
 import datetime
 import hashlib
@@ -53,6 +54,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import hdc_isa_v41 as I                    # noqa: E402
 import rtl_hdc_v41x_vec_campaign as C      # noqa: E402
 import uarch_model as U                    # noqa: E402
+import w11_vm_h as H                       # noqa: E402
 
 OUT = ROOT / "results/uarch/w11_vm_options.json"
 SPEC = ROOT / "results/floorplan/v41_vm_dist_spec.json"
@@ -60,7 +62,7 @@ LANE_REC = "results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.jso
 LANE_REC_BRANCH = "claude/w11-dedicated-units"
 N, M, NG = 1024, 256, 128
 PERIOD_PS, PS_PER_UM = 920.0, 0.76
-MUX_LEVELS_PER_STAGE = 8      # ASSUMED: 2:1 mux levels that fit one 0.92 ns stage beside its register (~0.1 ns a level)
+MUX_LEVELS_PER_STAGE = 8      # ASSUMED unless --mux-levels / --rot-record: 2:1 mux levels in one 0.92 ns stage
 ROT_LEVELS = int(math.log2(N))                 # a 1,024-lane rotate (log shifter): 10 levels
 BENES_LEVELS = 2 * int(math.log2(N)) - 1       # an arbitrary permutation (gathers): 19 levels
 XBAR_LEVELS = int(math.log2(N))                # a 1,024:1 mux tree per output: 10 levels
@@ -138,7 +140,8 @@ def measure_h(ops):
         if lay["bad"]:
             continue
         vw = lay["vw"]
-        vec0 = [(np.arange(len(oo)), C.elem_index(f, oo, ii)) for oo, ii in lay["vecs"]]
+        # the physical lane of each live element (dead lanes of a slot are skipped, not compacted)
+        vec0 = [(H.phys_lanes(f, lay, oo, ii), C.elem_index(f, oo, ii)) for oo, ii in lay["vecs"]]
         st_raw = class_addrs(f, f, vm)
         g = align(f)
         st_al = class_addrs(f, g, vm)
@@ -231,7 +234,13 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--limit", type=int, default=0, help="first N vehicle ops only (a smoke test; not a record)")
+    ap.add_argument("--mux-levels", type=int, default=0,
+                    help="measured 2:1 mux levels a 0.92 ns stage (from the rotate network's hardening)")
+    ap.add_argument("--mux-basis", default="", help="the record(s) the measured mux levels come from")
     a = ap.parse_args()
+    global MUX_LEVELS_PER_STAGE
+    if a.mux_levels:
+        MUX_LEVELS_PER_STAGE = a.mux_levels
     spec = json.loads(SPEC.read_text())
     cells = lane_cells()
 
@@ -242,6 +251,27 @@ def main() -> int:
         ops = ops[:a.limit]
     hm, per_op = measure_h(ops)
     print("H", json.dumps(hm), flush=True)
+    # the builder's alignment rule (HDC_V41_VM_ALIGN=128) and the vector unit's per-op decision (option H RTL)
+    prev = os.environ.get("HDC_V41_VM_ALIGN")
+    os.environ["HDC_V41_VM_ALIGN"] = "128"
+    try:
+        recs_a, _, _, meta_a = C.vehicle_records()
+    finally:
+        if prev is None:
+            os.environ.pop("HDC_V41_VM_ALIGN")
+        else:
+            os.environ["HDC_V41_VM_ALIGN"] = prev
+    ops_a = [("vehicle", C.resolve(f0, dyn), np.asarray(vm, dtype=np.uint32)) for f0, dyn, vm, _ in recs_a]
+    if a.limit:
+        ops_a = ops_a[:a.limit]
+    rule_ops = []
+    for tag, f, vm in ops_a:
+        if f["nout"] == 0 or f["nin"] == 0 or C.layout(f, N, M)["bad"]:
+            continue
+        rule_ops.append(dict(flags=H.rule(f, N, M), red=bool(f["red"]), ew=f["dst"] == I.DST_VM))
+    hchk = H.check(ops_a, N, M)
+    hchk.pop("unsafe")
+    print("H rule", hchk, flush=True)
 
     # ---- geometry basis: the spec record's SU + VM block (macros at area, lane / VM logic at 50 %)
     fp, geo, tr = spec["footprint"], spec["geometry"], spec["trees"]
@@ -368,6 +398,26 @@ def main() -> int:
 
     options["H"] = price_H(True)
     options["H_align_only"] = price_H(False)
+
+    def price_H_rtl():
+        o = copy.deepcopy(options["H_align_only"])
+        su, cl = o["su_op_class_stages"], o["clients"]
+        rot, ben, scal = su["residual_rotate_read"], su["gather_read"], su["scalar_read"]
+        ext = {True: [], False: []}
+        for p in rule_ops:
+            x = bcast + H.hold(p["flags"], rot=rot, gath=ben, scal=scal)
+            x += cl["su_results"] if p["red"] else (1 if p["ew"] else 0)
+            ext[p["red"]].append(x)
+        su["local_element_write_stages"] = 1
+        o.update(su_op_extra_cycles=round(float(np.mean(ext[False])), 3),
+                 su_red_extra_cycles=round(float(np.mean(ext[True])), 3),
+                 su_op_extra_basis=("the vector unit's own per-op decision (rtl/hdc/v41x/ot_hdc_v41x_vec.sv VMD_NG, "
+                                    "tools/w11_vm_h.rule) on the vehicle built with HDC_V41_VM_ALIGN=128: "
+                                    "broadcast 4 + its hold + the result tree (reductions) or the local write (1)"),
+                 layout_rule="VM regions 128-aligned by the builder (HDC_V41_VM_ALIGN=128); op offsets as built",
+                 rule_check=hchk)
+        return o
+    options["H_rtl"] = price_H_rtl()
     options["C"] = price_C("crossbar")
     options["C_rotate"] = price_C("rotate")
     options["A"] = price_A()
@@ -436,7 +486,7 @@ def main() -> int:
         source_commit=subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True,
                                      text=True).stdout.strip(),
         basis=dict(clock_ps=PERIOD_PS, wire_ps_per_um=PS_PER_UM, stage_rule="tools/uarch_model.wire_cycles",
-                   mux_levels_per_stage=MUX_LEVELS_PER_STAGE, rotate_levels=ROT_LEVELS, benes_levels=BENES_LEVELS,
+                   mux_levels_per_stage=MUX_LEVELS_PER_STAGE, mux_levels_basis=a.mux_basis or "ASSUMED", rotate_levels=ROT_LEVELS, benes_levels=BENES_LEVELS,
                    crossbar_levels=XBAR_LEVELS, density=cells,
                    network_cells=("rotate: N x 32 x log2 N mux2; Benes: N x 32 x (2 log2 N - 1); full crossbar: "
                                   "N x (N - 1) x 32 mux2 (a 1,024:1 mux tree per output bit); a stage register "
@@ -454,11 +504,15 @@ def main() -> int:
                    model="tools/uarch_model.py PRESETS['proposal'] (identical evaluate() to claude/w11-dedicated-"
                          "units 73ba9c9b on these keys: AR 3,747.6 / MTP 5,811.4 tok/s at 6/6/6/4 on both)",
                    positions=U.V41_POSITIONS, tau=U.V41_TAU, ctx=1048576),
-        h_measurement=dict(source="reduced vehicle, position 7 (tools/rtl_hdc_v41x_vec_campaign.vehicle_records)",
+        h_measurement=dict(source="reduced vehicle, position 7 (tools/rtl_hdc_v41x_vec_campaign.vehicle_records); "
+                           "idealised alignment (every op base rounded down to 128); physical lanes",
                            meta=meta, **hm),
+        h_rtl_rule=dict(source="the vehicle built with HDC_V41_VM_ALIGN=128, the vector unit's per-op rule",
+                        meta=meta_a, **hchk),
         rates=rows, options=options,
         source_sha256={str(p.relative_to(ROOT)): sha(p) for p in
                        [Path(__file__).resolve(), ROOT / "tools/uarch_model.py", ROOT / "tools/rtl_hdc_v41x_vec_campaign.py",
+                        ROOT / "tools/w11_vm_h.py",
                         SPEC, ROOT / "tools/hdc_isa_v41.py", ROOT / "tools/hdc_program_v41.py"]})
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)) + "\n")

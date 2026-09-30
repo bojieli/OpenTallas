@@ -46,6 +46,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_v41x_vec_campaign as C      # noqa: E402
 import w11_su_softmax_spec as SM           # noqa: E402
 import rtl_chip_v41x_die_smoke as ds       # noqa: E402
+import w11_vm_h as HR                      # noqa: E402
 
 core = ds.core
 OUT = ROOT / "results/rtl/w11_vm_dist_gate.json"
@@ -68,9 +69,24 @@ def rel(p: Path) -> str:
     return str(Path(p).resolve().relative_to(ROOT))
 
 
+OPTIONS = ROOT / "results/uarch/w11_vm_options.json"
+
+
+def h_set():
+    """Option H's stages from the pricing record (results/uarch/w11_vm_options.json, option H_rtl)."""
+    o = json.loads(OPTIONS.read_text())["options"]
+    h = o.get("H_rtl") or o["H_align_only"]
+    cl, su = h["clients"], h["su_op_class_stages"]
+    return dict(X_GATHER_STAGES=cl["x_gather"], RET_SCATTER_STAGES=cl["ret_scatter"],
+                COLL_WRITE_STAGES=cl["coll_write"], SU_RES_STAGES=cl["su_results"], VM_DIST_H=1,
+                SUBCAST=su["control_broadcast"], SU_EWR_STAGES=su.get("local_element_write_stages", 1),
+                SU_ROT_STAGES=su["residual_rotate_read"], SU_GATH_STAGES=su["gather_read"],
+                SU_SCAL_STAGES=su["scalar_read"])
+
+
 def stage_sets():
     spec = json.loads(SPEC.read_text())["trees"]
-    return {"spec": dict(X_GATHER_STAGES=spec["x_gather"]["stages"], RET_SCATTER_STAGES=spec["ret_scatter"]["stages"],
+    return {"h": h_set(), "spec": dict(X_GATHER_STAGES=spec["x_gather"]["stages"], RET_SCATTER_STAGES=spec["ret_scatter"]["stages"],
                          SU_RES_STAGES=spec["su_results"]["stages"], COLL_WRITE_STAGES=spec["coll_write"]["stages"]),
             # tools/uarch_model.VM_DIST, as the spec record carries it (model_stages)
             "model": dict(X_GATHER_STAGES=spec["x_gather"]["model_stages"],
@@ -94,12 +110,49 @@ def vmdist_fields(text: str):
 
 # ---- the vector unit ---------------------------------------------------------------------------------------
 _orig_parse, _orig_compare = C.parse_trace, C.compare
+_orig_write, _orig_run = C.write_case, C.run_case
+VROT_RE = VROT = re.compile(r"VROT seq=(\d+) hold=(\d+) b=(\d) g=(\d) r=(\d) w=(\d)")
+_CASES = {}                 # case dir -> (ops, memory image) as written
+CUR = dict(N=None, M=None)  # the bench width of the campaign running (option H's rule check)
 
 
 def _parse(text):
     tr = _orig_parse(text)
     tr["vmdist"] = vmdist_fields(text)
+    tr["vrot"] = [tuple(map(int, m.groups())) for m in VROT.finditer(text)]
     return tr
+
+
+def _write(d, mem, ops, *a, **k):
+    _CASES[str(d)] = ([dict(f) for f in ops], mem)
+    return _orig_write(d, mem, ops, *a, **k)
+
+
+def _run(exe, d, *a, **k):
+    tr = _orig_run(exe, d, *a, **k)
+    tr["case"] = _CASES.get(str(d))
+    return tr
+
+
+def h_check(tr):
+    """Option H: the unit's per-op decision (VROT) against tools/w11_vm_h.rule, and the rule's safety against
+    the laid-out accesses (a LOCAL class with a non-local lane, a BROADCAST class reading two elements)."""
+    if not tr.get("vrot") or not tr.get("case"):
+        return None
+    ops, mem = tr["case"]
+    N, M = CUR["N"], CUR["M"]
+    mism = unsafe = flagged = 0
+    hold = 0
+    for (seq, h, b, g, r, w), f in zip(tr["vrot"], ops):
+        fl = HR.rule(f, N, M)
+        mism += int(tuple(bool(x) for x in (b, g, r, w)) != fl)
+        cl = HR.classify(f, N, M)
+        rem, multi = HR.truth(f, mem.vm, N, M)
+        unsafe += int(any((v == "L" and rem[c]) or (v == "B" and multi[c]) for c, v in cl.items()))
+        flagged += int(g or r or w)
+        hold += h
+    return dict(ops=len(tr["vrot"]), ops_written=len(ops), rule_mismatches=mism, unsafe_ops=unsafe,
+                network_ops=flagged, hold_cycles=hold)
 
 
 def _compare(tr, mref):
@@ -107,18 +160,27 @@ def _compare(tr, mref):
     c["vmdist"] = tr.get("vmdist")
     if c["vmdist"] is not None and c["vmdist"]["fault"]:
         c["pass_"] = False
+    c["h"] = h_check(tr)
+    if c["h"] is not None and (c["h"]["rule_mismatches"] or c["h"]["unsafe_ops"] or
+                               c["h"]["ops"] != c["h"]["ops_written"]):
+        c["pass_"] = False
     return c
 
 
 def su_setup():
-    C.parse_trace, C.compare = _parse, _compare
+    C.parse_trace, C.compare, C.write_case, C.run_case = _parse, _compare, _write, _run
     for p in DIST:
         if p not in C.RTL:
             C.RTL.append(p)
 
 
 def su_flags(vd, st):
-    return f"-GVM_DIST={vd} -GSU_RES_STAGES={st['SU_RES_STAGES']} -GRET_SCATTER_STAGES={st['RET_SCATTER_STAGES']}"
+    f = f"-GVM_DIST={vd} -GSU_RES_STAGES={st['SU_RES_STAGES']} -GRET_SCATTER_STAGES={st['RET_SCATTER_STAGES']}"
+    if vd and st.get("VM_DIST_H"):
+        f += (f" -GVM_DIST_H=1 -GBCAST_STAGES={st['SUBCAST']} -GSU_EWR_STAGES={st['SU_EWR_STAGES']}"
+              f" -GROT_STAGES={st['SU_ROT_STAGES']} -GGATH_STAGES={st['SU_GATH_STAGES']}"
+              f" -GSCAL_STAGES={st['SU_SCAL_STAGES']}")
+    return f
 
 
 def reusable(obj: Path, exe: Path, flags, sources) -> bool:
@@ -159,7 +221,7 @@ def su_build(N, M, obj, vd, st):
 
 def su_part(scratch: Path, st, n1024: bool, jobs: int, small: bool = True):
     su_setup()
-    out = dict(stages=dict(SU_RES_STAGES=st["SU_RES_STAGES"], RET_SCATTER_STAGES=st["RET_SCATTER_STAGES"]),
+    out = dict(stages=dict(st), vm_align=os.environ.get("HDC_V41_VM_ALIGN", "32"),
                builds={}, campaigns={}, softmax={})
     cfgs = ([(16, 8), (64, 16)] if small else []) + ([(1024, 256)] if n1024 else [])
     exes = {}
@@ -175,8 +237,10 @@ def su_part(scratch: Path, st, n1024: bool, jobs: int, small: bool = True):
         tag = f"vm_dist_{vd}"
         res = {}
         if small:
+            CUR.update(N=16, M=8)
             res["random_N16_M8"] = C.random_campaign(exes[(16, 8, vd)], 16, 8, list(range(1, 25)), 40,
                                                      scratch / f"r16_vd{vd}")
+            CUR.update(N=64, M=16)
             res["random_N64_M16"] = C.random_campaign(exes[(64, 16, vd)], 64, 16, list(range(101, 117)), 40,
                                                       scratch / f"r64_vd{vd}")
             res["vehicle_N64_M16"] = C.vehicle_campaign(exes[(64, 16, vd)], 64, 16, scratch / f"veh_vd{vd}", recs, cr,
@@ -188,6 +252,7 @@ def su_part(scratch: Path, st, n1024: bool, jobs: int, small: bool = True):
                                        chain_ext=C.perf_chain_ext(e, 64, 16, scratch / f"p64_vd{vd}", rng),
                                        mixed_classes=C.perf_mix(e, 64, 16, scratch / f"p64_vd{vd}", rng))
         if n1024:
+            CUR.update(N=1024, M=256)
             e = exes[(1024, 256, vd)]
             # 16-op random programs that fit the bench's 2^18-word memory at N = 1,024 (the campaign's rule)
             fits = []
@@ -211,6 +276,7 @@ def su_part(scratch: Path, st, n1024: bool, jobs: int, small: bool = True):
     # softmax chain (tools/w11_su_softmax_spec.py fixture), vec-bench variants
     sm_cfgs = ([(16, 8)] if small else []) + ([(1024, 256)] if n1024 else [])
     for N, M in sm_cfgs:
+        CUR.update(N=N, M=M)
         for vd in (0, 1):
             vflags = su_flags(vd, st).split() + (["--unroll-count", "4", "-fno-dfg"] if N >= 1024 else [])
             exe, info = SM.build("vec", N, M, 7, scratch / f"sm_vd{vd}_N{N}", jobs, vflags)
@@ -243,6 +309,9 @@ def su_summary(out):
         s["all_pass"] &= all(x["pass_"] for x in a + b)
         d = [y["cycles"] - x["cycles"] for x, y in zip(a, b) if x["cycles"] is not None and y["cycles"] is not None]
         s["deltas"][key] = dict(min=min(d), max=max(d), total=sum(d), cases=len(d)) if d else None
+        hs = [y["h"] for y in b if y.get("h")]
+        if hs:
+            s.setdefault("h_rule", {})[key] = {k: sum(h[k] for h in hs) for k in hs[0]}
         mons = [y["vmdist"] for y in b if y.get("vmdist")]
         s["monitors"][key] = dict(
             reads={k: sum(m["reads"][k] for m in mons) for k in CLASSES},
@@ -317,7 +386,7 @@ def die_run(exe: Path, img: Path) -> dict:
     step = dict(zip(names, map(int, m.groups())))
     die = re.search(r"DIE fault=([01]+)", log)
     iss = ISSUES.search(log)
-    rec = dict(step=step, die_fault_bits=die.group(1) if die else None,
+    rec = dict(step=step, die_fault_bits=die.group(1) if die else None, _log=log,
                issues=dict(zip(("me", "su", "qe", "xu", "he", "coll"), map(int, iss.groups()))) if iss else None,
                vmdist=vmdist_fields(log), unit_counters=core.counters(log), simulation_exit=sim.returncode,
                simulation_wall_seconds=round(time.time() - t0, 1),
@@ -346,6 +415,8 @@ def die_part(scratch: Path, sets: dict, reuse_images: bool):
     with cf.ThreadPoolExecutor(len(exes)) as ex:
         res = dict(zip(exes, ex.map(lambda k: die_run(exes[k], img), exes)))
     base = res["vm_dist_0"]
+    for r in res.values():
+        r.pop("_log", None)
     for k, r in res.items():
         r["stages"] = variants[k][1] if variants[k][0] else None
         if k != "vm_dist_0" and r.get("status") == "pass" and base.get("status") == "pass":
@@ -368,6 +439,7 @@ def main() -> int:
                          "~31 GiB a build), die")
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--reuse-images", action="store_true")
+    ap.add_argument("--su-set", default="h", help="the stage set of the VM_DIST = 1 vector benches: h | spec | model")
     ap.add_argument("--out", type=Path, default=None,
                     help="default results/rtl/w11_vm_dist_gate_<parts>.json")
     a = ap.parse_args()
@@ -384,7 +456,7 @@ def main() -> int:
                host=os.uname().nodename, simulator=ds.tool_version(ds.VERILATOR))
     t0 = time.time()
     with cf.ThreadPoolExecutor(2) as ex:
-        fs = (ex.submit(su_part, a.scratch / "su", sets["spec"], "su1024" in parts, a.jobs, "su" in parts)
+        fs = (ex.submit(su_part, a.scratch / "su", sets[a.su_set], "su1024" in parts, a.jobs, "su" in parts)
               if parts & {"su", "su1024"} else None)
         fd = ex.submit(die_part, a.scratch / "die", sets, a.reuse_images) if "die" in parts else None
         if fs is not None:
