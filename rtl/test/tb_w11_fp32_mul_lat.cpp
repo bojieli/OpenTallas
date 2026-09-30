@@ -1,4 +1,4 @@
-#include "Vtb_w11_fp32_add_lat.h"
+#include "Vtb_w11_fp32_mul_lat.h"
 #include <cstdio>
 #include <cstdint>
 #include <random>
@@ -8,7 +8,7 @@ static uint32_t pick(std::mt19937_64& r){
   return s|(e<<23)|m;}
 int main(int argc,char**argv){
   long n=argc>1?atol(argv[1]):2000000; std::mt19937_64 r(12345);
-  Vtb_w11_fp32_add_lat t; t.clk=0; t.rst_n=0; t.v=0; t.a=0;t.b=0;
+  Vtb_w11_fp32_mul_lat t; t.clk=0; t.rst_n=0; t.v=0; t.a=0;t.b=0;
   long bad[5]={0,0,0,0,0}, cmp=0;
   for(long c=0;c<n+20;c++){
     t.rst_n = c>4; 
@@ -19,5 +19,5 @@ int main(int argc,char**argv){
     if(c>16) for(int i=0;i<5;i++) if(t.mism&(1<<i)) bad[i]++;   // skip the reset transient (delay lines unreset)
     cmp++;
   }
-  printf("W11_FPADD_EQ cycles=%ld mism_lat3=%ld lat4=%ld lat5=%ld lat6=%ld lat7=%ld\n",cmp,bad[0],bad[1],bad[2],bad[3],bad[4]);
+  printf("W11_FPMUL_EQ cycles=%ld mism_lat3=%ld lat4=%ld lat5=%ld lat6=%ld lat7=%ld\n",cmp,bad[0],bad[1],bad[2],bad[3],bad[4]);
   return (bad[0]|bad[1]|bad[2]|bad[3]|bad[4])?1:0;}
