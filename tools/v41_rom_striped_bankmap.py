@@ -45,7 +45,15 @@ sys.path.insert(0, str(ROOT / "tools"))
 import v41_floorplan_die_macromap as M  # noqa: E402
 
 DEPTH = 8192
-BF16_MACROS = 4096                    # uarch_model PRESETS["proposal"].bf16_stripe_macros
+import uarch_model as U  # noqa: E402
+
+# macros carrying BF16 lanes: read from the model (PRESETS["proposal"].bf16_stripe_macros), never a literal;
+# None there means every macro carries BF16 (W10 BF16_PAIR: BF16 on the standard pair)
+BF16_MACROS = U.PRESETS["proposal"].get("bf16_stripe_macros")
+
+
+def bf16_count(n: int) -> int:
+    return n if BF16_MACROS is None else min(BF16_MACROS, n)
 WPW = {"fp4": 64, "fp8": 32, "bf16": 16}
 EXPERT = {"w1": (576, 5120), "w3": (576, 5120), "w2": (1280, 2304)}   # rank quarter (rows, K)
 TOPK, N_EXPERTS = 6, 384
@@ -262,7 +270,7 @@ def derive(snapshot: Path, draws: int, seed: int, only=None, keep=None):
                 continue
             w1 = by_die[name]
             n = w1["macros"][M.WIDE]                     # the die's macro count in W1's (contiguous) map
-            die = Die(n, min(BF16_MACROS, n))
+            die = Die(n, bf16_count(n))
             phase_loads, mats_all = {}, []
             for L in dense_layers:
                 mats = dense_matrices(dense[L], L)
@@ -365,7 +373,8 @@ def main(argv=None):
         claim_boundary=("binding rule and measured per-phase read cycles under the proposal's whole-row striping; "
                         "a FAIL means the model's t_read (words / macros) is not realisable by whole-row "
                         "ownership, not that the binding is wrong"),
-        rule=dict(bf16_macros=BF16_MACROS, bf16_macro_ids="floor(i * N / 4096), i < 4096",
+        rule=dict(bf16_macros=BF16_MACROS, bf16_macro_ids=("every macro" if BF16_MACROS is None else
+                                                          f"floor(i * N / {BF16_MACROS}), i < {BF16_MACROS}"),
                   word_order="k-outer: address = base + block * rows_here + row_index",
                   dense="LPT per phase: fewest phase words, then most free depth, then lowest id",
                   experts="expert j (die id order): w1|w3 rows on (j mod floor(N/1152))*1152 + r, w2 rows on (j mod floor(N/1280))*1280 + r"),

@@ -48,7 +48,7 @@ def test_busiest_die_binding_and_record():
     DIE = []
     dies, t_model = S.derive(SNAP, draws=1, seed=1, only=["layer_s01_r3"], keep=DIE)
     d = dies[0]
-    assert d["macros"] == 13798 and d["bf16_macros"] == 4096 and d["capacity_ok"]
+    assert d["macros"] == 13798 and d["bf16_macros"] == S.bf16_count(13798) and d["capacity_ok"]
     assert _every_word_once(DIE[0], 13798) == d["weight_words"]
     rec = json.loads(REC.read_text())
     got = next(x for x in rec["dies"] if x["die"] == "layer_s01_r3")

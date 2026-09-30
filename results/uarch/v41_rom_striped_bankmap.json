@@ -3,18 +3,18 @@
  "verdict": "FAIL_model_t_read_mismatch",
  "claim_boundary": "binding rule and measured per-phase read cycles under the proposal's whole-row striping; a FAIL means the model's t_read (words / macros) is not realisable by whole-row ownership, not that the binding is wrong",
  "rule": {
-  "bf16_macros": 4096,
-  "bf16_macro_ids": "floor(i * N / 4096), i < 4096",
+  "bf16_macros": 2048,
+  "bf16_macro_ids": "floor(i * N / 2048), i < 2048",
   "word_order": "k-outer: address = base + block * rows_here + row_index",
   "dense": "LPT per phase: fewest phase words, then most free depth, then lowest id",
   "experts": "expert j (die id order): w1|w3 rows on (j mod floor(N/1152))*1152 + r, w2 rows on (j mod floor(N/1280))*1280 + r"
  },
  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
  "source_sha256": {
-  "tools/v41_rom_striped_bankmap.py": "92f0e41745e1a511a58b0359079b566e4a685700341cf411e357a439fdc2df3b",
+  "tools/v41_rom_striped_bankmap.py": "28bc7bc5af37f73bc1a8ae553d94430e2bb061af098622bb5492f66e55b094a3",
   "tools/v41_floorplan_die_macromap.py": "c1b28d9191ab3bf7bbcb6ec6d38d26c10bd90acdaf009a39f44d171724f83ece",
-  "tools/uarch_model.py": "da6df29e03945e298beab9ba03bac44bc4d1d02ae657dff6ed477ef63ebb73e4",
-  "results/uarch/v41_rom.json": "717a859d09ee71af4e68fffe848c064222d0e22c2db912fa784ed888b8ce5ef9",
+  "tools/uarch_model.py": "6e2638f9fe1f268e0e30442e9182322bb808f09cd0802cc63587bbbcb863e62e",
+  "results/uarch/v41_rom.json": "6a9c98b60b18d2281749e1d16e6201e36421c0a15bd32c6460fcc6b44368b160",
   "results/arch/v41_stage_owner_preflight.json": "8d7607de634470f58132eb36bb9100b369689a9b509dd299662a7f97fba47a1d"
  },
  "draws": 200,
@@ -22,65 +22,65 @@
  "busiest_die": "layer_s01_r3",
  "phase_cycles_vs_model": {
   "a_proj": {
-   "model_t_read": 9,
+   "model_t_read": 80.0,
    "busiest_die": 320,
    "worst_die": 320,
    "equal": false
   },
   "wq_b": {
-   "model_t_read": 36,
+   "model_t_read": 64.0,
    "busiest_die": 40,
    "worst_die": 40,
    "equal": false
   },
   "cmp.wk": {
-   "model_t_read": 1,
+   "model_t_read": 40.0,
    "busiest_die": 32,
    "worst_die": 32,
    "equal": false
   },
   "wo_a": {
-   "model_t_read": 128,
+   "model_t_read": 256.0,
    "busiest_die": 256,
    "worst_die": 256,
-   "equal": false
+   "equal": true
   },
   "wo_b": {
-   "model_t_read": 24,
+   "model_t_read": 40.0,
    "busiest_die": 64,
    "worst_die": 64,
    "equal": false
   },
   "router": {
-   "model_t_read": 8,
+   "model_t_read": 40.0,
    "busiest_die": 320,
    "worst_die": 320,
    "equal": false
   },
   "shared_gu": {
-   "model_t_read": 14,
+   "model_t_read": 40.0,
    "busiest_die": 160,
    "worst_die": 160,
    "equal": false
   },
   "experts_gu": {
-   "model_t_read": 41,
+   "model_t_read": 48.0,
    "busiest_die": 156.4,
    "worst_die": 164.0,
    "equal": false
   },
   "down": {
-   "model_t_read": 24,
-   "busiest_die": 108.18,
-   "worst_die": 123.84,
+   "model_t_read": 40.0,
+   "busiest_die": 104.76,
+   "worst_die": 120.96,
    "equal": false
   }
  },
  "priced": {
-  "model_tokens_s": 4395.6,
-  "measured_bankmap_tokens_s": 3900.4,
-  "measured_T_us": 256.386,
-  "model_T_us": 227.502,
+  "model_tokens_s": 3808.8,
+  "measured_bankmap_tokens_s": 3499.8,
+  "measured_T_us": 285.729,
+  "model_T_us": 262.549,
   "note": "lm_head (BF16, not on a layer die) keeps the model's t_read"
  },
  "all_capacity_ok": true,
@@ -90,13 +90,13 @@
    "stage": 0,
    "rank": 0,
    "macros": 13706,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     0,
     1
    ],
    "weight_words": 77213696,
-   "max_address": 6404,
+   "max_address": 6660,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 35065856,
@@ -170,7 +170,7 @@
        "p_collision_free": 0.275
       },
       "down": {
-       "mean": 119.16,
+       "mean": 97.92,
        "max_seen": 180
       }
      },
@@ -182,7 +182,7 @@
        "p_collision_free": 0.845
       },
       "down": {
-       "mean": 93.6,
+       "mean": 81.0,
        "max_seen": 144
       }
      },
@@ -198,13 +198,13 @@
    "stage": 0,
    "rank": 1,
    "macros": 13706,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     0,
     1
    ],
    "weight_words": 77213696,
-   "max_address": 6404,
+   "max_address": 6660,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 35065856,
@@ -278,8 +278,8 @@
        "p_collision_free": 0.225
       },
       "down": {
-       "mean": 117.18,
-       "max_seen": 216
+       "mean": 96.84,
+       "max_seen": 180
       }
      },
      "true_occupancy": {
@@ -290,8 +290,8 @@
        "p_collision_free": 0.845
       },
       "down": {
-       "mean": 95.76,
-       "max_seen": 180
+       "mean": 80.28,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -306,13 +306,13 @@
    "stage": 0,
    "rank": 2,
    "macros": 13706,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     0,
     1
    ],
    "weight_words": 77213696,
-   "max_address": 6404,
+   "max_address": 6660,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 35065856,
@@ -386,7 +386,7 @@
        "p_collision_free": 0.24
       },
       "down": {
-       "mean": 119.7,
+       "mean": 93.96,
        "max_seen": 180
       }
      },
@@ -398,8 +398,8 @@
        "p_collision_free": 0.835
       },
       "down": {
-       "mean": 94.5,
-       "max_seen": 180
+       "mean": 79.02,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -414,13 +414,13 @@
    "stage": 0,
    "rank": 3,
    "macros": 13706,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     0,
     1
    ],
    "weight_words": 77213696,
-   "max_address": 6404,
+   "max_address": 6660,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 35065856,
@@ -494,7 +494,7 @@
        "p_collision_free": 0.235
       },
       "down": {
-       "mean": 119.7,
+       "mean": 95.04,
        "max_seen": 180
       }
      },
@@ -506,7 +506,7 @@
        "p_collision_free": 0.785
       },
       "down": {
-       "mean": 95.58,
+       "mean": 80.82,
        "max_seen": 180
       }
      },
@@ -522,12 +522,12 @@
    "stage": 1,
    "rank": 0,
    "macros": 13798,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     2
    ],
    "weight_words": 78503424,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34529792,
@@ -590,7 +590,7 @@
        "p_collision_free": 0.185
       },
       "down": {
-       "mean": 112.5,
+       "mean": 108.72,
        "max_seen": 216
       }
      },
@@ -602,7 +602,7 @@
        "p_collision_free": 0.39
       },
       "down": {
-       "mean": 104.04,
+       "mean": 103.68,
        "max_seen": 180
       }
      },
@@ -618,12 +618,12 @@
    "stage": 1,
    "rank": 1,
    "macros": 13798,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     2
    ],
    "weight_words": 78503424,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34529792,
@@ -686,7 +686,7 @@
        "p_collision_free": 0.22
       },
       "down": {
-       "mean": 106.02,
+       "mean": 109.44,
        "max_seen": 180
       }
      },
@@ -698,8 +698,8 @@
        "p_collision_free": 0.365
       },
       "down": {
-       "mean": 100.26,
-       "max_seen": 144
+       "mean": 105.48,
+       "max_seen": 180
       }
      },
      "worst_case": {
@@ -714,12 +714,12 @@
    "stage": 1,
    "rank": 2,
    "macros": 13798,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     2
    ],
    "weight_words": 78503424,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34529792,
@@ -782,7 +782,7 @@
        "p_collision_free": 0.235
       },
       "down": {
-       "mean": 110.34,
+       "mean": 109.44,
        "max_seen": 180
       }
      },
@@ -794,7 +794,7 @@
        "p_collision_free": 0.43
       },
       "down": {
-       "mean": 103.5,
+       "mean": 102.42,
        "max_seen": 180
       }
      },
@@ -810,12 +810,12 @@
    "stage": 1,
    "rank": 3,
    "macros": 13798,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     2
    ],
    "weight_words": 78503424,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34529792,
@@ -878,7 +878,7 @@
        "p_collision_free": 0.245
       },
       "down": {
-       "mean": 108.18,
+       "mean": 104.76,
        "max_seen": 180
       }
      },
@@ -890,7 +890,7 @@
        "p_collision_free": 0.375
       },
       "down": {
-       "mean": 101.7,
+       "mean": 104.4,
        "max_seen": 180
       }
      },
@@ -906,13 +906,13 @@
    "stage": 2,
    "rank": 0,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     3,
     4
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -1018,7 +1018,7 @@
        "p_collision_free": 0.21
       },
       "down": {
-       "mean": 119.7,
+       "mean": 94.14,
        "max_seen": 180
       }
      },
@@ -1030,7 +1030,7 @@
        "p_collision_free": 0.91
       },
       "down": {
-       "mean": 86.4,
+       "mean": 77.76,
        "max_seen": 144
       }
      },
@@ -1046,13 +1046,13 @@
    "stage": 2,
    "rank": 1,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     3,
     4
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -1158,7 +1158,7 @@
        "p_collision_free": 0.255
       },
       "down": {
-       "mean": 118.08,
+       "mean": 98.28,
        "max_seen": 180
       }
      },
@@ -1170,7 +1170,7 @@
        "p_collision_free": 0.95
       },
       "down": {
-       "mean": 87.3,
+       "mean": 77.4,
        "max_seen": 144
       }
      },
@@ -1186,13 +1186,13 @@
    "stage": 2,
    "rank": 2,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     3,
     4
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -1298,8 +1298,8 @@
        "p_collision_free": 0.23
       },
       "down": {
-       "mean": 119.52,
-       "max_seen": 180
+       "mean": 97.38,
+       "max_seen": 216
       }
      },
      "true_occupancy": {
@@ -1310,8 +1310,8 @@
        "p_collision_free": 0.935
       },
       "down": {
-       "mean": 86.58,
-       "max_seen": 180
+       "mean": 76.5,
+       "max_seen": 108
       }
      },
      "worst_case": {
@@ -1326,13 +1326,13 @@
    "stage": 2,
    "rank": 3,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     3,
     4
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -1438,7 +1438,7 @@
        "p_collision_free": 0.2
       },
       "down": {
-       "mean": 117.54,
+       "mean": 99.18,
        "max_seen": 216
       }
      },
@@ -1450,7 +1450,7 @@
        "p_collision_free": 0.925
       },
       "down": {
-       "mean": 86.04,
+       "mean": 77.58,
        "max_seen": 144
       }
      },
@@ -1466,12 +1466,12 @@
    "stage": 3,
    "rank": 0,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     5
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -1561,12 +1561,12 @@
    "stage": 3,
    "rank": 1,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     5
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -1656,12 +1656,12 @@
    "stage": 3,
    "rank": 2,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     5
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -1751,12 +1751,12 @@
    "stage": 3,
    "rank": 3,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     5
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -1846,13 +1846,13 @@
    "stage": 4,
    "rank": 0,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     6,
     7
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -1958,8 +1958,8 @@
        "p_collision_free": 0.26
       },
       "down": {
-       "mean": 119.88,
-       "max_seen": 180
+       "mean": 95.22,
+       "max_seen": 144
       }
      },
      "true_occupancy": {
@@ -1970,7 +1970,7 @@
        "p_collision_free": 0.98
       },
       "down": {
-       "mean": 79.56,
+       "mean": 74.34,
        "max_seen": 144
       }
      },
@@ -1986,13 +1986,13 @@
    "stage": 4,
    "rank": 1,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     6,
     7
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -2098,8 +2098,8 @@
        "p_collision_free": 0.25
       },
       "down": {
-       "mean": 119.16,
-       "max_seen": 180
+       "mean": 91.62,
+       "max_seen": 144
       }
      },
      "true_occupancy": {
@@ -2110,8 +2110,8 @@
        "p_collision_free": 0.995
       },
       "down": {
-       "mean": 78.3,
-       "max_seen": 144
+       "mean": 73.8,
+       "max_seen": 108
       }
      },
      "worst_case": {
@@ -2126,13 +2126,13 @@
    "stage": 4,
    "rank": 2,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     6,
     7
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -2238,7 +2238,7 @@
        "p_collision_free": 0.25
       },
       "down": {
-       "mean": 115.02,
+       "mean": 94.86,
        "max_seen": 180
       }
      },
@@ -2250,7 +2250,7 @@
        "p_collision_free": 0.99
       },
       "down": {
-       "mean": 79.2,
+       "mean": 73.26,
        "max_seen": 144
       }
      },
@@ -2266,13 +2266,13 @@
    "stage": 4,
    "rank": 3,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     6,
     7
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -2378,8 +2378,8 @@
        "p_collision_free": 0.295
       },
       "down": {
-       "mean": 117.36,
-       "max_seen": 180
+       "mean": 91.62,
+       "max_seen": 144
       }
      },
      "true_occupancy": {
@@ -2390,7 +2390,7 @@
        "p_collision_free": 0.98
       },
       "down": {
-       "mean": 77.94,
+       "mean": 74.88,
        "max_seen": 108
       }
      },
@@ -2406,12 +2406,12 @@
    "stage": 5,
    "rank": 0,
    "macros": 13774,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     8
    ],
    "weight_words": 78365184,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34471424,
@@ -2474,7 +2474,7 @@
        "p_collision_free": 0.25
       },
       "down": {
-       "mean": 111.96,
+       "mean": 111.6,
        "max_seen": 180
       }
      },
@@ -2486,7 +2486,7 @@
        "p_collision_free": 0.625
       },
       "down": {
-       "mean": 93.96,
+       "mean": 93.42,
        "max_seen": 180
       }
      },
@@ -2502,12 +2502,12 @@
    "stage": 5,
    "rank": 1,
    "macros": 13774,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     8
    ],
    "weight_words": 78365184,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34471424,
@@ -2570,7 +2570,7 @@
        "p_collision_free": 0.17
       },
       "down": {
-       "mean": 113.76,
+       "mean": 110.52,
        "max_seen": 180
       }
      },
@@ -2582,7 +2582,7 @@
        "p_collision_free": 0.67
       },
       "down": {
-       "mean": 87.84,
+       "mean": 91.62,
        "max_seen": 144
       }
      },
@@ -2598,12 +2598,12 @@
    "stage": 5,
    "rank": 2,
    "macros": 13774,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     8
    ],
    "weight_words": 78365184,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34471424,
@@ -2666,8 +2666,8 @@
        "p_collision_free": 0.19
       },
       "down": {
-       "mean": 110.34,
-       "max_seen": 180
+       "mean": 110.88,
+       "max_seen": 216
       }
      },
      "true_occupancy": {
@@ -2678,8 +2678,8 @@
        "p_collision_free": 0.685
       },
       "down": {
-       "mean": 88.02,
-       "max_seen": 144
+       "mean": 91.98,
+       "max_seen": 180
       }
      },
      "worst_case": {
@@ -2694,12 +2694,12 @@
    "stage": 5,
    "rank": 3,
    "macros": 13774,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     8
    ],
    "weight_words": 78365184,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34471424,
@@ -2762,8 +2762,8 @@
        "p_collision_free": 0.27
       },
       "down": {
-       "mean": 109.62,
-       "max_seen": 180
+       "mean": 110.7,
+       "max_seen": 216
       }
      },
      "true_occupancy": {
@@ -2774,8 +2774,8 @@
        "p_collision_free": 0.675
       },
       "down": {
-       "mean": 91.08,
-       "max_seen": 144
+       "mean": 92.88,
+       "max_seen": 180
       }
      },
      "worst_case": {
@@ -2790,12 +2790,12 @@
    "stage": 6,
    "rank": 0,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     9
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -2885,12 +2885,12 @@
    "stage": 6,
    "rank": 1,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     9
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -2980,12 +2980,12 @@
    "stage": 6,
    "rank": 2,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     9
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -3075,12 +3075,12 @@
    "stage": 6,
    "rank": 3,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     9
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -3170,13 +3170,13 @@
    "stage": 7,
    "rank": 0,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     10,
     11
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -3282,7 +3282,7 @@
        "p_collision_free": 0.23
       },
       "down": {
-       "mean": 123.84,
+       "mean": 96.48,
        "max_seen": 180
       }
      },
@@ -3294,7 +3294,7 @@
        "p_collision_free": 0.785
       },
       "down": {
-       "mean": 94.32,
+       "mean": 81.9,
        "max_seen": 144
       }
      },
@@ -3310,13 +3310,13 @@
    "stage": 7,
    "rank": 1,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     10,
     11
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -3422,8 +3422,8 @@
        "p_collision_free": 0.235
       },
       "down": {
-       "mean": 117.0,
-       "max_seen": 180
+       "mean": 96.84,
+       "max_seen": 144
       }
      },
      "true_occupancy": {
@@ -3434,7 +3434,7 @@
        "p_collision_free": 0.8
       },
       "down": {
-       "mean": 92.52,
+       "mean": 79.38,
        "max_seen": 144
       }
      },
@@ -3450,13 +3450,13 @@
    "stage": 7,
    "rank": 2,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     10,
     11
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -3562,7 +3562,7 @@
        "p_collision_free": 0.21
       },
       "down": {
-       "mean": 119.88,
+       "mean": 99.36,
        "max_seen": 180
       }
      },
@@ -3574,8 +3574,8 @@
        "p_collision_free": 0.85
       },
       "down": {
-       "mean": 94.5,
-       "max_seen": 180
+       "mean": 82.98,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -3590,13 +3590,13 @@
    "stage": 7,
    "rank": 3,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     10,
     11
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -3702,8 +3702,8 @@
        "p_collision_free": 0.175
       },
       "down": {
-       "mean": 119.88,
-       "max_seen": 216
+       "mean": 97.92,
+       "max_seen": 180
       }
      },
      "true_occupancy": {
@@ -3714,8 +3714,8 @@
        "p_collision_free": 0.825
       },
       "down": {
-       "mean": 93.6,
-       "max_seen": 180
+       "mean": 81.0,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -3730,12 +3730,12 @@
    "stage": 8,
    "rank": 0,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     12
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -3825,12 +3825,12 @@
    "stage": 8,
    "rank": 1,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     12
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -3920,12 +3920,12 @@
    "stage": 8,
    "rank": 2,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     12
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -4015,12 +4015,12 @@
    "stage": 8,
    "rank": 3,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     12
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -4110,13 +4110,13 @@
    "stage": 9,
    "rank": 0,
    "macros": 13747,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     13,
     14
    ],
    "weight_words": 77573632,
-   "max_address": 6416,
+   "max_address": 6736,
    "capacity_ok": true,
    "other_words_capacity_only": 2580480,
    "free_words_after_weights": 35041792,
@@ -4223,7 +4223,7 @@
        "p_collision_free": 0.225
       },
       "down": {
-       "mean": 111.6,
+       "mean": 97.02,
        "max_seen": 180
       }
      },
@@ -4235,7 +4235,7 @@
        "p_collision_free": 0.965
       },
       "down": {
-       "mean": 82.44,
+       "mean": 75.78,
        "max_seen": 108
       }
      },
@@ -4251,13 +4251,13 @@
    "stage": 9,
    "rank": 1,
    "macros": 13747,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     13,
     14
    ],
    "weight_words": 77573632,
-   "max_address": 6416,
+   "max_address": 6736,
    "capacity_ok": true,
    "other_words_capacity_only": 2580480,
    "free_words_after_weights": 35041792,
@@ -4364,7 +4364,7 @@
        "p_collision_free": 0.2
       },
       "down": {
-       "mean": 109.8,
+       "mean": 96.48,
        "max_seen": 180
       }
      },
@@ -4376,8 +4376,8 @@
        "p_collision_free": 0.935
       },
       "down": {
-       "mean": 83.16,
-       "max_seen": 144
+       "mean": 77.76,
+       "max_seen": 108
       }
      },
      "worst_case": {
@@ -4392,13 +4392,13 @@
    "stage": 9,
    "rank": 2,
    "macros": 13747,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     13,
     14
    ],
    "weight_words": 77573632,
-   "max_address": 6416,
+   "max_address": 6736,
    "capacity_ok": true,
    "other_words_capacity_only": 2580480,
    "free_words_after_weights": 35041792,
@@ -4505,7 +4505,7 @@
        "p_collision_free": 0.21
       },
       "down": {
-       "mean": 110.52,
+       "mean": 95.22,
        "max_seen": 180
       }
      },
@@ -4517,7 +4517,7 @@
        "p_collision_free": 0.94
       },
       "down": {
-       "mean": 81.72,
+       "mean": 77.4,
        "max_seen": 144
       }
      },
@@ -4533,13 +4533,13 @@
    "stage": 9,
    "rank": 3,
    "macros": 13747,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     13,
     14
    ],
    "weight_words": 77573632,
-   "max_address": 6416,
+   "max_address": 6736,
    "capacity_ok": true,
    "other_words_capacity_only": 2580480,
    "free_words_after_weights": 35041792,
@@ -4646,8 +4646,8 @@
        "p_collision_free": 0.185
       },
       "down": {
-       "mean": 112.86,
-       "max_seen": 216
+       "mean": 92.7,
+       "max_seen": 144
       }
      },
      "true_occupancy": {
@@ -4658,7 +4658,7 @@
        "p_collision_free": 0.92
       },
       "down": {
-       "mean": 81.36,
+       "mean": 78.3,
        "max_seen": 144
       }
      },
@@ -4674,12 +4674,12 @@
    "stage": 10,
    "rank": 0,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     15
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -4769,12 +4769,12 @@
    "stage": 10,
    "rank": 1,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     15
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -4864,12 +4864,12 @@
    "stage": 10,
    "rank": 2,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     15
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -4959,12 +4959,12 @@
    "stage": 10,
    "rank": 3,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     15
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -5054,13 +5054,13 @@
    "stage": 11,
    "rank": 0,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     16,
     17
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -5166,8 +5166,8 @@
        "p_collision_free": 0.29
       },
       "down": {
-       "mean": 121.32,
-       "max_seen": 180
+       "mean": 96.48,
+       "max_seen": 144
       }
      },
      "true_occupancy": {
@@ -5178,7 +5178,7 @@
        "p_collision_free": 0.98
       },
       "down": {
-       "mean": 77.94,
+       "mean": 74.34,
        "max_seen": 108
       }
      },
@@ -5194,13 +5194,13 @@
    "stage": 11,
    "rank": 1,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     16,
     17
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -5306,7 +5306,7 @@
        "p_collision_free": 0.36
       },
       "down": {
-       "mean": 117.54,
+       "mean": 99.72,
        "max_seen": 180
       }
      },
@@ -5318,8 +5318,8 @@
        "p_collision_free": 0.995
       },
       "down": {
-       "mean": 78.12,
-       "max_seen": 144
+       "mean": 74.16,
+       "max_seen": 108
       }
      },
      "worst_case": {
@@ -5334,13 +5334,13 @@
    "stage": 11,
    "rank": 2,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     16,
     17
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -5446,8 +5446,8 @@
        "p_collision_free": 0.3
       },
       "down": {
-       "mean": 118.26,
-       "max_seen": 180
+       "mean": 93.6,
+       "max_seen": 144
       }
      },
      "true_occupancy": {
@@ -5458,7 +5458,7 @@
        "p_collision_free": 0.985
       },
       "down": {
-       "mean": 76.86,
+       "mean": 73.8,
        "max_seen": 108
       }
      },
@@ -5474,13 +5474,13 @@
    "stage": 11,
    "rank": 3,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     16,
     17
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -5586,8 +5586,8 @@
        "p_collision_free": 0.21
       },
       "down": {
-       "mean": 116.64,
-       "max_seen": 216
+       "mean": 97.74,
+       "max_seen": 180
       }
      },
      "true_occupancy": {
@@ -5598,8 +5598,8 @@
        "p_collision_free": 0.99
       },
       "down": {
-       "mean": 78.84,
-       "max_seen": 144
+       "mean": 74.16,
+       "max_seen": 108
       }
      },
      "worst_case": {
@@ -5614,12 +5614,12 @@
    "stage": 12,
    "rank": 0,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     18
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -5709,12 +5709,12 @@
    "stage": 12,
    "rank": 1,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     18
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -5804,12 +5804,12 @@
    "stage": 12,
    "rank": 2,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     18
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -5899,12 +5899,12 @@
    "stage": 12,
    "rank": 3,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     18
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -5994,12 +5994,12 @@
    "stage": 13,
    "rank": 0,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     19
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -6089,12 +6089,12 @@
    "stage": 13,
    "rank": 1,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     19
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -6184,12 +6184,12 @@
    "stage": 13,
    "rank": 2,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     19
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -6279,12 +6279,12 @@
    "stage": 13,
    "rank": 3,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     19
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -6374,13 +6374,13 @@
    "stage": 14,
    "rank": 0,
    "macros": 13766,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     20,
     21
    ],
    "weight_words": 78515712,
-   "max_address": 6596,
+   "max_address": 6816,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34255360,
@@ -6455,7 +6455,7 @@
        "p_collision_free": 0.2
       },
       "down": {
-       "mean": 111.42,
+       "mean": 109.26,
        "max_seen": 216
       }
      },
@@ -6467,7 +6467,7 @@
        "p_collision_free": 0.175
       },
       "down": {
-       "mean": 109.62,
+       "mean": 109.08,
        "max_seen": 180
       }
      },
@@ -6487,7 +6487,7 @@
        "p_collision_free": 0.235
       },
       "down": {
-       "mean": 110.52,
+       "mean": 111.06,
        "max_seen": 216
       }
      },
@@ -6499,7 +6499,7 @@
        "p_collision_free": 0.825
       },
       "down": {
-       "mean": 87.48,
+       "mean": 87.66,
        "max_seen": 144
       }
      },
@@ -6515,13 +6515,13 @@
    "stage": 14,
    "rank": 1,
    "macros": 13766,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     20,
     21
    ],
    "weight_words": 78515712,
-   "max_address": 6596,
+   "max_address": 6816,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34255360,
@@ -6596,8 +6596,8 @@
        "p_collision_free": 0.16
       },
       "down": {
-       "mean": 109.08,
-       "max_seen": 216
+       "mean": 110.7,
+       "max_seen": 180
       }
      },
      "true_occupancy": {
@@ -6608,7 +6608,7 @@
        "p_collision_free": 0.18
       },
       "down": {
-       "mean": 107.82,
+       "mean": 108.9,
        "max_seen": 180
       }
      },
@@ -6628,7 +6628,7 @@
        "p_collision_free": 0.225
       },
       "down": {
-       "mean": 108.18,
+       "mean": 110.7,
        "max_seen": 180
       }
      },
@@ -6641,7 +6641,7 @@
       },
       "down": {
        "mean": 90.0,
-       "max_seen": 180
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -6656,13 +6656,13 @@
    "stage": 14,
    "rank": 2,
    "macros": 13766,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     20,
     21
    ],
    "weight_words": 78515712,
-   "max_address": 6596,
+   "max_address": 6816,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34255360,
@@ -6737,7 +6737,7 @@
        "p_collision_free": 0.175
       },
       "down": {
-       "mean": 108.18,
+       "mean": 108.72,
        "max_seen": 216
       }
      },
@@ -6749,7 +6749,7 @@
        "p_collision_free": 0.155
       },
       "down": {
-       "mean": 110.88,
+       "mean": 110.34,
        "max_seen": 180
       }
      },
@@ -6769,7 +6769,7 @@
        "p_collision_free": 0.255
       },
       "down": {
-       "mean": 107.28,
+       "mean": 107.46,
        "max_seen": 180
       }
      },
@@ -6781,7 +6781,7 @@
        "p_collision_free": 0.84
       },
       "down": {
-       "mean": 85.68,
+       "mean": 90.0,
        "max_seen": 144
       }
      },
@@ -6797,13 +6797,13 @@
    "stage": 14,
    "rank": 3,
    "macros": 13766,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     20,
     21
    ],
    "weight_words": 78515712,
-   "max_address": 6596,
+   "max_address": 6816,
    "capacity_ok": true,
    "other_words_capacity_only": 2408448,
    "free_words_after_weights": 34255360,
@@ -6878,8 +6878,8 @@
        "p_collision_free": 0.195
       },
       "down": {
-       "mean": 113.04,
-       "max_seen": 216
+       "mean": 110.88,
+       "max_seen": 180
       }
      },
      "true_occupancy": {
@@ -6890,7 +6890,7 @@
        "p_collision_free": 0.23
       },
       "down": {
-       "mean": 108.36,
+       "mean": 109.44,
        "max_seen": 180
       }
      },
@@ -6910,7 +6910,7 @@
        "p_collision_free": 0.195
       },
       "down": {
-       "mean": 110.7,
+       "mean": 112.32,
        "max_seen": 180
       }
      },
@@ -6922,8 +6922,8 @@
        "p_collision_free": 0.8
       },
       "down": {
-       "mean": 88.92,
-       "max_seen": 144
+       "mean": 87.48,
+       "max_seen": 180
       }
      },
      "worst_case": {
@@ -6938,12 +6938,12 @@
    "stage": 15,
    "rank": 0,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     22
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -7033,12 +7033,12 @@
    "stage": 15,
    "rank": 1,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     22
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -7128,12 +7128,12 @@
    "stage": 15,
    "rank": 2,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     22
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -7223,12 +7223,12 @@
    "stage": 15,
    "rank": 3,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     22
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -7318,13 +7318,13 @@
    "stage": 16,
    "rank": 0,
    "macros": 13770,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     23,
     24
    ],
    "weight_words": 78486016,
-   "max_address": 6476,
+   "max_address": 6852,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34317824,
@@ -7430,7 +7430,7 @@
        "p_collision_free": 0.24
       },
       "down": {
-       "mean": 116.1,
+       "mean": 95.58,
        "max_seen": 216
       }
      },
@@ -7442,8 +7442,8 @@
        "p_collision_free": 0.93
       },
       "down": {
-       "mean": 84.78,
-       "max_seen": 144
+       "mean": 77.04,
+       "max_seen": 108
       }
      },
      "worst_case": {
@@ -7458,13 +7458,13 @@
    "stage": 16,
    "rank": 1,
    "macros": 13770,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     23,
     24
    ],
    "weight_words": 78486016,
-   "max_address": 6476,
+   "max_address": 6852,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34317824,
@@ -7570,7 +7570,7 @@
        "p_collision_free": 0.2
       },
       "down": {
-       "mean": 117.9,
+       "mean": 95.04,
        "max_seen": 180
       }
      },
@@ -7582,7 +7582,7 @@
        "p_collision_free": 0.945
       },
       "down": {
-       "mean": 85.14,
+       "mean": 76.32,
        "max_seen": 144
       }
      },
@@ -7598,13 +7598,13 @@
    "stage": 16,
    "rank": 2,
    "macros": 13770,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     23,
     24
    ],
    "weight_words": 78486016,
-   "max_address": 6476,
+   "max_address": 6852,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34317824,
@@ -7710,7 +7710,7 @@
        "p_collision_free": 0.17
       },
       "down": {
-       "mean": 117.54,
+       "mean": 98.64,
        "max_seen": 180
       }
      },
@@ -7722,7 +7722,7 @@
        "p_collision_free": 0.9
       },
       "down": {
-       "mean": 87.84,
+       "mean": 77.22,
        "max_seen": 144
       }
      },
@@ -7738,13 +7738,13 @@
    "stage": 16,
    "rank": 3,
    "macros": 13770,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     23,
     24
    ],
    "weight_words": 78486016,
-   "max_address": 6476,
+   "max_address": 6852,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34317824,
@@ -7850,7 +7850,7 @@
        "p_collision_free": 0.205
       },
       "down": {
-       "mean": 120.24,
+       "mean": 95.4,
        "max_seen": 180
       }
      },
@@ -7862,7 +7862,7 @@
        "p_collision_free": 0.93
       },
       "down": {
-       "mean": 87.12,
+       "mean": 78.48,
        "max_seen": 144
       }
      },
@@ -7878,12 +7878,12 @@
    "stage": 17,
    "rank": 0,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     25
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -7973,12 +7973,12 @@
    "stage": 17,
    "rank": 1,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     25
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -8068,12 +8068,12 @@
    "stage": 17,
    "rank": 2,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     25
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -8163,12 +8163,12 @@
    "stage": 17,
    "rank": 3,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     25
    ],
    "weight_words": 78143488,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34562048,
@@ -8258,13 +8258,13 @@
    "stage": 18,
    "rank": 0,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     26,
     27
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -8370,7 +8370,7 @@
        "p_collision_free": 0.295
       },
       "down": {
-       "mean": 119.88,
+       "mean": 95.22,
        "max_seen": 180
       }
      },
@@ -8382,8 +8382,8 @@
        "p_collision_free": 0.995
       },
       "down": {
-       "mean": 79.56,
-       "max_seen": 108
+       "mean": 73.98,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -8398,13 +8398,13 @@
    "stage": 18,
    "rank": 1,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     26,
     27
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -8510,7 +8510,7 @@
        "p_collision_free": 0.255
       },
       "down": {
-       "mean": 116.82,
+       "mean": 93.06,
        "max_seen": 180
       }
      },
@@ -8522,8 +8522,8 @@
        "p_collision_free": 0.99
       },
       "down": {
-       "mean": 77.4,
-       "max_seen": 108
+       "mean": 74.88,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -8538,13 +8538,13 @@
    "stage": 18,
    "rank": 2,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     26,
     27
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -8650,8 +8650,8 @@
        "p_collision_free": 0.28
       },
       "down": {
-       "mean": 117.18,
-       "max_seen": 180
+       "mean": 94.86,
+       "max_seen": 144
       }
      },
      "true_occupancy": {
@@ -8662,8 +8662,8 @@
        "p_collision_free": 1.0
       },
       "down": {
-       "mean": 80.82,
-       "max_seen": 144
+       "mean": 74.16,
+       "max_seen": 108
       }
      },
      "worst_case": {
@@ -8678,13 +8678,13 @@
    "stage": 18,
    "rank": 3,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     26,
     27
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -8790,7 +8790,7 @@
        "p_collision_free": 0.285
       },
       "down": {
-       "mean": 120.78,
+       "mean": 94.86,
        "max_seen": 180
       }
      },
@@ -8802,8 +8802,8 @@
        "p_collision_free": 0.99
       },
       "down": {
-       "mean": 79.56,
-       "max_seen": 144
+       "mean": 73.44,
+       "max_seen": 108
       }
      },
      "worst_case": {
@@ -8818,12 +8818,12 @@
    "stage": 19,
    "rank": 0,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     28
    ],
    "weight_words": 78171648,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34533888,
@@ -8885,7 +8885,7 @@
        "p_collision_free": 0.195
       },
       "down": {
-       "mean": 107.1,
+       "mean": 108.9,
        "max_seen": 180
       }
      },
@@ -8897,7 +8897,7 @@
        "p_collision_free": 0.595
       },
       "down": {
-       "mean": 95.04,
+       "mean": 92.34,
        "max_seen": 144
       }
      },
@@ -8913,12 +8913,12 @@
    "stage": 19,
    "rank": 1,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     28
    ],
    "weight_words": 78171648,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34533888,
@@ -8980,7 +8980,7 @@
        "p_collision_free": 0.215
       },
       "down": {
-       "mean": 110.52,
+       "mean": 113.76,
        "max_seen": 216
       }
      },
@@ -8992,7 +8992,7 @@
        "p_collision_free": 0.71
       },
       "down": {
-       "mean": 92.34,
+       "mean": 94.32,
        "max_seen": 180
       }
      },
@@ -9008,12 +9008,12 @@
    "stage": 19,
    "rank": 2,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     28
    ],
    "weight_words": 78171648,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34533888,
@@ -9075,7 +9075,7 @@
        "p_collision_free": 0.26
       },
       "down": {
-       "mean": 111.78,
+       "mean": 111.6,
        "max_seen": 252
       }
      },
@@ -9087,8 +9087,8 @@
        "p_collision_free": 0.68
       },
       "down": {
-       "mean": 92.7,
-       "max_seen": 180
+       "mean": 92.16,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -9103,12 +9103,12 @@
    "stage": 19,
    "rank": 3,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     28
    ],
    "weight_words": 78171648,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34533888,
@@ -9170,7 +9170,7 @@
        "p_collision_free": 0.215
       },
       "down": {
-       "mean": 107.1,
+       "mean": 109.62,
        "max_seen": 180
       }
      },
@@ -9182,8 +9182,8 @@
        "p_collision_free": 0.69
       },
       "down": {
-       "mean": 91.98,
-       "max_seen": 144
+       "mean": 92.7,
+       "max_seen": 180
       }
      },
      "worst_case": {
@@ -9198,12 +9198,12 @@
    "stage": 20,
    "rank": 0,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     29
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -9293,12 +9293,12 @@
    "stage": 20,
    "rank": 1,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     29
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -9388,12 +9388,12 @@
    "stage": 20,
    "rank": 2,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     29
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -9483,12 +9483,12 @@
    "stage": 20,
    "rank": 3,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     29
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -9578,13 +9578,13 @@
    "stage": 21,
    "rank": 0,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     30,
     31
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -9690,8 +9690,8 @@
        "p_collision_free": 0.185
       },
       "down": {
-       "mean": 119.16,
-       "max_seen": 216
+       "mean": 97.56,
+       "max_seen": 180
       }
      },
      "true_occupancy": {
@@ -9702,8 +9702,8 @@
        "p_collision_free": 0.815
       },
       "down": {
-       "mean": 94.5,
-       "max_seen": 180
+       "mean": 82.98,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -9718,13 +9718,13 @@
    "stage": 21,
    "rank": 1,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     30,
     31
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -9830,8 +9830,8 @@
        "p_collision_free": 0.23
       },
       "down": {
-       "mean": 117.9,
-       "max_seen": 180
+       "mean": 97.56,
+       "max_seen": 216
       }
      },
      "true_occupancy": {
@@ -9842,7 +9842,7 @@
        "p_collision_free": 0.87
       },
       "down": {
-       "mean": 93.24,
+       "mean": 81.18,
        "max_seen": 144
       }
      },
@@ -9858,13 +9858,13 @@
    "stage": 21,
    "rank": 2,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     30,
     31
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -9970,7 +9970,7 @@
        "p_collision_free": 0.2
       },
       "down": {
-       "mean": 119.16,
+       "mean": 96.84,
        "max_seen": 180
       }
      },
@@ -9982,8 +9982,8 @@
        "p_collision_free": 0.825
       },
       "down": {
-       "mean": 94.86,
-       "max_seen": 144
+       "mean": 81.0,
+       "max_seen": 180
       }
      },
      "worst_case": {
@@ -9998,13 +9998,13 @@
    "stage": 21,
    "rank": 3,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     30,
     31
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -10110,7 +10110,7 @@
        "p_collision_free": 0.26
       },
       "down": {
-       "mean": 119.7,
+       "mean": 96.12,
        "max_seen": 180
       }
      },
@@ -10122,8 +10122,8 @@
        "p_collision_free": 0.785
       },
       "down": {
-       "mean": 93.06,
-       "max_seen": 180
+       "mean": 82.26,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -10138,12 +10138,12 @@
    "stage": 22,
    "rank": 0,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     32
    ],
    "weight_words": 78171648,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34533888,
@@ -10205,7 +10205,7 @@
        "p_collision_free": 0.155
       },
       "down": {
-       "mean": 112.14,
+       "mean": 114.66,
        "max_seen": 216
       }
      },
@@ -10217,8 +10217,8 @@
        "p_collision_free": 0.37
       },
       "down": {
-       "mean": 100.26,
-       "max_seen": 144
+       "mean": 104.4,
+       "max_seen": 180
       }
      },
      "worst_case": {
@@ -10233,12 +10233,12 @@
    "stage": 22,
    "rank": 1,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     32
    ],
    "weight_words": 78171648,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34533888,
@@ -10301,7 +10301,7 @@
       },
       "down": {
        "mean": 107.82,
-       "max_seen": 144
+       "max_seen": 180
       }
      },
      "true_occupancy": {
@@ -10312,7 +10312,7 @@
        "p_collision_free": 0.42
       },
       "down": {
-       "mean": 103.32,
+       "mean": 101.34,
        "max_seen": 180
       }
      },
@@ -10328,12 +10328,12 @@
    "stage": 22,
    "rank": 2,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     32
    ],
    "weight_words": 78171648,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34533888,
@@ -10395,7 +10395,7 @@
        "p_collision_free": 0.14
       },
       "down": {
-       "mean": 109.62,
+       "mean": 110.34,
        "max_seen": 216
       }
      },
@@ -10407,8 +10407,8 @@
        "p_collision_free": 0.36
       },
       "down": {
-       "mean": 106.2,
-       "max_seen": 216
+       "mean": 103.86,
+       "max_seen": 180
       }
      },
      "worst_case": {
@@ -10423,12 +10423,12 @@
    "stage": 22,
    "rank": 3,
    "macros": 13758,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     32
    ],
    "weight_words": 78171648,
-   "max_address": 6416,
+   "max_address": 6672,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34533888,
@@ -10490,7 +10490,7 @@
        "p_collision_free": 0.255
       },
       "down": {
-       "mean": 108.36,
+       "mean": 107.64,
        "max_seen": 180
       }
      },
@@ -10502,7 +10502,7 @@
        "p_collision_free": 0.36
       },
       "down": {
-       "mean": 102.6,
+       "mean": 105.48,
        "max_seen": 180
       }
      },
@@ -10518,13 +10518,13 @@
    "stage": 23,
    "rank": 0,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     33,
     34
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -10630,7 +10630,7 @@
        "p_collision_free": 0.255
       },
       "down": {
-       "mean": 119.34,
+       "mean": 96.84,
        "max_seen": 180
       }
      },
@@ -10642,7 +10642,7 @@
        "p_collision_free": 0.885
       },
       "down": {
-       "mean": 88.74,
+       "mean": 77.94,
        "max_seen": 144
       }
      },
@@ -10658,13 +10658,13 @@
    "stage": 23,
    "rank": 1,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     33,
     34
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -10770,7 +10770,7 @@
        "p_collision_free": 0.23
       },
       "down": {
-       "mean": 121.86,
+       "mean": 95.76,
        "max_seen": 180
       }
      },
@@ -10782,8 +10782,8 @@
        "p_collision_free": 0.905
       },
       "down": {
-       "mean": 87.12,
-       "max_seen": 180
+       "mean": 78.66,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -10798,13 +10798,13 @@
    "stage": 23,
    "rank": 2,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     33,
     34
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -10910,8 +10910,8 @@
        "p_collision_free": 0.215
       },
       "down": {
-       "mean": 117.54,
-       "max_seen": 216
+       "mean": 99.9,
+       "max_seen": 180
       }
      },
      "true_occupancy": {
@@ -10922,8 +10922,8 @@
        "p_collision_free": 0.955
       },
       "down": {
-       "mean": 91.08,
-       "max_seen": 180
+       "mean": 78.48,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -10938,13 +10938,13 @@
    "stage": 23,
    "rank": 3,
    "macros": 13746,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     33,
     34
    ],
    "weight_words": 78319616,
-   "max_address": 6440,
+   "max_address": 6696,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34287616,
@@ -11050,7 +11050,7 @@
        "p_collision_free": 0.175
       },
       "down": {
-       "mean": 120.42,
+       "mean": 95.04,
        "max_seen": 180
       }
      },
@@ -11062,8 +11062,8 @@
        "p_collision_free": 0.965
       },
       "down": {
-       "mean": 87.84,
-       "max_seen": 180
+       "mean": 77.04,
+       "max_seen": 108
       }
      },
      "worst_case": {
@@ -11078,12 +11078,12 @@
    "stage": 24,
    "rank": 0,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     35
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -11173,12 +11173,12 @@
    "stage": 24,
    "rank": 1,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     35
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -11268,12 +11268,12 @@
    "stage": 24,
    "rank": 2,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     35
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -11363,12 +11363,12 @@
    "stage": 24,
    "rank": 3,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     35
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -11458,13 +11458,13 @@
    "stage": 25,
    "rank": 0,
    "macros": 13770,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     36,
     37
    ],
    "weight_words": 78486016,
-   "max_address": 6396,
+   "max_address": 6852,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34317824,
@@ -11538,8 +11538,8 @@
        "p_collision_free": 0.155
       },
       "down": {
-       "mean": 109.26,
-       "max_seen": 216
+       "mean": 113.76,
+       "max_seen": 180
       }
      },
      "true_occupancy": {
@@ -11550,7 +11550,7 @@
        "p_collision_free": 0.195
       },
       "down": {
-       "mean": 113.04,
+       "mean": 111.24,
        "max_seen": 216
       }
      },
@@ -11570,7 +11570,7 @@
        "p_collision_free": 0.28
       },
       "down": {
-       "mean": 115.92,
+       "mean": 119.7,
        "max_seen": 180
       }
      },
@@ -11582,7 +11582,7 @@
        "p_collision_free": 0.99
       },
       "down": {
-       "mean": 79.56,
+       "mean": 79.92,
        "max_seen": 144
       }
      },
@@ -11598,13 +11598,13 @@
    "stage": 25,
    "rank": 1,
    "macros": 13770,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     36,
     37
    ],
    "weight_words": 78486016,
-   "max_address": 6396,
+   "max_address": 6852,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34317824,
@@ -11678,7 +11678,7 @@
        "p_collision_free": 0.18
       },
       "down": {
-       "mean": 112.68,
+       "mean": 109.98,
        "max_seen": 216
       }
      },
@@ -11690,7 +11690,7 @@
        "p_collision_free": 0.155
       },
       "down": {
-       "mean": 108.18,
+       "mean": 112.32,
        "max_seen": 180
       }
      },
@@ -11710,7 +11710,7 @@
        "p_collision_free": 0.225
       },
       "down": {
-       "mean": 115.92,
+       "mean": 118.98,
        "max_seen": 180
       }
      },
@@ -11722,7 +11722,7 @@
        "p_collision_free": 0.985
       },
       "down": {
-       "mean": 79.92,
+       "mean": 79.74,
        "max_seen": 144
       }
      },
@@ -11738,13 +11738,13 @@
    "stage": 25,
    "rank": 2,
    "macros": 13770,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     36,
     37
    ],
    "weight_words": 78486016,
-   "max_address": 6396,
+   "max_address": 6852,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34317824,
@@ -11818,7 +11818,7 @@
        "p_collision_free": 0.225
       },
       "down": {
-       "mean": 111.24,
+       "mean": 110.7,
        "max_seen": 216
       }
      },
@@ -11830,7 +11830,7 @@
        "p_collision_free": 0.21
       },
       "down": {
-       "mean": 106.92,
+       "mean": 109.98,
        "max_seen": 216
       }
      },
@@ -11850,7 +11850,7 @@
        "p_collision_free": 0.275
       },
       "down": {
-       "mean": 117.9,
+       "mean": 120.96,
        "max_seen": 180
       }
      },
@@ -11862,8 +11862,8 @@
        "p_collision_free": 0.98
       },
       "down": {
-       "mean": 78.48,
-       "max_seen": 108
+       "mean": 79.74,
+       "max_seen": 144
       }
      },
      "worst_case": {
@@ -11878,13 +11878,13 @@
    "stage": 25,
    "rank": 3,
    "macros": 13770,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     36,
     37
    ],
    "weight_words": 78486016,
-   "max_address": 6396,
+   "max_address": 6852,
    "capacity_ok": true,
    "other_words_capacity_only": 2244608,
    "free_words_after_weights": 34317824,
@@ -11958,8 +11958,8 @@
        "p_collision_free": 0.205
       },
       "down": {
-       "mean": 107.82,
-       "max_seen": 180
+       "mean": 111.42,
+       "max_seen": 216
       }
      },
      "true_occupancy": {
@@ -11970,8 +11970,8 @@
        "p_collision_free": 0.18
       },
       "down": {
-       "mean": 112.14,
-       "max_seen": 180
+       "mean": 111.78,
+       "max_seen": 216
       }
      },
      "worst_case": {
@@ -11990,7 +11990,7 @@
        "p_collision_free": 0.215
       },
       "down": {
-       "mean": 118.26,
+       "mean": 118.62,
        "max_seen": 252
       }
      },
@@ -12018,12 +12018,12 @@
    "stage": 26,
    "rank": 0,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     38
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -12113,12 +12113,12 @@
    "stage": 26,
    "rank": 1,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     38
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -12208,12 +12208,12 @@
    "stage": 26,
    "rank": 2,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     38
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -12303,12 +12303,12 @@
    "stage": 26,
    "rank": 3,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     38
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -12398,12 +12398,12 @@
    "stage": 27,
    "rank": 0,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     39
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -12493,12 +12493,12 @@
    "stage": 27,
    "rank": 1,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     39
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -12588,12 +12588,12 @@
    "stage": 27,
    "rank": 2,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     39
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
@@ -12683,12 +12683,12 @@
    "stage": 27,
    "rank": 3,
    "macros": 13734,
-   "bf16_macros": 4096,
+   "bf16_macros": 2048,
    "dense_layers": [
     39
    ],
    "weight_words": 78005248,
-   "max_address": 6456,
+   "max_address": 6556,
    "capacity_ok": true,
    "other_words_capacity_only": 2080768,
    "free_words_after_weights": 34503680,
