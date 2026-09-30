@@ -38,7 +38,14 @@ module ot_v41_bf16_lanes2 #(
 );
     localparam integer HW = $clog2(NCHB);
     localparam integer TW = HW + 2 + TRW + 1;
-    wire [TW-1:0] t_in = {slot, first, last, tree, final_i};
+    // 1.2 GHz: the word, x slice and tag are registered at the lanes' boundary (the element's capture mux and the
+    // 16 lanes' fan-out are not in one cycle)
+    reg [255:0] w_r, x_r;
+    reg         v_r;
+    reg [TW-1:0] t_r;
+    always @(posedge clk or negedge rst_n) if (!rst_n) v_r <= 1'b0; else v_r <= v;
+    always @(posedge clk) begin w_r <= w; x_r <= x; t_r <= {slot, first, last, tree, final_i}; end
+    wire [TW-1:0] t_in = t_r;
     wire [TW-1:0] t_p;
     ot_hdc_delay #(.W(TW), .D(5)) u_pt (.clk(clk), .rst_n(rst_n), .d(t_in), .q(t_p));
     wire [15:0] pv;
@@ -49,10 +56,10 @@ module ot_v41_bf16_lanes2 #(
     wire [TRW:0] ct [0:15];
     genvar l;
     generate for (l = 0; l < 16; l = l + 1) begin : g_l
-        ot_hdc_bmul u_m (.clk(clk), .rst_n(rst_n), .v(v), .a({w[16*l +: 16], 16'd0}), .b({x[16*l +: 16], 16'd0}),
+        ot_hdc_bmul u_m (.clk(clk), .rst_n(rst_n), .v(v_r), .a({w_r[16*l +: 16], 16'd0}), .b({x_r[16*l +: 16], 16'd0}),
                          .y(prod[l]), .fault(pf[l]));
         reg [4:0] vp;
-        always @(posedge clk or negedge rst_n) if (!rst_n) vp <= 5'd0; else vp <= {vp[3:0], v};
+        always @(posedge clk or negedge rst_n) if (!rst_n) vp <= 5'd0; else vp <= {vp[3:0], v_r};
         assign pv[l] = vp[4];
         ot_v41_chain2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(clk), .rst_n(rst_n), .v(pv[l]),
             .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
