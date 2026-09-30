@@ -92,15 +92,22 @@
       "status": "pass"
     },
     "v41_index_bandwidth": {
-      "evidence": "results/rtl/hdc_v41x_idx_shard_reader_pc.json",
+      "evidence": "results/rtl/w11_idx_reader_rate.json; results/rtl/w11_idx_ring_gate.json",
       "observed": {
+        "checked_keys": 262144,
         "effective_modeled_sectors_per_cycle": 103.496,
-        "keys": null,
-        "measured_sectors_per_cycle": 0,
-        "user_count": null
+        "isolated_users_exact": [
+          0,
+          481,
+          551,
+          865
+        ],
+        "keys": 262144,
+        "measured_sectors_per_cycle": 110.989,
+        "record_clock_target_sectors_per_cycle": 108.8
       },
-      "required": "four-stack concurrent exact scan at or above the adopted effective HBM rate, with user isolation",
-      "status": "blocked"
+      "required": "four-stack exact 262,144-key scan at or above the adopted effective HBM rate (and the record's own target at its clock), with multi-user isolation",
+      "status": "pass"
     },
     "v41_rate_covers_activation_load": {
       "evidence": "results/arch/v41_tp_rowsplit_measured_reprice.json; results/arch/v41_fullshape_load_floor.json",
@@ -135,12 +142,13 @@
     "results/rtl/hdc_v41x_fullshape_token_rtl.json": "missing",
     "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "62923ec77d9663bd5b90c14d693ea41815c9bcb64db5782bc230c6219e2ff6b2",
     "results/rtl/hdc_v41x_fullshape_weight_rtl_preflight.json": "666eb8f1c5afd86032bcae69da49cb557b8d48da39f74a62282d9cd7b41cbb86",
-    "results/rtl/hdc_v41x_idx_shard_reader_pc.json": "b86adbef20492be7778c5375dac13c4cfb78f8814e0568900dfd69fcb3fb1928",
     "results/rtl/qwen_o4_fullshape_hbm_matched.json": "missing",
     "results/rtl/qwen_o4_fullshape_tp2_ar.json": "missing",
     "results/rtl/qwen_o4_fullshape_tp2_dflash.json": "missing",
     "results/rtl/v41_collective_depth_campaign.json": "2c99155903830e712f1ca283a681dbecc464eadfac45960a8b577c499d887bd8",
-    "tools/final_number_readiness.py": "6e5e449049c8ab084ad633f642035c9afb6b4d6310b65f127baa0a0f317b790d"
+    "results/rtl/w11_idx_reader_rate.json": "a84f7a84abf619624edde3f9a7ce6a7aa4374b93ac6c9ac478cd5354f2df74a3",
+    "results/rtl/w11_idx_ring_gate.json": "386e1e7c3705180aa409c849a1a1ab3f7f38ceeb580b9f8e995c0addeafc8b8e",
+    "tools/final_number_readiness.py": "2405a0c43868c3c7b93ac8bb6314577dafcd72e847ea7efb69d81eda8254101c"
   },
   "terminal_ready": false
 }

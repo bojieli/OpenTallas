@@ -267,7 +267,10 @@ def main():
     ap.add_argument("--pdn-tcl", default=f"{PLAT}/openRoad/pdn/BLOCKS_grid_strategy.tcl",
                     help="PDN script (container path); repo scripts are mounted at /src/tools/chip_assembly/tcl")
     ap.add_argument("--pdn-exclude", default="", help="space-separated master globs left out of the macro element grid")
+    ap.add_argument("--refit", type=Path, help="a re-fit record (tools/v41_floorplan_refit.py): check that floorplan")
     a = ap.parse_args()
+    if a.refit:
+        PK.REFIT = json.loads(a.refit.read_text())["geometry"]["refit"]
     run = a.run_dir.resolve()
     prepare(a.variant, run, a.pdn, a.psm, a.pdn_exclude, a.window, a.tapcell, a.pdn_tcl)
     img = subprocess.run(["docker", "image", "inspect", IMAGE, "--format", "{{.Id}}"], capture_output=True,
@@ -285,7 +288,8 @@ def main():
     pins = tags.get("OT_PINS", [""])[0]
     pdn = tags.get("OT_PDN", [None])[0]
     psm = tags.get("OT_PSM", [])
-    rec = dict(schema="opentallas.v41.floorplan_orfs_check.v1", variant=a.variant, pdn_exclude=a.pdn_exclude, pdn_tcl=a.pdn_tcl, window=a.window, tapcell=a.tapcell,
+    rec = dict(schema="opentallas.v41.floorplan_orfs_check.v1", variant=a.variant,
+               refit=(str(a.refit), hashlib.sha256(a.refit.read_bytes()).hexdigest()) if a.refit else None, pdn_exclude=a.pdn_exclude, pdn_tcl=a.pdn_tcl, window=a.window, tapcell=a.tapcell,
                tapcell_result=None,
                image=IMAGE, image_id=img, openroad=OPENROAD, wall_s=round(time.time() - t, 1),
                peak_rss_kb=peak, docker_rc=r.returncode, stdout_tail=r.stdout[-200:],

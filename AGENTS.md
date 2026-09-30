@@ -26,6 +26,15 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
 - Evidence is committed, source-pinned records.
 - Failed verdicts are never overwritten.
 - Clock and uncertainty constraints are never relaxed without pricing the change.
+- Sign-off corners (user decision, 2026-09-30):
+  - A headline clock frequency must close setup at the SS corner and hold at the FF corner, under the 60 ps setup / 25 ps hold uncertainty policy.
+  - TT closures are pathfinding evidence only, labelled as TT.
+  - Memory macros are checked at SS with their own clk→q; results/uarch/v41_rom_depth_study.json has the ROM macro figures.
+- Clock target (user decision, 2026-09-30): 1.2 GHz (0.833 ns) at SS; the V4.1 ROM uses 4096-row macros, 2 per element slot. Bottleneck blocks are pipelined or parallelised to meet it, and each added latency cycle is reported to the model.
+- Clock domains (root, 2026-09-30, from the measured FP32 add: 3.31 ns per add at LAT 3 against ~7 ns at the 8–9 stages 1.2 GHz needs):
+  - The streaming domain runs at 1.2 GHz: ROM field and elements, index scan, attention tiles, links, the HBM service.
+  - The serial-chain domain runs at 0.9 GHz (3:4) on the LAT-3 FP32 add: SU, SFU, softplus, Sinkhorn, reducers.
+  - The model prices it at +28% AR against all-1.2 GHz.
 - Stage files by explicit path, never `git add -A`.
 - Run long jobs in pinned clean worktrees, not in the main checkout.
 - After editing any doc under `docs/`, regenerate the prose-figure census and sync its two untriaged-count annotations, then run `make check-figures`.

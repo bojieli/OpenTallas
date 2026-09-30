@@ -67,8 +67,18 @@ module ot_v41_chain #(
     reg          sp_v, sp_f;
     reg [SW-1:0] sp_slot;
     reg [31:0]   sp_val;
-    wire fwd5 = sv && !d_last && ps[4] == slot_r;
-    wire fwd6 = sp_v && sp_slot == slot_r;
+    // forwarding decisions are made a cycle ahead against the incoming slot and registered (the compare no
+    // longer sits in front of the adder): fwd5 = the slot's sum leaves the adder in the operand cycle,
+    // fwd6 = it left one cycle before
+    reg [4:0] pl;
+    reg fwd5, fwd6;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin fwd5 <= 1'b0; fwd6 <= 1'b0; end
+        else begin
+            fwd5 <= pv[3] && !pl[3] && ps[3] == slot;
+            fwd6 <= sv && !d_last && ps[4] == slot;
+        end
+    always @(posedge clk) pl <= {pl[3:0], last_r};
     assign a = first_r ? 32'd0 : (fwd5 ? sum : (fwd6 ? sp_val : acc_r));
     assign af = first_r ? 1'b0 : (fwd5 ? d_f : (fwd6 ? sp_f : accf_r));
     always @(posedge clk or negedge rst_n) begin

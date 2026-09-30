@@ -17,6 +17,9 @@ Rule: every stream builds only what the microarchitecture model sizes, and stops
 | W13 | GPU-organised HBM comparators (SM, bulk copy, hardware barrier) | [~] SM elements exact; hardening; die floorplans | HBM speculation model-only (causal block attention, KV rollback not built) |
 | W14 | Model economics: batch sweep, energy per token, cost | [~] | |
 | W15 | Deterministic hardware collectives, built and MEASURED end to end | [~] | every multi-die headline depends on it; the V4.1 ROM 4,167 tok/s assumes ~0.15 µs |
+| W16 | Die consolidation: V4.1 ROM die count from placed capacity; right-sized HBM dies; equal area/cost/power comparison | [~] | analytical die counts were from the N5 ledger + over-reserved hub |
+| W17 | V4.1 full-shape layer and token through runtime composition | [~] | no full-shape layer/token has run end to end |
+| W18 | V4.1 full-die assembly: HBM PHY abstract fix, hierarchical PDN + power-switch rings, real-abstract die route | [~] | flat die PDN runs out of memory; PHY abstract defective |
 
 User decisions (2026-09-29):
 - V4.1 ROM keeps MTP at m=1; Qwen ROM is AR only; HBM comparators keep speculation.
