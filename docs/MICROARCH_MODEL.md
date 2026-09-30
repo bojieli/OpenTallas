@@ -285,6 +285,52 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
    - V4.1: 196 mm², including the 112.7 mm² dedicated-unit hub between the SM half-arrays.
 5. **V4.1 SMs issue group-slot on small slices.** This takes the HBM token from 2,533 to 2,920 tok/s. The x store that delivers a whole 8-column fragment every cycle is 99 shallow macros per SM.
 
+## HBM comparator feasibility audit (W19, `tools/hbm_feasibility_audit.py`, `results/uarch/hbm_feasibility_audit.json`)
+
+This audit is analysis only: no P&R and no RTL. It walks the V4.1 HBM chain node by node, exactly as `v41_hbm_chain` does. It then moves the chain to 1.2 GHz the way W16 does: cycle terms are rescaled and fabric seconds are kept. Each correction below is a switch on that walk, applied one at a time.
+
+- **Baselines.** At main HEAD the walk gives 3,072 AR and 6,206 MTP tok/s. The W16 headline under audit (branch `claude/w16-consolidation`, 84aa38ce) is 3,194 AR and 6,350 MTP. That branch predates the SM constants merged from W13 at SS: drain 95 cycles and a 78-cycle boundary.
+- **DRAM proxy.** DRAMsim3 ran on two HBM3E pseudo-channels, using HBM3-class timings in ns (ASSUMED), bank groups interleaved per burst, and all-bank refresh. The fraction of peak it reached, by access pattern:
+  - weight stream: 0.898;
+  - weight stream with KV writes: 0.873;
+  - expert chunks of 1.5 KB at random rows: 0.797;
+  - 288 B KV rows: 0.504.
+  An idle first access costs 53 ns in the DRAM itself.
+
+| Assumption | Model value | Evidence | Verdict | Corrected AR / MTP tok/s |
+|---|---|---|---|---:|
+| 1a HBM3E sustained bandwidth | 0.90 × 1.0 TB/s a stack; weight sweep 37.4 µs under a 326 µs chain | Proxy gives 0.87–0.90 on the stream. The sweep is 12% of the chain, so batch-1 AR is not bandwidth-bound | SOUND | 3,072 / 6,206 |
+| 1b Routed-expert fetch after the router | Omitted: the uarch chain dropped W9's +1 µs a layer | Expert ids exist only after the top-6. Priced at 0.5 µs first access × 40 layers | OPTIMISTIC, −6% AR | 2,877 / 5,966 |
+| 2a Switched collective latency | 0.668 µs × 188 on the path = 125.9 µs | W15 NVLS bench, TP-12, deterministic, SCRATCH: 0.81 µs all-reduce, 0.85–0.89 µs all-gather. 0.83 µs used | OPTIMISTIC, −8.6% | 2,808 / 5,878 |
+| 2b Collective count | 188, from W9's K-split down projection | `sm_op_cycles` keeps each row's whole K in one SM, which is the exact golden order. That order needs the 6 × 2,304 intermediate gathered before the down projection: +1 collective per MoE layer | OPTIMISTIC, −7.9% | 2,829 / 5,846 |
+| 3 MoE at TP-96 (384 experts, top-6, 2,304 × 5,120 FP4) | Each die holds 1/96 of every expert (184 KB a die an expert) | Balanced by construction. EP at batch 1 costs about +200 µs/token: at most 6 of 96 dies active, 4.9 µs an expert, E[max load] 1.15. Aligning 64 heads onto 96 dies costs +2 µs | SOUND (TP beats EP) | 3,052 / 6,182 |
+| 4a MTP, dense matrices on 8 MMA columns | One weight pass serves 6 positions | `SM_ELEM` v41 has 8 columns; the RTL exactness cases use 2 columns | SOUND, not yet measured | — |
+| 4b MTP, routed experts | 6 experts a layer | Each position routes its own top-6, giving a union U(6) = 34.6 experts. They are fetched after the router at the proxy's 0.797 | OPTIMISTIC, −10.7% MTP | — / 5,541 |
+| 4c MTP, per-position KV rows (W11: 6 × 645) | kvscan issue ×6, collective bytes ×6 | The chain assumes no shared rows | SOUND | — |
+| 5 KV at 1M | 0.936 GB a user; ~7,760 users a TP-96 group | Per token per user: 0.183 GB of index keys and 6 MB of rows, against 346 TB/s a group | SOUND | — |
+| 6a Indexer | ROM TP-4 widths: 262,144 keys a die | TP-96 holds 1/96 of the keys; the merge becomes 96 × 512 | PESSIMISTIC, +3.3% | 3,174 / 6,958 |
+| 6b Attention | 16 heads a die | ≤ 1 head a die at TP-96 | PESSIMISTIC, +3.5% | 3,179 / 6,997 |
+| 6c Serial units | Rescaled to 1.2 GHz | AGENTS.md puts SU, SFU, reducers and select in the 0.9 GHz domain | OPTIMISTIC, −7.5% | 2,842 / 5,623 |
+| 6d Drafter | 3/40 of an AR token (ASSUMED) | W9 `draft_g` at G = 96 gives 46.8 µs: 5 Markov steps, each with a collective | OPTIMISTIC, −3.7% MTP | — / 5,979 |
+| 6e Barriers | 329 × 78 cycles, measured in RTL | This is a hardware-sequenced persistent program, not GPU kernels. With V100 `grid.sync` barriers the rate would be 1,246 | SOUND for this machine | — |
+| Qwen 1: HBM efficiency | 0.90 of 8 × 1.0 TB/s | Proxy gives 0.873–0.898 | SOUND (0–3%) | 854 AR (model 881) |
+| Qwen 4: DFlash b16 | Verify = AR bytes + draft bytes | GQA 4 × 16 positions = 64 query columns on 16 MMA columns, so K and V pass 4 times. Softmax runs on the SIMT lanes | OPTIMISTIC, −14% | 2,296 at b12 (model 2,670 at b16) |
+
+- **Realistic V4.1 HBM per-user range.** These are all corrections combined, with the union for MTP and W9's drafter:
+  - **AR: 2,196 – 2,395 – 2,905 tok/s**, against the 3,194 headline;
+  - **MTP: 4,951 – 5,228 – 6,161 tok/s**, against 6,350.
+  The first number is the pessimistic end: 1 µs fetch, 0.89 µs collectives, 0.795 expert efficiency. The middle number is central. The last is optimistic: 0.25 µs fetch, the model's own fabric and the 1.2 GHz chain.
+- **No assumption is an architectural blocker.** Every gap is a latency term with a known build. The largest are the collectives (count and latency), the exposed expert fetch, and the serial-domain clock.
+- **The model under-prices MTP more than AR.** The 6 verify positions do not share routed experts.
+- **Build plan for a full-shape HBM token (W19):**
+  1. The TP-96 program: exact row-split matvecs, head-aligned `wq_b`, and sequence-sharded KV and index keys. It is golden-checked per layer by extending W17's TP-4 ISA executor to TP-96 ranks.
+  2. The expert fetch path: router top-6, then descriptors, then bulk copy into SMEM, with first-byte latency measured in RTL against a DRAM model.
+  3. W15's P = 6 and P = 48 NVLS records, committed, with the expert-intermediate gather and the 96-way index merge added.
+  4. 8-column SM exactness and timing.
+  5. Dedicated units at TP-96 widths in the 0.9 GHz domain.
+  6. One full-shape token by runtime composition over 96 ranks, checked against the 1M reference token (21946).
+  7. Re-price the model from steps 1–6 and restate the headline.
+
 ## Summary: what the model changed
 
 | Design | Previous figure | Microarchitecture model (fits die) | Largest lever |
