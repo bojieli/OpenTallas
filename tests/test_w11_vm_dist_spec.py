@@ -58,8 +58,12 @@ def test_tree_stages_follow_the_model_rule(rec):
     import uarch_model as U
     for name, t in rec["trees"].items():
         assert t["stages"] == U.wire_cycles(t["distance_um"], 1e12 / 920, 0.76), name
-        # the rule reproduces the model's own figures on the model's geometry
-        assert t["model_rule_stages"] == t["model_stages"], name
+    # the model (option H, root 2026-09-30) takes this record's block: its stages are the spec's, with the
+    # collective endpoint at the VM port (the scatter tree's stages)
+    tr = rec["trees"]
+    for name in ("x_gather", "ret_scatter", "su_results"):
+        assert tr[name]["model_stages"] == tr[name]["stages"], name
+    assert tr["coll_write"]["model_stages"] == tr["ret_scatter"]["stages"]
 
 
 def test_discrepancies_are_flagged(rec):
