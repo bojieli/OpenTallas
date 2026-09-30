@@ -57,6 +57,8 @@ module ot_qwen_rom_tile_logic #(
     parameter integer KV_SK = 7,          // scores split (log2)
     parameter integer KV_SV = 9,          // weighted-sum split (log2)
     parameter integer ACC_LAT = 5,        // lane accumulator FP32 add latency (ot_hdc_matvec_part ACC_LAT)
+    parameter integer FAST_ISSUE = 0,     // 1.2 GHz issue loop (ot_hdc_matvec_part FAST_ISSUE)
+    parameter integer KV_PREP = 0,        // KV-op offset pipeline cycles (ot_hdc_matvec_part KV_PREP)
     parameter integer TREE_LAT = 3        // split-tree pair adder latency (ot_hdc_matvec_part TREE_LAT)
 ) (
     input  wire              clk,
@@ -121,7 +123,7 @@ module ot_qwen_rom_tile_logic #(
     wire              me_fault;
     ot_hdc_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
         .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(MEM_EXTRA),
-        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT)) u_me (
+        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
@@ -203,7 +205,7 @@ module ot_qwen_rom_tile_logic #(
     endfunction
     generate if (KV_LOCAL != 0) begin : g_kv_local
         localparam [KV_AW-1:0] PRK = GT >> KV_SK;
-        //: K words a group holds: ceil(512 position tiles / (GT >> SK)) rounds x NH heads (44 at G = 6,144)
+        //: K words a group holds: ceil(KV_PT position tiles / (GT >> SK)) rounds x NH heads (44 at G = 6,144, 8K)
         //: 2^(KV_HB-7) position tiles a head (512 at the 8K window); a literal 512 overlaps V onto K above 8K
         localparam integer KV_PT = 1 << (KV_HB - 7);
         localparam integer KV_KL = ((KV_PT + (GT >> KV_SK) - 1) / (GT >> KV_SK)) * KV_NH;
@@ -262,6 +264,8 @@ module ot_qwen_rom_tile #(
     parameter integer KV_VB = 131072,     // TP-4: 2 KV heads a die
     parameter integer KV_NH = 2,
     parameter integer ACC_LAT = 5,        // lane accumulator FP32 add latency (ot_hdc_matvec_part ACC_LAT)
+    parameter integer FAST_ISSUE = 0,     // 1.2 GHz issue loop (ot_hdc_matvec_part FAST_ISSUE)
+    parameter integer KV_PREP = 0,        // KV-op offset pipeline cycles (ot_hdc_matvec_part KV_PREP)
     parameter integer TREE_LAT = 3        // split-tree pair adder latency (ot_hdc_matvec_part TREE_LAT)
 ) (
     input  wire              clk,
@@ -291,7 +295,7 @@ module ot_qwen_rom_tile #(
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_rd(rom_rd),

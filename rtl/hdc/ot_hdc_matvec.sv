@@ -83,7 +83,9 @@ module ot_hdc_matvec #(
     parameter integer SMIN = 0,          // pruning: smallest split any op uses (0 = none)
     parameter integer ORD = 0,           // extra result-write register stages
     parameter integer ACC_LAT = 5,       // lane accumulator / split-tree adder latencies (ot_hdc_matvec_part)
-    parameter integer TREE_LAT = 3
+    parameter integer TREE_LAT = 3,
+    parameter integer FAST_ISSUE = 0,
+    parameter integer KV_PREP = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -146,7 +148,7 @@ module ot_hdc_matvec #(
     wire active;
     ot_hdc_matvec_part #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(INT8_WEIGHT),
                          .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .SMIN(SMIN), .ORD(ORD),
-                         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT)) u_p (
+                         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP)) u_p (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
@@ -199,7 +201,11 @@ module ot_hdc_matvec_part #(
     // split-tree pair adder (3: ot_hdc_qadd; else ot_hdc_fp32_add_lat #(TREE_LAT)).  Values do not change;
     // results emerge ACC_LAT - 5 + LG * (TREE_LAT - 3) cycles later.
     parameter integer ACC_LAT = 5,
-    parameter integer TREE_LAT = 3
+    parameter integer TREE_LAT = 3,
+    // FAST_ISSUE: the 1.2 GHz issue loop (pipelined per-op products, keep-prefix loop adds); 0: the original
+    parameter integer FAST_ISSUE = 0,
+    // KV_PREP: cycles a KV-sourced op waits after its go for the pipelined per-group KV offsets (3), 0: none
+    parameter integer KV_PREP = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -333,18 +339,23 @@ module ot_hdc_matvec_part #(
     reg [NW:0]       lb, lb_step;          // first lane-vector index of the round (mmode 1)
     reg              t_last, k_last;
     wire             j_last = (j == IL - 1);
+    //: pruning: an op below the smallest split the pruned tree supports
+    reg              split_fault;
+    //: KV_PREP > 0: a KV-sourced op waits KV_PREP cycles after its go (ready low) for its per-group KV
+    //: offsets, which leave the issue path as a pipelined multiply (see g_kv_addr)
+    reg              pend;
+    reg [3:0]        pcnt;
+
+    assign ready = !active && !pend;
+
+generate if (FAST_ISSUE == 0) begin : g_issue_legacy
     // tiles one round covers: GT/S (the whole engine's groups)
     wire [$clog2(GT):0] per_round = GT >> i_split;
     //: KV ops cut their whole K interleaved: ceil(K/S) steps
     wire [NW-1:0]    kc_in = i_wsrc ? ((i_k + ((16'd1 << i_split) - 16'd1)) >> i_split) : i_k;
-    //: pruning: an op below the smallest split the pruned tree supports
-    reg              split_fault;
-
-    assign ready = !active;
-
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            active <= 1'b0;
+            active <= 1'b0; pend <= 1'b0; pcnt <= 4'd0;
             wrom_re <= 1'b0; kv_re <= 1'b0;
             split_fault <= 1'b0;
         end else if (!active) begin
@@ -396,6 +407,121 @@ module ot_hdc_matvec_part #(
             end
         end
     end
+end else begin : g_issue_fast
+    //: FAST_ISSUE (1.2 GHz @ SS): the same schedule, cycle for cycle (plus KV_PREP on KV ops).
+    //: (1) The per-op products (the round steps ts*(GT/S), ots*(GT/S), (GT/S)*W*IL, (GT/S)*W and the KV
+    //:     K-step count ceil(K/S)) are first needed at the first K or round boundary, IL >= 3 cycles after
+    //:     the go: they are two register stages computed from the latched fields, not an input-to-register
+    //:     multiply; ts*(GT/S) is shifted adds of ts (GT's set bits), not a multiplier.
+    //: (2) Every loop add is ot_hdc_kadd: a Kogge-Stone prefix adder whose levels are kept netlist
+    //:     boundaries (ABC re-maps a flattened `+` as a MAJ ripple: 22 cells, -656 ps at SS on `cur`).
+    localparam integer PRW = $clog2(GT) + 1;
+    //: x * (GT >> s), exactly, as the sum of x shifted to each set bit b >= s of the constant GT (two terms at
+    //: 6,144): no multiplier
+    function automatic [AW+PRW-1:0] mul_gt_shr(input [AW-1:0] x, input [3:0] sh);
+        integer b;
+        reg [AW+PRW-1:0] acc;
+        begin
+            acc = 0;
+            for (b = 0; b < PRW; b = b + 1)
+                if (((GT >> b) & 1) != 0 && b >= sh) acc = acc + ({{PRW{1'b0}}, x} << (b - sh));
+            mul_gt_shr = acc;
+        end
+    endfunction
+    reg [PRW-1:0]    pr_a;                 // GT >> split
+    reg [AW+PRW-1:0] tsg_a, otsg_a;        // ts*(GT>>S), ots*(GT>>S)
+    reg [NW-1:0]     kc_a;
+    localparam [NW:0]   WNB = W;
+    localparam [NW-1:0] ONE = 1, TWO = 2;
+    always @(posedge clk) begin
+        pr_a <= GT >> split_r;
+        tsg_a <= mul_gt_shr(ts_r, split_r);
+        otsg_a <= mul_gt_shr(ots_r, split_r);
+        kc_a <= wsrc_r ? ((ktot_r + ((1 << split_r) - 1)) >> split_r) : ktot_r;
+        tstep_r <= !wsrc_r ? ts_r : tsg_a[AW-1:0];
+        ot_step <= otsg_a[AW-1:0];
+        nb_step <= pr_a * (W * IL);
+        lb_step <= pr_a * W;
+        k_r <= kc_a;
+    end
+    //: loop adds
+    wire [AW-1:0] cur_js, oa_j, xc_j, bk_k, xk_k, bt_t, ot_t;
+    wire [NW:0]   nb_j, nbt_t, lb_t;
+    wire [NW-1:0] k_1, k_2, t_1, t_2;
+    ot_hdc_kadd #(.W(AW)) u_a0 (.a(cur), .b(js_r), .s(cur_js));
+    ot_hdc_kadd #(.W(AW)) u_a1 (.a(oa), .b(ojs_r), .s(oa_j));
+    ot_hdc_kadd #(.W(AW)) u_a2 (.a(xc), .b(xjs_r), .s(xc_j));
+    ot_hdc_kadd #(.W(AW)) u_a3 (.a(base_k), .b(ks_r), .s(bk_k));
+    ot_hdc_kadd #(.W(AW)) u_a4 (.a(xk), .b(xks_r), .s(xk_k));
+    ot_hdc_kadd #(.W(AW)) u_a5 (.a(base_t), .b(tstep_r), .s(bt_t));
+    ot_hdc_kadd #(.W(AW)) u_a6 (.a(ot), .b(ot_step), .s(ot_t));
+    ot_hdc_kadd #(.W(NW+1)) u_a7 (.a(nb), .b(WNB), .s(nb_j));
+    ot_hdc_kadd #(.W(NW+1)) u_a8 (.a(nb_t), .b(nb_step), .s(nbt_t));
+    ot_hdc_kadd #(.W(NW+1)) u_a9 (.a(lb), .b(lb_step), .s(lb_t));
+    ot_hdc_kadd #(.W(NW)) u_a10 (.a(k), .b(ONE), .s(k_1));
+    ot_hdc_kadd #(.W(NW)) u_a11 (.a(k), .b(TWO), .s(k_2));
+    ot_hdc_kadd #(.W(NW)) u_a12 (.a(t), .b(ONE), .s(t_1));
+    ot_hdc_kadd #(.W(NW)) u_a13 (.a(t), .b(TWO), .s(t_2));
+    //: the go's own first-boundary flags, without the K-step divide: ceil(K/S) == 1 <=> K <= S
+    wire kc_is_1 = i_wsrc ? ({{(32-NW){1'b0}}, i_k} <= (32'd1 << i_split)) : (i_k == 1);
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            active <= 1'b0; pend <= 1'b0; pcnt <= 4'd0;
+            wrom_re <= 1'b0; kv_re <= 1'b0;
+            split_fault <= 1'b0;
+        end else if (pend) begin
+            wrom_re <= 1'b0; kv_re <= 1'b0;
+            if (pcnt == 0) begin pend <= 1'b0; active <= 1'b1; end
+            else pcnt <= pcnt - 1'b1;
+        end else if (!active) begin
+            wrom_re <= 1'b0; kv_re <= 1'b0;
+            if (go) begin
+                if (KV_PREP > 0 && i_wsrc) begin pend <= 1'b1; pcnt <= KV_PREP - 1; end
+                else active <= 1'b1;
+                if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+                nout_r <= i_nout; tiles_r <= i_tiles; ktot_r <= i_k;
+                wsrc_r <= i_wsrc; round_r <= i_round; oen_r <= i_oen; amax_r <= i_amax;
+                rmax_r <= i_rmax; mbase_r <= i_mbase;
+                scale_base_r <= (INT8_WEIGHT != 0 && INT8_SCALE_WCS_BASE != 0) ? i_wcs : i_wbase;
+                mmode_r <= i_mmode; split_r <= i_split; wcs_r <= i_wcs;
+                ts_r <= i_ts; ks_r <= i_ks; js_r <= i_js; jsh_r <= i_jsh;
+                xks_r <= i_xks; xjs_r <= i_xjs; xcs_r <= i_xcs; ots_r <= i_ots; ojs_r <= i_ojs;
+                t <= 0; k <= 0; j <= 0;
+                t_last <= (i_tiles == 1); k_last <= kc_is_1;
+                cur <= i_wbase; base_k <= i_wbase; base_t <= i_wbase;
+                xk <= i_xbase; xc <= i_xbase; xk_base <= i_xbase;
+                oa <= i_obase; ot <= i_obase;
+                nb <= 0; nb_t <= 0;
+                lb <= 0;
+            end
+        end else begin
+            wrom_re <= !wsrc_r; kv_re <= wsrc_r;
+            wrom_addr <= cur;
+            if (!j_last) begin
+                j <= j + 1'b1; oa <= oa_j; nb <= nb_j; xc <= xc_j;
+                if ((((j + 1'b1) >> jsh_r) << jsh_r) == (j + 1'b1)) cur <= cur_js;
+            end else begin
+                j <= 0; nb <= nb_t; oa <= ot;
+                if (!k_last) begin
+                    k <= k_1; k_last <= (k_2 == k_r);
+                    base_k <= bk_k; cur <= bk_k;
+                    xk <= xk_k; xc <= xk_k;
+                end else begin
+                    k <= 0; k_last <= (k_r == 1);
+                    xk <= xk_base; xc <= xk_base;
+                    if (!t_last) begin
+                        t <= t_1; t_last <= (t_2 == tiles_r);
+                        base_t <= bt_t; base_k <= bt_t; cur <= bt_t;
+                        ot <= ot_t; oa <= ot_t;
+                        nb_t <= nbt_t; nb <= nbt_t; lb <= lb_t;
+                    end else begin
+                        active <= 1'b0;
+                    end
+                end
+            end
+        end
+    end
+end endgenerate
     // x reads (group g = GBASE + local: chunk c = g mod S).  With a
     // non-power-of-two GT, the final GT % S groups have no complete K-split
     // tile.  The O4 drafter FC uses G=6144, S=4096; only groups 0..4095 belong
@@ -412,11 +538,35 @@ module ot_hdc_matvec_part #(
             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
     end
     //: KV ops: group g = q*S + c takes tile r*(GT/S) + q, chunk c: its own word
-    generate if (LANES) begin : g_kv_addr
+    generate if (LANES && KV_PREP == 0) begin : g_kv_addr
         always @(posedge clk) begin
             if (active)
                 for (gi = 0; gi < G; gi = gi + 1)
                     kv_addr[gi*AW +: AW] <= cur + ((gb + gi) >> split_r) * ts_r + ((gb + gi) & ((1 << split_r) - 1)) * wcs_r;
+        end
+    end else if (LANES) begin : g_kv_addr_prep
+        //: the per-group offset q*ts + c*wcs is constant through the op: a free-running three-stage pipeline
+        //: (split -> q, c; the two products; their sum) from the go's latched fields, ready after KV_PREP = 3
+        reg [31:0]   q_p [0:G-1];
+        reg [31:0]   c_p [0:G-1];
+        reg [AW-1:0] p1 [0:G-1];
+        reg [AW-1:0] p2 [0:G-1];
+        reg [AW-1:0] off [0:G-1];
+        genvar gq;
+        for (gq = 0; gq < G; gq = gq + 1) begin : g_off
+            wire [AW-1:0] a_s;
+            wire [AW+31:0] pq = q_p[gq] * ts_r;
+            wire [AW+31:0] pc = c_p[gq] * wcs_r;
+            always @(posedge clk) begin
+                q_p[gq] <= (gb + gq) >> split_r;
+                c_p[gq] <= (gb + gq) & ((1 << split_r) - 1);
+                p1[gq] <= pq[AW-1:0];
+                p2[gq] <= pc[AW-1:0];
+                off[gq] <= p1[gq] + p2[gq];
+            end
+            ot_hdc_kadd #(.W(AW)) u_ka (.a(cur), .b(off[gq]), .s(a_s));
+            always @(posedge clk)
+                if (active) kv_addr[gq*AW +: AW] <= a_s;
         end
     end endgenerate
 
@@ -964,7 +1114,7 @@ module ot_hdc_matvec_part #(
     //: accepting edge so a just-issued op never reads as drained.
     localparam [ORD+2:0] OMASK = (1 << (ORD + 1)) - 2;     // result-write stages 1..ORD
     wire ord_busy = |(ov_line & OMASK);
-    wire idle_c = !active && !e_v && !(|m_vl) && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|post_pending) && !(|tv) && !ov1
+    wire idle_c = !active && !pend && !e_v && !(|m_vl) && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|post_pending) && !(|tv) && !ov1
                   && !ov2 && !ord_busy && !mx_we;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;
@@ -1006,4 +1156,14 @@ module ot_hdc_tadd #(parameter integer LAT = 3) (
     end else begin : g_l
         ot_hdc_ladd #(.LAT(LAT)) u (clk, rst_n, v, a, b, y, fault);
     end endgenerate
+endmodule
+
+// ot_hdc_kadd #(W): a + b (mod 2^W) through ot_hdc_ksa, the keep-prefix Kogge-Stone adder
+module ot_hdc_kadd #(parameter integer W = 24) (
+    input  wire [W-1:0] a,
+    input  wire [W-1:0] b,
+    output wire [W-1:0] s
+);
+    wire c;
+    ot_hdc_ksa #(.W(W)) u (.a(a), .b(b), .cin(1'b0), .s(s), .cout(c));
 endmodule
