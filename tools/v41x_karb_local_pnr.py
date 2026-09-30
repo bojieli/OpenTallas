@@ -40,9 +40,10 @@ CLOCK_NS = 0.92
 UNCERTAINTY_NS = 0.06
 AW, TAGW, LENW, BEATW, DW = 30, 16, 4, 4, 256
 ENV_H = 64.0
-K_SPAN = (200.0, 370.0)
+K_SPAN = (200.0, 370.0)          # regional K port on the slice's top edge (v1 PHY window 375 um)
 EPC_OUTER = 14                   # outermost region's credits, 2 * hops + 2 (12 mm PHY: 6 hops)
-PROOT_HOPS = (6, 4, 3, 1, 1, 3, 4, 6)   # region 7 .. 0 trunk hops (12 mm PHY, 1 mm hops)          # regional K port on the slice's top edge (v1 PHY window 375 um)
+PROOT_HOPS = (6, 4, 3, 1, 1, 3, 4, 6)   # region 7 .. 0 trunk hops (12 mm PHY, 1 mm hops)
+PROOT_H = 64.0
 HOLD_NS = None                   # W18 --phy-e8p5: project SDC policy 25 ps hold uncertainty
 SIGNOFF_ARGS: list = []          # W18 --signoff-1p2: harden at WC (SS libs), repair hold at WC and BC
 BUFFER_HOOK = "physical/abi3/v41x_karb_repair_buffer_cap.tcl"
@@ -202,7 +203,7 @@ def pregion_case() -> dict:
 
 
 def proot_case(w: float = 750.0) -> dict:
-    h = ENV_H
+    h = PROOT_H
     rw = TAGW + BEATW + DW
     pins_l, pins_r = [], []
     for g in range(8):
@@ -286,6 +287,8 @@ def main() -> int:
             EPC_OUTER = 2 * 8 + 2      # W15 SS reach 504 um: region centres 0.53-3.72 mm -> 2..8 hops
             global PROOT_HOPS
             PROOT_HOPS = (8, 6, 4, 2, 2, 4, 6, 8)
+            global PROOT_H
+            PROOT_H = 128.0            # 64 um: GRT-0183 (boxed in) with the deeper 0.5 mm-hop credit queues
     c = CASES[a.case]()
     if a.phy_e8p5:
         sfx = "_w18e8p5" + ("_1p2" if a.signoff_1p2 else "")

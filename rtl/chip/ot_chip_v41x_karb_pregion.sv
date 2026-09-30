@@ -147,6 +147,16 @@ module ot_chip_v41x_karb_pregion #(
 `endif
     end endgenerate
     always @(posedge clk) if (send) {s_tag, s_beat, s_data} <= fin_d;
+    // W18: with PAIRSTAGE, write completion and the status counts are pre-combined per PC pair in registers
+    // beside the pair, so no status/completion path spans the region in one cycle (+1 cycle of latency)
+    reg [1:0] kwd_p; reg [3:0] bg_p, ct_p;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin kwd_p <= 2'd0; bg_p <= 4'd0; ct_p <= 4'd0; end
+        else begin
+            kwd_p <= {kwd[3] | kwd[2], kwd[1] | kwd[0]};
+            bg_p  <= {2'(bg[3]) + 2'(bg[2]), 2'(bg[1]) + 2'(bg[0])};
+            ct_p  <= {2'(ct[3]) + 2'(ct[2]), 2'(ct[1]) + 2'(ct[0])};
+        end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             kcr <= 4'd0; qcr <= 4'd0; s_v <= 1'b0; cred <= CW'(EPC);
@@ -156,8 +166,8 @@ module ot_chip_v41x_karb_pregion #(
             qcr <= qpop;
             s_v <= send;
             cred <= cred - CW'(send) + CW'(s_cr);
-            k_wr_done <= |kwd;
-            b_grant_n <= 3'(bg[0]) + 3'(bg[1]) + 3'(bg[2]) + 3'(bg[3]);
-            contend_n <= 3'(ct[0]) + 3'(ct[1]) + 3'(ct[2]) + 3'(ct[3]);
+            k_wr_done <= PAIRSTAGE ? |kwd_p : |kwd;
+            b_grant_n <= PAIRSTAGE ? 3'(bg_p[1:0]) + 3'(bg_p[3:2]) : 3'(bg[0]) + 3'(bg[1]) + 3'(bg[2]) + 3'(bg[3]);
+            contend_n <= PAIRSTAGE ? 3'(ct_p[1:0]) + 3'(ct_p[3:2]) : 3'(ct[0]) + 3'(ct[1]) + 3'(ct[2]) + 3'(ct[3]);
         end
 endmodule
