@@ -1,0 +1,18 @@
+library(w18_flank_c12m9s450_ss) {
+  delay_model : table_lookup ;
+  time_unit : "1ps" ;
+  voltage_unit : "1V" ;
+  current_unit : "1mA" ;
+  capacitive_load_unit (1,ff) ;
+  pulling_resistance_unit : "1kohm" ;
+  leakage_power_unit : "1nW" ;
+  nom_process : 1 ;
+  nom_voltage : 0.7 ;
+  nom_temperature : 25 ;
+  cell(w18_flank_c12m9s450) {
+    area : 266328.0 ;
+    dont_touch : true ;
+    dont_use : true ;
+    pin(o) { direction : output ; }
+  }
+}
