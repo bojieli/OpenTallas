@@ -4842,26 +4842,26 @@
    "product": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 87.0,
-     "gated_mJ_b1": 563.3,
+     "gated_mJ_b1": 568.3,
      "gated_mJ_saturated": 296.5,
      "gap_only_pre_ramp_mJ_per_token": 99.2,
-     "gap_only_gated_mJ_b1": 575.4,
+     "gap_only_gated_mJ_b1": 580.4,
      "gap_only_gated_mJ_saturated": 308.6
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 692.6,
-     "gated_mJ_b1": 1168.9,
+     "gated_mJ_b1": 1173.9,
      "gated_mJ_saturated": 902.1,
      "gap_only_pre_ramp_mJ_per_token": 789.3,
-     "gap_only_gated_mJ_b1": 1265.6,
+     "gap_only_gated_mJ_b1": 1270.6,
      "gap_only_gated_mJ_saturated": 998.7
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 174.0,
-     "gated_mJ_b1": 650.3,
+     "gated_mJ_b1": 655.3,
      "gated_mJ_saturated": 383.5,
      "gap_only_pre_ramp_mJ_per_token": 198.3,
-     "gap_only_gated_mJ_b1": 674.6,
+     "gap_only_gated_mJ_b1": 679.6,
      "gap_only_gated_mJ_saturated": 407.8
     }
    }
@@ -5521,16 +5521,16 @@
     "option_ii cap 3": {
      "stages": 32,
      "dies": 168,
-     "ar": 3342.9,
-     "mtp": 4772.2,
+     "ar": 3288.4,
+     "mtp": 4746.6,
      "saturated": 74909.6,
      "pipeline_hops_us": 13.414
     },
     "option_iii": {
      "stages": 36,
      "dies": 184,
-     "ar": 3301.8,
-     "mtp": 4679.7,
+     "ar": 3248.5,
+     "mtp": 4655.0,
      "saturated": 74756.3,
      "pipeline_hops_us": 14.882
     }
@@ -8174,8 +8174,8 @@
     "packages": 94,
     "hbm_stacks": 608,
     "busiest_die_macros": 10448,
-    "ar_tokens_s_b1": 4206.1,
-    "mtp_tokens_s_b1": 6626.9,
+    "ar_tokens_s_b1": 4205.1,
+    "mtp_tokens_s_b1": 6626.3,
     "ar_saturated_tokens_s": 95791.6,
     "mtp_saturated_tokens_s": 68325.3,
     "stage_hops": 36,
@@ -8196,7 +8196,8 @@
     },
     "field_concurrency": 1.0,
     "added_latency": {
-     "suffix:softplus_sqrt": -97
+     "suffix:softplus_sqrt": -97,
+     "suffix:idx.topk_local": 8
     },
     "slow_domain": null,
     "chain_stages": null,
@@ -8217,7 +8218,7 @@
      "attn.idx.score": 13.38,
      "substage_hop0": 13.36,
      "attn.wo_a": 12.63,
-     "attn.idx.topk_local": 9.75,
+     "attn.idx.topk_local": 9.81,
      "ffn.experts_gu": 8.53,
      "attn.a_proj": 8.23
     },
@@ -8230,12 +8231,12 @@
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 4206.1,
-      "ungated_mJ": 3011.14,
-      "gated_mJ": 418.09,
+      "tokens_s": 4205.1,
+      "ungated_mJ": 3011.78,
+      "gated_mJ": 418.14,
       "ungated_static_w": 12054.2,
       "gated_static_w": 1147.7,
-      "gated_system_w": 1758.5
+      "gated_system_w": 1758.3
      },
      "ar_sat": {
       "tokens_s": 95791.6,
@@ -8246,19 +8247,19 @@
       "gated_system_w": 19467.2
      },
      "mtp_b1": {
-      "tokens_s": 6626.9,
-      "ungated_mJ": 2034.2,
-      "gated_mJ": 378.67,
+      "tokens_s": 6626.3,
+      "ungated_mJ": 2034.38,
+      "gated_mJ": 378.69,
       "ungated_static_w": 12054.2,
       "gated_static_w": 1083.1,
-      "gated_system_w": 2509.4
+      "gated_system_w": 2509.3
      },
      "mtp_sat": {
       "tokens_s": 68325.3,
       "ungated_mJ": 391.65,
       "gated_mJ": 269.91,
       "ungated_static_w": 12054.2,
-      "gated_static_w": 3736.2,
+      "gated_static_w": 3736.3,
       "gated_system_w": 18441.7
      }
     },
@@ -8274,8 +8275,8 @@
      },
      "L14": {
       "engram_ready_us": 1.336,
-      "residual_ready_us": 79.983,
-      "slack_us": 78.647,
+      "residual_ready_us": 79.997,
+      "slack_us": 78.66,
       "on_critical_path": false
      }
     },
@@ -8333,10 +8334,10 @@
     "packages": 94,
     "hbm_stacks": 608,
     "busiest_die_macros": 10448,
-    "ar_tokens_s_b1": 3897.0,
-    "mtp_tokens_s_b1": 5485.9,
+    "ar_tokens_s_b1": 3896.2,
+    "mtp_tokens_s_b1": 5485.4,
     "ar_saturated_tokens_s": 92256.3,
-    "mtp_saturated_tokens_s": 51455.6,
+    "mtp_saturated_tokens_s": 51452.7,
     "stage_hops": 36,
     "pipeline_hops_us": 15.249,
     "cooling": {
@@ -8355,7 +8356,8 @@
     },
     "field_concurrency": 0.5,
     "added_latency": {
-     "suffix:softplus_sqrt": -97
+     "suffix:softplus_sqrt": -97,
+     "suffix:idx.topk_local": 8
     },
     "slow_domain": null,
     "chain_stages": null,
@@ -8376,7 +8378,7 @@
      "ffn.combine_allreduce": 17.07,
      "attn.idx.score": 13.38,
      "substage_hop0": 13.36,
-     "attn.idx.topk_local": 9.75,
+     "attn.idx.topk_local": 9.81,
      "ffn.experts_gu": 9.6,
      "ffn.down": 9.43
     },
@@ -8389,12 +8391,12 @@
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3897.0,
-      "ungated_mJ": 3238.4,
-      "gated_mJ": 437.51,
+      "tokens_s": 3896.2,
+      "ungated_mJ": 3239.04,
+      "gated_mJ": 437.57,
       "ungated_static_w": 12054.2,
       "gated_static_w": 1139.1,
-      "gated_system_w": 1705.0
+      "gated_system_w": 1704.8
      },
      "ar_sat": {
       "tokens_s": 92256.3,
@@ -8405,20 +8407,20 @@
       "gated_system_w": 19113.6
      },
      "mtp_b1": {
-      "tokens_s": 5485.9,
-      "ungated_mJ": 2412.55,
-      "gated_mJ": 411.06,
+      "tokens_s": 5485.4,
+      "ungated_mJ": 2412.74,
+      "gated_mJ": 411.08,
       "ungated_static_w": 12054.2,
       "gated_static_w": 1074.3,
-      "gated_system_w": 2255.0
+      "gated_system_w": 2254.9
      },
      "mtp_sat": {
-      "tokens_s": 51455.6,
-      "ungated_mJ": 449.49,
+      "tokens_s": 51452.7,
+      "ungated_mJ": 449.5,
       "gated_mJ": 280.78,
       "ungated_static_w": 12054.2,
-      "gated_static_w": 3373.2,
-      "gated_system_w": 14447.9
+      "gated_static_w": 3373.1,
+      "gated_system_w": 14447.2
      }
     },
     "busiest_stage": 18,
@@ -8433,8 +8435,8 @@
      },
      "L14": {
       "engram_ready_us": 1.496,
-      "residual_ready_us": 85.127,
-      "slack_us": 83.63,
+      "residual_ready_us": 85.14,
+      "slack_us": 83.643,
       "on_critical_path": false
      }
     },
@@ -8492,10 +8494,10 @@
     "packages": 94,
     "hbm_stacks": 608,
     "busiest_die_macros": 10448,
-    "ar_tokens_s_b1": 3667.8,
-    "mtp_tokens_s_b1": 5381.6,
+    "ar_tokens_s_b1": 3667.1,
+    "mtp_tokens_s_b1": 5381.2,
     "ar_saturated_tokens_s": 92256.3,
-    "mtp_saturated_tokens_s": 50597.4,
+    "mtp_saturated_tokens_s": 50594.6,
     "stage_hops": 36,
     "pipeline_hops_us": 15.249,
     "cooling": {
@@ -8523,7 +8525,8 @@
      "sfu:softplus": 68,
      "suffix:idx.score": 28,
      "suffix:.attn.scores": 17,
-     "suffix:softplus_sqrt": -97
+     "suffix:softplus_sqrt": -97,
+     "suffix:idx.topk_local": 8
     },
     "slow_domain": null,
     "chain_stages": null,
@@ -8544,7 +8547,7 @@
      "ffn.combine_allreduce": 17.07,
      "attn.idx.score": 13.57,
      "substage_hop0": 13.36,
-     "attn.idx.topk_local": 9.75,
+     "attn.idx.topk_local": 9.81,
      "ffn.experts_gu": 9.6,
      "ffn.down": 9.43
     },
@@ -8557,12 +8560,12 @@
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3667.8,
-      "ungated_mJ": 3431.73,
-      "gated_mJ": 453.6,
+      "tokens_s": 3667.1,
+      "ungated_mJ": 3432.37,
+      "gated_mJ": 453.66,
       "ungated_static_w": 12054.2,
       "gated_static_w": 1131.1,
-      "gated_system_w": 1663.7
+      "gated_system_w": 1663.6
      },
      "ar_sat": {
       "tokens_s": 92256.3,
@@ -8573,20 +8576,20 @@
       "gated_system_w": 19113.6
      },
      "mtp_b1": {
-      "tokens_s": 5381.6,
-      "ungated_mJ": 2455.1,
-      "gated_mJ": 414.65,
+      "tokens_s": 5381.2,
+      "ungated_mJ": 2455.29,
+      "gated_mJ": 414.67,
       "ungated_static_w": 12054.2,
       "gated_static_w": 1073.2,
-      "gated_system_w": 2231.5
+      "gated_system_w": 2231.4
      },
      "mtp_sat": {
-      "tokens_s": 50597.4,
-      "ungated_mJ": 453.47,
-      "gated_mJ": 281.16,
+      "tokens_s": 50594.6,
+      "ungated_mJ": 453.48,
+      "gated_mJ": 281.17,
       "ungated_static_w": 12054.2,
-      "gated_static_w": 3336.2,
-      "gated_system_w": 14226.2
+      "gated_static_w": 3336.1,
+      "gated_system_w": 14225.5
      }
     },
     "busiest_stage": 18,
@@ -8601,8 +8604,8 @@
      },
      "L14": {
       "engram_ready_us": 1.535,
-      "residual_ready_us": 90.722,
-      "slack_us": 89.188,
+      "residual_ready_us": 90.736,
+      "slack_us": 89.201,
       "on_critical_path": false
      }
     },
@@ -8660,10 +8663,10 @@
     "packages": 94,
     "hbm_stacks": 608,
     "busiest_die_macros": 10448,
-    "ar_tokens_s_b1": 2730.3,
-    "mtp_tokens_s_b1": 4566.7,
+    "ar_tokens_s_b1": 2729.9,
+    "mtp_tokens_s_b1": 4566.4,
     "ar_saturated_tokens_s": 90676.5,
-    "mtp_saturated_tokens_s": 46108.3,
+    "mtp_saturated_tokens_s": 46106.0,
     "stage_hops": 36,
     "pipeline_hops_us": 15.249,
     "cooling": {
@@ -8682,7 +8685,8 @@
     },
     "field_concurrency": 0.5,
     "added_latency": {
-     "suffix:softplus_sqrt": -97
+     "suffix:softplus_sqrt": -97,
+     "suffix:idx.topk_local": 8
     },
     "slow_domain": null,
     "chain_stages": 8,
@@ -8716,12 +8720,12 @@
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2730.3,
-      "ungated_mJ": 4560.22,
-      "gated_mJ": 547.53,
+      "tokens_s": 2729.9,
+      "ungated_mJ": 4560.87,
+      "gated_mJ": 547.58,
       "ungated_static_w": 12054.2,
       "gated_static_w": 1098.4,
-      "gated_system_w": 1494.9
+      "gated_system_w": 1494.8
      },
      "ar_sat": {
       "tokens_s": 90676.5,
@@ -8732,20 +8736,20 @@
       "gated_system_w": 18929.4
      },
      "mtp_b1": {
-      "tokens_s": 4566.7,
-      "ungated_mJ": 2854.8,
-      "gated_mJ": 448.21,
+      "tokens_s": 4566.4,
+      "ungated_mJ": 2854.99,
+      "gated_mJ": 448.23,
       "ungated_static_w": 12054.2,
       "gated_static_w": 1064.0,
       "gated_system_w": 2046.8
      },
      "mtp_sat": {
-      "tokens_s": 46108.3,
-      "ungated_mJ": 476.66,
+      "tokens_s": 46106.0,
+      "ungated_mJ": 476.67,
       "gated_mJ": 285.7,
       "ungated_static_w": 12054.2,
-      "gated_static_w": 3249.3,
-      "gated_system_w": 13173.1
+      "gated_static_w": 3249.2,
+      "gated_system_w": 13172.5
      }
     },
     "busiest_stage": 18,
@@ -8760,8 +8764,8 @@
      },
      "L14": {
       "engram_ready_us": 1.79,
-      "residual_ready_us": 123.509,
-      "slack_us": 121.72,
+      "residual_ready_us": 123.523,
+      "slack_us": 121.733,
       "on_critical_path": false
      }
     },
@@ -8819,10 +8823,10 @@
     "packages": 94,
     "hbm_stacks": 608,
     "busiest_die_macros": 10448,
-    "ar_tokens_s_b1": 3492.9,
-    "mtp_tokens_s_b1": 5052.6,
+    "ar_tokens_s_b1": 3492.3,
+    "mtp_tokens_s_b1": 5052.2,
     "ar_saturated_tokens_s": 90025.4,
-    "mtp_saturated_tokens_s": 49782.6,
+    "mtp_saturated_tokens_s": 49779.9,
     "stage_hops": 36,
     "pipeline_hops_us": 15.249,
     "cooling": {
@@ -8841,7 +8845,8 @@
     },
     "field_concurrency": 0.5,
     "added_latency": {
-     "suffix:softplus_sqrt": -97
+     "suffix:softplus_sqrt": -97,
+     "suffix:idx.topk_local": 8
     },
     "slow_domain": [
      900000000.0,
@@ -8866,8 +8871,8 @@
      "attn.idx.score": 13.42,
      "substage_hop0": 13.36,
      "ffn.experts_gu": 9.87,
-     "ffn.down": 9.8,
-     "attn.idx.topk_local": 9.75
+     "attn.idx.topk_local": 9.81,
+     "ffn.down": 9.8
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
@@ -8878,12 +8883,12 @@
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3492.9,
-      "ungated_mJ": 3596.25,
-      "gated_mJ": 467.4,
+      "tokens_s": 3492.3,
+      "ungated_mJ": 3596.89,
+      "gated_mJ": 467.45,
       "ungated_static_w": 12054.2,
-      "gated_static_w": 1125.4,
-      "gated_system_w": 1632.6
+      "gated_static_w": 1125.3,
+      "gated_system_w": 1632.5
      },
      "ar_sat": {
       "tokens_s": 90025.4,
@@ -8894,20 +8899,20 @@
       "gated_system_w": 18853.7
      },
      "mtp_b1": {
-      "tokens_s": 5052.6,
-      "ungated_mJ": 2600.98,
-      "gated_mJ": 427.0,
+      "tokens_s": 5052.2,
+      "ungated_mJ": 2601.17,
+      "gated_mJ": 427.02,
       "ungated_static_w": 12054.2,
       "gated_static_w": 1070.0,
-      "gated_system_w": 2157.5
+      "gated_system_w": 2157.4
      },
      "mtp_sat": {
-      "tokens_s": 49782.6,
-      "ungated_mJ": 457.36,
+      "tokens_s": 49779.9,
+      "ungated_mJ": 457.38,
       "gated_mJ": 284.84,
       "ungated_static_w": 12054.2,
-      "gated_static_w": 3465.5,
-      "gated_system_w": 14180.0
+      "gated_static_w": 3465.3,
+      "gated_system_w": 14179.3
      }
     },
     "busiest_stage": 18,
@@ -8922,8 +8927,8 @@
      },
      "L14": {
       "engram_ready_us": 1.565,
-      "residual_ready_us": 95.526,
-      "slack_us": 93.961,
+      "residual_ready_us": 95.54,
+      "slack_us": 93.974,
       "on_critical_path": false
      }
     },
@@ -8981,10 +8986,10 @@
     "packages": 94,
     "hbm_stacks": 608,
     "busiest_die_macros": 10448,
-    "ar_tokens_s_b1": 3388.1,
-    "mtp_tokens_s_b1": 4991.9,
+    "ar_tokens_s_b1": 3332.1,
+    "mtp_tokens_s_b1": 4963.8,
     "ar_saturated_tokens_s": 90025.4,
-    "mtp_saturated_tokens_s": 49335.5,
+    "mtp_saturated_tokens_s": 49088.5,
     "stage_hops": 36,
     "pipeline_hops_us": 15.249,
     "cooling": {
@@ -9003,7 +9008,8 @@
     },
     "field_concurrency": 0.5,
     "added_latency": {
-     "suffix:softplus_sqrt": -97
+     "suffix:softplus_sqrt": -97,
+     "suffix:idx.topk_local": 8
     },
     "slow_domain": [
      900000000.0,
@@ -9023,12 +9029,12 @@
     "ss_wire": true,
     "critical_path_top_us": {
      "attn.wo_a": 21.67,
-     "attn.out_allreduce": 17.93,
-     "ffn.combine_allreduce": 17.93,
+     "attn.out_allreduce": 19.13,
+     "ffn.combine_allreduce": 19.13,
      "attn.idx.score": 13.42,
      "substage_hop0": 13.36,
-     "ffn.experts_gu": 10.8,
-     "ffn.down": 10.73,
+     "ffn.experts_gu": 10.6,
+     "ffn.down": 10.53,
      "attn.a_proj": 10.11
     },
     "capacity_users_1m": 866,
@@ -9040,12 +9046,12 @@
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3388.1,
-      "ungated_mJ": 3703.02,
-      "gated_mJ": 476.28,
+      "tokens_s": 3332.1,
+      "ungated_mJ": 3762.85,
+      "gated_mJ": 481.27,
       "ungated_static_w": 12054.2,
-      "gated_static_w": 1121.7,
-      "gated_system_w": 1613.7
+      "gated_static_w": 1119.7,
+      "gated_system_w": 1603.6
      },
      "ar_sat": {
       "tokens_s": 90025.4,
@@ -9056,20 +9062,20 @@
       "gated_system_w": 18853.7
      },
      "mtp_b1": {
-      "tokens_s": 4991.9,
-      "ungated_mJ": 2629.98,
-      "gated_mJ": 429.45,
+      "tokens_s": 4963.8,
+      "ungated_mJ": 2643.64,
+      "gated_mJ": 430.6,
       "ungated_static_w": 12054.2,
-      "gated_static_w": 1069.4,
-      "gated_system_w": 2143.7
+      "gated_static_w": 1069.1,
+      "gated_system_w": 2137.4
      },
      "mtp_sat": {
-      "tokens_s": 49335.5,
-      "ungated_mJ": 459.56,
-      "gated_mJ": 285.05,
+      "tokens_s": 49088.5,
+      "ungated_mJ": 460.79,
+      "gated_mJ": 285.17,
       "ungated_static_w": 12054.2,
-      "gated_static_w": 3444.7,
-      "gated_system_w": 14063.1
+      "gated_static_w": 3433.2,
+      "gated_system_w": 13998.4
      }
     },
     "busiest_stage": 18,
@@ -9078,14 +9084,14 @@
     "engram_dag_slack": {
      "L1": {
       "engram_ready_us": 1.58,
-      "residual_ready_us": 5.722,
-      "slack_us": 4.141,
+      "residual_ready_us": 5.832,
+      "slack_us": 4.251,
       "on_critical_path": false
      },
      "L14": {
       "engram_ready_us": 1.58,
-      "residual_ready_us": 98.58,
-      "slack_us": 96.999,
+      "residual_ready_us": 100.253,
+      "slack_us": 98.673,
       "on_critical_path": false
      }
     },
@@ -11186,10 +11192,11 @@
    {
     "design": "V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)",
     "tier": "ROM",
-    "per_user_ar": 3388.1,
-    "per_user_mtp": 4991.9,
+    "per_user_ar": 3332.1,
+    "per_user_mtp": 4963.8,
+    "per_user_mtp_headline_tau_3p78": 5142.0,
     "saturated_tokens_s": 90025.4,
-    "mJ_b1": 563.3,
+    "mJ_b1": 568.3,
     "mJ_saturated": 296.5,
     "capex_usd": {
      "low": 656462,
@@ -11301,12 +11308,25 @@
   ],
   "qwen": [
    {
-    "design": "Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144)",
+    "design": "Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144), TT",
     "tier": "ROM",
     "per_user_ar": 9367.6,
     "saturated_tokens_s": 23841.9,
     "mJ_b1": 97.94,
     "mJ_saturated": 84.98,
+    "capex_usd": {
+     "low": 29113,
+     "high": 35113
+    },
+    "users_8k": 536
+   },
+   {
+    "design": "Qwen ROM option C at 1.2 GHz SS (W12 SS wires, LAT-7 ME, droop cap75 + preramp256)",
+    "tier": "ROM",
+    "per_user_ar": 8473.9,
+    "saturated_tokens_s": 23841.9,
+    "mJ_b1": 120.1,
+    "mJ_saturated": 107.2,
     "capex_usd": {
      "low": 29113,
      "high": 35113
@@ -11400,6 +11420,467 @@
    "rom_side": "the exact-order extra gather does not apply to the ROM array: a macro sums its experts in id order inside the element and the TP-4 combine is a fixed-order all-reduce (no cross-die expert partials to re-order); the 0.9 GHz serial domain is already in the ROM product"
   },
   "rule": "USER DECISION 2026-09-30: V4.1 ROM headline = saturated throughput, J/token and cost at equal manufacturing cost; per-user speed claimed against GPUs (tier 1-2) only; Qwen ROM keeps its per-user claim"
+ },
+ "tau_sweep_1m": {
+  "rows": [
+   {
+    "design": "V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)",
+    "tau_2.91": 3958.5,
+    "tau_3.649": 4963.8,
+    "tau_3.78": 5142.0,
+    "tau_4.5": 6121.4,
+    "tau_5.24": 7128.1
+   },
+   {
+    "design": "V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires; W19 audit central)",
+    "tau_2.91": 4228.3,
+    "tau_3.649": 5302.1,
+    "tau_3.78": 5492.4,
+    "tau_4.5": 6538.6,
+    "tau_5.24": 7613.9
+   },
+   {
+    "design": "V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 audit central)",
+    "tau_2.91": 4228.3,
+    "tau_3.649": 5302.1,
+    "tau_3.78": 5492.4,
+    "tau_4.5": 6538.6,
+    "tau_5.24": 7613.9
+   },
+   {
+    "design": "V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 audit central)",
+    "tau_2.91": 4228.3,
+    "tau_3.649": 5302.1,
+    "tau_3.78": 5492.4,
+    "tau_4.5": 6538.6,
+    "tau_5.24": 7613.9
+   },
+   {
+    "design": "DeepSeek-V4.1-Flash on 8x B200 (tier 2, calibrated)",
+    "tau_2.91": 429.6,
+    "tau_3.649": 538.7,
+    "tau_3.78": 558.0,
+    "tau_4.5": 664.3,
+    "tau_5.24": 773.6
+   },
+   {
+    "design": "DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance)",
+    "tau_2.91": 293.5,
+    "tau_3.649": 368.0,
+    "tau_3.78": 381.2,
+    "tau_4.5": 453.8,
+    "tau_5.24": 528.5
+   }
+  ],
+  "taus": {
+   "poetry (creative, lower; LMSYS V4-Flash)": 2.91,
+   "measured on V4.1-Flash, reasoning mix (OpenTallas; corroboration)": 3.649,
+   "HEADLINE: arena-hard (general chat; LMSYS V4-Flash, cap-accept ceiling)": 3.78,
+   "4.5 (interpolated)": 4.5,
+   "gsm8k (math, upper; LMSYS V4-Flash)": 5.24
+  },
+  "headline_tau": 3.78,
+  "source": "LMSYS, 'DSpark in SGLang' (2026-07-06), https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ Figure 4: DeepSeek-V4-Flash, H200 TP4 DP-attention, block 6, cap-accept verify (acceptance ceiling)",
+  "gamma": 5,
+  "note": "tau <= gamma + 1 = 6 always holds here; GPU rows scale their tier-2 MTP the same way (their draft is modelled per step)"
+ },
+ "short_context_8k": {
+  "ctx": 8192,
+  "rows": [
+   {
+    "design": "V4.1 ROM product (columns, 1.2 GHz SS)",
+    "ar": 3572.9,
+    "mtp": 5784.6,
+    "saturated": 115770.5,
+    "dies": 188,
+    "silicon_mm2": 153220.0,
+    "capex_usd": 656462,
+    "users": 93722
+   },
+   {
+    "design": "V4.1 HBM tier 3, equal cost (2 x TP-96), W19 audit central",
+    "ar": 2608.8,
+    "mtp": 6639.4,
+    "saturated": 98514.7,
+    "dies": 192,
+    "silicon_mm2": 65376.0,
+    "capex_usd": 512856,
+    "users": 15526
+   },
+   {
+    "design": "V4.1-Flash, 8x B200 (tier 2, calibrated)",
+    "ar": 282.7,
+    "mtp": 548.4,
+    "gpus": 8,
+    "silicon_mm2": 12800.0,
+    "capex_usd": 200000.0,
+    "cost_basis": "purchase price"
+   },
+   {
+    "design": "V4.1-Flash, 8x B300 (tier 2; = B200 within the model, ASSUMED)",
+    "ar": 282.7,
+    "mtp": 548.4,
+    "gpus": 8,
+    "silicon_mm2": 12800.0,
+    "note": "B300 keeps 8 TB/s of HBM3E a GPU (288 GB); per-user decode at low batch is bandwidth- and latency-bound, so the tier-2 B300 row equals B200 within the model (ASSUMED; no public min-latency B300 DeepSeek record)"
+   }
+  ]
+ },
+ "gpu_calibration": {
+  "conditions": "8x B200, context ~3K (ISL 1K / OSL 2K), MTP",
+  "published": [
+   {
+    "design": "DeepSeek-R1 (671B), 8x B200, TensorRT-LLM min-latency",
+    "tok_s_user": 368.0,
+    "ctx": 3072,
+    "mtp_layers": 3,
+    "src": "TensorRT-LLM tech blog 1 (ISL 1K / OSL 2K, FP4)"
+   },
+   {
+    "design": "DeepSeek-V3.2, B200, TensorRT-LLM min-latency",
+    "tok_s_user": 312.0,
+    "ctx": null,
+    "mtp_layers": 3,
+    "src": "TensorRT-LLM tech blog 15"
+   },
+   {
+    "design": "Llama 4 Maverick (400B MoE, 17B active), 1x DGX B200",
+    "tok_s_user": 1038.0,
+    "ctx": null,
+    "mtp_layers": null,
+    "src": "NVIDIA / Tom's Hardware, 2025-05: the ~1,000 tok/s/user public record is NOT a DeepSeek model"
+   }
+  ],
+  "model_v41_ar": 282.7,
+  "model_v41_mtp": 548.4,
+  "error_vs_r1_record": 0.49,
+  "note": "the model prices V4.1-Flash (13B active) and R1 is 37B active: a like-for-like error needs an R1 run of the tier-2 form; the ratio shown mixes model size with model error"
+ },
+ "qwen_context_sweep": {
+  "rows": [
+   {
+    "ctx": 8192,
+    "design": "ROM option C (4 stacks a die, FP8 KV)",
+    "ar_tokens_s": 9383.7,
+    "kv_bytes_per_token": 603979776,
+    "kv_read_us": 41.9,
+    "chain_us": 106.6,
+    "binding": "compute chain",
+    "users": 536,
+    "saturated_tokens_s": 23841.9,
+    "mJ_b1": 97.9,
+    "mJ_saturated": 85.0
+   },
+   {
+    "ctx": 8192,
+    "design": "ROM option C, 6 stacks a die",
+    "ar_tokens_s": 9383.7,
+    "kv_bytes_per_token": 603979776,
+    "kv_read_us": 28.0,
+    "chain_us": 106.6,
+    "binding": "compute chain",
+    "users": 804,
+    "saturated_tokens_s": 35762.8,
+    "mJ_b1": 97.9,
+    "mJ_saturated": 82.2
+   },
+   {
+    "ctx": 8192,
+    "design": "ROM option C, FP4/INT4 KV (quality untested)",
+    "ar_tokens_s": 9383.7,
+    "kv_bytes_per_token": 301989888,
+    "kv_read_us": 21.0,
+    "chain_us": 106.6,
+    "binding": "compute chain",
+    "users": 1072,
+    "saturated_tokens_s": 39530.8,
+    "mJ_b1": 64.6,
+    "mJ_saturated": 48.3
+   },
+   {
+    "ctx": 8192,
+    "design": "Qwen HBM tier 3 (2 x 4-stack right-sized dies), AR",
+    "ar_tokens_s": 880.5,
+    "kv_bytes_per_token": 603979776,
+    "kv_read_us": 83.9,
+    "binding": "HBM stream",
+    "users": 255
+   },
+   {
+    "ctx": 8192,
+    "design": "Qwen3-8B on 1x B200, FP8 (tier 2, calibrated), AR",
+    "ar_tokens_s": 331.0,
+    "kv_bytes_per_token": 603979776,
+    "kv_read_us": 115.1,
+    "users": 255,
+    "mJ_b1": 2081.4
+   },
+   {
+    "ctx": 32768,
+    "design": "ROM option C (4 stacks a die, FP8 KV)",
+    "ar_tokens_s": 5960.5,
+    "kv_bytes_per_token": 2415919104,
+    "kv_read_us": 167.8,
+    "chain_us": 134.1,
+    "binding": "KV stream",
+    "users": 134,
+    "saturated_tokens_s": 5960.5,
+    "mJ_b1": 310.0,
+    "mJ_saturated": 310.0
+   },
+   {
+    "ctx": 32768,
+    "design": "ROM option C, 6 stacks a die",
+    "ar_tokens_s": 7457.2,
+    "kv_bytes_per_token": 2415919104,
+    "kv_read_us": 111.8,
+    "chain_us": 134.1,
+    "binding": "compute chain",
+    "users": 201,
+    "saturated_tokens_s": 8940.7,
+    "mJ_b1": 303.3,
+    "mJ_saturated": 298.8
+   },
+   {
+    "ctx": 32768,
+    "design": "ROM option C, FP4/INT4 KV (quality untested)",
+    "ar_tokens_s": 7457.2,
+    "kv_bytes_per_token": 1207959552,
+    "kv_read_us": 83.9,
+    "chain_us": 134.1,
+    "binding": "compute chain",
+    "users": 268,
+    "saturated_tokens_s": 11920.9,
+    "mJ_b1": 170.0,
+    "mJ_saturated": 160.0
+   },
+   {
+    "ctx": 32768,
+    "design": "Qwen HBM tier 3 (2 x 4-stack right-sized dies), AR",
+    "ar_tokens_s": 720.8,
+    "kv_bytes_per_token": 2415919104,
+    "kv_read_us": 335.6,
+    "binding": "HBM stream",
+    "users": 63
+   },
+   {
+    "ctx": 32768,
+    "design": "Qwen3-8B on 1x B200, FP8 (tier 2, calibrated), AR",
+    "ar_tokens_s": 297.1,
+    "kv_bytes_per_token": 2415919104,
+    "kv_read_us": 460.3,
+    "users": 63,
+    "mJ_b1": 2319.3
+   },
+   {
+    "ctx": 131072,
+    "design": "ROM option C (4 stacks a die, FP8 KV)",
+    "ar_tokens_s": 1490.1,
+    "kv_bytes_per_token": 9663676416,
+    "kv_read_us": 671.1,
+    "chain_us": 243.4,
+    "binding": "KV stream",
+    "users": 33,
+    "saturated_tokens_s": 1490.1,
+    "mJ_b1": 1210.2,
+    "mJ_saturated": 1210.2
+   },
+   {
+    "ctx": 131072,
+    "design": "ROM option C, 6 stacks a die",
+    "ar_tokens_s": 2235.2,
+    "kv_bytes_per_token": 9663676416,
+    "kv_read_us": 447.4,
+    "chain_us": 243.4,
+    "binding": "KV stream",
+    "users": 50,
+    "saturated_tokens_s": 2235.2,
+    "mJ_b1": 1165.4,
+    "mJ_saturated": 1165.4
+   },
+   {
+    "ctx": 131072,
+    "design": "ROM option C, FP4/INT4 KV (quality untested)",
+    "ar_tokens_s": 2980.2,
+    "kv_bytes_per_token": 4831838208,
+    "kv_read_us": 335.5,
+    "chain_us": 243.4,
+    "binding": "KV stream",
+    "users": 67,
+    "saturated_tokens_s": 2980.2,
+    "mJ_b1": 610.1,
+    "mJ_saturated": 610.1
+   },
+   {
+    "ctx": 131072,
+    "design": "Qwen HBM tier 3 (2 x 4-stack right-sized dies), AR",
+    "ar_tokens_s": 417.7,
+    "kv_bytes_per_token": 9663676416,
+    "kv_read_us": 1342.4,
+    "binding": "HBM stream",
+    "users": 15
+   },
+   {
+    "ctx": 131072,
+    "design": "Qwen3-8B on 1x B200, FP8 (tier 2, calibrated), AR",
+    "ar_tokens_s": 210.7,
+    "kv_bytes_per_token": 9663676416,
+    "kv_read_us": 1841.2,
+    "users": 15,
+    "mJ_b1": 3270.7
+   },
+   {
+    "ctx": 200000,
+    "design": "ROM option C (4 stacks a die, FP8 KV)",
+    "ar_tokens_s": 976.6,
+    "kv_bytes_per_token": 14745600000,
+    "kv_read_us": 1024.0,
+    "chain_us": 320.4,
+    "binding": "KV stream",
+    "users": 21,
+    "saturated_tokens_s": 976.6,
+    "mJ_b1": 1841.3,
+    "mJ_saturated": 1841.3
+   },
+   {
+    "ctx": 200000,
+    "design": "ROM option C, 6 stacks a die",
+    "ar_tokens_s": 1464.8,
+    "kv_bytes_per_token": 14745600000,
+    "kv_read_us": 682.7,
+    "chain_us": 320.4,
+    "binding": "KV stream",
+    "users": 32,
+    "saturated_tokens_s": 1464.8,
+    "mJ_b1": 1773.1,
+    "mJ_saturated": 1773.1
+   },
+   {
+    "ctx": 200000,
+    "design": "ROM option C, FP4/INT4 KV (quality untested)",
+    "ar_tokens_s": 1953.1,
+    "kv_bytes_per_token": 7372800000,
+    "kv_read_us": 512.0,
+    "chain_us": 320.4,
+    "binding": "KV stream",
+    "users": 43,
+    "saturated_tokens_s": 1953.1,
+    "mJ_b1": 925.7,
+    "mJ_saturated": 925.7
+   },
+   {
+    "ctx": 200000,
+    "design": "Qwen HBM tier 3 (2 x 4-stack right-sized dies), AR",
+    "ar_tokens_s": 322.6,
+    "kv_bytes_per_token": 14745600000,
+    "kv_read_us": 2048.4,
+    "binding": "HBM stream",
+    "users": 10
+   },
+   {
+    "ctx": 200000,
+    "design": "Qwen3-8B on 1x B200, FP8 (tier 2, calibrated), AR",
+    "ar_tokens_s": 175.0,
+    "kv_bytes_per_token": 14745600000,
+    "kv_read_us": 2809.5,
+    "users": 10,
+    "mJ_b1": 3937.9
+   }
+  ],
+  "note": "W12b context audit (claude/w12-qwen-rom b4d2715f): KV read 18,432 x T bytes a token a die; HBM binds from ~32K (W12b ~1.4k tok/s at 128K, ~0.9k at 200K with SW 1,024, matching this sweep); 32K needs parameters and 2 larger SRAMs (+~10 mm2 a die); 128K and 200K need a 27-bit address and a larger VM (or head-serial scores).  Qwen3-8B is natively 32K and 128K with YaRN; 200K is beyond official support.  FP8 KV (baseline); the FP4/INT4-KV rows halve the KV bytes and are QUALITY-UNTESTED",
+  "rule": "per-user token = max(replayed compute chain at ctx, busiest die's KV stream) for the ROM; the HBM tier 3 and GPU scale their 8K step by the streamed bytes (weights + KV)"
+ },
+ "qwen_helix_200k": {
+  "ctx": 200000,
+  "rows": [
+   {
+    "extra_kv_dies": 0,
+    "total_dies": 4,
+    "ar_tokens_s": 976.6,
+    "kv_read_us": 1024.0,
+    "merge_us": 0.0,
+    "users": 21
+   },
+   {
+    "extra_kv_dies": 4,
+    "total_dies": 8,
+    "ar_tokens_s": 1920.9,
+    "kv_read_us": 512.0,
+    "merge_us": 8.6,
+    "users": 43
+   },
+   {
+    "extra_kv_dies": 8,
+    "total_dies": 12,
+    "ar_tokens_s": 2857.8,
+    "kv_read_us": 341.3,
+    "merge_us": 8.6,
+    "users": 65
+   },
+   {
+    "extra_kv_dies": 16,
+    "total_dies": 20,
+    "ar_tokens_s": 3039.9,
+    "kv_read_us": 204.8,
+    "merge_us": 8.6,
+    "users": 109
+   }
+  ],
+  "chain_us": 320.4,
+  "rule": "KV split by position over the 4 ROM dies + n KV dies (4 stacks each); one ordered partial-softmax merge a layer on the board fit (ASSUMED); weights stay on the ROM dies"
+ },
+ "qwen_product_ss": {
+  "k": 4,
+  "G": 6144,
+  "link": "board",
+  "cycles": 135381,
+  "tokens_s_b1": 8473.9,
+  "clock_hz": 1200000000.0,
+  "unit_busy": {
+   "stream": 5625,
+   "weights": 18432,
+   "attn_scores": 3168,
+   "attn_pv": 4608,
+   "lm_head": 1584
+  },
+  "exchange": {
+   "per_allreduce_cycles": 442.0,
+   "argmax_gather_cycles": 187.5,
+   "token_cycles": 32012,
+   "source": "MEASURED on the V4.1 TP-4 group (W15 v41p17_r0d1024 fit: 2 packages x 2 dies, direct T1 board links), transferred to the Qwen payload and clock",
+   "per_allreduce_ns": 368.3
+  },
+  "saturated_tokens_s": 23841.9,
+  "bounds": {
+   "lanes": 43177.9,
+   "stream_unit": 213333.3,
+   "kv_stream": 23841.9
+  },
+  "binding": "kv_stream",
+  "capacity_users": 536,
+  "banks_per_column": 5,
+  "column_words": 19440,
+  "bank_padding": 0.0508,
+  "static_w_per_die": 51.83,
+  "area_need_mm2_per_die": 517.2,
+  "rom_mm2_per_die": 229.3,
+  "fits_storage_n5": true,
+  "droop": {
+   "me_lat_extra": 166,
+   "droop_rate": 0.956,
+   "droop_mJ": 22.2,
+   "src": "W12b 775f5279 / 8289866f: LAT-7 ME +54 cycles an op; droop cap75 + preramp256"
+  }
+ },
+ "hbm_collective_sensitivity": {
+  "model": 188,
+  "audit": 228,
+  "w19_exact_minimised": 265,
+  "w19_exact_unfused": 305,
+  "audit_central_ar": 2394.5,
+  "at_265_ar": 2230.5,
+  "at_305_ar": 2076.7,
+  "src": "W19 claude/w19-hbm-token f364f884 (exact TP-96 program, layer 0 bit-exact); collectives at the audit's 0.83 us scratch switch latency; PENDING W19's final count and W15's P = 48 fit"
  },
  "comparison_rule": {
   "v41_targets": {
@@ -11958,11 +12439,11 @@
  },
  "clock_domain_cases": {
   "a: all 1.2 GHz, chain adds 8 stages": {
-   "ar_tokens_s_b1": 2678.1,
-   "mtp_tokens_s_b1": 4331.8,
+   "ar_tokens_s_b1": 2677.7,
+   "mtp_tokens_s_b1": 4331.5,
    "ar_saturated_tokens_s": 89379.8,
-   "mtp_saturated_tokens_s": 45798.7,
-   "gated_mJ_b1": 554.68,
+   "mtp_saturated_tokens_s": 45796.4,
+   "gated_mJ_b1": 554.74,
    "gated_mJ_saturated": 210.28,
    "busiest_stage_us": 11.19,
    "critical_path_top_us": {
@@ -11978,15 +12459,15 @@
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 87.0,
-     "gated_mJ_b1": 641.7,
+     "gated_mJ_b1": 641.8,
      "gated_mJ_saturated": 297.3,
      "gap_only_pre_ramp_mJ_per_token": 102.3,
-     "gap_only_gated_mJ_b1": 657.0,
+     "gap_only_gated_mJ_b1": 657.1,
      "gap_only_gated_mJ_saturated": 312.6
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 692.6,
-     "gated_mJ_b1": 1247.3,
+     "gated_mJ_b1": 1247.4,
      "gated_mJ_saturated": 902.9,
      "gap_only_pre_ramp_mJ_per_token": 814.6,
      "gap_only_gated_mJ_b1": 1369.3,
@@ -11994,7 +12475,7 @@
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 174.0,
-     "gated_mJ_b1": 728.7,
+     "gated_mJ_b1": 728.8,
      "gated_mJ_saturated": 384.3,
      "gap_only_pre_ramp_mJ_per_token": 204.7,
      "gap_only_gated_mJ_b1": 759.4,
@@ -12003,11 +12484,11 @@
    }
   },
   "a: all 1.2 GHz, chain adds 9 stages": {
-   "ar_tokens_s_b1": 2538.9,
-   "mtp_tokens_s_b1": 4236.3,
+   "ar_tokens_s_b1": 2538.5,
+   "mtp_tokens_s_b1": 4236.1,
    "ar_saturated_tokens_s": 89379.8,
-   "mtp_saturated_tokens_s": 44932.6,
-   "gated_mJ_b1": 575.23,
+   "mtp_saturated_tokens_s": 44930.4,
+   "gated_mJ_b1": 575.28,
    "gated_mJ_saturated": 210.28,
    "busiest_stage_us": 11.19,
    "critical_path_top_us": {
@@ -12034,7 +12515,7 @@
      "gated_mJ_b1": 1267.9,
      "gated_mJ_saturated": 902.9,
      "gap_only_pre_ramp_mJ_per_token": 824.0,
-     "gap_only_gated_mJ_b1": 1399.2,
+     "gap_only_gated_mJ_b1": 1399.3,
      "gap_only_gated_mJ_saturated": 1034.3
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
@@ -12048,11 +12529,11 @@
    }
   },
   "b: 1.2 GHz field (LAT 7) + 0.9 GHz chain units (LAT 3), W18 CDC": {
-   "ar_tokens_s_b1": 3396.9,
-   "mtp_tokens_s_b1": 4730.5,
+   "ar_tokens_s_b1": 3396.3,
+   "mtp_tokens_s_b1": 4730.2,
    "ar_saturated_tokens_s": 88537.5,
-   "mtp_saturated_tokens_s": 49373.8,
-   "gated_mJ_b1": 475.51,
+   "mtp_saturated_tokens_s": 49371.1,
+   "gated_mJ_b1": 475.57,
    "gated_mJ_saturated": 211.17,
    "busiest_stage_us": 11.29,
    "critical_path_top_us": {
@@ -12068,10 +12549,10 @@
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 87.0,
-     "gated_mJ_b1": 562.5,
+     "gated_mJ_b1": 562.6,
      "gated_mJ_saturated": 298.2,
      "gap_only_pre_ramp_mJ_per_token": 99.1,
-     "gap_only_gated_mJ_b1": 574.6,
+     "gap_only_gated_mJ_b1": 574.7,
      "gap_only_gated_mJ_saturated": 310.3
     },
     "1,024-cycle pre-ramp, no cap": {
@@ -12093,11 +12574,11 @@
    }
   },
   "b: 1.2 GHz field (LAT 7) + 0.8 GHz chain units (LAT 3), W18 CDC": {
-   "ar_tokens_s_b1": 3271.3,
-   "mtp_tokens_s_b1": 4646.1,
+   "ar_tokens_s_b1": 3270.7,
+   "mtp_tokens_s_b1": 4645.8,
    "ar_saturated_tokens_s": 87907.3,
-   "mtp_saturated_tokens_s": 48762.8,
-   "gated_mJ_b1": 486.9,
+   "mtp_saturated_tokens_s": 48760.2,
+   "gated_mJ_b1": 486.96,
    "gated_mJ_saturated": 211.85,
    "busiest_stage_us": 11.38,
    "critical_path_top_us": {
@@ -12113,7 +12594,7 @@
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 87.0,
-     "gated_mJ_b1": 573.9,
+     "gated_mJ_b1": 574.0,
      "gated_mJ_saturated": 298.9,
      "gap_only_pre_ramp_mJ_per_token": 99.6,
      "gap_only_gated_mJ_b1": 586.5,
@@ -12121,7 +12602,7 @@
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 692.6,
-     "gated_mJ_b1": 1179.5,
+     "gated_mJ_b1": 1179.6,
      "gated_mJ_saturated": 904.5,
      "gap_only_pre_ramp_mJ_per_token": 792.4,
      "gap_only_gated_mJ_b1": 1279.3,
@@ -12129,20 +12610,20 @@
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 174.0,
-     "gated_mJ_b1": 660.9,
+     "gated_mJ_b1": 661.0,
      "gated_mJ_saturated": 385.9,
      "gap_only_pre_ramp_mJ_per_token": 199.1,
-     "gap_only_gated_mJ_b1": 686.0,
+     "gap_only_gated_mJ_b1": 686.1,
      "gap_only_gated_mJ_saturated": 411.0
     }
    }
   },
   "c: all 0.9 GHz, LAT 3": {
-   "ar_tokens_s_b1": 2905.4,
-   "mtp_tokens_s_b1": 3809.6,
+   "ar_tokens_s_b1": 2904.8,
+   "mtp_tokens_s_b1": 3809.3,
    "ar_saturated_tokens_s": 72157.1,
-   "mtp_saturated_tokens_s": 38529.1,
-   "gated_mJ_b1": 508.63,
+   "mtp_saturated_tokens_s": 38526.9,
+   "gated_mJ_b1": 508.7,
    "gated_mJ_saturated": 201.91,
    "busiest_stage_us": 13.86,
    "critical_path_top_us": {
@@ -12153,7 +12634,7 @@
     "attn.idx.score": 15.5,
     "ffn.router": 13.42,
     "substage_hop0": 13.41,
-    "attn.idx.topk_local": 13.01
+    "attn.idx.topk_local": 13.08
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
@@ -12161,7 +12642,7 @@
      "gated_mJ_b1": 595.7,
      "gated_mJ_saturated": 288.9,
      "gap_only_pre_ramp_mJ_per_token": 96.2,
-     "gap_only_gated_mJ_b1": 604.8,
+     "gap_only_gated_mJ_b1": 604.9,
      "gap_only_gated_mJ_saturated": 298.1
     },
     "1,024-cycle pre-ramp, no cap": {
@@ -12169,7 +12650,7 @@
      "gated_mJ_b1": 1201.3,
      "gated_mJ_saturated": 894.5,
      "gap_only_pre_ramp_mJ_per_token": 765.6,
-     "gap_only_gated_mJ_b1": 1274.2,
+     "gap_only_gated_mJ_b1": 1274.3,
      "gap_only_gated_mJ_saturated": 967.5
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
@@ -12177,7 +12658,7 @@
      "gated_mJ_b1": 682.7,
      "gated_mJ_saturated": 376.0,
      "gap_only_pre_ramp_mJ_per_token": 192.4,
-     "gap_only_gated_mJ_b1": 701.0,
+     "gap_only_gated_mJ_b1": 701.1,
      "gap_only_gated_mJ_saturated": 394.3
     }
    }
@@ -13942,7 +14423,7 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "c4aa8f816880ef916dbdc2bf7993e8d7ed920637ebac7be31102a25adbaaf43a",
+  "tools/uarch_model.py": "398b303a987e31927d2fb14c1a878ad85349e098905dc01f96cfa021a4875645",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
