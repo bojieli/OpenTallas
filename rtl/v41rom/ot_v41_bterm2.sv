@@ -11,7 +11,11 @@ module ot_v41_bterm2 #(
     // register, so P1 sees E4M3 codes only and the format flop's fanout leaves the P1 product cycle
     // (the -51.6 ps SS path of the ot_gpu_bd_col route at 0.833 ns).  Arithmetic and latency are unchanged;
     // the default (0) is the W10 element's netlist.
-    parameter integer DEC_P0 = 0
+    parameter integer DEC_P0 = 0,
+    // SH_DUP = 1 (W13): the P1 shift amounts are registered twice (kept), one copy steering the low half of
+    // each 42-bit term, one the high half: half the fanout per flop, one buffer level less ahead of the P2
+    // CSA (the -8.7 ps SS path p1_sh -> buffers -> shifter -> CSA 32 -> 7 of the DEC_P0 route).  Default 0.
+    parameter integer SH_DUP = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -60,6 +64,7 @@ module ot_v41_bterm2 #(
     reg signed [10:0] p1_es;
     reg signed [8:0]  p1_p [0:31];
     reg [4:0]         p1_sh [0:31];
+    (* keep *) reg [32*5-1:0] p1_sha, p1_shb;   // SH_DUP copies
     reg [7:0]         xc, wc;
     reg [3:0]         xs, ws, xf, wf;
     reg [7:0]         pm;
@@ -83,6 +88,10 @@ module ot_v41_bterm2 #(
             pm = xs * ws;
             p1_p[i] <= (xc[7] ^ wc[7]) ? -$signed({1'b0, pm}) : $signed({1'b0, pm});
             p1_sh[i] <= {1'b0, xf} + {1'b0, wf} - 5'd2;
+            if (SH_DUP != 0) begin
+                p1_sha[5*i +: 5] <= {1'b0, xf} + {1'b0, wf} - 5'd2;
+                p1_shb[5*i +: 5] <= {1'b0, xf} + {1'b0, wf} - 5'd2;
+            end
         end
         p1_nan <= nan;
     end
@@ -91,7 +100,11 @@ module ot_v41_bterm2 #(
     reg [32*W-1:0] terms;
     always @(*) begin
         for (i = 0; i < 32; i = i + 1)
-            terms[W*i +: W] = {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
+            if (SH_DUP != 0) begin
+                terms[W*i +: W/2]         = ({{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sha[5*i +: 5]) & {(W/2){1'b1}};
+                terms[W*i + W/2 +: W - W/2] = ({{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_shb[5*i +: 5]) >> (W/2);
+            end else
+                terms[W*i +: W] = {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
     end
     wire [7*W-1:0] c7;
     ot_v41_csa #(.N(32), .M(7), .W(W)) u_csa1 (.d(terms), .q(c7));
