@@ -32,7 +32,7 @@ END_CAP = 60.0
 
 
 def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um: float, flank_um: float,
-          tag: str) -> dict:
+          tag: str, clock_ns: float = 0.833, corner: str = "WC") -> dict:
     work.mkdir(parents=True, exist_ok=True)
     n_st = int((length_um - 2 * END_CAP) // spacing_um)
     L = round(2 * END_CAP + n_st * spacing_um, 3)
@@ -42,7 +42,7 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
     rows = int((y1 - y0 - 2 * ROW) / ROW)
     top = f"w18_chan{tag}"
     sv = [f"// W18 spine channel: {wires} chains x {n_st + 1} stations at {spacing_um} um (tools/w18/channel.py)",
-          f"module {top} (input clk, input [{wires - 1}:0] d, output [{wires - 1}:0] q);"]
+          f"module {top} (input clk, input [{wires - 1}:0] d, output [{wires - 1}:0] q, output [1:0] flank_o);"]
     for i in range(wires):
         prev = f"d[{i}]"
         for s in range(n_st + 1):
@@ -53,8 +53,8 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
             prev = out
         # a movable output buffer per chain (global placement needs movable cells; all stations are FIRM)
         sv.append(f"  BUFx2_ASAP7_75t_R ob{i} (.A({prev}), .Y(q[{i}]));")
-    sv.append(f"  w18_flank{tag} u_flank_s (.tie(1'b0));")
-    sv.append(f"  w18_flank{tag} u_flank_n (.tie(1'b0));")
+    sv.append(f"  w18_flank{tag} u_flank_s (.o(flank_o[0]));")
+    sv.append(f"  w18_flank{tag} u_flank_n (.o(flank_o[1]));")
     sv.append("endmodule")
     gen = ROOT / "physical/w18"
     gen.mkdir(parents=True, exist_ok=True)
@@ -71,8 +71,8 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
     (vdir / f"{fname}.lef").write_text("\n".join([
         "VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {fname}", "  CLASS BLOCK ;",
         f"  FOREIGN {fname} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {fw:.3f} BY {fh:.3f} ;",
-        "  PIN tie", "    DIRECTION INPUT ;", "    USE SIGNAL ;", "    PORT", "      LAYER M4 ;",
-        f"        RECT 0.000 {fh / 2 - 0.012:.3f} 0.192 {fh / 2 + 0.012:.3f} ;", "    END", "  END tie",
+        "  PIN o", "    DIRECTION OUTPUT ;", "    USE SIGNAL ;", "    PORT", "      LAYER M4 ;",
+        f"        RECT 0.000 {fh / 2 - 0.012:.3f} 0.192 {fh / 2 + 0.012:.3f} ;", "    END", "  END o",
         "  OBS"] + [f"    LAYER M{i} ;\n      RECT 0 0 {fw:.3f} {fh:.3f} ;" for i in range(1, 8)]
         + ["  END", f"END {fname}", "END LIBRARY", ""]))
     for c in ("tt", "ss", "ff"):
@@ -81,11 +81,12 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
             f"  current_unit : \"1mA\" ;\n  capacitive_load_unit (1,ff) ;\n  pulling_resistance_unit : \"1kohm\" ;\n"
             f"  leakage_power_unit : \"1nW\" ;\n  nom_process : 1 ;\n  nom_voltage : 0.7 ;\n  nom_temperature : 25 ;\n"
             f"  cell({fname}) {{\n    area : {fw * fh:.1f} ;\n    dont_touch : true ;\n    dont_use : true ;\n"
-            f"    pin(tie) {{ direction : input ; capacitance : 0.5 ; }}\n  }}\n}}\n")
+            f"    pin(o) {{ direction : output ; }}\n  }}\n}}\n")
     (vdir / f"{fname}_bb.v").write_text(f"// W18 flank placeholder: a neighbouring ROM-array cluster row (OBS M1-M7)\n"
-                                        f"(* blackbox *) module {fname} (input tie);\nendmodule\n")
+                                        f"(* blackbox *) module {fname} (output o);\nendmodule\n")
     for side, fy in (("s", 1.08), ("n", round(y1 + 1.08, 3))):
-        hook.append(f"place_inst -name u_flank_{side} -location {{{END_CAP} {fy}}} -orientation R0 -status FIRM")
+        hook += [f"set fi [$block findInst u_flank_{side}]", "$fi setPlacementStatus PLACED", "$fi setOrient R0",
+                 f"$fi setLocation [um {END_CAP}] [um {fy}]", "$fi setPlacementStatus FIRM"]
     flops = ["# W18 channel station flops, placed FIRM after tapcell/PDN, skipping tap cells in their row",
              "set block [ord::get_db_block]", "set ::ot_dbu [[ord::get_db_tech] getDbUnitsPerMicron]",
              "proc um {v} { return [expr {round($v * $::ot_dbu)}] }",
@@ -120,11 +121,12 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
     pin_y = f"{y0 + 2:g}-{y1 - 2:g}"
     argv = [sys.executable, str(ROOT / "tools/run_abi3_physical.py"), "--view", "asap7", "--top", top,
             "--source", f"physical/w18/{top}.sv", "--source", f"physical/w18/w18_flank{tag}/w18_flank{tag}_bb.v",
-            "--macro-view", f"w18_flank{tag}=physical/w18/w18_flank{tag}", "--macro-place-halo", "1", "1", "--clock-period-ns", "0.92", "--clock-uncertainty-ns", "0.06",
+            "--macro-view", f"w18_flank{tag}=physical/w18/w18_flank{tag}", "--macro-place-halo", "1", "1", "--clock-period-ns", f"{clock_ns:g}", "--clock-uncertainty-ns", "0.06",
+            "--orfs-corner", corner, "--hold-corners", f"{corner},BC",
             "--clock-uncertainty-hold-ns", "0.025", "--io-delay-fraction", "0.2", "--stages", "pnr",
             "--die-area", "0", "0", f"{L:g}", f"{H:g}", "--core-area", "1.08", "1.08", f"{L - 1.08:g}", f"{H - 1.08:g}",
             "--place-density", "0.5", "--orfs-var", "PLACE_DENSITY_LB_ADDON=", "--pin-region", r"^d\[\d+\]$=left", "--pin-region", r"^q\[\d+\]$=right",
-            "--pin-region", r"^clk$=left", "--step-tcl", f"POST_MACRO_PLACE=physical/w18/{top}_place.tcl",
+            "--pin-region", r"^clk$=left", "--pin-region", r"^flank_o\[\d+\]$=left", "--step-tcl", f"POST_MACRO_PLACE=physical/w18/{top}_place.tcl",
             "--step-tcl", f"POST_PDN=physical/w18/{top}_flops.tcl",
             "--nickname-tag", f"w18_chan{tag}", "--keep-workdir", str(work / "run"), "--force",
             "--output", str(work / "physical.json")]
@@ -144,9 +146,12 @@ def main(argv=None):
     ap.add_argument("--spine-um", type=float, default=32.4)
     ap.add_argument("--flank-um", type=float, default=150.0)
     ap.add_argument("--tag", default="")
+    ap.add_argument("--clock-ns", type=float, default=0.833, help="AGENTS.md 2026-09-30: 1.2 GHz at SS")
+    ap.add_argument("--corner", default="WC", help="ORFS hardening corner (WC = SS libraries)")
     ap.add_argument("--run", action="store_true")
     a = ap.parse_args(argv)
-    m = build(a.work.resolve(), a.length_um, a.spacing_um, a.wires, a.spine_um, a.flank_um, a.tag)
+    m = build(a.work.resolve(), a.length_um, a.spacing_um, a.wires, a.spine_um, a.flank_um, a.tag, a.clock_ns,
+              a.corner)
     print(json.dumps({k: v for k, v in m.items() if k != "argv"}, indent=1))
     if a.run:
         return subprocess.run(m["argv"] and [sys.executable, *m["argv"]], cwd=ROOT).returncode

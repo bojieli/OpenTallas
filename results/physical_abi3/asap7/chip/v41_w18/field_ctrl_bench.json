@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.v41.w18_field_ctrl_bench.v1",
+ "rtl": {
+  "result": {
+   "words": "300",
+   "capped_beats": "240",
+   "stretch_events": "27",
+   "longest": "607",
+   "alarm": "1",
+   "errors": "0"
+  },
+  "verdict": "PASS"
+ },
+ "mutants": {
+  "take_ignores_parity": {
+   "result": {
+    "words": "300",
+    "capped_beats": "240",
+    "stretch_events": "27",
+    "longest": "607",
+    "alarm": "1",
+    "errors": "240"
+   },
+   "verdict": "FAIL"
+  },
+  "second_beat_dropped": {
+   "result": {
+    "words": "300",
+    "capped_beats": "140",
+    "stretch_events": "28",
+    "longest": "607",
+    "alarm": "1",
+    "errors": "648"
+   },
+   "verdict": "FAIL"
+  },
+  "release_without_hold": {
+   "result": {
+    "words": "300",
+    "capped_beats": "240",
+    "stretch_events": "29",
+    "longest": "600",
+    "alarm": "1",
+    "errors": "21"
+   },
+   "verdict": "FAIL"
+  },
+  "no_min_stretch": {
+   "result": {
+    "words": "300",
+    "capped_beats": "240",
+    "stretch_events": "27",
+    "longest": "607",
+    "alarm": "1",
+    "errors": "5"
+   },
+   "verdict": "FAIL"
+  }
+ },
+ "sources": {
+  "rtl/chip/ot_chip_v41_xcap.sv": "3fa0d011795f2762504e05b598ccf7c08077e6534f6ec5c7b52713db112e5802",
+  "rtl/chip/ot_chip_v41_droop_ctrl.sv": "1cae496dc82ee5050149a703d136d6e97b15dc708893ec5c59c29347a4afd706",
+  "rtl/test/tb_chip_v41_xcap_droop.sv": "9d234979ba2c265dad9789a80b960a2d6666e307f4bdfe85c6a54e561540eab4"
+ },
+ "tool_sha256": "11045ed07af4420ad7c2925fc64749222c049dab7574b7f004b6ec4e5864d157",
+ "simulator": "Icarus Verilog version 11.0 (stable) ()",
+ "pass": true
+}

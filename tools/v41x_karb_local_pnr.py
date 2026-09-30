@@ -43,6 +43,7 @@ ENV_H = 64.0
 K_SPAN = (200.0, 370.0)
 EPC_OUTER = 14                   # outermost region's credits, 2 * hops + 2 (12 mm PHY: 6 hops)          # regional K port on the slice's top edge (v1 PHY window 375 um)
 HOLD_NS = None                   # W18 --phy-e8p5: project SDC policy 25 ps hold uncertainty
+SIGNOFF_ARGS: list = []          # W18 --signoff-1p2: harden at WC (SS libs), repair hold at WC and BC
 BUFFER_HOOK = "physical/abi3/v41x_karb_repair_buffer_cap.tcl"
 KARB = ["rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv"]
 
@@ -56,6 +57,7 @@ def common(top: str, sources: list[str], w: float, h: float, params: list[str] =
         args += ["--param", p]
     if HOLD_NS is not None:
         args += ["--clock-uncertainty-hold-ns", f"{HOLD_NS:g}"]
+    args += SIGNOFF_ARGS
     args += ["--clock-period-ns", f"{CLOCK_NS:g}", "--clock-uncertainty-ns", f"{UNCERTAINTY_NS:g}",
              "--io-delay-fraction", "0.2", "--stages", "synth,pnr",
              "--die-area", "0", "0", f"{w:g}", f"{h:g}", "--core-area", f"{m:g}", f"{m:g}", f"{w - m:g}", f"{h - m:g}",
@@ -246,7 +248,7 @@ CASES = {"slice": slice_case, "region": region_case, "stack_ep": stack_ep_case, 
          "trunk_end": lambda: trunk_case(11400.0, "_end"), "trunk_mid": lambda: trunk_case(3150.0, "_mid"),
          # the pipelined partition (ot_chip_v41x_hbm_karb_pipe)
          "pslice": pslice_case, "pregion": pregion_case, "proot": proot_case,
-         "link600": lambda: link_case(600.0),
+         "link600": lambda: link_case(600.0), "link450": lambda: link_case(450.0),
          "link_1000": link_case, "link_750": lambda: link_case(750.0), "link_1250": lambda: link_case(1250.0)}
 
 
@@ -266,16 +268,25 @@ def main() -> int:
     ap.add_argument("--phy-e8p5", action="store_true",
                     help="W18: fit the legal v2 PHY abstract ot_hbm3e_phy_v41x_aw30_e8p5 (265.584 um pseudo-channel "
                          "window, K pins 0.96-120.384 um), K port at 125.28-262.08 um, 60/25 ps SDC")
+    ap.add_argument("--signoff-1p2", action="store_true",
+                    help="W18 / AGENTS.md 2026-09-30: 1.2 GHz (0.833 ns), hardened at CORNER=WC, hold at WC and BC")
     a = ap.parse_args()
+    if a.signoff_1p2:
+        global CLOCK_NS, SIGNOFF_ARGS
+        CLOCK_NS = 0.833
+        SIGNOFF_ARGS = ["--orfs-corner", "WC", "--hold-corners", "WC,BC"]
     if a.phy_e8p5:
         global PHY_PC_WINDOW_UM, PC_PIN_SPAN, K_SPAN, HOLD_NS
         PHY_PC_WINDOW_UM, PC_PIN_SPAN, K_SPAN, HOLD_NS = 265.584, (0.96, 120.384), (125.28, 262.08), 0.025
         global EPC_OUTER
         EPC_OUTER = 2 * 4 + 2          # 8.5 mm PHY: the outermost region centre is 3.72 mm out -> 4 hops of <= 1 mm
+        if a.signoff_1p2:
+            EPC_OUTER = 2 * 7 + 2      # at 0.833 ns SS the hop is ~0.6 mm (to be measured): 7 hops
     c = CASES[a.case]()
     if a.phy_e8p5:
-        c["nickname"] += "_w18e8p5"
-        c["output"] = c["output"].replace("/physical.json", "_w18e8p5/physical.json")
+        sfx = "_w18e8p5" + ("_1p2" if a.signoff_1p2 else "")
+        c["nickname"] += sfx
+        c["output"] = c["output"].replace("/physical.json", f"{sfx}/physical.json")
         c.setdefault("floorplan", {})["phy_view"] = "ot_hbm3e_phy_v41x_aw30_e8p5"
     args = list(c["args"])
     if a.density:
