@@ -1628,7 +1628,7 @@
  "slo_tokens_s_per_user": 100.0,
  "cost_rule": "best mode of each design at each point: b1 = its fastest single-user mode, saturated = its largest aggregate within the per-user state capacity; capex = packages at the iso-package price + ROM mask NRE / production units (low: coding layers only; high: full mask sets)",
  "source_sha256": {
-  "tools/uarch_model.py": "c4aa8f816880ef916dbdc2bf7993e8d7ed920637ebac7be31102a25adbaaf43a",
+  "tools/uarch_model.py": "398b303a987e31927d2fb14c1a878ad85349e098905dc01f96cfa021a4875645",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",

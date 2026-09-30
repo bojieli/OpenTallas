@@ -2025,10 +2025,13 @@ def _sat_batch(rows):
 
 
 # ---- V4.1 ROM: the priced graph, per die, by energy category and stage occupancy ----
+_CONS_CTX = 1048576   # the V4.1 context of _v41_graph / the consolidation HBM chain (W16's short-context rows set it)
+
+
 def _v41_graph(d, positions=1):
     """The proposal's priced graph; with positions > 1 the MTP verify pass at m = 1 (the issue scaling of
     v41_verify_T, which returns only times)."""
-    r = evaluate(copy.deepcopy(d), 1048576)
+    r = evaluate(copy.deepcopy(d), _CONS_CTX)
     g = r.pop("_g")
     if positions > 1:
         E = A._env()
@@ -3220,7 +3223,10 @@ SS_DERATE_MEASURED = 1.43   # W13 (root relay 2026-09-30): the TT-closed tc16 FP
 # FF hold, 60/25): 504 um a stage at 0.833 ns, 748 um at 1.111 ns (the 1,118 um TT fit it replaces)
 SS_REACH_UM = {1.2e9: 504.0, 0.9e9: 748.0}
 MTP_KV_PER_POSITION = True    # W11 / root 2026-09-30: verify KV rows are per position (6 x 645 rows a pass), not shared
-W15_V41_COLL_STAGES_SS = 30      # collective -> link PHY (W3 placement) at 1.2 GHz SS; the measured v41p17 fit carries 17
+W15_V41_COLL_STAGES_SS = 48      # W18b MEASURED (claude/w18-die-assembly b359e69e die_route_layer_split.json): collective
+                                 # -> farthest SerDes 48 stages at the SS reach (UCIe 37); the v41p17 fit carries 17
+W18B_EXPERT_WIRE = 36 + 40       # W18b measured, M8/M9 trunks: VM x root -> farthest cluster 36 + farthest cluster -> VM
+                                 # 40 (PLACEHOLDER cycles until W15's M8/M9-only reach lands; the routed lengths stand)
 W11_SERIAL_MUL_EXTRA = 1         # W11 3bc74342: a LAT-3 mul misses 0.9 GHz by 17 ps -> LAT 4, +1 cycle a multiply in the
                                  # SU/SFU/softplus/Sinkhorn chains; priced as +1 slow cycle a chain node (a LOWER BOUND:
                                  # the per-node multiply count is not in the graph)
@@ -3600,7 +3606,7 @@ MODEL_CHAIN_ADD_STAGES = 3      # the model's hub chain units are priced with th
 MODEL_ELEM_ADD_STAGES = FADD_PIPE   # the field element's chain adder (ot_fp32_add_rne_pipe, 5)
 # root 2026-09-30: the old ot_hdc_softplus depth (259) is replaced by the SU's v41x softplus (162, ot_hdc_v41x_sfu.sv):
 # 97 cycles a layer recovered
-SOFTPLUS_FIX = {"suffix:softplus_sqrt": -97}   # ROOT RULING 2026-09-30: arch_budget_v41's SFU_DEPTH / V41 softplus
+SOFTPLUS_FIX = {"suffix:softplus_sqrt": -97, "suffix:idx.topk_local": 8}   # + W11: idx_tail latency 8 -> 16   # ROOT RULING 2026-09-30: arch_budget_v41's SFU_DEPTH / V41 softplus
 # 259 is the LEGACY standalone unit; the product uses the SU's v41x softplus (162) through this correction only.
 # arch_budget_v41 stays FROZEN as the spec basis (the hardware is built to its derived widths; folding it there
 # re-derives weight_macs 264,960 -> 246,528 etc.); the full re-baseline waits for the headline-restatement pass.
@@ -3645,7 +3651,8 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
         for name, nd in g.nodes.items():
             u = nd.get("_uarch")
             if u:
-                new = 2 * math.ceil(d["bcast_um"][u["region"]] / reach)
+                new = (W18B_EXPERT_WIRE if u["region"] == "expert" else
+                       2 * math.ceil(d["bcast_um"][u["region"]] / reach))
                 old = u["wire"] - d.get("vm_x_gather_stages", 0) - d.get("vm_ret_scatter_stages", 0)
                 nd["depth"] += max(0, new - old) * cyc
             elif nd["kind"] == "collective":
@@ -3769,7 +3776,7 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
         pts[key] = dict(tokens_s=round(rate, 1), ungated_mJ=round((e[0] / tau + dy) * 1e3, 2),
                         gated_mJ=round((e[3] / tau + dy) * 1e3, 2), ungated_static_w=round(e[0] / period, 1),
                         gated_static_w=round(e[3] / period, 1), gated_system_w=round(e[3] / period + dy * rate, 1))
-    rows_ = 1048576
+    rows_ = _CONS_CTX
     windows_rings = max(2, math.ceil(plan["layers_per_stage"]))
     per_user = rows_ * (A.CKV_ROW_B + A.IDX_KEY_B) / 4 + _V41_CFG_WINDOW() * A.WIN_ROW_B * windows_rings
     users = int(HBM_CAP_EFF * A.ROM_DIE_HBM_STACKS * HBM_STACK_B // per_user)
@@ -3890,7 +3897,7 @@ _HBM_CHAIN_CACHE = {}
 
 def _hbm_chain_n(N, n_sm, positions=1):
     """v41_hbm_chain at TP-N with n_sm SMs a die (group-slot).  Equal to v41_hbm_chain at N = 96, n_sm = 32."""
-    key = (N, n_sm, positions)
+    key = (N, n_sm, positions, _CONS_CTX)
     if key not in _HBM_CHAIN_CACHE:
         _HBM_CHAIN_CACHE[key] = _hbm_chain_n_uncached(N, n_sm, positions)
     return dict(_HBM_CHAIN_CACHE[key])
@@ -3899,7 +3906,7 @@ def _hbm_chain_n(N, n_sm, positions=1):
 def _hbm_chain_n_uncached(N, n_sm, positions):
     d = hbm_gpu_design("v41")
     clock = d["clock_hz"]
-    arch, b = arch_graph(1048576)
+    arch, b = arch_graph(_CONS_CTX)
     g = b.g
     path = g.path(b.sink)
     mv = other = extra = xfill = 0.0
@@ -3958,7 +3965,7 @@ def hbm_ss_wire_delta(stacks):
 
 
 def v41_hbm_n(N, stacks, ec, gated_rows, replicas=1, clock_hz=None):
-    key = (N, stacks, replicas, id(ec), clock_hz)
+    key = (N, stacks, replicas, id(ec), clock_hz, _CONS_CTX)
     if key not in _HBM_N_CACHE:
         _HBM_N_CACHE[key] = _v41_hbm_n(N, stacks, ec, gated_rows, replicas, clock_hz)
     return copy.deepcopy(_HBM_N_CACHE[key])
@@ -4376,6 +4383,19 @@ def consolidation(ec=None, lv=None):
                      "188 dies of analytical logic; capacity_limit's hbm_users (811) uses the busiest-die rule of a "
                      "pipelined placement, whereas the TP-96 comparator holds 1/96 of every layer's KV per die")),
         headline_table=cons_headline_table(head, rule, qwen, ec, pc),
+        tau_sweep_1m=cons_tau_sweep([(x["design"], dict(mtp=x.get("per_user_mtp")))
+                                     for x in cons_headline_table(head, rule, qwen, ec, pc)["v41"]]),
+        short_context_8k=cons_short_context(Sp, hp, t_a, head, ec, gr, 8192),
+        gpu_calibration=gpu_calibration_row(ec),
+        qwen_context_sweep=qwen_context_sweep(ec),
+        qwen_helix_200k=qwen_helix_scaleout(ec),
+        qwen_product_ss=qwen_product_ss(),
+        hbm_collective_sensitivity=dict(model=188, audit=228, w19_exact_minimised=265, w19_exact_unfused=305,
+                                        audit_central_ar=2394.5, at_265_ar=round(1 / (1 / 2394.5 + 37 * 0.83e-6), 1),
+                                        at_305_ar=round(1 / (1 / 2394.5 + 77 * 0.83e-6), 1),
+                                        src="W19 claude/w19-hbm-token f364f884 (exact TP-96 program, layer 0 bit-exact); "
+                                            "collectives at the audit's 0.83 us scratch switch latency; PENDING W19's "
+                                            "final count and W15's P = 48 fit"),
         comparison_rule=dict(v41_targets=tgt, v41=rule, qwen=q_rule,
                              basis="ROM = the consolidated analytical headline; power = the gated saturated AR system "
                                    "power (both sides, the adopted gated-alike policies); cost = manufacturing capex "
@@ -4665,6 +4685,7 @@ def cons_headline_table(head, rule, qwen, ec, pc):
     cst = {c["design"]: c for c in ec["cost"]}
     v41 = [dict(design="V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)", tier="ROM",
                 per_user_ar=head["ar_tokens_s_b1"], per_user_mtp=head["mtp_tokens_s_b1"],
+                per_user_mtp_headline_tau_3p78=round(head["mtp_tokens_s_b1"] * 3.78 / V41_TAU, 1),
                 saturated_tokens_s=head["ar_saturated_tokens_s"], mJ_b1=dr["gated_mJ_b1"], mJ_saturated=dr["gated_mJ_saturated"],
                 capex_usd=head["cost"]["capex_usd"], silicon_mm2=head["silicon_mm2"], users_1m=head["capacity_users_1m"],
                 system_w_saturated=head["energy"]["ar_sat"]["gated_system_w"])]
@@ -4694,9 +4715,14 @@ def cons_headline_table(head, rule, qwen, ec, pc):
         if "DeepSeek" in a["design"]:
             v41.append(dict(design=a["design"], tier="1", per_user_mtp=a["per_user_tokens_s"],
                             mJ_b1=a["energy_mJ_per_token_at_689W"]))
-    q = [dict(design="Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144)", tier="ROM",
+    qs = qwen_product_ss()
+    q = [dict(design="Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144), TT", tier="ROM",
               per_user_ar=pc["tokens_s_b1"], saturated_tokens_s=pc["saturated_tokens_s"], mJ_b1=pc["mJ_b1"],
-              mJ_saturated=pc["mJ_saturated"], capex_usd=pc["capex_usd"], users_8k=pc["capacity_users"])]
+              mJ_saturated=pc["mJ_saturated"], capex_usd=pc["capex_usd"], users_8k=pc["capacity_users"]),
+         dict(design="Qwen ROM option C at 1.2 GHz SS (W12 SS wires, LAT-7 ME, droop cap75 + preramp256)", tier="ROM",
+              per_user_ar=qs["tokens_s_b1"], saturated_tokens_s=pc["saturated_tokens_s"],
+              mJ_b1=round(pc["mJ_b1"] + QWEN_SS["droop_mJ"], 1), mJ_saturated=round(pc["mJ_saturated"] + QWEN_SS["droop_mJ"], 1),
+              capex_usd=pc["capex_usd"], users_8k=pc["capacity_users"])]
     for row in qwen[1:3]:
         q.append(dict(design=row["design"] + " (tier 3, idealised; DFlash W19 audit -14%)", tier="3",
                       per_user_ar=row["ar_tokens_s_b1"],
@@ -4849,6 +4875,250 @@ def qwen_small_die(tiles_mm2=(308.0, 359.0), spine_mm=1.4, margin=0.10):
     return dict(rows=rows, spine_mm=spine_mm, margin=margin, phy_long_edge_mm=W,
                 note="the die keeps its 4 PHYs on the long edges (2 x 8.5 mm + corners = 19 mm); the smaller die is "
                      "priced at the same G = 6,144 and tok/s")
+
+
+# ---------------------------------------------------------------------------------------------------------
+# W16 follow-ups (root, 2026-09-30): the product stage-owner file, the MTP tau sweep, short-context rows, the GPU
+# calibration row, and the Qwen context sweep.
+# ---------------------------------------------------------------------------------------------------------
+# MTP acceptance (root / user direction 2026-09-30): the headline tau is third-party.  LMSYS, "DSpark in SGLang"
+# (https://www.lmsys.org/blog/2026-07-06-dspark-sglang/, Figure 4, reproduction appendix): DeepSeek-V4-FLASH, H200,
+# TP4 + DP-attention, draft block 6 (gamma = 5), cap-accept verify mode ("to expose the acceptance ceiling"):
+# gsm8k 5.24, arena-hard 3.78, poetry 2.91.  V4-Flash, not V4.1-Flash; our measured 3.649 corroborates.
+TAU_SWEEP = (("poetry (creative, lower; LMSYS V4-Flash)", 2.91),
+             ("measured on V4.1-Flash, reasoning mix (OpenTallas; corroboration)", V41_TAU),
+             ("HEADLINE: arena-hard (general chat; LMSYS V4-Flash, cap-accept ceiling)", 3.78),
+             ("4.5 (interpolated)", 4.5),
+             ("gsm8k (math, upper; LMSYS V4-Flash)", 5.24))
+TAU_SRC = ("LMSYS, 'DSpark in SGLang' (2026-07-06), https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ Figure 4: "
+           "DeepSeek-V4-Flash, H200 TP4 DP-attention, block 6, cap-accept verify (acceptance ceiling)")
+
+
+def cons_tau_sweep(rows, positions=V41_POSITIONS):
+    """MTP per-user rate at each tau from the rows' measured-tau MTP rate: a verify step's time does not depend on how
+    many positions are accepted, so tok/s scales with tau / V41_TAU (tau <= gamma + 1 = positions)."""
+    out = []
+    for name, x in rows:
+        base = x.get("mtp")
+        if base is None:
+            continue
+        r = dict(design=name)
+        for lab, tau in TAU_SWEEP:
+            assert tau <= positions, "tau above gamma + 1 is impossible"
+            r[f"tau_{tau:g}"] = round(base * tau / V41_TAU, 1)
+        out.append(r)
+    return dict(rows=out, taus={lab: t for lab, t in TAU_SWEEP}, headline_tau=3.78, source=TAU_SRC,
+                gamma=positions - 1, note="tau <= gamma + 1 = 6 always holds here; GPU rows scale their tier-2 MTP "
+                                          "the same way (their draft is modelled per step)")
+
+
+@contextlib.contextmanager
+def _cons_ctx(ctx):
+    """Price the V4.1 graphs at context `ctx` instead of 1M (the consolidation section's own graphs only)."""
+    global _CONS_CTX
+    old = _CONS_CTX
+    _CONS_CTX = ctx
+    _HBM_CHAIN_CACHE.clear()
+    _HBM_N_CACHE.clear()
+    try:
+        yield ctx
+    finally:
+        _CONS_CTX = old
+        _HBM_CHAIN_CACHE.clear()
+        _HBM_N_CACHE.clear()
+
+
+# public GPU single-user records (root 2026-09-30).  TensorRT-LLM tech blog 1, "Pushing Latency Boundaries: Optimizing
+# DeepSeek-R1 Performance on NVIDIA B200 GPUs": 8x B200, ISL 1K / OSL 2K, FP4, MTP extended to 3 layers (relaxed
+# acceptance), 368 tok/s a user.  TensorRT-LLM blog 15 (DeepSeek-V3.2 on Blackwell): B200 min-latency ~312 tok/s a
+# user with MTP-3.  NVIDIA's 1,038 tok/s a user on one DGX B200 is Llama 4 Maverick (not DeepSeek).  B300: the public
+# interactivity points (SemiAnalysis InferenceX) are 73-150 tok/s a user at throughput-optimal settings; no
+# min-latency B300 DeepSeek record was found.
+GPU_PUBLIC = [
+    dict(design="DeepSeek-R1 (671B), 8x B200, TensorRT-LLM min-latency", tok_s_user=368.0, ctx=3072, mtp_layers=3,
+         src="TensorRT-LLM tech blog 1 (ISL 1K / OSL 2K, FP4)"),
+    dict(design="DeepSeek-V3.2, B200, TensorRT-LLM min-latency", tok_s_user=312.0, ctx=None, mtp_layers=3,
+         src="TensorRT-LLM tech blog 15"),
+    dict(design="Llama 4 Maverick (400B MoE, 17B active), 1x DGX B200", tok_s_user=1038.0, ctx=None, mtp_layers=None,
+         src="NVIDIA / Tom's Hardware, 2025-05: the ~1,000 tok/s/user public record is NOT a DeepSeek model"),
+]
+B300_OVER_B200 = dict(hbm_bw=8.0 / 8.0, note="B300 keeps 8 TB/s of HBM3E a GPU (288 GB); per-user decode at low batch "
+                                             "is bandwidth- and latency-bound, so the tier-2 B300 row equals B200 "
+                                             "within the model (ASSUMED; no public min-latency B300 DeepSeek record)")
+
+
+def gpu_tier2_v41_ctx(ctx, positions=1):
+    """Tier-2 8x B200 V4.1-Flash step at context ctx (gpu_economics' form: fixed per layer + weight + index/KV bytes
+    at the fitted B200 byte rate + NCCL-class all-reduces), batch 1."""
+    fixed = GPU_FIT["fixed_seconds_qwen"]
+    s_per_B = (1 / 230.0 - fixed) / (2 * GPU_FIT["qwen_fp8_weight_bytes"])
+    c = A._env()["c"]
+    idx_user = 262144 * A.IDX_KEY_B * 4 * 38 * ctx / 1048576     # gpu_economics' 1M index-key read, scaled to ctx
+    t = (40 * fixed / 36 + s_per_B * (_v41_weight_bytes(positions) + idx_user) / 8 + 40 * 5 * NCCL_ALLREDUCE_S)
+    return t
+
+
+def cons_short_context(Sp, hp, t_a, head, ec, gr, ctx=8192):
+    """Short-context rows (root 2026-09-30): the public GPU records are short-context, and the 1M headline is dominated
+    by the index scan and attention.  The ROM product, the HBM tier 3 at equal cost (audited) and GPU tier 2, at ctx."""
+    with _cons_ctx(ctx):
+        p = cons_v41_rom(Sp, hp, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ, FIELD_CONCURRENCY, SOFTPLUS_FIX,
+                         PRODUCT_DYN_SCALE, (0.9e9, "w18"), None, 7, True)
+        h = v41_hbm_n(96, 4, ec, gr, replicas=2, clock_hz=PRODUCT_CLOCK_HZ)
+    t_ar = gpu_tier2_v41_ctx(ctx)
+    gv = ec["gpu"]["v41"]
+    mtp_ratio = gv["mtp_b1"] / gv["tokens_s_b1"]
+    return dict(ctx=ctx, rows=[
+        dict(design="V4.1 ROM product (columns, 1.2 GHz SS)", ar=p["ar_tokens_s_b1"], mtp=p["mtp_tokens_s_b1"],
+             saturated=p["ar_saturated_tokens_s"], dies=p["dies"], silicon_mm2=p["dies"] * FLOORPLAN["die_mm2"],
+             capex_usd=head["cost"]["capex_usd"]["low"], users=p["capacity_users_1m"]),
+        dict(design="V4.1 HBM tier 3, equal cost (2 x TP-96), W19 audit central", ar=round(
+            h["ar"]["batch1"]["per_user_tokens_s"] * HBM_AUDIT["ar"], 1),
+             mtp=round(h["mtp"]["batch1"]["per_user_tokens_s"] * HBM_AUDIT["mtp"], 1),
+             saturated=h["ar"]["saturated"]["aggregate_tokens_s"], dies=h["dies"], silicon_mm2=h["silicon_mm2"],
+             capex_usd=h["cost"]["capex_usd"]["low"], users=h["capacity_users_1m"]),
+        dict(design="V4.1-Flash, 8x B200 (tier 2, calibrated)", ar=round(1 / t_ar, 1), mtp=round(mtp_ratio / t_ar, 1),
+             gpus=8, silicon_mm2=16 * 800.0, capex_usd=8 * COST["package_usd"], cost_basis="purchase price"),
+        dict(design="V4.1-Flash, 8x B300 (tier 2; = B200 within the model, ASSUMED)", ar=round(1 / t_ar, 1),
+             mtp=round(mtp_ratio / t_ar, 1), gpus=8, silicon_mm2=16 * 800.0, note=B300_OVER_B200["note"])])
+
+
+def gpu_calibration_row(ec):
+    """Our tier-2 model at DeepSeek-R1's published min-latency conditions (8x B200, ~3K context, MTP-3) against its
+    368 tok/s: R1 is 671B / 37B active (FP4 in the record) against V4.1-Flash's 284B / 13B, so the row reports the
+    model's V4.1 short-context step and states the model mismatch."""
+    t = gpu_tier2_v41_ctx(3072)
+    gv = ec["gpu"]["v41"]
+    mtp = gv["mtp_b1"] / gv["tokens_s_b1"] / t
+    return dict(conditions="8x B200, context ~3K (ISL 1K / OSL 2K), MTP", published=GPU_PUBLIC,
+                model_v41_ar=round(1 / t, 1), model_v41_mtp=round(mtp, 1),
+                error_vs_r1_record=round(mtp / 368.0 - 1, 3),
+                note="the model prices V4.1-Flash (13B active) and R1 is 37B active: a like-for-like error needs an R1 "
+                     "run of the tier-2 form; the ratio shown mixes model size with model error")
+
+
+QWEN_CTX_SWEEP = (8192, 32768, 131072, 200000)
+QWEN_CTX_NOTE = ("W12b context audit (claude/w12-qwen-rom b4d2715f): KV read 18,432 x T bytes a token a die; HBM "
+                 "binds from ~32K (W12b ~1.4k tok/s at 128K, ~0.9k at 200K with SW 1,024, matching this sweep); 32K "
+                 "needs parameters and 2 larger SRAMs (+~10 mm2 a die); 128K and 200K need a 27-bit address and a "
+                 "larger VM (or head-serial scores).  "
+                 "Qwen3-8B is natively 32K and 128K with YaRN; 200K is beyond official support.  FP8 KV (baseline); "
+                 "the FP4/INT4-KV rows halve the KV bytes and are QUALITY-UNTESTED")
+
+
+def qwen_context_sweep(ec):
+    """Qwen3-8B per-user AR, KV bytes a token and KV read time, users that fit, saturated tok/s and J/token at 8K-200K
+    for the ROM product (option C: TP-4, 4 x 4 stacks), its 6-stack-a-die and FP4-KV sensitivities, the HBM tier 3
+    (2 x 4-stack right-sized dies) and GPU tier 2 (1x B200).  Rule: a token is the longer of the replayed compute
+    chain at ctx (the attention work grows with ctx) and the KV stream of the busiest die (overlapped, ASSUMED)."""
+    import arch_budget_qwen3 as Q
+    import hdc_timing as T
+    wl, kvb8 = _qwen_wl()
+    qr, qh = ec["qwen_rom"], ec["qwen_hbm"]
+    cats = qr["energy"]["categories_mJ_per_token"]
+    kv_e8 = (cats["kv_on_die"] + cats["stack"]) * 1e-3
+    other_e = sum(v for k, v in cats.items() if k not in ("kv_on_die", "stack")) * 1e-3
+    P_static = qr["energy"]["static_w_total"]
+    dq = hbm_gpu_design("qwen")
+    w_B = sum(b_ for b_, _ in qwen_hbm_ops(dq["element"], dq["barrier"]["boundary_cycles"], dq["drain_cycles"])) - kvb8 / 2
+    w_total = 2 * w_B
+    t_h8 = 1 / qh["ar"]["tokens_s_b1"]
+    fixed = GPU_FIT["fixed_seconds_qwen"]
+    s_per_B = (1 / 230.0 - fixed) / (2 * GPU_FIT["qwen_fp8_weight_bytes"])
+    rows = []
+    for ctx in QWEN_CTX_SWEEP:
+        k0 = dict(T.K)
+        Q.CLOCK[0] = Q.clock_hz()
+        clock = Q.CLOCK[0]
+        try:
+            T.K["me_lat"] = k0["me_lat"] + QWEN_WIRE_W12["me_lat_extra"]
+            nh, kv = QWEN_TP_SHAPE[4]
+            shp = dict(Q.Q, NH=nh, KV=kv, FF=-(-Q.Q["FF"] // 4), V=-(-Q.Q["V"] // 4))
+            r = Q.as_built(ctx, groups=6144, su_width=1024, shape=shp, ucie=False)
+        finally:
+            T.K.clear()
+            T.K.update(k0)
+        x = _qwen_exchange("board", 4, clock)
+        chain = (r["cycles"] + x["token_cycles"]) / clock
+        for tag, stacks, kvf in (("ROM option C (4 stacks a die, FP8 KV)", 4, 1.0),
+                                 ("ROM option C, 6 stacks a die", 6, 1.0),
+                                 ("ROM option C, FP4/INT4 KV (quality untested)", 4, 0.5)):
+            kvb = kvb8 * ctx / 8192 * kvf
+            kv_die = kvb * kv / Q.Q["KV"]
+            t_kv = kv_die / (stacks * HBM_STACK_BPS)
+            t = max(chain, t_kv)
+            users = int(stacks * HBM_STACK_B * HBM_CAP_EFF // kv_die)
+            ub = r["unit_busy"]
+            lanes = ub["weights"] + ub["attn_scores"] + ub["attn_pv"] + ub["lm_head"]
+            sat = min(clock / lanes, clock / ub["stream"], stacks * HBM_STACK_BPS / kv_die)
+            dyn = other_e + kv_e8 * kvb / kvb8
+            rows.append(dict(ctx=ctx, design=tag, ar_tokens_s=round(1 / t, 1), kv_bytes_per_token=round(kvb),
+                             kv_read_us=round(t_kv * 1e6, 1), chain_us=round(chain * 1e6, 1),
+                             binding="KV stream" if t_kv > chain else "compute chain", users=users,
+                             saturated_tokens_s=round(min(sat, users / t), 1),
+                             mJ_b1=round((dyn + P_static * t) * 1e3, 1),
+                             mJ_saturated=round((dyn + P_static / min(sat, users / t)) * 1e3, 1)))
+        kvb = kvb8 * ctx / 8192
+        t_h = t_h8 * (w_total + kvb) / (w_total + kvb8)
+        users_h = int((8 * HBM_STACK_B * HBM_CAP_EFF - w_total) // kvb)
+        rows.append(dict(ctx=ctx, design="Qwen HBM tier 3 (2 x 4-stack right-sized dies), AR", ar_tokens_s=round(1 / t_h, 1),
+                         kv_bytes_per_token=round(kvb), kv_read_us=round(t_h * kvb / (w_total + kvb) * 1e6, 1),
+                         binding="HBM stream", users=users_h))
+        t_g = fixed + s_per_B * (GPU_FIT["qwen_fp8_weight_bytes"] + kvb)
+        users_g = int((B200_HBM_B * HBM_CAP_EFF - GPU_FIT["qwen_fp8_weight_bytes"]) // kvb)
+        rows.append(dict(ctx=ctx, design="Qwen3-8B on 1x B200, FP8 (tier 2, calibrated), AR", ar_tokens_s=round(1 / t_g, 1),
+                         kv_bytes_per_token=round(kvb), kv_read_us=round(s_per_B * kvb * 1e6, 1), users=users_g,
+                         mJ_b1=round(B200_W_DECODE * t_g * 1e3, 1)))
+    return dict(rows=rows, note=QWEN_CTX_NOTE,
+                rule="per-user token = max(replayed compute chain at ctx, busiest die's KV stream) for the ROM; the HBM "
+                     "tier 3 and GPU scale their 8K step by the streamed bytes (weights + KV)")
+
+
+# Qwen ROM product at 1.2 GHz SS (root 2026-09-30, W12b claude/w12-qwen-rom 8289866f): W12's TP-4 wire stages at the SS
+# reach (112 cycles an ME op incl. MEM_EXTRA) + LAT-7 ME adders (+54 an op), and the droop product choice cap75 +
+# preramp256 (x0.956 tok/s, +22.2 mJ a token of ramp energy; results/floorplan/qwen_rom_w12/droop_1p2ghz.json)
+QWEN_SS = dict(me_lat_extra=QWEN_W12_TP4_ME_EXTRA_SS + 54, droop_rate=0.956, droop_mJ=22.2,
+               src="W12b 775f5279 / 8289866f: LAT-7 ME +54 cycles an op; droop cap75 + preramp256")
+
+
+def qwen_product_ss():
+    p = qwen_tp_point(4, 6144, "board", clock_hz=PRODUCT_CLOCK_HZ, me_lat_extra=QWEN_SS["me_lat_extra"])
+    return dict(p, tokens_s_b1=round(p["tokens_s_b1"] * QWEN_SS["droop_rate"], 1), droop=QWEN_SS)
+
+
+def qwen_helix_scaleout(ec, ctx=200000, extra=(0, 4, 8, 16)):
+    """Long-context KV scale-out (root 2026-09-30): extra HBM + attention dies hold context slices (KV split by
+    position, Helix-style) with an exact ordered merge of the partial softmax; weights stay on the 4 ROM dies.  Per
+    user at ctx: max(compute chain, KV stream over all dies' stacks) + one ordered merge a layer (a board all-gather of
+    the partial (max, sum, output) vectors, W15's measured TP-4 board fit, ASSUMED to span the added dies)."""
+    import arch_budget_qwen3 as Q
+    import hdc_timing as T
+    wl, kvb8 = _qwen_wl()
+    Q.CLOCK[0] = Q.clock_hz()
+    clock = Q.CLOCK[0]
+    k0 = dict(T.K)
+    try:
+        T.K["me_lat"] = k0["me_lat"] + QWEN_WIRE_W12["me_lat_extra"]
+        nh, kv = QWEN_TP_SHAPE[4]
+        shp = dict(Q.Q, NH=nh, KV=kv, FF=-(-Q.Q["FF"] // 4), V=-(-Q.Q["V"] // 4))
+        r = Q.as_built(ctx, groups=6144, su_width=1024, shape=shp, ucie=False)
+    finally:
+        T.K.clear()
+        T.K.update(k0)
+    chain = (r["cycles"] + _qwen_exchange("board", 4, clock)["token_cycles"]) / clock
+    kvb = kvb8 * ctx / 8192
+    merge = w15_collective_s("v41p17_r0d1024", "all_gather", Q.Q["H"] * 4 + 64, 4)
+    rows = []
+    for n in extra:
+        stacks = 4 * (4 + n)
+        t_kv = kvb / (stacks * HBM_STACK_BPS)
+        t = max(chain, t_kv) + (Q.Q["L"] * merge if n else 0.0)
+        rows.append(dict(extra_kv_dies=n, total_dies=4 + n, ar_tokens_s=round(1 / t, 1), kv_read_us=round(t_kv * 1e6, 1),
+                         merge_us=round(Q.Q["L"] * merge * 1e6, 1) if n else 0.0,
+                         users=int(stacks * HBM_STACK_B * HBM_CAP_EFF // kvb)))
+    return dict(ctx=ctx, rows=rows, chain_us=round(chain * 1e6, 1),
+                rule="KV split by position over the 4 ROM dies + n KV dies (4 stacks each); one ordered partial-softmax "
+                     "merge a layer on the board fit (ASSUMED); weights stay on the ROM dies")
 
 
 CONS_SOURCES = ECON_SOURCES + ("results/arch/v41_die_assembly.json", "results/arch/v41_die_placement.json",
