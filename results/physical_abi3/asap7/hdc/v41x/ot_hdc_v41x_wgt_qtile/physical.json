@@ -60,6 +60,13 @@
     "temperature_c": 0.0,
     "voltage_v": 0.7
   },
+  "currency": {
+    "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run",
+    "reason": "rtl/hdc/v41x/ot_hdc_v41x_wgt_{tile,mac,bdot}.sv changed at d531684a (FP8 E4M3 checkpoint-precision lane) and wgt_{tops,red}.sv at b97c71d5 (R-U2 pooled tiles) after this route; a re-route is ~2.5 h of ORFS; not re-run.",
+    "stale_since": "d531684a",
+    "state": "stale",
+    "verdict_kept": "pass"
+  },
   "design": {
     "antenna": 0,
     "antenna_violating_nets": 0,

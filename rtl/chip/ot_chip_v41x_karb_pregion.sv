@@ -19,7 +19,11 @@ module ot_chip_v41x_karb_pregion #(
     parameter integer KQ    = 4,
     parameter integer RQ    = 3,
     parameter integer EPC   = 4,
-    parameter bit     K_RD_FENCE = 1'b1
+    parameter bit     K_RD_FENCE = 1'b1,
+    // W18 (1.2 GHz SS): 1 = registered queue heads and a registered pair stage (PCs 0/1 and 2/3 merge next
+    // to their windows, the final 2:1 merge at the region centre), so no response wire spans more than half a
+    // 4-PC region in one cycle; adds one cycle to the K response path.  0 = the original single 4:1 select (fd6e9a81).
+    parameter bit     PAIRSTAGE  = 1'b1
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -79,13 +83,39 @@ module ot_chip_v41x_karb_pregion #(
     reg  [3:0] qcr;
     reg  [CW-1:0] cred;
     reg  [1:0] sel; reg any;
+    wire       send;
+    wire [RW-1:0] fin_d;
     integer i;
-    always @(*) begin
-        sel = 2'd0; any = 1'b0;
-        for (i = 3; i >= 0; i = i - 1) if (qv[i]) begin sel = 2'(i); any = 1'b1; end
-    end
-    wire send = any && cred != 0;
-    assign qpop = {4{send}} & (4'b1 << sel);
+    generate if (PAIRSTAGE) begin : g_pair
+        // level 1: lowest-PC priority inside each pair, into a 2-entry registered pair queue
+        wire [1:0] pv, prdy, pout_v, pout_rdy;
+        wire [2*RW-1:0] pin_d, pout_d;
+        genvar k;
+        for (k = 0; k < 2; k = k + 1) begin : g_pq
+            wire lo = qv[2*k];
+            assign pv[k] = qv[2*k] || qv[2*k+1];
+            assign pin_d[k*RW +: RW] = lo ? qd[(2*k)*RW +: RW] : qd[(2*k+1)*RW +: RW];
+            assign qpop[2*k]   = prdy[k] && lo;
+            assign qpop[2*k+1] = prdy[k] && !lo && qv[2*k+1];
+            ot_chip_v41x_karb_q2 #(.W(RW)) u_pq (
+                .clk(clk), .rst_n(rst_n), .in_v(pv[k]), .in_rdy(prdy[k]), .in_d(pin_d[k*RW +: RW]),
+                .out_v(pout_v[k]), .out_rdy(pout_rdy[k]), .out_d(pout_d[k*RW +: RW]));
+        end
+        // level 2 at the region centre: lower pair first, one send per credit
+        wire fsel = !pout_v[0];
+        assign send = (pout_v[0] || pout_v[1]) && cred != 0;
+        assign pout_rdy = {send && fsel, send && !fsel};
+        assign fin_d = fsel ? pout_d[RW +: RW] : pout_d[0 +: RW];
+        always @(*) begin sel = 2'd0; any = 1'b0; end
+    end else begin : g_flat
+        always @(*) begin
+            sel = 2'd0; any = 1'b0;
+            for (i = 3; i >= 0; i = i - 1) if (qv[i]) begin sel = 2'(i); any = 1'b1; end
+        end
+        assign send = any && cred != 0;
+        assign qpop = {4{send}} & (4'b1 << sel);
+        assign fin_d = qd[sel*RW +: RW];
+    end endgenerate
     genvar p;
     generate for (p = 0; p < 4; p = p + 1) begin : g_s
         wire [TAGW-1:0] st; wire [BEATW-1:0] sb; wire [DW-1:0] sdt;
@@ -108,7 +138,7 @@ module ot_chip_v41x_karb_pregion #(
             .r_beat(r_beat[p*BEATW +: BEATW]), .r_data(r_data[p*DW +: DW]),
             .b_grant(bg[p]), .contend(ct[p]));
         wire qrdy;
-        ot_chip_v41x_karb_qn #(.W(RW), .DEPTH(RQ)) u_q (
+        ot_chip_v41x_karb_qh #(.W(RW), .DEPTH(RQ)) u_q (   // W18: registered head (qn-equivalent)
             .clk(clk), .rst_n(rst_n), .in_v(sv[p]), .in_rdy(qrdy), .in_d(sd[p*RW +: RW]),
             .out_v(qv[p]), .out_rdy(qpop[p]), .out_d(qd[p*RW +: RW]));
 `ifndef SYNTHESIS
@@ -116,7 +146,17 @@ module ot_chip_v41x_karb_pregion #(
             $error("ot_chip_v41x_karb_pregion: slice %0d sent without a credit", p);
 `endif
     end endgenerate
-    always @(posedge clk) if (send) {s_tag, s_beat, s_data} <= qd[sel*RW +: RW];
+    always @(posedge clk) if (send) {s_tag, s_beat, s_data} <= fin_d;
+    // W18: with PAIRSTAGE, write completion and the status counts are pre-combined per PC pair in registers
+    // beside the pair, so no status/completion path spans the region in one cycle (+1 cycle of latency)
+    reg [1:0] kwd_p; reg [3:0] bg_p, ct_p;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin kwd_p <= 2'd0; bg_p <= 4'd0; ct_p <= 4'd0; end
+        else begin
+            kwd_p <= {kwd[3] | kwd[2], kwd[1] | kwd[0]};
+            bg_p  <= {2'(bg[3]) + 2'(bg[2]), 2'(bg[1]) + 2'(bg[0])};
+            ct_p  <= {2'(ct[3]) + 2'(ct[2]), 2'(ct[1]) + 2'(ct[0])};
+        end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             kcr <= 4'd0; qcr <= 4'd0; s_v <= 1'b0; cred <= CW'(EPC);
@@ -126,8 +166,8 @@ module ot_chip_v41x_karb_pregion #(
             qcr <= qpop;
             s_v <= send;
             cred <= cred - CW'(send) + CW'(s_cr);
-            k_wr_done <= |kwd;
-            b_grant_n <= 3'(bg[0]) + 3'(bg[1]) + 3'(bg[2]) + 3'(bg[3]);
-            contend_n <= 3'(ct[0]) + 3'(ct[1]) + 3'(ct[2]) + 3'(ct[3]);
+            k_wr_done <= PAIRSTAGE ? |kwd_p : |kwd;
+            b_grant_n <= PAIRSTAGE ? 3'(bg_p[1:0]) + 3'(bg_p[3:2]) : 3'(bg[0]) + 3'(bg[1]) + 3'(bg[2]) + 3'(bg[3]);
+            contend_n <= PAIRSTAGE ? 3'(ct_p[1:0]) + 3'(ct_p[3:2]) : 3'(ct[0]) + 3'(ct[1]) + 3'(ct[2]) + 3'(ct[3]);
         end
 endmodule

@@ -43,13 +43,17 @@ def test_batch_curves_are_physical():
 def test_batch_one_matches_the_single_user_sections():
     e = _rec()
     # W15 (2026-09-29): V4.1 collectives and the Qwen TP-2 exchanges priced from the RTL measurement
-    assert abs(e["v41_rom"]["ar"]["tokens_s_b1"] - 3808.8) < 1.0
-    assert abs(e["v41_rom"]["mtp_m1"]["tokens_s_b1"] - 5856.5) < 1.0
-    assert abs(e["qwen_rom"]["ar"]["tokens_s_b1"] - 9851.1) < 1.0
+    # re-pinned 2026-09-30 (W16 merge): main's model (W11 distributed-VM stages, two-word attention loader, W18 power
+    # calibration) gives 3,747.6 / 5,811.4; the committed 3,808.8 / 5,856.5 record predated those merges
+    assert abs(e["v41_rom"]["ar"]["tokens_s_b1"] - 3747.6) < 1.0
+    assert abs(e["v41_rom"]["mtp_m1"]["tokens_s_b1"] - 5811.4) < 1.0
+    # W16 / root 2026-09-30: the Qwen ROM product is option C (4 dies, TP-4, G 6,144, W12 wires)
+    assert abs(e["qwen_rom"]["ar"]["tokens_s_b1"] - 9367.6) < 1.0
     assert abs(e["qwen_hbm"]["ar"]["tokens_s_b1"] - 880.6) < 1.0
     assert abs(e["qwen_hbm"]["dflash"]["tokens_s_b1"] - 2671.0) < 1.0
-    assert abs(e["v41_hbm"]["ar"]["tokens_s_b1"] - 2919.8) < 1.0
-    assert abs(e["v41_hbm"]["mtp"]["tokens_s_b1"] - 5673.0) < 1.0
+    # main's W13 SM timings (drain 95, 78-cycle boundary) moved the tier-3 chain (W16 merge of 5aa6e609)
+    assert abs(e["v41_hbm"]["ar"]["tokens_s_b1"] - 2801.8) < 1.0
+    assert abs(e["v41_hbm"]["mtp"]["tokens_s_b1"] - 5539.4) < 1.0
     assert abs(e["gpu"]["qwen"]["tokens_s_b1"] - 331.0) < 1.0
     assert abs(e["gpu"]["v41"]["tokens_s_b1"] - 277.7) < 1.0
 
@@ -58,7 +62,8 @@ def test_qwen_rom_batching_binds_on_the_kv_stream_not_the_lanes():
     q = _rec()["qwen_rom"]
     assert q["binding"] == "kv_stream"
     assert q["bounds_tokens_s"]["kv_stream"] < q["bounds_tokens_s"]["lanes"]
-    assert abs(q["ar"]["saturated_tokens_s"] - 11920.9) < 1.0          # arch_budget_qwen3 batch_model agrees
+    # option C: each die streams its 2 of 8 KV heads from its own 4 stacks (16 stacks), twice the 2-die 11,920.9
+    assert abs(q["ar"]["saturated_tokens_s"] - 2 * 11920.9) < 1.0
 
 
 def test_v41_rom_saturation_is_the_stage_occupancy_bound():
@@ -88,7 +93,7 @@ def test_cost_rows():
     e = _rec()
     c = {r["design"]: r for r in e["cost"]}
     assert c["V4.1 ROM array (AR / MTP m = 1)"]["rom_mask_sets"] == 188
-    assert c["Qwen ROM (AR, G = 6,144)"]["rom_mask_sets"] == 2
+    assert c["Qwen ROM (AR, G = 6,144)"]["rom_mask_sets"] == 4          # option C: 4 ROM dies
     for r in e["cost"]:
         assert r["capex_per_system_usd"]["low"] <= r["capex_per_system_usd"]["high"]
         assert r["usd_per_tokens_s_saturated"]["low"] <= r["usd_per_tokens_s_b1"]["low"]
@@ -174,9 +179,12 @@ def test_every_design_is_gated_alike():
 
 def test_v41_hbm_timeline_reproduces_the_chain():
     import uarch_model as U
-    for P, T_us in ((1, 342.5), (U.V41_POSITIONS, 617.5)):
+    # the timeline reproduces the chain it walks (W16 merge: the chain moved with W13's SM timings, 342.5 -> 356.9 us
+    # AR and 617.5 -> 632.0 us MTP, so the fixed values no longer held)
+    for P in (1, U.V41_POSITIONS):
         segs, _, _ = U.v41_hbm_timeline(P)
-        assert abs(sum(d for d, _ in segs) * 1e6 - T_us) < 0.5
+        _, parts, _ = U.v41_hbm_chain(True, P)
+        assert abs(sum(d for d, _ in segs) * 1e6 - sum(parts.values())) < 0.5
 
 
 def test_gating_never_places_a_wake_in_a_short_gap():

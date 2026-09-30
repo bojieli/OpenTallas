@@ -31,6 +31,7 @@ module ot_hbm3e_phy_v41x (
     output wire [39:0] wr_beat,
     output wire [2047:0] wr_data,
     output wire k_oor,
+    output wire w_oor,
     output wire [63:0] refreshes,
     output wire [31:0] w_reads
 );
