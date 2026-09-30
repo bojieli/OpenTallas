@@ -126,6 +126,19 @@ BASE = dict(
     collective_cycles=232,        # measured: 12 layer-0 collectives in 2,780 cycles (V41_DIE_ENGINE_PROFILE)
 )
 
+# Distributed VM (root decision 2026-09-29): the VM is lane-group-local banks inside HUB_SU_VECTOR (128 groups of 8
+# lanes, element i in group i mod 128).  Register stages from the W1 hub geometry (results/floorplan/
+# v41_pack_expanded_woa.json), SU lane array 11.96 mm2 as a 3,458 um square abutting the HUB_VM strip and centred on
+# it, at 0.92 ns / 0.76 ps/um:
+#   x gather     farthest group -> VM port (west edge centre): 3,458 + 1,729 = 5,187 um      -> 6
+#   result scatter  VM port -> farthest group, the same run                                    -> 6
+#   collective write  with the collective endpoint at the VM port (W10 placement, root 2026-09-29): the scatter
+#                     tree alone -> 6 (11 from HUB_COLLECTIVE's W1 position)
+#   SU results   reducer root at the array centre -> farthest group 3,458 um (element writes are local) -> 4
+VM_DIST = dict(vm_x_gather_stages=6, vm_ret_scatter_stages=6, vm_coll_write_stages=6, su_ret_stages=4)
+# the SU's broadcast tree to the farthest lane (W11 SU worker's placement derivation, root-accepted)
+SU_BCAST = dict(su_bcast_stages=4)
+
 PRESETS = {
     # the RTL as elaborated today (W1 rung 1 profile + measured component gates)
     "as_built": dict(BASE, name="as_built", weight_macs_die=512, bf16_macs_die=64, idx_macs=1024,
@@ -152,7 +165,9 @@ PRESETS["proposal"] = dict(PRESETS["spec_striped"], name="proposal", vm_read_ele
                            # adopted design -- endpoint at the die centre (W3 placement, 17 wire stages to the link
                            # PHYs), direct T1 links (no relay), receive depth 1,024 (results/rtl/w15_collectives.json
                            # v41p17_r0d1024_sweep fit); collective_cycles is then unused
-                           collective_w15="v41p17_r0d1024")
+                           collective_w15="v41p17_r0d1024",
+                           # ROOT DECISION 2026-09-29 (W11): distributed VM (lane-group banks) and SU broadcast stages
+                           **VM_DIST, **SU_BCAST)
 PRESETS["proposal_whole"] = dict(PRESETS["proposal"], name="proposal_whole", row_split="whole")
 PRESETS["proposal_ksplit"] = dict(PRESETS["proposal"], name="proposal_ksplit", row_split="ksplit")
 PRESETS["prop_vm256_measured"] = dict(PRESETS["prop_vm256"], name="prop_vm256_measured", su_lanes=16, sfu_lanes=8,
@@ -301,6 +316,9 @@ def price_matvec(nd, name, d, clock, c):
     leaves = holding if d["return_leaf_elems"] is None else d["return_leaf_elems"]
     tree = math.ceil(math.log(max(2, leaves), d["return_fanin"]))
     wire = 2 * wire_cycles(d["bcast_um"][region], clock, d.get("wire_ps_per_um", WIRE_PS_PER_UM))
+    # distributed VM (W11, root 2026-09-29): x is gathered from the lane-group banks to the VM port, results are
+    # scattered back to them -- register stages from the hub geometry (VM_DIST below)
+    wire += d.get("vm_x_gather_stages", 0) + d.get("vm_ret_scatter_stages", 0)
     depth_c = d["elem_fill"] + wire + tree + adder_levels * FADD_PIPE
     return dict(key=key, fmt=fmt, K=K, rows=rows, words=words, holding=holding, region=region,
                 t_read=t_read, t_mac=t_mac, t_x=t_x, t_ret=t_ret, issue=issue_c, bind=bind,
@@ -342,7 +360,8 @@ def evaluate(d: dict, ctx: int = 1048576):
                 macs = n_keys * c["index_heads"] * c["index_head_dim"]
                 nd["issue"] = max(nd["issue"], macs / d["idx_macs"] * cyc)
             elif d["use_measured_attention"] and name.endswith(".scores"):
-                nd["issue"] = d["att_measured_job_cycles"] * cyc
+                # PWORDS=2 loader: measured 449 cycles at T640 (claude/w11-attn c80877d8); else the PWORDS=1 job
+                nd["issue"] = (449 if d.get("att_pwords") == 2 else d["att_measured_job_cycles"]) * cyc
                 nd["depth"] = 0.0
             elif d["use_measured_attention"] and name.endswith(".pv"):
                 nd["issue"] = 0.0      # the measured job covers scores + PV
@@ -353,6 +372,8 @@ def evaluate(d: dict, ctx: int = 1048576):
             nd["issue"] = 0.0          # the measured issue -> last commit latency includes the payload stream
         elif k == "collective" and d["collective_cycles"]:
             nd["depth"] = max(nd["depth"], d["collective_cycles"] * cyc)
+        if k == "collective" and d.get("vm_coll_write_stages"):
+            nd["depth"] += d["vm_coll_write_stages"] * cyc      # the collective DMA's write into the lane groups
     if d.get("su_layout_extra_cycles"):
         for name, nd in g.nodes.items():
             if name.endswith(".attn.exp"):
@@ -691,10 +712,14 @@ DEDICATED = dict(
         q_bits=512 * 16, kv_row_bits=16 * 265, p_word_bits=32 * 16, pv_out_bits_per_tile=16 * 32,
         area_est_um2=16 * 32 * UNIT["mac_bf16_um2"],
         area_basis="ESTIMATE until hardened: 512 pipelined BF16 MACs (ot_mac_bf16_fp32_pipe 509 um2)",
-        hardened_record="results/physical_abi3/asap7/hdc/v41x/w11/attn_tile_td32_nb4/physical.json",
+        hardened_record="results/physical_abi3/asap7/hdc/v41x/w11/attn_tile/physical.json",
         hardened_scale=1,
         measured_record="results/rtl/v41_full_attention_numeric/result.json",
         measured_job_cycles_pwords1=609, measured_pv_window_pwords1=(248, 559),
+        # the two-word probability loader (claude/w11-attn c80877d8, results/rtl/w11_attn_ploader.json): exact on all
+        # four full-geometry cases; with 2 probability words/cycle upstream (1/cycle gives back the PWORDS=1 cycles)
+        measured_job_cycles_pwords2={640: 449, 128: 193}, measured_pv_window_pwords2=(240, 399),
+        measured_verify6_cycles={1: 3389, 2: 2429},
     ),
     stream_unit=dict(
         element="ot_hdc_v41x_vec_lane (KIND 0 light / 1 SFU / 2 full lane 0) under ONE controller and ONE "
@@ -703,11 +728,21 @@ DEDICATED = dict(
         area_est_light_um2=UNIT["su_light_lane_um2"], area_est_sfu_um2=UNIT["su_lane_um2"],
         area_basis="ESTIMATE until hardened: light lane 1.5 x (2 fp32 mul + 3 fp32 add); SFU lane = the "
                    "synthesis-only ot_hdc_v41_su_lane",
-        hardened_record_light="results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024/physical.json",
-        hardened_record_sfu="results/physical_abi3/asap7/hdc/v41x/w11/vec_sfu1024/physical.json",
+        hardened_record_light="results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.json",
+        hardened_record_sfu="results/physical_abi3/asap7/hdc/v41x/w11/vec_sfu1024r/physical.json",
         measured_record="results/rtl/v41x_su_softmax.json", measured_softmax_t640_n16_m8=3280,
     ),
 )
+
+
+SU_OP_ACCEPT = 6          # measured: SU accept -> first emit per op (results/rtl/w11_su_spec.json, claude/w11-su)
+# SU placement (W11 SU worker derivation): lane array 11.96 mm2 as a square of side 3,458 um; controller at its
+# centre -> farthest lane (corner) 3,458 um Manhattan; results return to HUB_VM on the SU region's west edge,
+# farthest lane -> VM edge 3,458 + 392 um
+SU_FARTHEST_LANE_UM = 3458.0
+SU_RETURN_UM = 3850.0
+SU_BCAST_STAGES_W1 = wire_cycles(SU_FARTHEST_LANE_UM, 1e12 / 920, WIRE_PS_PER_UM_LOADED)   # = 4
+SU_RET_STAGES_W1 = wire_cycles(SU_RETURN_UM, 1e12 / 920, WIRE_PS_PER_UM_LOADED)            # = 5
 
 
 def _hardened_um2(rel):
@@ -815,12 +850,17 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20, positions: in
              f"L{layer}.attn.pv": dict(beats=beats, p_words=math.ceil(T * u["H"] * 16 / u["p_word_bits"]),
                                        pwords_per_cycle=pwords, positions=positions, issue=positions * pv_cycles,
                                        note="p.v issue = blocks x max(beats/block, p-load cycles/block)")},
-        measured=dict(record=u["measured_record"], job_cycles_pwords1=u["measured_job_cycles_pwords1"],
+        measured_job_cycles=(u["measured_job_cycles_pwords2"].get(T) if pwords == 2
+                             else (u["measured_job_cycles_pwords1"] if T == 640 else None)),
+        measured=dict(record=u["measured_record"], record_pwords2="results/rtl/w11_attn_ploader.json",
+                      job_cycles_pwords2=u["measured_job_cycles_pwords2"], verify6=u["measured_verify6_cycles"],
+                      job_cycles_pwords1=u["measured_job_cycles_pwords1"],
                       pv_window_pwords1=u["measured_pv_window_pwords1"]))
     # -- stream unit
     u = DEDICATED["stream_unit"]
     N, M = d["su_lanes"], d["sfu_lanes"]
     sm = _su_softmax_ops(N, M, T=T)
+    bst, rst = d.get("su_bcast_stages", 0), d.get("su_ret_stages", d.get("su_bcast_stages", 0))
     for v in sm.values():
         v["vectors"] *= positions
     aL, qL = _hardened_um2(u["hardened_record_light"])
@@ -838,6 +878,10 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20, positions: in
         area_mm2=round(((N - M) * light + M * sfu) / 1e6, 3),
         ops={f"L{layer}.attn.softmax.{k}": v for k, v in sm.items()},
         softmax_issue_vectors=sum(v["vectors"] for v in sm.values()),
+        # a dependent op pays its issue, its pipeline depth, the broadcast tree to the farthest lane and the
+        # result return to the VM (su_bcast_stages / su_ret_stages, from the W1 hub placement; root 2026-09-29)
+        su_bcast_stages=bst, su_ret_stages=rst,
+        softmax_chain_cycles=sum(v["vectors"] + v["depth"] + bst + rst + SU_OP_ACCEPT for v in sm.values()),
         measured=dict(record=u["measured_record"], t640_n16_m8=u["measured_softmax_t640_n16_m8"]))
     hub = sum(out[k]["area_mm2"] for k in ("indexer", "attention", "stream_unit"))
     return dict(design=d["name"], ctx=ctx, layer=layer, T=T, positions=positions, keys_per_die=keys, units=out,
@@ -3142,7 +3186,8 @@ def main(argv=None):
         rows = [dedicated_ledger(copy.deepcopy(PRESETS[n]), a.ctx) for n in (a.preset or ("as_built", "proposal"))]
         # root decisions of 2026-09-29 (W11): 16 NK=4 index slices, NL=4 attention with the two-word loader;
         # single position and the MTP verify pass (6 positions, m = 1)
-        w11 = dict(copy.deepcopy(PRESETS["proposal"]), idx_macs=262144, att_macs=32768, att_pwords=2)
+        w11 = dict(copy.deepcopy(PRESETS["proposal"]), idx_macs=262144, att_macs=32768, att_pwords=2,
+                   su_bcast_stages=SU_BCAST_STAGES_W1, su_ret_stages=SU_RET_STAGES_W1)
         for P in (1, 6):
             rows.append(dedicated_ledger(dict(w11, name=f"proposal_w11_p{P}"), a.ctx, positions=P))
         for r in rows:
