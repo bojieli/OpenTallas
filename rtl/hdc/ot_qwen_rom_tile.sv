@@ -208,8 +208,10 @@ endmodule
 module ot_qwen_rom_tile #(
     parameter integer NW = 18,
     parameter integer GT = 6144,
-    parameter integer SMIN = 6,
-    parameter integer CODE_BANKS = 10
+    parameter integer SMIN = 7,           // TP-4 product (2026-09-30): smallest split 128
+    parameter integer CODE_BANKS = 5,     // TP-4 product: W16's 5-bank map
+    parameter integer KV_VB = 131072,     // TP-4: 2 KV heads a die
+    parameter integer KV_NH = 2
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -237,7 +239,8 @@ module ot_qwen_rom_tile #(
     wire                  kvs_r_ce;
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
-    ot_qwen_rom_tile_logic #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1)) u_logic (
+    ot_qwen_rom_tile_logic #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1),
+        .KV_VB(KV_VB), .KV_NH(KV_NH)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_rd(rom_rd),
