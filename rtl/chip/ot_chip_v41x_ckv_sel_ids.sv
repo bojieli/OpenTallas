@@ -46,7 +46,9 @@
 //   own_count[d]  ranks listed so far (final when done)
 //   own_idx[d] -> own_rank[d] (the rank), own_gid[d] (its id)
 //
-// Throughput: one sel beat (W entries) per cycle; in_ready is held high.
+// Throughput: one sel beat (W entries) per cycle; s_ready is held high on
+// the open port.  Latency: an entry is readable two cycles after its beat is
+// accepted (input register, then the bank write).
 // ---------------------------------------------------------------------------
 module ot_chip_v41x_ckv_sel_ids #(
     parameter integer Q = 4,
@@ -85,17 +87,28 @@ module ot_chip_v41x_ckv_sel_ids #(
     output reg                  fault,
     output reg  [3:0]           fault_code  // {count, order, overflow, mask}
 );
-    reg [POS_W-1:0] tab [0:K-1];
-    reg [$clog2(Q+1)-1:0] port;
+    // Storage: W banks (rank mod W) of K/W rows, one write port each: a beat's
+    // lanes are rotated onto the banks, so no bank sees more than one write per
+    // cycle (SRAM-mappable).  The beat is registered before it is checked and
+    // written (acceptance pointer aport runs one beat ahead of r_port).
+    localparam integer BD = K / W;
+    localparam integer LW = $clog2(W);
+    reg [POS_W-1:0] tb [0:W-1][0:BD-1];
+    reg [$clog2(Q+1)-1:0] aport, r_port;
     reg [POS_W-1:0] prev;
     reg have_prev;
     reg run;
+    reg r_v, r_last;
+    reg [W-1:0] r_lv;
+    reg [W*IW-1:0] r_idx;
+    assign s_ready = run ? (Q'(1) << aport) : '0;
+    wire acc = run && aport < Q && s_valid[aport];
 
-    wire [W-1:0] lv = s_lv[port*W +: W];
-    wire beat = run && port < Q && s_valid[port];
-    assign s_ready = run ? (Q'(1) << port) : '0;
+    function automatic [POS_W-1:0] tab_rd(input [KW-1:0] rk);
+        tab_rd = tb[rk[LW-1:0]][rk >> LW];
+    endfunction
 
-    // lane mask must be a prefix; n = its population
+    // lane mask must be a prefix; n = its population; ascending, strictly
     integer i;
     reg [$clog2(W+1)-1:0] n;
     reg prefix_ok, order_ok;
@@ -103,39 +116,44 @@ module ot_chip_v41x_ckv_sel_ids #(
     always @(*) begin
         n = 0; prefix_ok = 1'b1; order_ok = 1'b1; last_id = prev;
         for (i = 0; i < W; i = i + 1) begin
-            if (lv[i]) begin
+            if (r_lv[i]) begin
                 if (n != i[$clog2(W+1)-1:0]) prefix_ok = 1'b0;
                 n = n + 1'b1;
-                if ((have_prev || i != 0) &&
-                    POS_W'(s_idx[(port*W + i)*IW +: IW]) <= last_id) order_ok = 1'b0;
-                last_id = POS_W'(s_idx[(port*W + i)*IW +: IW]);
+                if ((have_prev || i != 0) && POS_W'(r_idx[i*IW +: IW]) <= last_id) order_ok = 1'b0;
+                last_id = POS_W'(r_idx[i*IW +: IW]);
             end
         end
     end
+    wire wr_ok = r_v && prefix_ok && 32'(count) + 32'(n) <= K;
+    wire [LW-1:0] c0 = count[LW-1:0];
+    wire [KW-1:0] r0 = count >> LW;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            count <= 0; done <= 0; fault <= 0; fault_code <= 0; port <= 0;
-            prev <= 0; have_prev <= 0; run <= 0; done_cycle_count <= 0;
+            count <= 0; done <= 0; fault <= 0; fault_code <= 0; aport <= 0; r_port <= 0;
+            prev <= 0; have_prev <= 0; run <= 0; done_cycle_count <= 0; r_v <= 0; r_last <= 0;
         end else if (clr) begin
-            count <= 0; done <= 0; port <= 0; prev <= 0; have_prev <= 0; run <= 1;
-            done_cycle_count <= 0;
+            count <= 0; done <= 0; aport <= 0; r_port <= 0; prev <= 0; have_prev <= 0; run <= 1;
+            done_cycle_count <= 0; r_v <= 0;
         end else begin
             if (run && !done) done_cycle_count <= done_cycle_count + 1;
-            if (beat) begin
+            r_v <= acc;
+            if (acc) begin
+                r_lv <= s_lv[aport*W +: W]; r_idx <= s_idx[aport*W*IW +: W*IW]; r_last <= s_last[aport];
+                if (s_last[aport]) begin
+                    aport <= aport + 1'b1;
+                    if (aport == Q - 1) run <= 0;
+                end
+            end
+            if (r_v) begin
                 if (!prefix_ok) begin fault <= 1; fault_code[0] <= 1; end
                 if (!order_ok) begin fault <= 1; fault_code[2] <= 1; end
                 if (32'(count) + 32'(n) > K) begin fault <= 1; fault_code[1] <= 1; end
-                else begin
-                    for (i = 0; i < W; i = i + 1)
-                        if (i < n) tab[32'(count) + i] <= POS_W'(s_idx[(port*W + i)*IW +: IW]);
-                    count <= count + KW'(n);
-                end
+                else count <= count + KW'(n);
                 if (n != 0) begin prev <= last_id; have_prev <= 1; end
-                if (s_last[port]) begin
-                    port <= port + 1'b1;
-                    if (port == Q - 1) begin
-                        run <= 0;
+                if (r_last) begin
+                    r_port <= r_port + 1'b1;
+                    if (r_port == Q - 1) begin
                         if (count + KW'(n) != exp_n) begin fault <= 1; fault_code[3] <= 1; end
                         else done <= 1;
                     end
@@ -143,37 +161,51 @@ module ot_chip_v41x_ckv_sel_ids #(
             end
         end
     end
+    genvar bk;
+    generate for (bk = 0; bk < W; bk = bk + 1) begin : g_bank
+        wire [LW-1:0] j = LW'(bk) - c0;                 // lane landing on this bank
+        wire [KW-1:0] row = r0 + KW'({1'b0, c0} + {1'b0, j} >= (LW+1)'(W));
+        always @(posedge clk)
+            if (wr_ok && 32'(j) < 32'(n)) tb[bk][row] <= POS_W'(r_idx[j*IW +: IW]);
+    end endgenerate
 
     // ---- owned-rank lists ----
     genvar od;
     generate for (od = 0; od < 4; od = od + 1) begin : g_own
         if (OWN[od]) begin : g_on
-            reg [KW-1:0] lst [0:K-1];
-            reg [KW-1:0] pos [0:W-1];
-            reg [KW-1:0] nown;
+            reg [KW-1:0] lb [0:W-1][0:BD-1];
+            reg [KW-1:0] comp [0:W-1];                  // compacted owned ranks of this beat
+            reg [$clog2(W+1)-1:0] nown;
             reg [KW-1:0] oc;
             integer a;
             assign own_count[od*KW +: KW] = oc;
             always @(*) begin
                 nown = 0;
-                for (a = 0; a < W; a = a + 1) begin
-                    pos[a] = nown;
-                    if (a < n && s_idx[(port*W + a)*IW + 4 +: 2] == 2'(od)) nown = nown + 1'b1;
-                end
+                for (a = 0; a < W; a = a + 1) comp[a] = 0;
+                for (a = 0; a < W; a = a + 1)
+                    if (a < n && r_idx[a*IW + 4 +: 2] == 2'(od)) begin
+                        comp[nown[LW-1:0]] = count + KW'(a);
+                        nown = nown + 1'b1;
+                    end
             end
             always @(posedge clk or negedge rst_n) begin
                 if (!rst_n) oc <= 0;
                 else if (clr) oc <= 0;
-                else if (beat && prefix_ok && 32'(count) + 32'(n) <= K) begin
-                    for (a = 0; a < W; a = a + 1)
-                        if (a < n && s_idx[(port*W + a)*IW + 4 +: 2] == 2'(od))
-                            lst[32'(oc) + 32'(pos[a])] <= count + KW'(a);
-                    oc <= oc + nown;
-                end
+                else if (wr_ok) oc <= oc + KW'(nown);
             end
-            wire [KW-1:0] rk = lst[own_idx[od*KW +: KW]];
+            wire [LW-1:0] o0 = oc[LW-1:0];
+            wire [KW-1:0] q0 = oc >> LW;
+            genvar ob;
+            for (ob = 0; ob < W; ob = ob + 1) begin : g_ob
+                wire [LW-1:0] j = LW'(ob) - o0;
+                wire [KW-1:0] row = q0 + KW'({1'b0, o0} + {1'b0, j} >= (LW+1)'(W));
+                always @(posedge clk)
+                    if (wr_ok && 32'(j) < 32'(nown)) lb[ob][row] <= comp[j];
+            end
+            wire [KW-1:0] oi = own_idx[od*KW +: KW];
+            wire [KW-1:0] rk = lb[oi[LW-1:0]][oi >> LW];
             assign own_rank[od*KW +: KW] = rk;
-            assign own_gid[od*POS_W +: POS_W] = tab[rk];
+            assign own_gid[od*POS_W +: POS_W] = tab_rd(rk);
         end else begin : g_off
             assign own_count[od*KW +: KW] = 0;
             assign own_rank[od*KW +: KW] = 0;
@@ -183,7 +215,7 @@ module ot_chip_v41x_ckv_sel_ids #(
 
     genvar r;
     generate for (r = 0; r < NRD; r = r + 1) begin : g_rd
-        wire [POS_W-1:0] g = tab[rd_rank[r*KW +: KW]];
+        wire [POS_W-1:0] g = tab_rd(rd_rank[r*KW +: KW]);
         assign rd_gid[r*POS_W +: POS_W] = g;
         assign rd_die[r*2 +: 2] = g[5:4];
         assign rd_stack[r*2 +: 2] = g[7:6];

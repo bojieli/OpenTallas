@@ -128,7 +128,7 @@ module ot_chip_v41x_ckv_selected_dma #(
             m_tag[active_stack*TAGW +: TAGW] = TAGW'(sec);
         end
     end
-    integer j;
+    integer j, si;
     reg final_poison;
     always @(*) begin
         final_poison = 1'b0;
@@ -166,7 +166,8 @@ module ot_chip_v41x_ckv_selected_dma #(
                     end else if (rtag == TAGW'(8) && final_poison) begin
                         fault <= 1; fault_code[2] <= 1; state <= IDLE;
                     end else begin
-                        stage[256*rtag[3:0] +: 256] <= s_data[active_stack*256 +: 256];
+                        for (si = 0; si < 9; si = si + 1)     // constant-index sector writes (no shifter)
+                            if (rtag[3:0] == 4'(si)) stage[256*si +: 256] <= s_data[active_stack*256 +: 256];
                         st_sectors_read <= st_sectors_read + 1;
                         got <= got_next;
                         if (got_next == 9'h1ff) begin
@@ -200,7 +201,8 @@ module ot_chip_v41x_ckv_selected_dma #(
                     end else if (sec == 4'd8 && final_poison) begin
                         fault <= 1; fault_code[2] <= 1; state <= IDLE;
                     end else begin
-                        stage[256*sec +: 256] <= s_data[active_stack*256 +: 256];
+                        for (si = 0; si < 9; si = si + 1)
+                            if (sec == 4'(si)) stage[256*si +: 256] <= s_data[active_stack*256 +: 256];
                         st_sectors_read <= st_sectors_read + 1;
                         if (sec == 4'd8) begin
                             stage_valid <= 1;

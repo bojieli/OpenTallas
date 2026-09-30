@@ -32,7 +32,7 @@
 //           id_idx (this module's registered cursor) -> id_rank_in (the
 //           entry's selection rank), id_gid, id_die (combinational reads of
 //           the table / owned list).
-//   rows    o_v/o_ready, o_rank (selection rank), o_gid, o_row (the DMA's
+//   rows    o_v/o_ready (registered output stage), o_rank (selection rank), o_gid, o_row (the DMA's
 //           2,304-bit packed row: 512 E2M1 nibbles low first, then 32 E4M3
 //           scales).  One row per cycle at most.
 //   hbm     four stack ports, reads only, one-sector requests, tags
@@ -43,7 +43,7 @@
 // ---------------------------------------------------------------------------
 module ot_chip_v41x_ckv_sel_fetch #(
     parameter integer DIE_ID = 0,
-    parameter integer NSLOT = 16,
+    parameter integer NSLOT = 64,        // row slots in flight (sized for ~260-cycle HBM latency at 4 stacks)
     parameter integer POS_W = 21,
     parameter integer SEC_W = 30,
     parameter integer HAW = 30,
@@ -67,11 +67,11 @@ module ot_chip_v41x_ckv_sel_fetch #(
     input  wire [KW-1:0]         id_rank_in,
     input  wire [POS_W-1:0]      id_gid,
     input  wire [1:0]            id_die,
-    output wire                  o_v,
+    output reg                   o_v,
     input  wire                  o_ready,
-    output wire [KW-1:0]         o_rank,
-    output wire [POS_W-1:0]      o_gid,
-    output wire [2303:0]         o_row,
+    output reg  [KW-1:0]         o_rank,
+    output reg  [POS_W-1:0]      o_gid,
+    output reg  [2303:0]         o_row,
     output reg                   done,
     output reg                   fault,
     output reg  [1:0]            fault_code,   // {slot remote, slot DMA}
@@ -97,8 +97,8 @@ module ot_chip_v41x_ckv_sel_fetch #(
 
     // ---- slots ----
     wire [NSLOT-1:0] sl_ready, sl_ok, sl_fault, sl_remote;
-    wire [NSLOT*2304-1:0] sl_row;
-    wire [NSLOT*POS_W-1:0] sl_src;
+    wire [2303:0] sl_row [0:NSLOT-1];
+    wire [POS_W-1:0] sl_src [0:NSLOT-1];
     wire [NSLOT*4-1:0] sl_mv;
     wire [NSLOT*4*HAW-1:0] sl_maddr;
     wire [NSLOT*4*4-1:0] sl_mtag;
@@ -143,8 +143,8 @@ module ot_chip_v41x_ckv_sel_fetch #(
             .local_row(lrow), .window_count(wcount), .source_id(e_gid),
             .remote_needed(sl_remote[s]), .remote_die(rdie_unused), .kv_ok(sl_ok[s]),
             .re(1'b0), .rrow(10'd0), .relem(9'd0), .q(q_unused), .q_fp8(q8_unused),
-            .packed_row(sl_row[s*2304 +: 2304]), .packed_valid(), .packed_local_row(plr),
-            .packed_source_id(sl_src[s*POS_W +: POS_W]),
+            .packed_row(sl_row[s]), .packed_valid(), .packed_local_row(plr),
+            .packed_source_id(sl_src[s]),
             .fault(sl_fault[s]), .fault_code(fc), .st_rows_fetched(nrows), .st_sectors_read(nsec),
             .m_v(sl_mv[s*4 +: 4]), .m_rdy(sl_mrdy[s*4 +: 4]), .m_addr(sl_maddr[s*4*HAW +: 4*HAW]),
             .m_len(len4), .m_tag(tag4), .m_we(mwe_unused), .m_wdata(mwd_unused), .m_wstrb(mws_unused),
@@ -191,13 +191,15 @@ module ot_chip_v41x_ckv_sel_fetch #(
             if (s_v[st]) sl_sv[32'(s_tag[st*TAGW + 4 +: SW])*4 + st] = 1'b1;
     end
 
-    // ---- output: slots retire in allocation (rank) order ----
+    // ---- output: slots retire in allocation (rank) order into a registered output stage ----
     reg [SW-1:0] oldest;
-    assign o_v = run && busy[oldest] && sl_ok[oldest];
-    assign o_rank = srank[oldest];
-    assign o_gid = sl_src[oldest*POS_W +: POS_W];
-    assign o_row = sl_row[oldest*2304 +: 2304];
-    wire osend = o_v && o_ready;
+    wire osend = run && busy[oldest] && sl_ok[oldest] && (!o_v || o_ready);   // slot -> output register
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin o_v <= 0; o_rank <= 0; o_gid <= 0; end
+        else if (osend) begin o_v <= 1; o_rank <= srank[oldest]; o_gid <= sl_src[oldest]; end
+        else if (o_ready) o_v <= 0;
+    end
+    always @(posedge clk) if (osend) o_row <= sl_row[oldest];
 
 `ifndef SYNTHESIS
     initial if (NSLOT < 1 || TAGW < SW + 4)
@@ -235,7 +237,7 @@ module ot_chip_v41x_ckv_sel_fetch #(
                 if (osend) oldest <= SW'((32'(oldest) + 1) % NSLOT);
                 busy <= (busy | (dispatch ? (NSLOT'(1) << alloc) : '0)) &
                         ~(osend ? (NSLOT'(1) << oldest) : '0);
-                if (cur == id_count && id_done && !e_v && busy == 0) begin
+                if (cur == id_count && id_done && !e_v && busy == 0 && !o_v) begin
                     run <= 0; done <= 1;
                 end
             end
