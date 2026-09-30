@@ -2,8 +2,17 @@
 // Runtime index-key writer.  In SHARDED mode consecutive 16-key groups are
 // placed on successive stacks and each stack's groups are packed locally.
 // SHARDED=0 preserves the reduced vehicle's replicated image.
+// RING=1 (opt-in, W11 ring key layout; the record format of
+// ot_hdc_v41x_idx_ring_port WIDE_REC=1): the record names the key by
+// (region, position) with no 1,024-row limit -- w_ssec = the region's base
+// sector (user base + r x RING_UBLK blocks, r = the key's VM key region),
+// w_csec = the key's row (its position), w_sslot = 0; w_stack_mask is unused
+// (the port places the key on its quarter's stack).  The user base is latched
+// with the key's SU store, so a record waiting for w_rdy keeps its user when
+// the next user's step has started.
 module ot_hdc_v41x_idx_pool_kwr #(
-    parameter integer AW=24, NW=16, NL=8, HAW=28, SHARDED=0, SLICE_SECTORS=0
+    parameter integer AW=24, NW=16, NL=8, HAW=28, SHARDED=0, SLICE_SECTORS=0,
+    parameter integer RING=0, RING_UBLK=17
 ) (
     input wire clk, rst_n,
     input wire [AW-1:0] cfg_ik_base,
@@ -28,6 +37,7 @@ module ot_hdc_v41x_idx_pool_kwr #(
 );
     reg busy;
     reg [AW-1:0] rbase,row;
+    reg [HAW-1:0] ubase_q;
     wire [AW-1:0] local_row = SHARDED ? ((row >> 6) << 4) | (row & 4'hf) : row;
     assign w_stack_mask=SHARDED ? (4'b0001 << row[5:4]) : 4'b1111;
     reg [NW-1:0] kdim;
@@ -39,9 +49,14 @@ module ot_hdc_v41x_idx_pool_kwr #(
     reg [AW-1:0] off,b0;
     wire [HAW-1:0] local_csec=HAW'((b0+1+(local_row>>6))*128+2*(local_row&63));
     wire [HAW-1:0] local_ssec=HAW'(b0*128+(local_row>>3));
-    wire [HAW:0] physical_csec={1'b0,i_user_base_sec}+{1'b0,local_csec};
-    wire [HAW:0] physical_ssec={1'b0,i_user_base_sec}+{1'b0,local_ssec};
-    wire local_bad=(SLICE_SECTORS>0) &&
+    // RING: the region's base sector and the end of its UBLK blocks (both inside the address space)
+    wire [HAW:0] ring_base={1'b0,ubase_q}+{1'b0,HAW'(b0)<<7};
+    wire [HAW+8:0] ring_end=(HAW+9)'(ring_base)+(HAW+9)'(RING_UBLK)*(HAW+9)'(128);
+    wire [HAW:0] physical_csec=(RING!=0) ? {1'b0,HAW'(row)} : {1'b0,i_user_base_sec}+{1'b0,local_csec};
+    wire [HAW:0] physical_ssec=(RING!=0) ? ring_base : {1'b0,i_user_base_sec}+{1'b0,local_ssec};
+    wire local_bad=(RING!=0) ? ((ring_end > (HAW+9)'(1)<<HAW) || (SLICE_SECTORS>0 &&
+                                (HAW+9)'(HAW'(b0)+HAW'(RING_UBLK))*(HAW+9)'(128) > (HAW+9)'(SLICE_SECTORS))) :
+                   (SLICE_SECTORS>0) &&
                    (local_csec >= HAW'(SLICE_SECTORS-1) || local_ssec >= HAW'(SLICE_SECTORS));
     reg [511:0] block;
     reg [136:0] enc[0:3];
@@ -52,6 +67,7 @@ module ot_hdc_v41x_idx_pool_kwr #(
             enc[i]=enc32(block);
         end
         b0=((rbase>>4)-cfg_ik_base)/128*17;
+        if(RING!=0) b0=((rbase>>4)-cfg_ik_base)/128*RING_UBLK;
     end
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
@@ -62,7 +78,7 @@ module ot_hdc_v41x_idx_pool_kwr #(
             if(hit) begin
                 if(busy || w_v || i_nout!=1 || (i_kdim!=32 && i_kdim!=128)) fault<=1;
                 else begin
-                    busy<=1;rbase<=i_obase;row<=i_orow;kdim<=i_kdim;
+                    busy<=1;rbase<=i_obase;row<=i_orow;kdim<=i_kdim;ubase_q<=i_user_base_sec;
                     got<=0;need<=i_kdim==32 ? {{96{1'b0}},{32{1'b1}}} : {128{1'b1}};
                     wbad<=0;
                 end
@@ -86,7 +102,7 @@ module ot_hdc_v41x_idx_pool_kwr #(
     always @(posedge clk) begin
         w_csec<=physical_csec[HAW-1:0];
         w_ssec<=physical_ssec[HAW-1:0];
-        w_sslot<=local_row[2:0];
+        w_sslot<=(RING!=0) ? 3'd0 : local_row[2:0];
         for(integer b=0;b<4;b=b+1) begin
             w_codes[128*b +: 128]<=enc[b][127:0];
             w_scales[8*b +: 8]<=enc[b][135:128];

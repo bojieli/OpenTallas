@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.w11-die-ring-pin-ledger.v1",
+  "base_commit": "0e424d50",
+  "sources": {
+    "rtl/chip/ot_chip_v41x_die.sv": {
+      "before": "a6ca7221090dbc6050fe897bbc87dcad6d0e68e645963cd88617629ceec12aed",
+      "after": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2"
+    },
+    "rtl/chip/ot_chip_v41x_tile.sv": {
+      "before": "05ccdad5847584209b2968f4a9ff75b8155b4923493ce1357e36b9df6d5b313f",
+      "after": "c74505d599728bc0948994ddfe13da6d95eaff343ea2ee08c50fe13e5d8aa46b"
+    },
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": {
+      "before": "1ebf6dab72d3fd3789b65cbcff6f3e74387c12c39c0f1339c99a3e22b6adcd16",
+      "after": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a"
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": {
+      "before": "5d134aa4f4592e9bff55252613bc031a0cdfcaa5d2ab1b2b564d47b055bfa7ae",
+      "after": "6aa64b41e15f270e2e266d0a1938f09234606fc0d1ba392612d51bf2b610ae12"
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": {
+      "before": "6e6ed8fe1927de57b531ab97345511939da3459672e90aef3ca6d7777216cd6e",
+      "after": "74fd4a4e2618a02163e331bc4c318a1f3d2743691492a17a1ac4158c2478b27e"
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv": {
+      "before": "3facd07fd27e0d099dfab9ee638c3ed83910716fc33b14852254f638a1fe4019",
+      "after": "9bbb649dea5f5ff7a65fd1eef897b76e2774a6fbbcad91b1f3df4dd8a055ab15"
+    }
+  },
+  "records_moved": [
+    {
+      "record": "results/rtl/w11_die_smoke_source_list_fix.json",
+      "moved_sources": [
+        "rtl/chip/ot_chip_v41x_die.sv",
+        "rtl/chip/ot_chip_v41x_tile.sv",
+        "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv"
+      ]
+    }
+  ],
+  "label": "pins moved by opt-in parameters (pool_kwr RING, ring_port WIDE_REC, die IDX_RING_MU; defaults unchanged); not re-run",
+  "default_path_evidence": {
+    "gate": "results/rtl/w11_die_idx_ring_gate.json",
+    "replicated_reference_pos7_cycles": 449701,
+    "adopted_die_smoke_cycles": 449701,
+    "cycle_identical": true,
+    "token": 3118
+  },
+  "source_sha256": {
+    "results/rtl/w11_die_idx_ring_gate.json": "7afa425f9320b8a03ca916bf1eef34a4451246f66e8a2475d3dc320422a7ff0a",
+    "results/rtl/hdc_v41x_die_top_smoke.json": "25145545fec8bb4abc0eaa09ae2264fb746ff240d44f35899ee52d8dea15361d",
+    "tools/w11_die_ring_pin_ledger.py": "9fabc6e4c2ab5ff41288a9cd4ab441dbaaf83354276f2379562c69298de8e324"
+  },
+  "stage": "fullcap"
+}
