@@ -9,6 +9,7 @@
 //   S3  select, subnormal shift, sticky/round bits        | C3 (LAT >= 4)
 //       round increment (prefix add)                      | C4 (LAT >= 7)
 //       encode, refusals -> y
+// Every prefix adder is ot_hdc_ksadd_k (rtl/hdc/ot_hdc_prefix.sv, (* keep *) levels).
 // Uses ot_hdc_w11_cut (rtl/hdc/ot_hdc_fp32_add_lat.sv).
 // ---------------------------------------------------------------------------
 module ot_hdc_fp32_mul_lat #(
@@ -65,7 +66,7 @@ module ot_hdc_fp32_mul_lat #(
     // ---- S1b: rows, exponent sum ------------------------------------------------------------------
     wire [11:0] power;
     wire power_c;
-    ot_hdc_ksa #(.W(12)) u_pw (.a(p_ap), .b(p_bp), .cin(1'b0), .s(power), .cout(power_c));
+    ot_hdc_ksadd_k #(.W(12)) u_pw (.a(p_ap), .b(p_bp), .cin(1'b0), .s(power), .cout(power_c));
     wire [48*8-1:0] rows;
     ot_hdc_mul24_rows u_rows (.a(p_a), .b(p_b), .rows(rows));
 
@@ -126,7 +127,7 @@ module ot_hdc_fp32_mul_lat #(
     // ---- S2b: the prefix add -----------------------------------------------------------------------
     wire [47:0] prod;
     wire unused_cout;
-    ot_hdc_ksa #(.W(48)) u_cpa (.a(q_l7[47:0]), .b(q_l7[95:48]), .cin(1'b0), .s(prod), .cout(unused_cout));
+    ot_hdc_ksadd_k #(.W(48)) u_cpa (.a(q_l7[47:0]), .b(q_l7[95:48]), .cin(1'b0), .s(prod), .cout(unused_cout));
 
     reg        s2_v, s2_byp, s2_sign, s2_sub47, s2_sub46;
     reg [1:0]  s2_err;
@@ -171,7 +172,7 @@ module ot_hdc_fp32_mul_lat #(
     // ---- S3b: round ---------------------------------------------------------------------------------
     wire [23:0] rnd_w;
     wire rnd_cw;
-    ot_hdc_ksa #(.W(24)) u_rnd (.a(r_main), .b(24'd0), .cin(r_inc), .s(rnd_w), .cout(rnd_cw));
+    ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(r_main), .b(24'd0), .cin(r_inc), .s(rnd_w), .cout(rnd_cw));
     localparam integer W4 = 1 + 1 + 2 + 1 + 1 + 12 + 24 + 1;
     wire [W4-1:0] c4;
     ot_hdc_w11_cut #(.W(W4), .CUT(CUT4)) u_c4 (.clk(clk), .rst_n(rst_n),
