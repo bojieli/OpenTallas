@@ -61,9 +61,11 @@ def main(argv=None):
     area = lambda ks: round(sum(parts[k]["w"] * parts[k]["h"] for k in ks) / 1e6, 2)  # noqa: E731
     ratio = F_FAST / F_SLOW
     cdc = [
-        dict(point="SU -> attention p-words", from_domain="slow", width_bits=conn["vm_pv_preload"]["data_bits"],
-             widened_bits=int(round(conn["vm_pv_preload"]["data_bits"] * ratio)),
-             note="W11 is widening the p-word port; 4/3 keeps the fast consumer's rate"),
+        dict(point="SU -> attention p-words", from_domain="slow", width_bits=1024,
+             widened_bits=int(round(1024 * ratio)), adopted_bits=1536,
+             note="fast-side rate 1,024 b per 1.2 GHz cycle (160 cycles per stream); the slow side needs 1,365 b "
+                  "per 0.9 GHz cycle; W11 adopted 1,536 b in / 1,024 b out through one ratio FIFO.  (The ledger's "
+                  "vm_pv_preload 128 is the probability-buffer preload, not this stream.)"),
         dict(point="attention scores and PV -> VM", from_domain="fast", width_bits=512, widened_bits=683,
              note="ASSUMED 512-bit attention output word (W3); the slow VM write side needs 4/3 the width"),
         dict(point="VM x-gather -> field x broadcast", from_domain="slow", width_bits=549,
@@ -88,6 +90,7 @@ def main(argv=None):
             c["latency"] = dict(fast_cycles_min=s2f[0], fast_cycles_mean=s2f[1], fast_cycles_max=s2f[2],
                                 model_cycles=int(-(-s2f[2] // 1)))
         c["fifo"] = "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+        c["units"] = "bits per cycle of the named side: width_bits per fast cycle, widened_bits per slow cycle"
     # clock-tree power (the measured pair's clock-related groups at TT, scaled to 1.2 GHz)
     bd = pr["power_w_per_pair"]["breakdown"]
     idle = bd["idle_clock_on"]

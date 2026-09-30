@@ -45,7 +45,7 @@ EPC_OUTER = 14                   # outermost region's credits, 2 * hops + 2 (12 
 HOLD_NS = None                   # W18 --phy-e8p5: project SDC policy 25 ps hold uncertainty
 SIGNOFF_ARGS: list = []          # W18 --signoff-1p2: harden at WC (SS libs), repair hold at WC and BC
 BUFFER_HOOK = "physical/abi3/v41x_karb_repair_buffer_cap.tcl"
-KARB = ["rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv"]
+KARB = ["rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv", "rtl/chip/ot_chip_v41x_karb_qh.sv"]
 
 
 def common(top: str, sources: list[str], w: float, h: float, params: list[str] = (), density: float = 0.6):
@@ -249,6 +249,7 @@ CASES = {"slice": slice_case, "region": region_case, "stack_ep": stack_ep_case, 
          # the pipelined partition (ot_chip_v41x_hbm_karb_pipe)
          "pslice": pslice_case, "pregion": pregion_case, "proot": proot_case,
          "link600": lambda: link_case(600.0), "link450": lambda: link_case(450.0),
+         "link900": lambda: link_case(900.0),
          "link_1000": link_case, "link_750": lambda: link_case(750.0), "link_1250": lambda: link_case(1250.0)}
 
 
@@ -274,7 +275,7 @@ def main() -> int:
     if a.signoff_1p2:
         global CLOCK_NS, SIGNOFF_ARGS
         CLOCK_NS = 0.833
-        SIGNOFF_ARGS = ["--orfs-corner", "WC", "--hold-corners", "WC,BC"]
+        SIGNOFF_ARGS = ["--orfs-corner", "WC", "--hold-corners", "WC,BC", "--orfs-var", "ADDER_MAP_FILE="]
     if a.phy_e8p5:
         global PHY_PC_WINDOW_UM, PC_PIN_SPAN, K_SPAN, HOLD_NS
         PHY_PC_WINDOW_UM, PC_PIN_SPAN, K_SPAN, HOLD_NS = 265.584, (0.96, 120.384), (125.28, 262.08), 0.025

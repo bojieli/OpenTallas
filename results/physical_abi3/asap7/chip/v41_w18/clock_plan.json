@@ -96,16 +96,18 @@
    {
     "point": "SU -> attention p-words",
     "from_domain": "slow",
-    "width_bits": 128,
-    "widened_bits": 171,
-    "note": "W11 is widening the p-word port; 4/3 keeps the fast consumer's rate",
+    "width_bits": 1024,
+    "widened_bits": 1365,
+    "adopted_bits": 1536,
+    "note": "fast-side rate 1,024 b per 1.2 GHz cycle (160 cycles per stream); the slow side needs 1,365 b per 0.9 GHz cycle; W11 adopted 1,536 b in / 1,024 b out through one ratio FIFO.  (The ledger's vm_pv_preload 128 is the probability-buffer preload, not this stream.)",
     "latency": {
      "fast_cycles_min": 3.67,
      "fast_cycles_mean": 4.0,
      "fast_cycles_max": 4.34,
      "model_cycles": 5
     },
-    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)",
+    "units": "bits per cycle of the named side: width_bits per fast cycle, widened_bits per slow cycle"
    },
    {
     "point": "attention scores and PV -> VM",
@@ -119,7 +121,8 @@
      "slow_cycles_max": 3.75,
      "model_cycles": 4
     },
-    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)",
+    "units": "bits per cycle of the named side: width_bits per fast cycle, widened_bits per slow cycle"
    },
    {
     "point": "VM x-gather -> field x broadcast",
@@ -133,7 +136,8 @@
      "fast_cycles_max": 4.34,
      "model_cycles": 5
     },
-    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)",
+    "units": "bits per cycle of the named side: width_bits per fast cycle, widened_bits per slow cycle"
    },
    {
     "point": "field results -> VM",
@@ -147,7 +151,8 @@
      "slow_cycles_max": 3.75,
      "model_cycles": 4
     },
-    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)",
+    "units": "bits per cycle of the named side: width_bits per fast cycle, widened_bits per slow cycle"
    },
    {
     "point": "collective DMA <-> VM",
@@ -161,7 +166,8 @@
      "slow_cycles_max": 3.75,
      "model_cycles": 4
     },
-    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)",
+    "units": "bits per cycle of the named side: width_bits per fast cycle, widened_bits per slow cycle"
    },
    {
     "point": "VM -> indexer query",
@@ -175,7 +181,8 @@
      "fast_cycles_max": 4.34,
      "model_cycles": 5
     },
-    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)",
+    "units": "bits per cycle of the named side: width_bits per fast cycle, widened_bits per slow cycle"
    },
    {
     "point": "index scores -> select",
@@ -189,7 +196,8 @@
      "slow_cycles_max": 3.75,
      "model_cycles": 4
     },
-    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)",
+    "units": "bits per cycle of the named side: width_bits per fast cycle, widened_bits per slow cycle"
    }
   ],
   "rate_matching": "every slow-side port at a crossing must be 4/3 as wide as its fast-side rate, or the fast side stalls 25% of the time; the widened_bits column is that width"
@@ -217,5 +225,5 @@
   "pair_record_sha256": "2218b6efbff9cf7bba5d7984014352f3d26ffdf75a8a481b33706cf7f5cd3f04",
   "connectivity_sha256": "f0084b7be92ff5930c5278cb8d13898314358f9a72f27ce59f9bbd01339b0ca8"
  },
- "tool_sha256": "6951e74446fda71d34845049cce1db927f189e168720c5247da5943666747513"
+ "tool_sha256": "6b636a4c0391a08a3dd5cd45bee374e5c28cdde90d567129a4cc416cb46819b2"
 }
