@@ -259,8 +259,12 @@ HBM_SWITCH = {
 }
 
 
-def hbm_params(P):
-    t = HBM_T_CORE * 1e9
+HBM_T_SS = 0.833                     # the product clock, 1.2 GHz at SS (AGENTS.md, user decision 2026-09-30)
+
+
+def hbm_params(P, t=None):
+    """Bench parameters for P packages; t: die and switch clock period in ns (default the HBM die's 1.0339 GHz)."""
+    t = HBM_T_CORE * 1e9 if t is None else t
     xt = HBM_SWITCH["kp4_codeword_ns"]["value"]
     c = HBM_SWITCH["channel_components_ns"]["value"]
     L = math.ceil(math.log2(P))
@@ -276,13 +280,37 @@ def hbm_x_dly():
 
 
 HBM_WORDS = (1, 2, 4, 8)
+# The V4.1 HBM comparator's two TP-96 gathers the feasibility audit adds (tools/hbm_feasibility_audit.py): the
+# row-split expert intermediate (6 routed experts x 2,304 x BF16 = 27,648 B a token, 288 B a rank) and the 96-way
+# indexer top-k merge (512 (score, position) candidates x 8 B = 4,096 B a rank, 393,216 B a token).
+HBM_PROD_GATHERS = {"expert_intermediate_gather": 6 * 2304 * 2 // 96, "index_merge_96way": 512 * 8}
+HBM_PORT_BPS = 0.9e12                # package switch port payload a direction (tools/arch_hbm_switched_v41.py)
 
 
-def hbm_fixture(outdir: Path, P: int, seed: int = 96) -> dict:
+def hbm_slot_bytes(t_ns):
+    """Product bytes one bench record slot stands for.  The bench moves one 64 B record a switch cycle on each
+    package's downlink (and one a die cycle on the UCIe forward); its frame carries a whole record, so the bench's
+    timing does not depend on the record width.  A product gather of B bytes a rank is therefore timed as
+    ceil(B / slot) records a rank, slot = the 0.9 TB/s port's bytes a clock (the audit's own B / PKG_LINK_BPS term)."""
+    return HBM_PORT_BPS * t_ns * 1e-9
+
+
+def hbm_prod_ops(t_ns):
+    """8 descriptors: the two product gathers in slots, back to back as a MoE layer then an indexer layer issue them,
+    with a 1-record all-reduce between (the layer's output reduction)."""
+    slot = hbm_slot_bytes(t_ns)
+    g1, g2 = (math.ceil(b / slot) for b in HBM_PROD_GATHERS.values())
+    return [dict(mode=1, words=g1), dict(mode=0, words=1), dict(mode=1, words=g2), dict(mode=0, words=1),
+            dict(mode=1, words=g1), dict(mode=1, words=g2), dict(mode=0, words=1), dict(mode=1, words=g2)]
+
+
+def hbm_fixture(outdir: Path, P: int, seed: int = 96, ops=None) -> dict:
     import hdc_golden as G
     outdir.mkdir(parents=True, exist_ok=True)
     N, MAXW, LANES = 2 * P, 8, 16
-    ops = [dict(mode=0, words=w) for w in HBM_WORDS] + [dict(mode=1, words=w) for w in HBM_WORDS]
+    if ops is None:
+        ops = [dict(mode=0, words=w) for w in HBM_WORDS] + [dict(mode=1, words=w) for w in HBM_WORDS]
+    assert len(ops) == 8 and all(1 <= o["words"] <= MAXW for o in ops), ops
     rng = np.random.default_rng(seed)
     part = np.zeros((len(ops), N, MAXW, LANES), dtype=np.uint32)
     exp = np.zeros((len(ops), MAXW, LANES), dtype=np.uint32)
@@ -380,6 +408,16 @@ CONFIGS = {
                                            T_CORE=0.833, U_WIRE=29), "q256"),
     "hbm_p48": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48), X_WIRE=16, U_WIRE=16), "hbm48"),
     "hbm_p6": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6), X_WIRE=16, U_WIRE=16), "hbm6"),
+    # the same benches at the 1.2 GHz product clock (dies and switch at 0.833 ns; the channel and switch core are
+    # nanosecond figures, so only the cycle counts move), and the audit's product gathers (_prod: same binaries,
+    # fixture hbm_prod_ops) -- the collective list of W19's TP-96 audit
+    "hbm_p48_ss": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48, HBM_T_SS), X_WIRE=16, U_WIRE=16), "hbm48"),
+    "hbm_p6_ss": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6, HBM_T_SS), X_WIRE=16, U_WIRE=16), "hbm6"),
+    "hbm_p48_prod": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48), X_WIRE=16, U_WIRE=16), "hbm48_prod"),
+    "hbm_p6_prod": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6), X_WIRE=16, U_WIRE=16), "hbm6_prod"),
+    "hbm_p48_ss_prod": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48, HBM_T_SS), X_WIRE=16, U_WIRE=16),
+                        "hbm48_ss_prod"),
+    "hbm_p6_ss_prod": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6, HBM_T_SS), X_WIRE=16, U_WIRE=16), "hbm6_ss_prod"),
     "q256d64_sram": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0), "q256"),
     "q1024": ("tb_w15_qwen_tp2", dict(LANES=1024, DEPTH=16, U_NL=1, U_T=0.95), "q1024"),
 }
@@ -389,7 +427,14 @@ def verilator_version():
     return subprocess.run([str(VERILATOR), "--version"], capture_output=True, text=True).stdout.strip()
 
 
+HBM_FIXTURES = {"hbm48": (48, None), "hbm6": (6, None), "hbm48_prod": (48, hbm_prod_ops(HBM_T_CORE * 1e9)),
+                "hbm6_prod": (6, hbm_prod_ops(HBM_T_CORE * 1e9)), "hbm48_ss_prod": (48, hbm_prod_ops(HBM_T_SS)),
+                "hbm6_ss_prod": (6, hbm_prod_ops(HBM_T_SS))}
+
+
 def binary_name(name):
+    if name.endswith("_prod"):
+        return name[:-len("_prod")]
     if name.endswith("_even_sweep"):
         return name[:-len("_even_sweep")]
     return name[:-len("_sweep")] if name.endswith("_sweep") else name
@@ -664,6 +709,17 @@ def config_record(c):
                                   corner_channels=[r["extra"] for r in meas if r["extra"]]))
     if top in ("tb_w15_v41_tp4", "tb_w15_v41_hbm_nvls"):
         rows = summarize_v41(meas[0], clock)
+        if fix.endswith("_prod"):
+            slot = hbm_slot_bytes(1e9 / clock)
+            names = {math.ceil(b / slot): k for k, b in HBM_PROD_GATHERS.items()}
+            for r in rows:
+                if r["mode"] == "all_gather":
+                    r["product_collective"] = names[r["words_per_rank"]]
+                    r["product_bytes_per_rank"] = HBM_PROD_GATHERS[names[r["words_per_rank"]]]
+                    r["slot_bytes_per_rank"] = round(r["words_per_rank"] * slot, 1)
+            rec["slot_bytes"] = round(slot, 1)
+            rec["slot_basis"] = hbm_slot_bytes.__doc__.split("\n")[0] + " ... " + \
+                "one record = %.1f B at the 0.9 TB/s port and this clock; gathers rounded up to whole records" % slot
         rec["collectives"] = rows
         rec["fit"] = fit(rows)
         rec["sum_issue_to_last_commit_cycles"] = sum(r["issue_to_last_commit_cycles"] for r in rows)
@@ -725,6 +781,25 @@ def write_record(out, old, cfgs):
     return rec
 
 
+def merge(inputs, out: Path):
+    """One record from several campaign outputs run at different commits: every config carries the git state,
+    source pins and Verilator of the campaign that produced it (`provenance`); a later input replaces an earlier
+    config of the same name only when listed later on the command line."""
+    cfgs, prov = {}, []
+    for i, p in enumerate(inputs):
+        d = json.loads(Path(p).read_text())
+        prov.append(dict(input=str(p), git=d["git"], source_sha256=d["source_sha256"], verilator=d["verilator"],
+                         configs=sorted(d["configs"])))
+        for n, c in d["configs"].items():
+            cfgs[n] = dict(c, provenance=i)
+    rec = dict(schema="w15_collectives_merged_v1", claim_boundary=json.loads(Path(inputs[-1]).read_text())
+               ["claim_boundary"], campaigns=prov, links=dict(LINKS, board_stages=board_stages()),
+               verilator_flags=VFLAGS, configs=cfgs)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rec, indent=1, sort_keys=True, default=str) + "\n")
+    return rec
+
+
 SWEEP_WORDS_EVEN = (2, 8, 36, 80, 160, 320)
 
 
@@ -769,6 +844,12 @@ def main(argv=None):
     sub.add_parser("links")
     sf = sub.add_parser("sweep-fixture")
     sf.add_argument("dir", type=Path)
+    hf = sub.add_parser("hbm-fixture", help="write the HBM NVLS fixtures (HBM_FIXTURES) under W15_VEC")
+    hf.add_argument("names", nargs="*")
+    mg = sub.add_parser("merge", help="merge campaign records (each keeps its git state and source pins)")
+    mg.add_argument("--out", type=Path, required=True)
+    mg.add_argument("--schema-note", default="")
+    mg.add_argument("inputs", nargs="+", type=Path)
     cp = sub.add_parser("campaign")
     cp.add_argument("--config", action="append")
     cp.add_argument("--ncal", type=int, default=24)
@@ -779,6 +860,12 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "qwen-fixture":
         print(json.dumps(qwen_fixture(a.dir, a.lanes, a.h), indent=1))
+    elif a.cmd == "hbm-fixture":
+        for n in a.names or HBM_FIXTURES:
+            P, ops = HBM_FIXTURES[n]
+            print(n, json.dumps(hbm_fixture(VEC / n, P, ops=ops)["images_sha256"]))
+    elif a.cmd == "merge":
+        merge(a.inputs, a.out)
     elif a.cmd == "sweep-fixture":
         print(json.dumps(v41_sweep_fixture(a.dir)["images_sha256"]))
     elif a.cmd == "campaign":
