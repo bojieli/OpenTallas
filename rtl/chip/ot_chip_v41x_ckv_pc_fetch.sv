@@ -74,7 +74,7 @@ endmodule
 //   hbm       m_v/m_rdy/m_addr/m_tag (tag {slot, sector}), s_v/s_tag/s_beat/s_data.
 //   row out   o_v/o_take (registered 2,304-bit row, its rank and id).
 //   S slots in one 1R1W SRAM of S*9 x 256 bits; issue, response write and readout in slot order.
-//   The response port and the fault outputs are registered (one cycle each).
+//   The request port, the response port and the fault outputs are registered (one cycle each).
 module ot_chip_v41x_ckv_pc_port #(
     parameter integer S = 16,
     parameter integer POS_W = 21,
@@ -91,10 +91,10 @@ module ot_chip_v41x_ckv_pc_port #(
     input  wire [POS_W-1:0] d_gid,
     input  wire [HAW-1:0] d_a0,
     output wire d_free,
-    output wire m_v,
+    output reg  m_v,
     input  wire m_rdy,
-    output wire [HAW-1:0] m_addr,
-    output wire [TAGW-1:0] m_tag,
+    output reg  [HAW-1:0] m_addr,
+    output reg  [TAGW-1:0] m_tag,
     input  wire s_v_in,
     input  wire [TAGW-1:0] s_tag_in,
     input  wire [3:0] s_beat_in,
@@ -113,9 +113,18 @@ module ot_chip_v41x_ckv_pc_port #(
     reg [TAGW-1:0] s_tag;
     reg [3:0] s_beat;
     reg [255:0] s_data;
+    reg poison;                          // NaN E4M3 scale byte in the incoming sector, found before the register
+    integer b;
+    reg poison_in;
+    always @(*) begin
+        poison_in = 1'b0;
+        for (b = 0; b < 32; b = b + 1) if (s_data_in[8*b +: 7] == 7'h7f) poison_in = 1'b1;
+    end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) s_v <= 1'b0; else s_v <= s_v_in;
-    always @(posedge clk) begin s_tag <= s_tag_in; s_beat <= s_beat_in; s_data <= s_data_in; end
+    always @(posedge clk) begin
+        s_tag <= s_tag_in; s_beat <= s_beat_in; s_data <= s_data_in; poison <= poison_in;
+    end
     reg [S-1:0] busy, cmp;
     reg [3:0] got [0:S-1];
     reg [KW-1:0] rk [0:S-1];
@@ -123,20 +132,14 @@ module ot_chip_v41x_ckv_pc_port #(
     reg [HAW-1:0] a0 [0:S-1];
     reg [SW-1:0] al, ip, rp;
     reg [3:0] isec;
+    // the request leaves from an output register (m_v/m_addr/m_tag); the next one loads when it is
+    // empty or accepted this cycle
     wire iss_v = run && busy[ip] && !cmp[ip];
-    assign m_v = iss_v;
-    assign m_addr = a0[ip] + HAW'(isec);
-    assign m_tag = {ip, isec};
-    wire grant = iss_v && m_rdy;
+    wire can_load = !m_v || m_rdy;
+    wire grant = iss_v && can_load;
     wire [SW-1:0] rslot = s_tag[4 +: SW];
     wire [3:0] rsec = s_tag[3:0];
     wire rsp_bad = s_v && (rsec > 4'd8 || !busy[rslot] || s_beat != 0);
-    integer b;
-    reg poison;
-    always @(*) begin
-        poison = 1'b0;
-        for (b = 0; b < 32; b = b + 1) if (s_data[8*b +: 7] == 7'h7f) poison = 1'b1;
-    end
     wire rsp_poison = s_v && !rsp_bad && rsec == 4'd8 && poison;
     reg ro_act, ro_q;
     reg [3:0] ro_k, ro_kq;
@@ -146,7 +149,7 @@ module ot_chip_v41x_ckv_pc_port #(
         .clk(clk), .we(s_v && !rsp_bad), .waddr(8'(32'(rslot) * 9 + 32'(rsec))), .wdata(s_data),
         .re(ro_act), .raddr(8'(32'(rp) * 9 + 32'(ro_k))), .rdata(rdata));
     assign d_free = !busy[al];
-    assign busy_any = |busy || ro_act || ro_q || o_v || s_v;
+    assign busy_any = |busy || ro_act || ro_q || o_v || s_v || m_v;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin fault_rsp <= 1'b0; fault_poison <= 1'b0; end
         else begin fault_rsp <= rsp_bad; fault_poison <= rsp_poison; end
@@ -154,6 +157,7 @@ module ot_chip_v41x_ckv_pc_port #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             busy <= 0; cmp <= 0; al <= 0; ip <= 0; rp <= 0; isec <= 0;
+            m_v <= 0; m_addr <= 0; m_tag <= 0;
             ro_act <= 0; ro_k <= 0; ro_q <= 0; ro_kq <= 0; o_v <= 0; o_rank <= 0; o_gid <= 0;
             for (i = 0; i < S; i = i + 1) got[i] <= 0;
         end else begin
@@ -163,10 +167,11 @@ module ot_chip_v41x_ckv_pc_port #(
                 al <= SW'((32'(al) + 1) % S);
             end
             if (grant) begin
+                m_v <= 1'b1; m_addr <= a0[ip] + HAW'(isec); m_tag <= {ip, isec};
                 if (isec == 4'd8) begin
                     isec <= 0; cmp[ip] <= 1'b1; ip <= SW'((32'(ip) + 1) % S);
                 end else isec <= isec + 1'b1;
-            end
+            end else if (can_load) m_v <= 1'b0;
             if (s_v && !rsp_bad && !rsp_poison) got[rslot] <= got[rslot] + 1'b1;
             ro_q <= ro_act; ro_kq <= ro_k;
             if (ro_start) begin
