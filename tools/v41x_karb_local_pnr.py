@@ -40,6 +40,8 @@ CLOCK_NS = 0.92
 UNCERTAINTY_NS = 0.06
 AW, TAGW, LENW, BEATW, DW = 30, 16, 4, 4, 256
 ENV_H = 64.0
+K_SPAN = (200.0, 370.0)          # regional K port on the slice's top edge (v1 PHY window 375 um)
+HOLD_NS = None                   # W18 --phy-e8p5: project SDC policy 25 ps hold uncertainty
 BUFFER_HOOK = "physical/abi3/v41x_karb_repair_buffer_cap.tcl"
 KARB = ["rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv"]
 
@@ -51,6 +53,8 @@ def common(top: str, sources: list[str], w: float, h: float, params: list[str] =
         args += ["--source", s]
     for p in params:
         args += ["--param", p]
+    if HOLD_NS is not None:
+        args += ["--clock-uncertainty-hold-ns", f"{HOLD_NS:g}"]
     args += ["--clock-period-ns", f"{CLOCK_NS:g}", "--clock-uncertainty-ns", f"{UNCERTAINTY_NS:g}",
              "--io-delay-fraction", "0.2", "--stages", "synth,pnr",
              "--die-area", "0", "0", f"{w:g}", f"{h:g}", "--core-area", f"{m:g}", f"{m:g}", f"{w - m:g}", f"{h - m:g}",
@@ -72,14 +76,14 @@ def slice_case(h: float = ENV_H, tag: str = "") -> dict:
         r"^(b_v|b_rdy|b_we|b_wr_done|b_rsp_v|b_rsp_rdy)$|^(b_addr|b_len|b_tag|b_wdata|b_wstrb|b_rsp_tag|b_rsp_beat|"
         r"b_rsp_data)\[\d+\]$" + f"=top:{span(0, *PC_PIN_SPAN)}",
         r"^(k_v|k_take|k_we|k_wr_done|k_rsp_v|k_rsp_rdy|b_grant|contend|clk|rst_n)$|^(k_addr|k_len|k_tag|k_wdata|"
-        r"k_wstrb|k_rsp_tag|k_rsp_beat|k_rsp_data)\[\d+\]$" + f"=top:{200:g}-{370:g}",
+        r"k_wstrb|k_rsp_tag|k_rsp_beat|k_rsp_data)\[\d+\]$" + f"=top:{K_SPAN[0]:g}-{K_SPAN[1]:g}",
     ]
     args = common("ot_chip_v41x_karb_slice", ["rtl/chip/ot_chip_v41x_karb_slice.sv"], w, h, [f"AW={AW}"])
     for r in regions:
         args += ["--pin-region", r]
     return {"args": args, "nickname": f"w2a_karb_slice_aw30{tag}",
             "output": f"results/physical_abi3/asap7/chip/v41x_karb_local/slice_aw30{tag}/physical.json",
-            "floorplan": {"die_um": [w, h], "pc_pin_span_um": PC_PIN_SPAN, "k_span_um": [200, 370]}}
+            "floorplan": {"die_um": [w, h], "pc_pin_span_um": PC_PIN_SPAN, "k_span_um": list(K_SPAN)}}
 
 
 def region_case(h: float = ENV_H, tag: str = "") -> dict:
@@ -167,7 +171,7 @@ def pslice_case() -> dict:
         args += ["--pin-region", r]
     return {"args": args, "nickname": "w2a_karb_pslice_aw30",
             "output": "results/physical_abi3/asap7/chip/v41x_karb_local/pslice_aw30/physical.json",
-            "floorplan": {"die_um": [w, h], "pc_pin_span_um": PC_PIN_SPAN, "k_span_um": [200, 370]}}
+            "floorplan": {"die_um": [w, h], "pc_pin_span_um": PC_PIN_SPAN, "k_span_um": list(K_SPAN)}}
 
 
 def pregion_case() -> dict:
@@ -257,8 +261,18 @@ def main() -> int:
     ap.add_argument("--abstract", action="store_true",
                     help="after a kept route: ORFS do-generate_abstract (write_abstract_lef + write_timing_model) "
                          "in <work>/<case>/orfs; prints the LEF/Liberty paths and digests")
+    ap.add_argument("--phy-e8p5", action="store_true",
+                    help="W18: fit the legal v2 PHY abstract ot_hbm3e_phy_v41x_aw30_e8p5 (265.584 um pseudo-channel "
+                         "window, K pins 0.96-120.384 um), K port at 125.28-262.08 um, 60/25 ps SDC")
     a = ap.parse_args()
+    if a.phy_e8p5:
+        global PHY_PC_WINDOW_UM, PC_PIN_SPAN, K_SPAN, HOLD_NS
+        PHY_PC_WINDOW_UM, PC_PIN_SPAN, K_SPAN, HOLD_NS = 265.584, (0.96, 120.384), (125.28, 262.08), 0.025
     c = CASES[a.case]()
+    if a.phy_e8p5:
+        c["nickname"] += "_w18e8p5"
+        c["output"] = c["output"].replace("/physical.json", "_w18e8p5/physical.json")
+        c.setdefault("floorplan", {})["phy_view"] = "ot_hbm3e_phy_v41x_aw30_e8p5"
     args = list(c["args"])
     if a.density:
         args[args.index("--place-density") + 1] = f"{a.density:g}"
