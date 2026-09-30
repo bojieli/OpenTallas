@@ -74,6 +74,7 @@ endmodule
 //   hbm       m_v/m_rdy/m_addr/m_tag (tag {slot, sector}), s_v/s_tag/s_beat/s_data.
 //   row out   o_v/o_take (registered 2,304-bit row, its rank and id).
 //   S slots in one 1R1W SRAM of S*9 x 256 bits; issue, response write and readout in slot order.
+//   The response port and the fault outputs are registered (one cycle each).
 module ot_chip_v41x_ckv_pc_port #(
     parameter integer S = 16,
     parameter integer POS_W = 21,
@@ -94,19 +95,27 @@ module ot_chip_v41x_ckv_pc_port #(
     input  wire m_rdy,
     output wire [HAW-1:0] m_addr,
     output wire [TAGW-1:0] m_tag,
-    input  wire s_v,
-    input  wire [TAGW-1:0] s_tag,
-    input  wire [3:0] s_beat,
-    input  wire [255:0] s_data,
+    input  wire s_v_in,
+    input  wire [TAGW-1:0] s_tag_in,
+    input  wire [3:0] s_beat_in,
+    input  wire [255:0] s_data_in,
     output reg  o_v,
     input  wire o_take,
     output reg  [KW-1:0] o_rank,
     output reg  [POS_W-1:0] o_gid,
     output reg  [2303:0] o_row,
     output wire busy_any,
-    output wire fault_rsp,
-    output wire fault_poison
+    output reg  fault_rsp,
+    output reg  fault_poison
 );
+    // the HBM response is registered on entry (one cycle), the faults on exit
+    reg s_v;
+    reg [TAGW-1:0] s_tag;
+    reg [3:0] s_beat;
+    reg [255:0] s_data;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) s_v <= 1'b0; else s_v <= s_v_in;
+    always @(posedge clk) begin s_tag <= s_tag_in; s_beat <= s_beat_in; s_data <= s_data_in; end
     reg [S-1:0] busy, cmp;
     reg [3:0] got [0:S-1];
     reg [KW-1:0] rk [0:S-1];
@@ -137,9 +146,10 @@ module ot_chip_v41x_ckv_pc_port #(
         .clk(clk), .we(s_v && !rsp_bad), .waddr(8'(32'(rslot) * 9 + 32'(rsec))), .wdata(s_data),
         .re(ro_act), .raddr(8'(32'(rp) * 9 + 32'(ro_k))), .rdata(rdata));
     assign d_free = !busy[al];
-    assign busy_any = |busy || ro_act || ro_q || o_v;
-    assign fault_rsp = rsp_bad;
-    assign fault_poison = rsp_poison;
+    assign busy_any = |busy || ro_act || ro_q || o_v || s_v;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin fault_rsp <= 1'b0; fault_poison <= 1'b0; end
+        else begin fault_rsp <= rsp_bad; fault_poison <= rsp_poison; end
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -260,7 +270,8 @@ module ot_chip_v41x_ckv_pc_fetch #(
             .clk(clk), .rst_n(rst_n), .run(run),
             .d_v(dispatch && e_port == q), .d_rank(e_rank), .d_gid(e_gid), .d_a0(HAW'(e_a0)), .d_free(p_free[q]),
             .m_v(m_v[q]), .m_rdy(m_rdy[q]), .m_addr(m_addr[q*HAW +: HAW]), .m_tag(m_tag[q*TAGW +: TAGW]),
-            .s_v(s_v[q]), .s_tag(s_tag[q*TAGW +: TAGW]), .s_beat(s_beat[q*4 +: 4]), .s_data(s_data[q*256 +: 256]),
+            .s_v_in(s_v[q]), .s_tag_in(s_tag[q*TAGW +: TAGW]), .s_beat_in(s_beat[q*4 +: 4]),
+            .s_data_in(s_data[q*256 +: 256]),
             .o_v(p_ov[q]), .o_take(p_take[q]), .o_rank(p_rank[q*KW +: KW]), .o_gid(p_gid[q*POS_W +: POS_W]),
             .o_row(p_row[q*2304 +: 2304]), .busy_any(p_busy_any[q]), .fault_rsp(p_fault_rsp[q]),
             .fault_poison(p_fault_poison[q]));
