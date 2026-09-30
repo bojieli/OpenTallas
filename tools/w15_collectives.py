@@ -367,6 +367,15 @@ CONFIGS = {
                                                    X_PACE_NUM=7, X_PACE_DEN=8), "sweepw32"),
     "v41ss_p30_w32_d1024": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
                                                    FIFO_SRAM=0, FPLAT=1, ADD_LAT=7, T_CORE=0.833, X_PACE_NUM=7, X_PACE_DEN=8), "l0w32"),
+    # W18 collective lane map (claude/w18-die-assembly 133f7ca4, results/physical_abi3/asap7/chip/v41_w18/
+    # collective_lane_map.json; root-adopted): engine at the link edge centre, VM -> engine 30 stages, engine ->
+    # critical-peer lanes <= 2 at 504 um/stage: 32 stages between the VM-side stream and the PHY on each die
+    "v41ss_lm_w32": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
+                                            FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
+                                            X_PACE_NUM=7, X_PACE_DEN=8), "l0w32"),
+    "v41ss_lm_w32_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
+                                                  FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
+                                                  X_PACE_NUM=7, X_PACE_DEN=8), "sweepw32"),
     "qss_256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0, FPLAT=1, ADD_LAT=7,
                                            T_CORE=0.833, U_WIRE=29), "q256"),
     "hbm_p48": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48), X_WIRE=16, U_WIRE=16), "hbm48"),
