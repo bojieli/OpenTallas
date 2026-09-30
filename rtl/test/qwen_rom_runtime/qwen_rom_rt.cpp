@@ -35,6 +35,9 @@
 #include <cstring>
 #include <memory>
 #include <sys/resource.h>
+#include <type_traits>
+#include <algorithm>
+#include <atomic>
 
 constexpr int D = 2, W = 16, H = 4096, TMAX = 8192, KVH = 4, HD = 128, X_BASE = 4096;
 constexpr int G = GROUPS, TG = 4, NT = G / TG, CB = CBANKS, SW = SWIDTH, NXC = 1 << SMAXB, NXL = NXC / TG;
@@ -45,24 +48,36 @@ constexpr int WPG = W * 8 / 32;                 // code-image u32 words per grou
     printf("FATAL %s %ld %ld\n", m, a, b); fflush(stdout); exit(2);
 }
 template <class A> static inline uint64_t getb(const A& w, size_t pos, int n) {
-    uint64_t r = 0;
-    for (int k = 0; k < n; ) {
-        size_t word = (pos + k) / 32, off = (pos + k) % 32;
-        int take = std::min(n - k, int(32 - off));
-        r |= uint64_t((w[word] >> off) & ((take == 32) ? 0xffffffffu : ((1u << take) - 1))) << k;
-        k += take;
+    if constexpr (std::is_integral_v<A>) {
+        return (uint64_t(w) >> pos) & (n >= 64 ? ~0ull : ((1ull << n) - 1));
+    } else {
+        uint64_t r = 0;
+        for (int k = 0; k < n; ) {
+            size_t word = (pos + k) / 32, off = (pos + k) % 32;
+            int take = std::min(n - k, int(32 - off));
+            r |= uint64_t((w[word] >> off) & ((take == 32) ? 0xffffffffu : ((1u << take) - 1))) << k;
+            k += take;
+        }
+        return r;
     }
-    return r;
 }
 template <class A> static inline void setb(A& w, size_t pos, int n, uint64_t v) {
-    for (int k = 0; k < n; ) {
-        size_t word = (pos + k) / 32, off = (pos + k) % 32;
-        int take = std::min(n - k, int(32 - off));
-        uint32_t mask = (take == 32) ? 0xffffffffu : (((1u << take) - 1) << off);
-        w[word] = (w[word] & ~mask) | (uint32_t(v >> k << off) & mask);
-        k += take;
+    if constexpr (std::is_integral_v<A>) {
+        uint64_t m = (n >= 64 ? ~0ull : ((1ull << n) - 1)) << pos;
+        w = A((uint64_t(w) & ~m) | ((v << pos) & m));
+    } else {
+        for (int k = 0; k < n; ) {
+            size_t word = (pos + k) / 32, off = (pos + k) % 32;
+            int take = std::min(n - k, int(32 - off));
+            uint32_t mask = (take == 32) ? 0xffffffffu : (((1u << take) - 1) << off);
+            w[word] = (w[word] & ~mask) | (uint32_t(v >> k << off) & mask);
+            k += take;
+        }
     }
 }
+// 32-bit lane l of a port (integral or wide)
+template <class A> static inline uint32_t lane32(const A& w, size_t l) { return uint32_t(getb(w, 32 * l, 32)); }
+template <class A> static inline void set32(A& w, size_t l, uint32_t v) { setb(w, 32 * l, 32, v); }
 static std::vector<uint64_t> as64(const std::vector<uint32_t>& w) {
     std::vector<uint64_t> r(w.size() / 2);
     for (size_t i = 0; i < r.size(); i++) r[i] = w[2 * i] | (uint64_t(w[2 * i + 1]) << 32);
@@ -371,20 +386,20 @@ int main(int argc, char** argv) {
                 for (int g = 0; g < NPORT; g++)
                     if (getb(t.vw_me_we, g, 1)) {
                         uint32_t a = getb(t.vw_me_addr, g * 24, 24); uint32_t msk = getb(t.vw_me_mask, g * 16, 16);
-                        for (int l = 0; l < W; l++) if ((msk >> l) & 1) vmw[d].push_back({(a << 4) + l, t.vw_me_data[g * 16 + l]});
+                        for (int l = 0; l < W; l++) if ((msk >> l) & 1) vmw[d].push_back({(a << 4) + l, lane32(t.vw_me_data, g * 16 + l)});
                     }
             }
             if (t.vw_mx_we)
                 for (int l = 0; l < W; l++)
-                    if ((t.vw_mx_mask >> l) & 1) vmw[d].push_back({uint32_t((uint64_t(t.vw_mx_addr) << 4) + l), t.vw_mx_data[l]});
+                    if ((t.vw_mx_mask >> l) & 1) vmw[d].push_back({uint32_t((uint64_t(t.vw_mx_addr) << 4) + l), lane32(t.vw_mx_data, l)});
             for (int l = 0; l < SW; l++) {
-                if (getb(t.vw_su_we, l, 1)) vmw[d].push_back({uint32_t(getb(t.vw_su_addr, l * 24, 24)), t.vw_su_data[l]});
-                if (getb(t.kv_we, l, 1)) kvw[d].push_back({uint32_t(getb(t.kv_waddr, l * 24, 24)), t.kv_wdata[l]});
+                if (getb(t.vw_su_we, l, 1)) vmw[d].push_back({uint32_t(getb(t.vw_su_addr, l * 24, 24)), lane32(t.vw_su_data, l)});
+                if (getb(t.kv_we, l, 1)) kvw[d].push_back({uint32_t(getb(t.kv_waddr, l * 24, 24)), lane32(t.kv_wdata, l)});
             }
             if (t.vw_rd_we) vmw[d].push_back({t.vw_rd_addr, t.vw_rd_data});
             r.svr = t.s_vre;
             if (t.s_vre) for (int l = 0; l < W; l++) { size_t a = (size_t(t.s_vraddr) << 4) + l; r.svr_q[l] = a < VM_ELEMS ? m.vm[a] : 0; }
-            if (t.s_vwe) for (int l = 0; l < W; l++) vmw[d].push_back({uint32_t((uint32_t(t.s_vwaddr) << 4) + l), t.s_vwdata[l]});
+            if (t.s_vwe) for (int l = 0; l < W; l++) vmw[d].push_back({uint32_t((uint32_t(t.s_vwaddr) << 4) + l), lane32(t.s_vwdata, l)});
         }
         // ---- rising edge ------------------------------------------------------------------
         for (int d = 0; d < D; d++) die[d]->clk = 1;
@@ -401,14 +416,14 @@ int main(int argc, char** argv) {
             Fabric& f = *fab[d];
             for (auto& w : vmw[d]) if (w.a < VM_ELEMS) m.vm[w.a] = w.v;
             for (auto& w : kvw[d]) if (w.a < KV_ELEMS) m.kv[w.a] = w.v;
-            if (r.prog) for (int w = 0; w < 32; w++) t.prog_q[w] = r.prog_q[w];
+            if (r.prog) for (int w = 0; w < 32; w++) set32(t.prog_q, w, r.prog_q[w]);
             if (r.desc) t.desc_q = r.desc_q;
-            if (r.svr) for (int l = 0; l < W; l++) t.s_vrq[l] = r.svr_q[l];
+            if (r.svr) for (int l = 0; l < W; l++) set32(t.s_vrq, l, r.svr_q[l]);
             for (int l = 0; l < SW; l++) {
-                if (r.cr[l]) { t.crom_q[2 * l] = uint32_t(r.cr_q[l]); t.crom_q[2 * l + 1] = uint32_t(r.cr_q[l] >> 32); }
-                if (r.va[l]) t.va_q[l] = r.va_q[l];
-                if (r.vb[l]) t.vb_q[l] = r.vb_q[l];
-                if (r.vc[l]) t.vc_q[l] = r.vc_q[l];
+                if (r.cr[l]) { set32(t.crom_q, 2 * l, uint32_t(r.cr_q[l])); set32(t.crom_q, 2 * l + 1, uint32_t(r.cr_q[l] >> 32)); }
+                if (r.va[l]) set32(t.va_q, l, r.va_q[l]);
+                if (r.vb[l]) set32(t.vb_q, l, r.vb_q[l]);
+                if (r.vc[l]) set32(t.vc_q, l, r.vc_q[l]);
             }
             if (me_en[d]) {
                 const bool sl = scale_local();
@@ -416,13 +431,13 @@ int main(int argc, char** argv) {
                     if (r.sc[g]) {
                         if (sl && g >= NPORT) fatal("scale read beyond the port groups", g);
                         size_t w = sl ? size_t(g) * m.scale_words + r.sc_addr[g] : size_t(r.sc_addr[g]);
-                        for (int j = 0; j < 8; j++) t.scale_q[g * 8 + j] = m.scales[w * 8 + j];
+                        for (int j = 0; j < 8; j++) set32(t.scale_q, g * 8 + j, m.scales[w * 8 + j]);
                     }
                 // x chunk port: XVM extra vector-memory registers, then the spine's capture
                 if (XVM == 0) {
-                    for (int c = 0; c < NXC; c++) if (r.vx[c]) t.vx_q[c] = r.vx_q[c];
+                    for (int c = 0; c < NXC; c++) if (r.vx[c]) set32(t.vx_q, c, r.vx_q[c]);
                 } else {
-                    for (int c = 0; c < NXC; c++) if (r.xpipe_v[XVM - 1][c]) t.vx_q[c] = r.xpipe_q[XVM - 1][c];
+                    for (int c = 0; c < NXC; c++) if (r.xpipe_v[XVM - 1][c]) set32(t.vx_q, c, r.xpipe_q[XVM - 1][c]);
                     for (int s = XVM - 1; s > 0; s--) { r.xpipe_q[s] = r.xpipe_q[s - 1]; r.xpipe_v[s] = r.xpipe_v[s - 1]; }
                     r.xpipe_q[0] = r.vx_q; r.xpipe_v[0] = r.vx;
                 }
@@ -438,7 +453,7 @@ int main(int argc, char** argv) {
                             setb(x.rom_rd, base + 256, 10, 0);
                         }
                     }
-                    if (r.kvr[i]) for (int k = 0; k < TG * W; k++) x.kv_q[k] = r.kv_q[i * TG * W + k];
+                    if (r.kvr[i]) for (int k = 0; k < TG * W; k++) set32(x.kv_q, k, r.kv_q[i * TG * W + k]);
                 });
             }
         }
