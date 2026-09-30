@@ -106,10 +106,9 @@ endmodule
 // 5), II 1, no reset on data (validity travels outside).
 //   A  signed products from a 7-input table, offset-binary operands (no sign
 //      extension); CSA 32 -> 7
-//   B  CSA 7 -> 2                                   | cut (QL >= 5)
-//      carry-propagate add: S; |S|; the exponent decisions that do not need
-//      the leading-zero count
-//   C  leading-zero count; the subnormal right shift + RNE   | cut (QL >= 4)
+//   B  CSA 7 -> 2, carry-propagate add: S           | cut (QL >= 4)
+//      |S|; the exponent decisions that do not need the leading-zero count
+//   C  leading-zero count; the subnormal right shift + RNE   | cut (QL >= 5)
 //      normal pack, select
 // The cuts only add registers: the value is the same at every QL.
 // ---------------------------------------------------------------------------
@@ -174,13 +173,14 @@ module ot_hdc_v41x_q4dot #(
 
     // -- stage B: CSA 7 -> 2, the add, |S|, the exponent decisions that do not
     //    depend on the leading-zero count ----------------------------------------
-    wire [2*14-1:0] qb0, qb;
-    ot_hdc_v41x_csa #(.N(7), .M(2), .W(14)) u_cb (.d(ra), .q(qb0));
+    wire [2*14-1:0] qb;
+    ot_hdc_v41x_csa #(.N(7), .M(2), .W(14)) u_cb (.d(ra), .q(qb));
+    wire [13:0] sb0 = (qb[13:0] + qb[27:14]) ^ 14'h2000;    // remove the 2^13 offset
+    wire [13:0] sb;
     wire signed [9:0] rea_b;
     wire rrefa_b;
-    ot_hdc_delay #(.W(28 + 10 + 1), .D((QL >= 5) ? 1 : 0)) u_cutb (.clk(clk), .rst_n(1'b1),
-        .d({qb0, rea, rrefa}), .q({qb, rea_b, rrefa_b}));
-    wire [13:0] sb = (qb[13:0] + qb[27:14]) ^ 14'h2000;     // remove the 2^13 offset
+    ot_hdc_delay #(.W(14 + 10 + 1), .D((QL >= 4) ? 1 : 0)) u_cutb (.clk(clk), .rst_n(1'b1),
+        .d({sb0, rea, rrefa}), .q({sb, rea_b, rrefa_b}));
     wire [12:0] mb = sb[13] ? (~sb[12:0] + 13'd1) : sb[12:0];   // |S| <= 4608 < 2^13
     wire signed [11:0] kb = $signed({{2{rea_b[9]}}, rea_b}) + 12'sd149;      // subnormal: F = |S| * 2^kb
     wire [11:0] nkb = -kb;
@@ -204,7 +204,7 @@ module ot_hdc_v41x_q4dot #(
     end
 
     // -- stage C: leading-zero count and the subnormal path (independent of it);
-    //    [cut, QL >= 4]; normal pack, select ---------------------------------------
+    //    [cut, QL >= 5]; normal pack, select ---------------------------------------
     reg  [3:0]  lz0;
     integer kq;
     always @* begin
@@ -223,7 +223,7 @@ module ot_hdc_v41x_q4dot #(
     wire signed [9:0] ceb;
     wire signed [11:0] cnl, cov;
     wire              csg, cref;
-    ot_hdc_delay #(.W(4 + 13 + 24 + 10 + 12 + 12 + 2), .D((QL >= 4) ? 1 : 0)) u_cutc (.clk(clk), .rst_n(1'b1),
+    ot_hdc_delay #(.W(4 + 13 + 24 + 10 + 12 + 12 + 2), .D((QL >= 5) ? 1 : 0)) u_cutc (.clk(clk), .rst_n(1'b1),
         .d({lz0, rm, f0, reb, rnl, rov, rsg, rrefb}), .q({lz, cm, f, ceb, cnl, cov, csg, cref}));
     wire [12:0]       mn = cm << lz;                         // leading one at bit 12
     wire [7:0]        bef = ceb[7:0] + 8'd139 - {4'd0, lz};  // biased exponent (mod 256) where normal
