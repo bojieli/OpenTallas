@@ -27,10 +27,31 @@ RING_SOURCES = ("rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv", "rtl/hdc/v41x/ot_
                 "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv",
                 "rtl/rom/ot_rom_pkg_ctrl_x.sv", "rtl/chip/ot_chip_v41x_die.sv",
                 "tools/v41_hbm_region_preflight.py", "tools/w11_v41_hbm_region_preflight_ring.py", GATE)
+# die integration of the per-user key regions (W11 full capacity): the two-user die gate and the naming gate
+DIE_MU, NAMING = "results/rtl/w11_die_idx_ring_mu_gate.json", "results/rtl/w11_idx_ring_naming.json"
 
 
 def sha(p: str) -> str:
     return hashlib.sha256((ROOT / p).read_bytes()).hexdigest()
+
+
+def isolation() -> dict:
+    out = {"standalone_multiuser_key_address_isolation": True,
+           "standalone": "the ring gate writes and reads four users (0, 481, 551, 865) of an 866-user region with "
+                         "every HBM request checked against its user's region"}
+    mu = json.loads((ROOT / DIE_MU).read_text()) if (ROOT / DIE_MU).exists() else None
+    nm = json.loads((ROOT / NAMING).read_text()) if (ROOT / NAMING).exists() else None
+    if mu and nm and mu["status"] == nm["status"] == "pass":
+        out.update({"die_integrated": True,
+                    "die": ("ot_chip_v41x_die IDX_RING_MU = 1 keys the key region from the step's 10-bit user id "
+                            "(block user x IKH_SLICE / 128 + r x UBLK; at full shape user x 1,090): "
+                            f"{DIE_MU} runs two users' decode steps interleaved at full ring capacity, exact, each "
+                            f"user's ring carried across the other's step; {NAMING} names keys past slot 1,024 and "
+                            "across the ring wrap through the die's writer path for users 1 and 865")})
+    else:
+        out.update({"die_integrated": False,
+                    "die": "the die (ot_chip_v41x_die) ties the key user base low"})
+    return out
 
 
 def build() -> dict:
@@ -89,12 +110,8 @@ def build() -> dict:
                          "keys_checked": full["checked_keys"], "max_sector_address": full["max_sector_address"],
                          "key_region_base_block": p["KB"],
                          "key_region_top_sector": (p["KB"] + model_users * ublk) * 128 - 1},
-        "isolation": {"standalone_multiuser_key_address_isolation": True,
-                      "die_integrated": False,
-                      "reason": "the ring gate writes and reads four users (0, 481, 551, 865) of an 866-user "
-                                "region with every HBM request checked against its user's region; the die "
-                                "(ot_chip_v41x_die) still uses the replicated key path and ties the key user base low"},
-        "source_sha256": {s: sha(s) for s in RING_SOURCES},
+        "isolation": isolation(),
+        "source_sha256": {s: sha(s) for s in RING_SOURCES + tuple(d for d in (DIE_MU, NAMING) if (ROOT / d).exists())},
     }
     assert rec["ring"]["fits"]
     assert rec["widths"]["user_id_bits"] >= rec["widths"]["user_id_bits_needed"]

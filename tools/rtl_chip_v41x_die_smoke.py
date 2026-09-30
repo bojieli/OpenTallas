@@ -52,6 +52,26 @@ CHIP = [ROOT / f"rtl/chip/{n}.sv" for n in ("ot_chip_v41x_kv_prefetch", "ot_chip
                                             "ot_chip_v41x_hbm3e_phy", "ot_chip_v41x_coll_transpose",
                                             "ot_chip_v41x_coll_dma", "ot_chip_v41x_tile",
                                             "ot_chip_v41x_die")]
+# Modules the die / tile / core instantiate (behind their opt-in parameters) that this list predated: added
+# to the hierarchy by 2dd02d37 (idx shard reader/addr), 6ed0adff (ME xbank), 777dee24 (window KV prefetch
+# chain), 52d74a94 (local K arbitration) and 27bea8d3 (packed window attention, compact QROM word, RoPE SU
+# word) without this tool's list following, so the smoke stopped elaborating (MODMISSING).
+DIE_DEPS = [ROOT / p for p in (
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv", "rtl/chip/ot_chip_v41x_attn_row_merge.sv",
+    "rtl/chip/ot_chip_v41x_hbm_karb_local.sv", "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv",
+    "rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv", "rtl/chip/ot_chip_v41x_karb_region.sv",
+    "rtl/chip/ot_chip_v41x_karb_region_kq.sv", "rtl/chip/ot_chip_v41x_karb_slice.sv",
+    "rtl/chip/ot_chip_v41x_karb_stack_ep.sv", "rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+    "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv", "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv",
+    "rtl/chip/ot_chip_v41x_rope_region_guard.sv", "rtl/chip/ot_chip_v41x_rope_su_word.sv",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv", "rtl/chip/ot_chip_v41x_window_block_guard.sv",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv", "rtl/chip/ot_chip_v41x_window_refill_schedule.sv",
+    "rtl/chip/ot_chip_v41x_window_retention.sv", "rtl/chip/ot_chip_v41x_window_row_codec.sv",
+    "rtl/chip/ot_chip_v41x_window_stage4.sv", "rtl/chip/ot_chip_v41x_window_stream.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv", "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv", "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv")]
+DIE_INCLUDES = [ROOT / "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh"]
 KVTB = ROOT / "rtl/test/tb_chip_v41x_kv_prefetch.sv"
 KVTB_SOURCES = [ROOT / p for p in ("rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv", "rtl/hdc/kv/ot_hdc_hbm_model.sv",
                                    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv", "rtl/chip/ot_chip_v41x_hbm_karb.sv",
@@ -88,7 +108,7 @@ def sources(fp: str, build=False, models=True) -> list[Path]:
     setup(fp)
     out = [p for p in core.rtl_sources(build) if models or p not in HBM_MODELS]
     out += [p for p in EXTRA if (models or p not in HBM_MODELS) and p not in out]
-    return out + CHIP
+    return out + [p for p in DIE_DEPS if p not in out] + CHIP
 
 
 def tool_version(cmd) -> str:
@@ -399,7 +419,7 @@ def main() -> int:
         "created_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "source_commit": subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True,
                                         cwd=ROOT).stdout.strip(),
-        "source_sha256": {rel(p): sha(p) for p in srcs + [core.SVH, core.VLT, TB, HARNESS, Path(__file__),
+        "source_sha256": {rel(p): sha(p) for p in srcs + DIE_INCLUDES + [core.SVH, core.VLT, TB, HARNESS, Path(__file__),
                                                           ROOT / "tools/rtl_hdc_v41x_decode_campaign.py",
                                                           ROOT / "tools/hdc_program_v41.py",
                                                           ROOT / "tools/hdc_images_v41x.py"]},

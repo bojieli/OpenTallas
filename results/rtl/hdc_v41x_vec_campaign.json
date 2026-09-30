@@ -1,6 +1,10 @@
 {
  "schema": "opentallas.rtl.hdc_v41x_vec_campaign/1",
- "generated_at": "2026-09-29T17:25:03Z",
+ "generated_at": "2026-09-29T22:46:15Z",
+ "wire_stages": {
+  "BCAST_STAGES": 0,
+  "RET_STAGES": 0
+ },
  "sfu_equivalence": {
   "operands": 1000000,
   "fdiv_vs_ot_hdc_fdiv": {
@@ -3331,6 +3335,10 @@
  },
  "spec": {
   "clock_ghz": 1.034,
+  "wire_stages": {
+   "bcast": 0,
+   "ret": 0
+  },
   "rows": [
    {
     "item": "light lanes: elements/cycle, a 20,480-element hc_post op",
@@ -3345,9 +3353,10 @@
     "required": 1024,
     "measured": 952.5581395348837,
     "meets": false,
-    "note": "the first op's vector 0 of each consumer waits for the producer's vector 0 to be written",
+    "note": "the first op's vector 0 of each consumer waits for the producer's vector 0 to be written; ACCEPTED below the row (root, 2026-09-29): measured 952.6 of 1,024 at N = 1,024, the bubbles are not chased",
+    "accepted_measured": 952.6,
     "graded": true,
-    "expected_meets": true
+    "expected_meets": false
    },
    {
     "item": "SFU lanes: elements/cycle of an exp op",
@@ -3363,6 +3372,7 @@
     "measured": 21,
     "meets": true,
     "le": true,
+    "wire_stages_excluded": 0,
     "graded": true,
     "expected_meets": true
    },
@@ -3433,24 +3443,22 @@
   "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
   "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "5a88f2536d8e4f1e54bc9ea6c969af33ed1ae4b4c914aae561cb6601715745a6",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "94d0d16aff5cb5d366fd189b64058c18f02aec242e1b414084eef5de1806eeb0",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "1b0a5ccbbe8c156f4920bc31a48af545b96441203df156299d91b302752909c4",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "0ba8c77b349a8116958f09f3948116c8183f558f10b3228b55bcb55f1108b315",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "caa46eb92238986b91b67615df7a30a1f17b5b27ddee84284e06cd58f6a9b528",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "fa4f7bf762971004ffa7c7df253ef6789a9e0dd9c351ee3b71fc8d8d4150ae99",
-  "rtl/test/tb_hdc_v41x_vec.sv": "c636a367b5d0192a03cc25252dbcd3d7d8ee2c7743bab90cc5a9c1bfd1ddab88",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "cc9aad507db760a2d7086558c1fde3cb4bd0062730fd4c2447d9634e43b4b00a",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "569db2f33b015cc80d0f6eccd2b6d6036f25ebf56a1ea1140265bec10efa6453",
+  "rtl/test/tb_hdc_v41x_vec.sv": "6347b84fd02065ba4f1e51ea22ffec3c6066b8f19c54d971390a82716542d15e",
   "rtl/test/tb_hdc_v41x_vec_sfu.sv": "c5f1af065d397535bc74a60f65eaf656b83df75a1ae47389e4c2ccb7db9804e3",
   "rtl/test/tb_hdc_v41x_vec_fields.svh": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
   "rtl/test/hdc_v41_harness.cpp": "f2a82a2ea843a1f8b04fd94e94adea61037a9fa6aef45f6b0c8550abe5a6dce1",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "ca1c02361bc218863e01dd9d8128aceb62369672645612952095c624f6780747",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "7d05b86774dd90c4f4d8ed6665f87796ee61ef7569c9642c05a8f05630dc72a7",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
   "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692"
  },
- "git_head": "5affab643823b987f4012f543356fe32bd0d925b",
- "git_dirty_tracked_files": [
-  "results/rtl/w11_su_checkpoint_fix.json"
- ],
+ "git_head": "5de2c368eb35bdd11b6026ad41afd065a0f88765",
+ "git_dirty_tracked_files": [],
  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
  "verilator_extra_flags": "--unroll-count 4 -fno-dfg",
  "reused_builds": true

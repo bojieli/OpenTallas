@@ -70,6 +70,9 @@ module ot_chip_v41x_tile #(
     parameter integer X_IDX = 2,
     parameter integer PIKH_HAW = FULL_SHAPE ? 30 : 28, // pooled-index physical HBM sector address
     parameter integer IDX_SHARDED = 0,      // paired compact index-key layout
+    parameter integer IDX_RING = 0,         // opt-in W11 quarter-per-stack ring key layout
+    parameter integer IDX_RING_RSB = 1,
+    parameter integer IDX_RING_RTAIL = 0,
     parameter integer IDX_MULTIUSER = 0,    // latch a physical key-slice base at start
     parameter integer IDX_KEY_SLICE_SECTORS = 0,
     parameter integer X_SEL = 1,
@@ -336,6 +339,8 @@ module ot_chip_v41x_tile #(
     wire pikw_v, pikw_rdy; wire [3:0] pikw_stack_mask;
     wire [PIKH_HAW-1:0] pikw_csec, pikw_ssec; wire [511:0] pikw_codes; wire [2:0] pikw_sslot; wire [31:0] pikw_scales;
     reg idx_user_fault;
+    wire [127:0] core_kr_v, core_kr_rdy;   // K responses to / readiness from the core's key reader
+    wire kb_ring_fault;
     reg [PIKH_HAW-1:0] idx_user_base_q;
     wire [PIKH_HAW:0] idx_slice_end={1'b0,idx_user_base_sec}+
                                   (PIKH_HAW+1)'(IDX_KEY_SLICE_SECTORS);
@@ -349,14 +354,15 @@ module ot_chip_v41x_tile #(
     end
     // One fault output: core, RoPE read, QE ROM and per-user index-slice faults
     // (main carried two drivers of fault and two core_fault declarations here).
-    assign fault = core_fault | rope_read_fault | qrom_rom_fault | idx_user_fault;
+    assign fault = core_fault | rope_read_fault | qrom_rom_fault | idx_user_fault | kb_ring_fault;
 
     ot_hdc_core_v41x #(.FULL_SHAPE(FULL_SHAPE), .AW(AW), .NW(NW), .INSTR_BITS(INSTR_BITS),
                        .SW(SW), .HS(HS), .W_HBM(W_HBM), .KV_HBM(KV_HBM), .X_HE(X_HE), .X_ME(X_ME), .X_ATT(X_ATT), .X_IDX(X_IDX),
                        .X_SEL(X_SEL), .X_EG(X_EG), .XSQ(XSQ), .XSW(XSW), .X_SU(X_SU), .SUN(SUN), .SUM(SUM),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW),
                        .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_MULTIUSER(IDX_MULTIUSER),
-                       .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS)) u_core (
+                       .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS), .IDX_RING(IDX_RING),
+                       .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .done(done), .acc_n(acc_n), .acc_tok(), .next_token(next_token), .next_val(next_val), .cycles(cycles),
         .fault(core_fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
@@ -384,8 +390,8 @@ module ot_chip_v41x_tile #(
         .ikh_rsp_data({32*256{1'b0}}), .ikw_v(), .ikw_csec(), .ikw_codes(), .ikw_ssec(), .ikw_sslot(),
         .ikw_scale(),
         .pikh_req_v(pikh_req_v), .pikh_req_rdy(pikh_req_rdy), .pikh_req_addr(pikh_req_addr),
-        .pikh_req_len(pikh_req_len), .pikh_req_tag(pikh_req_tag), .pikh_rsp_v(kr_v),
-        .pikh_rsp_rdy(kr_rdy), .pikh_rsp_tag(kr_tag), .pikh_rsp_beat(kr_beat), .pikh_rsp_data(kr_data),
+        .pikh_req_len(pikh_req_len), .pikh_req_tag(pikh_req_tag), .pikh_rsp_v(core_kr_v),
+        .pikh_rsp_rdy(core_kr_rdy), .pikh_rsp_tag(kr_tag), .pikh_rsp_beat(kr_beat), .pikh_rsp_data(kr_data),
         .pikw_v(pikw_v), .pikw_rdy(pikw_rdy), .pikw_stack_mask(pikw_stack_mask), .pikw_csec(pikw_csec),
         .pikw_codes(pikw_codes), .pikw_ssec(pikw_ssec), .pikw_sslot(pikw_sslot), .pikw_scales(pikw_scales),
         .qrom_re(qrom_re), .qrom_addr(qrom_addr), .qrom_q(qrom_q),
@@ -459,15 +465,34 @@ module ot_chip_v41x_tile #(
     end endgenerate
 
     // -- pooled index-key HBM bridge: four stacks, timed key-image writes -------------------
-    ot_hdc_v41x_idx_pool_hbm_bridge #(.AW(PIKH_HAW)) u_kb (
-        .clk(clk), .rst_n(rst_n), .w_v(pikw_v), .w_rdy(pikw_rdy), .w_stack_mask(pikw_stack_mask),
+    generate if (IDX_RING != 0) begin : g_kb_ring
+    // W11 ring layout: key writer (decode steps + boundary migration) and the K-port arbiter
+    ot_hdc_v41x_idx_ring_port #(.AW(PIKH_HAW), .RSB(IDX_RING_RSB), .RTAIL(IDX_RING_RTAIL), .READ_FENCE(1),
+                                .WIDE_REC(1)) u_kb (
+        .clk(clk), .rst_n(rst_n), .w_v(pikw_v), .w_rdy(pikw_rdy),
         .w_csec(pikw_csec), .w_codes(pikw_codes), .w_ssec(pikw_ssec), .w_sslot(pikw_sslot),
         .w_scales(pikw_scales), .r_v(pikh_req_v), .r_rdy(pikh_req_rdy), .r_addr(pikh_req_addr),
-        .r_len(pikh_req_len), .r_tag(pikh_req_tag), .h_v(kh_v), .h_rdy(kh_rdy), .h_addr(kh_addr),
+        .r_len(pikh_req_len), .r_tag(pikh_req_tag), .r_rsp_v(core_kr_v), .r_rsp_rdy(core_kr_rdy),
+        .d_v(1'b0), .d_rdy(), .d_base('0), .d_n('0), .d_key('0),
+        .h_v(kh_v), .h_rdy(kh_rdy), .h_addr(kh_addr),
         .h_len(kh_len), .h_tag(kh_tag), .h_we(kh_we), .h_wdata(kh_wdata), .h_wstrb(kh_wstrb),
-        .h_wr_done(kh_wr_done), .busy(kb_busy), .dbg_records(kb_records),
+        .h_wr_done(kh_wr_done), .h_rsp_v(kr_v), .h_rsp_rdy(kr_rdy), .h_rsp_tag(kr_tag),
+        .h_rsp_data(kr_data), .busy(kb_busy), .fault(kb_ring_fault), .dbg_records(kb_records),
         .dbg_writes(kb_writes), .dbg_fifo_highwater(kb_highwater),
-        .dbg_read_stalls(kb_read_stalls), .dbg_writer_stalls(kb_writer_stalls));
+        .dbg_read_stalls(kb_read_stalls), .dbg_writer_stalls(kb_writer_stalls),
+        .dbg_migrations(), .dbg_copied_sectors());
+    end else begin : g_kb_bridge
+    ot_hdc_v41x_idx_pool_hbm_bridge #(.AW(PIKH_HAW)) u_kb (
+            .clk(clk), .rst_n(rst_n), .w_v(pikw_v), .w_rdy(pikw_rdy), .w_stack_mask(pikw_stack_mask),
+            .w_csec(pikw_csec), .w_codes(pikw_codes), .w_ssec(pikw_ssec), .w_sslot(pikw_sslot),
+            .w_scales(pikw_scales), .r_v(pikh_req_v), .r_rdy(pikh_req_rdy), .r_addr(pikh_req_addr),
+            .r_len(pikh_req_len), .r_tag(pikh_req_tag), .h_v(kh_v), .h_rdy(kh_rdy), .h_addr(kh_addr),
+            .h_len(kh_len), .h_tag(kh_tag), .h_we(kh_we), .h_wdata(kh_wdata), .h_wstrb(kh_wstrb),
+            .h_wr_done(kh_wr_done), .busy(kb_busy), .dbg_records(kb_records),
+            .dbg_writes(kb_writes), .dbg_fifo_highwater(kb_highwater),
+            .dbg_read_stalls(kb_read_stalls), .dbg_writer_stalls(kb_writer_stalls));
+    assign core_kr_v = kr_v; assign kr_rdy = core_kr_rdy; assign kb_ring_fault = 1'b0;
+    end endgenerate
 
     // -- synchronous-read memories (the port behaviour of rtl/test/tb_hdc_core_v41x_whbm.sv) --
     integer l, q, e;
