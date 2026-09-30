@@ -81,7 +81,7 @@ endmodule
 // exp Horner steps never leave it (their products are at most 0.12 K and
 // 0.42 K).
 // ---------------------------------------------------------------------------
-module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000) (
+module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000, parameter integer CUT = 1) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -95,9 +95,9 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000) (
     localparam [23:0] MK = {1'b1, K[22:0]};
     localparam signed [11:0] EK = $signed({4'd0, KF}) - 12'sd127;
 
-    wire [5:0] vd;
-    ot_hdc_vline #(.D(5)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
-    assign vo = vd[5];
+    wire [4+CUT:0] vd;
+    ot_hdc_vline #(.D(4 + CUT)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
+    assign vo = vd[4 + CUT];
 
     // -- F1: the multiplier's stage 1 -----------------------------------------
     wire [7:0]  a_field = a[30:23];
@@ -115,7 +115,7 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000) (
                                                    : ($signed({4'd0, b_field}) - 12'sd150);
     wire [11:0] power;
     wire power_c;
-    ot_hdc_ksa #(.W(12)) u_pw (.a(a_power), .b(b_power), .cin(1'b0), .s(power), .cout(power_c));
+    ot_hdc_ksadd_k #(.W(12)) u_pw (.a(a_power), .b(b_power), .cin(1'b0), .s(power), .cout(power_c));
     wire [48*8-1:0] rows;
     ot_hdc_mul24_rows u_rows (.a(a_raw << a_lz[4:0]), .b(b_raw << b_lz[4:0]), .rows(rows));
 
@@ -127,20 +127,20 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000) (
         s1_rows <= rows; s1_power <= power;
     end
 
-    // -- F1b: the tree's last four carry-save levels (8 rows -> 2), cut before the prefix add
+    // -- F1b (CUT = 1): the tree's last four carry-save levels (8 rows -> 2), a register before the prefix add
     wire [95:0] cs;
     ot_hdc_mul24_csa u_cs (.rows(s1_rows), .cs(cs));
-    reg        s1b_nf, s1b_zero, s1b_sign;
-    reg [95:0] s1b_cs;
-    reg signed [11:0] s1b_power;
-    always @(posedge clk) begin
-        s1b_nf <= s1_nf; s1b_zero <= s1_zero; s1b_sign <= s1_sign; s1b_cs <= cs; s1b_power <= s1_power;
-    end
+    wire        s1b_nf, s1b_zero, s1b_sign;
+    wire [95:0] s1b_cs;
+    wire [11:0] s1b_pw;
+    wire signed [11:0] s1b_power = s1b_pw;
+    ot_hdc_delay #(.W(111), .D(CUT)) d_cut (clk, rst_n, {s1_nf, s1_zero, s1_sign, cs, s1_power},
+                                            {s1b_nf, s1b_zero, s1b_sign, s1b_cs, s1b_pw});
 
     // -- F2: product; distance below K for either leading bit ----------------
     wire [47:0] prod;
     wire prod_c;
-    ot_hdc_ksa #(.W(48)) u_cpa (.a(s1b_cs[47:0]), .b(s1b_cs[95:48]), .cin(1'b0), .s(prod), .cout(prod_c));
+    ot_hdc_ksadd_k #(.W(48)) u_cpa (.a(s1b_cs[47:0]), .b(s1b_cs[95:48]), .cin(1'b0), .s(prod), .cout(prod_c));
     //: The product's floor exponent is power + 47 (bit 47 set) or power + 46.
     //: d = EK - floor; the rounded product M' (25 bits) lands in K's frame
     //: (K = MK << 3) as 2 M' >> (d - 2).
@@ -175,7 +175,7 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000) (
     wire st = top ? (|s2_prod[22:0]) : (|s2_prod[21:0]);
     wire [23:0] mr;
     wire mr_c;
-    ot_hdc_ksa #(.W(24)) u_rp (.a(main), .b(24'd0), .cin(rb && (st || main[0])), .s(mr), .cout(mr_c));
+    ot_hdc_inc_k #(.W(24)) u_rp (.a(main), .inc(rb && (st || main[0])), .y(mr), .co(mr_c));
     wire [25:0] w2 = {mr_c, mr, 1'b0};                 // 2 M'
     wire [4:0]  sh = top ? s2_sh47 : s2_sh46;
     wire [25:0] msk = top ? s2_m47 : s2_m46;
@@ -197,17 +197,17 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000) (
     // -- F4: K +- P, renormalise, second rounding, encode --------------------
     wire [27:0] sum;
     wire sum_c;
-    ot_hdc_ksa #(.W(28)) u_add (.a({1'b0, MK, 3'b000}), .b(s3_pf), .cin(s3_neg), .s(sum), .cout(sum_c));
+    ot_hdc_ksadd_k #(.W(28)) u_add (.a({1'b0, MK, 3'b000}), .b(s3_pf), .cin(s3_neg), .s(sum), .cout(sum_c));
     //: val: [26:3] significand, [2] guard, [1:0] sticky.
     wire [26:0] val = sum[27] ? {sum[27:2], sum[1] | sum[0]} : sum[26] ? sum[26:0] : {sum[25:0], 1'b0};
     wire [7:0]  fld = sum[27] ? (KF + 8'd1) : sum[26] ? KF : (KF - 8'd1);
     wire inc = val[2] && ((|val[1:0]) || val[3]);
     wire [23:0] rs;
     wire rs_c;
-    ot_hdc_ksa #(.W(24)) u_rnd (.a(val[26:3]), .b(24'd0), .cin(inc), .s(rs), .cout(rs_c));
+    ot_hdc_inc_k #(.W(24)) u_rnd (.a(val[26:3]), .inc(inc), .y(rs), .co(rs_c));
     wire [31:0] code = {1'b0, fld + {7'd0, rs_c}, rs_c ? 23'd0 : rs[22:0]};
     always @(posedge clk) begin
-        fault <= vd[4] && s3_f;
+        fault <= vd[3 + CUT] && s3_f;
         y <= s3_f ? 32'd0 : s3_k ? K : code;
     end
 endmodule
@@ -221,7 +221,7 @@ endmodule
 // 2 rnd <= 2^24 is a subnormal or the code of 2^-125 or below).  Faults as
 // ot_hdc_qmul (an overflow of the doubled value is the second multiply's).
 // ---------------------------------------------------------------------------
-module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1) (
+module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1, parameter integer CUT = 1) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -246,7 +246,7 @@ module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1) (
                                                    : ($signed({4'd0, b_field}) - 12'sd150);
     wire [11:0] power;
     wire power_c;
-    ot_hdc_ksa #(.W(12)) u_pw (.a(a_power), .b(b_power), .cin(1'b0), .s(power), .cout(power_c));
+    ot_hdc_ksadd_k #(.W(12)) u_pw (.a(a_power), .b(b_power), .cin(1'b0), .s(power), .cout(power_c));
     wire [48*8-1:0] rows;
     ot_hdc_mul24_rows u_rows (.a(a_raw << a_lz[4:0]), .b(b_raw << b_lz[4:0]), .rows(rows));
     reg        s1_v, s1_byp, s1_nf, s1_sign;
@@ -257,20 +257,20 @@ module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1) (
         s1_byp <= nonfinite || zero; s1_nf <= nonfinite; s1_sign <= a[31] ^ b[31];
         s1_rows <= rows; s1_power <= power;
     end
-    // -- stage 1b: the tree's last four carry-save levels, cut before the prefix add --
+    // -- stage 1b (CUT = 1): the tree's last four carry-save levels, a register before the prefix add --
     wire [95:0] cs;
     ot_hdc_mul24_csa u_cs (.rows(s1_rows), .cs(cs));
-    reg        s1b_v, s1b_byp, s1b_nf, s1b_sign;
-    reg [95:0] s1b_cs;
-    reg signed [11:0] s1b_power;
-    always @(posedge clk or negedge rst_n) if (!rst_n) s1b_v <= 1'b0; else s1b_v <= s1_v;
-    always @(posedge clk) begin
-        s1b_byp <= s1_byp; s1b_nf <= s1_nf; s1b_sign <= s1_sign; s1b_cs <= cs; s1b_power <= s1_power;
-    end
+    wire        s1b_v, s1b_byp, s1b_nf, s1b_sign;
+    wire [95:0] s1b_cs;
+    wire [11:0] s1b_pw;
+    wire signed [11:0] s1b_power = s1b_pw;
+    ot_hdc_delay #(.W(111), .D(CUT)) d_cut (clk, rst_n, {s1_byp, s1_nf, s1_sign, cs, s1_power},
+                                            {s1b_byp, s1b_nf, s1b_sign, s1b_cs, s1b_pw});
+    ot_hdc_delay #(.W(1), .D(CUT), .RESET(1)) d_cutv (clk, rst_n, s1_v, s1b_v);
     // -- stage 2 (ot_hdc_fp32_mul_fast) --
     wire [47:0] prod;
     wire prod_c;
-    ot_hdc_ksa #(.W(48)) u_cpa (.a(s1b_cs[47:0]), .b(s1b_cs[95:48]), .cin(1'b0), .s(prod), .cout(prod_c));
+    ot_hdc_ksadd_k #(.W(48)) u_cpa (.a(s1b_cs[47:0]), .b(s1b_cs[95:48]), .cin(1'b0), .s(prod), .cout(prod_c));
     wire signed [11:0] fl47 = s1b_power + 12'sd47;
     wire signed [11:0] fl46 = s1b_power + 12'sd46;
     wire signed [11:0] sh_sub = -(s1b_power + 12'sd149);
@@ -312,7 +312,7 @@ module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1) (
     wire st = is_sub ? s_st : n_st;
     wire [23:0] rnd;
     wire rnd_c;
-    ot_hdc_ksa #(.W(24)) u_rnd (.a(main), .b(24'd0), .cin(rb && (st || main[0])), .s(rnd), .cout(rnd_c));
+    ot_hdc_inc_k #(.W(24)) u_rnd (.a(main), .inc(rb && (st || main[0])), .y(rnd), .co(rnd_c));
     wire carry = !is_sub && rnd_c;
     wire [23:0] man = carry ? {1'b1, rnd[23:1]} : rnd;
     wire signed [11:0] floor_ = fl + {11'd0, carry};
@@ -364,12 +364,12 @@ module ot_hdc_addpos2 (
     wire [31:0] bypass_code = nonfinite ? 32'd0 : (a_zero ? (b_zero ? 32'd0 : b) : a);
     wire cmp_c;
     wire [30:0] cmp_s;
-    ot_hdc_ksa #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
+    ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
     wire swap = !cmp_c;
     wire [7:0] dab, dba;
     wire dab_c, dba_c;
-    ot_hdc_ksa #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
-    ot_hdc_ksa #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
+    ot_hdc_ksadd_k #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
+    ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
     function automatic [27:0] jam28;
         input [23:0] man;
         input [7:0]  d;
@@ -404,13 +404,13 @@ module ot_hdc_addpos2 (
 
     wire [27:0] sum;
     wire sum_c;
-    ot_hdc_ksa #(.W(28)) u_sum (.a({1'b0, s1_big, 3'b000}), .b(s1_small), .cin(1'b0), .s(sum), .cout(sum_c));
+    ot_hdc_ksadd_k #(.W(28)) u_sum (.a({1'b0, s1_big, 3'b000}), .b(s1_small), .cin(1'b0), .s(sum), .cout(sum_c));
     wire carry = sum[27];
     wire [26:0] val = carry ? {sum[27:2], sum[1] | sum[0]} : sum[26:0];
     wire inc = val[2] && ((|val[1:0]) || val[3]);
     wire [23:0] rnd;
     wire rnd_c;
-    ot_hdc_ksa #(.W(24)) u_rnd (.a(val[26:3]), .b(24'd0), .cin(inc), .s(rnd), .cout(rnd_c));
+    ot_hdc_inc_k #(.W(24)) u_rnd (.a(val[26:3]), .inc(inc), .y(rnd), .co(rnd_c));
     wire [23:0] man = rnd_c ? {1'b1, rnd[23:1]} : rnd;
     wire [8:0]  e = {1'b0, s1_exp} + {8'd0, carry} + {8'd0, rnd_c};
     //: A sum of two subnormals stays subnormal unless it reaches bit 23.
@@ -451,7 +451,7 @@ endmodule
 // p_pre / n_pre are the last Horner result and n at depth 32, for a consumer
 // that folds the exponent step into its own first stage (ot_hdc_v41x_spdiv).
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_exp_s (
+module ot_hdc_v41x_exp_s #(parameter integer PCUT = 1) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -462,10 +462,11 @@ module ot_hdc_v41x_exp_s (
     output wire [8:0]  n_pre,
     output wire        fault
 );
-    localparam integer T_T = 4;                 // t registered
-    localparam integer T_R = T_T + 5;           // 9
-    localparam integer T_P = T_R + 6 * 5;       // 39
-    localparam integer DEPTH = T_P + 1;         // 40
+    localparam integer LH = 4 + PCUT;           // Horner step latency
+    localparam integer T_T = 3 + PCUT;          // t registered
+    localparam integer T_R = T_T + 5;           // r registered (9)
+    localparam integer T_P = T_R + 6 * LH;      // 39
+    localparam integer DEPTH = T_P + 1;         // 40 (33 at PCUT = 0)
     localparam [31:0] K_MAX   = 32'h42B00000;   //  88.0
     localparam [31:0] K_MINM  = 32'h42AE0000;   //  87.0 (magnitude of the lower clamp)
     localparam [31:0] K_LOG2E = 32'h3FB8AA3B;
@@ -626,7 +627,7 @@ module ot_hdc_v41x_exp_s (
     end
     wire [31:0] t;
     wire        t_f;
-    ot_hdc_fp32_mul_x2 #(.DOUBLE(0)) m_t (.clk(clk), .rst_n(rst_n), .v(v), .a(x), .b(K_LOG2E), .y(t), .fault(t_f));
+    ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT)) m_t (.clk(clk), .rst_n(rst_n), .v(v), .a(x), .b(K_LOG2E), .y(t), .fault(t_f));
 
     // depth 2: |xc| * 2^43 (valid when n != 0, which needs |xc| >= 2^-2)
     wire [7:0]  xe = xc[30:23];
@@ -678,8 +679,12 @@ module ot_hdc_v41x_exp_s (
     end
 
     // depth 6: | |xc| - T |, both orders at once
-    wire [50:0] dab = {1'b0, afix5} - {1'b0, tfix};
-    wire [50:0] dba = {1'b0, tfix} - {1'b0, afix5};
+    wire [51-1:0] dab;
+    wire dab_c;
+    ot_hdc_ksadd_k #(.W(51)) u_dab (.a({1'b0, afix5}), .b(~({1'b0, tfix})), .cin(1'b1), .s(dab), .cout(dab_c));
+    wire [51-1:0] dba;
+    wire dba_c;
+    ot_hdc_ksadd_k #(.W(51)) u_dba (.a({1'b0, tfix}), .b(~({1'b0, afix5})), .cin(1'b1), .s(dba), .cout(dba_c));
     reg  [49:0] dmag;
     reg         rsign, rzero, nnz6, f_rng;
     reg  [31:0] xc6;
@@ -710,7 +715,7 @@ module ot_hdc_v41x_exp_s (
     wire inc = nv[25] && ((|nv[24:0]) || nv[26]);
     wire [23:0] rs;
     wire rs_c;
-    ot_hdc_ksa #(.W(24)) u_rnd (.a(nv[49:26]), .b(24'd0), .cin(inc), .s(rs), .cout(rs_c));
+    ot_hdc_inc_k #(.W(24)) u_rnd (.a(nv[49:26]), .inc(inc), .y(rs), .co(rs_c));
     reg [31:0] r;
     reg        f_rng8;
     always @(posedge clk) begin
@@ -730,16 +735,19 @@ module ot_hdc_v41x_exp_s (
     generate
         for (k = 1; k <= 6; k = k + 1) begin : g_h
             if (k < 6) begin : g_rd
-                ot_hdc_delay #(.W(32), .D(5)) d_r (clk, rst_n, rd[k-1], rd[k]);
+                ot_hdc_delay #(.W(32), .D(LH)) d_r (clk, rst_n, rd[k-1], rd[k]);
             end
-            ot_hdc_hstep #(.K(poly(k))) u_h (.clk(clk), .rst_n(rst_n), .v(vd[T_R + 5*(k-1)]),
+            ot_hdc_hstep #(.K(poly(k)), .CUT(PCUT)) u_h (.clk(clk), .rst_n(rst_n), .v(vd[T_R + LH*(k-1)]),
                                              .a(pa[k-1]), .b(rd[k-1]), .y(pa[k]), .vo(), .fault(hf[k]));
         end
     endgenerate
 
     wire [8:0] nint_d;
     ot_hdc_delay #(.W(9), .D(T_P - T_T - 1)) d_n (clk, rst_n, nint, nint_d);
-    always @(posedge clk) y <= pa[6] + {{14{nint_d[8]}}, nint_d, 23'd0};
+    wire [8:0] y_hi;
+    wire y_hi_c;
+    ot_hdc_ksadd_k #(.W(9)) u_ye (.a(pa[6][31:23]), .b(nint_d), .cin(1'b0), .s(y_hi), .cout(y_hi_c));
+    always @(posedge clk) y <= {y_hi, pa[6][22:0]};       // pa[6] + (n << 23)
     assign p_pre = pa[6];
     assign n_pre = nint_d;
 
@@ -778,7 +786,10 @@ module ot_hdc_v41x_spdiv (
     assign vo = vd[DEPTH];
 
     // ---- D1 ----
-    wire [31:0] t  = p + {{14{n[8]}}, n, 23'd0};
+    wire [8:0]  t_hi;
+    wire        t_hi_c;
+    ot_hdc_ksadd_k #(.W(9)) u_te (.a(p[31:23]), .b(n), .cin(1'b0), .s(t_hi), .cout(t_hi_c));
+    wire [31:0] t  = {t_hi, p[22:0]};                  // p + (n << 23)
     wire [7:0]  et = t[30:23];
     wire [23:0] mt = {1'b1, t[22:0]};
     wire [7:0]  s8 = 8'd128 - et;                      // >= 1 for t <= 1
@@ -802,14 +813,24 @@ module ot_hdc_v41x_spdiv (
 
     // ---- D2: divisor significand and its triple ----
     wire [23:0] mbf = {1'b1, d_f};
+    wire [23:0] mb_i;
+    wire        mb_c;
+    ot_hdc_inc_k #(.W(24)) u_mb (.a(mbf), .inc(d_inc), .y(mb_i), .co(mb_c));
+    //: 3 mbf + 3 inc: one carry-save level, then the prefix add
+    wire [25:0] m3a = {2'b0, mbf}, m3b = {1'b0, mbf, 1'b0}, m3c = d_inc ? 26'd3 : 26'd0;
+    wire [25:0] m3s = m3a ^ m3b ^ m3c;
+    wire [25:0] m3k = {(m3a[24:0] & m3b[24:0]) | (m3a[24:0] & m3c[24:0]) | (m3b[24:0] & m3c[24:0]), 1'b0};
+    wire [25:0] mb3_i;
+    wire        mb3_c;
+    ot_hdc_ksadd_k #(.W(26)) u_mb3 (.a(m3s), .b(m3k), .cin(1'b0), .s(mb3_i), .cout(mb3_c));
     reg        e_sign, e_zero, e_bad;
     reg [23:0] e_ma, e_mb;
     reg [25:0] e_mb3;
     reg signed [10:0] e_e;
     always @(posedge clk) begin
         e_sign <= 1'b0; e_zero <= d_zero; e_bad <= d_bad; e_e <= d_e; e_ma <= d_ma;
-        e_mb  <= mbf + {23'd0, d_inc};
-        e_mb3 <= {2'b0, mbf} + {1'b0, mbf, 1'b0} + (d_inc ? 26'd3 : 26'd0);
+        e_mb  <= mb_i;
+        e_mb3 <= mb3_i;
     end
 
     // ---- recurrence (ot_hdc_v41x_fdiv) ----
@@ -830,9 +851,15 @@ module ot_hdc_v41x_spdiv (
             wire [QB-1:0] qin = (j == 0) ? {QB{1'b0}} : r_q[j-1];
             wire [26:0]   x   = (j == 0) ? {2'b0, e_ma, 1'b0} :
                                 TWO ? {r_rem[j-1][24:0], 2'b0} : {1'b0, r_rem[j-1][24:0], 1'b0};
-            wire [27:0]   d1 = {1'b0, x} - {4'b0, mb};
-            wire [27:0]   d2 = {1'b0, x} - {3'b0, mb, 1'b0};
-            wire [27:0]   d3 = {1'b0, x} - {2'b0, mb3};
+            wire [28-1:0] d1;
+            wire d1_c;
+            ot_hdc_ksadd_k #(.W(28)) u_d1 (.a({1'b0, x}), .b(~({4'b0, mb})), .cin(1'b1), .s(d1), .cout(d1_c));
+            wire [28-1:0] d2;
+            wire d2_c;
+            ot_hdc_ksadd_k #(.W(28)) u_d2 (.a({1'b0, x}), .b(~({3'b0, mb, 1'b0})), .cin(1'b1), .s(d2), .cout(d2_c));
+            wire [28-1:0] d3;
+            wire d3_c;
+            ot_hdc_ksadd_k #(.W(28)) u_d3 (.a({1'b0, x}), .b(~({2'b0, mb3})), .cin(1'b1), .s(d3), .cout(d3_c));
             wire [1:0]    q  = !d3[27] ? 2'd3 : !d2[27] ? 2'd2 : !d1[27] ? 2'd1 : 2'd0;
             wire [26:0]   r  = !d3[27] ? d3[26:0] : !d2[27] ? d2[26:0] : !d1[27] ? d1[26:0] : x;
             always @(posedge clk) begin
@@ -889,7 +916,9 @@ module ot_hdc_v41x_spdiv (
         end
     end
     wire        rup = f2_g && (f2_st || f2_sig[0]);
-    wire [30:0] code = {f2_field, f2_sig[22:0]} + {30'd0, rup};
+    wire [30:0] code;
+    wire        code_c;
+    ot_hdc_inc_k #(.W(31)) u_code (.a({f2_field, f2_sig[22:0]}), .inc(rup), .y(code), .co(code_c));
     wire        ovf = f2_ovf || (code[30:23] == 8'hFF);
     always @(posedge clk) begin
         if (f2_bad || (ovf && !f2_zero)) begin y <= 32'd0; fault <= vd[DEPTH-1]; end
@@ -990,13 +1019,21 @@ module ot_hdc_fsqrt4 (
             wire [RW-1:0] t1 = {{(RW-Q_W-3){1'b0}}, src_q, 3'b001};
             wire [RW-1:0] t2 = {{(RW-Q_W-4){1'b0}}, src_q, 4'b0100};
             wire [RW-1:0] t3 = {{(RW-Q_W-5){1'b0}}, src_q3, 3'b001};
-            wire [RW:0] d1 = {1'b0, xx} - {1'b0, t1};
-            wire [RW:0] d2 = {1'b0, xx} - {1'b0, t2};
-            wire [RW:0] d3 = {1'b0, xx} - {1'b0, t3};
+            wire [RW:0] d1;
+            wire d1_c;
+            ot_hdc_ksadd_k #(.W(RW+1)) u_d1 (.a({1'b0, xx}), .b(~({1'b0, t1})), .cin(1'b1), .s(d1), .cout(d1_c));
+            wire [RW:0] d2;
+            wire d2_c;
+            ot_hdc_ksadd_k #(.W(RW+1)) u_d2 (.a({1'b0, xx}), .b(~({1'b0, t2})), .cin(1'b1), .s(d2), .cout(d2_c));
+            wire [RW:0] d3;
+            wire d3_c;
+            ot_hdc_ksadd_k #(.W(RW+1)) u_d3 (.a({1'b0, xx}), .b(~({1'b0, t3})), .cin(1'b1), .s(d3), .cout(d3_c));
             wire [1:0] q = !d3[RW] ? 2'd3 : !d2[RW] ? 2'd2 : !d1[RW] ? 2'd1 : 2'd0;
             wire [RW-1:0] r = !d3[RW] ? d3[RW-1:0] : !d2[RW] ? d2[RW-1:0] : !d1[RW] ? d1[RW-1:0] : xx;
-            wire [Q_W+1:0] q3m = src_q3 - {{(Q_W+1){1'b0}}, 1'b1};
-            wire [Q_W+1:0] q3p = src_q3 + {{(Q_W+1){1'b0}}, 1'b1};
+            wire [Q_W+1:0] q3m, q3p;
+            wire q3m_c, q3p_c;
+            ot_hdc_ksadd_k #(.W(Q_W+2)) u_q3m (.a(src_q3), .b({(Q_W+2){1'b1}}), .cin(1'b0), .s(q3m), .cout(q3m_c));
+            ot_hdc_inc_k #(.W(Q_W+2)) u_q3p (.a(src_q3), .inc(1'b1), .y(q3p), .co(q3p_c));
             wire [Q_W+1:0] q3n = (q == 2'd0) ? {q3m[Q_W-1:0], 2'b01} :
                                  (q == 2'd1) ? {src_q3[Q_W-1:0], 2'b00} :
                                  (q == 2'd2) ? {src_q3[Q_W-1:0], 2'b11} : {q3p[Q_W-1:0], 2'b10};
@@ -1035,7 +1072,10 @@ module ot_hdc_fsqrt4 (
         end
     end
     wire        round_up = f_guard && (f_sticky || f_trunc[0]);
-    wire [24:0] rounded  = {1'b0, f_trunc} + {24'd0, round_up};
+    wire [23:0] rnd24;
+    wire        rnd24_c;
+    ot_hdc_inc_k #(.W(24)) u_rq (.a(f_trunc), .inc(round_up), .y(rnd24), .co(rnd24_c));
+    wire [24:0] rounded  = {rnd24_c, rnd24};
     wire        carried  = rounded[24];
     wire [23:0] sig_out  = carried ? rounded[24:1] : rounded[23:0];
     wire signed [EXP_W-1:0] biased = f_unb + (carried ? 12'sd1 : 12'sd0) + 12'sd127;
@@ -1058,7 +1098,7 @@ endmodule
 //     sp = RN(max(x, 0) + l)             ot_hdc_addpos2             -> 91
 //     r = sqrt(sp)                       ot_hdc_fsqrt4              -> 107
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_softplus_s (
+module ot_hdc_v41x_softplus_s #(parameter integer PCUT = 1) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -1068,13 +1108,15 @@ module ot_hdc_v41x_softplus_s (
     output wire        vo,
     output wire        fault
 );
-    localparam integer T_PN   = 39;
+    localparam integer LH     = 4 + PCUT;        // Horner step latency
+    localparam integer LM     = 3 + PCUT;        // multiply latency
+    localparam integer T_PN   = 8 + PCUT + 6 * LH;   // 39: the exp's last Horner result
     localparam integer T_U    = T_PN + 19;       // 58
-    localparam integer T_U2   = T_U + 4;         // 62
-    localparam integer T_P    = T_U2 + 8 * 5;    // 102
-    localparam integer T_L    = T_P + 4;         // 106
+    localparam integer T_U2   = T_U + LM;        // 62
+    localparam integer T_P    = T_U2 + 8 * LH;   // 102
+    localparam integer T_L    = T_P + LM;        // 106
     localparam integer T_SP   = T_L + 2;         // 108
-    localparam integer DEPTH  = T_SP + 16;       // 124
+    localparam integer DEPTH  = T_SP + 16;       // 124 (107 at PCUT = 0)
     localparam [32*9-1:0] C = {32'h3D70F0F1, 32'h3D888889, 32'h3D9D89D9, 32'h3DBA2E8C, 32'h3DE38E39,
                                32'h3E124925, 32'h3E4CCCCD, 32'h3EAAAAAB, 32'h3F800000};  // 1/17 .. 1/1
     function automatic [31:0] coef(input integer i);
@@ -1088,11 +1130,11 @@ module ot_hdc_v41x_softplus_s (
     wire [31:0] p_pre, u, u2, l, spv;
     wire [8:0]  n_pre;
     wire f_exp, f_div, f_u2, f_l, f_sp, f_sq;
-    ot_hdc_v41x_exp_s u_exp (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(), .vo(),
+    ot_hdc_v41x_exp_s #(.PCUT(PCUT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(), .vo(),
                              .p_pre(p_pre), .n_pre(n_pre), .fault(f_exp));
     ot_hdc_v41x_spdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_PN]), .p(p_pre), .n(n_pre),
                              .y(u), .vo(), .fault(f_div));
-    ot_hdc_fp32_mul_x2 #(.DOUBLE(0)) m_u2 (.clk(clk), .rst_n(rst_n), .v(vd[T_U]), .a(u), .b(u), .y(u2), .fault(f_u2));
+    ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT)) m_u2 (.clk(clk), .rst_n(rst_n), .v(vd[T_U]), .a(u), .b(u), .y(u2), .fault(f_u2));
 
     wire [31:0] u2d [0:7];
     wire [31:0] pa  [0:8];
@@ -1103,16 +1145,16 @@ module ot_hdc_v41x_softplus_s (
     generate
         for (k = 1; k <= 8; k = k + 1) begin : g_h
             if (k < 8) begin : g_d
-                ot_hdc_delay #(.W(32), .D(5)) d_u2 (clk, rst_n, u2d[k-1], u2d[k]);
+                ot_hdc_delay #(.W(32), .D(LH)) d_u2 (clk, rst_n, u2d[k-1], u2d[k]);
             end
-            ot_hdc_hstep #(.K(coef(k))) u_h (.clk(clk), .rst_n(rst_n), .v(vd[T_U2 + 5*(k-1)]),
+            ot_hdc_hstep #(.K(coef(k)), .CUT(PCUT)) u_h (.clk(clk), .rst_n(rst_n), .v(vd[T_U2 + LH*(k-1)]),
                                             .a(pa[k-1]), .b(u2d[k-1]), .y(pa[k]), .vo(), .fault(hf[k]));
         end
     endgenerate
 
     wire [31:0] u_d;
     ot_hdc_delay #(.W(32), .D(T_P - T_U)) d_u (clk, rst_n, u, u_d);
-    ot_hdc_fp32_mul_x2 m_l (.clk(clk), .rst_n(rst_n), .v(vd[T_P]), .a(u_d), .b(pa[8]), .y(l), .fault(f_l));
+    ot_hdc_fp32_mul_x2 #(.CUT(PCUT)) m_l (.clk(clk), .rst_n(rst_n), .v(vd[T_P]), .a(u_d), .b(pa[8]), .y(l), .fault(f_l));
 
     reg  [31:0] mx;
     wire [31:0] mx_d;

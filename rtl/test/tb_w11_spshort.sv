@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 // Equivalence of the short softplus units (rtl/hdc/v41x/ot_hdc_v41x_spshort.sv)
 // against the committed pipes, one operand per cycle.  UNIT selects the check:
-//   0  ot_hdc_v41x_softplus_s (124) vs ot_hdc_v41x_softplus (162): sp, r, fault
-//   1  ot_hdc_v41x_exp_s (40)       vs ot_hdc_v41x_exp (49): y, fault
+//   0  ot_hdc_v41x_softplus_s (124; 107 at PCUT 0) vs ot_hdc_v41x_softplus (162): sp, r, fault
+//   1  ot_hdc_v41x_exp_s (40; 33 at PCUT 0)       vs ot_hdc_v41x_exp (49): y, fault
 //   2  ot_hdc_fsqrt4 (16)           vs ot_hdc_fsqrt (31): y, fault
 //      Units 0-2 take x = LO, LO+1, ... (N words, wrapping): +LO=<hex> +N=<count>.
 //   3  ot_hdc_hstep #(K) for the 8 softplus and 5 exp Horner constants vs
@@ -11,7 +11,8 @@
 //      after a sweep of every (a exponent near K) x (every b exponent) pair.
 //      +N=<cycles>; the stream is +verilator+seed+<n>.
 // Prints: W11SP unit=<u> n=<checked> err=<e> [refused=<r> unjustified=<j>] ...
-module tb_w11_spshort #(parameter integer UNIT = 0) (input wire clk);
+module tb_w11_spshort #(parameter integer UNIT = 0, parameter integer PCUT = 1) (input wire clk);
+    localparam integer D_SP = PCUT ? 124 : 107, D_EXP = PCUT ? 40 : 33;
     reg rst_n = 1'b0;
     reg [63:0] cyc = 0, fed = 0, n = 64'd1000000;
     reg [31:0] lo = 32'd0;
@@ -39,8 +40,8 @@ module tb_w11_spshort #(parameter integer UNIT = 0) (input wire clk);
         wire [31:0] s0, r0, s1, r1, s1d, r1d;
         wire v0, v1, f0, f1, v1d, f1d;
         ot_hdc_v41x_softplus   u_old (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .sp(s0), .r(r0), .vo(v0), .fault(f0));
-        ot_hdc_v41x_softplus_s u_new (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .sp(s1), .r(r1), .vo(v1), .fault(f1));
-        ot_hdc_delay #(.W(66), .D(162 - 124), .RESET(1)) d_n (clk, rst_n, {v1, f1, s1, r1}, {v1d, f1d, s1d, r1d});
+        ot_hdc_v41x_softplus_s #(.PCUT(PCUT)) u_new (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .sp(s1), .r(r1), .vo(v1), .fault(f1));
+        ot_hdc_delay #(.W(66), .D(162 - D_SP), .RESET(1)) d_n (clk, rst_n, {v1, f1, s1, r1}, {v1d, f1d, s1d, r1d});
         always @(posedge clk) if (rst_n) begin
             if (v0) begin
                 nchk = nchk + 1;
@@ -57,8 +58,8 @@ module tb_w11_spshort #(parameter integer UNIT = 0) (input wire clk);
         wire [31:0] y0, y1, y1d;
         wire v0, v1, f0, f1, v1d, f1d;
         ot_hdc_v41x_exp   u_old (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .y(y0), .vo(v0), .fault(f0));
-        ot_hdc_v41x_exp_s u_new (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .y(y1), .vo(v1), .p_pre(), .n_pre(), .fault(f1));
-        ot_hdc_delay #(.W(34), .D(49 - 40), .RESET(1)) d_n (clk, rst_n, {v1, f1, y1}, {v1d, f1d, y1d});
+        ot_hdc_v41x_exp_s #(.PCUT(PCUT)) u_new (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .y(y1), .vo(v1), .p_pre(), .n_pre(), .fault(f1));
+        ot_hdc_delay #(.W(34), .D(49 - D_EXP), .RESET(1)) d_n (clk, rst_n, {v1, f1, y1}, {v1d, f1d, y1d});
         always @(posedge clk) if (rst_n) begin
             if (v0) begin
                 nchk = nchk + 1;
@@ -147,13 +148,13 @@ module tb_w11_spshort #(parameter integer UNIT = 0) (input wire clk);
             end
             wire [31:0] yn, pm, yr, pm_d, yn_d;
             wire fn, fm, fa, fn_d, fm_d, vn;
-            ot_hdc_hstep #(.K(K)) u_h (.clk(clk), .rst_n(rst_n), .v(hv), .a(a), .b(b), .y(yn), .vo(vn), .fault(fn));
+            ot_hdc_hstep #(.K(K), .CUT(PCUT)) u_h (.clk(clk), .rst_n(rst_n), .v(hv), .a(a), .b(b), .y(yn), .vo(vn), .fault(fn));
             ot_hdc_qmul m_r (clk, rst_n, hv, a, b, pm, fm);
             ot_hdc_qadd a_r (clk, rst_n, 1'b1, pm, K, yr, fa);
-            ot_hdc_delay #(.W(34), .D(1), .RESET(1)) d_n (clk, rst_n, {fn, yn}, {fn_d, yn_d});
+            ot_hdc_delay #(.W(34), .D(2 - PCUT), .RESET(1)) d_n (clk, rst_n, {fn, yn}, {fn_d, yn_d});
             ot_hdc_delay #(.W(33), .D(3), .RESET(1)) d_m (clk, rst_n, {fm, pm}, {fm_d, pm_d});
             wire vr;
-            ot_hdc_delay #(.W(1), .D(1), .RESET(1)) d_v (clk, rst_n, vn, vr);
+            ot_hdc_delay #(.W(1), .D(2 - PCUT), .RESET(1)) d_v (clk, rst_n, vn, vr);
             always @(posedge clk) if (rst_n && vr) begin
                 hchk[gk] = hchk[gk] + 1;
                 if (fn_d) begin
@@ -179,17 +180,17 @@ module tb_w11_spshort #(parameter integer UNIT = 0) (input wire clk);
         end
         wire [31:0] xy, xp, xr, xy_d;
         wire xf, xf1, xf2, xf_d, xf1_d;
-        ot_hdc_fp32_mul_x2 u_x2 (.clk(clk), .rst_n(rst_n), .v(mv), .a(ma), .b(mb), .y(xy), .fault(xf));
+        ot_hdc_fp32_mul_x2 #(.CUT(PCUT)) u_x2 (.clk(clk), .rst_n(rst_n), .v(mv), .a(ma), .b(mb), .y(xy), .fault(xf));
         ot_hdc_qmul m_x1 (clk, rst_n, mv, ma, mb, xp, xf1);
         ot_hdc_qmul m_x2r (clk, rst_n, 1'b1, xp, 32'h40000000, xr, xf2);
-        ot_hdc_delay #(.W(33), .D(2), .RESET(1)) d_x (clk, rst_n, {xf, xy}, {xf_d, xy_d});
+        ot_hdc_delay #(.W(33), .D(3 - PCUT), .RESET(1)) d_x (clk, rst_n, {xf, xy}, {xf_d, xy_d});
         ot_hdc_delay #(.W(1), .D(3), .RESET(1)) d_x1 (clk, rst_n, xf1, xf1_d);
         wire [31:0] x0y, xp_d;
         wire x0f, xf1_d1;
-        ot_hdc_fp32_mul_x2 #(.DOUBLE(0)) u_x0 (.clk(clk), .rst_n(rst_n), .v(mv), .a(ma), .b(mb), .y(x0y), .fault(x0f));
-        ot_hdc_delay #(.W(33), .D(1), .RESET(1)) d_xp (clk, rst_n, {xf1, xp}, {xf1_d1, xp_d});
+        ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT)) u_x0 (.clk(clk), .rst_n(rst_n), .v(mv), .a(ma), .b(mb), .y(x0y), .fault(x0f));
+        ot_hdc_delay #(.W(33), .D(PCUT), .RESET(1)) d_xp (clk, rst_n, {xf1, xp}, {xf1_d1, xp_d});
         wire mv4;
-        ot_hdc_delay #(.W(1), .D(4), .RESET(1)) d_mv4 (clk, rst_n, mv, mv4);
+        ot_hdc_delay #(.W(1), .D(3 + PCUT), .RESET(1)) d_mv4 (clk, rst_n, mv, mv4);
         reg [63:0] x0chk = 0, x0err = 0;
         always @(posedge clk) if (rst_n && mv4) begin
             x0chk = x0chk + 1;
