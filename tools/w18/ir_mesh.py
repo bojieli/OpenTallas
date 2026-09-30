@@ -117,8 +117,9 @@ def solve(W, H, blk, p):
         total += cur
     rows.append(np.arange(n)); cols.append(np.arange(n)); vals.append(diag)
     G = sp.csr_matrix((np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))), shape=(n, n))
-    M = spla.spilu(G.tocsc(), drop_tol=1e-4, fill_factor=10)
-    v, info = spla.cg(G, I, rtol=1e-10, maxiter=5000, M=spla.LinearOperator(G.shape, M.solve))
+    dinv = 1.0 / G.diagonal()
+    M = spla.LinearOperator(G.shape, lambda x: dinv * x)          # Jacobi: fast per iteration on a 2D mesh
+    v, info = spla.cg(G, I, x0=np.full(n, VDD), rtol=1e-9, maxiter=200000, M=M)
     return v.reshape(ny, nx), dict(nodes=n, nx=nx, ny=ny, vdd_bumps=nb, total_current_a=round(total, 1),
                                    cg_info=int(info), rsq_eff=rsq)
 
