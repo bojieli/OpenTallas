@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.qwen-o4-kv-slice-map.v1",
+ "status": "pass",
+ "groups": 6144,
+ "tp": 4,
+ "kv_heads_per_die": 2,
+ "v_base_word": 131072,
+ "position": 8191,
+ "kv_ops": 2,
+ "owned_reads": 1048576,
+ "distinct_words_read": 262144,
+ "window_words_k_plus_v_at_pos": 262144,
+ "max_local_index": 53,
+ "slice_words": 128,
+ "tile_cycles_with_disagreeing_local": 0,
+ "per_group_collisions": 0,
+ "words_read_by_more_than_one_tile": 0,
+ "image_program_sha256": "fe9aebed4f4dccbfe980237a5b4b9d6207909746fb9fd2a0f961d7fbc2582de0",
+ "source_sha256": {
+  "tools/qwen_o4_kv_slice_map.py": "224ad0cc8aa54ddbc3b8a16e17c31cd17793313470cd7492d048e11752e7d487",
+  "rtl/hdc/ot_qwen_rom_tile.sv": "eb377eee1470c7ae39802a351c90aa00aca38d6f9370ac0e68a2600ab00b6ead",
+  "rtl/hdc/ot_hdc_matvec.sv": "454c336ca59b2b4c8b673f489a229e108f5034a1353091e72a987f25e1088e24"
+ },
+ "claim_boundary": "Address-map proof for one layer program at one position; the RTL restates the same formula."
+}
