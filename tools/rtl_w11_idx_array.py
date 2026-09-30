@@ -177,19 +177,30 @@ def verilator_version():
     return subprocess.run([VERILATOR, "--version"], capture_output=True, text=True).stdout.strip()
 
 
+# element arithmetic latencies (FPL, FML, QL; ot_hdc_v41x_idx_engine): 3/3/3 as built, --lat for the 1.2 GHz
+# streaming build (adds ot_hdc_fp32_add_lat.sv)
+LAT = {"FPL": 3, "FML": 3, "QL": 3}
+
+
+def rtl():
+    return RTL + (["rtl/hdc/ot_hdc_fp32_add_lat.sv"] if LAT["FPL"] != 3 else [])
+
+
 def build(work: Path, ns, nk, jobs=8):
     tag = re.sub(r"[^0-9.]", "", verilator_version().split()[1])
-    obj = work / f"obj_ns{ns}_nk{nk}_v{tag}"
+    lt = "" if LAT == {"FPL": 3, "FML": 3, "QL": 3} else "_lat{FPL}_{FML}_{QL}".format(**LAT)
+    obj = work / f"obj_ns{ns}_nk{nk}_v{tag}{lt}"
     exe = obj / "Vtb_hdc_v41x_idx_array"
-    stamp = hashlib.sha256(b"".join((ROOT / p).read_bytes() for p in RTL + [TB, VLT, HARNESS])).hexdigest()
+    stamp = hashlib.sha256(b"".join((ROOT / p).read_bytes() for p in rtl() + [TB, VLT, HARNESS])).hexdigest()
     if exe.exists() and (obj / "stamp").exists() and (obj / "stamp").read_text() == stamp:
         return exe, None
     obj.mkdir(parents=True, exist_ok=True)
     cmd = [VERILATOR, "--cc", "--exe", "--build", "-O3", "--x-assign", "fast", "--x-initial", "fast",
            "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-DECLFILENAME", "-Wno-UNOPTFLAT",
-           "--top-module", "tb_hdc_v41x_idx_array", f"-GNS={ns}", f"-GNK={nk}",
+           "--top-module", "tb_hdc_v41x_idx_array", f"-GNS={ns}", f"-GNK={nk}"] + \
+          [f"-G{k}={v}" for k, v in LAT.items()] + [
            "-CFLAGS", "-DVTOP=Vtb_hdc_v41x_idx_array -O1", "-j", str(jobs), "--Mdir", str(obj),
-           str(ROOT / VLT), str(ROOT / TB)] + [str(ROOT / p) for p in RTL] + [str(ROOT / HARNESS)]
+           str(ROOT / VLT), str(ROOT / TB)] + [str(ROOT / p) for p in rtl()] + [str(ROOT / HARNESS)]
     t0 = time.time()
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode:
@@ -434,7 +445,8 @@ def phase_record(work: Path):
         block="V4.1 indexer scoring array (dedicated unit), spec NS=16 x NK=4 = 64 keys/cycle per die",
         tool="tools/rtl_w11_idx_array.py",
         git_head=head, sources_dirty_at_run=bool(dirty),
-        source_sha256={p: sha(p) for p in SOURCES},
+        source_sha256={p: sha(p) for p in SOURCES + [x for x in rtl() if x not in SOURCES]},
+        element_latencies=dict(LAT),
         golden="tools/hdc_golden_v41.py Model.indexer lines under chunk8: dots_q4 (block dots rounded once, csum), "
                "to_bf16, relu*w to_bf16, reduce_rows(csum) to_bf16; candidate mask -inf; faults/refusals -> 0+fault",
         parameters=dict(spec_ns=16, spec_nk=4, nb=NB, ih=IH, iw=IW, md=MD, verilator=sims.get("verilator")),
@@ -471,7 +483,14 @@ def main():
     ap.add_argument("--skip-full", action="store_true")
     ap.add_argument("--par", type=int, default=12)
     ap.add_argument("--configs", default="", help="sim only these NSxNK configs, e.g. 2x4,4x1")
+    ap.add_argument("--lat", default=None, help="FPL,FML,QL element latencies (default 3,3,3 = as built)")
+    ap.add_argument("--output", default=None, help="record path (default results/rtl/w11_idx_array.json)")
     a = ap.parse_args()
+    global OUT
+    if a.lat:
+        LAT.update(zip(("FPL", "FML", "QL"), map(int, a.lat.split(","))))
+    if a.output:
+        OUT = Path(a.output)
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
     if a.phase in ("all", "prepare"):
