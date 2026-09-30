@@ -265,6 +265,8 @@ module tb_w15_v41_hbm_nvls #(
         assign rr[0 +: PW] = dr;
         assign dl_v = dv;
         assign dl_r = dr;
+        always @(posedge rep) if (fu2 | fx2 | fx6 | fu6)
+            $display("W15LATE pkg=%0d u10=%0d up=%0d dn=%0d u01=%0d", p, fu2, fx2, fx6, fu6);
         assign lf[D0] = fu1 | fu2 | fu3 | fu4 | fx0 | fx5 | fx6 | fx7 | (|aerr & av[0]);
         assign lf[D1] = fu0 | fu5 | fu6 | fu7 | fx1 | fx2 | fx3 | fx4;
     end endgenerate
@@ -284,6 +286,7 @@ module tb_w15_v41_hbm_nvls #(
         repeat (20) @(posedge clk[0]);
         dump = 1; #0.01;
         rep = 1; #0.01;
+        $display("W15FAULTS lf=%b sw=%0d", lf, sw_fault);
         $display("W15DONE seed=%0d det=%0d u_drel=%0d x_drel=%0d faults=%0d", seed0, DET, U_DREL, X_DREL,
                  (|lf) || sw_fault);
         $finish;

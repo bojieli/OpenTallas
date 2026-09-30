@@ -437,7 +437,10 @@ def run(name: str, seed: int, det: int, drel: dict, extra: dict | None = None) -
     return res
 
 
-GUARD = 1                  # cycles of release margin beyond the worst arrival seen over the sweep and its corners
+GUARD = 2                  # cycles of release margin beyond the worst arrival seen over the sweep and its corners:
+                           # 1 for the RX head register (4fad2dc5: a bundle is releasable the cycle after it is
+                           # visible) + 1 for clock phases the sweep did not draw (the HBM TP-12 bench found a
+                           # downlink arrival one cycle past 14 sampled phases at the upper channel corner)
 CLASS_KEYS = {"ucie": ("U_DREL", "U_DLY", "U_JS"), "board": ("X_DREL", "X_DLY", "X_JS")}
 CHAN_DEFAULT = {"U_DLY": LINKS["ucie_a"]["phy_adapter_tx_rx_ns"]["value"],
                 "U_JS": LINKS["ucie_a"]["static_latency_variation_ns"]["value"],
