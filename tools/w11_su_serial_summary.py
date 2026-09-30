@@ -49,7 +49,8 @@ def row(name, note):
                 routing_layers=[a for a in ("M2 M5", "M2 M9") if f"--routing-layers {a}" in argv] or None,
                 cell_area_um2=g.get("area_um2"), die_area_um2=m.get("die_area_um2"),
                 drc=g.get("drc"), signal_integrity_clean=g.get("signal_integrity_clean"),
-                commit=(d.get("git") or {}).get("commit"), worktree_dirty=(d.get("git") or {}).get("worktree_dirty"))
+                commit=(d.get("git") or {}).get("commit"), worktree_dirty=(d.get("git") or {}).get("worktree_dirty"),
+                currency=(d.get("currency") or {}).get("state", "current"))
 
 
 def depths(mlat, alat):

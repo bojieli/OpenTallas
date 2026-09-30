@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DIR = ROOT / "results/physical_abi3/asap7/hdc/v41x/w11_serial"
 sys.path.insert(0, str(ROOT / "tools"))
+sys.path.insert(0, str(ROOT / "tests"))
 
 
 def _rows():
@@ -43,3 +44,10 @@ def test_summary_depths_match_the_campaign_model():
 def test_every_record_is_pinned_to_a_clean_commit():
     for r in _rows().values():
         assert r["commit"] and r["worktree_dirty"] is False
+
+
+def test_records_are_current_or_marked_stale():
+    from record_currency_support import assert_current_or_marked_stale
+    for p in sorted(DIR.glob("*/physical.json")):
+        body = json.loads(p.read_text())
+        assert_current_or_marked_stale(body, {x["path"]: x["sha256"] for x in body["design"]["sources"]}, p.parent.name)

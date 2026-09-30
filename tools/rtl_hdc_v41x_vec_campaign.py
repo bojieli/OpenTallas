@@ -64,7 +64,7 @@ OUT = ROOT / "results/rtl/hdc_v41x_vec_campaign.json"
 RTL = [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in
        ("ot_hdc_v41x_sfu", "ot_hdc_v41x_vec_lane", "ot_hdc_v41x_vec_side", "ot_hdc_v41x_vec_red", "ot_hdc_v41x_vec")]
 LIB = [ROOT / p for p in ("rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
-                          "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+                          "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fastfp_lat.sv",
                           "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv",
                           "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv", "rtl/hdc/v41/ot_hdc_softplus.sv")]
 TB = ROOT / "rtl/test/tb_hdc_v41x_vec.sv"
