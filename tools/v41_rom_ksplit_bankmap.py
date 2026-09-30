@@ -379,6 +379,7 @@ NEAR = False
 CRITICAL = ("a_proj", "wq_b", "cmp.wk", "wo_b", "router")
 REACH_UM = 504.0                     # W15: SS register-to-register reach at 0.833 ns
 GATHER_SCATTER = 12                  # the model's VM x-gather + return-scatter stages (6 + 6)
+SLOT_XY = None                       # [(x_um, y_um, distance_um)] of slot j (the farther macro of its pair)
 SLOT_DIST = None                     # np.array: distance (um) of the j-th nearest pair slot
 
 
@@ -393,8 +394,10 @@ def load_geometry(path: Path):
     root = next(c for c in r["latency_crossings"]["crossings"] if "ROM_MAC.expert" in c["crossing"])["from_um"]
     ms = [i for i in r["instances"] if i[5].startswith("ROM_MAC.")]
     w = 125.712
-    d = sorted(abs(i[2] + w / 2 - root[0]) + abs(i[3] + 60 - root[1]) for i in ms)
-    return np.array(d[1::2]), root                    # one distance per pair (the farther half)
+    pts = sorted((abs(i[2] + w / 2 - root[0]) + abs(i[3] + 60 - root[1]), i[2] + w / 2, i[3] + 60) for i in ms)
+    global SLOT_XY
+    SLOT_XY = [(round(p[1], 1), round(p[2], 1), round(p[0], 1)) for p in pts[1::2]]   # (x, y, distance) per slot
+    return np.array([p[0] for p in pts[1::2]]), root      # one distance per pair (the farther half)
 
 
 def place_dense(die: Die, mats: list[dict], layer: int):
@@ -760,6 +763,7 @@ def main(argv=None):
     p.add_argument("--fadd-rec", type=int, default=None, help="FP32 adder recurrence (chain latency) in cycles")
     a = p.parse_args(argv)
     global BF16_PAIR, FADD_REC, NEAR, SLOT_DIST, PERM
+    _root = None
     if a.near or a.wire:
         SLOT_DIST, _root = load_geometry(a.geometry)
         PERM = np.random.default_rng(a.seed).permutation(len(SLOT_DIST))
@@ -819,7 +823,11 @@ def main(argv=None):
             with_measured_t_read=price(rows, "t_read"), with_measured_t_phase=price(rows, "t_phase"),
             with_measured_t_phase_and_wire=price(rows, "t_phase", True) if (a.near or a.wire) else None),
         all_capacity_ok=all(d["capacity_ok"] for d in dies),
-        element_needs=element_needs_all(dies), dies=dies)
+        element_needs=element_needs_all(dies), dies=dies,
+        slot_geometry=None if SLOT_XY is None else dict(
+            root_um=list(_root), columns=["x_um", "y_um", "manhattan_um_to_root"], slots=SLOT_XY,
+            note=("slot j is the j-th nearest ROM pair to ONE x-broadcast root / return sink (the distributed-VM "
+                  "port); a multi-root return must map each root's region to a contiguous set of these slots")))
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(dict(verdict=rec["verdict"], busiest=bus, capacity=rec["all_capacity_ok"],
