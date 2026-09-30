@@ -30,6 +30,37 @@
 // against ot_hdc_qmul -> ot_hdc_qadd (results/rtl/w11_softplus_short.json).
 // ---------------------------------------------------------------------------
 
+// The last four carry-save levels of ot_hdc_mul24_sum (8 rows -> sum and carry), without its
+// prefix add: a register may sit between them (the 1.111 ns SS cut).
+module ot_hdc_mul24_csa (
+    input  wire [48*8-1:0] rows,
+    output wire [95:0]     cs      // {carry, sum}
+);
+    function automatic [95:0] csa;
+        input [47:0] r0, r1, r2;
+        begin
+            csa[47:0] = r0 ^ r1 ^ r2;
+            csa[95:48] = ((r0 & r1) | (r0 & r2) | (r1 & r2)) << 1;
+        end
+    endfunction
+    wire [48*6-1:0] l4;
+    wire [48*4-1:0] l5;
+    wire [48*3-1:0] l6;
+    genvar i;
+    generate
+        for (i = 0; i < 2; i = i + 1) begin : g_l4
+            assign l4[96*i +: 96] = csa(rows[144*i +: 48], rows[144*i + 48 +: 48], rows[144*i + 96 +: 48]);
+        end
+        assign l4[192 +: 96] = rows[288 +: 96];
+        for (i = 0; i < 2; i = i + 1) begin : g_l5
+            assign l5[96*i +: 96] = csa(l4[144*i +: 48], l4[144*i + 48 +: 48], l4[144*i + 96 +: 48]);
+        end
+    endgenerate
+    assign l6[0 +: 96] = csa(l5[0 +: 48], l5[48 +: 48], l5[96 +: 48]);
+    assign l6[96 +: 48] = l5[144 +: 48];
+    assign cs = csa(l6[0 +: 48], l6[48 +: 48], l6[96 +: 48]);
+endmodule
+
 // ---------------------------------------------------------------------------
 // Horner step y = RN(RN(a*b) + K), K a positive normal constant, LATENCY 4.
 //   F1  the multiplier's stage 1 (decode, normalise, partial products, three
@@ -64,9 +95,9 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000) (
     localparam [23:0] MK = {1'b1, K[22:0]};
     localparam signed [11:0] EK = $signed({4'd0, KF}) - 12'sd127;
 
-    wire [4:0] vd;
-    ot_hdc_vline #(.D(4)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
-    assign vo = vd[4];
+    wire [5:0] vd;
+    ot_hdc_vline #(.D(5)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vd));
+    assign vo = vd[5];
 
     // -- F1: the multiplier's stage 1 -----------------------------------------
     wire [7:0]  a_field = a[30:23];
@@ -96,14 +127,25 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000) (
         s1_rows <= rows; s1_power <= power;
     end
 
+    // -- F1b: the tree's last four carry-save levels (8 rows -> 2), cut before the prefix add
+    wire [95:0] cs;
+    ot_hdc_mul24_csa u_cs (.rows(s1_rows), .cs(cs));
+    reg        s1b_nf, s1b_zero, s1b_sign;
+    reg [95:0] s1b_cs;
+    reg signed [11:0] s1b_power;
+    always @(posedge clk) begin
+        s1b_nf <= s1_nf; s1b_zero <= s1_zero; s1b_sign <= s1_sign; s1b_cs <= cs; s1b_power <= s1_power;
+    end
+
     // -- F2: product; distance below K for either leading bit ----------------
     wire [47:0] prod;
-    ot_hdc_mul24_sum u_sum (.rows(s1_rows), .p(prod));
+    wire prod_c;
+    ot_hdc_ksa #(.W(48)) u_cpa (.a(s1b_cs[47:0]), .b(s1b_cs[95:48]), .cin(1'b0), .s(prod), .cout(prod_c));
     //: The product's floor exponent is power + 47 (bit 47 set) or power + 46.
     //: d = EK - floor; the rounded product M' (25 bits) lands in K's frame
     //: (K = MK << 3) as 2 M' >> (d - 2).
-    wire signed [11:0] d47 = EK - (s1_power + 12'sd47);
-    wire signed [11:0] d46 = EK - (s1_power + 12'sd46);
+    wire signed [11:0] d47 = EK - (s1b_power + 12'sd47);
+    wire signed [11:0] d46 = EK - (s1b_power + 12'sd46);
     function automatic [4:0] shamt(input signed [11:0] d);
         shamt = (d > 12'sd29) ? 5'd27 : (d < 12'sd2) ? 5'd0 : d[4:0] - 5'd2;
     endfunction
@@ -118,7 +160,7 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000) (
     reg [4:0]  s2_sh47, s2_sh46;
     reg [25:0] s2_m47, s2_m46;
     always @(posedge clk) begin
-        s2_nf <= s1_nf; s2_zero <= s1_zero; s2_sign <= s1_sign;
+        s2_nf <= s1b_nf; s2_zero <= s1b_zero; s2_sign <= s1b_sign;
         s2_prod <= prod;
         s2_tiny47 <= d47 > 12'sd29; s2_tiny46 <= d46 > 12'sd29;
         s2_oor47 <= d47 < 12'sd2;   s2_oor46 <= d46 < 12'sd2;
@@ -165,7 +207,7 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000) (
     ot_hdc_ksa #(.W(24)) u_rnd (.a(val[26:3]), .b(24'd0), .cin(inc), .s(rs), .cout(rs_c));
     wire [31:0] code = {1'b0, fld + {7'd0, rs_c}, rs_c ? 23'd0 : rs[22:0]};
     always @(posedge clk) begin
-        fault <= vd[3] && s3_f;
+        fault <= vd[4] && s3_f;
         y <= s3_f ? 32'd0 : s3_k ? K : code;
     end
 endmodule
@@ -179,7 +221,7 @@ endmodule
 // 2 rnd <= 2^24 is a subnormal or the code of 2^-125 or below).  Faults as
 // ot_hdc_qmul (an overflow of the doubled value is the second multiply's).
 // ---------------------------------------------------------------------------
-module ot_hdc_fp32_mul_x2 (
+module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -215,12 +257,23 @@ module ot_hdc_fp32_mul_x2 (
         s1_byp <= nonfinite || zero; s1_nf <= nonfinite; s1_sign <= a[31] ^ b[31];
         s1_rows <= rows; s1_power <= power;
     end
+    // -- stage 1b: the tree's last four carry-save levels, cut before the prefix add --
+    wire [95:0] cs;
+    ot_hdc_mul24_csa u_cs (.rows(s1_rows), .cs(cs));
+    reg        s1b_v, s1b_byp, s1b_nf, s1b_sign;
+    reg [95:0] s1b_cs;
+    reg signed [11:0] s1b_power;
+    always @(posedge clk or negedge rst_n) if (!rst_n) s1b_v <= 1'b0; else s1b_v <= s1_v;
+    always @(posedge clk) begin
+        s1b_byp <= s1_byp; s1b_nf <= s1_nf; s1b_sign <= s1_sign; s1b_cs <= cs; s1b_power <= s1_power;
+    end
     // -- stage 2 (ot_hdc_fp32_mul_fast) --
     wire [47:0] prod;
-    ot_hdc_mul24_sum u_sum (.rows(s1_rows), .p(prod));
-    wire signed [11:0] fl47 = s1_power + 12'sd47;
-    wire signed [11:0] fl46 = s1_power + 12'sd46;
-    wire signed [11:0] sh_sub = -(s1_power + 12'sd149);
+    wire prod_c;
+    ot_hdc_ksa #(.W(48)) u_cpa (.a(s1b_cs[47:0]), .b(s1b_cs[95:48]), .cin(1'b0), .s(prod), .cout(prod_c));
+    wire signed [11:0] fl47 = s1b_power + 12'sd47;
+    wire signed [11:0] fl46 = s1b_power + 12'sd46;
+    wire signed [11:0] sh_sub = -(s1b_power + 12'sd149);
     wire [5:0] shc = (sh_sub > 12'sd63) ? 6'd63 : sh_sub[5:0];
     reg [47:0] m_round, m_sticky;
     integer k;
@@ -234,9 +287,9 @@ module ot_hdc_fp32_mul_x2 (
     reg [47:0] s2_prod, s2_mr, s2_ms;
     reg [5:0]  s2_sh;
     reg signed [11:0] s2_fl47, s2_fl46;
-    always @(posedge clk or negedge rst_n) if (!rst_n) s2_v <= 1'b0; else s2_v <= s1_v;
+    always @(posedge clk or negedge rst_n) if (!rst_n) s2_v <= 1'b0; else s2_v <= s1b_v;
     always @(posedge clk) begin
-        s2_byp <= s1_byp; s2_nf <= s1_nf; s2_sign <= s1_sign;
+        s2_byp <= s1b_byp; s2_nf <= s1b_nf; s2_sign <= s1b_sign;
         s2_prod <= prod;
         s2_sub47 <= fl47 < -12'sd126;
         s2_sub46 <= fl46 < -12'sd126;
@@ -263,9 +316,12 @@ module ot_hdc_fp32_mul_x2 (
     wire carry = !is_sub && rnd_c;
     wire [23:0] man = carry ? {1'b1, rnd[23:1]} : rnd;
     wire signed [11:0] floor_ = fl + {11'd0, carry};
-    wire over = !is_sub && (floor_ > 12'sd126);
-    wire [7:0] field = floor_[7:0] + 8'd128;
-    wire [31:0] code = is_sub ? {s2_sign, 6'd0, rnd, 1'b0} : {s2_sign, field, man[22:0]};
+    wire over = !is_sub && (floor_ > (DOUBLE ? 12'sd126 : 12'sd127));
+    wire [7:0] field = floor_[7:0] + (DOUBLE ? 8'd128 : 8'd127);
+    wire sub_carry = is_sub && rnd[23];
+    wire [31:0] code = !is_sub ? {s2_sign, field, man[22:0]} :
+                       DOUBLE ? {s2_sign, 6'd0, rnd, 1'b0} :
+                       (sub_carry ? {s2_sign, 8'h01, 23'd0} : {s2_sign, 8'h00, rnd[22:0]});
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; fault <= 1'b0; end
         else begin
@@ -406,9 +462,10 @@ module ot_hdc_v41x_exp_s (
     output wire [8:0]  n_pre,
     output wire        fault
 );
-    localparam integer T_R = 8;
-    localparam integer T_P = T_R + 6 * 4;       // 32
-    localparam integer DEPTH = T_P + 1;         // 33
+    localparam integer T_T = 4;                 // t registered
+    localparam integer T_R = T_T + 5;           // 9
+    localparam integer T_P = T_R + 6 * 5;       // 39
+    localparam integer DEPTH = T_P + 1;         // 40
     localparam [31:0] K_MAX   = 32'h42B00000;   //  88.0
     localparam [31:0] K_MINM  = 32'h42AE0000;   //  87.0 (magnitude of the lower clamp)
     localparam [31:0] K_LOG2E = 32'h3FB8AA3B;
@@ -568,10 +625,8 @@ module ot_hdc_v41x_exp_s (
         else xc <= x;
     end
     wire [31:0] t;
-    wire [1:0]  t_err;
-    wire        t_vo;
-    ot_hdc_fp32_mul_fast m_t (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(x), .b(K_LOG2E),
-                              .y(t), .err(t_err), .valid_out(t_vo));
+    wire        t_f;
+    ot_hdc_fp32_mul_x2 #(.DOUBLE(0)) m_t (.clk(clk), .rst_n(rst_n), .v(v), .a(x), .b(K_LOG2E), .y(t), .fault(t_f));
 
     // depth 2: |xc| * 2^43 (valid when n != 0, which needs |xc| >= 2^-2)
     wire [7:0]  xe = xc[30:23];
@@ -584,8 +639,8 @@ module ot_hdc_v41x_exp_s (
     end
     wire [31:0] xc3;
     wire        chi3, clo3;
-    ot_hdc_delay #(.W(32), .D(2)) d_xc3 (clk, rst_n, xc, xc3);
-    ot_hdc_delay #(.W(2), .D(2)) d_c3 (clk, rst_n, {c_hi, c_lo}, {chi3, clo3});
+    ot_hdc_delay #(.W(32), .D(T_T - 1)) d_xc3 (clk, rst_n, xc, xc3);
+    ot_hdc_delay #(.W(2), .D(T_T - 1)) d_c3 (clk, rst_n, {c_hi, c_lo}, {chi3, clo3});
 
     // depth 4: n = rint-to-even(t) (ot_hdc_v41x_exp's integer step), or the clamp's
     wire [23:0] tm = {1'b1, t[22:0]};
@@ -606,13 +661,13 @@ module ot_hdc_v41x_exp_s (
             nint <= t[31] ? -{1'b0, tmag} : {1'b0, tmag};
             nmag <= tmag[6:0]; nneg <= t[31] && (tmag != 8'd0); nnz <= (tmag != 8'd0);
         end
-        f_t <= vd[3] && !chi3 && !clo3 && (t_err != 2'd0 || tmag[7]);
+        f_t <= vd[T_T] && !chi3 && !clo3 && (t_f || tmag[7]);
     end
     wire [31:0] xc4;
     wire [49:0] afix4;
     wire        xsm4;
     ot_hdc_delay #(.W(32), .D(1)) d_xc4 (clk, rst_n, xc3, xc4);
-    ot_hdc_delay #(.W(51), .D(2)) d_a4 (clk, rst_n, {x_small, afix}, {xsm4, afix4});
+    ot_hdc_delay #(.W(51), .D(T_T - 1)) d_a4 (clk, rst_n, {x_small, afix}, {xsm4, afix4});
 
     // depth 5: T(|n|)
     reg [49:0] tfix, afix5;
@@ -633,7 +688,7 @@ module ot_hdc_v41x_exp_s (
         rsign <= xc5[31] ^ dab[50];
         rzero <= (dab == 51'd0);
         nnz6  <= nnz5; xc6 <= xc5;
-        f_rng <= vd[5] && nnz5 && xsm5;       // n != 0 needs |xc| >= 2^-2: never fails
+        f_rng <= vd[T_T + 2] && nnz5 && xsm5;       // n != 0 needs |xc| >= 2^-2: never fails
     end
 
     // depth 7: normalise (the leading one to bit 49); field = 133 - lz
@@ -675,15 +730,15 @@ module ot_hdc_v41x_exp_s (
     generate
         for (k = 1; k <= 6; k = k + 1) begin : g_h
             if (k < 6) begin : g_rd
-                ot_hdc_delay #(.W(32), .D(4)) d_r (clk, rst_n, rd[k-1], rd[k]);
+                ot_hdc_delay #(.W(32), .D(5)) d_r (clk, rst_n, rd[k-1], rd[k]);
             end
-            ot_hdc_hstep #(.K(poly(k))) u_h (.clk(clk), .rst_n(rst_n), .v(vd[T_R + 4*(k-1)]),
+            ot_hdc_hstep #(.K(poly(k))) u_h (.clk(clk), .rst_n(rst_n), .v(vd[T_R + 5*(k-1)]),
                                              .a(pa[k-1]), .b(rd[k-1]), .y(pa[k]), .vo(), .fault(hf[k]));
         end
     endgenerate
 
     wire [8:0] nint_d;
-    ot_hdc_delay #(.W(9), .D(T_P - 4)) d_n (clk, rst_n, nint, nint_d);
+    ot_hdc_delay #(.W(9), .D(T_P - T_T - 1)) d_n (clk, rst_n, nint, nint_d);
     always @(posedge clk) y <= pa[6] + {{14{nint_d[8]}}, nint_d, 23'd0};
     assign p_pre = pa[6];
     assign n_pre = nint_d;
@@ -1013,13 +1068,13 @@ module ot_hdc_v41x_softplus_s (
     output wire        vo,
     output wire        fault
 );
-    localparam integer T_PN   = 32;
-    localparam integer T_U    = T_PN + 19;       // 51
-    localparam integer T_U2   = T_U + 3;         // 54
-    localparam integer T_P    = T_U2 + 8 * 4;    // 86
-    localparam integer T_L    = T_P + 3;         // 89
-    localparam integer T_SP   = T_L + 2;         // 91
-    localparam integer DEPTH  = T_SP + 16;       // 107
+    localparam integer T_PN   = 39;
+    localparam integer T_U    = T_PN + 19;       // 58
+    localparam integer T_U2   = T_U + 4;         // 62
+    localparam integer T_P    = T_U2 + 8 * 5;    // 102
+    localparam integer T_L    = T_P + 4;         // 106
+    localparam integer T_SP   = T_L + 2;         // 108
+    localparam integer DEPTH  = T_SP + 16;       // 124
     localparam [32*9-1:0] C = {32'h3D70F0F1, 32'h3D888889, 32'h3D9D89D9, 32'h3DBA2E8C, 32'h3DE38E39,
                                32'h3E124925, 32'h3E4CCCCD, 32'h3EAAAAAB, 32'h3F800000};  // 1/17 .. 1/1
     function automatic [31:0] coef(input integer i);
@@ -1037,7 +1092,7 @@ module ot_hdc_v41x_softplus_s (
                              .p_pre(p_pre), .n_pre(n_pre), .fault(f_exp));
     ot_hdc_v41x_spdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_PN]), .p(p_pre), .n(n_pre),
                              .y(u), .vo(), .fault(f_div));
-    ot_hdc_qmul m_u2 (clk, rst_n, vd[T_U], u, u, u2, f_u2);
+    ot_hdc_fp32_mul_x2 #(.DOUBLE(0)) m_u2 (.clk(clk), .rst_n(rst_n), .v(vd[T_U]), .a(u), .b(u), .y(u2), .fault(f_u2));
 
     wire [31:0] u2d [0:7];
     wire [31:0] pa  [0:8];
@@ -1048,9 +1103,9 @@ module ot_hdc_v41x_softplus_s (
     generate
         for (k = 1; k <= 8; k = k + 1) begin : g_h
             if (k < 8) begin : g_d
-                ot_hdc_delay #(.W(32), .D(4)) d_u2 (clk, rst_n, u2d[k-1], u2d[k]);
+                ot_hdc_delay #(.W(32), .D(5)) d_u2 (clk, rst_n, u2d[k-1], u2d[k]);
             end
-            ot_hdc_hstep #(.K(coef(k))) u_h (.clk(clk), .rst_n(rst_n), .v(vd[T_U2 + 4*(k-1)]),
+            ot_hdc_hstep #(.K(coef(k))) u_h (.clk(clk), .rst_n(rst_n), .v(vd[T_U2 + 5*(k-1)]),
                                             .a(pa[k-1]), .b(u2d[k-1]), .y(pa[k]), .vo(), .fault(hf[k]));
         end
     endgenerate
