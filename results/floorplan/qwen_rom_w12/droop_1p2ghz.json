@@ -2489,6 +2489,150 @@
    "cap_fraction": 0.5
   }
  ],
+ "schedule": {
+  "1": {
+   "ops": 217,
+   "busy_runs": 217,
+   "token_cycles": 83898,
+   "first_start": 90,
+   "busy_cycles": 20592,
+   "gap_histogram": {
+    "<=16": 0,
+    "17-256": 143,
+    "257-1024": 73,
+    ">1024": 0
+   }
+  },
+  "8192": {
+   "ops": 217,
+   "busy_runs": 217,
+   "token_cycles": 127822,
+   "first_start": 90,
+   "busy_cycles": 27792,
+   "gap_histogram": {
+    "<=16": 0,
+    "17-256": 107,
+    "257-1024": 73,
+    ">1024": 36
+   }
+  },
+  "basis": "tools/hdc_timing.simulate replay of the TP-4 die program, SW = 64, W12 wires (+81 an op)"
+ },
+ "me_field_energy_mj_per_token": 29.6,
+ "schemes_root_20260930": {
+  "gap_preramp256": {
+   "cap_fraction": 1.0,
+   "peak_current_a": 1825.6,
+   "droop_mv": {
+    "L0.5pH_C5uF": 23.6,
+    "L0.5pH_C15uF": 23.5,
+    "L0.5pH_C30uF": 23.2,
+    "L1pH_C5uF": 29.7,
+    "L1pH_C15uF": 29.9,
+    "L1pH_C30uF": 28.7,
+    "L2pH_C5uF": 45.7,
+    "L2pH_C15uF": 44.6,
+    "L2pH_C30uF": 44.2,
+    "L5pH_C5uF": 95.7,
+    "L5pH_C15uF": 95.1,
+    "L5pH_C30uF": 95.2
+   },
+   "droop_mv_at_1pH_15uF": 29.9,
+   "droop_mv_at_2pH_15uF": 44.6,
+   "warm_max_cycles": 256,
+   "preramp_cycles": 256,
+   "ramps_per_token": 110,
+   "warm_gaps": 107,
+   "warm_cycles": 23632,
+   "warm_energy_mj": 25.167,
+   "ramp_energy_mj": 14.995,
+   "energy_mj_per_token": 40.162,
+   "cycles_per_token": 0,
+   "tok_s_vs_model": 1.0,
+   "power_w_at_model_rate": 239.7
+  },
+  "gap_preramp1024": {
+   "cap_fraction": 1.0,
+   "peak_current_a": 1825.6,
+   "droop_mv": {
+    "L0.5pH_C5uF": 19.9,
+    "L0.5pH_C15uF": 19.9,
+    "L0.5pH_C30uF": 19.9,
+    "L1pH_C5uF": 21.0,
+    "L1pH_C15uF": 21.0,
+    "L1pH_C30uF": 21.0,
+    "L2pH_C5uF": 23.5,
+    "L2pH_C15uF": 23.5,
+    "L2pH_C30uF": 23.6,
+    "L5pH_C5uF": 33.8,
+    "L5pH_C15uF": 33.9,
+    "L5pH_C30uF": 33.4
+   },
+   "droop_mv_at_1pH_15uF": 21.0,
+   "droop_mv_at_2pH_15uF": 23.5,
+   "warm_max_cycles": 256,
+   "preramp_cycles": 1024,
+   "ramps_per_token": 110,
+   "warm_gaps": 107,
+   "warm_cycles": 23632,
+   "warm_energy_mj": 25.167,
+   "ramp_energy_mj": 59.979,
+   "energy_mj_per_token": 85.146,
+   "cycles_per_token": 0,
+   "tok_s_vs_model": 1.0,
+   "power_w_at_model_rate": 508.1
+  },
+  "cap75_preramp256": {
+   "cap_fraction": 0.75,
+   "peak_current_a": 1369.2,
+   "droop_mv": {
+    "L0.5pH_C5uF": 17.9,
+    "L0.5pH_C15uF": 17.8,
+    "L0.5pH_C30uF": 17.6,
+    "L1pH_C5uF": 22.4,
+    "L1pH_C15uF": 22.6,
+    "L1pH_C30uF": 21.7,
+    "L2pH_C5uF": 34.4,
+    "L2pH_C15uF": 33.6,
+    "L2pH_C30uF": 33.3,
+    "L5pH_C5uF": 72.0,
+    "L5pH_C15uF": 71.4,
+    "L5pH_C30uF": 71.5
+   },
+   "droop_mv_at_1pH_15uF": 22.6,
+   "droop_mv_at_2pH_15uF": 33.6,
+   "ramps_per_token": 217,
+   "energy_mj_per_token": 22.185,
+   "cycles_per_token": 9264.0,
+   "tok_s_vs_model": 0.956,
+   "power_w_at_model_rate": 126.6
+  },
+  "cap50_preramp256": {
+   "cap_fraction": 0.5,
+   "peak_current_a": 912.8,
+   "droop_mv": {
+    "L0.5pH_C5uF": 12.1,
+    "L0.5pH_C15uF": 12.1,
+    "L0.5pH_C30uF": 11.9,
+    "L1pH_C5uF": 15.1,
+    "L1pH_C15uF": 15.3,
+    "L1pH_C30uF": 14.7,
+    "L2pH_C5uF": 23.2,
+    "L2pH_C15uF": 22.6,
+    "L2pH_C30uF": 22.4,
+    "L5pH_C5uF": 48.2,
+    "L5pH_C15uF": 47.8,
+    "L5pH_C30uF": 47.9
+   },
+   "droop_mv_at_1pH_15uF": 15.3,
+   "droop_mv_at_2pH_15uF": 22.6,
+   "ramps_per_token": 217,
+   "energy_mj_per_token": 14.79,
+   "cycles_per_token": 27792.0,
+   "tok_s_vs_model": 0.8786,
+   "power_w_at_model_rate": 77.5
+  }
+ },
  "verdict": "full-field step 1826 A (1278 W) vs the V4.1 die's 2,625 A: ramp17 227.9 mV at 2 pH / 15 uF; preramp256 44.6 mV (0 cycles); cap50+preramp256 22.6 mV but +13.8% cycles (the cap doubles every op's issue)",
  "w18_reference": {
   "record": "results/physical_abi3/asap7/chip/v41_w18/droop_schemes_1p2ghz.json",
@@ -2496,7 +2640,7 @@
  },
  "claim_boundary": "lumped L-C-R first droop (W18's model and assumptions: R_pkg, detector, DTC, L and C sweeps); tile power from a pre-route CTS database synthesised at TT with ripple adders, not a signed-off tile; base current assumed",
  "sources": {
-  "tools/qwen_rom_droop_w12.py": "2553c2cb0eee7cbd76fc550cecf7e2160b970fbfa6fa247d5aeeda7c3f114f52",
+  "tools/qwen_rom_droop_w12.py": "2966b756dbe09eea0761c5376798ec31176bfaa1d36c5e015adea17aeb8d1351",
   "tools/w18/droop_sim.py": "62e9b7ff12073962590105fe0907b29c72b1e12d07a934b125c11b0680834b22",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
