@@ -1,5 +1,6 @@
 {
  "schema": "opentallas.rtl.hdc_v41x_vec_campaign/1",
+ "historical": "FAILED verdict kept as recorded (the reducer tap hazard, see w11_su_checkpoint_bug.json). Its pinned sources have since changed (the tap fix, lane PRE/clip timing, the SU wire stages BCAST_STAGES/RET_STAGES); the current campaign is results/rtl/hdc_v41x_vec_campaign.json.",
  "generated_at": "2026-09-29T15:58:10Z",
  "sfu_equivalence": {
   "operands": 1000000,

@@ -6,13 +6,17 @@
 // (NOUT words) -- per head {flt, y}.  Every output beat is compared in order;
 // y is compared only where the golden value is finite (flt = 0).  Prints
 //   V41XTILE beats=<n> checked=<n> errors=<n> faults=<n> first_ov=<cycle> last_ov=<cycle>
+// PWORDS = 2 appends {ld_w2v, ld_w_hi[TD*16]} above iv (the two-word p-load port); PWORDS = 1 is unchanged.
 module tb_hdc_v41x_attn_tile (input wire clk);
     parameter integer H = 16;
     parameter integer TD = 64;
     parameter integer NCYC = 64;
     parameter integer NOUT = 16;
+    parameter integer PWORDS = 1;
+    parameter integer NBANK = 3;
     localparam integer BW = 2;
-    localparam integer WIN = 1 + BW + TD * 18 + 1 + 1 + BW + 8 + TD * 16;
+    localparam integer WIN0 = 1 + BW + TD * 18 + 1 + 1 + BW + 8 + TD * 16;
+    localparam integer WIN = WIN0 + ((PWORDS > 1) ? TD * 16 + 1 : 0);
     localparam integer WEXP = H * 33;
 
     reg [WIN-1:0]  stim [0:NCYC-1];
@@ -37,13 +41,24 @@ module tb_hdc_v41x_attn_tile (input wire clk);
     wire [TD*18-1:0] ib = w[IB0 +: TD*18];
     wire [BW-1:0] ibank = w[IB0 + TD*18 +: BW];
     wire iv = w[IB0 + TD*18 + BW];
+    wire [PWORDS*TD*16-1:0] ld_wp;
+    wire ld_w2v;
+    generate
+        if (PWORDS > 1) begin : g_p2
+            assign ld_wp = {w[WIN0 +: TD*16], ld_w};
+            assign ld_w2v = w[WIN0 + TD*16];
+        end else begin : g_p1
+            assign ld_wp = ld_w;
+            assign ld_w2v = 1'b0;
+        end
+    endgenerate
 
     wire ov;
     wire [H*32-1:0] oy;
     wire [H-1:0] oflt;
-    ot_hdc_v41x_attn_tile #(.H(H), .TD(TD), .NBANK(3), .BW(BW)) dut (
+    ot_hdc_v41x_attn_tile #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS)) dut (
         .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
-        .ld_w(ld_w), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
+        .ld_w(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
 
     integer nout = 0, errors = 0, checked = 0, faults = 0, first_ov = -1, last_ov = -1, h;
     always @(posedge clk) begin

@@ -416,13 +416,67 @@ WIRE_J_PER_BIT_MM = 0.1e-12   # ASSUMED: repeated RC global wire, C ~0.2 fF/um, 
                               # a 45 nm survey puts repeated RC wire at ~0.4 pJ/bit/mm (sensitivity row)
 SFU_OPS_PER_ELEM = 10         # ASSUMED FP32-op equivalents per exp/sigmoid/divide element
 BYTES_PER_WORD = {"fp4": 34, "fp8": 33, "bf16": 32, "fp32": 32}
+# ROM field power, MEASURED (W18, 2026-09-30): OpenSTA report_power on W10 p5's routed pair (6_final.odb + SPEF, TT
+# 0.7 V, 1.087 GHz, input toggle density 0.5).  A pair = 2 ROM macros + their strip logic.  Busy 229.6 mW (seq 45.1,
+# comb 128.0, clock tree 23.7, ROM macros 32.7); idle with the clock running 83.5 mW (clock tree 23.7, flop clock pins
+# 27.0, ROM macro clock 32.7, leakage 0.22); idle with an ideal per-pair ICG that also stops the ROM macro clock
+# 0.22 mW (leakage: ROM 0.20, cells 0.02).  These replace the area-based clock and leakage of the ROM field (the old
+# terms under-stated its clock ~45x); the hub keeps the area-based terms, UNCALIBRATED.
+PAIR_W = dict(clock_hz=1.087e9, busy=0.2296, idle_ungated=0.0835, idle_icg=0.00022, leak_rom=0.00020,
+              leak_cell=0.00002, placed_pairs=7102,
+              src="W18 report_power on W10 p5 routed pair (claude/w18-die-assembly, 2026-09-30); placed pairs = "
+                  "results/floorplan/v41_pack_refit_w10_interim.json capacity.used_pair_rows (W10 428c3631)")
+
+
+# Stage power gating (W18, 2026-09-30): a 16-pair cluster measures 14-17 mV IR; the power-switch rings that hold a
+# 10 mV budget take 5% of the cluster area.  Pair outline 513.756 x 131.76 um (W18, from W10 p5's abstract).
+SWITCH_RING = dict(cluster_area_frac=0.05, pair_um2=513.756 * 131.76, slots=9931,
+                   src="W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = "
+                       "v41_pack_refit_w10_interim.json capacity.pair_row_slots")
+
+
+def switch_ring_ledger():
+    """Area of the stage power-switch rings in the ROM field, and whether the re-fit's spare pair slots hold it."""
+    N = PAIR_W["placed_pairs"]
+    mm2 = SWITCH_RING["cluster_area_frac"] * N * SWITCH_RING["pair_um2"] / 1e6
+    slots_needed = N * (1 + SWITCH_RING["cluster_area_frac"])
+    return dict(switch_ring_mm2=round(mm2, 2), pair_slots_needed=round(slots_needed),
+                pair_slots=SWITCH_RING["slots"], fits_spare_slots=bool(slots_needed <= SWITCH_RING["slots"]),
+                basis=SWITCH_RING["src"])
+
+
+def pair_power(clock):
+    """Per-pair ROM-field power at `clock`: leakage, the clock of an idle pair whose clock runs, and the full
+    (clock + switching) power of a busy pair, each excluding leakage.  Clock and switching scale linearly with the
+    clock from the 1.087 GHz measurement (ASSUMED: same 0.7 V supply)."""
+    s = clock / PAIR_W["clock_hz"]
+    leak = PAIR_W["idle_icg"]
+    return dict(leak=leak, clock=(PAIR_W["idle_ungated"] - leak) * s, busy=(PAIR_W["busy"] - leak) * s)
+
+
+def busy_pairs(nd):
+    """Pairs a weight matvec keeps busy while it issues: the pairs of its holding macros (2 macros a pair)."""
+    u = nd.get("_uarch")
+    return min(PAIR_W["placed_pairs"], math.ceil(u["holding"] / 2)) if u else 0
+
+
+def xnet_energy(u, field_mm, wire_j):
+    """Energy of a weight matvec outside its pairs: x broadcast over the field, the VM read of x, the partial-sum
+    return wires and the VM write of the result (the pairs' own MACs, ROM reads and x capture are in PAIR_W)."""
+    xbits = u["K"] * (16 if u["fmt"] == "bf16" else 8)
+    return (xbits * field_mm * wire_j + u["K"] * 4 * E_SRAM_B
+            + u["rows"] * u["ksplit"] * 32 * (field_mm / FLOORPLAN["cols"] / 2 + 10.0) * wire_j + u["rows"] * 4 * E_SRAM_B)
 
 
 def power_ledger(d, g, clock, tokens_s, area, wire_j=WIRE_J_PER_BIT_MM):
-    stage_of = {}
+    """Busiest layer die.  ROM field from the measured pair (PAIR_W): every weight matvec keeps its holding pairs
+    busy for its issue time; the other placed pairs idle, clocked (ungated) or stopped by the per-pair ICG.  Hub
+    (dedicated units + VM ports) clock and leakage from its area (UNCALIBRATED).  Energy per token = dynamic above
+    the clocked-idle floor (field busy excess, off-pair network, hub units, HBM interface, links)."""
+    pp = pair_power(clock)
+    N = PAIR_W["placed_pairs"]
     stack_e = {}
-    per_layer = {}
-    occ_layer = {}
+    per_layer, field_layer, bp_layer, occ_layer, peak_layer = {}, {}, {}, {}, {}
     field_mm = FLOORPLAN["cols"] * 25.628 + 20.0          # broadcast tree wire length (column runs + trunk)
     for name, nd in g.nodes.items():
         L = nd["layer"]
@@ -432,15 +486,11 @@ def power_ledger(d, g, clock, tokens_s, area, wire_j=WIRE_J_PER_BIT_MM):
         k = nd["kind"]
         u = nd.get("_uarch")
         if u:
-            macs = u["rows"] * u["K"]
-            e += macs * E_MAC["fp4" if u["fmt"] == "fp4" else "fp8" if u["fmt"] == "fp8" else "bf16"]
-            e += u["words"] * BYTES_PER_WORD[u["fmt"]] * E_ROM_B
-            xbits = u["K"] * (16 if u["fmt"] == "bf16" else 8)
-            e += xbits * field_mm * wire_j                              # x broadcast over the field
-            e += u["K"] * 4 * E_SRAM_B                                  # x read out of the VM
-            e += u["K"] * u["holding"] * E_DELIVER_B / 32               # x delivered into each holding element
-            e += u["rows"] * u["ksplit"] * 32 * (field_mm / FLOORPLAN["cols"] / 2 + 10.0) * wire_j  # partial return
-            e += u["rows"] * 4 * E_SRAM_B                               # result write into the VM
+            bp = busy_pairs(nd) * nd["issue"]
+            bp_layer[L] = bp_layer.get(L, 0.0) + bp
+            field_layer[L] = field_layer.get(L, 0.0) + bp * (pp["busy"] - pp["clock"])
+            peak_layer[L] = max(peak_layer.get(L, 0), busy_pairs(nd))
+            e += xnet_energy(u, field_mm, wire_j)
         elif k == "matvec" and name.endswith("hc.fn"):
             e += nd["sweep"]["macs"] * E_MAC["fp32"]
         elif k in ("vector", "reduce") and nd.get("_work"):
@@ -463,35 +513,66 @@ def power_ledger(d, g, clock, tokens_s, area, wire_j=WIRE_J_PER_BIT_MM):
         if k not in ("collective", "hop"):
             occ_layer[L] = occ_layer.get(L, 0.0) + nd["issue"]
     lps = 40 / 28
-    stages = {}
-    occ = {}
+    stages, fstage, bstage, occ, peak = {}, {}, {}, {}, {}
     for L, e in per_layer.items():
         st = int(L / lps)
-        stages[st] = stages.get(st, 0.0) + e
+        stages[st] = stages.get(st, 0.0) + e + field_layer.get(L, 0.0)
+        fstage[st] = fstage.get(st, 0.0) + field_layer.get(L, 0.0)
+        bstage[st] = bstage.get(st, 0.0) + bp_layer.get(L, 0.0)
         occ[st] = occ.get(st, 0.0) + occ_layer.get(L, 0.0)
+        peak[st] = max(peak.get(st, 0), peak_layer.get(L, 0))
     busiest = max(stages, key=stages.get)
     e_tok = stages[busiest]
+    e_other = e_tok - fstage[busiest]
+    bp_tok = bstage[busiest]                       # busy pair-seconds per token on this die
     stack_tok = sum(v for L, v in stack_e.items() if int(L / lps) == busiest)
-    logic_mm2 = area["rom_field_strip_used_mm2"] + area["hub_logic_mm2"]
-    rom_mm2 = area["rom_macros"]
+    hub_mm2 = area["hub_logic_mm2"]
     sram_mm2 = area["vm_ports"]
-    clock_w = CLOCK_J_MM2 * clock * (logic_mm2 + 0.15 * (rom_mm2 + sram_mm2))
-    leak_w = logic_mm2 * LEAK["logic"] + rom_mm2 * LEAK["rom_array"] + sram_mm2 * LEAK["sram_array"]
+    hub_clock_w = CLOCK_J_MM2 * clock * (hub_mm2 + 0.15 * sram_mm2)
+    hub_leak_w = hub_mm2 * LEAK["logic"] + sram_mm2 * LEAK["sram_array"]
+    field_clock_w = N * pp["clock"]
+    field_leak_w = N * pp["leak"]
     idle_w = 4 * HBM_IDLE_W_STACK
-    static_w = clock_w + leak_w + idle_w
     sat_rate = 1.0 / max(occ.values())
+    maxp = peak[busiest]
+
+    def mode(icg):
+        static = field_leak_w + (0.0 if icg else field_clock_w) + hub_clock_w + hub_leak_w + idle_w
+        e = e_tok + (bp_tok * pp["clock"] if icg else 0.0)      # with the ICG a busy pair's clock is dynamic
+        p1, ps = static + e * tokens_s, static + e * sat_rate
+        # peak: the widest op's pairs busy, the rest idle; the rest of the die at its saturated average
+        idle_pair = pp["leak"] + (0.0 if icg else pp["clock"])
+        peak_w = (maxp * (pp["busy"] + pp["leak"]) + (N - maxp) * idle_pair + hub_clock_w + hub_leak_w + idle_w
+                  + e_other * sat_rate)
+        fits = ps <= COOLING_LIMIT_W
+        thr = sat_rate if fits else max(0.0, (COOLING_LIMIT_W - static) / e)
+        return dict(static_w=round(static, 1), energy_per_token_uJ=round(e * 1e6, 2),
+                    total_w_single_user=round(p1, 1), total_w_saturated=round(ps, 1),
+                    peak_w_saturated=round(peak_w, 1), fits_cooling_saturated=bool(fits),
+                    peak_fits_cooling=bool(peak_w <= COOLING_LIMIT_W),
+                    cooling_throttled_tokens_s_per_stage=round(thr, 1))
+    ung, icg = mode(False), mode(True)
     out = dict(busiest_stage=busiest, energy_per_token_uJ=round(e_tok * 1e6, 2),
                hbm_stack_energy_per_token_uJ=round(stack_tok * 1e6, 2),
                hbm_stack_w_saturated=round(stack_tok / max(occ.values()), 1),
                dynamic_w_single_user=round(e_tok * tokens_s, 1), dynamic_w_saturated=round(e_tok * sat_rate, 1),
                saturated_tokens_s_per_stage=round(sat_rate, 1),
-               clock_w=round(clock_w, 1), leakage_w=round(leak_w, 1), hbm_idle_w=idle_w,
-               total_w_single_user=round(static_w + e_tok * tokens_s, 1),
-               total_w_saturated=round(static_w + e_tok * sat_rate, 1), cooling_limit_w=COOLING_LIMIT_W,
-               fits_cooling_saturated=bool(static_w + e_tok * sat_rate <= COOLING_LIMIT_W),
+               clock_w=round(field_clock_w + hub_clock_w, 1), leakage_w=round(field_leak_w + hub_leak_w, 1),
+               hbm_idle_w=idle_w,
+               total_w_single_user=ung["total_w_single_user"], total_w_saturated=ung["total_w_saturated"],
+               cooling_limit_w=COOLING_LIMIT_W, fits_cooling_saturated=ung["fits_cooling_saturated"],
+               field=dict(basis="MEASURED per pair (PAIR_W, W18)", placed_pairs=N,
+                          pair_w=dict(leak=round(pp["leak"], 5), clock=round(pp["clock"], 5), busy=round(pp["busy"], 5)),
+                          clock_w=round(field_clock_w, 1), leakage_w=round(field_leak_w, 2),
+                          busy_pair_us_per_token=round(bp_tok * 1e6, 1),
+                          busy_pairs_equiv_single_user=round(bp_tok * tokens_s, 1),
+                          busy_pairs_equiv_saturated=round(bp_tok * sat_rate, 1),
+                          peak_busy_pairs=maxp, dynamic_energy_per_token_uJ=round(fstage[busiest] * 1e6, 2)),
+               hub=dict(basis="area x technology.json clock / leakage constants, UNCALIBRATED",
+                        clock_w=round(hub_clock_w, 1), leakage_w=round(hub_leak_w, 1)),
+               ungated=ung, per_pair_icg=icg, switch_rings=switch_ring_ledger(),
                wire_j_per_bit_mm=wire_j)
     return out
-
 
 UNIT = json.loads((ROOT / "results/arch/arch_budget_v41.json").read_text())["unit_areas_um2"]
 SRAM_256B_MACRO = dict(um2=174.744 * 70.47, bits=262144, width=256)   # ot_sram_1r1w_1024x256_m2_r2c2
@@ -1904,25 +1985,23 @@ def _v41_graph(d, positions=1):
 
 def v41_rom_ledger(g, mac_ops=MAC_OPS, wire_j=WIRE_J_PER_BIT_MM):
     """Per-layer (one die) energy by category and stage occupancy: power_ledger's terms, split so that a verify
-    pass can scale them (compute x positions, HBM once per pass).  With mac_ops=1 the busiest stage's on-die sum
-    equals power_ledger's energy_per_token_uJ (tests/test_uarch_economics.py)."""
+    pass can scale them (compute x positions, HBM once per pass).  The ROM field is the measured pair (PAIR_W):
+    'field' is its busy excess over the clocked-idle floor.  With mac_ops=1 the busiest stage's on-die sum equals
+    power_ledger's energy_per_token_uJ (tests/test_uarch_economics.py)."""
     field_mm = FLOORPLAN["cols"] * 25.628 + 20.0
+    pp = pair_power(A._env()["clock"])
     lay, occ = {}, {}
     for name, nd in g.nodes.items():
         L = nd["layer"]
         if L is None or L < 0:
             continue
-        e = lay.setdefault(L, dict(mac=0.0, rom=0.0, xnet=0.0, units=0.0, hbm_if=0.0, stack=0.0, link=0.0))
+        e = lay.setdefault(L, dict(mac=0.0, field=0.0, xnet=0.0, units=0.0, hbm_if=0.0, stack=0.0, link=0.0))
         k = nd["kind"]
         u = nd.get("_uarch")
         if u:
-            e["mac"] += u["rows"] * u["K"] * mac_ops * E_MAC["fp4" if u["fmt"] == "fp4" else "fp8" if u["fmt"] == "fp8"
-                                                             else "bf16"]
-            e["rom"] += u["words"] * BYTES_PER_WORD[u["fmt"]] * E_ROM_B
-            xbits = u["K"] * (16 if u["fmt"] == "bf16" else 8)
-            e["xnet"] += (xbits * field_mm * wire_j + u["K"] * 4 * E_SRAM_B + u["K"] * u["holding"] * E_DELIVER_B / 32
-                          + u["rows"] * u["ksplit"] * 32 * (field_mm / FLOORPLAN["cols"] / 2 + 10.0) * wire_j
-                          + u["rows"] * 4 * E_SRAM_B)
+            # measured pairs (PAIR_W): busy excess over the clocked idle floor, which is the die's static clock
+            e["field"] += busy_pairs(nd) * nd["issue"] * (pp["busy"] - pp["clock"])
+            e["xnet"] += xnet_energy(u, field_mm, wire_j)
         elif k == "matvec" and name.endswith("hc.fn"):
             e["mac"] += nd["sweep"]["macs"] * mac_ops * E_MAC["fp32"]
         elif k in ("vector", "reduce") and nd.get("_work"):
@@ -1945,7 +2024,7 @@ def v41_rom_ledger(g, mac_ops=MAC_OPS, wire_j=WIRE_J_PER_BIT_MM):
         s = int(L / lps)
         st_e[s] = st_e.get(s, 0.0) + sum(v for kk, v in lay[L].items() if kk != "stack")
         st_o[s] = st_o.get(s, 0.0) + occ.get(L, 0.0)
-    cats = {kk: sum(x[kk] for x in lay.values()) for kk in ("mac", "rom", "xnet", "units", "hbm_if", "stack", "link")}
+    cats = {kk: sum(x[kk] for x in lay.values()) for kk in ("mac", "field", "xnet", "units", "hbm_if", "stack", "link")}
     return dict(per_die_categories_J=cats, stage_die_energy_J=st_e, stage_occupancy_s=st_o)
 
 
@@ -2004,12 +2083,15 @@ def v41_rom_economics():
         energy=dict(dynamic_mJ_per_token_die=round(dyn_die * 1e3, 3), stack_mJ_per_token=round(cats["stack"] * 1e3, 3),
                     categories_mJ_per_token={k: round(v * 1e3, 4) for k, v in cats.items()},
                     static_w=static_w, static_w_total=round(P_static, 1),
-                    layer_die_static_w=dict(clock=pw["clock_w"], leakage=pw["leakage_w"], hbm_interface_idle=pw["hbm_idle_w"],
+                    layer_die_static_w=dict(clock=pw["clock_w"], leakage=pw["leakage_w"], field_clock=pw["field"]["clock_w"],
+                                            hub_clock_uncalibrated=pw["hub"]["clock_w"], hbm_interface_idle=pw["hbm_idle_w"],
                                             links=round(link_static_die, 3)),
                     mtp_dynamic_mJ_per_token=round(dyn_m * 1e3, 3),
                     basis="power_ledger terms on every stage x 4 TP dies (the uarch graph is one die, busiest-die "
-                          "macros for every layer); layer-die static = the ledger's clock + leakage + HBM interface "
-                          "idle, ungated, plus the rack's always-on SerDes and UCIe; head and Engram-table dies' "
+                          "macros for every layer); ROM field = the MEASURED pair (PAIR_W, W18): dynamic 'field' = busy "
+                          "excess over the clocked-idle floor; layer-die static = the ledger's clock + leakage (field "
+                          "measured per placed pair, ungated; hub from area, UNCALIBRATED) + HBM interface idle, plus "
+                          "the rack's always-on SerDes and UCIe; head and Engram-table dies' "
                           "static from results/arch/v41_rack.json power.static; HBM stack DRAM energy of the index "
                           "and KV reads; stack background (refresh) power not charged"),
         stage_occupancy_us={str(k): round(v * 1e6, 2) for k, v in sorted(led["stage_occupancy_s"].items())})
@@ -2470,7 +2552,9 @@ def _stage_windows(g):
 
 
 def _region_busy(g):
-    """Per-stage, per-die busy time of the ROM field (weight matvecs) and the hub (every other issued unit)."""
+    """Per-stage, per-die busy time of the ROM field (weight matvecs) and the hub (every other issued unit).  The
+    field's is pair-weighted (busy pair-seconds / placed pairs): with the per-pair ICG only an op's holding pairs
+    clock, so region clock gating (policy 2) charges the field clock for that equivalent full-field time."""
     lps = 40 / V41_STAGES
     out = {}
     for n, nd in g.nodes.items():
@@ -2479,7 +2563,10 @@ def _region_busy(g):
             continue
         s = int(L / lps)
         b = out.setdefault(s, dict(field=0.0, hub=0.0))
-        b["field" if nd.get("_uarch") else "hub"] += nd["issue"]
+        if nd.get("_uarch"):
+            b["field"] += nd["issue"] * busy_pairs(nd) / PAIR_W["placed_pairs"]
+        else:
+            b["hub"] += nd["issue"]
     return out
 
 
@@ -2491,9 +2578,10 @@ def v41_die_static_parts(d):
     a = area_ledger(d)
     rack = json.loads((ROOT / "results/arch/v41_rack.json").read_text())["power"]["per_die"]["static_w"]
     cl = CLOCK_J_MM2 * clock
+    N = PAIR_W["placed_pairs"]
     return dict(
-        field=dict(clock=cl * (a["rom_field_strip_used_mm2"] + 0.15 * a["rom_macros"]),
-                   leak_logic=a["rom_field_strip_used_mm2"] * LEAK["logic"], leak_rom=a["rom_macros"] * LEAK["rom_array"]),
+        # ROM field MEASURED per pair (PAIR_W); hub from its area, UNCALIBRATED
+        field=dict(clock=N * pair_power(clock)["clock"], leak_logic=N * PAIR_W["leak_cell"], leak_rom=N * PAIR_W["leak_rom"]),
         hub=dict(clock=cl * (a["hub_logic_mm2"] + 0.15 * a["vm_ports"]),
                  leak_logic=a["hub_logic_mm2"] * LEAK["logic"], leak_sram=a["vm_ports"] * LEAK["sram_array"]),
         hbm_if=4 * HBM_IDLE_W_STACK, serdes=rack["serdes_always_on"], ucie=rack["ucie_idle"])
@@ -2607,8 +2695,9 @@ def v41_static_power(ec=None):
     return dict(policies=POLICIES, constants=PG, die_static_w={k: (round(x, 3) if not isinstance(x, dict) else
                                                                 {kk: round(vv, 3) for kk, vv in x.items()})
                                                             for k, x in p.items()},
-                basis="per layer die: the area ledger's clock and leakage by region (ROM field = strip logic + ROM "
-                      "macros; hub = dedicated units + VM ports), HBM interface idle, always-on SerDes and UCIe from "
+                basis="per layer die: ROM field clock and leakage MEASURED per pair (PAIR_W, W18: 7,102 placed pairs; "
+                      "region clock gating = the per-pair ICG, charged for the pair-weighted busy time); hub (dedicated "
+                      "units + VM ports) clock and leakage from its area, UNCALIBRATED; HBM interface idle, always-on SerDes and UCIe from "
                       "results/arch/v41_rack.json; head dies at the rack's static scaled by the layer-die policy "
                       "ratio; Engram table dies at the rack's leakage, gated outside their gathers; dynamic "
                       "energy unchanged from the economics section", **out)
@@ -2951,6 +3040,34 @@ def sweep(ctx: int):
     return rows
 
 
+POWER_CLOCKS = (1.25e9, 1.5e9)
+
+
+def power_clock_sensitivity(name="proposal", ctx=1048576, clocks=POWER_CLOCKS):
+    """The design re-priced at a faster clock (the architecture DAG rebuilt at that clock, then the uarch pricing;
+    wire flight, HBM streams and the W15 collectives keep their times) with the measured pair power scaled linearly
+    with the clock at the same 0.7 V (ASSUMED: a faster clock may need a higher supply, which this under-states)."""
+    E = A._env()
+    base = E["clock"]
+    saved = dict(_ARCH_CACHE)
+    rows = []
+    try:
+        for f in clocks:
+            E["clock"] = f
+            _ARCH_CACHE.clear()                  # the architecture DAG prices cycle terms at E["clock"]
+            d = copy.deepcopy(PRESETS[name])
+            r = evaluate(d, ctx)
+            g = r.pop("_g")
+            pw = power_ledger(d, g, f, r["tokens_s"], area_ledger(d))
+            rows.append(dict(clock_hz=f, tokens_s=round(r["tokens_s"], 1), power=pw))
+    finally:
+        E["clock"] = base
+        _ARCH_CACHE.clear()
+        _ARCH_CACHE.update(saved)
+    return dict(design=name, basis="architecture DAG and uarch pricing rebuilt at each clock; pair power x f / "
+                                   "1.087 GHz at 0.7 V (ASSUMED)", rows=rows)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
@@ -3097,6 +3214,8 @@ def main(argv=None):
         print("   ", {k: v for k, v in list(r["breakdown_us"].items())[:6]})
         print("   top:", list(r["critical_path_by_node_us"].items())[:8])
     out = dict(schema="opentallas.uarch.v41_rom.v1", ctx=a.ctx, rows=rows)
+    if "proposal" in names:
+        out["power_clock_sensitivity"] = power_clock_sensitivity("proposal", a.ctx)
     if a.sweep:
         out["sweep"] = sweep(a.ctx)
     if a.out:
