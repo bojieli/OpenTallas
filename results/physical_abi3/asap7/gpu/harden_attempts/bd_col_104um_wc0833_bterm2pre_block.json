@@ -1,0 +1,226 @@
+{
+  "abstract": {
+    "basis": "ORFS generate_abstract: write_abstract_lef -bloat_occupied_layers and write_timing_model on 6_final.odb with its extracted SPEF",
+    "lef": {
+      "path": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col.lef",
+      "sha256": "44592f7aba05cebf88905402e45ab97e9ba393d42df100369e104a4fdd2fc1f5"
+    },
+    "liberty": {
+      "path": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_typ.lib",
+      "sha256": "47a2f9d500736efd60cc484be0b6df4bc203d940f79a484d0016017edad0959a"
+    }
+  },
+  "block": "ot_gpu_bd_col",
+  "budget": {
+    "name": "gpu_sm_v41",
+    "table": "results/physical_abi3/asap7/chip/budgets/gpu_sm_v41.json"
+  },
+  "budget_check": {
+    "basis": "routed delay from the block's write_timing_model liberty: an input's worst setup constraint (pin to register, setup included), an output's worst clock-to-output",
+    "over_budget": [
+      "fault",
+      "ov",
+      "y"
+    ],
+    "ports": {
+      "fault": {
+        "budget_ps": 450.0,
+        "routed_ps": 468.2,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": false
+      },
+      "first": {
+        "budget_ps": 300.0,
+        "routed_ps": 108.1,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "fp4": {
+        "budget_ps": 300.0,
+        "routed_ps": 161.5,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "last": {
+        "budget_ps": 300.0,
+        "routed_ps": 107.7,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "otag": {
+        "budget_ps": 450.0,
+        "routed_ps": 401.0,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "ov": {
+        "budget_ps": 450.0,
+        "routed_ps": 460.5,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": false
+      },
+      "tag": {
+        "budget_ps": 300.0,
+        "routed_ps": 73.5,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "v": {
+        "budget_ps": 300.0,
+        "routed_ps": 119.3,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "we": {
+        "budget_ps": 300.0,
+        "routed_ps": 134.0,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "wq": {
+        "budget_ps": 300.0,
+        "routed_ps": 148.0,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "xe": {
+        "budget_ps": 300.0,
+        "routed_ps": 83.5,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "xq": {
+        "budget_ps": 300.0,
+        "routed_ps": 131.8,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "y": {
+        "budget_ps": 450.0,
+        "routed_ps": 454.8,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": false
+      }
+    }
+  },
+  "clock_insertion_estimate": {
+    "basis": "measured: this block's previous budgeted route (results/physical_abi3/asap7/chip/blocks/ot_gpu_bd_col.json)",
+    "latency_ps": 226.46
+  },
+  "clock_period_ns": 0.833,
+  "closed_against_budget": false,
+  "closed_basis": "setup and hold met with the budgeted I/O constraints, zero DRC, zero max-slew / max-cap / max-fanout violations",
+  "constraints": "budgeted per-port set_input_delay / set_output_delay (no I/O false paths), clock uncertainty from the budget, max transition 320 ps",
+  "die_um": [
+    104.0,
+    104.0
+  ],
+  "elapsed_seconds": 1556.7,
+  "flat_record": "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json",
+  "git": {
+    "commit": "a74e652f027183a4ae885bffeedb8c69cf796c8d",
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "metrics": {
+    "antenna_violating_nets": 0,
+    "clock_skew_ps": 90.4524,
+    "core_area_um2": 9953.04,
+    "die_area_um2": 10816,
+    "drc_errors": 0,
+    "flow_errors": {},
+    "fmax_hz": 1037880000.0,
+    "hold_tns_ps": 0,
+    "hold_violations": 0,
+    "hold_wns_ps": 12.4712,
+    "macro_area_um2": 0,
+    "macro_count": 0,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 0,
+    "power_total_w": 0.0717728,
+    "setup_tns_ps": -25366.1,
+    "setup_violations": 801,
+    "setup_wns_ps": -130.5,
+    "stdcell_area_um2": 6988.79,
+    "stdcell_count": 57260,
+    "utilization": 0.702177,
+    "vias": 488878,
+    "wirelength_um": 216773
+  },
+  "notes": "V4.1 SM block-dot column: 2 exact k32 FP8/FP4 lanes + tree",
+  "routed_clock_insertion_ps": 245.61,
+  "schema": "opentallas-chip-block-v1",
+  "sources": [
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "afa7fbda71e1da3c1f5a7ca38309582a2c3567cfafe336f292fa24a5c80877ee"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "0bb7697efec1c0e41c8faeaba314f8fd313facfdfbec1419e57d015780871d45"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_fadd.sv",
+      "sha256": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_tree.sv",
+      "sha256": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm.sv",
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm2.sv",
+      "sha256": "c3f59c201775ff9c8170da8bd4779759715b0abd557a807b9c995d8f99ee120f"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_bd_col.sv",
+      "sha256": "9637b23a0e48ae59818d2dc4a0a8e5333a73961c1783f37b82ca79d70a762df5"
+    }
+  ],
+  "toolchain": {
+    "image": "openroad/orfs:latest",
+    "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+  },
+  "work_dir": "/home/ubuntu/w13work/bd_col_12"
+}

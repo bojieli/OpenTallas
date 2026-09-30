@@ -1,0 +1,196 @@
+{
+  "abstract": {
+    "basis": "ORFS generate_abstract: write_abstract_lef -bloat_occupied_layers and write_timing_model on 6_final.odb with its extracted SPEF",
+    "lef": {
+      "path": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16.lef",
+      "sha256": "dfd70b77f45dca99dddebac4f49f14f72a5664ffc55e6d78114e40f2f431a32a"
+    },
+    "liberty": {
+      "path": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16_typ.lib",
+      "sha256": "d1f90506bb4b315af6516e46882f1f5e8a44bb079109037430a45d08c4f309b3"
+    }
+  },
+  "block": "ot_gpu_tc16",
+  "budget": {
+    "name": "gpu_sm_v41",
+    "table": "results/physical_abi3/asap7/chip/budgets/gpu_sm_v41.json"
+  },
+  "budget_check": {
+    "basis": "routed delay from the block's write_timing_model liberty: an input's worst setup constraint (pin to register, setup included), an output's worst clock-to-output",
+    "over_budget": [
+      "fault",
+      "ov"
+    ],
+    "ports": {
+      "fault": {
+        "budget_ps": 450.0,
+        "routed_ps": 455.8,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": false
+      },
+      "first": {
+        "budget_ps": 300.0,
+        "routed_ps": 123.4,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "last": {
+        "budget_ps": 300.0,
+        "routed_ps": 123.7,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "otag": {
+        "budget_ps": 450.0,
+        "routed_ps": 407.6,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "ov": {
+        "budget_ps": 450.0,
+        "routed_ps": 450.3,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": false
+      },
+      "tag": {
+        "budget_ps": 300.0,
+        "routed_ps": 91.1,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "v": {
+        "budget_ps": 300.0,
+        "routed_ps": 156.2,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "w": {
+        "budget_ps": 300.0,
+        "routed_ps": 133.4,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "x": {
+        "budget_ps": 300.0,
+        "routed_ps": 83.6,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      },
+      "y": {
+        "budget_ps": 450.0,
+        "routed_ps": 419.4,
+        "through_ps": null,
+        "through_split": null,
+        "within_budget": true
+      }
+    }
+  },
+  "clock_insertion_estimate": {
+    "basis": "measured: this block's previous budgeted route (results/physical_abi3/asap7/chip/blocks/ot_gpu_tc16.json)",
+    "latency_ps": 257.05
+  },
+  "clock_period_ns": 0.833,
+  "closed_against_budget": false,
+  "closed_basis": "setup and hold met with the budgeted I/O constraints, zero DRC, zero max-slew / max-cap / max-fanout violations",
+  "constraints": "budgeted per-port set_input_delay / set_output_delay (no I/O false paths), clock uncertainty from the budget, max transition 320 ps",
+  "die_um": [
+    164.0,
+    164.0
+  ],
+  "elapsed_seconds": 12156.7,
+  "flat_record": null,
+  "git": {
+    "commit": "626797f616f815652b6de910f3f7583a2c947ad3",
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "metrics": {
+    "antenna_violating_nets": 0,
+    "clock_skew_ps": 100.891,
+    "core_area_um2": 25566.1,
+    "die_area_um2": 26896,
+    "drc_errors": 0,
+    "flow_errors": {},
+    "fmax_hz": 933007000.0,
+    "hold_tns_ps": 0,
+    "hold_violations": 0,
+    "hold_wns_ps": 10.3799,
+    "macro_area_um2": 0,
+    "macro_count": 0,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 0,
+    "power_total_w": 0.129363,
+    "setup_tns_ps": -46455.8,
+    "setup_violations": 669,
+    "setup_wns_ps": -238.803,
+    "stdcell_area_um2": 17670,
+    "stdcell_count": 135653,
+    "utilization": 0.69115,
+    "vias": 1035919,
+    "wirelength_um": 392788
+  },
+  "notes": "V4.1 SM BF16 column: 16 exact lanes + 16-leaf tree (ot_gpu_tc_col L=16)",
+  "routed_clock_insertion_ps": 317.88,
+  "schema": "opentallas-chip-block-v1",
+  "sources": [
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "afa7fbda71e1da3c1f5a7ca38309582a2c3567cfafe336f292fa24a5c80877ee"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "0bb7697efec1c0e41c8faeaba314f8fd313facfdfbec1419e57d015780871d45"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_fadd.sv",
+      "sha256": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_tree.sv",
+      "sha256": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_tc_col.sv",
+      "sha256": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f"
+    }
+  ],
+  "toolchain": {
+    "image": "openroad/orfs:latest",
+    "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+  },
+  "work_dir": "/home/ubuntu/w13work/tc16_12"
+}
