@@ -13,7 +13,11 @@
 // Uses ot_hdc_w11_cut (rtl/hdc/ot_hdc_fp32_add_lat.sv).
 // ---------------------------------------------------------------------------
 module ot_hdc_fp32_mul_lat #(
-    parameter integer LAT = 3
+    parameter integer LAT = 3,
+    // CUTS >= 0 picks the extra cuts explicitly, bit k-1 = C<k> (LAT must be 3 + their count); -1: by LAT as above.
+    // W11 serial domain: CUTS = 4'b0101 (C1 + C3, LAT 5) cuts the INPUT side, so an operand multiplexer in front
+    // of the unit shares stage 1 with the decode / normalise instead of the partial-product rows
+    parameter integer CUTS = -1
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -24,10 +28,13 @@ module ot_hdc_fp32_mul_lat #(
     output reg  [1:0]  err,
     output reg         valid_out
 );
-    localparam integer CUT1 = (LAT >= 6) ? 1 : 0;
-    localparam integer CUT2 = (LAT >= 5) ? 1 : 0;
-    localparam integer CUT3 = (LAT >= 4) ? 1 : 0;
-    localparam integer CUT4 = (LAT >= 7) ? 1 : 0;
+    localparam integer CUT1 = (CUTS >= 0) ? CUTS % 2       : (LAT >= 6) ? 1 : 0;
+    localparam integer CUT2 = (CUTS >= 0) ? (CUTS / 2) % 2 : (LAT >= 5) ? 1 : 0;
+    localparam integer CUT3 = (CUTS >= 0) ? (CUTS / 4) % 2 : (LAT >= 4) ? 1 : 0;
+    localparam integer CUT4 = (CUTS >= 0) ? (CUTS / 8) % 2 : (LAT >= 7) ? 1 : 0;
+    generate if (CUTS >= 0 && CUT1 + CUT2 + CUT3 + CUT4 + 3 != LAT) begin : g_bad_cuts
+        ot_hdc_fp32_mul_lat_CUTS_must_match_LAT u_trap ();
+    end endgenerate
     localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
     function automatic [95:0] csa;
         input [47:0] r0, r1, r2;
@@ -217,4 +224,10 @@ endmodule
 module ot_hdc_fp32_mul_lat7 (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
                              output wire [1:0] err, output wire valid_out);
     ot_hdc_fp32_mul_lat #(.LAT(7)) u (.*);
+endmodule
+
+// the W11 serial-domain LAT-5 multiplier: the LAT-4 cuts plus C1 (after the decode / normalise), bit-identical
+module ot_hdc_fp32_mul_lat5i (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
+                              output wire [1:0] err, output wire valid_out);
+    ot_hdc_fp32_mul_lat #(.LAT(5), .CUTS(5)) u (.*);
 endmodule

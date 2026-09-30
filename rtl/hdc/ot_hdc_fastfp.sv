@@ -484,6 +484,10 @@ module ot_hdc_qmul_lat #(
         // the fixed LAT-4 top: a plain module name, so synthesis can keep it as its own hierarchy
         // (ORFS SYNTH_KEEP_MODULES) and ABC maps it as the standalone unit
         ot_hdc_fp32_mul_lat4 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+    end else if (LAT == 5) begin : g_l5
+        // LAT 5 is the input-cut variant (C1 + C3; rtl/hdc/ot_hdc_fp32_mul_lat.sv): the operand multiplexer ahead of
+        // the unit shares a stage with the decode / normalise, not with the partial products (W11 serial domain)
+        ot_hdc_fp32_mul_lat5i u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
     end else begin : g_ln
         ot_hdc_fp32_mul_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
                                             .valid_out(vo));
