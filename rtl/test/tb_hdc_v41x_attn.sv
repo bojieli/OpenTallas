@@ -28,6 +28,7 @@ module tb_hdc_v41x_attn (input wire clk);
     parameter integer BUB = 0;             // percent
     parameter integer MAXCYC = 200000;
     parameter integer PWORDS = 1;          // probability words per handshake
+    parameter integer ILV = 0;             // position-interleaved verify mode (engine ILV)
     localparam integer S = D / TD;
     localparam integer NT = NL * S;
     localparam integer DPT = D / NT;
@@ -45,11 +46,15 @@ module tb_hdc_v41x_attn (input wire clk);
     reg [1023:0] dir;
     integer seed = 1;
     integer psup = PWORDS;                 // upstream words supplied per cycle
+    integer su_l0 = 0;                     // ILV: SU latency from a chain's start to its first p word
+    integer p_delay = P_DELAY;             // ILV = 0: cycles from a job's last score to its first p word (+pdelay)
     initial begin
         if (!$value$plusargs("dir=%s", dir)) begin $display("+dir missing"); $finish; end
         if ($value$plusargs("seed=%d", seed)) ;
         if ($value$plusargs("njob=%d", NJOB)) ;
         if ($value$plusargs("psup=%d", psup)) ;
+        if ($value$plusargs("su_l0=%d", su_l0)) ;
+        if ($value$plusargs("pdelay=%d", p_delay)) ;
         $readmemh({dir, "/jobs.hex"}, jobs);
         $readmemh({dir, "/q.hex"}, qm);
         $readmemh({dir, "/kv.hex"}, kvm);
@@ -58,6 +63,7 @@ module tb_hdc_v41x_attn (input wire clk);
         $readmemh({dir, "/pv.hex"}, pvm);
     end
     function automatic integer jT(input integer j);   jT = jobs[j][15:0];      endfunction
+    function automatic bit jR(input integer j);       jR = jobs[j][16];        endfunction   // ILV: reuse staged KV
     function automatic integer jKV(input integer j);  jKV = jobs[j][63:32];    endfunction
     function automatic integer jP(input integer j);   jP = jobs[j][95:64];     endfunction
     function automatic integer jSC(input integer j);  jSC = jobs[j][127:96];   endfunction
@@ -77,7 +83,7 @@ module tb_hdc_v41x_attn (input wire clk);
     reg pv_cr = 0;
     wire qk_iss, pv_iss;
     ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS),
-                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS)) dut (
+                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS), .ILV(ILV)) dut (
         .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(job_t), .job_ready(job_ready),
         .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
@@ -94,6 +100,9 @@ module tb_hdc_v41x_attn (input wire clk);
     integer pv_last_cyc [0:63];
     integer qk_first [0:63], qk_last [0:63], pv_first [0:63], pv_last [0:63];
     integer qk_beats [0:63], pv_beats [0:63];
+    // ILV driver state
+    integer fj = 0, fst = 0, pj = 0, staged = 0, su_free = 0, busy_qk = 0, busy_pv = 0, first_acc = -1;
+    integer p_first_cyc [0:63], su_start [0:63], job_acc [0:63];
     // ---- checker state ----
     integer sj = 0, srows = 0;  // score job / rows received
     integer vj = 0, vdims = 0;  // pv job / dims received
@@ -113,54 +122,112 @@ module tb_hdc_v41x_attn (input wire clk);
         if (cyc == 3) rst_n <= 1'b1;
         // ---------------- drive ----------------
         job_v <= 1'b0;
-        if (q_v && q_ready) begin qn = qn + 1; q_v <= 1'b0; end
-        if (kv_v && kv_ready) begin
-            for (l = 0; l < NL; l = l + 1) if (kv_m[l]) enter[kvr + l] = cyc;
-            kvr = kvr + NL; kv_v <= 1'b0;
-        end
-        if (p_v && p_ready) begin
-            pnw = (jT(dj) + R - 1) / R;
-            pn = pn + ((pnw - pn < PWORDS) ? pnw - pn : PWORDS); p_v <= 1'b0; p_last_cyc[dj] = cyc;
-        end
-        if (rst_n && dj < NJOB) begin
-            case (st)
-                0: if (job_ready && !job_v) begin
-                       job_v <= 1'b1; job_t <= jT(dj); qn = 0; kvr = 0; pn = 0; st = 1;
-                       qk_first[dj] = -1; pv_first[dj] = -1; qk_beats[dj] = 0; pv_beats[dj] = 0;
-                   end
-                default: ;
-            endcase
-            if (st >= 1 && st <= 4) begin
-                // q words
-                if (qn < H && !(q_v && !q_ready) && !bub()) begin
-                    q_v <= 1'b1; q_w <= qm[dj * H + qn];
-                end
-                if (qn >= H) q_v <= 1'b0;
-                // kv rows
-                if ((KV_AFTER_Q == 0 || qn >= H) && kvr < jT(dj) && !bub()) begin
-                    kv_v <= 1'b1;
-                    for (l = 0; l < NL; l = l + 1) begin
-                        kv_m[l] <= (kvr + l) < jT(dj);
-                        kv_w[l*ROWW +: ROWW] <= ((kvr + l) < jT(dj)) ? kvm[jKV(dj) + kvr + l] : {ROWW{1'b0}};
+        if (ILV == 0) begin
+            if (q_v && q_ready) begin qn = qn + 1; q_v <= 1'b0; end
+            if (kv_v && kv_ready) begin
+                for (l = 0; l < NL; l = l + 1) if (kv_m[l]) enter[kvr + l] = cyc;
+                kvr = kvr + NL; kv_v <= 1'b0;
+            end
+            if (p_v && p_ready) begin
+                pnw = (jT(dj) + R - 1) / R;
+                pn = pn + ((pnw - pn < PWORDS) ? pnw - pn : PWORDS); p_v <= 1'b0; p_last_cyc[dj] = cyc;
+            end
+            if (rst_n && dj < NJOB) begin
+                case (st)
+                    0: if (job_ready && !job_v) begin
+                           job_v <= 1'b1; job_t <= jT(dj); qn = 0; kvr = 0; pn = 0; st = 1;
+                           qk_first[dj] = -1; pv_first[dj] = -1; qk_beats[dj] = 0; pv_beats[dj] = 0;
+                       end
+                    default: ;
+                endcase
+                if (st >= 1 && st <= 4) begin
+                    // q words
+                    if (qn < H && !(q_v && !q_ready) && !bub()) begin
+                        q_v <= 1'b1; q_w <= qm[dj * H + qn];
+                    end
+                    if (qn >= H) q_v <= 1'b0;
+                    // kv rows
+                    if ((KV_AFTER_Q == 0 || qn >= H) && kvr < jT(dj) && !bub()) begin
+                        kv_v <= 1'b1;
+                        for (l = 0; l < NL; l = l + 1) begin
+                            kv_m[l] <= (kvr + l) < jT(dj);
+                            kv_w[l*ROWW +: ROWW] <= ((kvr + l) < jT(dj)) ? kvm[jKV(dj) + kvr + l] : {ROWW{1'b0}};
+                        end
+                    end
+                    // probabilities after the job's last score + P_DELAY
+                    if (sj > dj && pwait < p_delay) pwait = pwait + 1;
+                    pnw = (jT(dj) + R - 1) / R;
+                    pstep = (pnw - pn < PWORDS) ? pnw - pn : PWORDS;
+                    if (psup < PWORDS && sj > dj && pwait >= p_delay && psupplied < pnw && psupplied - pn < PWORDS) psupplied = psupplied + psup;
+                    if (sj > dj && pwait >= p_delay && pn < pnw && (psup >= PWORDS || psupplied >= pn + pstep) && !bub()) begin
+                        p_v <= 1'b1;
+                        if (PWORDS == 1) p_w <= pm[jP(dj) + pn];
+                        else for (pw = 0; pw < PWORDS; pw = pw + 1)
+                            p_w[pw*TD*16 +: TD*16] <= (pw < pstep) ? pm[jP(dj) + pn + pw] : {TD*16{1'b1}};
+                    end
+                    if (pn >= pnw && qn >= H && kvr >= jT(dj)) begin
+                        dj = dj + 1; st = 0; pwait = 0; psupplied = 0;
                     end
                 end
-                // probabilities after the job's last score + P_DELAY
-                if (sj > dj && pwait < P_DELAY) pwait = pwait + 1;
-                pnw = (jT(dj) + R - 1) / R;
+            end
+        end else begin
+            // ---- ILV: front driver (job, q, kv) and the SU model for the probabilities, independent ----
+            if (q_v && q_ready) begin qn = qn + 1; q_v <= 1'b0; end
+            if (kv_v && kv_ready) begin
+                for (l = 0; l < NL; l = l + 1) if (kv_m[l]) enter[kvr - kvr % NL + l] = cyc;
+                kvr = (kvr - kvr % NL + NL < jT(fj)) ? kvr - kvr % NL + NL : jT(fj);
+                staged = kvr; kv_v <= 1'b0;
+            end
+            if (p_v && p_ready) begin
+                pnw = (jT(pj) + R - 1) / R;
+                pn = pn + ((pnw - pn < PWORDS) ? pnw - pn : PWORDS); p_v <= 1'b0; p_last_cyc[pj] = cyc;
+                if (p_first_cyc[pj] < 0) p_first_cyc[pj] = cyc;
+            end
+            if (rst_n && fj < NJOB) begin
+                if (fst == 0) begin
+                    if (job_ready && !job_v) begin
+                        job_v <= 1'b1; job_t <= {jR(fj) ? 1'b1 : 1'b0, 15'(jT(fj))}; qn = 0; fst = 1;
+                        if (jR(fj)) kvr = staged; else begin kvr = 0; staged = 0; end
+                        qk_first[fj] = -1; pv_first[fj] = -1; qk_beats[fj] = 0; pv_beats[fj] = 0;
+                        p_first_cyc[fj] = -1; su_start[fj] = -1; job_acc[fj] = cyc;
+                    end
+                end else begin
+                    if (qn < H && !(q_v && !q_ready) && !bub()) begin
+                        q_v <= 1'b1; q_w <= qm[fj * H + qn];
+                    end
+                    if (qn >= H) q_v <= 1'b0;
+                    if ((KV_AFTER_Q == 0 || qn >= H) && kvr < jT(fj) && !bub()) begin
+                        kv_v <= 1'b1;
+                        for (l = 0; l < NL; l = l + 1) begin
+                            tt = kvr - kvr % NL + l;
+                            kv_m[l] <= (tt >= kvr) && (tt < jT(fj));
+                            kv_w[l*ROWW +: ROWW] <= ((tt >= kvr) && (tt < jT(fj))) ? kvm[jKV(fj) + tt] : {ROWW{1'b0}};
+                        end
+                    end
+                    if (qn >= H && kvr >= jT(fj)) begin fj = fj + 1; fst = 0; end
+                end
+            end
+            // SU: position pj's chain starts at its last score or when the previous position's p stream has
+            // ended, whichever is later; its first word is offered SU_L0 cycles later, then PWORDS words per cycle
+            if (rst_n && pj < NJOB && sj > pj) begin
+                if (su_start[pj] < 0) su_start[pj] = (sc_last_cyc[pj] > su_free) ? sc_last_cyc[pj] : su_free;
+                pnw = (jT(pj) + R - 1) / R;
                 pstep = (pnw - pn < PWORDS) ? pnw - pn : PWORDS;
-                if (psup < PWORDS && sj > dj && pwait >= P_DELAY && psupplied < pnw && psupplied - pn < PWORDS) psupplied = psupplied + psup;
-                if (sj > dj && pwait >= P_DELAY && pn < pnw && (psup >= PWORDS || psupplied >= pn + pstep) && !bub()) begin
-                    p_v <= 1'b1;
-                    if (PWORDS == 1) p_w <= pm[jP(dj) + pn];
-                    else for (pw = 0; pw < PWORDS; pw = pw + 1)
-                        p_w[pw*TD*16 +: TD*16] <= (pw < pstep) ? pm[jP(dj) + pn + pw] : {TD*16{1'b1}};
+                if (cyc >= su_start[pj] + su_l0) begin
+                    if (psupplied < pnw && psupplied - pn < PWORDS) psupplied = psupplied + psup;
+                    if (pn < pnw && psupplied >= pn + pstep && !bub()) begin
+                        p_v <= 1'b1;
+                        if (PWORDS == 1) p_w <= pm[jP(pj) + pn];
+                        else for (pw = 0; pw < PWORDS; pw = pw + 1)
+                            p_w[pw*TD*16 +: TD*16] <= (pw < pstep) ? pm[jP(pj) + pn + pw] : {TD*16{1'b1}};
+                    end
                 end
-                if (pn >= pnw && qn >= H && kvr >= jT(dj)) begin
-                    dj = dj + 1; st = 0; pwait = 0; psupplied = 0;
-                end
+                if (pn >= pnw) begin su_free = cyc; pj = pj + 1; pn = 0; psupplied = 0; end
             end
         end
         // ---------------- issue counters ----------------
+        if (qk_iss) busy_qk = busy_qk + 1;
+        if (pv_iss) busy_pv = busy_pv + 1;
         if (qk_iss) begin
             if (qk_first[ij_qk] < 0) qk_first[ij_qk] = cyc;
             qk_last[ij_qk] = cyc; qk_beats[ij_qk] = qk_beats[ij_qk] + 1;
@@ -241,6 +308,16 @@ module tb_hdc_v41x_attn (input wire clk);
         if (vj >= NJOB || cyc >= MAXCYC) begin
             $display("V41XATTN jobs=%0d sc_checked=%0d sc_errors=%0d pv_checked=%0d pv_errors=%0d faults=%0d lat_score_max=%0d lat_score_min=%0d lat_pv_max=%0d cycles=%0d timeout=%0d",
                      vj, sc_chk, sc_err, pv_chk, pv_err, nflt, lat_sc_max, lat_sc_min, lat_pv_max, cyc, cyc >= MAXCYC);
+            if (ILV != 0) begin
+                for (i = 0; i < vj; i = i + 1)
+                    $display("V41XPOS job=%0d accept=%0d su_start=%0d p_first=%0d p_last=%0d", i, job_acc[i], su_start[i],
+                             p_first_cyc[i], p_last_cyc[i]);
+                $display("V41XILV su_l0=%0d qk_beats=%0d pv_beats=%0d busy=%0d cycles=%0d", su_l0, busy_qk, busy_pv,
+                         busy_qk + busy_pv, cyc);
+            end
+`ifdef OT_ATTN_SETCHECK
+            $display("V41XSETCHK loads=%0d reads=%0d errors=%0d", dut.sck_ld, dut.sck_reads, dut.sck_errors);
+`endif
             $finish;
         end
     end
