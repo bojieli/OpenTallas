@@ -4,40 +4,142 @@
  "updated_utc": "2026-09-30T04:00:00Z",
  "rule": "The full-shape token is not reported done while any row is open (root, user 2026-09-30).",
  "risks": [
-  {"id": 1, "risk": "Die-level ROM-field front end missing (W10 array ran only in a bench, <= 16 elements, Python-generated cfg and x stream, 1-row root)",
-   "owner": "W17", "status": "closed at composition scope; open at full die",
-   "evidence": ["rtl/v41die/ot_v41_spine.sv, ot_v41_pair.sv (per-element cfg ROM, parallel load), ot_v41_field.sv, ot_v41_retn.sv, ot_v41_rom_adapt.sv",
-                "tools/v41_field_rt_gate.py -> field runtime-composition gate: flat vs composed every port every cycle PASS (2,315 cycles, 8 phases), wrong-edge mutant rejected; golden 152/160 on the first run (W10 empty-go defect, id 9), re-run pending"],
-   "next": "full-die field (6,899 pairs, 128 regions) in the TP-4 die run"},
-  {"id": 2, "risk": "L0 program softmax scale imm1=0 (and 6 other placeholder constant groups)",
-   "owner": "W17 (claude/w17-isa)", "status": "closed at ISA level",
-   "evidence": ["results/rtl/v41_program_constants.json (config-derived manifest)", "tests/test_v41_program_constants.py", "tests/test_v41_l0_softmax_scale_defect.py (regression)", "results/rtl/w17_l0_fullshape_isa.json"]},
-  {"id": 3, "risk": "Indexed layers have no selected-CKV path (client, merger, selected-ID stream; window source rejects FP4 rows)",
-   "owner": "W11 builds, W17 integrates", "status": "open", "evidence": [], "next": "after L0 in RTL"},
-  {"id": 4, "risk": "Full-shape program ISA-only: CROM constants and expert bases zero; never executed",
-   "owner": "W17", "status": "closed at ISA level (TP-4 executor bit-exact at 1M seed 20260930, 1M default seed, 200K; attn_sink per-rank defect found and fixed)",
-   "evidence": ["tools/v41_fullshape_isa.py", "results/rtl/w17_l0_fullshape_isa.json"]},
-  {"id": 5, "risk": "Simulation size: 1,024-lane SU (31 GB) and attention (13 GB, flat 51 GB OOM) put the die > 100 GB",
-   "owner": "W17", "status": "mitigated: die with X_ROM + attention cut lints at 6 GB; attention compiled separately (hierarchical); exactness at SUN=16, cycles claimed only at 1,024/256",
-   "evidence": ["rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv V41_ATT_CUT", "rtl/test/v41_runtime/ot_v41_rt_die.sv"]},
-  {"id": 6, "risk": "Reference token fragile (200K margin 0.00998); 1M headline needed",
-   "owner": "W17 (claude/w17-ref)", "status": "closed: 1M seed 20260930, token 21946, margin 3.149 logit (>= 1.0; 101x half a BF16 ulp of the top logit), independently replicated bit-exact",
-   "evidence": ["results/rtl/w17_v41_1m_reference_token.json"]},
-  {"id": 7, "risk": "Host capacity: checkpoint local only; ot-pve2 disk", "owner": "W17", "status": "managed: images generated locally; builds local + ot-pve3", "evidence": []},
-  {"id": 8, "risk": "Integration dependencies: W10 closed element + BF16 pair; W11 VM-H, interleaved-verify attention, hub closure; W15 measured collective timings; W18 die assembly",
-   "owner": "W10/W11/W15/W18 (tracked by W17)", "status": "open",
-   "evidence": ["W10 interface frozen results/uarch/v41_rom_element_interface.json (a024d717)", "W11 VM-H v1 (claude/w11-vmdist 40dba101, WRT0 139a2999)", "W15 v41p17_r0d512_w32 cycles (claude/w15-collectives-2 4fad2dc5)", "W18 routed crossings: x broadcast 17, return 18 cycles"]},
-  {"id": 9, "risk": "W10 element: go with an empty configuration corrupts the element's next op",
-   "owner": "W10 (root cause); W17 workaround in ot_v41_pair (go only with a valid class)", "status": "worked around; W10 fix pending",
-   "evidence": ["field gate first run 152/160, repro in the W17 report"]},
-  {"id": 10, "risk": "Multi-rank ISA machine with COLL missing", "owner": "W17", "status": "closed", "evidence": ["tools/v41_fullshape_isa.py"]},
-  {"id": 11, "risk": "Die collective word is 512 bits (CL_LANES = 16, die elaboration check) while W15's adopted engine is 32 lanes / 128 B; links modelled as deterministic-release delay lines (48 / 177 cycles)",
-   "owner": "W17 + W15", "status": "open: cycle attribution item", "evidence": []},
-  {"id": 12, "risk": "Attention adapter drives the engine with PWORDS = 1 (609-cycle 640-row job) while the adopted loader is PWORDS = 2 (449)",
-   "owner": "W11 (adapter) / W17", "status": "open: exact either way, cycles differ", "evidence": ["results/rtl/w11_attn_ploader.json"]},
-  {"id": 13, "risk": "Program issues one weight matrix per op (w1 and w3 separately, experts one at a time) while the model merges phases (a_proj, experts_gu); expert cfg is per (expert, matrix) phase",
-   "owner": "W17", "status": "open: cycle attribution item; data-dependent merged expert phase needs a W10/W17 cfg design", "evidence": []},
-  {"id": 14, "risk": "ROM macro may become 4,096 deep (2 per slot) and units re-pipelined for 1.2 GHz SS",
-   "owner": "W10/root", "status": "tracked: field images and composition parametric in depth (v41_die_images.Field depth)", "evidence": []}
+  {
+   "id": 1,
+   "risk": "Die-level ROM-field front end missing (W10 array ran only in a bench, <= 16 elements, Python-generated cfg and x stream, 1-row root)",
+   "owner": "W17",
+   "status": "closed at composition scope (field gate PASS: every port every cycle, 160/160 rows golden-exact, mutant rejected); open at full die",
+   "evidence": [
+    "rtl/v41die/ot_v41_spine.sv, ot_v41_pair.sv (per-element cfg ROM, parallel load), ot_v41_field.sv, ot_v41_retn.sv, ot_v41_rom_adapt.sv",
+    "results/rtl/w17_field_rt_gate.json (PASS; first-run 152/160 kept in history)"
+   ],
+   "next": "full-die field (6,899 pairs, 128 regions) in the TP-4 die run"
+  },
+  {
+   "id": 2,
+   "risk": "L0 program softmax scale imm1=0 (and 6 other placeholder constant groups)",
+   "owner": "W17 (claude/w17-isa)",
+   "status": "closed at ISA level",
+   "evidence": [
+    "results/rtl/v41_program_constants.json (config-derived manifest)",
+    "tests/test_v41_program_constants.py",
+    "tests/test_v41_l0_softmax_scale_defect.py (regression)",
+    "results/rtl/w17_l0_fullshape_isa.json"
+   ]
+  },
+  {
+   "id": 3,
+   "risk": "Indexed layers have no selected-CKV path (client, merger, selected-ID stream; window source rejects FP4 rows)",
+   "owner": "W11 builds, W17 integrates",
+   "status": "open",
+   "evidence": [],
+   "next": "after L0 in RTL"
+  },
+  {
+   "id": 4,
+   "risk": "Full-shape program ISA-only: CROM constants and expert bases zero; never executed",
+   "owner": "W17",
+   "status": "closed at ISA level (TP-4 executor bit-exact at 1M seed 20260930, 1M default seed, 200K; attn_sink per-rank defect found and fixed)",
+   "evidence": [
+    "tools/v41_fullshape_isa.py",
+    "results/rtl/w17_l0_fullshape_isa.json"
+   ]
+  },
+  {
+   "id": 5,
+   "risk": "Simulation size: 1,024-lane SU (31 GB) and attention (13 GB, flat 51 GB OOM) put the die > 100 GB",
+   "owner": "W17",
+   "status": "mitigated: die with X_ROM + attention cut lints at 6 GB; attention compiled separately (hierarchical); exactness at SUN=16, cycles claimed only at 1,024/256",
+   "evidence": [
+    "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv V41_ATT_CUT",
+    "rtl/test/v41_runtime/ot_v41_rt_die.sv",
+    "flat attention verilation: 51 GB OOM on ot-pve3; 188.6 GB peak, aborted at the 180 GB cap on ot-pve1; hierarchical build 12.9 GB PASS on ot-pve3"
+   ]
+  },
+  {
+   "id": 6,
+   "risk": "Reference token fragile (200K margin 0.00998); 1M headline needed",
+   "owner": "W17 (claude/w17-ref)",
+   "status": "closed: 1M seed 20260930, token 21946, margin 3.149 logit (>= 1.0; 101x half a BF16 ulp of the top logit), independently replicated bit-exact",
+   "evidence": [
+    "results/rtl/w17_v41_1m_reference_token.json"
+   ]
+  },
+  {
+   "id": 7,
+   "risk": "Host capacity: checkpoint local only; ot-pve2 disk",
+   "owner": "W17",
+   "status": "managed: images generated locally; builds local + ot-pve3",
+   "evidence": []
+  },
+  {
+   "id": 8,
+   "risk": "Integration dependencies: W10 closed element + BF16 pair; W11 VM-H, interleaved-verify attention, hub closure; W15 measured collective timings; W18 die assembly",
+   "owner": "W10/W11/W15/W18 (tracked by W17)",
+   "status": "open",
+   "evidence": [
+    "W10 interface frozen results/uarch/v41_rom_element_interface.json (a024d717)",
+    "W11 VM-H v1 (claude/w11-vmdist 40dba101, WRT0 139a2999)",
+    "W15 v41p17_r0d512_w32 cycles (claude/w15-collectives-2 4fad2dc5)",
+    "W18 routed crossings: x broadcast 17, return 18 cycles"
+   ]
+  },
+  {
+   "id": 9,
+   "risk": "W10 element: go with an empty configuration corrupts the element's next op",
+   "owner": "W10 (root cause); W17 workaround in ot_v41_pair (go only with a valid class)",
+   "status": "worked around; W10 fix pending",
+   "evidence": [
+    "field gate first run 152/160, repro in the W17 report"
+   ]
+  },
+  {
+   "id": 10,
+   "risk": "Multi-rank ISA machine with COLL missing",
+   "owner": "W17",
+   "status": "closed",
+   "evidence": [
+    "tools/v41_fullshape_isa.py"
+   ]
+  },
+  {
+   "id": 11,
+   "risk": "Die collective word is 512 bits (CL_LANES = 16, die elaboration check) while W15's adopted engine is 32 lanes / 128 B; links modelled as deterministic-release delay lines (48 / 177 cycles)",
+   "owner": "W17 + W15",
+   "status": "open: cycle attribution item",
+   "evidence": []
+  },
+  {
+   "id": 12,
+   "risk": "Attention adapter drives the engine with PWORDS = 1 (609-cycle 640-row job) while the adopted loader is PWORDS = 2 (449)",
+   "owner": "W11 (adapter) / W17",
+   "status": "open: exact either way, cycles differ",
+   "evidence": [
+    "results/rtl/w11_attn_ploader.json"
+   ]
+  },
+  {
+   "id": 13,
+   "risk": "Program issues one weight matrix per op (w1 and w3 separately, experts one at a time) while the model merges phases (a_proj, experts_gu); expert cfg is per (expert, matrix) phase",
+   "owner": "W17",
+   "status": "open: cycle attribution item; data-dependent merged expert phase needs a W10/W17 cfg design",
+   "evidence": []
+  },
+  {
+   "id": 14,
+   "risk": "ROM macro may become 4,096 deep (2 per slot) and units re-pipelined for 1.2 GHz SS",
+   "owner": "W10/root",
+   "status": "tracked: field images and composition parametric in depth (v41_die_images.Field depth)",
+   "evidence": []
+  },
+  {
+   "id": 15,
+   "risk": "Two clock domains (1.2 GHz streaming: field, index, attention, links, HBM service; 0.9 GHz serial chain: SU, SFU, softplus, Sinkhorn, reducers) with a 3:4 ratio-synchronous CDC (W18 specifies)",
+   "owner": "W17 (composition) + W18 (CDC spec)",
+   "status": "open: the functional exactness path runs single-clock first (clock-independent); cycle counts per domain need both clocks and the CDC FIFOs in the composition",
+   "evidence": [
+    "AGENTS.md c0894b1c"
+   ]
+  }
  ]
 }

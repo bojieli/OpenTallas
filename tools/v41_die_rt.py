@@ -120,7 +120,10 @@ def link(a) -> Path:
     dirs = [w / p for p in ("die0", "die1", "die2", "die3", "pq", "pb", "retn", "root")] + [attn_obj]
     archives, inc = [], {f"-I{vroot}/include", f"-I{vroot}/include/vltstd", f"-I{RT}", f"-I{ROOT / 'rtl/test/qwen_runtime'}"}
     for d in dirs:
-        archives += sorted(d.rglob("*.a"))
+        # a hierarchical build carries its own libverilated.a (and libV<top>.a duplicating V<top>__ALL.a); the
+        # host links the Verilator runtime once
+        archives += sorted(x for x in d.rglob("*.a") if x.name != "libverilated.a" and
+                           not (x.name.startswith("libV") and (x.parent / (x.name[3:-2] + "__ALL.a")).exists()))
         for h in d.rglob("V*.h"):
             inc.add(f"-I{h.parent}")
     exe = w / "v41_die_rt"

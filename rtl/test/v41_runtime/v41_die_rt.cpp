@@ -363,9 +363,9 @@ template <class DIE> struct Die : DieBase {
         return uint32_t(v41rt_vm_word(adr));
     }
     uint8_t ucie_tx_v() override { return d->ucie_ctx_valid; }
-    void ucie_tx(std::vector<uint32_t>& r) override { r.assign(std::begin(d->ucie_ctx_rec), std::end(d->ucie_ctx_rec)); }
+    void ucie_tx(std::vector<uint32_t>& r) override { r.resize(64); for (int k = 0; k < 18; k++) r[k] = d->ucie_ctx_rec[k]; }
     uint8_t bl_tx_v() override { return d->bl_ctx_valid; }
-    void bl_tx(std::vector<uint32_t>& r) override { r.assign(std::begin(d->bl_ctx_rec), std::end(d->bl_ctx_rec)); }
+    void bl_tx(std::vector<uint32_t>& r) override { r.resize(64); for (int k = 0; k < 18; k++) r[k] = d->bl_ctx_rec[k]; }
     uint8_t ucie_cr() override { return d->ucie_ccr_out; }
     uint8_t bl_cr() override { return d->bl_ccr_out; }
     void set_links(uint8_t u_v, const std::vector<uint32_t>& u_rec, uint8_t u_cr, uint8_t b_v,
@@ -408,6 +408,7 @@ int main(int argc, char** argv) {
         plus2[d] = "+OT_ROM_DIR=" + root + "/r" + std::to_string(d);   // the spine's phase / stream / key ROMs
         av[d] = {"v41_die_rt", plus[d].c_str(), plus2[d].c_str()};
     }
+    { static const char* pav[] = {"v41_die_rt"}; for (int w = 0; w < pool.size(); w++) pool.ctx(w)->commandArgs(1, pav); }
     auto t0 = std::chrono::steady_clock::now();
     dies.emplace_back(new Die<Vdie0>(pool, root + "/r0", 0, 3, av[0].data()));
     dies.emplace_back(new Die<Vdie1>(pool, root + "/r1", 1, 3, av[1].data()));
