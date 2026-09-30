@@ -477,9 +477,23 @@ def bd_campaign(args):
     return out + _run_specs(smv_case, specs_v, args.jobs, 20261001)
 
 
+def w19_campaign(args):
+    """W19's TP-96 V4.1 op shapes on the 8-column V4.1 SM macro top (ot_gpu_sm_v, group-slot issue): measured
+    start -> last-result cycles for the HBM token model."""
+    V.set_arith("chunk8")
+    kw = dict(workdir=args.workdir, xdepth=64, rmax=4096)
+    specs = [
+        (("w19_fp4_w13_24x5120", "v41_fp4", 24, 5120, 8), dict(kw, gs=True)),
+        (("w19_fp8_wob_54x8192", "v41_fp8", 54, 8192, 8), dict(kw, gs=True)),
+        (("w19_bf16_woa_86x4096", "v41_bf16", 86, 4096, 8), dict(kw, gs=True)),
+        (("w19_fp8_wqa_14x5120", "v41_fp8", 14, 5120, 8), dict(kw, gs=True)),
+    ]
+    return _run_specs(smv_case, specs, args.jobs, 20261003)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("which", choices=["lanes", "blockdot"])
+    ap.add_argument("which", choices=["lanes", "blockdot", "w19"])
     ap.add_argument("--cols", type=int, default=2)
     ap.add_argument("--out")
     ap.add_argument("--workdir", default=None)
@@ -488,6 +502,9 @@ def main(argv=None):
     if a.which == "lanes":
         cases = lanes_campaign(a)
         src = LANE_SRC + [x for x in SMQ_SRC if x not in LANE_SRC]
+    elif a.which == "w19":
+        cases = w19_campaign(a)
+        src = BD_SRC + [x for x in SMV_SRC if x not in BD_SRC]
     else:
         cases = bd_campaign(a)
         src = BD_SRC + [x for x in SMV_SRC if x not in BD_SRC]
