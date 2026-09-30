@@ -106,6 +106,8 @@ CLOCK_GATE_CELL = "ICGx1_ASAP7_75t_R"
 CLOCK_GATE_MIN_FLOPS = 8
 # ORFS asap7 corner names -> the liberty file list variable the platform defines
 ORFS_LIB_CORNERS = {"TC": "TC_NLDM_LIB_FILES", "BC": "BC_NLDM_LIB_FILES", "WC": "WC_NLDM_LIB_FILES"}
+# the memory compiler's liberty tag of each ORFS corner (tools/mem_compiler writes NAME_{tt,ss,ff}.lib)
+ORFS_CORNER_MACRO_TAG = {"TC": "tt", "WC": "ss", "BC": "ff"}
 ORFS_EXPECTED_IMAGE_ID = (
     "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
 )
@@ -1712,6 +1714,7 @@ def resolve_macro_views(
     specs: list[str],
     halo: list[float] | None,
     memory_macros: dict[str, Any] | None,
+    corners: list[str] | None = None,
 ) -> dict[str, Any] | None:
     """Resolve --macro-view NAME=DIR: a macro compiled by tools/mem_compiler.
 
@@ -1727,8 +1730,12 @@ def resolve_macro_views(
     pnr = view.get("pnr")
     if not pnr:
         raise FlowError(f"view {view_name} has no place-and-route platform")
-    corner = pnr.get("corner_env") or "TT"
-    corner_tag = {"TT": "tt", "SS": "ss", "FF": "ff"}.get(str(corner).upper(), "tt")
+    corner = pnr.get("corner_env") or "TC"
+    corner_tag = ORFS_CORNER_MACRO_TAG.get(str(corner).upper()) or \
+        {"TT": "tt", "SS": "ss", "FF": "ff"}.get(str(corner).upper(), "tt")
+    # every ORFS corner the run reads (primary + --hold-corners) needs the macro's own liberty of that corner;
+    # a missing one FAILS CLOSED (no silent fallback to another corner's timing)
+    all_corners = [str(corner).upper()] + [c for c in (corners or []) if c != str(corner).upper()]
     entries = []
     for spec in specs:
         if "=" not in spec:
@@ -1743,6 +1750,16 @@ def resolve_macro_views(
         for path in (lef, lib):
             if not path.is_file():
                 raise FlowError(f"--macro-view {name}: {path} missing; run tools/mem_compiler/build_library.py")
+        libs_by_corner = {}
+        for c in all_corners:
+            tag = ORFS_CORNER_MACRO_TAG.get(c)
+            if tag is None:
+                continue
+            cl = base / f"{name}_{tag}.lib"
+            if not cl.is_file():
+                raise FlowError(f"--macro-view {name}: no {tag.upper()} liberty for ORFS corner {c} ({cl}); "
+                                "refusing to time the macro with another corner's view")
+            libs_by_corner[c] = cl
         try:
             rel_lef = lef.relative_to(ROOT.resolve())
             rel_lib = lib.relative_to(ROOT.resolve())
@@ -1756,6 +1773,8 @@ def resolve_macro_views(
             "name": name,
             "lef": {"path": f"/src/{rel_lef}", "sha256": sha256_file(lef)},
             "lib": {"path": f"/src/{rel_lib}", "sha256": sha256_file(lib)},
+            "libs_by_corner": {c: {"path": f"/src/{cl.resolve().relative_to(ROOT.resolve())}",
+                                   "sha256": sha256_file(cl)} for c, cl in libs_by_corner.items()},
             "views_resolved_from": "OpenTallas memory compiler views in the source tree (tools/mem_compiler)",
             "generator": sheet.get("generator"),
             "capacity_bits": bits,
@@ -1947,6 +1966,25 @@ def recorded_memory_max_bits(record: dict[str, Any]) -> int | None:
     return 65536   # the only value any record between 738746b2 and this field used
 
 
+def corner_lib_lines(corners: list[str], memory_macros: dict[str, Any] | None) -> list[str]:
+    """CORNERS config: each ORFS corner reads its standard cells AND every macro's own liberty of that corner.
+
+    ADDITIONAL_LIBS reaches only LIB_FILES, so without this a multi-corner run drops (or mistimes) the macros.
+    A macro lacking a corner's liberty FAILS CLOSED.
+    """
+    lines = ["export CORNERS = " + " ".join(corners)]
+    for c in corners:
+        mlibs = []
+        for m in (memory_macros or {}).get("macros", []):
+            lbc = m.get("libs_by_corner")
+            if not lbc or c not in lbc:
+                raise FlowError(f"macro {m.get('name')}: no liberty for ORFS corner {c}; multi-corner "
+                                "timing would drop or mistime the macro")
+            mlibs.append(lbc[c]["path"])
+        lines.append(f"export {c}_LIB_FILES = $({ORFS_LIB_CORNERS[c]})" + "".join(" " + l for l in mlibs))
+    return lines
+
+
 def orfs_config_lines(
     nickname: str,
     block: dict[str, Any],
@@ -2053,9 +2091,7 @@ def orfs_config_lines(
     if constraints and constraints.get("hold_corners"):
         # the first corner is the primary one the rest of the flow (CORNER) names
         corners = constraints["hold_corners"]
-        config.append("export CORNERS = " + " ".join(corners))
-        for c in corners:
-            config.append(f"export {c}_LIB_FILES = $({ORFS_LIB_CORNERS[c]})")
+        config.extend(corner_lib_lines(corners, memory_macros))
     config.extend(memory_macro_config_lines(memory_macros))
     config.extend(floorplan_extra_lines(floorplan))
     return config
@@ -2899,6 +2935,12 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--orfs-corner", choices=sorted(ORFS_LIB_CORNERS), default=None,
+        help=("the primary ORFS corner of place and route (asap7: TC typical, WC slow = SS, BC fast = FF); "
+              "overrides the view's corner_env.  --macro-view macros are timed with their own liberty of "
+              "that corner (NAME_{tt,ss,ff}.lib), and a missing one fails the run"),
+    )
+    parser.add_argument(
         "--hold-corners",
         default=None,
         metavar="C1,C2",
@@ -3160,6 +3202,14 @@ def main(argv: list[str] | None = None) -> int:
                 return 2
             view["pnr"]["extra_config"][key] = value
 
+    if args.orfs_corner:
+        if view.get("pnr") is None:
+            print(f"--orfs-corner: view {args.view} has no place-and-route platform", file=sys.stderr)
+            return 2
+        view = dict(view)
+        view["pnr"] = dict(view["pnr"])
+        view["pnr"]["corner_env"] = args.orfs_corner
+
     try:
         if args.cts_cluster_size is not None and "pnr" not in stages:
             raise ValueError("--cts-cluster-size requires stage pnr")
@@ -3288,7 +3338,8 @@ def main(argv: list[str] | None = None) -> int:
             None if args.macro_view and not args.memory_macro else args.macro_place_halo,
         )
         memory_macros = resolve_macro_views(
-            args.view, view, args.macro_view, args.macro_place_halo, memory_macros
+            args.view, view, args.macro_view, args.macro_place_halo, memory_macros,
+            corners=[c.strip() for c in args.hold_corners.split(",")] if args.hold_corners else None,
         )
     except FlowError as exc:
         print(str(exc), file=sys.stderr)
