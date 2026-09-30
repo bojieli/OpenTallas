@@ -76,7 +76,7 @@ def main():
     if not args.reuse:
         cmd=[C.VERILATOR,'--cc','--exe','--build','-O2','-Wno-fatal','-Wno-WIDTH','-Wno-UNOPTFLAT',
              '--top-module','tb_hdc_v41x_su_softmax','--prefix','Vtb','-Mdir',str(obj),
-             '-GN=16','-GM=8','-GLV=8','-GVMA=15','-GKVA=4','-GCRA=4','-GWRA=4','-GXBA=4','-GPMAX=8',
+             '-GN=16','-GM=8','-GLV=7','-GVMA=15','-GKVA=4','-GCRA=4','-GWRA=4','-GXBA=4','-GPMAX=8',
              f'-I{ROOT / "rtl/test"}',*map(str,C.LIB),*map(str,C.RTL),
              str(ROOT/'rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv'),str(ROOT/'rtl/test/tb_hdc_v41x_su_softmax.sv'),
              str(C.HARNESS),'-CFLAGS','-O1','-j','4']

@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.rtl.hdc_v41x_vec_campaign/1",
- "generated_at": "2026-09-29T22:46:15Z",
+ "generated_at": "2026-09-29T22:43:14Z",
  "wire_stages": {
-  "BCAST_STAGES": 0,
-  "RET_STAGES": 0
+  "BCAST_STAGES": 4,
+  "RET_STAGES": 5
  },
  "sfu_equivalence": {
   "operands": 1000000,
@@ -27,9 +27,9 @@
   "pass_": true
  },
  "verilator_build_seconds": {
-  "N16_M8": 0.0,
-  "N64_M16": 0.0,
-  "N1024_M256": 0.0
+  "N16_M8": 99.6,
+  "N64_M16": 290.2,
+  "N1024_M256": 3876.6
  },
  "random_N1024_skipped_seeds": [
   1007
@@ -62,7 +62,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1135,
+    "cycles": 1169,
     "pass_": true
    },
    {
@@ -91,7 +91,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 730,
+    "cycles": 749,
     "pass_": true
    },
    {
@@ -122,7 +122,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1090,
+    "cycles": 1109,
     "pass_": true
    },
    {
@@ -150,7 +150,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 984,
+    "cycles": 1016,
     "pass_": true
    },
    {
@@ -181,7 +181,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1278,
+    "cycles": 1314,
     "pass_": true
    },
    {
@@ -210,7 +210,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1135,
+    "cycles": 1164,
     "pass_": true
    },
    {
@@ -239,7 +239,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1045,
+    "cycles": 1078,
     "pass_": true
    },
    {
@@ -268,7 +268,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1170,
+    "cycles": 1194,
     "pass_": true
    },
    {
@@ -299,7 +299,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1232,
+    "cycles": 1266,
     "pass_": true
    },
    {
@@ -327,7 +327,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 891,
+    "cycles": 918,
     "pass_": true
    },
    {
@@ -358,7 +358,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1080,
+    "cycles": 1100,
     "pass_": true
    },
    {
@@ -388,7 +388,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 965,
+    "cycles": 994,
     "pass_": true
    },
    {
@@ -416,7 +416,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 961,
+    "cycles": 995,
     "pass_": true
    },
    {
@@ -446,7 +446,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1127,
+    "cycles": 1156,
     "pass_": true
    },
    {
@@ -474,7 +474,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 888,
+    "cycles": 910,
     "pass_": true
    },
    {
@@ -503,7 +503,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 996,
+    "cycles": 1016,
     "pass_": true
    },
    {
@@ -532,7 +532,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1138,
+    "cycles": 1172,
     "pass_": true
    },
    {
@@ -562,7 +562,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 990,
+    "cycles": 1019,
     "pass_": true
    },
    {
@@ -590,7 +590,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1014,
+    "cycles": 1043,
     "pass_": true
    },
    {
@@ -619,7 +619,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 989,
+    "cycles": 1013,
     "pass_": true
    },
    {
@@ -648,7 +648,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1085,
+    "cycles": 1105,
     "pass_": true
    },
    {
@@ -675,7 +675,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 760,
+    "cycles": 784,
     "pass_": true
    },
    {
@@ -703,7 +703,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1092,
+    "cycles": 1121,
     "pass_": true
    },
    {
@@ -731,7 +731,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 888,
+    "cycles": 919,
     "pass_": true
    }
   ],
@@ -761,7 +761,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1064,
+    "cycles": 1098,
     "pass_": true
    },
    {
@@ -789,7 +789,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1217,
+    "cycles": 1241,
     "pass_": true
    },
    {
@@ -818,7 +818,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1037,
+    "cycles": 1061,
     "pass_": true
    },
    {
@@ -846,7 +846,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 928,
+    "cycles": 947,
     "pass_": true
    },
    {
@@ -878,7 +878,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1343,
+    "cycles": 1362,
     "pass_": true
    },
    {
@@ -909,7 +909,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1157,
+    "cycles": 1176,
     "pass_": true
    },
    {
@@ -936,7 +936,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 725,
+    "cycles": 739,
     "pass_": true
    },
    {
@@ -966,7 +966,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1078,
+    "cycles": 1102,
     "pass_": true
    },
    {
@@ -996,7 +996,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1071,
+    "cycles": 1094,
     "pass_": true
    },
    {
@@ -1025,7 +1025,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 940,
+    "cycles": 973,
     "pass_": true
    },
    {
@@ -1054,7 +1054,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1122,
+    "cycles": 1151,
     "pass_": true
    },
    {
@@ -1083,7 +1083,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 983,
+    "cycles": 1012,
     "pass_": true
    },
    {
@@ -1112,7 +1112,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1009,
+    "cycles": 1048,
     "pass_": true
    },
    {
@@ -1139,7 +1139,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 821,
+    "cycles": 851,
     "pass_": true
    },
    {
@@ -1169,7 +1169,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1364,
+    "cycles": 1398,
     "pass_": true
    },
    {
@@ -1199,7 +1199,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1300,
+    "cycles": 1309,
     "pass_": true
    }
   ],
@@ -1229,7 +1229,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 407,
+    "cycles": 436,
     "pass_": true
    },
    {
@@ -1255,7 +1255,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 442,
+    "cycles": 471,
     "pass_": true
    },
    {
@@ -1282,7 +1282,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 312,
+    "cycles": 331,
     "pass_": true
    },
    {
@@ -1309,7 +1309,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 284,
+    "cycles": 302,
     "pass_": true
    },
    {
@@ -1336,7 +1336,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 400,
+    "cycles": 424,
     "pass_": true
    },
    {
@@ -1363,7 +1363,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 312,
+    "cycles": 331,
     "pass_": true
    },
    {
@@ -1392,7 +1392,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 510,
+    "cycles": 524,
     "pass_": true
    },
    {
@@ -1419,7 +1419,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 383,
+    "cycles": 397,
     "pass_": true
    },
    {
@@ -1446,7 +1446,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 375,
+    "cycles": 394,
     "pass_": true
    },
    {
@@ -1473,7 +1473,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 448,
+    "cycles": 472,
     "pass_": true
    },
    {
@@ -1500,7 +1500,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 431,
+    "cycles": 445,
     "pass_": true
    },
    {
@@ -1527,7 +1527,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 381,
+    "cycles": 410,
     "pass_": true
    },
    {
@@ -1553,7 +1553,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 220,
+    "cycles": 224,
     "pass_": true
    },
    {
@@ -1581,7 +1581,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 372,
+    "cycles": 391,
     "pass_": true
    },
    {
@@ -1608,7 +1608,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 431,
+    "cycles": 445,
     "pass_": true
    }
   ]
@@ -1635,7 +1635,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2146,
+    "cycles": 2325,
     "pass_": true
    },
    {
@@ -1654,7 +1654,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1928,
+    "cycles": 2109,
     "pass_": true
    },
    {
@@ -1675,7 +1675,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1644,
+    "cycles": 1825,
     "pass_": true
    },
    {
@@ -1696,7 +1696,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1777,
+    "cycles": 1943,
     "pass_": true
    },
    {
@@ -1715,7 +1715,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1806,
+    "cycles": 1972,
     "pass_": true
    },
    {
@@ -1736,7 +1736,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1644,
+    "cycles": 1825,
     "pass_": true
    },
    {
@@ -1757,7 +1757,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1673,
+    "cycles": 1820,
     "pass_": true
    },
    {
@@ -1778,7 +1778,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1966,
+    "cycles": 2150,
     "pass_": true
    },
    {
@@ -1797,7 +1797,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1806,
+    "cycles": 1972,
     "pass_": true
    },
    {
@@ -1818,7 +1818,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1644,
+    "cycles": 1825,
     "pass_": true
    },
    {
@@ -1839,7 +1839,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1673,
+    "cycles": 1820,
     "pass_": true
    },
    {
@@ -1858,7 +1858,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1914,
+    "cycles": 2099,
     "pass_": true
    },
    {
@@ -1879,7 +1879,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1644,
+    "cycles": 1825,
     "pass_": true
    },
    {
@@ -1900,7 +1900,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1673,
+    "cycles": 1820,
     "pass_": true
    },
    {
@@ -1921,7 +1921,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1966,
+    "cycles": 2150,
     "pass_": true
    },
    {
@@ -1940,7 +1940,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1806,
+    "cycles": 1972,
     "pass_": true
    },
    {
@@ -1961,7 +1961,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1644,
+    "cycles": 1825,
     "pass_": true
    },
    {
@@ -1982,7 +1982,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1673,
+    "cycles": 1820,
     "pass_": true
    },
    {
@@ -2003,7 +2003,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1966,
+    "cycles": 2150,
     "pass_": true
    },
    {
@@ -2022,7 +2022,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1630,
+    "cycles": 1803,
     "pass_": true
    },
    {
@@ -2043,7 +2043,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1865,
+    "cycles": 2025,
     "pass_": true
    },
    {
@@ -2062,7 +2062,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1918,
+    "cycles": 2104,
     "pass_": true
    },
    {
@@ -2083,7 +2083,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1458,
+    "cycles": 1606,
     "pass_": true
    },
    {
@@ -2104,7 +2104,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1871,
+    "cycles": 2052,
     "pass_": true
    },
    {
@@ -2125,7 +2125,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1919,
+    "cycles": 2079,
     "pass_": true
    },
    {
@@ -2144,7 +2144,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1918,
+    "cycles": 2104,
     "pass_": true
    },
    {
@@ -2165,7 +2165,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1458,
+    "cycles": 1606,
     "pass_": true
    },
    {
@@ -2186,7 +2186,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1871,
+    "cycles": 2052,
     "pass_": true
    },
    {
@@ -2207,7 +2207,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1910,
+    "cycles": 2080,
     "pass_": true
    },
    {
@@ -2226,7 +2226,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1630,
+    "cycles": 1786,
     "pass_": true
    },
    {
@@ -2247,7 +2247,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1746,
+    "cycles": 1923,
     "pass_": true
    },
    {
@@ -2268,7 +2268,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1746,
+    "cycles": 1892,
     "pass_": true
    },
    {
@@ -2289,7 +2289,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1973,
+    "cycles": 2163,
     "pass_": true
    },
    {
@@ -2308,7 +2308,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1375,
+    "cycles": 1518,
     "pass_": true
    },
    {
@@ -2329,7 +2329,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1898,
+    "cycles": 2079,
     "pass_": true
    },
    {
@@ -2350,7 +2350,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1851,
+    "cycles": 2006,
     "pass_": true
    },
    {
@@ -2369,7 +2369,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1993,
+    "cycles": 2188,
     "pass_": true
    },
    {
@@ -2390,7 +2390,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1420,
+    "cycles": 1558,
     "pass_": true
    },
    {
@@ -2411,7 +2411,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1898,
+    "cycles": 2079,
     "pass_": true
    },
    {
@@ -2432,7 +2432,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1867,
+    "cycles": 2027,
     "pass_": true
    },
    {
@@ -2451,7 +2451,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1843,
+    "cycles": 2019,
     "pass_": true
    },
    {
@@ -2472,7 +2472,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1474,
+    "cycles": 1636,
     "pass_": true
    },
    {
@@ -2493,7 +2493,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1863,
+    "cycles": 2034,
     "pass_": true
    },
    {
@@ -2514,7 +2514,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2001,
+    "cycles": 2175,
     "pass_": true
    },
    {
@@ -2533,7 +2533,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1714,
+    "cycles": 1881,
     "pass_": true
    },
    {
@@ -2554,7 +2554,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1623,
+    "cycles": 1799,
     "pass_": true
    },
    {
@@ -2575,7 +2575,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1718,
+    "cycles": 1875,
     "pass_": true
    },
    {
@@ -2596,7 +2596,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2037,
+    "cycles": 2216,
     "pass_": true
    },
    {
@@ -2615,7 +2615,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1746,
+    "cycles": 1917,
     "pass_": true
    },
    {
@@ -2636,7 +2636,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1623,
+    "cycles": 1799,
     "pass_": true
    },
    {
@@ -2657,7 +2657,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1693,
+    "cycles": 1845,
     "pass_": true
    },
    {
@@ -2678,7 +2678,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 2001,
+    "cycles": 2190,
     "pass_": true
    },
    {
@@ -2697,7 +2697,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1771,
+    "cycles": 1932,
     "pass_": true
    },
    {
@@ -2718,7 +2718,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1661,
+    "cycles": 1847,
     "pass_": true
    },
    {
@@ -2739,7 +2739,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1677,
+    "cycles": 1824,
     "pass_": true
    },
    {
@@ -2758,7 +2758,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 338,
+    "cycles": 391,
     "pass_": true
    }
   ]
@@ -2775,9 +2775,9 @@
      "last_emit": 30,
      "emit_span_cycles": 20,
      "elements_per_cycle": 64.0,
-     "first_write": 32,
-     "last_write": 51,
-     "depth": 21,
+     "first_write": 41,
+     "last_write": 60,
+     "depth": 30,
      "chase": [
       0,
       0,
@@ -2790,13 +2790,13 @@
     {
      "elements": 1280,
      "vectors": 20,
-     "first_emit": 33,
-     "last_emit": 52,
+     "first_emit": 38,
+     "last_emit": 57,
      "emit_span_cycles": 20,
      "elements_per_cycle": 64.0,
-     "first_write": 54,
-     "last_write": 73,
-     "depth": 21,
+     "first_write": 68,
+     "last_write": 87,
+     "depth": 30,
      "chase": [
       1,
       1,
@@ -2809,13 +2809,13 @@
     {
      "elements": 1280,
      "vectors": 20,
-     "first_emit": 55,
-     "last_emit": 74,
+     "first_emit": 65,
+     "last_emit": 84,
      "emit_span_cycles": 20,
      "elements_per_cycle": 64.0,
-     "first_write": 76,
-     "last_write": 95,
-     "depth": 21,
+     "first_write": 95,
+     "last_write": 114,
+     "depth": 30,
      "chase": [
       1,
       1,
@@ -2828,13 +2828,13 @@
     {
      "elements": 1280,
      "vectors": 20,
-     "first_emit": 77,
-     "last_emit": 96,
+     "first_emit": 92,
+     "last_emit": 111,
      "emit_span_cycles": 20,
      "elements_per_cycle": 64.0,
-     "first_write": 98,
-     "last_write": 117,
-     "depth": 21,
+     "first_write": 122,
+     "last_write": 141,
+     "depth": 30,
      "chase": [
       1,
       1,
@@ -2842,7 +2842,7 @@
      ],
      "layout": "whole-unflattened",
      "result_cycles": [
-      167
+      191
      ],
      "result_after_last_write": 50
     }
@@ -2853,77 +2853,77 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 177,
+    "cycles": 201,
     "pass_": true
    },
    "sequence": {
     "elements": 5120,
-    "first_emit_to_last_emit": 86,
-    "elements_per_cycle": 59.53488372093023,
-    "first_emit_to_result": 156,
+    "first_emit_to_last_emit": 101,
+    "elements_per_cycle": 50.693069306930695,
+    "first_emit_to_result": 180,
     "vectors": 80
    }
   },
   "depths": {
    "classes": {
     "linear (M1, M2, Q, AD, E1, E2 all used)": {
-     "emit_to_write": 21,
-     "model": 21,
+     "emit_to_write": 30,
+     "model": 30,
      "vectors": 1
     },
     "linear (copy)": {
-     "emit_to_write": 21,
-     "model": 21,
+     "emit_to_write": 30,
+     "model": 30,
      "vectors": 1
     },
     "gather (IND_I)": {
-     "emit_to_write": 23,
-     "model": 23,
+     "emit_to_write": 32,
+     "model": 32,
      "vectors": 1
     },
     "divide (M1 A'/B)": {
-     "emit_to_write": 37,
-     "model": 37,
+     "emit_to_write": 46,
+     "model": 46,
      "vectors": 1
     },
     "exp": {
-     "emit_to_write": 70,
-     "model": 70,
+     "emit_to_write": 79,
+     "model": 79,
      "vectors": 1
     },
     "sigmoid": {
-     "emit_to_write": 92,
-     "model": 92,
+     "emit_to_write": 101,
+     "model": 101,
      "vectors": 1
     },
     "silu": {
-     "emit_to_write": 92,
-     "model": 92,
+     "emit_to_write": 101,
+     "model": 101,
      "vectors": 1
     },
     "rsqrt (side pipe)": {
-     "emit_to_write": 58,
-     "model": 58,
+     "emit_to_write": 67,
+     "model": 67,
      "vectors": 8
     },
     "sqrt (side pipe)": {
-     "emit_to_write": 52,
-     "model": 52,
+     "emit_to_write": 61,
+     "model": 61,
      "vectors": 8
     },
     "sqrt(softplus) (side pipe)": {
-     "emit_to_write": 183,
-     "model": 183,
+     "emit_to_write": 192,
+     "model": 192,
      "vectors": 8
     },
     "Engram gate (side pipe)": {
-     "emit_to_write": 125,
-     "model": 125,
+     "emit_to_write": 134,
+     "model": 134,
      "vectors": 8
     },
     "reduce: one packed row of 64": {
-     "emit_to_write": 21,
-     "model": 21,
+     "emit_to_write": 30,
+     "model": 30,
      "vectors": 1,
      "result_after_last_write": 35,
      "model_result": 35,
@@ -2931,8 +2931,8 @@
      "tap_level": 3
     },
     "reduce: one spanning row of 1280 (20 vectors)": {
-     "emit_to_write": 21,
-     "model": 21,
+     "emit_to_write": 30,
+     "model": 30,
      "vectors": 20,
      "result_after_last_write": 50,
      "model_result": 50,
@@ -2940,8 +2940,8 @@
      "tap_level": 3
     },
     "reduce: 8 packed rows of 8": {
-     "emit_to_write": 21,
-     "model": 21,
+     "emit_to_write": 30,
+     "model": 30,
      "vectors": 1,
      "result_after_last_write": 26,
      "model_result": 26,
@@ -2955,7 +2955,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1115,
+    "cycles": 1236,
     "pass_": true
    }
   },
@@ -2973,7 +2973,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 110,
+    "cycles": 119,
     "pass_": true
    }
   },
@@ -2984,49 +2984,49 @@
      "vectors": 4,
      "first_emit": 11,
      "last_emit": 14,
-     "depth": 21
+     "depth": 30
     },
     {
      "cls": "sfu1",
      "vectors": 16,
      "first_emit": 16,
      "last_emit": 31,
-     "depth": 70
+     "depth": 79
     },
     {
      "cls": "linear",
      "vectors": 4,
      "first_emit": 81,
      "last_emit": 84,
-     "depth": 21
+     "depth": 30
     },
     {
      "cls": "div",
      "vectors": 16,
      "first_emit": 85,
      "last_emit": 100,
-     "depth": 37
+     "depth": 46
     },
     {
      "cls": "sfu4",
      "vectors": 16,
      "first_emit": 117,
      "last_emit": 132,
-     "depth": 92
+     "depth": 101
     },
     {
      "cls": "linear",
      "vectors": 4,
      "first_emit": 204,
      "last_emit": 207,
-     "depth": 21
+     "depth": 30
     },
     {
      "cls": "linear",
      "vectors": 4,
      "first_emit": 208,
      "last_emit": 211,
-     "depth": 21
+     "depth": 30
     }
    ],
    "bubbles_between_ops": [
@@ -3043,7 +3043,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 242,
+    "cycles": 251,
     "pass_": true
    }
   }
@@ -3060,9 +3060,9 @@
      "last_emit": 30,
      "emit_span_cycles": 20,
      "elements_per_cycle": 1024.0,
-     "first_write": 32,
-     "last_write": 51,
-     "depth": 21,
+     "first_write": 41,
+     "last_write": 60,
+     "depth": 30,
      "chase": [
       0,
       0,
@@ -3075,13 +3075,13 @@
     {
      "elements": 20480,
      "vectors": 20,
-     "first_emit": 33,
-     "last_emit": 52,
+     "first_emit": 38,
+     "last_emit": 57,
      "emit_span_cycles": 20,
      "elements_per_cycle": 1024.0,
-     "first_write": 54,
-     "last_write": 73,
-     "depth": 21,
+     "first_write": 68,
+     "last_write": 87,
+     "depth": 30,
      "chase": [
       1,
       1,
@@ -3094,13 +3094,13 @@
     {
      "elements": 20480,
      "vectors": 20,
-     "first_emit": 55,
-     "last_emit": 74,
+     "first_emit": 65,
+     "last_emit": 84,
      "emit_span_cycles": 20,
      "elements_per_cycle": 1024.0,
-     "first_write": 76,
-     "last_write": 95,
-     "depth": 21,
+     "first_write": 95,
+     "last_write": 114,
+     "depth": 30,
      "chase": [
       1,
       1,
@@ -3113,13 +3113,13 @@
     {
      "elements": 20480,
      "vectors": 20,
-     "first_emit": 77,
-     "last_emit": 96,
+     "first_emit": 92,
+     "last_emit": 111,
      "emit_span_cycles": 20,
      "elements_per_cycle": 1024.0,
-     "first_write": 98,
-     "last_write": 117,
-     "depth": 21,
+     "first_write": 122,
+     "last_write": 141,
+     "depth": 30,
      "chase": [
       1,
       1,
@@ -3127,7 +3127,7 @@
      ],
      "layout": "whole-unflattened",
      "result_cycles": [
-      179
+      203
      ],
      "result_after_last_write": 62
     }
@@ -3138,77 +3138,77 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 189,
+    "cycles": 213,
     "pass_": true
    },
    "sequence": {
     "elements": 81920,
-    "first_emit_to_last_emit": 86,
-    "elements_per_cycle": 952.5581395348837,
-    "first_emit_to_result": 168,
+    "first_emit_to_last_emit": 101,
+    "elements_per_cycle": 811.0891089108911,
+    "first_emit_to_result": 192,
     "vectors": 80
    }
   },
   "depths": {
    "classes": {
     "linear (M1, M2, Q, AD, E1, E2 all used)": {
-     "emit_to_write": 21,
-     "model": 21,
+     "emit_to_write": 30,
+     "model": 30,
      "vectors": 1
     },
     "linear (copy)": {
-     "emit_to_write": 21,
-     "model": 21,
+     "emit_to_write": 30,
+     "model": 30,
      "vectors": 1
     },
     "gather (IND_I)": {
-     "emit_to_write": 23,
-     "model": 23,
+     "emit_to_write": 32,
+     "model": 32,
      "vectors": 1
     },
     "divide (M1 A'/B)": {
-     "emit_to_write": 37,
-     "model": 37,
+     "emit_to_write": 46,
+     "model": 46,
      "vectors": 1
     },
     "exp": {
-     "emit_to_write": 70,
-     "model": 70,
+     "emit_to_write": 79,
+     "model": 79,
      "vectors": 1
     },
     "sigmoid": {
-     "emit_to_write": 92,
-     "model": 92,
+     "emit_to_write": 101,
+     "model": 101,
      "vectors": 1
     },
     "silu": {
-     "emit_to_write": 92,
-     "model": 92,
+     "emit_to_write": 101,
+     "model": 101,
      "vectors": 1
     },
     "rsqrt (side pipe)": {
-     "emit_to_write": 58,
-     "model": 58,
+     "emit_to_write": 67,
+     "model": 67,
      "vectors": 8
     },
     "sqrt (side pipe)": {
-     "emit_to_write": 52,
-     "model": 52,
+     "emit_to_write": 61,
+     "model": 61,
      "vectors": 8
     },
     "sqrt(softplus) (side pipe)": {
-     "emit_to_write": 183,
-     "model": 183,
+     "emit_to_write": 192,
+     "model": 192,
      "vectors": 8
     },
     "Engram gate (side pipe)": {
-     "emit_to_write": 125,
-     "model": 125,
+     "emit_to_write": 134,
+     "model": 134,
      "vectors": 8
     },
     "reduce: one packed row of 1024": {
-     "emit_to_write": 21,
-     "model": 21,
+     "emit_to_write": 30,
+     "model": 30,
      "vectors": 1,
      "result_after_last_write": 47,
      "model_result": 47,
@@ -3216,8 +3216,8 @@
      "tap_level": 7
     },
     "reduce: one spanning row of 20480 (20 vectors)": {
-     "emit_to_write": 21,
-     "model": 21,
+     "emit_to_write": 30,
+     "model": 30,
      "vectors": 20,
      "result_after_last_write": 62,
      "model_result": 62,
@@ -3225,8 +3225,8 @@
      "tap_level": 7
     },
     "reduce: 128 packed rows of 8": {
-     "emit_to_write": 21,
-     "model": 21,
+     "emit_to_write": 30,
+     "model": 30,
      "vectors": 1,
      "result_after_last_write": 26,
      "model_result": 26,
@@ -3240,7 +3240,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 1151,
+    "cycles": 1272,
     "pass_": true
    }
   },
@@ -3258,7 +3258,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 86,
+    "cycles": 95,
     "pass_": true
    }
   },
@@ -3269,49 +3269,49 @@
      "vectors": 4,
      "first_emit": 11,
      "last_emit": 14,
-     "depth": 21
+     "depth": 30
     },
     {
      "cls": "sfu1",
      "vectors": 16,
      "first_emit": 16,
      "last_emit": 31,
-     "depth": 70
+     "depth": 79
     },
     {
      "cls": "linear",
      "vectors": 4,
      "first_emit": 81,
      "last_emit": 84,
-     "depth": 21
+     "depth": 30
     },
     {
      "cls": "div",
      "vectors": 16,
      "first_emit": 85,
      "last_emit": 100,
-     "depth": 37
+     "depth": 46
     },
     {
      "cls": "sfu4",
      "vectors": 16,
      "first_emit": 117,
      "last_emit": 132,
-     "depth": 92
+     "depth": 101
     },
     {
      "cls": "linear",
      "vectors": 4,
      "first_emit": 204,
      "last_emit": 207,
-     "depth": 21
+     "depth": 30
     },
     {
      "cls": "linear",
      "vectors": 4,
      "first_emit": 208,
      "last_emit": 211,
-     "depth": 21
+     "depth": 30
     }
    ],
    "bubbles_between_ops": [
@@ -3328,7 +3328,7 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 242,
+    "cycles": 251,
     "pass_": true
    }
   }
@@ -3336,8 +3336,8 @@
  "spec": {
   "clock_ghz": 1.034,
   "wire_stages": {
-   "bcast": 0,
-   "ret": 0
+   "bcast": 4,
+   "ret": 5
   },
   "rows": [
    {
@@ -3351,7 +3351,7 @@
    {
     "item": "light lanes: sustained over 4 back-to-back chained hc_post ops (81,920 elements)",
     "required": 1024,
-    "measured": 952.5581395348837,
+    "measured": 811.0891089108911,
     "meets": false,
     "note": "the first op's vector 0 of each consumer waits for the producer's vector 0 to be written; ACCEPTED below the row (root, 2026-09-29): measured 952.6 of 1,024 at N = 1,024, the bubbles are not chased",
     "accepted_measured": 952.6,
@@ -3372,7 +3372,7 @@
     "measured": 21,
     "meets": true,
     "le": true,
-    "wire_stages_excluded": 0,
+    "wire_stages_excluded": 9,
     "graded": true,
     "expected_meets": true
    },
@@ -3461,5 +3461,5 @@
  "git_dirty_tracked_files": [],
  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
  "verilator_extra_flags": "--unroll-count 4 -fno-dfg",
- "reused_builds": true
+ "reused_builds": false
 }

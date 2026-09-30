@@ -94,7 +94,13 @@ module ot_hdc_core_v41x #(
     // SU: ot_hdc_v41x_vec geometry
     parameter integer SUN   = 16,          // light lanes (elements a cycle)
     parameter integer SUM   = 8,           // SFU lanes
-    parameter integer SULV  = 8,           // reducer time levels
+    parameter integer SULV  = 7,           // reducer time levels, 1..7 (was 8: silently clamped to 7)
+    // SU wire stages (ot_hdc_v41x_vec BCAST_STAGES / RET_STAGES; 0 / 0 = no wire).  The spec die (N 1,024,
+    // M 256, W1 hub placement, 0.92 ns, 0.76 ps/um) is SUBCAST 4 (controller at the lane array's centre ->
+    // corner lane, 3,458 um) and SURET 5 (farthest lane -> HUB_VM, 3,850 um): results/rtl/w11_su_spec.json
+    // wire_stage_derivation
+    parameter integer SUBCAST = 0,         // broadcast-tree register stages, controller -> lanes
+    parameter integer SURET = 0,           // return register stages, lanes / reducer -> vector memory
     // HE: ot_hdc_v41x_hcp geometry
     parameter integer HHW   = 8,           // HCP lanes per group (8 x HHW FP32 MAC lanes)
     parameter integer HTL   = 9,           // HCP tail levels
@@ -1005,7 +1011,8 @@ module ot_hdc_core_v41x #(
     genvar sp;
     generate if (X_SU != 0) begin : g_su_x
         wire [SUN-1:0] raw_kv_we;
-        ot_hdc_v41x_su_adapt #(.N(SUN), .M(SUM), .LV(SULV), .AW(AW), .NW(NW), .CLS_DRAIN((NSLOT > 1) ? 1 : 0))
+        ot_hdc_v41x_su_adapt #(.N(SUN), .M(SUM), .LV(SULV), .AW(AW), .NW(NW), .CLS_DRAIN((NSLOT > 1) ? 1 : 0),
+                               .BCAST_STAGES(SUBCAST), .RET_STAGES(SURET))
             u_su (
             .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
             .i_nout(su_nout), .i_nin(su_nin), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src),

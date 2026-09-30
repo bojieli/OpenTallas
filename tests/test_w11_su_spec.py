@@ -65,3 +65,23 @@ def test_port_widths(rec):
     assert p["element_write"]["bits"] == 1024 * 32
     assert p["result_write"]["bits"] == 128 * 32
     assert p["vm_banks_256b"]["all_four_operand_streams"] == 512
+
+
+@pytest.mark.parametrize("lv,ok", [(7, True), (8, False)])
+def test_reducer_levels_above_7_fail_elaboration(lv, ok):
+    """l_in is 3 bits: LV > 7 must be refused at elaboration (not clamped), even under -Wno-fatal."""
+    import shutil
+    import subprocess
+    sys_path = str(ROOT / "tools")
+    import sys
+    if sys_path not in sys.path:
+        sys.path.insert(0, sys_path)
+    import rtl_hdc_v41x_vec_campaign as C
+    if not shutil.which(C.VERILATOR) and not Path(C.VERILATOR).exists():
+        pytest.skip("no verilator")
+    srcs = [*map(str, C.LIB), *map(str, C.RTL), str(ROOT / "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv")]
+    r = subprocess.run([C.VERILATOR, "--lint-only", "-Wno-fatal", "-Wno-lint", "-Wno-style",
+                        "--top-module", "ot_hdc_v41x_su_adapt", f"-GLV={lv}", *srcs], capture_output=True, text=True)
+    assert (r.returncode == 0) == ok, r.stderr[-2000:]
+    if not ok:
+        assert "LV_must_be_1_to_7" in r.stderr
