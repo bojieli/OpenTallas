@@ -32,7 +32,7 @@ END_CAP = 60.0
 
 
 def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um: float, flank_um: float,
-          tag: str, clock_ns: float = 0.833, corner: str = "WC") -> dict:
+          tag: str, clock_ns: float = 0.833, corner: str = "WC", max_layer: str = "") -> dict:
     work.mkdir(parents=True, exist_ok=True)
     n_st = int((length_um - 2 * END_CAP) // spacing_um)
     L = round(2 * END_CAP + n_st * spacing_um, 3)
@@ -73,7 +73,7 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
         f"  FOREIGN {fname} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {fw:.3f} BY {fh:.3f} ;",
         "  PIN o", "    DIRECTION OUTPUT ;", "    USE SIGNAL ;", "    PORT", "      LAYER M4 ;",
         f"        RECT 0.000 {fh / 2 - 0.012:.3f} 0.192 {fh / 2 + 0.012:.3f} ;", "    END", "  END o",
-        "  OBS"] + [f"    LAYER M{i} ;\n      RECT 0 0 {fw:.3f} {fh:.3f} ;" for i in range(1, 8)]
+        "  OBS"] + [f"    LAYER M{i} ;\n      RECT 0.5 0 {fw:.3f} {fh:.3f} ;" for i in range(1, 8)]
         + ["  END", f"END {fname}", "END LIBRARY", ""]))
     for c in ("tt", "ss", "ff"):
         (vdir / f"{fname}_{c}.lib").write_text(
@@ -123,7 +123,9 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
             "--source", f"physical/w18/{top}.sv", "--source", f"physical/w18/w18_flank{tag}/w18_flank{tag}_bb.v",
             "--macro-view", f"w18_flank{tag}=physical/w18/w18_flank{tag}", "--macro-place-halo", "1", "1", "--clock-period-ns", f"{clock_ns:g}", "--clock-uncertainty-ns", "0.06",
             "--orfs-corner", corner, "--hold-corners", f"{corner},BC",
+            *(["--routing-layers", "M2", max_layer] if max_layer else []),
             "--orfs-var", "PDN_TCL=/src/physical/w18pdn/pdn_channel.tcl",
+            "--orfs-var", "SDC_FILE=/src/physical/w18sdc/channel.sdc", "--orfs-var", "ADDER_MAP_FILE=",
             "--clock-uncertainty-hold-ns", "0.025", "--io-delay-fraction", "0.2", "--stages", "pnr",
             "--die-area", "0", "0", f"{L:g}", f"{H:g}", "--core-area", "1.08", "1.08", f"{L - 1.08:g}", f"{H - 1.08:g}",
             "--place-density", "0.5", "--orfs-var", "PLACE_DENSITY_LB_ADDON=", "--pin-region", r"^d\[\d+\]$=left", "--pin-region", r"^q\[\d+\]$=right",
@@ -149,10 +151,11 @@ def main(argv=None):
     ap.add_argument("--tag", default="")
     ap.add_argument("--clock-ns", type=float, default=0.833, help="AGENTS.md 2026-09-30: 1.2 GHz at SS")
     ap.add_argument("--corner", default="WC", help="ORFS hardening corner (WC = SS libraries)")
+    ap.add_argument("--max-layer", default="", help="top routing layer (default: the platform's M7)")
     ap.add_argument("--run", action="store_true")
     a = ap.parse_args(argv)
     m = build(a.work.resolve(), a.length_um, a.spacing_um, a.wires, a.spine_um, a.flank_um, a.tag, a.clock_ns,
-              a.corner)
+              a.corner, a.max_layer)
     print(json.dumps({k: v for k, v in m.items() if k != "argv"}, indent=1))
     if a.run:
         return subprocess.run(m["argv"] and [sys.executable, *m["argv"]], cwd=ROOT).returncode
