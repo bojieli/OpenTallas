@@ -116,6 +116,11 @@ NODE_NS = {
     "argmax_local": (1415.3 * 1346 / 262144 + 139.3, "serial"),
 }
 OFF_PATH = {"hc_mixes", "compressor", "cand_apply"}
+# P verify positions on the dedicated / stream units: each extra position repeats the step's ISSUE, the pipeline
+# depth is paid once.  The issue fraction of the chain's dedicated time is the model's own
+# (v41_hbm_chain(positions=6): verify_extra_issue 95.955 us over dedicated_and_su 103.253 us for 5 extra positions).
+ISSUE_FRAC = 95.955 / 103.253 / 5
+LOCAL_REPEAT = lambda P: 1.0 + (P - 1) * ISSUE_FRAC  # noqa: E731
 OFF_PATH_COLL = ("engram.", "candidate merge")             # Engram rows/kv (hash ids known at token start); L20 cands   # overlap the attention chain (inputs ready, outputs used later)
 IDX_SCORE_NS, IDX_TOPK_NS, ROM_KEYS = 1686.7, 1415.3, 262144
 UNIT_LAT_CYC = 48
@@ -136,8 +141,13 @@ def local_cycles(op: dict, m: dict) -> tuple[float, str]:
     return ns * (F_FAST / F_SERIAL if dom == "serial" else 1.0), dom
 
 
-def compose(prog: dict, sm: SMTable, coll: dict, fetch_us: float, m: dict) -> dict:
+def compose(prog: dict, sm: SMTable, coll: dict, fetch_us: float, m: dict, mtp: dict | None = None) -> dict:
+    """mtp: None (one position) or dict(P, union{layer: n}, stream_us_per_expert): the verify pass rides the SM
+    columns (measured: 6-column cycles = 1-column), carries P positions' bytes in each collective, repeats the
+    per-position dedicated/SU steps and the head's attention P times, and streams the union of routed experts
+    (each expert's w1/w3/w2 lines once) with the fetch exposed as max(first access, union stream - SM work)."""
     per_layer, flags = [], set()
+    P = mtp["P"] if mtp else 1
     tot = dict(sm=0.0, barrier=0.0, collective=0.0, local=0.0, fetch=0.0)
     for lay in prog["layers"]:
         t = dict(sm=0.0, barrier=0.0, collective=0.0, local=0.0, fetch=0.0)
@@ -157,6 +167,8 @@ def compose(prog: dict, sm: SMTable, coll: dict, fetch_us: float, m: dict) -> di
                 rows_die = max(r1 - r0 for r0, r1 in op["rows"])
                 R = math.ceil(rows_die / N_SM)
                 lines, drain, how = sm.op(op["fmt"], op["k"], R)
+                if mtp and op["tag"].startswith("expert slot") and "slot 6" not in op["tag"]:
+                    lines = lines * mtp["union"][lay["layer"]] / 6.0     # the union's weights pass once
                 if how != "measured":
                     flags.add(f"SM shape {op['fmt']} K={op['k']} R={R} priced by line rate (not measured)")
                 batchable = op["tag"].startswith("expert slot")
@@ -169,7 +181,7 @@ def compose(prog: dict, sm: SMTable, coll: dict, fetch_us: float, m: dict) -> di
                 continue
             if k == "local" and op["fn"] == "swiglu":     # the SMs' SIMT lanes, on the rows each SM produced:
                 if not swi:                               # charged once a layer (the slots' rows run together)
-                    t["local"] += local_cycles(op, m)[0] / 1e3
+                    t["local"] += LOCAL_REPEAT(P) * local_cycles(op, m)[0] / 1e3
                     swi = True
                 continue
             flush()
@@ -177,15 +189,19 @@ def compose(prog: dict, sm: SMTable, coll: dict, fetch_us: float, m: dict) -> di
                 if op["tag"].startswith(OFF_PATH_COLL):       # ready at token start / only masks later layers
                     t["off_path_collectives"] = t.get("off_path_collectives", 0) + 1
                     continue
-                t["collective"] += coll_us(op["bytes"] / TP, coll, "all_reduce" if k == "all_reduce" else "all_gather")
+                t["collective"] += coll_us(P * op["bytes"] / TP, coll, "all_reduce" if k == "all_reduce" else "all_gather")
                 ncoll += 1
             elif k == "expert_fetch":
-                t["fetch"] += fetch_us
+                if mtp:
+                    stream = mtp["stream_us_per_expert"] * mtp["union"][lay["layer"]]
+                    t["fetch"] += max(fetch_us, stream - mtp["union"][lay["layer"]] / 6.0 * mtp["routed_sm_us"])
+                else:
+                    t["fetch"] += fetch_us
             elif k == "local":
                 if op["fn"] == "index_scores":
                     m["n_keys"] = op["n"]
                 ns, _ = local_cycles(op, m)
-                t["local"] += ns / 1e3
+                t["local"] += LOCAL_REPEAT(P) * ns / 1e3
         flush()
         offc = t.pop("off_path_collectives", 0)
         per_layer.append(dict(layer=lay["layer"], collectives=ncoll, off_path_collectives=offc,
@@ -203,6 +219,8 @@ def main() -> int:
     ap.add_argument("--sm", type=Path, nargs="+", required=True)
     ap.add_argument("--fetch", type=Path)
     ap.add_argument("--coll", type=Path)
+    ap.add_argument("--fetch-case", default="ar_L0_refresh_postponed")
+    ap.add_argument("--mtp", type=Path, help="the 96-rank MTP record: compose the 6-position verify pass")
     ap.add_argument("--coll-config", default="hbm_p48_ss")
     ap.add_argument("--record", type=Path)
     a = ap.parse_args()
@@ -215,13 +233,28 @@ def main() -> int:
         coll = dict(fixed_us=0.83, us_per_byte=1 / 0.9e12 * 1e6, source="PENDING: audit scratch W15 NVLS P=6 "
                     "(0.81-0.89 us), slope at the 0.9 TB/s package link")
     if a.fetch:
-        fetch_us = json.loads(a.fetch.read_text())["exposed_fetch_us"]
-        fsrc = str(a.fetch)
+        fetch_us = json.loads(a.fetch.read_text())["audit_comparison"]["exposed_ns"][a.fetch_case] / 1e3
+        fsrc = f"{a.fetch} exposed_ns[{a.fetch_case}]"
     else:
         fetch_us, fsrc = 0.5, "PENDING: audit central 0.5 us"
     m = dict(n_keys=0, node_ns=NODE_NS, off_path=sorted(OFF_PATH),
              source="uarch_model arch-DAG node prices on the 1M path (W11 widths), serial steps at 0.9 GHz")
-    res = compose(prog, sm, coll, fetch_us, m)
+    mtp = None
+    if a.mtp:
+        mr = next(iter(json.loads(a.mtp.read_text())["runs"].values()))["result"]
+        fr = json.loads(a.fetch.read_text()) if a.fetch else None
+        case = next((c for c in fr["cases"] if c["case"] == "mtp_union35_refresh_postponed"), None) if fr else None
+        # one stack share: 35 experts streamed in (done - req) ns
+        per = ((case["ns_from_first_router_value"]["done"] - case["ns_from_first_router_value"]["req"]) / 1e3 / 35
+               if case else 3.6e12 ** -1 * 191e3 * 1e6 / 0.797)
+        rsm = sm.op("fp4", 5120, 1)
+        routed = 12 * (rsm[0]) / F_FAST * 1e6                  # 6 experts' w1/w3 lines on the SM (AR)
+        mtp = dict(P=len(mr["positions"]), union={l["layer"]: l["n_union"] for l in mr["layers"]},
+                   stream_us_per_expert=per, routed_sm_us=routed)
+    res = compose(prog, sm, coll, fetch_us, m, mtp)
+    if mtp:
+        res["mtp_inputs"] = dict(P=mtp["P"], mean_union=sum(mtp["union"].values()) / len(mtp["union"]),
+                                 stream_us_per_expert=round(mtp["stream_us_per_expert"], 4))
     res.update(collective_model=coll, fetch_source=fsrc, dedicated=m)
     print(json.dumps({k: v for k, v in res.items() if k != "layers"}, indent=1))
     if a.record:
