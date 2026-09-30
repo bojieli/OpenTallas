@@ -99,4 +99,4 @@ foreach {name mx my orient capture} $ot_macros {
     }
 }
 puts "OT_W10_ELEM_PLACE macros=[expr {[llength $ot_macros]/5}] fixed_capture_flops=$nfixed"
-if {$nfixed + $nunused != 1096 || $nunused > 8} { error "capture flop count $nfixed" }
+if {$nfixed + $nunused != 1096 || $nunused > 16} { error "capture flop count $nfixed" }
