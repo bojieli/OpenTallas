@@ -19,6 +19,12 @@
 //             ready crosses it), and the root picks the lower half first.  One
 //             added cycle on the response path; credits still return on the
 //             region pop.
+//             HEADREG=1 (with MERGE2): each region queue drains into its own
+//             two-entry registered queue first, so the half select reads a
+//             2:1 head mux instead of the region queue's DEPTH:1 read mux
+//             (rp -> 18:1 x 276 -> 4:1 -> half queue was -212 ps at SS).  A
+//             second added response cycle; credits still return when an entry
+//             leaves the (credited) region queue.
 //   events    registered OR of the regions' K write completions, K grants at
 //             ingress, B grant / conflict counts accumulated.
 // ---------------------------------------------------------------------------
@@ -33,7 +39,8 @@ module ot_chip_v41x_karb_proot #(
     parameter integer NREG  = NPC / 4,
     // per-region response queue depth (= the region's credits), 8 bits a region, region 0 in [7:0]
     parameter [8*NREG-1:0] EPCS = {NREG{8'd4}},
-    parameter bit     MERGE2 = 1'b1
+    parameter bit     MERGE2 = 1'b1,
+    parameter bit     HEADREG = 1'b1
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -106,11 +113,22 @@ module ot_chip_v41x_karb_proot #(
     wire [NREG-1:0]    q_v, q_rdy;
     wire [NREG*RW-1:0] q_d;
     wire [NREG-1:0] pop;
+    wire [NREG-1:0]    r_v, r_rdy;           // region queue outputs (before the optional head register)
+    wire [NREG*RW-1:0] r_d;
     genvar g;
     generate for (g = 0; g < NREG; g = g + 1) begin : g_q
         ot_chip_v41x_karb_qn #(.W(RW), .DEPTH(EPCS[g*8 +: 8])) u_q (
             .clk(clk), .rst_n(rst_n), .in_v(s_v[g]), .in_rdy(q_rdy[g]), .in_d(s_d[g*RW +: RW]),
-            .out_v(q_v[g]), .out_rdy(pop[g]), .out_d(q_d[g*RW +: RW]));
+            .out_v(r_v[g]), .out_rdy(r_rdy[g]), .out_d(r_d[g*RW +: RW]));
+        if (MERGE2 && HEADREG) begin : g_hr
+            ot_chip_v41x_karb_q2 #(.W(RW)) u_hr (
+                .clk(clk), .rst_n(rst_n), .in_v(r_v[g]), .in_rdy(r_rdy[g]), .in_d(r_d[g*RW +: RW]),
+                .out_v(q_v[g]), .out_rdy(pop[g]), .out_d(q_d[g*RW +: RW]));
+        end else begin : g_nohr
+            assign q_v[g] = r_v[g];
+            assign r_rdy[g] = pop[g];
+            assign q_d[g*RW +: RW] = r_d[g*RW +: RW];
+        end
 `ifndef SYNTHESIS
         always @(posedge clk) if (rst_n && s_v[g] && !q_rdy[g])
             $error("ot_chip_v41x_karb_proot: region %0d sent without a credit", g);
@@ -170,7 +188,7 @@ module ot_chip_v41x_karb_proot #(
         if (!rst_n) begin
             s_cr <= '0; k_wr_done <= 1'b0; k_grants <= 0; b_grants <= 0; contended <= 0;
         end else begin
-            s_cr <= pop;
+            s_cr <= r_v & r_rdy;
             k_wr_done <= |r_kwd;
             if (k_v && k_rdy) k_grants <= k_grants + 1;
             b_grants  <= b_grants + 32'(bsum);
