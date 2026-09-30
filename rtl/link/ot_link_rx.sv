@@ -165,39 +165,51 @@ module ot_link_rx #(
         if (!rrst_n) fault_ovf <= 1'b0;
         else if (|lovf) fault_ovf <= 1'b1;
 
-    // ---- core side: in-order read, release -------------------------------------------------------------
+    // ---- core side: in-order read into a head register, release from it ------------------------------------
+    // The FIFO head (lane mux) is loaded into a head register, and whether that register is due NEXT cycle
+    // is computed and registered with it, so the release decision is a flop (the hardened 0.92 ns port's
+    // critical path was lane mux -> age -> compare -> pop pointer).  A bundle visible at the FIFO at age a is
+    // in the register at a + 1, so deterministic release needs every arrival at a <= RELAGE - 1: the late
+    // check is one cycle stricter than the release point (the calibrated drel carries one guard cycle).
     reg  [LB-1:0]  rn;
     wire           hv = !lempty[rn];
     wire [BW-1:0]  hb = lhead[rn*BW +: BW];
     wire [TSW-1:0] hts = hb[BW-1 -: TSW];
     wire [TSW-1:0] age = now - hts;
     wire [TSW-1:0] RELAGE = drel - WIRE;
-    wire           go = hv && (!det || (age >= RELAGE));
-    reg            seen;                                  // the current head was already visible
+    reg            hr_v, hr_due;
+    reg  [BW-1:0]  hr;
+    wire [TSW-1:0] hr_ts = hr[BW-1 -: TSW];
+    wire           go = hr_v && (!det || hr_due);
+    wire           ld = hv && (!hr_v || go);
+    reg            seen;                                  // the current FIFO head was already visible
     reg  [15:0]    waiting;
     integer q;
     always @(*) begin
         lrd = 0;
-        if (go) lrd[rn] = 1'b1;
+        if (ld) lrd[rn] = 1'b1;
         waiting = 0;
         for (q = 0; q < NL; q = q + 1) waiting = waiting + lcnt[q*(AW+1) +: AW+1];
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            rn <= 0; seen <= 1'b0; fault_late <= 1'b0;
+            rn <= 0; seen <= 1'b0; fault_late <= 1'b0; hr_v <= 1'b0; hr_due <= 1'b0;
             stat_min_age <= {TSW{1'b1}}; stat_max_age <= 0; stat_max_wait <= 0; stat_bundles <= 0;
         end else begin
-            if (go) rn <= (rn == NL - 1) ? 0 : rn + 1'b1;
-            seen <= hv && !go;
+            if (ld) rn <= (rn == NL - 1) ? 0 : rn + 1'b1;
+            hr_v <= ld || (hr_v && !go);
+            hr_due <= ld ? (TSW'(age + 1'b1) >= RELAGE) : (TSW'(now + 1'b1 - hr_ts) >= RELAGE);
+            seen <= hv && !ld;
             if (hv && !seen) begin
                 if (age < stat_min_age) stat_min_age <= age;
                 if (age > stat_max_age) stat_max_age <= age;
-                if (det && age > RELAGE) fault_late <= 1'b1;
+                if (det && age >= RELAGE) fault_late <= 1'b1;
             end
             if (waiting > stat_max_wait) stat_max_wait <= waiting;
             if (go) stat_bundles <= stat_bundles + 1;
         end
     end
+    always @(posedge clk) if (ld) hr <= hb;
 
     // ---- edge -> hub wire --------------------------------------------------------------------------------
     reg  [WIRE-1:0] wv;
@@ -210,7 +222,7 @@ module ot_link_rx #(
             for (i = 1; i < WIRE; i = i + 1) wv[i] <= wv[i-1];
         end
     always @(posedge clk) begin
-        wd[0] <= hb;
+        wd[0] <= hr;
         for (i = 1; i < WIRE; i = i + 1) wd[i] <= wd[i-1];
     end
     wire [BW-1:0] ob = wd[WIRE-1];
