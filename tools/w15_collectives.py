@@ -355,15 +355,18 @@ CONFIGS = {
     "q256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64), "q256"),
     "q256d16": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=16), "q256"),
     "q256d128": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=128), "q256"),
-    # 1.2 GHz @ SS (AGENTS.md 2026-09-30): 0.833 ns core, wire stages from the SS segment sweep (504 um per stage,
+    # 1.2 GHz @ SS (AGENTS.md 2026-09-30): 0.833 ns core; the 128 B engine out-runs a 13-lane T1 link (154 vs
+    # 137 GB/s), so the T1 transmit is paced deterministically at 7/8 bundle a cycle (under the link's 0.892);
+    # without pacing the link backpressure reached the engine through the CDC credit return and 2 of 14
+    # deterministic runs moved a last-transmit cycle by one (results kept identical); wire stages from the SS segment sweep (504 um per stage,
     # results/rtl/w15_collectives.json physical.wire_reach), engine tree adders ot_hdc_fp32_add_lat LAT 7
     "v41ss_p30_w32": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
-                                             FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833), "l0w32"),
+                                             FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833, X_PACE_NUM=7, X_PACE_DEN=8), "l0w32"),
     "v41ss_p30_w32_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
-                                                   FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833),
-                            "sweepw32"),
+                                                   FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
+                                                   X_PACE_NUM=7, X_PACE_DEN=8), "sweepw32"),
     "v41ss_p30_w32_d1024": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
-                                                   FIFO_SRAM=0, FPLAT=1, ADD_LAT=7, T_CORE=0.833), "l0w32"),
+                                                   FIFO_SRAM=0, FPLAT=1, ADD_LAT=7, T_CORE=0.833, X_PACE_NUM=7, X_PACE_DEN=8), "l0w32"),
     "qss_256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0, FPLAT=1, ADD_LAT=7,
                                            T_CORE=0.833, U_WIRE=29), "q256"),
     "hbm_p48": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48), X_WIRE=16, U_WIRE=16), "hbm48"),

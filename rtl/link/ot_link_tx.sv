@@ -60,7 +60,14 @@ module ot_link_tx #(
     parameter integer RESERVE      = 2,
     parameter integer HUBFC        = 1,        // 0: no hub credit loop (the edge FIFO drains faster than
                                                //    one bundle a core cycle; overflow is still latched)
-    parameter integer BW           = TSW + NVC + CW + NVC * PW,   // bundle
+    parameter integer PACE_NUM     = 0,        // >0: DETERMINISTIC PACING -- bundles only on slots of a token bucket
+    parameter integer PACE_DEN     = 1,        //     (PACE_NUM / PACE_DEN bundles a core cycle, set below the link's
+                                               //     drain rate), so no backpressure ever reaches the engine
+                                               //     through the phase-dependent CDC credit return; credit pulses
+                                               //     are accumulated and sent as counts (CNTW bits per credit)
+    parameter integer CNTW         = (PACE_NUM > 0) ? 3 : 1,
+    parameter integer CFW          = CW * CNTW,
+    parameter integer BW           = TSW + NVC + CFW + NVC * PW,  // bundle
     parameter integer SW           = BW + 1,                       // slot
     parameter integer NS           = FRAME_CYCLES * NL,            // slots per frame
     parameter integer FRW          = NS * SW + 32                  // frame
@@ -88,14 +95,41 @@ module ot_link_tx #(
     wire [NL-1:0]  lovf;
     reg  [CRW-1:0] hub_cr;
     wire [CRW-1:0] ret;                                   // entries freed at the edge, after the return wire
-    assign vc_ready = (HUBFC == 0 || hub_cr > RESERVE) ? {NVC{1'b1}} : ~GATED;
+    // pacing bucket (PACE_NUM > 0): capped at one bundle, so an idle link banks no burst
+    localparam integer PB = $clog2(PACE_DEN + PACE_NUM + 1) + 1;
+    reg  [PB-1:0]  pace;
+    wire           slot = (PACE_NUM == 0) || (pace >= PACE_DEN);
+    assign vc_ready = ((HUBFC == 0 || hub_cr > RESERVE) && slot) ? {NVC{1'b1}} : ~GATED;
     wire [NVC-1:0] dv = vc_valid;
-    wire           bv = (|dv) || (|cr_pulse);
-    wire [BW-1:0]  bundle = {now, dv, cr_pulse, vc_rec};
+    // credit field: the pulses themselves (CNTW 1, unpaced), or counts accumulated to the next slot
+    reg  [CNTW-1:0] ccnt [0:CW-1];
+    reg  [CFW-1:0]  cfield;
+    reg             cpend, covf;
+    integer c;
+    always @(*) begin
+        cpend = 1'b0; covf = 1'b0;
+        for (c = 0; c < CW; c = c + 1) begin
+            if (PACE_NUM == 0) cfield[c*CNTW +: CNTW] = cr_pulse[c];
+            else begin
+                cfield[c*CNTW +: CNTW] = ccnt[c] + cr_pulse[c];
+                if (ccnt[c] == {CNTW{1'b1}} && cr_pulse[c]) covf = 1'b1;
+            end
+            if (cfield[c*CNTW +: CNTW] != 0) cpend = 1'b1;
+        end
+    end
+    wire           bv = slot && ((|dv) || cpend);
+    wire [BW-1:0]  bundle = {now, dv, cfield, vc_rec};
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            hub_cr <= CAP; fault <= 1'b0; stat_bundles <= 0; stat_gated_stall <= 0;
+            hub_cr <= CAP; fault <= 1'b0; stat_bundles <= 0; stat_gated_stall <= 0; pace <= PACE_DEN;
+            for (c = 0; c < CW; c = c + 1) ccnt[c] <= 0;
         end else begin
+            if (PACE_NUM != 0) begin
+                pace <= ((bv ? pace - PACE_DEN : pace) + PACE_NUM > PACE_DEN) ? PACE_DEN
+                        : (bv ? pace - PACE_DEN : pace) + PACE_NUM;
+                for (c = 0; c < CW; c = c + 1) ccnt[c] <= bv ? 0 : cfield[c*CNTW +: CNTW];
+                if (covf || ((|(dv & ~GATED)) && !slot)) fault <= 1'b1;   // count overflow / ungated off-slot
+            end
             hub_cr <= hub_cr - (bv ? 1'b1 : 1'b0) + ret;
             if ((HUBFC != 0 && bv && hub_cr == 0) || (|lovf)) fault <= 1'b1;
             if (bv) stat_bundles <= stat_bundles + 1;

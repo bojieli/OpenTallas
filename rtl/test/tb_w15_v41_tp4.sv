@@ -36,13 +36,14 @@ module tb_w15_v41_tp4 #(
     // 128 B records, so the board frame (one RS(272,257) codeword payload) takes X_NL = 1 bundle a PCS cycle,
     // two per codeword = 256 B, the same 4 x 64 B the 16-lane frame carries
     parameter integer LANES = 16, U_NL = 2, X_NL = 2,
-    parameter integer FIFO_SRAM = 0, SRAM_MACRO = 1, FPLAT = 0, ADD_LAT = 3
+    parameter integer FIFO_SRAM = 0, SRAM_MACRO = 1, FPLAT = 0, ADD_LAT = 3,
+    parameter integer X_PACE_NUM = 0, X_PACE_DEN = 1
 );
     localparam integer N=4, FW=32*LANES, PW=FW+35, RB=2, WA=15, GW=4, TSW=16;
     localparam integer OPS=12, MAXW=320, MEMW=32768;
     localparam integer UNVC = RELAY ? 3 : 1;
     localparam integer UBW = TSW + UNVC + 2 + UNVC*PW, UFRW = U_FC*U_NL*(UBW+1) + 32;
-    localparam integer XBW = TSW + 1 + 2 + PW,        XFRW = X_FC*X_NL*(XBW+1) + 32;
+    localparam integer X_CNTW = (X_PACE_NUM > 0) ? 3 : 1, XBW = TSW + 1 + 2 * X_CNTW + PW,        XFRW = X_FC*X_NL*(XBW+1) + 32;
     localparam integer U_AWTX = 6, X_AWTX = 6, U_AWRX = 5, X_AWRX = 5;
 
     integer seed, seed0, DET, U_DREL, X_DREL;
@@ -268,7 +269,7 @@ module tb_w15_v41_tp4 #(
                 assign vv = txv[s*N+t];
                 assign txready[s*N+t] = rdy;
                 ot_link_tx #(.NVC(1), .PW(PW), .CW(2), .TSW(TSW), .WIRE(X_WIRE), .AW(X_AWTX), .NL(X_NL),
-                             .FRAME_CYCLES(X_FC), .ENC_STAGES(X_ENC)) u_tx (
+                             .FRAME_CYCLES(X_FC), .ENC_STAGES(X_ENC), .PACE_NUM(X_PACE_NUM), .PACE_DEN(X_PACE_DEN)) u_tx (
                     .clk(clk[s]), .rst_n(rst_n[s]), .now(now[s]), .vc_valid(vv), .vc_ready(rdy),
                     .vc_rec(txrec[s*PW+:PW]), .cr_pulse(crout[2*(s*N+t)+:2]), .lclk(lx[s]), .lrst_n(rst_x[s]),
                     .f_valid(fv), .f_data(fd), .fault(f0), .stat_bundles(), .stat_gated_stall());
@@ -278,7 +279,7 @@ module tb_w15_v41_tp4 #(
                 reg rr = 0;
                 always @(posedge rclk) rr <= ($realtime > 40.0);
                 ot_link_rx #(.NVC(1), .PW(PW), .CW(2), .TSW(TSW), .WIRE(X_WIRE), .AW(X_AWRX), .NL(X_NL),
-                             .FRAME_CYCLES(X_FC), .DEC_STAGES(X_DEC)) u_rx (
+                             .FRAME_CYCLES(X_FC), .DEC_STAGES(X_DEC), .CNTW(X_CNTW)) u_rx (
                     .rclk(rclk), .rrst_n(rr), .f_valid(rfv), .f_data(rfd), .clk(clk[t]), .rst_n(rst_n[t]),
                     .now(now[t]), .det(DET[0]), .drel(TSW'(X_DREL)), .vc_valid(ovv), .vc_rec(orec), .cr_pulse(crin[2*(t*N+s)+:2]),
                     .fault_crc(f1), .fault_late(f2), .fault_ovf(f3), .stat_min_age(amin), .stat_max_age(amax),

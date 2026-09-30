@@ -44,7 +44,9 @@ module ot_link_rx #(
     parameter integer FRAME_CYCLES = 1,
     parameter integer DEC_STAGES   = 0,
     parameter integer SYNC         = 2,
-    parameter integer BW           = TSW + NVC + CW + NVC * PW,
+    parameter integer CNTW         = 1,        // credit counts per bundle (ot_link_tx PACE_NUM > 0: 3)
+    parameter integer CFW          = CW * CNTW,
+    parameter integer BW           = TSW + NVC + CFW + NVC * PW,
     parameter integer SW           = BW + 1,
     parameter integer NS           = FRAME_CYCLES * NL,
     parameter integer FRW          = NS * SW + 32
@@ -227,8 +229,21 @@ module ot_link_rx #(
     end
     wire [BW-1:0] ob = wd[WIRE-1];
     wire [NVC-1:0] odv = ob[BW-TSW-1 -: NVC];
-    wire [CW-1:0]  ocm = ob[NVC*PW +: CW];
+    wire [CFW-1:0] ocm = ob[NVC*PW +: CFW];
     assign vc_valid = wv[WIRE-1] ? odv : {NVC{1'b0}};
-    assign cr_pulse = wv[WIRE-1] ? ocm : {CW{1'b0}};
+    generate if (CNTW == 1) begin : g_pulse
+        assign cr_pulse = wv[WIRE-1] ? ocm : {CW{1'b0}};
+    end else begin : g_count
+        // counts -> one pulse per cycle per credit (the engine takes one a cycle); deterministic, as the bundles are
+        reg [CNTW+3:0] pend [0:CW-1];
+        genvar cc;
+        for (cc = 0; cc < CW; cc = cc + 1) begin : g_c
+            wire [CNTW+3:0] tot = pend[cc] + (wv[WIRE-1] ? ocm[cc*CNTW +: CNTW] : 0);
+            assign cr_pulse[cc] = tot != 0;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) pend[cc] <= 0;
+                else pend[cc] <= tot - (tot != 0 ? 1'b1 : 1'b0);
+        end
+    end endgenerate
     assign vc_rec   = ob[NVC*PW-1:0];
 endmodule
