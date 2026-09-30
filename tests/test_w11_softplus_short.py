@@ -45,3 +45,15 @@ def test_depths_are_the_rtl_localparams():
     assert rec["after"] == sum(a for _, _, a in SCHEDULE) == 107
     assert rec["saved_cycles"] == 55
     assert [u["depth"] for u in rec["units"]] == [d[1] for d in DEPTHS]
+
+
+def test_prefix_widths_are_all_proved():
+    from tools.w11_softplus_short import INC_WIDTHS, KSADD_WIDTHS
+    src = (ROOT / NEW).read_text()
+    lit = {"RW+1": 33, "Q_W+2": 28}
+    ks = {lit.get(w, None) or int(w) for w in re.findall(r"ot_hdc_ksadd_k #\(\.W\(([^)]+)\)\)", src)}
+    inc = {lit.get(w, None) or int(w) for w in re.findall(r"ot_hdc_inc_k #\(\.W\(([^)]+)\)\)", src)}
+    assert ks <= set(KSADD_WIDTHS) and inc <= set(INC_WIDTHS)
+    proofs = _record()["exactness"]["prefix_adder_proofs"]
+    assert all(v == "proved" for v in proofs.values())
+    assert len(proofs) == len(KSADD_WIDTHS) + len(INC_WIDTHS)

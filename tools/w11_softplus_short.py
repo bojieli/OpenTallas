@@ -180,17 +180,34 @@ def physical(d):
     return out
 
 
+def strip_comments(text: str) -> str:
+    return "\n".join(line.split("//", 1)[0].rstrip() for line in text.splitlines() if line.split("//", 1)[0].strip())
+
+
+def same_logic(commit: str) -> dict:
+    """The evidence ran on `commit`; every file it used must differ from HEAD's at most in comments."""
+    out = {}
+    for p in [NEW, TB, PREFIX, PREFIX_SIM, *LIB]:
+        old = subprocess.run(["git", "-C", str(ROOT), "show", f"{commit}:{p}"], capture_output=True, text=True).stdout
+        out[p] = strip_comments(old) == strip_comments((ROOT / p).read_text())
+    return out
+
+
 def record(args):
     eq = exhaustive(args.eq)
     u3 = random_units(args.u3)
     ph = physical(args.phys)
     head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     proofs = prove(Path(args.u3) / "prefix_proofs")
-    ok = all(v["pass_"] for v in eq.values()) and u3["pass_"] and all(v == "proved" for v in proofs.values())
+    logic = same_logic(args.evidence_commit)
+    ok = (all(v["pass_"] for v in eq.values()) and u3["pass_"] and all(v == "proved" for v in proofs.values())
+          and all(logic.values()))
     rec = dict(
         schema="opentallas.w11-softplus-short.v1",
         status="pass" if ok else "fail",
         git_head=head,
+        evidence_commit=args.evidence_commit,
+        evidence_sources_equal_to_head_but_comments=logic,
         simulator="Verilator 4.038",
         clock_domain="serial chain, 0.9 GHz (1.111 ns) at SS setup / FF hold, 60/25 ps (AGENTS.md)",
         depth=dict(before=162, after=107, saved_cycles=55, saved_ns_at_0p9GHz=round(55 / 0.9, 1),
@@ -230,6 +247,7 @@ def main():
     r.add_argument("--u3", required=True)
     r.add_argument("--phys", required=True)
     r.add_argument("--limitation", default="")
+    r.add_argument("--evidence-commit", required=True, help="commit the benches and routes were built from")
     a = ap.parse_args()
     if a.cmd == "build":
         build(a.dir)
