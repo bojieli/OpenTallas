@@ -1,0 +1,787 @@
+{
+ "schema": "opentallas.uarch.w11_vm_options.v1",
+ "generated_utc": "2026-09-30T01:00:35Z",
+ "source_commit": "6ccc8f6714ff70f5784706175a284f9ef0a1d887",
+ "basis": {
+  "clock_ps": 920.0,
+  "wire_ps_per_um": 0.76,
+  "stage_rule": "tools/uarch_model.wire_cycles",
+  "mux_levels_per_stage": 8,
+  "rotate_levels": 10,
+  "benes_levels": 19,
+  "crossbar_levels": 10,
+  "density": {
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.json",
+   "record_ref": "claude/w11-dedicated-units",
+   "comb_cell_um2": 0.0878,
+   "flop_um2": 0.2952,
+   "utilization": 0.453157,
+   "lane_cell_um2": 7069.46,
+   "lane_core_um2": 15600.5
+  },
+  "network_cells": "rotate: N x 32 x log2 N mux2; Benes: N x 32 x (2 log2 N - 1); full crossbar: N x (N - 1) x 32 mux2 (a 1,024:1 mux tree per output bit); a stage register of N x 32 flops per pipeline stage; mux2 = the lane's mean combinational cell, footprint at 50 % utilisation (the spec's logic basis)",
+  "geometry": "distributed (H, A): the spec record's SU + VM block (macros at area, lane / VM logic at 50 %), grown by the network footprint; rotate span = block W + H, scalar fetch = (W + H) / 2; collective write with the endpoint at the VM port (W10 placement, as the model's 6); central (C): the lane array (the spec's lane logic at 50 %) as a square with the VM strip (macros + VM logic + crossbar) along one side",
+  "su_per_op": "a dependent SU op pays the controller broadcast (4, every option) + its operand path + its element-write path (reductions: + the result tree instead of the write); the model's SU node depths exclude all of these (su_bcast / su_ret are not in evaluate())",
+  "model": "tools/uarch_model.py PRESETS['proposal'] (identical evaluate() to claude/w11-dedicated-units 73ba9c9b on these keys: AR 3,747.6 / MTP 5,811.4 tok/s at 6/6/6/4 on both)",
+  "positions": 6,
+  "tau": 3.649,
+  "ctx": 1048576
+ },
+ "h_measurement": {
+  "source": "reduced vehicle, position 7 (tools/rtl_hdc_v41x_vec_campaign.vehicle_records)",
+  "meta": {
+   "position": 7,
+   "token": 3582,
+   "program_instructions": 3992,
+   "stream_ops": 2649
+  },
+  "ops": 2649,
+  "vectors_as_laid": 5082,
+  "vectors_h": 6370,
+  "vector_ratio": 1.2534,
+  "ops_fixed_by_alignment_alone": 1674,
+  "ops_relaid_by_ban": 216,
+  "elements": {
+   "A": 533217,
+   "B": 513445,
+   "C": 518725,
+   "D": 512325,
+   "G": 15328,
+   "E": 510581
+  },
+  "remote_share_as_laid": {
+   "A": 0.8317,
+   "B": 0.5339,
+   "C": 0.2985,
+   "D": 0.0993,
+   "G": 0.9924,
+   "E": 0.5833
+  },
+  "remote_share_aligned": {
+   "A": 0.3721,
+   "B": 0.5285,
+   "C": 0.1917,
+   "D": 0.0992,
+   "G": 0.9611,
+   "E": 0.1751
+  },
+  "remote_share_h": {
+   "A": 0.287,
+   "B": 0.5254,
+   "C": 0.1177,
+   "D": 0.0987,
+   "G": 0.9611,
+   "E": 0.2366
+  },
+  "broadcast_share": {
+   "A": 0.0,
+   "B": 0.4591,
+   "C": 0.368,
+   "D": 0.8983,
+   "G": 0.0,
+   "E": 0.0
+  },
+  "residual_elements_h": {
+   "A": 153014,
+   "B": 269768,
+   "C": 61056,
+   "D": 50560,
+   "G": 14732,
+   "E": 120812
+  },
+  "residual_elements_aligned": {
+   "A": 198409,
+   "B": 271336,
+   "C": 99456,
+   "D": 50800,
+   "G": 14732,
+   "E": 89404
+  },
+  "ops_needing_rotate": 853,
+  "ops_needing_rotate_by_class": {
+   "E": 335,
+   "C": 218,
+   "A": 505,
+   "B": 406,
+   "D": 80,
+   "G": 76
+  },
+  "ops_needing_rotate_aligned_only": 853,
+  "ops_needing_rotate_by_class_aligned_only": {
+   "E": 255,
+   "C": 298,
+   "A": 585,
+   "B": 414,
+   "D": 80,
+   "G": 76
+  },
+  "ops_with_broadcast": 2097,
+  "reduce_ops": 466,
+  "gather_ops": 156
+ },
+ "rates": {
+  "flat_vm_reference": {
+   "design": {
+    "name": "flat_vm_reference"
+   },
+   "ar_tokens_s": 3808.8,
+   "mtp_tokens_s": 5856.5,
+   "T_us": 262.55,
+   "verify_over_ar": 2.2981
+  },
+  "model_vm_dist_6_6_6_4": {
+   "design": {
+    "vm_x_gather_stages": 6,
+    "vm_ret_scatter_stages": 6,
+    "vm_coll_write_stages": 6,
+    "su_ret_stages": 4,
+    "su_bcast_stages": 4
+   },
+   "ar_tokens_s": 3747.6,
+   "mtp_tokens_s": 5811.4,
+   "T_us": 266.84,
+   "verify_over_ar": 2.2781
+  }
+ },
+ "options": {
+  "H": {
+   "geometry": {
+    "block_mm2": 38.7183177088,
+    "w_um": 6345.993465169953,
+    "h_um": 6101.213974598804,
+    "scale": 1.0323892474531802,
+    "x_gather_um": 8816.604173250158,
+    "ret_scatter_um": 8816.604173250158,
+    "coll_um_at_port": 8816.604173250158,
+    "coll_um_w1": 12859.440466276812,
+    "su_results_um": 5644.072015826536,
+    "rotate_um": 12447.207439768757,
+    "scalar_fetch_um": 6223.603719884379
+   },
+   "networks": [
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "benes",
+     "comb_cells": 622592,
+     "flops": 589824,
+     "cell_mm2": 0.2287796224,
+     "footprint_mm2": 0.4575592448
+    },
+    {
+     "kind": "bcast",
+     "comb_cells": 2048,
+     "flops": 768,
+     "cell_mm2": 0.000406528,
+     "footprint_mm2": 0.000813056
+    },
+    {
+     "kind": "bcast",
+     "comb_cells": 2048,
+     "flops": 768,
+     "cell_mm2": 0.000406528,
+     "footprint_mm2": 0.000813056
+    }
+   ],
+   "network_cell_mm2": 1.1956588544000002,
+   "network_footprint_mm2": 2.3913177088000004,
+   "clients": {
+    "x_gather": 10,
+    "ret_scatter": 10,
+    "coll_write": 10,
+    "coll_write_from_w1_hub": 15,
+    "su_results": 7,
+    "he_qe_xu_expert_reads": "= x_gather (class X)"
+   },
+   "su_op_class_stages": {
+    "control_broadcast": 4,
+    "local_read": 0,
+    "scalar_read": 8,
+    "residual_rotate_read": 17,
+    "gather_read": 18,
+    "local_element_write": 0,
+    "residual_rotate_write": 17,
+    "reduce_result": 7,
+    "residual_classes": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "E",
+     "G"
+    ]
+   },
+   "su_op_extra_cycles": 16.813,
+   "su_red_extra_cycles": 25.966,
+   "su_op_extra_basis": "mean over the vehicle's element ops / reductions of the stages each needs",
+   "su_issue_ratio": 1.2534,
+   "layout_rule": "bases 128-aligned; packed cross-group rows banned (re-laid one row a 128-lane slot)",
+   "design_keys": {
+    "vm_x_gather_stages": 10,
+    "vm_ret_scatter_stages": 10,
+    "vm_coll_write_stages": 10,
+    "su_ret_stages": 7,
+    "su_bcast_stages": 4,
+    "su_op_extra_cycles": 16.813,
+    "su_red_extra_cycles": 25.966,
+    "su_lanes": 816.9778203287059,
+    "sfu_lanes": 204.24445508217647
+   },
+   "rates": {
+    "ar_tokens_s": 3490.1,
+    "mtp_tokens_s": 5569.5,
+    "T_us": 286.52,
+    "verify_over_ar": 2.2117
+   },
+   "rates_clients_only": {
+    "ar_tokens_s": 3685.6,
+    "mtp_tokens_s": 5699.3,
+    "T_us": 271.32,
+    "verify_over_ar": 2.2848
+   },
+   "sram": {
+    "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "macros": 1536,
+    "mm2": 10.893,
+    "note": "the same replica / bank count serves every option: the port demand is the SU's"
+   },
+   "footprint_mm2": 38.718
+  },
+  "H_align_only": {
+   "geometry": {
+    "block_mm2": 38.7183177088,
+    "w_um": 6345.993465169953,
+    "h_um": 6101.213974598804,
+    "scale": 1.0323892474531802,
+    "x_gather_um": 8816.604173250158,
+    "ret_scatter_um": 8816.604173250158,
+    "coll_um_at_port": 8816.604173250158,
+    "coll_um_w1": 12859.440466276812,
+    "su_results_um": 5644.072015826536,
+    "rotate_um": 12447.207439768757,
+    "scalar_fetch_um": 6223.603719884379
+   },
+   "networks": [
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "benes",
+     "comb_cells": 622592,
+     "flops": 589824,
+     "cell_mm2": 0.2287796224,
+     "footprint_mm2": 0.4575592448
+    },
+    {
+     "kind": "bcast",
+     "comb_cells": 2048,
+     "flops": 768,
+     "cell_mm2": 0.000406528,
+     "footprint_mm2": 0.000813056
+    },
+    {
+     "kind": "bcast",
+     "comb_cells": 2048,
+     "flops": 768,
+     "cell_mm2": 0.000406528,
+     "footprint_mm2": 0.000813056
+    }
+   ],
+   "network_cell_mm2": 1.1956588544000002,
+   "network_footprint_mm2": 2.3913177088000004,
+   "clients": {
+    "x_gather": 10,
+    "ret_scatter": 10,
+    "coll_write": 10,
+    "coll_write_from_w1_hub": 15,
+    "su_results": 7,
+    "he_qe_xu_expert_reads": "= x_gather (class X)"
+   },
+   "su_op_class_stages": {
+    "control_broadcast": 4,
+    "local_read": 0,
+    "scalar_read": 8,
+    "residual_rotate_read": 17,
+    "gather_read": 18,
+    "local_element_write": 0,
+    "residual_rotate_write": 17,
+    "reduce_result": 7,
+    "residual_classes": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "E",
+     "G"
+    ]
+   },
+   "su_op_extra_cycles": 16.19,
+   "su_red_extra_cycles": 25.966,
+   "su_op_extra_basis": "mean over the vehicle's element ops / reductions of the stages each needs",
+   "su_issue_ratio": 1.0,
+   "layout_rule": "bases 128-aligned only; packed rows kept (their residual rides the rotate network)",
+   "design_keys": {
+    "vm_x_gather_stages": 10,
+    "vm_ret_scatter_stages": 10,
+    "vm_coll_write_stages": 10,
+    "su_ret_stages": 7,
+    "su_bcast_stages": 4,
+    "su_op_extra_cycles": 16.19,
+    "su_red_extra_cycles": 25.966,
+    "su_lanes": 1024.0,
+    "sfu_lanes": 256.0
+   },
+   "rates": {
+    "ar_tokens_s": 3517.1,
+    "mtp_tokens_s": 5659.0,
+    "T_us": 284.32,
+    "verify_over_ar": 2.1929
+   },
+   "rates_clients_only": {
+    "ar_tokens_s": 3707.9,
+    "mtp_tokens_s": 5781.7,
+    "T_us": 269.7,
+    "verify_over_ar": 2.2652
+   },
+   "sram": {
+    "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "macros": 1536,
+    "mm2": 10.893,
+    "note": "the same replica / bank count serves every option: the port demand is the SU's"
+   },
+   "footprint_mm2": 38.718
+  },
+  "C": {
+   "geometry": {
+    "lane_array_mm2": 23.9127808,
+    "lane_side_um": 4890.069610956474,
+    "vm_block_mm2": 50.2866551808,
+    "vm_depth_um": 10283.423178297899,
+    "bank_to_lane_um": 17618.527594732608,
+    "bank_to_port_um": 12728.457983776136,
+    "block_mm2": 74.19943598079999
+   },
+   "networks": [
+    {
+     "kind": "crossbar",
+     "comb_cells": 33521664,
+     "flops": 720896,
+     "cell_mm2": 3.1560105984,
+     "footprint_mm2": 6.3120211968
+    },
+    {
+     "kind": "crossbar",
+     "comb_cells": 33521664,
+     "flops": 720896,
+     "cell_mm2": 3.1560105984,
+     "footprint_mm2": 6.3120211968
+    },
+    {
+     "kind": "crossbar",
+     "comb_cells": 33521664,
+     "flops": 720896,
+     "cell_mm2": 3.1560105984,
+     "footprint_mm2": 6.3120211968
+    },
+    {
+     "kind": "crossbar",
+     "comb_cells": 33521664,
+     "flops": 720896,
+     "cell_mm2": 3.1560105984,
+     "footprint_mm2": 6.3120211968
+    },
+    {
+     "kind": "crossbar",
+     "comb_cells": 33521664,
+     "flops": 720896,
+     "cell_mm2": 3.1560105984,
+     "footprint_mm2": 6.3120211968
+    },
+    {
+     "kind": "crossbar",
+     "comb_cells": 33521664,
+     "flops": 720896,
+     "cell_mm2": 3.1560105984,
+     "footprint_mm2": 6.3120211968
+    }
+   ],
+   "network_cell_mm2": 18.9360635904,
+   "network_footprint_mm2": 37.8721271808,
+   "clients": {
+    "x_gather": 15,
+    "ret_scatter": 15,
+    "coll_write": 15,
+    "su_results": 15,
+    "he_qe_xu_expert_reads": "= x_gather (class X)"
+   },
+   "su_op_class_stages": {
+    "control_broadcast": 4,
+    "operand_read": 22,
+    "gather_read": 22,
+    "element_write": 22,
+    "reduce_result": 15
+   },
+   "su_op_extra_cycles": 48,
+   "su_red_extra_cycles": 41,
+   "su_issue_ratio": 1.0,
+   "sensitivity_3850um_each_way": {
+    "one_way": 7,
+    "su_op_extra_cycles": 18,
+    "rates": {
+     "ar_tokens_s": 3454.8,
+     "mtp_tokens_s": 5611.7,
+     "T_us": 289.45,
+     "verify_over_ar": 2.1715
+    }
+   },
+   "design_keys": {
+    "vm_x_gather_stages": 15,
+    "vm_ret_scatter_stages": 15,
+    "vm_coll_write_stages": 15,
+    "su_ret_stages": 15,
+    "su_bcast_stages": 4,
+    "su_op_extra_cycles": 48,
+    "su_red_extra_cycles": 41,
+    "su_lanes": 1024.0,
+    "sfu_lanes": 256.0
+   },
+   "rates": {
+    "ar_tokens_s": 3166.7,
+    "mtp_tokens_s": 5387.5,
+    "T_us": 315.78,
+    "verify_over_ar": 2.0699
+   },
+   "rates_clients_only": {
+    "ar_tokens_s": 3659.4,
+    "mtp_tokens_s": 5744.9,
+    "T_us": 273.27,
+    "verify_over_ar": 2.2493
+   },
+   "sram": {
+    "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "macros": 1536,
+    "mm2": 10.893,
+    "note": "the same replica / bank count serves every option: the port demand is the SU's"
+   },
+   "footprint_mm2": 74.199
+  },
+  "C_rotate": {
+   "geometry": {
+    "lane_array_mm2": 23.9127808,
+    "lane_side_um": 4890.069610956474,
+    "vm_block_mm2": 14.4559875072,
+    "vm_depth_um": 2956.1925815555983,
+    "bank_to_lane_um": 10291.29699799031,
+    "bank_to_port_um": 5401.227387033836,
+    "block_mm2": 38.3687683072
+   },
+   "networks": [
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 458752,
+     "cell_mm2": 0.1641938944,
+     "footprint_mm2": 0.3283877888
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 458752,
+     "cell_mm2": 0.1641938944,
+     "footprint_mm2": 0.3283877888
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 458752,
+     "cell_mm2": 0.1641938944,
+     "footprint_mm2": 0.3283877888
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 458752,
+     "cell_mm2": 0.1641938944,
+     "footprint_mm2": 0.3283877888
+    },
+    {
+     "kind": "benes",
+     "comb_cells": 622592,
+     "flops": 491520,
+     "cell_mm2": 0.19976028159999998,
+     "footprint_mm2": 0.39952056319999996
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 458752,
+     "cell_mm2": 0.1641938944,
+     "footprint_mm2": 0.3283877888
+    }
+   ],
+   "network_cell_mm2": 1.0207297536000002,
+   "network_footprint_mm2": 2.0414595072000004,
+   "clients": {
+    "x_gather": 7,
+    "ret_scatter": 7,
+    "coll_write": 7,
+    "su_results": 7,
+    "he_qe_xu_expert_reads": "= x_gather (class X)"
+   },
+   "su_op_class_stages": {
+    "control_broadcast": 4,
+    "operand_read": 14,
+    "gather_read": 15,
+    "element_write": 14,
+    "reduce_result": 7
+   },
+   "su_op_extra_cycles": 32,
+   "su_red_extra_cycles": 25,
+   "su_issue_ratio": 1.0,
+   "sensitivity_3850um_each_way": {
+    "one_way": 7,
+    "su_op_extra_cycles": 18,
+    "rates": {
+     "ar_tokens_s": 3528.4,
+     "mtp_tokens_s": 5668.2,
+     "T_us": 283.41,
+     "verify_over_ar": 2.1965
+    }
+   },
+   "design_keys": {
+    "vm_x_gather_stages": 7,
+    "vm_ret_scatter_stages": 7,
+    "vm_coll_write_stages": 7,
+    "su_ret_stages": 7,
+    "su_bcast_stages": 4,
+    "su_op_extra_cycles": 32,
+    "su_red_extra_cycles": 25,
+    "su_lanes": 1024.0,
+    "sfu_lanes": 256.0
+   },
+   "rates": {
+    "ar_tokens_s": 3381.8,
+    "mtp_tokens_s": 5559.2,
+    "T_us": 295.7,
+    "verify_over_ar": 2.1448
+   },
+   "rates_clients_only": {
+    "ar_tokens_s": 3737.6,
+    "mtp_tokens_s": 5803.9,
+    "T_us": 267.55,
+    "verify_over_ar": 2.2749
+   },
+   "sram": {
+    "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "macros": 1536,
+    "mm2": 10.893,
+    "note": "the same replica / bank count serves every option: the port demand is the SU's"
+   },
+   "footprint_mm2": 38.369
+  },
+  "A": {
+   "geometry": {
+    "block_mm2": 39.1047441792,
+    "w_um": 6377.582796488129,
+    "h_um": 6131.584833116782,
+    "scale": 1.037528314514329,
+    "x_gather_um": 8860.49180595237,
+    "ret_scatter_um": 8860.49180595237,
+    "coll_um_at_port": 8860.49180595237,
+    "coll_um_w1": 12923.452685590482,
+    "su_results_um": 5672.167295449837,
+    "rotate_um": 12509.167629604912,
+    "scalar_fetch_um": 6254.583814802456
+   },
+   "networks": [
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 557056,
+     "cell_mm2": 0.19321323520000003,
+     "footprint_mm2": 0.38642647040000005
+    },
+    {
+     "kind": "benes",
+     "comb_cells": 622592,
+     "flops": 589824,
+     "cell_mm2": 0.2287796224,
+     "footprint_mm2": 0.4575592448
+    },
+    {
+     "kind": "bcast",
+     "comb_cells": 2048,
+     "flops": 768,
+     "cell_mm2": 0.000406528,
+     "footprint_mm2": 0.000813056
+    },
+    {
+     "kind": "bcast",
+     "comb_cells": 2048,
+     "flops": 768,
+     "cell_mm2": 0.000406528,
+     "footprint_mm2": 0.000813056
+    }
+   ],
+   "network_cell_mm2": 1.3888720896000004,
+   "network_footprint_mm2": 2.777744179200001,
+   "clients": {
+    "x_gather": 11,
+    "ret_scatter": 11,
+    "coll_write": 11,
+    "coll_write_from_w1_hub": 15,
+    "su_results": 7,
+    "he_qe_xu_expert_reads": "= x_gather (class X)"
+   },
+   "su_op_class_stages": {
+    "control_broadcast": 4,
+    "unit_stride_read": 17,
+    "scalar_read": 17,
+    "gather_read": 18,
+    "element_write": 17,
+    "reduce_result": 7
+   },
+   "su_op_extra_cycles": 38,
+   "su_red_extra_cycles": 28,
+   "su_issue_ratio": 1.0,
+   "design_keys": {
+    "vm_x_gather_stages": 11,
+    "vm_ret_scatter_stages": 11,
+    "vm_coll_write_stages": 11,
+    "su_ret_stages": 7,
+    "su_bcast_stages": 4,
+    "su_op_extra_cycles": 38,
+    "su_red_extra_cycles": 28,
+    "su_lanes": 1024.0,
+    "sfu_lanes": 256.0
+   },
+   "rates": {
+    "ar_tokens_s": 3291.3,
+    "mtp_tokens_s": 5488.2,
+    "T_us": 303.83,
+    "verify_over_ar": 2.1133
+   },
+   "rates_clients_only": {
+    "ar_tokens_s": 3698.1,
+    "mtp_tokens_s": 5774.3,
+    "T_us": 270.41,
+    "verify_over_ar": 2.262
+   },
+   "sram": {
+    "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "macros": 1536,
+    "mm2": 10.893,
+    "note": "the same replica / bank count serves every option: the port demand is the SU's"
+   },
+   "footprint_mm2": 39.105
+  }
+ },
+ "source_sha256": {
+  "tools/w11_vm_options.py": "56a8cc419b91d4ebbf7f27ae49e4d20f194dc90ebd98fdcf646ccc0d596b9531",
+  "tools/uarch_model.py": "bb9f1b16fee63e3e4a6f8f7babd8bbeb089743462087b9efbaffcad10e5115c5",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "ca1c02361bc218863e01dd9d8128aceb62369672645612952095c624f6780747",
+  "results/floorplan/v41_vm_dist_spec.json": "bcad859f7b985ecec5206dcadac6dfced6df998b115f7b32de1c4dd234fb055b",
+  "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
+  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f"
+ }
+}
