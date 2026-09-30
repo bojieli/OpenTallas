@@ -41,8 +41,14 @@ SNAP_X, SNAP_Y = F.SNAP_X, F.SNAP_Y
 CORR = F.CORRIDOR_UM
 
 
+REACH = [None]      # --reach-um: a measured per-stage reach overrides the model's rule
+
+
 def wc(um):
-    """register stages to cross um of loaded wire (the model's rule)"""
+    """register stages to cross um of loaded wire: ceil(L / reach) with a measured reach (W15 SS: 261 ps +
+    1.135 ps/um, 504 um a stage at 0.833 ns), else the model's rule (tools/uarch_model.wire_cycles)"""
+    if REACH[0]:
+        return max(1, math.ceil(um / REACH[0])) if um > 0 else 0
     return U.wire_cycles(um, CLOCK_HZ, U.WIRE_PS_PER_UM_LOADED)
 
 
@@ -105,7 +111,9 @@ def main():
     ap.add_argument('--spine-logic-mm2', type=float, default=4.0,
                     help='engine top + sequencer + TP seq cell area / 0.5 (placed), until synthesised')
     ap.add_argument('--out-dir', type=Path, required=True)
+    ap.add_argument('--reach-um', type=float, help='per-stage wire reach (um); W15 SS at 0.833 ns: 504')
     a = ap.parse_args()
+    REACH[0] = a.reach_um
     G, TCUT = a.groups, a.smin
     NT, LT = G // 4, 2
     BLK = 1 << (TCUT - LT)                         # tiles a block (a level-TCUT subtree)
@@ -349,7 +357,7 @@ def main():
         design=dict(groups=G, tiles=NT, tile_groups=4, smin=a.smin, tree_cut=TCUT, blocks=NB, tiles_per_block=BLK,
                     code_banks_per_column=rp['code_rom']['banks_per_column'], tile_macros=tile_macros + 2,
                     ports=ports, scale_local=True),
-        clock_hz=CLOCK_HZ, wire=dict(ps_per_um=U.WIRE_PS_PER_UM_LOADED, overhead_ps=U.WIRE_OVERHEAD_PS,
+        clock_hz=CLOCK_HZ, reach_um_override=a.reach_um, wire=dict(ps_per_um=U.WIRE_PS_PER_UM_LOADED, overhead_ps=U.WIRE_OVERHEAD_PS,
                                      reach_um=round((1e12 / CLOCK_HZ - U.UNCERTAINTY_PS - U.WIRE_OVERHEAD_PS) /
                                                     U.WIRE_PS_PER_UM_LOADED, 1)),
         die_um=[F.DIE_W, round(F.DIE_H, 3)],
