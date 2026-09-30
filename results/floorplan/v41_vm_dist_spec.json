@@ -2118,7 +2118,7 @@
    "stages": 10,
    "model_distance_um": 5187,
    "model_rule_stages": 6,
-   "model_stages": 9.19
+   "model_stages": 6
   },
   "ret_scatter": {
    "client": "matvec result write (model vm_write_elems)",
@@ -2131,7 +2131,7 @@
    "stages": 10,
    "model_distance_um": 5187,
    "model_rule_stages": 6,
-   "model_stages": 9.19
+   "model_stages": 6
   },
   "coll_write": {
    "client": "collective DMA write from HUB_COLLECTIVE (4 x 512-bit words)",
@@ -2144,7 +2144,7 @@
    "stages": 15,
    "model_distance_um": 9103,
    "model_rule_stages": 11,
-   "model_stages": 9.19
+   "model_stages": 6
   },
   "su_results": {
    "client": "SU chunk8 reducer results (N/8 = 128 slots)",
@@ -2157,7 +2157,7 @@
    "stages": 7,
    "model_distance_um": 3458,
    "model_rule_stages": 4,
-   "model_stages": 5.744
+   "model_stages": 4
   }
  },
  "geometry": {
@@ -2458,11 +2458,11 @@
    "consequence": "such a vector needs one extra array cycle per extra row in a bank: the SU must split it (issue cost) or stall; neither exists in ot_hdc_v41x_vec"
   }
  ],
- "created_utc": "2026-09-30T07:50:06.474178+00:00",
- "source_commit": "731875a6e5d38000622ac08aa721a7366402bfac",
+ "created_utc": "2026-09-30T08:20:03.628888+00:00",
+ "source_commit": "5a5fe600f80003f6716c77e609eba1b913ac6f49",
  "source_sha256": {
   "tools/w11_vm_dist_spec.py": "ffb114db8415e567366447751091c6587bda3026efb2fabfa21720f3b4467920",
-  "tools/uarch_model.py": "04434be6b362a6024b4492add879d17399303afa299540c3d624ae07f7281887",
+  "tools/uarch_model.py": "5eced177086888ee272c497dfb93c5e6e7dfd142a31fb60ca1c8bb87705676fa",
   "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
   "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d",

@@ -309,7 +309,9 @@ def main() -> int:
     blk0 = fp["block_mm2"]
     assert abs(blk0 - (lanes_mm2 + vmlog_mm2 + fp["per_group"]["macro_um2"] * NG / 1e6)) < 0.05, "spec block basis"
     W0, H0 = fp["block_w_um"], fp["block_h_um"]
-    bcast = 4                           # the controller's broadcast tree (root-accepted su_bcast_stages)
+    # the controller's broadcast tree to the farthest lane (3,458 um: the lane array's centre -> corner): the
+    # root-accepted 4 under the 0.76 ps/um rule, re-derived from the measured reach when given
+    bcast = stages(3458.0) if REACH_UM else 4
 
     def dist_geometry(extra_mm2):
         s = math.sqrt((blk0 + extra_mm2) / blk0)
