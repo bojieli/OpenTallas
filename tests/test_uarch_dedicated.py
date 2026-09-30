@@ -52,3 +52,12 @@ def test_record_carries_the_w11_rows():
     assert p6["units"]["indexer"]["ops"]["L20.attn.idx.score"]["issue"] == 24576
     assert p6["units"]["attention"]["ops"]["L20.attn.pv"]["issue"] == 960
     assert rec["source_sha256"]["tools/uarch_model.py"]
+
+
+def test_su_chain_prices_broadcast_and_return_stages():
+    su0 = _spec(su_bcast_stages=0, su_ret_stages=0)["units"]["stream_unit"]
+    su4 = _spec(su_bcast_stages=4, su_ret_stages=4)["units"]["stream_unit"]
+    # 4 dependent ops, each paying the broadcast and the return
+    assert su4["softmax_chain_cycles"] - su0["softmax_chain_cycles"] == 4 * 2 * 4
+    # the zero-stage chain is the measured RTL chain within a few cycles (419 chained at T640, claude/w11-su)
+    assert abs(su0["softmax_chain_cycles"] - 419) <= 10

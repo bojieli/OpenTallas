@@ -96,15 +96,22 @@
       "status": "pass"
     },
     "v41_index_bandwidth": {
-      "evidence": "results/rtl/hdc_v41x_idx_shard_reader_pc.json",
+      "evidence": "results/rtl/w11_idx_reader_rate.json; results/rtl/w11_idx_ring_gate.json",
       "observed": {
+        "checked_keys": 262144,
         "effective_modeled_sectors_per_cycle": 103.496,
-        "keys": null,
-        "measured_sectors_per_cycle": 0,
-        "user_count": null
+        "isolated_users_exact": [
+          0,
+          481,
+          551,
+          865
+        ],
+        "keys": 262144,
+        "measured_sectors_per_cycle": 110.989,
+        "record_clock_target_sectors_per_cycle": 108.8
       },
-      "required": "four-stack concurrent exact scan at or above the adopted effective HBM rate, with user isolation",
-      "status": "blocked"
+      "required": "four-stack exact 262,144-key scan at or above the adopted effective HBM rate (and the record's own target at its clock), with multi-user isolation",
+      "status": "pass"
     },
     "v41_rate_covers_activation_load": {
       "evidence": "results/arch/v41_tp_rowsplit_measured_reprice.json; results/arch/v41_fullshape_load_floor.json",
@@ -127,7 +134,7 @@
   },
   "schema": "opentallas.final-number-readiness.v1",
   "source_sha256": {
-    "results/arch/v41_fullshape_load_floor.json": "e456b079f198c850a3371c7d8de6f4befa2d2d1d921427c6edcacc1aeedce539",
+    "results/arch/v41_fullshape_load_floor.json": "8e7649459b7c479a703323d13044a7deb59f017cffecb8f64a1011cec8d840ad",
     "results/arch/v41_tp_rowsplit_measured_reprice.json": "3b642a904469134926f7d8c0aa9f454177c41b93e6b3c02351a21abb33e77b85",
     "results/physical_abi3/asap7/chip/v41x_full_die/physical.json": "missing",
     "results/physical_abi3/asap7/chip/v41x_hbm_karb/strip_pin_placement.json": "c605dc5d26471af93b12a99fa0677aa5067cc1004052f8ac71adce559cb1f64a",
@@ -139,12 +146,13 @@
     "results/rtl/hdc_v41x_fullshape_token_rtl.json": "missing",
     "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
     "results/rtl/hdc_v41x_fullshape_weight_rtl_preflight.json": "8a45de03b920043fc8ebaee636c942543570ce986f293012b98b9cd08d4b6429",
-    "results/rtl/hdc_v41x_idx_shard_reader_pc.json": "b86adbef20492be7778c5375dac13c4cfb78f8814e0568900dfd69fcb3fb1928",
     "results/rtl/qwen_o4_fullshape_hbm_matched.json": "missing",
     "results/rtl/qwen_o4_fullshape_tp2_ar.json": "missing",
     "results/rtl/qwen_o4_fullshape_tp2_dflash.json": "missing",
     "results/rtl/v41_collective_depth_campaign.json": "2c99155903830e712f1ca283a681dbecc464eadfac45960a8b577c499d887bd8",
-    "tools/final_number_readiness.py": "6e5e449049c8ab084ad633f642035c9afb6b4d6310b65f127baa0a0f317b790d"
+    "results/rtl/w11_idx_reader_rate.json": "a84f7a84abf619624edde3f9a7ce6a7aa4374b93ac6c9ac478cd5354f2df74a3",
+    "results/rtl/w11_idx_ring_gate.json": "386e1e7c3705180aa409c849a1a1ab3f7f38ceeb580b9f8e995c0addeafc8b8e",
+    "tools/final_number_readiness.py": "2405a0c43868c3c7b93ac8bb6314577dafcd72e847ea7efb69d81eda8254101c"
   },
   "terminal_ready": false
 }
