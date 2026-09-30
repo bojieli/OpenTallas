@@ -292,37 +292,133 @@
     "stages_trunk": 18
    },
    "power": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 325.26,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 0.7,
-    "dynamic_w_single_user": 0.0,
-    "dynamic_w_saturated": 0.1,
+    "busiest_stage": 28,
+    "energy_per_token_uJ": 219652.99,
+    "hbm_stack_energy_per_token_uJ": 0.0,
+    "hbm_stack_w_saturated": 0.0,
+    "dynamic_w_single_user": 12.5,
+    "dynamic_w_saturated": 87.7,
     "saturated_tokens_s_per_stage": 399.3,
-    "clock_w": 4.3,
-    "leakage_w": 3.2,
+    "clock_w": 564.1,
+    "leakage_w": 3.3,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 18.8,
-    "total_w_saturated": 18.9,
+    "total_w_single_user": 591.0,
+    "total_w_saturated": 666.2,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 1580519.6,
+     "busy_pairs_equiv_single_user": 89.7,
+     "busy_pairs_equiv_saturated": 631.1,
+     "peak_busy_pairs": 632,
+     "dynamic_energy_per_token_uJ": 219633.76
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 1.5,
+     "leakage_w": 1.7
+    },
+    "ungated": {
+     "static_w": 578.5,
+     "energy_per_token_uJ": 219652.99,
+     "total_w_single_user": 591.0,
+     "total_w_saturated": 666.2,
+     "peak_w_saturated": 666.4,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 16.0,
+     "energy_per_token_uJ": 344848.74,
+     "total_w_single_user": 35.6,
+     "total_w_saturated": 153.7,
+     "peak_w_saturated": 153.9,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": true,
+     "cooling_throttled_tokens_s_per_stage": 399.3
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 1e-13
    },
    "power_wire_0p4": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 693.39,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 0.7,
-    "dynamic_w_single_user": 0.0,
-    "dynamic_w_saturated": 0.3,
+    "busiest_stage": 28,
+    "energy_per_token_uJ": 219705.32,
+    "hbm_stack_energy_per_token_uJ": 0.0,
+    "hbm_stack_w_saturated": 0.0,
+    "dynamic_w_single_user": 12.5,
+    "dynamic_w_saturated": 87.7,
     "saturated_tokens_s_per_stage": 399.3,
-    "clock_w": 4.3,
-    "leakage_w": 3.2,
+    "clock_w": 564.1,
+    "leakage_w": 3.3,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 18.8,
-    "total_w_saturated": 19.0,
+    "total_w_single_user": 591.0,
+    "total_w_saturated": 666.3,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 1580519.6,
+     "busy_pairs_equiv_single_user": 89.7,
+     "busy_pairs_equiv_saturated": 631.1,
+     "peak_busy_pairs": 632,
+     "dynamic_energy_per_token_uJ": 219633.76
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 1.5,
+     "leakage_w": 1.7
+    },
+    "ungated": {
+     "static_w": 578.5,
+     "energy_per_token_uJ": 219705.32,
+     "total_w_single_user": 591.0,
+     "total_w_saturated": 666.3,
+     "peak_w_saturated": 666.4,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 16.0,
+     "energy_per_token_uJ": 344901.07,
+     "total_w_single_user": 35.6,
+     "total_w_saturated": 153.7,
+     "peak_w_saturated": 153.9,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": true,
+     "cooling_throttled_tokens_s_per_stage": 399.3
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 4e-13
    }
   },
@@ -616,37 +712,133 @@
     "stages_trunk": 18
    },
    "power": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 325.26,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 13.2,
-    "dynamic_w_single_user": 0.1,
-    "dynamic_w_saturated": 2.4,
+    "busiest_stage": 28,
+    "energy_per_token_uJ": 714.85,
+    "hbm_stack_energy_per_token_uJ": 0.0,
+    "hbm_stack_w_saturated": 0.0,
+    "dynamic_w_single_user": 0.3,
+    "dynamic_w_saturated": 5.3,
     "saturated_tokens_s_per_stage": 7443.0,
-    "clock_w": 11.1,
-    "leakage_w": 10.9,
+    "clock_w": 567.1,
+    "leakage_w": 6.7,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 33.2,
-    "total_w_saturated": 35.5,
+    "total_w_single_user": 585.3,
+    "total_w_saturated": 590.3,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 5005.8,
+     "busy_pairs_equiv_single_user": 2.0,
+     "busy_pairs_equiv_saturated": 37.3,
+     "peak_busy_pairs": 632,
+     "dynamic_energy_per_token_uJ": 695.61
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 4.5,
+     "leakage_w": 5.2
+    },
+    "ungated": {
+     "static_w": 585.0,
+     "energy_per_token_uJ": 714.85,
+     "total_w_single_user": 585.3,
+     "total_w_saturated": 590.3,
+     "peak_w_saturated": 673.0,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 22.5,
+     "energy_per_token_uJ": 1111.36,
+     "total_w_single_user": 22.9,
+     "total_w_saturated": 30.7,
+     "peak_w_saturated": 160.5,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": true,
+     "cooling_throttled_tokens_s_per_stage": 7443.0
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 1e-13
    },
    "power_wire_0p4": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 693.39,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 13.2,
-    "dynamic_w_single_user": 0.3,
-    "dynamic_w_saturated": 5.2,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 1035.06,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 6.7,
+    "dynamic_w_single_user": 0.4,
+    "dynamic_w_saturated": 7.7,
     "saturated_tokens_s_per_stage": 7443.0,
-    "clock_w": 11.1,
-    "leakage_w": 10.9,
+    "clock_w": 567.1,
+    "leakage_w": 6.7,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 33.4,
-    "total_w_saturated": 38.3,
+    "total_w_single_user": 585.4,
+    "total_w_saturated": 592.7,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 2975.3,
+     "busy_pairs_equiv_single_user": 1.2,
+     "busy_pairs_equiv_saturated": 22.1,
+     "peak_busy_pairs": 75,
+     "dynamic_energy_per_token_uJ": 413.45
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 4.5,
+     "leakage_w": 5.2
+    },
+    "ungated": {
+     "static_w": 585.0,
+     "energy_per_token_uJ": 1035.06,
+     "total_w_single_user": 585.4,
+     "total_w_saturated": 592.7,
+     "peak_w_saturated": 600.1,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 22.5,
+     "energy_per_token_uJ": 1270.74,
+     "total_w_single_user": 23.0,
+     "total_w_saturated": 31.9,
+     "peak_w_saturated": 43.4,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": true,
+     "cooling_throttled_tokens_s_per_stage": 7443.0
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 4e-13
    }
   },
@@ -940,37 +1132,133 @@
     "stages_trunk": 18
    },
    "power": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 326.63,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 64.8,
-    "dynamic_w_single_user": 0.7,
-    "dynamic_w_saturated": 12.0,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 4187.27,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 32.7,
+    "dynamic_w_single_user": 8.8,
+    "dynamic_w_saturated": 153.2,
     "saturated_tokens_s_per_stage": 36591.2,
-    "clock_w": 33.0,
-    "leakage_w": 35.8,
+    "clock_w": 567.1,
+    "leakage_w": 6.7,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 80.7,
-    "total_w_saturated": 92.0,
+    "total_w_single_user": 593.8,
+    "total_w_saturated": 738.2,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 28426.2,
+     "busy_pairs_equiv_single_user": 59.5,
+     "busy_pairs_equiv_saturated": 1040.1,
+     "peak_busy_pairs": 6400,
+     "dynamic_energy_per_token_uJ": 3950.19
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 4.5,
+     "leakage_w": 5.2
+    },
+    "ungated": {
+     "static_w": 585.0,
+     "energy_per_token_uJ": 4187.27,
+     "total_w_single_user": 593.8,
+     "total_w_saturated": 738.2,
+     "peak_w_saturated": 1483.1,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 22.5,
+     "energy_per_token_uJ": 6438.96,
+     "total_w_single_user": 35.9,
+     "total_w_saturated": 258.1,
+     "peak_w_saturated": 1427.4,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 36591.2
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 1e-13
    },
    "power_wire_0p4": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 694.77,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 64.8,
-    "dynamic_w_single_user": 1.5,
-    "dynamic_w_saturated": 25.4,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 4571.79,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 32.7,
+    "dynamic_w_single_user": 9.6,
+    "dynamic_w_saturated": 167.3,
     "saturated_tokens_s_per_stage": 36591.2,
-    "clock_w": 33.0,
-    "leakage_w": 35.8,
+    "clock_w": 567.1,
+    "leakage_w": 6.7,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 81.5,
-    "total_w_saturated": 105.5,
+    "total_w_single_user": 594.6,
+    "total_w_saturated": 752.3,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 28426.2,
+     "busy_pairs_equiv_single_user": 59.5,
+     "busy_pairs_equiv_saturated": 1040.1,
+     "peak_busy_pairs": 6400,
+     "dynamic_energy_per_token_uJ": 3950.19
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 4.5,
+     "leakage_w": 5.2
+    },
+    "ungated": {
+     "static_w": 585.0,
+     "energy_per_token_uJ": 4571.79,
+     "total_w_single_user": 594.6,
+     "total_w_saturated": 752.3,
+     "peak_w_saturated": 1497.1,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 22.5,
+     "energy_per_token_uJ": 6823.48,
+     "total_w_single_user": 36.7,
+     "total_w_saturated": 272.1,
+     "peak_w_saturated": 1441.5,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 36591.2
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 4e-13
    }
   },
@@ -1264,37 +1552,133 @@
     "stages_trunk": 18
    },
    "power": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 326.63,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 125.1,
-    "dynamic_w_single_user": 1.4,
-    "dynamic_w_saturated": 23.0,
+    "busiest_stage": 28,
+    "energy_per_token_uJ": 909.42,
+    "hbm_stack_energy_per_token_uJ": 0.0,
+    "hbm_stack_w_saturated": 0.0,
+    "dynamic_w_single_user": 3.8,
+    "dynamic_w_saturated": 64.2,
     "saturated_tokens_s_per_stage": 70568.2,
-    "clock_w": 33.0,
-    "leakage_w": 35.8,
+    "clock_w": 567.1,
+    "leakage_w": 6.7,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 81.4,
-    "total_w_saturated": 103.1,
+    "total_w_single_user": 588.9,
+    "total_w_saturated": 649.2,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 6405.9,
+     "busy_pairs_equiv_single_user": 27.1,
+     "busy_pairs_equiv_saturated": 452.1,
+     "peak_busy_pairs": 6899,
+     "dynamic_energy_per_token_uJ": 890.18
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 4.6,
+     "leakage_w": 5.2
+    },
+    "ungated": {
+     "static_w": 585.1,
+     "energy_per_token_uJ": 909.42,
+     "total_w_single_user": 588.9,
+     "total_w_saturated": 649.2,
+     "peak_w_saturated": 1545.1,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 22.5,
+     "energy_per_token_uJ": 1416.84,
+     "total_w_single_user": 28.5,
+     "total_w_saturated": 122.5,
+     "peak_w_saturated": 1529.0,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 70568.2
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 1e-13
    },
    "power_wire_0p4": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 694.77,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 125.1,
-    "dynamic_w_single_user": 2.9,
-    "dynamic_w_saturated": 49.0,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 1228.14,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 63.1,
+    "dynamic_w_single_user": 5.2,
+    "dynamic_w_saturated": 86.7,
     "saturated_tokens_s_per_stage": 70568.2,
-    "clock_w": 33.0,
-    "leakage_w": 35.8,
+    "clock_w": 567.1,
+    "leakage_w": 6.7,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 83.0,
-    "total_w_saturated": 129.1,
+    "total_w_single_user": 590.2,
+    "total_w_saturated": 671.7,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 4364.7,
+     "busy_pairs_equiv_single_user": 18.4,
+     "busy_pairs_equiv_saturated": 308.0,
+     "peak_busy_pairs": 6400,
+     "dynamic_energy_per_token_uJ": 606.54
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 4.6,
+     "leakage_w": 5.2
+    },
+    "ungated": {
+     "static_w": 585.1,
+     "energy_per_token_uJ": 1228.14,
+     "total_w_single_user": 590.2,
+     "total_w_saturated": 671.7,
+     "peak_w_saturated": 1518.3,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 22.5,
+     "energy_per_token_uJ": 1573.88,
+     "total_w_single_user": 29.1,
+     "total_w_saturated": 133.6,
+     "peak_w_saturated": 1462.7,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 70568.2
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 4e-13
    }
   },
@@ -1588,37 +1972,133 @@
     "stages_trunk": 18
    },
    "power": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 326.63,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 125.7,
-    "dynamic_w_single_user": 1.4,
-    "dynamic_w_saturated": 23.2,
+    "busiest_stage": 28,
+    "energy_per_token_uJ": 909.42,
+    "hbm_stack_energy_per_token_uJ": 0.0,
+    "hbm_stack_w_saturated": 0.0,
+    "dynamic_w_single_user": 3.9,
+    "dynamic_w_saturated": 64.5,
     "saturated_tokens_s_per_stage": 70955.7,
-    "clock_w": 33.1,
-    "leakage_w": 35.9,
+    "clock_w": 567.2,
+    "leakage_w": 6.8,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 81.6,
-    "total_w_saturated": 103.4,
+    "total_w_single_user": 589.1,
+    "total_w_saturated": 649.8,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 6405.9,
+     "busy_pairs_equiv_single_user": 27.2,
+     "busy_pairs_equiv_saturated": 454.5,
+     "peak_busy_pairs": 6899,
+     "dynamic_energy_per_token_uJ": 890.18
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 4.6,
+     "leakage_w": 5.3
+    },
+    "ungated": {
+     "static_w": 585.2,
+     "energy_per_token_uJ": 909.42,
+     "total_w_single_user": 589.1,
+     "total_w_saturated": 649.8,
+     "peak_w_saturated": 1545.3,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 22.7,
+     "energy_per_token_uJ": 1416.84,
+     "total_w_single_user": 28.7,
+     "total_w_saturated": 123.2,
+     "peak_w_saturated": 1529.2,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 70955.7
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 1e-13
    },
    "power_wire_0p4": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 694.77,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 125.7,
-    "dynamic_w_single_user": 3.0,
-    "dynamic_w_saturated": 49.3,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 1165.24,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 63.5,
+    "dynamic_w_single_user": 4.9,
+    "dynamic_w_saturated": 82.7,
     "saturated_tokens_s_per_stage": 70955.7,
-    "clock_w": 33.1,
-    "leakage_w": 35.9,
+    "clock_w": 567.2,
+    "leakage_w": 6.8,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 83.2,
-    "total_w_saturated": 129.5,
+    "total_w_single_user": 590.2,
+    "total_w_saturated": 667.9,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 3912.1,
+     "busy_pairs_equiv_single_user": 16.6,
+     "busy_pairs_equiv_saturated": 277.6,
+     "peak_busy_pairs": 6400,
+     "dynamic_energy_per_token_uJ": 543.64
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 4.6,
+     "leakage_w": 5.3
+    },
+    "ungated": {
+     "static_w": 585.2,
+     "energy_per_token_uJ": 1165.24,
+     "total_w_single_user": 590.2,
+     "total_w_saturated": 667.9,
+     "peak_w_saturated": 1518.7,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 22.7,
+     "energy_per_token_uJ": 1475.13,
+     "total_w_single_user": 28.9,
+     "total_w_saturated": 127.3,
+     "peak_w_saturated": 1463.1,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 70955.7
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 4e-13
    }
   },
@@ -1916,37 +2396,133 @@
     "stages_trunk": 18
    },
    "power": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 363.09,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 136.5,
-    "dynamic_w_single_user": 1.4,
-    "dynamic_w_saturated": 28.0,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 1252.34,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 68.9,
+    "dynamic_w_single_user": 4.8,
+    "dynamic_w_saturated": 96.5,
     "saturated_tokens_s_per_stage": 77021.9,
-    "clock_w": 18.1,
-    "leakage_w": 18.8,
+    "clock_w": 567.5,
+    "leakage_w": 7.2,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 49.5,
-    "total_w_saturated": 76.0,
+    "total_w_single_user": 590.7,
+    "total_w_saturated": 682.4,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 7055.6,
+     "busy_pairs_equiv_single_user": 26.9,
+     "busy_pairs_equiv_saturated": 543.4,
+     "peak_busy_pairs": 6899,
+     "dynamic_energy_per_token_uJ": 980.46
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 5.0,
+     "leakage_w": 5.7
+    },
+    "ungated": {
+     "static_w": 586.0,
+     "energy_per_token_uJ": 1252.34,
+     "total_w_single_user": 590.7,
+     "total_w_saturated": 682.4,
+     "peak_w_saturated": 1565.6,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 23.4,
+     "energy_per_token_uJ": 1811.22,
+     "total_w_single_user": 30.3,
+     "total_w_saturated": 162.9,
+     "peak_w_saturated": 1549.5,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 77021.9
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 1e-13
    },
    "power_wire_0p4": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 832.79,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 136.5,
-    "dynamic_w_single_user": 3.2,
-    "dynamic_w_saturated": 64.1,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 1741.24,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 68.9,
+    "dynamic_w_single_user": 6.6,
+    "dynamic_w_saturated": 134.1,
     "saturated_tokens_s_per_stage": 77021.9,
-    "clock_w": 18.1,
-    "leakage_w": 18.8,
+    "clock_w": 567.5,
+    "leakage_w": 7.2,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 51.2,
-    "total_w_saturated": 112.2,
+    "total_w_single_user": 592.6,
+    "total_w_saturated": 720.1,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 7055.6,
+     "busy_pairs_equiv_single_user": 26.9,
+     "busy_pairs_equiv_saturated": 543.4,
+     "peak_busy_pairs": 6899,
+     "dynamic_energy_per_token_uJ": 980.46
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 5.0,
+     "leakage_w": 5.7
+    },
+    "ungated": {
+     "static_w": 586.0,
+     "energy_per_token_uJ": 1741.24,
+     "total_w_single_user": 592.6,
+     "total_w_saturated": 720.1,
+     "peak_w_saturated": 1603.3,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 23.4,
+     "energy_per_token_uJ": 2300.12,
+     "total_w_single_user": 32.2,
+     "total_w_saturated": 200.6,
+     "peak_w_saturated": 1587.2,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 77021.9
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 4e-13
    }
   },
@@ -2244,37 +2820,133 @@
     "stages_trunk": 18
    },
    "power": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 326.63,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 124.8,
-    "dynamic_w_single_user": 1.2,
-    "dynamic_w_saturated": 23.0,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 843.62,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 63.0,
+    "dynamic_w_single_user": 3.0,
+    "dynamic_w_saturated": 59.4,
     "saturated_tokens_s_per_stage": 70433.6,
-    "clock_w": 17.8,
-    "leakage_w": 18.6,
+    "clock_w": 567.5,
+    "leakage_w": 7.2,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 48.8,
-    "total_w_saturated": 70.6,
+    "total_w_single_user": 589.0,
+    "total_w_saturated": 645.4,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 4364.7,
+     "busy_pairs_equiv_single_user": 15.7,
+     "busy_pairs_equiv_saturated": 307.4,
+     "peak_busy_pairs": 6400,
+     "dynamic_energy_per_token_uJ": 606.54
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 5.0,
+     "leakage_w": 5.7
+    },
+    "ungated": {
+     "static_w": 586.0,
+     "energy_per_token_uJ": 843.62,
+     "total_w_single_user": 589.0,
+     "total_w_saturated": 645.4,
+     "peak_w_saturated": 1492.0,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 23.4,
+     "energy_per_token_uJ": 1189.36,
+     "total_w_single_user": 27.7,
+     "total_w_saturated": 107.2,
+     "peak_w_saturated": 1436.4,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 70433.6
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 1e-13
    },
    "power_wire_0p4": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 694.77,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 124.8,
-    "dynamic_w_single_user": 2.5,
-    "dynamic_w_saturated": 48.9,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 1228.14,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 63.0,
+    "dynamic_w_single_user": 4.4,
+    "dynamic_w_saturated": 86.5,
     "saturated_tokens_s_per_stage": 70433.6,
-    "clock_w": 17.8,
-    "leakage_w": 18.6,
+    "clock_w": 567.5,
+    "leakage_w": 7.2,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 50.1,
-    "total_w_saturated": 96.5,
+    "total_w_single_user": 590.4,
+    "total_w_saturated": 672.5,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 4364.7,
+     "busy_pairs_equiv_single_user": 15.7,
+     "busy_pairs_equiv_saturated": 307.4,
+     "peak_busy_pairs": 6400,
+     "dynamic_energy_per_token_uJ": 606.54
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 5.0,
+     "leakage_w": 5.7
+    },
+    "ungated": {
+     "static_w": 586.0,
+     "energy_per_token_uJ": 1228.14,
+     "total_w_single_user": 590.4,
+     "total_w_saturated": 672.5,
+     "peak_w_saturated": 1519.1,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 23.4,
+     "energy_per_token_uJ": 1573.88,
+     "total_w_single_user": 29.1,
+     "total_w_saturated": 134.2,
+     "peak_w_saturated": 1463.5,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 70433.6
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 4e-13
    }
   },
@@ -2572,37 +3244,133 @@
     "stages_trunk": 18
    },
    "power": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 363.09,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 136.5,
-    "dynamic_w_single_user": 1.4,
-    "dynamic_w_saturated": 28.0,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 1252.34,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 68.9,
+    "dynamic_w_single_user": 4.8,
+    "dynamic_w_saturated": 96.5,
     "saturated_tokens_s_per_stage": 77021.9,
-    "clock_w": 18.1,
-    "leakage_w": 18.8,
+    "clock_w": 567.5,
+    "leakage_w": 7.2,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 49.5,
-    "total_w_saturated": 76.0,
+    "total_w_single_user": 590.7,
+    "total_w_saturated": 682.4,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 7055.6,
+     "busy_pairs_equiv_single_user": 26.9,
+     "busy_pairs_equiv_saturated": 543.4,
+     "peak_busy_pairs": 6899,
+     "dynamic_energy_per_token_uJ": 980.46
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 5.0,
+     "leakage_w": 5.7
+    },
+    "ungated": {
+     "static_w": 586.0,
+     "energy_per_token_uJ": 1252.34,
+     "total_w_single_user": 590.7,
+     "total_w_saturated": 682.4,
+     "peak_w_saturated": 1565.6,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 23.4,
+     "energy_per_token_uJ": 1811.22,
+     "total_w_single_user": 30.3,
+     "total_w_saturated": 162.9,
+     "peak_w_saturated": 1549.5,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 77021.9
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 1e-13
    },
    "power_wire_0p4": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 832.79,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 136.5,
-    "dynamic_w_single_user": 3.2,
-    "dynamic_w_saturated": 64.1,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 1741.24,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 68.9,
+    "dynamic_w_single_user": 6.6,
+    "dynamic_w_saturated": 134.1,
     "saturated_tokens_s_per_stage": 77021.9,
-    "clock_w": 18.1,
-    "leakage_w": 18.8,
+    "clock_w": 567.5,
+    "leakage_w": 7.2,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 51.2,
-    "total_w_saturated": 112.2,
+    "total_w_single_user": 592.6,
+    "total_w_saturated": 720.1,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 7055.6,
+     "busy_pairs_equiv_single_user": 26.9,
+     "busy_pairs_equiv_saturated": 543.4,
+     "peak_busy_pairs": 6899,
+     "dynamic_energy_per_token_uJ": 980.46
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 5.0,
+     "leakage_w": 5.7
+    },
+    "ungated": {
+     "static_w": 586.0,
+     "energy_per_token_uJ": 1741.24,
+     "total_w_single_user": 592.6,
+     "total_w_saturated": 720.1,
+     "peak_w_saturated": 1603.3,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 23.4,
+     "energy_per_token_uJ": 2300.12,
+     "total_w_single_user": 32.2,
+     "total_w_saturated": 200.6,
+     "peak_w_saturated": 1587.2,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 77021.9
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 4e-13
    }
   },
@@ -2896,41 +3664,281 @@
     "stages_trunk": 18
    },
    "power": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 326.63,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 1.7,
-    "dynamic_w_single_user": 0.1,
-    "dynamic_w_saturated": 0.3,
+    "busiest_stage": 28,
+    "energy_per_token_uJ": 909.42,
+    "hbm_stack_energy_per_token_uJ": 0.0,
+    "hbm_stack_w_saturated": 0.0,
+    "dynamic_w_single_user": 0.3,
+    "dynamic_w_saturated": 0.9,
     "saturated_tokens_s_per_stage": 953.4,
-    "clock_w": 30.1,
-    "leakage_w": 32.5,
+    "clock_w": 564.2,
+    "leakage_w": 3.4,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 73.9,
-    "total_w_saturated": 74.1,
+    "total_w_single_user": 579.1,
+    "total_w_saturated": 579.7,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 6405.9,
+     "busy_pairs_equiv_single_user": 2.0,
+     "busy_pairs_equiv_saturated": 6.1,
+     "peak_busy_pairs": 6899,
+     "dynamic_energy_per_token_uJ": 890.18
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 1.6,
+     "leakage_w": 1.8
+    },
+    "ungated": {
+     "static_w": 578.8,
+     "energy_per_token_uJ": 909.42,
+     "total_w_single_user": 579.1,
+     "total_w_saturated": 579.7,
+     "peak_w_saturated": 1537.5,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 16.2,
+     "energy_per_token_uJ": 1416.84,
+     "total_w_single_user": 16.7,
+     "total_w_saturated": 17.6,
+     "peak_w_saturated": 1521.4,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 953.4
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 1e-13
    },
    "power_wire_0p4": {
-    "busiest_stage": 14,
-    "energy_per_token_uJ": 694.77,
-    "hbm_stack_energy_per_token_uJ": 1772.12,
-    "hbm_stack_w_saturated": 1.7,
-    "dynamic_w_single_user": 0.2,
-    "dynamic_w_saturated": 0.7,
+    "busiest_stage": 9,
+    "energy_per_token_uJ": 1165.24,
+    "hbm_stack_energy_per_token_uJ": 894.38,
+    "hbm_stack_w_saturated": 0.9,
+    "dynamic_w_single_user": 0.4,
+    "dynamic_w_saturated": 1.1,
     "saturated_tokens_s_per_stage": 953.4,
-    "clock_w": 30.1,
-    "leakage_w": 32.5,
+    "clock_w": 564.2,
+    "leakage_w": 3.4,
     "hbm_idle_w": 11.2,
-    "total_w_single_user": 74.0,
-    "total_w_saturated": 74.5,
+    "total_w_single_user": 579.2,
+    "total_w_saturated": 579.9,
     "cooling_limit_w": 474.56,
-    "fits_cooling_saturated": true,
+    "fits_cooling_saturated": false,
+    "field": {
+     "basis": "MEASURED per pair (PAIR_W, W18)",
+     "placed_pairs": 7102,
+     "pair_w": {
+      "leak": 0.00022,
+      "clock": 0.07921,
+      "busy": 0.21817
+     },
+     "clock_w": 562.6,
+     "leakage_w": 1.56,
+     "busy_pair_us_per_token": 3912.1,
+     "busy_pairs_equiv_single_user": 1.2,
+     "busy_pairs_equiv_saturated": 3.7,
+     "peak_busy_pairs": 6400,
+     "dynamic_energy_per_token_uJ": 543.64
+    },
+    "hub": {
+     "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+     "clock_w": 1.6,
+     "leakage_w": 1.8
+    },
+    "ungated": {
+     "static_w": 578.8,
+     "energy_per_token_uJ": 1165.24,
+     "total_w_single_user": 579.2,
+     "total_w_saturated": 579.9,
+     "peak_w_saturated": 1468.7,
+     "fits_cooling_saturated": false,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 0.0
+    },
+    "per_pair_icg": {
+     "static_w": 16.2,
+     "energy_per_token_uJ": 1475.13,
+     "total_w_single_user": 16.7,
+     "total_w_saturated": 17.6,
+     "peak_w_saturated": 1413.1,
+     "fits_cooling_saturated": true,
+     "peak_fits_cooling": false,
+     "cooling_throttled_tokens_s_per_stage": 953.4
+    },
+    "switch_rings": {
+     "switch_ring_mm2": 24.04,
+     "pair_slots_needed": 7457,
+     "pair_slots": 9931,
+     "fits_spare_slots": true,
+     "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+    },
     "wire_j_per_bit_mm": 4e-13
    }
   }
  ],
+ "power_clock_sensitivity": {
+  "design": "proposal",
+  "basis": "architecture DAG and uarch pricing rebuilt at each clock; pair power x f / 1.087 GHz at 0.7 V (ASSUMED)",
+  "rows": [
+   {
+    "clock_hz": 1250000000.0,
+    "tokens_s": 4265.8,
+    "power": {
+     "busiest_stage": 9,
+     "energy_per_token_uJ": 1252.34,
+     "hbm_stack_energy_per_token_uJ": 894.38,
+     "hbm_stack_w_saturated": 77.1,
+     "dynamic_w_single_user": 5.3,
+     "dynamic_w_saturated": 108.0,
+     "saturated_tokens_s_per_stage": 86245.5,
+     "clock_w": 686.2,
+     "leakage_w": 7.2,
+     "hbm_idle_w": 11.2,
+     "total_w_single_user": 709.9,
+     "total_w_saturated": 812.6,
+     "cooling_limit_w": 474.56,
+     "fits_cooling_saturated": false,
+     "field": {
+      "basis": "MEASURED per pair (PAIR_W, W18)",
+      "placed_pairs": 7102,
+      "pair_w": {
+       "leak": 0.00022,
+       "clock": 0.09577,
+       "busy": 0.26378
+      },
+      "clock_w": 680.1,
+      "leakage_w": 1.56,
+      "busy_pair_us_per_token": 5835.8,
+      "busy_pairs_equiv_single_user": 24.9,
+      "busy_pairs_equiv_saturated": 503.3,
+      "peak_busy_pairs": 6899,
+      "dynamic_energy_per_token_uJ": 980.46
+     },
+     "hub": {
+      "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+      "clock_w": 6.0,
+      "leakage_w": 5.7
+     },
+     "ungated": {
+      "static_w": 704.6,
+      "energy_per_token_uJ": 1252.34,
+      "total_w_single_user": 709.9,
+      "total_w_saturated": 812.6,
+      "peak_w_saturated": 1887.1,
+      "fits_cooling_saturated": false,
+      "peak_fits_cooling": false,
+      "cooling_throttled_tokens_s_per_stage": 0.0
+     },
+     "per_pair_icg": {
+      "static_w": 24.4,
+      "energy_per_token_uJ": 1811.22,
+      "total_w_single_user": 32.2,
+      "total_w_saturated": 180.6,
+      "peak_w_saturated": 1867.7,
+      "fits_cooling_saturated": true,
+      "peak_fits_cooling": false,
+      "cooling_throttled_tokens_s_per_stage": 86245.5
+     },
+     "switch_rings": {
+      "switch_ring_mm2": 24.04,
+      "pair_slots_needed": 7457,
+      "pair_slots": 9931,
+      "fits_spare_slots": true,
+      "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+     },
+     "wire_j_per_bit_mm": 1e-13
+    }
+   },
+   {
+    "clock_hz": 1500000000.0,
+    "tokens_s": 4709.4,
+    "power": {
+     "busiest_stage": 9,
+     "energy_per_token_uJ": 1252.34,
+     "hbm_stack_energy_per_token_uJ": 894.38,
+     "hbm_stack_w_saturated": 85.3,
+     "dynamic_w_single_user": 5.9,
+     "dynamic_w_saturated": 119.4,
+     "saturated_tokens_s_per_stage": 95350.7,
+     "clock_w": 823.4,
+     "leakage_w": 7.2,
+     "hbm_idle_w": 11.2,
+     "total_w_single_user": 847.7,
+     "total_w_saturated": 961.2,
+     "cooling_limit_w": 474.56,
+     "fits_cooling_saturated": false,
+     "field": {
+      "basis": "MEASURED per pair (PAIR_W, W18)",
+      "placed_pairs": 7102,
+      "pair_w": {
+       "leak": 0.00022,
+       "clock": 0.11492,
+       "busy": 0.31653
+      },
+      "clock_w": 816.2,
+      "leakage_w": 1.56,
+      "busy_pair_us_per_token": 4863.2,
+      "busy_pairs_equiv_single_user": 22.9,
+      "busy_pairs_equiv_saturated": 463.7,
+      "peak_busy_pairs": 6899,
+      "dynamic_energy_per_token_uJ": 980.46
+     },
+     "hub": {
+      "basis": "area x technology.json clock / leakage constants, UNCALIBRATED",
+      "clock_w": 7.2,
+      "leakage_w": 5.7
+     },
+     "ungated": {
+      "static_w": 841.8,
+      "energy_per_token_uJ": 1252.34,
+      "total_w_single_user": 847.7,
+      "total_w_saturated": 961.2,
+      "peak_w_saturated": 2258.6,
+      "fits_cooling_saturated": false,
+      "peak_fits_cooling": false,
+      "cooling_throttled_tokens_s_per_stage": 0.0
+     },
+     "per_pair_icg": {
+      "static_w": 25.6,
+      "energy_per_token_uJ": 1811.22,
+      "total_w_single_user": 34.2,
+      "total_w_saturated": 198.3,
+      "peak_w_saturated": 2235.3,
+      "fits_cooling_saturated": true,
+      "peak_fits_cooling": false,
+      "cooling_throttled_tokens_s_per_stage": 95350.7
+     },
+     "switch_rings": {
+      "switch_ring_mm2": 24.04,
+      "pair_slots_needed": 7457,
+      "pair_slots": 9931,
+      "fits_spare_slots": true,
+      "basis": "W18 cluster PSM + switch-ring sizing (claude/w18-die-assembly, 2026-09-30); slots = v41_pack_refit_w10_interim.json capacity.pair_row_slots"
+     },
+     "wire_j_per_bit_mm": 1e-13
+    }
+   }
+  ]
+ },
  "sweep": [
   {
    "vm_read_elems": 16,

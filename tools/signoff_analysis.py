@@ -382,6 +382,37 @@ def corner_libs(corner: str) -> list[str]:
     return [f"{PLATFORM}/lib/NLDM/{t.format(c=tag)}" for t in LIB_TEMPLATES]
 
 
+# Memory-compiler macros (physical/asap7_memory_macros/NAME/NAME_{tt,ss,ff}.lib) instantiated in a routed block:
+# each corner must read the macro's OWN liberty of that corner.  Without it OpenSTA treats the macro as a black
+# box (no clk->q, no setup), so a macro path would silently vanish from every corner's timing.
+MACRO_DIR = ROOT / "physical/asap7_memory_macros"
+MACRO_MOUNT = "/so_macros"
+
+
+def block_macros(results_dir: Path) -> list[str]:
+    """Memory-compiler macro masters instantiated in the routed netlist (6_final.v, else any *.v there)."""
+    names = {d.name for d in MACRO_DIR.iterdir() if d.is_dir()} if MACRO_DIR.is_dir() else set()
+    found = set()
+    srcs = [results_dir / "6_final.v"] if (results_dir / "6_final.v").exists() else sorted(results_dir.glob("*.v"))
+    for v in srcs:
+        for m in re.finditer(r"^\s*([A-Za-z_][A-Za-z0-9_]*)\s+(?:#\s*\(|\\?[A-Za-z_])", v.read_text(errors="ignore"), re.M):
+            if m.group(1) in names:
+                found.add(m.group(1))
+    return sorted(found)
+
+
+def macro_libs(macros: list[str], corner: str) -> list[tuple[Path, str]]:
+    """(host path, container path) of every macro's liberty for `corner`; FAILS CLOSED when one is missing."""
+    tag = CORNERS[corner]["lib_tag"].lower()
+    out = []
+    for name in macros:
+        lib = MACRO_DIR / name / f"{name}_{tag}.lib"
+        if not lib.is_file():
+            raise RuntimeError(f"macro {name}: no {corner} liberty ({lib}); refusing to time it with another corner")
+        out.append((lib, f"{MACRO_MOUNT}/{name}/{name}_{tag}.lib"))
+    return out
+
+
 TCL_PRELUDE = r"""
 proc emit {key value} { puts "SIGNOFF $key=$value" }
 proc sum_list {l} { set s 0.0; foreach x $l { set s [expr {$s + $x}] }; return $s }
@@ -592,11 +623,11 @@ def session_script(results: str, out: str, corner: str, *, saif: str = "", saif_
                    groups: list[str] | None = None, inst_power: str = "", derate: float = 0.0,
                    stages: tuple[str, ...] = ("power", "clock", "timing"), ir_sources: tuple[str, ...] = (),
                    bump_pitch_um: float = 140.0, bump_size_um: float = 50.0, spef: bool = True,
-                   stage: str = "final", pdn_tcl: str = "") -> str:
+                   stage: str = "final", pdn_tcl: str = "", extra_libs: list[str] | None = None) -> str:
     """The OpenROAD Tcl of one analysis session (paths as seen in the container)."""
     c = CORNERS[corner]
     head = [
-        f"set ::so_libs {tcl_list(corner_libs(corner))}",
+        f"set ::so_libs {tcl_list(corner_libs(corner) + list(extra_libs or []))}",
         f"set ::so_odb {results}/{STAGE_FILES[stage][0]}",
         f"set ::so_sdc {results}/{STAGE_FILES[stage][1]}",
         f"set ::so_spef {{{results + '/' + STAGE_FILES[stage][2] if spef and STAGE_FILES[stage][2] else ''}}}",
@@ -835,17 +866,22 @@ def analyze(results_dir: Path, out_dir: Path, *, label: str, record: Path | None
                             "core_area_um2": m.get("core_area_um2"),
                             "orfs_vectorless_power_w": m.get("power_total_w"),
                             "git_commit": rec.get("git", {}).get("commit")}
+    macros = block_macros(results_dir)
+    if macros:
+        mounts[str(MACRO_DIR.resolve())] = f"{MACRO_MOUNT}:ro"
     for corner in corners:
+        mlibs = macro_libs(macros, corner)
         stages = tuple(tt_stages) if tt_stages else \
             (("power", "clock", "timing") if corner == "TT" else ("power", "timing"))
         script = session_script("/so_res", f"/so_out/{corner}", corner, saif=saif_c, saif_scope=saif_scope,
                                 stage=stage, pdn_tcl="/so_pdn.tcl" if pdn_tcl else "",
                                 groups=groups, derate=derate, stages=stages,
                                 ir_sources=tuple(ir_sources) if corner == "TT" else (),
-                                bump_pitch_um=bump_pitch_um)
+                                bump_pitch_um=bump_pitch_um, extra_libs=[c_ for _, c_ in mlibs])
         text = run_session(script, mounts, out_dir / f"session_{corner}.log", gate_min_gb=gate_min_gb)
         parsed = parse_session(text)
-        c = {"corner": CORNERS[corner], "libraries": corner_libs(corner)}
+        c = {"corner": CORNERS[corner], "libraries": corner_libs(corner),
+             "macro_libraries": {Path(h).name: sha256_file(h) for h, _ in mlibs}}
         c["power_w"] = {g: {p: parsed.get(f"power.{g}.{p}_w") for p in ("internal", "switching", "leakage", "total")}
                         for g in ("total", "sequential", "combinational", "clock", "macro")}
         hier = {}
