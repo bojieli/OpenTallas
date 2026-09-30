@@ -48,30 +48,40 @@ module ot_hdc_v41x_idx_quarter_join (
     output reg [64*544-1:0] o_key,
     output reg [63:0] o_ref
 );
+    // W11 1.2 GHz form (bit- and cycle-identical at the ports to the compare form, commit
+    // 7361f422): every per-quarter decision of the current output beat b is a registered flag
+    // kept from rem[q] = L_q - 16 b (need: rem > 0, or rem > 8 for a half head; the lane mask
+    // l < rem; o_last), so no 30-bit add or compare sits between the handshake and the beat.
+    // L_3 = N - 3 Qs = Qs + N mod 32 (Qs = 8 floor(N / 32)).
     reg run;
-    reg [29:0] beat, qs, n;
+    reg [29:0] beat;
     reg [5:0] drop [0:3];                // leading stream beats still to discard
     reg [3:0] half;                      // quarter head at 8 mod 16
     reg [3:0] primed;                    // carry holds the head beat's upper half
     reg [8*544-1:0] carry [0:3];
     reg [7:0] carry_kv [0:3];
-    wire [29:0] qlen [0:3];
-    assign qlen[0]=qs; assign qlen[1]=qs; assign qlen[2]=qs; assign qlen[3]=n-qs-qs-qs;
-    wire [29:0] last_beat=(qlen[3]-1'b1)>>4;
+    reg signed [31:0] rem [0:3];         // L_q - 16 beat
+    reg [3:0] qz;                        // L_q == 0
+    reg [3:0] f_pos, f_gt8, f_last;      // rem > 0, rem > 8, o_last of this beat
+    reg [15:0] f_m [0:3];                // lane l < rem
     function automatic ref_key(input [31:0] scale);
         ref_key=(scale[7:0]>=8'd253 || scale[15:8]>=8'd253 ||
                  scale[23:16]>=8'd253 || scale[31:24]>=8'd253);
     endfunction
+    function automatic [15:0] therm(input signed [31:0] r);
+        integer j;
+        for(j=0;j<16;j=j+1) therm[j]=(r>j);
+    endfunction
     // per quarter: does output beat `beat` need a stream beat now, is it here
-    reg [3:0] need, have;
+    reg [3:0] need;
     reg [3:0] pre;                       // a stream beat to drop or to prime the carry
     integer q,l;
     always @* begin
         for(q=0;q<4;q=q+1) begin
-            pre[q]=run && (drop[q]!=0 || (half[q] && !primed[q] && qlen[q]!=0));
+            pre[q]=run && (drop[q]!=0 || (half[q] && !primed[q] && !qz[q]));
             // aligned: keys 16b..16b+15 are one stream beat; half: the stream
             // beat supplies keys 16b+8..16b+23, needed while 16b+8 < L_q
-            need[q]=run && !pre[q] && (half[q] ? ((beat<<4)+30'd8 < qlen[q]) : ((beat<<4) < qlen[q]));
+            need[q]=run && !pre[q] && (half[q] ? f_gt8[q] : f_pos[q]);
         end
     end
     wire room=!o_valid || o_ready;
@@ -79,21 +89,31 @@ module ot_hdc_v41x_idx_quarter_join (
     wire take=run && room && ready_all;
     always @* i_ready=(pre & i_valid) | (take ? need : 4'b0);
     assign busy=run || o_valid;
+    // the command's quarter lengths
+    wire [29:0] c_qs={2'b00,cmd_nkeys[29:5],3'b000};
+    wire [29:0] c_q3=c_qs+30'(cmd_nkeys[4:0]);
     reg [15:0] m;
     reg [16*544-1:0] w;
     reg [15:0] wkv;
+    reg signed [31:0] r, rn;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
-            run<=0; fault<=0; o_valid<=0; beat<=0; qs<=0; n<=0;
-            o_kv<=0; o_last<=0; o_key<=0; o_ref<=0; half<=0; primed<=0;
-            for(q=0;q<4;q=q+1) begin drop[q]<=0; carry[q]<=0; carry_kv[q]<=0; end
+            run<=0; fault<=0; o_valid<=0; beat<=0;
+            o_kv<=0; o_last<=0; o_key<=0; o_ref<=0; half<=0; primed<=0; qz<=0;
+            f_pos<=0; f_gt8<=0; f_last<=0;
+            for(q=0;q<4;q=q+1) begin drop[q]<=0; carry[q]<=0; carry_kv[q]<=0; rem[q]<=0; f_m[q]<=0; end
         end else if(cmd_v && !busy) begin
-            n<=cmd_nkeys; qs<={2'b00,cmd_nkeys[29:5],3'b000};
             beat<=0; fault<=cmd_nkeys==0 || (|{cmd_skip[32],cmd_skip[22],cmd_skip[12],cmd_skip[2:0]}); run<=cmd_nkeys!=0;
             primed<=0;
             for(q=0;q<4;q=q+1) begin
                 drop[q]<=cmd_skip[10*q+4 +: 6];
                 half[q]<=cmd_skip[10*q+3];
+                r=(q==3) ? $signed({2'b00,c_q3}) : $signed({2'b00,c_qs});
+                rem[q]<=r;
+                qz[q]<=(r==0);
+                f_pos[q]<=(r>0); f_gt8[q]<=(r>8);
+                f_m[q]<=therm(r);
+                f_last[q]<=(r==0) ? 1'b1 : (r<=16);
             end
         end else begin
             if(o_valid && o_ready) o_valid<=0;
@@ -107,7 +127,7 @@ module ot_hdc_v41x_idx_quarter_join (
             end
             if(take) begin
                 for(q=0;q<4;q=q+1) begin
-                    for(l=0;l<16;l=l+1) m[l]=((beat<<4)+30'(l))<qlen[q];
+                    m=f_m[q];
                     if(half[q]) begin
                         w={i_key[16*q*544 +: 8*544],carry[q]};
                         wkv={need[q] ? i_kv[16*q +: 8] : 8'd0,carry_kv[q]};
@@ -120,16 +140,22 @@ module ot_hdc_v41x_idx_quarter_join (
                         wkv=need[q] ? i_kv[16*q +: 16] : 16'd0;
                     end
                     o_kv[16*q +: 16]<=m;
-                    o_last[q]<=(qlen[q]==0) ? (beat==0) : (beat==((qlen[q]-1'b1)>>4));
+                    o_last[q]<=f_last[q];
                     // every key the quarter needs must be present in the stream
                     if((m & ~wkv)!=0) fault<=1;
                     for(l=0;l<16;l=l+1) begin
                         o_key[(16*q+l)*544 +: 544]<=m[l] ? w[l*544 +: 544] : 544'd0;
                         o_ref[16*q+l]<=m[l] && ref_key(w[l*544+512 +: 32]);
                     end
+                    // the next beat's flags
+                    rn=rem[q]-32'sd16;
+                    rem[q]<=rn;
+                    f_pos[q]<=(rem[q]>16); f_gt8[q]<=(rem[q]>24);
+                    f_m[q]<=therm(rn);
+                    f_last[q]<=qz[q] ? (rem[q]==16) : (rem[q]>=17 && rem[q]<=32);
                 end
                 o_valid<=1;
-                if(beat==last_beat) run<=0;
+                if(f_last[3]) run<=0;
                 beat<=beat+1'b1;
             end
         end
