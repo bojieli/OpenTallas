@@ -35,6 +35,64 @@
    "currency": "stale"
   },
   {
+   "run": "sc_r5",
+   "note": "the reducer, first attempt: yosys OOM-killed at a 32 GB floor",
+   "top": "ot_hdc_v41x_vec_red1024",
+   "parameters": {
+    "ALAT": 4,
+    "MLAT": 5
+   },
+   "status": "error",
+   "closed": false,
+   "clock_period_ns": null,
+   "ss_fmax_mhz": null,
+   "setup_wns_ps": null,
+   "hold_wns_ps": null,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": null,
+   "cell_area_um2": null,
+   "die_area_um2": null,
+   "drc": null,
+   "signal_integrity_clean": null,
+   "commit": "61a46c6aef6f37e5c1bb13893157e40b39cd9ba3",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_l5m5u20",
+   "note": "sc_l5 on M2-M5 at 20% utilisation: global route overflow 167 (GRT-0116)",
+   "top": "ot_hdc_v41x_vec_light1024r",
+   "parameters": {
+    "ALAT": 4,
+    "MLAT": 5
+   },
+   "status": "error",
+   "closed": false,
+   "clock_period_ns": null,
+   "ss_fmax_mhz": null,
+   "setup_wns_ps": null,
+   "hold_wns_ps": null,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": [
+    "M2 M5"
+   ],
+   "cell_area_um2": 7226.61,
+   "die_area_um2": null,
+   "drc": null,
+   "signal_integrity_clean": null,
+   "commit": "61a46c6aef6f37e5c1bb13893157e40b39cd9ba3",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
    "run": "sc_l5m5",
    "note": "sc_l5 routed on M2-M5 only (M6/M7 left free over the block): global route congestion (GRT-0116) at 25% utilisation",
    "top": "ot_hdc_v41x_vec_light1024r",
