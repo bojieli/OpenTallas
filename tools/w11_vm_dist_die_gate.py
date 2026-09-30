@@ -49,7 +49,7 @@ def build(obj: Path, vd: int, st: dict, jobs: int) -> tuple[Path, dict]:
         return exe, dict(reused=True)
     cmd = ["/usr/bin/time", "-v", ds.VERILATOR, "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH",
            "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "-Wno-MODDUP", "-Wno-TIMESCALEMOD", "-Wno-VARHIDDEN",
-           "-Wno-UNOPTFLAT", "-Wno-MULTIDRIVEN", "--top-module", "tb_chip_v41x_die_vmdist", *flags,
+           "-Wno-UNOPTFLAT", "-Wno-MULTIDRIVEN", "--top-module", "tb_chip_v41x_die_vmdist", "-DOT_VM_DIST", *flags,
            "-Mdir", str(obj), f"-I{core.SVH.parent}", str(core.VLT), *map(str, G.die_sources()), str(G.TB_DIE),
            str(G.HARNESS_DIE), "-CFLAGS", "-O0", "-j", str(jobs)]
     t0 = time.time()

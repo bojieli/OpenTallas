@@ -208,6 +208,7 @@ module tb_hdc_v41x_vec #(
                 if (e < xvec) vm[(xbase + xn * xvec + e) & ((1<<VMA)-1)] <= xb[(xn * xvec + e) & ((1<<XBA)-1)];
     end
     end else begin : g_dist
+`ifdef OT_VM_DIST
     // the distributed banks: reads 4*l+s (operand s of lane l, VM-sourced only), then the N gather-index reads;
     // writes: the N element writes, the N/8 reducer results, the producer's XVMAX words (the flat order)
     localparam integer NRD = 5 * N, NWR = N + NR + XVMAX;
@@ -307,6 +308,10 @@ module tb_hdc_v41x_vec #(
         end
         if (d_fault) $display("F %0d vmdist", cyc);
     end
+`else
+    assign rd_q_u = rd_q; assign vi_q_u = vi_q; assign xpipe_busy = 1'b0;
+    initial $fatal(1, "tb_hdc_v41x_vec: VM_DIST = 1 needs +define+OT_VM_DIST and rtl/chip/ot_v41_vm_dist*.sv");
+`endif
     end endgenerate
 
     // ---- trace and end ----------------------------------------------------------------------------------

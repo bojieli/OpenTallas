@@ -181,6 +181,8 @@ def su_setup():
 
 def su_flags(vd, st):
     f = f"-GVM_DIST={vd} -GSU_RES_STAGES={st['SU_RES_STAGES']} -GRET_SCATTER_STAGES={st['RET_SCATTER_STAGES']}"
+    if vd:
+        f += " -DOT_VM_DIST"
     if vd and st.get("VM_DIST_H"):
         f += (f" -GVM_DIST_H=1 -GBCAST_STAGES={st['SUBCAST']} -GSU_EWR_STAGES={st['SU_EWR_STAGES']}"
               f" -GROT_STAGES={st['SU_ROT_STAGES']} -GGATH_STAGES={st['SU_GATH_STAGES']}"
@@ -372,7 +374,7 @@ def die_build(obj: Path, vd: int, st: dict) -> Path:
         return exe
     cmd = ["/usr/bin/time", "-v", ds.VERILATOR, "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH",
            "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "-Wno-MODDUP", "-Wno-TIMESCALEMOD", "-Wno-VARHIDDEN",
-           "-Wno-UNOPTFLAT", "-Wno-MULTIDRIVEN", "--top-module", "tb_chip_v41x_die_vmdist", f"-GVM_DIST={vd}",
+           "-Wno-UNOPTFLAT", "-Wno-MULTIDRIVEN", "--top-module", "tb_chip_v41x_die_vmdist", "-DOT_VM_DIST", f"-GVM_DIST={vd}",
            *[f"-G{k}={v}" for k, v in st.items()], "-Mdir", str(obj), f"-I{core.SVH.parent}", str(core.VLT),
            *map(str, die_sources()), str(TB_DIE), str(HARNESS_DIE), "-CFLAGS", "-O1", "-j", "8"]
     t0 = time.time()

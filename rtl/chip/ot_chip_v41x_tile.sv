@@ -601,6 +601,7 @@ module ot_chip_v41x_tile #(
         end
     end
     end else begin : g_vm_dist
+`ifdef OT_VM_DIST
     // ---- ROM banks and SRAM other than the VM: the flat branch's statements for them -----------------
     reg [4*SUN-1:0]    xs_was_vm;
     reg [4*SUN*32-1:0] xs_rd_loc;
@@ -758,5 +759,11 @@ module ot_chip_v41x_tile #(
         if (dump_q) for (bi = 0; bi < (1 << VM_AW); bi = bi + 1) vm[bi] = u_vmd.bd_img[bi];
     end
     always @(posedge clk) if (vm_fault) $display("VMDIST_FAULT");
+`else
+    // VM_DIST = 1 needs the distributed-VM sources (rtl/chip/ot_v41_vm_dist*.sv) and +define+OT_VM_DIST; the
+    // guard keeps every other source list (which does not carry them) building the flat tile
+    assign coll_wpend = 1'b0; assign vm_fault = 1'b0;
+    initial $fatal(1, "ot_chip_v41x_tile: VM_DIST = 1 needs +define+OT_VM_DIST and rtl/chip/ot_v41_vm_dist*.sv");
+`endif
     end endgenerate
 endmodule

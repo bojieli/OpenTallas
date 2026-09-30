@@ -259,9 +259,11 @@ module tb_chip_v41x_die_vmdist #(
     reg [31:0] kv_e;
     integer drain = 0;
     // the distributed memory's monitor line, one cycle before the checks (drain 3,999)
+`ifdef OT_VM_DIST
     generate if (VM_DIST) begin : g_vmd_report
         always @(posedge clk) if (drain == 3999) dut.u_tile.g_vm_dist.u_vmd.report();
     end endgenerate
+`endif
     always @(posedge clk) begin
         cyc <= cyc + 1;
         // the die synchronises reset over two edges: release it two cycles before the gate's bench
