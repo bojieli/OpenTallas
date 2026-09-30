@@ -83,6 +83,9 @@ module ot_hdc_core_v41x #(
     parameter integer IDX_SHARDED = 0,      // opt-in paired compact key writer and reader
     parameter integer IDX_MULTIUSER = 0,    // per-user sector base is applied before PC selection
     parameter integer IDX_KEY_SLICE_SECTORS = 0,
+    parameter integer IDX_RING = 0,         // opt-in W11 quarter-per-stack ring key layout (X_IDX = 2)
+    parameter integer IDX_RING_RSB = 1,
+    parameter integer IDX_RING_RTAIL = 0,
     parameter integer X_SEL = 0,           // XU index-score SELECT -> the streaming-filter select
     parameter integer X_EG  = 0,           // XU EGATHER -> the per-bank Engram gather
     parameter integer XSQ   = 4,           // select: quarters
@@ -978,7 +981,8 @@ module ot_hdc_core_v41x #(
         if (X_IDX == 2) begin : g_pool
             ot_hdc_v41x_idx_pool_adapt #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP),
                                            .HAW(PIKH_HAW), .SHARDED(IDX_SHARDED),
-                                           .SLICE_SECTORS(IDX_KEY_SLICE_SECTORS)) u_idx (
+                                           .SLICE_SECTORS(IDX_KEY_SLICE_SECTORS), .RING(IDX_RING),
+                                           .RING_RSB(IDX_RING_RSB), .RING_RTAIL(IDX_RING_RTAIL)) u_idx (
                 .clk(clk), .rst_n(rst_n), .go(e_go[3]), .ready(e_ready[3]), .idle(e_idle[3]), .cfg_ik_base(cfg_ik_base),
                 .i_user_base_sec(IDX_MULTIUSER ? idx_user_base_sec : PIKH_HAW'(0)),
                 .i_nout(me_nout), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase), .i_xks(me_xks), .i_xjs(me_xjs),
@@ -993,7 +997,9 @@ module ot_hdc_core_v41x #(
                 .dbg_ops(), .dbg_elems(), .dbg_keys_streamed(), .dbg_hbm_beats(), .dbg_keys_scored(),
                 .dbg_headsums_fused());
             ot_hdc_v41x_idx_pool_kwr #(.AW(AW), .NW(NW), .NL(KNL), .HAW(PIKH_HAW),
-                                         .SHARDED(IDX_SHARDED), .SLICE_SECTORS(IDX_KEY_SLICE_SECTORS)) u_kwr (
+                                         .SHARDED(IDX_SHARDED), .SLICE_SECTORS(IDX_KEY_SLICE_SECTORS),
+                                         .RING(IDX_RING), .RING_UBLK(IDX_RING_RSB*17 +
+                                             ((IDX_RING_RTAIL != 0) ? 1 + (IDX_RING_RTAIL + 63) / 64 : 0))) u_kwr (
                 .clk(clk), .rst_n(rst_n), .cfg_ik_base(cfg_ik_base),
                 .i_user_base_sec(IDX_MULTIUSER ? idx_user_base_sec : PIKH_HAW'(0)),
                 .su_go(su_go), .i_dst(dst), .i_obase(o_base),

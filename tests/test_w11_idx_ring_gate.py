@@ -22,6 +22,15 @@ def test_gate_record_current_and_passing():
 
 def test_preflight_record_matches_rebuild():
     rec = json.loads(pre.OUT.read_text())
-    assert rec == json.loads(json.dumps(pre.build(), sort_keys=True))
+    rebuilt = json.loads(json.dumps(pre.build(), sort_keys=True))
+    # a pin moved by the die ring integration is labelled in the W11 pin ledger, not re-run
+    ledger = json.loads((pre.ROOT / "results/rtl/w11_die_ring_pin_ledger.json").read_text())
+    moved = next((m["moved_sources"] for m in ledger["records_moved"]
+                  if m["record"] == "results/arch/w11_v41_hbm_region_preflight_ring.json"), [])
+    for f in moved:
+        assert rec["source_sha256"][f] == ledger["sources"][f]["before"]
+        assert rebuilt["source_sha256"][f] == ledger["sources"][f]["after"]
+        rebuilt["source_sha256"][f] = rec["source_sha256"][f]
+    assert rec == rebuilt
     assert rec["status"] == "capacity_match"
     assert rec["capacity"]["users_ring_layout"] >= rec["capacity"]["users_model"] == 866

@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.w11-die-ring-pin-ledger.v1",
+  "base_commit": "4b1ac1dd",
+  "sources": {
+    "rtl/chip/ot_chip_v41x_die.sv": {
+      "before": "e6614aa917eaa140d068eeeb6dc5fbfd40363a98c44f26e39d2193e86b5983fb",
+      "after": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2"
+    },
+    "rtl/chip/ot_chip_v41x_tile.sv": {
+      "before": "359a430097899dfcb4b097b24ba7e2bcd5d3d3d72c59d4fabdb53c074363f703",
+      "after": "c74505d599728bc0948994ddfe13da6d95eaff343ea2ee08c50fe13e5d8aa46b"
+    },
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": {
+      "before": "4b58c624046838efe7c0399c3d704c10a7798aca80a265379d550d88757c5341",
+      "after": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a"
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": {
+      "before": "c21e96fa6601d198dbdff534acd4138fb73cdaa5b99709f31cfd2798a046fd8e",
+      "after": "6aa64b41e15f270e2e266d0a1938f09234606fc0d1ba392612d51bf2b610ae12"
+    }
+  },
+  "records_moved": [],
+  "label": "pins moved by an opt-in parameter (IDX_RING, default 0); not re-run",
+  "default_path_evidence": {
+    "gate": "results/rtl/w11_die_idx_ring_gate.json",
+    "replicated_reference_pos7_cycles": 449701,
+    "adopted_die_smoke_cycles": 449701,
+    "cycle_identical": true,
+    "token": 3118
+  },
+  "source_sha256": {
+    "results/rtl/w11_die_idx_ring_gate.json": "7afa425f9320b8a03ca916bf1eef34a4451246f66e8a2475d3dc320422a7ff0a",
+    "results/rtl/hdc_v41x_die_top_smoke.json": "25145545fec8bb4abc0eaa09ae2264fb746ff240d44f35899ee52d8dea15361d",
+    "tools/w11_die_ring_pin_ledger.py": "9fabc6e4c2ab5ff41288a9cd4ab441dbaaf83354276f2379562c69298de8e324"
+  }
+}
