@@ -155,7 +155,9 @@ module ot_hdc_v41x_attn #(
     parameter integer PV_CRED = 64,    // pv-beat credits
     parameter bit SRAM_MACRO = 0,      // ASAP7 packed-row staging macro boundary
     parameter integer PWORDS = 1,      // probability words per p handshake (1 or 2)
-    parameter integer ILV = 0          // 1: position-interleaved verify mode (see the controller)
+    parameter integer ILV = 0,         // 1: position-interleaved verify mode (see the controller)
+    parameter integer REPL = 0         // 1 (needs ILV = 1): per-tile copies of the transposer read/write indices,
+                                       //   the E-register q.k/p.v select and registered pad flags (timing only)
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -233,6 +235,9 @@ module ot_hdc_v41x_attn #(
     localparam integer GUARD_Q = 20;
     localparam integer CNTW = 5;
     generate
+        if (REPL != 0 && ILV == 0) begin : g_bad_repl
+            initial $error("ot_hdc_v41x_attn: REPL = 1 needs ILV = 1");
+        end
         if (!(PWORDS == 1 || (PWORDS == 2 && (PB % 2) == 0))) begin : g_bad_pwords
             initial $error("ot_hdc_v41x_attn: PWORDS must be 1, or 2 with an even word count per block");
         end
@@ -496,7 +501,8 @@ module ot_hdc_v41x_attn #(
     reg [D*16-1:0]   e_q_w;
     reg              e_iv, e_pv;
     reg [BW-1:0]     e_ibank;
-    reg [NT*TD*18-1:0] e_ib;
+    reg [NT*TD*18-1:0] e_ib_c;         // REPL = 0: one E register for the issue operands
+    wire [NT*TD*18-1:0] e_ib;          // REPL = 1: per-tile registers (g_tr[*].g_rx.e_ib_t)
     // tags carried to the outputs
     reg [15:0]       e_row0;
     reg [NL-1:0]     e_mask;
@@ -505,20 +511,64 @@ module ot_hdc_v41x_attn #(
     reg [7:0]        e_c;
 
     // transposers: per tile 2 halves x TD rows x DPT dims of 18-bit elements
+    // REPL = 1: every tile has its own copy of the p.v read index (block half, dim) and of the q.k/p.v select,
+    // loaded from the controller registers on the same edge as the shared _d copies (so no cycle moves), its own
+    // fill write index/enable, and registered pad flags; the synthesis keeps the copies (fanout is per tile).
     wire [NT*TD*18-1:0] tr_col;
+    reg  [NL-1:0] qpad_r;              // REPL: (rd_r0 + r) >= T, registered with rd_r0
+    integer pi;
+    always @(posedge clk) begin
+        for (pi = 0; pi < NL; pi = pi + 1) begin
+            qpad_r[pi] <= (rd_row0 + pi) >= T;
+        end
+    end
     generate
         for (gk = 0; gk < NT; gk = gk + 1) begin : g_tr
             reg [17:0] tr [0:2*TD*DPT-1];
             integer r, x;
+            wire          w_en;
+            wire          w_half;
+            wire [7:0]    w_cnt;
+            wire [NL-1:0] w_pad;
+            wire          r_half;
+            wire [7:0]    r_c;
+            if (REPL != 0) begin : g_rx
+                (* keep *) reg          fw_t;
+                (* keep *) reg          fb_t;
+                (* keep *) reg [7:0]    fc_t;
+                (* keep *) reg [NL-1:0] fp_t;
+                (* keep *) reg          rb_t;
+                (* keep *) reg [7:0]    rc_t;
+                (* keep *) reg          sel_t;
+                reg [TD*18-1:0]         e_ib_t;
+                always @(posedge clk or negedge rst_n) begin
+                    if (!rst_n) begin fw_t <= 1'b0; sel_t <= 1'b0; end
+                    else begin fw_t <= fl_go && !qk_go; sel_t <= pv_go; end
+                end
+                always @(posedge clk) begin
+                    fb_t <= fl_blk[0]; fc_t <= fl_cnt; rb_t <= iss_blk[0]; rc_t <= iss_c;
+                    for (r = 0; r < NL; r = r + 1) fp_t[r] <= (rd_row0 + r) >= T_p;
+                    e_ib_t <= sel_t ? tr_col[gk*TD*18 +: TD*18] : qk_ib[gk*TD*18 +: TD*18];
+                end
+                assign w_en = fw_t; assign w_half = fb_t; assign w_cnt = fc_t; assign w_pad = fp_t;
+                assign r_half = rb_t; assign r_c = rc_t;
+                assign e_ib[gk*TD*18 +: TD*18] = e_ib_t;
+            end else begin : g_r1
+                for (gl = 0; gl < NL; gl = gl + 1) begin : g_p
+                    assign w_pad[gl] = (rd_r0 + gl) >= T_p;
+                end
+                assign w_en = fill_wr; assign w_half = fill_blk_d[0]; assign w_cnt = fill_cnt_d;
+                assign r_half = e_iss_blk[0]; assign r_c = e_iss_c;
+                assign e_ib[gk*TD*18 +: TD*18] = e_ib_c[gk*TD*18 +: TD*18];
+            end
             always @(posedge clk)
-                if (fill_wr)
+                if (w_en)
                     for (r = 0; r < NL; r = r + 1)
                         for (x = 0; x < DPT; x = x + 1)
-                            tr[((fill_blk_d % 2) * TD + fill_cnt_d * NL + r) * DPT + x] <=
-                                elem(rd_q[r*ROWW + ((gk*DPT + x) / 32) * GW +: GW], (gk*DPT + x) % 32,
-                                     (rd_r0 + r) >= T_p);
+                            tr[(w_half * TD + w_cnt * NL + r) * DPT + x] <=
+                                elem(rd_q[r*ROWW + ((gk*DPT + x) / 32) * GW +: GW], (gk*DPT + x) % 32, w_pad[r]);
             for (gs = 0; gs < TD; gs = gs + 1) begin : g_c
-                assign tr_col[(gk*TD + gs)*18 +: 18] = tr[((e_iss_blk % 2) * TD + gs) * DPT + e_iss_c];
+                assign tr_col[(gk*TD + gs)*18 +: 18] = tr[(r_half * TD + gs) * DPT + r_c];
             end
         end
     endgenerate
@@ -530,7 +580,8 @@ module ot_hdc_v41x_attn #(
             for (gs = 0; gs < S; gs = gs + 1) begin : g_qks
                 for (gk = 0; gk < TD; gk = gk + 1) begin : g_qke
                     assign qk_ib[((gl*S + gs)*TD + gk)*18 +: 18] =
-                        elem(rd_q[gl*ROWW + ((gs*TD + gk) / 32) * GW +: GW], (gs*TD + gk) % 32, (rd_r0 + gl) >= T);
+                        elem(rd_q[gl*ROWW + ((gs*TD + gk) / 32) * GW +: GW], (gs*TD + gk) % 32,
+                             (REPL != 0) ? qpad_r[gl] : ((rd_r0 + gl) >= T));
                 end
             end
         end
@@ -553,7 +604,7 @@ module ot_hdc_v41x_attn #(
         e_p_w <= p_w;
         e_q_w <= q_w;
         e_ibank <= pv_e ? e_iss_bank : rd_bank;
-        e_ib <= pv_e ? tr_col : qk_ib;
+        e_ib_c <= pv_e ? tr_col : qk_ib;
         e_row0 <= rd_r0;
         for (li = 0; li < NL; li = li + 1) e_mask[li] <= (rd_r0 + li) < T;
         e_fin <= e_iss_final;

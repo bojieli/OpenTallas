@@ -24,7 +24,13 @@
 // folds.  Every handshake (valid/ready/credit) is a real top-level port, so
 // the engine's combinational p_v -> q_ready path is an in-to-out path here.
 // ---------------------------------------------------------------------------
-module ot_v41_attn_eng_ctl_phys (
+// BREG = 1: every control input and ready/issue output passes a boundary register here, so each
+// engine port path is flop-to-flop (the die-internal neighbours are registered); the reported
+// fmax is then register-to-register.  REPL = 1 selects the engine's per-tile index copies.
+module ot_v41_attn_eng_ctl_phys #(
+    parameter integer BREG = 0,
+    parameter integer REPL = 0
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        job_v,
@@ -62,14 +68,40 @@ module ot_v41_attn_eng_ctl_phys (
         if (ld_sel == 2'd1) kv_w <= {kv_w[KW-65:0], ld_d};
         if (ld_sel == 2'd2) p_w <= {p_w[PW-65:0], ld_d};
     end
+    wire e_job_v, e_q_v, e_kv_v, e_p_v, e_sc_cr, e_pv_cr, e_job_ready, e_q_ready, e_kv_ready, e_p_ready, e_qk_iss, e_pv_iss;
+    wire [15:0] e_job_t; wire [3:0] e_kv_m;
+    generate if (BREG != 0) begin : g_breg
+        reg ri_job_v, ri_q_v, ri_kv_v, ri_p_v, ri_sc_cr, ri_pv_cr, ro_job_ready, ro_q_ready, ro_kv_ready, ro_p_ready, ro_qk, ro_pv;
+        reg [15:0] ri_job_t; reg [3:0] ri_kv_m;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin
+                ri_job_v <= 1'b0; ri_q_v <= 1'b0; ri_kv_v <= 1'b0; ri_p_v <= 1'b0; ri_sc_cr <= 1'b0; ri_pv_cr <= 1'b0;
+                ro_job_ready <= 1'b0; ro_q_ready <= 1'b0; ro_kv_ready <= 1'b0; ro_p_ready <= 1'b0; ro_qk <= 1'b0; ro_pv <= 1'b0;
+            end else begin
+                ri_job_v <= job_v; ri_q_v <= q_v; ri_kv_v <= kv_v; ri_p_v <= p_v; ri_sc_cr <= sc_cr; ri_pv_cr <= pv_cr;
+                ro_job_ready <= e_job_ready; ro_q_ready <= e_q_ready; ro_kv_ready <= e_kv_ready; ro_p_ready <= e_p_ready;
+                ro_qk <= e_qk_iss; ro_pv <= e_pv_iss;
+            end
+        end
+        always @(posedge clk) begin ri_job_t <= job_t; ri_kv_m <= kv_m; end
+        assign e_job_v = ri_job_v; assign e_q_v = ri_q_v; assign e_kv_v = ri_kv_v; assign e_p_v = ri_p_v;
+        assign e_sc_cr = ri_sc_cr; assign e_pv_cr = ri_pv_cr; assign e_job_t = ri_job_t; assign e_kv_m = ri_kv_m;
+        assign job_ready = ro_job_ready; assign q_ready = ro_q_ready; assign kv_ready = ro_kv_ready;
+        assign p_ready = ro_p_ready; assign qk_iss = ro_qk; assign pv_iss = ro_pv;
+    end else begin : g_nobreg
+        assign e_job_v = job_v; assign e_q_v = q_v; assign e_kv_v = kv_v; assign e_p_v = p_v;
+        assign e_sc_cr = sc_cr; assign e_pv_cr = pv_cr; assign e_job_t = job_t; assign e_kv_m = kv_m;
+        assign job_ready = e_job_ready; assign q_ready = e_q_ready; assign kv_ready = e_kv_ready;
+        assign p_ready = e_p_ready; assign qk_iss = e_qk_iss; assign pv_iss = e_pv_iss;
+    end endgenerate
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
-    ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS), .PWORDS(PWORDS), .ILV(1)) u_eng (
-        .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(job_t), .job_ready(job_ready),
-        .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
-        .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
-        .p_v(p_v), .p_w(p_w), .p_ready(p_ready), .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f),
-        .pv_cr(pv_cr), .qk_iss(qk_iss), .pv_iss(pv_iss));
+    ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS), .PWORDS(PWORDS), .ILV(1), .REPL(REPL)) u_eng (
+        .clk(clk), .rst_n(rst_n), .job_v(e_job_v), .job_t(e_job_t), .job_ready(e_job_ready),
+        .q_v(e_q_v), .q_w(q_w), .q_ready(e_q_ready), .kv_v(e_kv_v), .kv_m(e_kv_m), .kv_w(kv_w), .kv_ready(e_kv_ready),
+        .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(e_sc_cr),
+        .p_v(e_p_v), .p_w(p_w), .p_ready(e_p_ready), .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f),
+        .pv_cr(e_pv_cr), .qk_iss(e_qk_iss), .pv_iss(e_pv_iss));
     function automatic [31:0] fold(input [NT*H*32-1:0] x, input integer n);
         integer i;
         begin

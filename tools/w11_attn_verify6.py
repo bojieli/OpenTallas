@@ -129,6 +129,7 @@ def main():
     ap.add_argument("--l0", type=int, action="append")
     ap.add_argument("--pwords", type=int, default=2)
     ap.add_argument("--bub", type=int, default=0)
+    ap.add_argument("--repl", type=int, default=0, help="engine REPL for the ILV = 1 bench")
     a = ap.parse_args()
     if a.mode == "vectors":
         print(json.dumps(vectors(a.cfg, a.out)))
@@ -172,11 +173,11 @@ def main():
     cfg = CFGS[a.cfg]
     res = []
     for ilv in (0, 1):
-        extra = {"PWORDS": a.pwords, "ILV": ilv, "BUB": a.bub}
+        extra = {"PWORDS": a.pwords, "ILV": ilv, "BUB": a.bub, **({"REPL": a.repl} if ilv and a.repl else {})}
         exe = C.build_engine(a.scratch, {k: cfg[k] for k in ("H", "D", "TD", "NL", "TROWS")}, man["counts"], extra)
         for l0 in a.l0 or [0]:
             r, out = run_exe(exe, vd, ilv, l0)
-            r.update(config=a.cfg, PWORDS=a.pwords, BUB=a.bub)
+            r.update(config=a.cfg, PWORDS=a.pwords, BUB=a.bub, REPL=a.repl if ilv else 0)
             (a.scratch / f"{a.cfg}_ilv{ilv}_l{l0}_b{a.bub}.log").write_text(out)
             print(json.dumps({k: v for k, v in r.items() if k != "per_position"}), flush=True)
             res.append(r)
