@@ -112,7 +112,11 @@ def main():
                     help='engine top + sequencer + TP seq cell area / 0.5 (placed), until synthesised')
     ap.add_argument('--out-dir', type=Path, required=True)
     ap.add_argument('--reach-um', type=float, help='per-stage wire reach (um); W15 SS at 0.833 ns: 504')
+    ap.add_argument('--die-um', type=float, nargs=2, help='die outline w h (um); default the O4 815 mm2 frame '
+                    '(tools/qwen_o4_floorplan.py DIE_W x DIE_H): the smaller-die option')
     a = ap.parse_args()
+    if a.die_um:
+        F.DIE_W, F.DIE_H = float(a.die_um[0]), float(a.die_um[1])
     REACH[0] = a.reach_um
     G, TCUT = a.groups, a.smin
     NT, LT = G // 4, 2
@@ -210,6 +214,8 @@ def main():
         if sum(b['height_um'] for b in blocks(cand)) <= core_h:
             sw = cand
             break
+    if sw is None:
+        raise SystemExit(f'the spine blocks do not fit a {core_h:.0f} um core height at any width up to 7.8 mm')
     bl = blocks(sw)
     sx = F.snap(F.DIE_W / 2 - sw / 2, SNAP_X)
     p.region('spine', 'spine', sx, core_y0, sw, core_h)
@@ -360,7 +366,7 @@ def main():
         clock_hz=CLOCK_HZ, reach_um_override=a.reach_um, wire=dict(ps_per_um=U.WIRE_PS_PER_UM_LOADED, overhead_ps=U.WIRE_OVERHEAD_PS,
                                      reach_um=round((1e12 / CLOCK_HZ - U.UNCERTAINTY_PS - U.WIRE_OVERHEAD_PS) /
                                                     U.WIRE_PS_PER_UM_LOADED, 1)),
-        die_um=[F.DIE_W, round(F.DIE_H, 3)],
+        die_um=[F.DIE_W, round(F.DIE_H, 3)], die_mm2=round(F.DIE_W * F.DIE_H / 1e6, 2),
         tile_um=[round(tw, 3), round(th, 3)], tile_mm2=round(tw * th / 1e6, 5),
         core=dict(y0=core_y0, y1=round(core_y1, 3), west=west, east=east),
         spine=dict(x=sx, width_um=sw, used_um=round(spine_used, 1), core_height_um=round(core_h, 1),
