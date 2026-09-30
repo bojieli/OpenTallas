@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/home/ubuntu/w18work/karb12/proot/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_chip_v41x_karb_proot\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -1107.53,
+  "tns_ps": -566353.6,
+  "worst_register_d_slack_ps": -1107.282959,
+  "worst_reg_to_reg_slack_ps": -406.78,
+  "worst_input_to_reg_slack_ps": 265.23,
+  "worst_output_port_slack_ps": -1107.526123,
+  "violating_d_pins": 4687,
+  "errors": [],
+  "odb_sha256": "c2461eca5b945538b747868df0d7f2cb050b2172be0137b0fa9315313271531c",
+  "spef_sha256": "c5b0a2afc13ae704d7628f3c76cd878cb069e0a1fdf1333542d39efb938df38e",
+  "sdc_sha256": "431f573c18c79f8217dd355fd74237505b8867967ad9a2394d1c8aff2a80e18c"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 8.57,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 8.57095,
+  "worst_reg_to_reg_slack_ps": 18.62,
+  "worst_input_to_reg_slack_ps": 54.11,
+  "worst_output_port_slack_ps": 498.474609,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "c2461eca5b945538b747868df0d7f2cb050b2172be0137b0fa9315313271531c",
+  "spef_sha256": "c5b0a2afc13ae704d7628f3c76cd878cb069e0a1fdf1333542d39efb938df38e",
+  "sdc_sha256": "431f573c18c79f8217dd355fd74237505b8867967ad9a2394d1c8aff2a80e18c"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": false,
+ "w18b_verdict": "NOT CLOSED at SS: reg-to-reg -406.8 ps. Worst path g_q[6].u_q.n -> g_q[7].u_q.n: the response side selects the lowest-index non-empty of the eight region queues in one cycle across the 750 um block (counters -> select -> pop -> counters). Fix: MERGE2 (per-half select into a two-entry registered queue; the root picks the lower half first; +1 response cycle)."
+}

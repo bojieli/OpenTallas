@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/home/ubuntu/w18work/karb12/pregion/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_chip_v41x_karb_pregion\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_cl",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -650.13,
+  "tns_ps": -1436632.4,
+  "worst_register_d_slack_ps": -646.109863,
+  "worst_reg_to_reg_slack_ps": -318.85,
+  "worst_input_to_reg_slack_ps": 97.29,
+  "worst_output_port_slack_ps": -650.125122,
+  "violating_d_pins": 4741,
+  "errors": [],
+  "odb_sha256": "02c5ae128cc7908cc6fdf91d88ae8b2e1279e261b2fc016e61798367a8cc6392",
+  "spef_sha256": "2934074f599cb723a523ef6fd4d10010f63f95fd52f90e3ea615bead13067af1",
+  "sdc_sha256": "31d82881f222198f3b4467350248483a6eb061649130e377168283b5591dbab7"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": -1.68,
+  "tns_ps": -1.7,
+  "worst_register_d_slack_ps": -1.675243,
+  "worst_reg_to_reg_slack_ps": 9.04,
+  "worst_input_to_reg_slack_ps": 45.8,
+  "worst_output_port_slack_ps": 364.724915,
+  "violating_d_pins": 1,
+  "errors": [],
+  "odb_sha256": "02c5ae128cc7908cc6fdf91d88ae8b2e1279e261b2fc016e61798367a8cc6392",
+  "spef_sha256": "2934074f599cb723a523ef6fd4d10010f63f95fd52f90e3ea615bead13067af1",
+  "sdc_sha256": "31d82881f222198f3b4467350248483a6eb061649130e377168283b5591dbab7"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": false,
+ "w18b_verdict": "NOT CLOSED at SS: reg-to-reg -318.9 ps (was -313 with the previous qh). The two-head qh that closes pslice alone (+35 ps) does not help here: the worst path is inside slice 3's own qh (u_kq.cnt -> h1 load enable), and ~290 ps of it is four BUFx16f wire repeaters. Flat placement of the region spreads the slice's queue across the region. Fix under way: harden the region with each slice fenced into its own 265.6 um window."
+}
