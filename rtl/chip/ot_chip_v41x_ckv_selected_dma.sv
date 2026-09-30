@@ -11,13 +11,24 @@
 // the array fabric must transfer them to this die before attention can run.
 // local_row < window_count is never accepted here.  One row is staged at a
 // time; kv_ok only means that exact local/source pair has fully arrived.
+//
+// PIPE (opt-in, default 0 = the original one-outstanding-sector schedule):
+// PIPE = 1 issues the row's nine sector reads back to back (one per grant,
+// tag = sector index) and accepts their responses in any order and while
+// requests are still issuing; each tag must be 0..8, not yet received and
+// already issued. kv_ok rises when all nine have arrived (the NaN-scale probe
+// is applied to the tag-8 sector whenever it arrives). The HBM response port
+// must therefore keep the TAGW-bit tag of every request. Several PIPE
+// instances behind a per-stack arbiter form the multi-row selected fetch
+// (ot_chip_v41x_ckv_sel_fetch).
 module ot_chip_v41x_ckv_selected_dma #(
     parameter integer POS_W = 21,
     parameter integer SEC_W = 30,
     parameter integer HAW = 30,
     parameter integer TAGW = 16,
     parameter integer DIE_ID = 0,
-    parameter integer MAX_CONTEXT = 1048576
+    parameter integer MAX_CONTEXT = 1048576,
+    parameter integer PIPE = 0
 ) (
     input wire clk, rst_n,
     input wire [4*SEC_W-1:0] region_base_sector,
@@ -68,6 +79,11 @@ module ot_chip_v41x_ckv_selected_dma #(
     reg [POS_W-1:0] active_local_source;
     reg [2303:0] stage;
     reg stage_valid;
+    reg [8:0] got;                         // PIPE: sectors received
+    wire [TAGW-1:0] rtag = s_tag[active_stack*TAGW +: TAGW];
+    wire rtag_ok = rtag < TAGW'(9) && rtag < TAGW'(sec) + TAGW'(state == RSP) &&
+                   !got[rtag[3:0]];
+    wire [8:0] got_next = got | (9'd1 << rtag[3:0]);
     wire [1:0] source_die = source_id[5:4];
     wire [1:0] source_stack = source_id[7:6];
     wire [POS_W-1:0] source_local = (source_id >> 8 << 4) | POS_W'(source_id[3:0]);
@@ -124,7 +140,7 @@ module ot_chip_v41x_ckv_selected_dma #(
         if (!rst_n) begin
             state <= IDLE; sec <= 0; active_row <= 0; active_source <= 0;
             active_stack <= 0; active_local_source <= 0; remote_needed <= 0;
-            stage_valid <= 0; q <= 0; q_fp8 <= 0;
+            stage_valid <= 0; q <= 0; q_fp8 <= 0; got <= 0;
             fault <= 0; fault_code <= 0;
             st_rows_fetched <= 0; st_sectors_read <= 0;
         end else begin
@@ -138,6 +154,28 @@ module ot_chip_v41x_ckv_selected_dma #(
             end
             if (state == REQ && addr_bad) begin
                 fault <= 1; fault_code[0] <= 1; state <= IDLE;
+            end else if (PIPE != 0 && state != IDLE) begin
+                // REQ: issuing sectors sec = 0..8; RSP: all issued.  Responses
+                // are accepted in both.
+                if (state == REQ && grant) begin
+                    if (sec == 4'd8) state <= RSP; else sec <= sec + 1'b1;
+                end
+                if (response) begin
+                    if (!rtag_ok || s_beat[active_stack*4 +: 4] != 0) begin
+                        fault <= 1; fault_code[1] <= 1; state <= IDLE;
+                    end else if (rtag == TAGW'(8) && final_poison) begin
+                        fault <= 1; fault_code[2] <= 1; state <= IDLE;
+                    end else begin
+                        stage[256*rtag[3:0] +: 256] <= s_data[active_stack*256 +: 256];
+                        st_sectors_read <= st_sectors_read + 1;
+                        got <= got_next;
+                        if (got_next == 9'h1ff) begin
+                            stage_valid <= 1;
+                            st_rows_fetched <= st_rows_fetched + 1;
+                            state <= IDLE;
+                        end
+                    end
+                end
             end else case (state)
                 IDLE: if (fetch_v) begin
                     stage_valid <= 0;
@@ -145,7 +183,7 @@ module ot_chip_v41x_ckv_selected_dma #(
                     active_source <= source_id;
                     active_stack <= source_stack;
                     active_local_source <= source_local;
-                    sec <= 0;
+                    sec <= 0; got <= 0;
                     if (local_row < {2'b0, window_count} || local_row >= 10'd640 ||
                         window_count > 8'd128 || source_id >= published_source_count ||
                         source_id >= POS_W'(MAX_CONTEXT)) begin
