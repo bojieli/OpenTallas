@@ -60,6 +60,13 @@
     "temperature_c": 0.0,
     "voltage_v": 0.7
   },
+  "currency": {
+    "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run",
+    "reason": "rtl/hdc/v41x/ot_hdc_v41x_idx.sv and ot_hdc_v41x_idx_arith.sv changed at 1ae5b7d6 (block-dot 7-input table timing rework) after this TT route; not re-routed: ORFS was saturated (7 live containers) and a TT route is pathfinding only; the W11 index stream carries newer idx_tail routes.",
+    "stale_since": "1ae5b7d6",
+    "state": "stale",
+    "verdict_kept": "pass"
+  },
   "design": {
     "antenna": 0,
     "antenna_violating_nets": 0,
