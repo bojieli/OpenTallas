@@ -231,3 +231,18 @@ def test_karb_and_cdc_records():
     c = r["v41_rom"]["cdc"]
     assert c["fast_to_slow_slow_cycles"] == 4 and c["slow_to_fast_fast_cycles"] == 5
     assert c["vm_port_area_mm2"]["after"] > c["vm_port_area_mm2"]["before"]
+
+
+def test_product_stage_owner_file():
+    import uarch_model as U
+    own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
+    r = _rec()
+    ad = next(p for p in r["v41_rom"]["points"] if p.get("role") == "product" and "SS wire" in p["label"])
+    assert own["schema"] == "opentallas.v41.stage_owner_preflight.v1" and own["stage_count"] == ad["stages"]
+    assert own["layer_dies"] == ad["layer_dies"] and len(own["layer_owners"]) == 40
+    assert own["min_per_die_headroom_after_rounding_and_engram_spill_bytes"] > 0
+    stages = {o["dense_owner_stage"] for o in own["layer_owners"]}
+    assert max(stages) <= own["stage_count"] - 1
+    assert own["source_sha256"]["tools/uarch_model.py"] == __import__("hashlib").sha256(
+        (ROOT / "tools/uarch_model.py").read_bytes()).hexdigest()
+    assert U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8") == own["stage_count"]
