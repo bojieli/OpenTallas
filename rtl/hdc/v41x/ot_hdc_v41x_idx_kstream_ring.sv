@@ -301,7 +301,12 @@ module ot_hdc_v41x_idx_kstream_ring #(
     parameter integer TAGW = 16,
     parameter integer LENW = 4,
     parameter integer BEATW = 4,
-    parameter integer DW   = 256
+    parameter integer DW   = 256,
+    // opt-in (W11 hardening): ROBM = 1 the ROB in SRAM macros with synchronous read
+    // (ot_hdc_v41x_idx_kdata_m, ROB_XP pipeline stages); 0 the behavioural ot_hdc_v41x_idx_kdata
+    parameter integer ROBM = 0,
+    parameter integer ROB_MACRO = 1,
+    parameter integer ROB_XP = 1
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -335,8 +340,8 @@ module ot_hdc_v41x_idx_kstream_ring #(
     wire [1:0] dr_q;
     wire [4:0] dr_fold, dr_nkeys;
     wire [5:0] dr_sidx;
-    wire       kbusy;
-    assign busy = kbusy || o_valid;
+    wire       kbusy, dbusy;
+    assign busy = kbusy || o_valid || dbusy;
     integer ck;
     reg [4:0] nko;
     reg [5:0] nbt;
@@ -363,10 +368,21 @@ module ot_hdc_v41x_idx_kstream_ring #(
     generate for(pp=0;pp<NPC;pp=pp+1) begin:g_adj
         assign rsp_beat_adj[pp*BEATW +: BEATW]=rsp_beat[pp*BEATW +: BEATW]+BEATW'(rsp_tag[pp*TAGW+TAGW-1 -: 2]);
     end endgenerate
+    generate if (ROBM != 0) begin : g_robm
+    ot_hdc_v41x_idx_kdata_m #(.NPC(NPC), .WB(WB), .TAGW(TAGW), .BEATW(BEATW), .DW(DW), .MACRO(ROB_MACRO),
+                              .XP(ROB_XP)) u_d (
+        .clk(clk), .rst_n(rst_n), .rsp_v(rsp_v), .rsp_rdy(rsp_rdy), .rsp_tag(rsp_tag), .rsp_beat(rsp_beat_adj),
+        .rsp_data(rsp_data),
+        .dr_scale(dr_scale), .dr_quarter(dr_quarter), .dr_slot(dr_slot), .dr_q(dr_q), .dr_fold(dr_fold),
+        .dr_sidx(dr_sidx), .dr_nkeys(dr_nkeys), .dr_ready(dr_ready), .o_valid(o_valid), .o_ready(o_ready),
+        .o_kv(o_kv), .o_key(o_key), .busy(dbusy));
+    end else begin : g_rob
     ot_hdc_v41x_idx_kdata #(.NPC(NPC), .WB(WB), .TAGW(TAGW), .BEATW(BEATW), .DW(DW)) u_d (
         .clk(clk), .rst_n(rst_n), .rsp_v(rsp_v), .rsp_rdy(rsp_rdy), .rsp_tag(rsp_tag), .rsp_beat(rsp_beat_adj),
         .rsp_data(rsp_data),
         .dr_scale(dr_scale), .dr_quarter(dr_quarter), .dr_slot(dr_slot), .dr_q(dr_q), .dr_fold(dr_fold),
         .dr_sidx(dr_sidx), .dr_nkeys(dr_nkeys), .dr_ready(dr_ready), .o_valid(o_valid), .o_ready(o_ready),
         .o_kv(o_kv), .o_key(o_key));
+    assign dbusy = 1'b0;
+    end endgenerate
 endmodule

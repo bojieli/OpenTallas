@@ -21,7 +21,8 @@ module tb_w11_idx_ring_concurrent #(
     parameter integer WB=128, GA=120, CLK_PS=967, LEAD=300,
     // LEAD_STEPS > 0: user UB's first LEAD_STEPS steps complete before scan 2 starts, and DURING of its
     // steps are issued after it starts (DURING = 0: the writer is kept saturated for the whole scan)
-    parameter integer LEAD_STEPS=0, DURING=0
+    parameter integer LEAD_STEPS=0, DURING=0,
+    parameter integer ROBM=0, ROB_MACRO=1, ROB_XP=1     // the reader's ROB (ot_hdc_v41x_idx_kstream_ring)
 ) (input wire clk, rst_n, cmd_v);
     localparam integer NPC=32, TAGW=16, LENW=4, BEATW=4, DW=256, NW=HW+10;
     localparam integer C = RSB*1024 + RTAIL;
@@ -98,7 +99,7 @@ module tb_w11_idx_ring_concurrent #(
     wire [4*48-1:0] s_keys, s_beats;
     generate for (s = 0; s < 4; s = s + 1) begin : g_rd
         ot_hdc_v41x_idx_kstream_ring #(.NPC(NPC),.WB(WB),.GA(GA),.AW(AW),.HW(HW),.TAGW(TAGW),
-            .LENW(LENW),.BEATW(BEATW),.DW(DW)) ks (
+            .LENW(LENW),.BEATW(BEATW),.DW(DW),.ROBM(ROBM),.ROB_MACRO(ROB_MACRO),.ROB_XP(ROB_XP)) ks (
             .clk(clk),.rst_n(rst_n),.cmd_v(scan_go && (g_n1[s*NW +: NW] + g_n2[s*NW +: NW]) != 0),
             .cmd_base(g_base1[s*HW +: HW]),.cmd_skip(g_skip[s*10 +: 10]),.cmd_nkeys(g_n1[s*NW +: NW]),
             .cmd_base2(g_base2[s*HW +: HW]),.cmd_nkeys2(g_n2[s*NW +: NW]),.busy(s_busy[s]),
