@@ -23,7 +23,10 @@ module ot_v41_rom_array #(
     parameter integer NB = 1,         // 2: elements are W1 macro pairs sharing one front end (N counts macros)
     parameter integer MTP = 0,        // 1: position-outer MTP (up to 6 positions)
     parameter integer EARLY = 0,      // 1: segment-tree early exit (fill cut)
-    parameter integer BYPASS = 0      // 1: return-node forward bypass (fill cut)
+    parameter integer BYPASS = 0,     // 1: return-node forward bypass (fill cut)
+    parameter integer FAST = 0,       // 1.2 GHz element pipeline (ot_v41_rom_elem FAST / CUT)
+    parameter [8:0] CUT = 9'b1_0111_1011,
+    parameter integer PP = 0          // ping-pong 2 x ot_rom_4096x274_m8 per macro slot
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -112,7 +115,7 @@ module ot_v41_rom_array #(
         wire [5*NB-1:0] pseg, pnseg;
         wire [3*NB-1:0] ppos;
         ot_v41_rom_elem #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NB(NB), .MTP(MTP), .EARLY(EARLY),
-                          .INSTANCE($sformatf("e%0d", g))) u_e (
+                          .FAST(FAST), .CUT(CUT), .PP(PP), .INSTANCE($sformatf("e%0d", g))) u_e (
             .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v && cfg_e == g), .cfg_a(cfg_a), .cfg_d(cfg_d),
             .go(go_d[BST]), .go_bf(gb_d[BST]), .xb_v(bv_d[BST]), .xb_b(bb[BBW-1 -: 3]), .xb_sv(bb[BBW-4 -: 4]),
             .xb_u(bb[1055:1024]), .xb_d(bb[1023:0]), .xs_v(xv_d[BST]), .xs_p(xb[XBW-2 -: 8]), .xs_b(xb[XBW-10 -: 3]),

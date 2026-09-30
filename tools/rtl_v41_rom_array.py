@@ -38,6 +38,10 @@ RTL = ["rtl/v41rom/ot_v41_ret.sv", "rtl/v41rom/ot_v41_rom_array.sv", "rtl/v41rom
        "rtl/v41rom/ot_v41_bf16_lanes.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_cg.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
        "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v"]
+# the 1.2 GHz element (FAST / PP)
+RTL_FAST = ["rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/v41rom/ot_v41_chain2.sv",
+            "rtl/v41rom/ot_v41_segtree2.sv", "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v"]
+FAST_LAT = 8                # ot_v41_fadd default CUT
 TB = "rtl/test/tb_v41_rom_array.sv"
 NSEG, NCH = 8, 16
 XF_Q, XF_BF = 4, 8          # x FIFO depth: FP8/FP4 element, BF16-capable element
@@ -175,8 +179,8 @@ def x_codes(xq: np.ndarray) -> np.ndarray:
 # ---------------------------------------------------------------------------------------------------------
 # one phase on N elements
 # ---------------------------------------------------------------------------------------------------------
-def viamap(words: dict[int, int], path: Path) -> None:
-    rows = [0] * 1024
+def viamap(words: dict[int, int], path: Path, depth: int = 8192) -> None:
+    rows = [0] * (depth // 8)
     for a, w in words.items():
         r, s = divmod(a, 8)
         v = rows[r]
@@ -220,9 +224,13 @@ def place_sibling(die, specs):
     return {ph: dict(t_phase=S.phase_cycles(by_fmt))}, info
 
 
-def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibling=False, npos=1):
+def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibling=False, npos=1, die=None,
+                acc=None, pp=False):
     """nb = 2: N macros as N/2 W1 pairs sharing one front end; each pair holds the same segment structure
-    for two consecutive rows (a 'super row' 2R, 2R+1), placed with the bank-map rules on N/2 pair slots."""
+    for two consecutive rows (a 'super row' 2R, 2R+1), placed with the bank-map rules on N/2 pair slots.
+    die / acc (multi-phase runs): the die the phase is placed on (its fill carries over, so a later phase's
+    words sit above an earlier one's) and the per-(element, macro) ROM words accumulated over the phases (the
+    caller writes the via masks)."""
     K = mats[0].K
     assert all(m.K == K for m in mats)
     # npos MTP positions (verify rows): each position has its own x; each row of each position is an
@@ -244,7 +252,9 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
         xbs.append((G.bits(G.to_bf16(x)) >> 16).astype(np.uint32))
     # placement with the bank-map rules on an N-macro die (every element carries BF16 lanes here)
     NE = N // nb
-    die = S.Die(NE, NE)
+    if die is None:
+        die = S.Die(NE, NE)
+    seg0 = len(die.segs)
     specs = [dict(tensor=f"m{mi}", phase=m.phase, fmt=m.fmt, rows=-(-m.rows // nb), K=m.K)
              for mi, m in enumerate(mats)]
     orig = S.model_split
@@ -259,15 +269,19 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
     cfg, n_words = [], 0
     by_e = {}
     for i, sg in enumerate(die.segs):
-        by_e.setdefault(sg["macro"], []).append(i)
+        if i >= seg0:
+            by_e.setdefault(sg["macro"], []).append(i)
     rounds = {}                      # (q, b) -> {unit} ; demand per element
+    # PP: every element's words in its issue order (element_order), word i of the phase at index pbase + i,
+    # bank index[0], address index >> 1; pbase is even and follows the element's previous phase
+    pp_words = {}
     demand = {}
     nsent = 0
     for e in range(NE):
         sids = by_e.get(e, [])
         segs = [die.segs[i] for i in sids]
         assert len(segs) <= NSEG, (e, len(segs))
-        words = [{} for _ in range(nb)]
+        words = [{} for _ in range(nb)] if acc is None else [acc.setdefault((e, mb), {}) for mb in range(nb)]
         # classes in ascending unit range; segments of a class by (fmt, row, tensor) -- element_order's order
         cls = {}
         for j, sg in enumerate(segs):
@@ -318,8 +332,27 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
         for c in range(len(centries), NSEG):
             cfg.append((e, NSEG + c, 0))
         nsub = max([-(-nu // 8) for _, nu, _, _ in centries] + [1])
-        cfg.append((e, 2 * NSEG, (nsub - 1) | ((npos - 1) << 3)))
-        for mb in range(nb):
+        pbase = 0
+        if pp:
+            key = ("pbase", e)
+            pbase = acc.get(key, 0) if acc is not None else 0
+            byk = {}
+            for j, sg in enumerate(segs):
+                mi = int(sg["tensor"][1:]); m = mats[mi]
+                for k, (u, b, h) in enumerate(S.segment_order(sg["fmt"], sg["e0"], sg["elems"])):
+                    byk[(j, u, b, h)] = [words[mb].get(sg["base"] + k, 0) for mb in range(nb)]
+            order = S.element_order(segs) if segs else []
+            for mb in range(nb):
+                banks = pp_words.setdefault((e, mb), ({}, {})) if acc is None else \
+                    acc.setdefault(("pp", e, mb), ({}, {}))
+                for i, (j, u, b, h) in enumerate(order):
+                    idx = pbase + i
+                    banks[idx & 1][idx >> 1] = byk[(j, u, b, h)][mb]
+            if acc is not None:
+                acc[key] = pbase + len(order) + (len(order) & 1)
+            assert pbase + len(order) <= 2 * 4096, (e, pbase, len(order))
+        cfg.append((e, 2 * NSEG, (nsub - 1) | ((npos - 1) << 3) | (pbase << 6)))
+        for mb in range(nb if (acc is None and not pp) else 0):
             viamap(words[mb], work / (f"e{e}.viamap.hex" if mb == 0 else f"e{e}b.viamap.hex"))
         # stream needs and demand of this element, round by round (element_order)
         for (i, u, b, h) in (S.element_order(segs) if segs else []):
@@ -377,19 +410,25 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
     assert 8 * 0 + t_rounds == t_pred or True
     (work / "cfg.hex").write_text("".join(f"{(e << 53) | (a << 48) | d:016x}\n" for e, a, d in cfg))
     (work / "stream.hex").write_text("".join(f"{v:0404x}\n" for v in beats))
+    if pp:
+        for (e, mb), lst in pp_words.items():
+            for bk in (0, 1):
+                viamap(lst[bk], work / f"e{e}{'b' if mb else ''}_{bk}.viamap.hex", 4096)
     return dict(bf=bf, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32), nsent=nsent, npos=npos, exp_fp32=exp_fp32, exp_bf16=exp_bf16,
                 t_pred=t_pred, t_rounds=t_rounds, words=n_words, split=info,
                 elements=[len(by_e.get(e, [])) for e in range(NE)])
 
 
-def build_sim(N: int, work: Path, xf: int, nb: int = 1, mtp: int = 0, early: int = 0, bypass: int = 0) -> Path:
-    out = work / f"obj_n{N}_xf{xf}_nb{nb}_m{mtp}{early}{bypass}"
+def build_sim(N: int, work: Path, xf: int, nb: int = 1, mtp: int = 0, early: int = 0, bypass: int = 0,
+              defines: tuple[str, ...] = (), fast: int = 0, pp: int = 0) -> Path:
+    out = work / (f"obj_n{N}_xf{xf}_nb{nb}_m{mtp}{early}{bypass}" + (f"_f{fast}p{pp}" if fast or pp else "")
+                  + "".join("_" + d for d in defines))
     exe = out / "Vtb_v41_rom_array"
     if exe.exists():
         return exe
     cmd = [str(VERILATOR), "--binary", "--timing", "-j", "8", "-Wno-fatal", "-Wno-lint", "-Wno-style",
-           "-O2", f"-GN={N}", f"-GXF={xf}", f"-GNB={nb}", f"-GMTP={mtp}", f"-GEARLY={early}", f"-GBYPASS={bypass}", "--top-module", "tb_v41_rom_array", "-Mdir", str(out), str(ROOT / TB)]
-    cmd += [str(ROOT / p) for p in RTL]
+           "-O2", f"-GN={N}", f"-GXF={xf}", f"-GNB={nb}", f"-GMTP={mtp}", f"-GEARLY={early}", f"-GBYPASS={bypass}", f"-GFAST={fast}", f"-GPP={pp}", "--top-module", "tb_v41_rom_array", "-Mdir", str(out)] + [f"-D{d}" for d in defines] + [str(ROOT / TB)]
+    cmd += [str(ROOT / p) for p in RTL + RTL_FAST]
     subprocess.run(cmd, check=True, cwd=work, stdout=subprocess.DEVNULL)
     return exe
 
@@ -408,12 +447,83 @@ def run_case(exe: Path, work: Path, ph: dict):
     return rows, done
 
 
+# back-to-back phases on one array (the spine broadcasts `go` to every element, so elements go EMPTY in a small
+# phase and then hold work in the next): the W17 field-composition defect (an empty go corrupted the next op)
+SEQUENCES = {
+    "empty_then_partial": ["fp8_tiny_one_row", "fp4_expert_w1", "fp8_tiny_one_row", "fp8_wo_b_kquarter",
+                           "fp8_tiny_one_row", "fp8_wq_b"],
+    "mixed_families": ["fp8_wq_b", "bf16_indexer_wk", "fp8_wo_b_kquarter", "mixed_down_fp4_expert_w2_fp8_shared_w2",
+                       "bf16_router_gate", "fp4_expert_w1"],
+}
+
+
+def run_multi(ck: Ckpt, N: int, nb: int, seq: str, work: Path, rng, npos: int = 1, fillcut: bool = False,
+              defines: tuple[str, ...] = (), fast: int = 0, pp: int = 0):
+    """One simulation of several phases back to back on one array; every row of every phase is checked."""
+    names = SEQUENCES[seq]
+    NE = N // nb
+    die = S.Die(NE, NE)
+    acc = {}
+    phs, cfg_lines, st_lines, meta = [], [], [], []
+    allc = cases(ck, N, nb)
+    for k, name in enumerate(names):
+        mats = allc[name]
+        sub = work / f"ph{k}"
+        sub.mkdir(parents=True, exist_ok=True)
+        ph = build_phase(mats, N, sub, rng, split=8 if "split8" in name else None, nb=nb, npos=npos, die=die,
+                         acc=acc, pp=bool(pp))
+        cfg_lines += (sub / "cfg.hex").read_text().split()
+        st_lines += (sub / "stream.hex").read_text().split()
+        meta.append((int(ph["bf"]) << 72) | (ph["nrows"] << 48) | (ph["nst"] << 24) | ph["ncfg"])
+        phs.append(ph)
+    for key, words in acc.items():
+        if key[0] == "pp":
+            _, e, mb = key
+            for bk in (0, 1):
+                viamap(words[bk], work / f"e{e}{'b' if mb else ''}_{bk}.viamap.hex", 4096)
+        elif isinstance(key[0], int) and not pp:
+            e, mb = key
+            viamap(words, work / (f"e{e}.viamap.hex" if mb == 0 else f"e{e}b.viamap.hex"))
+    (work / "cfg.hex").write_text("".join(x + "\n" for x in cfg_lines))
+    (work / "stream.hex").write_text("".join(x + "\n" for x in st_lines))
+    (work / "meta.hex").write_text("".join(f"{m:019x}\n" for m in meta))
+    # the scenario must exercise the defect: some element empty in one phase and holding work in the next
+    empty_then_work = sum(1 for a, b in zip(phs, phs[1:]) for e in range(NE)
+                          if a["elements"][e] == 0 and b["elements"][e] > 0)
+    xf = XF_BF if any(p["bf"] for p in phs) else XF_Q
+    exe = build_sim(N, work.parent, xf, nb, mtp=int(npos > 1), early=int(fillcut), bypass=int(fillcut),
+                    defines=defines, fast=fast, pp=pp)
+    r = subprocess.run([str(exe), f"+DIR={work}", f"+OT_ROM_DIR={work}", f"+PHASES={len(names)}"],
+                       capture_output=True, text=True, check=True)
+    got, pinfo = {}, {}
+    for line in r.stdout.splitlines():
+        t = line.split()
+        if t and t[0] == "ROW":
+            got[(int(t[7]), int(t[6]), int(t[1]))] = (int(t[2], 16), int(t[3], 16), int(t[4]), int(t[5]))
+        elif t and t[0] == "PHASE":
+            pinfo[int(t[1])] = dict(cycles=int(t[2]), fault=int(t[3]), hung=int(t[4]))
+    out = []
+    for k, (name, ph) in enumerate(zip(names, phs)):
+        ok32 = sum(got.get((k, pos, row), (None,))[0] == v for (pos, row), v in ph["exp_fp32"].items())
+        ok16 = sum(got.get((k, pos, row), (None, None))[1] == v for (pos, row), v in ph["exp_bf16"].items())
+        extra = sum(1 for (kk, pos, row) in got if kk == k and not row & SENT and (pos, row) not in ph["exp_fp32"])
+        out.append(dict(phase=k, case=name, rows=len(ph["exp_fp32"]), fp32_exact=ok32, bf16_exact=ok16,
+                        unexpected_rows=extra, elements_with_work=sum(1 for x in ph["elements"] if x),
+                        **pinfo.get(k, dict(cycles=None, fault=None, hung=None))))
+    return dict(sequence=seq, N=N, NB=nb, positions=npos, fill_cuts=fillcut, defines=list(defines), fast=fast, pp=pp,
+                empty_then_work_transitions=empty_then_work, phases=out,
+                exact=all(p["fp32_exact"] == p["rows"] == p["bf16_exact"] and not p["fault"] and not p["hung"]
+                          and not p["unexpected_rows"] for p in out))
+
+
 def cases(ck: Ckpt, N: int, nb: int = 1):
     L = f"layers.{LAYER}."
     half = max(1, N // 2)
     E = 7
     return {
         "fp8_wq_a_whole_rows": [Mat(ck, L + "attn.wq_a", "fp8", N, 5120, phase="wq_b")],
+        # one short row: most elements get no segment (and still receive the broadcast go)
+        "fp8_tiny_one_row": [Mat(ck, L + "attn.wq_b", "fp8", 1, 512, r0=77, phase="wq_b")],
         "fp8_wq_a_ksplit": [Mat(ck, L + "attn.wq_a", "fp8", half, 5120, r0=64, phase="wq_b")],
         "fp8_wq_b": [Mat(ck, L + "attn.wq_b", "fp8", half, 1280, r0=4096, phase="wq_b")],
         "fp8_wo_b_kquarter": [Mat(ck, L + "attn.wo_b", "fp8", max(1, N // 4), 2048, r0=100, k0=2048, phase="wo_b")],
@@ -451,22 +561,51 @@ def main(argv=None):
     ap.add_argument("--mtp", type=int, default=1, help="MTP positions per phase (1..6), position-outer")
     ap.add_argument("--fillcut", action="store_true", help="segment-tree early exit + return forward bypass")
     ap.add_argument("--output", type=Path)
+    ap.add_argument("--multi", nargs="*", help="back-to-back phase sequences (SEQUENCES) instead of single phases")
+    ap.add_argument("--define", nargs="*", default=[], help="Verilog defines (e.g. a mutant)")
+    ap.add_argument("--fast", action="store_true", help="the 1.2 GHz element pipeline (FAST=1, LAT-stage adders)")
+    ap.add_argument("--pp", action="store_true", help="ping-pong 2 x ot_rom_4096x274_m8 per macro slot")
     a = ap.parse_args(argv)
+    if a.fast:
+        S.FADD_REC = FAST_LAT             # rounds last at least the adder recurrence
     G.set_arith("chunk8")
     ck = Ckpt(a.snapshot)
     rng = np.random.default_rng(SEED)
     out = []
+    if a.multi is not None:
+        for nb, N in [(nb, N) for nb in a.nb for N in a.n]:
+            for seq in (a.multi or list(SEQUENCES)):
+                wd = a.work / (f"multi_n{N}_nb{nb}_p{a.mtp}{'_fc' if a.fillcut else ''}{'_fast' if a.fast else ''}"
+                               f"{'_pp' if a.pp else ''}_{seq}{''.join('_' + d for d in a.define)}")
+                wd.mkdir(parents=True, exist_ok=True)
+                r = run_multi(ck, N, nb, seq, wd, np.random.default_rng(SEED), npos=a.mtp, fillcut=a.fillcut,
+                              defines=tuple(a.define), fast=int(a.fast), pp=int(a.pp))
+                print(json.dumps(r), flush=True)
+                out.append(r)
+        if a.output:
+            srcs = RTL + (RTL_FAST if (a.fast or a.pp) else []) + [TB, "tools/rtl_v41_rom_array.py", "tools/v41_rom_ksplit_bankmap.py", "tools/hdc_golden_v41.py"]
+            rec = dict(schema="opentallas.v41.rom_array_multiphase.v1",
+                       verdict="PASS" if all(r["exact"] for r in out) and any(r["empty_then_work_transitions"] > 0 for r in out) else "FAIL",
+                       golden="tools/hdc_golden_v41.py linear_q / linear_bf16, HDC_V41_ARITH=chunk8",
+                       checkpoint_revision=a.snapshot.name, checkpoint_header_sha256=ck.pins, seed=SEED,
+                       simulator=f"verilator 5.050 ({VERILATOR})", source_sha256={p: sha(ROOT / p) for p in srcs},
+                       sequences=out)
+            a.output.parent.mkdir(parents=True, exist_ok=True)
+            a.output.write_text(json.dumps(rec, indent=1) + "\n")
+        return 0
     for nb, N in [(nb, N) for nb in a.nb for N in a.n]:
         a.work.mkdir(parents=True, exist_ok=True)
         for name, mats in cases(ck, N, nb).items():
             if mats is None or (a.only and a.only not in name):
                 continue
-            wd = a.work / f"n{N}_nb{nb}{'_sib' if a.sibling else ''}_p{a.mtp}{'_fc' if a.fillcut else ''}_{name}"
+            wd = a.work / (f"n{N}_nb{nb}{'_sib' if a.sibling else ''}_p{a.mtp}{'_fc' if a.fillcut else ''}"
+                           f"{'_fast' if a.fast else ''}{'_pp' if a.pp else ''}_{name}")
             wd.mkdir(exist_ok=True)
             ph = build_phase(mats, N, wd, rng, split=8 if "split8" in name else None, nb=nb, sibling=a.sibling,
-                             npos=a.mtp)
+                             npos=a.mtp, pp=a.pp)
             xf = XF_BF if ph["bf"] else XF_Q
-            exe = build_sim(N, a.work, xf, nb, mtp=int(a.mtp > 1), early=int(a.fillcut), bypass=int(a.fillcut))
+            exe = build_sim(N, a.work, xf, nb, mtp=int(a.mtp > 1), early=int(a.fillcut), bypass=int(a.fillcut),
+                            fast=int(a.fast), pp=int(a.pp))
             rows, done = run_case(exe, wd, ph)
             rows = {t: v for t, v in rows.items() if not t[1] & SENT}
             ok_fp32 = sum(rows.get(t, (None,))[0] == v for t, v in ph["exp_fp32"].items())
@@ -492,14 +631,15 @@ def main(argv=None):
                                                    "fault", "cycles_last_row", "t_phase_pred", "fill", "model_depth")}), flush=True)
             out.append(rec)
     if a.output:
-        srcs = RTL + [TB, "tools/rtl_v41_rom_array.py", "tools/v41_rom_ksplit_bankmap.py", "tools/hdc_golden_v41.py"]
+        srcs = RTL + (RTL_FAST if (a.fast or a.pp) else []) + [TB, "tools/rtl_v41_rom_array.py", "tools/v41_rom_ksplit_bankmap.py", "tools/hdc_golden_v41.py"]
         rec = dict(schema="opentallas.v41.rom_array_exactness.v1",
                    verdict="PASS" if all(r["fp32_exact"] == r["rows"] == r["bf16_exact"] and not r["fault"]
                                          for r in out) else "FAIL",
                    golden="tools/hdc_golden_v41.py linear_q, HDC_V41_ARITH=chunk8",
                    checkpoint_revision=a.snapshot.name, checkpoint_header_sha256=ck.pins, seed=SEED,
                    simulator=f"verilator 5.050 ({VERILATOR})",
-                   params=dict(NSEG=NSEG, NCH=NCH, XF_Q=XF_Q, XF_BF=XF_BF, BST=2, RST=1, LV=5, RD=64, root_D=128, BF16=1, NCHB=8),
+                   params=dict(NSEG=NSEG, NCH=NCH, XF_Q=XF_Q, XF_BF=XF_BF, BST=2, RST=1, LV=5, RD=64, root_D=128, BF16=1, NCHB=8,
+                               FAST=int(a.fast), PP=int(a.pp), LAT=FAST_LAT if a.fast else 5),
                    source_sha256={p: sha(ROOT / p) for p in srcs}, cases=out)
         a.output.parent.mkdir(parents=True, exist_ok=True)
         a.output.write_text(json.dumps(rec, indent=1) + "\n")

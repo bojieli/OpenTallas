@@ -14,6 +14,8 @@ module tb_v41_rom_array;
     parameter integer MTP = 0;
     parameter integer EARLY = 0;
     parameter integer BYPASS = 0;
+    parameter integer FAST = 0;
+    parameter integer PP = 0;
     localparam integer XBW = 546;
     localparam integer LEAD = 1;
     reg clk = 1'b0, rst_n = 1'b0;
@@ -31,7 +33,7 @@ module tb_v41_rom_array;
     wire [2:0] r_pos;
     wire [31:0] r_fp32;
     ot_v41_rom_array #(.N(N), .BF16(BF16), .XF(XF), .NB(NB), .MTP(MTP), .EARLY(EARLY), .BYPASS(BYPASS),
-                      .RD(64), .ROOTD(128)) dut (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_e(cfg_e), .cfg_a(cfg_a),
+                      .FAST(FAST), .PP(PP), .RD(64), .ROOTD(128)) dut (.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_e(cfg_e), .cfg_a(cfg_a),
         .cfg_d(cfg_d), .go(go), .go_bf(go_bf), .xb_v(bbeat[1063]), .xb_b(bbeat[1062:1060]), .xb_sv(bbeat[1059:1056]),
         .xb_u(bbeat[1055:1024]), .xb_d(bbeat[1023:0]), .xs_pos(qpos), .xb_pos(bpos), .r_pos(r_pos), .xs_v(beat[545]), .xs_p(beat[544:537]), .xs_b(beat[536:534]),
         .xs_sv(beat[533:532]), .xs_q0(beat[531:276]), .xs_e0(beat[275:266]), .xs_q1(beat[265:10]),
@@ -39,52 +41,85 @@ module tb_v41_rom_array;
         .busy(busy), .fault(fault));
     reg [60:0] cfg [0:65535];
     reg [6+XBW+1064-1:0] stream [0:65535];
+    reg [72:0] meta [0:63];          // multi-phase (+PHASES): per phase {bf, nrows[23:0], nst[23:0], ncfg[23:0]}
     reg [8*1024-1:0] dir;
-    integer ncfg, nst, nrows, i, cyc, got, fd;
-    reg trace;
+    integer ncfg, nst, nrows, i, cyc, got, fd, nph, ph, cbase, sbase, tcyc, idle;
+    reg trace, bfp;
     initial trace = $test$plusargs("TRACE");
+    // one phase: its configuration writes, `go`, its stream from LEAD cycles after go, until its rows are out
+    task automatic run_phase(input integer p);
+        begin
+            for (i = 0; i < ncfg; i = i + 1) begin
+                @(negedge clk);
+                cfg_v = 1'b1; {cfg_e, cfg_a, cfg_d} = cfg[cbase + i];
+            end
+            @(negedge clk);
+            cfg_v = 1'b0;
+            go = 1'b1;
+            go_bf = bfp;
+            beat = '0;                      // the stream starts LEAD cycles after go
+            got = 0;
+            for (cyc = 1; cyc < 200000 && got < nrows; cyc = cyc + 1) begin
+                @(negedge clk);
+                go = 1'b0;
+                {qpos, bpos, beat, bbeat} = (cyc >= LEAD && cyc - LEAD < nst) ? stream[sbase + cyc - LEAD] : '0;
+                if (trace && cyc < 400)
+                    $display("T %0d go=%0d xv=%0d | e0 hit=%0d iss=%0d fc=%0d run=%0d n_run=%0d np=%0d nb=%0d xs_p=%0d xs_b=%0d pv=%0d | l0=%0d c0=%0d tv=%0d",
+                        cyc, dut.g_el[0].u_e.go, dut.g_el[0].u_e.xs_v, dut.g_el[0].u_e.hit, dut.g_el[0].u_e.issue,
+                        dut.g_el[0].u_e.f_cnt, dut.g_el[0].u_e.w_run, dut.g_el[0].u_e.n_run, dut.g_el[0].u_e.n_pair,
+                        dut.g_el[0].u_e.n_b, dut.g_el[0].u_e.xs_p, dut.g_el[0].u_e.xs_b, dut.g_el[0].u_e.pv,
+                        dut.g_el[0].u_e.g_mac[0].l0_v, dut.g_el[0].u_e.g_mac[0].c0_v, dut.g_el[0].u_e.g_mac[0].t_v);
+                if (trace && dut.g_el[0].u_e.g_mac[0].c0_v) $display("C0 %0d slot? %08h tag=%0h", cyc, dut.g_el[0].u_e.g_mac[0].c0_s, dut.g_el[0].u_e.g_mac[0].c0_t);
+                if (trace && dut.g_el[0].u_e.g_mac[0].b_v) $display("B0 %0d %08h tag=%0h", cyc, dut.g_el[0].u_e.g_mac[0].b_val, dut.g_el[0].u_e.g_mac[0].pr_t);
+                if (trace && dut.g_el[0].u_e.pv[0]) $display("P0 %0d %08h row=%0d", cyc, dut.g_el[0].u_e.pval[31:0], dut.g_el[0].u_e.prow[15:0]);
+                if (r_v) begin
+                    $display("ROW %0d %08h %04h %0d %0d %0d %0d", r_row, r_fp32, r_bf16, r_e, cyc - 1, r_pos, p);
+                    got = got + 1;
+                end
+            end
+            tcyc = cyc - 1;
+            // the next phase starts only once the array is idle (a spine never overlaps two ops on an element)
+            idle = 0; i = 0;
+            while (idle < 8 && i < 4000) begin
+                i = i + 1;
+                @(negedge clk);
+                if (r_v) begin
+                    $display("ROW %0d %08h %04h %0d %0d %0d %0d", r_row, r_fp32, r_bf16, r_e, -1, r_pos, p);
+                end
+                idle = busy ? 0 : idle + 1;
+            end
+            $display("PHASE %0d %0d %0d %0d", p, tcyc, fault, idle < 8);
+        end
+    endtask
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) $fatal(1, "+DIR");
-        if (!$value$plusargs("NROWS=%d", nrows)) $fatal(1, "+NROWS");
-        if (!$value$plusargs("NCFG=%d", ncfg)) $fatal(1, "+NCFG");
-        if (!$value$plusargs("NST=%d", nst)) $fatal(1, "+NST");
         $readmemh({dir, "/cfg.hex"}, cfg);
         $readmemh({dir, "/stream.hex"}, stream);
+        if ($value$plusargs("PHASES=%d", nph)) $readmemh({dir, "/meta.hex"}, meta);
+        else begin
+            nph = 0;
+            if (!$value$plusargs("NROWS=%d", nrows)) $fatal(1, "+NROWS");
+            if (!$value$plusargs("NCFG=%d", ncfg)) $fatal(1, "+NCFG");
+            if (!$value$plusargs("NST=%d", nst)) $fatal(1, "+NST");
+        end
         repeat (4) @(posedge clk);
         rst_n = 1'b1;
         @(posedge clk);
-        for (i = 0; i < ncfg; i = i + 1) begin
-            @(negedge clk);
-            cfg_v = 1'b1; {cfg_e, cfg_a, cfg_d} = cfg[i];
-        end
-        @(negedge clk);
-        cfg_v = 1'b0;
-        go = 1'b1;
-        go_bf = $test$plusargs("BF");
-        beat = '0;                      // the stream starts LEAD cycles after go
-        cyc = 0; got = 0;
-        for (cyc = 1; cyc < 200000 && got < nrows; cyc = cyc + 1) begin
-            @(negedge clk);
-            go = 1'b0;
-            {qpos, bpos, beat, bbeat} = (cyc >= LEAD && cyc - LEAD < nst) ? stream[cyc - LEAD] : '0;
-            if (trace && cyc < 400)
-                $display("T %0d go=%0d xv=%0d | e0 hit=%0d iss=%0d fc=%0d run=%0d n_run=%0d np=%0d nb=%0d xs_p=%0d xs_b=%0d pv=%0d | l0=%0d c0=%0d tv=%0d",
-                    cyc, dut.g_el[0].u_e.go, dut.g_el[0].u_e.xs_v, dut.g_el[0].u_e.hit, dut.g_el[0].u_e.issue,
-                    dut.g_el[0].u_e.f_cnt, dut.g_el[0].u_e.w_run, dut.g_el[0].u_e.n_run, dut.g_el[0].u_e.n_pair,
-                    dut.g_el[0].u_e.n_b, dut.g_el[0].u_e.xs_p, dut.g_el[0].u_e.xs_b, dut.g_el[0].u_e.pv,
-                    dut.g_el[0].u_e.g_mac[0].l0_v, dut.g_el[0].u_e.g_mac[0].c0_v, dut.g_el[0].u_e.g_mac[0].t_v);
-            if (trace && dut.g_el[0].u_e.g_mac[0].c0_v) $display("C0 %0d slot? %08h tag=%0h", cyc, dut.g_el[0].u_e.g_mac[0].c0_s, dut.g_el[0].u_e.g_mac[0].c0_t);
-            if (trace && dut.g_el[0].u_e.g_mac[0].b_v) $display("B0 %0d %08h tag=%0h", cyc, dut.g_el[0].u_e.g_mac[0].b_val, dut.g_el[0].u_e.g_mac[0].pr_t);
-            if (trace && dut.g_el[0].u_e.pv[0]) $display("P0 %0d %08h row=%0d", cyc, dut.g_el[0].u_e.pval[31:0], dut.g_el[0].u_e.prow[15:0]);
-            if (r_v) begin
-                $display("ROW %0d %08h %04h %0d %0d %0d", r_row, r_fp32, r_bf16, r_e, cyc - 1, r_pos);
-                got = got + 1;
+        cbase = 0; sbase = 0;
+        if (nph == 0) begin
+            bfp = $test$plusargs("BF");
+            run_phase(0);
+        end else begin
+            for (ph = 0; ph < nph; ph = ph + 1) begin
+                bfp = meta[ph][72]; nrows = meta[ph][71:48]; nst = meta[ph][47:24]; ncfg = meta[ph][23:0];
+                run_phase(ph);
+                cbase = cbase + ncfg; sbase = sbase + nst;
             end
         end
         if (fault) $display("FAULTS elem=%b nodes=%b root=%b e0: fifo=%b mac0 c0=%b c1=%b t=%b", dut.e_fault, dut.nf, dut.rf,
             dut.g_el[0].u_e.ffault, dut.g_el[0].u_e.g_mac[0].c0_fault, dut.g_el[0].u_e.g_mac[0].c1_fault,
             dut.g_el[0].u_e.g_mac[0].t_fault);
-        $display("DONE %0d %0d", cyc - 1, fault);
+        $display("DONE %0d %0d", tcyc, fault);
         $finish;
     end
 endmodule
