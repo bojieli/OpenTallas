@@ -78,7 +78,7 @@ def lef_macro(path: Path) -> dict:
 
 
 def plan(pack_rec: dict, pair: dict, rows: int, row_ch: float, col_gap: float, spine_h: float,
-         pairs_needed: int | None = None) -> dict:
+         pairs_needed: int | None = None, bf16: dict | None = None, bf16_pairs: int = 0) -> dict:
     g = pack_rec["geometry"]
     die_w, die_h = g["die_w_um"], g["die_h_um"]
     cx0, cy0, cx1, cy1 = g["core"]
@@ -90,20 +90,25 @@ def plan(pack_rec: dict, pair: dict, rows: int, row_ch: float, col_gap: float, s
     blockers = [(hub[0] - halo, hub[1] - halo, hub[2] + 2 * halo, hub[3] + 2 * halo)] + \
                [(c["x"], c["y"], c["w"], c["h"]) for c in vcorr]
     need = pairs_needed or pack_rec["capacity"]["used_pair_rows"]
-    pw, ph = pair["w"], pair["h"]
+    kinds = [pair] + ([bf16] if bf16 else [])
+    pw, ph = max(k["w"] for k in kinds), max(k["h"] for k in kinds)
+    two_sided = any(k["pin_edges"]["N"] and k["pin_edges"]["S"] for k in kinds)
     cl_w = snap_up(pw, X_STEP)                        # pair origins on the joint grid (pins on track)
-    row_pitch = snap_up(ph + row_ch, Y_STEP)          # one pair + its pin channel (south of the pair)
+    # one pair + its pin channel (south of the pair); with pins on both N and S edges (inputs S, outputs N)
+    # adjacent rows share the channel between them and the band gets one more channel on top
+    row_pitch = snap_up(ph + row_ch, Y_STEP)
     band_h = rows * row_pitch
     col_pitch = snap_up(cl_w + col_gap, X_STEP)
     ncols = int((cx1 - cx0 + col_gap) // col_pitch)
     x0 = snap_dn(cx0 + ((cx1 - cx0 + col_gap) - ncols * col_pitch) / 2, X_STEP)
     bands = []
     y = cy0
-    while y + row_pitch <= cy1 + 1e-6:
-        n = min(rows, int((cy1 - y + 1e-6) // row_pitch))
+    top_ch = snap_up(row_ch, Y_STEP) if two_sided else 0.0
+    while y + row_pitch + top_ch <= cy1 + 1e-6:
+        n = min(rows, int((cy1 - y - top_ch + 1e-6) // row_pitch))
         bands.append((y, n))
-        y = snap_up(y + n * row_pitch + spine_h, Y_STEP)
-    spines = [snap_up(b + n * row_pitch, Y_STEP) for b, n in bands[:-1]]
+        y = snap_up(y + n * row_pitch + top_ch + spine_h, Y_STEP)
+    spines = [snap_up(b + n * row_pitch + top_ch, Y_STEP) for b, n in bands[:-1]]
 
     def clear(x, y, w, h):
         return all(not (x < bx + bw and bx < x + w and y < by + bh and by < y + h) for bx, by, bw, bh in blockers)
@@ -132,15 +137,39 @@ def plan(pack_rec: dict, pair: dict, rows: int, row_ch: float, col_gap: float, s
                                      h=round(len(s) * row_pitch, 3), rows=len(s)))
     for cl in clusters:
         cl["dist_um"] = round(abs(cl["x"] + cl["w"] / 2 - hx) + abs(cl["y"] + cl["h"] / 2 - hy), 1)
+        cl["kind"] = "q"
+    bf16_cols = []
+    if bf16 and bf16_pairs:
+        # dedicated BF16 COLUMNS (root, 2026-09-30): whole columns, spread evenly over the columns ordered by
+        # their distance from VM (so the BF16 slots see the same distance mix as the q slots)
+        colcap = {}
+        for cl in clusters:
+            colcap[cl["col"]] = colcap.get(cl["col"], 0) + cl["rows"]
+        order = sorted(colcap, key=lambda c: min(x["dist_um"] for x in clusters if x["col"] == c))
+        tot = sum(colcap.values())
+        k = 1
+        while True:
+            step = len(order) / k
+            pick = [order[int(i * step)] for i in range(k)]
+            if sum(colcap[c] for c in pick) * need / tot >= bf16_pairs or k == len(order):
+                break
+            k += 1
+        bf16_cols = sorted(pick)
+        for cl in clusters:
+            if cl["col"] in bf16_cols:
+                cl["kind"] = "bf16"
     clusters.sort(key=lambda c: (c["dist_um"], c["x"], c["y"]))
-    left, used = need, []
+    used = []
+    left = {"q": need - bf16_pairs, "bf16": bf16_pairs}
     for cl in clusters:
-        if left <= 0:
-            break
-        take = min(left, cl["rows"])
+        if left[cl["kind"]] <= 0:
+            continue
+        take = min(left[cl["kind"]], cl["rows"])
         u = dict(cl, used_rows=take, name=f"cl_c{cl['col']}_b{cl['band']}_y{int(cl['y'])}")
         used.append(u)
-        left -= take
+        left[cl["kind"]] -= take
+    short = {k: max(0, v) for k, v in left.items()}
+    left = sum(short.values())
     cap = sum(c["rows"] for c in clusters)
     # crossings with the real cluster extents (worst corner of the farthest used cluster from VM)
     wm = FP.wire_delay_model()
@@ -155,12 +184,15 @@ def plan(pack_rec: dict, pair: dict, rows: int, row_ch: float, col_gap: float, s
                 for yy in (far["y"], far["y"] + far["h"]))
     return dict(
         die=dict(w_um=die_w, h_um=die_h, core=g["core"]),
+        bf16=dict(bf16, pairs=bf16_pairs, columns=bf16_cols,
+                  slots=sum(c["rows"] for c in clusters if c["kind"] == "bf16")) if bf16 else None,
+        pin_channels="shared between rows, one extra per band (pins on N and S)" if two_sided else "south of each row",
         pair=dict(pair, pitch_um=[col_pitch, row_pitch],
                   pack_pitch_um=[g["pair_pitch_um"], g["rom_v_pitch_um"]],
                   pitch_vs_pack=[round(col_pitch / g["pair_pitch_um"], 4), round(row_pitch / g["rom_v_pitch_um"], 4)]),
         cluster_rule=dict(rows=rows, row_channel_um=row_ch, col_gap_um=col_gap, spine_h_um=spine_h,
                           row_pitch_um=row_pitch, col_pitch_um=col_pitch, columns=ncols, bands=len(bands)),
-        capacity=dict(pairs_needed=need, pair_slots=cap, closes=left <= 0, short=max(0, left),
+        capacity=dict(pairs_needed=need, pair_slots=cap, closes=left <= 0, short=max(0, left), short_by_kind=short,
                       clusters_used=len(used), clusters_total=len(clusters),
                       full_clusters_used=sum(1 for c in used if c["used_rows"] == rows)),
         clusters=used, spines_y=spines,
@@ -184,20 +216,40 @@ def main(argv=None):
     ap.add_argument("--pairs-needed", type=int, default=0,
                     help="pairs to place (default: the pack's used pair rows); the element is whatever --pair-lef "
                          "is, so a different ROM macro depth enters through its pair abstract and count")
+    ap.add_argument("--bf16-lef", type=Path, help="BF16 column-pair element abstract (dedicated columns)")
+    ap.add_argument("--bf16-pairs", type=int, default=0, help="how many of --pairs-needed are BF16 column pairs")
+    ap.add_argument("--label", default="")
+    ap.add_argument("--slots-out", type=Path, help="per-slot list (x, y, kind, distance) for W10's bank map")
     ap.add_argument("--output", type=Path, required=True)
     a = ap.parse_args(argv)
     rec = json.loads(a.pack.read_text())
     pair = lef_macro(a.pair_lef)
-    out = plan(rec, pair, a.rows, a.row_channel_um, a.col_gap_um, a.spine_um, a.pairs_needed or None)
+    bf = lef_macro(a.bf16_lef) if a.bf16_lef else None
+    out = plan(rec, pair, a.rows, a.row_channel_um, a.col_gap_um, a.spine_um, a.pairs_needed or None, bf,
+               a.bf16_pairs)
     out = dict(schema="opentallas.v41.w18_die_floorplan.v1",
                status="floorplan_from_real_element_abstract",
+               label=a.label or None,
                inputs=dict(pack=str(a.pack), pack_sha256=sha(a.pack), pair_lef=str(a.pair_lef),
-                           pair_lef_sha256=sha(a.pair_lef), tool_sha256=sha(Path(__file__))),
+                           pair_lef_sha256=sha(a.pair_lef), tool_sha256=sha(Path(__file__)),
+                           **(dict(bf16_lef=str(a.bf16_lef), bf16_lef_sha256=sha(a.bf16_lef)) if a.bf16_lef else {})),
                placeholders=["hub partitions (W11 hardened hub elements pending)",
                              "HBM service bands (K-arb / KV streamer / index-key control)",
                              "SerDes lanes and UCIe-A modules (W15 link ports pending)"],
                **out)
     a.output.write_text(json.dumps(out, indent=1) + "\n")
+    if a.slots_out:
+        vm = out["hub"]["parts"]["HUB_VM"]
+        hx, hy = vm["x"] + vm["w"] / 2, vm["y"] + vm["h"] / 2
+        rp = out["cluster_rule"]["row_pitch_um"]
+        slots = [dict(cluster=c["name"], x=c["x"], y=round(c["y"] + r * rp, 3), kind=c["kind"],
+                      dist_um=round(abs(c["x"] + c["w"] / 2 - hx) + abs(c["y"] + r * rp + rp / 2 - hy), 1))
+                 for c in out["clusters"] for r in range(c["used_rows"])]
+        slots.sort(key=lambda s: (s["dist_um"], s["x"], s["y"]))
+        a.slots_out.write_text(json.dumps(dict(schema="opentallas.v41.w18_slot_list.v1", floorplan=str(a.output),
+                                               floorplan_sha256=sha(a.output), vm_centre_um=[hx, hy],
+                                               basis="pair slot origin (x, y); distance = Manhattan from the VM "
+                                                     "centre to the slot centre", slots=slots), indent=0) + "\n")
     c = out["capacity"]
     print(json.dumps(dict(pair=out["pair"]["pitch_um"], vs_pack=out["pair"]["pitch_vs_pack"], cap=c,
                           cross=out["crossings"]["vm_to_farthest_cluster"], rule=out["cluster_rule"]), indent=1))
