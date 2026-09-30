@@ -120,7 +120,7 @@ def main() -> int:
     for k, r in res.items():
         r["build"] = built[k][1]
         r["stages"] = variants[k][1] if variants[k][0] else None
-        if k != "vm_dist_0" and base and r.get("status") == "pass" and base.get("status") == "pass":
+        if r["stages"] is not None and base and r.get("status") == "pass" and base.get("status") == "pass":
             r["token_identical_to_vm_dist_0"] = r["step"]["next_token"] == base["step"]["next_token"]
             r["cycle_delta_vs_vm_dist_0"] = r["step"]["cycles"] - base["step"]["cycles"]
             iss = r["issues"]
