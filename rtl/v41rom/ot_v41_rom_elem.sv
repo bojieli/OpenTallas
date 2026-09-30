@@ -336,14 +336,29 @@ module ot_v41_rom_elem #(
             glq_r[bf] <= hq_[3:0] - c_u0[bf][3:0]; glb_r[bf] <= hb_[3:0] - c_u0[bf][3:0];
         end
     end
-    always @* begin
-        gtot_f = 7'd0;
-        for (bf = 0; bf < NSEG; bf = bf + 1)
-            if (base_go[bf]) gtot_f = gtot_f + {3'd0, go_bf_e ? glb_r[bf] : glq_r[bf]};
+    // sub-block-0 slice totals of each family (configuration only; the configuration ends >= 2 cycles before go)
+    reg [6:0] tot0_r, tot1_r;
+    reg [6:0] t0_, t1_;
+    always @(posedge clk) begin
+        t0_ = 7'd0; t1_ = 7'd0;
+        for (bf = 0; bf < NSEG; bf = bf + 1) begin
+            if (c_v[bf] && !c_bf[bf]) t0_ = t0_ + {3'd0, glq_r[bf]};
+            if (c_v[bf] && c_bf[bf]) t1_ = t1_ + {3'd0, glb_r[bf]};
+        end
+        tot0_r <= t0_; tot1_r <= t1_;
     end
+    always @* gtot_f = go_bf_e ? tot1_r : tot0_r;
+    // next-sub-block total: 3 registered stages from b_lo (a sub-block lasts >= 8 rounds)
+    reg [3:0] dk_r [0:NSEG-1];
+    reg [5:0] ps_r [0:3];
     always @(posedge gclk) begin
-        ntot_r <= ntot; ltot_r <= ltot;
-        for (bf = 0; bf < NSEG; bf = bf + 1) begin nlo_r[bf] <= nlo[bf]; nhi_r[bf] <= nhi[bf]; end
+        for (bf = 0; bf < NSEG; bf = bf + 1) begin
+            nlo_r[bf] <= nlo[bf]; nhi_r[bf] <= nhi[bf];
+            dk_r[bf] <= (base_live[bf] && nhi_r[bf] > nlo_r[bf]) ? nhi_r[bf][3:0] - nlo_r[bf][3:0] : 4'd0;
+        end
+        for (bf = 0; bf < 4; bf = bf + 1) ps_r[bf] <= {2'd0, dk_r[2*bf]} + {2'd0, dk_r[2*bf+1]};
+        ntot_r <= {1'b0, ps_r[0]} + {1'b0, ps_r[1]} + {1'b0, ps_r[2]} + {1'b0, ps_r[3]};
+        ltot_r <= fam ? tot1_r : tot0_r;
     end
     // bound registers: sub-block 0 at go_e and at each new position, the next sub-block at a sub-block end
     wire bn_adv = bnum != 0 && bn_cnt + {4'd0, bnum} == bn_tot && bn_b == 3'd7;
@@ -360,7 +375,16 @@ module ot_v41_rom_elem #(
                 else if (bn_adv) begin b_lo[bc] <= nlo[bc]; b_hi[bc] <= nhi[bc]; end
             end
     end
-    wire [2:0] bnum = {2'd0, bm[0]} + {2'd0, bm[1]} + {2'd0, bm[2]} + {2'd0, bm[3]};
+    // FAST: the slice match is registered (stage A) and counted / pushed a cycle later (stage B).  The spine keeps
+    // one idle cycle between the last beat of a round and the first beat of the next, so stage A never matches
+    // against a round state that stage B is about to advance.
+    reg [3:0]    bm_r;
+    reg [1023:0] xbd_r;
+    always @(posedge gclk or negedge rst_n) if (!rst_n) bm_r <= 4'd0; else bm_r <= (go_e || FAST == 0) ? 4'd0 : bm;
+    always @(posedge gclk) xbd_r <= xb_d_e;
+    wire [3:0]    bmu = (FAST != 0) ? bm_r : bm;
+    wire [1023:0] xbd = (FAST != 0) ? xbd_r : xb_d_e;
+    wire [2:0] bnum = {2'd0, bmu[0]} + {2'd0, bmu[1]} + {2'd0, bmu[2]} + {2'd0, bmu[3]};
     wire hit = hit_q;
 
     // ---------------- x FIFO (pair slices) ------------------------------------------------------------------
@@ -383,9 +407,9 @@ module ot_v41_rom_elem #(
     reg [XW-1:0] bpre [0:3];
     always @* begin
         bpre[0] = '0;
-        bpre[1] = {{(XW-1){1'b0}}, bm[0]};
-        bpre[2] = bpre[1] + {{(XW-1){1'b0}}, bm[1]};
-        bpre[3] = bpre[2] + {{(XW-1){1'b0}}, bm[2]};
+        bpre[1] = {{(XW-1){1'b0}}, bmu[0]};
+        bpre[2] = bpre[1] + {{(XW-1){1'b0}}, bmu[1]};
+        bpre[3] = bpre[2] + {{(XW-1){1'b0}}, bmu[2]};
     end
 
     // ---------------- word walker -------------------------------------------------------------------------------
@@ -556,7 +580,7 @@ module ot_v41_rom_elem #(
             f_q1[f_wr] <= FAST != 0 ? fw_q1 : xs_q1_e; f_e1[f_wr] <= FAST != 0 ? fw_e1 : xs_e1_e;
         end
         for (bk = 0; bk < 4; bk = bk + 1)
-            if (bm[bk]) f_q0[f_wr + bpre[bk]] <= xb_d_e[256*bk +: 256];
+            if (bmu[bk]) f_q0[f_wr + bpre[bk]] <= xbd[256*bk +: 256];
         hz_s[0] <= w_cnt;
         for (k = 1; k < LAT; k = k + 1) hz_s[k] <= hz_s[k-1];
     end

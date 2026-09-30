@@ -225,7 +225,7 @@ def place_sibling(die, specs):
 
 
 def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibling=False, npos=1, die=None,
-                acc=None, pp=False):
+                acc=None, pp=False, fast_stream=None):
     """nb = 2: N macros as N/2 W1 pairs sharing one front end; each pair holds the same segment structure
     for two consecutive rows (a 'super row' 2R, 2R+1), placed with the bank-map rules on N/2 pair slots.
     die / acc (multi-phase runs): the die the phase is placed on (its fill carries over, so a later phase's
@@ -233,6 +233,8 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
     caller writes the via masks)."""
     K = mats[0].K
     assert all(m.K == K for m in mats)
+    if fast_stream is None:
+        fast_stream = S.FADD_REC != 5              # the 1.2 GHz element registers the BF16 slice match
     # npos MTP positions (verify rows): each position has its own x; each row of each position is an
     # independent golden row (greedy speculative = non-speculative at the element)
     exp_fp32, exp_bf16 = {}, {}
@@ -373,10 +375,12 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
         rl = max(S.FADD_REC, len(units), dmax)
         if bf:
             groups = [units[i:i + 4] for i in range(0, len(units), 4)]
-            rl = max(S.FADD_REC, len(groups), (S.BF16_WORD_CYCLES if S.BF16_PAIR else 1) * dmax)
+            rl = max(S.FADD_REC, len(groups) + (1 if fast_stream else 0),
+                     (S.BF16_WORD_CYCLES if S.BF16_PAIR else 1) * dmax)
             slots = [None] * rl
+            span = rl - 1 if fast_stream else rl       # FAST: the round's last cycle carries no beat
             for i, g in enumerate(groups):
-                slots[(i * rl) // len(groups)] = g
+                slots[(i * span) // len(groups)] = g
             for g in slots:
                 if g is None:
                     beats.append(ptag)
