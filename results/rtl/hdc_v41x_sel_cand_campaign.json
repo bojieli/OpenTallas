@@ -1902,5 +1902,12 @@
    "pass": true
   }
  ],
- "quick": false
+ "quick": false,
+ "currency": {
+  "state": "stale",
+  "stale_since": "43ea7573",
+  "reason": "tools/hdc_golden_v41.py changed at 43ea7573 (R-ARITH chunk8 mode) after this record; its pinned digest (from 0dc7a5b9) was never on main. Not a quick gate: the recorded configuration (400 real positions) runs >40 min at load ~160. A 160-position re-run at HEAD 5aa6e609 passed with identical spec results (exact golden equality, 0 stall cycles, tail max 147/149 for sel), but was not committed because it is a smaller vehicle than this record; a 400-position re-run was started to replace this marker.",
+  "verdict_kept": "pass",
+  "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run"
+ }
 }

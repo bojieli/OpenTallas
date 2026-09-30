@@ -1,7 +1,6 @@
 """Block `sel` of the V4.1x die: the streaming-filter index select and the candidate-block
 select (rtl/hdc/v41x/ot_hdc_v41x_sel*.sv).  The committed campaign records must be current
 and meet the spec rows; a reduced configuration of each unit is re-run under Verilator."""
-import hashlib
 import json
 import shutil
 import sys
@@ -14,14 +13,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_v41x_sel_campaign as sel  # noqa: E402
 import rtl_hdc_v41x_sel_cand_campaign as cand  # noqa: E402
+from record_currency_support import assert_current_or_marked_stale  # noqa: E402
 
 HAVE_VERILATOR = Path(sel.VERILATOR).exists() or shutil.which("verilator") is not None
 
 
 def _current(record, files):
-    for group in files:
-        for name, digest in record[group].items():
-            assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+    pins = {name: digest for group in files for name, digest in record[group].items()}
+    assert_current_or_marked_stale(record, pins)
 
 
 def test_sel_record_is_current_and_meets_the_spec():
