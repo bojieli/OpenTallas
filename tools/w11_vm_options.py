@@ -237,10 +237,14 @@ def main() -> int:
     ap.add_argument("--mux-levels", type=int, default=0,
                     help="measured 2:1 mux levels a 0.92 ns stage (from the rotate network's hardening)")
     ap.add_argument("--mux-basis", default="", help="the record(s) the measured mux levels come from")
+    ap.add_argument("--period-ps", type=float, default=0.0,
+                    help="the VM / SU clock domain's period for the wire and mux stages (default 920)")
     a = ap.parse_args()
-    global MUX_LEVELS_PER_STAGE
+    global MUX_LEVELS_PER_STAGE, PERIOD_PS
     if a.mux_levels:
         MUX_LEVELS_PER_STAGE = a.mux_levels
+    if a.period_ps:
+        PERIOD_PS = a.period_ps
     spec = json.loads(SPEC.read_text())
     cells = lane_cells()
 
@@ -412,13 +416,19 @@ def main() -> int:
     options["H"] = price_H(True)
     options["H_align_only"] = price_H(False)
 
-    def price_H_rtl():
+    def price_H_rtl(benes=False):
         o = copy.deepcopy(options["H_align_only"])
         su, cl = o["su_op_class_stages"], o["clients"]
-        # X streams (gathered A, half streams, other strides) cross the class-X trees: group -> VM port (x gather)
-        # and port -> lanes / groups (the scatter run), XI_ELEMS elements a cycle
-        su["gather_read"] = cl["x_gather"] + cl["ret_scatter"]
-        su["x_path"] = f"class-X trees, {H.XI_ELEMS} elements a cycle (x_gather + ret_scatter stages)"
+        if benes:
+            # X streams through a pipelined Benes permutation network at the full vector rate: the op pays the
+            # network's stages (the rotate's span + 19 mux levels) and no issue interval
+            su["gather_read"] = stages(o["geometry"]["rotate_um"]) + mux_stages(BENES_LEVELS)
+            su["x_path"] = "Benes permutation network, full rate"
+        else:
+            # X streams (gathered A, half streams, other strides) cross the class-X trees: group -> VM port
+            # (x gather) and port -> lanes / groups (the scatter run), XI_ELEMS elements a cycle
+            su["gather_read"] = cl["x_gather"] + cl["ret_scatter"]
+            su["x_path"] = f"class-X trees, {H.XI_ELEMS} elements a cycle (x_gather + ret_scatter stages)"
         rot, ben, scal = su["residual_rotate_read"], su["gather_read"], su["scalar_read"]
 
         def extras(ops_):
@@ -432,10 +442,18 @@ def main() -> int:
         e_fs, r_fs = extras(rule_ops)
         e_v, r_v = extras(rule_ops_vehicle)
         su["local_element_write_stages"] = 1
+        ik = "vectors" if benes else "issue_cycles"
+        if benes:
+            # one Benes a read class that can be X (A gathered or strided; B, D half) plus the write side
+            o["networks"] = o["networks"] + [net_area("benes", su["gather_read"], cells) for _ in range(2)]
+            o["network_cell_mm2"] = sum(x["cell_mm2"] for x in o["networks"])
+            o["network_footprint_mm2"] = sum(x["footprint_mm2"] for x in o["networks"])
+            o["geometry"] = dict(o["geometry"], block_mm2=o["geometry"]["block_mm2"] +
+                                 2 * o["networks"][-1]["footprint_mm2"])
         o.update(su_op_extra_cycles=e_fs, su_red_extra_cycles=r_fs,
-                 su_issue_ratio=round(hchk_fs["issue_cycles"] / hchk_fs["vectors_packed"], 4),
+                 su_issue_ratio=round(hchk_fs[ik] / hchk_fs["vectors_packed"], 4),
                  vehicle_aligned=dict(su_op_extra_cycles=e_v, su_red_extra_cycles=r_v,
-                                      su_issue_ratio=round(hchk["issue_cycles"] / hchk["vectors_packed"], 4)),
+                                      su_issue_ratio=round(hchk[ik] / hchk["vectors_packed"], 4)),
                  su_op_extra_basis=("the vector unit's own per-op decision (rtl/hdc/v41x/ot_hdc_v41x_vec.sv VMD_NG, "
                                     "tools/w11_vm_h.rule) on the full-shape L0 program (bound at 32-alignment; the "
                                     "vehicle built with HDC_V41_VM_ALIGN=128 in vehicle_aligned): broadcast 4 + "
@@ -445,6 +463,7 @@ def main() -> int:
                  rule_check=dict(full_shape_l0=hchk_fs, vehicle_aligned=hchk))
         return o
     options["H_rtl"] = price_H_rtl()
+    options["H_benes"] = price_H_rtl(benes=True)
     options["C"] = price_C("crossbar")
     options["C_rotate"] = price_C("rotate")
     options["A"] = price_A()
@@ -508,8 +527,48 @@ def main() -> int:
         o["footprint_mm2"] = round(o["geometry"]["block_mm2"], 3)
         print(k, o["rates"], o["footprint_mm2"], round(o["network_footprint_mm2"], 3), flush=True)
 
+    # ---- CDC ports (root 2026-09-30, AGENTS.md c0894b1c): VM-H is in the serial / SU domain (0.9 GHz); a client
+    # in the fast domain crosses W18's ratio FIFO (rtl/chip/ot_chip_v41_ratio_fifo.sv), so the VM side is 4/3 as
+    # wide.  Each client's tree: its root width, its run in the SU + VM block (the spec record's distances, H
+    # geometry) and its register stages at the SU domain's period.
+    g_h = options["H_rtl"]["geometry"]
+    cdc_clients = [
+        # name, old bits (fast side), new bits (VM side), run, direction
+        ("x read VM -> ROM field", 549, 732, g_h["x_gather_um"], "read (class X)"),
+        ("field results -> VM", 4096, 5461, g_h["ret_scatter_um"], "write (the roots / scatter)"),
+        ("attention scores / PV -> VM", 512, 683, g_h["ret_scatter_um"], "write"),
+        ("VM -> collective", 512, 683, g_h["x_gather_um"], "read (class X)"),
+        ("collective -> VM", 2048, 2731, g_h["coll_um_at_port"], "write"),
+        ("VM -> indexer query", 256, 341, g_h["x_gather_um"], "read (class X)"),
+    ]
+    su_ps = 1111.0
+    cdc = []
+    for name, ob, nb, um, d in cdc_clients:
+        st = U.wire_cycles(um, 1e12 / su_ps, PS_PER_UM)
+        flops_old, flops_new = ob * stages(um), nb * st
+        cdc.append(dict(client=name, direction=d, old_bits=ob, new_bits=nb, run_um=round(um),
+                        stages_at_1111ps=st, wire_mm_old=round(ob * um / 1e3, 1), wire_mm_new=round(nb * um / 1e3, 1),
+                        tree_flops_old=flops_old, tree_flops_new=flops_new,
+                        tree_flop_mm2_delta=round((flops_new - flops_old) * cells["flop_um2"] / 1e6 / 0.5, 4),
+                        per_group_words_per_cycle=round(nb / 32 / NG, 3)))
+    cdc_rec = dict(
+        basis=("W18's ratio FIFO: the slow (VM) side 4/3 as wide as the fast side's rate; latency 4 slow cycles "
+               "fast -> slow, 5 fast cycles slow -> fast (rtl/chip/ot_chip_v41_ratio_fifo.sv cbaf864f); runs from "
+               "the H geometry; stages at the SU domain's 1.111 ns; flops at the hardened lane's 0.295 um2, 50 %"),
+        clients=cdc,
+        su_to_attention_pwords=dict(bits=1536, needs=1365, note="12 x 128 b from the SFU lanes directly: not a VM port"),
+        wire_mm_delta=round(sum(c["wire_mm_new"] - c["wire_mm_old"] for c in cdc), 1),
+        tree_flop_mm2_delta=round(sum(c["tree_flop_mm2_delta"] for c in cdc), 4),
+        banks_replicas=("unchanged: every client's words spread over the 128 groups (<= 1.34 words a group a "
+                        "cycle, the widest the result scatter) and consecutive elements share a row in a group, so "
+                        "the class-X replica's one row a bank and the merging write queue (ot_v41_vm_group_phys "
+                        "K = 4, WQD = 16, one macro row write a bank a cycle) carry them; the queue depth is a "
+                        "measured gate item (wq_occ), not yet at full shape"))
+    print("CDC", json.dumps(cdc_rec)[:600], flush=True)
+
     rec = dict(
         schema="opentallas.uarch.w11_vm_options.v1",
+        cdc_ports=cdc_rec,
         generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         source_commit=subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True,
                                      text=True).stdout.strip(),

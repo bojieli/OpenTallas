@@ -129,22 +129,23 @@ BASE = dict(
 # Distributed VM, option H (ROOT DECISION 2026-09-30, W11; results/uarch/w11_vm_options.json option H_rtl): the VM
 # is lane-group-local banks inside HUB_SU_VECTOR (128 groups of 8 lanes, element e in group e mod 128); the
 # builder 128-aligns every VM region (tools/hdc_program_v41.py HDC_V41_VM_ALIGN=128); the stream unit decides per
-# op whether it needs the per-row scalar fetch, the residual rotate network or the gather network and holds the
-# op for them (rtl/hdc/v41x/ot_hdc_v41x_vec.sv VMD_NG).  Register stages from the SU + VM block of
-# results/floorplan/v41_vm_dist_spec.json grown by the networks, at 0.92 ns / 0.76 ps/um:
-#   x gather / result scatter   farthest group <-> VM port                                  -> 10 / 10
-#   collective write            endpoint at the VM port (W10 placement), the scatter tree    -> 10
-#   SU results                  reducer root at the block centre -> farthest group           -> 7
+# op whether it needs the per-row scalar fetch, the residual rotate network or the class-X path and holds the op
+# for them (rtl/hdc/v41x/ot_hdc_v41x_vec.sv VMD_NG).  VM-H is in the SERIAL / SU clock domain (0.9 GHz, 1.111 ns
+# SS; AGENTS.md c0894b1c): its register stages are counted at 1.111 ns on the SU + VM block of
+# results/floorplan/v41_vm_dist_spec.json grown by the networks (0.76 ps/um), the rotate network at the measured
+# 7 mux levels a stage (results/physical_abi3/asap7/chip/w11_vm_rot/su_wc_lps7: SS 917.6 MHz), and converted here
+# to cycles of the model's clock (x VM_SU_CLOCK_RATIO) because evaluate() has one clock:
+#   x gather / result scatter / collective write (endpoint at the VM port)    8 / 8 / 8 SU cycles
+#   SU results (reducer root at the block centre)                              5 SU cycles
 #   su_op_extra_cycles / su_red_extra_cycles: the mean per-op stages a dependent SU element op / reduction pays
-#   on the vehicle (the broadcast tree 4, the op's network hold, the local write 1 or the result tree) --
-#   evaluate() adds them to the depth of every SU vector / reduce node
-VM_DIST = dict(vm_x_gather_stages=10, vm_ret_scatter_stages=10, vm_coll_write_stages=10, su_ret_stages=7)
-#   su_issue_ratio: SU issue cycles / the packed layout's vectors (ops laid out one row a vector so every stream
-#   is one rotation; ops with a gather / half / other-stride stream crossing the class-X trees 64 elements a
-#   cycle) -- all three measured on the full-shape L0 program (results/uarch/w11_vm_options.json option H_rtl;
-#   the unit's own decision, rtl/hdc/v41x/ot_hdc_v41x_vec.sv VMD_NG, rotate network 10 mux levels a stage,
-#   results/physical_abi3/asap7/chip/w11_vm_rot)
-VM_DIST_H = dict(su_op_extra_cycles=31.157, su_red_extra_cycles=38.273, su_issue_ratio=1.1687)
+#   on the full-shape L0 program (broadcast 4, the op's network hold, the local write 1 or the result tree):
+#   25.804 / 30.636 SU cycles; su_issue_ratio: SU issue / the packed layout's vectors (one-row-a-vector
+#   unpacking, class-X ops at 64 elements a cycle) 1.1687.  The SU's own issue is NOT rescaled to 0.9 GHz here.
+VM_SU_CLOCK_RATIO = 1.0339e9 / 0.9e9
+VM_DIST = dict(vm_x_gather_stages=round(8 * VM_SU_CLOCK_RATIO, 3), vm_ret_scatter_stages=round(8 * VM_SU_CLOCK_RATIO, 3),
+               vm_coll_write_stages=round(8 * VM_SU_CLOCK_RATIO, 3), su_ret_stages=round(5 * VM_SU_CLOCK_RATIO, 3))
+VM_DIST_H = dict(su_op_extra_cycles=round(25.804 * VM_SU_CLOCK_RATIO, 3),
+                 su_red_extra_cycles=round(30.636 * VM_SU_CLOCK_RATIO, 3), su_issue_ratio=1.1687)
 # the SU's broadcast tree to the farthest lane (W11 SU worker's placement derivation, root-accepted)
 SU_BCAST = dict(su_bcast_stages=4)
 SU_OP_EXTRA_NATIVE = True     # evaluate() prices su_op_extra_cycles / su_red_extra_cycles itself
