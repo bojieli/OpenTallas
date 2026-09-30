@@ -99,7 +99,11 @@ module ot_link_tx #(
     localparam integer PB = $clog2(PACE_DEN + PACE_NUM + 1) + 1;
     reg  [PB-1:0]  pace;
     wire           slot = (PACE_NUM == 0) || (pace >= PACE_DEN);
-    assign vc_ready = ((HUBFC == 0 || hub_cr > RESERVE) && slot) ? {NVC{1'b1}} : ~GATED;
+    // paced links need no hub credit loop (the pace is below the drain rate; an edge-FIFO overflow still latches
+    // fault): the loop's return crosses the CDC, so its phase-dependent refill would reach the engine as
+    // non-deterministic backpressure once the hub<->edge round trip exceeds the FIFO (SS wire: 2 x 32 stages)
+    localparam integer FC_ON = (HUBFC != 0) && (PACE_NUM == 0);
+    assign vc_ready = ((FC_ON == 0 || hub_cr > RESERVE) && slot) ? {NVC{1'b1}} : ~GATED;
     wire [NVC-1:0] dv = vc_valid;
     // credit field: the pulses themselves (CNTW 1, unpaced), or counts accumulated to the next slot
     reg  [CNTW-1:0] ccnt [0:CW-1];
@@ -145,9 +149,9 @@ module ot_link_tx #(
                 if (covf || ((|(dv & ~GATED)) && !slot)) fault <= 1'b1;   // count overflow / ungated off-slot
             end
             hub_cr <= hub_cr - (bv ? 1'b1 : 1'b0) + ret;
-            if ((HUBFC != 0 && bv && hub_cr == 0) || (|lovf)) fault <= 1'b1;
+            if ((FC_ON != 0 && bv && hub_cr == 0) || (|lovf)) fault <= 1'b1;
             if (bv) stat_bundles <= stat_bundles + 1;
-            if (HUBFC != 0 && hub_cr <= RESERVE) stat_gated_stall <= stat_gated_stall + 1;
+            if (FC_ON != 0 && hub_cr <= RESERVE) stat_gated_stall <= stat_gated_stall + 1;
         end
     end
 
