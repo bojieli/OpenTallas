@@ -382,7 +382,7 @@ module tb_chip_v41x_die_ring_mu #(
                                          bad_kv == 0 && q_bad == 0 && carry_bad == 0) ? "PASS" : "FAIL");
             drain <= 0;
             if (step + 1 == nsteps) begin
-                $display(all_ok ? "PASS" : "FAIL");
+                if (all_ok != 0) $display("PASS"); else $display("FAIL");
                 $finish;
             end
             step <= step + 1; loaded = 1'b0;

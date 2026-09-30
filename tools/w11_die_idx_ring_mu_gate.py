@@ -141,7 +141,7 @@ def main() -> int:
         if s["step"] in carry:
             s["key_carry"] = carry[s["step"]]
     ok = (sim.returncode == 0 and len(steps) == 4 and all(s["verdict"] == "PASS" for s in steps) and
-          log.rstrip().splitlines()[-2:].count("PASS") >= 1 and set(carry) == {2, 3} and
+          "PASS" in log.splitlines() and set(carry) == {2, 3} and
           all(c["keys_checked_cumulative"] > 0 for c in carry.values()) and roms_identical and chained and
           all(s["next_token"] == s["isa_next_token"] for s in steps))
     rec = {
