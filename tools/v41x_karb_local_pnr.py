@@ -265,6 +265,8 @@ def main() -> int:
     ap.add_argument("--stages")
     ap.add_argument("--density", type=float, help="override the global placement density")
     ap.add_argument("--orfs-var", action="append", help="KEY=VALUE passed to run_abi3_physical --orfs-var")
+    ap.add_argument("--step-tcl", action="append", help="HOOK=path passed to run_abi3_physical --step-tcl")
+    ap.add_argument("--tag", default="", help="suffix for the nickname and the output record directory")
     ap.add_argument("--abstract", action="store_true",
                     help="after a kept route: ORFS do-generate_abstract (write_abstract_lef + write_timing_model) "
                          "in <work>/<case>/orfs; prints the LEF/Liberty paths and digests")
@@ -300,6 +302,11 @@ def main() -> int:
         args[args.index("--place-density") + 1] = f"{a.density:g}"
     for v in a.orfs_var or []:
         args += ["--orfs-var", v]
+    for v in a.step_tcl or []:
+        args += ["--step-tcl", v]
+    if a.tag:
+        c["nickname"] += a.tag
+        c["output"] = c["output"].replace("/physical.json", f"{a.tag}/physical.json")
     if a.stages:
         args[args.index("--stages") + 1] = a.stages
     argv = [sys.executable, str(ROOT / "tools/run_abi3_physical.py"), *args, "--nickname-tag", c["nickname"],

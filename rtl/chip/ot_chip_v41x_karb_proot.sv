@@ -11,6 +11,14 @@
 //   response  one EPCS[g]-entry queue per region, filled from the trunk (regions
 //             hold its credits); the consumer sees the lowest-index non-empty
 //             queue; each pop returns a credit through a register (s_cr).
+//             MERGE2=1 (W18b, 2026-09-30): the eight regions' queues span the
+//             750 um block, and one-cycle lowest-index selection across all of
+//             them (region counters -> select -> pop -> counters) is -407 ps at
+//             SS.  Each half (regions 0-3, 4-7) selects locally into a two-entry
+//             registered queue (ot_chip_v41x_karb_q2: registered room, so no
+//             ready crosses it), and the root picks the lower half first.  One
+//             added cycle on the response path; credits still return on the
+//             region pop.
 //   events    registered OR of the regions' K write completions, K grants at
 //             ingress, B grant / conflict counts accumulated.
 // ---------------------------------------------------------------------------
@@ -24,7 +32,8 @@ module ot_chip_v41x_karb_proot #(
     parameter integer KQ    = 4,
     parameter integer NREG  = NPC / 4,
     // per-region response queue depth (= the region's credits), 8 bits a region, region 0 in [7:0]
-    parameter [8*NREG-1:0] EPCS = {NREG{8'd4}}
+    parameter [8*NREG-1:0] EPCS = {NREG{8'd4}},
+    parameter bit     MERGE2 = 1'b1
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -96,15 +105,9 @@ module ot_chip_v41x_karb_proot #(
     // responses
     wire [NREG-1:0]    q_v, q_rdy;
     wire [NREG*RW-1:0] q_d;
-    reg  [LREG-1:0]    esel; reg eany;
-    always @(*) begin
-        esel = '0; eany = 1'b0;
-        for (i = NREG - 1; i >= 0; i = i - 1) if (q_v[i]) begin esel = LREG'(i); eany = 1'b1; end
-    end
     wire [NREG-1:0] pop;
     genvar g;
     generate for (g = 0; g < NREG; g = g + 1) begin : g_q
-        assign pop[g] = eany && k_rsp_rdy && esel == g;
         ot_chip_v41x_karb_qn #(.W(RW), .DEPTH(EPCS[g*8 +: 8])) u_q (
             .clk(clk), .rst_n(rst_n), .in_v(s_v[g]), .in_rdy(q_rdy[g]), .in_d(s_d[g*RW +: RW]),
             .out_v(q_v[g]), .out_rdy(pop[g]), .out_d(q_d[g*RW +: RW]));
@@ -113,8 +116,48 @@ module ot_chip_v41x_karb_proot #(
             $error("ot_chip_v41x_karb_proot: region %0d sent without a credit", g);
 `endif
     end endgenerate
-    assign k_rsp_v = eany;
-    assign {k_rsp_tag, k_rsp_beat, k_rsp_data} = q_d[esel*RW +: RW];
+    if (MERGE2 && NREG >= 2 && NREG % 2 == 0) begin : g_m2
+        localparam integer NH = NREG / 2;
+        localparam integer LH = (NH > 1) ? $clog2(NH) : 1;
+        wire [1:0]    h_v, h_rdy;
+        wire [2*RW-1:0] h_d;
+        reg  [LH-1:0] hsel [0:1];
+        reg  [1:0]    hany;
+        integer j;
+        always @(*) begin
+            for (j = 0; j < 2; j = j + 1) begin hsel[j] = '0; hany[j] = 1'b0; end
+            for (j = NH - 1; j >= 0; j = j - 1) begin
+                if (q_v[j])      begin hsel[0] = LH'(j); hany[0] = 1'b1; end
+                if (q_v[NH + j]) begin hsel[1] = LH'(j); hany[1] = 1'b1; end
+            end
+        end
+        for (g = 0; g < NREG; g = g + 1) begin : g_pop
+            assign pop[g] = (g < NH) ? (hany[0] && h_rdy[0] && hsel[0] == LH'(g))
+                                     : (hany[1] && h_rdy[1] && hsel[1] == LH'(g - NH));
+        end
+        wire [1:0] h_pop;
+        assign h_pop[0] = h_v[0] && k_rsp_rdy;
+        assign h_pop[1] = !h_v[0] && h_v[1] && k_rsp_rdy;
+        for (g = 0; g < 2; g = g + 1) begin : g_h
+            ot_chip_v41x_karb_q2 #(.W(RW)) u_h (
+                .clk(clk), .rst_n(rst_n), .in_v(hany[g]), .in_rdy(h_rdy[g]),
+                .in_d(q_d[(g * NH + hsel[g]) * RW +: RW]),
+                .out_v(h_v[g]), .out_rdy(h_pop[g]), .out_d(h_d[g*RW +: RW]));
+        end
+        assign k_rsp_v = |h_v;
+        assign {k_rsp_tag, k_rsp_beat, k_rsp_data} = h_v[0] ? h_d[0 +: RW] : h_d[RW +: RW];
+    end else begin : g_m1
+        reg  [LREG-1:0]    esel; reg eany;
+        always @(*) begin
+            esel = '0; eany = 1'b0;
+            for (i = NREG - 1; i >= 0; i = i - 1) if (q_v[i]) begin esel = LREG'(i); eany = 1'b1; end
+        end
+        for (g = 0; g < NREG; g = g + 1) begin : g_pop
+            assign pop[g] = eany && k_rsp_rdy && esel == g;
+        end
+        assign k_rsp_v = eany;
+        assign {k_rsp_tag, k_rsp_beat, k_rsp_data} = q_d[esel*RW +: RW];
+    end
     reg [LPC+2:0] bsum, csum;
     always @(*) begin
         bsum = '0; csum = '0;
