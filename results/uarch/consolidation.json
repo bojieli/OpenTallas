@@ -1,6 +1,22 @@
 {
  "schema": "opentallas.uarch.consolidation.v1",
  "v41_rom": {
+  "die_shrink_sensitivity": {
+   "slots_now": 7628,
+   "pairs_needed": 5289,
+   "margin": 0.1,
+   "src": "root ruling 2026-09-30; W18b claude/w18-die-assembly 510f376e; v41_stage_owner_product.json",
+   "area_ratio": 0.7627031987414788,
+   "crossing_scale": 0.8733288033389709,
+   "role": "sensitivity",
+   "ar_tokens_s_b1": 3186.5,
+   "mtp_tokens_s_b1": 4894.6,
+   "ar_saturated_tokens_s": 90025.4,
+   "product_ar": 3155.9,
+   "product_mtp": 4874.9,
+   "product_saturated": 90025.4,
+   "note": "crossings (field broadcast/return, expert trunks, collective->SerDes) x sqrt(area ratio); die area, cost and power not re-priced; PENDING W18b's floorplan of the shrunk die"
+  },
   "counts": [
    {
     "bf16": "standard_pair",
@@ -14610,7 +14626,7 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "e7f732c096d9e75b763ae6ec5bd0f19991f5fd835a9785321d8a28a9f00ccf01",
+  "tools/uarch_model.py": "f6d0208d766a0cdebd30866ac4415c13040f229db0f7e4360427fb6644484850",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",

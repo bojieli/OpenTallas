@@ -3261,6 +3261,14 @@ def _w11_serial_cycles(name, nd, levels):
     return m["rsqrt"] if leaf == "rsqrt" else m["linear"]
 
 
+# ROOT RULING 2026-09-30 (die size): the layer die is still sized by the old pack (815 mm2, 7,628 pair slots; W18b
+# 510f376e die_assembly.json), while the product owner file needs 5,289 pairs a die (1,024 BF16 columns;
+# results/arch/v41_stage_owner_product.json, max pairs_per_die_by_stage).  Shrink to 5,289 + ~10% margin; W18b
+# floorplans it.  Until its crossings land, a SENSITIVITY row scales every on-die crossing by sqrt(area ratio).
+DIE_SHRINK = dict(slots_now=7628, pairs_needed=5289, margin=0.10,
+                  src="root ruling 2026-09-30; W18b claude/w18-die-assembly 510f376e; v41_stage_owner_product.json")
+DIE_SHRINK["area_ratio"] = DIE_SHRINK["pairs_needed"] * (1 + DIE_SHRINK["margin"]) / DIE_SHRINK["slots_now"]
+DIE_SHRINK["crossing_scale"] = math.sqrt(DIE_SHRINK["area_ratio"])
 PRODUCT_SERIAL = "w11_measured"
 PRODUCT_TAG = ("ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, "
                "light lane 929 MHz)")
@@ -3647,7 +3655,7 @@ SOFTPLUS_FIX = {"suffix:softplus_sqrt": -97, "suffix:idx.topk_local": 8}   # + W
 
 
 def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_stages=None, ss_wire=False, d=None,
-                 serial=None):
+                 serial=None, xscale=1.0):
     """Re-time a priced V4.1 graph (one pass of P positions): the field-concurrency cap on every field read, W10's
     two-pass BF16 on wo_a, the latency inventory, and optionally a slower clock domain for the serial-chain units
     (slow = (hz, cdc_cycles)): their issue and depth stretch by clock / hz, and each crossing into the domain adds
@@ -3689,12 +3697,12 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
         for name, nd in g.nodes.items():
             u = nd.get("_uarch")
             if u:
-                new = (W18B_EXPERT_WIRE if u["region"] == "expert" else
-                       2 * math.ceil(d["bcast_um"][u["region"]] / reach))
+                new = (math.ceil(W18B_EXPERT_WIRE * xscale) if u["region"] == "expert" else
+                       2 * math.ceil(d["bcast_um"][u["region"]] * xscale / reach))
                 old = u["wire"] - d.get("vm_x_gather_stages", 0) - d.get("vm_ret_scatter_stages", 0)
                 nd["depth"] += max(0, new - old) * cyc
             elif nd["kind"] == "collective":
-                nd["depth"] += 2 * (W15_V41_COLL_STAGES_SS - 17) * cyc
+                nd["depth"] += 2 * (math.ceil(W15_V41_COLL_STAGES_SS * xscale) - 17) * cyc
             elif nd["kind"] in SLOW_KINDS and slow and not serial:
                 nd["depth"] += W11_SERIAL_MUL_EXTRA / slow[0]
     if serial == "w11_measured" and slow:
@@ -3722,7 +3730,7 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
 
 def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16="columns", clock_hz=None,
                  field_concurrency=1.0, added_latency=None, dyn_scale=1.0, slow_domain=None, chain_stages=None,
-                 elem_stages=None, ss_wire=False, serial=None):
+                 elem_stages=None, ss_wire=False, serial=None, xscale=1.0):
     """The V4.1 ROM array at S TP-4 stages, n_head head dies and n_table Engram table dies: AR and MTP m = 1 per
     user, the busiest-stage saturated aggregate, energy (ungated and the adopted stage power gating, 1 us wake),
     KV capacity, HBM stacks and die counts.  Same model pieces as the economics and levers sections."""
@@ -3745,12 +3753,12 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
                               else [(_cons_stage_of(name, nd, plan), 1.0)]):
                     pair_s[s0] = pair_s.get(s0, 0.0) + busy_pairs(nd) * nd["issue"] * f
         T1 = _cons_adjust(g1, 1, r1["clock_hz"], bf16, field_concurrency, lat, slow_domain, chain_stages, elem_stages,
-                          ss_wire, d, serial)
+                          ss_wire, d, serial, xscale)
         r1["T_us"], r1["tokens_s"] = T1 * 1e6, 1 / T1
         occ = _cons_occupancy(g1, plan)
         _, gv = _v41_graph(d, V41_POSITIONS)
         Tp = _cons_adjust(gv, V41_POSITIONS, r1["clock_hz"], bf16, field_concurrency, lat, slow_domain, chain_stages,
-                          elem_stages, ss_wire, d, serial)
+                          elem_stages, ss_wire, d, serial, xscale)
         occ_v = _cons_occupancy(gv, plan)
         win1, _ = _cons_windows(g1, plan)
         fstarts = cons_field_starts(g1, plan, r1["clock_hz"])
@@ -4278,6 +4286,16 @@ def consolidation(ec=None, lv=None):
     # the comparison-rule reference: the product basis at TT (PROVISIONAL: the product die count is open until the
     # closed pair's pitch lands, root 2026-09-30)
     head = prod[PRODUCT_TAG]   # final: SS wires and W11's measured serial build in
+    # SENSITIVITY (root die-size ruling): the product with every on-die crossing x sqrt(area ratio); die area, cost
+    # and power are NOT re-priced here (W18b's shrunk floorplan replaces this row)
+    xs = cons_v41_rom(Sp, hp, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ, FIELD_CONCURRENCY, SOFTPLUS_FIX,
+                      PRODUCT_DYN_SCALE, (0.9e9, "w18"), None, 7, True, PRODUCT_SERIAL, DIE_SHRINK["crossing_scale"])
+    die_shrink = dict(DIE_SHRINK, role="sensitivity", ar_tokens_s_b1=xs["ar_tokens_s_b1"],
+                      mtp_tokens_s_b1=xs["mtp_tokens_s_b1"], ar_saturated_tokens_s=xs["ar_saturated_tokens_s"],
+                      product_ar=head["ar_tokens_s_b1"], product_mtp=head["mtp_tokens_s_b1"],
+                      product_saturated=head["ar_saturated_tokens_s"],
+                      note="crossings (field broadcast/return, expert trunks, collective->SerDes) x sqrt(area ratio); "
+                           "die area, cost and power not re-priced; PENDING W18b's floorplan of the shrunk die")
     # 2. HBM dies right-sized; the V4.1 HBM sweep; Qwen HBM
     dies = {f"{m}_{s}": right_size_hbm_die(m, s) for m in ("qwen", "v41") for s in (4, 6)}
     dies["v41_4_phy12mm"] = right_size_hbm_die("v41", 4, 12.0)
@@ -4390,7 +4408,7 @@ def consolidation(ec=None, lv=None):
                                aggregate_tokens_s=round(n * row["saturated_tokens_s"], 1),
                                capacity_users=n * row["capacity_users"]))
     return dict(
-        v41_rom=dict(counts=counts, stage_table=stage_table, legal_phy_sensitivity=legal_phy,
+        v41_rom=dict(die_shrink_sensitivity=die_shrink, counts=counts, stage_table=stage_table, legal_phy_sensitivity=legal_phy,
                      product_basis=dict(zip(("bf16", "pitch", "density", "overhead", "credit"), PB)),
                      droop=dict(DROOP, product=cons_droop(head)), fp32_add_ss=FP32_ADD_SS,
                      cdc=dict(CDC_W18, vm_port_area_mm2=dict(

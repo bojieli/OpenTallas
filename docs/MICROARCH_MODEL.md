@@ -839,6 +839,8 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 | MTP tok/s at τ 3.78 | 5,142 | 5,050 | -1.8% |
 | Saturated AR tok/s | 90,025 | 90,025 | +0.0% |
 
+**Sensitivity: shrunk layer die (root ruling, 2026-09-30; `die_shrink_sensitivity`).** The layer die is still sized by the old pack (7,628 pair slots), but the product needs 5,289 pairs a die. Root ruled to shrink it to that count plus 10% margin, an area ratio of 0.763. Until W18b's floorplan of the shrunk die lands, every on-die crossing the model prices is scaled by the square root of that ratio (×0.873). These are the field broadcast and return, the expert trunks, and collective to SerDes. AR 3,156 → 3,186 (+1.0%), MTP at τ 3.649 4,875 → 4,895 (+0.4%), saturated 90,025 → 90,025. Die area, cost and power are not re-priced in this row; it is not the product.
+
 **Clock-domain cases** (`clock_domain_cases`, all with the cap; the measured W11 FP32 add prices every serial chain):
 
 | Case | AR tok/s | MTP tok/s | Saturated AR | Gated mJ, B = 1 / saturated | Top of the critical path (µs) |
