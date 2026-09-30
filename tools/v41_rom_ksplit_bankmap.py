@@ -797,12 +797,17 @@ def main(argv=None):
     p.add_argument("--geometry", type=Path, default=ROOT / "results/floorplan/v41_pack_refit_w10_ss833_interim.json",
                    help="floorplan pack record giving pair-slot distances (with --near or --wire)")
     p.add_argument("--wire", action="store_true", help="measure each phase's farthest pair and wire cycles")
+    p.add_argument("--owners", type=Path, default=None,
+                   help="stage-owner record (default: v41_floorplan_die_macromap.OWNERS, the preflight); product: "
+                        "results/arch/v41_stage_owner_product.json (W16, 37 stages)")
     p.add_argument("--regions", type=int, default=0,
                    help="VM groups of the multi-root return (W17: 128); region of super row r = r mod R, slots "
                         "j = g (mod R)")
     p.add_argument("--critical", nargs="*", default=None, help="phases confined to the nearest slots (with --near)")
     p.add_argument("--fadd-rec", type=int, default=None, help="FP32 adder recurrence (chain latency) in cycles")
     a = p.parse_args(argv)
+    if a.owners:
+        M.OWNERS = a.owners.resolve()
     global BF16_PAIR, FADD_REC, NEAR, SLOT_DIST, PERM
     _root = None
     if a.near or a.wire:
