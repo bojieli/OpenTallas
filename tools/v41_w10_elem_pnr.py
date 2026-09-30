@@ -130,7 +130,7 @@ def hook_tcl(p: dict) -> str:
 
 
 def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), stop=None,
-         setup_only=False, hold_ns=0.025, period=0.92, corner=None) -> list[str]:
+         setup_only=False, hold_ns=0.025, period=0.92, corner=None, pdn="pdn_w10_elem_m7") -> list[str]:
     w, h = p["die_um"]
     top = "ot_v41_rom_elem_q" if p["wrapped"] else p["top"]      # an FP8/FP4 macro has no BF16 x port
     params = [q for q in params if not (p["wrapped"] and q.startswith("BF16="))]
@@ -149,7 +149,7 @@ def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), s
           "--max-transition-ns", "0.32", "--slew-margin-percent", "40", "--hold-margin-ns", "0.02",
           "--step-tcl", f"POST_MACRO_PLACE={hook_name(p)}",
           "--step-tcl", "POST_DETAIL_PLACE=physical/abi3/check_pg_before_route.tcl",
-          "--orfs-var", "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7.tcl",
+          "--orfs-var", f"PDN_TCL=/src/tools/chip_assembly/tcl/{pdn}.tcl",
           "--nickname-tag", tag, "--keep-workdir", keep, "--output", output]
     if p.get("pp"):
         a += ["--sdc-append", "physical/abi3/v41_w10_elem_pp_multicycle.sdc"]
@@ -192,6 +192,9 @@ def main() -> None:
     ap.add_argument("--pp", action="store_true", help="ping-pong 2 x ot_rom_4096x274_m8 per macro slot (PP=1)")
     ap.add_argument("--period", type=float, default=0.92, help="clock period, ns")
     ap.add_argument("--corner", choices=["TC", "WC", "BC"], help="ORFS primary corner (sign-off: WC)")
+    ap.add_argument("--pdn", default="pdn_w10_elem_m7",
+                    choices=["pdn_w10_elem_m7", "pdn_w10_elem_m7_ir", "pdn_w10_elem_m7_ir_m6"],
+                    help="element power grid (the IR fix: _ir = M5 at 2.7 um; _ir_m6 also M6)")
     ap.add_argument("--no-wrap", dest="wrap", action="store_false",
                     help="FP8/FP4: harden ot_v41_rom_elem itself (with the unused BF16 x port) instead of ot_v41_rom_elem_q")
     a = ap.parse_args()
@@ -204,7 +207,7 @@ def main() -> None:
     if a.print:
         print(json.dumps({"plan": p, "argv": argv(p, a.tag, a.keep, a.output, a.density, a.param, a.stop_after,
                                                      a.setup_only_uncertainty, a.hold_uncertainty_ns,
-                                                     a.period, a.corner)}, indent=1))
+                                                     a.period, a.corner, a.pdn)}, indent=1))
 
 
 if __name__ == "__main__":
