@@ -140,7 +140,7 @@ def exhaustive(dirs):
 
 def random_units(d):
     """Unit 3 logs: per-constant Horner step counts, mul_x2 and addpos2."""
-    hs, x2, ap = {}, dict(checked=0, errors=0), dict(checked=0, errors=0)
+    hs, x2, ap, m4 = {}, dict(checked=0, errors=0), dict(checked=0, errors=0), dict(checked=0, errors=0)
     seeds = []
     for f in sorted(Path(d).glob("s*.log")):
         t = f.read_text()
@@ -151,13 +151,14 @@ def random_units(d):
             h = hs.setdefault(m[1], dict(checked=0, errors=0, refused=0, unjustified_refusals=0))
             for k, v in zip(("checked", "errors", "refused", "unjustified_refusals"), map(int, m.groups()[1:])):
                 h[k] += v
-        for name, acc in (("mul_x2", x2), ("addpos2", ap)):
+        for name, acc in (("mul_x2", x2), ("addpos2", ap), ("mul4", m4)):
             m = re.search(rf"W11SP {name} n=(\d+) err=(\d+)", t)
             acc["checked"] += int(m[1])
             acc["errors"] += int(m[2])
     ok = (all(h["errors"] == 0 and h["unjustified_refusals"] == 0 for h in hs.values())
-          and x2["errors"] == 0 and ap["errors"] == 0 and len(hs) == 13)
+          and x2["errors"] == 0 and ap["errors"] == 0 and m4["errors"] == 0 and len(hs) == 13)
     return dict(seeds=seeds, hstep_by_constant=hs, mul_x2_vs_qmul_qmul2=x2, addpos2_vs_qadd_same_sign=ap,
+                mul_doubled0_vs_qmul=m4,
                 hstep_checked_total=sum(h["checked"] for h in hs.values()), pass_=ok)
 
 
