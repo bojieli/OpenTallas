@@ -113,7 +113,11 @@ def fetch_case(work, lay, name, mode, ids=None, rv=None, start=6000, bg_ppm=0, n
                   REQ_PS=10000 + noc_ps, RSP_PS=10000 + noc_ps, **(extra or {}))
     exe = build(SRC_F, "tb_gpu_expert_fetch", d, params, "f")
     out = run(exe, d)
-    line = [l for l in out.splitlines() if l.startswith("FETCH")][-1]
+    (d / "sim.out").write_text(out)
+    lines = [l for l in out.splitlines() if l.startswith("FETCH")]
+    if not lines:
+        return dict(case=name, verdict="fail", error="no FETCH line", mode="router" if mode == 0 else "ids")
+    line = lines[-1]
     if "TIMEOUT" in line:
         return dict(case=name, verdict="fail", timeout=True)
     r = {k: int(v) for k, v in re.findall(r"(\w+)=(-?\d+)", line)}
@@ -143,6 +147,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--out")
     ap.add_argument("--work", default="/tmp/claude-1000/w19/b2")
+    ap.add_argument("--skip", default="", help="comma list of case names not to run (recorded as skipped)")
+    ap.add_argument("--jobs", type=int, default=4)
     a = ap.parse_args(argv)
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
@@ -179,12 +185,14 @@ def main(argv=None):
             c["router_exact"] = c["ids"] == real[L][1]
             c["verdict"] = "pass" if c["verdict"] == "pass" and c["router_exact"] else "fail"
         return c
+    skipped = [j[0] for j in jobs if j[0] in set(filter(None, a.skip.split(",")))]
+    jobs = [j for j in jobs if j[0] not in skipped]
     from concurrent.futures import ThreadPoolExecutor
-    with ThreadPoolExecutor(4) as ex:
+    with ThreadPoolExecutor(a.jobs) as ex:
         cases = list(ex.map(one, jobs))
     for c in cases:
-        print(c["case"], c["verdict"], c["ns_from_first_router_value"], "first byte", c["first_byte_latency_ns"],
-              "GB/s", c["stream_GBps"])
+        print(c["case"], c["verdict"], c.get("ns_from_first_router_value"), "first byte", c.get("first_byte_latency_ns"),
+              "GB/s", c.get("stream_GBps"))
     by = {c["case"]: c for c in cases}
     central = by["ar_L0"]
     ok = topk["verdict"] == "pass" and all(c["verdict"] == "pass" for c in cases)
@@ -206,13 +214,13 @@ def main(argv=None):
                               rsp_ps="10,000 PHY/controller (model default, assumed) + NoC",
                               noc_ps_central=5000, refresh="all-bank REFab, tREFI 3.9 us, tRFC 350 ns, staggered; "
                               "requests start after the first interval", timings="model defaults (Ramulator2 HBM3)"),
-               layout=lay, router_topk=topk, cases=cases,
+               layout=lay, router_topk=topk, cases=cases, skipped_cases=skipped,
                audit_comparison=dict(
                    audit=AUDIT,
                    metric="exposed wait after the router: top-6 out -> the first expert's w1/w3 rows landed in "
                           "every SM of the stack (the first expert matvec can start; later experts stream under "
                           "it). The model prices 0.5 us a MoE layer (0.25 / 1.0 bounds).",
-                   exposed_ns={c["case"]: exposed(c) for c in cases if c["mode"] == "router"},
+                   exposed_ns={c["case"]: exposed(c) for c in cases if c["mode"] == "router" and "ns_from_first_router_value" in c},
                    exposed_ns_refresh_live_ar=[exposed(by[k]) for k in ("ar_L0", "ar_L1", "ar_L20", "ar_L39",
                                                                          "ar_L0_start6050", "ar_L0_start6100")],
                    exposed_ns_refresh_postponed_ar=exposed(by["ar_L0_refresh_postponed"]),

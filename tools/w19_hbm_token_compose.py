@@ -78,8 +78,20 @@ class SMTable:
         return math.ceil(max(rs) * R * K), ds[len(ds) // 2], "scaled"
 
 
-def coll_us(nbytes_die: float, coll: dict) -> float:
-    return coll["fixed_us"] + nbytes_die * coll["us_per_byte"]
+def coll_us(nbytes_die: float, coll: dict, kind: str = "all_gather") -> float:
+    c = coll.get(kind, coll.get("all_gather", coll))
+    return c["fixed_us"] + nbytes_die * c["us_per_byte"]
+
+
+def w15_fit(rec: dict, config: str) -> dict:
+    """W15's record layout: configs.<name>.fit.{all_gather,all_reduce}.{fixed_cycles, cycles_per_word} with 64-B
+    words per rank and clock_hz."""
+    cfg = rec["configs"][config]
+    hz = cfg.get("clock_hz", rec.get("clock_hz"))
+    out = {}
+    for k, v in cfg["fit"].items():
+        out[k] = dict(fixed_us=v["fixed_cycles"] / hz * 1e6, us_per_byte=v["cycles_per_word"] / 64 / hz * 1e6)
+    return out
 
 
 # dedicated-unit / stream-unit step costs (ns at 1.2 GHz), from the uarch model's own arch-DAG node prices on the
@@ -165,7 +177,7 @@ def compose(prog: dict, sm: SMTable, coll: dict, fetch_us: float, m: dict) -> di
                 if op["tag"].startswith(OFF_PATH_COLL):       # ready at token start / only masks later layers
                     t["off_path_collectives"] = t.get("off_path_collectives", 0) + 1
                     continue
-                t["collective"] += coll_us(op["bytes"] / TP, coll)
+                t["collective"] += coll_us(op["bytes"] / TP, coll, "all_reduce" if k == "all_reduce" else "all_gather")
                 ncoll += 1
             elif k == "expert_fetch":
                 t["fetch"] += fetch_us
@@ -191,13 +203,14 @@ def main() -> int:
     ap.add_argument("--sm", type=Path, nargs="+", required=True)
     ap.add_argument("--fetch", type=Path)
     ap.add_argument("--coll", type=Path)
+    ap.add_argument("--coll-config", default="hbm_p48_ss")
     ap.add_argument("--record", type=Path)
     a = ap.parse_args()
     prog = json.loads(a.program.read_text())
     sm = SMTable([json.loads(p.read_text()) for p in a.sm], "ar")
     if a.coll:
-        c = json.loads(a.coll.read_text())
-        coll = dict(fixed_us=c["fit"]["fixed_us"], us_per_byte=c["fit"]["us_per_byte"], source=str(a.coll))
+        coll = w15_fit(json.loads(a.coll.read_text()), a.coll_config)
+        coll["source"] = f"{a.coll} configs.{a.coll_config}"
     else:
         coll = dict(fixed_us=0.83, us_per_byte=1 / 0.9e12 * 1e6, source="PENDING: audit scratch W15 NVLS P=6 "
                     "(0.81-0.89 us), slope at the 0.9 TB/s package link")
