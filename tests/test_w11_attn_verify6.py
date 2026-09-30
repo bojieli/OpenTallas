@@ -13,8 +13,15 @@ REC = json.loads((ROOT / 'results/rtl/w11_attn_verify6.json').read_text())
 
 
 def test_sources_are_pinned():
+    # this test file is pinned in the record as it was at the record's commit (it has since gained the
+    # withdrawal checks); it is checked at that commit
+    import subprocess
     for name, digest in REC['sources_sha256'].items():
-        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+        if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest:
+            assert name == 'tests/test_w11_attn_verify6.py', name
+            old = subprocess.run(['git', 'show', f"{REC['git_head']}:{name}"], cwd=ROOT, capture_output=True,
+                                 check=True).stdout
+            assert hashlib.sha256(old).hexdigest() == digest, name
 
 
 def test_every_position_is_exact_and_the_set_checker_is_clean():
@@ -28,7 +35,7 @@ def test_every_position_is_exact_and_the_set_checker_is_clean():
             assert r['positions'][-1]['last_pv'] == r['total']
     for r in fg['interleaved']:
         assert r['setcheck']['errors'] == 0 and r['setcheck']['reads'] > 0
-    assert REC['verdict']['status'] == 'pass'
+    assert REC['verdict']['synthetic_rule_status'] == 'pass'
 
 
 def test_interleaving_beats_serial_at_every_su_latency():
@@ -81,3 +88,9 @@ def test_small_interleaved_verify_rtl(tmp_path):
     assert r['exact'] and r['jobs'] == 6, r
     s, _ = W.run_exe(exe, tmp_path / 'v', 1, 0)
     assert s['exact'] and s['total_cycles'] <= r['total_cycles']
+
+
+def test_real_mtp_claim_is_withdrawn_with_history():
+    v = REC['verdict']
+    assert v['status'] == 'withdrawn_for_model_order' and 'WITHDRAWN' in v['withdrawn']
+    assert REC['verdict_history'][0]['status'] == 'pass' and REC['verdict_history'][0]['scope'] == 'rows-last synthetic rule'

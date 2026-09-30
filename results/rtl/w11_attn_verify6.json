@@ -4020,6 +4020,19 @@
   "setcheck_clean": true,
   "guard_tight": true,
   "default_identical": true,
-  "status": "pass"
- }
+  "status": "withdrawn_for_model_order",
+  "synthetic_rule_status": "pass",
+  "withdrawn": "2026-09-30: the verify-6 exactness claim is WITHDRAWN for the real MTP verify case. It holds only for this record's rows-last synthetic rule (one shared row set, position k attends rows [0, T_k)). Model.forward_positions gives each verify position its own row list (its sliding window win[-128:] oldest first, then its OWN indexer selection), and the p.v csum over the list is order-sensitive, so the layout is not bit-identical to Model.attend. Replacement: two ping-pong staging buffers with per-position rows in model order (root GO 2026-09-30)."
+ },
+ "verdict_history": [
+  {
+   "exact_all": true,
+   "setcheck_clean": true,
+   "guard_tight": true,
+   "default_identical": true,
+   "status": "pass",
+   "recorded_at_commit": "3c976239168801302be78dbc402a1dd964670a0a",
+   "scope": "rows-last synthetic rule"
+  }
+ ]
 }
