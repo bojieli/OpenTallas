@@ -133,6 +133,10 @@ module ot_hdc_v41x_vec_lane #(
     localparam integer D_DIV = 19, D_EXP = 7 * MLAT + 28, D_SIG = D_EXP + 3 + D_DIV;     // 49, 71 (MLAT 4: 56, 78)
     localparam integer D_RSQ = 9 * MLAT + 10, D_SQRT = 31, D_SP = 18 * MLAT + 108;       // 37, 162 (46, 180)
     localparam integer D_EG = 1 + 31 + 1 + D_SIG;                                        // 104 (111)
+    // MLAT >= 4 is the serial-domain build: its integer adds and compares are keep-prefix adders
+    // (ot_hdc_kadd / _kge / _kinc over rtl/hdc/ot_hdc_prefix.sv) and its FP adds ot_hdc_fp32_add_lat3, so ABC
+    // cannot re-ripple them inside the lane; MLAT = 3 keeps the behavioural operators (the unit as it was)
+    localparam integer K = (MLAT != 3) ? 1 : 0;
     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
                       H_SP = D_SP, H_EG = D_EG;
     localparam integer HAS_SFU = (KIND != 0);
@@ -161,6 +165,15 @@ module ot_hdc_v41x_vec_lane #(
         end
     endfunction
 
+    // pre_a with its two compares supplied (le_v: okey(v) <= okey(imm), le_0: okey(+0) <= okey(imm))
+    function automatic [31:0] pre_a2(input [31:0] v, input relu, input amin, input [31:0] imm, input le_v, input le_0);
+        reg zero;
+        begin
+            zero = relu && v[31];
+            pre_a2 = !amin ? (zero ? 32'd0 : v) : zero ? (le_0 ? 32'd0 : imm) : (le_v ? v : imm);
+        end
+    endfunction
+
     // ---- LEAF: the broadcast's last register stage --------------------------------------------------
     // LEAF = 0: the lane uses its inputs as they arrive (the controller's broadcast register, or the tree's
     // leaf outside the lane).  LEAF = 1 (ot_hdc_v41x_vec with BCAST_STAGES > 0): the tree's last stage is
@@ -179,13 +192,19 @@ module ot_hdc_v41x_vec_lane #(
     //: slot (outer) and in-slot (inner) offsets of this lane for a slot size 2^ls
     wire [CW-1:0] d_o = lid >> ls;
     wire [CW-1:0] d_i = lid & ((1 << ls) - 1);
-    wire [CW-1:0] ol_c = o_v + d_o, il_c = i_v + d_i;
-    wire [AW-1:0] row_c = krow + d_o[AW-1:0];
+    wire [CW-1:0] ol_c, il_c;
+    wire [AW-1:0] row_c;
+    wire [2:0]    unused_c0;
+    ot_hdc_kadd #(.W(CW), .K(K)) u_olc (.a(o_v), .b(d_o), .cin(1'b0), .s(ol_c), .cout(unused_c0[0]));
+    ot_hdc_kadd #(.W(CW), .K(K)) u_ilc (.a(i_v), .b(d_i), .cin(1'b0), .s(il_c), .cout(unused_c0[1]));
+    ot_hdc_kadd #(.W(AW), .K(K)) u_rwc (.a(krow), .b(d_o[AW-1:0]), .cin(1'b0), .s(row_c), .cout(unused_c0[2]));
     wire          lin_c = (lid < (1 << lvw));
     wire [5*AW-1:0] sum_c;
     genvar gs;
     generate for (gs = 0; gs < 5; gs = gs + 1) begin : g_sum
-        assign sum_c[gs*AW +: AW] = vb[gs*AW +: AW] + (bank ? off1[gs] : off0[gs]);
+        wire unused_cs;
+        ot_hdc_kadd #(.W(AW), .K(K)) u_s (.a(vb[gs*AW +: AW]), .b(bank ? off1[gs] : off0[gs]), .cin(1'b0),
+                                          .s(sum_c[gs*AW +: AW]), .cout(unused_cs));
     end endgenerate
     // what F0 and the offset bank read: the partials and fields at the leaf
     wire             emit_e, ld_e, ldbank_e, lin_e, cpair_e;
@@ -252,7 +271,7 @@ module ot_hdc_v41x_vec_lane #(
                 end
             end
         end
-    end else begin : g_ld3
+    end else if (K == 0) begin : g_ld3
         integer s, k;
         reg [AW-1:0] g0, g1, g2;
         reg          ldp_v, ldq_v, ldp_bank, ldq_bank;
@@ -294,12 +313,76 @@ module ot_hdc_v41x_vec_lane #(
                 for (s = 0; s < 5; s = s + 1)
                     if (ldq_bank) off1[s] <= ldq_01[s] + ldq_2[s]; else off0[s] <= ldq_01[s] + ldq_2[s];
         end
+    end else begin : g_ld3k
+        // the same three cycles on keep-prefix adders: a group's (at most 4) masked terms in a two-level tree
+        reg          ldp_v, ldq_v, ldp_bank, ldq_bank;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin ldp_v <= 1'b0; ldq_v <= 1'b0; end
+            else begin ldp_v <= ld_e; ldq_v <= ldp_v; end
+        end
+        always @(posedge clk) begin
+            if (ld_e) ldp_bank <= ldbank_e;
+            if (ldp_v) ldq_bank <= ldp_bank;
+        end
+        genvar ss, jj, kk;
+        wire [5*AW-1:0] s_bus;                         // stream ss's offset, at the third cycle
+        integer s;
+        always @(posedge clk)
+            if (ldq_v)
+                for (s = 0; s < 5; s = s + 1)
+                    if (ldq_bank) off1[s] <= s_bus[s*AW +: AW]; else off0[s] <= s_bus[s*AW +: AW];
+        for (ss = 0; ss < 5; ss = ss + 1) begin : g_s
+            wire [3*AW-1:0] grp;                       // the three group sums of stream ss
+            for (jj = 0; jj < 3; jj = jj + 1) begin : g_j
+                localparam integer LO = (jj == 0) ? 0 : (jj == 1) ? G1 : G2;
+                localparam integer HI = (jj == 0) ? G1 : (jj == 1) ? G2 : LN;
+                wire [4*AW-1:0] t;                     // the group's masked terms, zero-padded to 4
+                for (kk = 0; kk < 4; kk = kk + 1) begin : g_t
+                    if (LO + kk < HI) begin : g_on
+                        assign t[kk*AW +: AW] = lane_id[LO + kk] ? ldc_e[(ss*LN + LO + kk)*AW +: AW] : {AW{1'b0}};
+                    end else begin : g_off
+                        assign t[kk*AW +: AW] = {AW{1'b0}};
+                    end
+                end
+                wire [AW-1:0] s01, s23;
+                wire [2:0]    unused_c;
+                if (HI - LO > 2) begin : g_4
+                    ot_hdc_kadd #(.W(AW), .K(1)) u_a (.a(t[0 +: AW]), .b(t[AW +: AW]), .cin(1'b0), .s(s01), .cout(unused_c[0]));
+                    ot_hdc_kadd #(.W(AW), .K(1)) u_b (.a(t[2*AW +: AW]), .b(t[3*AW +: AW]), .cin(1'b0), .s(s23), .cout(unused_c[1]));
+                    ot_hdc_kadd #(.W(AW), .K(1)) u_c (.a(s01), .b(s23), .cin(1'b0), .s(grp[jj*AW +: AW]), .cout(unused_c[2]));
+                end else if (HI - LO == 2) begin : g_2
+                    ot_hdc_kadd #(.W(AW), .K(1)) u_a (.a(t[0 +: AW]), .b(t[AW +: AW]), .cin(1'b0), .s(grp[jj*AW +: AW]), .cout(unused_c[0]));
+                    assign {s01, s23, unused_c[2:1]} = 0;
+                end else begin : g_1
+                    assign grp[jj*AW +: AW] = t[0 +: AW];
+                    assign {s01, s23, unused_c} = 0;
+                end
+            end
+            reg  [AW-1:0] p0, p1, p2, q01, q2;
+            wire [AW-1:0] s_01, s_all;
+            wire [1:0]    unused_q;
+            ot_hdc_kadd #(.W(AW), .K(1)) u_q (.a(p0), .b(p1), .cin(1'b0), .s(s_01), .cout(unused_q[0]));
+            ot_hdc_kadd #(.W(AW), .K(1)) u_o (.a(q01), .b(q2), .cin(1'b0), .s(s_all), .cout(unused_q[1]));
+            assign s_bus[ss*AW +: AW] = s_all;
+            always @(posedge clk) begin
+                if (ld_e) begin p0 <= grp[0 +: AW]; p1 <= grp[AW +: AW]; p2 <= grp[2*AW +: AW]; end
+                if (ldp_v) begin q01 <= s_01; q2 <= p2; end
+            end
+        end
     end endgenerate
 
     // ---- F0: liveness, addresses ------------------------------------------------------------------
-    wire live0 = emit_e && lin_e && (ol_e < no_e) && (il_e < ni_e);
+    wire ol_ge, il_ge;
+    ot_hdc_kge #(.W(CW), .K(K)) u_olg (.a(ol_e), .b(no_e), .ge(ol_ge));
+    ot_hdc_kge #(.W(CW), .K(K)) u_ilg (.a(il_e), .b(ni_e), .ge(il_ge));
+    wire live0 = emit_e && lin_e && !ol_ge && !il_ge;
     // (il << 4) + row[3:0] is the concatenation {il, row[3:0]}
-    wire [AW-1:0] kvt = obase_e + ((row_e >> 4) << KVT_SH) + {il_e[AW-5:0], row_e[3:0]};
+    wire [AW-1:0] kvt, kvt1, vi_sum;
+    wire [2:0]    unused_c1;
+    ot_hdc_kadd #(.W(AW), .K(K)) u_kv1 (.a(obase_e), .b((row_e >> 4) << KVT_SH), .cin(1'b0), .s(kvt1), .cout(unused_c1[0]));
+    ot_hdc_kadd #(.W(AW), .K(K)) u_kv2 (.a(kvt1), .b({il_e[AW-5:0], row_e[3:0]}), .cin(1'b0), .s(kvt), .cout(unused_c1[1]));
+    ot_hdc_kadd #(.W(AW), .K(K)) u_via (.a(aibase_e), .b((aind_e == IND_I) ? il_e[AW-1:0] : ol_e[AW-1:0]), .cin(1'b0),
+                                        .s(vi_sum), .cout(unused_c1[2]));
     reg          f_v, f_g, f_par;
     reg [AW-1:0] f_a, f_b, f_c, f_d, f_o;
     reg [7:0]    f_src;
@@ -318,7 +401,7 @@ module ot_hdc_v41x_vec_lane #(
         f_par <= il_e[0];
         f_src <= srcs_e;
         f_cpair <= cpair_e;
-        vi_addr <= aibase_e + ((aind_e == IND_I) ? il_e[AW-1:0] : ol_e[AW-1:0]);
+        vi_addr <= vi_sum;
     end
     // ---- G1, G2: a gathered A (index from the vector memory, scaled by a power of two) ---------------
     reg          g1_v, g2_v, g1_par, g2_par, g1_cpair, g2_cpair;
@@ -331,10 +414,13 @@ module ot_hdc_v41x_vec_lane #(
     end
     reg [4:0] f_sh;
     always @(posedge clk) f_sh <= gsh_e;
+    wire [AW-1:0] g2_sum;
+    wire          unused_c2;
+    ot_hdc_kadd #(.W(AW), .K(K)) u_g2a (.a(g1_a), .b(vi_q[AW-1:0] << g1_sh), .cin(1'b0), .s(g2_sum), .cout(unused_c2));
     always @(posedge clk) begin
         g1_a <= f_a; g1_b <= f_b; g1_c <= f_c; g1_d <= f_d; g1_o <= f_o; g1_par <= f_par; g1_src <= f_src;
         g1_cpair <= f_cpair; g1_sh <= f_sh;
-        g2_a <= g1_a + (vi_q[AW-1:0] << g1_sh);
+        g2_a <= g2_sum;
         g2_b <= g1_b; g2_c <= g1_c; g2_d <= g1_d; g2_o <= g1_o; g2_par <= g1_par; g2_src <= g1_src;
         g2_cpair <= g1_cpair;
     end
@@ -369,18 +455,28 @@ module ot_hdc_v41x_vec_lane #(
     // BF16, and truncated + one BF16 ulp) side by side and selected by the rounding decision, so no compare
     // waits for the rounding carry (bit-identical for all inputs: tools/w11_equiv_clip.ys; W11 timing fix)
     wire [31:0] a_t  = {x_a[31:16], 16'd0};
-    wire [31:0] a_u  = {x_a[31:16] + 16'd1, 16'd0};
+    wire [15:0] a_hi1;
+    ot_hdc_kinc #(.W(16), .K(K)) u_au (.a(x_a[31:16]), .inc(1'b1), .y(a_hi1));
+    wire [31:0] a_u  = {a_hi1, 16'd0};
     wire        a_up = x_a[15] & ((|x_a[14:0]) | x_a[16]);
-    wire [31:0] a_mx = pre_a(x_a, cx_arelu, cx_amin, cx_imm3);
-    wire [31:0] a_mt = pre_a(a_t, cx_arelu, cx_amin, cx_imm3);
-    wire [31:0] a_mu = pre_a(a_u, cx_arelu, cx_amin, cx_imm3);
+    // pre_a's compares, as prefix compares: okey(v) <= okey(imm3) for the three candidates, and +0 <= imm3
+    wire [31:0] k_imm3 = okey(cx_imm3);
+    wire        le_x, le_t, le_u, le_0;
+    ot_hdc_kge #(.W(32), .K(K)) u_lex (.a(k_imm3), .b(okey(x_a)), .ge(le_x));
+    ot_hdc_kge #(.W(32), .K(K)) u_let (.a(k_imm3), .b(okey(a_t)), .ge(le_t));
+    ot_hdc_kge #(.W(32), .K(K)) u_leu (.a(k_imm3), .b(okey(a_u)), .ge(le_u));
+    ot_hdc_kge #(.W(32), .K(K)) u_le0 (.a(k_imm3), .b(32'h80000000), .ge(le_0));
+    wire [31:0] a_mx = pre_a2(x_a, cx_arelu, cx_amin, cx_imm3, le_x, le_0);
+    wire [31:0] a_mt = pre_a2(a_t, cx_arelu, cx_amin, cx_imm3, le_t, le_0);
+    wire [31:0] a_mu = pre_a2(a_u, cx_arelu, cx_amin, cx_imm3, le_u, le_0);
     wire [31:0] a_m  = !cx_arnd ? a_mx : a_up ? a_mu : a_mt;
     // clip(C, -imm3, imm3) = fmin(fmax(C, lo), hi) with its three comparisons side by side (bit-identical,
     // ties included: proven by tools/w11_equiv_clip.ys; the chained form was the lane's critical path, W11)
     wire [31:0] c_lo = {1'b1, cx_imm3[30:0]};
-    wire        c_ge_lo = okey(x_c) >= okey(c_lo);
-    wire        c_le_hi = okey(x_c) <= okey(cx_imm3);
-    wire        c_lohi  = okey(c_lo) <= okey(cx_imm3);
+    wire        c_ge_lo, c_le_hi, c_lohi;
+    ot_hdc_kge #(.W(32), .K(K)) u_cgl (.a(okey(x_c)), .b(okey(c_lo)), .ge(c_ge_lo));
+    ot_hdc_kge #(.W(32), .K(K)) u_clh (.a(k_imm3), .b(okey(x_c)), .ge(c_le_hi));
+    ot_hdc_kge #(.W(32), .K(K)) u_clo (.a(k_imm3), .b(okey(c_lo)), .ge(c_lohi));
     wire [31:0] c_m = !cx_cclip ? x_c : c_ge_lo ? (c_le_hi ? x_c : cx_imm3) : (c_lohi ? c_lo : cx_imm3);
     reg  [31:0] p_a, p_b, p_c, p_d;
     reg  [AW-1:0] p_o;
@@ -398,7 +494,9 @@ module ot_hdc_v41x_vec_lane #(
     wire f_m1;
     ot_hdc_qmul_lat #(MLAT) u_m1 (clk, rst_n, p_v && p_mul, p_a, (cp_m1 == M1_AB) ? p_b : (cp_m1 == M1_AA) ? p_a : cp_imm1,
                       mul1_y, f_m1);
-    wire [31:0] byp_in = (cp_m1 == M1_MAXB && okey(p_b) > okey(p_a)) ? p_b : p_a;
+    wire        ba_ge;                               // okey(p_a) >= okey(p_b), i.e. not (okey(p_b) > okey(p_a))
+    ot_hdc_kge #(.W(32), .K(K)) u_mxb (.a(okey(p_a)), .b(okey(p_b)), .ge(ba_ge));
+    wire [31:0] byp_in = (cp_m1 == M1_MAXB && !ba_ge) ? p_b : p_a;
     ot_hdc_delay #(.W(32), .D(MLAT)) u_b1 (.clk(clk), .rst_n(rst_n), .d(byp_in), .q(byp1));
     localparam integer T1W = 32 * 3 + AW + 1;            // B, C', D, O, parity
     wire [T1W-1:0] t1;
@@ -453,7 +551,7 @@ module ot_hdc_v41x_vec_lane #(
     end
     wire [31:0] add_y, add_byp;
     wire f_ad;
-    ot_hdc_qadd u_ad (clk, rst_n, v2 && ca_ad != AD_BYP, P2, ad_y, add_y, f_ad);
+    ot_hdc_qadd_lat #(K) u_ad (clk, rst_n, v2 && ca_ad != AD_BYP, P2, ad_y, add_y, f_ad);
     wire [31:0] r_b, r_c;
     wire [AW-1:0] r_o;
     wire [2:0]  r_ad;
@@ -481,7 +579,7 @@ module ot_hdc_v41x_vec_lane #(
             ot_hdc_vline #(.D(D_EXP)) u_vs (.clk(clk), .rst_n(rst_n), .v(v3 && is_sig), .vd(vs));
             ot_hdc_v41x_exp #(.LM(MLAT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)),
                                    .x(is_exp ? R : {~R[31], R[30:0]}), .y(y_exp), .vo(), .fault(f_e));
-            ot_hdc_qadd u_den (clk, rst_n, vs[D_EXP], y_exp, 32'h3F800000, den, f_den);
+            ot_hdc_qadd_lat #(K) u_den (clk, rst_n, vs[D_EXP], y_exp, 32'h3F800000, den, f_den);
             wire silu_in = (ci_sfu == SFU_SILU);
             wire [31:0] num_in = silu_in ? R : 32'h3F800000;
             ot_hdc_delay #(.W(32), .D(D_EXP + 3)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
@@ -520,7 +618,7 @@ module ot_hdc_v41x_vec_lane #(
     ot_hdc_qmul_lat #(MLAT) u_e1m (clk, rst_n, v4 && (cs_e1 == E1_MULC || cs_e1 == E1_MULIMM), S,
                        (cs_e1 == E1_MULC) ? s_c : cs_imm2, e1m, f_e1m);
     wire [31:0] e1a3;
-    ot_hdc_qadd u_e1a (clk, rst_n, v4 && (cs_e1 == E1_ADDC || cs_e1 == E1_ADDIMM), S,
+    ot_hdc_qadd_lat #(K) u_e1a (clk, rst_n, v4 && (cs_e1 == E1_ADDC || cs_e1 == E1_ADDIMM), S,
                        (cs_e1 == E1_ADDC) ? s_c : cs_imm2, e1a3, f_e1a);
     // E1 is MLAT deep (its multiply); the 3-cycle add waits MLAT - 3 more
     ot_hdc_delay #(.W(32), .D(MLAT - 3)) u_e1ad (.clk(clk), .rst_n(rst_n), .d(e1a3), .q(e1a));
@@ -547,7 +645,12 @@ module ot_hdc_v41x_vec_lane #(
     wire v6 = v6l[MLAT];
     wire [31:0] U = (u_e2 == E2_BYP) ? e2_byp : e2m;
     // ---- OUT --------------------------------------------------------------------------------------------------
-    wire [31:0] out = co_rnd ? bf16(U) : U;
+    // bf16(U) = (U[31:16] + inc) << 16, inc = U[15] & (U[16] | U[14:0] != 0): round to nearest even.  The KV
+    // write is bf16(out) = bf16(U) whether or not out was rounded (bf16 of a BF16 value is itself)
+    wire [15:0] u_hi1;
+    ot_hdc_kinc #(.W(16), .K(K)) u_rnd (.a(U[31:16]), .inc(U[15] & (U[16] | (|U[14:0]))), .y(u_hi1));
+    wire [31:0] u_bf = {u_hi1, 16'd0};
+    wire [31:0] out = co_rnd ? u_bf : U;
     reg         ov_r;
     reg  [31:0] o_x;
     always @(posedge clk or negedge rst_n) begin
@@ -560,7 +663,7 @@ module ot_hdc_v41x_vec_lane #(
     end
     always @(posedge clk) begin
         vm_waddr <= u_o; vm_wdata <= out;
-        kv_waddr <= u_o; kv_wdata <= bf16(out);
+        kv_waddr <= u_o; kv_wdata <= u_bf;
         o_x <= out;
     end
     assign ro_v = ov_r;

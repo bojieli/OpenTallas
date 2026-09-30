@@ -490,3 +490,63 @@ module ot_hdc_qmul_lat #(
     end endgenerate
     assign fault = vo && (err != 2'd0);
 endmodule
+
+// ot_hdc_qadd_lat #(KEEP): ot_hdc_qadd, or (KEEP = 1) the plain ot_hdc_fp32_add_lat3 top of rtl/hdc/ot_hdc_fp32_add_lat.sv
+// (needs rtl/hdc/ot_hdc_prefix.sv): the same LATENCY-3 binary32 add, bit for bit, with (* keep *) Kogge-Stone
+// prefix adders that ABC cannot re-ripple inside a parent block (W11 serial domain, 0.9 GHz at SS).
+module ot_hdc_qadd_lat #(
+    parameter integer KEEP = 0
+) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire        fault
+);
+    wire [1:0] err;
+    wire vo;
+    generate if (KEEP == 0) begin : g_fast
+        ot_hdc_fp32_add_fast u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+    end else begin : g_keep
+        ot_hdc_fp32_add_lat3 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+    end endgenerate
+    assign fault = vo && (err != 2'd0);
+endmodule
+
+// Keep-prefix integer arithmetic for the W11 serial-domain build (K = 1: rtl/hdc/ot_hdc_prefix.sv, whose
+// (* keep *) Kogge-Stone levels ABC cannot re-ripple; K = 0: the behavioural operator, the unit as it was).
+module ot_hdc_kadd #(parameter integer W = 24, parameter integer K = 0) (
+    input  wire [W-1:0] a, input wire [W-1:0] b, input wire cin, output wire [W-1:0] s, output wire cout
+);
+    generate if (K == 0) begin : g_b
+        assign {cout, s} = {1'b0, a} + {1'b0, b} + {{W{1'b0}}, cin};
+    end else begin : g_k
+        ot_hdc_ksadd_k #(.W(W)) u (.a(a), .b(b), .cin(cin), .s(s), .cout(cout));
+    end endgenerate
+endmodule
+
+// ge = (a >= b), unsigned
+module ot_hdc_kge #(parameter integer W = 32, parameter integer K = 0) (
+    input  wire [W-1:0] a, input wire [W-1:0] b, output wire ge
+);
+    generate if (K == 0) begin : g_b
+        assign ge = (a >= b);
+    end else begin : g_k
+        wire [W-1:0] unused_s;
+        ot_hdc_ksadd_k #(.W(W)) u (.a(a), .b(~b), .cin(1'b1), .s(unused_s), .cout(ge));
+    end endgenerate
+endmodule
+
+// y = a + inc (mod 2^W)
+module ot_hdc_kinc #(parameter integer W = 16, parameter integer K = 0) (
+    input  wire [W-1:0] a, input wire inc, output wire [W-1:0] y
+);
+    generate if (K == 0) begin : g_b
+        assign y = a + {{(W-1){1'b0}}, inc};
+    end else begin : g_k
+        wire unused_co;
+        ot_hdc_inc_k #(.W(W)) u (.a(a), .inc(inc), .y(y), .co(unused_co));
+    end endgenerate
+endmodule

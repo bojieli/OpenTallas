@@ -42,11 +42,14 @@ module ot_hdc_v41x_vec_side #(
     reg         eg_v;
     reg  [31:0] eg_sgn;                 // the sign, along the square root (31)
     wire [31:0] absr = {1'b0, x[30:0]};
+    wire        eg_le;                                  // absr <= 1e-6 (0x358637BD)
+    ot_hdc_kge #(.W(32), .K((MLAT != 3) ? 1 : 0)) u_egc (.a(32'h358637BD), .b(absr), .ge(eg_le));
+    wire        eg_gt = !eg_le;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) eg_v <= 1'b0; else eg_v <= v && fn == SFU_EGATE;
     end
     always @(posedge clk) begin
-        eg_m <= (absr > 32'h358637BD) ? absr : 32'h358637BD;          // 1e-6
+        eg_m <= eg_gt ? absr : 32'h358637BD;                           // max(|x|, 1e-6)
         eg_sgn <= {eg_sgn[30:0], x[31] && (x[30:0] != 31'd0)};
     end
     wire [31:0] eg_r;
@@ -64,7 +67,7 @@ module ot_hdc_v41x_vec_side #(
     ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk), .rst_n(rst_n), .v(eg_sv), .vd(ve));
     ot_hdc_v41x_exp #(.LM(MLAT)) u_exp (.clk(clk), .rst_n(rst_n), .v(eg_sv), .x({~eg_s[31], eg_s[30:0]}), .y(e_y), .vo(),
                            .fault(f_eg2));
-    ot_hdc_qadd u_den (clk, rst_n, ve[D_EXP], e_y, 32'h3F800000, den, f_eg3);
+    ot_hdc_qadd_lat #((MLAT != 3) ? 1 : 0) u_den (clk, rst_n, ve[D_EXP], e_y, 32'h3F800000, den, f_eg3);
     wire [3:0] vd;
     ot_hdc_vline #(.D(3)) u_vd (.clk(clk), .rst_n(rst_n), .v(ve[D_EXP]), .vd(vd));
     ot_hdc_v41x_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[3]), .a(32'h3F800000), .b(den), .y(y_eg), .vo(),
