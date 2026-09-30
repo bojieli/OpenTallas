@@ -28,14 +28,14 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def export(golden_dir: Path, output_dir: Path, record: Path) -> dict:
+def export(golden_dir: Path, output_dir: Path, record: Path, seed: int = C.SEED) -> dict:
     shard = json.loads((golden_dir / "ctx200000_L00.json").read_text())
     if shard["arith"] != "chunk8" or shard["context"] != CONTEXT or shard["layer"] != LAYER:
         raise ValueError("wrong golden shard/arithmetic")
     ck = C.Checkpoint()
     m, init_pin = C.build_model(ck, engram=False)
-    st, state_desc = C.synthetic_state(m, CONTEXT, layers=[LAYER])
-    hist = C.token_history(CONTEXT)
+    st, state_desc = C.synthetic_state(m, CONTEXT, seed=seed, layers=[LAYER])
+    hist = C.token_history(CONTEXT, seed=seed)
     tok = hist[-1]
     h = np.repeat(ck.rows("embed.weight", [tok]), m.hc, axis=0).astype(np.float32)
     pre = np.array([1, 0, 0, 0], dtype=np.float32)[:m.hc]
@@ -109,11 +109,14 @@ def export(golden_dir: Path, output_dir: Path, record: Path) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--golden-dir", type=Path, required=True)
+    parser.add_argument("--seed", type=int, default=C.SEED,
+                        help="seed of the golden shard's synthetic state and token history (tools/"
+                             "rtl_v41_fullshape_layer_campaign.py --seed; the default reproduces existing records)")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "results/rtl")
     parser.add_argument("--record", type=Path,
                         default=ROOT / "results/rtl/hdc_v41x_fullshape_200k_l0_wo_a_vectors.json")
     args = parser.parse_args()
-    result = export(args.golden_dir, args.output_dir, args.record)
+    result = export(args.golden_dir, args.output_dir, args.record, seed=args.seed)
     print(json.dumps({"status": result["status"], "acc": result["acc"], "za": result["za"]}))
 
 

@@ -71,7 +71,9 @@ def program_words():
     for pc in PCS:
         w = words[pc]
         d = I.decode(w, full_shape=True)
-        if pc == 30:
+        if pc == 30 and d["imm1"] == int(np.float32(512 ** -0.5).view(np.uint32)):
+            pass                       # fixed program (claude/w17-isa): no patch needed
+        elif pc == 30:
             assert d["m1"] == I.M1_AIMM and d["red"] == I.RED_MAX and d["imm1"] == 0, d
             fields = {k: v for k, v in d.items()}
             fields["imm1"] = C.f32u(F(512) ** F(-0.5)) if hasattr(C, "f32u") else int(np.float32(512 ** -0.5).view(np.uint32))

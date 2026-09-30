@@ -5,11 +5,15 @@
  "status": "pass",
  "simulator": "icarus Icarus Verilog version 11.0 (stable) ()",
  "source_sha256": {
-  "rtl/gpu/ot_gpu_tree.sv": "6973a40d35478320c25b032bef5ac57a4928cef02b9581602ea9c8d68338d142",
+  "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "afa7fbda71e1da3c1f5a7ca38309582a2c3567cfafe336f292fa24a5c80877ee",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "0bb7697efec1c0e41c8faeaba314f8fd313facfdfbec1419e57d015780871d45",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
   "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
-  "rtl/gpu/ot_gpu_stack.sv": "8df2167979baea3e9358a92a01a7ad595bf64d3ed8f44ccd9e6832c8a8e8c8a1",
-  "rtl/gpu/ot_gpu_tc_col.sv": "1651517301c4a888abd5fd21e7f786a4304763901024a686b5b74a58208e4b0e",
-  "rtl/gpu/ot_gpu_sm.sv": "d014595faf900e625ef994c7e4714e01fb533fb68863311b1fc89827c327492f",
+  "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+  "rtl/gpu/ot_gpu_tc_col.sv": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f",
+  "rtl/gpu/ot_gpu_sm.sv": "43489304c695bed14c53eb93bf7d93e71db5e66e8ccc4610572b1d5b9bdcc6f7",
   "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
   "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
@@ -17,12 +21,12 @@
   "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
   "rtl/test/tb_gpu_sm.sv": "89b89548496a077399e1441a12067b17aa918fdebb65c6391117592b39cbc89a",
   "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
-  "rtl/gpu/ot_gpu_xstore.sv": "04fa16d083b07ead7bd55a542783b71f5a20a42c763ddad9d5f748b1849e4a45",
-  "rtl/gpu/ot_gpu_sm_q.sv": "5adc309fac4fcd6f4c69881486ece590b431fa0aab2c7890222e7457137fd98a",
+  "rtl/gpu/ot_gpu_xstore.sv": "990094f52f6a13f1618730bb2b61f02b7d439df872e31509b0cb83ae9eb770ca",
+  "rtl/gpu/ot_gpu_sm_q.sv": "8e0aa477664f385a8536b1610c508fdd637bb020377adf744671c960d984b06f",
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
   "rtl/test/tb_gpu_sm_q.sv": "6b34330e15229579e141e0d647aa7d1074976c5cb443d94514d3be220c34b78e",
-  "tools/rtl_gpu_sm_exact.py": "70cb4c9f3e3afebeb1184c4e5ae829c1665eb855507459c4047bfd0c3f4d3ee6",
+  "tools/rtl_gpu_sm_exact.py": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
  },
@@ -47,15 +51,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 137,
-    "first_result": 95,
-    "last_result": 134,
+    "cycles_start_to_done": 160,
+    "first_result": 118,
+    "last_result": 157,
     "lines": 64,
     "consumed": 64,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 65
+    "drain_last_line_to_last_result": 88
    }
   },
   {
@@ -78,15 +82,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 196,
-    "first_result": 125,
-    "last_result": 193,
+    "cycles_start_to_done": 217,
+    "first_result": 146,
+    "last_result": 214,
     "lines": 104,
     "consumed": 104,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 60
+    "drain_last_line_to_last_result": 81
    }
   },
   {
@@ -109,15 +113,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 156,
-    "first_result": 105,
-    "last_result": 153,
+    "cycles_start_to_done": 177,
+    "first_result": 126,
+    "last_result": 174,
     "lines": 54,
     "consumed": 54,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 60
+    "drain_last_line_to_last_result": 81
    }
   },
   {
@@ -140,15 +144,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 319,
-    "first_result": 309,
-    "last_result": 316,
+    "cycles_start_to_done": 338,
+    "first_result": 328,
+    "last_result": 335,
     "lines": 256,
     "consumed": 256,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 55
+    "drain_last_line_to_last_result": 74
    }
   },
   {
@@ -171,15 +175,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 95,
-    "first_result": 85,
-    "last_result": 92,
+    "cycles_start_to_done": 114,
+    "first_result": 104,
+    "last_result": 111,
     "lines": 32,
     "consumed": 32,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 55
+    "drain_last_line_to_last_result": 74
    }
   },
   {
@@ -202,15 +206,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 425,
-    "first_result": 223,
-    "last_result": 422,
+    "cycles_start_to_done": 448,
+    "first_result": 246,
+    "last_result": 445,
     "lines": 64,
     "consumed": 64,
     "fault": 0,
     "stall_waits": 36,
     "released": 1,
-    "drain_last_line_to_last_result": 65
+    "drain_last_line_to_last_result": 88
    }
   },
   {
@@ -233,15 +237,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 186,
-    "first_result": 112,
-    "last_result": 183,
+    "cycles_start_to_done": 203,
+    "first_result": 129,
+    "last_result": 200,
     "lines": 128,
     "consumed": 128,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 50
+    "drain_last_line_to_last_result": 67
    }
   },
   {
@@ -264,15 +268,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 311,
-    "first_result": 178,
-    "last_result": 308,
+    "cycles_start_to_done": 330,
+    "first_result": 197,
+    "last_result": 327,
     "lines": 176,
     "consumed": 176,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 55
+    "drain_last_line_to_last_result": 74
    }
   },
   {
@@ -295,15 +299,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 718,
-    "first_result": 708,
-    "last_result": 715,
+    "cycles_start_to_done": 743,
+    "first_result": 733,
+    "last_result": 740,
     "lines": 640,
     "consumed": 640,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 70
+    "drain_last_line_to_last_result": 95
    }
   },
   {
@@ -326,15 +330,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 199,
-    "first_result": 196,
-    "last_result": 196,
+    "cycles_start_to_done": 224,
+    "first_result": 221,
+    "last_result": 221,
     "lines": 80,
     "consumed": 80,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 70
+    "drain_last_line_to_last_result": 95
    }
   },
   {
@@ -357,15 +361,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 226,
-    "first_result": 211,
-    "last_result": 223,
+    "cycles_start_to_done": 245,
+    "first_result": 230,
+    "last_result": 242,
     "lines": 48,
     "consumed": 48,
     "fault": 0,
     "stall_waits": 13,
     "released": 1,
-    "drain_last_line_to_last_result": 55
+    "drain_last_line_to_last_result": 74
    }
   },
   {
@@ -388,15 +392,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 103,
-    "first_result": 96,
-    "last_result": 100,
+    "cycles_start_to_done": 126,
+    "first_result": 119,
+    "last_result": 123,
     "lines": 32,
     "consumed": 32,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 65
+    "drain_last_line_to_last_result": 88
    }
   },
   {
@@ -419,14 +423,14 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 257,
-    "first_result": 207,
-    "last_result": 254,
+    "cycles_start_to_done": 280,
+    "first_result": 230,
+    "last_result": 277,
     "lines": 64,
     "consumed": 64,
     "fault": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 66
+    "drain_last_line_to_last_result": 89
    }
   },
   {
@@ -449,14 +453,14 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 284,
-    "first_result": 217,
-    "last_result": 281,
+    "cycles_start_to_done": 305,
+    "first_result": 238,
+    "last_result": 302,
     "lines": 54,
     "consumed": 54,
     "fault": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 61
+    "drain_last_line_to_last_result": 82
    }
   },
   {
@@ -479,14 +483,14 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 503,
-    "first_result": 493,
-    "last_result": 500,
+    "cycles_start_to_done": 522,
+    "first_result": 512,
+    "last_result": 519,
     "lines": 256,
     "consumed": 256,
     "fault": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 56
+    "drain_last_line_to_last_result": 75
    }
   }
  ]

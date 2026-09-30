@@ -173,10 +173,17 @@ module ot_gpu_sm_v #(
             for (q = 0; q < LSB; q = q + 1) begin : g_f
                 assign xf_s[16*q +: 16] = ix[col*XC + LB*266 + (sp*LSB + q)*16 +: 16];
             end
-            ot_gpu_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
+            if (LBS == 2 && IL == 8 && TAGW == 16) begin : g_hbd
+                ot_gpu_bd_col u_bd (
                 .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
                 .wq(iwq[sp*LBS*256 +: LBS*256]), .we(iwe[sp*LBS*10 +: LBS*10]), .xq(xq_s), .xe(xe_s),
                 .ov(bov[sp]), .y(by[32*sp +: 32]), .otag(btag[TAGW*sp +: TAGW]), .fault(bfault[sp]));
+            end else begin : g_sbd
+                ot_gpu_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
+                .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
+                .wq(iwq[sp*LBS*256 +: LBS*256]), .we(iwe[sp*LBS*10 +: LBS*10]), .xq(xq_s), .xe(xe_s),
+                .ov(bov[sp]), .y(by[32*sp +: 32]), .otag(btag[TAGW*sp +: TAGW]), .fault(bfault[sp]));
+            end
             if (LSB == 16 && TAGW == 16 && IL == 8) begin : g_hard
                 // the hardened 16-lane macro (full-shape SM: 4,096 rows, 8 slots)
                 ot_gpu_tc16 u_tc (
@@ -197,10 +204,10 @@ module ot_gpu_sm_v #(
         wire tv, tf;
         wire [31:0] ty;
         wire [TAGW-1:0] tt;
-        ot_gpu_tree #(.N(SUB), .TAGW(TAGW)) u_comb (.clk(clk), .rst_n(rst_n), .v(tin_v), .d(tin),
+        ot_gpu_tree #(.N(SUB), .TAGW(TAGW), .ALAT(7)) u_comb (.clk(clk), .rst_n(rst_n), .v(tin_v), .d(tin),
                                                   .tag(tin_tag), .ov(tv), .y(ty), .otag(tt), .fault(tf));
         wire kf;
-        ot_gpu_stack #(.LEV(LEV), .IL(IL), .TAGW(RW)) u_stack (
+        ot_gpu_stack #(.LEV(LEV), .IL(IL), .TAGW(RW), .ALAT(7)) u_stack (
             .clk(clk), .rst_n(rst_n), .iv(tv), .d(ty), .ilast(tt[SW]), .islot(tt[SW-1:0]),
             .itag(tt[TAGW-1:SW+1]), .ov(cv[col]), .y(cy[32*col +: 32]), .otag(crow[RW*col +: RW]), .fault(kf));
         assign cf[col] = (|bfault) | (|ffault) | tf | kf | (bov[0] & fov[0]);
