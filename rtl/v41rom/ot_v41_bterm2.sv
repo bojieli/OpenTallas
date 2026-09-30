@@ -33,7 +33,8 @@ module ot_v41_bterm2 #(
     integer i;
 
     // -- P0: input register -----------------------------------------------------------
-    reg              p0_v, p0_first, p0_last, p0_fp4;
+    reg              p0_v, p0_first, p0_last;
+    (* keep *) reg   p0_fp4;              // never merged with another lane's (W13: a merged fp4 flop drove 2 lanes' decoders)
     reg [255:0]      p0_xq, p0_wq;
     reg signed [9:0] p0_xe, p0_we;
     always @(posedge clk or negedge rst_n) begin
