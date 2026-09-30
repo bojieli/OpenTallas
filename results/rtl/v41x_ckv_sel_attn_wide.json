@@ -2619,7 +2619,7 @@
   "status": "pass",
   "currency": {
     "state": "stale",
-    "stale_since": "merge of main 67d9e5c0 into claude/w11-ckvsel",
+    "stale_since": "dd82b940",
     "reason": "engine gained opt-in REPL/PHYS/NSTAGE/ILV (defaults cycle-identical, per W11 attention) and the wide-fetch port gained registered status/addresses (dd82b940, row-exact on 20 reduced runs); this record (sources c18ef312) is being re-run on the merged sources (ot-pve3 ~/w11ckv_qsim4.sh)",
     "verdict_kept": "pass",
     "moved": [
