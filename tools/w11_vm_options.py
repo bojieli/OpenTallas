@@ -27,8 +27,8 @@ record), network logic mm2 from mux2 / flop counts at the hardened SU light lane
 footprint, and the token rate at 1M context through tools/uarch_model: AR = evaluate(d)["tokens_s"], MTP =
 tau / (v41_verify_T(d, 6, 1) + draft) as speculation_rows() (tau 3.649).  The design dicts derive from
 PRESETS["proposal"] with the option's stages; the SU per-op latency is carried by two design keys this tool
-adds to evaluate() through a graph hook (su_op_extra_cycles on the SU vector nodes, su_red_extra_cycles on the
-SU reduce nodes) -- uarch_model.py itself is unchanged.
+that evaluate() prices on the SU vector / reduce nodes (su_op_extra_cycles, su_red_extra_cycles; a graph hook adds
+them for a uarch_model without them).
 
 Writes results/uarch/w11_vm_options.json.
     python3 tools/w11_vm_options.py [--out PATH]
@@ -264,14 +264,27 @@ def main() -> int:
     ops_a = [("vehicle", C.resolve(f0, dyn), np.asarray(vm, dtype=np.uint32)) for f0, dyn, vm, _ in recs_a]
     if a.limit:
         ops_a = ops_a[:a.limit]
-    rule_ops = []
-    for tag, f, vm in ops_a:
-        if f["nout"] == 0 or f["nin"] == 0 or C.layout(f, N, M)["bad"]:
-            continue
-        rule_ops.append(dict(flags=H.rule(f, N, M), red=bool(f["red"]), ew=f["dst"] == I.DST_VM))
+    def rule_ops_of(ops_):
+        out = []
+        for tag, f, vm in ops_:
+            if f["nout"] == 0 or f["nin"] == 0 or H.layout_h(f, N, M)["bad"]:
+                continue
+            out.append(dict(flags=H.rule(f, N, M), red=bool(f["red"]), ew=f["dst"] == I.DST_VM))
+        return out
     hchk = H.check(ops_a, N, M)
     hchk.pop("unsafe")
-    print("H rule", hchk, flush=True)
+    print("H rule (vehicle, aligned)", hchk, flush=True)
+    # the full-shape L0 program (results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json, bound at the
+    # builder's 32-alignment: an upper bound on H's networks), the basis of the full-shape model's keys
+    import w11_vm_dist_spec as SP
+    fs_ops, _ = SP.full_shape_ops(65535)
+    zvm = np.zeros(1 << 24, dtype=np.uint32)
+    fs_ops = [(t, f, zvm) for t, f in fs_ops]
+    hchk_fs = H.check(fs_ops, N, M)
+    hchk_fs.pop("unsafe")
+    print("H rule (full-shape L0)", hchk_fs, flush=True)
+    rule_ops = rule_ops_of(fs_ops)
+    rule_ops_vehicle = rule_ops_of(ops_a)
 
     # ---- geometry basis: the spec record's SU + VM block (macros at area, lane / VM logic at 50 %)
     fp, geo, tr = spec["footprint"], spec["geometry"], spec["trees"]
@@ -402,20 +415,34 @@ def main() -> int:
     def price_H_rtl():
         o = copy.deepcopy(options["H_align_only"])
         su, cl = o["su_op_class_stages"], o["clients"]
+        # X streams (gathered A, half streams, other strides) cross the class-X trees: group -> VM port (x gather)
+        # and port -> lanes / groups (the scatter run), XI_ELEMS elements a cycle
+        su["gather_read"] = cl["x_gather"] + cl["ret_scatter"]
+        su["x_path"] = f"class-X trees, {H.XI_ELEMS} elements a cycle (x_gather + ret_scatter stages)"
         rot, ben, scal = su["residual_rotate_read"], su["gather_read"], su["scalar_read"]
-        ext = {True: [], False: []}
-        for p in rule_ops:
-            x = bcast + H.hold(p["flags"], rot=rot, gath=ben, scal=scal)
-            x += cl["su_results"] if p["red"] else (1 if p["ew"] else 0)
-            ext[p["red"]].append(x)
+
+        def extras(ops_):
+            ext = {True: [], False: []}
+            for p in ops_:
+                x = bcast + H.hold(p["flags"], rot=rot, gath=ben, scal=scal)
+                x += cl["su_results"] if p["red"] else (1 if p["ew"] else 0)
+                ext[p["red"]].append(x)
+            return (round(float(np.mean(ext[False])), 3) if ext[False] else 0.0,
+                    round(float(np.mean(ext[True])), 3) if ext[True] else 0.0)
+        e_fs, r_fs = extras(rule_ops)
+        e_v, r_v = extras(rule_ops_vehicle)
         su["local_element_write_stages"] = 1
-        o.update(su_op_extra_cycles=round(float(np.mean(ext[False])), 3),
-                 su_red_extra_cycles=round(float(np.mean(ext[True])), 3),
+        o.update(su_op_extra_cycles=e_fs, su_red_extra_cycles=r_fs,
+                 su_issue_ratio=round(hchk_fs["issue_cycles"] / hchk_fs["vectors_packed"], 4),
+                 vehicle_aligned=dict(su_op_extra_cycles=e_v, su_red_extra_cycles=r_v,
+                                      su_issue_ratio=round(hchk["issue_cycles"] / hchk["vectors_packed"], 4)),
                  su_op_extra_basis=("the vector unit's own per-op decision (rtl/hdc/v41x/ot_hdc_v41x_vec.sv VMD_NG, "
-                                    "tools/w11_vm_h.rule) on the vehicle built with HDC_V41_VM_ALIGN=128: "
-                                    "broadcast 4 + its hold + the result tree (reductions) or the local write (1)"),
+                                    "tools/w11_vm_h.rule) on the full-shape L0 program (bound at 32-alignment; the "
+                                    "vehicle built with HDC_V41_VM_ALIGN=128 in vehicle_aligned): broadcast 4 + "
+                                    "its hold + the result tree (reductions) or the local write (1); issue x the "
+                                    "unpacked layout's vector ratio"),
                  layout_rule="VM regions 128-aligned by the builder (HDC_V41_VM_ALIGN=128); op offsets as built",
-                 rule_check=hchk)
+                 rule_check=dict(full_shape_l0=hchk_fs, vehicle_aligned=hchk))
         return o
     options["H_rtl"] = price_H_rtl()
     options["C"] = price_C("crossbar")
@@ -438,7 +465,8 @@ def main() -> int:
 
     def rate(d):
         orig, g = hook(d.get("su_op_extra_cycles", 0), d.get("su_red_extra_cycles", 0))
-        U.arch_graph = g
+        if not getattr(U, "SU_OP_EXTRA_NATIVE", False):
+            U.arch_graph = g                    # evaluate() without the keys: the graph hook adds them
         try:
             r = U.evaluate(copy.deepcopy(d))
             r.pop("_g")
@@ -451,7 +479,7 @@ def main() -> int:
 
     base = copy.deepcopy(U.PRESETS["proposal"])
     for k in ("vm_x_gather_stages", "vm_ret_scatter_stages", "vm_coll_write_stages", "su_ret_stages",
-              "su_bcast_stages"):
+              "su_bcast_stages", "su_op_extra_cycles", "su_red_extra_cycles"):
         base.pop(k, None)
     rows = {}
     rows["flat_vm_reference"] = dict(design=dict(name="flat_vm_reference"), **rate(dict(base, name="flat")))
@@ -512,7 +540,9 @@ def main() -> int:
         rates=rows, options=options,
         source_sha256={str(p.relative_to(ROOT)): sha(p) for p in
                        [Path(__file__).resolve(), ROOT / "tools/uarch_model.py", ROOT / "tools/rtl_hdc_v41x_vec_campaign.py",
-                        ROOT / "tools/w11_vm_h.py",
+                        ROOT / "tools/w11_vm_h.py", ROOT / "tools/w11_vm_dist_spec.py",
+                        ROOT / "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json",
+                        *sorted((ROOT / "results/physical_abi3/asap7/chip/w11_vm_rot").glob("lps*/physical.json")),
                         SPEC, ROOT / "tools/hdc_isa_v41.py", ROOT / "tools/hdc_program_v41.py"]})
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)) + "\n")

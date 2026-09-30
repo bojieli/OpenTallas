@@ -127,6 +127,18 @@ def rule(f, N, M, ng=None):
     return ("B" in rd, "X" in rd, any(v in ("R", "P") for v in rd), cl.get("E") == "R", cl.get("E") == "X")
 
 
+XI_ELEMS = 64         # elements a cycle through the class-X trees (ot_hdc_v41x_vec XI_ELEMS)
+
+
+def xint(f, N, M, ng=None, flags=None):
+    """Cycles between an op's vectors: an op with an X stream crosses the class-X trees XI_ELEMS a cycle."""
+    fl = flags or rule(f, N, M, ng)
+    if not (fl[1] or fl[4]):
+        return 1
+    lay = layout_h(f, N, M, ng)
+    return max(1, -(-(1 << (lay["ls"] + lay["nsh"])) // XI_ELEMS))
+
+
 def hold(flags, rot=17, gath=18, scal=8):
     b, x, r, wr, wx = flags
     return (scal if b else 0) + (gath if x else rot if r else 0) + (gath if wx else rot if wr else 0)
@@ -175,7 +187,7 @@ def check(ops, N, M, ng=None):
     ng = ng or N // 8
     out = dict(ops=0, flagged=collections.Counter(), unsafe=[], unsafe_count=0, residual_ops=0, flagged_any=0,
                over_flagged=0, hold_cycles=0, holds=collections.Counter(), classes=collections.Counter(),
-               unpacked_ops=0, vectors=0, vectors_packed=0)
+               unpacked_ops=0, vectors=0, vectors_packed=0, issue_cycles=0)
     for k, (tag, f, vm) in enumerate(ops):
         if f["nout"] == 0 or f["nin"] == 0:
             continue
@@ -186,6 +198,7 @@ def check(ops, N, M, ng=None):
             continue
         out["ops"] += 1
         out["vectors"] += lay["nv"]
+        out["issue_cycles"] += lay["nv"] * xint(f, N, M, ng)
         out["vectors_packed"] += lay0["nv"]
         out["unpacked_ops"] += int(lay["nsh"] != lay0["nsh"])
         cl = classify(f, N, M, ng)

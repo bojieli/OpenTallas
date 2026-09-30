@@ -105,8 +105,10 @@ def main() -> int:
         r["image"] = str(images[k].name)
         vr = [tuple(map(int, m.groups())) for m in G.VROT_RE.finditer(r.pop("_log", ""))]
         if vr:
-            r["h_ops"] = dict(ops=len(vr), network_ops=sum(1 for x in vr if x[3] or x[4] or x[5]),
-                              broadcast_ops=sum(1 for x in vr if x[2]), hold_cycles=sum(x[1] for x in vr),
+            # (seq, hold, u, b, x, r, wr, wx, xi)
+            r["h_ops"] = dict(ops=len(vr), network_ops=sum(1 for x in vr if x[4] or x[5] or x[6] or x[7]),
+                              broadcast_ops=sum(1 for x in vr if x[3]), unpacked_ops=sum(1 for x in vr if x[2]),
+                              x_ops=sum(1 for x in vr if x[4] or x[7]), hold_cycles=sum(x[1] for x in vr),
                               holds={str(h): c for h, c in sorted(collections.Counter(x[1] for x in vr).items())})
     fa, h, hf = res.get("flat_a128"), res.get("h"), res.get("h_free")
     if h and hf and h.get("status") == "pass" and hf.get("status") == "pass":

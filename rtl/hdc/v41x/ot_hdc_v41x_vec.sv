@@ -165,7 +165,10 @@ module ot_hdc_v41x_vec #(
     parameter integer VMD_NG = 0,
     parameter integer ROT_STAGES = 17,
     parameter integer GATH_STAGES = 18,
-    parameter integer SCAL_STAGES = 8
+    parameter integer SCAL_STAGES = 8,
+    // an X stream (gathered A, half streams, other strides) crosses the class-X trees, XI_ELEMS elements a
+    // cycle: its op emits a vector every ceil(lanes / XI_ELEMS) cycles
+    parameter integer XI_ELEMS = 64
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -487,9 +490,13 @@ module ot_hdc_v41x_vec #(
     wire [7:0] c_hold = (VMD_NG == 0) ? 8'd0 :
                         8'((h_b ? SCAL_STAGES : 0) + (h_x ? GATH_STAGES : h_r ? ROT_STAGES : 0) +
                            (h_wx ? GATH_STAGES : h_wr ? ROT_STAGES : 0));
-    reg [7:0] p_hold;
+    wire [CW-1:0] h_use = 1 << (c_ls + c_nsh);
+    wire [7:0] c_xint = (VMD_NG == 0 || !(h_x || h_wx)) ? 8'd1 : 8'((h_use + XI_ELEMS - 1) / XI_ELEMS);
+    reg [7:0] p_hold, p_xint;
     reg [5:0] p_hfl;
-    always @(posedge clk) if (s2_go) begin p_hold <= c_hold; p_hfl <= {h_seg, h_b, h_x, h_r, h_wr, h_wx}; end
+    always @(posedge clk) if (s2_go) begin
+        p_hold <= c_hold; p_hfl <= {h_seg, h_b, h_x, h_r, h_wr, h_wx}; p_xint <= (c_xint == 0) ? 8'd1 : c_xint;
+    end
 
     // registered set-up results (the pending op)
     reg [CW-1:0]      p_no, p_ni;
@@ -568,9 +575,9 @@ module ot_hdc_v41x_vec #(
                  (a_chsrc == CH_SELF) ? pv_ok :
                  (a_chsrc == CH_RES)  ? !dr[7] :
                  (!dx[7] || (x_seq == a_chseq && x_cnt >= need));
-    reg  [7:0] a_hold, h_cnt;
+    reg  [7:0] a_hold, h_cnt, a_xint, x_gap;
     wire h_ok = (h_cnt >= a_hold);
-    wire emit = a_v && (a_started || (ck_ok && h_ok)) && ch_ok;
+    wire emit = a_v && (a_started || (ck_ok && h_ok)) && ch_ok && (x_gap == 8'd0);
     wire promote = (pst == 2'd3) && (!a_v || (emit && last_v));
 
     // set-up state
@@ -590,7 +597,7 @@ module ot_hdc_v41x_vec #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             a_v <= 1'b0; a_started <= 1'b0; pv_v <= 1'b0; e_tot <= 0; r_tot <= 0; rp_tot <= 0;
-            cpF <= 0; cpM <= 0; cpS <= 0; cpT <= 0; cpR <= 0; h_cnt <= 8'd0;
+            cpF <= 0; cpM <= 0; cpS <= 0; cpT <= 0; cpR <= 0; h_cnt <= 8'd0; x_gap <= 8'd0;
         end else begin
             e_tot <= e_tot + (emit ? 16'd1 : 16'd0);
             r_tot <= r_tot + (ret_i ? 16'd1 : 16'd0);
@@ -611,6 +618,9 @@ module ot_hdc_v41x_vec #(
             // the network hold (VMD_NG): counts once the op could otherwise start
             if (promote) h_cnt <= 8'd0;
             else if (a_v && !a_started && ck_ok && ch_ok && !h_ok) h_cnt <= h_cnt + 8'd1;
+            // an X op's vectors cross the class-X trees: one every a_xint cycles
+            if (emit) x_gap <= a_xint - 8'd1;
+            else if (x_gap != 8'd0) x_gap <= x_gap - 8'd1;
         end
     end
     always @(posedge clk) begin
@@ -632,10 +642,10 @@ module ot_hdc_v41x_vec #(
             a_imm1 <= q_imm1; a_imm2 <= q_imm2; a_imm3 <= q_imm3;
             a_obase <= q_obase; a_aibase <= q_aibase;
             a_seq <= q_seq; a_chseq <= q_chseq; a_chlead <= q_chlead; a_chmul <= q_chmul;
-            a_nv <= 0; a_acc <= 0; a_hold <= p_hold;
+            a_nv <= 0; a_acc <= 0; a_hold <= p_hold; a_xint <= (VMD_NG == 0) ? 8'd1 : p_xint;
 `ifndef SYNTHESIS
-            if (VMD_NG > 0) $display("VROT seq=%0d hold=%0d u=%0d b=%0d x=%0d r=%0d wr=%0d wx=%0d", q_seq, p_hold,
-                                     p_hfl[5], p_hfl[4], p_hfl[3], p_hfl[2], p_hfl[1], p_hfl[0]);
+            if (VMD_NG > 0) $display("VROT seq=%0d hold=%0d u=%0d b=%0d x=%0d r=%0d wr=%0d wx=%0d xi=%0d", q_seq,
+                                     p_hold, p_hfl[5], p_hfl[4], p_hfl[3], p_hfl[2], p_hfl[1], p_hfl[0], p_xint);
 `endif
         end else if (emit) begin
             if (!a_started) a_mark <= e_tot;

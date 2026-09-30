@@ -111,7 +111,7 @@ def vmdist_fields(text: str):
 # ---- the vector unit ---------------------------------------------------------------------------------------
 _orig_parse, _orig_compare = C.parse_trace, C.compare
 _orig_write, _orig_run = C.write_case, C.run_case
-VROT_RE = VROT = re.compile(r"VROT seq=(\d+) hold=(\d+) u=(\d) b=(\d) x=(\d) r=(\d) wr=(\d) wx=(\d)")
+VROT_RE = VROT = re.compile(r"VROT seq=(\d+) hold=(\d+) u=(\d) b=(\d) x=(\d) r=(\d) wr=(\d) wx=(\d) xi=(\d+)")
 _CASES = {}                 # case dir -> (ops, memory image) as written
 CUR = dict(N=None, M=None)  # the bench width of the campaign running (option H's rule check)
 HCFG = dict(rot=17, gath=18, scal=8)      # the H bench's network stages (set by su_part)
@@ -144,11 +144,11 @@ def h_check(tr):
     N, M = CUR["N"], CUR["M"]
     mism = unsafe = flagged = unpacked = 0
     hold = 0
-    for (seq, h, u, b, x, r, wr, wx), f in zip(tr["vrot"], ops):
+    for (seq, h, u, b, x, r, wr, wx, xi), f in zip(tr["vrot"], ops):
         fl = HR.rule(f, N, M)
         lay_u = HR.unpacked(f, N, M)
         mism += int(tuple(bool(v) for v in (b, x, r, wr, wx)) != fl or bool(u) != lay_u or h != HR.hold(
-            fl, rot=HCFG["rot"], gath=HCFG["gath"], scal=HCFG["scal"]))
+            fl, rot=HCFG["rot"], gath=HCFG["gath"], scal=HCFG["scal"]) or xi != HR.xint(f, N, M, None, fl))
         cl = HR.classify(f, N, M)
         rem, multi, norot = HR.truth(f, mem.vm, N, M, None, cl)
         unsafe += int(any((v == "L" and rem[c]) or (v == "B" and multi[c]) or (v in ("R", "P") and norot[c])
