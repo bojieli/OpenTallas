@@ -1,4 +1,5 @@
 {
+ "historical_note": "HISTORICAL (2026-09-30, claude/w17-isa): image set with attn.attn_sink replicated (all 64 heads) on every rank; the TP-4 program reads sink + 0..15 on every rank, so ranks 1-3 used heads 0-15's sinks. Superseded by the record of the same name without the suffix (die_slices slices the sink by the rank's heads).",
  "schema": "opentallas.rtl.hdc_v41x_fullshape_layers.v1.die_layer_images",
  "context": 200000,
  "position": 199999,
@@ -139,16 +140,13 @@
   "w.attn_sink": {
    "format": "F32",
    "shape": [
-    16,
+    64,
     4
    ],
    "dtype": "uint8",
-   "sha256": "f74e25574e1ccf42358789db986e8e8ecdc6e2778bab5e4370e2a9f6141baa2d",
+   "sha256": "8017bf7692016398f5b28fee5afe99d3f2f3a54cb68fc66d86a5b7a58c241457",
    "tensor": "layers.0.attn.attn_sink",
-   "rows": [
-    0,
-    16
-   ],
+   "rows": null,
    "cols": null
   },
   "w.wq_a": {
@@ -1050,10 +1048,18 @@
   "window_rows_per_layer": 127,
   "state_sha256": "f6b66da09d2fffc5f06c1b52aeff780fb98f6ca5f671568fd6fceaa4001bb6a2"
  },
- "bytes": 73913768,
- "wall_s": 1.0,
+ "bytes": 73913960,
+ "wall_s": 1.8,
  "status": "input_only",
  "claim_boundary": "Full-shape 200K layer-0 rank-0 die input image and golden I/O. No RTL bit-exact or cycle verdict.",
+ "source_commit": "3ee08d355f2244774fc0c2dda11c9746b4459b9e",
+ "source_sha256": {
+  "tools/rtl_v41_fullshape_layer_campaign.py": "71efde88ff7b6df9c7777d90d6b45b35636ffbdf17d1fefe3de0ecbddee845d5",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/hdc_replay_v41.py": "49fb9b3fa974581cc57dc2f7248b384b5492a007453a4940ebc10f4c8a776a57",
+  "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
+ },
  "checkpoint": {
   "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
   "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
@@ -1255,14 +1261,5 @@
   "verification": "snapshot's content-addressed blob IDs and existence; full shard rehash not run"
  },
  "reproduction": "python3 tools/rtl_v41_fullshape_layer_campaign.py --steps golden --contexts 200000 --layers 0 --scratch SCRATCH; python3 tools/rtl_v41_fullshape_layer_campaign.py --steps images --contexts 200000 --layers 0 --rank 0 --scratch SCRATCH",
- "source_commit": "56bf3ba12bede2116afdf640f1fead198d788a94",
- "source_sha256": {
-  "tools/rtl_v41_fullshape_layer_campaign.py": "cac05b248283e17148a91537121fe844fb04915a522e656e8dc3df9067294087",
-  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
-  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
-  "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
-  "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
- },
- "scratch_path_at_generation": "/home/ubuntu/w17work/isa/scratch/images/ctx200000_L00_r0",
- "change_note": "attn_sink sliced by the rank's heads (tools/rtl_v41_fullshape_layer_campaign.py die_slices); every other file byte-identical to the historical record"
+ "scratch_path_at_generation": "/tmp/codex_v41_fullshape_golden/images/ctx200000_L00_r0"
 }

@@ -1,51 +1,52 @@
 {
+  "historical_note": "HISTORICAL (2026-09-30, claude/w17-isa): layout with the attn_sink CROM entry replicated (64 words); superseded by the record of the same name without the suffix (16 rank-sliced sink words, gate.bias/pre0 bases moved down by 48 words).",
   "schema": "opentallas.v41x.fullshape.weight_layout.v1",
   "status": "token_selected_partial_rank_layout",
   "claim_boundary": "Every present source tensor and selected expert weight is placed; generated CROM/Engram/RoPE contracts and RTL binding still prevent token execution.",
-  "source_image_manifest_sha256": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901",
+  "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
   "layer": 0,
   "rank": 0,
   "source_records_sha256": {
-    "/home/ubuntu/w17work/isa/layout_200k/wq_a.qe.json": "7e136f63fd589019911ad426abf38ef96f33fc89cbe0600f5e14cf1e4d538bd8",
-    "/home/ubuntu/w17work/isa/layout_200k/wkv.qe.json": "0be8b95668f2c5d7b71b54a4ea3d7ce542a3d934ca2dff92ac841efa552e2103",
-    "/home/ubuntu/w17work/isa/layout_200k/wq_b.qe.json": "2edbdea561f5ad0ceb68067b2203a9c55958f7b6b401cb6e77d1390c89ee23d1",
-    "/home/ubuntu/w17work/isa/layout_200k/wo_b.qe.json": "f274c34106a4312562abaae7987dc10834910d782395606fff730b955dd81a74",
-    "/home/ubuntu/w17work/isa/layout_200k/shared.w1.qe.json": "0f04a7ca8328d990d3757ba3b2ecf8c924d44c3fd93ef50e09c3c59699c6811e",
-    "/home/ubuntu/w17work/isa/layout_200k/shared.w3.qe.json": "8ad383240bf8f4773c986d9b81d1ea8a2119018325f58c0a700b8c19780ee472",
-    "/home/ubuntu/w17work/isa/layout_200k/shared.w2.qe.json": "12d3d601d366e32400eac7b1d0017354782c506a9aaf34a85179ea46295102c7",
-    "/home/ubuntu/w17work/isa/layout_200k/exp110.w1.qe.json": "deb5d70ba43aed55eb95ee7a9b3f2c1bccbe4f62696fe4a9046ea8b379e29d60",
-    "/home/ubuntu/w17work/isa/layout_200k/exp112.w1.qe.json": "31ebbff3b51a92277cbee9fb8089994ed0ec4db2c45f41ae6901368aec8c2469",
-    "/home/ubuntu/w17work/isa/layout_200k/exp141.w1.qe.json": "2726a0a2d6a77526a57687f975a1449e6dc69341e1f5a0b3feeca6f394b3b7ea",
-    "/home/ubuntu/w17work/isa/layout_200k/exp144.w1.qe.json": "fdc83c33ab9f4e2a69df278ca3bab2b9d98a6cf42466013fe6a6d44ba7bcfce7",
-    "/home/ubuntu/w17work/isa/layout_200k/exp357.w1.qe.json": "a4f3d39e1eb0e1f357ce3e9f883c50243eaf85ed6d2aabb0130ff38f440b6e7e",
-    "/home/ubuntu/w17work/isa/layout_200k/exp361.w1.qe.json": "c32241061350b31baa049ffab54ff0fa1421d7a4015d2307d3d0de8d9e2f2ba6",
-    "/home/ubuntu/w17work/isa/layout_200k/exp110.w3.qe.json": "113689780f55fe24f3fa54eb57adae76f7b9b702b42477d4a117e205417024d4",
-    "/home/ubuntu/w17work/isa/layout_200k/exp112.w3.qe.json": "1f59f3697dd165d35471fc2e39b2b18f402096287830b45e00434cec724a25df",
-    "/home/ubuntu/w17work/isa/layout_200k/exp141.w3.qe.json": "56f9a74d959f7470057c4f4a637d00c274d63ef59efb98529b39aea2be2dbd3c",
-    "/home/ubuntu/w17work/isa/layout_200k/exp144.w3.qe.json": "4bdb3145872cb54dd19a693fc4e2211a5914c8aca0a45a6df9394c78dd63493f",
-    "/home/ubuntu/w17work/isa/layout_200k/exp357.w3.qe.json": "eb2f7422b4a3b80cf8e777bcce785c62f64dad82c7ca0483a02a2a771446275c",
-    "/home/ubuntu/w17work/isa/layout_200k/exp361.w3.qe.json": "13a6722c23e246ee154493294d643b4671d3d094482cc2b47f1ba58c89280194",
-    "/home/ubuntu/w17work/isa/layout_200k/exp110.w2.qe.json": "840b538b4ab89839f135b792a620f5d4e33d66c9f465eac1bfc74b893dd2b629",
-    "/home/ubuntu/w17work/isa/layout_200k/exp112.w2.qe.json": "4b613bf565644e35edc4405a5608f0c18035ed5615fd98854c31cbdc7eef5907",
-    "/home/ubuntu/w17work/isa/layout_200k/exp141.w2.qe.json": "13921ea69f839c18fdeb693f5ed628a1a18dcf285645e81be7945ef3015966de",
-    "/home/ubuntu/w17work/isa/layout_200k/exp144.w2.qe.json": "3ef2d3ef5354a983b279a300511f1dd2b075e06fbc047a47e8a32d1427a54eed",
-    "/home/ubuntu/w17work/isa/layout_200k/exp357.w2.qe.json": "208ab6bfdef97ef63bfa35bd2a00c8730896515a1104563d0a506ac8c6e95827",
-    "/home/ubuntu/w17work/isa/layout_200k/exp361.w2.qe.json": "3a1ff5f1236e1672f95ab24eca919bb1a65b4e23eb67745a560b86ee58deeac2",
-    "/home/ubuntu/w17work/isa/layout_200k/gate.me.json": "c2698c2aa990c2d865d6fec3092e2fb446e423e8c9af739891a5184473064d5a",
-    "/home/ubuntu/w17work/isa/layout_200k/wo_a.me.json": "1aba24c635a2632958c417aa7989707dd2b6a3d71321e9051a9e32624ecceeb5",
-    "/home/ubuntu/w17work/isa/layout_200k/hc_attn_fn.he.json": "81af8311923664075f5e3e1fa0bb3b3bbe0caea96d358994211b9774a449155a",
-    "/home/ubuntu/w17work/isa/layout_200k/hc_ffn_fn.he.json": "e10fb8b2282ca488f73d8e122b39748905d39151e3e06ba48e2f0568f9eed831",
-    "/home/ubuntu/w17work/isa/layout_200k/attn_norm.crom.json": "71c253a7e15a6cd2173d566263d86400a9ca09b1cc4d90a31a0a725a5538930d",
-    "/home/ubuntu/w17work/isa/layout_200k/ffn_norm.crom.json": "16b2689ab01119cdc02b1cef3df8bb566028c9a3c9eb973c0750dcc6ad2c5c3d",
-    "/home/ubuntu/w17work/isa/layout_200k/q_norm.crom.json": "0472625e48fb50ac33fd009f22c3c2a7a284f04b9659cda545b9462f9be0ea96",
-    "/home/ubuntu/w17work/isa/layout_200k/kv_norm.crom.json": "2706681323eb39fc299e8714e94a2eb85a9dd73894bf598df8876325a8e8deef",
-    "/home/ubuntu/w17work/isa/layout_200k/hc_attn_scale.crom.json": "24c5624bdb9697a10c2dd487b035f1120ca5d9a07e84a9d612907f7bb56f77ac",
-    "/home/ubuntu/w17work/isa/layout_200k/hc_attn_base.crom.json": "270966d1095ab2dec48ad3143c2998df4d8d3a30c35483960308eff7737c5f89",
-    "/home/ubuntu/w17work/isa/layout_200k/hc_ffn_scale.crom.json": "07e141b0f080aad7b6e8eb8938a1ce02a900118f95fb96d065bb68ab8c338910",
-    "/home/ubuntu/w17work/isa/layout_200k/hc_ffn_base.crom.json": "2483f4cdb89112945cd0c448e463110f68ab7d0b657bdba35d4585228fa8f762",
-    "/home/ubuntu/w17work/isa/layout_200k/attn_sink.crom.json": "18d64792de32c69fc1e422740f30a3d33f93fea1d9abe14f1c96542af86d970a",
-    "/home/ubuntu/w17work/isa/layout_200k/gate.bias.crom.json": "cf9af51a66884e0cd7004a7ce0f50acd6c370244fd79543179fee452aac53c51",
-    "/home/ubuntu/w17work/isa/layout_200k/pre0.crom.json": "4241f01239a3852b61b6facf81c4334384a08c2ace662cdf8e141e391f9f5cb1"
+    "/tmp/v41_fullshape_rank0_rom_images/wq_a.qe.json": "1a91df9c48e20c4ca74e53897194dd9ee374ec4838faa39024b45108994d64d1",
+    "/tmp/v41_fullshape_rank0_rom_images/wkv.qe.json": "b7c886cef669c73e1c8c4a4fd97002d745732215189781185856625b18b75ef2",
+    "/tmp/v41_fullshape_rank0_rom_images/wq_b.qe.json": "11b0978548195db36bfd7fde82c018d6186a501b950b36d5de1b514f0bb28f0a",
+    "/tmp/v41_fullshape_rank0_rom_images/wo_b.qe.json": "bbbc1768eb8e1ab2d502280edc0356b46a2aa5e65485bf518ab22afff7881d99",
+    "/tmp/v41_fullshape_rank0_rom_images/shared.w1.qe.json": "658a44f2ad9437b2d49e674bd3e68a5339a9db6054f628412a846fd9413b6961",
+    "/tmp/v41_fullshape_rank0_rom_images/shared.w3.qe.json": "92b7988834bf5f3b7f67878acbb93458a1f47b7e8953da13271d625522f0a21b",
+    "/tmp/v41_fullshape_rank0_rom_images/shared.w2.qe.json": "878bc3ae785a092a02889ec650ca15f49ba9b534a17668ff8e5d0131967fcaa2",
+    "/tmp/v41_fullshape_rank0_rom_images/exp110.w1.qe.json": "361a8dd2f33c6db340f68917ac263e63af2e2e8fa09315b29aac85a74f38db25",
+    "/tmp/v41_fullshape_rank0_rom_images/exp112.w1.qe.json": "0dee6c696b425d6881f1e9e522be3ba906fc87c978325c1f17426b49ac21c0ac",
+    "/tmp/v41_fullshape_rank0_rom_images/exp141.w1.qe.json": "296b990b44eb2edc9f0a3af95d41e7abdde6308342bfd69eda191f69cf94b10a",
+    "/tmp/v41_fullshape_rank0_rom_images/exp144.w1.qe.json": "cec2eb81765d0c22024ecd3dc195cef6c14b1df31fee1f9b330eb0a5a3fa4248",
+    "/tmp/v41_fullshape_rank0_rom_images/exp357.w1.qe.json": "6a6bf773550d65489ee55a9d17a9051bb4de3b31acca190abe7253a86cda52e5",
+    "/tmp/v41_fullshape_rank0_rom_images/exp361.w1.qe.json": "5ac9b5b792850f77c544ec88b7349b8e7a9ed1610e0424302a9654e65baece0c",
+    "/tmp/v41_fullshape_rank0_rom_images/exp110.w3.qe.json": "36d466022680f6130eebafc7e732bd0b0bc4cb6dfcc74657400667c253ca47be",
+    "/tmp/v41_fullshape_rank0_rom_images/exp112.w3.qe.json": "edbaee01a0017bbe0bf0b6ef26a61cddc34daa325028f65f28f4856308100780",
+    "/tmp/v41_fullshape_rank0_rom_images/exp141.w3.qe.json": "7b5cbcca9e2037ecffefcbd42d140a77d03fd68e5f44d844d764de987d556e26",
+    "/tmp/v41_fullshape_rank0_rom_images/exp144.w3.qe.json": "19f0f3d969b26b5bfe749103673999cf3a4f89ffcb079a0c1d7085d2c3832978",
+    "/tmp/v41_fullshape_rank0_rom_images/exp357.w3.qe.json": "61e4004fa7b8c512db4a585c62059b241bc8fbee3602f01d5bdb542531559d1c",
+    "/tmp/v41_fullshape_rank0_rom_images/exp361.w3.qe.json": "53fc626e3b90e9a1391d706bf92894d8cad6c59d70030ca8e7fe1642880988fa",
+    "/tmp/v41_fullshape_rank0_rom_images/exp110.w2.qe.json": "e0008b55bd19cc946b5dd210ba84934e2dd912252650a786bd0dfd10f3c7d8b1",
+    "/tmp/v41_fullshape_rank0_rom_images/exp112.w2.qe.json": "446321299e842e8a18c556885ae5468fafb8009361bf33d4771b337ce0140b65",
+    "/tmp/v41_fullshape_rank0_rom_images/exp141.w2.qe.json": "ee78ebad8d5ea812757cffc17af6e2904d8d63c4f953cba55301725ed1895571",
+    "/tmp/v41_fullshape_rank0_rom_images/exp144.w2.qe.json": "275538ab0d05489d8581cbced793b9dbd6d68db2fbaef7f9610e25e90e226c86",
+    "/tmp/v41_fullshape_rank0_rom_images/exp357.w2.qe.json": "89ac79b9309972162e49c8962f3b5966b2e410dc13f3c5591aaa1d5b21a240bf",
+    "/tmp/v41_fullshape_rank0_rom_images/exp361.w2.qe.json": "28064c6ce03c0177294e51fb99f319df1b73b5890a73958d191581e5645761d5",
+    "/tmp/v41_fullshape_rank0_rom_images/gate.me.json": "8cb5c5da019af4483f5091d864a0cafad7a03f83243604a6d3bf391f50938c7b",
+    "/tmp/v41_fullshape_rank0_rom_images/wo_a.me.json": "06446b317f4c3306d5fa0493a41a7045b5695d1b68e7811952213300d79294f5",
+    "/tmp/v41_fullshape_rank0_rom_images/hc_attn_fn.he.json": "7ffb9e7ee7c021bbeb422104a00eb225fb6192c6b7f7e1f3bfdfdc6c964ea3a8",
+    "/tmp/v41_fullshape_rank0_rom_images/hc_ffn_fn.he.json": "739ca8e5e68481885c1c5659735c1cf50dbb86583b30c7d49d2b3048e4d5834b",
+    "/tmp/v41_fullshape_rank0_rom_images/attn_norm.crom.json": "4f52ca6742acd7b80db8e7d592d65056d2cf4a1b2f82cc6aa895860f9bd3e7bf",
+    "/tmp/v41_fullshape_rank0_rom_images/ffn_norm.crom.json": "e80ce3ee2249ebf20a6d9bc3e09157b4ade2b0a232691392828c9638ee15d6be",
+    "/tmp/v41_fullshape_rank0_rom_images/q_norm.crom.json": "9e55069da0f6e0d1a659975f95d10d89bc8cce952c5030601fe43babc6248382",
+    "/tmp/v41_fullshape_rank0_rom_images/kv_norm.crom.json": "e634b657522ec57fa3dc44001db27ad7b9e29b62084d809efc0d10320737802e",
+    "/tmp/v41_fullshape_rank0_rom_images/hc_attn_scale.crom.json": "b188094bc41ec9f654848b9f286457b0d567c998c936e7027e7405afa0988269",
+    "/tmp/v41_fullshape_rank0_rom_images/hc_attn_base.crom.json": "d3f3a2cded0de20b53bb997a46c4461938321dd80e7b7206e84e9fd17d2e90ef",
+    "/tmp/v41_fullshape_rank0_rom_images/hc_ffn_scale.crom.json": "8aa78c03297632ea0187486fad774d024a01b9d6f263d49ddf9d2ed7be819b93",
+    "/tmp/v41_fullshape_rank0_rom_images/hc_ffn_base.crom.json": "0ea070d85bee4b96fbb48c97dcc1fd0545f76c43f1e2ccaade71f675f41b0152",
+    "/tmp/v41_fullshape_rank0_rom_images/attn_sink.crom.json": "73ce162e3564d2eea269fa000a6a304ed27b9156810a168caadf076adf9f99a8",
+    "/tmp/v41_fullshape_rank0_rom_images/gate.bias.crom.json": "0882466d21778ec3a8b52fe14f9750ad771bdfef1d5c8285bbd66f495a3ce09a",
+    "/tmp/v41_fullshape_rank0_rom_images/pre0.crom.json": "d2a9bae284fe10d3084e27b0a2836499f115373beaa3061c8ec65edd3f9f0193"
   },
   "matrices": {
     "wq_a": {
@@ -1106,16 +1107,16 @@
     "attn_sink": {
       "engine": "crom",
       "base_word": 12128,
-      "word_count": 16,
+      "word_count": 64,
       "format": "FP32_lo_plus_zero_hi",
       "source_format": "F32",
-      "source_tensor_sha256": "f74e25574e1ccf42358789db986e8e8ecdc6e2778bab5e4370e2a9f6141baa2d",
-      "output_image_sha256": "832dc5cbce3770b5b4dddcd8393e0d53ee65eee016ea6b6b4e11f6a859598d05",
-      "output_image_bytes": 128
+      "source_tensor_sha256": "8017bf7692016398f5b28fee5afe99d3f2f3a54cb68fc66d86a5b7a58c241457",
+      "output_image_sha256": "528a53fe874896051bc145e41bc5407573e872bff90664e9a46d225899d863e7",
+      "output_image_bytes": 512
     },
     "gate.bias": {
       "engine": "crom",
-      "base_word": 12144,
+      "base_word": 12192,
       "word_count": 384,
       "format": "FP32_lo_plus_zero_hi",
       "source_format": "F32",
@@ -1125,7 +1126,7 @@
     },
     "pre0": {
       "engine": "crom",
-      "base_word": 12528,
+      "base_word": 12576,
       "word_count": 4,
       "format": "FP32_lo_plus_zero_hi",
       "generated_rule": "hdc_program_v41.Layout: [1.0, 0.0, 0.0, 0.0]",
@@ -1170,7 +1171,7 @@
   "selected_expert_weights_complete": true,
   "expert_access_policy": "fail_closed_if_any_requested_id_lacks_w1_w3_or_w2",
   "rom_capacity_bytes": 2714287356,
-  "reserved_bytes": 1877530528,
+  "reserved_bytes": 1877530912,
   "regions": [
     {
       "engine": "crom",
@@ -1231,21 +1232,21 @@
     {
       "engine": "crom",
       "start_word": 12128,
-      "end_word_exclusive": 12144,
+      "end_word_exclusive": 12192,
       "bytes_per_bank_word": 8,
       "name": "attn_sink"
     },
     {
       "engine": "crom",
-      "start_word": 12144,
-      "end_word_exclusive": 12528,
+      "start_word": 12192,
+      "end_word_exclusive": 12576,
       "bytes_per_bank_word": 8,
       "name": "gate.bias"
     },
     {
       "engine": "crom",
-      "start_word": 12528,
-      "end_word_exclusive": 12532,
+      "start_word": 12576,
+      "end_word_exclusive": 12580,
       "bytes_per_bank_word": 8,
       "name": "pre0"
     },
@@ -1350,12 +1351,12 @@
   ],
   "all_experts_materialized": false,
   "complete_die_image": false,
-  "source_commit": "56bf3ba12bede2116afdf640f1fead198d788a94",
+  "source_commit": "3ee08d355f2244774fc0c2dda11c9746b4459b9e",
   "source_sha256": {
-    "tools/rtl_v41_fullshape_layer_campaign.py": "cac05b248283e17148a91537121fe844fb04915a522e656e8dc3df9067294087",
+    "tools/rtl_v41_fullshape_layer_campaign.py": "71efde88ff7b6df9c7777d90d6b45b35636ffbdf17d1fefe3de0ecbddee845d5",
     "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
     "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
-    "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
+    "tools/hdc_replay_v41.py": "49fb9b3fa974581cc57dc2f7248b384b5492a007453a4940ebc10f4c8a776a57",
     "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
   },
   "checkpoint": {
@@ -1559,7 +1560,7 @@
     "verification": "snapshot's content-addressed blob IDs and existence; full shard rehash not run"
   },
   "source_image_manifest": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
-  "layout_tool_sha256": "083fd31df8515de35899faad7a1a0db51c8583d10a94faee903bdc1e988fd45b",
+  "layout_tool_sha256": "0482a83619eb09dbe2cb3acb237f64b47111696d4d8a70c6de785bd82e9c8fd1",
   "context": 200000,
   "selected_expert_ids": [
     110,
@@ -1575,361 +1576,5 @@
     "rope_yarn",
     "tmap"
   ],
-  "token_runnable": false,
-  "hbm_weight_layout": {
-    "status": "same_payload_sector_map_only",
-    "claim_boundary": "HBM sectors hold byte-identical bank words, but full-shape HBM weight fetch RTL is not yet implemented; existing LENW4 window cannot request 34/66-sector QE words.",
-    "sector_bytes": 32,
-    "hbm_sector_count_reserved": 58669696,
-    "hbm_bytes_reserved": 1877430272,
-    "regions": [
-      {
-        "engine": "he",
-        "start_word": 0,
-        "end_word_exclusive": 7680,
-        "bytes_per_bank_word": 32,
-        "name": "hc_attn_fn",
-        "hbm_sector_base": 0,
-        "hbm_sector_end_exclusive": 61440,
-        "sectors_per_word": 8
-      },
-      {
-        "engine": "he",
-        "start_word": 7680,
-        "end_word_exclusive": 15360,
-        "bytes_per_bank_word": 32,
-        "name": "hc_ffn_fn",
-        "hbm_sector_base": 61440,
-        "hbm_sector_end_exclusive": 122880,
-        "sectors_per_word": 8
-      },
-      {
-        "engine": "me",
-        "start_word": 0,
-        "end_word_exclusive": 7680,
-        "bytes_per_bank_word": 4,
-        "name": "gate",
-        "hbm_sector_base": 122880,
-        "hbm_sector_end_exclusive": 184320,
-        "sectors_per_word": 8
-      },
-      {
-        "engine": "me",
-        "start_word": 7680,
-        "end_word_exclusive": 138752,
-        "bytes_per_bank_word": 4,
-        "name": "wo_a",
-        "hbm_sector_base": 184320,
-        "hbm_sector_end_exclusive": 1232896,
-        "sectors_per_word": 8
-      },
-      {
-        "engine": "qe",
-        "start_word": 0,
-        "end_word_exclusive": 800,
-        "bytes_per_bank_word": 33,
-        "name": "wq_a",
-        "hbm_sector_base": 1232896,
-        "hbm_sector_end_exclusive": 1285696,
-        "sectors_per_word": 66
-      },
-      {
-        "engine": "qe",
-        "start_word": 800,
-        "end_word_exclusive": 1120,
-        "bytes_per_bank_word": 33,
-        "name": "wkv",
-        "hbm_sector_base": 1285696,
-        "hbm_sector_end_exclusive": 1306816,
-        "sectors_per_word": 66
-      },
-      {
-        "engine": "qe",
-        "start_word": 1120,
-        "end_word_exclusive": 6240,
-        "bytes_per_bank_word": 33,
-        "name": "wq_b",
-        "hbm_sector_base": 1306816,
-        "hbm_sector_end_exclusive": 1644736,
-        "sectors_per_word": 66
-      },
-      {
-        "engine": "qe",
-        "start_word": 6240,
-        "end_word_exclusive": 11360,
-        "bytes_per_bank_word": 33,
-        "name": "wo_b",
-        "hbm_sector_base": 1644736,
-        "hbm_sector_end_exclusive": 1982656,
-        "sectors_per_word": 66
-      },
-      {
-        "engine": "qe",
-        "start_word": 11360,
-        "end_word_exclusive": 12800,
-        "bytes_per_bank_word": 33,
-        "name": "shared.w1",
-        "hbm_sector_base": 1982656,
-        "hbm_sector_end_exclusive": 2077696,
-        "sectors_per_word": 66
-      },
-      {
-        "engine": "qe",
-        "start_word": 12800,
-        "end_word_exclusive": 14240,
-        "bytes_per_bank_word": 33,
-        "name": "shared.w3",
-        "hbm_sector_base": 2077696,
-        "hbm_sector_end_exclusive": 2172736,
-        "sectors_per_word": 66
-      },
-      {
-        "engine": "qe",
-        "start_word": 14240,
-        "end_word_exclusive": 15680,
-        "bytes_per_bank_word": 33,
-        "name": "shared.w2",
-        "hbm_sector_base": 2172736,
-        "hbm_sector_end_exclusive": 2267776,
-        "sectors_per_word": 66
-      },
-      {
-        "engine": "qe",
-        "start_word": 15680,
-        "end_word_exclusive": 568640,
-        "bytes_per_bank_word": 17,
-        "name": "exp.w1",
-        "hbm_sector_base": 2267776,
-        "hbm_sector_end_exclusive": 21068416,
-        "sectors_per_word": 34
-      },
-      {
-        "engine": "qe",
-        "start_word": 568640,
-        "end_word_exclusive": 1121600,
-        "bytes_per_bank_word": 17,
-        "name": "exp.w3",
-        "hbm_sector_base": 21068416,
-        "hbm_sector_end_exclusive": 39869056,
-        "sectors_per_word": 34
-      },
-      {
-        "engine": "qe",
-        "start_word": 1121600,
-        "end_word_exclusive": 1674560,
-        "bytes_per_bank_word": 17,
-        "name": "exp.w2",
-        "hbm_sector_base": 39869056,
-        "hbm_sector_end_exclusive": 58669696,
-        "sectors_per_word": 34
-      }
-    ],
-    "matrices": {
-      "wq_a": {
-        "hbm_sector_base": 1232896,
-        "sectors_per_word": 66,
-        "sector_count": 52800,
-        "payload_sha256": "0dbaa88f85ae533c7e60771024b9450539a3edd53b641bb3a15c163820046066"
-      },
-      "wkv": {
-        "hbm_sector_base": 1285696,
-        "sectors_per_word": 66,
-        "sector_count": 21120,
-        "payload_sha256": "a8a7c088143b45bb0ada25e181a2a9fac44d6c03bcabef2d1a8e183eb0c7b44f"
-      },
-      "wq_b": {
-        "hbm_sector_base": 1306816,
-        "sectors_per_word": 66,
-        "sector_count": 337920,
-        "payload_sha256": "a1c57c3040aa4d78a7f881bc710e280e7c62b1997455a2bbd19da561305ea761"
-      },
-      "wo_b": {
-        "hbm_sector_base": 1644736,
-        "sectors_per_word": 66,
-        "sector_count": 337920,
-        "payload_sha256": "8b5950dd6e676fdf65c05d457f959ce759e23a0887acee5e810466a9113fb920"
-      },
-      "shared.w1": {
-        "hbm_sector_base": 1982656,
-        "sectors_per_word": 66,
-        "sector_count": 95040,
-        "payload_sha256": "c449bf9e65622bfcde1480f7d23c40c494060c5165b88d13f5ab82a92334444e"
-      },
-      "shared.w3": {
-        "hbm_sector_base": 2077696,
-        "sectors_per_word": 66,
-        "sector_count": 95040,
-        "payload_sha256": "0d75d249b0e8bb5c8fbe3cd23b02ac4c3fd8fcf49a9e5e5b86dfb39cdb9c0f09"
-      },
-      "shared.w2": {
-        "hbm_sector_base": 2172736,
-        "sectors_per_word": 66,
-        "sector_count": 95040,
-        "payload_sha256": "69dc9d605e001ef3466d67df5d47ecf688bc396e2f9e7dc6952e576dd1f2005a"
-      },
-      "exp110.w1": {
-        "hbm_sector_base": 7653376,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "b8b26fadc3bcd08ce5e95e8a731334a409bb02ed919d3c4dc39c9e192545419f"
-      },
-      "exp112.w1": {
-        "hbm_sector_base": 7751296,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "0feabf327889baa12b4d0200abae5beb179402396eab35a28795f6d37f640daa"
-      },
-      "exp141.w1": {
-        "hbm_sector_base": 9171136,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "47852c20bae8a16758774b1581b228485be6db89d4d921ed0e84417a1c1084df"
-      },
-      "exp144.w1": {
-        "hbm_sector_base": 9318016,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "1b0f27963add88927fdfad062da51df6decfaf0b5ae0455b812543996628fb5f"
-      },
-      "exp357.w1": {
-        "hbm_sector_base": 19746496,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "19cc72cadffceecc4eb0e56e44f6f92f8e7d3604ba00b0f72c0eaf387a17130e"
-      },
-      "exp361.w1": {
-        "hbm_sector_base": 19942336,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "17a8789e3cc63066e6fc93eada8200154bb5fec3e01817150d6faddea6d62309"
-      },
-      "exp110.w3": {
-        "hbm_sector_base": 26454016,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "b3ffa2c8974796470195a246d9bc42b1de9f6e73bc6efc791b32f5adf1115691"
-      },
-      "exp112.w3": {
-        "hbm_sector_base": 26551936,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "a432d822168384523e700cb43c1153023978d7bfdf718d63d5269d5c478b70cd"
-      },
-      "exp141.w3": {
-        "hbm_sector_base": 27971776,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "d08eec30e5b21a1dfaffe74c8204b59061061df6a64192f512b1b0bd55029d90"
-      },
-      "exp144.w3": {
-        "hbm_sector_base": 28118656,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "281b8974d771bbe38583fcec290f08cc9ef1651d37822934f704d7966cd9a137"
-      },
-      "exp357.w3": {
-        "hbm_sector_base": 38547136,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "ec943e032a6cda28fd2c9b596841f501bbb8bee7b4c7d24a5c0100a5b516e78d"
-      },
-      "exp361.w3": {
-        "hbm_sector_base": 38742976,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "00203bf5f21b26aa1842a5c2c1dac2fe4950869e3b182916b92195c0f775be4c"
-      },
-      "exp110.w2": {
-        "hbm_sector_base": 45254656,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "8327ddcf33278422afdc7e961df54b1a78fc86b31e915ffff40693453395b91d"
-      },
-      "exp112.w2": {
-        "hbm_sector_base": 45352576,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "c3543f8e4f0b2ffc8e1935f13dcda2bedd61f2322686fae1b74de36493b68d47"
-      },
-      "exp141.w2": {
-        "hbm_sector_base": 46772416,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "5d6c80d0b635c0746b86778e14aaf1b1fbbb728cb1e85bcf33c6ce701132181e"
-      },
-      "exp144.w2": {
-        "hbm_sector_base": 46919296,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "59008835ac0c6c6f785eb5606f229b14b50e63bd6247d55a6cb856f264a166ca"
-      },
-      "exp357.w2": {
-        "hbm_sector_base": 57347776,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "1e55111a8a3cd2445da299812c9e4a86822c846f1a9227ca2116eb0cc1ebea83"
-      },
-      "exp361.w2": {
-        "hbm_sector_base": 57543616,
-        "sectors_per_word": 34,
-        "sector_count": 48960,
-        "payload_sha256": "ec96bbf7c777058010445831a7a5218e27f098ce359daa02ac2ac72abc274109"
-      },
-      "gate": {
-        "hbm_sector_base": 122880,
-        "sectors_per_word": 8,
-        "sector_count": 61440,
-        "payload_sha256": "8d456d9a7ccd8fe848af8891fa9d67e71713f4b6e3b984974d7ac3192b88fc1f"
-      },
-      "wo_a": {
-        "hbm_sector_base": 184320,
-        "sectors_per_word": 8,
-        "sector_count": 1048576,
-        "payload_sha256": "5cc5de8536d4efe889b38e5c8c593f63e0d66ffb9475ca6efa1e7c083af1bdf1"
-      },
-      "hc_attn_fn": {
-        "hbm_sector_base": 0,
-        "sectors_per_word": 8,
-        "sector_count": 61440,
-        "payload_sha256": "123553128f7cde2b5d01605e3ac70e236d0c07b02aa346044041c4078993fb15"
-      },
-      "hc_ffn_fn": {
-        "hbm_sector_base": 61440,
-        "sectors_per_word": 8,
-        "sector_count": 61440,
-        "payload_sha256": "326a98c9c1220de56ece3f2ffe4b45dcfe6189279599c55b78ead9b2915deb07"
-      }
-    }
-  },
-  "rtl_engine_preflight": {
-    "status": "rtl_parameter_gap",
-    "required": {
-      "me_bank_aw": 18,
-      "me_kmax": 5120,
-      "he_bank_aw": 14,
-      "he_kcmax": 2560
-    },
-    "current_defaults": {
-      "me_bank_aw": 18,
-      "me_kmax": 512,
-      "he_bank_aw": 16,
-      "he_kcmax": 128
-    },
-    "gaps": {
-      "me_kmax": {
-        "required": 5120,
-        "current": 512
-      },
-      "he_kcmax": {
-        "required": 2560,
-        "current": 128
-      }
-    },
-    "source_sha256": {
-      "core": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
-      "me": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
-      "he": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c"
-    },
-    "claim_boundary": "Static parameter check only; sufficient widths would still need elaboration, exact shard simulation and physical closure."
-  }
+  "token_runnable": false
 }

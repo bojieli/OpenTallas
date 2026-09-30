@@ -716,7 +716,8 @@ def die_slices(L, rank, s, experts, eng):
            ("hc_ffn_scale", P + "hc_ffn_scale", None, None), ("hc_ffn_base", P + "hc_ffn_base", None, None),
            ("attn_norm", P + "attn_norm.weight", None, None), ("ffn_norm", P + "ffn_norm.weight", None, None),
            ("q_norm", P + "attn.q_norm.weight", None, None), ("kv_norm", P + "attn.kv_norm.weight", None, None),
-           ("attn_sink", P + "attn.attn_sink", None, None),
+           # per-head sinks follow the rank's heads (the program reads sink + 0 .. heads/tp - 1 on every rank)
+           ("attn_sink", P + "attn.attn_sink", rr(s["heads"]), None),
            ("wq_a", P + "attn.wq_a.weight", rr(s["q_rank"]), None), ("wq_a.scale", P + "attn.wq_a.scale", sb(s["q_rank"]), None),
            ("wkv", P + "attn.wkv.weight", rr(hd), None), ("wkv.scale", P + "attn.wkv.scale", sb(hd), None),
            ("wq_b", P + "attn.wq_b.weight", rr(s["heads"] * hd), None),
