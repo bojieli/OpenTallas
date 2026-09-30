@@ -1,0 +1,156 @@
+{
+ "binary_sha256": "f16129f24be3113b1bca7486aa92966a22c363636065c1fe6f70d1ec2beb574a",
+ "claim_boundary": "Connected Qwen3-8B token 0 at position 0 (or the listed stage prefix) on the W12 ROM die design point: G=5,120 TP-2 dies, the production core with the vector stream unit and the array spine, 1,280 tile elements a die composed by the host from one compiled tile model, real checkpoint images. Embedding preloaded; stage sequencing (image-bank select, per-layer zero KV window) is the host's. Wire stages are parameters; physical timing is not simulated.",
+ "design_point": {
+  "collective_lat_cycles": 339,
+  "count_width": 18,
+  "groups_per_die": 6144,
+  "kv_fp8": true,
+  "pruned": true,
+  "scale_local": false,
+  "smax": 11,
+  "smin": 7,
+  "su_reducer_time_levels": 7,
+  "su_width": 64,
+  "tiles_per_die": 1536,
+  "tp": 4,
+  "tree_cut": 7
+ },
+ "generated_core_sha256": "c8023a8b38be3d78a81deba60c20e318d7adcf50174c0112e16ef59e47bb9793",
+ "hier_su": false,
+ "layer_x_checks": {
+  "L0_die0_x": {
+   "actual_sha256": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "expected_sha256": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "mismatches": 0,
+   "words": 4096
+  },
+  "L0_die1_x": {
+   "actual_sha256": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "expected_sha256": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "mismatches": 0,
+   "words": 4096
+  },
+  "L0_die2_x": {
+   "actual_sha256": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "expected_sha256": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "mismatches": 0,
+   "words": 4096
+  },
+  "L0_die3_x": {
+   "actual_sha256": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "expected_sha256": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "mismatches": 0,
+   "words": 4096
+  }
+ },
+ "oracle_logit_bits": "419c72b5",
+ "oracle_sha256": "7babf695255d1f9d116a78805727f8dceb41af2fcf628ab8de1d040cb40a5520",
+ "oracle_token": 50994,
+ "rtl_logit_bits": "00000000",
+ "rtl_token": 0,
+ "schema": "opentallas.qwen-rom-rt-token-tp2.v1",
+ "simulate_wall_seconds": 4455.7,
+ "source_sha256": {
+  "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+  "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_isa.svh": "3b26786e5f2942cf398c275736670d483ee9520468144db774a64207ebb6a3b4",
+  "rtl/hdc/ot_hdc_matvec.sv": "a405904d794687047077208a7d3a8d2e1de88024303151e58b5909e093adec18",
+  "rtl/hdc/ot_hdc_qwen_int8_arith.sv": "49cb8cc53efb3f7bfbee3d14e44ccc8d0910367e6f786d589254aee4d1a9c46d",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+  "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+  "rtl/hdc/ot_hdc_reduce_q.sv": "0b3e3050e99b81ceb0ca43af80eac9445508991a8e74eb9b2ec9f2017be02f32",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_sfu_q.sv": "e5214ce45567a64470f5f4c4441221bbb1437361b0f4fc1d8cd441f30568a338",
+  "rtl/hdc/ot_hdc_stream.sv": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61",
+  "rtl/hdc/ot_hdc_vreduce.sv": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+  "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+  "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+  "rtl/hdc/ot_qwen_me_array.sv": "dec28d11f13bd587788db4b6cb7cf90fad0a30f843a461c211006e6e62c5f218",
+  "rtl/hdc/ot_qwen_rom_tile.sv": "a521b879ce3850e5c339dbf8e07aaf210c2632237c6d58b1364fac61f8c5a47b",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+  "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
+  "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+  "rtl/rom/ot_rom_pkg_link.sv": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3",
+  "rtl/rom/ot_rom_tp_seq.sv": "63f919078a412bd790453d8e8a773a17e15bfc36e18acaa8862b8a270f3485ce",
+  "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv": "f3dd0c135949158ac32f37573133b246b4f1968f5778afc1faf7f6b6713a2bec",
+  "rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp": "67a8511c367296d3b3184c5f51643d236766bf605f3c9e3652c65c94ddb81c1b",
+  "rtl/test/qwen_runtime/qwen_rt_matvec.hpp": "337ae8dedab0e49ddfa76c70a88589b7ea374548e0d88f4bce2628aadc4e453b",
+  "rtl/test/qwen_runtime/qwen_rt_memory.hpp": "8b6f9b084ca2a20cc12c99da7d53629635141a9a28302a87cbfae16b54145b47",
+  "tools/qwen_rom_rt_core_emit.py": "54ccf9f14b1ef7c09ea248e91dc83447213d68a086a5a317ee013ac914f6df2f",
+  "tools/qwen_rom_rt_token.py": "00f08f7e327bb0b6239c6d0c0b211b68fb884350672b38472c225303e878ab2f"
+ },
+ "source_stable": true,
+ "stage_image_sha256": {
+  "L0/die0/crom.hex": "c126227c6aa928ce366be81528c638404ebfb4272cb2ba2ceb64db8012370d39",
+  "L0/die0/matrix_int8.hex": "ff43369878ef7ffa3817e657e82f6c16fc786d3fbc327d3cd8fbe4009f604eca",
+  "L0/die0/matrix_scale_bf16.hex": "cd9a1011cf7a2d3f85cb999d83622533686c347be6bbca87f5172e0a9bb63768",
+  "L0/die0/program.hex": "50934438a4c845a6f9cf82304128c10660ad5a4da3bf8833b8ffd4a259b3ef77",
+  "L0/die0/segments.hex": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+  "L0/die1/crom.hex": "c126227c6aa928ce366be81528c638404ebfb4272cb2ba2ceb64db8012370d39",
+  "L0/die1/matrix_int8.hex": "7ab3e789f7eff5ba84ea905e5d521b2abe8c6a360f324e291cb29f037553563a",
+  "L0/die1/matrix_scale_bf16.hex": "0694f6f5c78cc5fd73b79dfbbb102481c5843e54adbec081b661cd06e43a8f44",
+  "L0/die1/program.hex": "50934438a4c845a6f9cf82304128c10660ad5a4da3bf8833b8ffd4a259b3ef77",
+  "L0/die1/segments.hex": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+  "L0/die2/crom.hex": "c126227c6aa928ce366be81528c638404ebfb4272cb2ba2ceb64db8012370d39",
+  "L0/die2/matrix_int8.hex": "0853615349254e28346a5de2d16bce411faf9c6d973fb139a8485e064da2a625",
+  "L0/die2/matrix_scale_bf16.hex": "6f05064d583a5e16d47d281e84eb788cb01c0bacb73a8534829804239f72f064",
+  "L0/die2/program.hex": "50934438a4c845a6f9cf82304128c10660ad5a4da3bf8833b8ffd4a259b3ef77",
+  "L0/die2/segments.hex": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+  "L0/die3/crom.hex": "c126227c6aa928ce366be81528c638404ebfb4272cb2ba2ceb64db8012370d39",
+  "L0/die3/matrix_int8.hex": "1a0f325cc7c67770e4aa5eeb009db0868e49c52359e3fc693fad6df6c7e5abbe",
+  "L0/die3/matrix_scale_bf16.hex": "0de324f821f0bccbcf816635efcd96a960b4b09adc92bb78bf3a5fe9b9d8f6fc",
+  "L0/die3/program.hex": "50934438a4c845a6f9cf82304128c10660ad5a4da3bf8833b8ffd4a259b3ef77",
+  "L0/die3/segments.hex": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48"
+ },
+ "stages": {
+  "L0": {
+   "cycles": 4669,
+   "me_clock_edges": "2033/2033",
+   "next_token": "0/0",
+   "next_val": "00000000/00000000"
+  }
+ },
+ "stages_run": [
+  "L0"
+ ],
+ "status": "pass",
+ "steps": [
+  {
+   "max_rss_kib": 172248,
+   "name": "verilate_coll",
+   "returncode": 0,
+   "seconds": 9.41
+  },
+  {
+   "max_rss_kib": 325656,
+   "name": "build_coll",
+   "returncode": 0,
+   "seconds": 87.98
+  },
+  {
+   "max_rss_kib": 327496,
+   "name": "link",
+   "returncode": 0,
+   "seconds": 38.33
+  }
+ ],
+ "total_cycles": 4676,
+ "verilator_die_flags": "",
+ "wire_stages": {
+  "broadcast_and_x_network_bd": 41,
+  "engine_latency_added_xd_plus_ord": 112,
+  "mem_extra": 1,
+  "result_write_ord": 7,
+  "tree_to_spine_tws": 38,
+  "upper_tree_level_nws": 5,
+  "vm_conflict_register_xvm": 1
+ },
+ "w12b_note": "TP-4 layer 0, 4 dies, G6144, SW 64, SS wire stages (BD 41, NWS 5, TWS 38, ORD 7, MEM_EXTRA 1), plain N=4 oneshot collective at LAT 339 with DEPTH 1024 (--coll-depth; credit-sufficient): bit-exact on all four dies, 4,669 cycles. ME adders at the original LAT (5/3) and the original issue loop: the 1.2 GHz ME (LAT 7, FAST_ISSUE, KV_PREP 3) adds ~ +54 cycles an ME op and +3 a KV op. Sources: ot-pve1 /home/ubuntu/w12/wt4 (source_sha256 above), tool at 8e9585a8."
+}
