@@ -31,8 +31,14 @@ def use_phy(name: str) -> None:
 def main(argv=None):
     ap = argparse.ArgumentParser(add_help=False)
     ap.add_argument("--hbm-phy", required=True)
+    ap.add_argument("--die-w-um", type=float, default=0.0, help="shrink/grow the die (snapped to the joint grid)")
+    ap.add_argument("--die-h-um", type=float, default=0.0)
     a, rest = ap.parse_known_args(argv)
     use_phy(a.hbm_phy)
+    if a.die_w_um:
+        PK.DIE_W = int(a.die_w_um / PK.X_STEP) * PK.X_STEP
+    if a.die_h_um:
+        PK.DIE_H = int(a.die_h_um / PK.Y_STEP) * PK.Y_STEP
     RF.main(rest)
 
 

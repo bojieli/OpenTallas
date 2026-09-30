@@ -1,0 +1,125 @@
+{
+ "schema": "opentallas.v41.w18_shrunk_die.v1",
+ "status": "INTERIM: shrunk die on the W10 p5 pair abstract (the p12 q-pair and BF16 column tiles have not landed); the detached rebase chain re-derives all of this on p12",
+ "ruling": "root 2026-09-30: layer die = product need (5,289 pairs/die, 1,024 BF16 column pairs; results/arch/v41_stage_owner_product.json) + ~10%, HBM PHY edge kept",
+ "die": {
+  "um": [
+   28816.992,
+   23224.32
+  ],
+  "mm2": 669.255,
+  "scale": 0.9062,
+  "area_vs_815mm2": 0.8212,
+  "pair_slots": 5968,
+  "bf16_slots": 1160,
+  "note": "pack re-run on the current hub record (SU_VECTOR 14.96 mm2)"
+ },
+ "crossings_full_route_m2m9": {
+  "vm_xroot_to_farthest_cluster": {
+   "routed_um": 14826.5,
+   "cycles": 30
+  },
+  "farthest_cluster_to_vm": {
+   "routed_um": 16288.8,
+   "cycles": 33
+  },
+  "collective_to_farthest_serdes": {
+   "routed_um": 22711.8,
+   "cycles": 46
+  },
+  "collective_to_farthest_ucie": {
+   "routed_um": 16955.2,
+   "cycles": 34
+  },
+  "hbm_window": {
+   "routed_um": 11735.3,
+   "cycles": 24
+  },
+  "idx_keys": {
+   "routed_um": 19750.2,
+   "cycles": 40
+  },
+  "selected_kv": {
+   "routed_um": 11790.9,
+   "cycles": 24
+  },
+  "idx_topk": {
+   "routed_um": 18824.7,
+   "cycles": 38
+  },
+  "hub": {
+   "routed_um": 74.0,
+   "cycles": 1
+  }
+ },
+ "crossings_layer_split": {
+  "trunk_m8m9": {
+   "vm_xroot_to_farthest_cluster": {
+    "routed_um": 14789.5,
+    "cycles": 30
+   },
+   "farthest_cluster_to_vm": {
+    "routed_um": 16585.0,
+    "cycles": 33
+   }
+  },
+  "rest": {
+   "collective_to_farthest_serdes": {
+    "routed_um": 22600.7,
+    "cycles": 45
+   },
+   "collective_to_farthest_ucie": {
+    "routed_um": 16862.6,
+    "cycles": 34
+   },
+   "hbm_window": {
+    "routed_um": 12438.7,
+    "cycles": 25
+   },
+   "idx_keys": {
+    "routed_um": 19546.6,
+    "cycles": 39
+   },
+   "selected_kv": {
+    "routed_um": 11790.9,
+    "cycles": 24
+   },
+   "idx_topk": {
+    "routed_um": 18769.1,
+    "cycles": 38
+   },
+   "hub": {
+    "routed_um": 37.0,
+    "cycles": 1
+   }
+  }
+ },
+ "overflow": {
+  "full": 0,
+  "trunk": 0,
+  "rest": 0
+ },
+ "reach": {
+  "um": 504,
+  "basis": "W15 M2-M9 SS reach at 0.833 ns; trunk cycles restated when the M8/M9 reach lands"
+ },
+ "ir_die_mesh_vdd_worst_mv": {
+  "ir_cap50_vdd2": 10.207,
+  "ir_peak": 32.279,
+  "ir_sat": 12.691
+ },
+ "ir_note": "the die-mesh term of the adopted scheme (50% cap + 1/2 bumps) is 10.2 mV/rail, as on the 815 mm2 die (the worst node is local), so the adopted rail-to-rail stack stays 65.8 mV against 70 (ir/ir_options.json); cluster PSM on the p5 pair 16.0/18.9 mV (VDD/VSS) as before",
+ "files": {
+  "cluster16_psm.json": "1b74163d11630e14d1e4b9f3fd0933180c85921c7fabee832ecccea7dd1abfdb",
+  "die_route_full.json": "2157cf5483ee99ea336c290b19da85ddd9fe27c3300a104c376fb4fe4a950209",
+  "die_route_split_rest.json": "9bd6b437873e252bd9c31f20a338149d741b01b041ca25ca819889dd96b161a3",
+  "die_route_split_trunk.json": "c1de9353ab56d5ffbd0b0c0f4ec80e38dcfc1816169cc286801e893f79bd118b",
+  "die_shrink.json": "e7ab754749d2c071ed746b32581ffd8633bd5bbc2ddcb392de97a87d48ac64f4",
+  "floorplan.json": "2b9e95bd8584b0b3b2c512212003fbe5cb5a3c2b75e98a41c4eb114e3bedd616",
+  "ir_cap50_vdd2.json": "704823b0b21e9ac8225ae89dc9702352138695a8b21bdfcff0c2672c18a76723",
+  "ir_peak.json": "c9491c282b3f37e8cd8f287a8ccc167e93cef428a038c53f900700bf721fab31",
+  "ir_sat.json": "b4aec0c82747415964451cf9b7c078fa38fbc83dea9ed4acba10b53e5490a78b",
+  "pack.json": "590b070d17937bad52dd9de76f4a9ef8b5dea4d87d5c0cb5ca32fdb0a485df94",
+  "slots.json": "b2839892508b25610e517c93ffa3249573faea569257817e075acb98648fbbcf"
+ }
+}
