@@ -41,7 +41,8 @@ UNCERTAINTY_NS = 0.06
 AW, TAGW, LENW, BEATW, DW = 30, 16, 4, 4, 256
 ENV_H = 64.0
 K_SPAN = (200.0, 370.0)
-EPC_OUTER = 14                   # outermost region's credits, 2 * hops + 2 (12 mm PHY: 6 hops)          # regional K port on the slice's top edge (v1 PHY window 375 um)
+EPC_OUTER = 14                   # outermost region's credits, 2 * hops + 2 (12 mm PHY: 6 hops)
+PROOT_HOPS = (6, 4, 3, 1, 1, 3, 4, 6)   # region 7 .. 0 trunk hops (12 mm PHY, 1 mm hops)          # regional K port on the slice's top edge (v1 PHY window 375 um)
 HOLD_NS = None                   # W18 --phy-e8p5: project SDC policy 25 ps hold uncertainty
 SIGNOFF_ARGS: list = []          # W18 --signoff-1p2: harden at WC (SS libs), repair hold at WC and BC
 BUFFER_HOOK = "physical/abi3/v41x_karb_repair_buffer_cap.tcl"
@@ -216,7 +217,7 @@ def proot_case(w: float = 750.0) -> dict:
         f"{pin_regex(pins_r)}=bottom:{w / 2 + 90:g}-{w - 10:g}",
     ]
     srcs = ["rtl/chip/ot_chip_v41x_karb_proot.sv", *KARB]
-    epcs = "".join(f"{2 * hp + 2:02x}" for hp in (6, 4, 3, 1, 1, 3, 4, 6))   # region 7 .. region 0
+    epcs = "".join(f"{2 * hp + 2:02x}" for hp in PROOT_HOPS)   # region 7 .. region 0
     args = common("ot_chip_v41x_karb_proot", srcs, w, h, [f"AW={AW}", f"EPCS=64'h{epcs}"])
     for r in regions:
         args += ["--pin-region", r]
@@ -282,7 +283,9 @@ def main() -> int:
         global EPC_OUTER
         EPC_OUTER = 2 * 4 + 2          # 8.5 mm PHY: the outermost region centre is 3.72 mm out -> 4 hops of <= 1 mm
         if a.signoff_1p2:
-            EPC_OUTER = 2 * 7 + 2      # at 0.833 ns SS the hop is ~0.6 mm (to be measured): 7 hops
+            EPC_OUTER = 2 * 8 + 2      # W15 SS reach 504 um: region centres 0.53-3.72 mm -> 2..8 hops
+            global PROOT_HOPS
+            PROOT_HOPS = (8, 6, 4, 2, 2, 4, 6, 8)
     c = CASES[a.case]()
     if a.phy_e8p5:
         sfx = "_w18e8p5" + ("_1p2" if a.signoff_1p2 else "")

@@ -165,7 +165,8 @@ def edge_for(c, peer_x, peer_y):
     return "N" if dy > 0 else "S"
 
 
-def write(m: dict, work: Path, k: int, obs_top: int, m89: float, low: float, iters: int = 50) -> dict:
+def write(m: dict, work: Path, k: int, obs_top: int, m89: float, low: float, iters: int = 50,
+          hub_obs_top: int = 0) -> dict:
     work.mkdir(parents=True, exist_ok=True)
     cl = {c.inst: c for c in m["clusters"]}
     plan: dict[str, dict[str, list]] = {}
@@ -210,7 +211,8 @@ def write(m: dict, work: Path, k: int, obs_top: int, m89: float, low: float, ite
     masters = {}
     for c in m["clusters"]:
         masters[c.inst] = f"M__{c.inst}"
-        text, _ = D.cluster_lef(c, plan.get(c.inst, {}), k, obs_top, masters[c.inst])
+        ot = hub_obs_top if (hub_obs_top and c.kind == "hub") else obs_top
+        text, _ = D.cluster_lef(c, plan.get(c.inst, {}), k, ot, masters[c.inst])
         lefs.append(text)
     lefs.append("END LIBRARY\n")
     (work / "clusters.lef").write_text("\n".join(lefs))
@@ -284,7 +286,7 @@ close $out
 mem done
 """
     (work / "run.tcl").write_text(tcl)
-    man = dict(k=k, congestion_iterations=iters, obs_top=f"M{obs_top}", m8_m9_reserve=m89, m2_m7_adjustment=low, growth=growth,
+    man = dict(k=k, congestion_iterations=iters, hub_obs_top=hub_obs_top or obs_top, obs_top=f"M{obs_top}", m8_m9_reserve=m89, m2_m7_adjustment=low, growth=growth,
                bundle_nets=sum(D.bundle_count(b["bits"], k) for b in m["buses"]),
                wires=sum(b["bits"] * 1 for b in m["buses"] if b["cls"] not in ("px", "pr")),
                instances=len(m["clusters"]), buses=len(m["buses"]))
@@ -397,6 +399,8 @@ def main(argv=None):
     ap.add_argument("--iters", type=int, default=50)
     ap.add_argument("--no-probes", action="store_true", help="congestion case without the 1-bundle path probes")
     ap.add_argument("--subroots", type=int, default=0, help="distribute the x root / result sink into N sub-roots")
+    ap.add_argument("--hub-obs-top", type=int, default=0,
+                    help="hub blocks obstruct M1..M<n> only (W11 re-hardens capped at M5); 0 = as --obs-top")
     ap.add_argument("--hub-inset", type=float, default=0.0,
                     help="widen the hub ring channel by pulling the hub's outer partition edges in by this many um")
     ap.add_argument("--host", default="")
@@ -411,7 +415,7 @@ def main(argv=None):
     fp, pk = json.loads(a.floorplan.read_text()), json.loads(a.pack.read_text())
     mdl = model(fp, pk, probes=not a.no_probes, subroots=a.subroots, hub_inset=a.hub_inset)
     if a.mode == "write":
-        print(json.dumps(write(mdl, work, a.k, a.obs_top, a.m89_reserve, a.low_adjust, a.iters), indent=1))
+        print(json.dumps(write(mdl, work, a.k, a.obs_top, a.m89_reserve, a.low_adjust, a.iters, a.hub_obs_top), indent=1))
         return 0
     rec = record(mdl, work, a.floorplan, a.pack, a.k, a.reach_um, a.reach_basis)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
