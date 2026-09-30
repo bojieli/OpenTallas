@@ -146,7 +146,10 @@ module ot_hdc_v41x_attn #(
     parameter bit SRAM_MACRO = 0,      // ASAP7 packed-row staging macro boundary
     parameter integer PWORDS = 1,      // probability words per p handshake (1 or 2)
     parameter integer FPL = 3,         // binary32 add latency (7: 1.2 GHz streaming domain)
-    parameter integer FML = 3          // tile product latency
+    parameter integer FML = 3,         // tile product latency
+    parameter integer NBANKP = 0       // stationary banks; 0 = 3 (PWORDS 1) / 4 (PWORDS 2) as built.  The bank
+                                       // lifetime grows with the skew (6 FPL): at FPL 7 more banks keep p.v at
+                                       // one beat per cycle (see the W11 stream record)
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -197,8 +200,10 @@ module ot_hdc_v41x_attn #(
     localparam integer AW = $clog2(DEPTH);
     localparam integer NBLKMAX = (TROWS + TD - 1) / TD;
     localparam integer MLEV = (NBLKMAX <= 1) ? 1 : $clog2(NBLKMAX);
-    localparam integer NBANK = (PWORDS >= 2) ? 4 : 3;
-    localparam integer BW = 2;
+    localparam integer NBANK = (NBANKP > 0) ? NBANKP : ((PWORDS >= 2) ? 4 : 3);
+    localparam integer BW = (NBANK <= 4) ? 2 : $clog2(NBANK);
+    localparam integer BD = (NBANK <= 4) ? 4 : (1 << $clog2(NBANK));   // block -> bank table entries
+    localparam integer LA = (NBANK <= 4) ? 3 : NBANK - 1;             // p-load lookahead, blocks
     localparam integer LVT = $clog2(TD / 8);
     localparam integer TLAT = 3 + FML + FPL * (7 + LVT);   // tile: input -> ov (27 + 3 LVT as built)
     localparam integer LS = (S <= 1) ? 0 : $clog2(S);  // lane-tree levels
@@ -253,7 +258,7 @@ module ot_hdc_v41x_attn #(
     reg [15:0] pl_blk;                // block being loaded
     reg [7:0]  pl_word;               // word within it
     reg [BW-1:0] pl_bank;
-    reg [BW-1:0] blk_bank [0:3];      // bank of block (index mod 4)
+    reg [BW-1:0] blk_bank [0:BD-1];   // bank of block (index mod BD)
     // fills
     reg [15:0] fl_blk;
     reg [7:0]  fl_cnt;
@@ -274,7 +279,7 @@ module ot_hdc_v41x_attn #(
     assign kv_ready = act && (wptr < T);
     wire kv_go = kv_v && kv_ready;
     // p words: a new block needs a free bank and at most 3 blocks between the issuing and the loading one
-    assign p_ready = act && (q_cnt == H) && (pl_blk < nblk) && ((pl_word != 0) || (p_bank_ok && (pl_blk < iss_blk + 3)));
+    assign p_ready = act && (q_cnt == H) && (pl_blk < nblk) && ((pl_word != 0) || (p_bank_ok && (pl_blk < iss_blk + LA)));
     wire p_go = p_v && p_ready;
     wire p_last_word = p_go && ((PWORDS == 1) ? (pl_word + 1 == words_blk) : ({8'd0, pl_word} + PWORDS >= words_blk));
     wire p_w2v = (PWORDS > 1) && ({8'd0, pl_word} + 1 < words_blk);   // second word of the pair is live
@@ -291,7 +296,7 @@ module ot_hdc_v41x_attn #(
     wire pv_go = pv_go_raw;
     wire fl_half_free = (fl_blk < iss_blk + 2) || ((fl_blk == iss_blk + 2) && pv_go_raw && (iss_c + 1 == DPT));
     wire fl_go = act && phase_pv && (fl_blk < nblk) && fl_half_free;
-    wire [BW-1:0] iss_bank = (pl_blk == iss_blk) ? ((pl_word == 0) ? next_bank : pl_bank) : blk_bank[iss_blk[1:0]];
+    wire [BW-1:0] iss_bank = (pl_blk == iss_blk) ? ((pl_word == 0) ? next_bank : pl_bank) : blk_bank[iss_blk % BD];
     assign qk_iss = qk_go;
     assign pv_iss = pv_go;
 
@@ -337,7 +342,7 @@ module ot_hdc_v41x_attn #(
             if (p_go) begin
                 if (pl_word == 0) begin
                     pl_bank <= next_bank;
-                    blk_bank[pl_blk[1:0]] <= next_bank;
+                    blk_bank[pl_blk % BD] <= next_bank;
                     held[next_bank] <= 1'b1;
                     next_bank <= (next_bank == NBANK - 1) ? {BW{1'b0}} : next_bank + 1'b1;
                 end
