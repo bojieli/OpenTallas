@@ -19,12 +19,12 @@ from pathlib import Path
 
 import numpy as np
 
-from hdc_qwen_fullshape_placement import CONFIG, GROUPS, LOCK, matrix
+from hdc_qwen_fullshape_placement import CONFIG, GROUPS, LOCK, TP, matrix
 from hdc_qwen_int8_image import shipped_vocab_rows
 from hdc_qwen_layer0_rom import engine_word_arrays, pinned_snapshot, word_hex
 
 ROOT = Path(__file__).resolve().parents[1]
-ROWS = 75968
+ROWS = 151936 // TP
 PINS = ('tools/qwen_o4_head_rom.py', 'tools/hdc_qwen_int8_image.py', 'tools/hdc_qwen_layer0_rom.py',
         'tools/hdc_qwen_fullshape_placement.py', 'tools/qwen3_deployment_quality.py')
 
@@ -55,7 +55,7 @@ def emit(snapshot: Path, out: Path, die: int, window: int = 8192) -> dict:
             if addr < scale_count:
                 sf.write(word_hex(scale, 16) + '\n')
     manifest = {'schema': 'opentallas.qwen-o4-head-rom.v1', 'die': die, 'rows': ROWS, 'row0': die * ROWS,
-                'geometry': geo, 'groups': GROUPS, 'code_words': code_count, 'scale_words': scale_count,
+                'geometry': geo, 'groups': GROUPS, 'tp': TP, 'code_words': code_count, 'scale_words': scale_count,
                 'code_base': 0, 'scale_base': 0, 'checkpoint_revision': Path(snapshot).name,
                 'checkpoint_lock_sha256': sha(LOCK), 'config_sha256': sha(CONFIG),
                 'source_sha256': {p: sha(ROOT / p) for p in PINS},
@@ -68,7 +68,7 @@ def emit(snapshot: Path, out: Path, die: int, window: int = 8192) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--snapshot', type=Path, required=True)
-    ap.add_argument('--die', type=int, choices=(0, 1), required=True)
+    ap.add_argument('--die', type=int, choices=range(TP), required=True)
     ap.add_argument('--out', type=Path, required=True)
     args = ap.parse_args()
     m = emit(args.snapshot, args.out, args.die)

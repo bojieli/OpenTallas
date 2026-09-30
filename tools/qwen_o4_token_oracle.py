@@ -30,9 +30,9 @@ import hdc_qwen_fullshape_program as FP
 import qwen_o4_layer0_oracle as L0
 
 ROOT = Path(__file__).resolve().parents[1]
-W, IL, GROUPS = L0.W, L0.IL, L0.GROUPS
+W, IL, GROUPS, TP = L0.W, L0.IL, L0.GROUPS, L0.TP
 VM = L0.VM
-HEAD_ROWS = 75968
+HEAD_ROWS = 151936 // TP
 
 
 def sha(p):
@@ -45,7 +45,7 @@ class LayerImage(L0.Image):
     def __init__(self, directory, layer):
         self.dir = Path(directory)
         self.manifest = json.loads((self.dir / f'layer{layer}_rom.json').read_text())
-        if self.manifest['layer'] != layer or self.manifest['tp'] != 2:
+        if self.manifest['layer'] != layer or self.manifest['tp'] != TP:
             raise ValueError(f'expected layer {layer} TP2 images in {directory}')
         for name, digest in self.manifest['image_sha256'].items():
             if sha(self.dir / name) != digest:
@@ -164,22 +164,22 @@ def run(layer_dirs, head_dirs, binding, preload, out, layers=36):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     x0 = L0._preload_x(preload)
-    vms = [np.zeros(L0.VM_ELEMS, dtype=np.float32) for _ in range(2)]
+    vms = [np.zeros(L0.VM_ELEMS, dtype=np.float32) for _ in range(TP)]
     for vm in vms:
         vm[VM['X']:VM['X'] + 4096] = x0
     record = {'schema': 'opentallas.qwen-o4-token-tp2-oracle.v1', 'status': 'ISA_golden_only',
-              'token': 0, 'position': 0, 'layers': layers, 'x_preload_sha256': sha(preload),
+              'token': 0, 'position': 0, 'layers': layers, 'tp': TP, 'groups': GROUPS, 'x_preload_sha256': sha(preload),
               'layer_image_sha256': {}, 'layer_x_sha256': {}, 'oracle_source_sha256': {
                   p: sha(ROOT / p) for p in ('tools/qwen_o4_token_oracle.py', 'tools/qwen_o4_layer0_oracle.py',
                                              'tools/hdc_golden.py', 'tools/hdc_program.py', 'tools/hdc_isa.py',
                                              'tools/hdc_qwen_fullshape_isa.py', 'tools/hdc_qwen_fullshape_program.py')}}
     for n in range(layers):
-        images = [LayerImage(layer_dirs.format(layer=n, die=d), n) for d in (0, 1)]
-        if images[0].descriptors != images[1].descriptors:
-            raise ValueError('TP2 descriptor mismatch')
+        images = [LayerImage(layer_dirs.format(layer=n, die=d), n) for d in range(TP)]
+        if any(im.descriptors != images[0].descriptors for im in images):
+            raise ValueError('TP descriptor mismatch')
         vms = run_layer(images, vms)
         record['layer_image_sha256'][f'L{n}'] = [im.manifest['image_sha256'] for im in images]
-        for d in (0, 1):
+        for d in range(TP):
             path = out / f'L{n:02d}_die{d}_x.hex'
             L0._bits_hex(path, vms[d][VM['X']:VM['X'] + 4096])
             record['layer_x_sha256'][f'L{n}_die{d}'] = sha(path)
@@ -189,7 +189,7 @@ def run(layer_dirs, head_dirs, binding, preload, out, layers=36):
         return record
     heads = []
     with FP.program_geometry(VM):
-        for d in (0, 1):
+        for d in range(TP):
             im = HeadImage(head_dirs.format(die=d), binding, d)
             m = HeadMachine(im, d, vms[d], images[0].manifest['matrix_layout'])
             dyn = P.dyn_values(m.lay, token=0, pos=0)
@@ -205,7 +205,7 @@ def run(layer_dirs, head_dirs, binding, preload, out, layers=36):
                                       'logit_bits': f'{int(G.bits(np.float32(m.logits[m.argmax]))):08x}',
                                       'rows': len(m.logits), 'xnorm_sha256': sha(path),
                                       'image_sha256': im.manifest['image_sha256']}
-    logits = np.concatenate([heads[0].logits, heads[1].logits]).astype(np.float32)
+    logits = np.concatenate([h.logits for h in heads]).astype(np.float32)
     token = int(np.argmax(logits))
     top2 = np.sort(logits)[-2:]
     record.update({'next_token': token, 'next_logit_bits': f'{int(G.bits(np.float32(logits[token]))):08x}',

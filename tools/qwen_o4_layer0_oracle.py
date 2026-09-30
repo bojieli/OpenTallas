@@ -23,7 +23,7 @@ import hdc_qwen_fullshape_isa as QI
 import hdc_qwen_fullshape_program as FP
 
 ROOT = Path(__file__).resolve().parents[1]
-from hdc_qwen_fullshape_placement import GROUPS  # noqa: E402  (QWEN_O4_GROUPS)
+from hdc_qwen_fullshape_placement import GROUPS, TP  # noqa: E402  (QWEN_O4_GROUPS, QWEN_O4_TP)
 W, IL = I.W_LANES, I.INTERLEAVE
 VM, VM_ELEMS = FP.vm_map()
 
@@ -44,7 +44,7 @@ class Image:
     def __init__(self, directory):
         self.dir = Path(directory)
         self.manifest = json.loads((self.dir / 'layer0_rom.json').read_text())
-        if self.manifest['layer'] != 0 or self.manifest['tp'] != 2:
+        if self.manifest['layer'] != 0 or self.manifest['tp'] != TP:
             raise ValueError('expected emitted layer-0 TP2 images')
         for name, digest in self.manifest['image_sha256'].items():
             if _sha(self.dir / name) != digest:

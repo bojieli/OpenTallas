@@ -20,7 +20,7 @@ import hdc_golden as G
 import hdc_isa as I
 import hdc_program as P
 import hdc_qwen_fullshape_program as FP
-from hdc_qwen_fullshape_placement import CONFIG, LOCK, GROUPS, matrix
+from hdc_qwen_fullshape_placement import CONFIG, LOCK, GROUPS, TP, matrix
 from hdc_qwen_int8_image import layer_tp2_matrices
 
 W, IL = I.W_LANES, I.INTERLEAVE
@@ -181,7 +181,7 @@ def emit(snapshot: Path, out: Path, die: int, layer: int = 0, compact_banks=Fals
                     'tools/hdc_program.py', 'tools/hdc_isa.py', 'tools/qwen3_deployment_quality.py')
     source_pins = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in source_files}
     manifest = {'schema': 'opentallas.qwen-o4-layer-tp2-rom.v1', 'status': 'image_and_isa_emitted',
-                'layer': layer, 'die': die, 'tp': 2, 'checkpoint_revision': snapshot.name,
+                'layer': layer, 'die': die, 'tp': TP, 'checkpoint_revision': snapshot.name,
                 'checkpoint_lock_sha256': hashlib.sha256(LOCK.read_bytes()).hexdigest(),
                 'config_sha256': hashlib.sha256(CONFIG.read_bytes()).hexdigest(),
                 'checkpoint_index_sha256': hashlib.sha256((snapshot / 'model.safetensors.index.json').read_bytes()).hexdigest(),
@@ -296,7 +296,7 @@ def verify_sample(snapshot: Path, out: Path, die: int, rows_per_matrix=8, layer:
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--snapshot', type=Path, required=True)
-    ap.add_argument('--die', type=int, choices=(0, 1), required=True)
+    ap.add_argument('--die', type=int, choices=range(TP), required=True)
     ap.add_argument('--layer', type=int, choices=range(36), default=0)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--compact-banks', action='store_true',

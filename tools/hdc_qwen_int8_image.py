@@ -58,7 +58,8 @@ def layer_tp2_matrices(snapshot: Path, layer: int, die: int, *, rows_per_matrix:
     mapping to ROM engine words belongs to the shipped-shape program emitter.
     """
     from safetensors import safe_open
-    if not 0 <= layer < 36 or die not in (0, 1):
+    from hdc_qwen_fullshape_placement import TP
+    if not 0 <= layer < 36 or not 0 <= die < TP:
         raise ValueError('shipped layer or TP die out of range')
     snapshot = Path(snapshot)
     idx = json.loads((snapshot / "model.safetensors.index.json").read_text())["weight_map"]
@@ -88,7 +89,7 @@ def layer_tp2_matrices(snapshot: Path, layer: int, die: int, *, rows_per_matrix:
             # Row-split shards select global rows first. Column-split shards
             # share the same complete rows and must share their BF16 scales.
             if axis == "rows":
-                per_die = full_shape[0] // 2
+                per_die = full_shape[0] // TP
                 lo = die * per_die
                 w = w[lo:lo + min(rows_per_matrix, per_die)]
                 # The row selection has happened; quantize its full columns.
@@ -97,12 +98,12 @@ def layer_tp2_matrices(snapshot: Path, layer: int, die: int, *, rows_per_matrix:
                 selected_rows = (lo, lo + len(w))
             else:
                 w = w[:rows_per_matrix]
-                q, s = quantize_full_rows_then_partition(w, die=die, axis="columns", tp=2)
+                q, s = quantize_full_rows_then_partition(w, die=die, axis="columns", tp=TP)
                 selected_rows = (0, len(w))
         else:
             q, s = quantize_full_rows_then_partition(w, die=die, axis=axis,
-                                                    norm=norms.get(norm_name), tp=2)
-            selected_rows = ((die * full_shape[0] // 2, (die + 1) * full_shape[0] // 2)
+                                                    norm=norms.get(norm_name), tp=TP)
+            selected_rows = ((die * full_shape[0] // TP, (die + 1) * full_shape[0] // TP)
                              if axis == "rows" else (0, full_shape[0]))
         source_hash = hashlib.sha256(w.contiguous().view(torch.int16).numpy().tobytes()).hexdigest()
         norm_hash = (hashlib.sha256(norms[norm_name].contiguous().view(torch.int16).numpy().tobytes()).hexdigest()
@@ -129,9 +130,11 @@ def shipped_vocab_rows(snapshot: Path, kind: str, *, start: int, count: int, die
     if kind not in ('embedding', 'lm_head') or start < 0 or count < 1:
         raise ValueError('invalid vocabulary image window')
     if kind == 'lm_head':
-        if die not in (0, 1) or start + count > 75968:
-            raise ValueError('lm_head TP2 window exceeds die vocabulary slice')
-        key, global_start = 'lm_head.weight', die * 75968 + start
+        from hdc_qwen_fullshape_placement import TP
+        rows_die = 151936 // TP
+        if not 0 <= die < TP or start + count > rows_die:
+            raise ValueError('lm_head TP window exceeds die vocabulary slice')
+        key, global_start = 'lm_head.weight', die * rows_die + start
     else:
         if die is not None or start + count > 151936:
             raise ValueError('embedding window exceeds global vocabulary')

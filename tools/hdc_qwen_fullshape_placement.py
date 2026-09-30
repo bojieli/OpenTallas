@@ -21,6 +21,9 @@ LOCK = ROOT / 'compiler/models/qwen3-8b/checkpoint_source.json'
 # model (tools/uarch_model.py, docs/MICROARCH_MODEL.md) chooses 5,120, which is
 # selected with QWEN_O4_GROUPS=5120 for every tool that imports this constant.
 GROUPS, W, IL = int(os.environ.get('QWEN_O4_GROUPS', '6144')), I.W_LANES, I.INTERLEAVE
+# Tensor-parallel dies (QWEN_O4_TP): 2 is the published O4 package; 4 is the 2026-09-30 product
+# (two packages of two dies, 8 q / 2 kv heads a die).
+TP = int(os.environ.get('QWEN_O4_TP', '2'))
 EMBED_CODES_PER_WORD = 64  # tools/hdc_qwen_int8_image.py separate embedding ROM
 
 
@@ -74,8 +77,8 @@ def placement(config=None, groups=GROUPS):
     # Both TP2 dies have the same matrix geometry; row contents and vocab
     # indices differ.  Code ROM words are 8*W*G bits, exactly as the reduced
     # INT8 image writer; each output row gets one BF16 post-tree scale.
-    dims = [('qkv', (nh // 2 + 2 * kv // 2) * hd, h),
-            ('o', h, nh // 2 * hd), ('gu', ff, h), ('down', h, ff // 2)]
+    dims = [('qkv', (nh // TP + 2 * kv // TP) * hd, h),
+            ('o', h, nh // TP * hd), ('gu', 2 * ff // TP, h), ('down', h, ff // TP)]
     for layer in range(layers):
         for name, n, k in dims:
             row = matrix(base, f'L{layer:02d}.{name}', n, k, groups)
@@ -84,7 +87,7 @@ def placement(config=None, groups=GROUPS):
             matrices.append(row)
             base = row['end']
             scale_base = row['scale_end']
-    head = matrix(base, 'lm_head', vocab // 2, h, groups)
+    head = matrix(base, 'lm_head', vocab // TP, h, groups)
     head['scale_base'] = scale_base
     head['scale_end'] = scale_base + head['scale_words']
     matrices.append(head)
@@ -101,7 +104,7 @@ def placement(config=None, groups=GROUPS):
         blockers.append('legacy hdc_program embedding element address exceeds ISA AW24; separate INT8 embed ROM requires a new base contract')
     if vocab > n_limit:
         blockers.append('vocabulary token and argmax index exceed NW16')
-    if vocab // 2 > n_limit:
+    if vocab // TP > n_limit:
         blockers.append('lm_head me_nout exceeds ISA NW16; emit row chunks with argmax continuation')
     if max(P.VM['GU'] + ff, P.VM['ACT'] + ff // 2, P.VM['QKV'] + (nh // 2 + kv) * hd) > I.VM_ELEMS:
         blockers.append('fixed vector-memory placement exceeds VM_ELEMS=4096')
@@ -115,7 +118,7 @@ def placement(config=None, groups=GROUPS):
             'status': 'blocked' if blockers else 'ready_for_image',
             'config_sha256': hashlib.sha256(CONFIG.read_bytes()).hexdigest(),
             'checkpoint_lock_sha256': hashlib.sha256(LOCK.read_bytes()).hexdigest(),
-            'tp': 2, 'identical_geometry_per_die': True,
+            'tp': TP, 'identical_geometry_per_die': True,
             'groups': groups, 'lanes': W, 'interleave': IL,
             'matrix_code_words_per_die': base,
             'matrix_code_word_bits': 8 * W * groups,

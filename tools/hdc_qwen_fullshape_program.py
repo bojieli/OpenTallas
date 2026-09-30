@@ -14,13 +14,13 @@ from pathlib import Path
 import hdc_isa as I
 import hdc_program as P
 import hdc_qwen_fullshape_isa as QI
-from hdc_qwen_fullshape_placement import CONFIG, LOCK, GROUPS, placement
+from hdc_qwen_fullshape_placement import CONFIG, LOCK, GROUPS, TP, placement
 
 W = I.W_LANES
 TMAX = 8192
 
 
-def vm_map(h=4096, ff=6144, nh=16, kv=4, hd=128):
+def vm_map(h=4096, ff=12288 // TP, nh=32 // TP, kv=8 // TP, hd=128):
     """Nonoverlapping, 16-element aligned live regions for a full context."""
     # TP segment descriptor has only eight bits for the VM word address.
     # Keep the collective destination in its first 256 words.
@@ -41,12 +41,12 @@ class LayerZero:
     """Shape-only Layout adapter for build_program, with one paged KV layer."""
 
     def __init__(self, report, die, matrix_rows=None):
-        if die not in (0, 1):
-            raise ValueError('TP2 die must be 0 or 1')
+        if not 0 <= die < TP:
+            raise ValueError('TP die out of range')
         # This layer has no lm_head, so the 16-bit descriptor row0 is zero.
         # The 75,968-row vocabulary offset needs a wider head descriptor later.
-        self.tp, self.die, self.row0 = 2, die, 0
-        self.H, self.L, self.NH, self.KV, self.HD, self.FF = 4096, 1, 16, 4, 128, 6144
+        self.tp, self.die, self.row0 = TP, die, 0
+        self.H, self.L, self.NH, self.KV, self.HD, self.FF = 4096, 1, 32 // TP, 8 // TP, 128, 12288 // TP
         self.norm_fold = True
         self.half, self.GUB, self.groups, self.eps = 64, 128, GROUPS, 1e-6
         self.kv_v0 = self.KV * TMAX * self.HD
@@ -150,7 +150,7 @@ def profile(die, matrix_rows=None, post_scale_bases=None):
                Path(QI.__file__),
                Path(__file__).with_name('hdc_qwen_fullshape_placement.py')]
     return {'schema': 'opentallas.qwen-o4-fullshape-first-layer-program.v1',
-            'status': 'profile_only', 'die': die, 'tp': 2,
+            'status': 'profile_only', 'die': die, 'tp': TP,
             'config_sha256': hashlib.sha256(CONFIG.read_bytes()).hexdigest(),
             'checkpoint_lock_sha256': hashlib.sha256(LOCK.read_bytes()).hexdigest(),
             'source_sha256': {str(path.relative_to(CONFIG.parents[3])):
@@ -174,10 +174,10 @@ def profile_lm_head(die, matrix_row, final_norm_base, chunk_words=512):
     place = placement()
     vm, vm_elems = vm_map()
     lay = LayerZero(place, die)
-    lay.row0 = die * 75968
+    lay.row0 = die * (151936 // TP)
     lay.cb['final'] = final_norm_base
     lay.mat['lm_head'] = {'base': matrix_row['base'], 'scale_base': matrix_row['scale_base'],
-                          'n': 75968, 'k': matrix_row['k_per_split'],
+                          'n': 151936 // TP, 'k': matrix_row['k_per_split'],
                           'tiles': matrix_row['rounds'], 'split': matrix_row['split']}
     with program_geometry(vm):
         program = P.build_program(lay, layers=[], embed=False, head=True,
@@ -204,7 +204,7 @@ def profile_lm_head(die, matrix_row, final_norm_base, chunk_words=512):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument('--die', type=int, choices=(0, 1), required=True)
+    ap.add_argument('--die', type=int, choices=range(TP), required=True)
     ap.add_argument('--out', type=Path, required=True)
     args = ap.parse_args()
     report = profile(args.die)
