@@ -2458,11 +2458,11 @@
    "consequence": "such a vector needs one extra array cycle per extra row in a bank: the SU must split it (issue cost) or stall; neither exists in ot_hdc_v41x_vec"
   }
  ],
- "created_utc": "2026-09-30T08:20:03.628888+00:00",
- "source_commit": "5a5fe600f80003f6716c77e609eba1b913ac6f49",
+ "created_utc": "2026-09-30T19:15:28.078692+00:00",
+ "source_commit": "45b257c81153903ff775ffffcb5172e47ee036b3",
  "source_sha256": {
   "tools/w11_vm_dist_spec.py": "ffb114db8415e567366447751091c6587bda3026efb2fabfa21720f3b4467920",
-  "tools/uarch_model.py": "5eced177086888ee272c497dfb93c5e6e7dfd142a31fb60ca1c8bb87705676fa",
+  "tools/uarch_model.py": "c4aa8f816880ef916dbdc2bf7993e8d7ed920637ebac7be31102a25adbaaf43a",
   "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
   "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d",
@@ -2470,7 +2470,7 @@
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
   "results/floorplan/v41_pack_expanded_woa.json": "6c36746d55fa21650355b10a1316b7938b408f4167e6eba529a80c3e1dc1cb58",
   "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
-  "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "81fa804534d548b7c1f77dc97b33b643d49fd78d63316a15592d920fcc1eca37",
+  "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "ffcc20a520ec7faebd26c184d6b59e9cf192d4ae199f5a7f149ceab19803fc04",
   "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2"
  }
 }
