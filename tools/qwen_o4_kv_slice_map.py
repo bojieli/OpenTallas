@@ -33,10 +33,12 @@ import hdc_isa as I  # noqa: E402
 import hdc_program as P  # noqa: E402
 import hdc_qwen_fullshape_isa as QI  # noqa: E402
 import hdc_qwen_fullshape_program as FP  # noqa: E402
-from hdc_qwen_fullshape_placement import GROUPS  # noqa: E402
+from hdc_qwen_fullshape_placement import GROUPS, TP  # noqa: E402
 
 W, IL, TG = I.W_LANES, I.INTERLEAVE, 4
-KV_VB, KV_HB, KV_NH, KV_SK, KV_SV, KV_AW = 262144, 16, 4, 7, 9, 7
+KV_HB, KV_SK, KV_SV, KV_AW = 16, 7, 9, 7
+KV_NH = 8 // TP                     # KV heads a die (rtl/hdc/ot_qwen_rom_tile.sv KV_NH)
+KV_VB = KV_NH << KV_HB               # first V word (KV_VB)
 
 
 def local(a, groups=GROUPS):
@@ -115,7 +117,7 @@ def main():
     ok = (max_local < (1 << KV_AW) and tile_disagree == 0 and collisions == 0 and multi == 0)
     src = ['tools/qwen_o4_kv_slice_map.py', 'rtl/hdc/ot_qwen_rom_tile.sv', 'rtl/hdc/ot_hdc_matvec.sv']
     rec = {'schema': 'opentallas.qwen-o4-kv-slice-map.v1', 'status': 'pass' if ok else 'fail',
-           'groups': GROUPS, 'position': args.pos, 'kv_ops': len(ops), 'owned_reads': reads,
+           'groups': GROUPS, 'tp': TP, 'kv_heads_per_die': KV_NH, 'v_base_word': KV_VB, 'position': args.pos, 'kv_ops': len(ops), 'owned_reads': reads,
            'distinct_words_read': len(readers), 'window_words_k_plus_v_at_pos': 2 * window_k,
            'max_local_index': max_local, 'slice_words': 1 << KV_AW,
            'tile_cycles_with_disagreeing_local': tile_disagree, 'per_group_collisions': collisions,
