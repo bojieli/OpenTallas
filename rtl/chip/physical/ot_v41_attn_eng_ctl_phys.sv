@@ -27,9 +27,13 @@
 // BREG = 1: every control input and ready/issue output passes a boundary register here, so each
 // engine port path is flop-to-flop (the die-internal neighbours are registered); the reported
 // fmax is then register-to-register.  REPL = 1 selects the engine's per-tile index copies.
+// D = 512 with PHYS = 1: the full 64-tile fanout, the engine's transposers and merges stubbed as registered
+// sinks (PHYS = 1 keeps each tile's REPL index/select copy registers, the endpoints of the broadcast).
 module ot_v41_attn_eng_ctl_phys #(
     parameter integer BREG = 0,
-    parameter integer REPL = 0
+    parameter integer REPL = 0,
+    parameter integer D = 64,
+    parameter integer PHYS = 0
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -57,7 +61,7 @@ module ot_v41_attn_eng_ctl_phys #(
     output wire        qk_iss,
     output wire        pv_iss
 );
-    localparam integer H = 16, D = 64, TD = 32, NL = 4, TROWS = 640, PWORDS = 2;
+    localparam integer H = 16, TD = 32, NL = 4, TROWS = 640, PWORDS = 2;
     localparam integer QW = D * 16, KW = NL * (D / 32) * 265, PW = PWORDS * TD * 16;
     localparam integer NT = NL * (D / TD);
     reg [QW-1:0] q_w;
@@ -96,7 +100,7 @@ module ot_v41_attn_eng_ctl_phys #(
     end endgenerate
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
-    ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS), .PWORDS(PWORDS), .ILV(1), .REPL(REPL)) u_eng (
+    ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS), .PWORDS(PWORDS), .ILV(1), .REPL(REPL), .PHYS(PHYS)) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(e_job_v), .job_t(e_job_t), .job_ready(e_job_ready),
         .q_v(e_q_v), .q_w(q_w), .q_ready(e_q_ready), .kv_v(e_kv_v), .kv_m(e_kv_m), .kv_w(kv_w), .kv_ready(e_kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(e_sc_cr),
@@ -109,8 +113,15 @@ module ot_v41_attn_eng_ctl_phys #(
             for (i = 0; i < n; i = i + 1) fold = fold ^ x[i*32 +: 32];
         end
     endfunction
+    function automatic [31:0] fold_sc(input [NL*H*32-1:0] x);
+        integer i;
+        begin
+            fold_sc = 32'd0;
+            for (i = 0; i < NL * H; i = i + 1) fold_sc = fold_sc ^ x[i*32 +: 32];
+        end
+    endfunction
     always @(posedge clk) begin
-        sc_v_o <= sc_v; sc_row_o <= sc_row; sc_fold <= fold({{(NT-NL)*H*32{1'b0}}, sc_y}, NL * H) ^ {sc_m, sc_f[27:0]};
+        sc_v_o <= sc_v; sc_row_o <= sc_row; sc_fold <= fold_sc(sc_y) ^ {sc_m, sc_f[27:0]};
         pv_v_o <= pv_v; pv_c_o <= pv_c; pv_fold <= fold(pv_y, NT * H) ^ pv_f[31:0];
     end
 endmodule

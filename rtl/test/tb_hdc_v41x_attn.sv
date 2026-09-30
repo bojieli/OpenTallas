@@ -30,6 +30,7 @@ module tb_hdc_v41x_attn (input wire clk);
     parameter integer PWORDS = 1;          // probability words per handshake
     parameter integer ILV = 0;             // position-interleaved verify mode (engine ILV)
     parameter integer REPL = 0;            // engine REPL (per-tile index copies; needs ILV)
+    parameter integer NSTAGE = 1;          // engine NSTAGE (2: two staging buffers; needs ILV; jobs carry no reuse flag)
     localparam integer S = D / TD;
     localparam integer NT = NL * S;
     localparam integer DPT = D / NT;
@@ -84,7 +85,7 @@ module tb_hdc_v41x_attn (input wire clk);
     reg pv_cr = 0;
     wire qk_iss, pv_iss;
     ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS),
-                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS), .ILV(ILV), .REPL(REPL)) dut (
+                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS), .ILV(ILV), .REPL(REPL), .NSTAGE(NSTAGE)) dut (
         .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(job_t), .job_ready(job_ready),
         .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
