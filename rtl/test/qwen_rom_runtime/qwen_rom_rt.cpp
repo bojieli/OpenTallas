@@ -35,11 +35,16 @@
 #include <cstring>
 #include <memory>
 #include <sys/resource.h>
+#include <string>
 #include <type_traits>
 #include <algorithm>
 #include <atomic>
 
-constexpr int D = 2, W = 16, H = 4096, TMAX = 8192, KVH = 4, HD = 128, X_BASE = 4096;
+#ifndef TPD
+#define TPD 2
+#endif
+constexpr int D = TPD, W = 16, H = 4096, TMAX = 8192, KVH = 8 / TPD, HD = 128, X_BASE = 4096;
+constexpr int RB = (D > 1) ? ((D > 2) ? 2 : 1) : 1;   // rank bits (ot_rom_tp_seq RB)
 constexpr int G = GROUPS, TG = 4, NT = G / TG, CB = CBANKS, SW = SWIDTH, NXC = 1 << SMAXB, NXL = NXC / TG;
 constexpr int LT = 2, TCUT = TCUTL, NPT = G >> TCUT, NWS_EXT = (NWSD > 0) ? NWSD - 1 : 0, XVM = XVMD;
 constexpr int WPG = W * 8 / 32;                 // code-image u32 words per group
@@ -204,8 +209,14 @@ int main(int argc, char** argv) {
     {
         FILE* f = fopen(argv[2], "r");
         if (!f) fatal("stages file");
-        char n[256], a[1024], b[1024]; int k;
-        while (fscanf(f, "%255s %1023s %1023s %d", n, a, b, &k) == 4) stages.push_back({n, {a, b}, k != 0});
+        char n[256], a[1024]; int k;
+        while (fscanf(f, "%255s", n) == 1) {
+            Stage st; st.name = n;
+            for (int d = 0; d < D; d++) { if (fscanf(f, "%1023s", a) != 1) fatal("stage line"); st.dir[d] = a; }
+            if (fscanf(f, "%d", &k) != 1) fatal("stage kv_reset");
+            st.kv_reset = k != 0;
+            stages.push_back(st);
+        }
         fclose(f);
         if (stages.empty()) fatal("no stages");
     }
@@ -223,7 +234,7 @@ int main(int argc, char** argv) {
     std::unique_ptr<Fabric> fab[D];
     for (int d = 0; d < D; d++) {
         dctx[d].randReset(0);
-        die[d].reset(new Vdie(&dctx[d], d ? "die1" : "die0"));
+        die[d].reset(new Vdie(&dctx[d], ("die" + std::to_string(d)).c_str()));
         die[d]->tp_token = 0; die[d]->tp_pos = 0; die[d]->h_start = 0;
         fab[d].reset(new Fabric(*die[d], pool));
     }
@@ -238,21 +249,21 @@ int main(int argc, char** argv) {
         bool ch = false;
         uint8_t iv = 0, il = 0, im = 0;
         std::remove_reference_t<decltype(coll.in_data)> idat;
-        uint64_t itag = 0;
+        std::remove_reference_t<decltype(coll.in_tag)> itag{};
         for (int d = 0; d < D; d++) {
             iv |= die[d]->c_valid << d; il |= die[d]->c_last << d; im |= die[d]->c_mode << d;
             for (int w = 0; w < 16; w++) idat[d * 16 + w] = die[d]->c_data[w];
-            itag |= uint64_t(die[d]->c_tag) << (32 * d);
+            setb(itag, 32 * d, 32, die[d]->c_tag);
         }
         ch |= rt_set(coll.rst_n, die[0]->rt_rst_n);
         ch |= rt_set(coll.in_valid, iv); ch |= rt_set(coll.in_last, il); ch |= rt_set(coll.in_mode, im);
-        ch |= rt_set(coll.in_data, idat); ch |= rt_set(coll.in_tag, (std::remove_reference_t<decltype(coll.in_tag)>)itag);
+        ch |= rt_set(coll.in_data, idat); ch |= rt_set(coll.in_tag, itag);
         for (int d = 0; d < D; d++) {
             Vdie& t = *die[d];
             ch |= rt_set(t.c_ready, uint8_t((coll.in_ready >> d) & 1));
             ch |= rt_set(t.r_valid, uint8_t((coll.out_valid >> d) & 1));
             ch |= rt_set(t.r_last, uint8_t((coll.out_last >> d) & 1));
-            ch |= rt_set(t.r_rank, uint8_t((coll.out_rank >> d) & 1));
+            ch |= rt_set(t.r_rank, uint8_t(getb(coll.out_rank, d * RB, RB)));
             ch |= rt_set(t.r_err, uint8_t((coll.out_err >> d) & 1));
             std::remove_reference_t<decltype(t.r_data)> rd;
             for (int w = 0; w < 16; w++) rd[w] = coll.out_data[d * 16 + w];
@@ -260,7 +271,8 @@ int main(int argc, char** argv) {
         }
         return ch;
     };
-    uint8_t me_en[D] = {1, 1};
+    uint8_t me_en[D];
+    for (int d = 0; d < D; d++) me_en[d] = 1;
     int max_settle = 0;
     long passes = 0;
     auto settle = [&](bool fabric_live[D]) {
@@ -296,29 +308,32 @@ int main(int argc, char** argv) {
         r.xpipe_q.assign(XVM, std::vector<uint32_t>(NXC, 0)); r.xpipe_v.assign(XVM, std::vector<uint8_t>(NXC, 0));
         r.rom_bank.assign(NT, -1); r.rom_addr.assign(NT, 0); r.kvr.assign(NT, 0); r.kv_q.assign(size_t(G) * W, 0);
     }
-    long me_busy[D] = {0, 0}, edges = 0, n_me_wr[D] = {0, 0}, n_su_wr[D] = {0, 0};
+    long me_busy[D] = {}, edges = 0, n_me_wr[D] = {}, n_su_wr[D] = {};
     const bool trace = getenv("RT_TRACE") != nullptr;
     long progress_every = getenv("RT_PROGRESS") ? atol(getenv("RT_PROGRESS")) : 4096;
     bool stage_done = false, next_stage = false;
-    size_t cur = 0; long stage_start = 7, busy0[D] = {0, 0};
+    size_t cur = 0; long stage_start = 7, busy0[D] = {};
     auto tstart = std::chrono::steady_clock::now();
-    bool live_all[D] = {true, true};
+    bool live_all[D];
+    for (int d = 0; d < D; d++) live_all[d] = true;
     for (long tick = 0;; tick++) {
         for (int d = 0; d < D; d++) die[d]->clk = 0;
         coll.clk = 0;
         settle(live_all);
         {
             uint32_t cyc = die[0]->cyc;
-            uint8_t all_done = die[0]->s_done && die[1]->s_done;
+            uint8_t all_done = 1;
+            for (int d = 0; d < D; d++) all_done &= die[d]->s_done;
             if (cyc > 8 && all_done && !stage_done) {
                 stage_done = true;
-                uint8_t sf = die[0]->s_fault | (die[1]->s_fault << 1), cf = die[0]->core_fault | (die[1]->core_fault << 1);
+                uint8_t sf = 0, cf = 0;
+                for (int d = 0; d < D; d++) { sf |= die[d]->s_fault << d; cf |= die[d]->core_fault << d; }
                 uint8_t lf = coll.fault;
                 double sec = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
                 printf("STAGE %s done cycles=%ld start_cyc=%ld end_cyc=%u me_busy=%ld/%ld next_token=%u/%u next_val=%08x/%08x "
                        "seq_fault=%d core_fault=%d coll_fault=%d me_writes=%ld su_writes=%ld wall=%.0fs\n", stages[cur].name.c_str(), long(cyc) - stage_start,
-                       stage_start, cyc, me_busy[0] - busy0[0], me_busy[1] - busy0[1], die[0]->seq_ntok, die[1]->seq_ntok,
-                       die[0]->seq_nval, die[1]->seq_nval, sf, cf, lf, n_me_wr[0], n_su_wr[0], sec);
+                       stage_start, cyc, me_busy[0] - busy0[0], me_busy[D - 1] - busy0[D - 1], die[0]->seq_ntok, die[D - 1]->seq_ntok,
+                       die[0]->seq_nval, die[D - 1]->seq_nval, sf, cf, lf, n_me_wr[0], n_su_wr[0], sec);
                 for (int d = 0; d < D; d++) {
                     FILE* fp = fopen((dir + "/" + stages[cur].name + "_die" + char('0' + d) + "_x.hex").c_str(), "w");
                     for (int i = 0; i < H; i++) fprintf(fp, "%08x\n", mem[d].vm[X_BASE + i]);
@@ -330,7 +345,7 @@ int main(int argc, char** argv) {
                     struct rusage ru; getrusage(RUSAGE_SELF, &ru);
                     printf("QWEN_ROM_TOKEN_TP2 PASS stages=%zu token=%u val=%08x die1_token=%u cycles=%u edges=%ld "
                            "settle_max=%d wall_s=%.1f RSS_KiB=%ld threads=%d\n", stages.size(), die[0]->seq_ntok,
-                           die[0]->seq_nval, die[1]->seq_ntok, cyc, edges, max_settle, sec, ru.ru_maxrss, threads);
+                           die[0]->seq_nval, die[D - 1]->seq_ntok, cyc, edges, max_settle, sec, ru.ru_maxrss, threads);
                     return 0;
                 }
                 next_stage = true;
@@ -485,12 +500,13 @@ int main(int argc, char** argv) {
                    mem[0].code_words, mem[0].scale_words, mem[0].crom_words);
             fflush(stdout);
         }
-        bool live[D] = {bool(me_en[0]), bool(me_en[1])};
+        bool live[D];
+        for (int d = 0; d < D; d++) live[d] = me_en[d];
         settle(live);
         if (tick % progress_every == 0) {
             double sec = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
             printf("progress tick=%ld cyc=%u pc_base=%u/%u me_busy=%ld/%ld wall=%.0fs passes=%ld\n", tick, die[0]->cyc,
-                   die[0]->prog_base, die[1]->prog_base, me_busy[0], me_busy[1], sec, passes);
+                   die[0]->prog_base, die[D - 1]->prog_base, me_busy[0], me_busy[D - 1], sec, passes);
             fflush(stdout);
         }
     }

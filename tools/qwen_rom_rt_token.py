@@ -76,6 +76,8 @@ def main() -> None:
     ap.add_argument("--scale-local", type=int, choices=(0, 1), default=0,
                     help="port-local scale ROM (stage dirs from tools/qwen_rom_scale_local.py)")
     ap.add_argument("--code-banks", type=int, default=10)
+    ap.add_argument("--tp", type=int, choices=(2, 4), default=2, help="dies (tensor-parallel ranks)")
+    ap.add_argument("--coll-lat", type=int, default=11, help="collective link latency (cycles), ot_rom_oneshot_allreduce LAT")
     ap.add_argument("--vflags", default="", help="extra Verilator flags for the die model (e.g. W11's "
                     "'--unroll-count 4 -fno-dfg' for an SW=1,024 stream unit)")
     ap.add_argument("--hier-su", action="store_true", help="compile the stream unit as its own hierarchical block")
@@ -114,10 +116,10 @@ def main() -> None:
              f"-GXVM={args.xvm}", f"-GNWS={args.nws}", f"-GTWS={args.tws}", f"-GORD={args.ord}"]
     models = [
         ("die", "ot_qwen_rom_rt_die", [str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
-         [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1",
+         [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
           f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", f"-GMEM_EXTRA={args.mem_extra}", *spine]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
-         ["-GN=2", "-GLANES=16", "-GTAGW=32", "-GDEPTH=16", "-GLAT=11", "-GBPC_NUM=3600"]),
+         [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", "-GDEPTH=16", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_logic", [*map(str, TILE_RTL)],
          [f"-GGT={G}", f"-GNW={NW}", f"-GSMIN={args.smin}", f"-GCODE_BANKS={args.code_banks}", "-GIREG=1", f"-GMEM_EXTRA={args.mem_extra}",
           f"-GNREG={1 if args.nws > 0 else 0}", "-GKV_LOCAL=0"]),
@@ -142,7 +144,7 @@ def main() -> None:
     binary = out / "qwen_rom_rt"
     run("link", ["g++", "-std=c++20", "-O2", "-pthread", f"-DGROUPS={G}", f"-DCOUNTWIDTH={NW}",
                  f"-DSWIDTH={args.su_width}", f"-DSMAXB={args.smax}", f"-DTCUTL={args.tcut}", f"-DNWSD={args.nws}",
-                 f"-DXVMD={args.xvm}", f"-DCBANKS={args.code_banks}", f"-DSMINV={args.smin}", *sorted(includes), RR / "qwen_rom_rt.cpp", "-Wl,--start-group", *archives,
+                 f"-DXVMD={args.xvm}", f"-DTPD={args.tp}", f"-DCBANKS={args.code_banks}", f"-DSMINV={args.smin}", *sorted(includes), RR / "qwen_rom_rt.cpp", "-Wl,--start-group", *archives,
                  "-Wl,--end-group", f"{vroot}/include/verilated.cpp", f"{vroot}/include/verilated_threads.cpp",
                  f"{vroot}/include/verilated_dpi.cpp",
                  "-o", binary])
@@ -150,7 +152,7 @@ def main() -> None:
         print("built", binary)
         return
     stages = [line.split() for line in args.stages.read_text().splitlines() if line.strip()]
-    stage_pins = {f"{n}/die{d}/{f}": sha(Path(p) / f) for n, d0, d1, _ in stages for d, p in enumerate((d0, d1))
+    stage_pins = {f"{st[0]}/die{d}/{f}": sha(Path(p) / f) for st in stages for d, p in enumerate(st[1:-1])
                   for f in ("matrix_int8.hex", "matrix_scale_bf16.hex", "crom.hex", "program.hex", "segments.hex")}
     env = dict(os.environ, RT_THREADS=str(args.threads), RT_SCALE_LOCAL=str(args.scale_local))
     t0 = time.monotonic()
@@ -170,7 +172,7 @@ def main() -> None:
         if not name.startswith("L"):
             continue
         n = int(name[1:])
-        for d in (0, 1):
+        for d in range(args.tp):
             got_p, want_p = out / f"{name}_die{d}_x.hex", args.token_oracle / f"L{n:02d}_die{d}_x.hex"
             got = vector(got_p) if got_p.exists() else []
             want = vector(want_p) if want_p.exists() else []
@@ -186,7 +188,7 @@ def main() -> None:
     good = p.returncode == 0 and bool(m) and token_ok and stable and all(c["mismatches"] == 0 for c in checks.values())
     result = {
         "schema": "opentallas.qwen-rom-rt-token-tp2.v1", "status": "pass" if good else "fail",
-        "design_point": {"groups_per_die": G, "tiles_per_die": G // 4, "count_width": NW, "su_width": args.su_width,
+        "design_point": {"tp": args.tp, "collective_lat_cycles": args.coll_lat, "groups_per_die": G, "tiles_per_die": G // 4, "count_width": NW, "su_width": args.su_width,
                          "su_reducer_time_levels": args.lv, "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut,
                          "pruned": True, "kv_fp8": True, "scale_local": bool(args.scale_local)},
         "wire_stages": {"broadcast_and_x_network_bd": args.bd, "vm_conflict_register_xvm": args.xvm,

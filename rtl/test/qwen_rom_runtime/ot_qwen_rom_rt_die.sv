@@ -51,7 +51,7 @@ module ot_qwen_rom_rt_die #(
     input  wire              r_valid,
     input  wire [511:0]      r_data,
     input  wire              r_last,
-    input  wire              r_rank,
+    input  wire [((D > 2) ? 2 : 1)-1:0] r_rank,
     input  wire              r_err,
     output wire [11:0]       prog_base,
     output wire              prog_re,
