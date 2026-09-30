@@ -1,0 +1,102 @@
+{
+ "schema": "opentallas.v41.rom_element_interface.v1",
+ "status": "FROZEN for W17 (cfg ROM, array spine) and W18 (die assembly), 2026-09-30; changes need a new version",
+ "rtl": "rtl/v41rom/ot_v41_rom_elem.sv (FP8/FP4 macro pairs harden through rtl/v41rom/ot_v41_rom_elem_q.sv, which ties the BF16 port off)",
+ "die_parameters": {
+  "NB": 2,
+  "NSEG": 8,
+  "NCH": 16,
+  "NCHB": 8,
+  "LV": 5,
+  "MTP": 1,
+  "EARLY": 1,
+  "CG": 1,
+  "DRAIN": 127,
+  "XF": {
+   "fp8_fp4_pair": 4,
+   "bf16_pair": 8
+  },
+  "BF16": {
+   "bf16_pairs": 1024,
+   "other_pairs": 0
+  }
+ },
+ "clock_and_reset": {
+  "clk": "one clock; the element gates its own logic with one ICG (ot_hdc_cg): clocked from `go` until DRAIN cycles after its walkers stop; configuration registers stay on clk",
+  "rst_n": "asynchronous, active low"
+ },
+ "configuration": {
+  "port": "cfg_v, cfg_a[4:0], cfg_d[47:0]: one register write per cycle, any order, before `go`; must not change during an op",
+  "segment_entry": {
+   "addr": "0..7 (segment slot s)",
+   "bits": {
+    "[15:0]": "row tag (bit 15 = idle half: no partial emitted)",
+    "[20:16]": "segment index within the row",
+    "[25:21]": "segments in the row",
+    "[26]": "FP4 (else FP8, or BF16 when [42])",
+    "[27]": "low chunk of the first unit present",
+    "[28]": "high chunk of the last unit present",
+    "[41:29]": "ROM base address of the segment's words",
+    "[42]": "BF16"
+   }
+  },
+  "class_entry": {
+   "addr": "8..15 (class slot c)",
+   "bits": {
+    "[0]": "valid",
+    "[8:1]": "first unit (chunk pair / BF16 lane group)",
+    "[15:9]": "units (<= 64)",
+    "[18:16]": "first segment slot",
+    "[21:19]": "last segment slot",
+    "[22]": "BF16 family"
+   },
+   "rule": "segment slots of a class are contiguous and ordered by (fmt, row); classes of one element are disjoint unit ranges in ascending order"
+  },
+  "global_entry": {
+   "addr": "16",
+   "bits": {
+    "[2:0]": "sub-blocks - 1 (ceil(max units / 8) - 1)",
+    "[5:3]": "MTP positions - 1 (0..5)"
+   }
+  },
+  "pair_row_entry": {
+   "addr": "17..24 (17 + s)",
+   "bits": {
+    "[15:0]": "row tag of segment s on the pair's second macro (bit 15 = idle)"
+   }
+  },
+  "writes_per_op": "up to 25 (8 segments + 8 classes + 1 global + 8 pair rows); an op using k segments and j classes needs k + j + 1 + k",
+  "bits_per_op_full": "8 x 43 + 8 x 23 + 6 + 8 x 16 = 662",
+  "generator": "tools/rtl_v41_rom_array.py build_phase (per element: segments, classes, bases from tools/v41_rom_ksplit_bankmap.py)"
+ },
+ "op_start": {
+  "go": "one-cycle pulse; go_bf in the same cycle selects the x family (0: FP8/FP4 stream xs_*, 1: BF16 stream xb_*)",
+  "x_stream": "beats may start the cycle after go; for MTP, position p's rounds follow position p-1's (xs_pos / xb_pos tag each beat)"
+ },
+ "x_stream": {
+  "fp8_fp4": {
+   "ports": "xs_v, xs_p[7:0] pair index, xs_b[2:0] block, xs_sv[1:0] slot valid, xs_q0/xs_e0 chunk 2p codes+exp, xs_q1/xs_e1 chunk 2p+1, xs_pos[2:0]",
+   "order": "round (q, b): the needed pairs in ascending order; rounds in (position, q, b) order; a round lasts >= 5 cycles; spacing so an element never holds more than XF slices"
+  },
+  "bf16": {
+   "ports": "xb_v, xb_b[2:0], xb_sv[3:0], xb_u[4x8] lane-group ids, xb_d[4x256] (16 BF16 per slot: element h*128 + l*8 + b), xb_pos[2:0]",
+   "order": "round (q, b): needed lane groups ascending, up to 4 per beat"
+  }
+ },
+ "outputs": {
+  "partial": "per macro m: pv[m], pval[32m+:32] FP32 node, prow[16m+:16], pseg[5m+:5], pnseg[5m+:5], perr[m], ppos[3m+:3]",
+  "meaning": "{position, row, segment lo, level 0, segments}: a golden csum node over the row's segment; the return network adds golden siblings (ot_v41_ret_node/root)",
+  "rate": "at most one partial per macro per cycle"
+ },
+ "status_outputs": {
+  "busy": "op in flight or draining",
+  "fault": "sticky: x FIFO overflow, chain recurrence violation, tree queue overflow, BF16 product fault"
+ },
+ "power_pins": "VDD/VSS on M7 straps (tools/chip_assembly/tcl/pdn_w10_elem_m7.tcl)",
+ "source_sha256": {
+  "rtl/v41rom/ot_v41_rom_elem.sv": "2a2695256f941a78cc3b51f0f20aaf28c9ba24945fb7c800e1f29ef3254620cd",
+  "rtl/v41rom/ot_v41_rom_elem_q.sv": "413433f8056712288552d550164728a59ae540e4e8d5293eff79762f12bbad60",
+  "tools/rtl_v41_rom_array.py": "66f7c8aa94336c1e2aa46858a94d965a539a4f6ddc706866cd46dd024b8084c1",
+  "tools/chip_assembly/tcl/pdn_w10_elem_m7.tcl": "072ce76e538181e1641cc57435b4bbe409a4b7abb7e61601b37f7f359c2aab19"
+ }
+}
