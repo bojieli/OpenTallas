@@ -691,7 +691,7 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 
 | Design | Tier | Per-user AR | Per-user MTP | Saturated tok/s | mJ/token, B = 1 / saturated | Capex | Users at 1M |
 |---|---|---:|---:|---:|---:|---:|---:|
-| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | ROM | 3,388 | 4,992 | 90,025 | 563 / 296 | $656k | 866 |
+| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | ROM | 3,156 | 4,875 | 90,025 | 585 / 296 | $656k | 866 |
 | V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 3 | 2,452 | 5,302 | 101,171 | 8,286 / 742 | $1,011k | 31,052 |
 | V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 3 | 2,452 | 5,302 | 50,585 | 4,874 / 742 | $513k | 15,526 |
 | V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 3 | 2,452 | 5,302 | 25,293 | 3,168 / 742 | $264k | 7,763 |
@@ -700,13 +700,38 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 
 | Design | Tier | Per-user AR | Per-user DFlash | Saturated tok/s | mJ/token, B = 1 / saturated | Capex | Users at 8K |
 |---|---|---:|---:|---:|---:|---:|---:|
-| Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144) | ROM | 9,368 | — | 23,842 | 98 / 85 | $29k | 536 |
+| Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144), TT | ROM | 9,368 | — | 23,842 | 98 / 85 | $29k | 536 |
+| Qwen ROM option C at 1.2 GHz SS (W12 SS wires, LAT-7 ME, droop cap75 + preramp256) | ROM | 8,474 | — | 23,842 | 120 / 107 | $29k | 536 |
 | Qwen HBM, 1 right-sized die(s) x 6 stacks (388.9 mm2 each) (tier 3, idealised; DFlash W19 audit -14%) | 3 | 660 | 1,722 | 5,328 | 356 / 128 | $19k | 188 |
 | Qwen HBM, 2 right-sized die(s) x 4 stacks (265.8 mm2 each) (tier 3, idealised; DFlash W19 audit -14%) | 3 | 880 | 2,296 | 7,104 | 356 / 128 | $20k | 255 |
 | Qwen3-8B on 1x B200, FP8 (tier 2, calibrated) | 2 | 331 | 853 | 7,907 | 2,081 / 87 | $25k | 255 |
 | Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 1 (DFlash paper Table 3) | 1 | 230 | — | — | 2,996 / — | — | — |
 | Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, Math500 (tau 8.01, 5.1x) | 1 | 1,175 | — | — | 586 / — | — | — |
 | Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, HumanEval (tau 6.50, 4.2x) | 1 | 955 | — | — | 722 / — | — | — |
+
+**MTP acceptance** (`tau_sweep_1m`). The headline τ is third-party: 3.78, arena-hard (general chat), from LMSYS, 'DSpark in SGLang' (2026-07-06), https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ Figure 4: DeepSeek-V4-Flash, H200 TP4 DP-attention, block 6, cap-accept verify (acceptance ceiling). It is V4-Flash, not V4.1-Flash, and cap-accept is a ceiling. Our measured 3.649 corroborates it. γ = 5, so τ ≤ 6 always holds.
+
+| Design | τ 2.91 | τ 3.649 | τ 3.78 | τ 4.5 | τ 5.24 |
+|---|---:|---:|---:|---:|---:|
+| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | 3,888 | 4,875 | 5,050 | 6,012 | 7,000 |
+| V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 4,228 | 5,302 | 5,492 | 6,539 | 7,614 |
+| V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 4,228 | 5,302 | 5,492 | 6,539 | 7,614 |
+| V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 4,228 | 5,302 | 5,492 | 6,539 | 7,614 |
+| DeepSeek-V4.1-Flash on 8x B200 (tier 2, calibrated) | 430 | 539 | 558 | 664 | 774 |
+| DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance) | 294 | 368 | 381 | 454 | 528 |
+
+**Short context (8K)** (`short_context_8k`). The public GPU records are short-context; the 1M headline is dominated by the index scan and attention.
+
+| Design | AR tok/s | MTP tok/s | Saturated | Dies / GPUs | Silicon mm² | Capex |
+|---|---:|---:|---:|---:|---:|---:|
+| V4.1 ROM product (columns, 1.2 GHz SS) | 3,369 | 5,663 | 115,770 | 188 | 153,220 | 656,462 |
+| V4.1 HBM tier 3, equal cost (2 x TP-96), W19 audit central | 2,609 | 6,639 | 98,515 | 192 | 65,376 | 512,856 |
+| V4.1-Flash, 8x B200 (tier 2, calibrated) | 283 | 548 | — | 8 | 12,800 | 200,000 |
+| V4.1-Flash, 8x B300 (tier 2; = B200 within the model, ASSUMED) | 283 | 548 | — | 8 | 12,800 | — |
+
+**GPU calibration** (`gpu_calibration`). Public single-user records: DeepSeek-R1 on 8x B200 at 368 tok/s (TensorRT-LLM blog 1: ISL 1K / OSL 2K, MTP-3) and DeepSeek-V3.2 at ~312 on B200 (blog 15). The ~1,000 tok/s/user public record is Llama 4 Maverick, not DeepSeek. Our tier-2 model at ~3K context gives V4.1-Flash 282.7 AR / 548.4 MTP, +49% against R1's 368. That comparison mixes model size (R1 has 37B active parameters, V4.1-Flash 13B) with model error.
+
+**HBM tier-3 collective count** (W19's exact TP-96 program; sensitivity): the model has 188 collectives on the path, the audit 228, and the minimised exact program 265 → 2230.5 AR (305 → 2076.7), from the audit's central 2,394.5.
 
 ### Density basis (root ruling, 2026-09-30)
 
@@ -783,12 +808,13 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 | 34 stages (stage-count comparison) | 1.03 | 34 / 176 | 3,692 | 5,688 | 77,180 | 425 / 194 |
 | density asap7 | 1.03 | 24 / 120 | 3,742 | 5,723 | 76,758 | 357 / 193 |
 | density roma | 1.03 | 34 / 192 | 3,692 | 5,688 | 77,180 | 456 / 200 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ideal depths, no concurrency cap | 1.2 | 37 / 188 | 4,206 | 6,627 | 95,792 | 418 / 203 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: 50% field-concurrency cap (W18, adopted) | 1.2 | 37 / 188 | 3,897 | 5,486 | 92,256 | 438 / 207 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: cap + W11 hub latency inventory (estimates) | 1.2 | 37 / 188 | 3,668 | 5,382 | 92,256 | 454 / 207 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: cap + measured FP32 add: chain and element adds 8 stages | 1.2 | 37 / 188 | 2,730 | 4,567 | 90,676 | 548 / 209 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED (AGENTS.md c0894b1c): cap + 1.2 GHz streaming domain (LAT-7 adds, W11: 1,208 MHz SS) + 0.9 GHz chain domain (LAT 3), W18 ratio-FIFO CDC | 1.2 | 37 / 188 | 3,493 | 5,053 | 90,025 | 467 / 209 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 LAT-4 serial mul | 1.2 | 37 / 188 | 3,388 | 4,992 | 90,025 | 476 / 209 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ideal depths, no concurrency cap | 1.2 | 37 / 188 | 4,205 | 6,626 | 95,792 | 418 / 203 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: 50% field-concurrency cap (W18, adopted) | 1.2 | 37 / 188 | 3,896 | 5,485 | 92,256 | 438 / 207 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: cap + W11 hub latency inventory (estimates) | 1.2 | 37 / 188 | 3,667 | 5,381 | 92,256 | 454 / 207 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: cap + measured FP32 add: chain and element adds 8 stages | 1.2 | 37 / 188 | 2,730 | 4,566 | 90,676 | 548 / 209 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED (AGENTS.md c0894b1c): cap + 1.2 GHz streaming domain (LAT-7 adds, W11: 1,208 MHz SS) + 0.9 GHz chain domain (LAT 3), W18 ratio-FIFO CDC | 1.2 | 37 / 188 | 3,492 | 5,052 | 90,025 | 467 / 209 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 LAT-4 serial mul | 1.2 | 37 / 188 | 3,332 | 4,964 | 90,025 | 481 / 209 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) | 1.2 | 37 / 188 | 3,156 | 4,875 | 90,025 | 498 / 209 |
 
 **More stages buy no throughput.** 28 → 34 stages costs 0.8% AR (+2.2 µs of hops) and leaves the saturated rate flat (76,962 vs 77,180). The reason is that the layer-20 index scan, which does not split, sets the stage period at about 13 µs.
 
@@ -799,20 +825,31 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 **Adopted design:** a 1.2 GHz streaming domain and a 0.9 GHz serial-chain domain.
 
 - **Streaming domain (1.2 GHz):** the ROM field and its elements with LAT-7 adds (W11: 1,208 MHz SS, 5.79 ns an add), the index scan and the attention tiles.
-- **Serial-chain domain (0.9 GHz):** the SU, SFU, softplus, reducer, Sinkhorn, and the VM-H rotate network and group tiles, on the LAT-3 add (906 MHz SS, 3.31 ns).
-- **Crossings:** CDC at the VM port both ways, 2 slow cycles (ASSUMED; W18 gives the FIFO latency).
+- **Serial-chain domain (0.9 GHz):** the SU, SFU, softplus, reducer, Sinkhorn, and the VM-H rotate network and group tiles. The product prices W11's MEASURED serial build (`claude/w11-suclose` ddd2f725): the SU light lane closes at 1.111 ns SS / FF hold, 60/25 (929 MHz), with a 5-cycle multiply and a 4-cycle add.
+- **Crossings:** CDC at the VM port both ways, W18's ratio FIFO: 4 slow cycles fast→slow, 5 fast cycles slow→fast.
 - **Other constraints:** a 50% field-concurrency cap (W18 peak current) and a 256-cycle pre-ramp (W18 droop).
-- **Stage count:** macros are 4096m8 × 2 per slot, so the product basis is 30 stages / 164 dies (8 head dies).
+- **Stage count:** macros are 4096m8 × 2 per slot, so the product basis is 37 stages / 188 dies (4 head dies).
+
+**Named step: W11's measured serial build (W16b, 2026-09-30).** The previous product priced the 0.9 GHz units at the model's 3-stage-add depths plus one cycle a node for the LAT-4 multiply (a lower bound). W11 has now closed the serial build, so the product uses its measured depths in 0.9 GHz cycles instead: linear op 21 → 30, exp 49 → 71, sigmoid/silu 71 → 94, rsqrt 37 → 58, sqrt(softplus) 162 → 216, Engram gate 104 → 127, divide unchanged, and reducer tap 26 → 35 plus 3 → 4 cycles a tree level. The Sinkhorn unit is outside the serial build, so it keeps the one-cycle bound; its SFU front (row max and exp) takes the exp change.
+
+| V4.1 ROM product, 1M | Before (LAT-4 bound) | After (measured) | Change |
+|---|---:|---:|---:|
+| AR tok/s | 3,332 | 3,156 | -5.3% |
+| MTP tok/s at τ 3.649 | 4,964 | 4,875 | -1.8% |
+| MTP tok/s at τ 3.78 | 5,142 | 5,050 | -1.8% |
+| Saturated AR tok/s | 90,025 | 90,025 | +0.0% |
+
+**Sensitivity: shrunk layer die (root ruling, 2026-09-30; `die_shrink_sensitivity`).** The layer die is still sized by the old pack (7,628 pair slots), but the product needs 5,289 pairs a die. Root ruled to shrink it to that count plus 10% margin, an area ratio of 0.763. Until W18b's floorplan of the shrunk die lands, every on-die crossing the model prices is scaled by the square root of that ratio (×0.873). These are the field broadcast and return, the expert trunks, and collective to SerDes. AR 3,156 → 3,186 (+1.0%), MTP at τ 3.649 4,875 → 4,895 (+0.4%), saturated 90,025 → 90,025. Die area, cost and power are not re-priced in this row; it is not the product.
 
 **Clock-domain cases** (`clock_domain_cases`, all with the cap; the measured W11 FP32 add prices every serial chain):
 
 | Case | AR tok/s | MTP tok/s | Saturated AR | Gated mJ, B = 1 / saturated | Top of the critical path (µs) |
 |---|---:|---:|---:|---:|---|
 | a: all 1.2 GHz, chain adds 8 stages | 2,678 | 4,332 | 89,380 | 555 / 210 | attn.wo_a 21.17, attn.out_allreduce 17.07, ffn.combine_allreduce 17.07 |
-| a: all 1.2 GHz, chain adds 9 stages | 2,539 | 4,236 | 89,380 | 575 / 210 | attn.wo_a 21.17, ffn.softplus_sqrt 19.1, attn.out_allreduce 17.07 |
-| b: 1.2 GHz field (LAT 7) + 0.9 GHz chain units (LAT 3), W18 CDC | 3,397 | 4,730 | 88,538 | 476 / 211 | attn.wo_a 21.33, attn.out_allreduce 17.07, ffn.combine_allreduce 17.07 |
+| a: all 1.2 GHz, chain adds 9 stages | 2,538 | 4,236 | 89,380 | 575 / 210 | attn.wo_a 21.17, ffn.softplus_sqrt 19.1, attn.out_allreduce 17.07 |
+| b: 1.2 GHz field (LAT 7) + 0.9 GHz chain units (LAT 3), W18 CDC | 3,396 | 4,730 | 88,538 | 476 / 211 | attn.wo_a 21.33, attn.out_allreduce 17.07, ffn.combine_allreduce 17.07 |
 | b: 1.2 GHz field (LAT 7) + 0.8 GHz chain units (LAT 3), W18 CDC | 3,271 | 4,646 | 87,907 | 487 / 212 | attn.wo_a 21.33, attn.out_allreduce 17.07, ffn.combine_allreduce 17.07 |
-| c: all 0.9 GHz, LAT 3 | 2,905 | 3,810 | 72,157 | 509 / 202 | attn.wo_a 27.87, attn.out_allreduce 22.76, ffn.combine_allreduce 22.76 |
+| c: all 0.9 GHz, LAT 3 | 2,905 | 3,809 | 72,157 | 509 / 202 | attn.wo_a 27.87, attn.out_allreduce 22.76, ffn.combine_allreduce 22.76 |
 
 - **The measured add overturns "everything at 1.2 GHz".** At 1.2 GHz an add needs 8–9 stages (6.7–7.5 ns), so the serial chains slow down more than the clock gains.
 - **The split design keeps the chains on the 906 MHz LAT-3 add**, and gives the best per-user rate with a saturated rate within a few percent.
@@ -820,9 +857,9 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 
 **Droop pre-ramp energy** (W18 67b0bd49), on the adopted product:
 
-- 50% cap + 256-cycle pre-ramp: +87.0 mJ per token, i.e. 563.3 / 296.5 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +99.2 mJ.
-- 1,024-cycle pre-ramp, no cap: +692.6 mJ per token, i.e. 1168.9 / 902.1 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +789.3 mJ.
-- 256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV): +174.0 mJ per token, i.e. 650.3 / 383.5 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +198.3 mJ.
+- 50% cap + 256-cycle pre-ramp: +87.0 mJ per token, i.e. 585.1 / 296.5 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +99.8 mJ.
+- 1,024-cycle pre-ramp, no cap: +692.6 mJ per token, i.e. 1190.7 / 902.1 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +794.5 mJ.
+- 256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV): +174.0 mJ per token, i.e. 672.1 / 383.5 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +199.6 mJ.
 
 The priced graph has 8.81 field-op starts per layer die per token, of which 6.51 follow an idle gap longer than 256 cycles (ASSUMED decay constant). W18's count was 6. The 1,024-cycle no-cap pre-ramp is rejected on energy.
 
@@ -867,6 +904,38 @@ The AR-only ROM does not fit the two-reticle package at 75 + ECC: it needs 746.5
   - W12 estimate 359 mm2 (ASAP7 tiles): 504.0 mm², yield 0.6276, $256.3 per die, $10,825 for 4 dies and 2 packages.
   - storage-only 75 + ECC tile need (the ruled basis): 622.5 mm², yield 0.568, $360.8 per die, $11,243 for 4 dies and 2 packages.
   - 815 mm2 reference: 815.0 mm², yield 0.4863, $578.2 per die, $12,113 for 4 dies and 2 packages.
+
+**Qwen context sweep** (`qwen_context_sweep`). W12b context audit (claude/w12-qwen-rom b4d2715f): KV read 18,432 x T bytes a token a die; HBM binds from ~32K (W12b ~1.4k tok/s at 128K, ~0.9k at 200K with SW 1,024, matching this sweep); 32K needs parameters and 2 larger SRAMs (+~10 mm2 a die); 128K and 200K need a 27-bit address and a larger VM (or head-serial scores).  Qwen3-8B is natively 32K and 128K with YaRN; 200K is beyond official support.  FP8 KV (baseline); the FP4/INT4-KV rows halve the KV bytes and are QUALITY-UNTESTED
+
+| Context | Design | AR tok/s | KV bytes per token | KV read µs | Binding | Users | Saturated | mJ, B = 1 / saturated |
+|---:|---|---:|---:|---:|---|---:|---:|---:|
+| 8,192 | ROM option C (4 stacks a die, FP8 KV) | 9,384 | 603,979,776 | 41.9 | compute chain | 536 | 23,842 | 97.9 / 85.0 |
+| 8,192 | ROM option C, 6 stacks a die | 9,384 | 603,979,776 | 28.0 | compute chain | 804 | 35,763 | 97.9 / 82.2 |
+| 8,192 | ROM option C, FP4/INT4 KV (quality untested) | 9,384 | 301,989,888 | 21.0 | compute chain | 1,072 | 39,531 | 64.6 / 48.3 |
+| 8,192 | Qwen HBM tier 3 (2 x 4-stack right-sized dies), AR | 880 | 603,979,776 | 83.9 | HBM stream | 255 | — | — / — |
+| 8,192 | Qwen3-8B on 1x B200, FP8 (tier 2, calibrated), AR | 331 | 603,979,776 | 115.1 | — | 255 | — | 2,081.4 / — |
+| 32,768 | ROM option C (4 stacks a die, FP8 KV) | 5,960 | 2,415,919,104 | 167.8 | KV stream | 134 | 5,960 | 310.0 / 310.0 |
+| 32,768 | ROM option C, 6 stacks a die | 7,457 | 2,415,919,104 | 111.8 | compute chain | 201 | 8,941 | 303.3 / 298.8 |
+| 32,768 | ROM option C, FP4/INT4 KV (quality untested) | 7,457 | 1,207,959,552 | 83.9 | compute chain | 268 | 11,921 | 170.0 / 160.0 |
+| 32,768 | Qwen HBM tier 3 (2 x 4-stack right-sized dies), AR | 721 | 2,415,919,104 | 335.6 | HBM stream | 63 | — | — / — |
+| 32,768 | Qwen3-8B on 1x B200, FP8 (tier 2, calibrated), AR | 297 | 2,415,919,104 | 460.3 | — | 63 | — | 2,319.3 / — |
+| 131,072 | ROM option C (4 stacks a die, FP8 KV) | 1,490 | 9,663,676,416 | 671.1 | KV stream | 33 | 1,490 | 1,210.2 / 1,210.2 |
+| 131,072 | ROM option C, 6 stacks a die | 2,235 | 9,663,676,416 | 447.4 | KV stream | 50 | 2,235 | 1,165.4 / 1,165.4 |
+| 131,072 | ROM option C, FP4/INT4 KV (quality untested) | 2,980 | 4,831,838,208 | 335.5 | KV stream | 67 | 2,980 | 610.1 / 610.1 |
+| 131,072 | Qwen HBM tier 3 (2 x 4-stack right-sized dies), AR | 418 | 9,663,676,416 | 1,342.4 | HBM stream | 15 | — | — / — |
+| 131,072 | Qwen3-8B on 1x B200, FP8 (tier 2, calibrated), AR | 211 | 9,663,676,416 | 1,841.2 | — | 15 | — | 3,270.7 / — |
+| 200,000 | ROM option C (4 stacks a die, FP8 KV) | 977 | 14,745,600,000 | 1,024.0 | KV stream | 21 | 977 | 1,841.3 / 1,841.3 |
+| 200,000 | ROM option C, 6 stacks a die | 1,465 | 14,745,600,000 | 682.7 | KV stream | 32 | 1,465 | 1,773.1 / 1,773.1 |
+| 200,000 | ROM option C, FP4/INT4 KV (quality untested) | 1,953 | 7,372,800,000 | 512.0 | KV stream | 43 | 1,953 | 925.7 / 925.7 |
+| 200,000 | Qwen HBM tier 3 (2 x 4-stack right-sized dies), AR | 323 | 14,745,600,000 | 2,048.4 | HBM stream | 10 | — | — / — |
+| 200,000 | Qwen3-8B on 1x B200, FP8 (tier 2, calibrated), AR | 175 | 14,745,600,000 | 2,809.5 | — | 10 | — | 3,937.9 / — |
+
+**KV scale-out at 200K** (`qwen_helix_200k`). Extra HBM + attention dies hold context slices, with an exact ordered partial-softmax merge; the weights stay on the 4 ROM dies:
+
+- +0 KV dies (4 total): 977 tok/s per user, 21 users.
+- +4 KV dies (8 total): 1,921 tok/s per user, 43 users.
+- +8 KV dies (12 total): 2,858 tok/s per user, 65 users.
+- +16 KV dies (20 total): 3,040 tok/s per user, 109 users.
 
 ### Right-sized HBM dies and the V4.1 HBM die count
 

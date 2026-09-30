@@ -1,0 +1,641 @@
+{
+ "schema": "opentallas.uarch.w19_hbm_token.v1",
+ "source_commit": "c31561e51c2075ad295f008b58fe531cd8fcec49",
+ "generated_utc": "2026-09-30T19:27:24Z",
+ "inputs": {
+  "results/rtl/w19_hbm_tp96_program.json": "0faf1c3c16e2be237c427c69f42a9319984435e4e7e84f56e07a9ed7b45f973c",
+  "results/rtl/w19_sm_real_ops.json": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+  "results/rtl/w19_sm_real_ops_oreduce.json": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
+  "results/rtl/w19_expert_fetch.json": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72"
+ },
+ "source_sha256": {
+  "tools/w19_hbm_token_compose.py": "6e30ad5a24c303fe13ea35cb977d48af49fcc6ab8e1a8ad9df7038eb6115bc91"
+ },
+ "result": {
+  "collectives_on_path": 305,
+  "total_us": 463.33,
+  "tokens_s": 2158.3,
+  "parts_us": {
+   "sm": 69.15,
+   "barrier": 22.29,
+   "collective": 253.27,
+   "local": 113.3,
+   "fetch": 5.33
+  },
+  "layers": [
+   {
+    "layer": 0,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 1,
+    "collectives": 7,
+    "off_path_collectives": 2,
+    "us": {
+     "sm": 1.994,
+     "barrier": 0.585,
+     "collective": 5.812,
+     "local": 3.537,
+     "fetch": 0.133
+    },
+    "total_us": 12.061
+   },
+   {
+    "layer": 2,
+    "collectives": 10,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.929,
+     "barrier": 0.715,
+     "collective": 8.308,
+     "local": 2.948,
+     "fetch": 0.133
+    },
+    "total_us": 14.033
+   },
+   {
+    "layer": 3,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 4,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 5,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 6,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 7,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 8,
+    "collectives": 10,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.929,
+     "barrier": 0.715,
+     "collective": 8.308,
+     "local": 2.948,
+     "fetch": 0.133
+    },
+    "total_us": 14.033
+   },
+   {
+    "layer": 9,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 10,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 11,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 12,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 13,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 14,
+    "collectives": 10,
+    "off_path_collectives": 2,
+    "us": {
+     "sm": 2.345,
+     "barrier": 0.78,
+     "collective": 8.308,
+     "local": 3.765,
+     "fetch": 0.133
+    },
+    "total_us": 15.331
+   },
+   {
+    "layer": 15,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 16,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 17,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 18,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 19,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 20,
+    "collectives": 10,
+    "off_path_collectives": 1,
+    "us": {
+     "sm": 1.929,
+     "barrier": 0.715,
+     "collective": 8.308,
+     "local": 3.154,
+     "fetch": 0.133
+    },
+    "total_us": 14.24
+   },
+   {
+    "layer": 21,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 22,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 23,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 24,
+    "collectives": 10,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.789,
+     "barrier": 0.65,
+     "collective": 8.308,
+     "local": 3.023,
+     "fetch": 0.133
+    },
+    "total_us": 13.903
+   },
+   {
+    "layer": 25,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 26,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 27,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 28,
+    "collectives": 10,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.789,
+     "barrier": 0.65,
+     "collective": 8.308,
+     "local": 3.023,
+     "fetch": 0.133
+    },
+    "total_us": 13.903
+   },
+   {
+    "layer": 29,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 30,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 31,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 32,
+    "collectives": 10,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.789,
+     "barrier": 0.65,
+     "collective": 8.308,
+     "local": 3.023,
+     "fetch": 0.133
+    },
+    "total_us": 13.903
+   },
+   {
+    "layer": 33,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 34,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 35,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 36,
+    "collectives": 10,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.789,
+     "barrier": 0.65,
+     "collective": 8.308,
+     "local": 3.023,
+     "fetch": 0.133
+    },
+    "total_us": 13.903
+   },
+   {
+    "layer": 37,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 38,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": 39,
+    "collectives": 7,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 1.578,
+     "barrier": 0.52,
+     "collective": 5.812,
+     "local": 2.72,
+     "fetch": 0.133
+    },
+    "total_us": 10.763
+   },
+   {
+    "layer": "head",
+    "collectives": 1,
+    "off_path_collectives": 0,
+    "us": {
+     "sm": 2.934,
+     "barrier": 0.065,
+     "collective": 0.83,
+     "local": 0.55,
+     "fetch": 0.0
+    },
+    "total_us": 4.379
+   }
+  ],
+  "flags": [
+   "SM shape bf16 K=5120 R=43 priced by line rate (not measured)"
+  ],
+  "collective_model": {
+   "fixed_us": 0.83,
+   "us_per_byte": 1.1111111111111112e-06,
+   "source": "PENDING: audit scratch W15 NVLS P=6 (0.81-0.89 us), slope at the 0.9 TB/s package link"
+  },
+  "fetch_source": "results/rtl/w19_expert_fetch.json exposed_ns[ar_L0_refresh_postponed]",
+  "dedicated": {
+   "n_keys": 1048576,
+   "node_ns": {
+    "hc_pre_norm": [
+     266.1,
+     "serial"
+    ],
+    "q_norm_kv_row": [
+     261.2,
+     "serial"
+    ],
+    "q_rope": [
+     37.7,
+     "serial"
+    ],
+    "attend": [
+     639.1999999999999,
+     "fast"
+    ],
+    "hc_post": [
+     73.5,
+     "serial"
+    ],
+    "router_act": [
+     278.6,
+     "serial"
+    ],
+    "route": [
+     133.4,
+     "serial"
+    ],
+    "swiglu": [
+     129.6,
+     "serial"
+    ],
+    "moe_sum": [
+     40.6,
+     "serial"
+    ],
+    "index_q": [
+     45.5,
+     "serial"
+    ],
+    "engram_mix": [
+     421.7,
+     "serial"
+    ],
+    "engram_fetch": [
+     254.8,
+     "fast"
+    ],
+    "cand_mask": [
+     0.0,
+     "fast"
+    ],
+    "final_norm": [
+     266.1,
+     "serial"
+    ],
+    "argmax_local": [
+     146.56697463989258,
+     "serial"
+    ]
+   },
+   "off_path": [
+    "cand_apply",
+    "compressor",
+    "hc_mixes"
+   ],
+   "source": "uarch_model arch-DAG node prices on the 1M path (W11 widths), serial steps at 0.9 GHz"
+  }
+ }
+}
