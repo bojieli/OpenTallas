@@ -72,7 +72,9 @@ def plan(logic_w: float, pair: bool = False, wrapped: bool = False, outline=None
             for k in (0, 1):
                 macros.append({"inst": f"{pre}g_mac[{mb}].g_pp.u_rom{k}", "master": ROM4K, "x": x,
                                "y": y_rom + k * (ROM4K[2] + PP_GAP), "orient": orient if k == 0 else
-                               {"R0": "MX", "MY": "R180"}[orient], "capture": True})
+                               {"R0": "MX", "MY": "R180"}[orient],
+                               # a PP read is a 2-cycle path: the capture registers are left to the placer
+                               "capture": False})
         else:
             macros.append({"inst": f"{pre}g_mac[{mb}].g_one.u_rom", "master": ROM, "x": x, "y": y_rom,
                            "orient": orient, "capture": True})

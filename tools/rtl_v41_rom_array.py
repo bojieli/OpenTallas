@@ -422,7 +422,7 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
     base_nodes = 0
     for sg in die.segs[seg0:]:
         u0, u1 = S.unit_range(sg["fmt"], sg["e0"], sg["elems"])
-        base_nodes = max(base_nodes, (u1 - u0) * (4 if (sg["fmt"] == "bf16" and S.BF16_PAIR) else
+        base_nodes = max(base_nodes, (u1 - u0) * (S.BF16_WORD_CYCLES if (sg["fmt"] == "bf16" and S.BF16_PAIR) else
                                                    (2 if sg["fmt"] == "fp8" else 1)))
     chain_slots = 0
     if bf and S.BF16_PAIR:
@@ -509,7 +509,7 @@ def run_multi(ck: Ckpt, N: int, nb: int, seq: str, work: Path, rng, npos: int = 
                           if a["elements"][e] == 0 and b["elements"][e] > 0)
     xf = XF_BF if any(p["bf"] for p in phs) else XF_Q
     exe = build_sim(N, work.parent, xf, nb, mtp=int(npos > 1), early=int(fillcut), bypass=int(fillcut),
-                    defines=defines, fast=fast, pp=pp, bp=int(S.BF16_PAIR))
+                    defines=defines, fast=fast, pp=pp, bp=(0 if not S.BF16_PAIR else (2 if S.BF16_WORD_CYCLES == 8 else 1)))
     r = subprocess.run([str(exe), f"+DIR={work}", f"+OT_ROM_DIR={work}", f"+PHASES={len(names)}"],
                        capture_output=True, text=True, check=True)
     got, pinfo = {}, {}
@@ -536,6 +536,8 @@ def run_multi(ck: Ckpt, N: int, nb: int, seq: str, work: Path, rng, npos: int = 
 def cases(ck: Ckpt, N: int, nb: int = 1):
     L = f"layers.{LAYER}."
     half = max(1, N // 2)
+    # option ii (<= 2 BF16 segments per element, 4-unit segments): BF16 cases sized to fit a small array
+    bfr = (lambda r: max(1, min(r, (N // 16) * nb))) if S.BF16_CAP else (lambda r: r)
     E = 7
     return {
         "fp8_wq_a_whole_rows": [Mat(ck, L + "attn.wq_a", "fp8", N, 5120, phase="wq_b")],
@@ -555,12 +557,12 @@ def cases(ck: Ckpt, N: int, nb: int = 1):
             for i, e in enumerate((3, 57, 121, 200, 288, 377))]
             + [Mat(ck, L + "ffn.shared_experts.w1", "fp8", 1, 5120, r0=32, phase="experts_gu")]
         if N >= 8 * nb else None,
-        "bf16_router_gate": [Mat(ck, L + "ffn.gate", "bf16", half, 5120, r0=96 * 3, phase="router")],
-        "bf16_compressor_wkv_ksplit": [Mat(ck, L + "attn.compressor.wkv", "bf16", half, 5120, r0=384,
+        "bf16_router_gate": [Mat(ck, L + "ffn.gate", "bf16", bfr(half), 5120, r0=96 * 3, phase="router")],
+        "bf16_compressor_wkv_ksplit": [Mat(ck, L + "attn.compressor.wkv", "bf16", bfr(half), 5120, r0=384,
                                            phase="router")],
-        "bf16_wkv_4096_whole_rows": [Mat(ck, L + "attn.compressor.wkv", "bf16", N, 4096, r0=130, k0=512,
+        "bf16_wkv_4096_whole_rows": [Mat(ck, L + "attn.compressor.wkv", "bf16", bfr(N), 4096, r0=130, k0=512,
                                          phase="wo_a")],
-        "bf16_indexer_wk": [Mat(ck, L + "attn.indexer.wk", "bf16", N, 512, r0=0, phase="cmp.wk")],
+        "bf16_indexer_wk": [Mat(ck, L + "attn.indexer.wk", "bf16", bfr(N), 512, r0=0, phase="cmp.wk")],
         "mixed_down_fp4_expert_w2_fp8_shared_w2": [
             Mat(ck, L + f"ffn.experts.{E}.w2", "fp4", half, 2304, r0=3840, phase="down"),
             Mat(ck, L + "ffn.shared_experts.w2", "fp8", half, 2304, r0=3840, phase="down")],
@@ -582,12 +584,15 @@ def main(argv=None):
     ap.add_argument("--define", nargs="*", default=[], help="Verilog defines (e.g. a mutant)")
     ap.add_argument("--fast", action="store_true", help="the 1.2 GHz element pipeline (FAST=1, LAT-stage adders)")
     ap.add_argument("--pp", action="store_true", help="ping-pong 2 x ot_rom_4096x274_m8 per macro slot")
-    ap.add_argument("--bp", action="store_true", help="BF16_PAIR: BF16 on the standard pair (4 multipliers, "
+    ap.add_argument("--bp", type=int, default=0, choices=[0, 1, 2], help="BF16_PAIR: BF16 on the standard pair (4 multipliers, "
                                                       "4-cycle word hold, NCH 24, 2-unit BF16 sub-blocks)")
     a = ap.parse_args(argv)
     if a.bp:
         assert a.fast, "--bp needs --fast"
-        S.BF16_PAIR, S.BF16_WORD_CYCLES, S.BF16_SPLIT_BOOST = True, 4, 1
+        S.BF16_PAIR, S.BF16_WORD_CYCLES, S.BF16_SPLIT_BOOST = True, (8 if a.bp == 2 else 4), 1
+        S.IL_BF16 = 1 if a.bp == 2 else 2
+        S.BF16_CAP = 3 if a.bp == 2 else 0
+        S.BF16_MAX_UNITS = 4 if a.bp == 2 else 8
     if a.fast:
         S.FADD_REC = FAST_LAT             # rounds last at least the adder recurrence
     G.set_arith("chunk8")
@@ -623,8 +628,15 @@ def main(argv=None):
             wd = a.work / (f"n{N}_nb{nb}{'_sib' if a.sibling else ''}_p{a.mtp}{'_fc' if a.fillcut else ''}{'_bp' if a.bp else ''}"
                            f"{'_fast' if a.fast else ''}{'_pp' if a.pp else ''}_{name}")
             wd.mkdir(exist_ok=True)
-            ph = build_phase(mats, N, wd, rng, split=8 if "split8" in name else None, nb=nb, sibling=a.sibling,
-                             npos=a.mtp, pp=a.pp)
+            try:
+                ph = build_phase(mats, N, wd, rng, split=8 if "split8" in name else None, nb=nb, sibling=a.sibling,
+                                 npos=a.mtp, pp=a.pp)
+            except AssertionError as ex:
+                if "BF16 cap" not in str(ex):
+                    raise
+                print(json.dumps(dict(N=N, NB=nb, case=name, skipped="more BF16 segments than 2 per element")))
+                out.append(dict(N=N, NB=nb, case=name, skipped=True, rows=0, fp32_exact=0, bf16_exact=0, fault=0))
+                continue
             if a.bp and ph["bf"] and (ph["chain_slots"] > 24 or ph["base_nodes"] > 32):
                 print(json.dumps(dict(N=N, NB=nb, case=name, skipped="placement needs %d chain slots per lane and %d "
                                       "segment-tree base nodes; the element has 24 and 32 (LV 5), and the full-die "
@@ -635,7 +647,7 @@ def main(argv=None):
                 continue
             xf = XF_BF if ph["bf"] else XF_Q
             exe = build_sim(N, a.work, xf, nb, mtp=int(a.mtp > 1), early=int(a.fillcut), bypass=int(a.fillcut),
-                            fast=int(a.fast), pp=int(a.pp), bp=int(a.bp))
+                            fast=int(a.fast), pp=int(a.pp), bp=a.bp)
             rows, done = run_case(exe, wd, ph)
             rows = {t: v for t, v in rows.items() if not t[1] & SENT}
             ok_fp32 = sum(rows.get(t, (None,))[0] == v for t, v in ph["exp_fp32"].items())

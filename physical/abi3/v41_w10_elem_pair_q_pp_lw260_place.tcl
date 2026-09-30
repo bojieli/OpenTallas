@@ -36,10 +36,10 @@ proc ot_row_orient {block y dbu} {
     error "No placement row at Y=$y"
 }
 set ot_macros {
-    {u_e.g_mac[0].g_pp.u_rom0} 14.160 6.160 R0 1
-    {u_e.g_mac[0].g_pp.u_rom1} 14.160 69.070 MX 1
-    {u_e.g_mac[1].g_pp.u_rom0} 423.440 6.160 MY 1
-    {u_e.g_mac[1].g_pp.u_rom1} 423.440 69.070 R180 1
+    {u_e.g_mac[0].g_pp.u_rom0} 14.160 6.160 R0 0
+    {u_e.g_mac[0].g_pp.u_rom1} 14.160 69.070 MX 0
+    {u_e.g_mac[1].g_pp.u_rom0} 423.440 6.160 MY 0
+    {u_e.g_mac[1].g_pp.u_rom1} 423.440 69.070 R180 0
 }
 set nfixed 0
 set nunused 0
@@ -99,4 +99,4 @@ foreach {name mx my orient capture} $ot_macros {
     }
 }
 puts "OT_W10_ELEM_PLACE macros=[expr {[llength $ot_macros]/5}] fixed_capture_flops=$nfixed"
-if {$nfixed + $nunused != 1096 || $nunused > 16} { error "capture flop count $nfixed" }
+if {$nfixed + $nunused != 0 || $nunused > 0} { error "capture flop count $nfixed" }

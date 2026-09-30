@@ -105,7 +105,14 @@ module ot_v41_rom_elem #(
     localparam integer HW = $clog2(NCH);
     localparam integer LAT = FAST != 0 ? 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] : 5;
     localparam integer XD = PP != 0 ? 3 : 2;       // issue -> captured ROM word (a PP read is a 2-cycle path)
-    localparam integer BPH = 4;                    // BF16_PAIR: cycles a BF16 word is held
+    // BF16_PAIR: BP = 2 (root re-decision 2026-09-30, option ii, the product): 2 multipliers per macro, a word held
+    // 8 cycles (lanes 2k, 2k+1 in cycle k) into the 2 chunk chains (slot = 8 x word + k, <= 2 words per round at
+    // NCH 16), the pair adder forms each 2-chunk node, a BF16 sub-block is 1 unit.  BP = 1: option iii (4 mults).
+    localparam integer BPH = BP == 2 ? 8 : 4;      // cycles a BF16 word is held
+    localparam integer BPN = 16 / BPH;             // multipliers per macro
+    localparam integer KW = BP == 2 ? 3 : 2;       // hold counter width
+    localparam [2:0] HOLDM1 = BPH - 1;
+    localparam [KW-1:0] KLAST = BPH - 1;
 
     // ---------------- inputs: registered at the element boundary when FAST (the column spine drives them from
     // its own registers; one more cycle keeps the input delay out of the capture and walker loops).  go_e and the
@@ -236,8 +243,8 @@ module ot_v41_rom_elem #(
     ot_v41_first #(.N(NSEG)) u_flive (.live(base_live), .c(c_live), .ok(c_live_ok));
 
     // units per sub-block: 8 (shift 3); BF16_PAIR BF16 family 2 (shift 1)
-    wire [1:0] sbs = (BP != 0 && fam) ? 2'd1 : 2'd3;
-    wire [1:0] sbs_go = (BP != 0 && go_bf_e) ? 2'd1 : 2'd3;
+    wire [1:0] sbs = (BP != 0 && fam) ? (BP == 2 ? 2'd0 : 2'd1) : 2'd3;
+    wire [1:0] sbs_go = (BP != 0 && go_bf_e) ? (BP == 2 ? 2'd0 : 2'd1) : 2'd3;
     wire [8:0] sbn = 9'd1 << sbs;
     wire [8:0] sbn_go = 9'd1 << sbs_go;
     // FAST walkers: the per-class sub-block facts (class live in sub-block q, its units there) depend only on q and
@@ -294,7 +301,7 @@ module ot_v41_rom_elem #(
     always @* begin
         ntot = 7'd0; gtot = 7'd0; ltot = 7'd0;
         for (bc = 0; bc < NSEG; bc = bc + 1) begin
-            cend = {1'b0, c_u0[bc]} + {2'd0, c_nu[bc]};
+            cend = (FAST != 0) ? cend_r[bc] : {1'b0, c_u0[bc]} + {2'd0, c_nu[bc]};
             // next sub-block
             nlo[bc] = b_lo[bc] + sbn;
             nhi[bc] = (cend < nlo[bc] + sbn) ? cend : nlo[bc] + sbn;
@@ -327,25 +334,31 @@ module ot_v41_rom_elem #(
     reg [6:0] gtot_f;
     reg [8:0] ce_, hq_, hb_;
     integer bf;
+    reg [8:0] cend_r [0:NSEG-1];
+    always @(posedge clk) for (bf = 0; bf < NSEG; bf = bf + 1) cend_r[bf] <= {1'b0, c_u0[bf]} + {2'd0, c_nu[bf]};
     always @(posedge clk) begin
         for (bf = 0; bf < NSEG; bf = bf + 1) begin
-            ce_ = {1'b0, c_u0[bf]} + {2'd0, c_nu[bf]};
+            ce_ = cend_r[bf];
             hq_ = (ce_ < {1'b0, c_u0[bf]} + 9'd8) ? ce_ : {1'b0, c_u0[bf]} + 9'd8;
-            hb_ = (ce_ < {1'b0, c_u0[bf]} + ((BP != 0) ? 9'd2 : 9'd8)) ? ce_ : {1'b0, c_u0[bf]} + ((BP != 0) ? 9'd2 : 9'd8);
+            hb_ = (ce_ < {1'b0, c_u0[bf]} + ((BP == 2) ? 9'd1 : (BP != 0) ? 9'd2 : 9'd8)) ? ce_
+                : {1'b0, c_u0[bf]} + ((BP == 2) ? 9'd1 : (BP != 0) ? 9'd2 : 9'd8);
             hi0q_r[bf] <= hq_; hi0b_r[bf] <= hb_;
             glq_r[bf] <= hq_[3:0] - c_u0[bf][3:0]; glb_r[bf] <= hb_[3:0] - c_u0[bf][3:0];
         end
     end
     // sub-block-0 slice totals of each family (configuration only; the configuration ends >= 2 cycles before go)
     reg [6:0] tot0_r, tot1_r;
-    reg [6:0] t0_, t1_;
+    reg [4:0] tq_r [0:3];
+    reg [4:0] tb_r [0:3];
     always @(posedge clk) begin
-        t0_ = 7'd0; t1_ = 7'd0;
-        for (bf = 0; bf < NSEG; bf = bf + 1) begin
-            if (c_v[bf] && !c_bf[bf]) t0_ = t0_ + {3'd0, glq_r[bf]};
-            if (c_v[bf] && c_bf[bf]) t1_ = t1_ + {3'd0, glb_r[bf]};
+        for (bf = 0; bf < 4; bf = bf + 1) begin
+            tq_r[bf] <= ((c_v[2*bf] && !c_bf[2*bf]) ? {1'b0, glq_r[2*bf]} : 5'd0)
+                      + ((c_v[2*bf+1] && !c_bf[2*bf+1]) ? {1'b0, glq_r[2*bf+1]} : 5'd0);
+            tb_r[bf] <= ((c_v[2*bf] && c_bf[2*bf]) ? {1'b0, glb_r[2*bf]} : 5'd0)
+                      + ((c_v[2*bf+1] && c_bf[2*bf+1]) ? {1'b0, glb_r[2*bf+1]} : 5'd0);
         end
-        tot0_r <= t0_; tot1_r <= t1_;
+        tot0_r <= {2'd0, tq_r[0]} + {2'd0, tq_r[1]} + {2'd0, tq_r[2]} + {2'd0, tq_r[3]};
+        tot1_r <= {2'd0, tb_r[0]} + {2'd0, tb_r[1]} + {2'd0, tb_r[2]} + {2'd0, tb_r[3]};
     end
     always @* gtot_f = go_bf_e ? tot1_r : tot0_r;
     // next-sub-block total: 3 registered stages from b_lo (a sub-block lasts >= 8 rounds)
@@ -454,8 +467,8 @@ module ot_v41_rom_elem #(
     reg [13:0] a_ctr;
     reg        pp_last_v, pp_last_b;
     wire       pp_block = (PP != 0) && pp_last_v && pp_last_b == a_ctr[0];
-    reg [1:0] bp_hold;                      // BF16_PAIR: cycles left of the word being multiplied
-    wire issue = w_run && f_cnt != 0 && !hazard && !pp_block && !(BP != 0 && bp_hold != 2'd0);
+    reg [2:0] bp_hold;                      // BF16_PAIR: cycles left of the word being multiplied
+    wire issue = w_run && f_cnt != 0 && !hazard && !pp_block && !(BP != 0 && bp_hold != 3'd0);
     wire pop = issue && w_cls_last;
     reg ffault;
     wire [NB-1:0] bk_fault;
@@ -479,11 +492,11 @@ module ot_v41_rom_elem #(
     always @(posedge gclk or negedge rst_n) begin
         if (!rst_n) begin
             n_run <= 1'b0; bn_run <= 1'b0; fam <= 1'b0; w_run <= 1'b0; f_cnt <= 0; f_wr <= 0; f_rd <= 0; hz_v <= '0; ffault <= 1'b0;
-            pp_last_v <= 1'b0; bp_hold <= 2'd0;
+            pp_last_v <= 1'b0; bp_hold <= 3'd0;
         end else begin
             hz_v <= {hz_v[LAT-2:0], issue};
             pp_last_v <= issue; pp_last_b <= a_ctr[0];
-            if (BP != 0) bp_hold <= (issue && w_bf) ? 2'd3 : (bp_hold != 2'd0 ? bp_hold - 2'd1 : 2'd0);
+            if (BP != 0) bp_hold <= (issue && w_bf) ? HOLDM1 : (bp_hold != 3'd0 ? bp_hold - 3'd1 : 3'd0);
             if (go_e) begin
                 // go_e with no valid class of the phase's family is legal and a no-op (the spine broadcasts go_e to
                 // every element): no walker starts, so no x beat is captured and no word is issued.  Before this,
@@ -542,7 +555,7 @@ module ot_v41_rom_elem #(
                 if (pop) f_rd <= f_rd + 1'b1;
                 if ({1'b0, f_cnt} + {2'b0, npush} > XF + (pop ? 1 : 0)) ffault <= 1'b1;
                 // BF16_PAIR: a round may hold at most NCH / 4 BF16 words (4 chain slots each)
-                if (BP != 0 && issue && w_bf && {27'd0, w_cnt} >= NCH / 4) ffault <= 1'b1;
+                if (BP != 0 && issue && w_bf && {27'd0, w_cnt} >= NCH / BPH) ffault <= 1'b1;
             end
         end
     end
@@ -726,31 +739,34 @@ module ot_v41_rom_elem #(
         // hold the captured word and x slice for BPH cycles; cycle k multiplies lanes 4k .. 4k+3
         reg [255:0] hw_, hx_;
         reg [TW-1:0] ht;
-        reg [1:0] hk;
+        reg [KW-1:0] hk;
         reg hv;
         always @(posedge gclk or negedge rst_n) begin
-            if (!rst_n) begin hv <= 1'b0; hk <= 2'd0; end
-            else if (i2_v && i2_bf) begin hv <= 1'b1; hk <= 2'd0; end
-            else if (hv) begin hk <= hk + 2'd1; if (hk == 2'd3) hv <= 1'b0; end
+            if (!rst_n) begin hv <= 1'b0; hk <= '0; end
+            else if (i2_v && i2_bf) begin hv <= 1'b1; hk <= '0; end
+            else if (hv) begin hk <= hk + 1'b1; if (hk == KLAST) hv <= 1'b0; end
         end
         always @(posedge gclk) if (i2_v && i2_bf) begin hw_ <= cap[255:0]; hx_ <= i2_q0; ht <= i2_t; end
         // product pipe tag: {slot, first, last, position, tree, final}
         localparam integer PW_ = HW + 2 + TG + 1;
         // chain slot = 4 x (word in round) + k (the word index is the tag's slot field, < NCH / 4)
-        wire [HW-1:0] pslot = {ht[TW-3 -: HW-2], hk};
+        wire [HW-1:0] pslot = {ht[TW-1-KW -: HW-KW], hk};
         // the segment's final base node is the LAST 4-chunk node of its last unit (k = 3)
-        wire [PW_-1:0] pt_in = {pslot, ht[5], ht[4], ht[TW-HW-1 -: TG], ht[3] && hk == 2'd3};
+        wire [PW_-1:0] pt_in = {pslot, ht[5], ht[4], ht[TW-HW-1 -: TG], ht[3] && hk == KLAST};
         wire [PW_-1:0] pt;
-        ot_hdc_delay #(.W(PW_), .D(5)) u_mt (.clk(gclk), .rst_n(rst_n), .d(pt_in), .q(pt));
-        reg [4:0] mvp;
-        always @(posedge gclk or negedge rst_n) if (!rst_n) mvp <= 5'd0; else mvp <= {mvp[3:0], hv};
-        assign m_v = mvp[4];
+        // the lane select is registered (hv_r, wl_r, xl_r) before the multipliers
+        ot_hdc_delay #(.W(PW_), .D(6)) u_mt (.clk(gclk), .rst_n(rst_n), .d(pt_in), .q(pt));
+        reg [5:0] mvp;
+        reg hv_r;
+        always @(posedge gclk or negedge rst_n) if (!rst_n) begin mvp <= 6'd0; hv_r <= 1'b0; end
+            else begin mvp <= {mvp[4:0], hv}; hv_r <= hv; end
+        assign m_v = mvp[5];
         assign {m_slot, m_first, m_last, m_tag} = pt;
         genvar mm;
-        for (mm = 0; mm < 4; mm = mm + 1) begin : g_mul
-            wire [15:0] wl = hw_[16 * (4 * hk + mm) +: 16];
-            wire [15:0] xl = hx_[16 * (4 * hk + mm) +: 16];
-            ot_hdc_bmul u_m (.clk(gclk), .rst_n(rst_n), .v(hv), .a({wl, 16'd0}), .b({xl, 16'd0}),
+        for (mm = 0; mm < BPN; mm = mm + 1) begin : g_mul
+            reg [15:0] wl, xl;
+            always @(posedge gclk) begin wl <= hw_[16 * (BPN * hk + mm) +: 16]; xl <= hx_[16 * (BPN * hk + mm) +: 16]; end
+            ot_hdc_bmul u_m (.clk(gclk), .rst_n(rst_n), .v(hv_r), .a({wl, 16'd0}), .b({xl, 16'd0}),
                              .y(m_y[mm]), .fault(m_f[mm]));
         end
         assign ci0_v = fam ? m_v : l0_v;           assign ci1_v = fam ? m_v : l1_v;
@@ -795,7 +811,7 @@ module ot_v41_rom_elem #(
     wire        q4_v, q4_err;
     wire [31:0] q4_val;
     wire [TG:0] q4_t;
-    if (BP != 0) begin : g_bpc
+    if (BP == 1) begin : g_bpc
         ot_v41_chain2 #(.NCH(NCH), .TW(TG + 1), .CUT(CUT)) u_c2 (.clk(gclk), .rst_n(rst_n), .v(m_v),
             .slot(m_slot), .first(m_first), .last(m_last), .term(m_y[2]), .term_f(m_f[2]),
             .tag(m_tag), .ov(c2_v), .osum(c2_s), .of(c2_f), .otag(c2_t), .fault(c2_fault));
@@ -833,7 +849,7 @@ module ot_v41_rom_elem #(
     wire        q_v = pr_vp[LAT-1];
     wire [31:0] q_val = pr_t[1] ? pr_sum : pr_pass;
     wire        q_err = pr_t[0] | (pr_t[1] && pr_err != 2'd0);
-    if (BP != 0) begin : g_bp4
+    if (BP == 1) begin : g_bp4
         // chunks 4k+2 + 4k+3 (golden level 1), then (4k + 4k+1) + (4k+2 + 4k+3) (level 2)
         wire [31:0] pb_sum, l2_sum;
         wire [1:0]  pb_err, l2_err;
@@ -867,10 +883,10 @@ module ot_v41_rom_elem #(
         assign bf_v = 1'b0; assign bf_val = 32'd0; assign bf_tree = '0; assign bf_final = 1'b0;
         assign bf_err = 1'b0; assign b_fault = 1'b0;
     end
-    wire        qq_v = (BP != 0 && fam) ? q4_v : q_v;       // BF16_PAIR BF16 phase: the 4-chunk node
-    wire [31:0] qq_val = (BP != 0 && fam) ? q4_val : q_val;
-    wire        qq_err = (BP != 0 && fam) ? q4_err : q_err;
-    wire [TG:0] qq_t = (BP != 0 && fam) ? q4_t : pr_t[TG+2:2];
+    wire        qq_v = (BP == 1 && fam) ? q4_v : q_v;       // BP 1 BF16 phase: the 4-chunk node (BP 2: the pair's)
+    wire [31:0] qq_val = (BP == 1 && fam) ? q4_val : q_val;
+    wire        qq_err = (BP == 1 && fam) ? q4_err : q_err;
+    wire [TG:0] qq_t = (BP == 1 && fam) ? q4_t : pr_t[TG+2:2];
     wire        b_v = qq_v | bf_v;
     wire [31:0] b_val = bf_v ? bf_val : qq_val;
     wire        b_err = bf_v ? bf_err : qq_err;
@@ -913,7 +929,7 @@ module ot_v41_rom_elem #(
     assign bk_fault[mb] = c0_fault | c1_fault | c2_fault | c3_fault | t_fault | b_fault;
     end endgenerate
     assign busy = w_run | i1_v | i2_v | drain != 8'd0;
-    assign walk_busy = w_run | n_run | bn_run | i1_v | i2_v | (BP != 0 && bp_hold != 2'd0);
+    assign walk_busy = w_run | n_run | bn_run | i1_v | i2_v | (BP != 0 && bp_hold != 3'd0);
     // slot field of the tag is HW bits; BF16 chains use its low log2(NCHB) bits (words per round <= NCHB)
 endmodule
 

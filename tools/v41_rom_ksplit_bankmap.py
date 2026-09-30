@@ -75,6 +75,7 @@ BF16_WORD_CYCLES = 8
 BF16_CAP = 0                        # BF16_PAIR: max BF16 words in flight per element per round (0 = no cap)
 BF16_SPLIT_BOOST = 0                # 0: the model's split; 1: split BF16 rows as if each word were 8 (BF16_PAIR)
 IL_BF16 = 2
+BF16_MAX_UNITS = 0                  # BF16_PAIR: largest BF16 segment in units (0 = no limit)
 
 
 def il(fmt: str) -> int:
@@ -130,6 +131,11 @@ def model_split(rows: int, K: int, n: int, fmt: str = "fp8") -> int:
     s = min(s, npow2(C))
     if fmt == "fp4":
         s = min(s, max(1, npow2(C) // 2))
+    if fmt == "bf16" and BF16_PAIR and BF16_MAX_UNITS:
+        # BF16_PAIR segments of at most BF16_MAX_UNITS 128-element units (segment-tree base nodes = units x hold
+        # <= 32 at LV 5, and the element's 3-bit sub-block counter)
+        while s < npow2(C) and math.ceil(K / s) > BF16_MAX_UNITS * 128:
+            s *= 2
     return s
 
 
@@ -349,7 +355,8 @@ class Die:
             self.regions.append(dict(inst=inst, macro=m, base=base, words=int(self.fill[m]) - base, seg_ids=sids))
 
 
-def lpt(die: Die, allowed: np.ndarray, load: np.ndarray, count: int, w: int, blocked=None) -> np.ndarray:
+def lpt(die: Die, allowed: np.ndarray, load: np.ndarray, count: int, w: int, blocked=None, capcount=None,
+        cap=0) -> np.ndarray:
     """`count` equal segments to the least-loaded allowed macros; `blocked` (bool per macro) excludes macros
     already holding an overlapping but different unit range in this phase (an element's classes are
     disjoint)."""
@@ -359,12 +366,17 @@ def lpt(die: Die, allowed: np.ndarray, load: np.ndarray, count: int, w: int, blo
     out = np.empty(count, dtype=np.int64)
     got = 0
     while got < count:
+        if cap:
+            allowed = allowed[capcount[allowed] < cap]
+            assert len(allowed) > 0, "BF16 cap: no element left"
         order = np.lexsort((allowed, die.fill[allowed], load[allowed]))
         lvl = load[allowed[order]]
         k = min(count - got, int(np.searchsorted(lvl, lvl[0], side="right")))
         take = allowed[order[:k]]
         out[got:got + k] = take
         load[take] += w
+        if cap:
+            capcount[take] += 1
         got += k
     return out
 
@@ -376,6 +388,7 @@ def lpt(die: Die, allowed: np.ndarray, load: np.ndarray, count: int, w: int, blo
 # time equals the whole-die placement's, so its farthest pair (the op's wire latency) shrinks at no issue cost.
 # ---------------------------------------------------------------------------------------------------------
 NEAR = False
+REGIONS = 0                          # W17: VM groups (a row's segments stay in its group's slots); 0 = one root
 CRITICAL = ("a_proj", "wq_b", "cmp.wk", "wo_b", "router")
 REACH_UM = 504.0                     # W15: SS register-to-register reach at 0.833 ns
 GATHER_SCATTER = 12                  # the model's VM x-gather + return-scatter stages (6 + 6)
@@ -440,7 +453,8 @@ def _place_phase(die: Die, ms: list[dict], layer: int, ph: str, M: int, info: di
             n_set = len(die.bf) if m["fmt"] == "bf16" else die.n
             n_set = min(n_set, M)
             if BF16_PAIR and m["fmt"] == "bf16":
-                n_set *= BF16_WORD_CYCLES if BF16_SPLIT_BOOST else 1     # a BF16 word costs 8 read cycles: split further
+                # a BF16 word costs `hold` read cycles: split further, but never past the per-element cap
+                n_set *= (min(BF16_WORD_CYCLES, BF16_CAP) if BF16_CAP else BF16_WORD_CYCLES) if BF16_SPLIT_BOOST else 1
             s = model_split(m["rows"], m["K"], n_set, m["fmt"])
             segs = segments(m["K"], s)
             info[m["tensor"]] = dict(rows=m["rows"], K=m["K"], fmt=m["fmt"], s_model=s,
@@ -451,6 +465,7 @@ def _place_phase(die: Die, ms: list[dict], layer: int, ph: str, M: int, info: di
         items.sort(key=lambda t: (-t[0], t[1]["tensor"], t[2]))
         ids = []
         held = {}                                # unit range -> macros holding it in this phase
+        bfcount = np.zeros(die.n, dtype=np.int64)
         for w, m, si, e0, el in items:
             allowed = die.bf if m["fmt"] == "bf16" else np.arange(die.n)
             allowed = allowed[allowed < M]
@@ -459,7 +474,22 @@ def _place_phase(die: Die, ms: list[dict], layer: int, ph: str, M: int, info: di
             for (f2, a0, a1), ms_ in held.items():
                 if f2 == rng[0] and (a0, a1) != rng[1:] and a0 < rng[2] and rng[1] < a1:
                     blocked[ms_] = True
-            mac = lpt(die, allowed, load, m["rows"], w, blocked)
+            # at most BF16_CAP BF16 segments per element in a phase (1-unit sub-blocks: that many words per round)
+            capv = BF16_CAP if (BF16_PAIR and BF16_CAP and m["fmt"] == "bf16") else 0
+            if REGIONS:
+                # W17 multi-root return: super row r (output rows n, n + 128 of one 256-row block) belongs to VM
+                # group r mod REGIONS, whose slots are {g, g + REGIONS, ...}; least load, then near-first, within it
+                mac = np.empty(m["rows"], dtype=np.int64)
+                for g in range(REGIONS):
+                    rows_g = np.arange(g, m["rows"], REGIONS)
+                    if len(rows_g) == 0:
+                        continue
+                    al = allowed[allowed % REGIONS == g]
+                    if len(al) == 0:
+                        al = allowed[allowed % REGIONS == g % max(1, len(allowed))]
+                    mac[rows_g] = lpt(die, al, load, len(rows_g), w, blocked, bfcount, capv)
+            else:
+                mac = lpt(die, allowed, load, m["rows"], w, blocked, bfcount, capv)
             held[rng] = np.unique(np.concatenate([held.get(rng, np.zeros(0, np.int64)), mac]))
             for r in range(m["rows"]):
                 ids.append(len(die.segs))
@@ -645,7 +675,14 @@ def derive(snapshot: Path, draws: int, seed: int, only=None, keep=None):
                 ex.append(dict(layer=t["layer"], experts_owned=len(t["ids"]), **expert_stats(n, t, sd, rng, draws)))
             if keep is not None:
                 keep.append(die)
+            reg_bad = {}
+            if REGIONS:
+                for sg in die.segs:
+                    if sg["macro"] % REGIONS != sg["row"] % REGIONS:
+                        k_ = "experts" if ".experts." in sg["tensor"] else "dense"
+                        reg_bad[k_] = reg_bad.get(k_, 0) + 1
             dies.append(dict(die=name, stage=stage, rank=rank, macros=n_macros, pair_slots=n,
+                             region_mismatched_segments=reg_bad if REGIONS else None,
                              bf16_pair_slots=len(die.bf), rows_per_slot=PAIR,
                              dense_layers=dense_layers, segments=len(die.segs),
                              weight_words=int(sum(rg["words"] for rg in die.regions)),
@@ -754,11 +791,15 @@ def main(argv=None):
     p.add_argument("--bf16-pair", action="store_true", help="BF16 on every standard pair (BF16_PAIR)")
     p.add_argument("--bf16-split", action="store_true", help="BF16_PAIR: split BF16 rows for 8-cycle words")
     p.add_argument("--bf16-cap", type=int, default=0, help="BF16_PAIR: max BF16 words in flight per element")
+    p.add_argument("--bf16-sub", type=int, default=2, help="BF16_PAIR: units per BF16 sub-block")
     p.add_argument("--bf16-hold", type=int, default=8, help="BF16_PAIR: cycles a BF16 word is held (16 / multipliers)")
     p.add_argument("--near", action="store_true", help="distance-aware placement of the critical low-work phases")
     p.add_argument("--geometry", type=Path, default=ROOT / "results/floorplan/v41_pack_refit_w10_ss833_interim.json",
                    help="floorplan pack record giving pair-slot distances (with --near or --wire)")
     p.add_argument("--wire", action="store_true", help="measure each phase's farthest pair and wire cycles")
+    p.add_argument("--regions", type=int, default=0,
+                   help="VM groups of the multi-root return (W17: 128); region of super row r = r mod R, slots "
+                        "j = g (mod R)")
     p.add_argument("--critical", nargs="*", default=None, help="phases confined to the nearest slots (with --near)")
     p.add_argument("--fadd-rec", type=int, default=None, help="FP32 adder recurrence (chain latency) in cycles")
     a = p.parse_args(argv)
@@ -768,6 +809,8 @@ def main(argv=None):
         SLOT_DIST, _root = load_geometry(a.geometry)
         PERM = np.random.default_rng(a.seed).permutation(len(SLOT_DIST))
     NEAR = bool(a.near)
+    global REGIONS
+    REGIONS = a.regions
     global CRITICAL
     if a.critical is not None:
         CRITICAL = tuple(a.critical)
@@ -776,6 +819,9 @@ def main(argv=None):
     BF16_SPLIT_BOOST = int(a.bf16_split)
     global BF16_CAP, BF16_WORD_CYCLES
     BF16_CAP = a.bf16_cap
+    global IL_BF16, BF16_MAX_UNITS
+    IL_BF16 = a.bf16_sub
+    BF16_MAX_UNITS = min(8 * a.bf16_sub, 32 // a.bf16_hold) if a.bf16_pair else 0
     BF16_WORD_CYCLES = a.bf16_hold
     if a.fadd_rec:
         FADD_REC = a.fadd_rec
@@ -811,7 +857,10 @@ def main(argv=None):
                                       rule="each critical phase on the smallest nearest-slot prefix (sixteenths of "
                                            "the die, then powers of two) whose stream-round time equals the "
                                            "whole-die placement's; everything else on the whole die")
-                  if NEAR else None),
+                  if NEAR else None,
+                  regions=dict(count=REGIONS, row_rule="super row r = output rows (256 b + i, 256 b + i + 128), "
+                                                        "region = r mod count", slot_rule="region g owns slots j = g "
+                                                        "(mod count)") if REGIONS else None),
         checkpoint_revision=a.snapshot.name,
         source_sha256={str(q.relative_to(ROOT)): sha(q) for q in
                        [Path(__file__).resolve(), ROOT / "tools/v41_floorplan_die_macromap.py",

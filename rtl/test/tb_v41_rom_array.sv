@@ -56,7 +56,7 @@ module tb_v41_rom_array;
             end
             @(negedge clk);
             cfg_v = 1'b0;
-            repeat (2) @(negedge clk);          // the configuration ends >= 2 cycles before go (FAST element)
+            repeat (4) @(negedge clk);          // the configuration ends >= 4 cycles before go (FAST element)
             go = 1'b1;
             go_bf = bfp;
             beat = '0;                      // the stream starts LEAD cycles after go
