@@ -200,11 +200,35 @@ template <class DIE> struct Field {
     }
     template <class F> void each_pair(int s, F f) { if (slot_kind[s] == 1) f(*pb[slot_idx[s]]); else if (slot_kind[s] == 0) f(*pq[slot_idx[s]]); }
     size_t nmodels() const { size_t n = act.size() + roots.size(); for (auto& l : nodes) n += l.size(); return n; }
+    // QUIESCENCE SKIP (RT_SKIP=1; the gate and the reference run use 0): a pair whose element is clock-gated with no
+    // configuration load (its `quiet`) and whose broadcast carries neither cfg_go nor go is not evaluated -- clocking
+    // it changes no state; a return node with nothing queued or in flight and no valid input likewise.  Invalid data
+    // lines are not modelled while skipped (consumers latch only valid data).  At the low phase a skipped model is
+    // re-evaluated only if its inputs now carry work, so its `quiet` is current at the next edge.
+    bool skip_on = false;
+    uint8_t bus_go = 0;                  // cfg_go | go on the broadcast bus (set by the host each phase)
+    long skips = 0, evals = 0;
+    template <class M> bool pair_skip(M& m) { return skip_on && m.quiet && !bus_go; }
+    bool node_skip(Vretn& n) { return skip_on && n.quiet && !n.a_v && !n.b_v; }
     void model_at(size_t i, uint8_t clk, uint8_t rst) {
-        if (i < act.size()) { each_pair(act[i], [&](auto& m) { m.clk = clk; m.rst_n = rst; m.eval(); }); return; }
+        if (i < act.size()) {
+            each_pair(act[i], [&](auto& m) { if (rst && pair_skip(m)) return; m.clk = clk; m.rst_n = rst; m.eval(); });
+            return;
+        }
         i -= act.size();
-        for (auto& l : nodes) { if (i < l.size()) { auto& n = *l[i]; n.clk = clk; n.rst_n = rst; n.eval(); return; } i -= l.size(); }
+        for (auto& l : nodes) {
+            if (i < l.size()) { auto& n = *l[i]; if (rst && node_skip(n)) return; n.clk = clk; n.rst_n = rst; n.eval(); return; }
+            i -= l.size();
+        }
         auto& r = *roots[i]; r.clk = clk; r.rst_n = rst; r.eval();
+    }
+    void update_bus_go() {
+        const auto& b = die.rom_fb;
+        // bus layout (LSB first): xb_d 1024, xb_u 32, xb_sv 4, xb_b 3, xb_v 1, xb_pos 3, xs_pos 3, xs_e1 10, xs_q1 256,
+        // xs_e0 10, xs_q0 256, xs_sv 2, xs_b 3, xs_p 8, xs_v 1, go_bf 1, go 1, np 3, ph PHW, cfg 1
+        size_t p_go = 1024 + 32 + 4 + 3 + 1 + 3 + 3 + 10 + 256 + 10 + 256 + 2 + 3 + 8 + 1 + 1;
+        size_t p_cfg = p_go + 1 + 3 + ROM_PHW;
+        bus_go = uint8_t(getb(b, p_go, 1) | getb(b, p_cfg, 1));
     }
     Node leaf(int g, int m) {
         Node o{};
@@ -249,6 +273,7 @@ template <class DIE> struct Field {
         n.a_v = a.v; n.a_t = a.t; n.a_d = a.d; n.a_e = a.e; n.b_v = b.v; n.b_t = b.t; n.b_d = b.d; n.b_e = b.e;
     }
     void propagate() {
+        update_bus_go();
         pool.run(act.size(), [&](size_t i) { each_pair(act[i], [&](auto& m) { bcast(m); }); });
         for (int l = 0; l < LS; l++) {
             int n = NL >> (l + 1);
@@ -284,6 +309,7 @@ struct DieBase {
     virtual bool done() = 0;
     virtual uint32_t cycles() = 0;
     virtual uint32_t fault() = 0;
+    virtual uint32_t pc() = 0;
     virtual void cfg(const std::string& name, uint64_t v) = 0;
     virtual uint32_t vm_word(int a) = 0;
     // collective ports
@@ -314,6 +340,7 @@ template <class DIE> struct Die : DieBase {
         Verilated::threadContextp(&ctx);
         d->clk = 0; d->rst_n = 0; d->eval();
         f.reset(new Field<DIE>(*d, pool, dir, id));
+        if (const char* e = getenv("RT_SKIP")) f->skip_on = atoi(e) != 0;
     }
     void set_inputs(uint8_t clk, uint8_t rst) override { d->clk = clk; d->rst_n = rst; a->clk = clk; a->rst_n = rst; }
     void eval() override { d->eval(); }
@@ -354,6 +381,7 @@ template <class DIE> struct Die : DieBase {
     bool done() override { return d->done; }
     uint32_t cycles() override { return d->cycles; }
     uint32_t fault() override { return d->fault; }
+    uint32_t pc() override { return d->dbg_pc; }
     void cfg(const std::string& n, uint64_t v) override {
         if (n == "cfg_ik_base") d->cfg_ik_base = v;
         else if (n == "window_region_valid") d->window_region_valid = v;
@@ -568,7 +596,7 @@ int main(int argc, char** argv) {
         if (cyc % 200 == 0) {
             double el = std::chrono::duration<double>(std::chrono::steady_clock::now() - t1).count();
             FILE* pf = fopen((out + "/progress.log").c_str(), "a");
-            if (pf) { fprintf(pf, "CYC %ld wall %.1f s issue_unit %s\n", cyc, el, ""); fclose(pf); }
+            if (pf) { fprintf(pf, "CYC %ld wall %.1f s pc %u %u %u %u\n", cyc, el, dies[0]->pc(), dies[1]->pc(), dies[2]->pc(), dies[3]->pc()); fclose(pf); }
             printf("CYC %ld\n", cyc); fflush(stdout);
         }
     }

@@ -21,7 +21,8 @@ module ot_v41_retn #(
     output wire [31:0] o_t,
     output wire [31:0] o_d,
     output wire        o_e,
-    output wire        fault
+    output wire        fault,
+    output wire        quiet            // nothing queued or in flight (simulation host: skip while inputs idle)
 );
     wire ov, oe;
     wire [31:0] ot, od;
@@ -39,6 +40,11 @@ module ot_v41_retn #(
         assign rv[r+1] = q;
     end endgenerate
     assign o_v = rv[RST];
+`ifdef V41_RT
+    assign quiet = u_n.ac == 0 && u_n.bc == 0 && u_n.vp == 0 && u_n.ap == 0 && !u_n.by_v && rv[RST:1] == '0 && !a_v && !b_v;
+`else
+    assign quiet = 1'b0;
+`endif
     assign o_t = rq[64:33];
     assign o_d = rq[32:1];
     assign o_e = rq[0];

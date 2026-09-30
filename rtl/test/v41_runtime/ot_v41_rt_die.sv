@@ -57,6 +57,7 @@ module ot_v41_rt_die #(
     output wire [7:0]        fault,
     output wire [4:0]        unit_busy,
     output wire [2:0]        issue_unit,
+    output wire [13:0]       dbg_pc,           // the core's program counter (observability only)
     // ROM field
     output wire [ROM_FBW-1:0] rom_fb,
     input  wire [ROM_FRW-1:0] rom_fr,
@@ -128,6 +129,7 @@ module ot_v41_rt_die #(
         .kv_refetches(), .kv_wq_high(), .kv_hold_cycles(), .kv_hbm_grants(), .kv_fault_code(),
         .rope_region_ok(), .rope_fault(), .rope_hbm_grants(), .rope_hbm_wait_cycles());
 
+    assign dbg_pc = dut.u_tile.u_core.pc;
     // ---- images ---------------------------------------------------------------------------------------
     string dir;
     integer fd, i;

@@ -88,7 +88,7 @@ def build(a) -> dict:
     for pre, bf, xf in (("pq", 0, 4), ("pb", 1, 8)):
         models.append((pre, "ot_v41_pair", ["-DV41_RT", f"-GPHW={ROM_PHW}", f"-GBF16={bf}", f"-GXF={xf}"],
                        [ROOT / "rtl/v41die/ot_v41_pair.sv", RT / "ot_rom_8192x274_m8_rt.sv", *W10, *LEAF]))
-    models.append(("retn", "ot_v41_retn", ["-GRD=64", "-GRST=1", "-GBYPASS=1"],
+    models.append(("retn", "ot_v41_retn", ["-DV41_RT", "-GRD=64", "-GRST=1", "-GBYPASS=1"],
                    [ROOT / "rtl/v41die/ot_v41_retn.sv", *W10, *LEAF]))
     models.append(("root", "ot_v41_ret_root", ["-GD=128", "-GQD=128"], [*W10, *LEAF]))
     for pre, top, extra, files in models:

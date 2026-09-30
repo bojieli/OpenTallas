@@ -63,7 +63,10 @@ module ot_v41_pair #(
     output wire [1:0]   perr,
     output wire [5:0]   ppos,
     output wire         busy,
-    output wire         fault
+    output wire         fault,
+    // quiet: no op in flight, no partial pending, no configuration load (the element's clock is gated): clocking
+    // a quiet pair changes nothing until cfg_go or go (simulation host uses it to skip evaluations)
+    output wire         quiet
 );
     localparam integer CW = 3 * NSEG + 1;
     localparam integer DEPTH = CW << PHW;
@@ -128,6 +131,9 @@ module ot_v41_pair #(
         c_a <= ld_k;
         if (ld_run) c_d <= (ld_k == 5'(2 * NSEG)) ? (cmr(ld_a) | {42'd0, ld_np, 3'd0}) : cmr(ld_a);
     end
+    wire e_busy;
+    assign busy = e_busy;
+    assign quiet = !e_busy && !ld_run && !c_v && !cfg_go && !(go && act);
     ot_v41_rom_elem #(.NSEG(NSEG), .NCH(NCH), .XF(XF), .LV(LV), .BF16(BF16), .NB(2), .MTP(MTP), .EARLY(EARLY),
                       .INSTANCE(INSTANCE)) u_e (
         .clk(clk), .rst_n(rst_n), .cfg_v(c_v), .cfg_a(c_a), .cfg_d(c_d),
@@ -135,5 +141,5 @@ module ot_v41_pair #(
         .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0),
         .xs_q1(xs_q1), .xs_e1(xs_e1), .xs_pos(xs_pos), .xb_pos(xb_pos), .ppos(ppos),
         .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg), .perr(perr),
-        .busy(busy), .fault(fault));
+        .busy(e_busy), .fault(fault));
 endmodule
