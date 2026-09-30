@@ -2,7 +2,7 @@
   "schema": "opentallas.v41x.fullshape.weight_layout.v1",
   "status": "partial_rank_layout_verified",
   "claim_boundary": "Source-pinned partial rank layout. Missing weights/constants and unmaterialized experts prevent full-layer/token claims.",
-  "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
+  "source_image_manifest_sha256": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901",
   "layer": 0,
   "rank": 0,
   "source_records_sha256": {
@@ -204,5 +204,17 @@
     }
   ],
   "all_experts_materialized": false,
-  "complete_die_image": false
+  "complete_die_image": false,
+  "repin_20260930": {
+    "label": "stale: program changed",
+    "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+    "rerun": false,
+    "changed_pins": {
+      "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json": {
+        "old": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
+        "new": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901"
+      }
+    },
+    "historical_copy": null
+  }
 }
