@@ -310,6 +310,8 @@ int main(int argc, char** argv) {
     }
     long me_busy[D] = {}, edges = 0, n_me_wr[D] = {}, n_su_wr[D] = {};
     const bool trace = getenv("RT_TRACE") != nullptr;
+    const bool itrace = getenv("RT_ITRACE") != nullptr;
+    bool itr_me = false, itr_c = false;
     long progress_every = getenv("RT_PROGRESS") ? atol(getenv("RT_PROGRESS")) : 4096;
     bool stage_done = false, next_stage = false;
     // a new stage's done is armed only once every die's sequencer has dropped the previous one
@@ -367,6 +369,12 @@ int main(int argc, char** argv) {
             auto& r = rs[d];
             Fabric& f = *fab[d];
             vmw[d].clear(); kvw[d].clear();
+            if (itrace && d == 0) {
+                // RT_ITRACE: die 0's instruction fetches, ME busy edges, collective traffic edges (per-stage cycles)
+                if (t.prog_re) printf("ITR cyc=%u fetch=%u\n", t.cyc, unsigned((size_t(t.prog_base) + t.prog_addr) & 4095));
+                if (bool(t.me_clk_en) != itr_me) { itr_me = t.me_clk_en; printf("ITR cyc=%u me=%d\n", t.cyc, int(itr_me)); }
+                if (bool(t.c_valid) != itr_c) { itr_c = t.c_valid; printf("ITR cyc=%u coll=%d\n", t.cyc, int(itr_c)); }
+            }
             me_en[d] = t.me_clk_en;
             if (t.wrom_re) fatal("stream-unit weight-ROM read (the simulation core narrows that port)");
             r.prog = t.prog_re;
