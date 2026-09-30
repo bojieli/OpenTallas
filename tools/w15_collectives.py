@@ -187,6 +187,8 @@ TB_SRC = {
                         "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC],
     "tb_w15_link_unit": ["rtl/test/tb_w15_link_unit.sv", *LINK_SRC],
     "tb_w15_crc32": ["rtl/test/tb_w15_crc32.sv", "rtl/link/ot_link_crc32.sv"],
+    "tb_w15_v41_hbm_nvls": ["rtl/test/tb_w15_v41_hbm_nvls.sv", *LINK_SRC, "rtl/link/ot_link_nvls_switch.sv",
+                            "rtl/hdc/ot_hdc_fastfp.sv"],
 }
 UNIT = {   # name -> (top, -G overrides): the link direction alone, both link classes; the CRC equivalence
     "unit_ucie": ("tb_w15_link_unit", dict(WIRE_TX=22, WIRE_RX=22, DREL=58, AW_TX=6)),
@@ -225,6 +227,94 @@ def unit_checks():
 
 VFLAGS = ["--binary", "--timing", "-CFLAGS", "-O0", "-Wno-fatal", "-Wno-WIDTH", "-Wno-TIMESCALEMOD", "-Wno-lint",
           "-Wno-style", "-Wno-MULTIDRIVEN"]
+# ---------------------------------------------------------------------------------------------------------------
+# V4.1 HBM comparator: TP-96 (48 two-die packages) through one NVLink-class switch tier with in-switch reduction
+# ---------------------------------------------------------------------------------------------------------------
+HBM_T_CORE = 1 / 1.0339e9            # the HBM die clock (results/floorplan/hbm_gpu/v41_hbm_die.json clock_hz)
+HBM_SWITCH = {
+    "switch_core_ns": dict(value=250.0, grade="published (upper bound, used as the value)",
+                           source="Broadcom Scale-Up Ethernet Framework Spec RM104 (2025) Appendix A Fig. 22: 'Switch "
+                                  "Tx+Rx Latency <250ns' (tools/sync_cost_table.py r-sue); the comparator's alpha = "
+                                  "2 x 209 + 250 = 668 ns (tools/arch_hbm_switched_v41.py)"),
+    "in_switch_reduction": dict(value="fixed pairwise tree over the port (package) index, binary32 RNE",
+                                grade="ASSUMED (deterministic order)",
+                                source="NVLS / SHARP in-network reduction is the comparator's headline "
+                                       "(arch_hbm_switched_v41 nvl_0p9_nvls); a FIXED-order tree is our requirement "
+                                       "for bit-identical results, not a published NVSwitch property"),
+    "switch_clock_ns": dict(value=HBM_T_CORE * 1e9, grade="ASSUMED", source="switch core at the die clock"),
+    "link": dict(value="112G PAM4, full RS(544,514) KP4 over <= 0.8 m rack cable, 68 lanes (0.9 TB/s payload)",
+                 grade="derived", source="configs/hardware/technology.json links.rom_rack_cable_serdes (hop 209 ns: "
+                 "channel 200 + CDC 4 + endpoint 5); 0.9 TB/s per package per direction (arch_hbm_switched_v41)"),
+    "kp4_codeword_ns": dict(value=5440 / (68 * 112.0), grade="derived", source="5,440 bits / (68 x 112 Gb/s)"),
+    "channel_components_ns": dict(value=dict(tx_pcs_fec_encode=4.0, tx_analog=3.0, flight_0p8m=3.7, rx_afe_dsp=50.0,
+                                              codeword=round(5440 / (68 * 112.0), 3), rx_deskew=10.0,
+                                              rs544_decode=round(200 - 4 - 3 - 3.7 - 50 - 5440 / (68 * 112.0) - 10, 2)),
+                                  grade="ASSUMED split of the 200 ns channel",
+                                  source="flight: 4.6 ns/m twinax (Broadcom SUE); RS544 decode the remainder "
+                                         "(IEEE P802.3ck gustlin_3ck_01_1118: 50-100 ns processing + interleave)"),
+    "wire_stages": dict(value=16, grade="floorplan",
+                        source="results/floorplan/hbm_gpu/v41_hbm_die.json crossings tp_root_to_ucie (14.7 mm, 16 "
+                               "cycles); the SerDes edge is ASSUMED at the same distance"),
+}
+
+
+def hbm_params(P):
+    t = HBM_T_CORE * 1e9
+    xt = HBM_SWITCH["kp4_codeword_ns"]["value"]
+    c = HBM_SWITCH["channel_components_ns"]["value"]
+    L = math.ceil(math.log2(P))
+    core = round(HBM_SWITCH["switch_core_ns"]["value"] / t)
+    return dict(P=P, T_CORE=t, T_SW=t, X_T=round(xt, 5), X_ENC=round(c["tx_pcs_fec_encode"] / xt),
+                X_DEC=round((c["rx_deskew"] + c["rs544_decode"]) / xt), SW_PIPE=core - (2 + 3 * L),
+                )
+
+
+def hbm_x_dly():
+    c = HBM_SWITCH["channel_components_ns"]["value"]
+    return round(c["tx_analog"] + c["flight_0p8m"] + c["rx_afe_dsp"] + c["codeword"], 3)
+
+
+HBM_WORDS = (1, 2, 4, 8)
+
+
+def hbm_fixture(outdir: Path, P: int, seed: int = 96) -> dict:
+    import hdc_golden as G
+    outdir.mkdir(parents=True, exist_ok=True)
+    N, MAXW, LANES = 2 * P, 8, 16
+    ops = [dict(mode=0, words=w) for w in HBM_WORDS] + [dict(mode=1, words=w) for w in HBM_WORDS]
+    rng = np.random.default_rng(seed)
+    part = np.zeros((len(ops), N, MAXW, LANES), dtype=np.uint32)
+    exp = np.zeros((len(ops), MAXW, LANES), dtype=np.uint32)
+    for oi, o in enumerate(ops):
+        v = (np.exp2(rng.uniform(-6, 6, size=(N, MAXW, LANES))) * rng.choice([-1, 1], size=(N, MAXW, LANES))
+             ).astype(np.float32)
+        v[1::7] = -v[0::7][:len(v[1::7])]                     # exact cancellations across dies
+        part[oi] = G.bits(v)
+        if o["mode"] == 0:
+            for k in range(o["words"]):
+                for ln in range(LANES):
+                    s = [G.add(v[2 * q, k, ln], v[2 * q + 1, k, ln]) for q in range(P)]   # in-package d0 + d1
+                    while len(s) > 1:                                                   # the switch's tree
+                        s = [G.add(s[2 * i], s[2 * i + 1]) for i in range(len(s) // 2)] + ([s[-1]] if len(s) % 2 else [])
+                    exp[oi, k, ln] = G.bits(s[0]).item()
+
+    def wr(path, arr):
+        with path.open("w") as f:
+            for lanes in arr.reshape(-1, LANES):
+                f.write("".join(f"{int(x):08x}" for x in lanes[::-1]) + "\n")
+    wr(outdir / "part.hex", part)
+    wr(outdir / "expected.hex", exp)
+    (outdir / "desc.hex").write_text("".join(f"{(o['mode'] << 31) | (i << 15) | o['words']:08x}\n"
+                                             for i, o in enumerate(ops)))
+    meta = dict(schema="w15_v41_hbm_nvls_fixture_v1", P=P, dies=N, ops=ops, seed=seed,
+                reference="in-package d_2p + d_2p+1, then the switch's pairwise tree over packages (odd element "
+                          "passes), tools/hdc_golden.add (binary32 RNE, +0 canonical)",
+                images_sha256={p: sha(outdir / p) for p in ("part.hex", "expected.hex", "desc.hex")},
+                golden_sha256=sha(ROOT / "tools/hdc_golden.py"))
+    (outdir / "manifest.json").write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n")
+    return meta
+
+
 # bench configurations: name -> (top, verilator -G overrides, fixture)
 CONFIGS = {
     # V4.1 TP-4: the adopted engine contract (RELAY 1, receive depth 256) and the levers
@@ -264,6 +354,8 @@ CONFIGS = {
     "q256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64), "q256"),
     "q256d16": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=16), "q256"),
     "q256d128": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=128), "q256"),
+    "hbm_p48": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48), X_WIRE=16, U_WIRE=16), "hbm48"),
+    "hbm_p6": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6), X_WIRE=16, U_WIRE=16), "hbm6"),
     "q256d64_sram": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0), "q256"),
     "q1024": ("tb_w15_qwen_tp2", dict(LANES=1024, DEPTH=16, U_NL=1, U_T=0.95), "q1024"),
 }
@@ -319,7 +411,7 @@ def run(name: str, seed: int, det: int, drel: dict, extra: dict | None = None) -
     log = r.stdout + r.stderr
     (out / "log.txt").write_text(log)
     res = dict(seed=seed, det=det, drel=drel, extra=extra or {}, fatal=("%Fatal" in log) or ("%Error" in log))
-    if top == "tb_w15_v41_tp4":
+    if top in ("tb_w15_v41_tp4", "tb_w15_v41_hbm_nvls"):
         ops = [dict(zip(("op", "die", "mode", "words", "issue", "first_tx", "last_tx", "first_vm", "last_vm",
                          "done", "writes", "expect"), map(int, m.groups()))) for m in OPL.finditer(log)]
         links = [dict(src=int(m[1]), dst=int(m[2]), cls=m[3], age_min=int(m[4]), age_max=int(m[5]),
@@ -353,14 +445,15 @@ CHAN_DEFAULT = {"U_DLY": LINKS["ucie_a"]["phy_adapter_tx_rx_ns"]["value"],
                 "X_JS": LINKS["board_112g"]["static_latency_variation_ns"]["value"]}
 
 
-def corners(classes):
+def corners(classes, top=None):
     """Static latency pinned at the bottom and at the top of its range (the seeds draw the inside)."""
     lo = {}
     hi = {}
+    cd = dict(CHAN_DEFAULT, **({"X_DLY": hbm_x_dly()} if top == "tb_w15_v41_hbm_nvls" else {}))
     for c in classes:
         _, dk, jk = CLASS_KEYS[c]
-        lo.update({dk: CHAN_DEFAULT[dk], jk: 0.0})
-        hi.update({dk: round(CHAN_DEFAULT[dk] + CHAN_DEFAULT[jk], 4), jk: 0.0})
+        lo.update({dk: cd[dk], jk: 0.0})
+        hi.update({dk: round(cd[dk] + cd[jk], 4), jk: 0.0})
     return [lo, hi]
 
 
@@ -388,11 +481,11 @@ def seeds(n):
 def campaign_config(name, ncal=24, nmeas=12, jobs=16):
     from concurrent.futures import ThreadPoolExecutor
     top = CONFIGS[name][0]
-    classes = ["ucie", "board"] if top == "tb_w15_v41_tp4" else ["ucie"]
+    classes = ["ucie", "board"] if top in ("tb_w15_v41_tp4", "tb_w15_v41_hbm_nvls") else ["ucie"]
     build(name)
     big = {k[0]: 4000 for k in (CLASS_KEYS[c] for c in classes)}          # release far beyond any arrival
     cal_jobs = [(s, 0, big, None) for s in seeds(ncal)] + \
-        [(1000 + i, 0, big, c) for i, c in enumerate(corners(classes))]
+        [(1000 + i, 0, big, c) for i, c in enumerate(corners(classes, top))]
     with ThreadPoolExecutor(jobs) as ex:
         cal = list(ex.map(lambda a: run(name, *a), cal_jobs))
     arr = {}
@@ -402,7 +495,7 @@ def campaign_config(name, ncal=24, nmeas=12, jobs=16):
             a[0], a[1] = min(a[0], lo), max(a[1], hi)
     drel = {CLASS_KEYS[c][0]: arr[c][1] + GUARD for c in classes}
     meas_jobs = [(s, 1, drel, None) for s in seeds(nmeas)] + \
-        [(2000 + i, 1, drel, c) for i, c in enumerate(corners(classes))]
+        [(2000 + i, 1, drel, c) for i, c in enumerate(corners(classes, top))]
     with ThreadPoolExecutor(jobs) as ex:
         meas = list(ex.map(lambda a: run(name, *a), meas_jobs))
     return dict(name=name, classes=classes, calibration=cal, arrival_cycles=arr, drel=drel, measured=meas)
@@ -519,7 +612,7 @@ def summarize_qwen(res, clock_hz):
                 exchanges=len(rows))
 
 
-CLOCK = {"tb_w15_v41_tp4": 1 / 0.92e-9, "tb_w15_qwen_tp2": 1 / 0.9102e-9}
+CLOCK = {"tb_w15_v41_tp4": 1 / 0.92e-9, "tb_w15_qwen_tp2": 1 / 0.9102e-9, "tb_w15_v41_hbm_nvls": 1.0339e9}
 
 
 def config_record(c):
@@ -533,16 +626,16 @@ def config_record(c):
                release_delay_cycles=c["drel"],
                free_running=dict(det=0, runs=len(cal), all_passed=all(r["passed"] for r in cal),
                                  distinct_timings=len({r["timing_sha256"] for r in cal}),
-                                 distinct_results=len({r["vm_sha256"] for r in cal}) if top == "tb_w15_v41_tp4" else None,
+                                 distinct_results=len({r["vm_sha256"] for r in cal}) if top != "tb_w15_qwen_tp2" else None,
                                  seeds=[r["seed"] for r in cal], corner_channels=[r["extra"] for r in cal if r["extra"]]),
                deterministic=dict(det=1, runs=len(meas), all_passed=all(r["passed"] for r in meas),
                                   distinct_timings=len({r["timing_sha256"] for r in meas}),
-                                  distinct_results=len({r["vm_sha256"] for r in meas}) if top == "tb_w15_v41_tp4" else None,
+                                  distinct_results=len({r["vm_sha256"] for r in meas}) if top != "tb_w15_qwen_tp2" else None,
                                   timing_sha256=meas[0]["timing_sha256"], result_sha256=meas[0]["vm_sha256"],
                                   late_faults=sum(1 for r in meas for l in r.get("links", []) if l["faults"][2]),
                                   seeds=[r["seed"] for r in meas],
                                   corner_channels=[r["extra"] for r in meas if r["extra"]]))
-    if top == "tb_w15_v41_tp4":
+    if top in ("tb_w15_v41_tp4", "tb_w15_v41_hbm_nvls"):
         rows = summarize_v41(meas[0], clock)
         rec["collectives"] = rows
         rec["fit"] = fit(rows)
