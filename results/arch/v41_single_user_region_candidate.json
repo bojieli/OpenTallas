@@ -771,6 +771,13 @@
       "source_rows_per_die_stack": 12500
     }
   },
+  "currency": {
+    "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run",
+    "reason": "The tool asserts die gaps that main has since closed: the die passes .IDX_SHARDED( since 27bea8d3 and .W_HBM(, the 24-bit wq_addr/PHY AW/qstream HAW were widened at cf4940f0, and '.c_v(4\\'b0)' / 'assign kv_ok = 1\\'b0' are gone. Its conclusions (index blocked because the die does not set IDX_SHARDED; comparator weights truncated at 2^24 sectors) no longer hold, so the assertions cannot be updated without changing the ledger's conclusions; it needs re-derivation against the current die.",
+    "stale_since": "27bea8d3",
+    "state": "stale",
+    "verdict_kept": "candidate_for_root_review_not_configured_in_die"
+  },
   "physical_sectors_per_stack": 703125000,
   "placement_status": "candidate_for_root_review_not_configured_in_die",
   "schema": "v41_single_user_region_candidate_v1",

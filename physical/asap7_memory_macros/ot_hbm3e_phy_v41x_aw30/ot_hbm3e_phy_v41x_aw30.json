@@ -36,7 +36,7 @@
     "pin_pitch_um": 0.192,
     "placement": "pseudo-channel p's K request and response bits in [p*window + 20, p*window + 195] um; W pseudo-channel c's bits (c < 8) in [c*window + 205, c*window + 360] um, the shared W request in window 0's; clk, rst_n and status in window 16's W span",
     "pseudo_channel_window_um": 375.003,
-    "signal_pins": 22237,
+    "signal_pins": 22238,
     "w_pins_in_window_um": [
       205.0,
       360.0
@@ -107,10 +107,10 @@
   },
   "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
   "views": {
-    "ot_hbm3e_phy_v41x_aw30.lef": "afbab25bad0e319ac057bfebf41782dc63ada82715132f975d6328eec6079c3b",
-    "ot_hbm3e_phy_v41x_aw30_bb.v": "bffaf8d8d75c49e31996e5ca106ad6cfdd7fff3efa89406c0b4b46f78dc0981e",
-    "ot_hbm3e_phy_v41x_aw30_ff.lib": "b219a9c729f67831182e34bbdd9af10ca5740449ce2d243e606db04874a964c3",
-    "ot_hbm3e_phy_v41x_aw30_ss.lib": "37ce7ff5db96353a0e2b474cd42d237c4ddb0f6ee14dc0e458015a0dd07a646a",
-    "ot_hbm3e_phy_v41x_aw30_tt.lib": "f7174d85e338ffbf0d7510596b26eecef8ef2214aba8c1f659edfb85a64d9020"
+    "ot_hbm3e_phy_v41x_aw30.lef": "bab87674d8c11d6395d2d1492736fc3927726ab29545b25b8e1ae860daf0a177",
+    "ot_hbm3e_phy_v41x_aw30_bb.v": "ec590fdf247b31349b2c5907595b0eec2768cfbfa4eed4e7cae7099b13221371",
+    "ot_hbm3e_phy_v41x_aw30_ff.lib": "627f448bc08fc35147f94831274480892eed25147bc4f4601ff34367bc1151d8",
+    "ot_hbm3e_phy_v41x_aw30_ss.lib": "ae6d946ce32a07811a4d63d1386bdf23e2a857da401ba6ef277636d77ad3fef9",
+    "ot_hbm3e_phy_v41x_aw30_tt.lib": "2e36a6080116f12ef2ab4e984b68d2fdd54ab1d979d243ce5b56c8ee4a149af5"
   }
 }
