@@ -40,7 +40,7 @@ module ot_gpu_bd_col #(
     // (ot_gpu_fadd): the term of slot s arrives BT cycles after its issue, so the ring runs BT cycles late and
     // keeps the slot rotation; a bubble adds +0 (the slot's sum holds, bit for bit).
     localparam integer BT = 11;
-    localparam integer ALAT = 7;
+    localparam integer ALAT = 8;
     localparam integer FB = IL - ALAT;
     wire [LB-1:0] tv_l, tf_l;
     wire [LB*32-1:0] term;
@@ -56,7 +56,7 @@ module ot_gpu_bd_col #(
     ot_hdc_vline #(.D(BT)) u_ld (.clk(clk), .rst_n(rst_n), .v(v && last), .vd(ll_d));
     wire [TAGW-1:0] tag_t;
     ot_hdc_delay #(.W(TAGW), .D(BT)) u_tt (.clk(clk), .rst_n(rst_n), .d(tag), .q(tag_t));
-    // ring: acc register (1) + adder (ALAT) + feedback delay (FB - 1) = IL
+    // ring: adder (ALAT) + feedback delay (FB) = IL; the first-select is combinational at the adder input
     reg  [LB*32-1:0] tm_q;
     reg              first_q, last_q, tv_q;
     reg  [TAGW-1:0]  tag_q;
@@ -73,12 +73,12 @@ module ot_gpu_bd_col #(
     wire [LB-1:0] af;
     generate for (l = 0; l < LB; l = l + 1) begin : g_ring
         wire [31:0] sum, fb_pre;
-        reg  [31:0] acc_q;
-        always @(posedge clk) acc_q <= first_q ? 32'd0 : fb_pre;
-        reg [31:0] tm_d;
-        always @(posedge clk) tm_d <= tm_q[32*l +: 32];
-        ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(acc_q), .b(tm_d), .y(sum), .fault(af[l]));
-        ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum), .q(fb_pre));
+        reg  [31:0] tm_d;
+        reg         first_d, tv_d;
+        always @(posedge clk) begin tm_d <= tm_q[32*l +: 32]; first_d <= first_q; tv_d <= tv_q; end
+        wire [31:0] acc_in = first_d ? 32'd0 : fb_pre;
+        ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(tv_d), .a(acc_in), .b(tm_d), .y(sum), .fault(af[l]));
+        ot_hdc_delay #(.W(32), .D(FB)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum), .q(fb_pre));
         assign acc[32*l +: 32] = sum;
     end endgenerate
     // the chunk's final sum leaves the adder 1 + ALAT cycles after its last term is registered
@@ -95,7 +95,7 @@ module ot_gpu_bd_col #(
     wire tf, t_ov;
     wire [31:0] t_y;
     wire [TAGW-1:0] t_tag;
-    ot_gpu_tree #(.N(LB), .TAGW(TAGW), .ALAT(7)) u_tree (.clk(clk), .rst_n(rst_n), .v(lov[0]), .d(acc), .tag(tag_d),
+    ot_gpu_tree #(.N(LB), .TAGW(TAGW), .ALAT(8)) u_tree (.clk(clk), .rst_n(rst_n), .v(lov[0]), .d(acc), .tag(tag_d),
                                               .ov(t_ov), .y(t_y), .otag(t_tag), .fault(tf));
     // output registers: the hardened macro's outputs leave flops
     reg ov_q, fault_q;

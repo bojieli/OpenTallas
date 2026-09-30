@@ -27,7 +27,7 @@ module ot_gpu_tc_col #(
     parameter integer L    = 32,        // defaults = the hardened macro (Qwen SM: 32 lanes, 16-bit tag)
     parameter integer IL   = 8,
     parameter integer TAGW = 16,
-    parameter integer ALAT = 7          // adder latency: the IL-slot ring needs ALAT <= IL - 1
+    parameter integer ALAT = 8          // adder latency: the IL-slot ring needs ALAT <= IL
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -42,7 +42,7 @@ module ot_gpu_tc_col #(
     output wire [TAGW-1:0] otag,
     output wire            fault
 );
-    localparam integer FB = IL - ALAT;          // ring = acc register + adder + (FB - 1) delay = IL
+    localparam integer FB = IL - ALAT;          // ring = adder (ALAT) + feedback delay (FB) = IL; first-select is combinational at the adder input
     reg            v_q, first_q, last_q;
     reg [L-1:0]    v_ql;                // per-lane copy of v for the bubble gate
     reg [TAGW-1:0] tag_q;
@@ -71,15 +71,14 @@ module ot_gpu_tc_col #(
     genvar l;
     generate for (l = 0; l < L; l = l + 1) begin : g_lane
         wire [31:0] prod, fb_pre;
-        reg  [31:0] acc_q;
         wire f0, f1;
         // a bubble multiplies by +0: the slot's sum holds
         wire [15:0] wg = v_ql[l] ? w_q[16*l +: 16] : 16'd0;
         ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(v_q), .a({wg, 16'd0}),
                            .b({x_q[16*l +: 16], 16'd0}), .y(prod), .fault(f0));
-        always @(posedge clk) acc_q <= fl[4] ? 32'd0 : fb_pre;
-        ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(vl[5]), .a(acc_q), .b(prod), .y(sum[32*l +: 32]), .fault(f1));
-        ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*l +: 32]), .q(fb_pre));
+        wire [31:0] acc_in = fl[5] ? 32'd0 : fb_pre;
+        ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(vl[5]), .a(acc_in), .b(prod), .y(sum[32*l +: 32]), .fault(f1));
+        ot_hdc_delay #(.W(32), .D(FB)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*l +: 32]), .q(fb_pre));
         assign lf[l] = f0 | f1;
     end endgenerate
     wire tf, t_ov;
@@ -120,6 +119,6 @@ module ot_gpu_tc16 (
     output wire [15:0]   otag,
     output wire          fault
 );
-    ot_gpu_tc_col #(.L(16), .IL(8), .TAGW(16), .ALAT(7)) u (.clk(clk), .rst_n(rst_n), .v(v), .first(first), .last(last),
+    ot_gpu_tc_col #(.L(16), .IL(8), .TAGW(16), .ALAT(8)) u (.clk(clk), .rst_n(rst_n), .v(v), .first(first), .last(last),
         .tag(tag), .w(w), .x(x), .ov(ov), .y(y), .otag(otag), .fault(fault));
 endmodule

@@ -27,7 +27,7 @@ module ot_gpu_stack #(
     parameter integer LEV  = 5,     // levels: G <= 2^LEV groups per row
     parameter integer IL   = 8,     // slots (rows in flight)
     parameter integer TAGW = 8,     // tag travelling with the result (row id)
-    parameter integer ALAT = 7      // adder latency (ot_gpu_fadd)
+    parameter integer ALAT = 8      // adder latency (ot_gpu_fadd)
 ) (
     input  wire              clk,
     input  wire              rst_n,

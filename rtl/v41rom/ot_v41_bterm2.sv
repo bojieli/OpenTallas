@@ -113,6 +113,9 @@ module ot_v41_bterm2 #(
     end
 
     // -- P4a: the carry-save pair's sum -------------------------------------------------------------
+    wire [W-1:0] s4a;
+    wire         c4a;
+    ot_v41_ksadd #(.W(W)) u_s4a (.a(p3_a), .b(p3_b), .cin(1'b0), .s(s4a), .cout(c4a));
     reg               p4a_v, p4a_nan;
     reg signed [10:0] p4a_es;
     reg [W-1:0]       p4a_s;
@@ -122,16 +125,12 @@ module ot_v41_bterm2 #(
     end
     always @(posedge clk) begin
         p4a_nan <= p3_nan; p4a_es <= p3_es;
-        p4a_s <= p3_a + p3_b;
+        p4a_s <= s4a;
     end
     // -- P4b: sign-magnitude (the negation as ~s + 1 with a parallel-prefix increment) ---------------
-    reg  [W-1:0] ng;
-    reg  [W-1:0] ones4;
-    always @* begin
-        ones4[0] = 1'b1;
-        for (i = 1; i < W; i = i + 1) ones4[i] = &(~p4a_s | ~(({{(W-1){1'b0}}, 1'b1} << i) - {{(W-1){1'b0}}, 1'b1}));
-        ng = ~p4a_s ^ ones4;                  // -(a + b) = ~s + 1
-    end
+    wire [W-1:0] ng;                          // -(a + b) = ~s + 1
+    wire         cng;
+    ot_v41_inc #(.W(W)) u_ng (.a(~p4a_s), .inc(1'b1), .y(ng), .co(cng));
     reg               p4_v, p4_first, p4_last, p4_nan, p4_s;
     reg signed [11:0] p4_eb;
     reg [W-2:0]       p4_m;
@@ -193,12 +192,9 @@ module ot_v41_bterm2 #(
     // -- P6: round to 24 bits (the golden's float32 of the exact dot) -----------------------------
     wire [23:0] m24 = p5_nm[40:17];
     wire        inc = p5_nm[16] & ((p5_nm[15:0] != 16'd0) | m24[0]);
-    reg  [24:0] ones6;
-    always @* begin
-        ones6[0] = 1'b1;
-        for (i = 1; i < 25; i = i + 1) ones6[i] = &({1'b0, m24} | ~((25'd1 << i) - 25'd1));
-    end
-    wire [24:0] mr = {1'b0, m24} ^ ({25{inc}} & ones6);          // m24 + inc, parallel prefix
+    wire [24:0] mr;                                              // m24 + inc, explicit prefix
+    wire        cmr;
+    ot_v41_inc #(.W(25)) u_mr (.a({1'b0, m24}), .inc(inc), .y(mr), .co(cmr));
     reg               p6_v, p6_first, p6_last, p6_nan, p6_s, p6_z;
     reg signed [11:0] p6_b;
     reg [22:0]        p6_f;
@@ -238,12 +234,9 @@ module ot_v41_bterm2 #(
 
     // -- P8: subnormal round and pack ---------------------------------------------------------------
     wire        inc8 = p7_g & (p7_st | p7_t[0]);
-    reg  [23:0] ones8;
-    always @* begin
-        ones8[0] = 1'b1;
-        for (i = 1; i < 24; i = i + 1) ones8[i] = &(p7_t | ~((24'd1 << i) - 24'd1));
-    end
-    wire [23:0] tr = p7_t ^ ({24{inc8}} & ones8);                  // p7_t + inc, parallel prefix
+    wire [23:0] tr;                                                // p7_t + inc, explicit prefix
+    wire        ctr;
+    ot_v41_inc #(.W(24)) u_tr (.a(p7_t), .inc(inc8), .y(tr), .co(ctr));
     reg         p8_v, p8_first, p8_last, p8_f;
     reg [31:0]  p8_y;
     always @(posedge clk or negedge rst_n) begin
