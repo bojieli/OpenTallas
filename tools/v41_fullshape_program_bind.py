@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import hdc_replay_v41 as R  # noqa: E402
 import hdc_isa_v41 as I  # noqa: E402
+import v41_program_constants as KC  # noqa: E402
 
 DEFAULT_LAYOUT = ROOT / "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json"
 DEFAULT_SHARD = ROOT / "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json"
@@ -29,6 +30,11 @@ DEFAULT_ROPE_CACHE = ROOT / "results/rtl/v41x_rope_hbm_cache.json"
 
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _rel(path: Path) -> str:
+    path = Path(path).resolve()
+    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
 
 
 def _require(cond: bool, message: str) -> None:
@@ -271,15 +277,20 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
         blockers.append("production HBM RoPE full-position table image and physical region not bound")
     instruction_trace = []
     for pc, f in enumerate(program):
-        instruction_trace.append(dict(
-            pc=pc, unit=f["unit"], tag=f.get("_tag"),
-            reads=sorted(f.get("_reads", ())), writes=sorted(f.get("_writes", ())),
-            fields={k: v for k, v in f.items() if not k.startswith("_")},
-        ))
+        row = dict(pc=pc, unit=f["unit"], tag=f.get("_tag"),
+                   reads=sorted(f.get("_reads", ())), writes=sorted(f.get("_writes", ())),
+                   fields={k: v for k, v in f.items() if not k.startswith("_")})
+        if f.get("_imm"):
+            # field -> the constants-manifest entry (tools/v41_program_constants.py) the immediate encodes
+            row["imm_sources"] = dict(f["_imm"])
+        instruction_trace.append(row)
     return dict(schema="opentallas.v41x.fullshape.program_bind.v1",
                 status="runnable" if not blockers else "blocked", layer=0, rank=0,
-                layout_sha256=sha(layout_path), shard_sha256=sha(shard_path),
-                qe_stream_sha256=sha(qe_path), rope_mode=rope_mode,
+                layout_path=_rel(layout_path), layout_sha256=sha(layout_path),
+                shard_path=_rel(shard_path), shard_sha256=sha(shard_path),
+                qe_stream_path=_rel(qe_path), qe_stream_sha256=sha(qe_path), rope_mode=rope_mode,
+                context=shard["context"], position=shard["position"],
+                constants_manifest=_rel(KC.OUT), constants_manifest_sha256=sha(KC.OUT),
                 rope_patch_sha256=sha(rope_path) if rope_mode == "sparse_fixture" else None,
                 rope_token_patch=rope_source if rope_mode == "sparse_fixture" else None,
                 rope_hbm_table=rope_source if rope_mode == "hbm_cache" else None,
@@ -293,7 +304,7 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
                                     packed_requires_fp4_port_adapter=qe["packed_requires_fp4_port_adapter"]),
                 source_sha256={str(p.relative_to(ROOT)): sha(p) for p in (
                     Path(__file__).resolve(), ROOT / "tools/hdc_replay_v41.py",
-                    ROOT / "tools/hdc_isa_v41.py",
+                    ROOT / "tools/hdc_isa_v41.py", ROOT / "tools/v41_program_constants.py", KC.OUT,
                     ROOT / "rtl/hdc/v41/ot_hdc_v41_qe.sv",
                     ROOT / "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv")},
                 source_experts=list(selected), matrix_count=len(expected),
