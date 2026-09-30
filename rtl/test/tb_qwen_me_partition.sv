@@ -226,8 +226,11 @@ module tb_qwen_me_partition;
         end
     endtask
 
+    parameter integer MAXCYC = 400000;
     always @(negedge clk) if (rst_n) begin
         cyc = cyc + 1;
+        if (cyc % 2000 == 0) $display("progress cyc=%0d ops=%0d writes=%0d idle r/m/a=%b%b%b", cyc, ops, nqm, r_idle, m_idle, a_idle);
+        if (cyc > MAXCYC) begin $display("FAIL timeout cyc=%0d ops=%0d idle r/m/a=%b%b%b", cyc, ops, r_idle, m_idle, a_idle); $finish; end
         // unpruned new engine == original, every port
         if ({u_ready, u_idle, u_wrom_re, u_wrom_addr, u_scale_re, u_scale_gre, u_scale_addr, u_kv_re, u_kv_addr,
              u_x_re, u_x_addr, u_ov, u_o_we, u_o_addr, u_o_mask, u_o_data, u_am_idx, u_am_val, u_am_any,
@@ -296,7 +299,9 @@ module tb_qwen_me_partition;
             @(posedge clk);
             #0.1;
             if (go && r_ready) begin ops = ops + 1; new_op; end
-            go = (($urandom(seed) % 8) != 0); seed = seed + 1;
+            // an argmax op resets the running best at issue: as the core's sequencer does, issue it
+            // only once every engine has drained (the argmax trees differ in depth when pruned)
+            go = (($urandom(seed) % 8) != 0) && (!i_amax || (r_idle && m_idle && a_idle)); seed = seed + 1;
         end
         go = 0;
         busy = 0;
