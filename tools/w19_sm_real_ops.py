@@ -212,7 +212,11 @@ def main() -> int:
         groups = {}
         for k, e in dump.items():
             op, _, p = k.rpartition(".p")
-            groups.setdefault(op, []).append((int(p), e))
+            # MTP: a routed-expert slot holds a different expert per position; the SM pass of one expert's
+            # weights carries the columns (positions) that routed to it
+            w = e["w"] if isinstance(e["w"], str) else "|".join(e["w"])
+            key = op if label == "ar" else f"{op}:{w.split('.')[-3] if '.experts.' in w else ''}"
+            groups.setdefault(key, []).append((int(p), e))
         jobs = [(op, [e for _, e in sorted(v, key=lambda t: t[0])]) for op, v in sorted(groups.items())]
         # every weight the cases need, loaded once (not thread-safe to load lazily in parallel)
         for _, ents in jobs:
