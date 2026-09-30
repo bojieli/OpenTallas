@@ -176,7 +176,7 @@ def edge_for(c, peer_x, peer_y):
 
 def write(m: dict, work: Path, k: int, obs_top: int, m89: float, low: float, iters: int = 50,
           hub_obs_top: int = 0, signal_layers: str = "M2-M9", adjust: dict | None = None,
-          region_tcl: str = "") -> dict:
+          region_tcl: str = "", hub_obs: dict | None = None) -> dict:
     work.mkdir(parents=True, exist_ok=True)
     cl = {c.inst: c for c in m["clusters"]}
     plan: dict[str, dict[str, list]] = {}
@@ -222,6 +222,8 @@ def write(m: dict, work: Path, k: int, obs_top: int, m89: float, low: float, ite
     for c in m["clusters"]:
         masters[c.inst] = f"M__{c.inst}"
         ot = hub_obs_top if (hub_obs_top and c.kind == "hub") else obs_top
+        if hub_obs and c.kind == "hub" and c.inst.replace("hub_", "") in hub_obs:
+            ot = hub_obs[c.inst.replace("hub_", "")]
         text, _ = D.cluster_lef(c, plan.get(c.inst, {}), k, ot, masters[c.inst])
         lefs.append(text)
     lefs.append("END LIBRARY\n")
@@ -300,7 +302,7 @@ mem done
 """
     (work / "run.tcl").write_text(tcl)
     man = dict(k=k, congestion_iterations=iters, signal_layers=signal_layers, layer_adjustment=adjust or None,
-               region_adjustments=region_tcl.count("set_global_routing_region_adjustment"),
+               region_adjustments=region_tcl.count("set_global_routing_region_adjustment"), hub_obs=hub_obs or None,
                classes=sorted({b["cls"] for b in m["buses"]}), hub_obs_top=hub_obs_top or obs_top, obs_top=f"M{obs_top}", m8_m9_reserve=m89, m2_m7_adjustment=low, growth=growth,
                bundle_nets=sum(D.bundle_count(b["bits"], k) for b in m["buses"]),
                wires=sum(b["bits"] * 1 for b in m["buses"] if b["cls"] not in ("px", "pr")),
@@ -448,6 +450,8 @@ def main(argv=None):
     ap.add_argument("--adjust", action="append", default=[], help="LAYER=ADJ capacity adjustment override")
     ap.add_argument("--region-tcl", type=Path, help="extra set_global_routing_region_adjustment lines "
                     "(tools/w18/route_combine.py --emit-regions: charge a previous pass's usage)")
+    ap.add_argument("--hub-obs", action="append", default=[],
+                    help="per hub partition obstruction top, e.g. su_vector=6 (overrides --hub-obs-top for it)")
     ap.add_argument("--host", default="")
     ap.add_argument("--memory-gb", type=int, default=100)
     ap.add_argument("--output", type=Path)
@@ -463,7 +467,8 @@ def main(argv=None):
     if a.mode == "write":
         adj = {kv.split("=")[0]: float(kv.split("=")[1]) for kv in a.adjust}
         print(json.dumps(write(mdl, work, a.k, a.obs_top, a.m89_reserve, a.low_adjust, a.iters, a.hub_obs_top,
-                               a.signal_layers, adj, a.region_tcl.read_text() if a.region_tcl else ""), indent=1))
+                               a.signal_layers, adj, a.region_tcl.read_text() if a.region_tcl else "",
+                               {kv.split("=")[0]: int(kv.split("=")[1]) for kv in a.hub_obs}), indent=1))
         return 0
     rec = record(mdl, work, a.floorplan, a.pack, a.k, a.reach_um, a.reach_basis)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")

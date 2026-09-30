@@ -1,0 +1,168 @@
+{
+ "schema": "opentallas.v41.w18_hub_layer_plan.v1",
+ "question": "W11: the SU lanes do not route capped at M2-M5 (overflow 1,304 at 25% util, 167 at 20%). Which hub layer cap keeps the die route at 0 overflow?",
+ "floorplan": "results/physical_abi3/asap7/chip/v41_w18/shrink_p5_interim/floorplan.json (shrunk 669 mm2 die, p5 pair; interim)",
+ "cases": {
+  "base_m5": {
+   "overflow": 0,
+   "cycles": {
+    "vm_xroot_to_farthest_cluster": 30,
+    "farthest_cluster_to_vm": 33,
+    "collective_to_farthest_serdes": 46,
+    "collective_to_farthest_ucie": 34,
+    "hbm_window": 24,
+    "idx_keys": 40,
+    "selected_kv": 24,
+    "idx_topk": 38,
+    "hub": 1
+   },
+   "hub_obs": null,
+   "hub_obs_top": 5
+  },
+  "su6": {
+   "overflow": 0,
+   "cycles": {
+    "vm_xroot_to_farthest_cluster": 31,
+    "farthest_cluster_to_vm": 36,
+    "collective_to_farthest_serdes": 46,
+    "collective_to_farthest_ucie": 34,
+    "hbm_window": 24,
+    "idx_keys": 41,
+    "selected_kv": 24,
+    "idx_topk": 38,
+    "hub": 1
+   },
+   "hub_obs": {
+    "su_vector": 6
+   },
+   "hub_obs_top": 5
+  },
+  "su7": {
+   "overflow": 0,
+   "cycles": {
+    "vm_xroot_to_farthest_cluster": 30,
+    "farthest_cluster_to_vm": 33,
+    "collective_to_farthest_serdes": 46,
+    "collective_to_farthest_ucie": 34,
+    "hbm_window": 25,
+    "idx_keys": 40,
+    "selected_kv": 24,
+    "idx_topk": 38,
+    "hub": 1
+   },
+   "hub_obs": {
+    "su_vector": 7
+   },
+   "hub_obs_top": 5
+  },
+  "all6": {
+   "overflow": 0,
+   "cycles": {
+    "vm_xroot_to_farthest_cluster": 30,
+    "farthest_cluster_to_vm": 34,
+    "collective_to_farthest_serdes": 46,
+    "collective_to_farthest_ucie": 41,
+    "hbm_window": 25,
+    "idx_keys": 40,
+    "selected_kv": 24,
+    "idx_topk": 38,
+    "hub": 1
+   },
+   "hub_obs": null,
+   "hub_obs_top": 6
+  },
+  "su6s_t": {
+   "overflow": 0,
+   "cycles": {
+    "vm_xroot_to_farthest_cluster": 30,
+    "farthest_cluster_to_vm": 33
+   },
+   "hub_obs": {
+    "su_vector": 6
+   },
+   "hub_obs_top": 5
+  },
+  "su6s_r": {
+   "overflow": 0,
+   "cycles": {
+    "collective_to_farthest_serdes": 45,
+    "collective_to_farthest_ucie": 34,
+    "hbm_window": 24,
+    "idx_keys": 39,
+    "selected_kv": 24,
+    "idx_topk": 38,
+    "hub": 1
+   },
+   "hub_obs": {
+    "su_vector": 6
+   },
+   "hub_obs_top": 5
+  },
+  "su7s_t": {
+   "overflow": 0,
+   "cycles": {
+    "vm_xroot_to_farthest_cluster": 30,
+    "farthest_cluster_to_vm": 33
+   },
+   "hub_obs": {
+    "su_vector": 7
+   },
+   "hub_obs_top": 5
+  },
+  "su7s_r": {
+   "overflow": 0,
+   "cycles": {
+    "collective_to_farthest_serdes": 45,
+    "collective_to_farthest_ucie": 34,
+    "hbm_window": 24,
+    "idx_keys": 39,
+    "selected_kv": 24,
+    "idx_topk": 38,
+    "hub": 1
+   },
+   "hub_obs": {
+    "su_vector": 7
+   },
+   "hub_obs_top": 5
+  },
+  "all7s_t": {
+   "overflow": 0,
+   "cycles": {
+    "vm_xroot_to_farthest_cluster": 30,
+    "farthest_cluster_to_vm": 33
+   },
+   "hub_obs": null,
+   "hub_obs_top": 7
+  },
+  "all7s_r": {
+   "overflow": 7230,
+   "cycles": {
+    "collective_to_farthest_serdes": 47,
+    "collective_to_farthest_ucie": 36,
+    "hbm_window": 33,
+    "idx_keys": 48,
+    "selected_kv": 27,
+    "idx_topk": 38,
+    "hub": 1
+   },
+   "hub_obs": null,
+   "hub_obs_top": 7
+  }
+ },
+ "adopted": "SU_VECTOR obstructs M1-M7 (SU lanes own M2-M7; W11 is routing the light lane at M6 and M7 caps), every other hub part stays at M1-M5, the x/result trunks cross on M8/M9 above: 0 overflow in the full route and in both layer-split passes; crossings unchanged against the M5 baseline (x root 30, result 33, SerDes 45, UCIe 34, HBM window 24, index keys 39, top-k 38, selected KV 24).",
+ "negative": "every hub part capped at M7 (all7s): the non-trunk pass overflows 7,230 and HBM window/index keys grow to 33/48 cycles -- only SU may take M6/M7",
+ "note": "all6 (every hub part at M6, full route) is 0 overflow but UCIe grows 34 -> 41 (the collective->UCIe bus detours around the hub)",
+ "files": {
+  "all6.json": "2dea6bd27c05197922c6fd1c63bea4fef7ceebf08febe9ccda6508312adb0df6",
+  "all7s_r.json": "107f79267592c06caad745ffebaea6e0a547fcaa3cea8aaa59801bb685fe9e3b",
+  "all7s_t.json": "fb645c341b90e0b92a3997c897e6bb1c1426a4f1dd2f244b52fb64b6d599497c",
+  "base_m5.json": "12cad9211f96e19b908178b0418335e7cbc990e061728f732175344caff4c5a6",
+  "su6.json": "66d2be33d49c6d9cf58b8724df106041000cc0c148b22e82a6332c28f8a4ed13",
+  "su6s_r.json": "04c6be74f51791775124a2ef7d015f53f2cabd4c8a13228f77a243e050e53ce1",
+  "su6s_t.json": "3daea5061df52442b586dff8857956dc916db411ae8c069c8c2adcd750b8694d",
+  "su7.json": "4a086d6d361cb443e29c40685d5fa47e4415017028ebd28a78e00eca5b6edccc",
+  "su7s_r.json": "1e01a9a7e39aaf8ffac33da48825dc65e39d337472d73231830c16191268f792",
+  "su7s_t.json": "c6ad02aa7308e0ab72c39acf0ae647ce4e1aae82e3daf9d4a8330437eef528df"
+ },
+ "tool_sha256": "78a28a9df7039133c8ea87fe6634e318a53af63c8a939f0a4c55ccbd554b780f"
+}
