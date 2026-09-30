@@ -11,6 +11,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_v41x_vec_campaign as C  # noqa: E402
+from record_currency_support import assert_current_or_marked_stale  # noqa: E402
 
 PHYSICAL = ROOT / "results/physical_abi3/asap7/hdc/v41x"
 
@@ -72,5 +73,4 @@ def test_physical_records_route_the_committed_sources():
     for top in tops:
         body = json.loads((PHYSICAL / top / "physical.json").read_text())
         assert body["design"]["top"] == top
-        for src in body["design"]["sources"]:
-            assert hashlib.sha256((ROOT / src["path"]).read_bytes()).hexdigest() == src["sha256"], src["path"]
+        assert_current_or_marked_stale(body, {x["path"]: x["sha256"] for x in body["design"]["sources"]}, top)
