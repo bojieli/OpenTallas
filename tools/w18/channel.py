@@ -123,6 +123,7 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
             "--source", f"physical/w18/{top}.sv", "--source", f"physical/w18/w18_flank{tag}/w18_flank{tag}_bb.v",
             "--macro-view", f"w18_flank{tag}=physical/w18/w18_flank{tag}", "--macro-place-halo", "1", "1", "--clock-period-ns", f"{clock_ns:g}", "--clock-uncertainty-ns", "0.06",
             "--orfs-corner", corner, "--hold-corners", f"{corner},BC",
+            "--orfs-var", "PDN_TCL=/src/physical/w18pdn/pdn_channel.tcl",
             "--clock-uncertainty-hold-ns", "0.025", "--io-delay-fraction", "0.2", "--stages", "pnr",
             "--die-area", "0", "0", f"{L:g}", f"{H:g}", "--core-area", "1.08", "1.08", f"{L - 1.08:g}", f"{H - 1.08:g}",
             "--place-density", "0.5", "--orfs-var", "PLACE_DENSITY_LB_ADDON=", "--pin-region", r"^d\[\d+\]$=left", "--pin-region", r"^q\[\d+\]$=right",

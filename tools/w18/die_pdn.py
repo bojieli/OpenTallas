@@ -212,7 +212,7 @@ def die_case(a) -> dict:
     def blk(kind, w, h, note):
         nm = f"w18p_{kind}_{round(w * 1000)}x{round(h * 1000)}"
         if nm not in lefs:
-            lefs[nm] = load_lef(nm, w, h, note)
+            lefs[nm] = block_lef(nm, w, h, note) if a.block_pins else load_lef(nm, w, h, note)
         return nm
 
     win = a.window                     # die-level window (um): the bump array makes IR local
@@ -277,9 +277,11 @@ add_global_connection -net {{VDD}} -inst_pattern {{.*}} -pin_pattern {{^VDD$}} -
 add_global_connection -net {{VSS}} -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -ground
 set_voltage_domain -name {{CORE}} -power {{VDD}} -ground {{VSS}}
 define_pdn_grid -name {{die}} -voltage_domains {{CORE}} -pins {{M9}}
-add_pdn_stripe -grid {{die}} -layer {{M8}} -width {{{M8['width']}}} -spacing {{{M8['spacing']}}} -pitch {{{M8['pitch']}}} -offset {{{M8['pitch'] / 4 - M8['width'] / 2 + 1.0}}}
+""" + (f"""add_pdn_stripe -grid {{die}} -layer {{M9}} -width {{{M9['width']}}} -spacing {{{M9['spacing']}}} -pitch {{{M9['pitch']}}} -offset {{2.0}}
+define_pdn_grid -macro -cells {{{' '.join(lefs)}}} -halo "0 0 0 0" -voltage_domains {{CORE}} -name {{Blocks}}
+add_pdn_connect -grid {{Blocks}} -layers {{M8 M9}}""" if a.block_pins else f"""add_pdn_stripe -grid {{die}} -layer {{M8}} -width {{{M8['width']}}} -spacing {{{M8['spacing']}}} -pitch {{{M8['pitch']}}} -offset {{{M8['pitch'] / 4 - M8['width'] / 2 + 1.0}}}
 add_pdn_stripe -grid {{die}} -layer {{M9}} -width {{{M9['width']}}} -spacing {{{M9['spacing']}}} -pitch {{{M9['pitch']}}} -offset {{2.0}}
-add_pdn_connect -grid {{die}} -layers {{M8 M9}}
+add_pdn_connect -grid {{die}} -layers {{M8 M9}}""") + f"""
 if {{[catch {{pdngen}} err]}} {{ puts "OT_PDN status=FAIL err=$err" }} else {{
   set nsw 0; foreach net [$block getNets] {{ foreach sw [$net getSWires] {{ incr nsw [llength [$sw getWires]] }} }}
   puts "OT_PDN status=PASS special_wire_shapes=$nsw" }}
@@ -388,6 +390,9 @@ def main(argv=None):
             p.add_argument("--pack", type=Path, required=True)
             p.add_argument("--hub-w-mm2", type=float, default=3.53, help="hub/service W/mm2 (default: pair density)")
             p.add_argument("--duty", type=float, default=1.0, help="ROM-field busy fraction (saturation map)")
+            p.add_argument("--block-pins", action=argparse.BooleanOptionalAction, default=True,
+                           help="tiles expose M8 power straps joined to the die M9 grid by a macro grid "
+                                "(default); --no-block-pins: an M8+M9 mesh over point-load tiles")
             p.add_argument("--window", type=float, nargs=4, metavar=("X0", "Y0", "X1", "Y1"),
                            help="analyse this window of the die (um); default the whole die")
             p.add_argument("--pair-idle-w", type=float, default=0.00022, help="idle pair W (0.00022 ideal ICG)")
