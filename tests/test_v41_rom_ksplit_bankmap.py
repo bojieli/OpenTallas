@@ -96,3 +96,36 @@ def test_phases_match_model():
         assert r["issue_ok"], (ph, r)
         assert r["t_read_within_model"], (ph, r)
     assert rec["verdict"].startswith("PASS")
+
+
+PROD = ROOT / "results/uarch/v41_rom_ksplit_bankmap_product.json"
+
+
+@pytest.mark.skipif(not PROD.exists(), reason="product bank map record not generated")
+def test_product_bank_map_distance_aware_all_dies():
+    """The product bank map (root decision 2026-09-30): BF16_PAIR option iii, L = 8 chains, distance-aware
+    placement of the latency-critical phases.  Every die fits its ROM depth; the critical phases sit on a
+    nearest-slot prefix no farther than the whole-die placement; the record binds current sources."""
+    import hashlib
+    rec = json.loads(PROD.read_text())
+    for p, h in rec["source_sha256"].items():
+        assert hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h, p
+    rule = rec["rule"]
+    assert rule["bf16_pair"]["enabled"] and rule["bf16_pair"]["word_hold_cycles"] == 4
+    assert rule["chain_recurrence_cycles"] == 8
+    da = rule["distance_aware"]
+    assert set(da["critical"]) == {"a_proj", "wq_b", "cmp.wk", "wo_a", "wo_b", "router", "shared_gu", "down"}
+    assert len(rec["dies"]) == 112
+    assert rec["all_capacity_ok"] and all(d["capacity_ok"] and d["max_address"] <= S.DEPTH for d in rec["dies"])
+    whole = max(r["wire"]["farthest_um"] for r in rec["phase_vs_model"].values() if r.get("wire"))
+    for ph in da["critical"]:
+        w = rec["phase_vs_model"][ph]["wire"]
+        assert w["farthest_um"] <= whole and w["wire_cycles"] == 2 * math.ceil(w["farthest_um"] / da["reach_um"]) \
+            + da["gather_scatter_cycles"], ph
+    for d in rec["dies"]:
+        for L in d["dense"]:
+            for ph, w in L["wire"].items():
+                if ph in da["critical"] and w["near_slots"] is not None:
+                    assert w["slots_used"] <= w["near_slots"] <= d["pair_slots"], (d["die"], ph)
+    pr = rec["priced"]
+    assert pr["with_measured_t_phase_and_wire"] is not None

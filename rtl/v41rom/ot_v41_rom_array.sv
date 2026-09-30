@@ -139,7 +139,7 @@ module ot_v41_rom_array #(
             wire ov, oe, of;
             wire [31:0] ot;
             wire [31:0] od;
-            ot_v41_ret_node #(.D(RD), .BYPASS(BYPASS)) u_n (.clk(clk), .rst_n(rst_n),
+            ot_v41_ret_node #(.D(RD), .BYPASS(BYPASS), .FAST(FAST), .CUT(CUT)) u_n (.clk(clk), .rst_n(rst_n),
                 .a_v(nv[l][2*g]), .a_t(nt[l][2*g]), .a_d(nd[l][2*g]), .a_e(ne[l][2*g]),
                 .b_v(nv[l][2*g+1]), .b_t(nt[l][2*g+1]), .b_d(nd[l][2*g+1]), .b_e(ne[l][2*g+1]),
                 .o_v(ov), .o_t(ot), .o_d(od), .o_e(oe), .fault(of));

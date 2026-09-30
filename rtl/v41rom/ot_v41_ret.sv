@@ -53,8 +53,10 @@ endpackage
 module ot_v41_ret_node #(
     parameter integer D = 4,
     parameter integer WAIT = 2,
-    parameter integer BYPASS = 0     // 1: a forwarded partial leaves the next cycle (not through the 5-cycle add
+    parameter integer BYPASS = 0,    // 1: a forwarded partial leaves the next cycle (not through the 5-cycle add
                                      //    alignment); it yields to an add result emerging that cycle
+    parameter integer FAST = 0,      // 1: the 1.2 GHz ot_v41_fadd (CUT) instead of the 5-stage adder
+    parameter [8:0] CUT = 9'b1_0111_1011
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -74,6 +76,7 @@ module ot_v41_ret_node #(
 );
     import ot_v41_ret_pkg::*;
     localparam integer AW = $clog2(D);
+    localparam integer LAT = FAST != 0 ? 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] : 5;
     reg [31:0] at [0:D-1], bt [0:D-1];
     reg [31:0] ad [0:D-1], bd [0:D-1];
     reg        ae [0:D-1], be [0:D-1];
@@ -83,36 +86,41 @@ module ot_v41_ret_node #(
     wire ah = ac != 0, bh = bc != 0;
     wire [31:0] ta = at[ar], tb = bt[br];
     wire add = ah && bh && sibling(ta, tb);
-    reg [4:0] ap;                        // adds in the adder pipeline, by age
-    wire slot_free = (BYPASS == 0) || !ap[3];
+    reg [LAT-1:0] ap;                    // adds in the adder pipeline, by age
+    wire slot_free = (BYPASS == 0) || !ap[LAT-2];
     wire fwd_a = !add && ah && slot_free && (complete(ta) || bh || aw8 >= WAIT || ac == D);
     wire fwd_b = !add && !fwd_a && bh && slot_free && (complete(tb) || aw8 >= WAIT || bw8 >= WAIT || bc == D);
     wire pop_a = add || fwd_a, pop_b = add || fwd_b;
     wire [31:0] sum;
     wire [1:0] err;
     wire sv;
-    ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(ad[ar]), .b(bd[br]),
-                                .y(sum), .err(err), .valid_out(sv));
+    if (FAST != 0) begin : g_f
+        ot_v41_fadd #(.CUT(CUT)) u_add (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(ad[ar]), .b(bd[br]),
+                                        .y(sum), .err(err), .valid_out(sv));
+    end else begin : g_s
+        ot_fp32_add_rne_pipe u_add (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(ad[ar]), .b(bd[br]),
+                                    .y(sum), .err(err), .valid_out(sv));
+    end
     wire [31:0] nt = add ? parent(ta, tb) : (fwd_a ? ta : tb);
     wire [31:0] fd = fwd_a ? ad[ar] : bd[br];
     wire fe = add ? (ae[ar] | be[br]) : (fwd_a ? ae[ar] : be[br]);
     wire [31:0] fdd;
     wire [33:0] dt;
-    ot_hdc_delay #(.W(32), .D(5)) u_fd (.clk(clk), .rst_n(rst_n), .d(fd), .q(fdd));
-    ot_hdc_delay #(.W(34), .D(5)) u_dt (.clk(clk), .rst_n(rst_n), .d({nt, add, fe}), .q(dt));
-    reg [4:0] vp;
+    ot_hdc_delay #(.W(32), .D(LAT)) u_fd (.clk(clk), .rst_n(rst_n), .d(fd), .q(fdd));
+    ot_hdc_delay #(.W(34), .D(LAT)) u_dt (.clk(clk), .rst_n(rst_n), .d({nt, add, fe}), .q(dt));
+    reg [LAT-1:0] vp;
     reg        by_v, by_e;
     reg [31:0] by_t;
     reg [31:0] by_d;
     always @(posedge clk) begin by_t <= nt; by_d <= fd; by_e <= fe; end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            ar <= 0; aw <= 0; br <= 0; bw <= 0; ac <= 0; bc <= 0; vp <= 0; aw8 <= 0; bw8 <= 0; fault <= 1'b0;
-            ap <= 5'd0; by_v <= 1'b0;
+            ar <= 0; aw <= 0; br <= 0; bw <= 0; ac <= 0; bc <= 0; vp <= '0; aw8 <= 0; bw8 <= 0; fault <= 1'b0;
+            ap <= '0; by_v <= 1'b0;
         end else begin
-            ap <= {ap[3:0], add};
+            ap <= {ap[LAT-2:0], add};
             by_v <= (BYPASS != 0) && (fwd_a | fwd_b);
-            vp <= {vp[3:0], add | ((BYPASS == 0) && (fwd_a | fwd_b))};
+            vp <= {vp[LAT-2:0], add | ((BYPASS == 0) && (fwd_a | fwd_b))};
             if (a_v) aw <= aw + 1'b1;
             if (b_v) bw <= bw + 1'b1;
             if (pop_a) ar <= ar + 1'b1;
@@ -128,10 +136,10 @@ module ot_v41_ret_node #(
         if (a_v) begin at[aw] <= norm(a_t); ad[aw] <= a_d; ae[aw] <= a_e; end
         if (b_v) begin bt[bw] <= norm(b_t); bd[bw] <= b_d; be[bw] <= b_e; end
     end
-    assign o_v = vp[4] | by_v;
-    assign o_t = vp[4] ? dt[33:2] : by_t;
-    assign o_d = vp[4] ? (dt[1] ? sum : fdd) : by_d;
-    assign o_e = vp[4] ? (dt[0] | (dt[1] && err != 2'd0)) : by_e;
+    assign o_v = vp[LAT-1] | by_v;
+    assign o_t = vp[LAT-1] ? dt[33:2] : by_t;
+    assign o_d = vp[LAT-1] ? (dt[1] ? sum : fdd) : by_d;
+    assign o_e = vp[LAT-1] ? (dt[0] | (dt[1] && err != 2'd0)) : by_e;
 endmodule
 
 module ot_v41_ret_root #(

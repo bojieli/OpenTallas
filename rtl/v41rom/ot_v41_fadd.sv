@@ -51,9 +51,13 @@ module ot_v41_fadd #(
     wire        nonf0 = (a_field == 8'hff) || (b_field == 8'hff);
     wire        az0 = (a_man0 == 24'd0);
     wire        bz0 = (b_man0 == 24'd0);
+    // |b| significand > |a| significand  <=>  a - b borrows (explicit prefix: a 24-bit compare ripples otherwise)
+    wire [23:0] dm0;
+    wire        age0;
+    ot_v41_ksadd #(.W(24)) u_cm0 (.a(a_man0), .b(~b_man0), .cin(1'b1), .s(dm0), .cout(age0));
     localparam integer W0 = 1 + 8 + 8 + 24 + 24 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 32;
     wire [W0-1:0] o0 = {valid_in, a_exp0, b_exp0, a_man0, b_man0, a[31], b[31], nonf0, az0, bz0,
-                        b_exp0 > a_exp0, b_exp0 == a_exp0, b_man0 > a_man0,
+                        b_exp0 > a_exp0, b_exp0 == a_exp0, !age0,
                         nonf0 ? 32'd0 : (az0 ? (bz0 ? 32'd0 : b) : a)};
     wire [W0-1:0] i1;
     ot_v41_cut #(.W(W0), .EN(CUT[0])) u_c0 (.clk(clk), .rst_n(rst_n), .d(o0), .q(i1));
@@ -113,7 +117,11 @@ module ot_v41_fadd #(
     wire        v4, byp4, sub4, sg4; wire [1:0] er4; wire [31:0] code4; wire [7:0] ex4; wire [27:0] big4, sml4;
     assign {v4, byp4, sub4, sg4, er4, code4, ex4, big4, sml4} = i4;
     localparam integer W4 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 28 + 28;
-    wire [W4-1:0] o4 = {v4, byp4, sub4, sg4, er4, code4, ex4, big4 + sml4, big4 - sml4};
+    wire [27:0] sum4, dif4;
+    wire        c4a, c4b;
+    ot_v41_ksadd #(.W(28)) u_s4 (.a(big4), .b(sml4), .cin(1'b0), .s(sum4), .cout(c4a));
+    ot_v41_ksadd #(.W(28)) u_d4 (.a(big4), .b(~sml4), .cin(1'b1), .s(dif4), .cout(c4b));
+    wire [W4-1:0] o4 = {v4, byp4, sub4, sg4, er4, code4, ex4, sum4, dif4};
     wire [W4-1:0] i5;
     ot_v41_cut #(.W(W4), .EN(CUT[4])) u_c4 (.clk(clk), .rst_n(rst_n), .d(o4), .q(i5));
 
@@ -161,13 +169,11 @@ module ot_v41_fadd #(
     // t + inc as a parallel-prefix flip mask (bit i flips when inc and every bit below is one): yosys otherwise
     // maps the increment as a 24-deep ripple of ORs (-83 ps alone at SS, 0.833 ns)
     wire [24:0] t8 = {1'b0, val8[26:3]};
-    reg  [24:0] ones8;
-    always @* begin
-        ones8[0] = 1'b1;
-        for (k = 1; k < 25; k = k + 1) ones8[k] = &(t8 | ~((25'd1 << k) - 25'd1));
-    end
+    wire [24:0] r8;
+    wire        co8;
+    ot_v41_inc #(.W(25)) u_i8 (.a(t8), .inc(inc8), .y(r8), .co(co8));
     localparam integer W8 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 25;
-    wire [W8-1:0] o8 = {v8, byp8, sg8, z8, er8, code8, ex8, t8 ^ ({25{inc8}} & ones8)};
+    wire [W8-1:0] o8 = {v8, byp8, sg8, z8, er8, code8, ex8, r8};
     wire [W8-1:0] i9;
     ot_v41_cut #(.W(W8), .EN(CUT[8])) u_c8 (.clk(clk), .rst_n(rst_n), .d(o8), .q(i9));
 

@@ -30,7 +30,7 @@ MACRO_DIR = "physical/asap7_memory_macros"
 ROM = ("ot_rom_8192x274_m8", 125.712, 119.340)
 ROM4K = ("ot_rom_4096x274_m8", 125.28, 62.91)          # PP: two per macro slot, read alternately (ping-pong)
 PP_GAP = 1.08                                         # between the two stacked 4096-word macros
-SOURCES_FAST = ["rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/v41rom/ot_v41_chain2.sv",
+SOURCES_FAST = ["rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot_v41_prefix.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/v41rom/ot_v41_chain2.sv",
                 "rtl/v41rom/ot_v41_segtree2.sv"]
 MARGIN, CH, GAP = 2.16, 12.0, 4.0
 W1_HALF_STRIP_UM = 158.544 / 2
