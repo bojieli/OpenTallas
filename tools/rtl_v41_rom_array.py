@@ -36,7 +36,7 @@ VERILATOR = Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator
 RTL = ["rtl/v41rom/ot_v41_ret.sv", "rtl/v41rom/ot_v41_rom_array.sv", "rtl/v41rom/ot_v41_rom_elem.sv",
        "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_chain.sv", "rtl/v41rom/ot_v41_segtree.sv",
        "rtl/v41rom/ot_v41_bf16_lanes.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
-       "rtl/hdc/ot_hdc_delay.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
+       "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_cg.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
        "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v"]
 TB = "rtl/test/tb_v41_rom_array.sv"
 NSEG, NCH = 8, 16

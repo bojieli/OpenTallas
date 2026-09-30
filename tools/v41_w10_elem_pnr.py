@@ -33,7 +33,7 @@ W1_HALF_STRIP_UM = 158.544 / 2
 W1_ROW_PITCH_UM = 120.96
 SOURCES = ["rtl/v41rom/ot_v41_rom_elem_q.sv", "rtl/v41rom/ot_v41_rom_elem.sv", "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_chain.sv",
            "rtl/v41rom/ot_v41_segtree.sv", "rtl/v41rom/ot_v41_bf16_lanes.sv", "rtl/hdc/ot_hdc_fpu.sv",
-           "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
+           "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_cg.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
            f"{MACRO_DIR}/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v"]
 
 
@@ -97,6 +97,7 @@ def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), s
           "--max-transition-ns", "0.32", "--slew-margin-percent", "40", "--hold-margin-ns", "0.02",
           "--step-tcl", f"POST_MACRO_PLACE={hook_name(p)}",
           "--step-tcl", "POST_DETAIL_PLACE=physical/abi3/check_pg_before_route.tcl",
+          "--orfs-var", "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7.tcl",
           "--nickname-tag", tag, "--keep-workdir", keep, "--output", output]
     for m in p["macro_views"]:
         a += ["--macro-view", f"{m}={MACRO_DIR}/{m}"]
