@@ -33,7 +33,7 @@
 // Interfaces (as ot_chip_v41x_ckv_sel_fetch)
 //   job     job_v/job_ready, window_count, published_source_count, per-stack
 //           region base/count (current user and source layer).
-//   ids     id_count/id_done, id_idx -> id_rank_in, id_gid (the die's owned
+//   ids     id_count/id_done, id_idx -> id_rank_in, id_gid (IDLAT = 1: one cycle later) (the die's owned
 //           list of ot_chip_v41x_ckv_sel_ids; non-owned entries are skipped).
 //   rows    o_v/o_ready, o_rank, o_gid, o_row (registered).
 //   hbm     NP = 4P ports (port q = stack * P + j): m_v/m_rdy/m_addr/m_tag,
@@ -200,6 +200,7 @@ module ot_chip_v41x_ckv_pc_fetch #(
     parameter integer K = 512,
     parameter integer MAX_CONTEXT = 1048576,
     parameter bit SRAM_MACRO = 0,
+    parameter bit IDLAT = 0,            // 1: id reads are synchronous (ot_chip_v41x_ckv_sel_ids RDREG = 1)
     parameter integer NP = 4 * P,
     parameter integer LP = (P > 1) ? $clog2(P) : 1,
     parameter integer SW = (S > 1) ? $clog2(S) : 1,
@@ -261,7 +262,16 @@ module ot_chip_v41x_ckv_pc_fetch #(
     wire [NP-1:0] p_free;                          // port has a free slot
     wire dispatch = run && e_v && owned && !e_range_bad && p_free[e_port];
     wire skip = run && e_v && !owned;
-    wire eload = run && cur < id_count && (!e_v || dispatch || skip);
+    wire consume = dispatch || skip;
+    // IDLAT = 0: the entry loads from the combinational read at cur.
+    // IDLAT = 1: a read issued at cur returns next cycle (rd_p); it lands in the entry register or, if
+    // the entry is held, in a one-entry skid; a read is issued only when both will have room.
+    reg rd_p, k_v;
+    reg [KW-1:0] k_rank;
+    reg [POS_W-1:0] k_gid;
+    wire [1:0] occ_next = 2'(e_v && !consume) + 2'(k_v) + 2'(rd_p);
+    wire eload = IDLAT ? 1'b0 : (run && cur < id_count && (!e_v || consume));
+    wire issue = IDLAT && run && cur < id_count && occ_next <= 2'd1;
 
     // ---- ports ----
     wire [NP-1:0] p_busy_any, p_fault_rsp, p_fault_poison, p_ov;
@@ -347,6 +357,7 @@ module ot_chip_v41x_ckv_pc_fetch #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             run <= 0; cur <= 0; wcount <= 0; e_v <= 0; e_rank <= 0; e_gid <= 0;
+            rd_p <= 0; k_v <= 0; k_rank <= 0; k_gid <= 0;
             done <= 0; fault <= 0; fault_code <= 0; st_owned_rows <= 0;
         end else begin
             if (|p_fault_rsp) begin fault <= 1; fault_code[1] <= 1; end
@@ -354,12 +365,26 @@ module ot_chip_v41x_ckv_pc_fetch #(
             if (run && e_v && owned && e_range_bad) begin fault <= 1; fault_code[0] <= 1; end
             if (job_v && !run) begin
                 run <= 1; cur <= 0; wcount <= window_count; done <= 0; e_v <= 0; st_owned_rows <= 0;
+                rd_p <= 0; k_v <= 0;
             end else if (run) begin
-                if (eload) begin
+                if (IDLAT) begin
+                    rd_p <= issue;
+                    if (issue) cur <= cur + 1'b1;
+                    if (!e_v || consume) begin
+                        if (k_v) begin
+                            e_v <= 1; e_rank <= k_rank; e_gid <= k_gid;
+                            k_v <= rd_p; k_rank <= id_rank_in; k_gid <= id_gid;
+                        end else if (rd_p) begin
+                            e_v <= 1; e_rank <= id_rank_in; e_gid <= id_gid;
+                        end else e_v <= 0;
+                    end else if (rd_p) begin
+                        k_v <= 1; k_rank <= id_rank_in; k_gid <= id_gid;
+                    end
+                end else if (eload) begin
                     e_v <= 1; e_rank <= id_rank_in; e_gid <= id_gid; cur <= cur + 1'b1;
                 end else if (dispatch || skip) e_v <= 0;
                 if (dispatch) st_owned_rows <= st_owned_rows + 1;
-                if (cur == id_count && id_done && !e_v && p_busy_any == 0 && sv == 0 && !o_v) begin
+                if (cur == id_count && id_done && !e_v && !k_v && !rd_p && p_busy_any == 0 && sv == 0 && !o_v) begin
                     run <= 0; done <= 1;
                 end
             end
