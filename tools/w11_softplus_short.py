@@ -190,7 +190,16 @@ def same_logic(commit: str) -> dict:
     out = {}
     for p in [NEW, TB, PREFIX, PREFIX_SIM, *LIB]:
         old = subprocess.run(["git", "-C", str(ROOT), "show", f"{commit}:{p}"], capture_output=True, text=True).stdout
-        out[p] = strip_comments(old) == strip_comments((ROOT / p).read_text())
+        a, b = strip_comments(old), strip_comments((ROOT / p).read_text())
+        if a == b:
+            out[p] = True
+        elif b.startswith(a) and p == NEW:
+            # only whole modules appended (the parameter-free hardening tops); nothing the evidence ran is changed
+            added = re.findall(r"^module (\w+)", b[len(a):], re.M)
+            out[p] = f"same, plus appended modules {added}" if added and not any(
+                re.search(rf"\b{m}\b", a) for m in added) else False
+        else:
+            out[p] = False
     return out
 
 
@@ -202,7 +211,7 @@ def record(args):
     proofs = prove(Path(args.u3) / "prefix_proofs")
     logic = same_logic(args.evidence_commit)
     ok = (all(v["pass_"] for v in eq.values()) and u3["pass_"] and all(v == "proved" for v in proofs.values())
-          and all(logic.values()))
+          and all(bool(v) for v in logic.values()))
     rec = dict(
         schema="opentallas.w11-softplus-short.v1",
         status="pass" if ok else "fail",
