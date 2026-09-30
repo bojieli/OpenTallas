@@ -348,12 +348,211 @@ def generate_v41x(out: Path | None, npc: int = 32, k_aw: int = 28) -> dict[str, 
     return sheet
 
 
+# ---------------------------------------------------------------------------------------------------------
+# v2 (W18): a LEGAL V4.1 abstract.  The v1 views above are kept unchanged as the historical, defective
+# abstract that W1's pack check measured (results/floorplan/v41_pack_*.json legality.abstract_defects):
+#   * every signal pin was off the M5 track: the pseudo-channel window origin wi * (edge / 32) is not on the
+#     0.048 um grid (12,000.096 / 32 = 375.003 um), so the pins fell on 24 distinct phases and no macro origin
+#     could put them all on track;
+#   * VDD/VSS were M4 straps under a full M5 OBS, so the parent's M5 stripes could never reach them
+#     (pdngen PDN-0006 in the platform strategy).
+# v2 fixes both by construction and makes the shoreline a parameter:
+#   * window pitch, window origins, span offsets and pin pitch are all multiples of the M5 track pitch
+#     (0.048 um), and every pin rect starts on a multiple of 0.048, so its centre is on the M5 track
+#     (offset 0.012) for any origin on the pack's 0.432 um joint grid, in R0 and MX; the width is a
+#     multiple of 0.432 so MY/R180 keep the pins on track as well (asserted below);
+#   * the macro obstructs M1-M4 only (as every catalog ROM/SRAM view); VDD/VSS are M4 straps centred on M4
+#     tracks, which the parent reaches with M5 stripes and M4-M5 vias (the same ElementGrid connect the
+#     catalog macros use).  M5 and above are left to the parent's power grid and over-the-macro routing;
+#   * the core-facing edge is a parameter: HBM3E PHYs of ~8-9 mm per stack (GH100 precedent, below).
+M5_TRACK_UM = 0.048
+M5_TRACK_OFF_UM = 0.012
+M4_TRACK_UM = 0.048
+M4_TRACK_OFF_UM = 0.012
+JOINT_X_UM = 0.432                      # lcm(0.054 placement site, 0.048 M5 track): the pack's macro x grid
+V2_EDGE_BASIS = {
+    "grade": "assumed",
+    "value_mm": 8.5,
+    "source": "NVIDIA GH100 (814 mm^2) places six HBM3 sites, three along each long edge of the die (NVIDIA "
+              "H100 Tensor Core GPU Architecture whitepaper, 2022, die shot and 'up to 6 HBM3/HBM2e stacks'); "
+              "with a ~33 mm long edge that leaves <= 11 mm of shoreline per stack including the keep-out "
+              "between PHYs, so the PHY itself is taken as 8-9 mm (8.5 mm default, a parameter).  The "
+              "technology table's 12.0 mm is the 11 mm HBM3E package edge plus keep-out, i.e. the package "
+              "pitch on the interposer, not the die-side PHY",
+}
+
+
+def _n(v: float, q: float) -> int:
+    k = round(v / q)
+    if abs(k * q - v) > 1e-6:
+        raise ValueError(f"{v} is not a multiple of {q}")
+    return k
+
+
+def write_lef_v41x_legal(w: float, h: float, plist: list[Pin], place: dict, npc: int, pitch: float,
+                         name: str) -> tuple[str, dict[str, Any]]:
+    """The V4.1 PHY abstract with every signal pin on the M5 track and PDN-reachable M4 power straps."""
+    _n(w, JOINT_X_UM)
+    _n(pitch, M5_TRACK_UM)
+    win = math.floor(w / npc / M5_TRACK_UM) * M5_TRACK_UM          # window pitch on the track grid
+    # K and W spans inside each window, packed from the window origin on the track grid.
+    k_bits = sum(1 for b, (wi, g) in place.items() if wi == 0 and g == "k")
+    w_bits = max(sum(1 for b, (wi, g) in place.items() if wi == c and g == "w") for c in range(npc))
+    k_lo = 10 * M5_TRACK_UM * 2                                      # 0.96 um guard from the window edge
+    k_hi = k_lo + k_bits * pitch
+    w_lo = k_hi + 10 * M5_TRACK_UM * 2
+    w_hi = w_lo + w_bits * pitch
+    if w_hi + k_lo > win + 1e-9:
+        raise SystemExit(f"{name}: {k_bits} K + {w_bits} W pins at {pitch} um need {w_hi + k_lo:.3f} um; "
+                         f"window is {win:.3f} um (edge {w:.3f} / {npc})")
+    L = ["# OpenTallas tools/mem_compiler/hbm_phy_gen.py --variant v41x_legal (v2): HBM3E PHY + controller",
+         "# ABSTRACT for the adopted V4.1 die (rtl/chip/ot_chip_v41x_hbm3e_phy.sv); controller-side pins only.",
+         "# Every signal pin centre is on an M5 track; VDD/VSS are M4 straps reachable from M5 (OBS M1-M4).",
+         "VERSION 5.7 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {name}",
+         f"  FOREIGN {name} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;", "  CLASS BLOCK ;"]
+    cursor: dict[tuple[int, str], float] = {}
+    pw, pl = 0.024, 0.192
+    off_track = 0
+    xs: list[float] = []
+    for p in plist:
+        for b in p.bits():
+            wi, grp = place[b]
+            lo, hi = (k_lo, k_hi) if grp == "k" else (w_lo, w_hi)
+            x = cursor.get((wi, grp), round(wi * win + lo, 3))
+            if x + pw > wi * win + hi + 1e-9:
+                raise SystemExit(f"{b}: window {wi} group {grp} overflows at {x:.3f} um")
+            cursor[(wi, grp)] = round(x + pitch, 3)
+            xc = x + pw / 2
+            if abs(((xc - M5_TRACK_OFF_UM) / M5_TRACK_UM) - round((xc - M5_TRACK_OFF_UM) / M5_TRACK_UM)) > 1e-6:
+                off_track += 1
+            xs.append(x)
+            L += [f"  PIN {b}", f"    DIRECTION {p.direction.upper()} ;",
+                  "    USE CLOCK ;" if p.kind == "clock" else "    USE SIGNAL ;", "    SHAPE ABUTMENT ;",
+                  "    PORT", "      LAYER M5 ;", f"      RECT {x:.3f} {h - pl:.3f} {x + pw:.3f} {h:.3f} ;",
+                  "    END", f"  END {b}"]
+    if off_track:
+        raise SystemExit(f"{name}: {off_track} pin centres off the M5 track")
+    # VDD/VSS: 0.288 um M4 straps, centres on M4 tracks, alternating every 1.2 um (25 tracks), stopping
+    # 2.4 um short of the pin edge so no strap sits under the pin band.
+    sw, step = 0.288, 25 * M4_TRACK_UM
+    y0 = M4_TRACK_OFF_UM + 21 * M4_TRACK_UM - sw / 2                 # centre on track 21 (1.02 um)
+    straps: dict[str, list[float]] = {"VDD": [], "VSS": []}
+    y, kk = y0, 0
+    while y + sw < h - 2.4:
+        straps["VDD" if kk % 2 == 0 else "VSS"].append(round(y, 3))
+        y += step
+        kk += 1
+    for net, use in (("VDD", "POWER"), ("VSS", "GROUND")):
+        L += [f"  PIN {net}", "    DIRECTION INOUT ;", f"    USE {use} ;", "    PORT", "      LAYER M4 ;"]
+        L += [f"      RECT 0.480 {yy:.3f} {w - 0.48:.3f} {yy + sw:.3f} ;" for yy in straps[net]]
+        L += ["    END", f"  END {net}"]
+    L += ["  OBS"]
+    for layer in ("M1", "M2", "M3", "M4"):
+        L += [f"    LAYER {layer} ;", f"    RECT 0 0 {w:.3f} {h:.3f} ;"]
+    L += ["  END", f"END {name}", "", "END LIBRARY"]
+    return "\n".join(L) + "\n", {
+        "signal_pins": sum(pp.width for pp in plist), "pin_pitch_um": pitch, "pin_layer": "M5",
+        "pin_edge": "top (core-facing)", "pseudo_channel_window_um": round(win, 3),
+        "k_pins_in_window_um": [round(k_lo, 3), round(k_hi, 3)],
+        "w_pins_in_window_um": [round(w_lo, 3), round(w_hi, 3)],
+        "pins_off_m5_track": 0, "on_track_orientations": ["R0", "MX"], "pin_phases_mod_48nm": sorted({round(x * 1000) % 48 for x in xs}),
+        "power": {"layer": "M4", "strap_width_um": sw, "strap_step_um": step,
+                  "straps": {k: len(v) for k, v in straps.items()},
+                  "obstructed_layers": ["M1", "M2", "M3", "M4"],
+                  "reach": "the parent's M5 stripes over the macro, M4-M5 vias (catalog-macro ElementGrid)"},
+        "placement": "pseudo-channel p's K request/response bits in [p*window + K span]; W pseudo-channel c's "
+                     "bits (c < 8) in [c*window + W span], the shared W request in window 0's W span; clk, "
+                     "rst_n and status in window 16's W span",
+        "matches": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv ports at KTAGW = 17, NPC_W = 8, LWIN = 10"}
+
+
+def v41x_legal_name(k_aw: int, edge_mm: float) -> str:
+    return f"{V41X}{'_aw30' if k_aw == 30 else ''}_e{edge_mm:g}".replace(".", "p")
+
+
+def generate_v41x_legal(out: Path | None, edge_mm: float = V2_EDGE_BASIS["value_mm"], npc: int = 32,
+                        k_aw: int = 30, area_mm2: float | None = None) -> dict[str, Any]:
+    if k_aw not in (28, 30):
+        raise ValueError("K address width must be the reduced 28-bit or full packed 30-bit profile")
+    name = v41x_legal_name(k_aw, edge_mm)
+    area = tech("hbm.hbm3e.phy_area_mm2_per_stack")
+    a_mm2 = area["value"] if area_mm2 is None else area_mm2
+    w_um = asap7.snap_up(edge_mm * 1000.0, JOINT_X_UM)
+    h_um = asap7.snap_up(a_mm2 * 1e6 / w_um, 2.16)                  # lcm(0.27 row, 0.048 M4 track)
+    plist, place = v41x_pins(npc, k_aw=k_aw)
+    lef, pin_info = write_lef_v41x_legal(w_um, h_um, plist, place, npc, 0.192, name=name)
+    cal = asap7.calibration()
+    energy = tech("energy.hbm_j_per_byte")
+    per_corner = {}
+    for c in asap7.CORNERS:
+        k = cal["corners"][c]
+        fo4 = k["fo4_ps"]
+        per_corner[c] = Timing(
+            corner=c, voltage=k["voltage_v"], temperature=k["temperature_c"],
+            clk_to_q_ps=k["dff_clk_to_q_ps"] + 3 * fo4, out_r_kohm=k["inv4_r_kohm"] / 2.0,
+            out_slew_intrinsic_ps=1.5 * fo4, setup_ps=k["dff_setup_ps"] + 3 * fo4, hold_ps=k["dff_hold_ps"] + fo4,
+            min_period_ps=900.0, min_pulse_ps=360.0,
+            read_energy_fj=energy["value"] * 1e15 * 32, write_energy_fj=0.0,
+            leakage_nw=0.0, pin_cap_ff=k["inv1_cin_ff"] * 2, clk_cap_ff=50.0,
+            breakdown={"fo4_ps": fo4})
+    sheet: dict[str, Any] = {
+        "schema": "opentallas.hbm-phy-abstract.v2",
+        "generator": f"tools/mem_compiler/hbm_phy_gen.py --variant v41x_legal --edge-mm {edge_mm:g} v2.0",
+        "kind": "hbm_phy_abstract", "name": name,
+        "supersedes": {"views": f"{V41X}{'_aw30' if k_aw == 30 else ''} (v1)",
+                       "defects_fixed": ["22,237 signal pins off the M5 track (24 pin phases)",
+                                         "M4 power under the macro's own M5 OBS (pdngen PDN-0006)"],
+                       "v1_views_kept": "unchanged, as the historical abstract W1's records measured"},
+        "footprint": {"width_um": w_um, "height_um": h_um, "area_mm2": w_um * h_um / 1e6,
+                      "edge_basis": dict(V2_EDGE_BASIS, value_mm=edge_mm),
+                      "area_basis": {"value_mm2": a_mm2, "grade": area["grade"] if area_mm2 is None else "assumed",
+                                     "source": "configs/hardware/technology.json hbm.hbm3e.phy_area_mm2_per_stack"
+                                     if area_mm2 is None else "--area-mm2", "note": area["note"]},
+                      "depth": "area / edge, snapped up to 2.16 um"},
+        "interface": {"port_list": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv (as v1)",
+                      "parameters": {"NPC": npc, "KTAGW": 17, "NPC_W": 8, "LWIN": 10, "K_AW": k_aw},
+                      "controller_clock_mhz": {"value": 1087.0, "grade": "assumed",
+                                               "note": "the die clock; min_period 900 ps"}},
+        "pins": pin_info,
+        "timing": {c: asdict(t) for c, t in per_corner.items()},
+        "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
+        "claim_boundary": "a placement and connection abstract for licensed IP; footprint and boundary timing are "
+                          "assumed, the port list is the adopted RTL's",
+    }
+    if out is not None:
+        d = out / name
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"{name}.lef").write_text(lef)
+        comment = ("HBM3E PHY + controller abstract (v2, legal pins/PDN) for the adopted V4.1 die, controller-side "
+                   "boundary timing only (assumed)")
+        for c, t in per_corner.items():
+            (d / f"{name}_{c}.lib").write_text(write_liberty(name, t, plist, w_um * h_um, None, comment))
+        (d / f"{name}_bb.v").write_text(blackbox_verilog(name, plist, comment + "; functional model: "
+                                                         "rtl/chip/ot_chip_v41x_hbm3e_phy.sv"))
+        files = sorted(p.name for p in d.iterdir() if p.name != f"{name}.json")
+        sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
+        (d / f"{name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
+    return sheet
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=asap7.ROOT / "physical/asap7_memory_macros")
-    ap.add_argument("--variant", choices=["v1", "v41x"], default="v1")
+    ap.add_argument("--variant", choices=["v1", "v41x", "v41x_legal"], default="v1")
+    ap.add_argument("--edge-mm", type=float, default=V2_EDGE_BASIS["value_mm"],
+                    help="v41x_legal: core-facing PHY edge per stack (mm)")
+    ap.add_argument("--area-mm2", type=float, default=None, help="v41x_legal: override the PHY area")
     ap.add_argument("--k-aw", type=int, default=28, help="V4.1 K sector address width: 28 reduced or 30 full")
     args = ap.parse_args()
+    if args.variant == "v41x_legal":
+        s = generate_v41x_legal(args.out, edge_mm=args.edge_mm, k_aw=args.k_aw if args.k_aw != 28 else 30,
+                                area_mm2=args.area_mm2)
+        f = s["footprint"]
+        print(f"{s['name']}: {f['width_um']:.3f} x {f['height_um']:.3f} um ({f['area_mm2']:.2f} mm2), "
+              f"{s['pins']['signal_pins']} pins, window {s['pins']['pseudo_channel_window_um']} um, "
+              f"K {s['pins']['k_pins_in_window_um']} W {s['pins']['w_pins_in_window_um']}, "
+              f"phases {s['pins']['pin_phases_mod_48nm']}")
+        return 0
     if args.variant == "v41x":
         s = generate_v41x(args.out, k_aw=args.k_aw)
         f = s["footprint"]
