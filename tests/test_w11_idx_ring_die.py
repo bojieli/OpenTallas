@@ -1,4 +1,3 @@
-import pytest
 """W11 ring layout follow-ups: die gate, concurrent writes, prefill sizing -- records current (fast)."""
 
 import hashlib
@@ -12,7 +11,6 @@ ROOT = Path(__file__).resolve().parents[1]
 DIE = ROOT / "results/rtl/w11_die_idx_ring_gate.json"
 
 
-@pytest.mark.xfail(reason="pending W11 re-run on main 628d3aa6: rtl/hdc/v41x/ot_hdc_v41x_attn.sv pin moved by the attention-loader merge (opt-in PWORDS, default behaviour unchanged)", strict=False)
 def test_die_gate_passes_and_pins_are_current():
     rec = json.loads(DIE.read_text())
     assert rec["status"] == "pass"
