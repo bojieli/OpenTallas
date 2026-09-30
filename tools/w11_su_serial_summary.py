@@ -22,6 +22,14 @@ DIR = ROOT / "results/physical_abi3/asap7/hdc/v41x/w11_serial"
 RUNS = {
     "sc_l5": "light lane (N=1,024, LEAF), MLAT 5 / ALAT 4 serial build: input-cut mul lat5i + add lat4i, keep-prefix "
              "integer arithmetic, three-cycle offset load; M2-M9",
+    "sc_l5b": "sc_l5 re-routed on the current source layout (ot_hdc_fastfp_lat.sv split)",
+    "sc_s5": "SFU lane (N=1,024, LEAF, lane 5), MLAT 5 / ALAT 4 serial build; M2-M9",
+    "sc_s5m5": "SFU lane on M2-M5 only",
+    "sc_r6": "the N=1,024 chunk8 reducer, MLAT 5 / ALAT 4 (square lat5i, every add lat4i)",
+    "sc_r6m5": "the reducer on M2-M5 only",
+    "sc_r5": "the reducer, first attempt: yosys OOM-killed at a 32 GB floor",
+    "sc_l5m5u20": "sc_l5 on M2-M5 at 20% utilisation: global route overflow 167 (GRT-0116)",
+    "sc_l5m5u15": "sc_l5 on M2-M5 at 15% utilisation",
     "sc_l5m5": "sc_l5 routed on M2-M5 only (M6/M7 left free over the block): global route congestion (GRT-0116) at "
                "25% utilisation",
     "sc_l3": "light lane, MLAT 4 / ALAT 3 with keep-prefix arithmetic (no input cuts): the multipliers' stage 1 "

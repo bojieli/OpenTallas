@@ -124,7 +124,9 @@ def build(kind, N, M, LV, obj: Path, jobs, vflags=(), stages=(0, 0), mlat=3, ala
     top = "tb_hdc_v41x_su_softmax" if kind == "adapt" else "tb_hdc_v41x_vec"
     srcs = [*map(str, C.LIB), *map(str, C.RTL)]
     srcs += [str(ADAPT), str(TB_ADAPT)] if kind == "adapt" else [str(TB_VEC)]
-    cmd = ["/usr/bin/time", "-v", C.VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
+    # /usr/bin/time -v reports the build's peak RSS; a host without it (the remote job image) builds without
+    timer = ["/usr/bin/time", "-v"] if Path("/usr/bin/time").exists() else []
+    cmd = [*timer, C.VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
            "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-UNOPTFLAT", *vflags, "--top-module", top, "--prefix", "Vtb", "-Mdir", str(obj),
            f"-GN={N}", f"-GM={M}", f"-GLV={LV}", f"-GBCAST_STAGES={stages[0]}", f"-GRET_STAGES={stages[1]}",
            f"-GMLAT={mlat}", f"-GALAT={alat}", *[f"-G{k}={v}" for k, v in MEMP.items()],
