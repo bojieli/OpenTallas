@@ -1,0 +1,144 @@
+{
+ "schema": "opentallas.qwen-rom-w12.tile-power.v1",
+ "element": "ot_qwen_rom_tile (W12 route tile_n518, 518.4 x 386.64 um, 0.833 ns, 60/25; CTS database 4_cts.odb: synthesised at ORFS CORNER=TC with ripple adders, NOT timing-closed)",
+ "basis": "OpenSTA report_power, TT 0.7 V RVT + the macros' _tt.lib, 1.2 GHz, placement parasitics (setRC), propagated clock; scenarios: default activity, input activity 0.5 / 0.25 (duty 0.5), input activity 0 with the clock running (idle, clock on)",
+ "odb_sha256": "a2cf67a3e3f0b4ca48a17858440017d1d1487c7b01a84601c533c7af5d10910c",
+ "log_sha256": "679e1fdc8dd03ea45815808c25881f32d1151626c71b4013723ac7b38f9566b6",
+ "scenarios": {
+  "default": 0.757,
+  "busy_in0p5": 0.832,
+  "busy_in0p25": 0.824,
+  "idle_clock_on": 0.247
+ },
+ "breakdown": {
+  "default": {
+   "sequential": {
+    "internal_w": 0.135,
+    "switching_w": 0.0224,
+    "leakage_w": 1.26e-05,
+    "total_w": 0.158
+   },
+   "combinational": {
+    "internal_w": 0.219,
+    "switching_w": 0.206,
+    "leakage_w": 3.91e-05,
+    "total_w": 0.425
+   },
+   "clock": {
+    "internal_w": 0.0488,
+    "switching_w": 0.035,
+    "leakage_w": 3.09e-06,
+    "total_w": 0.0839
+   },
+   "macro": {
+    "internal_w": 0.0897,
+    "switching_w": 0.0,
+    "leakage_w": 0.000552,
+    "total_w": 0.0903
+   },
+   "total": {
+    "internal_w": 0.493,
+    "switching_w": 0.263,
+    "leakage_w": 0.000607,
+    "total_w": 0.757
+   }
+  },
+  "busy_in0p5": {
+   "sequential": {
+    "internal_w": 0.134,
+    "switching_w": 0.024,
+    "leakage_w": 1.26e-05,
+    "total_w": 0.158
+   },
+   "combinational": {
+    "internal_w": 0.253,
+    "switching_w": 0.247,
+    "leakage_w": 3.91e-05,
+    "total_w": 0.5
+   },
+   "clock": {
+    "internal_w": 0.0488,
+    "switching_w": 0.035,
+    "leakage_w": 3.09e-06,
+    "total_w": 0.0839
+   },
+   "macro": {
+    "internal_w": 0.0897,
+    "switching_w": 0.0,
+    "leakage_w": 0.000552,
+    "total_w": 0.0903
+   },
+   "total": {
+    "internal_w": 0.526,
+    "switching_w": 0.306,
+    "leakage_w": 0.000607,
+    "total_w": 0.832
+   }
+  },
+  "busy_in0p25": {
+   "sequential": {
+    "internal_w": 0.137,
+    "switching_w": 0.0237,
+    "leakage_w": 1.26e-05,
+    "total_w": 0.16
+   },
+   "combinational": {
+    "internal_w": 0.25,
+    "switching_w": 0.24,
+    "leakage_w": 3.91e-05,
+    "total_w": 0.49
+   },
+   "clock": {
+    "internal_w": 0.0488,
+    "switching_w": 0.035,
+    "leakage_w": 3.09e-06,
+    "total_w": 0.0839
+   },
+   "macro": {
+    "internal_w": 0.0897,
+    "switching_w": 0.0,
+    "leakage_w": 0.000552,
+    "total_w": 0.0903
+   },
+   "total": {
+    "internal_w": 0.525,
+    "switching_w": 0.299,
+    "leakage_w": 0.000607,
+    "total_w": 0.824
+   }
+  },
+  "idle_clock_on": {
+   "sequential": {
+    "internal_w": 0.0732,
+    "switching_w": 0.0,
+    "leakage_w": 1.26e-05,
+    "total_w": 0.0732
+   },
+   "combinational": {
+    "internal_w": 0.0,
+    "switching_w": 0.0,
+    "leakage_w": 3.9e-05,
+    "total_w": 3.9e-05
+   },
+   "clock": {
+    "internal_w": 0.0488,
+    "switching_w": 0.035,
+    "leakage_w": 3.09e-06,
+    "total_w": 0.0839
+   },
+   "macro": {
+    "internal_w": 0.0897,
+    "switching_w": 0.0,
+    "leakage_w": 0.000552,
+    "total_w": 0.0903
+   },
+   "total": {
+    "internal_w": 0.212,
+    "switching_w": 0.035,
+    "leakage_w": 0.000607,
+    "total_w": 0.247
+   }
+  }
+ },
+ "note": "the macro group (0.090 W) is the 12 macros' clock/internal power at every edge: ICG must gate the 8 unselected code-ROM banks and the idle KV SRAMs (W18 icg_requirement)"
+}
