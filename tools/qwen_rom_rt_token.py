@@ -78,6 +78,9 @@ def main() -> None:
     ap.add_argument("--code-banks", type=int, default=10)
     ap.add_argument("--tp", type=int, choices=(2, 4), default=2, help="dies (tensor-parallel ranks)")
     ap.add_argument("--coll-lat", type=int, default=11, help="collective link latency (cycles), ot_rom_oneshot_allreduce LAT")
+    ap.add_argument("--coll-depth", type=int, default=16,
+                    help="collective receive FIFO words per source (a power of two); credits return over the link, "
+                         "so a depth under ~2 x LAT + 8 words throttles the exchange to DEPTH words a round trip")
     ap.add_argument("--vflags", default="", help="extra Verilator flags for the die model (e.g. W11's "
                     "'--unroll-count 4 -fno-dfg' for an SW=1,024 stream unit)")
     ap.add_argument("--hier-su", action="store_true", help="compile the stream unit as its own hierarchical block")
@@ -119,16 +122,20 @@ def main() -> None:
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
           f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", f"-GMEM_EXTRA={args.mem_extra}", *spine]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
-         [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", "-GDEPTH=16", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
+         [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_logic", [*map(str, TILE_RTL)],
          [f"-GGT={G}", f"-GNW={NW}", f"-GSMIN={args.smin}", f"-GCODE_BANKS={args.code_banks}", "-GIREG=1", f"-GMEM_EXTRA={args.mem_extra}",
           f"-GNREG={1 if args.nws > 0 else 0}", "-GKV_LOCAL=0"]),
     ]
-    (out / "build_params.json").write_text(json.dumps({p: params for p, _, _, params in models}, indent=1))
+    bp = out / "build_params.json"
+    prior = json.loads(bp.read_text()) if bp.exists() else {}
+    bp.write_text(json.dumps({p: params for p, _, _, params in models}, indent=1))
     for prefix, top, files, params in models:
         mdir = out / prefix
         if (mdir / f"V{prefix}__ALL.a").exists():
-            continue
+            if prior.get(prefix) == params:
+                continue
+            subprocess.run(["rm", "-rf", str(mdir)], check=True)       # parameters changed: rebuild this model
         run(f"verilate_{prefix}", [args.verilator, "--cc", "-O3", "-Wno-fatal", "-Wno-TIMESCALEMOD", "-Wno-WIDTH",
                                    "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-PINMISSING", f"-I{C.ISA_SVH.parent}",
                                    "--top-module", top, "--prefix", f"V{prefix}", "--Mdir", mdir, *params, *files,
