@@ -91,6 +91,10 @@ def main(argv=None):
                                 peak_current=ref(pc_p), droop=ref(dr_p), package_spec=dr.get("package_spec"),
                                 benches=[ref(fc_p), ref(pg_p)]),
         blocks_1p2ghz=blocks,
+        head_and_table_dies=(dict(ref(D / "head_table_fit.json"),
+                                  head=load(D / "head_table_fit.json")["head_die"],
+                                  table=load(D / "head_table_fit.json")["table_die"])
+                             if (D / "head_table_fit.json").exists() else None),
         tool_sha256=sha(Path(__file__)))
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(dict(collective=rec["collective"]["engines"], crit=rec["collective"]["critical_peer_lanes"],

@@ -665,10 +665,68 @@
   },
   "karb/pslice_aw30_w18e8p5_1p2": {
    "record": "results/physical_abi3/asap7/chip/v41x_karb_local/pslice_aw30_w18e8p5_1p2/corner_sta.json",
-   "sha256": "ed1926f491618ac46360f36e6b5aa412763983375674e92ddcdb63ef72693b10",
-   "ss_setup_reg_to_reg_ps": 34.88,
-   "ff_hold_reg_to_reg_ps": 10.62
+   "sha256": "8f2d5b7e3142ce99c8a4205f3c2155e7d3dc3385454cbaf376973a850242e114",
+   "ss_setup_reg_to_reg_ps": 53.9,
+   "ff_hold_reg_to_reg_ps": 17.52
   }
  },
- "tool_sha256": "bc51c3d6a167a6e0f24aac87291237c91e039d88c1653cf354a6c38f5cb3f767"
+ "head_and_table_dies": {
+  "record": "results/physical_abi3/asap7/chip/v41_w18/head_table_fit.json",
+  "sha256": "119a137d2cc0bbf6e06364309e5b61a809e4f9eb06705104e552c2e4df2e1280",
+  "head": {
+   "tile_um": [
+    476.0,
+    126.9
+   ],
+   "tile_pitch_um": [
+    476.064,
+    127.44
+   ],
+   "tiles_needed": 6992,
+   "mac_tiles": 6117,
+   "embed_tiles_conservative": 875,
+   "slots": 9360,
+   "overhead_fill_derate": 0.8467,
+   "usable_slots": 7925,
+   "margin_pct": 13.3,
+   "fits_one_quarter": true,
+   "dies": 4,
+   "vm_to_farthest_tile": {
+    "L_um": 18660.5,
+    "cycles": 38
+   },
+   "w16_analytical": {
+    "need_mm2": 479.0,
+    "usable_mm2": 481.0,
+    "head_dies_8192m8": 4,
+    "head_dies_4096m8": 8
+   },
+   "floorplan": {
+    "record": "results/physical_abi3/asap7/chip/v41_w18/head_die/die_floorplan_head.json",
+    "sha256": "474602c8178849fd9ee820cd811736b559887475fdbdf1a0b39d1ac3e1de2cf9"
+   },
+   "basis": "ASAP7 tile geometry, TP-4 head group: per die (lm_head + drafter)/4 MAC-bearing, embedding/4 as full tiles (conservative)"
+  },
+  "table": {
+   "macro": "ot_rom_8192x274_m8",
+   "macro_pitch_um": [
+    130.032,
+    120.96
+   ],
+   "raw_slots": 48108,
+   "usable_macros": 37364,
+   "bytes_per_die_GB": 10.48,
+   "table_bytes_GB": 202.76,
+   "dies_asap7_geometry": 20,
+   "dies_w16_analytical": 36,
+   "dies_w16_asap7": 20,
+   "farthest_macro_to_link_edge": {
+    "L_um": 27627.7,
+    "cycles": 55,
+    "basis": "links on the east and west edges; a gather tree registers every 504 um; the switched table->layer path is inter-die (rack record)"
+   },
+   "note": "ASAP7 macro geometry holds 274 raw bits a word; W16's analytical density is the product basis"
+  }
+ },
+ "tool_sha256": "60804ddaa8998d53236f5b003bea06169cdf283a306548ff3f5f2b013e5560bd"
 }

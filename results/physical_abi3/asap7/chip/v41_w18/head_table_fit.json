@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.v41.w18_head_table_fit.v1",
+ "head_die": {
+  "tile_um": [
+   476.0,
+   126.9
+  ],
+  "tile_pitch_um": [
+   476.064,
+   127.44
+  ],
+  "tiles_needed": 6992,
+  "mac_tiles": 6117,
+  "embed_tiles_conservative": 875,
+  "slots": 9360,
+  "overhead_fill_derate": 0.8467,
+  "usable_slots": 7925,
+  "margin_pct": 13.3,
+  "fits_one_quarter": true,
+  "dies": 4,
+  "vm_to_farthest_tile": {
+   "L_um": 18660.5,
+   "cycles": 38
+  },
+  "w16_analytical": {
+   "need_mm2": 479.0,
+   "usable_mm2": 481.0,
+   "head_dies_8192m8": 4,
+   "head_dies_4096m8": 8
+  },
+  "floorplan": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/head_die/die_floorplan_head.json",
+   "sha256": "474602c8178849fd9ee820cd811736b559887475fdbdf1a0b39d1ac3e1de2cf9"
+  },
+  "basis": "ASAP7 tile geometry, TP-4 head group: per die (lm_head + drafter)/4 MAC-bearing, embedding/4 as full tiles (conservative)"
+ },
+ "table_die": {
+  "macro": "ot_rom_8192x274_m8",
+  "macro_pitch_um": [
+   130.032,
+   120.96
+  ],
+  "raw_slots": 48108,
+  "usable_macros": 37364,
+  "bytes_per_die_GB": 10.48,
+  "table_bytes_GB": 202.76,
+  "dies_asap7_geometry": 20,
+  "dies_w16_analytical": 36,
+  "dies_w16_asap7": 20,
+  "farthest_macro_to_link_edge": {
+   "L_um": 27627.7,
+   "cycles": 55,
+   "basis": "links on the east and west edges; a gather tree registers every 504 um; the switched table->layer path is inter-die (rack record)"
+  },
+  "note": "ASAP7 macro geometry holds 274 raw bits a word; W16's analytical density is the product basis"
+ },
+ "w16": {
+  "worktree": "/tmp/claude-1000/wt/w16",
+  "uarch_model_sha256": "557f535f3ed35d1299a66fee35aa2e65a8685c793bb0b4831d85c72e273e6f07",
+  "state": "W16 worktree, uncommitted"
+ },
+ "tool_sha256": "1314c0041b0aef384cf55b0b2b94d968a088dda844f79bbe101335a324c255df"
+}
