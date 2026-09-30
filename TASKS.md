@@ -1,31 +1,43 @@
 # OpenTallas critical-path tracker
 
-Updated 2026-09-29 09:40 UTC. **Root is now Claude (`claude-main`)**; Codex root stopped at 06:22 after `4a82ce47`. Active plan: [integrated floorplan and physical-composition plan](docs/INTEGRATED_PHYSICAL_PLAN.md) — workstreams W0-W7 cover Qwen3 ROM/HBM and V4.1 ROM/HBM floorplans, hardened clusters, die assembly, connected exact execution and reprice. Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **Primary objective is minimum single-user decode latency; secondary is independent-request pipeline throughput.**
+Updated 2026-09-30. **Root: Claude (`claude-main`).** Active plan: [integrated design plan](docs/INTEGRATED_PHYSICAL_PLAN.md). The priorities are:
+1. 1.2 GHz SS closure of every element;
+2. full-shape RTL tokens (V4.1 ROM, Qwen ROM, HBM);
+3. the V4.1 die rebase on p12 with the BF16 columns;
+4. headline restatement.
+
+Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash with physical evidence. **The primary objective is minimum single-user decode latency; the secondary is independent-request pipeline throughput.**
 
 Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
 
-## Model-first build streams (2026-09-29, root: Claude): see docs/MICROARCH_MODEL.md and docs/INTEGRATED_PHYSICAL_PLAN.md
+## Model-first build streams (updated 2026-09-30): see docs/INTEGRATED_PHYSICAL_PLAN.md and docs/MICROARCH_MODEL.md
 
-Rule: every stream builds only what the microarchitecture model sizes, and stops and reports on any discrepancy.
+Rule: every stream builds only what the microarchitecture model sizes, and stops and reports on any discrepancy. Sign-off is SS setup / FF hold at 60/25 ps; TT is pathfinding only. Streams with a `b` suffix succeed the finished first phase of the same stream.
 
-| Stream | Scope | Status | Top open risk |
+| Stream | Scope | Status and records | Next deliverable |
 |---|---|---|---|
-| W10 | V4.1 ROM element and striped K-split bank map | [~] element exact 144/144 rows at N=2/4/8; pair-shared element adopted; placed runs p1/q1 pending; then fill cuts + position-outer MTP (m=1) + die re-fit | synthesised element ~40% over the model: strip fit (hub over-reserved, spare slots) |
-| W11 | V4.1 dedicated units (indexer 64 keys/cycle, attention NL=4 + 2-word loader, stream unit 1,024 lanes) | [~] ledger merged; hardened elements routing | index reader must reach the HBM rate; indexer 16 vs 32 slices under MTP |
-| W12 | Qwen ROM, AR only, G=6144 pruned + scale remap + 512-wide VM x port | [~] tile/spine RTL; tile P&R; runtime composition | tile placed area; 81-stage per-op wire latency |
-| W13 | GPU-organised HBM comparators (SM, bulk copy, hardware barrier) | [~] SM elements exact; hardening; die floorplans | HBM speculation model-only (causal block attention, KV rollback not built) |
-| W14 | Model economics: batch sweep, energy per token, cost | [~] | |
-| W15 | Deterministic hardware collectives, built and MEASURED end to end | [~] | every multi-die headline depends on it; the V4.1 ROM 4,167 tok/s assumes ~0.15 µs |
-| W16 | Die consolidation: V4.1 ROM die count from placed capacity; right-sized HBM dies; equal area/cost/power comparison | [~] | analytical die counts were from the N5 ledger + over-reserved hub |
-| W17 | V4.1 full-shape layer and token through runtime composition | [~] | no full-shape layer/token has run end to end |
-| W18 | V4.1 full-die assembly: HBM PHY abstract fix, hierarchical PDN + power-switch rings, real-abstract die route | [~] | flat die PDN runs out of memory; PHY abstract defective |
+| W10 | V4.1 ROM element (q pair + BF16 column element, 1.2 GHz, p12, PDN) | [x] Element final RTL (ICG, registered BF16 bounds and chain forwarding), frozen interface, pair-mode bank map, exactness re-run, ROM depth study: `results/uarch/v41_rom_element_interface.json`, `results/uarch/v41_rom_depth_study.json`, `results/uarch/v41_rom_array_exactness.json`. [x] Per-corner macro liberty in P&R and sign-off. [~] BF16 columns adopted (37 stages / 188 dies); p12 q pair at 476 x 126.9 um; BF16 column element at 1.2 GHz on branch | BF16 column element and q pair closed at SS/FF |
+| W11 | V4.1 hub units (VM-H landing, CKV, ILV (a), serial/streaming closure, shared FP primitives) | [x] FP32 add/mul latency sweep at SS: `results/physical_abi3/asap7/hdc/w11_fp/w11_fp_latency_sweep.json`. [x] Index ring at the HBM rate: `results/rtl/w11_idx_reader_rate.json`, `results/rtl/w11_die_idx_ring_gate.json`. [x] Two-user die ring gate at full capacity: `results/rtl/w11_die_idx_ring_mu_gate.json`. [x] Attention two-word loader: `results/rtl/w11_attn_ploader.json`. [!] Verify-6 exactness claim withdrawn for the real MTP row order (`results/rtl/w11_attn_verify6.json`). [x] Selected-CKV path with wide fetch exact at full geometry (merged on main after this branch point: `results/rtl/v41x_ckv_sel_attn_wide.json`). [~] VM-H die decode exact (branch) | SU lanes, softplus and attention controller closed at SS; ILV option (a) exact |
+| W12 / W12b | Qwen ROM, option C: 4 dies / 2 packages, TP-4, G=6,144, INT8 (TP-4 token, tile, die, droop) | [x] W12: G=6144 tile/spine RTL and tile P&R inputs. [~] W12b: TP-2 L0 exact at G=6,144; full token exact through layer 9; TP-4 ISA oracle token 50994 (margin 4.31) on branch | TP-4 RTL token; die droop analysis |
+| W13 / W13b | HBM comparators, GPU organisation (SMs) | [x] W13: SM exactness and 1.2 GHz SS SM datapath (LAT-7 add/mul, bterm2 block-dot): `results/rtl/gpu_sm_exact.json`, `results/rtl/gpu_sm_blockdot_exact.json`; HBM die floorplans `results/floorplan/hbm_gpu/`. [~] W13b: SM columns at SS | SM columns closed at SS |
+| W14 | Model economics: batch sweep, energy per token, cost | [x] `results/uarch/economics.json`, `results/uarch/economics_levers.json` (feeds W16's restatement) | folded into W16 |
+| W15 / W15b | Deterministic hardware collectives, measured end to end; links | [x] W15: measured collectives adopted in the model: `results/rtl/w15_collectives.json`. [~] W15b: SS campaign, switch TP-96 record, thick metal | committed P = 6 / 48 NVLS records |
+| W16 | uarch model and records | [~] Regenerating `results/uarch/*` on the calibrated model (two clock domains, 188-die V4.1 ROM, Qwen option C, audited HBM, tau 3.78). Do not edit docs/MICROARCH_MODEL.md (W16 owns it) | restated headlines |
+| W17 | V4.1 full-shape token (L0 4-die RTL, then indexed layer, then full) | [x] TP-4 L0 ISA executor bit-exact at 1M and 200K: `results/rtl/w17_l0_fullshape_isa.json`; program constants `results/rtl/v41_program_constants.json`; robust 1M reference token 21946 (margin 3.149, replicated): `results/rtl/w17_v41_1m_reference_token.json`. [x] Field runtime-composition gate 160/160 (branch). [~] L0 4-die RTL run | L0 4-die RTL run exact |
+| W18 / W18b | V4.1 die assembly | [x] W18: PHY v41x_legal e8p5, K-arb pslice and ratio FIFO closed at SS, IR options, clock plan, lane map, head/table die fits, peak current and droop: `results/physical_abi3/asap7/chip/v41_w18/die_assembly.json` (route `route/die_route_k32_ph5.json`, 0 overflow; IR `ir/ir_options.json`, 104.3 -> 65.8 mV recommended; `peak_current.json`; `head_table_fit.json`). [~] W18b: one rebase on p12 with the BF16 columns | die record on the final element |
+| W19 | HBM full-shape token | [x] TP-96 V4.1 HBM token bit-exact at ISA level on 96 ranks (40 layers + head, 1M, token 21946, logits sha equal): `results/rtl/w19_hbm_tp96_isa.json`, `results/rtl/w19_hbm_tp96_program.json`. [x] HBM feasibility audit (no architectural blocker): `results/uarch/hbm_feasibility_audit.json`. [~] Expert fetch RTL, MTP golden, composition | expert-fetch RTL with measured first-byte latency |
 
-User decisions (2026-09-29):
-- V4.1 ROM keeps MTP at m=1; Qwen ROM is AR only; HBM comparators keep speculation.
-- Headlines are qualified as pending until calibration.
-- Old K-arbiter until the die floorplan is redone.
-- Speed is claimed against GPUs (tiers 1 and 2), with the idealised HBM machine as the architectural control; energy, cost and batch are first-class.
+User decisions (2026-09-29/30):
+- Build all four designs in parallel; no legacy work.
+- Headlines stay pending until calibration, then are restated together.
+- V4.1 ROM keeps MTP at m=1; Qwen ROM is autoregressive only; HBM comparators keep speculation.
+- Clock 1.2 GHz at SS. The V4.1 ROM runs two domains (1.2 GHz streaming, 0.9 GHz serial chain) on 4096-row macros in ping-pong.
+- V4.1 ROM: dedicated BF16 columns, 37 stages / 188 dies.
+- Qwen ROM: option C (4 dies, 2 packages, TP-4, G=6,144, INT8, FP8 KV).
+- Density: storage-only 75 Mbit/mm2 at N5 + ECC for every die class.
+- MTP acceptance: third-party tau 3.78 (V4-Flash arena-hard, LMSYS DSpark, cap-accept ceiling), with sensitivities 5.24 / 2.91.
+- V4.1 positioning: equal-cost throughput, energy and cost are the headline. Per-user speed is claimed against real GPUs (tiers 1-2) and reported honestly against tier 3.
 
 ## Current critical path and owners
 
