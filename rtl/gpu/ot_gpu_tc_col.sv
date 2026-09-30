@@ -27,7 +27,7 @@ module ot_gpu_tc_col #(
     parameter integer L    = 32,        // defaults = the hardened macro (Qwen SM: 32 lanes, 16-bit tag)
     parameter integer IL   = 8,
     parameter integer TAGW = 16,
-    parameter integer ALAT = 8          // adder latency: the IL-slot ring needs ALAT <= IL
+    parameter integer ALAT = 7          // adder latency: the IL-slot ring needs ALAT <= IL
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -119,6 +119,6 @@ module ot_gpu_tc16 (
     output wire [15:0]   otag,
     output wire          fault
 );
-    ot_gpu_tc_col #(.L(16), .IL(8), .TAGW(16), .ALAT(8)) u (.clk(clk), .rst_n(rst_n), .v(v), .first(first), .last(last),
+    ot_gpu_tc_col #(.L(16), .IL(8), .TAGW(16), .ALAT(7)) u (.clk(clk), .rst_n(rst_n), .v(v), .first(first), .last(last),
         .tag(tag), .w(w), .x(x), .ov(ov), .y(y), .otag(otag), .fault(fault));
 endmodule

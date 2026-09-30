@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
 // FP32 RNE add of the GPU-organised SM at the 1.2 GHz SS clock, in the ot_hdc_fadd port shape (y, fault).
-// LAT = 8: W10's ot_v41_fadd (bit-identical to the qualified ot_fp32_add_rne_pipe; explicit (* keep *) prefix
-// adders, which ABC cannot re-ripple -- W11's LAT-7 adder rippled to -239 ps at SS inside the routed column).
-// LAT 3..7: W11's ot_hdc_fp32_add_lat (pathfinding).
+// LAT 3..7: W11's shared ot_hdc_fp32_add_lat on keep-level Kogge-Stone prefixes (claude/w11-fpk b7d1a525,
+// parity with ot_fp32_add_rne_pipe checked by W11); LAT 7 is the SM's depth (IL-8 ring kept).
+// LAT = 8: W10's ot_v41_fadd (same arithmetic, pathfinding alternative).
 module ot_gpu_fadd #(
-    parameter integer LAT = 8
+    parameter integer LAT = 7
 ) (
     input  wire        clk,
     input  wire        rst_n,

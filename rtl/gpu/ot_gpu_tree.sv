@@ -16,7 +16,7 @@
 module ot_gpu_tree #(
     parameter integer N    = 32,
     parameter integer TAGW = 8,
-    parameter integer ALAT = 8      // adder latency (ot_gpu_fadd)
+    parameter integer ALAT = 7      // adder latency (ot_gpu_fadd)
 ) (
     input  wire            clk,
     input  wire            rst_n,

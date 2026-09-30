@@ -180,7 +180,7 @@ BLOCKS.update({
 
 GPU_FP = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_fpu.sv",
           "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
-          "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/v41rom/ot_v41_prefix.sv",
+          "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/v41rom/ot_v41_prefix.sv",
           "rtl/v41rom/ot_v41_fadd.sv", "rtl/gpu/ot_gpu_fadd.sv",
           "rtl/gpu/ot_gpu_tree.sv"]
 BLOCKS.update({

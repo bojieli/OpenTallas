@@ -39,15 +39,24 @@ module ot_gpu_bd_col #(
     // LATENCY 11), accumulated per golden chunk on an IL-slot circulating ring around the LAT-7 FP32 adder
     // (ot_gpu_fadd): the term of slot s arrives BT cycles after its issue, so the ring runs BT cycles late and
     // keeps the slot rotation; a bubble adds +0 (the slot's sum holds, bit for bit).
-    localparam integer BT = 11;
-    localparam integer ALAT = 8;
+    localparam integer BT = 12;          // lane input register + ot_v41_bterm2 (LAT 11)
+    localparam integer ALAT = 7;
     localparam integer FB = IL - ALAT;
     wire [LB-1:0] tv_l, tf_l;
     wire [LB*32-1:0] term;
     genvar l;
     generate for (l = 0; l < LB; l = l + 1) begin : g_bt
-        ot_v41_bterm2 #(.TW(1)) u_bt (.clk(clk), .rst_n(rst_n), .v(v), .fp4(fp4),
-            .xq(xq[256*l +: 256]), .xe(xe[10*l +: 10]), .wq(wq[256*l +: 256]), .we(we[10*l +: 10]),
+        // one registered fp4 per lane, kept, so synthesis cannot merge the lanes' format flops into one net
+        // driving every lane's decoders (the -71 ps SS path of the first 1.2 GHz route)
+        (* keep *) reg fp4_l;
+        always @(posedge clk) fp4_l <= fp4;
+        reg [255:0] xq_l, wq_l;
+        reg [9:0]   xe_l, we_l;
+        reg         v_l;
+        always @(posedge clk) begin xq_l <= xq[256*l +: 256]; wq_l <= wq[256*l +: 256]; xe_l <= xe[10*l +: 10]; we_l <= we[10*l +: 10]; end
+        always @(posedge clk or negedge rst_n) if (!rst_n) v_l <= 1'b0; else v_l <= v;
+        ot_v41_bterm2 #(.TW(1)) u_bt (.clk(clk), .rst_n(rst_n), .v(v_l), .fp4(fp4_l),
+            .xq(xq_l), .xe(xe_l), .wq(wq_l), .we(we_l),
             .tag(1'b0), .ov(tv_l[l]), .y(term[32*l +: 32]), .f(tf_l[l]), .otag());
     end endgenerate
     // first / last / tag aligned with the terms
@@ -95,7 +104,7 @@ module ot_gpu_bd_col #(
     wire tf, t_ov;
     wire [31:0] t_y;
     wire [TAGW-1:0] t_tag;
-    ot_gpu_tree #(.N(LB), .TAGW(TAGW), .ALAT(8)) u_tree (.clk(clk), .rst_n(rst_n), .v(lov[0]), .d(acc), .tag(tag_d),
+    ot_gpu_tree #(.N(LB), .TAGW(TAGW), .ALAT(7)) u_tree (.clk(clk), .rst_n(rst_n), .v(lov[0]), .d(acc), .tag(tag_d),
                                               .ov(t_ov), .y(t_y), .otag(t_tag), .fault(tf));
     // output registers: the hardened macro's outputs leave flops
     reg ov_q, fault_q;
