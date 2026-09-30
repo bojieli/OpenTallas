@@ -36,6 +36,7 @@ def main():
     ap.add_argument('--jobs', type=int, default=8)
     ap.add_argument('--param', action='append', default=[],
                     help='extra bench parameter NAME=VALUE (e.g. NJOBMAX=6 NKV=3840 for the verify-6 case)')
+    ap.add_argument('--define', action='append', default=[], help='Verilog define (e.g. OT_ATTN_SETCHECK)')
     a = ap.parse_args()
     root, b = a.root.resolve(), a.build.resolve()
     b.mkdir(parents=True, exist_ok=True)
@@ -50,14 +51,14 @@ def main():
            '-Mdir', str(b / 'obj'), '-j', str(a.jobs), '-Wno-fatal', '-Wno-WIDTH', '-Wno-TIMESCALEMOD',
            '--output-split', '20000', '--output-split-cfuncs', '2000', '--unroll-count', '1',
            '--unroll-limit', '131072', '-GH=16', '-GD=512', '-GTD=32', '-GNL=4', '-GTROWS=640',
-           f'-GPWORDS={a.pwords}', *[f'-G{x}' for x in a.param], '--hierarchical', str(b / HIER), *[str(b / s) for s in SOURCES],
+           f'-GPWORDS={a.pwords}', *[f'-G{x}' for x in a.param], *[f'+define+{x}' for x in a.define], '--hierarchical', str(b / HIER), *[str(b / s) for s in SOURCES],
            str(b / HARNESS), '-CFLAGS', '-O1']
     t0 = time.time()
     with (b / 'build.log').open('w') as log:
         r = subprocess.run(cmd, cwd=b, stdout=log, stderr=subprocess.STDOUT)
     rss = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
     exe = b / 'obj' / 'Vtb'
-    status = dict(command=cmd, source_sha256=pins, pwords=a.pwords, params=a.param, returncode=r.returncode,
+    status = dict(command=cmd, source_sha256=pins, pwords=a.pwords, params=a.param, defines=a.define, returncode=r.returncode,
                   elapsed=time.time() - t0, max_rss_kib=rss,
                   executable_sha256=sha(exe) if exe.is_file() else None,
                   verilator_version=subprocess.check_output([str(a.verilator), '--version'], text=True).strip(),

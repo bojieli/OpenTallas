@@ -1305,16 +1305,41 @@ SM_ELEM = {
 }
 
 
+def gpu_hardened_columns():
+    """Routed (flat, ASAP7, 0.92 ns, closed) column areas that replace the unit-sum estimate:
+    ot_gpu_tc_col at 16 lanes (lanes + 15-adder tree) and ot_gpu_bd_col at 2 block-dot lanes (+ tree)."""
+    out = {}
+    for key, rec, lanes in (("lane_with_tree", "ot_gpu_tc_col_l16_092", 16), ("blockdot_with_tree", "ot_gpu_bd_col_lb2_092", 2)):
+        p = ROOT / f"results/physical_abi3/asap7/gpu/{rec}/physical.json"
+        if p.exists():
+            r = json.loads(p.read_text())
+            if r.get("status") == "pass" and r["design"].get("closed"):
+                out[key] = r["design"]["area_um2"] / lanes
+                out[key + "_source"] = str(p.relative_to(ROOT))
+    return out
+
+
 def sm_area(e: dict, staging_kb: float):
-    """SM element area (mm2) by resource; logic placed at GPU_LOGIC_UTIL, SRAM at GPU_MACRO_PACK."""
+    """SM element area (mm2) by resource; logic placed at GPU_LOGIC_UTIL, SRAM at GPU_MACRO_PACK.  Where a
+    column has been routed (gpu_hardened_columns) its measured area per lane replaces lanes + tree."""
     u = GPU_UNIT_UM2
     c = e["cols"]
     lanes = e["int8_lanes"] + e["bf16_lanes"]
+    hc = gpu_hardened_columns()
+    if "lane_with_tree" in hc:
+        lane_tree = c * (e["int8_lanes"] * (hc["lane_with_tree"] + u["int8_decode"])
+                         + e["bf16_lanes"] * hc["lane_with_tree"])
+    else:
+        lane_tree = c * (e["int8_lanes"] * (u["lane"] + u["int8_decode"]) + e["bf16_lanes"] * u["lane"]) \
+            + c * (max(lanes, 1) - 1) * (u["fp32_add"] + 32 * u["dff"]) * (1 if lanes else 0)
+    if "blockdot_with_tree" in hc:
+        bd = c * e["blockdot_lanes"] * hc["blockdot_with_tree"]
+    else:
+        bd = c * e["blockdot_lanes"] * (u["blockdot"] + u["fp32_add"] + 8 * 32 * u["dff"]) \
+            + (c * (e["blockdot_lanes"] - 1) * (u["fp32_add"] + 32 * u["dff"]) if e["blockdot_lanes"] and not lanes else 0)
     logic = dict(
-        mma_lanes=c * (e["int8_lanes"] * (u["lane"] + u["int8_decode"]) + e["bf16_lanes"] * u["lane"]),
-        blockdot=c * e["blockdot_lanes"] * (u["blockdot"] + u["fp32_add"] + 8 * 32 * u["dff"]),
-        # one fixed pairwise tree per column over the widest lane set, output-registered adders
-        tree=c * (max(lanes, e["blockdot_lanes"]) - 1) * (u["fp32_add"] + 32 * u["dff"]),
+        mma_lanes_and_trees=lane_tree,
+        blockdot_and_trees=bd,
         stack=c * e["stack_levels"] * (u["fp32_add"] + 2 * 34 * u["dff"]),
         row_scale=c * u["fp32_mul"],
         simt=e["simt_lanes"] * u["simt_lane"],
@@ -1337,6 +1362,7 @@ def sm_area(e: dict, staging_kb: float):
     logic_mm2 = sum(logic.values()) / 1e6
     sram_mm2 = sum(macros[k] * sram_um2[k] for k in macros) * GPU_MACRO_PACK / 1e6
     return dict(logic_um2={k: round(v) for k, v in logic.items()}, logic_mm2=round(logic_mm2, 3),
+                hardened_columns=hc,
                 footprint_logic_mm2=round(logic_mm2 / GPU_LOGIC_UTIL, 3), sram_kb=sram_kb, sram_macros=macros,
                 sram_mm2=round(sram_mm2, 3), total_mm2=round(logic_mm2 / GPU_LOGIC_UTIL + sram_mm2, 3),
                 macs_per_clk=c * (lanes + 32 * e["blockdot_lanes"]))
@@ -1407,6 +1433,9 @@ def hbm_floorplan_record(model: str):
     return json.loads(p.read_text()) if p.exists() else None
 
 
+WIRE_REACH_SS_UM = 504.0   # measured (W15): routed register-to-register reach per stage at 0.833 ns, SS corner
+
+
 def barrier_network(model: str, clock: float, n_sm: int):
     """Barrier latency derived from the floorplan: SM -> quadrant node -> root (arrival AND-tree) and back
     (release), every wire segment registered at the loaded channel constant, one register per tree node.
@@ -1423,7 +1452,7 @@ def barrier_network(model: str, clock: float, n_sm: int):
         leaf_um = 2 * side + 1.5 * side                          # farthest SM of a 4 x 2 quadrant to its node
         trunk_um = 2 * side + 1 * side                           # quadrant node to root
         levels = 2
-    w = lambda um: wire_cycles(um, clock, WIRE_PS_PER_UM_LOADED)  # noqa: E731
+    w = lambda um: max(1, math.ceil(um / WIRE_REACH_SS_UM))  # noqa: E731  (1.2 GHz at SS, W15 reach)
     arrive = w(leaf_um) + w(trunk_um) + levels + 1               # + the SM's local all-subpartitions-done flop
     release = w(leaf_um) + w(trunk_um) + levels
     return dict(arrive_cycles=arrive, release_cycles=release, round_trip_cycles=arrive + release,

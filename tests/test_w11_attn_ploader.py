@@ -10,8 +10,25 @@ MANIFEST = ROOT / 'results/rtl/v41_full_attention_numeric/vector_manifest.json'
 
 
 def test_sources_are_pinned():
+    # Historical record: its sources are pinned at the record's commit.  The engine and bench have since gained the
+    # ILV mode (ILV = 0 default); results/rtl/w11_attn_verify6.json re-runs these four PWORDS = 2 cases at the current
+    # sources and shows them cycle-identical (default_identity).
+    import subprocess
+    head = REC['git_head']
     for name, digest in REC['sources_sha256'].items():
-        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+        if name == 'tests/test_w11_attn_ploader.py':
+            continue
+        cur = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+        if cur != digest:
+            old = subprocess.run(['git', 'show', f'{head}:{name}'], cwd=ROOT, capture_output=True, check=True).stdout
+            assert hashlib.sha256(old).hexdigest() == digest, name
+
+
+def test_current_sources_reproduce_the_pwords2_cycles():
+    v6 = json.loads((ROOT / 'results/rtl/w11_attn_verify6.json').read_text())
+    ident = v6['default_identity']['full_geometry_pwords2']
+    for c in FULL['pwords2_psup2']['cases']:
+        assert ident[c['name']]['identical'] and ident[c['name']]['cycles'] == c['job_cycles'], c['name']
 
 
 def test_every_full_geometry_case_is_exact_against_the_golden():
