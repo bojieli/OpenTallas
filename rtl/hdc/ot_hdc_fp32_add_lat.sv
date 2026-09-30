@@ -10,6 +10,8 @@
 //   C1  round increment (prefix adder)                          | cut C_C  (LAT >= 6)
 //   C2  encode, subnormal, overflow, canonical zero -> y
 //   (B2 is cut after the sentinel LZC when LAT >= 7)
+// Every prefix adder is ot_hdc_ksadd_k (rtl/hdc/ot_hdc_prefix.sv): (* keep *) Kogge-Stone levels, so ABC cannot
+// re-ripple the carries inside a parent block (W13: the plain form closed standalone and failed in context).
 // LAT 3 has the cuts of ot_hdc_fp32_add_fast (after A, after B, after C).
 // ---------------------------------------------------------------------------
 module ot_hdc_fp32_add_lat #(
@@ -44,11 +46,11 @@ module ot_hdc_fp32_add_lat #(
     wire [31:0] bypass_code = nonfinite ? 32'd0 : (a_zero ? (b_zero ? 32'd0 : b) : a);
     wire cmp_c;
     wire [30:0] cmp_s;
-    ot_hdc_ksa #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
+    ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
     wire [7:0] dab, dba;
     wire dab_c, dba_c;
-    ot_hdc_ksa #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
-    ot_hdc_ksa #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
+    ot_hdc_ksadd_k #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
+    ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
     // A1 -> A2 boundary bundle
     localparam integer WA = 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8;
     wire [WA-1:0] a1 = {valid_in, bypass, (nonfinite ? E_NONFINITE : E_NONE), bypass_code, a[31] ^ b[31], a[31], b[31],
@@ -104,8 +106,8 @@ module ot_hdc_fp32_add_lat #(
     wire [27:0] big28 = {1'b0, s1_big, 3'b000};
     wire [27:0] sum_w, dif_w;
     wire sum_c, dif_c;
-    ot_hdc_ksa #(.W(28)) u_sum (.a(big28), .b(s1_small), .cin(1'b0), .s(sum_w), .cout(sum_c));
-    ot_hdc_ksa #(.W(28)) u_dif (.a(big28), .b(~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
+    ot_hdc_ksadd_k #(.W(28)) u_sum (.a(big28), .b(s1_small), .cin(1'b0), .s(sum_w), .cout(sum_c));
+    ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28), .b(~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
     localparam integer WB = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 28 + 28;
     wire [WB-1:0] b2_in;
     ot_hdc_w11_cut #(.W(WB), .CUT(CUT_B)) u_cb (.clk(clk), .rst_n(rst_n),
@@ -139,8 +141,8 @@ module ot_hdc_fp32_add_lat #(
     wire [26:0] sub_val = w_dif[26:0] << lz[4:0];
     wire [7:0]  exp_sub, exp_add;
     wire exp_sub_c, exp_add_c;
-    ot_hdc_ksa #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
-    ot_hdc_ksa #(.W(8)) u_eadd (.a(w_exp), .b(8'd0), .cin(w_carry), .s(exp_add), .cout(exp_add_c));
+    ot_hdc_ksadd_k #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
+    ot_hdc_ksadd_k #(.W(8)) u_eadd (.a(w_exp), .b(8'd0), .cin(w_carry), .s(exp_add), .cout(exp_add_c));
 
     reg        s2_v, s2_byp, s2_sign, s2_zero;
     reg [1:0]  s2_err;
@@ -162,7 +164,7 @@ module ot_hdc_fp32_add_lat #(
     wire inc = s2_val[2] && ((|s2_val[1:0]) || s2_val[3]);
     wire [23:0] rnd_w;
     wire rnd_cw;
-    ot_hdc_ksa #(.W(24)) u_rnd (.a(s2_val[26:3]), .b(24'd0), .cin(inc), .s(rnd_w), .cout(rnd_cw));
+    ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(s2_val[26:3]), .b(24'd0), .cin(inc), .s(rnd_w), .cout(rnd_cw));
     localparam integer WC = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 1;
     wire [WC-1:0] c2_in;
     ot_hdc_w11_cut #(.W(WC), .CUT(CUT_C)) u_cc (.clk(clk), .rst_n(rst_n),
