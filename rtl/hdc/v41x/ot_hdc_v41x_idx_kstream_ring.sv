@@ -84,7 +84,8 @@ module ot_hdc_v41x_idx_kctl_ring #(
     localparam integer UW = BW - SW;  // tag bits above the ROB entry
 
     reg            run;
-    (* keep *) reg [NPC-1:0] bsy_g;            // per-generator copies of busy (fanout)
+    reg [NPC-1:0]  bsy_g;                     // per-generator copies of busy (fanout); each copy's next
+                                              // state reads its own output, so synthesis cannot merge them
     reg [9:0]      first_skip;
     wire [HW+9:0] cmd_span=cmd_nkeys+{{HW{1'b0}},cmd_skip};
     // segment 2 follows segment 1's (possibly partial) last super-block
@@ -179,8 +180,15 @@ module ot_hdc_v41x_idx_kctl_ring #(
     reg [HW-1:0]   g_left [0:NPC-1];          // nblk - g_hi
     reg [HW-1:0]   g_l1   [0:NPC-1];          // nblk1 - 1 - g_hi
     reg [NPC-1:0]  g_more, g_wrapn, g_first, g_lo16;
-    reg [HW-1:0]   eg     [0:NPC-1];          // g_hi - d_hi
-    reg [HW-1:0]   dl     [0:NPC-1];          // nx_hi - d_hi
+    // eg = g_hi - d_hi and dl = nx_hi - d_hi are kept in EW = SW + 1 bits: 0 <= d_hi <= nx_hi <=
+    // g_hi <= d_hi + GA + 1 while they are read (the drain passes block h only once every channel
+    // has issued h -- an entry's completion bit is set only by an issued, undrained block of that
+    // entry, and two such blocks are more than GA < WB apart -- and a channel issues only within GA
+    // of the head), so the EW-bit differences equal the HW-bit ones they replace.
+    localparam integer EW = SW + 1;
+    initial if (GA + 2 > (1 << EW)) $fatal(1, "ot_hdc_v41x_idx_kctl_ring: GA + 1 must fit EW bits");
+    reg [EW-1:0]   eg     [0:NPC-1];          // g_hi - d_hi
+    reg [EW-1:0]   dl     [0:NPC-1];          // nx_hi - d_hi
     reg [NPC-1:0]  ga_ok;                     // dl < GA
     reg [NPC-1:0]  nx_v;
     reg [BW-1:0]   nx_hi  [0:NPC-1];
@@ -230,7 +238,6 @@ module ot_hdc_v41x_idx_kctl_ring #(
     reg  [HW-1:0]  b2p1;                      // base2 + 1
     reg  [4:0]     fb2;                       // fold(base2)
     reg  [HW+9:0]  r_span;                    // cmd_span, for the ph 1 load of g_rem / d_rem
-    reg  [WB-1:0]  th;                        // th[i]: i < d_slot (the return gate's entry-bit compare)
     reg  [2:0]     lval [0:NPC-1];            // left[p][rr_s[p]] as of this cycle (read a cycle early)
     wire [BW-1:0]  d_hi1 = d_hi + 1'b1;
     wire [4:0]     d_fold_n = d_wrapn ? fb2 : fold(d_abs1);   // the head's fold after a step
@@ -249,6 +256,28 @@ module ot_hdc_v41x_idx_kctl_ring #(
         end
     end
 
+    // a < b as a 3-level prefix tree over (up to) 8 bits
+    function automatic lt_tree(input [SW-1:0] a, input [SW-1:0] b);
+        reg [7:0] g1, e1;
+        reg [3:0] g2, e2;
+        reg [1:0] g3, e3;
+        integer i;
+        begin
+            for (i = 0; i < 8; i = i + 1) begin
+                g1[i] = (i < SW) ? (!a[i % SW] && b[i % SW]) : 1'b0;
+                e1[i] = (i < SW) ? (a[i % SW] == b[i % SW]) : 1'b1;
+            end
+            for (i = 0; i < 4; i = i + 1) begin
+                g2[i] = g1[2*i+1] | (e1[2*i+1] & g1[2*i]);
+                e2[i] = e1[2*i+1] & e1[2*i];
+            end
+            for (i = 0; i < 2; i = i + 1) begin
+                g3[i] = g2[2*i+1] | (e2[2*i+1] & g2[2*i]);
+                e3[i] = e2[2*i+1] & e2[2*i];
+            end
+            lt_tree = g3[1] | (e3[1] & g3[0]);
+        end
+    endfunction
     // a beat is taken only when its block has a ROB entry (within WB of the head):
     // (tag - d_hi) mod 2^BW < WB; otherwise its channel's return queue holds it and
     // that channel alone stops
@@ -256,8 +285,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
     generate
         for (gq = 0; gq < NPC; gq = gq + 1) begin : g_rr
             wire [BW-1:0] t = rsp_tag[gq*TAGW +: BW];
-            wire [WB-1:0] tdec = WB'(1) << t[SW-1:0];
-            wire          bor = |(tdec & th);
+            wire          bor = lt_tree(t[SW-1:0], d_hi[SW-1:0]);
             if (UW > 0) begin : g_u
                 assign rsp_rdy[gq] = bor ? (t[BW-1:SW] == d_hu1) : (t[BW-1:SW] == d_hi[BW-1:SW]);
             end else begin : g_n
@@ -294,6 +322,11 @@ module ot_hdc_v41x_idx_kctl_ring #(
             else if (rr_v[pl] && rr_s[pl] == rsp_tag[pl*TAGW +: SW]) lval[pl] <= lval[pl] - 3'd1;
             else lval[pl] <= left[pl * WB + rsp_tag[pl*TAGW +: SW]];
         end
+    integer pb;
+    always @(posedge clk)
+        if (!rst_n) bsy_g <= '0;
+        else for (pb = 0; pb < NPC; pb = pb + 1)
+            bsy_g[pb] <= bsy_g[pb] ? (run || dr_quarter) : cmd_v;   // = busy's next state
     // the generators' flags and counters (written only here)
     integer pf;
     always @(posedge clk) begin
@@ -345,7 +378,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
     end
     always @(posedge clk) begin
         if (!rst_n) begin
-            run <= 1'b0; busy <= 1'b0; bsy_g <= '0; ph <= 2'd0; req_v <= 0; nx_v <= 0; rr_v <= 0; adv <= 1'b0;
+            run <= 1'b0; busy <= 1'b0; ph <= 2'd0; req_v <= 0; nx_v <= 0; rr_v <= 0; adv <= 1'b0;
             dr_scale <= 1'b0; dr_quarter <= 1'b0;
             for (p = 0; p < NPC; p = p + 1) begin cc[p] <= 0; g_hi[p] <= 0; end
         end else begin
@@ -370,9 +403,9 @@ module ot_hdc_v41x_idx_kctl_ring #(
             end
             if (!busy) begin
                 if (cmd_v) begin
-                    // (d_hi, th, d_hu1 set the return gate, an output: they move only on a command)
-                    run <= 1'b1; busy <= 1'b1; bsy_g <= '1; ph <= 2'd1;
-                    d_hi <= 0; d_oh <= WB'(1); th <= '0; d_hu1 <= 1;
+                    // (d_hi, d_hu1 set the return gate, an output: they move only on a command)
+                    run <= 1'b1; busy <= 1'b1; ph <= 2'd1;
+                    d_hi <= 0; d_oh <= WB'(1); d_hu1 <= 1;
                 end
                 first_skip<=cmd_skip;
                 base2 <= cmd_base2; span2 <= cmd_nkeys2; m2 <= sbkeys(cmd_nkeys2);
@@ -484,7 +517,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                 end
                 if (d_step) begin
                     adv <= 1'b1;
-                    d_hi <= d_hi1; d_oh <= d_oh1; th <= d_oh[WB-1] ? '0 : (th | d_oh);
+                    d_hi <= d_hi1; d_oh <= d_oh1;
                     d_hu1 <= d_hi1[BW-1:SW] + 1'b1;
                     if (ph != 0) begin
                         d_more <= !t_n[d_hi[1:0] + 2'd1];
@@ -509,7 +542,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     end
                 end
                 if (!d_live) run <= 1'b0;
-                if (!run && !dr_quarter) begin busy <= 1'b0; bsy_g <= '0; end
+                if (!run && !dr_quarter) busy <= 1'b0;
             end
         end
     end
