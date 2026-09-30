@@ -31,7 +31,8 @@
 // (exact) and RN(n*ln2_lo) depend on n alone, n in [-126, 127] after the clamp:
 // a 254-entry table holding the golden's own products.
 module ot_hdc_v41x_exp #(
-    parameter integer LM = 3                    // multiplier latency (3, or 4: ot_hdc_qmul_lat)
+    parameter integer LM = 3,                   // multiplier latency (ot_hdc_qmul_lat)
+    parameter integer LA = 3                    // add latency (ot_hdc_qadd_lat: 3, or 4 input cut)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -41,7 +42,6 @@ module ot_hdc_v41x_exp #(
     output wire        vo,
     output wire        fault
 );
-    localparam integer LA = 3;
     localparam integer T_N = 1 + LM + 1;        // n registered
     localparam integer T_K = T_N + 1;           // table products registered
     localparam integer T_R1 = T_K + LA;
@@ -353,9 +353,9 @@ module ot_hdc_v41x_exp #(
 
     wire [31:0] r1, r, xc_d, lo_d;
     ot_hdc_delay #(.W(32), .D(T_K - 1)) d_x (clk, rst_n, xc, xc_d);
-    ot_hdc_qadd_lat #((LM != 3) ? 1 : 0) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
+    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
     ot_hdc_delay #(.W(32), .D(LA)) d_lo (clk, rst_n, a_lo, lo_d);
-    ot_hdc_qadd_lat #((LM != 3) ? 1 : 0) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
+    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
 
     // Horner: p = C0; six times p = p*r + C[k]; r travels in (LM+LA)-cycle hops.
     wire [31:0] rd [0:6];
@@ -371,7 +371,7 @@ module ot_hdc_v41x_exp #(
                 ot_hdc_delay #(.W(32), .D(LM + LA)) d_r (clk, rst_n, rd[k-1], rd[k]);
             end
             ot_hdc_qmul_lat #(LM) u_m (clk, rst_n, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
-            ot_hdc_qadd_lat #((LM != 3) ? 1 : 0) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
+            ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
         end
     endgenerate
 
@@ -380,7 +380,7 @@ module ot_hdc_v41x_exp #(
     // 2^n into the exponent field (a keep-prefix add in the serial-domain build, LM != 3)
     wire [31:0] y_n;
     wire        unused_cy;
-    ot_hdc_kadd #(.W(32), .K((LM != 3) ? 1 : 0)) u_yn (.a(pa[6]), .b({{14{nint_d[8]}}, nint_d, 23'd0}), .cin(1'b0),
+    ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_yn (.a(pa[6]), .b({{14{nint_d[8]}}, nint_d, 23'd0}), .cin(1'b0),
                                                       .s(y_n), .cout(unused_cy));
     always @(posedge clk) y <= y_n;
 
@@ -389,7 +389,8 @@ endmodule
 
 // 1/sqrt(v): seed 0x5f3759df - (bits >> 1), three steps y*(1.5 - half*(y*y)).
 module ot_hdc_v41x_rsqrt #(
-    parameter integer LM = 3                    // multiplier latency (3, or 4: ot_hdc_qmul_lat)
+    parameter integer LM = 3,                   // multiplier latency (ot_hdc_qmul_lat)
+    parameter integer LA = 3                    // add latency (ot_hdc_qadd_lat: 3, or 4 input cut)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -399,7 +400,6 @@ module ot_hdc_v41x_rsqrt #(
     output wire        vo,
     output wire        fault
 );
-    localparam integer LA = 3;
     localparam integer IT = 3 * LM + LA;
     localparam integer DEPTH = 1 + 3 * IT;      // 37 (LM 3), 46 (LM 4)
     wire [DEPTH:0] vd;
@@ -409,7 +409,7 @@ module ot_hdc_v41x_rsqrt #(
     reg [31:0] y0;
     wire [31:0] y0_n;
     wire        unused_cy;
-    ot_hdc_kadd #(.W(32), .K((LM != 3) ? 1 : 0)) u_y0 (.a(32'h5F3759DF), .b(~{1'b0, x[31:1]}), .cin(1'b1), .s(y0_n),
+    ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_y0 (.a(32'h5F3759DF), .b(~{1'b0, x[31:1]}), .cin(1'b1), .s(y0_n),
                                                       .cout(unused_cy));
     always @(posedge clk) y0 <= y0_n;
     wire [31:0] half;
@@ -431,7 +431,7 @@ module ot_hdc_v41x_rsqrt #(
             end
             ot_hdc_qmul_lat #(LM) m_yy (clk, rst_n, vd[1 + IT*k],             yi[k], yi[k], yy[k], f[4*k]);
             ot_hdc_qmul_lat #(LM) m_hm (clk, rst_n, vd[1 + IT*k + LM],        hd[k], yy[k], hm[k], f[4*k+1]);
-            ot_hdc_qadd_lat #((LM != 3) ? 1 : 0) a_s  (clk, rst_n, vd[1 + IT*k + 2*LM],      32'h3FC00000, {~hm[k][31], hm[k][30:0]}, s[k], f[4*k+2]);
+            ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_s  (clk, rst_n, vd[1 + IT*k + 2*LM],      32'h3FC00000, {~hm[k][31], hm[k][30:0]}, s[k], f[4*k+2]);
             ot_hdc_delay #(.W(32), .D(2*LM + LA)) d_y (clk, rst_n, yi[k], yd[k]);
             ot_hdc_qmul_lat #(LM) m_y  (clk, rst_n, vd[1 + IT*k + 2*LM + LA], yd[k], s[k], yi[k+1], f[4*k+3]);
         end
@@ -621,7 +621,8 @@ endmodule
 // The fault convention is ot_hdc_softplus's.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_softplus #(
-    parameter integer LM = 3                    // multiplier latency (3, or 4: ot_hdc_qmul_lat)
+    parameter integer LM = 3,                   // multiplier latency (ot_hdc_qmul_lat)
+    parameter integer LA = 3                    // add latency (ot_hdc_qadd_lat: 3, or 4 input cut)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -632,7 +633,6 @@ module ot_hdc_v41x_softplus #(
     output wire        vo,
     output wire        fault
 );
-    localparam integer LA = 3;
     localparam integer T_EXP  = 7 * LM + 8 * LA + 4;   // ot_hdc_v41x_exp DEPTH
     localparam integer T_DEN  = T_EXP + LA;
     localparam integer T_U    = T_DEN + 19;
@@ -654,8 +654,8 @@ module ot_hdc_v41x_softplus #(
 
     wire [31:0] t, den, t_d, u, u2, lp, l;
     wire f_exp, f_den, f_div, f_u2, f_up, f_l, f_sp, f_sq;
-    ot_hdc_v41x_exp #(.LM(LM)) u_exp (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(t), .vo(), .fault(f_exp));
-    ot_hdc_qadd_lat #((LM != 3) ? 1 : 0) a_den (clk, rst_n, vd[T_EXP], t, 32'h40000000, den, f_den);
+    ot_hdc_v41x_exp #(.LM(LM), .LA(LA)) u_exp (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b1, x[30:0]}), .y(t), .vo(), .fault(f_exp));
+    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_den (clk, rst_n, vd[T_EXP], t, 32'h40000000, den, f_den);
     ot_hdc_delay #(.W(32), .D(LA)) d_t (clk, rst_n, t, t_d);
     ot_hdc_v41x_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_DEN]), .a(t_d), .b(den), .y(u), .vo(), .fault(f_div));
     ot_hdc_qmul_lat #(LM) m_u2 (clk, rst_n, vd[T_U], u, u, u2, f_u2);
@@ -673,7 +673,7 @@ module ot_hdc_v41x_softplus #(
                 ot_hdc_delay #(.W(32), .D(LM + LA)) d_u2 (clk, rst_n, u2d[k-1], u2d[k]);
             end
             ot_hdc_qmul_lat #(LM) u_m (clk, rst_n, vd[T_U2 + (LM + LA)*(k-1)], pa[k-1], u2d[k-1], pm[k], hf[2*k-1]);
-            ot_hdc_qadd_lat #((LM != 3) ? 1 : 0) u_a (clk, rst_n, vd[T_U2 + (LM + LA)*(k-1) + LM], pm[k], coef(k), pa[k], hf[2*k]);
+            ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) u_a (clk, rst_n, vd[T_U2 + (LM + LA)*(k-1) + LM], pm[k], coef(k), pa[k], hf[2*k]);
         end
     endgenerate
 
@@ -687,7 +687,7 @@ module ot_hdc_v41x_softplus #(
     wire x_nan = (x[30:23] == 8'hFF) && (x[22:0] != 23'd0);
     always @(posedge clk) mx <= (x[31] && !x_nan) ? 32'd0 : x;
     ot_hdc_delay #(.W(32), .D(T_L - 1)) d_mx (clk, rst_n, mx, mx_d);
-    ot_hdc_qadd_lat #((LM != 3) ? 1 : 0) a_sp (clk, rst_n, vd[T_L], mx_d, l, spv, f_sp);
+    ot_hdc_qadd_lat #(.KEEP((LM != 3 || LA != 3) ? 1 : 0), .LAT(LA)) a_sp (clk, rst_n, vd[T_L], mx_d, l, spv, f_sp);
 
     ot_hdc_fsqrt u_sq (.clk(clk), .rst_n(rst_n), .v(vd[T_SP]), .a(spv), .y(r), .vo(), .fault(f_sq));
     ot_hdc_delay #(.W(32), .D(DEPTH - T_SP)) d_sp (clk, rst_n, spv, sp);

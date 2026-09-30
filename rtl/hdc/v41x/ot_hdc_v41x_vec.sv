@@ -65,6 +65,9 @@
 // MLAT = 4 (the LAT-4 multiplier, W11 serial domain at 0.9 GHz): M1, M2, E1 and E2 are 4 deep, exp 56,
 //   sigmoid / silu 78, rsqrt 46, sqrt(softplus) 180, gate 111 (divide 19, sqrt 31 and AD 3 unchanged);
 //   a linear op takes 25 cycles and the reducer's square is 4 deep (27 + ...).
+// ALAT (FP add latency, 3 or 4 with the input-cut adder; W11 serial domain): AD is ALAT deep, every add of the
+//   SFU chains, and every reducer step (CHAIN 7 ALAT, TREE / TIME ALAT a level).  Depths at MLAT / ALAT:
+//   linear 6 + 4 MLAT + ALAT (21 at 3 / 3, 30 at MLAT 5 / ALAT 4); tools/rtl_hdc_v41x_vec_campaign.set_mlat.
 //
 // WIRE STAGES (BCAST_STAGES, RET_STAGES; 0 and 0 are the unit as it was, cycle for
 // cycle).  At N = 1,024 the lanes span millimetres of the hub, so the controller
@@ -152,7 +155,8 @@ module ot_hdc_v41x_vec #(
     parameter integer KVT_SH = 9,
     parameter integer BCAST_STAGES = 0, // register stages of the pipelined controller -> lane broadcast tree
     parameter integer RET_STAGES = 0,   // register stages of the lane / reducer -> vector-memory write path
-    parameter integer MLAT = 3          // multiplier latency (ot_hdc_qmul_lat): 3, or 4 (W11 serial domain)
+    parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4 or 5 (W11 serial domain)
+    parameter integer ALAT = 3          // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -268,10 +272,11 @@ module ot_hdc_v41x_vec #(
     function automatic pow2(input [AW-1:0] x);
         pow2 = (x != 0) && ((x & (x - 1)) == 0);
     endfunction
-    // S-stage depths (ot_hdc_v41x_vec_lane / _side): exp 7 MLAT + 28, sigmoid exp + 3 + 19, rsqrt 9 MLAT + 10,
-    // sqrt 31, sqrt(softplus) 18 MLAT + 108, gate 33 + sigmoid
-    localparam integer D_EXP = 7 * MLAT + 28, D_SIG = D_EXP + 22, D_RSQ = 9 * MLAT + 10, D_SQRT = 31,
-                       D_SP = 18 * MLAT + 108, D_EG = 33 + D_SIG;
+    // S-stage depths (ot_hdc_v41x_vec_lane / _side): exp 7 MLAT + 8 ALAT + 4, sigmoid exp + ALAT + 19, rsqrt
+    // 1 + 9 MLAT + 3 ALAT, sqrt 31, sqrt(softplus) exp + 11 MLAT + 10 ALAT + 50, gate 33 + sigmoid
+    localparam integer D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG = D_EXP + ALAT + 19, D_RSQ = 1 + 9 * MLAT + 3 * ALAT,
+                       D_SQRT = 31, D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 50, D_EG = 33 + D_SIG;
+    localparam [15:0] H_A = ALAT;
     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
                       H_EG = D_EG;
     function automatic [7:0] sfu_d(input [2:0] s);
@@ -367,11 +372,11 @@ module ot_hdc_v41x_vec #(
     wire c_div = (q_m1 == M1_DIVB || q_m1 == M1_DIVIMM);
     wire [9:0] c_dF = c_gather ? 10'd6 : 10'd4;       // broadcast register + fetch
     wire [9:0] c_dM = c_dF + 10'd1 + (c_div ? 10'd19 : H_M[9:0]);
-    wire [9:0] c_dS = c_dM + H_M[9:0] + 10'd3 + {2'd0, sfu_d(q_sfu)};
+    wire [9:0] c_dS = c_dM + H_M[9:0] + H_A[9:0] + {2'd0, sfu_d(q_sfu)};
     wire [9:0] c_lt = red_on ? {6'd0, c_ls} - 10'd3 : 10'd0;
-    // retire (E1, E2, OUT: 2 MLAT + 1), then the reducer to its tap (IN 1, SQ MLAT, CHAIN 21)
-    wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + 10'd1 + 10'd22 + H_M[9:0] + 10'd3 * c_lt;
-    wire [9:0] c_dR = c_dT + 10'd1 + (c_span ? 10'd3 * {5'd0, c_L} : 10'd0);
+    // retire (E1, E2, OUT: 2 MLAT + 1), then the reducer to its tap (IN 1, SQ MLAT, CHAIN 7 ALAT, TREE ALAT lt)
+    wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * H_A[9:0] + H_A[9:0] * c_lt;
+    wire [9:0] c_dR = c_dT + 10'd1 + (c_span ? H_A[9:0] * {5'd0, c_L} : 10'd0);
     wire c_bad = (red_on && scalar_c) || s_flatbad || (c_span && c_L > LV) || (c_gather && !pow2(c_gstr));
     // offset terms: stream s (A, B, C, D, O), bit k of the lane index
     wire [AW-1:0] so_s [0:4];
@@ -700,13 +705,13 @@ module ot_hdc_v41x_vec #(
     wire          vm, col_m;
     ot_hdc_v41x_ins #(.W(WC), .K(2), .DEPTHS({16'd19, H_M}), .DMAX(19)) u_cm (.clk(clk), .rst_n(rst_n),
         .v(vp), .sel({p_div, !p_div}), .d(cwp), .vo(vm), .q(cwm), .coll(col_m), .busy(bz_m));
-    // AD in (+MLAT: M2), S in (+MLAT + 3: AD)
+    // AD in (+MLAT: M2), S in (+MLAT + ALAT: AD)
     wire [WC-1:0] cwa, cwi;
-    wire [MLAT+3:0] vml;
+    wire [MLAT+ALAT:0] vml;
     ot_hdc_delay #(.W(WC), .D(MLAT)) u_ca (.clk(clk), .rst_n(rst_n), .d(cwm), .q(cwa));
-    ot_hdc_delay #(.W(WC), .D(3)) u_ci (.clk(clk), .rst_n(rst_n), .d(cwa), .q(cwi));
-    ot_hdc_vline #(.D(MLAT + 3)) u_vml (.clk(clk), .rst_n(rst_n), .v(vm), .vd(vml));
-    wire vi = vml[MLAT + 3];
+    ot_hdc_delay #(.W(WC), .D(ALAT)) u_ci (.clk(clk), .rst_n(rst_n), .d(cwa), .q(cwi));
+    ot_hdc_vline #(.D(MLAT + ALAT)) u_vml (.clk(clk), .rst_n(rst_n), .v(vm), .vd(vml));
+    wire vi = vml[MLAT + ALAT];
     wire [2:0] i_s = `CW_SFU(cwi);
     wire [6:0] s_sel = {i_s == SFU_EGATE, i_s == SFU_SPSQRT, i_s == SFU_SQRT, i_s == SFU_RSQRT,
                         i_s == SFU_SIGM || i_s == SFU_SILU, i_s == SFU_EXP, i_s == SFU_NONE};
@@ -755,7 +760,7 @@ module ot_hdc_v41x_vec #(
     genvar l;
     generate for (l = 0; l < N; l = l + 1) begin : g_lane
         ot_hdc_v41x_vec_lane #(.AW(AW), .CW(CW), .LN(LN), .KIND((l == 0) ? 2 : (l < M) ? 1 : 0),
-                               .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0), .MLAT(MLAT)) u_lane (
+                               .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0), .MLAT(MLAT), .ALAT(ALAT)) u_lane (
             .clk(clk), .rst_n(rst_n), .lane_id(l[10:0]),
             .ld(tr_ld), .ld_bank(tr_ldbank), .ld_c(tr_ldc),
             .emit(tr_emit), .bank(tr_bank), .o_v(tr_ov), .i_v(tr_iv), .no(tr_no), .ni(tr_ni), .ls(tr_ls), .lvw(tr_lvw),
@@ -780,7 +785,7 @@ module ot_hdc_v41x_vec #(
     end endgenerate
     assign side_v = l_sv[0];
     assign side_x = l_sx[31:0];
-    ot_hdc_v41x_vec_side #(.MLAT(MLAT)) u_side (.clk(clk), .rst_n(rst_n), .v(side_v), .fn(`CW_SFU(cwi)), .x(side_x),
+    ot_hdc_v41x_vec_side #(.MLAT(MLAT), .ALAT(ALAT)) u_side (.clk(clk), .rst_n(rst_n), .v(side_v), .fn(`CW_SFU(cwi)), .x(side_x),
                                  .fn_out(`CW_SFU(cws)), .y(side_y), .fault(side_f));
 
     // =========================================================================================
@@ -791,7 +796,7 @@ module ot_hdc_v41x_vec #(
     wire [NR-1:0]    l_res_we;
     wire [NR*AW-1:0] l_res_addr;
     wire [NR*32-1:0] l_res_data;
-    ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(9), .MLAT(MLAT)) u_red (.clk(clk), .rst_n(rst_n),
+    ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(9), .MLAT(MLAT), .ALAT(ALAT)) u_red (.clk(clk), .rst_n(rst_n),
         .v_in(retire && r_red != RED_NONE), .x_in(l_rox), .live_in(l_rov), .mx_in(r_red == RED_MAX),
         .sq_in(r_sq), .lt_in(r_lt), .span_in(r_span), .l_in(r_L), .last_in(r_wrap), .nres_in(r_nres),
         .rnd_in(r_rnd), .rbase_in(r_rbase), .rsh_in(r_rsh), .meta_in({r_seq, r_lastres}),

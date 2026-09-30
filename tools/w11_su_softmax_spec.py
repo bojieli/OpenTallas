@@ -119,7 +119,7 @@ def wire_stage_derivation(N=1024, M=256):
                      "every lane")
 
 
-def build(kind, N, M, LV, obj: Path, jobs, vflags=(), stages=(0, 0), mlat=3):
+def build(kind, N, M, LV, obj: Path, jobs, vflags=(), stages=(0, 0), mlat=3, alat=3):
     obj.mkdir(parents=True, exist_ok=True)
     top = "tb_hdc_v41x_su_softmax" if kind == "adapt" else "tb_hdc_v41x_vec"
     srcs = [*map(str, C.LIB), *map(str, C.RTL)]
@@ -127,7 +127,7 @@ def build(kind, N, M, LV, obj: Path, jobs, vflags=(), stages=(0, 0), mlat=3):
     cmd = ["/usr/bin/time", "-v", C.VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
            "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-UNOPTFLAT", *vflags, "--top-module", top, "--prefix", "Vtb", "-Mdir", str(obj),
            f"-GN={N}", f"-GM={M}", f"-GLV={LV}", f"-GBCAST_STAGES={stages[0]}", f"-GRET_STAGES={stages[1]}",
-           f"-GMLAT={mlat}", *[f"-G{k}={v}" for k, v in MEMP.items()],
+           f"-GMLAT={mlat}", f"-GALAT={alat}", *[f"-G{k}={v}" for k, v in MEMP.items()],
            f"-I{ROOT / 'rtl/test'}", *srcs, str(C.HARNESS), "-CFLAGS", "-O1", "-j", str(jobs)]
     t0 = time.time()
     with (obj / "build.log").open("w") as log:
@@ -137,7 +137,7 @@ def build(kind, N, M, LV, obj: Path, jobs, vflags=(), stages=(0, 0), mlat=3):
     if r.returncode:
         raise RuntimeError(f"build {kind} N{N} failed:\n" + text[-4000:])
     m = re.search(r"Maximum resident set size \(kbytes\): (\d+)", text)
-    return obj / "Vtb", dict(wall_s=round(wall, 1), verilator_flags=list(vflags), stages=list(stages), mlat=mlat, max_rss_gib=round(int(m.group(1)) / 2**20, 2) if m else None,
+    return obj / "Vtb", dict(wall_s=round(wall, 1), verilator_flags=list(vflags), stages=list(stages), mlat=mlat, alat=alat, max_rss_gib=round(int(m.group(1)) / 2**20, 2) if m else None,
                              note="max RSS of the largest single process (verilator or one g++)")
 
 
@@ -253,9 +253,11 @@ def main():
     ap.add_argument("--stages", nargs="+", default=["0:0"], help="BCAST_STAGES:RET_STAGES pairs")
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--mlat", type=int, default=3,
-                    help="ot_hdc_v41x_vec MLAT: multiplier latency (3, or 4: the W11 serial domain); keys get _L<mlat>")
+                    help="ot_hdc_v41x_vec MLAT: multiplier latency (3, 4 or 5: the W11 serial domain); keys get _L<mlat>")
+    ap.add_argument("--alat", type=int, default=3, help="ot_hdc_v41x_vec ALAT: FP add latency (3, or 4); keys get A<alat>")
     args = ap.parse_args()
-    C.set_mlat(args.mlat)
+    C.set_mlat(args.mlat, args.alat)
+    lsfx = ("" if (args.mlat, args.alat) == (3, 3) else f"_L{args.mlat}" + ("" if args.alat == 3 else f"A{args.alat}"))
     C.write_fields_svh()
     args.scratch.mkdir(parents=True, exist_ok=True)
     rec = dict(schema="opentallas.rtl.w11_su_spec/1", generated_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -263,17 +265,17 @@ def main():
                heads=16, head_dim=512, reducer_levels=args.lv, clock_ghz=C.CLOCK_GHZ,
                model_issue=dict(vectors_H16_T640_N1024_M256=dict(zip(OP_NAMES, MODEL_VECTORS_T640_N1024)),
                                 depths=MODEL_DEPTHS),
-               mlat=args.mlat,
+               mlat=args.mlat, alat=args.alat,
                depths_at_mlat=dict(linear_emit_to_write=C.D_FETCH + C.D_PRE + C.D_M1 + C.D_STAGE + C.D_AD
                                    + 2 * C.D_STAGE + C.D_OUT, exp_in_S=C.SFU_DEPTH[C.I.SFU_EXP],
-                                   reducer=f"{C.D_RED} + 3*log2(S/8) + 3*L"),
+                                   reducer=f"{C.D_RED} + {C.D_RSTEP}*log2(S/8) + {C.D_RSTEP}*L"),
                wire_stage_derivation=wire_stage_derivation(), builds={}, configs={})
     if args.reuse and args.builds_from:
         prev = json.loads(args.builds_from.read_text())
         rec["builds"] = {k: dict(v, reused_from=dict(record=str(args.builds_from), git_head=prev.get("git_head")))
                          for k, v in prev["builds"].items()}
     runs = [(cfg, tuple(map(int, st.split(":")))) for cfg in args.configs for st in args.stages]
-    sfx_of = lambda B, R: ("" if (B, R) == (0, 0) else f"_B{B}R{R}") + ("" if args.mlat == 3 else f"_L{args.mlat}")
+    sfx_of = lambda B, R: ("" if (B, R) == (0, 0) else f"_B{B}R{R}") + lsfx
     # every bench first (build_parallel at once: an N1024 build peaks near 31 GiB), then the cases
     exes, futs = {}, {}
     with ThreadPoolExecutor(args.build_parallel) as pool:
@@ -285,7 +287,7 @@ def main():
                 if args.reuse and (obj / "Vtb").exists():
                     exes[key] = obj / "Vtb"
                     continue
-                futs[key] = pool.submit(build, kind, N, M, args.lv, obj, args.jobs, args.vflags.split(), (B, R), args.mlat)
+                futs[key] = pool.submit(build, kind, N, M, args.lv, obj, args.jobs, args.vflags.split(), (B, R), args.mlat, args.alat)
         for key, fu in futs.items():
             exes[key], info = fu.result()
             rec["builds"][key] = info
@@ -310,7 +312,7 @@ def main():
         rec["configs"][f"N{N}_M{M}{sfx}"] = crec
     # what the wire stages cost: end-to-end cycles against the same case with none
     for key, cf in rec["configs"].items():
-        base = rec["configs"].get(f"N{cf['N']}_M{cf['M']}" + ("" if args.mlat == 3 else f"_L{args.mlat}"))
+        base = rec["configs"].get(f"N{cf['N']}_M{cf['M']}" + lsfx)
         if base is None or base is cf:
             continue
         cf["delta_vs_no_wire_stages"] = {
@@ -322,7 +324,7 @@ def main():
                                           for o, b in zip(r["ops"], base["cases"][T][v]["ops"])])
                 for v, r in cs.items()} for T, cs in cf["cases"].items() if T in base["cases"]}
     # the model's vector counts against the measured ones (T640 at N1024/M256)
-    c = rec["configs"].get("N1024_M256" + ("" if args.mlat == 3 else f"_L{args.mlat}"), {}).get("cases", {}).get("T640")
+    c = rec["configs"].get("N1024_M256" + lsfx, {}).get("cases", {}).get("T640")
     if c:
         rec["model_vector_check"] = {v: [dict(op=o["op"], model=m, measured=o["vectors"], equal=o["vectors"] == m)
                                          for o, m in zip(c[v]["ops"], MODEL_VECTORS_T640_N1024)] for v in c}

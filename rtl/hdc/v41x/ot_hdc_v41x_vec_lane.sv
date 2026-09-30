@@ -49,7 +49,8 @@ module ot_hdc_v41x_vec_lane #(
     parameter integer KIND = 0,         // 0 light, 1 SFU, 2 full (lane 0)
     parameter integer KVT_SH = 9,
     parameter integer LEAF = 0,         // 1: the broadcast tree's LAST stage is this lane's own leaf register (below)
-    parameter integer MLAT = 3          // multiplier latency (ot_hdc_qmul_lat): 3, or 4 (W11 serial domain, 0.9 GHz)
+    parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4, or 5 (W11 serial domain, 0.9 GHz)
+    parameter integer ALAT = 3          // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -130,13 +131,17 @@ module ot_hdc_v41x_vec_lane #(
     localparam [2:0] E1_BYP = 0, E1_MULC = 1, E1_ADDC = 2, E1_MULIMM = 3, E1_ADDIMM = 4;
     localparam [1:0] E2_BYP = 0, E2_MULB = 1, E2_MULIMM = 2;
     // stage depths; MLAT = 4 lengthens every multiplying stage by one (M1 / M2 / E1 / E2: 4) and the SFU chains
-    localparam integer D_DIV = 19, D_EXP = 7 * MLAT + 28, D_SIG = D_EXP + 3 + D_DIV;     // 49, 71 (MLAT 4: 56, 78)
-    localparam integer D_RSQ = 9 * MLAT + 10, D_SQRT = 31, D_SP = 18 * MLAT + 108;       // 37, 162 (46, 180)
+    localparam integer D_DIV = 19, D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG = D_EXP + ALAT + D_DIV;  // 49, 71
+    localparam integer D_RSQ = 1 + 9 * MLAT + 3 * ALAT, D_SQRT = 31;                                // 37
+    localparam integer D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 50;                                    // 162
     localparam integer D_EG = 1 + 31 + 1 + D_SIG;                                        // 104 (111)
     // MLAT >= 4 is the serial-domain build: its integer adds and compares are keep-prefix adders
     // (ot_hdc_kadd / _kge / _kinc over rtl/hdc/ot_hdc_prefix.sv) and its FP adds ot_hdc_fp32_add_lat3, so ABC
     // cannot re-ripple them inside the lane; MLAT = 3 keeps the behavioural operators (the unit as it was)
-    localparam integer K = (MLAT != 3) ? 1 : 0;
+    localparam integer K = (MLAT != 3 || ALAT != 3) ? 1 : 0;
+    generate if (ALAT > MLAT || ALAT < 3 || ALAT > 4) begin : g_bad_alat
+        ot_hdc_v41x_vec_lane_ALAT_must_be_3_or_4_and_at_most_MLAT u_trap ();
+    end endgenerate
     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
                       H_SP = D_SP, H_EG = D_EG;
     localparam integer HAS_SFU = (KIND != 0);
@@ -551,15 +556,15 @@ module ot_hdc_v41x_vec_lane #(
     end
     wire [31:0] add_y, add_byp;
     wire f_ad;
-    ot_hdc_qadd_lat #(K) u_ad (clk, rst_n, v2 && ca_ad != AD_BYP, P2, ad_y, add_y, f_ad);
+    ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_ad (clk, rst_n, v2 && ca_ad != AD_BYP, P2, ad_y, add_y, f_ad);
     wire [31:0] r_b, r_c;
     wire [AW-1:0] r_o;
     wire [2:0]  r_ad;
-    ot_hdc_delay #(.W(32 * 3 + AW + 3), .D(3)) u_d3 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(32 * 3 + AW + 3), .D(ALAT)) u_d3 (.clk(clk), .rst_n(rst_n),
         .d({P2, a2_b, a2_c, a2_o, ca_ad}), .q({add_byp, r_b, r_c, r_o, r_ad}));
-    wire [3:0] v3l;
-    ot_hdc_vline #(.D(3)) u_v3 (.clk(clk), .rst_n(rst_n), .v(v2), .vd(v3l));
-    wire v3 = v3l[3];
+    wire [ALAT:0] v3l;
+    ot_hdc_vline #(.D(ALAT)) u_v3 (.clk(clk), .rst_n(rst_n), .v(v2), .vd(v3l));
+    wire v3 = v3l[ALAT];
     wire [31:0] R = (r_ad == AD_BYP) ? add_byp : add_y;
     // ---- S --------------------------------------------------------------------------------------------------
     localparam integer T4W = 32 * 3 + AW;                 // R, B, C', O
@@ -577,15 +582,15 @@ module ot_hdc_v41x_vec_lane #(
             wire [D_EXP:0] vs;                 // a sigmoid-chain element, along the exp
             ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)), .vd(ve));
             ot_hdc_vline #(.D(D_EXP)) u_vs (.clk(clk), .rst_n(rst_n), .v(v3 && is_sig), .vd(vs));
-            ot_hdc_v41x_exp #(.LM(MLAT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)),
+            ot_hdc_v41x_exp #(.LM(MLAT), .LA(ALAT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)),
                                    .x(is_exp ? R : {~R[31], R[30:0]}), .y(y_exp), .vo(), .fault(f_e));
-            ot_hdc_qadd_lat #(K) u_den (clk, rst_n, vs[D_EXP], y_exp, 32'h3F800000, den, f_den);
+            ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_den (clk, rst_n, vs[D_EXP], y_exp, 32'h3F800000, den, f_den);
             wire silu_in = (ci_sfu == SFU_SILU);
             wire [31:0] num_in = silu_in ? R : 32'h3F800000;
-            ot_hdc_delay #(.W(32), .D(D_EXP + 3)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
-            wire [3:0] vdn;
-            ot_hdc_vline #(.D(3)) u_vdn (.clk(clk), .rst_n(rst_n), .v(vs[D_EXP]), .vd(vdn));
-            ot_hdc_v41x_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(vdn[3]), .a(num_d), .b(den), .y(y_div), .vo(),
+            ot_hdc_delay #(.W(32), .D(D_EXP + ALAT)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
+            wire [ALAT:0] vdn;
+            ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk), .rst_n(rst_n), .v(vs[D_EXP]), .vd(vdn));
+            ot_hdc_v41x_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(vdn[ALAT]), .a(num_d), .b(den), .y(y_div), .vo(),
                                     .fault(f_div));
             wire [6:0] sel;
             assign sel = {ci_sfu == SFU_EGATE, ci_sfu == SFU_SPSQRT, ci_sfu == SFU_SQRT, ci_sfu == SFU_RSQRT,
@@ -618,10 +623,10 @@ module ot_hdc_v41x_vec_lane #(
     ot_hdc_qmul_lat #(MLAT) u_e1m (clk, rst_n, v4 && (cs_e1 == E1_MULC || cs_e1 == E1_MULIMM), S,
                        (cs_e1 == E1_MULC) ? s_c : cs_imm2, e1m, f_e1m);
     wire [31:0] e1a3;
-    ot_hdc_qadd_lat #(K) u_e1a (clk, rst_n, v4 && (cs_e1 == E1_ADDC || cs_e1 == E1_ADDIMM), S,
+    ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_e1a (clk, rst_n, v4 && (cs_e1 == E1_ADDC || cs_e1 == E1_ADDIMM), S,
                        (cs_e1 == E1_ADDC) ? s_c : cs_imm2, e1a3, f_e1a);
     // E1 is MLAT deep (its multiply); the 3-cycle add waits MLAT - 3 more
-    ot_hdc_delay #(.W(32), .D(MLAT - 3)) u_e1ad (.clk(clk), .rst_n(rst_n), .d(e1a3), .q(e1a));
+    ot_hdc_delay #(.W(32), .D(MLAT - ALAT)) u_e1ad (.clk(clk), .rst_n(rst_n), .d(e1a3), .q(e1a));
     wire [31:0] e_b;
     wire [AW-1:0] e_o;
     wire [2:0]  e_e1;

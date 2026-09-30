@@ -8,7 +8,8 @@
 //                             (the unit is one controller + one reducer; the lane is the element)
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_vec_red1024 #(
-    parameter integer MLAT = 3          // the square's multiplier latency (4: W11 serial domain)
+    parameter integer MLAT = 3,         // the square's multiplier latency (W11 serial domain: 5)
+    parameter integer ALAT = 3          // the add latency (W11 serial domain: 4)
 ) (
     input  wire clk, input wire rst_n, input wire v_in, input wire [32767:0] x_in, input wire [1023:0] live_in,
     input  wire mx_in, sq_in, input wire [3:0] lt_in, input wire span_in, input wire [2:0] l_in,
@@ -17,7 +18,7 @@ module ot_hdc_v41x_vec_red1024 #(
     output wire [127:0] o_we, output wire [3071:0] o_addr, output wire [4095:0] o_data, output wire [8:0] o_meta,
     output wire o_ev, output wire busy, output wire fault
 );
-    ot_hdc_v41x_vec_red #(.N(1024), .MW(9), .MLAT(MLAT)) u (.*);
+    ot_hdc_v41x_vec_red #(.N(1024), .MW(9), .MLAT(MLAT), .ALAT(ALAT)) u (.*);
 endmodule
 
 // ot_hdc_v41x_vec_lane1024r: one lane of the N = 1,024 unit (LN = 10, LEAF = 1) driven from a register that stands
@@ -27,7 +28,8 @@ endmodule
 module ot_hdc_v41x_vec_lane1024r #(
     parameter integer KIND = 0,
     parameter integer LANE = 37,
-    parameter integer MLAT = 3          // multiplier latency (4: W11 serial domain)
+    parameter integer MLAT = 3,         // multiplier latency (W11 serial domain: 5)
+    parameter integer ALAT = 3          // FP add latency (W11 serial domain: 4)
 ) (
     input  wire clk, input wire rst_n,
     input  wire ld, input wire ld_bank, input wire [1199:0] ld_c,
@@ -64,7 +66,7 @@ module ot_hdc_v41x_vec_lane1024r #(
             r_odst} = b_q;
     // the lane with LEAF = 1: its own register is the broadcast tree's last stage (claude/w11-su d734e304);
     // b_q above stands for the tree's stage BCAST_STAGES - 1
-    ot_hdc_v41x_vec_lane #(.AW(24), .LN(10), .KIND(KIND), .LEAF(1), .MLAT(MLAT)) u (
+    ot_hdc_v41x_vec_lane #(.AW(24), .LN(10), .KIND(KIND), .LEAF(1), .MLAT(MLAT), .ALAT(ALAT)) u (
         .clk(clk), .rst_n(rst_n), .lane_id(LANE[10:0]), .ld(r_ld), .ld_bank(r_ld_bank), .ld_c(r_ld_c), .emit(r_emit),
         .bank(r_bank), .o_v(r_o_v), .i_v(r_i_v), .no(r_no), .ni(r_ni), .ls(r_ls), .lvw(r_lvw), .vb(r_vb),
         .krow(r_krow), .obase(r_obase), .aibase(r_aibase), .aind(r_aind), .gsh(r_gsh), .cpair(r_cpair), .dst(r_dst),
@@ -79,7 +81,8 @@ module ot_hdc_v41x_vec_lane1024r #(
 endmodule
 
 module ot_hdc_v41x_vec_light1024r #(
-    parameter integer MLAT = 3
+    parameter integer MLAT = 3,
+    parameter integer ALAT = 3
 ) (
     input  wire clk, input wire rst_n,
     input  wire ld, input wire ld_bank, input wire [1199:0] ld_c,
@@ -97,11 +100,12 @@ module ot_hdc_v41x_vec_light1024r #(
     output wire [23:0] kv_waddr, output wire [31:0] kv_wdata, output wire ro_v, output wire [31:0] ro_x,
     output wire fault, output wire coll
 );
-    ot_hdc_v41x_vec_lane1024r #(.KIND(0), .LANE(37), .MLAT(MLAT)) u (.*);
+    ot_hdc_v41x_vec_lane1024r #(.KIND(0), .LANE(37), .MLAT(MLAT), .ALAT(ALAT)) u (.*);
 endmodule
 
 module ot_hdc_v41x_vec_sfu1024r #(
-    parameter integer MLAT = 3
+    parameter integer MLAT = 3,
+    parameter integer ALAT = 3
 ) (
     input  wire clk, input wire rst_n,
     input  wire ld, input wire ld_bank, input wire [1199:0] ld_c,
@@ -119,5 +123,5 @@ module ot_hdc_v41x_vec_sfu1024r #(
     output wire [23:0] kv_waddr, output wire [31:0] kv_wdata, output wire ro_v, output wire [31:0] ro_x,
     output wire fault, output wire coll
 );
-    ot_hdc_v41x_vec_lane1024r #(.KIND(1), .LANE(5), .MLAT(MLAT)) u (.*);
+    ot_hdc_v41x_vec_lane1024r #(.KIND(1), .LANE(5), .MLAT(MLAT), .ALAT(ALAT)) u (.*);
 endmodule

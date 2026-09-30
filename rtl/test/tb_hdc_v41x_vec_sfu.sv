@@ -10,7 +10,7 @@
 // Operands: random words with the exponent field biased toward the edges
 // (subnormal, near-overflow, near 1).  +N=<count> sets the number of operands.
 // Prints: V41XSFU n=<n> div_err=<e> exp_err=<e> rsq_err=<e> sp_err=<e>
-module tb_hdc_v41x_vec_sfu #(parameter integer MLAT = 3) (input wire clk);   // MLAT: the fast units' multiplier latency
+module tb_hdc_v41x_vec_sfu #(parameter integer MLAT = 3, parameter integer ALAT = 3) (input wire clk);   // MLAT: the fast units' multiplier latency
     reg rst_n = 1'b0;
     integer cyc = 0, n = 200000, fed = 0;
     reg  [31:0] a, b;
@@ -50,21 +50,21 @@ module tb_hdc_v41x_vec_sfu #(parameter integer MLAT = 3) (input wire clk);   // 
     // exp
     wire [31:0] eq, er, eq_d;
     wire evq, evr, efq, efr, evq_d, efq_d;
-    ot_hdc_v41x_exp #(.LM(MLAT)) u_ne (.clk(clk), .rst_n(rst_n), .v(v), .x(a), .y(eq), .vo(evq), .fault(efq));
+    ot_hdc_v41x_exp #(.LM(MLAT), .LA(ALAT)) u_ne (.clk(clk), .rst_n(rst_n), .v(v), .x(a), .y(eq), .vo(evq), .fault(efq));
     ot_hdc_exp      u_re (.clk(clk), .rst_n(rst_n), .v(v), .x(a), .y(er), .vo(evr), .fault(efr));
-    ot_hdc_delay #(.W(34), .D(92 - (7 * MLAT + 28)), .RESET(1)) d_e (clk, rst_n, {evq, efq, eq}, {evq_d, efq_d, eq_d});
+    ot_hdc_delay #(.W(34), .D(92 - (7 * MLAT + 8 * ALAT + 4)), .RESET(1)) d_e (clk, rst_n, {evq, efq, eq}, {evq_d, efq_d, eq_d});
     // rsqrt (argument |a|)
     wire [31:0] rq, rr, rq_d;
     wire rvq, rvr, rfq, rfr, rvq_d, rfq_d;
-    ot_hdc_v41x_rsqrt #(.LM(MLAT)) u_nr (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b0, a[30:0]}), .y(rq), .vo(rvq), .fault(rfq));
+    ot_hdc_v41x_rsqrt #(.LM(MLAT), .LA(ALAT)) u_nr (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b0, a[30:0]}), .y(rq), .vo(rvq), .fault(rfq));
     ot_hdc_rsqrt      u_rr (.clk(clk), .rst_n(rst_n), .v(v), .x({1'b0, a[30:0]}), .y(rr), .vo(rvr), .fault(rfr));
-    ot_hdc_delay #(.W(34), .D(61 - (9 * MLAT + 10)), .RESET(1)) d_r (clk, rst_n, {rvq, rfq, rq}, {rvq_d, rfq_d, rq_d});
+    ot_hdc_delay #(.W(34), .D(61 - (1 + 9 * MLAT + 3 * ALAT)), .RESET(1)) d_r (clk, rst_n, {rvq, rfq, rq}, {rvq_d, rfq_d, rq_d});
     // softplus
     wire [31:0] sq, sr, tq, tr, sq_d, tq_d;
     wire svq, svr, sfq, sfr, svq_d, sfq_d;
-    ot_hdc_v41x_softplus #(.LM(MLAT)) u_ns (.clk(clk), .rst_n(rst_n), .v(v), .x(a), .sp(sq), .r(tq), .vo(svq), .fault(sfq));
+    ot_hdc_v41x_softplus #(.LM(MLAT), .LA(ALAT)) u_ns (.clk(clk), .rst_n(rst_n), .v(v), .x(a), .sp(sq), .r(tq), .vo(svq), .fault(sfq));
     ot_hdc_softplus      u_rs (.clk(clk), .rst_n(rst_n), .v(v), .x(a), .sp(sr), .r(tr), .vo(svr), .fault(sfr));
-    ot_hdc_delay #(.W(66), .D(259 - (18 * MLAT + 108)), .RESET(1)) d_s (clk, rst_n, {svq, sfq, sq, tq}, {svq_d, sfq_d, sq_d, tq_d});
+    ot_hdc_delay #(.W(66), .D(259 - (7 * MLAT + 8 * ALAT + 4 + 11 * MLAT + 10 * ALAT + 50)), .RESET(1)) d_s (clk, rst_n, {svq, sfq, sq, tq}, {svq_d, sfq_d, sq_d, tq_d});
 
     integer rsq_fm = 0;
     integer de = 0, ee = 0, re = 0, se = 0, dn = 0, en = 0, rn = 0, sn = 0;
