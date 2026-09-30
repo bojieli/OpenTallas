@@ -72,6 +72,7 @@ IL = 8                              # chain registers per lane = units per sub-b
 # may carry BF16.  Off by default so the committed records keep their meaning (--bf16-pair).
 BF16_PAIR = False
 BF16_WORD_CYCLES = 8
+BF16_CAP = 0                        # BF16_PAIR: max BF16 words in flight per element per round (0 = no cap)
 BF16_SPLIT_BOOST = 0                # 0: the model's split; 1: split BF16 rows as if each word were 8 (BF16_PAIR)
 IL_BF16 = 2
 
@@ -246,7 +247,8 @@ def element_needs(segs_fmt: dict[str, list[tuple[int, int, int, int]]]) -> dict:
                 w += sum(len(unit_halves(fmt, e0, el, u)) for u in range(u0, min(u1, u0 + il(fmt))))
         out["words_per_round"] = max(out["words_per_round"], w)
         # chain registers per lane the round needs (a BF16_PAIR word spreads over 8 slots per lane)
-        slots = w * (BF16_WORD_CYCLES if (BF16_PAIR and f == "bf16") else 1)
+        slots = (min(w, BF16_CAP) if (BF16_PAIR and f == "bf16" and BF16_CAP) else w) \
+            * (BF16_WORD_CYCLES if (BF16_PAIR and f == "bf16") else 1)   # each chain takes `hold` terms per word
         out["chain_slots_per_lane"] = max(out.get("chain_slots_per_lane", 0), slots)
     return out
 
@@ -289,6 +291,14 @@ def phase_cycles(segs_fmt: dict[str, list[tuple[int, int, int, int]]]) -> int:
                 continue
             beats = -(-len(need) // 4) if f == "bf16" else len(need)
             hold = BF16_WORD_CYCLES if (BF16_PAIR and f == "bf16") else 1
+            if BF16_PAIR and f == "bf16" and BF16_CAP:
+                # at most BF16_CAP words in flight per element (chain slots): an element's round words go in
+                # groups of BF16_CAP, and the x slices of the round are re-streamed for every group
+                G = max(-(-d // BF16_CAP) for d in demand.values())
+                for g in range(G):
+                    dg = max(min(BF16_CAP, d - BF16_CAP * g) for d in demand.values())
+                    total += 8 * max(FADD_REC, beats, hold * dg)
+                continue
             total += 8 * max(FADD_REC, beats, hold * max(demand.values()))
     return total
 
@@ -661,12 +671,17 @@ def main(argv=None):
     p.add_argument("--no-price", action="store_true")
     p.add_argument("--bf16-pair", action="store_true", help="BF16 on every standard pair (BF16_PAIR)")
     p.add_argument("--bf16-split", action="store_true", help="BF16_PAIR: split BF16 rows for 8-cycle words")
+    p.add_argument("--bf16-cap", type=int, default=0, help="BF16_PAIR: max BF16 words in flight per element")
+    p.add_argument("--bf16-hold", type=int, default=8, help="BF16_PAIR: cycles a BF16 word is held (16 / multipliers)")
     p.add_argument("--fadd-rec", type=int, default=None, help="FP32 adder recurrence (chain latency) in cycles")
     a = p.parse_args(argv)
     global BF16_PAIR, FADD_REC
     BF16_PAIR = bool(a.bf16_pair)
     global BF16_SPLIT_BOOST
     BF16_SPLIT_BOOST = int(a.bf16_split)
+    global BF16_CAP, BF16_WORD_CYCLES
+    BF16_CAP = a.bf16_cap
+    BF16_WORD_CYCLES = a.bf16_hold
     if a.fadd_rec:
         FADD_REC = a.fadd_rec
     model, params = model_rows()

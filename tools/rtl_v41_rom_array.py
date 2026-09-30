@@ -331,7 +331,8 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
             cfg.append((e, NSEG + c, 1 | (u0 << 1) | (nu << 9) | (s0 << 16) | (s1 << 19) | (int(bf) << 22)))
         for c in range(len(centries), NSEG):
             cfg.append((e, NSEG + c, 0))
-        nsub = max([-(-nu // 8) for _, nu, _, _ in centries] + [1])
+        nsub = max([-(-nu // S.il("bf16" if bf else "fp8")) for _, nu, _, _ in centries] + [1])
+        assert nsub <= 8, ("sub-blocks exceed the element's 3-bit counter", e, nsub)
         pbase = 0
         if pp:
             key = ("pbase", e)
@@ -357,7 +358,7 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
         # stream needs and demand of this element, round by round (element_order)
         for (i, u, b, h) in (S.element_order(segs) if segs else []):
             sg = segs[i]
-            q = (u - S.unit_range(sg["fmt"], sg["e0"], sg["elems"])[0]) // S.IL
+            q = (u - S.unit_range(sg["fmt"], sg["e0"], sg["elems"])[0]) // S.il(sg["fmt"])
             rounds.setdefault((q, b), set()).add(u)
             demand[(q, b, e)] = demand.get((q, b, e), 0) + 1
     # the x stream: per round, needed pairs ascending, spread over r = max(5, beats, demand)
@@ -372,7 +373,7 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
         rl = max(S.FADD_REC, len(units), dmax)
         if bf:
             groups = [units[i:i + 4] for i in range(0, len(units), 4)]
-            rl = max(S.FADD_REC, len(groups), dmax)
+            rl = max(S.FADD_REC, len(groups), (S.BF16_WORD_CYCLES if S.BF16_PAIR else 1) * dmax)
             slots = [None] * rl
             for i, g in enumerate(groups):
                 slots[(i * rl) // len(groups)] = g
@@ -414,20 +415,27 @@ def build_phase(mats: list[Mat], N: int, work: Path, rng, split=None, nb=1, sibl
         for (e, mb), lst in pp_words.items():
             for bk in (0, 1):
                 viamap(lst[bk], work / f"e{e}{'b' if mb else ''}_{bk}.viamap.hex", 4096)
-    return dict(bf=bf, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32), nsent=nsent, npos=npos, exp_fp32=exp_fp32, exp_bf16=exp_bf16,
+    chain_slots = 0
+    if bf and S.BF16_PAIR:
+        per_e = {}
+        for (q, b, e), v in demand.items():
+            per_e[e] = max(per_e.get(e, 0), v)
+        chain_slots = max(per_e.values(), default=0) * S.BF16_WORD_CYCLES
+    return dict(bf=bf, chain_slots=chain_slots, ncfg=len(cfg), nst=len(beats), nrows=len(exp_fp32), nsent=nsent, npos=npos, exp_fp32=exp_fp32, exp_bf16=exp_bf16,
                 t_pred=t_pred, t_rounds=t_rounds, words=n_words, split=info,
                 elements=[len(by_e.get(e, [])) for e in range(NE)])
 
 
 def build_sim(N: int, work: Path, xf: int, nb: int = 1, mtp: int = 0, early: int = 0, bypass: int = 0,
-              defines: tuple[str, ...] = (), fast: int = 0, pp: int = 0) -> Path:
+              defines: tuple[str, ...] = (), fast: int = 0, pp: int = 0, bp: int = 0) -> Path:
     out = work / (f"obj_n{N}_xf{xf}_nb{nb}_m{mtp}{early}{bypass}" + (f"_f{fast}p{pp}" if fast or pp else "")
+                  + ("_bp" if bp else "")
                   + "".join("_" + d for d in defines))
     exe = out / "Vtb_v41_rom_array"
     if exe.exists():
         return exe
     cmd = [str(VERILATOR), "--binary", "--timing", "-j", "8", "-Wno-fatal", "-Wno-lint", "-Wno-style",
-           "-O2", f"-GN={N}", f"-GXF={xf}", f"-GNB={nb}", f"-GMTP={mtp}", f"-GEARLY={early}", f"-GBYPASS={bypass}", f"-GFAST={fast}", f"-GPP={pp}", "--top-module", "tb_v41_rom_array", "-Mdir", str(out)] + [f"-D{d}" for d in defines] + [str(ROOT / TB)]
+           "-O2", f"-GN={N}", f"-GXF={xf}", f"-GNB={nb}", f"-GMTP={mtp}", f"-GEARLY={early}", f"-GBYPASS={bypass}", f"-GFAST={fast}", f"-GPP={pp}", f"-GBP={bp}", "--top-module", "tb_v41_rom_array", "-Mdir", str(out)] + [f"-D{d}" for d in defines] + [str(ROOT / TB)]
     cmd += [str(ROOT / p) for p in RTL + RTL_FAST]
     subprocess.run(cmd, check=True, cwd=work, stdout=subprocess.DEVNULL)
     return exe
@@ -492,7 +500,7 @@ def run_multi(ck: Ckpt, N: int, nb: int, seq: str, work: Path, rng, npos: int = 
                           if a["elements"][e] == 0 and b["elements"][e] > 0)
     xf = XF_BF if any(p["bf"] for p in phs) else XF_Q
     exe = build_sim(N, work.parent, xf, nb, mtp=int(npos > 1), early=int(fillcut), bypass=int(fillcut),
-                    defines=defines, fast=fast, pp=pp)
+                    defines=defines, fast=fast, pp=pp, bp=int(S.BF16_PAIR))
     r = subprocess.run([str(exe), f"+DIR={work}", f"+OT_ROM_DIR={work}", f"+PHASES={len(names)}"],
                        capture_output=True, text=True, check=True)
     got, pinfo = {}, {}
@@ -565,7 +573,12 @@ def main(argv=None):
     ap.add_argument("--define", nargs="*", default=[], help="Verilog defines (e.g. a mutant)")
     ap.add_argument("--fast", action="store_true", help="the 1.2 GHz element pipeline (FAST=1, LAT-stage adders)")
     ap.add_argument("--pp", action="store_true", help="ping-pong 2 x ot_rom_4096x274_m8 per macro slot")
+    ap.add_argument("--bp", action="store_true", help="BF16_PAIR: BF16 on the standard pair (4 multipliers, "
+                                                      "4-cycle word hold, NCH 24, 2-unit BF16 sub-blocks)")
     a = ap.parse_args(argv)
+    if a.bp:
+        assert a.fast, "--bp needs --fast"
+        S.BF16_PAIR, S.BF16_WORD_CYCLES, S.BF16_SPLIT_BOOST = True, 4, 1
     if a.fast:
         S.FADD_REC = FAST_LAT             # rounds last at least the adder recurrence
     G.set_arith("chunk8")
@@ -575,7 +588,7 @@ def main(argv=None):
     if a.multi is not None:
         for nb, N in [(nb, N) for nb in a.nb for N in a.n]:
             for seq in (a.multi or list(SEQUENCES)):
-                wd = a.work / (f"multi_n{N}_nb{nb}_p{a.mtp}{'_fc' if a.fillcut else ''}{'_fast' if a.fast else ''}"
+                wd = a.work / (f"multi_n{N}_nb{nb}_p{a.mtp}{'_fc' if a.fillcut else ''}{'_fast' if a.fast else ''}{'_bp' if a.bp else ''}"
                                f"{'_pp' if a.pp else ''}_{seq}{''.join('_' + d for d in a.define)}")
                 wd.mkdir(parents=True, exist_ok=True)
                 r = run_multi(ck, N, nb, seq, wd, np.random.default_rng(SEED), npos=a.mtp, fillcut=a.fillcut,
@@ -598,14 +611,20 @@ def main(argv=None):
         for name, mats in cases(ck, N, nb).items():
             if mats is None or (a.only and a.only not in name):
                 continue
-            wd = a.work / (f"n{N}_nb{nb}{'_sib' if a.sibling else ''}_p{a.mtp}{'_fc' if a.fillcut else ''}"
+            wd = a.work / (f"n{N}_nb{nb}{'_sib' if a.sibling else ''}_p{a.mtp}{'_fc' if a.fillcut else ''}{'_bp' if a.bp else ''}"
                            f"{'_fast' if a.fast else ''}{'_pp' if a.pp else ''}_{name}")
             wd.mkdir(exist_ok=True)
             ph = build_phase(mats, N, wd, rng, split=8 if "split8" in name else None, nb=nb, sibling=a.sibling,
                              npos=a.mtp, pp=a.pp)
+            if a.bp and ph["bf"] and ph["chain_slots"] > 24:
+                print(json.dumps(dict(N=N, NB=nb, case=name, skipped="placement needs %d chain slots per lane; the "
+                                      "element has 24 and the full-die bank map never needs more" % ph["chain_slots"])))
+                out.append(dict(N=N, NB=nb, case=name, skipped=True, chain_slots=ph["chain_slots"], rows=0,
+                                fp32_exact=0, bf16_exact=0, fault=0))
+                continue
             xf = XF_BF if ph["bf"] else XF_Q
             exe = build_sim(N, a.work, xf, nb, mtp=int(a.mtp > 1), early=int(a.fillcut), bypass=int(a.fillcut),
-                            fast=int(a.fast), pp=int(a.pp))
+                            fast=int(a.fast), pp=int(a.pp), bp=int(a.bp))
             rows, done = run_case(exe, wd, ph)
             rows = {t: v for t, v in rows.items() if not t[1] & SENT}
             ok_fp32 = sum(rows.get(t, (None,))[0] == v for t, v in ph["exp_fp32"].items())
@@ -639,7 +658,7 @@ def main(argv=None):
                    checkpoint_revision=a.snapshot.name, checkpoint_header_sha256=ck.pins, seed=SEED,
                    simulator=f"verilator 5.050 ({VERILATOR})",
                    params=dict(NSEG=NSEG, NCH=NCH, XF_Q=XF_Q, XF_BF=XF_BF, BST=2, RST=1, LV=5, RD=64, root_D=128, BF16=1, NCHB=8,
-                               FAST=int(a.fast), PP=int(a.pp), LAT=FAST_LAT if a.fast else 5),
+                               FAST=int(a.fast), PP=int(a.pp), BP=int(a.bp), LAT=FAST_LAT if a.fast else 5),
                    source_sha256={p: sha(ROOT / p) for p in srcs}, cases=out)
         a.output.parent.mkdir(parents=True, exist_ok=True)
         a.output.write_text(json.dumps(rec, indent=1) + "\n")
