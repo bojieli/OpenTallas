@@ -78,6 +78,23 @@ BIND = {1048576: ROOT / "results/rtl/hdc_v41x_fullshape_1m_program_bind_rope_hbm
         200000: ROOT / "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json"}
 OUT = ROOT / "results/rtl/w17_l0_fullshape_isa.json"
 SCRATCH = Path("/home/ubuntu/w17work/isa/scratch")
+# the headline 1M reference token (claude/w17-ref): seed 20260930 -> 21946, margin 3.149
+REF_SEED = 20260930
+REF_RECORD = ROOT / "results/rtl/w17_v41_1m_reference_token.json"
+SEEDED = {(1048576, REF_SEED): dict(bind=ROOT / "results/rtl/hdc_v41x_fullshape_1m_s20260930_program_bind_rope_hbm.json",
+                                    scratch=Path("/home/ubuntu/w17work/isa/scratch_s20260930"))}
+
+
+def case(ctx: int, seed: int = LC.SEED) -> tuple[Path, Path]:
+    """(bind record, scratch dir) of a context and golden seed."""
+    if seed == LC.SEED:
+        return BIND[ctx], SCRATCH
+    c = SEEDED[(ctx, seed)]
+    return c["bind"], c["scratch"]
+
+
+def case_key(ctx: int, seed: int = LC.SEED) -> str:
+    return str(ctx) if seed == LC.SEED else f"{ctx}_seed{seed}"
 VM_ELEMS = 1 << 19
 TP, W, IL, GR, BL = 4, I.W_LANES, I.INTERLEAVE, I.GROUPS, I.BL
 HD, TROWS, WINDOW, SCAN_CAP, TOPK = 512, 640, 128, 16384, 512
@@ -142,19 +159,27 @@ def full_dyn(pos: int, tok: int = 0) -> list[int]:
 
 
 # -- golden shard and the rank images ------------------------------------------------------------------------------
-def load_golden(ctx: int, scratch: Path) -> dict:
-    rec = json.loads(GOLDEN_RECORD.read_text())["contexts"][str(ctx)]
+def load_golden(ctx: int, scratch: Path, seed: int = LC.SEED) -> dict:
+    if seed == LC.SEED:
+        rec = json.loads(GOLDEN_RECORD.read_text())["contexts"][str(ctx)]
+        state_sha = rec["initial_state_segments"][0]["description"]["sha256"]["win0"]
+    else:
+        rec = json.loads(REF_RECORD.read_text())
+        if (rec["context"], rec["seed"]) != (ctx, seed):
+            raise SystemExit(f"{REF_RECORD.name} is not the ctx {ctx} seed {seed} token")
+        state_sha = None       # the record pins the whole state digest only; rows re-derived from the seed
     L0 = rec["layers"][0]
     z = np.load(scratch / f"ctx{ctx}_L00.npz")
     js = json.loads((scratch / f"ctx{ctx}_L00.json").read_text())
     got_in, got_out = LC.digest(z["h_in"], z["pre_in"]), LC.digest(z["h_out"], z["pre_out"])
     if got_in != L0["input_sha256"] or got_out != L0["output_sha256"]:
-        raise SystemExit(f"ctx {ctx}: golden shard I/O sha256 differs from {GOLDEN_RECORD.name}")
+        raise SystemExit(f"ctx {ctx}: golden shard I/O sha256 differs from its golden record")
     for k, v in js["trace_sha256"].items():
         if LC.digest(z[k]) != v:
             raise SystemExit(f"ctx {ctx}: golden trace array {k} differs from its shard record")
     return dict(z={k: z[k] for k in z.files}, shard=js, record=L0, position=rec["position"],
-                experts=js["experts"], state_sha=rec["initial_state_segments"][0]["description"]["sha256"]["win0"])
+                experts=js["experts"], state_sha=state_sha, seed=seed,
+                token_history=js.get("token_history", rec.get("token_history")))
 
 
 def rank_images(ctx: int, rank: int, scratch: Path, golden: dict) -> tuple[dict, Path, dict]:
@@ -688,10 +713,10 @@ def checkpoints(bind):
 
 
 def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=print, snap=None,
-                on_pc=None, ranks_out=None) -> dict:
+                on_pc=None, ranks_out=None, seed=LC.SEED) -> dict:
     """snap: {pc: None} filled with every rank's VM after pc; on_pc(pc, ranks): called after every PC;
     ranks_out: a list that receives the four Rank objects (final VM, per-rank weight-op logs `rk.log`)."""
-    golden = load_golden(ctx, scratch)
+    golden = load_golden(ctx, scratch, seed)
     pos = golden["position"]
     lay = BoundLayout(bind_path)
     if lay.selected != golden["experts"]:
@@ -715,8 +740,8 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
     consts = dict(consts, _sinkhorn_iters=man["unit_parameters"]["sinkhorn_iters"]["value"])
     ck = LC.Checkpoint()
     m, _ = LC.build_model(ck, engram=False)
-    st, sdesc = LC.synthetic_state(m, ctx, layers=[0])
-    if sdesc["sha256"]["win0"] != golden["state_sha"]:
+    st, sdesc = LC.synthetic_state(m, ctx, seed=seed, layers=[0])
+    if golden["state_sha"] is not None and sdesc["sha256"]["win0"] != golden["state_sha"]:
         raise SystemExit(f"ctx {ctx}: synthetic window rows differ from the golden record")
     win = np.stack(st["win"][0]).astype(F)
     cs = V.rope_cs(m.freqs_plain, pos)
@@ -788,13 +813,16 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
     unwritten = {str(rk.r): rk.unwritten for rk in ranks if rk.unwritten}
     exact = bool(results) and all(x["bit_exact"] for x in results) and not defects and not unwritten \
         and len(results) == len(cps)
-    return dict(context=ctx, position=pos, verdict="pass" if exact else "fail",
+    return dict(context=ctx, position=pos, seed=seed, verdict="pass" if exact else "fail",
                 experts=golden["experts"], regions=results, defects=defects, unwritten_reads=unwritten,
                 instructions_executed=len(fields) if not defects else defects[0]["pc"],
                 engine_log_rank0=trace, rope=rope_check,
                 inputs=dict(golden_shard_input_sha256=golden["record"]["input_sha256"],
                             golden_shard_output_sha256=golden["record"]["output_sha256"],
-                            window_rows_sha256=golden["state_sha"], rank_images=rank_pins,
+                            window_rows_sha256=golden["state_sha"] or sdesc["sha256"]["win0"],
+                            window_rows_check="golden record win0 digest" if golden["state_sha"] else
+                            "re-derived from the seed (the reference record pins only the whole-state digest); "
+                            "checked through the bit-exact attention output", rank_images=rank_pins,
                             bind=str(bind_path.relative_to(ROOT)), bind_sha256=sha(bind_path),
                             layout=str(lay.layout_path.relative_to(ROOT)), layout_sha256=sha(lay.layout_path),
                             qe_stream=str(lay.qe_path.relative_to(ROOT)), qe_stream_sha256=sha(lay.qe_path)))
@@ -806,7 +834,8 @@ SOURCES = ("tools/v41_fullshape_isa.py", "tools/hdc_isa_v41.py", "tools/hdc_repl
            "tools/v41_fullshape_program_bind.py", "tools/rtl_v41x_fullshape_l0_program.py",
            "results/rtl/v41_program_constants.json", "results/rtl/hdc_v41x_fullshape_l0_program.hex",
            "results/rtl/hdc_v41x_fullshape_l0_program.json", "results/rtl/hdc_v41x_fullshape_golden.json",
-           "results/rtl/v41x_rope_hbm_cache.json", "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+           "results/rtl/v41x_rope_hbm_cache.json", "results/rtl/w17_v41_1m_reference_token.json",
+           "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
            "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv", "rtl/rom/ot_rom_oneshot_px.sv",
            "compiler/models/deepseek-v4.1-flash/inference_config.json")
 
@@ -818,12 +847,16 @@ def main() -> int:
     ap.add_argument("--program", type=Path, default=PROGRAM)
     ap.add_argument("--record", type=Path)
     ap.add_argument("--fixes", type=Path, help="JSON list of the program fixes this run verifies")
+    ap.add_argument("--seed", type=int, default=LC.SEED, help="golden seed (20260930: the 1M reference token)")
     a = ap.parse_args()
     ctxs = a.context or [1048576, 200000]
     out = {}
     for ctx in ctxs:
-        out[str(ctx)] = run_context(ctx, a.scratch, BIND[ctx], a.program)
-        print(f"ctx {ctx}: {out[str(ctx)]['verdict']}")
+        bind, scratch = case(ctx, a.seed)
+        scratch = a.scratch if a.seed == LC.SEED else scratch
+        key = case_key(ctx, a.seed)
+        out[key] = run_context(ctx, scratch, bind, a.program, seed=a.seed)
+        print(f"ctx {key}: {out[key]['verdict']}")
     if a.record:
         head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
         rec = dict(schema=SCHEMA,
@@ -838,11 +871,19 @@ def main() -> int:
                    program_sha256=sha(a.program),
                    fixes=json.loads(a.fixes.read_text()) if a.fixes else [],
                    contexts=out,
+                   headline=f"1048576_seed{REF_SEED}",
                    source_sha256={s: sha(ROOT / s) for s in SOURCES},
                    reproduction="python3 tools/rtl_v41_fullshape_layer_campaign.py --steps images --contexts C "
                                 "--layers 0 --rank R --scratch SCRATCH (R = 0..3, SCRATCH holding the golden "
                                 "ctxC_L00.{json,npz} shards); python3 tools/v41_fullshape_isa.py --context C "
                                 "--scratch SCRATCH --record OUT")
+        if a.record.exists():          # contexts not re-run, the fix list and failed verdicts are kept
+            old = json.loads(a.record.read_text())
+            rec["contexts"] = {**old.get("contexts", {}), **out}
+            rec["status"] = "pass" if all(v["verdict"] == "pass" for v in rec["contexts"].values()) else "fail"
+            rec["fixes"] = rec["fixes"] or old.get("fixes", [])
+            if "failed_runs" in old:
+                rec["failed_runs"] = old["failed_runs"]
         a.record.write_text(json.dumps(rec, indent=1) + "\n")
         print("wrote", a.record)
     return 0 if all(v["verdict"] == "pass" for v in out.values()) else 1

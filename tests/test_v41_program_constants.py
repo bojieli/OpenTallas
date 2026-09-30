@@ -21,7 +21,8 @@ import v41_program_constants as KC  # noqa: E402
 
 PROGRAM = ROOT / "results/rtl/hdc_v41x_fullshape_l0_program.hex"
 BINDS = [ROOT / "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json",
-         ROOT / "results/rtl/hdc_v41x_fullshape_1m_program_bind_rope_hbm.json"]
+         ROOT / "results/rtl/hdc_v41x_fullshape_1m_program_bind_rope_hbm.json",
+         ROOT / "results/rtl/hdc_v41x_fullshape_1m_s20260930_program_bind_rope_hbm.json"]
 CONFIG = json.loads((ROOT / "compiler/models/deepseek-v4.1-flash/inference_config.json").read_text())
 IMMS = ("imm1", "imm2", "imm3")
 # The fixes of 2026-09-30 (field, PCs, manifest constant): the task's defect list, pinned independently of
@@ -124,7 +125,8 @@ def test_core_dyn_table_matches_the_emitter():
 def test_isa_record_passes_both_contexts():
     rec = json.loads((ROOT / "results/rtl/w17_l0_fullshape_isa.json").read_text())
     assert rec["status"] == "pass"
-    for ctx in ("1048576", "200000"):
+    assert rec["headline"] == "1048576_seed20260930"
+    for ctx in ("1048576_seed20260930", "1048576", "200000"):
         c = rec["contexts"][ctx]
         assert c["verdict"] == "pass" and not c["defects"] and not c["unwritten_reads"]
         assert all(r["bit_exact"] for r in c["regions"]) and len(c["regions"]) == 9

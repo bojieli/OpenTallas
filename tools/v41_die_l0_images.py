@@ -169,7 +169,9 @@ def weight_ops(rk, slices: dict) -> list[dict]:
     return out
 
 
-def build(ctx: int, out_root: Path, snapshots: bool, log=print) -> dict:
+def build(ctx: int, out_root: Path, snapshots: bool, log=print, seed: int = LC.SEED) -> dict:
+    bind, scratch = X.case(ctx, seed)
+    tag = f"ctx{ctx}" if seed == LC.SEED else f"ctx{ctx}_s{seed}"
     ranks = []
     snapdirs = {}
 
@@ -177,21 +179,22 @@ def build(ctx: int, out_root: Path, snapshots: bool, log=print) -> dict:
         if not snapshots:
             return
         for rk in rks:
-            d = snapdirs.setdefault(rk.r, out_root / f"ctx{ctx}_r{rk.r}")
+            d = snapdirs.setdefault(rk.r, out_root / f"{tag}_r{rk.r}")
             d.mkdir(parents=True, exist_ok=True)
             sparse(d / f"vm_pc{pc:03d}.hex", vm_runs(rk.vm, rk.ok), 8)
 
-    res = X.run_context(ctx, X.SCRATCH, X.BIND[ctx], X.PROGRAM, log_fn=log, on_pc=on_pc, ranks_out=ranks)
+    res = X.run_context(ctx, scratch, bind, X.PROGRAM, log_fn=log, on_pc=on_pc, ranks_out=ranks, seed=seed)
     if res["verdict"] != "pass":
         raise SystemExit(f"ctx {ctx}: the ISA executor does not pass; no die images written")
-    golden = X.load_golden(ctx, X.SCRATCH)
+    golden = X.load_golden(ctx, scratch, seed)
     pos = golden["position"]
-    lay = X.BoundLayout(X.BIND[ctx])
+    lay = X.BoundLayout(bind)
     fields = [X.I.decode(int(w, 16), full_shape=True) for w in X.PROGRAM.read_text().split()]
     for f, row in zip(fields, lay.bind["instruction_trace"]):
         f["_tag"] = row["tag"]
     # the shared inputs: HE banks, window ring, RoPE entry
-    ldir = Path(f"/home/ubuntu/w17work/isa/layout_{'1m' if ctx == 1048576 else '200k'}")
+    ldir = Path(f"/home/ubuntu/w17work/isa/layout_{'1m' if ctx == 1048576 else '200k'}"
+                + ("" if seed == LC.SEED else f"_s{seed}"))
     he = {}
     for name, base in HE_BASES.items():
         rec = lay.layout["matrices"][name]
@@ -203,7 +206,7 @@ def build(ctx: int, out_root: Path, snapshots: bool, log=print) -> dict:
                 he[(base + w) * 8 + b] = sum(int(img[w, b, l]) << (32 * l) for l in range(8))
     ck = LC.Checkpoint()
     m, _ = LC.build_model(ck, engram=False)
-    st, _ = LC.synthetic_state(m, ctx, layers=[0])
+    st, _ = LC.synthetic_state(m, ctx, seed=seed, layers=[0])
     win = np.stack(st["win"][0]).astype(np.float32)
     rows = list(range(pos - len(win), pos))
     codes, scales = LC.pack_fp8_ue8m0(win)
@@ -221,7 +224,7 @@ def build(ctx: int, out_root: Path, snapshots: bool, log=print) -> dict:
                   PROG_AW=14)
     ranks_rec = {}
     for rk in ranks:
-        d = out_root / f"ctx{ctx}_r{rk.r}"
+        d = out_root / f"{tag}_r{rk.r}"
         d.mkdir(parents=True, exist_ok=True)
         (d / "prog.hex").write_text(prog_words)
         crom = {int(a): [(int(G.bits(rk.crom[a, 1])) << 32) | int(G.bits(rk.crom[a, 0]))]
@@ -245,13 +248,13 @@ def build(ctx: int, out_root: Path, snapshots: bool, log=print) -> dict:
         wops = weight_ops(rk, slice_of(rk.r, golden["experts"]))
         (d / "weight_ops.json").write_text(json.dumps(dict(
             context=ctx, rank=rk.r, experts=golden["experts"],
-            image_dir=str(X.SCRATCH / "images" / f"ctx{ctx}_L00_r{rk.r}"),
-            image_manifest_sha256=X.sha(X.SCRATCH / "images" / f"ctx{ctx}_L00_r{rk.r}" / "manifest.json"),
+            seed=seed, image_dir=str(scratch / "images" / f"ctx{ctx}_L00_r{rk.r}"),
+            image_manifest_sha256=X.sha(scratch / "images" / f"ctx{ctx}_L00_r{rk.r}" / "manifest.json"),
             ops=wops), indent=1) + "\n")
         man = dict(
-            schema=SCHEMA + ".rank", context=ctx, position=pos, rank=rk.r,
+            schema=SCHEMA + ".rank", context=ctx, position=pos, seed=seed, rank=rk.r,
             die_parameters=dict(params, RANK=rk.r),
-            inputs=dict(host_mode=1, host_token=golden["shard"]["token_history"][-1], host_pos=pos, host_user=0,
+            inputs=dict(host_mode=1, host_token=golden["token_history"][-1], host_pos=pos, host_user=0,
                         host_entry=0, window_region_valid=1, window_region_base=WIN_BASE,
                         window_region_count=WIN_COUNT, window_prime_user=0,
                         window_rows_preloaded=[rows[0], rows[-1]], window_current_row_slot=pos % 128,
@@ -271,11 +274,11 @@ def build(ctx: int, out_root: Path, snapshots: bool, log=print) -> dict:
         ranks_rec[str(rk.r)] = dict(dir=str(d), manifest_sha256=X.sha(d / "manifest.json"), images=man["images"],
                                     weight_ops=len(wops), expect_vm_elements=man["expect_vm_elements"])
         log(f"ctx {ctx} rank {rk.r}: {d} ({len(wops)} weight ops, {man['expect_vm_elements']} VM elements)")
-    return dict(context=ctx, position=pos, isa_verdict=res["verdict"],
+    return dict(context=ctx, position=pos, seed=seed, isa_verdict=res["verdict"],
                 isa_regions={r["region"]: r["bit_exact"] for r in res["regions"]}, ranks=ranks_rec,
                 bench=dict(params, inputs_common=dict(window_region_base=WIN_BASE, window_region_count=WIN_COUNT,
                                                       rope_plain_base=ROPE_PLAIN_BASE, rope_reserved_end=RESERVED_END)),
-                sources=dict(bind=str(X.BIND[ctx].relative_to(ROOT)), bind_sha256=X.sha(X.BIND[ctx]),
+                sources=dict(bind=str(bind.relative_to(ROOT)), bind_sha256=X.sha(bind),
                              layout_sha256=X.sha(lay.layout_path), program_sha256=X.sha(X.PROGRAM)))
 
 
@@ -285,18 +288,20 @@ def main() -> int:
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--snapshots", action="store_true")
     ap.add_argument("--record", type=Path)
+    ap.add_argument("--seed", type=int, default=LC.SEED, help="golden seed (20260930: the 1M reference token)")
     a = ap.parse_args()
     ctxs = a.context or [1048576, 200000]
-    recs = {str(c): build(c, a.out, a.snapshots) for c in ctxs}
+    recs = {X.case_key(c, a.seed): build(c, a.out, a.snapshots, seed=a.seed) for c in ctxs}
     if a.record:
         srcs = ("tools/v41_die_l0_images.py", "tools/v41_fullshape_isa.py", "tools/rtl_hdc_v41x_attn_campaign.py",
                 "tools/v41_fullshape_weight_layout.py", "tools/rtl_v41_fullshape_layer_campaign.py",
-                "results/rtl/hdc_v41x_fullshape_l0_program.hex", "results/rtl/w17_l0_fullshape_isa.json")
+                "results/rtl/hdc_v41x_fullshape_l0_program.hex", "results/rtl/w17_l0_fullshape_isa.json",
+                "results/rtl/w17_v41_1m_reference_token.json")
         old = json.loads(a.record.read_text()) if a.record.exists() else {}
         rec = dict(schema=SCHEMA, status="input_only",
                    claim_boundary="Die image sets and bench contract for the full-shape L0 RTL run; expected VMs "
                                   "from the passing ISA executor. No RTL verdict.",
-                   contexts={**old.get("contexts", {}), **recs},
+                   contexts={**old.get("contexts", {}), **recs}, headline=f"1048576_seed{X.REF_SEED}",
                    source_sha256={s: X.sha(ROOT / s) for s in srcs})
         a.record.write_text(json.dumps(rec, indent=1) + "\n")
         print("wrote", a.record)

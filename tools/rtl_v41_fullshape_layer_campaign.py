@@ -770,7 +770,7 @@ def R_IDX_SRC():
     return R.IDX_SRC
 
 
-def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=print):
+def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=print, seed=SEED):
     """The full-shape image set of die `rank` of layer L's tensor group for the token at position ctx - 1."""
     import hdc_replay_v41 as R
     t0 = time.time()
@@ -783,6 +783,7 @@ def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=pr
     out_dir.mkdir(parents=True, exist_ok=True)
     experts = list(range(s["n_exp"])) if all_experts else shard["experts"]
     man = {"schema": SCHEMA + ".die_layer_images", "context": ctx, "position": ctx - 1, "layer": L, "rank": rank,
+           **({"seed": seed} if seed != SEED else {}),
            "tp": s["tp"], "split": "tools/rtl_v41_fullshape_layer_campaign.py die_slices (TP plan section 1; w2 by "
                                     "output rows)", "experts_populated": experts,
            "experts_note": "only the experts this token's router picks carry content (a sparse image) unless "
@@ -799,7 +800,7 @@ def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=pr
         a, dt = _raw(ck, tensor, rows, cols)
         put(f"w.{name}", a, dt, tensor=tensor, rows=rows, cols=cols)
     # KV / index state entering this layer (the synthetic state + the rows earlier layers of this token appended)
-    st, sdesc = synthetic_state(m, ctx, layers=[L])
+    st, sdesc = synthetic_state(m, ctx, seed=seed, layers=[L])
     win = np.stack(st["win"][L])
     c8, e8 = pack_fp8_ue8m0(win)
     put("kv.window.codes", c8, "F8_E4M3", rows=len(win), note="127 rows before this position, oldest first")
@@ -823,7 +824,7 @@ def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=pr
             put(f"kv.slots{src}", np.stack([np.stack(p) for p in st["slots"][src]]), "F32 (kv, gate) pairs")
     if eng:
         li = m.engram.layer_ids.index(L)
-        ids = m.engram.hashes(token_history(ctx), li)
+        ids = m.engram.hashes(token_history(ctx, seed=seed), li)
         put("engram.ids", np.asarray(ids, np.int64), "int64 table rows (the hash of this token)")
         put("engram.rows", ck.rows(f"layers.{L}.engram.embed.weight", ids), "F8_E4M3")
         put("engram.scale", np.asarray(ck.raw(f"layers.{L}.engram.embed.scale")[0]).reshape(-1, 8)[ids], "F8_E8M0 raw")
@@ -1279,7 +1280,7 @@ def main() -> int:
         for ctx in map(int, a.contexts.split(",")):
             for L in parse_layers(a.layers):
                 images(ctx, L, a.rank, a.scratch, a.scratch / "images" / f"ctx{ctx}_L{L:02d}_r{a.rank}",
-                       all_experts=a.all_experts)
+                       all_experts=a.all_experts, seed=a.seed)
     if "constraints" in steps:
         md, _ = constraints(tuple(map(int, a.contexts.split(","))))
         a.constraints_md.write_text(md)
