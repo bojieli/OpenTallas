@@ -8,6 +8,9 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 RECS = {p: ROOT / f"results/rtl/w11_vm_dist_gate_{p}.json" for p in ("su", "die", "su1024")}
+# option-H records: pinned to the commit they ran at (checked against git), superseded by re-runs as the H
+# stages move (the SU-domain re-closure)
+H_RECS = {p: ROOT / f"results/rtl/w11_vm_dist_gate_{p}.json" for p in ("su_h", "die_h")}
 
 
 def load(part):
@@ -27,8 +30,11 @@ def test_record_is_source_pinned(rec):
                  "rtl/chip/ot_v41_vm_dist_pipe.sv", "rtl/hdc/v41x/ot_hdc_core_v41x.sv", "rtl/chip/ot_chip_v41x_tile.sv",
                  "tools/w11_vm_dist_gate.py"):
         assert name in rec["source_sha256"], name
+    # a record is pinned to the commit it ran at (the option-H work has since moved these sources on)
+    import subprocess
     for name, digest in rec["source_sha256"].items():
-        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+        blob = subprocess.run(["git", "-C", str(ROOT), "show", f"{rec['git_head']}:{name}"], capture_output=True)
+        assert blob.returncode == 0 and hashlib.sha256(blob.stdout).hexdigest() == digest, name
 
 
 def test_stage_sets_are_the_spec_and_the_model(rec):
@@ -81,3 +87,26 @@ def test_die_decode_exact_and_token_identical():
             # units run concurrently, so part of each hold overlaps other work
             assert 0 < r["cycle_delta_vs_vm_dist_0"] < r["x_gather_issue_cycles"] + 50000
     assert runs["vm_dist_1_spec"]["cycle_delta_vs_vm_dist_0"] >= runs["vm_dist_1_model"]["cycle_delta_vs_vm_dist_0"]
+
+
+@pytest.mark.parametrize("part", sorted(H_RECS))
+def test_option_h_records_pinned_at_their_commit(part):
+    import subprocess
+    if not H_RECS[part].exists():
+        pytest.skip(f"{H_RECS[part].name} not committed")
+    rec = json.loads(H_RECS[part].read_text())
+    for name, digest in rec["source_sha256"].items():
+        blob = subprocess.run(["git", "-C", str(ROOT), "show", f"{rec['git_head']}:{name}"], capture_output=True)
+        assert blob.returncode == 0 and hashlib.sha256(blob.stdout).hexdigest() == digest, name
+
+
+def test_su_option_h_exact_and_rule_checked():
+    if not H_RECS["su_h"].exists():
+        pytest.skip("su_h not committed")
+    rec = json.loads(H_RECS["su_h"].read_text())
+    s = rec["su_summary"]
+    assert rec["su"]["stages"]["VM_DIST_H"] == 1 and rec["su"]["vm_align"] == "128"
+    assert s["all_pass"] and s["cases"] > 100
+    for key, h in s["h_rule"].items():
+        # the unit's per-op decision (flags, unpack, hold, X interval) is the Python rule's, and the rule is safe
+        assert h["rule_mismatches"] == 0 and h["unsafe_ops"] == 0 and h["ops"] == h["ops_written"], key
