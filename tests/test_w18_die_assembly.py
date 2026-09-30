@@ -2,6 +2,7 @@
 controller, real-element floorplan."""
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import shutil
@@ -94,3 +95,32 @@ def test_committed_records_are_consistent():
     if fp.exists():
         r = json.loads(fp.read_text())
         assert r["capacity"]["closes"] and r["capacity"]["pairs_needed"] == 7102
+
+
+def test_layer_split_route_record():
+    """The x/result trunks ride M8/M9 (pin-access via stacks aside) and both passes close with 0 overflow."""
+    base = ROOT / "results/physical_abi3/asap7/chip/v41_w18/route"
+    rec = json.loads((base / "die_route_layer_split.json").read_text())
+    for p in rec["passes"].values():
+        assert p["global_route"]["overflow_total"] == 0
+        assert hashlib.sha256((ROOT / p["record"]).read_bytes()).hexdigest() == p["sha256"]
+    for cls in ("xb", "rs", "px", "pr"):
+        share = rec["trunk_layer_share_pct"][cls]
+        assert share.get("M8", 0) + share.get("M9", 0) >= 93.0
+        assert not share.get("M2") and not share.get("M3")
+
+
+def test_region_emit_charges_every_used_block(tmp_path):
+    import sys
+    sys.path.insert(0, str(ROOT / "tools/w18"))
+    import route_combine as R
+    w = tmp_path / "p"
+    w.mkdir()
+    (w / "gcell_usage.txt").write_text("GRIDX " + ",".join(str(1000 * i) for i in range(17)) + "\nGRIDY 0,1000,2000,3000,4000\n"
+                                       "L M8 0 100/0 100/3 100/3 100/40\n")
+    R.emit(w, ["M8"], tmp_path / "r.tcl", 0.0001)
+    lines = (tmp_path / "r.tcl").read_text().split("\n")
+    lines = [ln for ln in lines if ln]
+    assert len(lines) == 2                      # the two 0.05 blocks merge; the 0.4 block is its own run
+    assert lines[0].endswith("-adjustment 0.05") and lines[1].endswith("-adjustment 0.4")
+    assert lines[0].startswith("set_global_routing_region_adjustment {4.000 0.000 12.000 4.000}")

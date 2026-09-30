@@ -1,0 +1,111 @@
+{
+ "schema": "opentallas.v41.w18_die_route_layer_split.v1",
+ "status": "bundled_die_global_route, 0 overflow in both passes",
+ "method": "Two passes on the same floorplan (die_floorplan_ch8.64, W10 p5 pair), k=32 bundling. Pass 1: x-broadcast (xb), result (rs) trunks and their 1-bundle path probes (px, pr) routed ALONE with set_routing_layers -signal M8-M9 at full M8/M9 capacity. Pass 2: every other net on M2-M9 (M2-M7 adjustment 0.25 as before), with the M8/M9 capacity each 4x4-GCell block lost to pass 1 charged as a region adjustment (tools/w18/route_combine.py --emit-regions, used fraction rounded UP to 0.05, every block with any trunk use; 29,050 regions). Pass 2 closing with 0 overflow against that charged capacity means trunk + other demand fits every block's raw capacity. OpenROAD GRT has no per-net layer range for signal nets (a CLOCK sig type or an STA clock on the trunk drivers is not picked up: 'Found 0 clock nets'), hence the split.",
+ "trunk_layer_share_pct": {
+  "pr": {
+   "M4": 0.1,
+   "M5": 0.3,
+   "M6": 0.3,
+   "M7": 0.3,
+   "M8": 60.6,
+   "M9": 38.3
+  },
+  "px": {
+   "M4": 0.1,
+   "M5": 0.4,
+   "M6": 0.4,
+   "M7": 0.4,
+   "M8": 69.5,
+   "M9": 29.2
+  },
+  "rs": {
+   "M4": 0.0,
+   "M5": 2.0,
+   "M6": 2.0,
+   "M7": 2.0,
+   "M8": 68.4,
+   "M9": 25.6
+  },
+  "xb": {
+   "M4": 0.1,
+   "M5": 2.2,
+   "M6": 2.2,
+   "M7": 2.2,
+   "M8": 73.5,
+   "M9": 19.7
+  }
+ },
+ "trunk_layer_note": "the M4-M7 share (<=2.2%) is pin access: the cluster pins are on M5, so each trunk leaves the pin by a via stack",
+ "passes": {
+  "trunk": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/route/die_route_split_trunk_m8m9.json",
+   "sha256": "c1419928b9722949981bc050d6aa954084c8f85316c9a202d78ffcfb82d14820",
+   "global_route": {
+    "resource": 34369843,
+    "demand": 999811,
+    "usage_pct": 2.91,
+    "overflow_h": 0,
+    "overflow_v": 0,
+    "overflow_total": 0
+   }
+  },
+  "rest": {
+   "record": "results/physical_abi3/asap7/chip/v41_w18/route/die_route_split_rest.json",
+   "sha256": "4118ee48406c35b7d4562c8650e156a7753e591776eb4498fd11402b22cf220e",
+   "global_route": {
+    "resource": 56507154,
+    "demand": 460991,
+    "usage_pct": 0.82,
+    "overflow_h": 0,
+    "overflow_v": 0,
+    "overflow_total": 0
+   }
+  }
+ },
+ "unconstrained_first_try": {
+  "case": "trunks alone on M8-M9 with the old 30% M8/M9 reserve",
+  "overflow_total": 3400,
+  "max_h_v": [
+   15,
+   15
+  ],
+  "note": "negative: at 70% of M8/M9 the 20 trunks + 928 probes converge on the hub edge; the reserve is dropped in pass 1 and charged exactly in pass 2"
+ },
+ "naive_sum_check": {
+  "case": "pass 2 routed without the charge, usage summed per block",
+  "m8_overflow_blocks": 360,
+  "m8_overflow_tracks": 7207,
+  "m9_overflow_blocks": 0,
+  "note": "negative: why pass 2 must see pass 1's usage"
+ },
+ "crossings_routed_um": {
+  "vm_xroot_to_farthest_cluster": {
+   "m8m9": 17862.2,
+   "m2m9_ph5": 18158.3
+  },
+  "farthest_cluster_to_vm": {
+   "m8m9": 19676.1,
+   "m2m9_ph5": 19343.0
+  }
+ },
+ "crossings_cycles_at_504um": {
+  "vm_xroot_to_farthest_cluster": 36,
+  "farthest_cluster_to_vm": 40,
+  "collective_to_farthest_serdes": 48,
+  "collective_to_farthest_ucie": 37,
+  "hbm_window": 28,
+  "idx_keys": 43,
+  "selected_kv": 27,
+  "idx_topk": 42,
+  "hub": 1
+ },
+ "reach": {
+  "um": 504,
+  "basis": "PLACEHOLDER: W15 M2-M9 SS reach at 0.833 ns; the trunk cycles get re-stated with W15's M8/M9-only reach when it lands (routed lengths stand)"
+ },
+ "inputs": {
+  "tool_die_route_sha256": "351a6436a36761ec953cc22e6195d8656583e128e0febc4526c9e05ae86036a3",
+  "tool_route_combine_sha256": "47647a155e597393c05f7eb6db97471047a58928aa6ea73f2120c8bf5a588065"
+ }
+}

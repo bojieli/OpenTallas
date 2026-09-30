@@ -154,6 +154,15 @@ def model(fp: dict, pk: dict, probes: bool = True, subroots: int = 0, hub_inset:
     return dict(clusters=cl, buses=buses, die_mm=[fp["die"]["w_um"] / 1000, fp["die"]["h_um"] / 1000])
 
 
+def select(m: dict, only: str = "", exclude: str = "") -> dict:
+    """Keep the buses of the listed classes (layer-split route: the x/result trunks and their probes on
+    M8/M9 in one pass, everything else on M2-M9 in another, with M8/M9 capacity charged for the trunks)."""
+    on = {c for c in only.split(",") if c}
+    off = {c for c in exclude.split(",") if c}
+    m["buses"] = [b for b in m["buses"] if (not on or b["cls"] in on) and b["cls"] not in off]
+    return m
+
+
 def edge_for(c, peer_x, peer_y):
     """Pins of a ROM cluster face the spine (N/S) -- its E/W sides are 8.64 um column gaps; other blocks
     face their peer."""
@@ -166,7 +175,8 @@ def edge_for(c, peer_x, peer_y):
 
 
 def write(m: dict, work: Path, k: int, obs_top: int, m89: float, low: float, iters: int = 50,
-          hub_obs_top: int = 0) -> dict:
+          hub_obs_top: int = 0, signal_layers: str = "M2-M9", adjust: dict | None = None,
+          region_tcl: str = "") -> dict:
     work.mkdir(parents=True, exist_ok=True)
     cl = {c.inst: c for c in m["clusters"]}
     plan: dict[str, dict[str, list]] = {}
@@ -237,7 +247,8 @@ def write(m: dict, work: Path, k: int, obs_top: int, m89: float, low: float, ite
     g = 0.054 * k
     place = [f"place_inst -name {c.inst} -location {{{round(round(c.x * 1000 / g) * g, 3)} "
              f"{round(round(c.y * 1000 / g) * g, 3)}}} -orientation R0 -status FIRM" for c in m["clusters"]]
-    adj = [f"set_global_routing_layer_adjustment {nm} {m89 if nm in ('M8', 'M9') else low}"
+    adjust = adjust or {}
+    adj = [f"set_global_routing_layer_adjustment {nm} {adjust.get(nm, m89 if nm in ('M8', 'M9') else low)}"
            for nm, *_ in D.ASAP7_LAYERS[1:]]
     tcl = f"""proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {{VmRSS:\\s+(\\d+)}} $s -> r; puts "OTMEM $tag [expr {{$r/1024}}] MB [clock seconds]" }}
@@ -250,10 +261,12 @@ initialize_floorplan -die_area {{0 0 {W:.3f} {H:.3f}}} -core_area {{0 0 {W:.3f} 
 {chr(10).join(place)}
 mem placed
 {chr(10).join(adj)}
-set_routing_layers -signal M2-M9
+{region_tcl}
+set_routing_layers -signal {signal_layers}
 global_route -verbose -allow_congestion -congestion_iterations {iters} -congestion_report_file /work/grt_congestion.rpt
 mem grt
 report_wire_length -net * -global_route -file /work/wirelength.csv
+write_guides /work/route.guide
 set blk [ord::get_db_block]
 set out [open /work/gcell_usage.txt w]
 set grid [$blk getGCellGrid]
@@ -286,7 +299,9 @@ close $out
 mem done
 """
     (work / "run.tcl").write_text(tcl)
-    man = dict(k=k, congestion_iterations=iters, hub_obs_top=hub_obs_top or obs_top, obs_top=f"M{obs_top}", m8_m9_reserve=m89, m2_m7_adjustment=low, growth=growth,
+    man = dict(k=k, congestion_iterations=iters, signal_layers=signal_layers, layer_adjustment=adjust or None,
+               region_adjustments=region_tcl.count("set_global_routing_region_adjustment"),
+               classes=sorted({b["cls"] for b in m["buses"]}), hub_obs_top=hub_obs_top or obs_top, obs_top=f"M{obs_top}", m8_m9_reserve=m89, m2_m7_adjustment=low, growth=growth,
                bundle_nets=sum(D.bundle_count(b["bits"], k) for b in m["buses"]),
                wires=sum(b["bits"] * 1 for b in m["buses"] if b["cls"] not in ("px", "pr")),
                instances=len(m["clusters"]), buses=len(m["buses"]))
@@ -344,21 +359,24 @@ def record(m: dict, work: Path, fp_path: Path, pk_path: Path, k: int, reach_um: 
             c["max_cycles"] = max(c["max_cycles"] or 0, r["cycles"])
     px = [r for r in per if r["cls"] == "px" and r["cycles"]]
     pr = [r for r in per if r["cls"] == "pr" and r["cycles"]]
-    cross = {
-        "vm_xroot_to_farthest_cluster": dict(routed_um=max(r["routed_um"] for r in px), cycles=max(r["cycles"] for r in px),
-                                             model_cycles=MODEL["xb"],
-                                             histogram=_hist([r["cycles"] for r in px])),
-        "farthest_cluster_to_vm": dict(routed_um=max(r["routed_um"] for r in pr), cycles=max(r["cycles"] for r in pr),
-                                       histogram=_hist([r["cycles"] for r in pr])),
-        "collective_to_farthest_serdes": next(dict(routed_um=r["routed_um"], cycles=r["cycles"],
-                                                   model_cycles=MODEL["link_serdes"]) for r in per
-                                              if r["cls"] == "link_serdes_probe"),
-        "collective_to_farthest_ucie": next(dict(routed_um=r["routed_um"], cycles=r["cycles"],
-                                                 model_cycles=MODEL["link_ucie"]) for r in per
-                                            if r["cls"] == "link_ucie_probe"),
-    }
+    cross = {}
+    if px:
+        cross["vm_xroot_to_farthest_cluster"] = dict(routed_um=max(r["routed_um"] for r in px),
+                                                     cycles=max(r["cycles"] for r in px), model_cycles=MODEL["xb"],
+                                                     histogram=_hist([r["cycles"] for r in px]))
+    if pr:
+        cross["farthest_cluster_to_vm"] = dict(routed_um=max(r["routed_um"] for r in pr),
+                                               cycles=max(r["cycles"] for r in pr),
+                                               histogram=_hist([r["cycles"] for r in pr]))
+    for key, c, mc in (("collective_to_farthest_serdes", "link_serdes_probe", MODEL["link_serdes"]),
+                       ("collective_to_farthest_ucie", "link_ucie_probe", MODEL["link_ucie"])):
+        r = next((r for r in per if r["cls"] == c), None)
+        if r:
+            cross[key] = dict(routed_um=r["routed_um"], cycles=r["cycles"], model_cycles=mc)
     for c in ("hbm_window", "idx_keys", "selected_kv", "idx_topk", "hub"):
         rs = [r for r in per if r["cls"] == c]
+        if not rs:
+            continue
         cross[c] = dict(max_routed_um=max((r["routed_um"] or 0) for r in rs), max_cycles=max((r["cycles"] or 0) for r in rs),
                         per_net={r["id"]: r["cycles"] for r in rs})
     peak = next((int(l.split(":")[1]) for l in log.splitlines() if "Maximum resident set size" in l), None)
@@ -372,11 +390,32 @@ def record(m: dict, work: Path, fp_path: Path, pk_path: Path, k: int, reach_um: 
         manifest=json.loads((work / "manifest.json").read_text()),
         run=json.loads((work / "run_meta.json").read_text()) if (work / "run_meta.json").exists() else None,
         global_route={k_: v for k_, v in glog.items() if k_ != "mem"}, peak_rss_kb=peak,
+        layer_share_by_class=guide_layers(work / "route.guide") if (work / "route.guide").exists() else None,
         wire_model=dict(wm, reach_um=round(reach, 1), reach_basis=reach_basis or
                         "TT fit (floorplans.wire_delay_model) at 0.92 ns / 60 ps"),
         crossings=cross, classes=cls, nets=per,
         inputs=dict(floorplan=str(fp_path), floorplan_sha256=sha(fp_path), pack=str(pk_path), pack_sha256=sha(pk_path),
                     tool_sha256=sha(Path(__file__)), v41_die_sha256=sha(D.__file__)))
+
+
+def guide_layers(path: Path) -> dict:
+    """Per-class share of routed guide length on each layer (checks that a layer-split pass kept its layers;
+    pin access below the range shows up as short via-stack guides on the pin layer)."""
+    acc: dict[str, dict[str, float]] = {}
+    net = None
+    for ln in Path(path).read_text().splitlines():
+        p = ln.split()
+        if not p or p[0] in ("(", ")"):
+            continue
+        if len(p) == 1:
+            net = p[0]
+            continue
+        x0, y0, x1, y1 = map(float, p[:4])
+        mm_ = re.match(r"n_([a-z]+(?:_[a-z]+)*?)_(?:b\d|cl_|hbm|ucie|serdes|xsub|hub|tx|far|coll|vm)", net or "")
+        c = mm_.group(1) if mm_ else (net or "?").split("_")[1] if (net or "").startswith("n_") else "?"
+        d = acc.setdefault(c, {})
+        d[p[4]] = d.get(p[4], 0.0) + max(x1 - x0, y1 - y0)
+    return {c: {l: round(100 * v / sum(d.values()), 1) for l, v in sorted(d.items())} for c, d in sorted(acc.items())}
 
 
 def _hist(xs):
@@ -403,6 +442,12 @@ def main(argv=None):
                     help="hub blocks obstruct M1..M<n> only (W11 re-hardens capped at M5); 0 = as --obs-top")
     ap.add_argument("--hub-inset", type=float, default=0.0,
                     help="widen the hub ring channel by pulling the hub's outer partition edges in by this many um")
+    ap.add_argument("--only-classes", default="", help="route only these bus classes (comma list)")
+    ap.add_argument("--exclude-classes", default="", help="drop these bus classes (comma list)")
+    ap.add_argument("--signal-layers", default="M2-M9")
+    ap.add_argument("--adjust", action="append", default=[], help="LAYER=ADJ capacity adjustment override")
+    ap.add_argument("--region-tcl", type=Path, help="extra set_global_routing_region_adjustment lines "
+                    "(tools/w18/route_combine.py --emit-regions: charge a previous pass's usage)")
     ap.add_argument("--host", default="")
     ap.add_argument("--memory-gb", type=int, default=100)
     ap.add_argument("--output", type=Path)
@@ -413,9 +458,12 @@ def main(argv=None):
     if a.mode == "run":
         return run(work, a.host, a.memory_gb)
     fp, pk = json.loads(a.floorplan.read_text()), json.loads(a.pack.read_text())
-    mdl = model(fp, pk, probes=not a.no_probes, subroots=a.subroots, hub_inset=a.hub_inset)
+    mdl = select(model(fp, pk, probes=not a.no_probes, subroots=a.subroots, hub_inset=a.hub_inset),
+                 a.only_classes, a.exclude_classes)
     if a.mode == "write":
-        print(json.dumps(write(mdl, work, a.k, a.obs_top, a.m89_reserve, a.low_adjust, a.iters, a.hub_obs_top), indent=1))
+        adj = {kv.split("=")[0]: float(kv.split("=")[1]) for kv in a.adjust}
+        print(json.dumps(write(mdl, work, a.k, a.obs_top, a.m89_reserve, a.low_adjust, a.iters, a.hub_obs_top,
+                               a.signal_layers, adj, a.region_tcl.read_text() if a.region_tcl else ""), indent=1))
         return 0
     rec = record(mdl, work, a.floorplan, a.pack, a.k, a.reach_um, a.reach_basis)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
