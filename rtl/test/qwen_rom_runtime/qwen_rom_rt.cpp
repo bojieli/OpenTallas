@@ -144,6 +144,9 @@ struct Fabric {
     void eval() { pool.run(t.size(), [&](size_t i) { t[i]->eval(); }); }
     // rising edge: external wire stages shift with pre-edge values, then every tile evaluates
     void edge() {
+        // a Verilated model sees a rising edge only after it has evaluated with clk low: lower the
+        // tiles' clock (with pre-edge inputs) before raising it
+        if (clk) { set_clk(0); eval(); }
         if (NWS_EXT > 0)
             pool.run(t.size(), [&](size_t i) {
                 if (!hl[i]) return;
@@ -293,14 +296,15 @@ int main(int argc, char** argv) {
         r.xpipe_q.assign(XVM, std::vector<uint32_t>(NXC, 0)); r.xpipe_v.assign(XVM, std::vector<uint8_t>(NXC, 0));
         r.rom_bank.assign(NT, -1); r.rom_addr.assign(NT, 0); r.kvr.assign(NT, 0); r.kv_q.assign(size_t(G) * W, 0);
     }
-    long me_busy[D] = {0, 0}, edges = 0;
+    long me_busy[D] = {0, 0}, edges = 0, n_me_wr[D] = {0, 0}, n_su_wr[D] = {0, 0};
+    const bool trace = getenv("RT_TRACE") != nullptr;
     long progress_every = getenv("RT_PROGRESS") ? atol(getenv("RT_PROGRESS")) : 4096;
     bool stage_done = false, next_stage = false;
     size_t cur = 0; long stage_start = 7, busy0[D] = {0, 0};
     auto tstart = std::chrono::steady_clock::now();
     bool live_all[D] = {true, true};
     for (long tick = 0;; tick++) {
-        for (int d = 0; d < D; d++) { die[d]->clk = 0; fab[d]->set_clk(0); }
+        for (int d = 0; d < D; d++) die[d]->clk = 0;
         coll.clk = 0;
         settle(live_all);
         {
@@ -312,9 +316,9 @@ int main(int argc, char** argv) {
                 uint8_t lf = coll.fault;
                 double sec = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
                 printf("STAGE %s done cycles=%ld start_cyc=%ld end_cyc=%u me_busy=%ld/%ld next_token=%u/%u next_val=%08x/%08x "
-                       "seq_fault=%d core_fault=%d coll_fault=%d wall=%.0fs\n", stages[cur].name.c_str(), long(cyc) - stage_start,
+                       "seq_fault=%d core_fault=%d coll_fault=%d me_writes=%ld su_writes=%ld wall=%.0fs\n", stages[cur].name.c_str(), long(cyc) - stage_start,
                        stage_start, cyc, me_busy[0] - busy0[0], me_busy[1] - busy0[1], die[0]->seq_ntok, die[1]->seq_ntok,
-                       die[0]->seq_nval, die[1]->seq_nval, sf, cf, lf, sec);
+                       die[0]->seq_nval, die[1]->seq_nval, sf, cf, lf, n_me_wr[0], n_su_wr[0], sec);
                 for (int d = 0; d < D; d++) {
                     FILE* fp = fopen((dir + "/" + stages[cur].name + "_die" + char('0' + d) + "_x.hex").c_str(), "w");
                     for (int i = 0; i < H; i++) fprintf(fp, "%08x\n", mem[d].vm[X_BASE + i]);
@@ -368,6 +372,12 @@ int main(int argc, char** argv) {
                     r.vx[c] = getb(t.vx_re, c, 1);
                     if (r.vx[c]) { uint32_t a = getb(t.vx_addr, c * 24, 24); r.vx_q[c] = a < VM_ELEMS ? m.vm[a] : 0; }
                 });
+                if (trace && d == 0) {
+                    long nr = 0, nz = 0; uint32_t a0 = 0, v0 = 0;
+                    for (int c = 0; c < NXC; c++) if (r.vx[c]) { nr++; if (r.vx_q[c]) { if (!nz) { a0 = getb(t.vx_addr, c * 24, 24); v0 = r.vx_q[c]; } nz++; } }
+                    long nrom = 0; for (int i = 0; i < NT; i++) nrom += (fab[d]->t[i]->rom_ce != 0);
+                    if (nr || nrom) printf("TRACE cyc=%u xreads=%ld nonzero=%ld first=%u:%08x tiles_rom=%ld tgo=%d\n", t.cyc, nr, nz, a0, v0, nrom, int(t.tgo));
+                }
                 // tiles: code ROM bank and KV
                 pool.run(NT, [&](size_t i) {
                     Vtile& x = *f.t[i];
@@ -387,13 +397,16 @@ int main(int argc, char** argv) {
                     if (getb(t.vw_me_we, g, 1)) {
                         uint32_t a = getb(t.vw_me_addr, g * 24, 24); uint32_t msk = getb(t.vw_me_mask, g * 16, 16);
                         for (int l = 0; l < W; l++) if ((msk >> l) & 1) vmw[d].push_back({(a << 4) + l, lane32(t.vw_me_data, g * 16 + l)});
+                        n_me_wr[d]++;
+                        if (trace && d == 0 && n_me_wr[d] <= 40)
+                            printf("TRACE cyc=%u me_wr g=%d word=%u mask=%04x d0=%08x\n", t.cyc, g, a, msk, lane32(t.vw_me_data, g * 16));
                     }
             }
             if (t.vw_mx_we)
                 for (int l = 0; l < W; l++)
                     if ((t.vw_mx_mask >> l) & 1) vmw[d].push_back({uint32_t((uint64_t(t.vw_mx_addr) << 4) + l), lane32(t.vw_mx_data, l)});
             for (int l = 0; l < SW; l++) {
-                if (getb(t.vw_su_we, l, 1)) vmw[d].push_back({uint32_t(getb(t.vw_su_addr, l * 24, 24)), lane32(t.vw_su_data, l)});
+                if (getb(t.vw_su_we, l, 1)) { vmw[d].push_back({uint32_t(getb(t.vw_su_addr, l * 24, 24)), lane32(t.vw_su_data, l)}); n_su_wr[d]++; }
                 if (getb(t.kv_we, l, 1)) kvw[d].push_back({uint32_t(getb(t.kv_waddr, l * 24, 24)), lane32(t.kv_wdata, l)});
             }
             if (t.vw_rd_we) vmw[d].push_back({t.vw_rd_addr, t.vw_rd_data});
