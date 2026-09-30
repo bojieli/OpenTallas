@@ -53,9 +53,9 @@ def test_stage_plan_is_the_equal_byte_placement():
 def test_product_basis_and_stage_table():
     r = _rec()
     v = r["v41_rom"]
-    assert v["product"]["status"].startswith("OPEN")
+    assert v["product"]["status"].startswith("188 dies: 37 TP-4 stages")      # BF16 columns (user decision)
     pb = v["product_basis"]
-    assert pb == dict(bf16="standard_pair", pitch="w10_budget", density="analytical", overhead=0.125, credit="ring")
+    assert pb["density"] == "analytical" and pb["overhead"] == 0.125 and pb["credit"] == "ring"
     cs = v["counts"]
     for bf in ("standard_pair", "columns"):
         for pitch in ("w10_budget", "w18_measured"):
@@ -188,11 +188,16 @@ def test_adopted_product_row():
     r = _rec()
     pts = [p for p in r["v41_rom"]["points"] if p.get("role") == "product"]
     ad = next(p for p in pts if "ADOPTED" in p["label"])
-    assert ad["clock_hz"] == 1.2e9 and ad["field_concurrency"] == 0.5 and ad["bf16"] == "standard_pair"
+    assert ad["clock_hz"] == 1.2e9 and ad["field_concurrency"] == 0.5 and ad["bf16"] == "columns"
     assert list(ad["slow_domain"]) == [0.9e9, "w18"] and ad["elem_stages"] == 7
     assert ad["added_latency"] == {"suffix:softplus_sqrt": -97}         # the v41x softplus (162, not 259)
-    assert ad["stages"] == 30 and ad["dies"] == 164
-    assert r["v41_rom"]["product"]["reference_for_comparisons"]["dies"] == 164
+    import uarch_model as U                                   # the product stage count is the fit's own answer
+    assert ad["stages"] == U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8")
+    assert ad["dies"] == 4 * ad["stages"] + 4 + 36             # head group on 8192m8 ping-pong (4 dies), 36 tables
+    ref = ad["bf16_stage_reference"]
+    assert ref["option_ii cap 3 (reference)"] < ref["option_iii BF16_PAIR (reference)"] <= ref["columns (product)"]
+    ft = r["v41_rom"]["product"]["bf16_full_token"]
+    assert all(ad["ar_tokens_s_b1"] >= v["ar"] for v in ft.values())       # the columns win per user
     ideal = next(p for p in pts if p["label"].endswith("ideal depths, no concurrency cap"))
     capped = next(p for p in pts if p["label"].endswith("(W18, adopted)"))
     assert capped["ar_tokens_s_b1"] < ideal["ar_tokens_s_b1"]          # the 50% cap costs time

@@ -51,8 +51,9 @@ def test_batch_one_matches_the_single_user_sections():
     assert abs(e["qwen_rom"]["ar"]["tokens_s_b1"] - 9367.6) < 1.0
     assert abs(e["qwen_hbm"]["ar"]["tokens_s_b1"] - 880.6) < 1.0
     assert abs(e["qwen_hbm"]["dflash"]["tokens_s_b1"] - 2671.0) < 1.0
-    assert abs(e["v41_hbm"]["ar"]["tokens_s_b1"] - 2919.8) < 1.0
-    assert abs(e["v41_hbm"]["mtp"]["tokens_s_b1"] - 5673.0) < 1.0
+    # main's W13 SM timings (drain 95, 78-cycle boundary) moved the tier-3 chain (W16 merge of 5aa6e609)
+    assert abs(e["v41_hbm"]["ar"]["tokens_s_b1"] - 2801.8) < 1.0
+    assert abs(e["v41_hbm"]["mtp"]["tokens_s_b1"] - 5539.4) < 1.0
     assert abs(e["gpu"]["qwen"]["tokens_s_b1"] - 331.0) < 1.0
     assert abs(e["gpu"]["v41"]["tokens_s_b1"] - 277.7) < 1.0
 
@@ -178,9 +179,12 @@ def test_every_design_is_gated_alike():
 
 def test_v41_hbm_timeline_reproduces_the_chain():
     import uarch_model as U
-    for P, T_us in ((1, 342.5), (U.V41_POSITIONS, 617.5)):
+    # the timeline reproduces the chain it walks (W16 merge: the chain moved with W13's SM timings, 342.5 -> 356.9 us
+    # AR and 617.5 -> 632.0 us MTP, so the fixed values no longer held)
+    for P in (1, U.V41_POSITIONS):
         segs, _, _ = U.v41_hbm_timeline(P)
-        assert abs(sum(d for d, _ in segs) * 1e6 - T_us) < 0.5
+        _, parts, _ = U.v41_hbm_chain(True, P)
+        assert abs(sum(d for d, _ in segs) * 1e6 - sum(parts.values())) < 0.5
 
 
 def test_gating_never_places_a_wake_in_a_short_gap():

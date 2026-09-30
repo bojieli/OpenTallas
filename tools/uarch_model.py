@@ -3173,7 +3173,11 @@ CONS_CREDIT = dict(ring=("ring_free_mm2",), none=())
 # sha256 2218b6efbff9cf7bba5d7984014352f3d26ffdf75a8a481b33706cf7f5cd3f04, tiling die_floorplan_ch8.64:
 # 522.72 x 140.40 um = +7.75% x +16.07%, area x 1.2507; ch4.32 x 1.2122, ch17.28 x 1.3276).  p5 is not closed.
 CONS_PITCH = dict(w10_budget=dict(q_um=(485.136, 120.96), src="root hard budget for W10 p9/q7 (the pack pitch)"),
-                  w18_measured=dict(q_um=(522.72, 140.40), src="W18 d1e3c0aa pair_w10p5_abstract.json tiling ch8.64"))
+                  w18_measured=dict(q_um=(522.72, 140.40), src="W18 d1e3c0aa pair_w10p5_abstract.json tiling ch8.64"),
+                  w10_q_1p2=dict(q_um=(476.0, 126.9), src="W10 (2026-09-30): the q pair at 1.2 GHz, 4096m8 ping-pong, WC "
+                                                          "floorplan cells 21.9k um2 at 85% logic utilisation"),
+                  w10_iii_1p2=dict(q_um=(574.0, 126.9), src="W10 (2026-09-30): the BF16_PAIR (iii) pair at 1.2 GHz, 32.3k "
+                                                            "um2 cells (+20.7% tile)"))
 # ROOT RULING 2026-09-30: the 1,024 BF16-capable pairs (2,048 BF16 macros) sit in their own columns at a 1,019 um
 # pitch (the BF16 element strip), at the row pitch of the variant
 CONS_BF16 = dict(
@@ -3188,6 +3192,16 @@ CONS_BF16 = dict(
                       "per pair (+5-6% of p8's 20.3 k, 85-87% utilisation: a closure risk); only wo_a slows, "
                       "~+48 cycles a layer (~-1% tok/s); not built",
     standard_pair_wo_a_extra_cycles=48,
+    # ROOT DECISION 2026-09-30: option (ii) ADOPTED -- q pairs + 2 exact BF16 multipliers a macro, word cap (cap 2 was
+    # +250 um2 a macro, +3.45 mm2 a die); W10 measured the BF16 ops at L = 8: wo_a 256 -> 384, cmp.wk 64 -> 128,
+    # router 80 -> 128 cycles (busiest die 3,585 tok/s against 3,760 on columns)
+    option_ii_extra_cycles={"wo_a": 128, "cmp.wk": 64, "router": 48}, option_ii_area_mm2=16.0,
+    # USER DECISION 2026-09-30: maximum per-user rate, die count not a constraint -> option (iii) is the PRODUCT:
+    # 4 BF16 multipliers a macro, 4-cycle hold, 4 chains at NCH = 24, W10's measured 574 x 126.9 um tile (every pair);
+    # W10's per-op issue for the BF16 ops (cycles, busiest die): wo_a 192, cmp.wk 64, router 80, a_proj 160
+    option_iii_issue_cycles={"wo_a": 192, "cmp.wk": 64, "router": 80, "a_proj": 160},
+    # ROOT 2026-09-30 (update): option (ii) becomes cap 3 / NCH = 24 (cap 2 cannot place wo_a): busiest die 3,503 tok/s
+    # (W10), ~+16 mm2 a die routed (ESTIMATE; W10 p12 measures it); the op cycles above are cap 2's, pending p12
 )
 BF16_MODES = ("standard_pair", "columns")
 # ROM macro depth (W10 study, claude/w10-v41-rom-element c673fd43, results/uarch/v41_rom_depth_study.json): single-
@@ -3205,6 +3219,7 @@ SS_DERATE_MEASURED = 1.43   # W13 (root relay 2026-09-30): the TT-closed tc16 FP
 # W15 (root relay 2026-09-30): measured SS wire reach, period = 261 ps + 1.135 ps/um x L (routed 547-bit spans, SS setup,
 # FF hold, 60/25): 504 um a stage at 0.833 ns, 748 um at 1.111 ns (the 1,118 um TT fit it replaces)
 SS_REACH_UM = {1.2e9: 504.0, 0.9e9: 748.0}
+MTP_KV_PER_POSITION = True    # W11 / root 2026-09-30: verify KV rows are per position (6 x 645 rows a pass), not shared
 W15_V41_COLL_STAGES_SS = 30      # collective -> link PHY (W3 placement) at 1.2 GHz SS; the measured v41p17 fit carries 17
 W11_SERIAL_MUL_EXTRA = 1         # W11 3bc74342: a LAT-3 mul misses 0.9 GHz by 17 ps -> LAT 4, +1 cycle a multiply in the
                                  # SU/SFU/softplus/Sinkhorn chains; priced as +1 slow cycle a chain node (a LOWER BOUND:
@@ -3321,7 +3336,8 @@ def cons_field_need_mm2(S, density, pitch="w10_budget", bf16="standard_pair", de
     pairs = _cons_busiest_macros(S) / 2
     return _cons_need(pairs, cons_stage_plan(S)["payload_per_die_B"], density, pitch,
                       CONS_BF16["pairs"] if bf16 == "columns" else 0, depth,
-                      cons_bf16_hub_mm2(density) if bf16 == "hub_unit" else 0.0)
+                      cons_bf16_hub_mm2(density) if bf16 == "hub_unit" else
+                      CONS_BF16["option_ii_area_mm2"] if bf16 == "option_ii" else 0.0)
 
 
 def cons_bf16_hub_mm2(density="analytical"):
@@ -3646,6 +3662,10 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
             nd["depth"] += u["adder_levels"] * (es - MODEL_ELEM_ADD_STAGES) * cyc
             if bf16 == "standard_pair" and u["key"] == "wo_a":
                 nd["issue"] += P * CONS_BF16["standard_pair_wo_a_extra_cycles"] * cyc
+            if bf16 == "option_ii" and u["key"] in CONS_BF16["option_ii_extra_cycles"]:
+                nd["issue"] += P * CONS_BF16["option_ii_extra_cycles"][u["key"]] * cyc
+            if bf16 == "option_iii" and u["key"] in CONS_BF16["option_iii_issue_cycles"]:
+                nd["issue"] = max(nd["issue"], P * CONS_BF16["option_iii_issue_cycles"][u["key"]] / fc * cyc)
     fin = g.solve(True)
     return fin[[n for n in g.nodes if n.endswith("token.return")][0]]
 
@@ -3709,6 +3729,12 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
     cats["field_clock_busy"] = V41_TP * sum(pair_s.values()) * pp["clock"] * dyn_scale    # ICG: busy pairs' clock
     dyn = sum(v for k, v in cats.items() if k != "stack") + cats["stack"]
     e_pass = sum(v * (1 if k in ("hbm_if", "stack") else V41_POSITIONS) for k, v in cats.items())
+    # W11 (root 2026-09-30): each verify position attends its OWN window (w_{p-127}..w_p) and its own index selection,
+    # so the attention KV rows are NOT shared across the 6 positions -- 6 x the rows a pass (the index keys stay once
+    # a pass).  The attention job's time already repeats per position; the correction is the rows' HBM energy.
+    kv_rows_J = V41_TP * sum(640 * A.WIN_ROW_B / 4 for n in g1.nodes if n.endswith(".attn.scores")) * E_HBM_B
+    if MTP_KV_PER_POSITION:
+        e_pass += (V41_POSITIONS - 1) * kv_rows_J
     dyn_m = (e_pass + V41_DRAFT_FRACTION * dyn) / V41_TAU
     # gated (the adopted stage power gating, 1 us wake): v41_static_power's rule on this plan's stages
     p = v41_die_static_parts(d)
@@ -3997,7 +4023,8 @@ def _v41_hbm_n(N, stacks, ec, gated_rows, replicas=1, clock_hz=None):
         per = max(1, cols // P)
         passes = math.ceil(B / per)
         wb = passes * _v41_weight_bytes(min(B, per) * P)
-        e = (toks * macs_j + (wb + B * per_user_hbm) * E_HBM_B + wb * 2 * E_SRAM_B + toks * units_j
+        kvp = tot["bytes"]["kv_hbm"] * (P if MTP_KV_PER_POSITION else 1) + tot["bytes"]["idx"]
+        e = (toks * macs_j + (wb + B * kvp) * E_HBM_B + wb * 2 * E_SRAM_B + toks * units_j
              + toks * coll_b * 8 * E_LINK["board"] * 2)
         return e * (1 + draft_frac)
     out = {}
@@ -4129,8 +4156,31 @@ def consolidation(ec=None, lv=None):
     # USER DECISION (AGENTS.md e7479589): the V4.1 product basis is 4096m8, 2 macros a slot, at 1.2 GHz SS, BF16 on
     # the standard pair; W18's 50% field-concurrency cap adopted; dynamic energy +16% at 1.2 GHz (root, ASSUMED);
     # the latency inventory folds in as it lands (W11 hub estimates so far)
-    Sp = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", "w10_budget", "standard_pair", "4096m8")
-    hp = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", "w10_budget", "4096m8")
+    # USER DECISION 2026-09-30: BF16 option (iii) at W10's measured 574 x 126.9 um tile (max per-user rate)
+    # USER DECISION 2026-09-30 (final): maximum per-user rate, die count free -> BF16 COLUMNS are the product: on the
+    # full-token basis they beat (iii) and (ii) (the busiest-die op cycles favoured (iii), but its +20.7% pair pitch
+    # adds stages, i.e. hops, and its BF16 issue floors sit above the columns' full-width BF16 lanes)
+    Sp = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8")
+    # ROOT 2026-09-30: the head group on 8192m8 WITH ping-pong (2 macros a slot, alternate reads, 2-cycle macro path:
+    # 1,667 ps against 8192m8's SS clk->q 1,004 + 25 + 60 ps) fits 4 dies -- 0.4% margin at the storage-only density,
+    # 13.3% at W18's floorplan (claude/w18-die-assembly 4ed60cbb head_table_fit.json): CONFIRMED at floorplan level
+    hp = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "8192m8")
+    head_fit = dict(dies=hp, depth="8192m8 ping-pong", margin_storage_only=0.004, margin_w18_floorplan=0.133,
+                    on_4096m8=cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "4096m8"),
+                    status="CONFIRMED at floorplan level (W18 4ed60cbb); 168 dies if the head group were on 4096m8",
+                    table_dies_asap7_floorplan=dict(dies=20, src="W18 4ed60cbb head_table_fit.json (ASAP7 geometry "
+                                                                 "feasibility row); the product stays 36 (storage-only)"))
+    bf16_ref = {k: cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", pt, bfm, "4096m8")
+                for k, pt, bfm in (("option_ii cap 3 (reference)", "w10_q_1p2", "option_ii"),
+                                   ("option_iii BF16_PAIR (reference)", "w10_iii_1p2", "option_iii"),
+                                   ("columns (product)", "w10_q_1p2", "columns"))}
+    bf16_full_token = {}
+    for k, pt_, bfm in (("option_ii cap 3", "w10_q_1p2", "option_ii"), ("option_iii", "w10_iii_1p2", "option_iii")):
+        S_ = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", pt_, bfm, "4096m8")
+        q_ = cons_v41_rom(S_, 4, cons_table_dies("analytical")["dies"], 1.0, None, bfm, PRODUCT_CLOCK_HZ,
+                          FIELD_CONCURRENCY, SOFTPLUS_FIX, PRODUCT_DYN_SCALE, (0.9e9, "w18"), None, 7, True)
+        bf16_full_token[k] = dict(stages=S_, dies=q_["dies"], ar=q_["ar_tokens_s_b1"], mtp=q_["mtp_tokens_s_b1"],
+                                  saturated=q_["ar_saturated_tokens_s"], pipeline_hops_us=q_["pipeline_hops_us"])
     prod = {}
     for tag, fc, lat, cs, es in (("ideal depths, no concurrency cap", 1.0, SOFTPLUS_FIX, None, None),
                                  ("50% field-concurrency cap (W18, adopted)", FIELD_CONCURRENCY, SOFTPLUS_FIX, None, None),
@@ -4143,10 +4193,10 @@ def consolidation(ec=None, lv=None):
                                   FIELD_CONCURRENCY, SOFTPLUS_FIX, None, 7),  # CDC per W18 (4 slow / 5 fast)
                                  ("ADOPTED + W15 SS wire reach (504 um) + W11 LAT-4 serial mul", FIELD_CONCURRENCY,
                                   SOFTPLUS_FIX, None, 7)):
-        pt = cons_v41_rom(Sp, hp, t_a, 1.0, None, "standard_pair", PRODUCT_CLOCK_HZ, fc, lat, PRODUCT_DYN_SCALE,
+        pt = cons_v41_rom(Sp, hp, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ, fc, lat, PRODUCT_DYN_SCALE,
                           (0.9e9, "w18") if tag.startswith("ADOPTED") else None, cs, es, "SS wire" in tag)
-        pt.update(label=f"PRODUCT BASIS 4096m8 @ 1.2 GHz SS: {tag}", density="analytical", bf16_mode="standard_pair",
-                  role="product", depth="4096m8")
+        pt.update(label=f"PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: {tag}", density="analytical",
+                  bf16_mode="columns", role="product", depth="4096m8", bf16_stage_reference=bf16_ref)
         prod[tag] = pt
         points.append(pt)
     # the SS-clock curve (root 2026-09-30): tok/s against the logic's SS clock, capped at each macro's SS limit, so
@@ -4298,8 +4348,18 @@ def consolidation(ec=None, lv=None):
                              derate=SS_DERATE, derate_measured=SS_DERATE_MEASURED,
                              depth_options=ROM_DEPTH_OPTS, depth_src=ROM_DEPTH_SRC),
                      bf16_hub_unit_mm2=round(cons_bf16_hub_mm2(), 2),
-                     product=dict(status="OPEN: re-derived when the closed pair's pitch lands (root 2026-09-30); the "
-                                         "table-die count follows W17's confirmation of the Engram path",
+                     product=dict(status=f"{head['dies']} dies: {head['stages']} TP-4 stages ({head['layer_dies']} layer "
+                                         "dies, BF16 COLUMNS (1,024 at W10's 1,063.7 x 131.76 um planned outline) with q "
+                                         "pairs at W10's 476 x 126.9 um tile -- USER DECISION: maximum per-user rate, die "
+                                         f"count free) + {head['head_dies']} head dies (8192m8 ping-pong, fit confirmed at "
+                                         f"floorplan level) + {head['table_dies']} Engram table dies (storage-only basis; "
+                                         "ASAP7 feasibility 20).  Why the columns: on the full-token basis they give the "
+                                         "highest per-user rate; W10's busiest-die op cycles favoured (iii), but its +20.7% "
+                                         "pair pitch adds stages (hops) and its BF16 issue floors exceed the columns' "
+                                         "full-width BF16 lanes.  References in bf16_full_token",
+                                  bf16_full_token=bf16_full_token,
+                                  option_ii_area_breakeven_mm2_for_31_stages=11.4,
+                                  head_fit=head_fit,
                                   reference_for_comparisons=dict(stages=head["stages"], layer_dies=head["layer_dies"],
                                                                  head_dies=head["head_dies"],
                                                                  table_dies=head["table_dies"], dies=head["dies"],
@@ -4581,6 +4641,20 @@ def cons_karb_delta(S=None, reach_mm=None, clock_hz=None):
                 regions_ss=karb_region_cycles(KARB["reach_mm_ss"]), stages=S, basis=KARB)
 
 
+# W19 HBM feasibility audit (claude/w19-hbm-audit aa0ac6bd, results/uarch/hbm_feasibility_audit.json; root 2026-09-30):
+# central estimates against main's model at 1.2 GHz (3,071.7 AR / 6,206.0 MTP): 2,394.5 AR / 5,227.7 MTP (range AR
+# 2,196-2,905, MTP 4,951-6,161).  Optimistic terms: routed-expert fetch after the router, measured switch latency,
+# +1 gather a MoE layer for the exact expert order, 34.6 distinct experts a layer over 6 positions, serial units in the
+# 0.9 GHz domain, the drafter on the 96-die graph; pessimistic: indexer at 1/96 keys, 1 head a die.  Applied here as
+# ratios to the tier-3 per-user rates (the saturated column is left at the model's pass bound, labelled).
+HBM_AUDIT = dict(ar=2394.5 / 3071.7, mtp=5227.7 / 6206.0, ar_range=(2196.2 / 3071.7, 2905.0 / 3071.7),
+                 mtp_range=(4951.1 / 6206.0, 6160.6 / 6206.0), qwen_dflash=0.86, qwen_dflash_block12=2296.0,
+                 src="claude/w19-hbm-audit aa0ac6bd results/uarch/hbm_feasibility_audit.json (summary.realistic_range)",
+                 rom_side="the exact-order extra gather does not apply to the ROM array: a macro sums its experts in id "
+                          "order inside the element and the TP-4 combine is a fixed-order all-reduce (no cross-die "
+                          "expert partials to re-order); the 0.9 GHz serial domain is already in the ROM product")
+
+
 def cons_headline_table(head, rule, qwen, ec, pc):
     """USER DECISION 2026-09-30: the V4.1 ROM headline is saturated throughput, energy per token and cost at EQUAL
     MANUFACTURING COST; per-user speed is claimed only against real GPUs (tier 1 measured, tier 2 calibrated) and
@@ -4597,9 +4671,16 @@ def cons_headline_table(head, rule, qwen, ec, pc):
     for x in rule:
         if x.get("stacks_per_die") == 4 and "ar" in x:
             v41.append(dict(design=f"V4.1 HBM tier 3 (idealised), {x['rule']}: {x['replicas']} x TP-{x['tp']} ({x['dies']} "
-                                   f"right-sized dies, 1.2 GHz, SS wires)", tier="3",
-                            per_user_ar=x["ar"]["batch1"]["per_user_tokens_s"],
-                            per_user_mtp=x["mtp"]["batch1"]["per_user_tokens_s"],
+                                   f"right-sized dies, 1.2 GHz, SS wires; W19 audit central)", tier="3",
+                            per_user_ar=round(x["ar"]["batch1"]["per_user_tokens_s"] * HBM_AUDIT["ar"], 1),
+                            per_user_mtp=round(x["mtp"]["batch1"]["per_user_tokens_s"] * HBM_AUDIT["mtp"], 1),
+                            per_user_ar_model=x["ar"]["batch1"]["per_user_tokens_s"],
+                            per_user_mtp_model=x["mtp"]["batch1"]["per_user_tokens_s"],
+                            per_user_ar_audit_range=[round(x["ar"]["batch1"]["per_user_tokens_s"] * f, 1)
+                                                     for f in HBM_AUDIT["ar_range"]],
+                            per_user_mtp_audit_range=[round(x["mtp"]["batch1"]["per_user_tokens_s"] * f, 1)
+                                                      for f in HBM_AUDIT["mtp_range"]],
+                            saturated_note="the model's column-pass bound (the audit prices single-user latency)",
                             saturated_tokens_s=x["ar"]["saturated"]["aggregate_tokens_s"],
                             mJ_b1=x["ar"]["batch1"]["gated_mJ"], mJ_saturated=x["ar"]["saturated"]["gated_mJ"],
                             capex_usd=x["cost"]["capex_usd"], silicon_mm2=x["silicon_mm2"], users_1m=x["capacity_users_1m"]))
@@ -4617,8 +4698,10 @@ def cons_headline_table(head, rule, qwen, ec, pc):
               per_user_ar=pc["tokens_s_b1"], saturated_tokens_s=pc["saturated_tokens_s"], mJ_b1=pc["mJ_b1"],
               mJ_saturated=pc["mJ_saturated"], capex_usd=pc["capex_usd"], users_8k=pc["capacity_users"])]
     for row in qwen[1:3]:
-        q.append(dict(design=row["design"] + " (tier 3, idealised)", tier="3", per_user_ar=row["ar_tokens_s_b1"],
-                      per_user_dflash=row["dflash_tokens_s_b1"], saturated_tokens_s=row["saturated_tokens_s"],
+        q.append(dict(design=row["design"] + " (tier 3, idealised; DFlash W19 audit -14%)", tier="3",
+                      per_user_ar=row["ar_tokens_s_b1"],
+                      per_user_dflash=round(row["dflash_tokens_s_b1"] * HBM_AUDIT["qwen_dflash"], 1),
+                      per_user_dflash_model=row["dflash_tokens_s_b1"], saturated_tokens_s=row["saturated_tokens_s"],
                       mJ_b1=row["gated_mJ_b1"], mJ_saturated=row["gated_mJ_sat"], capex_usd=row["cost"]["capex_usd"],
                       users_8k=row["capacity_users"]))
     gq = g["qwen"]
@@ -4631,7 +4714,7 @@ def cons_headline_table(head, rule, qwen, ec, pc):
         if "Qwen" in a["design"] and a["batch"] == 1:
             q.append(dict(design=a["design"], tier="1", per_user_ar=a["per_user_tokens_s"],
                           mJ_b1=a["energy_mJ_per_token_at_689W"]))
-    return dict(v41=v41, qwen=q, rule="USER DECISION 2026-09-30: V4.1 ROM headline = saturated throughput, J/token and "
+    return dict(v41=v41, qwen=q, hbm_audit=HBM_AUDIT, rule="USER DECISION 2026-09-30: V4.1 ROM headline = saturated throughput, J/token and "
                                      "cost at equal manufacturing cost; per-user speed claimed against GPUs (tier 1-2) "
                                      "only; Qwen ROM keeps its per-user claim")
 
@@ -4652,7 +4735,7 @@ def cons_clock_cases(S, h, t):
             ("b: 1.2 GHz field (LAT 7) + 0.9 GHz chain units (LAT 3), W18 CDC", 1.2e9, 1.16, (0.9e9, "w18"), None, 7),
             ("b: 1.2 GHz field (LAT 7) + 0.8 GHz chain units (LAT 3), W18 CDC", 1.2e9, 1.16, (0.8e9, "w18"), None, 7),
             ("c: all 0.9 GHz, LAT 3", 0.9e9, 1.0, None, None, None)):
-        p = cons_v41_rom(S, h, t, 1.0, None, "standard_pair", hz, FIELD_CONCURRENCY, SOFTPLUS_FIX, dyn, slow, cs, es)
+        p = cons_v41_rom(S, h, t, 1.0, None, "option_iii", hz, FIELD_CONCURRENCY, SOFTPLUS_FIX, dyn, slow, cs, es)
         out[tag] = dict(ar_tokens_s_b1=p["ar_tokens_s_b1"], mtp_tokens_s_b1=p["mtp_tokens_s_b1"],
                         ar_saturated_tokens_s=p["ar_saturated_tokens_s"], mtp_saturated_tokens_s=p["mtp_saturated_tokens_s"],
                         gated_mJ_b1=p["energy"]["ar_b1"]["gated_mJ"], gated_mJ_saturated=p["energy"]["ar_sat"]["gated_mJ"],
