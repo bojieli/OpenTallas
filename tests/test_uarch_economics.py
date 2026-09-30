@@ -45,7 +45,8 @@ def test_batch_one_matches_the_single_user_sections():
     # W15 (2026-09-29): V4.1 collectives and the Qwen TP-2 exchanges priced from the RTL measurement
     assert abs(e["v41_rom"]["ar"]["tokens_s_b1"] - 3808.8) < 1.0
     assert abs(e["v41_rom"]["mtp_m1"]["tokens_s_b1"] - 5856.5) < 1.0
-    assert abs(e["qwen_rom"]["ar"]["tokens_s_b1"] - 9851.1) < 1.0
+    # W16 / root 2026-09-30: the Qwen ROM product is option C (4 dies, TP-4, G 6,144, W12 wires)
+    assert abs(e["qwen_rom"]["ar"]["tokens_s_b1"] - 9367.6) < 1.0
     assert abs(e["qwen_hbm"]["ar"]["tokens_s_b1"] - 880.6) < 1.0
     assert abs(e["qwen_hbm"]["dflash"]["tokens_s_b1"] - 2671.0) < 1.0
     assert abs(e["v41_hbm"]["ar"]["tokens_s_b1"] - 2919.8) < 1.0
@@ -58,7 +59,8 @@ def test_qwen_rom_batching_binds_on_the_kv_stream_not_the_lanes():
     q = _rec()["qwen_rom"]
     assert q["binding"] == "kv_stream"
     assert q["bounds_tokens_s"]["kv_stream"] < q["bounds_tokens_s"]["lanes"]
-    assert abs(q["ar"]["saturated_tokens_s"] - 11920.9) < 1.0          # arch_budget_qwen3 batch_model agrees
+    # option C: each die streams its 2 of 8 KV heads from its own 4 stacks (16 stacks), twice the 2-die 11,920.9
+    assert abs(q["ar"]["saturated_tokens_s"] - 2 * 11920.9) < 1.0
 
 
 def test_v41_rom_saturation_is_the_stage_occupancy_bound():
@@ -88,7 +90,7 @@ def test_cost_rows():
     e = _rec()
     c = {r["design"]: r for r in e["cost"]}
     assert c["V4.1 ROM array (AR / MTP m = 1)"]["rom_mask_sets"] == 188
-    assert c["Qwen ROM (AR, G = 6,144)"]["rom_mask_sets"] == 2
+    assert c["Qwen ROM (AR, G = 6,144)"]["rom_mask_sets"] == 4          # option C: 4 ROM dies
     for r in e["cost"]:
         assert r["capex_per_system_usd"]["low"] <= r["capex_per_system_usd"]["high"]
         assert r["usd_per_tokens_s_saturated"]["low"] <= r["usd_per_tokens_s_b1"]["low"]

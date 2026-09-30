@@ -599,3 +599,212 @@ This table supersedes the energy columns of "Batch, energy and capacity" above.
    - 1–2 EUV coding masks per die at $0.5–1M each.
    - V4.1 NRE is $139–421M, against $2,820M with full mask sets.
 4. **Every energy comparison uses the gated-alike table above.** The same policies and cited constants apply to every design; GPU rows are at measured board power.
+
+## Consolidation: die counts, clocks, right-sized HBM dies, the comparison rule (`--consolidation`, `results/uarch/consolidation.json`)
+
+This is a user-approved study (W16, 2026-09-30). The physical floorplans leave spare area that the analytical die ledger did not predict. This section re-derives the die counts from the placed field geometry and prices the clock plan at SS sign-off. It also right-sizes the HBM dies and re-prices every design on die area. It calls the sections above; the only thing it changes elsewhere is the Qwen ROM product row (option C, below). Test: `tests/test_uarch_consolidation.py`.
+
+**TT basis pending SS.** Rows are priced at the TT model clock (1.0339 GHz) unless they are labelled SS / 1.2 GHz. **The product V4.1 die count is OPEN**: it is re-derived when the closed element pair's pitch lands, so the rows below are the decision table, not a restatement.
+
+### Density basis (root ruling, 2026-09-30)
+
+- **Fit basis for both ROM designs:** storage-only ROM at N5, 75.0 Mbit/mm² (a 0.021 µm² 6T cell × ROMA's ROM/SRAM 0.33 / array efficiency 0.52), plus SECDED 266/256.
+- **Sensitivities:** ROMA's TSMC 7 nm compiler at 57.8 Mbit/mm² (conservative), and the placed predictive ASAP7 macro at about 150 Mbit/mm² raw (physical feasibility only; `results/floorplan/v41_rom_capacity.json` forbids substituting it).
+- **Compute-in-ROM upside:** the Qwen ledger's 148 Mbit/mm² is N6 storage ÷ an ASSUMED 1.6× cell multiplier × a vendor-quoted 4 bits per cell. It may appear only as a labelled upside (an unimplemented mechanism).
+- Neither 75 nor 148 is HC1-derived; HC1 is a cross-check only (4.31 MB/mm² whole die).
+
+**Most of the floorplans' spare area is the ASAP7 macro being twice the fit density.**
+
+### V4.1 ROM layer dies: stage table
+
+**Field geometry.** The W10 re-fit is reproduced here, because its record is not committed; `refit` pins its hashes.
+
+- Tool: `tools/v41_floorplan_refit.py` at `claude/w10-v41-rom-element` 1f598e0b.
+- The FP8/FP4 pair p5 stands in for both pair types, because the BF16 pair q2 failed at detailed placement. p5 is not closed: 886 MHz, WNS −209 ps.
+- The field is 9,931 pair rows at 485.136 × 120.96 µm = 582.77 mm².
+
+**Overhead.** PDN bumps, IO/ESD, DFT, clock and decap are reserved at 12.5% of the die (band 10–15%, ASSUMED). On-chip decap alone takes up to 10% (Popovich, Mezhiba and Friedman, 2008), and 15–20% in high-performance processors; `technology.json` uses 0.10.
+
+**Credit (root ruling: ring only).** The re-fit's 67.3 mm² of whitespace outside the field was measured on its rectangles:
+
+- 53.5 mm² is the 1.0–1.1 mm die-edge ring left after the edge I/O;
+- 13.8 mm² is hub halos, which are not field.
+
+The overhead is charged to the ring first; the "none" column gives no credit. Fill is 90%.
+
+**Table.** Each cell is TP-4 stages for storage-only 75 / ASAP7 / ROMA (layer dies = 4 × stages). Engram table dies are 36 / 20 / 46–48.
+
+| BF16 | Pitch | Overhead | Credit: ring | Credit: none |
+|---|---|---:|---|---|
+| **standard pair (adopted)** | W10 budget 485 × 121 µm | 10% | 28 / 23 / 33 | 31 / 26 / 37 |
+| **standard pair (adopted)** | W10 budget 485 × 121 µm | 12.5% | 29 / 24 / 34 | 32 / 27 / 38 |
+| **standard pair (adopted)** | W10 budget 485 × 121 µm | 15% | 30 / 25 / 36 | 34 / 28 / 40 |
+| **standard pair (adopted)** | W18 measured 522.7 × 140.4 µm | 10% | 34 / 29 / 39 | 37 / 32 / 43 |
+| **standard pair (adopted)** | W18 measured 522.7 × 140.4 µm | 12.5% | 35 / 30 / 40 | 39 / 34 / 45 |
+| **standard pair (adopted)** | W18 measured 522.7 × 140.4 µm | 15% | 37 / 32 / 42 | 41 / 35 / 47 |
+| columns (reference) | W10 budget 485 × 121 µm | 10% | 34 / 28 / 40 | 38 / 32 / 45 |
+| columns (reference) | W10 budget 485 × 121 µm | 12.5% | 35 / 29 / 41 | 40 / 33 / 47 |
+| columns (reference) | W10 budget 485 × 121 µm | 15% | 37 / 31 / 43 | 42 / 35 / 50 |
+| columns (reference) | W18 measured 522.7 × 140.4 µm | 10% | 39 / 34 / 45 | 44 / 38 / 50 |
+| columns (reference) | W18 measured 522.7 × 140.4 µm | 12.5% | 41 / 35 / 47 | 46 / 40 / 53 |
+| columns (reference) | W18 measured 522.7 × 140.4 µm | 15% | 43 / 37 / 49 | 49 / 42 / 56 |
+
+Pitch and BF16 sources:
+
+- **W18 measured pitch:** W10's p5 abstract tiled with an 8.64 µm pin channel (`claude/w18-die-assembly` d1e3c0aa), ×1.25 area.
+- **BF16 columns:** 1,024 pairs at W10's planned outline of 1,063.7 × 131.76 µm.
+- **Standard pair (W10, adopted):** 16 BF16 weights per word, read once per 8 cycles into 2 exact BF16 multipliers per macro. It is exact, costs about +1.2 k µm² per pair (a closure risk at 85–87% utilisation), and adds 48 cycles per layer to `wo_a`.
+
+At the ruled basis, **today's 28 stages do not fit a layer die**.
+
+### Priced points (`points`)
+
+| Point | Clock GHz | Stages / dies | AR tok/s | MTP tok/s | Saturated AR | Gated mJ, B = 1 / saturated |
+|---|---:|---|---:|---:|---:|---:|
+| as placed (188 dies, BF16 columns in the model's timing, TT) | 1.03 | 28 / 188 | 3,809 | 5,856 | 77,516 | 352 / 105 |
+| BF16 lever: columns | 1.03 | 35 / 180 | 3,772 | 5,832 | 88,262 | 355 / 108 |
+| BF16 lever: standard_pair | 1.03 | 29 / 156 | 3,777 | 5,749 | 87,637 | 327 / 104 |
+| BF16 lever: hub_unit | 1.03 | 30 / 160 | 3,798 | 5,849 | 77,600 | 330 / 105 |
+| 28 stages (stage-count comparison) | 1.03 | 28 / 152 | 3,782 | 5,752 | 76,962 | 323 / 105 |
+| 34 stages (stage-count comparison) | 1.03 | 34 / 176 | 3,751 | 5,732 | 77,180 | 352 / 109 |
+| density asap7 | 1.03 | 24 / 120 | 3,804 | 5,766 | 76,758 | 275 / 98 |
+| density roma | 1.03 | 34 / 192 | 3,751 | 5,732 | 77,180 | 380 / 114 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: ideal depths, no concurrency cap | 1.2 | 30 / 164 | 4,290 | 6,593 | 84,258 | 312 / 108 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: 50% field-concurrency cap (W18, adopted) | 1.2 | 30 / 164 | 3,998 | 5,554 | 79,975 | 331 / 115 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: cap + W11 hub latency inventory (estimates) | 1.2 | 30 / 164 | 3,757 | 5,448 | 79,975 | 347 / 115 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: cap + measured FP32 add: chain and element adds 8 stages | 1.2 | 30 / 164 | 2,767 | 4,558 | 77,443 | 442 / 118 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: ADOPTED (AGENTS.md c0894b1c): cap + 1.2 GHz streaming domain (LAT-7 adds, W11: 1,208 MHz SS) + 0.9 GHz chain domain (LAT 3), W18 ratio-FIFO CDC | 1.2 | 30 / 164 | 3,554 | 5,042 | 76,501 | 362 / 118 |
+
+**More stages buy no throughput.** 28 → 34 stages costs 0.8% AR (+2.2 µs of hops) and leaves the saturated rate flat (76,962 vs 77,180). The reason is that the layer-20 index scan, which does not split, sets the stage period at about 13 µs.
+
+### Clock plan at SS (user decisions 2026-09-30; adopted in AGENTS.md c0894b1c)
+
+**Adopted design:** a 1.2 GHz streaming domain and a 0.9 GHz serial-chain domain.
+
+- **Streaming domain (1.2 GHz):** the ROM field and its elements with LAT-7 adds (W11: 1,208 MHz SS, 5.79 ns an add), the index scan and the attention tiles.
+- **Serial-chain domain (0.9 GHz):** the SU, SFU, softplus, reducer, Sinkhorn, and the VM-H rotate network and group tiles, on the LAT-3 add (906 MHz SS, 3.31 ns).
+- **Crossings:** CDC at the VM port both ways, 2 slow cycles (ASSUMED; W18 gives the FIFO latency).
+- **Other constraints:** a 50% field-concurrency cap (W18 peak current) and a 256-cycle pre-ramp (W18 droop).
+- **Stage count:** macros are 4096m8 × 2 per slot, so the product basis is 30 stages / 164 dies (8 head dies).
+
+**Clock-domain cases** (`clock_domain_cases`, all with the cap; the measured W11 FP32 add prices every serial chain):
+
+| Case | AR tok/s | MTP tok/s | Saturated AR | Gated mJ, B = 1 / saturated | Top of the critical path (µs) |
+|---|---:|---:|---:|---:|---|
+| a: all 1.2 GHz, chain adds 8 stages | 2,767 | 4,558 | 77,443 | 442 / 118 | attn.wo_a 22.37, ffn.softplus_sqrt 16.98, attn.out_allreduce 16.87 |
+| a: all 1.2 GHz, chain adds 9 stages | 2,619 | 4,451 | 77,443 | 463 / 118 | attn.wo_a 22.37, ffn.softplus_sqrt 19.1, attn.out_allreduce 16.87 |
+| b: 1.2 GHz field (LAT 7) + 0.9 GHz chain units (LAT 3), W18 CDC | 3,554 | 5,042 | 76,501 | 362 / 118 | attn.wo_a 22.53, attn.out_allreduce 16.87, ffn.combine_allreduce 16.87 |
+| b: 1.2 GHz field (LAT 7) + 0.8 GHz chain units (LAT 3), W18 CDC | 3,416 | 4,946 | 75,630 | 374 / 119 | attn.wo_a 22.53, attn.out_allreduce 16.87, ffn.combine_allreduce 16.87 |
+| c: all 0.9 GHz, LAT 3 | 3,095 | 4,210 | 63,460 | 402 / 124 | attn.wo_a 29.47, attn.out_allreduce 22.49, ffn.combine_allreduce 22.49 |
+
+- **The measured add overturns "everything at 1.2 GHz".** At 1.2 GHz an add needs 8–9 stages (6.7–7.5 ns), so the serial chains slow down more than the clock gains.
+- **The split design keeps the chains on the 906 MHz LAT-3 add**, and gives the best per-user rate with a saturated rate within a few percent.
+- **The stage period is set by the layer-20 index scan throughout.**
+
+**Droop pre-ramp energy** (W18 67b0bd49), on the adopted product:
+
+- 50% cap + 256-cycle pre-ramp: +70.6 mJ per token, i.e. 433.0 / 188.9 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +99.1 mJ.
+- 1,024-cycle pre-ramp, no cap: +561.6 mJ per token, i.e. 924.0 / 679.9 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +788.6 mJ.
+- 256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV): +141.1 mJ per token, i.e. 503.5 / 259.4 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +198.2 mJ.
+
+The priced graph has 10.87 field-op starts per layer die per token, of which 8.03 follow an idle gap longer than 256 cycles (ASSUMED decay constant). W18's count was 6. The 1,024-cycle no-cap pre-ramp is rejected on energy.
+
+**SS-clock curve** (`ss.curve`): AR / MTP / saturated tok/s against the logic's SS clock, capped at each macro's SS limit (the older single-domain basis, for reading off the depth):
+
+| Depth | Logic SS GHz: AR tok/s |
+|---|---|
+| 8192m8 (29 stages) | 0.70: 2,598, 0.75: 2,771, 0.80: 2,946, 0.85: 3,116, 0.90: 3,286, 1.35: 3,345 |
+| 4096m8 (30 stages) | 0.70: 2,596, 0.75: 2,768, 0.80: 2,943, 0.85: 3,112, 0.90: 3,282, 0.95: 3,448, 1.00: 3,614, 1.05: 3,776, 1.10: 3,930, 1.15: 4,078, 1.20: 4,231, 1.35: 4,250 |
+| 2048m4 (31 stages) | 0.70: 2,593, 0.75: 2,765, 0.80: 2,940, 0.85: 3,108, 0.90: 3,278, 0.95: 3,444, 1.00: 3,609, 1.05: 3,771, 1.10: 3,924, 1.15: 4,072, 1.20: 4,225, 1.25: 4,370, 1.30: 4,514, 1.35: 4,584 |
+
+**K arbiter** (W18: 7 + 2 × (hops − 1) cycles). There are 56 HBM-touching nodes on the path. The cost is -0.297% at 1 mm reach (13 cycles worst) and -0.343% at the 0.75 mm SS reach (15 cycles). It is not yet in the product.
+
+### Engram table dies
+
+- **Die count:** 72 → 36 at the storage-only density (5.67 GB per die); 20 at ASAP7, 48 at ROMA. A table die carries no MAC strips, hub or HBM.
+- **Hops and latency: no change.** The path is a table package, then one 51.2T switch, then a layer package.
+  - The rack's Engram L1 path is 1.874 µs, an upper bound for any table-die count, against 3.57 µs of slack.
+  - On the priced DAG, the Engram value arrives at 1.34 µs and meets the residual at 5.01 µs.
+  - No Engram node is on the critical path at any stage count tested.
+- **Load:** 3.8 rows per die per layer (expected maximum), and 0.2% of a table package's lanes at saturation.
+
+### Qwen ROM: option C (root / user decision, 2026-09-30)
+
+The AR-only ROM does not fit the two-reticle package at 75 + ECC: it needs 746.5 of 560 mm² of tile array per die, and 883.3 at ROMA. `qwen_rom_options()` prices the alternatives, each with the busiest die's TP-k slice replayed, at 8K with W12 wires.
+
+**W12 wires give 9,194 tok/s at the 2-die reference, where the economics section's W5 wires gave 9,851. W12 is used.**
+
+| Option | G per die | tok/s AR | Saturated | Users | mJ, B = 1 / saturated | Hardware $ | Exchange per all-reduce |
+|---|---:|---:|---:|---:|---:|---:|---|
+| A: 3 dies in ONE package (12 stacks; not demonstrated), TP-3 over UCIe | 4,096 | 9,096 | 15,895 | 357 | 91 / 85 | 8,625 | 76.0 cycles (ASSUMED from the W15 TP-2 measurement: a one-shot to 2 peers over direct UCIe adds one FP32 add stage) |
+| B: 3 single-die packages (4 stacks each, H100-class), TP-3 over board links | 4,096 | 7,433 | 15,895 | 357 | 94 / 85 | 11,065 | 446.8 cycles (MEASURED on the V4.1 TP-4 group) |
+| C: 2 B200-class packages (2 dies + 8 stacks each), TP-4 with one package crossing | 6,144 | 9,368 | 23,842 | 536 | 98 / 85 | 12,113 | 446.8 cycles (MEASURED on the V4.1 TP-4 group) |
+| D: the 2-die reference: fits only with the compute-in-ROM UPSIDE (148 Mbit/mm2; assumed cell multiplier, unimplemented mechanism) | 6,144 | 9,194 | 11,921 | 268 | 88 / 85 | 6,056 | 71.0 cycles (MEASURED) |
+
+- **G = 6,144 (W12's die, layer 0 exact) is the product.** It uses 529.5 of 560 mm² (5.45% margin).
+- **the TP-4 token is not lane-bound: G 6,144 -> 6,336 buys +0.04% (9,367.6 -> 9,371.4 tok/s) and the saturated rate is KV-stream bound at every G >= 4,096, so extra area does not buy per-user speed; legal G step is 64 groups (the program's embedding-word rule).**
+- **ROMA-safe sensitivity:** G = 4,928 at 8,673 tok/s (−7.4%).
+- **At 1.2 GHz SS:** C runs at 10,262 tok/s, and 10,556 with W12's TP-4 wire count (66 cycles per ME op, including the SS pin-capture register).
+- **A smaller die** holds the placed tiles, spine, PHYs and UCIe with a 10% margin:
+  - W12 estimate 308 mm2 (ASAP7 tiles): 443.9 mm², yield 0.661, $210.7 per die, $10,643 for 4 dies and 2 packages.
+  - W12 estimate 359 mm2 (ASAP7 tiles): 504.0 mm², yield 0.6276, $256.3 per die, $10,825 for 4 dies and 2 packages.
+  - storage-only 75 + ECC tile need (the ruled basis): 622.5 mm², yield 0.568, $360.8 per die, $11,243 for 4 dies and 2 packages.
+  - 815 mm2 reference: 815.0 mm², yield 0.4863, $578.2 per die, $12,113 for 4 dies and 2 packages.
+
+### Right-sized HBM dies and the V4.1 HBM die count
+
+**Shoreline** (root): the H200 is GH100 (~814 mm²) with six HBM3e stacks, three per long edge, which gives 8.5 mm of edge per PHY. Six stacks per die is demonstrated; more is not.
+
+| Die | Stacks | Outline mm | Area mm² | Package |
+|---|---:|---|---:|---|
+| qwen | 4 | 19.0 × 15.63 | 296.9 | 2 dies + 8 stacks (CoWoS-L, B200 class) |
+| qwen | 6 | 27.5 × 15.84 | 435.5 | 1 die + 6 stacks (CoWoS-S, H100/H200 class) |
+| v41 | 4 | 19.0 × 18.2 | 345.7 | 2 dies + 8 stacks (CoWoS-L, B200 class) |
+| v41 | 6 | 27.5 × 15.78 | 434.0 | 1 die + 6 stacks (CoWoS-S, H100/H200 class) |
+| v41 (12 mm PHY placeholder) | 4 | 26.0 × 13.62 | 354.2 | 2 dies + 8 stacks (CoWoS-L, B200 class) |
+| qwen (12 mm PHY placeholder) | 6 | 38.0 × 11.82 | 449.0 | 1 die + 6 stacks (CoWoS-S, H100/H200 class) (exceeds the reticle) |
+
+**V4.1 HBM sweep** (TP-N at 1.2 GHz for equal footing; 1M):
+
+| Dies × stacks | Users at 1M | AR tok/s | MTP tok/s | Saturated AR | mJ, B = 1 / saturated | Capex $ |
+|---|---:|---:|---:|---:|---:|---:|
+| 7 × 4 (capacity minimum) | 60 | 1,380 | 2,580 | 4,760 | 1744 / 663 | 34,183 |
+| 17 × 4 | 926 | 2,139 | 4,927 | 11,561 | 1904 / 663 | 60,144 |
+| 24 × 4 | 1,531 | 2,441 | 5,379 | 16,321 | 2009 / 663 | 77,306 |
+| 48 × 4 | 3,608 | 2,874 | 5,962 | 25,293 | 2392 / 677 | 139,613 |
+| 96 × 4 | 7,763 | 3,194 | 6,350 | 25,293 | 3136 / 739 | 264,226 |
+| 5 × 6 (capacity minimum) | 103 | 1,432 | 2,761 | 5,100 | 1691 / 652 | 35,168 |
+| 11 × 6 | 882 | 2,135 | 4,920 | 11,221 | 1800 / 652 | 59,371 |
+| 24 × 6 | 2,570 | 2,710 | 5,749 | 24,482 | 2044 / 652 | 111,809 |
+| 48 × 6 | 5,685 | 3,077 | 6,213 | 25,293 | 2487 / 688 | 208,618 |
+| 96 × 6 | 11,917 | 3,293 | 6,464 | 25,293 | 3378 / 761 | 402,235 |
+
+- To hold 866 users at 1M, the comparator needs 17 dies × 4 stacks or 11 × 6.
+- Its existing 811-user figure uses a pipelined busiest-die rule; under TP-96 it holds 7,763.
+- W13 at SS pre-layout: an 8-stage fp32_add_rne_pipe breaks the IL = 8 circulating accumulator; IL = 16 gives V4.1 HBM ~2,500 AR (from ~2,920); a 7-stage adder keeps IL = 8 (W13 estimate, not priced here).
+
+### Cost: die area with a yield model (`fab`), replacing the iso-package B200 price
+
+- **Wafer:** $16,988 per N5 wafer (Khan and Mann, CSET 2020).
+- **Yield:** D0 0.10/cm² (TSMC 2020 Technology Symposium), negative binomial with α = 3 (ASSUMED), no harvesting.
+- **Packaging:** CoWoS-S $750, CoWoS-L $1,100, and $920 test and assembly per package (Raymond James via Silicon Analysts).
+- **HBM3E:** $360 per stack.
+- **NRE, via-programmable:** base sets + 1–2 coding masks per ROM die, and one full set per HBM die design, over 1,000 units.
+
+### The comparison rule
+
+The reference is the adopted V4.1 ROM product basis: 133,660 mm², $571,785 capex (low), and 9,050 W gated at the saturated AR rate. The HBM side runs at 1.2 GHz.
+
+| Rule | HBM configuration | AR tok/s | MTP tok/s | Saturated AR | Users at 1M | mJ, B = 1 / saturated |
+|---|---|---:|---:|---:|---:|---:|
+| equal area | 4 × TP-96 (384 dies) | 3,194 | 6,350 | 101,171 | 31,052 | 8158 / 739 |
+| equal cost (headline pairing) | 2 × TP-96 (192 dies) | 3,194 | 6,350 | 50,585 | 15,526 | 4810 / 739 |
+| equal power | 1 × TP-20 (20 dies) | 2,305 | 5,181 | 13,601 | 1,185 | 1945 / 663 |
+
+### Floorplan checks needed (coordinate through root)
+
+- **W10:** a consolidated V4.1 layer die at the product basis: 4096m8 × 2 per slot, standard-pair BF16 at the 485 × 121 µm budget pitch with abutment pins, 30 stages' busiest-die macros, and the overhead in the edge ring. Also closure of the standard pair at +1.2 k µm².
+- **W10 / W18:** an Engram table-die floorplan (about 628 mm² usable).
+- **W13:** one right-sized HBM die: V4.1 with 4 stacks at 19.0 × 18.2 mm, on the legal 8.5 mm PHY.
+- **W12:** the smaller Qwen die when the routed tile area lands.
+
