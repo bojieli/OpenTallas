@@ -19,6 +19,10 @@
 // ---------------------------------------------------------------------------
 
 // W-bit adder with carry-in, Kogge-Stone prefix carries.
+// KEEP: every prefix level is a netlist boundary (as rtl/hdc/v41/ot_hdc_sk_arith.sv ot_hdc_sk_cadd).  Flattened,
+// ABC's area recovery re-maps the prefix network as a ripple chain whenever its own (TT, wireless) delay estimate
+// meets the clock -- routed at SS in the W12 tile: 20 MAJ cells in a row per 28-bit add, -711 ps at 0.833 ns.
+// The function is unchanged.
 module ot_hdc_ksa #(parameter integer W = 8) (
     input  wire [W-1:0] a,
     input  wire [W-1:0] b,
@@ -27,24 +31,29 @@ module ot_hdc_ksa #(parameter integer W = 8) (
     output wire         cout
 );
     // Index 0 of the prefix network is the carry-in; index i+1 is bit i.
-    reg [W:0] g, p, gn, pn;
-    integer l, i;
-    always @* begin
-        g = {a & b, cin};
-        p = {a ^ b, 1'b0};
-        for (l = 1; l <= W; l = l * 2) begin
-            gn = g;
-            pn = p;
-            for (i = l; i <= W; i = i + 1) begin
-                gn[i] = g[i] | (p[i] & g[i - l]);
-                pn[i] = p[i] & p[i - l];
+    localparam integer L = $clog2(W + 1);
+    genvar l, i;
+    generate
+        for (l = 0; l <= L; l = l + 1) begin : g_lv
+            (* keep *) wire [W:0] g, p;
+            if (l == 0) begin : g_init
+                assign g = {a & b, cin};
+                assign p = {a ^ b, 1'b0};
+            end else begin : g_step
+                for (i = 0; i <= W; i = i + 1) begin : g_bit
+                    if (i >= (1 << (l - 1))) begin : g_op
+                        assign g[i] = g_lv[l-1].g[i] | (g_lv[l-1].p[i] & g_lv[l-1].g[i - (1 << (l - 1))]);
+                        assign p[i] = g_lv[l-1].p[i] & g_lv[l-1].p[i - (1 << (l - 1))];
+                    end else begin : g_pass
+                        assign g[i] = g_lv[l-1].g[i];
+                        assign p[i] = g_lv[l-1].p[i];
+                    end
+                end
             end
-            g = gn;
-            p = pn;
         end
-    end
-    assign s = (a ^ b) ^ g[W-1:0];
-    assign cout = g[W];
+    endgenerate
+    assign s = (a ^ b) ^ g_lv[L].g[W-1:0];
+    assign cout = g_lv[L].g[W];
 endmodule
 
 // Leading-zero count of a 32-bit word as a tree (n = 32 for zero).

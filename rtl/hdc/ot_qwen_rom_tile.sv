@@ -55,7 +55,9 @@ module ot_qwen_rom_tile_logic #(
     parameter integer KV_HB = 16,         // words per head: 2^KV_HB
     parameter integer KV_NH = 4,          // KV heads per die
     parameter integer KV_SK = 7,          // scores split (log2)
-    parameter integer KV_SV = 9           // weighted-sum split (log2)
+    parameter integer KV_SV = 9,          // weighted-sum split (log2)
+    parameter integer ACC_LAT = 5,        // lane accumulator FP32 add latency (ot_hdc_matvec_part ACC_LAT)
+    parameter integer TREE_LAT = 3        // split-tree pair adder latency (ot_hdc_matvec_part TREE_LAT)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -118,7 +120,8 @@ module ot_qwen_rom_tile_logic #(
     wire [TG*W*32-1:0] me_kv_q;
     wire              me_fault;
     ot_hdc_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(MEM_EXTRA)) u_me (
+        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(MEM_EXTRA),
+        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
@@ -138,7 +141,7 @@ module ot_qwen_rom_tile_logic #(
 
     // -- upper tree node ---------------------------------------------------------
     wire node_fault;
-    ot_qwen_me_node #(.W(W), .WS(NREG)) u_node (.clk(clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va),
+    ot_qwen_me_node #(.W(W), .WS(NREG), .TREE_LAT(TREE_LAT)) u_node (.clk(clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va),
                                                .y(n_y), .vy(n_vy), .fault(node_fault));
     assign fault = me_fault | node_fault;
 
@@ -255,7 +258,9 @@ module ot_qwen_rom_tile #(
     parameter integer SMIN = 7,           // TP-4 product (2026-09-30): smallest split 128
     parameter integer CODE_BANKS = 5,     // TP-4 product: W16's 5-bank map
     parameter integer KV_VB = 131072,     // TP-4: 2 KV heads a die
-    parameter integer KV_NH = 2
+    parameter integer KV_NH = 2,
+    parameter integer ACC_LAT = 5,        // lane accumulator FP32 add latency (ot_hdc_matvec_part ACC_LAT)
+    parameter integer TREE_LAT = 3        // split-tree pair adder latency (ot_hdc_matvec_part TREE_LAT)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -284,7 +289,7 @@ module ot_qwen_rom_tile #(
     wire [6:0]            kvs_r_addr;
     wire [511:0]          kvs_rd;
     ot_qwen_rom_tile_logic #(.NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(1),
-        .KV_VB(KV_VB), .KV_NH(KV_NH)) u_logic (
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_rd(rom_rd),

@@ -25,7 +25,8 @@ ROOT = Path(__file__).resolve().parents[1]
 ORIG_COMMIT = "0e8df511"
 TB = ROOT / "rtl/test/tb_qwen_me_partition.sv"
 RTL = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_qwen_me_array", "ot_qwen_rom_tile", "ot_hdc_matvec", "ot_hdc_fpu",
-                                         "ot_hdc_fp32_mul_pipe", "ot_hdc_fastfp", "ot_hdc_delay", "ot_hdc_sfu")] \
+                                         "ot_hdc_fp32_mul_pipe", "ot_hdc_fastfp", "ot_hdc_delay", "ot_hdc_sfu",
+                                         "ot_hdc_fp32_add_lat")] \
     + [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv"]
 
 

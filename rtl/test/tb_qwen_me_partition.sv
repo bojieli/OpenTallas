@@ -18,15 +18,28 @@
 // from the same vector memory.  Random back-to-back ops, dense and KV-sourced,
 // splits SMIN..SMAX.  MUTANT = 1 swaps the ROM slices of tiles 0 and 1 and
 // must fail.
+// ==? (reference bits never assigned -- X after reset -- are don't-care) where the simulator has four states;
+// Verilator is two-state (no X to mask) and rejects a non-constant ==? right-hand side
+`ifdef VERILATOR
+`define EQX ==
+`else
+`define EQX ==?
+`endif
 module tb_qwen_me_partition;
     parameter integer GT = 80, TG = 4, SMIN = 3, SMAX = 5, TCUT = 3;
     parameter integer BD = 0, XVM = 0, NWS = 0, TWS = 0, ORD = 0, MEM_EXTRA = 0;
     parameter integer NOPS = 300, SEED = 1, MUTANT = 0;
     parameter integer W = 16;
+    // adder depths of the engines under test (ot_hdc_matvec_part ACC_LAT / TREE_LAT; 5 / 3 = the original's).
+    // Deeper adders move every result, scale read and maximum later: mono is then checked against the
+    // original on every memory request per cycle and on results, scale reads, maxima and argmax as event
+    // sequences, the first result exactly LX cycles later.
+    parameter integer ACC_LAT = 5, TREE_LAT = 3;
     localparam integer IL = 8, AW = 24, NW = 16;
     localparam integer NT = GT / TG, NXC = 1 << SMAX, LT = $clog2(TG);
     localparam integer XD = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA;
     localparam integer ZERO_WIRE = (XD == 0 && ORD == 0);
+    localparam integer LX = (ACC_LAT - 5) + $clog2(GT) * (TREE_LAT - 3);   // the deeper adders' extra latency
 
     reg clk = 0, rst_n = 0;
     always #1 clk = ~clk;
@@ -95,7 +108,7 @@ module tb_qwen_me_partition;
     ot_hdc_matvec_ref #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1)) u_ref (`MV_CONN(r));
     ot_hdc_matvec #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1)) u_unp (`MV_CONN(u));
     ot_hdc_matvec #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-                    .SMIN(SMIN)) u_mono (`MV_CONN(m));
+                    .SMIN(SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT)) u_mono (`MV_CONN(m));
 
     // array
     wire a_ready, a_idle, a_scale_re, a_ov, a_am_any, a_mx_we, a_fault;
@@ -116,7 +129,8 @@ module tb_qwen_me_partition;
     wire [NW-1:0] a_am_idx; wire [31:0] a_am_val;
     wire [AW-1:0] a_mx_addr; wire [W-1:0] a_mx_mask; wire [W*32-1:0] a_mx_data; wire [15:0] a_progress;
     ot_qwen_me_array #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT),
-                       .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .CODE_BANKS(CB), .KV_LOCAL(0), .MEM_EXTRA(MEM_EXTRA)) u_arr (
+                       .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .CODE_BANKS(CB), .KV_LOCAL(0), .MEM_EXTRA(MEM_EXTRA),
+                       .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT)) u_arr (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(a_ready), .idle(a_idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc), .i_wbase(i_wbase), .i_ts(i_ts),
         .i_ks(i_ks), .i_js(i_js), .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs), .i_jsh(i_jsh),
@@ -215,6 +229,9 @@ module tb_qwen_me_partition;
     reg [NW+32:0] amm [0:4095];
     reg [NW+32:0] ama [0:4095];
     reg [AW+8-1:0] scm [0:65535];
+    reg [AW+W+W*32+8-1:0] qr [0:65535];
+    reg [AW+8-1:0] scr [0:65535];
+    integer nqr = 0, nscr = 0, first_ov_r = -1;
     reg [AW+8-1:0] sca [0:65535];
     integer nqm = 0, nqa = 0, nxr = 0, nxm = 0, nxa = 0, namr = 0, namm = 0, nama = 0, nscm = 0, nsca = 0;
     reg [NW+32:0] lam_r = 0, lam_m = 0, lam_a = 0;
@@ -240,11 +257,15 @@ module tb_qwen_me_partition;
              r_mx_we, r_mx_addr, r_mx_mask, r_mx_data, r_progress, r_fault}) fail("unpruned != original", -1);
         // pruned monolithic == original on requests, writes, progress
         // (==? : bits the reference has never assigned -- X after reset -- are don't-care)
-        if (!({m_ready, m_wrom_re, m_wrom_addr, m_scale_re, m_scale_gre, m_kv_re, m_kv_addr, m_x_re, m_x_addr,
-             m_ov, m_o_we, m_o_mask, m_progress, m_fault} ==?
+        if (LX != 0) begin
+            if (!({m_ready, m_wrom_re, m_wrom_addr, m_kv_re, m_kv_addr, m_x_re, m_x_addr} `EQX
+                  {r_ready, r_wrom_re, r_wrom_addr, r_kv_re, r_kv_addr, r_x_re, r_x_addr}))
+                fail("pruned != original (requests)", -1);
+        end else if (!({m_ready, m_wrom_re, m_wrom_addr, m_scale_re, m_scale_gre, m_kv_re, m_kv_addr, m_x_re, m_x_addr,
+             m_ov, m_o_we, m_o_mask, m_progress, m_fault} `EQX
             {r_ready, r_wrom_re, r_wrom_addr, r_scale_re, r_scale_gre, r_kv_re, r_kv_addr, r_x_re, r_x_addr,
              r_ov, r_o_we, r_o_mask, r_progress, r_fault})) fail("pruned != original (requests/writes)", -1);
-        for (g = 0; g < GT; g = g + 1) begin
+        if (LX == 0) for (g = 0; g < GT; g = g + 1) begin
             if (r_scale_gre[g] === 1'b1 && m_scale_addr[g*AW +: AW] !== r_scale_addr[g*AW +: AW]) fail("pruned scale_addr", g);
             if (r_o_we[g] === 1'b1 && ({m_o_addr[g*AW +: AW], m_o_data[g*W*32 +: W*32]} !==
                               {r_o_addr[g*AW +: AW], r_o_data[g*W*32 +: W*32]})) fail("pruned result word", g);
@@ -252,7 +273,7 @@ module tb_qwen_me_partition;
         // array vs pruned monolithic
         if (ZERO_WIRE) begin
             if (!({a_ready, a_idle, a_scale_re, a_scale_gre, a_ov, a_o_we, a_o_mask, a_am_idx, a_am_val, a_am_any,
-                 a_mx_we, a_mx_addr, a_mx_mask, a_mx_data, a_progress, a_fault} ==?
+                 a_mx_we, a_mx_addr, a_mx_mask, a_mx_data, a_progress, a_fault} `EQX
                 {m_ready, m_idle, m_scale_re, m_scale_gre, m_ov, m_o_we, m_o_mask, m_am_idx, m_am_val, m_am_any,
                  m_mx_we, m_mx_addr, m_mx_mask, m_mx_data, m_progress, m_fault})) fail("array != pruned (ports)", -1);
             for (g = 0; g < NXC && g < GT; g = g + 1)
@@ -273,6 +294,11 @@ module tb_qwen_me_partition;
         if (a_fault || m_fault || r_fault) fail("a fault was raised", -1);
         // event streams
         if (m_ov && first_ov_m < 0) first_ov_m = cyc;
+        if (r_ov && first_ov_r < 0) first_ov_r = cyc;
+        for (g = 0; g < GT; g = g + 1) begin
+            if (r_o_we[g] === 1'b1) begin qr[nqr] = {g[7:0], r_o_addr[g*AW +: AW], r_o_mask[g*W +: W], r_o_data[g*W*32 +: W*32]}; nqr = nqr + 1; end
+            if (r_scale_gre[g] === 1'b1) begin scr[nscr] = {g[7:0], r_scale_addr[g*AW +: AW]}; nscr = nscr + 1; end
+        end
         if (a_ov && first_ov_a < 0) first_ov_a = cyc;
         for (g = 0; g < GT; g = g + 1) begin
             if (m_o_we[g]) begin qm[nqm] = {g[7:0], m_o_addr[g*AW +: AW], m_o_mask[g*W +: W], m_o_data[g*W*32 +: W*32]}; nqm = nqm + 1; end
@@ -324,12 +350,25 @@ module tb_qwen_me_partition;
         if (namr != namm || namm != nama) begin $display("FAIL argmax change counts %0d %0d %0d", namr, namm, nama); errors = errors + 1; end
         for (n = 0; n < namr && n < namm && n < nama; n = n + 1)
             if (amr[n] !== amm[n] || amm[n] !== ama[n]) begin if (errors < 20) $display("FAIL argmax event %0d", n); errors = errors + 1; end
+        if (LX != 0) begin
+            if (nqr != nqm) begin $display("FAIL result write count ref=%0d mono=%0d", nqr, nqm); errors = errors + 1; end
+            for (n = 0; n < nqr && n < nqm; n = n + 1)
+                if (qr[n] !== qm[n]) begin if (errors < 20) $display("FAIL ref/mono result write event %0d", n); errors = errors + 1; end
+            if (nscr != nscm) begin $display("FAIL scale read count ref=%0d mono=%0d", nscr, nscm); errors = errors + 1; end
+            for (n = 0; n < nscr && n < nscm; n = n + 1)
+                if (scr[n] !== scm[n]) begin if (errors < 20) $display("FAIL ref/mono scale read event %0d", n); errors = errors + 1; end
+            if (first_ov_m - first_ov_r != LX) begin
+                $display("FAIL mono first result at +%0d over the original, expected +%0d", first_ov_m - first_ov_r, LX);
+                errors = errors + 1;
+            end
+        end
         if (first_ov_a - first_ov_m != XD + ORD) begin
             $display("FAIL first result at +%0d, expected +%0d", first_ov_a - first_ov_m, XD + ORD); errors = errors + 1;
         end
         if (errors == 0 && nqm > 0)
-            $display("PASS GT=%0d TG=%0d SMIN=%0d SMAX=%0d TCUT=%0d BD=%0d XVM=%0d NWS=%0d TWS=%0d ORD=%0d ops=%0d cycles=%0d result_writes=%0d maxima=%0d argmax_changes=%0d scale_reads=%0d latency_added=%0d",
-                     GT, TG, SMIN, SMAX, TCUT, BD, XVM, NWS, TWS, ORD, ops, cyc, nqm, nxm, namm, nscm, first_ov_a - first_ov_m);
+            $display("PASS GT=%0d TG=%0d SMIN=%0d SMAX=%0d TCUT=%0d BD=%0d XVM=%0d NWS=%0d TWS=%0d ORD=%0d ops=%0d cycles=%0d result_writes=%0d maxima=%0d argmax_changes=%0d scale_reads=%0d latency_added=%0d ACC_LAT=%0d TREE_LAT=%0d adder_latency_added=%0d",
+                     GT, TG, SMIN, SMAX, TCUT, BD, XVM, NWS, TWS, ORD, ops, cyc, nqm, nxm, namm, nscm, first_ov_a - first_ov_m,
+                     ACC_LAT, TREE_LAT, first_ov_m - first_ov_r);
         else $display("FAIL errors=%0d writes=%0d", errors, nqm);
         $finish;
     end

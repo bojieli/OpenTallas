@@ -81,7 +81,9 @@ module ot_hdc_matvec #(
     // programs keep the historical shared ME_WBASE address by default.
     parameter integer INT8_SCALE_WCS_BASE = 0,
     parameter integer SMIN = 0,          // pruning: smallest split any op uses (0 = none)
-    parameter integer ORD = 0            // extra result-write register stages
+    parameter integer ORD = 0,           // extra result-write register stages
+    parameter integer ACC_LAT = 5,       // lane accumulator / split-tree adder latencies (ot_hdc_matvec_part)
+    parameter integer TREE_LAT = 3
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -143,7 +145,8 @@ module ot_hdc_matvec #(
     // The issue loop's state, named for the testbenches that observe it.
     wire active;
     ot_hdc_matvec_part #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(INT8_WEIGHT),
-                         .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .SMIN(SMIN), .ORD(ORD)) u_p (
+                         .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .SMIN(SMIN), .ORD(ORD),
+                         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT)) u_p (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
@@ -189,7 +192,14 @@ module ot_hdc_matvec_part #(
     parameter integer GOUT = G,
     // MEM_EXTRA: memory data (ROM, KV, x) returns MEM_EXTRA cycles later than c+1 (a capture register at
     // the macro pins, e.g. the ROM tile at 0.833 ns SS); the element tags wait the same cycles
-    parameter integer MEM_EXTRA = 0
+    parameter integer MEM_EXTRA = 0,
+    // Adder depths (1.2 GHz @ SS, AGENTS.md clock target).  ACC_LAT: the lane accumulator's FP32 add latency
+    // (5: ot_hdc_fadd, the qualified five-stage pipe; else ot_hdc_fp32_add_lat #(ACC_LAT), bit-identical, 3..7).
+    // The IL-slot ring is acc register + adder + (FB - 1) delay = IL, so ACC_LAT <= IL - 1.  TREE_LAT: the
+    // split-tree pair adder (3: ot_hdc_qadd; else ot_hdc_fp32_add_lat #(TREE_LAT)).  Values do not change;
+    // results emerge ACC_LAT - 5 + LG * (TREE_LAT - 3) cycles later.
+    parameter integer ACC_LAT = 5,
+    parameter integer TREE_LAT = 3
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -267,8 +277,9 @@ module ot_hdc_matvec_part #(
 );
     localparam integer LW = $clog2(W);
     localparam integer LG = $clog2(G);
-    localparam integer FB = IL - 5;       // circulation delay after the adder
-    localparam integer TA = 3;            // split-tree adder: ot_hdc_qadd (rtl/hdc/ot_hdc_fastfp.sv), LATENCY 3
+    localparam integer FB = IL - ACC_LAT; // circulation delay after the adder
+    localparam integer SD = 5 + ACC_LAT;  // S3 -> the lane sums (products at +5, the accumulator add)
+    localparam integer TA = TREE_LAT;     // split-tree adder: ot_hdc_qadd (rtl/hdc/ot_hdc_fastfp.sv), LATENCY 3, or ot_hdc_ladd
     localparam integer TL = TA + 1;       // split-tree cycles per level: the adder + 1 output register
     localparam integer OD = TL * LG;      // split tree
     localparam integer XDD = (PART == 2) ? XD : 0;
@@ -505,18 +516,18 @@ module ot_hdc_matvec_part #(
     end endgenerate
     wire [TW-1:0] a_tag;
     generate if (PORTS) begin : g_atag
-        ot_hdc_delay #(.W(TW), .D(10 + OD + XDD)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag));
+        ot_hdc_delay #(.W(TW), .D(SD + OD + XDD)) u_tag (.clk(clk), .rst_n(rst_n), .d(s3_tag), .q(a_tag));
     end else begin : g_no_atag
         assign a_tag = {TW{1'b0}};
     end endgenerate
-    wire [10+OD+XDD:0] vline;
-    ot_hdc_vline #(.D(10 + OD + XDD)) u_v (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(vline));
+    wire [SD+OD+XDD:0] vline;
+    ot_hdc_vline #(.D(SD + OD + XDD)) u_v (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(vline));
     wire [5:0] fl_first;
     ot_hdc_vline #(.D(5)) u_first (.clk(clk), .rst_n(rst_n), .v(s3_first && s3_v), .vd(fl_first));
     // split and KV flag reach the tree's first level here 10 cycles after S3
     // (PART 2: its first level, LV0 + 1, TL*LV0 + XD cycles later)
     wire [3:0] t_split;
-    ot_hdc_delay #(.W(4), .D(10 + TL * LV0 + XDD)) u_ts (.clk(clk), .rst_n(rst_n), .d(s3_tag[TW-6 -: 4]), .q(t_split));
+    ot_hdc_delay #(.W(4), .D(SD + TL * LV0 + XDD)) u_ts (.clk(clk), .rst_n(rst_n), .d(s3_tag[TW-6 -: 4]), .q(t_split));
 
     // -- lanes -------------------------------------------------------------------
     wire [GL*W*32-1:0] sum;
@@ -540,8 +551,13 @@ module ot_hdc_matvec_part #(
                 //: the adder's alignment logic (me_iter11: -98 ps on this path).
                 always @(posedge clk) acc_q <= fl_first[4] ? 32'd0 : fb_pre;
                 assign acc_in = acc_q;
-                ot_hdc_fadd u_add (clk, rst_n, vline[5], acc_in, prod,
-                                   sum[32*LI +: 32], f1);
+                if (ACC_LAT == 5) begin : g_fadd
+                    ot_hdc_fadd u_add (clk, rst_n, vline[5], acc_in, prod,
+                                       sum[32*LI +: 32], f1);
+                end else begin : g_ladd
+                    ot_hdc_ladd #(.LAT(ACC_LAT)) u_add (clk, rst_n, vline[5], acc_in, prod,
+                                                       sum[32*LI +: 32], f1);
+                end
                 ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*LI +: 32]), .q(fb_pre));
                 assign lfault[LI] = f0 | f1;
             end
@@ -600,7 +616,7 @@ module ot_hdc_matvec_part #(
             for (p = 0; p < PAIRS; p = p + 1) begin : g_add
                 localparam integer PW = p / W, PL = p % W;
                 wire [31:0] s_out;
-                ot_hdc_qadd u_add (clk, rst_n, vline[10 + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
+                ot_hdc_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_n, vline[SD + TL*(lv-1) + XDD] && (split_at[4*lv-1 -: 4] >= lv),
                                    lvl[lv-1][32*((2*PW)*W + PL) +: 32], lvl[lv-1][32*((2*PW+1)*W + PL) +: 32],
                                    s_out, pf[p]);
                 if (ALWAYS) begin : g_a
@@ -624,9 +640,9 @@ module ot_hdc_matvec_part #(
     endgenerate
     // PART 1: the tile's top level and its valid, towards the tree above
     assign t_out = lvl[LG][W*32-1:0];
-    assign t_vout = vline[10 + OD];
+    assign t_vout = vline[SD + OD];
     wire [GI*W*32-1:0] raw_res = lvl[LG];
-    wire raw_v = vline[10 + OD + XDD];
+    wire raw_v = vline[SD + OD + XDD];
     wire raw_last, raw_oen, raw_amax, raw_wsrc, raw_mmode;
     wire [3:0] raw_split;
     wire [AW-1:0] raw_oa, raw_ots, raw_mbase, raw_sbase;
@@ -644,7 +660,7 @@ module ot_hdc_matvec_part #(
     generate if (INT8_WEIGHT != 0 && PORTS) begin : g_post_scale
         wire [TW-1:0] tag_d5, pre_tag;
         wire [5:0] vd;
-        wire [8+OD+XDD:0] pre_vline;
+        wire [SD-2+OD+XDD:0] pre_vline;
         wire pre_last, pre_oen, pre_amax, pre_wsrc, pre_mmode;
         wire [3:0] pre_split;
         wire [AW-1:0] pre_oa, pre_ots, pre_mbase, pre_sbase;
@@ -654,15 +670,15 @@ module ot_hdc_matvec_part #(
         wire [GR*W*32-1:0] scaled;
         ot_hdc_delay #(.W(TW), .D(5)) u_tag (.clk(clk), .rst_n(rst_n), .d(a_tag), .q(tag_d5));
         ot_hdc_vline #(.D(5)) u_v (.clk(clk), .rst_n(rst_n), .v(raw_v), .vd(vd));
-        ot_hdc_delay #(.W(TW), .D(8+OD+XDD)) u_pretag (.clk(clk), .rst_n(rst_n),
+        ot_hdc_delay #(.W(TW), .D(SD-2+OD+XDD)) u_pretag (.clk(clk), .rst_n(rst_n),
             .d(s3_tag), .q(pre_tag));
         wire [NW-1:0] pre_t;
         if (SCALE_LOCAL != 0) begin : g_pret
-            ot_hdc_delay #(.W(NW), .D(8+OD+XDD)) u_pret (.clk(clk), .rst_n(rst_n), .d(s3_t), .q(pre_t));
+            ot_hdc_delay #(.W(NW), .D(SD-2+OD+XDD)) u_pret (.clk(clk), .rst_n(rst_n), .d(s3_t), .q(pre_t));
         end else begin : g_nopret
             assign pre_t = {NW{1'b0}};
         end
-        ot_hdc_vline #(.D(8+OD+XDD)) u_prev (.clk(clk), .rst_n(rst_n),
+        ot_hdc_vline #(.D(SD-2+OD+XDD)) u_prev (.clk(clk), .rst_n(rst_n),
             .v(s3_v), .vd(pre_vline));
         assign {pre_last, pre_oen, pre_amax, pre_wsrc, pre_mmode, pre_split,
                 pre_oa, pre_ots, pre_nb, pre_lb, pre_nout,
@@ -672,7 +688,7 @@ module ot_hdc_matvec_part #(
         for (pg = 0; pg < NPG; pg = pg + 1) begin : g_scale_request_mask
             // A group with no output rows cannot need a scale word. This also
             // drops the incomplete G % S tail in a K-split operation.
-            assign pre_scale_active[pg] = pre_vline[8+OD+XDD] && pre_last && !pre_wsrc &&
+            assign pre_scale_active[pg] = pre_vline[SD-2+OD+XDD] && pre_last && !pre_wsrc &&
                 ((gb + pg) < (GT >> pre_split)) &&
                 (pre_mmode ? (pre_lb + (gb + pg)*W < pre_nout) :
                              (pre_nb + (gb + pg)*(W*IL) < pre_nout));
@@ -954,4 +970,40 @@ module ot_hdc_matvec_part #(
         if (!rst_n) idle <= 1'b1;
         else idle <= idle_c && !(go && ready);
     end
+endmodule
+
+
+// ot_hdc_ladd #(LAT): ot_hdc_fp32_add_lat (bit-identical to ot_hdc_qadd / ot_hdc_fadd) with the qadd port
+// shape: fault = a valid result's err.
+module ot_hdc_ladd #(parameter integer LAT = 7) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire        fault
+);
+    wire [1:0] err;
+    wire vo;
+    ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err),
+                                        .valid_out(vo));
+    assign fault = vo && (err != 2'd0);
+endmodule
+
+// The split-tree pair adder: ot_hdc_qadd at LAT 3 (the legacy netlist), else ot_hdc_ladd #(LAT).
+module ot_hdc_tadd #(parameter integer LAT = 3) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire        fault
+);
+    generate if (LAT == 3) begin : g_q
+        ot_hdc_qadd u (clk, rst_n, v, a, b, y, fault);
+    end else begin : g_l
+        ot_hdc_ladd #(.LAT(LAT)) u (clk, rst_n, v, a, b, y, fault);
+    end endgenerate
 endmodule
