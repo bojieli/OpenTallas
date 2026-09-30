@@ -38,7 +38,7 @@ V = "rtl/hdc/v41x/"
 SOURCES = [V + f for f in (
     "ot_hdc_v41x_idx_hbm.sv", "ot_hdc_v41x_idx_kstream.sv", "ot_hdc_v41x_idx_kstream_ring.sv",
     "ot_hdc_v41x_idx_quarter_join.sv", "ot_hdc_v41x_idx_ring_ranges.sv",
-    "ot_hdc_v41x_idx_ring_kwr.sv")] + ["rtl/test/tb_w11_idx_ring_gate.sv"]
+    "ot_hdc_v41x_idx_ring_kwr.sv", "ot_hdc_v41x_idx_kdata_m.sv")] + ["rtl/test/tb_w11_idx_ring_gate.sv", "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"]
 CPP = "rtl/test/w11_idx_ring_gate.cpp"
 TOP = "tb_w11_idx_ring_gate"
 
