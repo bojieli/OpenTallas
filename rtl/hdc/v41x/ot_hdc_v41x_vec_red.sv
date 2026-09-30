@@ -28,18 +28,22 @@
 //
 // Pipeline, from the retiring vector (every stage one vector a cycle):
 //   IN     1  the out values and the lanes' liveness
-//   SQ     3  out*out (red_sq), else a delay
+//   SQ     3  out*out (red_sq), else a delay (MLAT: 3, or 4 with the LAT-4 multiplier, W11 serial domain)
 //   CHAIN 21  per chunk, 7 chained ops, lane 8c+j delayed 3(j-1)
 //   TREE   3  per level, log2(N/8) levels; packed results are tapped at level lt
 //   TIME   3  per level, L = ceil(log2 nv) levels, for spanning segments only
 //   OUT    1  result register: NR = N/8 result slots, slot k at rbase + (k << rsh)
-// A packed result leaves at 26 + 3 lt after the retire; a spanning segment's
-// result leaves 26 + 3 lt + 3 L after its last vector retires.  Different taps
+// A packed result leaves at 26 + 3 lt after the retire; a spanning segment's result leaves 26 + 3 lt + 3 L
+// after its last vector retires.  With MLAT / ALAT (W11 serial domain: the square MLAT deep, every add step
+// ALAT deep): 2 + MLAT + 7 ALAT + ALAT lt (+ ALAT L).  Different taps
 // and different L merge at the result port.  The controller orders results
 // across ops there (checkpoint R), and orders every reducing op at the tap,
 // the TIME input of spanning ops (checkpoint T).
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_vred_op (
+module ot_hdc_v41x_vred_op #(
+    parameter integer K = 0,            // 1: keep-prefix add and compare (W11 serial-domain build)
+    parameter integer LAT = 3           // add latency (ot_hdc_qadd_lat: 3, or 4 input cut)
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -55,14 +59,18 @@ module ot_hdc_v41x_vred_op (
     endfunction
     wire [31:0] ys, ym;
     wire mxd;
-    ot_hdc_qadd u_add (clk, rst_n, v && !mx, a, b, ys, fault);
-    ot_hdc_delay #(.W(33), .D(3)) u_m (.clk(clk), .rst_n(rst_n), .d({mx, (okey(a) >= okey(b)) ? a : b}),
+    wire ab_ge;
+    ot_hdc_qadd_lat #(.KEEP(K), .LAT(LAT)) u_add (clk, rst_n, v && !mx, a, b, ys, fault);
+    ot_hdc_kge #(.W(32), .K(K)) u_ge (.a(okey(a)), .b(okey(b)), .ge(ab_ge));
+    ot_hdc_delay #(.W(33), .D(LAT)) u_m (.clk(clk), .rst_n(rst_n), .d({mx, ab_ge ? a : b}),
                                       .q({mxd, ym}));
     assign y = mxd ? ym : ys;
 endmodule
 
 // x * x (a lane of the reducer's square stage; its own module so a simulator shares its code)
-module ot_hdc_v41x_vsq (
+module ot_hdc_v41x_vsq #(
+    parameter integer MLAT = 3
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -71,14 +79,16 @@ module ot_hdc_v41x_vsq (
     output wire        fault
 );
     /* verilator no_inline_module */
-    ot_hdc_qmul u (clk, rst_n, v, x, x, y, fault);
+    ot_hdc_qmul_lat #(MLAT) u (clk, rst_n, v, x, x, y, fault);
 endmodule
 
 module ot_hdc_v41x_vec_red #(
     parameter integer N  = 64,          // lanes, a power of two >= 8
     parameter integer LV = 6,           // time levels: spanning segments of up to 2^LV vectors (1..7)
     parameter integer AW = 24,
-    parameter integer MW = 64           // meta carried with an item (opaque here, returned with its result)
+    parameter integer MW = 64,          // meta carried with an item (opaque here, returned with its result)
+    parameter integer MLAT = 3,         // the square's multiplier latency (ot_hdc_qmul_lat): 3, 4 or 5
+    parameter integer ALAT = 3          // the add latency (ot_hdc_qadd_lat): 3, or 4; every CHAIN / TREE / TIME step
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -113,6 +123,8 @@ module ot_hdc_v41x_vec_red #(
     end endgenerate
     localparam integer NC = N / 8;
     localparam integer LC = $clog2(NC);          // tree levels
+    localparam integer K = (MLAT != 3 || ALAT != 3) ? 1 : 0;  // the serial-domain build: keep-prefix arithmetic
+    localparam integer DCH = 7 * ALAT;           // CHAIN: 7 chained ops
     localparam integer TAG = 1 + 4 + 1 + 3 + 1 + 8 + 1 + AW + 5 + MW;
     function automatic [31:0] bf16(input [31:0] x);
         bf16 = (x + 32'h7FFF + {31'd0, x[16]}) & 32'hFFFF0000;
@@ -136,45 +148,45 @@ module ot_hdc_v41x_vec_red #(
     wire [N-1:0]    fsq;
     genvar l;
     generate for (l = 0; l < N; l = l + 1) begin : g_sq
-        ot_hdc_v41x_vsq u_sq (.clk(clk), .rst_n(rst_n), .v(i_v && i_sq && i_live[l]), .x(i_x[32*l +: 32]),
+        ot_hdc_v41x_vsq #(.MLAT(MLAT)) u_sq (.clk(clk), .rst_n(rst_n), .v(i_v && i_sq && i_live[l]), .x(i_x[32*l +: 32]),
                               .y(xsq[32*l +: 32]), .fault(fsq[l]));
     end endgenerate
     wire [N-1:0]   q_live;
     wire [TAG-1:0] q_t;
     wire           q_sq;
-    ot_hdc_delay #(.W(N*32 + N + TAG + 1), .D(3)) u_sqd (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(N*32 + N + TAG + 1), .D(MLAT)) u_sqd (.clk(clk), .rst_n(rst_n),
         .d({i_x, i_live, i_t, i_sq}), .q({xd, q_live, q_t, q_sq}));
-    wire [3:0] vq;
-    ot_hdc_vline #(.D(3)) u_vq (.clk(clk), .rst_n(rst_n), .v(i_v), .vd(vq));
+    wire [MLAT:0] vq;
+    ot_hdc_vline #(.D(MLAT)) u_vq (.clk(clk), .rst_n(rst_n), .v(i_v), .vd(vq));
     wire q_mx = q_t[TAG-1];
     wire [N*32-1:0] c_x;
     generate for (l = 0; l < N; l = l + 1) begin : g_pad
         assign c_x[32*l +: 32] = !q_live[l] ? (q_mx ? 32'hFF800000 : 32'd0) :
                                  q_sq ? xsq[32*l +: 32] : xd[32*l +: 32];
     end endgenerate
-    wire c_v = vq[3];
+    wire c_v = vq[MLAT];
 
     // -- CHAIN: chunk c = lanes 8c .. 8c+7, sequential ------------------------------------------
     wire [NC*32-1:0] chunk;
     wire [NC*7-1:0]  fch;
-    wire [21:0]      vch, mxl;
-    ot_hdc_vline #(.D(21)) u_vch (.clk(clk), .rst_n(rst_n), .v(c_v), .vd(vch));
-    ot_hdc_vline #(.D(21)) u_mxl (.clk(clk), .rst_n(rst_n), .v(c_v && q_mx), .vd(mxl));
+    wire [DCH:0]     vch, mxl;
+    ot_hdc_vline #(.D(DCH)) u_vch (.clk(clk), .rst_n(rst_n), .v(c_v), .vd(vch));
+    ot_hdc_vline #(.D(DCH)) u_mxl (.clk(clk), .rst_n(rst_n), .v(c_v && q_mx), .vd(mxl));
     genvar c, j;
     generate for (c = 0; c < NC; c = c + 1) begin : g_chunk
         wire [32*8-1:0] acc;
         assign acc[31:0] = c_x[32*(8*c) +: 32];
         for (j = 1; j < 8; j = j + 1) begin : g_step
             wire [31:0] xj;
-            ot_hdc_delay #(.W(32), .D(3 * (j - 1))) u_xd (.clk(clk), .rst_n(rst_n),
+            ot_hdc_delay #(.W(32), .D(ALAT * (j - 1))) u_xd (.clk(clk), .rst_n(rst_n),
                 .d(c_x[32*(8*c + j) +: 32]), .q(xj));
-            ot_hdc_v41x_vred_op u_op (.clk(clk), .rst_n(rst_n), .v(vch[3 * (j - 1)]), .mx(mxl[3 * (j - 1)]),
+            ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT)) u_op (.clk(clk), .rst_n(rst_n), .v(vch[ALAT * (j - 1)]), .mx(mxl[ALAT * (j - 1)]),
                 .a(acc[32*(j-1) +: 32]), .b(xj), .y(acc[32*j +: 32]), .fault(fch[7*c + j - 1]));
         end
         assign chunk[32*c +: 32] = acc[32*7 +: 32];
     end endgenerate
     wire [TAG-1:0] ct;
-    ot_hdc_delay #(.W(TAG), .D(21)) u_ct (.clk(clk), .rst_n(rst_n), .d(q_t), .q(ct));
+    ot_hdc_delay #(.W(TAG), .D(DCH)) u_ct (.clk(clk), .rst_n(rst_n), .d(q_t), .q(ct));
 
     // -- TREE ---------------------------------------------------------------------------------------
     wire [NC*32-1:0] lvl [0:LC];
@@ -183,28 +195,28 @@ module ot_hdc_v41x_vec_red #(
     wire [LC:0]      tf;
     wire [LC:0]      tb;
     assign lvl[0] = chunk;
-    assign tv[0] = vch[21];
+    assign tv[0] = vch[DCH];
     assign tt[0] = ct;
     assign tf[0] = 1'b0;
     assign tb[0] = 1'b0;
     genvar lv, p;
     generate for (lv = 1; lv <= LC; lv = lv + 1) begin : g_tree
         wire [(NC >> lv)-1:0] pf;
-        wire [3:0] vd;
-        ot_hdc_vline #(.D(3)) u_vd (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .vd(vd));
+        wire [ALAT:0] vd;
+        ot_hdc_vline #(.D(ALAT)) u_vd (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .vd(vd));
         wire [TAG-1:0] td;
-        ot_hdc_delay #(.W(TAG), .D(3)) u_td (.clk(clk), .rst_n(rst_n), .d(tt[lv-1]), .q(td));
+        ot_hdc_delay #(.W(TAG), .D(ALAT)) u_td (.clk(clk), .rst_n(rst_n), .d(tt[lv-1]), .q(td));
         wire [NC*32-1:0] q;
         for (p = 0; p < (NC >> lv); p = p + 1) begin : g_pair
-            ot_hdc_v41x_vred_op u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tt[lv-1][TAG-1]),
+            ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT)) u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tt[lv-1][TAG-1]),
                 .a(lvl[lv-1][32*(2*p) +: 32]), .b(lvl[lv-1][32*(2*p+1) +: 32]), .y(q[32*p +: 32]), .fault(pf[p]));
         end
         assign q[NC*32-1 : (NC >> lv)*32] = 0;
         assign lvl[lv] = q;
-        assign tv[lv] = vd[3];
+        assign tv[lv] = vd[ALAT];
         assign tt[lv] = td;
         assign tf[lv] = |pf;
-        assign tb[lv] = |vd[2:0];
+        assign tb[lv] = |vd[ALAT-1:0];
     end endgenerate
 
     // -- taps: the item at level j with lt == j --------------------------------------------------------
@@ -252,18 +264,18 @@ module ot_hdc_v41x_vec_red #(
         always @(posedge clk) if (in_v && !held_v && !pass) held <= in_x;
         wire [31:0] s, pd;
         wire f;
-        ot_hdc_v41x_vred_op u_op (.clk(clk), .rst_n(rst_n), .v(pair), .mx(in_t[TAG-1]), .a(held), .b(in_x),
+        ot_hdc_v41x_vred_op #(.K(K), .LAT(ALAT)) u_op (.clk(clk), .rst_n(rst_n), .v(pair), .mx(in_t[TAG-1]), .a(held), .b(in_x),
                                   .y(s), .fault(f));
         wire [TAG+1-1:0] od;
-        ot_hdc_delay #(.W(TAG + 1 + 32), .D(3)) u_od (.clk(clk), .rst_n(rst_n), .d({in_t, pair, in_x}), .q({od, pd}));
-        wire [3:0] vd;
-        ot_hdc_vline #(.D(3)) u_vd (.clk(clk), .rst_n(rst_n), .v(pair || pass), .vd(vd));
+        ot_hdc_delay #(.W(TAG + 1 + 32), .D(ALAT)) u_od (.clk(clk), .rst_n(rst_n), .d({in_t, pair, in_x}), .q({od, pd}));
+        wire [ALAT:0] vd;
+        ot_hdc_vline #(.D(ALAT)) u_vd (.clk(clk), .rst_n(rst_n), .v(pair || pass), .vd(vd));
         assign sv[t] = od[0] ? s : pd;
-        assign sval[t] = vd[3];
+        assign sval[t] = vd[ALAT];
         assign st[t] = od[TAG:1];
-        assign sx[t] = vd[3] && od[TAG:1][TAG-10] && (od[TAG:1][TAG-7 -: 3] == t);
+        assign sx[t] = vd[ALAT] && od[TAG:1][TAG-10] && (od[TAG:1][TAG-7 -: 3] == t);
         assign sf[t] = f;
-        assign sb[t] = held_v || (|vd[2:0]);
+        assign sb[t] = held_v || (|vd[ALAT-1:0]);
     end endgenerate
     // an item that leaves the top without being a result: its segment was longer than 2^LV vectors
     wire top_bad = sval[LV] && !sx[LV];
@@ -279,6 +291,22 @@ module ot_hdc_v41x_vec_red #(
     wire res_multi = (pk_v && tr_v) || ($countones(sx) > 1);
 
     // -- OUT --------------------------------------------------------------------------------------------
+    // slot k's address rbase + (k << rsh) and the BF16 roundings (bf16(x) = (x[31:16] + inc) << 16, inc =
+    // x[15] & (x[16] | x[14:0] != 0)), on keep-prefix adders in the serial-domain build
+    wire [NC*AW-1:0] pk_addr;
+    wire [NC*32-1:0] pk_bf;
+    wire [15:0]      tr_hi;
+    genvar ko;
+    generate for (ko = 0; ko < NC; ko = ko + 1) begin : g_out
+        wire unused_c;
+        wire [31:0] xk = tap_x[32*ko +: 32];
+        wire [15:0] hi;
+        ot_hdc_kadd #(.W(AW), .K(K)) u_ad (.a(tap_t[TAG-20 -: AW]), .b(ko << tap_t[TAG-20-AW -: 5]), .cin(1'b0),
+                                           .s(pk_addr[ko*AW +: AW]), .cout(unused_c));
+        ot_hdc_kinc #(.W(16), .K(K)) u_bf (.a(xk[31:16]), .inc(xk[15] & (xk[16] | (|xk[14:0]))), .y(hi));
+        assign pk_bf[32*ko +: 32] = {hi, 16'd0};
+    end endgenerate
+    ot_hdc_kinc #(.W(16), .K(K)) u_trbf (.a(tr_x[31:16]), .inc(tr_x[15] & (tr_x[16] | (|tr_x[14:0]))), .y(tr_hi));
     integer k;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin o_we <= 0; o_ev <= 1'b0; fault <= 1'b0; end
@@ -291,9 +319,9 @@ module ot_hdc_v41x_vec_red #(
     end
     always @(posedge clk) begin
         for (k = 0; k < NC; k = k + 1) begin
-            o_addr[k*AW +: AW] <= pk_v ? tap_t[TAG-20 -: AW] + (k << tap_t[TAG-20-AW -: 5]) : tr_t[TAG-20 -: AW];
-            o_data[32*k +: 32] <= pk_v ? (tap_t[TAG-19] ? bf16(tap_x[32*k +: 32]) : tap_x[32*k +: 32])
-                                       : (tr_t[TAG-19] ? bf16(tr_x) : tr_x);
+            o_addr[k*AW +: AW] <= pk_v ? pk_addr[k*AW +: AW] : tr_t[TAG-20 -: AW];
+            o_data[32*k +: 32] <= pk_v ? (tap_t[TAG-19] ? pk_bf[32*k +: 32] : tap_x[32*k +: 32])
+                                       : (tr_t[TAG-19] ? {tr_hi, 16'd0} : tr_x);
         end
         o_meta <= pk_v ? tap_t[MW-1:0] : tr_t[MW-1:0];
     end
