@@ -87,7 +87,10 @@ module ot_hdc_bmul (
         s1_a <= da[17:10]; s1_b <= db[17:10];
         s1_e <= $signed(da[9:0]) + $signed(db[9:0]);
     end
-    // stage 2: the 8x8 product
+    // stage 2: the 8x8 product, a carry-save tree and a kept prefix adder (a flattened `*` is re-mapped by
+    // ABC as a ripple carry chain: -496 ps at 0.833 ns SS); the product is unchanged
+    wire [15:0] p8x8;
+    ot_hdc_mul8x8_cs u_m (.a(s1_a), .b(s1_b), .p(p8x8));
     reg        s2_v, s2_s, s2_z, s2_nf;
     reg [15:0] s2_p;
     reg signed [10:0] s2_e;
@@ -97,7 +100,7 @@ module ot_hdc_bmul (
     end
     always @(posedge clk) begin
         s2_s <= s1_s; s2_z <= s1_z; s2_nf <= s1_nf; s2_e <= s1_e;
-        s2_p <= s1_a * s1_b;
+        s2_p <= p8x8;
     end
     // stage 3: normalise (leading bit 15 or 14) and bias
     reg        s3_v, s3_s, s3_z, s3_nf;
@@ -134,4 +137,59 @@ module ot_hdc_bmul (
         if (!rst_n) begin y <= 32'd0; fault <= 1'b0; end
         else begin y <= s4_y; fault <= s4_v && s4_bad; end
     end
+endmodule
+
+// 8 x 8 unsigned product: AND array, 3:2 carry-save levels (8 -> 6 -> 4 -> 3 -> 2 rows), kept Kogge-Stone final add
+module ot_hdc_mul8x8_cs (
+    input  wire [7:0]  a,
+    input  wire [7:0]  b,
+    output wire [15:0] p
+);
+    function automatic [31:0] csa;        // {carry, sum} of three 16-bit rows
+        input [15:0] r0, r1, r2;
+        begin
+            csa[15:0] = r0 ^ r1 ^ r2;
+            csa[31:16] = ((r0 & r1) | (r0 & r2) | (r1 & r2)) << 1;
+        end
+    endfunction
+    wire [16*8-1:0] l0;
+    genvar i;
+    generate for (i = 0; i < 8; i = i + 1) begin : g_pp
+        assign l0[16*i +: 16] = {8'd0, a & {8{b[i]}}} << i;
+    end endgenerate
+    (* keep *) wire [16*6-1:0] l1;
+    (* keep *) wire [16*4-1:0] l2;
+    (* keep *) wire [16*3-1:0] l3;
+    (* keep *) wire [16*2-1:0] l4;
+    assign l1[0 +: 32]  = csa(l0[0 +: 16], l0[16 +: 16], l0[32 +: 16]);
+    assign l1[32 +: 32] = csa(l0[48 +: 16], l0[64 +: 16], l0[80 +: 16]);
+    assign l1[64 +: 32] = l0[96 +: 32];
+    assign l2[0 +: 32]  = csa(l1[0 +: 16], l1[16 +: 16], l1[32 +: 16]);
+    assign l2[32 +: 32] = csa(l1[48 +: 16], l1[64 +: 16], l1[80 +: 16]);
+    assign l3[0 +: 32]  = csa(l2[0 +: 16], l2[16 +: 16], l2[32 +: 16]);
+    assign l3[32 +: 16] = l2[48 +: 16];
+    assign l4 = csa(l3[0 +: 16], l3[16 +: 16], l3[32 +: 16]);
+    // kept prefix levels (as ot_hdc_ksa, local so this file stands alone)
+    localparam integer L = 4;
+    generate
+        for (i = 0; i <= L; i = i + 1) begin : g_lv
+            (* keep *) wire [15:0] g, q;
+            if (i == 0) begin : g0
+                assign g = l4[0 +: 16] & l4[16 +: 16];
+                assign q = l4[0 +: 16] ^ l4[16 +: 16];
+            end else begin : gi
+                genvar j;
+                for (j = 0; j < 16; j = j + 1) begin : g_b
+                    if (j >= (1 << (i - 1))) begin : g_op
+                        assign g[j] = g_lv[i-1].g[j] | (g_lv[i-1].q[j] & g_lv[i-1].g[j - (1 << (i - 1))]);
+                        assign q[j] = g_lv[i-1].q[j] & g_lv[i-1].q[j - (1 << (i - 1))];
+                    end else begin : g_pass
+                        assign g[j] = g_lv[i-1].g[j];
+                        assign q[j] = g_lv[i-1].q[j];
+                    end
+                end
+            end
+        end
+    endgenerate
+    assign p = (l4[0 +: 16] ^ l4[16 +: 16]) ^ {g_lv[L].g[14:0], 1'b0};
 endmodule

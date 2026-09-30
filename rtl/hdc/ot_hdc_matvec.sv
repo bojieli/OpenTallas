@@ -598,7 +598,21 @@ end endgenerate
         e_rmax <= rmax_r; e_j <= j; e_mbase <= mbase_r;
         e_opend <= t_last && k_last && j_last;           // the op's last element
     end
-    generate if (LANES) begin : g_gm
+    generate if (LANES && FAST_ISSUE != 0 && KV_PREP >= 2) begin : g_gm_fast
+        //: k*S + c < K  <=>  k < ceil((K - c) / S) (K > c): the per-group K-step limit is constant through the op, a
+        //: two-stage pipeline from the latched fields, ready by the KV op's first element (KV_PREP >= 2)
+        reg [NW:0] kdif [0:G-1];
+        reg [NW:0] klim [0:G-1];
+        genvar gk;
+        for (gk = 0; gk < G; gk = gk + 1) begin : g_kl
+            wire [31:0] c32 = (gb + gk) & ((1 << split_r) - 1);
+            always @(posedge clk) begin
+                kdif[gk] <= ({{(32-NW){1'b0}}, ktot_r} > c32) ? (ktot_r - c32[NW:0] + ((1 << split_r) - 1)) : {(NW+1){1'b0}};
+                klim[gk] <= kdif[gk] >> split_r;
+                e_gm[gk] <= (((gb + gk) >> split_r) < (GT >> split_r)) && (!wsrc_r || ({1'b0, k} < klim[gk]));
+            end
+        end
+    end else if (LANES) begin : g_gm
         always @(posedge clk)
             for (gi = 0; gi < G; gi = gi + 1)
                 e_gm[gi] <= (((gb + gi) >> split_r) < (GT >> split_r)) &&
