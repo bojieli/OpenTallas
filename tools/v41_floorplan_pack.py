@@ -92,6 +92,10 @@ ROM_V_PITCH = 56 * Y_STEP     # 120.96 um, macro 119.34 tall: 1.62 um vertical h
 PAIR_GAP = 20 * X_STEP        # 8.64 um address-side gap between column pairs
 PIN_HALO = 5 * X_STEP         # 2.16 um (>= ORFS MACRO_ROWS_HALO_X 2 um) std-cell keepout on each MAC-strip side
 SPINE_EVERY = 16              # macro rows between horizontal spine corridors
+# W10 re-fit (tools/v41_floorplan_refit.py): the MAC strip of a pair column sized from a PLACED element pair
+# instead of the analytical reservation, with BF16-capable pair columns of their own width.
+#   REFIT = dict(strip_q_um=..., strip_bf_um=..., bf_pairs=..., basis=...)
+REFIT = None
 SPINE_H = 15 * Y_STEP         # 32.4 um
 VCORR_W = 100 * X_STEP        # 43.2 um vertical HBM corridor
 SERVICE_H = 100 * Y_STEP      # 216 um HBM service band
@@ -302,6 +306,13 @@ def build(variant: str) -> dict:
         "SU_VECTOR": prof["soft"]["SU_VECTOR"]["mm2"],
         "HC": prof["soft"]["HC"]["mm2"],
     }
+    if REFIT and REFIT.get("hub_mm2"):
+        need_mm2.update(REFIT["hub_mm2"])          # hub parts sized from the model / hardened units
+    if REFIT:
+        for k, f in REFIT.get("hub_scale", {}).items():    # power-switch area on gated partitions
+            need_mm2[k] *= f
+        for k, v in REFIT.get("hub_add_mm2", {}).items():  # always-on island in the VM column
+            need_mm2[k] += v
     hub_area = sum(need_mm2.values()) * 1e6 * HUB_SLACK
     core_w, core_h = core_x1 - core_x0, core_y1 - core_y0
     # Equal ROM/MAC ring depth d on all sides: (W - 2d)(H - 2d) = hub_area.
@@ -373,8 +384,15 @@ def build(variant: str) -> dict:
     pair_rows = math.ceil(total_need / 2) + math.ceil(nar_need / 2)
     strip_area = prof["soft"]["ROM_MAC_strip"]["mm2"] * 1e6
     strip_w = snap_up(strip_area / (pair_rows * hmac) + 2 * PIN_HALO, X_STEP)
+    if REFIT:
+        strip_w = snap_up(REFIT["strip_q_um"] + 2 * PIN_HALO, X_STEP)
+        strip_bf = snap_up(REFIT["strip_bf_um"] + 2 * PIN_HALO, X_STEP)
+    else:
+        strip_bf = strip_w
     pair_w = 2 * wmac + strip_w
     pair_pitch = snap_up(pair_w + PAIR_GAP, X_STEP)
+    pair_w_bf = 2 * wmac + strip_bf
+    pair_pitch_bf = snap_up(pair_w_bf + PAIR_GAP, X_STEP)
     hub_box = (hub_x - HUB_HALO, hub_y - HUB_HALO, hub_w + 2 * HUB_HALO, hub_h + 2 * HUB_HALO)
     blockers = [hub_box] + [(c["x"], c["y"], c["w"], c["h"]) for c in vcorr]
 
@@ -384,10 +402,52 @@ def build(variant: str) -> dict:
                 return False
         return True
 
-    slots = []   # (x_pair, y, row_index_in_band) per pair row
+    slots = []   # (x_pair, y, strip width) per pair row
     spines = []
-    ncols = int((core_x1 - core_x0 + PAIR_GAP) // pair_pitch)
-    x_start = snap_dn(core_x0 + ((core_x1 - core_x0 + PAIR_GAP) - ncols * pair_pitch) / 2, X_STEP)
+    span = core_x1 - core_x0 + PAIR_GAP
+    ncols = int(span // pair_pitch)
+    col_type = ["q"] * ncols
+    if REFIT and REFIT.get("bf_pairs"):
+        # BF16 columns nearest the hub's x centre; add them (each replaces enough q width) until their free
+        # pair rows cover the BF16 pairs
+        hub_cx = hub_x + hub_w / 2
+        nbf = 0
+        while True:
+            nbf += 1
+            nq = int((span - nbf * pair_pitch_bf) // pair_pitch)
+            ncols = nq + nbf
+            widths = None
+            # centre-out order of column indices
+            order_c = sorted(range(ncols), key=lambda c: abs(c - (ncols - 1) / 2))
+            col_type = ["q"] * ncols
+            for c in order_c[:nbf]:
+                col_type[c] = "bf"
+            xs, x = [], 0.0
+            for t in col_type:
+                xs.append(x)
+                x += pair_pitch_bf if t == "bf" else pair_pitch
+            x0 = snap_dn(core_x0 + (span - x) / 2, X_STEP)
+            band_h0 = SPINE_EVERY * ROM_V_PITCH
+            ys0, y0_, r0 = [], core_y0, 0
+            while y0_ + ROM_V_PITCH <= core_y1 + 1e-6:
+                ys0.append(y0_)
+                r0 += 1
+                y0_ += ROM_V_PITCH
+                if r0 % SPINE_EVERY == 0:
+                    y0_ += SPINE_H
+            bf_rows = 0
+            for c, t in enumerate(col_type):
+                if t != "bf":
+                    continue
+                xp_ = snap_dn(x0 + xs[c], X_STEP)
+                bf_rows += sum(1 for yy in ys0 if all(not (xp_ < bx + bw and bx < xp_ + pair_w_bf and yy < by + bh
+                                                           and by < yy + hmac) for bx, by, bw, bh in blockers))
+            if bf_rows >= REFIT["bf_pairs"] or nq <= 0:
+                break
+        col_x = [snap_dn(x0 + xx, X_STEP) for xx in xs]
+    else:
+        x_start = snap_dn(core_x0 + (span - ncols * pair_pitch) / 2, X_STEP)
+        col_x = [x_start + c * pair_pitch for c in range(ncols)]
     # Horizontal rows: bands of SPINE_EVERY macro rows separated by a spine corridor.
     band_h = SPINE_EVERY * ROM_V_PITCH
     ys = []
@@ -401,15 +461,16 @@ def build(variant: str) -> dict:
             spines.append(y)
             y += SPINE_H
     for c in range(ncols):
-        xp = x_start + c * pair_pitch
+        xp = col_x[c]
+        sw = strip_bf if col_type[c] == "bf" else strip_w
         for y in ys:
-            if free(xp, y, pair_w, hmac):
-                slots.append((xp, y))
+            if free(xp, y, 2 * wmac + sw, hmac):
+                slots.append((xp, y, sw))
     # Order slots by Manhattan distance of their MAC strip center to the VM center
     # (activation source / reduction sink).
     vm_part = next(p for p in parts if p[0] == "VM")
     hcx, hcy = vm_part[1] + vm_part[3] / 2, vm_part[2] + vm_part[4] / 2
-    slots.sort(key=lambda s: (abs(s[0] + pair_w / 2 - hcx) + abs(s[1] + hmac / 2 - hcy), s[0], s[1]))
+    slots.sort(key=lambda s: (abs(s[0] + (2 * wmac + s[2]) / 2 - hcx) + abs(s[1] + hmac / 2 - hcy), s[0], s[1]))
     capacity_wide = 2 * len(slots)
     # Narrow (compact wo_a) macros use their own pair rows (2 per row, same strip).
     order = ["ROM_MAC.ME", "ROM_MAC.dense_QE", "VM.CONSTANT_HE", "ENGRAM.spill", "ROM_MAC.expert"]
@@ -425,7 +486,7 @@ def build(variant: str) -> dict:
                 if si >= len(slots):
                     overflow.setdefault(g, {})[view] = n - k
                     break
-                xp, y = slots[si]
+                xp, y, strip_w_s = slots[si]
                 si += 1
                 w_view = wnar if view == NARROW else wmac
                 h_view = hnar if view == NARROW else hmac
@@ -433,11 +494,11 @@ def build(variant: str) -> dict:
                 P.add_hard(f"rom_{len(P.hard)}", view, xp + (wmac - w_view), y, w_view, h_view, "R0", g)
                 k += 1
                 if k < n:
-                    P.add_hard(f"rom_{len(P.hard)}", view, xp + wmac + strip_w, y, w_view, h_view, "MY", g)
+                    P.add_hard(f"rom_{len(P.hard)}", view, xp + wmac + strip_w_s, y, w_view, h_view, "MY", g)
                     k += 1
                 placed_by_group.setdefault(g, {})[view] = placed_by_group.get(g, {}).get(view, 0) + min(2, n - k + 2)
                 P.soft.append(dict(name=f"MAC_{g}_{si}", x=round(xp + wmac + PIN_HALO, 3), y=round(y, 3),
-                                   w=round(strip_w - 2 * PIN_HALO, 3), h=round(hmac, 3), kind="ROM_MAC_strip",
+                                   w=round(strip_w_s - 2 * PIN_HALO, 3), h=round(hmac, 3), kind="ROM_MAC_strip",
                                    area_req_um2=None, merge=True))
     used_rows = si
     # Merge per-row MAC strips into column runs for compactness of the record.
@@ -453,10 +514,17 @@ def build(variant: str) -> dict:
     geometry = dict(die_w_um=round(DIE_W, 3), die_h_um=round(DIE_H, 3), die_mm2=round(DIE_W * DIE_H / 1e6, 4),
                     core=[core_x0, core_y0, round(core_x1, 3), round(core_y1, 3)],
                     hub=[round(v, 3) for v in hub], strip_w_um=strip_w, pair_pitch_um=pair_pitch,
+                    strip_bf_w_um=strip_bf, pair_pitch_bf_um=pair_pitch_bf,
+                    bf_columns=sum(t == "bf" for t in col_type), refit=REFIT,
                     rom_v_pitch_um=ROM_V_PITCH, pair_columns=ncols, rom_rows=len(ys),
                     spine_every_rows=SPINE_EVERY, spine_h_um=SPINE_H, vcorr_w_um=VCORR_W,
                     service_h_um=SERVICE_H, hub_halo_um=HUB_HALO, pair_gap_um=PAIR_GAP, pin_halo_um=PIN_HALO)
-    capacity = dict(pair_row_slots=len(slots), wide_slot_capacity=capacity_wide, used_pair_rows=used_rows,
+    bf_slots = sum(1 for s_ in slots if s_[2] == strip_bf and REFIT)
+    bf_used = sum(1 for s_ in slots[:used_rows] if s_[2] == strip_bf and REFIT)
+    capacity = dict(pair_row_slots=len(slots), bf_pair_row_slots=bf_slots, bf_pair_rows_used=bf_used,
+                    bf_pairs_required=(REFIT or {}).get("bf_pairs", 0),
+                    bf_closes=bool(not REFIT or bf_used >= REFIT.get("bf_pairs", 0)),
+                    wide_slot_capacity=capacity_wide, used_pair_rows=used_rows,
                     spare_pair_rows=len(slots) - used_rows, required_by_group=need, overflow=overflow,
                     closes=not overflow)
     return dict(P=P, geometry=geometry, capacity=capacity, prof=prof, mm=mm, cat=cat,
@@ -678,6 +746,13 @@ def crossings(B: dict) -> dict:
                    key=lambda q: abs(q[0] - src[0]) + abs(q[1] - src[1]))
 
     vm_c = ctr(parts["VM"])
+    if REFIT and REFIT.get("xroot") in parts:
+        # distributed VM (W11): the ROM field's x-broadcast root / result-return sink sits at the middle of the
+        # named hub region's edge nearest the core centre (lane-group-local VM banks live inside it)
+        _, rx, ry, rw, rh, _ = parts[REFIT["xroot"]]
+        c0x, c0y, c1x, c1y = B["core"]
+        cxc = (c0x + c1x) / 2
+        vm_c = (rx + rw if rx + rw / 2 < cxc else rx, ry + rh / 2)
     att = parts["ATTENTION"]
     for m in P.hard:
         if m["group"] == "HBM_PHY":
@@ -695,6 +770,9 @@ def crossings(B: dict) -> dict:
         if f:
             add(f"VM (hub) -> farthest {grp} ROM/MAC strip", vm_c, f, bits, basis, led)
     coll = parts["COLLECTIVE"]
+    if REFIT and REFIT.get("xroot") in parts:
+        # the collective endpoint sits at the distributed VM's port (W15's measured die-centre placement)
+        coll = ("COLLECTIVE", vm_c[0], vm_c[1], 0.0, 0.0, 0.0)
     ucie = [m for m in P.hard if m["group"] == "UCIE"]
     ser = [m for m in P.hard if m["group"] == "SERDES"]
     cc = ctr(coll)

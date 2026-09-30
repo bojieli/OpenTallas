@@ -43,22 +43,22 @@
   },
   {
    "design": "V4.1 ROM AR",
-   "tokens_s_b1": 3808.8,
-   "energy_mJ_b1": 3429.023,
+   "tokens_s_b1": 3747.6,
+   "energy_mJ_b1": 19622.213,
    "sat_batch": 32,
    "sat_aggregate_tokens_s": 77021.9,
    "sat_per_user_tokens_s": 2406.9,
-   "energy_mJ_sat": 208.432,
+   "energy_mJ_sat": 1055.741,
    "capacity_users": 866
   },
   {
    "design": "V4.1 ROM MTP m = 1",
-   "tokens_s_b1": 5856.5,
-   "energy_mJ_b1": 2243.349,
+   "tokens_s_b1": 5811.4,
+   "energy_mJ_b1": 12733.914,
    "sat_batch": 16,
    "sat_aggregate_tokens_s": 50708.4,
    "sat_per_user_tokens_s": 3169.3,
-   "energy_mJ_sat": 294.357,
+   "energy_mJ_sat": 1590.875,
    "capacity_users": 866
   },
   {
@@ -506,53 +506,53 @@
    "src": "results/arch/v41_rack.json comparison[0] and logical.roles"
   },
   "ar": {
-   "tokens_s_b1": 3808.8,
+   "tokens_s_b1": 3747.6,
    "saturated_tokens_s": 77021.9,
    "rows": [
     {
      "batch": 1,
-     "per_user_tokens_s": 3808.8,
-     "aggregate_tokens_s": 3808.8,
-     "per_user_ms_per_token": 0.2625,
+     "per_user_tokens_s": 3747.6,
+     "aggregate_tokens_s": 3747.6,
+     "per_user_ms_per_token": 0.2668,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 3429.023,
-     "system_w": 13061.0
+     "energy_mJ_per_token": 19622.213,
+     "system_w": 73536.0
     },
     {
      "batch": 2,
-     "per_user_tokens_s": 3808.8,
-     "aggregate_tokens_s": 7617.6,
-     "per_user_ms_per_token": 0.2625,
+     "per_user_tokens_s": 3747.6,
+     "aggregate_tokens_s": 7495.2,
+     "per_user_ms_per_token": 0.2668,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 1734.954,
-     "system_w": 13216.0
+     "energy_mJ_per_token": 9864.187,
+     "system_w": 73934.0
     },
     {
      "batch": 4,
-     "per_user_tokens_s": 3808.8,
-     "aggregate_tokens_s": 15235.3,
-     "per_user_ms_per_token": 0.2625,
+     "per_user_tokens_s": 3747.6,
+     "aggregate_tokens_s": 14990.4,
+     "per_user_ms_per_token": 0.2668,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 887.919,
-     "system_w": 13528.0
+     "energy_mJ_per_token": 4985.174,
+     "system_w": 74730.0
     },
     {
      "batch": 8,
-     "per_user_tokens_s": 3808.8,
-     "aggregate_tokens_s": 30470.5,
-     "per_user_ms_per_token": 0.2625,
+     "per_user_tokens_s": 3747.6,
+     "aggregate_tokens_s": 29980.8,
+     "per_user_ms_per_token": 0.2668,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 464.402,
-     "system_w": 14151.0
+     "energy_mJ_per_token": 2545.668,
+     "system_w": 76321.0
     },
     {
      "batch": 16,
-     "per_user_tokens_s": 3808.8,
-     "aggregate_tokens_s": 60941.1,
-     "per_user_ms_per_token": 0.2625,
+     "per_user_tokens_s": 3747.6,
+     "aggregate_tokens_s": 59961.6,
+     "per_user_ms_per_token": 0.2668,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 252.643,
-     "system_w": 15396.0
+     "energy_mJ_per_token": 1325.915,
+     "system_w": 79504.0
     },
     {
      "batch": 32,
@@ -560,8 +560,8 @@
      "aggregate_tokens_s": 77021.9,
      "per_user_ms_per_token": 0.4155,
      "binding": "busiest stage occupancy",
-     "energy_mJ_per_token": 208.432,
-     "system_w": 16054.0
+     "energy_mJ_per_token": 1055.741,
+     "system_w": 81315.0
     },
     {
      "batch": 64,
@@ -569,8 +569,8 @@
      "aggregate_tokens_s": 77021.9,
      "per_user_ms_per_token": 0.8309,
      "binding": "busiest stage occupancy",
-     "energy_mJ_per_token": 208.432,
-     "system_w": 16054.0
+     "energy_mJ_per_token": 1055.741,
+     "system_w": 81315.0
     },
     {
      "batch": 128,
@@ -578,8 +578,8 @@
      "aggregate_tokens_s": 77021.9,
      "per_user_ms_per_token": 1.6619,
      "binding": "busiest stage occupancy",
-     "energy_mJ_per_token": 208.432,
-     "system_w": 16054.0
+     "energy_mJ_per_token": 1055.741,
+     "system_w": 81315.0
     },
     {
      "batch": 256,
@@ -587,8 +587,8 @@
      "aggregate_tokens_s": 77021.9,
      "per_user_ms_per_token": 3.3237,
      "binding": "busiest stage occupancy",
-     "energy_mJ_per_token": 208.432,
-     "system_w": 16054.0
+     "energy_mJ_per_token": 1055.741,
+     "system_w": 81315.0
     },
     {
      "batch": 512,
@@ -596,8 +596,8 @@
      "aggregate_tokens_s": 77021.9,
      "per_user_ms_per_token": 6.6475,
      "binding": "busiest stage occupancy",
-     "energy_mJ_per_token": 208.432,
-     "system_w": 16054.0
+     "energy_mJ_per_token": 1055.741,
+     "system_w": 81315.0
     },
     {
      "batch": 866,
@@ -605,51 +605,51 @@
      "aggregate_tokens_s": 77021.9,
      "per_user_ms_per_token": 11.2436,
      "binding": "busiest stage occupancy",
-     "energy_mJ_per_token": 208.432,
-     "system_w": 16054.0
+     "energy_mJ_per_token": 1055.741,
+     "system_w": 81315.0
     }
    ],
    "sat_batch": 32
   },
   "mtp_m1": {
-   "tokens_s_b1": 5856.5,
+   "tokens_s_b1": 5811.4,
    "saturated_tokens_s": 50708.4,
    "rows": [
     {
      "batch": 1,
-     "per_user_tokens_s": 5856.5,
-     "aggregate_tokens_s": 5856.5,
-     "per_user_ms_per_token": 0.1707,
+     "per_user_tokens_s": 5811.4,
+     "aggregate_tokens_s": 5811.4,
+     "per_user_ms_per_token": 0.1721,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 2243.349,
-     "system_w": 13138.0
+     "energy_mJ_per_token": 12733.914,
+     "system_w": 74002.0
     },
     {
      "batch": 2,
-     "per_user_tokens_s": 5856.5,
-     "aggregate_tokens_s": 11713.1,
-     "per_user_ms_per_token": 0.1707,
+     "per_user_tokens_s": 5811.4,
+     "aggregate_tokens_s": 11622.8,
+     "per_user_ms_per_token": 0.1721,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 1141.608,
-     "system_w": 13372.0
+     "energy_mJ_per_token": 6441.227,
+     "system_w": 74865.0
     },
     {
      "batch": 4,
-     "per_user_tokens_s": 5856.5,
-     "aggregate_tokens_s": 23426.2,
-     "per_user_ms_per_token": 0.1707,
+     "per_user_tokens_s": 5811.4,
+     "aggregate_tokens_s": 23245.5,
+     "per_user_ms_per_token": 0.1721,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 590.737,
-     "system_w": 13839.0
+     "energy_mJ_per_token": 3294.884,
+     "system_w": 76591.0
     },
     {
      "batch": 8,
-     "per_user_tokens_s": 5856.5,
-     "aggregate_tokens_s": 46852.4,
-     "per_user_ms_per_token": 0.1707,
+     "per_user_tokens_s": 5811.4,
+     "aggregate_tokens_s": 46491.1,
+     "per_user_ms_per_token": 0.1721,
      "binding": "single-user chain",
-     "energy_mJ_per_token": 315.302,
-     "system_w": 14773.0
+     "energy_mJ_per_token": 1721.713,
+     "system_w": 80044.0
     },
     {
      "batch": 16,
@@ -657,8 +657,8 @@
      "aggregate_tokens_s": 50708.4,
      "per_user_ms_per_token": 0.3155,
      "binding": "busiest stage occupancy (verify pass)",
-     "energy_mJ_per_token": 294.357,
-     "system_w": 14926.0
+     "energy_mJ_per_token": 1590.875,
+     "system_w": 80671.0
     },
     {
      "batch": 32,
@@ -666,8 +666,8 @@
      "aggregate_tokens_s": 50708.4,
      "per_user_ms_per_token": 0.6311,
      "binding": "busiest stage occupancy (verify pass)",
-     "energy_mJ_per_token": 294.357,
-     "system_w": 14926.0
+     "energy_mJ_per_token": 1590.875,
+     "system_w": 80671.0
     },
     {
      "batch": 64,
@@ -675,8 +675,8 @@
      "aggregate_tokens_s": 50708.4,
      "per_user_ms_per_token": 1.2621,
      "binding": "busiest stage occupancy (verify pass)",
-     "energy_mJ_per_token": 294.357,
-     "system_w": 14926.0
+     "energy_mJ_per_token": 1590.875,
+     "system_w": 80671.0
     },
     {
      "batch": 128,
@@ -684,8 +684,8 @@
      "aggregate_tokens_s": 50708.4,
      "per_user_ms_per_token": 2.5242,
      "binding": "busiest stage occupancy (verify pass)",
-     "energy_mJ_per_token": 294.357,
-     "system_w": 14926.0
+     "energy_mJ_per_token": 1590.875,
+     "system_w": 80671.0
     },
     {
      "batch": 256,
@@ -693,8 +693,8 @@
      "aggregate_tokens_s": 50708.4,
      "per_user_ms_per_token": 5.0485,
      "binding": "busiest stage occupancy (verify pass)",
-     "energy_mJ_per_token": 294.357,
-     "system_w": 14926.0
+     "energy_mJ_per_token": 1590.875,
+     "system_w": 80671.0
     },
     {
      "batch": 512,
@@ -702,8 +702,8 @@
      "aggregate_tokens_s": 50708.4,
      "per_user_ms_per_token": 10.097,
      "binding": "busiest stage occupancy (verify pass)",
-     "energy_mJ_per_token": 294.357,
-     "system_w": 14926.0
+     "energy_mJ_per_token": 1590.875,
+     "system_w": 80671.0
     },
     {
      "batch": 866,
@@ -711,44 +711,46 @@
      "aggregate_tokens_s": 50708.4,
      "per_user_ms_per_token": 17.078,
      "binding": "busiest stage occupancy (verify pass)",
-     "energy_mJ_per_token": 294.357,
-     "system_w": 14926.0
+     "energy_mJ_per_token": 1590.875,
+     "system_w": 80671.0
     }
    ],
    "sat_batch": 16,
    "tau": 3.649,
    "positions": 6,
-   "verify_us": 603.4,
-   "draft_us": 19.7
+   "verify_us": 607.9,
+   "draft_us": 20.0
   },
   "capacity_users": 866,
   "capacity_basis": "results/arch/arch_budget_v41.json capacity[1048576].rom_users (KV + index keys of the busiest layer-20 group in its 4 HBM3E stacks per die, 90% usable)",
   "energy": {
-   "dynamic_mJ_per_token_die": 21.56,
+   "dynamic_mJ_per_token_die": 86.837,
    "stack_mJ_per_token": 19.325,
    "categories_mJ_per_token": {
-    "mac": 2.6896,
-    "rom": 1.1415,
-    "xnet": 12.9066,
+    "mac": 0.3429,
+    "field": 69.0807,
+    "xnet": 12.5906,
     "units": 2.4058,
     "hbm_if": 1.2559,
     "stack": 19.3248,
     "link": 1.1606
    },
    "static_w": {
-    "layer_dies": 9094.0,
+    "layer_dies": 69327.6,
     "head_dies": 369.3,
     "table_dies": 3441.5
    },
-   "static_w_total": 12904.8,
+   "static_w_total": 73138.4,
    "layer_die_static_w": {
-    "clock": 18.1,
-    "leakage": 18.8,
+    "clock": 567.5,
+    "leakage": 7.2,
+    "field_clock": 562.6,
+    "hub_clock_uncalibrated": 5.0,
     "hbm_interface_idle": 11.2,
     "links": 33.096
    },
-   "mtp_dynamic_mJ_per_token": 39.866,
-   "basis": "power_ledger terms on every stage x 4 TP dies (the uarch graph is one die, busiest-die macros for every layer); layer-die static = the ledger's clock + leakage + HBM interface idle, ungated, plus the rack's always-on SerDes and UCIe; head and Engram-table dies' static from results/arch/v41_rack.json power.static; HBM stack DRAM energy of the index and KV reads; stack background (refresh) power not charged"
+   "mtp_dynamic_mJ_per_token": 148.541,
+   "basis": "power_ledger terms on every stage x 4 TP dies (the uarch graph is one die, busiest-die macros for every layer); ROM field = the MEASURED pair (PAIR_W, W18): dynamic 'field' = busy excess over the clocked-idle floor; layer-die static = the ledger's clock + leakage (field measured per placed pair, ungated; hub from area, UNCALIBRATED) + HBM interface idle, plus the rack's always-on SerDes and UCIe; head and Engram-table dies' static from results/arch/v41_rack.json power.static; HBM stack DRAM energy of the index and KV reads; stack background (refresh) power not charged"
   },
   "stage_occupancy_us": {
    "0": 3.15,
@@ -1510,11 +1512,11 @@
     "low": 2632000,
     "high": 5170000
    },
-   "tokens_s_b1": 5856.5,
+   "tokens_s_b1": 5811.4,
    "tokens_s_saturated": 77021.9,
    "usd_per_tokens_s_b1": {
-    "low": 449.42,
-    "high": 882.78
+    "low": 452.9,
+    "high": 889.63
    },
    "usd_per_tokens_s_saturated": {
     "low": 34.17,
@@ -1626,7 +1628,7 @@
  "slo_tokens_s_per_user": 100.0,
  "cost_rule": "best mode of each design at each point: b1 = its fastest single-user mode, saturated = its largest aggregate within the per-user state capacity; capex = packages at the iso-package price + ROM mask NRE / production units (low: coding layers only; high: full mask sets)",
  "source_sha256": {
-  "tools/uarch_model.py": "ea7434a83f38deb1bbaf9764ceb0c3b1c2e922f6006af331ab9b2bfe75472f76",
+  "tools/uarch_model.py": "92057ebba09cf8914e91bb334870216eae56b2e360134972234815c1824e3821",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",

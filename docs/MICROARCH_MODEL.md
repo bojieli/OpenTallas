@@ -33,11 +33,11 @@ Two ledgers accompany every design:
 |---|---:|---|---|
 | As built: RTL engines (512 QE lanes, 64 BF16, 4-element VM, 16-lane SU, 1,024 indexer MACs, measured attention and reader) | **56.8** | `wo_a` alone 5.1 ms, experts 2.7 ms, index scan 2.6 ms, lm_head 2.5 ms | trivially |
 | Spec widths, W1 contiguous bank map | **400** | Every matrix is read from its own bank set: about 8,000 cycles each | yes |
-| Spec widths, rows striped over every macro | **2,137** | VM read port: 4 elements/cycle, so 1,280 cycles per 5,120-wide projection | **no**: 184 of 132 mm² of strip |
-| + VM 64/128 elements, BF16 on every macro | 4,761 | | **no**: 184 mm² |
-| Striped whole rows, VM 64/128, BF16 lanes on 2,048 macros | 3,937 | whole-row reads (a BF16 row at K = 5,120 is 320 words in one macro) and expert tile collisions | yes: 104.8 mm² |
-| **Proposal:** the same with each row's K split over macros in golden-aligned chunk runs, FP32 adders in the return tree | **4,167** | fixed per-phase fill (compute chain), index scan | **yes**: 117.8 of 132 mm² strip, 51.8 of 233.7 mm² hub |
-| Proposal weight path with the dedicated units as built | 320 | index scan at 1,024 MACs: 2.6 ms; softmax at 16 lanes: 127 µs | |
+| Spec widths, rows striped over every macro | **2,094** | VM read port: 4 elements/cycle, so 1,280 cycles per 5,120-wide projection | **no**: 292.8 of 132 mm² of strip |
+| + VM 64/128 elements, BF16 on every macro | 4,226 | | **no**: 292.8 mm² |
+| Striped whole rows, VM 64/128, BF16 lanes on 2,048 macros | 3,608 | whole-row reads (a BF16 row at K = 5,120 is 320 words in one macro) and expert tile collisions | yes: 115.1 mm² |
+| **Proposal:** the same with each row's K split over macros in golden-aligned chunk runs, FP32 adders in the return tree | **3,809** | fixed per-phase fill (compute chain), index scan, W15-measured collectives | **yes**: 117.8 of 132 mm² strip, 56.6 of 233.7 mm² hub |
+| Proposal weight path with the dedicated units as built | 317 | index scan at 1,024 MACs: 2.6 ms; softmax at 16 lanes: 127 µs | |
 
 Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#sweep`) decide the physical design point.
 - At 128 read elements or more, each ROM-field column needs 109–215% of the tracks over it. Those ports **cannot be routed** in the W1 floorplan.
@@ -51,7 +51,7 @@ Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#
 2. **Rows are K-split over macros, not owned whole.** W10's striped bank map (`f02e4600`) measured whole-row ownership.
    - A macro reads one word per cycle, so a matrix with fewer rows than macros takes K / (weights per word) cycles per row, not words / macros.
    - Active experts also collide on shared tiles.
-   - Whole-row ownership gives 3,937 tok/s. Splitting each row's K over up to 2^n macros, in power-of-two-aligned runs of golden chunks, gives 4,172 tok/s (both at 2,048 BF16 macros). That split is exact under the golden `csum` padded tree, with the partials added in the return tree in the same order.
+   - Whole-row ownership gives 3,608 tok/s. Splitting each row's K over up to 2^n macros, in power-of-two-aligned runs of golden chunks, gives 3,809 tok/s (both at 2,048 BF16 macros). That split is exact under the golden `csum` padded tree, with the partials added in the return tree in the same order.
    - It costs log2(split) FP32 adder levels (5 cycles each) and about 2.7 mm² of adders, and it also removes the routing-dependent collision variance.
    - **W10 interim corrections (all now in the model):**
      - Segments are golden-aligned: next_pow2(ceil(C/s)) chunks, not K/s.
@@ -60,7 +60,7 @@ Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#
      - A chain-recurrence floor applies: 8 sequential adds × latency 5 = 40 cycles per stream round.
      - Each row has ceil(C/c) segments, which is fewer than s when C is not a power of two. FP4 segments are whole chunk pairs, since an FP4 word carries block b of two sibling chunks. FP8 and FP4 matrices share one x stream. With these, W10's bank map matches the model's issue on every phase where read or x binds, and is below it elsewhere (verdict PASS_issue_match_t_read_below_model).
      - A BF16 element completes 16 chunk sums per cycle, so it needs a 15-adder tree and 128 chain registers. At 4,096 BF16 macros this breaks the fit (148.7 mm²).
-3. **The element is one ROM macro, 2 FP4 block-dot lanes (64 MACs), a 274-bit capture register and 8 FP32 chunk partials.** BF16 lanes (16, plus a 15-adder chain tree) go on **2,048** macros: 4,172 tok/s at 117.8 mm². 2,560 gains 0.3%, and 3,072 does not fit.
+3. **The element is one ROM macro, 2 FP4 block-dot lanes (64 MACs), a 274-bit capture register and 8 FP32 chunk partials.** BF16 lanes (16, plus a 15-adder chain tree) go on **2,048** macros: 3,809 tok/s at 117.8 mm². 3,072 gains 0.5% and does not fit (133.3 mm²).
 4. **VM ports: 64 FP32 elements/cycle read (the x broadcast leaves as FP8, 512 bits) and 128 elements/cycle write.**
    - These are up from 4 read and 64 write.
    - This is a banked-VM design task: 8 + 16 banks of 256-bit SRAM.
@@ -73,32 +73,58 @@ Sweep: the VM port width and the BF16 stripe count (`results/uarch/v41_rom.json#
 
 ## Power ledger (V4.1 ROM busiest die, `power` in each row of `results/uarch/v41_rom.json`)
 
-Dynamic energy per token is summed from every priced node's work:
-- MACs by format;
-- ROM bytes;
-- x read from the VM, broadcast over the field (wire), and delivered into each holding element;
-- partial-sum return (wire) and result write into the VM;
-- stream-unit and SFU element ops;
-- the on-die share of HBM traffic (PHY and controller, 0.8 pJ/bit; the DRAM energy dissipates in the stack);
-- collective link bits.
+**The ROM field is the measured pair** (`PAIR_W`, recalibrated 2026-09-30). W18 ran OpenSTA `report_power` on W10 p5's routed pair: `6_final.odb` with SPEF, TT 0.7 V, 1.087 GHz, input toggle density 0.5. A pair is 2 ROM macros plus their strip logic.
 
-Clock and leakage come from the area ledger by class (logic, ROM, SRAM), plus HBM interface idle power. Constants are from `configs/hardware/technology.json`. Wire energy is 0.1 pJ/bit/mm (ASSUMED), with 0.4 as a sensitivity.
+| Pair state | mW | Parts |
+|---|---:|---|
+| Busy | 229.6 | sequential 45.1, combinational 128.0, clock tree 23.7, ROM macros 32.7 |
+| Idle, clock running | 83.5 | clock tree 23.7, flop clock pins 27.0, ROM macro clock 32.7, leakage 0.22 |
+| Idle, ideal per-pair ICG (the ROM macro clock stopped too) | 0.22 | leakage: ROM 0.20, cells 0.02 |
 
-Proposal at 1M context, busiest die = stage 14 (the layer-20 index scan):
+How the ledger composes these:
+- **Busy pairs:** each weight matvec keeps its holding macros' pairs (2 macros each) busy for its issue time; the other placed pairs (7,102, from W10's re-fit) idle.
+- **Clock scaling:** clock and switching power scale linearly with the clock from the 1.087 GHz measurement, at the same 0.7 V (ASSUMED).
+- **Energy outside the pair:** the x broadcast over the field, the VM read of x, the partial-sum return wires and the VM write. The pair's own MACs, ROM reads and x capture are inside `PAIR_W`.
+- **Everything else is priced as before:** the stream unit and SFU element ops, the on-die share of HBM traffic (0.8 pJ/bit; the DRAM energy dissipates in the stack) and collective link bits.
+- **Uncalibrated:** the hub's clock and leakage (dedicated units and VM ports) still come from its area and `technology.json`.
+- **Wire energy:** 0.1 pJ/bit/mm (ASSUMED), with 0.4 as a sensitivity.
 
-| | W |
-|---|---:|
-| Clock | 18.1 |
-| Leakage | 18.8 |
-| HBM interface idle | 11.2 |
-| Dynamic, single user (4,167 tok/s) | 1.5 |
-| Dynamic, saturated (stage occupancy bound, 77k tok/s) | 28.0 |
-| **Total, single user** | **49.6** |
-| **Total, saturated** | **76.0** (112.2 at 0.4 pJ/bit/mm wire) |
-| Liquid cooling limit | 474.56 |
-| HBM stack energy at saturation (dissipated in the stacks, not the die) | 136.5 |
+**The area-based ROM-field terms were wrong by more than an order of magnitude.** Their clock was 13.1 W against the measured 562.6 W (about 43×); their leakage was 13.2 W against 1.6 W (8× too high).
 
-- **Power does not bind the V4.1 ROM die.** Energy per token on the busiest die is 363 µJ on-die plus 1,772 µJ in the stacks, dominated by index-key reads.
+Proposal at 1M context, 1.034 GHz, 3,809 tok/s. The busiest die by energy is stage 9 (the field's busy energy now dominates; it was stage 14, the layer-20 index scan):
+
+| W | Ungated | Per-pair ICG |
+|---|---:|---:|
+| ROM field clock (7,102 pairs × 79.2 mW) | 562.6 | charged only while busy |
+| ROM field leakage | 1.6 | 1.6 |
+| Hub clock / leakage (UNCALIBRATED) | 5.0 / 5.7 | 5.0 / 5.7 |
+| HBM interface idle | 11.2 | 11.2 |
+| **Static** | **586.0** | **23.4** |
+| Energy per token, busiest die (µJ) | 1,252 | 1,811 |
+| **Total, single user** | **590.7** | **30.3** |
+| **Total, saturated** (stage occupancy bound, 77,022 tok/s) | **682.4** (720.1 at 0.4 pJ/bit/mm) | **162.9** (200.6) |
+| Instantaneous peak at saturation (a whole-field op busies 6,899 pairs) | 1,565.6 | 1,549.5 |
+| Liquid cooling limit | 474.56 | 474.56 |
+| HBM stack power at saturation (in the stacks, not the die) | 68.9 | 68.9 |
+
+- **A per-pair ICG that also stops the ROM macro clock is a design requirement, not an energy lever.**
+  - Ungated, the field's clock alone (563 W) exceeds the 474.6 W cooling budget, even with no token in flight. No throughput is cool enough.
+  - With the ICG the die averages 30 W for a single user and 163 W at saturation, well inside the budget.
+- **The instantaneous peak is a power-delivery load, not a thermal one.** A whole-field matvec busies up to 6,899 pairs at 0.23 W for its issue time, about 1.55 kW. It lasts microseconds, so it bounds the PDN, IR drop and di/dt (W18), not the cooling.
+- **Stage power-switch rings cost 24.0 mm² of the field** (`switch_rings`). W18 measured 14–17 mV IR drop on a 16-pair cluster. Switch rings that hold a 10 mV budget take 5% of the cluster area: 5% of 7,102 pairs at W18's 513.8 × 131.8 µm pair outline. The re-fit's spare slots hold it: 7,457 of 9,931 needed.
+- **Busy duty is low.** At saturation the field averages 543 busy pairs of 7,102 (7.6%); a single user averages 27.
+
+**Clock sensitivity** (`power_clock_sensitivity`; the architecture DAG and the uarch pricing are rebuilt at each clock; pair power scales × f / 1.087 GHz at 0.7 V, ASSUMED — a faster clock that needs a higher supply costs more):
+
+| Clock | tok/s, single user | Saturated tok/s per stage | Field clock, ungated (W) | Per-pair ICG: single user / saturated / peak (W) |
+|---|---:|---:|---:|---:|
+| 1.034 GHz (model) | 3,809 | 77,022 | 562.6 | 30.3 / 162.9 / 1,550 |
+| 1.25 GHz | 4,266 | 86,246 | 680.1 | 32.2 / 180.6 / 1,868 |
+| 1.5 GHz | 4,709 | 95,351 | 816.2 | 34.2 / 198.3 / 2,235 |
+
+- A faster clock buys +12% and +24% single-user tok/s, not the clock ratio: wire flight, HBM streams and the W15 collectives keep their times.
+- Energy per token is unchanged at the same voltage: busy cycles × energy per cycle.
+- With the per-pair ICG the saturated average stays inside cooling. The instantaneous peak grows with the clock (2.2 kW at 1.5 GHz), and that is the PDN's problem.
 - The architecture model's 396.6 W hottest die sizes static power from the analytical logic area, and includes MTP and 1,024-user batches. This ledger does not yet model MTP.
 
 ## Calibration and limits
@@ -130,17 +156,17 @@ It also checks tile area against the 560 mm² tile array. The area model is cali
 
 | Design (8K context, one die of the TP-2 pair) | tok/s | Array need / 560 mm² |
 |---|---:|---|
-| As built (scalar stream unit, no wire registers) | 179 | 682 (no fit) |
+| As built (scalar stream unit, no wire registers) | 178 | 682 (no fit) |
 | Architecture (G = 6,144, stream unit 1,024 wide, ideal wires) | 11,193 | 682 (no fit) |
-| + floorplan wires | 9,968 | 682 (no fit) |
-| + pruned logic | 9,968 | 583 (**no fit**) |
-| G = 5,120, pruned, with wires (integer banks: 14 per column, 28 macros per tile; 10 port tiles) | 9,063 | 566.4 / 566.2 (**misses by 0.2**) |
-| G = 4,096, pruned | 8,383 | 496 (fits) |
+| + floorplan wires | 9,851 | 682 (no fit) |
+| + pruned logic | 9,851 | 583 (**no fit**) |
+| G = 5,120, pruned, with wires (integer banks: 14 per column, 28 macros per tile; 10 port tiles) | 8,966 | 566.4 / 566.2 (**misses by 0.2**) |
+| G = 4,096, pruned | 8,300 | 496 (fits) |
 
 **Decisions:**
 - **User decision, 2026-09-29: the Qwen ROM die is AR only**, so the DFlash drafter is not in ROM.
-- With target-only banks (10 per column at G = 6,144; W12's integer placement: 34,669 macros, 265.0 mm²), **G = 6,144 pruned fits**: 552.9 / 560 mm², 9,968 tok/s. The scale-ROM remap adds about 11 mm² of margin.
-- The hardened tile area decides. If the margin is under 2%, fall back to G = 5,632 pruned (533.9 / 560 mm², 9,496 tok/s).
+- With target-only banks (10 per column at G = 6,144; W12's integer placement: 34,669 macros, 265.0 mm²), **G = 6,144 pruned fits**: 552.9 / 560 mm², 9,851 tok/s. The scale-ROM remap adds about 11 mm² of margin.
+- The hardened tile area decides. If the margin is under 2%, fall back to G = 5,632 pruned (533.9 / 560 mm², 9,390 tok/s).
 
 **Build requirements the RTL lacks:**
 - the vector stream unit (the shipped scalar one deadlocks layer 0, W6);
@@ -263,8 +289,8 @@ Verify positions ride the MMA columns: 16 are built, one weight fetch serves the
 
 | Design | Previous figure | Microarchitecture model (fits die) | Largest lever |
 |---|---:|---:|---|
-| V4.1 ROM, 1M | 4,933 (architecture) | 4,167 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
-| Qwen ROM, 8K | 10,874 (published) | 9,968 | AR only (no drafter ROM) lets G = 6,144 pruned fit; wires +12%; vector stream unit |
+| V4.1 ROM, 1M | 4,933 (architecture) | 3,809 | stripe rows over all macros; VM 64/128 ports; dedicated indexer, stream unit and reader at spec |
+| Qwen ROM, 8K | 10,874 (published) | 9,851 | AR only (no drafter ROM) lets G = 6,144 pruned fit; wires +12%; vector stream unit |
 | Qwen HBM, 8K | 881 | 880.6 (DFlash b16 2,671) | bulk-copy weight supply prefetching through boundaries; hardware barrier (30 cycles) |
 | V4.1 HBM, 1M | 3,579 | 2,920 (MTP 5,673) | SM op latency on 1/96 row slices (group-slot issue); hardware barrier (40 cycles); bulk-copy supply |
 
@@ -276,9 +302,9 @@ The lane multiplier m counts the positions that multiply one ROM weight word in 
 
 | Design | Verify / AR time | tok/s | Speedup | Extra lane area | Decision (user, 2026-09-29) |
 |---|---:|---:|---:|---:|---|
-| V4.1 ROM MTP, 6 positions, m = 1 | 2.43× | **6,063** | **1.46×** | 0 | **adopted** |
-| V4.1 ROM MTP, m = 2 | 1.99× | 7,366 | 1.77× | 86.0 mm² (does not fit) | rejected |
-| V4.1 ROM MTP, m = 6 | 1.73× | 8,447 | 2.03× | 429.9 mm² | rejected |
+| V4.1 ROM MTP, 6 positions, m = 1 | 2.30× | **5,857** | **1.54×** | 0 | **adopted** |
+| V4.1 ROM MTP, m = 2 | 1.89× | 7,064 | 1.86× | 86.0 mm² (does not fit) | rejected |
+| V4.1 ROM MTP, m = 6 | 1.65× | 8,051 | 2.11× | 429.9 mm² | rejected |
 | Qwen ROM DFlash, m = 1 (best block = 1, i.e. AR) | — | 9,017 | 1.0× | 0 (+29 mm² drafter ROM) | **AR only** |
 | Qwen ROM DFlash, m = 5, block 5 | — | 18,720 | 2.08× | 178.7 mm² | rejected: does not fit |
 
@@ -286,7 +312,7 @@ The lane multiplier m counts the positions that multiply one ROM weight word in 
 - **V4.1 tokens are latency-bound.** Fill is about half the token, so 6 positions share the expensive part.
 - **Qwen tokens are lane-bound.** Each extra position costs a whole weight sweep, and only 1.7–3.7 tokens are accepted.
 
-Removing the drafter frees about 12% of Qwen code ROM. Target-only banks are 10 per column at G = 6,144, and **G = 6,144 pruned then fits** (552.9 / 560 mm², 9,968 tok/s). The scale-ROM remap adds about 11 mm² of margin.
+Removing the drafter frees about 12% of Qwen code ROM. Target-only banks are 10 per column at G = 6,144, and **G = 6,144 pruned then fits** (552.9 / 560 mm², 9,851 tok/s). The scale-ROM remap adds about 11 mm² of margin.
 
 The V4.1 draft cost is ASSUMED at 3/40 of an AR token (3 draft blocks of 40 layers). The HBM comparators' DFlash and MTP rows come from W13's SM model.
 
@@ -301,7 +327,7 @@ Every multi-die design here assumes deterministic hardware collectives at link l
 
 | Collective / exchange latency | V4.1 ROM (AR) | V4.1 HBM (GPU org., AR) | Qwen ROM (AR, G = 6,144) | Qwen HBM (AR) |
 |---|---:|---:|---:|---:|
-| own baseline | **4,167** (~0.15 µs links) | **2,920** (0.668 µs switch) | **9,968** (17.5 ns UCIe) | **881** |
+| own baseline | **3,809** (W15-measured collectives) | **2,920** (0.668 µs switch) | **9,851** (W15-measured exchange; 9,968 at 17.5 ns) | **881** |
 | 0.1–0.15 µs | 3,752 | 4,084 | 9,404 | 876 |
 | 0.5–0.668 µs | 2,785 | 2,920 | 7,378 | 854 |
 | 1 µs | 2,390 | 2,469 | 5,813 | 828 |
@@ -309,7 +335,7 @@ Every multi-die design here assumes deterministic hardware collectives at link l
 | 10 µs | 493 | 476 | — | — |
 
 **At equal collective latency, V4.1 ROM and V4.1 HBM have almost the same single-user speed.** Both are latency-bound, not bandwidth-bound.
-- The ROM array's advantage (4,167 against 2,920) is structural. Its weights are local, so small TP-4 groups on direct links suffice.
+- The ROM array's advantage (3,809 against 2,920) is structural. Its weights are local, so small TP-4 groups on direct links suffice.
 - The HBM machine must spread every matrix over 96 dies to reach its bandwidth, which needs a switched fabric.
 - Qwen ROM stays about 11× faster than Qwen HBM at every latency, because the Qwen HBM machine is bandwidth-bound.
 - Every headline depends strongly on deterministic hardware collectives. At NCCL-class latency (5–10 µs) both V4.1 designs fall to 500–900 tok/s.
@@ -376,12 +402,12 @@ User positioning (2026-09-29): the paper claims single-user speed against GPUs (
 
 | Design | tok/s, B = 1 | mJ/token, B = 1 | Saturated batch | Aggregate tok/s | Per-user tok/s | mJ/token, saturated | Users that fit |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| Qwen ROM AR (G = 6,144) | 9,968 | 86.4 | 2 | 11,921 | 5,960 | 84.7 | 268 |
+| Qwen ROM AR (G = 6,144) | 9,851 | 86.5 | 2 | 11,921 | 5,960 | 84.7 | 268 |
 | Qwen HBM tier 3, AR | 881 | 983 | 16 | 6,684 | 418 | 133 | 255 |
 | Qwen HBM tier 3, DFlash | 2,671 | 358 | 8 | 7,101 | 888 | 129 | 255 |
 | Qwen 1× B200, AR (tier 2) | 331 | 2,081 | 255 | 7,907 | 31.0 | 87.1 | 255 |
-| V4.1 ROM, AR | 4,167 | 3,138 | 32 | 77,022 | 2,407 | 208 | 866 |
-| V4.1 ROM, MTP m = 1 | 6,063 | 2,168 | 16 | 50,708 | 3,169 | 294 | 866 |
+| V4.1 ROM, AR (ungated) | 3,809 | 19,309 | 32 | 77,022 | 2,407 | 1,056 | 866 |
+| V4.1 ROM, MTP m = 1 (ungated) | 5,857 | 12,637 | 16 | 50,708 | 3,169 | 1,591 | 866 |
 | V4.1 HBM tier 3, AR | 2,920 | 3,692 | 16 | 21,792 | 1,362 | 913 | 811 |
 | V4.1 HBM tier 3, MTP | 5,673 | 2,287 | 4 | 12,122 | 3,030 | 1,676 | 811 |
 | V4.1 8× B200, AR (tier 2) | 278 | 19,852 | 839 | 13,018 | 15.5 | 423 | 839 |
@@ -393,12 +419,12 @@ Per-batch rows (per-user rate, aggregate, per-user latency, energy, system power
 
 ### Energy basis
 
-- **V4.1 ROM:** the power ledger's terms (MACs by format, ROM words, x network, stream unit, the on-die HBM share, links), summed over every stage and multiplied by the 4 TP dies, plus the stacks' share of the index and KV reads.
-  - Dynamic energy is 21.6 mJ on the dies and 19.3 mJ in the stacks per token.
-  - Static power is 12.9 kW:
-    - 112 layer dies at the ledger's ungated clock + leakage + HBM interface idle (48.1 W), plus the rack's always-on SerDes and UCIe (33.1 W);
+- **V4.1 ROM:** the power ledger's terms, summed over every stage and multiplied by the 4 TP dies, plus the stacks' share of the index and KV reads. The terms are the measured pair's busy excess over its clocked-idle floor, the x network, the stream unit, the on-die HBM share and the links.
+  - Dynamic energy is 86.8 mJ on the dies (69.1 of it the pairs) and 19.3 mJ in the stacks per token.
+  - Static power, ungated, is 73.1 kW:
+    - 112 layer dies at the ledger's ungated clock + leakage + HBM interface idle (580 W: the measured field clock is 563 W), plus the rack's always-on SerDes and UCIe (33.1 W);
     - head and Engram-table dies at the rack record's static.
-  - **Static power dominates at every batch.** Stage clock gating is the energy lever.
+  - **The ungated rows are not a realisable design:** a layer die's field clock exceeds its cooling budget. The adopted per-pair ICG and stage power gating (the levers section and the gated-alike table) are the figures to compare.
 - **Qwen ROM:** its own ledger with the same constants, both dies.
   - Dynamic energy is 76.2 mJ/token, of which 59.5 mJ is the HBM stack share of the KV read and 7.1 mJ its on-die share.
   - Static power is 101.5 W. The areas are the W12 ROM (265 mm²), the pruned group logic plus PHYs (173.8 mm²) and the KV ring (23.9 mm²).
@@ -406,7 +432,7 @@ Per-batch rows (per-user rate, aggregate, per-user latency, energy, system power
   - Static power per package: 69 W (Qwen); 6.5 kW for the 96 V4.1 dies.
   - The NVL-class switch is not charged.
 - **GPU:** 689 W measured decode power per B200 (`technology.json` `power.gpu_reference_power`) × step time. The record also carries the rows at the 1,200 W TDP.
-- MAC energy is 2 operations per MAC in this section, as in `technology.json` and `arch_budget_v41`. The V4.1 power ledger above charges 1 per MAC, which changes its busiest die by under 1%. The test checks that this section's ledger reproduces the power ledger's busiest stage when run at 1 operation per MAC.
+- MAC energy is 2 operations per MAC in this section, as in `technology.json` and `arch_budget_v41`. The V4.1 power ledger above charges 1 per MAC. Its ROM-field MACs are now inside the measured pair, so the operation count applies only to the hub (HC projection and attention/indexer MACs). The test checks that this section's ledger reproduces the power ledger's busiest stage when run at 1 operation per MAC.
 - HBM background (refresh) power is not charged on any design.
 
 ### Cost
@@ -429,10 +455,10 @@ Per-batch rows (per-user rate, aggregate, per-user latency, energy, system power
 
 | System | Packages | Dies | HBM stacks | ROM mask sets | Capex | $ per tok/s, B = 1 | $ per tok/s, saturated | $ per tok/s at ≥ 100 tok/s/user |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Qwen ROM (AR, G = 6,144) | 1 | 2 | 8 | 2 | $28k–55k | 2.81–5.52 | 2.35–4.61 | 2.35–4.61 |
+| Qwen ROM (AR, G = 6,144) | 1 | 2 | 8 | 2 | $28k–55k | 2.84–5.58 | 2.35–4.61 | 2.35–4.61 |
 | Qwen HBM tier 3 (AR / DFlash) | 1 | 2 | 8 | 0 | $25k | 9.36 | 3.52 | 3.52 |
 | Qwen 1× B200 (tier 2, AR) | 1 | 2 | 8 | 0 | $25k | 75.53 | 3.16 | 5.15 |
-| V4.1 ROM array (AR / MTP m = 1) | 94 | 188 | 464 | 188 | $2.63M–5.17M | 434–853 | 34.2–67.1 | 34.2–67.1 |
+| V4.1 ROM array (AR / MTP m = 1) | 94 | 188 | 464 | 188 | $2.63M–5.17M | 449–883 | 34.2–67.1 | 34.2–67.1 |
 | V4.1 HBM tier 3 (AR / MTP) | 48 | 96 | 384 | 0 | $1.20M | 212 | 55.1 | 55.1 |
 | V4.1 8× B200 (tier 2, AR) | 8 | 16 | 64 | 0 | $200k | 720 | 15.4 | 51.4 |
 
@@ -442,14 +468,16 @@ Each system is costed at its best mode for each point: its fastest single-user m
 
 1. **Single-user speed is where ROM wins.**
    - At batch 1 the Qwen ROM package is 30× a B200 in tok/s, 24× in energy per token and 14–27× in $ per tok/s.
-   - The V4.1 ROM array against 8× B200, both AR, is 15× in tok/s and 6.3× in energy per token. With MTP on both it is 11× in tok/s.
+   - The V4.1 ROM array against 8× B200, both AR, is 13.7× in tok/s. Ungated it spends about the same energy per token (19.3 against 19.9 J). With the adopted gating (per-pair ICG and stage power gating) it spends 41× less (481 mJ). With MTP on both it is 11× in tok/s.
 2. **Batching does not help the Qwen ROM package.** Its 8 HBM stacks must stream every user's 604 MB of 8K KV per token, so the aggregate saturates at 11,921 tok/s from batch 2. A B200, with the same 8 stacks, saturates at 7,907, and only at 31 tok/s per user. At saturation all three Qwen machines spend 85–133 mJ per token, dominated by the KV read. Cost per aggregate tok/s is then within 2× across them.
-3. **V4.1 ROM has the largest aggregate** (77,022 tok/s against 21,792 for tier 3 and 13,018 for 8× B200) **and the lowest saturated energy** (208 mJ against 913 and 423).
+3. **V4.1 ROM has the largest aggregate** (77,022 tok/s against 21,792 for tier 3 and 13,018 for 8× B200) **and, gated, the lowest saturated energy** (221 mJ against 755 for tier 3 gated and 423 for 8× B200; 1,056 ungated).
    - Its capex is the highest: 94 packages plus 188 ROM mask sets, where the NRE is 0.3–2.8 M$ per system at 1,000 units.
    - Per aggregate tok/s it therefore costs 2–4× 8× B200 at saturation, where the GPU serves 15.5 tok/s per user.
    - At a ≥ 100 tok/s/user floor it is 0.7–1.3× the GPU.
 4. **MTP m = 1 is a single-user lever on the ROM array.** It lowers the saturated aggregate by 34%. Run MTP only while the stages are not yet full (below about 12 users) and AR beyond.
-5. **Static power sets the energy of both V4.1 designs.** V4.1 ROM runs at 3.1 J per token at batch 1 and 0.21 J saturated, against 19.9 and 0.42 J for 8× B200. Stage clock gating and SerDes idle states are the next energy levers.
+5. **Static power sets the energy of both V4.1 designs.**
+   - Ungated, V4.1 ROM runs at 19.3 J per token at batch 1 and 1.06 J saturated, against 19.9 and 0.42 J for 8× B200. The measured field clock (563 W per layer die) dominates.
+   - Gated (per-pair ICG, stage power gating, 1 µs wake) it runs at 0.48 and 0.22 J.
 
 ## Economics levers: static power, adaptive MTP, ROM masks (`--levers`, `results/uarch/economics_levers.json`)
 
@@ -457,20 +485,20 @@ These are root's follow-ups to the economics findings (2026-09-29). The test is 
 
 ### V4.1 ROM static-power reduction
 
-At batch 1 the token visits the 28 stages one after another. Each stage is on the critical path for 4.7–20.4 µs of the 240 µs token and idle for the rest; the shortest idle is 219.6 µs. The model prices each layer die's static power by region and class from the area ledger:
+At batch 1 the token visits the 28 stages one after another. Each stage is on the critical path for 5.1–22.0 µs of the 262.5 µs token and idle for the rest; the shortest idle is 240.6 µs. The model prices each layer die's static power by region: the ROM field from the measured pair (2026-09-30), the hub by class from the area ledger:
 
 | Component | W per layer die |
 |---|---:|
-| ROM field (strip logic + ROM macros): clock / leakage | 13.1 / 13.2 |
-| Hub (dedicated units + VM ports): clock / leakage | 5.0 / 5.7 |
+| ROM field (7,102 measured pairs): clock / leakage | 562.6 / 1.6 |
+| Hub (dedicated units + VM ports): clock / leakage (UNCALIBRATED) | 5.0 / 5.7 |
 | HBM interface idle (4 stacks) | 11.2 |
 | Always-on 112G SerDes | 30.6 |
 | UCIe idle | 2.5 |
 
-**The SerDes are the largest static item on a layer die.** The model then applies four cumulative policies:
+**The ROM field's clock is the largest static item on a layer die**, 18× the always-on SerDes. The model then applies four cumulative policies:
 
 1. **Stage clock gating.** A stage's clock runs only during its window. The rest of the period keeps an ASSUMED 10% clock residual (the global spine and the ICG enables).
-2. **Region clock gating.** Inside the window, the ROM field and the hub each clock only while they are busy.
+2. **Region clock gating.** Inside the window, the ROM field and the hub each clock only while they are busy. For the field this is the per-pair ICG: only an op's holding pairs clock, charged for the pair-weighted busy time.
 3. **Stage power gating** in the idle time, with these residuals:
    - logic and ROM leak 3% (ReGate, MICRO 2025, §6.1; a mask ROM holds no state, so it needs no retention);
    - the VM SRAM sleeps with retention at 25%;
@@ -482,21 +510,22 @@ At batch 1 the token visits the 28 stages one after another. Each stage is on th
 
 **Engram table dies** (ROM tables, no state) stay awake only for their two gathers and the wake-up. Head dies scale by the layer-die policy ratio. Dynamic energy is unchanged from the economics section.
 
-**No wake lands on the single-user token path.** At batch 1 the schedule is static and periodic, and the shortest idle (219.6 µs AR, 531.2 µs MTP) exceeds every wake-up, including the 133 µs sensitivity: the Haswell C6 worst case (Schöne et al. 2015), which includes a state restore that a ROM stage does not need.
+**No wake lands on the single-user token path.** At batch 1 the schedule is static and periodic, and the shortest idle (240.6 µs AR, 551.2 µs MTP) exceeds every wake-up, including the 133 µs sensitivity: the Haswell C6 worst case (Schöne et al. 2015), which includes a state restore that a ROM stage does not need.
 
 | V4.1 ROM system (1M) | Static W | mJ/token, AR, B = 1 | mJ/token, AR, saturated | mJ/token, MTP, B = 1 | mJ/token, MTP, saturated |
 |---|---:|---:|---:|---:|---:|
-| Ungated (economics section) | 12,902 | 3,137 | 208 | 2,168 | 294 |
-| Stage clock gating | 11,073 | 2,698 | 190 | 1,866 | 267 |
-| + region clock gating | 11,020 | 2,686 | 187 | 1,860 | 261 |
-| **+ stage power gating, 1 µs wake** | **1,194** (B = 1) / 4,977 (saturated) | **328** | **106** | **228** | **112** |
-| + stage power gating, 133 µs wake | 4,888 (B = 1) | 1,214 | 187 | 471 | 261 |
+| Ungated (economics section) | 73,145 | 19,310 | 1,056 | 12,638 | 1,591 |
+| Stage clock gating | 17,625 | 4,733 | 498 | 3,142 | 761 |
+| + region clock gating (per-pair ICG) | 15,767 | 4,246 | 344 | 2,876 | 515 |
+| **+ stage power gating, 1 µs wake** | **1,428** (B = 1) / 8,837 (saturated) | **481** | **221** | **412** | **296** |
+| + stage power gating, 133 µs wake | 7,216 (B = 1) | 2,001 | 344 | 829 | 515 |
 
-- **Power gating, not clock gating, is the lever.**
-  - Clock gating saves 14%: clock is only 18 of the 81 W on a layer die.
-  - Power gating the idle stages cuts batch-1 energy 9.6× (AR) and 9.5× (MTP), to 328 and 228 mJ/token. The 8× B200 AR figure is 19,852.
+- **Both levers are now large, because the measured clock is.**
+  - Clock is 568 of 613 W on a layer die. Stage clock gating cuts batch-1 energy 4.1× (AR).
+  - What is left is the ASSUMED 10% ICG residual on the 563 W field clock, 56 W per idle die. The pair's own ICG measures 0.22 mW idle, so this residual is the global spine to 7,102 ICGs, and W18's die route must measure it.
+  - Power gating the idle stages cuts batch-1 energy 40× (AR) and 31× (MTP), to 481 and 412 mJ/token. The 8× B200 AR figure is 19,852.
 - **At saturation the gaps are short.** The period is 13.0 µs (AR) and 72 µs (MTP).
-  - With a 1 µs wake, 28 of 29 stages still gate between tokens, and energy falls to 106 mJ (AR) and 112 mJ (MTP).
+  - With a 1 µs wake, 28 of 29 stages still gate between tokens, and energy falls to 221 mJ (AR) and 296 mJ (MTP).
   - With a C6-class wake, no stage gates at saturation.
 - **Build requirements:**
   - power switches per stage domain, with staggered wake;
@@ -507,15 +536,15 @@ At batch 1 the token visits the 28 stages one after another. Each stage is on th
 
 ### Adaptive MTP
 
-Use MTP while its aggregate exceeds AR's, and AR beyond. On the ROM array, AR's per-user rate stays flat until its own saturation, so the crossing is exact: MTP's saturated 50,708 / AR's 4,167 = **12.2 users**. On the HBM comparator the AR chain slows with every column-batched user, and the sweep brackets the crossing between 8 and 16 users.
+Use MTP while its aggregate exceeds AR's, and AR beyond. On the ROM array, AR's per-user rate stays flat until its own saturation, so the crossing is exact: MTP's saturated 50,708 / AR's 3,809 = **13.3 users**. On the HBM comparator the AR chain slows with every column-batched user, and the sweep brackets the crossing between 8 and 16 users.
 
 | Batch | V4.1 ROM mode | Per-user tok/s | Aggregate tok/s | V4.1 HBM tier 3 mode | Per-user tok/s | Aggregate tok/s |
 |---:|---|---:|---:|---|---:|---:|
-| 1 | MTP | 6,063 | 6,063 | MTP | 5,673 | 5,673 |
-| 2 | MTP | 6,063 | 12,126 | MTP | 5,673 | 11,346 |
-| 4 | MTP | 6,063 | 24,252 | MTP | 3,031 | 12,122 |
-| 8 | MTP | 6,063 | 48,504 | MTP | 1,515 | 12,122 |
-| 16 | AR | 4,167 | 66,668 | AR | 1,362 | 21,792 |
+| 1 | MTP | 5,857 | 5,857 | MTP | 5,673 | 5,673 |
+| 2 | MTP | 5,857 | 11,713 | MTP | 5,673 | 11,346 |
+| 4 | MTP | 5,857 | 23,426 | MTP | 3,031 | 12,122 |
+| 8 | MTP | 5,857 | 46,852 | MTP | 1,515 | 12,122 |
+| 16 | AR | 3,809 | 60,941 | AR | 1,362 | 21,792 |
 | 32 | AR | 2,407 | 77,022 | AR | 681 | 21,792 |
 | 866 / 811 (capacity) | AR | 88.9 | 77,022 | AR | 26.7 | 21,658 |
 
@@ -559,7 +588,7 @@ This table supersedes the energy columns of "Batch, energy and capacity" above.
 
 | Design | Point | tok/s | Ungated mJ/token | Clock-gated | Clock + power gated | Static W, ungated → gated |
 |---|---|---:|---:|---:|---:|---:|
-| Qwen ROM AR (G = 6,144) | B = 1 | 9,968 | 86.4 | 84.6 | **84.6** | 102 → 83.4 |
+| Qwen ROM AR (G = 6,144) | B = 1 | 9,851 | 86.5 | 84.7 | **84.6** | 102 → 82.8 |
 | Qwen ROM AR (G = 6,144) | saturated | 11,921 | 84.7 | 83.5 | **83.5** | 102 → 87.3 |
 | Qwen HBM tier 3 AR | B = 1 | 881 | 983 | 978 | **976** | 69.3 → 63.7 |
 | Qwen HBM tier 3 AR | saturated | 6,684 | 133 | 132 | **132** | 69.3 → 62.0 |
@@ -567,10 +596,10 @@ This table supersedes the energy columns of "Batch, energy and capacity" above.
 | Qwen HBM tier 3 DFlash | saturated | 7,101 | 129 | 129 | **128** | 69.3 → 62.4 |
 | Qwen 1× B200 AR (tier 2) | B = 1 | 331 | 2,081 | — | **2,081** | measured |
 | Qwen 1× B200 AR (tier 2) | saturated | 7,907 | 87.1 | — | **87.1** | measured |
-| V4.1 ROM AR | B = 1 | 4,167 | 3,137 | 2,686 | **328** | 12,902 → 1,194 |
-| V4.1 ROM AR | saturated | 77,022 | 208 | 187 | **106** | 12,902 → 4,977 |
-| V4.1 ROM MTP m = 1 | B = 1 | 6,063 | 2,168 | 1,860 | **228** | 12,902 → 1,141 |
-| V4.1 ROM MTP m = 1 | saturated | 50,708 | 294 | 261 | **112** | 12,902 → 3,641 |
+| V4.1 ROM AR | B = 1 | 3,809 | 19,310 | 4,246 | **481** | 73,145 → 1,428 |
+| V4.1 ROM AR | saturated | 77,022 | 1,056 | 344 | **221** | 73,145 → 8,837 |
+| V4.1 ROM MTP m = 1 | B = 1 | 5,857 | 12,638 | 2,876 | **412** | 73,145 → 1,544 |
+| V4.1 ROM MTP m = 1 | saturated | 50,708 | 1,591 | 515 | **296** | 73,145 → 7,501 |
 | V4.1 HBM tier 3 AR | B = 1 | 2,920 | 3,692 | 3,468 | **3,246** | 6,513 → 5,210 |
 | V4.1 HBM tier 3 AR | saturated | 21,792 | 913 | 895 | **755** | 6,513 → 3,067 |
 | V4.1 HBM tier 3 MTP | B = 1 | 5,673 | 2,287 | 2,184 | **1,922** | 6,513 → 4,444 |
@@ -582,8 +611,8 @@ This table supersedes the energy columns of "Batch, energy and capacity" above.
 - **The V4.1 HBM comparator gains 12–16% at batch 1 and 12–17% at saturation.**
   - Its 96 TP dies are all on every token. Their idle comes in short gaps between phases: the SMs have 281 gaps within the 253 µs they are idle, and only 91 µs of them are long enough to gate.
   - The SerDes idle between collectives mostly in gaps under 5 µs.
-- **The V4.1 ROM pipeline idles each stage in one long gap per token,** and power gating takes its batch-1 energy down 9.6×.
-- **Gated alike, V4.1 ROM uses 9.9× less energy per token than the HBM comparator at batch 1 in AR, 8.4× with MTP, and 7.1× at saturation.** The advantage is structural: a pipeline of weight-local stages idles in long gaps; a TP-96 machine does not.
+- **The V4.1 ROM pipeline idles each stage in one long gap per token,** and gating takes its batch-1 energy down 40×.
+- **Gated alike, V4.1 ROM uses 6.7× less energy per token than the HBM comparator at batch 1 in AR, 4.7× with MTP, and 3.4× (AR) / 5.0× (MTP) at saturation.** These figures use the measured ROM-field pair; the HBM comparator's SMs are still area-priced. The advantage is structural: a pipeline of weight-local stages idles in long gaps; a TP-96 machine does not.
 
 ### Adopted power and cost requirements (root, 2026-09-29)
 
@@ -593,7 +622,7 @@ This table supersedes the energy columns of "Batch, energy and capacity" above.
    - HBM controller and PHY power-down, with the DRAM self-refreshing.
    - SerDes and UCIe low-power idle, with a 5 µs pre-wake.
    - Every wake is scheduled from the static token schedule into an idle gap that fits wake + break-even. No wake may land on the single-user token path.
-2. **Adaptive MTP.** Run MTP while the batch is below the switch point and AR at or above it. The switch is 12.2 users on the V4.1 ROM array (exact) and between 8 and 16 users on the HBM comparator.
+2. **Adaptive MTP.** Run MTP while the batch is below the switch point and AR at or above it. The switch is 13.3 users on the V4.1 ROM array (exact) and between 8 and 16 users on the HBM comparator.
 3. **Via-programmable ROM is the cost basis.**
    - Shared base mask sets per die role: 3 for V4.1 (layer, head + DSpark, Engram table), 1 for Qwen.
    - 1–2 EUV coding masks per die at $0.5–1M each.
@@ -605,6 +634,32 @@ This table supersedes the energy columns of "Batch, energy and capacity" above.
 This is a user-approved study (W16, 2026-09-30). The physical floorplans leave spare area that the analytical die ledger did not predict. This section re-derives the die counts from the placed field geometry and prices the clock plan at SS sign-off. It also right-sizes the HBM dies and re-prices every design on die area. It calls the sections above; the only thing it changes elsewhere is the Qwen ROM product row (option C, below). Test: `tests/test_uarch_consolidation.py`.
 
 **TT basis pending SS.** Rows are priced at the TT model clock (1.0339 GHz) unless they are labelled SS / 1.2 GHz. **The product V4.1 die count is OPEN**: it is re-derived when the closed element pair's pitch lands, so the rows below are the decision table, not a restatement.
+
+### Headline comparison (user decision, 2026-09-30; `headline_table`)
+
+- **V4.1 ROM:** the headline is saturated throughput, energy per token and cost at **equal manufacturing cost**. Per-user speed is claimed only against real GPUs (tier 1 measured, tier 2 calibrated), and is reported honestly against the idealised HBM machine (tier 3).
+- **Qwen ROM** keeps its per-user claim.
+- ROM energies include the adopted 256-cycle pre-ramp.
+- GPU cost is the purchase price; the ROM and tier-3 cost is manufacturing capex (low NRE).
+
+| Design | Tier | Per-user AR | Per-user MTP | Saturated tok/s | mJ/token, B = 1 / saturated | Capex | Users at 1M |
+|---|---|---:|---:|---:|---:|---:|---:|
+| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | ROM | 3,402 | 4,953 | 76,501 | 535 / 294 | $572k | 866 |
+| V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires) | 3 | 3,154 | 6,303 | 101,171 | 8,244 / 739 | $1,012k | 31,052 |
+| V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires) | 3 | 3,154 | 6,303 | 50,585 | 4,853 / 739 | $513k | 15,526 |
+| V4.1 HBM tier 3 (idealised), equal power: 1 x TP-48 (48 right-sized dies, 1.2 GHz, SS wires) | 3 | 2,841 | 5,920 | 25,293 | 2,402 / 677 | $140k | 3,608 |
+| DeepSeek-V4.1-Flash on 8x B200 (tier 2, calibrated) | 2 | 278 | 539 | 13,018 | 19,852 / 423 | $200k | 839 |
+| DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance) | 1 | — | 368 | — | 14,978 / — | — | — |
+
+| Design | Tier | Per-user AR | Per-user DFlash | Saturated tok/s | mJ/token, B = 1 / saturated | Capex | Users at 8K |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144) | ROM | 9,368 | — | 23,842 | 98 / 85 | $29k | 536 |
+| Qwen HBM, 1 right-sized die(s) x 6 stacks (435.5 mm2 each) (tier 3, idealised) | 3 | 660 | 2,003 | 5,328 | 356 / 128 | $19k | 188 |
+| Qwen HBM, 2 right-sized die(s) x 4 stacks (296.9 mm2 each) (tier 3, idealised) | 3 | 881 | 2,671 | 7,105 | 356 / 128 | $20k | 255 |
+| Qwen3-8B on 1x B200, FP8 (tier 2, calibrated) | 2 | 331 | 853 | 7,907 | 2,081 / 87 | $25k | 255 |
+| Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 1 (DFlash paper Table 3) | 1 | 230 | — | — | 2,996 / — | — | — |
+| Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, Math500 (tau 8.01, 5.1x) | 1 | 1,175 | — | — | 586 / — | — | — |
+| Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, HumanEval (tau 6.50, 4.2x) | 1 | 955 | — | — | 722 / — | — | — |
 
 ### Density basis (root ruling, 2026-09-30)
 
@@ -661,23 +716,26 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 
 | Point | Clock GHz | Stages / dies | AR tok/s | MTP tok/s | Saturated AR | Gated mJ, B = 1 / saturated |
 |---|---:|---|---:|---:|---:|---:|
-| as placed (188 dies, BF16 columns in the model's timing, TT) | 1.03 | 28 / 188 | 3,809 | 5,856 | 77,516 | 352 / 105 |
-| BF16 lever: columns | 1.03 | 35 / 180 | 3,772 | 5,832 | 88,262 | 355 / 108 |
-| BF16 lever: standard_pair | 1.03 | 29 / 156 | 3,777 | 5,749 | 87,637 | 327 / 104 |
-| BF16 lever: hub_unit | 1.03 | 30 / 160 | 3,798 | 5,849 | 77,600 | 330 / 105 |
-| 28 stages (stage-count comparison) | 1.03 | 28 / 152 | 3,782 | 5,752 | 76,962 | 323 / 105 |
-| 34 stages (stage-count comparison) | 1.03 | 34 / 176 | 3,751 | 5,732 | 77,180 | 352 / 109 |
-| density asap7 | 1.03 | 24 / 120 | 3,804 | 5,766 | 76,758 | 275 / 98 |
-| density roma | 1.03 | 34 / 192 | 3,751 | 5,732 | 77,180 | 380 / 114 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: ideal depths, no concurrency cap | 1.2 | 30 / 164 | 4,290 | 6,593 | 84,258 | 312 / 108 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: 50% field-concurrency cap (W18, adopted) | 1.2 | 30 / 164 | 3,998 | 5,554 | 79,975 | 331 / 115 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: cap + W11 hub latency inventory (estimates) | 1.2 | 30 / 164 | 3,757 | 5,448 | 79,975 | 347 / 115 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: cap + measured FP32 add: chain and element adds 8 stages | 1.2 | 30 / 164 | 2,767 | 4,558 | 77,443 | 442 / 118 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: ADOPTED (AGENTS.md c0894b1c): cap + 1.2 GHz streaming domain (LAT-7 adds, W11: 1,208 MHz SS) + 0.9 GHz chain domain (LAT 3), W18 ratio-FIFO CDC | 1.2 | 30 / 164 | 3,554 | 5,042 | 76,501 | 362 / 118 |
+| as placed (188 dies, BF16 columns in the model's timing, TT) | 1.03 | 28 / 188 | 3,748 | 5,811 | 77,516 | 434 / 200 |
+| BF16 lever: columns | 1.03 | 35 / 180 | 3,712 | 5,787 | 88,262 | 427 / 191 |
+| BF16 lever: standard_pair | 1.03 | 29 / 156 | 3,717 | 5,705 | 87,637 | 408 / 196 |
+| BF16 lever: hub_unit | 1.03 | 30 / 160 | 3,737 | 5,804 | 77,600 | 409 / 196 |
+| 28 stages (stage-count comparison) | 1.03 | 28 / 152 | 3,722 | 5,709 | 76,962 | 405 / 199 |
+| 34 stages (stage-count comparison) | 1.03 | 34 / 176 | 3,692 | 5,688 | 77,180 | 425 / 194 |
+| density asap7 | 1.03 | 24 / 120 | 3,742 | 5,723 | 76,758 | 357 / 193 |
+| density roma | 1.03 | 34 / 192 | 3,692 | 5,688 | 77,180 | 456 / 200 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: ideal depths, no concurrency cap | 1.2 | 30 / 164 | 4,223 | 6,543 | 84,258 | 410 / 216 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: 50% field-concurrency cap (W18, adopted) | 1.2 | 30 / 164 | 3,940 | 5,519 | 79,975 | 427 / 221 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: cap + W11 hub latency inventory (estimates) | 1.2 | 30 / 164 | 3,706 | 5,414 | 79,975 | 442 / 221 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: cap + measured FP32 add: chain and element adds 8 stages | 1.2 | 30 / 164 | 2,739 | 4,534 | 77,443 | 530 / 223 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: ADOPTED (AGENTS.md c0894b1c): cap + 1.2 GHz streaming domain (LAT-7 adds, W11: 1,208 MHz SS) + 0.9 GHz chain domain (LAT 3), W18 ratio-FIFO CDC | 1.2 | 30 / 164 | 3,508 | 5,013 | 76,501 | 456 / 224 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS: ADOPTED + W15 SS wire reach (504 um) + W11 LAT-4 serial mul | 1.2 | 30 / 164 | 3,402 | 4,953 | 76,501 | 464 / 224 |
 
 **More stages buy no throughput.** 28 → 34 stages costs 0.8% AR (+2.2 µs of hops) and leaves the saturated rate flat (76,962 vs 77,180). The reason is that the layer-20 index scan, which does not split, sets the stage period at about 13 µs.
 
 ### Clock plan at SS (user decisions 2026-09-30; adopted in AGENTS.md c0894b1c)
+
+**Power accounting:** the per-pair ICG is adopted (W18 / power-cal). Idle pairs pay leakage only, and a busy pair's clock is dynamic energy. An interim 807 W layer-die figure came from charging every idle pair's ungated clock; it was corrected before landing. Each product row carries `cooling`, with the ungated form kept for reference.
 
 **Adopted design:** a 1.2 GHz streaming domain and a 0.9 GHz serial-chain domain.
 
@@ -691,11 +749,11 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 
 | Case | AR tok/s | MTP tok/s | Saturated AR | Gated mJ, B = 1 / saturated | Top of the critical path (µs) |
 |---|---:|---:|---:|---:|---|
-| a: all 1.2 GHz, chain adds 8 stages | 2,767 | 4,558 | 77,443 | 442 / 118 | attn.wo_a 22.37, ffn.softplus_sqrt 16.98, attn.out_allreduce 16.87 |
-| a: all 1.2 GHz, chain adds 9 stages | 2,619 | 4,451 | 77,443 | 463 / 118 | attn.wo_a 22.37, ffn.softplus_sqrt 19.1, attn.out_allreduce 16.87 |
-| b: 1.2 GHz field (LAT 7) + 0.9 GHz chain units (LAT 3), W18 CDC | 3,554 | 5,042 | 76,501 | 362 / 118 | attn.wo_a 22.53, attn.out_allreduce 16.87, ffn.combine_allreduce 16.87 |
-| b: 1.2 GHz field (LAT 7) + 0.8 GHz chain units (LAT 3), W18 CDC | 3,416 | 4,946 | 75,630 | 374 / 119 | attn.wo_a 22.53, attn.out_allreduce 16.87, ffn.combine_allreduce 16.87 |
-| c: all 0.9 GHz, LAT 3 | 3,095 | 4,210 | 63,460 | 402 / 124 | attn.wo_a 29.47, attn.out_allreduce 22.49, ffn.combine_allreduce 22.49 |
+| a: all 1.2 GHz, chain adds 8 stages | 2,739 | 4,534 | 77,443 | 530 / 223 | attn.wo_a 22.77, attn.out_allreduce 17.07, ffn.combine_allreduce 17.07 |
+| a: all 1.2 GHz, chain adds 9 stages | 2,594 | 4,430 | 77,443 | 549 / 223 | attn.wo_a 22.77, ffn.softplus_sqrt 19.1, attn.out_allreduce 17.07 |
+| b: 1.2 GHz field (LAT 7) + 0.9 GHz chain units (LAT 3), W18 CDC | 3,508 | 5,013 | 76,501 | 456 / 224 | attn.wo_a 22.93, attn.out_allreduce 17.07, ffn.combine_allreduce 17.07 |
+| b: 1.2 GHz field (LAT 7) + 0.8 GHz chain units (LAT 3), W18 CDC | 3,374 | 4,918 | 75,630 | 467 / 224 | attn.wo_a 22.93, attn.out_allreduce 17.07, ffn.combine_allreduce 17.07 |
+| c: all 0.9 GHz, LAT 3 | 3,049 | 4,183 | 63,460 | 478 / 212 | attn.wo_a 30.0, attn.out_allreduce 22.76, ffn.combine_allreduce 22.76 |
 
 - **The measured add overturns "everything at 1.2 GHz".** At 1.2 GHz an add needs 8–9 stages (6.7–7.5 ns), so the serial chains slow down more than the clock gains.
 - **The split design keeps the chains on the 906 MHz LAT-3 add**, and gives the best per-user rate with a saturated rate within a few percent.
@@ -703,9 +761,9 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 
 **Droop pre-ramp energy** (W18 67b0bd49), on the adopted product:
 
-- 50% cap + 256-cycle pre-ramp: +70.6 mJ per token, i.e. 433.0 / 188.9 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +99.1 mJ.
-- 1,024-cycle pre-ramp, no cap: +561.6 mJ per token, i.e. 924.0 / 679.9 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +788.6 mJ.
-- 256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV): +141.1 mJ per token, i.e. 503.5 / 259.4 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +198.2 mJ.
+- 50% cap + 256-cycle pre-ramp: +70.6 mJ per token, i.e. 535.0 / 294.3 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +99.2 mJ.
+- 1,024-cycle pre-ramp, no cap: +561.6 mJ per token, i.e. 1026.1 / 785.3 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +789.3 mJ.
+- 256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV): +141.1 mJ per token, i.e. 605.6 / 364.8 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +198.3 mJ.
 
 The priced graph has 10.87 field-op starts per layer die per token, of which 8.03 follow an idle gap longer than 256 cycles (ASSUMED decay constant). W18's count was 6. The 1,024-cycle no-cap pre-ramp is rejected on energy.
 
@@ -713,9 +771,9 @@ The priced graph has 10.87 field-op starts per layer die per token, of which 8.0
 
 | Depth | Logic SS GHz: AR tok/s |
 |---|---|
-| 8192m8 (29 stages) | 0.70: 2,598, 0.75: 2,771, 0.80: 2,946, 0.85: 3,116, 0.90: 3,286, 1.35: 3,345 |
-| 4096m8 (30 stages) | 0.70: 2,596, 0.75: 2,768, 0.80: 2,943, 0.85: 3,112, 0.90: 3,282, 0.95: 3,448, 1.00: 3,614, 1.05: 3,776, 1.10: 3,930, 1.15: 4,078, 1.20: 4,231, 1.35: 4,250 |
-| 2048m4 (31 stages) | 0.70: 2,593, 0.75: 2,765, 0.80: 2,940, 0.85: 3,108, 0.90: 3,278, 0.95: 3,444, 1.00: 3,609, 1.05: 3,771, 1.10: 3,924, 1.15: 4,072, 1.20: 4,225, 1.25: 4,370, 1.30: 4,514, 1.35: 4,584 |
+| 8192m8 (29 stages) | 0.70: 2,556, 0.75: 2,726, 0.80: 2,899, 0.85: 3,066, 0.90: 3,234, 1.35: 3,292 |
+| 4096m8 (30 stages) | 0.70: 2,554, 0.75: 2,724, 0.80: 2,896, 0.85: 3,062, 0.90: 3,230, 0.95: 3,394, 1.00: 3,557, 1.05: 3,717, 1.10: 3,869, 1.15: 4,015, 1.20: 4,166, 1.35: 4,185 |
+| 2048m4 (31 stages) | 0.70: 2,552, 0.75: 2,721, 0.80: 2,892, 0.85: 3,059, 0.90: 3,226, 0.95: 3,390, 1.00: 3,552, 1.05: 3,712, 1.10: 3,863, 1.15: 4,009, 1.20: 4,160, 1.25: 4,303, 1.30: 4,445, 1.35: 4,514 |
 
 **K arbiter** (W18: 7 + 2 × (hops − 1) cycles). There are 56 HBM-touching nodes on the path. The cost is -0.297% at 1 mm reach (13 cycles worst) and -0.343% at the 0.75 mm SS reach (15 cycles). It is not yet in the product.
 
@@ -768,16 +826,16 @@ The AR-only ROM does not fit the two-reticle package at 75 + ECC: it needs 746.5
 
 | Dies × stacks | Users at 1M | AR tok/s | MTP tok/s | Saturated AR | mJ, B = 1 / saturated | Capex $ |
 |---|---:|---:|---:|---:|---:|---:|
-| 7 × 4 (capacity minimum) | 60 | 1,380 | 2,580 | 4,760 | 1744 / 663 | 34,183 |
-| 17 × 4 | 926 | 2,139 | 4,927 | 11,561 | 1904 / 663 | 60,144 |
-| 24 × 4 | 1,531 | 2,441 | 5,379 | 16,321 | 2009 / 663 | 77,306 |
-| 48 × 4 | 3,608 | 2,874 | 5,962 | 25,293 | 2392 / 677 | 139,613 |
-| 96 × 4 | 7,763 | 3,194 | 6,350 | 25,293 | 3136 / 739 | 264,226 |
-| 5 × 6 (capacity minimum) | 103 | 1,432 | 2,761 | 5,100 | 1691 / 652 | 35,168 |
-| 11 × 6 | 882 | 2,135 | 4,920 | 11,221 | 1800 / 652 | 59,371 |
-| 24 × 6 | 2,570 | 2,710 | 5,749 | 24,482 | 2044 / 652 | 111,809 |
-| 48 × 6 | 5,685 | 3,077 | 6,213 | 25,293 | 2487 / 688 | 208,618 |
-| 96 × 6 | 11,917 | 3,293 | 6,464 | 25,293 | 3378 / 761 | 402,235 |
+| 7 × 4 (capacity minimum) | 60 | 1,372 | 2,579 | 4,760 | 1746 / 663 | 34,183 |
+| 17 × 4 | 926 | 2,121 | 4,898 | 11,561 | 1908 / 663 | 60,144 |
+| 24 × 4 | 1,531 | 2,418 | 5,345 | 16,321 | 2014 / 663 | 77,306 |
+| 48 × 4 | 3,608 | 2,841 | 5,920 | 25,293 | 2402 / 677 | 139,613 |
+| 96 × 4 | 7,763 | 3,154 | 6,303 | 25,293 | 3157 / 739 | 264,226 |
+| 5 × 6 (capacity minimum) | 103 | 1,418 | 2,760 | 5,100 | 1693 / 652 | 35,168 |
+| 11 × 6 | 882 | 2,104 | 4,872 | 11,221 | 1805 / 652 | 59,371 |
+| 24 × 6 | 2,570 | 2,661 | 5,684 | 24,482 | 2055 / 652 | 111,809 |
+| 48 × 6 | 5,685 | 3,014 | 6,136 | 25,293 | 2509 / 688 | 208,618 |
+| 96 × 6 | 11,917 | 3,221 | 6,382 | 25,293 | 3421 / 761 | 402,235 |
 
 - To hold 866 users at 1M, the comparator needs 17 dies × 4 stacks or 11 × 6.
 - Its existing 811-user figure uses a pipelined busiest-die rule; under TP-96 it holds 7,763.
@@ -793,13 +851,13 @@ The AR-only ROM does not fit the two-reticle package at 75 + ECC: it needs 746.5
 
 ### The comparison rule
 
-The reference is the adopted V4.1 ROM product basis: 133,660 mm², $571,785 capex (low), and 9,050 W gated at the saturated AR rate. The HBM side runs at 1.2 GHz.
+The reference is the adopted V4.1 ROM product basis: 133,660 mm², $571,785 capex (low), and 17,115 W gated at the saturated AR rate. The HBM side runs at 1.2 GHz.
 
 | Rule | HBM configuration | AR tok/s | MTP tok/s | Saturated AR | Users at 1M | mJ, B = 1 / saturated |
 |---|---|---:|---:|---:|---:|---:|
-| equal area | 4 × TP-96 (384 dies) | 3,194 | 6,350 | 101,171 | 31,052 | 8158 / 739 |
-| equal cost (headline pairing) | 2 × TP-96 (192 dies) | 3,194 | 6,350 | 50,585 | 15,526 | 4810 / 739 |
-| equal power | 1 × TP-20 (20 dies) | 2,305 | 5,181 | 13,601 | 1,185 | 1945 / 663 |
+| equal area | 4 × TP-96 (384 dies) | 3,154 | 6,303 | 101,171 | 31,052 | 8244 / 739 |
+| equal cost (headline pairing) | 2 × TP-96 (192 dies) | 3,154 | 6,303 | 50,585 | 15,526 | 4853 / 739 |
+| equal power | 1 × TP-48 (48 dies) | 2,841 | 5,920 | 25,293 | 3,608 | 2402 / 677 |
 
 ### Floorplan checks needed (coordinate through root)
 

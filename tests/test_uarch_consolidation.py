@@ -192,10 +192,15 @@ def test_adopted_product_row():
     assert list(ad["slow_domain"]) == [0.9e9, "w18"] and ad["elem_stages"] == 7
     assert ad["added_latency"] == {"suffix:softplus_sqrt": -97}         # the v41x softplus (162, not 259)
     assert ad["stages"] == 30 and ad["dies"] == 164
+    assert r["v41_rom"]["product"]["reference_for_comparisons"]["dies"] == 164
     ideal = next(p for p in pts if p["label"].endswith("ideal depths, no concurrency cap"))
     capped = next(p for p in pts if p["label"].endswith("(W18, adopted)"))
     assert capped["ar_tokens_s_b1"] < ideal["ar_tokens_s_b1"]          # the 50% cap costs time
-    assert ad["cooling"]["layer_die_busiest_w_saturated"] < ad["cooling"]["limit_w_per_die"]
+    # per-pair ICG adopted: idle pairs pay leakage only; the ungated form (every idle pair clocked) is kept for the
+    # waterfall and must be far above (the pre-fix 807 W came from charging it)
+    c = ad["cooling"]
+    assert c["layer_die_mean_w_saturated"] <= c["layer_die_busiest_w_saturated"] < c["limit_w_per_die"] and c["fits"]
+    assert c["cooling_ungated"]["mean_w"] > 3 * c["layer_die_mean_w_saturated"]
     # the comparison rule's reference is the adopted row
     assert abs(r["comparison_rule"]["v41_targets"]["power"] - ad["energy"]["ar_sat"]["gated_system_w"]) < 1.0
 

@@ -370,7 +370,7 @@ def test_cts_route_record_reproduces_config():
     block = {key: design[key] for key in
              ("top", "parameters", "clock_port", "false_path_from_ports")}
     block["sources"] = [source["path"] for source in design["sources"]]
-    view = flow.with_cts_cluster_size(flow.VIEWS[record["view"]["name"]],
+    view = flow.with_cts_cluster_size(flow.recorded_view(record),
                                       pnr["clock_tree_config"]["CTS_CLUSTER_SIZE"])
     lines = flow.orfs_config_lines(pnr["design_nickname"], block, pnr["platform"],
                                    view["pnr"], pnr["core_utilization_percent"],

@@ -43,8 +43,10 @@ def test_batch_curves_are_physical():
 def test_batch_one_matches_the_single_user_sections():
     e = _rec()
     # W15 (2026-09-29): V4.1 collectives and the Qwen TP-2 exchanges priced from the RTL measurement
-    assert abs(e["v41_rom"]["ar"]["tokens_s_b1"] - 3808.8) < 1.0
-    assert abs(e["v41_rom"]["mtp_m1"]["tokens_s_b1"] - 5856.5) < 1.0
+    # re-pinned 2026-09-30 (W16 merge): main's model (W11 distributed-VM stages, two-word attention loader, W18 power
+    # calibration) gives 3,747.6 / 5,811.4; the committed 3,808.8 / 5,856.5 record predated those merges
+    assert abs(e["v41_rom"]["ar"]["tokens_s_b1"] - 3747.6) < 1.0
+    assert abs(e["v41_rom"]["mtp_m1"]["tokens_s_b1"] - 5811.4) < 1.0
     # W16 / root 2026-09-30: the Qwen ROM product is option C (4 dies, TP-4, G 6,144, W12 wires)
     assert abs(e["qwen_rom"]["ar"]["tokens_s_b1"] - 9367.6) < 1.0
     assert abs(e["qwen_hbm"]["ar"]["tokens_s_b1"] - 880.6) < 1.0

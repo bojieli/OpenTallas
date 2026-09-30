@@ -2438,27 +2438,27 @@
    "product": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 70.6,
-     "gated_mJ_b1": 433.0,
-     "gated_mJ_saturated": 188.9,
-     "gap_only_pre_ramp_mJ_per_token": 99.1,
-     "gap_only_gated_mJ_b1": 461.5,
-     "gap_only_gated_mJ_saturated": 217.4
+     "gated_mJ_b1": 535.0,
+     "gated_mJ_saturated": 294.3,
+     "gap_only_pre_ramp_mJ_per_token": 99.2,
+     "gap_only_gated_mJ_b1": 563.6,
+     "gap_only_gated_mJ_saturated": 322.9
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 561.6,
-     "gated_mJ_b1": 924.0,
-     "gated_mJ_saturated": 679.9,
-     "gap_only_pre_ramp_mJ_per_token": 788.6,
-     "gap_only_gated_mJ_b1": 1151.1,
-     "gap_only_gated_mJ_saturated": 906.9
+     "gated_mJ_b1": 1026.1,
+     "gated_mJ_saturated": 785.3,
+     "gap_only_pre_ramp_mJ_per_token": 789.3,
+     "gap_only_gated_mJ_b1": 1253.8,
+     "gap_only_gated_mJ_saturated": 1013.0
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 141.1,
-     "gated_mJ_b1": 503.5,
-     "gated_mJ_saturated": 259.4,
-     "gap_only_pre_ramp_mJ_per_token": 198.2,
-     "gap_only_gated_mJ_b1": 560.6,
-     "gap_only_gated_mJ_saturated": 316.5
+     "gated_mJ_b1": 605.6,
+     "gated_mJ_saturated": 364.8,
+     "gap_only_pre_ramp_mJ_per_token": 198.3,
+     "gap_only_gated_mJ_b1": 662.8,
+     "gap_only_gated_mJ_saturated": 422.1
     }
    }
   },
@@ -2541,11 +2541,11 @@
      "capped_by_macro": false,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 2598.4,
-     "mtp_tokens_s_b1": 3924.0,
+     "ar_tokens_s_b1": 2556.4,
+     "mtp_tokens_s_b1": 3894.5,
      "ar_saturated_tokens_s": 59334.6,
-     "gated_mJ_b1": 444.31,
-     "gated_mJ_saturated": 120.8
+     "gated_mJ_b1": 515.78,
+     "gated_mJ_saturated": 210.41
     },
     {
      "depth": "8192m8",
@@ -2554,11 +2554,11 @@
      "capped_by_macro": false,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 2770.9,
-     "mtp_tokens_s_b1": 4195.4,
+     "ar_tokens_s_b1": 2726.3,
+     "mtp_tokens_s_b1": 4163.5,
      "ar_saturated_tokens_s": 63572.8,
-     "gated_mJ_b1": 420.98,
-     "gated_mJ_saturated": 117.28
+     "gated_mJ_b1": 494.17,
+     "gated_mJ_saturated": 207.52
     },
     {
      "depth": "8192m8",
@@ -2567,11 +2567,11 @@
      "capped_by_macro": false,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 2946.1,
-     "mtp_tokens_s_b1": 4468.7,
+     "ar_tokens_s_b1": 2898.8,
+     "mtp_tokens_s_b1": 4434.7,
      "ar_saturated_tokens_s": 67811.0,
-     "gated_mJ_b1": 400.09,
-     "gated_mJ_saturated": 114.19
+     "gated_mJ_b1": 474.82,
+     "gated_mJ_saturated": 204.99
     },
     {
      "depth": "8192m8",
@@ -2580,11 +2580,11 @@
      "capped_by_macro": false,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3115.6,
-     "mtp_tokens_s_b1": 4737.4,
+     "ar_tokens_s_b1": 3065.8,
+     "mtp_tokens_s_b1": 4701.5,
      "ar_saturated_tokens_s": 72049.2,
-     "gated_mJ_b1": 382.11,
-     "gated_mJ_saturated": 111.47
+     "gated_mJ_b1": 458.17,
+     "gated_mJ_saturated": 202.77
     },
     {
      "depth": "8192m8",
@@ -2593,11 +2593,11 @@
      "capped_by_macro": false,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3286.4,
-     "mtp_tokens_s_b1": 5007.6,
+     "ar_tokens_s_b1": 3234.0,
+     "mtp_tokens_s_b1": 4969.7,
      "ar_saturated_tokens_s": 76287.4,
-     "gated_mJ_b1": 365.88,
-     "gated_mJ_saturated": 109.05
+     "gated_mJ_b1": 443.13,
+     "gated_mJ_saturated": 200.78
     },
     {
      "depth": "8192m8",
@@ -2606,11 +2606,11 @@
      "capped_by_macro": true,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3345.0,
-     "mtp_tokens_s_b1": 5102.3,
+     "ar_tokens_s_b1": 3291.9,
+     "mtp_tokens_s_b1": 5063.7,
      "ar_saturated_tokens_s": 77813.2,
-     "gated_mJ_b1": 360.68,
-     "gated_mJ_saturated": 108.24
+     "gated_mJ_b1": 438.31,
+     "gated_mJ_saturated": 200.12
     },
     {
      "depth": "8192m8",
@@ -2619,11 +2619,11 @@
      "capped_by_macro": true,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3345.0,
-     "mtp_tokens_s_b1": 5102.3,
+     "ar_tokens_s_b1": 3291.9,
+     "mtp_tokens_s_b1": 5063.7,
      "ar_saturated_tokens_s": 77813.2,
-     "gated_mJ_b1": 360.68,
-     "gated_mJ_saturated": 108.24
+     "gated_mJ_b1": 438.31,
+     "gated_mJ_saturated": 200.12
     },
     {
      "depth": "8192m8",
@@ -2632,11 +2632,11 @@
      "capped_by_macro": true,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3345.0,
-     "mtp_tokens_s_b1": 5102.3,
+     "ar_tokens_s_b1": 3291.9,
+     "mtp_tokens_s_b1": 5063.7,
      "ar_saturated_tokens_s": 77813.2,
-     "gated_mJ_b1": 360.68,
-     "gated_mJ_saturated": 108.24
+     "gated_mJ_b1": 438.31,
+     "gated_mJ_saturated": 200.12
     },
     {
      "depth": "8192m8",
@@ -2645,11 +2645,11 @@
      "capped_by_macro": true,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3345.0,
-     "mtp_tokens_s_b1": 5102.3,
+     "ar_tokens_s_b1": 3291.9,
+     "mtp_tokens_s_b1": 5063.7,
      "ar_saturated_tokens_s": 77813.2,
-     "gated_mJ_b1": 360.68,
-     "gated_mJ_saturated": 108.24
+     "gated_mJ_b1": 438.31,
+     "gated_mJ_saturated": 200.12
     },
     {
      "depth": "8192m8",
@@ -2658,11 +2658,11 @@
      "capped_by_macro": true,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3345.0,
-     "mtp_tokens_s_b1": 5102.3,
+     "ar_tokens_s_b1": 3291.9,
+     "mtp_tokens_s_b1": 5063.7,
      "ar_saturated_tokens_s": 77813.2,
-     "gated_mJ_b1": 360.68,
-     "gated_mJ_saturated": 108.24
+     "gated_mJ_b1": 438.31,
+     "gated_mJ_saturated": 200.12
     },
     {
      "depth": "8192m8",
@@ -2671,11 +2671,11 @@
      "capped_by_macro": true,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3345.0,
-     "mtp_tokens_s_b1": 5102.3,
+     "ar_tokens_s_b1": 3291.9,
+     "mtp_tokens_s_b1": 5063.7,
      "ar_saturated_tokens_s": 77813.2,
-     "gated_mJ_b1": 360.68,
-     "gated_mJ_saturated": 108.24
+     "gated_mJ_b1": 438.31,
+     "gated_mJ_saturated": 200.12
     },
     {
      "depth": "8192m8",
@@ -2684,11 +2684,11 @@
      "capped_by_macro": true,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3345.0,
-     "mtp_tokens_s_b1": 5102.3,
+     "ar_tokens_s_b1": 3291.9,
+     "mtp_tokens_s_b1": 5063.7,
      "ar_saturated_tokens_s": 77813.2,
-     "gated_mJ_b1": 360.68,
-     "gated_mJ_saturated": 108.24
+     "gated_mJ_b1": 438.31,
+     "gated_mJ_saturated": 200.12
     },
     {
      "depth": "8192m8",
@@ -2697,11 +2697,11 @@
      "capped_by_macro": true,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3345.0,
-     "mtp_tokens_s_b1": 5102.3,
+     "ar_tokens_s_b1": 3291.9,
+     "mtp_tokens_s_b1": 5063.7,
      "ar_saturated_tokens_s": 77813.2,
-     "gated_mJ_b1": 360.68,
-     "gated_mJ_saturated": 108.24
+     "gated_mJ_b1": 438.31,
+     "gated_mJ_saturated": 200.12
     },
     {
      "depth": "8192m8",
@@ -2710,11 +2710,11 @@
      "capped_by_macro": true,
      "stages": 29,
      "dies": 156,
-     "ar_tokens_s_b1": 3345.0,
-     "mtp_tokens_s_b1": 5102.3,
+     "ar_tokens_s_b1": 3291.9,
+     "mtp_tokens_s_b1": 5063.7,
      "ar_saturated_tokens_s": 77813.2,
-     "gated_mJ_b1": 360.68,
-     "gated_mJ_saturated": 108.24
+     "gated_mJ_b1": 438.31,
+     "gated_mJ_saturated": 200.12
     },
     {
      "depth": "4096m8",
@@ -2723,11 +2723,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 2595.9,
-     "mtp_tokens_s_b1": 3922.4,
+     "ar_tokens_s_b1": 2553.9,
+     "mtp_tokens_s_b1": 3892.9,
      "ar_saturated_tokens_s": 52162.9,
-     "gated_mJ_b1": 462.43,
-     "gated_mJ_saturated": 126.96
+     "gated_mJ_b1": 535.09,
+     "gated_mJ_saturated": 214.97
     },
     {
      "depth": "4096m8",
@@ -2736,11 +2736,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 2768.0,
-     "mtp_tokens_s_b1": 4193.6,
+     "ar_tokens_s_b1": 2723.5,
+     "mtp_tokens_s_b1": 4161.7,
      "ar_saturated_tokens_s": 55888.8,
-     "gated_mJ_b1": 438.12,
-     "gated_mJ_saturated": 123.21
+     "gated_mJ_b1": 512.32,
+     "gated_mJ_saturated": 211.84
     },
     {
      "depth": "4096m8",
@@ -2749,11 +2749,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 2942.9,
-     "mtp_tokens_s_b1": 4466.5,
+     "ar_tokens_s_b1": 2895.7,
+     "mtp_tokens_s_b1": 4432.6,
      "ar_saturated_tokens_s": 59614.7,
-     "gated_mJ_b1": 416.35,
-     "gated_mJ_saturated": 119.92
+     "gated_mJ_b1": 491.93,
+     "gated_mJ_saturated": 209.1
     },
     {
      "depth": "4096m8",
@@ -2762,11 +2762,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 3112.0,
-     "mtp_tokens_s_b1": 4735.1,
+     "ar_tokens_s_b1": 3062.3,
+     "mtp_tokens_s_b1": 4699.2,
      "ar_saturated_tokens_s": 63340.6,
-     "gated_mJ_b1": 397.61,
-     "gated_mJ_saturated": 117.03
+     "gated_mJ_b1": 474.37,
+     "gated_mJ_saturated": 206.69
     },
     {
      "depth": "4096m8",
@@ -2775,11 +2775,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 3282.4,
-     "mtp_tokens_s_b1": 5004.9,
+     "ar_tokens_s_b1": 3230.1,
+     "mtp_tokens_s_b1": 4967.0,
      "ar_saturated_tokens_s": 67066.5,
-     "gated_mJ_b1": 380.69,
-     "gated_mJ_saturated": 114.45
+     "gated_mJ_b1": 458.52,
+     "gated_mJ_saturated": 204.54
     },
     {
      "depth": "4096m8",
@@ -2788,11 +2788,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 3448.4,
-     "mtp_tokens_s_b1": 5271.2,
+     "ar_tokens_s_b1": 3393.8,
+     "mtp_tokens_s_b1": 5231.3,
      "ar_saturated_tokens_s": 70792.5,
-     "gated_mJ_b1": 365.81,
-     "gated_mJ_saturated": 112.15
+     "gated_mJ_b1": 444.57,
+     "gated_mJ_saturated": 202.62
     },
     {
      "depth": "4096m8",
@@ -2801,11 +2801,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 3614.0,
-     "mtp_tokens_s_b1": 5536.9,
+     "ar_tokens_s_b1": 3557.0,
+     "mtp_tokens_s_b1": 5495.2,
      "ar_saturated_tokens_s": 74518.4,
-     "gated_mJ_b1": 352.33,
-     "gated_mJ_saturated": 110.07
+     "gated_mJ_b1": 431.95,
+     "gated_mJ_saturated": 200.9
     },
     {
      "depth": "4096m8",
@@ -2814,11 +2814,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 3776.4,
-     "mtp_tokens_s_b1": 5802.9,
+     "ar_tokens_s_b1": 3717.1,
+     "mtp_tokens_s_b1": 5759.2,
      "ar_saturated_tokens_s": 77782.2,
-     "gated_mJ_b1": 340.26,
-     "gated_mJ_saturated": 108.29
+     "gated_mJ_b1": 420.63,
+     "gated_mJ_saturated": 199.42
     },
     {
      "depth": "4096m8",
@@ -2827,11 +2827,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 3930.1,
-     "mtp_tokens_s_b1": 6066.0,
+     "ar_tokens_s_b1": 3868.8,
+     "mtp_tokens_s_b1": 6020.5,
      "ar_saturated_tokens_s": 80018.6,
-     "gated_mJ_b1": 329.75,
-     "gated_mJ_saturated": 106.89
+     "gated_mJ_b1": 410.78,
+     "gated_mJ_saturated": 198.27
     },
     {
      "depth": "4096m8",
@@ -2840,11 +2840,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 4078.3,
-     "mtp_tokens_s_b1": 6325.6,
+     "ar_tokens_s_b1": 4015.1,
+     "mtp_tokens_s_b1": 6278.2,
      "ar_saturated_tokens_s": 82175.8,
-     "gated_mJ_b1": 320.37,
-     "gated_mJ_saturated": 105.6
+     "gated_mJ_b1": 401.98,
+     "gated_mJ_saturated": 197.21
     },
     {
      "depth": "4096m8",
@@ -2853,11 +2853,11 @@
      "capped_by_macro": false,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 4231.4,
-     "mtp_tokens_s_b1": 6589.7,
+     "ar_tokens_s_b1": 4166.3,
+     "mtp_tokens_s_b1": 6540.5,
      "ar_saturated_tokens_s": 84258.0,
-     "gated_mJ_b1": 311.36,
-     "gated_mJ_saturated": 104.43
+     "gated_mJ_b1": 393.54,
+     "gated_mJ_saturated": 196.25
     },
     {
      "depth": "4096m8",
@@ -2866,11 +2866,11 @@
      "capped_by_macro": true,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 4250.1,
-     "mtp_tokens_s_b1": 6621.7,
+     "ar_tokens_s_b1": 4184.7,
+     "mtp_tokens_s_b1": 6572.2,
      "ar_saturated_tokens_s": 84503.0,
-     "gated_mJ_b1": 310.31,
-     "gated_mJ_saturated": 104.29
+     "gated_mJ_b1": 392.56,
+     "gated_mJ_saturated": 196.14
     },
     {
      "depth": "4096m8",
@@ -2879,11 +2879,11 @@
      "capped_by_macro": true,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 4250.1,
-     "mtp_tokens_s_b1": 6621.7,
+     "ar_tokens_s_b1": 4184.7,
+     "mtp_tokens_s_b1": 6572.2,
      "ar_saturated_tokens_s": 84503.0,
-     "gated_mJ_b1": 310.31,
-     "gated_mJ_saturated": 104.29
+     "gated_mJ_b1": 392.56,
+     "gated_mJ_saturated": 196.14
     },
     {
      "depth": "4096m8",
@@ -2892,11 +2892,11 @@
      "capped_by_macro": true,
      "stages": 30,
      "dies": 164,
-     "ar_tokens_s_b1": 4250.1,
-     "mtp_tokens_s_b1": 6621.7,
+     "ar_tokens_s_b1": 4184.7,
+     "mtp_tokens_s_b1": 6572.2,
      "ar_saturated_tokens_s": 84503.0,
-     "gated_mJ_b1": 310.31,
-     "gated_mJ_saturated": 104.29
+     "gated_mJ_b1": 392.56,
+     "gated_mJ_saturated": 196.14
     },
     {
      "depth": "2048m4",
@@ -2905,11 +2905,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 2593.4,
-     "mtp_tokens_s_b1": 3920.7,
+     "ar_tokens_s_b1": 2551.5,
+     "mtp_tokens_s_b1": 3891.3,
      "ar_saturated_tokens_s": 59401.9,
-     "gated_mJ_b1": 469.07,
-     "gated_mJ_saturated": 125.9
+     "gated_mJ_b1": 540.98,
+     "gated_mJ_saturated": 212.99
     },
     {
      "depth": "2048m4",
@@ -2918,11 +2918,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 2765.2,
-     "mtp_tokens_s_b1": 4191.7,
+     "ar_tokens_s_b1": 2720.7,
+     "mtp_tokens_s_b1": 4159.8,
      "ar_saturated_tokens_s": 63644.9,
-     "gated_mJ_b1": 444.42,
-     "gated_mJ_saturated": 122.19
+     "gated_mJ_b1": 517.83,
+     "gated_mJ_saturated": 209.88
     },
     {
      "depth": "2048m4",
@@ -2931,11 +2931,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 2939.6,
-     "mtp_tokens_s_b1": 4464.4,
+     "ar_tokens_s_b1": 2892.5,
+     "mtp_tokens_s_b1": 4430.6,
      "ar_saturated_tokens_s": 67887.9,
-     "gated_mJ_b1": 422.34,
-     "gated_mJ_saturated": 118.94
+     "gated_mJ_b1": 497.11,
+     "gated_mJ_saturated": 207.16
     },
     {
      "depth": "2048m4",
@@ -2944,11 +2944,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 3108.4,
-     "mtp_tokens_s_b1": 4732.7,
+     "ar_tokens_s_b1": 3058.8,
+     "mtp_tokens_s_b1": 4696.8,
      "ar_saturated_tokens_s": 72130.9,
-     "gated_mJ_b1": 403.34,
-     "gated_mJ_saturated": 116.07
+     "gated_mJ_b1": 479.26,
+     "gated_mJ_saturated": 204.76
     },
     {
      "depth": "2048m4",
@@ -2957,11 +2957,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 3278.4,
-     "mtp_tokens_s_b1": 5002.3,
+     "ar_tokens_s_b1": 3226.3,
+     "mtp_tokens_s_b1": 4964.4,
      "ar_saturated_tokens_s": 76373.9,
-     "gated_mJ_b1": 386.17,
-     "gated_mJ_saturated": 113.52
+     "gated_mJ_b1": 463.15,
+     "gated_mJ_saturated": 202.63
     },
     {
      "depth": "2048m4",
@@ -2970,11 +2970,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 3444.0,
-     "mtp_tokens_s_b1": 5268.2,
+     "ar_tokens_s_b1": 3389.5,
+     "mtp_tokens_s_b1": 5228.4,
      "ar_saturated_tokens_s": 80616.9,
-     "gated_mJ_b1": 371.08,
-     "gated_mJ_saturated": 111.24
+     "gated_mJ_b1": 448.97,
+     "gated_mJ_saturated": 200.72
     },
     {
      "depth": "2048m4",
@@ -2983,11 +2983,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 3609.1,
-     "mtp_tokens_s_b1": 5533.7,
+     "ar_tokens_s_b1": 3552.3,
+     "mtp_tokens_s_b1": 5492.0,
      "ar_saturated_tokens_s": 84859.9,
-     "gated_mJ_b1": 357.41,
-     "gated_mJ_saturated": 109.18
+     "gated_mJ_b1": 436.13,
+     "gated_mJ_saturated": 199.0
     },
     {
      "depth": "2048m4",
@@ -2996,11 +2996,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 3771.1,
-     "mtp_tokens_s_b1": 5799.3,
+     "ar_tokens_s_b1": 3712.0,
+     "mtp_tokens_s_b1": 5755.7,
      "ar_saturated_tokens_s": 88504.1,
-     "gated_mJ_b1": 345.16,
-     "gated_mJ_saturated": 107.43
+     "gated_mJ_b1": 424.63,
+     "gated_mJ_saturated": 197.55
     },
     {
      "depth": "2048m4",
@@ -3009,11 +3009,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 3924.3,
-     "mtp_tokens_s_b1": 6062.1,
+     "ar_tokens_s_b1": 3863.2,
+     "mtp_tokens_s_b1": 6016.6,
      "ar_saturated_tokens_s": 90823.3,
-     "gated_mJ_b1": 334.5,
-     "gated_mJ_saturated": 106.07
+     "gated_mJ_b1": 414.62,
+     "gated_mJ_saturated": 196.43
     },
     {
      "depth": "2048m4",
@@ -3022,11 +3022,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 4072.1,
-     "mtp_tokens_s_b1": 6321.3,
+     "ar_tokens_s_b1": 4009.1,
+     "mtp_tokens_s_b1": 6274.0,
      "ar_saturated_tokens_s": 93049.5,
-     "gated_mJ_b1": 324.99,
-     "gated_mJ_saturated": 104.83
+     "gated_mJ_b1": 405.67,
+     "gated_mJ_saturated": 195.41
     },
     {
      "depth": "2048m4",
@@ -3035,11 +3035,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 4224.8,
-     "mtp_tokens_s_b1": 6585.1,
+     "ar_tokens_s_b1": 4159.9,
+     "mtp_tokens_s_b1": 6535.9,
      "ar_saturated_tokens_s": 95188.3,
-     "gated_mJ_b1": 315.85,
-     "gated_mJ_saturated": 103.7
+     "gated_mJ_b1": 397.09,
+     "gated_mJ_saturated": 194.48
     },
     {
      "depth": "2048m4",
@@ -3048,11 +3048,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 4369.6,
-     "mtp_tokens_s_b1": 6842.8,
+     "ar_tokens_s_b1": 4302.9,
+     "mtp_tokens_s_b1": 6791.8,
      "ar_saturated_tokens_s": 97244.7,
-     "gated_mJ_b1": 307.78,
-     "gated_mJ_saturated": 102.65
+     "gated_mJ_b1": 389.5,
+     "gated_mJ_saturated": 193.62
     },
     {
      "depth": "2048m4",
@@ -3061,11 +3061,11 @@
      "capped_by_macro": false,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 4513.7,
-     "mtp_tokens_s_b1": 7100.1,
+     "ar_tokens_s_b1": 4445.2,
+     "mtp_tokens_s_b1": 7047.3,
      "ar_saturated_tokens_s": 99223.3,
-     "gated_mJ_b1": 300.26,
-     "gated_mJ_saturated": 101.68
+     "gated_mJ_b1": 382.44,
+     "gated_mJ_saturated": 192.83
     },
     {
      "depth": "2048m4",
@@ -3074,11 +3074,11 @@
      "capped_by_macro": true,
      "stages": 31,
      "dies": 168,
-     "ar_tokens_s_b1": 4583.8,
-     "mtp_tokens_s_b1": 7224.8,
+     "ar_tokens_s_b1": 4514.5,
+     "mtp_tokens_s_b1": 7171.1,
      "ar_saturated_tokens_s": 100146.8,
-     "gated_mJ_b1": 296.77,
-     "gated_mJ_saturated": 101.25
+     "gated_mJ_b1": 379.16,
+     "gated_mJ_saturated": 192.47
     }
    ],
    "tt_clock_hz": 1033900000.0,
@@ -3114,12 +3114,13 @@
   "product": {
    "status": "OPEN: re-derived when the closed pair's pitch lands (root 2026-09-30); the table-die count follows W17's confirmation of the Engram path",
    "reference_for_comparisons": {
-    "stages": 29,
-    "layer_dies": 116,
-    "head_dies": 4,
+    "stages": 30,
+    "layer_dies": 120,
+    "head_dies": 8,
     "table_dies": 36,
-    "dies": 156,
-    "basis": "storage-only 75.0, BF16 on the standard pair, W10 budget pitch, 12.5%, ring credit"
+    "dies": 164,
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS: ADOPTED + W15 SS wire reach (504 um) + W11 LAT-4 serial mul",
+    "basis": "storage-only 75.0, BF16 on the standard pair, W10 budget pitch, 12.5%, ring credit, 4096m8"
    }
   },
   "points": [
@@ -3135,8 +3136,8 @@
     "packages": 94,
     "hbm_stacks": 464,
     "busiest_die_macros": 13798,
-    "ar_tokens_s_b1": 3808.8,
-    "mtp_tokens_s_b1": 5856.5,
+    "ar_tokens_s_b1": 3747.6,
+    "mtp_tokens_s_b1": 5811.4,
     "ar_saturated_tokens_s": 77516.5,
     "mtp_saturated_tokens_s": 51061.1,
     "stage_hops": 27,
@@ -3144,9 +3145,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 96.1,
-     "layer_die_busiest_w_saturated": 138.9,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 14,
+     "layer_die_static_w": 56.4,
+     "layer_die_mean_w_saturated": 142.6,
+     "layer_die_busiest_w_saturated": 324.5,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 619.0,
+      "mean_w": 679.1
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -3162,55 +3170,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 18.62,
-     "ffn.combine_allreduce": 18.62,
-     "attn.wo_a": 14.04,
+     "attn.out_allreduce": 18.85,
+     "ffn.combine_allreduce": 18.85,
+     "attn.wo_a": 14.51,
      "attn.idx.score": 13.49,
      "attn.idx.topk_local": 11.32,
      "ffn.softplus_sqrt": 11.14,
      "substage_hop0": 10.04,
-     "ffn.experts_gu": 9.05
+     "ffn.experts_gu": 9.52
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9094.0,
+     "layer_dies": 6316.4,
      "head_dies": 369.3,
      "table_dies": 3441.5,
-     "total": 12904.7
+     "total": 10127.1
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3808.8,
-      "ungated_mJ": 3428.19,
-      "gated_mJ": 351.54,
-      "ungated_static_w": 12901.6,
-      "gated_static_w": 1183.2,
-      "gated_system_w": 1338.9
+      "tokens_s": 3747.6,
+      "ungated_mJ": 2849.02,
+      "gated_mJ": 434.16,
+      "ungated_static_w": 10137.6,
+      "gated_static_w": 1087.6,
+      "gated_system_w": 1627.0
      },
      "ar_sat": {
       "tokens_s": 77516.5,
-      "ungated_mJ": 207.32,
-      "gated_mJ": 105.43,
-      "ungated_static_w": 12901.6,
-      "gated_static_w": 5003.3,
-      "gated_system_w": 8172.5
+      "ungated_mJ": 274.71,
+      "gated_mJ": 200.22,
+      "ungated_static_w": 10137.6,
+      "gated_static_w": 4363.2,
+      "gated_system_w": 15520.3
      },
      "mtp_b1": {
-      "tokens_s": 5856.5,
-      "ungated_mJ": 2242.81,
-      "gated_mJ": 234.38,
-      "ungated_static_w": 12901.6,
-      "gated_static_w": 1139.2,
-      "gated_system_w": 1372.7
+      "tokens_s": 5811.4,
+      "ungated_mJ": 1955.86,
+      "gated_mJ": 391.1,
+      "ungated_static_w": 10137.6,
+      "gated_static_w": 1044.2,
+      "gated_system_w": 2272.8
      },
      "mtp_sat": {
       "tokens_s": 51061.1,
-      "ungated_mJ": 292.54,
-      "gated_mJ": 111.79,
-      "ungated_static_w": 12901.6,
-      "gated_static_w": 3672.4,
-      "gated_system_w": 5708.0
+      "ungated_mJ": 409.96,
+      "gated_mJ": 272.68,
+      "ungated_static_w": 10137.6,
+      "gated_static_w": 3128.0,
+      "gated_system_w": 13923.5
      }
     },
     "busiest_stage": 14,
@@ -3218,15 +3227,15 @@
     "layers_per_stage": 1.429,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.344,
-      "residual_ready_us": 5.012,
-      "slack_us": 3.668,
+      "engram_ready_us": 1.355,
+      "residual_ready_us": 5.116,
+      "slack_us": 3.761,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.344,
-      "residual_ready_us": 88.366,
-      "slack_us": 87.023,
+      "engram_ready_us": 1.355,
+      "residual_ready_us": 89.852,
+      "slack_us": 88.497,
       "on_critical_path": false
      }
     },
@@ -3278,8 +3287,8 @@
     "packages": 90,
     "hbm_stacks": 576,
     "busiest_die_macros": 11042,
-    "ar_tokens_s_b1": 3772.0,
-    "mtp_tokens_s_b1": 5831.6,
+    "ar_tokens_s_b1": 3711.9,
+    "mtp_tokens_s_b1": 5786.8,
     "ar_saturated_tokens_s": 88261.9,
     "mtp_saturated_tokens_s": 58816.9,
     "stage_hops": 34,
@@ -3287,9 +3296,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 90.6,
-     "layer_die_busiest_w_saturated": 134.1,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 17,
+     "layer_die_static_w": 56.4,
+     "layer_die_mean_w_saturated": 127.1,
+     "layer_die_busiest_w_saturated": 288.3,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 619.0,
+      "mean_w": 668.7
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -3305,55 +3321,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 18.62,
-     "ffn.combine_allreduce": 18.62,
-     "attn.wo_a": 14.04,
+     "attn.out_allreduce": 18.85,
+     "ffn.combine_allreduce": 18.85,
+     "attn.wo_a": 14.51,
      "attn.idx.score": 13.49,
      "substage_hop0": 12.64,
      "attn.idx.topk_local": 11.32,
      "ffn.softplus_sqrt": 11.14,
-     "ffn.experts_gu": 9.05
+     "ffn.experts_gu": 9.52
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 10793.4,
+     "layer_dies": 7895.4,
      "head_dies": 369.3,
      "table_dies": 3324.4,
-     "total": 14487.1
+     "total": 11589.1
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3772.0,
-      "ungated_mJ": 3881.3,
-      "gated_mJ": 354.82,
-      "ungated_static_w": 14486.3,
-      "gated_static_w": 1184.4,
-      "gated_system_w": 1338.4
+      "tokens_s": 3711.9,
+      "ungated_mJ": 3257.07,
+      "gated_mJ": 426.53,
+      "ungated_static_w": 11602.3,
+      "gated_static_w": 1095.5,
+      "gated_system_w": 1583.3
      },
      "ar_sat": {
       "tokens_s": 88261.9,
-      "ungated_mJ": 204.94,
-      "gated_mJ": 107.7,
-      "ungated_static_w": 14486.3,
-      "gated_static_w": 5903.3,
-      "gated_system_w": 9505.4
+      "ungated_mJ": 262.85,
+      "gated_mJ": 190.96,
+      "ungated_static_w": 11602.3,
+      "gated_static_w": 5256.6,
+      "gated_system_w": 16854.3
      },
      "mtp_b1": {
-      "tokens_s": 5831.6,
-      "ungated_mJ": 2523.85,
-      "gated_mJ": 233.5,
-      "ungated_static_w": 14486.3,
-      "gated_static_w": 1129.9,
-      "gated_system_w": 1361.7
+      "tokens_s": 5786.8,
+      "ungated_mJ": 2195.52,
+      "gated_mJ": 370.74,
+      "ungated_static_w": 11602.3,
+      "gated_static_w": 1042.7,
+      "gated_system_w": 2145.4
      },
      "mtp_sat": {
       "tokens_s": 58816.9,
-      "ungated_mJ": 286.04,
-      "gated_mJ": 109.22,
-      "ungated_static_w": 14486.3,
-      "gated_static_w": 4086.4,
-      "gated_system_w": 6424.0
+      "ungated_mJ": 387.82,
+      "gated_mJ": 251.0,
+      "ungated_static_w": 11602.3,
+      "gated_static_w": 3555.0,
+      "gated_system_w": 14763.2
      }
     },
     "busiest_stage": 17,
@@ -3361,15 +3378,15 @@
     "layers_per_stage": 1.143,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.401,
-      "residual_ready_us": 5.012,
-      "slack_us": 3.611,
+      "engram_ready_us": 1.412,
+      "residual_ready_us": 5.116,
+      "slack_us": 3.704,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.401,
-      "residual_ready_us": 89.472,
-      "slack_us": 88.071,
+      "engram_ready_us": 1.412,
+      "residual_ready_us": 90.958,
+      "slack_us": 89.545,
       "on_critical_path": false
      }
     },
@@ -3421,8 +3438,8 @@
     "packages": 78,
     "hbm_stacks": 480,
     "busiest_die_macros": 13326,
-    "ar_tokens_s_b1": 3776.8,
-    "mtp_tokens_s_b1": 5748.9,
+    "ar_tokens_s_b1": 3716.6,
+    "mtp_tokens_s_b1": 5705.4,
     "ar_saturated_tokens_s": 87637.3,
     "mtp_saturated_tokens_s": 58361.1,
     "stage_hops": 28,
@@ -3430,9 +3447,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 96.8,
-     "layer_die_busiest_w_saturated": 137.0,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 14,
+     "layer_die_static_w": 56.4,
+     "layer_die_mean_w_saturated": 148.9,
+     "layer_die_busiest_w_saturated": 307.4,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 619.0,
+      "mean_w": 683.6
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -3448,55 +3472,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 18.62,
-     "ffn.combine_allreduce": 18.62,
-     "attn.wo_a": 15.9,
+     "attn.out_allreduce": 18.85,
+     "ffn.combine_allreduce": 18.85,
+     "attn.wo_a": 16.37,
      "attn.idx.score": 13.49,
      "attn.idx.topk_local": 11.32,
      "ffn.softplus_sqrt": 11.14,
      "substage_hop0": 10.41,
-     "ffn.experts_gu": 9.05
+     "ffn.experts_gu": 9.52
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9337.5,
+     "layer_dies": 6541.9,
      "head_dies": 369.3,
      "table_dies": 3324.4,
-     "total": 13031.2
+     "total": 10235.6
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3776.8,
-      "ungated_mJ": 3490.46,
-      "gated_mJ": 327.45,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 1082.3,
-      "gated_system_w": 1236.7
+      "tokens_s": 3716.6,
+      "ungated_mJ": 2898.8,
+      "gated_mJ": 407.57,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 987.7,
+      "gated_system_w": 1514.7
      },
      "ar_sat": {
       "tokens_s": 87637.3,
-      "ungated_mJ": 189.54,
-      "gated_mJ": 103.72,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 5506.9,
-      "gated_system_w": 9089.4
+      "ungated_mJ": 258.73,
+      "gated_mJ": 196.41,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 4785.7,
+      "gated_system_w": 17213.2
      },
      "mtp_b1": {
-      "tokens_s": 5748.9,
-      "ungated_mJ": 2306.07,
-      "gated_mJ": 220.19,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 1036.7,
-      "gated_system_w": 1265.9
+      "tokens_s": 5705.4,
+      "ungated_mJ": 2003.83,
+      "gated_mJ": 373.09,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 942.5,
+      "gated_system_w": 2128.6
      },
      "mtp_sat": {
       "tokens_s": 58361.1,
-      "ungated_mJ": 263.09,
-      "gated_mJ": 108.84,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 4025.7,
-      "gated_system_w": 6351.8
+      "ungated_mJ": 383.46,
+      "gated_mJ": 266.26,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 3407.1,
+      "gated_system_w": 15539.4
      }
     },
     "busiest_stage": 14,
@@ -3504,15 +3529,15 @@
     "layers_per_stage": 1.379,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.344,
-      "residual_ready_us": 5.058,
-      "slack_us": 3.715,
+      "engram_ready_us": 1.355,
+      "residual_ready_us": 5.163,
+      "slack_us": 3.807,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.344,
-      "residual_ready_us": 89.388,
-      "slack_us": 88.044,
+      "engram_ready_us": 1.355,
+      "residual_ready_us": 90.874,
+      "slack_us": 89.518,
       "on_critical_path": false
      }
     },
@@ -3564,8 +3589,8 @@
     "packages": 80,
     "hbm_stacks": 496,
     "busiest_die_macros": 12878,
-    "ar_tokens_s_b1": 3798.1,
-    "mtp_tokens_s_b1": 5849.3,
+    "ar_tokens_s_b1": 3737.2,
+    "mtp_tokens_s_b1": 5804.2,
     "ar_saturated_tokens_s": 77599.7,
     "mtp_saturated_tokens_s": 51120.4,
     "stage_hops": 29,
@@ -3573,9 +3598,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 93.7,
-     "layer_die_busiest_w_saturated": 137.3,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 56.4,
+     "layer_die_mean_w_saturated": 134.3,
+     "layer_die_busiest_w_saturated": 315.1,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 619.0,
+      "mean_w": 673.4
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -3591,55 +3623,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 18.62,
-     "ffn.combine_allreduce": 18.62,
-     "attn.wo_a": 14.04,
+     "attn.out_allreduce": 18.85,
+     "ffn.combine_allreduce": 18.85,
+     "attn.wo_a": 14.51,
      "attn.idx.score": 13.49,
      "attn.idx.topk_local": 11.32,
      "ffn.softplus_sqrt": 11.14,
      "substage_hop0": 10.78,
-     "ffn.experts_gu": 9.05
+     "ffn.experts_gu": 9.52
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9575.5,
+     "layer_dies": 6767.5,
      "head_dies": 369.3,
      "table_dies": 3324.4,
-     "total": 13269.2
+     "total": 10461.2
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3798.1,
-      "ungated_mJ": 3534.91,
-      "gated_mJ": 330.38,
-      "ungated_static_w": 13270.6,
-      "gated_static_w": 1099.6,
-      "gated_system_w": 1254.8
+      "tokens_s": 3737.2,
+      "ungated_mJ": 2942.03,
+      "gated_mJ": 409.06,
+      "ungated_static_w": 10472.5,
+      "gated_static_w": 1006.3,
+      "gated_system_w": 1528.7
      },
      "ar_sat": {
       "tokens_s": 77599.7,
-      "ungated_mJ": 211.89,
-      "gated_mJ": 105.4,
-      "ungated_static_w": 13270.6,
-      "gated_static_w": 5007.1,
-      "gated_system_w": 8178.8
+      "ungated_mJ": 274.74,
+      "gated_mJ": 196.36,
+      "ungated_static_w": 10472.5,
+      "gated_static_w": 4389.7,
+      "gated_system_w": 15237.2
      },
      "mtp_b1": {
-      "tokens_s": 5849.3,
-      "ungated_mJ": 2308.6,
-      "gated_mJ": 219.78,
-      "ungated_static_w": 13270.6,
-      "gated_static_w": 1052.5,
-      "gated_system_w": 1285.5
+      "tokens_s": 5804.2,
+      "ungated_mJ": 2008.81,
+      "gated_mJ": 369.95,
+      "ungated_static_w": 10472.5,
+      "gated_static_w": 960.2,
+      "gated_system_w": 2147.3
      },
      "mtp_sat": {
       "tokens_s": 51120.4,
-      "ungated_mJ": 299.44,
-      "gated_mJ": 109.92,
-      "ungated_static_w": 13270.6,
-      "gated_static_w": 3582.3,
-      "gated_system_w": 5619.3
+      "ungated_mJ": 409.38,
+      "gated_mJ": 264.46,
+      "ungated_static_w": 10472.5,
+      "gated_static_w": 3064.0,
+      "gated_system_w": 13519.4
      }
     },
     "busiest_stage": 15,
@@ -3647,15 +3680,15 @@
     "layers_per_stage": 1.333,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.344,
-      "residual_ready_us": 5.012,
-      "slack_us": 3.668,
+      "engram_ready_us": 1.355,
+      "residual_ready_us": 5.116,
+      "slack_us": 3.761,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.344,
-      "residual_ready_us": 88.738,
-      "slack_us": 87.394,
+      "engram_ready_us": 1.355,
+      "residual_ready_us": 90.224,
+      "slack_us": 88.868,
       "on_critical_path": false
      }
     },
@@ -3707,8 +3740,8 @@
     "packages": 76,
     "hbm_stacks": 464,
     "busiest_die_macros": 13798,
-    "ar_tokens_s_b1": 3782.1,
-    "mtp_tokens_s_b1": 5752.4,
+    "ar_tokens_s_b1": 3721.7,
+    "mtp_tokens_s_b1": 5708.8,
     "ar_saturated_tokens_s": 76962.5,
     "mtp_saturated_tokens_s": 50666.1,
     "stage_hops": 27,
@@ -3716,9 +3749,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 96.0,
-     "layer_die_busiest_w_saturated": 137.8,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 14,
+     "layer_die_static_w": 56.4,
+     "layer_die_mean_w_saturated": 142.0,
+     "layer_die_busiest_w_saturated": 319.8,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 619.0,
+      "mean_w": 678.7
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -3734,55 +3774,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 18.62,
-     "ffn.combine_allreduce": 18.62,
-     "attn.wo_a": 15.9,
+     "attn.out_allreduce": 18.85,
+     "ffn.combine_allreduce": 18.85,
+     "attn.wo_a": 16.37,
      "attn.idx.score": 13.49,
      "attn.idx.topk_local": 11.32,
      "ffn.softplus_sqrt": 11.14,
      "substage_hop0": 10.04,
-     "ffn.experts_gu": 9.05
+     "ffn.experts_gu": 9.52
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9094.0,
+     "layer_dies": 6316.4,
      "head_dies": 369.3,
      "table_dies": 3324.4,
-     "total": 12787.6
+     "total": 10010.0
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3782.1,
-      "ungated_mJ": 3421.2,
-      "gated_mJ": 322.65,
-      "ungated_static_w": 12784.6,
-      "gated_static_w": 1065.7,
-      "gated_system_w": 1220.3
+      "tokens_s": 3721.7,
+      "ungated_mJ": 2836.4,
+      "gated_mJ": 404.53,
+      "ungated_static_w": 10020.6,
+      "gated_static_w": 969.9,
+      "gated_system_w": 1505.5
      },
      "ar_sat": {
       "tokens_s": 76962.5,
-      "ungated_mJ": 207.0,
-      "gated_mJ": 104.52,
-      "ungated_static_w": 12784.6,
-      "gated_static_w": 4897.8,
-      "gated_system_w": 8044.4
+      "ungated_mJ": 274.13,
+      "gated_mJ": 199.13,
+      "ungated_static_w": 10020.6,
+      "gated_static_w": 4248.2,
+      "gated_system_w": 15325.5
      },
      "mtp_b1": {
-      "tokens_s": 5752.4,
-      "ungated_mJ": 2262.35,
-      "gated_mJ": 217.47,
-      "ungated_static_w": 12784.6,
-      "gated_static_w": 1021.6,
-      "gated_system_w": 1251.0
+      "tokens_s": 5708.8,
+      "ungated_mJ": 1966.7,
+      "gated_mJ": 373.64,
+      "ungated_static_w": 10020.6,
+      "gated_static_w": 926.1,
+      "gated_system_w": 2133.0
      },
      "mtp_sat": {
       "tokens_s": 50666.1,
-      "ungated_mJ": 292.2,
-      "gated_mJ": 110.5,
-      "ungated_static_w": 12784.6,
-      "gated_static_w": 3578.7,
-      "gated_system_w": 5598.6
+      "ungated_mJ": 409.2,
+      "gated_mJ": 271.09,
+      "ungated_static_w": 10020.6,
+      "gated_static_w": 3023.3,
+      "gated_system_w": 13735.3
      }
     },
     "busiest_stage": 14,
@@ -3790,15 +3831,15 @@
     "layers_per_stage": 1.429,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.344,
-      "residual_ready_us": 5.058,
-      "slack_us": 3.715,
+      "engram_ready_us": 1.355,
+      "residual_ready_us": 5.163,
+      "slack_us": 3.807,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.344,
-      "residual_ready_us": 89.016,
-      "slack_us": 87.673,
+      "engram_ready_us": 1.355,
+      "residual_ready_us": 90.502,
+      "slack_us": 89.147,
       "on_critical_path": false
      }
     },
@@ -3850,8 +3891,8 @@
     "packages": 88,
     "hbm_stacks": 560,
     "busiest_die_macros": 11367,
-    "ar_tokens_s_b1": 3751.0,
-    "mtp_tokens_s_b1": 5731.8,
+    "ar_tokens_s_b1": 3691.6,
+    "mtp_tokens_s_b1": 5688.5,
     "ar_saturated_tokens_s": 77180.1,
     "mtp_saturated_tokens_s": 50821.1,
     "stage_hops": 33,
@@ -3859,9 +3900,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 89.7,
-     "layer_die_busiest_w_saturated": 133.5,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 17,
+     "layer_die_static_w": 56.4,
+     "layer_die_mean_w_saturated": 121.1,
+     "layer_die_busiest_w_saturated": 296.0,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 619.0,
+      "mean_w": 664.4
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -3877,55 +3925,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 18.62,
-     "ffn.combine_allreduce": 18.62,
-     "attn.wo_a": 15.9,
+     "attn.out_allreduce": 18.85,
+     "ffn.combine_allreduce": 18.85,
+     "attn.wo_a": 16.37,
      "attn.idx.score": 13.49,
      "substage_hop0": 12.27,
      "attn.idx.topk_local": 11.32,
      "ffn.softplus_sqrt": 11.14,
-     "ffn.experts_gu": 9.05
+     "ffn.experts_gu": 9.52
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 10539.5,
+     "layer_dies": 7669.9,
      "head_dies": 369.3,
      "table_dies": 3324.4,
-     "total": 14233.1
+     "total": 11363.5
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3751.0,
-      "ungated_mJ": 3838.06,
-      "gated_mJ": 351.86,
-      "ungated_static_w": 14243.3,
-      "gated_static_w": 1166.7,
-      "gated_system_w": 1319.8
+      "tokens_s": 3691.6,
+      "ungated_mJ": 3215.04,
+      "gated_mJ": 425.05,
+      "ungated_static_w": 11376.3,
+      "gated_static_w": 1076.8,
+      "gated_system_w": 1569.1
      },
      "ar_sat": {
       "tokens_s": 77180.1,
-      "ungated_mJ": 225.36,
-      "gated_mJ": 108.95,
-      "ungated_static_w": 14243.3,
-      "gated_static_w": 5258.5,
-      "gated_system_w": 8408.8
+      "ungated_mJ": 280.75,
+      "gated_mJ": 193.84,
+      "ungated_static_w": 11376.3,
+      "gated_static_w": 4668.8,
+      "gated_system_w": 14960.7
      },
      "mtp_b1": {
-      "tokens_s": 5731.8,
-      "ungated_mJ": 2524.73,
-      "gated_mJ": 234.03,
-      "ungated_static_w": 14243.3,
-      "gated_static_w": 1113.6,
-      "gated_system_w": 1341.4
+      "tokens_s": 5688.5,
+      "ungated_mJ": 2193.68,
+      "gated_mJ": 373.99,
+      "ungated_static_w": 11376.3,
+      "gated_static_w": 1025.0,
+      "gated_system_w": 2127.4
      },
      "mtp_sat": {
       "tokens_s": 50821.1,
-      "ungated_mJ": 320.02,
-      "gated_mJ": 111.95,
-      "ungated_static_w": 14243.3,
-      "gated_static_w": 3669.1,
-      "gated_system_w": 5689.4
+      "ungated_mJ": 417.66,
+      "gated_mJ": 256.44,
+      "ungated_static_w": 11376.3,
+      "gated_static_w": 3183.1,
+      "gated_system_w": 13032.5
      }
     },
     "busiest_stage": 17,
@@ -3933,15 +3982,15 @@
     "layers_per_stage": 1.176,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.401,
-      "residual_ready_us": 5.058,
-      "slack_us": 3.658,
+      "engram_ready_us": 1.412,
+      "residual_ready_us": 5.163,
+      "slack_us": 3.75,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.401,
-      "residual_ready_us": 89.75,
-      "slack_us": 88.349,
+      "engram_ready_us": 1.412,
+      "residual_ready_us": 91.236,
+      "slack_us": 89.823,
       "on_critical_path": false
      }
     },
@@ -3993,8 +4042,8 @@
     "packages": 60,
     "hbm_stacks": 400,
     "busiest_die_macros": 16099,
-    "ar_tokens_s_b1": 3803.5,
-    "mtp_tokens_s_b1": 5766.5,
+    "ar_tokens_s_b1": 3742.4,
+    "mtp_tokens_s_b1": 5722.7,
     "ar_saturated_tokens_s": 76758.2,
     "mtp_saturated_tokens_s": 50520.5,
     "stage_hops": 23,
@@ -4002,9 +4051,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 101.9,
-     "layer_die_busiest_w_saturated": 141.6,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 12,
+     "layer_die_static_w": 56.4,
+     "layer_die_mean_w_saturated": 157.5,
+     "layer_die_busiest_w_saturated": 326.2,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 619.0,
+      "mean_w": 689.4
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -4020,55 +4076,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 18.62,
-     "ffn.combine_allreduce": 18.62,
-     "attn.wo_a": 15.9,
+     "attn.out_allreduce": 18.85,
+     "ffn.combine_allreduce": 18.85,
+     "attn.wo_a": 16.37,
      "attn.idx.score": 13.49,
      "attn.idx.topk_local": 11.32,
      "ffn.softplus_sqrt": 11.14,
-     "ffn.experts_gu": 9.05,
-     "attn.a_proj": 8.94
+     "ffn.experts_gu": 9.52,
+     "attn.a_proj": 9.4
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 8121.2,
+     "layer_dies": 5414.0,
      "head_dies": 369.3,
      "table_dies": 1749.5,
-     "total": 10240.0
+     "total": 7532.8
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3803.5,
-      "ungated_mJ": 2732.66,
-      "gated_mJ": 275.28,
-      "ungated_static_w": 10237.9,
-      "gated_static_w": 891.4,
-      "gated_system_w": 1047.0
+      "tokens_s": 3742.4,
+      "ungated_mJ": 2161.0,
+      "gated_mJ": 356.76,
+      "ungated_static_w": 7541.9,
+      "gated_static_w": 789.7,
+      "gated_system_w": 1335.2
      },
      "ar_sat": {
       "tokens_s": 76758.2,
-      "ungated_mJ": 174.29,
-      "gated_mJ": 97.63,
-      "ungated_static_w": 10237.9,
-      "gated_static_w": 4353.3,
-      "gated_system_w": 7493.7
+      "ungated_mJ": 244.02,
+      "gated_mJ": 193.24,
+      "ungated_static_w": 7541.9,
+      "gated_static_w": 3644.7,
+      "gated_system_w": 14833.0
      },
      "mtp_b1": {
-      "tokens_s": 5766.5,
-      "ungated_mJ": 1815.34,
-      "gated_mJ": 189.11,
-      "ungated_static_w": 10237.9,
-      "gated_static_w": 860.4,
-      "gated_system_w": 1090.5
+      "tokens_s": 5722.7,
+      "ungated_mJ": 1532.36,
+      "gated_mJ": 346.88,
+      "ungated_static_w": 7541.9,
+      "gated_static_w": 757.8,
+      "gated_system_w": 1985.1
      },
      "mtp_sat": {
       "tokens_s": 50520.5,
-      "ungated_mJ": 242.56,
-      "gated_mJ": 105.19,
-      "ungated_static_w": 10237.9,
-      "gated_static_w": 3297.7,
-      "gated_system_w": 5314.1
+      "ungated_mJ": 363.75,
+      "gated_mJ": 267.43,
+      "ungated_static_w": 7541.9,
+      "gated_static_w": 2675.5,
+      "gated_system_w": 13510.5
      }
     },
     "busiest_stage": 12,
@@ -4076,15 +4133,15 @@
     "layers_per_stage": 1.667,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.344,
-      "residual_ready_us": 5.058,
-      "slack_us": 3.715,
+      "engram_ready_us": 1.355,
+      "residual_ready_us": 5.163,
+      "slack_us": 3.807,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.344,
-      "residual_ready_us": 88.644,
-      "slack_us": 87.301,
+      "engram_ready_us": 1.355,
+      "residual_ready_us": 90.13,
+      "slack_us": 88.775,
       "on_critical_path": false
      }
     },
@@ -4136,8 +4193,8 @@
     "packages": 96,
     "hbm_stacks": 576,
     "busiest_die_macros": 11367,
-    "ar_tokens_s_b1": 3751.0,
-    "mtp_tokens_s_b1": 5731.8,
+    "ar_tokens_s_b1": 3691.6,
+    "mtp_tokens_s_b1": 5688.5,
     "ar_saturated_tokens_s": 77180.1,
     "mtp_saturated_tokens_s": 50821.1,
     "stage_hops": 33,
@@ -4145,9 +4202,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 89.7,
-     "layer_die_busiest_w_saturated": 133.5,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 17,
+     "layer_die_static_w": 56.4,
+     "layer_die_mean_w_saturated": 121.1,
+     "layer_die_busiest_w_saturated": 296.0,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 619.0,
+      "mean_w": 664.4
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -4163,55 +4227,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 18.62,
-     "ffn.combine_allreduce": 18.62,
-     "attn.wo_a": 15.9,
+     "attn.out_allreduce": 18.85,
+     "ffn.combine_allreduce": 18.85,
+     "attn.wo_a": 16.37,
      "attn.idx.score": 13.49,
      "substage_hop0": 12.27,
      "attn.idx.topk_local": 11.32,
      "ffn.softplus_sqrt": 11.14,
-     "ffn.experts_gu": 9.05
+     "ffn.experts_gu": 9.52
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 10539.5,
+     "layer_dies": 7669.9,
      "head_dies": 738.5,
      "table_dies": 4319.9,
-     "total": 15597.9
+     "total": 12728.3
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3751.0,
-      "ungated_mJ": 4201.89,
-      "gated_mJ": 380.31,
-      "ungated_static_w": 15608.1,
-      "gated_static_w": 1273.4,
-      "gated_system_w": 1426.5
+      "tokens_s": 3691.6,
+      "ungated_mJ": 3584.73,
+      "gated_mJ": 455.62,
+      "ungated_static_w": 12741.1,
+      "gated_static_w": 1189.7,
+      "gated_system_w": 1682.0
      },
      "ar_sat": {
       "tokens_s": 77180.1,
-      "ungated_mJ": 243.05,
-      "gated_mJ": 114.48,
-      "ungated_static_w": 15608.1,
-      "gated_static_w": 5685.3,
-      "gated_system_w": 8835.5
+      "ungated_mJ": 298.43,
+      "gated_mJ": 199.61,
+      "ungated_static_w": 12741.1,
+      "gated_static_w": 5113.9,
+      "gated_system_w": 15405.8
      },
      "mtp_b1": {
-      "tokens_s": 5731.8,
-      "ungated_mJ": 2762.83,
-      "gated_mJ": 254.59,
-      "ungated_static_w": 15608.1,
-      "gated_static_w": 1231.4,
-      "gated_system_w": 1459.2
+      "tokens_s": 5688.5,
+      "ungated_mJ": 2433.59,
+      "gated_mJ": 395.86,
+      "ungated_static_w": 12741.1,
+      "gated_static_w": 1149.4,
+      "gated_system_w": 2251.9
      },
      "mtp_sat": {
       "tokens_s": 50821.1,
-      "ungated_mJ": 346.87,
-      "gated_mJ": 120.06,
-      "ungated_static_w": 15608.1,
-      "gated_static_w": 4081.4,
-      "gated_system_w": 6101.7
+      "ungated_mJ": 444.51,
+      "gated_mJ": 264.88,
+      "ungated_static_w": 12741.1,
+      "gated_static_w": 3612.3,
+      "gated_system_w": 13461.7
      }
     },
     "busiest_stage": 17,
@@ -4219,15 +4284,15 @@
     "layers_per_stage": 1.176,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.401,
-      "residual_ready_us": 5.058,
-      "slack_us": 3.658,
+      "engram_ready_us": 1.412,
+      "residual_ready_us": 5.163,
+      "slack_us": 3.75,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.401,
-      "residual_ready_us": 89.75,
-      "slack_us": 88.349,
+      "engram_ready_us": 1.412,
+      "residual_ready_us": 91.236,
+      "slack_us": 89.823,
       "on_critical_path": false
      }
     },
@@ -4279,8 +4344,8 @@
     "packages": 78,
     "hbm_stacks": 480,
     "busiest_die_macros": 13326,
-    "ar_tokens_s_b1": 3345.0,
-    "mtp_tokens_s_b1": 5102.3,
+    "ar_tokens_s_b1": 3291.9,
+    "mtp_tokens_s_b1": 5063.7,
     "ar_saturated_tokens_s": 77813.2,
     "mtp_saturated_tokens_s": 51818.8,
     "stage_hops": 28,
@@ -4288,9 +4353,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 93.0,
-     "layer_die_busiest_w_saturated": 128.7,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 14,
+     "layer_die_static_w": 55.9,
+     "layer_die_mean_w_saturated": 138.1,
+     "layer_die_busiest_w_saturated": 278.8,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 555.4,
+      "mean_w": 612.7
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -4306,55 +4378,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 22.05,
-     "ffn.combine_allreduce": 22.05,
-     "attn.wo_a": 17.73,
+     "attn.out_allreduce": 22.31,
+     "ffn.combine_allreduce": 22.31,
+     "attn.wo_a": 18.26,
      "attn.idx.score": 15.2,
      "attn.idx.topk_local": 12.75,
      "ffn.softplus_sqrt": 12.55,
-     "substage_hop0": 10.43,
-     "attn.a_proj": 9.98
+     "attn.a_proj": 10.5,
+     "ffn.experts_gu": 10.46
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9105.5,
+     "layer_dies": 6483.9,
      "head_dies": 369.3,
      "table_dies": 3324.4,
-     "total": 12799.2
+     "total": 10177.6
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3345.0,
-      "ungated_mJ": 3935.67,
-      "gated_mJ": 360.68,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 1069.7,
-      "gated_system_w": 1206.5
+      "tokens_s": 3291.9,
+      "ungated_mJ": 3254.5,
+      "gated_mJ": 438.31,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 976.1,
+      "gated_system_w": 1442.9
      },
      "ar_sat": {
       "tokens_s": 77813.2,
-      "ungated_mJ": 208.31,
-      "gated_mJ": 108.24,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 5241.9,
-      "gated_system_w": 8422.8
+      "ungated_mJ": 273.49,
+      "gated_mJ": 200.12,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 4537.8,
+      "gated_system_w": 15572.2
      },
      "mtp_b1": {
-      "tokens_s": 5102.3,
-      "ungated_mJ": 2593.27,
-      "gated_mJ": 242.04,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 1031.6,
-      "gated_system_w": 1234.9
+      "tokens_s": 5063.7,
+      "ungated_mJ": 2231.42,
+      "gated_mJ": 393.07,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 937.7,
+      "gated_system_w": 1990.4
      },
      "mtp_sat": {
       "tokens_s": 51818.8,
-      "ungated_mJ": 291.28,
-      "gated_mJ": 116.03,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 3947.4,
-      "gated_system_w": 6012.7
+      "ungated_mJ": 405.62,
+      "gated_mJ": 272.19,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 3332.0,
+      "gated_system_w": 14104.3
      }
     },
     "busiest_stage": 14,
@@ -4362,15 +4435,15 @@
     "layers_per_stage": 1.379,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.403,
-      "residual_ready_us": 5.745,
-      "slack_us": 4.343,
+      "engram_ready_us": 1.416,
+      "residual_ready_us": 5.863,
+      "slack_us": 4.447,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.403,
-      "residual_ready_us": 100.979,
-      "slack_us": 99.576,
+      "engram_ready_us": 1.416,
+      "residual_ready_us": 102.652,
+      "slack_us": 101.236,
       "on_critical_path": false
      }
     },
@@ -4426,8 +4499,8 @@
     "packages": 78,
     "hbm_stacks": 480,
     "busiest_die_macros": 13326,
-    "ar_tokens_s_b1": 2676.6,
-    "mtp_tokens_s_b1": 4048.1,
+    "ar_tokens_s_b1": 2633.4,
+    "mtp_tokens_s_b1": 4017.2,
     "ar_saturated_tokens_s": 61284.8,
     "mtp_saturated_tokens_s": 40811.9,
     "stage_hops": 28,
@@ -4435,9 +4508,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 86.6,
-     "layer_die_busiest_w_saturated": 114.7,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 14,
+     "layer_die_static_w": 55.0,
+     "layer_die_mean_w_saturated": 119.7,
+     "layer_die_busiest_w_saturated": 230.5,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 448.4,
+      "mean_w": 493.6
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -4453,55 +4533,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 27.99,
-     "ffn.combine_allreduce": 27.99,
-     "attn.wo_a": 22.41,
+     "attn.out_allreduce": 28.33,
+     "ffn.combine_allreduce": 28.33,
+     "attn.wo_a": 23.07,
      "attn.idx.score": 19.3,
      "attn.idx.topk_local": 16.19,
      "ffn.softplus_sqrt": 15.93,
-     "attn.rows_allgather": 13.84,
-     "attn.a_proj": 12.45
+     "attn.a_proj": 13.11,
+     "ffn.experts_gu": 12.72
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 8722.7,
+     "layer_dies": 6379.5,
      "head_dies": 369.3,
      "table_dies": 3324.4,
-     "total": 12416.4
+     "total": 10073.2
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2676.6,
-      "ungated_mJ": 4908.36,
-      "gated_mJ": 433.36,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 1050.5,
-      "gated_system_w": 1159.9
+      "tokens_s": 2633.4,
+      "ungated_mJ": 4032.83,
+      "gated_mJ": 505.64,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 958.1,
+      "gated_system_w": 1331.5
      },
      "ar_sat": {
       "tokens_s": 61284.8,
-      "ungated_mJ": 253.46,
-      "gated_mJ": 119.12,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 4795.0,
-      "gated_system_w": 7300.3
+      "ungated_mJ": 309.0,
+      "gated_mJ": 209.03,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 4119.8,
+      "gated_system_w": 12810.4
      },
      "mtp_b1": {
-      "tokens_s": 4048.1,
-      "ungated_mJ": 3258.25,
-      "gated_mJ": 292.66,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 1023.4,
-      "gated_system_w": 1184.7
+      "tokens_s": 4017.2,
+      "ungated_mJ": 2758.53,
+      "gated_mJ": 439.37,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 929.9,
+      "gated_system_w": 1765.1
      },
      "mtp_sat": {
       "tokens_s": 40811.9,
-      "ungated_mJ": 359.08,
-      "gated_mJ": 133.31,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 3813.9,
-      "gated_system_w": 5440.5
+      "ungated_mJ": 458.95,
+      "gated_mJ": 286.38,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 3203.5,
+      "gated_system_w": 11687.6
      }
     },
     "busiest_stage": 14,
@@ -4509,15 +4590,15 @@
     "layers_per_stage": 1.379,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.549,
-      "residual_ready_us": 7.243,
-      "slack_us": 5.694,
+      "engram_ready_us": 1.565,
+      "residual_ready_us": 7.391,
+      "slack_us": 5.826,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.549,
-      "residual_ready_us": 126.354,
-      "slack_us": 124.806,
+      "engram_ready_us": 1.565,
+      "residual_ready_us": 128.476,
+      "slack_us": 126.911,
       "on_critical_path": false
      }
     },
@@ -4573,8 +4654,8 @@
     "packages": 78,
     "hbm_stacks": 480,
     "busiest_die_macros": 13326,
-    "ar_tokens_s_b1": 2992.3,
-    "mtp_tokens_s_b1": 4542.9,
+    "ar_tokens_s_b1": 2944.3,
+    "mtp_tokens_s_b1": 4508.4,
     "ar_saturated_tokens_s": 69005.7,
     "mtp_saturated_tokens_s": 45953.6,
     "stage_hops": 28,
@@ -4582,9 +4663,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 89.5,
-     "layer_die_busiest_w_saturated": 121.2,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 14,
+     "layer_die_static_w": 55.4,
+     "layer_die_mean_w_saturated": 128.3,
+     "layer_die_busiest_w_saturated": 253.1,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 498.4,
+      "mean_w": 549.2
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -4600,55 +4688,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 24.86,
-     "ffn.combine_allreduce": 24.86,
-     "attn.wo_a": 19.9,
+     "attn.out_allreduce": 25.16,
+     "ffn.combine_allreduce": 25.16,
+     "attn.wo_a": 20.49,
      "attn.idx.score": 17.14,
      "attn.idx.topk_local": 14.38,
      "ffn.softplus_sqrt": 14.15,
-     "attn.a_proj": 11.15,
-     "attn.rows_allgather": 11.1
+     "attn.a_proj": 11.74,
+     "ffn.experts_gu": 11.5
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 8896.7,
+     "layer_dies": 6425.9,
      "head_dies": 369.3,
      "table_dies": 3324.4,
-     "total": 12590.4
+     "total": 10119.6
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2992.3,
-      "ungated_mJ": 4394.86,
-      "gated_mJ": 394.99,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 1059.6,
-      "gated_system_w": 1181.9
+      "tokens_s": 2944.3,
+      "ungated_mJ": 3621.96,
+      "gated_mJ": 470.1,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 966.6,
+      "gated_system_w": 1384.1
      },
      "ar_sat": {
       "tokens_s": 69005.7,
-      "ungated_mJ": 229.68,
-      "gated_mJ": 113.39,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 5003.8,
-      "gated_system_w": 7824.6
+      "ungated_mJ": 290.29,
+      "gated_mJ": 204.34,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 4315.1,
+      "gated_system_w": 14100.5
      },
      "mtp_b1": {
-      "tokens_s": 4542.9,
-      "ungated_mJ": 2907.65,
-      "gated_mJ": 265.97,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 1027.2,
-      "gated_system_w": 1208.3
+      "tokens_s": 4508.4,
+      "ungated_mJ": 2480.63,
+      "gated_mJ": 414.96,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 933.6,
+      "gated_system_w": 1870.8
      },
      "mtp_sat": {
       "tokens_s": 45953.6,
-      "ungated_mJ": 323.36,
-      "gated_mJ": 124.21,
-      "ungated_static_w": 13028.2,
-      "gated_static_w": 3876.3,
-      "gated_system_w": 5707.8
+      "ungated_mJ": 430.86,
+      "gated_mJ": 278.9,
+      "ungated_static_w": 10246.5,
+      "gated_static_w": 3263.5,
+      "gated_system_w": 12816.5
      }
     },
     "busiest_stage": 14,
@@ -4656,15 +4745,15 @@
     "layers_per_stage": 1.379,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.472,
-      "residual_ready_us": 6.451,
-      "slack_us": 4.979,
+      "engram_ready_us": 1.487,
+      "residual_ready_us": 6.584,
+      "slack_us": 5.097,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.472,
-      "residual_ready_us": 112.956,
-      "slack_us": 111.484,
+      "engram_ready_us": 1.487,
+      "residual_ready_us": 114.843,
+      "slack_us": 113.356,
       "on_critical_path": false
      }
     },
@@ -4720,8 +4809,8 @@
     "packages": 82,
     "hbm_stacks": 512,
     "busiest_die_macros": 12878,
-    "ar_tokens_s_b1": 4250.1,
-    "mtp_tokens_s_b1": 6621.7,
+    "ar_tokens_s_b1": 4184.7,
+    "mtp_tokens_s_b1": 6572.2,
     "ar_saturated_tokens_s": 84503.0,
     "mtp_saturated_tokens_s": 59168.0,
     "stage_hops": 29,
@@ -4729,9 +4818,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 97.9,
-     "layer_die_busiest_w_saturated": 147.1,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 57.3,
+     "layer_die_mean_w_saturated": 142.1,
+     "layer_die_busiest_w_saturated": 346.1,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 713.5,
+      "mean_w": 772.8
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -4747,55 +4843,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 16.78,
-     "ffn.combine_allreduce": 16.78,
-     "attn.wo_a": 13.76,
+     "attn.out_allreduce": 16.98,
+     "ffn.combine_allreduce": 16.98,
+     "attn.wo_a": 14.16,
      "attn.idx.score": 13.38,
      "substage_hop0": 10.76,
      "attn.idx.topk_local": 9.71,
      "ffn.softplus_sqrt": 9.55,
-     "ffn.experts_gu": 8.09
+     "ffn.experts_gu": 8.49
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9923.5,
+     "layer_dies": 6875.5,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13986.5
+     "total": 10938.5
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 4250.1,
-      "ungated_mJ": 3250.15,
-      "gated_mJ": 310.31,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1145.1,
-      "gated_system_w": 1318.9
+      "tokens_s": 4184.7,
+      "ungated_mJ": 2730.58,
+      "gated_mJ": 392.56,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1057.8,
+      "gated_system_w": 1642.7
      },
      "ar_sat": {
       "tokens_s": 84503.0,
-      "ungated_mJ": 202.29,
-      "gated_mJ": 104.29,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 5359.2,
-      "gated_system_w": 8813.2
+      "ungated_mJ": 268.09,
+      "gated_mJ": 196.14,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 4761.6,
+      "gated_system_w": 16574.1
      },
      "mtp_b1": {
-      "tokens_s": 6621.7,
-      "ungated_mJ": 2099.72,
-      "gated_mJ": 206.85,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1105.8,
-      "gated_system_w": 1369.7
+      "tokens_s": 6572.2,
+      "ungated_mJ": 1854.17,
+      "gated_mJ": 359.72,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1020.0,
+      "gated_system_w": 2364.2
      },
      "mtp_sat": {
       "tokens_s": 59168.0,
-      "ungated_mJ": 270.37,
-      "gated_mJ": 106.91,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 3967.8,
-      "gated_system_w": 6325.5
+      "ungated_mJ": 387.76,
+      "gated_mJ": 262.91,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 3454.4,
+      "gated_system_w": 15555.7
      }
     },
     "busiest_stage": 15,
@@ -4803,15 +4900,15 @@
     "layers_per_stage": 1.333,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.275,
-      "residual_ready_us": 4.427,
-      "slack_us": 3.152,
+      "engram_ready_us": 1.285,
+      "residual_ready_us": 4.516,
+      "slack_us": 3.231,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.275,
-      "residual_ready_us": 79.31,
-      "slack_us": 78.035,
+      "engram_ready_us": 1.285,
+      "residual_ready_us": 80.584,
+      "slack_us": 79.299,
       "on_critical_path": false
      }
     },
@@ -4867,8 +4964,8 @@
     "packages": 82,
     "hbm_stacks": 512,
     "busiest_die_macros": 12878,
-    "ar_tokens_s_b1": 2673.9,
-    "mtp_tokens_s_b1": 4046.3,
+    "ar_tokens_s_b1": 2630.8,
+    "mtp_tokens_s_b1": 4015.5,
     "ar_saturated_tokens_s": 53877.3,
     "mtp_saturated_tokens_s": 35471.7,
     "stage_hops": 29,
@@ -4876,9 +4973,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 84.2,
-     "layer_die_busiest_w_saturated": 114.0,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 55.0,
+     "layer_die_mean_w_saturated": 109.1,
+     "layer_die_busiest_w_saturated": 232.8,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 448.4,
+      "mean_w": 486.2
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -4894,55 +4998,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 27.99,
-     "ffn.combine_allreduce": 27.99,
-     "attn.wo_a": 22.41,
+     "attn.out_allreduce": 28.33,
+     "ffn.combine_allreduce": 28.33,
+     "attn.wo_a": 23.07,
      "attn.idx.score": 19.3,
      "attn.idx.topk_local": 16.19,
      "ffn.softplus_sqrt": 15.93,
-     "attn.rows_allgather": 13.84,
-     "attn.a_proj": 12.45
+     "attn.a_proj": 13.11,
+     "ffn.experts_gu": 12.72
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 8939.5,
+     "layer_dies": 6599.5,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13002.5
+     "total": 10662.5
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2673.9,
-      "ungated_mJ": 5141.95,
-      "gated_mJ": 451.02,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1096.7,
-      "gated_system_w": 1206.0
+      "tokens_s": 2630.8,
+      "ungated_mJ": 4260.9,
+      "gated_mJ": 524.4,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1011.8,
+      "gated_system_w": 1379.6
      },
      "ar_sat": {
       "tokens_s": 53877.3,
-      "ungated_mJ": 294.04,
-      "gated_mJ": 125.17,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 4541.6,
-      "gated_system_w": 6743.7
+      "ungated_mJ": 341.02,
+      "gated_mJ": 213.47,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 3969.9,
+      "gated_system_w": 11501.4
      },
      "mtp_b1": {
-      "tokens_s": 4046.3,
-      "ungated_mJ": 3410.76,
-      "gated_mJ": 307.82,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1084.3,
-      "gated_system_w": 1245.5
+      "tokens_s": 4015.5,
+      "ungated_mJ": 2904.48,
+      "gated_mJ": 453.36,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 999.2,
+      "gated_system_w": 1820.5
      },
      "mtp_sat": {
       "tokens_s": 35471.7,
-      "ungated_mJ": 424.37,
-      "gated_mJ": 143.18,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 3665.3,
-      "gated_system_w": 5078.7
+      "ungated_mJ": 510.17,
+      "gated_mJ": 293.62,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 3160.4,
+      "gated_system_w": 10415.2
      }
     },
     "busiest_stage": 15,
@@ -4950,15 +5055,15 @@
     "layers_per_stage": 1.333,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.549,
-      "residual_ready_us": 7.243,
-      "slack_us": 5.694,
+      "engram_ready_us": 1.565,
+      "residual_ready_us": 7.391,
+      "slack_us": 5.826,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.549,
-      "residual_ready_us": 126.354,
-      "slack_us": 124.806,
+      "engram_ready_us": 1.565,
+      "residual_ready_us": 128.476,
+      "slack_us": 126.911,
       "on_critical_path": false
      }
     },
@@ -5014,8 +5119,8 @@
     "packages": 82,
     "hbm_stacks": 512,
     "busiest_die_macros": 12878,
-    "ar_tokens_s_b1": 2988.9,
-    "mtp_tokens_s_b1": 4540.8,
+    "ar_tokens_s_b1": 2941.0,
+    "mtp_tokens_s_b1": 4506.3,
     "ar_saturated_tokens_s": 60665.0,
     "mtp_saturated_tokens_s": 39940.6,
     "stage_hops": 29,
@@ -5023,9 +5128,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 87.0,
-     "layer_die_busiest_w_saturated": 120.5,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 55.4,
+     "layer_die_mean_w_saturated": 116.3,
+     "layer_die_busiest_w_saturated": 255.6,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 498.4,
+      "mean_w": 541.0
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -5041,55 +5153,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 24.86,
-     "ffn.combine_allreduce": 24.86,
-     "attn.wo_a": 19.9,
+     "attn.out_allreduce": 25.16,
+     "ffn.combine_allreduce": 25.16,
+     "attn.wo_a": 20.49,
      "attn.idx.score": 17.14,
      "attn.idx.topk_local": 14.38,
      "ffn.softplus_sqrt": 14.15,
-     "attn.a_proj": 11.15,
-     "attn.rows_allgather": 11.1
+     "attn.a_proj": 11.74,
+     "ffn.experts_gu": 11.5
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9131.5,
+     "layer_dies": 6647.5,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13194.5
+     "total": 10710.5
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2988.9,
-      "ungated_mJ": 4604.33,
-      "gated_mJ": 411.04,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1106.4,
-      "gated_system_w": 1228.6
+      "tokens_s": 2941.0,
+      "ungated_mJ": 3826.15,
+      "gated_mJ": 486.95,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1021.0,
+      "gated_system_w": 1432.1
      },
      "ar_sat": {
       "tokens_s": 60665.0,
-      "ungated_mJ": 265.71,
-      "gated_mJ": 119.07,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 4743.8,
-      "gated_system_w": 7223.4
+      "ungated_mJ": 318.5,
+      "gated_mJ": 208.39,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 4161.9,
+      "gated_system_w": 12642.2
      },
      "mtp_b1": {
-      "tokens_s": 4540.8,
-      "ungated_mJ": 3043.71,
-      "gated_mJ": 279.55,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1088.4,
-      "gated_system_w": 1269.4
+      "tokens_s": 4506.3,
+      "ungated_mJ": 2610.45,
+      "gated_mJ": 427.14,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1003.2,
+      "gated_system_w": 1924.8
      },
      "mtp_sat": {
       "tokens_s": 39940.6,
-      "ungated_mJ": 381.35,
-      "gated_mJ": 133.04,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 3722.0,
-      "gated_system_w": 5313.5
+      "ungated_mJ": 475.97,
+      "gated_mJ": 285.03,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 3215.5,
+      "gated_system_w": 11384.3
      }
     },
     "busiest_stage": 15,
@@ -5097,15 +5210,15 @@
     "layers_per_stage": 1.333,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.472,
-      "residual_ready_us": 6.451,
-      "slack_us": 4.979,
+      "engram_ready_us": 1.487,
+      "residual_ready_us": 6.584,
+      "slack_us": 5.097,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.472,
-      "residual_ready_us": 112.956,
-      "slack_us": 111.484,
+      "engram_ready_us": 1.487,
+      "residual_ready_us": 114.843,
+      "slack_us": 113.356,
       "on_critical_path": false
      }
     },
@@ -5161,8 +5274,8 @@
     "packages": 84,
     "hbm_stacks": 528,
     "busiest_die_macros": 12465,
-    "ar_tokens_s_b1": 4583.8,
-    "mtp_tokens_s_b1": 7224.8,
+    "ar_tokens_s_b1": 4514.5,
+    "mtp_tokens_s_b1": 7171.1,
     "ar_saturated_tokens_s": 100146.8,
     "mtp_saturated_tokens_s": 74829.3,
     "stage_hops": 30,
@@ -5170,9 +5283,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 101.3,
-     "layer_die_busiest_w_saturated": 153.4,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 57.9,
+     "layer_die_mean_w_saturated": 154.2,
+     "layer_die_busiest_w_saturated": 356.3,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 778.3,
+      "mean_w": 845.7
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -5188,55 +5308,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 15.29,
-     "ffn.combine_allreduce": 15.29,
+     "attn.out_allreduce": 15.47,
+     "ffn.combine_allreduce": 15.47,
      "attn.idx.score": 13.32,
-     "attn.wo_a": 12.6,
+     "attn.wo_a": 12.96,
      "substage_hop0": 11.12,
      "attn.idx.topk_local": 8.84,
      "ffn.softplus_sqrt": 8.7,
-     "ffn.experts_gu": 7.61
+     "ffn.experts_gu": 7.98
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 10403.1,
+     "layer_dies": 7179.1,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 14466.1
+     "total": 11242.1
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 4583.8,
-      "ungated_mJ": 3069.6,
-      "gated_mJ": 296.77,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 1173.1,
-      "gated_system_w": 1360.4
+      "tokens_s": 4514.5,
+      "ungated_mJ": 2590.17,
+      "gated_mJ": 379.16,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 1086.0,
+      "gated_system_w": 1711.7
      },
      "ar_sat": {
       "tokens_s": 100146.8,
-      "ungated_mJ": 179.49,
-      "gated_mJ": 101.25,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 6047.4,
-      "gated_system_w": 10139.4
+      "ungated_mJ": 249.11,
+      "gated_mJ": 192.47,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 5394.9,
+      "gated_system_w": 19275.1
      },
      "mtp_b1": {
-      "tokens_s": 7224.8,
-      "ungated_mJ": 1961.43,
-      "gated_mJ": 195.77,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 1126.7,
-      "gated_system_w": 1414.4
+      "tokens_s": 7171.1,
+      "ungated_mJ": 1745.91,
+      "gated_mJ": 347.8,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 1041.7,
+      "gated_system_w": 2494.2
      },
      "mtp_sat": {
       "tokens_s": 74829.3,
-      "ungated_mJ": 225.36,
-      "gated_mJ": 100.79,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 4561.7,
-      "gated_system_w": 7541.9
+      "ungated_mJ": 350.45,
+      "gated_mJ": 255.8,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 3984.7,
+      "gated_system_w": 19141.0
      }
     },
     "busiest_stage": 15,
@@ -5244,15 +5365,15 @@
     "layers_per_stage": 1.29,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.284,
-      "residual_ready_us": 4.058,
-      "slack_us": 2.774,
+      "engram_ready_us": 1.293,
+      "residual_ready_us": 4.14,
+      "slack_us": 2.847,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.284,
-      "residual_ready_us": 73.414,
-      "slack_us": 72.13,
+      "engram_ready_us": 1.293,
+      "residual_ready_us": 74.574,
+      "slack_us": 73.281,
       "on_critical_path": false
      }
     },
@@ -5308,8 +5429,8 @@
     "packages": 84,
     "hbm_stacks": 528,
     "busiest_die_macros": 12465,
-    "ar_tokens_s_b1": 2671.2,
-    "mtp_tokens_s_b1": 4044.6,
+    "ar_tokens_s_b1": 2628.2,
+    "mtp_tokens_s_b1": 4013.8,
     "ar_saturated_tokens_s": 61354.3,
     "mtp_saturated_tokens_s": 40862.6,
     "stage_hops": 30,
@@ -5317,9 +5438,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 84.7,
-     "layer_die_busiest_w_saturated": 113.3,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 55.0,
+     "layer_die_mean_w_saturated": 114.0,
+     "layer_die_busiest_w_saturated": 225.2,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 448.4,
+      "mean_w": 489.7
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -5335,55 +5463,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 27.99,
-     "ffn.combine_allreduce": 27.99,
-     "attn.wo_a": 22.41,
+     "attn.out_allreduce": 28.33,
+     "ffn.combine_allreduce": 28.33,
+     "attn.wo_a": 23.07,
      "attn.idx.score": 19.3,
      "attn.idx.topk_local": 16.19,
      "ffn.softplus_sqrt": 15.93,
-     "attn.rows_allgather": 13.84,
-     "attn.a_proj": 12.45
+     "attn.a_proj": 13.11,
+     "ffn.experts_gu": 12.72
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9175.5,
+     "layer_dies": 6819.5,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13238.5
+     "total": 10882.5
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2671.2,
-      "ungated_mJ": 5238.17,
-      "gated_mJ": 457.5,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 1112.9,
-      "gated_system_w": 1222.1
+      "tokens_s": 2628.2,
+      "ungated_mJ": 4349.73,
+      "gated_mJ": 530.12,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 1029.0,
+      "gated_system_w": 1393.3
      },
      "ar_sat": {
       "tokens_s": 61354.3,
-      "ungated_mJ": 267.14,
-      "gated_mJ": 124.13,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 5109.0,
-      "gated_system_w": 7616.0
+      "ungated_mJ": 318.99,
+      "gated_mJ": 211.51,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 4473.2,
+      "gated_system_w": 12976.8
      },
      "mtp_b1": {
-      "tokens_s": 4044.6,
-      "ungated_mJ": 3472.36,
-      "gated_mJ": 311.66,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 1099.5,
-      "gated_system_w": 1260.5
+      "tokens_s": 4013.8,
+      "ungated_mJ": 2959.94,
+      "gated_mJ": 455.51,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 1015.4,
+      "gated_system_w": 1828.4
      },
      "mtp_sat": {
       "tokens_s": 40862.6,
-      "ungated_mJ": 379.58,
-      "gated_mJ": 140.66,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 4120.4,
-      "gated_system_w": 5747.8
+      "ungated_mJ": 473.4,
+      "gated_mJ": 289.56,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 3555.8,
+      "gated_system_w": 11832.3
      }
     },
     "busiest_stage": 15,
@@ -5391,15 +5520,15 @@
     "layers_per_stage": 1.29,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.63,
-      "residual_ready_us": 7.243,
-      "slack_us": 5.613,
+      "engram_ready_us": 1.647,
+      "residual_ready_us": 7.391,
+      "slack_us": 5.744,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.63,
-      "residual_ready_us": 126.354,
-      "slack_us": 124.724,
+      "engram_ready_us": 1.647,
+      "residual_ready_us": 128.476,
+      "slack_us": 126.829,
       "on_critical_path": false
      }
     },
@@ -5455,8 +5584,8 @@
     "packages": 84,
     "hbm_stacks": 528,
     "busiest_die_macros": 12465,
-    "ar_tokens_s_b1": 2985.6,
-    "mtp_tokens_s_b1": 4538.6,
+    "ar_tokens_s_b1": 2937.8,
+    "mtp_tokens_s_b1": 4504.1,
     "ar_saturated_tokens_s": 69083.9,
     "mtp_saturated_tokens_s": 46010.6,
     "stage_hops": 30,
@@ -5464,9 +5593,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.0,
-     "layer_die_mean_w_saturated": 87.5,
-     "layer_die_busiest_w_saturated": 119.8,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 55.4,
+     "layer_die_mean_w_saturated": 121.8,
+     "layer_die_busiest_w_saturated": 247.0,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 498.4,
+      "mean_w": 544.9
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {},
@@ -5482,55 +5618,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 24.86,
-     "ffn.combine_allreduce": 24.86,
-     "attn.wo_a": 19.9,
+     "attn.out_allreduce": 25.16,
+     "ffn.combine_allreduce": 25.16,
+     "attn.wo_a": 20.49,
      "attn.idx.score": 17.14,
      "attn.idx.topk_local": 14.38,
      "ffn.softplus_sqrt": 14.15,
-     "substage_hop0": 11.19,
-     "attn.a_proj": 11.15
+     "attn.a_proj": 11.74,
+     "ffn.experts_gu": 11.5
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9361.5,
+     "layer_dies": 6869.1,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13424.5
+     "total": 10932.1
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2985.6,
-      "ungated_mJ": 4690.94,
-      "gated_mJ": 416.95,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 1122.8,
-      "gated_system_w": 1244.8
+      "tokens_s": 2937.8,
+      "ungated_mJ": 3905.92,
+      "gated_mJ": 492.04,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 1038.4,
+      "gated_system_w": 1445.5
      },
      "ar_sat": {
       "tokens_s": 69083.9,
-      "ungated_mJ": 241.82,
-      "gated_mJ": 118.09,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 5335.6,
-      "gated_system_w": 8158.4
+      "ungated_mJ": 298.81,
+      "gated_mJ": 206.46,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 4687.9,
+      "gated_system_w": 14262.8
      },
      "mtp_b1": {
-      "tokens_s": 4538.6,
-      "ungated_mJ": 3098.76,
-      "gated_mJ": 283.0,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 1103.7,
-      "gated_system_w": 1284.4
+      "tokens_s": 4504.1,
+      "ungated_mJ": 2659.78,
+      "gated_mJ": 428.88,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 1019.4,
+      "gated_system_w": 1931.7
      },
      "mtp_sat": {
       "tokens_s": 46010.6,
-      "ungated_mJ": 341.57,
-      "gated_mJ": 130.82,
-      "ungated_static_w": 13883.3,
-      "gated_static_w": 4186.8,
-      "gated_system_w": 6019.2
+      "ungated_mJ": 443.09,
+      "gated_mJ": 281.23,
+      "ungated_static_w": 11067.7,
+      "gated_static_w": 3620.2,
+      "gated_system_w": 12939.4
      }
     },
     "busiest_stage": 15,
@@ -5538,15 +5675,15 @@
     "layers_per_stage": 1.29,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.545,
-      "residual_ready_us": 6.451,
-      "slack_us": 4.907,
+      "engram_ready_us": 1.559,
+      "residual_ready_us": 6.584,
+      "slack_us": 5.025,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.545,
-      "residual_ready_us": 112.956,
-      "slack_us": 111.412,
+      "engram_ready_us": 1.559,
+      "residual_ready_us": 114.843,
+      "slack_us": 113.284,
       "on_critical_path": false
      }
     },
@@ -5602,8 +5739,8 @@
     "packages": 82,
     "hbm_stacks": 512,
     "busiest_die_macros": 12878,
-    "ar_tokens_s_b1": 4290.1,
-    "mtp_tokens_s_b1": 6592.6,
+    "ar_tokens_s_b1": 4223.2,
+    "mtp_tokens_s_b1": 6543.3,
     "ar_saturated_tokens_s": 84258.0,
     "mtp_saturated_tokens_s": 58873.6,
     "stage_hops": 29,
@@ -5611,9 +5748,16 @@
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.16,
-     "layer_die_mean_w_saturated": 100.1,
-     "layer_die_busiest_w_saturated": 157.0,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 57.3,
+     "layer_die_mean_w_saturated": 155.4,
+     "layer_die_busiest_w_saturated": 391.0,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 710.2,
+      "mean_w": 778.8
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 1.0,
     "added_latency": {
@@ -5631,55 +5775,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.out_allreduce": 16.87,
-     "ffn.combine_allreduce": 16.87,
-     "attn.wo_a": 13.83,
+     "attn.out_allreduce": 17.07,
+     "ffn.combine_allreduce": 17.07,
+     "attn.wo_a": 14.23,
      "attn.idx.score": 13.38,
      "substage_hop0": 10.76,
      "attn.idx.topk_local": 9.75,
-     "ffn.experts_gu": 8.13,
-     "attn.a_proj": 7.83
+     "ffn.experts_gu": 8.53,
+     "attn.a_proj": 8.23
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9911.5,
+     "layer_dies": 6875.5,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13974.5
+     "total": 10938.5
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 4290.1,
-      "ungated_mJ": 3223.67,
-      "gated_mJ": 311.59,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1146.6,
-      "gated_system_w": 1336.8
+      "tokens_s": 4223.2,
+      "ungated_mJ": 2726.26,
+      "gated_mJ": 409.84,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1059.1,
+      "gated_system_w": 1730.8
      },
      "ar_sat": {
       "tokens_s": 84258.0,
-      "ungated_mJ": 206.2,
-      "gated_mJ": 107.88,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 5355.0,
-      "gated_system_w": 9089.4
+      "ungated_mJ": 287.74,
+      "gated_mJ": 215.52,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 4757.1,
+      "gated_system_w": 18159.4
      },
      "mtp_b1": {
-      "tokens_s": 6592.6,
-      "ungated_mJ": 2114.27,
-      "gated_mJ": 212.99,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1105.5,
-      "gated_system_w": 1404.2
+      "tokens_s": 6543.3,
+      "ungated_mJ": 1893.26,
+      "gated_mJ": 392.15,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1019.6,
+      "gated_system_w": 2566.0
      },
      "mtp_sat": {
       "tokens_s": 58873.6,
-      "ungated_mJ": 276.99,
-      "gated_mJ": 112.6,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 3961.7,
-      "gated_system_w": 6629.4
+      "ungated_mJ": 420.49,
+      "gated_mJ": 294.9,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 3448.0,
+      "gated_system_w": 17362.1
      }
     },
     "busiest_stage": 15,
@@ -5687,15 +5832,15 @@
     "layers_per_stage": 1.333,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.277,
-      "residual_ready_us": 4.368,
-      "slack_us": 3.091,
+      "engram_ready_us": 1.287,
+      "residual_ready_us": 4.458,
+      "slack_us": 3.171,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.277,
-      "residual_ready_us": 78.529,
-      "slack_us": 77.252,
+      "engram_ready_us": 1.287,
+      "residual_ready_us": 79.809,
+      "slack_us": 78.522,
       "on_critical_path": false
      }
     },
@@ -5748,18 +5893,25 @@
     "packages": 82,
     "hbm_stacks": 512,
     "busiest_die_macros": 12878,
-    "ar_tokens_s_b1": 3997.9,
-    "mtp_tokens_s_b1": 5553.9,
+    "ar_tokens_s_b1": 3939.7,
+    "mtp_tokens_s_b1": 5518.9,
     "ar_saturated_tokens_s": 79975.2,
-    "mtp_saturated_tokens_s": 51810.3,
+    "mtp_saturated_tokens_s": 51607.2,
     "stage_hops": 29,
     "pipeline_hops_us": 12.68,
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.16,
-     "layer_die_mean_w_saturated": 99.3,
-     "layer_die_busiest_w_saturated": 144.6,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 57.3,
+     "layer_die_mean_w_saturated": 150.4,
+     "layer_die_busiest_w_saturated": 340.3,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 710.2,
+      "mean_w": 775.3
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 0.5,
     "added_latency": {
@@ -5777,55 +5929,56 @@
      "layer_die_ramps_per_token": 804,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.wo_a": 22.37,
-     "attn.out_allreduce": 16.87,
-     "ffn.combine_allreduce": 16.87,
+     "attn.wo_a": 22.77,
+     "attn.out_allreduce": 17.07,
+     "ffn.combine_allreduce": 17.07,
      "attn.idx.score": 13.38,
      "substage_hop0": 10.76,
      "attn.idx.topk_local": 9.75,
-     "ffn.experts_gu": 8.67,
-     "head.lm_head": 8.63
+     "ffn.experts_gu": 9.07,
+     "head.lm_head": 8.64
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9911.5,
+     "layer_dies": 6875.5,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13974.5
+     "total": 10938.5
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3997.9,
-      "ungated_mJ": 3456.1,
-      "gated_mJ": 330.92,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1145.8,
-      "gated_system_w": 1323.0
+      "tokens_s": 3939.7,
+      "ungated_mJ": 2911.01,
+      "gated_mJ": 427.38,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1057.1,
+      "gated_system_w": 1683.7
      },
      "ar_sat": {
       "tokens_s": 79975.2,
-      "ungated_mJ": 214.87,
-      "gated_mJ": 114.59,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 5619.6,
-      "gated_system_w": 9164.2
+      "ungated_mJ": 294.63,
+      "gated_mJ": 220.76,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 4934.3,
+      "gated_system_w": 17655.3
      },
      "mtp_b1": {
-      "tokens_s": 5553.9,
-      "ungated_mJ": 2501.21,
-      "gated_mJ": 245.24,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1110.4,
-      "gated_system_w": 1362.0
+      "tokens_s": 5518.9,
+      "ungated_mJ": 2200.83,
+      "gated_mJ": 421.49,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1021.8,
+      "gated_system_w": 2326.1
      },
      "mtp_sat": {
-      "tokens_s": 51810.3,
-      "ungated_mJ": 308.58,
-      "gated_mJ": 125.04,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 4130.5,
-      "gated_system_w": 6478.1
+      "tokens_s": 51607.2,
+      "ungated_mJ": 446.42,
+      "gated_mJ": 305.03,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 3544.9,
+      "gated_system_w": 15741.7
      }
     },
     "busiest_stage": 15,
@@ -5833,15 +5986,15 @@
     "layers_per_stage": 1.333,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.384,
-      "residual_ready_us": 4.69,
-      "slack_us": 3.306,
+      "engram_ready_us": 1.394,
+      "residual_ready_us": 4.78,
+      "slack_us": 3.386,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.384,
-      "residual_ready_us": 83.059,
-      "slack_us": 81.675,
+      "engram_ready_us": 1.394,
+      "residual_ready_us": 84.339,
+      "slack_us": 82.945,
       "on_critical_path": false
      }
     },
@@ -5894,18 +6047,25 @@
     "packages": 82,
     "hbm_stacks": 512,
     "busiest_die_macros": 12878,
-    "ar_tokens_s_b1": 3757.0,
-    "mtp_tokens_s_b1": 5447.7,
+    "ar_tokens_s_b1": 3705.5,
+    "mtp_tokens_s_b1": 5414.0,
     "ar_saturated_tokens_s": 79975.2,
-    "mtp_saturated_tokens_s": 50940.3,
+    "mtp_saturated_tokens_s": 50744.0,
     "stage_hops": 29,
     "pipeline_hops_us": 12.68,
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.16,
-     "layer_die_mean_w_saturated": 99.3,
-     "layer_die_busiest_w_saturated": 144.6,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 57.3,
+     "layer_die_mean_w_saturated": 150.4,
+     "layer_die_busiest_w_saturated": 340.3,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 710.2,
+      "mean_w": 775.3
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 0.5,
     "added_latency": {
@@ -5932,55 +6092,56 @@
      "layer_die_ramps_per_token": 964,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.wo_a": 22.37,
-     "attn.out_allreduce": 16.87,
-     "ffn.combine_allreduce": 16.87,
+     "attn.wo_a": 22.77,
+     "attn.out_allreduce": 17.07,
+     "ffn.combine_allreduce": 17.07,
      "attn.idx.score": 13.57,
      "substage_hop0": 10.76,
      "attn.idx.topk_local": 9.75,
-     "ffn.experts_gu": 8.67,
-     "ffn.softplus_sqrt": 8.63
+     "ffn.experts_gu": 9.07,
+     "head.lm_head": 8.64
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9911.5,
+     "layer_dies": 6875.5,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13974.5
+     "total": 10938.5
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3757.0,
-      "ungated_mJ": 3674.86,
-      "gated_mJ": 346.89,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1136.8,
-      "gated_system_w": 1303.3
+      "tokens_s": 3705.5,
+      "ungated_mJ": 3084.89,
+      "gated_mJ": 442.16,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1049.0,
+      "gated_system_w": 1638.5
      },
      "ar_sat": {
       "tokens_s": 79975.2,
-      "ungated_mJ": 214.87,
-      "gated_mJ": 114.59,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 5619.6,
-      "gated_system_w": 9164.2
+      "ungated_mJ": 294.63,
+      "gated_mJ": 220.76,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 4934.3,
+      "gated_system_w": 17655.3
      },
      "mtp_b1": {
-      "tokens_s": 5447.7,
-      "ungated_mJ": 2549.07,
-      "gated_mJ": 248.85,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1108.8,
-      "gated_system_w": 1355.7
+      "tokens_s": 5414.0,
+      "ungated_mJ": 2238.88,
+      "gated_mJ": 424.89,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1020.8,
+      "gated_system_w": 2300.3
      },
      "mtp_sat": {
-      "tokens_s": 50940.3,
-      "ungated_mJ": 313.07,
-      "gated_mJ": 125.49,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 4084.5,
-      "gated_system_w": 6392.6
+      "tokens_s": 50744.0,
+      "ungated_mJ": 449.99,
+      "gated_mJ": 305.5,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 3509.4,
+      "gated_system_w": 15502.1
      }
     },
     "busiest_stage": 15,
@@ -5988,15 +6149,15 @@
     "layers_per_stage": 1.333,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.422,
-      "residual_ready_us": 5.088,
-      "slack_us": 3.666,
+      "engram_ready_us": 1.432,
+      "residual_ready_us": 5.178,
+      "slack_us": 3.746,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.422,
-      "residual_ready_us": 88.655,
-      "slack_us": 87.233,
+      "engram_ready_us": 1.432,
+      "residual_ready_us": 89.935,
+      "slack_us": 88.503,
       "on_critical_path": false
      }
     },
@@ -6017,7 +6178,7 @@
      "bytes_per_token": 13312,
      "link_Bps_per_package": 26352941176.47059,
      "link_utilisation_ar_saturated": 0.0022,
-     "link_utilisation_mtp_saturated": 0.0024
+     "link_utilisation_mtp_saturated": 0.0023
     },
     "cost": {
      "silicon_usd": 94825,
@@ -6049,18 +6210,25 @@
     "packages": 82,
     "hbm_stacks": 512,
     "busiest_die_macros": 12878,
-    "ar_tokens_s_b1": 2766.9,
-    "mtp_tokens_s_b1": 4558.1,
+    "ar_tokens_s_b1": 2738.9,
+    "mtp_tokens_s_b1": 4534.4,
     "ar_saturated_tokens_s": 77442.7,
-    "mtp_saturated_tokens_s": 46321.4,
+    "mtp_saturated_tokens_s": 46159.0,
     "stage_hops": 29,
     "pipeline_hops_us": 12.68,
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.16,
-     "layer_die_mean_w_saturated": 98.7,
-     "layer_die_busiest_w_saturated": 139.7,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 57.3,
+     "layer_die_mean_w_saturated": 147.5,
+     "layer_die_busiest_w_saturated": 319.9,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 710.2,
+      "mean_w": 773.2
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 0.5,
     "added_latency": {
@@ -6072,61 +6240,62 @@
     "field_starts": {
      "mean_starts_per_die": 10.87,
      "mean_ramps_per_die": 8.03,
-     "held_cycles_per_token": 21530,
+     "held_cycles_per_token": 21338,
      "max_ramps_per_die": 12,
      "tau_cycles": 256,
      "layer_die_ramps_per_token": 964,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.wo_a": 22.37,
+     "attn.wo_a": 22.77,
+     "attn.out_allreduce": 17.07,
+     "ffn.combine_allreduce": 17.07,
      "ffn.softplus_sqrt": 16.98,
-     "attn.out_allreduce": 16.87,
-     "ffn.combine_allreduce": 16.87,
      "attn.idx.score": 13.38,
      "ffn.swiglu": 11.91,
      "substage_hop0": 10.76,
-     "ffn.experts_gu": 10.13
+     "ffn.experts_gu": 10.53
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9911.5,
+     "layer_dies": 6875.5,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13974.5
+     "total": 10938.5
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2766.9,
-      "ungated_mJ": 4973.89,
-      "gated_mJ": 442.16,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1100.8,
-      "gated_system_w": 1223.4
+      "tokens_s": 2738.9,
+      "ungated_mJ": 4117.44,
+      "gated_mJ": 529.94,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1015.8,
+      "gated_system_w": 1451.5
      },
      "ar_sat": {
       "tokens_s": 77442.7,
-      "ungated_mJ": 220.45,
-      "gated_mJ": 117.54,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 5670.6,
-      "gated_system_w": 9102.9
+      "ungated_mJ": 299.06,
+      "gated_mJ": 222.93,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 4946.2,
+      "gated_system_w": 17264.5
      },
      "mtp_b1": {
-      "tokens_s": 4558.1,
-      "ungated_mJ": 3037.77,
-      "gated_mJ": 285.88,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1096.5,
-      "gated_system_w": 1303.1
+      "tokens_s": 4534.4,
+      "ungated_mJ": 2627.32,
+      "gated_mJ": 458.86,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1009.0,
+      "gated_system_w": 2080.7
      },
      "mtp_sat": {
-      "tokens_s": 46321.4,
-      "ungated_mJ": 339.77,
-      "gated_mJ": 132.31,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 4029.7,
-      "gated_system_w": 6128.6
+      "tokens_s": 46159.0,
+      "ungated_mJ": 471.22,
+      "gated_mJ": 311.09,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 3450.4,
+      "gated_system_w": 14359.5
      }
     },
     "busiest_stage": 15,
@@ -6134,15 +6303,15 @@
     "layers_per_stage": 1.333,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.68,
-      "residual_ready_us": 7.418,
-      "slack_us": 5.739,
+      "engram_ready_us": 1.69,
+      "residual_ready_us": 7.508,
+      "slack_us": 5.819,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.68,
-      "residual_ready_us": 122.007,
-      "slack_us": 120.328,
+      "engram_ready_us": 1.69,
+      "residual_ready_us": 123.287,
+      "slack_us": 121.598,
       "on_critical_path": false
      }
     },
@@ -6195,18 +6364,25 @@
     "packages": 82,
     "hbm_stacks": 512,
     "busiest_die_macros": 12878,
-    "ar_tokens_s_b1": 3553.6,
-    "mtp_tokens_s_b1": 5041.9,
+    "ar_tokens_s_b1": 3507.6,
+    "mtp_tokens_s_b1": 5013.0,
     "ar_saturated_tokens_s": 76501.4,
-    "mtp_saturated_tokens_s": 50033.0,
+    "mtp_saturated_tokens_s": 49843.6,
     "stage_hops": 29,
     "pipeline_hops_us": 12.68,
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.16,
-     "layer_die_mean_w_saturated": 98.5,
-     "layer_die_busiest_w_saturated": 138.4,
-     "basis": "ungated die static + the layer dies' dynamic energy at the saturated rate, mean and scaled by the busiest stage's occupancy over the mean"
+     "busiest_stage": 15,
+     "layer_die_static_w": 57.3,
+     "layer_die_mean_w_saturated": 146.4,
+     "layer_die_busiest_w_saturated": 314.4,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 710.2,
+      "mean_w": 772.5
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
     "field_concurrency": 0.5,
     "added_latency": {
@@ -6227,55 +6403,56 @@
      "layer_die_ramps_per_token": 964,
      "layer_die_starts_per_token": 1304
     },
+    "ss_wire": false,
     "critical_path_top_us": {
-     "attn.wo_a": 22.53,
-     "attn.out_allreduce": 16.87,
-     "ffn.combine_allreduce": 16.87,
+     "attn.wo_a": 22.93,
+     "attn.out_allreduce": 17.07,
+     "ffn.combine_allreduce": 17.07,
      "attn.idx.score": 13.42,
      "substage_hop0": 10.76,
-     "attn.idx.topk_local": 9.75,
-     "ffn.experts_gu": 9.47,
-     "ffn.down": 9.4
+     "ffn.experts_gu": 9.87,
+     "ffn.down": 9.8,
+     "attn.idx.topk_local": 9.75
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 9911.5,
+     "layer_dies": 6875.5,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13974.5
+     "total": 10938.5
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 3553.6,
-      "ungated_mJ": 3882.6,
-      "gated_mJ": 362.42,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1130.4,
-      "gated_system_w": 1287.9
+      "tokens_s": 3507.6,
+      "ungated_mJ": 3250.02,
+      "gated_mJ": 456.3,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1042.6,
+      "gated_system_w": 1600.5
      },
      "ar_sat": {
       "tokens_s": 76501.4,
-      "ungated_mJ": 222.62,
-      "gated_mJ": 118.3,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 5659.4,
-      "gated_system_w": 9050.0
+      "ungated_mJ": 300.78,
+      "gated_mJ": 223.72,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 4946.2,
+      "gated_system_w": 17114.7
      },
      "mtp_b1": {
-      "tokens_s": 5041.9,
-      "ungated_mJ": 2750.59,
-      "gated_mJ": 264.26,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 1103.9,
-      "gated_system_w": 1332.4
+      "tokens_s": 5013.0,
+      "ungated_mJ": 2399.06,
+      "gated_mJ": 438.81,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1015.0,
+      "gated_system_w": 2199.8
      },
      "mtp_sat": {
-      "tokens_s": 50033.0,
-      "ungated_mJ": 317.93,
-      "gated_mJ": 131.06,
-      "ungated_static_w": 13639.8,
-      "gated_static_w": 4290.2,
-      "gated_system_w": 6557.2
+      "tokens_s": 49843.6,
+      "ungated_mJ": 453.85,
+      "gated_mJ": 309.78,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 3660.5,
+      "gated_system_w": 15440.4
      }
     },
     "busiest_stage": 15,
@@ -6283,15 +6460,172 @@
     "layers_per_stage": 1.333,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.455,
-      "residual_ready_us": 5.46,
-      "slack_us": 4.005,
+      "engram_ready_us": 1.465,
+      "residual_ready_us": 5.55,
+      "slack_us": 4.085,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.455,
-      "residual_ready_us": 94.014,
-      "slack_us": 92.559,
+      "engram_ready_us": 1.465,
+      "residual_ready_us": 95.294,
+      "slack_us": 93.829,
+      "on_critical_path": false
+     }
+    },
+    "density": "analytical",
+    "bf16_mode": "standard_pair",
+    "role": "product",
+    "depth": "4096m8",
+    "engram": {
+     "table_dies": 36,
+     "table_packages": 18,
+     "rows_per_token": 48,
+     "expected_max_rows_per_die_per_layer": 3.78,
+     "engram_l1_latency_us": 1.874,
+     "engram_l1_slack_us": 3.57,
+     "engram_l14_slack_us": 65.2,
+     "hops": "unchanged: table package -> one 51.2T switch -> layer package (2 switched legs)",
+     "latency_basis": "rack critical_paths: 2 switched legs + the 396 ns port read of all 48 rows at ONE port (an upper bound for any table-die count) + serialisation into the consumer port",
+     "bytes_per_token": 13312,
+     "link_Bps_per_package": 26352941176.47059,
+     "link_utilisation_ar_saturated": 0.0021,
+     "link_utilisation_mtp_saturated": 0.0023
+    },
+    "cost": {
+     "silicon_usd": 94825,
+     "package_usd": 165640,
+     "hbm_usd": 184320,
+     "hardware_usd": 444785,
+     "nre_usd": {
+      "low": 127000000.0,
+      "high": 373000000.0
+     },
+     "capex_usd": {
+      "low": 571785,
+      "high": 817785
+     },
+     "silicon_mm2": 133660.0
+    },
+    "cost_iso_package_usd": 2050000.0,
+    "silicon_mm2": 133660.0
+   },
+   {
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS: ADOPTED + W15 SS wire reach (504 um) + W11 LAT-4 serial mul",
+    "stages": 30,
+    "bf16": "standard_pair",
+    "clock_hz": 1200000000.0,
+    "layer_dies": 120,
+    "head_dies": 8,
+    "table_dies": 36,
+    "dies": 164,
+    "packages": 82,
+    "hbm_stacks": 512,
+    "busiest_die_macros": 12878,
+    "ar_tokens_s_b1": 3401.9,
+    "mtp_tokens_s_b1": 4953.4,
+    "ar_saturated_tokens_s": 76501.4,
+    "mtp_saturated_tokens_s": 49395.4,
+    "stage_hops": 29,
+    "pipeline_hops_us": 12.68,
+    "cooling": {
+     "limit_w_per_die": 474.56,
+     "dyn_scale": 1.16,
+     "busiest_stage": 15,
+     "layer_die_static_w": 57.3,
+     "layer_die_mean_w_saturated": 146.4,
+     "layer_die_busiest_w_saturated": 314.4,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 710.2,
+      "mean_w": 772.5
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
+    },
+    "field_concurrency": 0.5,
+    "added_latency": {
+     "suffix:softplus_sqrt": -97
+    },
+    "slow_domain": [
+     900000000.0,
+     "w18"
+    ],
+    "chain_stages": null,
+    "elem_stages": 7,
+    "field_starts": {
+     "mean_starts_per_die": 10.87,
+     "mean_ramps_per_die": 8.03,
+     "held_cycles_per_token": 12267,
+     "max_ramps_per_die": 12,
+     "tau_cycles": 256,
+     "layer_die_ramps_per_token": 964,
+     "layer_die_starts_per_token": 1304
+    },
+    "ss_wire": true,
+    "critical_path_top_us": {
+     "attn.wo_a": 23.27,
+     "attn.out_allreduce": 17.93,
+     "ffn.combine_allreduce": 17.93,
+     "attn.idx.score": 13.42,
+     "ffn.experts_gu": 10.8,
+     "substage_hop0": 10.76,
+     "ffn.down": 10.73,
+     "attn.a_proj": 10.11
+    },
+    "capacity_users_1m": 866,
+    "static_w_ungated": {
+     "layer_dies": 6875.5,
+     "head_dies": 738.5,
+     "table_dies": 3324.4,
+     "total": 10938.5
+    },
+    "energy": {
+     "ar_b1": {
+      "tokens_s": 3401.9,
+      "ungated_mJ": 3346.05,
+      "gated_mJ": 464.46,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1038.9,
+      "gated_system_w": 1580.0
+     },
+     "ar_sat": {
+      "tokens_s": 76501.4,
+      "ungated_mJ": 300.78,
+      "gated_mJ": 223.72,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 4946.2,
+      "gated_system_w": 17114.7
+     },
+     "mtp_b1": {
+      "tokens_s": 4953.4,
+      "ungated_mJ": 2425.09,
+      "gated_mJ": 441.12,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 1014.3,
+      "gated_system_w": 2185.0
+     },
+     "mtp_sat": {
+      "tokens_s": 49395.4,
+      "ungated_mJ": 455.83,
+      "gated_mJ": 310.06,
+      "ungated_static_w": 10841.8,
+      "gated_static_w": 3641.4,
+      "gated_system_w": 15315.4
+     }
+    },
+    "busiest_stage": 15,
+    "busiest_stage_us": 13.07,
+    "layers_per_stage": 1.333,
+    "engram_dag_slack": {
+     "L1": {
+      "engram_ready_us": 1.48,
+      "residual_ready_us": 5.762,
+      "slack_us": 4.282,
+      "on_critical_path": false
+     },
+     "L14": {
+      "engram_ready_us": 1.48,
+      "residual_ready_us": 98.347,
+      "slack_us": 96.867,
       "on_critical_path": false
      }
     },
@@ -6568,18 +6902,18 @@
     "capacity_users_per_group": 60,
     "feasible": true,
     "weight_sweep_us": 512.9,
-    "chain_us_ar": 724.9,
+    "chain_us_ar": 728.9,
     "die_mm2": 345.7,
     "silicon_mm2": 2419.9,
     "static_w_ungated": 487.4,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 1379.5,
-      "aggregate_tokens_s": 1379.5,
-      "ungated_mJ": 1814.75,
-      "gated_mJ": 1744.06,
-      "gated_system_w": 2406.0
+      "per_user_tokens_s": 1371.9,
+      "aggregate_tokens_s": 1371.9,
+      "ungated_mJ": 1816.7,
+      "gated_mJ": 1745.61,
+      "gated_system_w": 2395.0
      },
      "saturated": {
       "batch": 8,
@@ -6593,18 +6927,18 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2580.0,
-      "aggregate_tokens_s": 2580.0,
-      "ungated_mJ": 1327.7,
-      "gated_mJ": 1267.68,
-      "gated_system_w": 3271.0
+      "per_user_tokens_s": 2579.4,
+      "aggregate_tokens_s": 2579.4,
+      "ungated_mJ": 1327.74,
+      "gated_mJ": 1267.71,
+      "gated_system_w": 3270.0
      },
      "saturated": {
       "batch": 1,
-      "per_user_tokens_s": 2580.0,
-      "aggregate_tokens_s": 2580.0,
-      "ungated_mJ": 1327.7,
-      "gated_mJ": 1257.15,
+      "per_user_tokens_s": 2579.4,
+      "aggregate_tokens_s": 2579.4,
+      "ungated_mJ": 1327.74,
+      "gated_mJ": 1257.17,
       "gated_system_w": 3243.0
      }
     },
@@ -6635,18 +6969,18 @@
     "capacity_users_per_group": 147,
     "feasible": true,
     "weight_sweep_us": 448.8,
-    "chain_us_ar": 666.3,
+    "chain_us_ar": 670.3,
     "die_mm2": 345.7,
     "silicon_mm2": 2765.6,
     "static_w_ungated": 557.0,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 1500.9,
-      "aggregate_tokens_s": 1500.9,
-      "ungated_mJ": 1832.58,
-      "gated_mJ": 1758.32,
-      "gated_system_w": 2639.0
+      "per_user_tokens_s": 1491.9,
+      "aggregate_tokens_s": 1491.9,
+      "ungated_mJ": 1834.8,
+      "gated_mJ": 1760.1,
+      "gated_system_w": 2626.0
      },
      "saturated": {
       "batch": 8,
@@ -6660,19 +6994,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2942.9,
-      "aggregate_tokens_s": 2942.9,
-      "ungated_mJ": 1328.07,
-      "gated_mJ": 1267.93,
+      "per_user_tokens_s": 2942.1,
+      "aggregate_tokens_s": 2942.1,
+      "ungated_mJ": 1328.11,
+      "gated_mJ": 1267.96,
       "gated_system_w": 3731.0
      },
      "saturated": {
-      "batch": 147,
-      "per_user_tokens_s": 20.0,
-      "aggregate_tokens_s": 2942.9,
-      "ungated_mJ": 1328.07,
-      "gated_mJ": 1257.38,
-      "gated_system_w": 3700.0
+      "batch": 1,
+      "per_user_tokens_s": 2942.1,
+      "aggregate_tokens_s": 2942.1,
+      "ungated_mJ": 1328.11,
+      "gated_mJ": 1257.4,
+      "gated_system_w": 3699.0
      }
     },
     "cost": {
@@ -6702,18 +7036,18 @@
     "capacity_users_per_group": 320,
     "feasible": true,
     "weight_sweep_us": 359.0,
-    "chain_us_ar": 590.6,
+    "chain_us_ar": 594.6,
     "die_mm2": 345.7,
     "silicon_mm2": 3457.0,
     "static_w_ungated": 696.3,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 1693.2,
-      "aggregate_tokens_s": 1693.2,
-      "ungated_mJ": 1872.67,
-      "gated_mJ": 1790.38,
-      "gated_system_w": 3031.0
+      "per_user_tokens_s": 1681.8,
+      "aggregate_tokens_s": 1681.8,
+      "ungated_mJ": 1875.45,
+      "gated_mJ": 1792.61,
+      "gated_system_w": 3015.0
      },
      "saturated": {
       "batch": 320,
@@ -6727,19 +7061,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3662.6,
-      "aggregate_tokens_s": 3662.6,
-      "ungated_mJ": 1328.89,
-      "gated_mJ": 1268.49,
-      "gated_system_w": 4646.0
+      "per_user_tokens_s": 3661.5,
+      "aggregate_tokens_s": 3661.5,
+      "ungated_mJ": 1328.95,
+      "gated_mJ": 1268.53,
+      "gated_system_w": 4645.0
      },
      "saturated": {
       "batch": 1,
-      "per_user_tokens_s": 3662.6,
-      "aggregate_tokens_s": 3662.6,
-      "ungated_mJ": 1328.89,
-      "gated_mJ": 1257.89,
-      "gated_system_w": 4607.0
+      "per_user_tokens_s": 3661.5,
+      "aggregate_tokens_s": 3661.5,
+      "ungated_mJ": 1328.95,
+      "gated_mJ": 1257.93,
+      "gated_system_w": 4606.0
      }
     },
     "cost": {
@@ -6769,18 +7103,18 @@
     "capacity_users_per_group": 493,
     "feasible": true,
     "weight_sweep_us": 299.2,
-    "chain_us_ar": 540.7,
+    "chain_us_ar": 544.7,
     "die_mm2": 345.7,
     "silicon_mm2": 4148.4,
     "static_w_ungated": 835.6,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 1849.3,
-      "aggregate_tokens_s": 1849.3,
-      "ungated_mJ": 1913.25,
-      "gated_mJ": 1822.85,
-      "gated_system_w": 3371.0
+      "per_user_tokens_s": 1835.8,
+      "aggregate_tokens_s": 1835.8,
+      "ungated_mJ": 1916.59,
+      "gated_mJ": 1825.52,
+      "gated_system_w": 3351.0
      },
      "saturated": {
       "batch": 8,
@@ -6794,19 +7128,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 4375.9,
-      "aggregate_tokens_s": 4375.9,
-      "ungated_mJ": 1329.72,
-      "gated_mJ": 1269.06,
-      "gated_system_w": 5553.0
+      "per_user_tokens_s": 4374.4,
+      "aggregate_tokens_s": 4374.4,
+      "ungated_mJ": 1329.79,
+      "gated_mJ": 1269.11,
+      "gated_system_w": 5552.0
      },
      "saturated": {
       "batch": 1,
-      "per_user_tokens_s": 4375.9,
-      "aggregate_tokens_s": 4375.9,
-      "ungated_mJ": 1329.72,
-      "gated_mJ": 1258.42,
-      "gated_system_w": 5507.0
+      "per_user_tokens_s": 4374.4,
+      "aggregate_tokens_s": 4374.4,
+      "ungated_mJ": 1329.79,
+      "gated_mJ": 1258.46,
+      "gated_system_w": 5505.0
      }
     },
     "cost": {
@@ -6836,18 +7170,18 @@
     "capacity_users_per_group": 839,
     "feasible": true,
     "weight_sweep_us": 224.4,
-    "chain_us_ar": 473.3,
+    "chain_us_ar": 477.3,
     "die_mm2": 345.7,
     "silicon_mm2": 5531.2,
     "static_w_ungated": 1114.1,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2112.9,
-      "aggregate_tokens_s": 2112.9,
-      "ungated_mJ": 1988.7,
-      "gated_mJ": 1883.19,
-      "gated_system_w": 3979.0
+      "per_user_tokens_s": 2095.3,
+      "aggregate_tokens_s": 2095.3,
+      "ungated_mJ": 1993.15,
+      "gated_mJ": 1886.75,
+      "gated_system_w": 3953.0
      },
      "saturated": {
       "batch": 16,
@@ -6861,19 +7195,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 4886.3,
-      "aggregate_tokens_s": 4886.3,
-      "ungated_mJ": 1366.78,
-      "gated_mJ": 1294.35,
-      "gated_system_w": 6325.0
+      "per_user_tokens_s": 4858.3,
+      "aggregate_tokens_s": 4858.3,
+      "ungated_mJ": 1368.09,
+      "gated_mJ": 1295.24,
+      "gated_system_w": 6293.0
      },
      "saturated": {
       "batch": 2,
-      "per_user_tokens_s": 2893.8,
-      "aggregate_tokens_s": 5787.6,
-      "ungated_mJ": 1331.27,
-      "gated_mJ": 1259.39,
-      "gated_system_w": 7289.0
+      "per_user_tokens_s": 2892.4,
+      "aggregate_tokens_s": 5784.8,
+      "ungated_mJ": 1331.37,
+      "gated_mJ": 1259.44,
+      "gated_system_w": 7286.0
      }
     },
     "cost": {
@@ -6903,18 +7237,18 @@
     "capacity_users_per_group": 926,
     "feasible": true,
     "weight_sweep_us": 211.2,
-    "chain_us_ar": 467.6,
+    "chain_us_ar": 471.6,
     "die_mm2": 345.7,
     "silicon_mm2": 5876.9,
     "static_w_ungated": 1183.7,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2138.7,
-      "aggregate_tokens_s": 2138.7,
-      "ungated_mJ": 2014.9,
-      "gated_mJ": 1904.15,
-      "gated_system_w": 4072.0
+      "per_user_tokens_s": 2120.6,
+      "aggregate_tokens_s": 2120.6,
+      "ungated_mJ": 2019.62,
+      "gated_mJ": 1907.93,
+      "gated_system_w": 4046.0
      },
      "saturated": {
       "batch": 16,
@@ -6928,19 +7262,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 4926.7,
-      "aggregate_tokens_s": 4926.7,
-      "ungated_mJ": 1379.04,
-      "gated_mJ": 1302.71,
-      "gated_system_w": 6418.0
+      "per_user_tokens_s": 4898.3,
+      "aggregate_tokens_s": 4898.3,
+      "ungated_mJ": 1380.44,
+      "gated_mJ": 1303.66,
+      "gated_system_w": 6386.0
      },
      "saturated": {
-      "batch": 2,
-      "per_user_tokens_s": 3066.1,
-      "aggregate_tokens_s": 6132.2,
-      "ungated_mJ": 1331.81,
-      "gated_mJ": 1259.72,
-      "gated_system_w": 7725.0
+      "batch": 926,
+      "per_user_tokens_s": 6.6,
+      "aggregate_tokens_s": 6129.1,
+      "ungated_mJ": 1331.91,
+      "gated_mJ": 1259.78,
+      "gated_system_w": 7721.0
      }
     },
     "cost": {
@@ -6970,18 +7304,18 @@
     "capacity_users_per_group": 1185,
     "feasible": true,
     "weight_sweep_us": 179.5,
-    "chain_us_ar": 433.8,
+    "chain_us_ar": 437.8,
     "die_mm2": 345.7,
     "silicon_mm2": 6914.0,
     "static_w_ungated": 1392.6,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2305.2,
-      "aggregate_tokens_s": 2305.2,
-      "ungated_mJ": 2065.55,
-      "gated_mJ": 1944.67,
-      "gated_system_w": 4483.0
+      "per_user_tokens_s": 2284.1,
+      "aggregate_tokens_s": 2284.1,
+      "ungated_mJ": 2071.12,
+      "gated_mJ": 1949.12,
+      "gated_system_w": 4452.0
      },
      "saturated": {
       "batch": 16,
@@ -6995,19 +7329,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5180.6,
-      "aggregate_tokens_s": 5180.6,
-      "ungated_mJ": 1407.59,
-      "gated_mJ": 1322.19,
-      "gated_system_w": 6850.0
+      "per_user_tokens_s": 5149.2,
+      "aggregate_tokens_s": 5149.2,
+      "ungated_mJ": 1409.23,
+      "gated_mJ": 1323.31,
+      "gated_system_w": 6814.0
      },
      "saturated": {
       "batch": 2,
-      "per_user_tokens_s": 3587.8,
-      "aggregate_tokens_s": 7175.6,
-      "ungated_mJ": 1332.85,
-      "gated_mJ": 1260.38,
-      "gated_system_w": 9044.0
+      "per_user_tokens_s": 3585.7,
+      "aggregate_tokens_s": 7171.4,
+      "ungated_mJ": 1332.97,
+      "gated_mJ": 1260.45,
+      "gated_system_w": 9039.0
      }
     },
     "cost": {
@@ -7037,18 +7371,18 @@
     "capacity_users_per_group": 1531,
     "feasible": true,
     "weight_sweep_us": 149.6,
-    "chain_us_ar": 409.6,
+    "chain_us_ar": 413.6,
     "die_mm2": 345.7,
     "silicon_mm2": 8296.8,
     "static_w_ungated": 1671.1,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2441.1,
-      "aggregate_tokens_s": 2441.1,
-      "ungated_mJ": 2146.0,
-      "gated_mJ": 2009.02,
-      "gated_system_w": 4904.0
+      "per_user_tokens_s": 2417.5,
+      "aggregate_tokens_s": 2417.5,
+      "ungated_mJ": 2152.68,
+      "gated_mJ": 2014.36,
+      "gated_system_w": 4870.0
      },
      "saturated": {
       "batch": 16,
@@ -7062,19 +7396,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5378.9,
-      "aggregate_tokens_s": 5378.9,
-      "ungated_mJ": 1449.46,
-      "gated_mJ": 1350.76,
-      "gated_system_w": 7266.0
+      "per_user_tokens_s": 5345.1,
+      "aggregate_tokens_s": 5345.1,
+      "ungated_mJ": 1451.43,
+      "gated_mJ": 1352.1,
+      "gated_system_w": 7227.0
      },
      "saturated": {
       "batch": 2,
-      "per_user_tokens_s": 4269.0,
-      "aggregate_tokens_s": 8538.0,
-      "ungated_mJ": 1334.51,
-      "gated_mJ": 1261.41,
-      "gated_system_w": 10770.0
+      "per_user_tokens_s": 4266.0,
+      "aggregate_tokens_s": 8532.0,
+      "ungated_mJ": 1334.65,
+      "gated_mJ": 1261.5,
+      "gated_system_w": 10763.0
      }
     },
     "cost": {
@@ -7104,18 +7438,18 @@
     "capacity_users_per_group": 2224,
     "feasible": true,
     "weight_sweep_us": 112.2,
-    "chain_us_ar": 376.7,
+    "chain_us_ar": 380.7,
     "die_mm2": 345.7,
     "silicon_mm2": 11062.4,
     "static_w_ungated": 2228.2,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2654.3,
-      "aggregate_tokens_s": 2654.3,
-      "ungated_mJ": 2300.87,
-      "gated_mJ": 2132.91,
-      "gated_system_w": 5661.0
+      "per_user_tokens_s": 2626.5,
+      "aggregate_tokens_s": 2626.5,
+      "ungated_mJ": 2309.77,
+      "gated_mJ": 2140.03,
+      "gated_system_w": 5621.0
      },
      "saturated": {
       "batch": 16,
@@ -7129,19 +7463,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5674.8,
-      "aggregate_tokens_s": 5674.8,
-      "ungated_mJ": 1531.42,
-      "gated_mJ": 1406.68,
-      "gated_system_w": 7983.0
+      "per_user_tokens_s": 5637.2,
+      "aggregate_tokens_s": 5637.2,
+      "ungated_mJ": 1534.04,
+      "gated_mJ": 1408.47,
+      "gated_system_w": 7940.0
      },
      "saturated": {
       "batch": 2224,
       "per_user_tokens_s": 5.0,
-      "aggregate_tokens_s": 11201.8,
-      "ungated_mJ": 1337.69,
-      "gated_mJ": 1263.41,
-      "gated_system_w": 14152.0
+      "aggregate_tokens_s": 11191.5,
+      "ungated_mJ": 1337.87,
+      "gated_mJ": 1263.52,
+      "gated_system_w": 14141.0
      }
     },
     "cost": {
@@ -7171,18 +7505,18 @@
     "capacity_users_per_group": 3608,
     "feasible": true,
     "weight_sweep_us": 74.8,
-    "chain_us_ar": 347.9,
+    "chain_us_ar": 351.9,
     "die_mm2": 345.7,
     "silicon_mm2": 16593.6,
     "static_w_ungated": 3342.3,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2874.1,
-      "aggregate_tokens_s": 2874.1,
-      "ungated_mJ": 2624.34,
-      "gated_mJ": 2391.65,
-      "gated_system_w": 6874.0
+      "per_user_tokens_s": 2841.4,
+      "aggregate_tokens_s": 2841.4,
+      "ungated_mJ": 2637.69,
+      "gated_mJ": 2402.33,
+      "gated_system_w": 6826.0
      },
      "saturated": {
       "batch": 32,
@@ -7196,19 +7530,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5961.9,
-      "aggregate_tokens_s": 5961.9,
-      "ungated_mJ": 1699.38,
-      "gated_mJ": 1521.29,
-      "gated_system_w": 9070.0
+      "per_user_tokens_s": 5920.3,
+      "aggregate_tokens_s": 5920.3,
+      "ungated_mJ": 1703.32,
+      "gated_mJ": 1523.97,
+      "gated_system_w": 9022.0
      },
      "saturated": {
-      "batch": 3608,
-      "per_user_tokens_s": 3.8,
-      "aggregate_tokens_s": 13857.8,
-      "ungated_mJ": 1379.96,
-      "gated_mJ": 1289.89,
-      "gated_system_w": 17875.0
+      "batch": 4,
+      "per_user_tokens_s": 3460.5,
+      "aggregate_tokens_s": 13842.0,
+      "ungated_mJ": 1380.24,
+      "gated_mJ": 1290.06,
+      "gated_system_w": 17857.0
      }
     },
     "cost": {
@@ -7238,18 +7572,18 @@
     "capacity_users_per_group": 4993,
     "feasible": true,
     "weight_sweep_us": 56.1,
-    "chain_us_ar": 330.1,
+    "chain_us_ar": 334.1,
     "die_mm2": 345.7,
     "silicon_mm2": 22124.8,
     "static_w_ungated": 4456.3,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3029.6,
-      "aggregate_tokens_s": 3029.6,
-      "ungated_mJ": 2932.35,
-      "gated_mJ": 2638.03,
-      "gated_system_w": 7992.0
+      "per_user_tokens_s": 2993.4,
+      "aggregate_tokens_s": 2993.4,
+      "ungated_mJ": 2950.15,
+      "gated_mJ": 2652.27,
+      "gated_system_w": 7939.0
      },
      "saturated": {
       "batch": 32,
@@ -7263,19 +7597,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 6155.0,
-      "aggregate_tokens_s": 6155.0,
-      "ungated_mJ": 1862.8,
-      "gated_mJ": 1632.78,
-      "gated_system_w": 10050.0
+      "per_user_tokens_s": 6110.8,
+      "aggregate_tokens_s": 6110.8,
+      "ungated_mJ": 1868.04,
+      "gated_mJ": 1636.36,
+      "gated_system_w": 9999.0
      },
      "saturated": {
       "batch": 4,
-      "per_user_tokens_s": 3482.2,
-      "aggregate_tokens_s": 13928.6,
-      "ungated_mJ": 1458.72,
-      "gated_mJ": 1339.24,
-      "gated_system_w": 18654.0
+      "per_user_tokens_s": 3478.2,
+      "aggregate_tokens_s": 13912.7,
+      "ungated_mJ": 1459.09,
+      "gated_mJ": 1339.47,
+      "gated_system_w": 18636.0
      }
     },
     "cost": {
@@ -7305,18 +7639,18 @@
     "capacity_users_per_group": 7763,
     "feasible": true,
     "weight_sweep_us": 37.4,
-    "chain_us_ar": 313.1,
+    "chain_us_ar": 317.1,
     "die_mm2": 345.7,
     "silicon_mm2": 33187.2,
     "static_w_ungated": 6684.5,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3193.7,
-      "aggregate_tokens_s": 3193.7,
-      "ungated_mJ": 3554.44,
-      "gated_mJ": 3135.65,
-      "gated_system_w": 10014.0
+      "per_user_tokens_s": 3153.5,
+      "aggregate_tokens_s": 3153.5,
+      "ungated_mJ": 3581.15,
+      "gated_mJ": 3157.01,
+      "gated_system_w": 9956.0
      },
      "saturated": {
       "batch": 32,
@@ -7330,19 +7664,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 6350.3,
-      "aggregate_tokens_s": 6350.3,
-      "ungated_mJ": 2191.4,
-      "gated_mJ": 1857.0,
-      "gated_system_w": 11793.0
+      "per_user_tokens_s": 6303.2,
+      "aggregate_tokens_s": 6303.2,
+      "ungated_mJ": 2199.27,
+      "gated_mJ": 1862.37,
+      "gated_system_w": 11739.0
      },
      "saturated": {
-      "batch": 7763,
-      "per_user_tokens_s": 1.8,
-      "aggregate_tokens_s": 13996.6,
-      "ungated_mJ": 1616.36,
-      "gated_mJ": 1438.01,
-      "gated_system_w": 20127.0
+      "batch": 4,
+      "per_user_tokens_s": 3495.1,
+      "aggregate_tokens_s": 13980.5,
+      "ungated_mJ": 1616.91,
+      "gated_mJ": 1438.35,
+      "gated_system_w": 20109.0
      }
     },
     "cost": {
@@ -7372,18 +7706,18 @@
     "capacity_users_per_group": 103,
     "feasible": true,
     "weight_sweep_us": 478.7,
-    "chain_us_ar": 698.4,
+    "chain_us_ar": 705.2,
     "die_mm2": 434.0,
     "silicon_mm2": 2170.0,
     "static_w_ungated": 411.0,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 1431.9,
-      "aggregate_tokens_s": 1431.9,
-      "ungated_mJ": 1748.49,
-      "gated_mJ": 1691.05,
-      "gated_system_w": 2421.0
+      "per_user_tokens_s": 1418.0,
+      "aggregate_tokens_s": 1418.0,
+      "ungated_mJ": 1751.29,
+      "gated_mJ": 1693.29,
+      "gated_system_w": 2401.0
      },
      "saturated": {
       "batch": 8,
@@ -7397,19 +7731,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2760.8,
-      "aggregate_tokens_s": 2760.8,
-      "ungated_mJ": 1287.66,
-      "gated_mJ": 1240.36,
-      "gated_system_w": 3424.0
+      "per_user_tokens_s": 2759.8,
+      "aggregate_tokens_s": 2759.8,
+      "ungated_mJ": 1287.72,
+      "gated_mJ": 1240.4,
+      "gated_system_w": 3423.0
      },
      "saturated": {
       "batch": 1,
-      "per_user_tokens_s": 2760.8,
-      "aggregate_tokens_s": 2760.8,
-      "ungated_mJ": 1287.66,
-      "gated_mJ": 1232.06,
-      "gated_system_w": 3402.0
+      "per_user_tokens_s": 2759.8,
+      "aggregate_tokens_s": 2759.8,
+      "ungated_mJ": 1287.72,
+      "gated_mJ": 1232.09,
+      "gated_system_w": 3400.0
      }
     },
     "cost": {
@@ -7439,18 +7773,18 @@
     "capacity_users_per_group": 233,
     "feasible": true,
     "weight_sweep_us": 398.9,
-    "chain_us_ar": 627.8,
+    "chain_us_ar": 634.6,
     "die_mm2": 434.0,
     "silicon_mm2": 2604.0,
     "static_w_ungated": 493.2,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 1592.9,
-      "aggregate_tokens_s": 1592.9,
-      "ungated_mJ": 1771.07,
-      "gated_mJ": 1709.12,
-      "gated_system_w": 2722.0
+      "per_user_tokens_s": 1575.8,
+      "aggregate_tokens_s": 1575.8,
+      "ungated_mJ": 1774.43,
+      "gated_mJ": 1711.8,
+      "gated_system_w": 2697.0
      },
      "saturated": {
       "batch": 8,
@@ -7464,19 +7798,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3302.7,
-      "aggregate_tokens_s": 3302.7,
-      "ungated_mJ": 1288.12,
-      "gated_mJ": 1240.68,
-      "gated_system_w": 4098.0
+      "per_user_tokens_s": 3301.2,
+      "aggregate_tokens_s": 3301.2,
+      "ungated_mJ": 1288.19,
+      "gated_mJ": 1240.72,
+      "gated_system_w": 4096.0
      },
      "saturated": {
-      "batch": 1,
-      "per_user_tokens_s": 3302.7,
-      "aggregate_tokens_s": 3302.7,
-      "ungated_mJ": 1288.12,
-      "gated_mJ": 1232.35,
-      "gated_system_w": 4070.0
+      "batch": 233,
+      "per_user_tokens_s": 14.2,
+      "aggregate_tokens_s": 3301.2,
+      "ungated_mJ": 1288.19,
+      "gated_mJ": 1232.39,
+      "gated_system_w": 4068.0
      }
     },
     "cost": {
@@ -7506,18 +7840,18 @@
     "capacity_users_per_group": 493,
     "feasible": true,
     "weight_sweep_us": 299.2,
-    "chain_us_ar": 540.7,
+    "chain_us_ar": 547.6,
     "die_mm2": 434.0,
     "silicon_mm2": 3472.0,
     "static_w_ungated": 657.6,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 1849.3,
-      "aggregate_tokens_s": 1849.3,
-      "ungated_mJ": 1817.05,
-      "gated_mJ": 1745.89,
-      "gated_system_w": 3229.0
+      "per_user_tokens_s": 1826.3,
+      "aggregate_tokens_s": 1826.3,
+      "ungated_mJ": 1821.53,
+      "gated_mJ": 1749.48,
+      "gated_system_w": 3195.0
      },
      "saturated": {
       "batch": 8,
@@ -7531,19 +7865,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 4375.9,
-      "aggregate_tokens_s": 4375.9,
-      "ungated_mJ": 1289.07,
-      "gated_mJ": 1241.32,
-      "gated_system_w": 5432.0
+      "per_user_tokens_s": 4373.3,
+      "aggregate_tokens_s": 4373.3,
+      "ungated_mJ": 1289.16,
+      "gated_mJ": 1241.38,
+      "gated_system_w": 5429.0
      },
      "saturated": {
       "batch": 1,
-      "per_user_tokens_s": 4375.9,
-      "aggregate_tokens_s": 4375.9,
-      "ungated_mJ": 1289.07,
-      "gated_mJ": 1232.94,
-      "gated_system_w": 5395.0
+      "per_user_tokens_s": 4373.3,
+      "aggregate_tokens_s": 4373.3,
+      "ungated_mJ": 1289.16,
+      "gated_mJ": 1233.0,
+      "gated_system_w": 5392.0
      }
     },
     "cost": {
@@ -7573,18 +7907,18 @@
     "capacity_users_per_group": 752,
     "feasible": true,
     "weight_sweep_us": 239.4,
-    "chain_us_ar": 489.3,
+    "chain_us_ar": 496.1,
     "die_mm2": 434.0,
     "silicon_mm2": 4340.0,
     "static_w_ungated": 822.1,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2043.6,
-      "aggregate_tokens_s": 2043.6,
-      "ungated_mJ": 1863.69,
-      "gated_mJ": 1783.2,
-      "gated_system_w": 3644.0
+      "per_user_tokens_s": 2015.6,
+      "aggregate_tokens_s": 2015.6,
+      "ungated_mJ": 1869.29,
+      "gated_mJ": 1787.68,
+      "gated_system_w": 3603.0
      },
      "saturated": {
       "batch": 752,
@@ -7598,19 +7932,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 4775.9,
-      "aggregate_tokens_s": 4775.9,
-      "ungated_mJ": 1310.91,
-      "gated_mJ": 1256.22,
-      "gated_system_w": 6000.0
+      "per_user_tokens_s": 4730.5,
+      "aggregate_tokens_s": 4730.5,
+      "ungated_mJ": 1312.56,
+      "gated_mJ": 1257.35,
+      "gated_system_w": 5948.0
      },
      "saturated": {
-      "batch": 752,
-      "per_user_tokens_s": 7.2,
-      "aggregate_tokens_s": 5435.3,
-      "ungated_mJ": 1290.03,
-      "gated_mJ": 1233.54,
-      "gated_system_w": 6705.0
+      "batch": 2,
+      "per_user_tokens_s": 2715.6,
+      "aggregate_tokens_s": 5431.1,
+      "ungated_mJ": 1290.14,
+      "gated_mJ": 1233.61,
+      "gated_system_w": 6700.0
      }
     },
     "cost": {
@@ -7640,18 +7974,18 @@
     "capacity_users_per_group": 882,
     "feasible": true,
     "weight_sweep_us": 217.6,
-    "chain_us_ar": 468.5,
+    "chain_us_ar": 475.3,
     "die_mm2": 434.0,
     "silicon_mm2": 4774.0,
     "static_w_ungated": 904.3,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2134.6,
-      "aggregate_tokens_s": 2134.6,
-      "ungated_mJ": 1885.05,
-      "gated_mJ": 1800.29,
-      "gated_system_w": 3843.0
+      "per_user_tokens_s": 2104.0,
+      "aggregate_tokens_s": 2104.0,
+      "ungated_mJ": 1891.22,
+      "gated_mJ": 1805.22,
+      "gated_system_w": 3798.0
      },
      "saturated": {
       "batch": 16,
@@ -7665,19 +7999,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 4920.3,
-      "aggregate_tokens_s": 4920.3,
-      "ungated_mJ": 1322.56,
-      "gated_mJ": 1264.18,
-      "gated_system_w": 6220.0
+      "per_user_tokens_s": 4872.1,
+      "aggregate_tokens_s": 4872.1,
+      "ungated_mJ": 1324.38,
+      "gated_mJ": 1265.42,
+      "gated_system_w": 6165.0
      },
      "saturated": {
       "batch": 882,
       "per_user_tokens_s": 6.8,
-      "aggregate_tokens_s": 5961.5,
-      "ungated_mJ": 1290.46,
-      "gated_mJ": 1233.82,
-      "gated_system_w": 7355.0
+      "aggregate_tokens_s": 5956.5,
+      "ungated_mJ": 1290.59,
+      "gated_mJ": 1233.9,
+      "gated_system_w": 7350.0
      }
     },
     "cost": {
@@ -7707,18 +8041,18 @@
     "capacity_users_per_group": 1012,
     "feasible": true,
     "weight_sweep_us": 199.5,
-    "chain_us_ar": 453.9,
+    "chain_us_ar": 460.7,
     "die_mm2": 434.0,
     "silicon_mm2": 5208.0,
     "static_w_ungated": 986.5,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2203.1,
-      "aggregate_tokens_s": 2203.1,
-      "ungated_mJ": 1909.2,
-      "gated_mJ": 1819.61,
-      "gated_system_w": 4009.0
+      "per_user_tokens_s": 2170.5,
+      "aggregate_tokens_s": 2170.5,
+      "ungated_mJ": 1915.93,
+      "gated_mJ": 1824.98,
+      "gated_system_w": 3961.0
      },
      "saturated": {
       "batch": 16,
@@ -7732,19 +8066,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5026.3,
-      "aggregate_tokens_s": 5026.3,
-      "ungated_mJ": 1335.04,
-      "gated_mJ": 1272.69,
-      "gated_system_w": 6397.0
+      "per_user_tokens_s": 4976.1,
+      "aggregate_tokens_s": 4976.1,
+      "ungated_mJ": 1337.02,
+      "gated_mJ": 1274.04,
+      "gated_system_w": 6340.0
      },
      "saturated": {
       "batch": 2,
-      "per_user_tokens_s": 3241.1,
-      "aggregate_tokens_s": 6482.2,
-      "ungated_mJ": 1290.96,
-      "gated_mJ": 1234.13,
-      "gated_system_w": 8000.0
+      "per_user_tokens_s": 3238.2,
+      "aggregate_tokens_s": 6476.3,
+      "ungated_mJ": 1291.1,
+      "gated_mJ": 1234.21,
+      "gated_system_w": 7993.0
      }
     },
     "cost": {
@@ -7774,18 +8108,18 @@
     "capacity_users_per_group": 1531,
     "feasible": true,
     "weight_sweep_us": 149.6,
-    "chain_us_ar": 409.6,
+    "chain_us_ar": 416.5,
     "die_mm2": 434.0,
     "silicon_mm2": 6944.0,
     "static_w_ungated": 1315.3,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2441.1,
-      "aggregate_tokens_s": 2441.1,
-      "ungated_mJ": 2000.24,
-      "gated_mJ": 1892.43,
-      "gated_system_w": 4620.0
+      "per_user_tokens_s": 2401.2,
+      "aggregate_tokens_s": 2401.2,
+      "ungated_mJ": 2009.2,
+      "gated_mJ": 1899.6,
+      "gated_system_w": 4561.0
      },
      "saturated": {
       "batch": 16,
@@ -7799,19 +8133,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5378.9,
-      "aggregate_tokens_s": 5378.9,
-      "ungated_mJ": 1383.31,
-      "gated_mJ": 1305.62,
-      "gated_system_w": 7023.0
+      "per_user_tokens_s": 5321.4,
+      "aggregate_tokens_s": 5321.4,
+      "ungated_mJ": 1385.95,
+      "gated_mJ": 1307.43,
+      "gated_system_w": 6957.0
      },
      "saturated": {
       "batch": 2,
-      "per_user_tokens_s": 4269.0,
-      "aggregate_tokens_s": 8538.0,
-      "ungated_mJ": 1292.83,
-      "gated_mJ": 1235.3,
-      "gated_system_w": 10547.0
+      "per_user_tokens_s": 4263.9,
+      "aggregate_tokens_s": 8527.8,
+      "ungated_mJ": 1293.02,
+      "gated_mJ": 1235.42,
+      "gated_system_w": 10535.0
      }
     },
     "cost": {
@@ -7841,18 +8175,18 @@
     "capacity_users_per_group": 2051,
     "feasible": true,
     "weight_sweep_us": 119.7,
-    "chain_us_ar": 385.8,
+    "chain_us_ar": 392.6,
     "die_mm2": 434.0,
     "silicon_mm2": 8680.0,
     "static_w_ungated": 1644.1,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2592.0,
-      "aggregate_tokens_s": 2592.0,
-      "ungated_mJ": 2095.74,
-      "gated_mJ": 1968.82,
-      "gated_system_w": 5103.0
+      "per_user_tokens_s": 2547.0,
+      "aggregate_tokens_s": 2547.0,
+      "ungated_mJ": 2106.95,
+      "gated_mJ": 1977.78,
+      "gated_system_w": 5037.0
      },
      "saturated": {
       "batch": 16,
@@ -7866,19 +8200,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5590.1,
-      "aggregate_tokens_s": 5590.1,
-      "ungated_mJ": 1432.89,
-      "gated_mJ": 1339.46,
-      "gated_system_w": 7488.0
+      "per_user_tokens_s": 5528.1,
+      "aggregate_tokens_s": 5528.1,
+      "ungated_mJ": 1436.19,
+      "gated_mJ": 1341.71,
+      "gated_system_w": 7417.0
      },
      "saturated": {
       "batch": 2,
-      "per_user_tokens_s": 5269.1,
-      "aggregate_tokens_s": 10538.2,
-      "ungated_mJ": 1294.79,
-      "gated_mJ": 1236.53,
-      "gated_system_w": 13031.0
+      "per_user_tokens_s": 5261.3,
+      "aggregate_tokens_s": 10522.7,
+      "ungated_mJ": 1295.03,
+      "gated_mJ": 1236.67,
+      "gated_system_w": 13013.0
      }
     },
     "cost": {
@@ -7908,18 +8242,18 @@
     "capacity_users_per_group": 2570,
     "feasible": true,
     "weight_sweep_us": 99.7,
-    "chain_us_ar": 369.0,
+    "chain_us_ar": 375.8,
     "die_mm2": 434.0,
     "silicon_mm2": 10416.0,
     "static_w_ungated": 1972.9,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2710.0,
-      "aggregate_tokens_s": 2710.0,
-      "ungated_mJ": 2189.46,
-      "gated_mJ": 2043.79,
-      "gated_system_w": 5539.0
+      "per_user_tokens_s": 2660.8,
+      "aggregate_tokens_s": 2660.8,
+      "ungated_mJ": 2202.91,
+      "gated_mJ": 2054.54,
+      "gated_system_w": 5467.0
      },
      "saturated": {
       "batch": 32,
@@ -7933,19 +8267,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5749.2,
-      "aggregate_tokens_s": 5749.2,
-      "ungated_mJ": 1481.95,
-      "gated_mJ": 1372.93,
-      "gated_system_w": 7893.0
+      "per_user_tokens_s": 5683.6,
+      "aggregate_tokens_s": 5683.6,
+      "ungated_mJ": 1485.91,
+      "gated_mJ": 1375.63,
+      "gated_system_w": 7818.0
      },
      "saturated": {
       "batch": 4,
-      "per_user_tokens_s": 3122.9,
-      "aggregate_tokens_s": 12491.6,
-      "ungated_mJ": 1296.72,
-      "gated_mJ": 1237.74,
-      "gated_system_w": 15461.0
+      "per_user_tokens_s": 3117.4,
+      "aggregate_tokens_s": 12469.8,
+      "ungated_mJ": 1297.0,
+      "gated_mJ": 1237.91,
+      "gated_system_w": 15436.0
      }
     },
     "cost": {
@@ -7975,18 +8309,18 @@
     "capacity_users_per_group": 3608,
     "feasible": true,
     "weight_sweep_us": 74.8,
-    "chain_us_ar": 347.9,
+    "chain_us_ar": 354.8,
     "die_mm2": 434.0,
     "silicon_mm2": 13888.0,
     "static_w_ungated": 2630.6,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2874.1,
-      "aggregate_tokens_s": 2874.1,
-      "ungated_mJ": 2376.72,
-      "gated_mJ": 2193.58,
-      "gated_system_w": 6304.0
+      "per_user_tokens_s": 2818.8,
+      "aggregate_tokens_s": 2818.8,
+      "ungated_mJ": 2394.65,
+      "gated_mJ": 2207.92,
+      "gated_system_w": 6224.0
      },
      "saturated": {
       "batch": 32,
@@ -8000,19 +8334,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5961.9,
-      "aggregate_tokens_s": 5961.9,
-      "ungated_mJ": 1580.02,
-      "gated_mJ": 1439.84,
-      "gated_system_w": 8584.0
+      "per_user_tokens_s": 5891.4,
+      "aggregate_tokens_s": 5891.4,
+      "ungated_mJ": 1585.3,
+      "gated_mJ": 1443.44,
+      "gated_system_w": 8504.0
      },
      "saturated": {
-      "batch": 3608,
-      "per_user_tokens_s": 3.8,
-      "aggregate_tokens_s": 13857.8,
-      "ungated_mJ": 1328.61,
-      "gated_mJ": 1257.72,
-      "gated_system_w": 17429.0
+      "batch": 4,
+      "per_user_tokens_s": 3457.7,
+      "aggregate_tokens_s": 13830.9,
+      "ungated_mJ": 1328.98,
+      "gated_mJ": 1257.95,
+      "gated_system_w": 17399.0
      }
     },
     "cost": {
@@ -8042,18 +8376,18 @@
     "capacity_users_per_group": 5685,
     "feasible": true,
     "weight_sweep_us": 49.9,
-    "chain_us_ar": 325.0,
+    "chain_us_ar": 331.8,
     "die_mm2": 434.0,
     "silicon_mm2": 20832.0,
     "static_w_ungated": 3945.9,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3077.4,
-      "aggregate_tokens_s": 3077.4,
-      "ungated_mJ": 2743.66,
-      "gated_mJ": 2487.1,
-      "gated_system_w": 7654.0
+      "per_user_tokens_s": 3014.1,
+      "aggregate_tokens_s": 3014.1,
+      "ungated_mJ": 2770.55,
+      "gated_mJ": 2508.61,
+      "gated_system_w": 7561.0
      },
      "saturated": {
       "batch": 32,
@@ -8067,19 +8401,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 6212.7,
-      "aggregate_tokens_s": 6212.7,
-      "ungated_mJ": 1773.91,
-      "gated_mJ": 1572.14,
-      "gated_system_w": 9767.0
+      "per_user_tokens_s": 6136.2,
+      "aggregate_tokens_s": 6136.2,
+      "ungated_mJ": 1781.83,
+      "gated_mJ": 1577.54,
+      "gated_system_w": 9680.0
      },
      "saturated": {
-      "batch": 4,
-      "per_user_tokens_s": 3487.3,
-      "aggregate_tokens_s": 13949.1,
-      "ungated_mJ": 1421.66,
-      "gated_mJ": 1316.02,
-      "gated_system_w": 18357.0
+      "batch": 5685,
+      "per_user_tokens_s": 2.4,
+      "aggregate_tokens_s": 13921.9,
+      "ungated_mJ": 1422.21,
+      "gated_mJ": 1316.36,
+      "gated_system_w": 18326.0
      }
     },
     "cost": {
@@ -8109,18 +8443,18 @@
     "capacity_users_per_group": 7763,
     "feasible": true,
     "weight_sweep_us": 37.4,
-    "chain_us_ar": 313.1,
+    "chain_us_ar": 319.9,
     "die_mm2": 434.0,
     "silicon_mm2": 27776.0,
     "static_w_ungated": 5261.2,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3193.7,
-      "aggregate_tokens_s": 3193.7,
-      "ungated_mJ": 3108.78,
-      "gated_mJ": 2779.16,
-      "gated_system_w": 8876.0
+      "per_user_tokens_s": 3125.7,
+      "aggregate_tokens_s": 3125.7,
+      "ungated_mJ": 3144.64,
+      "gated_mJ": 2807.84,
+      "gated_system_w": 8776.0
      },
      "saturated": {
       "batch": 32,
@@ -8134,19 +8468,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 6350.3,
-      "aggregate_tokens_s": 6350.3,
-      "ungated_mJ": 1967.27,
-      "gated_mJ": 1704.07,
-      "gated_system_w": 10821.0
+      "per_user_tokens_s": 6270.4,
+      "aggregate_tokens_s": 6270.4,
+      "ungated_mJ": 1977.83,
+      "gated_mJ": 1711.28,
+      "gated_system_w": 10730.0
      },
      "saturated": {
       "batch": 7763,
       "per_user_tokens_s": 1.8,
-      "aggregate_tokens_s": 13996.6,
-      "ungated_mJ": 1514.67,
-      "gated_mJ": 1374.29,
-      "gated_system_w": 19235.0
+      "aggregate_tokens_s": 13969.2,
+      "ungated_mJ": 1515.41,
+      "gated_mJ": 1374.75,
+      "gated_system_w": 19204.0
      }
     },
     "cost": {
@@ -8176,18 +8510,18 @@
     "capacity_users_per_group": 11917,
     "feasible": true,
     "weight_sweep_us": 24.9,
-    "chain_us_ar": 303.7,
+    "chain_us_ar": 310.5,
     "die_mm2": 434.0,
     "silicon_mm2": 41664.0,
     "static_w_ungated": 7891.8,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3293.0,
-      "aggregate_tokens_s": 3293.0,
-      "ungated_mJ": 3857.96,
-      "gated_mJ": 3378.43,
-      "gated_system_w": 11125.0
+      "per_user_tokens_s": 3220.7,
+      "aggregate_tokens_s": 3220.7,
+      "ungated_mJ": 3911.74,
+      "gated_mJ": 3421.45,
+      "gated_system_w": 11020.0
      },
      "saturated": {
       "batch": 32,
@@ -8201,19 +8535,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 6464.5,
-      "aggregate_tokens_s": 6464.5,
-      "ungated_mJ": 2359.57,
-      "gated_mJ": 1971.74,
-      "gated_system_w": 12746.0
+      "per_user_tokens_s": 6381.7,
+      "aggregate_tokens_s": 6381.7,
+      "ungated_mJ": 2375.41,
+      "gated_mJ": 1982.55,
+      "gated_system_w": 12652.0
      },
      "saturated": {
-      "batch": 4,
-      "per_user_tokens_s": 3508.7,
-      "aggregate_tokens_s": 14034.7,
-      "ungated_mJ": 1701.08,
-      "gated_mJ": 1491.09,
-      "gated_system_w": 20927.0
+      "batch": 11917,
+      "per_user_tokens_s": 1.2,
+      "aggregate_tokens_s": 14007.2,
+      "ungated_mJ": 1702.19,
+      "gated_mJ": 1491.78,
+      "gated_system_w": 20896.0
      }
     },
     "cost": {
@@ -8356,11 +8690,180 @@
   ],
   "existing_rule_note": "arch_budget_v41.hbm_comparator sizes 99 (model: 96) dies by ISO LOGIC AREA with the ROM array's 188 dies of analytical logic; capacity_limit's hbm_users (811) uses the busiest-die rule of a pipelined placement, whereas the TP-96 comparator holds 1/96 of every layer's KV per die"
  },
+ "headline_table": {
+  "v41": [
+   {
+    "design": "V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)",
+    "tier": "ROM",
+    "per_user_ar": 3401.9,
+    "per_user_mtp": 4953.4,
+    "saturated_tokens_s": 76501.4,
+    "mJ_b1": 535.0,
+    "mJ_saturated": 294.3,
+    "capex_usd": {
+     "low": 571785,
+     "high": 817785
+    },
+    "silicon_mm2": 133660.0,
+    "users_1m": 866,
+    "system_w_saturated": 17114.7
+   },
+   {
+    "design": "V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires)",
+    "tier": "3",
+    "per_user_ar": 3153.5,
+    "per_user_mtp": 6303.2,
+    "saturated_tokens_s": 101170.8,
+    "mJ_b1": 8243.75,
+    "mJ_saturated": 738.74,
+    "capex_usd": {
+     "low": 1011902,
+     "high": 1011902
+    },
+    "silicon_mm2": 132748.8,
+    "users_1m": 31052
+   },
+   {
+    "design": "V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires)",
+    "tier": "3",
+    "per_user_ar": 3153.5,
+    "per_user_mtp": 6303.2,
+    "saturated_tokens_s": 50585.4,
+    "mJ_b1": 4852.59,
+    "mJ_saturated": 738.74,
+    "capex_usd": {
+     "low": 513451,
+     "high": 513451
+    },
+    "silicon_mm2": 66374.4,
+    "users_1m": 15526
+   },
+   {
+    "design": "V4.1 HBM tier 3 (idealised), equal power: 1 x TP-48 (48 right-sized dies, 1.2 GHz, SS wires)",
+    "tier": "3",
+    "per_user_ar": 2841.4,
+    "per_user_mtp": 5920.3,
+    "saturated_tokens_s": 25292.7,
+    "mJ_b1": 2402.33,
+    "mJ_saturated": 676.52,
+    "capex_usd": {
+     "low": 139613,
+     "high": 139613
+    },
+    "silicon_mm2": 16593.6,
+    "users_1m": 3608
+   },
+   {
+    "design": "DeepSeek-V4.1-Flash on 8x B200 (tier 2, calibrated)",
+    "tier": "2",
+    "per_user_ar": 277.7,
+    "per_user_mtp": 538.7,
+    "saturated_tokens_s": 13018.3,
+    "mJ_b1": 19851.78,
+    "mJ_saturated": 423.4,
+    "capex_usd": {
+     "low": 200000,
+     "high": 200000
+    },
+    "users_1m": 839,
+    "cost_basis": "purchase price (iso-package $25k a B200), not manufacturing cost"
+   },
+   {
+    "design": "DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance)",
+    "tier": "1",
+    "per_user_mtp": 368.0,
+    "mJ_b1": 14978.3
+   }
+  ],
+  "qwen": [
+   {
+    "design": "Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144)",
+    "tier": "ROM",
+    "per_user_ar": 9367.6,
+    "saturated_tokens_s": 23841.9,
+    "mJ_b1": 97.94,
+    "mJ_saturated": 84.98,
+    "capex_usd": {
+     "low": 29113,
+     "high": 35113
+    },
+    "users_8k": 536
+   },
+   {
+    "design": "Qwen HBM, 1 right-sized die(s) x 6 stacks (435.5 mm2 each) (tier 3, idealised)",
+    "tier": "3",
+    "per_user_ar": 660.5,
+    "per_user_dflash": 2003.2,
+    "saturated_tokens_s": 5328.5,
+    "mJ_b1": 355.9,
+    "mJ_saturated": 128.1,
+    "capex_usd": {
+     "low": 19035,
+     "high": 19035
+    },
+    "users_8k": 188
+   },
+   {
+    "design": "Qwen HBM, 2 right-sized die(s) x 4 stacks (296.9 mm2 each) (tier 3, idealised)",
+    "tier": "3",
+    "per_user_ar": 880.6,
+    "per_user_dflash": 2671.0,
+    "saturated_tokens_s": 7104.6,
+    "mJ_b1": 355.9,
+    "mJ_saturated": 128.1,
+    "capex_usd": {
+     "low": 20136,
+     "high": 20136
+    },
+    "users_8k": 255
+   },
+   {
+    "design": "Qwen3-8B on 1x B200, FP8 (tier 2, calibrated)",
+    "tier": "2",
+    "per_user_ar": 331.0,
+    "per_user_dflash": {
+     "reasoning_mix": 853.3,
+     "math_code": [
+      1390.3,
+      1688.2
+     ]
+    },
+    "saturated_tokens_s": 7907.0,
+    "mJ_b1": 2081.44,
+    "mJ_saturated": 87.14,
+    "capex_usd": {
+     "low": 25000,
+     "high": 25000
+    },
+    "users_8k": 255,
+    "cost_basis": "purchase price"
+   },
+   {
+    "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 1 (DFlash paper Table 3)",
+    "tier": "1",
+    "per_user_ar": 230.0,
+    "mJ_b1": 2995.7
+   },
+   {
+    "design": "Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, Math500 (tau 8.01, 5.1x)",
+    "tier": "1",
+    "per_user_ar": 1175.0,
+    "mJ_b1": 586.4
+   },
+   {
+    "design": "Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, HumanEval (tau 6.50, 4.2x)",
+    "tier": "1",
+    "per_user_ar": 955.0,
+    "mJ_b1": 721.5
+   }
+  ],
+  "rule": "USER DECISION 2026-09-30: V4.1 ROM headline = saturated throughput, J/token and cost at equal manufacturing cost; per-user speed claimed against GPUs (tier 1-2) only; Qwen ROM keeps its per-user claim"
+ },
  "comparison_rule": {
   "v41_targets": {
    "area": 133660.0,
    "cost": 571785,
-   "power": 9050.0
+   "power": 17114.7
   },
   "v41": [
    {
@@ -8375,18 +8878,18 @@
     "capacity_users_per_group": 7763,
     "feasible": true,
     "weight_sweep_us": 37.4,
-    "chain_us_ar": 313.1,
+    "chain_us_ar": 317.1,
     "die_mm2": 345.7,
     "silicon_mm2": 132748.8,
     "static_w_ungated": 26738.1,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3193.7,
-      "aggregate_tokens_s": 3193.7,
-      "ungated_mJ": 9833.48,
-      "gated_mJ": 8158.3,
-      "gated_system_w": 26055.0
+      "per_user_tokens_s": 3153.5,
+      "aggregate_tokens_s": 3153.5,
+      "ungated_mJ": 9940.3,
+      "gated_mJ": 8243.75,
+      "gated_system_w": 25997.0
      },
      "saturated": {
       "batch": 128,
@@ -8400,19 +8903,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 6350.3,
-      "aggregate_tokens_s": 6350.3,
-      "ungated_mJ": 5349.28,
-      "gated_mJ": 4011.66,
-      "gated_system_w": 25475.0
+      "per_user_tokens_s": 6303.2,
+      "aggregate_tokens_s": 6303.2,
+      "ungated_mJ": 5380.75,
+      "gated_mJ": 4033.13,
+      "gated_system_w": 25422.0
      },
      "saturated": {
-      "batch": 31052,
-      "per_user_tokens_s": 1.8,
-      "aggregate_tokens_s": 55986.4,
-      "ungated_mJ": 1616.36,
-      "gated_mJ": 1438.01,
-      "gated_system_w": 80509.0
+      "batch": 16,
+      "per_user_tokens_s": 3495.1,
+      "aggregate_tokens_s": 55922.2,
+      "ungated_mJ": 1616.91,
+      "gated_mJ": 1438.35,
+      "gated_system_w": 80436.0
      }
     },
     "cost": {
@@ -8443,18 +8946,18 @@
     "capacity_users_per_group": 11917,
     "feasible": true,
     "weight_sweep_us": 24.9,
-    "chain_us_ar": 303.7,
+    "chain_us_ar": 310.5,
     "die_mm2": 434.0,
     "silicon_mm2": 124992.0,
     "static_w_ungated": 23675.4,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3293.0,
-      "aggregate_tokens_s": 3293.0,
-      "ungated_mJ": 8651.02,
-      "gated_mJ": 7212.44,
-      "gated_system_w": 23751.0
+      "per_user_tokens_s": 3220.7,
+      "aggregate_tokens_s": 3220.7,
+      "ungated_mJ": 8812.37,
+      "gated_mJ": 7341.5,
+      "gated_system_w": 23645.0
      },
      "saturated": {
       "batch": 96,
@@ -8468,19 +8971,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 6464.5,
-      "aggregate_tokens_s": 6464.5,
-      "ungated_mJ": 4801.15,
-      "gated_mJ": 3637.66,
-      "gated_system_w": 23516.0
+      "per_user_tokens_s": 6381.7,
+      "aggregate_tokens_s": 6381.7,
+      "ungated_mJ": 4848.69,
+      "gated_mJ": 3670.09,
+      "gated_system_w": 23421.0
      },
      "saturated": {
-      "batch": 12,
-      "per_user_tokens_s": 3508.7,
-      "aggregate_tokens_s": 42104.2,
-      "ungated_mJ": 1701.08,
-      "gated_mJ": 1491.09,
-      "gated_system_w": 62781.0
+      "batch": 35751,
+      "per_user_tokens_s": 1.2,
+      "aggregate_tokens_s": 42021.6,
+      "ungated_mJ": 1702.19,
+      "gated_mJ": 1491.78,
+      "gated_system_w": 62687.0
      }
     },
     "cost": {
@@ -8511,18 +9014,18 @@
     "capacity_users_per_group": 7763,
     "feasible": true,
     "weight_sweep_us": 37.4,
-    "chain_us_ar": 313.1,
+    "chain_us_ar": 317.1,
     "die_mm2": 345.7,
     "silicon_mm2": 66374.4,
     "static_w_ungated": 13369.0,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3193.7,
-      "aggregate_tokens_s": 3193.7,
-      "ungated_mJ": 5647.46,
-      "gated_mJ": 4809.86,
-      "gated_system_w": 15361.0
+      "per_user_tokens_s": 3153.5,
+      "aggregate_tokens_s": 3153.5,
+      "ungated_mJ": 5700.87,
+      "gated_mJ": 4852.59,
+      "gated_system_w": 15303.0
      },
      "saturated": {
       "batch": 64,
@@ -8536,19 +9039,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 6350.3,
-      "aggregate_tokens_s": 6350.3,
-      "ungated_mJ": 3244.03,
-      "gated_mJ": 2575.22,
-      "gated_system_w": 16353.0
+      "per_user_tokens_s": 6303.2,
+      "aggregate_tokens_s": 6303.2,
+      "ungated_mJ": 3259.76,
+      "gated_mJ": 2585.95,
+      "gated_system_w": 16300.0
      },
      "saturated": {
-      "batch": 15526,
-      "per_user_tokens_s": 1.8,
-      "aggregate_tokens_s": 27993.2,
-      "ungated_mJ": 1616.36,
-      "gated_mJ": 1438.01,
-      "gated_system_w": 40254.0
+      "batch": 8,
+      "per_user_tokens_s": 3495.1,
+      "aggregate_tokens_s": 27961.1,
+      "ungated_mJ": 1616.91,
+      "gated_mJ": 1438.35,
+      "gated_system_w": 40218.0
      }
     },
     "cost": {
@@ -8579,18 +9082,18 @@
     "capacity_users_per_group": 11917,
     "feasible": true,
     "weight_sweep_us": 24.9,
-    "chain_us_ar": 303.7,
+    "chain_us_ar": 310.5,
     "die_mm2": 434.0,
     "silicon_mm2": 41664.0,
     "static_w_ungated": 7891.8,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 3293.0,
-      "aggregate_tokens_s": 3293.0,
-      "ungated_mJ": 3857.96,
-      "gated_mJ": 3378.43,
-      "gated_system_w": 11125.0
+      "per_user_tokens_s": 3220.7,
+      "aggregate_tokens_s": 3220.7,
+      "ungated_mJ": 3911.74,
+      "gated_mJ": 3421.45,
+      "gated_system_w": 11020.0
      },
      "saturated": {
       "batch": 32,
@@ -8604,19 +9107,19 @@
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 6464.5,
-      "aggregate_tokens_s": 6464.5,
-      "ungated_mJ": 2359.57,
-      "gated_mJ": 1971.74,
-      "gated_system_w": 12746.0
+      "per_user_tokens_s": 6381.7,
+      "aggregate_tokens_s": 6381.7,
+      "ungated_mJ": 2375.41,
+      "gated_mJ": 1982.55,
+      "gated_system_w": 12652.0
      },
      "saturated": {
-      "batch": 4,
-      "per_user_tokens_s": 3508.7,
-      "aggregate_tokens_s": 14034.7,
-      "ungated_mJ": 1701.08,
-      "gated_mJ": 1491.09,
-      "gated_system_w": 20927.0
+      "batch": 11917,
+      "per_user_tokens_s": 1.2,
+      "aggregate_tokens_s": 14007.2,
+      "ungated_mJ": 1702.19,
+      "gated_mJ": 1491.78,
+      "gated_system_w": 20896.0
      }
     },
     "cost": {
@@ -8637,138 +9140,138 @@
    },
    {
     "rule": "equal power",
-    "target": 9050.0,
-    "dies": 20,
-    "tp": 20,
+    "target": 17114.7,
+    "dies": 48,
+    "tp": 48,
     "replicas": 1,
     "stacks_per_die": 4,
     "sm_per_die": 32,
-    "capacity_users_1m": 1185,
-    "capacity_users_per_group": 1185,
+    "capacity_users_1m": 3608,
+    "capacity_users_per_group": 3608,
     "feasible": true,
-    "weight_sweep_us": 179.5,
-    "chain_us_ar": 433.8,
+    "weight_sweep_us": 74.8,
+    "chain_us_ar": 351.9,
     "die_mm2": 345.7,
-    "silicon_mm2": 6914.0,
-    "static_w_ungated": 1392.6,
+    "silicon_mm2": 16593.6,
+    "static_w_ungated": 3342.3,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2305.2,
-      "aggregate_tokens_s": 2305.2,
-      "ungated_mJ": 2065.55,
-      "gated_mJ": 1944.67,
-      "gated_system_w": 4483.0
+      "per_user_tokens_s": 2841.4,
+      "aggregate_tokens_s": 2841.4,
+      "ungated_mJ": 2637.69,
+      "gated_mJ": 2402.33,
+      "gated_system_w": 6826.0
      },
      "saturated": {
-      "batch": 16,
-      "per_user_tokens_s": 850.1,
-      "aggregate_tokens_s": 13600.9,
-      "ungated_mJ": 716.69,
-      "gated_mJ": 662.51,
-      "gated_system_w": 9011.0
+      "batch": 32,
+      "per_user_tokens_s": 790.4,
+      "aggregate_tokens_s": 25292.7,
+      "ungated_mJ": 746.44,
+      "gated_mJ": 676.52,
+      "gated_system_w": 17111.0
      }
     },
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5180.6,
-      "aggregate_tokens_s": 5180.6,
-      "ungated_mJ": 1407.59,
-      "gated_mJ": 1322.19,
-      "gated_system_w": 6850.0
+      "per_user_tokens_s": 5920.3,
+      "aggregate_tokens_s": 5920.3,
+      "ungated_mJ": 1703.32,
+      "gated_mJ": 1523.97,
+      "gated_system_w": 9022.0
      },
      "saturated": {
-      "batch": 2,
-      "per_user_tokens_s": 3587.8,
-      "aggregate_tokens_s": 7175.6,
-      "ungated_mJ": 1332.85,
-      "gated_mJ": 1260.38,
-      "gated_system_w": 9044.0
+      "batch": 4,
+      "per_user_tokens_s": 3460.5,
+      "aggregate_tokens_s": 13842.0,
+      "ungated_mJ": 1380.24,
+      "gated_mJ": 1290.06,
+      "gated_system_w": 17857.0
      }
     },
     "cost": {
-     "silicon_usd": 2922,
-     "package_usd": 20200,
-     "hbm_usd": 28800,
-     "hardware_usd": 51922,
+     "silicon_usd": 7013,
+     "package_usd": 48480,
+     "hbm_usd": 69120,
+     "hardware_usd": 124613,
      "nre_usd": {
       "low": 15000000.0,
       "high": 15000000.0
      },
      "capex_usd": {
-      "low": 66922,
-      "high": 66922
+      "low": 139613,
+      "high": 139613
      },
-     "silicon_mm2": 6914.0
+     "silicon_mm2": 16593.6
     }
    },
    {
     "rule": "equal power",
-    "target": 9050.0,
-    "dies": 13,
-    "tp": 13,
+    "target": 17114.7,
+    "dies": 40,
+    "tp": 40,
     "replicas": 1,
     "stacks_per_die": 6,
     "sm_per_die": 48,
-    "capacity_users_1m": 1142,
-    "capacity_users_per_group": 1142,
+    "capacity_users_1m": 4647,
+    "capacity_users_per_group": 4647,
     "feasible": true,
-    "weight_sweep_us": 184.1,
-    "chain_us_ar": 442.3,
+    "weight_sweep_us": 59.8,
+    "chain_us_ar": 341.0,
     "die_mm2": 434.0,
-    "silicon_mm2": 5642.0,
-    "static_w_ungated": 1068.7,
+    "silicon_mm2": 17360.0,
+    "static_w_ungated": 3288.2,
     "ar": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 2261.0,
-      "aggregate_tokens_s": 2261.0,
-      "ungated_mJ": 1934.09,
-      "gated_mJ": 1839.52,
-      "gated_system_w": 4159.0
+      "per_user_tokens_s": 2932.6,
+      "aggregate_tokens_s": 2932.6,
+      "ungated_mJ": 2582.71,
+      "gated_mJ": 2358.35,
+      "gated_system_w": 6916.0
      },
      "saturated": {
-      "batch": 16,
-      "per_user_tokens_s": 828.8,
-      "aggregate_tokens_s": 13260.8,
-      "ungated_mJ": 694.88,
-      "gated_mJ": 652.24,
-      "gated_system_w": 8649.0
+      "batch": 32,
+      "per_user_tokens_s": 790.4,
+      "aggregate_tokens_s": 25292.7,
+      "ungated_mJ": 744.3,
+      "gated_mJ": 675.51,
+      "gated_system_w": 17086.0
      }
     },
     "mtp": {
      "batch1": {
       "batch": 1,
-      "per_user_tokens_s": 5114.4,
-      "aggregate_tokens_s": 5114.4,
-      "ungated_mJ": 1347.73,
-      "gated_mJ": 1281.35,
-      "gated_system_w": 6553.0
+      "per_user_tokens_s": 6035.5,
+      "aggregate_tokens_s": 6035.5,
+      "ungated_mJ": 1683.6,
+      "gated_mJ": 1510.51,
+      "gated_system_w": 9117.0
      },
      "saturated": {
-      "batch": 2,
-      "per_user_tokens_s": 3499.4,
-      "aggregate_tokens_s": 6998.9,
-      "ungated_mJ": 1291.47,
-      "gated_mJ": 1234.45,
-      "gated_system_w": 8640.0
+      "batch": 4,
+      "per_user_tokens_s": 3471.3,
+      "aggregate_tokens_s": 13885.2,
+      "ungated_mJ": 1375.6,
+      "gated_mJ": 1287.16,
+      "gated_system_w": 17872.0
      }
     },
     "cost": {
-     "silicon_usd": 2648,
-     "package_usd": 21710,
-     "hbm_usd": 28080,
-     "hardware_usd": 52438,
+     "silicon_usd": 8148,
+     "package_usd": 66800,
+     "hbm_usd": 86400,
+     "hardware_usd": 161348,
      "nre_usd": {
       "low": 15000000.0,
       "high": 15000000.0
      },
      "capex_usd": {
-      "low": 67438,
-      "high": 67438
+      "low": 176348,
+      "high": 176348
      },
-     "silicon_mm2": 5642.0
+     "silicon_mm2": 17360.0
     }
    }
   ],
@@ -8904,235 +9407,236 @@
   "clock_hz": 1200000000.0,
   "note": "USER DECISION (AGENTS.md e7479589): every design at 1.2 GHz SS for equal footing -- V4.1 ROM product rows, the V4.1 HBM sweep and comparison rule (cycle terms at 1.2 GHz; fabric and HBM stream seconds unchanged), the Qwen ROM product; the Qwen HBM comparator is HBM-bandwidth bound, so its rate does not move with the clock",
   "v41_hbm_96x4_tt": 2919.8,
-  "v41_hbm_96x4_1p2": 3193.7,
+  "v41_hbm_96x4_1p2": 3153.5,
   "qwen_rom_c_1p2": 10262.0,
   "qwen_rom_c_1p2_w12_tp4_wires": 10555.9,
+  "qwen_rom_c_1p2_w12_tp4_ss_reach": 9703.8,
   "v41_hbm_w13_ss_note": "W13 at SS pre-layout: an 8-stage fp32_add_rne_pipe breaks the IL = 8 circulating accumulator; IL = 16 gives V4.1 HBM ~2,500 AR (from ~2,920); a 7-stage adder keeps IL = 8 (W13 estimate, not priced here)",
   "qwen_rom_c_tt": 9367.6
  },
  "clock_domain_cases": {
   "a: all 1.2 GHz, chain adds 8 stages": {
-   "ar_tokens_s_b1": 2766.9,
-   "mtp_tokens_s_b1": 4558.1,
+   "ar_tokens_s_b1": 2738.9,
+   "mtp_tokens_s_b1": 4534.4,
    "ar_saturated_tokens_s": 77442.7,
-   "mtp_saturated_tokens_s": 46321.4,
-   "gated_mJ_b1": 442.16,
-   "gated_mJ_saturated": 117.54,
+   "mtp_saturated_tokens_s": 46159.0,
+   "gated_mJ_b1": 529.94,
+   "gated_mJ_saturated": 222.93,
    "busiest_stage_us": 12.91,
    "critical_path_top_us": {
-    "attn.wo_a": 22.37,
+    "attn.wo_a": 22.77,
+    "attn.out_allreduce": 17.07,
+    "ffn.combine_allreduce": 17.07,
     "ffn.softplus_sqrt": 16.98,
-    "attn.out_allreduce": 16.87,
-    "ffn.combine_allreduce": 16.87,
     "attn.idx.score": 13.38,
     "ffn.swiglu": 11.91,
     "substage_hop0": 10.76,
-    "ffn.experts_gu": 10.13
+    "ffn.experts_gu": 10.53
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 70.6,
-     "gated_mJ_b1": 512.7,
-     "gated_mJ_saturated": 188.1,
-     "gap_only_pre_ramp_mJ_per_token": 102.7,
-     "gap_only_gated_mJ_b1": 544.9,
-     "gap_only_gated_mJ_saturated": 220.3
+     "gated_mJ_b1": 600.5,
+     "gated_mJ_saturated": 293.5,
+     "gap_only_pre_ramp_mJ_per_token": 102.6,
+     "gap_only_gated_mJ_b1": 632.6,
+     "gap_only_gated_mJ_saturated": 325.6
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 561.6,
-     "gated_mJ_b1": 1003.8,
-     "gated_mJ_saturated": 679.1,
-     "gap_only_pre_ramp_mJ_per_token": 817.5,
-     "gap_only_gated_mJ_b1": 1259.7,
-     "gap_only_gated_mJ_saturated": 935.1
+     "gated_mJ_b1": 1091.5,
+     "gated_mJ_saturated": 784.5,
+     "gap_only_pre_ramp_mJ_per_token": 816.9,
+     "gap_only_gated_mJ_b1": 1346.9,
+     "gap_only_gated_mJ_saturated": 1039.9
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 141.1,
-     "gated_mJ_b1": 583.3,
-     "gated_mJ_saturated": 258.7,
-     "gap_only_pre_ramp_mJ_per_token": 205.4,
-     "gap_only_gated_mJ_b1": 647.6,
-     "gap_only_gated_mJ_saturated": 323.0
+     "gated_mJ_b1": 671.1,
+     "gated_mJ_saturated": 364.1,
+     "gap_only_pre_ramp_mJ_per_token": 205.3,
+     "gap_only_gated_mJ_b1": 735.2,
+     "gap_only_gated_mJ_saturated": 428.2
     }
    }
   },
   "a: all 1.2 GHz, chain adds 9 stages": {
-   "ar_tokens_s_b1": 2618.6,
-   "mtp_tokens_s_b1": 4451.4,
+   "ar_tokens_s_b1": 2593.5,
+   "mtp_tokens_s_b1": 4430.0,
    "ar_saturated_tokens_s": 77442.7,
-   "mtp_saturated_tokens_s": 45435.6,
-   "gated_mJ_b1": 462.56,
-   "gated_mJ_saturated": 117.54,
+   "mtp_saturated_tokens_s": 45279.3,
+   "gated_mJ_b1": 548.82,
+   "gated_mJ_saturated": 222.93,
    "busiest_stage_us": 12.91,
    "critical_path_top_us": {
-    "attn.wo_a": 22.37,
+    "attn.wo_a": 22.77,
     "ffn.softplus_sqrt": 19.1,
-    "attn.out_allreduce": 16.87,
-    "ffn.combine_allreduce": 16.87,
+    "attn.out_allreduce": 17.07,
+    "ffn.combine_allreduce": 17.07,
     "ffn.swiglu": 13.4,
     "attn.idx.score": 13.38,
     "substage_hop0": 10.76,
-    "attn.exp": 10.28
+    "ffn.experts_gu": 10.53
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 70.6,
-     "gated_mJ_b1": 533.1,
-     "gated_mJ_saturated": 188.1,
-     "gap_only_pre_ramp_mJ_per_token": 103.9,
-     "gap_only_gated_mJ_b1": 566.5,
-     "gap_only_gated_mJ_saturated": 221.4
+     "gated_mJ_b1": 619.4,
+     "gated_mJ_saturated": 293.5,
+     "gap_only_pre_ramp_mJ_per_token": 103.8,
+     "gap_only_gated_mJ_b1": 652.6,
+     "gap_only_gated_mJ_saturated": 326.7
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 561.6,
-     "gated_mJ_b1": 1024.2,
-     "gated_mJ_saturated": 679.1,
-     "gap_only_pre_ramp_mJ_per_token": 826.9,
-     "gap_only_gated_mJ_b1": 1289.5,
-     "gap_only_gated_mJ_saturated": 944.4
+     "gated_mJ_b1": 1110.4,
+     "gated_mJ_saturated": 784.5,
+     "gap_only_pre_ramp_mJ_per_token": 826.3,
+     "gap_only_gated_mJ_b1": 1375.1,
+     "gap_only_gated_mJ_saturated": 1049.2
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 141.1,
-     "gated_mJ_b1": 603.7,
-     "gated_mJ_saturated": 258.7,
-     "gap_only_pre_ramp_mJ_per_token": 207.8,
-     "gap_only_gated_mJ_b1": 670.3,
-     "gap_only_gated_mJ_saturated": 325.3
+     "gated_mJ_b1": 689.9,
+     "gated_mJ_saturated": 364.1,
+     "gap_only_pre_ramp_mJ_per_token": 207.6,
+     "gap_only_gated_mJ_b1": 756.5,
+     "gap_only_gated_mJ_saturated": 430.6
     }
    }
   },
   "b: 1.2 GHz field (LAT 7) + 0.9 GHz chain units (LAT 3), W18 CDC": {
-   "ar_tokens_s_b1": 3553.6,
-   "mtp_tokens_s_b1": 5041.9,
+   "ar_tokens_s_b1": 3507.6,
+   "mtp_tokens_s_b1": 5013.0,
    "ar_saturated_tokens_s": 76501.4,
-   "mtp_saturated_tokens_s": 50033.0,
-   "gated_mJ_b1": 362.42,
-   "gated_mJ_saturated": 118.3,
+   "mtp_saturated_tokens_s": 49843.6,
+   "gated_mJ_b1": 456.3,
+   "gated_mJ_saturated": 223.72,
    "busiest_stage_us": 13.07,
    "critical_path_top_us": {
-    "attn.wo_a": 22.53,
-    "attn.out_allreduce": 16.87,
-    "ffn.combine_allreduce": 16.87,
+    "attn.wo_a": 22.93,
+    "attn.out_allreduce": 17.07,
+    "ffn.combine_allreduce": 17.07,
     "attn.idx.score": 13.42,
     "substage_hop0": 10.76,
-    "attn.idx.topk_local": 9.75,
-    "ffn.experts_gu": 9.47,
-    "ffn.down": 9.4
+    "ffn.experts_gu": 9.87,
+    "ffn.down": 9.8,
+    "attn.idx.topk_local": 9.75
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 70.6,
-     "gated_mJ_b1": 433.0,
-     "gated_mJ_saturated": 188.9,
+     "gated_mJ_b1": 526.9,
+     "gated_mJ_saturated": 294.3,
      "gap_only_pre_ramp_mJ_per_token": 99.1,
-     "gap_only_gated_mJ_b1": 461.5,
-     "gap_only_gated_mJ_saturated": 217.4
+     "gap_only_gated_mJ_b1": 555.4,
+     "gap_only_gated_mJ_saturated": 322.8
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 561.6,
-     "gated_mJ_b1": 924.0,
-     "gated_mJ_saturated": 679.9,
+     "gated_mJ_b1": 1017.9,
+     "gated_mJ_saturated": 785.3,
      "gap_only_pre_ramp_mJ_per_token": 788.6,
-     "gap_only_gated_mJ_b1": 1151.1,
-     "gap_only_gated_mJ_saturated": 906.9
+     "gap_only_gated_mJ_b1": 1244.9,
+     "gap_only_gated_mJ_saturated": 1012.4
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 141.1,
-     "gated_mJ_b1": 503.5,
-     "gated_mJ_saturated": 259.4,
+     "gated_mJ_b1": 597.4,
+     "gated_mJ_saturated": 364.8,
      "gap_only_pre_ramp_mJ_per_token": 198.2,
-     "gap_only_gated_mJ_b1": 560.6,
-     "gap_only_gated_mJ_saturated": 316.5
+     "gap_only_gated_mJ_b1": 654.5,
+     "gap_only_gated_mJ_saturated": 421.9
     }
    }
   },
   "b: 1.2 GHz field (LAT 7) + 0.8 GHz chain units (LAT 3), W18 CDC": {
-   "ar_tokens_s_b1": 3416.5,
-   "mtp_tokens_s_b1": 4946.2,
+   "ar_tokens_s_b1": 3373.9,
+   "mtp_tokens_s_b1": 4918.4,
    "ar_saturated_tokens_s": 75630.3,
-   "mtp_saturated_tokens_s": 49405.9,
-   "gated_mJ_b1": 373.73,
-   "gated_mJ_saturated": 119.2,
+   "mtp_saturated_tokens_s": 49221.2,
+   "gated_mJ_b1": 466.76,
+   "gated_mJ_saturated": 224.49,
    "busiest_stage_us": 13.22,
    "critical_path_top_us": {
-    "attn.wo_a": 22.53,
-    "attn.out_allreduce": 16.87,
-    "ffn.combine_allreduce": 16.87,
+    "attn.wo_a": 22.93,
+    "attn.out_allreduce": 17.07,
+    "ffn.combine_allreduce": 17.07,
     "attn.idx.score": 13.42,
     "substage_hop0": 10.76,
-    "attn.idx.topk_local": 9.75,
-    "ffn.softplus_sqrt": 9.75,
-    "ffn.experts_gu": 9.47
+    "ffn.experts_gu": 9.87,
+    "ffn.down": 9.8,
+    "attn.idx.topk_local": 9.75
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 70.6,
-     "gated_mJ_b1": 444.3,
-     "gated_mJ_saturated": 189.8,
+     "gated_mJ_b1": 537.3,
+     "gated_mJ_saturated": 295.1,
      "gap_only_pre_ramp_mJ_per_token": 99.6,
-     "gap_only_gated_mJ_b1": 473.3,
-     "gap_only_gated_mJ_saturated": 218.8
+     "gap_only_gated_mJ_b1": 566.3,
+     "gap_only_gated_mJ_saturated": 324.0
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 561.6,
-     "gated_mJ_b1": 935.3,
-     "gated_mJ_saturated": 680.8,
+     "gated_mJ_b1": 1028.4,
+     "gated_mJ_saturated": 786.1,
      "gap_only_pre_ramp_mJ_per_token": 792.4,
-     "gap_only_gated_mJ_b1": 1166.1,
-     "gap_only_gated_mJ_saturated": 911.6
+     "gap_only_gated_mJ_b1": 1259.1,
+     "gap_only_gated_mJ_saturated": 1016.9
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 141.1,
-     "gated_mJ_b1": 514.9,
-     "gated_mJ_saturated": 260.3,
+     "gated_mJ_b1": 607.9,
+     "gated_mJ_saturated": 365.6,
      "gap_only_pre_ramp_mJ_per_token": 199.1,
-     "gap_only_gated_mJ_b1": 572.8,
-     "gap_only_gated_mJ_saturated": 318.3
+     "gap_only_gated_mJ_b1": 665.9,
+     "gap_only_gated_mJ_saturated": 423.6
     }
    }
   },
   "c: all 0.9 GHz, LAT 3": {
-   "ar_tokens_s_b1": 3095.3,
-   "mtp_tokens_s_b1": 4209.8,
+   "ar_tokens_s_b1": 3048.8,
+   "mtp_tokens_s_b1": 4183.0,
    "ar_saturated_tokens_s": 63459.9,
-   "mtp_saturated_tokens_s": 39184.6,
-   "gated_mJ_b1": 402.17,
-   "gated_mJ_saturated": 123.61,
+   "mtp_saturated_tokens_s": 39029.7,
+   "gated_mJ_b1": 477.94,
+   "gated_mJ_saturated": 211.83,
    "busiest_stage_us": 15.76,
    "critical_path_top_us": {
-    "attn.wo_a": 29.47,
-    "attn.out_allreduce": 22.49,
-    "ffn.combine_allreduce": 22.49,
+    "attn.wo_a": 30.0,
+    "attn.out_allreduce": 22.76,
+    "ffn.combine_allreduce": 22.76,
     "attn.idx.score": 15.5,
     "attn.idx.topk_local": 13.01,
-    "head.lm_head": 11.49,
-    "ffn.experts_gu": 10.84,
-    "substage_hop0": 10.8
+    "head.lm_head": 11.51,
+    "ffn.experts_gu": 11.38,
+    "attn.wq_b": 11.16
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 70.6,
-     "gated_mJ_b1": 472.7,
-     "gated_mJ_saturated": 194.2,
+     "gated_mJ_b1": 548.5,
+     "gated_mJ_saturated": 282.4,
      "gap_only_pre_ramp_mJ_per_token": 96.2,
-     "gap_only_gated_mJ_b1": 498.4,
-     "gap_only_gated_mJ_saturated": 219.8
+     "gap_only_gated_mJ_b1": 574.1,
+     "gap_only_gated_mJ_saturated": 308.0
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 561.6,
-     "gated_mJ_b1": 963.8,
-     "gated_mJ_saturated": 685.2,
+     "gated_mJ_b1": 1039.5,
+     "gated_mJ_saturated": 773.4,
      "gap_only_pre_ramp_mJ_per_token": 765.6,
-     "gap_only_gated_mJ_b1": 1167.7,
-     "gap_only_gated_mJ_saturated": 889.2
+     "gap_only_gated_mJ_b1": 1243.5,
+     "gap_only_gated_mJ_saturated": 977.4
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 141.1,
-     "gated_mJ_b1": 543.3,
-     "gated_mJ_saturated": 264.7,
+     "gated_mJ_b1": 619.1,
+     "gated_mJ_saturated": 353.0,
      "gap_only_pre_ramp_mJ_per_token": 192.4,
-     "gap_only_gated_mJ_b1": 594.5,
-     "gap_only_gated_mJ_saturated": 316.0
+     "gap_only_gated_mJ_b1": 670.3,
+     "gap_only_gated_mJ_saturated": 404.2
     }
    }
   }
@@ -10896,7 +11400,7 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "ea7434a83f38deb1bbaf9764ceb0c3b1c2e922f6006af331ab9b2bfe75472f76",
+  "tools/uarch_model.py": "92057ebba09cf8914e91bb334870216eae56b2e360134972234815c1824e3821",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
