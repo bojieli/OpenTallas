@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.w11-idx-ring-naming.v1",
   "status": "pass",
-  "git_head": "30a2ed3a83d5de2d17fc9f989c9a76649d02ceed",
+  "git_head": "70313ff0dcf9eaedf9277e1dc62865f5c6093c28",
   "simulator": "Verilator 5.050",
   "parameters": {
     "AW": 30,
@@ -46,7 +46,7 @@
     "steps_at_slot_past_1024": 44,
     "record_fifo_highwater": 1,
     "cycles": 154292,
-    "simulation_wall_seconds": 57.1,
+    "simulation_wall_seconds": 20.9,
     "simulation_log_sha256": "bb5331b7eb4ca5b6bff05a5c41f8bedf13f6b319a901c8166e1b7a9e57b1566f"
   },
   "negative_control": {
@@ -62,7 +62,7 @@
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kdata_m.sv": "a2fa51f89198cb9c8313282ee9dbd7167ff857b33f5e9440b649ce5ba8045638",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "2d00acaebc2c7630ce68ca3d06de2cd5e5f41573a92c166b289165f5de62a5b5",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "30f0d2e9d1550beeb9055b95bb9909abbb11b84194b11a9a49610487f19cee8e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "74fd4a4e2618a02163e331bc4c318a1f3d2743691492a17a1ac4158c2478b27e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "3454bdf85be8fb19171c71937e852501e3388cfc2d0ae8ee5dd9ddd98ba60774",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": "a2b148c335e07db4b7417bb48b7a86dd82f2cb88dc9c906b82aa12d717eb0047",
