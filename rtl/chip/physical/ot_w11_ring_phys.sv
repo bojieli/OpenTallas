@@ -168,11 +168,11 @@ module ot_w11_kdata_m_x2_phys (
 endmodule
 
 // the reader's control (ot_hdc_v41x_idx_kctl_ring: 32 request generators, entry state, drain) at the
-// die configuration: 30-bit sectors, 23-bit blocks, ROB 128, lookahead 120.  Every port is a top-level
-// pin except the return-queue handshake: rsp_v / rsp_tag are captured from and rsp_rdy is captured
-// into flip-flops (the ring port's return-queue head and pop registers), so the combinational
-// rsp_tag -> rsp_rdy gate is timed register to register instead of from an unbudgeted input to an
-// unbudgeted output.  rsp_beat is not read by the control.
+// die configuration: 30-bit sectors, 23-bit blocks, ROB 128, lookahead 120.  Every input is captured
+// from a flip-flop (the neighbours' output registers) and the one combinational output, rsp_rdy, is
+// captured into one (the ring port's pop register), so every path is timed register to register
+// (no unbudgeted zero-delay input or output, no hold padding against the clock insertion delay).
+// The control's own outputs are registered.  rsp_beat is not read by the control.
 module ot_w11_kctl_ring_phys (
     input  wire clk, rst_n,
     input  wire cmd_v,
@@ -195,18 +195,24 @@ module ot_w11_kctl_ring_phys (
     output wire [5:0] dr_sidx,
     input  wire dr_ready
 );
-    reg  [31:0] rsp_v_q;
+    reg  [31:0] rsp_v_q, req_rdy_q;
     reg  [32*16-1:0] rsp_tag_q;
     wire [31:0] rsp_rdy;
+    reg  cmd_v_q, dr_ready_q;
+    reg  [22:0] cmd_base_q, cmd_base2_q;
+    reg  [9:0] cmd_skip_q;
+    reg  [32:0] cmd_nkeys_q, cmd_nkeys2_q;
     always @(posedge clk) begin
-        rsp_v_q <= rsp_v; rsp_tag_q <= rsp_tag; rsp_rdy_q <= rsp_rdy;
+        rsp_v_q <= rsp_v; rsp_tag_q <= rsp_tag; rsp_rdy_q <= rsp_rdy; req_rdy_q <= req_rdy;
+        cmd_v_q <= cmd_v; cmd_base_q <= cmd_base; cmd_base2_q <= cmd_base2; cmd_skip_q <= cmd_skip;
+        cmd_nkeys_q <= cmd_nkeys; cmd_nkeys2_q <= cmd_nkeys2; dr_ready_q <= dr_ready;
     end
     ot_hdc_v41x_idx_kctl_ring #(.NPC(32), .WB(128), .GA(120), .AW(30), .HW(23), .TAGW(16), .LENW(4), .BEATW(4)) dut (
-        .clk(clk), .rst_n(rst_n), .cmd_v(cmd_v), .cmd_base(cmd_base), .cmd_skip(cmd_skip), .cmd_nkeys(cmd_nkeys),
-        .cmd_base2(cmd_base2), .cmd_nkeys2(cmd_nkeys2), .busy(busy), .req_v(req_v), .req_rdy(req_rdy),
+        .clk(clk), .rst_n(rst_n), .cmd_v(cmd_v_q), .cmd_base(cmd_base_q), .cmd_skip(cmd_skip_q), .cmd_nkeys(cmd_nkeys_q),
+        .cmd_base2(cmd_base2_q), .cmd_nkeys2(cmd_nkeys2_q), .busy(busy), .req_v(req_v), .req_rdy(req_rdy_q),
         .req_addr(req_addr), .req_len(req_len), .req_tag(req_tag), .rsp_v(rsp_v_q), .rsp_rdy(rsp_rdy),
         .rsp_tag(rsp_tag_q), .rsp_beat('0), .dr_scale(dr_scale), .dr_quarter(dr_quarter), .dr_slot(dr_slot),
-        .dr_q(dr_q), .dr_fold(dr_fold), .dr_sidx(dr_sidx), .dr_nkeys(dr_nkeys), .dr_ready(dr_ready));
+        .dr_q(dr_q), .dr_fold(dr_fold), .dr_sidx(dr_sidx), .dr_nkeys(dr_nkeys), .dr_ready(dr_ready_q));
 endmodule
 
 // the quarter join with its handshakes captured in flip-flops: i_valid / o_ready come from, and
