@@ -69,7 +69,12 @@ XBAR_LEVELS = int(math.log2(N))                # a 1,024:1 mux tree per output: 
 W = 32
 
 
+REACH_UM = 0.0    # measured wire reach a stage (W15, SS); 0: the model's wire_cycles rule
+
+
 def stages(um: float) -> int:
+    if REACH_UM:
+        return math.ceil(um / REACH_UM) if um > 0 else 0
     return U.wire_cycles(um, 1e12 / PERIOD_PS, PS_PER_UM)
 
 
@@ -237,10 +242,13 @@ def main() -> int:
     ap.add_argument("--mux-levels", type=int, default=0,
                     help="measured 2:1 mux levels a 0.92 ns stage (from the rotate network's hardening)")
     ap.add_argument("--mux-basis", default="", help="the record(s) the measured mux levels come from")
+    ap.add_argument("--reach-um", type=float, default=0.0,
+                    help="measured SS wire reach a register stage (W15: 748 um at 1.111 ns); replaces the ps/um rule")
     ap.add_argument("--period-ps", type=float, default=0.0,
                     help="the VM / SU clock domain's period for the wire and mux stages (default 920)")
     a = ap.parse_args()
-    global MUX_LEVELS_PER_STAGE, PERIOD_PS
+    global MUX_LEVELS_PER_STAGE, PERIOD_PS, REACH_UM
+    REACH_UM = a.reach_um
     if a.mux_levels:
         MUX_LEVELS_PER_STAGE = a.mux_levels
     if a.period_ps:
@@ -544,7 +552,7 @@ def main() -> int:
     su_ps = 1111.0
     cdc = []
     for name, ob, nb, um, d in cdc_clients:
-        st = U.wire_cycles(um, 1e12 / su_ps, PS_PER_UM)
+        st = stages(um)
         flops_old, flops_new = ob * stages(um), nb * st
         cdc.append(dict(client=name, direction=d, old_bits=ob, new_bits=nb, run_um=round(um),
                         stages_at_1111ps=st, wire_mm_old=round(ob * um / 1e3, 1), wire_mm_new=round(nb * um / 1e3, 1),
@@ -572,7 +580,9 @@ def main() -> int:
         generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         source_commit=subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True,
                                      text=True).stdout.strip(),
-        basis=dict(clock_ps=PERIOD_PS, wire_ps_per_um=PS_PER_UM, stage_rule="tools/uarch_model.wire_cycles",
+        basis=dict(clock_ps=PERIOD_PS, wire_ps_per_um=PS_PER_UM, wire_reach_um=REACH_UM or None,
+                   stage_rule=(f"ceil(um / {REACH_UM}) (W15 measured SS reach)" if REACH_UM
+                               else "tools/uarch_model.wire_cycles"),
                    mux_levels_per_stage=MUX_LEVELS_PER_STAGE, mux_levels_basis=a.mux_basis or "ASSUMED", rotate_levels=ROT_LEVELS, benes_levels=BENES_LEVELS,
                    crossbar_levels=XBAR_LEVELS, density=cells,
                    network_cells=("rotate: N x 32 x log2 N mux2; Benes: N x 32 x (2 log2 N - 1); full crossbar: "

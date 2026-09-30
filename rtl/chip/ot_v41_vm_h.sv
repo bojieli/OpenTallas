@@ -36,6 +36,15 @@
 // COLL_WRITE_STAGES).
 //
 // Simulation backdoor (bd_load / bd_dump / u_vmd.bd_img) as ot_v41_vm_dist.
+//
+// FLOORPLAN INPUTS (W18 die-route congestion, root 2026-09-30):
+//   * hard blocks (the lane-group tiles ot_v41_vm_group_phys, the rotate network ot_v41_vm_rot) route in M2-M5
+//     only (run_abi3_physical --routing-layers M2 M5); their SRAM macros obstruct M1-M4 only; so M6 / M7
+//     through-channels stay open over every VM-H block for the hub's ring and trunk traffic;
+//   * the x root's fan-out ports (class-X reads to the ROM field, 20 x 549 b before the 4/3 CDC widening) and the
+//     result / collective write roots are placed on the hub's OUTER edges, spread along them, not on the SU
+//     region's interior (VM-port) edge; the class-X tree then runs from the farthest group to the nearest outer
+//     edge (<= the spec record's farthest-group-to-port run).
 // ---------------------------------------------------------------------------
 module ot_v41_vm_h #(
     parameter integer NG    = 128,
