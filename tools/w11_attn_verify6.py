@@ -177,7 +177,7 @@ def main():
     if a.mode == "negative":
         a.scratch.mkdir(parents=True, exist_ok=True)
         vd = a.scratch / f"vec_{a.cfg}"
-        man = vectors(a.cfg, vd)
+        man = (vectors_model if a.order == "model" else vectors)(a.cfg, vd)
         cfg = CFGS[a.cfg]
         eng = a.scratch / "ot_hdc_v41x_attn_relaxed.sv"
         src = C.RTL_ENG.read_text()
@@ -185,7 +185,8 @@ def main():
         assert src.count(tight) == 1
         eng.write_text(src.replace(tight, "localparam integer P_THR = GUARD_Q - GUARD_P + 2;"))
         cap = {("NJOBMAX" if k == "NJOB" else k): 1 << max(4, int(v - 1).bit_length()) for k, v in man["counts"].items()}
-        prm = {**{k: cfg[k] for k in ("H", "D", "TD", "NL", "TROWS")}, **cap, "PWORDS": a.pwords, "ILV": 1}
+        prm = {**{k: cfg[k] for k in ("H", "D", "TD", "NL", "TROWS")}, **cap, "PWORDS": a.pwords, "ILV": 1,
+               **({"REPL": a.repl} if a.repl else {}), **({"NSTAGE": a.nstage} if a.nstage != 1 else {})}
         exe = C.verilator_build(C.TB_ENG, "tb_hdc_v41x_attn", [C.RTL_TILE, eng, C.RTL_STAGE, C.SRAM_MODEL, *C.LIB],
                                 a.scratch / "obj_relaxed", prm)
         res = []
@@ -195,6 +196,7 @@ def main():
             print(json.dumps({k: v for k, v in r.items() if k != "per_position"}), flush=True)
         caught = all(r["setcheck"]["errors"] > 0 and (r["score_errors"] + r["pv_errors"]) > 0 for r in res)
         a.out.write_text(json.dumps(dict(config=a.cfg, relaxation="P_THR + 1 (one cycle less write-after-read guard)",
+                                         engine_params=prm, order=a.order,
                                          engine_source_sha256=C.sha(C.RTL_ENG), runs=res, caught=caught), indent=1) + "\n")
         raise SystemExit(0 if caught else 1)
     # reduced: build with the set checker, run ILV 0 and 1 at each L0
