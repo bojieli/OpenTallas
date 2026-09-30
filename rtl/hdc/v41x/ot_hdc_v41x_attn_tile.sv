@@ -511,8 +511,12 @@ module ot_hdc_v41x_qaddl #(
         end else begin : g_lat
             wire [1:0] err;
             wire vo;
+            // a LAT-3 build does not list ot_hdc_fp32_add_lat.sv: this branch is not elaborated then, and the
+            // lint's timescale check must not trip on the unresolved name
+            // verilator lint_off TIMESCALEMOD
             ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y),
                                                 .err(err), .valid_out(vo));
+            // verilator lint_on TIMESCALEMOD
             assign fault = vo && (err != 2'd0);
         end
     endgenerate
