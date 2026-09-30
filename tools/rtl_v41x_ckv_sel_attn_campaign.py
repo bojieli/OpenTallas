@@ -7,6 +7,8 @@ Bench: rtl/test/tb_chip_v41x_ckv_sel_attn.sv; vectors: tools/v41_ckv_sel_attn_ve
           with results/rtl/v41_attention_elaboration_archive/tools/v41_attention_hierarchy.vlt, as the full-geometry
           attention gate tools/v41_full_attention_numeric_build.py)
   run     --exe EXE --vectors DIR --out DIR [--cases a,b] [--plusarg lat=100 ...] [--tag NAME]
+  mutate  --exe EXE --vectors DIR --out DIR   negative controls on full1m (corrupted HBM row, unsorted selection,
+          wrong published count): each must be caught (row mismatch or a module fault)
   record  --runs DIR [DIR ...] --out results/rtl/v41x_ckv_sel_attn.json   (never overwrites a failed verdict)
 """
 from __future__ import annotations
@@ -134,11 +136,65 @@ def run(a):
     raise SystemExit(0 if res['status'] == 'pass' else 1)
 
 
+def mutate(a):
+    src = a.vectors / 'full1m'
+    a.out.mkdir(parents=True, exist_ok=True)
+    muts = []
+
+    def one(name, fn):
+        d = a.out / ('mut_' + name)
+        if d.exists():
+            shutil.rmtree(d)
+        shutil.copytree(src, d)
+        fn(d)
+        p = subprocess.run([str(a.exe.resolve()), f'+dir={d.resolve()}', '+lat=100'], capture_output=True, text=True,
+                           timeout=a.timeout)
+        f = parse(p.stdout)
+        caught = f['CKVROWS'].get('errors', 0) > 0 or f['CKVSEL'].get('faults', 0) > 0 or \
+            f['CKVSEL'].get('hbm_missing', 0) > 0 or f['V41XATTN'].get('timeout', 0) == 1 or \
+            f['V41XATTN'].get('sc_errors', 0) > 0
+        muts.append(dict(mutation=name, caught=caught, fields=f))
+        print(name, 'caught' if caught else 'MISSED', flush=True)
+
+    def hbm_flip(d):                  # flip one code byte of the first selected row's first sector (die/stack copy)
+        sel0 = int((d / 'sel.hex').read_text().split()[0], 16)
+        cfg = [int(x, 16) for x in (d / 'cfg.hex').read_text().split()]
+        die, stack, local = (sel0 >> 4) & 3, (sel0 >> 6) & 3, ((sel0 >> 8) << 4) | (sel0 & 15)
+        key = (die << 32) | (stack << 30) | (cfg[9 + stack] + 9 * local)
+        keys = [int(x, 16) for x in (d / 'hkey.hex').read_text().split()]
+        dat = (d / 'hdat.hex').read_text().split()
+        i = keys.index(key)
+        dat[i] = f'{int(dat[i], 16) ^ 0x5a:064x}'
+        (d / 'hdat.hex').write_text(''.join(x + '\n' for x in dat))
+
+    def unsorted(d):                  # swap two selected ids inside quarter 0
+        ids = (d / 'sel.hex').read_text().split()
+        ids[3], ids[4] = ids[4], ids[3]
+        (d / 'sel.hex').write_text(''.join(x + '\n' for x in ids))
+
+    def unpublished(d):               # published count below the largest selected id
+        cfg = (d / 'cfg.hex').read_text().split()
+        ids = [int(x, 16) for x in (d / 'sel.hex').read_text().split()]
+        cfg[2] = f'{max(ids):08x}'
+        (d / 'cfg.hex').write_text(''.join(x + '\n' for x in cfg))
+
+    one('hbm_row_corrupted', hbm_flip)
+    one('selection_unsorted', unsorted)
+    one('source_unpublished', unpublished)
+    res = dict(executable_sha256=sha(a.exe), build_status=json.loads((a.exe.resolve().parents[1] /
+                                                                      'status.json').read_text()),
+               mutations=muts, status='pass' if all(m['caught'] for m in muts) else 'fail')
+    (a.out / 'mutations.json').write_text(json.dumps(res, indent=2) + '\n')
+    raise SystemExit(0 if res['status'] == 'pass' else 1)
+
+
 def record(a):
-    runs = []
+    runs, muts = [], []
     for d in a.runs:
         for f in sorted(Path(d).glob('result*.json')):
             runs.append(json.loads(f.read_text()))
+        if (Path(d) / 'mutations.json').is_file():
+            muts.append(json.loads((Path(d) / 'mutations.json').read_text()))
     if a.out.is_file():
         old = json.loads(a.out.read_text())
         if old.get('status') != 'pass':
@@ -147,7 +203,7 @@ def record(a):
     dirty = subprocess.check_output(['git', 'status', '--porcelain', '--', *PATH_SOURCES, *ENGINE_SOURCES, TB,
                                      *TOOLS], cwd=ROOT, text=True).strip()
     pins = {}
-    for r in runs:
+    for r in runs + muts:
         for rel, h in r['build_status']['source_sha256'].items():
             assert pins.setdefault(rel, h) == h, rel
     current = {rel: sha(ROOT / rel) for rel in sorted(set(pins) | set(TOOLS))}
@@ -167,8 +223,9 @@ def record(a):
         git_head=head, sources_dirty_at_record=bool(dirty), source_sha256=pins, current_sha256=current,
         stale_sources=stale,
         exact_full_geometry=exact, rows_only_reduced=rows,
+        negative_controls=[m for x in muts for m in x['mutations']],
         status='pass' if exact and all(r['pass_'] for r in exact) and all(r['pass_'] for r in rows) and not stale
-        else 'fail')
+        and all(x['status'] == 'pass' for x in muts) else 'fail')
     a.out.write_text(json.dumps(rec, indent=2) + '\n')
     print(rec['status'], len(exact), len(rows), stale)
 
@@ -189,11 +246,16 @@ def main():
     r.add_argument('--plusarg', action='append', default=[])
     r.add_argument('--tag', default='')
     r.add_argument('--timeout', type=int, default=7200)
+    m = sp.add_parser('mutate')
+    m.add_argument('--exe', type=Path, required=True)
+    m.add_argument('--vectors', type=Path, required=True)
+    m.add_argument('--out', type=Path, required=True)
+    m.add_argument('--timeout', type=int, default=7200)
     c = sp.add_parser('record')
     c.add_argument('--runs', type=Path, nargs='+', required=True)
     c.add_argument('--out', type=Path, default=ROOT / 'results/rtl/v41x_ckv_sel_attn.json')
     a = ap.parse_args()
-    {'build': build, 'run': run, 'record': record}[a.cmd](a)
+    {'build': build, 'run': run, 'mutate': mutate, 'record': record}[a.cmd](a)
 
 
 if __name__ == '__main__':

@@ -16,12 +16,13 @@
 // Each owned row is handed to one of NSLOT row slots; a slot is an unchanged
 // ot_chip_v41x_ckv_selected_dma (PIPE = 1: nine back-to-back sector reads,
 // responses in any order) and holds the finished 288-B row until it is sent.
-// Slots are allocated round robin in rank order.  Per HBM stack, the slots'
-// requests are arbitrated oldest-slot-first starting at the oldest busy slot
-// (the allocation order); the stack sees tag = {slot, sector}.  The response
-// is routed to its slot by the tag's slot field.  Finished rows leave on the
-// output as soon as they are complete, oldest-first among the complete slots
-// (the collector places them by rank, so order is not required here).
+// Slots are allocated round robin in rank order.  Each HBM stack keeps a
+// queue of the slots dispatched to it, in dispatch order; the head slot
+// issues its nine sectors back to back and is popped with the ninth (no
+// NSLOT-wide priority search: a registered-index mux per stack).  The stack
+// sees tag = {slot, sector}; the response is routed to its slot by the tag's
+// slot field.  Finished rows leave in allocation (rank) order; the next entry
+// of the id stream is held in a register (one read per cycle).
 //
 // Interfaces
 //   job     job_v/job_ready: window_count (the row index of rank 0),
@@ -104,11 +105,15 @@ module ot_chip_v41x_ckv_sel_fetch #(
     reg  [NSLOT*4-1:0] sl_mrdy;
     reg  [NSLOT*4-1:0] sl_sv;
 
-    wire scan = run && cur < id_count;
-    wire owned = id_die == 2'(DIE_ID);
+    // entry register: the stream entry at cursor cur - 1 (one read per cycle)
+    reg e_v;
+    reg [KW-1:0] e_rank;
+    reg [POS_W-1:0] e_gid;
+    wire owned = e_gid[5:4] == 2'(DIE_ID);
     wire slot_free = !busy[alloc] && sl_ready[alloc];
-    wire dispatch = scan && owned && slot_free;
-    wire skip = scan && !owned;
+    wire dispatch = run && e_v && owned && slot_free;
+    wire skip = run && e_v && !owned;
+    wire eload = run && cur < id_count && (!e_v || dispatch || skip);
 
     genvar s;
     generate for (s = 0; s < NSLOT; s = s + 1) begin : g_slot
@@ -128,14 +133,14 @@ module ot_chip_v41x_ckv_sel_fetch #(
         wire [4*4-1:0] len4;
         wire [4*4-1:0] tag4;
         wire [4*4-1:0] s_tag_slot;     // the DMA sees only the sector field of the stack tag
-        assign lrow = 10'(wcount) + 10'(id_rank_in);
+        assign lrow = 10'(wcount) + 10'(e_rank);
         ot_chip_v41x_ckv_selected_dma #(.POS_W(POS_W), .SEC_W(SEC_W), .HAW(HAW), .TAGW(4),
                                         .DIE_ID(DIE_ID), .MAX_CONTEXT(MAX_CONTEXT), .PIPE(1)) u_dma (
             .clk(clk), .rst_n(rst_n),
             .region_base_sector(region_base_sector), .region_sector_count(region_sector_count),
             .published_source_count(published_source_count),
             .fetch_v(dispatch && alloc == SW'(s)), .fetch_ready(sl_ready[s]),
-            .local_row(lrow), .window_count(wcount), .source_id(id_gid),
+            .local_row(lrow), .window_count(wcount), .source_id(e_gid),
             .remote_needed(sl_remote[s]), .remote_die(rdie_unused), .kv_ok(sl_ok[s]),
             .re(1'b0), .rrow(10'd0), .relem(9'd0), .q(q_unused), .q_fp8(q8_unused),
             .packed_row(sl_row[s*2304 +: 2304]), .packed_valid(), .packed_local_row(plr),
@@ -152,26 +157,26 @@ module ot_chip_v41x_ckv_sel_fetch #(
         end
     end endgenerate
 
-    // ---- per-stack arbitration: first requesting slot at or after the oldest busy slot ----
-    reg [SW-1:0] oldest;              // oldest busy slot (allocation order)
+    // ---- per-stack issue queues: slots in dispatch order; the head slot issues its nine sectors ----
+    reg [SW-1:0] sq [0:3][0:NSLOT-1];
+    reg [SW-1:0] qh [0:3], qt [0:3];
+    reg [SW:0] qn [0:3];
     reg [3:0] mv_r;
     reg [4*HAW-1:0] maddr_r;
     reg [4*TAGW-1:0] mtag_r;
-    integer st, j, idx;
-    reg found;
+    reg [3:0] pop;
+    integer st;
     always @(*) begin
-        sl_mrdy = '0; mv_r = 0; maddr_r = 0; mtag_r = 0;
-        for (st = 0; st < 4; st = st + 1) begin
-            found = 1'b0;
-            for (j = 0; j < NSLOT; j = j + 1) begin
-                idx = (32'(oldest) + j) % NSLOT;
-                if (!found && sl_mv[idx*4 + st]) begin
-                    found = 1'b1;
-                    mv_r[st] = 1'b1;
-                    maddr_r[st*HAW +: HAW] = sl_maddr[(idx*4 + st)*HAW +: HAW];
-                    mtag_r[st*TAGW +: TAGW] = {SW'(idx), sl_mtag[(idx*4 + st)*4 +: 4]};
-                    sl_mrdy[idx*4 + st] = m_rdy[st];
-                end
+        sl_mrdy = '0; mv_r = 0; maddr_r = 0; mtag_r = 0; pop = 0;
+        for (st = 0; st < 4; st = st + 1) begin : g_arb
+            reg [SW-1:0] hd;
+            hd = sq[st][qh[st]];
+            if (qn[st] != 0 && sl_mv[32'(hd)*4 + st]) begin
+                mv_r[st] = 1'b1;
+                maddr_r[st*HAW +: HAW] = sl_maddr[(32'(hd)*4 + st)*HAW +: HAW];
+                mtag_r[st*TAGW +: TAGW] = {hd, sl_mtag[(32'(hd)*4 + st)*4 +: 4]};
+                sl_mrdy[32'(hd)*4 + st] = m_rdy[st];
+                pop[st] = m_rdy[st] && sl_mtag[(32'(hd)*4 + st)*4 +: 4] == 4'd8;
             end
         end
     end
@@ -186,37 +191,13 @@ module ot_chip_v41x_ckv_sel_fetch #(
             if (s_v[st]) sl_sv[32'(s_tag[st*TAGW + 4 +: SW])*4 + st] = 1'b1;
     end
 
-    // ---- output: oldest complete slot ----
-    reg [SW-1:0] osel;
-    reg ofound;
-    always @(*) begin
-        osel = 0; ofound = 1'b0;
-        for (j = 0; j < NSLOT; j = j + 1) begin
-            idx = (32'(oldest) + j) % NSLOT;
-            if (!ofound && busy[idx] && sl_ok[idx]) begin ofound = 1'b1; osel = SW'(idx); end
-        end
-    end
-    assign o_v = run && ofound;
-    assign o_rank = srank[osel];
-    assign o_gid = sl_src[osel*POS_W +: POS_W];
-    assign o_row = sl_row[osel*2304 +: 2304];
+    // ---- output: slots retire in allocation (rank) order ----
+    reg [SW-1:0] oldest;
+    assign o_v = run && busy[oldest] && sl_ok[oldest];
+    assign o_rank = srank[oldest];
+    assign o_gid = sl_src[oldest*POS_W +: POS_W];
+    assign o_row = sl_row[oldest*2304 +: 2304];
     wire osend = o_v && o_ready;
-
-    // oldest busy slot, after this cycle's retire / allocation
-    reg [NSLOT-1:0] busy_n;
-    reg [SW-1:0] oldest_n;
-    reg ofd;
-    always @(*) begin
-        busy_n = busy;
-        if (osend) busy_n[osel] = 1'b0;
-        if (dispatch) busy_n[alloc] = 1'b1;
-        oldest_n = alloc; ofd = 1'b0;
-        // the oldest busy slot is the first busy one after the allocation pointer
-        for (j = 0; j < NSLOT; j = j + 1) begin
-            idx = (32'(dispatch ? SW'((32'(alloc) + 1) % NSLOT) : alloc) + j) % NSLOT;
-            if (!ofd && busy_n[idx]) begin ofd = 1'b1; oldest_n = SW'(idx); end
-        end
-    end
 
 `ifndef SYNTHESIS
     initial if (NSLOT < 1 || TAGW < SW + 4)
@@ -225,23 +206,36 @@ module ot_chip_v41x_ckv_sel_fetch #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             run <= 0; cur <= 0; wcount <= 0; alloc <= 0; busy <= 0; oldest <= 0;
+            e_v <= 0; e_rank <= 0; e_gid <= 0;
+            for (st = 0; st < 4; st = st + 1) begin qh[st] <= 0; qt[st] <= 0; qn[st] <= 0; end
             done <= 0; fault <= 0; fault_code <= 0; st_owned_rows <= 0;
         end else begin
             if (|sl_fault) begin fault <= 1; fault_code[0] <= 1; end
             if (|sl_remote) begin fault <= 1; fault_code[1] <= 1; end
             if (job_v && !run) begin
-                run <= 1; cur <= 0; wcount <= window_count; done <= 0;
+                run <= 1; cur <= 0; wcount <= window_count; done <= 0; e_v <= 0;
                 st_owned_rows <= 0;
             end else if (run) begin
+                if (eload) begin
+                    e_v <= 1; e_rank <= id_rank_in; e_gid <= id_gid; cur <= cur + 1'b1;
+                end else if (dispatch || skip) e_v <= 0;
+                for (st = 0; st < 4; st = st + 1) begin
+                    if (dispatch && e_gid[7:6] == 2'(st)) begin
+                        sq[st][qt[st]] <= alloc;
+                        qt[st] <= SW'((32'(qt[st]) + 1) % NSLOT);
+                    end
+                    if (pop[st]) qh[st] <= SW'((32'(qh[st]) + 1) % NSLOT);
+                    qn[st] <= qn[st] + (SW+1)'(dispatch && e_gid[7:6] == 2'(st)) - (SW+1)'(pop[st]);
+                end
                 if (dispatch) begin
-                    srank[alloc] <= id_rank_in;
+                    srank[alloc] <= e_rank;
                     alloc <= SW'((32'(alloc) + 1) % NSLOT);
                     st_owned_rows <= st_owned_rows + 1;
                 end
-                if (dispatch || skip) cur <= cur + 1'b1;
-                busy <= busy_n;
-                oldest <= oldest_n;
-                if (cur == id_count && id_done && busy_n == 0 && !dispatch) begin
+                if (osend) oldest <= SW'((32'(oldest) + 1) % NSLOT);
+                busy <= (busy | (dispatch ? (NSLOT'(1) << alloc) : '0)) &
+                        ~(osend ? (NSLOT'(1) << oldest) : '0);
+                if (cur == id_count && id_done && !e_v && busy == 0) begin
                     run <= 0; done <= 1;
                 end
             end
