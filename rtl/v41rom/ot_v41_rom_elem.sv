@@ -107,18 +107,64 @@ module ot_v41_rom_elem #(
     localparam integer XD = PP != 0 ? 3 : 2;       // issue -> captured ROM word (a PP read is a 2-cycle path)
     localparam integer BPH = 4;                    // BF16_PAIR: cycles a BF16 word is held
 
+    // ---------------- inputs: registered at the element boundary when FAST (the column spine drives them from
+    // its own registers; one more cycle keeps the input delay out of the capture and walker loops).  go_e and the
+    // configuration are registered on the free clock, the x beats on the gated clock (the gate opens at go_e).
+    wire         cfg_v_e, go_e, go_bf_e, xs_v_e, xb_v_e;
+    wire [4:0]   cfg_a_e;
+    wire [47:0]  cfg_d_e;
+    wire [7:0]   xs_p_e;
+    wire [2:0]   xs_b_e, xs_pos_e, xb_pos_e, xb_b_e;
+    wire [1:0]   xs_sv_e;
+    wire [255:0] xs_q0_e, xs_q1_e;
+    wire [9:0]   xs_e0_e, xs_e1_e;
+    wire [3:0]   xb_sv_e;
+    wire [31:0]  xb_u_e;
+    wire [1023:0] xb_d_e;
+    wire gclk;
+    if (FAST != 0) begin : g_ir
+        reg r_cfg_v, r_go, r_go_bf, r_xs_v, r_xb_v;
+        reg [4:0] r_cfg_a; reg [47:0] r_cfg_d; reg [7:0] r_xs_p; reg [2:0] r_xs_b, r_xs_pos, r_xb_pos, r_xb_b;
+        reg [1:0] r_xs_sv; reg [255:0] r_xs_q0, r_xs_q1; reg [9:0] r_xs_e0, r_xs_e1; reg [3:0] r_xb_sv;
+        reg [31:0] r_xb_u; reg [1023:0] r_xb_d;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin r_cfg_v <= 1'b0; r_go <= 1'b0; end
+            else begin r_cfg_v <= cfg_v; r_go <= go; end
+        always @(posedge clk) begin r_cfg_a <= cfg_a; r_cfg_d <= cfg_d; r_go_bf <= go_bf; end
+        always @(posedge gclk or negedge rst_n)
+            if (!rst_n) begin r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
+            else begin r_xs_v <= xs_v; r_xb_v <= xb_v; end
+        always @(posedge gclk) begin
+            r_xs_p <= xs_p; r_xs_b <= xs_b; r_xs_sv <= xs_sv; r_xs_q0 <= xs_q0; r_xs_e0 <= xs_e0;
+            r_xs_q1 <= xs_q1; r_xs_e1 <= xs_e1; r_xs_pos <= xs_pos; r_xb_pos <= xb_pos; r_xb_b <= xb_b;
+            r_xb_sv <= xb_sv; r_xb_u <= xb_u; r_xb_d <= xb_d;
+        end
+        // configuration writes are not registered: the class registers must be final one cycle before go_e so the
+        // registered sub-block facts below are current when go_e starts the walkers
+        assign cfg_v_e = cfg_v; assign cfg_a_e = cfg_a; assign cfg_d_e = cfg_d; assign go_e = r_go; assign go_bf_e = r_go_bf;
+        assign xs_v_e = r_xs_v; assign xs_p_e = r_xs_p; assign xs_b_e = r_xs_b; assign xs_sv_e = r_xs_sv;
+        assign xs_q0_e = r_xs_q0; assign xs_e0_e = r_xs_e0; assign xs_q1_e = r_xs_q1; assign xs_e1_e = r_xs_e1;
+        assign xs_pos_e = r_xs_pos; assign xb_pos_e = r_xb_pos; assign xb_v_e = r_xb_v; assign xb_b_e = r_xb_b;
+        assign xb_sv_e = r_xb_sv; assign xb_u_e = r_xb_u; assign xb_d_e = r_xb_d;
+    end else begin : g_nir
+        assign cfg_v_e = cfg_v; assign cfg_a_e = cfg_a; assign cfg_d_e = cfg_d; assign go_e = go; assign go_bf_e = go_bf;
+        assign xs_v_e = xs_v; assign xs_p_e = xs_p; assign xs_b_e = xs_b; assign xs_sv_e = xs_sv;
+        assign xs_q0_e = xs_q0; assign xs_e0_e = xs_e0; assign xs_q1_e = xs_q1; assign xs_e1_e = xs_e1;
+        assign xs_pos_e = xs_pos; assign xb_pos_e = xb_pos; assign xb_v_e = xb_v; assign xb_b_e = xb_b;
+        assign xb_sv_e = xb_sv; assign xb_u_e = xb_u; assign xb_d_e = xb_d;
+    end
+
     // ---------------- clock gate: the element runs only while it has an op in flight --------------------------
-    // Configuration registers stay on clk.  Everything else is clocked from `go` until DRAIN cycles after the
+    // Configuration registers stay on clk.  Everything else is clocked from `go_e` until DRAIN cycles after the
     // walkers stop (DRAIN covers the longest issue-to-partial latency: capture, block dot, chain, pair, segment
     // tree, BF16 tree), so the last partial has left and pv is low again before the clock stops.
-    wire gclk;
     wire walk_busy;
     reg [7:0] drain;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) drain <= 8'd0;
-        else if (go || walk_busy) drain <= DRAIN[7:0];
+        else if (go_e || walk_busy) drain <= DRAIN[7:0];
         else if (drain != 8'd0) drain <= drain - 8'd1;
-    wire cg_en = !rst_n || go || walk_busy || drain != 8'd0;
+    wire cg_en = !rst_n || go || go_e || walk_busy || drain != 8'd0;
     if (CG != 0) begin : g_cg
         ot_hdc_cg u_cg (.clk(clk), .en(cg_en), .gclk(gclk));
     end else begin : g_nocg
@@ -144,29 +190,29 @@ module ot_v41_rom_elem #(
     reg [2:0]  qlast;               // sub-blocks - 1
     reg [2:0]  plast;               // positions - 1 (MTP)
     reg [13:0] pbase;               // PP: the phase's first word in issue order (even); bank = index[0]
-    always @(posedge clk) if (cfg_v) begin
-        if ({27'd0, cfg_a} < NSEG) begin
-            s_row[cfg_a[SW-1:0]]  <= cfg_d[15:0];
-            s_idx[cfg_a[SW-1:0]]  <= cfg_d[20:16];
-            s_n[cfg_a[SW-1:0]]    <= cfg_d[25:21];
-            s_fp4[cfg_a[SW-1:0]]  <= cfg_d[26];
-            s_lo[cfg_a[SW-1:0]]   <= cfg_d[27];
-            s_hi[cfg_a[SW-1:0]]   <= cfg_d[28];
-            s_base[cfg_a[SW-1:0]] <= cfg_d[41:29];
-            s_bf[cfg_a[SW-1:0]]   <= cfg_d[42];
-        end else if ({27'd0, cfg_a} < 2 * NSEG) begin
-            c_v[cfg_a[SW-1:0]]  <= cfg_d[0];
-            c_u0[cfg_a[SW-1:0]] <= cfg_d[8:1];
-            c_nu[cfg_a[SW-1:0]] <= cfg_d[15:9];
-            c_s0[cfg_a[SW-1:0]] <= cfg_d[16 +: SW];
-            c_s1[cfg_a[SW-1:0]] <= cfg_d[19 +: SW];
-            c_bf[cfg_a[SW-1:0]] <= cfg_d[22];
-        end else if ({27'd0, cfg_a} == 2 * NSEG) begin
-            qlast <= cfg_d[2:0];
-            plast <= (MTP != 0) ? cfg_d[5:3] : 3'd0;
-            pbase <= cfg_d[19:6];
+    always @(posedge clk) if (cfg_v_e) begin
+        if ({27'd0, cfg_a_e} < NSEG) begin
+            s_row[cfg_a_e[SW-1:0]]  <= cfg_d_e[15:0];
+            s_idx[cfg_a_e[SW-1:0]]  <= cfg_d_e[20:16];
+            s_n[cfg_a_e[SW-1:0]]    <= cfg_d_e[25:21];
+            s_fp4[cfg_a_e[SW-1:0]]  <= cfg_d_e[26];
+            s_lo[cfg_a_e[SW-1:0]]   <= cfg_d_e[27];
+            s_hi[cfg_a_e[SW-1:0]]   <= cfg_d_e[28];
+            s_base[cfg_a_e[SW-1:0]] <= cfg_d_e[41:29];
+            s_bf[cfg_a_e[SW-1:0]]   <= cfg_d_e[42];
+        end else if ({27'd0, cfg_a_e} < 2 * NSEG) begin
+            c_v[cfg_a_e[SW-1:0]]  <= cfg_d_e[0];
+            c_u0[cfg_a_e[SW-1:0]] <= cfg_d_e[8:1];
+            c_nu[cfg_a_e[SW-1:0]] <= cfg_d_e[15:9];
+            c_s0[cfg_a_e[SW-1:0]] <= cfg_d_e[16 +: SW];
+            c_s1[cfg_a_e[SW-1:0]] <= cfg_d_e[19 +: SW];
+            c_bf[cfg_a_e[SW-1:0]] <= cfg_d_e[22];
+        end else if ({27'd0, cfg_a_e} == 2 * NSEG) begin
+            qlast <= cfg_d_e[2:0];
+            plast <= (MTP != 0) ? cfg_d_e[5:3] : 3'd0;
+            pbase <= cfg_d_e[19:6];
         end else begin                          // 2NSEG+1+s: the row of segment s on the pair's second macro
-            s_row[NSEG + cfg_a[SW-1:0] - 1] <= cfg_d[15:0];
+            s_row[NSEG + cfg_a_e[SW-1:0] - 1] <= cfg_d_e[15:0];
         end
     end
 
@@ -178,7 +224,7 @@ module ot_v41_rom_elem #(
         for (ci = 0; ci < NSEG; ci = ci + 1) begin
             nu_p[7*ci +: 7] = c_nu[ci];
             base_live[ci] = c_v[ci] && c_bf[ci] == fam;
-            base_go[ci] = c_v[ci] && c_bf[ci] == go_bf;
+            base_go[ci] = c_v[ci] && c_bf[ci] == go_bf_e;
         end
     end
     localparam integer UW = 1 + 3 + 3 + SW + 3;     // {run, q, b, c, j}
@@ -191,13 +237,13 @@ module ot_v41_rom_elem #(
 
     // units per sub-block: 8 (shift 3); BF16_PAIR BF16 family 2 (shift 1)
     wire [1:0] sbs = (BP != 0 && fam) ? 2'd1 : 2'd3;
-    wire [1:0] sbs_go = (BP != 0 && go_bf) ? 2'd1 : 2'd3;
+    wire [1:0] sbs_go = (BP != 0 && go_bf_e) ? 2'd1 : 2'd3;
     wire [8:0] sbn = 9'd1 << sbs;
     wire [8:0] sbn_go = 9'd1 << sbs_go;
     // FAST walkers: the per-class sub-block facts (class live in sub-block q, its units there) depend only on q and
     // the op, so they are held in registers for q and q + 1 (A, B) instead of being recomputed inside the walk
-    // loop; A <= B and B <= f(q + 2) when q advances, both <= f(0), f(1) at go and at an MTP restart.
-    function automatic [5*NSEG-1:0] sbf(input [3:0] q, input [1:0] sh, input [7*NSEG-1:0] nu, input [NSEG-1:0] base);
+    // loop; A <= B and B <= f(q + 2) when q advances, both <= f(0), f(1) at go_e and at an MTP restart.
+    function automatic [6*NSEG-1:0] sbf(input [3:0] q, input [1:0] sh, input [7*NSEG-1:0] nu, input [NSEG-1:0] base);
         integer k;
         reg [6:0] q8, rem;
         begin
@@ -206,11 +252,12 @@ module ot_v41_rom_elem #(
                 rem = (nu[7*k +: 7] > q8) ? nu[7*k +: 7] - q8 : 7'd0;
                 sbf[k] = base[k] && rem != 7'd0;                                  // live
                 sbf[NSEG + 4*k +: 4] = (rem > (7'd1 << sh)) ? (4'd1 << sh) : rem[3:0];   // units in sub-block
+                sbf[5*NSEG + k] = rem != 7'd0 && rem <= (7'd1 << sh);              // the class ends here
             end
         end
     endfunction
-    wire [5*NSEG-1:0] f0_go = sbf(4'd0, sbs_go, nu_p, base_go);
-    wire [5*NSEG-1:0] f1_go = sbf(4'd1, sbs_go, nu_p, base_go);
+    wire [6*NSEG-1:0] f0_go = sbf(4'd0, sbs_go, nu_p, base_go);
+    wire [6*NSEG-1:0] f1_go = sbf(4'd1, sbs_go, nu_p, base_go);
     // ---------------- x-need walker: one (pair, b) per class unit per round ------------------------------
     reg        n_run;
     reg [2:0]  n_q, n_pos, bn_pos, w_pos;
@@ -218,7 +265,7 @@ module ot_v41_rom_elem #(
     reg [SW-1:0] n_c;
     wire [7:0] n_pair = c_u0[n_c] + {2'd0, n_q, n_j};
     wire [UW-1:0] n_nx;
-    reg [5*NSEG-1:0] nA, nB, wA, wB, fF0, fF1;
+    reg [6*NSEG-1:0] nA, nB, wA, wB, fF0, fF1, nQ2, wQ2;     // xQ2: f(q + 2), registered every cycle
     if (FAST != 0) begin : g_nw2
         ot_v41_walk2 #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .live(nA[NSEG-1:0]),
             .livq1(nB[NSEG-1:0]), .cur(nA[5*NSEG-1:NSEG]), .qlast(qlast), .nx(n_nx));
@@ -226,7 +273,7 @@ module ot_v41_rom_elem #(
         ot_v41_walk #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .nu(nu_p), .base(base_live),
                                        .qlast(qlast), .sbs(2'd3), .nx(n_nx));
     end
-    wire hit_q = n_run && !fam && xs_v && xs_p == n_pair && xs_b == n_b && xs_pos == n_pos;
+    wire hit_q = n_run && !fam && xs_v_e && xs_p_e == n_pair && xs_b_e == n_b && xs_pos_e == n_pos;
     // BF16: capture, in slot order, every slice of this round (b) whose unit lies in a live class's sub-block
     reg        bn_run;
     reg [2:0]  bn_q;
@@ -252,7 +299,7 @@ module ot_v41_rom_elem #(
             nlo[bc] = b_lo[bc] + sbn;
             nhi[bc] = (cend < nlo[bc] + sbn) ? cend : nlo[bc] + sbn;
             if (base_live[bc] && nhi[bc] > nlo[bc]) ntot = ntot + (nhi[bc] - nlo[bc]);
-            // sub-block 0 at go
+            // sub-block 0 at go_e
             glo = {1'b0, c_u0[bc]};
             ghi = (cend < glo + sbn_go) ? cend : glo + sbn_go;
             lo0[bc] = glo; hi0[bc] = ghi;
@@ -262,18 +309,56 @@ module ot_v41_rom_elem #(
         for (bk = 0; bk < 4; bk = bk + 1) begin
             bm[bk] = 1'b0;
             for (bc = 0; bc < NSEG; bc = bc + 1)
-                if (base_live[bc] && {1'b0, xb_u[8*bk +: 8]} >= b_lo[bc] && {1'b0, xb_u[8*bk +: 8]} < b_hi[bc])
+                if (base_live[bc] && {1'b0, xb_u_e[8*bk +: 8]} >= b_lo[bc] && {1'b0, xb_u_e[8*bk +: 8]} < b_hi[bc])
                     bm[bk] = 1'b1;
-            bm[bk] = bm[bk] && (BF16 != 0 || BP != 0) && bn_run && fam && xb_v && xb_sv[bk] && xb_b == bn_b && xb_pos == bn_pos;
+            bm[bk] = bm[bk] && (BF16 != 0 || BP != 0) && bn_run && fam && xb_v_e && xb_sv_e[bk] && xb_b_e == bn_b && xb_pos_e == bn_pos;
         end
     end
-    // bound registers: sub-block 0 at go and at each new position, the next sub-block at a sub-block end
+    // FAST: the sub-block bounds and slice totals come from registers (the sums over classes are off the go and
+    // advance paths): per class the first-sub-block end for each family (from the class registers, on clk), the
+    // live family's first-sub-block total, and the next sub-block's bounds and total (from b_lo, on gclk)
+    reg [8:0] hi0q_r [0:NSEG-1];
+    reg [8:0] hi0b_r [0:NSEG-1];
+    reg [3:0] glq_r [0:NSEG-1];
+    reg [3:0] glb_r [0:NSEG-1];
+    reg [8:0] nlo_r [0:NSEG-1];
+    reg [8:0] nhi_r [0:NSEG-1];
+    reg [6:0] ntot_r, ltot_r;
+    reg [6:0] gtot_f;
+    reg [8:0] ce_, hq_, hb_;
+    integer bf;
+    always @(posedge clk) begin
+        for (bf = 0; bf < NSEG; bf = bf + 1) begin
+            ce_ = {1'b0, c_u0[bf]} + {2'd0, c_nu[bf]};
+            hq_ = (ce_ < {1'b0, c_u0[bf]} + 9'd8) ? ce_ : {1'b0, c_u0[bf]} + 9'd8;
+            hb_ = (ce_ < {1'b0, c_u0[bf]} + ((BP != 0) ? 9'd2 : 9'd8)) ? ce_ : {1'b0, c_u0[bf]} + ((BP != 0) ? 9'd2 : 9'd8);
+            hi0q_r[bf] <= hq_; hi0b_r[bf] <= hb_;
+            glq_r[bf] <= hq_[3:0] - c_u0[bf][3:0]; glb_r[bf] <= hb_[3:0] - c_u0[bf][3:0];
+        end
+    end
+    always @* begin
+        gtot_f = 7'd0;
+        for (bf = 0; bf < NSEG; bf = bf + 1)
+            if (base_go[bf]) gtot_f = gtot_f + {3'd0, go_bf_e ? glb_r[bf] : glq_r[bf]};
+    end
+    always @(posedge gclk) begin
+        ntot_r <= ntot; ltot_r <= ltot;
+        for (bf = 0; bf < NSEG; bf = bf + 1) begin nlo_r[bf] <= nlo[bf]; nhi_r[bf] <= nhi[bf]; end
+    end
+    // bound registers: sub-block 0 at go_e and at each new position, the next sub-block at a sub-block end
     wire bn_adv = bnum != 0 && bn_cnt + {4'd0, bnum} == bn_tot && bn_b == 3'd7;
     wire bn_newpos = bn_adv && bn_q == qlast;
     always @(posedge gclk) begin
         for (bc = 0; bc < NSEG; bc = bc + 1)
-            if (go || bn_newpos) begin b_lo[bc] <= lo0[bc]; b_hi[bc] <= hi0[bc]; end
-            else if (bn_adv) begin b_lo[bc] <= nlo[bc]; b_hi[bc] <= nhi[bc]; end
+            if (FAST != 0) begin
+                if (go_e || bn_newpos) begin
+                    b_lo[bc] <= {1'b0, c_u0[bc]};
+                    b_hi[bc] <= (go_e ? go_bf_e : fam) ? hi0b_r[bc] : hi0q_r[bc];
+                end else if (bn_adv) begin b_lo[bc] <= nlo_r[bc]; b_hi[bc] <= nhi_r[bc]; end
+            end else begin
+                if (go_e || bn_newpos) begin b_lo[bc] <= lo0[bc]; b_hi[bc] <= hi0[bc]; end
+                else if (bn_adv) begin b_lo[bc] <= nlo[bc]; b_hi[bc] <= nhi[bc]; end
+            end
     end
     wire [2:0] bnum = {2'd0, bm[0]} + {2'd0, bm[1]} + {2'd0, bm[2]} + {2'd0, bm[3]};
     wire hit = hit_q;
@@ -291,8 +376,8 @@ module ot_v41_rom_elem #(
     reg          fw_v;
     reg [255:0]  fw_q0, fw_q1;
     reg [9:0]    fw_e0, fw_e1;
-    always @(posedge gclk or negedge rst_n) if (!rst_n) fw_v <= 1'b0; else fw_v <= (FAST != 0) && hit_q && !go;
-    always @(posedge gclk) if (hit_q) begin fw_q0 <= xs_q0; fw_q1 <= xs_q1; fw_e0 <= xs_e0; fw_e1 <= xs_e1; end
+    always @(posedge gclk or negedge rst_n) if (!rst_n) fw_v <= 1'b0; else fw_v <= (FAST != 0) && hit_q && !go_e;
+    always @(posedge gclk) if (hit_q) begin fw_q0 <= xs_q0_e; fw_q1 <= xs_q1_e; fw_e0 <= xs_e0_e; fw_e1 <= xs_e1_e; end
     wire         qpush = (FAST != 0) ? fw_v : hit_q;
     wire [2:0] npush = qpush ? 3'd1 : bnum;
     reg [XW-1:0] bpre [0:3];
@@ -311,8 +396,9 @@ module ot_v41_rom_elem #(
     reg [HW-1:0] w_cnt;
     reg [12:0] w_ptr [0:NSEG-1];
     wire [6:0] w_uabs = ({4'd0, w_q} << sbs) + {4'd0, w_j};
-    wire w_firstu = w_uabs == 7'd0;
-    wire w_lastu  = w_uabs + 7'd1 == c_nu[w_c];
+    wire [3:0] w_curc = wA[NSEG + 4*w_c +: 4];
+    wire w_firstu = (FAST != 0) ? (w_q == 3'd0 && w_j == 3'd0) : w_uabs == 7'd0;
+    wire w_lastu  = (FAST != 0) ? (wA[5*NSEG + w_c] && {1'b0, w_j} + 4'd1 == w_curc) : w_uabs + 7'd1 == c_nu[w_c];
     wire [1:0] hv = {!(w_lastu && !s_hi[w_s]), !(w_firstu && !s_lo[w_s])};
     wire w_fp4 = s_fp4[w_s];
     wire w_bf = s_bf[w_s];
@@ -356,7 +442,8 @@ module ot_v41_rom_elem #(
     wire [SW-1:0] s0_nx = c_s0[w_nx_c];
     wire h_go   = !s_fp4[s0_first] && !s_bf[s0_first] && !s_lo[s0_first];
     wire h_next = !s_fp4[s_next] && !s_bf[s_next] && w_firstu && !s_lo[s_next];
-    wire h_nx   = !s_fp4[s0_nx] && !s_bf[s0_nx] && nx_uabs == 7'd0 && !s_lo[s0_nx];
+    wire nx_first = (FAST != 0) ? (w_nx[UW-2 -: 3] == 3'd0 && w_nx[2:0] == 3'd0) : nx_uabs == 7'd0;
+    wire h_nx   = !s_fp4[s0_nx] && !s_bf[s0_nx] && nx_first && !s_lo[s0_nx];
     wire [SW-1:0] s0_live = c_s0[c_live];
     wire h_live = !s_fp4[s0_live] && !s_bf[s0_live] && !s_lo[s0_live];
     // MTP: a walker that finishes a position's rounds restarts for the next position
@@ -373,19 +460,19 @@ module ot_v41_rom_elem #(
             hz_v <= {hz_v[LAT-2:0], issue};
             pp_last_v <= issue; pp_last_b <= a_ctr[0];
             if (BP != 0) bp_hold <= (issue && w_bf) ? 2'd3 : (bp_hold != 2'd0 ? bp_hold - 2'd1 : 2'd0);
-            if (go) begin
-                // go with no valid class of the phase's family is legal and a no-op (the spine broadcasts go to
+            if (go_e) begin
+                // go_e with no valid class of the phase's family is legal and a no-op (the spine broadcasts go_e to
                 // every element): no walker starts, so no x beat is captured and no word is issued.  Before this,
                 // the walkers started on the stale class 0 and could leave held operands in the segment tree that
                 // corrupted the next op (W17 field-composition finding, 2026-09-30).
 `ifdef W10_MUTANT_EMPTY_GO
-                n_run <= !go_bf; bn_run <= go_bf; w_run <= 1'b1;
+                n_run <= !go_bf_e; bn_run <= go_bf_e; w_run <= 1'b1;
 `else
-                n_run <= !go_bf && c_first_ok; bn_run <= go_bf && c_first_ok; w_run <= c_first_ok;
+                n_run <= !go_bf_e && c_first_ok; bn_run <= go_bf_e && c_first_ok; w_run <= c_first_ok;
 `endif
                 n_q <= 3'd0; n_b <= 3'd0; n_c <= c_first; n_j <= 3'd0;
                 n_pos <= 3'd0; bn_pos <= 3'd0; w_pos <= 3'd0;
-                bn_q <= 3'd0; bn_b <= 3'd0; bn_cnt <= 7'd0; fam <= go_bf; bn_tot <= gtot; w_q <= 3'd0; w_b <= 3'd0; w_c <= c_first; w_j <= 3'd0;
+                bn_q <= 3'd0; bn_b <= 3'd0; bn_cnt <= 7'd0; fam <= go_bf_e; bn_tot <= (FAST != 0) ? gtot_f : gtot; w_q <= 3'd0; w_b <= 3'd0; w_c <= c_first; w_j <= 3'd0;
                 w_s <= s0_first; w_h <= h_go; w_cnt <= 0;
                 f_cnt <= 0; f_wr <= 0; f_rd <= 0;
             end else begin
@@ -419,12 +506,12 @@ module ot_v41_rom_elem #(
                     if (bn_cnt + {4'd0, bnum} == bn_tot) begin
                         bn_cnt <= 7'd0;
                         if (bn_b == 3'd7 && bn_q == qlast) begin
-                            if (bn_pos != plast) begin bn_b <= 3'd0; bn_q <= 3'd0; bn_pos <= bn_pos + 3'd1; bn_tot <= ltot; end
+                            if (bn_pos != plast) begin bn_b <= 3'd0; bn_q <= 3'd0; bn_pos <= bn_pos + 3'd1; bn_tot <= (FAST != 0) ? ltot_r : ltot; end
                             else bn_run <= 1'b0;
                         end
                         else begin
                             bn_b <= bn_b + 3'd1;
-                            if (bn_b == 3'd7) begin bn_q <= bn_q + 3'd1; bn_tot <= ntot; end
+                            if (bn_b == 3'd7) begin bn_q <= bn_q + 3'd1; bn_tot <= (FAST != 0) ? ntot_r : ntot; end
                         end
                     end else bn_cnt <= bn_cnt + {4'd0, bnum};
                 end
@@ -436,36 +523,40 @@ module ot_v41_rom_elem #(
         end
     end
     // walker sub-block registers (FAST): see sbf above
+    always @(posedge gclk) begin
+        nQ2 <= sbf({1'b0, n_q} + 4'd2, 2'd3, nu_p, base_live);
+        wQ2 <= sbf({1'b0, w_q} + 4'd2, sbs, nu_p, base_live);
+    end
     wire n_step = hit;
     wire n_rst = n_step && !n_nx[UW-1] && n_more;
     wire w_step = issue && w_seg_last && w_s == c_s1[w_c];
     always @(posedge gclk) begin
-        if (go) begin
+        if (go_e) begin
             fF0 <= f0_go; fF1 <= f1_go; nA <= sbf(4'd0, 2'd3, nu_p, base_go); nB <= sbf(4'd1, 2'd3, nu_p, base_go);
             wA <= f0_go; wB <= f1_go;
         end else begin
             if (n_rst) begin nA <= sbf(4'd0, 2'd3, nu_p, base_live); nB <= sbf(4'd1, 2'd3, nu_p, base_live); end
             else if (n_step && n_nx[UW-1] && n_nx[UW-2 -: 3] != n_q) begin
-                nA <= nB; nB <= sbf({1'b0, n_q} + 4'd2, 2'd3, nu_p, base_live);
+                nA <= nB; nB <= nQ2;
             end
             if (w_restart) begin wA <= fF0; wB <= fF1; end
             else if (w_step && w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q) begin
-                wA <= wB; wB <= sbf({1'b0, w_q} + 4'd2, sbs, nu_p, base_live);
+                wA <= wB; wB <= wQ2;
             end
         end
     end
     integer si;
     always @(posedge gclk) begin
-        if (go || w_restart) for (si = 0; si < NSEG; si = si + 1) w_ptr[si] <= s_base[si];
+        if (go_e || w_restart) for (si = 0; si < NSEG; si = si + 1) w_ptr[si] <= s_base[si];
         else if (issue) w_ptr[w_s] <= w_ptr[w_s] + 13'd1;
-        if (go || w_restart) a_ctr <= pbase;
+        if (go_e || w_restart) a_ctr <= pbase;
         else if (issue) a_ctr <= a_ctr + 14'd1;
         if (FAST != 0 ? fw_v : hit) begin
-            f_q0[f_wr] <= FAST != 0 ? fw_q0 : xs_q0; f_e0[f_wr] <= FAST != 0 ? fw_e0 : xs_e0;
-            f_q1[f_wr] <= FAST != 0 ? fw_q1 : xs_q1; f_e1[f_wr] <= FAST != 0 ? fw_e1 : xs_e1;
+            f_q0[f_wr] <= FAST != 0 ? fw_q0 : xs_q0_e; f_e0[f_wr] <= FAST != 0 ? fw_e0 : xs_e0_e;
+            f_q1[f_wr] <= FAST != 0 ? fw_q1 : xs_q1_e; f_e1[f_wr] <= FAST != 0 ? fw_e1 : xs_e1_e;
         end
         for (bk = 0; bk < 4; bk = bk + 1)
-            if (bm[bk]) f_q0[f_wr + bpre[bk]] <= xb_d[256*bk +: 256];
+            if (bm[bk]) f_q0[f_wr + bpre[bk]] <= xb_d_e[256*bk +: 256];
         hz_s[0] <= w_cnt;
         for (k = 1; k < LAT; k = k + 1) hz_s[k] <= hz_s[k-1];
     end
