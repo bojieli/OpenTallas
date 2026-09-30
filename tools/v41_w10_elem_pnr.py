@@ -28,7 +28,6 @@ import v41_w2_romac_pnr as W2  # noqa: E402
 
 MACRO_DIR = "physical/asap7_memory_macros"
 ROM = ("ot_rom_8192x274_m8", 125.712, 119.340)
-ROM_PP = ("ot_rom_4096x274_m8", 125.712, 59.670)
 ROM4K = ("ot_rom_4096x274_m8", 125.28, 62.91)          # PP: two per macro slot, read alternately (ping-pong)
 PP_GAP = 0.0                                          # stacked 4096-word macros abut (a sub-halo sliver cannot be legalised)
 SOURCES_FAST = ["rtl/v41rom/ot_v41_fadd.sv", "rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/v41rom/ot_v41_chain2.sv",
@@ -40,7 +39,6 @@ SOURCES = ["rtl/v41rom/ot_v41_rom_elem_q.sv", "rtl/v41rom/ot_v41_rom_elem.sv", "
            "rtl/v41rom/ot_v41_segtree.sv", "rtl/v41rom/ot_v41_bf16_lanes.sv", "rtl/hdc/ot_hdc_fpu.sv",
            "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_cg.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv",
            f"{MACRO_DIR}/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v"]
-SOURCES_FAST = ["rtl/v41rom/ot_v41_fadd.sv", "rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/v41rom/ot_v41_chain2.sv", "rtl/v41rom/ot_v41_segtree2.sv", "rtl/v41rom/ot_v41_bf16_lanes2.sv", f"{MACRO_DIR}/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v"]
 
 
 def plan(logic_w: float, pair: bool = False, wrapped: bool = False, outline=None, ch_o: float = 5.4,
@@ -139,12 +137,22 @@ def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), s
     top = "ot_v41_rom_elem_q" if p["wrapped"] else p["top"]      # an FP8/FP4 macro has no BF16 x port
     params = [q for q in params if not (p["wrapped"] and q.startswith("BF16="))]
     a = ["tools/run_abi3_physical.py", "--view", "asap7", "--top", top]
-    params = list(params) + (["FAST=1"] if p.get("fast") else []) + (["PP=1"] if p.get("pp") else [])
+    params = list(params)
+    for name, enabled in (("FAST", p.get("fast")), ("PP", p.get("pp"))):
+        values = [q for q in params if q.startswith(name + "=")]
+        params = [q for q in params if not q.startswith(name + "=")]
+        if enabled:
+            params.append(name + "=1")
+        elif values:
+            params.append(values[-1])
     for s in p["sources"]:
         a += ["--source", s]
     a += ["--clock-period-ns", f"{period:g}", "--clock-uncertainty-ns", "0.06", "--io-delay-fraction", "0.2",
           "--stages", "pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
-          "--core-area", f"{p['margin_um']:g}", f"{p['margin_um']:g}", f"{w - p['margin_um']:g}", f"{h - p['margin_um']:g}",
+          # outline tiles keep the die at the pack pitch but inset the core rows by 0.54 um top and bottom: a VSS rail
+          # on the die edge has no room for its M2-M5 vias (p12q: PSM-0069 on the y = 0 rail)
+          "--core-area", f"{p['margin_um']:g}", f"{(0.54 if p.get('outline') else p['margin_um']):g}",
+          f"{w - p['margin_um']:g}", f"{h - (0.54 if p.get('outline') else p['margin_um']):g}",
           "--place-density", f"{density:g}", "--macro-place-halo", "2", "2",
           *(["--pin-region", f"^(p|busy|fault).*=top:{p['pin_span_um'][0]:g}-{p['pin_span_um'][1]:g}",
              "--pin-region", f"^(clk|rst|cfg|go|x).*=bottom:{p['pin_span_um'][0]:g}-{p['pin_span_um'][1]:g}"]
@@ -202,8 +210,11 @@ def main() -> None:
     ap.add_argument("--no-wrap", dest="wrap", action="store_false",
                     help="FP8/FP4: harden ot_v41_rom_elem itself (with the unused BF16 x port) instead of ot_v41_rom_elem_q")
     a = ap.parse_args()
+    modes = {q.split("=", 1)[0]: q.split("=", 1)[1] for q in a.param if "=" in q}
+    fast = a.fast or int(modes.get("FAST", "0"), 0) != 0
+    pp = a.pp or int(modes.get("PP", "0"), 0) != 0
     p = plan(a.logic_w, a.pair, wrapped=not any(q.startswith("BF16=1") for q in a.param) and a.wrap,
-             outline=a.outline, ch_o=a.channel, fast=a.fast, pp=a.pp)
+             outline=a.outline, ch_o=a.channel, fast=fast, pp=pp)
     if a.pair and "NB=2" not in a.param:
         a.param.append("NB=2")
     if a.write_hook or a.print:
