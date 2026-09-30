@@ -1,0 +1,829 @@
+{
+ "schema": "opentallas.hbm-feasibility-audit.v1",
+ "tool": "tools/hbm_feasibility_audit.py",
+ "stream": "W19",
+ "date": "2026-09-30",
+ "verdicts": [
+  {
+   "assumption": "1a sustained HBM3E bandwidth (weight stream)",
+   "model": "0.90 of 1.0 TB/s a stack, 3.6 TB/s a die; weight sweep 37.4 us under a 313-326 us chain",
+   "evidence": "DRAMsim3 proxy, all-bank refresh: stream 0.898, stream + writes 0.873; the sweep is 12% of the chain, so AR at batch 1 is not bandwidth-bound",
+   "verdict": "SOUND",
+   "corrected": {
+    "ar_tokens_s": 3071.7,
+    "mtp_tokens_s": 6206.0
+   }
+  },
+  {
+   "assumption": "1b data-dependent routed-expert fetch",
+   "model": "omitted: matvecs priced with weights resident (W9's G-graph carried +1 us a layer; the uarch chain dropped it)",
+   "evidence": "expert ids exist only after top-6; DRAMsim3 first access 53 ns in the DRAM + controller/PHY/NoC; 0.5 us central, 40 layers",
+   "verdict": "OPTIMISTIC",
+   "corrected": {
+    "ar_tokens_s": 2877.3,
+    "mtp_tokens_s": 5966.0
+   }
+  },
+  {
+   "assumption": "2a switched collective latency",
+   "model": "0.668 us x 188 on the path = 125.9 us",
+   "evidence": "W15 NVLS bench (TP-12, deterministic, SCRATCH): 0.81 us all-reduce, 0.85-0.89 us all-gather",
+   "verdict": "OPTIMISTIC",
+   "corrected": {
+    "ar_tokens_s": 2808.4,
+    "mtp_tokens_s": 5877.8
+   }
+  },
+  {
+   "assumption": "2b collective count vs exact row split",
+   "model": "188 on the path (W9 K-split down/wo_b) while sm_op_cycles keeps a row's whole K in one SM",
+   "evidence": "exact golden order needs the 6 x 2,304 expert intermediate gathered before down: +1 collective a MoE layer",
+   "verdict": "OPTIMISTIC",
+   "corrected": {
+    "ar_tokens_s": 2828.9,
+    "mtp_tokens_s": 5846.1
+   }
+  },
+  {
+   "assumption": "3 MoE at TP-96 (384 experts, top-6, 2,304 x 5,120 FP4)",
+   "model": "every die 1/96 of every expert: 48 gate/up rows, 184 KB a die an expert",
+   "evidence": "balanced by construction (no routing imbalance); EP at batch 1 puts 6 experts on <= 6 of 96 dies at 4.9 us each (E[max load] 1.15): ~+200 us/token; 64 heads on 96 dies need head alignment (+2 us)",
+   "verdict": "SOUND (TP beats EP at B = 1)",
+   "corrected": {
+    "ar_tokens_s": 3051.7,
+    "mtp_tokens_s": 6181.9
+   }
+  },
+  {
+   "assumption": "4a MTP: dense matrices on the 8 MMA columns",
+   "model": "one weight pass for 6 positions",
+   "evidence": "SM_ELEM v41 cols 8, x store sized for 8 columns; RTL exactness cases are 2 columns",
+   "verdict": "SOUND (8-column SM not yet measured)",
+   "corrected": null
+  },
+  {
+   "assumption": "4b MTP: routed experts ride the columns",
+   "model": "6 experts a layer for 6 positions",
+   "evidence": "each position routes its own top-6: union U(6) = 34.6 experts, fetched after the router (W9 prices the union)",
+   "verdict": "OPTIMISTIC",
+   "corrected": {
+    "ar_tokens_s": 3071.7,
+    "mtp_tokens_s": 5540.5
+   }
+  },
+  {
+   "assumption": "4c MTP: per-position KV rows (W11: 6 x 645 rows)",
+   "model": "kvscan issue repeated per position, collective bytes x 6",
+   "evidence": "W11 forward_positions: own window + own selection per position; the HBM chain assumes no shared rows",
+   "verdict": "SOUND",
+   "corrected": null
+  },
+  {
+   "assumption": "5 KV capacity/bandwidth at 1M",
+   "model": "0.936 GB a user; ~7,760 users a TP-96 group",
+   "evidence": "0.183 GB index keys + 6 MB rows a token a user; 346 TB/s a group",
+   "verdict": "SOUND",
+   "corrected": null
+  },
+  {
+   "assumption": "6a indexer at ROM TP-4 widths",
+   "model": "262,144 keys a die (the ROM DAG)",
+   "evidence": "TP-96 holds 1/96 of the keys; the merge becomes 96 x 512",
+   "verdict": "PESSIMISTIC",
+   "corrected": {
+    "ar_tokens_s": 3173.7,
+    "mtp_tokens_s": 6957.6
+   }
+  },
+  {
+   "assumption": "6b attention at 16 heads a die",
+   "model": "the ROM DAG's 16 heads",
+   "evidence": "<= 1 head a die at TP-96",
+   "verdict": "PESSIMISTIC",
+   "corrected": {
+    "ar_tokens_s": 3178.5,
+    "mtp_tokens_s": 6996.6
+   }
+  },
+  {
+   "assumption": "6c serial units at 1.2 GHz",
+   "model": "dedicated_and_su cycles rescaled to 1.2 GHz",
+   "evidence": "AGENTS.md clock domains: SU/SFU/reducers/select at 0.9 GHz",
+   "verdict": "OPTIMISTIC",
+   "corrected": {
+    "ar_tokens_s": 2841.6,
+    "mtp_tokens_s": 5622.5
+   }
+  },
+  {
+   "assumption": "6d drafter",
+   "model": "3/40 of an AR token (ASSUMED)",
+   "evidence": "W9 draft_g at G = 96: 46.8 us (3 layer spans + 5 Markov steps, each with a collective)",
+   "verdict": "OPTIMISTIC",
+   "corrected": {
+    "ar_tokens_s": 3071.7,
+    "mtp_tokens_s": 5978.8
+   }
+  },
+  {
+   "assumption": "6e barriers / kernel boundaries",
+   "model": "329 boundaries x 78 cycles (RTL-measured 62 + 16)",
+   "evidence": "tb_gpu_barrier; a persistent hardware-sequenced program, not GPU kernels (V100 grid.sync would give 1,246 tok/s)",
+   "verdict": "SOUND for the custom machine; idealised as a 'GPU'",
+   "corrected": null
+  },
+  {
+   "assumption": "Qwen 1: HBM efficiency",
+   "model": "0.90 of 8 x 1.0 TB/s",
+   "evidence": "proxy 0.873-0.898",
+   "verdict": "SOUND (0-3%)",
+   "corrected": {
+    "ar_tokens_s": 854.1
+   }
+  },
+  {
+   "assumption": "Qwen 4: DFlash b16 on 16 columns",
+   "model": "verify = AR bytes + draft bytes",
+   "evidence": "GQA 4 x 16 positions = 64 query columns: K/V pass the MMA 4 times; softmax on SIMT",
+   "verdict": "OPTIMISTIC",
+   "corrected": {
+    "dflash_tokens_s": 2296.0
+   }
+  }
+ ],
+ "summary": {
+  "w16_headline": {
+   "ar": 3193.7,
+   "mtp": 6350.3
+  },
+  "main_model_at_1p2": {
+   "ar": 3071.7,
+   "mtp": 6206.0
+  },
+  "realistic_range": {
+   "ar": [
+    2196.2,
+    2394.5,
+    2905.0
+   ],
+   "mtp": [
+    4951.1,
+    5227.7,
+    6160.6
+   ],
+   "order": "pessimistic, central, optimistic"
+  },
+  "blockers": "none architectural; every gap is a latency term with a known build"
+ },
+ "build_plan": [
+  "B1 program: the TP-96 V4.1 token as an SM/dedicated-unit program with row-split exact matvecs (whole K per SM), head-aligned wq_b (64 heads on 64 of 96 dies), sequence-sharded KV and index keys; golden-checked per layer (extends the W17 TP-4 ISA executor to TP-96 ranks)",
+  "B2 expert fetch path: router top-6 -> descriptor -> bulk copy of 6 (or U(6)) expert slices from 128 pseudo-channels into SMEM, measured first-byte latency in RTL against a DRAM model (closes 1b and 4b)",
+  "B3 collectives at P = 48: commit W15's tb_w15_v41_hbm_nvls P = 6 and P = 48 records; add the 27.6 KB expert-intermediate all-gather and the 96 x 512 index merge to the collective list",
+  "B4 8-column SM exactness and timing (the RTL cases are 2 columns): the MTP column claim",
+  "B5 dedicated units on the HBM die at TP-96 widths in the 0.9 GHz serial domain (indexer 1/96 keys, 96-way top-k merge, 1-head attention with per-position rows)",
+  "B6 runtime composition: one full-shape token over 96 ranks (runtime composition, not a flat netlist), one layer cycle-accurate per rank class, collectives from B3's record, token checked against the 1M reference token (21946)",
+  "B7 re-price the model from B1-B6 and restate the HBM headline; DSpark drafter priced on the G = 96 graph"
+ ],
+ "status": "analysis (no P&R, no RTL); corrections are estimates on the model's own node walk",
+ "headline_under_audit": {
+  "commit": "84aa38ce",
+  "record": "results/uarch/consolidation.json (branch claude/w16-consolidation)",
+  "ar_tokens_s": 3193.7,
+  "mtp_tokens_s": 6350.3,
+  "chain_us_ar": 313.1,
+  "weight_sweep_us": 37.4,
+  "drain_cycles": 70,
+  "barrier_boundary_cycles": 54,
+  "note": "pre-W13-SS SM constants; main HEAD now carries drain 95 and a 78-cycle boundary"
+ },
+ "w15_nvls_scratch": {
+  "bench": "rtl/test/tb_w15_v41_hbm_nvls.sv (branch claude/w15-ss 7223e0ea), ot_link_nvls_switch, P = 6 (12 dies)",
+  "status": "SCRATCH (not a committed record)",
+  "clock_hz": 1033900000.0,
+  "all_reduce_ns": {
+   "1": 808.6,
+   "2": 855.0,
+   "4": 856.9,
+   "8": 860.8
+  },
+  "all_gather_ns": {
+   "1": 848.2,
+   "2": 854.0,
+   "4": 865.7,
+   "8": 888.9
+  },
+  "words_bytes": 64,
+  "release": "deterministic (U_DREL 47, X_DREL 240)",
+  "note": "the switch core is held at 250 ns for any P (SW_PIPE = core - (2 + 3 log2 P)), so P = 48 should land within a few cycles of P = 6; the per-word slope is the bench's 16-lane width, not the product link"
+ },
+ "w9_g96_reference": {
+  "ar_tokens_s": 3580.4,
+  "ar_breakdown_us": {
+   "compute_chain": 111.73,
+   "weight_sweep": 37.37,
+   "collective_latency": 125.87,
+   "collective_bytes": 1.48
+  },
+  "mtp_m6_tokens_s": 8743.8,
+  "verify_us": 370.7,
+  "draft_us": 46.76,
+  "distinct_experts_6": 34.6,
+  "mtp_breakdown_us": {
+   "compute_chain": 112.83,
+   "weight_sweep": 99.65,
+   "collective_latency": 125.87,
+   "collective_bytes": 29.24
+  },
+  "collectives_issued": 250,
+  "collectives_on_ar_path": 219
+ },
+ "fetch_latency_us": {
+  "low": 0.25,
+  "central": 0.5,
+  "high": 1.0,
+  "source": "low: the DAG's own gather budget (arch_budget_v41.KV_GATHER_S_REQUIRED, 250 ns); central: the model's HBM_LOADED_LAT_NS (500 ns, the bulk-copy Little's-law latency); high: arch_budget_v41.HBM_LAT_S (1 us, the first access of a data-dependent gather); DRAMsim3 proxy: 48-56 ns of it is the DRAM row miss, the rest is controller queue, PHY, NoC and SMEM landing"
+ },
+ "collective_latency_us": {
+  "model": 0.668,
+  "w15_scratch_central": 0.83,
+  "collectives_on_path": 188.5
+ },
+ "dram_efficiency_used": {
+  "weight_stream_refresh": 0.898,
+  "weight_stream_with_writes_refresh": 0.873,
+  "expert_chunks_refresh": 0.797,
+  "kv_rows_refresh": 0.504,
+  "weight_stream_no_refresh": 0.995
+ },
+ "dram_proxy": {
+  "tool": "DRAMsim3",
+  "commit": "29817593b3389f1337235d63cac515024ab8fd6e",
+  "proxy": "2 HBM3E pseudo-channels (32 bit, BL8), 62.5 GB/s peak",
+  "timing_ns": {
+   "CL": 17,
+   "CWL": 8,
+   "tRCDRD": 14,
+   "tRCDWR": 10,
+   "tRP": 14,
+   "tRAS": 29,
+   "tRFC": 350,
+   "tRFCb": 200,
+   "tREFI": 3900,
+   "tRRD_S": 2,
+   "tRRD_L": 4,
+   "tWTR_S": 3,
+   "tWTR_L": 9,
+   "tFAW": 16,
+   "tWR": 16,
+   "tCCD_S": 1.024,
+   "tCCD_L": 2.048,
+   "tRTP_L": 7.5,
+   "tRTP_S": 3.8
+  },
+  "tck_ns": 0.256,
+  "patterns": {
+   "A_stream": "dense weight prefetch: sequential 32 B bursts",
+   "B_expert": "routed expert slice at TP-96: 1.5 KB contiguous at random 1 KB-aligned rows (1.44 KB a PC an expert)",
+   "C_kvrow": "selected KV / index rows: 288 B at random rows",
+   "D_stream_wr": "weight stream with one 32 B write per 32 reads (KV append, results)",
+   "E_random": "random 32 B reads (bound)"
+  },
+  "runs": {
+   "no_refresh": {
+    "A_stream": {
+     "GBps": 62.19,
+     "efficiency": 0.995,
+     "read_latency_ns": 188.9,
+     "activates": 3116
+    },
+    "B_expert": {
+     "GBps": 55.43,
+     "efficiency": 0.887,
+     "read_latency_ns": 239.1,
+     "activates": 16647
+    },
+    "C_kvrow": {
+     "GBps": 34.93,
+     "efficiency": 0.559,
+     "read_latency_ns": 482.4,
+     "activates": 50685
+    },
+    "D_stream_wr": {
+     "GBps": 60.39,
+     "efficiency": 0.966,
+     "read_latency_ns": 205.8,
+     "activates": 3352
+    },
+    "E_random": {
+     "GBps": 16.05,
+     "efficiency": 0.257,
+     "read_latency_ns": 878.8,
+     "activates": 51348
+    }
+   },
+   "all_bank_refresh_16b": {
+    "A_stream": {
+     "GBps": 56.12,
+     "efficiency": 0.898,
+     "read_latency_ns": 209.5,
+     "activates": 3100
+    },
+    "B_expert": {
+     "GBps": 49.83,
+     "efficiency": 0.797,
+     "read_latency_ns": 264.7,
+     "activates": 15401
+    },
+    "C_kvrow": {
+     "GBps": 31.52,
+     "efficiency": 0.504,
+     "read_latency_ns": 543.3,
+     "activates": 45914
+    },
+    "D_stream_wr": {
+     "GBps": 54.55,
+     "efficiency": 0.873,
+     "read_latency_ns": 228.4,
+     "activates": 3374
+    },
+    "E_random": {
+     "GBps": 14.42,
+     "efficiency": 0.231,
+     "read_latency_ns": 941.1,
+     "activates": 46316
+    },
+    "F_idle": {
+     "GBps": 0.06,
+     "efficiency": 0.001,
+     "read_latency_ns": 53.3,
+     "activates": 151
+    }
+   },
+   "all_bank_refresh_48b": {
+    "A_stream": {
+     "GBps": 56.25,
+     "efficiency": 0.9,
+     "read_latency_ns": 221.5,
+     "activates": 3144
+    },
+    "B_expert": {
+     "GBps": 51.12,
+     "efficiency": 0.818,
+     "read_latency_ns": 307.2,
+     "activates": 15906
+    },
+    "C_kvrow": {
+     "GBps": 31.76,
+     "efficiency": 0.508,
+     "read_latency_ns": 712.9,
+     "activates": 46257
+    },
+    "D_stream_wr": {
+     "GBps": 55.04,
+     "efficiency": 0.881,
+     "read_latency_ns": 218.6,
+     "activates": 3385
+    },
+    "E_random": {
+     "GBps": 14.42,
+     "efficiency": 0.231,
+     "read_latency_ns": 903.8,
+     "activates": 46301
+    }
+   },
+   "per_bank_refresh_48b": {
+    "A_stream": {
+     "GBps": 53.55,
+     "efficiency": 0.857,
+     "read_latency_ns": 211.6,
+     "activates": 2693
+    },
+    "B_expert": {
+     "GBps": 51.34,
+     "efficiency": 0.821,
+     "read_latency_ns": 322.6,
+     "activates": 15432
+    },
+    "C_kvrow": {
+     "GBps": 31.87,
+     "efficiency": 0.51,
+     "read_latency_ns": 547.0,
+     "activates": 46204
+    },
+    "D_stream_wr": {
+     "GBps": 34.68,
+     "efficiency": 0.555,
+     "read_latency_ns": 280.2,
+     "activates": 1930
+    },
+    "E_random": {
+     "GBps": 15.12,
+     "efficiency": 0.242,
+     "read_latency_ns": 969.0,
+     "activates": 48369
+    }
+   }
+  },
+  "caveats": [
+   "DRAMsim3 has no HBM3 protocol: the HBM (2) protocol with HBM3E-class timings in ns",
+   "saturated injection: read latencies are queueing, not first access (F_idle is first access)",
+   "no ECC, no controller or PHY overhead: an upper bound on the achievable fraction",
+   "per-bank refresh in DRAMsim3 is pessimistic against the repository's RTL REFpb study (results/rtl/hdc_hbm_campaign.json refresh_study, cited in arch_budget_v41.hbm_requirements: 0.965-0.993 of refresh-free)"
+  ]
+ },
+ "v41": {
+  "baseline_main": {
+   "ar_T_us": 325.5,
+   "ar_tokens_s": 3071.7,
+   "verify_T_us": 563.6,
+   "draft_us": 24.4,
+   "mtp_tokens_s": 6206.0,
+   "ar_parts_us": {
+    "dedicated_and_su": 103.77,
+    "verify_extra_issue": 0.0,
+    "sm_matvec": 63.526,
+    "x_broadcast_fill": 6.567,
+    "barrier": 21.385,
+    "collective_latency": 125.9,
+    "collective_bytes": 1.5,
+    "pipeline_hops": 0.9,
+    "control": 2.0
+   },
+   "verify_parts_us": {
+    "dedicated_and_su": 103.77,
+    "verify_extra_issue": 197.685,
+    "sm_matvec": 63.526,
+    "x_broadcast_fill": 39.4,
+    "barrier": 21.385,
+    "collective_latency": 125.9,
+    "collective_bytes": 9.0,
+    "pipeline_hops": 0.9,
+    "control": 2.0
+   },
+   "verify_info": {
+    "boundaries": 329,
+    "moe_layers": 40,
+    "distinct_experts": 6.0
+   }
+  },
+  "cases": {
+   "1_expert_fetch_latency": {
+    "ar_tokens_s": 2877.3,
+    "mtp_tokens_s": 5966.0,
+    "d_ar_us": 22.0,
+    "d_verify_us": 22.0,
+    "d_draft_us": 1.7
+   },
+   "1_expert_stream_efficiency": {
+    "ar_tokens_s": 3071.7,
+    "mtp_tokens_s": 6206.0,
+    "d_ar_us": 0.0,
+    "d_verify_us": 0.0,
+    "d_draft_us": 0.0
+   },
+   "2_collective_latency_w15": {
+    "ar_tokens_s": 2808.4,
+    "mtp_tokens_s": 5877.8,
+    "d_ar_us": 30.6,
+    "d_verify_us": 30.5,
+    "d_draft_us": 2.3
+   },
+   "3_rowsplit_intermediate_gather": {
+    "ar_tokens_s": 2828.9,
+    "mtp_tokens_s": 5846.1,
+    "d_ar_us": 28.0,
+    "d_verify_us": 34.1,
+    "d_draft_us": 2.1
+   },
+   "3_head_alignment_64_on_96": {
+    "ar_tokens_s": 3051.7,
+    "mtp_tokens_s": 6181.9,
+    "d_ar_us": 2.2,
+    "d_verify_us": 2.1,
+    "d_draft_us": 0.2
+   },
+   "4_mtp_expert_union": {
+    "ar_tokens_s": 3071.7,
+    "mtp_tokens_s": 5633.6,
+    "d_ar_us": 0.0,
+    "d_verify_us": 59.7,
+    "d_draft_us": 0.0
+   },
+   "4_mtp_expert_union_streamed": {
+    "ar_tokens_s": 3071.7,
+    "mtp_tokens_s": 5540.5,
+    "d_ar_us": 0.0,
+    "d_verify_us": 70.6,
+    "d_draft_us": 0.0
+   },
+   "6_indexer_at_tp96_widths": {
+    "ar_tokens_s": 3173.7,
+    "mtp_tokens_s": 6957.6,
+    "d_ar_us": -10.4,
+    "d_verify_us": -62.8,
+    "d_draft_us": -0.8
+   },
+   "6_attention_at_tp96_heads": {
+    "ar_tokens_s": 3178.5,
+    "mtp_tokens_s": 6996.6,
+    "d_ar_us": -10.9,
+    "d_verify_us": -65.7,
+    "d_draft_us": -0.8
+   },
+   "6_serial_chain_at_0p9ghz": {
+    "ar_tokens_s": 2841.6,
+    "mtp_tokens_s": 5622.5,
+    "d_ar_us": 26.4,
+    "d_verify_us": 59.0,
+    "d_draft_us": 2.0
+   },
+   "6_drafter_w9_g96": {
+    "ar_tokens_s": 3071.7,
+    "mtp_tokens_s": 5978.8,
+    "d_ar_us": 0.0,
+    "d_verify_us": 0.0,
+    "d_draft_us": 22.4
+   }
+  },
+  "combined": {
+   "central": {
+    "ar_T_us": 417.6,
+    "ar_tokens_s": 2394.5,
+    "verify_T_us": 648.1,
+    "draft_us": 49.9,
+    "mtp_tokens_s": 5227.7,
+    "ar_parts_us": {
+     "dedicated_and_su": 103.253,
+     "verify_extra_issue": 0.0,
+     "sm_matvec": 65.659,
+     "x_broadcast_fill": 6.567,
+     "expert_fetch_latency": 20.0,
+     "kv_gather_latency_delta": 2.0,
+     "barrier": 21.385,
+     "collective_latency": 156.433,
+     "collective_bytes": 4.995,
+     "pipeline_hops": 0.9,
+     "control": 2.0,
+     "rowsplit_intermediate_gather": 34.429
+    },
+    "verify_parts_us": {
+     "dedicated_and_su": 103.253,
+     "verify_extra_issue": 95.955,
+     "sm_matvec": 136.276,
+     "x_broadcast_fill": 39.4,
+     "expert_fetch_latency": 20.0,
+     "kv_gather_latency_delta": 2.0,
+     "barrier": 21.385,
+     "collective_latency": 156.433,
+     "collective_bytes": 29.972,
+     "pipeline_hops": 0.9,
+     "control": 2.0,
+     "rowsplit_intermediate_gather": 40.573
+    },
+    "verify_info": {
+     "boundaries": 329,
+     "moe_layers": 40,
+     "distinct_experts": 34.62
+    }
+   },
+   "pessimistic": {
+    "ar_T_us": 455.3,
+    "ar_tokens_s": 2196.2,
+    "verify_T_us": 686.0,
+    "draft_us": 51.0,
+    "mtp_tokens_s": 4951.1,
+    "ar_parts_us": {
+     "dedicated_and_su": 103.253,
+     "verify_extra_issue": 0.0,
+     "sm_matvec": 65.659,
+     "x_broadcast_fill": 6.567,
+     "expert_fetch_latency": 40.0,
+     "kv_gather_latency_delta": 6.0,
+     "barrier": 21.385,
+     "collective_latency": 167.741,
+     "collective_bytes": 4.995,
+     "pipeline_hops": 0.9,
+     "control": 2.0,
+     "rowsplit_intermediate_gather": 36.829
+    },
+    "verify_parts_us": {
+     "dedicated_and_su": 103.253,
+     "verify_extra_issue": 95.955,
+     "sm_matvec": 136.419,
+     "x_broadcast_fill": 39.4,
+     "expert_fetch_latency": 40.0,
+     "kv_gather_latency_delta": 6.0,
+     "barrier": 21.385,
+     "collective_latency": 167.741,
+     "collective_bytes": 29.972,
+     "pipeline_hops": 0.9,
+     "control": 2.0,
+     "rowsplit_intermediate_gather": 42.973
+    },
+    "verify_info": {
+     "boundaries": 329,
+     "moe_layers": 40,
+     "distinct_experts": 34.62
+    }
+   },
+   "optimistic": {
+    "ar_T_us": 344.2,
+    "ar_tokens_s": 2905.0,
+    "verify_T_us": 545.6,
+    "draft_us": 46.8,
+    "mtp_tokens_s": 6160.6,
+    "ar_parts_us": {
+     "dedicated_and_su": 78.881,
+     "verify_extra_issue": 0.0,
+     "sm_matvec": 65.659,
+     "x_broadcast_fill": 6.567,
+     "expert_fetch_latency": 10.0,
+     "kv_gather_latency_delta": 0.0,
+     "barrier": 21.385,
+     "collective_latency": 125.9,
+     "collective_bytes": 4.995,
+     "pipeline_hops": 0.9,
+     "control": 2.0,
+     "rowsplit_intermediate_gather": 27.949
+    },
+    "verify_parts_us": {
+     "dedicated_and_su": 78.881,
+     "verify_extra_issue": 73.239,
+     "sm_matvec": 129.785,
+     "x_broadcast_fill": 39.4,
+     "expert_fetch_latency": 10.0,
+     "kv_gather_latency_delta": 0.0,
+     "barrier": 21.385,
+     "collective_latency": 125.9,
+     "collective_bytes": 29.972,
+     "pipeline_hops": 0.9,
+     "control": 2.0,
+     "rowsplit_intermediate_gather": 34.093
+    },
+    "verify_info": {
+     "boundaries": 329,
+     "moe_layers": 40,
+     "distinct_experts": 34.62
+    }
+   }
+  }
+ },
+ "qwen": {
+  "model_ar_tokens_s": 880.5,
+  "model_sustained_fraction": 0.9,
+  "ar_at_efficiency": {
+   "proxy_stream_refresh": {
+    "fraction": 0.898,
+    "tokens_s": 878.5
+   },
+   "proxy_stream_writes_refresh": {
+    "fraction": 0.873,
+    "tokens_s": 854.1
+   },
+   "low": {
+    "fraction": 0.85,
+    "tokens_s": 831.6
+   }
+  },
+  "dflash": {
+   "model_best": 2670.1,
+   "model_best_block": 16,
+   "blocks": [
+    {
+     "block": 2,
+     "tau": 1.7361,
+     "model_tokens_s": 1268.0,
+     "model_step_cycles": 1504259,
+     "kv_passes": 1,
+     "attn_extra_cycles_per_layer": 0,
+     "softmax_extra_cycles_per_layer": 96,
+     "corrected_step_cycles": 1507715,
+     "corrected_tokens_s": 1265.1,
+     "corrected_tokens_s_at_proxy_eff": 1227.2
+    },
+    {
+     "block": 3,
+     "tau": 2.2654,
+     "model_tokens_s": 1654.5,
+     "model_step_cycles": 1504259,
+     "kv_passes": 1,
+     "attn_extra_cycles_per_layer": 0,
+     "softmax_extra_cycles_per_layer": 192,
+     "corrected_step_cycles": 1511171,
+     "corrected_tokens_s": 1647.0,
+     "corrected_tokens_s_at_proxy_eff": 1597.8
+    },
+    {
+     "block": 4,
+     "tau": 2.6256,
+     "model_tokens_s": 1917.6,
+     "model_step_cycles": 1504259,
+     "kv_passes": 1,
+     "attn_extra_cycles_per_layer": 0,
+     "softmax_extra_cycles_per_layer": 288,
+     "corrected_step_cycles": 1514627,
+     "corrected_tokens_s": 1904.5,
+     "corrected_tokens_s_at_proxy_eff": 1847.7
+    },
+    {
+     "block": 5,
+     "tau": 2.8591,
+     "model_tokens_s": 2088.2,
+     "model_step_cycles": 1504259,
+     "kv_passes": 2,
+     "attn_extra_cycles_per_layer": 1536,
+     "softmax_extra_cycles_per_layer": 384,
+     "corrected_step_cycles": 1573379,
+     "corrected_tokens_s": 1996.4,
+     "corrected_tokens_s_at_proxy_eff": 1939.1
+    },
+    {
+     "block": 6,
+     "tau": 3.0335,
+     "model_tokens_s": 2215.5,
+     "model_step_cycles": 1504259,
+     "kv_passes": 2,
+     "attn_extra_cycles_per_layer": 1536,
+     "softmax_extra_cycles_per_layer": 480,
+     "corrected_step_cycles": 1576835,
+     "corrected_tokens_s": 2113.6,
+     "corrected_tokens_s_at_proxy_eff": 2053.0
+    },
+    {
+     "block": 8,
+     "tau": 3.2956,
+     "model_tokens_s": 2407.0,
+     "model_step_cycles": 1504259,
+     "kv_passes": 2,
+     "attn_extra_cycles_per_layer": 1536,
+     "softmax_extra_cycles_per_layer": 672,
+     "corrected_step_cycles": 1583747,
+     "corrected_tokens_s": 2286.1,
+     "corrected_tokens_s_at_proxy_eff": 2220.9
+    },
+    {
+     "block": 12,
+     "tau": 3.4927,
+     "model_tokens_s": 2550.9,
+     "model_step_cycles": 1504259,
+     "kv_passes": 3,
+     "attn_extra_cycles_per_layer": 3584,
+     "softmax_extra_cycles_per_layer": 1056,
+     "corrected_step_cycles": 1671299,
+     "corrected_tokens_s": 2296.0,
+     "corrected_tokens_s_at_proxy_eff": 2233.8
+    },
+    {
+     "block": 16,
+     "tau": 3.6559,
+     "model_tokens_s": 2670.1,
+     "model_step_cycles": 1504259,
+     "kv_passes": 4,
+     "attn_extra_cycles_per_layer": 5632,
+     "softmax_extra_cycles_per_layer": 1440,
+     "corrected_step_cycles": 1758851,
+     "corrected_tokens_s": 2283.6,
+     "corrected_tokens_s_at_proxy_eff": 2224.8
+    },
+    {
+     "block": 16,
+     "tau": 3.6559,
+     "model_tokens_s": 2670.1,
+     "model_step_cycles": 1504259,
+     "kv_passes": 4,
+     "attn_extra_cycles_per_layer": 5632,
+     "softmax_extra_cycles_per_layer": 1440,
+     "corrected_step_cycles": 1758851,
+     "corrected_tokens_s": 2283.6,
+     "corrected_tokens_s_at_proxy_eff": 2224.8
+    }
+   ],
+   "corrected_best": {
+    "block": 12,
+    "tokens_s": 2296.0
+   },
+   "corrected_best_at_proxy_eff": {
+    "block": 12,
+    "tokens_s": 2233.8
+   },
+   "mma_columns": 16,
+   "gqa_q_per_kv": 4,
+   "clock_hz": 1098640000.0,
+   "basis": "the model prices the verify as the AR stream plus the draft bytes (hbm_speculation_rows): the in-block attention adds no bytes, but at GQA 4 a b-position block needs 4b query columns on each K/V element and the SM has 16, so K and V pass the MMA ceil(4b/16) times; softmax runs on the 4,096 SIMT lanes"
+  }
+ },
+ "source_sha256": {
+  "tools/uarch_model.py": "d683f27c4d851fcf98b35538a63a5adee019732e2ae0f69aec53dad6ad9b7f16",
+  "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+  "tools/arch_hbm_best_v41.py": "5834515c4ee7d033c1e103f133dc8ad0852291cfcbb804cf26ddb93af4c52548",
+  "tools/arch_hbm_switched_v41.py": "719db05f59839724f55a936f5264f9023998d5f83ba9e1fc4600f826e1f5d39c",
+  "tools/hbm_feasibility_audit.py": "9c683f1c2affad3e3233492583ec60f226bafaba2b01fb1a36d5d204efb3101a",
+  "results/uarch/hbm_gpu.json": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731",
+  "results/rtl/gpu_sm_exact.json": "b7c54f9292d4dca213385acd4530ee7fbb32e86cff97fa11f95ae998a501db01",
+  "results/rtl/gpu_sm_blockdot_exact.json": "378f0773409cb87a45f77c97a404cc18c41686344f7d577b6b3492d295840a1d",
+  "results/rtl/gpu_supply_barrier.json": "fbdd1295c6fc95fb08827ad616264530d739ace7ae7cf5d097b1b6784503e968",
+  "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+  "results/speculative/dflash_block_acceptance.json": "b1b92957d24db13ea7f80ce27bc526d17f8a81cc839498faeb5697681bd5e31c",
+  "results/arch/v41_latency_ladder.json": "43ebef09b314aa84e00457924a66ce00900a2d56adda1831bafa15556fbde2a5"
+ }
+}

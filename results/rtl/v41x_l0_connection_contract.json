@@ -115,5 +115,12 @@
       }
     },
     "historical_copy": null
+  },
+  "currency": {
+    "state": "stale",
+    "stale_since": "cf4940f0",
+    "reason": "The tool's source assertions describe connection gaps that main has since closed: cf4940f0 widened the die/PHY weight address beyond 24 bits (wq_addr, PHY w_addr), e0a54787 changed ot_hdc_qstream's HAW, and the asserted die line 'else if (att_packed_desc_ready) packed_desc_ok <= 1\\'b1;' never existed on main (the die now drives packed_desc_ok from the descriptor lifecycle's issue_ok, dc503862). The record's missing-connection and 24-bit-address observations no longer describe the die, so its assertions cannot be updated mechanically; the contract needs re-derivation, not a re-pin. The 14cd1d53 re-pin was labelled, not re-run.",
+    "verdict_kept": "blocked_pending_integration",
+    "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run"
   }
 }
