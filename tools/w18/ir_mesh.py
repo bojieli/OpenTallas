@@ -71,11 +71,12 @@ def blocks(fp: dict, pk: dict, a) -> list[tuple[str, float, float, float, float,
     return out
 
 
-def solve(W, H, blk, p):
+def solve(W, H, blk, p, strap_w=STRAP_W, strap_pitch=STRAP_PITCH, bump_pitch=BUMP_PITCH, vdd_every=3,
+          rsq_scale=1.0, bump_r=BUMP_R):
     nx, ny = int(math.ceil(W / p)) + 1, int(math.ceil(H / p)) + 1
     n = nx * ny
     idx = lambda i, j: j * nx + i  # noqa: E731
-    rsq = {l: R_UM[l] * WMIN[l] * (STRAP_PITCH / STRAP_W) for l in R_UM}     # effective ohm/sq per net
+    rsq = {l: R_UM[l] * WMIN[l] * rsq_scale * (strap_pitch / strap_w) for l in R_UM}   # effective ohm/sq per net
     gx = 1.0 / rsq["M8"]          # horizontal branch between x-neighbours: R = rsq * (p / p)
     gy = 1.0 / rsq["M9"]
     rows, cols, vals = [], [], []
@@ -92,13 +93,13 @@ def solve(W, H, blk, p):
         rows += [a_, a_ + nx]; cols += [a_ + nx, a_]; vals += [np.full(nx, -gy)] * 2
         diag[a_] += gy; diag[a_ + nx] += gy
     # bumps: 1/3 of a 40 um array; a bump ties its nearest node to VDD through BUMP_R
-    gb = 1.0 / BUMP_R
+    gb = 1.0 / bump_r
     nb = 0
-    bx = np.arange(BUMP_PITCH / 2, W, BUMP_PITCH)
-    by = np.arange(BUMP_PITCH / 2, H, BUMP_PITCH)
+    bx = np.arange(bump_pitch / 2, W, bump_pitch)
+    by = np.arange(bump_pitch / 2, H, bump_pitch)
     for kj, y in enumerate(by):
         for ki, x in enumerate(bx):
-            if (ki + kj) % 3 != 0:
+            if (ki + kj) % vdd_every != 0:
                 continue
             k = idx(int(round(x / p)), int(round(y / p)))
             diag[k] += gb
@@ -138,12 +139,20 @@ def main(argv=None):
     ap.add_argument("--ucie-w", type=float, default=0.5)
     ap.add_argument("--pitch-um", type=float, default=20.0)
     ap.add_argument("--tag", default="")
+    ap.add_argument("--strap-w", type=float, default=STRAP_W)
+    ap.add_argument("--strap-pitch", type=float, default=STRAP_PITCH, help="per net (VDD strap pitch)")
+    ap.add_argument("--bump-pitch", type=float, default=BUMP_PITCH)
+    ap.add_argument("--vdd-every", type=int, default=3, help="1 in N bumps is VDD (3 = 1/3)")
+    ap.add_argument("--rsq-scale", type=float, default=1.0,
+                    help="M8/M9 sheet resistance scale (ASAP7 thin top metal = 1; production thick top ~0.1)")
+    ap.add_argument("--bump-r", type=float, default=BUMP_R)
     ap.add_argument("--output", type=Path, required=True)
     a = ap.parse_args(argv)
     fp, pk = json.loads(a.floorplan.read_text()), json.loads(a.pack.read_text())
     W, H = fp["die"]["w_um"], fp["die"]["h_um"]
     blk = blocks(fp, pk, a)
-    v, info = solve(W, H, blk, a.pitch_um)
+    v, info = solve(W, H, blk, a.pitch_um, a.strap_w, a.strap_pitch, a.bump_pitch, a.vdd_every, a.rsq_scale,
+                    a.bump_r)
     drop = VDD - v
     # per-kind worst drop under each block
     p = a.pitch_um
@@ -166,7 +175,9 @@ def main(argv=None):
     rec = dict(schema="opentallas.v41.w18_ir_mesh.v1", tag=a.tag, level="die (M8/M9 + bumps)",
                die_um=[W, H], mesh=info | dict(pitch_um=p), bump=dict(pitch_um=BUMP_PITCH, r_ohm=BUMP_R,
                                                                    vdd_fraction="1/3", basis="ASSUMED"),
-               straps=dict(width_um=STRAP_W, pitch_per_net_um=STRAP_PITCH, r_um_kohm=R_UM, min_width_um=WMIN),
+               straps=dict(width_um=a.strap_w, pitch_per_net_um=a.strap_pitch, r_um_kohm=R_UM, min_width_um=WMIN,
+                           rsq_scale=a.rsq_scale, m8_m9_power_share=round(2 * a.strap_w / a.strap_pitch, 3)),
+               bumps_param=dict(pitch_um=a.bump_pitch, vdd_every=a.vdd_every, r_ohm=a.bump_r),
                power=dict(pair_w=a.pair_w, duty=a.duty, pair_idle_w=a.pair_idle_w, hub_w=a.hub_w_total,
                           service_w=a.service_w, phy_w=a.phy_w, serdes_w=a.serdes_w, ucie_w=a.ucie_w,
                           total_w=round(sum(b[5] for b in blk), 1)),
