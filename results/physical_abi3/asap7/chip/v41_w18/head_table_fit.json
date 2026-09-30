@@ -32,7 +32,8 @@
    "record": "results/physical_abi3/asap7/chip/v41_w18/head_die/die_floorplan_head.json",
    "sha256": "474602c8178849fd9ee820cd811736b559887475fdbdf1a0b39d1ac3e1de2cf9"
   },
-  "basis": "ASAP7 tile geometry, TP-4 head group: per die (lm_head + drafter)/4 MAC-bearing, embedding/4 as full tiles (conservative)"
+  "basis": "ASAP7 tile geometry, TP-4 head group: per die (lm_head + drafter)/4 MAC-bearing, embedding/4 as full tiles (conservative)",
+  "label": "4 dies fit at both bases: ASAP7 feasibility margin 13.3%, product (analytical) 479.0 of 481.0 mm2 (W16)"
  },
  "table_die": {
   "macro": "ot_rom_8192x274_m8",
@@ -52,12 +53,13 @@
    "cycles": 55,
    "basis": "links on the east and west edges; a gather tree registers every 504 um; the switched table->layer path is inter-die (rack record)"
   },
-  "note": "ASAP7 macro geometry holds 274 raw bits a word; W16's analytical density is the product basis"
+  "note": "ASAP7 macro geometry holds 274 raw bits a word; W16's analytical density is the product basis",
+  "label": "ASAP7 feasibility: 20; product (analytical, storage-only 75 Mbit/mm2 + ECC): 36 (W16)"
  },
  "w16": {
   "worktree": "/tmp/claude-1000/wt/w16",
-  "uarch_model_sha256": "557f535f3ed35d1299a66fee35aa2e65a8685c793bb0b4831d85c72e273e6f07",
+  "uarch_model_sha256": "f39091be761f01157f81739fdaea5a87052dfeaf23cd0009afee58930369daa9",
   "state": "W16 worktree, uncommitted"
  },
- "tool_sha256": "1314c0041b0aef384cf55b0b2b94d968a088dda844f79bbe101335a324c255df"
+ "tool_sha256": "0ba9738e2264810aec1a353071cca095a28e9a3ed77a0242c0bc6f937fc545e8"
 }

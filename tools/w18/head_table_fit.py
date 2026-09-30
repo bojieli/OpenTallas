@@ -79,7 +79,9 @@ def main(argv=None):
                                     head_dies_8192m8=w16["head_dies_8192"], head_dies_4096m8=w16["head_dies_4096"]),
                 floorplan=dict(record=str(fp_out.relative_to(ROOT)), sha256=sha(fp_out)),
                 basis="ASAP7 tile geometry, TP-4 head group: per die (lm_head + drafter)/4 MAC-bearing, embedding/4 as "
-                      "full tiles (conservative)")
+                      "full tiles (conservative)",
+                label="4 dies fit at both bases: ASAP7 feasibility margin %.1f%%, product (analytical) %.1f of %.1f mm2 "
+                      "(W16)" % (100 * (usable_slots - need) / need, w16["head_need_8192"], w16["usable"]))
     # ---- table die ----
     link_edge = 1043.28                               # UCIe/SerDes strip depth on each of two edges
     keep = 21.6
@@ -100,7 +102,9 @@ def main(argv=None):
                  farthest_macro_to_link_edge=dict(L_um=round(far_t, 1), cycles=math.ceil(far_t / REACH),
                                                   basis="links on the east and west edges; a gather tree registers every "
                                                         "504 um; the switched table->layer path is inter-die (rack record)"),
-                 note="ASAP7 macro geometry holds 274 raw bits a word; W16's analytical density is the product basis")
+                 note="ASAP7 macro geometry holds 274 raw bits a word; W16's analytical density is the product basis",
+                 label="ASAP7 feasibility: %d; product (analytical, storage-only 75 Mbit/mm2 + ECC): %d (W16)"
+                       % (n, w16["table"]["dies"]))
     rec = dict(schema="opentallas.v41.w18_head_table_fit.v1", head_die=head, table_die=table,
                w16=dict(worktree=str(a.w16), uarch_model_sha256=w16_sha, state="W16 worktree, uncommitted"),
                tool_sha256=sha(Path(__file__)))
