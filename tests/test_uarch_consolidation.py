@@ -190,7 +190,7 @@ def test_adopted_product_row():
     ad = next(p for p in pts if "ADOPTED" in p["label"])
     assert ad["clock_hz"] == 1.2e9 and ad["field_concurrency"] == 0.5 and ad["bf16"] == "columns"
     assert list(ad["slow_domain"]) == [0.9e9, "w18"] and ad["elem_stages"] == 7
-    assert ad["added_latency"] == {"suffix:softplus_sqrt": -97}         # the v41x softplus (162, not 259)
+    assert ad["added_latency"] == {"suffix:softplus_sqrt": -97, "suffix:idx.topk_local": 8}   # v41x softplus; idx_tail 16
     import uarch_model as U                                   # the product stage count is the fit's own answer
     assert ad["stages"] == U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8")
     assert ad["dies"] == 4 * ad["stages"] + 4 + 36             # head group on 8192m8 ping-pong (4 dies), 36 tables
@@ -246,3 +246,19 @@ def test_product_stage_owner_file():
     assert own["source_sha256"]["tools/uarch_model.py"] == __import__("hashlib").sha256(
         (ROOT / "tools/uarch_model.py").read_bytes()).hexdigest()
     assert U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8") == own["stage_count"]
+
+
+def test_followup_rows():
+    r = _rec()
+    ts = r["tau_sweep_1m"]
+    assert ts["headline_tau"] == 3.78 and "lmsys.org" in ts["source"]
+    rom = ts["rows"][0]
+    assert rom["tau_2.91"] < rom["tau_3.78"] < rom["tau_5.24"]
+    assert {x["design"][:10] for x in r["short_context_8k"]["rows"]} and r["short_context_8k"]["ctx"] == 8192
+    q = r["qwen_context_sweep"]["rows"]
+    rom = [x for x in q if x["design"].startswith("ROM option C (4 stacks")]
+    assert [x["ctx"] for x in rom] == [8192, 32768, 131072, 200000]
+    assert all(b["ar_tokens_s"] <= a["ar_tokens_s"] for a, b in zip(rom, rom[1:]))
+    hx = r["qwen_helix_200k"]["rows"]
+    assert hx[0]["extra_kv_dies"] == 0 and hx[-1]["ar_tokens_s"] > hx[0]["ar_tokens_s"]
+    assert r["gpu_calibration"]["published"][0]["tok_s_user"] == 368.0
