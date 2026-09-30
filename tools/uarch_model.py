@@ -1433,6 +1433,9 @@ def hbm_floorplan_record(model: str):
     return json.loads(p.read_text()) if p.exists() else None
 
 
+WIRE_REACH_SS_UM = 504.0   # measured (W15): routed register-to-register reach per stage at 0.833 ns, SS corner
+
+
 def barrier_network(model: str, clock: float, n_sm: int):
     """Barrier latency derived from the floorplan: SM -> quadrant node -> root (arrival AND-tree) and back
     (release), every wire segment registered at the loaded channel constant, one register per tree node.
@@ -1449,7 +1452,7 @@ def barrier_network(model: str, clock: float, n_sm: int):
         leaf_um = 2 * side + 1.5 * side                          # farthest SM of a 4 x 2 quadrant to its node
         trunk_um = 2 * side + 1 * side                           # quadrant node to root
         levels = 2
-    w = lambda um: wire_cycles(um, clock, WIRE_PS_PER_UM_LOADED)  # noqa: E731
+    w = lambda um: max(1, math.ceil(um / WIRE_REACH_SS_UM))  # noqa: E731  (1.2 GHz at SS, W15 reach)
     arrive = w(leaf_um) + w(trunk_um) + levels + 1               # + the SM's local all-subpartitions-done flop
     release = w(leaf_um) + w(trunk_um) + levels
     return dict(arrive_cycles=arrive, release_cycles=release, round_trip_cycles=arrive + release,

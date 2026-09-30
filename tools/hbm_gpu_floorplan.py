@@ -241,7 +241,7 @@ def build(model):
         xq = (min(s[1] for s in quads[q]) + max(s[1] for s in quads[q])) / 2
         ya = core_y1 if north else core_y0
         l2[q] = place_l2(p, f"l2_{'ns'[0 if north else 1]}{q % 2}", xq, ya, north)
-    wc = lambda um: U.wire_cycles(um, clock, U.WIRE_PS_PER_UM_LOADED)  # noqa: E731
+    wc = lambda um: max(1, math.ceil(um / U.WIRE_REACH_SS_UM))  # noqa: E731  (W15: 504 um/stage at 0.833 ns SS)
     # weight path: stack PHY -> service band -> L2 slice -> farthest SM of the quadrant (latency only; the
     # stream is prefetched, so these cycles add to the bulk-copy loaded latency, not to the token)
     wpath = max(abs(s[1] - phy_x[q]) + abs(s[2] - (l2[q]["y"] + (0 if q >= 2 else l2[q]["h"])))
