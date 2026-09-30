@@ -22,8 +22,9 @@ PRE = ROOT / "rtl/chip/ot_chip_v41_preramp.sv"
 PRE_TB = ROOT / "rtl/test/tb_chip_v41_preramp.sv"
 PRE_MUTANTS = {
     "ramp_too_fast": ("assign step = cfg_ramp / CW'(NG);", "assign step = CW'(1);"),
-    "no_preramp": ("wire want_up = (start_in != '0) && (start_in <= cfg_ramp);", "wire want_up = 1'b0;"),
+    "no_preramp": ("wire want_up   = (start_in != '0) && (start_in <= cfg_ramp);", "wire want_up   = 1'b0;"),
     "dummy_during_op": ("grp_dummy = op_active ? '0 : grp_en;", "grp_dummy = grp_en;"),
+    "no_hold_short_gap": ("wire want_hold = full && (start_in != '0) && (start_in <= cfg_gap);", "wire want_hold = 1'b0;"),
 }
 MUTANTS = {
     "take_ignores_parity": (XCAP, "assign take = xs_v && (cap ? (xs_sub == ph) : !xs_sub);",

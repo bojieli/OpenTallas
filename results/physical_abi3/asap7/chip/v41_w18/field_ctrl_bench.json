@@ -60,10 +60,13 @@
  "preramp": {
   "rtl": {
    "result": {
-    "ops": "40",
+    "ops": "60",
     "ramp": "256",
+    "gap": "400",
     "groups": "64",
-    "dummy_group_cycles": "693704",
+    "held_gaps": "22",
+    "ramped_gaps": "37",
+    "dummy_group_cycles": "892116",
     "errors": "0"
    },
    "verdict": "PASS"
@@ -71,31 +74,53 @@
   "mutants": {
    "ramp_too_fast": {
     "result": {
-     "ops": "40",
+     "ops": "60",
      "ramp": "256",
+     "gap": "400",
      "groups": "64",
-     "dummy_group_cycles": "659058",
-     "errors": "4518"
+     "held_gaps": "22",
+     "ramped_gaps": "37",
+     "dummy_group_cycles": "864176",
+     "errors": "5283"
     },
     "verdict": "FAIL"
    },
    "no_preramp": {
     "result": {
-     "ops": "40",
+     "ops": "60",
      "ramp": "256",
+     "gap": "400",
      "groups": "64",
-     "dummy_group_cycles": "332800",
-     "errors": "40"
+     "held_gaps": "22",
+     "ramped_gaps": "37",
+     "dummy_group_cycles": "571520",
+     "errors": "38"
     },
     "verdict": "FAIL"
    },
    "dummy_during_op": {
     "result": {
-     "ops": "40",
+     "ops": "60",
      "ramp": "256",
+     "gap": "400",
      "groups": "64",
-     "dummy_group_cycles": "1096712",
-     "errors": "6297"
+     "held_gaps": "22",
+     "ramped_gaps": "37",
+     "dummy_group_cycles": "1560916",
+     "errors": "10450"
+    },
+    "verdict": "FAIL"
+   },
+   "no_hold_short_gap": {
+    "result": {
+     "ops": "60",
+     "ramp": "256",
+     "gap": "400",
+     "groups": "64",
+     "held_gaps": "22",
+     "ramped_gaps": "37",
+     "dummy_group_cycles": "887320",
+     "errors": "6"
     },
     "verdict": "FAIL"
    }
@@ -105,10 +130,10 @@
   "rtl/chip/ot_chip_v41_xcap.sv": "3fa0d011795f2762504e05b598ccf7c08077e6534f6ec5c7b52713db112e5802",
   "rtl/chip/ot_chip_v41_droop_ctrl.sv": "1cae496dc82ee5050149a703d136d6e97b15dc708893ec5c59c29347a4afd706",
   "rtl/test/tb_chip_v41_xcap_droop.sv": "9d234979ba2c265dad9789a80b960a2d6666e307f4bdfe85c6a54e561540eab4",
-  "rtl/chip/ot_chip_v41_preramp.sv": "5bd3fb1b539fde78e495e5f8f76c819124b5e00b6234ae34c6e3da211745246d",
-  "rtl/test/tb_chip_v41_preramp.sv": "f2b18fd8a751041a6734cea2c5e92d0bb1b3391856dca340f445142139eb68cc"
+  "rtl/chip/ot_chip_v41_preramp.sv": "281a8e7aed8d6ad66e809c830819e3ec8a5ce0d32966ada24b5b28e1306a4e90",
+  "rtl/test/tb_chip_v41_preramp.sv": "0f55e0941321421f805a47e399573b5646b27873c96b70d9e95956ae0f157997"
  },
- "tool_sha256": "89ca5871660dc74ddf9da3271324dcafeafa5b4ce9ce8a88a6bf07f98c2705ce",
+ "tool_sha256": "a08d408cd16f9e570154dbb5e6707faf2c2bc6eccf43e47aee4919e9733cf546",
  "simulator": "Icarus Verilog version 11.0 (stable) ()",
  "pass": true
 }
