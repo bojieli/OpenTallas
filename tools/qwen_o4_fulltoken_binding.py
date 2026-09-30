@@ -157,7 +157,7 @@ def binding(snapshot, out):
                                (int(x, 16) for x in profile['descriptor_hex']), 64))
     files.append(write_final_norm(snapshot, out))
     pin = PINNED.get((GROUPS, TP))
-    if len(embed_words) != 2 or layer['program_words'] != 33 or (pin and heads[0]['program_words'] != pin[2]):
+    if len(embed_words) != 2 or (pin and (layer['program_words'] != 33 or heads[0]['program_words'] != pin[2])):
         raise ValueError('stage program word count changed')
     if QI.ROW_HIGH_OFFSET != 898 or QI.DESC_ROW_HIGH_OFFSET != 18:
         raise ValueError('18-bit row offset reserved bits changed')
