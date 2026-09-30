@@ -71,6 +71,8 @@ def main() -> None:
     ap.add_argument("--nws", type=int, required=True, help="wire stages into each upper tree level")
     ap.add_argument("--tws", type=int, required=True, help="level-TCUT words to the spine top")
     ap.add_argument("--ord", type=int, default=2, help="result-write stages")
+    ap.add_argument("--mem-extra", type=int, choices=(0, 1), default=0,
+                    help="tile memory capture stage (1 = the 0.833 ns product tile)")
     ap.add_argument("--scale-local", type=int, choices=(0, 1), default=0,
                     help="port-local scale ROM (stage dirs from tools/qwen_rom_scale_local.py)")
     ap.add_argument("--code-banks", type=int, default=10)
@@ -113,11 +115,11 @@ def main() -> None:
     models = [
         ("die", "ot_qwen_rom_rt_die", [str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1",
-          f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", *spine]),
+          f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", f"-GMEM_EXTRA={args.mem_extra}", *spine]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
          ["-GN=2", "-GLANES=16", "-GTAGW=32", "-GDEPTH=16", "-GLAT=11", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_logic", [*map(str, TILE_RTL)],
-         [f"-GGT={G}", f"-GNW={NW}", f"-GSMIN={args.smin}", f"-GCODE_BANKS={args.code_banks}", "-GIREG=1",
+         [f"-GGT={G}", f"-GNW={NW}", f"-GSMIN={args.smin}", f"-GCODE_BANKS={args.code_banks}", "-GIREG=1", f"-GMEM_EXTRA={args.mem_extra}",
           f"-GNREG={1 if args.nws > 0 else 0}", "-GKV_LOCAL=0"]),
     ]
     (out / "build_params.json").write_text(json.dumps({p: params for p, _, _, params in models}, indent=1))
@@ -189,7 +191,8 @@ def main() -> None:
                          "pruned": True, "kv_fp8": True, "scale_local": bool(args.scale_local)},
         "wire_stages": {"broadcast_and_x_network_bd": args.bd, "vm_conflict_register_xvm": args.xvm,
                         "upper_tree_level_nws": args.nws, "tree_to_spine_tws": args.tws, "result_write_ord": args.ord,
-                        "engine_latency_added_xd_plus_ord": args.bd + (args.tcut - 2) * args.nws + args.tws + args.ord},
+                        "mem_extra": args.mem_extra,
+                        "engine_latency_added_xd_plus_ord": args.bd + (args.tcut - 2) * args.nws + args.tws + args.mem_extra + args.ord},
         "verilator_die_flags": args.vflags, "hier_su": args.hier_su,
         "stages_run": [s[0] for s in stages], "rtl_token": token, "rtl_logit_bits": m.group(3) if m else None,
         "oracle_token": oracle.get("next_token"), "oracle_logit_bits": oracle.get("next_logit_bits"),

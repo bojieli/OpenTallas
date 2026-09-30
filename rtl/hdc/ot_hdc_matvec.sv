@@ -186,7 +186,10 @@ module ot_hdc_matvec_part #(
     // rounds*IL).  0: the dense image  wcs + round*(GT/S)*IL + q*IL + slot.
     parameter integer SCALE_LOCAL = 0,
     // GOUT: result and scale ports provided (the result-port groups a pruned top has; default G)
-    parameter integer GOUT = G
+    parameter integer GOUT = G,
+    // MEM_EXTRA: memory data (ROM, KV, x) returns MEM_EXTRA cycles later than c+1 (a capture register at
+    // the macro pins, e.g. the ROM tile at 0.833 ns SS); the element tags wait the same cycles
+    parameter integer MEM_EXTRA = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -423,7 +426,9 @@ module ot_hdc_matvec_part #(
     end
     //: the element's round (SCALE_LOCAL scale addressing), beside the tag
     reg [NW-1:0] e_t, s1_t, s1b_t, s2_t, s3_t;
-    always @(posedge clk) begin e_t <= t; s1_t <= e_t; s1b_t <= s1_t; s2_t <= s1b_t; s3_t <= s2_t; end
+    wire [NW-1:0] m_t;
+    ot_hdc_delay #(.W(NW), .D(MEM_EXTRA)) u_mtt (.clk(clk), .rst_n(rst_n), .d(e_t), .q(m_t));
+    always @(posedge clk) begin e_t <= t; s1_t <= m_t; s1b_t <= s1_t; s2_t <= s1b_t; s3_t <= s2_t; end
     always @(posedge clk) begin
         e_first <= (k == 0); e_last <= k_last;
         e_oen <= oen_r; e_amax <= amax_r; e_wsrc <= wsrc_r; e_round <= round_r; e_mmode <= mmode_r;
@@ -445,17 +450,27 @@ module ot_hdc_matvec_part #(
     wire [TW-1:0] e_tag = {e_last, e_oen, e_amax, e_wsrc, e_mmode, e_split, e_oa, e_ots, e_nb, e_lb, e_rem,
                            e_rmax, e_j, e_opend, e_mbase, scale_base_r};
     reg  [TW-1:0] s1_tag, s1b_tag, s2_tag, s3_tag;
+    //: MEM_EXTRA: the element's tags wait for its later memory data
+    wire [TW-1:0] m_tag;
+    wire [G-1:0]  m_gm;
+    wire          m_first, m_wsrc, m_round;
+    //: (D >= 2 for ot_hdc_vline; the bits past MEM_EXTRA duplicate s1_v / s1b_v)
+    wire [MEM_EXTRA+2:0] m_vl;
+    ot_hdc_vline #(.D(MEM_EXTRA + 2)) u_mv (.clk(clk), .rst_n(rst_n), .v(e_v), .vd(m_vl));
+    wire          m_v = m_vl[MEM_EXTRA];
+    ot_hdc_delay #(.W(TW + G + 3), .D(MEM_EXTRA)) u_mt (.clk(clk), .rst_n(rst_n),
+        .d({e_tag, e_gm, e_first, e_wsrc, e_round}), .q({m_tag, m_gm, m_first, m_wsrc, m_round}));
     reg          s1_v, s1b_v, s2_v, s3_v, s1_first, s1b_first, s2_first, s3_first;
     reg          s1b_wsrc, s1b_round;
     reg          s1_wsrc, s1_round, s2_round, s3_wsrc;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin s1_v <= 0; s1b_v <= 0; s2_v <= 0; s3_v <= 0; end
-        else begin s1_v <= e_v; s1b_v <= s1_v; s2_v <= s1b_v; s3_v <= s2_v; end
+        else begin s1_v <= m_v; s1b_v <= s1_v; s2_v <= s1b_v; s3_v <= s2_v; end
     end
     always @(posedge clk) begin
-        s1_tag <= e_tag; s1b_tag <= s1_tag; s2_tag <= s1b_tag; s3_tag <= s2_tag;
-        s1_first <= e_first; s1b_first <= s1_first; s2_first <= s1b_first; s3_first <= s2_first;
-        s1_wsrc <= e_wsrc; s1_round <= e_round; s1b_wsrc <= s1_wsrc; s1b_round <= s1_round;
+        s1_tag <= m_tag; s1b_tag <= s1_tag; s2_tag <= s1b_tag; s3_tag <= s2_tag;
+        s1_first <= m_first; s1b_first <= s1_first; s2_first <= s1b_first; s3_first <= s2_first;
+        s1_wsrc <= m_wsrc; s1_round <= m_round; s1b_wsrc <= s1_wsrc; s1b_round <= s1_round;
         s2_round <= s1b_round;
         s3_wsrc <= s2_tag[TW-4];
     end
@@ -471,7 +486,7 @@ module ot_hdc_matvec_part #(
     integer l;
     generate if (LANES) begin : g_operand
         always @(posedge clk) begin
-            s1_gm <= e_gm; s1b_gm <= s1_gm; s2_gm <= s1b_gm;
+            s1_gm <= m_gm; s1b_gm <= s1_gm; s2_gm <= s1b_gm;
             mq_wrom <= wrom_q; mq_kv <= kv_q; mq_x <= x_q;
             for (l = 0; l < G * W; l = l + 1)
                 if (INT8_WEIGHT != 0)
@@ -933,7 +948,7 @@ module ot_hdc_matvec_part #(
     //: accepting edge so a just-issued op never reads as drained.
     localparam [ORD+2:0] OMASK = (1 << (ORD + 1)) - 2;     // result-write stages 1..ORD
     wire ord_busy = |(ov_line & OMASK);
-    wire idle_c = !active && !e_v && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|post_pending) && !(|tv) && !ov1
+    wire idle_c = !active && !e_v && !(|m_vl) && !s1_v && !s1b_v && !s2_v && !s3_v && !(|vline) && !(|post_pending) && !(|tv) && !ov1
                   && !ov2 && !ord_busy && !mx_we;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) idle <= 1'b1;

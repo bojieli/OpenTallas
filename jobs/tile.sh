@@ -11,7 +11,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top ot_qwen_rom_tile \
   --source rtl/hdc/ot_hdc_matvec.sv --source rtl/hdc/ot_qwen_me_array.sv --source rtl/hdc/ot_qwen_rom_tile.sv \
   --source $M/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v \
   --source $M/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v \
-  --clock-period-ns 0.910216 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --stages $ST --corner TT --hold-corners WC,BC --keep-heavy-artifacts \
+  --clock-period-ns 0.833333 --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 --stages $ST --corner TT --hold-corners WC,BC --keep-heavy-artifacts \
   --max-transition-ns --max-fanout 32 --macro-place-halo 4.32 2.16 \
   --macro-view ot_rom_4096x266_m8=$M/ot_rom_4096x266_m8 \
   --macro-view ot_sram_1r1w_128x256_m1_r2c2=$M/ot_sram_1r1w_128x256_m1_r2c2 \

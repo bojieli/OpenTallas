@@ -20,12 +20,12 @@
 // must fail.
 module tb_qwen_me_partition;
     parameter integer GT = 80, TG = 4, SMIN = 3, SMAX = 5, TCUT = 3;
-    parameter integer BD = 0, XVM = 0, NWS = 0, TWS = 0, ORD = 0;
+    parameter integer BD = 0, XVM = 0, NWS = 0, TWS = 0, ORD = 0, MEM_EXTRA = 0;
     parameter integer NOPS = 300, SEED = 1, MUTANT = 0;
     parameter integer W = 16;
     localparam integer IL = 8, AW = 24, NW = 16;
     localparam integer NT = GT / TG, NXC = 1 << SMAX, LT = $clog2(TG);
-    localparam integer XD = BD + (TCUT - LT) * NWS + TWS;
+    localparam integer XD = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA;
     localparam integer ZERO_WIRE = (XD == 0 && ORD == 0);
 
     reg clk = 0, rst_n = 0;
@@ -116,7 +116,7 @@ module tb_qwen_me_partition;
     wire [NW-1:0] a_am_idx; wire [31:0] a_am_val;
     wire [AW-1:0] a_mx_addr; wire [W-1:0] a_mx_mask; wire [W*32-1:0] a_mx_data; wire [15:0] a_progress;
     ot_qwen_me_array #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT),
-                       .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .CODE_BANKS(CB), .KV_LOCAL(0)) u_arr (
+                       .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .CODE_BANKS(CB), .KV_LOCAL(0), .MEM_EXTRA(MEM_EXTRA)) u_arr (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(a_ready), .idle(a_idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc), .i_wbase(i_wbase), .i_ts(i_ts),
         .i_ks(i_ks), .i_js(i_js), .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs), .i_jsh(i_jsh),

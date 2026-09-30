@@ -44,6 +44,10 @@ module ot_qwen_rom_tile_logic #(
     parameter integer SMIN = 6,
     parameter integer CODE_BANKS = 10,
     parameter integer IREG = 1,
+    // MEM_EXTRA = 1: every memory operand is captured at its source before use -- each ROM bank's
+    // output at the macro pins (SS clk->q 739 ps leaves no room for the bank OR at 0.833 ns), the KV
+    // slice word and the x line -- one cycle the engine's tags wait (ot_hdc_matvec_part MEM_EXTRA)
+    parameter integer MEM_EXTRA = 1,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
     parameter integer KV_AW = 7,          // local KV words: 2^KV_AW
@@ -89,7 +93,9 @@ module ot_qwen_rom_tile_logic #(
     reg  [TG*32-1:0] xl_q;
     wire             go_i  = IREG ? go_q : ib_go;
     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
-    wire [TG*32-1:0] xl_i  = IREG ? xl_q : xl;
+    wire [TG*32-1:0] xl_r  = IREG ? xl_q : xl;
+    wire [TG*32-1:0] xl_i;
+    ot_hdc_delay #(.W(TG*32), .D(MEM_EXTRA)) u_xm (.clk(clk), .rst_n(rst_n), .d(xl_r), .q(xl_i));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) go_q <= 1'b0;
         else go_q <= ib_go;
@@ -112,7 +118,7 @@ module ot_qwen_rom_tile_logic #(
     wire [TG*W*32-1:0] me_kv_q;
     wire              me_fault;
     ot_hdc_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0)) u_me (
+        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(MEM_EXTRA)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
@@ -149,13 +155,31 @@ module ot_qwen_rom_tile_logic #(
         if (!rst_n) code_sel_q <= {CODE_BANKS{1'b0}};
         else if (wrom_re) code_sel_q <= rom_ce;
     end
+    //: MEM_EXTRA: the read strobe and bank select one more cycle, for the captured banks' OR
+    reg code_rd_q;
+    reg [CODE_BANKS-1:0] code_sel_q2;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin code_rd_q <= 1'b0; code_sel_q2 <= {CODE_BANKS{1'b0}}; end
+        else begin
+            code_rd_q <= wrom_re;
+            if (code_rd_q) code_sel_q2 <= code_sel_q;
+        end
+    end
     localparam integer PWB = 2 * W * 8;      // a group pair's slice of the code word (256 of the macro's 266 bits)
     generate
         for (p = 0; p < TG / 2; p = p + 1) begin : g_pair
             wire [PWB-1:0] or_q [0:CODE_BANKS];
             assign or_q[0] = {PWB{1'b0}};
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
-                assign or_q[b+1] = or_q[b] | (rom_rd[(p*CODE_BANKS + b)*266 +: PWB] & {PWB{code_sel_q[b]}});
+                wire [PWB-1:0] rd = rom_rd[(p*CODE_BANKS + b)*266 +: PWB];
+                if (MEM_EXTRA != 0) begin : g_cap
+                    //: the bank's output register at its pins: captured only when the bank was read
+                    reg [PWB-1:0] cap;
+                    always @(posedge clk) if (code_sel_q[b] && code_rd_q) cap <= rd;
+                    assign or_q[b+1] = or_q[b] | (cap & {PWB{code_sel_q2[b]}});
+                end else begin : g_nocap
+                    assign or_q[b+1] = or_q[b] | (rd & {PWB{code_sel_q[b]}});
+                end
             end
             assign wrom_q[PWB*p +: PWB] = or_q[CODE_BANKS];
         end
@@ -185,11 +209,22 @@ module ot_qwen_rom_tile_logic #(
         wire [KV_HB-4:0] pv = w[KV_HB-1:3];
         wire [KV_AW-1:0] lk = (tk / PRK) * KV_NH + a[KV_HB+1:KV_HB];
         wire [KV_AW-1:0] lv = KV_KL + (pv >> KV_SV) * KV_NH + w[KV_HB+1:KV_HB];
+        //: MEM_EXTRA: the slice word's capture register (held when not read)
+        wire [TG*W*8-1:0] kvs_rd_m;
+        if (MEM_EXTRA != 0) begin : g_kvcap
+            reg kv_rd_q;
+            reg [TG*W*8-1:0] cap;
+            always @(posedge clk or negedge rst_n) if (!rst_n) kv_rd_q <= 1'b0; else kv_rd_q <= me_kv_re;
+            always @(posedge clk) if (kv_rd_q) cap <= kvs_rd;
+            assign kvs_rd_m = cap;
+        end else begin : g_kvnocap
+            assign kvs_rd_m = kvs_rd;
+        end
         assign kvs_r_ce = me_kv_re;
         assign kvs_r_addr = is_v ? lv : lk;
         genvar e;
         for (e = 0; e < TG * W; e = e + 1) begin : g_x
-            assign me_kv_q[32*e +: 32] = e4m3_f32(kvs_rd[8*e +: 8]);
+            assign me_kv_q[32*e +: 32] = e4m3_f32(kvs_rd_m[8*e +: 8]);
         end
         assign kv_re = 1'b0;
         assign kv_addr = {TG*AW{1'b0}};
@@ -198,7 +233,16 @@ module ot_qwen_rom_tile_logic #(
         assign kvs_r_addr = {KV_AW{1'b0}};
         assign kv_re = me_kv_re;
         assign kv_addr = me_kv_addr;
-        assign me_kv_q = kv_q;
+        //: host-served global KV (simulation): the same capture stage as the slice
+        if (MEM_EXTRA != 0) begin : g_kvgcap
+            reg kv_rd_q;
+            reg [TG*W*32-1:0] cap;
+            always @(posedge clk or negedge rst_n) if (!rst_n) kv_rd_q <= 1'b0; else kv_rd_q <= me_kv_re;
+            always @(posedge clk) if (kv_rd_q) cap <= kv_q;
+            assign me_kv_q = cap;
+        end else begin : g_kvgnocap
+            assign me_kv_q = kv_q;
+        end
     end endgenerate
 endmodule
 

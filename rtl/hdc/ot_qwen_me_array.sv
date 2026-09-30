@@ -43,6 +43,7 @@ module ot_qwen_me_array #(
     parameter integer NWS = 0,
     parameter integer TWS = 0,
     parameter integer ORD = 0,
+    parameter integer MEM_EXTRA = 0,      // tile memory capture stage (ot_qwen_rom_tile_logic)
     parameter integer SCALE_LOCAL = 0,    // port-local scale ROM (ot_hdc_matvec_part SCALE_LOCAL)
     parameter integer CODE_BANKS = 2,
     parameter integer KV_LOCAL = 0        // 1: tiles hold KV slices (ot_qwen_rom_tile); 0: global KV port
@@ -99,7 +100,7 @@ module ot_qwen_me_array #(
     localparam integer LT  = $clog2(TG);
     localparam integer NXC = 1 << SMAX;
     localparam integer NXL = NXC / TG;
-    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS;
+    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA;
     localparam integer NPT = GT >> TCUT;                  // tree words into the top
     localparam integer IBW = 3 * NW + 13 * AW + 13;       // the i_* fields
     localparam integer IREG = (BD > XVM && BD > 0) ? 1 : 0;   // the tile's own input stage is one of BD
@@ -117,7 +118,7 @@ module ot_qwen_me_array #(
     wire [NPG*W-1:0]    sp_o_mask;
     wire [NPG*W*32-1:0] sp_o_data;
     ot_qwen_me_spine #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
-        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL)) u_spine (
+        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .MEM_EXTRA(MEM_EXTRA)) u_spine (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
@@ -187,7 +188,7 @@ module ot_qwen_me_array #(
             end
             wire [TG*W*32-1:0] kvq = t_kv_q[t*TG*W*32 +: TG*W*32];
             ot_qwen_rom_tile_logic #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
-                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL)) u_t (
+                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA)) u_t (
                 .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
                 .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),
                 .t_out(lw[LT][t*W*32 +: W*32]), .t_vout(lvv[LT][t]),
@@ -220,6 +221,7 @@ module ot_qwen_me_spine #(
     parameter integer NWS = 0,
     parameter integer TWS = 0,
     parameter integer ORD = 0,
+    parameter integer MEM_EXTRA = 0,      // tile memory capture stage (ot_qwen_rom_tile_logic)
     parameter integer SCALE_LOCAL = 0
 ) (
     input  wire              clk,
@@ -277,7 +279,7 @@ module ot_qwen_me_spine #(
     localparam integer LT  = $clog2(TG);
     localparam integer NXC = 1 << SMAX;
     localparam integer NXL = NXC / TG;
-    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS;
+    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA;
     localparam integer NPT = GT >> TCUT;                  // tree words into the top
     localparam integer IBW = 3 * NW + 13 * AW + 13;       // the i_* fields
     localparam integer IREG = (BD > XVM && BD > 0) ? 1 : 0;   // the tile's own input stage is one of BD

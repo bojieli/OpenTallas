@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CORE = ROOT / "rtl/hdc/ot_hdc_core_vector_weight.sv"
 VSTREAM = ROOT / "rtl/hdc/ot_hdc_vstream.sv"
 REMOVE = ("int8_wrom_q", "kv_raddr", "kv_q", "vx_re", "vx_addr", "vx_q", "me_oaddr", "me_omask", "me_odata")
-SPINE_PARAMS = ("SMIN", "SMAX", "TCUT", "BD", "XVM", "NWS", "TWS", "ORD", "SCALE_LOCAL")
+SPINE_PARAMS = ("SMIN", "SMAX", "TCUT", "BD", "XVM", "NWS", "TWS", "ORD", "SCALE_LOCAL", "MEM_EXTRA")
 
 
 def emit(text: str) -> str:
