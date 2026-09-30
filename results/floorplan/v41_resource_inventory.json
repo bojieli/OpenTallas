@@ -13,7 +13,7 @@
     "results/arch/v41_die_assembly.json": "9966fa08a48e9e904e23c093312ffd0a2ee2d7fe4eb197b70215c07f52224189",
     "results/arch/v41_stage_owner_preflight.json": "8d7607de634470f58132eb36bb9100b369689a9b509dd299662a7f97fba47a1d",
     "results/rtl/hdc_v41x_qtile_pair_bank.json": "8998d6a40c8ecef42e11ba8faa3f7f525156a0e326e0cc25dfaa4ca770d4c167",
-    "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
+    "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "62923ec77d9663bd5b90c14d693ea41815c9bcb64db5782bc230c6219e2ff6b2",
     "docs/V41X_DIE_PHYSICAL_PREFLIGHT.md": "1374f292959bb745b2ab1346ae4c6ef2b67b18d02b29770bf698e2807acadb78"
   },
   "rtl_profile": {
@@ -1015,5 +1015,17 @@
       "issue": "analytical 9.215mm2 remaining area is not routing margin proof",
       "action": "recompute full die from local physical cuts and explicit channels"
     }
-  ]
+  ],
+  "repin_20260930": {
+    "label": "stale: program changed",
+    "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+    "rerun": false,
+    "changed_pins": {
+      "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": {
+        "old": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
+        "new": "62923ec77d9663bd5b90c14d693ea41815c9bcb64db5782bc230c6219e2ff6b2"
+      }
+    },
+    "historical_copy": null
+  }
 }

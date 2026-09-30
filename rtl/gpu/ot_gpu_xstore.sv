@@ -96,13 +96,16 @@ module ot_gpu_xstore #(
             end
         end
     end
-    integer i;
-    always @(posedge clk) begin
-        if (rd_v) begin
-            for (i = 0; i < NM; i = i + 1) begin
-                if (rd_slot) buf1[(rd_k * NM + i) * 256 +: 256] <= rd[256*i +: 256];
-                else         buf0[(rd_k * NM + i) * 256 +: 256] <= rd[256*i +: 256];
+    // fragment buffers: word k of macro m lands in bits [(k*NM + m)*256, +256) -- constant slices per k,
+    // selected by a decoded enable (no variable part-selects on the 32-Kbit vectors)
+    genvar kk, mm;
+    generate for (kk = 0; kk < SUBS; kk = kk + 1) begin : g_k
+        wire en = rd_v && (rd_k == kk);
+        for (mm = 0; mm < NM; mm = mm + 1) begin : g_mw
+            always @(posedge clk) begin
+                if (en && rd_slot)  buf1[(kk * NM + mm) * 256 +: 256] <= rd[256*mm +: 256];
+                if (en && !rd_slot) buf0[(kk * NM + mm) * 256 +: 256] <= rd[256*mm +: 256];
             end
         end
-    end
+    end endgenerate
 endmodule

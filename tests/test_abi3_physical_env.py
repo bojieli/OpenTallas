@@ -438,3 +438,19 @@ def test_emitted_results_do_not_claim_pass_without_meeting_timing(path):
         assert float(m["hold_wns_ns"]) >= 0.0, f"{path}: pass with post-route hold WNS < 0"
         assert float(m["drc_errors"]) == 0, f"{path}: pass with DRC errors"
         assert float(m["antenna_violating_nets"]) == 0, f"{path}: pass with antenna violations"
+
+
+def test_asap7_adder_map_default_is_kogge_stone_and_recorded():
+    """asap7 runs default to yosys's Kogge-Stone adders (ADDER_MAP_FILE empty); records without the field used
+    the platform's FA/HA map, so their config.mk still replays."""
+    import run_abi3_physical as flow
+    v = flow.VIEWS["asap7"]
+    ks = flow.with_adder_map(v, flow.ADDER_MAP_KOGGE_STONE)
+    assert ks["pnr"]["extra_config"]["ADDER_MAP_FILE"] == ""
+    assert "ADDER_MAP_FILE" not in v["pnr"]["extra_config"]          # the view itself is untouched
+    assert flow.with_adder_map(v, flow.ADDER_MAP_PLATFORM) is v
+    legacy = {"view": {"name": "asap7"}, "place_and_route": {}}
+    assert "ADDER_MAP_FILE" not in flow.recorded_view(legacy)["pnr"]["extra_config"]
+    new = {"view": {"name": "asap7"}, "place_and_route": {"adder_map": flow.ADDER_MAP_KOGGE_STONE}}
+    assert flow.recorded_view(new)["pnr"]["extra_config"]["ADDER_MAP_FILE"] == ""
+    assert "--asap7-adder-map" in flow.build_parser().format_help()

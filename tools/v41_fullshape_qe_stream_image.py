@@ -28,6 +28,11 @@ SELECTED = (110, 112, 141, 144, 357, 361)
 MATRIX_ORDER = ("wq_a", "wkv", "wq_b", "wo_b", "shared.w1", "shared.w3", "shared.w2")
 FAMILY_ORDER = ("w1", "w3", "w2")
 FULL_NAMES = MATRIX_ORDER + tuple(f"exp{i}.{family}" for family in FAMILY_ORDER for i in SELECTED)
+DEFAULT_OTHER = ROOT / "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json"
+
+
+def full_names(selected) -> tuple[str, ...]:
+    return MATRIX_ORDER + tuple(f"exp{i}.{family}" for family in FAMILY_ORDER for i in selected)
 
 
 def digest(path: Path) -> str:
@@ -181,13 +186,16 @@ def verify_numeric_samples(logical: np.ndarray, codes: np.ndarray,
 
 
 def build(manifest_path: Path, source_dir: Path, out_dir: Path,
-          names: tuple[str, ...] | None = None) -> dict:
+          names: tuple[str, ...] | None = None, other_path: Path = DEFAULT_OTHER) -> dict:
     manifest = json.loads(manifest_path.read_text())
     if manifest.get("layer") != 0 or manifest.get("rank") != 0 or manifest.get("tp") != 4:
         raise ValueError("this gate supports shipped TP4 layer0 rank0 only")
+    # The token's router selection (the image manifest's populated experts); the 200K shard is SELECTED.
+    selected = tuple(manifest.get("experts_populated", SELECTED))
+    FULL = full_names(selected)
     if names is None:
-        names = FULL_NAMES
-    if len(names) != len(set(names)) or any(name not in FULL_NAMES for name in names):
+        names = FULL
+    if len(names) != len(set(names)) or any(name not in FULL for name in names):
         raise ValueError("invalid or repeated matrix name")
     out_dir.mkdir(parents=True, exist_ok=True)
     matrices = {}
@@ -235,31 +243,30 @@ def build(manifest_path: Path, source_dir: Path, out_dir: Path,
                               image_sha256=digest(path), logical_stream_sha256=hashlib.sha256(logical.tobytes()).hexdigest(),
                               image_bytes=path.stat().st_size,
                               adapter_required=fp4)
-    if names == FULL_NAMES:
+    if names == FULL:
         if tuple(family_base) != FAMILY_ORDER:
             raise AssertionError("missing expert family")
-    other_path = ROOT / "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json"
     other = json.loads(other_path.read_text())
     other_bytes = sum((r["end_word_exclusive"] - r["start_word"]) *
                       (r["bytes_per_bank_word"] * (64 if r["engine"] == "me" else 8 if r["engine"] == "he" else 1))
                       for r in other["regions"] if r["engine"] != "qe")
     physical_bytes = physical_base_sector * 32
     direct_bytes = base * WORD_BYTES
-    full = names == FULL_NAMES
+    full = names == FULL
     if full and physical_bytes + other_bytes > W.CAPACITY_BYTES:
         raise ValueError("packed physical QE image exceeds die ROM capacity")
     return dict(schema=SCHEMA, status="source_pinned_layout_readback_pass" if full else "partial_matrix_gate",
                 claim_boundary="image/addresses only; FP4 port adapter and full RTL token pending",
                 source_image_manifest=str(manifest_path.relative_to(ROOT)) if manifest_path.is_relative_to(ROOT) else str(manifest_path),
                 source_image_manifest_sha256=digest(manifest_path),
-                other_engine_layout_manifest=str(other_path.relative_to(ROOT)),
+                other_engine_layout_manifest=str(Path(other_path).resolve().relative_to(ROOT)),
                 other_engine_layout_sha256=digest(other_path),
                 layout_tool_sha256=digest(Path(__file__)),
                 source_commit=manifest.get("source_commit"), source_sha256=manifest.get("source_sha256"),
                 checkpoint=manifest.get("checkpoint"),
                 layer=0, rank=0, context=manifest.get("context"), matrices=matrices,
-                selected_expert_ids=list(SELECTED), all_experts_materialized=False,
-                expert_family_coverage={f"exp.{family}": list(SELECTED) for family in FAMILY_ORDER},
+                selected_expert_ids=list(selected), all_experts_materialized=False,
+                expert_family_coverage={f"exp.{family}": list(selected) for family in FAMILY_ORDER},
                 expert_access_policy="only materialized selected IDs; other slots fail closed",
                 logical_qrom_words=base, logical_direct_bytes=direct_bytes,
                 physical_qe_bytes_reserved=physical_bytes, other_engine_bytes_reserved=other_bytes,
@@ -278,9 +285,11 @@ def main() -> None:
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--record", type=Path, required=True)
     p.add_argument("--matrix", action="append")
+    p.add_argument("--other-layout", type=Path, default=DEFAULT_OTHER,
+                   help="the token-selected ME/HE/CROM layout record of the same shard")
     args = p.parse_args()
     record = build(args.manifest, args.source_dir, args.output_dir,
-                   tuple(args.matrix) if args.matrix else None)
+                   tuple(args.matrix) if args.matrix else None, args.other_layout)
     args.record.parent.mkdir(parents=True, exist_ok=True)
     args.record.write_text(json.dumps(record, indent=2) + "\n")
     print(json.dumps({k: record[k] for k in ("status", "logical_qrom_words", "packed_die_bytes_reserved", "direct_expanded_fits_die")}))

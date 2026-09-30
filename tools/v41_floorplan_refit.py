@@ -69,6 +69,7 @@ def main(argv=None):
     ap.add_argument("--bf-pair", type=Path, required=True)
     ap.add_argument("--hub", type=Path, default=ROOT / "results/uarch/v41_dedicated_units.json")
     ap.add_argument("--hub-row", default="proposal_w11_p6")
+    ap.add_argument("--label", default="", help="status label recorded in the re-fit (e.g. interim)")
     ap.add_argument("--xroot", default="SU_VECTOR",
                     help="hub region holding the x-broadcast root (distributed VM in the SU region, W11); '' = VM")
     ap.add_argument("--output", type=Path, required=True)
@@ -87,8 +88,15 @@ def main(argv=None):
                    hub_mm2=hub, hub_scale={"HC": g, "GATHER": g}, hub_add_mm2={"VM": AON_MM2},
                    xroot=a.xroot or None,
                    basis="W10 placed pairs + model hub + power switches + always-on island")
-    rec = P.run("expanded_woa", a.svg_dir, write_views=False)
+    import shutil
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        rec = P.run("expanded_woa", Path(td), write_views=False)
+        for f in Path(td).glob("*.svg"):                    # never overwrite W1's drawing
+            a.svg_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copy(f, a.svg_dir / (a.output.stem + ".svg"))
     rec["schema"] = "opentallas.v41.floorplan_pack_refit.v1"
+    rec["status"] = a.label or rec["status"]
     rec["refit"] = dict(
         q_pair=dict(record=str(a.q_pair), sha256=sha(a.q_pair), **q),
         bf16_pair=dict(record=str(a.bf_pair), sha256=sha(a.bf_pair), **b),

@@ -1,4 +1,3 @@
-import pytest
 """W11 ring layout at full capacity: writer naming gate and the two-user die gate -- records current (fast)."""
 
 import hashlib
@@ -23,7 +22,6 @@ def test_naming_record_current_and_passing():
     assert rec["negative_control"]["must_fail"] and not rec["negative_control"]["passed"]
 
 
-@pytest.mark.xfail(reason="pending W11 two-user die gate record results/rtl/w11_die_idx_ring_mu_gate.json (run in progress)", strict=False)
 def test_mu_die_gate_current_and_passing():
     rec = json.loads(MU.read_text())
     assert rec["status"] == "pass"

@@ -5,11 +5,17 @@
  "status": "pass",
  "simulator": "icarus Icarus Verilog version 11.0 (stable) ()",
  "source_sha256": {
-  "rtl/gpu/ot_gpu_tree.sv": "6973a40d35478320c25b032bef5ac57a4928cef02b9581602ea9c8d68338d142",
+  "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+  "rtl/v41rom/ot_v41_bterm2.sv": "7bcef5af5f27d2c8f43f8d185d0a6a3932ec003aa9a10979d166fdd0396154f9",
+  "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "afa7fbda71e1da3c1f5a7ca38309582a2c3567cfafe336f292fa24a5c80877ee",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "0bb7697efec1c0e41c8faeaba314f8fd313facfdfbec1419e57d015780871d45",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
   "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
-  "rtl/gpu/ot_gpu_stack.sv": "8df2167979baea3e9358a92a01a7ad595bf64d3ed8f44ccd9e6832c8a8e8c8a1",
-  "rtl/gpu/ot_gpu_bd_col.sv": "fb2ffeca31dcf16a7ed2296fc0dda5031d4d653f6707ec6ca4acbc5e7b6ca34e",
-  "rtl/gpu/ot_gpu_sm_bd.sv": "95457ab604b09c36564732f67e571e9b373850ecd80130f1d7a243591e330ab1",
+  "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+  "rtl/gpu/ot_gpu_bd_col.sv": "9637b23a0e48ae59818d2dc4a0a8e5333a73961c1783f37b82ca79d70a762df5",
+  "rtl/gpu/ot_gpu_sm_bd.sv": "f0229375762a515aae5cba3f82e275a143909ede5357daebcd94f2e85f5f7abb",
   "rtl/hdc/v41/ot_hdc_blockdot.sv": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
   "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
@@ -17,13 +23,13 @@
   "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
   "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
   "rtl/test/tb_gpu_sm_bd.sv": "3c3d4f2dec436650eaa846657e489d6d575f46c975775718abbd5285def2bcef",
-  "rtl/gpu/ot_gpu_tc_col.sv": "1651517301c4a888abd5fd21e7f786a4304763901024a686b5b74a58208e4b0e",
+  "rtl/gpu/ot_gpu_tc_col.sv": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f",
   "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
-  "rtl/gpu/ot_gpu_sm_v.sv": "35b66c21e7b8e6b6edd41b3710c67b6ef4e26ebb38f82d018cd0aa8a1c2cad61",
+  "rtl/gpu/ot_gpu_sm_v.sv": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c",
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
   "rtl/test/tb_gpu_sm_v.sv": "8ec5866247bd9c1cde174d189b112605b877286d1ad96b959137e72ee619bec2",
-  "tools/rtl_gpu_sm_exact.py": "70cb4c9f3e3afebeb1184c4e5ae829c1665eb855507459c4047bfd0c3f4d3ee6",
+  "tools/rtl_gpu_sm_exact.py": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
  },
@@ -49,15 +55,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 302,
-    "first_result": 164,
-    "last_result": 299,
+    "cycles_start_to_done": 317,
+    "first_result": 179,
+    "last_result": 314,
     "lines": 256,
     "consumed": 256,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 38
+    "drain_last_line_to_last_result": 52
    }
   },
   {
@@ -81,15 +87,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 430,
-    "first_result": 233,
-    "last_result": 427,
+    "cycles_start_to_done": 447,
+    "first_result": 250,
+    "last_result": 444,
     "lines": 264,
     "consumed": 264,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 43
+    "drain_last_line_to_last_result": 59
    }
   },
   {
@@ -113,15 +119,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 689,
-    "first_result": 366,
-    "last_result": 686,
+    "cycles_start_to_done": 708,
+    "first_result": 385,
+    "last_result": 705,
     "lines": 360,
     "consumed": 360,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 48
+    "drain_last_line_to_last_result": 66
    }
   },
   {
@@ -145,15 +151,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 174,
-    "first_result": 164,
-    "last_result": 171,
+    "cycles_start_to_done": 189,
+    "first_result": 179,
+    "last_result": 186,
     "lines": 128,
     "consumed": 128,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 38
+    "drain_last_line_to_last_result": 52
    }
   },
   {
@@ -177,15 +183,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 238,
-    "first_result": 215,
-    "last_result": 235,
+    "cycles_start_to_done": 291,
+    "first_result": 268,
+    "last_result": 288,
     "lines": 40,
     "consumed": 40,
     "fault": 0,
-    "stall_waits": 17,
+    "stall_waits": 22,
     "released": 1,
-    "drain_last_line_to_last_result": 33
+    "drain_last_line_to_last_result": 45
    }
   },
   {
@@ -209,15 +215,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 117,
-    "first_result": 114,
-    "last_result": 114,
+    "cycles_start_to_done": 136,
+    "first_result": 133,
+    "last_result": 133,
     "lines": 40,
     "consumed": 40,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 48
+    "drain_last_line_to_last_result": 66
    }
   },
   {
@@ -241,15 +247,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 113,
-    "first_result": 107,
-    "last_result": 110,
+    "cycles_start_to_done": 130,
+    "first_result": 124,
+    "last_result": 127,
     "lines": 48,
     "consumed": 48,
     "fault": 0,
     "stall_waits": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 43
+    "drain_last_line_to_last_result": 59
    }
   },
   {
@@ -273,15 +279,15 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 228,
-    "first_result": 221,
-    "last_result": 225,
+    "cycles_start_to_done": 243,
+    "first_result": 236,
+    "last_result": 240,
     "lines": 48,
     "consumed": 48,
     "fault": 0,
     "stall_waits": 15,
     "released": 1,
-    "drain_last_line_to_last_result": 38
+    "drain_last_line_to_last_result": 52
    }
   },
   {
@@ -301,14 +307,14 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 222,
-    "first_result": 219,
-    "last_result": 219,
+    "cycles_start_to_done": 241,
+    "first_result": 238,
+    "last_result": 238,
     "lines": 40,
     "consumed": 40,
     "fault": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 49
+    "drain_last_line_to_last_result": 67
    }
   },
   {
@@ -328,14 +334,14 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 218,
-    "first_result": 212,
-    "last_result": 215,
+    "cycles_start_to_done": 235,
+    "first_result": 229,
+    "last_result": 232,
     "lines": 48,
     "consumed": 48,
     "fault": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 44
+    "drain_last_line_to_last_result": 60
    }
   },
   {
@@ -355,14 +361,14 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 224,
-    "first_result": 217,
-    "last_result": 221,
+    "cycles_start_to_done": 242,
+    "first_result": 235,
+    "last_result": 239,
     "lines": 48,
     "consumed": 48,
     "fault": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 50
+    "drain_last_line_to_last_result": 67
    }
   },
   {
@@ -382,14 +388,14 @@
    "mismatches": 0,
    "exact": true,
    "rtl": {
-    "cycles_start_to_done": 408,
-    "first_result": 277,
-    "last_result": 405,
+    "cycles_start_to_done": 423,
+    "first_result": 292,
+    "last_result": 420,
     "lines": 144,
     "consumed": 144,
     "fault": 0,
     "released": 1,
-    "drain_last_line_to_last_result": 39
+    "drain_last_line_to_last_result": 53
    }
   }
  ]

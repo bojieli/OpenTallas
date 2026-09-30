@@ -1955,6 +1955,32 @@ def resolve_floorplan(
 SYNTH_MEMORY_MAX_BITS_SINCE = "2026-09-19T10:07:51+00:00"
 
 
+# asap7 adder mapping.  The platform's ADDER_MAP_FILE (yoSys/cells_adders: extract_fa + FA/HA cells) builds
+# ripple adders that ABC cannot restructure; set empty, yosys keeps its Kogge-Stone $alu map.  Measured (W10,
+# WC floorplan, 0.833 ns): the FP32 add pipe 840 -> 1,091 MHz, the V4.1 element 659 -> 715 MHz.  New runs
+# default to the Kogge-Stone map (--asap7-adder-map restores the platform's); the choice is recorded as
+# place_and_route.adder_map, and a record without it used the platform map.
+ADDER_MAP_KOGGE_STONE = "yosys_kogge_stone"
+ADDER_MAP_PLATFORM = "platform_fa_cells"
+
+
+def with_adder_map(view: dict[str, Any], adder_map: str) -> dict[str, Any]:
+    """The view whose ORFS config carries `adder_map` (asap7 only; other platforms are returned unchanged)."""
+    pnr = view.get("pnr")
+    if not pnr or pnr.get("platform") != "asap7" or adder_map != ADDER_MAP_KOGGE_STONE:
+        return view
+    out = dict(view)
+    out["pnr"] = dict(pnr)
+    out["pnr"]["extra_config"] = {**pnr["extra_config"], "ADDER_MAP_FILE": ""}
+    return out
+
+
+def recorded_view(record: dict[str, Any]) -> dict[str, Any]:
+    """The view a routed record's config.mk was written from (its recorded adder map applied)."""
+    view = VIEWS[record["view"]["name"]]
+    return with_adder_map(view, record.get("place_and_route", {}).get("adder_map", ADDER_MAP_PLATFORM))
+
+
 def recorded_memory_max_bits(record: dict[str, Any]) -> int | None:
     """The SYNTH_MEMORY_MAX_BITS a routed record's config.mk carried (None: no line)."""
     pnr = record.get("place_and_route", {})
@@ -2268,24 +2294,27 @@ def run_pnr(
     # wrapper, so the killed run kept burning cores on a result nobody would read.
     reports_dir = case / "reports" / platform_name / nickname / "base"
     logs_dir = case / "logs" / platform_name / nickname / "base"
-    if stop_after == "cts":
-        # through clock-tree synthesis and its setup/hold repair only; the
-        # record carries that stage's own metrics (ORFS 4_1_cts.json)
-        proc = orfs_make("cts", "orfs_flow.log", flow_timeout_seconds())
-        require_success(proc, "ORFS place-and-route through CTS")
-        cts_json = logs_dir / "4_1_cts.json"
+    if stop_after in ("cts", "floorplan"):
+        # through clock-tree synthesis and its setup/hold repair only (or through
+        # floorplan: the synthesised netlist timed at the run's ORFS corner before
+        # placement, a fast path-finding pass); the record carries that stage's own
+        # metrics (ORFS 4_1_cts.json / 2_1_floorplan.json)
+        st = stop_after
+        proc = orfs_make(st, "orfs_flow.log", flow_timeout_seconds())
+        require_success(proc, f"ORFS place-and-route through {st}")
+        cts_json = logs_dir / ("4_1_cts.json" if st == "cts" else "2_1_floorplan.json")
         if not cts_json.is_file():
-            raise FlowError(f"ORFS produced no CTS metrics at {cts_json}")
+            raise FlowError(f"ORFS produced no {st} metrics at {cts_json}")
         cts = json.loads(cts_json.read_text(encoding="utf-8"))
         errors = {k: v for k, v in cts.items() if k.endswith("__flow__errors__count")}
         if any(int(v) != 0 for v in errors.values()):
             raise FlowError(f"ORFS reported flow errors: {errors}")
-        fmax_info = conservative_fmax_metrics(cts, "cts")
+        fmax_info = conservative_fmax_metrics(cts, st)
         fmax = fmax_info["fmax_hz"]
         return {
             "platform": platform_name,
             "design_nickname": nickname,
-            "stopped_after": "cts",
+            "stopped_after": st,
             "core_utilization_percent": core_utilization,
             "synth_memory_max_bits": synth_memory_max_bits(),
             "place_density": place_density,
@@ -2295,22 +2324,22 @@ def run_pnr(
             "sdc_clock_period_library_units": period_lib,
             **({"signal_integrity_constraints": constraints} if constraints else {}),
             "metrics": {
-                "stage": "cts (placement-estimated parasitics)",
-                "setup_wns_ns": float(cts["cts__timing__setup__ws"]) * time_unit_ns,
-                "hold_wns_ns": float(cts["cts__timing__hold__ws"]) * time_unit_ns,
-                "setup_tns_ns": float(cts["cts__timing__setup__tns"]) * time_unit_ns,
-                "hold_tns_ns": float(cts["cts__timing__hold__tns"]) * time_unit_ns,
-                "setup_violations": cts.get("cts__timing__drv__setup_violation_count"),
-                "hold_violations": cts.get("cts__timing__drv__hold_violation_count"),
+                "stage": "cts (placement-estimated parasitics)" if st == "cts" else "floorplan (synthesised netlist, no placement parasitics)",
+                "setup_wns_ns": float(cts[f"{st}__timing__setup__ws"]) * time_unit_ns,
+                "hold_wns_ns": float(cts[f"{st}__timing__hold__ws"]) * time_unit_ns,
+                "setup_tns_ns": float(cts[f"{st}__timing__setup__tns"]) * time_unit_ns,
+                "hold_tns_ns": float(cts[f"{st}__timing__hold__tns"]) * time_unit_ns,
+                "setup_violations": cts.get(f"{st}__timing__drv__setup_violation_count"),
+                "hold_violations": cts.get(f"{st}__timing__drv__hold_violation_count"),
                 "fmax_mhz": float(fmax) / 1e6 if fmax is not None else None,
                 **fmax_info,
-                "hold_buffers": cts.get("cts__design__instance__count__hold_buffer"),
-                "setup_buffers": cts.get("cts__design__instance__count__setup_buffer"),
-                "instance_count": cts.get("cts__design__instance__count"),
-                "instance_area_um2": cts.get("cts__design__instance__area"),
-                "clock_skew_setup_ps": cts.get("cts__clock__skew__setup"),
-                "clock_skew_hold_ps": cts.get("cts__clock__skew__hold"),
-                "vectorless_power_total_w": cts.get("cts__power__total"),
+                "hold_buffers": cts.get(f"{st}__design__instance__count__hold_buffer"),
+                "setup_buffers": cts.get(f"{st}__design__instance__count__setup_buffer"),
+                "instance_count": cts.get(f"{st}__design__instance__count"),
+                "instance_area_um2": cts.get(f"{st}__design__instance__area"),
+                "clock_skew_setup_ps": cts.get(f"{st}__clock__skew__setup"),
+                "clock_skew_hold_ps": cts.get(f"{st}__clock__skew__hold"),
+                "vectorless_power_total_w": cts.get(f"{st}__power__total"),
                 "orfs_cts_metrics": cts,
             },
             "toolchain": orfs_identity(),
@@ -2960,9 +2989,14 @@ def build_parser() -> argparse.ArgumentParser:
              "under the view's pnr.extra_config.  Absent: nothing added",
     )
     parser.add_argument(
+        "--asap7-adder-map", action="store_true",
+        help=("asap7: keep the platform's ADDER_MAP_FILE (FA/HA ripple adders).  Default: ADDER_MAP_FILE is set "
+              "empty so yosys keeps its Kogge-Stone adders; recorded as place_and_route.adder_map"),
+    )
+    parser.add_argument(
         "--pnr-stop-after",
         default="finish",
-        choices=["finish", "cts"],
+        choices=["finish", "cts", "floorplan"],
         help=(
             "cts: run ORFS through clock-tree synthesis (with its setup/hold repair) "
             "and record the CTS-stage metrics, for a block whose global route does "
@@ -3201,6 +3235,9 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"--orfs-var {item!r}: expected KEY=VALUE", file=sys.stderr)
                 return 2
             view["pnr"]["extra_config"][key] = value
+
+    adder_map = ADDER_MAP_PLATFORM if args.asap7_adder_map else ADDER_MAP_KOGGE_STONE
+    view = with_adder_map(view, adder_map)
 
     if args.orfs_corner:
         if view.get("pnr") is None:
@@ -3511,6 +3548,8 @@ def main(argv: list[str] | None = None) -> int:
                 nickname_tag=args.nickname_tag,
                 stop_after=args.pnr_stop_after,
             )
+            if view["pnr"].get("platform") == "asap7":
+                record["place_and_route"]["adder_map"] = adder_map
             if args.cts_cluster_size is not None:
                 record["place_and_route"]["clock_tree_config"] = {
                     "CTS_CLUSTER_SIZE": args.cts_cluster_size,
