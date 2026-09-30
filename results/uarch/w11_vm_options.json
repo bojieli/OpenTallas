@@ -97,8 +97,8 @@
   "tree_flop_mm2_delta": 0.0188,
   "banks_replicas": "unchanged: every client's words spread over the 128 groups (<= 1.34 words a group a cycle, the widest the result scatter) and consecutive elements share a row in a group, so the class-X replica's one row a bank and the merging write queue (ot_v41_vm_group_phys K = 4, WQD = 16, one macro row write a bank a cycle) carry them; the queue depth is a measured gate item (wq_occ), not yet at full shape"
  },
- "generated_utc": "2026-09-30T19:17:55Z",
- "source_commit": "45b257c81153903ff775ffffcb5172e47ee036b3",
+ "generated_utc": "2026-09-30T19:34:48Z",
+ "source_commit": "838ab6a250111e299de36a5dbdd39146b9564b7c",
  "basis": {
   "clock_ps": 1111.0,
   "wire_ps_per_um": 0.76,
@@ -1423,7 +1423,7 @@
  },
  "source_sha256": {
   "tools/w11_vm_options.py": "bb337b60669710180d08fc771660c469626ced0a2da55585ec68dbcfcac5de03",
-  "tools/uarch_model.py": "c4aa8f816880ef916dbdc2bf7993e8d7ed920637ebac7be31102a25adbaaf43a",
+  "tools/uarch_model.py": "398b303a987e31927d2fb14c1a878ad85349e098905dc01f96cfa021a4875645",
   "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
   "tools/w11_vm_h.py": "5e24e7373073d5adf55b6303e0c0b9e71b8699c6ca0e57fa337d4a1d12ec84fb",
   "tools/w11_vm_dist_spec.py": "ffb114db8415e567366447751091c6587bda3026efb2fabfa21720f3b4467920",
@@ -1431,7 +1431,7 @@
   "results/physical_abi3/asap7/chip/w11_vm_rot/lps10/physical.json": "287454b67c17612baeb0335275cd3a257ee6a968d9323ef2987168811c06720a",
   "results/physical_abi3/asap7/chip/w11_vm_rot/lps5/physical.json": "95f6b5dcde345f31af938419c512519f6721056112d443bf627009d5cfc683f0",
   "results/physical_abi3/asap7/chip/w11_vm_rot/lps8/physical.json": "d11732832bcdb078929760c600e9393d9f145c514faeaf47191d456da8cc7602",
-  "results/floorplan/v41_vm_dist_spec.json": "cd645f9f6518a05df912a9888d902c6c1be88624bb75c8594ca6b02df194fb34",
+  "results/floorplan/v41_vm_dist_spec.json": "592a403eb06957b82a0fab6c10aecfbc7ee0d7d9628540ef3593129cfb46dbb3",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
   "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d"
  }
