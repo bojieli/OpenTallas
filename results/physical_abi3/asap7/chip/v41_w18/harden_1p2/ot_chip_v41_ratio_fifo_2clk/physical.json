@@ -5,8 +5,8 @@
         "antenna_violating_nets": 0.0,
         "antenna_violating_pins": 0.0,
         "drc_errors": 0.0,
-        "hold_violations": 1.0,
-        "hold_wns_ns": -0.00155779,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.009459160000000001,
         "max_cap_violations": 0.0,
         "max_fanout_violations": 0.0,
         "max_slew_violations": 0.0,
@@ -14,7 +14,7 @@
         "physically_clean": true,
         "scope": "post-route, extracted parasitics",
         "setup_violations": 64.0,
-        "setup_wns_ns": -0.0757154,
+        "setup_wns_ns": -0.0755911,
         "signal_integrity_clean": true,
         "stage": "place_and_route",
         "timing_met": false
@@ -26,7 +26,7 @@
     "status": "not_met"
   },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-09-30T08:01:20.749724+00:00",
+  "completed_at": "2026-09-30T13:01:08.190243+00:00",
   "corner": {
     "liberty": [
       {
@@ -65,9 +65,9 @@
     "antenna_violating_nets": 0,
     "antenna_violating_pins": 0,
     "area_basis": "place_and_route.metrics.standard_cell_area_um2",
-    "area_um2": 291.673,
+    "area_um2": 291.819,
     "block": "ot_chip_v41_ratio_fifo",
-    "cells": 2473,
+    "cells": 2475,
     "cells_basis": "place_and_route.metrics.standard_cell_count: routed netlist after timing repair and clock-tree synthesis, buffers included",
     "clock_period_ns": 0.833,
     "clock_port": "wclk",
@@ -81,11 +81,11 @@
     "false_path_from_ports": [],
     "false_path_io": false,
     "fmax_basis": "place_and_route.metrics.fmax_hz (ORFS finish__timing__fmax)",
-    "fmax_hz": 1320830000.0,
-    "hold_wns_ns": -0.00155779,
+    "fmax_hz": 1320530000.0,
+    "hold_wns_ns": 0.009459160000000001,
     "io_delay_fraction": 0.2,
     "parameters": {},
-    "setup_wns_ns": -0.0757154,
+    "setup_wns_ns": -0.0755911,
     "signal_integrity_clean": true,
     "signal_integrity_violations": {
       "max_cap_violations": 0,
@@ -100,32 +100,39 @@
       }
     ],
     "top": "ot_chip_v41_ratio_fifo",
-    "utilization_fraction": 0.140086
+    "utilization_fraction": 0.140156
   },
-  "elapsed_seconds": 835.645,
+  "elapsed_seconds": 971.759,
   "expected_not_met": false,
   "flow_completed": true,
-  "generated_at": "2026-09-30T07:47:25.104557+00:00",
+  "generated_at": "2026-09-30T12:44:56.431657+00:00",
   "git": {
-    "commit": "cf587171decb7cdefe3a8715ccd062db8ab449ea",
+    "commit": "3e759ec72e019a006c133044052dca70cdb21975",
     "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
     "untracked_results": [
-      "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/",
-      "results/physical_abi3/asap7/chip/v41x_karb_local/link_450um_w18e8p5_1p2/",
-      "results/physical_abi3/asap7/chip/v41x_karb_local/link_600um_w18e8p5_1p2/",
-      "results/physical_abi3/asap7/chip/v41x_karb_local/link_750um_w18e8p5_1p2/",
-      "results/physical_abi3/asap7/chip/v41x_karb_local/link_900um_w18e8p5_1p2/",
-      "results/physical_abi3/asap7/chip/v41x_karb_local/pregion_aw30_w18e8p5_1p2/",
-      "results/physical_abi3/asap7/chip/v41x_karb_local/pslice_aw30_w18e8p5_1p2/",
+      "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_droop_ctrl/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_pg_ctrl/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_preramp/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_ratio_fifo/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_ratio_fifo_2clk/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_xcap/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/link_450um_w18e8p5_1p2/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/link_600um_w18e8p5_1p2/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/link_750um_w18e8p5_1p2/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/link_900um_w18e8p5_1p2/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/pregion_aw30_w18e8p5_1p2_flatsel/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/pregion_aw30_w18e8p5_1p2_pairstage_statuscomb/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/pregion_aw30_w18e8p5_1p2_statusreg/physical_artifacts/",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/proot_aw30_w18e8p5_1p2/",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/pslice_aw30_w18e8p5_1p2/physical_artifacts/",
       "results/physical_abi3/asap7/chip/v41x_karb_local/region_aw30_w18e8p5/physical_artifacts/",
       "results/physical_abi3/asap7/chip/v41x_karb_local/slice_aw30_w18e8p5/physical_artifacts/"
     ],
     "worktree_dirty": true,
     "worktree_status": [
-      " M rtl/chip/ot_chip_v41x_karb_pregion.sv",
-      " M tools/w18/corner_sta.py",
+      " M tools/w18/channel.py",
       "?? physical/w18/",
-      "?? physical/w18sdc/"
+      "?? physical/w18sdc/channel.sdc"
     ]
   },
   "place_and_route": {
@@ -143,38 +150,38 @@
       },
       "6_final.def": {
         "retained": false,
-        "sha256": "4050271240cb0102e94eac3bc69c615030c904d5265a02696caef33c24bbba04",
-        "size_bytes": 2801181
+        "sha256": "749ab6205f11d13d8585fa386094c599c52a8276c11b625641e5262726d3eca9",
+        "size_bytes": 2798274
       },
       "6_final.gds": {
         "retained": false,
-        "sha256": "bffc417a1a5e12dfdb97d1a10d243c2f5dce89d4b1a0863190a29798b6ed5276",
-        "size_bytes": 3321866
+        "sha256": "c8873f75745fc507b945e24747476362aeafd191a37b88de71953ecbf515c7d3",
+        "size_bytes": 3317386
       },
       "6_final.odb": {
         "retained": false,
-        "sha256": "242eab1f7ecb3a1c3b8deade9a8cccddc915be4dc9a591acdc5de17f74e708a8",
-        "size_bytes": 6101387
+        "sha256": "4a87bd9d8cba6c7de70d7cf265a3f40ad2e4ba09179f0ece97822dd2d0d08504",
+        "size_bytes": 6101004
       },
       "6_final.spef": {
         "retained": false,
-        "sha256": "556ddd90b5afce551aa829f1fe965460987f4400f419181941b6c89600366277",
-        "size_bytes": 1964550
+        "sha256": "20a32dc5480fe49d1610012357d028eb900c770f68d427270174b703f376d9ee",
+        "size_bytes": 1963399
       },
       "6_final.v": {
         "retained": true,
-        "sha256": "71103208407482ca614fdff58f09052b3a649d764182bd45b31500a8b6e29c75",
-        "size_bytes": 196564
+        "sha256": "953e0ae0a675446fc68ebbb97ec6ef193f014e23f999c1bd468628239547ed7c",
+        "size_bytes": 196706
       },
       "6_finish.rpt": {
         "retained": true,
-        "sha256": "794713c6001277e31df98abbbd805c423207be9e0027e21f859cfaef56235dec",
-        "size_bytes": 43597
+        "sha256": "c93c00eace6d886a36fc728080c07e3cbc4690a1317f7c96c1e5362aab2aadaf",
+        "size_bytes": 43828
       },
       "config.mk": {
         "retained": true,
-        "sha256": "df6863138dc2b15ed1267d148ba54f42413cf7bce9b088376405d44d36812fc1",
-        "size_bytes": 940
+        "sha256": "8feddc7f900d6e828fb28c0e17310e33cdc3d35b6b343dcc3dc4ac3447528483",
+        "size_bytes": 970
       },
       "constraint.sdc": {
         "retained": true,
@@ -183,8 +190,8 @@
       },
       "metadata.json": {
         "retained": true,
-        "sha256": "846072d512d1b22fab3549aed6a91b391b4dd72b2044df04244481a7ec630468",
-        "size_bytes": 24180
+        "sha256": "b66b9299e9c9eedb09598d409dabf54dbdb22b74223c74d5f6529d9da625d790",
+        "size_bytes": 24163
       }
     },
     "clock_period_ns": 0.833,
@@ -224,11 +231,11 @@
         "synth__flow__errors__count": 0
       },
       "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
-      "fmax_hz": 1320830000.0,
-      "hold_tns_ns": -0.00155779,
-      "hold_violations": 1,
-      "hold_wns_ns": -0.00155779,
-      "instance_count": 10469,
+      "fmax_hz": 1320530000.0,
+      "hold_tns_ns": 0.0,
+      "hold_violations": 0,
+      "hold_wns_ns": 0.009459160000000001,
+      "instance_count": 10477,
       "library_time_unit_ns": 0.001,
       "macro_area_um2": 0,
       "macro_count": 0,
@@ -236,26 +243,26 @@
       "max_fanout_violations": 0,
       "max_slew_violations": 0,
       "missing_metadata_keys": [],
-      "orfs_aggregate_fmax_hz": 1320830000.0,
+      "orfs_aggregate_fmax_hz": 1320530000.0,
       "per_clock_fmax_hz": {},
-      "power_total_w": 0.00395827,
+      "power_total_w": 0.00395907,
       "raw_timing_library_units": {
-        "hold_tns_ns": -1.55779,
-        "hold_wns_ns": -1.55779,
-        "setup_tns_ns": -4424.07,
-        "setup_wns_ns": -75.7154
+        "hold_tns_ns": 0,
+        "hold_wns_ns": 9.45916,
+        "setup_tns_ns": -4418.08,
+        "setup_wns_ns": -75.5911
       },
-      "routed_nets": 2096,
-      "routed_wirelength_um": 8813,
+      "routed_nets": 2098,
+      "routed_wirelength_um": 8815,
       "sequential_area_um2": 99.3773,
       "sequential_cell_count": 336,
-      "setup_tns_ns": -4.4240699999999995,
+      "setup_tns_ns": -4.41808,
       "setup_violations": 64,
-      "setup_wns_ns": -0.0757154,
-      "standard_cell_area_um2": 291.673,
-      "standard_cell_count": 2473,
-      "utilization_fraction": 0.140086,
-      "vias": 17479
+      "setup_wns_ns": -0.0755911,
+      "standard_cell_area_um2": 291.819,
+      "standard_cell_count": 2475,
+      "utilization_fraction": 0.140156,
+      "vias": 17430
     },
     "netlist_normalization": {
       "normalized_netlist_sha256": "ad53c89e0f031978057adfcf1e86b7bde030c3e6d861d2268f3c8b6c60b50078",
@@ -417,9 +424,13 @@
         "BC"
       ],
       "hold_corners_basis": "ORFS CORNERS: every listed corner's liberty is read as its own scene, so repair_timing fixes setup AND hold at each of them (ASAP7: TC = TT 0.70 V 25 C, BC = FF 0.77 V 0 C, WC = SS 0.63 V 100 C); the platform's multi-bit flop views stay the primary corner's",
+      "hold_margin_basis": "ORFS HOLD_SLACK_MARGIN: repair_timing targets this much POSITIVE hold slack under global-route-estimated parasitics so the RCX-extracted finish check still lands non-negative.  Absent: ORFS default 0, which leaves the estimate-versus-extraction gap standing as a violation",
+      "hold_margin_library_units": 10.0,
+      "hold_margin_ns": 0.01,
       "sdc_lines": [
         "set_max_fanout 32 [current_design]"
-      ]
+      ],
+      "slew_margin_basis": "ORFS SLEW_MARGIN, passed to repair_design -slew_margin at placement and after global routing: the repair targets (100 - margin)% of each pin's slew limit under estimated parasitics; the finish check keeps the full limit"
     },
     "synth_memory_max_bits": 65536,
     "tns_end_percent": 100,
@@ -477,6 +488,8 @@
       "47.84",
       "--place-density",
       "0.5",
+      "--hold-margin-ns",
+      "0.01",
       "--orfs-var",
       "ADDER_MAP_FILE=",
       "--orfs-var",
@@ -490,7 +503,7 @@
       "results/physical_abi3/asap7/chip/v41_w18/harden_1p2/ot_chip_v41_ratio_fifo_2clk/physical.json"
     ],
     "driver": {
-      "commit": "cf587171decb7cdefe3a8715ccd062db8ab449ea",
+      "commit": "3e759ec72e019a006c133044052dca70cdb21975",
       "file_modified_since_commit": false,
       "note": "the driver and the sources come from the same tree; git.commit describes both",
       "path": "/tmp/claude-1000/wt/w18/tools/run_abi3_physical.py",
