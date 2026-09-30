@@ -795,11 +795,24 @@ def main(argv=None):
         rule=dict(split="s = model's doubling rule; segments of next_pow2(ceil(C/s)) chunks (golden-aligned)",
                   word_order="per macro region: sub-block q (8 units), b = 0..7, segments by (e0, row), units",
                   bf16_macros="floor(i * N / 2048), i < 2048",
-                  compressor_rows="model output-split quarter (W1 map keeps full replication)"),
+                  compressor_rows="model output-split quarter (W1 map keeps full replication)",
+                  bf16_pair=dict(enabled=BF16_PAIR, word_hold_cycles=BF16_WORD_CYCLES, sub_block_units=IL_BF16,
+                                 split_for_hold=bool(BF16_SPLIT_BOOST)) if BF16_PAIR else None,
+                  chain_recurrence_cycles=FADD_REC,
+                  distance_aware=dict(critical=list(CRITICAL), geometry=str(a.geometry.relative_to(ROOT))
+                                      if a.geometry.is_relative_to(ROOT) else str(a.geometry),
+                                      geometry_sha256=sha(a.geometry), reach_um=REACH_UM,
+                                      gather_scatter_cycles=GATHER_SCATTER,
+                                      slot_order="slot j = the j-th nearest ROM pair to the x-broadcast root",
+                                      rule="each critical phase on the smallest nearest-slot prefix (sixteenths of "
+                                           "the die, then powers of two) whose stream-round time equals the "
+                                           "whole-die placement's; everything else on the whole die")
+                  if NEAR else None),
         checkpoint_revision=a.snapshot.name,
         source_sha256={str(q.relative_to(ROOT)): sha(q) for q in
                        [Path(__file__).resolve(), ROOT / "tools/v41_floorplan_die_macromap.py",
-                        ROOT / "tools/uarch_model.py", ROOT / "results/uarch/v41_rom.json", M.OWNERS]},
+                        ROOT / "tools/uarch_model.py", ROOT / "results/uarch/v41_rom.json", M.OWNERS]
+                       + ([a.geometry.resolve()] if (a.near or a.wire) else [])},
         draws=a.draws, seed=a.seed, busiest_die=bus, phase_vs_model=rows,
         priced=None if a.no_price else dict(
             model_tokens_s=round(U.evaluate(dict(U.PRESETS["proposal"]))["tokens_s"], 1),
