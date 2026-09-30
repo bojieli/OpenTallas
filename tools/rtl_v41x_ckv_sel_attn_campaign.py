@@ -26,7 +26,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PATH_SOURCES = ['rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv', 'rtl/chip/ot_chip_v41x_ckv_selected_dma.sv',
                 'rtl/chip/ot_chip_v41x_ckv_sel_ids.sv', 'rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv',
-                'rtl/chip/ot_chip_v41x_ckv_sel_collect.sv', 'rtl/chip/ot_chip_v41x_ckv_stream_merge.sv']
+                'rtl/chip/ot_chip_v41x_ckv_sel_collect.sv', 'rtl/chip/ot_chip_v41x_ckv_stream_merge.sv',
+                'rtl/chip/ot_chip_v41x_ckv_pc_fetch.sv']
 ENGINE_SOURCES = ['rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv', 'rtl/hdc/v41x/ot_hdc_v41x_attn.sv',
                   'rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv',
                   'physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v',
@@ -48,7 +49,8 @@ def sha(p):
 def build(a):
     b = a.build.resolve()
     b.mkdir(parents=True, exist_ok=True)
-    srcs = PATH_SOURCES + (ENGINE_SOURCES if a.engine else []) + [TB]
+    sram = 'physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v'
+    srcs = PATH_SOURCES + (ENGINE_SOURCES if a.engine else [sram]) + [TB]
     pins = {}
     for rel in srcs + ([HIER] if a.engine else []) + [HARNESS]:
         dst = b / rel
@@ -189,6 +191,9 @@ def mutate(a):
 
 
 def record(a):
+    scope_fetch = ('wide fetch (ot_chip_v41x_ckv_pc_fetch)' if any('-GWIDE=1' in p for d in a.runs
+                   for f in Path(d).glob('result*.json') for p in json.loads(f.read_text())['build_status']['params'])
+                   else 'single-port fetch (ot_chip_v41x_ckv_sel_fetch)')
     runs, muts = [], []
     for d in a.runs:
         for f in sorted(Path(d).glob('result*.json')):
@@ -211,7 +216,7 @@ def record(a):
     exact = [r for run in runs if run['build_status']['engine'] for r in run['results']]
     rows = [r for run in runs if not run['build_status']['engine'] for r in run['results']]
     rec = dict(
-        schema='v41x_ckv_sel_attn/1',
+        schema='v41x_ckv_sel_attn/1', fetch=scope_fetch,
         scope=('Selected compressed-KV path of an indexed DeepSeek-V4.1 layer on one die of tensor group 4: the final '
                'select output -> selected-ID table with owned-rank lists -> four dies\' owned-row fetch (PIPE '
                'selected-CKV DMA slots, behavioural HBM stacks) -> behavioural all-gather links -> in-order collector '
