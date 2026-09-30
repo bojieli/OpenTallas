@@ -192,10 +192,10 @@ TB_SRC = {
                             "rtl/hdc/ot_hdc_fastfp.sv"],
 }
 UNIT = {   # name -> (top, -G overrides): the link direction alone, both link classes; the CRC equivalence
-    "unit_ucie": ("tb_w15_link_unit", dict(WIRE_TX=22, WIRE_RX=22, DREL=58, AW_TX=6)),
+    "unit_ucie": ("tb_w15_link_unit", dict(WIRE_TX=22, WIRE_RX=22, DREL=65, AW_TX=6)),
     "unit_board": ("tb_w15_link_unit", dict(FRAME_CYCLES=2, ENC_STAGES=4, DEC_STAGES=59, T_LINK=0.93407,
                                             DLY_NS=56.868, JSTATIC_NS=3.0, WANDER_NS=0.2, WIRE_TX=29, WIRE_RX=29,
-                                            DREL=199, AW_TX=6)),
+                                            DREL=206, AW_TX=6)),
     "crc_par": ("tb_w15_crc32", dict(W=2300)),
     "crc_ser": ("tb_w15_crc32", dict(W=2300, MASK_MAX_W=16)),
 }
@@ -506,10 +506,11 @@ def run(name: str, seed: int, det: int, drel: dict, extra: dict | None = None) -
     return res
 
 
-GUARD = 2                  # cycles of release margin beyond the worst arrival seen over the sweep and its corners:
+GUARD = 3                  # cycles of release margin beyond the worst arrival seen over the sweep and its corners:
                            # 1 for the RX head register (4fad2dc5: a bundle is releasable the cycle after it is
-                           # visible) + 1 for clock phases the sweep did not draw (the HBM TP-12 bench found a
-                           # downlink arrival one cycle past 14 sampled phases at the upper channel corner)
+                           # visible) + 1 for the RX prefetch register (HEAD_PIPE, the SS release path) + 1 for
+                           # clock phases the sweep did not draw (the HBM TP-12 bench found a downlink arrival one
+                           # cycle past 14 sampled phases at the upper channel corner)
 CLASS_KEYS = {"ucie": ("U_DREL", "U_DLY", "U_JS"), "board": ("X_DREL", "X_DLY", "X_JS")}
 CHAN_DEFAULT = {"U_DLY": LINKS["ucie_a"]["phy_adapter_tx_rx_ns"]["value"],
                 "U_JS": LINKS["ucie_a"]["static_latency_variation_ns"]["value"],

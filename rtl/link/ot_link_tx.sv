@@ -65,6 +65,10 @@ module ot_link_tx #(
                                                //     drain rate), so no backpressure ever reaches the engine
                                                //     through the phase-dependent CDC credit return; credit pulses
                                                //     are accumulated and sent as counts (CNTW bits per credit)
+    parameter integer CRC_PIPE     = 1,        // 1: the frame CRC in two more link-clock stages (ot_link_crc32_pipe:
+                                               //    slots registered, then CHUNK-bit partial parities registered) --
+                                               //    the one-cycle CRC was the SS critical path of the hardened port
+                                               //    (e9ec0311 port_qwen: 1.52 ns at SS); +2 link cycles of latency
     parameter integer CNTW         = (PACE_NUM > 0) ? 3 : 1,
     parameter integer CFW          = CW * CNTW,
     parameter integer BW           = TSW + NVC + CFW + NVC * PW,  // bundle
@@ -237,21 +241,39 @@ module ot_link_tx #(
     end endgenerate
     reg          fv0;
     reg [FRW-1:0] fd0;
+    wire         fe = (fk == FRAME_CYCLES - 1);           // the frame's last cycle: it leaves
     always @(posedge lclk or negedge lrst_n) begin
         if (!lrst_n) begin
-            rl <= 0; fk <= 0; acc <= 0; fv0 <= 1'b0;
+            rl <= 0; fk <= 0; acc <= 0;
         end else begin
             rl <= (rl + npop) % NL;
-            if (fk == FRAME_CYCLES - 1) begin
-                fk <= 0; acc <= 0; fv0 <= 1'b1;
+            if (fe) begin
+                fk <= 0; acc <= 0;
             end else begin
-                fk <= fk + 1'b1; acc <= full_slots; fv0 <= 1'b0;
+                fk <= fk + 1'b1; acc <= full_slots;
             end
         end
     end
-    wire [31:0] fcrc;
-    ot_link_crc32 #(.W(NS * SW)) u_crc (.d(full_slots), .crc(fcrc));
-    always @(posedge lclk) if (fk == FRAME_CYCLES - 1) fd0 <= {fcrc, full_slots};
+    generate if (CRC_PIPE == 0) begin : g_crc1
+        wire [31:0] fcrc;
+        ot_link_crc32 #(.W(NS * SW)) u_crc (.d(full_slots), .crc(fcrc));
+        always @(posedge lclk or negedge lrst_n) if (!lrst_n) fv0 <= 1'b0; else fv0 <= fe;
+        always @(posedge lclk) if (fe) fd0 <= {fcrc, full_slots};
+    end else begin : g_crc3
+        // slots -> register (a); partial parities of (a) -> register (b); frame = {crc, slots} -> fd0
+        reg              fva, fvb;
+        reg [NS*SW-1:0]  fda, fdb;
+        wire [31:0]      fcrc;
+        ot_link_crc32_pipe #(.W(NS * SW)) u_crc (.clk(lclk), .en(fva), .d(fda), .crc(fcrc));
+        always @(posedge lclk or negedge lrst_n)
+            if (!lrst_n) begin fva <= 1'b0; fvb <= 1'b0; fv0 <= 1'b0; end
+            else begin fva <= fe; fvb <= fva; fv0 <= fvb; end
+        always @(posedge lclk) begin
+            if (fe) fda <= full_slots;
+            if (fva) fdb <= fda;
+            if (fvb) fd0 <= {fcrc, fdb};
+        end
+    end endgenerate
 
     // ---- PCS / FEC encoder pipeline --------------------------------------------------------------------
     generate if (ENC_STAGES == 0) begin : g_noenc
