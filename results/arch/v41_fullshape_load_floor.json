@@ -86,9 +86,21 @@
     "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
     "tools/arch_lanes_v41.py": "1c5dde7d9041e25dc53fa90b9ea9b30c493dd690e6e776315735a7d948c76325",
     "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
-    "tools/hdc_replay_v41.py": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
+    "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
     "tools/v41_fullshape_load_floor.py": "c2c179e8ebb5220342c105c523a47d123dd91f8fbb9c379d8bbcfb7ca144c2d4",
     "tools/v41_tp_exact_reprice.py": "0cb0a233d8c8efb8b4f62b66ad5215face206d12365953ee665450f02e0ce303",
     "tools/v41_tp_rowsplit_measured_reprice.py": "3645f7229832955d28a618ffc80d1227ddb5e18d05230a69276010114e45ea2a"
+  },
+  "repin_20260930": {
+    "label": "pins moved: source edited outside this record's path",
+    "reason": "Tools this record pins were edited on claude/w17-isa (hdc_replay_v41 immediates from the constants manifest; die_slices attn_sink per rank; qe-stream/layout tools generalised to the 1M shard). None of those edits touches the path this record used; not re-run.",
+    "rerun": false,
+    "changed_pins": {
+      "tools/hdc_replay_v41.py": {
+        "old": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
+        "new": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d"
+      }
+    },
+    "historical_copy": null
   }
 }

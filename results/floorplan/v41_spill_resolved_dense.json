@@ -48,7 +48,7 @@
   },
   "owner_sha256": "8d7607de634470f58132eb36bb9100b369689a9b509dd299662a7f97fba47a1d",
   "representation_profile": "expanded_woa_resolved_dense_splits",
-  "program_sha256": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
+  "program_sha256": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
   "capacity_bytes": 2714287356,
   "expert_matrix_headers_checked": 46080,
   "stages": [
@@ -8812,5 +8812,17 @@
     "head allocation retained from mean model: exact head image capacity still required",
     "full layer-stage spill redistribution required if other stages fail",
     "actual gather endpoint/route timing unavailable, cannot prove minimum added critical-path latency"
-  ]
+  ],
+  "repin_20260930": {
+    "label": "pins moved: source edited outside this record's path",
+    "reason": "Tools this record pins were edited on claude/w17-isa (hdc_replay_v41 immediates from the constants manifest; die_slices attn_sink per rank; qe-stream/layout tools generalised to the 1M shard). None of those edits touches the path this record used; not re-run.",
+    "rerun": false,
+    "changed_pins": {
+      "tools/hdc_replay_v41.py": {
+        "old": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
+        "new": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d"
+      }
+    },
+    "historical_copy": null
+  }
 }

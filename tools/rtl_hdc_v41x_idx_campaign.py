@@ -292,10 +292,11 @@ def write_mems(d: Path, toks, ih, nb):
 # engine, 7/x/x the 1.2 GHz streaming-domain build (--lat), which adds the deeper adder's source
 LAT = {"FPL": 3, "FML": 3, "QL": 3}
 ADD_LAT = ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+PREFIX = ROOT / "rtl/hdc/ot_hdc_prefix.sv"          # the keep-level prefix adders ot_hdc_fp32_add_lat uses
 
 
 def engine_rtl():
-    return RTL + ([ADD_LAT] if LAT["FPL"] != 3 else [])
+    return RTL + ([ADD_LAT, PREFIX] if LAT["FPL"] != 3 else [])
 
 
 def build(work: Path, nk, ih, nb, fd, jobs=16):
@@ -692,7 +693,7 @@ def main():
     long_n = 512 if a.quick else 16384
     shapes = {"shipped": (32, 4), "reduced": (32, 1)}
     if engine_only:
-        rec["sources"].update({str(ADD_LAT.relative_to(ROOT)): sha(ADD_LAT)})
+        rec["sources"].update({str(p.relative_to(ROOT)): sha(p) for p in (ADD_LAT, PREFIX)})
     if a.only in (None, "hbm") and not engine_only:
         print("hbm scan", flush=True)
         rec["hbm_scan"] = hbm_scan(work, a.quick)

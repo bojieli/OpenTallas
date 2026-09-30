@@ -542,6 +542,18 @@
     "tools/v41_qe_shared_stall_gate.py": "cbc797abd6b1168a09aacb6e9b6248ba49845678ef489ffe09c866383455337c",
     "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
     "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
-    "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "81fa804534d548b7c1f77dc97b33b643d49fd78d63316a15592d920fcc1eca37"
+    "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "ffcc20a520ec7faebd26c184d6b59e9cf192d4ae199f5a7f149ceab19803fc04"
+  },
+  "repin_20260930": {
+    "label": "stale: program changed",
+    "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+    "rerun": false,
+    "changed_pins": {
+      "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": {
+        "old": "81fa804534d548b7c1f77dc97b33b643d49fd78d63316a15592d920fcc1eca37",
+        "new": "ffcc20a520ec7faebd26c184d6b59e9cf192d4ae199f5a7f149ceab19803fc04"
+      }
+    },
+    "historical_copy": "v41_qe_shared_stall_historical_before_w17_isa.json"
   }
 }

@@ -183,7 +183,7 @@ LAT = {"FPL": 3, "FML": 3, "QL": 3}
 
 
 def rtl():
-    return RTL + (["rtl/hdc/ot_hdc_fp32_add_lat.sv"] if LAT["FPL"] != 3 else [])
+    return RTL + (["rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv"] if LAT["FPL"] != 3 else [])
 
 
 def build(work: Path, ns, nk, jobs=8):

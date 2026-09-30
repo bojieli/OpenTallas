@@ -107,6 +107,7 @@ class Block:
     hard_macros: list[tuple] = field(default_factory=list)
     max_layer: str = "M6"
     pdn: str = "pdn_block.tcl"
+    macro_grid: Any = None         # callable -> list of (instance, x_um, y_um): fixed macro placement
 
     @property
     def core_area_um2(self) -> float:
@@ -178,32 +179,95 @@ BLOCKS.update({
 })
 
 GPU_FP = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_fpu.sv",
-          "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/gpu/ot_gpu_tree.sv"]
+          "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+          "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/gpu/ot_gpu_fadd.sv",
+          "rtl/gpu/ot_gpu_tree.sv"]
 BLOCKS.update({
     # W13: the replicated MMA macro of the GPU-organised HBM comparator's SM (32 lanes x 1 column + its
     # 32-leaf tree); the SM holds 4 sub-partitions x 16 columns of it.  Harden with OT_CHIP_PERIOD_NS=0.92.
     "ot_gpu_tc_col": Block(
-        "ot_gpu_tc_col", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 250.0, 250.0,
+        "ot_gpu_tc_col", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 220.0, 220.0,
         [(r"^w$", "N"), (r"^x$", "W"), (r"^(ov|y|otag|fault)$", "E")],
-        params={"L": 32, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6},
+        params={"L": 32, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25, "CORNER": "WC", "ADDER_MAP_FILE": ""},
         record="results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l32_092/physical.json",
         notes="exact tensor-core column: 32 BF16 x BF16 -> FP32 lanes, circulating IL-8 adders, 32-leaf tree",
         peak_gb=16.0),
     "ot_gpu_tc16": Block(
-        "ot_gpu_tc16", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 180.0, 180.0,
+        "ot_gpu_tc16", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 164.0, 164.0,
         [(r"^w$", "N"), (r"^x$", "W"), (r"^(ov|y|otag|fault)$", "E")],
-        default_edge="S", orfs_extra={"NUM_CORES": 6},
+        default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25, "CORNER": "WC", "ADDER_MAP_FILE": ""},
         notes="V4.1 SM BF16 column: 16 exact lanes + 16-leaf tree (ot_gpu_tc_col L=16)", peak_gb=12.0),
     "ot_gpu_bd_col": Block(
-        "ot_gpu_bd_col", GPU_FP + ["rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bd_col.sv"], 150.0, 150.0,
+        "ot_gpu_bd_col", GPU_FP + ["rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/gpu/ot_gpu_bd_col.sv"], 104.0, 104.0,
         [(r"^(wq|we)$", "N"), (r"^(xq|xe)$", "W"), (r"^(ov|y|otag|fault)$", "E")],
-        params={"LB": 2, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6},
+        params={"LB": 2, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25, "CORNER": "WC", "ADDER_MAP_FILE": ""},
         record="results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json",
         notes="V4.1 SM block-dot column: 2 exact k32 FP8/FP4 lanes + tree", peak_gb=12.0),
 })
 
 _ABS = "results/physical_abi3/asap7/chip/abstracts"
 _MEM = "physical/asap7_memory_macros"
+
+
+_PLACE_PROC = r"""set ot_block [ord::get_db_block]
+set ot_lut [dict create]
+foreach ot_inst [$ot_block getInsts] {
+  if {[[$ot_inst getMaster] isBlock]} {
+    dict set ot_lut [string map {"\\" ""} [$ot_inst getName]] [$ot_inst getName]
+  }
+}
+proc ot_place {name x y} {
+  global ot_lut
+  if {![dict exists $ot_lut $name]} { error "ot_place: no macro instance $name" }
+  place_macro -macro_name [dict get $ot_lut $name] -location [list $x $y] -orientation R0
+}
+"""
+
+
+def macro_placement_tcl(entries):
+    lines = ["# W13 SM element: a regular array of its hard macros (tools/chip_assembly/floorplans.py)", _PLACE_PROC]
+    lines += [f"ot_place {{{n}}} {x:.3f} {y:.3f}" for n, x, y in entries]
+    lines.append(f'puts "ot_place: {len(entries)} macros placed"')
+    return "\n".join(lines) + "\n"
+
+
+def _snap(v, q):
+    return round(round(v / q) * q, 3)
+
+
+def _rows(names, w, h, x0, y0, width, gap):
+    out, x, y = [], x0, y0
+    for n in names:
+        if x + w > x0 + width:
+            x, y = x0, y + h + gap
+        out.append((n, _snap(x, 0.432), _snap(y, 2.16)))
+        x += w + gap
+    return out, y + h + gap
+
+
+def grid_sm_q():
+    """64 column macros (250 um) in 8 x 8 (row r = column pair), the 20 x-store/staging SRAMs and the scale SRAM
+    in a band above; glue in the channels and the top band."""
+    names = [f"g_col[{c}].g_sub[{s}].g_hard.u_tc" for c in range(16) for s in range(4)]
+    e, y = _rows(names, 220.0, 220.0, 12.0, 12.0, 8 * 228.0, 8.0)
+    srams = [f"u_x.g_m[{m}].u_sram" for m in range(16)] + [f"u_bc.g_sram.g_mb[{m}].u_ring" for m in range(4)] + ["u_scale"]
+    e2, _ = _rows(srams, 174.744, 70.47, 12.0, y + 6.0, 1860.0, 8.0)
+    return e + e2
+
+
+def grid_sm_v():
+    """32 block-dot (150 um) and 32 BF16 (180 um) column macros in alternating rows of 8, then the 99 x-store
+    SRAMs and the 5 staging-ring SRAMs."""
+    e, y = [], 20.0
+    for r in range(4):
+        bd = [f"g_col[{c}].g_sub[{s}].g_hbd.u_bd" for c in range(2 * r, 2 * r + 2) for s in range(4)]
+        tc = [f"g_col[{c}].g_sub[{s}].g_hard.u_tc" for c in range(2 * r, 2 * r + 2) for s in range(4)]
+        a, y = _rows(bd, 104.0, 104.0, 12.0, y, 8 * 170.0, 6.0)
+        b, y = _rows(tc, 164.0, 164.0, 12.0, y, 8 * 170.0, 6.0)
+        e += a + b
+    xs, y = _rows([f"g_xm[{m}].u_x" for m in range(99)], 94.824, 41.04, 12.0, y + 4.0, 1370.0, 6.0)
+    rg, _ = _rows([f"u_bc.g_sram.g_mb[{m}].u_ring" for m in range(5)], 174.744, 70.47, 12.0, y + 4.0, 1370.0, 8.0)
+    return e + xs + rg
 
 
 def _sram(name):
@@ -220,32 +284,32 @@ BLOCKS.update({
                   "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_xstore.sv", "rtl/gpu/ot_gpu_sm_q.sv",
                   f"{_MEM}/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
                   f"{_MEM}/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"],
-        2200.0, 2500.0,
+        1900.0, 2150.0,
         [(r"^(req_|rsp_|d_)", "N"), (r"^(xw_|sw_)", "W"), (r"^(rv|rrow|rdata|fault)$", "E")],
         params={"NC": 16}, default_edge="S", place_density=0.55,
-        orfs_extra={"NUM_CORES": 12, "MACRO_PLACE_HALO": "6 6"},
+        orfs_extra={"NUM_CORES": 8, "MACRO_PLACE_HALO": "6 6", "HOLD_SLACK_MARGIN": 25, "CORNER": "WC", "ADDER_MAP_FILE": "", "REMOVE_ABC_BUFFERS": 1},
         hard_macros=[("ot_gpu_tc_col", f"{_ABS}/ot_gpu_tc_col/ot_gpu_tc_col.lef",
                       f"{_ABS}/ot_gpu_tc_col/ot_gpu_tc_col_typ.lib"),
                      _sram("ot_sram_1r1w_1024x256_m2_r2c2"), _sram("ot_sram_1r1w_256x256_m2_r2c2")],
-        max_layer="M9", pdn="pdn_sm.tcl", notes="Qwen HBM SM element (tools/uarch_model.hbm_gpu_design('qwen'))", peak_gb=60.0),
+        max_layer="M9", pdn="pdn_sm.tcl", macro_grid=grid_sm_q, notes="Qwen HBM SM element (tools/uarch_model.hbm_gpu_design('qwen'))", peak_gb=60.0),
     # W13: the hardened SM element of the V4.1 HBM die: 32 block-dot + 32 BF16 column macros (4 x 8 each),
     # 99 shallow x-store SRAMs (a whole 8-column fragment a cycle: group-slot issue), the 5-macro staging ring.
     "ot_gpu_sm_v": Block(
         "ot_gpu_sm_v",
         GPU_FP + ["rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_stack.sv", "rtl/gpu/ot_gpu_tc_col.sv",
-                  "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bd_col.sv",
+                  "rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/gpu/ot_gpu_bd_col.sv",
                   "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/gpu/ot_gpu_sm_v.sv",
                   f"{_MEM}/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
                   f"{_MEM}/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"],
-        1800.0, 1900.0,
+        1400.0, 1640.0,
         [(r"^(req_|rsp_|d_)", "N"), (r"^xw_", "W"), (r"^(rv|rrow|rdata|fault)$", "E")],
         params={"NC": 8}, default_edge="S", place_density=0.55,
-        orfs_extra={"NUM_CORES": 12, "MACRO_PLACE_HALO": "4 4"},
+        orfs_extra={"NUM_CORES": 8, "MACRO_PLACE_HALO": "4 4", "HOLD_SLACK_MARGIN": 25, "CORNER": "WC", "ADDER_MAP_FILE": "", "REMOVE_ABC_BUFFERS": 1},
         hard_macros=[("ot_gpu_tc16", f"{_ABS}/ot_gpu_tc16/ot_gpu_tc16.lef", f"{_ABS}/ot_gpu_tc16/ot_gpu_tc16_typ.lib"),
                      ("ot_gpu_bd_col", f"{_ABS}/ot_gpu_bd_col/ot_gpu_bd_col.lef",
                       f"{_ABS}/ot_gpu_bd_col/ot_gpu_bd_col_typ.lib"),
                      _sram("ot_sram_1r1w_1024x256_m2_r2c2"), _sram("ot_sram_1r1w_128x256_m1_r2c2")],
-        max_layer="M9", pdn="pdn_sm.tcl", notes="V4.1 HBM SM element (tools/uarch_model.hbm_gpu_design('v41'))",
+        max_layer="M9", pdn="pdn_sm.tcl", macro_grid=grid_sm_v, notes="V4.1 HBM SM element (tools/uarch_model.hbm_gpu_design('v41'))",
         peak_gb=60.0),
 })
 

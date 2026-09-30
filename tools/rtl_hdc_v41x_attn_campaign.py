@@ -55,6 +55,7 @@ RTL_STAGE = ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv"
 SRAM_MODEL = ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
 LIB = [ROOT / "rtl/hdc/ot_hdc_fastfp.sv"]
 ADD_LAT = ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+PREFIX = ROOT / "rtl/hdc/ot_hdc_prefix.sv"          # the keep-level prefix adders ot_hdc_fp32_add_lat uses
 TB_TILE = ROOT / "rtl/test/tb_hdc_v41x_attn_tile.sv"
 TB_ENG = ROOT / "rtl/test/tb_hdc_v41x_attn.sv"
 HARNESS = ROOT / "rtl/test/hdc_v41_harness.cpp"
@@ -348,7 +349,7 @@ TILE_RE = re.compile(r"V41XTILE beats=(\d+) checked=(\d+) errors=(\d+) faults=(\
 
 def lib(fpl=3):
     """The FP library of a build: the LAT-3 adder file, plus ot_hdc_fp32_add_lat for FPL > 3."""
-    return [*LIB, ADD_LAT] if fpl != 3 else list(LIB)
+    return [*LIB, ADD_LAT, PREFIX] if fpl != 3 else list(LIB)
 
 
 def run_tile(scratch: Path, H=16, TD=64, nbeats=200, seed=1, fpl=3, fml=3):

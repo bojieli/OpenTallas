@@ -51,10 +51,6 @@
             "current": 128,
             "required": 2560
           },
-          "me_bank_aw": {
-            "current": 17,
-            "required": 18
-          },
           "me_kmax": {
             "current": 512,
             "required": 5120
@@ -134,18 +130,18 @@
   },
   "schema": "opentallas.final-number-readiness.v1",
   "source_sha256": {
-    "results/arch/v41_fullshape_load_floor.json": "8e7649459b7c479a703323d13044a7deb59f017cffecb8f64a1011cec8d840ad",
+    "results/arch/v41_fullshape_load_floor.json": "6310cd0170363f51bbdd70535c211a3cd85e48d2ceea7dc7525f72793437502f",
     "results/arch/v41_tp_rowsplit_measured_reprice.json": "3b642a904469134926f7d8c0aa9f454177c41b93e6b3c02351a21abb33e77b85",
     "results/physical_abi3/asap7/chip/v41x_full_die/physical.json": "missing",
     "results/physical_abi3/asap7/chip/v41x_hbm_karb/strip_pin_placement.json": "c605dc5d26471af93b12a99fa0677aa5067cc1004052f8ac71adce559cb1f64a",
     "results/physical_hdc/asap7/qwen_o4_full_die/physical.json": "missing",
     "results/rtl/hdc_qwen_int8_tp2_ar.json": "289602cbb53b415c2fd6a23fc05929562bded5d80fb1f059fdafda9ff68c3a8f",
-    "results/rtl/hdc_v41x_fullshape_golden.json": "1c329cf169f21eae9298c0fde71e756cdda2060de9757a20b7741b86e685859b",
+    "results/rtl/hdc_v41x_fullshape_golden.json": "7736dad12d1ad49dd316b7d1947017c01c7d8be585ac6a408d504e21b7efe8c3",
     "results/rtl/hdc_v41x_fullshape_hbm_matched.json": "missing",
-    "results/rtl/hdc_v41x_fullshape_program_bind.json": "99d250781f4613f51f42b6aea1ef78fd9033e752ef4e5ed8aff211ce4eefab3d",
+    "results/rtl/hdc_v41x_fullshape_program_bind.json": "a53b50c26ea44d41b7ccabe6f324189b818998511eb814c3c9dcae890e3964dd",
     "results/rtl/hdc_v41x_fullshape_token_rtl.json": "missing",
-    "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "ced34e0609dce82493a9d104021f0a8bc8a58953779976020c0083d1c7f30f84",
-    "results/rtl/hdc_v41x_fullshape_weight_rtl_preflight.json": "8a45de03b920043fc8ebaee636c942543570ce986f293012b98b9cd08d4b6429",
+    "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json": "62923ec77d9663bd5b90c14d693ea41815c9bcb64db5782bc230c6219e2ff6b2",
+    "results/rtl/hdc_v41x_fullshape_weight_rtl_preflight.json": "666eb8f1c5afd86032bcae69da49cb557b8d48da39f74a62282d9cd7b41cbb86",
     "results/rtl/qwen_o4_fullshape_hbm_matched.json": "missing",
     "results/rtl/qwen_o4_fullshape_tp2_ar.json": "missing",
     "results/rtl/qwen_o4_fullshape_tp2_dflash.json": "missing",

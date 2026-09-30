@@ -66,6 +66,7 @@ module ot_gpu_sm #(
     input  wire                    release_in,
     output wire                    released
 );
+    localparam integer MLAT = 7;                    // row-scale multiply depth (ot_gpu_fmul)
     localparam integer L   = SUB * LS;
     localparam integer SW  = $clog2(IL);
     localparam integer RW  = $clog2(RMAX);
@@ -150,12 +151,12 @@ module ot_gpu_sm #(
         wire tv, tf;
         wire [31:0] ty;
         wire [TAGW-1:0] tt;
-        ot_gpu_tree #(.N(SUB), .TAGW(TAGW)) u_comb (.clk(clk), .rst_n(rst_n), .v(sov[0]), .d(sy),
+        ot_gpu_tree #(.N(SUB), .TAGW(TAGW), .ALAT(7)) u_comb (.clk(clk), .rst_n(rst_n), .v(sov[0]), .d(sy),
                                                   .tag(stag[TAGW-1:0]), .ov(tv), .y(ty), .otag(tt), .fault(tf));
         wire kv, kf;
         wire [31:0] ky;
         wire [RW-1:0] krow;
-        ot_gpu_stack #(.LEV(LEV), .IL(IL), .TAGW(RW)) u_stack (
+        ot_gpu_stack #(.LEV(LEV), .IL(IL), .TAGW(RW), .ALAT(7)) u_stack (
             .clk(clk), .rst_n(rst_n), .iv(tv), .d(ty), .ilast(tt[SW]), .islot(tt[SW-1:0]),
             .itag(tt[TAGW-1:SW+1]), .ov(kv), .y(ky), .otag(krow), .fault(kf));
         assign cv[col] = kv;
@@ -181,16 +182,16 @@ module ot_gpu_sm #(
     wire [NC*32-1:0] sy_out;
     wire [NC-1:0] mf;
     generate for (col = 0; col < NC; col = col + 1) begin : g_scale
-        ot_hdc_fmul u_mul (.clk(clk), .rst_n(rst_n), .v(kv_q && scale_q), .a(ky_q[32*col +: 32]),
+        ot_gpu_fmul #(.LAT(MLAT)) u_mul (.clk(clk), .rst_n(rst_n), .v(kv_q && scale_q), .a(ky_q[32*col +: 32]),
                            .b({ksc, 16'd0}), .y(sy_out[32*col +: 32]), .fault(mf[col]));
     end endgenerate
-    wire [5:0] svl;
-    ot_hdc_vline #(.D(5)) u_sv (.clk(clk), .rst_n(rst_n), .v(kv_q), .vd(svl));
+    wire [MLAT:0] svl;
+    ot_hdc_vline #(.D(MLAT)) u_sv (.clk(clk), .rst_n(rst_n), .v(kv_q), .vd(svl));
     wire [RW-1:0] srow;
-    ot_hdc_delay #(.W(RW), .D(5)) u_sr (.clk(clk), .rst_n(rst_n), .d(krow_q), .q(srow));
+    ot_hdc_delay #(.W(RW), .D(MLAT)) u_sr (.clk(clk), .rst_n(rst_n), .d(krow_q), .q(srow));
     wire [NC*32-1:0] ky_d;
-    ot_hdc_delay #(.W(NC*32), .D(5)) u_sy (.clk(clk), .rst_n(rst_n), .d(ky_q), .q(ky_d));
-    assign sv = svl[5];
+    ot_hdc_delay #(.W(NC*32), .D(MLAT)) u_sy (.clk(clk), .rst_n(rst_n), .d(ky_q), .q(ky_d));
+    assign sv = svl[MLAT];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin rv <= 1'b0; fault <= 1'b0; end
         else begin

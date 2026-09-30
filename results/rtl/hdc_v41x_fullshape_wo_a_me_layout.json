@@ -3,11 +3,11 @@
   "status": "one_matrix_exact_readback",
   "claim_boundary": "One source-pinned ME matrix; no complete die ROM or token execution.",
   "source_image_manifest": "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json",
-  "source_image_manifest_sha256": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
+  "source_image_manifest_sha256": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901",
   "layout_tool_sha256": "033e76e1ffabb33307cb00c345abf1200d5d1d4d7003cca9d4b57be5e783d0b3",
   "source_commit": "3ee08d355f2244774fc0c2dda11c9746b4459b9e",
   "source_sha256": {
-    "tools/rtl_v41_fullshape_layer_campaign.py": "71efde88ff7b6df9c7777d90d6b45b35636ffbdf17d1fefe3de0ecbddee845d5",
+    "tools/rtl_v41_fullshape_layer_campaign.py": "cac05b248283e17148a91537121fe844fb04915a522e656e8dc3df9067294087",
     "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
     "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
     "tools/hdc_replay_v41.py": "49fb9b3fa974581cc57dc2f7248b384b5492a007453a4940ebc10f4c8a776a57",
@@ -257,5 +257,21 @@
     }
   },
   "matrix_coverage": "one_matrix_only",
-  "unplaced_note": "All other matrices and constants remain unplaced."
+  "unplaced_note": "All other matrices and constants remain unplaced.",
+  "repin_20260930": {
+    "label": "stale: program changed",
+    "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+    "rerun": false,
+    "changed_pins": {
+      "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json": {
+        "old": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
+        "new": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901"
+      },
+      "tools/rtl_v41_fullshape_layer_campaign.py": {
+        "old": "71efde88ff7b6df9c7777d90d6b45b35636ffbdf17d1fefe3de0ecbddee845d5",
+        "new": "cac05b248283e17148a91537121fe844fb04915a522e656e8dc3df9067294087"
+      }
+    },
+    "historical_copy": null
+  }
 }

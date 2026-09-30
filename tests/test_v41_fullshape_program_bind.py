@@ -26,7 +26,8 @@ def test_current_layout_is_not_misreported_as_executable():
     assert all(x["backed"] for x in record["qe_address_trace"])
     assert any("FP4 QE" in x for x in record["blockers"])
     assert any("RoPE" in x and "production" in x for x in record["blockers"])
-    assert record["rope_token_patch"]["absolute_first_word"] == 6_412_548
+    # 12532 (the CROM word after pre0; the rank-sliced sink freed 48 words) + 199999 * 32
+    assert record["rope_token_patch"]["absolute_first_word"] == 6_412_500
     assert record["resource_trace"]["qe_direct_expanded_bytes"] > record["resource_trace"]["rom_capacity_bytes"]
     assert record["resource_trace"]["packed_die_bytes"] < record["resource_trace"]["rom_capacity_bytes"]
     assert len(record["me_wo_a_trace"]) == 2

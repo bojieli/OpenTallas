@@ -88,7 +88,7 @@
   ],
   "schema": "opentallas.rtl.v41x_l0_connection_contract.v1",
   "source_sha256": {
-    "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json": "e049806a52898fad344f4b8fcc30def1d082ada2cde86569271167aa4bed59e6",
+    "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json": "f069de06f0cae6e64404d56dd6542394bdcf19961643543e1731ba663ec546fb",
     "results/rtl/v41x_attn_packed_bypass.json": "7db6160d884b59a82aae0db9f6dc526882f9adabeac1d2ff3fc66e2fbe6c1b7d",
     "rtl/chip/ot_chip_v41x_attn_row_merge.sv": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
     "rtl/chip/ot_chip_v41x_ckv_selected_dma.sv": "794ab28f92dde86bed6a29c30e5e42e7ffe1bc5b211d1013bdecaf4eac25821c",
@@ -103,5 +103,17 @@
     "tools/hdc_replay_v41.py": "91b2897effabca8ec33d203a7411d771baf943ef153e6fb8ef35bf8872209e00",
     "tools/v41x_l0_connection_contract.py": "cee628d3966be90f5b9b91bb1bc8c5f60cf480b0f307e63d1b80407cb5d36d8b"
   },
-  "status": "blocked_pending_integration"
+  "status": "blocked_pending_integration",
+  "repin_20260930": {
+    "label": "stale: program changed",
+    "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+    "rerun": false,
+    "changed_pins": {
+      "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json": {
+        "old": "e049806a52898fad344f4b8fcc30def1d082ada2cde86569271167aa4bed59e6",
+        "new": "f069de06f0cae6e64404d56dd6542394bdcf19961643543e1731ba663ec546fb"
+      }
+    },
+    "historical_copy": null
+  }
 }
