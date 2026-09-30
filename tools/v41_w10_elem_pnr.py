@@ -144,7 +144,7 @@ def main() -> None:
     ap.add_argument("--outline", type=float, nargs=2, metavar=("W", "H"),
                     help="harden the pair as exactly the pack tile W x H um (abutting, no margins or pin channel)")
     ap.add_argument("--channel", type=float, default=5.4, help="with --outline: capture channel beside each ROM edge")
-    ap.add_argument("--stop-after", choices=["cts", "finish"], help="timing iteration: stop the flow after CTS")
+    ap.add_argument("--stop-after", choices=["floorplan", "cts", "finish"], help="timing iteration: stop the flow after CTS")
     ap.add_argument("--hold-uncertainty-ns", type=float, default=0.025,
                     help="hold clock uncertainty (project SDC policy: 60 ps setup / 25 ps hold)")
     ap.add_argument("--setup-only-uncertainty", action="store_true",
