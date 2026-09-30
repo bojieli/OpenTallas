@@ -106,6 +106,8 @@ CLOCK_GATE_CELL = "ICGx1_ASAP7_75t_R"
 CLOCK_GATE_MIN_FLOPS = 8
 # ORFS asap7 corner names -> the liberty file list variable the platform defines
 ORFS_LIB_CORNERS = {"TC": "TC_NLDM_LIB_FILES", "BC": "BC_NLDM_LIB_FILES", "WC": "WC_NLDM_LIB_FILES"}
+# the memory compiler's liberty tag of each ORFS corner (tools/mem_compiler writes NAME_{tt,ss,ff}.lib)
+ORFS_CORNER_MACRO_TAG = {"TC": "tt", "WC": "ss", "BC": "ff"}
 ORFS_EXPECTED_IMAGE_ID = (
     "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
 )
@@ -1712,6 +1714,7 @@ def resolve_macro_views(
     specs: list[str],
     halo: list[float] | None,
     memory_macros: dict[str, Any] | None,
+    corners: list[str] | None = None,
 ) -> dict[str, Any] | None:
     """Resolve --macro-view NAME=DIR: a macro compiled by tools/mem_compiler.
 
@@ -1727,8 +1730,12 @@ def resolve_macro_views(
     pnr = view.get("pnr")
     if not pnr:
         raise FlowError(f"view {view_name} has no place-and-route platform")
-    corner = pnr.get("corner_env") or "TT"
-    corner_tag = {"TT": "tt", "SS": "ss", "FF": "ff"}.get(str(corner).upper(), "tt")
+    corner = pnr.get("corner_env") or "TC"
+    corner_tag = ORFS_CORNER_MACRO_TAG.get(str(corner).upper()) or \
+        {"TT": "tt", "SS": "ss", "FF": "ff"}.get(str(corner).upper(), "tt")
+    # every ORFS corner the run reads (primary + --hold-corners) needs the macro's own liberty of that corner;
+    # a missing one FAILS CLOSED (no silent fallback to another corner's timing)
+    all_corners = [str(corner).upper()] + [c for c in (corners or []) if c != str(corner).upper()]
     entries = []
     for spec in specs:
         if "=" not in spec:
@@ -1743,6 +1750,16 @@ def resolve_macro_views(
         for path in (lef, lib):
             if not path.is_file():
                 raise FlowError(f"--macro-view {name}: {path} missing; run tools/mem_compiler/build_library.py")
+        libs_by_corner = {}
+        for c in all_corners:
+            tag = ORFS_CORNER_MACRO_TAG.get(c)
+            if tag is None:
+                continue
+            cl = base / f"{name}_{tag}.lib"
+            if not cl.is_file():
+                raise FlowError(f"--macro-view {name}: no {tag.upper()} liberty for ORFS corner {c} ({cl}); "
+                                "refusing to time the macro with another corner's view")
+            libs_by_corner[c] = cl
         try:
             rel_lef = lef.relative_to(ROOT.resolve())
             rel_lib = lib.relative_to(ROOT.resolve())
@@ -1756,6 +1773,8 @@ def resolve_macro_views(
             "name": name,
             "lef": {"path": f"/src/{rel_lef}", "sha256": sha256_file(lef)},
             "lib": {"path": f"/src/{rel_lib}", "sha256": sha256_file(lib)},
+            "libs_by_corner": {c: {"path": f"/src/{cl.resolve().relative_to(ROOT.resolve())}",
+                                   "sha256": sha256_file(cl)} for c, cl in libs_by_corner.items()},
             "views_resolved_from": "OpenTallas memory compiler views in the source tree (tools/mem_compiler)",
             "generator": sheet.get("generator"),
             "capacity_bits": bits,
@@ -1936,6 +1955,32 @@ def resolve_floorplan(
 SYNTH_MEMORY_MAX_BITS_SINCE = "2026-09-19T10:07:51+00:00"
 
 
+# asap7 adder mapping.  The platform's ADDER_MAP_FILE (yoSys/cells_adders: extract_fa + FA/HA cells) builds
+# ripple adders that ABC cannot restructure; set empty, yosys keeps its Kogge-Stone $alu map.  Measured (W10,
+# WC floorplan, 0.833 ns): the FP32 add pipe 840 -> 1,091 MHz, the V4.1 element 659 -> 715 MHz.  New runs
+# default to the Kogge-Stone map (--asap7-adder-map restores the platform's); the choice is recorded as
+# place_and_route.adder_map, and a record without it used the platform map.
+ADDER_MAP_KOGGE_STONE = "yosys_kogge_stone"
+ADDER_MAP_PLATFORM = "platform_fa_cells"
+
+
+def with_adder_map(view: dict[str, Any], adder_map: str) -> dict[str, Any]:
+    """The view whose ORFS config carries `adder_map` (asap7 only; other platforms are returned unchanged)."""
+    pnr = view.get("pnr")
+    if not pnr or pnr.get("platform") != "asap7" or adder_map != ADDER_MAP_KOGGE_STONE:
+        return view
+    out = dict(view)
+    out["pnr"] = dict(pnr)
+    out["pnr"]["extra_config"] = {**pnr["extra_config"], "ADDER_MAP_FILE": ""}
+    return out
+
+
+def recorded_view(record: dict[str, Any]) -> dict[str, Any]:
+    """The view a routed record's config.mk was written from (its recorded adder map applied)."""
+    view = VIEWS[record["view"]["name"]]
+    return with_adder_map(view, record.get("place_and_route", {}).get("adder_map", ADDER_MAP_PLATFORM))
+
+
 def recorded_memory_max_bits(record: dict[str, Any]) -> int | None:
     """The SYNTH_MEMORY_MAX_BITS a routed record's config.mk carried (None: no line)."""
     pnr = record.get("place_and_route", {})
@@ -1945,6 +1990,25 @@ def recorded_memory_max_bits(record: dict[str, Any]) -> int | None:
     if generated < datetime.fromisoformat(SYNTH_MEMORY_MAX_BITS_SINCE):
         return None
     return 65536   # the only value any record between 738746b2 and this field used
+
+
+def corner_lib_lines(corners: list[str], memory_macros: dict[str, Any] | None) -> list[str]:
+    """CORNERS config: each ORFS corner reads its standard cells AND every macro's own liberty of that corner.
+
+    ADDITIONAL_LIBS reaches only LIB_FILES, so without this a multi-corner run drops (or mistimes) the macros.
+    A macro lacking a corner's liberty FAILS CLOSED.
+    """
+    lines = ["export CORNERS = " + " ".join(corners)]
+    for c in corners:
+        mlibs = []
+        for m in (memory_macros or {}).get("macros", []):
+            lbc = m.get("libs_by_corner")
+            if not lbc or c not in lbc:
+                raise FlowError(f"macro {m.get('name')}: no liberty for ORFS corner {c}; multi-corner "
+                                "timing would drop or mistime the macro")
+            mlibs.append(lbc[c]["path"])
+        lines.append(f"export {c}_LIB_FILES = $({ORFS_LIB_CORNERS[c]})" + "".join(" " + l for l in mlibs))
+    return lines
 
 
 def orfs_config_lines(
@@ -2053,9 +2117,7 @@ def orfs_config_lines(
     if constraints and constraints.get("hold_corners"):
         # the first corner is the primary one the rest of the flow (CORNER) names
         corners = constraints["hold_corners"]
-        config.append("export CORNERS = " + " ".join(corners))
-        for c in corners:
-            config.append(f"export {c}_LIB_FILES = $({ORFS_LIB_CORNERS[c]})")
+        config.extend(corner_lib_lines(corners, memory_macros))
     config.extend(memory_macro_config_lines(memory_macros))
     config.extend(floorplan_extra_lines(floorplan))
     return config
@@ -2232,24 +2294,27 @@ def run_pnr(
     # wrapper, so the killed run kept burning cores on a result nobody would read.
     reports_dir = case / "reports" / platform_name / nickname / "base"
     logs_dir = case / "logs" / platform_name / nickname / "base"
-    if stop_after == "cts":
-        # through clock-tree synthesis and its setup/hold repair only; the
-        # record carries that stage's own metrics (ORFS 4_1_cts.json)
-        proc = orfs_make("cts", "orfs_flow.log", flow_timeout_seconds())
-        require_success(proc, "ORFS place-and-route through CTS")
-        cts_json = logs_dir / "4_1_cts.json"
+    if stop_after in ("cts", "floorplan"):
+        # through clock-tree synthesis and its setup/hold repair only (or through
+        # floorplan: the synthesised netlist timed at the run's ORFS corner before
+        # placement, a fast path-finding pass); the record carries that stage's own
+        # metrics (ORFS 4_1_cts.json / 2_1_floorplan.json)
+        st = stop_after
+        proc = orfs_make(st, "orfs_flow.log", flow_timeout_seconds())
+        require_success(proc, f"ORFS place-and-route through {st}")
+        cts_json = logs_dir / ("4_1_cts.json" if st == "cts" else "2_1_floorplan.json")
         if not cts_json.is_file():
-            raise FlowError(f"ORFS produced no CTS metrics at {cts_json}")
+            raise FlowError(f"ORFS produced no {st} metrics at {cts_json}")
         cts = json.loads(cts_json.read_text(encoding="utf-8"))
         errors = {k: v for k, v in cts.items() if k.endswith("__flow__errors__count")}
         if any(int(v) != 0 for v in errors.values()):
             raise FlowError(f"ORFS reported flow errors: {errors}")
-        fmax_info = conservative_fmax_metrics(cts, "cts")
+        fmax_info = conservative_fmax_metrics(cts, st)
         fmax = fmax_info["fmax_hz"]
         return {
             "platform": platform_name,
             "design_nickname": nickname,
-            "stopped_after": "cts",
+            "stopped_after": st,
             "core_utilization_percent": core_utilization,
             "synth_memory_max_bits": synth_memory_max_bits(),
             "place_density": place_density,
@@ -2259,22 +2324,22 @@ def run_pnr(
             "sdc_clock_period_library_units": period_lib,
             **({"signal_integrity_constraints": constraints} if constraints else {}),
             "metrics": {
-                "stage": "cts (placement-estimated parasitics)",
-                "setup_wns_ns": float(cts["cts__timing__setup__ws"]) * time_unit_ns,
-                "hold_wns_ns": float(cts["cts__timing__hold__ws"]) * time_unit_ns,
-                "setup_tns_ns": float(cts["cts__timing__setup__tns"]) * time_unit_ns,
-                "hold_tns_ns": float(cts["cts__timing__hold__tns"]) * time_unit_ns,
-                "setup_violations": cts.get("cts__timing__drv__setup_violation_count"),
-                "hold_violations": cts.get("cts__timing__drv__hold_violation_count"),
+                "stage": "cts (placement-estimated parasitics)" if st == "cts" else "floorplan (synthesised netlist, no placement parasitics)",
+                "setup_wns_ns": float(cts[f"{st}__timing__setup__ws"]) * time_unit_ns,
+                "hold_wns_ns": float(cts[f"{st}__timing__hold__ws"]) * time_unit_ns,
+                "setup_tns_ns": float(cts[f"{st}__timing__setup__tns"]) * time_unit_ns,
+                "hold_tns_ns": float(cts[f"{st}__timing__hold__tns"]) * time_unit_ns,
+                "setup_violations": cts.get(f"{st}__timing__drv__setup_violation_count"),
+                "hold_violations": cts.get(f"{st}__timing__drv__hold_violation_count"),
                 "fmax_mhz": float(fmax) / 1e6 if fmax is not None else None,
                 **fmax_info,
-                "hold_buffers": cts.get("cts__design__instance__count__hold_buffer"),
-                "setup_buffers": cts.get("cts__design__instance__count__setup_buffer"),
-                "instance_count": cts.get("cts__design__instance__count"),
-                "instance_area_um2": cts.get("cts__design__instance__area"),
-                "clock_skew_setup_ps": cts.get("cts__clock__skew__setup"),
-                "clock_skew_hold_ps": cts.get("cts__clock__skew__hold"),
-                "vectorless_power_total_w": cts.get("cts__power__total"),
+                "hold_buffers": cts.get(f"{st}__design__instance__count__hold_buffer"),
+                "setup_buffers": cts.get(f"{st}__design__instance__count__setup_buffer"),
+                "instance_count": cts.get(f"{st}__design__instance__count"),
+                "instance_area_um2": cts.get(f"{st}__design__instance__area"),
+                "clock_skew_setup_ps": cts.get(f"{st}__clock__skew__setup"),
+                "clock_skew_hold_ps": cts.get(f"{st}__clock__skew__hold"),
+                "vectorless_power_total_w": cts.get(f"{st}__power__total"),
                 "orfs_cts_metrics": cts,
             },
             "toolchain": orfs_identity(),
@@ -2899,6 +2964,12 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--orfs-corner", choices=sorted(ORFS_LIB_CORNERS), default=None,
+        help=("the primary ORFS corner of place and route (asap7: TC typical, WC slow = SS, BC fast = FF); "
+              "overrides the view's corner_env.  --macro-view macros are timed with their own liberty of "
+              "that corner (NAME_{tt,ss,ff}.lib), and a missing one fails the run"),
+    )
+    parser.add_argument(
         "--hold-corners",
         default=None,
         metavar="C1,C2",
@@ -2918,9 +2989,14 @@ def build_parser() -> argparse.ArgumentParser:
              "under the view's pnr.extra_config.  Absent: nothing added",
     )
     parser.add_argument(
+        "--asap7-adder-map", action="store_true",
+        help=("asap7: keep the platform's ADDER_MAP_FILE (FA/HA ripple adders).  Default: ADDER_MAP_FILE is set "
+              "empty so yosys keeps its Kogge-Stone adders; recorded as place_and_route.adder_map"),
+    )
+    parser.add_argument(
         "--pnr-stop-after",
         default="finish",
-        choices=["finish", "cts"],
+        choices=["finish", "cts", "floorplan"],
         help=(
             "cts: run ORFS through clock-tree synthesis (with its setup/hold repair) "
             "and record the CTS-stage metrics, for a block whose global route does "
@@ -3160,6 +3236,17 @@ def main(argv: list[str] | None = None) -> int:
                 return 2
             view["pnr"]["extra_config"][key] = value
 
+    adder_map = ADDER_MAP_PLATFORM if args.asap7_adder_map else ADDER_MAP_KOGGE_STONE
+    view = with_adder_map(view, adder_map)
+
+    if args.orfs_corner:
+        if view.get("pnr") is None:
+            print(f"--orfs-corner: view {args.view} has no place-and-route platform", file=sys.stderr)
+            return 2
+        view = dict(view)
+        view["pnr"] = dict(view["pnr"])
+        view["pnr"]["corner_env"] = args.orfs_corner
+
     try:
         if args.cts_cluster_size is not None and "pnr" not in stages:
             raise ValueError("--cts-cluster-size requires stage pnr")
@@ -3288,7 +3375,8 @@ def main(argv: list[str] | None = None) -> int:
             None if args.macro_view and not args.memory_macro else args.macro_place_halo,
         )
         memory_macros = resolve_macro_views(
-            args.view, view, args.macro_view, args.macro_place_halo, memory_macros
+            args.view, view, args.macro_view, args.macro_place_halo, memory_macros,
+            corners=[c.strip() for c in args.hold_corners.split(",")] if args.hold_corners else None,
         )
     except FlowError as exc:
         print(str(exc), file=sys.stderr)
@@ -3460,6 +3548,8 @@ def main(argv: list[str] | None = None) -> int:
                 nickname_tag=args.nickname_tag,
                 stop_after=args.pnr_stop_after,
             )
+            if view["pnr"].get("platform") == "asap7":
+                record["place_and_route"]["adder_map"] = adder_map
             if args.cts_cluster_size is not None:
                 record["place_and_route"]["clock_tree_config"] = {
                     "CTS_CLUSTER_SIZE": args.cts_cluster_size,

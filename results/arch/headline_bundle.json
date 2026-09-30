@@ -6902,7 +6902,7 @@
   "results/rtl/hdc_v41x_egather_campaign.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "486b3cf171489d5aa74baf01d425bb0e85c79e7b2b6ffe53e99ea7e35b7a26ed",
+   "sha256": "a04a418d19878e63cbcf7f404b5f53c351066ff9e7b08ce1b47da0c0203ab63b",
    "schema": "opentallas.hdc-v41x-egather-campaign.v1",
    "tool": "tools/rtl_hdc_v41x_egather_campaign.py",
    "command": "python3 tools/rtl_hdc_v41x_egather_campaign.py  (inferred; the record names no command)",
@@ -6973,7 +6973,7 @@
   "results/rtl/hdc_v41x_sel_campaign.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "6d32e8b5f728213263c76f394d3b312ee568914f4f2c180a0b690a65dbef7384",
+   "sha256": "f88c5a960913f3dd3ed2e544d10e8b462f4b9db5cac12d3c68eb2f4eb491bfaa",
    "schema": "opentallas-rtl-campaign-v1",
    "tool": "tools/rtl_hdc_v41x_sel_campaign.py",
    "command": "python3 tools/rtl_hdc_v41x_sel_campaign.py  (inferred; the record names no command)",
@@ -7009,7 +7009,7 @@
   "results/rtl/hdc_v41x_hcp_campaign.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "529e55e8a140a9e3394c6d2bfa958a8176b29da16a1c7d3ccddae53752473b11",
+   "sha256": "e13c82f0a407408b77358a55f465f645261c2277b8641b4a77cda1ace7cdca52",
    "schema": "opentallas.hdc-v41x-hcp-campaign.v1",
    "tool": "tools/rtl_hdc_v41x_hcp_campaign.py",
    "command": "python3 tools/rtl_hdc_v41x_hcp_campaign.py  (inferred; the record names no command)",
@@ -10969,7 +10969,7 @@
   "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_idx_tail/physical.json": {
    "exists": true,
    "tracked": true,
-   "sha256": "cab38a7245efd82a9f5b51fb9a53a62cfa50eba703085f91ae1b7052f63f7d66",
+   "sha256": "bb3390cc863785775313aea7196870af9e1fca019c721125a13fbf702afb9500",
    "schema": 1,
    "tool": "tools/run_abi3_physical.py",
    "command": "python3 tools/run_abi3_physical.py --view asap7 --top ot_hdc_v41x_idx_tail --source rtl/hdc/v41x/ot_hdc_v41x_idx.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_delay.sv --param NCH=4 --param NKT=1 --clock-period-ns 0.9 --io-delay-fraction 0 --false-path-from rst_n --stages synth,pnr --output /tmp/claude-1000/-home-ubuntu-OpenTallas/a8e65e85-aa3e-4cd3-8e4e-06b438a39eda/scratchpad/pnr/tail1/physical.json --force",

@@ -11,12 +11,25 @@ import hdc_golden_v41 as golden
 import hdc_isa_v41 as isa
 import hdc_replay_v41 as replay
 
+# The exact TP-4 layer-0 program (sparse RoPE fixture: no CTL5/CTL6) has 111 instructions.  The earlier 103-op
+# program grew by 8:
+#   +1  wo_a: one ME descriptor per local o-group (2 per rank) instead of one block-diagonal descriptor
+#       (84a973f9 "Map full-shape wo_a to two local output-group ME descriptors");
+#   +7  gate/up: the shipped checkpoint addresses w1 and w3 separately, so each of the 7 experts per token
+#       (shared + 6 routed) issues two LINQ ops (w1, w3) instead of one w13 op (70556363, per-family strides).
+# The production (HBM RoPE) program adds the CTL5 prefetch and CTL6 release: 113.
+PROGRAM_OPS = 103 + 1 + 7
+
 
 def test_layer0_collectives_encode_with_aligned_disjoint_regions():
     lay = replay.ShapeLayout(replay.SHIPPED, tp_exact=True)
     assert lay.vm.map["CKV2"] == 448_736 < 1 << 19  # first HBM-only region
     prog = replay.build_tp_layer0()
-    assert len(prog) == 103
+    assert len(prog) == PROGRAM_OPS
+    # the two changes since the 103-op program, counted from the program itself
+    assert sum(f["unit"] == isa.UNIT_ME and f["_tag"] == "L0.out" and not f.get("me_wsrc") for f in prog) == 2
+    assert sum(f["unit"] == isa.UNIT_QE and f.get("qe_mode") == isa.QE_LINQ and f["_tag"] in ("L0.shared", "L0.experts")
+               and f.get("qe_nb") == 160 for f in prog) == 2 * 7
     coll = [f for f in prog if f["unit"] == isa.UNIT_COLL]
     assert len(coll) == 12
     assert [f["coll_seq"] for f in coll] == list(range(len(coll)))
@@ -114,7 +127,7 @@ def test_tp_layer0_constant_rom_bases_bind_and_fail_closed():
         replay.build_tp_layer0(constant_bases=bases | {"rope_plain": 1 << 30})
     plain = replay.build_tp_layer0()
     bound = replay.build_tp_layer0(constant_bases=bases)
-    assert len(plain) == len(bound) == 103
+    assert len(plain) == len(bound) == PROGRAM_OPS
     references = {
         6: {"c_base": ("L0.attn_norm", 0)},
         13: {"c_base": ("L0.q_norm", 0)},
@@ -126,11 +139,13 @@ def test_tp_layer0_constant_rom_bases_bind_and_fail_closed():
         26: {"c_base": ("L0.hc_attn_scale", 8), "d_base": ("L0.hc_attn_base", 8)},
         32: {"a_base": ("L0.attn_sink", 0)},
         34: {"b_base": ("rope_plain", 0), "d_base": ("rope_plain", 0)},
-        49: {"c_base": ("L0.ffn_norm", 0)},
-        57: {"d_base": ("L0.gate_bias", 0)},
-        67: {"c_base": ("L0.hc_ffn_scale", 0), "d_base": ("L0.hc_ffn_base", 0)},
-        68: {"c_base": ("L0.hc_ffn_scale", 4), "d_base": ("L0.hc_ffn_base", 4)},
-        69: {"c_base": ("L0.hc_ffn_scale", 8), "d_base": ("L0.hc_ffn_base", 8)},
+        # shifts vs the 103-op PCs: +1 (second wo_a descriptor), +2 after the shared w1/w3 split, +5 at the
+        # FFN mix finish (MOE_HOOK = 1: routed experts 0, 1 and 2 have issued their split gate/up by then)
+        50: {"c_base": ("L0.ffn_norm", 0)},
+        59: {"d_base": ("L0.gate_bias", 0)},
+        72: {"c_base": ("L0.hc_ffn_scale", 0), "d_base": ("L0.hc_ffn_base", 0)},
+        73: {"c_base": ("L0.hc_ffn_scale", 4), "d_base": ("L0.hc_ffn_base", 4)},
+        74: {"c_base": ("L0.hc_ffn_scale", 8), "d_base": ("L0.hc_ffn_base", 8)},
     }
     for pc, fields in references.items():
         for field, (name, offset) in fields.items():
