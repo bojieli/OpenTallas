@@ -98,5 +98,28 @@
   "rtl/v41rom/ot_v41_rom_elem_q.sv": "413433f8056712288552d550164728a59ae540e4e8d5293eff79762f12bbad60",
   "tools/rtl_v41_rom_array.py": "66f7c8aa94336c1e2aa46858a94d965a539a4f6ddc706866cd46dd024b8084c1",
   "tools/chip_assembly/tcl/pdn_w10_elem_m7.tcl": "072ce76e538181e1641cc57435b4bbe409a4b7abb7e61601b37f7f359c2aab19"
- }
+ },
+ "tiles": {
+  "fp8_fp4_pair": {
+   "outline_um": [
+    485.136,
+    120.96
+   ],
+   "area_mm2": 0.05868,
+   "strip_um": 212.112,
+   "status": "hardening as exactly the W1 pack tile (p11, 60/25); abuts, pins top/bottom over the strip"
+  },
+  "bf16_pair": {
+   "outline_um": [
+    1063.746,
+    131.76
+   ],
+   "area_mm2": 0.14016,
+   "strip_um": 760,
+   "count": 1024,
+   "column_area_mm2": 143.52,
+   "status": "own BF16 pair columns at this pitch (root ruling 2026-09-30); q7 hardening at 60/25; synthesis logic 44.5k um2 does not fit the FP8/FP4 tile"
+  }
+ },
+ "version_note": "v1 + tiles (2026-09-30): die budget per pair tile for W16's stage fit; interface unchanged"
 }
