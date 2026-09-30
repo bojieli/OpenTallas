@@ -93,27 +93,38 @@ module ot_hdc_v41x_idx_kctl_ring #(
     function automatic [HW-1:0] blocks(input [HW+9:0] span);
         blocks = 17 * (span >> 10) + ((span[9:0] != 0) ? (1 + ((span[9:0] + 10'd63) >> 6)) : 0);
     endfunction
-    // The command's block counts are not computed in the command cycle: every flag the
-    // first run cycle needs comes from a cheap test of the command fields, and the
-    // counters load the counts in the first run cycle (c_init) from registered pieces.
-    // Exact for every scan whose block counts fit the HW-bit block counter (every scan
-    // the address space holds): then a nonempty segment has >= 2 blocks, so
-    // nblk != 0 <=> a span is nonzero, nblk1 != 1, and nblk1 == 2 <=> 1 <= span <= 64.
+    // The command's block counts are not computed in the command cycle.  They are built
+    // over the first three run cycles (ph 1: each segment's count from registered pieces;
+    // ph 2: their sum; ph 3: the counters load, less the blocks already stepped over), and
+    // until then every flag comes from small-count tables filled in the command cycle by
+    // cheap tests of the command fields (nblk == k, nblk1 == k for the first few k: a
+    // counter moves at most one block a cycle, so it is below 3 before the load).  Exact
+    // for every scan whose block counts fit the HW-bit block counter (every scan the
+    // address space holds): then a segment of 1,024 keys or more has >= 17 blocks.
     function automatic [4:0] bsmall(input [9:0] lo);   // blocks of a partial super-block
         bsmall = (lo != 0) ? 5'(1 + ((11'(lo) + 11'd63) >> 6)) : 5'd0;
     endfunction
     wire [10:0]    c_lo = {1'b0, cmd_nkeys[9:0]} + {1'b0, cmd_skip};
     wire [10:0]    c_m = ((cmd_nkeys[HW+9:10] != 0) || c_lo[10]) ? 11'd1024 : c_lo;  // sbkeys(cmd_span)
-    wire [7:0]     c_s7 = {1'b0, cmd_nkeys[6:0]} + {1'b0, cmd_skip[6:0]};
-    wire           c_w2 = (cmd_nkeys[HW+9:7] == 0) && (cmd_skip[9:7] == 0) && (c_s7 != 0) && (c_s7 <= 8'd64);
+    wire           c_hz1 = (cmd_nkeys[HW+9:10] == 0) && !c_lo[10];    // cmd_span < 1,024
+    wire           c_hz2 = (cmd_nkeys2[HW+9:10] == 0);
+    wire [4:0]     c_bs1 = bsmall(c_lo[9:0]), c_bs2 = bsmall(cmd_nkeys2[9:0]);
+    wire [5:0]     c_bss = {1'b0, c_bs1} + {1'b0, c_bs2};
     wire           c_nz1 = (cmd_nkeys != 0) || (cmd_skip != 0);
     wire           c_more = c_nz1 || (cmd_nkeys2 != 0);
-    reg            c_init, r_w2;
-    reg [HW-1:0]   r_hi1, r_hi2;
+    reg [1:0]      ph;                         // 1..3: the counters are being built
+    reg [3:1]      t_n;                        // t_n[k]: nblk == k
+    reg [4:2]      t_1;                        // t_1[k]: nblk1 == k
+    reg [HW-1:0]   r_hi1, r_hi2, r_b1, r_b2, r_n;
     reg [4:0]      r_sm1, r_sm2;
-    wire [HW-1:0]  i_b1 = HW'(17) * r_hi1 + HW'(r_sm1);
-    wire [HW-1:0]  i_n = i_b1 + HW'(17) * r_hi2 + HW'(r_sm2);
-    wire [HW-1:0]  i_nm1 = i_n - 1'b1, i_b1m1 = i_b1 - 1'b1, i_b1m2 = i_b1 - 2'd2;
+    // ph 3: the counters' values for a block index j (0..3) after this cycle
+    wire [HW-1:0]  l_n [0:3];
+    wire [HW-1:0]  l_1 [0:3];
+    genvar gj;
+    generate for (gj = 0; gj < 4; gj = gj + 1) begin : g_ld
+        assign l_n[gj] = r_n - HW'(gj);
+        assign l_1[gj] = r_b1 - HW'(gj + 1);
+    end endgenerate
 
     function automatic [4:0] fold(input [HW-1:0] b);
         fold = b[4:0] ^ b[9:5];
@@ -188,21 +199,25 @@ module ot_hdc_v41x_idx_kctl_ring #(
     reg [HW-1:0]   d_left, d_l1;              // nblk - d_hi, nblk1 - 1 - d_hi
     reg            d_more, d_wrapn;
     reg            adv;                       // the head moved at the last edge
-    reg [3:0]      grp_a, grp_b;              // per 8-bank group: cc[*][d_slot], cc[*][d_slot + 1] complete,
-                                              // as of last cycle; after a step the head is last cycle's
-                                              // d_slot + 1: grp_b
+    reg [3:0]      qa, qb;                    // per quarter q: its 8 banks (group q ^ fold[4:3]) complete
+                                              // at cc[*][d_slot] (qa) / cc[*][d_slot + 1] (qb, permuted
+                                              // with the next head's fold) as of last cycle; after a step
+                                              // the head is last cycle's d_slot + 1: qb
+    reg            all_a, all_b;              // all 32 banks complete, same two entries
+    reg [3:0]      qz;                        // qz[q]: quarter q of the head block has no keys (d_kb <= 16 q)
+    reg [3:0]      grp_a, grp_b;              // combinational: per 8-bank group, the two entries complete
     wire [SW-1:0]  d_slot = d_hi[SW-1:0];
     reg  [WB-1:0]  d_oh;                      // one-hot d_slot
     wire [WB-1:0]  d_oh1 = {d_oh[WB-2:0], d_oh[WB-1]};   // one-hot d_slot + 1
-    wire [3:0]     grp = adv ? grp_b : grp_a;
     wire [1:0]     d_qg = d_q ^ d_fold[4:3];  // the 8-bank group of quarter d_q
     integer b, c;
-    wire           all_in = &grp;
-    wire           q_in = grp[d_qg];
+    wire           all_in = adv ? all_b : all_a;
+    wire [3:0]     qsel = adv ? qb : qa;
+    wire           q_in = qsel[d_q];
     wire [6:0]     d_qk = (d_kb > {d_q, 4'd0}) ? d_kb - {d_q, 4'd0} : 7'd0;   // keys left from this quarter
     wire           d_live = run && d_more;
     wire           do_scale = d_live && (d_bidx == 0) && all_in;
-    wire           do_q = d_live && (d_bidx != 0) && q_in && (d_qk == 0 || dr_ready);
+    wire           do_q = d_live && (d_bidx != 0) && q_in && (qz[d_q] || dr_ready);
     wire           d_step = do_scale || (do_q && d_q == 3);
     // keys of the code block after the head (the head's next d_bidx); a scale block
     // (n_bidx 0) has none, so the head's own d_m serves
@@ -211,6 +226,21 @@ module ot_hdc_v41x_idx_kctl_ring #(
     wire [6:0]     n_kb = (n_bidx == 0 || d_m <= n_off) ? 7'd0 : ((d_m - n_off >= 64) ? 7'd64 : d_m - n_off);
     wire [HW-1:0]  d_abs1 = d_abs + 1'b1;
     wire [BW-1:0]  d_hi1 = d_hi + 1'b1;
+    wire [4:0]     d_fold_n = d_wrapn ? fold(base2) : fold(d_abs1);   // the head's fold after a step
+    function automatic [3:0] qzof(input [6:0] kb);
+        qzof = {kb <= 7'd48, kb <= 7'd32, kb <= 7'd16, kb == 7'd0};
+    endfunction
+    integer gb, gc2;
+    always @* begin
+        for (gb = 0; gb < 4; gb = gb + 1) begin
+            grp_a[gb] = 1'b1;
+            grp_b[gb] = 1'b1;
+            for (gc2 = 0; gc2 < 8; gc2 = gc2 + 1) begin
+                if ((cc[8 * gb + gc2] & d_oh) == 0) grp_a[gb] = 1'b0;
+                if ((cc[8 * gb + gc2] & d_oh1) == 0) grp_b[gb] = 1'b0;
+            end
+        end
+    end
 
     // a beat is taken only when its block has a ROB entry (within WB of the head):
     // (tag - d_hi) mod 2^BW < WB; otherwise its channel's return queue holds it and
@@ -270,16 +300,22 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     if (prep_w[pf] && !d_step) eg[pf] <= eg[pf] + 1'b1;
                     else if (!prep_w[pf] && d_step) eg[pf] <= eg[pf] - 1'b1;
                     if (prep_w[pf]) begin
-                        if (c_init) begin
-                            g_left[pf] <= i_nm1; g_more[pf] <= 1'b1; g_l1[pf] <= i_b1m2; g_wrapn[pf] <= r_w2;
+                        if (ph != 0) begin
+                            // block g_hi < 3: more = g_hi + 1 < nblk, wrap next = g_hi + 2 == nblk1
+                            g_more[pf] <= !t_n[g_hi[pf][1:0] + 2'd1];
+                            g_wrapn[pf] <= t_1[3'(g_hi[pf][1:0]) + 3'd2];
                         end else begin
-                            g_left[pf] <= g_left[pf] - 1'b1; g_more[pf] <= (g_left[pf] != 1);
-                            g_l1[pf] <= g_l1[pf] - 1'b1; g_wrapn[pf] <= (g_l1[pf] == 1);
+                            g_more[pf] <= (g_left[pf] != 1);
+                            g_wrapn[pf] <= (g_l1[pf] == 1);
                         end
+                        g_left[pf] <= g_left[pf] - 1'b1;
+                        g_l1[pf] <= g_l1[pf] - 1'b1;
                         g_first[pf] <= g_first[pf] && g_lo16[pf] && !g_wrapn[pf];
                         g_lo16[pf] <= g_lo16[pf] && (g_hi[pf][3:0] != 4'd15);
-                    end else if (c_init) begin
-                        g_left[pf] <= i_n; g_l1[pf] <= i_b1m1;
+                    end
+                    if (ph == 3) begin
+                        g_left[pf] <= prep_w[pf] ? l_n[g_hi[pf][1:0] + 2'd1] : l_n[g_hi[pf][1:0]];
+                        g_l1[pf] <= prep_w[pf] ? l_1[g_hi[pf][1:0] + 2'd1] : l_1[g_hi[pf][1:0]];
                     end
                 end
             end
@@ -287,21 +323,19 @@ module ot_hdc_v41x_idx_kctl_ring #(
     end
     always @(posedge clk) begin
         if (!rst_n) begin
-            run <= 1'b0; busy <= 1'b0; c_init <= 1'b0; req_v <= 0; nx_v <= 0; rr_v <= 0; adv <= 1'b0;
+            run <= 1'b0; busy <= 1'b0; ph <= 2'd0; req_v <= 0; nx_v <= 0; rr_v <= 0; adv <= 1'b0;
             dr_scale <= 1'b0; dr_quarter <= 1'b0;
             for (p = 0; p < NPC; p = p + 1) begin cc[p] <= 0; g_hi[p] <= 0; end
         end else begin
             dr_scale <= 1'b0;
             dr_quarter <= 1'b0;
-            // group completion for the next cycle (one-hot entry select, AND-OR)
+            // quarter completion for the next cycle (one-hot entry select, AND-OR; quarter order)
             for (b = 0; b < 4; b = b + 1) begin
-                grp_a[b] <= 1'b1;
-                grp_b[b] <= 1'b1;
-                for (c = 0; c < 8; c = c + 1) begin
-                    if ((cc[8 * b + c] & d_oh) == 0) grp_a[b] <= 1'b0;
-                    if ((cc[8 * b + c] & d_oh1) == 0) grp_b[b] <= 1'b0;
-                end
+                qa[b] <= grp_a[b[1:0] ^ d_fold[4:3]];
+                qb[b] <= grp_b[b[1:0] ^ d_fold_n[4:3]];
             end
+            all_a <= &grp_a;
+            all_b <= &grp_b;
             adv <= 1'b0;
             // responses: registered, then counted
             for (p = 0; p < NPC; p = p + 1) begin
@@ -317,9 +351,15 @@ module ot_hdc_v41x_idx_kctl_ring #(
                 base2 <= cmd_base2; span2 <= cmd_nkeys2; m2 <= sbkeys(cmd_nkeys2);
                 run <= 1'b1; busy <= 1'b1;
                 d_hi <= 0; d_oh <= WB'(1); d_hu1 <= 1; d_abs <= cmd_base; d_fold <= fold(cmd_base); d_bidx <= 0; d_rem <= cmd_span;
-                d_m <= c_m; d_q <= 0; d_kb <= 0;
+                d_m <= c_m; d_q <= 0; d_kb <= 0; qz <= 4'b1111;
                 d_more <= c_more; d_wrapn <= 1'b0;
-                c_init <= 1'b1; r_w2 <= c_w2;
+                ph <= 2'd1;
+                t_n[1] <= c_hz1 && c_hz2 && c_bss == 1;
+                t_n[2] <= c_hz1 && c_hz2 && c_bss == 2;
+                t_n[3] <= c_hz1 && c_hz2 && c_bss == 3;
+                t_1[2] <= c_hz1 && c_bs1 == 2;
+                t_1[3] <= c_hz1 && c_bs1 == 3;
+                t_1[4] <= c_hz1 && c_bs1 == 4;
                 r_hi1 <= cmd_span[HW+9:10]; r_sm1 <= bsmall(cmd_span[9:0]);
                 r_hi2 <= cmd_nkeys2[HW+9:10]; r_sm2 <= bsmall(cmd_nkeys2[9:0]);
                 nx_v <= 0;
@@ -330,8 +370,13 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     g_low[p] <= c_nz1 ? lower(5'd0, cmd_skip) : 8'd0;
                 end
             end else if (run) begin
-                c_init <= 1'b0;
-                if (c_init && !d_step) begin d_left <= i_n; d_l1 <= i_b1m1; end
+                if (ph != 0) ph <= (ph == 3) ? 2'd0 : ph + 2'd1;
+                if (ph == 1) begin r_b1 <= HW'(17) * r_hi1 + HW'(r_sm1); r_b2 <= HW'(17) * r_hi2 + HW'(r_sm2); end
+                if (ph == 2) r_n <= r_b1 + r_b2;
+                if (ph == 3) begin
+                    d_left <= d_step ? l_n[d_hi[1:0] + 2'd1] : l_n[d_hi[1:0]];
+                    d_l1 <= d_step ? l_1[d_hi[1:0] + 2'd1] : l_1[d_hi[1:0]];
+                end
                 for (p = 0; p < NPC; p = p + 1) begin
                     if (req_v[p] && req_rdy[p]) req_v[p] <= 1'b0;
                     // issue the prepared request
@@ -408,19 +453,22 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     adv <= 1'b1;
                     d_hi <= d_hi1; d_oh <= d_oh1;
                     d_hu1 <= d_hi1[BW-1:SW] + 1'b1;
-                    if (c_init) begin
-                        d_left <= i_nm1; d_more <= 1'b1; d_l1 <= i_b1m2; d_wrapn <= r_w2;
+                    if (ph != 0) begin
+                        d_more <= !t_n[d_hi[1:0] + 2'd1];
+                        d_wrapn <= t_1[3'(d_hi[1:0]) + 3'd2];
                     end else begin
-                        d_left <= d_left - 1'b1; d_more <= (d_left != 1);
-                        d_l1 <= d_l1 - 1'b1; d_wrapn <= (d_l1 == 1);
+                        d_more <= (d_left != 1);
+                        d_wrapn <= (d_l1 == 1);
+                        d_left <= d_left - 1'b1;
+                        d_l1 <= d_l1 - 1'b1;
                     end
                     if (d_wrapn) begin
-                        d_abs <= base2; d_fold <= fold(base2); d_bidx <= 0; d_rem <= span2; d_m <= m2; d_kb <= 0;
+                        d_abs <= base2; d_fold <= fold(base2); d_bidx <= 0; d_rem <= span2; d_m <= m2; d_kb <= 0; qz <= 4'b1111;
                     end else begin
                         d_abs <= d_abs1;
                         d_fold <= fold(d_abs1);
                         d_bidx <= n_bidx;
-                        d_kb <= n_kb;
+                        d_kb <= n_kb; qz <= qzof(n_kb);
                         if (d_bidx == 16) begin
                             d_rem <= d_rem - 1024;
                             d_m <= sbkeys_dec(d_rem);
