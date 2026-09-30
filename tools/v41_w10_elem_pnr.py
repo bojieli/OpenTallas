@@ -37,22 +37,36 @@ SOURCES = ["rtl/v41rom/ot_v41_rom_elem_q.sv", "rtl/v41rom/ot_v41_rom_elem.sv", "
            f"{MACRO_DIR}/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v"]
 
 
-def plan(logic_w: float, pair: bool = False, wrapped: bool = False) -> dict:
-    """pair: a W1 pair column [ROM R0 | logic strip | ROM MY] sharing one front end (ot_v41_rom_elem NB = 2)."""
+def plan(logic_w: float, pair: bool = False, wrapped: bool = False, outline=None, ch_o: float = 5.4) -> dict:
+    """pair: a W1 pair column [ROM R0 | logic strip | ROM MY] sharing one front end (ot_v41_rom_elem NB = 2).
+    outline (W, H): the block IS the pack's pair tile (W1 pitch, no margin, no pin channel): channels of ch_o
+    beside each ROM edge hold the capture flops, the strip takes the rest, and the tiles abut."""
     rom, rw, rh = ROM
-    die_h = W2.snap(2 * MARGIN + 2 * GAP + rh, 0.27)
-    x_rom = MARGIN + CH
-    x_logic0 = x_rom + rw + CH
-    x_rom1 = x_logic0 + logic_w + CH
-    die_w = W2.snap((x_rom1 + rw + CH if pair else x_logic0 + logic_w) + MARGIN, 0.054)
+    if outline:
+        die_w, die_h = outline
+        x_rom = ch_o
+        x_logic0 = x_rom + rw + ch_o
+        logic_w = die_w - 2 * rw - 4 * ch_o
+        x_rom1 = x_logic0 + logic_w + ch_o
+        y_rom = round((die_h - rh) / 2, 3)
+        margin = 0.0
+    else:
+        die_h = W2.snap(2 * MARGIN + 2 * GAP + rh, 0.27)
+        x_rom = MARGIN + CH
+        x_logic0 = x_rom + rw + CH
+        x_rom1 = x_logic0 + logic_w + CH
+        die_w = W2.snap((x_rom1 + rw + CH if pair else x_logic0 + logic_w) + MARGIN, 0.054)
+        y_rom = MARGIN + GAP
+        margin = MARGIN
     pre = "u_e." if wrapped else ""
-    macros = [{"inst": f"{pre}g_mac[0].u_rom", "master": ROM, "x": x_rom, "y": MARGIN + GAP, "orient": "R0",
+    macros = [{"inst": f"{pre}g_mac[0].u_rom", "master": ROM, "x": x_rom, "y": y_rom, "orient": "R0",
                "capture": True}]
     if pair:
-        macros.append({"inst": f"{pre}g_mac[1].u_rom", "master": ROM, "x": x_rom1, "y": MARGIN + GAP, "orient": "MY",
+        macros.append({"inst": f"{pre}g_mac[1].u_rom", "master": ROM, "x": x_rom1, "y": y_rom, "orient": "MY",
                        "capture": True})
     return {"case": "w10_elem_pair" if pair else "w10_elem", "top": "ot_v41_rom_elem", "die_um": [die_w, die_h],
-            "logic_region_um": [round(x_logic0, 3), MARGIN, round(x_logic0 + logic_w, 3), die_h - MARGIN],
+            "logic_region_um": [round(x_logic0, 3), margin, round(x_logic0 + logic_w, 3), die_h - margin],
+            "margin_um": margin, "outline": bool(outline),
             "pin_span_um": [round(x_logic0, 3), round(x_logic0 + logic_w, 3)],
             "macros": macros, "pair": pair, "wrapped": wrapped,
             "sources": SOURCES, "macro_views": [rom],
@@ -63,8 +77,9 @@ def plan(logic_w: float, pair: bool = False, wrapped: bool = False) -> dict:
 def hook_name(p: dict) -> str:
     """The hook fixes macro positions, which depend on the logic width for a pair: the width is in the name."""
     lw = int(round(p["logic_region_um"][2] - p["logic_region_um"][0]))
+    tile = f"_tile{int(round(p['die_um'][0]))}x{int(round(p['die_um'][1]))}" if p.get("outline") else ""
     return (f"physical/abi3/v41_w10_elem{'_pair' if p['pair'] else ''}{'_q' if p['wrapped'] else ''}"
-            f"{f'_lw{lw}' if p['pair'] else ''}_place.tcl")
+            f"{f'_lw{lw}' if p['pair'] else ''}{tile}_place.tcl")
 
 
 def hook_tcl(p: dict) -> str:
@@ -91,9 +106,12 @@ def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), s
         a += ["--source", s]
     a += ["--clock-period-ns", "0.92", "--clock-uncertainty-ns", "0.06", "--io-delay-fraction", "0.2",
           "--stages", "pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
-          "--core-area", f"{MARGIN:g}", f"{MARGIN:g}", f"{w - MARGIN:g}", f"{h - MARGIN:g}",
+          "--core-area", f"{p['margin_um']:g}", f"{p['margin_um']:g}", f"{w - p['margin_um']:g}", f"{h - p['margin_um']:g}",
           "--place-density", f"{density:g}", "--macro-place-halo", "2", "2",
-          "--pin-region", f".*=bottom:{p['pin_span_um'][0]:g}-{p['pin_span_um'][1]:g}",
+          *(["--pin-region", f"^(p|busy|fault).*=top:{p['pin_span_um'][0]:g}-{p['pin_span_um'][1]:g}",
+             "--pin-region", f"^(clk|rst|cfg|go|x).*=bottom:{p['pin_span_um'][0]:g}-{p['pin_span_um'][1]:g}"]
+            if p.get("outline") else
+            ["--pin-region", f".*=bottom:{p['pin_span_um'][0]:g}-{p['pin_span_um'][1]:g}"]),
           "--max-transition-ns", "0.32", "--slew-margin-percent", "40", "--hold-margin-ns", "0.02",
           "--step-tcl", f"POST_MACRO_PLACE={hook_name(p)}",
           "--step-tcl", "POST_DETAIL_PLACE=physical/abi3/check_pg_before_route.tcl",
@@ -123,6 +141,9 @@ def main() -> None:
     ap.add_argument("--output", default="results/physical_abi3/asap7/chip/v41_w10_elem/elem_physical.json")
     ap.add_argument("--param", action="append", default=[], help="RTL parameter, e.g. BF16=1")
     ap.add_argument("--pair", action="store_true", help="a W1 macro pair sharing one front end (NB=2)")
+    ap.add_argument("--outline", type=float, nargs=2, metavar=("W", "H"),
+                    help="harden the pair as exactly the pack tile W x H um (abutting, no margins or pin channel)")
+    ap.add_argument("--channel", type=float, default=5.4, help="with --outline: capture channel beside each ROM edge")
     ap.add_argument("--stop-after", choices=["cts", "finish"], help="timing iteration: stop the flow after CTS")
     ap.add_argument("--hold-uncertainty-ns", type=float, default=0.025,
                     help="hold clock uncertainty (project SDC policy: 60 ps setup / 25 ps hold)")
@@ -132,7 +153,8 @@ def main() -> None:
     ap.add_argument("--no-wrap", dest="wrap", action="store_false",
                     help="FP8/FP4: harden ot_v41_rom_elem itself (with the unused BF16 x port) instead of ot_v41_rom_elem_q")
     a = ap.parse_args()
-    p = plan(a.logic_w, a.pair, wrapped=not any(q.startswith("BF16=1") for q in a.param) and a.wrap)
+    p = plan(a.logic_w, a.pair, wrapped=not any(q.startswith("BF16=1") for q in a.param) and a.wrap,
+             outline=a.outline, ch_o=a.channel)
     if a.pair and "NB=2" not in a.param:
         a.param.append("NB=2")
     if a.write_hook or a.print:
