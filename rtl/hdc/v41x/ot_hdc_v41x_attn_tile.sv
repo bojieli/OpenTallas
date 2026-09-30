@@ -43,16 +43,20 @@
 // fault, whatever the stale A holds.
 //
 // CHUNK CHAIN: the 8 products of a chunk enter one sequential chain of 7
-// binary32 adders (ot_hdc_qadd, 3 cycles each); product i of the chunk is
-// issued 3*(i-1) cycles after product 0, by skewing the B element (shared by
-// all H heads) and the bank select, not the per-head product.  The chunk's
-// first term needs no adder: add(+0, p) = p for every canonical p.
+// binary32 adders (ot_hdc_v41x_qaddl, FPL cycles each: 3 = ot_hdc_qadd as
+// built, 7 = ot_hdc_fp32_add_lat for the 1.2 GHz streaming domain); product i
+// of the chunk is issued FPL*(i-1) cycles after product 0, by skewing the B
+// element (shared by all H heads) and the bank select, not the per-head
+// product.  The chunk's first term needs no adder: add(+0, p) = p for every
+// canonical p.  The chain is a recurrence only along one beat's chunk; beats
+// are independent, so II stays 1 at every FPL.
 //
 // Timing, a beat sampled at edge 0: R0 input register (1), dequant (2),
-// multiply (3 -> 5), chain (21 -> 26), tree 3*log2(TD/8) (-> 35 at TD=64),
-// output register: ov at LAT = 4 + 3 + 21 + 3*log2(TD/8) + 1 = 36 (TD=64).
-// Fully pipelined, II = 1, no stall: flow control is by issue credit in the
-// engine.
+// multiply FML (3 as built), chain 7*FPL, tree FPL*log2(TD/8), output
+// register: ov at LAT = 3 + FML + 7*FPL + FPL*log2(TD/8) (36 at TD = 64 and
+// FML = FPL = 3).  Fully pipelined, II = 1, no stall: flow control is by issue
+// credit in the engine.  A build with FPL > 3 adds
+// rtl/hdc/ot_hdc_fp32_add_lat.sv to its sources.
 //
 // Faults fail closed: a nonfinite A, an out-of-domain KV element (a NaN
 // code, a dequantised value outside the binary32 normal range), a product or
@@ -98,12 +102,19 @@ endmodule
 
 // ---------------------------------------------------------------------------
 // BF16 x BF16 -> binary32, IEEE RNE with gradual underflow, canonical +0,
-// LATENCY 3 -- hdc_golden.mul on BF16 operands.  The 8 x 8 significand
-// product is exact in binary32 whenever the result is normal; only a
-// subnormal result rounds.  A nonfinite operand or an overflowing result
-// raises flt with y = 0 (as ot_hdc_qmul).  `pad` forces y = +0, no fault.
+// LATENCY ML (3 as built, up to 6) -- hdc_golden.mul on BF16 operands.  The
+// 8 x 8 significand product is exact in binary32 whenever the result is
+// normal; only a subnormal result rounds.  A nonfinite operand or an
+// overflowing result raises flt with y = 0 (as ot_hdc_qmul).  `pad` forces
+// y = +0, no fault.  Cuts (registers only; the value is the same at every ML):
+//   ML >= 4  stage 3 after the subnormal alignment shifts
+//   ML >= 5  stage 2 after the leading-zero count
+//   ML >= 6  an operand register ahead of stage 1 (the bank-select mux and the
+//            skewed element, both high fan-out, get a cycle of their own)
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_attn_bmul (
+module ot_hdc_v41x_attn_bmul #(
+    parameter integer ML = 3
+) (
     input  wire        clk,
     input  wire [15:0] a,
     input  wire [15:0] b,
@@ -111,21 +122,25 @@ module ot_hdc_v41x_attn_bmul (
     output reg  [31:0] y,
     output reg         flt
 );
+    // -- operand register (ML >= 6)
+    wire [15:0] oa, ob;
+    wire        opad;
+    ot_hdc_v41x_dly #(.W(33), .D((ML >= 6) ? 1 : 0)) u_cut0 (.clk(clk), .d({a, b, pad}), .q({oa, ob, opad}));
     // -- stage 1: decode, 8x8 product, exponent sum
-    wire [7:0] ea = a[14:7];
-    wire [7:0] eb = b[14:7];
-    wire [7:0] ma = {(ea != 8'd0), a[6:0]};
-    wire [7:0] mb = {(eb != 8'd0), b[6:0]};
+    wire [7:0] ea = oa[14:7];
+    wire [7:0] eb = ob[14:7];
+    wire [7:0] ma = {(ea != 8'd0), oa[6:0]};
+    wire [7:0] mb = {(eb != 8'd0), ob[6:0]};
     wire [8:0] esum_c = {1'b0, (ea == 8'd0) ? 8'd1 : ea} + {1'b0, (eb == 8'd0) ? 8'd1 : eb};
-    wire nonfin_c = !pad && ((ea == 8'hff) || (eb == 8'hff));
-    wire zero_c = pad || (ma == 8'd0) || (mb == 8'd0);
+    wire nonfin_c = !opad && ((ea == 8'hff) || (eb == 8'hff));
+    wire zero_c = opad || (ma == 8'd0) || (mb == 8'd0);
     reg [15:0] s1_p;
     reg [8:0]  s1_esum;
     reg        s1_sign, s1_zero, s1_nonfin;
     always @(posedge clk) begin
         s1_p <= ma * mb;
         s1_esum <= esum_c;
-        s1_sign <= a[15] ^ b[15];
+        s1_sign <= oa[15] ^ ob[15];
         s1_zero <= zero_c;
         s1_nonfin <= nonfin_c;
     end
@@ -134,51 +149,62 @@ module ot_hdc_v41x_attn_bmul (
     //: value = P * 2^(esum - 268); msb at 15 - lz; biased exponent
     //: esum - 126 - lz; a subnormal result is P * 2^(esum - 119) in units of
     //: 2^-149, i.e. P << (esum - 119) or P >> (119 - esum) rounded.
-    reg [3:0] lz;
+    reg [3:0] lz0;
     integer i;
     always @* begin
-        lz = 4'd15;
+        lz0 = 4'd15;
         for (i = 0; i < 16; i = i + 1)
-            if (s1_p[i]) lz = 4'd15 - i[3:0];
+            if (s1_p[i]) lz0 = 4'd15 - i[3:0];
     end
-    wire [15:0] pn = s1_p << lz;
-    wire signed [10:0] biased = $signed({2'b00, s1_esum}) - 11'sd126 - $signed({7'd0, lz});
+    wire [3:0]  lz;
+    wire [15:0] c1_p;
+    wire [8:0]  c1_esum;
+    wire        c1_sign, c1_zero, c1_nonfin;
+    ot_hdc_v41x_dly #(.W(4 + 16 + 9 + 3), .D((ML >= 5) ? 1 : 0)) u_cut2 (.clk(clk),
+        .d({lz0, s1_p, s1_esum, s1_sign, s1_zero, s1_nonfin}), .q({lz, c1_p, c1_esum, c1_sign, c1_zero, c1_nonfin}));
+    wire [15:0] pn = c1_p << lz;
+    wire signed [10:0] biased = $signed({2'b00, c1_esum}) - 11'sd126 - $signed({7'd0, lz});
     wire normal_c = biased >= 11'sd1;
     wire over_c = biased >= 11'sd255;
-    wire signed [10:0] lsh = $signed({2'b00, s1_esum}) - 11'sd119;   // left shift if >= 0
+    wire signed [10:0] lsh = $signed({2'b00, c1_esum}) - 11'sd119;   // left shift if >= 0
     reg [31:0] s2_code_n;
     reg [15:0] s2_p;
     reg [4:0]  s2_lsh;            // 0 .. 22 when used
     reg [4:0]  s2_rsh;            // 1 .. 17 (clamped) when used
     reg        s2_left, s2_normal, s2_over, s2_sign, s2_zero, s2_nonfin;
     always @(posedge clk) begin
-        s2_code_n <= {s1_sign, biased[7:0], pn[14:0], 8'd0};
-        s2_p <= s1_p;
+        s2_code_n <= {c1_sign, biased[7:0], pn[14:0], 8'd0};
+        s2_p <= c1_p;
         s2_left <= !lsh[10];
         s2_lsh <= (lsh > 11'sd22) ? 5'd22 : lsh[4:0];
         s2_rsh <= (lsh < -11'sd17) ? 5'd17 : (-lsh[4:0]);
         s2_normal <= normal_c;
         s2_over <= over_c;
-        s2_sign <= s1_sign;
-        s2_zero <= s1_zero;
-        s2_nonfin <= s1_nonfin;
+        s2_sign <= c1_sign;
+        s2_zero <= c1_zero;
+        s2_nonfin <= c1_nonfin;
     end
 
-    // -- stage 3: subnormal alignment and rounding, select, encode
-    wire [22:0] lft = {7'd0, s2_p} << s2_lsh;
-    wire [15:0] rgt = s2_p >> s2_rsh;
+    // -- stage 3: subnormal alignment [cut, ML >= 4] and rounding, select, encode
+    wire [22:0] lft0 = {7'd0, s2_p} << s2_lsh;
+    wire [15:0] rgt0 = s2_p >> s2_rsh;
     wire [31:0] below = {s2_p, 16'd0} >> s2_rsh;       // bits shifted out, MSB first at [15]
-    wire rb = below[15];
-    wire st = |below[14:0];
-    wire [23:0] sub_f = s2_left ? {1'b0, lft} : ({8'd0, rgt} + {23'd0, rb && (st || rgt[0])});
-    wire [31:0] code_s = {s2_sign, 7'd0, sub_f};
+    wire [22:0] lft;
+    wire [15:0] rgt;
+    wire [31:0] c3_code_n;
+    wire rb, st, c3_left, c3_normal, c3_over, c3_sign, c3_zero, c3_nonfin;
+    ot_hdc_v41x_dly #(.W(23 + 16 + 32 + 8), .D((ML >= 4) ? 1 : 0)) u_cut3 (.clk(clk),
+        .d({lft0, rgt0, s2_code_n, below[15], |below[14:0], s2_left, s2_normal, s2_over, s2_sign, s2_zero, s2_nonfin}),
+        .q({lft, rgt, c3_code_n, rb, st, c3_left, c3_normal, c3_over, c3_sign, c3_zero, c3_nonfin}));
+    wire [23:0] sub_f = c3_left ? {1'b0, lft} : ({8'd0, rgt} + {23'd0, rb && (st || rgt[0])});
+    wire [31:0] code_s = {c3_sign, 7'd0, sub_f};
     always @(posedge clk) begin
-        if (s2_nonfin) begin
+        if (c3_nonfin) begin
             y <= 32'd0; flt <= 1'b1;
-        end else if (s2_zero) begin
+        end else if (c3_zero) begin
             y <= 32'd0; flt <= 1'b0;
-        end else if (s2_normal) begin
-            y <= s2_over ? 32'd0 : s2_code_n; flt <= s2_over;
+        end else if (c3_normal) begin
+            y <= c3_over ? 32'd0 : c3_code_n; flt <= c3_over;
         end else begin
             y <= (sub_f == 24'd0) ? 32'd0 : code_s; flt <= 1'b0;
         end
@@ -240,11 +266,13 @@ module ot_hdc_v41x_attn_deq (
 endmodule
 
 // ---------------------------------------------------------------------------
-// One chunk: 8 products (position i issued 3*(i-1) cycles after position 0)
-// summed sequentially: acc = p0; acc = add(acc, p_i), i = 1..7.  LATENCY 21
+// One chunk: 8 products (position i issued FPL*(i-1) cycles after position 0)
+// summed sequentially: acc = p0; acc = add(acc, p_i), i = 1..7.  LATENCY 7*FPL
 // from the products of positions 0/1.
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_attn_chunk (
+module ot_hdc_v41x_attn_chunk #(
+    parameter integer FPL = 3
+) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [8*32-1:0] p,
@@ -261,12 +289,12 @@ module ot_hdc_v41x_attn_chunk (
         for (gi = 1; gi < 8; gi = gi + 1) begin : g_a
             wire [31:0] s;
             wire sf;
-            ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(acc[(gi-1)*32 +: 32]), .b(p[gi*32 +: 32]),
-                             .y(s), .fault(sf));
-            reg [2:0] fd;
-            always @(posedge clk) fd <= {fd[1:0], af[gi-1] | pf[gi]};
+            ot_hdc_v41x_qaddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(acc[(gi-1)*32 +: 32]),
+                             .b(p[gi*32 +: 32]), .y(s), .fault(sf));
+            wire fdq;
+            ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(af[gi-1] | pf[gi]), .q(fdq));
             assign acc[gi*32 +: 32] = s;
-            assign af[gi] = fd[2] | sf;
+            assign af[gi] = fdq | sf;
         end
     endgenerate
     assign y = acc[7*32 +: 32];
@@ -275,13 +303,15 @@ endmodule
 
 // ---------------------------------------------------------------------------
 // One head of a tile: TD stationary operands (NBANK banks), TD multipliers,
-// TD/8 chunk chains, the pairwise tree.  LATENCY 3 + 21 + 3*log2(TD/8) from
-// the skewed operands to y (y is the last adder's register).
+// TD/8 chunk chains, the pairwise tree.  LATENCY FML + 7*FPL + FPL*log2(TD/8)
+// from the skewed operands to y (y is the last adder's register).
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_attn_hdp #(
     parameter integer TD = 64,
     parameter integer NBANK = 3,
-    parameter integer BW = 2
+    parameter integer BW = 2,
+    parameter integer FPL = 3,
+    parameter integer FML = 3
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -308,27 +338,27 @@ module ot_hdc_v41x_attn_hdp #(
             wire [15:0] av = ab[bk*16 +: 16];
             wire [17:0] be = sk_b[gk*18 +: 18];
             wire mf;
-            ot_hdc_v41x_attn_bmul u_m (.clk(clk), .a(av), .b(be[15:0]), .pad(be[17]), .y(p[gk*32 +: 32]), .flt(mf));
+            ot_hdc_v41x_attn_bmul #(.ML(FML)) u_m (.clk(clk), .a(av), .b(be[15:0]), .pad(be[17]), .y(p[gk*32 +: 32]), .flt(mf));
             // dequant fault rides with the product
-            reg [2:0] df;
-            always @(posedge clk) df <= {df[1:0], be[16] & ~be[17]};
-            assign pf[gk] = mf | df[2];
+            wire dfq;
+            ot_hdc_v41x_dly #(.W(1), .D(FML)) u_df (.clk(clk), .d(be[16] & ~be[17]), .q(dfq));
+            assign pf[gk] = mf | dfq;
         end
         wire [(2*NC-1)*32-1:0] tn;      // heap order: leaves (chunk sums) at NC-1 .. 2NC-2
         wire [2*NC-2:0]        tf;
         for (gn = 0; gn < NC; gn = gn + 1) begin : g_c
-            ot_hdc_v41x_attn_chunk u_c (.clk(clk), .rst_n(rst_n), .p(p[gn*256 +: 256]), .pf(pf[gn*8 +: 8]),
+            ot_hdc_v41x_attn_chunk #(.FPL(FPL)) u_c (.clk(clk), .rst_n(rst_n), .p(p[gn*256 +: 256]), .pf(pf[gn*8 +: 8]),
                                         .y(tn[(NC-1+gn)*32 +: 32]), .f(tf[NC-1+gn]));
         end
         for (gn = 0; gn < NC - 1; gn = gn + 1) begin : g_node
             wire [31:0] s;
             wire sf;
-            ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gn+1)*32 +: 32]),
+            ot_hdc_v41x_qaddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gn+1)*32 +: 32]),
                              .b(tn[(2*gn+2)*32 +: 32]), .y(s), .fault(sf));
-            reg [2:0] fd;
-            always @(posedge clk) fd <= {fd[1:0], tf[2*gn+1] | tf[2*gn+2]};
+            wire fdq;
+            ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(tf[2*gn+1] | tf[2*gn+2]), .q(fdq));
             assign tn[gn*32 +: 32] = s;
-            assign tf[gn] = fd[2] | sf;
+            assign tf[gn] = fdq | sf;
         end
     endgenerate
     assign y = tn[31:0];
@@ -341,7 +371,9 @@ module ot_hdc_v41x_attn_tile #(
     parameter integer TD = 64,         // products per head per beat (multiple of 8, TD/8 a power of two)
     parameter integer NBANK = 3,       // stationary-operand banks
     parameter integer BW = 2,          // bank index width
-    parameter integer PWORDS = 1       // p-mode words per load (1 or 2)
+    parameter integer PWORDS = 1,      // p-mode words per load (1 or 2)
+    parameter integer FPL = 3,         // binary32 add latency (7: 1.2 GHz streaming domain)
+    parameter integer FML = 3          // product latency (ot_hdc_v41x_attn_bmul)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -364,7 +396,7 @@ module ot_hdc_v41x_attn_tile #(
     localparam integer NC = TD / 8;          // chunks
     localparam integer LV = $clog2(NC);      // tree levels
     localparam integer R = TD / H;           // rows per p-load word
-    localparam integer LAT_CORE = 3 + 21 + 3 * LV;   // multiply .. tree, from the dequant register
+    localparam integer LAT_CORE = FML + 7 * FPL + FPL * LV;   // multiply .. tree, from the dequant register
 
     // -- R0: boundary registers
     reg              r_ld_v, r_ld_mode;
@@ -403,16 +435,16 @@ module ot_hdc_v41x_attn_tile #(
         else d1_v <= r_iv;
     end
 
-    // -- skew: chunk position i issues 3*(i-1) cycles after position 0 (0 for i = 0, 1)
+    // -- skew: chunk position i issues FPL*(i-1) cycles after position 0 (0 for i = 0, 1)
     wire [TD*18-1:0] sk_b;
     wire [8*BW-1:0]  sk_bank;
     generate
         for (gk = 0; gk < 8; gk = gk + 1) begin : g_skb
-            localparam integer DS = (gk == 0) ? 0 : 3 * (gk - 1);
+            localparam integer DS = (gk == 0) ? 0 : FPL * (gk - 1);
             ot_hdc_v41x_dly #(.W(BW), .D(DS)) u_d (.clk(clk), .d(d1_bank), .q(sk_bank[gk*BW +: BW]));
         end
         for (gk = 0; gk < TD; gk = gk + 1) begin : g_ske
-            localparam integer DS = ((gk % 8) == 0) ? 0 : 3 * ((gk % 8) - 1);
+            localparam integer DS = ((gk % 8) == 0) ? 0 : FPL * ((gk % 8) - 1);
             ot_hdc_v41x_dly #(.W(18), .D(DS)) u_d (.clk(clk), .d(d1_b[gk*18 +: 18]), .q(sk_b[gk*18 +: 18]));
         end
     endgenerate
@@ -438,7 +470,7 @@ module ot_hdc_v41x_attn_tile #(
             end
             wire [31:0] y;
             wire f;
-            ot_hdc_v41x_attn_hdp #(.TD(TD), .NBANK(NBANK), .BW(BW)) u_hdp (
+            ot_hdc_v41x_attn_hdp #(.TD(TD), .NBANK(NBANK), .BW(BW), .FPL(FPL), .FML(FML)) u_hdp (
                 .clk(clk), .rst_n(rst_n), .we(we), .wbank(r_ld_bank), .wd(wd), .sk_bank(sk_bank), .sk_b(sk_b),
                 .y(y), .f(f));
             always @(posedge clk) begin
@@ -454,4 +486,34 @@ module ot_hdc_v41x_attn_tile #(
         if (!rst_n) ov <= 1'b0;
         else ov <= v_core;
     end
+endmodule
+
+// ---------------------------------------------------------------------------
+// Fault-reporting binary32 add of the attention datapath: ot_hdc_qadd (LAT 3,
+// ot_hdc_fp32_add_fast) or, for LAT > 3, ot_hdc_fp32_add_lat -- bit for bit the
+// same adder, cut deeper (rtl/hdc/ot_hdc_fp32_add_lat.sv, which a LAT > 3 build
+// adds to its sources).
+// ---------------------------------------------------------------------------
+module ot_hdc_v41x_qaddl #(
+    parameter integer LAT = 3
+) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire        fault
+);
+    generate
+        if (LAT == 3) begin : g_fast
+            ot_hdc_qadd u (.clk(clk), .rst_n(rst_n), .v(v), .a(a), .b(b), .y(y), .fault(fault));
+        end else begin : g_lat
+            wire [1:0] err;
+            wire vo;
+            ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y),
+                                                .err(err), .valid_out(vo));
+            assign fault = vo && (err != 2'd0);
+        end
+    endgenerate
 endmodule

@@ -11,8 +11,9 @@
 //   ot_hdc_v41x_csa       carry-save reduction (copy of ot_hdc_v41_csa)
 //   ot_hdc_v41x_q4dot     exact FP4 (E2M1) x FP4 32-element block dot rounded
 //                         once to binary32 (RNE, gradual underflow, +0), with
-//                         the two UE8M0 block scales; LATENCY 3
-//   ot_hdc_v41x_bmul      to_bf16(mul(relu(a), w)) for BF16 a, w; LATENCY 2
+//                         the two UE8M0 block scales; LATENCY QL (3..5)
+//   ot_hdc_v41x_faddl     the binary32 adder at LATENCY 3 (fastfp) or deeper
+//   ot_hdc_v41x_bmul      to_bf16(mul(relu(a), w)) for BF16 a, w; LATENCY ML (3..5)
 //   ot_hdc_v41x_bf16      to_bf16 of binary32 bits (function, combinational)
 //
 // E2M1 code c[3:0]: c[3] sign, c[2:0] magnitude index into
@@ -101,15 +102,20 @@ module ot_hdc_v41x_csa #(
 endmodule
 
 // ---------------------------------------------------------------------------
-// Exact FP4 x FP4 block dot, rounded once to binary32.  LATENCY 3, II 1, no
-// reset on data (validity travels outside).
+// Exact FP4 x FP4 block dot, rounded once to binary32.  LATENCY QL (3, 4 or
+// 5), II 1, no reset on data (validity travels outside).
 //   A  signed products from a 7-input table, offset-binary operands (no sign
 //      extension); CSA 32 -> 7
-//   B  CSA 7 -> 2, carry-propagate add: S; |S|; the exponent decisions that
-//      do not need the leading-zero count
-//   C  leading-zero count, normal pack or subnormal right shift + RNE
+//   B  CSA 7 -> 2                                   | cut (QL >= 5)
+//      carry-propagate add: S; |S|; the exponent decisions that do not need
+//      the leading-zero count
+//   C  leading-zero count; the subnormal right shift + RNE   | cut (QL >= 4)
+//      normal pack, select
+// The cuts only add registers: the value is the same at every QL.
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_q4dot (
+module ot_hdc_v41x_q4dot #(
+    parameter integer QL = 3      // latency: 3 (as built), 4 (+ cut in C), 5 (+ cut in B)
+) (
     input  wire         clk,
     input  wire [127:0] a,        // 32 E2M1 codes, element i at [4i+3:4i]
     input  wire [127:0] b,
@@ -168,11 +174,15 @@ module ot_hdc_v41x_q4dot (
 
     // -- stage B: CSA 7 -> 2, the add, |S|, the exponent decisions that do not
     //    depend on the leading-zero count ----------------------------------------
-    wire [2*14-1:0] qb;
-    ot_hdc_v41x_csa #(.N(7), .M(2), .W(14)) u_cb (.d(ra), .q(qb));
+    wire [2*14-1:0] qb0, qb;
+    ot_hdc_v41x_csa #(.N(7), .M(2), .W(14)) u_cb (.d(ra), .q(qb0));
+    wire signed [9:0] rea_b;
+    wire rrefa_b;
+    ot_hdc_delay #(.W(28 + 10 + 1), .D((QL >= 5) ? 1 : 0)) u_cutb (.clk(clk), .rst_n(1'b1),
+        .d({qb0, rea, rrefa}), .q({qb, rea_b, rrefa_b}));
     wire [13:0] sb = (qb[13:0] + qb[27:14]) ^ 14'h2000;     // remove the 2^13 offset
     wire [12:0] mb = sb[13] ? (~sb[12:0] + 13'd1) : sb[12:0];   // |S| <= 4608 < 2^13
-    wire signed [11:0] kb = $signed({{2{rea[9]}}, rea}) + 12'sd149;      // subnormal: F = |S| * 2^kb
+    wire signed [11:0] kb = $signed({{2{rea_b[9]}}, rea_b}) + 12'sd149;      // subnormal: F = |S| * 2^kb
     wire [11:0] nkb = -kb;
     reg         rsg, rkneg;
     reg  [12:0] rm;
@@ -187,37 +197,46 @@ module ot_hdc_v41x_q4dot (
         rkneg <= kb[11];
         rkl <= kb[4:0];
         rkr <= (nkb > 12'd14) ? 4'd14 : nkb[3:0];
-        rnl <= $signed({{2{rea[9]}}, rea}) + 12'sd138;
-        rov <= $signed({{2{rea[9]}}, rea}) - 12'sd116;
-        reb <= rea;
-        rrefb <= rrefa;
+        rnl <= $signed({{2{rea_b[9]}}, rea_b}) + 12'sd138;
+        rov <= $signed({{2{rea_b[9]}}, rea_b}) - 12'sd116;
+        reb <= rea_b;
+        rrefb <= rrefa_b;
     end
 
-    // -- stage C: leading-zero count, normal pack or subnormal shift + RNE --------
-    reg  [3:0]  lz;
+    // -- stage C: leading-zero count and the subnormal path (independent of it);
+    //    [cut, QL >= 4]; normal pack, select ---------------------------------------
+    reg  [3:0]  lz0;
     integer kq;
     always @* begin
-        lz = 4'd13;
-        for (kq = 0; kq < 13; kq = kq + 1) if (rm[kq]) lz = 4'd12 - kq[3:0];
+        lz0 = 4'd13;
+        for (kq = 0; kq < 13; kq = kq + 1) if (rm[kq]) lz0 = 4'd12 - kq[3:0];
     end
-    wire [12:0]       mn = rm << lz;                         // leading one at bit 12
-    wire [7:0]        bef = reb[7:0] + 8'd139 - {4'd0, lz};  // biased exponent (mod 256) where normal
-    wire              nrm = $signed({8'd0, lz}) <= rnl;
-    wire              ovc = (rm != 13'd0) && ($signed({8'd0, lz}) <= rov);
     wire [26:0]       xr = {rm, 14'd0} >> rkr;
     wire [12:0]       qt = xr[26:14];
     wire              g = xr[13], st = |xr[12:0];
     wire [23:0]       fr = {11'd0, qt} + ((g && (st || qt[0])) ? 24'd1 : 24'd0);
     wire [23:0]       fl = {11'd0, rm} << rkl;
-    wire [23:0]       f = rkneg ? fr : fl;
+    wire [23:0]       f0 = rkneg ? fr : fl;
+    wire [3:0]        lz;
+    wire [12:0]       cm;
+    wire [23:0]       f;
+    wire signed [9:0] ceb;
+    wire signed [11:0] cnl, cov;
+    wire              csg, cref;
+    ot_hdc_delay #(.W(4 + 13 + 24 + 10 + 12 + 12 + 2), .D((QL >= 4) ? 1 : 0)) u_cutc (.clk(clk), .rst_n(1'b1),
+        .d({lz0, rm, f0, reb, rnl, rov, rsg, rrefb}), .q({lz, cm, f, ceb, cnl, cov, csg, cref}));
+    wire [12:0]       mn = cm << lz;                         // leading one at bit 12
+    wire [7:0]        bef = ceb[7:0] + 8'd139 - {4'd0, lz};  // biased exponent (mod 256) where normal
+    wire              nrm = $signed({8'd0, lz}) <= cnl;
+    wire              ovc = (cm != 13'd0) && ($signed({8'd0, lz}) <= cov);
     reg  [31:0] yc;
     reg         oc;
     always @* begin
-        oc = rrefb || ovc;
-        if (rm == 13'd0 || oc) yc = 32'd0;
-        else if (nrm) yc = {rsg, bef, mn[11:0], 11'd0};
+        oc = cref || ovc;
+        if (cm == 13'd0 || oc) yc = 32'd0;
+        else if (nrm) yc = {csg, bef, mn[11:0], 11'd0};
         else if (f == 24'd0) yc = 32'd0;
-        else yc = {rsg, 7'd0, f};
+        else yc = {csg, 7'd0, f};
     end
     always @(posedge clk) begin
         y <= yc;
@@ -243,15 +262,19 @@ endmodule
 // head weight); binary32 multiply semantics of hdc_golden.mul (RNE, gradual
 // underflow, a zero result +0) followed by to_bf16 -- two roundings where the
 // binary32 product is subnormal, one (to BF16) elsewhere, since an 8 x 8-bit
-// product is exact in binary32's significand.  LATENCY 3.  `ovf`: a product
-// past the binary32 range, or one to_bf16 rounds to infinity.
+// product is exact in binary32's significand.  LATENCY ML (3, 4 or 5).  `ovf`:
+// a product past the binary32 range, or one to_bf16 rounds to infinity.
 //   1  ReLU, significands, the exact 16-bit product, exponent sums
-//   2  leading-zero count and normalise (normal result); the subnormal
-//      alignment shift with guard and sticky
-//   3  BF16 RNE of the normal significand, or binary32-subnormal RNE then BF16
-//      RNE of the subnormal one; pack, refuse
+//   2  leading-zero count                                  | cut (ML >= 5)
+//      normalise (normal result); the subnormal alignment shift with guard
+//      and sticky
+//   3  BF16 RNE of the normal significand; binary32-subnormal RNE   | cut (ML >= 4)
+//      BF16 RNE of the subnormal one; pack, refuse
+// The cuts only add registers: the value is the same at every ML.
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_bmul (
+module ot_hdc_v41x_bmul #(
+    parameter integer ML = 3
+) (
     input  wire        clk,
     input  wire [15:0] a,
     input  wire [15:0] w,
@@ -283,16 +306,23 @@ module ot_hdc_v41x_bmul (
     end
 
     // -- stage 2 --------------------------------------------------------------------
-    reg  [4:0]  lz;
+    reg  [4:0]  lz0;
     integer kq;
     always @* begin
-        lz = 5'd16;
-        for (kq = 0; kq < 16; kq = kq + 1) if (rp[kq]) lz = 5'd15 - kq[4:0];
+        lz0 = 5'd16;
+        for (kq = 0; kq < 16; kq = kq + 1) if (rp[kq]) lz0 = 5'd15 - kq[4:0];
     end
-    wire [15:0]        pn = rp << lz;
-    wire signed [11:0] be = re + 12'sd142 - $signed({7'd0, lz});   // 15 - lz + e1 + 127
-    wire [32:0]        xr = {rp, 17'd0} >> rkr;
-    wire [23:0]        fl = {8'd0, rp} << rkl;
+    wire [4:0]         lz;
+    wire [15:0]        p2;
+    wire signed [11:0] e2;
+    wire               s2s, s2z, s2kneg;
+    wire [4:0]         s2kl, s2kr;
+    ot_hdc_delay #(.W(5 + 16 + 12 + 3 + 10), .D((ML >= 5) ? 1 : 0)) u_cut2 (.clk(clk), .rst_n(1'b1),
+        .d({lz0, rp, re, rs, rz, rkneg, rkl, rkr}), .q({lz, p2, e2, s2s, s2z, s2kneg, s2kl, s2kr}));
+    wire [15:0]        pn = p2 << lz;
+    wire signed [11:0] be = e2 + 12'sd142 - $signed({7'd0, lz});   // 15 - lz + e1 + 127
+    wire [32:0]        xr = {p2, 17'd0} >> s2kr;
+    wire [23:0]        fl = {8'd0, p2} << s2kl;
     reg  [15:0] s_pn;
     reg  [7:0]  s_be;
     reg         s_nrm, s_o32, s_zero, s_sign, s_kneg;
@@ -303,10 +333,10 @@ module ot_hdc_v41x_bmul (
         s_pn <= pn;
         s_be <= be[7:0];
         s_nrm <= (be >= 12'sd1);
-        s_o32 <= !rz && (rp != 16'd0) && (be >= 12'sd255);
-        s_zero <= rz || (rp == 16'd0);
-        s_sign <= rs;
-        s_kneg <= rkneg;
+        s_o32 <= !s2z && (p2 != 16'd0) && (be >= 12'sd255);
+        s_zero <= s2z || (p2 == 16'd0);
+        s_sign <= s2s;
+        s_kneg <= s2kneg;
         s_q <= xr[32:17] ;
         s_g <= xr[16];
         s_st <= |xr[15:0];
@@ -317,15 +347,48 @@ module ot_hdc_v41x_bmul (
     // normal: BF16 RNE of the 16-bit significand (binary32 holds it exactly)
     wire [8:0]  nr = {1'b0, s_pn[15:8]} + ((s_pn[7] && ((|s_pn[6:0]) || s_pn[8])) ? 9'd1 : 9'd0);
     wire [8:0]  nbe = {1'b0, s_be} + {8'd0, nr[8]};           // a carry renormalises: 1.0 x 2^(e+1)
-    wire [15:0] ynorm = {s_sign, nbe[7:0], nr[8] ? 7'd0 : nr[6:0]};
-    wire        onorm = (nbe >= 9'd255);
+    wire [15:0] ynorm0 = {s_sign, nbe[7:0], nr[8] ? 7'd0 : nr[6:0]};
+    wire        onorm0 = (nbe >= 9'd255);
     // subnormal: binary32 RNE at 2^-149, then to_bf16's RNE at 2^-133
     wire [23:0] fr = {7'd0, s_q} + ((s_g && (s_st || s_q[0])) ? 24'd1 : 24'd0);
-    wire [23:0] f = s_kneg ? fr : s_fl;
+    wire [23:0] f0 = s_kneg ? fr : s_fl;
+    wire [15:0] ynorm;
+    wire        onorm, t_sign, t_zero, t_o32, t_nrm;
+    wire [23:0] f;
+    ot_hdc_delay #(.W(16 + 1 + 24 + 4), .D((ML >= 4) ? 1 : 0)) u_cut3 (.clk(clk), .rst_n(1'b1),
+        .d({ynorm0, onorm0, f0, s_sign, s_zero, s_o32, s_nrm}), .q({ynorm, onorm, f, t_sign, t_zero, t_o32, t_nrm}));
     wire [32:0] fb = {9'd0, f} + 33'h7FFF + {32'd0, f[16]};
-    wire [15:0] ysub = (f == 24'd0) ? 16'd0 : {s_sign, fb[30:16]};
+    wire [15:0] ysub = (f == 24'd0) ? 16'd0 : {t_sign, fb[30:16]};
     always @(posedge clk) begin
-        ovf <= s_o32 || (!s_zero && s_nrm && onorm);
-        y <= (s_zero || s_o32 || (s_nrm && onorm)) ? 16'd0 : (s_nrm ? ynorm : ysub);
+        ovf <= t_o32 || (!t_zero && t_nrm && onorm);
+        y <= (t_zero || t_o32 || (t_nrm && onorm)) ? 16'd0 : (t_nrm ? ynorm : ysub);
     end
+endmodule
+
+// ---------------------------------------------------------------------------
+// binary32 add of the indexer: ot_hdc_fp32_add_fast (LAT 3) or, for LAT > 3, the
+// deeper-cut ot_hdc_fp32_add_lat (rtl/hdc/ot_hdc_fp32_add_lat.sv), bit for bit
+// the same adder.  A LAT > 3 build must add that file to its sources.
+// ---------------------------------------------------------------------------
+module ot_hdc_v41x_faddl #(
+    parameter integer LAT = 3
+) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        valid_in,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output wire [31:0] y,
+    output wire [1:0]  err,
+    output wire        valid_out
+);
+    generate
+        if (LAT == 3) begin : g_fast
+            ot_hdc_fp32_add_fast u (.clk(clk), .rst_n(rst_n), .valid_in(valid_in), .a(a), .b(b), .y(y), .err(err),
+                                    .valid_out(valid_out));
+        end else begin : g_lat
+            ot_hdc_fp32_add_lat #(.LAT(LAT)) u (.clk(clk), .rst_n(rst_n), .valid_in(valid_in), .a(a), .b(b), .y(y),
+                                                .err(err), .valid_out(valid_out));
+        end
+    endgenerate
 endmodule

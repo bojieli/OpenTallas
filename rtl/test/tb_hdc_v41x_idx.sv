@@ -18,6 +18,9 @@ module tb_hdc_v41x_idx #(
     parameter integer IH = 32,
     parameter integer NB = 4,
     parameter integer FD = 64,
+    parameter integer FPL = 3,              // engine arithmetic latencies (3/3/3 = as built)
+    parameter integer FML = 3,
+    parameter integer QL = 3,
     parameter integer MAXT = 4096,
     parameter integer MAXK = 1 << 20
 ) (input wire clk);
@@ -60,7 +63,7 @@ module tb_hdc_v41x_idx #(
     reg              o_ready = 1'b0;
     wire [NK-1:0]    o_kv, o_fault;
     wire [NK*16-1:0] o_score;
-    ot_hdc_v41x_idx_engine #(.NK(NK), .IH(IH), .NB(NB), .FD(FD)) dut (
+    ot_hdc_v41x_idx_engine #(.NK(NK), .IH(IH), .NB(NB), .FD(FD), .FPL(FPL), .FML(FML), .QL(QL)) dut (
         .clk(clk), .rst_n(rst_n), .ql_v(ql_v), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc),
         .ql_w(ql_w), .k_valid(k_valid), .k_ready(k_ready), .k_kv(k_kv), .k_keep(k_keep), .k_key(k_key),
         .o_valid(o_valid), .o_ready(o_ready), .o_kv(o_kv), .o_score(o_score), .o_fault(o_fault),

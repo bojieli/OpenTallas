@@ -3,7 +3,8 @@
 // score four keys in parallel. Atomic beat handshakes preserve the quarter's
 // ascending global-index order through independent finite output FIFOs.
 module ot_hdc_v41x_idx_score_quarter #(
-    parameter integer NK=4, NB=4, IH=32, IW=30, MD=64
+    parameter integer NK=4, NB=4, IH=32, IW=30, MD=64,
+    parameter integer FPL=3, FML=3, QL=3
 ) (
     input wire clk,rst_n,
     input wire ql_v,
@@ -37,7 +38,7 @@ module ot_hdc_v41x_idx_score_quarter #(
     genvar s;
     generate for(s=0;s<4;s=s+1) begin:g_slice
         localparam [IW-1:0] OFFSET=IW'(s*NK);
-        ot_hdc_v41x_idx_score_slice #(.NK(NK),.NB(NB),.IH(IH),.IW(IW),.MD(MD)) u (
+        ot_hdc_v41x_idx_score_slice #(.NK(NK),.NB(NB),.IH(IH),.IW(IW),.MD(MD),.FPL(FPL),.FML(FML),.QL(QL)) u (
             .clk(clk),.rst_n(rst_n),.ql_v(ql_v),.ql_ready(qr[s]),.ql_head(ql_head),
             .ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),
             .i_valid(take),.i_ready(sr[s]),.i_last(i_last),

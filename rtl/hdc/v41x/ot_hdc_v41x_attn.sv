@@ -71,7 +71,8 @@
 module ot_hdc_v41x_attn_merge #(
     parameter integer H = 16,
     parameter integer DPT = 16,
-    parameter integer MLEV = 4
+    parameter integer MLEV = 4,
+    parameter integer FPL = 3          // binary32 add latency
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -116,28 +117,17 @@ module ot_hdc_v41x_attn_merge #(
                 wire [31:0] a = use_ ? head[gh*32 +: 32] : 32'd0;
                 wire [31:0] y;
                 wire af;
-                ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(a), .b(lx[(gl*H+gh)*32 +: 32]),
-                                 .y(y), .fault(af));
-                reg [2:0] fd;
-                always @(posedge clk) fd <= {fd[1:0], lf[gl*H+gh] | (use_ & head[H*32+gh])};
+                ot_hdc_v41x_qaddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(a),
+                                 .b(lx[(gl*H+gh)*32 +: 32]), .y(y), .fault(af));
+                wire fdq;
+                ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(lf[gl*H+gh] | (use_ & head[H*32+gh])), .q(fdq));
                 assign lx[((gl+1)*H+gh)*32 +: 32] = y;
-                assign lf[(gl+1)*H+gh] = fd[2] | af;
+                assign lf[(gl+1)*H+gh] = fdq | af;
             end
-            reg [2:0] dv, dfin, dlive;
-            reg [MLEV-1:0] dblk [0:2];
-            always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) dv <= 3'd0;
-                else dv <= {dv[1:0], v};
-            end
-            always @(posedge clk) begin
-                dfin <= {dfin[1:0], fin};
-                dlive <= {dlive[1:0], live && (use_ || fin)};
-                dblk[0] <= blk; dblk[1] <= dblk[0]; dblk[2] <= dblk[1];
-            end
-            assign lv[gl+1] = dv[2];
-            assign lfin[gl+1] = dfin[2];
-            assign llive[gl+1] = dlive[2];
-            assign lblk[(gl+1)*MLEV +: MLEV] = dblk[2];
+            // the level's tags travel beside its adders (FPL cycles)
+            ot_hdc_v41x_vdly #(.D(FPL)) u_dv (.clk(clk), .rst_n(rst_n), .d(v), .q(lv[gl+1]));
+            ot_hdc_v41x_dly #(.W(2 + MLEV), .D(FPL)) u_dt (.clk(clk), .d({fin, live && (use_ || fin), blk}),
+                .q({lfin[gl+1], llive[gl+1], lblk[(gl+1)*MLEV +: MLEV]}));
         end
     endgenerate
     assign ov = lv[MLEV] && lfin[MLEV] && llive[MLEV];
@@ -154,7 +144,9 @@ module ot_hdc_v41x_attn #(
     parameter integer SC_CRED = 64,     // score-beat credits
     parameter integer PV_CRED = 64,    // pv-beat credits
     parameter bit SRAM_MACRO = 0,      // ASAP7 packed-row staging macro boundary
-    parameter integer PWORDS = 1       // probability words per p handshake (1 or 2)
+    parameter integer PWORDS = 1,      // probability words per p handshake (1 or 2)
+    parameter integer FPL = 3,         // binary32 add latency (7: 1.2 GHz streaming domain)
+    parameter integer FML = 3          // tile product latency
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -208,12 +200,12 @@ module ot_hdc_v41x_attn #(
     localparam integer NBANK = (PWORDS >= 2) ? 4 : 3;
     localparam integer BW = 2;
     localparam integer LVT = $clog2(TD / 8);
-    localparam integer TLAT = 27 + 3 * LVT;            // tile: input -> ov
+    localparam integer TLAT = 3 + FML + FPL * (7 + LVT);   // tile: input -> ov (27 + 3 LVT as built)
     localparam integer LS = (S <= 1) ? 0 : $clog2(S);  // lane-tree levels
 
     // write-after-read guards (cycles from an issue decision to a load of the same bank)
     function automatic integer skew(input integer i);
-        skew = (i == 0) ? 0 : 3 * (i - 1);
+        skew = (i == 0) ? 0 : FPL * (i - 1);
     endfunction
     function automatic integer guard_p(input integer dummy);
         integer g, j, m, best;
@@ -229,8 +221,10 @@ module ot_hdc_v41x_attn #(
         end
     endfunction
     localparam integer GUARD_P = guard_p(0);
-    localparam integer GUARD_Q = 20;
-    localparam integer CNTW = 5;
+    // the last skewed read of a bank is skew(7) cycles after the first (+2: the
+    // load's pipeline offset; 20 as built)
+    localparam integer GUARD_Q = skew(7) + 2;
+    localparam integer CNTW = $clog2(GUARD_Q + 2);
     generate
         if (!(PWORDS == 1 || (PWORDS == 2 && (PB % 2) == 0))) begin : g_bad_pwords
             initial $error("ot_hdc_v41x_attn: PWORDS must be 1, or 2 with an even word count per block");
@@ -497,7 +491,7 @@ module ot_hdc_v41x_attn #(
         for (gk = 0; gk < NT; gk = gk + 1) begin : g_t
             localparam integer SL = gk % S;
             wire [PWORDS*TD*16-1:0] ldw = e_ld_mode ? e_p_w : (PWORDS*TD*16)'(e_q_w[SL*TD*16 +: TD*16]);
-            ot_hdc_v41x_attn_tile #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS)) u_t (
+            ot_hdc_v41x_attn_tile #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML)) u_t (
                 .clk(clk), .rst_n(rst_n), .ld_v(e_ld_v), .ld_mode(e_ld_mode), .ld_bank(e_ld_bank),
                 .ld_grp(e_ld_grp), .ld_w(ldw), .ld_w2v(e_ld_w2v), .iv(e_iv), .ibank(e_ibank), .ib(e_ib[gk*TD*18 +: TD*18]),
                 .ov(t_ov[gk]), .oy(t_y[gk*H*32 +: H*32]), .oflt(t_f[gk*H +: H]));
@@ -528,12 +522,12 @@ module ot_hdc_v41x_attn #(
                 for (gs = 0; gs < S - 1; gs = gs + 1) begin : g_node
                     wire [31:0] y;
                     wire f;
-                    ot_hdc_qadd u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gs+1)*32 +: 32]),
+                    ot_hdc_v41x_qaddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(tn[(2*gs+1)*32 +: 32]),
                                      .b(tn[(2*gs+2)*32 +: 32]), .y(y), .fault(f));
-                    reg [2:0] fd;
-                    always @(posedge clk) fd <= {fd[1:0], tf[2*gs+1] | tf[2*gs+2]};
+                    wire fdq;
+                    ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(tf[2*gs+1] | tf[2*gs+2]), .q(fdq));
                     assign tn[gs*32 +: 32] = y;
-                    assign tf[gs] = fd[2] | f;
+                    assign tf[gs] = fdq | f;
                 end
                 assign ln_y[(gl*H + gh)*32 +: 32] = tn[31:0];
                 assign ln_f[gl*H + gh] = tf[0];
@@ -543,9 +537,9 @@ module ot_hdc_v41x_attn #(
     wire ln_v, ln_pv;
     wire [15:0] ln_row0;
     wire [NL-1:0] ln_mask;
-    ot_hdc_v41x_vdly #(.D(3 * LS + 1)) u_lnv (.clk(clk), .rst_n(rst_n), .d(t_ov[0] && !t_pv), .q(ln_v));
-    ot_hdc_v41x_dly #(.W(16 + NL), .D(3 * LS + 1)) u_lnt (.clk(clk), .d({t_row0, t_mask}), .q({ln_row0, ln_mask}));
-    // (the +1 above aligns with the register below; ln_y is 3*LS after t_y)
+    ot_hdc_v41x_vdly #(.D(FPL * LS + 1)) u_lnv (.clk(clk), .rst_n(rst_n), .d(t_ov[0] && !t_pv), .q(ln_v));
+    ot_hdc_v41x_dly #(.W(16 + NL), .D(FPL * LS + 1)) u_lnt (.clk(clk), .d({t_row0, t_mask}), .q({ln_row0, ln_mask}));
+    // (the +1 above aligns with the register below; ln_y is FPL*LS after t_y)
     reg [NL*H*32-1:0] ln_yr;
     reg [NL*H-1:0]    ln_fr;
     always @(posedge clk) begin ln_yr <= ln_y; ln_fr <= ln_f; end
@@ -563,14 +557,14 @@ module ot_hdc_v41x_attn #(
     wire [NT*H-1:0]    m_f;
     generate
         for (gk = 0; gk < NT; gk = gk + 1) begin : g_m
-            ot_hdc_v41x_attn_merge #(.H(H), .DPT(DPT), .MLEV(MLEV)) u_m (
+            ot_hdc_v41x_attn_merge #(.H(H), .DPT(DPT), .MLEV(MLEV), .FPL(FPL)) u_m (
                 .clk(clk), .rst_n(rst_n), .iv(t_ov[gk] && t_pv), .ifin(t_fin), .iblk(t_blk),
                 .iy(t_y[gk*H*32 +: H*32]), .if_(t_f[gk*H +: H]), .ov(m_ov[gk]), .oy(m_y[gk*H*32 +: H*32]),
                 .of_(m_f[gk*H +: H]));
         end
     endgenerate
     wire [7:0] m_c;
-    ot_hdc_v41x_dly #(.W(8), .D(3 * MLEV)) u_mc (.clk(clk), .d(t_c), .q(m_c));
+    ot_hdc_v41x_dly #(.W(8), .D(FPL * MLEV)) u_mc (.clk(clk), .d(t_c), .q(m_c));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) pv_v <= 1'b0;
         else pv_v <= m_ov[0];

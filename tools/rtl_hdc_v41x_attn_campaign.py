@@ -54,6 +54,7 @@ RTL_ENG = ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn.sv"
 RTL_STAGE = ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv"
 SRAM_MODEL = ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
 LIB = [ROOT / "rtl/hdc/ot_hdc_fastfp.sv"]
+ADD_LAT = ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv"
 TB_TILE = ROOT / "rtl/test/tb_hdc_v41x_attn_tile.sv"
 TB_ENG = ROOT / "rtl/test/tb_hdc_v41x_attn.sv"
 HARNESS = ROOT / "rtl/test/hdc_v41_harness.cpp"
@@ -239,7 +240,7 @@ def rand_kv_elems(rng, shape, fmt=None, kind="wide"):
 
 
 # -- tile bench -------------------------------------------------------------------------------
-def tile_vectors(rng, H, TD, nbeats, nbank=3):
+def tile_vectors(rng, H, TD, nbeats, nbank=3, fpl=3):
     """Random load/issue program for one tile and its expected outputs.  Returns (stim words, exp words)."""
     R = TD // H
     A = np.zeros((nbank, H, TD), dtype=np.int64)                      # BF16 bits
@@ -306,7 +307,7 @@ def tile_vectors(rng, H, TD, nbeats, nbank=3):
             word = ib << (TD * 16 + 12)
             word |= (b << (TD * 16 + 12 + TD * 18)) | (1 << (TD * 16 + 14 + TD * 18))
             stim.append(word)
-            busy_until[b] = cyc + 18
+            busy_until[b] = cyc + 6 * fpl         # the last skewed read: position 7, fpl * 6 cycles later
             cyc += 1
     return stim, exp
 
@@ -345,25 +346,32 @@ def verilator_build(tb: Path, top: str, srcs, obj: Path, params: dict, jobs: int
 TILE_RE = re.compile(r"V41XTILE beats=(\d+) checked=(\d+) errors=(\d+) faults=(\d+) first_ov=(-?\d+) last_ov=(-?\d+)")
 
 
-def run_tile(scratch: Path, H=16, TD=64, nbeats=200, seed=1):
+def lib(fpl=3):
+    """The FP library of a build: the LAT-3 adder file, plus ot_hdc_fp32_add_lat for FPL > 3."""
+    return [*LIB, ADD_LAT] if fpl != 3 else list(LIB)
+
+
+def run_tile(scratch: Path, H=16, TD=64, nbeats=200, seed=1, fpl=3, fml=3):
     rng = np.random.default_rng(seed)
-    stim, exp = tile_vectors(rng, H, TD, nbeats)
+    stim, exp = tile_vectors(rng, H, TD, nbeats, fpl=fpl)
     win = 1 + 2 + TD * 18 + 1 + 1 + 2 + 8 + TD * 16
-    d = scratch / f"tile_h{H}_td{TD}_s{seed}"
+    d = scratch / (f"tile_h{H}_td{TD}_s{seed}" + ("" if (fpl, fml) == (3, 3) else f"_l{fpl}_{fml}"))
     d.mkdir(parents=True, exist_ok=True)
     write_hex(d / "in.hex", stim, win)
     write_hex(d / "exp.hex", exp, 33 * H)
     prm = {"H": H, "TD": TD, "NCYC": len(stim), "NOUT": len(exp)}
-    obj = d / ("obj_" + src_digest([RTL_TILE, *LIB, TB_TILE], prm))
+    if (fpl, fml) != (3, 3):
+        prm.update(FPL=fpl, FML=fml)
+    obj = d / ("obj_" + src_digest([RTL_TILE, *lib(fpl), TB_TILE], prm))
     exe = obj / "Vtb"
     if not exe.is_file():
-        verilator_build(TB_TILE, "tb_hdc_v41x_attn_tile", [RTL_TILE, *LIB], obj, prm)
+        verilator_build(TB_TILE, "tb_hdc_v41x_attn_tile", [RTL_TILE, *lib(fpl)], obj, prm)
     out = subprocess.run([str(exe), f"+in={d / 'in.hex'}", f"+exp={d / 'exp.hex'}"], capture_output=True,
                          text=True, check=True).stdout
     m = TILE_RE.search(out)
     assert m, out
     beats, checked, errors, faults, fo, lo = map(int, m.groups())
-    return {"H": H, "TD": TD, "seed": seed, "beats": beats, "expected_beats": len(exp), "checked": checked,
+    return {"H": H, "TD": TD, "FPL": fpl, "FML": fml, "seed": seed, "beats": beats, "first_ov": fo, "expected_beats": len(exp), "checked": checked,
             "errors": errors, "faults_expected_and_raised": faults, "status": "pass" if errors == 0 and
             beats == len(exp) else "fail", "log_tail": out.strip().splitlines()[-12:]}
 
@@ -487,7 +495,7 @@ def build_engine(scratch: Path, cfg: dict, counts: dict, extra: dict):
     cap = {("NJOBMAX" if k == "NJOB" else k): 1 << max(4, int(v - 1).bit_length()) for k, v in counts.items()}
     params = {"H": cfg["H"], "D": cfg["D"], "TD": cfg["TD"], "NL": cfg["NL"], "TROWS": cfg["TROWS"], **cap,
               **extra}
-    sources = [RTL_TILE, RTL_ENG, RTL_STAGE, SRAM_MODEL, *LIB]
+    sources = [RTL_TILE, RTL_ENG, RTL_STAGE, SRAM_MODEL, *lib(int(extra.get("FPL", 3)))]
     tag = "_".join(f"{k}{v}" for k, v in sorted(params.items())) + src_digest([*sources, TB_ENG])
     obj = scratch / ("obj_" + hashlib.sha1(tag.encode()).hexdigest()[:12])
     exe = obj / "Vtb"

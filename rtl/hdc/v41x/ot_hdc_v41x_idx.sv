@@ -27,12 +27,17 @@
 // index query is loaded once per token, one head per cycle on the q-load port
 // (codes, scales, BF16 head weight), before the key stream starts.
 //
-// Timing (ot_hdc_fastfp adds, LATENCY 3): block dots 3 cycles after the input
-// register; the NB-1 sequential block adds 3 each (block i's key operands are
-// skewed 3(i-1) cycles so each block dot meets the running sum); score to
-// BF16 + ReLU 1; the product 3; the 7 sequential head adds 3 each; the
-// output register.  Tail: input register, log2(IH/8) tree levels x 3, to_bf16
-// + mask + output register.
+// Timing (binary32 adds of LATENCY FPL: 3 = ot_hdc_fp32_add_fast, the as-built
+// default; 7 = ot_hdc_fp32_add_lat for the 1.2 GHz streaming domain): block
+// dots QL cycles after the input register; the NB-1 sequential block adds FPL
+// each (block i's key operands are skewed FPL(i-1) cycles so each block dot
+// meets the running sum); score to BF16 + ReLU 1; the product FML; the 7
+// sequential head adds FPL each; the output register.  Tail: input register,
+// log2(IH/8) tree levels x FPL, to_bf16 + mask + output register.  The
+// sequential sums are recurrences only along one key's chain; keys are
+// independent, so II stays 1 at every latency.  FPL = FML = QL = 3 is the
+// as-built engine, cycle for cycle; a build with FPL > 3 adds
+// rtl/hdc/ot_hdc_fp32_add_lat.sv to its sources.
 //
 // Faults fail closed: any operand or intermediate the golden would compute as
 // nonfinite (a block scale >= 2^126, a block value, sum, product or BF16
@@ -46,7 +51,10 @@
 module ot_hdc_v41x_idx_chunk #(
     parameter integer NB  = 4,        // 32-blocks per head (index_head_dim / 32)
     parameter integer NKT = 1,        // keys per cycle through this tile
-    parameter integer HB  = 0         // first head of this chunk (for the q-load port)
+    parameter integer HB  = 0,        // first head of this chunk (for the q-load port)
+    parameter integer FPL = 3,        // binary32 add latency
+    parameter integer FML = 3,        // head-weight product latency (ot_hdc_v41x_bmul)
+    parameter integer QL  = 3         // block-dot latency (ot_hdc_v41x_q4dot)
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -68,9 +76,9 @@ module ot_hdc_v41x_idx_chunk #(
 );
     localparam integer HC = 8;
     localparam integer KW = NB * 136;
-    localparam integer LAT_SC = 3 + 3 * (NB - 1);       // block dots + sequential block adds
-    localparam integer LAT_T  = LAT_SC + 1 + 3;         // + bf16/ReLU + product
-    localparam integer LAT    = LAT_T + 3 * (HC - 1);   // + 7 sequential head adds
+    localparam integer LAT_SC = QL + FPL * (NB - 1);    // block dots + sequential block adds
+    localparam integer LAT_T  = LAT_SC + 1 + FML;       // + bf16/ReLU + product
+    localparam integer LAT    = LAT_T + FPL * (HC - 1); // + 7 sequential head adds
 
     // -- query registers (loaded between tokens) -----------------------------------
     reg [HC*NB*128-1:0] qc;
@@ -128,7 +136,7 @@ module ot_hdc_v41x_idx_chunk #(
             wire [NB*128-1:0] kc;
             wire [NB*8-1:0]   ks;
             for (bb = 0; bb < NB; bb = bb + 1) begin : g_skew
-                localparam integer DS = (bb == 0) ? 0 : 3 * (bb - 1);
+                localparam integer DS = (bb == 0) ? 0 : FPL * (bb - 1);
                 wire [135:0] kb_d;
                 ot_hdc_delay #(.W(136), .D(DS)) u_sk (.clk(clk), .rst_n(rst_n),
                     .d({key[NB*128 + 8*bb +: 8], key[128*bb +: 128]}), .q(kb_d));
@@ -145,7 +153,7 @@ module ot_hdc_v41x_idx_chunk #(
                 for (bb = 0; bb < NB; bb = bb + 1) begin : g_blk
                     wire [31:0] bv;
                     wire        bo;
-                    ot_hdc_v41x_q4dot u_d (.clk(clk), .a(qc[(h*NB+bb)*128 +: 128]), .b(kc[128*bb +: 128]),
+                    ot_hdc_v41x_q4dot #(.QL(QL)) u_d (.clk(clk), .a(qc[(h*NB+bb)*128 +: 128]), .b(kc[128*bb +: 128]),
                                            .ua(qs[(h*NB+bb)*8 +: 8]), .ub(ks[8*bb +: 8]), .y(bv), .ovf(bo));
                     if (bb == 0) begin : g_first
                         assign acc[31:0] = bv;                 // add(+0, b0) = b0 (b0 is +0 or nonzero)
@@ -154,12 +162,12 @@ module ot_hdc_v41x_idx_chunk #(
                         wire [1:0] err;
                         wire       vo_unused;
                         wire       pf;                      // fault of the running sum, carried
-                        ot_hdc_delay #(.W(1), .D(3)) u_pf (.clk(clk), .rst_n(rst_n), .d(afault[bb-1]), .q(pf));
-                        ot_hdc_fp32_add_fast u_a (.clk(clk), .rst_n(rst_n), .valid_in(1'b1),
+                        ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(clk), .rst_n(rst_n), .d(afault[bb-1]), .q(pf));
+                        ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(1'b1),
                             .a(acc[32*(bb-1) +: 32]), .b(bv), .y(acc[32*bb +: 32]), .err(err), .valid_out(vo_unused));
-                        // the block fault is 3 cycles younger than the sum it joins
+                        // the block fault is FPL cycles younger than the sum it joins
                         wire bo_d;
-                        ot_hdc_delay #(.W(1), .D(3)) u_bf (.clk(clk), .rst_n(rst_n), .d(bo), .q(bo_d));
+                        ot_hdc_delay #(.W(1), .D(FPL)) u_bf (.clk(clk), .rst_n(rst_n), .d(bo), .q(bo_d));
                         assign afault[bb] = pf || bo_d || (err != 2'd0);
                     end
                 end
@@ -175,29 +183,29 @@ module ot_hdc_v41x_idx_chunk #(
                 end
                 wire [15:0] tm;
                 wire        tmo;
-                ot_hdc_v41x_bmul u_m (.clk(clk), .a(rsc), .w(qw[16*h +: 16]), .y(tm), .ovf(tmo));
+                ot_hdc_v41x_bmul #(.ML(FML)) u_m (.clk(clk), .a(rsc), .w(qw[16*h +: 16]), .y(tm), .ovf(tmo));
                 wire        rscf_d;
-                ot_hdc_delay #(.W(1), .D(3)) u_tf (.clk(clk), .rst_n(rst_n), .d(rscf), .q(rscf_d));
+                ot_hdc_delay #(.W(1), .D(FML)) u_tf (.clk(clk), .rst_n(rst_n), .d(rscf), .q(rscf_d));
                 assign term[16*h +: 16] = tm;
                 assign tfault[h] = rscf_d || tmo;
             end
 
             // the chunk's sequential sum: seed with term 0 (-0 -> +0), then 7 adds;
-            // term j joins at add j, 3(j-1) cycles after the terms are formed
+            // term j joins at add j, FPL(j-1) cycles after the terms are formed
             wire [HC*32-1:0] cs;
             wire [HC-1:0] cf;
             assign cs[31:0] = (term[14:0] == 15'd0) ? 32'd0 : {term[15:0], 16'd0};
             assign cf[0] = tfault[0];
             for (h = 1; h < HC; h = h + 1) begin : g_chain
                 wire [16:0] tj;
-                ot_hdc_delay #(.W(17), .D(3 * (h - 1))) u_tj (.clk(clk), .rst_n(rst_n),
+                ot_hdc_delay #(.W(17), .D(FPL * (h - 1))) u_tj (.clk(clk), .rst_n(rst_n),
                     .d({tfault[h], term[16*h +: 16]}), .q(tj));
                 wire [1:0] err;
                 wire       vo_unused;
-                ot_hdc_fp32_add_fast u_a (.clk(clk), .rst_n(rst_n), .valid_in(1'b1),
+                ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(1'b1),
                     .a(cs[32*(h-1) +: 32]), .b({tj[15:0], 16'd0}), .y(cs[32*h +: 32]), .err(err), .valid_out(vo_unused));
                 wire pf;
-                ot_hdc_delay #(.W(1), .D(3)) u_pf (.clk(clk), .rst_n(rst_n), .d(cf[h-1] || tj[16]), .q(pf));
+                ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(clk), .rst_n(rst_n), .d(cf[h-1] || tj[16]), .q(pf));
                 assign cf[h] = pf || (err != 2'd0);
             end
             always @(posedge clk) begin
@@ -215,11 +223,12 @@ endmodule
 // ---------------------------------------------------------------------------
 // Per key: the pairwise tree over NCH chunk sums (NCH a power of two), to_bf16,
 // the candidate mask (keep = 0 -> -inf), registered output.  LATENCY
-// 1 + 3 log2(NCH) + 1.
+// 1 + FPL log2(NCH) + 1.
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_idx_tail #(
     parameter integer NCH = 4,
-    parameter integer NKT = 1
+    parameter integer NKT = 1,
+    parameter integer FPL = 3          // binary32 add latency
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -246,7 +255,7 @@ module ot_hdc_v41x_idx_tail #(
         rf <= i_fault;
     end
     wire [2*NKT:0] vl;
-    ot_hdc_delay #(.W(2 * NKT + 1), .D(3 * LV), .RESET(1)) u_vl (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(2 * NKT + 1), .D(FPL * LV), .RESET(1)) u_vl (.clk(clk), .rst_n(rst_n),
         .d({rkeep, rkv, rv}), .q(vl));
     genvar g, l, i;
     generate
@@ -263,11 +272,11 @@ module ot_hdc_v41x_idx_tail #(
                 for (i = 0; i < (NCH >> (l + 1)); i = i + 1) begin : g_add
                     wire [1:0] err;
                     wire       vo_unused;
-                    ot_hdc_fp32_add_fast u_a (.clk(clk), .rst_n(rst_n), .valid_in(1'b1),
+                    ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(1'b1),
                         .a(t[32*(l*NCH+2*i) +: 32]), .b(t[32*(l*NCH+2*i+1) +: 32]),
                         .y(t[32*((l+1)*NCH+i) +: 32]), .err(err), .valid_out(vo_unused));
                     wire pf;
-                    ot_hdc_delay #(.W(1), .D(3)) u_pf (.clk(clk), .rst_n(rst_n),
+                    ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(clk), .rst_n(rst_n),
                         .d(tf[l*NCH+2*i] || tf[l*NCH+2*i+1]), .q(pf));
                     assign tf[(l+1)*NCH+i] = pf || (err != 2'd0);
                 end
@@ -298,7 +307,9 @@ endmodule
 // flight plus beats held in the output FIFO stay within FD -- so with a
 // consumer that is always ready the engine takes a beat every cycle, and a
 // consumer that stalls backs the key stream up without losing a beat.  FD >=
-// LATENCY + 2 sustains one beat per cycle.  q load: ql_v, head index, codes,
+// LATENCY + 2 sustains one beat per cycle; the engine deepens a smaller FD to
+// the next power of two >= LATENCY + 2 (no change at FPL = FML = QL = 3, where
+// LATENCY + 2 = 50 at NB = 4, IH = 32).  q load: ql_v, head index, codes,
 // scales, BF16 weight; one head per cycle, before the keys it scores and after
 // the previous token's keys have left the tile (k_ready holds keys off for 3
 // cycles after the last q-load beat).
@@ -307,7 +318,10 @@ module ot_hdc_v41x_idx_engine #(
     parameter integer NK = 8,          // keys per cycle
     parameter integer IH = 32,         // index heads
     parameter integer NB = 4,          // 32-blocks per head
-    parameter integer FD = 64          // output FIFO depth (beats)
+    parameter integer FD = 64,         // output FIFO depth (beats), at least
+    parameter integer FPL = 3,         // binary32 add latency
+    parameter integer FML = 3,         // head-weight product latency
+    parameter integer QL  = 3          // block-dot latency
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -335,10 +349,11 @@ module ot_hdc_v41x_idx_engine #(
 );
     localparam integer NCH = IH / 8;
     localparam integer LVT = (NCH <= 1) ? 0 : $clog2(NCH);
-    localparam integer LAT_C = 1 + 3 + 3 * (NB - 1) + 1 + 3 + 3 * 7 + 1;   // chunk in-reg .. out-reg
-    localparam integer LAT_T = 1 + 3 * LVT + 1;
+    localparam integer LAT_C = 1 + QL + FPL * (NB - 1) + 1 + FML + FPL * 7 + 1;   // chunk in-reg .. out-reg
+    localparam integer LAT_T = 1 + FPL * LVT + 1;
     localparam integer LAT = LAT_C + LAT_T;                              // k beat -> tail output
-    localparam integer CW = $clog2(FD + 1);
+    localparam integer FDE = (FD >= LAT + 2) ? FD : (1 << $clog2(LAT + 2));   // effective FIFO depth
+    localparam integer CW = $clog2(FDE + 1);
 
     wire take = k_valid && k_ready;
 
@@ -350,7 +365,7 @@ module ot_hdc_v41x_idx_engine #(
     genvar c, g;
     generate
         for (c = 0; c < NCH; c = c + 1) begin : g_ch
-            ot_hdc_v41x_idx_chunk #(.NB(NB), .NKT(NK), .HB(8 * c)) u_c (
+            ot_hdc_v41x_idx_chunk #(.NB(NB), .NKT(NK), .HB(8 * c), .FPL(FPL), .FML(FML), .QL(QL)) u_c (
                 .clk(clk), .rst_n(rst_n), .ql_v(ql_v), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc),
                 .ql_w(ql_w), .k_v(take), .k_kv(k_kv), .k_key(k_key),
                 .c_v(cv[c]), .c_kv(ckv[c]), .c_sum(csum[c]), .c_fault(cfl[c]));
@@ -372,15 +387,15 @@ module ot_hdc_v41x_idx_engine #(
     wire              tv;
     wire [NK-1:0]     tkv, tf;
     wire [NK*16-1:0]  ts;
-    ot_hdc_v41x_idx_tail #(.NCH(NCH), .NKT(NK)) u_t (.clk(clk), .rst_n(rst_n), .i_v(cv[0]), .i_kv(ckv[0]),
+    ot_hdc_v41x_idx_tail #(.NCH(NCH), .NKT(NK), .FPL(FPL)) u_t (.clk(clk), .rst_n(rst_n), .i_v(cv[0]), .i_kv(ckv[0]),
         .i_keep(keep_d), .i_sum(tsum), .i_fault(tfl), .o_v(tv), .o_kv(tkv), .o_score(ts), .o_fault(tf));
 
     // output FIFO behind a registered output; a beat bypasses the FIFO when it
     // is empty and the output register is free.  Credit: beats in flight plus
     // beats in the FIFO plus the output register stay within FD.
     localparam integer EW = NK * 18;
-    localparam integer PW = (FD <= 2) ? 1 : $clog2(FD);
-    reg [EW-1:0] fm [0:FD-1];
+    localparam integer PW = (FDE <= 2) ? 1 : $clog2(FDE);
+    reg [EW-1:0] fm [0:FDE-1];
     reg [CW-1:0] fcnt, infl;
     reg [PW-1:0] wp, rp;
     wire deq = o_valid && o_ready;
@@ -412,7 +427,7 @@ module ot_hdc_v41x_idx_engine #(
         if (!rst_n) qsettle <= 2'd0;
         else if (ql_v) qsettle <= 2'd3;
         else if (qsettle != 0) qsettle <= qsettle - 2'd1;
-    assign k_ready = rst_n && !ql_v && (qsettle == 0) && ((infl + fcnt + (o_valid ? 1 : 0)) < FD);
+    assign k_ready = rst_n && !ql_v && (qsettle == 0) && ((infl + fcnt + (o_valid ? 1 : 0)) < FDE);
     always @(posedge clk) begin
         if (!rst_n) begin
             fcnt <= 0; infl <= 0; wp <= 0; rp <= 0; o_valid <= 1'b0;
@@ -420,12 +435,12 @@ module ot_hdc_v41x_idx_engine #(
             infl <= infl + (take ? 1 : 0) - (tv ? 1 : 0);
             if (push) begin
                 fm[wp] <= {tf, tkv, ts};
-                wp <= (wp == FD - 1) ? 0 : wp + 1;
+                wp <= (wp == FDE - 1) ? 0 : wp + 1;
             end
             fcnt <= fcnt + (push ? 1 : 0) - (from_fifo ? 1 : 0);
             if (from_fifo) begin
                 {o_fault, o_kv, o_score} <= fm[rp];
-                rp <= (rp == FD - 1) ? 0 : rp + 1;
+                rp <= (rp == FDE - 1) ? 0 : rp + 1;
                 o_valid <= 1'b1;
             end else if (bypass) begin
                 {o_fault, o_kv, o_score} <= {tf, tkv, ts};

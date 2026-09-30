@@ -14,7 +14,10 @@ module tb_hdc_v41x_attn_tile (input wire clk);
     parameter integer NOUT = 16;
     parameter integer PWORDS = 1;
     parameter integer NBANK = 3;
+    parameter integer FPL = 3;             // tile add / product latencies (3/3 = as built)
+    parameter integer FML = 3;
     localparam integer BW = 2;
+    localparam integer LATT = 3 + FML + FPL * (7 + $clog2(TD / 8));   // input -> ov (36 at TD = 64, 3/3)
     localparam integer WIN0 = 1 + BW + TD * 18 + 1 + 1 + BW + 8 + TD * 16;
     localparam integer WIN = WIN0 + ((PWORDS > 1) ? TD * 16 + 1 : 0);
     localparam integer WEXP = H * 33;
@@ -56,7 +59,7 @@ module tb_hdc_v41x_attn_tile (input wire clk);
     wire ov;
     wire [H*32-1:0] oy;
     wire [H-1:0] oflt;
-    ot_hdc_v41x_attn_tile #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS)) dut (
+    ot_hdc_v41x_attn_tile #(.H(H), .TD(TD), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL), .FML(FML)) dut (
         .clk(clk), .rst_n(rst_n), .ld_v(ld_v), .ld_mode(ld_mode), .ld_bank(ld_bank), .ld_grp(ld_grp),
         .ld_w(ld_wp), .ld_w2v(ld_w2v), .iv(iv), .ibank(ibank), .ib(ib), .ov(ov), .oy(oy), .oflt(oflt));
 
@@ -87,7 +90,7 @@ module tb_hdc_v41x_attn_tile (input wire clk);
             end
             nout = nout + 1;
         end
-        if (cyc == NCYC + 80) begin
+        if (cyc == NCYC + 44 + LATT) begin
             if (nout != NOUT) errors = errors + 1;
             $display("V41XTILE beats=%0d checked=%0d errors=%0d faults=%0d first_ov=%0d last_ov=%0d",
                      nout, checked, errors, faults, first_ov, last_ov);
