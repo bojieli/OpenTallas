@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.w11-idx-ring-naming.v1",
   "status": "pass",
-  "git_head": "0e424d5051ba9ddd0137176f45bef4f9ba3903a4",
+  "git_head": "6c2c05297da38186d47af8c245251e79e503e212",
   "simulator": "Verilator 5.050",
   "parameters": {
     "AW": 30,
@@ -46,28 +46,30 @@
     "steps_at_slot_past_1024": 44,
     "record_fifo_highwater": 1,
     "cycles": 154292,
-    "simulation_wall_seconds": 8.6,
-    "simulation_log_sha256": "87d3f14bf9cc9b6101e137917a0c4f5b7d120b88cbc24de5d6a85b349aa7b658"
+    "simulation_wall_seconds": 57.3,
+    "simulation_log_sha256": "bb5331b7eb4ca5b6bff05a5c41f8bedf13f6b319a901c8166e1b7a9e57b1566f"
   },
   "negative_control": {
     "change": "WIDE = 0: the port decodes the legacy record (region block = w_ssec / 128, row = {w_ssec mod 128, w_sslot} < 1,024)",
     "must_fail": true,
     "passed": false,
-    "failure_tail": "[0] %Fatal: tb_w11_idx_ring_naming.sv:208: Assertion failed in TOP.tb_w11_idx_ring_naming: fault port=1 join=0 geometry=0 writer=0\n%Error: /tmp/claude-1000/wt/w11-rd/rtl/test/tb_w11_idx_ring_naming.sv:208: Verilog $stop\nAborting...\n"
+    "failure_tail": "[0] %Fatal: tb_w11_idx_ring_naming.sv:208: Assertion failed in TOP.tb_w11_idx_ring_naming: fault port=1 join=0 geometry=0 writer=0\n%Error: /tmp/claude-1000/wt/w11-kc/rtl/test/tb_w11_idx_ring_naming.sv:208: Verilog $stop\nAborting...\n"
   },
   "checks": "every record's (region base block, position) against the step's user and count; after every step both users scanned in full (all four stacks, the quarter join), every key compared: bench-placed keys with their generator, written keys with the writer's record",
   "claim_boundary": "The die's ring writer path (ot_hdc_v41x_idx_pool_kwr RING = 1 -> ot_hdc_v41x_idx_ring_port WIDE_REC = 1) and the pooled adapter's ring reader arm, instantiated as the die does, at full ring capacity with timed HBM models; the key elements come from the bench (the SU store the core issues), not a decode step: the reduced vehicle provisions 128 positions (hdc_isa_v41.POS_MAX), so no die token reaches a slot past 1,024. The die-token evidence at full capacity is results/rtl/w11_die_idx_ring_mu_gate.json.",
   "sources_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kdata_m.sv": "a2fa51f89198cb9c8313282ee9dbd7167ff857b33f5e9440b649ce5ba8045638",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "829a1e1566c781466b20dc7c939026234ddbb30351a59601ce32e0c61f6a3ea3",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "5a3692a65a00b343c0d417097c58476b84f1a1bdc792feec85369c8328006f59",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "74fd4a4e2618a02163e331bc4c318a1f3d2743691492a17a1ac4158c2478b27e",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "d3832452c0f1716756380a97df34582aa5acddc952c84453a1a23a05c6e8a77b",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "3454bdf85be8fb19171c71937e852501e3388cfc2d0ae8ee5dd9ddd98ba60774",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": "a2b148c335e07db4b7417bb48b7a86dd82f2cb88dc9c906b82aa12d717eb0047",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv": "9bbb649dea5f5ff7a65fd1eef897b76e2774a6fbbcad91b1f3df4dd8a055ab15",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv": "85e919003fadf25e42cfbe641872fae703b490ef5d5abb0944396a5f06062ece",
     "rtl/test/tb_w11_idx_ring_naming.sv": "662b73a918eb9e42bd23227d4cb8223392c87e4ba2eb79b8ed3eed9571d835c4",
     "rtl/test/w11_idx_ring_naming.cpp": "d8d0e59005c3b239ceb4ffa0c7b2813bc1d7bdafbc82380dd125b14b53d58e39",
-    "tools/w11_idx_ring_naming.py": "0ad0f1693176ed6e4be68290218809ceeb947925a664b1a65ab7146b7d9809d7"
+    "tools/w11_idx_ring_naming.py": "9343de310ed1c7f4f319babac993c7ee7e6ba29e8b6ceb022500ca9f452c72a8"
   }
 }

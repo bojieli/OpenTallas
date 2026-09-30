@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.w11-idx-ring-gate.v1",
   "status": "pass",
-  "git_head": "fa7919eb296ca5d115f666cd53573e9353a49505",
+  "git_head": "6c2c05297da38186d47af8c245251e79e503e212",
   "simulator": "Verilator 4.038",
   "layout": {
     "placement": "stack q holds position quarter q (Qs = 8 floor(N/32)); key position p in ring slot p mod C of the user's per-stack ring; ring = RSB super-blocks + one RTAIL-key tail super-block; user region at block KB + user x UBLK on every stack; placement is a function of (user, N) alone",
@@ -47,8 +47,8 @@
         "CLK_PS": 967
       },
       "passed": true,
-      "build_wall_seconds": 36.1,
-      "simulation_wall_seconds": 4.3,
+      "build_wall_seconds": 210.9,
+      "simulation_wall_seconds": 21.0,
       "ring": {
         "slots": 2080,
         "blocks_per_user_per_stack": 36,
@@ -250,8 +250,8 @@
         "CLK_PS": 967
       },
       "passed": true,
-      "build_wall_seconds": 38.1,
-      "simulation_wall_seconds": 46.8,
+      "build_wall_seconds": 215.4,
+      "simulation_wall_seconds": 309.6,
       "ring": {
         "slots": 65568,
         "blocks_per_user_per_stack": 1090,
@@ -429,8 +429,8 @@
         "CLK_PS": 967
       },
       "passed": false,
-      "build_wall_seconds": 38.0,
-      "simulation_wall_seconds": 0.1,
+      "build_wall_seconds": 202.3,
+      "simulation_wall_seconds": 0.2,
       "ring": {
         "slots": 2080,
         "blocks_per_user_per_stack": 36,
@@ -447,14 +447,16 @@
   },
   "limitation": "Standalone gate: writer and readers own the HBM ports in alternate phases (no concurrent writes during a scan); not integrated into ot_chip_v41x_die; behavioural timed HBM with a modulo backing store (MEM_WORDS chosen so the four full-shape users' regions do not alias; the address monitor checks full 30-bit addresses).",
   "sources_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kdata_m.sv": "a2fa51f89198cb9c8313282ee9dbd7167ff857b33f5e9440b649ce5ba8045638",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "829a1e1566c781466b20dc7c939026234ddbb30351a59601ce32e0c61f6a3ea3",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "d3832452c0f1716756380a97df34582aa5acddc952c84453a1a23a05c6e8a77b",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "5a3692a65a00b343c0d417097c58476b84f1a1bdc792feec85369c8328006f59",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "3454bdf85be8fb19171c71937e852501e3388cfc2d0ae8ee5dd9ddd98ba60774",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": "a2b148c335e07db4b7417bb48b7a86dd82f2cb88dc9c906b82aa12d717eb0047",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv": "85e919003fadf25e42cfbe641872fae703b490ef5d5abb0944396a5f06062ece",
     "rtl/test/tb_w11_idx_ring_gate.sv": "1cac94439253d34fb13403989d44e625d06beea06cbd0fcfdbefc1f03c15edb4",
     "rtl/test/w11_idx_ring_gate.cpp": "ba6f335faa7f50bf1da9d4036f0ce5208aa2073f66aec14feac82886beaa5d53",
-    "tools/w11_idx_ring_gate.py": "b348ed1ace438d489faf91db4e7d76f218d4dbd02863c8c6a1f0e45c52ac4ebc"
+    "tools/w11_idx_ring_gate.py": "8eb8bf9ed0eda43b604fa526d39730c740f1ee1c5b13264f0a80ef7ee78d0b62"
   }
 }
