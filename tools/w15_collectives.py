@@ -475,7 +475,7 @@ def corners(classes, top=None):
     return [lo, hi]
 
 
-def arrivals(res, classes):
+def arrivals(res, classes, qwen_wire=None):
     """Hub-to-hub arrival latency (edge age + edge-to-hub wire) per link class, from a det=0 run."""
     out = {}
     if "links" in res:
@@ -484,7 +484,7 @@ def arrivals(res, classes):
             a[0] = min(a[0], l["age_min"] + l["wire"])
             a[1] = max(a[1], l["age_max"] + l["wire"])
     else:
-        w = QWEN_WIRE
+        w = QWEN_WIRE if qwen_wire is None else qwen_wire
         out["ucie"] = [min(res["link_age_min"]) + w, max(res["link_age_max"]) + w]
     return out
 
@@ -508,7 +508,7 @@ def campaign_config(name, ncal=24, nmeas=12, jobs=16):
         cal = list(ex.map(lambda a: run(name, *a), cal_jobs))
     arr = {}
     for r in cal:
-        for c, (lo, hi) in arrivals(r, classes).items():
+        for c, (lo, hi) in arrivals(r, classes, CONFIGS[name][1].get("U_WIRE")).items():
             a = arr.setdefault(c, [10 ** 9, 0])
             a[0], a[1] = min(a[0], lo), max(a[1], hi)
     drel = {CLASS_KEYS[c][0]: arr[c][1] + GUARD for c in classes}
