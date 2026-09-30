@@ -40,6 +40,7 @@ CLOCK_NS = 0.92
 UNCERTAINTY_NS = 0.06
 AW, TAGW, LENW, BEATW, DW = 30, 16, 4, 4, 256
 ENV_H = 64.0
+PREGION_H = ENV_H                # W18b --pregion-h: the 216 um HBM service band leaves 145 um beside its 70.5 um SRAMs
 K_SPAN = (200.0, 370.0)          # regional K port on the slice's top edge (v1 PHY window 375 um)
 EPC_OUTER = 14                   # outermost region's credits, 2 * hops + 2 (12 mm PHY: 6 hops)
 PROOT_HOPS = (6, 4, 3, 1, 1, 3, 4, 6)   # region 7 .. 0 trunk hops (12 mm PHY, 1 mm hops)
@@ -180,7 +181,7 @@ def pslice_case() -> dict:
 
 
 def pregion_case() -> dict:
-    w, h = 4 * PHY_PC_WINDOW_UM, ENV_H
+    w, h = 4 * PHY_PC_WINDOW_UM, PREGION_H
     regions = []
     for p in range(4):
         x0 = p * PHY_PC_WINDOW_UM
@@ -266,6 +267,7 @@ def main() -> int:
     ap.add_argument("--density", type=float, help="override the global placement density")
     ap.add_argument("--orfs-var", action="append", help="KEY=VALUE passed to run_abi3_physical --orfs-var")
     ap.add_argument("--step-tcl", action="append", help="HOOK=path passed to run_abi3_physical --step-tcl")
+    ap.add_argument("--pregion-h", type=float, default=0.0, help="pregion block height (um)")
     ap.add_argument("--tag", default="", help="suffix for the nickname and the output record directory")
     ap.add_argument("--abstract", action="store_true",
                     help="after a kept route: ORFS do-generate_abstract (write_abstract_lef + write_timing_model) "
@@ -291,6 +293,9 @@ def main() -> int:
             PROOT_HOPS = (8, 6, 4, 2, 2, 4, 6, 8)
             global PROOT_H
             PROOT_H = 128.0            # 64 um: GRT-0183 (boxed in) with the deeper 0.5 mm-hop credit queues
+    if a.pregion_h:
+        global PREGION_H
+        PREGION_H = a.pregion_h
     c = CASES[a.case]()
     if a.phy_e8p5:
         sfx = "_w18e8p5" + ("_1p2" if a.signoff_1p2 else "")
