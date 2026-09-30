@@ -28,6 +28,10 @@ import v41_w2_romac_pnr as W2  # noqa: E402
 
 MACRO_DIR = "physical/asap7_memory_macros"
 ROM = ("ot_rom_8192x274_m8", 125.712, 119.340)
+ROM4K = ("ot_rom_4096x274_m8", 125.28, 62.91)          # PP: two per macro slot, read alternately (ping-pong)
+PP_GAP = 1.08                                         # between the two stacked 4096-word macros
+SOURCES_FAST = ["rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/v41rom/ot_v41_chain2.sv",
+                "rtl/v41rom/ot_v41_segtree2.sv"]
 MARGIN, CH, GAP = 2.16, 12.0, 4.0
 W1_HALF_STRIP_UM = 158.544 / 2
 W1_ROW_PITCH_UM = 120.96
@@ -37,11 +41,14 @@ SOURCES = ["rtl/v41rom/ot_v41_rom_elem_q.sv", "rtl/v41rom/ot_v41_rom_elem.sv", "
            f"{MACRO_DIR}/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v"]
 
 
-def plan(logic_w: float, pair: bool = False, wrapped: bool = False, outline=None, ch_o: float = 5.4) -> dict:
+def plan(logic_w: float, pair: bool = False, wrapped: bool = False, outline=None, ch_o: float = 5.4,
+         fast: bool = False, pp: bool = False) -> dict:
     """pair: a W1 pair column [ROM R0 | logic strip | ROM MY] sharing one front end (ot_v41_rom_elem NB = 2).
     outline (W, H): the block IS the pack's pair tile (W1 pitch, no margin, no pin channel): channels of ch_o
     beside each ROM edge hold the capture flops, the strip takes the rest, and the tiles abut."""
-    rom, rw, rh = ROM
+    rom, rw, rh = ROM4K if pp else ROM
+    if pp:
+        rh = 2 * rh + PP_GAP                          # a slot = two stacked 4096-word macros
     if outline:
         die_w, die_h = outline
         x_rom = ch_o
@@ -59,17 +66,24 @@ def plan(logic_w: float, pair: bool = False, wrapped: bool = False, outline=None
         y_rom = MARGIN + GAP
         margin = MARGIN
     pre = "u_e." if wrapped else ""
-    macros = [{"inst": f"{pre}g_mac[0].u_rom", "master": ROM, "x": x_rom, "y": y_rom, "orient": "R0",
-               "capture": True}]
-    if pair:
-        macros.append({"inst": f"{pre}g_mac[1].u_rom", "master": ROM, "x": x_rom1, "y": y_rom, "orient": "MY",
-                       "capture": True})
+    macros = []
+    for mb, (x, orient) in enumerate([(x_rom, "R0")] + ([(x_rom1, "MY")] if pair else [])):
+        if pp:
+            for k in (0, 1):
+                macros.append({"inst": f"{pre}g_mac[{mb}].g_pp.u_rom{k}", "master": ROM4K, "x": x,
+                               "y": y_rom + k * (ROM4K[2] + PP_GAP), "orient": orient if k == 0 else
+                               {"R0": "MX", "MY": "R180"}[orient], "capture": True})
+        else:
+            macros.append({"inst": f"{pre}g_mac[{mb}].g_one.u_rom", "master": ROM, "x": x, "y": y_rom,
+                           "orient": orient, "capture": True})
     return {"case": "w10_elem_pair" if pair else "w10_elem", "top": "ot_v41_rom_elem", "die_um": [die_w, die_h],
             "logic_region_um": [round(x_logic0, 3), margin, round(x_logic0 + logic_w, 3), die_h - margin],
             "margin_um": margin, "outline": bool(outline),
             "pin_span_um": [round(x_logic0, 3), round(x_logic0 + logic_w, 3)],
             "macros": macros, "pair": pair, "wrapped": wrapped,
-            "sources": SOURCES, "macro_views": [rom],
+            "sources": SOURCES + (SOURCES_FAST if (fast or pp) else [])
+            + ([f"{MACRO_DIR}/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v"] if pp else []),
+            "macro_views": [rom] + (["ot_rom_8192x274_m8"] if pp else []), "fast": fast, "pp": pp,
             "w1_slot_um": [round((2 * rw if pair else rw) + (2 if pair else 1) * W1_HALF_STRIP_UM, 3), W1_ROW_PITCH_UM],
             "w1_slot_logic_um2": round(W1_HALF_STRIP_UM * W1_ROW_PITCH_UM, 1)}
 
@@ -79,14 +93,32 @@ def hook_name(p: dict) -> str:
     lw = int(round(p["logic_region_um"][2] - p["logic_region_um"][0]))
     tile = f"_tile{int(round(p['die_um'][0]))}x{int(round(p['die_um'][1]))}" if p.get("outline") else ""
     return (f"physical/abi3/v41_w10_elem{'_pair' if p['pair'] else ''}{'_q' if p['wrapped'] else ''}"
-            f"{f'_lw{lw}' if p['pair'] else ''}{tile}_place.tcl")
+            f"{'_pp' if p.get('pp') else ''}{f'_lw{lw}' if p['pair'] else ''}{tile}_place.tcl")
 
 
 def hook_tcl(p: dict) -> str:
     t = W2.hook_tcl(p)
     # the element's words use 272 of the macro's 274 output bits: rd_out[273:272] have no capture flop
+    # PP: a bank's capture flop loads only when its word arrives, so an enable gate may sit between pin and flop:
+    # look one cell further before calling the bit unused
     t = t.replace('if {$ff eq {}} { error "capture flop missing on [$net getName]" }',
-                  'if {$ff eq {}} { incr nunused; continue }')
+                  'if {$ff eq {}} {\n'
+                  '            foreach o [$net getITerms] {\n'
+                  '                set oi [$o getInst]\n'
+                  '                if {$oi eq $inst} { continue }\n'
+                  '                foreach ot [$oi getITerms] {\n'
+                  '                    if {![$ot isOutputSignal]} { continue }\n'
+                  '                    set n2 [$ot getNet]\n'
+                  '                    if {$n2 eq "NULL" || $n2 eq ""} { continue }\n'
+                  '                    foreach o2 [$n2 getITerms] {\n'
+                  '                        if {[string match *DFF* [[[$o2 getInst] getMaster] getName]]} { set ff [$o2 getInst]; break }\n'
+                  '                    }\n'
+                  '                    if {$ff ne {}} { break }\n'
+                  '                }\n'
+                  '                if {$ff ne {}} { break }\n'
+                  '            }\n'
+                  '        }\n'
+                  '        if {$ff eq {}} { incr nunused; continue }')
     t = t.replace("set nfixed 0", "set nfixed 0\nset nunused 0")
     nm = sum(1 for m in p['macros'] if m['capture'])
     t = t.replace(f"if {{$nfixed != {274 * nm}}}",
@@ -97,14 +129,15 @@ def hook_tcl(p: dict) -> str:
 
 
 def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), stop=None,
-         setup_only=False, hold_ns=0.025) -> list[str]:
+         setup_only=False, hold_ns=0.025, period=0.92, corner=None) -> list[str]:
     w, h = p["die_um"]
     top = "ot_v41_rom_elem_q" if p["wrapped"] else p["top"]      # an FP8/FP4 macro has no BF16 x port
     params = [q for q in params if not (p["wrapped"] and q.startswith("BF16="))]
     a = ["tools/run_abi3_physical.py", "--view", "asap7", "--top", top]
+    params = list(params) + (["FAST=1"] if p.get("fast") else []) + (["PP=1"] if p.get("pp") else [])
     for s in p["sources"]:
         a += ["--source", s]
-    a += ["--clock-period-ns", "0.92", "--clock-uncertainty-ns", "0.06", "--io-delay-fraction", "0.2",
+    a += ["--clock-period-ns", f"{period:g}", "--clock-uncertainty-ns", "0.06", "--io-delay-fraction", "0.2",
           "--stages", "pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
           "--core-area", f"{p['margin_um']:g}", f"{p['margin_um']:g}", f"{w - p['margin_um']:g}", f"{h - p['margin_um']:g}",
           "--place-density", f"{density:g}", "--macro-place-halo", "2", "2",
@@ -117,12 +150,16 @@ def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), s
           "--step-tcl", "POST_DETAIL_PLACE=physical/abi3/check_pg_before_route.tcl",
           "--orfs-var", "PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7.tcl",
           "--nickname-tag", tag, "--keep-workdir", keep, "--output", output]
-    for m in p["macro_views"]:
+    if p.get("pp"):
+        a += ["--sdc-append", "physical/abi3/v41_w10_elem_pp_multicycle.sdc"]
+    for m in p["macro_views"][:1]:
         a += ["--macro-view", f"{m}={MACRO_DIR}/{m}"]
     for q in params:
         a += ["--param", q]
     if stop:
         a += ["--pnr-stop-after", stop]
+    if corner:
+        a += ["--orfs-corner", corner]
     if setup_only:
         a += ["--clock-uncertainty-setup-only"]
     elif hold_ns is not None:
@@ -150,18 +187,23 @@ def main() -> None:
     ap.add_argument("--setup-only-uncertainty", action="store_true",
                     help="60 ps uncertainty on setup only (W5 semantics); the unified default also times hold "
                          "with it, which costs ~16k hold buffers per element")
+    ap.add_argument("--fast", action="store_true", help="the 1.2 GHz element pipeline (FAST=1)")
+    ap.add_argument("--pp", action="store_true", help="ping-pong 2 x ot_rom_4096x274_m8 per macro slot (PP=1)")
+    ap.add_argument("--period", type=float, default=0.92, help="clock period, ns")
+    ap.add_argument("--corner", choices=["TC", "WC", "BC"], help="ORFS primary corner (sign-off: WC)")
     ap.add_argument("--no-wrap", dest="wrap", action="store_false",
                     help="FP8/FP4: harden ot_v41_rom_elem itself (with the unused BF16 x port) instead of ot_v41_rom_elem_q")
     a = ap.parse_args()
     p = plan(a.logic_w, a.pair, wrapped=not any(q.startswith("BF16=1") for q in a.param) and a.wrap,
-             outline=a.outline, ch_o=a.channel)
+             outline=a.outline, ch_o=a.channel, fast=a.fast, pp=a.pp)
     if a.pair and "NB=2" not in a.param:
         a.param.append("NB=2")
     if a.write_hook or a.print:
         (ROOT / hook_name(p)).write_text(hook_tcl(p))      # the hook always matches the plan it is run with
     if a.print:
         print(json.dumps({"plan": p, "argv": argv(p, a.tag, a.keep, a.output, a.density, a.param, a.stop_after,
-                                                     a.setup_only_uncertainty, a.hold_uncertainty_ns)}, indent=1))
+                                                     a.setup_only_uncertainty, a.hold_uncertainty_ns,
+                                                     a.period, a.corner)}, indent=1))
 
 
 if __name__ == "__main__":

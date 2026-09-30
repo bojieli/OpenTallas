@@ -1003,6 +1003,8 @@ def sdc_lines(
         *(f"set_false_path -from [get_ports {port}]" for port in block["false_path_from_ports"]),
         *(["set_false_path -from $non_clock_inputs", "set_false_path -to [all_outputs]"]
           if block.get("false_path_io") else []),
+        # --sdc-append: design-intent exceptions (e.g. a ping-pong macro's 2-cycle read), verbatim
+        *block.get("extra_sdc_lines", []),
     ]
     return lines
 
@@ -2989,6 +2991,11 @@ def build_parser() -> argparse.ArgumentParser:
              "under the view's pnr.extra_config.  Absent: nothing added",
     )
     parser.add_argument(
+        "--sdc-append", action="append", default=[], metavar="FILE",
+        help=("append this SDC file's lines (design-intent timing exceptions, e.g. a multicycle macro read) to "
+              "the generated constraints; recorded with its digest under design.extra_sdc"),
+    )
+    parser.add_argument(
         "--asap7-adder-map", action="store_true",
         help=("asap7: keep the platform's ADDER_MAP_FILE (FA/HA ripple adders).  Default: ADDER_MAP_FILE is set "
               "empty so yosys keeps its Kogge-Stone adders; recorded as place_and_route.adder_map"),
@@ -3278,6 +3285,17 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.false_path_from is not None:
         block["false_path_from_ports"] = args.false_path_from
+    if args.sdc_append:
+        block["extra_sdc_lines"] = []
+        block["extra_sdc_files"] = []
+        for f in args.sdc_append:
+            path = (ROOT / f) if not Path(f).is_absolute() else Path(f)
+            if not path.is_file():
+                print(f"--sdc-append: {f} missing", file=sys.stderr)
+                return 2
+            block["extra_sdc_lines"] += [ln for ln in path.read_text().splitlines()
+                                         if ln.strip() and not ln.lstrip().startswith("#")]
+            block["extra_sdc_files"].append({"path": f, "sha256": sha256_file(path)})
     if args.core_input_port:
         block["core_input_ports"] = args.core_input_port
     if args.core_input_delay_min_ns is not None or args.core_input_delay_max_ns is not None:
@@ -3461,6 +3479,8 @@ def main(argv: list[str] | None = None) -> int:
                                          "ingress_input_delay_min_ns", "ingress_input_delay_max_ns")}
                if block.get("ingress_clock_port") else {}),
             "false_path_from_ports": block["false_path_from_ports"],
+            **({"extra_sdc": {"files": block["extra_sdc_files"], "lines": block["extra_sdc_lines"]}}
+               if block.get("extra_sdc_lines") else {}),
             "io_delay_fraction": block.get("io_delay_fraction", 0.2),
             **({"clock_uncertainty_ns": block["clock_uncertainty_ns"]}
                if block.get("clock_uncertainty_ns") is not None else {}),

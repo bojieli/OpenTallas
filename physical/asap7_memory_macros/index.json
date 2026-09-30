@@ -1,7 +1,7 @@
 {
   "calibration_sha256": "db9005199aaf928750e61b6831e7b9552d0eafa0522a1220fe3cdd526a2902b0",
   "config": "configs/memories/asap7_macros.json",
-  "config_sha256": "6e58ff9e13615cc1193edf65e5dab5169de6cd5fb7b938edaabe91540141c72c",
+  "config_sha256": "b79e71abf65dfc404ec469f6b843417a2b467e32285f89c9f86c4dfa581063fe",
   "generated_by": "tools/mem_compiler/build_library.py",
   "macros": {
     "ot_rom_1024x72_m8": {
@@ -168,6 +168,61 @@
         "ot_rom_4096x266_m8_tt.lib": "6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021"
       },
       "width_um": 121.824
+    },
+    "ot_rom_4096x274_m8": {
+      "analytical_model_comparison": {
+        "N7": {
+          "bandwidth_ratio_macro_over_model": 27.314784516009066,
+          "density_ratio_macro_over_model": 2.43996412710339,
+          "macro_array_efficiency": 0.8304750628977356,
+          "macro_rom_bits_per_mm2": 142399702.1429588,
+          "macro_rom_read_bytes_s_per_mm2": 7708839185629.226,
+          "measured_asap7_rom_cell_to_sram_cell_ratio": 0.25,
+          "model_rom_array_efficiency": 0.52,
+          "model_rom_bits_per_mm2": 58361391.69472503,
+          "model_rom_cell_to_sram_cell_ratio": 0.33,
+          "model_rom_read_bytes_s_per_mm2": 282222222222.2222,
+          "model_sram_bits_per_mm2": 24074074.074074075
+        }
+      },
+      "area_um2": 7881.365,
+      "array_efficiency": 0.8305,
+      "capacity_bits": 1122304,
+      "clk_to_q_ps": {
+        "ff": 492.2,
+        "ss": 744.0,
+        "tt": 590.5
+      },
+      "density_mb_per_mm2": 142.4,
+      "fmax_mhz": {
+        "ff": 2130.2,
+        "ss": 1404.8,
+        "tt": 1773.9
+      },
+      "height_um": 62.91,
+      "kind": "rom",
+      "leakage_nw_tt": 52805.14,
+      "min_period_ps": {
+        "ff": 469.4,
+        "ss": 711.9,
+        "tt": 563.7
+      },
+      "read_energy_fj_tt": 7630.54,
+      "spec": {
+        "bits": 274,
+        "mux": 8,
+        "name": "ot_rom_4096x274_m8",
+        "words": 4096
+      },
+      "views": {
+        "ot_rom_4096x274_m8.lef": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+        "ot_rom_4096x274_m8.v": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
+        "ot_rom_4096x274_m8_bb.v": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+        "ot_rom_4096x274_m8_ff.lib": "40cc08ccdde7dd3daf88aed4dee67f5656c47164d137afe45753720daf522f32",
+        "ot_rom_4096x274_m8_ss.lib": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+        "ot_rom_4096x274_m8_tt.lib": "b922c7425f6b3f7cefb69baa121b353cb6084be096cfb69cf7c7ea208c92f941"
+      },
+      "width_um": 125.28
     },
     "ot_rom_4096x72_m8": {
       "analytical_model_comparison": {

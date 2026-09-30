@@ -66,6 +66,19 @@ DEPTH = 8192
 BF16_MACROS = 2048                  # uarch_model PRESETS['proposal'] (92879e95)
 CHUNK_EL = 256
 IL = 8                              # chain registers per lane = units per sub-block
+# BF16_PAIR (root decision 2026-09-30): BF16 weights on the standard FP8/FP4 pair.  A BF16 word (16 weights)
+# is held BF16_WORD_CYCLES cycles and multiplied 2 per cycle per macro into the pair's two chunk chains
+# (NCH = 16 slots each), so a BF16 sub-block is IL_BF16 = 2 units (16 chunk slots per lane) and every macro
+# may carry BF16.  Off by default so the committed records keep their meaning (--bf16-pair).
+BF16_PAIR = False
+BF16_WORD_CYCLES = 8
+BF16_SPLIT_BOOST = 0                # 0: the model's split; 1: split BF16 rows as if each word were 8 (BF16_PAIR)
+IL_BF16 = 2
+
+
+def il(fmt: str) -> int:
+    """Units per sub-block of a format's family."""
+    return IL_BF16 if (BF16_PAIR and fmt == "bf16") else IL
 FADD_REC = 5                        # ot_fp32_add_rne_pipe recurrence
 SLOTS = {"fp8": 1, "fp4": 2, "bf16": 16}
 EXPERT_ROWS = {"w1": (576, 5120), "w3": (576, 5120), "w2": (1280, 2304)}   # rank quarter (rows, K)
@@ -169,9 +182,10 @@ def segment_order(fmt: str, e0: int, elems: int) -> list[tuple[int, int, int]]:
     at its base, in the order the element reads them -- sub-block q (8 units), b, unit, FP8 half."""
     u0, u1 = unit_range(fmt, e0, elems)
     out = []
-    for q0 in range(u0, u1, IL):
+    L = il(fmt)
+    for q0 in range(u0, u1, L):
         for b in range(8):
-            for u in range(q0, min(u1, q0 + IL)):
+            for u in range(q0, min(u1, q0 + L)):
                 for h in unit_halves(fmt, e0, elems, u):
                     out.append((u, b, h))
     return out
@@ -191,11 +205,13 @@ def element_order(segs: list[dict]) -> list[tuple[int, int, int, int]]:
         ids.sort(key=lambda i: (segs[i]["fmt"], segs[i]["row"], segs[i]["tensor"]))
     for (a0, a1), (b0, b1) in zip(keys, keys[1:]):
         assert a1 <= b0, ("overlapping classes on one macro", keys)
-    nq = max(-(-(u1 - u0) // IL) for u0, u1 in keys)
+    L = il(segs[0]["fmt"])
+    assert len({family(sg["fmt"]) for sg in segs}) == 1, "one x family per phase"
+    nq = max(-(-(u1 - u0) // L) for u0, u1 in keys)
     for q in range(nq):
         for b in range(8):
             for u0, u1 in keys:
-                for u in range(u0 + IL * q, min(u1, u0 + IL * q + IL)):
+                for u in range(u0 + L * q, min(u1, u0 + L * q + L)):
                     for i in cls[(u0, u1)]:
                         sg = segs[i]
                         for h in unit_halves(sg["fmt"], sg["e0"], sg["elems"], u):
@@ -211,13 +227,15 @@ def element_needs(segs_fmt: dict[str, list[tuple[int, int, int, int]]]) -> dict:
     for fmt, lst in segs_fmt.items():
         for m, e0, el, _ in lst:
             per.setdefault((family(fmt), m), []).append((fmt, e0, el))
-    out = dict(segments=0, classes=0, words_per_round=0, units_per_class=0, base_nodes=0)
+    out = dict(segments=0, classes=0, words_per_round=0, units_per_class=0, base_nodes=0, chain_slots_per_lane=0)
     for (f, m), lst in per.items():
         out["segments"] = max(out["segments"], len(lst))
         cls = {}
         for fmt, e0, el in lst:
             cls.setdefault(unit_range(fmt, e0, el), []).append((fmt, e0, el))
             nodes = -(-el // 256) if fmt == "fp8" else seg_units(fmt, e0, el)
+            if BF16_PAIR and fmt == "bf16":
+                nodes *= 8                       # BF16_PAIR: chunk-pair base nodes, 8 per 128-element unit
             out["base_nodes"] = max(out["base_nodes"], nodes)
         out["classes"] = max(out["classes"], len(cls))
         # words in the first round (the largest: sub-block 0 holds min(8, units) of every class)
@@ -225,8 +243,11 @@ def element_needs(segs_fmt: dict[str, list[tuple[int, int, int, int]]]) -> dict:
         for (u0, u1), members in cls.items():
             out["units_per_class"] = max(out["units_per_class"], u1 - u0)
             for fmt, e0, el in members:
-                w += sum(len(unit_halves(fmt, e0, el, u)) for u in range(u0, min(u1, u0 + IL)))
+                w += sum(len(unit_halves(fmt, e0, el, u)) for u in range(u0, min(u1, u0 + il(fmt))))
         out["words_per_round"] = max(out["words_per_round"], w)
+        # chain registers per lane the round needs (a BF16_PAIR word spreads over 8 slots per lane)
+        slots = w * (BF16_WORD_CYCLES if (BF16_PAIR and f == "bf16") else 1)
+        out["chain_slots_per_lane"] = max(out.get("chain_slots_per_lane", 0), slots)
     return out
 
 
@@ -253,20 +274,22 @@ def phase_cycles(segs_fmt: dict[str, list[tuple[int, int, int, int]]]) -> int:
         for m, fmt, e0, el in segs:
             u0, u1 = unit_range(fmt, e0, el)
             info.append((m, u0, [len(unit_halves(fmt, e0, el, u)) for u in range(u0, u1)]))
-        nq = max(-(-len(w) // IL) for _, _, w in info)
+        L = il("bf16" if f == "bf16" else "fp8")
+        nq = max(-(-len(w) // L) for _, _, w in info)
         for q in range(nq):
             need = set()
             demand = {}
             for m, u0, w in info:
-                part = w[IL * q: IL * q + IL]
+                part = w[L * q: L * q + L]
                 if not part:
                     continue
-                need.update(range(u0 + IL * q, u0 + IL * q + len(part)))
+                need.update(range(u0 + L * q, u0 + L * q + len(part)))
                 demand[m] = demand.get(m, 0) + sum(part)
             if not need:
                 continue
             beats = -(-len(need) // 4) if f == "bf16" else len(need)
-            total += 8 * max(FADD_REC, beats, max(demand.values()))
+            hold = BF16_WORD_CYCLES if (BF16_PAIR and f == "bf16") else 1
+            total += 8 * max(FADD_REC, beats, hold * max(demand.values()))
     return total
 
 
@@ -345,12 +368,15 @@ def place_dense(die: Die, mats: list[dict], layer: int):
         items = []
         for m in ms:
             n_set = len(die.bf) if m["fmt"] == "bf16" else die.n
+            if BF16_PAIR and m["fmt"] == "bf16":
+                n_set *= BF16_WORD_CYCLES if BF16_SPLIT_BOOST else 1     # a BF16 word costs 8 read cycles: split further
             s = model_split(m["rows"], m["K"], n_set, m["fmt"])
             segs = segments(m["K"], s)
             info[m["tensor"]] = dict(rows=m["rows"], K=m["K"], fmt=m["fmt"], s_model=s,
                                      segment_elems=[x[1] for x in segs])
+            cost = BF16_WORD_CYCLES if (BF16_PAIR and m["fmt"] == "bf16") else 1     # read cycles per word
             for si, (e0, el) in enumerate(segs):
-                items.append((seg_words(m["fmt"], e0, el), m, si, e0, el))
+                items.append((cost * seg_words(m["fmt"], e0, el), m, si, e0, el))
         items.sort(key=lambda t: (-t[0], t[1]["tensor"], t[2]))
         ids = []
         held = {}                                # unit range -> macros holding it in this phase
@@ -512,7 +538,7 @@ def derive(snapshot: Path, draws: int, seed: int, only=None, keep=None):
             w1 = by_die[name]
             n_macros = w1["macros"][M.WIDE]
             n = n_macros // PAIR
-            die = Die(n, min(BF16_MACROS, n_macros) // PAIR)
+            die = Die(n, n if BF16_PAIR else min(BF16_MACROS, n_macros) // PAIR)
             expect, per_layer, res_by_layer = {}, [], {}
             for L in dense_layers:
                 mats = dense_matrices(dense[L], L)
@@ -633,7 +659,16 @@ def main(argv=None):
     p.add_argument("--seed", type=int, default=20260929)
     p.add_argument("--die", action="append")
     p.add_argument("--no-price", action="store_true")
+    p.add_argument("--bf16-pair", action="store_true", help="BF16 on every standard pair (BF16_PAIR)")
+    p.add_argument("--bf16-split", action="store_true", help="BF16_PAIR: split BF16 rows for 8-cycle words")
+    p.add_argument("--fadd-rec", type=int, default=None, help="FP32 adder recurrence (chain latency) in cycles")
     a = p.parse_args(argv)
+    global BF16_PAIR, FADD_REC
+    BF16_PAIR = bool(a.bf16_pair)
+    global BF16_SPLIT_BOOST
+    BF16_SPLIT_BOOST = int(a.bf16_split)
+    if a.fadd_rec:
+        FADD_REC = a.fadd_rec
     model, params = model_rows()
     dies = derive(a.snapshot, a.draws, a.seed, a.die)
     bus, rows = compare(dies, model)
