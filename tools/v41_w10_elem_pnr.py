@@ -149,10 +149,10 @@ def argv(p: dict, tag: str, keep: str, output: str, density: float, params=(), s
         a += ["--source", s]
     a += ["--clock-period-ns", f"{period:g}", "--clock-uncertainty-ns", "0.06", "--io-delay-fraction", "0.2",
           "--stages", "pnr", "--die-area", "0", "0", f"{w:g}", f"{h:g}",
-          # outline tiles keep the die at the pack pitch but inset the core rows by 0.54 um top and bottom: a VSS rail
+          # outline tiles keep the die at the pack pitch but inset the core rows by one row (0.27 um) top and bottom: a VSS rail
           # on the die edge has no room for its M2-M5 vias (p12q: PSM-0069 on the y = 0 rail)
-          "--core-area", f"{p['margin_um']:g}", f"{(0.54 if p.get('outline') else p['margin_um']):g}",
-          f"{w - p['margin_um']:g}", f"{h - (0.54 if p.get('outline') else p['margin_um']):g}",
+          "--core-area", f"{p['margin_um']:g}", f"{(0.27 if p.get('outline') else p['margin_um']):g}",
+          f"{w - p['margin_um']:g}", f"{h - (0.27 if p.get('outline') else p['margin_um']):g}",
           "--place-density", f"{density:g}", "--macro-place-halo", "2", "2",
           *(["--pin-region", f"^(p|busy|fault).*=top:{p['pin_span_um'][0]:g}-{p['pin_span_um'][1]:g}",
              "--pin-region", f"^(clk|rst|cfg|go|x).*=bottom:{p['pin_span_um'][0]:g}-{p['pin_span_um'][1]:g}"]
