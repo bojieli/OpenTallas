@@ -2,10 +2,10 @@
   "claim_boundary": "Production tagged-RoPE L0 ISA encoded and decoded exactly for 113 instructions. The binder remains blocked on full table placement and packed QE adapter; no RTL execution verdict.",
   "instruction_bits": 2048,
   "instructions": 113,
-  "program_sha256": "c49245cf38ea0149325b7a5045aa3b86a994c70095f2e217c6816a58831c60c2",
+  "program_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
   "schema": "opentallas.rtl.v41x_fullshape_l0_program.v1",
   "source_sha256": {
-    "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "81fa804534d548b7c1f77dc97b33b643d49fd78d63316a15592d920fcc1eca37",
+    "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "ffcc20a520ec7faebd26c184d6b59e9cf192d4ae199f5a7f149ceab19803fc04",
     "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
     "tools/rtl_v41x_fullshape_l0_program.py": "55dc51d31ae520221bb2925328490ddf0ff5b462331c893ce3c967070047f62d"
   },

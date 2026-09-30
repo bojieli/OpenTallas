@@ -268,7 +268,10 @@ def main():
                     help="PDN script (container path); repo scripts are mounted at /src/tools/chip_assembly/tcl")
     ap.add_argument("--pdn-exclude", default="", help="space-separated master globs left out of the macro element grid")
     ap.add_argument("--refit", type=Path, help="a re-fit record (tools/v41_floorplan_refit.py): check that floorplan")
+    ap.add_argument("--hbm-phy", default=None, help="HBM PHY view to place (W18: the legal v2 abstract)")
     a = ap.parse_args()
+    if a.hbm_phy:
+        PK.HBM_PHY = a.hbm_phy
     if a.refit:
         PK.REFIT = json.loads(a.refit.read_text())["geometry"]["refit"]
     run = a.run_dir.resolve()
@@ -289,7 +292,8 @@ def main():
     pdn = tags.get("OT_PDN", [None])[0]
     psm = tags.get("OT_PSM", [])
     rec = dict(schema="opentallas.v41.floorplan_orfs_check.v1", variant=a.variant,
-               refit=(str(a.refit), hashlib.sha256(a.refit.read_bytes()).hexdigest()) if a.refit else None, pdn_exclude=a.pdn_exclude, pdn_tcl=a.pdn_tcl, window=a.window, tapcell=a.tapcell,
+               refit=(str(a.refit), hashlib.sha256(a.refit.read_bytes()).hexdigest()) if a.refit else None,
+               hbm_phy=PK.HBM_PHY, pdn_exclude=a.pdn_exclude, pdn_tcl=a.pdn_tcl, window=a.window, tapcell=a.tapcell,
                tapcell_result=None,
                image=IMAGE, image_id=img, openroad=OPENROAD, wall_s=round(time.time() - t, 1),
                peak_rss_kb=peak, docker_rc=r.returncode, stdout_tail=r.stdout[-200:],

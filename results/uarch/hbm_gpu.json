@@ -11,12 +11,12 @@
   },
   {
    "design": "qwen_hbm_gpu",
-   "T_us": 1135.6,
-   "tokens_s": 880.6,
+   "T_us": 1135.7,
+   "tokens_s": 880.5,
    "supply_frac": 1.0,
    "boundaries": 181,
-   "barrier_cycles": 46,
-   "exposed_over_hbm_cycles": 113,
+   "barrier_cycles": 64,
+   "exposed_over_hbm_cycles": 154,
    "form": "prefetching bulk copy (stream_overlap); barrier derived from the floorplan"
   },
   {
@@ -30,10 +30,10 @@
   },
   {
    "design": "qwen_hbm_gpu_derived_barrier_no_prefetch",
-   "T_us": 1144.3,
-   "tokens_s": 873.9,
+   "T_us": 1147.3,
+   "tokens_s": 871.6,
    "supply_frac": 1.0,
-   "barrier_us_per_token": 7.6,
+   "barrier_us_per_token": 10.5,
    "boundaries": 181,
    "form": "additive (pre-W13)"
   },
@@ -57,25 +57,25 @@
   },
   {
    "design": "qwen_hbm_gpu_grid_sync_v100",
-   "T_us": 1316.1,
-   "tokens_s": 759.8,
+   "T_us": 1320.6,
+   "tokens_s": 757.2,
    "supply_frac": 1.0,
    "boundaries": 181,
    "form": "prefetching bulk copy, V100 grid sync 1.43 us per boundary"
   },
   {
    "design": "v41_hbm_gpu_rowslot",
-   "T_us": 394.9,
-   "tokens_s": 2532.6,
+   "T_us": 409.3,
+   "tokens_s": 2443.3,
    "supply_frac": 1.0,
    "boundaries": 329,
    "form": "K-chain-aware SM chain, prefetching bulk copy",
    "breakdown_us": {
-    "sm_matvec": 119.3,
+    "sm_matvec": 126.1,
     "x_broadcast_fill": 7.6,
     "dedicated_and_su": 120.4,
     "verify_extra_issue": 0.0,
-    "barrier": 17.2,
+    "barrier": 24.8,
     "collective_latency": 125.9,
     "collective_bytes": 1.5,
     "pipeline_hops": 0.9,
@@ -84,17 +84,17 @@
   },
   {
    "design": "v41_hbm_gpu_groupslot",
-   "T_us": 342.5,
-   "tokens_s": 2919.8,
+   "T_us": 356.9,
+   "tokens_s": 2801.8,
    "supply_frac": 1.0,
    "boundaries": 329,
    "form": "K-chain-aware SM chain, prefetching bulk copy",
    "breakdown_us": {
-    "sm_matvec": 66.9,
+    "sm_matvec": 73.7,
     "x_broadcast_fill": 7.6,
     "dedicated_and_su": 120.4,
     "verify_extra_issue": 0.0,
-    "barrier": 17.2,
+    "barrier": 24.8,
     "collective_latency": 125.9,
     "collective_bytes": 1.5,
     "pipeline_hops": 0.9,
@@ -103,13 +103,13 @@
   },
   {
    "design": "v41_hbm_gpu_groupslot_grid_sync_v100",
-   "T_us": 795.8,
-   "tokens_s": 1256.6,
+   "T_us": 802.6,
+   "tokens_s": 1246.0,
    "supply_frac": 1.0,
    "boundaries": 329,
    "form": "K-chain-aware SM chain, prefetching bulk copy",
    "breakdown_us": {
-    "sm_matvec": 66.9,
+    "sm_matvec": 73.7,
     "x_broadcast_fill": 7.6,
     "dedicated_and_su": 120.4,
     "verify_extra_issue": 0.0,
@@ -139,8 +139,8 @@
   },
   {
    "design": "v41_hbm_pooled_chain_prefetch",
-   "T_us": 257.0,
-   "tokens_s": 3891.7,
+   "T_us": 264.6,
+   "tokens_s": 3779.4,
    "supply_frac": 1.0,
    "boundaries": 329,
    "form": "pooled-width chain (superseded upper bound)",
@@ -151,7 +151,7 @@
     "collective_bytes": 1.5,
     "pipeline_hops": 0.9,
     "control": 2.0,
-    "barrier": 15.0,
+    "barrier": 22.6,
     "weight_sweep_exposed": 0.0
    }
   },
@@ -174,8 +174,8 @@
   },
   {
    "design": "v41_hbm_gpu_derived_barrier_no_prefetch",
-   "T_us": 294.4,
-   "tokens_s": 3397.2,
+   "T_us": 302.0,
+   "tokens_s": 3311.3,
    "supply_frac": 1.0,
    "boundaries": 329,
    "form": "additive",
@@ -186,7 +186,7 @@
     "collective_bytes": 1.5,
     "pipeline_hops": 0.9,
     "control": 2.0,
-    "barrier": 15.0
+    "barrier": 22.6
    }
   },
   {
@@ -227,15 +227,15 @@
    "design": "qwen_hbm_ar",
    "block": 1,
    "tau": 1.0,
-   "step_cycles": 1247637,
-   "tokens_s": 880.6
+   "step_cycles": 1247678,
+   "tokens_s": 880.5
   },
   {
    "design": "qwen_hbm_dflash_b2",
    "block": 2,
    "tau": 1.7361,
-   "step_cycles": 1503778,
-   "tokens_s": 1268.4,
+   "step_cycles": 1504259,
+   "tokens_s": 1268.0,
    "speedup": 1.44,
    "draft_bytes_per_die": 835630080.0,
    "verify_bytes_per_die": 4087886208
@@ -244,9 +244,9 @@
    "design": "qwen_hbm_dflash_b3",
    "block": 3,
    "tau": 2.2654,
-   "step_cycles": 1503778,
-   "tokens_s": 1655.1,
-   "speedup": 1.88,
+   "step_cycles": 1504259,
+   "tokens_s": 1654.5,
+   "speedup": 1.879,
    "draft_bytes_per_die": 835630080.0,
    "verify_bytes_per_die": 4087886208
   },
@@ -254,8 +254,8 @@
    "design": "qwen_hbm_dflash_b4",
    "block": 4,
    "tau": 2.6256,
-   "step_cycles": 1503778,
-   "tokens_s": 1918.2,
+   "step_cycles": 1504259,
+   "tokens_s": 1917.6,
    "speedup": 2.178,
    "draft_bytes_per_die": 835630080.0,
    "verify_bytes_per_die": 4087886208
@@ -264,9 +264,9 @@
    "design": "qwen_hbm_dflash_b5",
    "block": 5,
    "tau": 2.8591,
-   "step_cycles": 1503778,
-   "tokens_s": 2088.8,
-   "speedup": 2.372,
+   "step_cycles": 1504259,
+   "tokens_s": 2088.2,
+   "speedup": 2.371,
    "draft_bytes_per_die": 835630080.0,
    "verify_bytes_per_die": 4087886208
   },
@@ -274,9 +274,9 @@
    "design": "qwen_hbm_dflash_b6",
    "block": 6,
    "tau": 3.0335,
-   "step_cycles": 1503778,
-   "tokens_s": 2216.2,
-   "speedup": 2.517,
+   "step_cycles": 1504259,
+   "tokens_s": 2215.5,
+   "speedup": 2.516,
    "draft_bytes_per_die": 835630080.0,
    "verify_bytes_per_die": 4087886208
   },
@@ -284,9 +284,9 @@
    "design": "qwen_hbm_dflash_b8",
    "block": 8,
    "tau": 3.2956,
-   "step_cycles": 1503778,
-   "tokens_s": 2407.7,
-   "speedup": 2.734,
+   "step_cycles": 1504259,
+   "tokens_s": 2407.0,
+   "speedup": 2.733,
    "draft_bytes_per_die": 835630080.0,
    "verify_bytes_per_die": 4087886208
   },
@@ -294,9 +294,9 @@
    "design": "qwen_hbm_dflash_b12",
    "block": 12,
    "tau": 3.4927,
-   "step_cycles": 1503778,
-   "tokens_s": 2551.7,
-   "speedup": 2.898,
+   "step_cycles": 1504259,
+   "tokens_s": 2550.9,
+   "speedup": 2.897,
    "draft_bytes_per_die": 835630080.0,
    "verify_bytes_per_die": 4087886208
   },
@@ -304,9 +304,9 @@
    "design": "qwen_hbm_dflash_b16",
    "block": 16,
    "tau": 3.6559,
-   "step_cycles": 1503778,
-   "tokens_s": 2671.0,
-   "speedup": 3.033,
+   "step_cycles": 1504259,
+   "tokens_s": 2670.1,
+   "speedup": 3.032,
    "draft_bytes_per_die": 835630080.0,
    "verify_bytes_per_die": 4087886208
   },
@@ -314,31 +314,31 @@
    "design": "qwen_hbm_dflash_best",
    "block": 16,
    "tau": 3.6559,
-   "step_cycles": 1503778,
-   "tokens_s": 2671.0,
-   "speedup": 3.033,
+   "step_cycles": 1504259,
+   "tokens_s": 2670.1,
+   "speedup": 3.032,
    "draft_bytes_per_die": 835630080.0,
    "verify_bytes_per_die": 4087886208
   },
   {
    "design": "v41_hbm_ar",
-   "tokens_s": 2919.8,
-   "T_us": 342.5
+   "tokens_s": 2801.8,
+   "T_us": 356.9
   },
   {
    "design": "v41_hbm_mtp",
    "positions": 6,
    "tau": 3.649,
-   "verify_us": 617.5,
-   "draft_us": 25.7,
-   "tokens_s": 5673.0,
-   "speedup": 1.943,
+   "verify_us": 632.0,
+   "draft_us": 26.8,
+   "tokens_s": 5539.4,
+   "speedup": 1.977,
    "verify_breakdown_us": {
-    "sm_matvec": 66.9,
+    "sm_matvec": 73.7,
     "x_broadcast_fill": 45.7,
     "dedicated_and_su": 120.4,
     "verify_extra_issue": 229.4,
-    "barrier": 17.2,
+    "barrier": 24.8,
     "collective_latency": 125.9,
     "collective_bytes": 9.0,
     "pipeline_hops": 0.9,
@@ -365,14 +365,14 @@
     "scratch_kb": 64,
     "stack_levels": 5
    },
-   "drain_cycles": 66,
+   "drain_cycles": 89,
    "drain_basis": "measured (RTL)",
    "drain_formula_cycles": 78,
    "measured": {
-    "qwen_drain_cycles": 66,
-    "v41_drain_cycles": 70,
-    "qwen_barrier_cycles": 30,
-    "v41_barrier_cycles": 38,
+    "qwen_drain_cycles": 89,
+    "v41_drain_cycles": 95,
+    "qwen_barrier_cycles": 48,
+    "v41_barrier_cycles": 62,
     "sources": [
      "results/rtl/gpu_sm_exact.json",
      "results/rtl/gpu_sm_exact.json",
@@ -383,78 +383,78 @@
    "sm_count_sweep": [
     {
      "n_sm": 8,
-     "cycles": 4072812,
-     "tokens_s_pkg": 269.7
+     "cycles": 4081061,
+     "tokens_s_pkg": 269.2
     },
     {
      "n_sm": 12,
-     "cycles": 2742120,
-     "tokens_s_pkg": 400.7
+     "cycles": 2750369,
+     "tokens_s_pkg": 399.5
     },
     {
      "n_sm": 16,
-     "cycles": 2076774,
-     "tokens_s_pkg": 529.0
+     "cycles": 2085023,
+     "tokens_s_pkg": 526.9
     },
     {
      "n_sm": 20,
-     "cycles": 1677566,
-     "tokens_s_pkg": 654.9
+     "cycles": 1685815,
+     "tokens_s_pkg": 651.7
     },
     {
      "n_sm": 24,
-     "cycles": 1411428,
-     "tokens_s_pkg": 778.4
+     "cycles": 1419677,
+     "tokens_s_pkg": 773.9
     },
     {
      "n_sm": 28,
-     "cycles": 1247645,
-     "tokens_s_pkg": 880.6
+     "cycles": 1247686,
+     "tokens_s_pkg": 880.5
     },
     {
      "n_sm": 32,
-     "cycles": 1247645,
-     "tokens_s_pkg": 880.6
+     "cycles": 1247686,
+     "tokens_s_pkg": 880.5
     },
     {
      "n_sm": 36,
-     "cycles": 1247645,
-     "tokens_s_pkg": 880.6
+     "cycles": 1247686,
+     "tokens_s_pkg": 880.5
     },
     {
      "n_sm": 40,
-     "cycles": 1247645,
-     "tokens_s_pkg": 880.6
+     "cycles": 1247686,
+     "tokens_s_pkg": 880.5
     },
     {
      "n_sm": 44,
-     "cycles": 1247645,
-     "tokens_s_pkg": 880.6
+     "cycles": 1247686,
+     "tokens_s_pkg": 880.5
     },
     {
      "n_sm": 48,
-     "cycles": 1247645,
-     "tokens_s_pkg": 880.6
+     "cycles": 1247686,
+     "tokens_s_pkg": 880.5
     },
     {
      "n_sm": 52,
-     "cycles": 1247645,
-     "tokens_s_pkg": 880.6
+     "cycles": 1247686,
+     "tokens_s_pkg": 880.5
     },
     {
      "n_sm": 56,
-     "cycles": 1247645,
-     "tokens_s_pkg": 880.6
+     "cycles": 1247686,
+     "tokens_s_pkg": 880.5
     },
     {
      "n_sm": 60,
-     "cycles": 1247645,
-     "tokens_s_pkg": 880.6
+     "cycles": 1247686,
+     "tokens_s_pkg": 880.5
     },
     {
      "n_sm": 64,
-     "cycles": 1247645,
-     "tokens_s_pkg": 880.6
+     "cycles": 1247686,
+     "tokens_s_pkg": 880.5
     }
    ],
    "sm_count_min": 28,
@@ -504,78 +504,83 @@
     "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512"
    },
    "barrier": {
-    "arrive_cycles": 16,
-    "release_cycles": 15,
-    "round_trip_cycles": 31,
-    "max_leaf_um": 4261.7,
-    "max_trunk_um": 6762.3,
+    "arrive_cycles": 25,
+    "release_cycles": 24,
+    "round_trip_cycles": 49,
+    "max_leaf_um": 4253.5,
+    "max_trunk_um": 6489.3,
     "levels": 2,
     "source": "results/floorplan/hbm_gpu/qwen_hbm_die.json",
     "x_broadcast_tail_cycles": 16,
-    "measured_round_trip_cycles": 30,
-    "boundary_cycles": 46,
+    "measured_round_trip_cycles": 48,
+    "boundary_cycles": 64,
     "basis": "derived from the floorplan, measured in RTL (tb_gpu_barrier)"
    },
    "staging_sweep": [
     {
      "staging_kb_per_sm": 16,
-     "cycles": 1292616,
-     "tokens_s": 849.9
+     "cycles": 1299389,
+     "tokens_s": 845.5
     },
     {
      "staging_kb_per_sm": 32,
-     "cycles": 1268586,
-     "tokens_s": 866.0
+     "cycles": 1273842,
+     "tokens_s": 862.5
     },
     {
      "staging_kb_per_sm": 64,
-     "cycles": 1254917,
-     "tokens_s": 875.5
+     "cycles": 1257262,
+     "tokens_s": 873.8
     },
     {
      "staging_kb_per_sm": 128,
-     "cycles": 1247645,
-     "tokens_s": 880.6
+     "cycles": 1247686,
+     "tokens_s": 880.5
     },
     {
      "staging_kb_per_sm": 256,
-     "cycles": 1247645,
-     "tokens_s": 880.6
+     "cycles": 1247686,
+     "tokens_s": 880.5
     },
     {
      "staging_kb_per_sm": 512,
-     "cycles": 1247645,
-     "tokens_s": 880.6
+     "cycles": 1247686,
+     "tokens_s": 880.5
     },
     {
      "staging_kb_per_sm": 1024,
-     "cycles": 1247645,
-     "tokens_s": 880.6
+     "cycles": 1247686,
+     "tokens_s": 880.5
     }
    ],
    "token": {
-    "cycles": 1247645,
-    "tokens_s": 880.6,
+    "cycles": 1247686,
+    "tokens_s": 880.5,
     "hbm_cycles": 1247532,
-    "chain_cycles_if_serial": 1078755,
+    "chain_cycles_if_serial": 1087004,
     "boundaries": 181,
-    "exposed_over_hbm_cycles": 113,
-    "additive_model_tokens_s": 873.8,
+    "exposed_over_hbm_cycles": 154,
+    "additive_model_tokens_s": 871.6,
     "note": "the stream prefetches through every boundary; only what the SMEM staging cannot absorb and the last op's tail are exposed"
    },
    "staging_kb_per_sm": 128,
    "sm_area": {
     "logic_um2": {
-     "mma_lanes": 1163392,
-     "blockdot": 0,
-     "tree": 802346,
+     "mma_lanes_and_trees": 1919283,
+     "blockdot_and_trees": 0,
      "stack": 32428,
      "row_scale": 12532,
      "simt": 149605,
      "x_operand_regs": 19110
     },
-    "logic_mm2": 2.179,
-    "footprint_logic_mm2": 4.359,
+    "logic_mm2": 2.133,
+    "hardened_columns": {
+     "lane_with_tree": 897.15,
+     "lane_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json",
+     "blockdot_with_tree": 2736.77,
+     "blockdot_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json"
+    },
+    "footprint_logic_mm2": 4.266,
     "sram_kb": {
      "x_store": 384.0,
      "staging": 128,
@@ -587,7 +592,7 @@
      "scratch": 2
     },
     "sram_mm2": 0.355,
-    "total_mm2": 4.714,
+    "total_mm2": 4.621,
     "macs_per_clk": 2048
    },
    "l2": {
@@ -605,11 +610,11 @@
     "mapping": "each SM's weight rows live in its own quadrant's stack: no weight byte crosses the die"
    },
    "die_fit": {
-    "sm_array_mm2": 150.85,
+    "sm_array_mm2": 147.87,
     "l2_mm2": 4.13,
     "dedicated_mm2": 0.0,
     "core_avail_mm2": 688.44,
-    "used_mm2": 154.98,
+    "used_mm2": 152.0,
     "fits": true
    }
   },
@@ -633,14 +638,14 @@
     "group_slot": true,
     "gs_cols": 8
    },
-   "drain_cycles": 70,
+   "drain_cycles": 95,
    "drain_basis": "measured (RTL)",
    "drain_formula_cycles": 68,
    "measured": {
-    "qwen_drain_cycles": 66,
-    "v41_drain_cycles": 70,
-    "qwen_barrier_cycles": 30,
-    "v41_barrier_cycles": 38,
+    "qwen_drain_cycles": 89,
+    "v41_drain_cycles": 95,
+    "qwen_barrier_cycles": 48,
+    "v41_barrier_cycles": 62,
     "sources": [
      "results/rtl/gpu_sm_exact.json",
      "results/rtl/gpu_sm_exact.json",
@@ -694,31 +699,36 @@
     "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512"
    },
    "barrier": {
-    "arrive_cycles": 20,
-    "release_cycles": 19,
-    "round_trip_cycles": 39,
-    "max_leaf_um": 3530.5,
-    "max_trunk_um": 11354.7,
+    "arrive_cycles": 32,
+    "release_cycles": 31,
+    "round_trip_cycles": 63,
+    "max_leaf_um": 3248.2,
+    "max_trunk_um": 11033.7,
     "levels": 2,
     "source": "results/floorplan/hbm_gpu/v41_hbm_die.json",
     "x_broadcast_tail_cycles": 16,
-    "measured_round_trip_cycles": 38,
-    "boundary_cycles": 54,
+    "measured_round_trip_cycles": 62,
+    "boundary_cycles": 78,
     "basis": "derived from the floorplan, measured in RTL (tb_gpu_barrier)"
    },
    "staging_kb_per_sm": 128,
    "sm_area": {
     "logic_um2": {
-     "mma_lanes": 270368,
-     "blockdot": 190151,
-     "tree": 199007,
+     "mma_lanes_and_trees": 459341,
+     "blockdot_and_trees": 175153,
      "stack": 9728,
      "row_scale": 6266,
      "simt": 149605,
      "x_operand_regs": 9854
     },
-    "logic_mm2": 0.835,
-    "footprint_logic_mm2": 1.67,
+    "logic_mm2": 0.81,
+    "hardened_columns": {
+     "lane_with_tree": 897.15,
+     "lane_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json",
+     "blockdot_with_tree": 2736.77,
+     "blockdot_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json"
+    },
+    "footprint_logic_mm2": 1.62,
     "sram_kb": {
      "x_store": 80.0,
      "staging": 128,
@@ -730,7 +740,7 @@
      "scratch": 2
     },
     "sram_mm2": 0.601,
-    "total_mm2": 2.271,
+    "total_mm2": 2.221,
     "macs_per_clk": 2560
    },
    "l2": {
@@ -758,11 +768,11 @@
    "dedicated_units_footprint_mm2": 112.7,
    "dedicated_units_source": "spec widths as in results/uarch/v41_rom.json proposal hub (W11 builds them)",
    "die_fit": {
-    "sm_array_mm2": 72.67,
+    "sm_array_mm2": 71.07,
     "l2_mm2": 4.13,
     "dedicated_mm2": 112.7,
     "core_avail_mm2": 688.44,
-    "used_mm2": 189.5,
+    "used_mm2": 187.9,
     "fits": true
    }
   }

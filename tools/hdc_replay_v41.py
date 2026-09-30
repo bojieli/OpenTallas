@@ -43,6 +43,7 @@ from pathlib import Path
 import hdc_isa_v41 as I
 import hdc_program_v41 as P
 import hdc_timing_v41 as T
+import v41_program_constants as KC
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results/arch/v41_replay.json"
@@ -56,6 +57,8 @@ DY = I.DYN
 # -- shapes ------------------------------------------------------------------------------------------------
 RATIO = [0, 0] + [2] * 18 + [1] * 20
 KV_SRC, IDX_SRC, CAND_SRC, ENGRAM = [2, 8, 14, 20], [2, 8, 14, 20, 24, 28, 32, 36], 20, [1, 14]
+# The model whose inference_config.json supplies a shape's program constants (tools/v41_program_constants.py).
+CONSTANTS_MODEL = {"reduced-v2": "reduced-v2", "deepseek-v4.1-flash": "deepseek-v4.1-flash"}
 REDUCED = dict(name="reduced-v2", dim=160, hc=4, heads=64, hd=32, rd=4, ih=32, ihd=32, q_rank=32, o_groups=8,
                o_rank=32, n_exp=12, k_exp=6, moe_ff=64, window=128, topk=16, vocab=4040, ehd=32, ecols=24,
                cand_b=8, cand_k=64, scan_cap=0, t_max=144, pmax=128, groups=4, tp=1)
@@ -249,9 +252,41 @@ class ShapeBuilder(P.Builder):
         self.K = lay.kv
         self.engram_inline = engram_inline
         s = self.s
-        self.m = type("M", (), dict(eps=1e-6, hc_eps=1e-6, index_w_scale=1.0, attn_scale=1.0, limit=10.0,
-                                    route_scale=1.0, engram_scale=1.0, ih=s["ih"], heads=lay.heads_d,
-                                    k_exp=s["k_exp"], n_exp=s["n_exp"]))()
+        # Every immediate comes from the checked constants manifest (tools/v41_program_constants.py), derived
+        # from the model's config and the golden; none is a literal here.  Each emitted immediate is annotated
+        # (`_imm`: field -> manifest name) so the encoded program can be checked against the manifest.
+        self.consts = KC.load(CONSTANTS_MODEL[s["name"]])
+        c = {k: v["value"] for k, v in self.consts.items()}
+        self.m = type("M", (), dict(eps=c["norm_eps"], hc_eps=c["hc_eps"], index_w_scale=c["index_w_scale"],
+                                    attn_scale=c["attn_scale"], limit=c["swiglu_limit"],
+                                    route_scale=c["route_scale"], engram_scale=c["engram_scale"],
+                                    ih=s["ih"], heads=lay.heads_d, k_exp=s["k_exp"], n_exp=s["n_exp"]))()
+        self._counts = {v["f32_bits"]: k for k, v in self.consts.items() if k.startswith("count_")}
+
+    def imm(self, name):
+        """The float32 bits of manifest constant `name`."""
+        return KC.bits(self.consts, name)
+
+    def count(self, n):
+        """(bits, manifest name) of a DIVIMM mean count; a count the manifest does not derive fails closed."""
+        b = f"0x{KC.f32_bits(n):08x}"
+        if b not in self._counts:
+            raise ValueError(f"reduction count {n} is not a manifest count {sorted(self._counts.values())}")
+        return int(b, 16), self._counts[b]
+
+    def su(self, reads, writes, tag, _imm=None, **f):
+        """Stream op; `_imm` names the manifest constant of each immediate field it sets."""
+        if _imm:
+            for field, name in _imm.items():
+                assert f.get(field) == self.imm(name), (tag, field, name)
+            f["_imm"] = dict(_imm)
+        super().su(reads, writes, tag, **f)
+
+    def rms_r(self, ss, n, dst, tag, pred=0):
+        cb, cname = self.count(n)
+        self.su({ss}, {dst}, tag, pred=pred, su_nout=1, su_nin=1, a_base=self.V[ss], m1=I.M1_DIVIMM,
+                imm1=cb, ad=I.AD_IMM, imm2=self.imm("norm_eps"), sfu=I.SFU_RSQRT, dst=I.DST_VM,
+                o_base=self.V[dst], _imm={"imm1": cname, "imm2": "norm_eps"})
 
     # annotate MACs / KV-sourced for the design-option pricing
     def me(self, mat, x, out, reads, writes, tag, **over):
@@ -295,9 +330,10 @@ class ShapeBuilder(P.Builder):
         common = dict(a_si=1, b_base=V_["RF"], m1=I.M1_AB, c_src=I.SRC_CLO, c_si=1, m2=I.M2_C,
                       d_src=I.SRC_CLO, d_si=1, ad=I.AD_D, dst=I.DST_VM, o_si=1, su_nout=1)
         self.su({"MIX", "RF"}, {Pn}, t, su_nin=4, a_base=V_["MIX"], c_base=sc, d_base=bs, sfu=I.SFU_SIGM,
-                e1=I.E1_ADDIMM, imm2=0, o_base=V_[Pn], **common)
+                e1=I.E1_ADDIMM, imm2=self.imm("hc_eps"), o_base=V_[Pn], _imm={"imm2": "hc_eps"}, **common)
         self.su({"MIX", "RF"}, {PO}, t, su_nin=4, a_base=V_["MIX"] + 4, c_base=sc + 4, d_base=bs + 4,
-                sfu=I.SFU_SIGM, e1=I.E1_MULIMM, imm2=0, o_base=V_[PO], **common)
+                sfu=I.SFU_SIGM, e1=I.E1_MULIMM, imm2=self.imm("hc_post_scale"), o_base=V_[PO],
+                _imm={"imm2": "hc_post_scale"}, **common)
         common["su_nout"] = 4
         self.su({"MIX", "RF"}, {"CRAW", "M4"}, t, su_nin=4, a_base=V_["MIX"] + 8, a_so=4, c_base=sc + 8, c_so=4,
                 d_base=bs + 8, d_so=4, o_base=V_["CRAW"], o_so=4, red=I.RED_MAX, r_base=V_["M4"], r_so=1,
@@ -350,11 +386,14 @@ class ShapeBuilder(P.Builder):
         self.su({"H", "EKV"}, {"ED"}, t, su_nout=4, su_nin=D, a_base=h, a_so=D, a_si=1, b_src=I.SRC_CLO,
                 b_base=0, b_so=D, b_si=1, m1=I.M1_AB, c_base=V_["EKV"], c_so=D, c_si=1,
                 m2=I.M2_C, red=I.RED_SUM, r_base=V_["ED"], r_so=1)
+        cb, cname = self.count(D)
         self.su({"ESS"}, {"ERS"}, t, su_nout=1, su_nin=8, a_base=V_["ESS"], a_si=1, m1=I.M1_DIVIMM,
-                imm1=0, ad=I.AD_IMM, imm2=0, sfu=I.SFU_RSQRT, dst=I.DST_VM, o_base=V_["ERS"], o_si=1)
+                imm1=cb, ad=I.AD_IMM, imm2=self.imm("norm_eps"), sfu=I.SFU_RSQRT, dst=I.DST_VM,
+                o_base=V_["ERS"], o_si=1, _imm={"imm1": cname, "imm2": "norm_eps"})
         self.su({"ERS", "ED"}, {"EDOT"}, t, su_nout=1, su_nin=4, a_base=V_["ERS"], a_si=1, b_base=V_["ERS"] + 4,
                 b_si=1, m1=I.M1_AB, c_base=V_["ED"], c_si=1, m2=I.M2_C, e1=I.E1_MULIMM,
-                imm2=0, dst=I.DST_VM, o_base=V_["EDOT"], o_si=1)
+                imm2=self.imm("engram_scale"), dst=I.DST_VM, o_base=V_["EDOT"], o_si=1,
+                _imm={"imm2": "engram_scale"})
         self.su({"EDOT"}, {"EG"}, t, su_nout=1, su_nin=4, a_base=V_["EDOT"], a_si=1, sfu=I.SFU_EGATE,
                 dst=I.DST_VM, o_base=V_["EG"], o_si=1)
         self.su({"EKV", "EG", "H"}, {"H", "SSX"}, t, su_nout=4, su_nin=D, a_base=V_["EKV"] + 4 * D, a_si=1,
@@ -441,7 +480,8 @@ class ShapeBuilder(P.Builder):
         self.qdq(I.QE_QDQ4, "IQ", ih * ihd // 32, V_["IQQ"], {"IQQ"}, t, pred)
         self.me(lay.mat[(L, "iwp")], V_["XN"], V_["WP"], {"XN"}, {"WP"}, t, pred=pred)
         self.su({"WP"}, {"WTS"}, t, pred=pred, su_nout=1, su_nin=ih, a_base=V_["WP"], a_si=1, a_rnd=1,
-                m1=I.M1_AIMM, imm1=0, rnd=1, dst=I.DST_VM, o_base=V_["WTS"], o_si=1)
+                m1=I.M1_AIMM, imm1=self.imm("index_w_scale"), rnd=1, dst=I.DST_VM, o_base=V_["WTS"], o_si=1,
+                _imm={"imm1": "index_w_scale"})
         self.kv_heads(ih, ihd, "IQQ", f"IK{src}", nsc, t, pred)
         STR = s["t_max"]
         self.su({"S", "WTS"}, {"IS"}, t, pred=pred, su_nout=0, su_d_nout=nsc, su_nin=ih, a_base=V_["S"], a_so=1,
@@ -532,7 +572,8 @@ class ShapeBuilder(P.Builder):
         sm = dict(su_nout=hdd, su_nin=0, su_d_nin=Tn, a_base=V_["S"], a_so=STR, a_si=1, dst=I.DST_VM,
                   o_base=V_["S"], o_so=STR, o_si=1)
         tsm = f"L{L}.softmax"
-        self.su({"S"}, {"S", "M"}, tsm, m1=I.M1_AIMM, imm1=0, red=I.RED_MAX, r_base=V_["M"], r_so=1, **sm)
+        self.su({"S"}, {"S", "M"}, tsm, m1=I.M1_AIMM, imm1=self.imm("attn_scale"), red=I.RED_MAX, r_base=V_["M"],
+                r_so=1, _imm={"imm1": "attn_scale"}, **sm)
         self.su({"S", "M"}, {"S", "Z"}, tsm, b_base=V_["M"], b_so=1, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM,
                 r_base=V_["Z"], r_so=1, **sm)
         if hook and P.ATTN_HOOK == "softmax":
@@ -602,8 +643,9 @@ class ShapeBuilder(P.Builder):
                 ind = dict(qe_ind=1, qe_ibase=V_["EID"] + k, qe_istride=stride)
                 ind2 = dict(ind, qe_istride=lay.qmat[(L, "exp_stride", "w2")]) if self.tp_exact else ind
             gu = V_[f"GU{k}"]
-            f = dict(su_nout=1, su_nin=ff, a_base=gu, a_si=1, a_min=1, imm3=0, c_base=gu + ff, c_si=1,
-                     c_clip=1, sfu=I.SFU_SILU, e1=I.E1_MULC, rnd=1, dst=I.DST_VM, o_base=V_[f"ACT{k}"], o_si=1)
+            f = dict(su_nout=1, su_nin=ff, a_base=gu, a_si=1, a_min=1, imm3=self.imm("swiglu_limit"),
+                     c_base=gu + ff, c_si=1, c_clip=1, sfu=I.SFU_SILU, e1=I.E1_MULC, rnd=1, dst=I.DST_VM,
+                     o_base=V_[f"ACT{k}"], o_si=1, _imm={"imm3": "swiglu_limit"})
             if not shared:
                 f.update(b_base=V_["WGT"] + k, e2=I.E2_MULB)
             def activate():
@@ -647,11 +689,11 @@ class ShapeBuilder(P.Builder):
         self.xu({"BI"}, {"EID"}, t, xu_op=I.XU_SEL, xu_src=V_["BI"], xu_dst=V_["EID"], xu_n=m.n_exp, xu_k=m.k_exp)
         self.su({"SC", "EID"}, {"TOT"}, t, su_nout=1, su_nin=m.k_exp, a_base=V_["SC"], a_si=1, a_ind=I.IND_I,
                 a_ibase=V_["EID"], red=I.RED_SEQ, r_base=V_["TOT"])
-        self.su({"TOT"}, {"DEN1"}, t, su_nout=1, su_nin=1, a_base=V_["TOT"], ad=I.AD_IMM, imm2=0,
-                dst=I.DST_VM, o_base=V_["DEN1"])
+        self.su({"TOT"}, {"DEN1"}, t, su_nout=1, su_nin=1, a_base=V_["TOT"], ad=I.AD_IMM,
+                imm2=self.imm("router_den_eps"), dst=I.DST_VM, o_base=V_["DEN1"], _imm={"imm2": "router_den_eps"})
         self.su({"SC", "EID", "DEN1"}, {"WGT"}, t, su_nout=1, su_nin=m.k_exp, a_base=V_["SC"], a_si=1,
                 a_ind=I.IND_I, a_ibase=V_["EID"], b_base=V_["DEN1"], m1=I.M1_DIVB, m2=I.M2_IMM,
-                imm1=0, dst=I.DST_VM, o_base=V_["WGT"], o_si=1)
+                imm1=self.imm("route_scale"), dst=I.DST_VM, o_base=V_["WGT"], o_si=1, _imm={"imm1": "route_scale"})
         ex = [expert(k) for k in range(m.k_exp)]
         ex[0][0]()
         if m.k_exp > 1:

@@ -11,11 +11,12 @@
 // the op does not use carries +0, which is the golden's +0 padding: the
 // adder's zero bypass makes x + (+0) = x bit for bit.
 //
-// One vector per cycle; LATENCY = 5 * log2(N).  `tag` travels with the sum.
+// One vector per cycle; LATENCY = ALAT * log2(N).  `tag` travels with the sum.
 // ---------------------------------------------------------------------------
 module ot_gpu_tree #(
     parameter integer N    = 32,
-    parameter integer TAGW = 8
+    parameter integer TAGW = 8,
+    parameter integer ALAT = 7      // adder latency (ot_gpu_fadd)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -32,7 +33,7 @@ module ot_gpu_tree #(
     wire [(2*N-1)*32-1:0] nodes;
     wire [(N > 1 ? N-1 : 1)-1:0] nf;
     assign nodes[N*32-1:0] = d;
-    localparam integer VD = (LEV > 0) ? 5*LEV : 2;
+    localparam integer VD = (LEV > 0) ? ALAT*LEV : 2;
     wire [VD:0] vl;
     ot_hdc_vline #(.D(VD)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vl));
     genvar lv, i;
@@ -41,14 +42,14 @@ module ot_gpu_tree #(
             for (i = 0; i < (N >> (lv + 1)); i = i + 1) begin : g_add
                 wire [31:0] a = nodes[(2*N - 2*(N >> lv) + 2*i) * 32 +: 32];
                 wire [31:0] b = nodes[(2*N - 2*(N >> lv) + 2*i + 1) * 32 +: 32];
-                ot_hdc_fadd u_add (.clk(clk), .rst_n(rst_n), .v(vl[5*lv]), .a(a), .b(b),
+                ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(vl[ALAT*lv]), .a(a), .b(b),
                                    .y(nodes[(2*N - 2*(N >> (lv + 1)) + i) * 32 +: 32]),
                                    .fault(nf[(N - (N >> lv)) + i]));
             end
         end
     endgenerate
-    ot_hdc_delay #(.W(TAGW), .D(5*LEV)) u_tag (.clk(clk), .rst_n(rst_n), .d(tag), .q(otag));
-    assign ov = (LEV > 0) ? vl[5*LEV] : v;
+    ot_hdc_delay #(.W(TAGW), .D(ALAT*LEV)) u_tag (.clk(clk), .rst_n(rst_n), .d(tag), .q(otag));
+    assign ov = (LEV > 0) ? vl[ALAT*LEV] : v;
     assign y = nodes[(2*N-2)*32 +: 32];
     assign fault = (LEV > 0) ? |nf : 1'b0;
 endmodule

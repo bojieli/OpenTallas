@@ -26,7 +26,8 @@
 module ot_gpu_stack #(
     parameter integer LEV  = 5,     // levels: G <= 2^LEV groups per row
     parameter integer IL   = 8,     // slots (rows in flight)
-    parameter integer TAGW = 8      // tag travelling with the result (row id)
+    parameter integer TAGW = 8,     // tag travelling with the result (row id)
+    parameter integer ALAT = 7      // adder latency (ot_gpu_fadd)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -90,13 +91,13 @@ module ot_gpu_stack #(
             always @(posedge clk) if (v_in && !last_in && !have) pend_d[s_in] <= d_in;
             // the level's adder: pending + incoming, or incoming + (+0) for an unpaired final partial
             wire [31:0] sum;
-            ot_hdc_fadd u_add (.clk(clk), .rst_n(rst_n), .v(go), .a(opa), .b(d_in), .y(sum), .fault(lf[l]));
-            wire [5:0] gv;
-            ot_hdc_vline #(.D(5)) u_gv (.clk(clk), .rst_n(rst_n), .v(go), .vd(gv));
+            ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(go), .a(opa), .b(d_in), .y(sum), .fault(lf[l]));
+            wire [ALAT:0] gv;
+            ot_hdc_vline #(.D(ALAT)) u_gv (.clk(clk), .rst_n(rst_n), .v(go), .vd(gv));
             wire [SW+TAGW:0] meta_q;
-            ot_hdc_delay #(.W(SW+TAGW+1), .D(5)) u_meta (.clk(clk), .rst_n(rst_n),
+            ot_hdc_delay #(.W(SW+TAGW+1), .D(ALAT)) u_meta (.clk(clk), .rst_n(rst_n),
                                                          .d({last_in, s_in, t_in}), .q(meta_q));
-            assign lv_v[l+1] = gv[5];
+            assign lv_v[l+1] = gv[ALAT];
             assign lv_last[l+1] = meta_q[SW+TAGW];
             assign lv_slot[SW*(l+1) +: SW] = meta_q[SW+TAGW-1:TAGW];
             assign lv_tag[TAGW*(l+1) +: TAGW] = meta_q[TAGW-1:0];

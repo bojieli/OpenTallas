@@ -21531,7 +21531,7 @@
    "decision_owner": "root (claude-main)"
   },
   "records_sha256": {
-   "results/rtl/v41_tp_layer0_collective_sequence.json": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0",
+   "results/rtl/v41_tp_layer0_collective_sequence.json": "7b01efa2927f7dd34173227cad7e026c37c329bf637375d57f9b98e704c11371",
    "results/arch/v41_single_token_schedule_preflight.json": "0e79822c428b82c2a61e999df00aa114fc291533063e839bdae3233c40937468",
    "results/rtl/v41x_coll_gw4_gate.json": "94c2ee4fc5e16bfcc6540907c9492273cd63e933f98407080133a1167194bbd6",
    "results/rtl/v41_tp_rowsplit_die_collectives.json": "37c388dc6149b3b1c4c77bf1c7f99860d4640af7a557c8d24cf1b0d7757edc13",
@@ -21544,5 +21544,17 @@
    "tools/arch_utilization_v41.py": "ecad26a759b5c57194c99def5100c6ff7685a2736233ee05ceb80b05551deef9"
   }
  },
- "claim_boundary": "counts and widths the die RTL elaborates at FULL_SHAPE=1 with default parameters; no area, frequency, throughput or token-rate claim; D1 latency figures marked ESTIMATE are derived from measured decompositions and are not measurements"
+ "claim_boundary": "counts and widths the die RTL elaborates at FULL_SHAPE=1 with default parameters; no area, frequency, throughput or token-rate claim; D1 latency figures marked ESTIMATE are derived from measured decompositions and are not measurements",
+ "repin_20260930": {
+  "label": "stale: program changed",
+  "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+  "rerun": false,
+  "changed_pins": {
+   "results/rtl/v41_tp_layer0_collective_sequence.json": {
+    "old": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0",
+    "new": "7b01efa2927f7dd34173227cad7e026c37c329bf637375d57f9b98e704c11371"
+   }
+  },
+  "historical_copy": null
+ }
 }

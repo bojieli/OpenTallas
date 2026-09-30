@@ -661,7 +661,10 @@ def rtl_engine_preflight(layout: dict) -> dict:
     }
 
     def param(path: Path, name: str) -> int:
-        match = re.search(rf"parameter\s+integer\s+{name}\s*=\s*(\d+)", path.read_text())
+        # A plain default, or a profile select `FULL_SHAPE ? full : reduced` (the full-shape value applies).
+        text = path.read_text()
+        match = re.search(rf"parameter\s+integer\s+{name}\s*=\s*FULL_SHAPE\s*\?\s*(\d+)\s*:\s*\d+", text) or \
+            re.search(rf"parameter\s+integer\s+{name}\s*=\s*(\d+)", text)
         if match is None:
             raise ValueError(f"cannot read RTL parameter {name} in {path}")
         return int(match.group(1))
@@ -701,8 +704,8 @@ def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -
     Unsupported/absent inputs are listed so a consumer must fail closed.
     """
     manifest = json.loads(manifest_path.read_text())
-    if manifest.get("layer") != 0 or manifest.get("rank") != 0 or manifest.get("context") != 200000:
-        raise ValueError("assembler is pinned to 200K/L0/rank0")
+    if manifest.get("layer") != 0 or manifest.get("rank") != 0 or manifest.get("context") not in (200000, 1048576):
+        raise ValueError("assembler is pinned to L0/rank0 at the 200K or 1M shard")
     out_dir.mkdir(parents=True, exist_ok=True)
     record_paths = []
     qe_base = 0
