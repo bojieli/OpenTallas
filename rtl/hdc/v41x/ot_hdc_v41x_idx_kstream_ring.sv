@@ -255,7 +255,8 @@ module ot_hdc_v41x_idx_kctl_ring #(
     generate
         for (gq = 0; gq < NPC; gq = gq + 1) begin : g_rr
             wire [BW-1:0] t = rsp_tag[gq*TAGW +: BW];
-            wire          bor = th[t[SW-1:0]];
+            wire [WB-1:0] tdec = WB'(1) << t[SW-1:0];
+            wire          bor = |(tdec & th);
             if (UW > 0) begin : g_u
                 assign rsp_rdy[gq] = bor ? (t[BW-1:SW] == d_hu1) : (t[BW-1:SW] == d_hi[BW-1:SW]);
             end else begin : g_n
@@ -284,7 +285,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
     end
     // left[p][tag entry] read a cycle ahead of its count, with this edge's writes forwarded:
     // the issue (wins, as in the main block) and the counted response
-    wire           run_upd = run && !(cmd_v && !busy);
+    wire           run_upd = run;              // run implies busy, so no command is accepted then
     integer pl;
     always @(posedge clk)
         for (pl = 0; pl < NPC; pl = pl + 1) begin
@@ -296,7 +297,10 @@ module ot_hdc_v41x_idx_kctl_ring #(
     integer pf;
     always @(posedge clk) begin
         if (rst_n) begin
-            if (cmd_v && !busy) begin
+            // idle: the command-derived state tracks the command inputs every cycle, so the
+            // edge that accepts a command loads it without cmd_v in its select (run implies
+            // busy: the run branch never overlaps an accepted command)
+            if (!busy) begin
                 for (pf = 0; pf < NPC; pf = pf + 1) begin
                     g_more[pf] <= c_more; g_wrapn[pf] <= 1'b0;
                     g_first[pf] <= c_nz1; g_lo16[pf] <= 1'b1;
@@ -362,15 +366,18 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     if (lval[p] == 3'd1) cc[p][rr_s[p]] <= 1'b1;
                 end
             end
-            if (cmd_v && !busy) begin
+            if (!busy) begin
+                if (cmd_v) begin
+                    // (d_hi, th, d_hu1 set the return gate, an output: they move only on a command)
+                    run <= 1'b1; busy <= 1'b1; ph <= 2'd1;
+                    d_hi <= 0; d_oh <= WB'(1); th <= '0; d_hu1 <= 1;
+                end
                 first_skip<=cmd_skip;
                 base2 <= cmd_base2; span2 <= cmd_nkeys2; m2 <= sbkeys(cmd_nkeys2);
-                run <= 1'b1; busy <= 1'b1;
-                d_hi <= 0; d_oh <= WB'(1); th <= '0; d_hu1 <= 1; d_abs <= cmd_base; d_abs1 <= cmd_base + 1'b1; d_fold <= fold(cmd_base); d_bidx <= 0;
+                d_abs <= cmd_base; d_abs1 <= cmd_base + 1'b1; d_fold <= fold(cmd_base); d_bidx <= 0;
                 r_span <= cmd_span; b2p1 <= cmd_base2 + 1'b1; fb2 <= fold(cmd_base2);
                 d_m <= c_m; d_q <= 0; d_kb <= 0; qz <= 4'b1111;
                 d_more <= c_more; d_wrapn <= 1'b0;
-                ph <= 2'd1;
                 t_n[1] <= c_hz1 && c_hz2 && c_bss == 1;
                 t_n[2] <= c_hz1 && c_hz2 && c_bss == 2;
                 t_n[3] <= c_hz1 && c_hz2 && c_bss == 3;
