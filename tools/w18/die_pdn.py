@@ -98,6 +98,21 @@ def tiles(x: float, y: float, w: float, h: float, tmax: float) -> list[tuple[flo
     return [(round(x + i * tw, 3), round(y + j * th, 3), tw, th) for j in range(ny) for i in range(nx)]
 
 
+def load_lef(name: str, w: float, h: float, note: str) -> str:
+    """A die-level current-map tile: the block's own grid is M7 and below (OBS M2-M7), the die grid (M8/M9)
+    runs over it; VDD/VSS are token M1 pins so the instance is on the nets (PSM draws its current at the
+    nearest node of the die grid's lowest layer)."""
+    return "\n".join([f"# W18 die-level load tile: {note}", "VERSION 5.8 ;", 'BUSBITCHARS "[]" ;',
+                      'DIVIDERCHAR "/" ;', f"MACRO {name}", "  CLASS BLOCK ;", f"  FOREIGN {name} 0 0 ;",
+                      "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;",
+                      "  PIN VDD", "    DIRECTION INOUT ;", "    USE POWER ;", "    PORT", "      LAYER M1 ;",
+                      "        RECT 0.100 0.100 0.200 0.200 ;", "    END", "  END VDD",
+                      "  PIN VSS", "    DIRECTION INOUT ;", "    USE GROUND ;", "    PORT", "      LAYER M1 ;",
+                      "        RECT 0.300 0.100 0.400 0.200 ;", "    END", "  END VSS",
+                      "  OBS"] + [f"    LAYER M{i} ;\n      RECT 0 0 {w:.3f} {h:.3f} ;" for i in range(2, 8)]
+                     + ["  END", f"END {name}", "END LIBRARY", ""])
+
+
 def def_file(design: str, w: float, h: float, comps: list[tuple[str, str, float, float, str]]) -> str:
     d = ["VERSION 5.8 ;", 'DIVIDERCHAR "/" ;', 'BUSBITCHARS "[]" ;', f"DESIGN {design} ;",
          "UNITS DISTANCE MICRONS 1000 ;", f"DIEAREA ( 0 0 ) ( {round(w * 1000)} {round(h * 1000)} ) ;",
@@ -197,15 +212,26 @@ def die_case(a) -> dict:
     def blk(kind, w, h, note):
         nm = f"w18p_{kind}_{round(w * 1000)}x{round(h * 1000)}"
         if nm not in lefs:
-            lefs[nm] = block_lef(nm, w, h, note)
+            lefs[nm] = load_lef(nm, w, h, note)
         return nm
+
+    win = a.window                     # die-level window (um): the bump array makes IR local
+    wx0, wy0 = (win[0], win[1]) if win else (0.0, 0.0)
 
     def add(name, kind, x, y, w, h, watts, note, tmax):
         ts = tiles(x, y, w, h, tmax)
         for i, (tx, ty, tw, th) in enumerate(ts):
+            pw_ = watts / len(ts)
+            if win:
+                cx0, cy0 = max(tx, win[0]), max(ty, win[1])
+                cx1, cy1 = min(tx + tw, win[2]), min(ty + th, win[3])
+                if cx1 - cx0 < 1.0 or cy1 - cy0 < 1.0:
+                    continue
+                pw_ *= (cx1 - cx0) * (cy1 - cy0) / (tw * th)
+                tx, ty, tw, th = round(cx0 - wx0, 3), round(cy0 - wy0, 3), round(cx1 - cx0, 3), round(cy1 - cy0, 3)
             n = f"{name}_t{i}"
             comps.append((n, blk(kind, tw, th, note), tx, ty, "R0"))
-            power[n] = watts / len(ts)
+            power[n] = pw_
             kinds[n] = kind
 
     for c in fp["clusters"]:
@@ -231,6 +257,8 @@ def die_case(a) -> dict:
             w, h = {"SERDES": (1000.08, 401.76), "UCIE": (1043.28, 388.8)}[grp]
         add(nm, grp.lower(), x, y, w, h, {"HBM_PHY": a.phy_w, "SERDES": a.serdes_w, "UCIE": a.ucie_w}[grp],
             f"{grp} power abstract ({master}); internal grid checked separately", 500.0)
+    if win:
+        W, H = round(win[2] - win[0], 3), round(win[3] - win[1], 3)
     for nm, t in lefs.items():
         (run / f"{nm}.lef").write_text(t)
     (run / "top.def").write_text(def_file("w18_die", W, H, comps))
@@ -249,9 +277,9 @@ add_global_connection -net {{VDD}} -inst_pattern {{.*}} -pin_pattern {{^VDD$}} -
 add_global_connection -net {{VSS}} -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -ground
 set_voltage_domain -name {{CORE}} -power {{VDD}} -ground {{VSS}}
 define_pdn_grid -name {{die}} -voltage_domains {{CORE}} -pins {{M9}}
+add_pdn_stripe -grid {{die}} -layer {{M8}} -width {{{M8['width']}}} -spacing {{{M8['spacing']}}} -pitch {{{M8['pitch']}}} -offset {{{M8['pitch'] / 4 - M8['width'] / 2 + 1.0}}}
 add_pdn_stripe -grid {{die}} -layer {{M9}} -width {{{M9['width']}}} -spacing {{{M9['spacing']}}} -pitch {{{M9['pitch']}}} -offset {{2.0}}
-define_pdn_grid -macro -cells {{{' '.join(lefs)}}} -halo "0 0 0 0" -voltage_domains {{CORE}} -name {{Blocks}}
-add_pdn_connect -grid {{Blocks}} -layers {{M8 M9}}
+add_pdn_connect -grid {{die}} -layers {{M8 M9}}
 if {{[catch {{pdngen}} err]}} {{ puts "OT_PDN status=FAIL err=$err" }} else {{
   set nsw 0; foreach net [$block getNets] {{ foreach sw [$net getSWires] {{ incr nsw [llength [$sw getWires]] }} }}
   puts "OT_PDN status=PASS special_wire_shapes=$nsw" }}
@@ -272,7 +300,9 @@ exit
     (run / "power_map.json").write_text(json.dumps({n: [kinds[n], round(p, 6)] for n, p in power.items()}))
     for n, p in power.items():
         tot[kinds[n]] = tot.get(kinds[n], 0.0) + p
-    meta = dict(level="die", size_um=[W, H], instances=len(comps), abstracts=len(lefs),
+    meta = dict(level="die", window_um=win, size_um=[W, H], grid_note=("die grid = M8 + M9 mesh over every block (the blocks' "
+                "own grids are M7 and below: the cluster level analyses M7 from ideal M8 pins, so M8 is counted at "
+                "both levels -- conservative); loads = current-map tiles"), instances=len(comps), abstracts=len(lefs),
                 power_w_by_kind={k: round(v, 3) for k, v in tot.items()}, power_w_total=round(sum(power.values()), 3),
                 pair_w=a.pair_w, duty=a.duty, pair_idle_w=a.pair_idle_w, hub_w_per_mm2=a.hub_w_mm2, phy_w=a.phy_w, serdes_w=a.serdes_w, ucie_w=a.ucie_w,
                 grid=dict(M9=M9, block_pins=M8), bumps=BUMP, sources="BUMPS on M9 (micro-bump array)",
@@ -358,6 +388,8 @@ def main(argv=None):
             p.add_argument("--pack", type=Path, required=True)
             p.add_argument("--hub-w-mm2", type=float, default=3.53, help="hub/service W/mm2 (default: pair density)")
             p.add_argument("--duty", type=float, default=1.0, help="ROM-field busy fraction (saturation map)")
+            p.add_argument("--window", type=float, nargs=4, metavar=("X0", "Y0", "X1", "Y1"),
+                           help="analyse this window of the die (um); default the whole die")
             p.add_argument("--pair-idle-w", type=float, default=0.00022, help="idle pair W (0.00022 ideal ICG)")
             p.add_argument("--phy-w", type=float, default=7.7, help="on-die HBM share per stack at full rate")
             p.add_argument("--serdes-w", type=float, default=0.5)

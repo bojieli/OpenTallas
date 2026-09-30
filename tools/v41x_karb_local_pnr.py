@@ -40,7 +40,8 @@ CLOCK_NS = 0.92
 UNCERTAINTY_NS = 0.06
 AW, TAGW, LENW, BEATW, DW = 30, 16, 4, 4, 256
 ENV_H = 64.0
-K_SPAN = (200.0, 370.0)          # regional K port on the slice's top edge (v1 PHY window 375 um)
+K_SPAN = (200.0, 370.0)
+EPC_OUTER = 14                   # outermost region's credits, 2 * hops + 2 (12 mm PHY: 6 hops)          # regional K port on the slice's top edge (v1 PHY window 375 um)
 HOLD_NS = None                   # W18 --phy-e8p5: project SDC policy 25 ps hold uncertainty
 BUFFER_HOOK = "physical/abi3/v41x_karb_repair_buffer_cap.tcl"
 KARB = ["rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv"]
@@ -163,7 +164,7 @@ def pslice_case() -> dict:
         r"^(b_v|b_rdy|b_we|b_wr_done|b_rsp_v|b_rsp_rdy)$|^(b_addr|b_len|b_tag|b_wdata|b_wstrb|b_rsp_tag|b_rsp_beat|"
         r"b_rsp_data)\[\d+\]$" + f"=top:{span(0, *PC_PIN_SPAN)}",
         r"^(kin_v|kin_we|k_pop|k_wr_done|ks_v|ks_cr|b_grant|contend|clk|rst_n)$|^(kin_addr|kin_len|kin_tag|kin_wdata|"
-        r"kin_wstrb|ks_tag|ks_beat|ks_data)\[\d+\]$" + f"=top:{200:g}-{370:g}",
+        r"kin_wstrb|ks_tag|ks_beat|ks_data)\[\d+\]$" + f"=top:{K_SPAN[0]:g}-{K_SPAN[1]:g}",
     ]
     srcs = ["rtl/chip/ot_chip_v41x_karb_pslice.sv", "rtl/chip/ot_chip_v41x_karb_slice.sv", *KARB]
     args = common("ot_chip_v41x_karb_pslice", srcs, w, h, [f"AW={AW}"])
@@ -188,7 +189,7 @@ def pregion_case() -> dict:
     srcs = ["rtl/chip/ot_chip_v41x_karb_pregion.sv", "rtl/chip/ot_chip_v41x_karb_pslice.sv",
             "rtl/chip/ot_chip_v41x_karb_slice.sv", *KARB]
     # EPC: the outermost region's credits (2 * 6 + 2)
-    args = common("ot_chip_v41x_karb_pregion", srcs, w, h, [f"AW={AW}", "EPC=14"])
+    args = common("ot_chip_v41x_karb_pregion", srcs, w, h, [f"AW={AW}", f"EPC={EPC_OUTER}"])
     for r in regions:
         args += ["--pin-region", r]
     return {"args": args, "nickname": "w2a_karb_pregion_aw30",
@@ -245,6 +246,7 @@ CASES = {"slice": slice_case, "region": region_case, "stack_ep": stack_ep_case, 
          "trunk_end": lambda: trunk_case(11400.0, "_end"), "trunk_mid": lambda: trunk_case(3150.0, "_mid"),
          # the pipelined partition (ot_chip_v41x_hbm_karb_pipe)
          "pslice": pslice_case, "pregion": pregion_case, "proot": proot_case,
+         "link600": lambda: link_case(600.0),
          "link_1000": link_case, "link_750": lambda: link_case(750.0), "link_1250": lambda: link_case(1250.0)}
 
 
@@ -268,6 +270,8 @@ def main() -> int:
     if a.phy_e8p5:
         global PHY_PC_WINDOW_UM, PC_PIN_SPAN, K_SPAN, HOLD_NS
         PHY_PC_WINDOW_UM, PC_PIN_SPAN, K_SPAN, HOLD_NS = 265.584, (0.96, 120.384), (125.28, 262.08), 0.025
+        global EPC_OUTER
+        EPC_OUTER = 2 * 4 + 2          # 8.5 mm PHY: the outermost region centre is 3.72 mm out -> 4 hops of <= 1 mm
     c = CASES[a.case]()
     if a.phy_e8p5:
         c["nickname"] += "_w18e8p5"

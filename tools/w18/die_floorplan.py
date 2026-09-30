@@ -181,11 +181,14 @@ def main(argv=None):
     ap.add_argument("--row-channel-um", type=float, default=8.64)
     ap.add_argument("--col-gap-um", type=float, default=8.64)
     ap.add_argument("--spine-um", type=float, default=PK.SPINE_H)
+    ap.add_argument("--pairs-needed", type=int, default=0,
+                    help="pairs to place (default: the pack's used pair rows); the element is whatever --pair-lef "
+                         "is, so a different ROM macro depth enters through its pair abstract and count")
     ap.add_argument("--output", type=Path, required=True)
     a = ap.parse_args(argv)
     rec = json.loads(a.pack.read_text())
     pair = lef_macro(a.pair_lef)
-    out = plan(rec, pair, a.rows, a.row_channel_um, a.col_gap_um, a.spine_um)
+    out = plan(rec, pair, a.rows, a.row_channel_um, a.col_gap_um, a.spine_um, a.pairs_needed or None)
     out = dict(schema="opentallas.v41.w18_die_floorplan.v1",
                status="floorplan_from_real_element_abstract",
                inputs=dict(pack=str(a.pack), pack_sha256=sha(a.pack), pair_lef=str(a.pair_lef),

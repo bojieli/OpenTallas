@@ -53,6 +53,8 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
             prev = out
         # a movable output buffer per chain (global placement needs movable cells; all stations are FIRM)
         sv.append(f"  BUFx2_ASAP7_75t_R ob{i} (.A({prev}), .Y(q[{i}]));")
+    sv.append(f"  w18_flank{tag} u_flank_s (.tie(1'b0));")
+    sv.append(f"  w18_flank{tag} u_flank_n (.tie(1'b0));")
     sv.append("endmodule")
     gen = ROOT / "physical/w18"
     gen.mkdir(parents=True, exist_ok=True)
@@ -62,11 +64,28 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
             "set block [ord::get_db_block]", "set tech [ord::get_db_tech]",
             "set ::ot_dbu [$tech getDbUnitsPerMicron]",
             "proc um {v} { return [expr {round($v * $::ot_dbu)}] }"]
-    for (a, b) in ((0.0, y0 - 1.08), (y1 + 1.08, H)):
-        hook.append(f"set bl [odb::dbBlockage_create $block [um {END_CAP}] [um {a}] [um {L - END_CAP}] [um {b}]]")
-        for lay in range(1, 8):
-            hook.append(f"odb::dbObstruction_create $block [$tech findLayer M{lay}] [um {END_CAP}] [um {a}] "
-                        f"[um {L - END_CAP}] [um {b}]")
+    fname = f"w18_flank{tag}"
+    fw, fh = round(L - 2 * END_CAP, 3), round(y0 - 2.16, 3)
+    vdir = gen / fname
+    vdir.mkdir(parents=True, exist_ok=True)
+    (vdir / f"{fname}.lef").write_text("\n".join([
+        "VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {fname}", "  CLASS BLOCK ;",
+        f"  FOREIGN {fname} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {fw:.3f} BY {fh:.3f} ;",
+        "  PIN tie", "    DIRECTION INPUT ;", "    USE SIGNAL ;", "    PORT", "      LAYER M4 ;",
+        f"        RECT 0.000 {fh / 2 - 0.012:.3f} 0.192 {fh / 2 + 0.012:.3f} ;", "    END", "  END tie",
+        "  OBS"] + [f"    LAYER M{i} ;\n      RECT 0 0 {fw:.3f} {fh:.3f} ;" for i in range(1, 8)]
+        + ["  END", f"END {fname}", "END LIBRARY", ""]))
+    for c in ("tt", "ss", "ff"):
+        (vdir / f"{fname}_{c}.lib").write_text(
+            f"library({fname}_{c}) {{\n  delay_model : table_lookup ;\n  time_unit : \"1ps\" ;\n  voltage_unit : \"1V\" ;\n"
+            f"  current_unit : \"1mA\" ;\n  capacitive_load_unit (1,ff) ;\n  pulling_resistance_unit : \"1kohm\" ;\n"
+            f"  leakage_power_unit : \"1nW\" ;\n  nom_process : 1 ;\n  nom_voltage : 0.7 ;\n  nom_temperature : 25 ;\n"
+            f"  cell({fname}) {{\n    area : {fw * fh:.1f} ;\n    dont_touch : true ;\n    dont_use : true ;\n"
+            f"    pin(tie) {{ direction : input ; capacitance : 0.5 ; }}\n  }}\n}}\n")
+    (vdir / f"{fname}_bb.v").write_text(f"// W18 flank placeholder: a neighbouring ROM-array cluster row (OBS M1-M7)\n"
+                                        f"(* blackbox *) module {fname} (input tie);\nendmodule\n")
+    for side, fy in (("s", 1.08), ("n", round(y1 + 1.08, 3))):
+        hook.append(f"place_inst -name u_flank_{side} -location {{{END_CAP} {fy}}} -orientation R0 -status FIRM")
     flops = ["# W18 channel station flops, placed FIRM after tapcell/PDN, skipping tap cells in their row",
              "set block [ord::get_db_block]", "set ::ot_dbu [[ord::get_db_tech] getDbUnitsPerMicron]",
              "proc um {v} { return [expr {round($v * $::ot_dbu)}] }",
@@ -100,7 +119,8 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
     (gen / f"{top}_place.tcl").write_text("\n".join(hook) + "\n")
     pin_y = f"{y0 + 2:g}-{y1 - 2:g}"
     argv = [sys.executable, str(ROOT / "tools/run_abi3_physical.py"), "--view", "asap7", "--top", top,
-            "--source", f"physical/w18/{top}.sv", "--clock-period-ns", "0.92", "--clock-uncertainty-ns", "0.06",
+            "--source", f"physical/w18/{top}.sv", "--source", f"physical/w18/w18_flank{tag}/w18_flank{tag}_bb.v",
+            "--macro-view", f"w18_flank{tag}=physical/w18/w18_flank{tag}", "--macro-place-halo", "1", "1", "--clock-period-ns", "0.92", "--clock-uncertainty-ns", "0.06",
             "--clock-uncertainty-hold-ns", "0.025", "--io-delay-fraction", "0.2", "--stages", "pnr",
             "--die-area", "0", "0", f"{L:g}", f"{H:g}", "--core-area", "1.08", "1.08", f"{L - 1.08:g}", f"{H - 1.08:g}",
             "--place-density", "0.5", "--orfs-var", "PLACE_DENSITY_LB_ADDON=", "--pin-region", r"^d\[\d+\]$=left", "--pin-region", r"^q\[\d+\]$=right",

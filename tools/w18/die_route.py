@@ -221,6 +221,35 @@ set_routing_layers -signal M2-M9
 global_route -verbose -allow_congestion -congestion_iterations {iters} -congestion_report_file /work/grt_congestion.rpt
 mem grt
 report_wire_length -net * -global_route -file /work/wirelength.csv
+set blk [ord::get_db_block]
+set out [open /work/gcell_usage.txt w]
+set grid [$blk getGCellGrid]
+if {{$grid ne "NULL"}} {{
+  set gx [$grid getGridX]
+  set gy [$grid getGridY]
+  puts $out "GRIDX [join $gx ,]"
+  puts $out "GRIDY [join $gy ,]"
+  set tech [ord::get_db_tech]
+  foreach ln {{M4 M5 M6 M7 M8 M9}} {{
+    set layer [$tech findLayer $ln]
+    set nx [llength $gx]; set ny [llength $gy]
+    for {{set j 0}} {{$j < $ny}} {{incr j 4}} {{
+      set row {{}}
+      for {{set i 0}} {{$i < $nx}} {{incr i 4}} {{
+        set cap 0; set use 0
+        for {{set jj $j}} {{$jj < min($j+4,$ny)}} {{incr jj}} {{
+          for {{set ii $i}} {{$ii < min($i+4,$nx)}} {{incr ii}} {{
+            set cap [expr {{$cap + [$grid getCapacity $layer $ii $jj]}}]
+            set use [expr {{$use + [$grid getUsage $layer $ii $jj]}}]
+          }}
+        }}
+        lappend row "$cap/$use"
+      }}
+      puts $out "L $ln $j [join $row {{ }}]"
+    }}
+  }}
+}}
+close $out
 mem done
 """
     (work / "run.tcl").write_text(tcl)
