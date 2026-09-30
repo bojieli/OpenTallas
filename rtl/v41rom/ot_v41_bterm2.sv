@@ -12,11 +12,11 @@ module ot_v41_bterm2 #(
     // (the -51.6 ps SS path of the ot_gpu_bd_col route at 0.833 ns).  Arithmetic and latency are unchanged;
     // the default (0) is the W10 element's netlist.
     parameter integer DEC_P0 = 0,
-    // TERM_P1 = 1 (W13): P1 also shifts each product into its 42-bit term and registers the terms, so P2 is
-    // the CSA 32 -> 7 alone (the DEC_P0 route's -8.7 ps SS path was p1_sh -> buffers -> shifter -> CSA; a
-    // duplicated shift amount left it at -13.0 ps).  P1 has the room once DEC_P0 takes the decode out.
-    // Arithmetic and latency are unchanged; costs 32 x (42 - 14) flops.  Default 0 (W10 netlist).
-    parameter integer TERM_P1 = 0
+    // SH16_P1 = 1 (W13): P1 applies the top bit of each term's shift (x 2^16) and P2 only the low four, one
+    // mux level moved from P2 (the DEC_P0 route's -8.7 ps SS path p1_sh -> shifter -> CSA 32 -> 7) into P1
+    // (product + negate; the whole shift in P1 failed at -77.7 ps).  Arithmetic and latency unchanged; costs
+    // 32 x (25 - 14) flops.  Default 0 (W10 netlist).
+    parameter integer SH16_P1 = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -65,7 +65,8 @@ module ot_v41_bterm2 #(
     reg signed [10:0] p1_es;
     reg signed [8:0]  p1_p [0:31];
     reg [4:0]         p1_sh [0:31];
-    reg [32*W-1:0]    p1_t;                   // TERM_P1: the terms, registered
+    reg [32*25-1:0]   p1_q;                   // SH16_P1: product x 2^(16 sh[4]), 25 bits signed
+    reg [32*4-1:0]    p1_sl;                  // SH16_P1: the low four shift bits
     reg [4:0]         shv;
     reg signed [8:0]  pv;
     reg [7:0]         xc, wc;
@@ -91,8 +92,10 @@ module ot_v41_bterm2 #(
             pm = xs * ws;
             pv  = (xc[7] ^ wc[7]) ? -$signed({1'b0, pm}) : $signed({1'b0, pm});
             shv = {1'b0, xf} + {1'b0, wf} - 5'd2;
-            if (TERM_P1 != 0) p1_t[W*i +: W] <= {{(W-9){pv[8]}}, pv} << shv;
-            else begin p1_p[i] <= pv; p1_sh[i] <= shv; end
+            if (SH16_P1 != 0) begin
+                p1_q[25*i +: 25] <= shv[4] ? {pv, 16'd0} : {{16{pv[8]}}, pv};
+                p1_sl[4*i +: 4] <= shv[3:0];
+            end else begin p1_p[i] <= pv; p1_sh[i] <= shv; end
         end
         p1_nan <= nan;
     end
@@ -101,7 +104,8 @@ module ot_v41_bterm2 #(
     reg [32*W-1:0] terms;
     always @(*) begin
         for (i = 0; i < 32; i = i + 1)
-            terms[W*i +: W] = (TERM_P1 != 0) ? p1_t[W*i +: W] : {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
+            terms[W*i +: W] = (SH16_P1 != 0) ? {{(W-25){p1_q[25*i + 24]}}, p1_q[25*i +: 25]} << p1_sl[4*i +: 4]
+                                              : {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
     end
     wire [7*W-1:0] c7;
     ot_v41_csa #(.N(32), .M(7), .W(W)) u_csa1 (.d(terms), .q(c7));
