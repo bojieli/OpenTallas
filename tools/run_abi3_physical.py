@@ -1955,6 +1955,32 @@ def resolve_floorplan(
 SYNTH_MEMORY_MAX_BITS_SINCE = "2026-09-19T10:07:51+00:00"
 
 
+# asap7 adder mapping.  The platform's ADDER_MAP_FILE (yoSys/cells_adders: extract_fa + FA/HA cells) builds
+# ripple adders that ABC cannot restructure; set empty, yosys keeps its Kogge-Stone $alu map.  Measured (W10,
+# WC floorplan, 0.833 ns): the FP32 add pipe 840 -> 1,091 MHz, the V4.1 element 659 -> 715 MHz.  New runs
+# default to the Kogge-Stone map (--asap7-adder-map restores the platform's); the choice is recorded as
+# place_and_route.adder_map, and a record without it used the platform map.
+ADDER_MAP_KOGGE_STONE = "yosys_kogge_stone"
+ADDER_MAP_PLATFORM = "platform_fa_cells"
+
+
+def with_adder_map(view: dict[str, Any], adder_map: str) -> dict[str, Any]:
+    """The view whose ORFS config carries `adder_map` (asap7 only; other platforms are returned unchanged)."""
+    pnr = view.get("pnr")
+    if not pnr or pnr.get("platform") != "asap7" or adder_map != ADDER_MAP_KOGGE_STONE:
+        return view
+    out = dict(view)
+    out["pnr"] = dict(pnr)
+    out["pnr"]["extra_config"] = {**pnr["extra_config"], "ADDER_MAP_FILE": ""}
+    return out
+
+
+def recorded_view(record: dict[str, Any]) -> dict[str, Any]:
+    """The view a routed record's config.mk was written from (its recorded adder map applied)."""
+    view = VIEWS[record["view"]["name"]]
+    return with_adder_map(view, record.get("place_and_route", {}).get("adder_map", ADDER_MAP_PLATFORM))
+
+
 def recorded_memory_max_bits(record: dict[str, Any]) -> int | None:
     """The SYNTH_MEMORY_MAX_BITS a routed record's config.mk carried (None: no line)."""
     pnr = record.get("place_and_route", {})
@@ -2963,6 +2989,11 @@ def build_parser() -> argparse.ArgumentParser:
              "under the view's pnr.extra_config.  Absent: nothing added",
     )
     parser.add_argument(
+        "--asap7-adder-map", action="store_true",
+        help=("asap7: keep the platform's ADDER_MAP_FILE (FA/HA ripple adders).  Default: ADDER_MAP_FILE is set "
+              "empty so yosys keeps its Kogge-Stone adders; recorded as place_and_route.adder_map"),
+    )
+    parser.add_argument(
         "--pnr-stop-after",
         default="finish",
         choices=["finish", "cts", "floorplan"],
@@ -3204,6 +3235,9 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"--orfs-var {item!r}: expected KEY=VALUE", file=sys.stderr)
                 return 2
             view["pnr"]["extra_config"][key] = value
+
+    adder_map = ADDER_MAP_PLATFORM if args.asap7_adder_map else ADDER_MAP_KOGGE_STONE
+    view = with_adder_map(view, adder_map)
 
     if args.orfs_corner:
         if view.get("pnr") is None:
@@ -3514,6 +3548,8 @@ def main(argv: list[str] | None = None) -> int:
                 nickname_tag=args.nickname_tag,
                 stop_after=args.pnr_stop_after,
             )
+            if view["pnr"].get("platform") == "asap7":
+                record["place_and_route"]["adder_map"] = adder_map
             if args.cts_cluster_size is not None:
                 record["place_and_route"]["clock_tree_config"] = {
                     "CTS_CLUSTER_SIZE": args.cts_cluster_size,
