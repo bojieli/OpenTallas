@@ -62,38 +62,64 @@ module ot_v41_vm_group_phys #(
         for (e = 0; e < 8; e = e + 1) begin : g_m
             assign m_wmask[b*256 + 32*e +: 32] = {32{m[0][e]}};
         end
-        // next state: pop entry 0, then merge / append the incoming writes in slot order
-        reg              nv   [0:WQD-1];
-        reg [RA-1:0]     nrow [0:WQD-1];
-        reg [255:0]      nd   [0:WQD-1];
-        reg [7:0]        nm   [0:WQD-1];
-        reg              ovf;
-        reg [7:0]        ncnt;
-        integer j, s, hit, t;
-        always @(*) begin
-            for (j = 0; j < WQD - 1; j = j + 1) begin
-                nv[j] = v[j+1]; nrow[j] = row[j+1]; nd[j] = d[j+1]; nm[j] = m[j+1];
+        // next state: pop entry 0, then each incoming write merges into the entry holding its row or takes the
+        // next free entry.  The K writes of a cycle name distinct rows (the caller merges by row), so a write's
+        // target does not depend on the others' data: all targets are one-hot and resolved in parallel.
+        wire [WQD-1:0]  pv;                      // entries after the pop
+        wire [RA-1:0]   prow [0:WQD-1];
+        wire [255:0]    pd   [0:WQD-1];
+        wire [7:0]      pm   [0:WQD-1];
+        for (e = 0; e < WQD; e = e + 1) begin : g_pop
+            if (e < WQD - 1) begin : g_s
+                assign pv[e] = v[e+1]; assign prow[e] = row[e+1]; assign pd[e] = d[e+1]; assign pm[e] = m[e+1];
+            end else begin : g_z
+                assign pv[e] = 1'b0; assign prow[e] = {RA{1'b0}}; assign pd[e] = 256'd0; assign pm[e] = 8'd0;
             end
-            nv[WQD-1] = 1'b0; nrow[WQD-1] = 0; nd[WQD-1] = 0; nm[WQD-1] = 0;
-            ovf = 1'b0;
-            for (s = 0; s < K; s = s + 1) if (wr_v[b*K + s]) begin
-                hit = -1;
+        end
+        // occupancy after the pop (entries are contiguous from 0)
+        reg [7:0] pc;
+        integer j;
+        always @(*) begin
+            pc = 0;
+            for (j = 0; j < WQD; j = j + 1) pc = pc + (pv[j] ? 8'd1 : 8'd0);
+        end
+        // per write: hit vector, and its allocation rank among the writes that miss
+        reg [WQD-1:0] tgt [0:K-1];
+        reg [7:0]     rank;
+        reg           ovf;
+        integer s2;
+        always @(*) begin
+            rank = 0; ovf = 1'b0;
+            for (s2 = 0; s2 < K; s2 = s2 + 1) begin
                 for (j = 0; j < WQD; j = j + 1)
-                    if (hit < 0 && nv[j] && nrow[j] == wr_row[(b*K + s)*RA +: RA]) hit = j;
-                if (hit < 0)
-                    for (j = 0; j < WQD; j = j + 1)
-                        if (hit < 0 && !nv[j]) hit = j;
-                if (hit < 0) ovf = 1'b1;
-                else begin
-                    if (!nv[hit]) begin nm[hit] = 0; nrow[hit] = wr_row[(b*K + s)*RA +: RA]; end
-                    nv[hit] = 1'b1;
-                    for (t = 0; t < 8; t = t + 1)
-                        if (wr_m[(b*K + s)*8 + t]) nd[hit][32*t +: 32] = wr_d[(b*K + s)*256 + 32*t +: 32];
-                    nm[hit] = nm[hit] | wr_m[(b*K + s)*8 +: 8];
+                    tgt[s2][j] = wr_v[b*K + s2] && pv[j] && prow[j] == wr_row[(b*K + s2)*RA +: RA];
+                if (wr_v[b*K + s2] && tgt[s2] == {WQD{1'b0}}) begin
+                    if (pc + rank < WQD) tgt[s2] = {{(WQD-1){1'b0}}, 1'b1} << (pc + rank);
+                    else ovf = 1'b1;
+                    rank = rank + 8'd1;
                 end
             end
+        end
+        reg [WQD-1:0]  nv;
+        reg [RA-1:0]   nrow [0:WQD-1];
+        reg [255:0]    nd   [0:WQD-1];
+        reg [7:0]      nm   [0:WQD-1];
+        reg [7:0]      ncnt;
+        integer t;
+        always @(*) begin
             ncnt = 0;
-            for (j = 0; j < WQD; j = j + 1) ncnt = ncnt + (nv[j] ? 8'd1 : 8'd0);
+            for (j = 0; j < WQD; j = j + 1) begin
+                nv[j] = pv[j]; nrow[j] = prow[j]; nd[j] = pd[j]; nm[j] = pv[j] ? pm[j] : 8'd0;
+                for (s2 = 0; s2 < K; s2 = s2 + 1)
+                    if (tgt[s2][j]) begin
+                        nv[j] = 1'b1;
+                        nrow[j] = wr_row[(b*K + s2)*RA +: RA];
+                        for (t = 0; t < 8; t = t + 1)
+                            if (wr_m[(b*K + s2)*8 + t]) nd[j][32*t +: 32] = wr_d[(b*K + s2)*256 + 32*t +: 32];
+                        nm[j] = nm[j] | wr_m[(b*K + s2)*8 +: 8];
+                    end
+                ncnt = ncnt + (nv[j] ? 8'd1 : 8'd0);
+            end
         end
         always @(posedge clk or negedge rst_n) begin
             if (!rst_n) begin

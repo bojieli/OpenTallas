@@ -1,18 +1,19 @@
 {
  "schema": "opentallas.uarch.w11_vm_options.v1",
- "generated_utc": "2026-09-30T01:00:35Z",
- "source_commit": "6ccc8f6714ff70f5784706175a284f9ef0a1d887",
+ "generated_utc": "2026-09-30T03:22:15Z",
+ "source_commit": "5dc9590642332eb86e38d874f28712a5dca73c55",
  "basis": {
   "clock_ps": 920.0,
   "wire_ps_per_um": 0.76,
   "stage_rule": "tools/uarch_model.wire_cycles",
-  "mux_levels_per_stage": 8,
+  "mux_levels_per_stage": 10,
+  "mux_levels_basis": "results/physical_abi3/asap7/chip/w11_vm_rot/lps10: ot_v41_vm_rot N=1024 W=2, all 10 levels in one stage, closed at 0.92 ns (60/25 ps, TT; SS/FF re-closure pending)",
   "rotate_levels": 10,
   "benes_levels": 19,
   "crossbar_levels": 10,
   "density": {
    "record": "results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.json",
-   "record_ref": "claude/w11-dedicated-units",
+   "record_ref": "worktree",
    "comb_cell_um2": 0.0878,
    "flop_um2": 0.2952,
    "utilization": 0.453157,
@@ -28,7 +29,7 @@
   "ctx": 1048576
  },
  "h_measurement": {
-  "source": "reduced vehicle, position 7 (tools/rtl_hdc_v41x_vec_campaign.vehicle_records)",
+  "source": "reduced vehicle, position 7 (tools/rtl_hdc_v41x_vec_campaign.vehicle_records); idealised alignment (every op base rounded down to 128); physical lanes",
   "meta": {
    "position": 7,
    "token": 3582,
@@ -37,10 +38,10 @@
   },
   "ops": 2649,
   "vectors_as_laid": 5082,
-  "vectors_h": 6370,
-  "vector_ratio": 1.2534,
-  "ops_fixed_by_alignment_alone": 1674,
-  "ops_relaid_by_ban": 216,
+  "vectors_h": 5740,
+  "vector_ratio": 1.1295,
+  "ops_fixed_by_alignment_alone": 1608,
+  "ops_relaid_by_ban": 100,
   "elements": {
    "A": 533217,
    "B": 513445,
@@ -50,28 +51,28 @@
    "E": 510581
   },
   "remote_share_as_laid": {
-   "A": 0.8317,
-   "B": 0.5339,
-   "C": 0.2985,
-   "D": 0.0993,
+   "A": 0.8115,
+   "B": 0.5334,
+   "C": 0.4706,
+   "D": 0.0992,
    "G": 0.9924,
-   "E": 0.5833
+   "E": 0.8098
   },
   "remote_share_aligned": {
-   "A": 0.3721,
-   "B": 0.5285,
-   "C": 0.1917,
-   "D": 0.0992,
-   "G": 0.9611,
-   "E": 0.1751
-  },
-  "remote_share_h": {
-   "A": 0.287,
-   "B": 0.5254,
-   "C": 0.1177,
+   "A": 0.1138,
+   "B": 0.5271,
+   "C": 0.2676,
    "D": 0.0987,
    "G": 0.9611,
-   "E": 0.2366
+   "E": 0.351
+  },
+  "remote_share_h": {
+   "A": 0.1048,
+   "B": 0.5246,
+   "C": 0.2676,
+   "D": 0.0987,
+   "G": 0.9611,
+   "E": 0.3415
   },
   "broadcast_share": {
    "A": 0.0,
@@ -82,35 +83,35 @@
    "E": 0.0
   },
   "residual_elements_h": {
-   "A": 153014,
-   "B": 269768,
-   "C": 61056,
+   "A": 55862,
+   "B": 269360,
+   "C": 138816,
    "D": 50560,
    "G": 14732,
-   "E": 120812
+   "E": 174380
   },
   "residual_elements_aligned": {
-   "A": 198409,
-   "B": 271336,
-   "C": 99456,
-   "D": 50800,
+   "A": 60697,
+   "B": 270616,
+   "C": 138816,
+   "D": 50560,
    "G": 14732,
-   "E": 89404
+   "E": 179212
   },
-  "ops_needing_rotate": 853,
+  "ops_needing_rotate": 921,
   "ops_needing_rotate_by_class": {
-   "E": 335,
-   "C": 218,
-   "A": 505,
+   "E": 539,
+   "C": 380,
+   "A": 395,
    "B": 406,
    "D": 80,
    "G": 76
   },
-  "ops_needing_rotate_aligned_only": 853,
+  "ops_needing_rotate_aligned_only": 921,
   "ops_needing_rotate_by_class_aligned_only": {
-   "E": 255,
-   "C": 298,
-   "A": 585,
+   "E": 539,
+   "C": 380,
+   "A": 395,
    "B": 414,
    "D": 80,
    "G": 76
@@ -118,6 +119,60 @@
   "ops_with_broadcast": 2097,
   "reduce_ops": 466,
   "gather_ops": 156
+ },
+ "h_rtl_rule": {
+  "source": "the vehicle built with HDC_V41_VM_ALIGN=128, the vector unit's per-op rule",
+  "meta": {
+   "position": 7,
+   "token": 3582,
+   "program_instructions": 3992,
+   "stream_ops": 2649
+  },
+  "ops": 2649,
+  "flagged": {
+   "b": 2221,
+   "x": 164,
+   "r": 1370,
+   "wr": 751,
+   "wx": 0
+  },
+  "unsafe_count": 0,
+  "residual_ops": 1535,
+  "flagged_any": 1535,
+  "over_flagged": 0,
+  "hold_cycles": 56777,
+  "holds": {
+   "0": 289,
+   "8": 825,
+   "17": 3,
+   "25": 618,
+   "26": 164,
+   "34": 136,
+   "42": 614
+  },
+  "classes": {
+   "BB": 2160,
+   "DB": 1941,
+   "CB": 680,
+   "EL": 1604,
+   "ER": 751,
+   "AL": 1522,
+   "BL": 346,
+   "DL": 289,
+   "CL": 733,
+   "CR": 691,
+   "AR": 921,
+   "CP": 136,
+   "AX": 164,
+   "GL": 80,
+   "BR": 5,
+   "DR": 3,
+   "GB": 76
+  },
+  "unpacked_ops": 666,
+  "vectors": 16796,
+  "vectors_packed": 5082,
+  "issue_cycles": 16916
  },
  "rates": {
   "flat_vm_reference": {
@@ -146,60 +201,60 @@
  "options": {
   "H": {
    "geometry": {
-    "block_mm2": 38.7183177088,
-    "w_um": 6345.993465169953,
-    "h_um": 6101.213974598804,
-    "scale": 1.0323892474531802,
-    "x_gather_um": 8816.604173250158,
-    "ret_scatter_um": 8816.604173250158,
-    "coll_um_at_port": 8816.604173250158,
-    "coll_um_w1": 12859.440466276812,
-    "su_results_um": 5644.072015826536,
-    "rotate_um": 12447.207439768757,
-    "scalar_fetch_um": 6223.603719884379
+    "block_mm2": 38.602240345599995,
+    "w_um": 6336.473693112494,
+    "h_um": 6092.061401935321,
+    "scale": 1.0308405363862263,
+    "x_gather_um": 8803.378180738373,
+    "ret_scatter_um": 8803.378180738373,
+    "coll_um_at_port": 8803.378180738373,
+    "coll_um_w1": 12840.149721226835,
+    "su_results_um": 5635.605212423499,
+    "rotate_um": 12428.535095047815,
+    "scalar_fetch_um": 6214.2675475239075
    },
    "networks": [
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "benes",
      "comb_cells": 622592,
-     "flops": 589824,
-     "cell_mm2": 0.2287796224,
-     "footprint_mm2": 0.4575592448
+     "flops": 557056,
+     "cell_mm2": 0.21910650880000002,
+     "footprint_mm2": 0.43821301760000003
     },
     {
      "kind": "bcast",
@@ -216,8 +271,8 @@
      "footprint_mm2": 0.000813056
     }
    ],
-   "network_cell_mm2": 1.1956588544000002,
-   "network_footprint_mm2": 2.3913177088000004,
+   "network_cell_mm2": 1.1376201728000002,
+   "network_footprint_mm2": 2.2752403456000003,
    "clients": {
     "x_gather": 10,
     "ret_scatter": 10,
@@ -230,10 +285,10 @@
     "control_broadcast": 4,
     "local_read": 0,
     "scalar_read": 8,
-    "residual_rotate_read": 17,
-    "gather_read": 18,
+    "residual_rotate_read": 16,
+    "gather_read": 17,
     "local_element_write": 0,
-    "residual_rotate_write": 17,
+    "residual_rotate_write": 16,
     "reduce_result": 7,
     "residual_classes": [
      "A",
@@ -244,10 +299,10 @@
      "G"
     ]
    },
-   "su_op_extra_cycles": 16.813,
-   "su_red_extra_cycles": 25.966,
+   "su_op_extra_cycles": 17.585,
+   "su_red_extra_cycles": 27.893,
    "su_op_extra_basis": "mean over the vehicle's element ops / reductions of the stages each needs",
-   "su_issue_ratio": 1.2534,
+   "su_issue_ratio": 1.1295,
    "layout_rule": "bases 128-aligned; packed cross-group rows banned (re-laid one row a 128-lane slot)",
    "design_keys": {
     "vm_x_gather_stages": 10,
@@ -255,22 +310,22 @@
     "vm_coll_write_stages": 10,
     "su_ret_stages": 7,
     "su_bcast_stages": 4,
-    "su_op_extra_cycles": 16.813,
-    "su_red_extra_cycles": 25.966,
-    "su_lanes": 816.9778203287059,
-    "sfu_lanes": 204.24445508217647
+    "su_op_extra_cycles": 17.585,
+    "su_red_extra_cycles": 27.893,
+    "su_lanes": 906.5958388667552,
+    "sfu_lanes": 226.6489597166888
    },
    "rates": {
-    "ar_tokens_s": 3490.1,
-    "mtp_tokens_s": 5569.5,
-    "T_us": 286.52,
-    "verify_over_ar": 2.2117
+    "ar_tokens_s": 3489.6,
+    "mtp_tokens_s": 5598.8,
+    "T_us": 286.56,
+    "verify_over_ar": 2.1993
    },
    "rates_clients_only": {
-    "ar_tokens_s": 3685.6,
-    "mtp_tokens_s": 5699.3,
-    "T_us": 271.32,
-    "verify_over_ar": 2.2848
+    "ar_tokens_s": 3695.1,
+    "mtp_tokens_s": 5736.6,
+    "T_us": 270.63,
+    "verify_over_ar": 2.2754
    },
    "sram": {
     "macro": "ot_sram_1r1w_256x256_m2_r2c2",
@@ -278,64 +333,64 @@
     "mm2": 10.893,
     "note": "the same replica / bank count serves every option: the port demand is the SU's"
    },
-   "footprint_mm2": 38.718
+   "footprint_mm2": 38.602
   },
   "H_align_only": {
    "geometry": {
-    "block_mm2": 38.7183177088,
-    "w_um": 6345.993465169953,
-    "h_um": 6101.213974598804,
-    "scale": 1.0323892474531802,
-    "x_gather_um": 8816.604173250158,
-    "ret_scatter_um": 8816.604173250158,
-    "coll_um_at_port": 8816.604173250158,
-    "coll_um_w1": 12859.440466276812,
-    "su_results_um": 5644.072015826536,
-    "rotate_um": 12447.207439768757,
-    "scalar_fetch_um": 6223.603719884379
+    "block_mm2": 38.602240345599995,
+    "w_um": 6336.473693112494,
+    "h_um": 6092.061401935321,
+    "scale": 1.0308405363862263,
+    "x_gather_um": 8803.378180738373,
+    "ret_scatter_um": 8803.378180738373,
+    "coll_um_at_port": 8803.378180738373,
+    "coll_um_w1": 12840.149721226835,
+    "su_results_um": 5635.605212423499,
+    "rotate_um": 12428.535095047815,
+    "scalar_fetch_um": 6214.2675475239075
    },
    "networks": [
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "benes",
      "comb_cells": 622592,
-     "flops": 589824,
-     "cell_mm2": 0.2287796224,
-     "footprint_mm2": 0.4575592448
+     "flops": 557056,
+     "cell_mm2": 0.21910650880000002,
+     "footprint_mm2": 0.43821301760000003
     },
     {
      "kind": "bcast",
@@ -352,8 +407,8 @@
      "footprint_mm2": 0.000813056
     }
    ],
-   "network_cell_mm2": 1.1956588544000002,
-   "network_footprint_mm2": 2.3913177088000004,
+   "network_cell_mm2": 1.1376201728000002,
+   "network_footprint_mm2": 2.2752403456000003,
    "clients": {
     "x_gather": 10,
     "ret_scatter": 10,
@@ -366,10 +421,10 @@
     "control_broadcast": 4,
     "local_read": 0,
     "scalar_read": 8,
-    "residual_rotate_read": 17,
-    "gather_read": 18,
+    "residual_rotate_read": 16,
+    "gather_read": 17,
     "local_element_write": 0,
-    "residual_rotate_write": 17,
+    "residual_rotate_write": 16,
     "reduce_result": 7,
     "residual_classes": [
      "A",
@@ -380,8 +435,8 @@
      "G"
     ]
    },
-   "su_op_extra_cycles": 16.19,
-   "su_red_extra_cycles": 25.966,
+   "su_op_extra_cycles": 17.585,
+   "su_red_extra_cycles": 27.893,
    "su_op_extra_basis": "mean over the vehicle's element ops / reductions of the stages each needs",
    "su_issue_ratio": 1.0,
    "layout_rule": "bases 128-aligned only; packed rows kept (their residual rides the rotate network)",
@@ -391,16 +446,16 @@
     "vm_coll_write_stages": 10,
     "su_ret_stages": 7,
     "su_bcast_stages": 4,
-    "su_op_extra_cycles": 16.19,
-    "su_red_extra_cycles": 25.966,
+    "su_op_extra_cycles": 17.585,
+    "su_red_extra_cycles": 27.893,
     "su_lanes": 1024.0,
     "sfu_lanes": 256.0
    },
    "rates": {
-    "ar_tokens_s": 3517.1,
-    "mtp_tokens_s": 5659.0,
-    "T_us": 284.32,
-    "verify_over_ar": 2.1929
+    "ar_tokens_s": 3501.5,
+    "mtp_tokens_s": 5647.5,
+    "T_us": 285.59,
+    "verify_over_ar": 2.1874
    },
    "rates_clients_only": {
     "ar_tokens_s": 3707.9,
@@ -414,64 +469,303 @@
     "mm2": 10.893,
     "note": "the same replica / bank count serves every option: the port demand is the SU's"
    },
-   "footprint_mm2": 38.718
+   "footprint_mm2": 38.602
+  },
+  "H_rtl": {
+   "geometry": {
+    "block_mm2": 38.602240345599995,
+    "w_um": 6336.473693112494,
+    "h_um": 6092.061401935321,
+    "scale": 1.0308405363862263,
+    "x_gather_um": 8803.378180738373,
+    "ret_scatter_um": 8803.378180738373,
+    "coll_um_at_port": 8803.378180738373,
+    "coll_um_w1": 12840.149721226835,
+    "su_results_um": 5635.605212423499,
+    "rotate_um": 12428.535095047815,
+    "scalar_fetch_um": 6214.2675475239075
+   },
+   "networks": [
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
+    },
+    {
+     "kind": "rotate",
+     "comb_cells": 327680,
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
+    },
+    {
+     "kind": "benes",
+     "comb_cells": 622592,
+     "flops": 557056,
+     "cell_mm2": 0.21910650880000002,
+     "footprint_mm2": 0.43821301760000003
+    },
+    {
+     "kind": "bcast",
+     "comb_cells": 2048,
+     "flops": 768,
+     "cell_mm2": 0.000406528,
+     "footprint_mm2": 0.000813056
+    },
+    {
+     "kind": "bcast",
+     "comb_cells": 2048,
+     "flops": 768,
+     "cell_mm2": 0.000406528,
+     "footprint_mm2": 0.000813056
+    }
+   ],
+   "network_cell_mm2": 1.1376201728000002,
+   "network_footprint_mm2": 2.2752403456000003,
+   "clients": {
+    "x_gather": 10,
+    "ret_scatter": 10,
+    "coll_write": 10,
+    "coll_write_from_w1_hub": 15,
+    "su_results": 7,
+    "he_qe_xu_expert_reads": "= x_gather (class X)"
+   },
+   "su_op_class_stages": {
+    "control_broadcast": 4,
+    "local_read": 0,
+    "scalar_read": 8,
+    "residual_rotate_read": 16,
+    "gather_read": 20,
+    "local_element_write": 0,
+    "residual_rotate_write": 16,
+    "reduce_result": 7,
+    "residual_classes": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "E",
+     "G"
+    ],
+    "x_path": "class-X trees, 64 elements a cycle (x_gather + ret_scatter stages)",
+    "local_element_write_stages": 1
+   },
+   "su_op_extra_cycles": 31.157,
+   "su_red_extra_cycles": 38.273,
+   "su_op_extra_basis": "the vector unit's own per-op decision (rtl/hdc/v41x/ot_hdc_v41x_vec.sv VMD_NG, tools/w11_vm_h.rule) on the full-shape L0 program (bound at 32-alignment; the vehicle built with HDC_V41_VM_ALIGN=128 in vehicle_aligned): broadcast 4 + its hold + the result tree (reductions) or the local write (1); issue x the unpacked layout's vector ratio",
+   "su_issue_ratio": 1.1687,
+   "layout_rule": "VM regions 128-aligned by the builder (HDC_V41_VM_ALIGN=128); op offsets as built",
+   "vehicle_aligned": {
+    "su_op_extra_cycles": 24.32,
+    "su_red_extra_cycles": 38.142,
+    "su_issue_ratio": 3.3286
+   },
+   "rule_check": {
+    "full_shape_l0": {
+     "ops": 62,
+     "flagged": {
+      "b": 52,
+      "x": 2,
+      "r": 41,
+      "wr": 26,
+      "wx": 7
+     },
+     "unsafe_count": 0,
+     "residual_ops": 48,
+     "flagged_any": 48,
+     "over_flagged": 0,
+     "hold_cycles": 1683,
+     "holds": {
+      "8": 14,
+      "17": 2,
+      "18": 7,
+      "25": 12,
+      "26": 1,
+      "34": 1,
+      "42": 24,
+      "43": 1
+     },
+     "classes": {
+      "AL": 27,
+      "BL": 7,
+      "DL": 7,
+      "CL": 27,
+      "EX": 7,
+      "BB": 51,
+      "DB": 45,
+      "EL": 24,
+      "AR": 32,
+      "CB": 14,
+      "ER": 26,
+      "CP": 3,
+      "BR": 1,
+      "CR": 8,
+      "AX": 2,
+      "GR": 2
+     },
+     "unpacked_ops": 7,
+     "vectors": 453,
+     "vectors_packed": 403,
+     "issue_cycles": 471
+    },
+    "vehicle_aligned": {
+     "ops": 2649,
+     "flagged": {
+      "b": 2221,
+      "x": 164,
+      "r": 1370,
+      "wr": 751,
+      "wx": 0
+     },
+     "unsafe_count": 0,
+     "residual_ops": 1535,
+     "flagged_any": 1535,
+     "over_flagged": 0,
+     "hold_cycles": 56777,
+     "holds": {
+      "0": 289,
+      "8": 825,
+      "17": 3,
+      "25": 618,
+      "26": 164,
+      "34": 136,
+      "42": 614
+     },
+     "classes": {
+      "BB": 2160,
+      "DB": 1941,
+      "CB": 680,
+      "EL": 1604,
+      "ER": 751,
+      "AL": 1522,
+      "BL": 346,
+      "DL": 289,
+      "CL": 733,
+      "CR": 691,
+      "AR": 921,
+      "CP": 136,
+      "AX": 164,
+      "GL": 80,
+      "BR": 5,
+      "DR": 3,
+      "GB": 76
+     },
+     "unpacked_ops": 666,
+     "vectors": 16796,
+     "vectors_packed": 5082,
+     "issue_cycles": 16916
+    }
+   },
+   "design_keys": {
+    "vm_x_gather_stages": 10,
+    "vm_ret_scatter_stages": 10,
+    "vm_coll_write_stages": 10,
+    "su_ret_stages": 7,
+    "su_bcast_stages": 4,
+    "su_op_extra_cycles": 31.157,
+    "su_red_extra_cycles": 38.273,
+    "su_lanes": 876.1872165654145,
+    "sfu_lanes": 219.04680414135362
+   },
+   "rates": {
+    "ar_tokens_s": 3347.0,
+    "mtp_tokens_s": 5486.6,
+    "T_us": 298.77,
+    "verify_over_ar": 2.151
+   },
+   "rates_clients_only": {
+    "ar_tokens_s": 3693.0,
+    "mtp_tokens_s": 5728.4,
+    "T_us": 270.78,
+    "verify_over_ar": 2.2775
+   },
+   "sram": {
+    "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "macros": 1536,
+    "mm2": 10.893,
+    "note": "the same replica / bank count serves every option: the port demand is the SU's"
+   },
+   "footprint_mm2": 38.602
   },
   "C": {
    "geometry": {
     "lane_array_mm2": 23.9127808,
     "lane_side_um": 4890.069610956474,
-    "vm_block_mm2": 50.2866551808,
-    "vm_depth_um": 10283.423178297899,
-    "bank_to_lane_um": 17618.527594732608,
-    "bank_to_port_um": 12728.457983776136,
-    "block_mm2": 74.19943598079999
+    "vm_block_mm2": 50.1705778176,
+    "vm_depth_um": 10259.685814122158,
+    "bank_to_lane_um": 17594.79023055687,
+    "bank_to_port_um": 12704.720619600395,
+    "block_mm2": 74.0833586176
    },
    "networks": [
     {
      "kind": "crossbar",
      "comb_cells": 33521664,
-     "flops": 720896,
-     "cell_mm2": 3.1560105984,
-     "footprint_mm2": 6.3120211968
+     "flops": 688128,
+     "cell_mm2": 3.1463374848,
+     "footprint_mm2": 6.2926749696
     },
     {
      "kind": "crossbar",
      "comb_cells": 33521664,
-     "flops": 720896,
-     "cell_mm2": 3.1560105984,
-     "footprint_mm2": 6.3120211968
+     "flops": 688128,
+     "cell_mm2": 3.1463374848,
+     "footprint_mm2": 6.2926749696
     },
     {
      "kind": "crossbar",
      "comb_cells": 33521664,
-     "flops": 720896,
-     "cell_mm2": 3.1560105984,
-     "footprint_mm2": 6.3120211968
+     "flops": 688128,
+     "cell_mm2": 3.1463374848,
+     "footprint_mm2": 6.2926749696
     },
     {
      "kind": "crossbar",
      "comb_cells": 33521664,
-     "flops": 720896,
-     "cell_mm2": 3.1560105984,
-     "footprint_mm2": 6.3120211968
+     "flops": 688128,
+     "cell_mm2": 3.1463374848,
+     "footprint_mm2": 6.2926749696
     },
     {
      "kind": "crossbar",
      "comb_cells": 33521664,
-     "flops": 720896,
-     "cell_mm2": 3.1560105984,
-     "footprint_mm2": 6.3120211968
+     "flops": 688128,
+     "cell_mm2": 3.1463374848,
+     "footprint_mm2": 6.2926749696
     },
     {
      "kind": "crossbar",
      "comb_cells": 33521664,
-     "flops": 720896,
-     "cell_mm2": 3.1560105984,
-     "footprint_mm2": 6.3120211968
+     "flops": 688128,
+     "cell_mm2": 3.1463374848,
+     "footprint_mm2": 6.2926749696
     }
    ],
-   "network_cell_mm2": 18.9360635904,
-   "network_footprint_mm2": 37.8721271808,
+   "network_cell_mm2": 18.8780249088,
+   "network_footprint_mm2": 37.7560498176,
    "clients": {
     "x_gather": 15,
     "ret_scatter": 15,
@@ -481,22 +775,22 @@
    },
    "su_op_class_stages": {
     "control_broadcast": 4,
-    "operand_read": 22,
-    "gather_read": 22,
-    "element_write": 22,
+    "operand_read": 21,
+    "gather_read": 21,
+    "element_write": 21,
     "reduce_result": 15
    },
-   "su_op_extra_cycles": 48,
-   "su_red_extra_cycles": 41,
+   "su_op_extra_cycles": 46,
+   "su_red_extra_cycles": 40,
    "su_issue_ratio": 1.0,
    "sensitivity_3850um_each_way": {
-    "one_way": 7,
-    "su_op_extra_cycles": 18,
+    "one_way": 6,
+    "su_op_extra_cycles": 16,
     "rates": {
-     "ar_tokens_s": 3454.8,
-     "mtp_tokens_s": 5611.7,
-     "T_us": 289.45,
-     "verify_over_ar": 2.1715
+     "ar_tokens_s": 3475.9,
+     "mtp_tokens_s": 5627.3,
+     "T_us": 287.69,
+     "verify_over_ar": 2.179
     }
    },
    "design_keys": {
@@ -505,16 +799,16 @@
     "vm_coll_write_stages": 15,
     "su_ret_stages": 15,
     "su_bcast_stages": 4,
-    "su_op_extra_cycles": 48,
-    "su_red_extra_cycles": 41,
+    "su_op_extra_cycles": 46,
+    "su_red_extra_cycles": 40,
     "su_lanes": 1024.0,
     "sfu_lanes": 256.0
    },
    "rates": {
-    "ar_tokens_s": 3166.7,
-    "mtp_tokens_s": 5387.5,
-    "T_us": 315.78,
-    "verify_over_ar": 2.0699
+    "ar_tokens_s": 3184.4,
+    "mtp_tokens_s": 5401.9,
+    "T_us": 314.03,
+    "verify_over_ar": 2.0761
    },
    "rates_clients_only": {
     "ar_tokens_s": 3659.4,
@@ -528,64 +822,64 @@
     "mm2": 10.893,
     "note": "the same replica / bank count serves every option: the port demand is the SU's"
    },
-   "footprint_mm2": 74.199
+   "footprint_mm2": 74.083
   },
   "C_rotate": {
    "geometry": {
     "lane_array_mm2": 23.9127808,
     "lane_side_um": 4890.069610956474,
-    "vm_block_mm2": 14.4559875072,
-    "vm_depth_um": 2956.1925815555983,
-    "bank_to_lane_um": 10291.29699799031,
-    "bank_to_port_um": 5401.227387033836,
-    "block_mm2": 38.3687683072
+    "vm_block_mm2": 14.339910144,
+    "vm_depth_um": 2932.455217379857,
+    "bank_to_lane_um": 10267.559633814568,
+    "bank_to_port_um": 5377.490022858094,
+    "block_mm2": 38.252690944
    },
    "networks": [
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 458752,
-     "cell_mm2": 0.1641938944,
-     "footprint_mm2": 0.3283877888
+     "flops": 425984,
+     "cell_mm2": 0.1545207808,
+     "footprint_mm2": 0.3090415616
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 458752,
-     "cell_mm2": 0.1641938944,
-     "footprint_mm2": 0.3283877888
+     "flops": 425984,
+     "cell_mm2": 0.1545207808,
+     "footprint_mm2": 0.3090415616
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 458752,
-     "cell_mm2": 0.1641938944,
-     "footprint_mm2": 0.3283877888
+     "flops": 425984,
+     "cell_mm2": 0.1545207808,
+     "footprint_mm2": 0.3090415616
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 458752,
-     "cell_mm2": 0.1641938944,
-     "footprint_mm2": 0.3283877888
+     "flops": 425984,
+     "cell_mm2": 0.1545207808,
+     "footprint_mm2": 0.3090415616
     },
     {
      "kind": "benes",
      "comb_cells": 622592,
-     "flops": 491520,
-     "cell_mm2": 0.19976028159999998,
-     "footprint_mm2": 0.39952056319999996
+     "flops": 458752,
+     "cell_mm2": 0.190087168,
+     "footprint_mm2": 0.380174336
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 458752,
-     "cell_mm2": 0.1641938944,
-     "footprint_mm2": 0.3283877888
+     "flops": 425984,
+     "cell_mm2": 0.1545207808,
+     "footprint_mm2": 0.3090415616
     }
    ],
-   "network_cell_mm2": 1.0207297536000002,
-   "network_footprint_mm2": 2.0414595072000004,
+   "network_cell_mm2": 0.962691072,
+   "network_footprint_mm2": 1.925382144,
    "clients": {
     "x_gather": 7,
     "ret_scatter": 7,
@@ -595,22 +889,22 @@
    },
    "su_op_class_stages": {
     "control_broadcast": 4,
-    "operand_read": 14,
-    "gather_read": 15,
-    "element_write": 14,
+    "operand_read": 13,
+    "gather_read": 14,
+    "element_write": 13,
     "reduce_result": 7
    },
-   "su_op_extra_cycles": 32,
-   "su_red_extra_cycles": 25,
+   "su_op_extra_cycles": 30,
+   "su_red_extra_cycles": 24,
    "su_issue_ratio": 1.0,
    "sensitivity_3850um_each_way": {
-    "one_way": 7,
-    "su_op_extra_cycles": 18,
+    "one_way": 6,
+    "su_op_extra_cycles": 16,
     "rates": {
-     "ar_tokens_s": 3528.4,
-     "mtp_tokens_s": 5668.2,
-     "T_us": 283.41,
-     "verify_over_ar": 2.1965
+     "ar_tokens_s": 3550.4,
+     "mtp_tokens_s": 5684.1,
+     "T_us": 281.66,
+     "verify_over_ar": 2.2042
     }
    },
    "design_keys": {
@@ -619,16 +913,16 @@
     "vm_coll_write_stages": 7,
     "su_ret_stages": 7,
     "su_bcast_stages": 4,
-    "su_op_extra_cycles": 32,
-    "su_red_extra_cycles": 25,
+    "su_op_extra_cycles": 30,
+    "su_red_extra_cycles": 24,
     "su_lanes": 1024.0,
     "sfu_lanes": 256.0
    },
    "rates": {
-    "ar_tokens_s": 3381.8,
-    "mtp_tokens_s": 5559.2,
-    "T_us": 295.7,
-    "verify_over_ar": 2.1448
+    "ar_tokens_s": 3402.0,
+    "mtp_tokens_s": 5574.5,
+    "T_us": 293.95,
+    "verify_over_ar": 2.1519
    },
    "rates_clients_only": {
     "ar_tokens_s": 3737.6,
@@ -642,71 +936,71 @@
     "mm2": 10.893,
     "note": "the same replica / bank count serves every option: the port demand is the SU's"
    },
-   "footprint_mm2": 38.369
+   "footprint_mm2": 38.253
   },
   "A": {
    "geometry": {
-    "block_mm2": 39.1047441792,
-    "w_um": 6377.582796488129,
-    "h_um": 6131.584833116782,
-    "scale": 1.037528314514329,
-    "x_gather_um": 8860.49180595237,
-    "ret_scatter_um": 8860.49180595237,
-    "coll_um_at_port": 8860.49180595237,
-    "coll_um_w1": 12923.452685590482,
-    "su_results_um": 5672.167295449837,
-    "rotate_um": 12509.167629604912,
-    "scalar_fetch_um": 6254.583814802456
+    "block_mm2": 38.9693205888,
+    "w_um": 6366.530119579224,
+    "h_um": 6120.9584832499795,
+    "scale": 1.0357302249230058,
+    "x_gather_um": 8845.13612084247,
+    "ret_scatter_um": 8845.13612084247,
+    "coll_um_at_port": 8845.13612084247,
+    "coll_um_w1": 12901.05568164096,
+    "su_results_um": 5662.337139654072,
+    "rotate_um": 12487.488602829204,
+    "scalar_fetch_um": 6243.744301414602
    },
    "networks": [
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "rotate",
      "comb_cells": 327680,
-     "flops": 557056,
-     "cell_mm2": 0.19321323520000003,
-     "footprint_mm2": 0.38642647040000005
+     "flops": 524288,
+     "cell_mm2": 0.18354012160000002,
+     "footprint_mm2": 0.36708024320000004
     },
     {
      "kind": "benes",
      "comb_cells": 622592,
-     "flops": 589824,
-     "cell_mm2": 0.2287796224,
-     "footprint_mm2": 0.4575592448
+     "flops": 557056,
+     "cell_mm2": 0.21910650880000002,
+     "footprint_mm2": 0.43821301760000003
     },
     {
      "kind": "bcast",
@@ -723,8 +1017,8 @@
      "footprint_mm2": 0.000813056
     }
    ],
-   "network_cell_mm2": 1.3888720896000004,
-   "network_footprint_mm2": 2.777744179200001,
+   "network_cell_mm2": 1.3211602944000003,
+   "network_footprint_mm2": 2.6423205888000005,
    "clients": {
     "x_gather": 11,
     "ret_scatter": 11,
@@ -735,14 +1029,14 @@
    },
    "su_op_class_stages": {
     "control_broadcast": 4,
-    "unit_stride_read": 17,
-    "scalar_read": 17,
-    "gather_read": 18,
-    "element_write": 17,
+    "unit_stride_read": 16,
+    "scalar_read": 16,
+    "gather_read": 17,
+    "element_write": 16,
     "reduce_result": 7
    },
-   "su_op_extra_cycles": 38,
-   "su_red_extra_cycles": 28,
+   "su_op_extra_cycles": 36,
+   "su_red_extra_cycles": 27,
    "su_issue_ratio": 1.0,
    "design_keys": {
     "vm_x_gather_stages": 11,
@@ -750,16 +1044,16 @@
     "vm_coll_write_stages": 11,
     "su_ret_stages": 7,
     "su_bcast_stages": 4,
-    "su_op_extra_cycles": 38,
-    "su_red_extra_cycles": 28,
+    "su_op_extra_cycles": 36,
+    "su_red_extra_cycles": 27,
     "su_lanes": 1024.0,
     "sfu_lanes": 256.0
    },
    "rates": {
-    "ar_tokens_s": 3291.3,
-    "mtp_tokens_s": 5488.2,
-    "T_us": 303.83,
-    "verify_over_ar": 2.1133
+    "ar_tokens_s": 3310.5,
+    "mtp_tokens_s": 5503.2,
+    "T_us": 302.07,
+    "verify_over_ar": 2.1201
    },
    "rates_clients_only": {
     "ar_tokens_s": 3698.1,
@@ -773,15 +1067,21 @@
     "mm2": 10.893,
     "note": "the same replica / bank count serves every option: the port demand is the SU's"
    },
-   "footprint_mm2": 39.105
+   "footprint_mm2": 38.969
   }
  },
  "source_sha256": {
-  "tools/w11_vm_options.py": "56a8cc419b91d4ebbf7f27ae49e4d20f194dc90ebd98fdcf646ccc0d596b9531",
-  "tools/uarch_model.py": "bb9f1b16fee63e3e4a6f8f7babd8bbeb089743462087b9efbaffcad10e5115c5",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "ca1c02361bc218863e01dd9d8128aceb62369672645612952095c624f6780747",
+  "tools/w11_vm_options.py": "e8a6074e6abb9a0b3105205655c449953b54434f51b7342c9b2ee2eb90c2e1ea",
+  "tools/uarch_model.py": "b264a876c92971de59b4b1707159f2bbfb4007aa677e47e85bb6dfd46be2e36f",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
+  "tools/w11_vm_h.py": "5e24e7373073d5adf55b6303e0c0b9e71b8699c6ca0e57fa337d4a1d12ec84fb",
+  "tools/w11_vm_dist_spec.py": "ffb114db8415e567366447751091c6587bda3026efb2fabfa21720f3b4467920",
+  "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "81fa804534d548b7c1f77dc97b33b643d49fd78d63316a15592d920fcc1eca37",
+  "results/physical_abi3/asap7/chip/w11_vm_rot/lps10/physical.json": "287454b67c17612baeb0335275cd3a257ee6a968d9323ef2987168811c06720a",
+  "results/physical_abi3/asap7/chip/w11_vm_rot/lps5/physical.json": "95f6b5dcde345f31af938419c512519f6721056112d443bf627009d5cfc683f0",
+  "results/physical_abi3/asap7/chip/w11_vm_rot/lps8/physical.json": "d11732832bcdb078929760c600e9393d9f145c514faeaf47191d456da8cc7602",
   "results/floorplan/v41_vm_dist_spec.json": "bcad859f7b985ecec5206dcadac6dfced6df998b115f7b32de1c4dd234fb055b",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
-  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f"
+  "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d"
  }
 }

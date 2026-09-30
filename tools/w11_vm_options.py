@@ -479,7 +479,7 @@ def main() -> int:
 
     base = copy.deepcopy(U.PRESETS["proposal"])
     for k in ("vm_x_gather_stages", "vm_ret_scatter_stages", "vm_coll_write_stages", "su_ret_stages",
-              "su_bcast_stages", "su_op_extra_cycles", "su_red_extra_cycles"):
+              "su_bcast_stages", "su_op_extra_cycles", "su_red_extra_cycles", "su_issue_ratio"):
         base.pop(k, None)
     rows = {}
     rows["flat_vm_reference"] = dict(design=dict(name="flat_vm_reference"), **rate(dict(base, name="flat")))

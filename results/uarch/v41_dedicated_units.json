@@ -378,8 +378,8 @@
      },
      "softmax_issue_vectors": 97,
      "su_bcast_stages": 4,
-     "su_ret_stages": 4,
-     "softmax_chain_cycles": 445,
+     "su_ret_stages": 7,
+     "softmax_chain_cycles": 457,
      "measured": {
       "record": "results/rtl/v41x_su_softmax.json",
       "t640_n16_m8": 3280
@@ -850,9 +850,9 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "904ae42f1b8f2639022bd9879401862c6dfb89c2ee70dde87b78a2c6d7cbf44d",
+  "tools/uarch_model.py": "b264a876c92971de59b4b1707159f2bbfb4007aa677e47e85bb6dfd46be2e36f",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "7d05b86774dd90c4f4d8ed6665f87796ee61ef7569c9642c05a8f05630dc72a7",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
   "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
   "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json": "d147f1c3fe358a6d79e3a59cc13048c99f0168f246c74b6065e82ea291be3955",
   "results/rtl/v41_full_attention_numeric/result.json": "883442f90d7a7430e1a2b019e23da9fd724aedd706fe1cbbd5c43c0c4a942fba",

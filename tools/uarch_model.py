@@ -126,18 +126,28 @@ BASE = dict(
     collective_cycles=232,        # measured: 12 layer-0 collectives in 2,780 cycles (V41_DIE_ENGINE_PROFILE)
 )
 
-# Distributed VM (root decision 2026-09-29): the VM is lane-group-local banks inside HUB_SU_VECTOR (128 groups of 8
-# lanes, element i in group i mod 128).  Register stages from the W1 hub geometry (results/floorplan/
-# v41_pack_expanded_woa.json), SU lane array 11.96 mm2 as a 3,458 um square abutting the HUB_VM strip and centred on
-# it, at 0.92 ns / 0.76 ps/um:
-#   x gather     farthest group -> VM port (west edge centre): 3,458 + 1,729 = 5,187 um      -> 6
-#   result scatter  VM port -> farthest group, the same run                                    -> 6
-#   collective write  with the collective endpoint at the VM port (W10 placement, root 2026-09-29): the scatter
-#                     tree alone -> 6 (11 from HUB_COLLECTIVE's W1 position)
-#   SU results   reducer root at the array centre -> farthest group 3,458 um (element writes are local) -> 4
-VM_DIST = dict(vm_x_gather_stages=6, vm_ret_scatter_stages=6, vm_coll_write_stages=6, su_ret_stages=4)
+# Distributed VM, option H (ROOT DECISION 2026-09-30, W11; results/uarch/w11_vm_options.json option H_rtl): the VM
+# is lane-group-local banks inside HUB_SU_VECTOR (128 groups of 8 lanes, element e in group e mod 128); the
+# builder 128-aligns every VM region (tools/hdc_program_v41.py HDC_V41_VM_ALIGN=128); the stream unit decides per
+# op whether it needs the per-row scalar fetch, the residual rotate network or the gather network and holds the
+# op for them (rtl/hdc/v41x/ot_hdc_v41x_vec.sv VMD_NG).  Register stages from the SU + VM block of
+# results/floorplan/v41_vm_dist_spec.json grown by the networks, at 0.92 ns / 0.76 ps/um:
+#   x gather / result scatter   farthest group <-> VM port                                  -> 10 / 10
+#   collective write            endpoint at the VM port (W10 placement), the scatter tree    -> 10
+#   SU results                  reducer root at the block centre -> farthest group           -> 7
+#   su_op_extra_cycles / su_red_extra_cycles: the mean per-op stages a dependent SU element op / reduction pays
+#   on the vehicle (the broadcast tree 4, the op's network hold, the local write 1 or the result tree) --
+#   evaluate() adds them to the depth of every SU vector / reduce node
+VM_DIST = dict(vm_x_gather_stages=10, vm_ret_scatter_stages=10, vm_coll_write_stages=10, su_ret_stages=7)
+#   su_issue_ratio: SU issue cycles / the packed layout's vectors (ops laid out one row a vector so every stream
+#   is one rotation; ops with a gather / half / other-stride stream crossing the class-X trees 64 elements a
+#   cycle) -- all three measured on the full-shape L0 program (results/uarch/w11_vm_options.json option H_rtl;
+#   the unit's own decision, rtl/hdc/v41x/ot_hdc_v41x_vec.sv VMD_NG, rotate network 10 mux levels a stage,
+#   results/physical_abi3/asap7/chip/w11_vm_rot)
+VM_DIST_H = dict(su_op_extra_cycles=31.157, su_red_extra_cycles=38.273, su_issue_ratio=1.1687)
 # the SU's broadcast tree to the farthest lane (W11 SU worker's placement derivation, root-accepted)
 SU_BCAST = dict(su_bcast_stages=4)
+SU_OP_EXTRA_NATIVE = True     # evaluate() prices su_op_extra_cycles / su_red_extra_cycles itself
 
 PRESETS = {
     # the RTL as elaborated today (W1 rung 1 profile + measured component gates)
@@ -167,19 +177,9 @@ PRESETS["proposal"] = dict(PRESETS["spec_striped"], name="proposal", vm_read_ele
                            # v41p17_r0d1024_sweep fit); collective_cycles is then unused
                            collective_w15="v41p17_r0d1024",
                            # ROOT DECISION 2026-09-29 (W11): distributed VM (lane-group banks) and SU broadcast stages
-                           **VM_DIST, **SU_BCAST)
+                           **VM_DIST, **VM_DIST_H, **SU_BCAST)
 PRESETS["proposal_whole"] = dict(PRESETS["proposal"], name="proposal_whole", row_split="whole")
 PRESETS["proposal_ksplit"] = dict(PRESETS["proposal"], name="proposal_ksplit", row_split="ksplit")
-# Distributed VM (root decision 2026-09-29): the VM is lane-group-local banks inside HUB_SU_VECTOR (128 groups of 8
-# lanes, element i in group i mod 128).  Register stages from the W1 hub geometry (results/floorplan/
-# v41_pack_expanded_woa.json), SU lane array 11.96 mm2 as a 3,458 um square abutting the HUB_VM strip and centred on
-# it, at 0.92 ns / 0.76 ps/um:
-#   x gather     farthest group -> VM port (west edge centre): 3,458 + 1,729 = 5,187 um      -> 6
-#   result scatter  VM port -> farthest group, the same run                                    -> 6
-#   collective write  HUB_COLLECTIVE centre -> VM port 3,774 um, then the scatter tree: 8,961 um -> 11
-#   SU results   reducer root at the array centre -> farthest group 3,458 um (element writes are local) -> 4
-VM_DIST = dict(vm_x_gather_stages=6, vm_ret_scatter_stages=6, vm_coll_write_stages=11, su_ret_stages=4)
-PRESETS["proposal_vmdist"] = dict(PRESETS["proposal"], name="proposal_vmdist", **VM_DIST)
 PRESETS["prop_vm256_measured"] = dict(PRESETS["prop_vm256"], name="prop_vm256_measured", su_lanes=16, sfu_lanes=8,
                                       att_macs=32768, use_measured_attention=True, idx_reader_Bpc=60 * 32,
                                       idx_macs=1024, collective_cycles=232)
@@ -357,7 +357,9 @@ def evaluate(d: dict, ctx: int = 1048576):
                 lanes_arch = _spec().sfu_lanes if nd["resource"][0] == "sfu" else _spec().su_lanes
                 n_el = nd["resource"][1] * lanes_arch
                 lanes = d["sfu_lanes"] if nd["resource"][0] == "sfu" else d["su_lanes"]
-                nd["issue"] = math.ceil(n_el / lanes) * cyc
+                nd["issue"] = math.ceil(n_el / lanes) * cyc * d.get("su_issue_ratio", 1.0)
+                # distributed VM option H: the per-op network / tree stages a dependent SU op pays (VM_DIST_H)
+                nd["depth"] += d.get("su_red_extra_cycles" if k == "reduce" else "su_op_extra_cycles", 0.0) * cyc
         elif k == "kvscan":
             if name.endswith("idx.score") and d["idx_reader_Bpc"]:
                 n_keys = int(nd["desc"].split()[2])
