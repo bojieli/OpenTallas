@@ -35,7 +35,8 @@ module tb_w15_v41_tp4 #(
     // engine width (FP32 lanes per record) and link-layer bundles per link cycle; a 32-lane engine carries
     // 128 B records, so the board frame (one RS(272,257) codeword payload) takes X_NL = 1 bundle a PCS cycle,
     // two per codeword = 256 B, the same 4 x 64 B the 16-lane frame carries
-    parameter integer LANES = 16, U_NL = 2, X_NL = 2
+    parameter integer LANES = 16, U_NL = 2, X_NL = 2,
+    parameter integer FIFO_SRAM = 0, SRAM_MACRO = 1
 );
     localparam integer N=4, FW=32*LANES, PW=FW+35, RB=2, WA=15, GW=4, TSW=16;
     localparam integer OPS=12, MAXW=320, MEMW=32768;
@@ -142,7 +143,7 @@ module tb_w15_v41_tp4 #(
             .o_data(od[s*GW*FW+:GW*FW]),.o_last(ol[s]),.o_rank(orank[s*RB+:RB]),
             .o_err(oerr[s]),.engine_fault(efault[s]));
         ot_rom_oneshot_die_px #(.N(N),.RANK(s),.LANES(LANES),.TAGW(32),.DEPTH(DEPTH),
-                                .PKG_DIES(2),.RELAY(RELAY),.ADD_LAT(3),.PAIRWISE(1),.GW(4),.OUT_BP(1)) u_coll (
+                                .PKG_DIES(2),.RELAY(RELAY),.ADD_LAT(3),.PAIRWISE(1),.GW(4),.OUT_BP(1),.FIFO_SRAM(FIFO_SRAM),.SRAM_MACRO(SRAM_MACRO)) u_coll (
             .clk(clk[s]),.rst_n(rst_n[s]),.in_valid(ev[s]),.in_ready(er[s]),.in_data(ed[s*FW+:FW]),
             .in_last(el[s]),.in_mode(em[s]),.in_tag(etag[s*32+:32]),
             .tx_valid(txv[s*N+:N]),.tx_rec(txrec[s*PW+:PW]),.tx_ready(txready[s*N+:N]),

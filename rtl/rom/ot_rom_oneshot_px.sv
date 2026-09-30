@@ -51,6 +51,8 @@ module ot_rom_oneshot_die_px #(
     parameter integer PAIRWISE = 0,            // full-shape wo_b: ((r0+r1)+(r2+r3))
     parameter integer GW       = 1,            // gather words emitted per cycle (divides N)
     parameter integer OUT_BP   = 0,            // GW=N gather may hold output until out_ready
+    parameter integer FIFO_SRAM = 0,           // 1: receive FIFOs in 1R1W SRAM macros (rtl/link/ot_fifo_sram_fwft.sv)
+    parameter integer SRAM_MACRO = 1,          //    macro kind (0 64x512, 1 256x256, 2 128x256); DEPTH/2 <= its words
     parameter integer FW       = 32 * LANES,
     parameter integer PW       = FW + 3 + TAGW, // {tag, mode, last, par, data}
     parameter integer RB       = (N > 1) ? $clog2(N) : 1
@@ -128,6 +130,7 @@ module ot_rom_oneshot_die_px #(
     reg           ppar;                                 // index parity of the next pop
     wire [2*N-1:0] push;
     wire [2*N-1:0] clash;
+    wire [2*N-1:0] hvf;                                 // head valid per (source, parity) FIFO
     wire [N-1:0]  nonempty;
     wire [PW-1:0] head [0:N-1];
     wire [PW-1:0] hd [0:2*N-1];
@@ -144,18 +147,25 @@ module ot_rom_oneshot_die_px #(
                 wire [PW-1:0] rec = (g == RANK) ? tx_rec : (pd_ ? rx_rec[g*PW +: PW] : rl_rx_rec[g*PW +: PW]);
                 assign push[F] = pd_ || pr_;
                 assign clash[F] = pd_ && pr_;
-                reg [PW-1:0] m [0:PD-1];
-                reg [DB-1:0] wp, rp;
-                always @(posedge clk) if (push[F]) m[wp] <= rec;
-                always @(posedge clk or negedge rst_n)
-                    if (!rst_n) begin wp <= 0; rp <= 0; end
-                    else begin
-                        if (push[F]) wp <= wp + 1'b1;
-                        if (pop && ppar == q) rp <= rp + 1'b1;
-                    end
-                assign hd[F] = m[rp];
+                if (FIFO_SRAM != 0) begin : g_sram
+                    ot_fifo_sram_fwft #(.W(PW), .DEPTH(PD), .MACRO(SRAM_MACRO)) u_f (
+                        .clk(clk), .rst_n(rst_n), .push(push[F]), .wdata(rec), .pop(pop && ppar == q),
+                        .hv(hvf[F]), .head(hd[F]), .ovf());
+                end else begin : g_flop
+                    reg [PW-1:0] m [0:PD-1];
+                    reg [DB-1:0] wp, rp;
+                    always @(posedge clk) if (push[F]) m[wp] <= rec;
+                    always @(posedge clk or negedge rst_n)
+                        if (!rst_n) begin wp <= 0; rp <= 0; end
+                        else begin
+                            if (push[F]) wp <= wp + 1'b1;
+                            if (pop && ppar == q) rp <= rp + 1'b1;
+                        end
+                    assign hd[F] = m[rp];
+                    assign hvf[F] = cnt[F] != 0;
+                end
             end
-            assign nonempty[g] = ppar ? (cnt[2*g + 1] != 0) : (cnt[2*g] != 0);
+            assign nonempty[g] = ppar ? hvf[2*g + 1] : hvf[2*g];
             assign head[g] = ppar ? hd[2*g + 1] : hd[2*g];
             // a record landing from a partner-package source is relayed to the package peer the cycle it lands
             if (RELAY != 0 && g != RANK && (g / PKG_DIES) != MYPKG) begin : g_on

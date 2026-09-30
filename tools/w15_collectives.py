@@ -175,12 +175,16 @@ BUILD = Path(os.environ.get("W15_BUILD", "/tmp/claude-1000/w15b"))
 VEC = Path(os.environ.get("W15_VEC", "/tmp/claude-1000/w15v"))
 LINK_SRC = ["rtl/link/ot_link_afifo.sv", "rtl/link/ot_link_crc32.sv", "rtl/link/ot_link_tx.sv", "rtl/link/ot_link_rx.sv",
             "rtl/link/ot_link_chan_model.sv"]
+SRAM_SRC = ["rtl/link/ot_fifo_sram_fwft.sv",
+            "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+            "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+            "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"]
 TB_SRC = {
     "tb_w15_v41_tp4": ["rtl/test/tb_w15_v41_tp4.sv", *LINK_SRC, "rtl/chip/ot_chip_v41x_coll_dma.sv",
                        "rtl/chip/ot_chip_v41x_coll_transpose.sv", "rtl/rom/ot_rom_oneshot_px.sv",
-                       "rtl/hdc/ot_hdc_fastfp.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv"],
+                       "rtl/hdc/ot_hdc_fastfp.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC],
     "tb_w15_qwen_tp2": ["rtl/test/tb_w15_qwen_tp2.sv", *LINK_SRC, "rtl/rom/ot_rom_oneshot_allreduce.sv",
-                        "rtl/proto/ot_fp32_add_rne_pipe.sv"],
+                        "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC],
     "tb_w15_link_unit": ["rtl/test/tb_w15_link_unit.sv", *LINK_SRC],
     "tb_w15_crc32": ["rtl/test/tb_w15_crc32.sv", "rtl/link/ot_link_crc32.sv"],
 }
@@ -244,6 +248,11 @@ CONFIGS = {
     "v41p17_r0d512_w32_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32,
                                                        X_NL=1), "sweepw32"),
     "v41p17_r0d1024_even_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep_even"),
+    # receive FIFOs in 1R1W SRAM macros (root 2026-09-29): must reproduce the flop configs' cycles and results
+    "v41p17_r0d512_w32_sram": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32, X_NL=1,
+                                                      FIFO_SRAM=1, SRAM_MACRO=1), "l0w32"),
+    "v41p17_r0d512_w32_sram_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32,
+                                                            X_NL=1, FIFO_SRAM=1, SRAM_MACRO=1), "sweepw32"),
     # payload sweep (bandwidth and the latency fit) on the same binaries
     "v41_r1d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=256), "sweep"),
     "v41_r0d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256), "sweep"),
@@ -255,6 +264,7 @@ CONFIGS = {
     "q256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64), "q256"),
     "q256d16": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=16), "q256"),
     "q256d128": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=128), "q256"),
+    "q256d64_sram": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0), "q256"),
     "q1024": ("tb_w15_qwen_tp2", dict(LANES=1024, DEPTH=16, U_NL=1, U_T=0.95), "q1024"),
 }
 

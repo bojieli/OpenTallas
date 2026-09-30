@@ -16,6 +16,7 @@ module tb_w15_qwen_tp2 #(
     parameter integer LANES = 16,
     parameter integer DEPTH = 16,
     parameter integer ADD_LAT = 5,
+    parameter integer FIFO_SRAM = 0, SRAM_MACRO = 0,
     parameter integer H = 4096,
     parameter integer EXCH = 73,
     parameter real    T_CORE = 0.9102,
@@ -81,7 +82,7 @@ module tb_w15_qwen_tp2 #(
         wire [31:0] nw = gatherx ? 1 : WPE;
         assign iv[s] = (st == 1) && (k < nw);
         wire [FW-1:0] ind = gatherx ? gat[s] : part[s*WPE + k];
-        ot_rom_oneshot_die #(.N(N), .RANK(s), .LANES(LANES), .TAGW(32), .DEPTH(DEPTH), .ADD_LAT(ADD_LAT)) u_e (
+        ot_rom_oneshot_die #(.N(N), .RANK(s), .LANES(LANES), .TAGW(32), .DEPTH(DEPTH), .ADD_LAT(ADD_LAT), .FIFO_SRAM(FIFO_SRAM), .SRAM_MACRO(SRAM_MACRO)) u_e (
             .clk(clk[s]), .rst_n(rst_n[s]), .in_valid(iv[s]), .in_ready(ir[s]), .in_data(ind),
             .in_last(k == nw - 1), .in_mode(gatherx), .in_tag(e[31:0]),
             .tx_valid(txv[s]), .tx_rec(txr[s*PW +: PW]), .tx_ready(txrdy[s*N +: N]), .cr_in(crin[s*N +: N]),
