@@ -19,8 +19,9 @@
     "window_bytes_per_die_per_user": 135168
   },
   "isolation": {
+    "die": "the die (ot_chip_v41x_die) ties the key user base low",
     "die_integrated": false,
-    "reason": "the ring gate writes and reads four users (0, 481, 551, 865) of an 866-user region with every HBM request checked against its user's region; the die (ot_chip_v41x_die) still uses the replicated key path and ties the key user base low",
+    "standalone": "the ring gate writes and reads four users (0, 481, 551, 865) of an 866-user region with every HBM request checked against its user's region",
     "standalone_multiuser_key_address_isolation": true
   },
   "ring": {
@@ -51,14 +52,15 @@
   "scope": "1M ratio-1 layer-20 die; keys in the W11 quarter-per-stack ring layout (each stack holds one position quarter: striped, not replicated); CKV and window as in the reference preflight",
   "source_sha256": {
     "results/rtl/w11_idx_ring_gate.json": "386e1e7c3705180aa409c849a1a1ab3f7f38ceeb580b9f8e995c0addeafc8b8e",
-    "rtl/chip/ot_chip_v41x_die.sv": "e6614aa917eaa140d068eeeb6dc5fbfd40363a98c44f26e39d2193e86b5983fb",
+    "results/rtl/w11_idx_ring_naming.json": "30d98097dd7fa3074041103073194f9fb97c3218a1116857a2e0c5e9b79dce4c",
+    "rtl/chip/ot_chip_v41x_die.sv": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "829a1e1566c781466b20dc7c939026234ddbb30351a59601ce32e0c61f6a3ea3",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "d3832452c0f1716756380a97df34582aa5acddc952c84453a1a23a05c6e8a77b",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": "a2b148c335e07db4b7417bb48b7a86dd82f2cb88dc9c906b82aa12d717eb0047",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv": "85e919003fadf25e42cfbe641872fae703b490ef5d5abb0944396a5f06062ece",
     "rtl/rom/ot_rom_pkg_ctrl_x.sv": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2",
-    "tools/v41_hbm_region_preflight.py": "b5c785bcb9cd5b0dd8999532c353697bff8118d07f3b35b3fd9329e30951fdee",
-    "tools/w11_v41_hbm_region_preflight_ring.py": "5b8c1143dc97aa6df9e5171d953ac5073f31fbf9f5e350285dcd15dc9738c82d"
+    "tools/v41_hbm_region_preflight.py": "9b632973024d3744530fe3a25731fbba910571b16fbe9e1e7e7d1dc0c46dee42",
+    "tools/w11_v41_hbm_region_preflight_ring.py": "33a5c38d40c89c81e912f93bb83f8b698e218e608159881ca07d87436d629334"
   },
   "status": "capacity_match",
   "supersedes_for_ring_layout": "results/arch/v41_hbm_region_preflight.json (replicated keys: 551 users)",

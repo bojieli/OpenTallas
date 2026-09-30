@@ -7,10 +7,17 @@
 //
 // This is a correctness-rate adapter: its single G4/M2 tile back-pressures
 // the 64-key kmerge beat.  Production rate needs replicated tile slices.
+// RING = 1 (opt-in, W11): the keys are read in the quarter-per-stack ring layout
+// by four ot_hdc_v41x_idx_kstream_ring streams joined by
+// ot_hdc_v41x_idx_quarter_join (the same 64-key quarter-order beat as kmerge).
 module ot_hdc_v41x_idx_pool_adapt #(
     parameter integer W=16, G=4, IL=8, AW=24, NW=16, MP=2,
     parameter integer IH=32, NPC=32, HAW=28, HLENW=4, HTAGW=16, HBEATW=4,
-    parameter integer SHARDED=0, SLICE_SECTORS=0
+    parameter integer SHARDED=0, SLICE_SECTORS=0,
+    // opt-in W11 quarter-per-stack ring key layout (ot_hdc_v41x_idx_ring_ranges): each
+    // region at the legacy region base block is a ring of RING_RSB super-blocks + a
+    // RING_RTAIL-key tail; written by ot_hdc_v41x_idx_ring_port (tile)
+    parameter integer RING=0, RING_RSB=1, RING_RTAIL=0, RING_WB=32, RING_GA=24
 ) (
     input wire clk, rst_n, go,
     output wire ready,
@@ -67,8 +74,13 @@ module ot_hdc_v41x_idx_pool_adapt #(
     wire [HAW:0] super_count_now=(local_keys_now+1023)>>10;
     wire [HAW:0] local_end_now={1'b0,local_base_now}+super_count_now*(HAW+1)'(2176);
     wire [HAW:0] physical_end_now={1'b0,i_user_base_sec}+local_end_now;
+    // RING: region r of the user is RING_UBLK blocks at user base + r x RING_UBLK (ot_hdc_v41x_idx_ring_ranges)
+    localparam integer RING_UBLK=RING_RSB*17+((RING_RTAIL!=0) ? 1+(RING_RTAIL+63)/64 : 0);
+    wire [HAW+8:0] ring_end_now=(HAW+9)'(i_user_base_sec)+
+        (HAW+9)'((HAW'((i_wbase-cfg_ik_base)>>7)+HAW'(1))*HAW'(RING_UBLK))*(HAW+9)'(128);
     wire bad_cfg_now=!i_fuse || (i_k!=32 && i_k!=128) || !i_mmode || ((IL<<i_hg)!=IH) ||
-        (i_user_base_sec[6:0]!=0) || physical_end_now[HAW] ||
+        (i_user_base_sec[6:0]!=0) ||
+        ((RING==0) ? physical_end_now[HAW] : (ring_end_now > (HAW+9)'(1)<<HAW)) ||
         (SHARDED && SLICE_SECTORS>0 && local_end_now>(HAW+1)'(SLICE_SECTORS));
     assign ready=st==A_IDLE;
 
@@ -196,7 +208,61 @@ module ot_hdc_v41x_idx_pool_adapt #(
     wire [47:0] merge_refcnt;
     reg [47:0] keys_sum,hb_sum;
     wire shard_fault;
-    generate if(SHARDED != 0) begin:g_sharded
+    generate if(RING != 0) begin:g_ring
+        localparam integer RHW=HAW-7, RNW=RHW+10;
+        wire [4*RHW-1:0] r_base1,r_base2;
+        wire [4*10-1:0] r_skip;
+        wire [4*RNW-1:0] r_n1,r_n2;
+        wire r_gfault,r_jfault,r_jbusy;
+        wire [3:0] sv,sr;
+        wire [4*16-1:0] skv;
+        wire [4*16*544-1:0] skey;
+        wire [4*48-1:0] ks_cnt,hb_cnt;
+        reg r_bad;
+        ot_hdc_v41x_idx_ring_ranges #(.HW(RHW),.UW(1),.RSB(RING_RSB),.RTAIL(RING_RTAIL)) geo (
+            .i_nkeys(RNW'(n)),.i_user(1'b0),
+            .cfg_key_base_block(RHW'(i_user_base_sec>>7)+RHW'(ik_off>>7)*RHW'(RING_UBLK)),
+            .o_base1(r_base1),.o_skip(r_skip),.o_n1(r_n1),.o_base2(r_base2),.o_n2(r_n2),
+            .o_user_base(),.o_fault(r_gfault));
+        genvar s;
+        for(s=0;s<4;s=s+1) begin:g_stack
+            ot_hdc_v41x_idx_kstream_ring #(.NPC(NPC),.WB(RING_WB),.GA(RING_GA),.AW(HAW),.HW(RHW),
+                .TAGW(HTAGW),.LENW(HLENW),.BEATW(HBEATW),.DW(256)) stream (
+                .clk(clk),.rst_n(rst_n),
+                .cmd_v(scan_cmd && (r_n1[s*RNW +: RNW]+r_n2[s*RNW +: RNW])!=0),
+                .cmd_base(r_base1[s*RHW +: RHW]),.cmd_skip(r_skip[s*10 +: 10]),.cmd_nkeys(r_n1[s*RNW +: RNW]),
+                .cmd_base2(r_base2[s*RHW +: RHW]),.cmd_nkeys2(r_n2[s*RNW +: RNW]),.busy(ks_busy[s]),
+                .req_v(h_req_v[s*NPC +: NPC]),.req_rdy(h_req_rdy[s*NPC +: NPC]),
+                .req_addr(h_req_addr[s*NPC*HAW +: NPC*HAW]),
+                .req_len(h_req_len[s*NPC*HLENW +: NPC*HLENW]),
+                .req_tag(h_req_tag[s*NPC*HTAGW +: NPC*HTAGW]),
+                .rsp_v(h_rsp_v[s*NPC +: NPC]),.rsp_rdy(h_rsp_rdy[s*NPC +: NPC]),
+                .rsp_tag(h_rsp_tag[s*NPC*HTAGW +: NPC*HTAGW]),
+                .rsp_beat(h_rsp_beat[s*NPC*HBEATW +: NPC*HBEATW]),
+                .rsp_data(h_rsp_data[s*NPC*256 +: NPC*256]),
+                .o_valid(sv[s]),.o_ready(sr[s]),.o_kv(skv[16*s +: 16]),
+                .o_key(skey[16*544*s +: 16*544]),
+                .cnt_keys_streamed(ks_cnt[48*s +: 48]),.cnt_hbm_beats(hb_cnt[48*s +: 48]));
+        end
+        ot_hdc_v41x_idx_quarter_join qjoin (
+            .clk(clk),.rst_n(rst_n),.cmd_v(scan_cmd),.cmd_nkeys(30'(n)),.cmd_skip(r_skip),
+            .busy(r_jbusy),.fault(r_jfault),.i_valid(sv),.i_ready(sr),.i_kv(skv),.i_key(skey),
+            .o_valid(merge_v),.o_ready(merge_r),.o_kv(merge_kv),.o_last(merge_last),
+            .o_key(merge_key),.o_ref(merge_ref));
+        assign merge_refcnt=48'd0;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n) r_bad<=0;
+            else if(st==A_IDLE && go) r_bad<=0;
+            else if(scan_cmd && r_gfault) r_bad<=1;
+        assign shard_fault=r_bad || r_jfault;
+        always @* begin
+            keys_sum=0;hb_sum=0;
+            for(integer t=0;t<4;t=t+1) begin
+                keys_sum=keys_sum+ks_cnt[48*t +: 48];
+                hb_sum=hb_sum+hb_cnt[48*t +: 48];
+            end
+        end
+    end else if(SHARDED != 0) begin:g_sharded
         wire shard_busy;
         wire [47:0] shard_keys,shard_beats;
         // A per-user compact base sector must be supplied through the
