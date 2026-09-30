@@ -41,8 +41,19 @@ KV_NH = 8 // TP                     # KV heads a die (rtl/hdc/ot_qwen_rom_tile.s
 KV_VB = KV_NH << KV_HB               # first V word (KV_VB)
 
 
+def set_window(tmax):
+    """Context window sizing (the 8K product: TMAX 8,192, KV_HB 16).  A head's K (or V) is tmax * HD / W words,
+    so KV_HB = log2(tmax) + 3; the tile's map slices the head index at bit KV_HB, so tmax must be a power of 2."""
+    global KV_HB, KV_VB
+    if tmax & (tmax - 1):
+        raise SystemExit('the tile map needs a power-of-two window (pad the head stride)')
+    FP.TMAX = tmax
+    KV_HB = tmax.bit_length() - 1 + 3
+    KV_VB = KV_NH << KV_HB
+
+
 def local(a, groups=GROUPS):
-    kl = -(-512 // (groups >> KV_SK)) * KV_NH
+    kl = -(-(1 << (KV_HB - 7)) // (groups >> KV_SK)) * KV_NH     # RTL KV_KL (512 position tiles at 8K)
     if a < KV_VB:
         t = (a % (1 << KV_HB)) >> 7
         return (t // (groups >> KV_SK)) * KV_NH + (a >> KV_HB)
@@ -82,11 +93,28 @@ def kv_reads(f, dyn, pos, groups):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--image', type=Path, required=True, help='a layer image directory (program.hex, layerN_rom.json)')
-    ap.add_argument('--pos', type=int, default=8191)
+    ap.add_argument('--pos', type=int, help='default: the window\'s last position')
+    ap.add_argument('--tmax', type=int, help='context window (default 8,192 = the image\'s program); another '
+                    'window rebuilds the program from the image\'s matrix layout (tools/hdc_qwen_fullshape_program, '
+                    'the ISA field dicts: no encode, so the A = 24 check is reported, not enforced)')
     ap.add_argument('--out', type=Path, required=True)
     args = ap.parse_args()
-    prog = [QI.decode_instruction(int(x, 16)) for x in (args.image / 'program.hex').read_text().split()]
     manifest = json.loads(next(args.image.glob('layer*_rom.json')).read_text())
+    tmax = args.tmax or FP.TMAX
+    if args.pos is None:
+        args.pos = tmax - 1
+    if args.tmax and args.tmax != 8192:
+        set_window(args.tmax)
+        lay0 = FP.LayerZero(None, manifest['die'], manifest['matrix_layout'])
+        vm, vm_elems = FP.vm_map()
+        with FP.program_geometry(vm):
+            prog = P.build_program(lay0, layers=[0], embed=False, head=False, scale_bases=True)
+        prog = [{n: f.get(n, 0) for n, _ in I.FIELDS} for f in prog]
+        program_src = dict(rebuilt_for_tmax=tmax, vm_elems=vm_elems, kv_window_elems=2 * lay0.kv_v0,
+                           isa_a24_ok=(vm_elems <= (1 << I.A) and 2 * lay0.kv_v0 <= (1 << I.A)))
+    else:
+        prog = [QI.decode_instruction(int(x, 16)) for x in (args.image / 'program.hex').read_text().split()]
+        program_src = dict(image_program_sha256=hashlib.sha256((args.image / 'program.hex').read_bytes()).hexdigest())
     lay = FP.LayerZero(None, manifest['die'], manifest['matrix_layout'])
     with FP.program_geometry(FP.vm_map()[0]):
         dyn = P.dyn_values(lay, token=0, pos=args.pos)
@@ -114,20 +142,24 @@ def main():
         tile_disagree += sum(1 for v in by_cycle.values() if len(v['l']) > 1)
     multi = sum(1 for v in readers.values() if len(v) > 1)
     window_k = KV_NH * (args.pos + 1) * 128 // W
-    ok = (max_local < (1 << KV_AW) and tile_disagree == 0 and collisions == 0 and multi == 0)
+    one_to_one = tile_disagree == 0 and collisions == 0 and multi == 0
+    ok = max_local < (1 << KV_AW) and one_to_one
+    need_aw = max(0, max_local).bit_length()
     src = ['tools/qwen_o4_kv_slice_map.py', 'rtl/hdc/ot_qwen_rom_tile.sv', 'rtl/hdc/ot_hdc_matvec.sv']
     rec = {'schema': 'opentallas.qwen-o4-kv-slice-map.v1', 'status': 'pass' if ok else 'fail',
            'groups': GROUPS, 'tp': TP, 'kv_heads_per_die': KV_NH, 'v_base_word': KV_VB, 'position': args.pos, 'kv_ops': len(ops), 'owned_reads': reads,
            'distinct_words_read': len(readers), 'window_words_k_plus_v_at_pos': 2 * window_k,
            'max_local_index': max_local, 'slice_words': 1 << KV_AW,
+           'window_tmax': tmax, 'kv_hb': KV_HB, 'one_to_one': one_to_one, 'kv_aw_needed': need_aw,
+           'slice_words_needed': 1 << need_aw, 'tile_kv_bytes_needed': (1 << need_aw) * 64,
+           'program': program_src,
            'tile_cycles_with_disagreeing_local': tile_disagree, 'per_group_collisions': collisions,
            'words_read_by_more_than_one_tile': multi,
-           'image_program_sha256': hashlib.sha256((args.image / 'program.hex').read_bytes()).hexdigest(),
            'source_sha256': {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in src},
            'claim_boundary': 'Address-map proof for one layer program at one position; the RTL restates the same formula.'}
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(rec, indent=1) + '\n')
-    print(json.dumps({k: rec[k] for k in ('status', 'owned_reads', 'distinct_words_read', 'max_local_index',
+    print(json.dumps({k: rec[k] for k in ('status', 'window_tmax', 'one_to_one', 'kv_aw_needed', 'owned_reads', 'distinct_words_read', 'max_local_index',
                                           'tile_cycles_with_disagreeing_local', 'per_group_collisions',
                                           'words_read_by_more_than_one_tile')}))
 

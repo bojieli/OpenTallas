@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.qwen-o4-kv-slice-map.v1",
+ "status": "fail",
+ "groups": 6144,
+ "tp": 4,
+ "kv_heads_per_die": 2,
+ "v_base_word": 2097152,
+ "position": 131071,
+ "kv_ops": 2,
+ "owned_reads": 16777216,
+ "distinct_words_read": 4194304,
+ "window_words_k_plus_v_at_pos": 4194304,
+ "max_local_index": 853,
+ "slice_words": 128,
+ "window_tmax": 131072,
+ "kv_hb": 20,
+ "one_to_one": true,
+ "kv_aw_needed": 10,
+ "slice_words_needed": 1024,
+ "tile_kv_bytes_needed": 65536,
+ "program": {
+  "rebuilt_for_tmax": 131072,
+  "vm_elems": 1080176,
+  "kv_window_elems": 67108864,
+  "isa_a24_ok": false
+ },
+ "tile_cycles_with_disagreeing_local": 0,
+ "per_group_collisions": 0,
+ "words_read_by_more_than_one_tile": 0,
+ "source_sha256": {
+  "tools/qwen_o4_kv_slice_map.py": "cf54109244d61977c3b7004165df2a3939cbbfb6ddc3d2ab076a8a6f9ccfad1d",
+  "rtl/hdc/ot_qwen_rom_tile.sv": "7d435163780b4cde0b662110dee809bae1003145ed78ccc11deb840c0ebf03b3",
+  "rtl/hdc/ot_hdc_matvec.sv": "197d43c844e4e2cbd80da86d46236eb287cb377180ff94930de379887967b6b7"
+ },
+ "claim_boundary": "Address-map proof for one layer program at one position; the RTL restates the same formula."
+}

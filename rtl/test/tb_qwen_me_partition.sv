@@ -19,7 +19,7 @@
 // splits SMIN..SMAX.  MUTANT = 1 swaps the ROM slices of tiles 0 and 1 and
 // must fail.
 // ==? (reference bits never assigned -- X after reset -- are don't-care) where the simulator has four states;
-// Verilator is two-state (no X to mask) and rejects a non-constant ==? right-hand side
+// (the two-state simulator has no X to mask and rejects a non-constant ==? right-hand side)
 `ifdef VERILATOR
 `define EQX ==
 `else
