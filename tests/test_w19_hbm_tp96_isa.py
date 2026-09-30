@@ -74,3 +74,13 @@ def test_sm_real_operands_are_exact():
         rec = json.loads((ROOT / "results/rtl" / name).read_text())
         assert rec["status"] == "pass", name
         assert all(c["exact"] for cs in rec["cases"].values() for c in cs), name
+
+
+def test_grouped_o_reduce_token_is_bit_exact():
+    rec = json.loads((ROOT / "results/rtl/w19_hbm_tp96_isa_oreduce.json").read_text())
+    res = rec["runs"]["oreduce:L0-39:head"]["result"]
+    assert rec["status"] == "pass" and res["variant"] == "oreduce"
+    assert all(l["verdict"] == "pass" for l in res["layers"]) and len(res["layers"]) == 40
+    assert res["head"]["verdict"] == "pass" and res["head"]["logits_sha256"] == REF["logits_sha256"]
+    prog = json.loads((ROOT / "results/rtl/w19_hbm_tp96_program_oreduce.json").read_text())
+    assert not any(op["tag"] == "o_gather" for lay in prog["layers"] for op in lay["ops"])
