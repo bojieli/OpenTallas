@@ -26,6 +26,11 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
 - Evidence is committed, source-pinned records.
 - Failed verdicts are never overwritten.
 - Clock and uncertainty constraints are never relaxed without pricing the change.
+- Sign-off corners (user decision, 2026-09-30):
+  - A headline clock frequency must close setup at the SS corner and hold at the FF corner, under the 60 ps setup / 25 ps hold uncertainty policy.
+  - TT closures are pathfinding evidence only, labelled as TT.
+  - Memory macros are checked at SS with their own clk→q; results/uarch/v41_rom_depth_study.json has the ROM macro figures.
+- Clock target (user decision, 2026-09-30): 1.2 GHz (0.833 ns) at SS for all logic in every design; the V4.1 ROM uses 4096-row macros, 2 per element slot. Bottleneck blocks are pipelined or parallelised to meet it, and each added latency cycle is reported to the model.
 - Stage files by explicit path, never `git add -A`.
 - Run long jobs in pinned clean worktrees, not in the main checkout.
 - After editing any doc under `docs/`, regenerate the prose-figure census and sync its two untriaged-count annotations, then run `make check-figures`.
