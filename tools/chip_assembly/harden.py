@@ -119,6 +119,8 @@ def spec_for(block: fp.Block, sdc: str, ports: dict[str, Any] | None) -> cs.Case
         max_layer=block.max_layer,
         macros=[cs.MacroView(n, orfs.ROOT / lef, orfs.ROOT / lib) for n, lef, lib in block.hard_macros],
         blackboxes=[n for n, _, _ in block.hard_macros],
+        macro_placement_tcl=fp.macro_placement_tcl(block.macro_grid()) if block.macro_grid else None,
+        macro_halo_um=(4.0, 4.0),
         place_density=block.place_density,
         extra={"SLEW_MARGIN": 40, "HOLD_SLACK_MARGIN": 5, "SETUP_SLACK_MARGIN": 15, **block.orfs_extra},
     )

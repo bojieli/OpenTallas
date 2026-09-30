@@ -107,6 +107,7 @@ class Block:
     hard_macros: list[tuple] = field(default_factory=list)
     max_layer: str = "M6"
     pdn: str = "pdn_block.tcl"
+    macro_grid: Any = None         # callable -> list of (instance, x_um, y_um): fixed macro placement
 
     @property
     def core_area_um2(self) -> float:
@@ -206,6 +207,67 @@ _ABS = "results/physical_abi3/asap7/chip/abstracts"
 _MEM = "physical/asap7_memory_macros"
 
 
+_PLACE_PROC = r"""set ot_block [ord::get_db_block]
+set ot_lut [dict create]
+foreach ot_inst [$ot_block getInsts] {
+  if {[[$ot_inst getMaster] isBlock]} {
+    dict set ot_lut [string map {"\\" ""} [$ot_inst getName]] [$ot_inst getName]
+  }
+}
+proc ot_place {name x y} {
+  global ot_lut
+  if {![dict exists $ot_lut $name]} { error "ot_place: no macro instance $name" }
+  place_macro -macro_name [dict get $ot_lut $name] -location [list $x $y] -orientation R0
+}
+"""
+
+
+def macro_placement_tcl(entries):
+    lines = ["# W13 SM element: a regular array of its hard macros (tools/chip_assembly/floorplans.py)", _PLACE_PROC]
+    lines += [f"ot_place {{{n}}} {x:.3f} {y:.3f}" for n, x, y in entries]
+    lines.append(f'puts "ot_place: {len(entries)} macros placed"')
+    return "\n".join(lines) + "\n"
+
+
+def _snap(v, q):
+    return round(round(v / q) * q, 3)
+
+
+def _rows(names, w, h, x0, y0, width, gap):
+    out, x, y = [], x0, y0
+    for n in names:
+        if x + w > x0 + width:
+            x, y = x0, y + h + gap
+        out.append((n, _snap(x, 0.432), _snap(y, 2.16)))
+        x += w + gap
+    return out, y + h + gap
+
+
+def grid_sm_q():
+    """64 column macros (250 um) in 8 x 8 (row r = column pair), the 20 x-store/staging SRAMs and the scale SRAM
+    in a band above; glue in the channels and the top band."""
+    names = [f"g_col[{c}].g_sub[{s}].g_hard.u_tc" for c in range(16) for s in range(4)]
+    e, y = _rows(names, 250.0, 250.0, 20.0, 20.0, 8 * 262.0, 12.0)
+    srams = [f"u_x.g_m[{m}].u_sram" for m in range(16)] + [f"u_bc.g_sram.g_mb[{m}].u_ring" for m in range(4)] + ["u_scale"]
+    e2, _ = _rows(srams, 174.744, 70.47, 20.0, y + 10.0, 2150.0, 12.0)
+    return e + e2
+
+
+def grid_sm_v():
+    """32 block-dot (150 um) and 32 BF16 (180 um) column macros in alternating rows of 8, then the 99 x-store
+    SRAMs and the 5 staging-ring SRAMs."""
+    e, y = [], 20.0
+    for r in range(4):
+        bd = [f"g_col[{c}].g_sub[{s}].g_hbd.u_bd" for c in range(2 * r, 2 * r + 2) for s in range(4)]
+        tc = [f"g_col[{c}].g_sub[{s}].g_hard.u_tc" for c in range(2 * r, 2 * r + 2) for s in range(4)]
+        a, y = _rows(bd, 150.0, 150.0, 20.0, y, 8 * 196.0, 10.0)
+        b, y = _rows(tc, 180.0, 180.0, 20.0, y, 8 * 196.0, 10.0)
+        e += a + b
+    xs, y = _rows([f"g_xm[{m}].u_x" for m in range(99)], 94.824, 41.04, 20.0, y + 6.0, 1760.0, 8.0)
+    rg, _ = _rows([f"u_bc.g_sram.g_mb[{m}].u_ring" for m in range(5)], 174.744, 70.47, 20.0, y + 4.0, 1760.0, 12.0)
+    return e + xs + rg
+
+
 def _sram(name):
     return (name, f"{_MEM}/{name}/{name}.lef", f"{_MEM}/{name}/{name}_tt.lib")
 
@@ -227,7 +289,7 @@ BLOCKS.update({
         hard_macros=[("ot_gpu_tc_col", f"{_ABS}/ot_gpu_tc_col/ot_gpu_tc_col.lef",
                       f"{_ABS}/ot_gpu_tc_col/ot_gpu_tc_col_typ.lib"),
                      _sram("ot_sram_1r1w_1024x256_m2_r2c2"), _sram("ot_sram_1r1w_256x256_m2_r2c2")],
-        max_layer="M9", pdn="pdn_sm.tcl", notes="Qwen HBM SM element (tools/uarch_model.hbm_gpu_design('qwen'))", peak_gb=60.0),
+        max_layer="M9", pdn="pdn_sm.tcl", macro_grid=grid_sm_q, notes="Qwen HBM SM element (tools/uarch_model.hbm_gpu_design('qwen'))", peak_gb=60.0),
     # W13: the hardened SM element of the V4.1 HBM die: 32 block-dot + 32 BF16 column macros (4 x 8 each),
     # 99 shallow x-store SRAMs (a whole 8-column fragment a cycle: group-slot issue), the 5-macro staging ring.
     "ot_gpu_sm_v": Block(
@@ -245,7 +307,7 @@ BLOCKS.update({
                      ("ot_gpu_bd_col", f"{_ABS}/ot_gpu_bd_col/ot_gpu_bd_col.lef",
                       f"{_ABS}/ot_gpu_bd_col/ot_gpu_bd_col_typ.lib"),
                      _sram("ot_sram_1r1w_1024x256_m2_r2c2"), _sram("ot_sram_1r1w_128x256_m1_r2c2")],
-        max_layer="M9", pdn="pdn_sm.tcl", notes="V4.1 HBM SM element (tools/uarch_model.hbm_gpu_design('v41'))",
+        max_layer="M9", pdn="pdn_sm.tcl", macro_grid=grid_sm_v, notes="V4.1 HBM SM element (tools/uarch_model.hbm_gpu_design('v41'))",
         peak_gb=60.0),
 })
 
