@@ -65,6 +65,7 @@ RTL = [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in
        ("ot_hdc_v41x_sfu", "ot_hdc_v41x_vec_lane", "ot_hdc_v41x_vec_side", "ot_hdc_v41x_vec_red", "ot_hdc_v41x_vec")]
 LIB = [ROOT / p for p in ("rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
                           "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
+                          "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
                           "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv", "rtl/hdc/v41/ot_hdc_softplus.sv")]
 TB = ROOT / "rtl/test/tb_hdc_v41x_vec.sv"
 TB_SFU = ROOT / "rtl/test/tb_hdc_v41x_vec_sfu.sv"
@@ -81,13 +82,30 @@ _PINNED = Path(os.environ.get("OPENTALLAS_TOOLS_ROOT", Path.home() / ".local/ope
     "verilator-5.050/bin/verilator"
 VERILATOR = str(_PINNED) if _PINNED.exists() else "verilator"
 
-# depths the RTL implements (ot_hdc_v41x_vec_lane / _red): emit -> write, per stage
-D_FETCH, D_FETCH_G, D_PRE, D_M1, D_DIV, D_STAGE, D_OUT = 4, 6, 1, 3, 19, 3, 1   # fetch includes the broadcast reg
+# depths the RTL implements (ot_hdc_v41x_vec_lane / _red): emit -> write, per stage.  MLAT (ot_hdc_v41x_vec MLAT,
+# --mlat) is the multiplier latency: 3, or 4 with the LAT-4 multiplier (W11 serial domain, 0.9 GHz at SS).  Every
+# multiplying stage (M1, M2, E1, E2) is MLAT deep; AD (the add) stays 3; set_mlat() derives the rest.
+D_FETCH, D_FETCH_G, D_PRE, D_DIV, D_AD, D_OUT = 4, 6, 1, 19, 3, 1   # fetch includes the broadcast reg
 # the unit's wire stages (ot_hdc_v41x_vec BCAST_STAGES / RET_STAGES) the benches are built with; every depth
 # (emit -> write, emit -> result) grows by BCAST + RET
 BCAST, RET = 0, 0
-SFU_DEPTH = {I.SFU_NONE: 0, I.SFU_EXP: 49, I.SFU_SIGM: 71, I.SFU_SILU: 71, I.SFU_RSQRT: 37, I.SFU_SQRT: 31,
-             I.SFU_SPSQRT: 162, I.SFU_EGATE: 104}
+
+
+def set_mlat(mlat):
+    """The depths at multiplier latency mlat (ot_hdc_v41x_vec_lane / _side / _red, ot_hdc_v41x_sfu)."""
+    global MLAT, D_M1, D_STAGE, D_RED, SFU_DEPTH
+    assert mlat in (3, 4, 5, 6, 7), mlat
+    MLAT = mlat
+    D_M1 = D_STAGE = mlat                 # M1 (not a divide), M2, E1, E2
+    D_RED = 23 + mlat                     # reducer, retire -> tap level 0 (+ OUT): IN 1, SQ mlat, CHAIN 21, OUT 1
+    d_exp = 7 * mlat + 28
+    d_sig = d_exp + 3 + 19
+    SFU_DEPTH = {I.SFU_NONE: 0, I.SFU_EXP: d_exp, I.SFU_SIGM: d_sig, I.SFU_SILU: d_sig,
+                 I.SFU_RSQRT: 9 * mlat + 10, I.SFU_SQRT: 31, I.SFU_SPSQRT: 18 * mlat + 108,
+                 I.SFU_EGATE: 1 + 31 + 1 + d_sig}
+
+
+set_mlat(3)          # 49 / 71 / 37 / 31 / 162 / 104, linear 21, reducer 26
 SCALAR_SFU = (I.SFU_RSQRT, I.SFU_SQRT, I.SFU_SPSQRT, I.SFU_EGATE)
 VEC_SFU = (I.SFU_EXP, I.SFU_SIGM, I.SFU_SILU)
 CH_NONE, CH_SELF, CH_RES, CH_EXT = range(4)
@@ -493,10 +511,10 @@ def layout(f, N, M):
     gather = f["aind"] != 0
     dF = (D_FETCH_G if gather else D_FETCH) + BCAST
     dM = dF + D_PRE + (D_DIV if f["m1"] in (I.M1_DIVB, I.M1_DIVIMM) else D_M1)
-    dS = dM + 2 * D_STAGE + SFU_DEPTH[f["sfu"]]
+    dS = dM + D_STAGE + D_AD + SFU_DEPTH[f["sfu"]]
     dP = dS + 2 * D_STAGE + D_OUT + RET
     lt = ls - 3 if red else 0
-    dR = dP + 26 + 3 * lt + (3 * L if span else 0)
+    dR = dP + D_RED + 3 * lt + (3 * L if span else 0)
     return dict(flat=flat, wnf=wnf, bad=bad, vw=vw, ls=ls, S=S, nsh=nsh, packed=packed, span=span, L=L, lt=lt, vecs=vecs,
                 dP=dP, dR=dR, nv=len(vecs))
 
@@ -823,7 +841,7 @@ def build(N, M, obj: Path, pmax=4096):
     cmd = [VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
            "-Wno-UNOPTFLAT", *os.environ.get("OT_VFLAGS", "").split(), "--top-module", "tb_hdc_v41x_vec", "--prefix", "Vtb",
            "-Mdir", str(obj),
-           f"-GN={N}", f"-GM={M}", f"-GBCAST_STAGES={BCAST}", f"-GRET_STAGES={RET}", f"-GPMAX={pmax}", f"-GVMA={VMA}", f"-GKVA={KVA}", f"-GCRA={CRA}", f"-GWRA={WRA}", f"-GXBA={XBA}", f"-I{ROOT / 'rtl/test'}",
+           f"-GN={N}", f"-GM={M}", f"-GBCAST_STAGES={BCAST}", f"-GRET_STAGES={RET}", f"-GMLAT={MLAT}", f"-GPMAX={pmax}", f"-GVMA={VMA}", f"-GKVA={KVA}", f"-GCRA={CRA}", f"-GWRA={WRA}", f"-GXBA={XBA}", f"-I{ROOT / 'rtl/test'}",
            *map(str, LIB), *map(str, RTL), str(TB), str(HARNESS), "-CFLAGS", "-O1", "-j", "8"]
     t0 = time.time()
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -1239,12 +1257,12 @@ def perf_mix(exe, N, M, scratch, rng):
 
 
 def sfu_equivalence(scratch, n=200000):
-    exe = scratch / "obj_sfu" / "Vtb"
-    (scratch / "obj_sfu").mkdir(parents=True, exist_ok=True)
+    exe = scratch / f"obj_sfu_m{MLAT}" / "Vtb"
+    (scratch / f"obj_sfu_m{MLAT}").mkdir(parents=True, exist_ok=True)
     if not exe.exists():
         cmd = [VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
-               "-Wno-BLKSEQ", "--top-module", "tb_hdc_v41x_vec_sfu", "--prefix", "Vtb", "-Mdir",
-               str(scratch / "obj_sfu"), *map(str, LIB), str(RTL[0]), str(TB_SFU), str(HARNESS), "-CFLAGS", "-O1"]
+               "-Wno-BLKSEQ", "--top-module", "tb_hdc_v41x_vec_sfu", "--prefix", "Vtb", f"-GMLAT={MLAT}", "-Mdir",
+               str(scratch / f"obj_sfu_m{MLAT}"), *map(str, LIB), str(RTL[0]), str(TB_SFU), str(HARNESS), "-CFLAGS", "-O1"]
         subprocess.run(cmd, check=True, capture_output=True)
     r = subprocess.run([str(exe), f"+N={n}"], capture_output=True, text=True)
     m = re.search(r"V41XSFU n=(\d+) div=(\d+) div_err=(\d+) exp=(\d+) exp_err=(\d+) rsq=(\d+) rsq_err=(\d+) "
@@ -1326,9 +1344,11 @@ def main():
     ap.add_argument("--random1024", type=int, default=0, help="also run this many random seeds at N = 1,024")
     ap.add_argument("--bcast", type=int, default=0, help="ot_hdc_v41x_vec BCAST_STAGES")
     ap.add_argument("--ret", type=int, default=0, help="ot_hdc_v41x_vec RET_STAGES")
+    ap.add_argument("--mlat", type=int, default=3, help="ot_hdc_v41x_vec MLAT: multiplier latency (3, or 4)")
     args = ap.parse_args()
     global BCAST, RET
     BCAST, RET = args.bcast, args.ret
+    set_mlat(args.mlat)
     scratch = Path(args.scratch or tempfile.mkdtemp(prefix="v41xvec_"))
     scratch.mkdir(parents=True, exist_ok=True)
     only = set(args.only.split(",")) if args.only else {"sfu", "random", "vehicle", "perf64", "perf1024"}
@@ -1337,14 +1357,18 @@ def main():
     print("scratch", scratch, flush=True)
     rec = dict(schema="opentallas.rtl.hdc_v41x_vec_campaign/1",
                generated_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-               wire_stages=dict(BCAST_STAGES=BCAST, RET_STAGES=RET))
+               wire_stages=dict(BCAST_STAGES=BCAST, RET_STAGES=RET), mlat=MLAT,
+               depths_model=dict(linear=D_FETCH + D_PRE + D_M1 + D_STAGE + D_AD + 2 * D_STAGE + D_OUT,
+                                 sfu={k: SFU_DEPTH[getattr(I, k)] for k in ("SFU_EXP", "SFU_SIGM", "SFU_RSQRT",
+                                                                           "SFU_SQRT", "SFU_SPSQRT", "SFU_EGATE")},
+                                 divide_m1=D_DIV, reducer_tap0=D_RED))
     rng = np.random.default_rng(20260926)
     exes = {}
 
     def exe_for(N, M):
         if (N, M) not in exes:
             t0 = time.time()
-            exes[(N, M)] = build(N, M, scratch / f"obj_{N}_{M}_b{BCAST}r{RET}")[0]
+            exes[(N, M)] = build(N, M, scratch / f"obj_{N}_{M}_b{BCAST}r{RET}m{MLAT}")[0]
             rec.setdefault("verilator_build_seconds", {})[f"N{N}_M{M}"] = round(time.time() - t0, 1)
             print(f"built N={N} M={M}", flush=True)
         return exes[(N, M)]

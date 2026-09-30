@@ -62,6 +62,9 @@
 //   gate 104, E1 3, E2 3, OUT 1.  A linear op takes 21 cycles.
 // Reducer (ot_hdc_v41x_vec_red): a result leaves 26 + 3*log2(S/8)
 // (+ 3*ceil(log2 vectors) when spanning) cycles after the vector retires.
+// MLAT = 4 (the LAT-4 multiplier, W11 serial domain at 0.9 GHz): M1, M2, E1 and E2 are 4 deep, exp 56,
+//   sigmoid / silu 78, rsqrt 46, sqrt(softplus) 180, gate 111 (divide 19, sqrt 31 and AD 3 unchanged);
+//   a linear op takes 25 cycles and the reducer's square is 4 deep (27 + ...).
 //
 // WIRE STAGES (BCAST_STAGES, RET_STAGES; 0 and 0 are the unit as it was, cycle for
 // cycle).  At N = 1,024 the lanes span millimetres of the hub, so the controller
@@ -74,7 +77,7 @@
 // stage is inside each lane (ot_hdc_v41x_vec_lane LEAF = 1): it registers the
 // lane's partial addresses (position, transposed-KV row, base + offset of every
 // stream), so the lane's first stage is one add / compare level; the offset
-// loads go from the tree's stage before it into a two-cycle sum (308 leaf + 242
+// loads go from the tree's stage before it into a three-cycle sum (308 leaf + 604
 // load flops a lane).  RET_STAGES
 // register stages carry every write back to the vector memory: the element
 // writes (vm_*, kv_*) and the reducer's results (res_*).  Every vector crosses
@@ -148,7 +151,8 @@ module ot_hdc_v41x_vec #(
     parameter integer NW = 16,
     parameter integer KVT_SH = 9,
     parameter integer BCAST_STAGES = 0, // register stages of the pipelined controller -> lane broadcast tree
-    parameter integer RET_STAGES = 0    // register stages of the lane / reducer -> vector-memory write path
+    parameter integer RET_STAGES = 0,   // register stages of the lane / reducer -> vector-memory write path
+    parameter integer MLAT = 3          // multiplier latency (ot_hdc_qmul_lat): 3, or 4 (W11 serial domain)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -264,14 +268,20 @@ module ot_hdc_v41x_vec #(
     function automatic pow2(input [AW-1:0] x);
         pow2 = (x != 0) && ((x & (x - 1)) == 0);
     endfunction
+    // S-stage depths (ot_hdc_v41x_vec_lane / _side): exp 7 MLAT + 28, sigmoid exp + 3 + 19, rsqrt 9 MLAT + 10,
+    // sqrt 31, sqrt(softplus) 18 MLAT + 108, gate 33 + sigmoid
+    localparam integer D_EXP = 7 * MLAT + 28, D_SIG = D_EXP + 22, D_RSQ = 9 * MLAT + 10, D_SQRT = 31,
+                       D_SP = 18 * MLAT + 108, D_EG = 33 + D_SIG;
+    localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+                      H_EG = D_EG;
     function automatic [7:0] sfu_d(input [2:0] s);
         case (s)
-            SFU_EXP: sfu_d = 49;
-            SFU_SIGM, SFU_SILU: sfu_d = 71;
-            SFU_RSQRT: sfu_d = 37;
-            SFU_SQRT: sfu_d = 31;
-            SFU_SPSQRT: sfu_d = 162;
-            SFU_EGATE: sfu_d = 104;
+            SFU_EXP: sfu_d = D_EXP;
+            SFU_SIGM, SFU_SILU: sfu_d = D_SIG;
+            SFU_RSQRT: sfu_d = D_RSQ;
+            SFU_SQRT: sfu_d = D_SQRT;
+            SFU_SPSQRT: sfu_d = D_SP;
+            SFU_EGATE: sfu_d = D_EG;
             default: sfu_d = 0;
         endcase
     endfunction
@@ -356,10 +366,11 @@ module ot_hdc_v41x_vec #(
     wire [AW-1:0] c_gstr = (q_aind == IND_I) ? q_asi : q_aso;
     wire c_div = (q_m1 == M1_DIVB || q_m1 == M1_DIVIMM);
     wire [9:0] c_dF = c_gather ? 10'd6 : 10'd4;       // broadcast register + fetch
-    wire [9:0] c_dM = c_dF + 10'd1 + (c_div ? 10'd19 : 10'd3);
-    wire [9:0] c_dS = c_dM + 10'd6 + {2'd0, sfu_d(q_sfu)};
+    wire [9:0] c_dM = c_dF + 10'd1 + (c_div ? 10'd19 : H_M[9:0]);
+    wire [9:0] c_dS = c_dM + H_M[9:0] + 10'd3 + {2'd0, sfu_d(q_sfu)};
     wire [9:0] c_lt = red_on ? {6'd0, c_ls} - 10'd3 : 10'd0;
-    wire [9:0] c_dT = c_dS + 10'd7 + 10'd25 + 10'd3 * c_lt;
+    // retire (E1, E2, OUT: 2 MLAT + 1), then the reducer to its tap (IN 1, SQ MLAT, CHAIN 21)
+    wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + 10'd1 + 10'd22 + H_M[9:0] + 10'd3 * c_lt;
     wire [9:0] c_dR = c_dT + 10'd1 + (c_span ? 10'd3 * {5'd0, c_L} : 10'd0);
     wire c_bad = (red_on && scalar_c) || s_flatbad || (c_span && c_L > LV) || (c_gather && !pow2(c_gstr));
     // offset terms: stream s (A, B, C, D, O), bit k of the lane index
@@ -687,31 +698,31 @@ module ot_hdc_v41x_vec #(
     // M1-line: 3 or 19
     wire [WC-1:0] cwm;
     wire          vm, col_m;
-    ot_hdc_v41x_ins #(.W(WC), .K(2), .DEPTHS({16'd19, 16'd3}), .DMAX(19)) u_cm (.clk(clk), .rst_n(rst_n),
+    ot_hdc_v41x_ins #(.W(WC), .K(2), .DEPTHS({16'd19, H_M}), .DMAX(19)) u_cm (.clk(clk), .rst_n(rst_n),
         .v(vp), .sel({p_div, !p_div}), .d(cwp), .vo(vm), .q(cwm), .coll(col_m), .busy(bz_m));
-    // AD in (+3), S in (+6)
+    // AD in (+MLAT: M2), S in (+MLAT + 3: AD)
     wire [WC-1:0] cwa, cwi;
-    wire [6:0]    vml;
-    ot_hdc_delay #(.W(WC), .D(3)) u_ca (.clk(clk), .rst_n(rst_n), .d(cwm), .q(cwa));
+    wire [MLAT+3:0] vml;
+    ot_hdc_delay #(.W(WC), .D(MLAT)) u_ca (.clk(clk), .rst_n(rst_n), .d(cwm), .q(cwa));
     ot_hdc_delay #(.W(WC), .D(3)) u_ci (.clk(clk), .rst_n(rst_n), .d(cwa), .q(cwi));
-    ot_hdc_vline #(.D(6)) u_vml (.clk(clk), .rst_n(rst_n), .v(vm), .vd(vml));
-    wire vi = vml[6];
+    ot_hdc_vline #(.D(MLAT + 3)) u_vml (.clk(clk), .rst_n(rst_n), .v(vm), .vd(vml));
+    wire vi = vml[MLAT + 3];
     wire [2:0] i_s = `CW_SFU(cwi);
     wire [6:0] s_sel = {i_s == SFU_EGATE, i_s == SFU_SPSQRT, i_s == SFU_SQRT, i_s == SFU_RSQRT,
                         i_s == SFU_SIGM || i_s == SFU_SILU, i_s == SFU_EXP, i_s == SFU_NONE};
     wire [WC-1:0] cws;
     wire          vs, col_s;
-    ot_hdc_v41x_ins #(.W(WC), .K(7), .DEPTHS({16'd104, 16'd162, 16'd31, 16'd37, 16'd71, 16'd49, 16'd0}),
-                      .DMAX(162)) u_cs (.clk(clk), .rst_n(rst_n), .v(vi), .sel(s_sel), .d(cwi), .vo(vs), .q(cws),
+    ot_hdc_v41x_ins #(.W(WC), .K(7), .DEPTHS({H_EG, H_SP, H_SQRT, H_RSQ, H_SIG, H_EXP, 16'd0}),
+                      .DMAX(D_SP)) u_cs (.clk(clk), .rst_n(rst_n), .v(vi), .sel(s_sel), .d(cwi), .vo(vs), .q(cws),
                       .coll(col_s), .busy(bz_s));
-    // E2 in (+3), OUT in (+6), retire (+7)
+    // E2 in (+MLAT: E1), OUT in (+2 MLAT), retire (+2 MLAT + 1)
     wire [WC-1:0] cwe, cwo, cwr;
-    wire [7:0]    vsl;
-    ot_hdc_delay #(.W(WC), .D(3)) u_ce (.clk(clk), .rst_n(rst_n), .d(cws), .q(cwe));
-    ot_hdc_delay #(.W(WC), .D(3)) u_co (.clk(clk), .rst_n(rst_n), .d(cwe), .q(cwo));
+    wire [2*MLAT+1:0] vsl;
+    ot_hdc_delay #(.W(WC), .D(MLAT)) u_ce (.clk(clk), .rst_n(rst_n), .d(cws), .q(cwe));
+    ot_hdc_delay #(.W(WC), .D(MLAT)) u_co (.clk(clk), .rst_n(rst_n), .d(cwe), .q(cwo));
     ot_hdc_delay #(.W(WC), .D(1)) u_cr (.clk(clk), .rst_n(rst_n), .d(cwo), .q(cwr));
-    ot_hdc_vline #(.D(7)) u_vsl (.clk(clk), .rst_n(rst_n), .v(vs), .vd(vsl));
-    wire retire = vsl[7];
+    ot_hdc_vline #(.D(2 * MLAT + 1)) u_vsl (.clk(clk), .rst_n(rst_n), .v(vs), .vd(vsl));
+    wire retire = vsl[2 * MLAT + 1];
     // retire meta
     wire [WR-1:0] rm = cwr[WR-1:0];
     wire [7:0]  r_seq   = rm[WR-1 -: 8];
@@ -744,7 +755,7 @@ module ot_hdc_v41x_vec #(
     genvar l;
     generate for (l = 0; l < N; l = l + 1) begin : g_lane
         ot_hdc_v41x_vec_lane #(.AW(AW), .CW(CW), .LN(LN), .KIND((l == 0) ? 2 : (l < M) ? 1 : 0),
-                               .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0)) u_lane (
+                               .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0), .MLAT(MLAT)) u_lane (
             .clk(clk), .rst_n(rst_n), .lane_id(l[10:0]),
             .ld(tr_ld), .ld_bank(tr_ldbank), .ld_c(tr_ldc),
             .emit(tr_emit), .bank(tr_bank), .o_v(tr_ov), .i_v(tr_iv), .no(tr_no), .ni(tr_ni), .ls(tr_ls), .lvw(tr_lvw),
@@ -769,7 +780,7 @@ module ot_hdc_v41x_vec #(
     end endgenerate
     assign side_v = l_sv[0];
     assign side_x = l_sx[31:0];
-    ot_hdc_v41x_vec_side u_side (.clk(clk), .rst_n(rst_n), .v(side_v), .fn(`CW_SFU(cwi)), .x(side_x),
+    ot_hdc_v41x_vec_side #(.MLAT(MLAT)) u_side (.clk(clk), .rst_n(rst_n), .v(side_v), .fn(`CW_SFU(cwi)), .x(side_x),
                                  .fn_out(`CW_SFU(cws)), .y(side_y), .fault(side_f));
 
     // =========================================================================================
@@ -780,7 +791,7 @@ module ot_hdc_v41x_vec #(
     wire [NR-1:0]    l_res_we;
     wire [NR*AW-1:0] l_res_addr;
     wire [NR*32-1:0] l_res_data;
-    ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(9)) u_red (.clk(clk), .rst_n(rst_n),
+    ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(9), .MLAT(MLAT)) u_red (.clk(clk), .rst_n(rst_n),
         .v_in(retire && r_red != RED_NONE), .x_in(l_rox), .live_in(l_rov), .mx_in(r_red == RED_MAX),
         .sq_in(r_sq), .lt_in(r_lt), .span_in(r_span), .l_in(r_L), .last_in(r_wrap), .nres_in(r_nres),
         .rnd_in(r_rnd), .rbase_in(r_rbase), .rsh_in(r_rsh), .meta_in({r_seq, r_lastres}),

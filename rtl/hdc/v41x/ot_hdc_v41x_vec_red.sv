@@ -28,13 +28,13 @@
 //
 // Pipeline, from the retiring vector (every stage one vector a cycle):
 //   IN     1  the out values and the lanes' liveness
-//   SQ     3  out*out (red_sq), else a delay
+//   SQ     3  out*out (red_sq), else a delay (MLAT: 3, or 4 with the LAT-4 multiplier, W11 serial domain)
 //   CHAIN 21  per chunk, 7 chained ops, lane 8c+j delayed 3(j-1)
 //   TREE   3  per level, log2(N/8) levels; packed results are tapped at level lt
 //   TIME   3  per level, L = ceil(log2 nv) levels, for spanning segments only
 //   OUT    1  result register: NR = N/8 result slots, slot k at rbase + (k << rsh)
-// A packed result leaves at 26 + 3 lt after the retire; a spanning segment's
-// result leaves 26 + 3 lt + 3 L after its last vector retires.  Different taps
+// A packed result leaves at 23 + MLAT + 3 lt (26 at MLAT 3) after the retire; a spanning segment's
+// result leaves 23 + MLAT + 3 lt + 3 L after its last vector retires.  Different taps
 // and different L merge at the result port.  The controller orders results
 // across ops there (checkpoint R), and orders every reducing op at the tap,
 // the TIME input of spanning ops (checkpoint T).
@@ -62,7 +62,9 @@ module ot_hdc_v41x_vred_op (
 endmodule
 
 // x * x (a lane of the reducer's square stage; its own module so a simulator shares its code)
-module ot_hdc_v41x_vsq (
+module ot_hdc_v41x_vsq #(
+    parameter integer MLAT = 3
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -71,14 +73,15 @@ module ot_hdc_v41x_vsq (
     output wire        fault
 );
     /* verilator no_inline_module */
-    ot_hdc_qmul u (clk, rst_n, v, x, x, y, fault);
+    ot_hdc_qmul_lat #(MLAT) u (clk, rst_n, v, x, x, y, fault);
 endmodule
 
 module ot_hdc_v41x_vec_red #(
     parameter integer N  = 64,          // lanes, a power of two >= 8
     parameter integer LV = 6,           // time levels: spanning segments of up to 2^LV vectors (1..7)
     parameter integer AW = 24,
-    parameter integer MW = 64           // meta carried with an item (opaque here, returned with its result)
+    parameter integer MW = 64,          // meta carried with an item (opaque here, returned with its result)
+    parameter integer MLAT = 3          // the square's multiplier latency (ot_hdc_qmul_lat): 3, or 4
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -136,23 +139,23 @@ module ot_hdc_v41x_vec_red #(
     wire [N-1:0]    fsq;
     genvar l;
     generate for (l = 0; l < N; l = l + 1) begin : g_sq
-        ot_hdc_v41x_vsq u_sq (.clk(clk), .rst_n(rst_n), .v(i_v && i_sq && i_live[l]), .x(i_x[32*l +: 32]),
+        ot_hdc_v41x_vsq #(.MLAT(MLAT)) u_sq (.clk(clk), .rst_n(rst_n), .v(i_v && i_sq && i_live[l]), .x(i_x[32*l +: 32]),
                               .y(xsq[32*l +: 32]), .fault(fsq[l]));
     end endgenerate
     wire [N-1:0]   q_live;
     wire [TAG-1:0] q_t;
     wire           q_sq;
-    ot_hdc_delay #(.W(N*32 + N + TAG + 1), .D(3)) u_sqd (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(N*32 + N + TAG + 1), .D(MLAT)) u_sqd (.clk(clk), .rst_n(rst_n),
         .d({i_x, i_live, i_t, i_sq}), .q({xd, q_live, q_t, q_sq}));
-    wire [3:0] vq;
-    ot_hdc_vline #(.D(3)) u_vq (.clk(clk), .rst_n(rst_n), .v(i_v), .vd(vq));
+    wire [MLAT:0] vq;
+    ot_hdc_vline #(.D(MLAT)) u_vq (.clk(clk), .rst_n(rst_n), .v(i_v), .vd(vq));
     wire q_mx = q_t[TAG-1];
     wire [N*32-1:0] c_x;
     generate for (l = 0; l < N; l = l + 1) begin : g_pad
         assign c_x[32*l +: 32] = !q_live[l] ? (q_mx ? 32'hFF800000 : 32'd0) :
                                  q_sq ? xsq[32*l +: 32] : xd[32*l +: 32];
     end endgenerate
-    wire c_v = vq[3];
+    wire c_v = vq[MLAT];
 
     // -- CHAIN: chunk c = lanes 8c .. 8c+7, sequential ------------------------------------------
     wire [NC*32-1:0] chunk;
