@@ -4,7 +4,7 @@
  "sources": {
   "rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv": "8e3ee1fba61f867dac2a8ad83abe703962c1902913bafe99c40e63e7905f0b84",
   "rtl/chip/ot_chip_v41x_karb_proot.sv": "d1251c4ba195c2067cb3f791882a1280c6d95459d9f120d1b87493182be0b4fa",
-  "rtl/chip/ot_chip_v41x_karb_pregion.sv": "8c8af44e5c8fc7246151f6f4fb2821e3409bd1212c56343110725c89dede9cdd",
+  "rtl/chip/ot_chip_v41x_karb_pregion.sv": "41b99296a692978f1ab8e69a1485dd2fd3bcac75026b69f136ed980959813023",
   "rtl/chip/ot_chip_v41x_karb_pslice.sv": "2df9d5ccd396d76426037ae01f036e71922e385088281358af272cf8119d5499",
   "rtl/chip/ot_chip_v41x_karb_pipe.sv": "378fd81d0de101435aa662bb59d2aa18ec19585adb6c8e0bd570dab9da9ae0f0",
   "rtl/chip/ot_chip_v41x_hbm_karb_local.sv": "73a9c0ea0eeb49d286a6e964e2f0f4ba5704a347be5c1ff67003059cc57dd558",
@@ -14,7 +14,7 @@
   "rtl/chip/ot_chip_v41x_karb_slice.sv": "4b72f689c543f9d35cf8bd6a88b34e1737f36ac7419e72dbf746959fef7a614b",
   "rtl/chip/ot_chip_v41x_karb_q2.sv": "90c16f6e5ccce13ea45af4d36cc91dcdaebe2de88b5d0e59da1caf1cedbc3b47",
   "rtl/chip/ot_chip_v41x_karb_qn.sv": "2e7ff8700db4d25f0d68d3d096d1f151e12e84778816f162b9126c4d545990a0",
-  "rtl/chip/ot_chip_v41x_karb_qh.sv": "e458a325507cb6a240bdf6d91608182e360c996612210bcae4d2a6b009f9379c",
+  "rtl/chip/ot_chip_v41x_karb_qh.sv": "a64bb18d4c70fe2a487cb1c475471141ba034530b83ff83f050d729e9ce0fb50",
   "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
   "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
   "rtl/test/tb_chip_v41x_karb_local_equiv.sv": "121af2a3e4694ebff7332dd30057d461f9895bf23035f38cdcaf3f66d25ff007",
@@ -74,7 +74,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 18.9,
+   "sim_seconds": 39.2,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -96,7 +96,7 @@
    "arms_identical": true,
    "cycles_mono": 987,
    "cycles_local": 991,
-   "cycles_pipe": 998,
+   "cycles_pipe": 1006,
    "first_k_latency_pipe": 64,
    "first_k_latency_mono": 53,
    "first_k_latency_local": 57,
@@ -115,7 +115,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 28.9,
+   "sim_seconds": 32.0,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -144,7 +144,7 @@
    "k_wr_done_events": {
     "mono": 164,
     "local": 162,
-    "pipe": 119
+    "pipe": 120
    },
    "k_grants": {
     "mono": 512,
@@ -156,7 +156,7 @@
     "local": 1024,
     "pipe": 1024
    },
-   "sim_seconds": 45.3,
+   "sim_seconds": 85.7,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -197,7 +197,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 48.5,
+   "sim_seconds": 71.4,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -226,7 +226,7 @@
    "k_wr_done_events": {
     "mono": 165,
     "local": 165,
-    "pipe": 162
+    "pipe": 161
    },
    "k_grants": {
     "mono": 512,
@@ -238,7 +238,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 46.1,
+   "sim_seconds": 64.4,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -279,7 +279,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 41.1,
+   "sim_seconds": 55.0,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -301,14 +301,14 @@
    "arms_identical": true,
    "cycles_mono": 1288,
    "cycles_local": 1726,
-   "cycles_pipe": 1268,
+   "cycles_pipe": 1269,
    "first_k_latency_pipe": 97,
    "first_k_latency_mono": 101,
    "first_k_latency_local": 104,
    "k_wr_done_events": {
     "mono": 300,
     "local": 313,
-    "pipe": 283
+    "pipe": 281
    },
    "k_grants": {
     "mono": 512,
@@ -320,7 +320,7 @@
     "local": 1024,
     "pipe": 1024
    },
-   "sim_seconds": 29.3,
+   "sim_seconds": 35.8,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -361,7 +361,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 33.2,
+   "sim_seconds": 25.0,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -402,7 +402,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 33.8,
+   "sim_seconds": 27.3,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -443,7 +443,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 27.8,
+   "sim_seconds": 30.1,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -484,7 +484,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 30.6,
+   "sim_seconds": 25.0,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -506,14 +506,14 @@
    "arms_identical": true,
    "cycles_mono": 1795,
    "cycles_local": 2257,
-   "cycles_pipe": 1503,
+   "cycles_pipe": 1715,
    "first_k_latency_pipe": 70,
    "first_k_latency_mono": 61,
    "first_k_latency_local": 63,
    "k_wr_done_events": {
     "mono": 121,
     "local": 123,
-    "pipe": 119
+    "pipe": 117
    },
    "k_grants": {
     "mono": 512,
@@ -525,7 +525,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 29.9,
+   "sim_seconds": 25.2,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -566,7 +566,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 26.7,
+   "sim_seconds": 21.4,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -607,7 +607,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 26.1,
+   "sim_seconds": 24.9,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -648,7 +648,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 32.9,
+   "sim_seconds": 23.6,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -677,7 +677,7 @@
    "k_wr_done_events": {
     "mono": 115,
     "local": 115,
-    "pipe": 112
+    "pipe": 111
    },
    "k_grants": {
     "mono": 512,
@@ -689,7 +689,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 47.4,
+   "sim_seconds": 32.1,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -718,7 +718,7 @@
    "k_wr_done_events": {
     "mono": 121,
     "local": 124,
-    "pipe": 117
+    "pipe": 118
    },
    "k_grants": {
     "mono": 512,
@@ -730,7 +730,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 41.3,
+   "sim_seconds": 36.1,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -771,7 +771,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 45.2,
+   "sim_seconds": 29.0,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -812,7 +812,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 45.9,
+   "sim_seconds": 37.9,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -853,7 +853,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 21.3,
+   "sim_seconds": 16.4,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -894,7 +894,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 19.8,
+   "sim_seconds": 11.0,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -935,7 +935,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 18.5,
+   "sim_seconds": 11.7,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -976,7 +976,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 24.2,
+   "sim_seconds": 25.7,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -1017,7 +1017,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 27.4,
+   "sim_seconds": 16.2,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -1058,7 +1058,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 20.3,
+   "sim_seconds": 26.5,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -1099,7 +1099,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 26.9,
+   "sim_seconds": 14.2,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -1140,7 +1140,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 27.7,
+   "sim_seconds": 24.9,
    "pass": true,
    "k_rd_fence": 1
   },
@@ -1181,7 +1181,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 26.3,
+   "sim_seconds": 17.9,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1203,7 +1203,7 @@
    "arms_identical": true,
    "cycles_mono": 987,
    "cycles_local": 991,
-   "cycles_pipe": 998,
+   "cycles_pipe": 1006,
    "first_k_latency_pipe": 64,
    "first_k_latency_mono": 53,
    "first_k_latency_local": 57,
@@ -1222,7 +1222,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 34.2,
+   "sim_seconds": 33.4,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1251,7 +1251,7 @@
    "k_wr_done_events": {
     "mono": 164,
     "local": 162,
-    "pipe": 119
+    "pipe": 120
    },
    "k_grants": {
     "mono": 512,
@@ -1263,7 +1263,7 @@
     "local": 1024,
     "pipe": 1024
    },
-   "sim_seconds": 47.8,
+   "sim_seconds": 39.2,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1304,7 +1304,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 37.3,
+   "sim_seconds": 46.0,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1333,7 +1333,7 @@
    "k_wr_done_events": {
     "mono": 165,
     "local": 160,
-    "pipe": 159
+    "pipe": 160
    },
    "k_grants": {
     "mono": 512,
@@ -1345,7 +1345,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 52.7,
+   "sim_seconds": 65.7,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1386,7 +1386,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 54.3,
+   "sim_seconds": 67.3,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1427,7 +1427,7 @@
     "local": 1024,
     "pipe": 1024
    },
-   "sim_seconds": 35.7,
+   "sim_seconds": 50.3,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1468,7 +1468,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 49.5,
+   "sim_seconds": 62.0,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1497,7 +1497,7 @@
    "k_wr_done_events": {
     "mono": 125,
     "local": 125,
-    "pipe": 126
+    "pipe": 125
    },
    "k_grants": {
     "mono": 512,
@@ -1509,7 +1509,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 42.3,
+   "sim_seconds": 37.0,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1531,7 +1531,7 @@
    "arms_identical": true,
    "cycles_mono": 1742,
    "cycles_local": 1625,
-   "cycles_pipe": 1737,
+   "cycles_pipe": 1288,
    "first_k_latency_pipe": 68,
    "first_k_latency_mono": 80,
    "first_k_latency_local": 86,
@@ -1550,7 +1550,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 34.8,
+   "sim_seconds": 50.2,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1591,7 +1591,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 31.0,
+   "sim_seconds": 64.9,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1632,7 +1632,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 39.7,
+   "sim_seconds": 63.1,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1673,7 +1673,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 42.2,
+   "sim_seconds": 57.7,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1714,7 +1714,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 26.5,
+   "sim_seconds": 53.8,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1736,14 +1736,14 @@
    "arms_identical": true,
    "cycles_mono": 1937,
    "cycles_local": 1789,
-   "cycles_pipe": 1274,
+   "cycles_pipe": 1271,
    "first_k_latency_pipe": 73,
    "first_k_latency_mono": 55,
    "first_k_latency_local": 58,
    "k_wr_done_events": {
     "mono": 108,
     "local": 112,
-    "pipe": 109
+    "pipe": 111
    },
    "k_grants": {
     "mono": 512,
@@ -1755,7 +1755,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 33.6,
+   "sim_seconds": 45.8,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1777,7 +1777,7 @@
    "arms_identical": true,
    "cycles_mono": 1919,
    "cycles_local": 1571,
-   "cycles_pipe": 1142,
+   "cycles_pipe": 1150,
    "first_k_latency_pipe": 70,
    "first_k_latency_mono": 77,
    "first_k_latency_local": 80,
@@ -1796,7 +1796,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 29.9,
+   "sim_seconds": 51.0,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1837,7 +1837,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 38.6,
+   "sim_seconds": 41.3,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1866,7 +1866,7 @@
    "k_wr_done_events": {
     "mono": 131,
     "local": 131,
-    "pipe": 134
+    "pipe": 135
    },
    "k_grants": {
     "mono": 512,
@@ -1878,7 +1878,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 27.2,
+   "sim_seconds": 44.1,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1907,7 +1907,7 @@
    "k_wr_done_events": {
     "mono": 120,
     "local": 122,
-    "pipe": 121
+    "pipe": 122
    },
    "k_grants": {
     "mono": 512,
@@ -1919,7 +1919,7 @@
     "local": 2048,
     "pipe": 2048
    },
-   "sim_seconds": 36.8,
+   "sim_seconds": 45.2,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -1960,7 +1960,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 11.9,
+   "sim_seconds": 12.1,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -2001,7 +2001,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 14.6,
+   "sim_seconds": 12.1,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -2042,7 +2042,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 20.2,
+   "sim_seconds": 16.5,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -2083,7 +2083,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 12.5,
+   "sim_seconds": 11.6,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -2124,7 +2124,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 16.5,
+   "sim_seconds": 13.0,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -2165,7 +2165,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 17.7,
+   "sim_seconds": 16.2,
    "pass": true,
    "k_rd_fence": 0
   },
@@ -2247,7 +2247,7 @@
     "local": 0,
     "pipe": 0
    },
-   "sim_seconds": 12.0,
+   "sim_seconds": 11.2,
    "pass": true,
    "k_rd_fence": 0
   }
@@ -2265,8 +2265,8 @@
     "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
     "PASS"
    ],
-   "sim_seconds": 1.1,
-   "log_sha256": "7df8eb03ead3a20ec968fda07fef3a577f3721d5dea2eea61d849c64de0debfa"
+   "sim_seconds": 2.6,
+   "log_sha256": "b1b484179ae4f395c14662e853486f17c5741ffabc9e196addd40b18dd379d1a"
   },
   {
    "arbiter": "local",
@@ -2280,8 +2280,8 @@
     "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
     "PASS"
    ],
-   "sim_seconds": 1.3,
-   "log_sha256": "ec232c181beac7ccf6785633f85c40dc27dc18d4fdc47fa4432119a5207d1c1c"
+   "sim_seconds": 1.2,
+   "log_sha256": "0bab98228ff868016d548a79d86320d385c3cc5998c48bb8e01241105c19b29f"
   },
   {
    "arbiter": "local",
@@ -2295,8 +2295,8 @@
     "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
     "PASS"
    ],
-   "sim_seconds": 1.4,
-   "log_sha256": "e49f8c1a836db065b0c9b1af99827638f600b49308dd0070ff27a866d930ad8d"
+   "sim_seconds": 1.2,
+   "log_sha256": "423bf447f9bcf80e6ef3aeae7d52e74923da93aca4896e376f2700a6383a1495"
   },
   {
    "arbiter": "pipelined local",
@@ -2305,13 +2305,13 @@
    "summary": [
     "KVPF_CASES max_descriptor_ops=2 max_words=640 user_slice_ops=3 slice_base=4096",
     "KVPF_WRAP done=1 writes=6 hits=10 mismatches=0",
-    "KVPF ops=38 words_read=4381 bad=0 held_min=202 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=3 hbm_kv_mismatch=0 fault=0 code=00000",
-    "KEYS reads=637227 bad=0 writes=623 wr_done=622 contended=1268 kv_grants=5807",
+    "KVPF ops=38 words_read=4355 bad=0 held_min=207 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=3 hbm_kv_mismatch=0 fault=0 code=00000",
+    "KEYS reads=635946 bad=0 writes=590 wr_done=588 contended=1163 kv_grants=5815",
     "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
     "PASS"
    ],
-   "sim_seconds": 1.4,
-   "log_sha256": "6d4fd2871487c5b103f7d75e8b07f4abbb8e380f818bc98672f381921a790373"
+   "sim_seconds": 1.8,
+   "log_sha256": "7fb07b93cd3d810d7d0e1d9951e4bb2f5dfbfc6c7049ab88f2d5cd9aa257d8af"
   },
   {
    "arbiter": "pipelined local",
@@ -2320,17 +2320,17 @@
    "summary": [
     "KVPF_CASES max_descriptor_ops=2 max_words=640 user_slice_ops=3 slice_base=4096",
     "KVPF_WRAP done=1 writes=6 hits=10 mismatches=0",
-    "KVPF ops=38 words_read=4393 bad=0 held_min=195 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=3 hbm_kv_mismatch=0 fault=0 code=00000",
-    "KEYS reads=638022 bad=0 writes=615 wr_done=615 contended=1213 kv_grants=5989",
+    "KVPF ops=38 words_read=4442 bad=0 held_min=210 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=3 hbm_kv_mismatch=0 fault=0 code=00000",
+    "KEYS reads=633902 bad=0 writes=623 wr_done=621 contended=1214 kv_grants=5875",
     "REGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1",
     "PASS"
    ],
    "sim_seconds": 1.7,
-   "log_sha256": "565f038f8ed0bef5724d0225d84e02233eebfd1522b7b2aed3eb503d98b900b7"
+   "log_sha256": "6b7bd3e6b5667d3e4314ddfa9016e9f07fcbaedb9579dba9ed152c900a6334fc"
   }
  ],
  "hash_steering_exhaustive": {
-  "summary": "KARB_HASH n=131072 got=131072 pipe_got=131072 bad=0 multi=25364 ingress_stalls=0",
+  "summary": "KARB_HASH n=131072 got=131072 pipe_got=131072 bad=0 multi=25492 ingress_stalls=0",
   "pass": false
  },
  "pass": false,
@@ -2347,5 +2347,5 @@
   "6": 14,
   "7": 18
  },
- "w18_note": "W18 re-run after the registered-head K queue (ot_chip_v41x_karb_qh) in pslice and the registered pair stage (PAIRSTAGE=1) in pregion: all 54 trace runs (3 arms x fence on/off) and all KV-prefetch bench arms pass; hash steering delivered all 131,072 requests correctly (bad=0). pass=false is the same pipelined-arm 'multi' criterion artifact recorded in results/rtl/chip_v41x_karb_pipe_equiv.json. The pair stage adds 1 cycle to every region's round trip (18/14/12/8/8/12/14/18 on the 12 mm test geometry)."
+ "w18_note": "W18 re-run after (1) the registered-head K queue (ot_chip_v41x_karb_qh, head loaded directly only when empty) in pslice and (2) the registered pair stage + pair-registered status/write-done (PAIRSTAGE=1) in pregion: all 54 trace runs and all KV-prefetch bench arms pass; hash steering bad=0. pass=false is the known pipelined-arm 'multi' criterion artifact (results/rtl/chip_v41x_karb_pipe_equiv.json). Round trip +1 cycle per region vs fd6e9a81."
 }
