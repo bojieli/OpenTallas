@@ -7,18 +7,22 @@
 // what changes is how much work each rounding takes and where the registers
 // sit.  The modules:
 //
-//   ot_hdc_hstep #(K)      y = RN(RN(a*b) + K), the Horner step, two roundings,
-//                          LATENCY 4 (a multiply 3 + an add 3 = 6 before)
-//   ot_hdc_v41x_exp_s      exp(x), DEPTH 33 (ot_hdc_v41x_exp: 49), every input
-//   ot_hdc_fp32_mul_x2     y = 2 * RN(a*b), the two roundings of mul(mul(u,p),2),
-//                          LATENCY 3 (3 + 3 before)
+//   ot_hdc_hstep #(K, CUT) y = RN(RN(a*b) + K), the Horner step, two roundings,
+//                          LATENCY 4 + CUT (a multiply 3 + an add 3 = 6 before)
+//   ot_hdc_v41x_exp_s      exp(x), DEPTH 33 + 7 PCUT (ot_hdc_v41x_exp: 49), every input
+//   ot_hdc_fp32_mul_x2     y = 2 * RN(a*b) (DOUBLE 1; the two roundings of
+//                          mul(mul(u,p),2)) or RN(a*b) (DOUBLE 0), LATENCY 3 + CUT
 //   ot_hdc_addpos2         RN(a + b) for operands of one sign, LATENCY 2
 //   ot_hdc_fsqrt4          correctly rounded sqrt, radix 4, DEPTH 16 (31 before)
 //   ot_hdc_v41x_spdiv      u = t / RN(t + 2) for t in [0, 1], DEPTH 19 from the
 //                          exp's last Horner result (3 + 19 + the exp's
 //                          exponent stage before)
-//   ot_hdc_v41x_softplus_s softplus and sqrt(softplus), DEPTH 107 (162 before)
+//   ot_hdc_v41x_softplus_s softplus and sqrt(softplus), DEPTH 107 + 17 PCUT (162 before)
 //
+// CUT / PCUT = 1 puts a register between the product's carry-save tree and its
+// 48-bit prefix add (ot_hdc_mul24_csa): the routed block at 1.111 ns SS was
+// limited there (v1, PCUT 0 without keep-level adders: 685 MHz).  Every wide
+// add is a keep-level prefix adder (rtl/hdc/ot_hdc_prefix.sv).
 // WHY THE ROUNDINGS STAY THE SAME.  Each of these units returns the correctly
 // rounded (RNE, canonical +0) value of the same exact quantity as the chain it
 // replaces, and a correctly rounded value is unique, so the bits are the same.
@@ -62,9 +66,10 @@ module ot_hdc_mul24_csa (
 endmodule
 
 // ---------------------------------------------------------------------------
-// Horner step y = RN(RN(a*b) + K), K a positive normal constant, LATENCY 4.
+// Horner step y = RN(RN(a*b) + K), K a positive normal constant, LATENCY 4 + CUT.
 //   F1  the multiplier's stage 1 (decode, normalise, partial products, three
 //       carry-save levels) -- ot_hdc_fp32_mul_fast unchanged
+//   F1b (CUT = 1) the tree's last four carry-save levels, registered
 //   F2  the rest of the tree and the prefix final add; from the exponent sum
 //       alone, for either leading-bit position: the product's distance d below
 //       K's exponent, the alignment shift and its sticky mask
@@ -428,7 +433,7 @@ module ot_hdc_addpos2 (
 endmodule
 
 // ---------------------------------------------------------------------------
-// exp(x), DEPTH 33, bit-identical to ot_hdc_v41x_exp (DEPTH 49) for every x.
+// exp(x), DEPTH 33 + 7 PCUT, bit-identical to ot_hdc_v41x_exp (DEPTH 49) for every x.
 // The same operations as tools/hdc_golden.exp:
 //   xc = clamp(x, -87, 88); t = RN(xc*log2e); n = rint-to-even(t);
 //   r = RN(RN(xc - n*LN2_HI) - RN(n*LN2_LO)); p = Horner (6 steps); y = p + n<<23.
@@ -445,10 +450,11 @@ endmodule
 //     T(m) = m*LN2_HI + RN(m*LN2_LO) (a 128-entry table, exact integers of
 //     2^-43): one subtraction, a normalise, a rounding.  n = 0 gives r = xc
 //     (canonical +0), as the golden's adds of -0 do.
-//   * the six Horner steps are ot_hdc_hstep (4 cycles each, not 6).
-// Stages: 1 clamp | 1-3 t = x*log2e | 2 |xc| on the 2^-43 grid | 4 n | 5 T(|n|)
-// | 6 |xc| - T | 7 normalise | 8 round (r) | 9-32 Horner | 33 exponent.
-// p_pre / n_pre are the last Horner result and n at depth 32, for a consumer
+//   * the six Horner steps are ot_hdc_hstep (4 + PCUT cycles each, not 6).
+// Stages (PCUT 0; PCUT 1 adds one to t and one to each Horner step): 1 clamp |
+// 1-3 t = x*log2e | 2 |xc| on the 2^-43 grid | 4 n | 5 T(|n|) | 6 |xc| - T |
+// 7 normalise | 8 round (r) | 9-32 Horner | 33 exponent.
+// p_pre / n_pre are the last Horner result and n at depth T_P, for a consumer
 // that folds the exponent step into its own first stage (ot_hdc_v41x_spdiv).
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_exp_s #(parameter integer PCUT = 1) (
@@ -1088,15 +1094,16 @@ module ot_hdc_fsqrt4 (
 endmodule
 
 // ---------------------------------------------------------------------------
-// softplus(x) and sqrt(softplus(x)): II 1, DEPTH 107, the ports, results and
-// fault of ot_hdc_v41x_softplus (DEPTH 162).  The same roundings:
-//     t = exp(-|x|)                      ot_hdc_v41x_exp_s, to (p, n) at 32
-//     u = t / RN(t + 2)                  ot_hdc_v41x_spdiv          -> 51
-//     u2 = RN(u * u)                     ot_hdc_qmul                -> 54
-//     p = 1/17; p = RN(RN(p*u2) + 1/(2i+1)), i = 7 .. 0  8 x ot_hdc_hstep -> 86
-//     l = 2 * RN(u * p)                  ot_hdc_fp32_mul_x2         -> 89
-//     sp = RN(max(x, 0) + l)             ot_hdc_addpos2             -> 91
-//     r = sqrt(sp)                       ot_hdc_fsqrt4              -> 107
+// softplus(x) and sqrt(softplus(x)): II 1, DEPTH 107 (PCUT 0) or 124 (PCUT 1),
+// the ports, results and fault of ot_hdc_v41x_softplus (DEPTH 162).  The same
+// roundings (depths at PCUT 0 / 1):
+//     t = exp(-|x|)                      ot_hdc_v41x_exp_s, (p, n) at 32 / 39
+//     u = t / RN(t + 2)                  ot_hdc_v41x_spdiv          -> 51 / 58
+//     u2 = RN(u * u)                     ot_hdc_fp32_mul_x2 DOUBLE 0 -> 54 / 62
+//     p = 1/17; p = RN(RN(p*u2) + 1/(2i+1)), i = 7 .. 0  8 x ot_hdc_hstep -> 86 / 102
+//     l = 2 * RN(u * p)                  ot_hdc_fp32_mul_x2         -> 89 / 106
+//     sp = RN(max(x, 0) + l)             ot_hdc_addpos2             -> 91 / 108
+//     r = sqrt(sp)                       ot_hdc_fsqrt4              -> 107 / 124
 // ---------------------------------------------------------------------------
 module ot_hdc_v41x_softplus_s #(parameter integer PCUT = 1) (
     input  wire        clk,
