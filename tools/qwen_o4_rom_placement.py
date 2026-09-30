@@ -38,7 +38,7 @@ SOURCES = [Path('tools/hdc_qwen_fullshape_placement.py'), Path('tools/hdc_golden
 
 G, W, IL = FP.GROUPS, 16, 8    # QWEN_O4_GROUPS (tools/hdc_qwen_fullshape_placement.py)
 PAIR_BITS = 2 * W * 8                 # a group pair's 256-bit slice of the 786,432-bit code word
-TP = 2
+TP = FP.TP                               # QWEN_O4_TP
 # DFlash drafter: fc 4096 x 20480 (5 target taps), 5 Qwen3-shaped layers (qwen3_o4_rtl_gaps.py)
 DRAFTER_LAYERS = 5
 DRAFTER_FC = (4096, 5 * 4096)
