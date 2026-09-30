@@ -1177,3 +1177,29 @@ module ot_hdc_v41x_softplus_s #(parameter integer PCUT = 1) (
     ot_hdc_delay #(.W(1), .D(DEPTH - T_SP), .RESET(1)) d_fsp (clk, rst_n, f_sp, f_sp_d);
     assign fault = f_sp_d | f_sq | f_exp | f_div | f_u2 | (|hf) | f_l;
 endmodule
+
+// Parameter-free PCUT = 0 tops for hardening (the runner's --param path trips a yosys assert here).
+module ot_hdc_v41x_softplus_s0 (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] x,
+    output wire [31:0] sp,
+    output wire [31:0] r,
+    output wire        vo,
+    output wire        fault
+);
+    ot_hdc_v41x_softplus_s #(.PCUT(0)) u (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .sp(sp), .r(r), .vo(vo), .fault(fault));
+endmodule
+
+module ot_hdc_v41x_exp_s0 (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        v,
+    input  wire [31:0] x,
+    output wire [31:0] y,
+    output wire        vo,
+    output wire        fault
+);
+    ot_hdc_v41x_exp_s #(.PCUT(0)) u (.clk(clk), .rst_n(rst_n), .v(v), .x(x), .y(y), .vo(vo), .p_pre(), .n_pre(), .fault(fault));
+endmodule
