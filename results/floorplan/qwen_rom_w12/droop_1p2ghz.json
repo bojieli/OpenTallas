@@ -2633,6 +2633,16 @@
    "power_w_at_model_rate": 77.5
   }
  },
+ "product_choice": {
+  "scheme": "cap75_preramp256",
+  "decided": "root, 2026-09-30",
+  "what": "a 75% concurrent-tile cap and a 256-cycle schedule-driven pre-ramp before every ME op",
+  "why": "meets 35 mV at 2 pH / 15 uF (the V4.1 package spec) at the smallest per-user cost",
+  "reference_rows": [
+   "gap_preramp256 (no cap: 35 mV only to 1 pH)",
+   "cap50_preramp256 (fallback, -12.1% tok/s)"
+  ]
+ },
  "verdict": "full-field step 1826 A (1278 W) vs the V4.1 die's 2,625 A: ramp17 227.9 mV at 2 pH / 15 uF; preramp256 44.6 mV (0 cycles); cap50+preramp256 22.6 mV but +13.8% cycles (the cap doubles every op's issue)",
  "w18_reference": {
   "record": "results/physical_abi3/asap7/chip/v41_w18/droop_schemes_1p2ghz.json",
@@ -2640,7 +2650,7 @@
  },
  "claim_boundary": "lumped L-C-R first droop (W18's model and assumptions: R_pkg, detector, DTC, L and C sweeps); tile power from a pre-route CTS database synthesised at TT with ripple adders, not a signed-off tile; base current assumed",
  "sources": {
-  "tools/qwen_rom_droop_w12.py": "2966b756dbe09eea0761c5376798ec31176bfaa1d36c5e015adea17aeb8d1351",
+  "tools/qwen_rom_droop_w12.py": "bb0095345db30461bb5cccf48e078a584faac5679fde944d1809c1a0a9b5994f",
   "tools/w18/droop_sim.py": "62e9b7ff12073962590105fe0907b29c72b1e12d07a934b125c11b0680834b22",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",

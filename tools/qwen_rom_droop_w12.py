@@ -232,6 +232,11 @@ def main(argv=None):
                       basis="tools/hdc_timing.simulate replay of the TP-4 die program, SW = 64, W12 wires (+81 an op)"),
         me_field_energy_mj_per_token=round(me_energy, 2),
         schemes_root_20260930=extra,
+        product_choice=dict(
+            scheme="cap75_preramp256", decided="root, 2026-09-30",
+            what="a 75% concurrent-tile cap and a 256-cycle schedule-driven pre-ramp before every ME op",
+            why="meets 35 mV at 2 pH / 15 uF (the V4.1 package spec) at the smallest per-user cost",
+            reference_rows=["gap_preramp256 (no cap: 35 mV only to 1 pH)", "cap50_preramp256 (fallback, -12.1% tok/s)"]),
         verdict=None,
         w18_reference=dict(record="results/physical_abi3/asap7/chip/v41_w18/droop_schemes_1p2ghz.json",
                            adopted="50% cap + 256-cycle schedule-driven pre-ramp"),
