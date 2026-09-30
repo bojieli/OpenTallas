@@ -3230,6 +3230,40 @@ W18B_EXPERT_WIRE = 36 + 40       # W18b measured, M8/M9 trunks: VM x root -> far
 W11_SERIAL_MUL_EXTRA = 1         # W11 3bc74342: a LAT-3 mul misses 0.9 GHz by 17 ps -> LAT 4, +1 cycle a multiply in the
                                  # SU/SFU/softplus/Sinkhorn chains; priced as +1 slow cycle a chain node (a LOWER BOUND:
                                  # the per-node multiply count is not in the graph)
+# W11 MEASURED serial build (claude/w11-suclose ddd2f725, results/physical_abi3/asap7/hdc/v41x/w11_serial/summary.json;
+# root 2026-09-30): the SU light lane CLOSES at 1.111 ns SS / FF hold, 60/25 (929 MHz, sc_l5) with MLAT 5 (input-cut
+# multiply) and ALAT 4.  Measured depths before -> after, in 0.9 GHz cycles: linear op 21 -> 30, exp 49 -> 71,
+# sigmoid/silu 71 -> 94, rsqrt 37 -> 58, sqrt(softplus) 162 -> 216, Engram gate 104 -> 127, divide 19 -> 19, reducer
+# tap 26 -> 35 and 3 -> 4 a tree/time level.  Folded as these added slow cycles on the serial-chain nodes IN PLACE OF
+# the W11_SERIAL_MUL_EXTRA lower bound (the measured build already carries the slower multiply); the Sinkhorn unit
+# itself is not in the serial build, so it keeps the +1 lower bound, and its SFU front (row max + exp) takes the exp
+# delta.
+W11_SERIAL_MEASURED = dict(linear=9, exp=22, sigmoid=23, silu=23, rsqrt=21, softplus=54, gate=23, div=0,
+                           reduce_tap=9, reduce_per_level=1, sinkhorn_front_exp=22, sinkhorn_unit=W11_SERIAL_MUL_EXTRA,
+                           light_lane_ss_mhz=929.0, period_ns=1.111, mlat=5, alat=4,
+                           src="claude/w11-suclose ddd2f725 results/physical_abi3/asap7/hdc/v41x/w11_serial/summary.json "
+                               "(depths.serial_build, added_cycles; sc_l5 pass)")
+
+
+def _w11_serial_cycles(name, nd, levels):
+    """Added 0.9 GHz cycles of one serial-chain node under W11's measured serial build."""
+    m = W11_SERIAL_MEASURED
+    if nd["kind"] == "sinkhorn":
+        return m["sinkhorn_front_exp"] + m["sinkhorn_unit"]
+    if nd["kind"] == "reduce":
+        return m["reduce_tap"] + m["reduce_per_level"] * levels.get(name, 0)
+    leaf = name.split(".")[-1]
+    if leaf == "gate" and name.startswith("E"):
+        return m["gate"]
+    fn = A.SFU_NODE.get(leaf)
+    if fn:
+        return m[fn]
+    return m["rsqrt"] if leaf == "rsqrt" else m["linear"]
+
+
+PRODUCT_SERIAL = "w11_measured"
+PRODUCT_TAG = ("ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, "
+               "light lane 929 MHz)")
 QWEN_W12_TP4_ME_EXTRA_SS = 41 + 5 * 5 + 38 + 1 + 7   # W12 c6e6b845 at the 504 um reach: 112 cycles an ME op
 PRODUCT_CLOCK_HZ = 1.2e9   # USER DECISION (AGENTS.md e7479589): 0.833 ns at SS for all logic in all four designs
 PRODUCT_DYN_SCALE = 1.16   # root 2026-09-30: dynamic energy about +16% at 1.2 GHz (ASSUMED: the voltage for the clock)
@@ -3612,12 +3646,16 @@ SOFTPLUS_FIX = {"suffix:softplus_sqrt": -97, "suffix:idx.topk_local": 8}   # + W
 # re-derives weight_macs 264,960 -> 246,528 etc.); the full re-baseline waits for the headline-restatement pass.
 
 
-def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_stages=None, ss_wire=False, d=None):
+def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_stages=None, ss_wire=False, d=None,
+                 serial=None):
     """Re-time a priced V4.1 graph (one pass of P positions): the field-concurrency cap on every field read, W10's
     two-pass BF16 on wo_a, the latency inventory, and optionally a slower clock domain for the serial-chain units
     (slow = (hz, cdc_cycles)): their issue and depth stretch by clock / hz, and each crossing into the domain adds
     cdc_cycles of the slow clock (ASSUMED synchroniser); returns the pass time."""
     cyc = 1.0 / clock
+    # the reducers' adder-tree levels, from the graph's as-priced depth (decode_critical_path: red_tail + FADD x levels)
+    levels = {name: max(0, round((nd["depth"] * clock - A.D.K["red_tail"]) / A.D.FADD)) for name, nd in g.nodes.items()
+              if nd["kind"] == "reduce"} if serial else {}
     # softplus correction and the latency inventory first (cycles at the model's 3-stage arithmetic), then the
     # serial-chain units' depth at chain_stages-deep adds (x chain_stages / 3), then the slow domain
     for name, nd in g.nodes.items():
@@ -3657,8 +3695,13 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
                 nd["depth"] += max(0, new - old) * cyc
             elif nd["kind"] == "collective":
                 nd["depth"] += 2 * (W15_V41_COLL_STAGES_SS - 17) * cyc
-            elif nd["kind"] in SLOW_KINDS and slow:
+            elif nd["kind"] in SLOW_KINDS and slow and not serial:
                 nd["depth"] += W11_SERIAL_MUL_EXTRA / slow[0]
+    if serial == "w11_measured" and slow:
+        # named step (root 2026-09-30): W11's MEASURED serial build at 1.111 ns SS replaces the 3-stage-add depths
+        for name, nd in g.nodes.items():
+            if nd["kind"] in SLOW_KINDS:
+                nd["depth"] += _w11_serial_cycles(name, nd, levels) / slow[0]
     es = elem_stages or MODEL_ELEM_ADD_STAGES
     for name, nd in g.nodes.items():
         u = nd.get("_uarch")
@@ -3679,7 +3722,7 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
 
 def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16="columns", clock_hz=None,
                  field_concurrency=1.0, added_latency=None, dyn_scale=1.0, slow_domain=None, chain_stages=None,
-                 elem_stages=None, ss_wire=False):
+                 elem_stages=None, ss_wire=False, serial=None):
     """The V4.1 ROM array at S TP-4 stages, n_head head dies and n_table Engram table dies: AR and MTP m = 1 per
     user, the busiest-stage saturated aggregate, energy (ungated and the adopted stage power gating, 1 us wake),
     KV capacity, HBM stacks and die counts.  Same model pieces as the economics and levers sections."""
@@ -3702,12 +3745,12 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
                               else [(_cons_stage_of(name, nd, plan), 1.0)]):
                     pair_s[s0] = pair_s.get(s0, 0.0) + busy_pairs(nd) * nd["issue"] * f
         T1 = _cons_adjust(g1, 1, r1["clock_hz"], bf16, field_concurrency, lat, slow_domain, chain_stages, elem_stages,
-                          ss_wire, d)
+                          ss_wire, d, serial)
         r1["T_us"], r1["tokens_s"] = T1 * 1e6, 1 / T1
         occ = _cons_occupancy(g1, plan)
         _, gv = _v41_graph(d, V41_POSITIONS)
         Tp = _cons_adjust(gv, V41_POSITIONS, r1["clock_hz"], bf16, field_concurrency, lat, slow_domain, chain_stages,
-                          elem_stages, ss_wire, d)
+                          elem_stages, ss_wire, d, serial)
         occ_v = _cons_occupancy(gv, plan)
         win1, _ = _cons_windows(g1, plan)
         fstarts = cons_field_starts(g1, plan, r1["clock_hz"])
@@ -3789,7 +3832,7 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
                 pipeline_hops_us=round(r1["breakdown_us"].get("pipeline_hops", 0.0), 3),
                 cooling=_cons_cooling(die_static, die_static_ungated, cats, pair_s, pp, dyn_scale, sat, S, tot),
                 field_concurrency=field_concurrency, added_latency=dict(lat), slow_domain=slow_domain,
-                chain_stages=chain_stages, elem_stages=elem_stages, field_starts=fstarts, ss_wire=ss_wire,
+                chain_stages=chain_stages, elem_stages=elem_stages, field_starts=fstarts, ss_wire=ss_wire, serial=serial,
                 critical_path_top_us=_cons_top(g1),
                 capacity_users_1m=users, static_w_ungated=dict({k: round(v, 1) for k, v in static.items()},
                                                              total=round(P_static, 1)),
@@ -4185,7 +4228,8 @@ def consolidation(ec=None, lv=None):
     for k, pt_, bfm in (("option_ii cap 3", "w10_q_1p2", "option_ii"), ("option_iii", "w10_iii_1p2", "option_iii")):
         S_ = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", pt_, bfm, "4096m8")
         q_ = cons_v41_rom(S_, 4, cons_table_dies("analytical")["dies"], 1.0, None, bfm, PRODUCT_CLOCK_HZ,
-                          FIELD_CONCURRENCY, SOFTPLUS_FIX, PRODUCT_DYN_SCALE, (0.9e9, "w18"), None, 7, True)
+                          FIELD_CONCURRENCY, SOFTPLUS_FIX, PRODUCT_DYN_SCALE, (0.9e9, "w18"), None, 7, True,
+                          PRODUCT_SERIAL)
         bf16_full_token[k] = dict(stages=S_, dies=q_["dies"], ar=q_["ar_tokens_s_b1"], mtp=q_["mtp_tokens_s_b1"],
                                   saturated=q_["ar_saturated_tokens_s"], pipeline_hops_us=q_["pipeline_hops_us"])
     prod = {}
@@ -4199,9 +4243,11 @@ def consolidation(ec=None, lv=None):
                                   "1,208 MHz SS) + 0.9 GHz chain domain (LAT 3), W18 ratio-FIFO CDC",
                                   FIELD_CONCURRENCY, SOFTPLUS_FIX, None, 7),  # CDC per W18 (4 slow / 5 fast)
                                  ("ADOPTED + W15 SS wire reach (504 um) + W11 LAT-4 serial mul", FIELD_CONCURRENCY,
-                                  SOFTPLUS_FIX, None, 7)):
+                                  SOFTPLUS_FIX, None, 7),
+                                 (PRODUCT_TAG, FIELD_CONCURRENCY, SOFTPLUS_FIX, None, 7)):
         pt = cons_v41_rom(Sp, hp, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ, fc, lat, PRODUCT_DYN_SCALE,
-                          (0.9e9, "w18") if tag.startswith("ADOPTED") else None, cs, es, "SS wire" in tag)
+                          (0.9e9, "w18") if tag.startswith("ADOPTED") else None, cs, es, "SS wire" in tag,
+                          PRODUCT_SERIAL if tag == PRODUCT_TAG else None)
         pt.update(label=f"PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: {tag}", density="analytical",
                   bf16_mode="columns", role="product", depth="4096m8", bf16_stage_reference=bf16_ref)
         prod[tag] = pt
@@ -4231,7 +4277,7 @@ def consolidation(ec=None, lv=None):
         pt["silicon_mm2"] = pt["dies"] * FLOORPLAN["die_mm2"]
     # the comparison-rule reference: the product basis at TT (PROVISIONAL: the product die count is open until the
     # closed pair's pitch lands, root 2026-09-30)
-    head = next(v for k, v in prod.items() if k.startswith("ADOPTED") and "SS wire" in k)   # final: SS wires in
+    head = prod[PRODUCT_TAG]   # final: SS wires and W11's measured serial build in
     # 2. HBM dies right-sized; the V4.1 HBM sweep; Qwen HBM
     dies = {f"{m}_{s}": right_size_hbm_die(m, s) for m in ("qwen", "v41") for s in (4, 6)}
     dies["v41_4_phy12mm"] = right_size_hbm_die("v41", 4, 12.0)
@@ -4963,7 +5009,7 @@ def cons_short_context(Sp, hp, t_a, head, ec, gr, ctx=8192):
     by the index scan and attention.  The ROM product, the HBM tier 3 at equal cost (audited) and GPU tier 2, at ctx."""
     with _cons_ctx(ctx):
         p = cons_v41_rom(Sp, hp, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ, FIELD_CONCURRENCY, SOFTPLUS_FIX,
-                         PRODUCT_DYN_SCALE, (0.9e9, "w18"), None, 7, True)
+                         PRODUCT_DYN_SCALE, (0.9e9, "w18"), None, 7, True, PRODUCT_SERIAL)
         h = v41_hbm_n(96, 4, ec, gr, replicas=2, clock_hz=PRODUCT_CLOCK_HZ)
     t_ar = gpu_tier2_v41_ctx(ctx)
     gv = ec["gpu"]["v41"]
