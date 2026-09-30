@@ -886,10 +886,17 @@ module ot_v41_rom_elem #(
     wire [31:0] bf_val;
     wire [TG-1:0] bf_tree;
     if (BF16 != 0) begin : g_bf
+        if (FAST != 0) begin : g_f
+        ot_v41_bf16_lanes2 #(.NCHB(NCHB), .TRW(TG), .CUT(CUT)) u_bf (.clk(gclk), .rst_n(rst_n), .v(i2_v && i2_bf),
+            .w(cap[255:0]), .x(i2_q0), .slot(i2_t[TW-HW +: $clog2(NCHB)]), .first(i2_t[5]), .last(i2_t[4]),
+            .tree(i2_t[TW-HW-1 -: TG]), .final_i(i2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
+            .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));
+        end else begin : g_s
         ot_v41_bf16_lanes #(.NCHB(NCHB), .TRW(TG)) u_bf (.clk(gclk), .rst_n(rst_n), .v(i2_v && i2_bf),
             .w(cap[255:0]), .x(i2_q0), .slot(i2_t[TW-HW +: $clog2(NCHB)]), .first(i2_t[5]), .last(i2_t[4]),
             .tree(i2_t[TW-HW-1 -: TG]), .final_i(i2_t[3]), .ov(bf_v), .oval(bf_val), .otree(bf_tree),
             .ofinal(bf_final), .oerr(bf_err), .fault(b_fault));
+        end
     end else begin : g_nobf
         assign bf_v = 1'b0; assign bf_val = 32'd0; assign bf_tree = '0; assign bf_final = 1'b0;
         assign bf_err = 1'b0; assign b_fault = 1'b0;
