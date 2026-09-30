@@ -33,7 +33,7 @@ def test_legal_phy_pins_on_m5_track_and_power_reachable():
     w = float(re.search(r"SIZE ([0-9.]+) BY", lef).group(1))
     assert abs(w / 0.432 - round(w / 0.432)) < 1e-6          # width on the pack's joint grid
     xs = [float(x) for x in re.findall(r"LAYER M5 ;\n      RECT ([0-9.]+) ", lef)]
-    assert len(xs) == 22237
+    assert len(xs) == 22238
     # pin centre = x + 0.012 must sit on the M5 track (offset 0.012, pitch 0.048): x multiple of 0.048
     assert all(round(x * 1000) % 48 == 0 for x in xs)
     obs = lef.split("  OBS")[1]

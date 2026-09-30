@@ -218,7 +218,8 @@ def v41x_pins(npc: int = 32, ktagw: int = 17, npc_w: int = 8, lwin: int = 10,
     plist = [Pin("clk", 1, "input", "clock"), Pin("rst_n", 1, "input", "control")]
     plist += [Pin(n, npc * b, d, kind[d]) for n, b, d in k]
     plist += [Pin(n, (npc_w if s == "pc" else 1) * b, d, kind[d]) for n, b, d, s in w]
-    plist += [Pin("k_oor", 1, "output", "control"), Pin("refreshes", 64, "output", "control"),
+    plist += [Pin("k_oor", 1, "output", "control"), Pin("w_oor", 1, "output", "control"),
+              Pin("refreshes", 64, "output", "control"),
               Pin("w_reads", 32, "output", "control")]
     place: dict[str, tuple[int, str]] = {}
     for n, b, _ in k:
@@ -230,7 +231,7 @@ def v41x_pins(npc: int = 32, ktagw: int = 17, npc_w: int = 8, lwin: int = 10,
         for c in range(reps):
             for i in range(b):
                 place[f"{n}[{c * b + i}]" if reps * b > 1 else n] = (c, "w")
-    for nm in (["clk", "rst_n", "k_oor"] + [f"refreshes[{i}]" for i in range(64)]
+    for nm in (["clk", "rst_n", "k_oor", "w_oor"] + [f"refreshes[{i}]" for i in range(64)]
                + [f"w_reads[{i}]" for i in range(32)]):
         place[nm] = (npc // 2, "w")
     return plist, place
