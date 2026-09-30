@@ -4,7 +4,7 @@
   "claim_boundary": "Released-checkpoint golden decode on deterministic synthetic, format-consistent KV/index state. No full-shape RTL layer, token cycle, or place-and-route verdict.",
   "source_commit": "0d005d14f291a31dd8d05faba8b0c6020075bd1c",
   "source_sha256": {
-    "tools/rtl_v41_fullshape_layer_campaign.py": "71efde88ff7b6df9c7777d90d6b45b35636ffbdf17d1fefe3de0ecbddee845d5",
+    "tools/rtl_v41_fullshape_layer_campaign.py": "cac05b248283e17148a91537121fe844fb04915a522e656e8dc3df9067294087",
     "tools/v41_fullshape_golden_collect.py": "b286387a8e657f5febc7283fcb1a1f6b9ec56a8d3fa70579c0966febd81da655",
     "tools/v41_fullshape_shard_compare.py": "91d9bab43d46e46e3464e3769343f94c57d7b1381524482c3f1c5efad1fa9543",
     "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
@@ -2096,5 +2096,17 @@
       "terminal_margin": 0.8698616027832031,
       "scratch_schema": "ctx{context}_L{layer:02d}.json/.npz"
     }
+  },
+  "repin_20260930": {
+    "label": "pins moved: source edited outside this record's path",
+    "reason": "Tools this record pins were edited on claude/w17-isa (hdc_replay_v41 immediates from the constants manifest; die_slices attn_sink per rank; qe-stream/layout tools generalised to the 1M shard). None of those edits touches the path this record used; not re-run.",
+    "rerun": false,
+    "changed_pins": {
+      "tools/rtl_v41_fullshape_layer_campaign.py": {
+        "old": "71efde88ff7b6df9c7777d90d6b45b35636ffbdf17d1fefe3de0ecbddee845d5",
+        "new": "cac05b248283e17148a91537121fe844fb04915a522e656e8dc3df9067294087"
+      }
+    },
+    "historical_copy": null
   }
 }

@@ -40,8 +40,14 @@ CLOCK_NS = 0.92
 UNCERTAINTY_NS = 0.06
 AW, TAGW, LENW, BEATW, DW = 30, 16, 4, 4, 256
 ENV_H = 64.0
+K_SPAN = (200.0, 370.0)          # regional K port on the slice's top edge (v1 PHY window 375 um)
+EPC_OUTER = 14                   # outermost region's credits, 2 * hops + 2 (12 mm PHY: 6 hops)
+PROOT_HOPS = (6, 4, 3, 1, 1, 3, 4, 6)   # region 7 .. 0 trunk hops (12 mm PHY, 1 mm hops)
+PROOT_H = 64.0
+HOLD_NS = None                   # W18 --phy-e8p5: project SDC policy 25 ps hold uncertainty
+SIGNOFF_ARGS: list = []          # W18 --signoff-1p2: harden at WC (SS libs), repair hold at WC and BC
 BUFFER_HOOK = "physical/abi3/v41x_karb_repair_buffer_cap.tcl"
-KARB = ["rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv"]
+KARB = ["rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv", "rtl/chip/ot_chip_v41x_karb_qh.sv"]
 
 
 def common(top: str, sources: list[str], w: float, h: float, params: list[str] = (), density: float = 0.6):
@@ -51,6 +57,9 @@ def common(top: str, sources: list[str], w: float, h: float, params: list[str] =
         args += ["--source", s]
     for p in params:
         args += ["--param", p]
+    if HOLD_NS is not None:
+        args += ["--clock-uncertainty-hold-ns", f"{HOLD_NS:g}"]
+    args += SIGNOFF_ARGS
     args += ["--clock-period-ns", f"{CLOCK_NS:g}", "--clock-uncertainty-ns", f"{UNCERTAINTY_NS:g}",
              "--io-delay-fraction", "0.2", "--stages", "synth,pnr",
              "--die-area", "0", "0", f"{w:g}", f"{h:g}", "--core-area", f"{m:g}", f"{m:g}", f"{w - m:g}", f"{h - m:g}",
@@ -72,14 +81,14 @@ def slice_case(h: float = ENV_H, tag: str = "") -> dict:
         r"^(b_v|b_rdy|b_we|b_wr_done|b_rsp_v|b_rsp_rdy)$|^(b_addr|b_len|b_tag|b_wdata|b_wstrb|b_rsp_tag|b_rsp_beat|"
         r"b_rsp_data)\[\d+\]$" + f"=top:{span(0, *PC_PIN_SPAN)}",
         r"^(k_v|k_take|k_we|k_wr_done|k_rsp_v|k_rsp_rdy|b_grant|contend|clk|rst_n)$|^(k_addr|k_len|k_tag|k_wdata|"
-        r"k_wstrb|k_rsp_tag|k_rsp_beat|k_rsp_data)\[\d+\]$" + f"=top:{200:g}-{370:g}",
+        r"k_wstrb|k_rsp_tag|k_rsp_beat|k_rsp_data)\[\d+\]$" + f"=top:{K_SPAN[0]:g}-{K_SPAN[1]:g}",
     ]
     args = common("ot_chip_v41x_karb_slice", ["rtl/chip/ot_chip_v41x_karb_slice.sv"], w, h, [f"AW={AW}"])
     for r in regions:
         args += ["--pin-region", r]
     return {"args": args, "nickname": f"w2a_karb_slice_aw30{tag}",
             "output": f"results/physical_abi3/asap7/chip/v41x_karb_local/slice_aw30{tag}/physical.json",
-            "floorplan": {"die_um": [w, h], "pc_pin_span_um": PC_PIN_SPAN, "k_span_um": [200, 370]}}
+            "floorplan": {"die_um": [w, h], "pc_pin_span_um": PC_PIN_SPAN, "k_span_um": list(K_SPAN)}}
 
 
 def region_case(h: float = ENV_H, tag: str = "") -> dict:
@@ -90,9 +99,9 @@ def region_case(h: float = ENV_H, tag: str = "") -> dict:
         regions.append(f"{pin_regex(karb_pc_pins(p, 'h', aw=AW))}=bottom:{span(x0, *PC_PIN_SPAN)}")
         regions.append(f"{pin_regex(karb_pc_pins(p, 'b', aw=AW))}=top:{span(x0, *PC_PIN_SPAN)}")
     regions.append(r"^(kq_v|kq_rdy|kq_we|clk|rst_n)$|^(kq_lpc|kq_addr|kq_len|kq_tag|kq_wdata|kq_wstrb)\[\d+\]$"
-                   + f"=top:{span(PHY_PC_WINDOW_UM, 200, 370)}")
+                   + f"=top:{span(PHY_PC_WINDOW_UM, *K_SPAN)}")
     regions.append(r"^(ks_v|ks_cr|k_wr_done)$|^(ks_tag|ks_beat|ks_data|b_grant_n|contend_n)\[\d+\]$"
-                   + f"=top:{span(2 * PHY_PC_WINDOW_UM, 200, 370)}")
+                   + f"=top:{span(2 * PHY_PC_WINDOW_UM, *K_SPAN)}")
     srcs = ["rtl/chip/ot_chip_v41x_karb_region.sv", "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
             "rtl/chip/ot_chip_v41x_karb_slice.sv", *KARB]
     args = common("ot_chip_v41x_karb_region", srcs, w, h, [f"AW={AW}"])
@@ -159,7 +168,7 @@ def pslice_case() -> dict:
         r"^(b_v|b_rdy|b_we|b_wr_done|b_rsp_v|b_rsp_rdy)$|^(b_addr|b_len|b_tag|b_wdata|b_wstrb|b_rsp_tag|b_rsp_beat|"
         r"b_rsp_data)\[\d+\]$" + f"=top:{span(0, *PC_PIN_SPAN)}",
         r"^(kin_v|kin_we|k_pop|k_wr_done|ks_v|ks_cr|b_grant|contend|clk|rst_n)$|^(kin_addr|kin_len|kin_tag|kin_wdata|"
-        r"kin_wstrb|ks_tag|ks_beat|ks_data)\[\d+\]$" + f"=top:{200:g}-{370:g}",
+        r"kin_wstrb|ks_tag|ks_beat|ks_data)\[\d+\]$" + f"=top:{K_SPAN[0]:g}-{K_SPAN[1]:g}",
     ]
     srcs = ["rtl/chip/ot_chip_v41x_karb_pslice.sv", "rtl/chip/ot_chip_v41x_karb_slice.sv", *KARB]
     args = common("ot_chip_v41x_karb_pslice", srcs, w, h, [f"AW={AW}"])
@@ -167,7 +176,7 @@ def pslice_case() -> dict:
         args += ["--pin-region", r]
     return {"args": args, "nickname": "w2a_karb_pslice_aw30",
             "output": "results/physical_abi3/asap7/chip/v41x_karb_local/pslice_aw30/physical.json",
-            "floorplan": {"die_um": [w, h], "pc_pin_span_um": PC_PIN_SPAN, "k_span_um": [200, 370]}}
+            "floorplan": {"die_um": [w, h], "pc_pin_span_um": PC_PIN_SPAN, "k_span_um": list(K_SPAN)}}
 
 
 def pregion_case() -> dict:
@@ -178,13 +187,13 @@ def pregion_case() -> dict:
         regions.append(f"{pin_regex(karb_pc_pins(p, 'h', aw=AW))}=bottom:{span(x0, *PC_PIN_SPAN)}")
         regions.append(f"{pin_regex(karb_pc_pins(p, 'b', aw=AW))}=top:{span(x0, *PC_PIN_SPAN)}")
     regions.append(r"^(t_v|t_we|clk|rst_n)$|^(t_lpc|t_addr|t_len|t_tag|t_wdata|t_wstrb|kcr)\[\d+\]$"
-                   + f"=top:{span(PHY_PC_WINDOW_UM, 200, 370)}")
+                   + f"=top:{span(PHY_PC_WINDOW_UM, *K_SPAN)}")
     regions.append(r"^(s_v|s_cr|k_wr_done)$|^(s_tag|s_beat|s_data|b_grant_n|contend_n)\[\d+\]$"
-                   + f"=top:{span(2 * PHY_PC_WINDOW_UM, 200, 370)}")
+                   + f"=top:{span(2 * PHY_PC_WINDOW_UM, *K_SPAN)}")
     srcs = ["rtl/chip/ot_chip_v41x_karb_pregion.sv", "rtl/chip/ot_chip_v41x_karb_pslice.sv",
             "rtl/chip/ot_chip_v41x_karb_slice.sv", *KARB]
     # EPC: the outermost region's credits (2 * 6 + 2)
-    args = common("ot_chip_v41x_karb_pregion", srcs, w, h, [f"AW={AW}", "EPC=14"])
+    args = common("ot_chip_v41x_karb_pregion", srcs, w, h, [f"AW={AW}", f"EPC={EPC_OUTER}"])
     for r in regions:
         args += ["--pin-region", r]
     return {"args": args, "nickname": "w2a_karb_pregion_aw30",
@@ -194,7 +203,7 @@ def pregion_case() -> dict:
 
 
 def proot_case(w: float = 750.0) -> dict:
-    h = ENV_H
+    h = PROOT_H
     rw = TAGW + BEATW + DW
     pins_l, pins_r = [], []
     for g in range(8):
@@ -209,7 +218,7 @@ def proot_case(w: float = 750.0) -> dict:
         f"{pin_regex(pins_r)}=bottom:{w / 2 + 90:g}-{w - 10:g}",
     ]
     srcs = ["rtl/chip/ot_chip_v41x_karb_proot.sv", *KARB]
-    epcs = "".join(f"{2 * hp + 2:02x}" for hp in (6, 4, 3, 1, 1, 3, 4, 6))   # region 7 .. region 0
+    epcs = "".join(f"{2 * hp + 2:02x}" for hp in PROOT_HOPS)   # region 7 .. region 0
     args = common("ot_chip_v41x_karb_proot", srcs, w, h, [f"AW={AW}", f"EPCS=64'h{epcs}"])
     for r in regions:
         args += ["--pin-region", r]
@@ -241,6 +250,8 @@ CASES = {"slice": slice_case, "region": region_case, "stack_ep": stack_ep_case, 
          "trunk_end": lambda: trunk_case(11400.0, "_end"), "trunk_mid": lambda: trunk_case(3150.0, "_mid"),
          # the pipelined partition (ot_chip_v41x_hbm_karb_pipe)
          "pslice": pslice_case, "pregion": pregion_case, "proot": proot_case,
+         "link600": lambda: link_case(600.0), "link450": lambda: link_case(450.0),
+         "link900": lambda: link_case(900.0),
          "link_1000": link_case, "link_750": lambda: link_case(750.0), "link_1250": lambda: link_case(1250.0)}
 
 
@@ -257,8 +268,33 @@ def main() -> int:
     ap.add_argument("--abstract", action="store_true",
                     help="after a kept route: ORFS do-generate_abstract (write_abstract_lef + write_timing_model) "
                          "in <work>/<case>/orfs; prints the LEF/Liberty paths and digests")
+    ap.add_argument("--phy-e8p5", action="store_true",
+                    help="W18: fit the legal v2 PHY abstract ot_hbm3e_phy_v41x_aw30_e8p5 (265.584 um pseudo-channel "
+                         "window, K pins 0.96-120.384 um), K port at 125.28-262.08 um, 60/25 ps SDC")
+    ap.add_argument("--signoff-1p2", action="store_true",
+                    help="W18 / AGENTS.md 2026-09-30: 1.2 GHz (0.833 ns), hardened at CORNER=WC, hold at WC and BC")
     a = ap.parse_args()
+    if a.signoff_1p2:
+        global CLOCK_NS, SIGNOFF_ARGS
+        CLOCK_NS = 0.833
+        SIGNOFF_ARGS = ["--orfs-corner", "WC", "--hold-corners", "WC,BC", "--orfs-var", "ADDER_MAP_FILE="]
+    if a.phy_e8p5:
+        global PHY_PC_WINDOW_UM, PC_PIN_SPAN, K_SPAN, HOLD_NS
+        PHY_PC_WINDOW_UM, PC_PIN_SPAN, K_SPAN, HOLD_NS = 265.584, (0.96, 120.384), (125.28, 262.08), 0.025
+        global EPC_OUTER
+        EPC_OUTER = 2 * 4 + 2          # 8.5 mm PHY: the outermost region centre is 3.72 mm out -> 4 hops of <= 1 mm
+        if a.signoff_1p2:
+            EPC_OUTER = 2 * 8 + 2      # W15 SS reach 504 um: region centres 0.53-3.72 mm -> 2..8 hops
+            global PROOT_HOPS
+            PROOT_HOPS = (8, 6, 4, 2, 2, 4, 6, 8)
+            global PROOT_H
+            PROOT_H = 128.0            # 64 um: GRT-0183 (boxed in) with the deeper 0.5 mm-hop credit queues
     c = CASES[a.case]()
+    if a.phy_e8p5:
+        sfx = "_w18e8p5" + ("_1p2" if a.signoff_1p2 else "")
+        c["nickname"] += sfx
+        c["output"] = c["output"].replace("/physical.json", f"{sfx}/physical.json")
+        c.setdefault("floorplan", {})["phy_view"] = "ot_hbm3e_phy_v41x_aw30_e8p5"
     args = list(c["args"])
     if a.density:
         args[args.index("--place-density") + 1] = f"{a.density:g}"

@@ -39,7 +39,9 @@ def build() -> dict:
     rate_p = "results/arch/v41_tp_rowsplit_measured_reprice.json"
     load_p = "results/arch/v41_fullshape_load_floor.json"
     coll_p = "results/rtl/v41_collective_depth_campaign.json"
-    index_p = "results/rtl/hdc_v41x_idx_shard_reader_pc.json"
+    # W11: the quarter-per-stack ring reader's HBM-rate record, with user isolation from the ring gate
+    index_p = "results/rtl/w11_idx_reader_rate.json"
+    iso_p = "results/rtl/w11_idx_ring_gate.json"
     route_p = "results/physical_abi3/asap7/chip/v41x_hbm_karb/strip_pin_placement.json"
     die_route_p = "results/physical_abi3/asap7/chip/v41x_full_die/physical.json"
     qwen_route_p = "results/physical_hdc/asap7/qwen_o4_full_die/physical.json"
@@ -57,6 +59,7 @@ def build() -> dict:
     load = read(load_p, used)
     coll = read(coll_p, used)
     index = read(index_p, used)
+    iso = read(iso_p, used)
     route = read(route_p, used)
     die_route = read(die_route_p, used)
     v41_rtl = read(v41_rtl_p, used)
@@ -76,8 +79,12 @@ def build() -> dict:
     old = rate.get("points", {}).get("1048576", {}).get("ar", {})
     ld = load.get("points", {}).get("1048576", {}).get("gw1_depth128_exact_stage", {})
     tails = coll.get("summary", {})
-    full_index = index.get("timed_1m_four_stack_concurrent", {})
+    full_index = next((c for c in index.get("cases", []) if c.get("name") == "quarter_stack_n262144"), {})
     measured_index = full_index.get("sectors_per_cycle", 0)
+    # the record's own target at its (slower) simulated clock is the stricter per-cycle bar
+    index_clock_target = index.get("target", {}).get("sectors_per_cycle", 0)
+    iso_full = next((c for c in iso.get("cases", []) if c.get("name") == "full_shape"), {})
+    iso_users = sorted({r["user"] for r in iso_full.get("reads", []) if r.get("checked") == r.get("n")})
     # The adopted 3.6 TB/s per die at 1.087 GHz is 103.5 32-byte sectors/cycle.
     effective_index_target = 3.6e12 / (1.087e9 * 32)
     model_ar = old.get("row_split_measured_gathers", 0)
@@ -108,15 +115,18 @@ def build() -> dict:
             "model binds both exact adopted-width tails; any new bank/packing result must reprice from its own gate",
             f"{coll_p}; {rate_p}"),
         "v41_index_bandwidth": gate(
-            full_index.get("status") == "pass_exact" and
-            full_index.get("keys") == 262_144 and
-            full_index.get("user_count", 0) >= 2 and
-            measured_index >= effective_index_target,
+            index.get("status") == "pass" and
+            full_index.get("keys") == 262_144 and full_index.get("checked_keys") == 262_144 and
+            iso.get("status") == "pass" and len(iso_users) >= 2 and
+            measured_index >= max(effective_index_target, index_clock_target),
             {"measured_sectors_per_cycle": measured_index,
-             "keys": full_index.get("keys"), "user_count": full_index.get("user_count"),
+             "keys": full_index.get("keys"), "checked_keys": full_index.get("checked_keys"),
+             "record_clock_target_sectors_per_cycle": index_clock_target,
+             "isolated_users_exact": iso_users,
              "effective_modeled_sectors_per_cycle": round(effective_index_target, 3)},
-            "four-stack concurrent exact scan at or above the adopted effective HBM rate, with user isolation",
-            index_p),
+            "four-stack exact 262,144-key scan at or above the adopted effective HBM rate (and the record's own "
+            "target at its clock), with multi-user isolation",
+            f"{index_p}; {iso_p}"),
         "v41_hbm_pin_layout": gate(route.get("verdict") == "pin_placement_pass",
             {"pin_placement": route.get("verdict"), "route_completed": route.get("route_completed")},
             "all pseudo-channel pins placed in physical PHY windows; routing is a separate full-die gate", route_p),

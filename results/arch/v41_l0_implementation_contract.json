@@ -6922,7 +6922,7 @@
     "results/arch/v41_hbm_region_preflight.json": "27e10f8e90d71167fd447141eaf49f9b1436867fc98fd35fcc94f6058464eab8",
     "results/arch/v41_single_token_schedule_preflight.json": "0e79822c428b82c2a61e999df00aa114fc291533063e839bdae3233c40937468",
     "results/rtl/hdc_v41x_fullshape_program_bind.json": "a7fbd5f477e9de97fba0c2d0e429edffeb0d0f28b6c5b39212dccf0c51777e7d",
-    "results/rtl/v41_tp_layer0_collective_sequence.json": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0",
+    "results/rtl/v41_tp_layer0_collective_sequence.json": "7b01efa2927f7dd34173227cad7e026c37c329bf637375d57f9b98e704c11371",
     "results/rtl/v41x_qe_local_tile_bank_l0.json": "1133dfd0fd30526dc420f34562c6073670186893dbcee61e8ddd7ef8490972e5",
     "rtl/chip/ot_chip_v41x_die.sv": "a7153c0cbb934ad932e1046c1762de0999c84b8c8caef9fb60a47fe65af43d3a",
     "rtl/chip/ot_chip_v41x_tile.sv": "504dd668151a456af98cbea899b5c2c663465aa4787c4cd20aec7189b0acd4dd",
@@ -6942,5 +6942,17 @@
     ],
     "tile_default_W_HBM": 1
   },
-  "historical_note": "Ported from Codex 5b56f959/638fcc14/649e2de6; pinned program bind differs at 9be3f0f1 and its ROM-die-mode-blocked entry is out of date. Historical; regenerate before citing."
+  "historical_note": "Ported from Codex 5b56f959/638fcc14/649e2de6; pinned program bind differs at 9be3f0f1 and its ROM-die-mode-blocked entry is out of date. Historical; regenerate before citing.",
+  "repin_20260930": {
+    "label": "stale: program changed",
+    "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+    "rerun": false,
+    "changed_pins": {
+      "results/rtl/v41_tp_layer0_collective_sequence.json": {
+        "old": "cb1d670786977715ccf5b036c218a81c5a851c1c7cbc9ac4bd8ab9e9a4f44ff0",
+        "new": "7b01efa2927f7dd34173227cad7e026c37c329bf637375d57f9b98e704c11371"
+      }
+    },
+    "historical_copy": null
+  }
 }

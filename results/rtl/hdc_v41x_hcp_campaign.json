@@ -1993,6 +1993,13 @@
     }
   ],
   "claim_boundary": "cycle-level Verilator simulation of ot_hdc_v41x_hcp with behavioural weight/x banks (fixed read latency) against tools/hdc_golden_v41.Model.hc_mixes under R-ARITH chunk8; the shipped-size fn is random (no shipped checkpoint in this repository), the reduced vehicle's fn and residuals are real.  Clock and area: results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_hcp*/physical.json.",
+  "currency": {
+    "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run",
+    "reason": "Pinned inputs moved after this record: tools/hdc_golden.py (8fb2059d), tools/hdc_golden_v41.py (43ea7573), rtl/hdc/v41x/ot_hdc_v41x_hcp.sv (6665aa95, routed-tile default W=8/TL=9), rtl/hdc/ot_hdc_sfu.sv (27d30c15, reciprocal saturation) and the campaign tool itself (52367cae, FP32 weights from HBM). A full re-run at HEAD 5aa6e609 was attempted and exceeded 40 min (killed by timeout at 2,401 s under load ~160 on 32 cores), so it is not a quick gate; not re-run.",
+    "stale_since": "8fb2059d",
+    "state": "stale",
+    "verdict_kept": "pass"
+  },
   "fp_stand_in": {
     "cases": 13,
     "identical_results_and_cycles": true,

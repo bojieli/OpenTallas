@@ -93,7 +93,19 @@
     "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
     "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
     "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
-    "tools/hdc_replay_v41.py": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
+    "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
     "tools/rtl_v41_fullshape_core_preflight.py": "04c6e8d37d026f476069ecfc544fc915e906a9e7a1c84034a751a3662503db1d"
+  },
+  "repin_20260930": {
+    "label": "pins moved: source edited outside this record's path",
+    "reason": "Tools this record pins were edited on claude/w17-isa (hdc_replay_v41 immediates from the constants manifest; die_slices attn_sink per rank; qe-stream/layout tools generalised to the 1M shard). None of those edits touches the path this record used; not re-run.",
+    "rerun": false,
+    "changed_pins": {
+      "tools/hdc_replay_v41.py": {
+        "old": "f93e66b8720b3a4a4aa1e43cad20da9b089f2df96c5805a6035cada466636852",
+        "new": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d"
+      }
+    },
+    "historical_copy": "hdc_v41x_fullshape_core_preflight_historical_before_w17_isa.json"
   }
 }
