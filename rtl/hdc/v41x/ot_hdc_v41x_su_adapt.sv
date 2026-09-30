@@ -36,12 +36,18 @@
 module ot_hdc_v41x_su_adapt #(
     parameter integer N  = 16,          // vector-unit light lanes
     parameter integer M  = 8,           // SFU lanes
-    parameter integer LV = 8,           // reducer time levels (a reduced segment spans <= 2^LV vectors)
+    parameter integer LV = 7,           // reducer time levels (a reduced segment spans <= 2^LV vectors), 1..7
     parameter integer AW = 24,
     parameter integer NW = 16,
     parameter integer CLS_DRAIN = 0,
     parameter integer KVT_SH = 9,
-    parameter integer RES_LAT = 0       // VM_DIST: the vector unit's result-tree stages (ot_hdc_v41x_vec)
+    parameter integer BCAST_STAGES = 0, // ot_hdc_v41x_vec: controller -> lane broadcast tree stages
+    parameter integer RET_STAGES = 0,   // ot_hdc_v41x_vec: lane / reducer -> vector-memory write stages
+    parameter integer RES_STAGES = -1,  // ot_hdc_v41x_vec: the reducer's result path (-1: RET_STAGES)
+    parameter integer VMD_NG = 0,       // ot_hdc_v41x_vec: distributed-VM option H lane groups (0: off)
+    parameter integer ROT_STAGES = 17,
+    parameter integer GATH_STAGES = 18,
+    parameter integer SCAL_STAGES = 8
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -160,7 +166,10 @@ module ot_hdc_v41x_su_adapt #(
     wire [15:0] cr_cnt, emitted;
     wire        retire_o, dbg_emit, dbg_ret, dbg_res;
     wire [7:0]  dbg_eseq, dbg_rseq, dbg_sseq;
-    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .AW(AW), .NW(NW), .KVT_SH(KVT_SH), .RES_LAT(RES_LAT)) u_vec (
+    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .AW(AW), .NW(NW), .KVT_SH(KVT_SH), .BCAST_STAGES(BCAST_STAGES),
+                     .RES_STAGES(RES_STAGES), .VMD_NG(VMD_NG), .ROT_STAGES(ROT_STAGES), .GATH_STAGES(GATH_STAGES),
+                     .SCAL_STAGES(SCAL_STAGES),
+                     .RET_STAGES(RET_STAGES)) u_vec (
         .clk(clk), .rst_n(rst_n), .go(v_go), .ready(v_ready), .idle(v_idle),
         .i_nout(nout), .i_nin(nin),
         .i_asrc(asrc), .i_bsrc(bsrc), .i_csrc(csrc), .i_dsrc(dsrc),

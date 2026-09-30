@@ -5,7 +5,7 @@ The RTL (opt-in, default 0 = the flat memory, bit- and cycle-identical):
   rtl/chip/ot_v41_vm_dist.sv (+ _group, _bank, _pipe)  NG lane-group banks, one module a group, replicated by
                               generate; element e in group e mod NG, 2 banks of 8-element rows a group
                               (results/floorplan/v41_vm_dist_spec.json)
-  ot_hdc_v41x_vec RES_LAT     the SU reducer's result tree (cr_rseq / idle follow its last stage)
+  ot_hdc_v41x_vec RES_STAGES  the SU reducer's result tree (cr_rseq / idle follow its last stage); VMD_NG option H
   ot_hdc_core_v41x VM_DIST    x-gather stages (ME / QE / XU / HE ops issue X_GATHER_STAGES later), result-
                               scatter stages (their writes land RET_SCATTER_STAGES later; idle / ready wait)
   ot_chip_v41x_tile VM_DIST   the banks in place of the flat vm array, the collective write tree

@@ -101,7 +101,12 @@ class Layout:
         self.rope_pos = I.ROPE_POS if mtp else PMAX
         layers = range(self.L + self.nmtp)
         # -- vector memory ------------------------------------------------------
-        v = self.vm = Alloc(I.VM_ELEMS_MTP if mtp else I.VM_ELEMS)
+        # HDC_V41_VM_ALIGN (opt-in, default 32 = the layout as before): every vector-memory region starts at a
+        # multiple of it.  128 is the distributed VM's option H rule (results/uarch/w11_vm_options.json): with
+        # element e in lane group e mod 128, an aligned region's unit-stride streams start in group 0.
+        va = int(os.environ.get("HDC_V41_VM_ALIGN", "32"))
+        assert va >= 32 and va & (va - 1) == 0, "HDC_V41_VM_ALIGN: a power of two >= 32"
+        v = self.vm = Alloc(I.VM_ELEMS_MTP if mtp else I.VM_ELEMS, align=va)
         scratch = [("H", 640), ("T", 640), ("SSX", 1), ("RF", 1), ("MIX", 32), ("PA", 4), ("POA", 4),
                    ("CA", 16), ("PF", 4), ("POF", 4), ("CF", 16), ("CRAW", 16), ("M4", 4), ("E16", 32),
                    ("X", 160), ("XN", 160), ("SS", 8), ("RS", 8), ("QA", 32), ("QR", 32), ("KVA", 32),
@@ -127,7 +132,7 @@ class Layout:
             v(f"E{k}", 160)
         self.scratch_names = {n for n, _ in scratch} | {f"{x}{k}" for x in ("GU", "ACT", "E") for k in range(7)}
         if mtp:
-            v.top = -(-v.top // 32) * 32
+            v.top = -(-v.top // va) * va
             self.slot_stride = v.top
             self.nslots = mtp["slots"]
             assert self.nslots <= I.NSLOT and (self.nslots + 1 <= self.ring or mtp.get("mutation"))

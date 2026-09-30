@@ -1,9 +1,12 @@
 {
  "schema": "opentallas.rtl.w11_su_checkpoint/1",
- "historical": "FAILED verdict kept as recorded (the hazard before the fix). Its pinned sources have since changed (the tap fix, lane PRE/clip timing, the SU wire stages BCAST_STAGES/RET_STAGES); the current record is results/rtl/w11_su_checkpoint_fix.json.",
- "label": "bug",
- "generated_at": "2026-09-29T16:01:30Z",
+ "label": "fix_wire",
+ "generated_at": "2026-09-29T21:12:44Z",
  "hazard": "a non-spanning reducing op followed by a spanning reducing op with a shallower tap: both items leave through the reducer's one tap; checkpoint T was armed by spanning ops only",
+ "wire_stages": {
+  "BCAST_STAGES": 4,
+  "RET_STAGES": 5
+ },
  "cases": [
   {
    "N": 16,
@@ -32,7 +35,7 @@
     "tap_level": 1,
     "time_levels": 0,
     "vectors": 10,
-    "model_emit_to_result": 50
+    "model_emit_to_result": 59
    },
    "second": {
     "fields": {
@@ -53,20 +56,22 @@
     "tap_level": 0,
     "time_levels": 2,
     "vectors": 3,
-    "model_emit_to_result": 53
+    "model_emit_to_result": 62
    },
    "between": [],
    "chained": {
     "ended": true,
-    "vm_mismatch_words": 1,
+    "vm_mismatch_words": 0,
     "kv_mismatch_words": 0,
-    "faults": 3,
+    "faults": 0,
     "order_faults": 0,
-    "cycles": 82,
-    "pass_": false,
-    "second_first_emit_after_first_last_emit": 1,
-    "first_last_result": 70,
-    "second_results": []
+    "cycles": 98,
+    "pass_": true,
+    "second_first_emit_after_first_last_emit": 4,
+    "first_last_result": 79,
+    "second_results": [
+     88
+    ]
    },
    "idle": {
     "ended": true,
@@ -74,22 +79,22 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 142,
+    "cycles": 160,
     "pass_": true,
-    "second_first_emit_after_first_last_emit": 57,
-    "first_last_result": 70,
+    "second_first_emit_after_first_last_emit": 66,
+    "first_last_result": 79,
     "second_results": [
-     132
+     150
     ]
    },
    "whole_seed": {
     "ended": true,
-    "vm_mismatch_words": 1,
+    "vm_mismatch_words": 0,
     "kv_mismatch_words": 0,
-    "faults": 3,
+    "faults": 0,
     "order_faults": 0,
-    "cycles": 1073,
-    "pass_": false,
+    "cycles": 1100,
+    "pass_": true,
     "ops": 39
    }
   },
@@ -120,7 +125,7 @@
     "tap_level": 1,
     "time_levels": 0,
     "vectors": 11,
-    "model_emit_to_result": 50
+    "model_emit_to_result": 59
    },
    "second": {
     "fields": {
@@ -141,20 +146,22 @@
     "tap_level": 0,
     "time_levels": 1,
     "vectors": 2,
-    "model_emit_to_result": 50
+    "model_emit_to_result": 59
    },
    "between": [],
    "chained": {
     "ended": true,
-    "vm_mismatch_words": 1,
+    "vm_mismatch_words": 0,
     "kv_mismatch_words": 0,
-    "faults": 2,
+    "faults": 0,
     "order_faults": 0,
-    "cycles": 82,
-    "pass_": false,
-    "second_first_emit_after_first_last_emit": 1,
-    "first_last_result": 71,
-    "second_results": []
+    "cycles": 95,
+    "pass_": true,
+    "second_first_emit_after_first_last_emit": 4,
+    "first_last_result": 80,
+    "second_results": [
+     85
+    ]
    },
    "idle": {
     "ended": true,
@@ -162,22 +169,22 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 139,
+    "cycles": 157,
     "pass_": true,
-    "second_first_emit_after_first_last_emit": 57,
-    "first_last_result": 71,
+    "second_first_emit_after_first_last_emit": 66,
+    "first_last_result": 80,
     "second_results": [
-     129
+     147
     ]
    },
    "whole_seed": {
     "ended": true,
-    "vm_mismatch_words": 1,
+    "vm_mismatch_words": 0,
     "kv_mismatch_words": 0,
-    "faults": 2,
+    "faults": 0,
     "order_faults": 0,
-    "cycles": 989,
-    "pass_": false,
+    "cycles": 1013,
+    "pass_": true,
     "ops": 38
    }
   },
@@ -208,7 +215,7 @@
     "tap_level": 3,
     "time_levels": 0,
     "vectors": 5,
-    "model_emit_to_result": 58
+    "model_emit_to_result": 67
    },
    "second": {
     "fields": {
@@ -229,7 +236,7 @@
     "tap_level": 1,
     "time_levels": 5,
     "vectors": 27,
-    "model_emit_to_result": 65
+    "model_emit_to_result": 74
    },
    "between": [
     {
@@ -251,21 +258,21 @@
      "tap_level": 0,
      "time_levels": 0,
      "vectors": 2,
-     "model_emit_to_result": 47
+     "model_emit_to_result": 56
     }
    ],
    "chained": {
     "ended": true,
-    "vm_mismatch_words": 1,
+    "vm_mismatch_words": 0,
     "kv_mismatch_words": 0,
-    "faults": 3,
+    "faults": 0,
     "order_faults": 0,
-    "cycles": 122,
-    "pass_": false,
-    "second_first_emit_after_first_last_emit": 6,
-    "first_last_result": 73,
+    "cycles": 134,
+    "pass_": true,
+    "second_first_emit_after_first_last_emit": 9,
+    "first_last_result": 82,
     "second_results": [
-     112
+     124
     ]
    },
    "idle": {
@@ -274,31 +281,34 @@
     "kv_mismatch_words": 0,
     "faults": 0,
     "order_faults": 0,
-    "cycles": 181,
+    "cycles": 199,
     "pass_": true,
-    "second_first_emit_after_first_last_emit": 65,
-    "first_last_result": 73,
+    "second_first_emit_after_first_last_emit": 74,
+    "first_last_result": 82,
     "second_results": [
-     171
+     189
     ]
    },
    "whole_seed": {
     "ended": true,
-    "vm_mismatch_words": 1,
+    "vm_mismatch_words": 0,
     "kv_mismatch_words": 0,
-    "faults": 3,
+    "faults": 0,
     "order_faults": 0,
-    "cycles": 1297,
-    "pass_": false,
+    "cycles": 1309,
+    "pass_": true,
     "ops": 36
    }
   }
  ],
- "builds": {},
- "all_pass": false,
- "hazard_reproduced": true,
+ "builds": {
+  "N16": 219.77447199821472,
+  "N64": 713.694696187973
+ },
+ "all_pass": true,
+ "hazard_reproduced": false,
  "controls_pass": true,
- "git_head": "194647e1b8e1c9b4e34accd9fb1c58a6fff53342",
+ "git_head": "53870d8f85e84d140285f550bab8f26beda8f9d4",
  "git_dirty_tracked_files": [],
  "input_sha256": {
   "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
@@ -311,15 +321,15 @@
   "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
   "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "5a88f2536d8e4f1e54bc9ea6c969af33ed1ae4b4c914aae561cb6601715745a6",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "94d0d16aff5cb5d366fd189b64058c18f02aec242e1b414084eef5de1806eeb0",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "1b0a5ccbbe8c156f4920bc31a48af545b96441203df156299d91b302752909c4",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "0ba8c77b349a8116958f09f3948116c8183f558f10b3228b55bcb55f1108b315",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "6b82064724a1f07e4bcbf4e7a787d017fc20699be1158831e9efe78bd4c03afc",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "87a3ae848a137aabbab8354563cc5acd7c1bfdcde0e471a7ce37f70198223c02",
-  "rtl/test/tb_hdc_v41x_vec.sv": "c636a367b5d0192a03cc25252dbcd3d7d8ee2c7743bab90cc5a9c1bfd1ddab88",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "cc9aad507db760a2d7086558c1fde3cb4bd0062730fd4c2447d9634e43b4b00a",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "569db2f33b015cc80d0f6eccd2b6d6036f25ebf56a1ea1140265bec10efa6453",
+  "rtl/test/tb_hdc_v41x_vec.sv": "6347b84fd02065ba4f1e51ea22ffec3c6066b8f19c54d971390a82716542d15e",
   "rtl/test/tb_hdc_v41x_vec_fields.svh": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
   "rtl/test/hdc_v41_harness.cpp": "f2a82a2ea843a1f8b04fd94e94adea61037a9fa6aef45f6b0c8550abe5a6dce1",
-  "tools/w11_su_checkpoint_repro.py": "1cfea0654ab41bb2a08e9139cf427cf75deceb4179f708c6277cc977874354b6",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "38bc8f88dc977b08fe2ac821cf5d72e75837dd26b7b50bebfccfc156fccf1a63",
+  "tools/w11_su_checkpoint_repro.py": "9a12f31429e1fd8a4f817a287ab2a767eb01cb42d24c65cc25aa9f303ce209b9",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "7d05b86774dd90c4f4d8ed6665f87796ee61ef7569c9642c05a8f05630dc72a7",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
   "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",

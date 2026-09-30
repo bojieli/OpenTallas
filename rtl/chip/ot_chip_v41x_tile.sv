@@ -99,6 +99,15 @@ module ot_chip_v41x_tile #(
     parameter integer X_GATHER_STAGES = 10,
     parameter integer RET_SCATTER_STAGES = 10,
     parameter integer SU_RES_STAGES = 7,
+    // the stream unit's broadcast / return stages (ot_hdc_core_v41x SUBCAST / SURET) and option H of the distributed
+    // VM (ot_hdc_core_v41x VM_DIST_H: the residual rotate / gather / scalar networks, held per op)
+    parameter integer SUBCAST = 0,
+    parameter integer SURET = 0,
+    parameter integer SU_EWR_STAGES = 1,
+    parameter integer VM_DIST_H = 0,
+    parameter integer SU_ROT_STAGES = 17,
+    parameter integer SU_GATH_STAGES = 18,
+    parameter integer SU_SCAL_STAGES = 8,
     parameter integer COLL_WRITE_STAGES = 15
 ) (
     input  wire              clk,
@@ -370,7 +379,9 @@ module ot_chip_v41x_tile #(
                        .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_MULTIUSER(IDX_MULTIUSER),
                        .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS),
                        .VM_DIST(VM_DIST), .X_GATHER_STAGES(X_GATHER_STAGES),
-                       .RET_SCATTER_STAGES(RET_SCATTER_STAGES), .SU_RES_STAGES(SU_RES_STAGES)) u_core (
+                       .RET_SCATTER_STAGES(RET_SCATTER_STAGES), .SU_RES_STAGES(SU_RES_STAGES),
+                       .SUBCAST(SUBCAST), .SURET(SURET), .SU_EWR_STAGES(SU_EWR_STAGES), .VM_DIST_H(VM_DIST_H),
+                       .SU_ROT_STAGES(SU_ROT_STAGES), .SU_GATH_STAGES(SU_GATH_STAGES), .SU_SCAL_STAGES(SU_SCAL_STAGES)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .done(done), .acc_n(acc_n), .acc_tok(), .next_token(next_token), .next_val(next_val), .cycles(cycles),
         .fault(core_fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),

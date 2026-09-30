@@ -38,12 +38,21 @@ module tb_hdc_v41x_vec #(
     parameter integer XVMAX = 4 * N,        // the external producer's vector, at most
     parameter integer TMAX = 2000000,
     // VM_DIST = 1: the vector memory is the distributed lane-group banks (rtl/chip/ot_v41_vm_dist.sv, NG = N/8
-    // groups); the reducer's results cross SU_RES_STAGES tree registers (ot_hdc_v41x_vec RES_LAT) and the
+    // groups); the reducer's results cross SU_RES_STAGES tree registers (ot_hdc_v41x_vec RES_STAGES) and the
     // external producer's writes -- the matvec result scatter -- RET_SCATTER_STAGES, its credits delayed alike.
     // 0: the flat memory (bit- and cycle-identical to the bench before VM_DIST).
     parameter integer VM_DIST = 0,
     parameter integer SU_RES_STAGES = 4,
-    parameter integer RET_SCATTER_STAGES = 6
+    parameter integer RET_SCATTER_STAGES = 6,
+    parameter integer BCAST_STAGES = 0,
+    parameter integer RET_STAGES = 0,
+    // option H of the distributed VM (VM_DIST = 1): the residual networks, held per op (ot_hdc_v41x_vec VMD_NG),
+    // and the element writes into the lane's own group (SU_EWR_STAGES, in place of RET_STAGES)
+    parameter integer VM_DIST_H = 0,
+    parameter integer SU_EWR_STAGES = 1,
+    parameter integer ROT_STAGES = 17,
+    parameter integer GATH_STAGES = 18,
+    parameter integer SCAL_STAGES = 8
 ) (input wire clk);
     `include "tb_hdc_v41x_vec_fields.svh"
     localparam integer AW = 24, NR = N / 8;
@@ -136,7 +145,10 @@ module tb_hdc_v41x_vec #(
     wire [7:0] dbg_eseq, dbg_rseq, dbg_sseq;
     wire [4*N*32-1:0] rd_q_u;
     wire [N*32-1:0]   vi_q_u;
-    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .RES_LAT(VM_DIST ? SU_RES_STAGES : 0)) dut (
+    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES),
+                      .RET_STAGES(VM_DIST ? SU_EWR_STAGES : RET_STAGES), .RES_STAGES(VM_DIST ? SU_RES_STAGES : -1),
+                      .VMD_NG((VM_DIST != 0 && VM_DIST_H != 0) ? N / 8 : 0), .ROT_STAGES(ROT_STAGES),
+                      .GATH_STAGES(GATH_STAGES), .SCAL_STAGES(SCAL_STAGES)) dut (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(w[F_NOUT +: 16]), .i_nin(w[F_NIN +: 16]),
         .i_asrc(w[F_ASRC +: 2]), .i_bsrc(w[F_BSRC +: 2]), .i_csrc(w[F_CSRC +: 2]), .i_dsrc(w[F_DSRC +: 2]),

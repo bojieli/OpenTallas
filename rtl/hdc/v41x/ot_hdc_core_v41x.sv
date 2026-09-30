@@ -91,7 +91,13 @@ module ot_hdc_core_v41x #(
     // SU: ot_hdc_v41x_vec geometry
     parameter integer SUN   = 16,          // light lanes (elements a cycle)
     parameter integer SUM   = 8,           // SFU lanes
-    parameter integer SULV  = 8,           // reducer time levels
+    parameter integer SULV  = 7,           // reducer time levels, 1..7 (was 8: silently clamped to 7)
+    // SU wire stages (ot_hdc_v41x_vec BCAST_STAGES / RET_STAGES; 0 / 0 = no wire).  The spec die (N 1,024,
+    // M 256, W1 hub placement, 0.92 ns, 0.76 ps/um) is SUBCAST 4 (controller at the lane array's centre ->
+    // corner lane, 3,458 um) and SURET 5 (farthest lane -> HUB_VM, 3,850 um): results/rtl/w11_su_spec.json
+    // wire_stage_derivation
+    parameter integer SUBCAST = 0,         // broadcast-tree register stages, controller -> lanes
+    parameter integer SURET = 0,           // return register stages, lanes / reducer -> vector memory
     // HE: ot_hdc_v41x_hcp geometry
     parameter integer HHW   = 8,           // HCP lanes per group (8 x HHW FP32 MAC lanes)
     parameter integer HTL   = 9,           // HCP tail levels
@@ -105,13 +111,23 @@ module ot_hdc_core_v41x #(
     //                       (its first x word arrives that much later; the sequencer holds the op)
     //   RET_SCATTER_STAGES  the matvec result scatter: every ME / QE / HE / XU vector-memory write lands that
     //                       many cycles later; the unit counts idle / ready only once its writes have landed
-    //   SU_RES_STAGES       the stream unit's reducer results (ot_hdc_v41x_vec RES_LAT; cr_rseq / idle follow)
+    //   SU_RES_STAGES       the stream unit's reducer results (ot_hdc_v41x_vec RES_STAGES; cr_rseq / idle follow)
+    //   SU_EWR_STAGES       the stream unit's element writes into the lane's own group (ot_hdc_v41x_vec RET_STAGES)
+    //   VM_DIST_H           option H (results/uarch/w11_vm_options.json): the stream unit decides per op whether it
+    //                       needs the residual rotate network (SU_ROT_STAGES each way), the gather network
+    //                       (SU_GATH_STAGES) or the per-row scalar fetch (SU_SCAL_STAGES), and holds the op for them
+    //                       (ot_hdc_v41x_vec VMD_NG = SUN / 8); 0: the networks are free (the first VM_DIST gate)
     // The collective write tree is the tile's (ot_chip_v41x_tile COLL_WRITE_STAGES).  0: the flat memory,
     // bit- and cycle-identical to the core before VM_DIST.
     parameter integer VM_DIST = 0,
     parameter integer X_GATHER_STAGES = 10,
     parameter integer RET_SCATTER_STAGES = 10,
-    parameter integer SU_RES_STAGES = 7
+    parameter integer SU_RES_STAGES = 7,
+    parameter integer SU_EWR_STAGES = 1,
+    parameter integer VM_DIST_H = 0,
+    parameter integer SU_ROT_STAGES = 17,
+    parameter integer SU_GATH_STAGES = 18,
+    parameter integer SU_SCAL_STAGES = 8
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -1037,7 +1053,10 @@ module ot_hdc_core_v41x #(
     generate if (X_SU != 0) begin : g_su_x
         wire [SUN-1:0] raw_kv_we;
         ot_hdc_v41x_su_adapt #(.N(SUN), .M(SUM), .LV(SULV), .AW(AW), .NW(NW), .CLS_DRAIN((NSLOT > 1) ? 1 : 0),
-                               .RES_LAT(VM_DIST ? SU_RES_STAGES : 0))
+                               .BCAST_STAGES(SUBCAST), .RET_STAGES(VM_DIST ? SU_EWR_STAGES : SURET),
+                               .RES_STAGES(VM_DIST ? SU_RES_STAGES : SURET),
+                               .VMD_NG((VM_DIST != 0 && VM_DIST_H != 0) ? SUN / 8 : 0), .ROT_STAGES(SU_ROT_STAGES),
+                               .GATH_STAGES(SU_GATH_STAGES), .SCAL_STAGES(SU_SCAL_STAGES))
             u_su (
             .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
             .i_nout(su_nout), .i_nin(su_nin), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src),

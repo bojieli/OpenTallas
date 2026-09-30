@@ -31,7 +31,14 @@ module tb_chip_v41x_die_vmdist #(
     parameter integer X_GATHER_STAGES = 10,
     parameter integer RET_SCATTER_STAGES = 10,
     parameter integer SU_RES_STAGES = 7,
-    parameter integer COLL_WRITE_STAGES = 15
+    parameter integer COLL_WRITE_STAGES = 15,
+    parameter integer SUBCAST = 0,
+    parameter integer SURET = 0,
+    parameter integer SU_EWR_STAGES = 1,
+    parameter integer VM_DIST_H = 0,
+    parameter integer SU_ROT_STAGES = 17,
+    parameter integer SU_GATH_STAGES = 18,
+    parameter integer SU_SCAL_STAGES = 8
 ) (input wire clk);
     localparam integer W = 16, VOCAB = 4040, KV_WORDS = 32768, VM_ELEMS = 65536;
     localparam integer IKH_WORDS = 1 << 18, HMEM = 1 << 20, QROM_WORDS = 1 << 16;
@@ -56,7 +63,9 @@ module tb_chip_v41x_die_vmdist #(
 
     ot_chip_v41x_die #(.RANK(0), .VM_DIST(VM_DIST), .X_GATHER_STAGES(X_GATHER_STAGES),
                        .RET_SCATTER_STAGES(RET_SCATTER_STAGES), .SU_RES_STAGES(SU_RES_STAGES),
-                       .COLL_WRITE_STAGES(COLL_WRITE_STAGES)) dut (
+                       .COLL_WRITE_STAGES(COLL_WRITE_STAGES), .SUBCAST(SUBCAST), .SURET(SURET),
+                       .SU_EWR_STAGES(SU_EWR_STAGES), .VM_DIST_H(VM_DIST_H), .SU_ROT_STAGES(SU_ROT_STAGES),
+                       .SU_GATH_STAGES(SU_GATH_STAGES), .SU_SCAL_STAGES(SU_SCAL_STAGES)) dut (
         .clk(clk), .rst_n(rst_n),
         .host_mode(1'b1), .host_start(start), .host_token(token), .host_pos(pos), .host_entry(14'd0),
         .host_prime_v(prime_v), .host_prime_first(prime_first), .host_prime_cid(prime_cid),

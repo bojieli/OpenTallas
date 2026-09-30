@@ -22,8 +22,14 @@ Per op: accept, emit / write / result cycles, the vector count and depths agains
 (layout(): max 16 vectors, exp + sum 48, sink 1, divide 32 at N1024/M256, H16/T640; linear depth 21,
 exp 49 in S, reducer 26 + 3 log2(S/8) + 3 L when spanning).
 
+Wire stages (--stages B:R ...): ot_hdc_v41x_vec's BCAST_STAGES (controller -> lanes broadcast tree) and
+RET_STAGES (lanes / reducer -> vector memory).  0:0 is the unit as it was (config key N{N}_M{M}); any other
+pair is keyed N{N}_M{M}_B{B}R{R}.  `wire_stage_derivation` sets the spec pair from the W1 hub placement
+(results/floorplan/v41_pack_expanded_woa.json) with the model's wire rule (tools/uarch_model.wire_cycles at
+0.92 ns, 0.76 ps/um).
+
 Writes results/rtl/w11_su_spec.json (new record; does not touch results/rtl/v41x_su_softmax.json).
-    python3 tools/w11_su_softmax_spec.py --scratch /tmp/.../su [--configs 16x8 1024x256]
+    python3 tools/w11_su_softmax_spec.py --scratch /tmp/.../su [--configs 16x8 1024x256] [--stages 0:0 4:4]
 """
 from __future__ import annotations
 
@@ -65,14 +71,63 @@ def sha(p: Path):
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
-def build(kind, N, M, LV, obj: Path, jobs, vflags=()):
+FLOORPLAN = ROOT / "results/floorplan/v41_pack_expanded_woa.json"
+SPEC_CLOCK_PS = 920.0
+WIRE_PS_PER_UM = 0.76
+
+
+def wire_stage_derivation(N=1024, M=256):
+    """BCAST_STAGES / RET_STAGES at the spec width from the W1 hub placement.
+
+    The lane array: (N - M) light lanes and M SFU lanes at the model's per-lane area estimates
+    (uarch_model.UNIT su_light_lane_um2 / su_lane_um2), laid out as a square of side s.  The controller sits at
+    the array's centre; the farthest lane is a corner: s / sqrt(2) straight, s Manhattan (routes are
+    Manhattan).  The return path goes from the farthest lane to the vector memory (HUB_VM, the strip on the
+    region's west edge): with the array abutting HUB_VM it is s + max(0, s/2 - VM height / 2); with the
+    array centred in HUB_SU_VECTOR it is longer (listed, not adopted)."""
+    import uarch_model as U
+    fp = json.loads(FLOORPLAN.read_text())
+    reg = {r[0]: dict(x=r[2], y=r[3], w=r[4], h=r[5]) for r in fp["soft_regions"]}
+    su, vm = reg["HUB_SU_VECTOR"], reg["HUB_VM"]
+    light, sfu = U.UNIT["su_light_lane_um2"], U.UNIT["su_lane_um2"]
+    area = (N - M) * light + M * sfu
+    side = math.sqrt(area)
+    vm_x1, vm_yc, vm_h = vm["x"] + vm["w"], vm["y"] + vm["h"] / 2, vm["h"]
+    cyc = lambda um: U.wire_cycles(um, 1e12 / SPEC_CLOCK_PS, WIRE_PS_PER_UM)
+    bcast_um = side                                            # centre -> corner, Manhattan
+    ret_abut_um = side + max(0.0, side / 2 - vm_h / 2)         # far corner -> HUB_VM's east edge
+    cx, cy = su["x"] + su["w"] / 2, su["y"] + su["h"] / 2
+    ret_centred_um = (cx + side / 2 - vm_x1) + max(0.0, abs(cy - vm_yc) + side / 2 - vm_h / 2)
+    return dict(
+        region=dict(HUB_SU_VECTOR_um=[round(su["w"], 1), round(su["h"], 1)],
+                    HUB_SU_VECTOR_centre_um=[round(cx, 1), round(cy, 1)],
+                    HUB_VM_um=[round(vm["w"], 1), round(vm["h"], 1)], HUB_VM_east_edge_x_um=round(vm_x1, 1),
+                    floorplan=str(FLOORPLAN.relative_to(ROOT))),
+        lane_array=dict(light_lanes=N - M, sfu_lanes=M, light_um2=light, sfu_um2=sfu, area_mm2=round(area / 1e6, 3),
+                        square_side_um=round(side, 1), area_basis="uarch_model.UNIT estimates (not hardened)"),
+        wire_rule=dict(fn="tools/uarch_model.wire_cycles", clock_ps=SPEC_CLOCK_PS, ps_per_um=WIRE_PS_PER_UM,
+                       check={"3000um": cyc(3000), "6000um": cyc(6000)}),
+        controller="at the lane array's centre, which is HUB_SU_VECTOR's centre height; the array abuts HUB_VM",
+        broadcast=dict(farthest_lane_manhattan_um=round(bcast_um, 1),
+                       farthest_lane_straight_um=round(side / math.sqrt(2), 1),
+                       stages=cyc(bcast_um), stages_if_straight=cyc(side / math.sqrt(2))),
+        ret=dict(farthest_lane_to_vm_um=round(ret_abut_um, 1), stages=cyc(ret_abut_um),
+                 alternative_array_centred_in_region=dict(um=round(ret_centred_um, 1), stages=cyc(ret_centred_um))),
+        adopted=dict(BCAST_STAGES=cyc(bcast_um), RET_STAGES=cyc(ret_abut_um)),
+        not_modelled="the operand reads (rd_addr -> rd_q, 4 streams) and the gather index read cross the same "
+                     "array to the vector memory; the unit's fetch depth (3) assumes a one-cycle memory beside "
+                     "every lane")
+
+
+def build(kind, N, M, LV, obj: Path, jobs, vflags=(), stages=(0, 0)):
     obj.mkdir(parents=True, exist_ok=True)
     top = "tb_hdc_v41x_su_softmax" if kind == "adapt" else "tb_hdc_v41x_vec"
     srcs = [*map(str, C.LIB), *map(str, C.RTL)]
     srcs += [str(ADAPT), str(TB_ADAPT)] if kind == "adapt" else [str(TB_VEC)]
     cmd = ["/usr/bin/time", "-v", C.VERILATOR, "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH",
            "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-UNOPTFLAT", *vflags, "--top-module", top, "--prefix", "Vtb", "-Mdir", str(obj),
-           f"-GN={N}", f"-GM={M}", f"-GLV={LV}", *[f"-G{k}={v}" for k, v in MEMP.items()],
+           f"-GN={N}", f"-GM={M}", f"-GLV={LV}", f"-GBCAST_STAGES={stages[0]}", f"-GRET_STAGES={stages[1]}",
+           *[f"-G{k}={v}" for k, v in MEMP.items()],
            f"-I{ROOT / 'rtl/test'}", *srcs, str(C.HARNESS), "-CFLAGS", "-O1", "-j", str(jobs)]
     t0 = time.time()
     with (obj / "build.log").open("w") as log:
@@ -82,7 +137,7 @@ def build(kind, N, M, LV, obj: Path, jobs, vflags=()):
     if r.returncode:
         raise RuntimeError(f"build {kind} N{N} failed:\n" + text[-4000:])
     m = re.search(r"Maximum resident set size \(kbytes\): (\d+)", text)
-    return obj / "Vtb", dict(wall_s=round(wall, 1), verilator_flags=list(vflags), max_rss_gib=round(int(m.group(1)) / 2**20, 2) if m else None,
+    return obj / "Vtb", dict(wall_s=round(wall, 1), verilator_flags=list(vflags), stages=list(stages), max_rss_gib=round(int(m.group(1)) / 2**20, 2) if m else None,
                              note="max RSS of the largest single process (verilator or one g++)")
 
 
@@ -194,7 +249,8 @@ def main():
     ap.add_argument("--builds-from", type=Path,
                     help="with --reuse: a record whose 'builds' made the reused benches (copied, marked reused)")
     ap.add_argument("--vflags", default="", help="extra Verilator flags, e.g. '-fno-inline' (recorded)")
-    ap.add_argument("--build-parallel", type=int, default=2, help="benches built at once (memory)")
+    ap.add_argument("--build-parallel", type=int, default=2, help="benches built at once (memory: ~31 GiB at N1024)")
+    ap.add_argument("--stages", nargs="+", default=["0:0"], help="BCAST_STAGES:RET_STAGES pairs")
     ap.add_argument("--out", type=Path, default=OUT)
     args = ap.parse_args()
     C.write_fields_svh()
@@ -204,40 +260,60 @@ def main():
                heads=16, head_dim=512, reducer_levels=args.lv, clock_ghz=C.CLOCK_GHZ,
                model_issue=dict(vectors_H16_T640_N1024_M256=dict(zip(OP_NAMES, MODEL_VECTORS_T640_N1024)),
                                 depths=MODEL_DEPTHS),
-               builds={}, configs={})
+               wire_stage_derivation=wire_stage_derivation(), builds={}, configs={})
     if args.reuse and args.builds_from:
         prev = json.loads(args.builds_from.read_text())
         rec["builds"] = {k: dict(v, reused_from=dict(record=str(args.builds_from), git_head=prev.get("git_head")))
                          for k, v in prev["builds"].items()}
-    for cfg in args.configs:
-        N, M = map(int, cfg.split("x"))
-        exes = {}
-        with ThreadPoolExecutor(args.build_parallel) as pool:
-            futs = {}
+    runs = [(cfg, tuple(map(int, st.split(":")))) for cfg in args.configs for st in args.stages]
+    sfx_of = lambda B, R: "" if (B, R) == (0, 0) else f"_B{B}R{R}"
+    # every bench first (build_parallel at once: an N1024 build peaks near 31 GiB), then the cases
+    exes, futs = {}, {}
+    with ThreadPoolExecutor(args.build_parallel) as pool:
+        for cfg, (B, R) in sorted(runs, key=lambda r: int(r[0].split("x")[0])):
+            N, M = map(int, cfg.split("x"))
             for kind in ("adapt", "vec"):
-                obj = args.scratch / f"obj_{kind}_N{N}_M{M}_LV{args.lv}"
+                key = f"{kind}_N{N}_M{M}{sfx_of(B, R)}"
+                obj = args.scratch / f"obj_{kind}_N{N}_M{M}_LV{args.lv}{sfx_of(B, R)}"
                 if args.reuse and (obj / "Vtb").exists():
-                    exes[kind] = obj / "Vtb"
+                    exes[key] = obj / "Vtb"
                     continue
-                futs[kind] = pool.submit(build, kind, N, M, args.lv, obj, args.jobs, args.vflags.split())
-            for kind, fu in futs.items():
-                exes[kind], info = fu.result()
-                rec["builds"][f"{kind}_N{N}_M{M}"] = info
-                print("built", kind, N, M, info, flush=True)
-        crec = dict(N=N, M=M, LV=args.lv, ports=ports(N, M), cases={})
+                futs[key] = pool.submit(build, kind, N, M, args.lv, obj, args.jobs, args.vflags.split(), (B, R))
+        for key, fu in futs.items():
+            exes[key], info = fu.result()
+            rec["builds"][key] = info
+            print("built", key, info, flush=True)
+    for cfg, (B, R) in runs:
+        N, M = map(int, cfg.split("x"))
+        C.BCAST, C.RET = B, R           # the layout model's depths for this bench
+        sfx = sfx_of(B, R)
+        crec = dict(N=N, M=M, LV=args.lv, BCAST_STAGES=B, RET_STAGES=R, ports=ports(N, M), cases={})
         jobs = []
         for T in args.tokens:
             mem, expected, regions, cl = cases(N, M, T)
             for variant, kind, ops, mref in cl:
-                d = args.scratch / f"case_N{N}_T{T}_{variant}"
-                jobs.append((T, variant, exes[kind], d, mem, ops, expected, regions, mref))
+                d = args.scratch / f"case_N{N}{sfx}_T{T}_{variant}"
+                jobs.append((T, variant, exes[f"{kind}_N{N}_M{M}{sfx}"], d, mem, ops, expected, regions, mref))
         with ThreadPoolExecutor(len(jobs)) as pool:
             res = list(pool.map(lambda j: (j[0], j[1], run_one(j[2], j[3], j[4], j[5], j[6], j[7], j[8], N, M)),
                                 jobs))
         for T, variant, r in res:
             crec["cases"].setdefault(f"T{T}", {})[variant] = r
             print(N, M, T, variant, r["pass_"], r["end_cycle"], r["first_accept_to_last_write_cycles"], flush=True)
-        rec["configs"][f"N{N}_M{M}"] = crec
+        rec["configs"][f"N{N}_M{M}{sfx}"] = crec
+    # what the wire stages cost: end-to-end cycles against the same case with none
+    for key, cf in rec["configs"].items():
+        base = rec["configs"].get(f"N{cf['N']}_M{cf['M']}")
+        if base is None or base is cf:
+            continue
+        cf["delta_vs_no_wire_stages"] = {
+            T: {v: dict(first_accept_to_last_write=r["first_accept_to_last_write_cycles"]
+                        - base["cases"][T][v]["first_accept_to_last_write_cycles"],
+                        end_cycle=r["end_cycle"] - base["cases"][T][v]["end_cycle"],
+                        per_op_last_done=[max(x["last"] for x in (o["write"], o["result"]) if x)
+                                          - max(x["last"] for x in (b["write"], b["result"]) if x)
+                                          for o, b in zip(r["ops"], base["cases"][T][v]["ops"])])
+                for v, r in cs.items()} for T, cs in cf["cases"].items() if T in base["cases"]}
     # the model's vector counts against the measured ones (T640 at N1024/M256)
     c = rec["configs"].get("N1024_M256", {}).get("cases", {}).get("T640")
     if c:
