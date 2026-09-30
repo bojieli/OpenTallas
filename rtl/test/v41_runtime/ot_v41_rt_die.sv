@@ -129,7 +129,7 @@ module ot_v41_rt_die #(
         .rope_region_ok(), .rope_fault(), .rope_hbm_grants(), .rope_hbm_wait_cycles());
 
     // ---- images ---------------------------------------------------------------------------------------
-    reg [8*1024-1:0] dir;
+    string dir;
     integer fd, i;
     reg [255:0] sw;
     reg [31:0] sa;
@@ -164,6 +164,8 @@ module ot_v41_rt_die #(
     end
     // final vector memory dump on request (the host calls it through DPI export)
     export "DPI-C" function v41rt_vm_word;
+    import "DPI-C" context function void v41rt_die_register(input int rank);
+    initial v41rt_die_register(RANK);
     function int v41rt_vm_word(input int a);
         v41rt_vm_word = dut.u_tile.vm[a];
     endfunction

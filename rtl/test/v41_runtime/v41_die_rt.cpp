@@ -34,6 +34,7 @@
 #include "svdpi.h"
 #include "qwen_rt_matvec.hpp"   // RtPool
 #include <array>
+#include <atomic>
 #include <chrono>
 #include <cstdio>
 #include <cstring>
@@ -72,6 +73,8 @@ extern "C" long long v41rt_cfg_read(int addr) {
     return (size_t(addr) < c.size()) ? (long long)c[addr] : 0;
 }
 extern "C" int v41rt_vm_word(int a);
+static svScope g_diescope[4] = {nullptr, nullptr, nullptr, nullptr};
+extern "C" void v41rt_die_register(int rank) { g_diescope[rank & 3] = svGetScope(); }
 
 // ------------------------------------------------------------------------------------------ bit helpers
 template <class V> static uint64_t getb(const V& v, size_t pos, int n) {
@@ -296,15 +299,20 @@ struct DieBase {
     std::vector<uint32_t> primes;
 };
 template <class DIE> struct Die : DieBase {
-    VerilatedContext ctx;
+    VerilatedContext ctx, actx;                  // the attention model has its own context (evaluated on its own thread)
     std::unique_ptr<DIE> d;
     std::unique_ptr<Vattn> a;
     std::unique_ptr<Field<DIE>> f;
     int id;
     Die(RtPool& pool, const std::string& dir, int id_, int argc, const char** argv) : id(id_) {
         ctx.randReset(0); ctx.commandArgs(argc, argv);
+        actx.randReset(0); actx.commandArgs(argc, argv);
         d.reset(new DIE(&ctx, ("die" + std::to_string(id)).c_str()));
-        a.reset(new Vattn(&ctx, ("att" + std::to_string(id)).c_str()));
+        a.reset(new Vattn(&actx, ("att" + std::to_string(id)).c_str()));
+        // Verilator resolves $value$plusargs through the CALLING thread's context: run the die's initial blocks
+        // (image loading) here, on this thread with the die's own context, before any pool thread evaluates it
+        Verilated::threadContextp(&ctx);
+        d->clk = 0; d->rst_n = 0; d->eval();
         f.reset(new Field<DIE>(*d, pool, dir, id));
     }
     void set_inputs(uint8_t clk, uint8_t rst) override { d->clk = clk; d->rst_n = rst; a->clk = clk; a->rst_n = rst; }
@@ -359,7 +367,7 @@ template <class DIE> struct Die : DieBase {
         else { printf("FATAL unknown cfg %s\n", n.c_str()); exit(2); }
     }
     uint32_t vm_word(int adr) override {
-        svSetScope(svGetScopeFromName(("die" + std::to_string(id) + ".ot_v41_rt_die").c_str()));
+        svSetScope(g_diescope[id]);
         return uint32_t(v41rt_vm_word(adr));
     }
     uint8_t ucie_tx_v() override { return d->ucie_ctx_valid; }
@@ -480,20 +488,23 @@ int main(int argc, char** argv) {
         int n = 0;
         for (;; n++) {
             if (n > 64) { printf("FATAL settle did not converge\n"); exit(4); }
-            bool ch = false;
-            for (auto& d : dies) { d->eval(); ch |= d->att_propagate(); }
+            std::atomic<bool> ch{false};
+            pool.run(4, [&](size_t k) { dies[k]->eval(); if (dies[k]->att_propagate()) ch = true; });
             if (!ch) break;
-            for (auto& d : dies) d->att_eval(0, rst);
+            pool.run(4, [&](size_t k) { dies[k]->att_eval(0, rst); });
         }
         max_settle = std::max(max_settle, n + 1);
     };
     auto tick = [&]() {
         for (auto& d : dies) d->set_inputs(1, rst);
         if (!wrong) {
-            for (auto& d : dies) { d->eval(); d->att_eval(1, rst); }
-            size_t tot = 0; std::vector<size_t> base;
+            // every model's rising edge from pre-edge inputs: the 4 dies and 4 attention engines first in the
+            // task list (the pool partitions statically, so these land on distinct workers), then the fields
+            size_t tot = 8; std::vector<size_t> base;
             for (auto& d : dies) { base.push_back(tot); tot += d->field_models(); }
             pool.run(tot, [&](size_t i) {
+                if (i < 4) { dies[i]->eval(); return; }
+                if (i < 8) { dies[i - 4]->att_eval(1, rst); return; }
                 int k = 3; while (base[k] > i) k--;
                 dies[k]->field_eval(i - base[k], 1, rst);
             });
@@ -507,10 +518,12 @@ int main(int argc, char** argv) {
         }
         link_step();
         for (auto& d : dies) d->set_inputs(0, rst);
-        size_t tot = 0; std::vector<size_t> base;
+        size_t tot = 4; std::vector<size_t> base;
         for (auto& d : dies) { base.push_back(tot); tot += d->field_models(); }
-        pool.run(tot, [&](size_t i) { int k = 3; while (base[k] > i) k--; dies[k]->field_eval(i - base[k], 0, rst); });
-        for (auto& d : dies) d->att_eval(0, rst);
+        pool.run(tot, [&](size_t i) {
+            if (i < 4) { dies[i]->att_eval(0, rst); return; }
+            int k = 3; while (base[k] > i) k--; dies[k]->field_eval(i - base[k], 0, rst);
+        });
         settle();
         cyc++;
     };
@@ -552,7 +565,12 @@ int main(int argc, char** argv) {
         bool all = true; for (long x : done_at) all &= x >= 0;
         if (all) break;
         for (int d = 0; d < 4; d++) if (dies[d]->fault()) { printf("FAULT die=%d cyc=%ld code=%02x\n", d, cyc, dies[d]->fault()); fflush(stdout); }
-        if (cyc % 1000 == 0) { printf("CYC %ld\n", cyc); fflush(stdout); }
+        if (cyc % 200 == 0) {
+            double el = std::chrono::duration<double>(std::chrono::steady_clock::now() - t1).count();
+            FILE* pf = fopen((out + "/progress.log").c_str(), "a");
+            if (pf) { fprintf(pf, "CYC %ld wall %.1f s issue_unit %s\n", cyc, el, ""); fclose(pf); }
+            printf("CYC %ld\n", cyc); fflush(stdout);
+        }
     }
     double run_s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t1).count();
     for (int d = 0; d < 4; d++) {
