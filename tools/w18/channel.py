@@ -39,7 +39,7 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
     H = round(round((2 * flank_um + spine_um) / (8 * ROW)) * 8 * ROW, 3)
     y0 = round(round(flank_um / ROW) * ROW, 3)              # spine rows start here
     y1 = round(y0 + spine_um, 3)
-    rows = int((y1 - y0 - 2 * ROW) / ROW)
+    rows = int((y1 - y0 - 2 * 3.24) / ROW)            # keep 12 rows (3.24 um) clear of each flank (macro row halo)
     top = f"w18_chan{tag}"
     sv = [f"// W18 spine channel: {wires} chains x {n_st + 1} stations at {spacing_um} um (tools/w18/channel.py)",
           f"module {top} (input clk, input [{wires - 1}:0] d, output [{wires - 1}:0] q, output [1:0] flank_o);"]
@@ -115,7 +115,7 @@ def build(work: Path, length_um: float, spacing_um: float, wires: int, spine_um:
                                           else END_CAP + s * spacing_um - (wires // rows + 2) * FLOP_W / 2)
         for i in range(wires):
             r, c = i % rows, i // rows
-            flops.append(f"ot_put r{i}_{s} {round(xs + c * FLOP_W, 3)} {round(y0 + ROW * (1 + r), 3)}")
+            flops.append(f"ot_put r{i}_{s} {round(xs + c * FLOP_W, 3)} {round(y0 + 3.24 + ROW * r, 3)}")
     (gen / f"{top}_flops.tcl").write_text("\n".join(flops) + "\n")
     (gen / f"{top}_place.tcl").write_text("\n".join(hook) + "\n")
     pin_y = f"{y0 + 2:g}-{y1 - 2:g}"

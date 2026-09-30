@@ -50,7 +50,7 @@ def sha(p) -> str:
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
-def model(fp: dict, pk: dict, probes: bool = True, subroots: int = 0) -> dict:
+def model(fp: dict, pk: dict, probes: bool = True, subroots: int = 0, hub_inset: float = 0.0) -> dict:
     C = D.Cluster
     mm = lambda v: round(v / 1000.0, 6)  # noqa: E731
     cl, buses = [], []
@@ -60,7 +60,13 @@ def model(fp: dict, pk: dict, probes: bool = True, subroots: int = 0) -> dict:
     hub = {}
     for nm, r in fp["hub"]["parts"].items():
         k = nm.replace("HUB_", "").lower()
-        hub[k] = C(f"hub_{k}", "w18_hub", "hub", mm(r["x"]), mm(r["y"]), mm(r["w"]), mm(r["h"]),
+        hr = fp["hub"]["rect"]
+        ix0 = hub_inset if abs(r["x"] - hr[0]) < 1 else 0.0
+        ix1 = hub_inset if abs(r["x"] + r["w"] - hr[0] - hr[2]) < 1 else 0.0
+        iy0 = hub_inset if abs(r["y"] - hr[1]) < 1 else 0.0
+        iy1 = hub_inset if abs(r["y"] + r["h"] - hr[1] - hr[3]) < 1 else 0.0
+        hub[k] = C(f"hub_{k}", "w18_hub", "hub", mm(r["x"] + ix0), mm(r["y"] + iy0), mm(r["w"] - ix0 - ix1),
+                   mm(r["h"] - iy0 - iy1),
                    basis=f"PLACEHOLDER {nm} (W11 hardened hub element pending)")
         cl.append(hub[k])
     svc = []
@@ -303,12 +309,13 @@ def run(work: Path, host: str, mem_gb: int) -> int:
     return p.returncode
 
 
-def record(m: dict, work: Path, fp_path: Path, pk_path: Path, k: int) -> dict:
+def record(m: dict, work: Path, fp_path: Path, pk_path: Path, k: int, reach_um: float = 0.0,
+           reach_basis: str = "") -> dict:
     lens = D.parse_wirelength(work / "wirelength.csv")
     log = (work / "grt.log").read_text()
     glog = D.parse_log(log)
     wm = FP.wire_delay_model()
-    reach = (D.PERIOD_PS - D.UNCERTAINTY_PS - wm["overhead_ps"]) / wm["ps_per_um"]
+    reach = reach_um or (D.PERIOD_PS - D.UNCERTAINTY_PS - wm["overhead_ps"]) / wm["ps_per_um"]
     cl = {c.inst: c for c in m["clusters"]}
     per = []
     for b in m["buses"]:
@@ -363,7 +370,8 @@ def record(m: dict, work: Path, fp_path: Path, pk_path: Path, k: int) -> dict:
         manifest=json.loads((work / "manifest.json").read_text()),
         run=json.loads((work / "run_meta.json").read_text()) if (work / "run_meta.json").exists() else None,
         global_route={k_: v for k_, v in glog.items() if k_ != "mem"}, peak_rss_kb=peak,
-        wire_model=dict(wm, reach_um=round(reach, 1)),
+        wire_model=dict(wm, reach_um=round(reach, 1), reach_basis=reach_basis or
+                        "TT fit (floorplans.wire_delay_model) at 0.92 ns / 60 ps"),
         crossings=cross, classes=cls, nets=per,
         inputs=dict(floorplan=str(fp_path), floorplan_sha256=sha(fp_path), pack=str(pk_path), pack_sha256=sha(pk_path),
                     tool_sha256=sha(Path(__file__)), v41_die_sha256=sha(D.__file__)))
@@ -389,19 +397,23 @@ def main(argv=None):
     ap.add_argument("--iters", type=int, default=50)
     ap.add_argument("--no-probes", action="store_true", help="congestion case without the 1-bundle path probes")
     ap.add_argument("--subroots", type=int, default=0, help="distribute the x root / result sink into N sub-roots")
+    ap.add_argument("--hub-inset", type=float, default=0.0,
+                    help="widen the hub ring channel by pulling the hub's outer partition edges in by this many um")
     ap.add_argument("--host", default="")
     ap.add_argument("--memory-gb", type=int, default=100)
     ap.add_argument("--output", type=Path)
+    ap.add_argument("--reach-um", type=float, default=0.0, help="register-to-register reach per cycle (um)")
+    ap.add_argument("--reach-basis", default="")
     a = ap.parse_args(argv)
     work = a.work.resolve()
     if a.mode == "run":
         return run(work, a.host, a.memory_gb)
     fp, pk = json.loads(a.floorplan.read_text()), json.loads(a.pack.read_text())
-    mdl = model(fp, pk, probes=not a.no_probes, subroots=a.subroots)
+    mdl = model(fp, pk, probes=not a.no_probes, subroots=a.subroots, hub_inset=a.hub_inset)
     if a.mode == "write":
         print(json.dumps(write(mdl, work, a.k, a.obs_top, a.m89_reserve, a.low_adjust, a.iters), indent=1))
         return 0
-    rec = record(mdl, work, a.floorplan, a.pack, a.k)
+    rec = record(mdl, work, a.floorplan, a.pack, a.k, a.reach_um, a.reach_basis)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(dict(gr=rec["global_route"].get("total"), cross=rec["crossings"]), indent=1)[:4000])
     return 0

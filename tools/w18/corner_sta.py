@@ -59,8 +59,19 @@ puts "OT_WS_REG_D $wd"
 set wo 1e9
 foreach p [all_outputs] {{ set s [get_property $p slack_{check}]; if {{$s ne "INF" && $s < $wo}} {{ set wo $s }} }}
 puts "OT_WS_OUT $wo"
+set pr [find_timing_paths -path_delay {check} -from [all_registers -clock_pins] -to [all_registers -data_pins] -group_path_count 1]
+if {{[llength $pr]}} {{ puts "OT_WS_R2R [get_property [lindex $pr 0] slack]" }} else {{ puts "OT_WS_R2R INF" }}
+set pi [find_timing_paths -path_delay {check} -from [all_inputs] -to [all_registers -data_pins] -group_path_count 1]
+if {{[llength $pi]}} {{ puts "OT_WS_I2R [get_property [lindex $pi 0] slack]" }} else {{ puts "OT_WS_I2R INF" }}
 exit
 """
+
+
+def _f(v):
+    try:
+        return round(float(v), 2)
+    except (TypeError, ValueError):
+        return None
 
 
 def run(orfs: Path, corner: str, macros: list[str]) -> dict:
@@ -76,6 +87,8 @@ def run(orfs: Path, corner: str, macros: list[str]) -> dict:
                 worst_slack_ps=round(float(g("OT_WS")) * 1e12, 2) if g("OT_WS") else None,
                 tns_ps=round(float(g("OT_TNS")) * 1e12, 1) if g("OT_TNS") else None,
                 worst_register_d_slack_ps=float(g("OT_WS_REG_D")) if g("OT_WS_REG_D") else None,
+                worst_reg_to_reg_slack_ps=_f(g("OT_WS_R2R")),
+                worst_input_to_reg_slack_ps=_f(g("OT_WS_I2R")),
                 worst_output_port_slack_ps=float(g("OT_WS_OUT")) if g("OT_WS_OUT") else None,
                 violating_d_pins=int(g("OT_VIOL_D_PINS")) if g("OT_VIOL_D_PINS") else None,
                 errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
