@@ -163,7 +163,7 @@ def test_every_routed_record_config_mk_is_still_reproduced_byte_for_byte():
             "clock_port": design["clock_port"],
             "false_path_from_ports": design["false_path_from_ports"],
         }
-        view = flow.VIEWS[record["view"]["name"]]
+        view = flow.recorded_view(record)
         lines = flow.orfs_config_lines(
             pnr["design_nickname"],
             block,
