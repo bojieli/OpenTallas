@@ -662,11 +662,15 @@ module ot_v41_rom_elem #(
     endfunction
     wire [12:0] rom_addr = PP != 0 ? {1'b0, a_ctr[12:1]} : w_ptr[w_s];
 
+    // BF16_PAIR: the x slice of the word being multiplied, held once for both macros of the pair
+    reg [255:0] hx_sh;
+    always @(posedge gclk) if (BP != 0 && i2_v && i2_bf) hx_sh <= i2_q0;
     // ---------------- per macro: ROM, capture at its pins, lanes, chains, pair adder, segment tree ------------
     genvar mb;
     generate for (mb = 0; mb < NB; mb = mb + 1) begin : g_mac
     wire [273:0] rd;
     wire [273:0] cap;
+    wire [273:0] cap_hold;        // PP: the captured word of the last issued word's bank (stable over a BF16 hold)
     if (PP != 0) begin : g_pp
         // two 4096-word macros read alternately.  Each read is a 2-cycle path: the bank's own capture register
         // (placed at its pins) loads only in the cycle its word arrives (set_multicycle_path -setup 2 from the
@@ -688,6 +692,9 @@ module ot_v41_rom_elem #(
             if (i2x_v && i2x_bk) cap1 <= rd1;
         end
         assign cap = i2_bk ? cap1 : cap0;
+        reg bk_h;
+        always @(posedge gclk) if (i2_v) bk_h <= i2_bk;
+        assign cap_hold = bk_h ? cap1 : cap0;
         assign rd = 274'd0;
     end else begin : g_one
         reg [273:0] cap_r;
@@ -698,6 +705,7 @@ module ot_v41_rom_elem #(
             u_rom (.clk(gclk), .ce_in(issue), .addr_in(rom_addr), .rd_out(rd));
         always @(posedge gclk) cap_r <= rd;
         assign cap = cap_r;
+        assign cap_hold = 274'd0;
     end
     wire [255:0] w0q = t_fp4 ? nib(cap[127:0]) : cap[255:0];
     wire [7:0]   w0e = t_fp4 ? cap[135:128] : cap[263:256];
@@ -737,7 +745,10 @@ module ot_v41_rom_elem #(
     wire [TG:0]   m_tag;
     if (BP != 0) begin : g_bpm
         // hold the captured word and x slice for BPH cycles; cycle k multiplies lanes 4k .. 4k+3
-        reg [255:0] hw_, hx_;
+        // the word: PP's per-bank capture register holds it (the next BF16 word arrives >= BPH cycles later);
+        // without PP a copy is held.  The x slice is the pair's shared hx_sh.
+        reg [255:0] hw_;
+        wire [255:0] hwv = PP != 0 ? cap_hold[255:0] : hw_;
         reg [TW-1:0] ht;
         reg [KW-1:0] hk;
         reg hv;
@@ -746,7 +757,7 @@ module ot_v41_rom_elem #(
             else if (i2_v && i2_bf) begin hv <= 1'b1; hk <= '0; end
             else if (hv) begin hk <= hk + 1'b1; if (hk == KLAST) hv <= 1'b0; end
         end
-        always @(posedge gclk) if (i2_v && i2_bf) begin hw_ <= cap[255:0]; hx_ <= i2_q0; ht <= i2_t; end
+        always @(posedge gclk) if (i2_v && i2_bf) begin if (PP == 0) hw_ <= cap[255:0]; ht <= i2_t; end
         // product pipe tag: {slot, first, last, position, tree, final}
         localparam integer PW_ = HW + 2 + TG + 1;
         // chain slot = 4 x (word in round) + k (the word index is the tag's slot field, < NCH / 4)
@@ -765,7 +776,7 @@ module ot_v41_rom_elem #(
         genvar mm;
         for (mm = 0; mm < BPN; mm = mm + 1) begin : g_mul
             reg [15:0] wl, xl;
-            always @(posedge gclk) begin wl <= hw_[16 * (BPN * hk + mm) +: 16]; xl <= hx_[16 * (BPN * hk + mm) +: 16]; end
+            always @(posedge gclk) begin wl <= hwv[16 * (BPN * hk + mm) +: 16]; xl <= hx_sh[16 * (BPN * hk + mm) +: 16]; end
             ot_hdc_bmul u_m (.clk(gclk), .rst_n(rst_n), .v(hv_r), .a({wl, 16'd0}), .b({xl, 16'd0}),
                              .y(m_y[mm]), .fault(m_f[mm]));
         end
