@@ -1,0 +1,221 @@
+{
+ "schema": "opentallas.v41.w18_clock_plan.v1",
+ "pll": {
+  "vco_ghz": 3.6,
+  "fast": {
+   "divide": 3,
+   "ghz": 1.2
+  },
+  "slow": {
+   "divide": 4,
+   "ghz": 0.9
+  },
+  "alignment": "rising edges coincide every 3.333 ns (4 fast = 3 slow); tightest fast/slow edge spacing 278 ps in either direction",
+  "basis": "one PLL per die, two dividers (AGENTS.md c0894b1c); the clocks are phase-related, so the crossings are timed synchronously by STA, not synchronised"
+ },
+ "domains": {
+  "slow_0p9": {
+   "units": [
+    "SU controller and broadcast tree",
+    "SU light and SFU lanes",
+    "chunk-8 reducer",
+    "lane-0 side pipe (rsqrt/sqrt/softplus/Engram gate)",
+    "softplus_sqrt",
+    "VM-H group tiles and rotate network (the whole VM)",
+    "Sinkhorn / mHC (HC)"
+   ],
+   "placement": {
+    "hub_partitions": [
+     "HUB_VM",
+     "HUB_SU_VECTOR",
+     "HUB_HC"
+    ],
+    "contiguous": true,
+    "area_mm2": 32.01,
+    "bbox_um": [
+     15562.8,
+     9903.6,
+     21541.248,
+     15722.64
+    ]
+   }
+  },
+  "fast_1p2": {
+   "units": [
+    "ROM field (all pairs)",
+    "indexer score array",
+    "attention tiles, controller, loader, ILV",
+    "ring reader/writer",
+    "CKV path",
+    "HBM service / PHY controllers",
+    "collective and link ports",
+    "gather"
+   ],
+   "placement": "everything else: the ROM field, HUB_ATTENTION, COLLECTIVE and GATHER (in the VM column, fast islands on the slow region's edge), HBM service bands, link strips"
+  },
+  "source": "W11 domain map (root, 2026-09-30)"
+ },
+ "cdc": {
+  "style": "synchronous-ratio FIFO (rtl/chip/ot_chip_v41_ratio_fifo.sv): no synchronisers, pointer published one source cycle after its entry, one flop-to-flop pointer crossing per direction at the domain edge (278 ps worst spacing), 4 entries",
+  "bench": {
+   "sparse": {
+    "result": {
+     "mode": "sparse",
+     "words": "4000",
+     "f2s_lat_ps": "3336/3753/4170",
+     "f2s_lat_slow_cycles": "3.00/3.38/3.75",
+     "s2f_lat_ps": "3058/3335/3614",
+     "s2f_lat_fast_cycles": "3.67/4.00/4.34",
+     "sat_f2s_words_per_ns": "0.086",
+     "sat_s2f_words_per_ns": "0.128",
+     "errors": "0"
+    },
+    "verdict": "PASS"
+   },
+   "random_stall": {
+    "result": {
+     "mode": "random_stall",
+     "words": "4000",
+     "f2s_lat_ps": "3336/4758/16680",
+     "f2s_lat_slow_cycles": "3.00/4.28/15.01",
+     "s2f_lat_ps": "3058/3515/7506",
+     "s2f_lat_fast_cycles": "3.67/4.22/9.01",
+     "sat_f2s_words_per_ns": "0.899",
+     "sat_s2f_words_per_ns": "0.886",
+     "errors": "0"
+    },
+    "verdict": "PASS"
+   }
+  },
+  "bench_sources": {
+   "rtl/chip/ot_chip_v41_ratio_fifo.sv": "56fec932b1f673eb10169dab58d4b1510af94f9d1ec4bdf75d17f1378f690284",
+   "rtl/test/tb_chip_v41_ratio_fifo.sv": "a8cea2aee5277d0a1c0f423c2634e95a124c9dd904b7279d83d7fe0659c9be6e"
+  },
+  "latency_basis": "write edge -> the destination edge that registers the word (sparse traffic, every phase of the hyperperiod); replaces the model's ASSUMED 2 cycles",
+  "points": [
+   {
+    "point": "SU -> attention p-words",
+    "from_domain": "slow",
+    "width_bits": 128,
+    "widened_bits": 171,
+    "note": "W11 is widening the p-word port; 4/3 keeps the fast consumer's rate",
+    "latency": {
+     "fast_cycles_min": 3.67,
+     "fast_cycles_mean": 4.0,
+     "fast_cycles_max": 4.34,
+     "model_cycles": 5
+    },
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+   },
+   {
+    "point": "attention scores and PV -> VM",
+    "from_domain": "fast",
+    "width_bits": 512,
+    "widened_bits": 683,
+    "note": "ASSUMED 512-bit attention output word (W3); the slow VM write side needs 4/3 the width",
+    "latency": {
+     "slow_cycles_min": 3.0,
+     "slow_cycles_mean": 3.38,
+     "slow_cycles_max": 3.75,
+     "model_cycles": 4
+    },
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+   },
+   {
+    "point": "VM x-gather -> field x broadcast",
+    "from_domain": "slow",
+    "width_bits": 549,
+    "widened_bits": 732,
+    "note": "the x root (xcap) is on the fast side: the VM must supply 4/3 x words per slow cycle (64 -> 85.3 elements) or the field idles 25% of x-bound cycles",
+    "latency": {
+     "fast_cycles_min": 3.67,
+     "fast_cycles_mean": 4.0,
+     "fast_cycles_max": 4.34,
+     "model_cycles": 5
+    },
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+   },
+   {
+    "point": "field results -> VM",
+    "from_domain": "fast",
+    "width_bits": 4096,
+    "widened_bits": 5461,
+    "note": "model VM write port 128 FP32 elements per fast cycle; the slow VM needs 171 per slow cycle",
+    "latency": {
+     "slow_cycles_min": 3.0,
+     "slow_cycles_mean": 3.38,
+     "slow_cycles_max": 3.75,
+     "model_cycles": 4
+    },
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+   },
+   {
+    "point": "collective DMA <-> VM",
+    "from_domain": "fast",
+    "width_bits": 512,
+    "widened_bits": 2731,
+    "note": "vm_collective 512 / collective_vm 2048 bits",
+    "latency": {
+     "slow_cycles_min": 3.0,
+     "slow_cycles_mean": 3.38,
+     "slow_cycles_max": 3.75,
+     "model_cycles": 4
+    },
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+   },
+   {
+    "point": "VM -> indexer query",
+    "from_domain": "slow",
+    "width_bits": 256,
+    "widened_bits": 341,
+    "note": "vm_he width",
+    "latency": {
+     "fast_cycles_min": 3.67,
+     "fast_cycles_mean": 4.0,
+     "fast_cycles_max": 4.34,
+     "model_cycles": 5
+    },
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+   },
+   {
+    "point": "index scores -> select",
+    "from_domain": "fast",
+    "width_bits": 32,
+    "widened_bits": 43,
+    "note": "selected_kv/score width 32 (ledger); rate-limited by top-k, width need not grow",
+    "latency": {
+     "slow_cycles_min": 3.0,
+     "slow_cycles_mean": 3.38,
+     "slow_cycles_max": 3.75,
+     "model_cycles": 4
+    },
+    "fifo": "ot_chip_v41_ratio_fifo, depth 4 (covers the 4-fast / 3-slow hyperperiod at full rate)"
+   }
+  ],
+  "rate_matching": "every slow-side port at a crossing must be 4/3 as wide as its fast-side rate, or the fast side stalls 25% of the time; the widened_bits column is that width"
+ },
+ "clock_power": {
+  "fast_domain": {
+   "pair_clock_w_each_1p2ghz": 0.09196,
+   "pair_clock_basis": "W10 p5 measured idle-with-clock groups: clock tree + flop clock pins (sequential internal) + ROM macro clock, x 1.2 / 1.087",
+   "field_ungated_w": 653.1,
+   "field_gated_idle_w": 0.0,
+   "field_per_busy_pair_w": 0.09196,
+   "global_tree_w": 0.074,
+   "global_tree_basis": "H-tree ~ 28 mm x sqrt(464 clusters) of M8 at 0.104 fF/um, x2 for repeaters (ASSUMED), 0.7 V, 1.2 GHz"
+  },
+  "slow_domain": {
+   "hub_clock_w": 1.836,
+   "basis": "model hub clock 5.0 W (UNCALIBRATED area x constant) x slow-region area share (0.42) x 0.9 / 1.034 GHz -- replace with W11's hardened units",
+   "global_tree_w": 0.0028,
+   "global_tree_basis": "the slow region is ~5% of the fast tree's span (ASSUMED)"
+  }
+ },
+ "inputs": {
+  "floorplan": "results/physical_abi3/asap7/chip/v41_w18/die_floorplan_ch8.64.json",
+  "floorplan_sha256": "a81dcc667cdfeb2f4046e4a78690801abaefd8cacdd04e0d3499ef14bf379c64",
+  "pair_record_sha256": "2218b6efbff9cf7bba5d7984014352f3d26ffdf75a8a481b33706cf7f5cd3f04",
+  "connectivity_sha256": "f0084b7be92ff5930c5278cb8d13898314358f9a72f27ce59f9bbd01339b0ca8"
+ },
+ "tool_sha256": "6951e74446fda71d34845049cce1db927f189e168720c5247da5943666747513"
+}
