@@ -6749,7 +6749,7 @@
  "source_sha256": {
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
   "results/floorplan/v41_pack_expanded_woa.json": "6c36746d55fa21650355b10a1316b7938b408f4167e6eba529a80c3e1dc1cb58",
-  "results/rtl/hdc_v41x_fullshape_program_bind.json": "53027154a10c14984bdb823fbf9d331c64f23ebb99cf7259429b9d2038926a32",
+  "results/rtl/hdc_v41x_fullshape_program_bind.json": "a53b50c26ea44d41b7ccabe6f324189b818998511eb814c3c9dcae890e3964dd",
   "rtl/chip/ot_chip_v41x_coll_dma.sv": "2e5f33b74ef8f59996287e82f86b9cf238380b5da432c5c903a0bd191e6eede3",
   "rtl/chip/ot_chip_v41x_coll_transpose.sv": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
   "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
@@ -6867,7 +6867,7 @@
   "changed_pins": {
    "results/rtl/hdc_v41x_fullshape_program_bind.json": {
     "old": "99d250781f4613f51f42b6aea1ef78fd9033e752ef4e5ed8aff211ce4eefab3d",
-    "new": "53027154a10c14984bdb823fbf9d331c64f23ebb99cf7259429b9d2038926a32"
+    "new": "a53b50c26ea44d41b7ccabe6f324189b818998511eb814c3c9dcae890e3964dd"
    }
   },
   "historical_copy": "w15_collectives_historical_before_w17_isa.json"
