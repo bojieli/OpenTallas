@@ -45,6 +45,7 @@ def layout():
     retained=sum(replaced.values())-replaced['read_landing_bits']-replaced['read_context_bits']
     total=sram['landing_physical_bits']+sram['context_physical_bits']+sum(control.values())+retained
     return dict(bank_count=8,sector_banks_per_line_bank=4,slots_per_bank=512,
+        context_allocations_per_controller_cycle=1,context_allocation_cycles_per_line=1,
         bank='slot & 7',row='slot >> 3',sector_bank='beat & 3',
         PC_ingress_FIFO_depth=8,PC_count=32,SRAM=sram,control_storage_bits=control,
         retained_transport_storage_bits=retained,total_storage_bits_per_controller=total,
@@ -90,7 +91,7 @@ class Landing:
         self.rr=[0]*32;self.lines={};self.cq=[deque() for _ in range(8)]
         self.skid=[deque() for _ in range(8)];self.pipe=[None]*8
         self.writes=0;self.accepted=0;self.delivered=[];self.retired_generation={}
-        self.same_line_merges=0;self.arb_collision_cycles=0
+        self.same_line_merges=0;self.arb_collision_cycles=0;self.allocations=0
 
     def allocate(self,tag,owner):
         if not 0<=tag<32768 or owner not in range(32):
@@ -100,6 +101,7 @@ class Landing:
         if (tag>>12)<=self.retired_generation.get(slot,-1):
             raise ValueError('retired tag generation reuse before drain/reset')
         self.lines[slot]=dict(tag=tag,owner=owner,mask=0,data={},enqueued=False)
+        self.allocations+=1
 
     def candidates(self,controller=0):
         return [(q[0][0],controller,b,q[0][2]) for b,q in enumerate(self.skid) if q]
@@ -185,7 +187,10 @@ def campaigns():
     for slot in range(8): sameSM.allocate(slot,0)
     sameSM.step({4*b+s:(b,s,bytes([s])*32) for b in range(8) for s in range(4)})
     sameSM.drain()
-    return {name:dict(accepted_sectors=m.accepted,written_sectors=m.writes,
+    return {name:dict(preallocated_line_contexts=m.allocations,
+        serial_context_allocation_cycles_before_return_trace=m.allocations,
+        trace_scope='Response arrival through delivery only. Preallocation charged separately at1 line/controller/cycle; excludes HBM source wait and actual destination/CDC service.',
+        accepted_sectors=m.accepted,written_sectors=m.writes,
         delivered_lines=len(m.delivered),last_delivery_cycle=max(e['cycle'] for e in m.delivered),
         first_delivery_cycle=min(e['cycle'] for e in m.delivered),
         same_line_merge_events=m.same_line_merges,sector_collision_cycles=m.arb_collision_cycles,
