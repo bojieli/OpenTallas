@@ -32,6 +32,43 @@ def footprint(bits=0, gates=0):
     return (bits * DFF + gates * GATE) / UTIL / 1e6
 
 
+def contains(outer, inner):
+    return outer[0] <= inner[0] and outer[1] <= inner[1] and inner[2] <= outer[2] and inner[3] <= outer[3]
+
+
+def overlaps(a, b):
+    return min(a[2],b[2]) > max(a[0],b[0])+1e-8 and min(a[3],b[3]) > max(a[1],b[1])+1e-8
+
+
+def audit_geometry(array_bbox, core_bbox, regions, placements, grids):
+    issues=[]
+    if not contains(core_bbox,array_bbox): issues.append('array_outside_core')
+    for region in regions:
+        b=region['bbox_um']
+        if b[2]<=b[0] or b[3]<=b[1]: issues.append('invalid_region:'+region['name'])
+        if not contains(array_bbox,region['bbox_um']): issues.append('region_outside_array:'+region['name'])
+    for i,a in enumerate(regions):
+        for b in regions[i+1:]:
+            if overlaps(a['bbox_um'],b['bbox_um']): issues.append('region_overlap:'+a['name']+':'+b['name'])
+    cells={r['name']:r['bbox_um'] for r in regions}
+    for sm in placements:
+        if not contains(cells['SMcell'+str(sm['SM'])],sm['bbox_um']): issues.append('SM_outside_cell:'+str(sm['SM']))
+    for grid in grids:
+        if not contains(cells[grid['band']],grid['bbox_um']): issues.append('grid_outside_band:'+str(grid['quadrant']))
+        for macro in grid['macros']:
+            if not contains(grid['bbox_um'],macro): issues.append('macro_outside_grid:'+str(grid['quadrant']))
+        for i,a in enumerate(grid['macros']):
+            if any(overlaps(a,b) for b in grid['macros'][i+1:]): issues.append('macro_overlap:'+str(grid['quadrant']))
+    for i,a in enumerate(grids):
+        if any(overlaps(a['bbox_um'],b['bbox_um']) for b in grids[i+1:]): issues.append('grid_overlap')
+    region_area=sum((r['bbox_um'][2]-r['bbox_um'][0])*(r['bbox_um'][3]-r['bbox_um'][1]) for r in regions)
+    array_area=(array_bbox[2]-array_bbox[0])*(array_bbox[3]-array_bbox[1])
+    if not math.isclose(region_area,array_area,rel_tol=1e-9): issues.append('reservation_partition_area_mismatch')
+    return dict(pass_all=not issues, issues=issues, coordinate_frame='array-local micrometers; explicit die origin stored separately',
+                reserved_region_area_um2=region_area, array_area_um2=array_area,
+                checked_SM_count=len(placements), checked_regions=len(regions), checked_macros=sum(len(g['macros']) for g in grids))
+
+
 def channel(lanes, tracks_per_um):
     # Both directions, complete 320-bit sector packets and four handshake bits.
     tracks = 2 * lanes * (320 + 4)
@@ -122,18 +159,45 @@ def compose(lanes=24, credits=128, sm_w=2200, sm_h=3500):
         cf = credit_floor(distance)
         geometry_fit = w <= core['x1']-core['x0'] and h <= core['y1']-core['y0']
         placements = []
+        # All geometry uses one array-local frame. Die origin is a separate
+        # transform, never silently added to placements compared with extents.
+        x0,y0=0,0
+        array_bbox=[x0,y0,x0+w,y0+h]
+        root_x=x0+4*(sm_w+9.008+cv['width_um'])
+        regions=[dict(name='north_service',bbox_um=[x0,y0,x0+w,y0+1500]),
+                 dict(name='south_service',bbox_um=[x0,y0+h-1500,x0+w,y0+h]),
+                 dict(name='root_router',bbox_um=[root_x,y0+1500,root_x+root_strip,y0+h-1500])]
         for y in range(4):
             for x in range(8):
-                px = core['x0']+x*(sm_w+9.008+cv['width_um'])+(root_strip if x>=4 else 0)
-                py = core['y0']+1500+y*(sm_h+5.68+ch['width_um'])
+                px = x*(sm_w+9.008+cv['width_um'])+(root_strip if x>=4 else 0)
+                py = 1500+y*(sm_h+5.68+ch['width_um'])
                 placements.append(dict(SM=y*8+x, quadrant=(y//2)*2+x//4,
                                        bbox_um=[px,py,px+sm_w,py+sm_h]))
+                regions.append(dict(name='SMcell'+str(y*8+x),bbox_um=[px,py,px+sm_w+9.008,py+sm_h+5.68]))
+                if x<7:
+                    regions.append(dict(name=f'Vchannel{x}_{y}',bbox_um=[px+sm_w+9.008,py,px+sm_w+9.008+cv['width_um'],py+sm_h+5.68]))
+            if y<3:
+                cy=y0+1500+(y+1)*(sm_h+5.68)+y*ch['width_um']
+                regions.extend([dict(name=f'Hchannel{y}_left',bbox_um=[x0,cy,root_x,cy+ch['width_um']]),
+                                dict(name=f'Hchannel{y}_right',bbox_um=[root_x+root_strip,cy,x0+w,cy+ch['width_um']])])
+        grids=[]
+        for q in range(4):
+            gx=(x0 if q%2==0 else root_x+root_strip)+100
+            gy=(y0 if q<2 else y0+h-1500)+100
+            macros=[[gx+(i%14)*200,gy+(i//14)*90,gx+(i%14)*200+large['area']['macro_width_um'],gy+(i//14)*90+large['area']['macro_height_um']] for i in range(164)]
+            grids.append(dict(quadrant=q,band='north_service' if q<2 else 'south_service',bbox_um=[gx,gy,gx+2800,gy+1080],macros=macros))
+        local_core=[0,0,core['x1']-core['x0'],core['y1']-core['y0']]
+        audit=audit_geometry(array_bbox,local_core,regions,placements,grids)
         rows.append(dict(model=model, sm_count=32, whole_slot_um=[sm_w,sm_h],
                          whole_slot_capacity_mm2=slot, array_including_reserved_channels_um=[w,h],
+                         array_bbox_um=array_bbox, core_bbox_um=local_core,
+                         coordinate_frame='array-local micrometers', array_die_origin_um=[core['x0'],core['y0']],
+                         array_absolute_die_bbox_um=[core['x0'],core['y0'],core['x0']+w,core['y0']+h],
+                         reserved_regions=regions, service_macro_grids=grids, geometry_audit=audit,
                          baseline_sm_mm2=baseline, explicit_added_costs_mm2=extras,
                          priced_sm_mm2=priced, unallocated_whole_element_margin_mm2=slot-priced,
                          aggregate_slots_mm2=32*slot, vertical=cv, horizontal=ch,
-                         geometry_fit=geometry_fit, known_element_area_fit=priced<=slot,
+                         geometry_fit=geometry_fit and audit['pass_all'], known_element_area_fit=priced<=slot,
                          root_strip_um=root_strip,
                          reserved_service_bands_mm2=3000*w/1e6,
                          reserved_router_strip_mm2=root_strip*(h-3000)/1e6,
@@ -210,7 +274,7 @@ def compose(lanes=24, credits=128, sm_w=2200, sm_h=3500):
         row['common_service_and_L2_packed_mm2'] = service['incremental_commonservice_mm2_die'] + l2['packed_SRAM_mm2_die'] + l2['controller_mm2_die']
         row['service_reservation_fit'] = row['common_service_and_L2_packed_mm2'] <= row['reserved_service_bands_mm2']
     feasible = all(x['geometry_fit'] and x['known_element_area_fit'] and x['width_fit'] and x['credits_fit'] and x['network_reservation_fit'] and x['service_reservation_fit'] for x in rows)
-    return dict(schema='opentallas.w13.ordinary_gpu_distributed_fit.v1', source_pins=pins,
+    return dict(schema='opentallas.w13.ordinary_gpu_distributed_fit.v2', source_pins=pins,
                 candidate_only=True, default_enabled=False, adopt=False,
                 coarse_resource_candidate=feasible, physical_build_ready=False,
                 full_program_ready=False, physical_admission='FAIL_CLOSED_PENDING_FULL_COMPOSITION',
