@@ -65,7 +65,7 @@ def credit_calendar(packet_count,credits,route=75,payload_cycles=1,reverse_route
         last_cache_write_and_reverse_credit_tick=last,
         first_credit_return_not_at_acceptance=True,actual_sink_stall_bound=False)
 
-def build():
+def build(route=75):
     blobs={name:raw(pin) for name,pin in SOURCES.items()}
     pins={name:dict(commit=c,path=p,sha256=sha(blobs[name])) for name,(c,p) in SOURCES.items()}
     demand=json.loads(gzip.decompress(blobs['demand']));audit=json.loads(blobs['encoded_audit'])
@@ -134,10 +134,10 @@ def build():
             # wave is actually accepted and reverse-credited. Then read the
             # next bank wave. This avoids a hidden wholecommand landing or
             # overwriting values while finite TX credits are stalled.
-            c=credit_calendar(0,credits)
+            c=credit_calendar(0,credits,route=route)
             c['packets']=packets
             c['last_cache_write_and_reverse_credit_tick']=sum(
-                credit_calendar(n,credits)['last_cache_write_and_reverse_credit_tick']
+                credit_calendar(n,credits,route=route)['last_cache_write_and_reverse_credit_tick']
                 for b in bursts for n in b['wave_fill_packets'])
             c['landing_reuse_policy']='Drain and reverse-credit all current bankwave packets before nextread; no read/fill overlap.'
             c['bank_descriptor_decode_read_capture_ticks']=bank_ticks
@@ -195,14 +195,14 @@ def build():
             control_catalog_read_ports_and_MAC_coexistence=None,
             added_forward_reverse_control_tracks=1024+64+64,
             existing_spine_tracks=832,corridor_capacity=1153,corridors_required=ceildiv(832+1152,1153),
-            route_fast_cycles=75,reverse_route_fast_cycles=75,
+            route_fast_cycles=route,reverse_route_fast_cycles=route,
             reverse_credit_serialization_fast_cycles=1,
             fast_to_slow_CDC_ticks=16,reverse_CDC_ticks=31,
             sink_cache_write_slow_cycles=1,actual_receiver_ready_bound=False),
         finite_packet_credit_area_screens=[dict(credits=c,TX_fullpacket_bits=c*672,
-            RX_landing_fullpacket_bits=c*672,route_pipeline_bits=75*1024,
+            RX_landing_fullpacket_bits=c*672,route_pipeline_bits=route*1024,
             credit_valid_and_return_state_bits=c*2+2*max(1,(c-1).bit_length()),
-            fullpacket_route_FF_and_enable_allocated_mm2=str(D(2*c*672+75*1024+c*2+2*max(1,(c-1).bit_length()))*(FF_cell+4*NAND_cell)/D('.5')/D(1000000)),
+            fullpacket_route_FF_and_enable_allocated_mm2=str(D(2*c*672+route*1024+c*2+2*max(1,(c-1).bit_length()))*(FF_cell+4*NAND_cell)/D('.5')/D(1000000)),
             no_RF_storage_reuse_credit=True,arbiter_enable_clock_wire_power_unbound=True)
             for c in (2,4,128)],
         gate_screen=dict(added_FF_bits=FF,mux2_bits=muxbits,
@@ -246,7 +246,7 @@ def build():
             runtime_tags_credits_ports_and_contextual_SSFF_bound=False),
         reverse_route_correction=dict(preserved_incomplete_calendar_commit='1360ff9e12f130a656dbbca0b00c02de860584db',
             defect='Earlier return priced reverse CDC but omitted physical return route and credit serialization.',
-            forward_and_reverse_envelope_fast_cycles=75,
+            forward_and_reverse_envelope_fast_cycles=route,
             actual_local_home_coordinates_bound=False,
             reverse_credit_pipeline_storage_power_additional_unpriced=True,
             historical_credit_power_budget_not_requalified=True),
