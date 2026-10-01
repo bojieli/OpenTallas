@@ -90,6 +90,11 @@ def test_runtime_exactbits_publication_and_final_lifetime(retained):
  for flag in ['producer_done','output_quiet']:
   bad=dict(args);bad[flag]=False
   with pytest.raises(ValueError,match='not yet visible'):E.accept_runtime_product(b,14,q,k,p,tag,tag,**bad)
+ for value in ['X',None,1]:
+  bad=dict(args);bad['producer_done']=value
+  with pytest.raises(ValueError,match='not yet visible'):E.accept_runtime_product(b,14,q,k,p,tag,tag,**bad)
+ bad=dict(args);bad['consumer_drain']='X'
+ with pytest.raises(ValueError,match='unknown'):E.accept_runtime_product(b,14,q,k,p,tag,tag,**bad)
  wrong=bytearray(p);wrong[0]^=1
  with pytest.raises(ValueError):E.accept_runtime_product(b,14,q,k,bytes(wrong),tag,tag,**args)
  bad=copy.deepcopy(tag);bad['program_sha256']='0'*64

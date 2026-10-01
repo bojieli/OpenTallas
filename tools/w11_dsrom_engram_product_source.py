@@ -74,7 +74,8 @@ def retained_source_binding(layer):
 
 def runtime_product_tag(binding,rank,epoch,program_sha,product_sha):
  if binding is None:raise ValueError('actual source pair required before runtime tag')
- if rank not in range(4) or not isinstance(epoch,int) or epoch<0:raise ValueError('runtime identity')
+ if type(rank) is not int or rank not in range(4) or type(epoch) is not int or not 0<=epoch<2**32:
+  raise ValueError('runtime identity')
  audit,_=object_json(PROGRAM_PIN,PROGRAM_PATH)
  if program_sha!=audit['ranks'][rank]['encoded_template_sha256']:raise ValueError('runtime actual program/rank binding')
  return {'rank':rank,'layer':binding['layer'],'epoch':epoch,'program_sha256':program_sha,
@@ -92,7 +93,8 @@ def accept_runtime_product(binding,layer,qraw,kraw,result,tag,expected_tag,*,pro
   raise ValueError('runtime source/tag/epoch mismatch')
  if tag.get('elements')!=ELEMENTS or tag.get('operation')!='FP32_RNE_MUL_CANONICAL_ZERO':raise ValueError('runtime operation/extent')
  if len(result)!=81920 or result!=expected or tag.get('product_sha256')!=sha(result):raise ValueError('runtime product bits/rounding/order')
- if not producer_done or not output_quiet:raise ValueError('product not yet visible; producer/outputs not drained')
+ if producer_done is not True or output_quiet is not True:raise ValueError('product not yet visible; producer/outputs not drained')
+ if type(consumer_drain) is not bool:raise ValueError('consumer drain unknown/nonboolean')
  return {'product_visible':True,'consumer_read_allowed':True,'credit_release_allowed':bool(consumer_drain),
   'physical_CROM_base':None,'physical_VM_base':None,'runtime_transport_qualified':False}
 
