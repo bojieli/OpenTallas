@@ -1,24 +1,25 @@
 {
  "schema": "opentallas.uarch.w19_hbm_token.v1",
- "source_commit": "c31561e51c2075ad295f008b58fe531cd8fcec49",
- "generated_utc": "2026-09-30T19:27:23Z",
+ "source_commit": "f99e466ca5295ecf9cb5603738e535d237692fa7",
+ "generated_utc": "2026-10-01T02:07:24Z",
  "inputs": {
   "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
   "results/rtl/w19_sm_real_ops.json": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
   "results/rtl/w19_sm_real_ops_oreduce.json": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
-  "results/rtl/w19_expert_fetch.json": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72"
+  "results/rtl/w19_expert_fetch.json": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+  "results/rtl/w15_hbm_nvls.json": "df0116a511d0519d3faea923845c4450e58d818913866dad7d0b34c3a260db6f"
  },
  "source_sha256": {
-  "tools/w19_hbm_token_compose.py": "6e30ad5a24c303fe13ea35cb977d48af49fcc6ab8e1a8ad9df7038eb6115bc91"
+  "tools/w19_hbm_token_compose.py": "532e750860030c2142cc514da714582083a70519f28dff0fc49cdd7d46ca936a"
  },
  "result": {
   "collectives_on_path": 265,
-  "total_us": 431.55,
-  "tokens_s": 2317.3,
+  "total_us": 495.23,
+  "tokens_s": 2019.2,
   "parts_us": {
    "sm": 70.58,
    "barrier": 22.29,
-   "collective": 220.04,
+   "collective": 283.73,
    "local": 113.3,
    "fetch": 5.33
   },
@@ -30,11 +31,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 1,
@@ -43,11 +44,11 @@
     "us": {
      "sm": 2.03,
      "barrier": 0.585,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 3.537,
      "fetch": 0.133
     },
-    "total_us": 11.266
+    "total_us": 11.59
    },
    {
     "layer": 2,
@@ -56,11 +57,11 @@
     "us": {
      "sm": 1.965,
      "barrier": 0.715,
-     "collective": 7.477,
+     "collective": 14.141,
      "local": 2.948,
      "fetch": 0.133
     },
-    "total_us": 13.239
+    "total_us": 19.902
    },
    {
     "layer": 3,
@@ -69,11 +70,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 4,
@@ -82,11 +83,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 5,
@@ -95,11 +96,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 6,
@@ -108,11 +109,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 7,
@@ -121,11 +122,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 8,
@@ -134,11 +135,11 @@
     "us": {
      "sm": 1.965,
      "barrier": 0.715,
-     "collective": 7.477,
+     "collective": 14.141,
      "local": 2.948,
      "fetch": 0.133
     },
-    "total_us": 13.239
+    "total_us": 19.902
    },
    {
     "layer": 9,
@@ -147,11 +148,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 10,
@@ -160,11 +161,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 11,
@@ -173,11 +174,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 12,
@@ -186,11 +187,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 13,
@@ -199,11 +200,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 14,
@@ -212,11 +213,11 @@
     "us": {
      "sm": 2.381,
      "barrier": 0.78,
-     "collective": 7.477,
+     "collective": 14.141,
      "local": 3.765,
      "fetch": 0.133
     },
-    "total_us": 14.537
+    "total_us": 21.2
    },
    {
     "layer": 15,
@@ -225,11 +226,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 16,
@@ -238,11 +239,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 17,
@@ -251,11 +252,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 18,
@@ -264,11 +265,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 19,
@@ -277,11 +278,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 20,
@@ -290,11 +291,11 @@
     "us": {
      "sm": 1.965,
      "barrier": 0.715,
-     "collective": 7.477,
+     "collective": 14.141,
      "local": 3.154,
      "fetch": 0.133
     },
-    "total_us": 13.445
+    "total_us": 20.108
    },
    {
     "layer": 21,
@@ -303,11 +304,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 22,
@@ -316,11 +317,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 23,
@@ -329,11 +330,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 24,
@@ -342,11 +343,11 @@
     "us": {
      "sm": 1.825,
      "barrier": 0.65,
-     "collective": 7.477,
+     "collective": 14.141,
      "local": 3.023,
      "fetch": 0.133
     },
-    "total_us": 13.108
+    "total_us": 19.771
    },
    {
     "layer": 25,
@@ -355,11 +356,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 26,
@@ -368,11 +369,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 27,
@@ -381,11 +382,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 28,
@@ -394,11 +395,11 @@
     "us": {
      "sm": 1.825,
      "barrier": 0.65,
-     "collective": 7.477,
+     "collective": 14.141,
      "local": 3.023,
      "fetch": 0.133
     },
-    "total_us": 13.108
+    "total_us": 19.771
    },
    {
     "layer": 29,
@@ -407,11 +408,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 30,
@@ -420,11 +421,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 31,
@@ -433,11 +434,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 32,
@@ -446,11 +447,11 @@
     "us": {
      "sm": 1.825,
      "barrier": 0.65,
-     "collective": 7.477,
+     "collective": 14.141,
      "local": 3.023,
      "fetch": 0.133
     },
-    "total_us": 13.108
+    "total_us": 19.771
    },
    {
     "layer": 33,
@@ -459,11 +460,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 34,
@@ -472,11 +473,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 35,
@@ -485,11 +486,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 36,
@@ -498,11 +499,11 @@
     "us": {
      "sm": 1.825,
      "barrier": 0.65,
-     "collective": 7.477,
+     "collective": 14.141,
      "local": 3.023,
      "fetch": 0.133
     },
-    "total_us": 13.108
+    "total_us": 19.771
    },
    {
     "layer": 37,
@@ -511,11 +512,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 38,
@@ -524,11 +525,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": 39,
@@ -537,11 +538,11 @@
     "us": {
      "sm": 1.614,
      "barrier": 0.52,
-     "collective": 4.981,
+     "collective": 5.305,
      "local": 2.72,
      "fetch": 0.133
     },
-    "total_us": 9.968
+    "total_us": 10.292
    },
    {
     "layer": "head",
@@ -550,20 +551,71 @@
     "us": {
      "sm": 2.934,
      "barrier": 0.065,
-     "collective": 0.83,
+     "collective": 0.852,
      "local": 0.55,
      "fetch": 0.0
     },
-    "total_us": 4.379
+    "total_us": 4.401
    }
   ],
   "flags": [
-   "SM shape bf16 K=5120 R=43 priced by line rate (not measured)"
+   "SM shape bf16 K=5120 R=43 priced by line rate (not measured)",
+   "collective 96 x 512 index merge: fit + select ESTIMATE",
+   "collective o-group tree reduce (8 contributors) + multicast: extrapolated"
   ],
   "collective_model": {
-   "fixed_us": 0.83,
-   "us_per_byte": 1.1111111111111112e-06,
-   "source": "PENDING: audit scratch W15 NVLS P=6 (0.81-0.89 us), slope at the 0.9 TB/s package link"
+   "kind": "w15_prod",
+   "hz": 1200480192.0768306,
+   "slot": 749.7,
+   "ag": {
+    "cycles_per_word": 89.7,
+    "fixed_cycles": 932.8,
+    "points": [
+     [
+      1,
+      996
+     ],
+     [
+      6,
+      1471
+     ],
+     [
+      1,
+      1049
+     ],
+     [
+      6,
+      1471
+     ],
+     [
+      6,
+      1471
+     ]
+    ]
+   },
+   "ar": {
+    "cycles_per_word": 6.0696,
+    "fixed_cycles": 988.74,
+    "points": [
+     [
+      1,
+      969
+     ],
+     [
+      2,
+      1023
+     ],
+     [
+      4,
+      1025
+     ],
+     [
+      8,
+      1029
+     ]
+    ]
+   },
+   "source": "results/rtl/w15_hbm_nvls.json configs.hbm_p48_ss_prod (gathers) / hbm_p48_ss (all-reduce fit)"
   },
   "fetch_source": "results/rtl/w19_expert_fetch.json exposed_ns[ar_L0_refresh_postponed]",
   "dedicated": {
