@@ -69,6 +69,17 @@ def images(out, *extra, lanes=None):
     return r.stdout
 
 
+_breakdown = D.breakdown
+_issues = {}
+
+
+def breakdown(trace, tags, cycles):
+    """The campaign's breakdown, keeping the issue trace (cycle, pc, unit) and the tags for the side record."""
+    issues, bd = _breakdown(trace, tags, cycles)
+    _issues.setdefault("runs", []).append(dict(cycles=cycles, issues=issues, tags=list(tags)))
+    return issues, bd
+
+
 def main():
     ap = argparse.ArgumentParser(add_help=False)
     ap.add_argument("--sukr", type=int, default=0)
@@ -77,13 +88,15 @@ def main():
     a, rest = ap.parse_known_args()
     FUSE.update(sukr=a.sukr, subcast=a.subcast, suret=a.suret)
     _swap()
-    D.defines, D.images = defines, images
+    D.defines, D.images, D.breakdown = defines, images, breakdown
     D.TOOLS += [ROOT / "tools/hdc_program_v41_fuse.py", ROOT / "tools/hdc_isa_v41_fuse.py", ROOT / "tools/w11_su_fuse.py",
                 ROOT / "tools/rtl_hdc_v41x_vec_kr_campaign.py", Path(__file__).resolve()]
     sys.argv = [sys.argv[0]] + rest
     rc = D.main()
     # annotate the record(s) the campaign wrote
     out = Path(rest[rest.index("--output") + 1]) if "--output" in rest else D.OUT
+    if _issues:
+        out.with_name(out.stem + ".issues.json").write_text(json.dumps(_issues) + "\n")
     for p in (out, out.with_name(out.stem + ".single.json")):
         if p.exists():
             rec = json.loads(p.read_text())
