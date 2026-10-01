@@ -1,0 +1,26 @@
+{
+  "actual_hardware_memory_provider": false,
+  "artifact_sha256": "06110580a8ba3ca50384fd394b33d0be8d44e05cc6299235cd0150d9d005c69c",
+  "committed_software_payload_bytes": 147456,
+  "dies": 2,
+  "encoded_KV_payload_dump_retained": false,
+  "focused_terminal_and_KV_tests": {
+    "passed": 8,
+    "seconds": 1.34
+  },
+  "hardware_token_cycles": null,
+  "layers": 36,
+  "outstanding_reader_leases": 0,
+  "owner_commit": "510c4ef853a838ed08d0f43e952332348be2f794",
+  "payload_restoration_possible": false,
+  "pending_writes": 0,
+  "positions": [
+    0,
+    1
+  ],
+  "publication_generations": 144,
+  "regenerated_metadata_equal": true,
+  "schema": "opentallas.parent.qwen-hbm-KV-publication-metadata-review.v1",
+  "scope": "Original worker software events and pre-codec produced FP32 hashes only, independently regenerated from verified archive. No numeric execution rerun or hardware persistence claim.",
+  "verdict": "PASS_ACTUAL_PUBLICATION_METADATA_ONLY"
+}
