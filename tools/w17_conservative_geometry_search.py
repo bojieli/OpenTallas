@@ -16,6 +16,25 @@ Q_POWER=('e79394b1c','results/uarch/w10_q_power_envelope_r1/power.json')
 Q_CONSTRUCTION_PIN=('6da3c7a60','results/uarch/w10_q_elaboration_inventory_r1/construction.json')
 DESCRIPTOR_PIN=('59d0630e62502eca15ef1151085aaf63c92c8e4e','tools/w17_compact_descriptor_price.py')
 
+def field_masks(q):
+    """Validate the existing NP8192/128-region Q + BF8 reservation scheme."""
+    npairs,regions,bf_per_region=8192,128,8
+    per_region=npairs//regions
+    if type(q) is not int or not regions<=q<=npairs-regions*bf_per_region:
+        raise ValueError('q mask outside combined Q/BF field capacity [128,7168]')
+    qm=[];bm=[]
+    for r in range(regions):
+        first=r*per_region
+        count=q//regions+int(r<q%regions)
+        bf_first=first+count
+        if not (first<=bf_first and bf_first+bf_per_region<=first+per_region<=npairs):
+            raise ValueError('Q/BF mask exceeds region or NP domain')
+        qm.append(dict(region=r,first_pair=first,pairs=count))
+        bm.append(dict(region=r,first_pair=bf_first,pairs=bf_per_region))
+    if sum(m['pairs'] for m in qm)!=q or sum(m['pairs'] for m in bm)!=1024:
+        raise ValueError('Q/BF mask count mismatch')
+    return qm,bm
+
 def product_geometry():
     raw=residency.blob(GEOMETRY)
     names={'FLOORPLAN','CONS_REFIT','CONS_FIELD_MM2','VMH_BLOCK','VMC_BLOCK',
@@ -51,13 +70,15 @@ def descriptor_cost(cap,stride):
         scope='Proposed fixed-stride shift/add and local template read; same gate-screen coefficients as 59d. No hardware timing credit.')
 
 def search(choices):
+    # Reject every invalid choice before reading inputs or calling the allocator.
+    choices=list(choices)
+    masks=[field_masks(q) for q in choices]
     m=residency.inputs();rows=[];pg=product_geometry()
     area_limit=D(pg['usable_field_mm2']);reserve=D(pg['BF1024_reserved_mm2'])
     power=json.loads(residency.blob(Q_POWER))
     construction_receipt=json.loads(residency.blob(Q_CONSTRUCTION_PIN))
     q_construction=D(construction_receipt['conditional_50pct_cell_plus_macro_budget_um2'])/D(1000000)
-    for q in choices:
-        if type(q) is not int or q<128 or q>8192:raise ValueError('q mask outside field')
+    for q,(mask,bf_mask) in zip(choices,masks):
         row=dict(q_pairs=q,NP=8192,return_regions=128)
         try:
             templates,stride=residency.templates(m,q)
@@ -69,14 +90,10 @@ def search(choices):
                 ss=sorted({x['stage'] for x in owners if x['layer']==layer})
                 layer_dist.append(dict(layer=layer,expert_stages=ss,
                     maximum_distance_from_first_owner=ss[-1]-ss[0]))
-            mask=[dict(region=r,first_pair=r*64,
-                pairs=q//128+int(r<q%128)) for r in range(128)]
-            assert sum(x['pairs'] for x in mask)==q
-            assert all(x['pairs']<=64 for x in mask)
             assert cap*max(stride.values())<=8192<(cap+1)*max(stride.values())
             row.update(status='INTEGER_EXPERT_SUBPROBLEM_PASS',
                 q_mask=mask,whole_triplet_capacity=cap,
-                BF_mask=[dict(region=x['region'],first_pair=x['first_pair']+x['pairs'],pairs=8) for x in mask],
+                BF_mask=bf_mask,
                 per_family_active_q_pairs={f:len(t['pairs']) for f,t in templates.items()},
                 expert_only_physical_stages=len(stages),TP4_expert_die_count=4*len(stages),
                 maximum_logical_mate_stride=max(stride.values()),
