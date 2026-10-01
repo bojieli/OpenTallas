@@ -1,4 +1,9 @@
 {
+  "BF_data_source_pin": {
+    "commit": "fea811df4",
+    "path": "results/uarch/w10_q_existing_icg_r1/BF_data.json",
+    "sha256": "097dfa903fed852d8744dec4a2ecd3b4caa53c305f12a23df5773f6d30aa9edb"
+  },
   "active_jobs_launched": 0,
   "actual_CROM_demand": {
     "cold_delivery_capture_route_CDC_ticks": null,
@@ -31635,7 +31640,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "7610.02892343534889000",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 832
@@ -31654,7 +31663,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "2ad9b8b40cab01c9d9577251d0d7258160cc951623e00eb968ba69ba55adfce4",
-              "pin_internal_STREAM_allocation_W": "7610.02892343534889000",
+              "pin_internal_STREAM_allocation_W": "7085.50252087371049000",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 35,
@@ -31667,7 +31676,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "7610.02892343534889000",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 832
@@ -31686,7 +31699,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "2ad9b8b40cab01c9d9577251d0d7258160cc951623e00eb968ba69ba55adfce4",
-              "pin_internal_STREAM_allocation_W": "7610.02892343534889000",
+              "pin_internal_STREAM_allocation_W": "7085.50252087371049000",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 35,
@@ -31699,7 +31712,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "9103.75406168229496360",
               "activation_refill_bytes": 2560,
               "active_pairs_per_wave": [
                 1024
@@ -31718,7 +31735,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "3d56270d9c03c2c7e8a9b96be943fd9a79cee9a72e97531abe0177976a3b6fbe",
-              "pin_internal_STREAM_allocation_W": "9103.75406168229496360",
+              "pin_internal_STREAM_allocation_W": "8579.22765912065656360",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 35,
@@ -35936,7 +35953,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "5112.70720792873592320",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 511,
@@ -35956,7 +35977,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "c4d68797557016dcc25d374c976e71bd886de90106dbd740d7b5e588eaf6493c",
-              "pin_internal_STREAM_allocation_W": "5112.70720792873592320",
+              "pin_internal_STREAM_allocation_W": "4588.18080536709752320",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 70,
@@ -35969,7 +35990,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "5112.70720792873592320",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 511,
@@ -35989,7 +36014,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "c4d68797557016dcc25d374c976e71bd886de90106dbd740d7b5e588eaf6493c",
-              "pin_internal_STREAM_allocation_W": "5112.70720792873592320",
+              "pin_internal_STREAM_allocation_W": "4588.18080536709752320",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 70,
@@ -36002,7 +36027,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "5120.48702635710543400",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 512,
@@ -36022,7 +36051,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "4bb3b5cd34334697c443a8384206a7075af2d61f21724cbfdf82de70c09a257c",
-              "pin_internal_STREAM_allocation_W": "5120.48702635710543400",
+              "pin_internal_STREAM_allocation_W": "4595.96062379546703400",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 70,
@@ -40240,7 +40269,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "3128.85350869451066920",
               "activation_refill_bytes": 20480,
               "active_pairs_per_wave": [
                 256,
@@ -40262,7 +40295,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "40be3b24e0cd2e1adef3142647cacea96df2c09f47bca993c99c79d905a5b214",
-              "pin_internal_STREAM_allocation_W": "3128.85350869451066920",
+              "pin_internal_STREAM_allocation_W": "2604.32710613287226920",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 140,
@@ -40275,7 +40308,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "3128.85350869451066920",
               "activation_refill_bytes": 20480,
               "active_pairs_per_wave": [
                 256,
@@ -40297,7 +40334,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "40be3b24e0cd2e1adef3142647cacea96df2c09f47bca993c99c79d905a5b214",
-              "pin_internal_STREAM_allocation_W": "3128.85350869451066920",
+              "pin_internal_STREAM_allocation_W": "2604.32710613287226920",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 140,
@@ -40310,7 +40347,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "3121.07369026614115840",
               "activation_refill_bytes": 12800,
               "active_pairs_per_wave": [
                 255,
@@ -40333,7 +40374,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "ff878efd56e9e1e51827cbf1edf96c95ef9ac6f4fa61251108389a577fc073f0",
-              "pin_internal_STREAM_allocation_W": "3121.07369026614115840",
+              "pin_internal_STREAM_allocation_W": "2596.54728770450275840",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 175,
@@ -44551,7 +44592,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1635.12837044756459560",
               "activation_refill_bytes": 71680,
               "active_pairs_per_wave": [
                 63,
@@ -44583,7 +44628,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "c1635ded9e37d11cdc9d50f4872c3b7d695a210add1a7331a999c7f9ba3a6ed5",
-              "pin_internal_STREAM_allocation_W": "1635.12837044756459560",
+              "pin_internal_STREAM_allocation_W": "1110.60196788592619560",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 490,
@@ -44596,7 +44641,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1635.12837044756459560",
               "activation_refill_bytes": 71680,
               "active_pairs_per_wave": [
                 63,
@@ -44628,7 +44677,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "c1635ded9e37d11cdc9d50f4872c3b7d695a210add1a7331a999c7f9ba3a6ed5",
-              "pin_internal_STREAM_allocation_W": "1635.12837044756459560",
+              "pin_internal_STREAM_allocation_W": "1110.60196788592619560",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 490,
@@ -44641,7 +44690,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1635.12837044756459560",
               "activation_refill_bytes": 43520,
               "active_pairs_per_wave": [
                 63,
@@ -44676,7 +44729,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "adabed04993782d44b05aac0e5aab6dcc76e34d9c7d7fbcc64a29c3d4ff72de5",
-              "pin_internal_STREAM_allocation_W": "1635.12837044756459560",
+              "pin_internal_STREAM_allocation_W": "1110.60196788592619560",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 595,
@@ -48894,7 +48947,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1378.39436231137073920",
               "activation_refill_bytes": 143360,
               "active_pairs_per_wave": [
                 30,
@@ -48940,7 +48997,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "4ef0c4aa262f6473f92a8f93e210e6ffc1455f032d9380a2efb0cd87ce7090f8",
-              "pin_internal_STREAM_allocation_W": "1378.39436231137073920",
+              "pin_internal_STREAM_allocation_W": "853.86795974973233920",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 980,
@@ -48953,7 +49010,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1378.39436231137073920",
               "activation_refill_bytes": 143360,
               "active_pairs_per_wave": [
                 30,
@@ -48999,7 +49060,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "4ef0c4aa262f6473f92a8f93e210e6ffc1455f032d9380a2efb0cd87ce7090f8",
-              "pin_internal_STREAM_allocation_W": "1378.39436231137073920",
+              "pin_internal_STREAM_allocation_W": "853.86795974973233920",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 980,
@@ -49012,7 +49073,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1386.17418073974025000",
               "activation_refill_bytes": 81920,
               "active_pairs_per_wave": [
                 32,
@@ -49062,7 +49127,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "0d5d75802ff9f6da70eebaee88b1a23470b18fc4f38a51441dea2c2cc98f355b",
-              "pin_internal_STREAM_allocation_W": "1386.17418073974025000",
+              "pin_internal_STREAM_allocation_W": "861.64777817810185000",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1120,
@@ -53280,7 +53345,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1261.69708588582807720",
               "activation_refill_bytes": 286720,
               "active_pairs_per_wave": [
                 15,
@@ -53354,7 +53423,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "4ab41042051f5e1d6a251a15d52d865942449d6970794d488023fd064c798cf3",
-              "pin_internal_STREAM_allocation_W": "1261.69708588582807720",
+              "pin_internal_STREAM_allocation_W": "737.17068332418967720",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1960,
@@ -53367,7 +53436,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1261.69708588582807720",
               "activation_refill_bytes": 286720,
               "active_pairs_per_wave": [
                 15,
@@ -53441,7 +53514,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "4ab41042051f5e1d6a251a15d52d865942449d6970794d488023fd064c798cf3",
-              "pin_internal_STREAM_allocation_W": "1261.69708588582807720",
+              "pin_internal_STREAM_allocation_W": "737.17068332418967720",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1960,
@@ -53454,7 +53527,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1261.69708588582807720",
               "activation_refill_bytes": 174080,
               "active_pairs_per_wave": [
                 15,
@@ -53540,7 +53617,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "b2c4153b74a8b65068d6bc4fe5d0ec963b6bdd25f16a877e6cdc403998d751f1",
-              "pin_internal_STREAM_allocation_W": "1261.69708588582807720",
+              "pin_internal_STREAM_allocation_W": "737.17068332418967720",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 2380,
@@ -57758,7 +57835,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1199.45853845887199080",
               "activation_refill_bytes": 655360,
               "active_pairs_per_wave": [
                 8,
@@ -57904,7 +57985,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "726c1eadb76920f2db2017cb3728e75c87ddcf17a62c1c7f2db1117e44d249d0",
-              "pin_internal_STREAM_allocation_W": "1199.45853845887199080",
+              "pin_internal_STREAM_allocation_W": "674.93213589723359080",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 4480,
@@ -57917,7 +57998,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1199.45853845887199080",
               "activation_refill_bytes": 655360,
               "active_pairs_per_wave": [
                 8,
@@ -58063,7 +58148,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "726c1eadb76920f2db2017cb3728e75c87ddcf17a62c1c7f2db1117e44d249d0",
-              "pin_internal_STREAM_allocation_W": "1199.45853845887199080",
+              "pin_internal_STREAM_allocation_W": "674.93213589723359080",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 4480,
@@ -58076,7 +58161,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1199.45853845887199080",
               "activation_refill_bytes": 327680,
               "active_pairs_per_wave": [
                 8,
@@ -58222,7 +58311,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "e8768b9f121e3e8ce164a4933ca75461b0d4c97661be5240b5b74e300f2bf351",
-              "pin_internal_STREAM_allocation_W": "1199.45853845887199080",
+              "pin_internal_STREAM_allocation_W": "674.93213589723359080",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 4480,
@@ -64658,7 +64747,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "5524.96019853875857448",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 576
@@ -64677,7 +64770,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "ef08fbc5d9cf6ee6cd09847aaf7217c413765947f4d1da1d43a64eeba9a8dd8c",
-              "pin_internal_STREAM_allocation_W": "5524.96019853875857448",
+              "pin_internal_STREAM_allocation_W": "5000.43379597712017448",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 36,
@@ -64690,7 +64783,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "5524.96019853875857448",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 576
@@ -64709,7 +64806,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "ef08fbc5d9cf6ee6cd09847aaf7217c413765947f4d1da1d43a64eeba9a8dd8c",
-              "pin_internal_STREAM_allocation_W": "5524.96019853875857448",
+              "pin_internal_STREAM_allocation_W": "5000.43379597712017448",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 36,
@@ -64722,7 +64819,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "7018.68533678570464808",
               "activation_refill_bytes": 2560,
               "active_pairs_per_wave": [
                 768
@@ -64741,7 +64842,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "9aa122096cdad30eab5cfdf296b991fd5e91a0ad2557014d460560ab968d7b12",
-              "pin_internal_STREAM_allocation_W": "7018.68533678570464808",
+              "pin_internal_STREAM_allocation_W": "6494.15893422406624808",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 36,
@@ -69259,7 +69360,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "4031.23506029181250088",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 384,
@@ -69279,7 +69384,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "c188fa52344af5599b6a832ad3453e3bd4f11530badaa1f9d60d88f846e87c87",
-              "pin_internal_STREAM_allocation_W": "4031.23506029181250088",
+              "pin_internal_STREAM_allocation_W": "3506.70865773017410088",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 72,
@@ -69292,7 +69397,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "4031.23506029181250088",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 384,
@@ -69312,7 +69421,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "c188fa52344af5599b6a832ad3453e3bd4f11530badaa1f9d60d88f846e87c87",
-              "pin_internal_STREAM_allocation_W": "4031.23506029181250088",
+              "pin_internal_STREAM_allocation_W": "3506.70865773017410088",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 72,
@@ -69325,7 +69434,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "4031.23506029181250088",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 384,
@@ -69345,7 +69458,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "d6652c91ac5bbe19a99e2580ba30490f00229c205995d7ff7aa0a4ade1c6972b",
-              "pin_internal_STREAM_allocation_W": "4031.23506029181250088",
+              "pin_internal_STREAM_allocation_W": "3506.70865773017410088",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 72,
@@ -73863,7 +73976,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "2537.50992204486642728",
               "activation_refill_bytes": 15360,
               "active_pairs_per_wave": [
                 192,
@@ -73884,7 +74001,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "a1f6bbf63e4a7ebc25d9252ec1a2bfcc4eb40ecab26edcde2d0a5efdd4bc08b2",
-              "pin_internal_STREAM_allocation_W": "2537.50992204486642728",
+              "pin_internal_STREAM_allocation_W": "2012.98351948322802728",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 108,
@@ -73897,7 +74014,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "2537.50992204486642728",
               "activation_refill_bytes": 15360,
               "active_pairs_per_wave": [
                 192,
@@ -73918,7 +74039,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "a1f6bbf63e4a7ebc25d9252ec1a2bfcc4eb40ecab26edcde2d0a5efdd4bc08b2",
-              "pin_internal_STREAM_allocation_W": "2537.50992204486642728",
+              "pin_internal_STREAM_allocation_W": "2012.98351948322802728",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 108,
@@ -73931,7 +74052,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "2537.50992204486642728",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 192,
@@ -73953,7 +74078,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "de75e12785b642515c7c336662774c06a7262d2d747398801f91c7e858259617",
-              "pin_internal_STREAM_allocation_W": "2537.50992204486642728",
+              "pin_internal_STREAM_allocation_W": "2012.98351948322802728",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 144,
@@ -78471,7 +78596,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1541.69316321356904488",
               "activation_refill_bytes": 46080,
               "active_pairs_per_wave": [
                 64,
@@ -78498,7 +78627,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "39adb1c0e1a88491e480af89211508f343df76e56c0508cc5b841f98409a71b5",
-              "pin_internal_STREAM_allocation_W": "1541.69316321356904488",
+              "pin_internal_STREAM_allocation_W": "1017.16676065193064488",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 324,
@@ -78511,7 +78640,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1541.69316321356904488",
               "activation_refill_bytes": 46080,
               "active_pairs_per_wave": [
                 64,
@@ -78538,7 +78671,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "39adb1c0e1a88491e480af89211508f343df76e56c0508cc5b841f98409a71b5",
-              "pin_internal_STREAM_allocation_W": "1541.69316321356904488",
+              "pin_internal_STREAM_allocation_W": "1017.16676065193064488",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 324,
@@ -78551,7 +78684,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1510.57388950009100168",
               "activation_refill_bytes": 33280,
               "active_pairs_per_wave": [
                 60,
@@ -78582,7 +78719,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "b626e663c8f34c2d94d45cca4f3f2c04846b54b4c0ae280ea45f7b4b5dd34b86",
-              "pin_internal_STREAM_allocation_W": "1510.57388950009100168",
+              "pin_internal_STREAM_allocation_W": "986.04748693845260168",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 468,
@@ -83100,7 +83237,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1292.73897350574469928",
               "activation_refill_bytes": 92160,
               "active_pairs_per_wave": [
                 32,
@@ -83136,7 +83277,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "c0c74cff3116ac9c10511ba685a0f9cae3626f0aed5677a42bd1cb628602b11e",
-              "pin_internal_STREAM_allocation_W": "1292.73897350574469928",
+              "pin_internal_STREAM_allocation_W": "768.21257094410629928",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 648,
@@ -83149,7 +83290,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1292.73897350574469928",
               "activation_refill_bytes": 92160,
               "active_pairs_per_wave": [
                 32,
@@ -83185,7 +83330,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "c0c74cff3116ac9c10511ba685a0f9cae3626f0aed5677a42bd1cb628602b11e",
-              "pin_internal_STREAM_allocation_W": "1292.73897350574469928",
+              "pin_internal_STREAM_allocation_W": "768.21257094410629928",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 648,
@@ -83198,7 +83343,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1277.17933664900567768",
               "activation_refill_bytes": 66560,
               "active_pairs_per_wave": [
                 30,
@@ -83242,7 +83391,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "40da95b98105f4f35a1f265c55755347eb1f56eff9c0e399f2c62b0e05a28875",
-              "pin_internal_STREAM_allocation_W": "1277.17933664900567768",
+              "pin_internal_STREAM_allocation_W": "752.65293408736727768",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 936,
@@ -87760,7 +87909,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1168.26187865183252648",
               "activation_refill_bytes": 184320,
               "active_pairs_per_wave": [
                 16,
@@ -87814,7 +87967,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "b99825b6719d154cbb16dbd434a41f75492de1919b73b0a959fc4ece53e5656c",
-              "pin_internal_STREAM_allocation_W": "1168.26187865183252648",
+              "pin_internal_STREAM_allocation_W": "643.73547609019412648",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1296,
@@ -87827,7 +87980,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1168.26187865183252648",
               "activation_refill_bytes": 184320,
               "active_pairs_per_wave": [
                 16,
@@ -87881,7 +88038,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "b99825b6719d154cbb16dbd434a41f75492de1919b73b0a959fc4ece53e5656c",
-              "pin_internal_STREAM_allocation_W": "1168.26187865183252648",
+              "pin_internal_STREAM_allocation_W": "643.73547609019412648",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1296,
@@ -87894,7 +88051,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1137.14260493835448328",
               "activation_refill_bytes": 163840,
               "active_pairs_per_wave": [
                 12,
@@ -87976,7 +88137,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "f9da75229ff8de53f974ad2c5300bf3d9a19c99501e37c7ba5b660a3a4b3f898",
-              "pin_internal_STREAM_allocation_W": "1137.14260493835448328",
+              "pin_internal_STREAM_allocation_W": "612.61620237671608328",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 2304,
@@ -92494,7 +92655,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1106.02333122487644008",
               "activation_refill_bytes": 368640,
               "active_pairs_per_wave": [
                 8,
@@ -92584,7 +92749,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "cf72f7edf87f54bfc95508ca318fa58cf5f33748096d940bd1d26f880c58f6cb",
-              "pin_internal_STREAM_allocation_W": "1106.02333122487644008",
+              "pin_internal_STREAM_allocation_W": "581.49692866323804008",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 2592,
@@ -92597,7 +92762,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1106.02333122487644008",
               "activation_refill_bytes": 368640,
               "active_pairs_per_wave": [
                 8,
@@ -92687,7 +92856,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "cf72f7edf87f54bfc95508ca318fa58cf5f33748096d940bd1d26f880c58f6cb",
-              "pin_internal_STREAM_allocation_W": "1106.02333122487644008",
+              "pin_internal_STREAM_allocation_W": "581.49692866323804008",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 2592,
@@ -92700,7 +92869,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1090.46369436813741848",
               "activation_refill_bytes": 327680,
               "active_pairs_per_wave": [
                 6,
@@ -92846,7 +93019,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "700c26f6165cbc1ef5ccabd160ef04a8a9cb735f28fdc9ab65b0b1aba470bf84",
-              "pin_internal_STREAM_allocation_W": "1090.46369436813741848",
+              "pin_internal_STREAM_allocation_W": "565.93729180649901848",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 4608,
@@ -99392,7 +99565,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "4933.61661188911433256",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 512
@@ -99411,7 +99588,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "3409a54e940ef77df818b1093aa0e30c8884905e0d52f3048d8f642588aea90d",
-              "pin_internal_STREAM_allocation_W": "4933.61661188911433256",
+              "pin_internal_STREAM_allocation_W": "4409.09020932747593256",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 36,
@@ -99424,7 +99601,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "4933.61661188911433256",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 512
@@ -99443,7 +99624,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "3409a54e940ef77df818b1093aa0e30c8884905e0d52f3048d8f642588aea90d",
-              "pin_internal_STREAM_allocation_W": "4933.61661188911433256",
+              "pin_internal_STREAM_allocation_W": "4409.09020932747593256",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 36,
@@ -99456,7 +99637,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "4933.61661188911433256",
               "activation_refill_bytes": 2560,
               "active_pairs_per_wave": [
                 512
@@ -99475,7 +99660,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "3409a54e940ef77df818b1093aa0e30c8884905e0d52f3048d8f642588aea90d",
-              "pin_internal_STREAM_allocation_W": "4933.61661188911433256",
+              "pin_internal_STREAM_allocation_W": "4409.09020932747593256",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 36,
@@ -103993,7 +104178,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "2941.98309422651956776",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 256,
@@ -104013,7 +104202,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "3f58d322b65cdf649bc79b071aebc7c295932054bf33aed02de06016aa0ccea3",
-              "pin_internal_STREAM_allocation_W": "2941.98309422651956776",
+              "pin_internal_STREAM_allocation_W": "2417.45669166488116776",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 72,
@@ -104026,7 +104215,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "2941.98309422651956776",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 256,
@@ -104046,7 +104239,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "3f58d322b65cdf649bc79b071aebc7c295932054bf33aed02de06016aa0ccea3",
-              "pin_internal_STREAM_allocation_W": "2941.98309422651956776",
+              "pin_internal_STREAM_allocation_W": "2417.45669166488116776",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 72,
@@ -104059,7 +104252,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "2941.98309422651956776",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 256,
@@ -104079,7 +104276,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "3f58d322b65cdf649bc79b071aebc7c295932054bf33aed02de06016aa0ccea3",
-              "pin_internal_STREAM_allocation_W": "2941.98309422651956776",
+              "pin_internal_STREAM_allocation_W": "2417.45669166488116776",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 72,
@@ -108597,7 +108794,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1946.16633539522218536",
               "activation_refill_bytes": 20480,
               "active_pairs_per_wave": [
                 128,
@@ -108619,7 +108820,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "bf1d91e0e0da3847f8fd999ecf9b462cdd4987ec869e7196bd6a0ad784c95600",
-              "pin_internal_STREAM_allocation_W": "1946.16633539522218536",
+              "pin_internal_STREAM_allocation_W": "1421.63993283358378536",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 144,
@@ -108632,7 +108833,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1946.16633539522218536",
               "activation_refill_bytes": 20480,
               "active_pairs_per_wave": [
                 128,
@@ -108654,7 +108859,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "bf1d91e0e0da3847f8fd999ecf9b462cdd4987ec869e7196bd6a0ad784c95600",
-              "pin_internal_STREAM_allocation_W": "1946.16633539522218536",
+              "pin_internal_STREAM_allocation_W": "1421.63993283358378536",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 144,
@@ -108667,7 +108872,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1946.16633539522218536",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 128,
@@ -108689,7 +108898,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "bf1d91e0e0da3847f8fd999ecf9b462cdd4987ec869e7196bd6a0ad784c95600",
-              "pin_internal_STREAM_allocation_W": "1946.16633539522218536",
+              "pin_internal_STREAM_allocation_W": "1421.63993283358378536",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 144,
@@ -113207,7 +113416,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1448.25795597957349416",
               "activation_refill_bytes": 40960,
               "active_pairs_per_wave": [
                 64,
@@ -113233,7 +113446,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "5526f3ff1ca7740da2dfae0c7f8a67a02b8303f478f0100584462c636c0ca2d1",
-              "pin_internal_STREAM_allocation_W": "1448.25795597957349416",
+              "pin_internal_STREAM_allocation_W": "923.73155341793509416",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 288,
@@ -113246,7 +113459,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1448.25795597957349416",
               "activation_refill_bytes": 40960,
               "active_pairs_per_wave": [
                 64,
@@ -113272,7 +113489,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "5526f3ff1ca7740da2dfae0c7f8a67a02b8303f478f0100584462c636c0ca2d1",
-              "pin_internal_STREAM_allocation_W": "1448.25795597957349416",
+              "pin_internal_STREAM_allocation_W": "923.73155341793509416",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 288,
@@ -113285,7 +113502,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1448.25795597957349416",
               "activation_refill_bytes": 20480,
               "active_pairs_per_wave": [
                 64,
@@ -113311,7 +113532,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "5526f3ff1ca7740da2dfae0c7f8a67a02b8303f478f0100584462c636c0ca2d1",
-              "pin_internal_STREAM_allocation_W": "1448.25795597957349416",
+              "pin_internal_STREAM_allocation_W": "923.73155341793509416",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 288,
@@ -117829,7 +118050,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1199.30376627174914856",
               "activation_refill_bytes": 81920,
               "active_pairs_per_wave": [
                 32,
@@ -117863,7 +118088,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "8e84ffa2d72a1ccc7af0b008fb31a7db73e8367075a911f95b8ac32946131ede",
-              "pin_internal_STREAM_allocation_W": "1199.30376627174914856",
+              "pin_internal_STREAM_allocation_W": "674.77736371011074856",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 576,
@@ -117876,7 +118101,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1199.30376627174914856",
               "activation_refill_bytes": 81920,
               "active_pairs_per_wave": [
                 32,
@@ -117910,7 +118139,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "8e84ffa2d72a1ccc7af0b008fb31a7db73e8367075a911f95b8ac32946131ede",
-              "pin_internal_STREAM_allocation_W": "1199.30376627174914856",
+              "pin_internal_STREAM_allocation_W": "674.77736371011074856",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 576,
@@ -117923,7 +118152,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1199.30376627174914856",
               "activation_refill_bytes": 40960,
               "active_pairs_per_wave": [
                 32,
@@ -117957,7 +118190,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "8e84ffa2d72a1ccc7af0b008fb31a7db73e8367075a911f95b8ac32946131ede",
-              "pin_internal_STREAM_allocation_W": "1199.30376627174914856",
+              "pin_internal_STREAM_allocation_W": "674.77736371011074856",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 576,
@@ -122475,7 +122708,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1074.82667141783697576",
               "activation_refill_bytes": 163840,
               "active_pairs_per_wave": [
                 16,
@@ -122525,7 +122762,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "f298a6cfa92255a90e603db62c5dbfaf5a4151507a180cae23b83139067d84a7",
-              "pin_internal_STREAM_allocation_W": "1074.82667141783697576",
+              "pin_internal_STREAM_allocation_W": "550.30026885619857576",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1152,
@@ -122538,7 +122775,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1074.82667141783697576",
               "activation_refill_bytes": 163840,
               "active_pairs_per_wave": [
                 16,
@@ -122588,7 +122829,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "f298a6cfa92255a90e603db62c5dbfaf5a4151507a180cae23b83139067d84a7",
-              "pin_internal_STREAM_allocation_W": "1074.82667141783697576",
+              "pin_internal_STREAM_allocation_W": "550.30026885619857576",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1152,
@@ -122601,7 +122842,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1074.82667141783697576",
               "activation_refill_bytes": 81920,
               "active_pairs_per_wave": [
                 16,
@@ -122651,7 +122896,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "f298a6cfa92255a90e603db62c5dbfaf5a4151507a180cae23b83139067d84a7",
-              "pin_internal_STREAM_allocation_W": "1074.82667141783697576",
+              "pin_internal_STREAM_allocation_W": "550.30026885619857576",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1152,
@@ -127169,7 +127414,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1012.58812399088088936",
               "activation_refill_bytes": 327680,
               "active_pairs_per_wave": [
                 8,
@@ -127251,7 +127500,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "14276c94b7d7f707aee650adf00ff4310856398b7fa5bb66f24f7ce23f91b9dd",
-              "pin_internal_STREAM_allocation_W": "1012.58812399088088936",
+              "pin_internal_STREAM_allocation_W": "488.06172142924248936",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 2304,
@@ -127264,7 +127513,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1012.58812399088088936",
               "activation_refill_bytes": 327680,
               "active_pairs_per_wave": [
                 8,
@@ -127346,7 +127599,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "14276c94b7d7f707aee650adf00ff4310856398b7fa5bb66f24f7ce23f91b9dd",
-              "pin_internal_STREAM_allocation_W": "1012.58812399088088936",
+              "pin_internal_STREAM_allocation_W": "488.06172142924248936",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 2304,
@@ -127359,7 +127612,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1012.58812399088088936",
               "activation_refill_bytes": 163840,
               "active_pairs_per_wave": [
                 8,
@@ -127441,7 +127698,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "14276c94b7d7f707aee650adf00ff4310856398b7fa5bb66f24f7ce23f91b9dd",
-              "pin_internal_STREAM_allocation_W": "1012.58812399088088936",
+              "pin_internal_STREAM_allocation_W": "488.06172142924248936",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 2304,
@@ -134437,7 +134694,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "2848.54788699252401704",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 256
@@ -134456,7 +134717,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "707ff2e6938acc40b21c98746ae9c2a22d3f84912abea1934d5c859945ed5c28",
-              "pin_internal_STREAM_allocation_W": "2848.54788699252401704",
+              "pin_internal_STREAM_allocation_W": "2324.02148443088561704",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 37,
@@ -134469,7 +134730,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "2848.54788699252401704",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 256
@@ -134488,7 +134753,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "707ff2e6938acc40b21c98746ae9c2a22d3f84912abea1934d5c859945ed5c28",
-              "pin_internal_STREAM_allocation_W": "2848.54788699252401704",
+              "pin_internal_STREAM_allocation_W": "2324.02148443088561704",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 37,
@@ -134501,7 +134766,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "2848.54788699252401704",
               "activation_refill_bytes": 2560,
               "active_pairs_per_wave": [
                 256
@@ -134520,7 +134789,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "707ff2e6938acc40b21c98746ae9c2a22d3f84912abea1934d5c859945ed5c28",
-              "pin_internal_STREAM_allocation_W": "2848.54788699252401704",
+              "pin_internal_STREAM_allocation_W": "2324.02148443088561704",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 37,
@@ -139038,7 +139307,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1852.73112816122663464",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 128,
@@ -139058,7 +139331,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "48f7bc26d5eae8567a132290bb2ed57bdbd140e9f52f2a058ad786beeff9d44c",
-              "pin_internal_STREAM_allocation_W": "1852.73112816122663464",
+              "pin_internal_STREAM_allocation_W": "1328.20472559958823464",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 74,
@@ -139071,7 +139344,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1852.73112816122663464",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 128,
@@ -139091,7 +139368,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "48f7bc26d5eae8567a132290bb2ed57bdbd140e9f52f2a058ad786beeff9d44c",
-              "pin_internal_STREAM_allocation_W": "1852.73112816122663464",
+              "pin_internal_STREAM_allocation_W": "1328.20472559958823464",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 74,
@@ -139104,7 +139381,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1852.73112816122663464",
               "activation_refill_bytes": 5120,
               "active_pairs_per_wave": [
                 128,
@@ -139124,7 +139405,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "48f7bc26d5eae8567a132290bb2ed57bdbd140e9f52f2a058ad786beeff9d44c",
-              "pin_internal_STREAM_allocation_W": "1852.73112816122663464",
+              "pin_internal_STREAM_allocation_W": "1328.20472559958823464",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 74,
@@ -143642,7 +143923,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1354.82274874557794344",
               "activation_refill_bytes": 20480,
               "active_pairs_per_wave": [
                 64,
@@ -143664,7 +143949,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "58dd895fe981f4e6783f445e36b5c5b5c785335ec3f355fa8c9ca60c3ba5c8bb",
-              "pin_internal_STREAM_allocation_W": "1354.82274874557794344",
+              "pin_internal_STREAM_allocation_W": "830.29634618393954344",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 148,
@@ -143677,7 +143962,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1354.82274874557794344",
               "activation_refill_bytes": 20480,
               "active_pairs_per_wave": [
                 64,
@@ -143699,7 +143988,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "58dd895fe981f4e6783f445e36b5c5b5c785335ec3f355fa8c9ca60c3ba5c8bb",
-              "pin_internal_STREAM_allocation_W": "1354.82274874557794344",
+              "pin_internal_STREAM_allocation_W": "830.29634618393954344",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 148,
@@ -143712,7 +144001,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1354.82274874557794344",
               "activation_refill_bytes": 10240,
               "active_pairs_per_wave": [
                 64,
@@ -143734,7 +144027,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "58dd895fe981f4e6783f445e36b5c5b5c785335ec3f355fa8c9ca60c3ba5c8bb",
-              "pin_internal_STREAM_allocation_W": "1354.82274874557794344",
+              "pin_internal_STREAM_allocation_W": "830.29634618393954344",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 148,
@@ -148252,7 +148545,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1105.86855903775359784",
               "activation_refill_bytes": 40960,
               "active_pairs_per_wave": [
                 32,
@@ -148278,7 +148575,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "e32f42e925c2f95b954b900479d393e51497d2733d1d976607618f39880072a5",
-              "pin_internal_STREAM_allocation_W": "1105.86855903775359784",
+              "pin_internal_STREAM_allocation_W": "581.34215647611519784",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 296,
@@ -148291,7 +148588,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1105.86855903775359784",
               "activation_refill_bytes": 40960,
               "active_pairs_per_wave": [
                 32,
@@ -148317,7 +148618,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "e32f42e925c2f95b954b900479d393e51497d2733d1d976607618f39880072a5",
-              "pin_internal_STREAM_allocation_W": "1105.86855903775359784",
+              "pin_internal_STREAM_allocation_W": "581.34215647611519784",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 296,
@@ -148330,7 +148631,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "1105.86855903775359784",
               "activation_refill_bytes": 20480,
               "active_pairs_per_wave": [
                 32,
@@ -148356,7 +148661,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "e32f42e925c2f95b954b900479d393e51497d2733d1d976607618f39880072a5",
-              "pin_internal_STREAM_allocation_W": "1105.86855903775359784",
+              "pin_internal_STREAM_allocation_W": "581.34215647611519784",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 296,
@@ -152874,7 +153179,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "981.39146418384142504",
               "activation_refill_bytes": 81920,
               "active_pairs_per_wave": [
                 16,
@@ -152908,7 +153217,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "838d19c1116abc5464671f862efc567f18c80337b0715a0a8077dc577469fcd6",
-              "pin_internal_STREAM_allocation_W": "981.39146418384142504",
+              "pin_internal_STREAM_allocation_W": "456.86506162220302504",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 592,
@@ -152921,7 +153230,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "981.39146418384142504",
               "activation_refill_bytes": 81920,
               "active_pairs_per_wave": [
                 16,
@@ -152955,7 +153268,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "838d19c1116abc5464671f862efc567f18c80337b0715a0a8077dc577469fcd6",
-              "pin_internal_STREAM_allocation_W": "981.39146418384142504",
+              "pin_internal_STREAM_allocation_W": "456.86506162220302504",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 592,
@@ -152968,7 +153281,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "981.39146418384142504",
               "activation_refill_bytes": 40960,
               "active_pairs_per_wave": [
                 16,
@@ -153002,7 +153319,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "838d19c1116abc5464671f862efc567f18c80337b0715a0a8077dc577469fcd6",
-              "pin_internal_STREAM_allocation_W": "981.39146418384142504",
+              "pin_internal_STREAM_allocation_W": "456.86506162220302504",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 592,
@@ -157520,7 +157837,11 @@
           "families": [
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "919.15291675688533864",
               "activation_refill_bytes": 163840,
               "active_pairs_per_wave": [
                 8,
@@ -157570,7 +157891,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "6fb2108c97fcf7940c225606ec898b305dea0b0b16b68521469cafda31c14d30",
-              "pin_internal_STREAM_allocation_W": "919.15291675688533864",
+              "pin_internal_STREAM_allocation_W": "394.62651419524693864",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1184,
@@ -157583,7 +157904,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "919.15291675688533864",
               "activation_refill_bytes": 163840,
               "active_pairs_per_wave": [
                 8,
@@ -157633,7 +157958,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "6fb2108c97fcf7940c225606ec898b305dea0b0b16b68521469cafda31c14d30",
-              "pin_internal_STREAM_allocation_W": "919.15291675688533864",
+              "pin_internal_STREAM_allocation_W": "394.62651419524693864",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1184,
@@ -157646,7 +157971,11 @@
             },
             {
               "BF_hub_nonexpert_data_W": "BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.",
-              "BF_idle_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_incoming_CFG_STREAM_root_data_wire_upper_W": "631.45283452040675328",
+              "BF_root_data_activation_interval": "Incoming CFG/STREAM only; not always-on or minimum power.",
+              "BF_root_pin_internal_only_upper_W": "106.92643195876835328",
+              "BF_unresolved_output_wire_upper_W": "524.5264025616384",
+              "Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W": "919.15291675688533864",
               "activation_refill_bytes": 81920,
               "active_pairs_per_wave": [
                 8,
@@ -157696,7 +158025,7 @@
               "no_PG_wake_assumed": true,
               "no_leaf_wake_completion_credit": true,
               "pair_wave_membership_sha256": "6fb2108c97fcf7940c225606ec898b305dea0b0b16b68521469cafda31c14d30",
-              "pin_internal_STREAM_allocation_W": "919.15291675688533864",
+              "pin_internal_STREAM_allocation_W": "394.62651419524693864",
               "power_physical_qualified": false,
               "power_values_source_pinned": true,
               "repeated_configuration_cycles": 1184,
@@ -157723,6 +158052,7 @@
   ],
   "chosen_feasible_point": null,
   "complete_token_latency_cycles": null,
+  "correction_to_prior2185": "BF631.45W is incoming-data/internal/pin plus524.53W unresolved wire allocation, not idle power. Typed pin/internal106.93W is now separate; no physical impossibility or always-on classification.",
   "current45bank_CROM_provider_clock_power_qualified": false,
   "engram_home_candidate": {
     "HBM_alternative": {

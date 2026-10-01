@@ -146,6 +146,9 @@ def build():
     power_pin=('fea811df4','results/uarch/w10_q_existing_icg_r1/phases.json')
     power_raw=R.blob(power_pin)
     power=json.loads(power_raw)
+    bf_data_pin=('fea811df4','results/uarch/w10_q_existing_icg_r1/BF_data.json')
+    bf_data_raw=R.blob(bf_data_pin)
+    bf_data=json.loads(bf_data_raw)
     historical_q1024=next(r for r in power['candidates'] if r['q_pairs']==1024)
     phase1024=historical_q1024['active_family_phases']['w2']
     root_clock=D(phase1024['root_q_clock_W'])/1024
@@ -224,6 +227,8 @@ def build():
                 wire=q*D(qdata['unresolved_wire_upper_W_per_resident_pair'])
                 data=root_data+leaf_data+wire
                 bf_root=1024*D(power['BF']['root_reachable_data_and_wire_upper_W_per_pair'])
+                bf_pin_internal=1024*(D(bf_data['terms']['root']['input_pin_upper_W'])+D(bf_data['terms']['root']['internal_data_upper_W']))
+                bf_wire=1024*D(bf_data['terms']['root']['unresolved_output_wire_upper_W'])
                 hub_data=sum(D(v) for v in power['hub']['configured_all_units_dynamic_upper_W'].values())
                 families.append(dict(family=f, atomic_components=len(components(t)),
                     largest_atomic_component=max(map(len,components(t))),
@@ -237,8 +242,13 @@ def build():
                     root_data_pin_internal_W=str(root_data),awake_leaf_data_pin_internal_W=str(leaf_data),
                     separate_CFG_only_Q_W=str(q*D(qdata['CFG_only_data_upper_W_per_pair'])),
                     unresolved_wire_ceiling_W=str(wire),
-                    BF_idle_root_data_wire_upper_W=str(bf_root),hub_all_units_dynamic_upper_W=str(hub_data),
-                    pin_internal_STREAM_allocation_W=str(baseline+leaf+root_data+leaf_data+bf_root+hub_data),
+                    BF_incoming_CFG_STREAM_root_data_wire_upper_W=str(bf_root),
+                    BF_root_pin_internal_only_upper_W=str(bf_pin_internal),
+                    BF_unresolved_output_wire_upper_W=str(bf_wire),
+                    BF_root_data_activation_interval='Incoming CFG/STREAM only; not always-on or minimum power.',
+                    hub_all_units_dynamic_upper_W=str(hub_data),
+                    pin_internal_STREAM_allocation_W=str(baseline+leaf+root_data+leaf_data+bf_pin_internal+hub_data),
+                    Q_pin_internal_with_BF_wire_screen_STREAM_allocation_W=str(baseline+leaf+root_data+leaf_data+bf_root+hub_data),
                     conservative_data_allocation_W=str(data), data_clock_static_W=str(baseline+leaf+data),
                     BF_hub_nonexpert_data_W='BF root and hub source ceilings included above; BF-active macro/nonexpert switching remains unbound.',
                     power_values_source_pinned=True,power_physical_qualified=False,
@@ -322,6 +332,8 @@ def build():
     return dict(schema='opentallas.w17.whole-calendar-alternatives.v1',
         baseline_candidate_source_pins=whole['source_pins'], geometry_search=sizes,
         power_phase_source_pin=dict(commit=power_pin[0],path=power_pin[1],sha256=R.sha(power_raw)),
+        BF_data_source_pin=dict(commit=bf_data_pin[0],path=bf_data_pin[1],sha256=R.sha(bf_data_raw)),
+        correction_to_prior2185='BF631.45W is incoming-data/internal/pin plus524.53W unresolved wire allocation, not idle power. Typed pin/internal106.93W is now separate; no physical impossibility or always-on classification.',
         power_phase_scope=power['phase_simultaneity'],
         historical_CROM512_reservation_W=power['CROM_proposal'],
         current45bank_CROM_provider_clock_power_qualified=False,
