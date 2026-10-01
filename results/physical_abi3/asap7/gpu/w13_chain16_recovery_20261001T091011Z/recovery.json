@@ -1,0 +1,58 @@
+{
+  "bundle_pins": {
+    "/tmp/claude-1000/w13jobs/chain16/w13_chain_successor.py": "e1f81454f457f4aed1a2899786bcd2497ee96364e78eab582a50e3ff4c53e338",
+    "/tmp/claude-1000/w13jobs/chain16/w13_column_corner_gate.py": "829f271ed92351faebe44c901c9ffdb1abc4098d3b2f63f5bed903b0af7aacda",
+    "/tmp/claude-1000/w13jobs/chain16/w13_floorplan_receipt.py": "a6703363bc10930b57672086539eebbebed1280c16de6317a9b16868d6e79441"
+  },
+  "cause": "This stream resumed chain15 before observing concurrent parent chain16 takeover; chain16 parked-predecessor guard correctly aborted. Chain15 has been reparked; no downstream launch occurred.",
+  "column_jobs_restarted_or_duplicated": 0,
+  "column_wrapper_handles": [
+    {
+      "pid": 2089594,
+      "start_ticks": "302549468",
+      "state": "S"
+    },
+    {
+      "pid": 1901598,
+      "start_ticks": "302086726",
+      "state": "S"
+    }
+  ],
+  "config_sha256": "808af4528141ac9ed35f738dae09756b772416764c20b55def743a8a7c3c91ff",
+  "exclusive_driver_lock_verified": true,
+  "failure_traceback_sha256": "c6c3801ed58fbf23fa0f3a916465e7a24813d24d003c50ee4223527f78de2c71",
+  "log_live": "/tmp/claude-1000/w13jobs/chain16/driver_recovery_20261001T091011Z.log",
+  "no_live_successor_before_recovery": true,
+  "predecessors": [
+    {
+      "pid": 2089666,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089669,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089670,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 3047316,
+      "start_ticks": "304527912",
+      "state": "T"
+    }
+  ],
+  "schema": "opentallas.w13.chain16_recovery.v1",
+  "sm_jobs_launched": 0,
+  "source_commit": "46f5f75872d1b00766c8be6a1f4b49a539397cd2",
+  "successor": {
+    "pid": 508855,
+    "start_ticks": "305066820",
+    "state": "R"
+  },
+  "timing_constraints_changed": false,
+  "utc": "2026-10-01T09:10:11.901856+00:00"
+}
