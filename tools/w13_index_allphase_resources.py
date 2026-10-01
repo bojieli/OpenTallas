@@ -81,6 +81,16 @@ def build():
     for p,sha in proof['source_pins'].items():
         assert hashlib.sha256(subprocess.check_output(['git','show',proof['source_commit']+':'+p])).hexdigest()==sha
     d=json.loads(gzip.decompress(raw));out=phase_resources(d['phases'],d['finite_phase_count'])
+    wavepath=base+'index-source-queryguard-waves-r1.json'
+    waveraw=subprocess.check_output(['git','show','879e75887:'+wavepath]);waves=json.loads(waveraw)
+    for p,sha in waves['source_pins'].items():
+        assert hashlib.sha256(subprocess.check_output(['git','show',waves['source_commit']+':'+p])).hexdigest()==sha
+    assert [w['wave_base_global_warp'] for w in waves['waves']]==[0,32,64,96]
+    assert [g for w in waves['waves'] for g in w['global_warps']]==list(range(128))
+    out['query_guard_wave_contract']={'git':'879e75887','path':wavepath,'sha256':hashlib.sha256(waveraw).hexdigest(),
+        'verified_source_pins':waves['source_pins'],'ordinary_address_warp_ops':waves['address_warp_ops_allwaves'],
+        'waves':waves['waves'],'physical_opcode_II_RF_import_launch_barrier_cycles':None,
+        'control_ops_are_additional_to_executed_phase_demand':True}
     out.update(schema='w13.index-allphase-source-resource-join.v1',source_git=proof['source_commit'],evidence_git='a4d69239c',
         verified_source_pins=proof['source_pins'],phase_manifest_sha256=hashlib.sha256(raw).hexdigest(),
         source_fixture=d['fixture'],source_event_count=sum(len(p['events']) for p in d['phases']),
