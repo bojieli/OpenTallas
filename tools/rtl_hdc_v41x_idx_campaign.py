@@ -288,30 +288,17 @@ def write_mems(d: Path, toks, ih, nb):
     return len(toks), len(kl)
 
 
-# engine arithmetic latencies (FPL binary32 add, FML head-weight product, QL block dot); 3/3/3 is the as-built
-# engine, 7/x/x the 1.2 GHz streaming-domain build (--lat), which adds the deeper adder's source
-LAT = {"FPL": 3, "FML": 3, "QL": 3}
-ADD_LAT = ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv"
-PREFIX = ROOT / "rtl/hdc/ot_hdc_prefix.sv"          # the keep-level prefix adders ot_hdc_fp32_add_lat uses
-
-
-def engine_rtl():
-    return RTL + ([ADD_LAT, PREFIX] if LAT["FPL"] != 3 else [])
-
-
 def build(work: Path, nk, ih, nb, fd, jobs=16):
-    lt = "" if LAT == {"FPL": 3, "FML": 3, "QL": 3} else "_lat{FPL}_{FML}_{QL}".format(**LAT)
-    obj = work / f"obj_nk{nk}_ih{ih}_nb{nb}_fd{fd}{lt}"
+    obj = work / f"obj_nk{nk}_ih{ih}_nb{nb}_fd{fd}"
     exe = obj / "Vtb_hdc_v41x_idx"
-    stamp = hashlib.sha256(b"".join(p.read_bytes() for p in engine_rtl() + [VLT, TB, HARNESS])).hexdigest()
+    stamp = hashlib.sha256(b"".join(p.read_bytes() for p in RTL + [VLT, TB, HARNESS])).hexdigest()
     if exe.exists() and (obj / "stamp").exists() and (obj / "stamp").read_text() == stamp:
         return exe
     cmd = ["verilator", "--cc", "--exe", "--build", "-O3", "--x-assign", "fast", "--x-initial", "fast",
            "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-DECLFILENAME", "-Wno-UNOPTFLAT",
-           "--top-module", "tb_hdc_v41x_idx", f"-GNK={nk}", f"-GIH={ih}", f"-GNB={nb}", f"-GFD={fd}"] + \
-          [f"-G{k}={v}" for k, v in LAT.items()] + [
+           "--top-module", "tb_hdc_v41x_idx", f"-GNK={nk}", f"-GIH={ih}", f"-GNB={nb}", f"-GFD={fd}",
            "-CFLAGS", "-DVTOP=Vtb_hdc_v41x_idx -O1", "-j", str(jobs), "--Mdir", str(obj),
-           str(VLT), str(TB)] + [str(p) for p in engine_rtl()] + [str(HARNESS)]
+           str(VLT), str(TB)] + [str(p) for p in RTL] + [str(HARNESS)]
     t0 = time.time()
     subprocess.run(cmd, check=True, capture_output=True, text=True)
     (obj / "stamp").write_text(stamp)
@@ -674,27 +661,19 @@ def main():
     ap.add_argument("--reuse-engine", default=None,
                     help="take the shipped/reduced sections from an earlier output of this tool, if every engine "
                          "source (RTL, bench, golden) it recorded is byte-identical now; the HBM scan is re-run")
-    ap.add_argument("--lat", default=None,
-                    help="FPL,FML,QL engine latencies (default 3,3,3 = as built; 7,4,4 etc. = the 1.2 GHz streaming "
-                         "build).  Only the engine benches run (the hsum/pooled benches do not use the engine)")
     a = ap.parse_args()
-    if a.lat:
-        LAT.update(zip(("FPL", "FML", "QL"), map(int, a.lat.split(","))))
-    engine_only = LAT != {"FPL": 3, "FML": 3, "QL": 3}
     work = Path(a.work)
     work.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(20260926)
     rec = {"schema": "opentallas-hdc-v41x-idx-campaign-v1", "block": "idx",
-           "tool": "tools/rtl_hdc_v41x_idx_campaign.py", "arith": G.ARITH, "spec": SPEC, "latencies": dict(LAT),
+           "tool": "tools/rtl_hdc_v41x_idx_campaign.py", "arith": G.ARITH, "spec": SPEC,
            "sources": {str(p.relative_to(ROOT)): sha(p) for p in RTL + HS_RTL[:1] + POOL_RTL + [VLT, TB, HS_TB, POOL_TB, HARNESS, ROOT / "tools/hdc_golden_v41.py",
                                                                         Path(__file__).resolve()]}}
     per_class = 2 if a.quick else 12
     nkeys = (lambda: int(rng.integers(1, 40))) if a.quick else (lambda: int(rng.integers(1, 400)))
     long_n = 512 if a.quick else 16384
     shapes = {"shipped": (32, 4), "reduced": (32, 1)}
-    if engine_only:
-        rec["sources"].update({str(p.relative_to(ROOT)): sha(p) for p in (ADD_LAT, PREFIX)})
-    if a.only in (None, "hbm") and not engine_only:
+    if a.only in (None, "hbm"):
         print("hbm scan", flush=True)
         rec["hbm_scan"] = hbm_scan(work, a.quick)
         rec["sources"].update({str(p.relative_to(ROOT)): sha(p) for p in SCAN_RTL + [SCAN_TB]})
@@ -733,8 +712,6 @@ def main():
             toks += veh
         print(f"{name}: {len(toks)} tokens, {sum(len(t['keep']) for t in toks)} keys", flush=True)
         rec[name] = shape_bench(work, name, ih, nb, a.nk, 64, toks, long_n, rng)
-        if engine_only:
-            continue
         rec[name]["hsum"] = hsum_bench(work, name, toks, ih)
         if name == "shipped":
             rec[name]["pooled"] = pool_bench(work, name, toks, ih, GT=1, M=2)
@@ -769,8 +746,7 @@ def main():
             ok &= r["pooled_core_geometry"]["bit_exact"] and r["pooled_core_geometry"]["split_mode_used"]
     if "hbm_scan" in rec:
         ok &= rec["hbm_scan"]["verdict"]["bit_exact"] and rec["hbm_scan"]["verdict"]["meets_90pct_of_peak_with_refresh"]
-    if not engine_only:
-        rec["die"] = die_summary(rec)
+    rec["die"] = die_summary(rec)
     rec["pooled_path"] = {
         "spec": "R-U2: the FP4 x FP4 index dots run on the pooled block-dot engine (wgt POOL=1, d_split two 4-block "
                 "rows per chunk unit, keys on rd_k from this stream); the ReLU x weight head sum on "

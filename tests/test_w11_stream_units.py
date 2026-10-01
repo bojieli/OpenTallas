@@ -1,5 +1,7 @@
 """W11 streaming-domain units (V4.1 indexer element and attention tile at 1.2 GHz / 0.833 ns SS).
 
+* the streaming units are separate _l modules (rtl/hdc/v41x/*_lat.sv, tools/w11_stream_latgen.py) so the pinned
+  as-built sources are untouched; the _l text is the routed revision's;
 * the latency-cut arithmetic (q4dot QL 3..5, indexer bmul ML 3..5, attention bmul ML 3..6) equals the as-built
   LAT-3 unit delayed by the added cycles (Icarus, random operands, one per cycle);
 * the record builder's latency model is the RTL's own localparam formulas, and gives the as-built latencies
@@ -25,7 +27,8 @@ SUMMARY = R.OUT_DIR / "w11_stream_summary.json"
 
 @pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog not installed")
 def test_cut_units_equal_lat3_delayed(tmp_path):
-    srcs = ["rtl/test/tb_w11s_cut_equiv.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+    srcs = ["rtl/test/tb_w11s_cut_equiv.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+            "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv", "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
             "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fastfp.sv"]
     vvp = tmp_path / "eq.vvp"
     subprocess.run(["iverilog", "-g2012", "-s", "tb_w11s_cut_equiv", "-o", str(vvp), *[str(ROOT / s) for s in srcs]],
@@ -36,18 +39,29 @@ def test_cut_units_equal_lat3_delayed(tmp_path):
 
 
 def test_latency_model_is_the_rtl():
-    idx = (ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx.sv").read_text()
+    idx = (ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv").read_text()
     assert "LAT_C = 1 + QL + FPL * (NB - 1) + 1 + FML + FPL * 7 + 1" in idx
     assert "LAT_T = 1 + FPL * LVT + 1" in idx
-    att = (ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn.sv").read_text()
+    att = (ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn_lat.sv").read_text()
     assert "TLAT = 3 + FML + FPL * (7 + LVT)" in att
     assert "GUARD_Q = skew(7) + 2" in att
-    tile = (ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv").read_text()
+    tile = (ROOT / "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv").read_text()
     assert "LAT_CORE = FML + 7 * FPL + FPL * LV" in tile
     assert R.idx_engine_lat(3, 3, 3) + 1 == 48          # the as-built first-score latency
     assert R.idx_engine_lat(3, 3, 3, nb=1) + 1 == 39    # the reduced shape, measured by the campaign
     assert R.idx_engine_lat(7, 5, 5, nb=1) + 1 == 79    # measured at the streaming latencies (reduced shape)
     assert R.attn_tile_lat(3, 3, 64) == 36 and R.attn_guard_q(3) == 20
+
+
+def test_streaming_files_are_the_routed_text():
+    """the _l files are the routed revision's module text, renamed (needs that revision in the clone)"""
+    import w11_stream_latgen as L
+    try:
+        files = L.generate()
+    except subprocess.CalledProcessError:
+        pytest.skip("source revision not in this clone")
+    for p, t in files.items():
+        assert (ROOT / p).read_text() == t, p
 
 
 @pytest.mark.skipif(not SUMMARY.is_file(), reason="record not committed yet")

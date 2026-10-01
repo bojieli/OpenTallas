@@ -29,10 +29,7 @@ module ot_hdc_v41x_idx_array #(
     parameter integer NB = 4,          // 32-blocks per head (index_head_dim/32)
     parameter integer IH = 32,         // index heads
     parameter integer IW = 30,         // global key index width
-    parameter integer MD = 64,         // per-slice score/metadata FIFO depth (deepened to cover the latency)
-    parameter integer FPL = 3,         // binary32 add latency (7: 1.2 GHz streaming domain)
-    parameter integer FML = 3,         // head-weight product latency
-    parameter integer QL = 3           // block-dot latency
+    parameter integer MD = 64          // per-slice score/metadata FIFO depth
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -73,7 +70,7 @@ module ot_hdc_v41x_idx_array #(
 
     genvar s;
     generate for (s = 0; s < NS; s = s + 1) begin : g_slice
-        ot_hdc_v41x_idx_score_slice #(.NK(NK), .NB(NB), .IH(IH), .IW(IW), .MD(MD), .FPL(FPL), .FML(FML), .QL(QL)) u (
+        ot_hdc_v41x_idx_score_slice #(.NK(NK), .NB(NB), .IH(IH), .IW(IW), .MD(MD)) u (
             .clk(clk), .rst_n(rst_n),
             .ql_v(ql_v), .ql_ready(qr[s]), .ql_head(ql_head),
             .ql_codes(ql_codes), .ql_sc(ql_sc), .ql_w(ql_w),

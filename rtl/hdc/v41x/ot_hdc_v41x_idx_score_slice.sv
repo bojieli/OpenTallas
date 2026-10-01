@@ -7,8 +7,7 @@
 // sixteen slices. The slice's arithmetic is fully pipelined (II=1 when ready),
 // with a finite metadata queue and the engine's own finite output credit.
 module ot_hdc_v41x_idx_score_slice #(
-    parameter integer NK=4, NB=4, IH=32, IW=30, MD=64,
-    parameter integer FPL=3, FML=3, QL=3   // engine arithmetic latencies (ot_hdc_v41x_idx_engine)
+    parameter integer NK=4, NB=4, IH=32, IW=30, MD=64
 ) (
     input wire clk, rst_n,
     input wire ql_v,
@@ -33,14 +32,8 @@ module ot_hdc_v41x_idx_score_slice #(
     output wire [NK*IW-1:0] o_index,
     output wire [NK-1:0] o_fault
 );
-    // the engine's key-to-score latency; a queue shallower than it + 4 would
-    // throttle the stream, so MD is deepened to the next power of two (no change
-    // at FPL = FML = QL = 3: latency 47 at NB = 4, IH = 32)
-    localparam integer LVE=(IH/8<=1)?0:$clog2(IH/8);
-    localparam integer LATE=(1+QL+FPL*(NB-1)+1+FML+FPL*7+1)+(1+FPL*LVE+1);
-    localparam integer MDE=(MD>=LATE+4)?MD:(1<<$clog2(LATE+4));
-    localparam integer PW=$clog2(MDE), CW=$clog2(MDE+1);
-    reg [IW+NK:0] meta [0:MDE-1]; // {last, first_index, refused mask}
+    localparam integer PW=$clog2(MD), CW=$clog2(MD+1);
+    reg [IW+NK:0] meta [0:MD-1]; // {last, first_index, refused mask}
     reg [PW-1:0] wr,rd;
     reg [CW-1:0] count;
     wire ev,er;
@@ -51,7 +44,7 @@ module ot_hdc_v41x_idx_score_slice #(
     // Query SRAM is single-buffered. A new query may overwrite it only after
     // all earlier score beats leave both the engine and metadata queue.
     assign ql_ready=(count==0) && !ev && !i_valid;
-    assign i_ready=er && count<MDE;
+    assign i_ready=er && count<MD;
     assign o_valid=ev && count!=0;
     assign o_last=meta[rd][IW+NK];
     assign o_kv=ekv;
@@ -63,7 +56,7 @@ module ot_hdc_v41x_idx_score_slice #(
         assign o_index[g*IW +: IW]=first_index+OFFSET;
         assign o_score[g*16 +: 16]=meta[rd][g] ? 16'd0 : es[g*16 +: 16];
     end endgenerate
-    ot_hdc_v41x_idx_engine #(.NK(NK),.IH(IH),.NB(NB),.FD(MDE),.FPL(FPL),.FML(FML),.QL(QL)) engine (
+    ot_hdc_v41x_idx_engine #(.NK(NK),.IH(IH),.NB(NB),.FD(MD)) engine (
         .clk(clk),.rst_n(rst_n),.ql_v(ql_v && ql_ready),.ql_head(ql_head),
         .ql_codes(ql_codes),.ql_sc(ql_sc),.ql_w(ql_w),
         .k_valid(take),.k_ready(er),.k_kv(i_kv),.k_keep(i_keep),.k_key(i_key),

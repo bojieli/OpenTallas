@@ -16,7 +16,7 @@ module ot_hdc_v41x_w11s_q4dot #(parameter integer QL = 3) (
     output wire [31:0]  y,
     output wire         ovf
 );
-    ot_hdc_v41x_q4dot #(.QL(QL)) u (.clk(clk), .a(a), .b(b), .ua(ua), .ub(ub), .y(y), .ovf(ovf));
+    ot_hdc_v41x_q4dot_l #(.QL(QL)) u (.clk(clk), .a(a), .b(b), .ua(ua), .ub(ub), .y(y), .ovf(ovf));
 endmodule
 
 module ot_hdc_v41x_w11s_bmul #(parameter integer ML = 3) (
@@ -27,7 +27,7 @@ module ot_hdc_v41x_w11s_bmul #(parameter integer ML = 3) (
     output wire [15:0] y,
     output wire        ovf
 );
-    ot_hdc_v41x_bmul #(.ML(ML)) u (.clk(clk), .a(a), .w(w), .y(y), .ovf(ovf));
+    ot_hdc_v41x_bmul_l #(.ML(ML)) u (.clk(clk), .a(a), .w(w), .y(y), .ovf(ovf));
 endmodule
 
 module ot_hdc_v41x_w11s_attn_bmul #(parameter integer ML = 3) (
@@ -39,5 +39,5 @@ module ot_hdc_v41x_w11s_attn_bmul #(parameter integer ML = 3) (
     output wire [31:0] y,
     output wire        flt
 );
-    ot_hdc_v41x_attn_bmul #(.ML(ML)) u (.clk(clk), .a(a), .b(b), .pad(pad), .y(y), .flt(flt));
+    ot_hdc_v41x_attn_bmul_l #(.ML(ML)) u (.clk(clk), .a(a), .b(b), .pad(pad), .y(y), .flt(flt));
 endmodule

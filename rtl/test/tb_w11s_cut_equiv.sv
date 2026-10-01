@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
-// W11 streaming units: the latency-cut arithmetic (ot_hdc_v41x_q4dot QL 3..5, ot_hdc_v41x_bmul ML 3..5,
-// ot_hdc_v41x_attn_bmul ML 3..6) equals the as-built LAT-3 unit delayed by the added cycles, output for output,
+// W11 streaming units: the latency-cut arithmetic (ot_hdc_v41x_q4dot_l QL 3..5, ot_hdc_v41x_bmul_l ML 3..5,
+// ot_hdc_v41x_attn_bmul_l ML 3..6) equals the as-built LAT-3 unit delayed by the added cycles, output for output,
 // on random operands streaming at one per cycle (+NCYC, default 20,000).  Prints W11SEQ checked=<n> errors=<n>.
 module tb_w11s_cut_equiv;
     reg clk = 0;
@@ -39,11 +39,11 @@ module tb_w11s_cut_equiv;
     genvar l;
     generate
         for (l = 3; l <= 5; l = l + 1) begin : g_q
-            ot_hdc_v41x_q4dot #(.QL(l)) u (.clk(clk), .a(qa), .b(qb), .ua(ua), .ub(ub), .y(qy[l]), .ovf(qo[l]));
-            ot_hdc_v41x_bmul #(.ML(l)) m (.clk(clk), .a(ba), .w(bw), .y(my[l]), .ovf(mo[l]));
+            ot_hdc_v41x_q4dot_l #(.QL(l)) u (.clk(clk), .a(qa), .b(qb), .ua(ua), .ub(ub), .y(qy[l]), .ovf(qo[l]));
+            ot_hdc_v41x_bmul_l #(.ML(l)) m (.clk(clk), .a(ba), .w(bw), .y(my[l]), .ovf(mo[l]));
         end
         for (l = 3; l <= 6; l = l + 1) begin : g_a
-            ot_hdc_v41x_attn_bmul #(.ML(l)) u (.clk(clk), .a(ab), .b(bb), .pad(pad), .y(ay[l]), .flt(ao[l]));
+            ot_hdc_v41x_attn_bmul_l #(.ML(l)) u (.clk(clk), .a(ab), .b(bb), .pad(pad), .y(ay[l]), .flt(ao[l]));
         end
     endgenerate
     // LAT-3 outputs, delayed 0..3 cycles

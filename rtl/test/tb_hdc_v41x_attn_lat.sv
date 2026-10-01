@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
-// Performance + bit-exactness bench of ot_hdc_v41x_attn against tools/hdc_golden_v41.py (chunk8), driven by
+// W11 streaming-domain copy of rtl/test/tb_hdc_v41x_attn.sv driving the _l (latency-parameterised) unit.
+// Performance + bit-exactness bench of ot_hdc_v41x_attn_l against tools/hdc_golden_v41.py (chunk8), driven by
 // tools/rtl_hdc_v41x_attn_campaign.py.  Jobs (one layer's attention each) run back to back:
 //   job_v -> q (H words) -> KV rows (NL per beat, from row 0; after q when KV_AFTER_Q) -> scores out, compared
 //   -> P_DELAY cycles after the job's last score (the stream unit's softmax barrier) the probabilities
@@ -28,6 +29,11 @@ module tb_hdc_v41x_attn (input wire clk);
     parameter integer BUB = 0;             // percent
     parameter integer MAXCYC = 200000;
     parameter integer PWORDS = 1;          // probability words per handshake
+    parameter integer FPL = 3;             // add / product latencies (3/3 = as built)
+    parameter integer FML = 3;
+    parameter integer SC_CRED = 64;        // consumer credits (cover the score / pv round trip)
+    parameter integer PV_CRED = 64;
+    parameter integer NBANKP = 0;          // stationary banks (0 = as built)
     parameter integer ILV = 0;             // position-interleaved verify mode (engine ILV)
     parameter integer REPL = 0;            // engine REPL (per-tile index copies; needs ILV)
     parameter integer NSTAGE = 1;          // engine NSTAGE (2: two staging buffers; needs ILV; jobs carry no reuse flag)
@@ -84,8 +90,8 @@ module tb_hdc_v41x_attn (input wire clk);
     wire pv_v; wire [7:0] pv_c; wire [NT*H*32-1:0] pv_y; wire [NT*H-1:0] pv_f;
     reg pv_cr = 0;
     wire qk_iss, pv_iss;
-    ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS),
-                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS), .ILV(ILV), .REPL(REPL), .NSTAGE(NSTAGE)) dut (
+    ot_hdc_v41x_attn_l #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS),
+                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS), .ILV(ILV), .FPL(FPL), .FML(FML), .SC_CRED(SC_CRED), .PV_CRED(PV_CRED), .NBANKP(NBANKP), .REPL(REPL), .NSTAGE(NSTAGE)) dut (
         .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(job_t), .job_ready(job_ready),
         .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
