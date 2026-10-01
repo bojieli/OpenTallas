@@ -2,7 +2,7 @@
 // W11: ot_hdc_fp32_add_lat #(LAT = 3..6) against ot_hdc_fp32_add_fast, cycle-aligned, every output bit.
 // Stimulus from the C++ driver (random encodings biased to specials, subnormals, near-cancellation, ties).
 module tb_w11_fp32_add_lat (input wire clk, input wire rst_n, input wire v, input wire [31:0] a, input wire [31:0] b,
-                            output wire [4:0] mism, output wire ref_v);
+                            output wire [5:0] mism, output wire ref_v);
     wire [31:0] yr; wire [1:0] er;
     ot_hdc_fp32_add_fast u_ref (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(yr), .err(er), .valid_out(ref_v));
     // the reference delayed to each LAT
@@ -15,4 +15,8 @@ module tb_w11_fp32_add_lat (input wire clk, input wire rst_n, input wire v, inpu
         wire [34:0] want = (L == 3) ? {ref_v, er, yr} : (L == 4) ? d1 : (L == 5) ? d2 : (L == 6) ? d3 : d4;
         assign mism[L-3] = rst_n && ({vo, e, y} != want);
     end endgenerate
+    // the serial-domain input-cut LAT-4 variant (C_A)
+    wire [31:0] y4i; wire [1:0] e4i; wire v4i;
+    ot_hdc_fp32_add_lat4i u4i (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y4i), .err(e4i), .valid_out(v4i));
+    assign mism[5] = rst_n && ({v4i, e4i, y4i} != d1);
 endmodule

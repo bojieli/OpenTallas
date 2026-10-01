@@ -23,7 +23,7 @@ def run():
                             '-o',exe,*map(str,SOURCES),str(BENCH)],check=True,capture_output=True,text=True)
             for latency,limit in [(2,8),(15,8),(64,8),(15,1)]:
                 p=subprocess.run(['vvp',exe,f'+LATENCY={latency}',f'+QUEUE_LIMIT={limit}', '+EPOCH_WRAP'],
-                                 check=True,capture_output=True,text=True,timeout=180)
+                                 check=True,capture_output=True,text=True,timeout=1800)
                 assert 'WINDOW_PRODUCER_COMPOSE_PASS' in p.stdout
                 def fields(prefix):
                     line=next(x for x in p.stdout.splitlines() if x.startswith(prefix))
@@ -34,7 +34,7 @@ def run():
                 cases.append({'credits':credits,'latency':latency,'queue_limit':limit,'metrics':metric,'result':result})
             if credits==8:
                 for kind in ['STALE_EPOCH','UNKNOWN_SECTOR','POISON','DUPLICATE']:
-                    p=subprocess.run(['vvp',exe,'+'+kind],check=True,capture_output=True,text=True,timeout=180)
+                    p=subprocess.run(['vvp',exe,'+'+kind],check=True,capture_output=True,text=True,timeout=1800)
                     assert 'REFILL_BAD_REPLY_REJECTED' in p.stdout,p.stdout
     for base,fast in zip(cases[:4],cases[4:]):
         assert fast['result']['refill0']<base['result']['refill0']

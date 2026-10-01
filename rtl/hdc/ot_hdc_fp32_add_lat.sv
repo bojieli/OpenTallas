@@ -15,7 +15,11 @@
 // LAT 3 has the cuts of ot_hdc_fp32_add_fast (after A, after B, after C).
 // ---------------------------------------------------------------------------
 module ot_hdc_fp32_add_lat #(
-    parameter integer LAT = 3
+    parameter integer LAT = 3,
+    // CUTS >= 0 picks the extra cuts explicitly, bits {D, C, B, A} (LAT must be 3 + their count); -1: by LAT.
+    // W11 serial domain: CUTS = 4'b0001 (C_A, LAT 4) cuts the INPUT side, so an operand multiplexer in front of
+    // the unit shares stage 1 with the decode / compare instead of the alignment
+    parameter integer CUTS = -1
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -26,10 +30,13 @@ module ot_hdc_fp32_add_lat #(
     output reg  [1:0]  err,
     output reg         valid_out
 );
-    localparam integer CUT_A = (LAT >= 5) ? 1 : 0;
-    localparam integer CUT_B = (LAT >= 4) ? 1 : 0;
-    localparam integer CUT_C = (LAT >= 6) ? 1 : 0;
-    localparam integer CUT_D = (LAT >= 7) ? 1 : 0;     // inside B2: after the sentinel LZC
+    localparam integer CUT_A = (CUTS >= 0) ? CUTS % 2       : (LAT >= 5) ? 1 : 0;
+    localparam integer CUT_B = (CUTS >= 0) ? (CUTS / 2) % 2 : (LAT >= 4) ? 1 : 0;
+    localparam integer CUT_C = (CUTS >= 0) ? (CUTS / 4) % 2 : (LAT >= 6) ? 1 : 0;
+    localparam integer CUT_D = (CUTS >= 0) ? (CUTS / 8) % 2 : (LAT >= 7) ? 1 : 0;     // inside B2: after the sentinel LZC
+    generate if (CUTS >= 0 && CUT_A + CUT_B + CUT_C + CUT_D + 3 != LAT) begin : g_bad_cuts
+        ot_hdc_fp32_add_lat_CUTS_must_match_LAT u_trap ();
+    end endgenerate
     localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
 
     // ---- A1 ----------------------------------------------------------------------------------------
@@ -210,6 +217,11 @@ module ot_hdc_w11_cut #(parameter integer W = 1, parameter integer CUT = 0) (
 endmodule
 
 // fixed tops for the hardening sweep
+// the W11 serial-domain LAT-4 adder: the LAT-3 cuts plus C_A (after the decode / compare), bit-identical
+module ot_hdc_fp32_add_lat4i (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
+                              output wire [1:0] err, output wire valid_out);
+    ot_hdc_fp32_add_lat #(.LAT(4), .CUTS(1)) u (.*);
+endmodule
 module ot_hdc_fp32_add_lat3 (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
                              output wire [1:0] err, output wire valid_out);
     ot_hdc_fp32_add_lat #(.LAT(3)) u (.*);

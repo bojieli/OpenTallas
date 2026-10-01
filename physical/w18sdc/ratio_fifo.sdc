@@ -1,0 +1,10 @@
+# W18: 3:4 ratio-synchronous CDC. Both clocks divide one 3.6 GHz VCO, rising edges aligned at t = 0.
+create_clock -name fast -period 833.333 [get_ports wclk]
+create_clock -name slow -period 1111.111 [get_ports rclk]
+set_clock_uncertainty -setup 60 [all_clocks]
+set_clock_uncertainty -hold 25 [all_clocks]
+set_input_delay 166 -clock fast [get_ports {w_v w_d* wrst_n}]
+set_input_delay 222 -clock slow [get_ports {r_rdy rrst_n}]
+set_output_delay 166 -clock fast [get_ports {w_rdy}]
+set_output_delay 222 -clock slow [get_ports {r_v r_d*}]
+set_max_fanout 32 [current_design]
