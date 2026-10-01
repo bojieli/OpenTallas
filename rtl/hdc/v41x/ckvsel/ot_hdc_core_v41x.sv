@@ -111,6 +111,10 @@ module ot_hdc_core_v41x #(
     // X_ROM = 1 (W17): every weight op (QE LINQ and the ME weight class) runs on the adopted ROM field through
     // ot_v41_rom_adapt + ot_v41_spine (rtl/v41die); the field itself is outside the core (rom_fb / rom_fr).
     parameter integer RANK = 0,            // tensor-group rank (rank-aware DYN NEWBLK)
+    parameter integer CKV_SEL = 0,         // W11 CKV_SELECTED copy (rtl/hdc/v41x/ckvsel): the selected-row gather
+                                           // (SU a_ind IND_O into KV/KVT, a_so 512) is served by the die's
+                                           // ot_chip_v41x_ckv_die_service: its scalar KV writes are suppressed and
+                                           // ckv_sel_v announces the id list; QE QDQ4E writes are mirrored on ckv_nw_*
     parameter integer X_ROM = 0,
     parameter integer ROM_R = 128,         // field return regions (roots = VM write ports)
     parameter integer ROM_PHW = 6,         // phases the field holds (log2)
@@ -270,6 +274,11 @@ module ot_hdc_core_v41x #(
     output wire              att_packed_idle,
     // Full-shape window QDQ8 writes use an atomic packed block handoff.
     // Selected compressed KV still uses the scalar KV port above.
+    output wire              ckv_sel_v,        // CKV_SEL: the KVT gather issued (pulse)
+    output wire [AW-1:0]     ckv_sel_ibase,    // its id list (VM element address, 16-aligned)
+    output wire              ckv_nw_we,        // CKV_SEL: a QE QDQ4E write (the position's compressed row)
+    output wire [AW-1:0]     ckv_nw_addr,
+    output wire [1023:0]     ckv_nw_data,
     output wire              win_blk_v,
     input  wire              win_blk_ready,
     output wire [AW-1:0]     win_blk_kvt_base,
@@ -427,6 +436,18 @@ module ot_hdc_core_v41x #(
                         su_nout == NW'(1) && su_nin == NW'(512) &&
                         a_base == win_cap_src_base;
     wire win_issue = su_go && win_su_match && win_issue_ready;
+    // CKV_SEL: the selected compressed-row gather (W17 contract: a_ind IND_O, dst KV/KVT, a_base 0, a_so 512)
+    wire ckv_su_match = FULL_SHAPE && (CKV_SEL != 0) && d_unit == 3'd2 && a_ind == 2'd2 &&
+                        (dst == 2'd2 || dst == 2'd3) && a_src == 2'd0 && a_so == AW'(512);
+    wire ckv_issue = su_go && ckv_su_match;
+    reg ckv_scalar_suppress;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) ckv_scalar_suppress <= 1'b0;
+        else if (ckv_issue) ckv_scalar_suppress <= 1'b1;
+        else if (su_idle && !su_go) ckv_scalar_suppress <= 1'b0;
+    end
+    assign ckv_sel_v = ckv_issue && dst == 2'd3;
+    assign ckv_sel_ibase = a_ibase;
     reg win_scalar_suppress;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) win_scalar_suppress <= 1'b0;
@@ -1081,7 +1102,7 @@ module ot_hdc_core_v41x #(
             .kv_we(raw_kv_we), .kv_waddr(xs_kv_waddr), .kv_wdata(xs_kv_wdata),
             .res_we(xs_res_we), .res_addr(xs_res_addr), .res_data(xs_res_data), .fault(su_fault),
             .dbg_ops(), .dbg_elems());
-        assign xs_kv_we = raw_kv_we & {SUN{!win_scalar_suppress}};
+        assign xs_kv_we = raw_kv_we & {SUN{!win_scalar_suppress && !ckv_scalar_suppress}};
         assign vi_re = 0; assign vi_addr = 0; assign vs_re = 0; assign vs_addr = 0; assign crom_re = 0;
         assign crom_addr = 0; assign ewrom_re = 0; assign ewrom_addr = 0; assign vw_su_we = 0; assign vw_su_addr = 0;
         assign vw_su_data = 0; assign kv_we = 0; assign kv_waddr = 0; assign kv_wdata = 0; assign vw_rd_we = 0;
@@ -1127,7 +1148,7 @@ module ot_hdc_core_v41x #(
                 .kv_wdata(kv_wdata[sp*SW*32 +: SW*32]),
                 .red_we(vw_rd_we[sp*SW +: SW]), .red_addr(vw_rd_addr[sp*SW*AW +: SW*AW]),
                 .red_data(vw_rd_data[sp*SW*32 +: SW*32]), .fault(su_fault_v[sp]));
-            assign kv_we[sp*SW +: SW] = raw_kv_we & {SW{!win_scalar_suppress}};
+            assign kv_we[sp*SW +: SW] = raw_kv_we & {SW{!win_scalar_suppress && !ckv_scalar_suppress}};
         end
 
         assign xs_vi_re = 0; assign xs_vi_addr = 0; assign xs_rd_re = 0; assign xs_rd_addr = 0; assign xs_rd_src = 0;
@@ -1203,6 +1224,9 @@ module ot_hdc_core_v41x #(
         .kvb_fault(win_capture_fault),
         .qr_re(qrom_re), .qr_addr(qrom_addr), .qr_q(qrom_q), .fault(qe_fault));
 
+    assign ckv_nw_we = (CKV_SEL != 0) && ww_q_we[0] && qe_mode == 2'd3;
+    assign ckv_nw_addr = ww_q_addr[0 +: AW];
+    assign ckv_nw_data = ww_q_data[0 +: 1024];
     generate if (FULL_SHAPE && KV_HBM) begin : g_packed_window_write
         ot_hdc_v41x_window_kv_blocks #(.AW(AW), .POS_W(NW), .KVT_SH(13),
                                          .SEPARATE_ROWS(1)) u_blocks (

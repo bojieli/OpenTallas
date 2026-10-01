@@ -62,7 +62,11 @@ module ot_hdc_v41x_att_adapt #(
     parameter integer NL    = 4,           // rows per cycle
     parameter integer TROWS = 160,         // rows per job (>= the attention rows T_MAX)
     parameter integer NHMAX = 32,          // heads per op
-    parameter bit PACKED_KV = 0            // full-shape die supplies stored rows
+    parameter bit PACKED_KV = 0,           // full-shape die supplies stored rows
+    // runtime-composition cut (W17, `define V41_ATT_CUT): the engine ot_hdc_v41x_attn is composed outside and
+    // its ports travel as two buses, {engine inputs} out and {engine outputs} in; the adapter is unchanged
+    parameter integer ATW = 1 + 16 + 1 + D*16 + 1 + NL + NL*(D/32)*265 + 1 + 1 + TD*16 + 1,
+    parameter integer AFW = 4 + 16 + NL + NL*H*32 + NL*H + 2 + 8 + NL*(D/TD)*H*32 + NL*(D/TD)*H
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -108,7 +112,9 @@ module ot_hdc_v41x_att_adapt #(
     output reg  [MP*G*AW-1:0] o_addr,
     output reg  [MP*G*W-1:0] o_mask,
     output reg  [MP*G*W*32-1:0] o_data,
-    output reg               fault
+    output reg               fault,
+    output wire [ATW-1:0]    att_to,
+    input  wire [AFW-1:0]    att_from
 );
     localparam integer GW   = 265;
     localparam integer NG   = D / 32;               // group words per row
@@ -179,12 +185,18 @@ module ot_hdc_v41x_att_adapt #(
     reg          sc_cr, pv_cr;
     wire kv_stream_v = PACKED_KV ? (kv_v && packed_kv_v) : kv_v;
     assign packed_kv_ready = PACKED_KV && st == A_RUN && kv_v && kv_ready;
+`ifdef V41_ATT_CUT
+    assign att_to = {job_v, 16'(T), q_v, q_w, kv_stream_v, kv_m, kv_w, sc_cr, p_v, p_w, pv_cr};
+    assign {job_ready, q_ready, kv_ready, p_ready, sc_row, sc_m, sc_y, sc_f, sc_v, pv_v, pv_c, pv_y, pv_f} = att_from;
+`else
+    assign att_to = '0;
     ot_hdc_v41x_attn #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS)) u_attn (
         .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(T), .job_ready(job_ready),
         .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_stream_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),
         .p_v(p_v), .p_w(p_w), .p_ready(p_ready), .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f),
         .pv_cr(pv_cr), .qk_iss(), .pv_iss());
+`endif
 
     // job streams
     reg  [7:0]   jn;                                // job (H heads from jn*H)

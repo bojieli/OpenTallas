@@ -92,7 +92,7 @@ module ot_v41_field #(
             .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1),
             .xs_e1(xs_e1), .xs_pos(xs_pos), .xb_pos(xb_pos), .xb_v(xb_v), .xb_b(xb_b), .xb_sv(xb_sv),
             .xb_u(xb_u), .xb_d(xb_d), .pv(pv), .pval(pval), .prow(prow), .pseg(pseg), .pnseg(pnseg),
-            .perr(perr), .ppos(ppos), .busy(p_busy[g]), .fault(p_fault[g]));
+            .perr(perr), .ppos(ppos), .busy(p_busy[g]), .fault(p_fault[g]), .quiet());
         genvar m;
         for (m = 0; m < 2; m = m + 1) begin : g_m
             assign nv[0][2*g+m] = pv[m];
@@ -107,7 +107,7 @@ module ot_v41_field #(
                 .a_v(nv[l][2*g]), .a_t(nt[l][2*g]), .a_d(nd[l][2*g]), .a_e(ne[l][2*g]),
                 .b_v(nv[l][2*g+1]), .b_t(nt[l][2*g+1]), .b_d(nd[l][2*g+1]), .b_e(ne[l][2*g+1]),
                 .o_v(nv[l+1][g]), .o_t(nt[l+1][g]), .o_d(nd[l+1][g]), .o_e(ne[l+1][g]),
-                .fault(n_fault[NL - (NL >> l) + g]));     // level l starts after NL - NL/2^l nodes
+                .fault(n_fault[NL - (NL >> l) + g]), .quiet());     // level l starts after NL - NL/2^l nodes
         end
     end endgenerate
     wire [R-1:0] rf;

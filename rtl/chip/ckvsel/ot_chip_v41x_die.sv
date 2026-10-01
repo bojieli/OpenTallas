@@ -123,6 +123,14 @@ module ot_chip_v41x_die #(
                                           // 0: the key user base is tied low (one user)
     parameter bit WINDOW_RETAIN_L0 = 0, // opt-in single-use QK->PV packed-stage retention
     parameter bit WINDOW_HBM_ATTENTION = 0, // opt-in L0 WINDOW-only internal source
+    // W11 CKV_SELECTED (this copy, rtl/chip/ckvsel/; default 0 = the pinned die): an indexed layer's attention
+    // rows = the 128 WINDOW rows (u_source) then the K = 512 selected compressed rows from
+    // ot_chip_v41x_ckv_die_service (ids from the VM, owned-row fetch on the K client, all-gather on ckv_ag_*,
+    // the position's own row re-encoded from its QDQ4E values and written home by its owner die); T = 640.
+    // Needs FULL_SHAPE and WINDOW_HBM_ATTENTION.
+    parameter bit CKV_SELECTED = 0,
+    parameter integer CKV_BASE = 1 << 22,   // compressed-row region base sector, every stack
+    parameter integer CKV_NSLOT = 64,
     parameter bit KARB_LOCAL = 0,  // opt-in: per-PC local K arbitration (ot_chip_v41x_hbm_karb_local)
     parameter bit KARB_FENCE = 1,  // with KARB_LOCAL: explicit same-PC K read-after-write fence
     parameter integer WINDOW_REFILL_CREDITS = 1, // opt-in bounded tagged WINDOW refill (8: results/rtl/v41x_window_refill_credits.json)
@@ -340,6 +348,18 @@ module ot_chip_v41x_die #(
     output wire [7:0]        fault,            // {HBM out of range, KV prefetch, rtr overflow, coll, ctrl proto,
                                                //  qstream, 0, core}, sticky
     output wire [4:0]        unit_busy,
+    // -- CKV_SELECTED all-gather (the host's delay lines; tied off / unused when CKV_SELECTED = 0) --------------------
+    output wire              ckv_ag_tx_valid,  // this die's owned selected rows, to each of the other three dies
+    input  wire              ckv_ag_tx_ready,
+    output wire [9:0]        ckv_ag_tx_rank,   // selection rank (row 128 + rank of the attention job)
+    output wire [20:0]       ckv_ag_tx_gid,    // global compressed-row id
+    output wire [2303:0]     ckv_ag_tx_row,    // 288-B row: 512 E2M1 nibbles low first, 32 E4M3 scales
+    input  wire [2:0]        ckv_ag_rx_valid,  // from the other three dies (rank order, self skipped); always taken
+    input  wire [3*10-1:0]   ckv_ag_rx_rank,
+    input  wire [3*21-1:0]   ckv_ag_rx_gid,
+    input  wire [3*2304-1:0] ckv_ag_rx_row,
+    output wire [31:0]       ckv_cycles_to_ready, // selection issue -> all K rows present (last step)
+    output wire [5:0]        ckv_fault_code,
     output wire [2:0]        issue_unit,
     output wire [31:0]       qs_fetched,
     output wire [31:0]       qs_consumed,
@@ -456,6 +476,11 @@ module ot_chip_v41x_die #(
     wire [255:0] win_blk_codes;
     wire [7:0] win_blk_scale;
     wire xa_we, xa_re, xb_we, xb_re; wire [VWA-1:0] xa_waddr, xa_raddr, xb_waddr, xb_raddr;
+    wire cd_xb_re; wire [VWA-1:0] cd_xb_raddr;            // the collective DMA's VM read (shared with the CKV ids)
+    wire ckv_sel_v, ckv_nw_we; wire [AW-1:0] ckv_sel_ibase, ckv_nw_addr; wire [1023:0] ckv_nw_data;
+    wire svc_vm_re; wire [VWA-1:0] svc_vm_raddr;
+    assign xb_re = cd_xb_re || (CKV_SELECTED && svc_vm_re);
+    assign xb_raddr = (CKV_SELECTED && svc_vm_re) ? svc_vm_raddr : cd_xb_raddr;
     wire [3:0] xb_we4; wire [4*VWA-1:0] xb_waddr4; wire [4*512-1:0] xb_wdata4;
     wire [511:0] xa_wdata, xa_rq, xb_wdata, xb_rq;
     localparam integer COLL_AW = FULL_SHAPE ? 30 : 24;
@@ -472,7 +497,7 @@ module ot_chip_v41x_die #(
     ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL), .IDX_MULTIUSER(IDX_RING_MU), .IDX_KEY_SLICE_SECTORS((IDX_RING_MU != 0) ? IKH_SLICE : 0), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
                         .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
                         .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW),
-                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .X_ATT(X_ATT), .RANK(RANK)) u_tile (
+                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .X_ATT(X_ATT), .RANK(RANK), .CKV_SEL(CKV_SELECTED ? 1 : 0)) u_tile (
         .clk(clk), .rst_n(rn), .rom_fb(rom_fb), .rom_fr(rom_fr), .rom_ffault(rom_ffault), .att_to(att_to), .att_from(att_from),
         .start(t_start), .token(t_token), .pos(t_pos), .entry(host_mode ? host_entry : 14'd0),
         .done(core_done), .next_token(core_next_token), .next_val(core_next_val), .cycles(core_cycles),
@@ -511,6 +536,8 @@ module ot_chip_v41x_die #(
         .xa_we(xa_we), .xa_waddr(xa_waddr), .xa_wdata(xa_wdata), .xa_re(xa_re), .xa_raddr(xa_raddr), .xa_rq(xa_rq),
         .xb_we4(xb_we4), .xb_waddr4(xb_waddr4), .xb_wdata4(xb_wdata4),
         .xb_re(xb_re), .xb_raddr(xb_raddr), .xb_rq(xb_rq),
+        .ckv_sel_v(ckv_sel_v), .ckv_sel_ibase(ckv_sel_ibase),
+        .ckv_nw_we(ckv_nw_we), .ckv_nw_addr(ckv_nw_addr), .ckv_nw_data(ckv_nw_data),
         .coll_go(core_coll_go), .coll_op(core_coll_op), .coll_src(core_coll_src), .coll_dst(core_coll_dst),
         .coll_ibase(core_coll_ibase), .coll_n(core_coll_n), .coll_k(core_coll_k), .coll_stride(core_coll_stride), .coll_seq(core_coll_seq),
         .coll_rnd(core_coll_rnd), .coll_busy(coll_busy), .coll_fault(die_coll_fault),
@@ -535,6 +562,9 @@ module ot_chip_v41x_die #(
     wire [4*256-1:0] pm_wdata, ps_data; wire [4*32-1:0] pm_wstrb;
     wire kv_fault; wire [4:0] kv_code;
     generate if (!FULL_SHAPE) begin : g_reduced_kv
+        assign svc_vm_re = 1'b0; assign svc_vm_raddr = '0;
+        assign ckv_ag_tx_valid = 1'b0; assign ckv_ag_tx_rank = '0; assign ckv_ag_tx_gid = '0;
+        assign ckv_ag_tx_row = '0; assign ckv_cycles_to_ready = 0; assign ckv_fault_code = '0;
     assign win_service_v=1'b0; assign win_service_m=4'd0;
     assign win_service_w=16960'd0; assign win_service_staged=1'b0;
     assign win_service_done=1'b0; assign win_service_fault=1'b0;
@@ -565,7 +595,7 @@ module ot_chip_v41x_die #(
         .st_hold_cycles(kv_hold_cycles));
     end else begin : g_packed_kv
         wire [10:0] life_beats;
-        ot_chip_v41x_attn_desc_lifecycle #(.AW(AW), .NW(NW), .L0_ONLY(1)) u_desc_life (
+        ot_chip_v41x_attn_desc_lifecycle #(.AW(AW), .NW(NW), .L0_ONLY(!CKV_SELECTED)) u_desc_life (
             .clk(clk), .rst_n(rn), .desc_v(kvd_v && (!WINDOW_RETAIN_L0 || !WINDOW_HBM_ATTENTION || win_service_start_ready || win_service_busy)), .desc_user(step_user),
             .desc_pos(kvd_pos), .desc_tiles(kvd_tiles), .desc_k(kvd_k), .desc_nout(kvd_nout),
             .desc_wbase(kvd_wbase), .desc_ts(kvd_ts), .desc_ks(kvd_ks), .desc_js(kvd_js),
@@ -591,6 +621,10 @@ module ot_chip_v41x_die #(
         // all-gather.  Until the mixed-row scheduler is wired, any legacy
         // scalar KVD read faults and cannot release the core's kv_ok barrier.
         wire [3:0] w_v, w_rdy, w_we, w_wdone, w_sv, w_srdy;
+        wire [3:0] c_v, c_rdy, c_we, c_wr_done, c_sv, c_srdy;        // CKV_SELECTED K client
+        wire [4*K_HAW-1:0] c_addr; wire [15:0] c_len, c_sbeat; wire [4*16-1:0] c_tag, c_stag;
+        wire [1023:0] c_wdata, c_sdata; wire [127:0] c_wstrb;
+        wire ckv_fault;
         wire [4*K_HAW-1:0] w_addr;
         wire [15:0] w_len, w_s_beat;
         wire [4*16-1:0] w_tag, w_s_tag;
@@ -630,7 +664,7 @@ module ot_chip_v41x_die #(
             window_region_end <= (K_HAW+1)'(K_MEM);
         wire window_source_start = WINDOW_HBM_ATTENTION &&
             att_packed_desc_accept && window_region_ok && kvd_mmode &&
-            att_packed_desc_rows == 11'd128 && kvd_pos >= NW'(127);
+            att_packed_desc_rows == (CKV_SELECTED ? 11'd640 : 11'd128) && kvd_pos >= NW'(127);
         always @(posedge clk or negedge rn)
             if (!rn) win_service_gen <= 16'd0;
             else if (window_source_start) win_service_gen <= att_packed_desc_gen;
@@ -645,6 +679,56 @@ module ot_chip_v41x_die #(
         assign window_prime_ready = window_region_ok && source_prime_ready;
         assign win_service_fault = source_fault ||
             (att_packed_desc_accept && !window_region_ok);
+        // window beats (32 for 128 rows), then, with CKV_SELECTED, the service's 128 selected-row beats
+        wire wsrc_v, wsrc_ready; wire [3:0] wsrc_m; wire [4*16*265-1:0] wsrc_w;
+        reg ckv_ph; reg [5:0] ckv_wbeats; reg ckv_job_pend;
+        wire svc_kv_v, svc_job_ready, svc_job_done; wire [3:0] svc_kv_m; wire [4*16*265-1:0] svc_kv_w;
+        assign win_service_v = (CKV_SELECTED && ckv_ph) ? svc_kv_v : wsrc_v;
+        assign win_service_m = (CKV_SELECTED && ckv_ph) ? svc_kv_m : wsrc_m;
+        assign win_service_w = (CKV_SELECTED && ckv_ph) ? svc_kv_w : wsrc_w;
+        assign wsrc_ready = !(CKV_SELECTED && ckv_ph) && tile_packed_ready;
+        always @(posedge clk or negedge rn)
+            if (!rn) begin ckv_ph <= 1'b0; ckv_wbeats <= 6'd0; ckv_job_pend <= 1'b0; end
+            else if (window_source_start) begin ckv_ph <= 1'b0; ckv_wbeats <= 6'd0; ckv_job_pend <= CKV_SELECTED; end
+            else begin
+                if (ckv_job_pend && svc_job_ready) ckv_job_pend <= 1'b0;
+                if (wsrc_v && wsrc_ready) begin
+                    ckv_wbeats <= ckv_wbeats + 1'b1;
+                    if (CKV_SELECTED && ckv_wbeats == 6'd31) ckv_ph <= 1'b1;
+                end
+                if (svc_job_done) ckv_ph <= 1'b0;
+            end
+        if (CKV_SELECTED) begin : g_ckv
+            wire [5:0] svc_fc; wire svc_fault;
+            ot_chip_v41x_ckv_die_service #(.DIE_ID(RANK), .K(512), .POS_W(21), .AW(AW), .VWA(VWA), .HAW(K_HAW),
+                .TAGW(16), .CKV_BASE(CKV_BASE), .CKV_SECTORS(K_MEM - CKV_BASE), .NSLOT(CKV_NSLOT)) u_ckv (
+                .clk(clk), .rst_n(rn),
+                .sel_v(ckv_sel_v), .sel_vmword(VWA'(ckv_sel_ibase >> 4)),
+                .nw_we(ckv_nw_we), .nw_addr(ckv_nw_addr), .nw_data(ckv_nw_data),
+                .vm_re(svc_vm_re), .vm_raddr(svc_vm_raddr), .vm_rq(xb_rq), .vm_busy(),
+                .c_v(c_v), .c_rdy(c_rdy), .c_addr(c_addr), .c_len(c_len), .c_tag(c_tag), .c_we(c_we),
+                .c_wdata(c_wdata), .c_wstrb(c_wstrb), .c_wr_done(c_wr_done), .c_sv(c_sv), .c_srdy(c_srdy),
+                .c_stag(c_stag), .c_sbeat(c_sbeat), .c_sdata(c_sdata),
+                .ag_tx_valid(ckv_ag_tx_valid), .ag_tx_ready(ckv_ag_tx_ready), .ag_tx_rank(ckv_ag_tx_rank),
+                .ag_tx_gid(ckv_ag_tx_gid), .ag_tx_row(ckv_ag_tx_row),
+                .ag_rx_valid(ckv_ag_rx_valid), .ag_rx_rank(ckv_ag_rx_rank), .ag_rx_gid(ckv_ag_rx_gid),
+                .ag_rx_row(ckv_ag_rx_row),
+                .job_v(ckv_job_pend), .job_ready(svc_job_ready),
+                .kv_v(svc_kv_v), .kv_ready(ckv_ph && tile_packed_ready), .kv_m(svc_kv_m), .kv_w(svc_kv_w),
+                .job_done(svc_job_done),
+                .fault(svc_fault), .fault_code(svc_fc), .rows_ready(),
+                .st_rows_local(), .st_rows_remote(), .st_cycles_to_ready(ckv_cycles_to_ready));
+            assign ckv_fault = svc_fault || (ckv_sel_v && ckv_sel_ibase[3:0] != 0);
+            assign ckv_fault_code = svc_fc;
+        end else begin : g_no_ckv
+            assign svc_kv_v = 1'b0; assign svc_kv_m = 4'd0; assign svc_kv_w = '0; assign svc_job_ready = 1'b0;
+            assign svc_job_done = 1'b0; assign svc_vm_re = 1'b0; assign svc_vm_raddr = '0;
+            assign c_v = 4'b0; assign c_addr = '0; assign c_len = '0; assign c_tag = '0; assign c_we = 4'b0;
+            assign c_wdata = '0; assign c_wstrb = '0; assign c_srdy = 4'b0;
+            assign ckv_ag_tx_valid = 1'b0; assign ckv_ag_tx_rank = '0; assign ckv_ag_tx_gid = '0;
+            assign ckv_ag_tx_row = '0; assign ckv_cycles_to_ready = 0; assign ckv_fault = 1'b0;
+            assign ckv_fault_code = '0;
+        end
         ot_chip_v41x_window_attn_source #(.POS_W(NW), .SEC_W(K_HAW),
             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK), .RETAIN_L0(WINDOW_RETAIN_L0),
             .REFILL_CREDITS(WINDOW_REFILL_CREDITS), .STREAM_II1(WINDOW_STREAM_II1)) u_source (
@@ -671,8 +755,8 @@ module ot_chip_v41x_die #(
             .refill_cycles(), .sectors_read(sectors_read),
             .rows_refilled(), .rows_fetched(rows_fetched),
             .blocks_written(blocks_written), .sectors_written(sectors_written),
-            .kv_v(win_service_v), .kv_ready(tile_packed_ready),
-            .kv_m(win_service_m), .kv_w(win_service_w),
+            .kv_v(wsrc_v), .kv_ready(wsrc_ready),
+            .kv_m(wsrc_m), .kv_w(wsrc_w),
             .m_v(w_v), .m_rdy(w_rdy), .m_addr(w_addr), .m_len(w_len),
             .m_tag(w_tag), .m_we(w_we), .m_wdata(w_wdata),
             .m_wstrb(w_wstrb), .m_wr_done(w_wdone),
@@ -680,6 +764,11 @@ module ot_chip_v41x_die #(
             .s_beat(w_s_beat), .s_data(w_s_data));
         assign win_fault = win_service_fault;
         end else begin : g_window_external_attention
+        assign c_v = 4'b0; assign c_addr = '0; assign c_len = '0; assign c_tag = '0; assign c_we = 4'b0;
+        assign c_wdata = '0; assign c_wstrb = '0; assign c_srdy = 4'b0; assign ckv_fault = 1'b0;
+        assign svc_vm_re = 1'b0; assign svc_vm_raddr = '0;
+        assign ckv_ag_tx_valid = 1'b0; assign ckv_ag_tx_rank = '0; assign ckv_ag_tx_gid = '0;
+        assign ckv_ag_tx_row = '0; assign ckv_cycles_to_ready = 0; assign ckv_fault_code = '0;
         assign win_service_v=1'b0; assign win_service_m=4'd0;
         assign win_service_w=16960'd0; assign win_service_staged=1'b0;
         assign win_service_done=1'b0; assign win_service_fault=1'b0;
@@ -756,9 +845,9 @@ module ot_chip_v41x_die #(
             .w_tag(w_tag), .w_we(w_we), .w_wdata(w_wdata), .w_wstrb(w_wstrb),
             .w_wr_done(w_wdone), .w_sv(w_sv), .w_srdy(w_srdy),
             .w_stag(w_s_tag), .w_sbeat(w_s_beat), .w_sdata(w_s_data),
-            .c_v(4'b0), .c_rdy(), .c_addr('0), .c_len('0), .c_tag('0),
-            .c_we(4'b0), .c_wdata('0), .c_wstrb('0), .c_wr_done(),
-            .c_sv(), .c_srdy(4'b0), .c_stag(), .c_sbeat(), .c_sdata(),
+            .c_v(c_v), .c_rdy(c_rdy), .c_addr(c_addr), .c_len(c_len), .c_tag(c_tag),
+            .c_we(c_we), .c_wdata(c_wdata), .c_wstrb(c_wstrb), .c_wr_done(c_wr_done),
+            .c_sv(c_sv), .c_srdy(c_srdy), .c_stag(c_stag), .c_sbeat(c_sbeat), .c_sdata(c_sdata),
             .p_v(p_v), .p_rdy(p_rdy), .p_addr(p_addr), .p_len(p_len),
             .p_tag(p_tag), .p_we(p_we), .p_wdata(p_wdata), .p_wstrb(p_wstrb),
             .p_wr_done(), .p_sv(p_sv), .p_srdy(p_srdy), .p_stag(p_stag),
@@ -775,7 +864,7 @@ module ot_chip_v41x_die #(
         assign rope_fault=rope_pf_fault;
         assign kv_ok = packed_desc_ok;
         assign kv_q = '0;
-        assign kv_fault = win_fault | unsupported_read | bad_block | rope_fault |
+        assign kv_fault = win_fault | unsupported_read | bad_block | rope_fault | ckv_fault |
                           att_packed_desc_fault;
         assign kv_code = win_code | {rope_fault, unsupported_read, bad_block, 2'b0};
         assign kv_ops = 0;
@@ -960,7 +1049,7 @@ module ot_chip_v41x_die #(
         .topk(FULL_SHAPE && coll_topk), .ibase(VWA'(core_coll_ibase >> 4)), .tk_k(16'(core_coll_k)),
         .tk_stride(core_coll_stride),
         .busy(coll_busy), .fault(dma_fault), .words_out(), .words_in(),
-        .vm_re(xb_re), .vm_raddr(xb_raddr), .vm_rq(xb_rq), .vm_we(xb_we),
+        .vm_re(cd_xb_re), .vm_raddr(cd_xb_raddr), .vm_rq(xb_rq), .vm_we(xb_we),
         .vm_waddr(xb_waddr), .vm_wdata(xb_wdata), .vm_ready4(1'b1),
         .vm_we4(xb_we4), .vm_waddr4(xb_waddr4), .vm_wdata4(xb_wdata4),
         .e_valid(e_valid), .e_ready(e_ready), .e_data(e_data), .e_last(e_last), .e_mode(e_mode), .e_tag(e_tag),

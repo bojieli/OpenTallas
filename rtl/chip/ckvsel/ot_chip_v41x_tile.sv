@@ -94,6 +94,7 @@ module ot_chip_v41x_tile #(
     parameter integer VM_AW   = FULL_SHAPE ? 19 : 16,
     // X_ROM (W17): weight ops on the adopted ROM field; the field is outside the tile (rom_fb / rom_fr)
     parameter integer RANK    = 0,
+    parameter integer CKV_SEL = 0,       // W11 CKV_SELECTED copy: passed to the core (rtl/hdc/v41x/ckvsel)
     parameter integer X_ROM   = 0,
     parameter integer ROM_R   = 128,
     parameter integer ROM_PHW = 6,
@@ -161,6 +162,11 @@ module ot_chip_v41x_tile #(
     // Packed QDQ8 window-row block handoff. The 10-bit user is package
     // context supplied by the die; CKV selected rows never use this path.
     input  wire [9:0]        window_user,
+    output wire              ckv_sel_v,
+    output wire [AW-1:0]     ckv_sel_ibase,
+    output wire              ckv_nw_we,
+    output wire [AW-1:0]     ckv_nw_addr,
+    output wire [1023:0]     ckv_nw_data,
     output wire              win_blk_v,
     input  wire              win_blk_ready,
     output wire [9:0]        win_blk_user,
@@ -387,7 +393,7 @@ module ot_chip_v41x_tile #(
                        .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_MULTIUSER(IDX_MULTIUSER),
                        .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS), .IDX_RING(IDX_RING),
                        .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL),
-                       .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK)) u_core (
+                       .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .rom_xre(rom_xre), .rom_xaddr(rom_xaddr), .rom_xq(rom_xq), .rom_we(rom_we), .rom_waddr(rom_waddr),
         .rom_wdata(rom_wdata), .rom_vre(rom_vre), .rom_vaddr(rom_vaddr), .rom_vq(rom_vq), .rom_fb(rom_fb),
@@ -431,6 +437,8 @@ module ot_chip_v41x_tile #(
         .att_packed_kv_m(att_packed_kv_m), .att_packed_kv_w(att_packed_kv_w),
         .att_packed_kv_fault(att_packed_kv_fault),
         .att_packed_issue(att_packed_issue), .att_packed_idle(att_packed_idle),
+        .ckv_sel_v(ckv_sel_v), .ckv_sel_ibase(ckv_sel_ibase),
+        .ckv_nw_we(ckv_nw_we), .ckv_nw_addr(ckv_nw_addr), .ckv_nw_data(ckv_nw_data),
         .win_blk_v(win_blk_v), .win_blk_ready(win_blk_ready),
         .win_blk_kvt_base(win_blk_kvt_base), .win_blk_row(win_blk_row),
         .win_blk_kvt_row(win_blk_kvt_row),

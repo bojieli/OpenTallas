@@ -36,7 +36,9 @@ module ot_v41_spine #(
     parameter integer VRD = 64,          // x elements read a cycle
     parameter integer KMAX = 6144,
     parameter integer BST = 2,
-    parameter integer NSEG = 8
+    parameter integer NSEG = 8,
+    // derived: broadcast bus width
+    parameter integer BW = 1 + PHW + 3 + 1 + 1 + 1 + 8 + 3 + 2 + 256 + 10 + 256 + 10 + 3 + 3 + 1 + 3 + 4 + 32 + 1024
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -48,6 +50,7 @@ module ot_v41_spine #(
     input  wire [VAW-1:0]    i_xps,
     input  wire [VAW-1:0]    i_obase,
     input  wire [VAW-1:0]    i_ops,
+    input  wire [1:0]        i_fmt,        // row format: 0 the phase ROM's, 1 all FP32, 2 all BF16
     output wire              ready,
     output wire              idle,
     // vector memory: x read (VRD consecutive elements, registered response next cycle)
@@ -79,6 +82,7 @@ module ot_v41_spine #(
     output wire [3:0]        f_xb_sv,
     output wire [31:0]       f_xb_u,
     output wire [1023:0]     f_xb_d,
+    output wire [BW-1:0]     f_bus,        // the same broadcast as one bus (runtime-composition cut)
     // field return (region roots)
     input  wire [R-1:0]      r_v,
     input  wire [16*R-1:0]   r_row,
@@ -113,6 +117,7 @@ module ot_v41_spine #(
     reg [PHW-1:0] ph;
     reg [2:0] np;
     reg [VAW-1:0] xbase, xps, obase, ops;
+    reg [1:0] fmt;
     reg [63:0] pw;
     reg [15:0] rsplit;
     wire       fam = pw[0];
@@ -133,6 +138,8 @@ module ot_v41_spine #(
     reg        rq_v;                             // read issued last cycle
     reg [2:0]  rq_pos;
     reg [13:0] rq_k;
+    reg [13:0] is_k;                             // read being issued (x_re)
+    reg [2:0]  is_pos;
     // quantisers (FP8 family): two 32-blocks a cycle
     wire [1:0] aq_vo, aq_f;
     wire [511:0] aq_q;
@@ -213,7 +220,6 @@ module ot_v41_spine #(
         end
     end
     // ------------------------------------------------------------------ broadcast wire stages
-    localparam integer BW = 1 + PHW + 3 + 1 + 1 + 1 + 8 + 3 + 2 + 256 + 10 + 256 + 10 + 3 + 3 + 1 + 3 + 4 + 32 + 1024;
     wire [BW-1:0] bc_in = {bt_cfg, ph, np, bt_go, bt_gobf, bt_xs_v, bt_p, bt_b, bt_sv, bt_q0, bt_e0, bt_q1, bt_e1,
                            bt_pos, bt_pos, bt_xb_v, bt_b, bt_bsv, bt_u, bt_d};
     wire [BW-1:0] bc;
@@ -224,6 +230,7 @@ module ot_v41_spine #(
     end endgenerate
     assign {f_cfg_go, f_cfg_ph, f_cfg_np, f_go, f_go_bf, f_xs_v, f_xs_p, f_xs_b, f_xs_sv, f_xs_q0, f_xs_e0, f_xs_q1,
             f_xs_e1, f_xs_pos, f_xb_pos, f_xb_v, f_xb_b, f_xb_sv, f_xb_u, f_xb_d} = bc;
+    assign f_bus = bc;
 
     // ------------------------------------------------------------------ control
     integer kr;
@@ -233,13 +240,17 @@ module ot_v41_spine #(
             st <= S_IDLE; fault <= 1'b0; bt_go <= 1'b0; bt_gobf <= 1'b0; bt_cfg <= 1'b0;
             ld_run <= 1'b0; rq_v <= 1'b0; sm_run <= 1'b0; sw_v <= 1'b0; x_re <= 1'b0;
             have[0] <= 15'd0; have[1] <= 15'd0; w_we <= {R{1'b0}}; phase_cycles <= 32'd0; cyc <= 32'd0;
+            rows_left <= 19'd0;
         end else begin
             bt_go <= 1'b0; bt_gobf <= 1'b0; bt_cfg <= 1'b0;
             cyc <= cyc + 32'd1;
             if (f_fault || (|aq_f)) fault <= 1'b1;
+            // rows still to write: loaded when the elements start, then one per written row
+            if (st == S_CFG && cfg_cnt == 6'(CW + 1)) rows_left <= 19'(nrow) * (19'(np) + 19'd1);
+            else rows_left <= rows_left - 19'($countones(r_v));
             case (st)
                 S_IDLE: if (go) begin
-                    ph <= i_ph; np <= i_np; xbase <= i_xbase; xps <= i_xps; obase <= i_obase; ops <= i_ops;
+                    ph <= i_ph; np <= i_np; xbase <= i_xbase; xps <= i_xps; obase <= i_obase; ops <= i_ops; fmt <= i_fmt;
                     pw <= phrom[{i_ph, 1'b0}]; rsplit <= phrom[{i_ph, 1'b1}][15:0];
                     st <= S_CFG; bt_cfg <= 1'b1; cfg_cnt <= 6'd0; cyc <= 32'd0;
                 end
@@ -248,7 +259,6 @@ module ot_v41_spine #(
                     // the elements load CW words (ROM read + register): go after the last one is written
                     if (cfg_cnt == 6'(CW + 1)) begin
                         st <= S_GO; bt_go <= 1'b1; bt_gobf <= fam;
-                        rows_left <= 19'(nrow) * 19'({16'd0, np} + 19'd1);
                     end
                 end
                 S_GO: begin
@@ -263,9 +273,10 @@ module ot_v41_spine #(
             endcase
             // loader: VRD elements a cycle in K order, position after position; the streamer's position
             // parity buffer is reused only after its beats are all sent (positions are streamed in order)
-            x_re <= 1'b0; rq_v <= x_re; rq_k <= ld_k; rq_pos <= ld_pos;
+            // rq_*: the read issued last cycle (its data arrives this cycle)
+            x_re <= 1'b0; rq_v <= x_re; rq_k <= is_k; rq_pos <= is_pos;
             if (ld_run && !(ld_pos != sm_pos && ld_pos[0] == sm_pos[0])) begin
-                x_re <= 1'b1;
+                x_re <= 1'b1; is_k <= ld_k; is_pos <= ld_pos;
                 x_addr <= xbase + VAW'(ld_pos) * xps + VAW'(ld_k);
                 if (ld_k + 14'(VRD) >= kk) begin
                     ld_k <= 14'd0;
@@ -297,11 +308,11 @@ module ot_v41_spine #(
             for (kr = 0; kr < R; kr = kr + 1) if (r_v[kr]) begin
                 w_we[kr] <= 1'b1;
                 w_addr[VAW*kr +: VAW] <= obase + VAW'(r_row[16*kr +: 16]) + VAW'(r_pos[3*kr +: 3]) * ops;
-                w_data[32*kr +: 32] <= ((r_row[16*kr +: 16] < rsplit) ? pw[62] : pw[63]) ? r_fp32[32*kr +: 32]
+                w_data[32*kr +: 32] <= ((fmt == 2'd1) || (fmt == 2'd0 && ((r_row[16*kr +: 16] < rsplit) ? pw[62] : pw[63])))
+                                       ? r_fp32[32*kr +: 32]
                                                                                          : {r_bf16[16*kr +: 16], 16'd0};
                 if (r_e[kr]) fault <= 1'b1;
             end
-            rows_left <= rows_left - 19'($countones(r_v));
         end
     end
     // buffers

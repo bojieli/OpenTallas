@@ -47,16 +47,17 @@ POOL = ("ot_hdc_v41x_idx_pcol", "ot_hdc_v41x_idx_hsum", "ot_hdc_v41x_idx_pool_fi
 HBM_MODELS = [ROOT / "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv", ROOT / "rtl/hdc/kv/ot_hdc_hbm_model.sv"]
 EXTRA = [ROOT / p for p in ("rtl/hdc/hbm/ot_hdc_qstream.sv", "rtl/hdc/kv/ot_hdc_hbm_model.sv",
                             "rtl/rom/ot_rom_pkg_ctrl_x.sv", "rtl/rom/ot_rom_fabric_router.sv",
-                            "rtl/rom/ot_rom_oneshot_px.sv")]
+                            "rtl/rom/ot_w15_rom_oneshot_px.sv")]
 CHIP = [ROOT / f"rtl/chip/{n}.sv" for n in ("ot_chip_v41x_kv_prefetch", "ot_chip_v41x_hbm_karb",
                                             "ot_chip_v41x_hbm3e_phy", "ot_chip_v41x_coll_transpose",
-                                            "ot_chip_v41x_coll_dma", "ot_chip_v41x_tile",
+                                            "ot_w15_coll_dma", "ot_chip_v41x_tile",
                                             "ot_chip_v41x_die")]
 # Modules the die / tile / core instantiate (behind their opt-in parameters) that this list predated: added
 # to the hierarchy by 2dd02d37 (idx shard reader/addr), 6ed0adff (ME xbank), 777dee24 (window KV prefetch
 # chain), 52d74a94 (local K arbitration) and 27bea8d3 (packed window attention, compact QROM word, RoPE SU
 # word) without this tool's list following, so the smoke stopped elaborating (MODMISSING).
 DIE_DEPS = [ROOT / p for p in (
+    "rtl/chip/ot_coll_topk_merge.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
     "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv", "rtl/chip/ot_chip_v41x_attn_row_merge.sv",
     "rtl/chip/ot_chip_v41x_hbm_karb_local.sv", "rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv",
     "rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv", "rtl/chip/ot_chip_v41x_karb_region.sv",
