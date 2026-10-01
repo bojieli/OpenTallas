@@ -92,7 +92,7 @@ def prove(before, after, top, sequential_types):
     return {'verdict':'PASS', 'original_cells':len(a['cells']), 'transformed_cells':len(b['cells']), 'every_original_cell_and_type_parameters_ports_equal':True, 'cell_port_connections_compared':connection_count, 'original_named_nets_compared':len(a['netnames']), 'top_ports_compared':len(a['ports']), 'original_type_counts':dict(sorted(counts.items())), 'added_tie_counts':dict(sorted(tie_counts.items())), 'added_tie_count':len(added), 'added_tie_area_um2':len(added)*0.04374, 'sequential_before':seq, 'sequential_after':seq, 'guard_expected':338023, 'guard_minimum':270418, 'fault_injection_rejected':mutants}
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('--work', type=Path, required=True); ap.add_argument('--lib-dir',type=Path,required=True); args=ap.parse_args()
+    ap=argparse.ArgumentParser(); ap.add_argument('--work', type=Path, required=True); ap.add_argument('--lib-dir',type=Path,required=True); ap.add_argument('--export-check', action='store_true'); args=ap.parse_args()
     seq=set(); library_pins={}
     for p in sorted(args.lib_dir.glob('*RVT_TT*lib')):
         text=p.read_text();library_pins[str(p)]=digest(p)
@@ -103,6 +103,16 @@ def main():
     before=json.loads((args.work/'before.json').read_text());after=json.loads((args.work/'after.json').read_text())
     result=prove(before,after,'ot_v41_attn_eng_ctl_phys',seq)
     result['input_sha256']={n:digest(args.work/n) for n in ['original.v','before.json','after.json','tied.v','transform.ys','transform.log']}
+    if args.export_check:
+        exported=json.loads((args.work/'reimport.json').read_text())
+        for design in [before,exported]:
+            for module in design['modules'].values():
+                for kind in ['cells','netnames']:
+                    for item in module.get(kind,{}).values():
+                        item.get('attributes',{}).pop('src',None)
+        export_result=prove(before,exported,'ot_v41_attn_eng_ctl_phys',seq)
+        result['export_reimport_proof']={k:v for k,v in export_result.items() if k != 'original_type_counts'}
+        result['export_reimport_json_sha256']=digest(args.work/'reimport.json')
     result['library_sha256']=library_pins;result['checker_sha256']=digest(__file__);result['physical_run_launched']=False;result['arithmetic_or_timing_optimization_run']=False
     (args.work/'proof.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k not in ['original_type_counts','library_sha256','input_sha256']}))
