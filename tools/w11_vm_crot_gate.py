@@ -47,6 +47,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
+import w11_vm_variant  # noqa: E402,F401  (VM-H / C_rotate sources and rules: rtl/w11crot)
 import rtl_hdc_v41x_vec_campaign as C      # noqa: E402
 import hdc_isa_v41 as I                    # noqa: E402
 import w11_vm_dist_gate as G               # noqa: E402
@@ -61,12 +62,13 @@ VMCROT = re.compile(r"VMCROT roots=(\d+) rows=(\d+) nonlocal=(\d+) e=(\d+) wr_no
 SU_KEYS = ("CR_LEAD", "CR_RD", "CR_GX", "CR_WR", "CR_RES")
 SOURCES = ["rtl/chip/ot_v41_vm_crot.sv", "rtl/v41rom/ot_v41_ret.sv", "rtl/chip/ot_v41_vm_dist.sv",
            "rtl/chip/ot_v41_vm_dist_group.sv", "rtl/chip/ot_v41_vm_dist_bank.sv", "rtl/chip/ot_v41_vm_dist_pipe.sv",
-           "rtl/hdc/v41x/ot_hdc_v41x_vec.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
-           "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv",
-           "rtl/hdc/v41x/ot_hdc_core_v41x.sv", "rtl/chip/ot_chip_v41x_tile.sv", "rtl/chip/ot_chip_v41x_die.sv",
-           "rtl/test/tb_hdc_v41x_vec.sv", "rtl/test/tb_chip_v41x_die_vmdist.sv", "tools/rtl_hdc_v41x_vec_campaign.py",
+           "rtl/w11crot/ot_hdc_v41x_vec.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+           "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv", "rtl/w11crot/ot_hdc_v41x_su_adapt.sv",
+           "rtl/w11crot/ot_hdc_core_v41x.sv", "rtl/w11crot/ot_chip_v41x_tile.sv", "rtl/w11crot/ot_chip_v41x_die.sv",
+           "rtl/w11crot/tb_hdc_v41x_vec.sv", "rtl/test/tb_chip_v41x_die_vmdist.sv", "tools/rtl_hdc_v41x_vec_campaign.py",
            "tools/w11_vm_dist_gate.py", "tools/w11_vm_dist_die_gate.py", "tools/w11_su_softmax_spec.py",
-           "tools/w11_vm_crot_gate.py", "results/floorplan/v41_vm_crot_stages.json"]
+           "tools/w11_vm_crot_gate.py", "tools/w11_vm_variant.py", "rtl/hdc/ot_hdc_fastfp.sv",
+           "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_prefix.sv", "results/floorplan/v41_vm_crot_stages.json"]
 
 
 def sha(p: Path) -> str:

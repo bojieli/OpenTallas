@@ -453,38 +453,6 @@ def check_reducer_claim(rng, trials=3000):
 
 
 # ---- the unit's layout (mirrors ot_hdc_v41x_vec's set-up) -------------------------------------------------
-# Distributed VM option H (ot_hdc_v41x_vec VMD_NG): the lane groups the unit's layout rule serves; 0 = off.
-# A benchmark of the H unit sets it to N / 8 (tools/w11_vm_dist_gate.py) so the schedule's chaining credits
-# follow the H layout.
-VMD_NG = 0
-
-
-def vmd_segmented(f, S, no_f, ni_f, ng):
-    """Option H: an op packed several rows a vector whose streams would need a different rotation in every
-    row slot (a unit stream with so != S mod ng, a per-row scalar with so != 0).  The unit then lays it out one
-    row a vector (ot_hdc_v41x_vec VMD_NG, h_seg)."""
-    mk = ng - 1
-    if no_f <= 1:
-        return False
-    st = []
-    for s in "abcd":
-        if f[f"{s}src"] == I.SRC_VM and not (s == "a" and f["aind"]) and not (s == "c" and f["cpair"]) and \
-                not (s in "bd" and f["bhalf"] and f[f"{s}si"] != 0):
-            st.append((f[f"{s}so"], f[f"{s}si"]))
-    if f["aind"] == I.IND_I:
-        st.append((0, 1))
-    elif f["aind"] == I.IND_O:
-        st.append((1, 0))
-    if f["dst"] == I.DST_VM:
-        st.append((f["oso"], f["osi"]))
-    for so, si in st:
-        if (si == 1 or ni_f == 1) and ((so - S) & mk) != 0:
-            return True
-        if si == 0 and ni_f > 1 and so != 0:
-            return True
-    return False
-
-
 def layout(f, N, M):
     no, ni = f["nout"], f["nin"]
     scalar = f["sfu"] in SCALAR_SFU
@@ -515,8 +483,6 @@ def layout(f, N, M):
     S = 1 << ls
     packed = (not wnf) and ni_f <= S
     nsh = (lvw - ls) if (packed and (not red or pow2(f["rso"]))) else 0
-    if VMD_NG and nsh and vmd_segmented(f, S, no_f, ni_f, VMD_NG):
-        nsh = 0
     span = red and not packed
     nvs = no_f * (ni_f >> ls) if wnf else -(-ni_f // S)
     L = clog2(nvs)

@@ -69,9 +69,45 @@ def load_fp(path: str | None):
     return json.loads(text), src
 
 
+SQ_REF = ("claude/w18-die-assembly", "dfce8d40", "results/physical_abi3/asap7/chip/v41_w18/hub_square/plus/floorplan.json")
+
+
+def load_ref(ref):
+    text = subprocess.run(["git", "show", f"{ref[1]}:{ref[2]}"], cwd=ROOT, capture_output=True, text=True,
+                          check=True).stdout
+    return json.loads(text), dict(branch=ref[0], commit=ref[1], path=ref[2],
+                                  sha256=hashlib.sha256(text.encode()).hexdigest())
+
+
+def square_geometry(fp):
+    """Worst distances of a hub whose lanes are the SU_VECTOR* parts around the VM part (any arrangement): lane-tile
+    centres on a TILE_UM grid inside each lane part, bank = any point of the VM part (its corners bound it)."""
+    parts = fp["hub"]["parts"]
+    V = parts["HUB_VM"]
+    lanes = []
+    for k, r in parts.items():
+        if r["kind"].startswith("SU_VECTOR"):
+            nx, ny = max(1, int(r["w"] // TILE_UM)), max(1, int(r["h"] // TILE_UM))
+            for i in range(nx):
+                for j in range(ny):
+                    lanes.append((r["x"] + TILE_UM * (i + 0.5), r["y"] + TILE_UM * (j + 0.5)))
+    corners = [(V["x"], V["y"]), (V["x"] + V["w"], V["y"]), (V["x"], V["y"] + V["h"]), (V["x"] + V["w"], V["y"] + V["h"])]
+    c = (V["x"] + V["w"] / 2, V["y"] + V["h"] / 2)
+    md = lambda p, q: abs(p[0] - q[0]) + abs(p[1] - q[1])
+    co = parts.get("HUB_COLLECTIVE")
+    cc = (co["x"] + co["w"] / 2, co["y"] + co["h"] / 2) if co else c
+    ctrl = max(md(c, k) for k in corners)
+    return dict(bank_um=[round(V["w"], 1), round(V["h"], 1)], lane_tiles=len(lanes),
+                worst_bank_to_lane_um=round(max(md(k, t) for k in corners for t in lanes), 1),
+                controller_to_farthest_bank_um=round(ctrl, 1),
+                controller_to_farthest_tile_um=round(max(md(c, t) for t in lanes), 1),
+                collective_to_farthest_bank_um=round(md(cc, c) + ctrl, 1))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--floorplan", default=None)
+    ap.add_argument("--square-floorplan", default=None)
     ap.add_argument("--out", type=Path, default=OUT)
     a = ap.parse_args()
     fp, src = load_fp(a.floorplan)
@@ -130,6 +166,17 @@ def main():
                                    X_GATHER_STAGES=1 + r481(ctrl_bank), RET_SCATTER_STAGES=r481(ctrl_bank),
                                    COLL_WRITE_STAGES=r481(coll_um),
                                    note="481 um a stage (W18b commit 32155a8f / W16b); not used for the RTL")
+    # the SQUARE (plus) hub W18b placed after root approved it as a free fix (claude/w18-die-assembly dfce8d40): the
+    # bank square at the centre, a lane arm on each side, collective / gather / HC pieces in the corners
+    sq_fp, sq_src = load_fp(a.square_floorplan) if a.square_floorplan else load_ref(SQ_REF)
+    sq = square_geometry(sq_fp)
+    variants["square_hub"] = dict(
+        CR_LEAD=st(sq["controller_to_farthest_bank_um"]), CR_RD=1 + st(sq["worst_bank_to_lane_um"]) + rot_mux,
+        CR_GX=ben_mux - rot_mux, CR_WR=st(sq["worst_bank_to_lane_um"]) + rot_mux,
+        CR_RES=st(sq["controller_to_farthest_bank_um"]), X_GATHER_STAGES=1 + st(sq["controller_to_farthest_bank_um"]),
+        RET_SCATTER_STAGES=st(sq["controller_to_farthest_bank_um"]),
+        COLL_WRITE_STAGES=st(sq["collective_to_farthest_bank_um"]), floorplan=sq_src, geometry=sq,
+        note="root-approved square (plus) hub; stage parameters only, the RTL is unchanged")
     su_extra = p["CR_LEAD"] + p["CR_RD"] + p["CR_WR"]
     rec = dict(
         schema="opentallas.floorplan.w11_vm_crot_stages.v1",

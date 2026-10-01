@@ -155,6 +155,40 @@ module ot_hdc_v41x_vec #(
     parameter integer KVT_SH = 9,
     parameter integer BCAST_STAGES = 0, // register stages of the pipelined controller -> lane broadcast tree
     parameter integer RET_STAGES = 0,   // register stages of the lane / reducer -> vector-memory write path
+    // the reducer's result path when it differs from the element writes' (-1: RET_STAGES).  The distributed
+    // VM (rtl/chip/ot_v41_vm_dist.sv) writes elements into the lane's own group and results over a tree.
+    parameter integer RES_STAGES = -1,
+    // DISTRIBUTED VM, option H (results/uarch/w11_vm_options.json): VMD_NG lane groups (lane l and element e
+    // in group l / e mod VMD_NG; 0 = off, the unit as before).  At set-up the unit decides from the op's
+    // fields and its layout, per stream, whether every lane's element is in the lane's group (LOCAL), one
+    // element feeds the whole vector (BROADCAST: the per-row scalar, fetched from its group to the root of
+    // the broadcast tree), or neither (the RESIDUAL rotate network; a gathered A: the permutation network).
+    // An op that needs a network holds its first vector until its operands could have crossed it, and pays
+    // the write side on its element writes the same way (the hold covers both: a consumer of its writes
+    // waits for them either way):
+    //   hold = SCAL_STAGES (a broadcast read) + GATH_STAGES (gathered A) | ROT_STAGES (other residual read)
+    //        + ROT_STAGES (residual element write)
+    parameter integer VMD_NG = 0,
+    parameter integer ROT_STAGES = 17,
+    parameter integer GATH_STAGES = 18,
+    parameter integer SCAL_STAGES = 8,
+    // an X stream (gathered A, half streams, other strides) crosses the class-X trees, XI_ELEMS elements a
+    // cycle: its op emits a vector every ceil(lanes / XI_ELEMS) cycles
+    parameter integer XI_ELEMS = 64,
+    // C_ROTATE VM (rtl/chip/ot_v41_vm_crot.sv; root ruling 2026-10-01): the central banked strip with a rotate
+    // network between the banks and the lanes.  Every op pays the strip round trip, no per-op class decision.
+    // The caller builds the unit with BCAST_STAGES = CR_LEAD + CR_RD (the lanes take their operands CR_RD
+    // stages after the strip read them, the control word is padded to match) and RET_STAGES / RES_STAGES =
+    // the lane -> strip write and reducer -> strip result stages, and sets
+    //   RD_LEAD  the cycles from emit to the strip's READ (CR_LEAD).  This unit's own consumers' credits lead
+    //            the landing by RD_LEAD, not by BCAST_STAGES: the read happens at the strip, CR_RD before the
+    //            lanes see its data (-1: BCAST_STAGES, the unit as before)
+    //   CROT_GX  extra cycles a gathered-A op is held (the permutation network's levels beyond the rotate's)
+    // Every vector of every op then arrives CR_RD later than its strip read, as in the strip's pipeline; the
+    // strip (ot_v41_vm_crot lead_hazards) checks that no operand's word was written in the CR_RD cycles between
+    // the strip read and the lanes' read here, so the values are the pipeline's.
+    parameter integer RD_LEAD = -1,
+    parameter integer CROT_GX = 0,
     parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4 or 5 (W11 serial domain)
     parameter integer ALAT = 3          // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
 ) (
@@ -238,7 +272,11 @@ module ot_hdc_v41x_vec #(
     localparam integer NR = N / 8;
     localparam integer CW = 24;
     // this unit's own consumers read BCAST_STAGES after their emit: their credits lead the landing by that much
-    localparam integer DI = (RET_STAGES > BCAST_STAGES) ? RET_STAGES - BCAST_STAGES : 0;
+    // (C_rotate: by RD_LEAD, the cycles from emit to the strip's read)
+    localparam integer LEADC = (RD_LEAD < 0) ? BCAST_STAGES : RD_LEAD;
+    localparam integer DI = (RET_STAGES > LEADC) ? RET_STAGES - LEADC : 0;
+    localparam integer RS = (RES_STAGES < 0) ? RET_STAGES : RES_STAGES;
+    localparam integer DIR = (RS > LEADC) ? RS - LEADC : 0;
     localparam [1:0] IND_NONE = 0, IND_I = 1, IND_O = 2;
     localparam [1:0] DST_NONE = 0, DST_KVT = 3;
     localparam [2:0] M1_DIVB = 4, M1_DIVIMM = 5;
@@ -363,7 +401,9 @@ module ot_hdc_v41x_vec #(
     wire [3:0] c_ls = (c_lsz > c_lvw) ? c_lvw : c_lsz[3:0];
     wire c_packed = !s_wnf && (s_ni <= (1 << c_ls));
     wire c_rpow = pow2(q_rso);
-    wire [3:0] c_nsh = (c_packed && (!red_on || c_rpow)) ? (c_lvw - c_ls) : 4'd0;
+    wire [3:0] c_nsh0 = (c_packed && (!red_on || c_rpow)) ? (c_lvw - c_ls) : 4'd0;
+    wire       h_seg;                    // option H: lay the op out one row a vector (below)
+    wire [3:0] c_nsh = h_seg ? 4'd0 : c_nsh0;
     wire [CW-1:0] c_nvs = s_wnf ? s_no * (s_ni >> c_ls) : (s_ni + (1 << c_ls) - 1) >> c_ls;
     wire [4:0] c_L = log2c(c_nvs);
     wire c_span = red_on && !c_packed;
@@ -405,6 +445,91 @@ module ot_hdc_v41x_vec #(
                                   si_s[s] << c_ls;
         end
     end
+    // ---- VMD_NG > 0: the op's streams against the lane groups (option H; tools/w11_vm_h.py mirrors it) ------
+    // Element e and lane l are in groups e, l mod NG.  Per stream (on the op's layout):
+    //   L  local     unit stride (or one element a row), base in group 0, every row starting where its lanes
+    //                do (one row; rows packed with so = S; a row a vector with so = 0), no row spanning
+    //                vectors of S < NG lanes
+    //   B  broadcast one element a vector (si = 0 with one row a vector, or so = 0): the per-row scalar,
+    //                fetched from its group to the broadcast tree's root
+    //   R  rotate    unit stride whose rows all start at one rotation (one row, a row a vector, so = S):
+    //                one rotation a vector through the residual rotate (ot_v41_vm_rot)
+    //   P  pair      C = A ^ 1: the rotate and its xor-1 level
+    //   X  other     gathered A, half streams, other strides: the permutation network
+    // SEGMENTED: rows packed several a vector whose streams would need a different rotation per row slot (unit
+    // stride with so != S, per-row scalar with so != 0) are laid out one row a vector (h_seg), which makes
+    // every such stream R or B at the cost of vectors.
+    localparam integer VNG = (VMD_NG > 0) ? VMD_NG : 1;
+    localparam [AW-1:0] VMK = VNG - 1;
+    localparam [2:0] HK_L = 0, HK_B = 1, HK_R = 2, HK_P = 3, HK_X = 4;
+    wire [CW-1:0] h_S = 1 << c_ls;
+    function automatic h_unit(input [AW-1:0] si, input [CW-1:0] ni);
+        h_unit = (si == 1) || (ni == 1);
+    endfunction
+    function automatic [2:0] h_kind(input [AW-1:0] base, input [AW-1:0] so, input [AW-1:0] si, input [3:0] nsh,
+                                    input [CW-1:0] S, input [CW-1:0] no, input [CW-1:0] ni);
+        reg unit, bc, loc, fits;
+        begin
+            unit = h_unit(si, ni);
+            bc = (si == 0) && (nsh == 0 || so == 0);
+            loc = unit && ((base & VMK) == 0) &&
+                  ((no == 1) || ((nsh != 0) ? (((so - S[AW-1:0]) & VMK) == 0) : ((so & VMK) == 0))) &&
+                  !(nsh == 0 && S < VNG && ni > S);
+            fits = (no == 1) || (nsh == 0) || (((so - S[AW-1:0]) & VMK) == 0);
+            h_kind = (bc && !unit) ? HK_B : loc ? HK_L : bc ? HK_B : (unit && fits) ? HK_R : HK_X;
+        end
+    endfunction
+    // segmented: judged on the natural layout (c_nsh0)
+    function automatic h_segs(input [AW-1:0] so, input [AW-1:0] si, input [CW-1:0] S, input [CW-1:0] ni);
+        h_segs = (h_unit(si, ni) && (((so - S[AW-1:0]) & VMK) != 0)) || (si == 0 && ni > 1 && so != 0);
+    endfunction
+    reg h_sg;
+    always @(*) begin
+        h_sg = 1'b0;
+        if (VMD_NG > 0 && c_nsh0 != 0 && s_no > 1) begin
+            if (q_asrc == 2'd0 && q_aind == IND_NONE && h_segs(q_aso, q_asi, h_S, s_ni)) h_sg = 1'b1;
+            if (q_bsrc == 2'd0 && !(q_bhalf && q_bsi != 0) && h_segs(q_bso, q_bsi, h_S, s_ni)) h_sg = 1'b1;
+            if (q_csrc == 2'd0 && !q_cpair && h_segs(q_cso, q_csi, h_S, s_ni)) h_sg = 1'b1;
+            if (q_dsrc == 2'd0 && !(q_bhalf && q_dsi != 0) && h_segs(q_dso, q_dsi, h_S, s_ni)) h_sg = 1'b1;
+            if (q_aind == IND_I && h_segs({AW{1'b0}}, {{(AW-1){1'b0}}, 1'b1}, h_S, s_ni)) h_sg = 1'b1;
+            if (q_aind == IND_O && h_segs({{(AW-1){1'b0}}, 1'b1}, {AW{1'b0}}, h_S, s_ni)) h_sg = 1'b1;
+            if (q_dst == 2'd1 && h_segs(q_oso, q_osi, h_S, s_ni)) h_sg = 1'b1;
+        end
+    end
+    assign h_seg = h_sg;
+    reg [2:0] hk_a, hk_b, hk_c, hk_d, hk_g, hk_e;
+    reg h_b, h_x, h_r, h_wr, h_wx;
+    always @(*) begin
+        hk_a = HK_L; hk_b = HK_L; hk_c = HK_L; hk_d = HK_L; hk_g = HK_L; hk_e = HK_L;
+        if (q_asrc == 2'd0) hk_a = (q_aind != IND_NONE) ? HK_X : h_kind(q_abase, q_aso, q_asi, c_nsh, h_S, s_no, s_ni);
+        if (q_bsrc == 2'd0) hk_b = (q_bhalf && q_bsi != 0) ? HK_X : h_kind(q_bbase, q_bso, q_bsi, c_nsh, h_S, s_no, s_ni);
+        if (q_csrc == 2'd0) hk_c = q_cpair ? ((q_asrc == 2'd0 && hk_a == HK_X) ? HK_X : HK_P) :
+                                   h_kind(q_cbase, q_cso, q_csi, c_nsh, h_S, s_no, s_ni);
+        if (q_dsrc == 2'd0) hk_d = (q_bhalf && q_dsi != 0) ? HK_X : h_kind(q_dbase, q_dso, q_dsi, c_nsh, h_S, s_no, s_ni);
+        if (q_aind == IND_I) hk_g = h_kind(q_aibase, {AW{1'b0}}, {{(AW-1){1'b0}}, 1'b1}, c_nsh, h_S, s_no, s_ni);
+        else if (q_aind == IND_O) hk_g = h_kind(q_aibase, {{(AW-1){1'b0}}, 1'b1}, {AW{1'b0}}, c_nsh, h_S, s_no, s_ni);
+        if (q_dst == 2'd1) begin
+            hk_e = h_kind(q_obase, q_oso, q_osi, c_nsh, h_S, s_no, s_ni);
+            if (hk_e == HK_B) hk_e = HK_X;
+        end
+        h_b = (hk_a == HK_B) || (hk_b == HK_B) || (hk_c == HK_B) || (hk_d == HK_B) || (hk_g == HK_B);
+        h_x = (hk_a == HK_X) || (hk_b == HK_X) || (hk_c == HK_X) || (hk_d == HK_X) || (hk_g == HK_X);
+        h_r = (hk_a == HK_R) || (hk_b == HK_R) || (hk_c == HK_R) || (hk_c == HK_P) || (hk_d == HK_R) ||
+              (hk_g == HK_R);
+        h_wr = (hk_e == HK_R);
+        h_wx = (hk_e == HK_X);
+    end
+    wire [7:0] c_hold = (VMD_NG == 0) ? ((q_aind != IND_NONE) ? 8'(CROT_GX) : 8'd0) :
+                        8'((h_b ? SCAL_STAGES : 0) + (h_x ? GATH_STAGES : h_r ? ROT_STAGES : 0) +
+                           (h_wx ? GATH_STAGES : h_wr ? ROT_STAGES : 0));
+    wire [CW-1:0] h_use = 1 << (c_ls + c_nsh);
+    wire [7:0] c_xint = (VMD_NG == 0 || !(h_x || h_wx)) ? 8'd1 : 8'((h_use + XI_ELEMS - 1) / XI_ELEMS);
+    reg [7:0] p_hold, p_xint;
+    reg [5:0] p_hfl;
+    always @(posedge clk) if (s2_go) begin
+        p_hold <= c_hold; p_hfl <= {h_seg, h_b, h_x, h_r, h_wr, h_wx}; p_xint <= (c_xint == 0) ? 8'd1 : c_xint;
+    end
+
     // registered set-up results (the pending op)
     reg [CW-1:0]      p_no, p_ni;
     reg [3:0]         p_ls, p_lvw, p_nsh, p_lt;
@@ -482,7 +607,9 @@ module ot_hdc_v41x_vec #(
                  (a_chsrc == CH_SELF) ? pv_ok :
                  (a_chsrc == CH_RES)  ? !dr[7] :
                  (!dx[7] || (x_seq == a_chseq && x_cnt >= need));
-    wire emit = a_v && (a_started || ck_ok) && ch_ok;
+    reg  [7:0] a_hold, h_cnt, a_xint, x_gap;
+    wire h_ok = (h_cnt >= a_hold);
+    wire emit = a_v && (a_started || (ck_ok && h_ok)) && ch_ok && (x_gap == 8'd0);
     wire promote = (pst == 2'd3) && (!a_v || (emit && last_v));
 
     // set-up state
@@ -502,7 +629,7 @@ module ot_hdc_v41x_vec #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             a_v <= 1'b0; a_started <= 1'b0; pv_v <= 1'b0; e_tot <= 0; r_tot <= 0; rp_tot <= 0;
-            cpF <= 0; cpM <= 0; cpS <= 0; cpT <= 0; cpR <= 0;
+            cpF <= 0; cpM <= 0; cpS <= 0; cpT <= 0; cpR <= 0; h_cnt <= 8'd0; x_gap <= 8'd0;
         end else begin
             e_tot <= e_tot + (emit ? 16'd1 : 16'd0);
             r_tot <= r_tot + (ret_i ? 16'd1 : 16'd0);
@@ -520,6 +647,12 @@ module ot_hdc_v41x_vec #(
             end
             if (promote) begin a_v <= 1'b1; a_started <= 1'b0; end
             else if (emit && last_v) a_v <= 1'b0;
+            // the network hold (VMD_NG): counts once the op could otherwise start
+            if (promote) h_cnt <= 8'd0;
+            else if (a_v && !a_started && ck_ok && ch_ok && !h_ok) h_cnt <= h_cnt + 8'd1;
+            // an X op's vectors cross the class-X trees: one every a_xint cycles
+            if (emit) x_gap <= a_xint - 8'd1;
+            else if (x_gap != 8'd0) x_gap <= x_gap - 8'd1;
         end
     end
     always @(posedge clk) begin
@@ -541,7 +674,11 @@ module ot_hdc_v41x_vec #(
             a_imm1 <= q_imm1; a_imm2 <= q_imm2; a_imm3 <= q_imm3;
             a_obase <= q_obase; a_aibase <= q_aibase;
             a_seq <= q_seq; a_chseq <= q_chseq; a_chlead <= q_chlead; a_chmul <= q_chmul;
-            a_nv <= 0; a_acc <= 0;
+            a_nv <= 0; a_acc <= 0; a_hold <= p_hold; a_xint <= (VMD_NG == 0) ? 8'd1 : p_xint;
+`ifndef SYNTHESIS
+            if (VMD_NG > 0) $display("VROT seq=%0d hold=%0d u=%0d b=%0d x=%0d r=%0d wr=%0d wx=%0d xi=%0d", q_seq,
+                                     p_hold, p_hfl[5], p_hfl[4], p_hfl[3], p_hfl[2], p_hfl[1], p_hfl[0], p_xint);
+`endif
         end else if (emit) begin
             if (!a_started) a_mark <= e_tot;
             a_nv <= a_nv + 16'd1;
@@ -812,40 +949,52 @@ module ot_hdc_v41x_vec #(
         .d({l_vm_we, l_kv_we}), .q({vm_we, kv_we}));
     ot_hdc_delay #(.W(N * (2 * AW + 64)), .D(RET_STAGES)) u_rwd (.clk(clk), .rst_n(rst_n),
         .d({l_vm_waddr, l_vm_wdata, l_kv_waddr, l_kv_wdata}), .q({vm_waddr, vm_wdata, kv_waddr, kv_wdata}));
-    ot_hdc_delay #(.W(NR), .D(RET_STAGES), .RESET(1)) u_rre (.clk(clk), .rst_n(rst_n), .d(l_res_we), .q(res_we));
-    ot_hdc_delay #(.W(NR * (AW + 32)), .D(RET_STAGES)) u_rrd (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(NR), .D(RS), .RESET(1)) u_rre (.clk(clk), .rst_n(rst_n), .d(l_res_we), .q(res_we));
+    ot_hdc_delay #(.W(NR * (AW + 32)), .D(RS)) u_rrd (.clk(clk), .rst_n(rst_n),
         .d({l_res_addr, l_res_data}), .q({res_addr, res_data}));
-    wire rt_live;
+    wire rt_live, rs_live;
     generate if (RET_STAGES == 0) begin : g_rt0
         assign {ret_p, ret_p_seq, ret_p_last} = {retire, r_seq, r_lastv};
-        assign {res_p, res_p_seq, res_p_last} = {red_ev, red_seq, red_lastres};
         assign rt_live = 1'b0;
     end else begin : g_rt
-        reg [RET_STAGES-1:0] rt_v, rs_v;
+        reg [RET_STAGES-1:0] rt_v;
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin rt_v <= {RET_STAGES{1'b0}}; rs_v <= {RET_STAGES{1'b0}}; end
-            else begin
-                rt_v <= (rt_v << 1) | {{(RET_STAGES-1){1'b0}}, retire};
-                rs_v <= (rs_v << 1) | {{(RET_STAGES-1){1'b0}}, red_ev};
-            end
+            if (!rst_n) rt_v <= {RET_STAGES{1'b0}};
+            else rt_v <= (rt_v << 1) | {{(RET_STAGES-1){1'b0}}, retire};
         end
-        wire [8:0] rt_m, rs_m;
+        wire [8:0] rt_m;
         ot_hdc_delay #(.W(9), .D(RET_STAGES)) u_rtm (.clk(clk), .rst_n(rst_n), .d({r_seq, r_lastv}), .q(rt_m));
-        ot_hdc_delay #(.W(9), .D(RET_STAGES)) u_rsm (.clk(clk), .rst_n(rst_n), .d({red_seq, red_lastres}), .q(rs_m));
         assign {ret_p, ret_p_seq, ret_p_last} = {rt_v[RET_STAGES-1], rt_m};
-        assign {res_p, res_p_seq, res_p_last} = {rs_v[RET_STAGES-1], rs_m};
-        assign rt_live = |{rt_v, rs_v};
+        assign rt_live = |rt_v;
+    end endgenerate
+    generate if (RS == 0) begin : g_rs0
+        assign {res_p, res_p_seq, res_p_last} = {red_ev, red_seq, red_lastres};
+        assign rs_live = 1'b0;
+    end else begin : g_rs
+        reg [RS-1:0] rs_v;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) rs_v <= {RS{1'b0}};
+            else rs_v <= (rs_v << 1) | {{(RS-1){1'b0}}, red_ev};
+        end
+        wire [8:0] rs_m;
+        ot_hdc_delay #(.W(9), .D(RS)) u_rsm (.clk(clk), .rst_n(rst_n), .d({red_seq, red_lastres}), .q(rs_m));
+        assign {res_p, res_p_seq, res_p_last} = {rs_v[RS-1], rs_m};
+        assign rs_live = |rs_v;
     end endgenerate
     generate if (DI == 0) begin : g_di0
         assign {ret_i, ret_i_seq, ret_i_last} = {retire, r_seq, r_lastv};
-        assign {res_i, res_i_seq, res_i_last} = {red_ev, red_seq, red_lastres};
     end else begin : g_di
-        wire [9:0] di_r, di_s;
+        wire [9:0] di_r;
         ot_hdc_delay #(.W(1), .D(DI), .RESET(1)) u_dirv (.clk(clk), .rst_n(rst_n), .d(retire), .q(di_r[9]));
         ot_hdc_delay #(.W(9), .D(DI)) u_dirm (.clk(clk), .rst_n(rst_n), .d({r_seq, r_lastv}), .q(di_r[8:0]));
-        ot_hdc_delay #(.W(1), .D(DI), .RESET(1)) u_disv (.clk(clk), .rst_n(rst_n), .d(red_ev), .q(di_s[9]));
-        ot_hdc_delay #(.W(9), .D(DI)) u_dism (.clk(clk), .rst_n(rst_n), .d({red_seq, red_lastres}), .q(di_s[8:0]));
         assign {ret_i, ret_i_seq, ret_i_last} = di_r;
+    end endgenerate
+    generate if (DIR == 0) begin : g_dir0
+        assign {res_i, res_i_seq, res_i_last} = {red_ev, red_seq, red_lastres};
+    end else begin : g_dir
+        wire [9:0] di_s;
+        ot_hdc_delay #(.W(1), .D(DIR), .RESET(1)) u_disv (.clk(clk), .rst_n(rst_n), .d(red_ev), .q(di_s[9]));
+        ot_hdc_delay #(.W(9), .D(DIR)) u_dism (.clk(clk), .rst_n(rst_n), .d({red_seq, red_lastres}), .q(di_s[8:0]));
         assign {res_i, res_i_seq, res_i_last} = di_s;
     end endgenerate
 
@@ -872,7 +1021,7 @@ module ot_hdc_v41x_vec #(
     // =========================================================================================
     // Status
     // =========================================================================================
-    wire pipe_live = b_emit || bt_live || rt_live || bz_f || vp || bz_m || (|vml) || bz_s || (|vsl);
+    wire pipe_live = b_emit || bt_live || rt_live || rs_live || bz_f || vp || bz_m || (|vml) || bz_s || (|vsl);
     wire idle_c = (pst == 2'd0) && !a_v && !pipe_live && !red_busy;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin idle <= 1'b1; fault <= 1'b0; order_fault <= 1'b0; end

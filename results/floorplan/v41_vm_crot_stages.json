@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.floorplan.w11_vm_crot_stages.v1",
- "generated_utc": "2026-10-01T02:42:32+00:00",
+ "generated_utc": "2026-10-01T03:27:24+00:00",
  "floorplan": {
   "branch": "claude/w18-die-assembly",
   "commit": "32155a8ffe8714d3fc98387acf0bb96e9d6cec9d",
@@ -85,6 +85,34 @@
    "RET_SCATTER_STAGES": 10,
    "COLL_WRITE_STAGES": 20,
    "note": "481 um a stage (W18b commit 32155a8f / W16b); not used for the RTL"
+  },
+  "square_hub": {
+   "CR_LEAD": 6,
+   "CR_RD": 16,
+   "CR_GX": 1,
+   "CR_WR": 15,
+   "CR_RES": 6,
+   "X_GATHER_STAGES": 7,
+   "RET_SCATTER_STAGES": 6,
+   "COLL_WRITE_STAGES": 13,
+   "floorplan": {
+    "branch": "claude/w18-die-assembly",
+    "commit": "dfce8d40",
+    "path": "results/physical_abi3/asap7/chip/v41_w18/hub_square/plus/floorplan.json",
+    "sha256": "2a1afe3897c61f64694afaa168362a1f3b67ed3f546e3ed741888f36b528fca4"
+   },
+   "geometry": {
+    "bank_um": [
+     3966.6,
+     3966.6
+    ],
+    "lane_tiles": 108,
+    "worst_bank_to_lane_um": 9114.6,
+    "controller_to_farthest_bank_um": 3966.6,
+    "controller_to_farthest_tile_um": 5148.0,
+    "collective_to_farthest_bank_um": 9547.6
+   },
+   "note": "root-approved square (plus) hub; stage parameters only, the RTL is unchanged"
   }
  },
  "design_keys": {
@@ -115,7 +143,7 @@
   "finding": "the 3,850 um framing bounds the lane -> strip-edge leg only; the rotate moves data along the strip's full height, so the worst bank -> lane leg is the hub's 10,735 um"
  },
  "source_sha256": {
-  "tools/w11_vm_crot_stages.py": "f651435ab3f3590dde2b5cc37d825f43e71c190b45645ccec4ecec738dcd89ba",
-  "tools/uarch_model.py": "9c9819e21f167e425ad89ae84b84249627fb8d28a1ca625a3274fe7c495119ee"
+  "tools/w11_vm_crot_stages.py": "5bc5b46b410004dac00ef57f2ad055300ddeec1bb68ab1cc649d82a694c18a15",
+  "tools/uarch_model.py": "0116a42e7b6cd57eff53755f9e671478819f9a7c7f5eb29fc84f5236e8e9ecea"
  }
 }

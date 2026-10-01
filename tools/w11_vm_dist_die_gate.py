@@ -32,6 +32,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
+import w11_vm_variant  # noqa: E402,F401  (VM-H / C_rotate sources and rules: rtl/w11crot)
 import w11_vm_dist_gate as G               # noqa: E402
 
 ds, core = G.ds, G.core

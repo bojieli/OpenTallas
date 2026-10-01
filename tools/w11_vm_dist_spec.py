@@ -48,6 +48,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
+import w11_vm_variant  # noqa: E402,F401  (VM-H / C_rotate sources and rules: rtl/w11crot)
 import hdc_isa_v41 as I                    # noqa: E402
 import rtl_hdc_v41x_vec_campaign as C      # noqa: E402
 import uarch_model as U                    # noqa: E402

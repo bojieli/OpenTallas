@@ -39,22 +39,28 @@ module ot_v41_vm_crot_port #(
     output reg  [NCLS*LR-1:0]           o_rot       // per class: the rotate amount (B mod 8 NG)
 );
     localparam integer QW = VMA - LG;               // local word bits
+    // Per column: the vector's words are the 16-word window starting at base0 = w0 & ~7 -- block A (base0, bank
+    // base0[3]) holds the slots s >= w0[2:0], block B (base0 + 8, the other bank) the slots s < w0[2:0].  So bank
+    // base0[3] reads row base0 >> 4 and the other bank row (base0 + 8) >> 4, and slot s selects bank
+    // base0[3] ^ (s < w0[2:0]).  No data-dependent indexing: two candidates (q, q + 1) a class, one compare a column.
     integer k, c, s;
-    reg [QW-1:0] q, w0, w;
+    reg [QW-1:0] q0, q1, w0, ba, bb;
     reg [LG-1:0] r;
     always @(posedge clk) begin
         for (k = 0; k < NCLS; k = k + 1) begin
             o_v[k] <= v[k];
             r = base[k*VMA +: LG];
-            q = base[k*VMA + LG +: QW];
+            q0 = base[k*VMA + LG +: QW];
+            q1 = q0 + 1'b1;
             o_rot[k*LR +: LR] <= base[k*VMA +: LR];
             for (c = 0; c < NCOL; c = c + 1) begin
-                w0 = q + ((COL0 + c < r) ? 1 : 0);
-                for (s = 0; s < 8; s = s + 1) begin
-                    w = {w0[QW-1:3], 3'(s)} + ((s < w0[2:0]) ? QW'(8) : QW'(0));
-                    o_bsel[(k*NCOL + c)*8 + s] <= w[3];
-                    o_row[((k*NCOL + c)*2 + w[3])*RA +: RA] <= w[QW-1:4];
-                end
+                w0 = (COL0 + c < r) ? q1 : q0;
+                ba = {w0[QW-1:3], 3'b000};
+                bb = ba + {{(QW-4){1'b0}}, 4'd8};
+                o_row[((k*NCOL + c)*2 + 0)*RA +: RA] <= ba[3] ? bb[QW-1:4] : ba[QW-1:4];
+                o_row[((k*NCOL + c)*2 + 1)*RA +: RA] <= ba[3] ? ba[QW-1:4] : bb[QW-1:4];
+                for (s = 0; s < 8; s = s + 1)
+                    o_bsel[(k*NCOL + c)*8 + s] <= ba[3] ^ (s < w0[2:0]);
             end
         end
     end

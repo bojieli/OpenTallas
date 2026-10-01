@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.rtl.w11_su_spec/1",
- "generated_at": "2026-09-30T12:55:56Z",
+ "generated_at": "2026-09-29T20:56:53Z",
  "contract": "Actual SU adapter: QK score -> exp score, sink denominator, post-PV divide.",
  "fixture": "tools/rtl_v41x_su_softmax_campaign.fixture",
  "heads": 16,
@@ -78,7 +78,7 @@
  },
  "builds": {
   "adapt_N16_M8": {
-   "wall_s": 169.7,
+   "wall_s": 111.2,
    "verilator_flags": [
     "--unroll-count",
     "4",
@@ -92,7 +92,7 @@
    "note": "max RSS of the largest single process (verilator or one g++)"
   },
   "vec_N16_M8": {
-   "wall_s": 262.7,
+   "wall_s": 113.5,
    "verilator_flags": [
     "--unroll-count",
     "4",
@@ -106,7 +106,7 @@
    "note": "max RSS of the largest single process (verilator or one g++)"
   },
   "adapt_N16_M8_B4R5": {
-   "wall_s": 248.7,
+   "wall_s": 141.6,
    "verilator_flags": [
     "--unroll-count",
     "4",
@@ -120,7 +120,7 @@
    "note": "max RSS of the largest single process (verilator or one g++)"
   },
   "vec_N16_M8_B4R5": {
-   "wall_s": 244.1,
+   "wall_s": 122.7,
    "verilator_flags": [
     "--unroll-count",
     "4",
@@ -134,7 +134,7 @@
    "note": "max RSS of the largest single process (verilator or one g++)"
   },
   "adapt_N1024_M256": {
-   "wall_s": 9764.8,
+   "wall_s": 5186.3,
    "verilator_flags": [
     "--unroll-count",
     "4",
@@ -144,11 +144,11 @@
     0,
     0
    ],
-   "max_rss_gib": 31.21,
+   "max_rss_gib": 31.22,
    "note": "max RSS of the largest single process (verilator or one g++)"
   },
   "vec_N1024_M256": {
-   "wall_s": 3579.7,
+   "wall_s": 5244.5,
    "verilator_flags": [
     "--unroll-count",
     "4",
@@ -158,11 +158,11 @@
     0,
     0
    ],
-   "max_rss_gib": 31.21,
+   "max_rss_gib": 31.22,
    "note": "max RSS of the largest single process (verilator or one g++)"
   },
   "adapt_N1024_M256_B4R5": {
-   "wall_s": 1979.3,
+   "wall_s": 4205.5,
    "verilator_flags": [
     "--unroll-count",
     "4",
@@ -176,7 +176,7 @@
    "note": "max RSS of the largest single process (verilator or one g++)"
   },
   "vec_N1024_M256_B4R5": {
-   "wall_s": 1931.8,
+   "wall_s": 4223.8,
    "verilator_flags": [
     "--unroll-count",
     "4",
@@ -254,7 +254,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 1.36,
+      "sim_wall_s": 5.1,
       "ops": [
        {
         "op": "scale+row max",
@@ -438,7 +438,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 1.27,
+      "sim_wall_s": 4.45,
       "ops": [
        {
         "op": "scale+row max",
@@ -622,7 +622,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 1.35,
+      "sim_wall_s": 3.55,
       "ops": [
        {
         "op": "scale+row max",
@@ -809,7 +809,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 3.12,
+      "sim_wall_s": 11.89,
       "ops": [
        {
         "op": "scale+row max",
@@ -993,7 +993,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 2.89,
+      "sim_wall_s": 8.19,
       "ops": [
        {
         "op": "scale+row max",
@@ -1177,7 +1177,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 3.03,
+      "sim_wall_s": 7.25,
       "ops": [
        {
         "op": "scale+row max",
@@ -1414,7 +1414,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 1.64,
+      "sim_wall_s": 6.55,
       "ops": [
        {
         "op": "scale+row max",
@@ -1598,7 +1598,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 1.62,
+      "sim_wall_s": 5.67,
       "ops": [
        {
         "op": "scale+row max",
@@ -1782,7 +1782,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 1.26,
+      "sim_wall_s": 4.02,
       "ops": [
        {
         "op": "scale+row max",
@@ -1969,7 +1969,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 2.44,
+      "sim_wall_s": 12.0,
       "ops": [
        {
         "op": "scale+row max",
@@ -2153,7 +2153,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 2.6,
+      "sim_wall_s": 8.71,
       "ops": [
        {
         "op": "scale+row max",
@@ -2337,7 +2337,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 2.9,
+      "sim_wall_s": 7.66,
       "ops": [
        {
         "op": "scale+row max",
@@ -2640,7 +2640,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 20.29,
+      "sim_wall_s": 44.75,
       "ops": [
        {
         "op": "scale+row max",
@@ -2824,7 +2824,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 19.99,
+      "sim_wall_s": 50.73,
       "ops": [
        {
         "op": "scale+row max",
@@ -3008,7 +3008,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 18.64,
+      "sim_wall_s": 40.23,
       "ops": [
        {
         "op": "scale+row max",
@@ -3195,7 +3195,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 23.37,
+      "sim_wall_s": 53.48,
       "ops": [
        {
         "op": "scale+row max",
@@ -3379,7 +3379,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 22.9,
+      "sim_wall_s": 58.12,
       "ops": [
        {
         "op": "scale+row max",
@@ -3563,7 +3563,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 22.3,
+      "sim_wall_s": 48.5,
       "ops": [
        {
         "op": "scale+row max",
@@ -3800,7 +3800,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 22.05,
+      "sim_wall_s": 49.19,
       "ops": [
        {
         "op": "scale+row max",
@@ -3984,7 +3984,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 20.82,
+      "sim_wall_s": 47.52,
       "ops": [
        {
         "op": "scale+row max",
@@ -4168,7 +4168,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 19.94,
+      "sim_wall_s": 48.32,
       "ops": [
        {
         "op": "scale+row max",
@@ -4355,7 +4355,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 25.55,
+      "sim_wall_s": 51.92,
       "ops": [
        {
         "op": "scale+row max",
@@ -4539,7 +4539,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 24.23,
+      "sim_wall_s": 56.37,
       "ops": [
        {
         "op": "scale+row max",
@@ -4723,7 +4723,7 @@
       },
       "faults": 0,
       "order_faults": 0,
-      "sim_wall_s": 23.62,
+      "sim_wall_s": 49.12,
       "ops": [
        {
         "op": "scale+row max",
@@ -5045,7 +5045,7 @@
   ]
  },
  "pass_": true,
- "git_head": "8f0d2e6349b8e8be8d33114bb15de415c57a32aa",
+ "git_head": "5de2c368eb35bdd11b6026ad41afd065a0f88765",
  "git_dirty_tracked_files": [],
  "host": "ubuntu",
  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
@@ -5063,18 +5063,18 @@
   "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "1b0a5ccbbe8c156f4920bc31a48af545b96441203df156299d91b302752909c4",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "0ba8c77b349a8116958f09f3948116c8183f558f10b3228b55bcb55f1108b315",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "cc9aad507db760a2d7086558c1fde3cb4bd0062730fd4c2447d9634e43b4b00a",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "d9e93b5a7d8902b2f20f85a4c1aa69fbcaee33cb224d0eff7876c24dcff4f003",
-  "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": "e382bd4033c140a192914b9bf348a5412f81b2b4e069d4dfd7fd8bd733227fc5",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "569db2f33b015cc80d0f6eccd2b6d6036f25ebf56a1ea1140265bec10efa6453",
+  "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": "a6531a9fddd6b9dee21c4512679eda222cf780573293179cc0cf5c797a5f0686",
   "rtl/test/tb_hdc_v41x_su_softmax.sv": "c8a5babb8b6996e94761d98d7c1c1fa3d5677eb99f27d06ab869d1222e84f40a",
-  "rtl/test/tb_hdc_v41x_vec.sv": "95235895dd804bbd06267eb5507b3db8441a27562815c779317c6f06ba928acf",
+  "rtl/test/tb_hdc_v41x_vec.sv": "6347b84fd02065ba4f1e51ea22ffec3c6066b8f19c54d971390a82716542d15e",
   "rtl/test/tb_hdc_v41x_vec_fields.svh": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
   "rtl/test/hdc_v41_harness.cpp": "f2a82a2ea843a1f8b04fd94e94adea61037a9fa6aef45f6b0c8550abe5a6dce1",
   "tools/w11_su_softmax_spec.py": "8ddf26dfb42f3003131ba8fc76bbb530419bf0e21d54b8b92d5cd9db775cf8e6",
   "tools/rtl_v41x_su_softmax_campaign.py": "d6c1cd5666766985ccb8cea3e6654283f4654c04238c94d85e0610d826e4b9bd",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "7d05b86774dd90c4f4d8ed6665f87796ee61ef7569c9642c05a8f05630dc72a7",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
-  "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d",
+  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692"
  },
  "currency": {

@@ -107,7 +107,48 @@ module ot_hdc_core_v41x #(
     parameter integer HBAW  = 16,          // HCP weight-bank word address
     // ME weight ops: ot_hdc_v41x_wgt_tile KIND 1 geometry
     parameter integer MG    = 8,           // chunk units (8 x MG BF16/FP32 MAC lanes)
-    parameter integer MBAW  = FULL_SHAPE ? 18 : 17 // weight-bank word address
+    parameter integer MBAW  = FULL_SHAPE ? 18 : 17, // weight-bank word address
+    // DISTRIBUTED VM (rtl/chip/ot_v41_vm_dist.sv; spec results/floorplan/v41_vm_dist_spec.json).  1: the vector
+    // memory is lane-group banks inside the stream unit's region; the non-SU clients reach it through trees:
+    //   X_GATHER_STAGES     the matvec x-gather read: an ME / QE / XU / HE op issues that many cycles later
+    //                       (its first x word arrives that much later; the sequencer holds the op)
+    //   RET_SCATTER_STAGES  the matvec result scatter: every ME / QE / HE / XU vector-memory write lands that
+    //                       many cycles later; the unit counts idle / ready only once its writes have landed
+    //   SU_RES_STAGES       the stream unit's reducer results (ot_hdc_v41x_vec RES_STAGES; cr_rseq / idle follow)
+    //   SU_EWR_STAGES       the stream unit's element writes into the lane's own group (ot_hdc_v41x_vec RET_STAGES)
+    //   VM_DIST_H           option H (results/uarch/w11_vm_options.json): the stream unit decides per op whether it
+    //                       needs the residual rotate network (SU_ROT_STAGES each way), the gather network
+    //                       (SU_GATH_STAGES) or the per-row scalar fetch (SU_SCAL_STAGES), and holds the op for them
+    //                       (ot_hdc_v41x_vec VMD_NG = SUN / 8); 0: the networks are free (the first VM_DIST gate)
+    // The collective write tree is the tile's (ot_chip_v41x_tile COLL_WRITE_STAGES).  0: the flat memory,
+    // bit- and cycle-identical to the core before VM_DIST.
+    parameter integer VM_DIST = 0,
+    parameter integer X_GATHER_STAGES = 10,
+    parameter integer RET_SCATTER_STAGES = 10,
+    parameter integer SU_RES_STAGES = 7,
+    parameter integer SU_EWR_STAGES = 1,
+    parameter integer VM_DIST_H = 0,
+    parameter integer SU_ROT_STAGES = 17,
+    parameter integer SU_GATH_STAGES = 18,
+    parameter integer SU_SCAL_STAGES = 8,
+    // C_ROTATE VM (rtl/chip/ot_v41_vm_crot.sv, root ruling 2026-10-01; needs VM_DIST = 1): the central banked strip
+    // with a rotate network between banks and lanes; every SU op pays the strip round trip, no per-op decision.
+    //   CR_LEAD  controller -> strip address stages (emit -> the strip's read)
+    //   CR_RD    strip -> lane operand stages (bank register, rotate mux stages, wire)
+    //   CR_GX    extra stages of a gathered A (the permutation network beyond the rotate)
+    //   CR_WR    lane -> strip element-write stages
+    //   CR_RES   reducer -> strip result stages
+    // The stream unit is then built with BCAST_STAGES = CR_LEAD + CR_RD, RET_STAGES = CR_WR, RES_STAGES = CR_RES,
+    // RD_LEAD = CR_LEAD, CROT_GX = CR_GX (SUBCAST / SU_EWR / SU_RES / VM_DIST_H are ignored).  0: as before.
+    parameter integer VM_CROT = 0,
+    parameter integer CR_LEAD = 1,
+    parameter integer CR_RD = 8,
+    parameter integer CR_GX = 1,
+    parameter integer CR_WR = 8,
+    parameter integer CR_RES = 8,
+    // the stream unit's multiplier / FP add latency (ot_hdc_v41x_vec MLAT / ALAT; the W11 serial build is 5 / 4)
+    parameter integer SU_MLAT = 3,
+    parameter integer SU_ALAT = 3
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -454,9 +495,26 @@ module ot_hdc_core_v41x #(
     reg [NW-1:0] he_nout, he_k;
     reg [AW-1:0] he_wbase, he_xbase, he_obase;
 
-    wire unit_ready = (d_unit == 3'd1) ? me_ready : (d_unit == 3'd2) ? su_ready :
-                      (d_unit == 3'd3) ? qe_ready : (d_unit == 3'd4) ? xu_ready : he_ready;
-    wire [4:0] idles = {he_idle, xu_idle, qe_idle, su_idle, me_idle};
+    // VM_DIST: a unit whose result writes are still in the scatter tree is neither idle nor ready
+    wire pend_me, pend_q, pend_h, pend_x;
+    // the units' vector-memory writes as produced (VM_DIST: before the result scatter tree)
+    wire [MP-1:0]      u_q_we, u_h_we;
+    wire [MP*AW-1:0]   u_q_addr, u_h_addr;
+    wire [MP*32-1:0]   u_q_mask, u_h_mask;
+    wire [MP*1024-1:0] u_q_data, u_h_data;
+    wire               u_xe_we, u_x_we;
+    wire [AW-1:0]      u_xe_addr, u_x_addr;
+    wire [31:0]        u_xe_data, u_x_mask;
+    wire [1023:0]      u_x_data;
+    wire unit_ready = (d_unit == 3'd1) ? (me_ready && !pend_me) : (d_unit == 3'd2) ? su_ready :
+                      (d_unit == 3'd3) ? (qe_ready && !pend_q) : (d_unit == 3'd4) ? (xu_ready && !pend_x) :
+                      (he_ready && !pend_h);
+    wire [4:0] idles = {he_idle && !pend_h, xu_idle && !pend_x, qe_idle && !pend_q, su_idle, me_idle && !pend_me};
+    // VM_DIST: an op of a unit that reads its operands through the x-gather tree issues X_GATHER_STAGES late
+    localparam integer XGS = VM_DIST ? X_GATHER_STAGES : 0;
+    reg [7:0] xg_cnt;
+    wire xg_unit = (d_unit == 3'd1) || (d_unit == 3'd3) || (d_unit == 3'd4) || (d_unit == 3'd5);
+    wire xg_hold = (XGS != 0) && xg_unit && (xg_cnt != 8'(XGS));
     wire [4:0] gos = {he_go, xu_go, qe_go, su_go, me_go};
     //: the wait mask names units whose in-flight work must have drained
     wire waited = ((d_wait & ~(idles & ~gos)) == 5'd0);
@@ -502,6 +560,7 @@ module ot_hdc_core_v41x #(
             next_token <= 0;
             issue_unit <= 0; ds <= 0;
             tokx_v <= 1'b0; amax_v <= 1'b0; acc_v <= 1'b0; xu_rst_v <= 1'b0;
+            xg_cnt <= 8'd0;
         end else begin
             me_go <= 1'b0; su_go <= 1'b0; qe_go <= 1'b0; xu_go <= 1'b0; he_go <= 1'b0;
             coll_go <= 1'b0; prog_re <= 1'b0;
@@ -566,7 +625,12 @@ module ot_hdc_core_v41x #(
                         end
                     end else if (waited && unit_ready && q_gate && kv_gate && m0_gate &&
                                  (!(FULL_SHAPE && KV_HBM && d_unit == 3'd2 && dst == 2'd3) ||
+                                  win_idle || (win_su_match && win_issue_ready)) && xg_hold) begin
+                        xg_cnt <= xg_cnt + 8'd1;
+                    end else if (waited && unit_ready && q_gate && kv_gate && m0_gate &&
+                                 (!(FULL_SHAPE && KV_HBM && d_unit == 3'd2 && dst == 2'd3) ||
                                   win_idle || (win_su_match && win_issue_ready))) begin
+                        xg_cnt <= 8'd0;
                         wrel_v <= d_wrel;
                         me_go <= (d_unit == 3'd1); su_go <= (d_unit == 3'd2);
                         qe_go <= (d_unit == 3'd3); xu_go <= (d_unit == 3'd4); he_go <= (d_unit == 3'd5);
@@ -829,18 +893,19 @@ module ot_hdc_core_v41x #(
     assign vx_re = e_vx_re[me_own*MP*G +: MP*G];
     assign vx_addr = e_vx_addr[me_own*MP*G*AW +: MP*G*AW];
     assign me_ov = e_ov[me_own];
-    assign vw_me_we = e_we[me_own*MP*G +: MP*G];
-    assign vw_me_addr = e_addr[me_own*MP*G*AW +: MP*G*AW];
-    assign vw_me_mask = e_mask[me_own*MP*G*W +: MP*G*W];
-    assign vw_me_data = e_data[me_own*MP*G*W*32 +: MP*G*W*32];
+    wire [MP*G-1:0]      u_me_we = e_we[me_own*MP*G +: MP*G];
+    wire [MP*G*AW-1:0]   u_me_addr = e_addr[me_own*MP*G*AW +: MP*G*AW];
+    wire [MP*G*W-1:0]    u_me_mask = e_mask[me_own*MP*G*W +: MP*G*W];
+    wire [MP*G*W*32-1:0] u_me_data = e_data[me_own*MP*G*W*32 +: MP*G*W*32];
     //: the argmax is a weight op's (the LM head, the Markov head)
     localparam integer EAM = (X_ME != 0) ? 1 : 0;
     assign am_idx_v = e_am_idx[EAM*MP*NW +: MP*NW];
     assign am_val_v = e_am_val[EAM*MP*32 +: MP*32];
     assign am_any_v = e_am_any[EAM*MP +: MP];
-    assign me_oaddr = vw_me_addr;
-    assign me_omask = vw_me_mask;
-    assign me_odata = vw_me_data;
+    // observation: the engine's result words as produced (before the VM_DIST scatter tree)
+    assign me_oaddr = u_me_addr;
+    assign me_omask = u_me_mask;
+    assign me_odata = u_me_data;
 
     // engine 0: the as-built matrix engine (every class not re-specified)
     ot_hdc_v41_matvec #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .MP(MP)) u_me (
@@ -1012,7 +1077,13 @@ module ot_hdc_core_v41x #(
     generate if (X_SU != 0) begin : g_su_x
         wire [SUN-1:0] raw_kv_we;
         ot_hdc_v41x_su_adapt #(.N(SUN), .M(SUM), .LV(SULV), .AW(AW), .NW(NW), .CLS_DRAIN((NSLOT > 1) ? 1 : 0),
-                               .BCAST_STAGES(SUBCAST), .RET_STAGES(SURET))
+                               .BCAST_STAGES(VM_CROT ? CR_LEAD + CR_RD : SUBCAST),
+                               .RET_STAGES(VM_CROT ? CR_WR : VM_DIST ? SU_EWR_STAGES : SURET),
+                               .RES_STAGES(VM_CROT ? CR_RES : VM_DIST ? SU_RES_STAGES : SURET),
+                               .VMD_NG((VM_DIST != 0 && VM_DIST_H != 0 && VM_CROT == 0) ? SUN / 8 : 0), .ROT_STAGES(SU_ROT_STAGES),
+                               .GATH_STAGES(SU_GATH_STAGES), .SCAL_STAGES(SU_SCAL_STAGES),
+                               .RD_LEAD(VM_CROT ? CR_LEAD : -1), .CROT_GX(VM_CROT ? CR_GX : 0),
+                               .MLAT(SU_MLAT), .ALAT(SU_ALAT))
             u_su (
             .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
             .i_nout(su_nout), .i_nin(su_nin), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src),
@@ -1097,7 +1168,7 @@ module ot_hdc_core_v41x #(
         .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
         .vi_re(vq_re), .vi_addr(vq_addr), .vi_q(vq_q),
         .xr_re(wqr_re), .xr_addr(wqr_addr), .xr_q(wqr_q),
-        .w_we(ww_q_we), .w_addr(ww_q_addr), .w_mask(ww_q_mask), .w_data(ww_q_data),
+        .w_we(u_q_we), .w_addr(u_q_addr), .w_mask(u_q_mask), .w_data(u_q_data),
         .kvb_v(win_capture_v), .kvb_src_addr(win_capture_addr),
         .kvb_codes(win_capture_codes), .kvb_scale(win_capture_scale),
         .kvb_fault(win_capture_fault),
@@ -1146,8 +1217,8 @@ module ot_hdc_core_v41x #(
                 .prime_cid(prime_cid),
                 .vr_re(vr_re), .vr_addr(vr_addr), .vr_q(vr_q), .xr_re(wxr_re), .xr_addr(wxr_addr), .xr_q(wxr_q),
                 .vsl_re(vsl_re), .vsl_addr(vsl_addr), .vsl_q(vsl_q),
-                .vw_we(vw_xe_we), .vw_addr(vw_xe_addr), .vw_data(vw_xe_data),
-                .w_we(ww_x_we), .w_addr(ww_x_addr), .w_mask(ww_x_mask), .w_data(ww_x_data),
+                .vw_we(u_xe_we), .vw_addr(u_xe_addr), .vw_data(u_xe_data),
+                .w_we(u_x_we), .w_addr(u_x_addr), .w_mask(u_x_mask), .w_data(u_x_data),
                 .cr_re(xcrom_re), .cr_addr(xcrom_addr), .cr_q(xcrom_q),
                 .er_re(erom_re), .er_addr(erom_addr), .er_q(erom_q), .fault(xu_fault));
         end else begin : g_xu_a
@@ -1163,8 +1234,8 @@ module ot_hdc_core_v41x #(
                 .sel_first(xu_sel_first), .prime_v(prime_v && st == S_IDLE), .prime_first(prime_first),
                 .prime_cid(prime_cid),
                 .vr_re(vr_re), .vr_addr(vr_addr), .vr_q(vr_q), .xr_re(wxr_re), .xr_addr(wxr_addr), .xr_q(wxr_q),
-                .vw_we(vw_xe_we), .vw_addr(vw_xe_addr), .vw_data(vw_xe_data),
-                .w_we(ww_x_we), .w_addr(ww_x_addr), .w_mask(ww_x_mask), .w_data(ww_x_data),
+                .vw_we(u_xe_we), .vw_addr(u_xe_addr), .vw_data(u_xe_data),
+                .w_we(u_x_we), .w_addr(u_x_addr), .w_mask(u_x_mask), .w_data(u_x_data),
                 .cr_re(xcrom_re), .cr_addr(xcrom_addr), .cr_q(xcrom_q),
                 .er_re(erom_re), .er_addr(erom_addr), .er_q(erom_q), .fault(xu_fault));
             assign vsl_re = {XSQ{1'b0}};
@@ -1180,7 +1251,7 @@ module ot_hdc_core_v41x #(
                 .i_nout(he_nout), .i_k(he_k), .i_wbase(he_wbase), .i_xbase(he_xbase), .i_obase(he_obase),
                 .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
                 .w_re(hb_re), .w_addr(hb_addr), .w_data(hb_q), .x_re(vh_re), .x_addr(vh_addr), .x_q(vh_q),
-                .o_we(ww_h_we), .o_addr(ww_h_addr), .o_mask(ww_h_mask), .o_data(ww_h_data), .fault(he_fault));
+                .o_we(u_h_we), .o_addr(u_h_addr), .o_mask(u_h_mask), .o_data(u_h_data), .fault(he_fault));
             assign hrom_re = 1'b0;
             assign hrom_addr = {AW{1'b0}};
         end else begin : g_he_a
@@ -1189,13 +1260,43 @@ module ot_hdc_core_v41x #(
             .i_nout(he_nout), .i_k(he_k), .i_wbase(he_wbase), .i_xbase(he_xbase), .i_obase(he_obase),
             .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
             .hr_re(hrom_re), .hr_addr(hrom_addr), .hr_q(hrom_q), .x_re(vh_re), .x_addr(vh_addr), .x_q(vh_q),
-            .o_we(ww_h_we), .o_addr(ww_h_addr), .o_mask(ww_h_mask), .o_data(ww_h_data), .fault(he_fault));
+            .o_we(u_h_we), .o_addr(u_h_addr), .o_mask(u_h_mask), .o_data(u_h_data), .fault(he_fault));
             assign hb_re = 8'd0;
             assign hb_addr = {(8*HBAW){1'b0}};
         end
     endgenerate
 
     assign unit_busy = ~idles;
+
+    // -- VM_DIST: the matvec result scatter tree (RET_SCATTER_STAGES registers) -------------------------
+    // Each unit's vector-memory writes cross the tree to the lane groups; `pend_*` holds the unit's idle and
+    // ready until its last write has reached the last stage (ot_v41_vm_dist_pipe).
+    localparam integer RSS = VM_DIST ? RET_SCATTER_STAGES : 0;
+    localparam integer WME = MP*G + MP*G*AW + MP*G*W + MP*G*W*32;
+    localparam integer WQ  = MP + MP*AW + MP*32 + MP*1024;
+    localparam integer WX  = 1 + AW + 32 + 1 + AW + 32 + 1024;
+    generate if (RSS == 0) begin : g_ret_flat
+        assign {vw_me_we, vw_me_addr, vw_me_mask, vw_me_data} = {u_me_we, u_me_addr, u_me_mask, u_me_data};
+        assign {ww_q_we, ww_q_addr, ww_q_mask, ww_q_data} = {u_q_we, u_q_addr, u_q_mask, u_q_data};
+        assign {ww_h_we, ww_h_addr, ww_h_mask, ww_h_data} = {u_h_we, u_h_addr, u_h_mask, u_h_data};
+        assign {vw_xe_we, vw_xe_addr, vw_xe_data, ww_x_we, ww_x_addr, ww_x_mask, ww_x_data} =
+               {u_xe_we, u_xe_addr, u_xe_data, u_x_we, u_x_addr, u_x_mask, u_x_data};
+        assign pend_me = 1'b0; assign pend_q = 1'b0; assign pend_h = 1'b0; assign pend_x = 1'b0;
+    end else begin : g_ret_tree
+        wire vme, vq, vh, vx;
+        ot_v41_vm_dist_pipe #(.W(WME), .D(RSS)) u_ret_me (.clk(clk), .rst_n(rst_n), .v(|u_me_we),
+            .d({u_me_we, u_me_addr, u_me_mask, u_me_data}), .v_o(vme),
+            .d_o({vw_me_we, vw_me_addr, vw_me_mask, vw_me_data}), .pending(pend_me));
+        ot_v41_vm_dist_pipe #(.W(WQ), .D(RSS)) u_ret_q (.clk(clk), .rst_n(rst_n), .v(|u_q_we),
+            .d({u_q_we, u_q_addr, u_q_mask, u_q_data}), .v_o(vq),
+            .d_o({ww_q_we, ww_q_addr, ww_q_mask, ww_q_data}), .pending(pend_q));
+        ot_v41_vm_dist_pipe #(.W(WQ), .D(RSS)) u_ret_h (.clk(clk), .rst_n(rst_n), .v(|u_h_we),
+            .d({u_h_we, u_h_addr, u_h_mask, u_h_data}), .v_o(vh),
+            .d_o({ww_h_we, ww_h_addr, ww_h_mask, ww_h_data}), .pending(pend_h));
+        ot_v41_vm_dist_pipe #(.W(WX), .D(RSS)) u_ret_x (.clk(clk), .rst_n(rst_n), .v(u_xe_we || u_x_we),
+            .d({u_xe_we, u_xe_addr, u_xe_data, u_x_we, u_x_addr, u_x_mask, u_x_data}), .v_o(vx),
+            .d_o({vw_xe_we, vw_xe_addr, vw_xe_data, ww_x_we, ww_x_addr, ww_x_mask, ww_x_data}), .pending(pend_x));
+    end endgenerate
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;

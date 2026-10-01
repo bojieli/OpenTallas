@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.w11-die-idx-ring-mu-gate.v1",
   "status": "pass",
-  "git_head": "8f0d2e6349b8e8be8d33114bb15de415c57a32aa",
+  "git_head": "e0a725035690285be4f9ad8589581bb6b331a32c",
   "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
   "configuration": {
     "die": "ot_chip_v41x_die",
@@ -222,9 +222,9 @@
     }
   },
   "simulation_exit": 0,
-  "simulation_wall_seconds": 2298.3,
-  "simulation_log_sha256": "517c14fc0d6a7f2c1dd376c57d3f991c8431ad4b47d9a87d3897a8c74388e5af",
-  "simulation_tail": "=97660 grants=79896 code=00000 att_issue=480 att_held_cycles=27602\nSTEP1 PASS\nSTEP2 user=1 key_carry checked=20 mismatches=0\nXCNT unit=he ops=240 elems=3686400\nXCNT unit=me ops=288 elems=10753536\nXCNT unit=att ops=720 elems=523008\nXCNT unit=su ops=7884 elems=1968399\nXCNT unit=sel ops=24 elems=525 reps=0\nXCNT unit=eg ops=6 elems=144\nXCNT unit=idx ops=24 elems=525\nXCNT unit=idx_hbm ops=1149 elems=1123\nXCNT unit=idx_fused ops=525 elems=16800\nXCNT unit=idx_kwr ops=9 elems=9\nIDXRING regions=8 preloaded_keys=172 max_region_keys=63 migrations=4 copied_sectors=408\nIDXHBMWR records=9 writes=435 highwater=1 read_stalls=1733 writer_stalls=0 refreshes=1497364 refpb=3\nHDC41 step=2 user=1 token=3118 pos=8 next_token=3977 expect=3977 cycles=451513 fault=0 logit_mismatch=0 vm_mismatch=0 kv_mismatch=0 key_carry_mismatch=0\nUTIL me_busy=565437 su_busy=551418 qe_busy=217801 xu_busy=83116 he_busy=96480 all_idle=279964\nQSTREAM q_ops=2208 q_words=110400 q_bad=0 qs_fault=0 qs_why=0 fetched=110400 consumed=110400 hbm_reads=1462080\nDIE fault=00000000 rtr_drops=0 kv_descriptors=720\nKVHBM ops=720 words=56020 sectors_written=43920 refetches=2196 wq_high=99 hold_cycles=130792 grants=99940 code=00000 att_issue=720 att_held_cycles=38387\nSTEP2 PASS\nSTEP3 user=2 key_carry checked=180 mismatches=0\nXCNT unit=he ops=320 elems=4915200\nXCNT unit=me ops=382 elems=14336000\nXCNT unit=att ops=960 elems=810240\nXCNT unit=su ops=10486 elems=2865212\nXCNT unit=sel ops=32 elems=946 reps=0\nXCNT unit=eg ops=8 elems=192\nXCNT unit=idx ops=32 elems=946\nXCNT unit=idx_hbm ops=2194 elems=2022\nXCNT unit=idx_fused ops=946 elems=30272\nXCNT unit=idx_kwr ops=10 elems=10\nIDXRING regions=8 preloaded_keys=172 max_region_keys=63 migrations=4 copied_sectors=408\nIDXHBMWR records=10 writes=438 highwater=1 read_stalls=1733 writer_stalls=0 refreshes=2091705 refpb=3\nHDC41 step=3 user=2 token=2266 pos=64 next_token=3276 expect=3276 cycles=558065 fault=0 logit_mismatch=0 vm_mismatch=0 kv_mismatch=0 key_carry_mismatch=0\nUTIL me_busy=798773 su_busy=759938 qe_busy=290340 xu_busy=110832 he_busy=128640 all_idle=378546\nQSTREAM q_ops=2944 q_words=147200 q_bad=0 qs_fault=0 qs_why=0 fetched=147200 consumed=147200 hbm_reads=1949440\nDIE fault=00000000 rtr_drops=0 kv_descriptors=960\nKVHBM ops=960 words=97680 sectors_written=67280 refetches=3416 wq_high=99 hold_cycles=196451 grants=164960 code=00000 att_issue=960 att_held_cycles=53502\nSTEP3 PASS\nPASS\n- /tmp/claude-1000/wt/w11-landpin/rtl/test/tb_chip_v41x_die_ring_mu.sv:386: Verilog $finish\n",
+  "simulation_wall_seconds": 11636.7,
+  "simulation_log_sha256": "ead4925663b0c73f61b07e57dc2c6538e1bab4940fd2fcabfa7f58c7c890f699",
+  "simulation_tail": "ycles=97660 grants=79896 code=00000 att_issue=480 att_held_cycles=27602\nSTEP1 PASS\nSTEP2 user=1 key_carry checked=20 mismatches=0\nXCNT unit=he ops=240 elems=3686400\nXCNT unit=me ops=288 elems=10753536\nXCNT unit=att ops=720 elems=523008\nXCNT unit=su ops=7884 elems=1968399\nXCNT unit=sel ops=24 elems=525 reps=0\nXCNT unit=eg ops=6 elems=144\nXCNT unit=idx ops=24 elems=525\nXCNT unit=idx_hbm ops=1149 elems=1123\nXCNT unit=idx_fused ops=525 elems=16800\nXCNT unit=idx_kwr ops=9 elems=9\nIDXRING regions=8 preloaded_keys=172 max_region_keys=63 migrations=4 copied_sectors=408\nIDXHBMWR records=9 writes=435 highwater=1 read_stalls=1733 writer_stalls=0 refreshes=1497364 refpb=3\nHDC41 step=2 user=1 token=3118 pos=8 next_token=3977 expect=3977 cycles=451513 fault=0 logit_mismatch=0 vm_mismatch=0 kv_mismatch=0 key_carry_mismatch=0\nUTIL me_busy=565437 su_busy=551418 qe_busy=217801 xu_busy=83116 he_busy=96480 all_idle=279964\nQSTREAM q_ops=2208 q_words=110400 q_bad=0 qs_fault=0 qs_why=0 fetched=110400 consumed=110400 hbm_reads=1462080\nDIE fault=00000000 rtr_drops=0 kv_descriptors=720\nKVHBM ops=720 words=56020 sectors_written=43920 refetches=2196 wq_high=99 hold_cycles=130792 grants=99940 code=00000 att_issue=720 att_held_cycles=38387\nSTEP2 PASS\nSTEP3 user=2 key_carry checked=180 mismatches=0\nXCNT unit=he ops=320 elems=4915200\nXCNT unit=me ops=382 elems=14336000\nXCNT unit=att ops=960 elems=810240\nXCNT unit=su ops=10486 elems=2865212\nXCNT unit=sel ops=32 elems=946 reps=0\nXCNT unit=eg ops=8 elems=192\nXCNT unit=idx ops=32 elems=946\nXCNT unit=idx_hbm ops=2194 elems=2022\nXCNT unit=idx_fused ops=946 elems=30272\nXCNT unit=idx_kwr ops=10 elems=10\nIDXRING regions=8 preloaded_keys=172 max_region_keys=63 migrations=4 copied_sectors=408\nIDXHBMWR records=10 writes=438 highwater=1 read_stalls=1733 writer_stalls=0 refreshes=2091705 refpb=3\nHDC41 step=3 user=2 token=2266 pos=64 next_token=3276 expect=3276 cycles=558065 fault=0 logit_mismatch=0 vm_mismatch=0 kv_mismatch=0 key_carry_mismatch=0\nUTIL me_busy=798773 su_busy=759938 qe_busy=290340 xu_busy=110832 he_busy=128640 all_idle=378546\nQSTREAM q_ops=2944 q_words=147200 q_bad=0 qs_fault=0 qs_why=0 fetched=147200 consumed=147200 hbm_reads=1949440\nDIE fault=00000000 rtr_drops=0 kv_descriptors=960\nKVHBM ops=960 words=97680 sectors_written=67280 refetches=3416 wq_high=99 hold_cycles=196451 grants=164960 code=00000 att_issue=960 att_held_cycles=53502\nSTEP3 PASS\nPASS\n- /tmp/claude-1000/wt/w11-rd/rtl/test/tb_chip_v41x_die_ring_mu.sv:386: Verilog $finish\n",
   "claim_boundary": "Reduced V4.1 decode steps through the die top with the ring key layout at full ring capacity (65,568-slot, 1,090-block regions) and the key user base keyed from the step's user id: two users' rings resident in HBM together; each user's steps write and scan only its own rings (a user's second step finds its ring as its first step left it and exact), bit-exact against the ISA model. The bench loads each step's vector memory and host-mode KV slice (host mode has one of each; the per-user KV slices of controller mode are not exercised). Reduced positions stay below 128 (hdc_isa_v41.POS_MAX), so ring slots past 1,024 and the ring wrap are shown by the writer/reader gate results/rtl/w11_idx_ring_naming.json, not by a die token.",
   "sources_sha256": {
     "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
@@ -232,7 +232,7 @@
     "rtl/chip/ot_chip_v41x_attn_row_merge.sv": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
     "rtl/chip/ot_chip_v41x_coll_dma.sv": "2e5f33b74ef8f59996287e82f86b9cf238380b5da432c5c903a0bd191e6eede3",
     "rtl/chip/ot_chip_v41x_coll_transpose.sv": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
-    "rtl/chip/ot_chip_v41x_die.sv": "adecb6482756df56249326aa317812c69dfeec2bb938496394850ff3e10a26b1",
+    "rtl/chip/ot_chip_v41x_die.sv": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2",
     "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b",
     "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
     "rtl/chip/ot_chip_v41x_hbm_karb_local.sv": "73a9c0ea0eeb49d286a6e964e2f0f4ba5704a347be5c1ff67003059cc57dd558",
@@ -249,7 +249,7 @@
     "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv": "18a90665039d2f6b87d312e11496c47262383c9801d9edbf60d34b7cd4f37dee",
     "rtl/chip/ot_chip_v41x_rope_region_guard.sv": "239c4a1f6ffa3f62022d27da2ecdbf9e6d406e190c0e0ab253c56bf593f1fbcb",
     "rtl/chip/ot_chip_v41x_rope_su_word.sv": "5a3c4176cefdc05f9f837c1f093ff31a12d903b527bf6097caafd3f10b34c12c",
-    "rtl/chip/ot_chip_v41x_tile.sv": "88287d765053f00259ad9ce22e76c258e6f966db6207bcbcbb317d7bac0fb0f9",
+    "rtl/chip/ot_chip_v41x_tile.sv": "c74505d599728bc0948994ddfe13da6d95eaff343ea2ee08c50fe13e5d8aa46b",
     "rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
     "rtl/chip/ot_chip_v41x_window_block_guard.sv": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791",
     "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
@@ -286,7 +286,7 @@
     "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
     "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
     "rtl/hdc/v41/ot_hdc_v41_xu.sv": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566",
-    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "66185b3bab95698f81e5d746c2abbd818d19a8e770f87315aad4836054e5da0a",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
     "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv": "1c71b11df5ec918b55bbb5706a80dda65e8470144ec08f27afc46523be57066b",
     "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "43a50490c9e0529f642b0ade3f886b677045d405c214471b52e824c7f33df858",
     "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd",
@@ -322,8 +322,8 @@
     "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
     "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "5a88f2536d8e4f1e54bc9ea6c969af33ed1ae4b4c914aae561cb6601715745a6",
-    "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": "e382bd4033c140a192914b9bf348a5412f81b2b4e069d4dfd7fd8bd733227fc5",
-    "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "d9e93b5a7d8902b2f20f85a4c1aa69fbcaee33cb224d0eff7876c24dcff4f003",
+    "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": "a6531a9fddd6b9dee21c4512679eda222cf780573293179cc0cf5c797a5f0686",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "569db2f33b015cc80d0f6eccd2b6d6036f25ebf56a1ea1140265bec10efa6453",
     "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "1b0a5ccbbe8c156f4920bc31a48af545b96441203df156299d91b302752909c4",
     "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "cc9aad507db760a2d7086558c1fde3cb4bd0062730fd4c2447d9634e43b4b00a",
     "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "0ba8c77b349a8116958f09f3948116c8183f558f10b3228b55bcb55f1108b315",
@@ -350,7 +350,7 @@
     "tools/w11_die_idx_ring_gate.py": "52446035d4989f325dcee9e73e3f617b475451745f394b09234ae2d3df2cae58",
     "tools/rtl_chip_v41x_die_smoke.py": "e6ac1ba5dd375eb0ba4ba951ed19af1a6decb91e895add417770f59c921ac514",
     "tools/rtl_hdc_v41x_decode_campaign.py": "dcf341c59b7c3de0e14c720ba720e92a6833cb4c4d956e3e76b22a4f5d33b867",
-    "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d",
+    "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
     "tools/hdc_images_v41x.py": "42989b07a65e85bf4406774d8b049f9e4d38ef0b259187f7a744fc97024ffcc3",
     "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh": "138edb11cd58f3d7d69cc9b8a383a86653c583198a87965a3de656ca22a069c4"
   }
