@@ -50,6 +50,9 @@ def price(demands):
                          publication='All K/V addressed sector WRvisible ACKs and reverse CDC completed before publication. No accepted/queued-write completion credit.',
                          physical_admission=False))
     return dict(schema='opentallas.w13.packed-KV-locked-RMW.v1',rows=rows,
+                per_writer_mixed_stack_command_patterns=[list(p) for p in sorted({tuple(r['mixed_read_write_commands_by_stack']) for r in rows})],
+                per_writer_stack_cycle_floor_range=[min(r['minimum_shared_stack_command_cycles'] for r in rows),max(r['minimum_shared_stack_command_cycles'] for r in rows)],
+                aggregate_mixed_commands_by_die_stack={str(die):[sum(r['mixed_read_write_commands_by_stack'][stack] for r in rows if r['die']==die) for stack in range(4)] for die in sorted({r['die'] for r in rows})},
                 mixed_command_policy='At most one shared read OR write command per stack per fast cycle; competing weights/KV/scales reduce available slots.',
                 total_port_payload_bytes=sum(r['port_payload_bytes'] for r in rows),
                 total_mixed_commands=sum(sum(r['mixed_read_write_commands_by_stack']) for r in rows),
