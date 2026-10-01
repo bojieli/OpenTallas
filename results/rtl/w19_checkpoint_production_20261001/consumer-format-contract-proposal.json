@@ -1,0 +1,162 @@
+{
+  "schema": "opentallas.w19.consumer-format-contract-proposal.v1",
+  "source_commit": "10a4071fb49fa6161e3523dc3a7025fe5be51357",
+  "status": "PROPOSAL_NOT_FROZEN",
+  "source_pins": {
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/rtl_v41_fullshape_layer_campaign.py": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8",
+    "results/rtl/w19_checkpoint_production_20261001/non_SM_source_inventory.json": "cd75fe06068663949dc605d7e64305b08b869fb109d4f0018f862855c9b26742",
+    "results/rtl/w19_checkpoint_production_20261001/accepted256-prerequisite-r2-main-c066.json": "c462190c077a67ed117821ce1b096845303b1662408e72c3bebd04ddd4b8baed"
+  },
+  "logical_extent_companion_commit": "a4424fec6",
+  "inventory_header_hash_definition": "SHA256 of the exact 8-byte little-endian safetensors header length prefix concatenated with the exact JSON header bytes; not JSON alone.",
+  "accepted_weight_format": {
+    "record_bytes": 256,
+    "weight_bytes": 128,
+    "exponent_bytes": 8,
+    "padding_bytes": 120,
+    "authority": "accepted256-prerequisite-r2-main-c066.json",
+    "weight_only_aw": 27,
+    "full_stack_aw": null
+  },
+  "state_formats": [
+    {
+      "family": "window",
+      "producer": "pack_fp8_ue8m0",
+      "source": "tools/rtl_v41_fullshape_layer_campaign.py",
+      "codes": "E4M3",
+      "code_bytes_per_row": 512,
+      "scales": "UE8M0 bias127 per32",
+      "scale_bytes_per_row": 16,
+      "ownership": "all96 ranks, every layer,128 rows",
+      "runtime_writer_qualified": false
+    },
+    {
+      "family": "compressed_KV",
+      "producer": "pack_fp4_e4m3",
+      "source": "tools/rtl_v41_fullshape_layer_campaign.py",
+      "codes": "E2M1 low nibble first",
+      "code_bytes_per_row": 256,
+      "scales": "E4M3 per16",
+      "scale_bytes_per_row": 32,
+      "ownership": "(global_row//8)%96",
+      "local_row": "(global_row//768)*8+global_row%8",
+      "runtime_writer_qualified": false
+    },
+    {
+      "family": "index",
+      "producer": "pack_fp4_ue8m0",
+      "source": "tools/rtl_v41_fullshape_layer_campaign.py",
+      "codes": "E2M1 low nibble first",
+      "code_bytes_per_row": 64,
+      "scales": "UE8M0 bias127 per32",
+      "scale_bytes_per_row": 4,
+      "ownership": "(global_row//8)%96",
+      "local_row": "(global_row//768)*8+global_row%8",
+      "runtime_writer_qualified": false
+    }
+  ],
+  "checkpoint_tables": [
+    {
+      "family": "Engram",
+      "ownership": "id%96 (existing ISA f_engram_fetch)",
+      "local_row": "id//96",
+      "codes": "checkpoint F8_E4M3 [row,256]",
+      "scales": "checkpoint F8_E8M0 [row,8]",
+      "stored_bytes": 202758032400,
+      "response": "golden decode_engram_rows; BF16-valued rows",
+      "response_rtl_qualified": false
+    },
+    {
+      "family": "embedding",
+      "ownership": null,
+      "proposed_ownership": "id%96; local row id//96, single row broadcast",
+      "ownership_source": "NEW MODEL PROPOSAL; ISA establishes activation fixture only",
+      "format": "checkpoint BF16 [129280,5120]",
+      "row_bytes": 10240,
+      "stored_bytes": 1323827200
+    }
+  ],
+  "coefficient_consumers": [
+    {
+      "family": "HC",
+      "golden_operator": "Model.hc_mixes -> matvec_c(fn, flat, HC_SPLIT, cls=he), norm, sigmoid, Sinkhorn",
+      "fn_format": "F32 [24,20480]",
+      "fn_bytes_per_operator": 1966080,
+      "fn_operators": 80,
+      "fn_stored_bytes": 157286400,
+      "scale_format": "F32 [3]",
+      "base_format": "F32 [24]",
+      "logical_access": "full fn, scale and base per invoked operator; logical ISA f_hc_mixes on ranks",
+      "physical_replicas": null,
+      "physical_access_sets": null,
+      "remote_service_schedule": null,
+      "warning": "Logical consumers do not establish whole-copy physical residency or permit assumed row subsets."
+    },
+    {
+      "family": "compressor/indexer",
+      "golden_operator": "f_compressor: pool in golden order, norm, linear_bf16(wk, latent), index norm, RoPE, QDQ, append",
+      "ownership": "current group owner (group//8)%96",
+      "formats": [
+        "compressor.norm BF16[512]",
+        "indexer.wk BF16[128,512]",
+        "indexer.k_norm BF16[128]"
+      ],
+      "coefficient_replication": null,
+      "rtl_matvec_and_packed_append_qualified": false
+    },
+    {
+      "family": "attention_sink",
+      "logical_access": "head rank0..63 consumes its single F32 scalar per layer; not whole vector on every rank",
+      "physical_placement": null
+    },
+    {
+      "family": "router_bias",
+      "logical_access": "f_route consumes gate.bias F32[384]; gate.bias_vl not used by this AR operator",
+      "physical_placement": null
+    },
+    {
+      "family": "norms_and_Engram_mix",
+      "logical_access": "f_hc_pre_norm, f_q_norm_kv_row, f_engram_mix and final norm use checkpoint BF16 vectors/matrices",
+      "physical_replication_and_service": null
+    }
+  ],
+  "append_workspace": {
+    "existing_source": "f_compressor slots store pending kv F32[512] and sc F32[512],4096 bytes per pending position; cleared on group close",
+    "reservation_bytes": null,
+    "lifecycle_and_append_commit_protocol": null
+  },
+  "four_controller_proposal": {
+    "line_bytes": 128,
+    "family_base_alignment_bytes": 256,
+    "controller": "(family_virtual_byte//128)%4",
+    "controller_offset": "(family_virtual_byte//512)*128 + family_virtual_byte%128",
+    "physical_address": "family_base[rank][controller]+controller_offset",
+    "bases": null,
+    "stripe_phase": "proposed zero independently per family, not frozen",
+    "rules": [
+      "retain actual rank ownership",
+      "nonoverlap family extents after accepted weight ledger",
+      "account stored table rows once, no whole embedding or Engram replication",
+      "no capacity modulo, per-layer rebasing, reload or alias"
+    ]
+  },
+  "freeze_requirements": [
+    "embedding owner approval",
+    "HC physical coefficient access sets and replica versus remote-service schedule",
+    "norm/bias/compressor coefficient service placement",
+    "runtime packed readers and exact writer/append protocol",
+    "workspace lifetime and user count",
+    "actual bases and stripe phase",
+    "controller/NoC bytes per cycle, queue/credit limits, routes, area and composed single-user latency in unified model"
+  ],
+  "next_connected_gate": "After modeled contract freeze: accepted256 resident address transport at model-selected width through finite controller service, then RTL router-produced IDs -> expert fetch -> qualified SM with actual activation propagation. State append and consumers must connect before any 40-layer+head full-token claim.",
+  "qualification": {
+    "full_resident": false,
+    "full_token_rtl": false,
+    "physical_SS_FF": false,
+    "historical_54_case_gate_rerun": false,
+    "compact_production_adoption": false
+  }
+}
