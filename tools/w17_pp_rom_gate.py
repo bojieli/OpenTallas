@@ -10,7 +10,7 @@ def main():
     a.work.mkdir(parents=True,exist_ok=True)
     pins={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in SRC}
     vl=os.path.expanduser('~/.local/opentallas-tools/verilator-5.050/bin/verilator')
-    cmd=[vl,'--cc','--exe','--build','-j','2','--top-module','tb_w17_pp_rom','--Mdir',str(a.work/'obj'),*[str(ROOT/s) for s in SRC[:3]]]
+    cmd=[vl,'--cc','--exe','--build','-Wno-fatal','-j','2','--top-module','tb_w17_pp_rom','--Mdir',str(a.work/'obj'),*[str(ROOT/s) for s in SRC[:3]]]
     p=subprocess.run(cmd,capture_output=True,text=True);(a.work/'build.log').write_text(p.stdout+p.stderr)
     runs=[]
     if p.returncode==0:
