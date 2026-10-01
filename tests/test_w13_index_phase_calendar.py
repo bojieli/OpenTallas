@@ -26,3 +26,36 @@ def test_authoritative_edge_omission_and_ACK_future_negative():
  e=event();l=lease();l['descriptor_WR_visible']=99
  d=audit([e],[l],{'x':{'op':'IADD','dependencies':['producer']}})
  assert 'authoritative_source_event_mismatch:x' in d['issues'];assert 'publication_lease_event_order' in d['issues']
+
+def version_fixture(overwrite_tick=76,consumer_read=80):
+    events=[];source={}
+    for name,read,finish,rr,producer in [('A',0,36,[0,1],None),('B',40,overwrite_tick,[0,1],None),('consumer_A',consumer_read,consumer_read+36,[2,0],'A')]:
+        e=event();e.update(id=name,RF_read_tick=read,issue_tick=read+8,writeback_tick=finish,RF_register_reads=rr,RF_register_writes=[3] if producer else [2],phase_entry_RF_visible_ticks={'0':0,'1':0})
+        operands=[dict(operand_index=j,register=v,producer_event='A' if producer and j==0 else 'phase_input:'+str(v),result_id='A.result' if producer and j==0 else 'input.'+str(v)) for j,v in enumerate(rr)]
+        results=[dict(register=e['RF_register_writes'][0],result_id=name+'.result')]
+        e.update(dependencies=[producer] if producer else [],operand_register_bindings=operands,result_register_bindings=results)
+        source[name]=dict(op='IADD',dependencies=e['dependencies'],operand_register_bindings=operands,result_register_bindings=results)
+        events.append(e)
+    l=lease();l['physical_provider_source_pin']={'synthetic_test_only':True}
+    return events,[l],source
+
+def test_exact_parent_stale_register_version_negative():
+    d=audit(*version_fixture())
+    assert not d['candidate_event_constraints_pass']
+    assert 'stale_register_version:consumer_A' in d['issues']
+    assert 'register_overwrite_before_last_consumer:A' in d['issues']
+
+def test_delayed_overwrite_after_consumer_positive():
+    events,leases,source=version_fixture(overwrite_tick=116,consumer_read=40)
+    events[1].update(RF_read_tick=80,issue_tick=88)
+    d=audit(events,leases,source)
+    assert d['issues']==[] and d['candidate_event_constraints_pass']
+    assert not d['physical_admission']
+
+def test_source_identity_ignored_or_mutated_is_rejected():
+    events,leases,source=version_fixture()
+    events[-1]['operand_register_bindings']=[dict(operand_index=0,register=2,producer_event='B',result_id='B.result'),events[-1]['operand_register_bindings'][1]]
+    d=audit(events,leases,source)
+    assert 'callback_operand_result_identity_mismatch:consumer_A' in d['issues']
+    del source['A']['result_register_bindings']
+    assert 'source_operand_result_identity_unbound:A' in audit(events,leases,source)['issues']
