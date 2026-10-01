@@ -57,7 +57,7 @@ def argv(mode, work, output):
         params={k:v for k,v in params.items() if k in ['NB','FAST','PP','MTP','EARLY','FRONT_PAR','WAKE_REG']}
     shape=model['elements'][mode]['outline_um']
     col=mode=='column'
-    cmd=[sys.executable,str(ROOT/'tools/run_abi3_physical.py'),'--view','asap7','--top',binding['top']]
+    cmd=[sys.executable,str(ROOT/'tools/w10_wake_flow.py'),'--view','asap7','--top',binding['top']]
     for p in sources:cmd += ['--source',p]
     cmd += ['--clock-period-ns','0.833','--clock-uncertainty-ns','0.06',
             '--clock-uncertainty-hold-ns','0.025','--io-delay-fraction','0.2',
@@ -67,7 +67,7 @@ def argv(mode, work, output):
             '--pin-region',('.*=bottom:151.44-851.44' if col else '^(clk|rst|cfg|go|x).*=bottom:135.54-375.3'),
             '--max-transition-ns','0.32','--slew-margin-percent','40','--hold-margin-ns','0',
             '--step-tcl',f'POST_MACRO_PLACE=physical/abi3/w10_wake_{mode}_place.tcl',
-            '--step-tcl','POST_DETAIL_PLACE=physical/abi3/check_pg_before_route.tcl',
+            '--step-tcl','POST_DETAIL_PLACE=physical/abi3/w10_wake_check_pg.tcl',
             '--orfs-var','PDN_TCL=/src/physical/abi3/w10_wake_pdn.tcl',
             '--nickname-tag',f'w10_wake_{mode}_r1','--keep-workdir',str(work),
             '--output',str(output),'--sdc-append','physical/abi3/w10_wake_pp_multicycle.sdc',
