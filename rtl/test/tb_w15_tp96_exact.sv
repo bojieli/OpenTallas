@@ -29,7 +29,7 @@ module tb_w15_tp96_exact #(
     parameter integer X_WIRE = 16, X_ENC = 6, X_DEC = 194,
     parameter integer SW_PIPE = 200,
     parameter integer LAND_DEPTH = 128,
-    parameter integer T0 = 64, GAP = 2
+    parameter integer T0 = 64, GAP = 2, MEASURE_WIDTH = 64
 );
     localparam integer N = 2 * P, FW = 32 * LANES, TAGW = 32, PW = FW + 2 + TAGW, TSW = 16, NL = 2;
     localparam integer BW = TSW + 1 + 1 + PW, FRW = NL * (BW + 1) + 32;   // UCIe and board: FRAME_CYCLES 1
@@ -83,12 +83,15 @@ module tb_w15_tp96_exact #(
         $readmemh({vecdir, "/expected.hex"}, expw);
         ready = 1;
         $display("W15HCFG seed=%0d P=%0d det=%0d u_drel=%0d x_drel=%0d sw_pipe=%0d", seed0, P, DET, U_DREL, X_DREL, SW_PIPE);
+        $display("W15MEASURE version=1 bits=%0d protocol_bits=%0d period_ps=%0d overflow_guard=1", MEASURE_WIDTH, TSW,
+                 2*$rtoi(T_CORE*500.0+0.5));
         go_clk = 1;
     end
     // ---- clocks: dies, their UCIe / SerDes link clocks, the switch and its SerDes link clock -----------------
     reg [N-1:0] clk = 0, lu = 0, lx = 0, rst_n = 0, rst_u = 0, rst_x = 0;
     reg sclk = 0, slx = 0, srst = 0, srst_x = 0;
     reg [TSW-1:0] now [0:N-1];
+    wire [MEASURE_WIDTH-1:0] measure_cycle [0:N-1];
     reg [TSW-1:0] snow = 0;
     genvar d, p;
     generate for (d = 0; d < N; d = d + 1) begin : g_clk
@@ -98,6 +101,8 @@ module tb_w15_tp96_exact #(
         always @(posedge clk[d]) rst_n[d] <= ($realtime > 40.0) && ready;
         always @(posedge lu[d]) rst_u[d] <= ($realtime > 40.0);
         always @(posedge lx[d]) rst_x[d] <= ($realtime > 40.0);
+        w15_tp96_measure_counter #(.WIDTH(MEASURE_WIDTH)) u_measure (
+            .clk(clk[d]), .enabled(rst_n[d]), .cycles(measure_cycle[d]));
         initial now[d] = 0;
         always @(posedge clk[d]) if (rst_n[d]) now[d] <= now[d] + 1'b1;
     end endgenerate
@@ -160,6 +165,11 @@ module tb_w15_tp96_exact #(
             end
             always @(posedge rep) $display("CREDIT die=%0d waiting=%0d consumer_stall=%0d landing_peak=%0d accepted=%0d",DD,credit_wait[DD],consumer_wait,landing_peak,accepted[DD]);
             integer issue_c [0:OPS-1], last_c [0:OPS-1], ftx [0:OPS-1], ltx [0:OPS-1], wr [0:OPS-1];
+            reg [MEASURE_WIDTH-1:0] m_issue [0:OPS-1], m_last [0:OPS-1], m_ftx [0:OPS-1], m_ltx [0:OPS-1];
+            always @(posedge dump)
+                for (integer o=0;o<OPS;o=o+1)
+                    $display("MEAS op=%0d die=%0d issue=%0d first_tx=%0d last_tx=%0d first_vm=%0d last_vm=%0d done=%0d",
+                             o,DD,m_issue[o],m_ftx[o],m_ltx[o],m_last[o],m_last[o],m_last[o]+1);
             // first_vm is not tracked separately: first_vm = last_vm = the last result (issue -> last result is fitted)
             always @(posedge dump)
                 for (integer o = 0; o < OPS; o = o + 1)
@@ -178,17 +188,19 @@ module tb_w15_tp96_exact #(
                         op <= o; k <= 0; got <= 0; seen <= 0;
                         n_ <= integer'(desc[o][14:0]);
                         want <= desc[o][31] ? N * integer'(desc[o][14:0]) : integer'(desc[o][14:0]);
+                        m_issue[o] = measure_cycle[DD]+1; m_ftx[o]=0; m_ltx[o]=0; m_last[o]=0;
                         issue_c[o] = now[DD] + 1; ftx[o] = -1; ltx[o] = -1; last_c[o] = -1; wr[o] = 0;
                         st <= 2;
                     end
                     2: begin
                         if (pv[j]) begin
-                            if (ftx[op] < 0) ftx[op] = now[DD];
-                            if (k == n_ - 1) ltx[op] = now[DD];
+                            if (ftx[op] < 0) begin ftx[op] = now[DD]; m_ftx[op] = measure_cycle[DD]; end
+                            if (k == n_ - 1) begin ltx[op] = now[DD]; m_ltx[op] = measure_cycle[DD]; end
                             k <= k + 1;
                         end
                         if (k<n_ && !pv[j]) credit_wait[DD] <= credit_wait[DD]+1;
                         if (got == want) begin
+                            m_last[op] = measure_cycle[DD]-1;
                             last_c[op] = now[DD] - 1;
                             if (op == OPS - 1) begin fin[DD] <= 1'b1; st <= 4; end
                             else begin waitc <= GAP; st <= 3; end
