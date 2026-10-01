@@ -2,7 +2,7 @@ import sys
 import pytest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
-from w13_provider_resource_calendar import write_calendar
+from w13_provider_resource_calendar import write_calendar,source_epoch64_contract
 
 
 def request(i,pc=None,ready=0):
@@ -64,5 +64,19 @@ def test_die_identity_separates_pending_capacity_and_same_address_order():
     d=run([a,b],1)
     assert [e['pending_reserved_and_column_ps'] for e in d['calendar']]==['0','0']
     del b['die'];assert run([b])['calendar'] is None
+
+
+def test_full64_requires_repriced_capture_and_independent_transport_identity():
+    q=request(0);q['epoch']=(1<<64)-1
+    contract=source_epoch64_contract()
+    args=([q],4,1000,2000,7274,10000)
+    assert write_calendar(*args,epoch_capture_contract=contract)['calendar'] is None
+    q['transport_epoch']=3
+    d=write_calendar(*args,epoch_capture_contract=contract)
+    assert not d['issues'] and d['calendar'][0]['producer_epoch64']==(1<<64)-1
+    assert d['calendar'][0]['transport_epoch32']==3
+    assert d['model_full64_producer_representation_verified'] and not d['source_epoch_LE64_whole_domain_qualified']
+    bad=dict(contract,captured_WR_pending_epoch_bits=32)
+    assert write_calendar(*args,epoch_capture_contract=bad)['calendar'] is None
     q=request(0);q['DRAM_eligibility_source_event']=None
     assert run([q])['calendar'] is None
