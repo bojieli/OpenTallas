@@ -4,9 +4,20 @@ A candidate calendar, not an instantiated cache or whole-token timing claim.
 """
 import argparse, ast, gzip, hashlib, json, subprocess, types
 from decimal import Decimal
+from pathlib import Path
 import w17_crom_finite_prefetch as C
 
 CURRENT='d84ba7b80904bd066ba71c19c169636a9dac96e8'
+HELPER_COMMIT='5f44f6e0465db704dd90852c6cc2c318f5aee8f8'
+HELPER_PATH='tools/w17_crom_finite_prefetch.py'
+HELPER_SHA256='824aceef53a155810027e3f9a12319b956bf1d2a425f62ea4c88224461341569'
+
+def verify_imported_helper(module=C):
+    loaded=Path(module.__file__).read_bytes()
+    if hashlib.sha256(loaded).hexdigest()!=HELPER_SHA256:
+        raise ValueError('finite-prefetch runtime helper source mismatch; requires '+HELPER_COMMIT+':'+HELPER_PATH+' SHA256 '+HELPER_SHA256)
+    return loaded
+
 
 def release_slot(fill_tick, capture_ack=False):
     if capture_ack is not True:
@@ -16,11 +27,14 @@ def release_slot(fill_tick, capture_ack=False):
     return ((capture+31+17*3+3+2)//3)*3
 
 def build():
+    imported_helper=verify_imported_helper()
     pins={}
     def raw(n,ref,path,gz=False):
         b=subprocess.check_output(['git','show',ref+':'+path])
         pins[n]=dict(commit=ref,path=path,sha256=hashlib.sha256(b).hexdigest())
         return gzip.decompress(b) if gz else b
+    helper=raw('runtime_finite_prefetch_helper',HELPER_COMMIT,HELPER_PATH)
+    assert helper==imported_helper and hashlib.sha256(helper).hexdigest()==HELPER_SHA256
     owner=json.loads(raw('owner',CURRENT,'results/arch/v41_stage_owner_product.json'))
     source=raw('uarch',CURRENT,'tools/uarch_model.py')
     env={}

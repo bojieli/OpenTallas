@@ -22,3 +22,14 @@ def test_actual_topology_and_exclusive_slot_calendar():
                 assert e['fill_and_packet_credit_complete_tick']<=e['emit_tick']<e['read_capture_tick']<e['candidate_owning_slot_reverse_credit_tick']
                 prior=e['candidate_owning_slot_reverse_credit_tick']
     assert not r['hardware_admission'] and r['full_token_cycles'] is None
+
+
+def test_wrong_runtime_helper_fails_before_calendar(tmp_path):
+    import types
+    from tools.w17_crom_hybrid_topology import verify_imported_helper,HELPER_SHA256
+    wrong=tmp_path/'old_prefetch.py'
+    wrong.write_text('def credit_calendar(): return 7008\n')
+    with pytest.raises(ValueError,match='runtime helper source mismatch'):
+        verify_imported_helper(types.SimpleNamespace(__file__=str(wrong)))
+    import hashlib
+    assert hashlib.sha256(verify_imported_helper()).hexdigest()==HELPER_SHA256
