@@ -1,25 +1,26 @@
 {
  "schema": "opentallas.uarch.w19_hbm_token.v1",
- "source_commit": "a6e86359f73f6b0afbfaca3200e6b98e0c192dd4",
- "generated_utc": "2026-10-01T02:35:23Z",
+ "source_commit": "d1cc22341878da1838ec89417c905efdabbb6d09",
+ "generated_utc": "2026-10-01T03:03:38Z",
  "inputs": {
   "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
   "results/rtl/w19_sm_real_ops.json": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
   "results/rtl/w19_sm_real_ops_oreduce.json": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
   "results/rtl/w19_expert_fetch.json": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
-  "results/rtl/w15_hbm_nvls.json": "df0116a511d0519d3faea923845c4450e58d818913866dad7d0b34c3a260db6f"
+  "results/rtl/w15_hbm_nvls.json": "df0116a511d0519d3faea923845c4450e58d818913866dad7d0b34c3a260db6f",
+  "results/rtl/w15_topk_merge_hbm96_p64.json": "1dbb8faad3d94d3d33109ae86dac2b1a209fcd991c76eb538564d1c927e28443"
  },
  "source_sha256": {
-  "tools/w19_hbm_token_compose.py": "d7d14f775a46c1ab7ca7f4c9aff11d62a7c59f2a6e59ec3d965fd43274ed6f14"
+  "tools/w19_hbm_token_compose.py": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38"
  },
  "result": {
   "collectives_on_path": 265,
-  "total_us": 975.44,
-  "tokens_s": 1025.2,
+  "total_us": 854.01,
+  "tokens_s": 1170.9,
   "parts_us": {
    "sm": 128.11,
    "barrier": 22.29,
-   "collective": 586.42,
+   "collective": 464.99,
    "local": 199.64,
    "fetch": 38.97
   },
@@ -57,11 +58,11 @@
     "us": {
      "sm": 3.432,
      "barrier": 0.715,
-     "collective": 46.951,
+     "collective": 31.772,
      "local": 5.229,
      "fetch": 0.989
     },
-    "total_us": 57.316
+    "total_us": 42.137
    },
    {
     "layer": 3,
@@ -135,11 +136,11 @@
     "us": {
      "sm": 3.632,
      "barrier": 0.715,
-     "collective": 46.951,
+     "collective": 31.772,
      "local": 5.229,
      "fetch": 1.095
     },
-    "total_us": 57.622
+    "total_us": 42.443
    },
    {
     "layer": 9,
@@ -213,11 +214,11 @@
     "us": {
      "sm": 3.048,
      "barrier": 0.78,
-     "collective": 46.951,
+     "collective": 31.772,
      "local": 6.626,
      "fetch": 0.565
     },
-    "total_us": 57.97
+    "total_us": 42.791
    },
    {
     "layer": 15,
@@ -291,11 +292,11 @@
     "us": {
      "sm": 3.298,
      "barrier": 0.715,
-     "collective": 46.951,
+     "collective": 31.772,
      "local": 5.627,
      "fetch": 0.919
     },
-    "total_us": 57.51
+    "total_us": 42.331
    },
    {
     "layer": 21,
@@ -343,11 +344,11 @@
     "us": {
      "sm": 3.358,
      "barrier": 0.65,
-     "collective": 46.951,
+     "collective": 31.772,
      "local": 5.373,
      "fetch": 1.025
     },
-    "total_us": 57.356
+    "total_us": 42.177
    },
    {
     "layer": 25,
@@ -395,11 +396,11 @@
     "us": {
      "sm": 3.292,
      "barrier": 0.65,
-     "collective": 46.951,
+     "collective": 31.772,
      "local": 5.373,
      "fetch": 0.989
     },
-    "total_us": 57.254
+    "total_us": 42.075
    },
    {
     "layer": 29,
@@ -447,11 +448,11 @@
     "us": {
      "sm": 3.358,
      "barrier": 0.65,
-     "collective": 46.951,
+     "collective": 31.772,
      "local": 5.373,
      "fetch": 1.025
     },
-    "total_us": 57.356
+    "total_us": 42.177
    },
    {
     "layer": 33,
@@ -499,11 +500,11 @@
     "us": {
      "sm": 3.558,
      "barrier": 0.65,
-     "collective": 46.951,
+     "collective": 31.772,
      "local": 5.373,
      "fetch": 1.131
     },
-    "total_us": 57.662
+    "total_us": 42.483
    },
    {
     "layer": 37,
@@ -560,7 +561,7 @@
   ],
   "flags": [
    "SM shape bf16 K=5120 R=43 priced by line rate (not measured)",
-   "collective 96 x 512 index merge: fit + select ESTIMATE",
+   "collective 96 x 512 index merge: fit + select MEASURED (series over positions)",
    "collective o-group tree reduce (8 contributors) + multicast: extrapolated"
   ],
   "mtp_inputs": {
@@ -620,7 +621,9 @@
      ]
     ]
    },
-   "source": "results/rtl/w15_hbm_nvls.json configs.hbm_p48_ss_prod (gathers) / hbm_p48_ss (all-reduce fit)"
+   "source": "results/rtl/w15_hbm_nvls.json configs.hbm_p48_ss_prod (gathers) / hbm_p48_ss (all-reduce fit)",
+   "select_cycles": 3875,
+   "select_source": "results/rtl/w15_topk_merge_hbm96_p64.json l20_index_topk (P=64)"
   },
   "fetch_source": "results/rtl/w19_expert_fetch.json exposed_ns[ar_L0_refresh_postponed]",
   "dedicated": {

@@ -104,8 +104,12 @@ def prod_us(op: dict, coll: dict, P: int) -> tuple[float, str]:
     cyc = coll["ag"]["fixed_cycles"] + coll["ag"]["cycles_per_word"] * math.ceil(per_rank / slot)
     how = "measured-fit"
     if k == "topk_merge" and op.get("what") in ("sel", "cand"):
-        cyc += 9 * (TP * op["k"] / 64) * P                            # select over the gathered candidates
-        how = "fit + select ESTIMATE"
+        if coll.get("select_cycles") and op.get("what") == "sel":     # measured unit, blocking: P merges in series
+            cyc += coll["select_cycles"] * P
+            how = "fit + select MEASURED (series over positions)"
+        else:
+            cyc += 9 * (TP * op["k"] / 64) * P                        # select over the gathered candidates
+            how = "fit + select ESTIMATE"
     return cyc / hz * 1e6, how
 
 
@@ -308,6 +312,7 @@ def main() -> int:
     ap.add_argument("--fetch-case", default="ar_L0_refresh_postponed")
     ap.add_argument("--mtp", type=Path, help="the 96-rank MTP record: compose the 6-position verify pass")
     ap.add_argument("--coll-config", default="hbm_p48_ss")
+    ap.add_argument("--select", type=Path, help="W15b's measured 96-way select record (replaces the estimate)")
     ap.add_argument("--fusion", action="store_true", help="AGENTS.md operator fusion: chained lane-local SU ops "
                     "pay unit depth only")
     ap.add_argument("--record", type=Path)
@@ -316,6 +321,11 @@ def main() -> int:
     sm = SMTable([json.loads(p.read_text()) for p in a.sm], "ar")
     if a.coll:
         coll = w15_prod(json.loads(a.coll.read_text()), a.coll_config)
+        if a.select:
+            sr = json.loads(a.select.read_text())
+            cs = sr["cases"] if isinstance(sr["cases"], list) else []
+            coll["select_cycles"] = next(c["cycles"] for c in cs if c["case"] == "l20_index_topk" and c["exact"])
+            coll["select_source"] = f"{a.select} l20_index_topk (P={sr['parameters']['P']})"
     else:
         coll = dict(fixed_us=0.83, us_per_byte=1 / 0.9e12 * 1e6, source="PENDING: audit scratch W15 NVLS P=6 "
                     "(0.81-0.89 us), slope at the 0.9 TB/s package link")
@@ -349,7 +359,7 @@ def main() -> int:
         head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
         rec = dict(schema="opentallas.uarch.w19_hbm_token.v1", source_commit=head,
                    generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                   inputs={str(p): sha(p) for p in (a.program, *a.sm, a.fetch, a.coll) if p},
+                   inputs={str(p): sha(p) for p in (a.program, *a.sm, a.fetch, a.coll, a.select) if p},
                    source_sha256={"tools/w19_hbm_token_compose.py": sha(ROOT / "tools/w19_hbm_token_compose.py")},
                    result=res)
         a.record.write_text(json.dumps(rec, indent=1) + "\n")
