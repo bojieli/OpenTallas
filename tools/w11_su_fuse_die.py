@@ -27,6 +27,7 @@ import rtl_hdc_v41x_decode_campaign as D   # noqa: E402
 SWAP = {"ot_hdc_v41x_vec": "ot_hdc_v41x_vec_kr", "ot_hdc_v41x_vec_lane": "ot_hdc_v41x_vec_lane_kr",
         "ot_hdc_v41x_su_adapt": "ot_hdc_v41x_su_adapt_kr", "ot_hdc_core_v41x": "ot_hdc_core_v41x_kr"}
 FUSE = dict(sukr=0, subcast=0, suret=0)
+EXTRA = ("rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv")
 
 
 def _swap():
@@ -34,6 +35,11 @@ def _swap():
         if p.stem in SWAP:
             D.RTL[k] = p.with_name(SWAP[p.stem] + ".sv")
     assert sum(p.stem in SWAP.values() for p in D.RTL) == len(SWAP), [p.stem for p in D.RTL]
+    # the vector unit's serial-domain primitives (keep-prefix adders, latency-parameterised FP), which the
+    # campaign's list lacks (its committed runs build the SU as built: --units he,me)
+    for n in EXTRA:
+        if ROOT / n not in D.RTL:
+            D.RTL.append(ROOT / n)
 
 
 _defines = D.defines
