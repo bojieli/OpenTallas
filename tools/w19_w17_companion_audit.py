@@ -50,13 +50,14 @@ def main():
     with tempfile.TemporaryDirectory(prefix='w19-w17-index-') as temp:
         env=dict(os.environ,GIT_INDEX_FILE=str(Path(temp)/'index'))
         git('read-tree',source,env=env)
-        checked=subprocess.run(['git','apply','--cached','--check','-'],cwd=ROOT,env=env,input=patch,capture_output=True)
+        checked=(subprocess.run(['git','apply','--cached','--check','-'],cwd=ROOT,env=env,input=patch,capture_output=True)
+                 if patch else subprocess.CompletedProcess([],0,b'',b''))
         if checked.returncode:
             (a.work/'apply.log').write_bytes(checked.stdout+checked.stderr)
             a.record.write_text(json.dumps(dict(status='fail',source_commit=source,w17_pin=pin,patch_sha256=sha(patch),
                 reason='Private-index composition failed; no runtime or main edits'),indent=2)+'\n')
             return 1
-        subprocess.run(['git','apply','--cached','-'],cwd=ROOT,env=env,input=patch,check=True)
+        if patch: subprocess.run(['git','apply','--cached','-'],cwd=ROOT,env=env,input=patch,check=True)
         tree=git('write-tree',env=env).decode().strip()
         paths=git('ls-files',env=env).decode().splitlines()
         export=a.work/'composed-source';export.mkdir()
