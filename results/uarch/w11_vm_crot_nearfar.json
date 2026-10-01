@@ -1,0 +1,215 @@
+{
+ "schema": "opentallas.uarch.w11_vm_crot_nearfar.v1",
+ "generated_utc": "2026-10-01T02:46:52+00:00",
+ "vehicle_meta": {
+  "position": 7,
+  "token": 3582,
+  "program_instructions": 3992,
+  "stream_ops": 2649
+ },
+ "stages": {
+  "CR_LEAD": 7,
+  "CR_RD": 18,
+  "CR_GX": 1,
+  "CR_WR": 17,
+  "CR_RES": 7,
+  "X_GATHER_STAGES": 8,
+  "RET_SCATTER_STAGES": 7,
+  "COLL_WRITE_STAGES": 13
+ },
+ "reach_um": 748.0,
+ "near_path": {
+  "read": 7,
+  "write": 6,
+  "op_extra": 20
+ },
+ "far_path": {
+  "read": 18,
+  "write": 17,
+  "op_extra": 42
+ },
+ "sets": {
+  "vehicle_as_built": {
+   "ops": 2649,
+   "near_ops": 0,
+   "near_share": 0.0,
+   "stream_near_share": {
+    "A": 0.2348,
+    "B": 0.135,
+    "C": 0.2924,
+    "D": 0.1491,
+    "E": 0.1754,
+    "G": 0.0
+   },
+   "stream_ops": {
+    "A": 2607,
+    "B": 2511,
+    "C": 2240,
+    "D": 2233,
+    "E": 2355,
+    "G": 156
+   },
+   "cross_half_access_share": {
+    "A": 0.5195,
+    "B": 0.45,
+    "C": 0.4456,
+    "D": 0.3735,
+    "E": 0.4658,
+    "G": 0.5157
+   },
+   "ops_never_near": {
+    "total": 2097,
+    "gathered": 156,
+    "broadcast_scalar": 2097
+   },
+   "variable_latency_mean_extra": 30.249,
+   "fixed_mean_extra": 40.3,
+   "vector_weighted": {
+    "variable": 29.002
+   },
+   "extra_histogram": {
+    "20": 80,
+    "21": 81,
+    "22": 44,
+    "23": 40,
+    "24": 216,
+    "25": 121,
+    "26": 210,
+    "27": 206,
+    "28": 4,
+    "29": 91,
+    "30": 206,
+    "31": 378,
+    "32": 40,
+    "33": 40,
+    "35": 163,
+    "36": 601,
+    "40": 128
+   },
+   "max_read_um": 10174.0,
+   "max_write_um": 10174.0
+  },
+  "vehicle_a128": {
+   "ops": 2649,
+   "near_ops": 289,
+   "near_share": 0.1091,
+   "stream_near_share": {
+    "A": 0.6747,
+    "B": 0.1497,
+    "C": 0.3469,
+    "D": 0.1491,
+    "E": 0.7507,
+    "G": 0.5128
+   },
+   "stream_ops": {
+    "A": 2607,
+    "B": 2511,
+    "C": 2240,
+    "D": 2233,
+    "E": 2355,
+    "G": 156
+   },
+   "cross_half_access_share": {
+    "A": 0.2593,
+    "B": 0.3668,
+    "C": 0.4303,
+    "D": 0.3684,
+    "E": 0.2255,
+    "G": 0.4843
+   },
+   "ops_never_near": {
+    "total": 2097,
+    "gathered": 156,
+    "broadcast_scalar": 2097
+   },
+   "variable_latency_mean_extra": 26.794,
+   "fixed_mean_extra": 40.3,
+   "vector_weighted": {
+    "variable": 26.325
+   },
+   "extra_histogram": {
+    "16": 291,
+    "18": 42,
+    "20": 165,
+    "21": 122,
+    "22": 120,
+    "23": 40,
+    "24": 176,
+    "25": 89,
+    "26": 6,
+    "27": 158,
+    "28": 48,
+    "29": 326,
+    "30": 563,
+    "31": 175,
+    "36": 240,
+    "40": 88
+   },
+   "max_read_um": 10174.0,
+   "max_write_um": 9741.0
+  },
+  "full_shape_l0": {
+   "ops": 62,
+   "near_ops": 0,
+   "near_share": 0.0,
+   "stream_near_share": {
+    "A": 0.4262,
+    "B": 0.1356,
+    "C": 0.5385,
+    "D": 0.1538,
+    "E": 0.4035,
+    "G": 0.0
+   },
+   "stream_ops": {
+    "A": 61,
+    "B": 59,
+    "C": 52,
+    "D": 52,
+    "E": 57,
+    "G": 2
+   },
+   "cross_half_access_share": {
+    "A": 0.1756,
+    "B": 0.5004,
+    "C": 0.0706,
+    "D": 0.4987,
+    "E": 0.0759,
+    "G": 1.0
+   },
+   "ops_never_near": {
+    "total": 51,
+    "gathered": 2,
+    "broadcast_scalar": 51
+   },
+   "variable_latency_mean_extra": 29.306,
+   "fixed_mean_extra": 40.258,
+   "vector_weighted": {
+    "variable": 31.61
+   },
+   "extra_histogram": {
+    "20": 1,
+    "21": 7,
+    "22": 1,
+    "25": 1,
+    "26": 7,
+    "27": 1,
+    "28": 2,
+    "30": 14,
+    "31": 17,
+    "32": 1,
+    "35": 1,
+    "36": 9
+   },
+   "max_read_um": 10174.0,
+   "max_write_um": 7793.2
+  }
+ },
+ "source_sha256": {
+  "tools/w11_vm_crot_nearfar.py": "dcf1418bbec98d9eecef2a2001c7e2cef84be55f1f01e3589120cc4e17a07c31",
+  "results/floorplan/v41_vm_crot_stages.json": "666bafb701fa5b205f6620e44b4f3e0e19b4ed069f2827e1743c11744cf33f53",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "0368dd56c283fcece490d07eaac79367e671e57853a01630f67fda869eba3329",
+  "tools/w11_vm_h.py": "5e24e7373073d5adf55b6303e0c0b9e71b8699c6ca0e57fa337d4a1d12ec84fb",
+  "tools/w11_vm_dist_spec.py": "ffb114db8415e567366447751091c6587bda3026efb2fabfa21720f3b4467920",
+  "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d"
+ }
+}
