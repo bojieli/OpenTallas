@@ -12,7 +12,7 @@ start=s.index(' for(int i=0;i<3000;i++)')
 end=s.index(' printf("end pc',start)
 prints=''.join('printf(" '+n[len(prefix):]+'=%u",unsigned(d.rootp->'+n+'));' for n in selected)
 s=s[:start]+' for(int i=0;i<12000;i++){tick();if(i%200==0||i==5899||i==10499){printf("HE cycle=%d pc=%u",i+1,d.dbg_pc);'+prints+'printf("\\n");fflush(stdout);}if(d.fault||d.dbg_pc>9)break;}\n'+s[end:]
-s=s[:s.index(' // dumps')]+'}\n'
+s=s[:s.index('  svSetScope(sc);')]+'}\n'
 (out/'probe.cpp').write_text(s)
 v=pathlib.Path('/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include')
 cmd=['g++','-std=c++20','-O1','-pthread','-I'+str(build),'-I'+str(v),'-I'+str(v/'vltstd'),str(out/'probe.cpp'),str(build/'Vdie0__ALL.a'),str(v/'verilated.cpp'),str(v/'verilated_dpi.cpp'),str(v/'verilated_threads.cpp'),'-o',str(out/'probe')]
