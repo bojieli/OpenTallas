@@ -1,0 +1,105 @@
+{
+  "schema": "opentallas.w13.actual-controller-byte-mask-inspection.v1",
+  "source_pins": [
+    {
+      "source_git": "fff8571b9f6928b3544e16bf7fb376df92946d2b",
+      "path": "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv",
+      "sha256": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197"
+    },
+    {
+      "source_git": "fff8571b9f6928b3544e16bf7fb376df92946d2b",
+      "path": "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv",
+      "sha256": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf"
+    },
+    {
+      "source_git": "fff8571b9f6928b3544e16bf7fb376df92946d2b",
+      "path": "rtl/hdc/hbm/ot_hdc_qwen_kv_pc_adapter.sv",
+      "sha256": "de20a96bfcef1d16e2059eb6f3925de18071549a50314cffc624f78c31def44c"
+    },
+    {
+      "source_git": "fff8571b9f6928b3544e16bf7fb376df92946d2b",
+      "path": "rtl/hdc/kv/ot_hdc_qwen_hbm_sector_bridge.sv",
+      "sha256": "2cb3c6d81e343bce86474b64eea27c6b48dbc897f1d988e9212cd1d7d1d1b764"
+    },
+    {
+      "source_git": "fff8571b9f6928b3544e16bf7fb376df92946d2b",
+      "path": "rtl/chip/ot_chip_v41x_shared_hbm_model.sv",
+      "sha256": "cfca3ce2fe7e17148df625a5990fec3c9093c0d5c4c9a15c41b74bf584c487f7"
+    },
+    {
+      "source_git": "fff8571b9f6928b3544e16bf7fb376df92946d2b",
+      "path": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+      "sha256": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b"
+    },
+    {
+      "source_git": "fff8571b9f6928b3544e16bf7fb376df92946d2b",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+      "sha256": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543"
+    },
+    {
+      "source_git": "fff8571b9f6928b3544e16bf7fb376df92946d2b",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    }
+  ],
+  "current_shared_Qwen_PC_service_byte_enable_port": false,
+  "observations": [
+    {
+      "path": "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv",
+      "finding": "req_we/address/tag/data256; no byte mask/strobe port; c_wr_done supplied by external controller, request acceptance distinct from completion."
+    },
+    {
+      "path": "rtl/hdc/hbm/ot_hdc_qwen_kv_pc_adapter.sv",
+      "finding": "Legacy one-outstanding halfsector RMW bridge; write ready explicitly waits matching pc_wr_done, cannot imply throughput or arbitrary2-byte-mask scheduler."
+    },
+    {
+      "path": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+      "finding": "k_wstrb32 exists in explicitly BEHAVIOURAL STAND-IN simulation models, not physical controller RTL. Not proof current common service carries or honors masks."
+    },
+    {
+      "path": "rtl/hdc/kv/ot_hdc_qwen_hbm_sector_bridge.sv",
+      "finding": "Standalone WRITE_REQ returns IDLE on phys_req_ready; no writevisible ACK input. Request-ready must not be wired to accepted service ready. Existing kv_pc_adapter only supplies ready after external matching wr_done; that external physical provider remains unbound."
+    }
+  ],
+  "hardware_masked_write_binding": "UNBOUND/NOT_ADMITTED; no direct masked write service credit",
+  "required_fallback": "Locked32B read, exact bitwise merge, full32B write, WRvisible ACK, reverseCDC, lockrelease then publication; preserve reader generations.",
+  "per_layer_die": {
+    "valid_K_bytes": 512,
+    "partial_K_sectors": 256,
+    "RMW_read_commands": 256,
+    "K_full_sector_write_commands": 256,
+    "V_full_sector_write_commands": 16,
+    "mixed_commands": 528,
+    "port_payload_bytes": 16896,
+    "write_visible_ACKs": 272,
+    "minimum_mixed_shared_stack_cycles": 132
+  },
+  "per_token_aggregate_TP2": {
+    "writers": 72,
+    "mixed_commands": 38016,
+    "port_payload_bytes": 1216512,
+    "write_visible_ACKs": 19584
+  },
+  "timing": "Read500ns loaded assumption sourceU; write-visible500ns separate SCENARIO not measured guarantee. Model chargesNoC53 perhop-leg, reverseCDC, RF2 and3INT merges9cycles each hypothesis; XOR/AND area/exactness/timing remainsunbound. No tokenclock/rate claim.",
+  "one_lock_template_elapsed_ns": 1230.8333333333333,
+  "physical_admission": "FAIL_CLOSED",
+  "token_major_layout": "No benefit assigned; full score read gather/transpose/refill/bank/NoC/address exactness costs required before selection.",
+  "actual_chosen_controller_writer_provider_source": null,
+  "writer_provider_contract": {
+    "interface_candidate": "ot_hdc_qwen_pc_service req_we/address/tag/data256 with p_wr_done_v/tag completion input; full32B writes only",
+    "hardware_binding": "UNBOUND; completion must originate at actual WRvisible provider, not enqueue/ready",
+    "mandatory_identity": [
+      "layer",
+      "die",
+      "position",
+      "sector_address",
+      "writer_epoch",
+      "lock_owner",
+      "request_tag"
+    ],
+    "lock_protocol": "acquire; read oldsector; retain lock across exactmaskmerge and accepted WR; wait matching WRvisible ACK+reverseCDC; release; publish only after all K/V commits; reader generations protected",
+    "legacy_accept_as_completion_admissible": false,
+    "masked_WR_direct_admissible": false,
+    "physical_admission": "FAIL_CLOSED"
+  }
+}
