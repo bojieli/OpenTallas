@@ -13,27 +13,45 @@ def encode(payload,t):
     assert 0<=payload<=DATA and 0<=t<=TAG
     return [(payload&LOW)|(t<<224), (payload>>224)|(t<<224)|(1<<248)]
 class Receiver:
+    # Six control FFs: RXphase2 +ACKpending1 +ACKreturned1 +TXphase1 +creditlocked1.
+    # RXphase EMPTY/HALF/FULL/DRAIN encodes publication and consumed-once.
     def __init__(self,expected):
-        self.expected=expected;self.first=None;self.word=None;self.ack=False
+        self.expected=expected;self.first=None;self.word=None;self.phase=0
+        self.ack_pending=False;self.ack_returned=False;self.tx_phase=0;self.credit_locked=True
+    @property
+    def ack(self):return self.ack_pending
+    @property
+    def published_valid(self):return self.phase==2
     def put(self,f):
+        if not self.credit_locked or self.phase not in (0,1):raise ValueError('held/retired word')
         if not 0<=f<1<<256 or f>>249:raise ValueError('frame padding')
         phase=(f>>248)&1;t=(f>>224)&TAG;payload=f&LOW
         if t!=self.expected or not ((t>>6)&1):raise ValueError('lease/tag mismatch')
-        if self.word is not None:raise ValueError('held full word')
-        if self.first is None:
+        if self.phase==0:
             if phase:raise ValueError('second before first')
-            self.first=payload
+            self.first=payload;self.phase=1
         else:
             if not phase:raise ValueError('duplicate/out-of-order first')
             if payload>>40:raise ValueError('second payload padding')
-            self.word=self.first|(payload<<224)|(t<<264)
-        # Fragment acceptance is NOT a full-word credit/ACK.
-        assert not self.ack
+            self.word=self.first|(payload<<224)|(t<<264);self.phase=2
+        assert not self.ack_pending
     def consume(self):
-        if self.word is None:raise ValueError('missing second fragment')
-        w=self.word;self.ack=True;return w
+        if self.phase!=2:raise ValueError('missing second or already consumed')
+        self.phase=3;self.ack_pending=True
+        # Keep all payload bits physically held until actual returned ACK/reset.
+        return self.word
+    def return_ack(self,logical_tag):
+        if self.phase!=3 or not self.ack_pending or logical_tag!=self.expected:
+            raise ValueError('early,duplicate,or mismatched returned ACK')
+        self.ack_pending=False;self.ack_returned=True;self.credit_locked=False;self.phase=0
+        # Payload remains held; only publication/lease state changes.
+    def arm(self,expected):
+        if self.credit_locked or self.phase!=0:raise ValueError('credit not returned')
+        self.expected=expected;self.first=None;self.ack_returned=False;self.credit_locked=True
     def reset(self,expected):
-        self.expected=expected;self.first=None;self.word=None;self.ack=False
+        self.expected=expected;self.first=None;self.phase=0
+        self.ack_pending=False;self.ack_returned=False;self.tx_phase=0;self.credit_locked=True
+        # Reset/drained-reuse provider is unbound; this is software semantics only.
 def must_reject(fn):
     try:fn()
     except ValueError:return True
@@ -52,7 +70,17 @@ if __name__=='__main__':
         assert rx.word is None and not rx.ack
         mutants+=must_reject(rx.consume)
         rx.put(second);assert not rx.ack
-        got=rx.consume();assert rx.ack and got==(payload|(t<<264))
+        mutants+=must_reject(lambda:rx.return_ack(t))
+        got=rx.consume();assert rx.ack and not rx.published_valid and got==(payload|(t<<264))
+        mutants+=must_reject(rx.consume)
+        assert rx.word==got
+        mutants+=must_reject(lambda:rx.put(first))
+        mutants+=must_reject(lambda:rx.arm(t))
+        mutants+=must_reject(lambda:rx.return_ack(t^1))
+        rx.return_ack(t);assert not rx.ack and not rx.published_valid and rx.word==got
+        mutants+=must_reject(rx.consume)
+        mutants+=must_reject(lambda:rx.return_ack(t))
+        mutants+=must_reject(lambda:rx.put(first))
         assert (got&DATA).to_bytes(33,'little')==raw[n*33:(n+1)*33]
         roundtrip.update(got.to_bytes(36,'little'));checks+=1
         for mutation in (second,first|(1<<255),first^(1<<240)):
@@ -90,7 +118,7 @@ if __name__=='__main__':
             actual_frame_CRC_endpoint_shared_port=None),
         lease_rule='Reserve receiver slot before first. Validate phase/order/tag/padding. First does not publish a word; second only assembles it. FullwordACK occurs only after local fullword consumer acceptance; originalword remains held meanwhile. Root rowlease held until all8word ACKs AND final external consumer ACK/generation visibility. Reset discards pending first and rejects old epoch.',
         new_state_per_response_hop_bits=318,
-        new_state_recipe='288assembledword +24expectedtag +6phase/valid/serializer/credit/lease control FF. Preserve original288 response FF/mux and every original clock; no subtraction.',
+        new_state_recipe='288assembledword +24expectedtag +6exactcontrolFF:RXphase2(EMPTY/HALF/FULL/DRAIN) +ACKpending1 +ACKreturned1 +TXphase1 +creditlocked1. Preserve original288 response FF/mux and every original clock; no subtraction.',
         response_hop_endpoint_count_per_home=hops,homes=homes,
         aggregate_new_fragment_FF_bits=192*extra_per_home,
         aggregate_total_storage_FF_bits=sum(h['total_storage_FF_bits'] for h in homes),
@@ -108,10 +136,13 @@ if __name__=='__main__':
             max_local_row_cycles=max(h['stop_wait_row_cycles_range'][1] for h in homes),
             max_local_row_ns=max(h['stop_wait_row_cycles_range'][1] for h in homes)/1.2,
             qualification='Conditional schedule only; hop/register/contextual SSFF and root externallease unqualified. Faster pipelined queue calendar requires separate executable proof and composed costs; old104/106cycle rows not reused.'),
+        six_control_state_bits_exact=True,publication_consumption_retirement_separate=True,
+        actual_tagged_ACK_wire_provider=False,ACK_API_scope='return_ack(logicaltag) tests logical lease retirement; physicalACK1bit identity/drainedreuse remains unproven.',
+        supersedes_failure_pin='a21f1cdd1 duplicate consume FAIL; prior codec/old failure records retained',
         software_gate=dict(roundtrip_words=checks,fragments=checks*2,negative_mutant_rejections=mutants,
             roundtrip288word_SHA256=roundtrip.hexdigest(),held_second_before_ACK_checked=True,
             reordered_duplicate_stale_epoch_mixed_tag_padding_earlyACK_rejected=True),
         no_actual_tree_decoder_RTL_gate=True,source_provider_proven=False,L1_generated_source=None,
         checkpoint_reads=0,RTL_or_PnR_runs=False,physical_admission=False,headline_rate=None)
-    target=ROOT/'two_fragment_contract.json';assert not target.exists();target.write_text(json.dumps(out,indent=2,sort_keys=True)+'\n')
+    target=ROOT/'two_fragment_contract_consumed_once.json';assert not target.exists();target.write_text(json.dumps(out,indent=2,sort_keys=True)+'\n')
     print(json.dumps(dict(sha256=hashlib.sha256(target.read_bytes()).hexdigest(),FF=out['aggregate_total_storage_FF_bits'],hops=hops,gate=out['software_gate'],latency=out['timing'])))

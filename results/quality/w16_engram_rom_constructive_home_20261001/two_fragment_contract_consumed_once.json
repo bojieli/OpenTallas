@@ -1,0 +1,2766 @@
+{
+  "ACK_API_scope": "return_ack(logicaltag) tests logical lease retirement; physicalACK1bit identity/drainedreuse remains unproven.",
+  "L1_generated_source": null,
+  "RTL_or_PnR_runs": false,
+  "actual_tagged_ACK_wire_provider": false,
+  "aggregate_new_fragment_FF_bits": 1522003968,
+  "aggregate_total_storage_FF_bits": 3595629118,
+  "checkpoint_reads": 0,
+  "clock_rule": "Every old and new FF and all1500067macros clock1.2GHz continuously. No inactive or stop credit.",
+  "fixture_scope": "384 beats from previously committed48retained first-row fixtures; not token hash coverage and no new checkpoint reads",
+  "generator_sha256": "f2e1b7c987e0620851cec88b4b1aaad2a0728542901d6cc3f2a985d9cb9f0455",
+  "headline_rate": null,
+  "homes": [
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 0,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 1,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 2,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 3,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 4,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 5,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 6,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 7,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 8,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 9,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 10,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 11,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 12,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 13,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 14,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 15,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 16,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 17,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 18,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 19,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 20,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 21,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 22,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 23,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 24,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 25,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 26,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 27,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 28,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 29,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 30,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 31,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 32,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 33,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 34,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 35,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 36,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 37,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 38,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 39,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 40,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 41,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 42,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 43,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 44,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 45,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 46,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 47,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 48,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 49,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 50,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 51,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 52,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 53,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 54,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 55,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 56,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 57,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 58,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 59,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 60,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 61,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 62,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 63,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 64,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 65,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 66,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 67,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 68,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 69,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 70,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 71,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 72,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 73,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 74,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 75,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 76,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 77,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 78,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 79,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 80,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 81,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 82,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 83,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 84,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 85,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 86,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 87,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 88,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 89,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 90,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 91,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 92,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 93,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 94,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 95,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 96,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 97,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 98,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 99,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 100,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 101,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 102,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 103,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 104,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 105,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 106,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 107,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 108,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 109,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 110,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 111,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 112,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 113,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 114,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6675,
+      "held_feedback_MUX2_bits": 18388156,
+      "home_id": 115,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461052,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388156
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 116,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 117,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 118,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 119,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 120,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 121,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 122,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 123,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 124,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 125,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 126,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 127,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 128,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 129,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 130,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 131,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 132,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 133,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 134,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 135,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 136,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 137,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 138,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 139,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 140,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 141,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 142,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 143,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 144,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 145,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 146,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 147,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 148,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 149,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 150,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 151,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 152,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 153,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 154,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 155,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 156,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 157,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 158,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 159,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 160,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 161,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 162,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 163,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 164,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 165,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 166,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 167,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 168,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 169,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 170,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 171,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 172,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 173,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 174,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 175,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 176,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 177,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 178,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 179,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 180,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 181,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 182,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 183,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 184,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 185,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 186,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 187,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 188,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 189,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 8192,
+      "held_feedback_MUX2_bits": 18840222,
+      "home_id": 190,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10913118,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18840222
+    },
+    {
+      "actual_macros": 6676,
+      "held_feedback_MUX2_bits": 18388454,
+      "home_id": 191,
+      "new_fragment_reassembly_and_control_FF_bits": 7927104,
+      "preserved_prior_FF_bits": 10461350,
+      "preserved_response_MUX2_bits": 2359008,
+      "request_demux_AND2_bits": 835482,
+      "stop_wait_row_cycles_range": [
+        2312,
+        2360
+      ],
+      "total_storage_FF_bits": 18388454
+    }
+  ],
+  "lease_rule": "Reserve receiver slot before first. Validate phase/order/tag/padding. First does not publish a word; second only assembles it. FullwordACK occurs only after local fullword consumer acceptance; originalword remains held meanwhile. Root rowlease held until all8word ACKs AND final external consumer ACK/generation visibility. Reset discards pending first and rejects old epoch.",
+  "new_state_per_response_hop_bits": 318,
+  "new_state_recipe": "288assembledword +24expectedtag +6exactcontrolFF:RXphase2(EMPTY/HALF/FULL/DRAIN) +ACKpending1 +ACKreturned1 +TXphase1 +creditlocked1. Preserve original288 response FF/mux and every original clock; no subtraction.",
+  "no_actual_tree_decoder_RTL_gate": true,
+  "packet": {
+    "actual_frame_CRC_endpoint_shared_port": null,
+    "controls": "requestready1,responsefragmentready1,fullwordACK1 separately; requestvalid embedded in requesttag",
+    "earlier_309_track_option": "Not claimed: explicit fullwordACK needs third reversecontrol.309requires source-proven multiplexedACK encoding.",
+    "first": "bits223:0 payloadlow224;247:224 duplicate tag24;248 phase0;255:249 zero",
+    "fragment_bits": 256,
+    "fragments": 2,
+    "full_word_bits": 288,
+    "margin_tracks": 11,
+    "payload_bits": 264,
+    "response_valid": "embedded in duplicated tag; no free phase/epoch wire outside256frame",
+    "second": "bits39:0 payloadhigh40;223:40 zero;247:224 duplicate SAMEtag24;248 phase1;255:249 zero",
+    "source_remaining_tracks": 321,
+    "tag_bits": 24,
+    "tag_recipe": "epoch8,column5,layer1,beat3,valid1,lease6; tagvalid at bit6",
+    "total_cut_tracks": 310
+  },
+  "physical_admission": false,
+  "publication_consumption_retirement_separate": true,
+  "repacked_enable_mask_sha256": "9ddedc8aa5c90e3f0d8a292429d6da9540f6277a1f1e3301fe44350a8cab89f1",
+  "response_hop_endpoint_count_per_home": 24928,
+  "runtime_events": {
+    "duplicated_tag_wire_bit_transition_upper_including_initial": 72,
+    "expected_tag_bit_transitions_per_lookup_upper": 36,
+    "feedback_stall": "No accepted repeatedwrite; payloadheld under backpressure. Disabled cones still see upstream raw pin transitions; Confucius owns typed event pricing.",
+    "first_payload_write_bits_per_lookup_upper": 1792,
+    "fragment_phase_bit_transitions_per_lookup_upper": 16,
+    "fullwordACKs_per_lookup": 8,
+    "macro_reads_per_lookup": 8,
+    "per_hop6control_bit_updates_upper": 192,
+    "reassembly_word_accepts_per_lookup": 8,
+    "response_fragments_per_lookup_per_selected_hop": 16,
+    "second_payload_write_bits_per_lookup_upper": 320,
+    "startup_reset_activity": null
+  },
+  "schema": "opentallas.engram.two-fragment-contract.v1",
+  "six_control_state_bits_exact": true,
+  "software_gate": {
+    "fragments": 768,
+    "held_second_before_ACK_checked": true,
+    "negative_mutant_rejections": 6528,
+    "reordered_duplicate_stale_epoch_mixed_tag_padding_earlyACK_rejected": true,
+    "roundtrip288word_SHA256": "65b52f05424441f2c063b942df41cb33c71fce20dbceaa1cb64d82672dbeba0e",
+    "roundtrip_words": 384
+  },
+  "source_provider_proven": false,
+  "source_retained_fixture_pin": {
+    "commit": "9b5ca5767c4c03be4c587d77ad8c4ca8ff6f1f39",
+    "path": "results/quality/w16_engram_eight_scale_binding_20261001/actual_rows.wire_beats.bin",
+    "sha256": "3d1ef08980e6e5b697542d509fab5ceab87112033a634a4162a9946ede6e40f5"
+  },
+  "status": "PASS_SOFTWARE_PACKET_ROUNDTRIP_AND_MUTANTS_CONDITIONAL_HARDWARE_UNBOUND",
+  "supersedes_failure_pin": "a21f1cdd1 duplicate consume FAIL; prior codec/old failure records retained",
+  "timing": {
+    "max_local_row_cycles": 2360,
+    "max_local_row_ns": 1966.6666666666667,
+    "qualification": "Conditional schedule only; hop/register/contextual SSFF and root externallease unqualified. Faster pipelined queue calendar requires separate executable proof and composed costs; old104/106cycle rows not reused.",
+    "schedule": "Conservative stop-and-wait per word, no overlap: Hrequest +1macro +4Hresponse (2fragments+assemble+localconsume) +HreverseACK =6H+1 perword,8words/row. H=13logic+actual35..36wirestages."
+  }
+}
