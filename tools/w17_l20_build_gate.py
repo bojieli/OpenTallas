@@ -16,6 +16,23 @@ import shutil
 import subprocess
 import time
 
+DRIVER_OLD_SHA256 = 'b011388e2aedbd1ccf4edfe9af1d0e2f210b44f357a76dbed3612f395a0a64c7'
+DRIVER_NEW_SHA256 = 'be2384333d37e8b2c923bfe27d324a013be4baebcba751b57cf342533160eda6'
+DRIVER_DIFF_SHA256 = '11ebc2f878886ebb45c6ae153c1801f4a7f62720f78dda5e7609d5c925c307b6'
+
+
+def driver_identity(expected, actual):
+    """Only the original driver or its reviewed source-coverage fix may run."""
+    allowed = {(DRIVER_OLD_SHA256, DRIVER_OLD_SHA256),
+               (DRIVER_OLD_SHA256, DRIVER_NEW_SHA256),
+               (DRIVER_NEW_SHA256, DRIVER_NEW_SHA256)}
+    if (expected, actual) not in allowed:
+        raise ValueError(f'unattested driver identity: expected={expected}, actual={actual}')
+    return dict(expected_sha256=expected, actual_sha256=actual,
+                original_commit='a8c660b2', fixed_commit='b65a087a',
+                reviewed_source_diff_sha256=DRIVER_DIFF_SHA256,
+                uses_attested_source_coverage_fix=actual == DRIVER_NEW_SHA256)
+
 
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -126,7 +143,10 @@ def main():
         if not retry <= set(range(4)) or a.jobs < 1:
             raise ValueError('invalid retry ranks/jobs')
         pins = json.loads(a.expected_source_pins.read_text())
-        # Driver may differ for the already verified evidence-only source fix.
+        # Bind the actual executable driver, with exactly one reviewed exception
+        # for the source-coverage-only a8c660b2 -> b65a087a diff.
+        rec['driver_identity'] = driver_identity(pins['tools/v41_die_rt.py'],
+                                                  sha(a.source / 'tools/v41_die_rt.py'))
         for name, h in pins.items():
             if name != 'tools/v41_die_rt.py' and sha(a.source / name) != h:
                 raise ValueError(f'RTL/source mismatch; cannot mix rank archives: {name}')

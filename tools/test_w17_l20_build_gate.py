@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Exercise W17 orchestration's real child-status and archive admission paths."""
 import json
+import hashlib
+import importlib.util
 import os
 from pathlib import Path
 import subprocess
@@ -9,6 +11,9 @@ import time
 import unittest
 
 GATE = Path(__file__).with_name('w17_l20_build_gate.py')
+spec = importlib.util.spec_from_file_location('w17_gate_under_test', GATE)
+PRODUCTION = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(PRODUCTION)
 DRIVER = '''import argparse,json,os,pathlib,subprocess,sys,time
 p=argparse.ArgumentParser(); p.add_argument('step'); p.add_argument('--l20',action='store_true'); p.add_argument('--work'); p.add_argument('--only'); p.add_argument('--jobs'); a=p.parse_args()
 time.sleep(float(os.environ.get('W17_GATE_TEST_SLEEP','0')))
@@ -29,12 +34,19 @@ class GateTest(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.source = self.root/'source'; (self.source/'tools').mkdir(parents=True)
         (self.source/'tools/v41_die_rt.py').write_text(DRIVER)
+        # Substitute only the identity constants for our disposable compiler
+        # fixture; production policy logic and orchestration stay unchanged.
+        self.fixture_old_sha = hashlib.sha256(b'old fixture driver').hexdigest()
+        self.fixture_new_sha = hashlib.sha256(DRIVER.encode()).hexdigest()
+        self.gate = self.root/'gate.py'
+        self.gate.write_text(GATE.read_text().replace(PRODUCTION.DRIVER_OLD_SHA256, self.fixture_old_sha)
+                             .replace(PRODUCTION.DRIVER_NEW_SHA256, self.fixture_new_sha))
         subprocess.run(['git','init','-q',str(self.source)],check=True)
         subprocess.run(['git','-C',str(self.source),'add','tools/v41_die_rt.py'],check=True)
         subprocess.run(['git','-C',str(self.source),'-c','user.name=W17 Test','-c','user.email=w17@example.invalid','commit','-qm','fixture'],check=True)
         self.work = self.root/'original'; self.work.mkdir()
         self.script = self.root/'original.sh'; self.script.write_text('wait\necho BUILT\n')
-        self.pins = self.root/'pins.json'; self.pins.write_text(json.dumps({'tools/v41_die_rt.py':'historical-driver'}))
+        self.pins = self.root/'pins.json'; self.pins.write_text(json.dumps({'tools/v41_die_rt.py':self.fixture_old_sha}))
         self.attempt = self.root/'attempt'
         for rank in (0,1,3):
             subprocess.run(['python3',str(self.source/'tools/v41_die_rt.py'),'build','--work',str(self.work),'--only',f'die{rank}'],check=True,stdout=subprocess.DEVNULL)
@@ -51,7 +63,7 @@ class GateTest(unittest.TestCase):
 
     def run_gate(self, child_rc=0, extras=()):
         env=dict(os.environ,W17_GATE_TEST_CHILD_RC=str(child_rc))
-        cmd=['python3',str(GATE),'--source',str(self.source),'--adopt-work',str(self.work),
+        cmd=['python3',str(self.gate),'--source',str(self.source),'--adopt-work',str(self.work),
              '--attempt',str(self.attempt),'--original-script',str(self.script),'--expected-source-pins',str(self.pins),
              '--min-memory-gib','0','--min-disk-gib','0','--max-load','100000',*extras]
         result=subprocess.run(cmd,env=env,capture_output=True,text=True)
@@ -63,6 +75,8 @@ class GateTest(unittest.TestCase):
         self.assertTrue((self.attempt/'BUILT').exists())
         self.assertEqual((self.attempt/'original_l20build.sh').read_bytes(),self.script.read_bytes())
         self.assertEqual((self.attempt/'original_rank2.driver.log').read_text(),'original exit137\n')
+        self.assertEqual(r['driver_identity']['actual_sha256'], self.fixture_new_sha)
+        self.assertEqual(r['source_sha256']['tools/v41_die_rt.py'], self.fixture_new_sha)
 
     def test_child_failure_never_writes_built(self):
         p,r=self.run_gate(child_rc=7); self.assertEqual(p.returncode,1)
@@ -101,6 +115,24 @@ class GateTest(unittest.TestCase):
             self.assertIn('WAIT_LIVE_RANKS',(self.attempt/'events.jsonl').read_text())
         finally:
             child.terminate(); child.wait()  # this test's own disposable fixture
+
+    def test_arbitrary_clean_driver_rewrite_is_refused(self):
+        driver=self.source/'tools/v41_die_rt.py'
+        driver.write_text(DRIVER+'\n# arbitrary rewrite outside the attestation\n')
+        subprocess.run(['git','-C',str(self.source),'add','tools/v41_die_rt.py'],check=True)
+        subprocess.run(['git','-C',str(self.source),'-c','user.name=W17 Test','-c','user.email=w17@example.invalid',
+                        'commit','-qm','arbitrary rewrite'],check=True)
+        p,r=self.run_gate(); self.assertEqual(p.returncode,1)
+        self.assertIn('unattested driver identity',r['error'])
+        self.assertFalse((self.attempt/'rank2.driver.log').exists())
+        self.assertFalse((self.attempt/'BUILT').exists())
+
+    def test_production_allows_only_exact_attested_identities(self):
+        old,new=PRODUCTION.DRIVER_OLD_SHA256,PRODUCTION.DRIVER_NEW_SHA256
+        for expected,actual in ((old,old),(old,new),(new,new)):
+            self.assertEqual(PRODUCTION.driver_identity(expected,actual)['actual_sha256'],actual)
+        for expected,actual in ((old,'f'*64),('f'*64,new),(new,old)):
+            with self.assertRaises(ValueError): PRODUCTION.driver_identity(expected,actual)
 
 
 if __name__ == '__main__':
