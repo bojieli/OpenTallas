@@ -1,6 +1,101 @@
 {
   "CKV": {
+    "HBM_transfer_qualified": false,
+    "conditional_ROM_staging_baseline": {
+      "actual_SS_FF_latency_cycles": null,
+      "actual_consumer_interface_changed": true,
+      "aggregate_payload_bits_per_cycle": 256,
+      "area_scope": "Analytical .2916um2/register and.2um2/muxbit at50% density; storage/mux FLOOR only, excludes control, decode, clock, CDC, RF ports/routes. Not measured area or fit.",
+      "boundary_routing_tracks": null,
+      "candidate_header_bits": 36,
+      "candidate_header_fields": {
+        "beat": 8,
+        "group": 4,
+        "job": 16,
+        "row_format_flags": 4,
+        "row_mask": 4
+      },
+      "channel_capacity_tracks": null,
+      "consumer_ports_and_enable_costs": null,
+      "exact_gate_passed": false,
+      "known_floor_mm2": "0.0420962304",
+      "maximum_padded_packet_bits": 1280,
+      "mux_bit_equivalents": 2784,
+      "mux_footprint_floor_mm2": "0.0011136",
+      "packet_credit_release": "Actual complete serialization, CDC landing, destination group write and consumerdone; no accept/timer release",
+      "policy": "Serialize exact raw32-element groups over one256bit source port, expand source format only inside consumer tiles, preserve row/group order and golden qdq; no arithmetic reassociation",
+      "power_IR": null,
+      "priced_extents": [
+        {
+          "connected_cycles": null,
+          "conservative_no_overlap_service_cycles": 4672,
+          "excluded": [
+            "actual ingress latency/stalls",
+            "CDC",
+            "consumer tile writes and done/credit delay",
+            "attention compute",
+            "descriptor/route/setup/hold/wake costs"
+          ],
+          "output_serialization_cycles": 2560,
+          "packet_bits": 559104,
+          "packets": 512,
+          "physical_clock_qualified": false,
+          "raw_input_bits": 540672,
+          "raw_input_serialization_cycles": 2112,
+          "selected_rows": 0,
+          "window_rows": 128
+        },
+        {
+          "connected_cycles": null,
+          "conservative_no_overlap_service_cycles": 15424,
+          "excluded": [
+            "actual ingress latency/stalls",
+            "CDC",
+            "consumer tile writes and done/credit delay",
+            "attention compute",
+            "descriptor/route/setup/hold/wake costs"
+          ],
+          "output_serialization_cycles": 8704,
+          "packet_bits": 1812480,
+          "packets": 2560,
+          "physical_clock_qualified": false,
+          "raw_input_bits": 1720320,
+          "raw_input_serialization_cycles": 6720,
+          "selected_rows": 512,
+          "window_rows": 128
+        },
+        {
+          "connected_cycles": null,
+          "conservative_no_overlap_service_cycles": 15376,
+          "excluded": [
+            "actual ingress latency/stalls",
+            "CDC",
+            "consumer tile writes and done/credit delay",
+            "attention compute",
+            "descriptor/route/setup/hold/wake costs"
+          ],
+          "output_serialization_cycles": 8672,
+          "packet_bits": 1808256,
+          "packets": 2560,
+          "physical_clock_qualified": false,
+          "raw_input_bits": 1716096,
+          "raw_input_serialization_cycles": 6704,
+          "selected_rows": 512,
+          "window_rows": 127
+        }
+      ],
+      "queue_packet_capacity": 2,
+      "replicas": 1,
+      "slot_fit": null,
+      "source_port_payload_bits_per_cycle": 256,
+      "storage_bits": 70272,
+      "storage_footprint_floor_mm2": "0.0409826304"
+    },
     "connected_rate_credit": false,
+    "current_RTL_matches_failed_source": {
+      "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv": true,
+      "rtl/chip/physical/ot_v41_ckv_merge_phys.sv": true
+    },
     "independent_FF_hold_PASS": false,
     "measured_configuration": {
       "clock_ps": 833,
@@ -130,8 +225,11 @@
     "results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001/config.mk": "955252ce0130c886e0012898a388ac7abd2205f0213c62ea9aa46f50d8129f5b",
     "results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001/constraint.sdc": "683a665baacb5dfcc2f05041196bef16542ec4faf59c75d556e5869463db9da0",
     "results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001/measurement.json": "b498f0f5744fc94e8349f0664719db5a2c16d1bc06df044c9aaec8a30e5881fe",
+    "results/quality/w16_w11_ckv_feasibility_20261001/feasibility.json": "619516232d7c959f46a0feaa325b566470747b239081e8387d3d302979b772fd",
     "results/quality/w16_w19_composed_schedule_20261001_r2/service_readiness.json": "c35f77713b275eba8c22c080b4611f7c21a9506bfac5a6d9fbd1c74356fda4c6",
-    "tools/w11_physical_terminal_gate.py": "02b42e442f8c2e6dcafd4a9c3df435204b296c89676475b835d22c2c9607a9cb"
+    "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv": "c7a963dbcd146d2395a305d5145bf879d5557ea1d2646480973cf42e17f94166",
+    "rtl/chip/physical/ot_v41_ckv_merge_phys.sv": "1afb1f8cf9f6c525f17ccf3d5243b3bf8b99505c8f303931e1a3c16feaa55177",
+    "tools/w11_physical_terminal_gate.py": "4c57fe8eccdd48bec313ff4b3a85d41aec408e54f177f5f2548cd8b396a25048"
   },
   "status": "BLOCKED_W11_PHYSICAL_TERMINALS",
   "tuning": false

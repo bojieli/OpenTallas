@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CKV = 'results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001'
 CTL = 'results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal'
 SERVICE = 'results/quality/w16_w19_composed_schedule_20261001_r2/service_readiness.json'
+FEASIBILITY = 'results/quality/w16_w11_ckv_feasibility_20261001/feasibility.json'
 OUT = ROOT / 'results/uarch/w11_physical_terminal_gate_20261001.json'
 
 
@@ -48,6 +49,14 @@ def build(root=ROOT):
     assert measurement['metrics']['setup_worst_slack_ps'] < 0
     assert measurement['metrics']['hold_worst_slack_ps'] < 0
     assert measurement['adopt'] is False
+    feasibility = json.loads(read(FEASIBILITY))
+    assert feasibility['physical_admission'] is False
+    assert feasibility['engine_RTL_build_ready'] is False and feasibility['adopt'] is False
+    assert feasibility['preserved_failure']['metrics'] == measurement['metrics']
+    current_source_matches = {
+        path: sha(read(path)) == expected
+        for path, expected in measurement['source_binding'][0]['source_sha256'].items()
+    }
 
     collection = json.loads(read(CTL + '/collection.json'))
     for item in collection['inventory']:
@@ -73,6 +82,9 @@ def build(root=ROOT):
                          measured_configuration=measurement['measured_configuration'],
                          original_source_binding=measurement['source_binding'],
                          original_source_Git_replay='NOT_ESTABLISHED_BY_THIS_ARCHIVE',
+                         current_RTL_matches_failed_source=current_source_matches,
+                         conditional_ROM_staging_baseline=feasibility['required_baseline_candidate'],
+                         HBM_transfer_qualified=False,
                          independent_FF_hold_PASS=False, required_hub_layers=['M2', 'M5'],
                          physical_admission=False, connected_rate_credit=False),
                 controller=dict(status='TERMINAL_FLOW_ERROR_DRT0305', returncode=1,

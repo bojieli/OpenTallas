@@ -16,6 +16,12 @@ def archive(tmp_path):
     service = tmp_path / W.SERVICE
     service.parent.mkdir(parents=True)
     service.write_bytes((W.ROOT / W.SERVICE).read_bytes())
+    paths = [W.FEASIBILITY, 'rtl/chip/ot_chip_v41x_ckv_stream_merge.sv',
+             'rtl/chip/physical/ot_v41_ckv_merge_phys.sv']
+    for name in paths:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes((W.ROOT / name).read_bytes())
     return tmp_path
 
 
@@ -28,6 +34,8 @@ def test_zero_DRC_and_loaded_corners_do_not_promote_failed_terminals():
     assert result['controller']['route_corner_verdict'] is None
     assert not result['physical_admission'] and not result['hardware_adopted']
     assert result['full_token_rate'] is None and result['maximum_qualified_clock_hz'] is None
+    assert all(result['CKV']['current_RTL_matches_failed_source'].values())
+    assert not result['CKV']['HBM_transfer_qualified']
 
 
 def test_forged_nonnegative_slack_cannot_override_retained_raw_report(archive):
