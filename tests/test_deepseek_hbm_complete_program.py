@@ -11,7 +11,7 @@ class CompleteProgram(unittest.TestCase):
         self.assertEqual({i['layer'] for i in g['instructions']},set(range(40))|{'head'})
         self.assertEqual(g['coverage']['software_handlers_bound'],2213)
         self.assertFalse(g['coverage']['full_GPU_instruction_lowering_complete'])
-        self.assertEqual(g['coverage']['ordinary_GPU_numerical_operator_bindings'],481)
+        self.assertEqual(g['coverage']['ordinary_GPU_numerical_operator_bindings'],489)
         self.assertFalse(g['DUT_RTL_qualified'])
         self.assertEqual([i['pc'] for i in g['instructions']],list(range(2213)))
         for i in g['instructions']:

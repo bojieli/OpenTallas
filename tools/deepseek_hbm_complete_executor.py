@@ -18,6 +18,8 @@ import w19_hbm_tp96_isa as H
 import w19_attention_lowered_proof as A
 import w19_rope_table_service as R
 from deepseek_hbm_complete_isa import WarpBackend,clone_numeric_modules
+import deepseek_hbm_complete_index as IX
+from deepseek_hbm_complete_canonical import CanonicalWarpBackend
 from deepseek_hbm_complete_program import compile_program,ROOT
 from deepseek_hbm_complete_memory import PersistentMemory,FiniteCollective
 
@@ -79,13 +81,13 @@ class Executor(H.Executor):
     def __init__(self,m,st,pos,hist,variant='oreduce',log=print):
         super().__init__(m,st,pos,hist,variant,log)
         self.memory=PersistentMemory();self.fabric=FiniteCollective();self.coefficients=InitialCoefficientFixture(m,pos)
-        self.operator_receipts=[];self.primitive_counts={};self.current=None
+        self.operator_receipts=[];self.primitive_counts={};self.index_receipts=[];self.current=None
         for family in ['ckv','ik']:
             arrays=getattr(st,family)
             for source,base in list(arrays.items()):arrays[source]=StateArray(base,self.memory,family,source)
         # Original pinned functions/globals untouched. These two handlers load
         # explicit setup coefficient rows through the companion interface.
-        self.warp_backend=WarpBackend()
+        self.warp_backend=CanonicalWarpBackend()
         gp,vp,ve=clone_numeric_modules(self.warp_backend,self.coefficients.get)
         self.bound_handlers={}
         for name,original in vars(H.Executor).items():
@@ -109,6 +111,21 @@ class Executor(H.Executor):
         self.memory.write_object(key,rk.get('win_new').tobytes());self.memory.fence()
         row=np.frombuffer(self.memory.read_object(key),dtype=np.float32).copy()
         rk.put('win_new',row);rk.win[op['layer']][-1]=row
+    def f_index_scores(self,rk,op):
+        n,source=op['n'],op['src']
+        if self.st.n[source]<n:raise ValueError('index read before paired row publication')
+        ids=self.owned(rk,n);q=rk.get('iqf').reshape(32,128);weights=rk.get('iw')
+        out=np.empty(len(ids),np.float32)
+        for start in range(0,len(ids),1024):
+            rows=ids[start:start+1024];keys=self.st.ik[source][rows]
+            result,programs=IX.scores(q,keys,weights,self.warp_backend);out[start:start+len(rows)]=result
+            self.index_receipts.append({'pc':self.current['pc'],'rank':rk.r,'start_local_row':start,'rows':len(rows),
+               'global_first':int(rows[0]),'global_last':int(rows[-1]),'ordinary_programs':[m.summary() for m in programs],
+               'service_timing_cycles':None,'packed_provider_bound':False})
+        rk.put('is_i',ids.astype(np.int64),n=len(ids))
+        # Existing reference F64 container is an ABI/storage bridge only; all
+        # score arithmetic above is F32/INT32, not GPU-F64 arithmetic credit.
+        rk.put('is_v',out.astype(np.float64),n=len(ids))
     def f_swiglu(self,rk,op):
         e=op['slot'];r0,r1=H.even(2304)[rk.r]
         route=rk.get('route_w')[e] if e<self.m.k_exp else None
@@ -206,7 +223,7 @@ def execute(program,*,out,stop_after=None,compare_reference=False):
     result.update(verdict='FAIL' if failure else 'PASS',failure=failure,layers=records,CPU_wall_s=round(time.monotonic()-started,3),
                   full_token_software_executed=result.get('full_token_software_executed',False))
     if ex is not None:result.update(operator_receipts=ex.operator_receipts,primitive_counts=ex.primitive_counts,
-      memory=ex.memory.summary(),scalar_GPU_recipes=ex.warp_backend.summary(),collective_events=ex.fabric.events,coefficient_initial_fixture_loads=ex.coefficients.requests)
+      index_kernel_receipts=ex.index_receipts,memory=ex.memory.summary(),scalar_GPU_recipes=ex.warp_backend.summary(),collective_events=ex.fabric.events,coefficient_initial_fixture_loads=ex.coefficients.requests)
     (out/'execution.json').write_text(json.dumps(result,indent=2)+'\n');return result
 
 if __name__=='__main__':
