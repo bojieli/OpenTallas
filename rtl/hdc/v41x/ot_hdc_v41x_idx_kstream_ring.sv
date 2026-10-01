@@ -213,12 +213,12 @@ module ot_hdc_v41x_idx_kctl_ring #(
     // -- drain state ------------------------------------------------------------------
     reg [BW-1:0]   d_hi;                      // head block (relative), low BW bits
     reg [UW-1:0]   d_hu1;                     // d_hi[BW-1:SW] + 1
-    reg [BW-1:0]   dhc  [0:3];                // copies of d_hi for the return gate (8 channels each)
-    reg [UW-1:0]   dhu1c[0:3];
-    wire [BW-1:0]  dhc_inc [0:3];             // dhc + 1
-    wire [UW-1:0]  dhu_inc [0:3];             // (dhc + 1)[BW-1:SW] + 1
+    reg [BW-1:0]   dhc  [0:NPC-1];            // a copy of d_hi per channel for the return gate (each copy's
+    reg [UW-1:0]   dhu1c[0:NPC-1];            // next value reads its own register, so they stay separate)
+    wire [BW-1:0]  dhc_inc [0:NPC-1];         // dhc + 1
+    wire [UW-1:0]  dhu_inc [0:NPC-1];         // (dhc + 1)[BW-1:SW] + 1
     genvar gh;
-    generate for (gh = 0; gh < 4; gh = gh + 1) begin : g_dhc
+    generate for (gh = 0; gh < NPC; gh = gh + 1) begin : g_dhc
         ot_hdc_inc_k #(.W(BW)) u_i (.a(dhc[gh]), .inc(1'b1), .y(dhc_inc[gh]), .co());
         ot_hdc_inc_k #(.W(UW)) u_u (.a(dhc_inc[gh][BW-1:SW]), .inc(1'b1), .y(dhu_inc[gh]), .co());
     end endgenerate
@@ -360,10 +360,10 @@ module ot_hdc_v41x_idx_kctl_ring #(
     generate
         for (gq = 0; gq < NPC; gq = gq + 1) begin : g_rr
             wire [BW-1:0] t = rsp_tag[gq*TAGW +: BW];
-            wire [BW-1:0] dh = dhc[gq / 8];
+            wire [BW-1:0] dh = dhc[gq];
             wire          bor = lt_tree(t[SW-1:0], dh[SW-1:0]);
             if (UW > 0) begin : g_u
-                wire e_0 = (t[BW-1:SW] == dh[BW-1:SW]), e_1 = (t[BW-1:SW] == dhu1c[gq / 8]);
+                wire e_0 = (t[BW-1:SW] == dh[BW-1:SW]), e_1 = (t[BW-1:SW] == dhu1c[gq]);
                 assign rsp_rdy[gq] = bor ? e_1 : e_0;
             end else begin : g_n
                 assign rsp_rdy[gq] = 1'b1;
@@ -490,7 +490,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     // (d_hi, d_hu1 set the return gate, an output: they move only on a command)
                     run <= 1'b1; busy <= 1'b1; ph <= 2'd1;
                     d_hi <= 0; d_oh <= WB'(1); d_hu1 <= 1;
-                    for (b = 0; b < 4; b = b + 1) begin dhc[b] <= 0; dhu1c[b] <= 1; end
+                    for (b = 0; b < NPC; b = b + 1) begin dhc[b] <= 0; dhu1c[b] <= 1; end
                     e1 <= SW'(1); e2 <= SW'(2);
                 end
                 first_skip<=cmd_skip;
@@ -610,7 +610,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     d_hi <= d_hi1; d_oh <= d_oh1;
                     d_hu1 <= d_hi1[BW-1:SW] + 1'b1;
                     e1 <= e2; e2 <= e2 + 1'b1;
-                    for (b = 0; b < 4; b = b + 1) begin
+                    for (b = 0; b < NPC; b = b + 1) begin
                         dhc[b] <= dhc_inc[b];
                         dhu1c[b] <= dhu_inc[b];
                     end
