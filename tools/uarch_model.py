@@ -6116,9 +6116,107 @@ def w10_capacity_diagnosis(inputs):
         no_new_pnr=True, no_retry_or_tuning=True, final_abstract_qualified=False)
 
 
+def w10_pinaccess_contract_review(inputs):
+    """Necessary interface constraints and wake-aware capacity, without a new flow.
+
+    This does not assert full DRC legality: detailed signal occupation, cut/EOL
+    rules and all simultaneous escapes require a separate parent-reviewed proof.
+    """
+    import re
+    geo, wake = inputs["geometry"], inputs["wake"]
+    lef = (ROOT/geo["macro_lef"]).read_text()
+    if hashlib.sha256(lef.encode()).hexdigest() != geo["macro_lef_sha256"]:
+        raise ValueError("pinned macro LEF mismatch")
+    height = round(float(re.search(r"SIZE [0-9.]+ BY ([0-9.]+)", lef)[1])*1000)
+    py = geo["tracks"]["M4"]["y_pitch_nm"]
+    origin = geo["tracks"]["M4"]["y_origin_nm"]
+    pin_phase = 12  # all 288 signal/clock centers verified in previous geometric audit
+    mirrored_phase = (height-pin_phase) % py
+    required_origin = (origin-mirrored_phase) % py
+    site = geo["site"]
+    feasible = (required_origin-site["origin_nm"][1]) % math.gcd(site["height_nm"],py)==0
+    rules, via = inputs["rules"], inputs["via45"]
+    min_lengths = {m:math.ceil(rules[m]["getArea"]/rules[m]["getWidth"]) for m in ("M4","M5")}
+    pin_size = [24,24]
+    via_m4 = [via["M4"][2]-via["M4"][0], via["M4"][3]-via["M4"][1]]
+    column = wake["elements"]["column"]
+    reserve = 6957.34272  # prior 144-track/edge, 50%-availability reservation, not measured demand
+    added = reserve+column["incremental_placement_um2_at_50pct"]
+    bx,by = CONS_PITCH[PRODUCT_PITCH]["bf16_outline_um"]
+    key = "w10_wake_access_contingency"
+    if key in CONS_PITCH:
+        raise ValueError("diagnostic key already present")
+    CONS_PITCH[key] = dict(CONS_PITCH[PRODUCT_PITCH],bf16_outline_um=(bx+added/by,by))
+    try:
+        stages = cons_min_stages("analytical",CONS["overhead"],"ring",PRODUCT_GEOM,key,"columns","4096m8")
+        head = cons_head_dies("analytical",CONS["overhead"],"ring",PRODUCT_GEOM,PRODUCT_PITCH,"8192m8")
+        r = cons_v41_rom(stages,head,cons_table_dies("analytical")["dies"],bf16="columns",
+            clock_hz=PRODUCT_CLOCK_HZ,field_concurrency=FIELD_CONCURRENCY,
+            added_latency=dict(SOFTPLUS_FIX,**W11_STREAM_SS,**PLUS_LAT),dyn_scale=PRODUCT_DYN_SCALE,
+            slow_domain=(0.9e9,"w18"),elem_stages=8,ss_wire=True,serial=PRODUCT_SERIAL,
+            die=DIE_SHRUNK_INTERIM,vmh=VMC_FUSED,hub_block=PRODUCT_HUB)
+    finally:
+        del CONS_PITCH[key]
+    expanded_half_span = (bx+added/by)/2
+    extra_wire_stage = max(0,math.ceil(expanded_half_span/WIRE_REACH_SS_UM)-1)
+    g = evaluate(copy.deepcopy(PRESETS["proposal"]))["_g"]
+    families = {n.split(".",1)[1] if n.startswith(("L","E")) and "." in n else n
+                for n,nd in g.nodes.items() if nd.get("_uarch")}
+    assert all(nd["kind"]=="matvec" for n,nd in g.nodes.items()
+               if any(n.endswith(f) for f in families))
+    guarded = cons_v41_rom(stages,head,cons_table_dies("analytical")["dies"],bf16="columns",
+        clock_hz=PRODUCT_CLOCK_HZ,field_concurrency=FIELD_CONCURRENCY,
+        added_latency=dict(SOFTPLUS_FIX,**W11_STREAM_SS,**PLUS_LAT,
+                           **{"suffix:"+f:extra_wire_stage for f in families}),
+        dyn_scale=PRODUCT_DYN_SCALE,slow_domain=(0.9e9,"w18"),elem_stages=8,ss_wire=True,
+        serial=PRODUCT_SERIAL,die=DIE_SHRUNK_INTERIM,vmh=VMC_FUSED,hub_block=PRODUCT_HUB)
+    return dict(schema="opentallas.w10.pinaccess_contract_review.v1",verdict="NECESSARY_CONSTRAINTS_PROVED_FULL_ACCESS_PENDING",
+        failed_baseline="c8 terminal rc1 DRT-0255, final abstract BLOCKED_INPUTS; no retry/tuning/rebase",
+        exclusive_wake_owner=inputs["owner"],wake_source_commits=inputs["owner_commits"],
+        inherited_pin_boundary=dict(same_LEF=True,same_executable_placement_body=inputs["wake_macro_placement_body_matches_failed_c8"],
+            same_orientations=["R0","MX","MY","R180"],fixed_capture_flops=0,
+            note="wake/leaf ICG and XF8 FIFO correctness do not establish ROM output access"),
+        necessary_constraints=dict(pin_um=[v/1000 for v in pin_size],via45_M4_enclosure_um=[v/1000 for v in via_m4],
+            direct_via_fits_port_rectangle=all(a<=b for a,b in zip(via_m4,pin_size)),
+            minimum_metal_area_nm2={m:rules[m]["getArea"] for m in ("M4","M5")},
+            minimum_straight_24nm_metal_length_nm=min_lengths,
+            mirrored_center_phase_nm=mirrored_phase,M4_track_origin_nm=origin,
+            required_mirrored_origin_phase_nm=required_origin,
+            compatible_with_placement_site_lattice=feasible,
+            common_site_track_period_nm=math.lcm(site["height_nm"],py),
+            explanation="math feasibility is not a placement recipe; VIA45 overhang and minimum-area escape metal remain necessary"),
+        local_power_observation=dict(M5_boxes=inputs["local_PG"],M4_special_metal_in_inspected_window=False,
+            scope="only x139.3..141.7um/y123..132um near two failed outputs; not all-pin DRC"),
+        capacity=dict(wake_column_XF=8,wake_incremental_placement_um2=column["incremental_placement_um2_at_50pct"],
+            current_gross_spare_um2=column["spare_placement_um2"],escape_reservation_um2=reserve,
+            combined_reserved_um2=added,gross_spare_after_both_um2=column["spare_placement_um2"]-added,
+            fits_gross_existing_slot=added<=column["spare_placement_um2"],local_contiguity_proved=False,
+            fifo_storage_bits_are_not_corridor_tracks="depth changes local storage/mux cost; crossing width depends on topology, not storage-bit sum"),
+        fully_additive_contingency=dict(outline_um=[bx+added/by,by],extra_mm2_per_layer_die=added*1024/1e6,
+            stages=stages,total_dies=r["dies"],ar_tokens_s=r["ar_tokens_s_b1"],token_us=1e6/r["ar_tokens_s_b1"],
+            local_latency_delta_cycles="zero only for local capture/escape; long-span routing is conditional below",
+            SS_wire_sensitivity=dict(expanded_half_span_um=expanded_half_span,measured_reach_um=WIRE_REACH_SS_UM,
+                extra_stage_if_halfspan_crossed=extra_wire_stage,
+                conservative_all_matvec_one_cycle=dict(ar_tokens_s=guarded["ar_tokens_s_b1"],
+                    token_us=1e6/guarded["ar_tokens_s_b1"]),
+                column_boundary_register_bits_upper=1616*extra_wire_stage,
+                column_extra_placement_um2_at_50pct=1616*extra_wire_stage*DFF_UM2*2,
+                basis="conditional upper bound; actual net topology must establish stage necessity; registers must fit local reserve or geometry be repriced before build"),
+            added_stage_hops_included=True,
+            basis="conservative all-additive reservation, no clock recovery; wire recalibration and actual local fit pending",adopted=False),
+        admissible_next_step="Parent reviews a macro interface escape contract: actual VIA45 enclosure, minimum area, cut/EOL/spacing, PDN and simultaneous-bank captures at preserved throughput/rounding. Owner keeps existing wake jobs; no independent new candidate.",
+        full_legal_access_proved=False,SS_FF_qualified=False,
+        prohibitions=["no current macro relocation or source edit","no c8/FRONT_PAR retry","no duplicate wake or parity qualification","no calibration v2 refresh or duplicate v3"],
+        missing_proof=["all orientations and all 288 ports, including via/cut/EOL rules",
+            "simultaneous escapes and actual capture/mux endpoint congestion",
+            "routed contextual SS/FF and qualified final abstract"],
+        source_sha256=inputs["sources_sha256"])
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--w10-pinaccess-contract", help="bounded wake-aware interface review JSON")
     ap.add_argument("--w10-capacity", help="read-only c8 geometry JSON for capacity diagnosis")
     ap.add_argument("--w10-baseline", action="store_true", help="audit existing FAST/PP/BP baseline only")
     ap.add_argument("--w10-frontend", action="store_true", help="size the separate opt-in W10 frontend only")
@@ -6136,6 +6234,13 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.w10_pinaccess_contract:
+        payload = json.dumps(w10_pinaccess_contract_review(json.loads(Path(a.w10_pinaccess_contract).read_text())), indent=2) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.w10_capacity:
         payload = json.dumps(w10_capacity_diagnosis(json.loads(Path(a.w10_capacity).read_text())), indent=2) + "\n"
         if a.out:
