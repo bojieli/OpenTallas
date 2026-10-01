@@ -1,0 +1,210 @@
+{
+  "HC_mix_denominator": 20480,
+  "norm_scalar_schedule": {
+    "RF_write_reservations": [
+      27,
+      0,
+      0,
+      0
+    ],
+    "allocation": {
+      "bindings": [
+        {
+          "definition": 0,
+          "last_use": 1,
+          "register": 0,
+          "value": "ea@0"
+        },
+        {
+          "definition": 1,
+          "last_use": 2,
+          "register": 0,
+          "value": "ea@1"
+        },
+        {
+          "definition": 2,
+          "last_use": 3,
+          "register": 0,
+          "value": "ea@2"
+        },
+        {
+          "definition": 3,
+          "last_use": 4,
+          "register": 0,
+          "value": "ea@3"
+        },
+        {
+          "definition": 4,
+          "last_use": 5,
+          "register": 0,
+          "value": "ea@4"
+        },
+        {
+          "definition": 5,
+          "last_use": 6,
+          "register": 0,
+          "value": "ea@5"
+        },
+        {
+          "definition": 6,
+          "last_use": 7,
+          "register": 0,
+          "value": "sum@6"
+        },
+        {
+          "definition": 7,
+          "last_use": 8,
+          "register": 0,
+          "value": "mean@7"
+        },
+        {
+          "definition": 8,
+          "last_use": 11,
+          "register": 0,
+          "value": "v@8"
+        },
+        {
+          "definition": 9,
+          "last_use": 10,
+          "register": 1,
+          "value": "shift@9"
+        },
+        {
+          "definition": 10,
+          "last_use": 16,
+          "register": 1,
+          "value": "y@10"
+        },
+        {
+          "definition": 11,
+          "last_use": 23,
+          "register": 0,
+          "value": "half@11"
+        },
+        {
+          "definition": 12,
+          "last_use": 13,
+          "register": 2,
+          "value": "yy@12"
+        },
+        {
+          "definition": 13,
+          "last_use": 14,
+          "register": 2,
+          "value": "hyy@13"
+        },
+        {
+          "definition": 14,
+          "last_use": 15,
+          "register": 2,
+          "value": "neg@14"
+        },
+        {
+          "definition": 15,
+          "last_use": 16,
+          "register": 2,
+          "value": "corr@15"
+        },
+        {
+          "definition": 16,
+          "last_use": 21,
+          "register": 1,
+          "value": "y@16"
+        },
+        {
+          "definition": 17,
+          "last_use": 18,
+          "register": 2,
+          "value": "yy@17"
+        },
+        {
+          "definition": 18,
+          "last_use": 19,
+          "register": 2,
+          "value": "hyy@18"
+        },
+        {
+          "definition": 19,
+          "last_use": 20,
+          "register": 2,
+          "value": "neg@19"
+        },
+        {
+          "definition": 20,
+          "last_use": 21,
+          "register": 2,
+          "value": "corr@20"
+        },
+        {
+          "definition": 21,
+          "last_use": 26,
+          "register": 1,
+          "value": "y@21"
+        },
+        {
+          "definition": 22,
+          "last_use": 23,
+          "register": 2,
+          "value": "yy@22"
+        },
+        {
+          "definition": 23,
+          "last_use": 24,
+          "register": 0,
+          "value": "hyy@23"
+        },
+        {
+          "definition": 24,
+          "last_use": 25,
+          "register": 0,
+          "value": "neg@24"
+        },
+        {
+          "definition": 25,
+          "last_use": 26,
+          "register": 0,
+          "value": "corr@25"
+        },
+        {
+          "definition": 26,
+          "last_use": 26,
+          "register": 0,
+          "value": "y@26"
+        }
+      ],
+      "control_assignment": {
+        "r28": "chunk/leaf index",
+        "r29": "predicate/loop counter",
+        "r30": "address low32",
+        "r31": "address high32"
+      },
+      "control_registers": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "operand_word": "8lane group g=(warp%4)*4+lane//8;word=(warp//4)*32+register;readcopy0/1, depthbank=word//128;row=word%128. Four lane8 groups per warp32;16 groups per SM.",
+      "peak_value_registers": 3,
+      "readonly_zero": "Ordinary FP32+0 immediate mux, charged normal FADD latency; no first-term bypass.",
+      "registers_thread": 32,
+      "spills": 0
+    },
+    "cycles": 195,
+    "instructions": {
+      "DIV": 1,
+      "FADD": 4,
+      "FMUL": 10,
+      "IADDR": 6,
+      "ISUB": 1,
+      "LOAD": 1,
+      "SHR": 1,
+      "XOR": 3
+    },
+    "issue_trace_sha256": "57df89cfeaaff649e5aea333aece340aaa340c59cddc9c91e37fdc441366b22d",
+    "shared_issue_cycles": 1
+  },
+  "path": "results/rtl/w19_checkpoint_production_20261001/gpu-norm-calendar-r1.json",
+  "scope": "Reuse scalar opcode recipe and resource inputs only; mean constant explicitly20480 forHCmix. No adoption of5120 pre/post norm graph here.",
+  "source_denominator": 5120
+}
