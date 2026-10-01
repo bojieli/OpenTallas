@@ -29,6 +29,7 @@ import v41_w2_romac_pnr as W2  # noqa: E402
 MACRO_DIR = "physical/asap7_memory_macros"
 ROM = ("ot_rom_8192x274_m8", 125.712, 119.340)
 ROM4K = ("ot_rom_4096x274_m8", 125.28, 62.91)          # PP: two per macro slot, read alternately (ping-pong)
+PP_GAP_FREE = 4.32                                    # free tiles: >= 2 halos + whole rows between the stacked macros
 PP_GAP = 0.0                                          # stacked 4096-word macros abut (a sub-halo sliver cannot be legalised)
 SOURCES_FAST = ["rtl/v41rom/ot_v41_fadd.sv", "rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/v41rom/ot_v41_chain2.sv",
                 "rtl/v41rom/ot_v41_segtree2.sv", "rtl/v41rom/ot_v41_bf16_lanes2.sv"]
@@ -47,8 +48,9 @@ def plan(logic_w: float, pair: bool = False, wrapped: bool = False, outline=None
     outline (W, H): the block IS the pack's pair tile (W1 pitch, no margin, no pin channel): channels of ch_o
     beside each ROM edge hold the capture flops, the strip takes the rest, and the tiles abut."""
     rom, rw, rh = ROM4K if pp else ROM
+    gap = 0.0 if outline else PP_GAP_FREE
     if pp:
-        rh = 2 * rh + PP_GAP                          # a slot = two stacked 4096-word macros
+        rh = 2 * rh + gap                             # a slot = two stacked 4096-word macros
     if outline:
         die_w, die_h = outline
         x_rom = ch_o
@@ -71,7 +73,7 @@ def plan(logic_w: float, pair: bool = False, wrapped: bool = False, outline=None
         if pp:
             for k in (0, 1):
                 macros.append({"inst": f"{pre}g_mac[{mb}].g_pp.u_rom{k}", "master": ROM4K, "x": x,
-                               "y": y_rom + k * (ROM4K[2] + PP_GAP), "orient": orient if k == 0 else
+                               "y": y_rom + k * (ROM4K[2] + gap), "orient": orient if k == 0 else
                                {"R0": "MX", "MY": "R180"}[orient],
                                # a PP read is a 2-cycle path: the capture registers are left to the placer
                                "capture": False})
