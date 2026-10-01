@@ -1,0 +1,360 @@
+{
+ "returncode": 0,
+ "tail": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=00",
+  "DONE die=1 cyc=10 core_cycles=10 fault=00",
+  "DONE die=2 cyc=10 core_cycles=10 fault=00",
+  "DONE die=3 cyc=10 core_cycles=10 fault=00",
+  "END cycles=10"
+ ],
+ "done": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=00",
+  "DONE die=1 cyc=10 core_cycles=10 fault=00",
+  "DONE die=2 cyc=10 core_cycles=10 fault=00",
+  "DONE die=3 cyc=10 core_cycles=10 fault=00"
+ ],
+ "wall_s": 0.0,
+ "check": {
+  "r0": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  },
+  "r1": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  },
+  "r2": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  },
+  "r3": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  }
+ }
+}
+{
+ "returncode": 1,
+ "tail": [
+  "TIMEOUT cycles=10"
+ ],
+ "done": [],
+ "wall_s": 0.0,
+ "check": null
+}
+{
+ "returncode": 0,
+ "tail": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=00",
+  "DONE die=1 cyc=10 core_cycles=10 fault=00",
+  "DONE die=2 cyc=10 core_cycles=10 fault=00",
+  "DONE die=3 cyc=10 core_cycles=10 fault=00",
+  "END cycles=10"
+ ],
+ "done": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=00",
+  "DONE die=1 cyc=10 core_cycles=10 fault=00",
+  "DONE die=2 cyc=10 core_cycles=10 fault=00",
+  "DONE die=3 cyc=10 core_cycles=10 fault=00"
+ ],
+ "wall_s": 0.0,
+ "check": {
+  "r0": {
+   "words": 2,
+   "actual_words": 3,
+   "length_ok": false,
+   "pass_exact": false,
+   "mismatches": 0,
+   "first": []
+  },
+  "r1": {
+   "words": 2,
+   "actual_words": 3,
+   "length_ok": false,
+   "pass_exact": false,
+   "mismatches": 0,
+   "first": []
+  },
+  "r2": {
+   "words": 2,
+   "actual_words": 3,
+   "length_ok": false,
+   "pass_exact": false,
+   "mismatches": 0,
+   "first": []
+  },
+  "r3": {
+   "words": 2,
+   "actual_words": 3,
+   "length_ok": false,
+   "pass_exact": false,
+   "mismatches": 0,
+   "first": []
+  }
+ }
+}
+{
+ "returncode": 0,
+ "tail": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=01",
+  "DONE die=1 cyc=10 core_cycles=10 fault=01",
+  "DONE die=2 cyc=10 core_cycles=10 fault=01",
+  "DONE die=3 cyc=10 core_cycles=10 fault=01",
+  "END cycles=10"
+ ],
+ "done": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=01",
+  "DONE die=1 cyc=10 core_cycles=10 fault=01",
+  "DONE die=2 cyc=10 core_cycles=10 fault=01",
+  "DONE die=3 cyc=10 core_cycles=10 fault=01"
+ ],
+ "wall_s": 0.0,
+ "check": {
+  "r0": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  },
+  "r1": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  },
+  "r2": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  },
+  "r3": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  }
+ }
+}
+{
+ "returncode": 0,
+ "tail": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=00",
+  "DONE die=1 cyc=10 core_cycles=10 fault=00",
+  "DONE die=2 cyc=10 core_cycles=10 fault=00",
+  "DONE die=3 cyc=10 core_cycles=10 fault=00",
+  "END cycles=10"
+ ],
+ "done": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=00",
+  "DONE die=1 cyc=10 core_cycles=10 fault=00",
+  "DONE die=2 cyc=10 core_cycles=10 fault=00",
+  "DONE die=3 cyc=10 core_cycles=10 fault=00"
+ ],
+ "wall_s": 0.0,
+ "check": {
+  "r0": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": false,
+   "mismatches": 1,
+   "first": [
+    [
+     1,
+     "3f800001",
+     "3f800000"
+    ]
+   ]
+  },
+  "r1": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": false,
+   "mismatches": 1,
+   "first": [
+    [
+     1,
+     "3f800001",
+     "3f800000"
+    ]
+   ]
+  },
+  "r2": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": false,
+   "mismatches": 1,
+   "first": [
+    [
+     1,
+     "3f800001",
+     "3f800000"
+    ]
+   ]
+  },
+  "r3": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": false,
+   "mismatches": 1,
+   "first": [
+    [
+     1,
+     "3f800001",
+     "3f800000"
+    ]
+   ]
+  }
+ }
+}
+{
+ "returncode": 0,
+ "tail": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=00",
+  "DONE die=1 cyc=10 core_cycles=10 fault=00",
+  "DONE die=2 cyc=10 core_cycles=10 fault=00",
+  "END cycles=10"
+ ],
+ "done": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=00",
+  "DONE die=1 cyc=10 core_cycles=10 fault=00",
+  "DONE die=2 cyc=10 core_cycles=10 fault=00"
+ ],
+ "wall_s": 0.0,
+ "check": {
+  "r0": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  },
+  "r1": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  },
+  "r2": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  },
+  "r3": {
+   "words": 2,
+   "actual_words": 2,
+   "length_ok": true,
+   "pass_exact": true,
+   "mismatches": 0,
+   "first": []
+  }
+ }
+}
+{
+ "returncode": 1,
+ "tail": [
+  "TIMEOUT cycles=10"
+ ],
+ "done": [],
+ "wall_s": 0.0,
+ "check": null
+}
+{
+ "returncode": 0,
+ "tail": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=00",
+  "DONE die=1 cyc=10 core_cycles=10 fault=00",
+  "DONE die=2 cyc=10 core_cycles=10 fault=00",
+  "DONE die=3 cyc=10 core_cycles=10 fault=00",
+  "END cycles=10"
+ ],
+ "done": [
+  "DONE die=0 cyc=10 core_cycles=10 fault=00",
+  "DONE die=1 cyc=10 core_cycles=10 fault=00",
+  "DONE die=2 cyc=10 core_cycles=10 fault=00",
+  "DONE die=3 cyc=10 core_cycles=10 fault=00"
+ ],
+ "wall_s": 0.0,
+ "check": {
+  "r0": {
+   "words": 2,
+   "actual_words": 1,
+   "length_ok": false,
+   "pass_exact": false,
+   "mismatches": 0,
+   "first": []
+  },
+  "r1": {
+   "words": 2,
+   "actual_words": 1,
+   "length_ok": false,
+   "pass_exact": false,
+   "mismatches": 0,
+   "first": []
+  },
+  "r2": {
+   "words": 2,
+   "actual_words": 1,
+   "length_ok": false,
+   "pass_exact": false,
+   "mismatches": 0,
+   "first": []
+  },
+  "r3": {
+   "words": 2,
+   "actual_words": 1,
+   "length_ok": false,
+   "pass_exact": false,
+   "mismatches": 0,
+   "first": []
+  }
+ }
+}
+test_exact (__main__.RuntimeIntegration) ... ok
+test_existing_result_preserved (__main__.RuntimeIntegration) ... ok
+test_extra_vm (__main__.RuntimeIntegration) ... ok
+test_fault (__main__.RuntimeIntegration) ... ok
+test_mismatch (__main__.RuntimeIntegration) ... ok
+test_missing_done (__main__.RuntimeIntegration) ... ok
+test_source_lists (__main__.RuntimeIntegration) ... ok
+test_timeout (__main__.RuntimeIntegration) ... ok
+test_truncated_vm (__main__.RuntimeIntegration) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.162s
+
+OK

@@ -1,0 +1,310 @@
+{
+  "schema": "opentallas.w19.payload_loader_gate.v1",
+  "status": "pass",
+  "source_commit": "aea92e9f93d1728787f12a390ff16e5c69b69327",
+  "historical_record_sha256": "cf7cdd3889ff90afda0c93f545c71ae2f2c1414f27d8a493619cd9aa83f76858",
+  "historical_source_commit": "3b15b18e997ad0a05cc7acf474a7329847e38845",
+  "historical_cases_audited": 60,
+  "historical_exact": 36,
+  "exponent_controls": 18,
+  "row_swap_controls": 6,
+  "model_preflight": {
+    "schema": "opentallas.uarch.gpu_payload_transport.v1",
+    "enabled_default": false,
+    "scope": "V4.1 HBM candidate only; Qwen/ROM ports unchanged",
+    "payloads": 24,
+    "layout": "136-B records in golden SM issue order; final line padding only",
+    "compute": {
+      "macs_per_cycle": 0,
+      "intensity_macs_per_byte": 0,
+      "arithmetic": "none"
+    },
+    "ports_Bpc": {
+      "fetch_read": 128,
+      "reservoir_write": 128,
+      "reservoir_read": 136,
+      "sm_response_write": 136
+    },
+    "boundaries_bits_pc": {
+      "fetch": 1024,
+      "sm": 1088,
+      "request_tag": 42
+    },
+    "replicas_per_die": 32,
+    "tag_depth": 16,
+    "reservoir_bytes": 512,
+    "sector_window": 16,
+    "assembly": "five 32-B sectors per 136-B record; four 8-B phases; per-sector duplicate/epoch validation",
+    "mux_bit_equivalents": 37696,
+    "storage_bits": 4504,
+    "fanout": "SM-local ready/valid; no new die-wide broadcast",
+    "demux": "one local SM response",
+    "footprint_mm2_per_sm": 0.018729,
+    "footprint_mm2_die": 0.5993,
+    "area_basis": "ASSUMED 0.2 um2 bit mux + DFFHQNx1 0.2916 um2 + 512 um2 control, 50% utilisation",
+    "slot_fit": "reserve this footprint inside existing W13 SM slot; measured contextual fit pending",
+    "routing": {
+      "tracks": 2420,
+      "channel_capacity_tracks": 3200,
+      "fits": true,
+      "basis": "ASSUMED 64 um local channel, four existing signal layers, 80 nm pitch; no hub layer change"
+    },
+    "physical_lines": 26,
+    "transferred_bytes": 3328,
+    "padded_fixture_bytes": 6144,
+    "service_cycles_no_stalls": 27,
+    "ideal_128B_payload_cycles": 24,
+    "extra_service_cycles": 3,
+    "steady_payloads_pc": 0.9411764705882353,
+    "first_payload_after_two_line_landings_cycles": 1,
+    "composed_path": {
+      "layers": 40,
+      "expert_ops_per_layer": 18,
+      "added_supply_cycles_upper_bound": 2160,
+      "added_supply_us_upper_bound": 1.8,
+      "basis": "serial sum for all routed w1/w3/w2 busiest-SM slices; overlap may hide service; excludes HBM wait"
+    },
+    "adoption": "OFF: exact, in-context SS/FF and measured token gain gates required; no token-rate restatement",
+    "loader_scope": "Already-sized host load-time swizzle; no engine or router RTL added",
+    "loader_buffer_bytes_bound": 167,
+    "model_source_sha256": "de920936c66d58c7e37ef2748efe934584fc7a6f76f7a668efd0a1ee11d042ab",
+    "element": {
+      "subparts": 4,
+      "int8_lanes": 0,
+      "bf16_lanes": 64,
+      "blockdot_lanes": 8,
+      "cols": 8,
+      "il": 8,
+      "ingest_Bpc": 128,
+      "k_max": 5120,
+      "x_bytes": 2,
+      "simt_lanes": 128,
+      "scratch_kb": 64,
+      "stack_levels": 3,
+      "group_slot": true,
+      "gs_cols": 8
+    },
+    "sm_count": 32,
+    "bulk_copy": {
+      "in_flight_B_die": 1800000.0,
+      "in_flight_B_sm": 56250.0,
+      "outstanding_sectors_sm": 879,
+      "descriptor_bytes": 4096,
+      "outstanding_descriptors_sm": 14,
+      "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)",
+      "measured": [
+        {
+          "outstanding_lines": 7,
+          "B_per_cycle": 1.6,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 16,
+          "B_per_cycle": 3.7,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 64,
+          "B_per_cycle": 14.9,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 256,
+          "B_per_cycle": 59.5,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 440,
+          "B_per_cycle": 101.0,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "outstanding_lines": 512,
+          "B_per_cycle": 102.5,
+          "share_B_per_cycle": 102.4
+        }
+      ],
+      "measured_source": "results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy, 128 B lines, 500 ns +- 50 ns loaded latency)",
+      "outstanding_lines_sm": 512,
+      "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512"
+    }
+  },
+  "connected_source_sha256": {
+    "rtl/sim/ot_hdc_prefix_vec.sv": "dd4cd5d6b650b83a32dfd56f8af739fe295573be64babcde4554cb713d1fe55c",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "rtl/v41rom/ot_v41_bterm2.sv": "6672d9e22d8a7a1c0ef293abc6970446cfa6c8e7c768c7b4706ee1cb94fcc708",
+    "rtl/gpu/ot_gpu_fadd.sv": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+    "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+    "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+    "rtl/gpu/ot_gpu_tc_col.sv": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940",
+    "rtl/gpu/ot_gpu_bd_col.sv": "6bb9a1468b9d0e54e93b75ff697461ba2d277cc2657c5337d8b97e01a2263af0",
+    "rtl/hdc/v41/ot_hdc_blockdot.sv": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+    "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+    "rtl/gpu/ot_gpu_sm_v.sv": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/gpu/ot_gpu_payload_assemble.sv": "355f01e90ccba32fca58339ea65d0b0bc87b906b7fe9b59d57eb6fc04636baa4",
+    "rtl/gpu/ot_gpu_expert_fetch.sv": "a36d62a66e7541a5052b0a1cd3c1c7be346e45627c80f4b94fc72d733b98883e",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/test/tb_w19_payload_loader.sv": "833b20a7f9862cd6e7f5623d82cf33fd7c3fbb84f3b4da0e96ec22ed9a5c6e70"
+  },
+  "host": "ubuntu@155.103.253.114",
+  "remote_work": "/home/ubuntu/w19-loader-gate",
+  "runtime": "Icarus Verilog version 12.0 (stable) ()\nIcarus Verilog runtime version 12.0 (stable) ()\n",
+  "executable_sha256": "432c3ead19e8daf63cbc4b89423c07701d2be44543bb258048a06557e36e5720",
+  "cases": [
+    {
+      "op": "L0.op21.p0",
+      "tag": "expert slot 0 w1",
+      "stall": 0,
+      "corrupt_exponent": false,
+      "row_swap": false,
+      "fixture_sha256": {
+        "cfg.hex": "ca0229a554504605e7e3f3807f49dd4b3c1a50e68c6d65e9771b50d4f6843174",
+        "lines.hex": "48254f5da15eb2a20fb028829b7c746a3c1a7d7183073aafa3f2371ea245fcd4",
+        "x.hex": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c"
+      },
+      "output_sha256": "d84e9aeb80921868d70d2fee69862c0f6025801d424c25516738e67449a9311a",
+      "reference_output_sha256": "d84e9aeb80921868d70d2fee69862c0f6025801d424c25516738e67449a9311a",
+      "pass_output": true
+    },
+    {
+      "op": "L0.op22.p0",
+      "tag": "expert slot 0 w3",
+      "stall": 0,
+      "corrupt_exponent": false,
+      "row_swap": false,
+      "fixture_sha256": {
+        "cfg.hex": "ca0229a554504605e7e3f3807f49dd4b3c1a50e68c6d65e9771b50d4f6843174",
+        "lines.hex": "6925b8435935ebe44d77f160b3fd1f65317707916c859d469de2f1663e0ac37e",
+        "x.hex": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c"
+      },
+      "output_sha256": "a43d2a1f88fd3a86c447a0d2244a3a272d9a3782ee09aae1bf0e49e388e587fc",
+      "reference_output_sha256": "a43d2a1f88fd3a86c447a0d2244a3a272d9a3782ee09aae1bf0e49e388e587fc",
+      "pass_output": true
+    },
+    {
+      "op": "L0.op43.p0",
+      "tag": "expert slot 0 w2",
+      "stall": 0,
+      "corrupt_exponent": false,
+      "row_swap": false,
+      "fixture_sha256": {
+        "cfg.hex": "f586d5c5088e11089e6216f9c604eb48679cb810e560dc1a3af51e5c1b403164",
+        "lines.hex": "9f74c397017a00bd224e6616f70fc7fdcbd8004e47c5b35e9e74ac0f42ade068",
+        "x.hex": "6a2d9861ec2199516e5de7c44d851088216c27ac38eb027bb49ba9bbd6168f0a"
+      },
+      "output_sha256": "c75a390d3e535410e8fbe3484ce327b50ea9fee2e485b0ce094b6c03d30baac1",
+      "reference_output_sha256": "c75a390d3e535410e8fbe3484ce327b50ea9fee2e485b0ce094b6c03d30baac1",
+      "pass_output": true
+    },
+    {
+      "op": "L0.op43.p0",
+      "tag": "expert slot 0 w2",
+      "stall": 1,
+      "corrupt_exponent": false,
+      "row_swap": false,
+      "fixture_sha256": {
+        "cfg.hex": "18ad994a019fa90e757c3f050431a34b3ee6f412a35e9cc837ac768f637bfe28",
+        "lines.hex": "9f74c397017a00bd224e6616f70fc7fdcbd8004e47c5b35e9e74ac0f42ade068",
+        "x.hex": "6a2d9861ec2199516e5de7c44d851088216c27ac38eb027bb49ba9bbd6168f0a"
+      },
+      "output_sha256": "6c464eabb11b5a903d26a30603dfd2df566a71d988ec2cd8e92db0ba5833d5dd",
+      "reference_output_sha256": "6c464eabb11b5a903d26a30603dfd2df566a71d988ec2cd8e92db0ba5833d5dd",
+      "pass_output": true
+    }
+  ],
+  "loader_records": [
+    {
+      "schema": "opentallas.w19.payload_loader.v1",
+      "format": "v41_128B_weights_8B_UE8M0",
+      "source_sha256": "48254f5da15eb2a20fb028829b7c746a3c1a7d7183073aafa3f2371ea245fcd4",
+      "image_sha256": "e7d03e7e386d7fce228ed45e3ba80e4d7269f9fcf582b560e012257279fe15ee",
+      "payloads": 24,
+      "expert_id": 61,
+      "cfg_base": 0,
+      "cfg_exp_lines": 26,
+      "cfg_off": 0,
+      "cfg_lines": 26,
+      "first_sector": 6344,
+      "sector_count": 104,
+      "logical_bytes": 3264,
+      "physical_bytes": 3328,
+      "buffer_bytes_bound": 167,
+      "adoption": false,
+      "scope": "One SM operation descriptor; checkpoint packing and router scheduling are prerequisites"
+    },
+    {
+      "schema": "opentallas.w19.payload_loader.v1",
+      "format": "v41_128B_weights_8B_UE8M0",
+      "source_sha256": "6925b8435935ebe44d77f160b3fd1f65317707916c859d469de2f1663e0ac37e",
+      "image_sha256": "00ca017a76b0f28ff53254b6196fef516f5c4eed10e68e7af0f5accc6854c231",
+      "payloads": 24,
+      "expert_id": 61,
+      "cfg_base": 0,
+      "cfg_exp_lines": 26,
+      "cfg_off": 0,
+      "cfg_lines": 26,
+      "first_sector": 6344,
+      "sector_count": 104,
+      "logical_bytes": 3264,
+      "physical_bytes": 3328,
+      "buffer_bytes_bound": 167,
+      "adoption": false,
+      "scope": "One SM operation descriptor; checkpoint packing and router scheduling are prerequisites"
+    },
+    {
+      "schema": "opentallas.w19.payload_loader.v1",
+      "format": "v41_128B_weights_8B_UE8M0",
+      "source_sha256": "9f74c397017a00bd224e6616f70fc7fdcbd8004e47c5b35e9e74ac0f42ade068",
+      "image_sha256": "38ba3b75e024ae4a5d16d9b3b3e3009c77e5e710636f716cfcf211db310cc67e",
+      "payloads": 32,
+      "expert_id": 61,
+      "cfg_base": 0,
+      "cfg_exp_lines": 34,
+      "cfg_off": 0,
+      "cfg_lines": 34,
+      "first_sector": 8296,
+      "sector_count": 136,
+      "logical_bytes": 4352,
+      "physical_bytes": 4352,
+      "buffer_bytes_bound": 167,
+      "adoption": false,
+      "scope": "One SM operation descriptor; checkpoint packing and router scheduling are prerequisites"
+    },
+    {
+      "schema": "opentallas.w19.payload_loader.v1",
+      "format": "v41_128B_weights_8B_UE8M0",
+      "source_sha256": "9f74c397017a00bd224e6616f70fc7fdcbd8004e47c5b35e9e74ac0f42ade068",
+      "image_sha256": "38ba3b75e024ae4a5d16d9b3b3e3009c77e5e710636f716cfcf211db310cc67e",
+      "payloads": 32,
+      "expert_id": 61,
+      "cfg_base": 0,
+      "cfg_exp_lines": 34,
+      "cfg_off": 0,
+      "cfg_lines": 34,
+      "first_sector": 8296,
+      "sector_count": 136,
+      "logical_bytes": 4352,
+      "physical_bytes": 4352,
+      "buffer_bytes_bound": 167,
+      "adoption": false,
+      "scope": "One SM operation descriptor; checkpoint packing and router scheduling are prerequisites"
+    }
+  ],
+  "loader_source_sha256": "ea11be4101495c66a04cc7a4cbb1b88090c66f96eaba5ae9787c838e64ea26ca",
+  "gate_source_sha256": "2e1b6222cc8bd385abe73a9dbd13103d614340097e3db2819d726c60f8c94345",
+  "claim_boundary": "Four freshly compiled loader/HBM/fetch/sector-adapter/SM output replays against retained golden-bound outputs. Production host loader replaces bench packing only; retained sector proof reused. No checkpoint decoding, router or full 96-rank runtime, full token, physical closure, measured token gain or adoption claim."
+}
