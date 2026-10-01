@@ -1,0 +1,16 @@
+{
+  "commands": [
+    "python3 -m pytest -q tests/test_qcnam_finalize_guard.py tests/test_qcnam_long_admission.py tests/test_qcnam_long_admission_watch.py tests/test_w11_lane_terminal.py",
+    "python3 tools/audit_qcnam_completed_core.py --out /tmp/qcnam-core-independent-NEW.json"
+  ],
+  "audit_output": "Use a fresh exclusive output path; never overwrite prior evidence.",
+  "scope": "CPU-only guard, mocked admission, immutable lane/calibration records; no threshold/source edits or evaluation launches.",
+  "full_verdict": null,
+  "parent_already_passed": "33 guard tests and independent core auditor; repeating core audit is optional.",
+  "validation": {
+    "focused_tests_passed": 57,
+    "duration_seconds": 0.84,
+    "thresholds_changed": false,
+    "source_changed": false
+  }
+}
