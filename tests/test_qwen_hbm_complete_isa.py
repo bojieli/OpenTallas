@@ -5,7 +5,8 @@ import numpy as np
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 import hdc_golden as G
-from qwen_hbm_complete_isa import ARITY,evaluate,manifest,recipe,striped_lines
+from qwen_hbm_complete_isa import ARITY,evaluate,manifest,recipe,striped_lines,KV_write_demands
+from qwen_hbm_complete_program import compile_program
 
 def equal(actual,expected):assert np.array_equal(np.asarray(actual,np.float32).view(np.uint32),np.asarray(expected,np.float32).view(np.uint32))
 
@@ -66,3 +67,16 @@ def test_striped_read_footprint_endpoint_and_per_stack_counts():
     assert striped_lines(127,2)==[1,1,0,0]
     assert striped_lines(128*3,128*6)==[2,1,1,2]
     with pytest.raises(ValueError):striped_lines(0,0)
+
+def test_actual_packed_K_partial_sector_amplification_and_V_full_sectors():
+    p=compile_program();zero=KV_write_demands(p,0);one=KV_write_demands(p,1)
+    assert len(zero)==len(one)==72
+    k=zero[0]['kinds']['K'];v=zero[0]['kinds']['V']
+    assert k['produced_payload_bytes']==v['produced_payload_bytes']==512
+    assert k['partial_sector_writes_by_stack']==[64]*4 and k['full_sector_writes_by_stack']==[0]*4
+    assert k['write_port_payload_bytes']==8192 and k['distinct_byte_masks']==[0x10001]
+    assert sum(v['full_sector_writes_by_stack'])==16 and sum(v['partial_sector_writes_by_stack'])==0
+    assert v['write_port_payload_bytes']==512 and v['distinct_byte_masks']==[0xffffffff]
+    assert one[0]['kinds']['K']['distinct_byte_masks']==[0x20002]
+    assert all(x['callback_timeline'] is None for x in zero)
+    with pytest.raises(ValueError):KV_write_demands(p,p['context_capacity'])

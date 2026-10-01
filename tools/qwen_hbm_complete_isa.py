@@ -187,6 +187,39 @@ def matrix_demands(graph):
                            callback_timeline=None,hardware_lowering_qualified=False))
     return result
 
+def KV_write_demands(graph,position=0):
+    """Actual packed-byte address/mask demands; ACK schedules remain unbound."""
+    if not 0<=position<graph['context_capacity']:raise ValueError('KV position aperture')
+    c=graph['config'];hd=c['head_dim'];heads=c['num_key_value_heads']//graph['TP'];context=graph['context_capacity']
+    extents={(rank['die'],e['name']):e for rank in graph['memory_allocation'] for e in rank['extents']}
+    result=[]
+    for op in graph['instructions']:
+        if op['opcode']!='KV_WRITE':continue
+        a=op['attributes'];layer=a['layer'];die=a['die'];kinds={}
+        for kind in ('K','V'):
+            e=extents[die,f'L{layer}.{kind}'];masks={}
+            for head in range(heads):
+                for dim in range(hd):
+                    offset=((head*(context//16)+position//16)*hd+dim)*16+position%16 if kind=='K' else (head*context+position)*hd+dim
+                    address=e['base']+offset
+                    # Sector lives inside a 128B line, striped across stacks.
+                    line=address//128;stack=line%4;stack_byte=(line//4)*128+address%128
+                    key=(stack,stack_byte//32);masks[key]=masks.get(key,0)|(1<<(stack_byte%32))
+            full=[0]*4;partial=[0]*4;valid=[0]*4
+            for (stack,sector),mask in masks.items():
+                (full if mask==0xffffffff else partial)[stack]+=1;valid[stack]+=mask.bit_count()
+            kinds[kind]=dict(produced_payload_bytes=heads*hd,valid_written_bytes_by_stack=valid,
+                             full_sector_writes_by_stack=full,partial_sector_writes_by_stack=partial,
+                             total_32B_write_commands=len(masks),write_port_payload_bytes=len(masks)*32,
+                             distinct_byte_masks=sorted(set(masks.values())),
+                             RMW_policy='Partial masks require admitted byte-enable support or actual lock/read/merge/WR schedule; no free partial write/RMW assumed',
+                             RMW_read_fast_cycles=None,WR_visible_ACK_fast_cycles=None)
+        result.append(dict(id=op['id'],layer=layer,die=die,position=position,dependencies=op['dependencies'],
+                           reads=op['inputs'],format='E4M3 byte packed',kinds=kinds,
+                           publication='Only all addressed-sector WRvisible commits for matching layer/die/position; retain reader generation until SCORES/PV final consumers',
+                           client_quad_binding=None,callback_timeline=None,hardware_qualified=False))
+    return result
+
 def manifest():
     kinds=['FADD','FMUL','EXP','RECIP','RSQRT','BF16','SILU_GATE','NORMALIZE']
     recipes={kind:recipe(kind) for kind in kinds}
@@ -213,6 +246,8 @@ def manifest():
                 graph_source='tools/qwen_hbm_complete_program.py',instructions=len(graph['instructions']),
                 semantic_instance_counts=dict(counts),direct_elementwise_recipes=direct,elementwise_instruction_instances=elementwise,
                 matrix_weight_demand_instances=matrix_demands(graph),
+                KV_write_demand_instances_position0=KV_write_demands(graph,0),
+                KV_write_demand_instances_position1=KV_write_demands(graph,1),
                 incomplete_macro_lowerings=[name for name in counts if name not in direct],
                 SFU_policy='EXP/reciprocal/rsqrt expanded into ordinary separate ADD/MUL and integer instructions; no native SFU or DIV replacement',
                 prerequisites=['Typed INT/compare area and contextual clock','Full operator chunk/tree reduction and register/address loops','Exact RF issue/writeback calendar','Shared bank/address maps and masks','Quad placement/locality','Loaded finite combined750Bpc controller/request-return/NoC/CDC/credits calendar'],
