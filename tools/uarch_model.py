@@ -6005,9 +6005,121 @@ def w10_baseline_model():
                 qualification_policy="reuse live c8; no new PnR, no FRONT_PAR retry, no headline restatement")
 
 
+def w10_capacity_diagnosis(inputs):
+    """Read-only c8 failure audit: bulk slot capacity does not prove pin access.
+
+    Geometry is from the saved global-route DB, never a qualified final abstract.
+    The channel reservation is an analytical contingency for parent review,
+    not a new route recipe, an orientation change, or a retry of c8.
+    """
+    import re
+    lef = (ROOT / inputs["macro_lef"]).read_text()
+    width, height = map(float, re.search(r"SIZE ([0-9.]+) BY ([0-9.]+)", lef).groups())
+    ports = []
+    for name, body in re.findall(r"  PIN (.*?)\n(.*?)  END ", lef, re.S):
+        if "USE POWER" in body or "USE GROUND" in body:
+            continue
+        box = re.search(r"RECT ([0-9.]+) ([0-9.]+) ([0-9.]+) ([0-9.]+)", body)
+        if box:
+            ports.append((name, [round(float(v)*1000) for v in box.groups()]))
+    track = inputs["tracks"]["M4"]
+    access = []
+    for macro in inputs["macros"]:
+        x0, y0 = macro["location_nm"]
+        aligned = intersecting = 0
+        offsets = set()
+        edge_counts = {"left": 0, "right": 0}
+        failures = []
+        for name, (xl, yl, xh, yh) in ports:
+            if macro["orientation"] in ("MX", "R180"):
+                yl, yh = round(height*1000)-yh, round(height*1000)-yl
+            if macro["orientation"] in ("MY", "R180"):
+                xl, xh = round(width*1000)-xh, round(width*1000)-xl
+            yc = y0 + (yl+yh)/2
+            residual = (yc-track["y_origin_nm"]) % track["y_pitch_nm"]
+            offset = min(residual, track["y_pitch_nm"]-residual)
+            offsets.add(offset)
+            aligned += offset == 0
+            first = math.ceil((y0+yl-track["y_origin_nm"])/track["y_pitch_nm"])
+            last = math.floor((y0+yh-track["y_origin_nm"])/track["y_pitch_nm"])
+            intersecting += last >= first
+            edge_counts["left" if (xl+xh)/2 < width*500 else "right"] += 1
+            if name in ("rd_out[171]", "rd_out[254]"):
+                failures.append(dict(port=name, center_y_um=yc/1000, center_offset_nm=offset,
+                                     intersecting_horizontal_tracks=max(0,last-first+1)))
+        warn = inputs["center_warning_counts"].get(macro["name"], 0)
+        access.append(dict(macro=macro["name"], orientation=macro["orientation"], signal_pins=len(ports),
+                           center_aligned=aligned, center_off_grid=len(ports)-aligned,
+                           intersecting_track_exists=intersecting, center_offsets_nm=sorted(offsets),
+                           edge_pins=edge_counts, observed_center_warnings=warn,
+                           warning_count_matches=(warn==len(ports)-aligned), selected_ports=failures))
+    c = inputs["cts"]
+    core = c["cts__design__core__area"]
+    cells = c["cts__design__instance__area__stdcell"]
+    macros = c["cts__design__instance__area__macros"]
+    slot = _cons_pair_mm2(PRODUCT_PITCH, True)
+    max_edge = max(max(m["edge_pins"].values()) for m in access)
+    # All edge pins on parallel M5 tracks is a conservative channel reservation,
+    # not a measured lower bound; local captures may need fewer long tracks.
+    channel = max_edge * inputs["tracks"]["M5"]["x_pitch_nm"] / 1000 / 0.5
+    reserve = 2 * len(access) * channel * height
+    bx, by = CONS_PITCH[PRODUCT_PITCH]["bf16_outline_um"]
+    widened = bx + reserve/by
+    key = "w10_read_only_channel_reservation"
+    if key in CONS_PITCH:
+        raise ValueError("diagnostic key already exists")
+    CONS_PITCH[key] = dict(CONS_PITCH[PRODUCT_PITCH], bf16_outline_um=(widened, by))
+    try:
+        stages = cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, key, "columns", "4096m8")
+        need = cons_field_need_mm2(stages, "analytical", key, "columns", "4096m8")
+        head = cons_head_dies("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, PRODUCT_PITCH, "8192m8")
+        composed = cons_v41_rom(stages, head, cons_table_dies("analytical")["dies"], bf16="columns",
+            clock_hz=PRODUCT_CLOCK_HZ, field_concurrency=FIELD_CONCURRENCY,
+            added_latency=dict(SOFTPLUS_FIX, **W11_STREAM_SS, **PLUS_LAT), dyn_scale=PRODUCT_DYN_SCALE,
+            slow_domain=(0.9e9, "w18"), elem_stages=8, ss_wire=True, serial=PRODUCT_SERIAL,
+            die=DIE_SHRUNK_INTERIM, vmh=VMC_FUSED, hub_block=PRODUCT_HUB)
+    finally:
+        del CONS_PITCH[key]
+    baseline = w10_baseline_model()["composition"]
+    return dict(schema="opentallas.w10.floorplan_capacity_diagnosis.v1", verdict="FAILED_BASELINE_DIAGNOSIS_ONLY",
+        terminal="c8 rc1 DRT-0255; recovery BLOCKED_INPUTS; FRONT_PAR rejected independently",
+        pinned_originals_unchanged=True, pin_access=access, failed_net_fanout=inputs["failed_nets"],
+        finding="All 576 center warnings match mirrored pin phases; failed nets have one sink each. Every pin rectangle still intersects a track: off-center warnings alone do not prove the maze failure cause.",
+        capacity=dict(reserved_bf16_slot_mm2=slot, actual_die_mm2=c["cts__design__die__area"]/1e6,
+                      core_um2=core, macro_um2=macros, stdcell_um2=cells,
+                      stdcell_utilization_outside_macros=cells/(core-macros), unoccupied_core_um2=core-cells-macros,
+                      bulk_tracks=w10_baseline_model()["boundaries"],
+                      physical_PP_ROM_routes=sum(x["total_sinks"] for x in inputs["fanout"].values()),
+                      all_payload_wire_sum=sum(x["total_sinks"] for x in inputs["fanout"].values())+1024+512,
+                      payload_utilization_if_one_shared_corridor=(sum(x["total_sinks"] for x in inputs["fanout"].values())+1024+512)/w10_baseline_model()["boundaries"]["estimated_local_channel_tracks"],
+                      omitted_from_that_sum="capture-to-mux links, metadata/control/clock, vias/PDN/OBS and detours",
+                      correction="old 1572-wire bound is effective ROM data + BF16 input only; PP has both physical bank buses and quantized input wiring. Actual corridor crossings still require topology assignment, not a global wire sum.",
+                      qualification="area and bulk tracks fit estimates; local escape/vias/PDN/DRC are not covered"),
+        reservation_contingency=dict(max_signals_per_macro_edge=max_edge, assumed_track_availability=0.5,
+            raw_M5_pitch_nm=inputs["tracks"]["M5"]["x_pitch_nm"], per_edge_channel_um=channel,
+            eight_edge_gross_area_um2=reserve, added_latency_cycles=0,
+            fit_inside_existing_slot="gross area can fit unoccupied area; local contiguity and cell displacement unproven",
+            if_fully_additive_outline_um=[widened,by], extra_mm2_per_die=reserve*CONS_BF16["pairs"]/1e6,
+            composed_analytical_stages=stages, composed_field_need_mm2=need,
+            token_pricing=dict(baseline=baseline["checked_in_lat8_audit"],
+                reservation=dict(ar_tokens_s=composed["ar_tokens_s_b1"], token_us=1e6/composed["ar_tokens_s_b1"],
+                                 dies=composed["dies"], pipeline_hops_us=composed["pipeline_hops_us"]),
+                extra_stage_count=stages-baseline["stage_count"],
+                composed_token_us_delta=1e6/composed["ar_tokens_s_b1"]-baseline["checked_in_lat8_audit"]["token_us"],
+                basis="existing graph repriced at its minimum stage count; zero local cycle delta, stage hops composed; no clock recovery credited; wire/layout recalibration pending"),
+            not_adopted=True, basis="conservative reservation only, not measured requirement or a c8 tuning recipe"),
+        next_admissible_step="Parent reviews macro-interface contract: prove legal access for all supported orientations including PDN/via enclosure; reserve escape and local capture space in the composed model before any new companion macro/floorplan build.",
+        requirements_before_build=["an immutable new companion view if pin geometry changes; preserve original LEF",
+            "actual pin access/PDN/via-capacity proof, not only bus-width divided by pitch",
+            "explicit priced slot geometry and latency, including full-field LAT8 calibration",
+            "parent architecture review before RTL; separate future exact and SS/FF contextual qualification"],
+        no_new_pnr=True, no_retry_or_tuning=True, final_abstract_qualified=False)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--w10-capacity", help="read-only c8 geometry JSON for capacity diagnosis")
     ap.add_argument("--w10-baseline", action="store_true", help="audit existing FAST/PP/BP baseline only")
     ap.add_argument("--w10-frontend", action="store_true", help="size the separate opt-in W10 frontend only")
     ap.add_argument("--preset", action="append")
@@ -6024,6 +6136,13 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.w10_capacity:
+        payload = json.dumps(w10_capacity_diagnosis(json.loads(Path(a.w10_capacity).read_text())), indent=2) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.w10_baseline:
         payload = json.dumps(w10_baseline_model(), indent=2) + "\n"
         if a.out:

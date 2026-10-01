@@ -1,0 +1,41 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+DIAG|DBU|1000
+DIAG|LAYER|M4|HORIZONTAL|24|24
+DIAG|TRACK_X|M4|45 81 117 153
+DIAG|TRACK_Y|M4|12 60 108 156
+DIAG|LAYER|M5|VERTICAL|24|24
+DIAG|TRACK_X|M5|12 60 108 156
+DIAG|TRACK_Y|M5|12 60 108 156
+DIAG|LAYER|M6|HORIZONTAL|32|32
+DIAG|TRACK_X|M6|60 108 156 204
+DIAG|TRACK_Y|M6|16 80 144 208
+DIAG|LAYER|M7|VERTICAL|32|32
+DIAG|TRACK_X|M7|16 80 144 208
+DIAG|TRACK_Y|M7|16 80 144 208
+DIAG|MACRO|g_mac\[0\].g_pp.u_rom0|R0|14148 6480|14148 6480 139428 69390
+DIAG|MACRO|g_mac\[0\].g_pp.u_rom1|MX|14148 73440|14148 73440 139428 136350
+DIAG|MACRO|g_mac\[1\].g_pp.u_rom0|MY|863460 6480|863460 6480 988740 69390
+DIAG|MACRO|g_mac\[1\].g_pp.u_rom1|R180|863460 73440|863460 73440 988740 136350
+DIAG|NET|g_mac\[0\].g_pp.u_rom0|rd_out[171]|g_mac\[0\].g_pp.rd0\[171\]|1
+DIAG|SINK|g_mac\[0\].g_pp.u_rom0|rd_out[171]|wire114125|BUFx16f_ASAP7_75t_R
+DIAG|NET|g_mac\[0\].g_pp.u_rom0|rd_out[254]|g_mac\[0\].g_pp.rd0\[254\]|1
+DIAG|SINK|g_mac\[0\].g_pp.u_rom0|rd_out[254]|_485323_|AO21x1_ASAP7_75t_R
+DIAG|FANOUT|g_mac\[0\].g_pp.u_rom0|274|272|1
+DIAG|NET|g_mac\[0\].g_pp.u_rom1|rd_out[171]|g_mac\[0\].g_pp.rd1\[171\]|1
+DIAG|SINK|g_mac\[0\].g_pp.u_rom1|rd_out[171]|_486105_|AO21x1_ASAP7_75t_R
+DIAG|NET|g_mac\[0\].g_pp.u_rom1|rd_out[254]|g_mac\[0\].g_pp.rd1\[254\]|1
+DIAG|SINK|g_mac\[0\].g_pp.u_rom1|rd_out[254]|_485921_|AO21x1_ASAP7_75t_R
+DIAG|FANOUT|g_mac\[0\].g_pp.u_rom1|274|272|1
+DIAG|NET|g_mac\[1\].g_pp.u_rom0|rd_out[171]|g_mac\[1\].g_pp.rd0\[171\]|1
+DIAG|SINK|g_mac\[1\].g_pp.u_rom0|rd_out[171]|_484298_|AO21x1_ASAP7_75t_R
+DIAG|NET|g_mac\[1\].g_pp.u_rom0|rd_out[254]|g_mac\[1\].g_pp.rd0\[254\]|1
+DIAG|SINK|g_mac\[1\].g_pp.u_rom0|rd_out[254]|_484114_|AO21x1_ASAP7_75t_R
+DIAG|FANOUT|g_mac\[1\].g_pp.u_rom0|274|272|1
+DIAG|NET|g_mac\[1\].g_pp.u_rom1|rd_out[171]|g_mac\[1\].g_pp.rd1\[171\]|1
+DIAG|SINK|g_mac\[1\].g_pp.u_rom1|rd_out[171]|place88219|BUFx2_ASAP7_75t_R
+DIAG|NET|g_mac\[1\].g_pp.u_rom1|rd_out[254]|g_mac\[1\].g_pp.rd1\[254\]|1
+DIAG|SINK|g_mac\[1\].g_pp.u_rom1|rd_out[254]|_484721_|AO21x1_ASAP7_75t_R
+DIAG|FANOUT|g_mac\[1\].g_pp.u_rom1|274|272|1
