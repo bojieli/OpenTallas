@@ -148,15 +148,16 @@ module ot_hdc_v41x_idx_ring_kwr #(
             assign hit[gi2] = h_rsp_v[gi2] && (h_rsp_tag[gi2*TAGW +: 5] == 5'(gk));
         end
         // win[i]: port i hits and no higher port does
-        wire [4*NPC-1:0] above;
-        assign above[4*NPC-1] = 1'b0;
-        for (gi2 = 0; gi2 < 4*NPC - 1; gi2 = gi2 + 1) begin : g_a
-            assign above[gi2] = above[gi2+1] | hit[gi2+1];
-        end
-        wire [4*NPC-1:0] win = hit & ~above;
+        reg  [4*NPC-1:0] win;
         reg  [DW-1:0] d;
+        reg  hi;
         integer j;
         always @* begin
+            hi = 1'b0;
+            for (j = 4*NPC - 1; j >= 0; j = j - 1) begin
+                win[j] = hit[j] && !hi;
+                hi = hi || hit[j];
+            end
             d = '0;
             for (j = 0; j < 4*NPC; j = j + 1) d = d | ({DW{win[j]}} & h_rsp_data[j*DW +: DW]);
         end
