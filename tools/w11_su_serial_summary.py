@@ -30,6 +30,8 @@ RUNS = {
     "sc_r5": "the reducer, first attempt: yosys OOM-killed at a 32 GB floor",
     "sc_l5m5u20": "sc_l5 on M2-M5 at 20% utilisation: global route overflow 167 (GRT-0116)",
     "sc_l5m5u15": "sc_l5 on M2-M5 at 15% utilisation",
+    "ll_m6": "sc_l5 routed on M2-M6 (W18b hub layer plan: SU_VECTOR obstructs M1-M7)",
+    "ll_m7": "sc_l5 routed on M2-M7 (W18b hub layer plan)",
     "sc_l5m5": "sc_l5 routed on M2-M5 only (M6/M7 left free over the block): global route congestion (GRT-0116) at "
                "25% utilisation",
     "sc_l3": "light lane, MLAT 4 / ALAT 3 with keep-prefix arithmetic (no input cuts): the multipliers' stage 1 "

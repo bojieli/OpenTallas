@@ -51,3 +51,11 @@ def test_records_are_current_or_marked_stale():
     for p in sorted(DIR.glob("*/physical.json")):
         body = json.loads(p.read_text())
         assert_current_or_marked_stale(body, {x["path"]: x["sha256"] for x in body["design"]["sources"]}, p.parent.name)
+
+
+def test_light_lane_closes_within_the_hub_layer_plan():
+    # W18b (claude/w18-die-assembly e909156c): SU_VECTOR may use M1-M7; the lane closes capped at M6 and at M7
+    rows = _rows()
+    for n in ("ll_m6", "ll_m7"):
+        r = rows[n]
+        assert r["closed"] and r["ss_fmax_mhz"] >= 900 and r["setup_wns_ps"] >= 0 and r["hold_wns_ps"] >= 0, (n, r)
