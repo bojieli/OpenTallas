@@ -1,0 +1,69 @@
+{
+  "recorded_utc": "2026-10-01T20:58:17.278510+00:00",
+  "scope": "READ_ONLY_L0_PC24_ADMISSION_MAP_NOT_EXACTNESS",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_clean": true,
+  "source_sha256": {
+    "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+    "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh": "854c07c61389f1c46fcfe542d82033b18d90e9de38ff4c7581c9013daef66a42",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13",
+    "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": "420723862866ec2e7687dfdaf30ee35fd2631409a466163ee46b03831b412a62",
+    "rtl/chip/ckvsel/ot_chip_v41x_die.sv": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+  },
+  "image_sha256": {
+    "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+    "cfg.txt": "037373fa58ea445f701a369dd8df8559e380ebcce069821363270a2e09c59967"
+  },
+  "binary_sha256": "dbd8546a7860d36dbfa446e240ba5be2ed5b5daf6b3db4d5a90c020e4d42f6c8",
+  "pid": 1968071,
+  "progress_tail": [
+    "CYC 15000 wall 5393.2 s pc 24 24 24 24",
+    "CYC 15200 wall 5476.0 s pc 24 24 24 24",
+    "CYC 15400 wall 5560.0 s pc 24 24 24 24",
+    "CYC 15600 wall 5651.5 s pc 24 24 24 24",
+    "CYC 15800 wall 5735.2 s pc 24 24 24 24"
+  ],
+  "pc24": {
+    "unit": "ME_attention",
+    "wait_mask": 2,
+    "k": 512,
+    "effective_nout": 128,
+    "effective_tiles": 4,
+    "dynamic_selectors": {
+      "33": "FDYN_T0=min(pos+1,128)",
+      "46": "FDYN_CEIL_T0_32=ceil(128/32)"
+    },
+    "status_interpretation": "PC remains before ME issue; S_GO advances PC next cycle. Periodic PC does not reveal admission state."
+  },
+  "preceding_pc23": {
+    "operation": "16 rows x 64 elements sparse RoPE",
+    "elements": 1024,
+    "light_lanes": 256,
+    "reason": "No flatten: A/O outer stride512 differs from row extent64. Slot S=64, VW=256, four rows/vector, sixteen rows require four vectors (c_nsh=2).",
+    "duration_limit": "Four emitted vectors plus actual pipeline/setup/retirement, conditional on admission; no unconditional elapsed-cycle deadline inferred",
+    "nonflattened_packed_vectors": 4
+  },
+  "admission_dependencies": [
+    "SU idle (wait bit1)",
+    "unit ready",
+    "packed window idle",
+    "attention descriptor kv_ok (lifecycle READY, after source stage_v) and !kvd_v"
+  ],
+  "window_source_work": {
+    "rows": 128,
+    "sectors_per_row": 17,
+    "cold_sector_reads": 2176,
+    "bytes": 69632,
+    "schedule": "SEND/WAIT per row; WAIT requires actual prefetch_ok; ISSUE only after all rows, then staged_v supplies descriptor READY",
+    "caveat": "cache hits may reduce reads; 2176 is cold work count, not measured counters or cycle bound"
+  },
+  "next_transition": "When wait/admission gates all true, me_go then S_GO -> PC25. PC25 SU4 element operation has no wait; later attention completion remains separately required.",
+  "observability": "Existing periodic log exposes PC only. Internal SU emitted/cr_dseq, window rows_refilled/sectors_read, descriptor state/kv_ok are not periodically exported. No ptrace, watcher, binary changes or restart performed.",
+  "verdict": "INCOMPLETE; duration alone is not causal no-progress evidence; no finite unconditional HBM-ready bound established in this receipt",
+  "next_measurement": "Read existing subsequent progress/terminal diagnostic; if no transition use existing terminal dstate/idles/waited decoding to separate SU retirement vs window/descriptor admission before proposing a successor instrumented build."
+}
