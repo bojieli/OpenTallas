@@ -110,6 +110,7 @@ module ot_hdc_core_v41x #(
     parameter integer MBAW  = FULL_SHAPE ? 18 : 17, // weight-bank word address
     // X_ROM = 1 (W17): every weight op (QE LINQ and the ME weight class) runs on the adopted ROM field through
     // ot_v41_rom_adapt + ot_v41_spine (rtl/v41die); the field itself is outside the core (rom_fb / rom_fr).
+    parameter integer RANK = 0,            // tensor-group rank (rank-aware DYN NEWBLK)
     parameter integer X_ROM = 0,
     parameter integer ROM_R = 128,         // field return regions (roots = VM write ports)
     parameter integer ROM_PHW = 6,         // phases the field holds (log2)
@@ -346,6 +347,7 @@ module ot_hdc_core_v41x #(
     output reg  [AW-1:0]     coll_src, coll_dst, coll_ibase,
     output reg  [NW-1:0]     coll_n,
     output reg  [11:0]       coll_k,
+    output reg  [31:0]       coll_stride,     // COLL_TOPK_MERGE: dyn[coll_d_stride] (global id = rank * stride + local)
     output reg  [7:0]        coll_seq,
     output reg               coll_rnd,
     input  wire              coll_busy, coll_fault,
@@ -693,6 +695,12 @@ module ot_hdc_core_v41x #(
             dyn[db + FDYN_WINM1] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) - 1;
             dyn[db + FDYN_WIN_ROW] <= ((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) * HDIM;
             dyn[db + FDYN_WINM1_ROW] <= (((p1 < FULL_WINDOW) ? p1 : FULL_WINDOW) - 1) * HDIM;
+            // NEWBLK (rank-aware): the local candidate block of position p1 - 1 on its owner rank (contiguous key
+            // quarters of SC1 = ceil(p1 / TP)), else the pad block one past this rank's last
+            dyn[db + FDYN_NEWBLK] <= ((p1 >= 1) && (AW'(p1 - 1) >= AW'(RANK) * AW'((p1 + FULL_TP - 1) / FULL_TP)) &&
+                                      (AW'(p1 - 1) < AW'(RANK + 1) * AW'((p1 + FULL_TP - 1) / FULL_TP))) ?
+                                     ((AW'(p1 - 1) - AW'(RANK) * AW'((p1 + FULL_TP - 1) / FULL_TP)) >> 3) :
+                                     ((AW'((p1 + FULL_TP - 1) / FULL_TP) + AW'(7)) >> 3);
         end
     end
 
@@ -766,6 +774,7 @@ module ot_hdc_core_v41x #(
             coll_op <= `F(COLL_OP); coll_src <= `F(COLL_SRC); coll_dst <= `F(COLL_DST);
             coll_ibase <= `F(COLL_IBASE); coll_n <= `F(COLL_N); coll_k <= `F(COLL_K);
             coll_seq <= `F(COLL_SEQ); coll_rnd <= `F(COLL_RND);
+            coll_stride <= 32'(dyn[c_dslot * NDYN + ir[O_COLL_D_STRIDE +: W_COLL_D_STRIDE]]);
         end
     end
     `undef F

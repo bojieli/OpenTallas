@@ -465,13 +465,14 @@ module ot_chip_v41x_die #(
     wire [COLL_AW-1:0] core_coll_src, core_coll_dst, core_coll_ibase;
     wire [COLL_NW-1:0] core_coll_n;
     wire [11:0] core_coll_k;
+    wire [31:0] core_coll_stride;
     wire [7:0] core_coll_seq;
     wire die_coll_fault;
 
     ot_chip_v41x_tile #(.FULL_SHAPE(FULL_SHAPE), .X_HE(X_HE), .X_ME(X_ME), .X_IDX(X_IDX), .X_SEL(X_SEL), .X_EG(X_EG), .PIKH_HAW(K_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL), .IDX_MULTIUSER(IDX_RING_MU), .IDX_KEY_SLICE_SECTORS((IDX_RING_MU != 0) ? IKH_SLICE : 0), .SW(SW), .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW), .SUN(SUN), .SUM(SUM), .W_HBM(W_HBM),
                         .NPC_W(NPC_W), .LWIN(LWIN), .LAW(LAW), .PROG_AW(PROG_AW), .WROM_AW(WROM_AW),
                         .HROM_AW(HROM_AW), .EROM_AW(EROM_AW), .CROM_AW(CROM_AW), .VM_AW(VM_AW),
-                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .X_ATT(X_ATT)) u_tile (
+                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .X_ATT(X_ATT), .RANK(RANK)) u_tile (
         .clk(clk), .rst_n(rn), .rom_fb(rom_fb), .rom_fr(rom_fr), .rom_ffault(rom_ffault), .att_to(att_to), .att_from(att_from),
         .start(t_start), .token(t_token), .pos(t_pos), .entry(host_mode ? host_entry : 14'd0),
         .done(core_done), .next_token(core_next_token), .next_val(core_next_val), .cycles(core_cycles),
@@ -511,7 +512,7 @@ module ot_chip_v41x_die #(
         .xb_we4(xb_we4), .xb_waddr4(xb_waddr4), .xb_wdata4(xb_wdata4),
         .xb_re(xb_re), .xb_raddr(xb_raddr), .xb_rq(xb_rq),
         .coll_go(core_coll_go), .coll_op(core_coll_op), .coll_src(core_coll_src), .coll_dst(core_coll_dst),
-        .coll_ibase(core_coll_ibase), .coll_n(core_coll_n), .coll_k(core_coll_k), .coll_seq(core_coll_seq),
+        .coll_ibase(core_coll_ibase), .coll_n(core_coll_n), .coll_k(core_coll_k), .coll_stride(core_coll_stride), .coll_seq(core_coll_seq),
         .coll_rnd(core_coll_rnd), .coll_busy(coll_busy), .coll_fault(die_coll_fault),
         .unit_busy(unit_busy), .issue_unit(issue_unit),
         .qs_fault(qs_fault), .qs_why(qs_why), .qs_fetched(qs_fetched), .qs_consumed(qs_consumed),
@@ -918,7 +919,11 @@ module ot_chip_v41x_die #(
     wire [2*N_TP-1:0] cr_in, cr_out;
     wire dma_fault;
     reg coll_issue_fault;
-    wire coll_issue_bad = core_coll_op[1] ||
+    // op 2 = COLL_TOPK_MERGE (W15b ot_coll_topk_merge in the DMA); op 3 (ARGMAX_MERGE) is not built and faults
+    wire coll_topk = core_coll_op == 2'd2;
+    wire coll_issue_bad = (core_coll_op == 2'd3) ||
+        (coll_topk && ((core_coll_ibase[3:0] != 0) || (core_coll_n[5:0] != 0) || (core_coll_dst[5:0] != 0) ||
+                       (core_coll_k == 0) || (64'(core_coll_ibase) >= (64'd1 << VM_AW)))) ||
         (core_coll_src[3:0] != 0) || (core_coll_dst[3:0] != 0) ||
         (core_coll_n[3:0] != 0) || (core_coll_n == 0) ||
         (64'(core_coll_src) >= (64'd1 << VM_AW)) ||
@@ -930,7 +935,7 @@ module ot_chip_v41x_die #(
             coll_issue_fault <= 1'b1;
     assign die_coll_fault = dma_fault | coll_issue_fault | cl_fault | o_err;
     wire cmd_go = FULL_SHAPE ? (core_coll_go && !coll_issue_bad) : coll_go;
-    wire cmd_mode = FULL_SHAPE ? core_coll_op[0] : coll_mode;
+    wire cmd_mode = FULL_SHAPE ? (core_coll_op[0] || coll_topk) : coll_mode;
     wire [CL_TAGW-1:0] cmd_tag = FULL_SHAPE ? CL_TAGW'(core_coll_seq) : coll_tag;
     wire [VWA-1:0] cmd_src = FULL_SHAPE ? VWA'(core_coll_src >> 4) : coll_src;
     wire [VWA-1:0] cmd_dst = FULL_SHAPE ? VWA'(core_coll_dst >> 4) : coll_dst;
@@ -948,11 +953,12 @@ module ot_chip_v41x_die #(
         .out_rank(o_rank), .out_err(o_err),
         .fault(cl_fault), .fault_code(cl_code));
     ot_chip_v41x_coll_dma #(.WA(VWA), .FW(CL_FW), .TAGW(CL_TAGW), .N(N_TP), .GW(CL_GW),
-                            .VM_ALWAYS_READY(FULL_SHAPE)) u_cdma (
+                            .VM_ALWAYS_READY(FULL_SHAPE), .TOPK(FULL_SHAPE)) u_cdma (
         .clk(clk), .rst_n(rn), .go(cmd_go), .mode(cmd_mode), .rnd(FULL_SHAPE ? core_coll_rnd : 1'b0),
         .tag(cmd_tag), .src(cmd_src), .n(cmd_n), .dst(cmd_dst),
-        // COLL_TOPK_MERGE (op 2): the core's ibase / k / stride fields are not wired yet (W17); op[1] still faults
-        .topk(1'b0), .ibase('0), .tk_k(16'd0), .tk_stride(32'd0),
+        // COLL_TOPK_MERGE (op 2): local (score, id) pairs at src / ibase, global id = RANK * stride + id
+        .topk(FULL_SHAPE && coll_topk), .ibase(VWA'(core_coll_ibase >> 4)), .tk_k(16'(core_coll_k)),
+        .tk_stride(core_coll_stride),
         .busy(coll_busy), .fault(dma_fault), .words_out(), .words_in(),
         .vm_re(xb_re), .vm_raddr(xb_raddr), .vm_rq(xb_rq), .vm_we(xb_we),
         .vm_waddr(xb_waddr), .vm_wdata(xb_wdata), .vm_ready4(1'b1),

@@ -93,6 +93,7 @@ module ot_chip_v41x_tile #(
     parameter integer CROM_AW = 15,
     parameter integer VM_AW   = FULL_SHAPE ? 19 : 16,
     // X_ROM (W17): weight ops on the adopted ROM field; the field is outside the tile (rom_fb / rom_fr)
+    parameter integer RANK    = 0,
     parameter integer X_ROM   = 0,
     parameter integer ROM_R   = 128,
     parameter integer ROM_PHW = 6,
@@ -245,6 +246,7 @@ module ot_chip_v41x_tile #(
     output wire [(FULL_SHAPE ? 30 : 24)-1:0] coll_src, coll_dst, coll_ibase,
     output wire [(FULL_SHAPE ? 21 : 16)-1:0] coll_n,
     output wire [11:0]       coll_k,
+    output wire [31:0]       coll_stride,
     output wire [7:0]        coll_seq,
     output wire              coll_rnd,
     input  wire              coll_busy, coll_fault,
@@ -385,7 +387,7 @@ module ot_chip_v41x_tile #(
                        .PIKH_HAW(PIKH_HAW), .IDX_SHARDED(IDX_SHARDED), .IDX_MULTIUSER(IDX_MULTIUSER),
                        .IDX_KEY_SLICE_SECTORS(IDX_KEY_SLICE_SECTORS), .IDX_RING(IDX_RING),
                        .IDX_RING_RSB(IDX_RING_RSB), .IDX_RING_RTAIL(IDX_RING_RTAIL),
-                       .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST)) u_core (
+                       .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .rom_xre(rom_xre), .rom_xaddr(rom_xaddr), .rom_xq(rom_xq), .rom_we(rom_we), .rom_waddr(rom_waddr),
         .rom_wdata(rom_wdata), .rom_vre(rom_vre), .rom_vaddr(rom_vaddr), .rom_vq(rom_vq), .rom_fb(rom_fb),
@@ -397,7 +399,7 @@ module ot_chip_v41x_tile #(
         .rope_pf_done(rope_pf_done), .rope_pf_release(rope_pf_release),
         .rope_pf_fault(rope_pf_fault),
         .coll_go(coll_go), .coll_op(coll_op), .coll_src(coll_src), .coll_dst(coll_dst),
-        .coll_ibase(coll_ibase), .coll_n(coll_n), .coll_k(coll_k), .coll_seq(coll_seq),
+        .coll_ibase(coll_ibase), .coll_n(coll_n), .coll_k(coll_k), .coll_stride(coll_stride), .coll_seq(coll_seq),
         .coll_rnd(coll_rnd), .coll_busy(coll_busy), .coll_fault(coll_fault),
         .prog_re(prog_re), .prog_addr(prog_addr), .prog_q(prog_q),
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
