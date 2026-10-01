@@ -31,6 +31,32 @@ def ref(p):
     return dict(record=str(Path(p).relative_to(ROOT)), sha256=sha(p))
 
 
+def _adopted():
+    """W18b (2026-10-01): the shrunk product die with the compact (plus) C_rotate hub, the layer plan and the
+    die-level requirements from the element tiles.  INTERIM until the W10b abstracts land (the rebase chain
+    re-derives these records)."""
+    hs_p = D / "hub_square/hub_square.json"
+    hp_p = D / "route/hubplan/hub_layer_plan.json"
+    ls_p = D / "route/die_route_layer_split.json"
+    if not hs_p.exists():
+        return None
+    hs = load(hs_p)
+    return dict(
+        status="INTERIM on W10b tile outlines (q pair 510.84 x 126.9, BF16 column pair 1002.89 x 142.56 um)",
+        die_and_hub=dict(ref(hs_p), adopted=hs["adopted"], plus=hs["plus"], square=hs["square"],
+                         strip_reference=hs["strip_reference"], rotate_on_m89=hs["rotate_on_m89"]),
+        layer_plan=dict(ref(hp_p), trunks_on_m8m9=ref(ls_p),
+                        rule="SU parts M1-M6, VM/bank square and other hub parts M1-M5, HBM service bands full metal, "
+                             "x/result trunks M8/M9 (layer-split route, rest charged per 4x4 GCell)"),
+        clock_requirement=("W10b element tiles time their I/O against neighbours on the same balanced tree (insertion "
+                           "~0.43-0.51 ns at SS, in the ETMs): the die clock tree must deliver clk at abutting tile pins "
+                           "balanced within ~+/-0.1 ns (input budget 0.25-0.667 ns, output -0.30 to -0.233 ns after the "
+                           "ideal edge) -- a die-CTS check, open"),
+        karb=dict(round_trip_cycles_by_region=[20, 16, 14, 10, 10, 14, 16, 20],
+                  basis="results/rtl/chip_v41x_karb_pipe_equiv_w18_iqrep.json (MERGE2 + HEADREG + replicated pointers)",
+                  closure="pslice closes; proot and pregion do not yet (see blocks_1p2ghz)"))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--output", type=Path, required=True)
@@ -95,6 +121,7 @@ def main(argv=None):
                                   head=load(D / "head_table_fit.json")["head_die"],
                                   table=load(D / "head_table_fit.json")["table_die"])
                              if (D / "head_table_fit.json").exists() else None),
+        adopted_2026_10_01=_adopted(),
         tool_sha256=sha(Path(__file__)))
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(dict(collective=rec["collective"]["engines"], crit=rec["collective"]["critical_peer_lanes"],
