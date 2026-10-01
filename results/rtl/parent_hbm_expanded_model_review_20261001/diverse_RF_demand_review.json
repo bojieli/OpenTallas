@@ -1,0 +1,29 @@
+{
+  "actual_RF_ports_routes_context_SSFF": null,
+  "artifact_commit": "024bf9f8f6e2201a51144969b5c17bf7a82aa64a",
+  "artifact_sha256": "bbb260a4fcda3feb5ac73767bb76e08737fffaee55f94d57b26a313d775abd2d",
+  "branches_must_not_be_summed": true,
+  "checkpoint_payload_reads": 0,
+  "hardware_admission": false,
+  "jobs_launched": 0,
+  "method": "Independent direct 32-bit count of executed operand/result register bindings; immediate operands excluded; active shared warp instructions counted from lane masks",
+  "opcode_latency_II": null,
+  "schema": "parent.hbm-diverse-RF-demand-review.v1",
+  "scope": "Resource demand only, not a scheduled execution",
+  "separate_branch_resource_totals": {
+    "exceptional": {
+      "RF_read_bits": 22828544,
+      "RF_two_copy_physical_write_bits": 35052736,
+      "RF_write_bits": 17526368,
+      "shared_warp_instructions": 2170
+    },
+    "finite": {
+      "RF_read_bits": 9021120,
+      "RF_two_copy_physical_write_bits": 14245568,
+      "RF_write_bits": 7122784,
+      "shared_warp_instructions": 1592
+    }
+  },
+  "source_events": 20492,
+  "whole_program_cycles": null
+}
