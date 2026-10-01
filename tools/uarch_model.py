@@ -5866,9 +5866,82 @@ def power_clock_sensitivity(name="proposal", ctx=1048576, clocks=POWER_CLOCKS):
                                    "1.087 GHz at 0.7 V (ASSUMED)", rows=rows)
 
 
+def w10_frontend_model():
+    """Bounded FRONT_PAR opt-in: parallel class addresses, then one-bit class selection.
+
+    Pre-RTL sizing only. No new memory, rounding point, pipeline stage or protocol.
+    Area uses a deliberately conservative 12 DFF-equivalents per full-adder bit
+    and 4 per equality bit; physical qualification must replace these estimates.
+    """
+    n, width = 8, 8
+    extra_add_bits = (n - 1) * width
+    extra_compare_bits = (n - 1) * width
+    # Preserve truncation to 8 bits BEFORE comparison (pair addresses wrap).
+    extra_area = (12 * extra_add_bits + 4 * extra_compare_bits + 4 * n) * DFF_UM2
+    tile = 510.84 * 126.9
+    macros = 4 * 7881.4  # ROM depth study: two 4096-row banks per macro, NB=2
+    strip = tile - macros
+    # Local replicated buses only; external hub/field wires are identical.
+    local_wires = n * (width + width + 1) + 3
+    local_tracks = FLOORPLAN["over_rom_tracks_per_100um"] * 238.68 / 100 * 0.5
+    s = cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM,
+                        PRODUCT_PITCH, "columns", "4096m8")
+    h = cons_head_dies("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, PRODUCT_PITCH, "8192m8")
+    def price(clock):
+        p = cons_v41_rom(s, h, cons_table_dies("analytical")["dies"], bf16="columns", clock_hz=clock,
+                         field_concurrency=FIELD_CONCURRENCY, added_latency=dict(SOFTPLUS_FIX, **W11_STREAM_SS),
+                         dyn_scale=PRODUCT_DYN_SCALE, slow_domain=(0.9e9, "w18"), elem_stages=7,
+                         ss_wire=True, serial=PRODUCT_SERIAL, die=DIE_SHRUNK_INTERIM, vmh=VMC_FUSED,
+                         hub_block=PRODUCT_HUB)
+        return dict(ar_tokens_s=p["ar_tokens_s_b1"], token_us=1e6 / p["ar_tokens_s_b1"],
+                    frontend_added_cycles=0, frontend_added_token_us=0)
+    target = price(PRODUCT_CLOCK_HZ)
+    # A sensitivity, NOT an operating point: adding reported slack to the period
+    # ignores re-CTS and every other critical path. Never adopt this as closure.
+    sensitivity = price(1e9 / (0.833 + 0.15986))
+    gain = target["ar_tokens_s"] / sensitivity["ar_tokens_s"] - 1
+    return dict(schema="opentallas.w10.frontend.model.v1", parameter="FRONT_PAR", default=0,
+                verdict="PASS_SIZING_ONLY", adoption="PENDING_RTL_GAIN_AND_SS_FF_IN_CONTEXT",
+                scope="separate W10 module namespace; existing main RTL and W16 model preserved",
+                integration=dict(base_commit="1be527dbc20e655b26dc4a236c5802aba0b3f710",
+                                 preserved_model_sha256="c85d9588ffd08641af364151bc7e0923324eea3520a63d41451e11716a62312f",
+                                 product_vm="VMC_FUSED"),
+                other_designs={k: "unchanged; FRONT_PAR is ROM-specific" for k in ("qwen_rom", "qwen_hbm", "v41_hbm")},
+                baseline_commit="66b0bee616464920080aa2c44189c4287a6ec1b4",
+                arithmetic="8-bit modular pair-address sum; all FP arithmetic and golden reduction orders unchanged",
+                compute=dict(macs_per_cycle_delta=0, control_matches_per_cycle=n, latency_cycles_delta=0,
+                             initiation_interval_cycles=1, compute_intensity_delta=0, communication_intensity_delta=0),
+                ports=dict(rom_bytes_per_cycle_per_macro=274 / 8, rom_bytes_per_cycle_delta=0,
+                           activation_bytes_per_cycle_delta=0, shared_memory_bytes_per_cycle_delta=0),
+                boundaries=dict(external_bits_per_cycle_delta=0, local_replicated_wires=local_wires,
+                                local_tracks_available_estimate=local_tracks,
+                                local_track_utilisation_estimate=local_wires / local_tracks,
+                                hub_routing_layers="unchanged; local strip only; physical layer audit pending"),
+                mux=dict(baseline="8:1 eight-bit base mux -> eight-bit add -> compare",
+                         candidate="8 parallel eight-bit add/compare cones -> class-qualified one-bit OR",
+                         replicas=n, extra_add_bits=extra_add_bits, extra_compare_bits=extra_compare_bits,
+                         demux_delta=0, q_j_and_xs_p_bit_fanout=n,
+                         class_select_fanout_per_bit=n // 2,
+                         walker_update_fanout="unchanged nA/nB and walker control sinks; must measure in context"),
+                area=dict(extra_register_bits=0, extra_logic_um2_upper_estimate=extra_area,
+                          estimate_basis="12 DFF equivalents/add bit, 4/compare bit, 4/class selection; ASSUMED",
+                          tile_um2=tile, macro_um2=macros, strip_um2=strip,
+                          incremental_strip_fraction=extra_area / strip,
+                          density_target=0.6, estimated_extra_placement_um2=extra_area / 0.6,
+                          fit="incremental estimate only; existing strip is congested; route required"),
+                composition=dict(stages=s, head_dies=h, target=target,
+                                 failed_path_period_sensitivity=sensitivity,
+                                 conditional_rate_gain_fraction=gain, minimum_adoption_gain_fraction=0.01,
+                                 sensitivity_caveat="hypothetical streaming clock recovery only; not measured gain or closure"),
+                source_sha256={p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in
+                               ("tools/uarch_model.py", "results/uarch/v41_rom_depth_study.json",
+                                "rtl/v41rom/ot_v41_rom_elem.sv", "rtl/v41rom/ot_v41_rom_elem_q.sv")})
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--w10-frontend", action="store_true", help="size the separate opt-in W10 frontend only")
     ap.add_argument("--preset", action="append")
     ap.add_argument("--sweep", action="store_true")
     ap.add_argument("--out")
@@ -5883,6 +5956,14 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.w10_frontend:
+        r = w10_frontend_model()
+        payload = json.dumps(r, indent=2) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.consolidation:
         import hashlib
         cs = consolidation()
