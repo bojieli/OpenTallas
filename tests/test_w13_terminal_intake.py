@@ -1,4 +1,7 @@
 import json
+from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
@@ -58,3 +61,25 @@ def test_reused_pid_is_not_original_live_wrapper(monkeypatch):
     monkeypatch.setattr(intake, "identity", lambda pid: {"pid": pid, "start_ticks": "new", "state": "S"})
     assert not intake.handle_live({"pid": 5, "start_ticks": "old"})
     assert intake.handle_live({"pid": 5, "start_ticks": "new"})
+
+
+def test_collector_commits_only_new_archive_paths(tmp_path, monkeypatch):
+    _, job = fixture(tmp_path)
+    stream = tmp_path / "stream"
+    stream.mkdir()
+    subprocess.run(["git", "init", "-q", str(stream)], check=True)
+    subprocess.run(["git", "config", "user.name", "Intake test"], cwd=stream, check=True)
+    subprocess.run(["git", "config", "user.email", "intake@example.invalid"], cwd=stream, check=True)
+    subprocess.run(["git", "commit", "--allow-empty", "-qm", "baseline"], cwd=stream, check=True)
+    (stream / "unrelated.txt").write_text("must remain unstaged")
+    config = {"tool_sha256": intake.digest(Path(intake.__file__)), "lock": str(tmp_path / "lock"),
+              "output": str(stream / "archive"), "stream_worktree": str(stream),
+              "events": str(tmp_path / "events"), "jobs": [job]}
+    path = tmp_path / "config.json"
+    path.write_text(json.dumps(config))
+    monkeypatch.setattr(intake, "handle_live", lambda handle: False)
+    monkeypatch.setattr(sys, "argv", [intake.__file__, str(path)])
+    intake.main()
+    files = subprocess.check_output(["git", "show", "--format=", "--name-only", "HEAD"], cwd=stream, text=True).splitlines()
+    assert files and all(name.startswith("archive/ot_gpu_tc16/") for name in files)
+    assert subprocess.check_output(["git", "status", "--porcelain"], cwd=stream, text=True) == "?? unrelated.txt\n"
