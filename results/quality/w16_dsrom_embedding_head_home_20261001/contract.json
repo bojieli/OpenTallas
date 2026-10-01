@@ -293,7 +293,7 @@
     "physical_fit_claim": false,
     "required": "separate producer/region field namespaces or admitted allocator; no silentsharedfieldfit"
   },
-  "generator_sha256": "a2b0f17892d0ed5388ad9abe07ebdb64516f006262057d44a479af1b9521dc9b",
+  "generator_sha256": "a30f7f9d091da7241174c0edec064ca2b421337666920a48f6031174b3f0cc88",
   "head": {
     "K_split": false,
     "actual_combine_schedule": null,
@@ -335,6 +335,28 @@
   "physical_capacity_credit": false,
   "product_complete": false,
   "schema": "opentallas.dsrom.embedding-head.ROM-candidate-home-validation.v1",
+  "separate_homes_decision": {
+    "candidate_total_homes": 8,
+    "embedding": "4storage-only vocabquarterhomes,oneglobaltablecopy",
+    "embedding_actual_reader_or_imageproducer": null,
+    "embedding_addr_formula": "localtoken*320+word0..319",
+    "embedding_address_width_bits": 24,
+    "embedding_bank_formula": "addr//4096",
+    "embedding_candidate_bank_depth_words": 4096,
+    "embedding_candidate_bank_word_bits": 274,
+    "embedding_candidate_banks_per_quarter": 2525,
+    "embedding_row_formula": "addr%4096",
+    "embedding_sequential_read_cycles_per_token": 320,
+    "embedding_words_per_quarter": 10342400,
+    "head": "4TPvocabquarters, each dedicated BF1024pairfield",
+    "head_allocator_proof": null,
+    "head_output_tiles": [
+      16384,
+      15936
+    ],
+    "owner": "Ram",
+    "physical_die_floorplan_fit": false
+  },
   "status": "PASS_METADATA_OWNERSHIP_SINGLE_SHARED_FIELD_CAPACITY_FAIL_PHYSICAL_UNQUALIFIED",
   "tensor_homes": {
     "embed.weight": {
@@ -535,6 +557,8 @@
   "verification": {
     "BF16_word_slots_all5120_columns_exact": true,
     "RTL_or_PnR_runs": 0,
+    "all32320_embedding_row_intervals_in2525banks_exact": true,
+    "head_output_tiles_sum_exact": true,
     "header_dtype_shapes_exact": true,
     "payload_reads": 0,
     "vocabulary_owner_partition_all129280_tokens_exact": true
