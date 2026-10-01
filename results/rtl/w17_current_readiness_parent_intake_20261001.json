@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.w17.current-readiness-parent-intake.v1",
+  "owner_receipt_sha256": "e5e872bf25fdceb73223506d91ebb3501cf4a379cd7ec9f64fbc41e5cdf04d78",
+  "source_commit": "3109f039c4ea9ac2189d31f27d98db3a97fd09a2",
+  "clean_source_verified": true,
+  "launch_pins_verified_against_files_and_git": 143,
+  "source_list_entries": {
+    "L0": 139,
+    "L20": 150
+  },
+  "fixture_files_hash_and_size_verified": 56,
+  "supervisor_live_pid": 848893,
+  "supervisor_argv": "python3 /home/ubuntu/w17-current-fastpp-l0/tools/w17_current_L0_supervisor_v2.py ",
+  "prerequisite_live_pid": 532447,
+  "prerequisite_argv": "python3 tools/w17_w10_field_rt_gate.py --fast 1 --pp 1 --bp 0 --snapshot /home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277 --workdir /tmp/claude-1000/w17-w10-field-r1 --jobs 2 --threads 4 --result /tmp/claude-1000/queue/w17jobs/w10_field_r1.json ",
+  "readiness_scope": "Source and fixture inventory only; bridge bindings retained as owner verification, no independent bridge replay here",
+  "elaboration_pass": false,
+  "runtime_pass": false,
+  "full40_token_qualified": false,
+  "adopt": false,
+  "next": "Existing bridge532447 terminal exact PASS; then existing supervisor848893 resource admission, regenerate PHW6 FASTPP images, build current attention + four dies + PHW6 field sequentialjobs2, require DONEall4 and complete524288VMwords/rank. IndexedL20 follows currentL0 success with own unique pins/images/resource admission."
+}

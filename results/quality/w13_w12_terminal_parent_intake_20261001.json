@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.w13-w12-parent-terminal-intake.v1",
+  "TC16_receipt_sha256": "246a444047d1cdc624e7b43ad73d6e6ee24c444efe446007c644f85d4c63df0b",
+  "TC16_archived_file_hashes_verified": 33,
+  "TC16_source_pins_verified_against_archive_and_git": 15,
+  "SS_setup_wns_ps": -31.06,
+  "FF_hold_wns_ps": 5.22,
+  "engineering_verdict": "FAIL",
+  "downstream_SM_admitted": false,
+  "Qwen_L10_new_vectors_verified": 4,
+  "Qwen_L10_words_per_die": 4096,
+  "Qwen_L10_mismatches": 0,
+  "Qwen_prior_layers_scope": "L0-L9 checks retained from owner; parent verifies new L10 archived vectors here",
+  "Qwen_launch_source_stable": "pending terminal",
+  "Qwen_full_token_qualified": false,
+  "hardware_adopted": false
+}
