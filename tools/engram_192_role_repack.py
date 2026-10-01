@@ -15,7 +15,7 @@ ROOT=Path('results/quality/w16_engram_rom_constructive_home_20261001')
 raw=(ROOT/'sensitivity_192_homes.json').read_bytes();old=json.loads(raw)
 pin=old['source_pin']['commit'];path=old['source_pin']['path']
 src=subprocess.check_output(['git','show',pin+':'+path]);fp=json.loads(src);g=fp['geometry']
-allowed={'ROM_MAC.expert','ROM_MAC.dense_QE','ROM_MAC.ME','VM.CONSTANT_HE','ENGRAM.spill'}
+allowed={'ROM_MAC.expert','ROM_MAC.dense_QE','ROM_MAC.ME','ENGRAM.spill'}
 removed=[r for r in fp['instances'] if r[5] in allowed]
 assert all(r[1]=='ot_rom_8192x274_m8' for r in removed)
 retained=[r for r in fp['instances'] if r[5] not in allowed]
@@ -26,6 +26,9 @@ ox=hx+hw+halo;oy=cy0
 px=old['grid_size_um'][0]/64;py=old['grid_size_um'][1]/128
 xvoids=sorted(set((r[2],r[2]+r[4]) for r in fp['channel_rects'] if r[1]=='vertical_hbm_corridor' and r[2]>=ox))
 yvoids=sorted(set((r[3],r[3]+r[5]) for r in fp['channel_rects'] if r[1]=='horizontal_spine'))
+# Preserve every source constant ROM. Four intersect this right strip;
+# reserve their entire y bands across the grid, including source pin halo.
+yvoids=sorted(set(yvoids+[(r[3]-g['pin_halo_um'],r[3]+119.34+g['pin_halo_um']) for r in retained if r[5]=='VM.CONSTANT_HE' and r[2]+125.712>ox]))
 def slots(start,count,pitch,voids):
     out=[];cur=start
     for _ in range(count):
@@ -77,7 +80,8 @@ vcorr=next(c for c in fp['channels']['channels'] if c['channel']=='vcorr_s1')
 newtracks=341
 out=dict(schema='opentallas.engram.192-home-role-repack.v1',source_floorplan_pin=old['source_pin'],
     source_LEF_pins=lef_pins,generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-    role_owner_decision='Ram: dedicated ENGRAM_TABLE_SERVICE192 homes; replace historical ROM payload plus corresponding MAC strips only. Keep current hub, allSRAM/HBM/PHY/IO/service and channels. Operators remain separately priced elsewhere; this does not claim capacity or payload removal.',
+    supersedes_previous_role_pin='f67dbe0b59cbf9890ceac153743db04eab4e961e; latest owner keeps constants, previous role screen preserved',
+    role_owner_decision='Ram latest: retain ALL VM.CONSTANT_HE. Dedicated ENGRAM_TABLE_SERVICE192 homes; replace historical ROM payload plus corresponding MAC strips only. Keep current hub, allSRAM/HBM/PHY/IO/service and channels. Operators remain separately priced elsewhere; this does not claim capacity or payload removal.',
     exact_replaced_historical_instances=removed,exact_replaced_historical_soft_regions=removed_soft,
     replaced_hard_count=len(removed),replaced_soft_count=len(removed_soft),
     all_retained_hard_count=len(retained),all_retained_soft_count=len(retained_soft),all_retained_channel_count=len(fp['channel_rects']),
@@ -100,6 +104,6 @@ out=dict(schema='opentallas.engram.192-home-role-repack.v1',source_floorplan_pin
     selector_latency_note='Nonuniform origins change tree edge lengths; prior104cycle row and prior typed192 CTS budget are not automatically valid for this repack. Price a source-bound new tree and root-to-PHY path before admission.',
     model_writes_only_no_source_retirement=True,L1_generated_source=None,checkpoint_reads=0,RTL_or_PnR_runs=False,
     physical_admission=False,full_token_rate=None)
-target=ROOT/'sensitivity_192_role_repack.json';assert not target.exists()
+target=ROOT/'sensitivity_192_role_repack_constants_retained.json';assert not target.exists()
 target.write_text(json.dumps(out,indent=2,sort_keys=True)+'\n')
 print(json.dumps(dict(sha256=hashlib.sha256(target.read_bytes()).hexdigest(),removed_hard=len(removed),removed_soft=len(removed_soft),maxpoint=out['coordinate_construction']['cell_maximum_point_um'],conflicts=dict(bad),spine_remaining=out['route_screen']['remaining_spine_tracks'])))
