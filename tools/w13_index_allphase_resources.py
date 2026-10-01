@@ -65,6 +65,7 @@ def phase_resources(phases, finite_count):
             'broadcast_extra_lane_fanouts_requiring_provider':broadcast_fanout,
             'crossphase_source_STORE_bindings_checked':bindings,
             'source_RF_contract':result['source_RF_contract'],'source_residency_pin':result['source_residency_pin'],
+            'source_RF_allocation_summary':result['source_RF_allocation_summary'],
             'calendar_blockers':result['issues'],'candidate_cycles':result['candidate_cycles']})
     return {'phases':summaries,'shared_producer_audit_issues':sorted(set(errors)),
         'unbound_external_first_read_lane_words':dict(external),
@@ -73,11 +74,12 @@ def phase_resources(phases, finite_count):
         'whole_program_cycles':None,'hardware_admission':False}
 
 
-def build():
+def build(evidence_git='024bf9f8f',version='r2'):
     base='results/rtl/deepseek_hbm_complete_20261001/'
-    proofraw=subprocess.check_output(['git','show','a4d69239c:'+base+'index-source-service-plan-proof-r1.json']);proof=json.loads(proofraw)
-    raw=subprocess.check_output(['git','show','a4d69239c:'+base+'index-source-service-phases-r1.json.gz'])
-    assert hashlib.sha256(raw).hexdigest()==proof['artifacts']['index-source-service-phases-r1.json.gz']['sha256']
+    proofraw=subprocess.check_output(['git','show',evidence_git+':'+base+'index-source-service-plan-proof-'+version+'.json']);proof=json.loads(proofraw)
+    artifact='index-source-service-phases-'+version+'.json.gz'
+    raw=subprocess.check_output(['git','show',evidence_git+':'+base+artifact])
+    assert hashlib.sha256(raw).hexdigest()==proof['artifacts'][artifact]['sha256']
     for p,sha in proof['source_pins'].items():
         assert hashlib.sha256(subprocess.check_output(['git','show',proof['source_commit']+':'+p])).hexdigest()==sha
     d=json.loads(gzip.decompress(raw));out=phase_resources(d['phases'],d['finite_phase_count'])
@@ -91,10 +93,11 @@ def build():
         'verified_source_pins':waves['source_pins'],'ordinary_address_warp_ops':waves['address_warp_ops_allwaves'],
         'waves':waves['waves'],'physical_opcode_II_RF_import_launch_barrier_cycles':None,
         'control_ops_are_additional_to_executed_phase_demand':True}
-    out.update(schema='w13.index-allphase-source-resource-join.v1',source_git=proof['source_commit'],evidence_git='a4d69239c',
+    out.update(schema='w13.index-allphase-source-resource-join.v2',source_git=proof['source_commit'],evidence_git=evidence_git,
         verified_source_pins=proof['source_pins'],phase_manifest_sha256=hashlib.sha256(raw).hexdigest(),
         source_fixture=d['fixture'],source_event_count=sum(len(p['events']) for p in d['phases']),
-        historical_442us_budget_verdict='FAIL_CURRENT_LOWERING_BUDGET',checkpoint_reads=0)
+        historical_442us_budget_verdict='FAIL_CURRENT_LOWERING_BUDGET',checkpoint_reads=0,
+        preserved_historical_fixture={'evidence_git':'a4d69239c','receipt':'allphase_resource_join_r1.json','scope':'all-ones RF/event counts not transferable to diverse r2'})
     return out
 
 

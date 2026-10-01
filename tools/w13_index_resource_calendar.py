@@ -59,6 +59,7 @@ def schedule(events, opcode_contract, memory_words, rf_contract='pinned', reside
     word addresses, one per active lane: no broadcast/coalescing assumption.
     """
     allocation=color(events);errors=list(allocation['issues']);portledger=[]
+    allocation_summary={k:allocation[k] for k in ('allocated_version_registers','reserved_address_loop_registers','total_per_lane_registers')}
     placement={}
     for e in allocate(events)['events']:
         for r in e['candidate_residency']:
@@ -99,6 +100,7 @@ def schedule(events, opcode_contract, memory_words, rf_contract='pinned', reside
                     errors.append('shared_address_outside_64KiB:'+e['id'])
     if errors:return {'issues':sorted(set(errors)),'calendar':None,'candidate_cycles':None,'demand':demand(events),
                       'source_RF_contract':rf,'source_lane_port_ledger':portledger,
+                      'source_RF_allocation_summary':allocation_summary,
                       'source_residency':placement,'source_residency_pin':residency_pin}
     warp_ready=defaultdict(int);partition_ready=defaultdict(int)
     results={};rfwrites=set();rfreads=set();shared_ready=0;calendar=[]
@@ -144,6 +146,7 @@ def schedule(events, opcode_contract, memory_words, rf_contract='pinned', reside
                 'result_ids':[r['result_id'] for r in dests]})
     return {'issues':[],'calendar':calendar,'candidate_cycles':max(warp_ready.values(),default=0),
             'source_RF_contract':rf,'source_lane_port_ledger':portledger,
+            'source_RF_allocation_summary':allocation_summary,
             'source_residency':placement,'source_residency_pin':residency_pin,
             'demand':demand(events),'scope':'conservative selected executed branch path only; source order per warp through retirement',
             'model_contract_only':True,'physical_admission':False}

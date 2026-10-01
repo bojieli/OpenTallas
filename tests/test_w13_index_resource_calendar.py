@@ -68,7 +68,7 @@ def test_pinned_finite_manifest_has_source_demands_but_no_invented_timing():
 
 
 def test_calendar_entry_rejects_excess_ports_even_without_allocator_gate(monkeypatch):
-    monkeypatch.setattr(R,'color',lambda events:{'issues':[]})
+    monkeypatch.setattr(R,'color',lambda events:{'issues':[],'allocated_version_registers':0,'reserved_address_loop_registers':8,'total_per_lane_registers':8})
     events=[event('a','MOV','r'),event('b','CUSTOM','s',[('r','a')]*5)]
     contracts={o:{'core_latency':1,'II':1} for o in ('MOV','CUSTOM')}
     d=schedule(events,contracts,{})
