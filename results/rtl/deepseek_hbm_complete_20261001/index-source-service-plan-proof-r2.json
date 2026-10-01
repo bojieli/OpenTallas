@@ -1,0 +1,559 @@
+{
+  "LOAD_values_matched_prior_mapped_STORE": 17036,
+  "RTL_written": false,
+  "actual_provider_timestamps": null,
+  "artifacts": {
+    "index-source-queryguard-waves-r2.json": {
+      "bytes": 9479,
+      "sha256": "a1379159ec6cbd9036f0a3ee6de11e9dedc5fdabe7f5c5478933f75329c38bfb"
+    },
+    "index-source-service-phases-r2.json.gz": {
+      "bytes": 13220299,
+      "sha256": "bbb260a4fcda3feb5ac73767bb76e08737fffaee55f94d57b26a313d775abd2d"
+    },
+    "index-source-service-plan-r2.json": {
+      "bytes": 24308,
+      "sha256": "6823fe5169bf46d54ea4cb5411c49f9f6d92a1827aa77491254d5e84604e0528"
+    },
+    "index-source-service-plan-r2.junit.xml": {
+      "bytes": 1021,
+      "sha256": "f34eb127809beab3875f4c277b87d1b905dc11344ca7c372eb72bdcb816c9129"
+    }
+  },
+  "checkpoint_reads": 0,
+  "fallback_address_mapping": null,
+  "fallback_changes": "actual QDQ raw q[3,37]=NaN;q[17,103]=Inf;key[1,75]=Inf, other heads/blocks preserve produced fixture",
+  "fallback_finite_query_blocks": 126,
+  "fallback_nonfinite_query_blocks": 2,
+  "fallback_nonfinite_query_heads": 2,
+  "finite_and_mixed_exceptional_original_full5456_F64_ABI_compare": "PASS",
+  "finite_output_F32_bits": [
+    1456209920,
+    1436221440
+  ],
+  "fixture_keys_distinct": 2,
+  "fixture_query_heads_distinct": 32,
+  "fixture_seed": 20261002,
+  "fixture_weight_values_distinct": 32,
+  "focused_tests": 5,
+  "guard_residency_normalized": {
+    "GPU_clock_credit": false,
+    "address_ops_per_warp": 12,
+    "address_warp_ops_allwaves": 1536,
+    "collectors_require": "all128 source flag STORE visibility, not firstwave visibility",
+    "crosswave_RF_persistence": false,
+    "flag_base": 59392,
+    "hardware_admitted": false,
+    "lease_lifetime": "held through all4 waves, collector loads and every currentquery consumer; no return between waves",
+    "loop_requires": "explicit owner launch/fence/loop exit after wave_base128; branch/SIMT control and threadmetadata import unbound",
+    "ordinary_address_program": [
+      {
+        "dst": "global_warp",
+        "op": "IADD",
+        "src": [
+          "wave_base",
+          "resident_slot"
+        ]
+      },
+      {
+        "dst": "head",
+        "op": "SHR",
+        "src": [
+          "global_warp",
+          2
+        ]
+      },
+      {
+        "dst": "block",
+        "op": "AND",
+        "src": [
+          "global_warp",
+          3
+        ]
+      },
+      {
+        "dst": "term",
+        "op": "SHL",
+        "src": [
+          "block",
+          5
+        ]
+      },
+      {
+        "dst": "term",
+        "op": "IADD",
+        "src": [
+          "term",
+          "lane_id"
+        ]
+      },
+      {
+        "dst": "word",
+        "op": "SHL",
+        "src": [
+          "term",
+          5
+        ]
+      },
+      {
+        "dst": "word",
+        "op": "IADD",
+        "src": [
+          "word",
+          "term"
+        ]
+      },
+      {
+        "dst": "word",
+        "op": "IADD",
+        "src": [
+          "word",
+          "head"
+        ]
+      },
+      {
+        "dst": "offset",
+        "op": "SHL",
+        "src": [
+          "word",
+          2
+        ]
+      },
+      {
+        "dst": "query_address",
+        "op": "IADD",
+        "src": [
+          "query_base",
+          "offset"
+        ]
+      },
+      {
+        "dst": "flag_offset",
+        "op": "SHL",
+        "src": [
+          "global_warp",
+          2
+        ]
+      },
+      {
+        "dst": "flag_address",
+        "op": "IADD",
+        "src": [
+          "flag_base",
+          "flag_offset"
+        ]
+      }
+    ],
+    "physical_opcode_II_RF_import_launch_barrier_cycles": null,
+    "query_base": 0,
+    "resident_context_limit_proposal": 32,
+    "schema": "w19 explicit queryguard four-wave proposal r1",
+    "silent_modulo_partitioning": false,
+    "source_commit": "14bc5283e9cf499996f14200e5d01c9c45e59823",
+    "source_phase": "phase0 query decodedbit guard",
+    "source_pins": {
+      "tools/deepseek_hbm_complete_index_service_plan.py": "1b91797e433d0d0505e7443a7d77e32ed575575cda7aa4a6dd6bd4b5040d50a8",
+      "tools/deepseek_hbm_complete_index_service_waves.py": "cc4fa40669db6065d835904e123073c169d5be275c361d326546ef08df7a67a9",
+      "tools/w19_gpu_simd_contract.py": "1d77387d045422d78a68e613e5bcba79506a563cc265dab73667ae37eadff920"
+    },
+    "source_warps": 128,
+    "wave_counter_recipe": [
+      {
+        "dst": "wave_base",
+        "op": "MOV",
+        "src": [
+          0
+        ]
+      },
+      {
+        "dst": "wave_base",
+        "op": "IADD",
+        "src": [
+          "wave_base",
+          32
+        ]
+      }
+    ],
+    "waves": [
+      {
+        "actual_residency_allocation": null,
+        "address_rule": "global_warp=wave_base+resident_slot; head=global_warp>>2; block=global_warp&3; term=block*32+lane; query=base+4*(term*33+head); flag=flag_base+4*global_warp",
+        "global_warps": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        "launch_loop_protection_cycles": null,
+        "launch_requires": [
+          "immutable_currentquery_owner_lease",
+          "query_RAW_store_visible",
+          "independent_source_context"
+        ],
+        "next_wave_dependency": "wave0_all_flag_STORE_visible_and_RF_drain",
+        "resident_slots": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        "reuse_requires": [
+          "all wave RF consumers complete",
+          "all wave flag STORE visible",
+          "RF residency drain"
+        ],
+        "source_event_slice": "phase0 active_lanes with first<=warp<=last; preserve original global warp/resultIDs",
+        "wave": 0,
+        "wave_base_global_warp": 0
+      },
+      {
+        "actual_residency_allocation": null,
+        "address_rule": "global_warp=wave_base+resident_slot; head=global_warp>>2; block=global_warp&3; term=block*32+lane; query=base+4*(term*33+head); flag=flag_base+4*global_warp",
+        "global_warps": [
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63
+        ],
+        "launch_loop_protection_cycles": null,
+        "launch_requires": [
+          "immutable_currentquery_owner_lease",
+          "query_RAW_store_visible",
+          "independent_source_context"
+        ],
+        "next_wave_dependency": "wave1_all_flag_STORE_visible_and_RF_drain",
+        "resident_slots": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        "reuse_requires": [
+          "all wave RF consumers complete",
+          "all wave flag STORE visible",
+          "RF residency drain"
+        ],
+        "source_event_slice": "phase0 active_lanes with first<=warp<=last; preserve original global warp/resultIDs",
+        "wave": 1,
+        "wave_base_global_warp": 32
+      },
+      {
+        "actual_residency_allocation": null,
+        "address_rule": "global_warp=wave_base+resident_slot; head=global_warp>>2; block=global_warp&3; term=block*32+lane; query=base+4*(term*33+head); flag=flag_base+4*global_warp",
+        "global_warps": [
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95
+        ],
+        "launch_loop_protection_cycles": null,
+        "launch_requires": [
+          "immutable_currentquery_owner_lease",
+          "query_RAW_store_visible",
+          "independent_source_context"
+        ],
+        "next_wave_dependency": "wave2_all_flag_STORE_visible_and_RF_drain",
+        "resident_slots": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        "reuse_requires": [
+          "all wave RF consumers complete",
+          "all wave flag STORE visible",
+          "RF residency drain"
+        ],
+        "source_event_slice": "phase0 active_lanes with first<=warp<=last; preserve original global warp/resultIDs",
+        "wave": 2,
+        "wave_base_global_warp": 64
+      },
+      {
+        "actual_residency_allocation": null,
+        "address_rule": "global_warp=wave_base+resident_slot; head=global_warp>>2; block=global_warp&3; term=block*32+lane; query=base+4*(term*33+head); flag=flag_base+4*global_warp",
+        "global_warps": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127
+        ],
+        "launch_loop_protection_cycles": null,
+        "launch_requires": [
+          "immutable_currentquery_owner_lease",
+          "query_RAW_store_visible",
+          "independent_source_context"
+        ],
+        "next_wave_dependency": null,
+        "resident_slots": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        "reuse_requires": [
+          "all wave RF consumers complete",
+          "all wave flag STORE visible",
+          "RF residency drain"
+        ],
+        "source_event_slice": "phase0 active_lanes with first<=warp<=last; preserve original global warp/resultIDs",
+        "wave": 3,
+        "wave_base_global_warp": 96
+      }
+    ]
+  },
+  "hardware_admitted": false,
+  "initial_external_LOAD_lanes_fixture_only_provider_UNBOUND": 13120,
+  "mapped_LOAD_lane_values_checked": 30156,
+  "mapped_STORE_lane_values_checked": 4632,
+  "mapping_timing_qualified": false,
+  "new_CPU_lease": false,
+  "query_scales": "8 exponent classes -126,-80,-20,-3,0,3,16,32 across heads/blocks",
+  "retained_original_ones_r1": "a4d69239c artifacts unchanged",
+  "source_commit": "14bc5283e9cf499996f14200e5d01c9c45e59823",
+  "source_pins": {
+    "tools/deepseek_hbm_complete_index.py": "00ecb0c00d8219c5ec6aa2790ea027df2016592b0f8353fad7969f806c4e14a7",
+    "tools/deepseek_hbm_complete_index_blas.py": "9816eb9a56ba0b4e9b1bf54c6a6cee45b2e3db083060836a8f29a2d2b3a0cebc",
+    "tools/deepseek_hbm_complete_index_blas_model.py": "3ff99eadd4cc93a0f12320d57729784ca57c919a97224916896e97ac07931d67",
+    "tools/deepseek_hbm_complete_index_codec.py": "efe595fb9f075d24b5ecce1ec8636c0f6fcdc628b189e1d098a7b4e274e4ed1a",
+    "tools/deepseek_hbm_complete_index_consumer.py": "95b1332bb104f03ecf81bff90a72632aa4aa0f09304e242c58deb2a37cb1e021",
+    "tools/deepseek_hbm_complete_index_exceptional.py": "840799e07e2bb1c6529d620b4296ad08a30cb49c8e663745ad90b6801680fd2a",
+    "tools/deepseek_hbm_complete_index_fused.py": "ed7e916328d8f57a5ea4d249133f6c2433bac90fe1bc4bf8b54153e998328755",
+    "tools/deepseek_hbm_complete_index_fused_model.py": "10961f2241b2256da587b8a9285e5851ec75d979198df71217ad7b9bfa14e211",
+    "tools/deepseek_hbm_complete_index_service_plan.py": "1b91797e433d0d0505e7443a7d77e32ed575575cda7aa4a6dd6bd4b5040d50a8",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/w19_gpu_compare_lowering.py": "bdd8fbb87a132bdd0c81e8b7f917e0f8abb86197fb12b4ae61386c86ef69a986",
+    "tools/w19_index32_integer_kernel.py": "8775ae6ff271dee79a5304bfb1653c3875e4d6c1e059f8d823fabbf3e8ba9fa4"
+  },
+  "source_producer_ownership": null,
+  "swapped_head_address_negative_test": "REJECTED",
+  "tests_source_sha256": "2e24d0f8327b3737fd44ec1e86f3fe35ad041a0885f16dd7cc457c04a7dacb28",
+  "trace_events": 20492,
+  "trace_generation_peak_RSS_kib": 1551276,
+  "trace_phases": 50,
+  "verdict": "PASS bounded diverse actualQDQ fixture and mapped values"
+}
