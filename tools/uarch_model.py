@@ -5105,7 +5105,10 @@ def cons_headline_table(head, rule, qwen, ec, pc):
                             per_user_ar_tmem_h5=round(1e6 / (HBM_W19["ar_us"] - HBM_TMEM["ar_us"]), 1),
                             per_user_mtp_tmem_h5=round(V41_TAU * 1e6 / (HBM_W19["mtp_pass_us"] - HBM_TMEM["mtp_pass_us"]
                                                                        + HBM_W19["drafter_us"]), 1),
-                            tmem_h5_label=f"H5 TMEM-style epilogue ({FUSION_LABEL}; W13b basis AR, FA MTP)",
+                            tmem_h5_label=f"H5 TMEM-style epilogue ({FUSION_LABEL}): only the us DELTA is applied to W19's "
+                                          "composition -- AR -11.6 us (W13b's dependent latency removed; W13b's absolute "
+                                          "basis 356.9 -> 345.3 us differs from W19's 442.1 us and is not used), MTP pass "
+                                          "-11.8 us (FA's H5 on W19's program)",
                             per_user_ar_unfused=round(HBM_W19["ar_tokens_s_unfused"], 1),
                             per_user_mtp_unfused=round(HBM_W19["mtp_tokens_s_unfused"], 1),
                             select_note="W15b's WIDE 96 x 512 top-k select MEASURED (419 cycles at P = 1,024 / PF = "
