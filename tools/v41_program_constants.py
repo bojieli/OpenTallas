@@ -102,6 +102,10 @@ def derive(model: str) -> dict:
                                           "router denominator"),
         golden, "Model.moe: den = add(total, F(<literal>))",
         "release code literal, parsed from the golden source", "router weight denominator (imm2, AD_IMM)")
+    put("cand_pin", _golden_literal(V.Model.candidate_blocks, r"bs\[\(n - 1\) // b\] = np\.(inf)", "pin"),
+        golden, "Model.candidate_blocks: bs[(n - 1) // b] = np.inf",
+        "release code: the newest position's block always kept, parsed from the golden source",
+        "layer-20 candidate pin (imm2, AD_IMM: block max + inf = +inf)")
     counts = {
         "count_hc_dim": (c["hc_mult"] * c["dim"], "hc_mult*dim", "HC mix rstd mean over the 4-copy residual"),
         "count_dim": (c["dim"], "dim", "sublayer norms (attn_norm, ffn_norm, final norm) and Engram norms"),
