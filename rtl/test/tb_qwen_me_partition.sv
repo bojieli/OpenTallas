@@ -40,11 +40,12 @@ module tb_qwen_me_partition;
     // checked against the original as event sequences only, and the testbench issues a go when every engine
     // is ready
     parameter integer FAST_ISSUE = 0, KV_PREP = 0;
+    parameter integer MUL_LAT = 5;           // the lane product latency (ot_hdc_matvec_part MUL_LAT)
     localparam integer IL = 8, AW = 24, NW = 16;
     localparam integer NT = GT / TG, NXC = 1 << SMAX, LT = $clog2(TG);
     localparam integer XD = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA;
     localparam integer ZERO_WIRE = (XD == 0 && ORD == 0);
-    localparam integer LX = (ACC_LAT - 5) + $clog2(GT) * (TREE_LAT - 3);   // the deeper adders' extra latency
+    localparam integer LX = (MUL_LAT - 5) + (ACC_LAT - 5) + $clog2(GT) * (TREE_LAT - 3);   // the deeper adders' extra latency
     localparam integer EV = (LX != 0 || KV_PREP != 0);
 
     reg clk = 0, rst_n = 0;
@@ -114,7 +115,7 @@ module tb_qwen_me_partition;
     ot_hdc_matvec_ref #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1)) u_ref (`MV_CONN(r));
     ot_hdc_matvec #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1)) u_unp (`MV_CONN(u));
     ot_hdc_matvec #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-                    .SMIN(SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP)) u_mono (`MV_CONN(m));
+                    .SMIN(SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_mono (`MV_CONN(m));
 
     // array
     wire a_ready, a_idle, a_scale_re, a_ov, a_am_any, a_mx_we, a_fault;
@@ -136,7 +137,7 @@ module tb_qwen_me_partition;
     wire [AW-1:0] a_mx_addr; wire [W-1:0] a_mx_mask; wire [W*32-1:0] a_mx_data; wire [15:0] a_progress;
     ot_qwen_me_array #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT),
                        .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .CODE_BANKS(CB), .KV_LOCAL(0), .MEM_EXTRA(MEM_EXTRA),
-                       .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP)) u_arr (
+                       .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_arr (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(a_ready), .idle(a_idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc), .i_wbase(i_wbase), .i_ts(i_ts),
         .i_ks(i_ks), .i_js(i_js), .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs), .i_jsh(i_jsh),
