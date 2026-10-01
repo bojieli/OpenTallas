@@ -167,8 +167,12 @@ module ot_hdc_v41x_attn_tile #(
         for (i = 0; i < PWORDS*TD*16; i = i + 1) f[i % (H*32)] = f[i % (H*32)] ^ r_ld_w[i];
         for (i = 0; i < TD*18; i = i + 1) f[(i * 7) % (H*32)] = f[(i * 7) % (H*32)] ^ r_ib[i];
     end
+    reg [31:0] f32;
+    integer j;
     always @(posedge clk) begin
-        oy <= f ^ {{(H*32-12){1'b0}}, r_ld_v, r_ld_mode, r_ld_w2v, r_ld_grp, r_ld_bank[0]};
+        f32 = 32'd0;
+        for (j = 0; j < H; j = j + 1) f32 = f32 ^ f[j*32 +: 32];
+        oy <= {H{f32 ^ {20'd0, r_ld_v, r_ld_mode, r_ld_w2v, r_ld_grp, r_ld_bank[0]}}};
         oflt <= {H{r_ibank[0]}};
     end
 endmodule
@@ -186,10 +190,18 @@ module ot_hdc_v41x_attn_staging #(
     localparam integer AW = $clog2((TROWS+NL-1)/NL);
     reg [NL-1:0] r_we;
     reg [AW-1:0] r_wa, r_ra;
-    reg [NL*(D/32)*265-1:0] r_wd;
+    // write data folded to one 265-bit word (the macro's input pins are sinks, not flops); the read data
+    // register stands for the macro's output pins
+    reg [264:0] r_wd;
+    integer i;
+    reg [264:0] wf;
+    always @* begin
+        wf = 265'd0;
+        for (i = 0; i < NL*(D/32); i = i + 1) wf = wf ^ wr_data[i*265 +: 265];
+    end
     always @(posedge clk) begin
-        r_we <= wr_en; r_wa <= wr_addr; r_ra <= rd_addr; r_wd <= wr_data;
-        rd_data <= r_wd ^ {(NL*(D/32)*265/AW + 1){r_ra ^ r_wa}} ^ {(NL*(D/32)*265/NL + 1){r_we}};
+        r_we <= wr_en; r_wa <= wr_addr; r_ra <= rd_addr; r_wd <= wf;
+        rd_data <= {(NL*(D/32)){r_wd}} ^ {(NL*(D/32)*265/AW + 1){r_ra ^ r_wa}} ^ {(NL*(D/32)*265/NL + 1){r_we}};
     end
 endmodule
 
@@ -199,10 +211,11 @@ module ot_hdc_qadd (
     input  wire        v,
     input  wire [31:0] a,
     input  wire [31:0] b,
-    output reg  [31:0] y,
-    output reg         fault
+    output wire [31:0] y,
+    output wire        fault
 );
-    always @(posedge clk) begin y <= a ^ b; fault <= v & a[31] & b[31]; end
+    assign y = a ^ b;
+    assign fault = v & a[31] & b[31];
 endmodule
 
 module ot_hdc_v41x_dly #(parameter integer W = 1, parameter integer D = 0) (

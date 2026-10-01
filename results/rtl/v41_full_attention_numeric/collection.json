@@ -17,5 +17,15 @@
   },
   "numeric_errors": 0,
   "score_outputs_checked": 24592,
-  "pv_outputs_checked": 32768
+  "pv_outputs_checked": 32768,
+  "currency": {
+    "state": "stale",
+    "stale_since": "945e8e7c",
+    "reason": "W11 attention engine gained opt-in REPL=2 and a slot-addressed p FIFO (REPL>=1 only); this PWORDS=1 default-engine evidence is unchanged in function (old/new small-bench per-job output identical, 8 cases); the full-geometry rebuild is deferred to the final controller RTL.",
+    "verdict_kept": "pass",
+    "moved": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn.sv"
+    ],
+    "marked": "2026-10-01 by W11 attention (claude/w11-attn)"
+  }
 }

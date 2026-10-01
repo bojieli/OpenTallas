@@ -158,7 +158,10 @@ module ot_hdc_v41x_attn #(
     parameter integer ILV = 0,         // 1: position-interleaved verify mode (see the controller)
     parameter integer REPL = 0,        // 1 (needs ILV = 1): per-tile copies of the transposer read/write indices,
                                        //   the E-register q.k/p.v select and registered pad flags, and a 2-entry
-                                       //   p-word input skid so q_ready/p_ready come from registers only
+                                       //   p-word input FIFO so q_ready/p_ready come from registers only;
+                                       // 2: as 1, plus one register stage between every issue/fill decision and
+                                       //   its per-tile copies and the staging read (q.k and p.v beats both enter
+                                       //   the E register one cycle later; guards one cycle longer)
     parameter integer PHYS = 0,        // 1: physical characterisation only (transposers/merges stubbed)
     parameter integer NSTAGE = 1       // 2 (needs ILV = 1): two staging buffers, the front job writes and reads
                                        //   one while the back job fills from the other (per-position row lists)
@@ -237,6 +240,7 @@ module ot_hdc_v41x_attn #(
     endfunction
     localparam integer GUARD_P = guard_p(0);
     localparam integer GUARD_Q = 20;
+    localparam integer XD = (REPL >= 2) ? 1 : 0;      // REPL = 2: extra decision -> copy/read stage
     localparam integer CNTW = 5;
     generate
         if (NSTAGE != 1 && !(NSTAGE == 2 && ILV != 0)) begin : g_bad_nstage
@@ -331,20 +335,26 @@ module ot_hdc_v41x_attn #(
     wire p_v_i;
     wire [PWORDS*TD*16-1:0] p_w_i;
     generate if (REPL != 0) begin : g_pskid
+        // two fixed slots: a push writes slot wp, the loader reads slot rp; a pop only moves rp (no wide mux enable
+        // behind the loader's accept logic)
         reg [1:0] sk_n;
+        reg       wp, rp;
         reg [PWORDS*TD*16-1:0] sk0, sk1;
         wire push = p_v && p_ready, pop = p_v_i && p_ready_i;
         assign p_ready = (sk_n != 2'd2);
         assign p_v_i = (sk_n != 2'd0);
-        assign p_w_i = sk0;
+        assign p_w_i = rp ? sk1 : sk0;
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) sk_n <= 2'd0;
-            else sk_n <= sk_n + (push ? 2'd1 : 2'd0) - (pop ? 2'd1 : 2'd0);
+            if (!rst_n) begin sk_n <= 2'd0; wp <= 1'b0; rp <= 1'b0; end
+            else begin
+                sk_n <= sk_n + (push ? 2'd1 : 2'd0) - (pop ? 2'd1 : 2'd0);
+                if (push) wp <= !wp;
+                if (pop) rp <= !rp;
+            end
         end
         always @(posedge clk) begin
-            if (pop) sk0 <= (sk_n == 2'd2) ? sk1 : p_w;
-            else if (push && sk_n == 2'd0) sk0 <= p_w;
-            if (push && ((sk_n == 2'd1 && !pop) || (sk_n == 2'd2 && pop))) sk1 <= p_w;
+            if (push && !wp) sk0 <= p_w;
+            if (push && wp) sk1 <= p_w;
         end
     end else begin : g_pdirect
         assign p_ready = p_ready_i;
@@ -421,7 +431,7 @@ module ot_hdc_v41x_attn #(
             if (kv_go) wptr <= wptr + ((kv_m == {NL{1'b1}}) ? NL : count_ones(kv_m));
             if (qk_go) begin
                 qk_row <= qk_row + NL;
-                bcnt[q_bank] <= GUARD_Q + 1;
+                bcnt[q_bank] <= GUARD_Q + 1 + XD;
                 if (qk_row + NL >= T) begin
                     phase_pv <= 1'b1;
                     held[q_bank] <= 1'b0;
@@ -456,7 +466,7 @@ module ot_hdc_v41x_attn #(
             if (fill_wr && (fill_cnt_d + 1 == FILLC)) filled_upto <= fill_blk_d + 1'b1;
             // p.v issue (ILV: its operands are read one cycle later, so the bank's guard is one cycle longer)
             if (pv_go) begin
-                bcnt[iss_bank] <= (ILV != 0) ? GUARD_Q + 1 : GUARD_Q;
+                bcnt[iss_bank] <= ((ILV != 0) ? GUARD_Q + 1 : GUARD_Q) + XD;
                 if (iss_c + 1 == DPT) begin
                     iss_c <= 8'd0;
                     iss_blk <= iss_blk + 1'b1;
@@ -487,11 +497,24 @@ module ot_hdc_v41x_attn #(
     always @(posedge clk) begin
         iss_bank_d <= iss_bank; iss_final_d <= iss_final; iss_blk_d <= iss_blk; iss_c_d <= iss_c;
     end
-    wire             pv_e = (ILV != 0) ? pv_go_d : pv_go;
-    wire [BW-1:0]    e_iss_bank = (ILV != 0) ? iss_bank_d : iss_bank;
-    wire             e_iss_final = (ILV != 0) ? iss_final_d : iss_final;
-    wire [15:0]      e_iss_blk = (ILV != 0) ? iss_blk_d : iss_blk;
-    wire [7:0]       e_iss_c = (ILV != 0) ? iss_c_d : iss_c;
+    // REPL = 2: a second stage
+    reg              pv_go_dd;
+    reg [BW-1:0]     iss_bank_dd;
+    reg              iss_final_dd;
+    reg [15:0]       iss_blk_dd;
+    reg [7:0]        iss_c_dd;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) pv_go_dd <= 1'b0;
+        else pv_go_dd <= (XD != 0) && pv_go_d;
+    end
+    always @(posedge clk) begin
+        iss_bank_dd <= iss_bank_d; iss_final_dd <= iss_final_d; iss_blk_dd <= iss_blk_d; iss_c_dd <= iss_c_d;
+    end
+    wire             pv_e = (XD != 0) ? pv_go_dd : (ILV != 0) ? pv_go_d : pv_go;
+    wire [BW-1:0]    e_iss_bank = (XD != 0) ? iss_bank_dd : (ILV != 0) ? iss_bank_d : iss_bank;
+    wire             e_iss_final = (XD != 0) ? iss_final_dd : (ILV != 0) ? iss_final_d : iss_final;
+    wire [15:0]      e_iss_blk = (XD != 0) ? iss_blk_dd : (ILV != 0) ? iss_blk_d : iss_blk;
+    wire [7:0]       e_iss_c = (XD != 0) ? iss_c_dd : (ILV != 0) ? iss_c_d : iss_c;
     function automatic [15:0] count_ones(input [NL-1:0] m);
         integer i;
         begin
@@ -508,6 +531,12 @@ module ot_hdc_v41x_attn #(
     wire [NL*ROWW-1:0] rd_q;           // NSTAGE = 1: the one read port
     wire [NL*ROWW-1:0] rd_q_qk, rd_q_fl;   // q.k rows / fill rows (NSTAGE = 2: two buffers, read concurrently)
     reg  [15:0]   rd_r0;
+    reg  [AW-1:0] rd_addr_r;          // REPL = 2: the staging read one cycle after the decision
+    reg           rd_qk2;
+    reg  [BW-1:0] rd_bank2;
+    reg  [15:0]   rd_r0_2, rq_r0_2;
+    reg  [NL-1:0] fpad_d1;
+    integer pi2;
     reg  [BW-1:0] rd_bank;
     // row index of the q.k read and of the fill read (NSTAGE = 1: the shared read's)
     wire [15:0]   row_qk_c = (NSTAGE == 2) ? qk_row : rd_row0;
@@ -518,21 +547,29 @@ module ot_hdc_v41x_attn #(
     generate if (NSTAGE == 2) begin : g_stage2
         reg fbuf_r, bbuf_r;
         wire [NL*ROWW-1:0] q0, q1;
-        wire [AW-1:0] qa = AW'(qk_row / NL), fa = AW'(fl_blk * FILLC + fl_cnt);
+        wire [AW-1:0] qa_c = AW'(qk_row / NL), fa_c = AW'(fl_blk * FILLC + fl_cnt);
+        reg  [AW-1:0] qa_r, fa_r;
+        reg           s0f_r, s1f_r, fbuf_rr, bbuf_rr;
+        always @(posedge clk) begin
+            qa_r <= qa_c; fa_r <= fa_c; s0f_r <= act_b && !bbuf; s1f_r <= act_b && bbuf;
+            fbuf_rr <= fbuf_r; bbuf_rr <= bbuf_r;
+        end
+        wire [AW-1:0] qa = (XD != 0) ? qa_r : qa_c, fa = (XD != 0) ? fa_r : fa_c;
+        wire s0f = (XD != 0) ? s0f_r : (act_b && !bbuf), s1f = (XD != 0) ? s1f_r : (act_b && bbuf);
         ot_hdc_v41x_attn_staging #(.D(D), .NL(NL), .TROWS(TROWS), .SRAM_MACRO(SRAM_MACRO)) u_stage0 (
             .clk(clk), .wr_en({NL{kv_go && !fbuf}} & kv_m), .wr_addr(AW'(wptr / NL)), .wr_data(kv_w),
-            .rd_addr((act_b && !bbuf) ? fa : qa), .rd_data(q0));
+            .rd_addr(s0f ? fa : qa), .rd_data(q0));
         ot_hdc_v41x_attn_staging #(.D(D), .NL(NL), .TROWS(TROWS), .SRAM_MACRO(SRAM_MACRO)) u_stage1 (
             .clk(clk), .wr_en({NL{kv_go && fbuf}} & kv_m), .wr_addr(AW'(wptr / NL)), .wr_data(kv_w),
-            .rd_addr((act_b && bbuf) ? fa : qa), .rd_data(q1));
+            .rd_addr(s1f ? fa : qa), .rd_data(q1));
         always @(posedge clk) begin fbuf_r <= fbuf; bbuf_r <= bbuf; end
-        assign rd_q_qk = fbuf_r ? q1 : q0;
-        assign rd_q_fl = bbuf_r ? q1 : q0;
+        assign rd_q_qk = ((XD != 0) ? fbuf_rr : fbuf_r) ? q1 : q0;
+        assign rd_q_fl = ((XD != 0) ? bbuf_rr : bbuf_r) ? q1 : q0;
         assign rd_q = rd_q_qk;
     end else begin : g_stage1
         ot_hdc_v41x_attn_staging #(.D(D), .NL(NL), .TROWS(TROWS), .SRAM_MACRO(SRAM_MACRO)) u_stage (
             .clk(clk), .wr_en({NL{kv_go}} & kv_m), .wr_addr(AW'(wptr / NL)), .wr_data(kv_w),
-            .rd_addr(rd_addr), .rd_data(rd_q));
+            .rd_addr((XD != 0) ? rd_addr_r : rd_addr), .rd_data(rd_q));
         assign rd_q_qk = rd_q;
         assign rd_q_fl = rd_q;
     end endgenerate
@@ -543,7 +580,18 @@ module ot_hdc_v41x_attn #(
     always @(posedge clk) begin
         rd_r0 <= rd_row0; fill_blk_d <= fl_blk; fill_cnt_d <= fl_cnt; rd_bank <= q_bank;
         rq_r0 <= qk_row; rf_r0 <= fl_blk * TD + fl_cnt * NL;
+        rd_addr_r <= rd_addr;
+        rd_bank2 <= rd_bank; rd_r0_2 <= rd_r0; rq_r0_2 <= rq_r0;
+        for (pi2 = 0; pi2 < NL; pi2 = pi2 + 1) fpad_d1[pi2] <= (row_fl_c + pi2) >= T_p;
     end
+    // REPL = 2: the q.k read data and its tags arrive one cycle later (declarations above)
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) rd_qk2 <= 1'b0;
+        else rd_qk2 <= (XD != 0) && rd_qk;
+    end
+    wire          rd_qk_s = (XD != 0) ? rd_qk2 : rd_qk;
+    wire [BW-1:0] rd_bank_s = (XD != 0) ? rd_bank2 : rd_bank;
+    wire [15:0]   r0_qk_s = (XD != 0) ? ((NSTAGE == 2) ? rq_r0_2 : rd_r0_2) : r0_qk;
 
     // element of dim x (0..31) of a group word, {pad, fmt, code, scale}
     function automatic [17:0] elem(input [GW-1:0] gw, input integer x, input pad);
@@ -576,6 +624,9 @@ module ot_hdc_v41x_attn #(
     // edge as the shared _d copies (so no cycle moves), and holds its own E operand register.
     wire [NT*TD*18-1:0] tr_col;
     reg  [NL-1:0] qpad_r;              // REPL: (rd_r0 + r) >= T, registered with rd_r0
+    reg  [NL-1:0] qpad_r2;
+    always @(posedge clk) qpad_r2 <= qpad_r;
+    wire [NL-1:0] qpad_s = (XD != 0) ? qpad_r2 : qpad_r;
     integer pi;
     always @(posedge clk) begin
         for (pi = 0; pi < NL; pi = pi + 1) begin
@@ -589,29 +640,29 @@ module ot_hdc_v41x_attn #(
             wire [TD*18-1:0] eib_t;
             for (gl = 0; gl < NL; gl = gl + 1) begin : g_g
                 assign w_g[gl*GW +: GW] = rd_q_fl[gl*ROWW + ((gk*DPT) / 32) * GW +: GW];
-                assign w_pad[gl] = (REPL != 0) ? ((row_fl_c + gl) >= T_p) : ((r0_fl + gl) >= T_p);
+                assign w_pad[gl] = (XD != 0) ? fpad_d1[gl] : (REPL != 0) ? ((row_fl_c + gl) >= T_p) : ((r0_fl + gl) >= T_p);
             end
             if (PHYS == 0) begin : g_real
                 ot_hdc_v41x_attn_tr #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32), .REPL(REPL)) u_tr (
                     .clk(clk), .rst_n(rst_n),
-                    .w_en_i((REPL != 0) ? (fl_go && ((NSTAGE == 2) || !qk_go)) : fill_wr),
-                    .w_half_i((REPL != 0) ? fl_blk[0] : fill_blk_d[0]),
-                    .w_cnt_i((REPL != 0) ? fl_cnt : fill_cnt_d),
+                    .w_en_i((XD != 0) ? fill_wr : (REPL != 0) ? (fl_go && ((NSTAGE == 2) || !qk_go)) : fill_wr),
+                    .w_half_i((XD != 0) ? fill_blk_d[0] : (REPL != 0) ? fl_blk[0] : fill_blk_d[0]),
+                    .w_cnt_i((XD != 0) ? fill_cnt_d : (REPL != 0) ? fl_cnt : fill_cnt_d),
                     .w_pad_i(w_pad), .w_g(w_g),
-                    .r_half_i((REPL != 0) ? iss_blk[0] : e_iss_blk[0]),
-                    .r_c_i((REPL != 0) ? iss_c : e_iss_c),
-                    .sel_i(pv_go), .qk_ib(qk_ib[gk*TD*18 +: TD*18]),
+                    .r_half_i((XD != 0) ? iss_blk_d[0] : (REPL != 0) ? iss_blk[0] : e_iss_blk[0]),
+                    .r_c_i((XD != 0) ? iss_c_d : (REPL != 0) ? iss_c : e_iss_c),
+                    .sel_i((XD != 0) ? pv_go_d : pv_go), .qk_ib(qk_ib[gk*TD*18 +: TD*18]),
                     .col(tr_col[gk*TD*18 +: TD*18]), .eib(eib_t));
             end else begin : g_phs
                 ot_hdc_v41x_attn_tr_phs #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32), .REPL(REPL)) u_tr (
                     .clk(clk), .rst_n(rst_n),
-                    .w_en_i((REPL != 0) ? (fl_go && ((NSTAGE == 2) || !qk_go)) : fill_wr),
-                    .w_half_i((REPL != 0) ? fl_blk[0] : fill_blk_d[0]),
-                    .w_cnt_i((REPL != 0) ? fl_cnt : fill_cnt_d),
+                    .w_en_i((XD != 0) ? fill_wr : (REPL != 0) ? (fl_go && ((NSTAGE == 2) || !qk_go)) : fill_wr),
+                    .w_half_i((XD != 0) ? fill_blk_d[0] : (REPL != 0) ? fl_blk[0] : fill_blk_d[0]),
+                    .w_cnt_i((XD != 0) ? fill_cnt_d : (REPL != 0) ? fl_cnt : fill_cnt_d),
                     .w_pad_i(w_pad), .w_g(w_g),
-                    .r_half_i((REPL != 0) ? iss_blk[0] : e_iss_blk[0]),
-                    .r_c_i((REPL != 0) ? iss_c : e_iss_c),
-                    .sel_i(pv_go), .qk_ib(qk_ib[gk*TD*18 +: TD*18]),
+                    .r_half_i((XD != 0) ? iss_blk_d[0] : (REPL != 0) ? iss_blk[0] : e_iss_blk[0]),
+                    .r_c_i((XD != 0) ? iss_c_d : (REPL != 0) ? iss_c : e_iss_c),
+                    .sel_i((XD != 0) ? pv_go_d : pv_go), .qk_ib(qk_ib[gk*TD*18 +: TD*18]),
                     .col(tr_col[gk*TD*18 +: TD*18]), .eib(eib_t));
             end
             assign e_ib[gk*TD*18 +: TD*18] = (REPL != 0) ? eib_t : e_ib_c[gk*TD*18 +: TD*18];
@@ -626,7 +677,7 @@ module ot_hdc_v41x_attn #(
                 for (gk = 0; gk < TD; gk = gk + 1) begin : g_qke
                     assign qk_ib[((gl*S + gs)*TD + gk)*18 +: 18] =
                         elem(rd_q_qk[gl*ROWW + ((gs*TD + gk) / 32) * GW +: GW], (gs*TD + gk) % 32,
-                             (REPL != 0) ? qpad_r[gl] : ((r0_qk + gl) >= T));
+                             (REPL != 0) ? qpad_s[gl] : ((r0_qk + gl) >= T));
                 end
             end
         end
@@ -636,7 +687,7 @@ module ot_hdc_v41x_attn #(
         if (!rst_n) begin e_ld_v <= 1'b0; e_iv <= 1'b0; e_pv <= 1'b0; end
         else begin
             e_ld_v <= q_go || p_go;
-            e_iv <= rd_qk || pv_e;
+            e_iv <= rd_qk_s || pv_e;
             e_pv <= pv_e;
         end
     end
@@ -648,10 +699,10 @@ module ot_hdc_v41x_attn #(
         e_ld_grp <= p_go ? pl_word : q_cnt;
         e_p_w <= p_w_i;
         e_q_w <= q_w;
-        e_ibank <= pv_e ? e_iss_bank : rd_bank;
+        e_ibank <= pv_e ? e_iss_bank : rd_bank_s;
         e_ib_c <= pv_e ? tr_col : qk_ib;
-        e_row0 <= r0_qk;
-        for (li = 0; li < NL; li = li + 1) e_mask[li] <= (r0_qk + li) < T;
+        e_row0 <= r0_qk_s;
+        for (li = 0; li < NL; li = li + 1) e_mask[li] <= (r0_qk_s + li) < T;
         e_fin <= e_iss_final;
         e_blk <= e_iss_blk[MLEV-1:0];
         e_c <= e_iss_c;
@@ -666,7 +717,7 @@ module ot_hdc_v41x_attn #(
     // the beat's: a mismatch is a write-after-read or read-before-write violation of the bank guards.
     integer sck_ctr = 0, sck_qset = 0, sck_plset = 0, sck_reads = 0, sck_errors = 0, sck_ld = 0;
     integer sck_blkset [0:3];
-    integer sck_rdset, sck_issset, sck_issset_d, e_ld_set, e_iset;
+    integer sck_rdset, sck_rdset2, sck_issset, sck_issset_d, sck_issset_dd, e_ld_set, e_iset;
     integer sck_sh [0:NBANK*H*TD-1];
     integer sck_wset [0:63];
     reg [BW+10:0] sck_w [0:63];            // {valid, w2v, mode, grp[7:0], bank}
@@ -683,8 +734,11 @@ module ot_hdc_v41x_attn #(
         sck_issset = (pl_blk == iss_blk) ? ((pl_word == 0) ? sck_ctr + 1 : sck_plset) : sck_blkset[iss_blk[1:0]];
         e_ld_set <= p_go ? ((pl_word == 0) ? sck_ctr + 1 : sck_plset) : ((q_cnt == 0) ? sck_ctr + 1 : sck_qset);
         sck_rdset <= sck_qset;
+        sck_rdset2 <= sck_rdset;
         sck_issset_d <= sck_issset;
-        e_iset <= pv_e ? ((ILV != 0) ? sck_issset_d : sck_issset) : sck_rdset;
+        sck_issset_dd <= sck_issset_d;
+        e_iset <= pv_e ? ((XD != 0) ? sck_issset_dd : (ILV != 0) ? sck_issset_d : sck_issset)
+                       : ((XD != 0) ? sck_rdset2 : sck_rdset);
         if (rst_n && q_go && q_cnt == 0) begin sck_ctr = sck_ctr + 1; sck_qset = sck_ctr; end
         if (rst_n && p_go && pl_word == 0) begin sck_ctr = sck_ctr + 1; sck_plset = sck_ctr; sck_blkset[pl_blk[1:0]] = sck_ctr; end
         // the E register of this cycle (sck_n)
@@ -932,7 +986,7 @@ module ot_hdc_v41x_attn_tr_phs #(
     (* keep *) reg fw_t, fb_t, rb_t, sel_t;
     (* keep *) reg [7:0] fc_t, rc_t;
     (* keep *) reg [NL-1:0] fp_t;
-    reg [NL*265-1:0] g_t;
+    reg [NL*(8*DPT+8)-1:0] g_t;        // the bytes of this tile's dims (FP8 view) and the scale, per row
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin fw_t <= 1'b0; sel_t <= 1'b0; end
         else begin fw_t <= w_en_i; sel_t <= sel_i; end
@@ -941,11 +995,12 @@ module ot_hdc_v41x_attn_tr_phs #(
     reg [TD*18-1:0] f;
     always @* begin
         f = {TD*18{1'b0}};
-        for (i = 0; i < NL*265; i = i + 1) f[i % (TD*18)] = f[i % (TD*18)] ^ g_t[i];
+        for (i = 0; i < NL*(8*DPT+8); i = i + 1) f[i % (TD*18)] = f[i % (TD*18)] ^ g_t[i];
     end
     always @(posedge clk) begin
         fb_t <= w_half_i; fc_t <= w_cnt_i; fp_t <= w_pad_i; rb_t <= r_half_i; rc_t <= r_c_i;
-        g_t <= w_en_i ? w_g : g_t;
+        for (i = 0; i < NL; i = i + 1)
+            if (w_en_i) g_t[i*(8*DPT+8) +: 8*DPT+8] <= {w_g[i*265 + 256 +: 8], w_g[i*265 + 8*XOFF +: 8*DPT]};
         eib <= sel_t ? (f ^ {{(TD*18-19){1'b0}}, fw_t, fb_t, rb_t, fc_t, rc_t}) : (qk_ib ^ {{(TD*18-NL){1'b0}}, fp_t});
     end
     assign col = f;
@@ -969,5 +1024,11 @@ module ot_hdc_v41x_attn_merge_phs #(
         if (!rst_n) ov <= 1'b0;
         else ov <= iv && ifin;
     end
-    always @(posedge clk) begin oy <= iy ^ {{(H*32-MLEV){1'b0}}, iblk}; of_ <= if_; end
+    reg [31:0] f32;
+    integer j;
+    always @(posedge clk) begin
+        f32 = 32'd0;
+        for (j = 0; j < H; j = j + 1) f32 = f32 ^ iy[j*32 +: 32];
+        oy <= {H{f32 ^ {{(32-MLEV){1'b0}}, iblk}}}; of_ <= if_;
+    end
 endmodule
