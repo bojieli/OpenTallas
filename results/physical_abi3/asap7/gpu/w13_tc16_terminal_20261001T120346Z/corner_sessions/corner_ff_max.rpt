@@ -1,0 +1,29 @@
+Startpoint: v (input port clocked by clk)
+Endpoint: u.v_q$_DFF_PN0_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+   Cap   Slew  Delay   Time   Description
+-------------------------------------------------------------------
+                 0.0    0.0   clock clk (rise edge)
+                 0.0    0.0   clock network delay (propagated)
+               730.0  730.0 ^ input external delay
+   1.1    7.2    1.2  731.2 ^ v (in)
+   4.3   16.7   17.4  748.6 ^ input13802/Y (BUFx2_ASAP7_75t_R)
+   0.8    5.3   15.9  764.5 ^ place23600/Y (BUFx3_ASAP7_75t_R)
+          5.3    0.1  764.5 ^ u.v_q$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+                      764.5   data arrival time
+
+               833.0  833.0   clock clk (rise edge)
+               176.4 1009.4   clock network delay (propagated)
+                 0.0 1009.4   clock reconvergence pessimism
+                     1009.4 ^ u.v_q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+               -11.5  997.9   library setup time
+                      997.9   data required time
+-------------------------------------------------------------------
+                      997.9   data required time
+                     -764.5   data arrival time
+-------------------------------------------------------------------
+                      233.4   slack (MET)
+
+
