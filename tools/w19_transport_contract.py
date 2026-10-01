@@ -5,6 +5,7 @@ W16 owns GPU compute lowering and unified critical-chain composition. This input
 sizes transport only; its new commit/fence ports are not present in the source.
 """
 import argparse
+import ast
 import hashlib
 import json
 import math
@@ -75,8 +76,15 @@ def build():
     if 'req_wstrb' in source or 'wr_done' in source or 'commit_v' in source or 'rsp_rdy' in sm:
         raise ValueError('actual source ports changed; requalify binding')
     regions = max(len(rank['regions']) for rank in candidate['ranks'])
-    import uarch_model as U
-    geometry = sizing(loaded_ns=U.HBM_LOADED_LAT_NS, region_count=regions)
+    # Read the exact unified-model constant without importing unrelated physical
+    # result loaders or running/repricing any of the four model generators.
+    tree = ast.parse((ROOT / 'tools/uarch_model.py').read_text())
+    latency_nodes = [n.value for n in tree.body if isinstance(n, ast.Assign)
+                     and any(isinstance(t, ast.Name) and t.id == 'HBM_LOADED_LAT_NS' for t in n.targets)]
+    if len(latency_nodes) != 1:
+        raise ValueError('unified loaded latency binding changed')
+    loaded_ns = ast.literal_eval(latency_nodes[0])
+    geometry = sizing(loaded_ns=loaded_ns, region_count=regions)
     return dict(schema='opentallas.w19.finite_transport_model_contract.v1',
         W16_input_ack=dict(acknowledged=True, qualification=QUAL, sha256=sha(QUAL),
             GPU_authority=SCOPE, authority_sha256=sha(SCOPE),
