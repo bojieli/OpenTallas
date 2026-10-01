@@ -552,6 +552,10 @@
   "owner_space_test": {
     "owner_register_mux_candidate_stdcell_um2": "4023.98720000000",
     "conditional_BF_spare_um2": "39.46534",
+    "owner_register_mux_candidate_stdcell_mm2": "0.00402398720",
+    "owner_register_mux_candidate_placed_mm2": "0.0080479744",
+    "area_units": "Standard-cell comparison is in square micrometres (um2); placement screens are in square millimetres (mm2). 1 mm2 = 1000000 um2.",
+    "qcfg_affine_candidate_placed_mm2_per_stage_rank": "17.9871561456",
     "owner_fits_one_conditional_BF_spare_under_candidate_register_realization": false,
     "deficit_um2": "3984.52186000000",
     "required": "Separate explicit hub reservation; do not hide owner tables in unallocatedBFspare orexpert ROM free words"
@@ -2516,6 +2520,40 @@
     "owner_tables_not_weight_bank_capacity": true,
     "BF_mapping_not_q_area": true
   },
+  "mandatory_CKV_baseline_correction": {
+    "failure_witness": {
+      "inner_ckv_completion_forced_zero": true,
+      "inner_ckv_write_enable_forced_zero": true,
+      "outer_ckv_write_rejected": true,
+      "outer_fault_asserted": true,
+      "persistent_KV_qualified": false,
+      "read_positive": true,
+      "scope": "Actual two unchanged mux modules only; not full service/token, physical timing, or a corrected write path.",
+      "source_commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "source_pins": {
+        "rtl/chip/ot_chip_v41x_kv_reqmux.sv": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
+        "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c"
+      },
+      "verdict": "PASS_REPRODUCED_CONNECTED_WRITE_BLOCKER"
+    },
+    "classification": "Mandatory baseline correctness and persistent-state visibility; not an optional performance optimization.",
+    "one_percent_optimization_gate_applies": false,
+    "required_contract": [
+      "Writable CKV routing through both actual muxes",
+      "Completion ownership for the untagged controller write-done response",
+      "Finite per-stack write credit retained until visibility completion",
+      "Publish row only after all nine sector writes are visible",
+      "Persistent next-token state and exact context/address range guards"
+    ],
+    "required_model_costs": [
+      "Write requests plus controller command/burst service",
+      "Completion routing, reverse CDC and publication fence latency",
+      "Owner/credit registers, arbitration, staging, ports and routing area"
+    ],
+    "current_connected_write_path_qualified": false,
+    "corrected_path_exactness_qualified": false,
+    "corrected_path_composed_service_bound_available": false
+  },
   "unresolved": [
     "Avicenna sourceboundnonexpert census then actualTP4consumer/codec/segment proof",
     "Godel actualtemplateword/basepatch classA gate",
@@ -2565,6 +2603,11 @@
       "commit": "bf097e43e1b01902c21af0e71b6e0b1ae337961e",
       "path": "results/quality/w10_clock_provider_join_r1/join.json",
       "sha256": "4c3dc4c9b150768fdb0ead62143bd32aa8a069423f9f5d642e5389c55ac90c23"
+    },
+    "ckv_write_failure": {
+      "commit": "d4391b2e0",
+      "path": "results/quality/parent_ckv_writepath_review_20261001/receipt.json",
+      "sha256": "5d23a25e90aa2d962477e39d3b07a3138cb639399f4ee17c3f619279cbbfaa2f"
     }
   }
 }

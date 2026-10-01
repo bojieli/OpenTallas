@@ -12,7 +12,8 @@ PINS={
  'historical_fullgoal':('4d40ecadbbfb73c51c187fddc9ae2d3b6be28eb6','results/uarch/w10_baseline_wake/fullgoal_bound.json'),
  'clock_slot':('0cdd92fd35f142c8f0fa170426113a5b2a64e153','results/uarch/w10_clock_tree_site_budget_r1/receipt.json'),
  'spatial_clock':('38695f435d25f4eade8ea7b050cefecd1f301fa7','results/uarch/w10_spatial_clock_preflight_r1/preflight.json'),
- 'rootstop':('bf097e43e1b01902c21af0e71b6e0b1ae337961e','results/quality/w10_clock_provider_join_r1/join.json')}
+ 'rootstop':('bf097e43e1b01902c21af0e71b6e0b1ae337961e','results/quality/w10_clock_provider_join_r1/join.json'),
+ 'ckv_write_failure':('d4391b2e0','results/quality/parent_ckv_writepath_review_20261001/receipt.json')}
 def blob(pin):return subprocess.check_output(['git','show',pin[0]+':'+pin[1]],cwd=ROOT)
 def sha(b):return hashlib.sha256(b).hexdigest()
 
@@ -68,11 +69,30 @@ def compose(data):
             old_outline_fit_transferred=False,mask_ROM_abstract_or_current_q_footprint=None),
         owner_placement_proposal=anchors,
         owner_space_test=dict(owner_register_mux_candidate_stdcell_um2=str(owner_std),conditional_BF_spare_um2=str(spare),
+            owner_register_mux_candidate_stdcell_mm2=str(owner_std/D('1000000')),
+            owner_register_mux_candidate_placed_mm2=str(owner),
+            area_units='Standard-cell comparison is in square micrometres (um2); placement screens are in square millimetres (mm2). 1 mm2 = 1000000 um2.',
+            qcfg_affine_candidate_placed_mm2_per_stage_rank=str(q*desc_pair),
             owner_fits_one_conditional_BF_spare_under_candidate_register_realization=owner_std<=spare,
             deficit_um2=str(owner_std-spare),required='Separate explicit hub reservation; do not hide owner tables in unallocatedBFspare orexpert ROM free words'),
         stage_bundles=bundle,
         omitted_nonexpert_contracts={k:dict(header_census_owner='Avicenna',source_pin=None,actual_ROM_word_count=None,rank_consumer_replication=None,physical_stage_assignment=None,area_mm2=None) for k in ('dense_attention','shared_experts','HC_coefficients','norm_constants','index_compressor','embedding_head','Engram','MTP')},
         no_double_count=dict(existing_element_cfg_registers_counted_once=True,new_cfg_template_ROM_and_affine_candidate_addition_separate=True,owner_tables_not_weight_bank_capacity=True,BF_mapping_not_q_area=True),
+        mandatory_CKV_baseline_correction=dict(
+            failure_witness=data['ckv_write_failure'],
+            classification='Mandatory baseline correctness and persistent-state visibility; not an optional performance optimization.',
+            one_percent_optimization_gate_applies=False,
+            required_contract=['Writable CKV routing through both actual muxes',
+                'Completion ownership for the untagged controller write-done response',
+                'Finite per-stack write credit retained until visibility completion',
+                'Publish row only after all nine sector writes are visible',
+                'Persistent next-token state and exact context/address range guards'],
+            required_model_costs=['Write requests plus controller command/burst service',
+                'Completion routing, reverse CDC and publication fence latency',
+                'Owner/credit registers, arbitration, staging, ports and routing area'],
+            current_connected_write_path_qualified=False,
+            corrected_path_exactness_qualified=False,
+            corrected_path_composed_service_bound_available=False),
         unresolved=['Avicenna sourceboundnonexpert census then actualTP4consumer/codec/segment proof','Godel actualtemplateword/basepatch classA gate','CurrentqPPfullmap/pin/clock/site footprint +descriptor realization/area/port contract','ActualdenseHC andownerhub physicalplacement/completebankallocator','Root/leaf clock+PG/CDC/NoC/collective/SU/CKV staging+SSFF +fullstageproviders'],
         connected_stage_cycles=None,full_token_cycles=None,full_token_rate=None,physical_admission=False,engine_RTL_build_ready=False,adopt=False,jobs_launched=0)
 
