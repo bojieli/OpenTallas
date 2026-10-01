@@ -40,6 +40,7 @@ CLOCK_NS = 0.92
 UNCERTAINTY_NS = 0.06
 AW, TAGW, LENW, BEATW, DW = 30, 16, 4, 4, 256
 ENV_H = 64.0
+SLICE_VIEW = "physical/w18/ot_chip_v41x_karb_pslice"   # W18b --slice-view: hardened pslice abstract used by pregionh
 PREGION_H = ENV_H                # W18b --pregion-h: the 216 um HBM service band leaves 145 um beside its 70.5 um SRAMs
 K_SPAN = (200.0, 370.0)          # regional K port on the slice's top edge (v1 PHY window 375 um)
 EPC_OUTER = 14                   # outermost region's credits, 2 * hops + 2 (12 mm PHY: 6 hops)
@@ -217,9 +218,9 @@ def pregion_hier_case() -> dict:
             continue
         out.append(args[i])
         i += 1
-    for s in keep + ["physical/w18/ot_chip_v41x_karb_pslice/ot_chip_v41x_karb_pslice_bb.v"]:
+    for s in keep + [f"{SLICE_VIEW}/ot_chip_v41x_karb_pslice_bb.v"]:
         out += ["--source", s]
-    out += ["--param", "HIER=1", "--macro-view", "ot_chip_v41x_karb_pslice=physical/w18/ot_chip_v41x_karb_pslice",
+    out += ["--param", "HIER=1", "--macro-view", f"ot_chip_v41x_karb_pslice={SLICE_VIEW}",
             "--macro-place-halo", "1", "1", "--orfs-var", "MACRO_PLACEMENT_TCL=/src/physical/w18/karb_pregion_hier_place.tcl",
             "--orfs-var", "PDN_TCL=/src/physical/w18pdn/pdn_karb_hier.tcl"]
     c["args"] = out
@@ -295,6 +296,7 @@ def main() -> int:
     ap.add_argument("--balanced-clock", action="store_true",
                     help="W18b: CTS with macro clustering 1 (each hard macro clock pin its own driver; TritonCTS balances "
                          "the ETM insertion) -- the die-level balanced-clock method (tools/w18/clock_balance.py)")
+    ap.add_argument("--slice-view", default="", help="pregionh: directory of the hardened pslice view")
     ap.add_argument("--pregion-h", type=float, default=0.0, help="pregion block height (um)")
     ap.add_argument("--tag", default="", help="suffix for the nickname and the output record directory")
     ap.add_argument("--abstract", action="store_true",
@@ -321,6 +323,9 @@ def main() -> int:
             PROOT_HOPS = (8, 6, 4, 2, 2, 4, 6, 8)
             global PROOT_H
             PROOT_H = 128.0            # 64 um: GRT-0183 (boxed in) with the deeper 0.5 mm-hop credit queues
+    if a.slice_view:
+        global SLICE_VIEW
+        SLICE_VIEW = a.slice_view
     if a.pregion_h:
         global PREGION_H
         PREGION_H = a.pregion_h

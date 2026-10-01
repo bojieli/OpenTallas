@@ -19,7 +19,10 @@ module ot_chip_v41x_karb_pslice #(
     parameter integer DW    = 256,
     parameter integer KQ    = 4,
     parameter integer RQ    = 3,
-    parameter bit     K_RD_FENCE = 1'b1
+    parameter bit     K_RD_FENCE = 1'b1,
+    // W18b (root 2026-10-01): register the K response at the slice boundary (+1 response cycle), so a hardened
+    // slice's ks_* leave from flops and the region's path starts at the macro pin
+    parameter bit     KSREG = 1'b1
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -83,6 +86,7 @@ module ot_chip_v41x_karb_pslice #(
         .out_v(q_v), .out_rdy(k_pop), .out_d(q_d));
     reg [CW-1:0] cred;
     wire krv;
+    wire [TAGW-1:0] kt; wire [BEATW-1:0] kb; wire [DW-1:0] kd;
     ot_chip_v41x_karb_slice #(.AW(AW), .TAGW(TAGW), .LENW(LENW), .BEATW(BEATW), .DW(DW),
                               .K_RD_FENCE(K_RD_FENCE)) u_s (
         .clk(clk), .rst_n(rst_n),
@@ -92,15 +96,25 @@ module ot_chip_v41x_karb_pslice #(
         .b_rsp_data(b_rsp_data),
         .k_v(q_v), .k_take(k_pop), .k_addr(k_addr), .k_len(k_len), .k_tag(k_tag), .k_we(k_we),
         .k_wdata(k_wdata), .k_wstrb(k_wstrb), .k_wr_done(k_wr_done),
-        .k_rsp_v(krv), .k_rsp_rdy(cred != 0), .k_rsp_tag(ks_tag), .k_rsp_beat(ks_beat), .k_rsp_data(ks_data),
+        .k_rsp_v(krv), .k_rsp_rdy(cred != 0), .k_rsp_tag(kt), .k_rsp_beat(kb), .k_rsp_data(kd),
         .h_v(h_v), .h_rdy(h_rdy), .h_addr(h_addr), .h_len(h_len), .h_tag(h_tag), .h_we(h_we),
         .h_wdata(h_wdata), .h_wstrb(h_wstrb), .h_wr_done(h_wr_done),
         .r_v(r_v), .r_rdy(r_rdy), .r_tag(r_tag), .r_beat(r_beat), .r_data(r_data),
         .b_grant(b_grant), .contend(contend));
-    assign ks_v = krv && cred != 0;
+    wire ks_go = krv && cred != 0;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) cred <= CW'(RQ);
-        else cred <= cred - CW'(ks_v) + CW'(ks_cr);
+        else cred <= cred - CW'(ks_go) + CW'(ks_cr);
+    generate if (KSREG) begin : g_ksr
+        reg ksv_r; reg [TAGW-1:0] kst_r; reg [BEATW-1:0] ksb_r; reg [DW-1:0] ksd_r;
+        always @(posedge clk or negedge rst_n) if (!rst_n) ksv_r <= 1'b0; else ksv_r <= ks_go;
+        always @(posedge clk) if (ks_go) begin kst_r <= kt; ksb_r <= kb; ksd_r <= kd; end
+        assign ks_v = ksv_r;
+        assign {ks_tag, ks_beat, ks_data} = {kst_r, ksb_r, ksd_r};
+    end else begin : g_ksc
+        assign ks_v = ks_go;
+        assign {ks_tag, ks_beat, ks_data} = {kt, kb, kd};
+    end endgenerate
 `ifndef SYNTHESIS
     always @(posedge clk) if (rst_n && kin_v && !q_rdy)
         $error("ot_chip_v41x_karb_pslice: K request arrived without a credit");
