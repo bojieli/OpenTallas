@@ -27,7 +27,13 @@ import rtl_hdc_v41x_decode_campaign as D   # noqa: E402
 SWAP = {"ot_hdc_v41x_vec": "ot_hdc_v41x_vec_kr", "ot_hdc_v41x_vec_lane": "ot_hdc_v41x_vec_lane_kr",
         "ot_hdc_v41x_su_adapt": "ot_hdc_v41x_su_adapt_kr", "ot_hdc_core_v41x": "ot_hdc_core_v41x_kr"}
 FUSE = dict(sukr=0, subcast=0, suret=0)
-EXTRA = ("rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv")
+EXTRA = ("rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv") + tuple(
+    # the index pool's modules: the bench names their instances in branches it does not build, and Verilator
+    # needs the modules defined to resolve those names (the campaign adds them only with --idx-pool)
+    f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_idx_pcol", "ot_hdc_v41x_idx_hsum", "ot_hdc_v41x_idx_pool_finish",
+                                     "ot_hdc_v41x_idx_pool_batch", "ot_hdc_v41x_idx_pool_replica",
+                                     "ot_hdc_v41x_idx_pool_adapt", "ot_hdc_v41x_idx_pool_kwr",
+                                     "ot_hdc_v41x_idx_pool_hbm_bridge"))
 
 
 def _swap():
