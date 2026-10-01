@@ -1,0 +1,360 @@
+{
+ "schema": "opentallas.w11.su_serial_domain/1",
+ "clock_period_ns": 1.111,
+ "clock": "0.9 GHz serial-chain domain",
+ "policy": "setup at SS (ORFS WC), hold at FF (BC), 60 ps setup / 25 ps hold uncertainty",
+ "runs": [
+  {
+   "run": "sc_l5",
+   "note": "light lane (N=1,024, LEAF), MLAT 5 / ALAT 4 serial build: input-cut mul lat5i + add lat4i, keep-prefix integer arithmetic, three-cycle offset load; M2-M9",
+   "top": "ot_hdc_v41x_vec_light1024r",
+   "parameters": {
+    "ALAT": 4,
+    "MLAT": 5
+   },
+   "status": "pass",
+   "closed": true,
+   "clock_period_ns": 1.111,
+   "ss_fmax_mhz": 929.0,
+   "setup_wns_ps": 34.6,
+   "hold_wns_ps": 2.5,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": [
+    "M2 M9"
+   ],
+   "cell_area_um2": 9535.82,
+   "die_area_um2": 30454.4,
+   "drc": 0,
+   "signal_integrity_clean": true,
+   "commit": "61a46c6aef6f37e5c1bb13893157e40b39cd9ba3",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_l5b",
+   "note": "sc_l5 re-routed on the current source layout (ot_hdc_fastfp_lat.sv split)",
+   "top": "ot_hdc_v41x_vec_light1024r",
+   "parameters": {
+    "ALAT": 4,
+    "MLAT": 5
+   },
+   "status": "pass",
+   "closed": true,
+   "clock_period_ns": 1.111,
+   "ss_fmax_mhz": 929.0,
+   "setup_wns_ps": 34.6,
+   "hold_wns_ps": 2.5,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": [
+    "M2 M9"
+   ],
+   "cell_area_um2": 9535.82,
+   "die_area_um2": 30454.4,
+   "drc": 0,
+   "signal_integrity_clean": true,
+   "commit": "56b815469f2c1fa8dbe26ebb3ef5ddab5ebf4382",
+   "worktree_dirty": false,
+   "currency": "current"
+  },
+  {
+   "run": "sc_r5",
+   "note": "the reducer, first attempt: yosys OOM-killed at a 32 GB floor",
+   "top": "ot_hdc_v41x_vec_red1024",
+   "parameters": {
+    "ALAT": 4,
+    "MLAT": 5
+   },
+   "status": "error",
+   "closed": false,
+   "clock_period_ns": null,
+   "ss_fmax_mhz": null,
+   "setup_wns_ps": null,
+   "hold_wns_ps": null,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": null,
+   "cell_area_um2": null,
+   "die_area_um2": null,
+   "drc": null,
+   "signal_integrity_clean": null,
+   "commit": "61a46c6aef6f37e5c1bb13893157e40b39cd9ba3",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_l5m5u20",
+   "note": "sc_l5 on M2-M5 at 20% utilisation: global route overflow 167 (GRT-0116)",
+   "top": "ot_hdc_v41x_vec_light1024r",
+   "parameters": {
+    "ALAT": 4,
+    "MLAT": 5
+   },
+   "status": "error",
+   "closed": false,
+   "clock_period_ns": null,
+   "ss_fmax_mhz": null,
+   "setup_wns_ps": null,
+   "hold_wns_ps": null,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": [
+    "M2 M5"
+   ],
+   "cell_area_um2": 7226.61,
+   "die_area_um2": null,
+   "drc": null,
+   "signal_integrity_clean": null,
+   "commit": "61a46c6aef6f37e5c1bb13893157e40b39cd9ba3",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_l5m5",
+   "note": "sc_l5 routed on M2-M5 only (M6/M7 left free over the block): global route congestion (GRT-0116) at 25% utilisation",
+   "top": "ot_hdc_v41x_vec_light1024r",
+   "parameters": {
+    "ALAT": 4,
+    "MLAT": 5
+   },
+   "status": "error",
+   "closed": false,
+   "clock_period_ns": null,
+   "ss_fmax_mhz": null,
+   "setup_wns_ps": null,
+   "hold_wns_ps": null,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": [
+    "M2 M5"
+   ],
+   "cell_area_um2": 7226.61,
+   "die_area_um2": null,
+   "drc": null,
+   "signal_integrity_clean": null,
+   "commit": "61a46c6aef6f37e5c1bb13893157e40b39cd9ba3",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_l3",
+   "note": "light lane, MLAT 4 / ALAT 3 with keep-prefix arithmetic (no input cuts): the multipliers' stage 1 behind the lane's operand multiplexers",
+   "top": "ot_hdc_v41x_vec_light1024r",
+   "parameters": {
+    "MLAT": 4
+   },
+   "status": "not_met",
+   "closed": false,
+   "clock_period_ns": 1.111,
+   "ss_fmax_mhz": 819.5,
+   "setup_wns_ps": -109.3,
+   "hold_wns_ps": 3.3,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": [
+    "M2 M9"
+   ],
+   "cell_area_um2": 9509.11,
+   "die_area_um2": 29460.6,
+   "drc": 0,
+   "signal_integrity_clean": true,
+   "commit": "56e31c92c1a1b4283befe420a5c3f480e01d643b",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_l2",
+   "note": "light lane, MLAT 4, FP units kept as modules, behavioural integer arithmetic",
+   "top": "ot_hdc_v41x_vec_light1024r",
+   "parameters": {
+    "MLAT": 4
+   },
+   "status": "not_met",
+   "closed": false,
+   "clock_period_ns": 1.111,
+   "ss_fmax_mhz": 722.1,
+   "setup_wns_ps": -273.9,
+   "hold_wns_ps": 4.4,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": [
+    "M2 M9"
+   ],
+   "cell_area_um2": 9196.48,
+   "die_area_um2": 26884.5,
+   "drc": 0,
+   "signal_integrity_clean": true,
+   "commit": "664816fc2e1688986e09b721243b68889687982a",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_l1",
+   "note": "light lane, MLAT 4, flat synthesis, behavioural integer arithmetic",
+   "top": "ot_hdc_v41x_vec_light1024r",
+   "parameters": {
+    "MLAT": 4
+   },
+   "status": "not_met",
+   "closed": false,
+   "clock_period_ns": 1.111,
+   "ss_fmax_mhz": 746.0,
+   "setup_wns_ps": -229.5,
+   "hold_wns_ps": 3.8,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": [
+    "M2 M9"
+   ],
+   "cell_area_um2": 9204.16,
+   "die_area_um2": 26295.5,
+   "drc": 0,
+   "signal_integrity_clean": true,
+   "commit": "664816fc2e1688986e09b721243b68889687982a",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_fmul5i",
+   "note": "standalone ot_hdc_fp32_mul_lat5i (C1 + C3 input-cut LAT 5)",
+   "top": "ot_hdc_fp32_mul_lat5i",
+   "parameters": {},
+   "status": "pass",
+   "closed": true,
+   "clock_period_ns": 1.111,
+   "ss_fmax_mhz": 953.2,
+   "setup_wns_ps": 61.9,
+   "hold_wns_ps": 9.1,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": null,
+   "cell_area_um2": 815.576,
+   "die_area_um2": 2509.61,
+   "drc": 0,
+   "signal_integrity_clean": true,
+   "commit": "a4444f5b65eb075cc3e0d460ee51abc08d27f16f",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_fmul4_abc450",
+   "note": "standalone ot_hdc_fp32_mul_lat4 (ABC delay target 450 ps)",
+   "top": "ot_hdc_fp32_mul_lat4",
+   "parameters": {},
+   "status": "pass",
+   "closed": true,
+   "clock_period_ns": 1.111,
+   "ss_fmax_mhz": 933.0,
+   "setup_wns_ps": 39.2,
+   "hold_wns_ps": 10.3,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": null,
+   "cell_area_um2": 741.932,
+   "die_area_um2": 2347.4,
+   "drc": 0,
+   "signal_integrity_clean": true,
+   "commit": "b5de307862f095e32443fe36535ea1b62a6f4727",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_fadd3_abc450",
+   "note": "standalone ot_hdc_fp32_add_lat3 (ABC delay target 450 ps)",
+   "top": "ot_hdc_fp32_add_lat3",
+   "parameters": {},
+   "status": "pass",
+   "closed": true,
+   "clock_period_ns": 1.111,
+   "ss_fmax_mhz": 922.5,
+   "setup_wns_ps": 27.0,
+   "hold_wns_ps": 8.5,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": null,
+   "cell_area_um2": 335.952,
+   "die_area_um2": 1043.03,
+   "drc": 0,
+   "signal_integrity_clean": true,
+   "commit": "b5de307862f095e32443fe36535ea1b62a6f4727",
+   "worktree_dirty": false,
+   "currency": "stale"
+  }
+ ],
+ "depths": {
+  "before": {
+   "mlat": 3,
+   "alat": 3,
+   "linear_emit_to_write": 21,
+   "divide_m1": 19,
+   "exp_in_S": 49,
+   "sigmoid_silu_in_S": 71,
+   "rsqrt_in_S": 37,
+   "sqrt_in_S": 31,
+   "sqrt_softplus_in_S": 162,
+   "engram_gate_in_S": 104,
+   "reducer_retire_to_result_tap0": 26,
+   "reducer_per_tree_or_time_level": 3
+  },
+  "serial_build": {
+   "mlat": 5,
+   "alat": 4,
+   "linear_emit_to_write": 30,
+   "divide_m1": 19,
+   "exp_in_S": 71,
+   "sigmoid_silu_in_S": 94,
+   "rsqrt_in_S": 58,
+   "sqrt_in_S": 31,
+   "sqrt_softplus_in_S": 216,
+   "engram_gate_in_S": 127,
+   "reducer_retire_to_result_tap0": 35,
+   "reducer_per_tree_or_time_level": 4
+  }
+ },
+ "added_cycles": {
+  "linear_emit_to_write": 9,
+  "divide_m1": 0,
+  "exp_in_S": 22,
+  "sigmoid_silu_in_S": 23,
+  "rsqrt_in_S": 21,
+  "sqrt_in_S": 0,
+  "sqrt_softplus_in_S": 54,
+  "engram_gate_in_S": 23,
+  "reducer_retire_to_result_tap0": 9,
+  "reducer_per_tree_or_time_level": 1
+ }
+}

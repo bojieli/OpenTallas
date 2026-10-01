@@ -13,13 +13,13 @@ REC = json.loads((ROOT / 'results/rtl/w11_attn_verify6.json').read_text())
 
 
 def test_sources_are_pinned():
-    # this test file is pinned in the record as committed with it (3c1b7c62); it has since gained the
-    # withdrawal checks, so that one file is checked at its commit
+    # historical record: a drifted source is checked at the record's commit (the test file itself at the commit
+    # that recorded it, 3c1b7c62); the engine has since gained opt-in REPL/PHYS/NSTAGE
     import subprocess
     for name, digest in REC['sources_sha256'].items():
         if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest:
-            assert name == 'tests/test_w11_attn_verify6.py', name
-            old = subprocess.run(['git', 'show', f"3c1b7c62:{name}"], cwd=ROOT, capture_output=True,
+            at = '3c1b7c62' if name == 'tests/test_w11_attn_verify6.py' else REC['git_head']
+            old = subprocess.run(['git', 'show', f"{at}:{name}"], cwd=ROOT, capture_output=True,
                                  check=True).stdout
             assert hashlib.sha256(old).hexdigest() == digest, name
 
