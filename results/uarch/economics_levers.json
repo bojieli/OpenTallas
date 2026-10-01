@@ -1070,7 +1070,7 @@
   "basis": "per domain: clock and leakage from its area by class (technology.json via the uarch constants), interface power (HBM idle, SerDes / UCIe); busy time and idle gaps from each design's own schedule: the V4.1 HBM chain walked node by node; Qwen dies with their ops' gaps split evenly (181 op boundaries, 36 KV streams, 73 UCIe exchanges); at saturation one contiguous idle gap per pass or token, as the ROM array's rule"
  },
  "source_sha256": {
-  "tools/uarch_model.py": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+  "tools/uarch_model.py": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
