@@ -35,6 +35,7 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
   - The streaming domain runs at 1.2 GHz: ROM field and elements, index scan, attention tiles, links, the HBM service.
   - The serial-chain domain runs at 0.9 GHz (3:4) on the LAT-3 FP32 add: SU, SFU, softplus, Sinkhorn, reducers.
   - The model prices it at +28% AR against all-1.2 GHz.
+- Operator fusion (user decision, 2026-10-01): dependent operations are chained through lane-local registers as far as possible. A value goes back to the vector memory (or any shared memory) only when another lane, unit or die needs it, or at a true cross-lane step (reduction, rotation, misaligned access). Per-op round trips through a memory network are a latency cost on serial chains. Price them in the model, and design them out.
 - Stage files by explicit path, never `git add -A`.
 - Run long jobs in pinned clean worktrees, not in the main checkout.
 - After editing any doc under `docs/`, regenerate the prose-figure census and sync its two untriaged-count annotations, then run `make check-figures`.

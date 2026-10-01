@@ -23,7 +23,7 @@ RTL = [Path('rtl/chip/ot_chip_v41x_coll_dma.sv'), Path('rtl/chip/ot_chip_v41x_di
        Path('rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh')]
 BENCH = [Path('rtl/test/tb_v41x_coll_dma.sv'), Path('rtl/test/tb_v41x_coll_pairwise.sv'),
          Path('rtl/test/tb_v41x_coll_wo_b.sv')]
-ADD = [Path('rtl/hdc/ot_hdc_fastfp.sv'), Path('rtl/proto/ot_fp32_add_rne_pipe.sv')]
+ADD = [Path('rtl/hdc/ot_hdc_fastfp.sv'), Path('rtl/hdc/ot_hdc_fastfp_lat.sv'), Path('rtl/proto/ot_fp32_add_rne_pipe.sv')]
 FIXTURE = [FIX / f'wo_b_rank{r}.hex' for r in range(4)] + [FIX / 'wo_b_expected.hex']
 ORIGIN_SHA256 = [
     'afeb46f26a82368a279e7e572dcfafa7c604f271f79313e339d75308ace888fd',

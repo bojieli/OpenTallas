@@ -25,6 +25,7 @@ import argparse
 import copy
 import dataclasses
 import json
+import hashlib
 import math
 import sys
 from pathlib import Path
@@ -632,6 +633,14 @@ def area_ledger(d: dict):
         + out["return_adders"] + out["bf16_chain"] + out["blockdot_chain"]
     hub = out["indexer"] + out["attention"] + out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"] \
         + d.get("su_vm_ports_mm2", 0.0)
+    blk = d.get("vmh_block")
+    if blk:
+        # ROOT RULINGS 2026-10-01: the measured SU+VM block (VM-H, then C_rotate for the product) replaces the SU
+        # lanes, SFU lanes and VM ports (its SRAM is the VM; the rest is lane logic and network)
+        hub += blk["block_mm2"] - (out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"]
+                                   + d.get("su_vm_ports_mm2", 0.0))
+        out["vm_ports"] = blk["sram_mm2"]
+        out["vmh_block_mm2"] = blk["block_mm2"]
     out["rom_field_strip_used_mm2"] = strip
     out["rom_field_strip_avail_mm2"] = FLOORPLAN["rom_field_strip_mm2"]
     out["hub_logic_mm2"] = hub
@@ -875,7 +884,12 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20, positions: in
         ports_total=ports, vm_banks_256b=banks,
         area_element_um2=dict(light=round(light), sfu=round(sfu)),
         area_basis=("hardened" if aL and aS else u["area_basis"]), hardened=dict(light=qL, sfu=qS),
-        area_mm2=round(((N - M) * light + M * sfu) / 1e6, 3),
+        area_mm2=(d["vmh_block"]["block_mm2"] if d.get("vmh_block") else round(((N - M) * light + M * sfu) / 1e6, 3)),
+        area_lanes_ledger_mm2=round(((N - M) * light + M * sfu) / 1e6, 3),
+        vmh_block=(dict(d["vmh_block"], note="ROOT RULINGS 2026-10-01: area_mm2 is the measured SU+VM block of the "
+                                             "product's VM option (lanes, VM SRAM, network); area_lanes_ledger_mm2 is "
+                                             "the lane-only ledger estimate")
+                   if d.get("vmh_block") else None),
         ops={f"L{layer}.attn.softmax.{k}": v for k, v in sm.items()},
         softmax_issue_vectors=sum(v["vectors"] for v in sm.values()),
         # a dependent op pays its issue, its pipeline depth, the broadcast tree to the farthest lane and the
@@ -1488,12 +1502,14 @@ def gpu_measured():
 
 
 def mma_drain_cycles(e: dict):
-    """Last weight into the MMA -> row result written to SMEM, from the element's pipeline: decode 1,
-    multiply 5, circulating add 5, then log2(lanes) tree levels and the stack levels at 5, row scale 5,
-    output register 2.  Replaced by the RTL measurement when recorded."""
+    """Last weight into the MMA -> row result written to SMEM, from the element's pipeline at 1.2 GHz SS (W13b
+    2026-09-30: FP32 add and mul 5 -> 7, W11's keep-prefix LAT 7; block-dot term 12 = W10 bterm2 11 + a lane input
+    register): decode 1, multiply 7, circulating add 7 (or the block-dot 12), then log2(lanes) tree levels and the stack
+    levels at 7, row scale 7, output register 2.  Replaced by the RTL measurement when recorded (gpu_measured: Qwen
+    89, V4.1 95 on main)."""
     lanes = max(e["int8_lanes"] + e["bf16_lanes"], e["blockdot_lanes"])
-    front = 16 if e["blockdot_lanes"] and not e["int8_lanes"] else 11      # block-dot P0..P8 + add, or lane
-    return front + 5 * math.ceil(math.log2(lanes)) + 5 * e["stack_levels"] + 5 + 2
+    front = 12 if e["blockdot_lanes"] and not e["int8_lanes"] else 15      # block-dot term, or lane decode+mul+add
+    return front + 7 * math.ceil(math.log2(lanes)) + 7 * e["stack_levels"] + 7 + 2
 
 
 def hbm_gpu_design(model: str):
@@ -2025,10 +2041,13 @@ def _sat_batch(rows):
 
 
 # ---- V4.1 ROM: the priced graph, per die, by energy category and stage occupancy ----
+_CONS_CTX = 1048576   # the V4.1 context of _v41_graph / the consolidation HBM chain (W16's short-context rows set it)
+
+
 def _v41_graph(d, positions=1):
     """The proposal's priced graph; with positions > 1 the MTP verify pass at m = 1 (the issue scaling of
     v41_verify_T, which returns only times)."""
-    r = evaluate(copy.deepcopy(d), 1048576)
+    r = evaluate(copy.deepcopy(d), _CONS_CTX)
     g = r.pop("_g")
     if positions > 1:
         E = A._env()
@@ -2183,21 +2202,35 @@ def _static_w(logic, rom, sram, clock, stacks):
                 hbm_interface_idle=stacks * HBM_IDLE_W_STACK)
 
 
+# ROOT / USER DECISION 2026-09-30 (W16): the Qwen ROM product is option C -- two B200-class packages, 4 dies,
+# TP-4 with one package crossing (W15's measured TP-4 board exchange), G = 6,144 a die (W12's die), W12 floorplan
+# wires, ROM at the storage-only density (75.0 Mbit/mm2 + SECDED) -- because the two-reticle package does not hold
+# the AR-only ROM at that density (tools/uarch_model.py qwen_rom_options).  The 2-die W5-wire row (9,851 tok/s) is
+# superseded; qwen_eval keeps both wire calibrations (w5 9,851, w12 9,194 at the 2-die reference).
+QWEN_ROM_PRODUCT = dict(k=4, G=6144, link="board", packages=2, stacks_per_die=4)
+
+
+def _qwen_rom_product():
+    P = QWEN_ROM_PRODUCT
+    q = qwen_tp_point(P["k"], P["G"], P["link"])
+    a = dict(logic=P["G"] * 18063.0 / 1e6 + QWEN_TILE_FIXED_MM2, rom=q["rom_mm2_per_die"],
+             sram=P["G"] * QWEN_AREA["kv_sram_group_um2"] / 1e6)
+    return q, a
+
+
 def qwen_rom_economics():
     import arch_budget_qwen3 as Q
-    q = qwen_eval(6144, 1024, pruned=True)
+    P = QWEN_ROM_PRODUCT
+    q, a = _qwen_rom_product()
     clock = q["clock_hz"]
     ub = q["unit_busy"]
     T1 = q["cycles"] / clock
     wl, kvb = _qwen_wl()
-    lanes = ub["weights"] + ub["attn_scores"] + ub["attn_pv"] + ub["lm_head"]     # the ME lanes, per die
-    bounds = dict(lanes=clock / lanes, stream_unit=clock / ub["stream"],
-                  kv_stream=8 * HBM_STACK_BPS / kvb)                              # 8 stacks, each die its own heads
+    bounds = dict(q["bounds"])                  # lanes, stream unit, KV stream (4 stacks a die, its own KV heads)
     bind = min(bounds, key=bounds.get)
     sat = bounds[bind]
-    cap = int(8 * HBM_STACK_B * HBM_CAP_EFF // kvb)
-    a = QWEN_ROM_AREA_DIE
-    st = {k: 2 * v for k, v in _static_w(a["logic"], a["rom"], a["sram"], clock, 4).items()}
+    cap = q["capacity_users"]
+    st = {k: P["k"] * v for k, v in _static_w(a["logic"], a["rom"], a["sram"], clock, P["stacks_per_die"]).items()}
     P_static = sum(st.values())
     macs = wl["weight_macs"] + wl["attention_macs"]
     tpx = Q.tp_exchanges(clock)
@@ -2205,7 +2238,7 @@ def qwen_rom_economics():
                 rom=wl["bytes"]["weights_rom_format"] * (E_ROM_B + E_DELIVER_B),
                 kv_on_die=kvb * (E_HBM_IF_B + E_DELIVER_B + 2 * E_SRAM_B),   # PHY/controller, ring SRAM, delivery
                 stream=wl["elementwise_total"] * (E_MAC["fp32"] + 2 * 4 * E_SRAM_B),
-                ucie=tpx["bytes_per_direction"] * 2 * 8 * E_LINK["ucie"],
+                ucie=tpx["bytes_per_direction"] * 2 * 8 * E_LINK["board"] * (P["k"] - 1),   # TP-4 exchanges
                 stack=kvb * (E_HBM_B - E_HBM_IF_B))
     dyn = sum(cats.values())
 
@@ -2213,21 +2246,24 @@ def qwen_rom_economics():
         agg = min(B / T1, sat)
         return dict(energy_mJ_per_token=round((dyn + P_static / agg) * 1e3, 3), package_w=round(P_static + dyn * agg, 1))
     rows = _curve(T1, sat, cap, bind.replace("_", " "), e)
-    return dict(design="Qwen3-8B ROM package (AR, G = 6,144 pruned, 8K)",
-                system=dict(packages=1, dies=2, stacks=8),
+    return dict(design="Qwen3-8B ROM, option C (2 packages, 4 dies, TP-4, G = 6,144 pruned, W12 wires, 8K)",
+                system=dict(packages=P["packages"], dies=P["k"], stacks=P["k"] * P["stacks_per_die"]),
+                product=dict(QWEN_ROM_PRODUCT, exchange=q["exchange"], wire_model="w12",
+                             superseded="2-die package, W5 wires: 9,851 tok/s (does not fit at 75 Mbit/mm2)"),
                 ar=dict(tokens_s_b1=round(1 / T1, 1), saturated_tokens_s=round(sat, 1), rows=rows,
                         sat_batch=_sat_batch(rows)["batch"]),
                 bounds_tokens_s={k: round(v, 1) for k, v in bounds.items()}, binding=bind,
                 unit_busy_cycles_per_die=ub, token_cycles=q["cycles"], capacity_users=cap,
-                capacity_basis="8 HBM3E stacks x 22.5 GB x 0.90 over the FP8 KV of one 8K user "
-                               f"({kvb / 1e6:.1f} MB)",
+                capacity_basis="each die's 4 HBM3E stacks x 22.5 GB x 0.90 over its 2 of 8 KV heads of one 8K user "
+                               f"({kvb / 1e6:.1f} MB a user)",
                 energy=dict(dynamic_mJ_per_token=round(dyn * 1e3, 3),
                             categories_mJ_per_token={k: round(v * 1e3, 4) for k, v in cats.items()},
                             static_w={k: round(v, 2) for k, v in st.items()}, static_w_total=round(P_static, 1),
                             area_mm2_per_die={k: round(v, 1) for k, v in a.items()},
-                            basis="the uarch constants (technology.json), 2 ops per MAC, both dies"),
+                            basis="the uarch constants (technology.json), 2 ops per MAC, all 4 dies; ROM area at the "
+                                  "storage-only density"),
                 note="m = 1: batching reuses no weight word, so the lanes, the stream unit and the KV stream each cap "
-                     "the aggregate; the KV stream (each user's 604 MB of 8K FP8 KV per token over 8 stacks) binds first")
+                     "the aggregate; the KV stream (each user's 604 MB of 8K FP8 KV per token over 16 stacks) binds first")
 
 
 
@@ -2548,7 +2584,7 @@ def economics():
             ok = [x["aggregate_tokens_s"] for x in modes[n_] if x["per_user_tokens_s"] >= ECON_SLO_TOKENS_S_PER_USER]
             best = max([best] + ok)
         return best or None
-    systems = (("Qwen ROM (AR, G = 6,144)", qr["system"], 2, ["Qwen ROM AR (G = 6,144)"]),
+    systems = (("Qwen ROM (AR, G = 6,144)", qr["system"], qr["system"]["dies"], ["Qwen ROM AR (G = 6,144)"]),
                ("Qwen HBM tier 3 (AR / DFlash)", qh["system"], 0, ["Qwen HBM tier 3 AR", "Qwen HBM tier 3 DFlash"]),
                ("Qwen 1x B200 (tier 2, AR)", gp["qwen"]["system"], 0, ["Qwen 1x B200 AR (tier 2)"]),
                ("V4.1 ROM array (AR / MTP m = 1)", V41_ROM_SYSTEM, V41_ROM_SYSTEM["dies"], ["V4.1 ROM AR", "V4.1 ROM MTP m = 1"]),
@@ -2828,7 +2864,7 @@ def rom_mask_sensitivity(ec=None):
     c = {r["design"]: r for r in ec["cost"]}
     out = []
     for name, dies, bases in (("V4.1 ROM array (AR / MTP m = 1)", V41_ROM_SYSTEM["dies"], MASK["v41_base_designs"]),
-                              ("Qwen ROM (AR, G = 6,144)", 2, MASK["qwen_base_designs"])):
+                              ("Qwen ROM (AR, G = 6,144)", QWEN_ROM_PRODUCT["k"], MASK["qwen_base_designs"])):
         r = c[name]
         hw = r["hardware_usd_iso_package"]
         cases = [("full mask set per die (economics high)", dies * MASK["full_set_usd"], None),
@@ -2983,12 +3019,12 @@ def gated_energy_table(ec=None, lv=None):
 
     # ---- Qwen ROM package (2 dies): lanes + ROM + KV ring, stream unit, HBM PHY, UCIe ----
     qr = ec["qwen_rom"]
-    qe = qwen_eval(6144, 1024, pruned=True)
+    qe, a = _qwen_rom_product()
+    nq = QWEN_ROM_PRODUCT["k"]
     clock = qe["clock_hz"]
     ub = qe["unit_busy"]
     wl, kvb = _qwen_wl()
-    a = QWEN_ROM_AREA_DIE
-    grp = 6144 * 18063.0 / 1e6
+    grp = QWEN_ROM_PRODUCT["G"] * 18063.0 / 1e6
     dq = dict(lanes=_domain(logic=grp, rom=a["rom"], sram=a["sram"], clock=clock, **CORE_WAKE),
               su=_domain(logic=12.8, clock=clock, **CORE_WAKE),
               hbm=_domain(logic=40.0, io_w=4 * HBM_IDLE_W_STACK, clock=clock, **_hbm_wake(clock)),
@@ -2997,11 +3033,12 @@ def gated_energy_table(ec=None, lv=None):
     ops = 5 * 36 + 1
     for point, T, tok in (("batch1", qe["cycles"] / clock, 1.0), ("saturated", 1 / qr["ar"]["saturated_tokens_s"], 1.0)):
         busy = dict(lanes=(ub["weights"] + ub["attn_scores"] + ub["attn_pv"] + ub["lm_head"]) / clock,
-                    su=ub["stream"] / clock, hbm=min(T, kvb / 2 / (4 * HBM_STACK_BPS)), ucie=tpx["cycles"] / clock)
+                    su=ub["stream"] / clock, hbm=min(T, kvb / nq / (4 * HBM_STACK_BPS)),
+                    ucie=qe["exchange"]["token_cycles"] / clock)
         gaps = dict(lanes=ops, su=ops, hbm=36, ucie=tpx["exchanges"])
         dyn = qr["energy"]["dynamic_mJ_per_token"] * 1e-3
         add("Qwen ROM AR (G = 6,144)", point, tok / T, dyn,
-            [(2, dq[k], T, min(T, busy[k]), _even_gaps(T, min(T, busy[k]), gaps[k])) for k in dq])
+            [(nq, dq[k], T, min(T, busy[k]), _even_gaps(T, min(T, busy[k]), gaps[k])) for k in dq])
     # ---- Qwen HBM tier 3 (2 dies): SMs, L2, HBM PHY, UCIe ----
     qh = ec["qwen_hbm"]
     dh = hbm_gpu_design("qwen")
@@ -3092,6 +3129,2421 @@ def gated_energy_table(ec=None, lv=None):
                       "per pass or token, as the ROM array's rule")
 
 
+# ---------------------------------------------------------------------------------------------------------
+# Consolidation (W16; user-approved study 2026-09-30).  The physical floorplans leave spare area the analytical
+# die ledger did not predict.  This section re-derives the V4.1 ROM die count from the placed field geometry, the
+# Engram table dies from their own (strip-free) floorplan, right-sizes the GPU-organised HBM dies to their PHY
+# shoreline, sweeps the V4.1 HBM comparator's die count, re-prices cost on die area with a yield model, and
+# re-examines the comparison rule.  It calls the sections above and changes none of them.
+#
+# DENSITY RULE (root, 2026-09-30): the product die count is stated at the ANALYTICAL ROM density (75.0 Mbit/mm2,
+# the envelope the ROM designs are built on; results/floorplan/v41_rom_capacity.json forbids substituting the
+# predictive macro area).  The ASAP7 predictive macro (~150 Mbit/mm2 raw) is physical feasibility only, and ROMA's
+# TSMC 7 nm compiler (57.8 Mbit/mm2) is the conservative case; both are sensitivities in every table.
+# ---------------------------------------------------------------------------------------------------------
+import contextlib  # noqa: E402
+
+_V41_CFG = json.loads((ROOT / "configs/models/candidates/deepseek-v4.1-flash.json").read_text())
+_V41_ASM = json.loads((ROOT / "results/arch/v41_die_assembly.json").read_text())["ledger"]["layer"]
+_V41_PLACE = json.loads((ROOT / "results/arch/v41_die_placement.json").read_text())
+
+# The W10 layer-die re-fit, REPRODUCED here (the record is not committed): tools/v41_floorplan_refit.py at
+# claude/w10-v41-rom-element 1f598e0b, --q-pair and --bf-pair both pair_final_physical_p5 (no placed BF16 pair
+# exists: q2 stopped at detailed placement with 184 overlaps), hub from W11 proposal_w11_p6.  p5 is NOT closed.
+CONS_REFIT = dict(
+    slots=9931, used_pair_rows_busiest=7102,
+    busiest_macros=dict(expert=13296, dense_qe=464, me=128, vm_constant=82, engram_spill=233),
+    pair_footprint_mm2=416.76 / 7102,        # pair row = 2 ot_rom_8192x274_m8 + its 225.07 um MAC strip (485.136 x 120.96 um)
+    strip_pitch_um=225.072, pair_pitch_um=485.136, rom_v_pitch_um=120.96,
+    hub_mm2=75.878, edge_io_mm2=64.984, hbm_service_mm2=10.368, channels_mm2=13.701,
+    whitespace_mm2=233.291, unused_slots_mm2=166.012, die_mm2=814.982,
+    tool="tools/v41_floorplan_refit.py", tool_sha256="77d5ee466fa70ea447e3dc3a5a57459307d68afa3914515ac62493fc48cb663c",
+    branch="claude/w10-v41-rom-element", commit="1f598e0b",
+    element_pair=dict(record="results/physical_abi3/asap7/chip/v41_w10_elem/pair_final_physical_p5.json",
+                      sha256="4ddaf275d54096663c6918776405dbd6ffdc21e576de9a00cb67323eba7b29c7",
+                      fmax_hz=886002000.0, setup_wns_ns=-0.208666, drc=1, logic_utilisation=0.801, closed=False),
+    committed=False,
+    caveats=["the re-fit record is not committed: reproduced from the W10 branch (tool + p5 sha pinned here)",
+             "p5 is not closed (886 MHz, WNS -209 ps, 1 DRC): a wider strip to close it lowers the slot count",
+             "no placed BF16 pair exists (q2 failed at detailed placement): p5 stands in for the BF16 columns"])
+CONS_FIELD_MM2 = CONS_REFIT["slots"] * CONS_REFIT["pair_footprint_mm2"]           # the ROM/MAC slot field, 582.8 mm2
+# ROOT RULING 2026-10-01 (option a): the measured VM-H SU+VM block is the product's hub block -- 128 lane-group tiles
+# (8 SU lanes + 12 ot_sram_1r1w_256x256 each), 38.95 mm2 at 6,365 x 6,119 um (claude/w11-vmh-land 3cc18731
+# results/uarch/w11_vm_options.json options.H_rtl: footprint 38.951, SRAM 10.893, network footprint 2.624 mm2).  It
+# replaces the dedicated-unit row's lane-only stream unit (14.249 mm2; W11: measured light lane 9,536 um2 cells, x2.3
+# the ledger's 4,085).  The re-fit's hub partition SU_VECTOR is the stream unit x (1 + SWITCH_FRACTION 0.05,
+# tools/v41_floorplan_refit.py), so the slot field gives up (38.951 - 14.249) x 1.05 = 25.9 mm2 on the 815 mm2 basis
+# (dies are free: the stage fit grows instead of the die)
+VMH_BLOCK = dict(block_mm2=38.951, w_um=6365.0, h_um=6119.5, sram_mm2=10.893, network_footprint_mm2=2.624,
+                 stream_unit_ledger_mm2=14.249, switch_fraction=0.05, budget_mm2=45.0,
+                 src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.H_rtl (root ruling "
+                     "2026-10-01, option a; budget 38-45 mm2 with W11's measured lanes at 50% utilisation)")
+VMH_BLOCK["field_loss_mm2"] = round((VMH_BLOCK["block_mm2"] - VMH_BLOCK["stream_unit_ledger_mm2"])
+                                    * (1 + VMH_BLOCK["switch_fraction"]), 3)
+VMH_BLOCK["option"] = "H_rtl"
+# ROOT RULING 2026-10-01 (after the VM waterfall): W11's C_rotate is the PRODUCT's VM -- central: the lane array as a
+# 4,890 um square with the VM strip (1,536 SRAM macros + VM logic + rotate/Benes network, 3,004 um deep) along one
+# side; 38.60 mm2 (claude/w11-vmh-land 3cc18731 w11_vm_options.json options.C_rotate).  VM-H stays a REFERENCE row
+VMC_BLOCK = dict(block_mm2=38.601, lane_array_mm2=23.913, lane_side_um=4890.1, vm_block_mm2=14.688, vm_depth_um=3003.7,
+                 sram_mm2=10.893, network_footprint_mm2=2.274, stream_unit_ledger_mm2=14.249, switch_fraction=0.05,
+                 option="C_rotate",
+                 src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.C_rotate (root ruling "
+                     "2026-10-01: the product's VM)")
+VMC_BLOCK["field_loss_mm2"] = round((VMC_BLOCK["block_mm2"] - VMC_BLOCK["stream_unit_ledger_mm2"])
+                                    * (1 + VMC_BLOCK["switch_fraction"]), 3)
+CONS_SLIVER_MM2 = CONS_REFIT["whitespace_mm2"] - CONS_REFIT["unused_slots_mm2"]   # whitespace outside the field
+# Where that whitespace is (measured on the reproduced re-fit's rectangles): the die-edge ring outside the core
+# (1.02-1.09 mm wide: die 814.98 - core 696.56 = 118.43 mm2) less the edge I/O instances in it (HBM PHYs, SerDes,
+# UCIe: 64.90 mm2, all in the ring) = 53.52 mm2; and gaps inside the core (core - slot field - hub - HBM service -
+# channels = 13.84 mm2: hub halos and field-edge fragments).  Neither is ROM field: no whole macro column fits the
+# ~1 mm ring beside the PHYs, and the core gaps are halos.  They can hold only the NON-distributed overhead (I/O and
+# ESD, PLLs, seal ring, edge decap); clock buffers, DFT/MBIST and field decap are distributed over the field.
+CONS_GEOM = dict(
+    w10_refit=dict(field_mm2=CONS_FIELD_MM2, ring_free_mm2=118.426 - 64.902, core_gap_mm2=13.84,
+                   src="W10 re-fit reproduced (claude/w10-v41-rom-element 1f598e0b), v1 HBM PHY 12.0 x 0.833 mm"),
+    w10_refit_vmh=dict(field_mm2=CONS_FIELD_MM2 - VMH_BLOCK["field_loss_mm2"], ring_free_mm2=118.426 - 64.902,
+                       core_gap_mm2=13.84,
+                       src="the W10 re-fit with the measured VM-H SU+VM block as the SU_VECTOR hub partition (root "
+                           "ruling 2026-10-01): the field less (38.951 - 14.249) x 1.05 mm2"),
+    w10_refit_crot=dict(field_mm2=CONS_FIELD_MM2 - VMC_BLOCK["field_loss_mm2"], ring_free_mm2=118.426 - 64.902,
+                        core_gap_mm2=13.84,
+                        src="the W10 re-fit with W11's C_rotate SU+VM block as the SU_VECTOR hub partition (root "
+                            "ruling 2026-10-01, the product): the field less (38.601 - 14.249) x 1.05 mm2"),
+    w18_legal_phy=dict(field_mm2=9637 * CONS_REFIT["pair_footprint_mm2"], ring_free_mm2=138.836 - 65.001,
+                       core_gap_mm2=13.72,
+                       src="claude/w18-die-assembly 4f9de5b5 results/floorplan/v41_pack_refit_w18_e8p5.json (sha256 "
+                           "472e9f5e9ba4a462b9042ec19d7048fd33cbc64623e2640f3c66cc3e1077afbb): the legal 8.5 mm PHY "
+                           "abstract is taller, so 185 ROM rows and 9,637 slots; not on main"),
+)
+# ROOT RULING 2026-09-30: ring-only credit (the core halo gaps are not field; distributed overhead comes out of the
+# field); the conservative case gives no credit
+CONS_CREDIT = dict(ring=("ring_free_mm2",), none=())
+# Element-pair pitch.  w10_budget: root's hard budget for W10's closed pair (485 x 121 um, abutment pins, no
+# channel), the pack's pitch.  w18_measured: W18's tiling of the W10 p5 abstract with an 8.64 um pin channel under
+# every row (claude/w18-die-assembly d1e3c0aa, results/physical_abi3/asap7/chip/v41_w18/pair_w10p5_abstract.json
+# sha256 2218b6efbff9cf7bba5d7984014352f3d26ffdf75a8a481b33706cf7f5cd3f04, tiling die_floorplan_ch8.64:
+# 522.72 x 140.40 um = +7.75% x +16.07%, area x 1.2507; ch4.32 x 1.2122, ch17.28 x 1.3276).  p5 is not closed.
+CONS_PITCH = dict(w10_budget=dict(q_um=(485.136, 120.96), src="root hard budget for W10 p9/q7 (the pack pitch)"),
+                  w18_measured=dict(q_um=(522.72, 140.40), src="W18 d1e3c0aa pair_w10p5_abstract.json tiling ch8.64"),
+                  w10_q_1p2=dict(q_um=(476.0, 126.9), src="W10 (2026-09-30): the q pair at 1.2 GHz, 4096m8 ping-pong, WC "
+                                                          "floorplan cells 21.9k um2 at 85% logic utilisation"),
+                  w10b_q=dict(q_um=(510.84, 126.9), src="W10b (2026-10-01): the q pair widened 7.3% after p12q3/p12qm63 "
+                                                        "failed CTS legalisation at 91-93% strip utilisation; p12q4 "
+                                                        "routes at this fixed --die-area (closure pending)",
+                              bf16_outline_um=(1002.89, 142.56)),
+                  w10_iii_1p2=dict(q_um=(574.0, 126.9), src="W10 (2026-09-30): the BF16_PAIR (iii) pair at 1.2 GHz, 32.3k "
+                                                            "um2 cells (+20.7% tile)"))
+# ROOT RULING 2026-09-30: the 1,024 BF16-capable pairs (2,048 BF16 macros) sit in their own columns at a 1,019 um
+# pitch (the BF16 element strip), at the row pitch of the variant
+CONS_BF16 = dict(
+    pairs=1024,
+    columns_outline_um=(1063.7, 131.76),   # W10's planned outline: the named steps before the W10b re-fit
+    columns_outline_w10b_um=(1002.89, 142.56),   # W10b (2026-10-01): c4/c5 route at this fixed --die-area, density
+                                                 # 0.5 (BF16 split 8x4 + 8x4, still 5 cycles); the product's outline
+    columns_src="W10 (root relay 2026-09-30): the BF16 pair's PLANNED outline, 1,063.7 x 131.76 um = 0.1402 mm2 "
+                "(four 12 um capture channels + margins), until q7 confirms; the earlier 1,019 um x row pitch is "
+                "superseded",
+    standard_pair_src="W10 (ab1146e5, 2026-09-30), ADOPTED by root: BF16 on the standard FP8/FP4 pair at the budget "
+                      "pitch -- 16 BF16 weights a word read once per 8 cycles into 2 exact BF16 multipliers per "
+                      "macro and the existing chain adders; exact (golden csum order unchanged); ~+1.1-1.3 k um2 "
+                      "per pair (+5-6% of p8's 20.3 k, 85-87% utilisation: a closure risk); only wo_a slows, "
+                      "~+48 cycles a layer (~-1% tok/s); not built",
+    standard_pair_wo_a_extra_cycles=48,
+    # ROOT DECISION 2026-09-30: option (ii) ADOPTED -- q pairs + 2 exact BF16 multipliers a macro, word cap (cap 2 was
+    # +250 um2 a macro, +3.45 mm2 a die); W10 measured the BF16 ops at L = 8: wo_a 256 -> 384, cmp.wk 64 -> 128,
+    # router 80 -> 128 cycles (busiest die 3,585 tok/s against 3,760 on columns)
+    option_ii_extra_cycles={"wo_a": 128, "cmp.wk": 64, "router": 48}, option_ii_area_mm2=16.0,
+    # USER DECISION 2026-09-30: maximum per-user rate, die count not a constraint -> option (iii) is the PRODUCT:
+    # 4 BF16 multipliers a macro, 4-cycle hold, 4 chains at NCH = 24, W10's measured 574 x 126.9 um tile (every pair);
+    # W10's per-op issue for the BF16 ops (cycles, busiest die): wo_a 192, cmp.wk 64, router 80, a_proj 160
+    option_iii_issue_cycles={"wo_a": 192, "cmp.wk": 64, "router": 80, "a_proj": 160},
+    # ROOT 2026-09-30 (update): option (ii) becomes cap 3 / NCH = 24 (cap 2 cannot place wo_a): busiest die 3,503 tok/s
+    # (W10), ~+16 mm2 a die routed (ESTIMATE; W10 p12 measures it); the op cycles above are cap 2's, pending p12
+)
+BF16_MODES = ("standard_pair", "columns")
+# ROM macro depth (W10 study, claude/w10-v41-rom-element c673fd43, results/uarch/v41_rom_depth_study.json): single-
+# cycle SS limit and density per macro; element count unchanged (2 or 4 macros per element slot)
+ROM_DEPTH_OPTS = {
+    "8192m8": dict(ss_ghz=0.918, tt_ghz=1.14, mb_per_mm2=149.6, macros_per_slot=1, field_delta_mm2=0.0),
+    "4096m8": dict(ss_ghz=1.206, tt_ghz=1.48, mb_per_mm2=142.4, macros_per_slot=2, field_delta_mm2=10.5),
+    "2048m4": dict(ss_ghz=1.324, tt_ghz=1.654, mb_per_mm2=136.1, macros_per_slot=4, field_delta_mm2=20.52),
+}
+ROM_DEPTH_SRC = ("claude/w10-v41-rom-element c673fd43 results/uarch/v41_rom_depth_study.json (rom_gen analytical "
+                 "compile, the shipped macro's calibrated generator); per-slot mux / select logic for 2-4 macros a slot "
+                 "NOT included (W10 to state)")
+SS_DERATE_MEASURED = 1.43   # W13 (root relay 2026-09-30): the TT-closed tc16 FP32 column re-timed at SS on its routed odb,
+                            # setup -398 ps -> 759 MHz; pessimistic for logic re-hardened at WC
+# W15 (root relay 2026-09-30): measured SS wire reach, period = 261 ps + 1.135 ps/um x L (routed 547-bit spans, SS setup,
+# FF hold, 60/25): 504 um a stage at 0.833 ns, 748 um at 1.111 ns (the 1,118 um TT fit it replaces)
+SS_REACH_UM = {1.2e9: 504.0, 0.9e9: 748.0}
+MTP_KV_PER_POSITION = True    # W11 / root 2026-09-30: verify KV rows are per position (6 x 645 rows a pass), not shared
+W15_V41_COLL_STAGES_SS = 48      # W18b MEASURED (claude/w18-die-assembly b359e69e die_route_layer_split.json): collective
+                                 # -> farthest SerDes 48 stages at the SS reach (UCIe 37); the v41p17 fit carries 17
+W18B_EXPERT_WIRE = 36 + 40       # W18b measured, M8/M9 trunks: VM x root -> farthest cluster 36 + farthest cluster -> VM
+                                 # 40 (PLACEHOLDER cycles until W15's M8/M9-only reach lands; the routed lengths stand)
+W11_SERIAL_MUL_EXTRA = 1         # W11 3bc74342: a LAT-3 mul misses 0.9 GHz by 17 ps -> LAT 4, +1 cycle a multiply in the
+                                 # SU/SFU/softplus/Sinkhorn chains; priced as +1 slow cycle a chain node (a LOWER BOUND:
+                                 # the per-node multiply count is not in the graph)
+# W11 MEASURED serial build (claude/w11-suclose ddd2f725, results/physical_abi3/asap7/hdc/v41x/w11_serial/summary.json;
+# root 2026-09-30): the SU light lane CLOSES at 1.111 ns SS / FF hold, 60/25 (929 MHz, sc_l5) with MLAT 5 (input-cut
+# multiply) and ALAT 4.  Measured depths before -> after, in 0.9 GHz cycles: linear op 21 -> 30, exp 49 -> 71,
+# sigmoid/silu 71 -> 94, rsqrt 37 -> 58, sqrt(softplus) 162 -> 216, Engram gate 104 -> 127, divide 19 -> 19, reducer
+# tap 26 -> 35 and 3 -> 4 a tree/time level.  Folded as these added slow cycles on the serial-chain nodes IN PLACE OF
+# the W11_SERIAL_MUL_EXTRA lower bound (the measured build already carries the slower multiply); the Sinkhorn unit
+# itself is not in the serial build, so it keeps the +1 lower bound, and its SFU front (row max + exp) takes the exp
+# delta.
+W11_SERIAL_MEASURED = dict(linear=9, exp=22, sigmoid=23, silu=23, rsqrt=21, softplus=54, gate=23, div=0,
+                           reduce_tap=9, reduce_per_level=1, sinkhorn_front_exp=22, sinkhorn_unit=W11_SERIAL_MUL_EXTRA,
+                           light_lane_ss_mhz=929.0, period_ns=1.111, mlat=5, alat=4,
+                           src="claude/w11-suclose ddd2f725 results/physical_abi3/asap7/hdc/v41x/w11_serial/summary.json "
+                               "(depths.serial_build, added_cycles; sc_l5 pass)")
+
+
+def _w11_serial_cycles(name, nd, levels):
+    """Added 0.9 GHz cycles of one serial-chain node under W11's measured serial build."""
+    m = W11_SERIAL_MEASURED
+    if nd["kind"] == "sinkhorn":
+        return m["sinkhorn_front_exp"] + m["sinkhorn_unit"]
+    if nd["kind"] == "reduce":
+        return m["reduce_tap"] + m["reduce_per_level"] * levels.get(name, 0)
+    leaf = name.split(".")[-1]
+    if leaf == "gate" and name.startswith("E"):
+        return m["gate"]
+    fn = A.SFU_NODE.get(leaf)
+    if fn:
+        return m[fn]
+    return m["rsqrt"] if leaf == "rsqrt" else m["linear"]
+
+
+# ROOT RULING 2026-09-30 (die size): the layer die is still sized by the old pack (815 mm2, 7,628 pair slots; W18b
+# 510f376e die_assembly.json), while the product owner file needs 5,289 pairs a die (1,024 BF16 columns;
+# results/arch/v41_stage_owner_product.json, max pairs_per_die_by_stage).  Shrink to 5,289 + ~10% margin; W18b
+# floorplans it.  Until its crossings land, a SENSITIVITY row scales every on-die crossing by sqrt(area ratio).
+DIE_SHRINK = dict(slots_now=7628, pairs_needed=5289, margin=0.10,
+                  src="root ruling 2026-09-30; W18b claude/w18-die-assembly 510f376e; v41_stage_owner_product.json")
+DIE_SHRINK["area_ratio"] = DIE_SHRINK["pairs_needed"] * (1 + DIE_SHRINK["margin"]) / DIE_SHRINK["slots_now"]
+DIE_SHRINK["crossing_scale"] = math.sqrt(DIE_SHRINK["area_ratio"])
+PRODUCT_SERIAL = "w11_measured"
+SERIAL_TAG = ("ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, "
+              "light lane 929 MHz)")
+# W18b INTERIM shrunk layer die (claude/w18-die-assembly 996f7982, results/physical_abi3/asap7/chip/v41_w18/
+# shrink_p5_interim/shrunk_die.json, crossings_layer_split; root die-size ruling): 28.82 x 23.22 mm = 669 mm2 (linear
+# scale 0.9062), 5,968 pair + 1,160 BF16 slots, 0 overflow.  Crossings at 504 um/stage: VM x root -> farthest cluster
+# 30 (was 36), farthest cluster -> VM 33 (40), collective -> SerDes 45 (48), -> UCIe 34 (37); HBM window 25, index
+# keys 39, top-k 38, selected KV 24 (not separately priced in the graph).  The field broadcast/return regions take
+# the die's linear scale.  Die area, cost and power stay on the 815 mm2 ledger until the p12 floorplan lands.
+DIE_OLD = dict(expert_wire=W18B_EXPERT_WIRE, coll_stages=W15_V41_COLL_STAGES_SS, field_scale=1.0)
+DIE_SHRUNK_INTERIM = dict(expert_wire=30 + 33, coll_stages=45, field_scale=0.9062, mm2=669.255, pair_slots=5968,
+                          bf16_slots=1160, src="claude/w18-die-assembly 996f7982 shrink_p5_interim/shrunk_die.json")
+SHRINK_TAG = SERIAL_TAG + " + W18b shrunk-die interim crossings (669 mm2)"
+# W11-stream (claude/w11-stream 540ef71c; record tool formulas at the shipped shape, idx_tail closed 1,249 MHz SS,
+# chunk and tile routes PENDING): indexer key -> score 48 -> 100 (+52; chunk 39 -> 83, the tail's +8 is already in
+# SOFTPLUS_FIX), attention tile input -> ov at TD 32 33 -> 72 (+39), engine bank guard 20 -> 44 (+24); W11 (answer,
+# 2026-09-30): both are engine pipeline depths, paid once a scores pass AND once a p.v pass (the p.v pass reuses the
+# tile after the softmax); throughput (II 1) unchanged
+W11_STREAM_SS = {"suffix:idx.score": 52, "suffix:.attn.scores": 39 + 24, "suffix:.attn.pv": 39 + 24}
+STREAM_TAG = SHRINK_TAG + " + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass)"
+# W11 VM-H (claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json, option H_rtl; W11 answer 2026-10-01): the
+# distributed VM's client stages replace VM_DIST one-for-one in SLOW (0.9 GHz) cycles at 748 um/stage -- x gather
+# 6 -> 12, result scatter 6 -> 12, collective write 6 -> 12 -- and every SU op pays the per-op network average of the
+# full-shape L0 program (control broadcast 5 + hold, per-class network stages, result tree 8): +36.706 slow cycles a
+# vector op, +44.909 a reduction, issue x1.1687 (unpacked layout).  The graph's SU nodes carry no su_bcast / su_ret
+# stages, so nothing is double counted; the CDC stays W18's FIFO.  Cross-check: die decode +5.0% vs flat (W11).
+VMH = dict(x_gather=12, ret_scatter=12, coll_write=12, su_op_extra=36.706, su_red_extra=44.909, su_issue=1.1687,
+           src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)")
+VMH_TAG = STREAM_TAG + " + W11 VM-H (12/12/12 slow stages, SU op +36.7 / red +44.9, issue x1.169)"
+# W11 C_rotate (3cc18731 options.C_rotate design_keys): client stages 8/8/8 slow cycles; per SU op the control
+# broadcast 5 + operand read 16 + element write 16 = 37, a reduction 5 + 16 + result tree 8 = 29; issue ratio 1.0
+VMC = dict(x_gather=8, ret_scatter=8, coll_write=8, su_op_extra=37, su_red_extra=29, su_issue=1.0,
+           src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (C_rotate)")
+PRODUCT_PITCH = "w10b_q"
+VMH_REF_GEOM = "w10_refit_vmh"   # the measured VM-H block (reference row)
+PRODUCT_GEOM = "w10_refit_crot"  # ROOT RULING 2026-10-01: W11's C_rotate SU+VM block in the hub (the product)
+PRODUCT_HUB = VMC_BLOCK
+W10B_TAG = "W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um)"
+VMH_REF_TAG = (VMH_TAG + f" + {W10B_TAG} and the VM-H hub block (SU+VM 38.95 mm2): one stage re-fit -- REFERENCE "
+               "(measured VM-H)")
+PRODUCT_TAG = (STREAM_TAG + f" + W11 C_rotate VM (8/8/8 slow stages, SU op +37 / red +29, issue x1.0) + {W10B_TAG} and "
+               "the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit (root ruling 2026-10-01)")
+QWEN_W12_TP4_ME_EXTRA_SS = 41 + 5 * 5 + 38 + 1 + 7   # W12 c6e6b845 at the 504 um reach: 112 cycles an ME op
+PRODUCT_CLOCK_HZ = 1.2e9   # USER DECISION (AGENTS.md e7479589): 0.833 ns at SS for all logic in all four designs
+PRODUCT_DYN_SCALE = 1.16   # root 2026-09-30: dynamic energy about +16% at 1.2 GHz (ASSUMED: the voltage for the clock)
+SS_CURVE_GHZ = (0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00, 1.05, 1.10, 1.15, 1.20, 1.25, 1.30, 1.35)
+SS_DERATE = 1.27     # USER DECISION 2026-09-30: sign-off at SS (setup) / FF (hold); logic without its own SS closure
+                     # is derated by the ROM macro's SS/TT ratio (8192m8: 1.14 / 0.918 = 1.24; root: use 1.27)
+
+
+def _cons_pair_mm2(pitch, bf16=False):
+    x, y = CONS_PITCH[pitch]["q_um"]
+    if bf16:
+        # the BF16 column outline travels with the tile variant: W10b's pair carries its own measured column outline
+        bx, by = CONS_PITCH[pitch].get("bf16_outline_um", CONS_BF16["columns_outline_um"])
+        return bx * by / 1e6
+    return x * y / 1e6
+CONS_MACRO_MM2 = ROM_MACRO_UM2 / 1e6
+CONS_STRIP_PER_PAIR_MM2 = CONS_REFIT["pair_footprint_mm2"] - 2 * CONS_MACRO_MM2    # MAC strip + gaps of one pair
+CONS_TABLE_MACRO_MM2 = (CONS_REFIT["pair_pitch_um"] - CONS_REFIT["strip_pitch_um"]) * CONS_REFIT["rom_v_pitch_um"] / 2e6
+CONS_TABLE_MACRO_B = 8192 * 33            # an Engram word: 264 payload bits of the 274-bit macro word (8 words a row)
+CONS = dict(
+    fill=0.90,                            # the study's slot fill (user instruction)
+    overhead=0.125, overhead_band=(0.10, 0.15),
+    overhead_basis=("per-die PDN bumps, IO/ESD, DFT, clock, decap not held by the floorplan.  On-chip decap alone "
+                    "takes 'as much as 10%' of die area (M. Popovich, A. Mezhiba, E. Friedman, Power Distribution "
+                    "Networks with On-Chip Decoupling Capacitors, Springer 2008) and 15-20% in high-performance "
+                    "processors; technology.json floorplan.overhead_area_fraction is 0.10 (assumed, sweep "
+                    "0.06-0.15).  ASSUMED 12.5%, band 10-15%.  The re-fit's edge slivers (whitespace outside the slot "
+                    "field) hold it first ('partly holds'); the conservative case gives them no credit."),
+    table_io_mm2=0.4 + 0.3888 * 1.043,    # 1 SerDes lane per table die (2 per table package, rack C4) at 0.4 mm2 +
+                                          # one UCIe-A x64 module to its package peer
+    table_logic_mm2=1.0,                  # ASSUMED: 24 gather slices + assembler (0.03 mm2 placed) + control, rounded up
+)
+# analytical: the layer-die ledger's mask-ROM area over its payload (checkpoint / 188, incl. SECDED 266/256)
+CONS_A_ANALYTICAL = _V41_ASM["rom_mm2"] / (_V41_CFG["checkpoint_bytes"] / 188)
+DENSITY = dict(
+    analytical=dict(mm2_per_B=CONS_A_ANALYTICAL, mbit_mm2=round(_V41_ASM["rom_density_mbit_per_mm2"], 2),
+                    basis="STORAGE-ONLY N5 (1 bit a mask-ROM cell): results/arch/v41_die_assembly.json ledger.layer, "
+                          "N5 6T 0.021 um2 x ROMA's ROM/SRAM 0.33 / array efficiency 0.52, SECDED 266/256; the one "
+                          "fit basis for both ROM designs (root ruling 2026-09-30).  Not HC1-derived: HC1 is a "
+                          "cross-check only (4.31 MB/mm2 whole die)"),
+    roma=dict(mm2_per_B=CONS_A_ANALYTICAL * _V41_ASM["rom_density_mbit_per_mm2"] / 57.8, mbit_mm2=57.8,
+              basis="Wang et al., ROMA, ASP-DAC 2026 (TSMC 7 nm memory compiler, 8192x64: 57.8 Mbit/mm2; "
+                    "technology.json rom entry): conservative sensitivity"),
+    asap7=dict(mm2_per_B=None, mbit_mm2=round(8192 * 274 / ROM_MACRO_UM2, 1),
+               basis="placed predictive ASAP7 ot_rom_8192x274_m8 macros of the integer macro map (physical "
+                     "feasibility only; not substituted into the analytical total)"),
+)
+
+
+def _cons_nonexpert_macros():
+    """Per-die non-expert macros (dense QE, ME, VM constants) of the integer macro map, and the expert macros."""
+    mm = json.loads((ROOT / "results/floorplan/v41_die_macromap_expanded_woa.json").read_text())
+    tot = {}
+    for d in mm["layer_dies"]:
+        for g_, v in d["macros_by_group"].items():
+            tot[g_] = tot.get(g_, 0) + sum(v.values())
+    return tot
+
+
+def cons_stage_plan(S: int):
+    """The 40 layers' ROM bytes laid out in layer order and cut into S equal-byte TP-4 stages (the placement rule of
+    tools/v41_die_placement.py); a layer's fraction per stage, its start stage, and each stage's per-die macros
+    (experts: 384 x 24 macros a layer a die; the non-expert macros spread over the layers by dense bytes)."""
+    dense, routed = _V41_CFG["layer_dense_weight_bytes"], _V41_CFG["layer_routed_weight_bytes"]
+    nl = len(dense)
+    lay = [dense[L] + routed[L] for L in range(nl)]
+    cap = sum(lay) / S
+    tot = _cons_nonexpert_macros()
+    nonexp = (tot["ROM_MAC.dense_QE"] + tot["ROM_MAC.ME"] + tot["VM.CONSTANT_HE"]) / 4
+    exp_l = tot["ROM_MAC.expert"] / 4 / nl
+    mac_l = [exp_l + nonexp * dense[L] / sum(dense) for L in range(nl)]
+    frac, start, x = {}, {}, 0.0
+    for L in range(nl):
+        a, b = x, x + lay[L]
+        s = int(a / cap + 1e-9)
+        start[L] = min(s, S - 1)
+        while a < b - 1e-6 and s < S:
+            e = min(b, (s + 1) * cap)
+            frac.setdefault(L, []).append((s, (e - a) / lay[L]))
+            a, s = e, s + 1
+        x = b
+    macros = [0.0] * S
+    for L, parts in frac.items():
+        for s, f in parts:
+            macros[s] += f * mac_l[L]
+    return dict(S=S, frac=frac, start=start, macros_per_die=macros, busiest_macros=max(macros),
+                payload_per_die_B=cap / 4, layers_per_stage=nl / S)
+
+
+def _cons_busiest_macros(S):
+    """Busiest layer die's macros at S stages, anchored to the re-fit's busiest die at 28 (layer macros, no spill)."""
+    b = CONS_REFIT["busiest_macros"]
+    anchor = b["expert"] + b["dense_qe"] + b["me"] + b["vm_constant"]
+    return anchor * cons_stage_plan(S)["busiest_macros"] / cons_stage_plan(28)["busiest_macros"]
+
+
+def _cons_need(pairs, payload_B, density, pitch, bf_pairs, depth="8192m8", extra_mm2=0.0):
+    """ROM + element-strip area of `pairs` element pairs (bf_pairs of them BF16 column pairs) holding payload_B;
+    `depth` scales the ROM area by the macro's density against the shipped 8192m8 (storage-only / ROMA: the array
+    efficiency; ASAP7: the macro area)."""
+    nq, nb = pairs - bf_pairs, bf_pairs
+    fq, fb = _cons_pair_mm2(pitch), _cons_pair_mm2(pitch, True)
+    dr = ROM_DEPTH_OPTS["8192m8"]["mb_per_mm2"] / ROM_DEPTH_OPTS[depth]["mb_per_mm2"]
+    rom = (2 * pairs * CONS_MACRO_MM2 if density == "asap7" else payload_B * DENSITY[density]["mm2_per_B"])
+    return rom * dr + nq * (fq - 2 * CONS_MACRO_MM2) + nb * (fb - 2 * CONS_MACRO_MM2) + extra_mm2
+
+
+def cons_field_need_mm2(S, density, pitch="w10_budget", bf16="standard_pair", depth="8192m8"):
+    """Slot-field area the busiest layer die needs at S stages: ASAP7 = its placed pair rows (FP8/FP4 pairs at the
+    variant's pitch, the 1,024 BF16 pairs at 1,019 um); storage-only / ROMA = the payload at that density plus each
+    pair's element strip (its footprint less its two ASAP7 macros; the element count is the read-width choice)."""
+    pairs = _cons_busiest_macros(S) / 2
+    return _cons_need(pairs, cons_stage_plan(S)["payload_per_die_B"], density, pitch,
+                      CONS_BF16["pairs"] if bf16 == "columns" else 0, depth,
+                      cons_bf16_hub_mm2(density) if bf16 == "hub_unit" else
+                      CONS_BF16["option_ii_area_mm2"] if bf16 == "option_ii" else 0.0)
+
+
+def cons_bf16_hub_mm2(density="analytical"):
+    """Option (c) of root's BF16 lever: the BF16 weights (wo_a, router, a_proj's BF16 rows, cmp.wk: ~10.3 M a die,
+    W10) in a small dedicated hub unit instead of the field -- BF16 MACs sized to keep wo_a at its 256-cycle issue
+    (8.39 M products / 256 = 32,768 MACs at 509 um2, the closed mac_bf16_fp32_pipe_round_stage) plus their ROM at the
+    density in shallow banks (1024x274 m8: 109.9 against 149.6 Mbit/mm2, ASSUMED to read 2,048 words a cycle)."""
+    macs = 8.39e6 / 256 * 509e-6
+    rom_b = 10.3e6 * 2
+    dr = ROM_DEPTH_OPTS["8192m8"]["mb_per_mm2"] / 109.9
+    rom = rom_b * 8 / 149.6e6 if density == "asap7" else rom_b * DENSITY[density]["mm2_per_B"]
+    return macs + rom * dr
+
+
+def cons_field_usable_mm2(overhead=None, credit="ring", geom="w10_refit"):
+    """Usable slot field: the overhead reserve is charged to the credited whitespace first (ring: the die-edge ring
+    outside the core, less its I/O instances; none), the rest to the field, then the fill factor."""
+    o = CONS["overhead"] if overhead is None else overhead
+    G = CONS_GEOM[geom]
+    charge = max(0.0, o * FLOORPLAN["die_mm2"] - sum(G[k] for k in CONS_CREDIT[credit]))
+    return CONS["fill"] * (G["field_mm2"] - charge)
+
+
+def cons_min_stages(density, overhead=None, credit="ring", geom="w10_refit", pitch="w10_budget", bf16="standard_pair",
+                    depth="8192m8"):
+    u = cons_field_usable_mm2(overhead, credit, geom)
+    return next(S for S in range(8, 90) if cons_field_need_mm2(S, density, pitch, bf16, depth) <= u)
+
+
+def cons_head_dies(density, overhead=None, credit="ring", geom="w10_refit", pitch="w10_budget", depth="8192m8"):
+    """The head group (lm_head, embedding, DSpark MTP; layer engines): TP-4 groups of the layer die's field."""
+    b = _V41_PLACE["bytes"]
+    per_die = (b["embed"] + b["head"] + b["mtp"]) / 4
+    # the embedding is a row table (one row a token, no MACs): only lm_head and the drafter carry MAC strips
+    m = (b["head"] + b["mtp"]) / 4 * _cons_busiest_macros(28) / cons_stage_plan(28)["payload_per_die_B"]
+    need = _cons_need(m / 2, per_die, density, pitch, 0, depth)
+    return 4 * math.ceil(need / cons_field_usable_mm2(overhead, credit, geom) - 1e-9)
+
+
+def cons_head_need_ratio(pitch, overhead=None, credit="ring", geom="w10_refit", depth="8192m8"):
+    """The head group's storage-only need against ONE TP-4 group of usable field (1 - this is the 4-die margin)."""
+    b = _V41_PLACE["bytes"]
+    per_die = (b["embed"] + b["head"] + b["mtp"]) / 4
+    m = (b["head"] + b["mtp"]) / 4 * _cons_busiest_macros(28) / cons_stage_plan(28)["payload_per_die_B"]
+    return _cons_need(m / 2, per_die, "analytical", pitch, 0, depth) / cons_field_usable_mm2(overhead, credit, geom)
+
+
+def cons_table_dies(density, overhead=None):
+    """Engram table dies: ROM, gather slices and links only (no MAC strips, hub, HBM); no floorplan exists, so the
+    overhead gets no sliver credit and the layer die's channels are charged."""
+    o = CONS["overhead"] if overhead is None else overhead
+    usable = CONS["fill"] * (FLOORPLAN["die_mm2"] - CONS["table_io_mm2"] - CONS["table_logic_mm2"]
+                             - CONS_REFIT["channels_mm2"] - o * FLOORPLAN["die_mm2"])
+    cap = (usable / CONS_TABLE_MACRO_MM2 * CONS_TABLE_MACRO_B if density == "asap7"
+           else usable / DENSITY[density]["mm2_per_B"])
+    tb = _V41_PLACE["bytes"]["engram_table_L1"] + _V41_PLACE["bytes"]["engram_table_L14"]
+    n = math.ceil(tb / cap)
+    return dict(dies=n + (n % 2), usable_mm2=round(usable, 1), bytes_per_die=cap, table_bytes=tb)
+
+
+def cons_engram_path(n_table, rates):
+    """Engram gathers on fewer table dies: the switched path (rack record), rows per die, link load per package."""
+    rack = json.loads((ROOT / "results/arch/v41_rack.json").read_text())
+    p, tr = rack["paths"], rack["traffic"]["rows"]["T3_engram"]
+    lane = rack["lanes"]["lane_net_Bps"]
+    rows = 2 * A._env()["c"]["engram_hash_columns"]
+    per_table = n_table // 2                                     # each Engram layer's table on half the dies
+    maxrows = expected_max_load(rows // 2, per_table)
+    pkgs = n_table // 2
+    by_tok = tr["bytes_per_token"] - (72 + 4) * 16 + (n_table + 4) * 16    # token-id multicast to fewer dies
+    out = dict(table_dies=n_table, table_packages=pkgs, rows_per_token=rows,
+               expected_max_rows_per_die_per_layer=round(maxrows, 2),
+               engram_l1_latency_us=round(p["engram_l1_s"] * 1e6, 3),
+               engram_l1_slack_us=3.57, engram_l14_slack_us=round(p["engram_l14_slack_s"] * 1e6, 1),
+               hops="unchanged: table package -> one 51.2T switch -> layer package (2 switched legs)",
+               latency_basis="rack critical_paths: 2 switched legs + the 396 ns port read of all 48 rows at ONE port "
+                             "(an upper bound for any table-die count) + serialisation into the consumer port",
+               bytes_per_token=by_tok, link_Bps_per_package=2 * lane)
+    for k, r in rates.items():
+        load = r * by_tok / pkgs
+        out[f"link_utilisation_{k}"] = round(load / (2 * lane), 4)
+    return out
+
+
+def cons_engram_slack(g):
+    """Slack of each Engram delivery on the priced token DAG: the time its consumer's other input is ready minus the
+    time the Engram value arrives (the DAG's E{L}.deliver hop: 2 board legs), and whether any Engram node is on the
+    critical path.  The table-die count does not enter the DAG: the gather is token-addressed and prefetched."""
+    fin = g.solve(True)
+    sink = [n for n in g.nodes if n.endswith("token.return")][0]
+    path = set(g.path(sink))
+    out = {}
+    for L in A._env()["c"]["engram_layer_ids"]:
+        eng = f"E{L}.deliver" if f"E{L}.deliver" in g.nodes else f"E{L}.knorm"
+        cons = f"L{L}.eng.dot"
+        other = [x for x in g.nodes[cons]["deps"] if not x.startswith("E")]
+        out[f"L{L}"] = dict(engram_ready_us=round(fin[eng] * 1e6, 3),
+                            residual_ready_us=round(max(fin[x] for x in other) * 1e6, 3),
+                            slack_us=round((max(fin[x] for x in other) - fin[eng]) * 1e6, 3),
+                            on_critical_path=any(n.startswith(f"E{L}.") for n in path))
+    return out
+
+
+# ---- re-pricing the V4.1 ROM array at S stages: the arch DAG rebuilt with the packed placement at S groups ----
+@contextlib.contextmanager
+def _cons_stages(S):
+    """Rebuild the arch DAG with the packed placement cut into S TP-4 groups: decode_critical_path.v41_machine is
+    called with units = checkpoint x 4S / layer bytes (packed_placement's capacity rule), so every stage and
+    substage hop moves to the new boundaries; no other node changes (tests/test_uarch_consolidation.py).  The arch
+    cache is swapped for the duration and restored."""
+    D_ = A.D
+    orig = D_.v41_machine
+    lt = sum(_V41_CFG["layer_dense_weight_bytes"]) + sum(_V41_CFG["layer_routed_weight_bytes"])
+    units = _V41_CFG["checkpoint_bytes"] * 4 * S / lt
+
+    def vm(*a, **k):
+        if a and a[0] == "array" and "units" not in k:
+            k["units"] = units
+        return orig(*a, **k)
+    saved = dict(_ARCH_CACHE)
+    _ARCH_CACHE.clear()
+    D_.v41_machine = vm
+    try:
+        yield units
+    finally:
+        D_.v41_machine = orig
+        _ARCH_CACHE.clear()
+        _ARCH_CACHE.update(saved)
+
+
+@contextlib.contextmanager
+def _cons_clock(hz):
+    """Price the V4.1 ROM at clock `hz`: the arch environment's clock (every cycle-counted node, wire stages at the
+    new period) and the W15 V4.1 collective fits' clock (their measured cycles take hz's period: conservative for the
+    link flight part).  Restored on exit."""
+    if hz is None:
+        yield None
+        return
+    E = A._env()
+    old = (E["clock"], E["p"])
+    cf = w15_record()["configs"]
+    oldw = {k: v["clock_hz"] for k, v in cf.items() if k.startswith("v41")}
+    saved = dict(_ARCH_CACHE)
+    _ARCH_CACHE.clear()
+    E["clock"], E["p"] = hz, dataclasses.replace(E["p"], clock_hz=hz)
+    for k in oldw:
+        cf[k]["clock_hz"] = hz
+    try:
+        yield hz
+    finally:
+        E["clock"], E["p"] = old
+        for k, v in oldw.items():
+            cf[k]["clock_hz"] = v
+        _ARCH_CACHE.clear()
+        _ARCH_CACHE.update(saved)
+
+
+def _cons_stage_of(name, nd, plan):
+    L = nd["layer"]
+    if L is None or L < 0 or L >= len(_V41_CFG["layer_dense_weight_bytes"]):
+        return "head"
+    return plan["start"][L]
+
+
+def _cons_cooling(die_static, die_static_ungated, cats, pair_s, pp, dyn_scale, sat, S, tot):
+    """Layer-die power at the saturated rate under the adopted per-pair ICG: die static without the field clock +
+    the on-die dynamic energy (incl. the busy pairs' clock) at the rate.  Mean die, and the busiest stage (its own
+    pair-seconds and hub share).  cooling_ungated: the same with every idle pair clocked (the pre-fix accounting)."""
+    on_die = sum(v for k, v in cats.items() if k != "stack")
+    mean_dyn = on_die * sat / (4 * S)
+    busiest = max(tot, key=tot.get)
+    b_pair = pair_s.get(busiest, 0.0) * pp["clock"] * dyn_scale
+    share = (on_die - cats["field_clock_busy"]) / (4 * S) * max(tot.values()) / (sum(tot.values()) / len(tot))
+    busiest_dyn = (share + b_pair) * sat
+    return dict(limit_w_per_die=COOLING_LIMIT_W, dyn_scale=dyn_scale, busiest_stage=busiest,
+                layer_die_static_w=round(die_static, 1),
+                layer_die_mean_w_saturated=round(die_static + mean_dyn, 1),
+                layer_die_busiest_w_saturated=round(die_static + busiest_dyn, 1),
+                fits=bool(die_static + busiest_dyn <= COOLING_LIMIT_W),
+                cooling_ungated=dict(static_w=round(die_static_ungated, 1),
+                                     mean_w=round(die_static_ungated + mean_dyn - cats["field_clock_busy"] * sat / (4 * S), 1)),
+                basis="per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' "
+                      "clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share "
+                      "of the rest")
+
+
+def _cons_occupancy(g, plan):
+    """Per-die issue seconds per stage, split ROM field / hub: routed experts over their stages in the placement's
+    byte fractions, every other node on its layer's start stage (A.stage_occupancy's rule)."""
+    occ = {}
+    for name, nd in g.nodes.items():
+        if nd["kind"] in ("collective", "hop"):
+            continue
+        s0 = _cons_stage_of(name, nd, plan)
+        parts = ([(s, f) for s, f in plan["frac"][nd["layer"]]] if s0 != "head" and name.endswith(A.EXPERT_NODES)
+                 else [(s0, 1.0)])
+        for s, f in parts:
+            b = occ.setdefault(s, dict(field=0.0, hub=0.0))
+            b["field" if nd.get("_uarch") else "hub"] += nd["issue"] * f
+    return occ
+
+
+def _cons_windows(g, plan):
+    sink = [n for n in g.nodes if n.endswith("token.return")][0]
+    win, t = {}, 0.0
+    for n in g.path(sink):
+        c = sum(g.contrib[n].values())
+        s = _cons_stage_of(n, g.nodes[n], plan)
+        win[s] = win.get(s, 0.0) + c
+        t += c
+    return win, t
+
+
+# Latency inventory (root 2026-09-30, user clock decision 1.2 GHz SS): every stream reports block | SS fmax | gap |
+# fix | ADDED LATENCY CYCLES; the added cycles are folded in here as extra depth on the named node families (node
+# name suffix -> cycles).  Empty until the inventories land.
+V41_ADDED_LATENCY = {}
+# W11 (a70c5d91, 2026-09-30): hub units at 1.2 GHz SS, ESTIMATES from TT x 1/1.43 until WC runs land.  The shared
+# fast FP32 add/mul goes 3 -> ~6 stages; per dependent op: SU linear +12 (21 -> 33), SU reducer 26+3L -> 40+5L
+# (+22 at L = 4), SFU exp +21, divide +8, sigmoid/silu +29, softplus +68, indexer +28, attention tile pass +17.
+# Keys: "kind:<k>" (non-SFU nodes of that kind), "sfu:<class>" (SFU_NODE classes), "suffix:<name suffix>".
+W11_LATENCY_SS_1P2 = {"kind:vector": 12, "kind:reduce": 22, "sfu:exp": 21, "sfu:div": 8, "sfu:sigmoid": 29,
+                      "sfu:silu": 29, "sfu:softplus": 68, "suffix:idx.score": 28, "suffix:.attn.scores": 17}
+
+
+def _cons_top(g, n=8):
+    """The critical path's largest node families (us), after re-timing."""
+    sink = [x for x in g.nodes if x.endswith("token.return")][0]
+    fam = {}
+    for x in g.path(sink):
+        tail = x.split(".", 1)[1] if x.startswith(("L", "E")) and "." in x else x
+        fam[tail] = fam.get(tail, 0.0) + sum(g.contrib[x].values())
+    return {k: round(v * 1e6, 2) for k, v in sorted(fam.items(), key=lambda kv: -kv[1])[:n]}
+
+
+def _lat_cycles(name, nd, lat):
+    if not lat:
+        return 0
+    c = 0
+    fn = A.SFU_NODE.get(name.split(".")[-1])
+    if nd["kind"] in ("vector", "reduce"):
+        c += lat.get(f"sfu:{fn}", 0) if fn else lat.get(f"kind:{nd['kind']}", 0)
+    for k, v in lat.items():
+        if k.startswith("suffix:") and name.endswith(k[7:]):
+            c += v
+        elif not k.startswith(("kind:", "sfu:", "suffix:")) and name.endswith(k):
+            c += v
+    return c
+FIELD_CONCURRENCY = 0.5   # W18 (92d7f4f8 results/physical_abi3/asap7/chip/v41_w18/peak_current.json): a field-wide
+                          # matvec draws 2,263 A a die (1.5x a B200-class package); adopted fix: at most 50% of the
+                          # pairs read concurrently (+ a droop detector) -- the field's read time doubles
+
+
+CDC_W18 = dict(fast_to_slow_slow_cycles=4, slow_to_fast_fast_cycles=5,
+               vm_port_widening=dict(factor=4 / 3, bits_before_after={"VM x read": (549, 732), "result write": (4096, 5461),
+                                                                      "attention scores/PV": (512, 683)},
+                                     area_mm2_added=None, note="every slow-side port at a crossing 4/3 wider (no 25% "
+                                                               "stalls); priced in consolidation()"),
+               src="W18 cbaf864f results/physical_abi3/asap7/chip/v41_w18/clock_plan.json")
+SLOW_KINDS = ("vector", "reduce", "sinkhorn")   # the serial-chain units: SU, SFU, softplus, reducer, Sinkhorn
+
+
+# W11 MEASURED (root relay 2026-09-30, rtl/hdc/ot_hdc_fp32_add_lat.sv, routed at WC/SS, bit-identical LAT 3-7):
+# the FP32 add's SS fmax and ns per dependent add.  1.2 GHz needs ~8-9 stages (~7-7.5 ns per add); SS/TT ~1.6.
+FP32_ADD_SS = {3: (906e6, 3.31), 4: (939e6, 4.26), 5: (892e6, 5.61), 6: (889e6, 6.75), 7: (1208e6, 5.79),
+               "ieee5": (992e6, 5.04)}
+MODEL_CHAIN_ADD_STAGES = 3      # the model's hub chain units are priced with the 3-stage fast FP (ADD_LAT fastfp)
+MODEL_ELEM_ADD_STAGES = FADD_PIPE   # the field element's chain adder (ot_fp32_add_rne_pipe, 5)
+# root 2026-09-30: the old ot_hdc_softplus depth (259) is replaced by the SU's v41x softplus (162, ot_hdc_v41x_sfu.sv):
+# 97 cycles a layer recovered
+SOFTPLUS_FIX = {"suffix:softplus_sqrt": -97, "suffix:idx.topk_local": 8}   # + W11: idx_tail latency 8 -> 16   # ROOT RULING 2026-09-30: arch_budget_v41's SFU_DEPTH / V41 softplus
+# 259 is the LEGACY standalone unit; the product uses the SU's v41x softplus (162) through this correction only.
+# arch_budget_v41 stays FROZEN as the spec basis (the hardware is built to its derived widths; folding it there
+# re-derives weight_macs 264,960 -> 246,528 etc.); the full re-baseline waits for the headline-restatement pass.
+
+
+def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_stages=None, ss_wire=False, d=None,
+                 serial=None, die=None, vmh=None):
+    """Re-time a priced V4.1 graph (one pass of P positions): the field-concurrency cap on every field read, W10's
+    two-pass BF16 on wo_a, the latency inventory, and optionally a slower clock domain for the serial-chain units
+    (slow = (hz, cdc_cycles)): their issue and depth stretch by clock / hz, and each crossing into the domain adds
+    cdc_cycles of the slow clock (ASSUMED synchroniser); returns the pass time."""
+    cyc = 1.0 / clock
+    # the reducers' adder-tree levels, from the graph's as-priced depth (decode_critical_path: red_tail + FADD x levels)
+    levels = {name: max(0, round((nd["depth"] * clock - A.D.K["red_tail"]) / A.D.FADD)) for name, nd in g.nodes.items()
+              if nd["kind"] == "reduce"} if serial else {}
+    # softplus correction and the latency inventory first (cycles at the model's 3-stage arithmetic), then the
+    # serial-chain units' depth at chain_stages-deep adds (x chain_stages / 3), then the slow domain
+    for name, nd in g.nodes.items():
+        nd["depth"] = max(0.0, nd["depth"] + _lat_cycles(name, nd, lat) * cyc)
+    if chain_stages:
+        for name, nd in g.nodes.items():
+            if nd["kind"] in SLOW_KINDS:
+                nd["depth"] *= chain_stages / MODEL_CHAIN_ADD_STAGES
+    if slow:
+        # W11's domain map: the SU, SFU, reducer, Sinkhorn, the VM-H rotate network and group tiles run in the slow
+        # domain; the crossing sits at the VM port, both ways (field x / results, attention, indexer, collectives):
+        # every dependency edge between the domains pays cdc_cycles of the slow clock (FIFO latency, W18 to state)
+        # W18 clock plan (cbaf864f, results/physical_abi3/asap7/chip/v41_w18/clock_plan.json): one PLL, 3.6 GHz /3 and
+        # /4, STA-timed crossings; ratio-FIFO latency fast->slow 3.0-3.75 slow cycles (charge 4), slow->fast
+        # 3.67-4.34 fast cycles (charge 5); slow = (hz, "w18") uses them, (hz, n) charges n slow cycles each way
+        hz, cdc = slow
+        f2s, s2f = ((CDC_W18["fast_to_slow_slow_cycles"] / hz, CDC_W18["slow_to_fast_fast_cycles"] / clock)
+                    if cdc == "w18" else (cdc / hz, cdc / hz))
+        for name, nd in g.nodes.items():
+            sl = nd["kind"] in SLOW_KINDS
+            if sl:
+                nd["issue"] *= clock / hz
+                nd["depth"] *= clock / hz
+            if nd["kind"] not in ("hop",) and any((g.nodes[x]["kind"] in SLOW_KINDS) != sl for x in nd["deps"]):
+                nd["depth"] += f2s if sl else s2f
+    if ss_wire:
+        # named step (root 2026-09-30): W15's SS reach -- every field broadcast/return wire term at ceil(L / 504 um)
+        # (both ways) instead of the TT fit, every collective +2 x (30 - 17) stages to the link PHY, and the W11
+        # LAT-4 serial multiply (+1 slow cycle a chain node)
+        reach = SS_REACH_UM[1.2e9]
+        dv = die or DIE_OLD
+        for name, nd in g.nodes.items():
+            u = nd.get("_uarch")
+            if u:
+                new = (dv["expert_wire"] if u["region"] == "expert" else
+                       2 * math.ceil(d["bcast_um"][u["region"]] * dv["field_scale"] / reach))
+                old = u["wire"] - d.get("vm_x_gather_stages", 0) - d.get("vm_ret_scatter_stages", 0)
+                nd["depth"] += max(0, new - old) * cyc
+            elif nd["kind"] == "collective":
+                nd["depth"] += 2 * (dv["coll_stages"] - 17) * cyc
+            elif nd["kind"] in SLOW_KINDS and slow and not serial:
+                nd["depth"] += W11_SERIAL_MUL_EXTRA / slow[0]
+    if serial == "w11_measured" and slow:
+        # named step (root 2026-09-30): W11's MEASURED serial build at 1.111 ns SS replaces the 3-stage-add depths
+        for name, nd in g.nodes.items():
+            if nd["kind"] in SLOW_KINDS:
+                nd["depth"] += _w11_serial_cycles(name, nd, levels) / slow[0]
+    if vmh and slow:
+        # W11 VM-H: client stages in slow cycles replace VM_DIST's (fast-cycle) 6/6/6; per-op network extras on SU ops
+        hz = slow[0]
+        for name, nd in g.nodes.items():
+            u = nd.get("_uarch")
+            if u:
+                nd["depth"] += ((vmh["x_gather"] + vmh["ret_scatter"]) / hz
+                                - (d.get("vm_x_gather_stages", 0) + d.get("vm_ret_scatter_stages", 0)) * cyc)
+            elif nd["kind"] == "collective" and d.get("vm_coll_write_stages"):
+                nd["depth"] += vmh["coll_write"] / hz - d["vm_coll_write_stages"] * cyc
+            elif nd["kind"] == "vector":
+                nd["depth"] += vmh["su_op_extra"] / hz
+                nd["issue"] *= vmh["su_issue"]
+            elif nd["kind"] == "reduce":
+                nd["depth"] += vmh["su_red_extra"] / hz
+                nd["issue"] *= vmh["su_issue"]
+    es = elem_stages or MODEL_ELEM_ADD_STAGES
+    for name, nd in g.nodes.items():
+        u = nd.get("_uarch")
+        if u:
+            # the element's chunk-8 chain floor and its K-split adder levels at es-stage adds
+            t_read = max(u["t_read"], 8 * es) if u["t_read"] >= CHAIN_FLOOR else u["t_read"]
+            nd["issue"] = max(t_read * P / fc, u["t_x"] * P, u["t_ret"] * P, u["t_mac"] * P) * cyc
+            nd["depth"] += u["adder_levels"] * (es - MODEL_ELEM_ADD_STAGES) * cyc
+            if bf16 == "standard_pair" and u["key"] == "wo_a":
+                nd["issue"] += P * CONS_BF16["standard_pair_wo_a_extra_cycles"] * cyc
+            if bf16 == "option_ii" and u["key"] in CONS_BF16["option_ii_extra_cycles"]:
+                nd["issue"] += P * CONS_BF16["option_ii_extra_cycles"][u["key"]] * cyc
+            if bf16 == "option_iii" and u["key"] in CONS_BF16["option_iii_issue_cycles"]:
+                nd["issue"] = max(nd["issue"], P * CONS_BF16["option_iii_issue_cycles"][u["key"]] / fc * cyc)
+    fin = g.solve(True)
+    return fin[[n for n in g.nodes if n.endswith("token.return")][0]]
+
+
+def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16="columns", clock_hz=None,
+                 field_concurrency=1.0, added_latency=None, dyn_scale=1.0, slow_domain=None, chain_stages=None,
+                 elem_stages=None, ss_wire=False, serial=None, die=None, vmh=None, hub_block=None):
+    """The V4.1 ROM array at S TP-4 stages, n_head head dies and n_table Engram table dies: AR and MTP m = 1 per
+    user, the busiest-stage saturated aggregate, energy (ungated and the adopted stage power gating, 1 us wake),
+    KV capacity, HBM stacks and die counts.  Same model pieces as the economics and levers sections."""
+    plan = cons_stage_plan(S)
+    lat = V41_ADDED_LATENCY if added_latency is None else added_latency
+    with _cons_clock(clock_hz), _cons_stages(S):
+        d = copy.deepcopy(PRESETS["proposal"])
+        d["macros"] = round(BASE["macros"] * plan["busiest_macros"] / cons_stage_plan(28)["busiest_macros"])
+        d["vmh_block"] = hub_block or None   # the measured SU+VM block's area in the hub (power; root 2026-10-01)
+        r1, g1 = _v41_graph(d, 1)
+        # energy BEFORE re-timing: the field's pair-seconds per token are the work, not the (capped, stretched)
+        # issue time -- the 50% cap halves the concurrent pairs and doubles the time, same pair-seconds
+        led = v41_rom_ledger(g1)
+        area = area_ledger(d)
+        pw = power_ledger(d, g1, r1["clock_hz"], r1["tokens_s"], area)
+        pp = pair_power(r1["clock_hz"])
+        pair_s = {}
+        for name, nd in g1.nodes.items():
+            if nd.get("_uarch") and _cons_stage_of(name, nd, plan) != "head":
+                for s0, f in ([(s, f) for s, f in plan["frac"][nd["layer"]]] if name.endswith(A.EXPERT_NODES)
+                              else [(_cons_stage_of(name, nd, plan), 1.0)]):
+                    pair_s[s0] = pair_s.get(s0, 0.0) + busy_pairs(nd) * nd["issue"] * f
+        T1 = _cons_adjust(g1, 1, r1["clock_hz"], bf16, field_concurrency, lat, slow_domain, chain_stages, elem_stages,
+                          ss_wire, d, serial, die, vmh)
+        r1["T_us"], r1["tokens_s"] = T1 * 1e6, 1 / T1
+        occ = _cons_occupancy(g1, plan)
+        _, gv = _v41_graph(d, V41_POSITIONS)
+        Tp = _cons_adjust(gv, V41_POSITIONS, r1["clock_hz"], bf16, field_concurrency, lat, slow_domain, chain_stages,
+                          elem_stages, ss_wire, d, serial, die, vmh)
+        occ_v = _cons_occupancy(gv, plan)
+        win1, _ = _cons_windows(g1, plan)
+        fstarts = cons_field_starts(g1, plan, r1["clock_hz"])
+        eslack = cons_engram_slack(g1)
+        winv, _ = _cons_windows(gv, plan)
+    Td = V41_DRAFT_FRACTION * T1
+    step1 = Tp + Td
+    occ_v.setdefault("head", dict(field=0.0, hub=0.0))["hub"] += Td
+    tot = {s: v["field"] + v["hub"] for s, v in occ.items()}
+    tot_v = {s: v["field"] + v["hub"] for s, v in occ_v.items()}
+    sat, sat_m = 1.0 / max(tot.values()), V41_TAU / max(tot_v.values())
+    rack = json.loads((ROOT / "results/arch/v41_rack.json").read_text())["power"]
+    link_die = rack["per_die"]["static_w"]["serdes_always_on"] + rack["per_die"]["static_w"]["ucie_idle"]
+    # ADOPTED per-pair ICG (W18 / power-cal): an idle pair keeps only its 0.22 mW leakage; a busy pair's clock is
+    # dynamic (pair-seconds x its clock power).  The ungated form (every idle pair clocked, 0.092 W at 1.2 GHz) is
+    # kept as `cooling_ungated` for the waterfall only.
+    field_clock_ungated = pw["field"]["clock_w"]
+    die_static_ungated = pw["clock_w"] + pw["leakage_w"] + pw["hbm_idle_w"] + link_die
+    die_static = die_static_ungated - field_clock_ungated
+    head_w = rack["static"]["head_dies"] / V41_ROM_SYSTEM["head_dies"]
+    tl = rack["per_die"]["table_leakage_w"] * V41_ROM_SYSTEM["table_dies"] * table_leak_scale
+    to = (rack["per_die"]["table_static_w"] - rack["per_die"]["table_leakage_w"]) * n_table
+    static = dict(layer_dies=4 * S * die_static, head_dies=n_head * head_w, table_dies=tl + to)
+    P_static = sum(static.values())
+    cats = {k: V41_TP * v * (dyn_scale if k != "stack" else 1.0) for k, v in led["per_die_categories_J"].items()}
+    cats["field_clock_busy"] = V41_TP * sum(pair_s.values()) * pp["clock"] * dyn_scale    # ICG: busy pairs' clock
+    dyn = sum(v for k, v in cats.items() if k != "stack") + cats["stack"]
+    e_pass = sum(v * (1 if k in ("hbm_if", "stack") else V41_POSITIONS) for k, v in cats.items())
+    # W11 (root 2026-09-30): each verify position attends its OWN window (w_{p-127}..w_p) and its own index selection,
+    # so the attention KV rows are NOT shared across the 6 positions -- 6 x the rows a pass (the index keys stay once
+    # a pass).  The attention job's time already repeats per position; the correction is the rows' HBM energy.
+    kv_rows_J = V41_TP * sum(640 * A.WIN_ROW_B / 4 for n in g1.nodes if n.endswith(".attn.scores")) * E_HBM_B
+    if MTP_KV_PER_POSITION:
+        e_pass += (V41_POSITIONS - 1) * kv_rows_J
+    dyn_m = (e_pass + V41_DRAFT_FRACTION * dyn) / V41_TAU
+    # gated (the adopted stage power gating, 1 us wake): v41_static_power's rule on this plan's stages
+    p = v41_die_static_parts(d)
+    p["field"]["clock"] = 0.0          # per-pair ICG: the field clock is in the dynamic energy (cats field_clock_busy)
+    ungated_die = sum(p["field"].values()) + sum(p["hub"].values()) + p["hbm_if"] + p["serdes"] + p["ucie"]
+    table_leak_die, table_other_die = tl / max(1, n_table), to / max(1, n_table)
+    wake = PG["stage_wake_s"]
+
+    def gated(period, act, busy, P):
+        out = {}
+        for pol in (0, 3):
+            e = 0.0
+            for s in list(range(S)) + ["head"]:
+                w = act.get(s, 0.0)
+                b = busy.get(s, dict(field=w, hub=w))
+                ok = period - w >= wake + PG["stage_bet_s"]
+                ed = _die_energy(p, period, w, b, pol, wake, ok)
+                e += 4 * ed if s != "head" else n_head * head_w * ed / ungated_die
+            tw = 2 * 0.5e-6 * P
+            t_on = min(period, tw + wake) if pol == 3 else period
+            e += n_table * (table_other_die * period + table_leak_die * (t_on + PG["logic_residual"] * (period - t_on)))
+            out[pol] = e
+        return out
+    win1["head"] = win1.get("head", 0.0)
+    winv["head"] = winv.get("head", 0.0) + Td
+    pts = {}
+    for key, period, act, busy, P, tau, dy in (
+            ("ar_b1", T1, win1, occ, 1, 1.0, dyn), ("ar_sat", 1 / sat, tot, occ, 1, 1.0, dyn),
+            ("mtp_b1", step1, winv, occ_v, 1, V41_TAU, dyn_m), ("mtp_sat", V41_TAU / sat_m, tot_v, occ_v, V41_POSITIONS, V41_TAU, dyn_m)):
+        e = gated(period, act, busy, P)
+        rate = tau / period
+        pts[key] = dict(tokens_s=round(rate, 1), ungated_mJ=round((e[0] / tau + dy) * 1e3, 2),
+                        gated_mJ=round((e[3] / tau + dy) * 1e3, 2), ungated_static_w=round(e[0] / period, 1),
+                        gated_static_w=round(e[3] / period, 1), gated_system_w=round(e[3] / period + dy * rate, 1))
+    rows_ = _CONS_CTX
+    windows_rings = max(2, math.ceil(plan["layers_per_stage"]))
+    per_user = rows_ * (A.CKV_ROW_B + A.IDX_KEY_B) / 4 + _V41_CFG_WINDOW() * A.WIN_ROW_B * windows_rings
+    users = int(HBM_CAP_EFF * A.ROM_DIE_HBM_STACKS * HBM_STACK_B // per_user)
+    dies = 4 * S + n_head + n_table
+    return dict(label=label or f"S = {S}", stages=S, bf16=bf16, clock_hz=r1["clock_hz"], layer_dies=4 * S, head_dies=n_head, table_dies=n_table,
+                dies=dies, packages=dies // 2, hbm_stacks=4 * (4 * S + n_head), busiest_die_macros=d["macros"],
+                ar_tokens_s_b1=round(1 / T1, 1), mtp_tokens_s_b1=round(V41_TAU / step1, 1),
+                ar_saturated_tokens_s=round(sat, 1), mtp_saturated_tokens_s=round(sat_m, 1),
+                stage_hops=sum(1 for n in g1.nodes.values() if n["kind"] == "hop" and n.get("hop_kind") in ("stage", "substage")),
+                pipeline_hops_us=round(r1["breakdown_us"].get("pipeline_hops", 0.0), 3),
+                cooling=_cons_cooling(die_static, die_static_ungated, cats, pair_s, pp, dyn_scale, sat, S, tot),
+                field_concurrency=field_concurrency, added_latency=dict(lat), slow_domain=slow_domain,
+                chain_stages=chain_stages, elem_stages=elem_stages, field_starts=fstarts, ss_wire=ss_wire, serial=serial,
+                die=(die or DIE_OLD), vmh=vmh, hub_block=(hub_block or {}).get("option"),
+                critical_path_top_us=_cons_top(g1),
+                capacity_users_1m=users, static_w_ungated=dict({k: round(v, 1) for k, v in static.items()},
+                                                             total=round(P_static, 1)),
+                energy=pts, busiest_stage=max(tot, key=tot.get), busiest_stage_us=round(max(tot.values()) * 1e6, 2),
+                layers_per_stage=round(plan["layers_per_stage"], 3), engram_dag_slack=eslack)
+
+
+def _V41_CFG_WINDOW():
+    return A._env()["c"]["window_tokens"]
+
+
+# ---- cost: die area with a yield model (replaces the iso-package B200 price) ----
+FAB = dict(
+    wafer_usd=16988.0, wafer_basis="S. Khan, A. Mann, 'AI Chips: What They Are and Why They Matter', CSET 2020: TSMC "
+                                   "5 nm wafer ~ $16,988 (estimate; cited)",
+    wafer_d_mm=300.0, edge_exclusion_mm=3.0,           # ASSUMED edge exclusion
+    d0_per_cm2=0.10, d0_basis="TSMC 2020 Technology Symposium: N5 D0 ~0.10-0.11 /cm2 at the HVM ramp, < 0.1 after "
+                              "(reported by AnandTech / Tom's Hardware); cited",
+    alpha=3.0, alpha_basis="ASSUMED negative-binomial clustering (Stapper); no harvesting or redundancy on any design",
+    package_usd=dict(cowos_l_2die=1100.0, cowos_s_1die=750.0),
+    package_basis="Raymond James via Silicon Analysts: CoWoS-S ~$750 (H100: 814 mm2 + 5-6 HBM stacks, ~2,500 mm2 "
+                  "interposer), CoWoS-L ~$1,100 (B200); cited analyst estimates",
+    test_assembly_usd=920.0, test_basis="Raymond James (H100 test and assembly ~$920 a package); cited analyst estimate",
+    hbm_stack_usd=COST["hbm_stack_usd"], hbm_basis="economics section (ASSUMED $360 a 24 GB stack; RJ's H100 80 GB "
+                                                   "HBM3 at ~$1,350 is ~$17/GB)",
+    mask_sets=dict(v41_rom_bases=MASK["v41_base_designs"], hbm_die=1, qwen_rom_bases=MASK["qwen_base_designs"]),
+    mask_basis="via-programmable ROM (adopted): base sets x $15M + 1 x $0.5M (low) .. 2 x $1M (high) coding masks per "
+               "ROM die; every HBM comparator die design also pays one full set; / 1,000 production units",
+)
+
+
+def die_cost(area_mm2):
+    r = FAB["wafer_d_mm"] / 2 - FAB["edge_exclusion_mm"]
+    dpw = math.pi * r * r / area_mm2 - math.pi * 2 * r / math.sqrt(2 * area_mm2)
+    y = (1 + area_mm2 / 100 * FAB["d0_per_cm2"] / FAB["alpha"]) ** (-FAB["alpha"])
+    return dict(area_mm2=round(area_mm2, 1), dies_per_wafer=round(dpw, 1), yield_=round(y, 4),
+                usd=round(FAB["wafer_usd"] / (dpw * y), 1))
+
+
+def mfg_cost(dies, packages, stacks, rom_dies=0, rom_bases=0, hbm_designs=0):
+    """dies: [(count, mm2)]; packages: [(count, class)].  Returns low/high capex per system (NRE amortised)."""
+    si = sum(n * die_cost(a)["usd"] for n, a in dies)
+    pk = sum(n * (FAB["package_usd"][c] + FAB["test_assembly_usd"]) for n, c in packages)
+    st = stacks * FAB["hbm_stack_usd"]
+    base = (rom_bases + hbm_designs) * MASK["full_set_usd"]
+    nre_lo = base + rom_dies * MASK["coding_masks_per_die"][0] * MASK["single_mask_usd"][0]
+    nre_hi = base + rom_dies * MASK["coding_masks_per_die"][1] * MASK["single_mask_usd"][1]
+    u = COST["production_units"]
+    hw = si + pk + st
+    return dict(silicon_usd=round(si), package_usd=round(pk), hbm_usd=round(st), hardware_usd=round(hw),
+                nre_usd=dict(low=nre_lo, high=nre_hi), capex_usd=dict(low=round(hw + nre_lo / u), high=round(hw + nre_hi / u)),
+                silicon_mm2=round(sum(n * a for n, a in dies), 1))
+
+
+# ---- HBM dies right-sized to their PHY shoreline ----
+HBM_SHORE = dict(
+    phy_edge_mm=8.5, phy_edge_basis="root 2026-09-30: NVIDIA H200 = the GH100 die (~814 mm2) with six HBM3e stacks, "
+                                    "three per long edge (H100: the same 6 sites, 5 active); ~8-9 mm of edge per "
+                                    "HBM3E PHY = GH100 long edge / 3 (Tom's Hardware, 'Nvidia H200 GPU announced'; "
+                                    "NVIDIA H200 materials).  The repository's 12 mm is a placeholder (sensitivity)",
+    phy_mm2=10.0, phy_basis="technology.json hbm.hbm3e phy_area_mm2_per_stack 10 (assumed, 8-15): depth = 10 / edge",
+    service_band_mm=0.63072, service_basis="results/floorplan/hbm_gpu svc_south / svc_north band height",
+    corner_mm=1.0, corner_basis="ASSUMED corner keep-out per long edge end",
+    demonstrated_stacks_per_die=6,
+    demonstrated_note="6 stacks on one die demonstrated (GH100/H200, 3 per long edge); 8 on one die is not (B200 "
+                      "splits 8 across 2 dies); more than 6 is marked not demonstrated",
+    reticle_mm=(26.0, 33.0),
+    route_factor_basis="the placed SM array's block over its tiles (hbm_gpu floorplan: 13,990 x 12,649 um over "
+                       "32 x 4.861 mm2 = 1.138)",
+)
+
+
+def right_size_hbm_die(model, stacks, phy_edge_mm=None, overhead=None):
+    """Smallest die that holds `stacks` HBM3E PHYs on its long edges (ceil(stacks/2) a side) and the logic of the
+    model's SM element array sized to them (8 SMs a stack, W13's rule), plus L2, hub, IO and the overhead reserve."""
+    dv = hbm_gpu_design(model)
+    fp = json.loads((ROOT / f"results/floorplan/hbm_gpu/{model}_hbm_die.json").read_text())
+    tile = fp["sm_tile"]["w"] * fp["sm_tile"]["h"] / 1e6
+    route = 13990.320000000002 * 12648.960000000001 / 1e6 / (32 * 1652.4 * 2941.92 / 1e6)
+    n_sm = 8 * stacks
+    l2 = dv["l2"]["mm2"] * stacks / 4 + 0.0
+    hub = dv.get("dedicated_units_footprint_mm2", 0.0)
+    io = 10.0 + (18.0 if model == "v41" else 0.0)     # host/UCIe 10 mm2 ledger; V4.1 fabric SerDes 18 mm2 (floorplan)
+    logic = n_sm * tile * route + l2 + hub + io
+    e = HBM_SHORE["phy_edge_mm"] if phy_edge_mm is None else phy_edge_mm
+    o = CONS["overhead"] if overhead is None else overhead
+    k = math.ceil(stacks / 2)
+    W = k * e + 2 * HBM_SHORE["corner_mm"]
+    depth = HBM_SHORE["phy_mm2"] / e
+    bands = 2 * W * (depth + HBM_SHORE["service_band_mm"])
+    area = (logic + bands) / (1 - o)
+    H = area / W
+    fits_reticle = (max(W, H) <= HBM_SHORE["reticle_mm"][1] and min(W, H) <= HBM_SHORE["reticle_mm"][0])
+    return dict(model=model, stacks=stacks, sm_count=n_sm, logic_mm2=round(logic, 1), shoreline_mm=round(W, 2),
+                die_w_mm=round(W, 2), die_h_mm=round(H, 2), die_mm2=round(area, 1), fits_reticle=fits_reticle,
+                demonstrated=stacks <= HBM_SHORE["demonstrated_stacks_per_die"],
+                package=("1 die + %d stacks (CoWoS-S, H100/H200 class)" % stacks if stacks == 6 else
+                         "2 dies + 8 stacks (CoWoS-L, B200 class)" if stacks == 4 else "not demonstrated"),
+                floorplan_815_logic_used_mm2=round(sum(fp["area_used"].values()), 1))
+
+
+# ---- the V4.1 HBM comparator at N dies (TP-N) ----
+_HBM_CHAIN_CACHE = {}
+
+
+def _hbm_chain_n(N, n_sm, positions=1):
+    """v41_hbm_chain at TP-N with n_sm SMs a die (group-slot).  Equal to v41_hbm_chain at N = 96, n_sm = 32."""
+    key = (N, n_sm, positions, _CONS_CTX)
+    if key not in _HBM_CHAIN_CACHE:
+        _HBM_CHAIN_CACHE[key] = _hbm_chain_n_uncached(N, n_sm, positions)
+    return dict(_HBM_CHAIN_CACHE[key])
+
+
+def _hbm_chain_n_uncached(N, n_sm, positions):
+    d = hbm_gpu_design("v41")
+    clock = d["clock_hz"]
+    arch, b = arch_graph(_CONS_CTX)
+    g = b.g
+    path = g.path(b.sink)
+    mv = other = extra = xfill = 0.0
+    for x in path:
+        nd = g.nodes[x]
+        t = sum(g.contrib[x].values())
+        k = node_key(x) if nd["kind"] == "matvec" else ""
+        if nd["kind"] == "matvec" and k and k != "hc.fn":
+            rows = nd["sweep"]["macs"] / NODE_K[k] / N
+            mv += sm_op_cycles(rows, NODE_K[k], NODE_FMT[k], d["drain_cycles"], True, n_sm) / clock
+            xfill += math.ceil(NODE_K[k] * positions * 2 / X_BCAST_BPC) / clock
+        elif nd["kind"] in ("collective", "hop"):
+            continue
+        else:
+            other += t
+            if positions > 1:
+                extra += (positions - 1) * nd.get("issue", 0.0)
+    nb = v41_boundaries(path, g.nodes)
+    parts = dict(sm_matvec=mv * 1e6, x_broadcast_fill=xfill * 1e6, dedicated_and_su=other * 1e6,
+                 verify_extra_issue=extra * 1e6, barrier=nb * d["barrier"]["boundary_cycles"] / clock * 1e6,
+                 **V41_HBM_FABRIC_US)
+    parts["collective_bytes"] *= positions
+    return parts
+
+
+def _v41_state_user():
+    c = A._env()["c"]
+    s = 0.0
+    for L in range(c["num_layers"]):
+        r = c["compress_ratios"][L]
+        if L in c["kv_source_layer_ids"] and r:
+            s += 1048576 // r * (A.CKV_ROW_B + A.IDX_KEY_B)
+        s += c["window_tokens"] * A.WIN_ROW_B
+    return s
+
+
+_HBM_N_CACHE = {}
+
+
+def hbm_ss_wire_delta(stacks):
+    """The V4.1 HBM die's barrier / x-broadcast / TP-root crossings at W15's SS reach (504 um), on the right-sized die
+    (the 815 mm2 floorplan's distances scaled by the linear size ratio), against the floorplan's TT stage counts."""
+    fp = json.loads((ROOT / "results/floorplan/hbm_gpu/v41_hbm_die.json").read_text())
+    k = math.sqrt(right_size_hbm_die("v41", stacks)["die_mm2"] / 815.0)
+    X = {c["name"]: c for c in fp["crossings"]}
+    r = SS_REACH_UM[1.2e9]
+
+    def st(name):
+        return math.ceil(X[name]["distance_um"] * k / r)
+    one_way = st("barrier_leaf") + st("barrier_trunk")
+    old_one = X["barrier_leaf"]["cycles_one_way"] + X["barrier_trunk"]["cycles_one_way"]
+    bnd = 2 * (one_way - old_one) + (st("x_broadcast_root_to_sm") - X["x_broadcast_root_to_sm"]["cycles_one_way"])
+    coll = 2 * max(0, st("tp_root_to_ucie") - X["tp_root_to_ucie"]["cycles_one_way"])
+    return dict(scale=round(k, 3), boundary_extra_cycles=bnd, collective_extra_cycles=coll,
+                collectives=round(V41_HBM_FABRIC_US["collective_latency"] / 0.668))
+
+
+def v41_hbm_n(N, stacks, ec, gated_rows, replicas=1, clock_hz=None):
+    key = (N, stacks, replicas, id(ec), clock_hz, _CONS_CTX)
+    if key not in _HBM_N_CACHE:
+        _HBM_N_CACHE[key] = _v41_hbm_n(N, stacks, ec, gated_rows, replicas, clock_hz)
+    return copy.deepcopy(_HBM_N_CACHE[key])
+
+
+def _v41_hbm_n(N, stacks, ec, gated_rows, replicas=1, clock_hz=None):
+    """V4.1 HBM comparator: `replicas` TP-N groups of dies with `stacks` HBM3E each (8 SMs a stack), 1M.  Per user
+    (AR, MTP), the saturated aggregate (column passes, v41_hbm_economics' rule), capacity (every die holds 1/N of
+    every layer's KV: TP-N), energy with the 96-die design's gated/ungated static ratio, power, area, cost."""
+    dv = hbm_gpu_design("v41")
+    cols = dv["element"]["cols"]
+    n_sm = 8 * stacks
+    sweep1 = 37.4 * (V41_HBM_DIES * 4) / (N * stacks)
+    w1 = _v41_weight_bytes(1)
+    sweep = lambda toks: sweep1 * _v41_weight_bytes(toks) / w1   # noqa: E731
+    cache = {}
+
+    ck = (dv["clock_hz"] / clock_hz) if clock_hz else 1.0   # cycle-counted terms at another clock (the fabric and
+                                                             # the HBM weight sweep keep their seconds)
+    bwire = hbm_ss_wire_delta(stacks) if clock_hz else None
+
+    def chain(P):
+        if P not in cache:
+            c = _hbm_chain_n(N, n_sm, P)
+            for k_ in ("sm_matvec", "x_broadcast_fill", "dedicated_and_su", "verify_extra_issue", "barrier"):
+                c[k_] *= ck
+            if bwire:          # W15 SS reach on the right-sized die: every boundary and collective grows
+                bc = dv["barrier"]["boundary_cycles"]
+                c["barrier"] *= (bc + bwire["boundary_extra_cycles"]) / bc
+                c["collective_latency"] += bwire["collectives"] * bwire["collective_extra_cycles"] / clock_hz * 1e6
+            cache[P] = c
+        return cache[P]
+    issue1 = chain(2)["verify_extra_issue"]
+
+    def T(P, toks):
+        return max(sum(chain(P).values()), sweep(toks))
+
+    def occ(P, toks):
+        p = chain(P)
+        return max(p["sm_matvec"] + p["x_broadcast_fill"] + p["barrier"], P * issue1, sweep(toks))
+    tot, *_ = _v41_weight_split()
+    per_user_hbm = tot["bytes"]["kv_hbm"] + tot["bytes"]["idx"]
+    macs_j = _v41_system_macs_j()
+    coll_b = tot["collective_bytes"]
+    units_j = ec["v41_rom"]["energy"]["categories_mJ_per_token"]["units"] * 1e-3
+    W = _V41_CFG["checkpoint_bytes"]
+    cap = int((N * stacks * HBM_STACK_B * HBM_CAP_EFF - W) // _v41_state_user())
+    rack = json.loads((ROOT / "results/arch/v41_rack.json").read_text())["power"]["per_die"]["static_w"]
+    sa = dv["sm_area"]
+    st1 = _static_w(n_sm * sa["logic_mm2"] + dv["dedicated_units_footprint_mm2"] * GPU_LOGIC_UTIL + 10.0 * stacks, 0.0,
+                    n_sm * sa["sram_mm2"] + dv["l2"]["mm2"] * stacks / 4, clock_hz or dv["clock_hz"], stacks)
+    st1["links"] = rack["serdes_always_on"] + rack["ucie_idle"]
+    P_static = replicas * N * sum(st1.values())
+    gr = {(r["design"], r["point"]): r for r in gated_rows}
+
+    def ratio(mode, point):
+        r = gr[(f"V4.1 HBM tier 3 {mode}", point)]
+        return r["clock_and_power_gated_static_w"] / r["ungated_static_w"]
+
+    def energy(B, P, draft_frac):
+        toks = B * P
+        per = max(1, cols // P)
+        passes = math.ceil(B / per)
+        wb = passes * _v41_weight_bytes(min(B, per) * P)
+        kvp = tot["bytes"]["kv_hbm"] * (P if MTP_KV_PER_POSITION else 1) + tot["bytes"]["idx"]
+        e = (toks * macs_j + (wb + B * kvp) * E_HBM_B + wb * 2 * E_SRAM_B + toks * units_j
+             + toks * coll_b * 8 * E_LINK["board"] * 2)
+        return e * (1 + draft_frac)
+    out = {}
+    for mode, P, tau, df in (("AR", 1, 1.0, 0.0), ("MTP", V41_POSITIONS, V41_TAU, V41_DRAFT_FRACTION)):
+        per = max(1, cols // P)
+        Td = df * T(1, 1)
+        best = None
+        rows = []
+        for B in sorted(set([b for b in ECON_BATCHES if b <= max(1, cap)] + [max(1, cap)])):
+            t = (T(B * P, B * P) + Td if B <= per else
+                 max(T(per * P, per * P) + Td, math.ceil(B / per) * (occ(per * P, per * P) + Td))) * 1e-6
+            pu = tau / t
+            e_dyn = energy(B, P, df) / (B * tau)
+            rows.append(dict(batch=B, per_user=pu, agg=replicas * B * pu, t=t, e_dyn=e_dyn))
+        b1 = rows[0]
+        best = max(rows, key=lambda r: r["agg"])
+        pts = {}
+        for point, r in (("batch1", b1), ("saturated", best)):
+            agg = r["agg"] if point == "saturated" else r["per_user"]
+            stat = P_static              # the whole system is powered, for a lone user too
+            g_ = ratio(mode, point)
+            pts[point] = dict(batch=r["batch"] * (replicas if point == "saturated" else 1),
+                              per_user_tokens_s=round(r["per_user"], 1), aggregate_tokens_s=round(agg, 1),
+                              ungated_mJ=round((r["e_dyn"] + stat / agg) * 1e3, 2),
+                              gated_mJ=round((r["e_dyn"] + g_ * stat / agg) * 1e3, 2),
+                              gated_system_w=round(g_ * stat + r["e_dyn"] * agg, 0))
+        out[mode] = pts
+    die = right_size_hbm_die("v41", stacks)
+    per_pkg = 1 if stacks == 6 else 2
+    n_d = replicas * N
+    cost = mfg_cost([(n_d, die["die_mm2"])],
+                    [(math.ceil(n_d / per_pkg), "cowos_s_1die" if per_pkg == 1 else "cowos_l_2die")],
+                    n_d * stacks, hbm_designs=1)
+    return dict(dies=n_d, tp=N, replicas=replicas, stacks_per_die=stacks, sm_per_die=n_sm, capacity_users_1m=cap * replicas,
+                capacity_users_per_group=cap, feasible=cap >= 1, weight_sweep_us=round(sweep1, 1),
+                chain_us_ar=round(sum(chain(1).values()), 1), die_mm2=die["die_mm2"],
+                silicon_mm2=round(n_d * die["die_mm2"], 1), static_w_ungated=round(P_static, 1),
+                ar=out["AR"], mtp=out["MTP"], cost=cost)
+
+
+# ---- the study ----
+def consolidation(ec=None, lv=None):
+    ec = ec or economics()
+    lv = lv or economics_levers(ec)
+    gr = lv["gated_alike"]["rows"]
+    # 1. V4.1 ROM: die counts per density basis and overhead
+    counts = []
+    for bf in BF16_MODES + ("hub_unit",):
+        for pitch in CONS_PITCH:
+            for dens in ("analytical", "asap7", "roma"):
+                for o in (CONS["overhead_band"][0], CONS["overhead"], CONS["overhead_band"][1]):
+                    for credit in CONS_CREDIT:
+                        S = cons_min_stages(dens, o, credit, "w10_refit", pitch, bf)
+                        t = cons_table_dies(dens, o)
+                        h = cons_head_dies(dens, o, credit, "w10_refit", pitch)
+                        u = cons_field_usable_mm2(o, credit)
+                        counts.append(dict(bf16=bf, pitch=pitch, density=dens, overhead=o, sliver_credit=credit,
+                                           stages=S, layer_dies=4 * S, head_dies=h, table_dies=t["dies"],
+                                           dies=4 * S + h + t["dies"], field_usable_mm2=round(u, 1),
+                                           field_need_mm2_at_28=round(cons_field_need_mm2(28, dens, pitch, bf), 1),
+                                           margin_at_28_mm2=round(u - cons_field_need_mm2(28, dens, pitch, bf), 2),
+                                           table_bytes_per_die_GB=round(t["bytes_per_die"] / 1e9, 2)))
+    C = {(r["bf16"], r["pitch"], r["density"], r["overhead"], r["sliver_credit"]): r for r in counts}
+    PB = ("standard_pair", "w10_budget", "analytical", CONS["overhead"], "ring")      # the product basis (root)
+    base = C[PB]
+    stage_table = []
+    for bf in BF16_MODES:
+        for pitch in CONS_PITCH:
+            for o in (CONS["overhead_band"][0], CONS["overhead"], CONS["overhead_band"][1]):
+                for credit in CONS_CREDIT:
+                    row = dict(bf16=bf, pitch=pitch, overhead=o, credit=credit)
+                    for dens in ("analytical", "asap7", "roma"):
+                        c = C[(bf, pitch, dens, o, credit)]
+                        row[dens] = dict(stages=c["stages"], layer_dies=c["layer_dies"], head_dies=c["head_dies"],
+                                         table_dies=c["table_dies"], margin_at_28_mm2=c["margin_at_28_mm2"])
+                    stage_table.append(row)
+    legal_phy = [dict(pitch=pitch, overhead=CONS["overhead"], credit=cr, bf16="standard_pair",
+                      analytical_stages=cons_min_stages("analytical", CONS["overhead"], cr, "w18_legal_phy", pitch))
+                 for pitch in CONS_PITCH for cr in CONS_CREDIT]
+    # table-die ROM leakage follows the ROM area at each density (the rack's leakage is the analytical area)
+    leak = dict(analytical=1.0, roma=DENSITY["roma"]["mm2_per_B"] / CONS_A_ANALYTICAL,
+                asap7=CONS_TABLE_MACRO_MM2 / CONS_TABLE_MACRO_B / CONS_A_ANALYTICAL)
+    pcache = {}
+
+    def price(tag, S, h, t, dens, bf, clock=None, **meta):
+        key = (S, h, t, leak[dens], bf if bf != "hub_unit" else "columns", clock)
+        if key not in pcache:
+            pcache[key] = cons_v41_rom(S, h, t, leak[dens], None, key[4], clock)
+        pt = copy.deepcopy(pcache[key])
+        pt.update(label=tag, density=dens, bf16_mode=bf, **meta)
+        return pt
+    t_a = C[PB]["table_dies"]
+    points = [price("as placed (188 dies, BF16 columns in the model's timing, TT)", 28, 4, 72, "analytical", "columns",
+                    role="reference")]
+    # root's BF16 lever at the product basis (TT): (a) BF16 columns, (b) two-pass BF16 on the standard pair, (c) hub
+    for bf in ("columns", "standard_pair", "hub_unit"):
+        c = C[(bf,) + PB[1:]]
+        points.append(price(f"BF16 lever: {bf}", c["stages"], c["head_dies"], c["table_dies"], "analytical", bf,
+                            role="bf16_lever"))
+    # 28 against 34 stages (TT, standard pair): more hand-offs against shallower stages
+    for S in (28, 34):
+        points.append(price(f"{S} stages (stage-count comparison)", S, 4, t_a, "analytical", "standard_pair",
+                            role="stage_count"))
+    # density sensitivities at the product basis (TT)
+    for dens in ("asap7", "roma"):
+        c = C[("standard_pair", "w10_budget", dens, CONS["overhead"], "ring")]
+        points.append(price(f"density {dens}", c["stages"], c["head_dies"], c["table_dies"], dens, "standard_pair",
+                            role="density"))
+    # USER DECISION: sign-off at SS.  Macro depth x clock: logic derated SS/TT = 1.27 (no logic block has an SS
+    # closure), and the upper bound where the logic is re-closed at the macro's SS clock
+    tt = A._env()["clock"]
+    ss_logic = tt / SS_DERATE
+    ss_rows = []
+    for depth, dv in ROM_DEPTH_OPTS.items():
+        S = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", "w10_budget", "standard_pair", depth)
+        h = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", "w10_budget", depth)
+        for mode, hz in (("(i) ROM-limited SS clock, logic ASSUMED re-hardened at WC to meet it", dv["ss_ghz"] * 1e9),
+                         ("(ii) TT-closed logic derated 1.43x (MEASURED: W13 tc16 re-timed at SS, 759 MHz)",
+                          min(dv["ss_ghz"] * 1e9, tt / SS_DERATE_MEASURED)),
+                         ("(iii) TT-closed logic derated 1.27x (the ROM macro's ratio)",
+                          min(dv["ss_ghz"] * 1e9, ss_logic))):
+            binds = ("the ROM macro (%s SS single-cycle %.3f GHz)" % (depth, dv["ss_ghz"]) if hz >= dv["ss_ghz"] * 1e9 - 1
+                     else "the TT-closed logic, derated: the model clock's slowest routed block %s (%.4f GHz TT)"
+                     % (min(A._env()["clock_rows"], key=lambda r: r["fmax_hz"])["block"], tt / 1e9))
+            pt = price(f"SS {depth}, {mode}", S, h, t_a, "analytical", "standard_pair", clock=hz, role="ss",
+                       depth=depth, clock_mode=mode, macro_ss_ghz=dv["ss_ghz"], clock_binds=binds)
+            points.append(pt)
+            ss_rows.append(pt)
+    # USER DECISION (AGENTS.md e7479589): the V4.1 product basis is 4096m8, 2 macros a slot, at 1.2 GHz SS, BF16 on
+    # the standard pair; W18's 50% field-concurrency cap adopted; dynamic energy +16% at 1.2 GHz (root, ASSUMED);
+    # the latency inventory folds in as it lands (W11 hub estimates so far)
+    # USER DECISION 2026-09-30: BF16 option (iii) at W10's measured 574 x 126.9 um tile (max per-user rate)
+    # USER DECISION 2026-09-30 (final): maximum per-user rate, die count free -> BF16 COLUMNS are the product: on the
+    # full-token basis they beat (iii) and (ii) (the busiest-die op cycles favoured (iii), but its +20.7% pair pitch
+    # adds stages, i.e. hops, and its BF16 issue floors sit above the columns' full-width BF16 lanes)
+    Sp = cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, PRODUCT_PITCH, "columns", "4096m8")
+    # the W10b tiles alone (the 815 mm2 field with the ledger hub): 39 stages; with the C_rotate block: Sp; with the
+    # VM-H block (reference row): Sh
+    Sp_w10b = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", PRODUCT_PITCH, "columns", "4096m8")
+    Sh = cons_min_stages("analytical", CONS["overhead"], "ring", VMH_REF_GEOM, PRODUCT_PITCH, "columns", "4096m8")
+    hh = cons_head_dies("analytical", CONS["overhead"], "ring", VMH_REF_GEOM, PRODUCT_PITCH, "8192m8")
+    # the named steps before the W10b tile re-fit run at the previous q pitch (W10 476 x 126.9 um)
+    Sp_prev = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8")
+    hp_prev = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "8192m8")
+    # ROOT 2026-09-30: the head group on 8192m8 WITH ping-pong (2 macros a slot, alternate reads, 2-cycle macro path:
+    # 1,667 ps against 8192m8's SS clk->q 1,004 + 25 + 60 ps) fits 4 dies -- 0.4% margin at the storage-only density,
+    # 13.3% at W18's floorplan (claude/w18-die-assembly 4ed60cbb head_table_fit.json): CONFIRMED at floorplan level
+    hp = cons_head_dies("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, PRODUCT_PITCH, "8192m8")
+    # W10b (2026-10-01): the wider q pair (510.84 um) takes the head group's storage-only need from 99.6% to 105.2% of
+    # one TP-4 group, so the model's rule gives 8 head dies.  W18's floorplan margin (13.3% at the 476 um pair) scaled
+    # by the same need ratio is ~8% -- an ESTIMATE, not a floorplan; the product follows the model's rule until W18b
+    # re-fits the head group at the W10b tile (root to rule)
+    r_prev, r_new = cons_head_need_ratio("w10_q_1p2"), cons_head_need_ratio(PRODUCT_PITCH, geom=PRODUCT_GEOM)
+    head_fit = dict(dies=hp, depth="8192m8 ping-pong", margin_storage_only=round(1 - r_new, 4),
+                    margin_storage_only_w10_q=round(1 - r_prev, 4), margin_w18_floorplan_w10_q=0.133,
+                    margin_w18_floorplan_scaled_estimate=round(1 - (1 - 0.133) * r_new / r_prev, 3),
+                    dies_at_w10_q=hp_prev,
+                    on_4096m8=cons_head_dies("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, PRODUCT_PITCH, "4096m8"),
+                    stages_w10b_tiles_only=Sp_w10b, stages_vmh_reference=Sh, hub_block=PRODUCT_HUB,
+                    status=(f"{hp} dies on the model's storage-only rule at the W10b tile (need {r_new:.1%} of one "
+                            f"TP-4 group; {hp_prev} at W10's 476 um pair, CONFIRMED at floorplan level by W18 "
+                            f"4ed60cbb).  W18's 13.3% floorplan margin scaled by the need ratio is ~"
+                            f"{1 - (1 - 0.133) * r_new / r_prev:.1%} (ESTIMATE): 4 head dies would likely hold at "
+                            "floorplan level -- pending a W18b head re-fit at the W10b tile and a root ruling"),
+                    table_dies_asap7_floorplan=dict(dies=20, src="W18 4ed60cbb head_table_fit.json (ASAP7 geometry "
+                                                                 "feasibility row); the product stays 36 (storage-only)"))
+    bf16_ref = {k: cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, pt, bfm, "4096m8")
+                for k, pt, bfm in (("option_ii cap 3 (reference)", PRODUCT_PITCH, "option_ii"),
+                                   ("option_iii BF16_PAIR (reference)", "w10_iii_1p2", "option_iii"),
+                                   ("columns (product)", PRODUCT_PITCH, "columns"))}
+    bf16_full_token = {}
+    for k, pt_, bfm in (("option_ii cap 3", PRODUCT_PITCH, "option_ii"), ("option_iii", "w10_iii_1p2", "option_iii")):
+        S_ = cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, pt_, bfm, "4096m8")
+        q_ = cons_v41_rom(S_, 4, cons_table_dies("analytical")["dies"], 1.0, None, bfm, PRODUCT_CLOCK_HZ,
+                          FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), PRODUCT_DYN_SCALE, (0.9e9, "w18"),
+                          None, 7, True, PRODUCT_SERIAL, DIE_SHRUNK_INTERIM, VMC, PRODUCT_HUB)
+        bf16_full_token[k] = dict(stages=S_, dies=q_["dies"], ar=q_["ar_tokens_s_b1"], mtp=q_["mtp_tokens_s_b1"],
+                                  saturated=q_["ar_saturated_tokens_s"], pipeline_hops_us=q_["pipeline_hops_us"])
+    prod = {}
+    for tag, fc, lat, cs, es in (("ideal depths, no concurrency cap", 1.0, SOFTPLUS_FIX, None, None),
+                                 ("50% field-concurrency cap (W18, adopted)", FIELD_CONCURRENCY, SOFTPLUS_FIX, None, None),
+                                 ("cap + W11 hub latency inventory (estimates)", FIELD_CONCURRENCY,
+                                  dict(W11_LATENCY_SS_1P2, **SOFTPLUS_FIX), None, None),
+                                 ("cap + measured FP32 add: chain and element adds 8 stages", FIELD_CONCURRENCY,
+                                  SOFTPLUS_FIX, 8, 8),
+                                 ("ADOPTED (AGENTS.md c0894b1c): cap + 1.2 GHz streaming domain (LAT-7 adds, W11: "
+                                  "1,208 MHz SS) + 0.9 GHz chain domain (LAT 3), W18 ratio-FIFO CDC",
+                                  FIELD_CONCURRENCY, SOFTPLUS_FIX, None, 7),  # CDC per W18 (4 slow / 5 fast)
+                                 ("ADOPTED + W15 SS wire reach (504 um) + W11 LAT-4 serial mul", FIELD_CONCURRENCY,
+                                  SOFTPLUS_FIX, None, 7),
+                                 (SERIAL_TAG, FIELD_CONCURRENCY, SOFTPLUS_FIX, None, 7),
+                                 (SHRINK_TAG, FIELD_CONCURRENCY, SOFTPLUS_FIX, None, 7),
+                                 (STREAM_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
+                                 (VMH_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
+                                 (VMH_REF_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
+                                 (PRODUCT_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7)):
+        fin = tag == PRODUCT_TAG
+        S_, h_, vm_, blk_ = ((Sp, hp, VMC, PRODUCT_HUB) if fin else (Sh, hh, VMH, VMH_BLOCK) if tag == VMH_REF_TAG
+                             else (Sp_prev, hp_prev, VMH if "VM-H" in tag else None, None))
+        pt = cons_v41_rom(S_, h_, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ,
+                          fc, lat, PRODUCT_DYN_SCALE,
+                          (0.9e9, "w18") if tag.startswith("ADOPTED") else None, cs, es, "SS wire" in tag,
+                          PRODUCT_SERIAL if "MEASURED serial" in tag else None,
+                          DIE_SHRUNK_INTERIM if "shrunk-die" in tag else None, vm_, blk_)
+        pt["vm_option"] = (blk_ or {}).get("option") or ("H_rtl" if vm_ is VMH else None)
+        pt["product_final"] = tag == PRODUCT_TAG
+        pt.update(label=f"PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: {tag}", density="analytical",
+                  bf16_mode="columns", role="product", depth="4096m8", bf16_stage_reference=bf16_ref)
+        prod[tag] = pt
+        points.append(pt)
+    # the SS-clock curve (root 2026-09-30): tok/s against the logic's SS clock, capped at each macro's SS limit, so
+    # the depth can be read off when the WC-hardened blocks report their SS fmax
+    ss_curve = []
+    for depth, dv in ROM_DEPTH_OPTS.items():
+        S = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", "w10_budget", "standard_pair", depth)
+        h = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", "w10_budget", depth)
+        for f in SS_CURVE_GHZ:
+            hz = min(f, dv["ss_ghz"]) * 1e9
+            pt = price(f"curve {depth} logic {f:.2f} GHz", S, h, t_a, "analytical", "standard_pair", clock=hz)
+            ss_curve.append(dict(depth=depth, logic_ss_ghz=f, clock_ghz=round(hz / 1e9, 4),
+                                 capped_by_macro=f > dv["ss_ghz"], stages=S, dies=pt["dies"],
+                                 ar_tokens_s_b1=pt["ar_tokens_s_b1"], mtp_tokens_s_b1=pt["mtp_tokens_s_b1"],
+                                 ar_saturated_tokens_s=pt["ar_saturated_tokens_s"],
+                                 gated_mJ_b1=pt["energy"]["ar_b1"]["gated_mJ"],
+                                 gated_mJ_saturated=pt["energy"]["ar_sat"]["gated_mJ"]))
+    for pt in points:
+        rate = dict(ar_saturated=pt["ar_saturated_tokens_s"], mtp_saturated=pt["mtp_saturated_tokens_s"] * V41_POSITIONS / V41_TAU)
+        pt["engram"] = cons_engram_path(pt["table_dies"], rate)
+        pt["cost"] = mfg_cost([(pt["dies"], FLOORPLAN["die_mm2"])],
+                              [((pt["layer_dies"] + pt["head_dies"]) // 2, "cowos_l_2die"), (pt["table_dies"] // 2, "cowos_l_2die")],
+                              pt["hbm_stacks"], rom_dies=pt["dies"], rom_bases=FAB["mask_sets"]["v41_rom_bases"])
+        pt["cost_iso_package_usd"] = pt["packages"] * COST["package_usd"]
+        pt["silicon_mm2"] = pt["dies"] * FLOORPLAN["die_mm2"]
+    # the comparison-rule reference: the product basis at TT (PROVISIONAL: the product die count is open until the
+    # closed pair's pitch lands, root 2026-09-30)
+    head = prod[PRODUCT_TAG]   # final: SS wires and W11's measured serial build in
+    die_shrink = dict(DIE_SHRINK, interim=DIE_SHRUNK_INTERIM, role="ruling",
+                      note="the product row carries W18b's interim shrunk-die crossings (996f7982); the sqrt(area) "
+                           "sensitivity of 9bde5a55 is superseded; die area, cost and power re-price on the p12 floorplan")
+    # 2. HBM dies right-sized; the V4.1 HBM sweep; Qwen HBM
+    dies = {f"{m}_{s}": right_size_hbm_die(m, s) for m in ("qwen", "v41") for s in (4, 6)}
+    dies["v41_4_phy12mm"] = right_size_hbm_die("v41", 4, 12.0)
+    dies["qwen_6_phy12mm"] = right_size_hbm_die("qwen", 6, 12.0)
+    minN = {s: math.ceil(_V41_CFG["checkpoint_bytes"] / (s * HBM_STACK_B * HBM_CAP_EFF)) for s in (4, 6)}
+    sweep = []
+    for s in (4, 6):
+        Ns = sorted(set([minN[s], minN[s] + 1, 8, 10, 12, 16, 20, 24, 32, 48, 64, 96]))
+        for N in Ns:
+            if N < minN[s]:
+                continue
+            r = v41_hbm_n(N, s, ec, gr, clock_hz=PRODUCT_CLOCK_HZ)
+            r["capacity_minimum"] = N == minN[s]
+            sweep.append(r)
+    users_866 = {}
+    for s in (4, 6):
+        N = minN[s]
+        while v41_hbm_n(N, s, ec, gr, clock_hz=PRODUCT_CLOCK_HZ)["capacity_users_1m"] < head["capacity_users_1m"]:
+            N += 1
+        users_866[s] = N
+    for s in (4, 6):
+        if not any(r["tp"] == users_866[s] and r["stacks_per_die"] == s for r in sweep):
+            r = v41_hbm_n(users_866[s], s, ec, gr, clock_hz=PRODUCT_CLOCK_HZ)
+            r["capacity_minimum"] = False
+            sweep.append(r)
+    sweep.sort(key=lambda r: (r["stacks_per_die"], r["dies"]))
+    # 3. the comparison rule: equal area, equal cost, equal power against the consolidated ROM array
+    def budget_N(s, key, target):
+        best = None
+        for N in range(minN[s], 97):
+            r = v41_hbm_n(N, s, ec, gr, clock_hz=PRODUCT_CLOCK_HZ) if key != "area" else None
+            val = (N * right_size_hbm_die("v41", s)["die_mm2"] if key == "area" else
+                   r["cost"]["capex_usd"]["low"] if key == "cost" else r["ar"]["saturated"]["gated_system_w"])
+            if val <= target:
+                best = N
+            elif key == "area":
+                break
+        return best
+    rule = []
+    tgt = dict(area=head["silicon_mm2"], cost=head["cost"]["capex_usd"]["low"],
+               power=head["energy"]["ar_sat"]["gated_system_w"])
+    for key in ("area", "cost", "power"):
+        for s in (4, 6):
+            per_die = right_size_hbm_die("v41", s)["die_mm2"]
+            if key == "area" and tgt["area"] >= 96 * per_die:
+                N, rep = 96, int(tgt["area"] // (96 * per_die))
+            else:
+                N, rep = budget_N(s, key, tgt[key]), 1
+                if key != "area" and N == 96:
+                    r96 = v41_hbm_n(96, s, ec, gr, clock_hz=PRODUCT_CLOCK_HZ)
+                    unit = r96["cost"]["capex_usd"]["low"] if key == "cost" else r96["ar"]["saturated"]["gated_system_w"]
+                    rep = max(1, int(tgt[key] // unit))
+            if N is None:
+                rule.append(dict(rule=f"equal {key}", stacks_per_die=s, feasible=False, target=tgt[key]))
+                continue
+            r = v41_hbm_n(N, s, ec, gr, replicas=rep, clock_hz=PRODUCT_CLOCK_HZ)
+            rule.append(dict(rule=f"equal {key}", target=tgt[key], **r))
+    # Qwen: ROM package vs right-sized HBM packages (bandwidth-bound: tok/s scales with stacks)
+    qh = ec["qwen_hbm"]
+    wl, kvb = _qwen_wl()
+    dq = hbm_gpu_design("qwen")
+    w_B = sum(b_ for b_, _ in qwen_hbm_ops(dq["element"], dq["barrier"]["boundary_cycles"], dq["drain_cycles"])) - kvb / 2
+    w_total = 2 * w_B
+    qg = {(r["design"], r["point"]): r for r in gr}
+    qwen = []
+    # the Qwen ROM PRODUCT (root, 2026-09-30): option C, 2 B200-class packages, TP-4, G = 6,144 a die, W12 wires
+    qo = qwen_rom_options(ec)
+    pc = next(r for r in qo["options"]["C"]["rows"] if r["G"] == 6144)
+    q_rom_cost = dict(capex_usd=pc["capex_usd"], hardware_usd=pc["hardware_usd"])
+    qwen.append(dict(design="Qwen ROM product: option C (2 B200-class packages, 4 x 815 mm2, 16 stacks, TP-4, G 6,144)",
+                     dies=4, stacks=16, silicon_mm2=4 * FLOORPLAN["die_mm2"], ar_tokens_s_b1=pc["tokens_s_b1"],
+                     saturated_tokens_s=pc["saturated_tokens_s"], capacity_users=pc["capacity_users"],
+                     gated_mJ_b1=pc["mJ_b1"], gated_mJ_sat=pc["mJ_saturated"],
+                     gated_system_w=round(pc["mJ_saturated"] * pc["saturated_tokens_s"] / 1e3, 1), cost=q_rom_cost,
+                     wire_calibration="W12 floorplan wires (9,194 tok/s at the 2-die reference); the economics "
+                                      "section's W5 wires give 9,851 there"))
+    for k, s in ((1, 6), (2, 4), (1, 4)):
+        die = right_size_hbm_die("qwen", s)
+        f = k * s / 8
+        ar_b1 = qh["ar"]["tokens_s_b1"] * f
+        df_b1 = qh["dflash"]["tokens_s_b1"] * f
+        sat = max(qh["ar"]["saturated_tokens_s"], qh["dflash"]["saturated_tokens_s"]) * f
+        cap = int((k * s * HBM_STACK_B * HBM_CAP_EFF - w_total) // kvb)
+        g1 = qg[("Qwen HBM tier 3 DFlash", "batch1")]
+        gs = qg[("Qwen HBM tier 3 DFlash", "saturated")]
+        # dynamic energy per token is unchanged (same bytes); static scales with the SMs (8 a stack) and the stacks
+        stat_scale = k * s / 8
+        e_b1 = (g1["clock_and_power_gated_mJ_per_token"] - g1["clock_and_power_gated_static_w"] / g1["tokens_s"] * 1e3
+                + g1["clock_and_power_gated_static_w"] * stat_scale / df_b1 * 1e3)
+        e_sat = (gs["clock_and_power_gated_mJ_per_token"] - gs["clock_and_power_gated_static_w"] / gs["tokens_s"] * 1e3
+                 + gs["clock_and_power_gated_static_w"] * stat_scale / sat * 1e3)
+        cost = mfg_cost([(k, die["die_mm2"])], [(1, "cowos_s_1die" if k == 1 else "cowos_l_2die")], k * s, hbm_designs=1)
+        qwen.append(dict(design=f"Qwen HBM, {k} right-sized die(s) x {s} stacks ({die['die_mm2']} mm2 each)", dies=k,
+                         stacks=k * s, silicon_mm2=round(k * die["die_mm2"], 1), ar_tokens_s_b1=round(ar_b1, 1),
+                         dflash_tokens_s_b1=round(df_b1, 1), saturated_tokens_s=round(sat, 1), capacity_users=cap,
+                         gated_mJ_b1=round(e_b1, 1), gated_mJ_sat=round(e_sat, 1),
+                         gated_system_w=round(e_sat * sat / 1e3, 1), cost=cost, demonstrated=die["demonstrated"],
+                         basis="bandwidth-bound: tok/s x (stacks / 8) of the 2-die W13 design (its barrier and TP "
+                               "exchange are hidden under the stream); DFlash at its best block"))
+    q_rule = []
+    rom_q = qwen[0]
+    for key, tv in (("area", rom_q["silicon_mm2"]), ("cost", rom_q["cost"]["capex_usd"]["low"]),
+                    ("power", rom_q["gated_system_w"])):
+        for row in qwen[1:3]:
+            unit = (row["silicon_mm2"] if key == "area" else row["cost"]["capex_usd"]["low"] if key == "cost"
+                    else row["gated_system_w"])
+            n = int(tv // unit)
+            q_rule.append(dict(rule=f"equal {key}", design=row["design"], packages=n,
+                               per_user_dflash_b1=row["dflash_tokens_s_b1"], per_user_ar_b1=row["ar_tokens_s_b1"],
+                               aggregate_tokens_s=round(n * row["saturated_tokens_s"], 1),
+                               capacity_users=n * row["capacity_users"]))
+    return dict(
+        v41_rom=dict(die_shrink_sensitivity=die_shrink, counts=counts, stage_table=stage_table, legal_phy_sensitivity=legal_phy,
+                     product_basis=dict(zip(("bf16", "pitch", "density", "overhead", "credit"), PB)),
+                     droop=dict(DROOP, product=cons_droop(head)), fp32_add_ss=FP32_ADD_SS,
+                     cdc=dict(CDC_W18, vm_port_area_mm2=dict(
+                         before=area_ledger(PRESETS["proposal"])["vm_ports"],
+                         after=round(area_ledger(PRESETS["proposal"])["vm_ports"] * 4 / 3, 3)),
+                              added_wires={k: b - a for k, (a, b) in CDC_W18["vm_port_widening"]["bits_before_after"].items()}),
+                     ss=dict(rows=[p["label"] for p in ss_rows], curve=ss_curve, tt_clock_hz=tt, ss_logic_clock_hz=ss_logic,
+                             derate=SS_DERATE, derate_measured=SS_DERATE_MEASURED,
+                             depth_options=ROM_DEPTH_OPTS, depth_src=ROM_DEPTH_SRC),
+                     bf16_hub_unit_mm2=round(cons_bf16_hub_mm2(), 2),
+                     product=dict(status=f"{head['dies']} dies: {head['stages']} TP-4 stages ({head['layer_dies']} layer "
+                                         "dies, BF16 COLUMNS (1,024 at W10b's 1,002.89 x 142.56 um column outline) with q "
+                                         "pairs at W10b's 510.84 x 126.9 um tile (floorplan sizes; routed closure "
+                                         "pending p12q4 / c5) and W11's C_rotate SU+VM hub block (38.60 mm2; root "
+                                         "rulings 2026-10-01; measured VM-H kept as a reference row) -- USER DECISION: maximum per-user rate, die "
+                                         f"count free) + {head['head_dies']} head dies (8192m8 ping-pong; see head_fit: "
+                                         f"{hp_prev} at W10's tile, re-fit pending) + {head['table_dies']} Engram table dies (storage-only basis; "
+                                         "ASAP7 feasibility 20).  Why the columns: on the full-token basis they give the "
+                                         "highest per-user rate; W10's busiest-die op cycles favoured (iii), but its +20.7% "
+                                         "pair pitch adds stages (hops) and its BF16 issue floors exceed the columns' "
+                                         "full-width BF16 lanes.  References in bf16_full_token",
+                                  bf16_full_token=bf16_full_token,
+                                  option_ii_area_breakeven_mm2_for_31_stages=11.4,
+                                  head_fit=head_fit,
+                                  reference_for_comparisons=dict(stages=head["stages"], layer_dies=head["layer_dies"],
+                                                                 head_dies=head["head_dies"],
+                                                                 table_dies=head["table_dies"], dies=head["dies"],
+                                                                 label=head["label"],
+                                                                 basis="storage-only 75.0, BF16 on the standard pair, "
+                                                                       "W10 budget pitch, 12.5%, ring credit, 4096m8")),
+                     points=points, refit=CONS_REFIT, geometries=CONS_GEOM, credit_modes=CONS_CREDIT,
+                     pitches=CONS_PITCH, bf16=CONS_BF16, field_mm2=round(CONS_FIELD_MM2, 2), sliver_mm2=round(CONS_SLIVER_MM2, 2),
+                     strip_per_pair_mm2=round(CONS_STRIP_PER_PAIR_MM2, 6), table_macro_mm2=round(CONS_TABLE_MACRO_MM2, 6),
+                     density=DENSITY, constants=CONS),
+        hbm=dict(right_sized=dies, shoreline=HBM_SHORE, v41_sweep=sweep, v41_capacity_min_dies=minN,
+                 v41_dies_for_rom_users=users_866, qwen=qwen, existing_rule_note=(
+                     "arch_budget_v41.hbm_comparator sizes 99 (model: 96) dies by ISO LOGIC AREA with the ROM array's "
+                     "188 dies of analytical logic; capacity_limit's hbm_users (811) uses the busiest-die rule of a "
+                     "pipelined placement, whereas the TP-96 comparator holds 1/96 of every layer's KV per die")),
+        headline_table=cons_headline_table(head, rule, qwen, ec, pc),
+        tau_sweep_1m=cons_tau_sweep([(x["design"], dict(mtp=x.get("per_user_mtp")))
+                                     for x in cons_headline_table(head, rule, qwen, ec, pc)["v41"]]),
+        short_context_8k=cons_short_context(Sp, hp, t_a, head, ec, gr, 8192),
+        gpu_calibration=gpu_calibration_row(ec),
+        qwen_context_sweep=qwen_context_sweep(ec),
+        qwen_helix_200k=qwen_helix_scaleout(ec),
+        qwen_product_ss=qwen_product_ss(), qwen_l0_rtl_vs_model=qwen_l0_rtl_vs_model(),
+        hbm_collective_sensitivity=dict(model=188, audit=228, w19_exact_minimised=265, w19_exact_unfused=305,
+                                        audit_central_ar=2394.5, at_265_ar=round(1 / (1 / 2394.5 + 37 * 0.83e-6), 1),
+                                        at_305_ar=round(1 / (1 / 2394.5 + 77 * 0.83e-6), 1),
+                                        src="W19 claude/w19-hbm-token f364f884 (exact TP-96 program, layer 0 bit-exact); "
+                                            "collectives at the audit's 0.83 us scratch switch latency; PENDING W19's "
+                                            "final count and W15's P = 48 fit"),
+        comparison_rule=dict(v41_targets=tgt, v41=rule, qwen=q_rule,
+                             basis="ROM = the consolidated analytical headline; power = the gated saturated AR system "
+                                   "power (both sides, the adopted gated-alike policies); cost = manufacturing capex "
+                                   "low (die area x yield, packages, stacks, NRE / 1,000); HBM beyond 96 dies adds "
+                                   "whole TP-96 replicas"),
+        karb=cons_karb_delta(Sp, clock_hz=PRODUCT_CLOCK_HZ),
+        model_caveats=MODEL_CAVEATS,
+        clock_basis=dict(clock_hz=PRODUCT_CLOCK_HZ, note="USER DECISION (AGENTS.md e7479589): every design at 1.2 GHz SS "
+                         "for equal footing -- V4.1 ROM product rows, the V4.1 HBM sweep and comparison rule (cycle terms "
+                         "comparator is HBM-bandwidth bound, so its rate does not move with the clock",
+                         v41_hbm_96x4_tt=v41_hbm_n(96, 4, ec, gr)["ar"]["batch1"]["per_user_tokens_s"],
+                         v41_hbm_96x4_1p2=v41_hbm_n(96, 4, ec, gr, clock_hz=PRODUCT_CLOCK_HZ)["ar"]["batch1"]["per_user_tokens_s"],
+                         qwen_rom_c_1p2=qwen_tp_point(4, 6144, "board", clock_hz=PRODUCT_CLOCK_HZ)["tokens_s_b1"],
+                         qwen_rom_c_1p2_w12_tp4_wires=qwen_tp_point(4, 6144, "board", clock_hz=PRODUCT_CLOCK_HZ,
+                                                                    me_lat_extra=QWEN_W12_TP4_ME_EXTRA)["tokens_s_b1"],
+                         qwen_rom_c_1p2_w12_tp4_ss_reach=qwen_tp_point(4, 6144, "board", clock_hz=PRODUCT_CLOCK_HZ,
+                                                                       me_lat_extra=QWEN_W12_TP4_ME_EXTRA_SS)["tokens_s_b1"],
+                         v41_hbm_w13_ss_note="W13 at SS pre-layout: an 8-stage fp32_add_rne_pipe breaks the IL = 8 "
+                                             "circulating accumulator; IL = 16 gives V4.1 HBM ~2,500 AR (from ~2,920); "
+                                             "a 7-stage adder keeps IL = 8 (W13 estimate, not priced here)",
+                         qwen_rom_c_tt=pc["tokens_s_b1"]),
+        clock_domain_cases=cons_clock_cases(Sp, hp, t_a),
+        qwen_rom=dict(product="C", product_row=pc, options=qo, small_die=qwen_small_die(),
+                      alternatives=dict(A="alternative: fastest per dollar, but an undemonstrated 3-reticle 12-stack "
+                                          "package", B="alternative: 3 single-die packages, TP-3 over board links",
+                                        D="alternative: the 2-die reference, fits only with the compute-in-ROM "
+                                          "UPSIDE (assumed cell multiplier, unimplemented mechanism)"),
+                      sensitivity="G 7,168 a die (9,597 tok/s, 18.6% bank padding): a new die for +2.4%"),
+        fab=FAB,
+        die_costs={f"{a:g} mm2": die_cost(a) for a in (815.0,) + tuple(sorted({v["die_mm2"] for v in dies.values()}))})
+
+
+# ---- Qwen ROM at the storage-only density (root ruling 2026-09-30): the dies it needs, and the options priced ----
+QWEN_DENSITY = dict(
+    storage_n5=dict(mbit_mm2=None, label="storage-only N5 (75.0 Mbit/mm2, the ruled basis) + SECDED 266/256"),
+    roma=dict(mbit_mm2=57.8, label="ROMA TSMC 7 nm compiler (conservative sensitivity) + SECDED"),
+    cirom_upside=dict(mbit_mm2=None, label="compute-in-ROM UPSIDE: the Qwen ledger's 148 Mbit/mm2 = N6 storage / an "
+                                         "ASSUMED 1.6x cell multiplier x a vendor-quoted 4 bits a cell; unimplemented "
+                                         "mechanism (no compute-in-ROM cell in this repository's RTL)"),
+)
+QWEN_TILE_FIXED_MM2 = 4 * 10.0 + 10.0 + 12.8      # 4 HBM PHY + UCIe PHY + stream-unit spill: per die, not per group
+QWEN_ECC = 266 / 256
+
+
+def _qwen_rom_bits():
+    qp = json.loads((ROOT / "results/floorplan/qwen_o4_rom_placement.json").read_text())
+    t, cr = qp["totals"], qp["code_rom"]
+    drafter = cr["drafter_words"] * cr["word_columns"] * 256
+    return dict(stored_bits_per_die=t["stored_bits"], drafter_bits_per_die=drafter,
+                target_bits_total=2 * (t["stored_bits"] - drafter),
+                cirom_mbit_mm2=t["stored_bits"] / t["ledger_rom_mm2_n6"] / 1e6)
+
+
+def qwen_rom_area_per_group_mm2():
+    """Non-ROM tile area per group (pruned group logic at 50% + KV ring SRAM), from the G = 6,144 fit (552.9 mm2 of
+    which 265.0 ROM and QWEN_TILE_FIXED_MM2 fixed)."""
+    return (552.9 - QWEN_ROM_AREA_DIE["rom"] - QWEN_TILE_FIXED_MM2) / 6144
+
+
+def qwen_rom_need_mm2(k, G, density="storage_n5"):
+    b = _qwen_rom_bits()
+    m = (_V41_ASM["rom_density_mbit_per_mm2"] if density == "storage_n5" else
+         b["cirom_mbit_mm2"] if density == "cirom_upside" else QWEN_DENSITY[density]["mbit_mm2"])
+    ecc = 1.0 if density == "cirom_upside" else QWEN_ECC
+    rom = b["target_bits_total"] * ecc / (m * 1e6) / k
+    return dict(rom_mm2=rom, need_mm2=QWEN_TILE_FIXED_MM2 + qwen_rom_area_per_group_mm2() * G + rom,
+                avail_mm2=QWEN_AREA["array_mm2"])
+
+
+QWEN_TP_SHAPE = {2: (16, 4), 3: (12, 3), 4: (8, 2)}   # busiest die's (query heads, KV heads): GQA groups of 4 whole
+
+
+def _qwen_exchange(kind, k, clock):
+    """Per-token exchange cycles (72 all-reduces + the argmax gather) and the embedding handoff, by link class."""
+    cf = w15_record()["configs"]
+    ref = cf[QWEN_EXCHANGE]["exchanges"]
+    if kind == "ucie_measured":
+        ar, ga, src = ref["allreduce_cycles_mean"], ref["argmax_gather_cycles"], "MEASURED (W15 q256d64, TP-2 UCIe)"
+    elif kind == "ucie_tp3_assumed":
+        ar, ga = ref["allreduce_cycles_mean"] + FADD_PIPE, ref["argmax_gather_cycles"]
+        src = ("ASSUMED from the W15 TP-2 measurement: a one-shot to 2 peers over direct UCIe adds one FP32 add stage "
+               "(+5 cycles) to the 71-cycle all-reduce")
+    else:
+        # the V4.1 TP-4 group measured over direct T1 board links (2 packages x 2 dies), W3 placement, depth 1,024:
+        # transferred to the Qwen payload (H = 4,096 FP32 partials) and clock
+        ar = w15_collective_s("v41p17_r0d1024", "all_reduce", 4096 * 4, 4) * clock
+        ga = w15_collective_s("v41p17_r0d1024", "all_gather", 8 * k, k) * clock
+        src = ("MEASURED on the V4.1 TP-4 group (W15 v41p17_r0d1024 fit: 2 packages x 2 dies, direct T1 board links), "
+               "transferred to the Qwen payload and clock" + ("" if k == 4 else "; TP-3 over board links ASSUMED at the "
+                                                               "TP-4 fit"))
+    tok = (2 * 36) * ar + ga
+    return dict(per_allreduce_cycles=round(ar, 1), argmax_gather_cycles=round(ga, 1), token_cycles=round(tok),
+                source=src, per_allreduce_ns=round(ar / clock * 1e9, 1))
+
+
+QWEN_W12_TP4_ME_EXTRA = 24 + 3 * 5 + 22 + 4 + 1   # W12 (a760c255, 2026-09-30): at TP-4, BD 24, NWS 3 x 5 levels,
+                                                  # TWS 22, ORD 4, + MEM_EXTRA 1 (the 4096x266 pin-capture register
+                                                  # b274bda5, needed at SS) = 66 cycles an ME op (W12 2-die: 81)
+
+
+def qwen_tp_point(k, G, link, wire_model="w12", clock_hz=None, me_lat_extra=None, ctx=8192, su_width=1024):
+    """Qwen3-8B ROM on k dies (TP-k), G groups a die, 8K, AR: the calibrated replay of the busiest die's slice, the
+    W12 floorplan wires, and the exchange of the given link class."""
+    import arch_budget_qwen3 as Q
+    import hdc_timing as T
+    Q.CLOCK[0] = clock_hz or Q.clock_hz()
+    clock = Q.CLOCK[0]
+    cf = w15_record()["configs"]
+    oldw = {n: v["clock_hz"] for n, v in cf.items() if n.startswith("v41")}
+    if clock_hz:                   # SS: the measured board-exchange cycles take the SS period (as the V4.1 SS pass)
+        for n in oldw:
+            cf[n]["clock_hz"] = clock_hz
+    nh, kv = QWEN_TP_SHAPE[k]
+    shp = dict(Q.Q, NH=nh, KV=kv, FF=-(-Q.Q["FF"] // k), V=-(-Q.Q["V"] // k))
+    k0 = dict(T.K)
+    try:
+        if wire_model == "w12":
+            T.K["me_lat"] = k0["me_lat"] + (QWEN_WIRE_W12["me_lat_extra"] if me_lat_extra is None else me_lat_extra)
+        r = Q.as_built(ctx, groups=G, su_width=su_width, shape=shp, ucie=False)
+    finally:
+        T.K.clear()
+        T.K.update(k0)
+    x = _qwen_exchange(link, k, clock)
+    emb = Q.tp_exchanges(clock)["embedding_handoff_cycles"]
+    if link not in ("ucie_measured", "ucie_tp3_assumed"):
+        emb += w15_collective_s("v41p17_r0d1024", "all_gather", 8, k) * clock    # the row crosses a board link
+    for n, v in oldw.items():
+        cf[n]["clock_hz"] = v
+    cycles = r["cycles"] + x["token_cycles"] + math.ceil(emb)
+    ub = r["unit_busy"]
+    wl, kvb = _qwen_wl()
+    kvfrac = kv / Q.Q["KV"]
+    lanes = ub["weights"] + ub["attn_scores"] + ub["attn_pv"] + ub["lm_head"]
+    bounds = dict(lanes=clock / lanes, stream_unit=clock / ub["stream"], kv_stream=4 * HBM_STACK_BPS / (kvb * kvfrac))
+    sat = min(bounds.values())
+    users = int(4 * HBM_STACK_B * HBM_CAP_EFF // (kvb * kvfrac))
+    # integer banks: a group-pair column holds its share of the target words in whole 4,096-deep banks
+    words = 38880 * (2 / k) * 6144 / G
+    banks = math.ceil(words / 4096)
+    area = qwen_rom_need_mm2(k, G)
+    rom_mm2 = area["rom_mm2"]
+    st = _static_w(G * QWEN_AREA["logic_group_pruned_um2"] / 1e6 + QWEN_TILE_FIXED_MM2, rom_mm2,
+                   G * QWEN_AREA["kv_sram_group_um2"] / 1e6, clock, 4)
+    return dict(k=k, G=G, link=link, cycles=cycles, tokens_s_b1=round(clock / cycles, 1), clock_hz=clock, unit_busy=ub,
+                layer_chain_cycles=r["layer_chain"]["cycles"], ctx=ctx, su_width=su_width,
+                exchange=x, saturated_tokens_s=round(sat, 1), bounds={a: round(b, 1) for a, b in bounds.items()},
+                binding=min(bounds, key=bounds.get), capacity_users=users,
+                banks_per_column=banks, column_words=round(words), bank_padding=round(1 - words / (banks * 4096), 4),
+                static_w_per_die=round(sum(st.values()), 2), area_need_mm2_per_die=round(area["need_mm2"], 1),
+                rom_mm2_per_die=round(rom_mm2, 1), fits_storage_n5=area["need_mm2"] <= area["avail_mm2"])
+
+
+def qwen_rom_options(ec=None):
+    """Root 2026-09-30: the Qwen ROM does not fit two reticles at the storage-only density; price the options."""
+    ec = ec or economics()
+    qr = ec["qwen_rom"]
+    ucie_ref_j = qr["energy"]["categories_mJ_per_token"]["ucie"] * 1e-3
+    dyn_ref = qr["energy"]["dynamic_mJ_per_token"] * 1e-3
+    import arch_budget_qwen3 as Q
+    xbytes = Q.tp_exchanges(Q.clock_hz())["bytes_per_direction"]
+    opts = dict(
+        A=dict(k=3, link="ucie_tp3_assumed", packages=[(1, "cowos_l_3die")], demonstrated=False,
+               what="3 dies in ONE package (12 stacks; not demonstrated), TP-3 over UCIe"),
+        B=dict(k=3, link="board", packages=[(3, "cowos_s_1die")], demonstrated=True,
+               what="3 single-die packages (4 stacks each, H100-class), TP-3 over board links"),
+        C=dict(k=4, link="board", packages=[(2, "cowos_l_2die")], demonstrated=True,
+               what="2 B200-class packages (2 dies + 8 stacks each), TP-4 with one package crossing"),
+        D=dict(k=2, link="ucie_measured", packages=[(1, "cowos_l_2die")], demonstrated=True,
+               what="the 2-die reference: fits only with the compute-in-ROM UPSIDE (148 Mbit/mm2; assumed cell "
+                    "multiplier, unimplemented mechanism)"),
+    )
+    pk_usd = dict(FAB["package_usd"], cowos_l_3die=1.5 * FAB["package_usd"]["cowos_l_2die"])
+    out = {}
+    for key, o in opts.items():
+        k = o["k"]
+        rows = []
+        for G in (2048, 3072, 4096, 5120, 6144, 7168, 8192):
+            dens = "cirom_upside" if key == "D" else "storage_n5"
+            fit = qwen_rom_need_mm2(k, G, dens)
+            if fit["need_mm2"] > fit["avail_mm2"] and not (G == 12288 // k):
+                continue
+            p = qwen_tp_point(k, G, o["link"])
+            p["fits"] = fit["need_mm2"] <= fit["avail_mm2"]
+            p["area_need_mm2_per_die"] = round(fit["need_mm2"], 1)
+            link_j = E_LINK["ucie"] if o["link"].startswith("ucie") else E_LINK["board"]
+            dyn = dyn_ref - ucie_ref_j + xbytes * 2 * 8 * link_j * (k - 1)
+            P_st = k * p["static_w_per_die"]
+            hw = mfg_cost([(k, FLOORPLAN["die_mm2"])], [], 4 * k, rom_dies=k,
+                          rom_bases=FAB["mask_sets"]["qwen_rom_bases"])
+            pkg = sum(n * (pk_usd[c] + FAB["test_assembly_usd"]) for n, c in o["packages"])
+            capex = dict(low=hw["capex_usd"]["low"] + round(pkg), high=hw["capex_usd"]["high"] + round(pkg))
+            hw_usd = hw["hardware_usd"] + round(pkg)
+            p.update(system_static_w=round(P_st, 1), dynamic_mJ=round(dyn * 1e3, 2),
+                     mJ_b1=round((dyn + P_st / p["tokens_s_b1"]) * 1e3, 2),
+                     mJ_saturated=round((dyn + P_st / p["saturated_tokens_s"]) * 1e3, 2),
+                     die_usd=round(k * die_cost(FLOORPLAN["die_mm2"])["usd"]), package_usd=round(pkg),
+                     hbm_usd=4 * k * FAB["hbm_stack_usd"], hardware_usd=hw_usd, capex_usd=capex,
+                     tokens_s_per_kusd=round(p["tokens_s_b1"] / hw_usd * 1e3, 2))
+            rows.append(p)
+        tot = next((r for r in rows if r["G"] * k == 12288), None)
+        fitting = [r for r in rows if r["fits"]]
+        best = max(fitting, key=lambda r: r["tokens_s_b1"] / r["hardware_usd"]) if fitting else None
+        out[key] = dict(o, total_G_12288=tot, best_tokens_s_per_usd=best, rows=rows,
+                        gated_note="gated = ungated: the Qwen ROM's idle gaps are shorter than wake + break-even "
+                                   "(gated-alike table)")
+    import arch_budget_qwen3 as Q2
+    ss_hz = Q2.clock_hz() / SS_DERATE
+    ss = []
+    for G, tag in ((6144, "product (option C, G 6,144)"), (4928, "ROMA-safe sensitivity (G 4,928)")):
+        for hz, corner in ((None, "TT"), (ss_hz, "SS (logic derated 1.27)")):
+            p = qwen_tp_point(4, G, "board", clock_hz=hz)
+            ss.append(dict(point=tag, corner=corner, clock_hz=p["clock_hz"], tokens_s_b1=p["tokens_s_b1"],
+                           saturated_tokens_s=p["saturated_tokens_s"], binding=p["binding"]))
+    Q2.CLOCK[0] = Q2.clock_hz()
+    g_search = dict(finding="the TP-4 token is not lane-bound: G 6,144 -> 6,336 buys +0.04% (9,367.6 -> 9,371.4 tok/s) "
+                            "and the saturated rate is KV-stream bound at every G >= 4,096, so extra area does not buy "
+                            "per-user speed; legal G step is 64 groups (the program's embedding-word rule)",
+                    chosen=6144, largest_with_2pct_margin=6336, roma_safe=4928)
+    return dict(options=out, rom_bits=_qwen_rom_bits(), corners=ss, g_search=g_search, per_group_mm2=round(qwen_rom_area_per_group_mm2(), 6),
+                fixed_mm2=QWEN_TILE_FIXED_MM2, densities=QWEN_DENSITY,
+                fit_by_density={d: {k: round(qwen_rom_need_mm2(k, 12288 // k, d)["need_mm2"], 1) for k in (2, 3, 4)}
+                                for d in QWEN_DENSITY},
+                package_basis=dict(FAB["package_basis"], cowos_l_3die="ASSUMED 1.5 x the 2-die CoWoS-L (no 3-reticle "
+                                                                       "package is demonstrated)")
+                if isinstance(FAB["package_basis"], dict) else FAB["package_basis"]
+                + "; 3-die CoWoS-L ASSUMED 1.5 x the 2-die price (no 3-reticle package is demonstrated)")
+
+
+# ---- K arbiter round trip (W18, root relay 2026-09-30) ----
+KARB = dict(base_cycles=7, per_hop_cycles=2,
+            region_distance_mm=(3.5, 2.5, 1.5, 0.5, 0.5, 1.5, 2.5, 3.5),
+            reach_mm_tt=1.0, reach_mm_ss=0.75,
+            src="W18: the pipelined, credited K arbiter's uncontended added K round trip is 7 + 2 x (hops - 1) cycles; "
+                "regions along the 8.5 mm PHY edge give 13/11/9/7/7/9/11/13 cycles at 1 mm hops (TT), up to 15 at the "
+                "likely SS reach of 0.75 mm (W15 measuring); region distances here reproduce those counts")
+
+
+# W18b e909156c (root relay 2026-10-01): MERGE2 alone fails SS (-212 ps); MERGE2 + HEADREG (54/54 equivalence-clean,
+# P&R running) adds +2 to the K round trip on the shrunk die (MERGE2's 19/15/13/9/9/13/15/19 superseded until the P&R
+# verdict)
+KARB_W18B_HEADREG = (20, 16, 14, 10, 10, 14, 16, 20)
+
+
+def karb_region_cycles(reach_mm):
+    return [KARB["base_cycles"] + KARB["per_hop_cycles"] * (math.ceil(d / reach_mm - 1e-9) - 1)
+            for d in KARB["region_distance_mm"]]
+
+
+def cons_karb_delta(S=None, reach_mm=None, clock_hz=None):
+    """Token-path cost of the K arbiter round trip: every HBM-touching node on the critical path (the index-selected
+    row gathers, the index-key scans, the window-row score reads) pays the round trip once (its stream is then
+    pipelined).  Worst region (all requests from the farthest region) and region mean; the model charged none."""
+    S = S or cons_min_stages("analytical")
+    with _cons_stages(S):
+        r, b = arch_graph(1048576)
+        g = b.g
+        path = g.path(b.sink)
+    n = sum(1 for x in path if x.endswith((".gather", "idx.score", ".attn.scores")))
+    clock = clock_hz or A._env()["clock"]
+    T = r["T_s"]
+    out = {}
+    for tag, reach in (("tt_1mm", KARB["reach_mm_tt"]), ("ss_0p75mm", KARB["reach_mm_ss"])) + (
+            (("custom", reach_mm),) if reach_mm else ()):
+        cyc = karb_region_cycles(reach)
+        for kind, c in (("worst", max(cyc)), ("mean", sum(cyc) / len(cyc))):
+            dt = n * c / clock
+            out[f"{tag}_{kind}"] = dict(reach_mm=reach, cycles_per_request=round(c, 2), requests_on_path=n,
+                                        added_us=round(dt * 1e6, 3), tokens_s_delta_pct=round(-dt / (T + dt) * 100, 3))
+    # W18b (e909156c, root relay): MERGE2 + HEADREG on proot (equivalence-clean 54/54, P&R running): the K round trip
+    # on the shrunk die is 20/16/14/10/10/14/16/20 (regions 0-7); a row only, not in the product
+    cyc = KARB_W18B_HEADREG
+    for kind, c in (("worst", max(cyc)), ("mean", sum(cyc) / len(cyc))):
+        dt = n * c / clock
+        out[f"w18b_merge2_headreg_{kind}"] = dict(cycles_per_request=round(c, 2), requests_on_path=n, added_us=round(dt * 1e6, 3),
+                                          tokens_s_delta_pct=round(-dt / (T + dt) * 100, 3))
+    return dict(rows=out, regions_w18b_merge2_headreg=list(KARB_W18B_HEADREG), regions_tt=karb_region_cycles(KARB["reach_mm_tt"]),
+                regions_ss=karb_region_cycles(KARB["reach_mm_ss"]), stages=S, basis=KARB)
+
+
+# W19 HBM feasibility audit (claude/w19-hbm-audit aa0ac6bd, results/uarch/hbm_feasibility_audit.json; root 2026-09-30):
+# central estimates against main's model at 1.2 GHz (3,071.7 AR / 6,206.0 MTP): 2,394.5 AR / 5,227.7 MTP (range AR
+# 2,196-2,905, MTP 4,951-6,161).  Optimistic terms: routed-expert fetch after the router, measured switch latency,
+# +1 gather a MoE layer for the exact expert order, 34.6 distinct experts a layer over 6 positions, serial units in the
+# 0.9 GHz domain, the drafter on the 96-die graph; pessimistic: indexer at 1/96 keys, 1 head a die.  Applied here as
+# ratios to the tier-3 per-user rates (the saturated column is left at the model's pass bound, labelled).
+HBM_AUDIT = dict(ar=2394.5 / 3071.7, mtp=5227.7 / 6206.0, ar_range=(2196.2 / 3071.7, 2905.0 / 3071.7),
+                 mtp_range=(4951.1 / 6206.0, 6160.6 / 6206.0), qwen_dflash=0.86, qwen_dflash_block12=2296.0,
+                 src="claude/w19-hbm-audit aa0ac6bd results/uarch/hbm_feasibility_audit.json (summary.realistic_range)",
+                 rom_side="the exact-order extra gather does not apply to the ROM array: a macro sums its experts in id "
+                          "order inside the element and the TP-4 combine is a fixed-order all-reduce (no cross-die "
+                          "expert partials to re-order); the 0.9 GHz serial domain is already in the ROM product")
+
+
+# W19 COMPOSED V4.1 HBM token (claude/w19-hbm-token a88743ff, results/uarch/w19_hbm_token_{ar,ar_gather,mtp}.json;
+# every term priced along the executed TP-96 program, which is bit-exact on 96 ranks -> 21946 and all 6 MTP verify
+# positions): AR (grouped o-reduce program, 265 collectives) 431.55 us; all-gather-only program (305) 463.33 us;
+# MTP verify pass (6 positions, measured 27.6-expert union) 628.47 us, + the audit's drafter 49.9 us.  Replaces the
+# audit ratios for the tier-3 per-user rates (the audit stays as a reference); collective latency PENDING W15's P=48 fit.
+HBM_W19 = dict(ar_us=431.55, ar_all_gather_us=463.33, mtp_pass_us=628.47, drafter_us=49.9, collectives=265,
+               src="claude/w19-hbm-token a88743ff results/uarch/w19_hbm_token_{ar,ar_gather,mtp}.json (result.total_us)")
+HBM_W19["ar_tokens_s"] = 1e6 / HBM_W19["ar_us"]
+HBM_W19["mtp_tokens_s"] = V41_TAU * 1e6 / (HBM_W19["mtp_pass_us"] + HBM_W19["drafter_us"])
+
+
+def cons_headline_table(head, rule, qwen, ec, pc):
+    """USER DECISION 2026-09-30: the V4.1 ROM headline is saturated throughput, energy per token and cost at EQUAL
+    MANUFACTURING COST; per-user speed is claimed only against real GPUs (tier 1 measured, tier 2 calibrated) and
+    reported against the idealised HBM machine (tier 3).  Qwen ROM keeps its per-user claim.  Every row names its
+    point; ROM energies include the adopted 256-cycle pre-ramp."""
+    dr = cons_droop(head)["50% cap + 256-cycle pre-ramp"]
+    g = ec["gpu"]
+    cst = {c["design"]: c for c in ec["cost"]}
+    v41 = [dict(design="V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)", tier="ROM",
+                per_user_ar=head["ar_tokens_s_b1"], per_user_mtp=head["mtp_tokens_s_b1"],
+                per_user_mtp_headline_tau_3p78=round(head["mtp_tokens_s_b1"] * 3.78 / V41_TAU, 1),
+                saturated_tokens_s=head["ar_saturated_tokens_s"], mJ_b1=dr["gated_mJ_b1"], mJ_saturated=dr["gated_mJ_saturated"],
+                capex_usd=head["cost"]["capex_usd"], silicon_mm2=head["silicon_mm2"], users_1m=head["capacity_users_1m"],
+                system_w_saturated=head["energy"]["ar_sat"]["gated_system_w"])]
+    for x in rule:
+        if x.get("stacks_per_die") == 4 and "ar" in x:
+            v41.append(dict(design=f"V4.1 HBM tier 3 (idealised), {x['rule']}: {x['replicas']} x TP-{x['tp']} ({x['dies']} "
+                                   f"right-sized dies, 1.2 GHz, SS wires; W19 composed token)", tier="3",
+                            per_user_ar=round(HBM_W19["ar_tokens_s"], 1), per_user_mtp=round(HBM_W19["mtp_tokens_s"], 1),
+                            per_user_ar_audit_central=round(x["ar"]["batch1"]["per_user_tokens_s"] * HBM_AUDIT["ar"], 1),
+                            per_user_mtp_audit_central=round(x["mtp"]["batch1"]["per_user_tokens_s"] * HBM_AUDIT["mtp"], 1),
+                            per_user_ar_model=x["ar"]["batch1"]["per_user_tokens_s"],
+                            per_user_mtp_model=x["mtp"]["batch1"]["per_user_tokens_s"],
+                            per_user_ar_audit_range=[round(x["ar"]["batch1"]["per_user_tokens_s"] * f, 1)
+                                                     for f in HBM_AUDIT["ar_range"]],
+                            per_user_mtp_audit_range=[round(x["mtp"]["batch1"]["per_user_tokens_s"] * f, 1)
+                                                      for f in HBM_AUDIT["mtp_range"]],
+                            saturated_note="the model's column-pass bound (the audit prices single-user latency)",
+                            saturated_tokens_s=x["ar"]["saturated"]["aggregate_tokens_s"],
+                            mJ_b1=x["ar"]["batch1"]["gated_mJ"], mJ_saturated=x["ar"]["saturated"]["gated_mJ"],
+                            capex_usd=x["cost"]["capex_usd"], silicon_mm2=x["silicon_mm2"], users_1m=x["capacity_users_1m"]))
+    gv = g["v41"]
+    v41.append(dict(design="DeepSeek-V4.1-Flash on 8x B200 (tier 2, calibrated)", tier="2", per_user_ar=gv["tokens_s_b1"],
+                    per_user_mtp=gv.get("mtp_b1"), saturated_tokens_s=gv["saturated_tokens_s"],
+                    mJ_b1=gv["rows"][0]["energy_mJ_per_token"], mJ_saturated=_sat_batch(gv["rows"])["energy_mJ_per_token"],
+                    capex_usd=cst["V4.1 8x B200 (tier 2, AR)"]["capex_per_system_usd"], users_1m=gv["capacity_users"],
+                    cost_basis="purchase price (iso-package $25k a B200), not manufacturing cost"))
+    for a in g["anchors"]:
+        if "DeepSeek" in a["design"]:
+            v41.append(dict(design=a["design"], tier="1", per_user_mtp=a["per_user_tokens_s"],
+                            mJ_b1=a["energy_mJ_per_token_at_689W"]))
+    qs = qwen_product_ss()
+    q = [dict(design="Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144), TT", tier="ROM",
+              per_user_ar=pc["tokens_s_b1"], saturated_tokens_s=pc["saturated_tokens_s"], mJ_b1=pc["mJ_b1"],
+              mJ_saturated=pc["mJ_saturated"], capex_usd=pc["capex_usd"], users_8k=pc["capacity_users"]),
+         dict(design="Qwen ROM option C at 1.2 GHz SS (W12 SS wires, LAT-7 ME, KV_PREP, droop cap75 + preramp256)", tier="ROM",
+              per_user_ar=qs["tokens_s_b1"], saturated_tokens_s=pc["saturated_tokens_s"],
+              mJ_b1=round(pc["mJ_b1"] + QWEN_SS["droop_mJ"], 1), mJ_saturated=round(pc["mJ_saturated"] + QWEN_SS["droop_mJ"], 1),
+              capex_usd=pc["capex_usd"], users_8k=pc["capacity_users"]),
+         *[dict(design=f"Qwen ROM option C at 1.2 GHz SS, {qs[k]['label']}", tier="ROM",
+                per_user_ar=qs[k]["tokens_s_b1"], saturated_tokens_s=pc["saturated_tokens_s"],
+                capex_usd=pc["capex_usd"], users_8k=pc["capacity_users"])
+           for k in ("rtl_attributed_as_built", "rtl_attributed_body_only")]]
+    for row in qwen[1:3]:
+        q.append(dict(design=row["design"] + " (tier 3, idealised; DFlash W19 audit -14%)", tier="3",
+                      per_user_ar=row["ar_tokens_s_b1"],
+                      per_user_dflash=round(row["dflash_tokens_s_b1"] * HBM_AUDIT["qwen_dflash"], 1),
+                      per_user_dflash_model=row["dflash_tokens_s_b1"], saturated_tokens_s=row["saturated_tokens_s"],
+                      mJ_b1=row["gated_mJ_b1"], mJ_saturated=row["gated_mJ_sat"], capex_usd=row["cost"]["capex_usd"],
+                      users_8k=row["capacity_users"]))
+    gq = g["qwen"]
+    q.append(dict(design="Qwen3-8B on 1x B200, FP8 (tier 2, calibrated)", tier="2", per_user_ar=gq["tokens_s_b1"],
+                  per_user_dflash=gq["dflash_b1"], saturated_tokens_s=gq["saturated_tokens_s"],
+                  mJ_b1=gq["rows"][0]["energy_mJ_per_token"], mJ_saturated=_sat_batch(gq["rows"])["energy_mJ_per_token"],
+                  capex_usd=cst["Qwen 1x B200 (tier 2, AR)"]["capex_per_system_usd"], users_8k=gq["capacity_users"],
+                  cost_basis="purchase price"))
+    for a in g["anchors"]:
+        if "Qwen" in a["design"] and a["batch"] == 1:
+            q.append(dict(design=a["design"], tier="1", per_user_ar=a["per_user_tokens_s"],
+                          mJ_b1=a["energy_mJ_per_token_at_689W"]))
+    return dict(v41=v41, qwen=q, hbm_audit=HBM_AUDIT, rule="USER DECISION 2026-09-30: V4.1 ROM headline = saturated throughput, J/token and "
+                                     "cost at equal manufacturing cost; per-user speed claimed against GPUs (tier 1-2) "
+                                     "only; Qwen ROM keeps its per-user claim")
+
+
+def cons_clock_cases(S, h, t):
+    """Root 2026-09-30, with W11's MEASURED ns per dependent FP32 add (FP32_ADD_SS).  Every case carries the 50%
+    field-concurrency cap and the softplus correction.
+    (a) everything at 1.2 GHz: the serial-chain units' adds at 8 or 9 stages (6.7 / 7.5 ns an add), the field
+        element's adds at 8 (its chunk-8 chain floor and K-split levels);
+    (b) the field, elements, index scan and attention tiles at 1.2 GHz (element adds 8 stages); the serial-chain units
+        (SU, SFU, softplus, reducer, Sinkhorn) at 0.9 GHz with LAT 3 (906 MHz SS measured, 3:4) or 0.8 GHz (2:3);
+        CDC 2 slow cycles a crossing (ASSUMED);
+    (c) everything at 0.9 GHz, LAT 3 (element adds IEEE 5-stage, 992 MHz SS)."""
+    out = {}
+    for tag, hz, dyn, slow, cs, es in (
+            ("a: all 1.2 GHz, chain adds 8 stages", 1.2e9, 1.16, None, 8, 8),
+            ("a: all 1.2 GHz, chain adds 9 stages", 1.2e9, 1.16, None, 9, 8),
+            ("b: 1.2 GHz field (LAT 7) + 0.9 GHz chain units (LAT 3), W18 CDC", 1.2e9, 1.16, (0.9e9, "w18"), None, 7),
+            ("b: 1.2 GHz field (LAT 7) + 0.8 GHz chain units (LAT 3), W18 CDC", 1.2e9, 1.16, (0.8e9, "w18"), None, 7),
+            ("c: all 0.9 GHz, LAT 3", 0.9e9, 1.0, None, None, None)):
+        p = cons_v41_rom(S, h, t, 1.0, None, "option_iii", hz, FIELD_CONCURRENCY, SOFTPLUS_FIX, dyn, slow, cs, es)
+        out[tag] = dict(ar_tokens_s_b1=p["ar_tokens_s_b1"], mtp_tokens_s_b1=p["mtp_tokens_s_b1"],
+                        ar_saturated_tokens_s=p["ar_saturated_tokens_s"], mtp_saturated_tokens_s=p["mtp_saturated_tokens_s"],
+                        gated_mJ_b1=p["energy"]["ar_b1"]["gated_mJ"], gated_mJ_saturated=p["energy"]["ar_sat"]["gated_mJ"],
+                        busiest_stage_us=p["busiest_stage_us"], critical_path_top_us=p["critical_path_top_us"],
+                        droop=cons_droop(p))
+    return out
+
+
+# ---- droop at 1.2 GHz (W18 67b0bd49 results/physical_abi3/asap7/chip/v41_w18/droop_schemes_1p2ghz.json) ----
+DROOP = dict(field_ops_per_layer_die_per_token=6,
+             schemes={"50% cap + 256-cycle pre-ramp": dict(mJ_per_op_start=0.098, extra_latency="the cap's (priced)"),
+                      "1,024-cycle pre-ramp, no cap": dict(mJ_per_op_start=0.78, extra_latency=0),
+                      "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": dict(mJ_per_op_start=0.196,
+                                                                                      extra_latency=0)},
+             src="W18 (root relay 2026-09-30): no fast-start scheme meets 35 mV at L_eff 1-10 pH; a schedule-driven "
+                 "pre-ramp dummy-clocks the next op's pairs ahead of time")
+
+
+PRERAMP_TAU_CYCLES = 256    # ASSUMED droop time constant: a field op after an idle gap longer than the pre-ramp
+                            # window needs a ramp (W18 to state the current-decay constant)
+
+
+def cons_field_starts(g, plan, clock):
+    """Field-op starts per layer die per token on the priced single-user graph, and those that follow an idle field
+    gap longer than the droop time constant (the only ones that need a pre-ramp; back-to-back field ops keep the
+    current up).  A field op is a weight matvec on the ROM field; its start is its finish less its issue and depth."""
+    fin = g.solve(True)
+    per = {}
+    for name, nd in g.nodes.items():
+        if not nd.get("_uarch"):
+            continue
+        s0 = _cons_stage_of(name, nd, plan)
+        if s0 == "head":
+            continue
+        end = fin[name]
+        start = end - nd["issue"] - nd["depth"]
+        per.setdefault(s0, []).append((start, end))
+    tau = PRERAMP_TAU_CYCLES / clock
+    out = dict(starts={}, ramps={}, held={})
+    for s0, ops in per.items():
+        ops.sort()
+        ramps, busy_end, held = 1, ops[0][1], 0.0
+        for st, en in ops[1:]:
+            gap = st - busy_end
+            if gap > tau:
+                ramps += 1
+            elif gap > 0:
+                held += gap                  # W18's gap policy: the field is held on through a short gap
+            busy_end = max(busy_end, en)
+        out["starts"][s0] = len(ops)
+        out["ramps"][s0] = ramps
+        out["held"][s0] = held * clock
+    n = len(per)
+    return dict(mean_starts_per_die=round(sum(out["starts"].values()) / n, 2),
+                mean_ramps_per_die=round(sum(out["ramps"].values()) / n, 2),
+                held_cycles_per_token=round(4 * sum(out["held"].values())),
+                max_ramps_per_die=max(out["ramps"].values()), tau_cycles=PRERAMP_TAU_CYCLES,
+                layer_die_ramps_per_token=4 * sum(out["ramps"].values()),
+                layer_die_starts_per_token=4 * sum(out["starts"].values()))
+
+
+def cons_droop(p):
+    """Pre-ramp energy per token on the layer dies: ops a layer die a token x layer dies x mJ an op start."""
+    n = DROOP["field_ops_per_layer_die_per_token"] * p["layer_dies"]
+    fs = p.get("field_starts")
+    out = {}
+    for k, v in DROOP["schemes"].items():
+        e = n * v["mJ_per_op_start"]
+        row = dict(pre_ramp_mJ_per_token=round(e, 1),
+                   gated_mJ_b1=round(p["energy"]["ar_b1"]["gated_mJ"] + e, 1),
+                   gated_mJ_saturated=round(p["energy"]["ar_sat"]["gated_mJ"] + e, 1))
+        if fs:      # ramp only after an idle gap (root lever / W18's gap policy), counted on the priced graph; a held
+                    # gap costs the ramp's energy per cycle (cfg_gap ~ cfg_ramp is energy-optimal, W18)
+            eg = fs["layer_die_ramps_per_token"] * v["mJ_per_op_start"] + \
+                fs.get("held_cycles_per_token", 0) * v["mJ_per_op_start"] / PRERAMP_TAU_CYCLES
+            row.update(gap_only_pre_ramp_mJ_per_token=round(eg, 1),
+                       gap_only_gated_mJ_b1=round(p["energy"]["ar_b1"]["gated_mJ"] + eg, 1),
+                       gap_only_gated_mJ_saturated=round(p["energy"]["ar_sat"]["gated_mJ"] + eg, 1))
+        out[k] = row
+    return out
+
+
+# ---- a smaller Qwen die (root 2026-09-30): the area extra G does not use ----
+def qwen_small_die(tiles_mm2=(308.0, 359.0), spine_mm=1.4, margin=0.10):
+    """Size the option-C Qwen die to its placed tiles (W12's TP-4 estimate, 1,536 tiles, 308-359 mm2; the routed
+    tile area replaces it when it lands) + spine + 4 HBM PHY + UCIe + stream-unit spill + 10% margin, with 4 stacks'
+    PHYs on the long edges (2 a side at 8.5 mm).  Also at the ruled storage-only density (the model's tile need)."""
+    fixed = QWEN_TILE_FIXED_MM2
+    W = 2 * HBM_SHORE["phy_edge_mm"] + 2 * HBM_SHORE["corner_mm"]
+    rows = []
+    rom75 = qwen_rom_need_mm2(4, 6144)
+    pad = qwen_tp_point(4, 6144, "board")["bank_padding"]
+    ruled = rom75["need_mm2"] - rom75["rom_mm2"] + rom75["rom_mm2"] / (1 - pad) - fixed
+    for tag, t in [(f"W12 estimate {x:g} mm2 (ASAP7 tiles)", x) for x in tiles_mm2] + [
+            ("storage-only 75 + ECC tile need (the ruled basis)", ruled)]:
+        H, Wd = 0.0, W
+        for _ in range(30):                          # the spine runs the die's length; the PHY edge grows past
+            area = (t + spine_mm * max(Wd, H) + fixed) * (1 + margin)   # 19 mm when the other side would exceed 26
+            Wd = max(W, area / 26.0)
+            H = area / Wd
+        L = max(Wd, H)
+        dc = die_cost(area)
+        hw = 4 * dc["usd"] + 2 * (FAB["package_usd"]["cowos_l_2die"] + FAB["test_assembly_usd"]) + 16 * FAB["hbm_stack_usd"]
+        rows.append(dict(basis=tag, tiles_mm2=round(t, 1), die_mm2=round(area, 1), outline_mm=(round(Wd, 2), round(H, 2)),
+                         fits_reticle=L <= 33.0 and min(Wd, H) <= 26.0, phy_edge_ok=Wd >= W - 1e-9,
+                         yield_=dc["yield_"], die_usd=dc["usd"], hardware_usd_4die=round(hw)))
+    ref = die_cost(FLOORPLAN["die_mm2"])
+    rows.append(dict(basis="815 mm2 reference", die_mm2=815.0, yield_=ref["yield_"], die_usd=ref["usd"],
+                     hardware_usd_4die=round(4 * ref["usd"] + 2 * (FAB["package_usd"]["cowos_l_2die"]
+                                                                   + FAB["test_assembly_usd"]) + 16 * FAB["hbm_stack_usd"])))
+    return dict(rows=rows, spine_mm=spine_mm, margin=margin, phy_long_edge_mm=W,
+                note="the die keeps its 4 PHYs on the long edges (2 x 8.5 mm + corners = 19 mm); the smaller die is "
+                     "priced at the same G = 6,144 and tok/s")
+
+
+# ---------------------------------------------------------------------------------------------------------
+# W16 follow-ups (root, 2026-09-30): the product stage-owner file, the MTP tau sweep, short-context rows, the GPU
+# calibration row, and the Qwen context sweep.
+# ---------------------------------------------------------------------------------------------------------
+# MTP acceptance (root / user direction 2026-09-30): the headline tau is third-party.  LMSYS, "DSpark in SGLang"
+# (https://www.lmsys.org/blog/2026-07-06-dspark-sglang/, Figure 4, reproduction appendix): DeepSeek-V4-FLASH, H200,
+# TP4 + DP-attention, draft block 6 (gamma = 5), cap-accept verify mode ("to expose the acceptance ceiling"):
+# gsm8k 5.24, arena-hard 3.78, poetry 2.91.  V4-Flash, not V4.1-Flash; our measured 3.649 corroborates.
+TAU_SWEEP = (("poetry (creative, lower; LMSYS V4-Flash)", 2.91),
+             ("measured on V4.1-Flash, reasoning mix (OpenTallas; corroboration)", V41_TAU),
+             ("HEADLINE: arena-hard (general chat; LMSYS V4-Flash, cap-accept ceiling)", 3.78),
+             ("4.5 (interpolated)", 4.5),
+             ("gsm8k (math, upper; LMSYS V4-Flash)", 5.24))
+TAU_SRC = ("LMSYS, 'DSpark in SGLang' (2026-07-06), https://www.lmsys.org/blog/2026-07-06-dspark-sglang/ Figure 4: "
+           "DeepSeek-V4-Flash, H200 TP4 DP-attention, block 6, cap-accept verify (acceptance ceiling)")
+
+
+def cons_tau_sweep(rows, positions=V41_POSITIONS):
+    """MTP per-user rate at each tau from the rows' measured-tau MTP rate: a verify step's time does not depend on how
+    many positions are accepted, so tok/s scales with tau / V41_TAU (tau <= gamma + 1 = positions)."""
+    out = []
+    for name, x in rows:
+        base = x.get("mtp")
+        if base is None:
+            continue
+        r = dict(design=name)
+        for lab, tau in TAU_SWEEP:
+            assert tau <= positions, "tau above gamma + 1 is impossible"
+            r[f"tau_{tau:g}"] = round(base * tau / V41_TAU, 1)
+        out.append(r)
+    return dict(rows=out, taus={lab: t for lab, t in TAU_SWEEP}, headline_tau=3.78, source=TAU_SRC,
+                gamma=positions - 1, note="tau <= gamma + 1 = 6 always holds here; GPU rows scale their tier-2 MTP "
+                                          "the same way (their draft is modelled per step)")
+
+
+@contextlib.contextmanager
+def _cons_ctx(ctx):
+    """Price the V4.1 graphs at context `ctx` instead of 1M (the consolidation section's own graphs only)."""
+    global _CONS_CTX
+    old = _CONS_CTX
+    _CONS_CTX = ctx
+    _HBM_CHAIN_CACHE.clear()
+    _HBM_N_CACHE.clear()
+    try:
+        yield ctx
+    finally:
+        _CONS_CTX = old
+        _HBM_CHAIN_CACHE.clear()
+        _HBM_N_CACHE.clear()
+
+
+# public GPU single-user records (root 2026-09-30).  TensorRT-LLM tech blog 1, "Pushing Latency Boundaries: Optimizing
+# DeepSeek-R1 Performance on NVIDIA B200 GPUs": 8x B200, ISL 1K / OSL 2K, FP4, MTP extended to 3 layers (relaxed
+# acceptance), 368 tok/s a user.  TensorRT-LLM blog 15 (DeepSeek-V3.2 on Blackwell): B200 min-latency ~312 tok/s a
+# user with MTP-3.  NVIDIA's 1,038 tok/s a user on one DGX B200 is Llama 4 Maverick (not DeepSeek).  B300: the public
+# interactivity points (SemiAnalysis InferenceX) are 73-150 tok/s a user at throughput-optimal settings; no
+# min-latency B300 DeepSeek record was found.
+GPU_PUBLIC = [
+    dict(design="DeepSeek-R1 (671B), 8x B200, TensorRT-LLM min-latency", tok_s_user=368.0, ctx=3072, mtp_layers=3,
+         src="TensorRT-LLM tech blog 1 (ISL 1K / OSL 2K, FP4)"),
+    dict(design="DeepSeek-V3.2, B200, TensorRT-LLM min-latency", tok_s_user=312.0, ctx=None, mtp_layers=3,
+         src="TensorRT-LLM tech blog 15"),
+    dict(design="Llama 4 Maverick (400B MoE, 17B active), 1x DGX B200", tok_s_user=1038.0, ctx=None, mtp_layers=None,
+         src="NVIDIA / Tom's Hardware, 2025-05: the ~1,000 tok/s/user public record is NOT a DeepSeek model"),
+]
+B300_OVER_B200 = dict(hbm_bw=8.0 / 8.0, note="B300 keeps 8 TB/s of HBM3E a GPU (288 GB); per-user decode at low batch "
+                                             "is bandwidth- and latency-bound, so the tier-2 B300 row equals B200 "
+                                             "within the model (ASSUMED; no public min-latency B300 DeepSeek record)")
+
+
+def gpu_tier2_v41_ctx(ctx, positions=1):
+    """Tier-2 8x B200 V4.1-Flash step at context ctx (gpu_economics' form: fixed per layer + weight + index/KV bytes
+    at the fitted B200 byte rate + NCCL-class all-reduces), batch 1."""
+    fixed = GPU_FIT["fixed_seconds_qwen"]
+    s_per_B = (1 / 230.0 - fixed) / (2 * GPU_FIT["qwen_fp8_weight_bytes"])
+    c = A._env()["c"]
+    idx_user = 262144 * A.IDX_KEY_B * 4 * 38 * ctx / 1048576     # gpu_economics' 1M index-key read, scaled to ctx
+    t = (40 * fixed / 36 + s_per_B * (_v41_weight_bytes(positions) + idx_user) / 8 + 40 * 5 * NCCL_ALLREDUCE_S)
+    return t
+
+
+def cons_short_context(Sp, hp, t_a, head, ec, gr, ctx=8192):
+    """Short-context rows (root 2026-09-30): the public GPU records are short-context, and the 1M headline is dominated
+    by the index scan and attention.  The ROM product, the HBM tier 3 at equal cost (audited) and GPU tier 2, at ctx."""
+    with _cons_ctx(ctx):
+        p = cons_v41_rom(Sp, hp, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ, FIELD_CONCURRENCY,
+                         dict(SOFTPLUS_FIX, **W11_STREAM_SS), PRODUCT_DYN_SCALE, (0.9e9, "w18"), None, 7, True,
+                         PRODUCT_SERIAL, DIE_SHRUNK_INTERIM)
+        h = v41_hbm_n(96, 4, ec, gr, replicas=2, clock_hz=PRODUCT_CLOCK_HZ)
+    h1 = v41_hbm_n(96, 4, ec, gr, replicas=2, clock_hz=PRODUCT_CLOCK_HZ)      # 1M: the W19 composition's context
+    w_ar = HBM_W19["ar_tokens_s"] / h1["ar"]["batch1"]["per_user_tokens_s"]
+    w_mtp = HBM_W19["mtp_tokens_s"] / h1["mtp"]["batch1"]["per_user_tokens_s"]
+    t_ar = gpu_tier2_v41_ctx(ctx)
+    gv = ec["gpu"]["v41"]
+    mtp_ratio = gv["mtp_b1"] / gv["tokens_s_b1"]
+    return dict(ctx=ctx, rows=[
+        dict(design="V4.1 ROM product (columns, 1.2 GHz SS)", ar=p["ar_tokens_s_b1"], mtp=p["mtp_tokens_s_b1"],
+             saturated=p["ar_saturated_tokens_s"], dies=p["dies"], silicon_mm2=p["dies"] * FLOORPLAN["die_mm2"],
+             capex_usd=head["cost"]["capex_usd"]["low"], users=p["capacity_users_1m"]),
+        dict(design="V4.1 HBM tier 3, equal cost (2 x TP-96), W19 composed/model ratio at 1M applied at ctx", ar=round(
+            h["ar"]["batch1"]["per_user_tokens_s"] * w_ar, 1),
+             mtp=round(h["mtp"]["batch1"]["per_user_tokens_s"] * w_mtp, 1), w19_ratio_ar=round(w_ar, 4),
+             w19_ratio_mtp=round(w_mtp, 4),
+             saturated=h["ar"]["saturated"]["aggregate_tokens_s"], dies=h["dies"], silicon_mm2=h["silicon_mm2"],
+             capex_usd=h["cost"]["capex_usd"]["low"], users=h["capacity_users_1m"]),
+        dict(design="V4.1-Flash, 8x B200 (tier 2, calibrated)", ar=round(1 / t_ar, 1), mtp=round(mtp_ratio / t_ar, 1),
+             gpus=8, silicon_mm2=16 * 800.0, capex_usd=8 * COST["package_usd"], cost_basis="purchase price"),
+        dict(design="V4.1-Flash, 8x B300 (tier 2; = B200 within the model, ASSUMED)", ar=round(1 / t_ar, 1),
+             mtp=round(mtp_ratio / t_ar, 1), gpus=8, silicon_mm2=16 * 800.0, note=B300_OVER_B200["note"])])
+
+
+def gpu_calibration_row(ec):
+    """Our tier-2 model at DeepSeek-R1's published min-latency conditions (8x B200, ~3K context, MTP-3) against its
+    368 tok/s: R1 is 671B / 37B active (FP4 in the record) against V4.1-Flash's 284B / 13B, so the row reports the
+    model's V4.1 short-context step and states the model mismatch."""
+    t = gpu_tier2_v41_ctx(3072)
+    gv = ec["gpu"]["v41"]
+    mtp = gv["mtp_b1"] / gv["tokens_s_b1"] / t
+    return dict(conditions="8x B200, context ~3K (ISL 1K / OSL 2K), MTP", published=GPU_PUBLIC,
+                model_v41_ar=round(1 / t, 1), model_v41_mtp=round(mtp, 1),
+                error_vs_r1_record=round(mtp / 368.0 - 1, 3),
+                note="the model prices V4.1-Flash (13B active) and R1 is 37B active: a like-for-like error needs an R1 "
+                     "run of the tier-2 form; the ratio shown mixes model size with model error")
+
+
+QWEN_CTX_SWEEP = (8192, 32768, 131072, 200000)
+QWEN_CTX_NOTE = ("W12b context audit (claude/w12-qwen-rom b4d2715f): KV read 18,432 x T bytes a token a die; HBM "
+                 "binds from ~32K (W12b ~1.4k tok/s at 128K, ~0.9k at 200K with SW 1,024, matching this sweep); 32K "
+                 "needs parameters and 2 larger SRAMs (+~10 mm2 a die); 128K and 200K need a 27-bit address and a "
+                 "larger VM (or head-serial scores).  "
+                 "Qwen3-8B is natively 32K and 128K with YaRN; 200K is beyond official support.  FP8 KV (baseline); "
+                 "the FP4/INT4-KV rows halve the KV bytes and are QUALITY-UNTESTED")
+
+
+def qwen_context_sweep(ec):
+    """Qwen3-8B per-user AR, KV bytes a token and KV read time, users that fit, saturated tok/s and J/token at 8K-200K
+    for the ROM product (option C: TP-4, 4 x 4 stacks), its 6-stack-a-die and FP4-KV sensitivities, the HBM tier 3
+    (2 x 4-stack right-sized dies) and GPU tier 2 (1x B200).  Rule: a token is the longer of the replayed compute
+    chain at ctx (the attention work grows with ctx) and the KV stream of the busiest die (overlapped, ASSUMED)."""
+    import arch_budget_qwen3 as Q
+    import hdc_timing as T
+    wl, kvb8 = _qwen_wl()
+    qr, qh = ec["qwen_rom"], ec["qwen_hbm"]
+    cats = qr["energy"]["categories_mJ_per_token"]
+    kv_e8 = (cats["kv_on_die"] + cats["stack"]) * 1e-3
+    other_e = sum(v for k, v in cats.items() if k not in ("kv_on_die", "stack")) * 1e-3
+    P_static = qr["energy"]["static_w_total"]
+    dq = hbm_gpu_design("qwen")
+    w_B = sum(b_ for b_, _ in qwen_hbm_ops(dq["element"], dq["barrier"]["boundary_cycles"], dq["drain_cycles"])) - kvb8 / 2
+    w_total = 2 * w_B
+    t_h8 = 1 / qh["ar"]["tokens_s_b1"]
+    fixed = GPU_FIT["fixed_seconds_qwen"]
+    s_per_B = (1 / 230.0 - fixed) / (2 * GPU_FIT["qwen_fp8_weight_bytes"])
+    rows = []
+    for ctx in QWEN_CTX_SWEEP:
+        k0 = dict(T.K)
+        Q.CLOCK[0] = Q.clock_hz()
+        clock = Q.CLOCK[0]
+        try:
+            T.K["me_lat"] = k0["me_lat"] + QWEN_WIRE_W12["me_lat_extra"]
+            nh, kv = QWEN_TP_SHAPE[4]
+            shp = dict(Q.Q, NH=nh, KV=kv, FF=-(-Q.Q["FF"] // 4), V=-(-Q.Q["V"] // 4))
+            r = Q.as_built(ctx, groups=6144, su_width=1024, shape=shp, ucie=False)
+        finally:
+            T.K.clear()
+            T.K.update(k0)
+        x = _qwen_exchange("board", 4, clock)
+        chain = (r["cycles"] + x["token_cycles"]) / clock
+        for tag, stacks, kvf in (("ROM option C (4 stacks a die, FP8 KV)", 4, 1.0),
+                                 ("ROM option C, 6 stacks a die", 6, 1.0),
+                                 ("ROM option C, FP4/INT4 KV (quality untested)", 4, 0.5)):
+            kvb = kvb8 * ctx / 8192 * kvf
+            kv_die = kvb * kv / Q.Q["KV"]
+            t_kv = kv_die / (stacks * HBM_STACK_BPS)
+            t = max(chain, t_kv)
+            users = int(stacks * HBM_STACK_B * HBM_CAP_EFF // kv_die)
+            ub = r["unit_busy"]
+            lanes = ub["weights"] + ub["attn_scores"] + ub["attn_pv"] + ub["lm_head"]
+            sat = min(clock / lanes, clock / ub["stream"], stacks * HBM_STACK_BPS / kv_die)
+            dyn = other_e + kv_e8 * kvb / kvb8
+            rows.append(dict(ctx=ctx, design=tag, ar_tokens_s=round(1 / t, 1), kv_bytes_per_token=round(kvb),
+                             kv_read_us=round(t_kv * 1e6, 1), chain_us=round(chain * 1e6, 1),
+                             binding="KV stream" if t_kv > chain else "compute chain", users=users,
+                             saturated_tokens_s=round(min(sat, users / t), 1),
+                             mJ_b1=round((dyn + P_static * t) * 1e3, 1),
+                             mJ_saturated=round((dyn + P_static / min(sat, users / t)) * 1e3, 1)))
+        kvb = kvb8 * ctx / 8192
+        t_h = t_h8 * (w_total + kvb) / (w_total + kvb8)
+        users_h = int((8 * HBM_STACK_B * HBM_CAP_EFF - w_total) // kvb)
+        rows.append(dict(ctx=ctx, design="Qwen HBM tier 3 (2 x 4-stack right-sized dies), AR", ar_tokens_s=round(1 / t_h, 1),
+                         kv_bytes_per_token=round(kvb), kv_read_us=round(t_h * kvb / (w_total + kvb) * 1e6, 1),
+                         binding="HBM stream", users=users_h))
+        t_g = fixed + s_per_B * (GPU_FIT["qwen_fp8_weight_bytes"] + kvb)
+        users_g = int((B200_HBM_B * HBM_CAP_EFF - GPU_FIT["qwen_fp8_weight_bytes"]) // kvb)
+        rows.append(dict(ctx=ctx, design="Qwen3-8B on 1x B200, FP8 (tier 2, calibrated), AR", ar_tokens_s=round(1 / t_g, 1),
+                         kv_bytes_per_token=round(kvb), kv_read_us=round(s_per_B * kvb * 1e6, 1), users=users_g,
+                         mJ_b1=round(B200_W_DECODE * t_g * 1e3, 1)))
+    return dict(rows=rows, note=QWEN_CTX_NOTE,
+                rule="per-user token = max(replayed compute chain at ctx, busiest die's KV stream) for the ROM; the HBM "
+                     "tier 3 and GPU scale their 8K step by the streamed bytes (weights + KV)")
+
+
+# Qwen ROM product at 1.2 GHz SS (root 2026-09-30, W12b claude/w12-qwen-rom 8289866f): W12's TP-4 wire stages at the SS
+# reach (112 cycles an ME op incl. MEM_EXTRA) + LAT-7 ME adders (+54 an op), and the droop product choice cap75 +
+# preramp256 (x0.956 tok/s, +22.2 mJ a token of ramp energy; results/floorplan/qwen_rom_w12/droop_1p2ghz.json)
+QWEN_SS = dict(me_lat_extra=QWEN_W12_TP4_ME_EXTRA_SS + 54, droop_rate=0.956, droop_mJ=22.2,
+               src="W12b 775f5279 / 8289866f: LAT-7 ME +54 cycles an op; droop cap75 + preramp256")
+
+
+# W12b (claude/w12-qwen-rom 42ecf382, root relay 2026-09-30): 1.2 GHz ME deltas -- LAT-7 adders +54 an ME op (ALREADY in
+# QWEN_SS since 775f5279, not added again), KV_PREP +3 a KV op (+216 a token), FAST_ISSUE 0
+QWEN_KV_PREP_CYCLES_TOKEN = 216
+# W12b MEASURED (42ecf382 results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64.json, status pass): TP-4 layer 0
+# bit-exact on 4 dies, G 6,144, SU width 64, SS wire stages (BD 41, NWS 5, TWS 38, ORD 7, MEM_EXTRA 1 = ME extra 112),
+# N=4 oneshot collective at LAT 339 / DEPTH 1024, ME adders and issue loop the originals: 4,669 cycles
+QWEN_L0_RTL = dict(cycles=4669, total_cycles=4676, collective_lat_cycles=339, su_width=64, groups=6144, tp=4,
+                   me_extra=QWEN_W12_TP4_ME_EXTRA_SS, position=0,
+                   src="claude/w12-qwen-rom 42ecf382 results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64.json "
+                       "(stages.L0.cycles)")
+
+
+# W12b ATTRIBUTION (claude/w12-qwen-rom a17a3c79, itrace results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64_itrace.txt):
+# each all-reduce is 2 serialized 128-word TP segments (8-bit count field), ~497 cycles each -> 991 an all-reduce, 1,982
+# a layer against the model's 884 (1,098 of the 1,325-cycle gap); the body excluding collectives is 2,687 cycles against
+# the model's 2,460 (+9.2%, ME latency per op).  Stage spans: QKV 431, attn 87, PV+O ME 769, O AR 991, post 69, gate/up
+# 528, SiLU 119, down 480, down AR 991, tail 222.  W12b's one-segment fix (79783ff9: a 256-word all-reduce is ONE TP
+# segment, count 0 encodes 256) is NOT measured (estimate ~620 an all-reduce at LAT 339; TP-4 L0 re-run pending)
+QWEN_L0_ATTR = dict(body_cycles=2687, allreduce_cycles=991, allreduces_per_layer=2, segments_per_allreduce=2,
+                    segment_cycles=497,
+                    spans=dict(qkv=431, attn=87, pv_o_me=769, o_ar=991, post=69, gate_up=528, silu=119, down=480,
+                               down_ar=991, tail=222),
+                    src="claude/w12-qwen-rom a17a3c79 results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64_itrace.txt",
+                    fix_pending="claude/w12-qwen-rom 79783ff9 one-segment all-reduce, NOT measured (est. ~620 cycles)")
+
+
+def qwen_l0_rtl_vs_model():
+    """The model's layer at W12b's RTL configuration (position 0, SU width 64, ME extra 112, TP-4, G 6,144, SS) against
+    the measured layer 0: the layer chain plus its two all-reduces, with W12b's per-stage attribution (body and
+    all-reduces separately), which replaces the single RTL-calibrated ratio (root 2026-10-01)."""
+    m = QWEN_L0_RTL
+    p = qwen_tp_point(4, m["groups"], "board", clock_hz=PRODUCT_CLOCK_HZ, me_lat_extra=m["me_extra"], ctx=1,
+                      su_width=m["su_width"])
+    ar = p["exchange"]["per_allreduce_cycles"]
+    model = p["layer_chain_cycles"] + 2 * ar
+    model_rtl_coll = p["layer_chain_cycles"] + 2 * m["collective_lat_cycles"]
+    return dict(rtl=m, model_layer_chain_cycles=p["layer_chain_cycles"], model_allreduce_cycles=ar,
+                model_layer_cycles=round(model, 1), ratio=round(m["cycles"] / model, 4),
+                model_short_pct=round(100 * (1 - model / m["cycles"]), 1),
+                model_layer_cycles_at_rtl_collective=round(model_rtl_coll, 1),
+                gap_cycles_at_rtl_collective=round(m["cycles"] - model_rtl_coll, 1),
+                attribution=dict(QWEN_L0_ATTR, model_body_cycles=p["layer_chain_cycles"],
+                                 body_ratio=round(QWEN_L0_ATTR["body_cycles"] / p["layer_chain_cycles"], 4),
+                                 allreduce_gap_cycles=round(2 * (QWEN_L0_ATTR["allreduce_cycles"] - ar), 1),
+                                 body_gap_cycles=round(QWEN_L0_ATTR["body_cycles"] - p["layer_chain_cycles"], 1)),
+                status="ATTRIBUTED (W12b a17a3c79): body +9.2% (ME latency per op), all-reduce 2 serialized TP segments")
+
+
+def qwen_product_ss():
+    p = qwen_tp_point(4, 6144, "board", clock_hz=PRODUCT_CLOCK_HZ, me_lat_extra=QWEN_SS["me_lat_extra"])
+    cyc = p["cycles"] + QWEN_KV_PREP_CYCLES_TOKEN
+    out = dict(p, cycles=cyc, tokens_s_b1=round(p["clock_hz"] / cyc * QWEN_SS["droop_rate"], 1), droop=QWEN_SS,
+               kv_prep_cycles=QWEN_KV_PREP_CYCLES_TOKEN)
+    # RTL-ATTRIBUTED rows (root 2026-10-01, replacing the single RTL-calibrated ratio): the layer chain (body) x W12b's
+    # measured body / the model's body at the L0 configuration, and the two all-reduces a layer either as built
+    # (2 serialized TP segments, 991 cycles each) or at the model's latency (W12b's one-segment fix, unmeasured);
+    # the head, embedding and KV_PREP stay at the model
+    cal = qwen_l0_rtl_vs_model()
+    att = cal["attribution"]
+    chain, ar = p["layer_chain_cycles"], p["exchange"]["per_allreduce_cycles"]
+    body_add = 36 * chain * (att["body_ratio"] - 1)
+    ar_add = 36 * 2 * (QWEN_L0_ATTR["allreduce_cycles"] - ar)
+    for key, c, lab in (
+            ("rtl_attributed_as_built", cyc + body_add + ar_add,
+             f"RTL-attributed, as built: per-layer body x {att['body_ratio']} (W12b {QWEN_L0_ATTR['body_cycles']:,} / "
+             f"model {att['model_body_cycles']:,.0f}) + 2 all-reduces at the measured {QWEN_L0_ATTR['allreduce_cycles']} "
+             "cycles (2 serialized 128-word TP segments; W12b a17a3c79)"),
+            ("rtl_attributed_body_only", cyc + body_add,
+             f"RTL-attributed, body only: per-layer body x {att['body_ratio']}; all-reduces at the model's "
+             f"{ar:,.0f} cycles, PENDING W12b's one-segment fix (79783ff9, unmeasured; est. ~620 at LAT 339)")):
+        out[key] = dict(cycles=round(c), body_ratio=att["body_ratio"],
+                        tokens_s_b1=round(p["clock_hz"] / c * QWEN_SS["droop_rate"], 1), label=lab)
+    return out
+
+
+# The model's own caveats: lessons where its pricing hid a cost that a measurement or a finer model exposed
+MODEL_CAVEATS = [
+    dict(id="vm_per_op_latency",
+         lesson="Per-op network latency on the latency-bound SU chain was invisible in the throughput-style VM pricing. "
+                "The VM was priced by port widths (vm_read_elems / vm_write_elems) and a few client wire stages, i.e. "
+                "as bandwidth; the SU softmax / norm / Sinkhorn chains are dependent ops, so each op pays the VM "
+                "network's full latency (control broadcast, operand read, element write or result tree).  W11's VM-H "
+                "measured that at +36.7 slow cycles a vector op and +44.9 a reduction: -14.5% AR on the full-shape "
+                "token, 82% of the 3,153 -> 2,680 drop (results/uarch/v41_vm_waterfall.json); more lanes or ports buy "
+                "nothing (issue is not the bind).  Rule: any shared network on a dependent chain is priced as "
+                "per-op latency on the chain, not as bandwidth.",
+         src="root 2026-10-01; W11 claude/w11-vmh-land 3cc18731; W16b waterfall"),
+]
+
+
+def _vm_waterfall_job(job):
+    tag, vmh, pitch, block, lanes, hub = job
+    if lanes:
+        PRESETS["proposal"] = dict(PRESETS["proposal"], su_lanes=lanes[0], sfu_lanes=lanes[1])
+    g = CONS_GEOM["w10_refit"]
+    f0 = g["field_mm2"]
+    loss = 0.0 if block is None else (block - 14.249) * 1.05
+    g["field_mm2"] = f0 - loss
+    try:
+        S = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", pitch, "columns", "4096m8")
+        H = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", pitch, "8192m8")
+    finally:
+        g["field_mm2"] = f0
+    hubd = dict(hub, block_mm2=block) if hub else None
+    p = cons_v41_rom(S, H, cons_table_dies("analytical")["dies"], 1.0, None, "columns", PRODUCT_CLOCK_HZ,
+                     FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), PRODUCT_DYN_SCALE, (0.9e9, "w18"), None,
+                     7, True, PRODUCT_SERIAL, DIE_SHRUNK_INTERIM, vmh, hubd)
+    return tag, dict(stages=S, dies=p["dies"], hub_block_mm2=block, ar_tokens_s_b1=round(p["ar_tokens_s_b1"], 1),
+                     mtp_tokens_s_b1=round(p["mtp_tokens_s_b1"], 1),
+                     ar_saturated_tokens_s=round(p["ar_saturated_tokens_s"], 1), vm=vmh)
+
+
+def cons_vm_waterfall(procs=None):
+    """Root 2026-10-01: the waterfall from the pre-VM-H product (3,153 AR) to the measured VM-H product, component by
+    component, and the VM levers at the product basis (W10b tiles, the block's hub area, 0.9 GHz SU domain)."""
+    from multiprocessing import get_context
+    novm = dict(x_gather=6 * 0.9 / 1.2, ret_scatter=6 * 0.9 / 1.2, coll_write=6 * 0.9 / 1.2, su_op_extra=0.0,
+                su_red_extra=0.0, su_issue=1.0, src="VM_DIST 6/6/6 fast cycles (no VM-H)")
+    H = dict(VMH)
+    C = dict(VMC)
+    CX = dict(x_gather=18, ret_scatter=18, coll_write=18, su_op_extra=57, su_red_extra=49, su_issue=1.0,
+              src="W11 3cc18731 options.C (central full crossbar, 74.66 mm2)")
+    steps, cum = [("previous product (VM_DIST 6/6/6, ledger hub, W10 q 476 um)", None, "w10_q_1p2", None, None, None)], dict(novm)
+    names = dict(x_gather="VM-H x gather 6 -> 12 stages", ret_scatter="VM-H result scatter 6 -> 12",
+                 coll_write="VM-H collective write 6 -> 12", su_op_extra="VM-H SU op network latency +36.7 slow cycles",
+                 su_red_extra="VM-H reduction network latency +44.9", su_issue="VM-H issue x1.169")
+    for k in ("x_gather", "ret_scatter", "coll_write", "su_op_extra", "su_red_extra", "su_issue"):
+        cum = dict(cum, **{k: H[k]})
+        steps.append((names[k], dict(cum), "w10_q_1p2", None, None, None))
+    steps.append(("W10b tiles (q 510.84 um): 37 -> 39 stages", H, PRODUCT_PITCH, None, None, None))
+    steps.append(("VM-H hub block 38.95 mm2: 39 -> 41 stages (measured VM-H reference)", H, PRODUCT_PITCH,
+                  VMH_BLOCK["block_mm2"], None, VMH_BLOCK))
+    shrink = lambda f: dict(H, su_op_extra=5 + (H["su_op_extra"] - 5) * f, su_red_extra=5 + (H["su_red_extra"] - 5) * f)
+    levers = [
+        ("(a) C_rotate instead of H (PRODUCT, root ruling)", C, PRODUCT_PITCH, VMC_BLOCK["block_mm2"], None, VMC_BLOCK),
+        ("(b) SU 2,048 / SFU 512 lanes, network unchanged (optimistic; block ~63 mm2)", H, PRODUCT_PITCH,
+         VMH_BLOCK["block_mm2"] + 24.0, (2048, 512), VMH_BLOCK),
+        ("(b) SU 2,048 / SFU 512 lanes, network stages x1.41", dict(shrink(1.41), x_gather=17, ret_scatter=17,
+                                                                    coll_write=17), PRODUCT_PITCH,
+         VMH_BLOCK["block_mm2"] + 24.0, (2048, 512), VMH_BLOCK),
+        ("(c) flat VM as buildable = W11 option C (central crossbar, 74.66 mm2)", CX, PRODUCT_PITCH, 74.664, None,
+         VMH_BLOCK),
+        ("(c) flat VM with no network (NOT physical; reference)", None, PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None,
+         VMH_BLOCK),
+        ("(d) VM-H per-op network latency -25%", shrink(0.75), PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None, VMH_BLOCK),
+        ("(d) VM-H per-op network latency -50%", shrink(0.5), PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None, VMH_BLOCK),
+        ("(d) VM-H client stages 12 -> 8 only", dict(H, x_gather=8, ret_scatter=8, coll_write=8), PRODUCT_PITCH,
+         VMH_BLOCK["block_mm2"], None, VMH_BLOCK),
+        ("(d) VM-H issue x1.169 -> 1.0 only", dict(H, su_issue=1.0), PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None,
+         VMH_BLOCK),
+        ("(d) compact C_rotate, 3,850 um each way (W11 sensitivity: one-way 8, op/red +21): NEXT DESIGN STEP",
+         dict(C, su_op_extra=21, su_red_extra=21), PRODUCT_PITCH, VMC_BLOCK["block_mm2"], None, VMC_BLOCK)]
+    jobs = steps + levers
+    with get_context("fork").Pool(procs or len(jobs)) as pool:
+        res = dict(pool.map(_vm_waterfall_job, jobs))
+    wf, prev = [], None
+    for j in steps:
+        r = dict(res[j[0]], step=j[0])
+        r["delta_ar"] = None if prev is None else round(r["ar_tokens_s_b1"] - prev, 1)
+        prev = r["ar_tokens_s_b1"]
+        wf.append(r)
+    ref = wf[-1]["ar_tokens_s_b1"]
+    lv = [dict(res[j[0]], lever=j[0], vs_vmh_reference_pct=round(100 * (res[j[0]]["ar_tokens_s_b1"] / ref - 1), 1))
+          for j in levers]
+    return dict(schema="opentallas.uarch.v41_vm_waterfall.v1", waterfall=wf, levers=lv,
+                total_drop_ar=round(wf[-1]["ar_tokens_s_b1"] - wf[0]["ar_tokens_s_b1"], 1),
+                ruling="ROOT 2026-10-01: (a) C_rotate is the product basis; the compact C_rotate placement (3,850 um "
+                       "each way) is the next design step with W11 and W18b; measured VM-H stays a reference row",
+                caveat=MODEL_CAVEATS[0]["lesson"],
+                source_sha256={"tools/uarch_model.py": hashlib.sha256((ROOT / "tools/uarch_model.py").read_bytes()).hexdigest()})
+
+
+def qwen_helix_scaleout(ec, ctx=200000, extra=(0, 4, 8, 16)):
+    """Long-context KV scale-out (root 2026-09-30): extra HBM + attention dies hold context slices (KV split by
+    position, Helix-style) with an exact ordered merge of the partial softmax; weights stay on the 4 ROM dies.  Per
+    user at ctx: max(compute chain, KV stream over all dies' stacks) + one ordered merge a layer (a board all-gather of
+    the partial (max, sum, output) vectors, W15's measured TP-4 board fit, ASSUMED to span the added dies)."""
+    import arch_budget_qwen3 as Q
+    import hdc_timing as T
+    wl, kvb8 = _qwen_wl()
+    Q.CLOCK[0] = Q.clock_hz()
+    clock = Q.CLOCK[0]
+    k0 = dict(T.K)
+    try:
+        T.K["me_lat"] = k0["me_lat"] + QWEN_WIRE_W12["me_lat_extra"]
+        nh, kv = QWEN_TP_SHAPE[4]
+        shp = dict(Q.Q, NH=nh, KV=kv, FF=-(-Q.Q["FF"] // 4), V=-(-Q.Q["V"] // 4))
+        r = Q.as_built(ctx, groups=6144, su_width=1024, shape=shp, ucie=False)
+    finally:
+        T.K.clear()
+        T.K.update(k0)
+    chain = (r["cycles"] + _qwen_exchange("board", 4, clock)["token_cycles"]) / clock
+    kvb = kvb8 * ctx / 8192
+    merge = w15_collective_s("v41p17_r0d1024", "all_gather", Q.Q["H"] * 4 + 64, 4)
+    rows = []
+    for n in extra:
+        stacks = 4 * (4 + n)
+        t_kv = kvb / (stacks * HBM_STACK_BPS)
+        t = max(chain, t_kv) + (Q.Q["L"] * merge if n else 0.0)
+        rows.append(dict(extra_kv_dies=n, total_dies=4 + n, ar_tokens_s=round(1 / t, 1), kv_read_us=round(t_kv * 1e6, 1),
+                         merge_us=round(Q.Q["L"] * merge * 1e6, 1) if n else 0.0,
+                         users=int(stacks * HBM_STACK_B * HBM_CAP_EFF // kvb)))
+    return dict(ctx=ctx, rows=rows, chain_us=round(chain * 1e6, 1),
+                rule="KV split by position over the 4 ROM dies + n KV dies (4 stacks each); one ordered partial-softmax "
+                     "merge a layer on the board fit (ASSUMED); weights stay on the ROM dies")
+
+
+CONS_SOURCES = ECON_SOURCES + ("results/arch/v41_die_assembly.json", "results/arch/v41_die_placement.json",
+                               "results/floorplan/v41_die_macromap_expanded_woa.json",
+                               "results/floorplan/v41_rom_capacity.json", "results/floorplan/qwen_o4_rom_placement.json",
+                               "results/floorplan/hbm_gpu/qwen_hbm_die.json", "results/floorplan/hbm_gpu/v41_hbm_die.json",
+                               "tools/decode_critical_path.py")
+
+
 def sweep(ctx: int):
     """Design-point search over the microarchitecture knobs that the evaluation shows binding."""
     rows = []
@@ -3152,9 +5604,33 @@ def main(argv=None):
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
     ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
     ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
+    ap.add_argument("--vm-waterfall", action="store_true", help="the VM waterfall and levers (root 2026-10-01)")
     ap.add_argument("--economics", action="store_true", help="batch, energy and cost of every design and GPU tier")
     ap.add_argument("--levers", action="store_true", help="V4.1 static-power gating, adaptive MTP, ROM mask cost")
+    ap.add_argument("--consolidation", action="store_true",
+                    help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.consolidation:
+        import hashlib
+        cs = consolidation()
+        for r in cs["v41_rom"]["points"]:
+            print(f"ROM {r['label']:44s} dies {r['dies']:4d} (L {r['layer_dies']} H {r['head_dies']} T {r['table_dies']})  "
+                  f"AR {r['ar_tokens_s_b1']:8.1f} MTP {r['mtp_tokens_s_b1']:8.1f}  sat {r['ar_saturated_tokens_s']:9.1f}  "
+                  f"gated mJ b1 {r['energy']['ar_b1']['gated_mJ']:8.1f} sat {r['energy']['ar_sat']['gated_mJ']:7.1f}  "
+                  f"capex ${r['cost']['capex_usd']['low']:,}-{r['cost']['capex_usd']['high']:,}")
+        for r in cs["hbm"]["v41_sweep"]:
+            print(f"HBM N={r['dies']:3d} x{r['stacks_per_die']}  users {r['capacity_users_1m']:6d}  AR {r['ar']['batch1']['per_user_tokens_s']:8.1f}"
+                  f"  MTP {r['mtp']['batch1']['per_user_tokens_s']:8.1f}  sat {r['ar']['saturated']['aggregate_tokens_s']:9.1f}"
+                  f"  gated mJ b1 {r['ar']['batch1']['gated_mJ']:8.1f}  capex ${r['cost']['capex_usd']['low']:,}")
+        for r in cs["comparison_rule"]["v41"]:
+            print("RULE", r["rule"], r["stacks_per_die"], r.get("dies"), r.get("replicas"),
+                  r.get("ar", {}).get("batch1", {}).get("per_user_tokens_s"), r.get("ar", {}).get("saturated", {}).get("aggregate_tokens_s"))
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            pins = {q: hashlib.sha256((ROOT / q).read_bytes()).hexdigest() for q in CONS_SOURCES}
+            Path(a.out).write_text(json.dumps(dict(schema="opentallas.uarch.consolidation.v1", **cs, source_sha256=pins),
+                                              indent=1, default=str) + "\n")
+        return
     if a.levers:
         import hashlib
         lv = economics_levers()
@@ -3211,12 +5687,23 @@ def main(argv=None):
                                                    sweep=rows, nccl_allreduce_s_assumed=NCCL_ALLREDUCE_S),
                                               indent=1, default=str) + "\n")
         return
+    if a.vm_waterfall:
+        w = cons_vm_waterfall()
+        for r in w["waterfall"]:
+            print(f"{r['ar_tokens_s_b1']:8.1f} {r['delta_ar'] or 0:+8.1f}  {r['stages']} / {r['dies']}  {r['step']}")
+        for r in w["levers"]:
+            print(f"{r['ar_tokens_s_b1']:8.1f} {r['vs_vmh_reference_pct']:+6.1f}%  {r['stages']} / {r['dies']}  {r['lever']}")
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(json.dumps(w, indent=1, default=str) + "\n")
+        return
     if a.dedicated:
         rows = [dedicated_ledger(copy.deepcopy(PRESETS[n]), a.ctx) for n in (a.preset or ("as_built", "proposal"))]
         # root decisions of 2026-09-29 (W11): 16 NK=4 index slices, NL=4 attention with the two-word loader;
         # single position and the MTP verify pass (6 positions, m = 1)
         w11 = dict(copy.deepcopy(PRESETS["proposal"]), idx_macs=262144, att_macs=32768, att_pwords=2,
-                   su_bcast_stages=SU_BCAST_STAGES_W1, su_ret_stages=SU_RET_STAGES_W1)
+                   su_bcast_stages=SU_BCAST_STAGES_W1, su_ret_stages=SU_RET_STAGES_W1,
+                   vmh_block=PRODUCT_HUB)   # ROOT RULINGS 2026-10-01: the product's SU+VM block (W18b packs this row)
         for P in (1, 6):
             rows.append(dedicated_ledger(dict(w11, name=f"proposal_w11_p{P}"), a.ctx, positions=P))
         for r in rows:

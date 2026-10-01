@@ -45,6 +45,35 @@ ILV_RE = re.compile(r"V41XILV su_l0=(\d+) qk_beats=(\d+) pv_beats=(\d+) busy=(\d
 SCK_RE = re.compile(r"V41XSETCHK loads=(\d+) reads=(\d+) errors=(\d+)")
 
 
+def vectors_model(cfg_name: str, d: Path, seed=20261002):
+    """Model-order verify rows (Model.forward_positions): position k attends its own row list, its sliding
+    window (WIN rows ending at its own row, oldest first) followed by its OWN selection of compressed rows
+    (NSEL rows drawn per position).  No row set is shared, so no reuse flag; golden = Job.expected on the list."""
+    cfg = CFGS[cfg_name]
+    H, D, TD, TMAX, W = cfg["H"], cfg["D"], cfg["TD"], cfg["TMAX"], cfg["WIN"]
+    nsel = TMAX - W
+    rng = np.random.default_rng(seed)
+    win = C.random_job(rng, H, D, W + NPOS - 1, W + NPOS - 1, "coarse")        # FP8 window rows
+    pool = C.random_job(rng, H, D, 4 * nsel + 1, 0, "coarse")                   # FP4 compressed rows
+    jobs = []
+    for k in range(NPOS):
+        sel = np.sort(rng.choice(pool.T, size=nsel, replace=False)) if nsel else np.zeros(0, dtype=int)
+        rows = [(win, k + i) for i in range(W)] + [(pool, int(i)) for i in rng.permutation(sel)]
+        fmt = np.array([j.fmt[i] for j, i in rows], dtype=np.int64)
+        codes = np.stack([j.codes[i] for j, i in rows])
+        scales = np.stack([j.scales[i] for j, i in rows])
+        q = C.from_bf16(C.rand_bf16(rng, (H, D), "coarse"))
+        p = C.from_bf16(C.rand_bf16(rng, (H, len(rows)), "coarse"))
+        jobs.append(C.Job(q, fmt, codes, scales, p, f"verify position {k}: window [{k}, {k + W}) + own selection"))
+    counts, stats = C.write_jobs(d, jobs, H, D, TD)
+    man = dict(scope=(f"MTP verify in model row order: {NPOS} positions, each its own row list (sliding {W}-row "
+                      f"window oldest first, then its own {nsel} selected compressed rows); synthetic golden inputs"),
+               config=cfg_name, parameters=cfg, seed=seed, order="model", T=[j.T for j in jobs], counts=counts,
+               expected=stats, images={x.name: C.sha(x) for x in sorted(d.glob("*.hex"))})
+    (d / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
+    return man
+
+
 def vectors(cfg_name: str, d: Path, seed=20261001):
     cfg = CFGS[cfg_name]
     H, D, TD, TMAX = cfg["H"], cfg["D"], cfg["TD"], cfg["TMAX"]
@@ -129,9 +158,12 @@ def main():
     ap.add_argument("--l0", type=int, action="append")
     ap.add_argument("--pwords", type=int, default=2)
     ap.add_argument("--bub", type=int, default=0)
+    ap.add_argument("--repl", type=int, default=0, help="engine REPL for the ILV = 1 bench")
+    ap.add_argument("--nstage", type=int, default=1, help="engine NSTAGE for the ILV = 1 bench")
+    ap.add_argument("--order", choices=["synthetic", "model"], default="synthetic")
     a = ap.parse_args()
     if a.mode == "vectors":
-        print(json.dumps(vectors(a.cfg, a.out)))
+        print(json.dumps((vectors_model if a.order == "model" else vectors)(a.cfg, a.out)))
         return
     if a.mode == "run":
         res = []
@@ -145,7 +177,7 @@ def main():
     if a.mode == "negative":
         a.scratch.mkdir(parents=True, exist_ok=True)
         vd = a.scratch / f"vec_{a.cfg}"
-        man = vectors(a.cfg, vd)
+        man = (vectors_model if a.order == "model" else vectors)(a.cfg, vd)
         cfg = CFGS[a.cfg]
         eng = a.scratch / "ot_hdc_v41x_attn_relaxed.sv"
         src = C.RTL_ENG.read_text()
@@ -153,7 +185,8 @@ def main():
         assert src.count(tight) == 1
         eng.write_text(src.replace(tight, "localparam integer P_THR = GUARD_Q - GUARD_P + 2;"))
         cap = {("NJOBMAX" if k == "NJOB" else k): 1 << max(4, int(v - 1).bit_length()) for k, v in man["counts"].items()}
-        prm = {**{k: cfg[k] for k in ("H", "D", "TD", "NL", "TROWS")}, **cap, "PWORDS": a.pwords, "ILV": 1}
+        prm = {**{k: cfg[k] for k in ("H", "D", "TD", "NL", "TROWS")}, **cap, "PWORDS": a.pwords, "ILV": 1,
+               **({"REPL": a.repl} if a.repl else {}), **({"NSTAGE": a.nstage} if a.nstage != 1 else {})}
         exe = C.verilator_build(C.TB_ENG, "tb_hdc_v41x_attn", [C.RTL_TILE, eng, C.RTL_STAGE, C.SRAM_MODEL, *C.LIB],
                                 a.scratch / "obj_relaxed", prm)
         res = []
@@ -163,20 +196,23 @@ def main():
             print(json.dumps({k: v for k, v in r.items() if k != "per_position"}), flush=True)
         caught = all(r["setcheck"]["errors"] > 0 and (r["score_errors"] + r["pv_errors"]) > 0 for r in res)
         a.out.write_text(json.dumps(dict(config=a.cfg, relaxation="P_THR + 1 (one cycle less write-after-read guard)",
+                                         engine_params=prm, order=a.order,
                                          engine_source_sha256=C.sha(C.RTL_ENG), runs=res, caught=caught), indent=1) + "\n")
         raise SystemExit(0 if caught else 1)
     # reduced: build with the set checker, run ILV 0 and 1 at each L0
     a.scratch.mkdir(parents=True, exist_ok=True)
     vd = a.scratch / f"vec_{a.cfg}"
-    man = vectors(a.cfg, vd)
+    man = (vectors_model if a.order == "model" else vectors)(a.cfg, vd)
     cfg = CFGS[a.cfg]
     res = []
     for ilv in (0, 1):
-        extra = {"PWORDS": a.pwords, "ILV": ilv, "BUB": a.bub}
+        extra = {"PWORDS": a.pwords, "ILV": ilv, "BUB": a.bub, **({"REPL": a.repl} if ilv and a.repl else {}),
+                 **({"NSTAGE": a.nstage} if ilv and a.nstage != 1 else {})}
         exe = C.build_engine(a.scratch, {k: cfg[k] for k in ("H", "D", "TD", "NL", "TROWS")}, man["counts"], extra)
         for l0 in a.l0 or [0]:
             r, out = run_exe(exe, vd, ilv, l0)
-            r.update(config=a.cfg, PWORDS=a.pwords, BUB=a.bub)
+            r.update(config=a.cfg, PWORDS=a.pwords, BUB=a.bub, REPL=a.repl if ilv else 0,
+                     NSTAGE=a.nstage if ilv else 1, order=a.order)
             (a.scratch / f"{a.cfg}_ilv{ilv}_l{l0}_b{a.bub}.log").write_text(out)
             print(json.dumps({k: v for k, v in r.items() if k != "per_position"}), flush=True)
             res.append(r)

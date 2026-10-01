@@ -38,7 +38,9 @@ module tb_hdc_v41x_su_softmax #(
     parameter integer XVMAX = 4 * N,        // the external producer's vector, at most
     parameter integer TMAX = 2000000,
     parameter integer BCAST_STAGES = 0,
-    parameter integer RET_STAGES = 0
+    parameter integer RET_STAGES = 0,
+    parameter integer MLAT = 3,
+    parameter integer ALAT = 3
 ) (input wire clk);
     `include "tb_hdc_v41x_vec_fields.svh"
     localparam integer AW = 24, NR = N / 8;
@@ -118,7 +120,7 @@ module tb_hdc_v41x_su_softmax #(
     wire [NR*32-1:0]  res_data;
     wire dbg_emit, dbg_ret, dbg_res;
     wire [7:0] dbg_eseq, dbg_rseq, dbg_sseq;
-    ot_hdc_v41x_su_adapt #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES), .RET_STAGES(RET_STAGES)) dut (
+    ot_hdc_v41x_su_adapt #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES), .RET_STAGES(RET_STAGES), .MLAT(MLAT), .ALAT(ALAT)) dut (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(w[F_NOUT +: 16]), .i_nin(w[F_NIN +: 16]),
         .i_asrc(w[F_ASRC +: 2]), .i_bsrc(w[F_BSRC +: 2]), .i_csrc(w[F_CSRC +: 2]), .i_dsrc(w[F_DSRC +: 2]),

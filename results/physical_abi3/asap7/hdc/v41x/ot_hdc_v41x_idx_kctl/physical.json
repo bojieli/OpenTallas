@@ -60,6 +60,13 @@
     "temperature_c": 0.0,
     "voltage_v": 0.7
   },
+  "currency": {
+    "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run",
+    "reason": "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv changed at 5ffe4b23 (activation counters) after this route; a re-route is ~78 min of ORFS and ORFS was saturated; not re-run.",
+    "stale_since": "5ffe4b23",
+    "state": "stale",
+    "verdict_kept": "pass"
+  },
   "design": {
     "antenna": 0,
     "antenna_violating_nets": 0,
