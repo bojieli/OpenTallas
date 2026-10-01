@@ -1,0 +1,94 @@
+{
+ "all_exact": true,
+ "cases": [
+  {
+   "case": "l20_index_topk",
+   "cycles": 995,
+   "exact": true,
+   "k": 512,
+   "n": 512,
+   "ranks": 96,
+   "stride": 262144,
+   "words": 32
+  },
+  {
+   "case": "ties_zeros_inf_k37",
+   "cycles": 516,
+   "exact": true,
+   "k": 37,
+   "n": 256,
+   "ranks": 96,
+   "stride": 1000,
+   "words": 3
+  },
+  {
+   "case": "ties_zeros_inf_kall",
+   "cycles": 515,
+   "exact": true,
+   "k": 24576,
+   "n": 256,
+   "ranks": 96,
+   "stride": 1000,
+   "words": 1536
+  },
+  {
+   "case": "argmax_tie_k1",
+   "cycles": 516,
+   "exact": true,
+   "k": 1,
+   "n": 256,
+   "ranks": 96,
+   "stride": 4096,
+   "words": 1
+  },
+  {
+   "case": "all_zero_signed_k100",
+   "cycles": 516,
+   "exact": true,
+   "k": 100,
+   "n": 256,
+   "ranks": 96,
+   "stride": 777,
+   "words": 7
+  },
+  {
+   "case": "uniform_k_half",
+   "cycles": 515,
+   "exact": true,
+   "k": 12288,
+   "n": 256,
+   "ranks": 96,
+   "stride": 1048576,
+   "words": 768
+  },
+  {
+   "case": "mostly_neg_inf_k17",
+   "cycles": 516,
+   "exact": true,
+   "k": 17,
+   "n": 256,
+   "ranks": 96,
+   "stride": 300,
+   "words": 2
+  }
+ ],
+ "claim_boundary": "Cycle-accurate RTL simulation (Verilator 5.050) of the select unit alone, loaded with the gathered candidates; cycles are go -> done at the unit's clock (the gather is the all-gather's, measured by tools/w15_collectives.py).",
+ "cycle_model": "(32/DIG) x (N*n/P + ~9) + N*n/PF + ~9 (HIST passes, PICK, FILTER)",
+ "dirty": [],
+ "git": "182f92ebe5d084a40c9640ace53d1d53114a139f",
+ "golden": "tools/hdc_golden_v41.topk_lowest_index over rank-major global scores, then sorted ids",
+ "parameters": {
+  "DIG": 8,
+  "N": 96,
+  "NMAX": 512,
+  "P": 1024,
+  "PF": 64
+ },
+ "schema": "w15_topk_merge_v1",
+ "source_sha256": {
+  "rtl/chip/ot_coll_topk_merge.sv": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6",
+  "rtl/test/tb_w15_topk_merge.sv": "95415aebf0ed571c5b836b4fccb4398da00c1f3a52763607525688879eb816cc",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/w15_topk_merge.py": "21b424a9bff14ecb6858335ce43d6319240112dabbcceaef08544d69961180f2"
+ }
+}
