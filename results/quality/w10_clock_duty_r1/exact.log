@@ -1,0 +1,7 @@
+PHASE mode=0 sent=336 rows=18
+PHASE mode=1 sent=64 rows=34
+PHASE mode=2 sent=0 rows=34
+PHASE mode=0 sent=336 rows=52
+PHASE mode=1 sent=64 rows=68
+PASS cycles=20769 hits=865 issues=1057 rows=84 nonzero=48 classes=255 wraps=240 qadv=6 restarts=4 rejected=276
+- /home/ubuntu/OpenTallas-w10-w18-recovery/rtl/test/tb_w10_wake_exact.sv:136: Verilog $finish
