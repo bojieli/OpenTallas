@@ -1,0 +1,30 @@
+Startpoint: u_tree.g_lv[0].g_add[2].u_add.g_w11.u.u_cb.g_r.r[82]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_tree.g_lv[0].g_add[2].u_add.g_w11.u.u_cd.g_r.r[88]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+ Delay   Time   Description
+-------------------------------------------------------
+   0.0    0.0   clock clk (rise edge)
+ 383.3  383.3   clock network delay (propagated)
+   0.0  383.3 ^ u_tree.g_lv[0].g_add[2].u_add.g_w11.u.u_cb.g_r.r[82]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  79.2  462.4 ^ u_tree.g_lv[0].g_add[2].u_add.g_w11.u.u_cb.g_r.r[82]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  26.2  488.7 v _309264_/Y (INVx1_ASAP7_75t_R)
+   1.0  489.6 v u_tree.g_lv[0].g_add[2].u_add.g_w11.u.u_cd.g_r.r[88]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+        489.6   data arrival time
+
+   0.0    0.0   clock clk (rise edge)
+ 408.7  408.7   clock network delay (propagated)
+ -10.1  398.6   clock reconvergence pessimism
+        398.6 ^ u_tree.g_lv[0].g_add[2].u_add.g_w11.u.u_cd.g_r.r[88]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  20.7  419.3   library hold time
+        419.3   data required time
+-------------------------------------------------------
+        419.3   data required time
+       -489.6   data arrival time
+-------------------------------------------------------
+         70.4   slack (MET)
+
+
