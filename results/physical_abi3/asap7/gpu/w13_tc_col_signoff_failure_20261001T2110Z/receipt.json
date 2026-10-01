@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-01T21:09:43.993556+00:00",
+  "source_git": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+  "engineering_verdict": "FAIL",
+  "flow_exit": null,
+  "stage": "FF_TIMING_MODEL_EXPORT_LIVE",
+  "clock_ps": 833,
+  "ss_setup_uncertainty_ps": 60,
+  "ss_setup_wns_ps": -102.65510663742816,
+  "ff_hold_uncertainty_ps": 25,
+  "ff_hold_wns_ps": -0.9053036098549683,
+  "ss_hold_diagnostic_zero_uncertainty_ps": 70.35627636042818,
+  "ff_setup_diagnostic_zero_uncertainty_ps": 186.11323593376028,
+  "adopt": false,
+  "SM_admission": false,
+  "retry_or_tune": false,
+  "manual_STA_or_extraction": false,
+  "pending": [
+    "completed FF ETM",
+    "original wrapper flow exit",
+    "final corner record"
+  ],
+  "files": {
+    "prior_source_and_wrapper_binding.json": "eb1410919a9de7179d561d239f1c5c2d3777595c821fdcf1bdd09bf29418adb5",
+    "worker_snapshot.txt": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "run/config.mk": "a0a5b41104bc232bb73d1eed6c0d4b5c5bbc2c70a1c2df8fb8a14d36b6e33d4e",
+    "run/corner_ss_max.rpt": "7d0a5a0432a4fe27bcddf777679e65aea8c6a4addb7b780b2aef130e19a150fe",
+    "run/corner_ss_min.rpt": "7d0ce609316dedc8e682bb9a7e4d4efc7472cb08d55e8b651545f0d520cc299b",
+    "run/corner_ff_max.rpt": "f2ea443427cb20d84e29c8ec85826bb90a73e2d84e6205b22d7d354fffc4a61d",
+    "run/boundary.json": "9fde5fd11fad6dc8c504efec8388e0a9e52ab26e01f9e7663b0b58d0e9fe8122",
+    "run/constraint.sdc": "00f50660ac54c896e66005fd2ee7534076714a035c58870120efd3a0a8801cdf",
+    "run/corner_ff.tcl": "6386d0f3429b3849a39c7c5155cad7ecaaffe4a655ee1d412ffdaa65f5a9c6c3",
+    "run/corner_ss.tcl": "f855b610720ebe704cebc8c95de137e8897ecfb432dc4f1ff09e54e0c94d2346",
+    "run/ot_gpu_tc_col_ss.lib": "bd2b76f8b999739e46cc21502060a6604049a879617b30511fd4ee48552dc47c",
+    "run/corner_ff_min.rpt": "9ede2666a1a9d4f511a09f9c74091415d1b3785c83e031e84d18f72bfc2f7b07",
+    "run/corner_ff.log": "4e08e178492daa4c71bcfaa9556906e48ec2cb125cac46edd2e9f9a20b50fd15",
+    "run/corner_ss.log": "8b71e66aca7b9c1b216446ddd22f0c59dc28d248d4d34637ea9ba7790419972d",
+    "run/reports/asap7/chip_ot_gpu_tc_col/base/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run/logs/asap7/chip_ot_gpu_tc_col/base/5_2_route.json": "9acee9a6041d7eaf1e8f92175670ecc2a5f7e969ca48d0a671f64b057b80f192",
+    "run/logs/asap7/chip_ot_gpu_tc_col/base/6_report.json": "85fb2ba36d6422acb0e6a3b03f55317ee8b5bde74a07802e979a8f81afa20a71"
+  }
+}
