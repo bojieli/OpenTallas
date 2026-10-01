@@ -116,7 +116,8 @@ def test_product_bank_map_distance_aware_all_dies():
     assert rule["chain_recurrence_cycles"] == 8
     da = rule["distance_aware"]
     assert set(da["critical"]) == {"a_proj", "wq_b", "cmp.wk", "wo_a", "wo_b", "router", "shared_gu", "down"}
-    assert len(rec["dies"]) == 148                         # 37 TP-4 stages (W16 product owners)
+    owners = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
+    assert len(rec["dies"]) == owners["layer_dies"]        # every layer die of the product owners (41 TP-4 stages: 164)
     assert rec["all_capacity_ok"] and all(d["capacity_ok"] and d["max_address"] <= S.DEPTH for d in rec["dies"])
     whole = max(r["wire"]["farthest_um"] for r in rec["phase_vs_model"].values() if r.get("wire"))
     for ph in da["critical"]:

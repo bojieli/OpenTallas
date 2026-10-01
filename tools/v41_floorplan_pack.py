@@ -321,7 +321,8 @@ def build(variant: str) -> dict:
     widths = {k: snap_up(v * 1e6 * HUB_SLACK / hub_h, X_STEP) for k, v in need_mm2.items()}
     # VM sits at mid-height, so COLLECTIVE (below) and GATHER (above) each get half of the
     # remaining column height: width = (2 * larger neighbour + VM) / hub height.
-    vm_factor = 1.3
+    # 1.3: routing allowance for loose VM SRAM macros; a measured VM block (REFIT vm_factor) carries its own network.
+    vm_factor = (REFIT or {}).get("vm_factor", 1.3)
     vm_col_w = max(snap_up((2 * max(need_mm2["COLLECTIVE"], need_mm2["GATHER"]) * HUB_SLACK
                             + need_mm2["VM"] * vm_factor) * 1e6 / hub_h, X_STEP),
                    snap_up(2 * cat["ot_sram_1rw_2048x128_m4_r2c2"]["width_um"] + 24, X_STEP))

@@ -86,10 +86,20 @@ def main(argv=None):
     g = 1 + SWITCH_FRACTION
     hub = {"ATTENTION": (u["indexer"]["area_mm2"] + u["attention"]["area_mm2"]) * g,
            "SU_VECTOR": u["stream_unit"]["area_mm2"] * g}
+    vmh = u["stream_unit"].get("vmh_block")
+    if vmh:
+        # The product's SU+VM block (C_rotate): stream_unit.area_mm2 = vmh_block.block_mm2 = lane_array_mm2 +
+        # vm_block_mm2 (lanes + VM SRAM + network).  Count the VM ONCE, in the hub's VM partition (replacing the
+        # pack's legacy 2 x VM-SRAM estimate, whose macros it then holds), and only the lanes in SU_VECTOR.
+        # block_mm2 excludes the power switches (uarch_model: field loss = (block - ledger) x (1 + switch_fraction)),
+        # so both parts take g.  The measured block carries its network, so no VM routing allowance (vm_factor 1).
+        hub["SU_VECTOR"] = vmh["lane_array_mm2"] * g
+        hub["VM"] = vmh["vm_block_mm2"] * g
     hub_basis = {k: dict(area_mm2=u[k]["area_mm2"], hardened=bool(u[k].get("hardened")),
                          replicas=u[k].get("replicas")) for k in ("indexer", "attention", "stream_unit")}
     P.REFIT = dict(strip_q_um=q["strip_um"] * g, strip_bf_um=b["strip_um"] * g, bf_pairs=BF16_PAIRS,
                    hub_mm2=hub, hub_scale={"HC": g, "GATHER": g}, hub_add_mm2={"VM": AON_MM2},
+                   vm_factor=1.0 if vmh else 1.3,
                    xroot=a.xroot or None,
                    reach_um=a.reach_um, reach_basis=a.reach_basis if a.reach_um else None,
                    basis="W10 placed pairs + model hub + power switches + always-on island")
