@@ -1,0 +1,295 @@
+{
+  "schema": "opentallas.window_epoch9.producer_lifecycle_model.v1",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_sha256": {
+    "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+    "rtl/chip/ckvsel/ot_chip_v41x_die.sv": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+    "results/rtl/hdc_v41x_fullshape_1m_s20260930_program_bind_rope_hbm.json": "28fb8443f1c1589908f77f51445bf4af3e9e5571836c981f505d27bec8c6e438",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
+    "rtl/chip/ot_chip_v41x_tile.sv": "c74505d599728bc0948994ddfe13da6d95eaff343ea2ee08c50fe13e5d8aa46b",
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1",
+    "rtl/chip/ot_chip_v41x_window_block_guard.sv": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/chip/ot_chip_v41x_window_retention.sv": "9c6b58ccbab8de37346fbf6e5b4353e115489f2f37af8e4533ec0d48f0336dee",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/test/v41_runtime/ot_v41_rt_die.sv": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+    "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+  },
+  "generator_sha256": "0baa37cb7d2d61e0df81560106aad08c045671aedf7d4dac96c75b7e19d945cb",
+  "verdict": "STATIC_HEALTHY_INTEGRATION_SPEC_READY_WRITE_VISIBILITY_AND_SYSTEM_RECOVERY_UNQUALIFIED",
+  "actual_descriptors": [
+    {
+      "pc": 24,
+      "tag": "L0.scores",
+      "fields": {
+        "unit": 1,
+        "me_nout": 128,
+        "me_tiles": 4,
+        "me_k": 512,
+        "me_wsrc": 1,
+        "me_wbase": 0,
+        "me_ts": 512,
+        "me_ks": 1,
+        "me_js": 0,
+        "me_xbase": 55744,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 3996,
+        "me_ots": 1,
+        "me_ojs": 40,
+        "me_oen": 1,
+        "me_xcs": 4096,
+        "me_split": 0,
+        "pred": 0,
+        "me_jsh": 3,
+        "me_xjs": 512,
+        "me_mmode": 1,
+        "me_d_nout": "T0",
+        "me_d_tiles": [
+          "ceil",
+          "T0",
+          32
+        ],
+        "me_hg": 1,
+        "me_ogs": 320,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 32,
+      "tag": "L0.pv",
+      "fields": {
+        "unit": 1,
+        "me_nout": 512,
+        "me_tiles": 16,
+        "me_k": 128,
+        "me_wsrc": 1,
+        "me_wbase": 0,
+        "me_ts": 1,
+        "me_ks": 32,
+        "me_js": 0,
+        "me_xbase": 63936,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 4642,
+        "me_ots": 1,
+        "me_ojs": 32,
+        "me_oen": 1,
+        "me_xcs": 5120,
+        "me_split": 0,
+        "me_jsh": 3,
+        "me_xjs": 640,
+        "me_mmode": 1,
+        "me_d_k": "T0",
+        "me_hg": 1,
+        "me_ogs": 256,
+        "wait": 2
+      }
+    }
+  ],
+  "producer_instructions": [
+    {
+      "pc": 20,
+      "unit": 3,
+      "tag": "L0.attn",
+      "reads": [
+        "KVN"
+      ],
+      "writes": [
+        "KVQ"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 1,
+        "qe_xbase": 54720,
+        "qe_nb": 16,
+        "qe_obase": 55232,
+        "qe_d_obase": 0,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 21,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "KVQ"
+      ],
+      "writes": [
+        "KT0"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 512,
+        "a_base": 55232,
+        "a_si": 1,
+        "dst": 3,
+        "o_base": 0,
+        "o_d": "WINM1",
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 4,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 22,
+      "unit": 2,
+      "tag": "L0.attn",
+      "reads": [
+        "KVQ"
+      ],
+      "writes": [
+        "KR0"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 512,
+        "a_base": 55232,
+        "a_si": 1,
+        "dst": 2,
+        "o_base": 0,
+        "o_d": "WINM1_ROW",
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    }
+  ],
+  "producer": {
+    "path": "QE QDQ8 kvb capture -> window_kv_blocks -> tile win_blk_user -> die block guard -> source WC/WS",
+    "capture_instruction_PC": 20,
+    "capture_base": 55232,
+    "capture_address": "QE obase+(block_index<<5); verified kvb_src_addr source",
+    "drain_instruction_PC": 21,
+    "scalar_alias_instruction_PC": 22,
+    "capture_blocks": 16,
+    "codes_per_block": 32,
+    "block_payload_bits": 264,
+    "one_row_payload_bits": 4224,
+    "producer_state_bits": 4338,
+    "source_user_bits": 10,
+    "source_row_bits": 21,
+    "block_idx_bits": 4,
+    "capture_contract": "16 contiguous32-element-aligned captures; FULL admits matching SU WINM1 drain; DRAIN holds block until accepted. Core suppresses scalar KVT writes for this exact capture provenance.",
+    "row_identity": {
+      "absolute_row": 1048575,
+      "local_KVT_row": 127,
+      "HBM_slot": 127,
+      "first_element": "kvt_base+((local_row>>4)<<13)+(block_idx<<9)+(local_row&15)"
+    },
+    "writes_per_new_row": 32,
+    "code_full_sector_writes": 16,
+    "scale_masked_sector_writes": 16,
+    "payload_bytes": 528,
+    "request_data_boundary_bytes": 1024,
+    "write_control": "WC grant -> WC_DONE ack -> WS grant(single-byte strobe at block_idx) -> WS_DONE ack. One global write at a time; tags remain sector0..15/code,16/scale, independent of refill credits/epoch.",
+    "logical_row_publish": "block_valid bits ordered0..15; row_valid set only after block15 WS_DONE. Stage invalidated by accepted block/prime. Producer becomes EMPTY at final block acceptance, before source finishes its writes: producer idle alone is not row/write drain."
+  },
+  "step_user_reset": {
+    "host": "t_start captures10-bit host_user and step_pos. Host start must occur only when previous core/service/lifecycle/producer operation is drained; wrapper has no general start_ready guard.",
+    "controller": "core_user registered with core_start; die captures one edge later, producer follows many cycles later. Verify this path separately before multiuser claims.",
+    "reset": "Two-flop die reset synchronizer rn is driven by external rst_n. t_start resets neither lifecycle last_gen nor source refill_epoch. No per-token reset assumption; runtime driver boots once and starts one L0 step.",
+    "isolation": "User/absolute row participate in row+stage provenance and lifecycle descriptor stability. User not carried in backend tag; single active source and empty-row transport enforce ownership. Configuration/user changes only at drained operation boundaries."
+  },
+  "operation_lifecycle": {
+    "state_storage_bits": 280,
+    "GENW": 16,
+    "GEN0": "forbidden; generation wraps65535->1 with wrap_drained",
+    "transitions": "IDLE accepts descriptor -> STAGE actual source stage -> READY issue_ok -> ARM engine starts -> STREAM32masked beats with matching generation -> DRAIN engine idle -> done.",
+    "stage_and_beat_gen": "Die latches win_service_gen from att_packed_desc_gen at actual window_source_start; source does not create descriptor generation. Both stage and beat labels use that latched16bit generation.",
+    "operation_binding": "QK PC24 rows derive nout because ks1; PV PC32 rows derive k because ks32; both128 rows. Source start_first=pos-127 and count128. No simulator force/epoch seeding permitted in future producer integration.",
+    "nonretain_readiness": "desc_accept is lifecycle-IDLE based; source start_ready not explicitly in nonretained desc gate. Future test must prove lifecycle idle implies source ready and producer writes drained, or separately model an admission guard.",
+    "lifecycle_wrap_check": "Existing wrap_drained checks !service_busy && window_prime_ready && !win_blk_v, not physical write visibility. Peirce owns stronger recovery/quiescence composition."
+  },
+  "epoch_lifetime": {
+    "width": 9,
+    "initial": 0,
+    "advance": "Only accepted cold row prefetch in REFILL_CREDITS>1. Writes/prime/t_start/newuser/descriptor completion do not reset or advance it.",
+    "L0_per_step_cold_max": 256,
+    "L0_retained_pair_max": 128,
+    "unbounded_repeated_steps": "Persistent modulo512 across operations and token starts. Two nonretained128+128 L0 pairs reach epoch0; next job reuses1 only after healthy row transport drain. There is no finite whole-session lifetime bound without operation count.",
+    "descriptor_gen_independent": "16bit generation changes once per accepted operation; not concatenated with row epoch or backend tags. Gen wrap and epoch wrap are distinct contracts.",
+    "healthy_invariant": "Before each advance: all previously admitted WINDOW request/reply state retired exactly once, no replay/hidden queues; reused epoch cannot certify absence of a ghost. Fault path delegated to Peirce."
+  },
+  "retention": {
+    "default": 0,
+    "qualification": "Only exact L0 QK->PV signatures resolved above, same normalized key; new nonzero descriptor generation different from QK.",
+    "key_bits": 320,
+    "content_epoch_bits": 32,
+    "retention_additional_control_bits": 824,
+    "invalidation": "t_start, accepted block/prime, region/config change, explicit invalidate, faults; generation_wrap forces miss. Stage can be reused only for one PV after QK lifecycle done AND engine idle AND source storage drained.",
+    "content_epoch": "Increments on mutation cycles; independent of9bit row epoch. No across-token cache. Intervening prime/write/user/config/step disallows hit.",
+    "hit_cost": "No row epochs/refill requests; refill counter0, but registered decision/dispatch, lifecycle and replay edges remain. Do not subtract an independently cold20,601 prediction from a later PV calendar."
+  },
+  "write_visibility": {
+    "timing_parameters_ps": {
+      "CLK_PS": 1000,
+      "CWL_PS": 6250,
+      "BURST_PS": 1024,
+      "WTRS_PS": 4375,
+      "WTRL_PS": 6250,
+      "CL_PS": 12500
+    },
+    "WR_model": "idx_hbm commits masked mem[addr %MEM_WORDS] and sets wr_done at WRcolumn issue edge I; source sees registered ack at I+1.",
+    "physical_data_visibility_lag_ps": 7274,
+    "physical_visibility_deadline": "tcol+CWL_PS+BURST_PS; source-observed wr_done alone is not physical write completion or all-owner quiescence.",
+    "final_row_visibility_guard": {
+      "conditional_wait_after_last_ack_cycles": 7,
+      "clock_ps": 1000,
+      "proof": "All32 writes globally serialized. Each WRtcol is no later than its issue edgeI; latest observedackA=I+1. AtA+7, (I+8)*1000 >= tcol+7274. Earlier acknowledged writes complete by same deadline. Valid only for pinned registered next-edge ack and stated timings.",
+      "minimal_future_control_bits": 4,
+      "control": "3bit countdown7..0 plus final-ack-seen1; keep final WS_DONE until countdown finishes, gate row_valid/producer ready/prefetch, reuse held row/user, no new payload or FSM state.",
+      "added_critical_cycles_upper_bound_per_new_row": 7,
+      "alternative": "Use actual physical write-visible completion/watermark, not wr_done; width/ports/latency require owning PHY interface model before RTL."
+    },
+    "read_turnaround": "Pinned RDcolumn after latestWR is constrained by CWL+BURST+WTR(S/L): >=11649/13524ps, exceeding write-visible7274ps by4375/6250ps. This protects same-PC modeled read scheduling, but does not upgrade ack or row_valid into a universal physical publication/reset proof.",
+    "qualification": "WR semantic gap preserved, not an observed numerical failure. No producer-write simulation launched. The guard is a model/spec only, not implemented or adopted."
+  },
+  "address_contract": {
+    "AW": 30,
+    "MEM_WORDS": 264320,
+    "original_MOD": "Every modeled access indexes addr %MEM_WORDS; that operation cannot prove fullAW capacity or unconditional alias safety.",
+    "no_alias_condition": "For every admitted address including burst beats: 0<=address<MEM_WORDS; additionally regions/users disjoint and no width overflow.",
+    "window_address": "base+user*2176+(absolute_row&127)*17+sector",
+    "bounded_user0": "base262144, user0 spans262144..264319 so MEM_WORDS264320 injective; user1 is outside this fixture and forbidden without increased allocation/new finite model.",
+    "writer_restricted": "Currentrow slot127 code16fullwrites+scale16maskedwrites must match same generation/provenance; historical127rows may use legitimate primeAPI, currentrow must come from actual capture/blk port, not prime."
+  },
+  "future_parameter_plumbing": {
+    "status": "SPEC_ONLY_NO_RTL_OR_WRAPPER_EDITS",
+    "existing_die": "WINDOW_REFILL_CREDITS default1; opt-in8, WINDOW_RETAIN_L0 default0, WINDOW_STREAM_II1 unchanged0.",
+    "missing_runtime": "ot_v41_rt_die lacks exposed credit/retention pass-through and currently instantiates unchanged source. Future isolated new simulation wrapper/copies must pass defaults1/0 with explicit candidate8/retain opt-ins and select exactly qualified9bit prefetch/source copies in source manifest.",
+    "production_guard": "Do not compile original11bit prefetch with credit8 as a safeepoch adoption. Existing credit1 remains sector-only. No global overlay/source replacement.",
+    "external_interfaces": "No new tag/user widths or payload/ports for healthy9bit encoding; writer-visible completion is a separate model interface; fault-drain interface owned by Peirce."
+  },
+  "full_token_composition": {
+    "status": "UNPRICED_NO_TOTAL_RATE_TRANSFER",
+    "causal_cost": "sum each actual descriptor-dependent cold refill event calendar + producer capture/writes/visibility tail + generation/stage/engine/stream barriers + all other scheduled core/ROM/collective/serial work. Starts and bank/refresh state come from preceding operations, not reset again.",
+    "L0_count": "Pinned program has2WINDOW mmode operations QK/PV; retention may eliminate PV fetch only when exact qualified hit. Later layers/CKV descriptor shapes are not transferred from this L0 result.",
+    "measured_conditional_cold_refill": 20601,
+    "total_layer_or_token_cycles": null,
+    "write_guard_additional_cycles_upper_bound_one_current_row": 7,
+    "excluded": "No40*L0, no warmtoken or whole-token headline; 1percent adoption criterion cannot be evaluated until composed actual program critical path is priced."
+  },
+  "minimal_next_gate": [
+    "Review this finite producer/write-visibility model and Peirce interface boundary before any producer bench.",
+    "Isolated producer+lifecycle fixture driven by actual QE capture interface,16orderedblocks, step user/pos, actual QK/PV descriptors and engine-idle/issue/beat controls; no simulator epoch force, no full engine build.",
+    "Check actual row publication before QK, fresh descriptor generations through QK/PV, retained miss/hit/mutation rules, data addresses injective and no producer/source idle gap misuse.",
+    "Healthy no-force wrap can use repeated legitimate QK/PV operations; write visibility controls compared to delayed-commit model, no reset-per-token. Fault/recovery joins only after Peirce contract; no duplicate recovery bench."
+  ],
+  "parent_evidence": {
+    "candidate_intake": "3f63970f3",
+    "independent_connected": "7a355939e",
+    "metadata_failure": "4bfc480f9",
+    "metadata_fix": "81de41b21"
+  },
+  "no_payload_reads": true,
+  "no_build": true,
+  "no_live_or_main_edit": true
+}
