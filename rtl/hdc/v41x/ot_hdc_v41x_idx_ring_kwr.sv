@@ -138,6 +138,30 @@ module ot_hdc_v41x_idx_ring_kwr #(
     // the request slot is free for a new request this edge
     wire rq_free = !rq_v || rq_take;
 
+    // the migration group buffer: sector k takes the response of the highest port i whose tag
+    // names k this cycle (the per-port write loop's last-wins order), as an explicit priority
+    // select per sector (same function; no 4,352-bit dynamic part-select per port for synthesis)
+    genvar gk, gi2;
+    generate for (gk = 0; gk < 17; gk = gk + 1) begin : g_gb
+        wire [4*NPC-1:0] hit;
+        for (gi2 = 0; gi2 < 4*NPC; gi2 = gi2 + 1) begin : g_h
+            assign hit[gi2] = h_rsp_v[gi2] && (h_rsp_tag[gi2*TAGW +: 5] == 5'(gk));
+        end
+        // win[i]: port i hits and no higher port does
+        wire [4*NPC-1:0] above;
+        assign above[4*NPC-1] = 1'b0;
+        for (gi2 = 0; gi2 < 4*NPC - 1; gi2 = gi2 + 1) begin : g_a
+            assign above[gi2] = above[gi2+1] | hit[gi2+1];
+        end
+        wire [4*NPC-1:0] win = hit & ~above;
+        reg  [DW-1:0] d;
+        integer j;
+        always @* begin
+            d = '0;
+            for (j = 0; j < 4*NPC; j = j + 1) d = d | ({DW{win[j]}} & h_rsp_data[j*DW +: DW]);
+        end
+        always @(posedge clk) if (rst_n && |hit) gbuf[gk*DW +: DW] <= d;
+    end endgenerate
     integer i, ndone;
     assign c_rdy = (st == S_IDLE) && !rq_v;
     assign busy = (st != S_IDLE) || rq_v || outst != 0 || ndone != 0;
@@ -162,7 +186,7 @@ module ot_hdc_v41x_idx_ring_kwr #(
             if (rq_take) rq_v <= 1'b0;
             // migration read data
             for (i = 0; i < 4*NPC; i = i + 1)
-                if (h_rsp_v[i]) gbuf[h_rsp_tag[i*TAGW +: 5]*DW +: DW] <= h_rsp_data[i*DW +: DW];
+                ;   // (gbuf is written by g_gb below)
             if (st == S_MRD || st == S_MWAIT) mgot <= mgot + 5'($countones(h_rsp_v));
             case (st)
             S_IDLE: if (c_v && c_rdy) begin
