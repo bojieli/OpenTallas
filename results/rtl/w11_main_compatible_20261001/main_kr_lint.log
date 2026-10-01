@@ -1,0 +1,81 @@
+%Warning-PINMISSING: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv:1115:42: Instance has missing pin: 'qr_issue_ready'
+ 1115 |                      .QLB(QLB), .MP(MP)) u_qe (
+      |                                          ^~~~
+                     /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41/ot_hdc_v41_qe.sv:94:29: ... Location of port declaration
+   94 |     input  wire             qr_issue_ready,
+      |                             ^~~~~~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-GENUNNAMED: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:278:24: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                        : ... Suggest assign a label with 'begin : gen_<label_name>'
+  278 |             if (ri==1) always @(posedge clk) xr[ri] <= xr0;
+      |                        ^~~~~~
+                     ... For warning description see https://verilator.org/warn/GENUNNAMED?v=5.050
+                     ... Use "/* verilator lint_off GENUNNAMED */" and lint_on around source to disable this message.
+%Warning-GENUNNAMED: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:279:18: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                        : ... Suggest assign a label with 'begin : gen_<label_name>'
+  279 |             else always @(posedge clk) xr[ri] <= xr[ri-1];
+      |                  ^~~~~~
+%Warning-GENUNNAMED: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:285:24: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                        : ... Suggest assign a label with 'begin : gen_<label_name>'
+  285 |             if (ri==1) always @(posedge clk) xr[ri] <= xr0;
+      |                        ^~~~~~
+%Warning-GENUNNAMED: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:286:18: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                        : ... Suggest assign a label with 'begin : gen_<label_name>'
+  286 |             else always @(posedge clk) xr[ri] <= xr[ri-1];
+      |                  ^~~~~~
+%Warning-GENUNNAMED: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:292:24: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                        : ... Suggest assign a label with 'begin : gen_<label_name>'
+  292 |             if (ri==1) always @(posedge clk) xr[ri] <= xr0;
+      |                        ^~~~~~
+%Warning-GENUNNAMED: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:293:18: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                        : ... Suggest assign a label with 'begin : gen_<label_name>'
+  293 |             else always @(posedge clk) xr[ri] <= xr[ri-1];
+      |                  ^~~~~~
+%Warning-GENUNNAMED: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:301:24: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                        : ... Suggest assign a label with 'begin : gen_<label_name>'
+  301 |             if (ri==1) always @(posedge clk) xr[ri] <= xr0;
+      |                        ^~~~~~
+%Warning-GENUNNAMED: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:302:18: Unnamed generate block 'genblk1' (IEEE 1800-2023 27.6)
+                                                                                                        : ... Suggest assign a label with 'begin : gen_<label_name>'
+  302 |             else always @(posedge clk) xr[ri] <= xr[ri-1];
+      |                  ^~~~~~
+%Warning-SELRANGE: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv:746:40: Selection index out of range: 1960:1960 outside 1535:0
+                                                                                                     : ... note: In instance 'ot_hdc_core_v41x'
+  746 |         qe_unrounded <= FULL_SHAPE ? ir[O_QE_UNROUNDED +: W_QE_UNROUNDED] : 1'b0;
+      |                                        ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-SELRANGE: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv:758:26: Selection index out of range: 1827:1826 outside 1535:0
+                                                                                                     : ... note: In instance 'ot_hdc_core_v41x'
+  758 |             coll_op <= ir[O_COLL_OP +: W_COLL_OP]; coll_src <= ir[O_COLL_SRC +: W_COLL_SRC]; coll_dst <= ir[O_COLL_DST +: W_COLL_DST];
+      |                          ^
+%Warning-SELRANGE: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv:758:66: Selection index out of range: 1857:1828 outside 1535:0
+                                                                                                     : ... note: In instance 'ot_hdc_core_v41x'
+  758 |             coll_op <= ir[O_COLL_OP +: W_COLL_OP]; coll_src <= ir[O_COLL_SRC +: W_COLL_SRC]; coll_dst <= ir[O_COLL_DST +: W_COLL_DST];
+      |                                                                  ^
+%Warning-SELRANGE: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv:758:108: Selection index out of range: 1887:1858 outside 1535:0
+                                                                                                      : ... note: In instance 'ot_hdc_core_v41x'
+  758 |             coll_op <= ir[O_COLL_OP +: W_COLL_OP]; coll_src <= ir[O_COLL_SRC +: W_COLL_SRC]; coll_dst <= ir[O_COLL_DST +: W_COLL_DST];
+      |                                                                                                            ^
+%Warning-SELRANGE: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv:759:29: Selection index out of range: 1950:1921 outside 1535:0
+                                                                                                     : ... note: In instance 'ot_hdc_core_v41x'
+  759 |             coll_ibase <= ir[O_COLL_IBASE +: W_COLL_IBASE]; coll_n <= ir[O_COLL_N +: W_COLL_N]; coll_k <= ir[O_COLL_K +: W_COLL_K];
+      |                             ^
+%Warning-SELRANGE: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv:759:73: Selection index out of range: 1908:1888 outside 1535:0
+                                                                                                     : ... note: In instance 'ot_hdc_core_v41x'
+  759 |             coll_ibase <= ir[O_COLL_IBASE +: W_COLL_IBASE]; coll_n <= ir[O_COLL_N +: W_COLL_N]; coll_k <= ir[O_COLL_K +: W_COLL_K];
+      |                                                                         ^
+%Warning-SELRANGE: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv:759:109: Selection index out of range: 1920:1909 outside 1535:0
+                                                                                                      : ... note: In instance 'ot_hdc_core_v41x'
+  759 |             coll_ibase <= ir[O_COLL_IBASE +: W_COLL_IBASE]; coll_n <= ir[O_COLL_N +: W_COLL_N]; coll_k <= ir[O_COLL_K +: W_COLL_K];
+      |                                                                                                             ^
+%Warning-SELRANGE: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv:760:27: Selection index out of range: 1958:1951 outside 1535:0
+                                                                                                     : ... note: In instance 'ot_hdc_core_v41x'
+  760 |             coll_seq <= ir[O_COLL_SEQ +: W_COLL_SEQ]; coll_rnd <= ir[O_COLL_RND +: W_COLL_RND];
+      |                           ^
+%Warning-SELRANGE: /tmp/claude-1000/wt/w11-main-compatible/rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv:760:69: Selection index out of range: 1959:1959 outside 1535:0
+                                                                                                     : ... note: In instance 'ot_hdc_core_v41x'
+  760 |             coll_seq <= ir[O_COLL_SEQ +: W_COLL_SEQ]; coll_rnd <= ir[O_COLL_RND +: W_COLL_RND];
+      |                                                                     ^
+%Error: Exiting due to 18 warning(s)
