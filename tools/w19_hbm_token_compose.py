@@ -124,23 +124,74 @@ def w15_fit(rec: dict, config: str) -> dict:
 # 1M critical path (tools/uarch_model.arch_graph; W11 unit widths), mapped onto the program's local steps.  The index
 # scan and local top-k are re-scaled from the ROM die's keys (262,144) to the TP-96 die's (1/96 of the keys), plus the
 # unit's pipeline latency; serial-chain steps run in the 0.9 GHz domain (x 4/3).
-NODE_NS = {
-    "hc_pre_norm": (42.6 + 74.5 + 104.5 + 44.5, "serial"),       # hc_pre, norm sumsq, rsqrt, scale
-    "q_norm_kv_row": (74.5 + 104.5 + 41.6 + 40.6, "serial"),     # q_norm sumsq, rsqrt, scale, q quant
-    "q_rope": (37.7, "serial"),
-    "attend": (159.6 + 74.0 + 124.2 + 176.0 + 105.4, "fast"),    # scores, max, exp, pv, normalize (16-head price)
-    "hc_post": (73.5, "serial"),
-    "router_act": (278.6, "serial"),                              # softplus_sqrt
-    "route": (32.9 + 31.9 + 25.1 + 43.5, "serial"),               # bias, top6, order, route weights
-    "swiglu": (129.6, "serial"),
-    "moe_sum": (40.6, "serial"),                                  # quant2 / sum
-    "index_q": (45.5, "serial"),
-    "engram_mix": (288.2 + 74.5 + 59.0, "serial"),
-    "engram_fetch": (254.8, "fast"),
-    "cand_mask": (0.0, "fast"),
-    "final_norm": (42.6 + 74.5 + 104.5 + 44.5, "serial"),
-    "argmax_local": (1415.3 * 1346 / 262144 + 139.3, "serial"),
+# Each local step is the list of its arch-DAG nodes: (node, ns, class, ctrl_ns), at the arch clock (1.0339 GHz)
+# from tools/uarch_model.arch_graph(1048576) contributions.  Classes (AGENTS.md operator fusion, 2026-10-01):
+#   head      a chain's first op: its operand comes from the VM (a matvec, collective, scan or select wrote it)
+#   chained   lane-local, consumes the previous op's lane register: under FUSION it pays its unit depth only
+#             (the SU stream address-to-write SU_BASE = 29 cycles and its dispatch ctrl are removed)
+#   reduce / rope / quant / select / scan   true cross-lane steps (reduction, pair rotation, segmented absmax
+#             quantise, selection, KV scan): paid in full with or without fusion
+# Unfused, every node pays its full price (the model's per-op VM round trip).
+SU_BASE_NS = 29 / 1.0339e9 * 1e9            # tools/decode_critical_path.py SU_BASE at the arch clock
+NORM = lambda q: [("norm.sumsq", 74.5, "reduce", 0.0), ("norm.rsqrt", 104.5, "chained", 6.8),  # noqa: E731
+                  ("norm.scale", q, "chained", 6.8)]
+NODE_PARTS = {
+    "hc_pre_norm": ([("hc_pre", 42.6, "chained", 0.0)] + NORM(44.5) + [("quant", 40.6, "quant", 0.0)], "serial"),
+    "q_norm_kv_row": (NORM(41.6) + [("q_quant", 40.6, "quant", 0.0)], "serial"),
+    "q_rope": ([("q_rope", 37.7, "rope", 0.0)], "serial"),
+    "attend": ([("scores", 159.6, "scan", 0.0), ("max", 74.0, "reduce", 0.0), ("exp", 124.2, "head", 0.0),
+                ("pv", 176.0, "scan", 0.0), ("normalize+inv_rope", 105.4, "rope", 0.0)], "fast"),
+    "hc_post": ([("hc_post", 73.5, "head", 6.8)], "serial"),
+    "router_act": ([("softplus_sqrt", 278.6, "head", 0.0)], "serial"),
+    "route": ([("bias", 32.9, "head", 0.0), ("top6", 31.9, "select", 6.8), ("top6_order", 25.1, "select", 6.8),
+               ("route_w", 43.5, "chained", 6.8)], "serial"),
+    "swiglu": ([("swiglu", 129.6, "head", 0.0)], "serial"),
+    "moe_sum": ([("quant2", 40.6, "quant", 0.0)], "serial"),
+    "index_q": ([("idx.q", 45.5, "rope", 0.0)], "serial"),
+    "engram_mix": ([("eng.hh", 74.5, "reduce", 0.0), ("eng.gate", 288.2, "chained", 6.8),
+                    ("eng.add", 59.0, "chained", 6.8)], "serial"),
+    "engram_fetch": ([("eng.rows", 254.8, "head", 0.0)], "fast"),
+    "cand_mask": ([], "fast"),
+    "final_norm": ([("hc_pre", 42.6, "chained", 0.0)] + NORM(44.5), "serial"),
+    "argmax_local": ([("argmax", 1415.3 * 1346 / 262144 + 139.3, "reduce", 0.0)], "serial"),
+    "z_quant": ([("z_quant", 40.6, "quant", 0.0)], "serial"),     # charged at the wo_b matvec (its FP8 input)
 }
+FUSION = {"on": False}
+
+
+def part_ns(fn):
+    parts, dom = NODE_PARTS[fn]
+    tot = 0.0
+    for name, ns, cls, ctrl in parts:
+        if FUSION["on"] and cls == "chained":
+            ns = ns - SU_BASE_NS - ctrl
+        tot += ns
+    return tot, dom
+
+
+def class_split(prog: dict) -> dict:
+    """Unfused ns (at the domain clock) of the token's on-path local steps by op class, and the fused saving."""
+    out = {}
+    for lay in prog["layers"]:
+        swi = False
+        for op in lay["ops"]:
+            fn = op.get("fn") if op["kind"] == "local" else ("z_quant" if op.get("tag") == "wo_b" else None)
+            if fn not in NODE_PARTS:
+                continue
+            if fn == "swiglu":                       # charged once a layer (the slots' rows run together)
+                if swi:
+                    continue
+                swi = True
+            parts, dom = NODE_PARTS[fn]
+            f = F_FAST / F_SERIAL if dom == "serial" else 1.0
+            for name, ns, cls, ctrl in parts:
+                c = out.setdefault(cls, dict(ops=0, ns=0.0, fused_saving_ns=0.0))
+                c["ops"] += 1
+                c["ns"] += ns * f
+                if cls == "chained":
+                    c["fused_saving_ns"] += (SU_BASE_NS + ctrl) * f
+    return {k: dict(ops=v["ops"], us=round(v["ns"] / 1e3, 2), fused_saving_us=round(v["fused_saving_ns"] / 1e3, 2))
+            for k, v in out.items()}
 OFF_PATH = {"hc_mixes", "compressor", "cand_apply"}
 # P verify positions on the dedicated / stream units: each extra position repeats the step's ISSUE, the pipeline
 # depth is paid once.  The issue fraction of the chain's dedicated time is the model's own
@@ -163,7 +214,7 @@ def local_cycles(op: dict, m: dict) -> tuple[float, str]:
     if fn in ("topk_local", "cand_local"):
         keys = math.ceil(m["n_keys"] / TP)
         return (IDX_TOPK_NS * keys / ROM_KEYS + UNIT_LAT_CYC / F_FAST * 1e9) * F_FAST / F_SERIAL, "serial"
-    ns, dom = NODE_NS[fn]
+    ns, dom = part_ns(fn)
     return ns * (F_FAST / F_SERIAL if dom == "serial" else 1.0), dom
 
 
@@ -189,6 +240,8 @@ def compose(prog: dict, sm: SMTable, coll: dict, fetch_us: float, m: dict, mtp: 
             pend = None
         for op in lay["ops"]:
             k = op["kind"]
+            if k == "mv" and op["tag"] == "wo_b":
+                t["local"] += LOCAL_REPEAT(P) * local_cycles(dict(fn="z_quant"), m)[0] / 1e3
             if k == "mv":
                 rows_die = max(r1 - r0 for r0, r1 in op["rows"])
                 R = math.ceil(rows_die / N_SM)
@@ -255,6 +308,8 @@ def main() -> int:
     ap.add_argument("--fetch-case", default="ar_L0_refresh_postponed")
     ap.add_argument("--mtp", type=Path, help="the 96-rank MTP record: compose the 6-position verify pass")
     ap.add_argument("--coll-config", default="hbm_p48_ss")
+    ap.add_argument("--fusion", action="store_true", help="AGENTS.md operator fusion: chained lane-local SU ops "
+                    "pay unit depth only")
     ap.add_argument("--record", type=Path)
     a = ap.parse_args()
     prog = json.loads(a.program.read_text())
@@ -269,7 +324,8 @@ def main() -> int:
         fsrc = f"{a.fetch} exposed_ns[{a.fetch_case}]"
     else:
         fetch_us, fsrc = 0.5, "PENDING: audit central 0.5 us"
-    m = dict(n_keys=0, node_ns=NODE_NS, off_path=sorted(OFF_PATH),
+    FUSION["on"] = a.fusion
+    m = dict(n_keys=0, node_parts=NODE_PARTS, fusion=a.fusion, op_class_split_unfused=class_split(prog), off_path=sorted(OFF_PATH),
              source="uarch_model arch-DAG node prices on the 1M path (W11 widths), serial steps at 0.9 GHz")
     mtp = None
     if a.mtp:

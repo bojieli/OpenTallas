@@ -14,13 +14,13 @@
  },
  "result": {
   "collectives_on_path": 265,
-  "total_us": 1006.92,
-  "tokens_s": 993.1,
+  "total_us": 975.44,
+  "tokens_s": 1025.2,
   "parts_us": {
    "sm": 128.11,
    "barrier": 22.29,
    "collective": 586.42,
-   "local": 231.13,
+   "local": 199.64,
    "fetch": 38.97
   },
   "layers": [
@@ -32,10 +32,10 @@
      "sm": 2.881,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.883
     },
-    "total_us": 16.406
+    "total_us": 15.634
    },
    {
     "layer": 1,
@@ -45,10 +45,10 @@
      "sm": 3.497,
      "barrier": 0.585,
      "collective": 6.561,
-     "local": 7.137,
+     "local": 6.186,
      "fetch": 0.989
     },
-    "total_us": 18.769
+    "total_us": 17.818
    },
    {
     "layer": 2,
@@ -58,10 +58,10 @@
      "sm": 3.432,
      "barrier": 0.715,
      "collective": 46.951,
-     "local": 6.001,
+     "local": 5.229,
      "fetch": 0.989
     },
-    "total_us": 58.088
+    "total_us": 57.316
    },
    {
     "layer": 3,
@@ -71,10 +71,10 @@
      "sm": 3.347,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.131
     },
-    "total_us": 17.12
+    "total_us": 16.348
    },
    {
     "layer": 4,
@@ -84,10 +84,10 @@
      "sm": 3.347,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.131
     },
-    "total_us": 17.12
+    "total_us": 16.348
    },
    {
     "layer": 5,
@@ -97,10 +97,10 @@
      "sm": 3.214,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.06
     },
-    "total_us": 16.916
+    "total_us": 16.144
    },
    {
     "layer": 6,
@@ -110,10 +110,10 @@
      "sm": 3.214,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.06
     },
-    "total_us": 16.916
+    "total_us": 16.144
    },
    {
     "layer": 7,
@@ -123,10 +123,10 @@
      "sm": 3.081,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.989
     },
-    "total_us": 16.712
+    "total_us": 15.94
    },
    {
     "layer": 8,
@@ -136,10 +136,10 @@
      "sm": 3.632,
      "barrier": 0.715,
      "collective": 46.951,
-     "local": 6.001,
+     "local": 5.229,
      "fetch": 1.095
     },
-    "total_us": 58.394
+    "total_us": 57.622
    },
    {
     "layer": 9,
@@ -149,10 +149,10 @@
      "sm": 2.881,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.883
     },
-    "total_us": 16.406
+    "total_us": 15.634
    },
    {
     "layer": 10,
@@ -162,10 +162,10 @@
      "sm": 2.614,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.742
     },
-    "total_us": 15.998
+    "total_us": 15.226
    },
    {
     "layer": 11,
@@ -175,10 +175,10 @@
      "sm": 3.014,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.954
     },
-    "total_us": 16.61
+    "total_us": 15.838
    },
    {
     "layer": 12,
@@ -188,10 +188,10 @@
      "sm": 2.614,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.742
     },
-    "total_us": 15.998
+    "total_us": 15.226
    },
    {
     "layer": 13,
@@ -201,10 +201,10 @@
      "sm": 2.947,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.919
     },
-    "total_us": 16.508
+    "total_us": 15.736
    },
    {
     "layer": 14,
@@ -214,10 +214,10 @@
      "sm": 3.048,
      "barrier": 0.78,
      "collective": 46.951,
-     "local": 7.577,
+     "local": 6.626,
      "fetch": 0.565
     },
-    "total_us": 58.921
+    "total_us": 57.97
    },
    {
     "layer": 15,
@@ -227,10 +227,10 @@
      "sm": 2.747,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.813
     },
-    "total_us": 16.202
+    "total_us": 15.43
    },
    {
     "layer": 16,
@@ -240,10 +240,10 @@
      "sm": 3.014,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.954
     },
-    "total_us": 16.61
+    "total_us": 15.838
    },
    {
     "layer": 17,
@@ -253,10 +253,10 @@
      "sm": 2.547,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.707
     },
-    "total_us": 15.896
+    "total_us": 15.124
    },
    {
     "layer": 18,
@@ -266,10 +266,10 @@
      "sm": 2.681,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.777
     },
-    "total_us": 16.1
+    "total_us": 15.328
    },
    {
     "layer": 19,
@@ -279,10 +279,10 @@
      "sm": 2.947,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.919
     },
-    "total_us": 16.508
+    "total_us": 15.736
    },
    {
     "layer": 20,
@@ -292,10 +292,10 @@
      "sm": 3.298,
      "barrier": 0.715,
      "collective": 46.951,
-     "local": 6.399,
+     "local": 5.627,
      "fetch": 0.919
     },
-    "total_us": 58.282
+    "total_us": 57.51
    },
    {
     "layer": 21,
@@ -305,10 +305,10 @@
      "sm": 3.147,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.025
     },
-    "total_us": 16.814
+    "total_us": 16.042
    },
    {
     "layer": 22,
@@ -318,10 +318,10 @@
      "sm": 2.814,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.848
     },
-    "total_us": 16.304
+    "total_us": 15.532
    },
    {
     "layer": 23,
@@ -331,10 +331,10 @@
      "sm": 3.281,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.095
     },
-    "total_us": 17.018
+    "total_us": 16.246
    },
    {
     "layer": 24,
@@ -344,10 +344,10 @@
      "sm": 3.358,
      "barrier": 0.65,
      "collective": 46.951,
-     "local": 6.145,
+     "local": 5.373,
      "fetch": 1.025
     },
-    "total_us": 58.128
+    "total_us": 57.356
    },
    {
     "layer": 25,
@@ -357,10 +357,10 @@
      "sm": 3.014,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.954
     },
-    "total_us": 16.61
+    "total_us": 15.838
    },
    {
     "layer": 26,
@@ -370,10 +370,10 @@
      "sm": 3.481,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.201
     },
-    "total_us": 17.324
+    "total_us": 16.552
    },
    {
     "layer": 27,
@@ -383,10 +383,10 @@
      "sm": 3.081,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.989
     },
-    "total_us": 16.712
+    "total_us": 15.94
    },
    {
     "layer": 28,
@@ -396,10 +396,10 @@
      "sm": 3.292,
      "barrier": 0.65,
      "collective": 46.951,
-     "local": 6.145,
+     "local": 5.373,
      "fetch": 0.989
     },
-    "total_us": 58.026
+    "total_us": 57.254
    },
    {
     "layer": 29,
@@ -409,10 +409,10 @@
      "sm": 3.147,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.025
     },
-    "total_us": 16.814
+    "total_us": 16.042
    },
    {
     "layer": 30,
@@ -422,10 +422,10 @@
      "sm": 3.347,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.131
     },
-    "total_us": 17.12
+    "total_us": 16.348
    },
    {
     "layer": 31,
@@ -435,10 +435,10 @@
      "sm": 3.347,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.131
     },
-    "total_us": 17.12
+    "total_us": 16.348
    },
    {
     "layer": 32,
@@ -448,10 +448,10 @@
      "sm": 3.358,
      "barrier": 0.65,
      "collective": 46.951,
-     "local": 6.145,
+     "local": 5.373,
      "fetch": 1.025
     },
-    "total_us": 58.128
+    "total_us": 57.356
    },
    {
     "layer": 33,
@@ -461,10 +461,10 @@
      "sm": 3.347,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.131
     },
-    "total_us": 17.12
+    "total_us": 16.348
    },
    {
     "layer": 34,
@@ -474,10 +474,10 @@
      "sm": 3.147,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.025
     },
-    "total_us": 16.814
+    "total_us": 16.042
    },
    {
     "layer": 35,
@@ -487,10 +487,10 @@
      "sm": 2.881,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.883
     },
-    "total_us": 16.406
+    "total_us": 15.634
    },
    {
     "layer": 36,
@@ -500,10 +500,10 @@
      "sm": 3.558,
      "barrier": 0.65,
      "collective": 46.951,
-     "local": 6.145,
+     "local": 5.373,
      "fetch": 1.131
     },
-    "total_us": 58.434
+    "total_us": 57.662
    },
    {
     "layer": 37,
@@ -513,10 +513,10 @@
      "sm": 3.281,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.095
     },
-    "total_us": 17.018
+    "total_us": 16.246
    },
    {
     "layer": 38,
@@ -526,10 +526,10 @@
      "sm": 3.214,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 1.06
     },
-    "total_us": 16.916
+    "total_us": 16.144
    },
    {
     "layer": 39,
@@ -539,10 +539,10 @@
      "sm": 3.081,
      "barrier": 0.52,
      "collective": 6.561,
-     "local": 5.56,
+     "local": 4.788,
      "fetch": 0.989
     },
-    "total_us": 16.712
+    "total_us": 15.94
    },
    {
     "layer": "head",
@@ -552,10 +552,10 @@
      "sm": 2.934,
      "barrier": 0.065,
      "collective": 0.852,
-     "local": 1.062,
+     "local": 0.81,
      "fetch": 0.0
     },
-    "total_us": 4.912
+    "total_us": 4.661
    }
   ],
   "flags": [
@@ -910,7 +910,7 @@
      "serial"
     ]
    },
-   "fusion": false,
+   "fusion": true,
    "op_class_split_unfused": {
     "chained": {
      "ops": 367,
