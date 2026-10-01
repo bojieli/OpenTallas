@@ -1,0 +1,140 @@
+.EEEEEEE.E                                                               [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_actual_L14_parameter_product_hash_and_perlane_layout __
+
+    @pytest.fixture(scope='module')
+    def retained():
+>    b=E.retained_source_binding(14)
+
+tests/test_w11_dsrom_engram_product_source.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layer = 14
+
+    def retained_source_binding(layer):
+>    demand,ref=object_json(SOURCE_PIN,SOURCE_PATH);sources=demand['generated_CROM_coefficients']['retained_sources']
+E    KeyError: 'generated_CROM_coefficients'
+
+tools/w11_dsrom_engram_product_source.py:65: KeyError
+_______ ERROR at setup of test_missing_L1_and_L14_substitution_rejected ________
+
+    @pytest.fixture(scope='module')
+    def retained():
+>    b=E.retained_source_binding(14)
+
+tests/test_w11_dsrom_engram_product_source.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layer = 14
+
+    def retained_source_binding(layer):
+>    demand,ref=object_json(SOURCE_PIN,SOURCE_PATH);sources=demand['generated_CROM_coefficients']['retained_sources']
+E    KeyError: 'generated_CROM_coefficients'
+
+tools/w11_dsrom_engram_product_source.py:65: KeyError
+___________ ERROR at setup of test_provenance_mutants_rejected[SHA] ____________
+
+    @pytest.fixture(scope='module')
+    def retained():
+>    b=E.retained_source_binding(14)
+
+tests/test_w11_dsrom_engram_product_source.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layer = 14
+
+    def retained_source_binding(layer):
+>    demand,ref=object_json(SOURCE_PIN,SOURCE_PATH);sources=demand['generated_CROM_coefficients']['retained_sources']
+E    KeyError: 'generated_CROM_coefficients'
+
+tools/w11_dsrom_engram_product_source.py:65: KeyError
+_______ ERROR at setup of test_provenance_mutants_rejected[manifestSHA] ________
+
+    @pytest.fixture(scope='module')
+    def retained():
+>    b=E.retained_source_binding(14)
+
+tests/test_w11_dsrom_engram_product_source.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layer = 14
+
+    def retained_source_binding(layer):
+>    demand,ref=object_json(SOURCE_PIN,SOURCE_PATH);sources=demand['generated_CROM_coefficients']['retained_sources']
+E    KeyError: 'generated_CROM_coefficients'
+
+tools/w11_dsrom_engram_product_source.py:65: KeyError
+__________ ERROR at setup of test_provenance_mutants_rejected[dtype] ___________
+
+    @pytest.fixture(scope='module')
+    def retained():
+>    b=E.retained_source_binding(14)
+
+tests/test_w11_dsrom_engram_product_source.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layer = 14
+
+    def retained_source_binding(layer):
+>    demand,ref=object_json(SOURCE_PIN,SOURCE_PATH);sources=demand['generated_CROM_coefficients']['retained_sources']
+E    KeyError: 'generated_CROM_coefficients'
+
+tools/w11_dsrom_engram_product_source.py:65: KeyError
+__________ ERROR at setup of test_provenance_mutants_rejected[shape] ___________
+
+    @pytest.fixture(scope='module')
+    def retained():
+>    b=E.retained_source_binding(14)
+
+tests/test_w11_dsrom_engram_product_source.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layer = 14
+
+    def retained_source_binding(layer):
+>    demand,ref=object_json(SOURCE_PIN,SOURCE_PATH);sources=demand['generated_CROM_coefficients']['retained_sources']
+E    KeyError: 'generated_CROM_coefficients'
+
+tools/w11_dsrom_engram_product_source.py:65: KeyError
+_________ ERROR at setup of test_provenance_mutants_rejected[revision] _________
+
+    @pytest.fixture(scope='module')
+    def retained():
+>    b=E.retained_source_binding(14)
+
+tests/test_w11_dsrom_engram_product_source.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layer = 14
+
+    def retained_source_binding(layer):
+>    demand,ref=object_json(SOURCE_PIN,SOURCE_PATH);sources=demand['generated_CROM_coefficients']['retained_sources']
+E    KeyError: 'generated_CROM_coefficients'
+
+tools/w11_dsrom_engram_product_source.py:65: KeyError
+___ ERROR at setup of test_runtime_exactbits_publication_and_final_lifetime ____
+
+    @pytest.fixture(scope='module')
+    def retained():
+>    b=E.retained_source_binding(14)
+
+tests/test_w11_dsrom_engram_product_source.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layer = 14
+
+    def retained_source_binding(layer):
+>    demand,ref=object_json(SOURCE_PIN,SOURCE_PATH);sources=demand['generated_CROM_coefficients']['retained_sources']
+E    KeyError: 'generated_CROM_coefficients'
+
+tools/w11_dsrom_engram_product_source.py:65: KeyError
+=========================== short test summary info ============================
+ERROR tests/test_w11_dsrom_engram_product_source.py::test_actual_L14_parameter_product_hash_and_perlane_layout
+ERROR tests/test_w11_dsrom_engram_product_source.py::test_missing_L1_and_L14_substitution_rejected
+ERROR tests/test_w11_dsrom_engram_product_source.py::test_provenance_mutants_rejected[SHA]
+ERROR tests/test_w11_dsrom_engram_product_source.py::test_provenance_mutants_rejected[manifestSHA]
+ERROR tests/test_w11_dsrom_engram_product_source.py::test_provenance_mutants_rejected[dtype]
+ERROR tests/test_w11_dsrom_engram_product_source.py::test_provenance_mutants_rejected[shape]
+ERROR tests/test_w11_dsrom_engram_product_source.py::test_provenance_mutants_rejected[revision]
+ERROR tests/test_w11_dsrom_engram_product_source.py::test_runtime_exactbits_publication_and_final_lifetime
+2 passed, 8 errors in 0.42s
