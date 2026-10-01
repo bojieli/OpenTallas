@@ -53,4 +53,7 @@ class ExpandedModel(unittest.TestCase):
         self.assertEqual(p['query_refill_extra_shared_copy_bytes_per_tile'],1047552)
         self.assertEqual(p['query_scale_and_unit_compute_replica_count'],32)
         self.assertIsNone(p['whole_phase_cycles'])
+        self.assertEqual(p['regions_per_SM']['k_sanitized']['bytes'],4224)
+        self.assertEqual(p['regions_per_SM']['k_units']['bytes'],4224)
+        self.assertEqual(p['key_decoder_padding_rows_per_SM'],30)
         self.assertEqual(m['HBM_ingress']['safe_max_sectors_per_command'],16)

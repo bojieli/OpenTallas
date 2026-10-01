@@ -14,9 +14,10 @@ RECEIPT=ROOT/'results/rtl/deepseek_hbm_complete_20261001/index-blas-production-c
 
 def layout(keys=64):
     if not 1<=keys<=64:raise ValueError('finite local key count')
+    padded_keys=ceil(keys/32)*32
     sizes=[('query',128*33*4),('keys',keys*128*4),('weights',128),('descriptors',keys*32),
-        ('joint_payload_descriptor_buffers',4*544),('q_sanitized',32*33*4),('k_sanitized',keys*33*4),
-        ('q_units',32*33*4),('k_units',keys*33*4),('q_exp',128),('k_exp',keys*4),
+        ('joint_payload_descriptor_buffers',4*544),('q_sanitized',32*33*4),('k_sanitized',padded_keys*33*4),
+        ('q_units',32*33*4),('k_units',padded_keys*33*4),('q_exp',128),('k_exp',padded_keys*4),
         ('finite_block',keys*32*4),('exception_state',keys*32*4),('chosen_blocks',4*keys*32*4),
         ('acc_ping',keys*32*4),('acc_pong',keys*32*4),('positive',keys*32*4),
         ('terms',keys*32*4),('head_reduction',keys*32*4),('output',keys*8),('zero_constant',4)]
@@ -153,6 +154,11 @@ def build():
             'replicated_query_bytes_per_die':32*local['query']['bytes'],
             'query_refill_extra_shared_copy_bytes_per_tile':31*local['query']['bytes']*2,
             'query_scale_and_unit_compute_replica_count':32,
+            'key_decoder_active_source_lanes_per_SM':32,
+            'key_decoder_padding_rows_per_SM':30,'key_decoder_padding_zero_init_bytes_per_SM':30*32*4,
+            'key_decoder_padding_zero_init_extra_bytes_per_die':32*30*32*4,
+            'key_decode_warp_work_inflation_vs_full64':16,
+            'padding_lane_suppression_lowerer_bound':False,
             'shared_macro_bytes_per_die':32*65536,'lane_RF_ports':'2R1W; version allocation Boyle pending',
             'source_key_scalar_reads':'sameword broadcast candidate;32lane fanout/port service not qualified',
             'barriers':['query transpose/refill visible on every assigned SM','key return/rowlease held through consumerdone',
