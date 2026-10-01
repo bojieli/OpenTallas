@@ -147,6 +147,8 @@
       "sfu": null
      },
      "area_mm2": 0.332,
+     "area_lanes_ledger_mm2": 0.332,
+     "vmh_block": null,
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 640,
@@ -342,6 +344,8 @@
       "sfu": null
      },
      "area_mm2": 14.249,
+     "area_lanes_ledger_mm2": 14.249,
+     "vmh_block": null,
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 16,
@@ -534,7 +538,23 @@
       },
       "sfu": null
      },
-     "area_mm2": 14.249,
+     "area_mm2": 38.601,
+     "area_lanes_ledger_mm2": 14.249,
+     "vmh_block": {
+      "block_mm2": 38.601,
+      "lane_array_mm2": 23.913,
+      "lane_side_um": 4890.1,
+      "vm_block_mm2": 14.688,
+      "vm_depth_um": 3003.7,
+      "sram_mm2": 10.893,
+      "network_footprint_mm2": 2.274,
+      "stream_unit_ledger_mm2": 14.249,
+      "switch_fraction": 0.05,
+      "option": "C_rotate",
+      "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.C_rotate (root ruling 2026-10-01: the product's VM)",
+      "field_loss_mm2": 25.57,
+      "note": "ROOT RULINGS 2026-10-01: area_mm2 is the measured SU+VM block of the product's VM option (lanes, VM SRAM, network); area_lanes_ledger_mm2 is the lane-only ledger estimate"
+     },
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 16,
@@ -579,7 +599,7 @@
      }
     }
    },
-   "hub_logic_mm2": 52.616,
+   "hub_logic_mm2": 76.968,
    "hub_avail_mm2": 233.7,
    "discrepancies": []
   },
@@ -727,7 +747,23 @@
       },
       "sfu": null
      },
-     "area_mm2": 14.249,
+     "area_mm2": 38.601,
+     "area_lanes_ledger_mm2": 14.249,
+     "vmh_block": {
+      "block_mm2": 38.601,
+      "lane_array_mm2": 23.913,
+      "lane_side_um": 4890.1,
+      "vm_block_mm2": 14.688,
+      "vm_depth_um": 3003.7,
+      "sram_mm2": 10.893,
+      "network_footprint_mm2": 2.274,
+      "stream_unit_ledger_mm2": 14.249,
+      "switch_fraction": 0.05,
+      "option": "C_rotate",
+      "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.C_rotate (root ruling 2026-10-01: the product's VM)",
+      "field_loss_mm2": 25.57,
+      "note": "ROOT RULINGS 2026-10-01: area_mm2 is the measured SU+VM block of the product's VM option (lanes, VM SRAM, network); area_lanes_ledger_mm2 is the lane-only ledger estimate"
+     },
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 16,
@@ -772,7 +808,7 @@
      }
     }
    },
-   "hub_logic_mm2": 52.616,
+   "hub_logic_mm2": 76.968,
    "hub_avail_mm2": 233.7,
    "discrepancies": []
   }
@@ -850,12 +886,12 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "904ae42f1b8f2639022bd9879401862c6dfb89c2ee70dde87b78a2c6d7cbf44d",
+  "tools/uarch_model.py": "341167cfecf1ae814115978eb36c8c5b41c9761760c0eebfc82c66dde4971232",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "7d05b86774dd90c4f4d8ed6665f87796ee61ef7569c9642c05a8f05630dc72a7",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
   "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
   "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json": "d147f1c3fe358a6d79e3a59cc13048c99f0168f246c74b6065e82ea291be3955",
-  "results/rtl/v41_full_attention_numeric/result.json": "883442f90d7a7430e1a2b019e23da9fd724aedd706fe1cbbd5c43c0c4a942fba",
+  "results/rtl/v41_full_attention_numeric/result.json": "76dfb9a4e0bf05ae54781df77c32df89cdcf074622b393ec25e81951f3e7c4c7",
   "results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.json": "8d769cca3c2072c88e88e9769a3bd1873f6daf2e36b8358cad0a8cea9c8ae304",
   "results/rtl/v41x_su_softmax.json": "e07463655922bcfb21c8364479b3632cf71705c116941994f63d20539b35bc75"
  }

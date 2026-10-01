@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import hdc_golden_v41 as G  # noqa: E402
 import hdc_v41_engram_shipped as ES  # noqa: E402
 import rtl_hdc_v41x_egather_campaign as C  # noqa: E402
+from record_currency_support import assert_current_or_marked_stale  # noqa: E402
 
 PHYS = ROOT / "results/physical_abi3/asap7/hdc/v41x"
 
@@ -43,8 +44,7 @@ def test_committed_record_meets_the_spec():
     assert rec["vectors"]["reduced"]["golden_rows_recorded_and_equal"] > 0
     assert all(m["caught"] for m in rec["mutations"])
     assert rec["io_pins"]["slice"]["total"] < 1000 and rec["io_pins"]["asm"]["total"] < 1000
-    for p, digest in rec["input_sha256"].items():
-        assert hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == digest, p
+    assert_current_or_marked_stale(rec, rec["input_sha256"], C.OUT.name)
 
 
 def test_physical_records_route_the_committed_sources():

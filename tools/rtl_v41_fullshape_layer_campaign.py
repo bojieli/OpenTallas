@@ -337,18 +337,19 @@ def rss_gb():
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1048576
 
 
-def golden_token(ctx, layers, out_dir: Path, head=True, log=print):
+def golden_token(ctx, layers, out_dir: Path, head=True, log=print, seed=SEED):
     """One decode token at position ctx - 1 through `layers` (consecutive from 0 unless a shard input is given),
-    layer by layer, saving every shard's input and output."""
+    layer by layer, saving every shard's input and output.  `seed` drives the synthetic state and the token
+    history (the default SEED reproduces the existing records)."""
     t0 = time.time()
     ck = Checkpoint()
     m, init_sha = build_model(ck, engram=any(L in (1, 14) for L in layers))
     t_build = time.time() - t0
     t0 = time.time()
-    st, sdesc = synthetic_state(m, ctx, layers=layers)
+    st, sdesc = synthetic_state(m, ctx, seed=seed, layers=layers)
     t_state = time.time() - t0
     log(f"ctx {ctx}: model {t_build:.1f} s, state {t_state:.1f} s, rss {rss_gb():.1f} GB")
-    hist = token_history(ctx)
+    hist = token_history(ctx, seed=seed)
     st["tokens"] = list(hist)
     tok = hist[-1]
     first = layers[0]
@@ -413,7 +414,7 @@ def golden_token(ctx, layers, out_dir: Path, head=True, log=print):
         shards.append(rec)
         log(f"ctx {ctx} L{L:02d} {rec['kind']}: {rec['golden_wall_s']} s, experts {rec['experts']}, "
             f"rss {rec['rss_gb_after']} GB")
-    out = {"context": ctx, "position": ctx - 1, "token": tok, "history": hist, "state": sdesc,
+    out = {"context": ctx, "position": ctx - 1, "seed": seed, "token": tok, "history": hist, "state": sdesc,
            "model_build_s": round(t_build, 1), "state_build_s": round(t_state, 1), "layers": shards,
            "golden_init_source_sha256": init_sha, "golden": pin, "arith": V.ARITH, "fuse": sorted(V.FUSE)}
     if head and layers[-1] == m.L - 1:
@@ -421,7 +422,8 @@ def golden_token(ctx, layers, out_dir: Path, head=True, log=print):
         xf = V.rmsnorm_fold(m.hc_pre(cx["h"], cx["pre"]), m.w["norm.weight"], m.eps)
         logits = V.mv(m.w["head.weight"], xf)
         nxt = int(np.argmax(logits))
-        out["head"] = {"next_token": nxt, "logits_sha256": digest(logits), "wall_s": round(time.time() - t1, 1),
+        top5 = [int(i) for i in np.argsort(-logits.astype(np.float64), kind="stable")[:5]]
+        out["head"] = {"next_token": nxt, "top5": [[i, float(logits[i])] for i in top5], "logits_sha256": digest(logits), "wall_s": round(time.time() - t1, 1),
                        "margin": float(V.margin(logits))}
         np.savez_compressed(out_dir / f"ctx{ctx}_head.npz", logits=logits, xf=xf)
     out["peak_rss_gb"] = round(rss_gb(), 2)
@@ -716,7 +718,8 @@ def die_slices(L, rank, s, experts, eng):
            ("hc_ffn_scale", P + "hc_ffn_scale", None, None), ("hc_ffn_base", P + "hc_ffn_base", None, None),
            ("attn_norm", P + "attn_norm.weight", None, None), ("ffn_norm", P + "ffn_norm.weight", None, None),
            ("q_norm", P + "attn.q_norm.weight", None, None), ("kv_norm", P + "attn.kv_norm.weight", None, None),
-           ("attn_sink", P + "attn.attn_sink", None, None),
+           # per-head sinks follow the rank's heads (the program reads sink + 0 .. heads/tp - 1 on every rank)
+           ("attn_sink", P + "attn.attn_sink", rr(s["heads"]), None),
            ("wq_a", P + "attn.wq_a.weight", rr(s["q_rank"]), None), ("wq_a.scale", P + "attn.wq_a.scale", sb(s["q_rank"]), None),
            ("wkv", P + "attn.wkv.weight", rr(hd), None), ("wkv.scale", P + "attn.wkv.scale", sb(hd), None),
            ("wq_b", P + "attn.wq_b.weight", rr(s["heads"] * hd), None),
@@ -767,7 +770,7 @@ def R_IDX_SRC():
     return R.IDX_SRC
 
 
-def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=print):
+def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=print, seed=SEED):
     """The full-shape image set of die `rank` of layer L's tensor group for the token at position ctx - 1."""
     import hdc_replay_v41 as R
     t0 = time.time()
@@ -780,6 +783,7 @@ def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=pr
     out_dir.mkdir(parents=True, exist_ok=True)
     experts = list(range(s["n_exp"])) if all_experts else shard["experts"]
     man = {"schema": SCHEMA + ".die_layer_images", "context": ctx, "position": ctx - 1, "layer": L, "rank": rank,
+           **({"seed": seed} if seed != SEED else {}),
            "tp": s["tp"], "split": "tools/rtl_v41_fullshape_layer_campaign.py die_slices (TP plan section 1; w2 by "
                                     "output rows)", "experts_populated": experts,
            "experts_note": "only the experts this token's router picks carry content (a sparse image) unless "
@@ -796,7 +800,7 @@ def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=pr
         a, dt = _raw(ck, tensor, rows, cols)
         put(f"w.{name}", a, dt, tensor=tensor, rows=rows, cols=cols)
     # KV / index state entering this layer (the synthetic state + the rows earlier layers of this token appended)
-    st, sdesc = synthetic_state(m, ctx, layers=[L])
+    st, sdesc = synthetic_state(m, ctx, seed=seed, layers=[L])
     win = np.stack(st["win"][L])
     c8, e8 = pack_fp8_ue8m0(win)
     put("kv.window.codes", c8, "F8_E4M3", rows=len(win), note="127 rows before this position, oldest first")
@@ -820,7 +824,7 @@ def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=pr
             put(f"kv.slots{src}", np.stack([np.stack(p) for p in st["slots"][src]]), "F32 (kv, gate) pairs")
     if eng:
         li = m.engram.layer_ids.index(L)
-        ids = m.engram.hashes(token_history(ctx), li)
+        ids = m.engram.hashes(token_history(ctx, seed=seed), li)
         put("engram.ids", np.asarray(ids, np.int64), "int64 table rows (the hash of this token)")
         put("engram.rows", ck.rows(f"layers.{L}.engram.embed.weight", ids), "F8_E4M3")
         put("engram.scale", np.asarray(ck.raw(f"layers.{L}.engram.embed.scale")[0]).reshape(-1, 8)[ids], "F8_E8M0 raw")
@@ -1260,6 +1264,8 @@ def main() -> int:
     ap.add_argument("--layers", default="0-39")
     ap.add_argument("--scratch", type=Path, default=Path(os.environ.get("OT_SCRATCH", "/tmp")) / "v41_fullshape")
     ap.add_argument("--output", type=Path, default=OUT)
+    ap.add_argument("--seed", type=int, default=SEED,
+                    help="golden: seed of the synthetic state and token history (default reproduces existing records)")
     ap.add_argument("--rank", type=int, default=0, help="images: the die's rank in its tensor group")
     ap.add_argument("--all-experts", action="store_true", help="images: every routed expert, not only the token's")
     ap.add_argument("--constraints-md", type=Path, default=Path("/tmp/claude-1000/v41_fullshape_layer0_constraints.md"))
@@ -1268,13 +1274,13 @@ def main() -> int:
     a.scratch.mkdir(parents=True, exist_ok=True)
     if "golden" in steps:
         for ctx in map(int, a.contexts.split(",")):
-            r = golden_token(ctx, parse_layers(a.layers), a.scratch)
+            r = golden_token(ctx, parse_layers(a.layers), a.scratch, seed=a.seed)
             (a.scratch / f"golden_ctx{ctx}_{a.layers}.json").write_text(json.dumps(r, indent=1) + "\n")
     if "images" in steps:
         for ctx in map(int, a.contexts.split(",")):
             for L in parse_layers(a.layers):
                 images(ctx, L, a.rank, a.scratch, a.scratch / "images" / f"ctx{ctx}_L{L:02d}_r{a.rank}",
-                       all_experts=a.all_experts)
+                       all_experts=a.all_experts, seed=a.seed)
     if "constraints" in steps:
         md, _ = constraints(tuple(map(int, a.contexts.split(","))))
         a.constraints_md.write_text(md)

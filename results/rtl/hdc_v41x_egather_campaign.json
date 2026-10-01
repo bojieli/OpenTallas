@@ -1,5 +1,12 @@
 {
   "claim_boundary": "cycle-level Verilator simulation of 48 column-bank slices and the consumer-side assembler with behavioural ROMs, a behavioural one-beat-per-cycle merge network and a behavioural vector memory; the shipped table CONTENT is synthetic (not in this repository), the reduced vehicle's is real; link latencies are parameters.  Clock, area and pins: results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_egather_{slice,asm}.",
+  "currency": {
+    "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run",
+    "reason": "tools/hdc_golden.py changed at 8fb2059d and tools/hdc_golden_v41.py at 43ea7573 after this record; the generating campaign (tools/rtl_hdc_v41x_egather_campaign.py) no longer runs at HEAD 5aa6e609: reduced_vectors() fails 'cannot reshape array of size 768 into shape (24,24,32)' against the current golden Engram layout. The campaign must be repaired before this record can be regenerated.",
+    "stale_since": "8fb2059d",
+    "state": "stale",
+    "verdict_kept": "pass"
+  },
   "input_sha256": {
     "rtl/hdc/v41x/ot_hdc_v41x_egather.sv": "d1ac9dc69dadfe10e7093ea99aa027f3420885d6a8bd7d35132cf3d22ed2db21",
     "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",

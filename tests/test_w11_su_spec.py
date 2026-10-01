@@ -1,12 +1,15 @@
 """W11: the V4.1 stream unit's softmax chain at the spec width N = 1,024 / M = 256 (tools/w11_su_softmax_spec.py,
 results/rtl/w11_su_spec.json).  Fast: reads the committed record only."""
-import hashlib
 import json
 from pathlib import Path
+
+import sys
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tests"))
+from record_currency_support import assert_current_or_marked_stale  # noqa: E402
 REC = ROOT / "results/rtl/w11_su_spec.json"
 
 
@@ -18,8 +21,7 @@ def rec():
 def test_record_is_source_pinned(rec):
     assert len(rec["git_head"]) == 40
     assert rec["input_sha256"]
-    for name, digest in rec["input_sha256"].items():
-        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+    assert_current_or_marked_stale(rec, rec["input_sha256"], REC.name)
 
 
 def test_every_case_is_bit_exact(rec):

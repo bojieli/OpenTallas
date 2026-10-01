@@ -2,6 +2,7 @@
 module tb_chip_v41x_window_refill_schedule;
     reg clk=0; always #5 clk=~clk;
     reg rst_n=0, start_v=0, prefetch_ready=1, prefetch_ok=0;
+    reg retain_hit=0;                   // ALLOW_RETAIN = 0 here: the port (dc503862) is unused
     reg prefetch_fault=0, issue_ready=1, issue_done=0, issue_fault=0;
     reg [9:0] start_user=0;
     reg [20:0] start_first=0;
