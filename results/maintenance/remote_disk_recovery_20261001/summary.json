@@ -1,0 +1,57 @@
+{
+  "timestamp_utc": "2026-10-01T09:11:05.386076+00:00",
+  "prior_audit_sha": "f44ac3d578bf0ba7756f22c1a5f2f65c9e66dc01",
+  "main_observed_head": "e475fc95a957444c5a8e0cfcd8165505ffd6d1ea",
+  "remote_source_worktrees_removed": 12,
+  "remote_source_interval_freed_bytes": 48772141056,
+  "remote_w19_artifacts_removed": 4,
+  "remote_w19_interval_freed_bytes": 38739968,
+  "local_owner_confirmed_checkpoint_directories_removed": 44,
+  "local_interval_freed_bytes": 71122563072,
+  "local_free_bytes_after": 305188175872,
+  "remote_free_bytes_after": {
+    "155.103.253.78": 49243836416,
+    "155.103.253.133": 58287988736,
+    "155.103.253.191": 85003087872,
+    "155.103.253.16": 70746071040,
+    "155.103.253.39": 42476572672,
+    "155.103.253.114": 84384202752,
+    "ot-pve1": 96624832512,
+    "ot-pve2": 81746051072,
+    "ot-pve3": 381826416640
+  },
+  "workers_audited": 9,
+  "remote_full_manifests_inspected": 13321,
+  "remote_host_process_manifests_inspected": 917,
+  "slot_summary": "final_worker_slot_summary.json",
+  "physical_handoff_thread": "01a0f697-9c3b-76a3-b5c8-b9ded268dfa9",
+  "physical_handoff_sent": true,
+  "new_builds_launched": 0,
+  "slots_reserved": 0,
+  "main_edited_by_cleanup": false,
+  "pushed": false,
+  "protected": [
+    "qcnam-finalize with unowned long_admission scripts",
+    "W10 c8 + root/scripts",
+    "W15 wt7/8/9/13/14 and d98 SRAM evidence/source/output",
+    "all newly active recovery source trees",
+    "QC live runs and readiness watcher",
+    "all live,locked,dirty or different-HEAD remote source copies"
+  ],
+  "retirement_scope": [
+    "W19.manifest exact remote release four paths on155.103.253.114",
+    "Exact47 previously-retired source paths as allowlist; remote copy requires matchingHEAD, clean index/untracked, unlocked, no full host/process-manifest refs, fresh proc cwd/cmd/fd/maps and current Docker checks",
+    "W11 owner entirew11land checkpoint confirmed and88evidence files/source hashes validated",
+    "W10 owner explicit43childcheckpoint list;80MBarchive1070members source hashes validated, c8 untouched"
+  ],
+  "notes": [
+    "Free deltas are measured during each removal and may include concurrent workload writes; negative or zero deltas are preserved.",
+    "All remote preserved HEAD refs validated on host after removal; source directories confirmed absent.",
+    "Full remote probe receipts compressed without byte loss; local/remote source/evidence refs retain exact original objects.",
+    "No repo-native RTL,model,docs or figures edited, so no figure-census regeneration required.",
+    "Nine-host capacity is observational and must be rechecked before scheduling. AGI advertised48GiB and PVE advertised454/216GiB slots exceed actual physical RAM; measured RAM/CPU governs decisions.",
+    "W11land and explicit W10child retirement only proceeded after newer owner confirmations superseded the earlier holds."
+  ],
+  "remote_total_interval_freed_bytes": 48810881024,
+  "combined_this_pass_interval_freed_bytes": 119933444096
+}

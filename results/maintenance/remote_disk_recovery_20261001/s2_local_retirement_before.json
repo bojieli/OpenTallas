@@ -1,0 +1,136 @@
+{
+  "path": "/home/ubuntu/w10qjobs/work/s2",
+  "timestamp": 1790845353.6384428,
+  "owner_clearance": "W10 explicit child list",
+  "local_process_hits": [],
+  "local_docker_hits": [],
+  "remote_process_docker_hits": {
+    "155.103.253.78_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "ot-pve3_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "155.103.253.16_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "155.103.253.114_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "155.103.253.191_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "ot-pve2_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "155.103.253.133_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "155.103.253.39_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "ot-pve1_probe_raw.json": {
+      "process": [],
+      "docker": []
+    }
+  },
+  "manifest_mentions": [],
+  "manifest_review": "Latest owner explicit retirement supersedes historical references; all current process/Docker references checked.",
+  "evidence_preservation": "w10_evidence_preservation.json",
+  "files": [
+    {
+      "relative": "orfs/config.mk",
+      "bytes": 1931
+    },
+    {
+      "relative": "orfs/1_2_yosys.raw.v",
+      "bytes": 17543176
+    },
+    {
+      "relative": "orfs/constraint.sdc",
+      "bytes": 468
+    },
+    {
+      "relative": "orfs/orfs_synth.log",
+      "bytes": 61332
+    },
+    {
+      "relative": "orfs/io_constraints.tcl",
+      "bytes": 590
+    },
+    {
+      "relative": "orfs/orfs_flow.log",
+      "bytes": 2168
+    },
+    {
+      "relative": "orfs/objects/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/abc.constr",
+      "bytes": 50
+    },
+    {
+      "relative": "orfs/objects/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/copyright.txt",
+      "bytes": 0
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/1_1_yosys_canonicalize.rtlil",
+      "bytes": 2131382
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/mem.json",
+      "bytes": 10414420
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/1_2_yosys.sdc",
+      "bytes": 468
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/1_2_yosys.v",
+      "bytes": 17543176
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/clock_period.txt",
+      "bytes": 4
+    },
+    {
+      "relative": "orfs/reports/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/synth_check.txt",
+      "bytes": 1307
+    },
+    {
+      "relative": "orfs/reports/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/synth_stat.txt",
+      "bytes": 47631
+    },
+    {
+      "relative": "orfs/hooks/post_detail_place_check_pg_before_route.tcl",
+      "bytes": 284
+    },
+    {
+      "relative": "orfs/hooks/post_macro_place_v41_w10_elem_pair_q_lw212_tile485x121_place.tcl",
+      "bytes": 4188
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/1_synth.log",
+      "bytes": 1604
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/1_1_yosys_canonicalize.log",
+      "bytes": 8969
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/1_2_yosys.log",
+      "bytes": 51987
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_rom_elem_q_asap7_w10_wc_s2/base/1_synth.json",
+      "bytes": 162
+    }
+  ],
+  "allocated_bytes": 47951872,
+  "free_before": 304963506176
+}
