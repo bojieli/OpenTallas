@@ -29,8 +29,10 @@ def test_export_default_disabled_and_real_full_head_bit_identity(exported, tmp_p
     bundle, manifest, expected = exported
     assert manifest['strict_explicit_child_RC'] is False
     assert manifest['missing_explicit_child_RC_cases'] == 61
-    assert len(expected) == 26
+    assert len(expected) == 28
     assert not (bundle / 'inputs' / 'd0_post_norm_bits.hex').exists()
+    assert not (bundle / 'inputs' / 'd0_rstd_bits.hex').exists()
+    assert (bundle / 'expected_only' / 'd0_rstd_bits.hex').exists()
     assert (bundle / 'expected_only' / 'd0_post_norm_bits.hex').exists()
     result = A.check_records(expected, records(expected))
     assert result['runtime_admission'] is False and result['full_token'] is False

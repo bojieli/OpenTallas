@@ -15,10 +15,10 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 PREFLIGHT = 'results/uarch/w19_qwen_hbm_consumer_adapter_preflight.json'
 FIXTURES = 'results/rtl/w19_qwen_hbm_vector_kv_fixtures'
-INPUTS = dict(raw_qkv_bits=(32, (3072,)), rstd_bits=(32, ()),
+INPUTS = dict(raw_qkv_bits=(32, (3072,)),
               qn_bits=(32, (128,)), kn_bits=(32, (128,)),
               cos_bits=(32, (64,)), sin_bits=(32, (64,)))
-EXPECTED = dict(raw_qkv_bits=(32, (3072,)), post_norm_bits=(32, (3072,)),
+EXPECTED = dict(raw_qkv_bits=(32, (3072,)), rstd_bits=(32, ()), post_norm_bits=(32, (3072,)),
                 q_rstd_bits=(32, (16,)), k_rstd_bits=(32, (4,)),
                 q_norm_bits=(32, (16, 128)), k_norm_bits=(32, (4, 128)),
                 q_rope_bits=(32, (16, 128)), k_rope_bits=(32, (4, 128)),
@@ -106,6 +106,7 @@ def export(bundle, enabled=False):
         status='fixture_export_only', full_token=False, adoption=False,
         fixture_inputs='inputs/ contains raw RTL outputs and checkpoint constants only',
         expected_only='Never feed expected_only/ intermediates into a successor DUT',
+        rstd_contract='Actual RTL norm producer owns rstd; fixture scalar is expected-only, never a DUT input',
         physical_KV_addresses=False, token=0, layer=0, position=0,
         preflight_sha256=sha(ROOT / PREFLIGHT), source_sha256=sha(__file__),
         consumer_model_revision=pre['consumer_model_revision'], artifacts=artifacts,
