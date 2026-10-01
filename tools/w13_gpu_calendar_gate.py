@@ -69,7 +69,14 @@ def audit(graph_pin, instruction_events, fabric_events, lowerings, repo=ROOT):
         if read:rf_issue[sm,part,r]+=1;rf_reads[sm,r]+=read
         if write:writes[sm,part,f]+=1;write_bits[sm,f]+=write
         if op=='DIV':
-            divider[sm,i]+=e.get('active_lanes',32)
+            # An issued warp event must bind its actual participating lanes.
+            # The single scalar divider still admits only one lane per cycle;
+            # invalid counts must never subtract from its occupancy.
+            active=e.get('active_lanes')
+            if type(active) is not int or not 1<=active<=32:
+                issues.append('invalid_DIV_active_lanes')
+            else:
+                divider[sm,i]+=active
         if set(e.get('shared_read_words',[])) & set(e.get('shared_write_words',[])) and e.get('shared_collision_policy')!='forward_committed':issues.append('shared_same_address_RW_unbound')
         if e.get('shared_write_words') and e.get('partial_word_write') and not e.get('masked_write_exact_gate'):issues.append('shared_masked_write_unbound')
         for direction in ('read','write'):

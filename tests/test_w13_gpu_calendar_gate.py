@@ -96,3 +96,43 @@ def test_read_response_requires_matching_request_and_ordered_service():
     assert 'read_response_service_order' in run([0],[ins()],[response],l)['issues']
     response['service_tick']=999999
     assert 'read_response_service_order' in run([0],[ins()],[request,response],l)['issues']
+
+
+@pytest.mark.parametrize('active_lanes',[-1,0,True,False,1.0,1.5,'1',None,33])
+def test_DIV_participation_rejects_invalid_cardinality_before_accounting(active_lanes):
+    l=lowering();l['0'].update(required_instruction_events=1,required_fabric_events=0,dependencies=[])
+    j=run([0],[ins(opcode='DIV',finish_tick=84,active_lanes=active_lanes)],[],l)
+    assert not j['modeled_service_calendar_closed']
+    assert 'invalid_DIV_active_lanes' in j['issues']
+    assert not j['physical_build_ready'] and j['speed_credit']==0
+
+
+def test_DIV_participation_must_be_explicit():
+    l=lowering();l['0'].update(required_instruction_events=1,required_fabric_events=0,dependencies=[])
+    assert 'invalid_DIV_active_lanes' in run([0],[ins(opcode='DIV',finish_tick=84)],[],l)['issues']
+
+
+@pytest.mark.parametrize('active_lanes',[1,2,32])
+def test_valid_DIV_cardinality_still_obeys_single_scalar_service(active_lanes):
+    l=lowering();l['0'].update(required_instruction_events=1,required_fabric_events=0,dependencies=[])
+    j=run([0],[ins(opcode='DIV',finish_tick=84,active_lanes=active_lanes)],[],l)
+    assert 'invalid_DIV_active_lanes' not in j['issues']
+    assert j['modeled_service_calendar_closed'] is (active_lanes==1)
+    if active_lanes>1:assert 'single_scalar_DIV_overbooked' in j['issues']
+
+
+def test_negative_DIV_participation_cannot_cancel_real_overbooking():
+    l=lowering();l['0'].update(required_instruction_events=3,required_fabric_events=0,dependencies=[])
+    events=[ins(opcode='DIV',partition=p,finish_tick=84,active_lanes=n) for p,n in enumerate([1,1,-1])]
+    j=run([0],events,[],l)
+    assert not j['modeled_service_calendar_closed']
+    assert 'invalid_DIV_active_lanes' in j['issues']
+    assert 'single_scalar_DIV_overbooked' in j['issues']
+
+
+def test_full_warp_DIV_lanes_can_serialize_without_capacity_relaxation():
+    events=[ins(opcode='DIV',rf_read_tick=4*i,issue_tick=8+4*i,finish_tick=84+4*i,active_lanes=1) for i in range(32)]
+    l=lowering();l['0'].update(required_instruction_events=32,required_fabric_events=0,dependencies=[])
+    j=run([0],events,[],l)
+    assert j['modeled_service_calendar_closed']
+    assert not j['physical_build_ready'] and j['speed_credit']==0
