@@ -50,7 +50,10 @@ def exp(a):
     return (p.view(np.uint32).astype(np.int64)+(n.astype(np.int64)<<23)).astype(np.uint32).view(F)
 def rstd(a,eps):return rsqrt(add(mul(chunk8(mul(a,a)),F(1/len(a))),F(eps)))
 def matrix(codes,x,split,interleaved=False):
-    codes=np.asarray(codes,dtype=F);x=np.asarray(x,dtype=F).reshape(-1)
+    codes=np.asarray(codes);x=np.asarray(x,dtype=F).reshape(-1)
+    if codes.shape[0]>256:
+        return np.concatenate([matrix(codes[r:r+256],x,split,interleaved) for r in range(0,codes.shape[0],256)])
+    codes=codes.astype(F)
     if codes.shape[1]!=len(x):raise ValueError('matrix input extent')
     if not interleaved and len(x)%split:raise ValueError('contiguous K split must divide K')
     parts=[]
@@ -77,6 +80,7 @@ class PersistentMemory:
     def __init__(self,program):
         self.program=program;self.bytes={};self.pending={};self.published={};self.next_tag=0;self.events=[]
         self.extents={(d['die'],e['name']):e for d in program['memory_allocation'] for e in d['extents']}
+        self.leases={};self.next_lease=0;self.last_lease=None
     def _address(self,die,layer,kind,head,position,dim):
         c=self.program['config'];context=self.program['context_capacity'];hd=c['head_dim'];kv=c['num_key_value_heads']//self.program['TP']
         if not 0<=position<context or not 0<=head<kv or not 0<=dim<hd:raise ValueError('KV aperture')
@@ -105,6 +109,7 @@ class PersistentMemory:
         return dict(tag=tag,key=p['key'])
     def read_KV(self,layer,die,position,fence):
         if fence['key']!=(layer,die,position) or self.published.get(fence['key'])!=fence['tag']:raise ValueError('stale publication fence')
+        if len(self.leases)>=36*self.program['TP']:raise ValueError('finite consumer leases exhausted')
         c=self.program['config'];kv=c['num_key_value_heads']//self.program['TP'];hd=c['head_dim']
         result=[]
         for kind in ('K','V'):
@@ -115,7 +120,20 @@ class PersistentMemory:
                     for dim in range(hd):data[head,pos,dim]=self.bytes[self._address(die,layer,kind,head,pos,dim)]
             result.append(fp8_decode(data))
         self.events.append(dict(event='persistent_KV_read',layer=layer,die=die,positions=position+1,bytes=2*kv*(position+1)*hd,cycles=None))
+        lease=self.next_lease;self.next_lease+=1;self.last_lease=lease
+        self.leases[lease]=dict(key=(layer,die,position),done=set())
+        self.events.append(dict(event='software_reader_lease_acquired',lease=lease,layer=layer,die=die,position=position,cycles=None))
         return result
+    def consumer_done(self,lease,stage):
+        if lease not in self.leases or stage not in ('SCORES','PV'):raise ValueError('unknown consumer lease or stage')
+        state=self.leases[lease]
+        if stage in state['done']:raise ValueError('duplicate consumer completion')
+        if stage=='PV' and 'SCORES' not in state['done']:raise ValueError('PV before score dependency completion')
+        state['done'].add(stage)
+        self.events.append(dict(event='software_consumer_done_after_result',lease=lease,stage=stage,cycles=None))
+        if state['done']=={'SCORES','PV'}:
+            del self.leases[lease]
+            self.events.append(dict(event='software_reader_lease_released',lease=lease,cycles=None))
 
 class FixtureWeights:
     """Small deterministic parameter fixture; no expected activations/oracle."""
@@ -134,9 +152,12 @@ class FixtureWeights:
 
 class CheckpointWeights:
     """Lazy shipped checkpoint/W8 recipe; weights only, never oracle features."""
-    def __init__(self,program,snapshot):
+    def __init__(self,program,snapshot,*,row_batch=256,lock=None):
         self.program=program;self.snapshot=Path(snapshot);self.cache={};self.constants={};self.layer=None;self.tensor_pins={}
-        lock=json.loads((ROOT/'compiler/models/qwen3-8b/checkpoint_source.json').read_text())
+        if not 1<=row_batch<=256:raise ValueError('bounded checkpoint row batch')
+        self.row_batch=row_batch;self.reads=[];self.file_pins={};self.file_stats={}
+        lock=lock or json.loads((ROOT/'compiler/models/qwen3-8b/checkpoint_source.json').read_text())
+        self.expected={x['path']:x for x in lock['expected_files']}
         self.checkpoint_revision=lock['revision']
         for name in ('config.json','model.safetensors.index.json'):
             expected=next(x for x in lock['expected_files'] if x['path']==name)
@@ -144,24 +165,55 @@ class CheckpointWeights:
         self.index=json.loads((self.snapshot/'model.safetensors.index.json').read_text())['weight_map']
         if json.loads((self.snapshot/'config.json').read_text())!=program['config']:raise ValueError('checkpoint geometry drift')
     def tensor(self,key):
+        return self.read_tensor(key)
+    def _verified_file(self,name):
+        path=self.snapshot/name;stat=path.stat();identity=(stat.st_dev,stat.st_ino,stat.st_size,stat.st_mtime_ns)
+        if name in self.file_pins:
+            if self.file_stats[name]!=identity:raise ValueError('checkpoint shard changed after admission')
+            return path
+        digest=hashlib.sha256()
+        with path.open('rb') as stream:
+            for block in iter(lambda:stream.read(8<<20),b''):digest.update(block)
+        expected=self.expected[name]
+        if stat.st_size!=expected['size_bytes'] or digest.hexdigest()!=expected['sha256']:raise ValueError('checkpoint shard source pin')
+        after=path.stat()
+        if identity!=(after.st_dev,after.st_ino,after.st_size,after.st_mtime_ns):raise ValueError('checkpoint shard changed while hashing')
+        self.file_pins[name]=digest.hexdigest();self.file_stats[name]=identity
+        return path
+    def read_tensor(self,key,start=None,stop=None):
         from safetensors import safe_open
-        with safe_open(str(self.snapshot/self.index[key]),framework='pt',device='cpu') as f:w=f.get_tensor(key)
-        self.tensor_pins[key]=hashlib.sha256(w.contiguous().view(__import__('torch').int16).numpy().tobytes()).hexdigest()
-        return w
+        import torch
+        filename=self.index[key];path=self._verified_file(filename)
+        with safe_open(str(path),framework='pt',device='cpu') as handle:
+            source=handle.get_slice(key);shape=source.get_shape()
+            if start is None:
+                if len(shape)>1:raise ValueError('matrix tensors require bounded row reads')
+                value=handle.get_tensor(key)
+            else:
+                if len(shape)!=2 or not 0<=start<stop<=shape[0] or stop-start>self.row_batch:raise ValueError('bounded row aperture')
+                value=source[start:stop]
+        if value.dtype!=torch.bfloat16:raise ValueError('checkpoint BF16 source format')
+        self._verified_file(filename)
+        digest=hashlib.sha256(value.contiguous().view(torch.int16).numpy().tobytes()).hexdigest()
+        read=dict(tensor=key,shard=filename,shape=shape,row_start=start,row_stop=stop,sha256=digest,bytes=value.numel()*2)
+        self.reads.append(read);self.tensor_pins[key if start is None else f'{key}[{start}:{stop}]']=digest
+        return value
+    def provenance(self):
+        return dict(checkpoint_revision=self.checkpoint_revision,verified_shards=self.file_pins,reads=self.reads,
+                    max_source_rows_per_read=self.row_batch,images_written=False,downloads=False,
+                    actual_hardware_memory_provider=False)
     def constant(self,layer,kind):
         key=f'model.layers.{layer}.self_attn.{kind}_norm.weight' if kind in ('q','k') else 'model.norm.weight'
         if key not in self.constants:self.constants[key]=self.tensor(key).float().numpy()
         return self.constants[key]
     def embedding(self,token):
-        from safetensors import safe_open
         from qwen3_deployment_quality import quantize_w8
         key='model.embed_tokens.weight'
-        with safe_open(str(self.snapshot/self.index[key]),framework='pt',device='cpu') as f:w=f.get_slice(key)[token:token+1]
-        self.tensor_pins[key+f'.row{token}']=hashlib.sha256(w.contiguous().view(__import__('torch').int16).numpy().tobytes()).hexdigest()
+        w=self.read_tensor(key,token,token+1)
         q,s,_=quantize_w8(w.float());return mul(q[0].numpy().astype(F),s.float().numpy()[0,0])
     def matrix(self,key):
         import torch
-        from hdc_qwen_int8_image_w12 import quantize_full_rows_then_partition
+        from qwen3_deployment_quality import quantize_w8
         d=self.program['weight_descriptors'][key]
         if self.layer!=d['layer']:self.cache={};self.layer=d['layer']
         if key in self.cache:return self.cache[key]
@@ -169,9 +221,16 @@ class CheckpointWeights:
         axis='columns' if d['name'] in ('o','down') else 'rows'
         qs=[];ss=[]
         for source in d['checkpoint_sources']:
-            w=self.tensor(source)
-            q,s=quantize_full_rows_then_partition(w,die=d['die'],axis=axis,norm=norm,tp=2)
-            qs.append(q.numpy());ss.append(s.float().numpy().reshape(-1))
+            from safetensors import safe_open
+            path=self._verified_file(self.index[source])
+            with safe_open(str(path),framework='pt',device='cpu') as handle:rows,k=handle.get_slice(source).get_shape()
+            start,end=(d['die']*(rows//2),(d['die']+1)*(rows//2)) if axis=='rows' else (0,rows)
+            for r in range(start,end,self.row_batch):
+                w=self.read_tensor(source,r,min(end,r+self.row_batch)).float()
+                if norm is not None:w=w*norm.float()[None,:]
+                q,s,_=quantize_w8(w)
+                if axis=='columns':q=q[:,d['die']*(k//2):(d['die']+1)*(k//2)]
+                qs.append(q.contiguous().numpy());ss.append(s.float().numpy().reshape(-1))
         self.cache[key]=(np.concatenate(qs),np.concatenate(ss))
         return self.cache[key]
 
@@ -179,7 +238,7 @@ class SoftwareGPUProvider:
     kind='software_functional_unqualified'
     def __init__(self,program,weights=None,memory=None):
         self.program=program;self.weights=weights or FixtureWeights(program);self.memory=memory or PersistentMemory(program)
-        self.calls=[]
+        self.calls=[];self.KV_leases={}
     def execute(self,op,args):
         name=op['opcode'];a=op['attributes'];c=self.program['config'];hd=c['head_dim'];tp=self.program['TP']
         self.calls.append(op['id'])
@@ -199,15 +258,19 @@ class SoftwareGPUProvider:
             out=[np.array([np.concatenate([add(mul(row[:half],co),mul(row[half:],neg(si))),add(mul(row[half:],co),mul(row[:half],si))]) for row in args[0]])]
         elif name=='KV_WRITE':out=[self.memory.submit_KV(a['layer'],a['die'],int(args[2]),args[0],args[1])]
         elif name=='KV_FENCE':out=[self.memory.fence(args[0])]
-        elif name=='KV_READ':out=self.memory.read_KV(a['layer'],a['die'],int(args[1]),args[0])
+        elif name=='KV_READ':
+            out=self.memory.read_KV(a['layer'],a['die'],int(args[1]),args[0])
+            for value in out:self.KV_leases[id(value)]=self.memory.last_lease
         elif name=='SCORES':
             query=bf16(args[0]);keys=args[1]
             out=[np.array([mul(matrix(keys[head//a['head_groups']],row,a['split'],True),F(1/np.sqrt(hd))) for head,row in enumerate(query)])]
+            self.memory.consumer_done(self.KV_leases.pop(id(keys)),'SCORES')
         elif name=='EXP_SUM':
             values=np.array([exp(add(row,neg(np.max(row)))) for row in args[0]])
             out=[bf16(values),np.array([chunk8(row) for row in values])]
         elif name=='PV':
             out=[np.array([matrix(args[1][head//a['head_groups']].T,row,a['split'],True) for head,row in enumerate(args[0])])]
+            self.memory.consumer_done(self.KV_leases.pop(id(args[1])),'PV')
         elif name=='NORMALIZE':out=[mul(args[0],reciprocal(args[1])[:,None]).reshape(-1)]
         elif name=='ALL_REDUCE':
             result=args[0]
@@ -223,7 +286,7 @@ class SoftwareGPUProvider:
         else:raise ValueError('no ordinaryGPU semantic lowering '+name)
         return out
 
-def execute(program,provider,token,position):
+def execute(program,provider,token,position,*,observer=None,stop_after_layer=None):
     if not 0<=token<program['config']['vocab_size'] or not 0<=position<program['context_capacity']:raise ValueError('runtime input aperture')
     registers={'token':int(token),'position':int(position)};done=set();trace=[]
     for op in program['instructions']:
@@ -233,14 +296,17 @@ def execute(program,provider,token,position):
         for name,value in zip(op['outputs'],out):
             if name in registers:raise ValueError('runtime SSA overwrite')
             registers[name]=value
+        if observer is not None:observer(op,out)
         for consumed in op['inputs']:
             if program['register_last_use'].get(consumed)==op['id'] and consumed not in ('token','position'):
                 del registers[consumed]
         done.add(op['id']);trace.append(dict(id=op['id'],opcode=op['opcode'],dependencies=op['dependencies'],provider_kind=provider.kind,cycles=None))
-    return dict(status='SOFTWARE_PROGRAM_COMPLETED',next_token=int(registers[program['result_register']]),position=position,
+        if stop_after_layer is not None and f'L{stop_after_layer}.X' in op['outputs']:break
+    complete=program['result_register'] in registers
+    return dict(status='SOFTWARE_PROGRAM_COMPLETED' if complete else 'SOFTWARE_PREFIX_COMPLETED',next_token=int(registers[program['result_register']]) if complete else None,position=position,
         instructions_retired=len(done),trace=trace,memory_events=list(provider.memory.events),
         fullshape=program['config']['num_hidden_layers']==36 and program['config']['hidden_size']==4096,
-        actual_RTL_executed=False,full_token_RTL=False,token_cycles=None,token_rate=None)
+        complete_program_executed=complete,actual_RTL_executed=False,full_token_RTL=False,token_cycles=None,token_rate=None)
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--program',type=Path,required=True);p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--token',type=int,required=True);p.add_argument('--steps',type=int,default=1);p.add_argument('--out',type=Path,required=True)
     a=p.parse_args();program=json.loads(a.program.read_text());provider=SoftwareGPUProvider(program,CheckpointWeights(program,a.snapshot))
