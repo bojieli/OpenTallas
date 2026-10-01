@@ -299,8 +299,9 @@ def test_w16b_pass2_steps():
     assert shr["ar_tokens_s_b1"] >= ser["ar_tokens_s_b1"] and stm["ar_tokens_s_b1"] <= shr["ar_tokens_s_b1"]
     assert shr["die"]["expert_wire"] == 63 and shr["die"]["coll_stages"] == 45
     t3 = [x for x in r["headline_table"]["v41"] if x["tier"] == "3"]
-    assert t3 and all(abs(x["per_user_ar"] - 1e6 / 465.17) < 0.1 for x in t3)          # W19 23648fc3, fused
-    assert all(abs(x["per_user_ar_unfused"] - 1e6 / 481.49) < 0.1 for x in t3)
+    assert t3 and all(abs(x["per_user_ar"] - 1e6 / 442.14) < 0.1 for x in t3)          # W19 71b3ffc5 (wide select PF 256), fused
+    assert all(abs(x["per_user_ar_unfused"] - 1e6 / 458.46) < 0.1 for x in t3)
+    assert all(x["per_user_ar_tmem_h5"] > x["per_user_ar"] for x in t3)                   # H5 TMEM named step
     q = r["qwen_l0_rtl_vs_model"]
     assert q["rtl"]["cycles"] == 4669 and q["rtl"]["me_extra"] == U.QWEN_W12_TP4_ME_EXTRA_SS   # the RTL ran without +54
     assert abs(q["ratio"] - 4669 / q["model_layer_cycles"]) < 1e-3
@@ -337,7 +338,9 @@ def test_w16b_followup_steps():
     cr = next(p for k, p in pts.items() if k.endswith(U.CROT_TAG))
     bd = next(p for k, p in pts.items() if k.endswith(U.FUSED_OPT_TAG))
     assert vmh["vmh"] == U.VMH and stm.get("vmh") is None and ref["vmh"] == U.VMH and fin["vmh"] == U.VMC_FUSED
-    assert sq["vmh"] == U.VMC and cr["vmh"] == U.VMC_COMPACT
+    pl = next(p for k, p in pts.items() if k.endswith(U.PLUS_TAG))
+    assert sq["vmh"] == U.VMC and cr["vmh"] == U.VMC_COMPACT and pl["vmh"] == U.VMC_PLUS
+    assert cr["ar_tokens_s_b1"] < pl["ar_tokens_s_b1"] < fin["ar_tokens_s_b1"]     # plus hub (37) beats the strip (42)
     # root 2026-10-01: compact C_rotate (42 / 32) edges VM-H; fusion is a named step, the optimistic mode its bound
     assert ref["ar_tokens_s_b1"] < cr["ar_tokens_s_b1"] < fin["ar_tokens_s_b1"] < bd["ar_tokens_s_b1"]
     assert cr["ar_tokens_s_b1"] < sq["ar_tokens_s_b1"]                         # the unplaced 37 / 29 was optimistic
@@ -355,7 +358,7 @@ def test_w16b_followup_steps():
     assert U._cons_pair_mm2("w10b_q", True) == 1002.89 * 142.56 / 1e6
     assert {"vm_per_op_latency", "rotate_span_is_the_hub_diameter"} <= {c["id"] for c in r["model_caveats"]}
     k = r["karb"]
-    assert k["regions_w18b_merge2_headreg"] == [20, 16, 14, 10, 10, 14, 16, 20]
+    assert k["regions_w18b_merge2_headreg"] == [21, 17, 15, 11, 11, 15, 17, 21]
     assert k["rows"]["w18b_merge2_headreg_worst"]["tokens_s_delta_pct"] < k["rows"]["ss_0p75mm_worst"]["tokens_s_delta_pct"]
     a = r["qwen_l0_rtl_vs_model"]["attribution"]
     assert (a["body_cycles"], a["allreduce_cycles"]) == (2687, 991)
@@ -397,3 +400,21 @@ def test_vm_waterfall_record():
     lv = {x["lever"]: x for x in w["levers"]}
     ca = next(x for k, x in lv.items() if "PRODUCT (modelled" in k)
     assert abs(ca["ar_tokens_s_b1"] - fin["ar_tokens_s_b1"]) < 0.5 and ca["vs_vmh_reference_pct"] > 0
+
+
+def test_root_rulings_fusion_families_and_in_order_caveat():
+    """Root 2026-10-01: fusion priced only on W11's measured families; the FA in-order SU caveat row; Qwen dataflow
+    named steps (W12b corrected)."""
+    import uarch_model as U
+    r = _rec()
+    fin = next(p for p in r["v41_rom"]["points"] if p.get("product_final"))
+    assert U.w11_fusable("L3.attn.hc_post") and U.w11_fusable("L3.ffn.norm.rsqrt") and U.w11_fusable("L3.ffn.route_w")
+    assert not any(U.w11_fusable(f"L3.{x}") for x in ("attn.exp", "attn.sink", "ffn.softplus_sqrt", "ffn.swiglu",
+                                                      "attn.quant", "attn.q_rope"))
+    assert 2700 < fin["ar_tokens_s_b1"] < 2850                                  # plus hub + W11-family fusion
+    h = r["headline_table"]["v41"][0]
+    c = h["in_order_su_caveat"]
+    assert c["pipelined"]["ar_tokens_s_b1"] < h["per_user_ar"] and c["blocking"]["ar_tokens_s_b1"] < c["pipelined"]["ar_tokens_s_b1"]
+    q = r["qwen_product_ss"]["dataflow_steps"]
+    assert q["model"][0]["cycles"] == r["qwen_product_ss"]["cycles"]           # L1 without overlap saves ~0
+    assert q["as_built"][-1]["tokens_s_b1"] > q["as_built"][0]["tokens_s_b1"]

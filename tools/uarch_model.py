@@ -3372,8 +3372,16 @@ CROT_TAG = (STREAM_TAG + f" + W11 C_rotate VM on W18b's compact hub (x 8 / scatt
 # USER RULE (AGENTS.md a6e86359) / ROOT RULING 2026-10-01: lane-local operator fusion is a named product step, the
 # conservative mode the headline and the optimistic mode its bound; "modelled; RTL pending" until W11 / W12b measure it
 FUSION_LABEL = "modelled; RTL pending"
-PRODUCT_TAG = CROT_TAG + f" + lane-local operator fusion (conservative; {FUSION_LABEL})"
-FUSED_OPT_TAG = CROT_TAG + f" + lane-local operator fusion, optimistic (BOUND; {FUSION_LABEL})"
+# ROOT RULING 2026-10-01: W18b's PLUS-shaped hub (claude/w18-die-assembly dfce8d40: a 3.93 mm central bank square,
+# four 1.6 mm lane arms; worst bank -> lane 9,058 um) at W11's square-hub stages (claude/w11-crot 57318ff3,
+# --stage-set square_hub, 748 um a stage): LEAD 6 / read 16 / write 15 / result 6 -> +37 an op, +28 a reduction; the
+# index top-k crossing +1 cycle on the plus die (38 vs 37); the strip (42 / 32) stays a reference row
+PLUS_TAG = (STREAM_TAG + f" + W11 C_rotate VM on W18b's plus hub (SU op +37 / red +28, issue x1.0; index top-k +1) + "
+            f"{W10B_TAG} and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit")
+PRODUCT_TAG = PLUS_TAG + f" + lane-local operator fusion on W11's fused families (conservative; {FUSION_LABEL})"
+FUSED_OPT_TAG = PLUS_TAG + f" + lane-local operator fusion on W11's fused families, optimistic (BOUND; {FUSION_LABEL})"
+CROT_FUSED_TAG = CROT_TAG + f" + lane-local operator fusion on W11's fused families (conservative; {FUSION_LABEL})"
+PLUS_LAT = {"suffix:idx.topk_merge": 1}
 QWEN_W12_TP4_ME_EXTRA_SS = 41 + 5 * 5 + 38 + 1 + 7   # W12 c6e6b845 at the 504 um reach: 112 cycles an ME op
 PRODUCT_CLOCK_HZ = 1.2e9   # USER DECISION (AGENTS.md e7479589): 0.833 ns at SS for all logic in all four designs
 PRODUCT_DYN_SCALE = 1.16   # root 2026-09-30: dynamic energy about +16% at 1.2 GHz (ASSUMED: the voltage for the clock)
@@ -3791,8 +3799,26 @@ _SU_FUSION_CACHE = {}
 FUSION_C_ROTATE_COMPACT = dict(bcast=7, read=18, read_red=18, write=17, result=7)
 VMC_COMPACT = dict(x_gather=8, ret_scatter=7, coll_write=13, su_op_extra=42, su_red_extra=32, su_issue=1.0,
                    src="claude/w11-crot results/floorplan/v41_vm_crot_stages.json (PROVISIONAL) on W18b 32155a8f")
-VMC_FUSED = dict(VMC_COMPACT, fusion=dict(FUSION_C_ROTATE_COMPACT, mode="conservative"))
-VMC_FUSED_OPT = dict(VMC_COMPACT, fusion=dict(FUSION_C_ROTATE_COMPACT, mode="optimistic"))
+VMC_COMPACT_FUSED = dict(VMC_COMPACT, fusion=dict(FUSION_C_ROTATE_COMPACT, mode="conservative"))
+# W11 square_hub stages on W18b's plus hub (claude/w11-crot 57318ff3); the client stages (x gather 8 / scatter 7 /
+# collective write 13) are carried from the strip until W11 re-derives them for the plus
+FUSION_C_ROTATE_PLUS = dict(bcast=6, read=16, read_red=16, write=15, result=6)
+VMC_PLUS = dict(x_gather=8, ret_scatter=7, coll_write=13, su_op_extra=37, su_red_extra=28, su_issue=1.0,
+                src="claude/w11-crot 57318ff3 (--stage-set square_hub) on W18b dfce8d40 plus hub; client stages from the strip")
+VMC_FUSED = dict(VMC_PLUS, fusion=dict(FUSION_C_ROTATE_PLUS, mode="conservative"))
+VMC_FUSED_OPT = dict(VMC_PLUS, fusion=dict(FUSION_C_ROTATE_PLUS, mode="optimistic"))
+
+
+def w11_fusable(name):
+    """ROOT RULING 2026-10-01: fusion is priced only on the families W11's measured pass fuses on the shipped program
+    (claude/w11-fuse a8ce0e4d results/rtl/w11_su_fuse_stats_shipped.json: 700 edges -- hc_post 246, rmsnorm hc_pre ->
+    norm out 243, moe expert sum 200, compressor 7, index_key 4); softmax, router, SwiGLU and the quantisers fuse
+    nothing (their consumers change layout, read broadcasts or gather).  The priced graph does not carry the 240
+    expert-sum adds nor hc_post's sub-ops, so this undercounts (raise only when the graph carries them and RTL confirms)."""
+    t = name.split(".", 1)[1] if name.startswith(("L", "E")) and "." in name else name
+    return (t in ("attn.hc_post", "ffn.hc_post", "attn.hc_pre", "ffn.hc_pre", "hc_pre", "head.hc_pre", "ffn.route_w")
+            or t.startswith(("attn.norm.", "ffn.norm.", "head.norm.", "norm.", "attn.cmp.k_norm"))
+            or (t.startswith("attn.cmp.") and "qdq" not in t))
 
 
 def su_fusion_classes(g):
@@ -3812,23 +3838,30 @@ def su_fusion_classes(g):
         if nd["kind"] not in SU_KINDS:
             continue
         leaf = name.rsplit(".", 1)[-1]
-        head = not nd["deps"] or any(g.nodes[x]["kind"] not in SU_KINDS for x in nd["deps"])
-        tail = not succ[name] or any(g.nodes[x]["kind"] not in SU_KINDS for x in succ[name])
+        fus = w11_fusable(name)
+        # a chain boundary: any input from outside the SU or from an SU op W11's pass does not fuse; the same for outputs
+        head = (not fus or not nd["deps"]
+                or any(g.nodes[x]["kind"] not in SU_KINDS or not w11_fusable(x) for x in nd["deps"]))
+        tail = (not fus or not succ[name]
+                or any(g.nodes[x]["kind"] not in SU_KINDS or not w11_fusable(x) for x in succ[name]))
         rope = "rope" in leaf
         quant = "quant" in leaf or leaf.endswith("qdq")
         red = nd["kind"] == "reduce"
 
-        def extra(fz, head=head, tail=tail, rope=rope, quant=quant, red=red):
+        def extra(fz, head=head, tail=tail, rope=rope, quant=quant, red=red, fus_=fus):
             m = FUSION_MODES[fz["mode"]]
             rd = fz["read_red" if red else "read"] if (head or (rope and not m["rope_lane_paired"])) else 0.0
             bc = fz["bcast"] if (head or not m["bcast_heads_only"]) else 0.0
+            if not fus_:
+                return fz["bcast"] + fz["read_red" if red else "read"] + (fz["result"] if red else fz["write"])
             wr = fz["result"] if red else (fz["write"] if tail else 0.0)
             seg = fz["result"] if (quant and m["quant_segmented"]) else 0.0
             return bc + rd + wr + seg
-        cls = ("cross-lane: reduction" if red else "cross-lane: RoPE rotation" if rope else
+        cls = ("not fused (outside W11's fused families)" if not fus else "cross-lane: reduction" if red else "cross-lane: RoPE rotation" if rope else
                "cross-lane: segmented quantise" if quant else
                "chain boundary: VM read" if head else "chain boundary: VM write" if tail else "lane-local chained")
-        out[name] = dict(kind=nd["kind"], head=head, tail=tail, rope=rope, quant=quant, cls=cls, extra_cycles=extra)
+        out[name] = dict(kind=nd["kind"], head=head, tail=tail, rope=rope, quant=quant, fusable=fus, cls=cls,
+                         extra_cycles=extra)
     _SU_FUSION_CACHE.clear()
     _SU_FUSION_CACHE[key] = (g, out)
     return out
@@ -4462,8 +4495,8 @@ def consolidation(ec=None, lv=None):
     for k, pt_, bfm in (("option_ii cap 3", PRODUCT_PITCH, "option_ii"), ("option_iii", "w10_iii_1p2", "option_iii")):
         S_ = cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, pt_, bfm, "4096m8")
         q_ = cons_v41_rom(S_, 4, cons_table_dies("analytical")["dies"], 1.0, None, bfm, PRODUCT_CLOCK_HZ,
-                          FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), PRODUCT_DYN_SCALE, (0.9e9, "w18"),
-                          None, 7, True, PRODUCT_SERIAL, DIE_SHRUNK_INTERIM, VMC_FUSED, PRODUCT_HUB)
+                          FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS, **PLUS_LAT), PRODUCT_DYN_SCALE,
+                          (0.9e9, "w18"), None, 7, True, PRODUCT_SERIAL, DIE_SHRUNK_INTERIM, VMC_FUSED, PRODUCT_HUB)
         bf16_full_token[k] = dict(stages=S_, dies=q_["dies"], ar=q_["ar_tokens_s_b1"], mtp=q_["mtp_tokens_s_b1"],
                                   saturated=q_["ar_saturated_tokens_s"], pipeline_hops_us=q_["pipeline_hops_us"])
     prod = {}
@@ -4485,11 +4518,16 @@ def consolidation(ec=None, lv=None):
                                  (VMH_REF_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
                                  (CROT_SQ_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
                                  (CROT_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
-                                 (PRODUCT_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
-                                 (FUSED_OPT_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7)):
+                                 (CROT_FUSED_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
+                                 (PLUS_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS, **PLUS_LAT), None, 7),
+                                 (PRODUCT_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS, **PLUS_LAT), None, 7),
+                                 (FUSED_OPT_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS, **PLUS_LAT), None,
+                                  7)):
         fin = tag == PRODUCT_TAG
         S_, h_, vm_, blk_ = ({PRODUCT_TAG: (Sp, hp, VMC_FUSED, PRODUCT_HUB), FUSED_OPT_TAG: (Sp, hp, VMC_FUSED_OPT, PRODUCT_HUB),
                               CROT_TAG: (Sp, hp, VMC_COMPACT, PRODUCT_HUB), CROT_SQ_TAG: (Sp, hp, VMC, PRODUCT_HUB),
+                              CROT_FUSED_TAG: (Sp, hp, VMC_COMPACT_FUSED, PRODUCT_HUB),
+                              PLUS_TAG: (Sp, hp, VMC_PLUS, PRODUCT_HUB),
                               VMH_REF_TAG: (Sh, hh, VMH, VMH_BLOCK)}.get(tag)
                              or (Sp_prev, hp_prev, VMH if "VM-H" in tag else None, None))
         pt = cons_v41_rom(S_, h_, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ,
@@ -4661,7 +4699,7 @@ def consolidation(ec=None, lv=None):
                                          "dies, BF16 COLUMNS (1,024 at W10b's 1,002.89 x 142.56 um column outline) with q "
                                          "pairs at W10b's 510.84 x 126.9 um tile (floorplan sizes; routed closure "
                                          "pending p12q4 / c5) and W11's C_rotate SU+VM hub block (38.60 mm2; root "
-                                         "rulings 2026-10-01: on W18b's compact hub, op +42 / red +32; lane-local fusion modelled, RTL pending; "
+                                         "rulings 2026-10-01: on W18b's plus hub, op +37 / red +28; lane-local fusion on W11's families, modelled, RTL pending; "
                                          "measured VM-H kept as the comparison row) -- USER DECISION: maximum per-user rate, die "
                                          f"count free) + {head['head_dies']} head dies (8192m8 ping-pong; see head_fit: "
                                          f"{hp_prev} at W10's tile, re-fit pending) + {head['table_dies']} Engram table dies (storage-only basis; "
@@ -4941,7 +4979,7 @@ KARB = dict(base_cycles=7, per_hop_cycles=2,
 # W18b e909156c (root relay 2026-10-01): MERGE2 alone fails SS (-212 ps); MERGE2 + HEADREG (54/54 equivalence-clean,
 # P&R running) adds +2 to the K round trip on the shrunk die (MERGE2's 19/15/13/9/9/13/15/19 superseded until the P&R
 # verdict)
-KARB_W18B_HEADREG = (20, 16, 14, 10, 10, 14, 16, 20)
+KARB_W18B_HEADREG = (21, 17, 15, 11, 11, 15, 17, 21)   # W18b f53e3be0: pregion centre queue, +3 (was +2: 20/16/...)
 
 
 def karb_region_cycles(reach_mm):
@@ -4969,8 +5007,9 @@ def cons_karb_delta(S=None, reach_mm=None, clock_hz=None):
             dt = n * c / clock
             out[f"{tag}_{kind}"] = dict(reach_mm=reach, cycles_per_request=round(c, 2), requests_on_path=n,
                                         added_us=round(dt * 1e6, 3), tokens_s_delta_pct=round(-dt / (T + dt) * 100, 3))
-    # W18b (e909156c, root relay): MERGE2 + HEADREG on proot (equivalence-clean 54/54, P&R running): the K round trip
-    # on the shrunk die is 20/16/14/10/10/14/16/20 (regions 0-7); a row only, not in the product
+    # W18b (f53e3be0 results/rtl/chip_v41x_karb_pipe_equiv_w18_cq.json, 54/54): MERGE2 + HEADREG + the pregion centre
+    # queue: the K round trip is 21/17/15/11/11/15/17/21 (regions 0-7, +3); pregion still fails SS (-224 ps); a row
+    # only, not in the product
     cyc = KARB_W18B_HEADREG
     for kind, c in (("worst", max(cyc)), ("mean", sum(cyc) / len(cyc))):
         dt = n * c / clock
@@ -4994,26 +5033,52 @@ HBM_AUDIT = dict(ar=2394.5 / 3071.7, mtp=5227.7 / 6206.0, ar_range=(2196.2 / 307
                           "expert partials to re-order); the 0.9 GHz serial domain is already in the ROM product")
 
 
-# W19 COMPOSED V4.1 HBM token (claude/w19-hbm-token 23648fc3, results/uarch/w19_hbm_token_{ar,ar_fused,ar_gather,mtp,
-# mtp_fused}.json; supersedes a88743ff / d5ce14e7 / d1cc2234): every term priced along the executed TP-96 program,
-# collectives on W15b's committed P=48 NVLS record (claude/w15-ss 3c3bf4c3: 932.8 + 89.7 x ceil(B_rank / 750 B) cycles at
-# 1.2 GHz) and W15b's MEASURED 96-way top-k select (3,875 cycles at P=64, claude/w15-ss 18a07a7a; blocking, so the MTP
-# pass charges its 6 positions in series).  The baseline includes the FP8 activation quantisers attn.quant and z_quant.
-# Lane-local fusion (USER RULE, the same as the ROM's for fairness): AR 481.49 -> 465.17 us, MTP verify pass 885.49 ->
-# 854.01 us.  MTP adds the audit's drafter 49.9 us.  Still labelled: the grouped o-reduce is extrapolated from the
-# all-reduce fit; W15b's wide select (P = 1,024) is simulating.
-HBM_W19 = dict(ar_us=465.17, ar_unfused_us=481.49, ar_all_gather_us=506.35, mtp_pass_us=854.01,
-               mtp_pass_unfused_us=885.49, drafter_us=49.9, collectives=265,
-               parts_us_fused=dict(sm=70.58, barrier=22.29, collective=263.49, local=103.48, fetch=5.33),
-               parts_us_unfused=dict(sm=70.58, barrier=22.29, collective=263.49, local=119.8, fetch=5.33),
-               mtp_parts_us_fused=dict(sm=128.11, barrier=22.29, collective=464.99, local=199.64, fetch=38.97),
+# W19 COMPOSED V4.1 HBM token (claude/w19-hbm-token 71b3ffc5, results/uarch/w19_hbm_token_{ar,ar_fused,mtp,mtp_fused}_wsel256
+# .json; supersedes a88743ff / d5ce14e7 / d1cc2234 / 23648fc3 / c350be7f): every term priced along the executed TP-96 program,
+# collectives on W15b's committed P=48 NVLS record and W15b's MEASURED WIDE 96-way top-k select (P = 1,024 / PF = 256:
+# 419 cycles, claude/w15-ss 082f11b2; one unit, the MTP pass's 6 positions in series; the P = 64 unit's 3,875 cycles
+# stays W19's narrow variant).  The baseline includes the FP8 activation quantisers.  Lane-local fusion (USER RULE, the
+# same as the ROM's for fairness): AR 458.46 -> 442.14 us, MTP verify pass 747.31 -> 715.82 us; MTP adds the audit's
+# drafter 49.9 us.  Still labelled: the grouped o-reduce is extrapolated from the all-reduce fit.
+HBM_W19 = dict(ar_us=442.14, ar_unfused_us=458.46, mtp_pass_us=715.82, mtp_pass_unfused_us=747.31, drafter_us=49.9,
+               collectives=265,
+               parts_us_fused=dict(sm=70.58, barrier=22.29, collective=240.46, local=103.48, fetch=5.33),
+               parts_us_unfused=dict(sm=70.58, barrier=22.29, collective=240.46, local=119.8, fetch=5.33),
+               mtp_parts_us_fused=dict(sm=128.11, barrier=22.29, collective=326.81, local=199.64, fetch=38.97),
                fusion=f"conservative-equivalent ({FUSION_LABEL})",
-               src="claude/w19-hbm-token 23648fc3 results/uarch/w19_hbm_token_{ar,ar_fused,ar_gather,mtp,mtp_fused}.json "
-                   "(result.total_us, result.parts_us); select MEASURED claude/w15-ss 18a07a7a")
+               src="claude/w19-hbm-token 71b3ffc5 results/uarch/w19_hbm_token_{ar,ar_fused,mtp,mtp_fused}_wsel256.json "
+                   "(result.total_us, result.parts_us); wide select PF = 256 MEASURED claude/w15-ss 082f11b2")
 HBM_W19["ar_tokens_s"] = 1e6 / HBM_W19["ar_us"]
 HBM_W19["ar_tokens_s_unfused"] = 1e6 / HBM_W19["ar_unfused_us"]
 HBM_W19["mtp_tokens_s"] = V41_TAU * 1e6 / (HBM_W19["mtp_pass_us"] + HBM_W19["drafter_us"])
 HBM_W19["mtp_tokens_s_unfused"] = V41_TAU * 1e6 / (HBM_W19["mtp_pass_unfused_us"] + HBM_W19["drafter_us"])
+# Dataflow level H5 (GPU-real; USER DECISION AGENTS.md a4f314fb): a TMEM-style accumulator memory with register
+# epilogues on the HBM SM's column outputs (W13b claude/w13-blockdot12 f984ba8d results/uarch/hbm_sm_epilogue_study.json,
+# model-level): norm sum-of-squares partials, block-32 quantise and the residual / mHC-post add leave the path.  AR saves
+# 11.6 us on W13b's own basis (356.9 -> 345.3 us, +3.4%); FA's re-pricing on W19's program (claude/fusion-audit a86b17cd)
+# gives 6.1 us AR / 11.8 us a verify pass.  Charged here: W13b's 11.6 us AR, FA's 11.8 us MTP pass.  Qwen HBM: 0 (the
+# token is HBM-bound).  modelled; RTL pending
+HBM_TMEM = dict(ar_us=11.6, ar_us_fa_w19_program=6.1, mtp_pass_us=11.8, qwen_us=0.0, area_mm2_per_die_v41=1.37,
+                src="W13b claude/w13-blockdot12 f984ba8d hbm_sm_epilogue_study.json; FA a86b17cd fusion_audit.json (H5)")
+# FA (claude/fusion-audit a86b17cd, results/uarch/fusion_audit.json v41_rom rows): the product graph's solve assumes
+# perfect SU interleaving; the die issues SU ops in order and drains on a dependent pair.  An in-order SU in graph
+# emission order adds 37.05 us to the AR token if pipelined and 86.99 us if blocking (MTP pass +81.62 / +141.18 us),
+# measured on the L1 fused product.  ROOT RULING 2026-10-01: a caveat row, applied additively to the headline, until the
+# die-token calibration (W11-fuse f0551ea7 issue trace) replaces it with the measured model / RTL ratio
+FA_INORDER = dict(ar_us_pipelined=37.054, ar_us_blocking=86.991, mtp_pass_us_pipelined=81.616, mtp_pass_us_blocking=141.184,
+                  src="claude/fusion-audit a86b17cd results/uarch/fusion_audit.json v41_rom.rows (L4_in_order_*)")
+
+
+def cons_in_order_caveat(ar, mtp):
+    """The FA in-order SU exposure on a V4.1 ROM row: AR period and the MTP effective period (tau / rate) + FA's us."""
+    out = {}
+    for k in ("pipelined", "blocking"):
+        a = 1 / (1 / ar + FA_INORDER[f"ar_us_{k}"] * 1e-6)
+        m = V41_TAU / (V41_TAU / mtp + FA_INORDER[f"mtp_pass_us_{k}"] * 1e-6)
+        out[k] = dict(ar_tokens_s_b1=round(a, 1), mtp_tokens_s_b1=round(m, 1), ar_pct=round(100 * (a / ar - 1), 1),
+                      mtp_pct=round(100 * (m / mtp - 1), 1))
+    return dict(out, basis=FA_INORDER, label="CAVEAT (FA): in-order SU issue with drain on dependence; replaced by the "
+                                             "die-token model / RTL ratio when measured")
 
 
 def cons_headline_table(head, rule, qwen, ec, pc):
@@ -5029,17 +5094,22 @@ def cons_headline_table(head, rule, qwen, ec, pc):
                 per_user_mtp_headline_tau_3p78=round(head["mtp_tokens_s_b1"] * 3.78 / V41_TAU, 1),
                 saturated_tokens_s=head["ar_saturated_tokens_s"], mJ_b1=dr["gated_mJ_b1"], mJ_saturated=dr["gated_mJ_saturated"],
                 capex_usd=head["cost"]["capex_usd"], silicon_mm2=head["silicon_mm2"], users_1m=head["capacity_users_1m"],
-                system_w_saturated=head["energy"]["ar_sat"]["gated_system_w"])]
+                system_w_saturated=head["energy"]["ar_sat"]["gated_system_w"], fusion_label=FUSION_LABEL,
+                in_order_su_caveat=cons_in_order_caveat(head["ar_tokens_s_b1"], head["mtp_tokens_s_b1"]))]
     for x in rule:
         if x.get("stacks_per_die") == 4 and "ar" in x:
             v41.append(dict(design=f"V4.1 HBM tier 3 (idealised), {x['rule']}: {x['replicas']} x TP-{x['tp']} ({x['dies']} "
                                    f"right-sized dies, 1.2 GHz, SS wires; W19 composed token)", tier="3",
                             per_user_ar=round(HBM_W19["ar_tokens_s"], 1), per_user_mtp=round(HBM_W19["mtp_tokens_s"], 1),
                             fusion=HBM_W19["fusion"],
+                            per_user_ar_tmem_h5=round(1e6 / (HBM_W19["ar_us"] - HBM_TMEM["ar_us"]), 1),
+                            per_user_mtp_tmem_h5=round(V41_TAU * 1e6 / (HBM_W19["mtp_pass_us"] - HBM_TMEM["mtp_pass_us"]
+                                                                       + HBM_W19["drafter_us"]), 1),
+                            tmem_h5_label=f"H5 TMEM-style epilogue ({FUSION_LABEL}; W13b basis AR, FA MTP)",
                             per_user_ar_unfused=round(HBM_W19["ar_tokens_s_unfused"], 1),
                             per_user_mtp_unfused=round(HBM_W19["mtp_tokens_s_unfused"], 1),
-                            select_note="W15b's 96 x 512 top-k select MEASURED (3,875 cycles at P = 64); blocking, "
-                                        "so MTP charges its 6 positions in series",
+                            select_note="W15b's WIDE 96 x 512 top-k select MEASURED (419 cycles at P = 1,024 / PF = "
+                                        "256); one unit, the MTP pass's 6 positions in series",
                             per_user_ar_audit_central=round(x["ar"]["batch1"]["per_user_tokens_s"] * HBM_AUDIT["ar"], 1),
                             per_user_mtp_audit_central=round(x["mtp"]["batch1"]["per_user_tokens_s"] * HBM_AUDIT["mtp"], 1),
                             per_user_ar_model=x["ar"]["batch1"]["per_user_tokens_s"],
@@ -5509,6 +5579,22 @@ def qwen_product_ss():
              f"{ar:,.0f} cycles, PENDING W12b's one-segment fix (79783ff9, unmeasured; est. ~620 at LAT 339)")):
         out[key] = dict(cycles=round(c), body_ratio=att["body_ratio"],
                         tokens_s_b1=round(p["clock_hz"] / c * QWEN_SS["droop_rate"], 1), label=lab)
+    # USER DECISION (AGENTS.md a4f314fb): dataflow levels as named steps, "modelled; RTL pending" (W12b corrected,
+    # claude/w12-qwen-rom 800717d0 results/uarch/qwen_su_overlap_spec.md): L1 lane registers alone save ~0 cycles (the
+    # vstream drains on every SFU class change; port and energy saving only); L1 with overlap (per-element class tag,
+    # per-vector KR credit, SU -> SU chase) ~5,600 cycles a token (estimate over 254 dependent pairs); the one-segment
+    # all-reduce (QWEN_O4_AR_WORDS=256) ~740 cycles a layer on the as-built 2-segment all-reduce (L0 re-measure running;
+    # the model row already prices the model's single all-reduce, so it applies to the as-built row only)
+    steps = {}
+    for key, base, ar_fix in (("model", cyc, 0), ("as_built", out["rtl_attributed_as_built"]["cycles"], 36 * 740)):
+        rows = []
+        for nm, dc in (("L1 lane registers (KR), no overlap", 0), ("L1 + overlap (KR credit, SU chase), estimate", 5600),
+                       ("+ one-segment all-reduce (as built), estimate", ar_fix)):
+            base -= dc
+            r = round(p["clock_hz"] / base * QWEN_SS["droop_rate"], 1)
+            rows.append(dict(step=nm, cycles=round(base), tokens_s_b1=r, label=FUSION_LABEL))
+        steps[key] = rows
+    out["dataflow_steps"] = dict(steps, src="W12b corrected 2026-10-01 (800717d0); 13,455 / 11,346 bounds WITHDRAWN")
     return out
 
 
@@ -5581,11 +5667,15 @@ def cons_vm_waterfall(procs=None):
     levers = [
         ("(a) C_rotate, W11 square layout (37 / 29): SUPERSEDED, unplaced geometry", C, PRODUCT_PITCH,
          VMC_BLOCK["block_mm2"], None, VMC_BLOCK),
-        ("(a) C_rotate on W18b's compact hub (42 / 32), unfused: PRODUCT basis", VMC_COMPACT, PRODUCT_PITCH,
+        ("(a) C_rotate on W18b's strip hub (42 / 32), unfused: reference", VMC_COMPACT, PRODUCT_PITCH,
          VMC_BLOCK["block_mm2"], None, VMC_BLOCK),
-        ("(a) C_rotate on W18b's compact hub, fused conservative: PRODUCT (modelled; RTL pending)", VMC_FUSED,
+        ("(a) C_rotate on W18b's strip hub, fused conservative: reference", VMC_COMPACT_FUSED, PRODUCT_PITCH,
+         VMC_BLOCK["block_mm2"], None, VMC_BLOCK),
+        ("(a) C_rotate on W18b's plus hub (37 / 28), unfused: PRODUCT basis", VMC_PLUS, PRODUCT_PITCH,
+         VMC_BLOCK["block_mm2"], None, VMC_BLOCK),
+        ("(a) C_rotate on W18b's plus hub, fused conservative: PRODUCT (modelled; RTL pending)", VMC_FUSED,
          PRODUCT_PITCH, VMC_BLOCK["block_mm2"], None, VMC_BLOCK),
-        ("(a) C_rotate on W18b's compact hub, fused optimistic: BOUND", VMC_FUSED_OPT, PRODUCT_PITCH,
+        ("(a) C_rotate on W18b's plus hub, fused optimistic: BOUND", VMC_FUSED_OPT, PRODUCT_PITCH,
          VMC_BLOCK["block_mm2"], None, VMC_BLOCK),
         ("(a) VM-H, fused conservative (comparison)", dict(H, fusion=dict(FUSION_VMH, mode="conservative")),
          PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None, VMH_BLOCK),

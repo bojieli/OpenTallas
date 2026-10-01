@@ -6063,27 +6063,27 @@
    "product": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 96.4,
-     "gated_mJ_b1": 672.3,
+     "gated_mJ_b1": 679.5,
      "gated_mJ_saturated": 312.3,
-     "gap_only_pre_ramp_mJ_per_token": 104.2,
-     "gap_only_gated_mJ_b1": 680.1,
-     "gap_only_gated_mJ_saturated": 320.1
+     "gap_only_pre_ramp_mJ_per_token": 103.2,
+     "gap_only_gated_mJ_b1": 686.3,
+     "gap_only_gated_mJ_saturated": 319.1
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 767.5,
-     "gated_mJ_b1": 1343.4,
+     "gated_mJ_b1": 1350.5,
      "gated_mJ_saturated": 983.4,
-     "gap_only_pre_ramp_mJ_per_token": 829.5,
-     "gap_only_gated_mJ_b1": 1405.3,
-     "gap_only_gated_mJ_saturated": 1045.3
+     "gap_only_pre_ramp_mJ_per_token": 821.7,
+     "gap_only_gated_mJ_b1": 1404.7,
+     "gap_only_gated_mJ_saturated": 1037.5
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 192.9,
-     "gated_mJ_b1": 768.7,
+     "gated_mJ_b1": 775.9,
      "gated_mJ_saturated": 408.7,
-     "gap_only_pre_ramp_mJ_per_token": 208.4,
-     "gap_only_gated_mJ_b1": 784.3,
-     "gap_only_gated_mJ_saturated": 424.3
+     "gap_only_pre_ramp_mJ_per_token": 206.5,
+     "gap_only_gated_mJ_b1": 789.5,
+     "gap_only_gated_mJ_saturated": 422.3
     }
    }
   },
@@ -6737,21 +6737,21 @@
   },
   "bf16_hub_unit_mm2": 19.79,
   "product": {
-   "status": "208 dies: 41 TP-4 stages (164 layer dies, BF16 COLUMNS (1,024 at W10b's 1,002.89 x 142.56 um column outline) with q pairs at W10b's 510.84 x 126.9 um tile (floorplan sizes; routed closure pending p12q4 / c5) and W11's C_rotate SU+VM hub block (38.60 mm2; root rulings 2026-10-01: on W18b's compact hub, op +42 / red +32; lane-local fusion modelled, RTL pending; measured VM-H kept as the comparison row) -- USER DECISION: maximum per-user rate, die count free) + 8 head dies (8192m8 ping-pong; see head_fit: 4 at W10's tile, re-fit pending) + 36 Engram table dies (storage-only basis; ASAP7 feasibility 20).  Why the columns: on the full-token basis they give the highest per-user rate; W10's busiest-die op cycles favoured (iii), but its +20.7% pair pitch adds stages (hops) and its BF16 issue floors exceed the columns' full-width BF16 lanes.  References in bf16_full_token",
+   "status": "208 dies: 41 TP-4 stages (164 layer dies, BF16 COLUMNS (1,024 at W10b's 1,002.89 x 142.56 um column outline) with q pairs at W10b's 510.84 x 126.9 um tile (floorplan sizes; routed closure pending p12q4 / c5) and W11's C_rotate SU+VM hub block (38.60 mm2; root rulings 2026-10-01: on W18b's plus hub, op +37 / red +28; lane-local fusion on W11's families, modelled, RTL pending; measured VM-H kept as the comparison row) -- USER DECISION: maximum per-user rate, die count free) + 8 head dies (8192m8 ping-pong; see head_fit: 4 at W10's tile, re-fit pending) + 36 Engram table dies (storage-only basis; ASAP7 feasibility 20).  Why the columns: on the full-token basis they give the highest per-user rate; W10's busiest-die op cycles favoured (iii), but its +20.7% pair pitch adds stages (hops) and its BF16 issue floors exceed the columns' full-width BF16 lanes.  References in bf16_full_token",
    "bf16_full_token": {
     "option_ii cap 3": {
      "stages": 35,
      "dies": 180,
-     "ar": 2816.6,
-     "mtp": 4466.5,
+     "ar": 2765.4,
+     "mtp": 4438.3,
      "saturated": 88343.0,
      "pipeline_hops_us": 14.515
     },
     "option_iii": {
      "stages": 38,
      "dies": 192,
-     "ar": 2787.4,
-     "mtp": 4371.3,
+     "ar": 2737.7,
+     "mtp": 4344.6,
      "saturated": 74668.5,
      "pipeline_hops_us": 15.616
     }
@@ -6794,7 +6794,7 @@
     "head_dies": 8,
     "table_dies": 36,
     "dies": 208,
-    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's compact hub (x 8 / scatter 7 / collective 13 slow stages, SU op +42 / red +32, issue x1.0) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion (conservative; modelled; RTL pending)",
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's plus hub (SU op +37 / red +28, issue x1.0; index top-k +1) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion on W11's fused families (conservative; modelled; RTL pending)",
     "basis": "storage-only 75.0, BF16 on the standard pair, W10 budget pitch, 12.5%, ring credit, 4096m8"
    }
   },
@@ -11882,7 +11882,7 @@
     "silicon_mm2": 169520.0
    },
    {
-    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's compact hub (x 8 / scatter 7 / collective 13 slow stages, SU op +42 / red +32, issue x1.0) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion (conservative; modelled; RTL pending)",
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's compact hub (x 8 / scatter 7 / collective 13 slow stages, SU op +42 / red +32, issue x1.0) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion on W11's fused families (conservative; modelled; RTL pending)",
     "stages": 41,
     "bf16": "columns",
     "clock_hz": 1200000000.0,
@@ -11893,10 +11893,10 @@
     "packages": 104,
     "hbm_stacks": 688,
     "busiest_die_macros": 9428,
-    "ar_tokens_s_b1": 2837.8,
-    "mtp_tokens_s_b1": 4618.3,
+    "ar_tokens_s_b1": 2749.0,
+    "mtp_tokens_s_b1": 4560.8,
     "ar_saturated_tokens_s": 89971.5,
-    "mtp_saturated_tokens_s": 46629.5,
+    "mtp_saturated_tokens_s": 46126.2,
     "stage_hops": 40,
     "pipeline_hops_us": 16.716,
     "cooling": {
@@ -11930,7 +11930,7 @@
     "field_starts": {
      "mean_starts_per_die": 8.15,
      "mean_ramps_per_die": 6.05,
-     "held_cycles_per_token": 24427,
+     "held_cycles_per_token": 22933,
      "max_ramps_per_die": 7,
      "tau_cycles": 256,
      "layer_die_ramps_per_token": 968,
@@ -11984,12 +11984,12 @@
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2837.8,
-      "ungated_mJ": 5059.45,
-      "gated_mJ": 575.88,
+      "tokens_s": 2749.0,
+      "ungated_mJ": 5218.3,
+      "gated_mJ": 588.48,
       "ungated_static_w": 13953.7,
-      "gated_static_w": 1230.0,
-      "gated_system_w": 1634.2
+      "gated_static_w": 1226.2,
+      "gated_system_w": 1617.8
      },
      "ar_sat": {
       "tokens_s": 89971.5,
@@ -12000,20 +12000,20 @@
       "gated_system_w": 19421.4
      },
      "mtp_b1": {
-      "tokens_s": 4618.3,
-      "ungated_mJ": 3231.98,
-      "gated_mJ": 472.52,
+      "tokens_s": 4560.8,
+      "ungated_mJ": 3270.08,
+      "gated_mJ": 475.66,
       "ungated_static_w": 13953.7,
-      "gated_static_w": 1209.6,
-      "gated_system_w": 2182.2
+      "gated_static_w": 1208.9,
+      "gated_system_w": 2169.4
      },
      "mtp_sat": {
-      "tokens_s": 46629.5,
-      "ungated_mJ": 509.85,
-      "gated_mJ": 293.89,
+      "tokens_s": 46126.2,
+      "ungated_mJ": 513.11,
+      "gated_mJ": 294.26,
       "ungated_static_w": 13953.7,
-      "gated_static_w": 3883.8,
-      "gated_system_w": 13704.0
+      "gated_static_w": 3859.1,
+      "gated_system_w": 13573.3
      }
     },
     "busiest_stage": 20,
@@ -12021,15 +12021,405 @@
     "layers_per_stage": 0.976,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.704,
-      "residual_ready_us": 7.451,
-      "slack_us": 5.747,
+      "engram_ready_us": 1.763,
+      "residual_ready_us": 7.732,
+      "slack_us": 5.97,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.704,
-      "residual_ready_us": 118.685,
-      "slack_us": 116.981,
+      "engram_ready_us": 1.763,
+      "residual_ready_us": 122.693,
+      "slack_us": 120.93,
+      "on_critical_path": false
+     }
+    },
+    "vm_option": "C_rotate",
+    "fusion": "conservative",
+    "fusion_label": "modelled; RTL pending",
+    "product_final": false,
+    "density": "analytical",
+    "bf16_mode": "columns",
+    "role": "product",
+    "depth": "4096m8",
+    "bf16_stage_reference": {
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
+    },
+    "engram": {
+     "table_dies": 36,
+     "table_packages": 18,
+     "rows_per_token": 48,
+     "expected_max_rows_per_die_per_layer": 3.78,
+     "engram_l1_latency_us": 1.874,
+     "engram_l1_slack_us": 3.57,
+     "engram_l14_slack_us": 65.2,
+     "hops": "unchanged: table package -> one 51.2T switch -> layer package (2 switched legs)",
+     "latency_basis": "rack critical_paths: 2 switched legs + the 396 ns port read of all 48 rows at ONE port (an upper bound for any table-die count) + serialisation into the consumer port",
+     "bytes_per_token": 13312,
+     "link_Bps_per_package": 26352941176.47059,
+     "link_utilisation_ar_saturated": 0.0025,
+     "link_utilisation_mtp_saturated": 0.0021
+    },
+    "cost": {
+     "silicon_usd": 120266,
+     "package_usd": 210080,
+     "hbm_usd": 247680,
+     "hardware_usd": 578026,
+     "nre_usd": {
+      "low": 149000000.0,
+      "high": 461000000.0
+     },
+     "capex_usd": {
+      "low": 727026,
+      "high": 1039026
+     },
+     "silicon_mm2": 169520.0
+    },
+    "cost_iso_package_usd": 2600000.0,
+    "silicon_mm2": 169520.0
+   },
+   {
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's plus hub (SU op +37 / red +28, issue x1.0; index top-k +1) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit",
+    "stages": 41,
+    "bf16": "columns",
+    "clock_hz": 1200000000.0,
+    "layer_dies": 164,
+    "head_dies": 8,
+    "table_dies": 36,
+    "dies": 208,
+    "packages": 104,
+    "hbm_stacks": 688,
+    "busiest_die_macros": 9428,
+    "ar_tokens_s_b1": 2733.3,
+    "mtp_tokens_s_b1": 4545.9,
+    "ar_saturated_tokens_s": 89971.5,
+    "mtp_saturated_tokens_s": 46034.9,
+    "stage_hops": 40,
+    "pipeline_hops_us": 16.716,
+    "cooling": {
+     "limit_w_per_die": 474.56,
+     "dyn_scale": 1.16,
+     "busiest_stage": 20,
+     "layer_die_static_w": 61.4,
+     "layer_die_mean_w_saturated": 128.9,
+     "layer_die_busiest_w_saturated": 277.6,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 714.3,
+      "mean_w": 762.0
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
+    },
+    "field_concurrency": 0.5,
+    "added_latency": {
+     "suffix:softplus_sqrt": -97,
+     "suffix:idx.topk_local": 8,
+     "suffix:idx.score": 52,
+     "suffix:.attn.scores": 63,
+     "suffix:.attn.pv": 63,
+     "suffix:idx.topk_merge": 1
+    },
+    "slow_domain": [
+     900000000.0,
+     "w18"
+    ],
+    "chain_stages": null,
+    "elem_stages": 7,
+    "field_starts": {
+     "mean_starts_per_die": 8.15,
+     "mean_ramps_per_die": 6.05,
+     "held_cycles_per_token": 21867,
+     "max_ramps_per_die": 7,
+     "tau_cycles": 256,
+     "layer_die_ramps_per_token": 968,
+     "layer_die_starts_per_token": 1304
+    },
+    "ss_wire": true,
+    "serial": "w11_measured",
+    "die": {
+     "expert_wire": 63,
+     "coll_stages": 45,
+     "field_scale": 0.9062,
+     "mm2": 669.255,
+     "pair_slots": 5968,
+     "bf16_slots": 1160,
+     "src": "claude/w18-die-assembly 996f7982 shrink_p5_interim/shrunk_die.json"
+    },
+    "vmh": {
+     "x_gather": 8,
+     "ret_scatter": 7,
+     "coll_write": 13,
+     "su_op_extra": 37,
+     "su_red_extra": 28,
+     "su_issue": 1.0,
+     "src": "claude/w11-crot 57318ff3 (--stage-set square_hub) on W18b dfce8d40 plus hub; client stages from the strip"
+    },
+    "hub_block": "C_rotate",
+    "critical_path_top_us": {
+     "attn.wo_a": 21.8,
+     "attn.out_allreduce": 19.31,
+     "ffn.combine_allreduce": 19.31,
+     "substage_hop0": 14.84,
+     "attn.idx.score": 13.76,
+     "ffn.softplus_sqrt": 12.71,
+     "ffn.experts_gu": 10.97,
+     "ffn.down": 10.37
+    },
+    "capacity_users_1m": 866,
+    "static_w_ungated": {
+     "layer_dies": 10068.9,
+     "head_dies": 738.5,
+     "table_dies": 3324.4,
+     "total": 14131.9
+    },
+    "energy": {
+     "ar_b1": {
+      "tokens_s": 2733.3,
+      "ungated_mJ": 5247.5,
+      "gated_mJ": 590.83,
+      "ungated_static_w": 13953.7,
+      "gated_static_w": 1225.6,
+      "gated_system_w": 1614.9
+     },
+     "ar_sat": {
+      "tokens_s": 89971.5,
+      "ungated_mJ": 297.53,
+      "gated_mJ": 215.86,
+      "ungated_static_w": 13953.7,
+      "gated_static_w": 6606.2,
+      "gated_system_w": 19421.4
+     },
+     "mtp_b1": {
+      "tokens_s": 4545.9,
+      "ungated_mJ": 3280.12,
+      "gated_mJ": 476.48,
+      "ungated_static_w": 13953.7,
+      "gated_static_w": 1208.7,
+      "gated_system_w": 2166.0
+     },
+     "mtp_sat": {
+      "tokens_s": 46034.9,
+      "ungated_mJ": 513.71,
+      "gated_mJ": 294.33,
+      "ungated_static_w": 13953.7,
+      "gated_static_w": 3854.7,
+      "gated_system_w": 13549.6
+     }
+    },
+    "busiest_stage": 20,
+    "busiest_stage_us": 11.11,
+    "layers_per_stage": 0.976,
+    "engram_dag_slack": {
+     "L1": {
+      "engram_ready_us": 1.747,
+      "residual_ready_us": 7.783,
+      "slack_us": 6.036,
+      "on_critical_path": false
+     },
+     "L14": {
+      "engram_ready_us": 1.747,
+      "residual_ready_us": 123.395,
+      "slack_us": 121.648,
+      "on_critical_path": false
+     }
+    },
+    "vm_option": "C_rotate",
+    "fusion": null,
+    "fusion_label": null,
+    "product_final": false,
+    "density": "analytical",
+    "bf16_mode": "columns",
+    "role": "product",
+    "depth": "4096m8",
+    "bf16_stage_reference": {
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
+    },
+    "engram": {
+     "table_dies": 36,
+     "table_packages": 18,
+     "rows_per_token": 48,
+     "expected_max_rows_per_die_per_layer": 3.78,
+     "engram_l1_latency_us": 1.874,
+     "engram_l1_slack_us": 3.57,
+     "engram_l14_slack_us": 65.2,
+     "hops": "unchanged: table package -> one 51.2T switch -> layer package (2 switched legs)",
+     "latency_basis": "rack critical_paths: 2 switched legs + the 396 ns port read of all 48 rows at ONE port (an upper bound for any table-die count) + serialisation into the consumer port",
+     "bytes_per_token": 13312,
+     "link_Bps_per_package": 26352941176.47059,
+     "link_utilisation_ar_saturated": 0.0025,
+     "link_utilisation_mtp_saturated": 0.0021
+    },
+    "cost": {
+     "silicon_usd": 120266,
+     "package_usd": 210080,
+     "hbm_usd": 247680,
+     "hardware_usd": 578026,
+     "nre_usd": {
+      "low": 149000000.0,
+      "high": 461000000.0
+     },
+     "capex_usd": {
+      "low": 727026,
+      "high": 1039026
+     },
+     "silicon_mm2": 169520.0
+    },
+    "cost_iso_package_usd": 2600000.0,
+    "silicon_mm2": 169520.0
+   },
+   {
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's plus hub (SU op +37 / red +28, issue x1.0; index top-k +1) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion on W11's fused families (conservative; modelled; RTL pending)",
+    "stages": 41,
+    "bf16": "columns",
+    "clock_hz": 1200000000.0,
+    "layer_dies": 164,
+    "head_dies": 8,
+    "table_dies": 36,
+    "dies": 208,
+    "packages": 104,
+    "hbm_stacks": 688,
+    "busiest_die_macros": 9428,
+    "ar_tokens_s_b1": 2786.8,
+    "mtp_tokens_s_b1": 4588.9,
+    "ar_saturated_tokens_s": 89971.5,
+    "mtp_saturated_tokens_s": 46342.7,
+    "stage_hops": 40,
+    "pipeline_hops_us": 16.716,
+    "cooling": {
+     "limit_w_per_die": 474.56,
+     "dyn_scale": 1.16,
+     "busiest_stage": 20,
+     "layer_die_static_w": 61.4,
+     "layer_die_mean_w_saturated": 128.9,
+     "layer_die_busiest_w_saturated": 277.6,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 714.3,
+      "mean_w": 762.0
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
+    },
+    "field_concurrency": 0.5,
+    "added_latency": {
+     "suffix:softplus_sqrt": -97,
+     "suffix:idx.topk_local": 8,
+     "suffix:idx.score": 52,
+     "suffix:.attn.scores": 63,
+     "suffix:.attn.pv": 63,
+     "suffix:idx.topk_merge": 1
+    },
+    "slow_domain": [
+     900000000.0,
+     "w18"
+    ],
+    "chain_stages": null,
+    "elem_stages": 7,
+    "field_starts": {
+     "mean_starts_per_die": 8.15,
+     "mean_ramps_per_die": 6.05,
+     "held_cycles_per_token": 21867,
+     "max_ramps_per_die": 7,
+     "tau_cycles": 256,
+     "layer_die_ramps_per_token": 968,
+     "layer_die_starts_per_token": 1304
+    },
+    "ss_wire": true,
+    "serial": "w11_measured",
+    "die": {
+     "expert_wire": 63,
+     "coll_stages": 45,
+     "field_scale": 0.9062,
+     "mm2": 669.255,
+     "pair_slots": 5968,
+     "bf16_slots": 1160,
+     "src": "claude/w18-die-assembly 996f7982 shrink_p5_interim/shrunk_die.json"
+    },
+    "vmh": {
+     "x_gather": 8,
+     "ret_scatter": 7,
+     "coll_write": 13,
+     "su_op_extra": 37,
+     "su_red_extra": 28,
+     "su_issue": 1.0,
+     "src": "claude/w11-crot 57318ff3 (--stage-set square_hub) on W18b dfce8d40 plus hub; client stages from the strip",
+     "fusion": {
+      "bcast": 6,
+      "read": 16,
+      "read_red": 16,
+      "write": 15,
+      "result": 6,
+      "mode": "conservative"
+     }
+    },
+    "hub_block": "C_rotate",
+    "critical_path_top_us": {
+     "attn.wo_a": 21.8,
+     "attn.out_allreduce": 19.31,
+     "ffn.combine_allreduce": 19.31,
+     "substage_hop0": 14.84,
+     "attn.idx.score": 13.76,
+     "ffn.softplus_sqrt": 12.71,
+     "ffn.experts_gu": 10.97,
+     "ffn.down": 10.37
+    },
+    "capacity_users_1m": 866,
+    "static_w_ungated": {
+     "layer_dies": 10068.9,
+     "head_dies": 738.5,
+     "table_dies": 3324.4,
+     "total": 14131.9
+    },
+    "energy": {
+     "ar_b1": {
+      "tokens_s": 2786.8,
+      "ungated_mJ": 5149.54,
+      "gated_mJ": 583.02,
+      "ungated_static_w": 13953.7,
+      "gated_static_w": 1227.8,
+      "gated_system_w": 1624.8
+     },
+     "ar_sat": {
+      "tokens_s": 89971.5,
+      "ungated_mJ": 297.53,
+      "gated_mJ": 215.86,
+      "ungated_static_w": 13953.7,
+      "gated_static_w": 6606.2,
+      "gated_system_w": 19421.4
+     },
+     "mtp_b1": {
+      "tokens_s": 4588.9,
+      "ungated_mJ": 3251.33,
+      "gated_mJ": 474.12,
+      "ungated_static_w": 13953.7,
+      "gated_static_w": 1209.3,
+      "gated_system_w": 2175.7
+     },
+     "mtp_sat": {
+      "tokens_s": 46342.7,
+      "ungated_mJ": 511.7,
+      "gated_mJ": 294.1,
+      "ungated_static_w": 13953.7,
+      "gated_static_w": 3869.8,
+      "gated_system_w": 13629.5
+     }
+    },
+    "busiest_stage": 20,
+    "busiest_stage_us": 11.11,
+    "layers_per_stage": 0.976,
+    "engram_dag_slack": {
+     "L1": {
+      "engram_ready_us": 1.747,
+      "residual_ready_us": 7.61,
+      "slack_us": 5.863,
+      "on_critical_path": false
+     },
+     "L14": {
+      "engram_ready_us": 1.747,
+      "residual_ready_us": 120.968,
+      "slack_us": 119.221,
       "on_critical_path": false
      }
     },
@@ -12059,7 +12449,7 @@
      "bytes_per_token": 13312,
      "link_Bps_per_package": 26352941176.47059,
      "link_utilisation_ar_saturated": 0.0025,
-     "link_utilisation_mtp_saturated": 0.0022
+     "link_utilisation_mtp_saturated": 0.0021
     },
     "cost": {
      "silicon_usd": 120266,
@@ -12080,7 +12470,7 @@
     "silicon_mm2": 169520.0
    },
    {
-    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's compact hub (x 8 / scatter 7 / collective 13 slow stages, SU op +42 / red +32, issue x1.0) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion, optimistic (BOUND; modelled; RTL pending)",
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's plus hub (SU op +37 / red +28, issue x1.0; index top-k +1) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion on W11's fused families, optimistic (BOUND; modelled; RTL pending)",
     "stages": 41,
     "bf16": "columns",
     "clock_hz": 1200000000.0,
@@ -12091,10 +12481,10 @@
     "packages": 104,
     "hbm_stacks": 688,
     "busiest_die_macros": 9428,
-    "ar_tokens_s_b1": 2878.8,
-    "mtp_tokens_s_b1": 4646.3,
+    "ar_tokens_s_b1": 2799.4,
+    "mtp_tokens_s_b1": 4599.0,
     "ar_saturated_tokens_s": 89971.5,
-    "mtp_saturated_tokens_s": 46854.4,
+    "mtp_saturated_tokens_s": 46414.3,
     "stage_hops": 40,
     "pipeline_hops_us": 16.716,
     "cooling": {
@@ -12117,7 +12507,8 @@
      "suffix:idx.topk_local": 8,
      "suffix:idx.score": 52,
      "suffix:.attn.scores": 63,
-     "suffix:.attn.pv": 63
+     "suffix:.attn.pv": 63,
+     "suffix:idx.topk_merge": 1
     },
     "slow_domain": [
      900000000.0,
@@ -12128,7 +12519,7 @@
     "field_starts": {
      "mean_starts_per_die": 8.15,
      "mean_ramps_per_die": 6.05,
-     "held_cycles_per_token": 24427,
+     "held_cycles_per_token": 21867,
      "max_ramps_per_die": 7,
      "tau_cycles": 256,
      "layer_die_ramps_per_token": 968,
@@ -12149,16 +12540,16 @@
      "x_gather": 8,
      "ret_scatter": 7,
      "coll_write": 13,
-     "su_op_extra": 42,
-     "su_red_extra": 32,
+     "su_op_extra": 37,
+     "su_red_extra": 28,
      "su_issue": 1.0,
-     "src": "claude/w11-crot results/floorplan/v41_vm_crot_stages.json (PROVISIONAL) on W18b 32155a8f",
+     "src": "claude/w11-crot 57318ff3 (--stage-set square_hub) on W18b dfce8d40 plus hub; client stages from the strip",
      "fusion": {
-      "bcast": 7,
-      "read": 18,
-      "read_red": 18,
-      "write": 17,
-      "result": 7,
+      "bcast": 6,
+      "read": 16,
+      "read_red": 16,
+      "write": 15,
+      "result": 6,
       "mode": "optimistic"
      }
     },
@@ -12169,7 +12560,7 @@
      "ffn.combine_allreduce": 19.31,
      "substage_hop0": 14.84,
      "attn.idx.score": 13.76,
-     "ffn.softplus_sqrt": 12.93,
+     "ffn.softplus_sqrt": 12.71,
      "ffn.experts_gu": 10.97,
      "ffn.down": 10.37
     },
@@ -12182,12 +12573,12 @@
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2878.8,
-      "ungated_mJ": 4989.56,
-      "gated_mJ": 570.32,
+      "tokens_s": 2799.4,
+      "ungated_mJ": 5126.94,
+      "gated_mJ": 581.22,
       "ungated_static_w": 13953.7,
-      "gated_static_w": 1231.8,
-      "gated_system_w": 1641.8
+      "gated_static_w": 1228.3,
+      "gated_system_w": 1627.1
      },
      "ar_sat": {
       "tokens_s": 89971.5,
@@ -12198,20 +12589,20 @@
       "gated_system_w": 19421.4
      },
      "mtp_b1": {
-      "tokens_s": 4646.3,
-      "ungated_mJ": 3213.76,
-      "gated_mJ": 471.02,
+      "tokens_s": 4599.0,
+      "ungated_mJ": 3244.67,
+      "gated_mJ": 473.57,
       "ungated_static_w": 13953.7,
-      "gated_static_w": 1210.0,
-      "gated_system_w": 2188.5
+      "gated_static_w": 1209.4,
+      "gated_system_w": 2178.0
      },
      "mtp_sat": {
-      "tokens_s": 46854.4,
-      "ungated_mJ": 508.41,
-      "gated_mJ": 293.73,
+      "tokens_s": 46414.3,
+      "ungated_mJ": 511.23,
+      "gated_mJ": 294.05,
       "ungated_static_w": 13953.7,
-      "gated_static_w": 3894.9,
-      "gated_system_w": 13762.4
+      "gated_static_w": 3873.3,
+      "gated_system_w": 13648.1
      }
     },
     "busiest_stage": 20,
@@ -12219,15 +12610,15 @@
     "layers_per_stage": 0.976,
     "engram_dag_slack": {
      "L1": {
-      "engram_ready_us": 1.688,
-      "residual_ready_us": 7.334,
-      "slack_us": 5.646,
+      "engram_ready_us": 1.747,
+      "residual_ready_us": 7.57,
+      "slack_us": 5.823,
       "on_critical_path": false
      },
      "L14": {
-      "engram_ready_us": 1.688,
-      "residual_ready_us": 116.943,
-      "slack_us": 115.255,
+      "engram_ready_us": 1.747,
+      "residual_ready_us": 120.408,
+      "slack_us": 118.661,
       "on_critical_path": false
      }
     },
@@ -12257,7 +12648,7 @@
      "bytes_per_token": 13312,
      "link_Bps_per_package": 26352941176.47059,
      "link_utilisation_ar_saturated": 0.0025,
-     "link_utilisation_mtp_saturated": 0.0022
+     "link_utilisation_mtp_saturated": 0.0021
     },
     "cost": {
      "silicon_usd": 120266,
@@ -14359,11 +14750,11 @@
    {
     "design": "V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)",
     "tier": "ROM",
-    "per_user_ar": 2837.8,
-    "per_user_mtp": 4618.3,
-    "per_user_mtp_headline_tau_3p78": 4784.1,
+    "per_user_ar": 2786.8,
+    "per_user_mtp": 4588.9,
+    "per_user_mtp_headline_tau_3p78": 4753.6,
     "saturated_tokens_s": 89971.5,
-    "mJ_b1": 672.3,
+    "mJ_b1": 679.5,
     "mJ_saturated": 312.3,
     "capex_usd": {
      "low": 727026,
@@ -14371,17 +14762,43 @@
     },
     "silicon_mm2": 169520.0,
     "users_1m": 866,
-    "system_w_saturated": 19421.4
+    "system_w_saturated": 19421.4,
+    "fusion_label": "modelled; RTL pending",
+    "in_order_su_caveat": {
+     "pipelined": {
+      "ar_tokens_s_b1": 2526.0,
+      "mtp_tokens_s_b1": 4161.7,
+      "ar_pct": -9.4,
+      "mtp_pct": -9.3
+     },
+     "blocking": {
+      "ar_tokens_s_b1": 2243.0,
+      "mtp_tokens_s_b1": 3897.0,
+      "ar_pct": -19.5,
+      "mtp_pct": -15.1
+     },
+     "basis": {
+      "ar_us_pipelined": 37.054,
+      "ar_us_blocking": 86.991,
+      "mtp_pass_us_pipelined": 81.616,
+      "mtp_pass_us_blocking": 141.184,
+      "src": "claude/fusion-audit a86b17cd results/uarch/fusion_audit.json v41_rom.rows (L4_in_order_*)"
+     },
+     "label": "CAVEAT (FA): in-order SU issue with drain on dependence; replaced by the die-token model / RTL ratio when measured"
+    }
    },
    {
     "design": "V4.1 HBM tier 3 (idealised), equal area: 5 x TP-96 (480 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
     "tier": "3",
-    "per_user_ar": 2149.8,
-    "per_user_mtp": 4036.9,
+    "per_user_ar": 2261.7,
+    "per_user_mtp": 4765.4,
     "fusion": "conservative-equivalent (modelled; RTL pending)",
-    "per_user_ar_unfused": 2076.9,
-    "per_user_mtp_unfused": 3901.0,
-    "select_note": "W15b's 96 x 512 top-k select MEASURED (3,875 cycles at P = 64); blocking, so MTP charges its 6 positions in series",
+    "per_user_ar_tmem_h5": 2322.7,
+    "per_user_mtp_tmem_h5": 4840.0,
+    "tmem_h5_label": "H5 TMEM-style epilogue (modelled; RTL pending; W13b basis AR, FA MTP)",
+    "per_user_ar_unfused": 2181.2,
+    "per_user_mtp_unfused": 4577.2,
+    "select_note": "W15b's WIDE 96 x 512 top-k select MEASURED (419 cycles at P = 1,024 / PF = 256); one unit, the MTP pass's 6 positions in series",
     "per_user_ar_audit_central": 2452.3,
     "per_user_mtp_audit_central": 5302.1,
     "per_user_ar_model": 3145.9,
@@ -14408,12 +14825,15 @@
    {
     "design": "V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
     "tier": "3",
-    "per_user_ar": 2149.8,
-    "per_user_mtp": 4036.9,
+    "per_user_ar": 2261.7,
+    "per_user_mtp": 4765.4,
     "fusion": "conservative-equivalent (modelled; RTL pending)",
-    "per_user_ar_unfused": 2076.9,
-    "per_user_mtp_unfused": 3901.0,
-    "select_note": "W15b's 96 x 512 top-k select MEASURED (3,875 cycles at P = 64); blocking, so MTP charges its 6 positions in series",
+    "per_user_ar_tmem_h5": 2322.7,
+    "per_user_mtp_tmem_h5": 4840.0,
+    "tmem_h5_label": "H5 TMEM-style epilogue (modelled; RTL pending; W13b basis AR, FA MTP)",
+    "per_user_ar_unfused": 2181.2,
+    "per_user_mtp_unfused": 4577.2,
+    "select_note": "W15b's WIDE 96 x 512 top-k select MEASURED (419 cycles at P = 1,024 / PF = 256); one unit, the MTP pass's 6 positions in series",
     "per_user_ar_audit_central": 2452.3,
     "per_user_mtp_audit_central": 5302.1,
     "per_user_ar_model": 3145.9,
@@ -14440,12 +14860,15 @@
    {
     "design": "V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
     "tier": "3",
-    "per_user_ar": 2149.8,
-    "per_user_mtp": 4036.9,
+    "per_user_ar": 2261.7,
+    "per_user_mtp": 4765.4,
     "fusion": "conservative-equivalent (modelled; RTL pending)",
-    "per_user_ar_unfused": 2076.9,
-    "per_user_mtp_unfused": 3901.0,
-    "select_note": "W15b's 96 x 512 top-k select MEASURED (3,875 cycles at P = 64); blocking, so MTP charges its 6 positions in series",
+    "per_user_ar_tmem_h5": 2322.7,
+    "per_user_mtp_tmem_h5": 4840.0,
+    "tmem_h5_label": "H5 TMEM-style epilogue (modelled; RTL pending; W13b basis AR, FA MTP)",
+    "per_user_ar_unfused": 2181.2,
+    "per_user_mtp_unfused": 4577.2,
+    "select_note": "W15b's WIDE 96 x 512 top-k select MEASURED (419 cycles at P = 1,024 / PF = 256); one unit, the MTP pass's 6 positions in series",
     "per_user_ar_audit_central": 2452.3,
     "per_user_mtp_audit_central": 5302.1,
     "per_user_ar_model": 3145.9,
@@ -14632,35 +15055,35 @@
   "rows": [
    {
     "design": "V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)",
-    "tau_2.91": 3683.0,
-    "tau_3.649": 4618.3,
-    "tau_3.78": 4784.1,
-    "tau_4.5": 5695.4,
-    "tau_5.24": 6631.9
+    "tau_2.91": 3659.6,
+    "tau_3.649": 4588.9,
+    "tau_3.78": 4753.6,
+    "tau_4.5": 5659.1,
+    "tau_5.24": 6589.7
    },
    {
     "design": "V4.1 HBM tier 3 (idealised), equal area: 5 x TP-96 (480 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
-    "tau_2.91": 3219.3,
-    "tau_3.649": 4036.9,
-    "tau_3.78": 4181.8,
-    "tau_4.5": 4978.4,
-    "tau_5.24": 5797.0
+    "tau_2.91": 3800.3,
+    "tau_3.649": 4765.4,
+    "tau_3.78": 4936.5,
+    "tau_4.5": 5876.8,
+    "tau_5.24": 6843.2
    },
    {
     "design": "V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
-    "tau_2.91": 3219.3,
-    "tau_3.649": 4036.9,
-    "tau_3.78": 4181.8,
-    "tau_4.5": 4978.4,
-    "tau_5.24": 5797.0
+    "tau_2.91": 3800.3,
+    "tau_3.649": 4765.4,
+    "tau_3.78": 4936.5,
+    "tau_4.5": 5876.8,
+    "tau_5.24": 6843.2
    },
    {
     "design": "V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
-    "tau_2.91": 3219.3,
-    "tau_3.649": 4036.9,
-    "tau_3.78": 4181.8,
-    "tau_4.5": 4978.4,
-    "tau_5.24": 5797.0
+    "tau_2.91": 3800.3,
+    "tau_3.649": 4765.4,
+    "tau_3.78": 4936.5,
+    "tau_4.5": 5876.8,
+    "tau_5.24": 6843.2
    },
    {
     "design": "DeepSeek-V4.1-Flash on 8x B200 (tier 2, calibrated)",
@@ -14706,10 +15129,10 @@
    },
    {
     "design": "V4.1 HBM tier 3, equal cost (2 x TP-96), W19 composed/model ratio at 1M applied at ctx",
-    "ar": 2286.9,
-    "mtp": 5055.1,
-    "w19_ratio_ar": 0.6834,
-    "w19_ratio_mtp": 0.6414,
+    "ar": 2406.0,
+    "mtp": 5967.4,
+    "w19_ratio_ar": 0.7189,
+    "w19_ratio_mtp": 0.7571,
     "saturated": 98514.7,
     "dies": 192,
     "silicon_mm2": 65376.0,
@@ -15095,6 +15518,49 @@
    "body_ratio": 1.0923,
    "tokens_s_b1": 7920.8,
    "label": "RTL-attributed, body only: per-layer body x 1.0923; all-reduces at the model's 442 cycles, PENDING W12b's one-segment fix (79783ff9, unmeasured; est. ~620 at LAT 339)"
+  },
+  "dataflow_steps": {
+   "model": [
+    {
+     "step": "L1 lane registers (KR), no overlap",
+     "cycles": 135597,
+     "tokens_s_b1": 8460.4,
+     "label": "modelled; RTL pending"
+    },
+    {
+     "step": "L1 + overlap (KR credit, SU chase), estimate",
+     "cycles": 129997,
+     "tokens_s_b1": 8824.8,
+     "label": "modelled; RTL pending"
+    },
+    {
+     "step": "+ one-segment all-reduce (as built), estimate",
+     "cycles": 129997,
+     "tokens_s_b1": 8824.8,
+     "label": "modelled; RTL pending"
+    }
+   ],
+   "as_built": [
+    {
+     "step": "L1 lane registers (KR), no overlap",
+     "cycles": 184362,
+     "tokens_s_b1": 6222.5,
+     "label": "modelled; RTL pending"
+    },
+    {
+     "step": "L1 + overlap (KR credit, SU chase), estimate",
+     "cycles": 178762,
+     "tokens_s_b1": 6417.5,
+     "label": "modelled; RTL pending"
+    },
+    {
+     "step": "+ one-segment all-reduce (as built), estimate",
+     "cycles": 152122,
+     "tokens_s_b1": 7541.3,
+     "label": "modelled; RTL pending"
+    }
+   ],
+   "src": "W12b corrected 2026-10-01 (800717d0); 13,455 / 11,346 bounds WITHDRAWN"
   }
  },
  "qwen_l0_rtl_vs_model": {
@@ -15658,27 +16124,27 @@
     "tokens_s_delta_pct": -0.247
    },
    "w18b_merge2_headreg_worst": {
-    "cycles_per_request": 20,
+    "cycles_per_request": 21,
     "requests_on_path": 56,
-    "added_us": 0.933,
-    "tokens_s_delta_pct": -0.448
+    "added_us": 0.98,
+    "tokens_s_delta_pct": -0.47
    },
    "w18b_merge2_headreg_mean": {
-    "cycles_per_request": 15.0,
+    "cycles_per_request": 16.0,
     "requests_on_path": 56,
-    "added_us": 0.7,
-    "tokens_s_delta_pct": -0.336
+    "added_us": 0.747,
+    "tokens_s_delta_pct": -0.358
    }
   },
   "regions_w18b_merge2_headreg": [
-   20,
-   16,
-   14,
-   10,
-   10,
-   14,
-   16,
-   20
+   21,
+   17,
+   15,
+   11,
+   11,
+   15,
+   17,
+   21
   ],
   "regions_tt": [
    13,
@@ -17815,7 +18281,7 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "341167cfecf1ae814115978eb36c8c5b41c9761760c0eebfc82c66dde4971232",
+  "tools/uarch_model.py": "1d653eba8142370583d461ef9481eaa8529add2cda1a950705fbef340c1d9c7f",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
