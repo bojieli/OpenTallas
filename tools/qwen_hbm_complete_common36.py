@@ -46,7 +46,7 @@ class Common36:
         self.completed_positions=[];self.phase='OPEN';self.control=None;self.nonce=0
         self.request_level=0;self.acknowledge_level=0;self.control_waiting=False
         self.control_phases={}
-        self.descriptor_masks={}
+        self.descriptor_masks={};self.writer_completed={}
         self.stats=Counter();self.last_ps=Fraction(0)
 
     @staticmethod
@@ -60,7 +60,7 @@ class Common36:
             raise ValueError('program boundary/session phase')
         if not 0<=position<self.graph['context_capacity']:raise ValueError('context aperture')
         self.position=position;self.issued={};self.visible={};self.retired={}
-        self.descriptor_masks={}
+        self.descriptor_masks={};self.writer_completed={}
 
     def instruction_issue(self,instruction,opcode,issue_ps):
         if self.position is None:raise ValueError('no encoded program active')
@@ -76,12 +76,21 @@ class Common36:
             raise ValueError('actual encoded result visibility/DUT retirement order')
         if any(e['owner']['instruction']==instruction for e in self.entries.values()) or any(o['instruction']==instruction for o in self.waiting.values()):
             raise ValueError('instruction still owns finite service/consumer callbacks')
+        if any(lock['owner'][4]==instruction for lock in self.RMW_locks.values()):
+            raise ValueError('instruction still owns persistent RMW lock')
+        op=self.graph['instructions'][instruction]
+        if op['opcode']=='KV_WRITE':
+            expected={(r['stack'],r['sector']) for r in sector_descriptors(self.graph,op,self.position)}
+            if set(self.writer_completed.get(instruction,{}))!=expected:
+                raise ValueError('addressed KV writer publication obligations incomplete')
+            if result<max(self.writer_completed[instruction].values()):
+                raise ValueError('writer result predates addressed completion callbacks')
         self.visible[instruction]=result;self.retired[instruction]=retire
 
     def finish_program(self):
         if self.position is None or len(self.retired)!=len(self.graph['instructions']):
             raise ValueError('full1737 encoded retirement boundary required')
-        if self.waiting or self.entries or self.capture[0] or self.capture[1] or self.CDC[0] or self.CDC[1] or self.return_CDC[0] or self.return_CDC[1]:
+        if self.waiting or self.entries or self.capture[0] or self.capture[1] or self.CDC[0] or self.CDC[1] or self.return_CDC[0] or self.return_CDC[1] or self.RMW_locks:
             raise ValueError('program boundary with live service state')
         self.last_ps=max(self.retired.values());self.completed_positions.append(self.position)
         self.stats['encoded_instructions_retired']+=len(self.retired);self.position=None
@@ -95,7 +104,7 @@ class Common36:
         die,client,stack=owner['die'],owner['client'],owner['stack']
         if die not in (0,1) or not 0<=client<36 or not 0<=stack<4:raise ValueError('36client/die/stack aperture')
         op=self.graph['instructions'][owner['instruction']]
-        if owner['instruction'] not in self.issued or die not in op['participants']:raise ValueError('request instruction/participant not issued')
+        if owner['instruction'] not in self.issued or owner['instruction'] in self.retired or die not in op['participants']:raise ValueError('request instruction/participant not issued')
         if owner['kind'] not in ('read','write') or not 1<=owner['length']<=32 or owner['kind']=='write' and owner['length']!=1:
             raise ValueError('LENW6/BEATW5/read32/write1 contract')
         if owner['sector']+owner['length']>1<<34:raise ValueError('fulladdress read extent would wrap')
@@ -105,6 +114,17 @@ class Common36:
                 raise ValueError('conflicting all-client request to locked RMW sector')
             if owner['kind']=='write' and lock['merge_visible'] is None:
                 raise ValueError('full sector WR before XOR AND XOR merge result')
+        if op['opcode']=='KV_WRITE' and owner['kind']=='write':
+            descriptors=self.descriptor_masks.setdefault(op['id'],{})
+            if not descriptors:
+                descriptors.update({(r['stack'],r['sector']):r for r in sector_descriptors(self.graph,op,self.position)})
+            descriptor=descriptors.get((stack,owner['sector']))
+            if descriptor is None or die!=op['attributes']['die']:
+                raise ValueError('addressed KV write descriptor required')
+            if (stack,owner['sector']) in self.writer_completed.get(op['id'],set()):
+                raise ValueError('duplicate completed KV sector write')
+            if descriptor['partial'] and lock is None:
+                raise ValueError('partial KV sector requires persistent RMW lock')
         key=die,client
         if key in self.waiting:
             if self.waiting[key]!=owner:raise ValueError('finite held client request must remain stable')
@@ -118,7 +138,7 @@ class Common36:
 
     def acquire_RMW(self,owner,mask):
         op=self.graph['instructions'][owner['instruction']]
-        if op['opcode']!='KV_WRITE' or op['id'] not in self.issued:
+        if op['opcode']!='KV_WRITE' or op['id'] not in self.issued or op['id'] in self.retired or owner['position']!=self.position or owner['die']!=op['attributes']['die']:
             raise ValueError('actual encoded KV writer RMW required')
         if op['id'] not in self.descriptor_masks:
             self.descriptor_masks[op['id']]={(r['stack'],r['sector']):r for r in sector_descriptors(self.graph,op,owner['position'])}
@@ -242,7 +262,10 @@ class Common36:
         if now<crossing(e['consumer_retired'],FAST):raise ValueError('actual retirement/reverse credit CDC required')
         self.return_CDC[die].pop(0);self.client_outstanding[die,e['owner']['client']]-=1
         owner=e['owner'];lock=(die,owner['stack'],owner['sector'])
-        if owner['kind']=='write' and lock in self.RMW_locks:del self.RMW_locks[lock]
+        if owner['kind']=='write':
+            if self.graph['instructions'][owner['instruction']]['opcode']=='KV_WRITE':
+                self.writer_completed.setdefault(owner['instruction'],{})[(owner['stack'],owner['sector'])]=now
+            if lock in self.RMW_locks:del self.RMW_locks[lock]
         del self.entries[die,packet['tag']];self.stats['credit_returns']+=1
 
     def quiescent(self):
@@ -315,10 +338,13 @@ def contract(repo=ROOT):
     event_scoreboard_bits=2*3*len(graph['instructions'])
     allocator_bits=2*(17+32+6+3)+2*36*3
     counters_bits=2*4*32*2*10
-    FF_bits=req_bits+map_bits+2*event_bits+reverse_bits+mailbox_bits+event_scoreboard_bits+allocator_bits+counters_bits
+    # Conservative independent bitmap and completion high-watermark for every
+    # writer; no overlap with previously priced publication bitmap assumed.
+    writer_completion_bits=sum(272+64 for op in graph['instructions'] if op['opcode']=='KV_WRITE')
+    FF_bits=writer_completion_bits+req_bits+map_bits+2*event_bits+reverse_bits+mailbox_bits+event_scoreboard_bits+allocator_bits+counters_bits
     mux_bits=2*35*sum(request_fields.values())+2*3*sum(map_fields.values())+2*3*sum(event_fields.values())
     compare_bits=2*4*(16+32+6+34)+2*2*sum(control_fields.values())
-    return dict(schema='Qwen_common36_tag16_held_ACK_drain_candidate_r1',source_pins=pins,
+    return dict(schema='Qwen_common36_tag16_held_ACK_drain_candidate_r2',source_pins=pins,
         source_audit={'controller':'TAGW16 valid/ready reads; q_n/r_n internal; original column-write modulo backing is not WRvisible. No visible/epoch/drain output.',
             'PC_service':'Wider prefixed owner tags; write-done externally supplied and pulse has no ready. Not directly wired to16bit controller.',
             'mailbox':'One outstanding closed-loop four-phase; src_done precedes full return-zero/src_ready; reset replay requires idempotence or fail-stop.',
@@ -329,7 +355,7 @@ def contract(repo=ROOT):
         RMW_binding='All-client same-sector locks persist through old-sector RF import, exact XOR/AND/XOR three9serialcycle candidate callbacks, fullWRvisible/ACK-store/retire/reversecredit. Existing64x675bit lock contexts remain charged; use at most4/die, no free replacement.',
         encoded_callback_contract=[dict(id=o['id'],opcode=o['opcode'],participants=o['participants'],dependencies=o['dependencies'],
             inputs=o['inputs'],outputs=o['outputs'],issue='matching graphID/opcode and retired dependencies',
-            result='source-produced result-visible callback',retire='after result-visible and no owned service callbacks',
+            result='source-produced result-visible callback',retire='after result-visible, no owned service callbacks or RMW locks; KV_WRITE all272 addressed WR visibility/ACK/consumer/reversecredit complete',
             actual_issue_RF_cycles=None,actual_consumer_service_cycles=None) for o in graph['instructions']],
         geometry=dict(dies=2,clients_per_die=36,request_holds_per_client=1,active_mappings_per_die=4,
             stacks=4,PCs_per_stack=32,controller_queued_beats=512,controller_return_beats=512,
@@ -346,6 +372,7 @@ def contract(repo=ROOT):
             control_fields=control_fields,request_hold_bits=req_bits,map_bits=map_bits,
             capture_plus_CDC_bits=2*event_bits,reverse_credit_bits=reverse_bits,mailbox_bits=mailbox_bits,
             all1737_event_bits=event_scoreboard_bits,allocator_bits=allocator_bits,
+            addressed_writer_completion_bits=writer_completion_bits,
             source_queue_count_observer_bits=counters_bits,total_FF_bits=FF_bits,
             mux_bit_equivalents=mux_bits,comparator_bit_equivalents=compare_bits,
             conservative_additive_area_mm2=(FF_bits*.2916+(mux_bits+compare_bits)*.2)/.5/1e6,

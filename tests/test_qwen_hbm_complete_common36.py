@@ -32,6 +32,14 @@ def complete(service,owner,start):
     service.credit_return(die,credit,returned)
     return returned,packet
 
+def control_fixture():
+    # Explicit two-op control-only fixture; never full-program coverage.
+    graph=Common36().graph.copy()
+    first=dict(graph['instructions'][0]);last=dict(graph['instructions'][-1])
+    last.update(id=1,dependencies=[0])
+    graph['instructions']=[first,last]
+    return Common36(graph=graph)
+
 def finish_empty_program(service,position=0):
     service.begin_program(position)
     for op in service.graph['instructions']:
@@ -94,7 +102,7 @@ def test_read8_capture_READY_holds_ack_and_drain_observes_actual_queues():
     with pytest.raises(ValueError,match='head'):service.ACK_store(0,packet,20000,30000,40000)
 
 def test_drain_control_tag_nonce_epoch_and_returnzero_are_not_fresh_boolean():
-    service=Common36();finish_empty_program(service);requests=service.begin_drain();request=requests[0]
+    service=control_fixture();finish_empty_program(service);requests=service.begin_drain();request=requests[0]
     for key in ('control_tag','epoch','next_epoch','nonce','position','final_instruction','die'):
         bad=dict(request);bad[key]+=1
         with pytest.raises(ValueError,match='control destination identity'):service.control_destination_accept(0,bad)
@@ -113,7 +121,7 @@ def test_drain_control_tag_nonce_epoch_and_returnzero_are_not_fresh_boolean():
     with pytest.raises(ValueError,match='control destination identity'):service.control_destination_accept(0,request)
 
 def test_old_ACK_after_proved_model_drain_reuse_and_missing_epoch_reject():
-    service=Common36();service.begin_program(0);op=service.graph['instructions'][0]
+    service=control_fixture();service.begin_program(0);op=service.graph['instructions'][0]
     service.instruction_issue(0,op['opcode'],0)
     end,old=complete(service,packet_request(service,op,0,0,0,'read'),0)
     service.instruction_result_retire(0,end,end)
@@ -199,3 +207,54 @@ def test_eight_full_encoded_graph_synthetic_sessions_cross_old_namespace_limit()
     assert service.stats['encoded_instructions_retired']==8*1737
     assert service.stats['completed_drains']==8 and service.epoch==8
     assert service.stats['RMW_merges']==8*72*256
+
+
+def test_writer_retirement_rejects_premerge_preWR_and_previsibility():
+    service=Common36();service.begin_program(0)
+    writer=next(o for o in service.graph['instructions'] if o['opcode']=='KV_WRITE')
+    for op in service.graph['instructions'][:writer['id']+1]:
+        service.instruction_issue(op['id'],op['opcode'],0)
+        if op!=writer:service.instruction_result_retire(op['id'],0,0)
+    descriptor=sector_descriptors(service.graph,writer,0)[0]
+    owner=packet_request(service,writer,0,35,descriptor['sector'],'read')
+    owner['stack']=descriptor['stack'];write=dict(owner,kind='write')
+    with pytest.raises(ValueError,match='requires persistent'):service.hold_request(write)
+    service.acquire_RMW(owner,descriptor['mask'])
+    end,_=complete(service,owner,0)
+    assert not service.entries and service.stats['requests_write']==0
+    with pytest.raises(ValueError,match='persistent RMW'):service.instruction_result_retire(writer['id'],end,end)
+    with pytest.raises(ValueError,match='dependency'):service.instruction_issue(writer['id']+1,service.graph['instructions'][writer['id']+1]['opcode'],end)
+    result=end+27*SLOW
+    service.RMW_merge_result(owner,['XOR','AND','XOR'],end,result)
+    with pytest.raises(ValueError,match='persistent RMW'):service.instruction_result_retire(writer['id'],result,result)
+    service.hold_request(write);accepted=edge(result+FAST,FAST)
+    tag=service.admit_next(0,accepted);service.controller_column(0,tag,0,0,accepted)
+    with pytest.raises(ValueError,match='owns finite service'):service.instruction_result_retire(writer['id'],accepted,accepted)
+    with pytest.raises(ValueError,match='backing visibility'):service.controller_return(0,tag,0,0,accepted+1)
+    packet=service.controller_return(0,tag,0,0,accepted+10000)
+    assert service.capture_offer(packet) and service.ACK_FIFO_push(0)
+    landing=crossing((Fraction(packet['visible_ps'])//FAST+1)*FAST,SLOW)
+    stored=edge(landing,SLOW)
+    with pytest.raises(ValueError,match='owns finite service'):service.instruction_result_retire(writer['id'],stored,stored)
+    service.ACK_store(0,packet,landing,stored,stored+SLOW)
+    service.consumer_result_retire(0,tag,0,stored+2*SLOW,stored+2*SLOW)
+    with pytest.raises(ValueError,match='owns finite service'):service.instruction_result_retire(writer['id'],stored+2*SLOW,stored+2*SLOW)
+    returned=crossing(stored+2*SLOW,FAST)
+    service.credit_return(0,dict(service.return_CDC[0][0]),returned)
+    with pytest.raises(ValueError,match='publication obligations'):service.instruction_result_retire(writer['id'],returned,returned)
+
+
+def test_one_completed_WR_cannot_publish_remaining271_sectors():
+    service=Common36();service.begin_program(0)
+    writer=next(o for o in service.graph['instructions'] if o['opcode']=='KV_WRITE')
+    for op in service.graph['instructions'][:writer['id']+1]:
+        service.instruction_issue(op['id'],op['opcode'],0)
+        if op!=writer:service.instruction_result_retire(op['id'],0,0)
+    descriptor=next(r for r in sector_descriptors(service.graph,writer,0) if not r['partial'])
+    owner=packet_request(service,writer,0,0,descriptor['sector']);owner['stack']=descriptor['stack']
+    end,_=complete(service,owner,0)
+    assert not service.entries and not service.RMW_locks
+    with pytest.raises(ValueError,match='publication obligations'):service.instruction_result_retire(writer['id'],end,end)
+    with pytest.raises(ValueError,match='duplicate completed'):service.hold_request(owner)
+    bad=dict(owner,sector=0)
+    with pytest.raises(ValueError,match='descriptor'):service.hold_request(bad)
