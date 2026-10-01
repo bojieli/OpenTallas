@@ -113,3 +113,8 @@ rtl/chip/ot_chip_v41x_ckv_die_service.sv
 rtl/chip/ckvsel/ot_chip_v41x_tile.sv
 rtl/chip/ckvsel/ot_chip_v41x_die.sv
 rtl/test/v41_runtime/ot_v41_rt_die_l20.sv
+rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv
+rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv
+rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv
+rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv
+rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv

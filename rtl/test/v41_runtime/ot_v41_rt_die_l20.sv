@@ -24,6 +24,14 @@ module ot_v41_rt_die_l20 #(
     parameter integer CKV_BASE = 1 << 22,
     parameter integer CKV_NSLOT = 64,
     parameter integer RANK = 0,
+    // W11 adopted indexer (opt-in; W17 passes -GX_IDX=2 -GIDX_RING=1 for the ring key layout at full capacity:
+    // C = 64 x 1,024 + 32 = 65,568 key slots a stack, a region UBLK = 1,090 blocks; keys placed by
+    // tools/w11_idx_ring_place.py into ikring_s<s>.hex, loaded below)
+    parameter integer X_IDX = 0,
+    parameter integer X_SEL = 0,
+    parameter integer IDX_RING = 0,
+    parameter integer IDX_RING_RSB = 64,
+    parameter integer IDX_RING_RTAIL = 32,
     parameter integer K_MEM = 1 << 24,
     parameter integer ROM_R = 128,
     parameter integer ROM_PHW = 6,
@@ -105,7 +113,8 @@ module ot_v41_rt_die_l20 #(
     output wire [5:0]        ckv_fault_code
 );
     ot_chip_v41x_die #(.FULL_SHAPE(1), .RANK(RANK), .X_ROM(1), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW),
-                       .ROM_BST(ROM_BST), .X_ATT(1), .X_ME(0), .X_IDX(0), .X_SEL(0), .X_EG(0), .W_HBM(0),
+                       .ROM_BST(ROM_BST), .X_ATT(1), .X_ME(0), .X_IDX(X_IDX), .X_SEL(X_SEL), .IDX_RING(IDX_RING), .IDX_RING_RSB(IDX_RING_RSB),
+                       .IDX_RING_RTAIL(IDX_RING_RTAIL), .X_EG(0), .W_HBM(0),
                        .WINDOW_HBM_ATTENTION(1), .CKV_SELECTED(CKV_SELECTED != 0), .CKV_BASE(CKV_BASE),
                        .CKV_NSLOT(CKV_NSLOT), .K_MEM(K_MEM), .SUN(SUN), .SUM(SUM),
                        .CL_LANES(CL_LANES), .CL_DEPTH(CL_DEPTH), .CL_RELAY(CL_RELAY)) dut (
@@ -230,6 +239,15 @@ module ot_v41_rt_die_l20 #(
         fd = $fopen({dir, "/hbmsparse2.hex"}, "r");
         if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[2].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
         fd = $fopen({dir, "/hbmsparse3.hex"}, "r");
+        if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[3].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
+        // the ring-placed index keys (tools/w11_idx_ring_place.py; IDX_RING = 1)
+        fd = $fopen({dir, "/ikring_s0.hex"}, "r");
+        if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[0].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
+        fd = $fopen({dir, "/ikring_s1.hex"}, "r");
+        if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[1].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
+        fd = $fopen({dir, "/ikring_s2.hex"}, "r");
+        if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[2].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
+        fd = $fopen({dir, "/ikring_s3.hex"}, "r");
         if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[3].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
         // indexed layers: the compressed rows this die owns, '<sector> <word>' on stack k (ckv_s<k>.hex)
         fd = $fopen({dir, "/ckv_s0.hex"}, "r");
