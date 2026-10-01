@@ -517,6 +517,6 @@
  "ruling": "ROOT 2026-10-01: C_rotate stays (no issue penalty; it wins the saturated rate), priced on W18b's placed compact hub at 748 um a stage (+42 / +32) with lane-local fusion as a named step (modelled; RTL pending); the square layout's 37 / 29 is superseded; VM-H is the comparison row; W11's aligned-base near / far allocator becomes an upside row when it lands",
  "caveat": "Per-op network latency on the latency-bound SU chain was invisible in the throughput-style VM pricing. The VM was priced by port widths (vm_read_elems / vm_write_elems) and a few client wire stages, i.e. as bandwidth; the SU softmax / norm / Sinkhorn chains are dependent ops, so each op pays the VM network's full latency (control broadcast, operand read, element write or result tree).  W11's VM-H measured that at +36.7 slow cycles a vector op and +44.9 a reduction: -14.5% AR on the full-shape token, 82% of the 3,153 -> 2,680 drop (results/uarch/v41_vm_waterfall.json); more lanes or ports buy nothing (issue is not the bind).  Rule: any shared network on a dependent chain is priced as per-op latency on the chain, not as bandwidth.",
  "source_sha256": {
-  "tools/uarch_model.py": "fdc40260ded435fe29340b83a44da01926ecfbeeca30f1a05c8914b8955da27e"
+  "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
  }
 }
