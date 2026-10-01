@@ -624,6 +624,21 @@ def parse_stat(text: str) -> dict[str, Any]:
     return {"per_cell": per_cell, "chip_area_um2": chip_area}
 
 
+def w11_controller_endpoint_commands(block: dict[str, Any]) -> list[str]:
+    """Opt-in physical-stub register retention; production RTL is unchanged."""
+    if not block.get("preserve_w11_controller_endpoints", False):
+        return []
+    expected = {"BREG": 1, "D": 512, "NSTAGE": 2, "PHYS": 1, "REPL": 2}
+    if block["top"] != "ot_v41_attn_eng_ctl_phys" or block["parameters"] != expected:
+        raise FlowError("W11 endpoint preservation requires the pinned full 64-tile PHYS controller configuration")
+    # Wire-level keep cannot prevent bit-level duplicate-register merging.
+    # Mark only the register cells representing tile/transposer/merge/macro
+    # boundaries, before synth decomposes vector registers into individual bits.
+    return ["proc", "flatten", *[
+        f"setattr -set keep 1 c:*{region}* t:*dff* %i"
+        for region in ("g_t[", "g_tr[", "g_m[", "u_stage")]]
+
+
 def run_synthesis(
     view: dict[str, Any],
     corner: dict[str, Any],
@@ -673,6 +688,7 @@ def run_synthesis(
                 *icg_lib,
                 *(f"read_verilog -sv {path}" for path in sources),
                 f"hierarchy -check -top {block['top']}{chparam}",
+                *w11_controller_endpoint_commands(block),
                 f"synth -top {block['top']} -flatten",
                 f"dfflibmap -liberty {dff_lib}",
                 f"abc{liberty_args}{dont_use_args} -D {delay_target_ps:g}",
@@ -717,6 +733,20 @@ def run_synthesis(
     netlist = work / "mapped.v"
     stripped = normalise_netlist(raw_netlist, netlist)
 
+    if block.get("preserve_w11_controller_endpoints"):
+        # Keep the historical full-size admission bound. Check mapped cells,
+        # using liberty's sequential classification, before any P&R starts.
+        expected = 338023
+        threshold = expected * 8 // 10
+        guard = {"expected_sequential": expected, "threshold": threshold,
+                 "observed_sequential": seq_cells,
+                 "normalized_netlist_sha256": sha256_file(netlist),
+                 "verdict": "passed" if seq_cells >= threshold else "aborted",
+                 "check": "liberty-classified sequential cells after host synthesis"}
+        (work / "w11_endpoint_guard.json").write_text(json.dumps(guard, indent=2) + "\n")
+        if seq_cells < threshold:
+            raise FlowError(f"W11 full-size endpoint guard failed: {seq_cells} < {threshold}")
+
     return {
         "netlist": netlist,
         "record": {
@@ -741,6 +771,26 @@ def run_synthesis(
 
 
 # --------------------------------------------------------------------------
+def prepare_w11_orfs_endpoint_netlist(block: dict[str, Any], work: Path, case: Path) -> dict[str, Any] | None:
+    """Use the guarded mapped endpoints in ORFS, avoiding independent RTL synthesis."""
+    if not block.get("preserve_w11_controller_endpoints"):
+        return None
+    w11_controller_endpoint_commands(block)
+    guard_path, netlist = work / "w11_endpoint_guard.json", work / "mapped.v"
+    if not guard_path.is_file() or not netlist.is_file():
+        raise FlowError("W11 endpoint P&R requires the guarded host synthesis stage")
+    guard = json.loads(guard_path.read_text())
+    if (guard.get("verdict") != "passed" or guard.get("threshold") != 270418
+            or guard.get("expected_sequential") != 338023
+            or guard.get("observed_sequential", 0) < 270418
+            or guard.get("normalized_netlist_sha256") != sha256_file(netlist)):
+        raise FlowError("W11 endpoint mapped-netlist admission failed")
+    shutil.copyfile(netlist, case / "w11_endpoint_mapped.v")
+    return {"mapped_netlist_sha256": sha256_file(netlist), "guard": guard,
+            "basis": "ORFS SYNTH_NETLIST_FILES copies the guarded host netlist without reoptimization. "
+                     "Host synthesis uses the selected driver liberty; routed setup/hold use ORFS WC/BC."}
+
+
 # SDC and signal-integrity constraints
 # --------------------------------------------------------------------------
 #
@@ -2223,6 +2273,9 @@ def run_pnr(
         nickname, block, platform_name, pnr, core_utilization, place_density,
         constraints, memory_macros, floorplan,
     )
+    endpoint_netlist = prepare_w11_orfs_endpoint_netlist(block, work, case)
+    if endpoint_netlist:
+        config.append("export SYNTH_NETLIST_FILES = /work/w11_endpoint_mapped.v")
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
     if floorplan and floorplan.get("pin_regions"):
         (case / "io_constraints.tcl").write_text(
@@ -2278,6 +2331,8 @@ def run_pnr(
         raise FlowError(f"ORFS produced no mapped netlist at {mapped}")
     raw_mapped = case / "1_2_yosys.raw.v"
     shutil.copy2(mapped, raw_mapped)
+    if endpoint_netlist and sha256_file(raw_mapped) != endpoint_netlist["mapped_netlist_sha256"]:
+        raise FlowError("ORFS changed the guarded W11 endpoint input netlist")
     signed_stripped = normalise_netlist(mapped, mapped)
     dft_record = None
     if dft:
@@ -2381,6 +2436,8 @@ def run_pnr(
     metrics["flow_error_counts"] = flow_errors
     if any(int(v) != 0 for v in flow_errors.values()):
         raise FlowError(f"ORFS reported flow errors: {flow_errors}")
+    if endpoint_netlist and metrics.get("sequential_cell_count", 0) < 270418:
+        raise FlowError("Routed W11 endpoint netlist fell below the original full-size guard")
 
     # Collect artifacts.
     artifacts: dict[str, Any] = {}
@@ -2421,6 +2478,7 @@ def run_pnr(
 
     return {
         "platform": platform_name,
+        **({"w11_endpoint_netlist": endpoint_netlist} if endpoint_netlist else {}),
         "design_nickname": nickname,
         "netlist_normalization": {
             "signed_declarations_stripped": signed_stripped,
@@ -2882,6 +2940,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-delay-max-ns", type=float, default=None,
                         help="set_output_delay -max on every output (with --output-delay-min-ns)")
     parser.add_argument("--stages", default="synth,sta", help="comma list of synth,sta,pnr")
+    parser.add_argument("--preserve-w11-controller-endpoints", action="store_true",
+                        help="retain physical-stub endpoint register cells in the full W11 controller vehicle; off by default")
     parser.add_argument(
         "--fmax-search",
         action="store_true",
@@ -3278,6 +3338,13 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.false_path_from is not None:
         block["false_path_from_ports"] = args.false_path_from
+    if args.preserve_w11_controller_endpoints:
+        block["preserve_w11_controller_endpoints"] = True
+        try:
+            w11_controller_endpoint_commands(block)
+        except FlowError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
     if args.core_input_port:
         block["core_input_ports"] = args.core_input_port
     if args.core_input_delay_min_ns is not None or args.core_input_delay_max_ns is not None:
@@ -3471,6 +3538,8 @@ def main(argv: list[str] | None = None) -> int:
             **({k: block[k] for k in ("output_delay_min_ns", "output_delay_max_ns")}
                if "output_delay_min_ns" in block else {}),
             "false_path_io": bool(block.get("false_path_io", False)),
+            **({"preserve_w11_controller_endpoints": True}
+               if block.get("preserve_w11_controller_endpoints") else {}),
             "sources": [
                 {
                     "path": source,
