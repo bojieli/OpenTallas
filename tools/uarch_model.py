@@ -1512,6 +1512,53 @@ def mma_drain_cycles(e: dict):
     return front + 7 * math.ceil(math.log2(lanes)) + 7 * e["stack_levels"] + 7 + 2
 
 
+def gpu_payload_transport_model(payloads=24, tag_depth=16):
+    """W19 opt-in V4.1 transport candidate, sized before RTL; no headline adoption.
+
+    Load-time swizzle: issue-order 128-B weights + eight UE8M0 bytes,
+    tightly concatenated, padded only at the descriptor's final 128-B line.
+    The existing fetch ring supplies four 32-B sectors per ordered line.
+    A finite 256-B reservoir joins those bytes to an SM request-tag FIFO.
+    """
+    if payloads <= 0 or tag_depth < 2 or tag_depth & (tag_depth - 1):
+        raise ValueError("positive payload count and power-of-two tag depth required")
+    physical_lines = math.ceil(payloads * 136 / 128)
+    # ASSUMED mux area: 0.2 um2 per 2:1 bit mux. Sixteen 8-B alignment
+    # phases require four barrel levels; pop shift is a fixed wire selection.
+    mux_bits = 2048 * 4 + 1088 * (tag_depth - 1)
+    storage_bits = 2048 + tag_depth * 10 + 5 * 24 + 64
+    logic_um2 = storage_bits * DFF_UM2 + mux_bits * 0.2 + 512
+    footprint_mm2 = logic_um2 / GPU_LOGIC_UTIL / 1e6
+    tracks = 1024 + 1088 + 2 * (32 + 10 + 24) + 16
+    channel_tracks = int(64 * 4 / 0.08)
+    # Added supply service versus an ideal 128-B payload. Existing MMA
+    # drain remains unchanged; this is not a composed token measurement.
+    service_cycles = physical_lines + 1
+    layer_extra = 12 * (math.ceil(24 * 136 / 128) + 1 - 24) + 6 * (math.ceil(32 * 136 / 128) + 1 - 32)
+    return dict(schema="opentallas.uarch.gpu_payload_transport.v1", enabled_default=False,
+        scope="V4.1 HBM candidate only; Qwen/ROM ports unchanged", payloads=payloads,
+        layout="136-B records in golden SM issue order; final line padding only",
+        compute=dict(macs_per_cycle=0, intensity_macs_per_byte=0, arithmetic="none"),
+        ports_Bpc=dict(fetch_read=128, reservoir_write=128, reservoir_read=136, sm_response_write=136),
+        boundaries_bits_pc=dict(fetch=1024, sm=1088, request_tag=42),
+        replicas_per_die=32, tag_depth=tag_depth, reservoir_bytes=256,
+        mux_bit_equivalents=mux_bits, storage_bits=storage_bits,
+        fanout="SM-local ready/valid; no new die-wide broadcast", demux="one local SM response",
+        footprint_mm2_per_sm=round(footprint_mm2, 6), footprint_mm2_die=round(32 * footprint_mm2, 4),
+        area_basis="ASSUMED 0.2 um2 bit mux + DFFHQNx1 0.2916 um2 + 512 um2 control, 50% utilisation",
+        slot_fit="reserve this footprint inside existing W13 SM slot; measured contextual fit pending",
+        routing=dict(tracks=tracks, channel_capacity_tracks=channel_tracks, fits=tracks <= channel_tracks,
+            basis="ASSUMED 64 um local channel, four existing signal layers, 80 nm pitch; no hub layer change"),
+        physical_lines=physical_lines, transferred_bytes=physical_lines * 128,
+        padded_fixture_bytes=payloads * 256, service_cycles_no_stalls=service_cycles,
+        ideal_128B_payload_cycles=payloads, extra_service_cycles=service_cycles - payloads,
+        steady_payloads_pc=16/17, first_payload_after_two_line_landings_cycles=1,
+        composed_path=dict(layers=40, expert_ops_per_layer=18, added_supply_cycles_upper_bound=40 * layer_extra,
+            added_supply_us_upper_bound=round(40 * layer_extra / 1.2e9 * 1e6, 3),
+            basis="serial sum for all routed w1/w3/w2 busiest-SM slices; overlap may hide service; excludes HBM wait"),
+        adoption="OFF: exact, in-context SS/FF and measured token gain gates required; no token-rate restatement")
+
+
 def hbm_gpu_design(model: str):
     """Size the GPU-organised HBM die for `model` ('qwen' | 'v41')."""
     import arch_budget_qwen3 as Q
