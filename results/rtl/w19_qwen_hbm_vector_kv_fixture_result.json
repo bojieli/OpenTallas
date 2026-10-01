@@ -1,0 +1,61 @@
+{
+  "adoption": false,
+  "cases": [
+    {
+      "checks": {
+        "deployed_boundary_mismatches": 0,
+        "fp8_saturation_inputs": 0,
+        "nonfinite": 0
+      },
+      "die": 0,
+      "file": "d0_vector_kv.npz",
+      "head_dim": 128,
+      "kv_heads": 4,
+      "q_heads": 16,
+      "sha256": "8bfe5ed0a9416b02654b9929834e244a897413f94f4fe0bd9f1bf087f5054922"
+    },
+    {
+      "checks": {
+        "deployed_boundary_mismatches": 0,
+        "fp8_saturation_inputs": 0,
+        "nonfinite": 0
+      },
+      "die": 1,
+      "file": "d1_vector_kv.npz",
+      "head_dim": 128,
+      "kv_heads": 4,
+      "q_heads": 16,
+      "sha256": "fa3ae12c00133e615b503ba5d6c7f1a01f9444a4ad65d765f4b44f9928ae02a1"
+    }
+  ],
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "claim_boundary": "Committed64-partition real-checkpoint RTL QKV outputs feed full-head host norm/RoPE/FP8 KV fixtures, bit-exact against independent deployed arithmetic. No RTL vector/KV/attention or full-token verdict.",
+  "full_token_cycles": null,
+  "global_qkv_post_norm_sha256": "04e736dc24a124b9fdd5a1bb107633159d3328515a2c169b970aaf4fff29b7ce",
+  "layer": 0,
+  "position": 0,
+  "preflight_sha256": "e1c0da13172657fe14f2cb5e706404be7d3553358841420881a544e45893364a",
+  "schema": "opentallas.w19-qwen-hbm-vector-kv-fixtures.v1",
+  "source_commit": "37865d54b8c8a9e7a5f13b73b33a214539dfaa85",
+  "source_sha256": {
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "tools/w19_qwen_hbm_vector_fixture.py": "49dc24915a46fdd37b84bf97df19e0834c024b8a00d7900ece4e047c4fb3ed3a"
+  },
+  "status": "producer_exact",
+  "tensors": {
+    "model.layers.0.self_attn.k_norm.weight": {
+      "bf16_sha256": "aaf5042c20082b5c13daed62ad9627f426cda5edc38eca48bd3f956da4eb05cd",
+      "shape": [
+        128
+      ]
+    },
+    "model.layers.0.self_attn.q_norm.weight": {
+      "bf16_sha256": "ad88a3013b2d8ecd138c36460751296c56bed2eff2d5d3a66377db04fd9e0799",
+      "shape": [
+        128
+      ]
+    }
+  },
+  "token": 0
+}
