@@ -1,0 +1,68 @@
+{
+  "actual_GPU_completion": false,
+  "actual_boundary_fixture_rows": 8,
+  "all_fixture_bits_match_retained_producer": true,
+  "checkpoint_payload_reads": 0,
+  "codec_owner_commits": [
+    "e49a98d09",
+    "6682c49a7",
+    "766c9d512",
+    "e5d9ad00a"
+  ],
+  "codec_shared_allocation_bytes": 63488,
+  "copy_LOAD_STORE_warp_issues_extra": 512,
+  "copy_shared_bytes_extra": 65536,
+  "descriptor_owner_commits": [
+    "fda28ee42",
+    "a104421d4",
+    "ed816bba3",
+    "b44d0e347"
+  ],
+  "exceptional_input_source_fallback_bytes": 512,
+  "finite_input_scale253_can_produce_Inf": true,
+  "focused_lifetime_descriptor_tests_passed": 4,
+  "focused_new_codec_tests_passed": 17,
+  "full_codec_model_byte_identical": true,
+  "hardware_admission": false,
+  "lifetime_candidate_allocation_bytes": 61440,
+  "lifetime_owner_commits": [
+    "62c3c796c",
+    "1ef7fc73e"
+  ],
+  "new_RTL_or_PnR_jobs": false,
+  "outstanding_software_publications": 0,
+  "outstanding_software_row_leases": 0,
+  "owner_join_reviews": {
+    "crossphase": {
+      "semantic_output_equal": true,
+      "stored_annotations": [
+        "focused_tests_passed",
+        "tool_sha256",
+        "tool_source_git"
+      ],
+      "stored_sha256": "e568d1cb1deb8cd4906449f07b32d8a8ec15e6336cf9c6440b62c914c2c87ebe"
+    },
+    "descriptor": {
+      "semantic_output_equal": true,
+      "stored_annotations": [
+        "focused_tests_passed",
+        "tool_source_git"
+      ],
+      "stored_sha256": "d584b0ea9224697dc137545f5d9c3c02881e6dda4cde04337a1dd634ee11c7c9"
+    }
+  },
+  "packed_reachable_finite_scale_bytes": [
+    1,
+    253
+  ],
+  "physical_clock_or_rate_credit": null,
+  "producer_gate_only_difference": "current review source_commit",
+  "schema": "parent.hbm.index-tagged-full-codec-and-lifetime-review.v1",
+  "scope_warning": "Codec and crossphase are distinct candidate layouts, not a combined qualified fit. Actual exceptional score executes CPU FP64 source oracle; production domain and ordinary GPU exact source order/NaN policy/FP64 or FP32INT lowering remain open. Descriptor transfers are not physical commands; stack addresses, visible ACK, read tags, CDC/service and in-context SSFF are unbound. Eight archived full-program callbacks are reference completion, not candidate GPU runtime.",
+  "score_paths": [
+    "ordinary INT32/FP32 index score shader",
+    "actual H.Executor.f_index_scores source fallback"
+  ],
+  "source_producer_gate_replayed": true,
+  "unreused_lifetime_peak_bytes": 65664
+}
