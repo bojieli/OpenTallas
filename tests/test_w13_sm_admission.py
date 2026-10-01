@@ -4,12 +4,21 @@ from pathlib import Path
 from unittest.mock import Mock
 
 from tools import w13_chain_successor as chain
-from tools.w13_floorplan_receipt import admission
+from tools.w13_floorplan_receipt import admission, cpu_admission
 
 
 def test_old_lease_cannot_admit_insufficient_peak():
     assert not admission(59 * 1048576, 55, 60)['passed']
     assert admission(60 * 1048576, 55, 60)['passed']
+
+
+def test_cpu_fit_is_required_even_when_memory_fits():
+    assert admission(142 * 1048576, 60, 60)['passed']
+    assert not cpu_admission(127.91, 28)['passed']
+    assert not cpu_admission(206.25, 28)['passed']
+    assert not cpu_admission(28, 28)['passed']
+    assert not cpu_admission(float('nan'), 28)['passed']
+    assert cpu_admission(1.22, 28)['passed']
 
 
 def test_guarded_dispatch_checks_worker_memory_before_synthesis(tmp_path, monkeypatch):
