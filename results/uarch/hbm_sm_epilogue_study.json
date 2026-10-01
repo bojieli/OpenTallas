@@ -1,0 +1,92 @@
+{
+ "schema": "opentallas.uarch.hbm_sm_epilogue.v1",
+ "status": "model-level (no RTL)",
+ "precedent": "NVIDIA Blackwell sm_100 tensor memory (256 KB/SM) + register epilogue (tcgen05.ld)",
+ "epilogue_depth_cycles": 16,
+ "partial_combine_cycles": 36,
+ "area": {
+  "qwen": {
+   "cols": 16,
+   "rows_per_sm_max": 384.0,
+   "tmem_kb_per_sm": 48.0,
+   "tmem_macros_32kb": 2,
+   "blackwell_tmem_kb_per_sm": 256,
+   "ports": {
+    "write_bits_per_clk": 512,
+    "read_bits_per_clk": 512,
+    "macro": "1R1W 256-bit (ot_sram_1r1w class); write = column drain, read = epilogue"
+   },
+   "epilogue_lanes": 16,
+   "epilogue_lane_um2": 1663,
+   "epilogue_logic_um2": 26612,
+   "added_mm2_per_sm": 0.0855,
+   "sm_mm2": 4.621,
+   "added_fraction_of_sm": 0.0185,
+   "added_mm2_per_die": 2.736,
+   "sm_per_die": 32
+  },
+  "v41": {
+   "cols": 8,
+   "rows_per_sm_max": 42.1,
+   "tmem_kb_per_sm": 2.7,
+   "tmem_macros_32kb": 1,
+   "blackwell_tmem_kb_per_sm": 256,
+   "ports": {
+    "write_bits_per_clk": 256,
+    "read_bits_per_clk": 256,
+    "macro": "1R1W 256-bit (ot_sram_1r1w class); write = column drain, read = epilogue"
+   },
+   "epilogue_lanes": 8,
+   "epilogue_lane_um2": 1663,
+   "epilogue_logic_um2": 13306,
+   "added_mm2_per_sm": 0.0427,
+   "sm_mm2": 2.221,
+   "added_fraction_of_sm": 0.0192,
+   "added_mm2_per_die": 1.368,
+   "sm_per_die": 32
+  }
+ },
+ "token": {
+  "v41": {
+   "clock_hz": 1033900000.0,
+   "baseline_us": 356.92,
+   "baseline_tokens_s": 2801.8,
+   "removed_on_path_us": 21.39,
+   "fused_nodes": 361,
+   "removed_by_kind_us": {
+    "attn.hc_post": 2.94,
+    "attn.norm.sumsq": 2.98,
+    "attn.q_norm.sumsq": 2.98,
+    "attn.q_quant": 1.62,
+    "attn.quant": 1.62,
+    "attn.z_quant": 1.62,
+    "ffn.hc_post": 2.94,
+    "ffn.norm.sumsq": 2.98,
+    "ffn.quant2": 1.62,
+    "head.norm.sumsq": 0.07
+   },
+   "added_epilogue_depth_us": 5.59,
+   "added_partial_combine_us": 4.21,
+   "with_epilogue_us": 345.32,
+   "saved_us_per_token": 11.59,
+   "with_epilogue_tokens_s": 2895.8,
+   "basis": "v41_hbm_chain (group-slot, 1M, AR): on-path sumsq / quant / hc_post nodes removed; each fused producer's drain +16 cycles; each sumsq keeps a 36-cycle on-die partial combine (the cross-die part rides the existing collective)"
+  },
+  "qwen": {
+   "clock_hz": 1098640000.0,
+   "baseline_cycles": 1247678,
+   "with_epilogue_cycles": 1247678,
+   "baseline_us": 1135.66,
+   "with_epilogue_us": 1135.66,
+   "saved_us_per_token": 0.0,
+   "dependent_latency_removed_us": 7.24,
+   "hbm_bound": true,
+   "basis": "qwen_hbm_ops + stream_overlap (8K, AR): the token is HBM-bound (the bulk copy prefetches through every boundary), so the removed dependent latency is hidden; it only shows where the stream cannot cover it"
+  }
+ },
+ "source_sha256": {
+  "tools/hbm_sm_epilogue_study.py": "df6ac3eafd5c54e940baae973f11d3fe9983f96bbd58a9b4aee14c9329b558aa",
+  "tools/uarch_model.py": "9c9819e21f167e425ad89ae84b84249627fb8d28a1ca625a3274fe7c495119ee",
+  "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3"
+ }
+}
