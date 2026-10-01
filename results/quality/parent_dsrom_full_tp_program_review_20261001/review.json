@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.parent.dsrom.full_tp_program.review.v1",
+  "owner_commit": "98c14e58b",
+  "program_canonical_sha256": "e923be14667cdaa6b7f0a5bc1589f16193556293b3a195b635267863bc0eb033",
+  "pinned_sources_verified": 8,
+  "transformer_stages": 40,
+  "TP": 4,
+  "stage_descriptors": 4771,
+  "head_descriptors": 7,
+  "descriptor_encoding_bits": 2048,
+  "focused_tests": "14 PASS; existing L0/L20 descriptor equality; bounded full40 four-token functional interpreter exact logits/traces/persistent state; mutation rejection; ratio2 codec scope",
+  "verdict": "PASS_FUNCTIONAL_PROGRAM_AND_DESCRIPTOR_STRUCTURE_ONLY",
+  "full_shape_numeric_execution": false,
+  "new_four_rank_ISA_execution": false,
+  "command_legality_vs_actual_lane_geometry": false,
+  "head_K": 5120,
+  "head_rows_per_rank": 32320,
+  "physical_home_binding": false,
+  "prelease_RTL_witness_qualified": false,
+  "hardware_admission": false,
+  "speed_credit": 0,
+  "next_gate": "Actual4rankISA command legality, constants/images/collectives/persistentstate; complete model resources then contextual RTL/SSFF"
+}
