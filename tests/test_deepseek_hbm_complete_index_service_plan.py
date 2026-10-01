@@ -24,3 +24,18 @@ class Service(unittest.TestCase):
         self.assertEqual(good.stores['authority_difference'][0,0],0)
         self.assertNotEqual(bad.stores['authority_difference'][0,0],0)
         self.assertEqual(good.metrics['shared_warp_issues'],49)
+    def test_IKD1_epoch64_highhalf_is_compared_not_truncated(self):
+        import struct
+        for epoch in [1,(1<<32)+1,(1<<63)+3,(1<<64)-1]:
+            descriptor=struct.pack('<4sBBHQ',b'IKD1',1,0,68,epoch)+bytes(16)
+            words=np.frombuffer(descriptor,dtype='<u4')
+            memory={}
+            for family,n in [('descriptor',8),('external_lease',16)]:
+                for word in range(n):
+                    value=int(words[word]) if family=='descriptor' else 0
+                    memory[f'{family}{word}']=np.full((1,32),value,np.uint32)
+                    memory[f'protected_expected_{family}{word}']=np.full((1,32),value,np.uint32)
+            self.assertEqual(P.authority_execute(memory,trace=True).stores['authority_difference'][0,0],0)
+            if epoch>>32:
+                memory['descriptor3'][0,:2]=0
+                self.assertNotEqual(P.authority_execute(memory,trace=True).stores['authority_difference'][0,0],0)
