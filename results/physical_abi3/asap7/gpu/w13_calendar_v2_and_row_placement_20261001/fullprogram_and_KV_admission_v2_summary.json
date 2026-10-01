@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-01T16:34:51.608642+00:00",
+  "source_git": "24bb37197",
+  "Qwen": {
+    "token0_actual_ops": 1737,
+    "token1_actual_ops": 1737,
+    "total_instruction_executions": 3474,
+    "input_to_token1": 11,
+    "token1_next_token": 358,
+    "cumulative_provider_events": 1008,
+    "source_callback_pin": {
+      "source_git": "c59e106d6d46f9b23e61b755ebbd859481cacbb5",
+      "path": "results/physical_abi3/asap7/gpu/w13_calendar_v2_and_row_placement_20261001/qwen_actual_token1_execution.json",
+      "sha256": "460bea0fa47955f6ee63cab80d3cbc48957f97ddfce5011eca7611b12119bda8"
+    },
+    "hardware_issue_RF_shared_fabric_clocks": "UNBOUND",
+    "physical_admission": "FAIL_CLOSED"
+  },
+  "DeepSeek": {
+    "actual_ops": 2213,
+    "authoritative_graph_source_git": "1c37cdaa9",
+    "actualruntime_source_git": "066dad009",
+    "callback_mappings_verified": 2213,
+    "collective_callbacks": 270,
+    "memory_provider_trace_rows": 256,
+    "memory_trace_complete": false,
+    "physical_admission": "FAIL_CLOSED"
+  },
+  "packedKV": {
+    "model_source_git": "212a1bcc3",
+    "chosen_masked_writer_provider": null,
+    "mandatory_RMW_port_B_per_layer_die": 16896,
+    "mixed_commands_per_layer_die": 528,
+    "visible_WR_ACKs_per_layer_die": 272,
+    "mixed_shared_stack_cmdcycles_floor": 132,
+    "total_port_B_TP2_token": 1216512,
+    "byteenable_physically_bound": false,
+    "writevisible_and_reverseCDC_required": true,
+    "token_major_layout_credit": 0
+  },
+  "resource_calendar_tests": 11,
+  "geometry_tests": 6,
+  "row_placement_tests": 2,
+  "RMW_tests": 2,
+  "total_tests": 21,
+  "no_hardware_admission": true,
+  "new_dispatch": false,
+  "sole_supervisor": "615596/start305293450 T monitor626096 EXCLUSIVE",
+  "TC16": "FAIL retained no retry"
+}
