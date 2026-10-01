@@ -22,8 +22,9 @@ module ot_v41_rt_die #(
     parameter integer ROM_PHW = 6,
     parameter integer ROM_SAW = 16,
     parameter integer ROM_BST = 17,
-    parameter integer SUN = 64,             // >= 64 at full shape: the SU's span depth L = log2(ceil(n/SUN)) <= LV (7)
-    parameter integer SUM = 16,
+    parameter integer SUN = 256,            // >= 256 at full shape: the SU's span depth L = log2(ceil(n/SUN)) <= LV (7) for
+                                            // the hc_post sum of squares over 20,480 (tools/v41_su_legality.py)
+    parameter integer SUM = 64,
     parameter integer CL_LANES = 16,
     parameter integer CL_DEPTH = 256,
     parameter integer CL_RELAY = 0,
