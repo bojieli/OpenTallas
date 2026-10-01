@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/home/ubuntu/w18work/karb20/pregionh/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_chip_v41x_karb_pregion\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_cl",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -669.49,
+  "tns_ps": -1623765.5,
+  "worst_register_d_slack_ps": -224.37175,
+  "worst_reg_to_reg_slack_ps": -224.37,
+  "worst_input_to_reg_slack_ps": 240.68,
+  "worst_output_port_slack_ps": -669.485168,
+  "violating_d_pins": 6959,
+  "errors": [],
+  "odb_sha256": "ccb5b60cfb31709ad50bbb3cad75e8573191b2f96c563bbba03f2ba3dcc3cc15",
+  "spef_sha256": "843b25b689bc85c02e043edf8033dbda84918cfdd42a7e9262abc75be325cfa6",
+  "sdc_sha256": "31d82881f222198f3b4467350248483a6eb061649130e377168283b5591dbab7"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": -218.36,
+  "tns_ps": -3469.2,
+  "worst_register_d_slack_ps": 10.695278,
+  "worst_reg_to_reg_slack_ps": 10.7,
+  "worst_input_to_reg_slack_ps": 67.16,
+  "worst_output_port_slack_ps": 404.611053,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "ccb5b60cfb31709ad50bbb3cad75e8573191b2f96c563bbba03f2ba3dcc3cc15",
+  "spef_sha256": "843b25b689bc85c02e043edf8033dbda84918cfdd42a7e9262abc75be325cfa6",
+  "sdc_sha256": "31d82881f222198f3b4467350248483a6eb061649130e377168283b5591dbab7"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": false,
+ "w18b_verdict": "NOT ADOPTED (root rule: adopt only if pregion closes SS/FF in context). Balanced-clock CTS (macro clustering 1 + TritonCTS insertion balancing from the ETM max_clock_tree_path, 229 ps SS) produces a byte-identical routed odb to the default CTS run (pregionh_h160cq): with four macros 265 um apart the default clustering already gives each its own cluster, and TritonCTS already balances the ETM insertion. Measured (clock_balance.json): slices within +80 / -13 ps SS (+83 / -8 FF) of the parent register median, inside the 100 ps tolerance. SS r2r -224.4 ps is therefore NOT a clock-balance residual: perfect balance of slice 0 recovers at most 80 ps (-> about -144 ps). The residual is the slice's UNREGISTERED ks_* response output (ETM clock-to-ks_v 585 ps = 229 insertion + ~356 internal clk->q and output logic at the 338 ps clock slew; the standalone slice's output-port slack is -201 ps at its 20% I/O budget) followed by ~524 ps of region logic and wire. Closing it needs a design change (register ks_* at the slice boundary, +1 response cycle) -- reported to root, stopped as instructed."
+}
