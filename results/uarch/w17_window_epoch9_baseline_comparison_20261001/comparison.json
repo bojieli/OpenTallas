@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.window_epoch9.baseline_comparison.v1",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "baseline_record_sha256": "5026593874ddf2cc07537021d7f1e1e5b41d72b0ad1d574d07409d72bc1308cb",
+  "baseline_log_sha256": "786e20d16c93c2415c3b3217a58f0f0227f6b8b3ff58780cb65b725e2746dae5",
+  "candidate_record_sha256": "b7f77b87956feb86e69312dfd6946e8bec542d797f706d7ff44986e8c9fd676e",
+  "verdict": "MEASURED_CREDIT1_ANCHOR_CANDIDATE_CORRECTNESS_ONLY",
+  "baseline_metrics": {
+    "start": 12300,
+    "staged": 136669,
+    "done": 136800,
+    "refill": 124368,
+    "reads": 2176,
+    "replies": 2176,
+    "beats": 32,
+    "max_inflight": 1
+  },
+  "backend_drained_PCs": 32,
+  "backend_refreshes": 34929,
+  "backend_activations": 2171,
+  "source_edge_accounting": {
+    "prior_model_predicted_last_response_cycle": 136667,
+    "prior_model_predicted_staged_cycle": 136668,
+    "observed_minus_predicted_staged_cycles": 1,
+    "verdict": "ONE_CYCLE_EDGE_CONVENTION_MISMATCH_PRESERVED",
+    "stage_minus_start_cycles": 124369,
+    "done_minus_start_cycles": 124500,
+    "schedule_refill_cycles": 124368,
+    "sum_row_firstgrant_to_scale_reply_spans": 123984,
+    "sum_handshake_latencies_if_no_request_refusal": 121936,
+    "identity": "refill=sum(row_span)+384; credit1 row_span=sum(17 handshake latencies)+16 when requests are not refused",
+    "inference_limit": "Prior model edge identity differs by1 from fixture labels. Aggregate counter alone does not prove every request-ready edge. Inferred latency sum is conditional, not an event-by-event transcript; no edge alignment tuning applied."
+  },
+  "candidate_comparison": {
+    "credits": 8,
+    "epoch_bits": 9,
+    "correctness": "PASS through actual owner muxes and KARB with synthetic service",
+    "actual_backend_refill_cycles": null,
+    "gain": null,
+    "constant_service_model": "credit1=128*(17L+19); credit8=128*(3L+12) for constant handshake L>=7 and no refusal",
+    "model_limit": "Do not fit constant L to measured credit1 or divide baseline by8. Actual DRAM refresh, row state, PC queues and return arbitration depend on changed admission times."
+  },
+  "conditional_layer_cost": {
+    "one_identical_cold_refill_schedule_cycles": 124368,
+    "start_to_staged_cycles": 124369,
+    "scope": "One bounded cold WINDOW refill contribution only. Subsequent QK/PV, other layer work, retention and competitors need their own composed conditions; no whole40/warmtoken transfer."
+  },
+  "watchdog_observation": {
+    "threshold_cycles": 100000,
+    "refill_exceeds_threshold_by": 24368,
+    "scope": "Refill counter exceeds threshold; whether ANY-rank-PC watchdog actually fires depends on its own progress/reset contract. Parent owns that analysis. No live driver/watchdog edit."
+  },
+  "next_gate": "Model source-controlled eight-credit admission and actual backend/return timing event by event at the same start/reset origin. Preserve edge identities and predict before reusing parent connected fixture. Verify per-PC counts/drain and reject mismatches rather than fitting timings.",
+  "limits": [
+    "CLK_PS1000 internal behavioral timing; no physical clock qualification",
+    "No competitors; source API historical prime provenance, generated nonpoison data, no actual producer writes/checkpoint/fulltoken qualification",
+    "No builds, parent baseline reruns, live/main edits or watchdog changes in this intake",
+    "Healthy wrap conservation qualified; external fault recovery and512-epoch same-tag ghosts remain subject to explicit drain/nonreplay contract"
+  ]
+}
