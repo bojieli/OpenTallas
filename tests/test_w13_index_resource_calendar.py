@@ -1,7 +1,8 @@
 import sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
-from w13_index_resource_calendar import schedule,demand,build
+import w13_index_resource_calendar as R
+from w13_index_resource_calendar import schedule,demand,build,pinned_RF_contract
 
 
 def event(eid,op,dst=None,reads=(),lanes=(0,1),warp=0):
@@ -64,3 +65,32 @@ def test_pinned_finite_manifest_has_source_demands_but_no_invented_timing():
     assert d['demand']['executed_warp_issues_by_opcode']['STORE']==2
     assert d['demand']['active_RF_read_bits_by_opcode']['STORE']==64
     assert not d['hardware_launch'] and d['whole_token_cycles'] is None
+
+
+def test_calendar_entry_rejects_excess_ports_even_without_allocator_gate(monkeypatch):
+    monkeypatch.setattr(R,'color',lambda events:{'issues':[]})
+    events=[event('a','MOV','r'),event('b','CUSTOM','s',[('r','a')]*5)]
+    contracts={o:{'core_latency':1,'II':1} for o in ('MOV','CUSTOM')}
+    d=schedule(events,contracts,{})
+    assert d['calendar'] is None and 'calendar_lane_2R1W_aperture:b' in d['issues']
+    two=event('a','CUSTOM','r');two['result_register_bindings']+=event('a','CUSTOM','s')['result_register_bindings']
+    d=schedule([two],contracts,{})
+    assert d['calendar'] is None and 'calendar_lane_2R1W_aperture:a' in d['issues']
+
+
+def test_source_RF_contract_unknown_or_widened_cannot_return_cycles():
+    events=[event('a','MOV','r')];contracts={'MOV':{'core_latency':1,'II':1}}
+    assert schedule(events,contracts,{},rf_contract=None)['candidate_cycles'] is None
+    widened=dict(pinned_RF_contract(),read_ports_bank=5)
+    assert schedule(events,contracts,{},rf_contract=widened)['candidate_cycles'] is None
+
+
+def test_allocator_residency_controls_RF_and_issue_parallelism():
+    contracts={'MOV':{'core_latency':1,'II':1}}
+    contiguous=schedule([event('a','MOV','r',warp=0),event('b','MOV','r',warp=1)],contracts,{})
+    separate=schedule([event('a','MOV','r',warp=0),event('b','MOV','r',warp=8)],contracts,{})
+    assert [e['partition'] for e in contiguous['calendar']]==[0,0]
+    assert [e['issue_cycle'] for e in contiguous['calendar']]==[0,1]
+    assert [e['partition'] for e in separate['calendar']]==[0,1]
+    assert [e['issue_cycle'] for e in separate['calendar']]==[0,0]
+    assert schedule([event('a','MOV','r')],contracts,{},residency=None)['candidate_cycles'] is None

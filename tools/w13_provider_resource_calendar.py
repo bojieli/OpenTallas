@@ -25,7 +25,7 @@ def write_calendar(requests, depth, clock_ps, per_PC_interval_ps, visibility_ps,
         identities.add(q['id'])
         if q['byte_mask']!=(1<<32)-1:
             return {'issues':['partial_write_requires_locked_RMW_read_merge_fullwrite'],'calendar':None}
-        if not 0<=q['PC']<32 or not 0<=q['sector']<1<<34 or not 0<=q['tag']<1<<16 or q['epoch']<0:
+        if not 0<=q['PC']<32 or not 0<=q['sector']<1<<34 or not 0<=q['tag']<1<<16 or not 0<=q['epoch']<1<<32:
             raise ValueError('controller identity/address aperture')
         stack=q['stack'];pc=(stack,q['PC']);address=(stack,q['PC'],q['sector'])
         pending=held.setdefault(stack,[])

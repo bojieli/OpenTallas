@@ -1,4 +1,5 @@
 import sys
+import pytest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from w13_provider_resource_calendar import write_calendar
@@ -49,5 +50,10 @@ def test_capacity_stall_cannot_reuse_expired_DRAM_eligibility():
     d=run([request(0),q],1)
     assert d['calendar'] is None
     assert d['issues']==['capacity_stall_requires_fresh_row_bank_refresh_eligibility']
+
+
+def test_descriptor_epoch64_must_not_truncate_into_controller_epoch32():
+    q=request(0);q['epoch']=1<<32
+    with pytest.raises(ValueError,match='identity/address aperture'):run([q])
     q=request(0);q['DRAM_eligibility_source_event']=None
     assert run([q])['calendar'] is None
