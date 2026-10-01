@@ -104,7 +104,11 @@ def main():
         result=dict(schema='opentallas.w19.w17_companion_audit.v1',status=status,source_commit=source,
                     reviewed_main_commit=parent,w17_pin=pin,w17_base=base,private_tree=tree,patch_sha256=sha(patch),
                     exported_source_bytes=size,exported_source_files=len(selected),imports=imports,regressions=regressions,
-                    w19_helper_caveat='W17 branch snapshot predates W19 sim_runner injection. Composing only W17 diff preserves W19 helper; do not replace working sources with the W17 whole tree.',
+                    auditor_source_commit=git('rev-parse','HEAD').decode().strip(),
+                    auditor_sha256=sha(Path(__file__).read_bytes()),
+                    w19_helper_caveat=('W17 snapshot predates W19 sim_runner injection; compose only its diff, preserving the W19 helper.'
+                        if not imports['tools/w19_sm_real_ops.py']['w17_snapshot_identical']
+                        else 'This W17 snapshot already contains the identical W19 helper.'),
                     claim_boundary='Private-index W19 + recovered W17 companion source composition, importer AST comparison, W17 admission/source-list regressions only; no engine builds, 96-rank runtime or physical qualification.')
         a.record.write_text(json.dumps(result,indent=2)+'\n')
         print(status,tree,regressions,flush=True)
