@@ -23,6 +23,7 @@ RECIPES={
  'hc_mixes':['tools/w19_gpu_simd_contract.py','tools/w19_gpu_compare_lowering.py'],
  'hc_pre_norm':['tools/w19_gpu_norm_calendar.py'], 'hc_post':['tools/w19_gpu_norm_calendar.py'],
  'final_norm':['tools/w19_gpu_norm_calendar.py'],
+ 'swiglu':['tools/deepseek_hbm_complete_isa.py'],
  'attend':['tools/w19_attention_lowered_proof.py','tools/w19_gpu_compare_lowering.py','tools/w19_gpu_attention_dots.py'],
  'index_scores':['tools/w19_index32_integer_kernel.py'],
 }
@@ -70,10 +71,10 @@ def compile_program(graph=None):
         for o in l['ops']:
             fn=o.get('fn',o['kind']);counts[fn]+=1
             handler='f_'+fn if o['kind']=='local' else {'mv':'op_mv','all_gather':'op_gather','all_reduce':'op_reduce','topk_merge':'op_merge','kv_gather':'op_kv_gather','expert_fetch':'op_fetch'}[o['kind']]
-            typed=o['kind']=='local' and fn=='attend'
+            typed=o['kind']=='local' and fn in ['attend','hc_pre_norm','hc_post','final_norm','swiglu']
             lowered.append({'pc':len(lowered),'layer':l['layer'],'source_op_id':o['id'],'kind':o['kind'],'function':fn,
               'semantic_handler':handler,'software_executable':True,
-              'numerical_backend':'TYPED_GPU_RECIPE_CPU' if typed else 'REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED',
+              'numerical_backend':'TYPED_GPU_RECIPE_CPU' if typed else 'TYPED_SCALAR_RECIPES_WITH_REFERENCE_MACRO_GAPS_CPU',
               'lowering_steps':STEPS.get(fn,['EXACT_MATRIX_SOURCE_ORDER'] if o['kind']=='mv' else ['FINITE_SERVICE_CALLBACK']),
               'recipe_sources':RECIPES.get(fn,[]),
               'costs':{'issue_cycles':None,'RF_read_ports':2,'RF_write_ports':1,'registers_per_thread':None,
@@ -82,12 +83,12 @@ def compile_program(graph=None):
                        'ordinary_INT_SFU_area_mm2':None,'routes_fit':None},
               'cost_status':'REQUIRES_RAM_COMPOSITION_AND_FULL_KERNEL_LOWERING','op':o})
     pins=[SOURCE,RESIDENT,'tools/w19_hbm_tp96_isa.py','tools/hdc_golden_v41.py','tools/hdc_golden.py',
-          'tools/rtl_v41_fullshape_layer_campaign.py','tools/deepseek_hbm_complete_program.py','tools/deepseek_hbm_complete_executor.py','tools/deepseek_hbm_complete_memory.py','compiler/models/deepseek-v4.1-flash/inference_config.json','results/rtl/w17_v41_1m_reference_token.json']
+          'tools/rtl_v41_fullshape_layer_campaign.py','tools/deepseek_hbm_complete_program.py','tools/deepseek_hbm_complete_executor.py','tools/deepseek_hbm_complete_memory.py','tools/deepseek_hbm_complete_isa.py','compiler/models/deepseek-v4.1-flash/inference_config.json','results/rtl/w17_v41_1m_reference_token.json']
     pins+=sorted({p for v in RECIPES.values() for p in v})
     return {'schema':'opentallas.deepseek.hbm.complete-program.v1','tp':96,'SMs_per_rank':32,'F32_lanes_per_SM':128,
        'position':g['position'],'variant':g['variant'],'instructions':lowered,'source_pins':{p:digest(p) for p in pins},
        'coverage':{'layers':40,'head':True,'operations':len(lowered),'functions':dict(counts),
-                   'software_handlers_bound':len(lowered),'ordinary_GPU_numerical_operator_bindings':counts['attend'],
+                   'software_handlers_bound':len(lowered),'ordinary_GPU_numerical_operator_bindings':sum(counts[f] for f in ['attend','hc_pre_norm','hc_post','final_norm','swiglu']),
                    'full_GPU_instruction_lowering_complete':False},
        'entry':'checkpoint embedding current token + explicit initialKV only; never perlayer reference activation',
        'DUT_RTL_qualified':False,'full_token_software_executed':False,'full_token_physical_qualified':False,

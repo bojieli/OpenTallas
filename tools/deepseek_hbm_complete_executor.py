@@ -17,6 +17,7 @@ import numpy as np
 import w19_hbm_tp96_isa as H
 import w19_attention_lowered_proof as A
 import w19_rope_table_service as R
+from deepseek_hbm_complete_isa import WarpBackend,clone_numeric_modules
 from deepseek_hbm_complete_program import compile_program,ROOT
 from deepseek_hbm_complete_memory import PersistentMemory,FiniteCollective
 
@@ -84,21 +85,35 @@ class Executor(H.Executor):
             for source,base in list(arrays.items()):arrays[source]=StateArray(base,self.memory,family,source)
         # Original pinned functions/globals untouched. These two handlers load
         # explicit setup coefficient rows through the companion interface.
-        vp=SimpleNamespace(**vars(H.V));vp.rope_cs=self.coefficients.get
+        self.warp_backend=WarpBackend()
+        gp,vp,ve=clone_numeric_modules(self.warp_backend,self.coefficients.get)
         self.bound_handlers={}
-        for name in ['f_compressor','f_index_q']:
-            original=getattr(H.Executor,name)
-            self.bound_handlers[name]=FunctionType(original.__code__,{**original.__globals__,'V':vp},name,original.__defaults__)
+        for name,original in vars(H.Executor).items():
+            if not hasattr(original,'__code__'):continue
+            fn=FunctionType(original.__code__,{**original.__globals__,'G':gp,'V':vp},name,original.__defaults__)
+            self.bound_handlers[name]=fn
+            if name not in vars(Executor):setattr(self,name,fn.__get__(self,type(self)))
+        # HC methods execute the same source control/order with the typed
+        # primitive backend, preserving actual produced inputs and rounding.
+        for name in ['hc_mixes','hc_pre','hc_post']:
+            original=getattr(H.V.Model,name)
+            fn=FunctionType(original.__code__,ve,name,original.__defaults__)
+            setattr(m,name,fn.__get__(m,type(m)))
     def cs(self,L):return self.coefficients.get(self.m.freqs_yarn if self.m.ratio[L]>0 else self.m.freqs_plain,self.pos)
     def f_compressor(self,rk,op):
         self.bound_handlers['f_compressor'](self,rk,op);self.memory.fence()
     def f_index_q(self,rk,op):self.bound_handlers['f_index_q'](self,rk,op)
     def f_q_norm_kv_row(self,rk,op):
-        super().f_q_norm_kv_row(rk,op)
+        self.bound_handlers['f_q_norm_kv_row'](self,rk,op)
         key=('window',rk.r,op['layer'],self.pos)
         self.memory.write_object(key,rk.get('win_new').tobytes());self.memory.fence()
         row=np.frombuffer(self.memory.read_object(key),dtype=np.float32).copy()
         rk.put('win_new',row);rk.win[op['layer']][-1]=row
+    def f_swiglu(self,rk,op):
+        e=op['slot'];r0,r1=H.even(2304)[rk.r]
+        route=rk.get('route_w')[e] if e<self.m.k_exp else None
+        a=self.warp_backend.swiglu(rk.get(f'e{e}.g',r0,r1),rk.get(f'e{e}.u',r0,r1),self.m.limit,route)
+        rk.put('ea',a,lo=e*2304+r0,n=(self.m.k_exp+1)*2304)
     def f_attend(self,rk,op):
         L=op['layer'];rows=rk.win[L]
         if op['yarn']:rows=np.concatenate([rows,rk.sel_rows[self.m.kv_of[L]]])
@@ -119,10 +134,10 @@ class Executor(H.Executor):
         def consumer(returned):
             for j,data in returned:
                 rk,name,mask,dt=metadata[j];rk.mem[name][mask]=np.frombuffer(data,dtype=dt)
-            return getattr(H.Executor,method)(self,op)
+            return self.bound_handlers[method](self,op)
         return self.fabric.publish(op['kind'],segments,consumer)
     def execute_instruction(self,instruction):
-        o=instruction['op'];self.current=instruction;t=time.monotonic()
+        o=instruction['op'];self.current=instruction;t=time.monotonic();before=self.warp_backend.snapshot()
         if o['kind'] in ['all_gather','all_reduce','topk_merge','kv_gather']:self._collective(o)
         else:super().run([o])
         if o['kind']=='all_gather' and o['tag']=='expert_intermediate_gather':self.split_ea()
@@ -130,6 +145,7 @@ class Executor(H.Executor):
         receipt={'pc':instruction['pc'],'layer':instruction['layer'],'source_op_id':o['id'],
                  'function':instruction['function'],'numerical_backend':instruction['numerical_backend'],
                  'completed':True,'CPU_wall_s':round(time.monotonic()-t,6),'GPU_cycles':None,'DUT_executed':False}
+        receipt['scalar_GPU_recipe_costs']={k:v-before.get(k,0) for k,v in self.warp_backend.snapshot().items()}
         self.operator_receipts.append(receipt);return receipt
 
 
@@ -190,7 +206,7 @@ def execute(program,*,out,stop_after=None,compare_reference=False):
     result.update(verdict='FAIL' if failure else 'PASS',failure=failure,layers=records,CPU_wall_s=round(time.monotonic()-started,3),
                   full_token_software_executed=result.get('full_token_software_executed',False))
     if ex is not None:result.update(operator_receipts=ex.operator_receipts,primitive_counts=ex.primitive_counts,
-      memory=ex.memory.summary(),collective_events=ex.fabric.events,coefficient_initial_fixture_loads=ex.coefficients.requests)
+      memory=ex.memory.summary(),scalar_GPU_recipes=ex.warp_backend.summary(),collective_events=ex.fabric.events,coefficient_initial_fixture_loads=ex.coefficients.requests)
     (out/'execution.json').write_text(json.dumps(result,indent=2)+'\n');return result
 
 if __name__=='__main__':

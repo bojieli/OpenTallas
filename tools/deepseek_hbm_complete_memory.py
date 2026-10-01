@@ -46,7 +46,9 @@ class PersistentMemory:
     def consume(self,t):
         if self.pending.get(t.tag)!=t or (t.tag,t.epoch) not in self.completed:raise ValueError('completion not committed or wrong generation')
         r=self.completed.pop((t.tag,t.epoch));self.event('consumer_done',t)
-        if not t.write:self.readers[t.key]-=1
+        if not t.write:
+            self.readers[t.key]-=1
+            if not self.readers[t.key]:del self.readers[t.key]
         del self.pending[t.tag];return r
     def transact(self,key,*,write=False,payload=None):
         # Synchronous software provider; finite slots still held through consume.
@@ -75,6 +77,8 @@ class FiniteCollective:
         produced=[(rank,self.memory.read_object(('collective',seq,rank))) for rank,_ in segments]
         result=consumer(produced);self.memory.fence()
         for key in list(self.memory.values):
-            if key[:2]==('collective',seq):del self.memory.values[key]
+            if key[:2]==('collective',seq):
+                del self.memory.values[key]
+                self.memory.epochs.pop(key,None)
         self.events.append({'sequence':seq,'kind':kind,'bytes':sum(len(x) for _,x in produced),'consumer_done':True,'cycles':None})
         return result
