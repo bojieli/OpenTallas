@@ -23,7 +23,8 @@ PROGRAM_OPS = 103 + 1 + 7
 
 def test_layer0_collectives_encode_with_aligned_disjoint_regions():
     lay = replay.ShapeLayout(replay.SHIPPED, tp_exact=True)
-    assert lay.vm.map["CKV2"] == 448_736 < 1 << 19  # first HBM-only region
+    # first HBM-only region; the layer-20 scratch regions (CKAL, SV, SELG, BLK, CBSEL, CBSV, CAND) sit before it
+    assert lay.vm.map["CKV2"] == 488_896 < 1 << 19
     prog = replay.build_tp_layer0()
     assert len(prog) == PROGRAM_OPS
     # the two changes since the 103-op program, counted from the program itself
@@ -80,7 +81,7 @@ def test_w2_row_split_and_wo_b_rank_tree_match_golden(monkeypatch):
 
 def test_exact_tp_emitter_fails_closed_for_other_layers():
     lay = replay.ShapeLayout(replay.SHIPPED, tp_exact=True)
-    with pytest.raises(ValueError, match="only layer 0"):
+    with pytest.raises(ValueError, match="supports layers 0 and 20"):
         replay.ShapeBuilder(lay).build([1], embed=False, head=False)
 
 
@@ -161,10 +162,12 @@ def test_tp_layer0_constant_rom_bases_bind_and_fail_closed():
 
 
 def test_compressed_layer_attention_stages_selected_rows_after_window():
-    # The exact TP layer-2 program is not yet emitted, but its attention
-    # composite already gives the die prefetcher bounded local row addresses.
+    # The exact TP layer-20 attention stages the selected (global-id) rows after the window rows as bounded
+    # local row addresses; the ratio-2 layers (2, 8, 14) fail closed until their slot ring is emitted.
+    with pytest.raises(ValueError, match="ratio 1 only"):
+        replay.ShapeBuilder(replay.ShapeLayout(replay.SHIPPED, tp_exact=True)).attention(2)
     builder = replay.ShapeBuilder(replay.ShapeLayout(replay.SHIPPED, tp_exact=True))
-    builder.attention(2)
+    builder.attention(20)
     fields = [item[0] for item in builder.prog]
     assert any(f.get("dst") == isa.DST_KVT and f.get("o_d") == "WIN" for f in fields)
     assert any(f.get("dst") == isa.DST_KV and f.get("o_d") == "WIN_ROW" for f in fields)

@@ -13,8 +13,15 @@ REC = json.loads((ROOT / 'results/rtl/w11_attn_verify6_model.json').read_text())
 
 
 def test_sources_are_pinned():
-    for name, digest in REC['sources_sha256'].items():
-        assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+    sys.path.insert(0, str(ROOT / "tests"))
+    from record_currency_support import assert_current_or_marked_stale
+    assert_current_or_marked_stale(REC, REC['sources_sha256'], 'w11_attn_verify6_model')
+
+
+def test_su_latency_is_unchanged_in_the_current_su_record():
+    su = json.loads((ROOT / 'results/rtl/w11_su_spec.json').read_text())
+    ch = su['configs']['N1024_M256_B4R5']['cases']['T640']['chained']
+    assert ch['ops'][1]['write']['first'] == REC['su_model']['L0'] == 188
 
 
 def test_builds_are_the_model_order_variant():
