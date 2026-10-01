@@ -7,6 +7,7 @@ reports the RTL changes still needed before those words can execute.
 """
 import argparse
 import contextlib
+import os
 import hashlib
 import json
 from pathlib import Path
@@ -82,10 +83,17 @@ def program_geometry(vm):
         P.VM, P.GR, P.S_STRIDE = prior
 
 
-def split_collectives(program, max_words=256):
+# QWEN_O4_AR_WORDS=256 (opt-in, the 1.2 GHz product): a 4,096-element all-reduce is one 256-word descriptor
+# segment (the 8-bit count encodes 256 as 0; rtl/rom/ot_rom_tp_seq.sv decodes it).  Default 128: the legacy split,
+# so every pinned stage image and record keeps its program.
+AR_WORDS = int(os.environ.get('QWEN_O4_AR_WORDS', '128'))
+
+
+def split_collectives(program, max_words=None):
     """Fit all-reduces into the TP descriptor's count (256 words since the count encodes 256 as 0; a 4,096-element
     reduction was two serialized 128-word segments, each paying the link's round trip: 991 cycles an all-reduce
     at LAT 339 against ~620 as one segment).  max_words=128 restores the legacy split."""
+    max_words = AR_WORDS if max_words is None else max_words
     out = []
     for f in program:
         coll = f.get('_coll')

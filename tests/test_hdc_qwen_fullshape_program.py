@@ -17,12 +17,9 @@ def test_first_layer_program_round_trip_and_die_order():
     a, b = F.profile(0), F.profile(1)
     assert (P.VM, P.GR, P.S_STRIDE) == before
     assert a['program_hex'] == b['program_hex']
-    # each 4,096-element all-reduce is ONE 256-word segment (the descriptor count encodes 256 as 0; it was two
-    # serialized 128-word segments, 31 words / 5 segments / 4 all-reduce segments)
-    assert a['program_words'] == len(a['program_hex']) == 29
-    assert a['segment_count'] == 3
-    assert a['allreduce_segments'] == 2
-    assert [QI.decode_descriptor(int(w, 16))['words'] for w in a['descriptor_hex']][:2] == [256, 256]
+    assert a['program_words'] == len(a['program_hex']) == 31
+    assert a['segment_count'] == 5
+    assert a['allreduce_segments'] == 4
     assert a['descriptor_hex'] == b['descriptor_hex']
     assert all(len(word) == 16 for word in a['descriptor_hex'])
     assert a['vm_elems'] <= 1 << I.A
@@ -62,3 +59,12 @@ def test_lm_head_512_word_chunks_keep_independent_scale_stride():
     chunks = [f for f in decoded if f['unit'] == I.UNIT_ME]
     assert len(chunks) == 7 and chunks[-1]['me_row0'] == 73728
     assert [f['me_amc'] for f in chunks] == [0] + [1] * 6
+
+
+def test_one_segment_all_reduce_is_opt_in(monkeypatch):
+    """QWEN_O4_AR_WORDS=256: each 4,096-element all-reduce is ONE 256-word segment (count 0 encodes 256)."""
+    monkeypatch.setattr(F, 'AR_WORDS', 256)
+    a = F.profile(0)
+    assert a['program_words'] == len(a['program_hex']) == 29
+    assert a['segment_count'] == 3 and a['allreduce_segments'] == 2
+    assert [QI.decode_descriptor(int(w, 16))['words'] for w in a['descriptor_hex']][:2] == [256, 256]
