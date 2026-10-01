@@ -299,7 +299,8 @@ def test_w16b_pass2_steps():
     assert shr["ar_tokens_s_b1"] >= ser["ar_tokens_s_b1"] and stm["ar_tokens_s_b1"] <= shr["ar_tokens_s_b1"]
     assert shr["die"]["expert_wire"] == 63 and shr["die"]["coll_stages"] == 45
     t3 = [x for x in r["headline_table"]["v41"] if x["tier"] == "3"]
-    assert t3 and all(abs(x["per_user_ar"] - 1e6 / 431.55) < 0.1 for x in t3)
+    assert t3 and all(abs(x["per_user_ar"] - 1e6 / 465.17) < 0.1 for x in t3)          # W19 23648fc3, fused
+    assert all(abs(x["per_user_ar_unfused"] - 1e6 / 481.49) < 0.1 for x in t3)
     q = r["qwen_l0_rtl_vs_model"]
     assert q["rtl"]["cycles"] == 4669 and q["rtl"]["me_extra"] == U.QWEN_W12_TP4_ME_EXTRA_SS   # the RTL ran without +54
     assert abs(q["ratio"] - 4669 / q["model_layer_cycles"]) < 1e-3
@@ -332,19 +333,27 @@ def test_w16b_followup_steps():
     vmh = next(p for k, p in pts.items() if k.endswith(U.VMH_TAG))
     ref = next(p for k, p in pts.items() if k.endswith(U.VMH_REF_TAG))
     fin = next(p for k, p in pts.items() if k.endswith(U.PRODUCT_TAG))
-    assert vmh["vmh"] == U.VMH and stm.get("vmh") is None and ref["vmh"] == U.VMH and fin["vmh"] == U.VMC
+    sq = next(p for k, p in pts.items() if k.endswith(U.CROT_SQ_TAG))
+    cr = next(p for k, p in pts.items() if k.endswith(U.CROT_TAG))
+    bd = next(p for k, p in pts.items() if k.endswith(U.FUSED_OPT_TAG))
+    assert vmh["vmh"] == U.VMH and stm.get("vmh") is None and ref["vmh"] == U.VMH and fin["vmh"] == U.VMC_FUSED
+    assert sq["vmh"] == U.VMC and cr["vmh"] == U.VMC_COMPACT
+    # root 2026-10-01: compact C_rotate (42 / 32) edges VM-H; fusion is a named step, the optimistic mode its bound
+    assert ref["ar_tokens_s_b1"] < cr["ar_tokens_s_b1"] < fin["ar_tokens_s_b1"] < bd["ar_tokens_s_b1"]
+    assert cr["ar_tokens_s_b1"] < sq["ar_tokens_s_b1"]                         # the unplaced 37 / 29 was optimistic
+    assert fin["fusion"] == "conservative" and fin["fusion_label"] == "modelled; RTL pending" and bd["fusion"] == "optimistic"
     assert vmh["ar_tokens_s_b1"] < stm["ar_tokens_s_b1"] and vmh["stages"] == stm["stages"] == 37
     assert ref["stages"] == 41 and ref["hub_block"] == "H_rtl" and not ref["product_final"]
     assert fin["stages"] == U.cons_min_stages("analytical", 0.125, "ring", "w10_refit_crot", "w10b_q", "columns", "4096m8")
     assert fin["stages"] == 41 and fin["dies"] == 4 * 41 + fin["head_dies"] + 36 and fin["hub_block"] == "C_rotate"
-    assert vmh["hub_block"] is None and ref["ar_tokens_s_b1"] < fin["ar_tokens_s_b1"]       # C_rotate beats VM-H
+    assert vmh["hub_block"] is None
     hf = r["v41_rom"]["product"]["head_fit"]
     assert hf["stages_w10b_tiles_only"] == 39 < fin["stages"] and hf["stages_vmh_reference"] == ref["stages"]
     assert abs(U.VMC_BLOCK["field_loss_mm2"] - (38.601 - 14.249) * 1.05) < 1e-3
     assert hf["dies"] == fin["head_dies"] and hf["dies_at_w10_q"] == 4 and hf["margin_storage_only_w10_q"] > 0
     assert U.CONS_PITCH["w10b_q"]["q_um"] == (510.84, 126.9)
     assert U._cons_pair_mm2("w10b_q", True) == 1002.89 * 142.56 / 1e6
-    assert any(c["id"] == "vm_per_op_latency" for c in r["model_caveats"])
+    assert {"vm_per_op_latency", "rotate_span_is_the_hub_diameter"} <= {c["id"] for c in r["model_caveats"]}
     k = r["karb"]
     assert k["regions_w18b_merge2_headreg"] == [20, 16, 14, 10, 10, 14, 16, 20]
     assert k["rows"]["w18b_merge2_headreg_worst"]["tokens_s_delta_pct"] < k["rows"]["ss_0p75mm_worst"]["tokens_s_delta_pct"]
@@ -386,5 +395,5 @@ def test_vm_waterfall_record():
     big = min(wf[1:], key=lambda x: x["delta_ar"])
     assert "SU op network latency" in big["step"]                                  # the dominant term
     lv = {x["lever"]: x for x in w["levers"]}
-    ca = next(x for k, x in lv.items() if k.startswith("(a) C_rotate"))
+    ca = next(x for k, x in lv.items() if "PRODUCT (modelled" in k)
     assert abs(ca["ar_tokens_s_b1"] - fin["ar_tokens_s_b1"]) < 0.5 and ca["vs_vmh_reference_pct"] > 0

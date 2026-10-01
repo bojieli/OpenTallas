@@ -182,8 +182,126 @@
     "su_issue": 1.0,
     "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (C_rotate)"
    },
-   "lever": "(a) C_rotate instead of H (PRODUCT, root ruling)",
+   "lever": "(a) C_rotate, W11 square layout (37 / 29): SUPERSEDED, unplaced geometry",
    "vs_vmh_reference_pct": 2.1
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2690.4,
+   "mtp_tokens_s_b1": 4512.9,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 7,
+    "coll_write": 13,
+    "su_op_extra": 42,
+    "su_red_extra": 32,
+    "su_issue": 1.0,
+    "src": "claude/w11-crot results/floorplan/v41_vm_crot_stages.json (PROVISIONAL) on W18b 32155a8f"
+   },
+   "lever": "(a) C_rotate on W18b's compact hub (42 / 32), unfused: PRODUCT basis",
+   "vs_vmh_reference_pct": 0.4
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2837.8,
+   "mtp_tokens_s_b1": 4618.3,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 7,
+    "coll_write": 13,
+    "su_op_extra": 42,
+    "su_red_extra": 32,
+    "su_issue": 1.0,
+    "src": "claude/w11-crot results/floorplan/v41_vm_crot_stages.json (PROVISIONAL) on W18b 32155a8f",
+    "fusion": {
+     "bcast": 7,
+     "read": 18,
+     "read_red": 18,
+     "write": 17,
+     "result": 7,
+     "mode": "conservative"
+    }
+   },
+   "lever": "(a) C_rotate on W18b's compact hub, fused conservative: PRODUCT (modelled; RTL pending)",
+   "vs_vmh_reference_pct": 5.9
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2878.8,
+   "mtp_tokens_s_b1": 4646.3,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 8,
+    "ret_scatter": 7,
+    "coll_write": 13,
+    "su_op_extra": 42,
+    "su_red_extra": 32,
+    "su_issue": 1.0,
+    "src": "claude/w11-crot results/floorplan/v41_vm_crot_stages.json (PROVISIONAL) on W18b 32155a8f",
+    "fusion": {
+     "bcast": 7,
+     "read": 18,
+     "read_red": 18,
+     "write": 17,
+     "result": 7,
+     "mode": "optimistic"
+    }
+   },
+   "lever": "(a) C_rotate on W18b's compact hub, fused optimistic: BOUND",
+   "vs_vmh_reference_pct": 7.4
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.951,
+   "ar_tokens_s_b1": 2825.8,
+   "mtp_tokens_s_b1": 4575.5,
+   "ar_saturated_tokens_s": 89095.5,
+   "vm": {
+    "x_gather": 12,
+    "ret_scatter": 12,
+    "coll_write": 12,
+    "su_op_extra": 36.706,
+    "su_red_extra": 44.909,
+    "su_issue": 1.1687,
+    "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)",
+    "fusion": {
+     "bcast": 5,
+     "read": 15.853000000000002,
+     "read_red": 31.909,
+     "write": 15.853000000000002,
+     "result": 8,
+     "mode": "conservative"
+    }
+   },
+   "lever": "(a) VM-H, fused conservative (comparison)",
+   "vs_vmh_reference_pct": 5.4
+  },
+  {
+   "stages": 41,
+   "dies": 208,
+   "hub_block_mm2": 38.601,
+   "ar_tokens_s_b1": 2519.9,
+   "mtp_tokens_s_b1": 4374.4,
+   "ar_saturated_tokens_s": 89971.5,
+   "vm": {
+    "x_gather": 11,
+    "ret_scatter": 10,
+    "coll_write": 20,
+    "su_op_extra": 61,
+    "su_red_extra": 46,
+    "su_issue": 1.0
+   },
+   "lever": "(a) C_rotate on the compact hub at 481 um a stage (61 / 46; sensitivity: the 1.2 GHz reach)",
+   "vs_vmh_reference_pct": -6.0
   },
   {
    "stages": 44,
@@ -345,14 +463,14 @@
     "su_issue": 1.0,
     "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (C_rotate)"
    },
-   "lever": "(d) compact C_rotate, 3,850 um each way (W11 sensitivity: one-way 8, op/red +21): NEXT DESIGN STEP",
+   "lever": "(d) W11's 3,850 um sensitivity (one-way 8, op / red +21): SUPERSEDED -- the rotate pays the hub diameter",
    "vs_vmh_reference_pct": 7.3
   }
  ],
  "total_drop_ar": -472.8,
- "ruling": "ROOT 2026-10-01: (a) C_rotate is the product basis; the compact C_rotate placement (3,850 um each way) is the next design step with W11 and W18b; measured VM-H stays a reference row",
+ "ruling": "ROOT 2026-10-01: C_rotate stays (no issue penalty; it wins the saturated rate), priced on W18b's placed compact hub at 748 um a stage (+42 / +32) with lane-local fusion as a named step (modelled; RTL pending); the square layout's 37 / 29 is superseded; VM-H is the comparison row; W11's aligned-base near / far allocator becomes an upside row when it lands",
  "caveat": "Per-op network latency on the latency-bound SU chain was invisible in the throughput-style VM pricing. The VM was priced by port widths (vm_read_elems / vm_write_elems) and a few client wire stages, i.e. as bandwidth; the SU softmax / norm / Sinkhorn chains are dependent ops, so each op pays the VM network's full latency (control broadcast, operand read, element write or result tree).  W11's VM-H measured that at +36.7 slow cycles a vector op and +44.9 a reduction: -14.5% AR on the full-shape token, 82% of the 3,153 -> 2,680 drop (results/uarch/v41_vm_waterfall.json); more lanes or ports buy nothing (issue is not the bind).  Rule: any shared network on a dependent chain is priced as per-op latency on the chain, not as bandwidth.",
  "source_sha256": {
-  "tools/uarch_model.py": "0116a42e7b6cd57eff53755f9e671478819f9a7c7f5eb29fc84f5236e8e9ecea"
+  "tools/uarch_model.py": "341167cfecf1ae814115978eb36c8c5b41c9761760c0eebfc82c66dde4971232"
  }
 }
