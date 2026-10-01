@@ -1,0 +1,106 @@
+{
+  "utc": "2026-10-01T12:23:55.823381+00:00",
+  "source_git": "14c57fd85dd6290ed223e4504570531da62ba928",
+  "contract_path": "results/rtl/w19_checkpoint_production_20261001/gpu-simd-lowering-candidate-r3.json",
+  "contract_sha256": "c4aad8b9c059536e5f7e5ce9a94619341cb2895c53af0f7b6bba6805bc8d2436",
+  "organisation": {
+    "sm_count": 32,
+    "simt_lanes_sm": 128,
+    "partitions_sm": 4,
+    "warp_threads": 32,
+    "resident_warps_sm": 32,
+    "modeled_fp32_lanes_die": 4096,
+    "implemented_general_simd_lanes": 0,
+    "statement": "Current ot_gpu_sm_v is matrix-only. SIMD/RF/standard divider/INT/shuffle path is proposed additional implementation of model-budgeted GPU organisation, not existing RTL or dedicated HCP/SU adoption."
+  },
+  "rf_candidate": {
+    "registers_thread": 32,
+    "capacity_bytes_sm": 131072,
+    "banks": 128,
+    "word_bits": 32,
+    "read_ports_bank": 2,
+    "write_ports_bank": 1,
+    "read_bits_cycle_sm": 8192,
+    "write_bits_cycle_sm": 4096,
+    "read_latency_candidate": 2,
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macro_count_sm": 64,
+    "macro_count_die": 2048,
+    "layout": "16 groups of8lanes; each word256b,depth256=8warps*32regs;two128row depthbanks;two readcopies; all writes broadcast to bothcopies",
+    "physical_capacity_bytes_sm": 262144,
+    "physical_capacity_bytes_die": 8388608,
+    "depth_select_mux_bits_sm": 8192,
+    "qualified_ported_area": false,
+    "arbitration": "one warp32 per partition; scoreboard; shared/SFU results reserve RF write slots, queue instead of unpriced multiwrite",
+    "macros_and_area": null
+  },
+  "shared_candidate": {
+    "capacity_bytes_sm": 65536,
+    "banks": 32,
+    "bank_word_bits": 32,
+    "read_ports_bank": 1,
+    "write_ports_bank": 1,
+    "warp_port_bytes_cycle": 128,
+    "read_latency_candidate": 1,
+    "write_latency_candidate": 1,
+    "hc_tile_coefficient_bytes": 32768,
+    "hc_tile_activation_bytes": 16384,
+    "hc_partial_control_bytes": 4096,
+    "hc_live_bytes": 53248,
+    "refill": "singlebuffer no overlap; row/chunk loop tiles1024+1024+512; scratch eviction never changes resident HBM bases",
+    "layout": "row-major consecutive chunks;coefficient k warp load word8*chunk+k has8-way bank conflict in naive layout: DMA/transposed32x8 shared tile required",
+    "scatter": "stage tile term-major shared words k*1024+chunk; adjacent warp lanes address adjacent banks; BF16 packed pairs similarly term-pair-major",
+    "transpose_buffer_bytes_coefficient": 2048,
+    "transpose_buffer_bytes_activation": 1024,
+    "transpose_service": "proposed normal DMA/swizzle32chunk x8term tile, double1KB coefficient/512B activation buffers outside64KBshmem; term-major128B writes; initial fill/drain cycles not free",
+    "dma_scatter_and_port_model_pending": true,
+    "macros_and_area": null
+  },
+  "alu_candidate": {
+    "fp32_mul_lanes_sm": 128,
+    "fp32_add_lanes_sm": 128,
+    "mul_latency": 7,
+    "add_latency": 7,
+    "FMA": false,
+    "rf_to_result_scoreboard_cycles": 9,
+    "issue": "one warp opcode/partition/cycle; ADD/MUL share scheduler; RF2cycles+coreLAT7; separate primitives area charged, not128 fusedMAC estimate assumed equivalent",
+    "integer_shift_compare_shuffle": "standard GPU paths proposed; area/routes/opcode/exactness pending",
+    "divider": "one standard IEEE F32 divider/SM,II1 LAT19 candidate; actual wrapper/SSFF not qualified"
+  },
+  "clock_candidates": {
+    "simd_hz": 900000000,
+    "fabric_hz": 1200000000,
+    "cdc": "proposed16x128B async credit FIFO/SM for DMA to .9GHz shmem; release/acquire epoch barrier; clock-crossing latency/area/SSFF pending"
+  },
+  "macro_lef": {
+    "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+    "sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "size_um": [
+      94.824,
+      41.04
+    ]
+  },
+  "rf_cost_screen": {
+    "raw_mm2_die": 7.96994961408,
+    "packed_mm2_die": 10.4406339944448,
+    "packed_mm2_sm": 0.3262698123264,
+    "packing_factor": 1.31,
+    "excludes": [
+      "depth/read muxes",
+      "write fanout",
+      "scoreboard/control",
+      "routes",
+      "CDC"
+    ],
+    "composed_total_mm2": null,
+    "allocation": "Authoritative RF candidate cost must be assigned once by Halley/Ram; previous sm_area simt aggregate inclusion unresolved, no blind additive sum"
+  },
+  "service_cost_owner": "Einstein common400macro allocation; Halley consumer RF/staging; Ram wholegraph pricing",
+  "service_cost_mm2": 162.284,
+  "service_client_corridor_assignment": "36client actual map unresolved",
+  "physical_admission": "FAIL_CLOSED",
+  "adopt": false,
+  "no_auto_clock_or_parameter_change": true,
+  "w11_ids_mismatch": "OWN1RDREG1 physical vs OWN1RDREG0 async; no transfer/autotoggle",
+  "live_tc_col_untouched": true
+}
