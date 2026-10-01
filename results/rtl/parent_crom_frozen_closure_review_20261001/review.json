@@ -1,0 +1,33 @@
+{
+  "L14_valid_span": [
+    529280,
+    549760
+  ],
+  "L1_invalid_hole": [
+    508800,
+    529280
+  ],
+  "actual_L1_L14_bases_unencoded": true,
+  "all_four_complete_images_absent": true,
+  "focused_tests_passed": 2,
+  "fresh_record_byte_equal": true,
+  "full_token_admission": false,
+  "independent_all_address_bijection": {
+    "banks": 45,
+    "collision_count": 0,
+    "logical_slots_per_row": 3,
+    "rows_per_bank": 4096,
+    "words": 552960
+  },
+  "record_sha256": "22e676348224ee74bed4a84f9f096ae3d677e412abef53b47746da74e891cddc",
+  "required_closures": [
+    "actual retained L1 coefficient source",
+    "complete immutable payload and encoded consumer bases",
+    "local home slots and routes",
+    "finite service deadline, visibility, clocks, consumer credit and power",
+    "connected full token execution"
+  ],
+  "schema": "parent_crom_frozen_closure_review",
+  "selected_16_output_service_floors_verified": true,
+  "source_commit": "64a04715c"
+}
