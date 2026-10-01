@@ -22,7 +22,7 @@ module ot_gpu_qwen_row_tiles #(
     input wire [15:0] commit_epoch,
     input wire [ROWW-1:0] commit_base,
     input wire [8:0] commit_rows,
-    output wire arrive,input wire release_in,
+    output wire arrive,output wire barrier_pending,input wire release_in,
     output reg done,output wire busy,output reg fault
 );
     localparam IDLE=0,BULK=1,ISSUE=2,COMMIT=3,ADVANCE=4,BARRIER=5;
@@ -31,7 +31,7 @@ module ot_gpu_qwen_row_tiles #(
     reg [31:0] wb;
     reg [23:0] wl;
     reg [15:0] ep;
-    reg release_q;
+    reg arrive_sense;
     wire [ROWW:0] end_row={1'b0,global_base}+{1'b0,rows_total};
     wire [ROWW-1:0] remain=total_q-offset;
     assign tile_rows=(remain>256) ? 9'd256 : remain[8:0];
@@ -42,12 +42,15 @@ module ot_gpu_qwen_row_tiles #(
     assign bulk_base=wb; assign bulk_lines=wl;
     assign bulk_valid=ENABLE_ROW_TILES && state==BULK;
     assign tile_valid=ENABLE_ROW_TILES && state==ISSUE;
-    assign arrive=ENABLE_ROW_TILES && state==BARRIER;
+    // Existing GPU tree is a sense-reversing barrier. Hold the new sense
+    // through release and idle; do not emit an unqualified level pulse.
+    assign arrive=arrive_sense;
+    assign barrier_pending=ENABLE_ROW_TILES && state==BARRIER;
     assign busy=state!=IDLE;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             state<=IDLE;done<=0;fault<=0;offset<=0;total_q<=0;
-            base_q<=0;ep<=0;wb<=0;wl<=0;release_q<=0;
+            base_q<=0;ep<=0;wb<=0;wl<=0;arrive_sense<=0;
         end else begin
             done<=0;
             if(start && busy) fault<=1;
@@ -59,7 +62,7 @@ module ot_gpu_qwen_row_tiles #(
                     else begin
                         total_q<=rows_total;base_q<=global_base;offset<=0;
                         ep<=epoch;wb<=weight_base;wl<=weight_lines;
-                        release_q<=release_in;state<=BULK;
+                        state<=BULK;
                     end
                 end
                 BULK: if(bulk_ready) state<=ISSUE;
@@ -67,11 +70,13 @@ module ot_gpu_qwen_row_tiles #(
                 COMMIT: if(l2_commit) begin
                     if(commit_epoch!=ep || commit_base!=tile_global_base ||
                        commit_rows!=tile_rows) fault<=1;
-                    else if(remain<=256) state<=BARRIER;
+                    else if(remain<=256) begin
+                        arrive_sense<=~arrive_sense;state<=BARRIER;
+                    end
                     else begin offset<=offset+256;state<=ADVANCE;end
                 end
                 ADVANCE: state<=ISSUE;
-                BARRIER: if(release_in!=release_q) begin state<=IDLE;done<=1;end
+                BARRIER: if(release_in==arrive_sense) begin state<=IDLE;done<=1;end
                 default: begin state<=IDLE;fault<=1;end
             endcase
         end
