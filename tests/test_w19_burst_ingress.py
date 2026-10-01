@@ -136,3 +136,12 @@ def test_rank_authoritative_credit_ledger_shared_between_controllers():
     assert a.prepare(0,[0]*3,16) is not None
     assert b.prepare(0,[0]*2,16) is None
     assert credits[0]==1
+
+
+def test_32PC_bursts_expose_synchronized_landing_collision():
+    r=M.trace32PC()
+    assert r['accepted_sectors']==r['written_sectors']==128
+    assert r['delivered_lines']==32
+    assert r['sector_bank_collision_cycles']>0
+    assert r['last_delivery_cycle']>7
+    assert r['serial_request_grant_cycles']==8

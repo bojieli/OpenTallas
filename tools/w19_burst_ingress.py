@@ -136,6 +136,33 @@ def trace():
         scope='Finite cycle oracle only; source wait/preparation/CDC/physical clocks excluded')
 
 
+def trace32PC():
+    m=Burst(groups=8,credits=Counter({sm:1 for sm in range(32)}))
+    tags=[]
+    for g in range(8):
+        tag=m.prepare(16*g,list(range(4*g,4*g+4)),128)
+        assert m.grant(tag,[64]*32);tags.append(tag)
+    for beat_in_line in (3,1,2,0):
+        responses={}
+        for g,tag in enumerate(tags):
+            for line in range(4):
+                beat=4*line+beat_in_line;pc=pc_of(16*g+beat)
+                assert pc not in responses
+                responses[pc]=(tag,beat,bytes([g*16+beat])*32,0)
+        accepted,_=m.step(responses);assert len(accepted)==32
+    for _ in range(100):m.step()
+    assert not m.pending and len(m.ring_lines)==32
+    events=sorted(m.landing.delivered,key=lambda e:e['tag'])
+    actual=b''.join(e['data'] for e in events)
+    assert actual==b''.join(bytes([i])*32 for i in range(128))
+    return dict(preissued_bursts=8,serial_prepare_cycles=8,serial_request_grant_cycles=8,
+        accepted_sectors=m.landing.accepted,written_sectors=m.landing.writes,
+        delivered_lines=len(events),sector_bank_collision_cycles=m.landing.arb_collision_cycles,
+        first_delivery_cycle=min(e['cycle'] for e in events),last_delivery_cycle=max(e['cycle'] for e in events),
+        exact_bytes_sha256=hashlib.sha256(actual).hexdigest(),
+        scope='Response-only trace with actual32PC map; preissued bursts and required setup/grant cycles explicit, HBM timing/CDC waits unpriced. Synchronized beat phases expose landing collisions; not a sustained service rate.')
+
+
 def build():
     wire=source_contract();old=B.layout();clock=1200000000;burst_bytes=wire['safe_max_read_sectors']*32
     one=burst_bytes*clock;minimum=math.ceil(1e12/one)
@@ -199,7 +226,7 @@ def build():
             two_port_allocation='Two group context banks by group parity; choose one even and one odd to write8 distinct line banks in one cycle. Stalls if complementary free groups/credits unavailable; no peak-rate guarantee.',
             two_port_request_enqueue='Up to32 sectors accepted/controller/cycle; multiple writes to each64-entry PC queue need explicitly coalesced enqueue indices. Current one-port behavioral loop is not a priced dual-port hardware implementation.',
             arbitration_pipeline_cycles=None,actual_grant_latency_cycles=None),
-        cycle_oracle=trace(),area_mm2=None,route_tracks=None,slot_fit=None,
+        cycle_oracle=trace(),cycle_oracle_actual32PC=trace32PC(),area_mm2=None,route_tracks=None,slot_fit=None,
         clock_closure=False,HC_CDC_and_fence_cycles=None,full_token_cycles=None,
         enabled_default=False,ready_to_build=False,new_RTL=False,new_PnR=False,
         unified_generator_modified=False,accepted256_baseline_modified=False,hardware_adopted=False,
