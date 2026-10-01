@@ -1,0 +1,133 @@
+{
+  "schema": "opentallas.parent-wrack-event-review.v1",
+  "source_commit": "83d0fc5831900767d54bce9a9d8339b494ec9085",
+  "focused_tests": 10,
+  "source_pins_verified": {
+    "tools/common_wrack_completion_calendar.py": "2d85173fb5361e9eafb27541f4417721fb2fb7ac8daef653b0cf2c77c20f7c9e",
+    "tests/test_common_wrack_completion_calendar.py": "32c2d339a3979fe837c506923e55e0c3cc5b6d241289b550849fe62f17183991",
+    "results/uarch/qwen_hbm_connected_20261001/common_GPU_WRACK_port_contract_r2.json": "88658188ff337d72552796eb6f74efba428e2b9f39d375c2df502496471e3979"
+  },
+  "stored_calendar_identical": true,
+  "four_credits_held_to_final_reverse_CDC": {
+    "status": "EVENT_BOUND_MODEL_CALENDAR_PROVIDER_UNQUALIFIED",
+    "timeline": [
+      {
+        "stack": 0,
+        "tag": 0,
+        "epoch": 42,
+        "ACK_delivery_ps": "190000/9",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      },
+      {
+        "stack": 0,
+        "tag": 1,
+        "epoch": 42,
+        "ACK_delivery_ps": "190000/9",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      },
+      {
+        "stack": 0,
+        "tag": 2,
+        "epoch": 42,
+        "ACK_delivery_ps": "190000/9",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      },
+      {
+        "stack": 0,
+        "tag": 3,
+        "epoch": 42,
+        "ACK_delivery_ps": "190000/9",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      }
+    ],
+    "done_ps": "122500",
+    "full_token_cycles": null,
+    "engine_RTL_build_ready": false,
+    "physical_admission": false
+  },
+  "credit_reuse_only_after_final_release": {
+    "status": "EVENT_BOUND_MODEL_CALENDAR_PROVIDER_UNQUALIFIED",
+    "timeline": [
+      {
+        "stack": 0,
+        "tag": 0,
+        "epoch": 42,
+        "ACK_delivery_ps": "190000/9",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      },
+      {
+        "stack": 0,
+        "tag": 1,
+        "epoch": 42,
+        "ACK_delivery_ps": "190000/9",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      },
+      {
+        "stack": 0,
+        "tag": 2,
+        "epoch": 42,
+        "ACK_delivery_ps": "190000/9",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      },
+      {
+        "stack": 0,
+        "tag": 3,
+        "epoch": 42,
+        "ACK_delivery_ps": "190000/9",
+        "landing_accept_ps": "25000",
+        "opcode_finish_ps": "100000",
+        "result_visible_ps": "110000",
+        "consumer_done_ps": "120000",
+        "credit_release_ps": "122500"
+      },
+      {
+        "stack": 0,
+        "tag": 4,
+        "epoch": 42,
+        "ACK_delivery_ps": "430000/3",
+        "landing_accept_ps": "150000",
+        "opcode_finish_ps": "200000",
+        "result_visible_ps": "210000",
+        "consumer_done_ps": "220000",
+        "credit_release_ps": "222500"
+      }
+    ],
+    "done_ps": "222500",
+    "full_token_cycles": null,
+    "engine_RTL_build_ready": false,
+    "physical_admission": false
+  },
+  "source_dependency_required_in_main": "07a07ec5d5c48a6498ac8bed6f6b6abc30937858",
+  "scope": "Synthetic supplied command/visibility/consumer events; no actual DRAM, consumer or physical qualification. No eight-cycle timer substitutes for final opcode/result visibility.",
+  "verdict": "PASS_AT_SYNTHETIC_EVENT_MODEL_SCOPE",
+  "full_token_qualified": false,
+  "adopted": false
+}
