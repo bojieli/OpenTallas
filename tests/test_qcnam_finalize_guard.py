@@ -163,3 +163,29 @@ def test_existing_verdict_cannot_be_overwritten(monkeypatch, tmp_path):
     with pytest.raises(ValueError, match="immutable"):
         G.main()
     assert out.read_text() == 'immutable FAIL\n'
+
+
+def pooled_records(core_indices, full_indices):
+    return {name: {"a": [dict(kind="mmlu", mmlu_index=i, answer=i % 4) for i in indices]}
+            for name, indices in (("core", core_indices), ("mmlu1000", full_indices))}
+
+
+@pytest.mark.parametrize("start,overlap,total", [(0, 200, 1000), (150, 50, 1150), (200, 0, 1200)])
+def test_pool_accepts_nested_overlapping_and_disjoint_draws(start, overlap, total):
+    result = G.validate_mmlu_pool(pooled_records(range(200), range(start, start + 1000)))
+    assert result["overlap_questions"] == overlap
+    assert result["pooled_questions"] == total
+    assert result["replacement_order"] == ["core", "mmlu1000"]
+
+
+def test_pool_rejects_conflicting_overlap_answers():
+    records = pooled_records(range(200), range(150, 1150))
+    records["mmlu1000"]["a"][0]["answer"] = 0
+    with pytest.raises(ValueError, match="answer provenance"):
+        G.validate_mmlu_pool(records)
+
+
+def test_pool_rejects_duplicate_questions():
+    records = pooled_records([0] * 200, range(1000))
+    with pytest.raises(ValueError, match="sample count"):
+        G.validate_mmlu_pool(records)

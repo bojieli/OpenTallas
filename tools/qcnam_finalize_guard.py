@@ -184,6 +184,28 @@ def validate_run(name, rec, raw, gen):
             require(all(r["prompt_len"] == 128 and r["ids_next"] == g["ids"][128:] for r, g in zip(gs, gen)), "greedy scoring tokens")
 
 
+def validate_mmlu_pool(records):
+    """Match the registered finalizer's union, not an assumed nested sample.
+
+    Q.mmlu_items draws size=200 and size=1000 separately with seed 0. Those
+    draws need not nest. The original _mmlu_pooled replaces only overlaps,
+    with the later mmlu1000 run, and retains other core questions.
+    """
+    pools = {}
+    for name, count in (("core", 200), ("mmlu1000", 1000)):
+        rows = [r for r in records[name]["a"] if r["kind"] == "mmlu"]
+        pool = {r["mmlu_index"]: r for r in rows}
+        require(len(rows) == len(pool) == count, f"{name}: pooled sample count")
+        pools[name] = pool
+    overlap = set(pools["core"]) & set(pools["mmlu1000"])
+    for index in overlap:
+        require(pools["core"][index]["answer"] == pools["mmlu1000"][index]["answer"],
+                "MMLU overlap answer provenance")
+    return dict(core_questions=200, mmlu1000_questions=1000, overlap_questions=len(overlap),
+                pooled_questions=len(set(pools["core"]) | set(pools["mmlu1000"])),
+                replacement_order=["core", "mmlu1000"])
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--observation", type=Path, required=True, help="committed live-job/source observation")
@@ -223,15 +245,13 @@ def main():
             raw = json.loads((evidence / name / "raw.json").read_text())
             validate_run(name, rec, raw, gen)
             records[name] = raw
-        core_mm = {r["mmlu_index"] for r in records["core"]["a"] if r["kind"] == "mmlu"}
-        full_mm = {r["mmlu_index"] for r in records["mmlu1000"]["a"]}
-        require(core_mm <= full_mm and len(full_mm) == 1000, "MMLU pooled sample provenance")
+        pool = validate_mmlu_pool(records)
         require(not active_jobs(), "lane became active during validation")
         if not args.finalize:
-            print(json.dumps(dict(ready=True, source_commit=PIN, evidence_sha256=hashes), indent=2))
+            print(json.dumps(dict(ready=True, source_commit=PIN, evidence_sha256=hashes, mmlu_pool=pool), indent=2))
             return 0
         meta = evidence / "meta.json"
-        meta.write_text(json.dumps(dict(source_commit=PIN, observation=observation, evidence_sha256=hashes,
+        meta.write_text(json.dumps(dict(source_commit=PIN, observation=observation, evidence_sha256=hashes, mmlu_pool=pool,
                                        driver_sha256=digest(__file__))))
         result = evidence / "verdict.json"
         subprocess.run(["python3", str(WT / "tools/deepseek_v41_nam_quality.py"), "--finalize",
