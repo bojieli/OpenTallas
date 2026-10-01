@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/home/ubuntu/w18work/karb17/proot/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_chip_v41x_karb_proot\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -528.35,
+  "tns_ps": -214936.1,
+  "worst_register_d_slack_ps": -142.265091,
+  "worst_reg_to_reg_slack_ps": -142.27,
+  "worst_input_to_reg_slack_ps": 325.77,
+  "worst_output_port_slack_ps": -528.347839,
+  "violating_d_pins": 1020,
+  "errors": [],
+  "odb_sha256": "e505b9ea8051b252e21fbffff27850558e18ee6720ce00c080d2a459a7d3dcfa",
+  "spef_sha256": "5b5082926a6216e070cc4da606c7a797d31328ad0f514a478f9ca022df250c2b",
+  "sdc_sha256": "431f573c18c79f8217dd355fd74237505b8867967ad9a2394d1c8aff2a80e18c"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 9.52,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 9.524714,
+  "worst_reg_to_reg_slack_ps": 15.3,
+  "worst_input_to_reg_slack_ps": 27.18,
+  "worst_output_port_slack_ps": 490.169403,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "e505b9ea8051b252e21fbffff27850558e18ee6720ce00c080d2a459a7d3dcfa",
+  "spef_sha256": "5b5082926a6216e070cc4da606c7a797d31328ad0f514a478f9ca022df250c2b",
+  "sdc_sha256": "431f573c18c79f8217dd355fd74237505b8867967ad9a2394d1c8aff2a80e18c"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": false,
+ "w18b_verdict": "NOT CLOSED at SS: r2r -142.3 ps (HEADREG -198.9); FF hold +15.3. The replicated ingress pointers removed the dispatch fanout; the worst path is now the 32-bit statistics counter k_grants (ripple carry chain). Next: 16+16 split counters with a registered carry (ot_chip_v41x_stat_ctr32, exact, one cycle late)."
+}

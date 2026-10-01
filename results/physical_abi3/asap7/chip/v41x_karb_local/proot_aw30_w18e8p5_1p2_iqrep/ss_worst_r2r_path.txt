@@ -1,0 +1,39 @@
+Startpoint: k_grants[0]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: k_grants[30]$_DFFE_PN0P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                            0.000    0.000   clock core_clk (rise edge)
+                          530.743  530.743   clock network delay (propagated)
+                  27.483    0.000  530.743 ^ k_grants[0]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     2    1.280   42.128   95.699  626.442 v k_grants[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     1    2.079   33.505   58.565  685.007 v _206899_/Y (OR3x1_ASAP7_75t_R)
+     1    1.471   17.282   43.165  728.172 v _206900_/Y (AO211x2_ASAP7_75t_R)
+     2    2.319   19.599   34.977  763.149 v hold53074/Y (BUFx2_ASAP7_75t_R)
+     2    1.372   31.443   88.724  851.873 v _206901_/Y (OR5x2_ASAP7_75t_R)
+     2    1.699   33.647   80.922  932.794 v _206902_/Y (OR5x2_ASAP7_75t_R)
+     2    1.097   29.903   78.085 1010.880 v _206903_/Y (OR5x2_ASAP7_75t_R)
+     2    1.509   28.014   74.539 1085.419 v _206904_/Y (OR4x2_ASAP7_75t_R)
+     2    1.636   28.765   72.794 1158.213 v _206905_/Y (OR4x2_ASAP7_75t_R)
+     2    1.329   26.972   73.536 1231.748 v _206906_/Y (OR4x2_ASAP7_75t_R)
+     2    1.374   26.291   50.308 1282.056 v _206907_/Y (OR3x1_ASAP7_75t_R)
+     3    2.279   35.728   55.817 1337.873 v _206908_/Y (OR3x1_ASAP7_75t_R)
+     1    0.816   11.027   34.277 1372.151 v place21467/Y (BUFx3_ASAP7_75t_R)
+     1    0.567   14.215   41.007 1413.157 ^ _206909_/Y (XNOR2x2_ASAP7_75t_R)
+                  14.215    0.024 1413.181 ^ k_grants[30]$_DFFE_PN0P_/D (DFFASRHQNx1_ASAP7_75t_R)
+                                  1413.181   data arrival time
+                          833.000  833.000   clock core_clk (rise edge)
+                          509.301 1342.301   clock network delay (propagated)
+                          -60.000 1282.301   clock uncertainty
+                           14.027 1296.328   clock reconvergence pessimism
+                                  1296.328 ^ k_grants[30]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                          -25.412 1270.916   library setup time
+                                  1270.916   data required time
+---------------------------------------------------------------------------------
+                                  1270.916   data required time
+                                  -1413.181   data arrival time
+---------------------------------------------------------------------------------
+                                  -142.265   slack (VIOLATED)

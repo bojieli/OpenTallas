@@ -77,9 +77,9 @@ module ot_chip_v41x_karb_proot #(
     input  wire [NREG-1:0]       r_kwd,
     input  wire [NREG*3-1:0]     r_bg,
     input  wire [NREG*3-1:0]     r_ct,
-    output reg  [31:0]           k_grants,
-    output reg  [31:0]           b_grants,
-    output reg  [31:0]           contended
+    output wire [31:0]           k_grants,
+    output wire [31:0]           b_grants,
+    output wire [31:0]           contended
 );
     localparam integer LPC  = $clog2(NPC);
     localparam integer LREG = (NREG > 1) ? $clog2(NREG) : 1;
@@ -188,12 +188,14 @@ module ot_chip_v41x_karb_proot #(
     end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            s_cr <= '0; k_wr_done <= 1'b0; k_grants <= 0; b_grants <= 0; contended <= 0;
+            s_cr <= '0; k_wr_done <= 1'b0;
         end else begin
             s_cr <= r_v & r_rdy;
             k_wr_done <= |r_kwd;
-            if (k_v && k_rdy) k_grants <= k_grants + 1;
-            b_grants  <= b_grants + 32'(bsum);
-            contended <= contended + 32'(csum);
+
         end
+    // statistics counters: split 16+16 with a registered carry (one cycle late, exact)
+    ot_chip_v41x_stat_ctr32 #(.IW(1))       u_kg (.clk(clk), .rst_n(rst_n), .inc(k_v && k_rdy), .q(k_grants));
+    ot_chip_v41x_stat_ctr32 #(.IW(LPC + 3)) u_bg (.clk(clk), .rst_n(rst_n), .inc(bsum), .q(b_grants));
+    ot_chip_v41x_stat_ctr32 #(.IW(LPC + 3)) u_ct (.clk(clk), .rst_n(rst_n), .inc(csum), .q(contended));
 endmodule

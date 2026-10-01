@@ -48,7 +48,7 @@ PROOT_H = 64.0
 HOLD_NS = None                   # W18 --phy-e8p5: project SDC policy 25 ps hold uncertainty
 SIGNOFF_ARGS: list = []          # W18 --signoff-1p2: harden at WC (SS libs), repair hold at WC and BC
 BUFFER_HOOK = "physical/abi3/v41x_karb_repair_buffer_cap.tcl"
-KARB = ["rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_q2r.sv", "rtl/chip/ot_chip_v41x_keep_dff.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv", "rtl/chip/ot_chip_v41x_karb_qh.sv"]
+KARB = ["rtl/chip/ot_chip_v41x_karb_q2.sv", "rtl/chip/ot_chip_v41x_karb_q2r.sv", "rtl/chip/ot_chip_v41x_keep_dff.sv", "rtl/chip/ot_chip_v41x_stat_ctr32.sv", "rtl/chip/ot_chip_v41x_karb_qn.sv", "rtl/chip/ot_chip_v41x_karb_qh.sv"]
 
 
 def common(top: str, sources: list[str], w: float, h: float, params: list[str] = (), density: float = 0.6):

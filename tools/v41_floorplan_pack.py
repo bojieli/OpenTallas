@@ -338,10 +338,36 @@ def build(variant: str) -> dict:
         vm_col_w = snap_up(2 * max(need_mm2["COLLECTIVE"], need_mm2["GATHER"]) * HUB_SLACK * 1e6 / hub_h, X_STEP)
         if crot.get("centre"):
             vm_col_w = 0.0      # COLLECTIVE / GATHER sit at the bottom / top of the strip column instead
+        shape = crot.get("shape", "strip")
+        if shape in ("square", "plus"):
+            # SQUARE C_rotate (root 2026-10-01, free fix): a central bank square of side b; the lanes either fill
+            # the ring of an S x S square ("square") or four arms of depth d on the bank square's sides ("plus",
+            # S = b + 2d, the four d x d corners go to COLLECTIVE, GATHER and two pieces of HC).  The hub height
+            # becomes the block side; the other partitions keep their areas at that height.
+            b = snap_up(math.sqrt(strip_mm2 * 1e6 * HUB_SLACK), X_STEP)
+            if shape == "square":
+                S = snap_up(math.sqrt(need_mm2["SU_VECTOR"] * 1e6 * HUB_SLACK), X_STEP)
+                d = snap_up((S - b) / 2, X_STEP)
+            else:
+                d = snap_up(lanes_mm2 * 1e6 * HUB_SLACK / 4 / b, X_STEP)
+            S = b + 2 * d
+            hub_h = S
+            widths = {k: snap_up(v * 1e6 * HUB_SLACK / hub_h, X_STEP) for k, v in need_mm2.items()}
+            widths["SU_VECTOR"] = S
+            if shape == "plus":
+                vm_col_w = 0.0
+                hc_rest = max(0.0, need_mm2["HC"] * 1e6 * HUB_SLACK - 2 * d * d)
+                widths["HC"] = snap_up(hc_rest / hub_h, X_STEP)
+            else:
+                vm_col_w = snap_up(2 * max(need_mm2["COLLECTIVE"], need_mm2["GATHER"]) * HUB_SLACK * 1e6 / hub_h, X_STEP)
+            crot_geo = dict(b=b, d=d, S=S, shape=shape)
     hub_w = widths["ATTENTION"] + vm_col_w + widths["SU_VECTOR"] + widths["HC"]
     cx = core_x0 + core_w / 2
     hub_x = snap_dn(cx - vm_col_w / 2 - widths["ATTENTION"], X_STEP)
-    if crot:
+    if crot and crot.get("shape", "strip") in ("square", "plus"):
+        # the bank square (x root, result sink) is centred on the core
+        hub_x = snap_dn(cx - crot_geo["S"] / 2 - vm_col_w - widths["ATTENTION"], X_STEP)
+    elif crot:
         # C_rotate: the x root and result sink are on the VM strip, so the STRIP is centred on the core
         hub_x = snap_dn(cx - strip_w / 2 - half_w - vm_col_w - widths["ATTENTION"], X_STEP)
     hub_y = snap_dn(core_y0 + (core_h - hub_h) / 2, Y_STEP)
@@ -350,7 +376,32 @@ def build(variant: str) -> dict:
     x = hub_x
     parts.append(("ATTENTION", x, hub_y, widths["ATTENTION"], hub_h, need_mm2["ATTENTION"]))
     x += widths["ATTENTION"]
-    if crot and crot.get("centre"):
+    if crot and crot.get("shape", "strip") in ("square", "plus"):
+        b, d, S = crot_geo["b"], crot_geo["d"], crot_geo["S"]
+        if crot_geo["shape"] == "square":
+            mid = snap_dn(hub_y + hub_h / 2, Y_STEP)
+            parts.append(("COLLECTIVE", x, hub_y, vm_col_w, mid - hub_y, need_mm2["COLLECTIVE"]))
+            parts.append(("GATHER", x, mid, vm_col_w, hub_y + hub_h - mid, need_mm2["GATHER"]))
+            x += vm_col_w
+            lane_w = lanes_mm2 * 1e6 / (S * S - b * b)
+            parts.append(("SU_VECTOR", x, hub_y, d, S, d * S * lane_w / 1e6))
+            parts.append(("SU_VECTOR_S", x + d, hub_y, b, d, b * d * lane_w / 1e6))
+            parts.append(("VM", x + d, hub_y + d, b, b, strip_mm2 + need_mm2["VM"]))
+            parts.append(("SU_VECTOR_N", x + d, hub_y + d + b, b, d, b * d * lane_w / 1e6))
+            parts.append(("SU_VECTOR_E", x + d + b, hub_y, d, S, d * S * lane_w / 1e6))
+        else:
+            q = lanes_mm2 / 4
+            parts.append(("COLLECTIVE", x, hub_y, d, d, need_mm2["COLLECTIVE"]))
+            parts.append(("SU_VECTOR", x, hub_y + d, d, b, q))
+            parts.append(("GATHER", x, hub_y + d + b, d, d, need_mm2["GATHER"]))
+            parts.append(("SU_VECTOR_S", x + d, hub_y, b, d, q))
+            parts.append(("VM", x + d, hub_y + d, b, b, strip_mm2 + need_mm2["VM"]))
+            parts.append(("SU_VECTOR_N", x + d, hub_y + d + b, b, d, q))
+            parts.append(("HC_SE", x + d + b, hub_y, d, d, d * d / 1e6))
+            parts.append(("SU_VECTOR_E", x + d + b, hub_y + d, d, b, q))
+            parts.append(("HC_NE", x + d + b, hub_y + d + b, d, d, d * d / 1e6))
+        x += S
+    elif crot and crot.get("centre"):
         # strip column = GATHER (top) | VM strip | COLLECTIVE (bottom), all at the strip width, centred in the SU array
         ch = snap_up(need_mm2["COLLECTIVE"] * 1e6 * HUB_SLACK / strip_w, Y_STEP)
         gh = snap_up(need_mm2["GATHER"] * 1e6 * HUB_SLACK / strip_w, Y_STEP)

@@ -223,8 +223,11 @@ def write(m: dict, work: Path, k: int, obs_top: int, m89: float, low: float, ite
     for c in m["clusters"]:
         masters[c.inst] = f"M__{c.inst}"
         ot = hub_obs_top if (hub_obs_top and c.kind == "hub") else obs_top
-        if hub_obs and c.kind == "hub" and c.inst.replace("hub_", "") in hub_obs:
-            ot = hub_obs[c.inst.replace("hub_", "")]
+        if hub_obs and c.kind == "hub":
+            nm_ = c.inst.replace("hub_", "")
+            for k_, v_ in hub_obs.items():          # exact name, or a prefix ending in '*' (su_vector* = every SU part)
+                if nm_ == k_ or (k_.endswith("*") and nm_.startswith(k_[:-1])):
+                    ot = v_
         text, _ = D.cluster_lef(c, plan.get(c.inst, {}), k, ot, masters[c.inst])
         lefs.append(text)
     lefs.append("END LIBRARY\n")
