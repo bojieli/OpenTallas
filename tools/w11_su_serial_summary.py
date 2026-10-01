@@ -83,7 +83,12 @@ def main():
                policy="setup at SS (ORFS WC), hold at FF (BC), 60 ps setup / 25 ps hold uncertainty",
                runs=rows,
                depths=dict(before=depths(3, 3), serial_build=depths(5, 4)),
-               added_cycles=None)
+               added_cycles=None,
+               exactness_scope=("exact at any N for which every op is layout-legal: a span reduction needs "
+                                "L = ceil(log2(ceil(n_flat / 2^ls))) <= LV, else the op faults at issue (c_bad).  "
+                                "The full-shape L0 program is legal at N >= 256 (N1024/M256 checked) and not at N16 "
+                                "or N64; the reduced vehicle and the softmax fixture are legal at N16 and N1024 "
+                                "(tests/test_w11_su_legality.py, tools/v41_su_legality.py)"))
     b, s = rec["depths"]["before"], rec["depths"]["serial_build"]
     rec["added_cycles"] = {k: s[k] - b[k] for k in b if k not in ("mlat", "alat")}
     (DIR / "summary.json").write_text(json.dumps(rec, indent=1) + "\n")

@@ -470,5 +470,6 @@
   "engram_gate_in_S": 23,
   "reducer_retire_to_result_tap0": 9,
   "reducer_per_tree_or_time_level": 1
- }
+ },
+ "exactness_scope": "exact at any N for which every op is layout-legal: a span reduction needs L = ceil(log2(ceil(n_flat / 2^ls))) <= LV, else the op faults at issue (c_bad).  The full-shape L0 program is legal at N >= 256 (N1024/M256 checked) and not at N16 or N64; the reduced vehicle and the softmax fixture are legal at N16 and N1024 (tests/test_w11_su_legality.py, tools/v41_su_legality.py)"
 }

@@ -3468,5 +3468,6 @@
   "reason": "W11 serial-domain change (claude/w11-suclose): MLAT/ALAT parameters, keep-prefix arithmetic and the three-cycle offset load were added; the unit is built at MLAT=3/ALAT=3 by default and that build is cycle-identical (rtl_hdc_v41x_vec_campaign at N16/N64 + vehicle + perf64, 3/3 at B4R5: every perf section equal to hdc_v41x_vec_campaign_wire.json; w11_su_softmax_spec N16 at 0:0 and 4:5: cycles equal).  The N1024 regeneration on these sources is queued (/tmp/claude-1000/w11s/queue/q_regen.sh); this marker is removed with it.",
   "verdict_kept": "all random / vehicle / perf checks pass (spec rows as graded)",
   "marked": "2026-09-30 W11 SU-close"
- }
+ },
+ "exactness_scope": "exact at any N for which every op is layout-legal (span levels L = ceil(log2(ceil(n_flat / 2^ls))) <= LV); an illegal op faults at issue.  The softmax fixture is legal at N16 and N1024; the full-shape L0 program is legal at N >= 256 (N1024/M256 checked) and NOT at N16 or N64 (tests/test_w11_su_legality.py, tools/v41_su_legality.py)"
 }
