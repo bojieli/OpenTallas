@@ -1,9 +1,11 @@
 {
+  "HE_words_all_four_reference_copies": 6553600,
   "main_text_tensor_count": 1258,
   "reference_word_totals_by_codec": {
     "bf16": 90341376,
     "fp8": 165806080,
     "reference_HE_hplace_FP32": 1638400
   },
-  "unbound_non_scale_tensor_count": 459
+  "unbound_non_scale_tensor_count": 459,
+  "word_total_scope": "FP8/BF16 totals sum4rankviews; HE total is one rank, fourcopytotal separate"
 }

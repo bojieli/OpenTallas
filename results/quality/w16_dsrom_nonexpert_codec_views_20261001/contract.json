@@ -6,7 +6,7 @@
   "census_sha256": "54a04d98a4806139e235486945123465f2ae63b80aaac0d8c02f4d759f3aaece",
   "current_product_complete": false,
   "full_allocation_authority": "Ram",
-  "generator_sha256": "69595a1b7872258b772ce6cd95ee7ab071ed37f35efd17084651064360fd0c1a",
+  "generator_sha256": "e1a4431ce45994c023460a98b174c47685d02f878a0fd9a345fb917ab032ddaf",
   "notes": [
     "Reference TP copies differ from full physical residency; no historical46stagefit reused.",
     "Counts are per matrix row across both paired row macros; per macro count explicit separately.",
@@ -30,13 +30,15 @@
   },
   "status": "REFERENCE_WORD_DEMAND_ONLY_NOT_PHYSICAL_FIT",
   "summary": {
+    "HE_words_all_four_reference_copies": 6553600,
     "main_text_tensor_count": 1258,
     "reference_word_totals_by_codec": {
       "bf16": 90341376,
       "fp8": 165806080,
       "reference_HE_hplace_FP32": 1638400
     },
-    "unbound_non_scale_tensor_count": 459
+    "unbound_non_scale_tensor_count": 459,
+    "word_total_scope": "FP8/BF16 totals sum4rankviews; HE total is one rank, fourcopytotal separate"
   },
   "tensors": {
     "embed.weight": {
