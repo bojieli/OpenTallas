@@ -687,21 +687,22 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 - **Qwen ROM** keeps its per-user claim.
 - ROM energies include the adopted 256-cycle pre-ramp.
 - GPU cost is the purchase price; the ROM and tier-3 cost is manufacturing capex (low NRE).
-- The tier-3 per-user rates carry W19's HBM feasibility audit, central estimate (`claude/w19-hbm-audit` aa0ac6bd), applied to the model's rates: V4.1 ×0.78 AR / ×0.84 MTP (range 0.71–0.95 / 0.80–0.99), Qwen DFlash −14%. The exact-order extra gather does not apply to the ROM array, which sums experts in id order inside the element.
+- The V4.1 tier-3 per-user rates are W19's COMPOSED token (`claude/w19-hbm-token` a88743ff): every term priced along the executed TP-96 program, which is bit-exact on 96 ranks. AR is 431.6 µs (265 collectives on the path); an MTP verify pass is 628.5 µs, plus the audit's 49.9 µs drafter. The collective latency is PENDING W15's P=48 fit. The audit's central figures stay in the record as a reference. Qwen DFlash keeps the audit's −14%. The exact-order extra gather does not apply to the ROM array, which sums experts in id order inside the element.
 
 | Design | Tier | Per-user AR | Per-user MTP | Saturated tok/s | mJ/token, B = 1 / saturated | Capex | Users at 1M |
 |---|---|---:|---:|---:|---:|---:|---:|
-| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | ROM | 3,156 | 4,875 | 90,025 | 585 / 296 | $656k | 866 |
-| V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 3 | 2,452 | 5,302 | 101,171 | 8,286 / 742 | $1,011k | 31,052 |
-| V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 3 | 2,452 | 5,302 | 50,585 | 4,874 / 742 | $513k | 15,526 |
-| V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 3 | 2,452 | 5,302 | 25,293 | 3,168 / 742 | $264k | 7,763 |
+| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | ROM | 3,153 | 4,859 | 90,025 | 585 / 296 | $656k | 866 |
+| V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3 | 2,317 | 5,379 | 101,171 | 8,286 / 742 | $1,011k | 31,052 |
+| V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3 | 2,317 | 5,379 | 50,585 | 4,874 / 742 | $513k | 15,526 |
+| V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3 | 2,317 | 5,379 | 25,293 | 3,168 / 742 | $264k | 7,763 |
 | DeepSeek-V4.1-Flash on 8x B200 (tier 2, calibrated) | 2 | 278 | 539 | 13,018 | 19,852 / 423 | $200k | 839 |
 | DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance) | 1 | — | 368 | — | 14,978 / — | — | — |
 
 | Design | Tier | Per-user AR | Per-user DFlash | Saturated tok/s | mJ/token, B = 1 / saturated | Capex | Users at 8K |
 |---|---|---:|---:|---:|---:|---:|---:|
 | Qwen ROM option C (4 dies, 2 packages, TP-4, G 6,144), TT | ROM | 9,368 | — | 23,842 | 98 / 85 | $29k | 536 |
-| Qwen ROM option C at 1.2 GHz SS (W12 SS wires, LAT-7 ME, droop cap75 + preramp256) | ROM | 8,474 | — | 23,842 | 120 / 107 | $29k | 536 |
+| Qwen ROM option C at 1.2 GHz SS (W12 SS wires, LAT-7 ME, KV_PREP, droop cap75 + preramp256) | ROM | 8,460 | — | 23,842 | 120 / 107 | $29k | 536 |
+| Qwen ROM option C at 1.2 GHz SS, RTL-CALIBRATED (per-layer body x 1.3962, W12b measured L0; pending attribution) | ROM | 6,107 | — | 23,842 | — / — | $29k | 536 |
 | Qwen HBM, 1 right-sized die(s) x 6 stacks (388.9 mm2 each) (tier 3, idealised; DFlash W19 audit -14%) | 3 | 660 | 1,722 | 5,328 | 356 / 128 | $19k | 188 |
 | Qwen HBM, 2 right-sized die(s) x 4 stacks (265.8 mm2 each) (tier 3, idealised; DFlash W19 audit -14%) | 3 | 880 | 2,296 | 7,104 | 356 / 128 | $20k | 255 |
 | Qwen3-8B on 1x B200, FP8 (tier 2, calibrated) | 2 | 331 | 853 | 7,907 | 2,081 / 87 | $25k | 255 |
@@ -713,10 +714,10 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 
 | Design | τ 2.91 | τ 3.649 | τ 3.78 | τ 4.5 | τ 5.24 |
 |---|---:|---:|---:|---:|---:|
-| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | 3,888 | 4,875 | 5,050 | 6,012 | 7,000 |
-| V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 4,228 | 5,302 | 5,492 | 6,539 | 7,614 |
-| V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 4,228 | 5,302 | 5,492 | 6,539 | 7,614 |
-| V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 audit central) | 4,228 | 5,302 | 5,492 | 6,539 | 7,614 |
+| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | 3,875 | 4,859 | 5,033 | 5,992 | 6,977 |
+| V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 4,290 | 5,379 | 5,572 | 6,634 | 7,724 |
+| V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 4,290 | 5,379 | 5,572 | 6,634 | 7,724 |
+| V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 4,290 | 5,379 | 5,572 | 6,634 | 7,724 |
 | DeepSeek-V4.1-Flash on 8x B200 (tier 2, calibrated) | 430 | 539 | 558 | 664 | 774 |
 | DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance) | 294 | 368 | 381 | 454 | 528 |
 
@@ -724,8 +725,8 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 
 | Design | AR tok/s | MTP tok/s | Saturated | Dies / GPUs | Silicon mm² | Capex |
 |---|---:|---:|---:|---:|---:|---:|
-| V4.1 ROM product (columns, 1.2 GHz SS) | 3,369 | 5,663 | 115,770 | 188 | 153,220 | 656,462 |
-| V4.1 HBM tier 3, equal cost (2 x TP-96), W19 audit central | 2,609 | 6,639 | 98,515 | 192 | 65,376 | 512,856 |
+| V4.1 ROM product (columns, 1.2 GHz SS) | 3,367 | 5,642 | 115,770 | 188 | 153,220 | 656,462 |
+| V4.1 HBM tier 3, equal cost (2 x TP-96), W19 composed/model ratio at 1M applied at ctx | 2,465 | 6,736 | 98,515 | 192 | 65,376 | 512,856 |
 | V4.1-Flash, 8x B200 (tier 2, calibrated) | 283 | 548 | — | 8 | 12,800 | 200,000 |
 | V4.1-Flash, 8x B300 (tier 2; = B200 within the model, ASSUMED) | 283 | 548 | — | 8 | 12,800 | — |
 
@@ -815,6 +816,8 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 | PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED (AGENTS.md c0894b1c): cap + 1.2 GHz streaming domain (LAT-7 adds, W11: 1,208 MHz SS) + 0.9 GHz chain domain (LAT 3), W18 ratio-FIFO CDC | 1.2 | 37 / 188 | 3,492 | 5,052 | 90,025 | 467 / 209 |
 | PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 LAT-4 serial mul | 1.2 | 37 / 188 | 3,332 | 4,964 | 90,025 | 481 / 209 |
 | PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) | 1.2 | 37 / 188 | 3,156 | 4,875 | 90,025 | 498 / 209 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) | 1.2 | 37 / 188 | 3,178 | 4,889 | 90,025 | 496 / 209 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) | 1.2 | 37 / 188 | 3,153 | 4,859 | 90,025 | 498 / 209 |
 
 **More stages buy no throughput.** 28 → 34 stages costs 0.8% AR (+2.2 µs of hops) and leaves the saturated rate flat (76,962 vs 77,180). The reason is that the layer-20 index scan, which does not split, sets the stage period at about 13 µs.
 
@@ -830,16 +833,22 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 - **Other constraints:** a 50% field-concurrency cap (W18 peak current) and a 256-cycle pre-ramp (W18 droop).
 - **Stage count:** macros are 4096m8 × 2 per slot, so the product basis is 37 stages / 188 dies (4 head dies).
 
-**Named step: W11's measured serial build (W16b, 2026-09-30).** The previous product priced the 0.9 GHz units at the model's 3-stage-add depths plus one cycle a node for the LAT-4 multiply (a lower bound). W11 has now closed the serial build, so the product uses its measured depths in 0.9 GHz cycles instead: linear op 21 → 30, exp 49 → 71, sigmoid/silu 71 → 94, rsqrt 37 → 58, sqrt(softplus) 162 → 216, Engram gate 104 → 127, divide unchanged, and reducer tap 26 → 35 plus 3 → 4 cycles a tree level. The Sinkhorn unit is outside the serial build, so it keeps the one-cycle bound; its SFU front (row max and exp) takes the exp change.
+**Named steps of the W16b passes (2026-09-30).** Each row adds one change to the row above it; the last row is the product.
 
-| V4.1 ROM product, 1M | Before (LAT-4 bound) | After (measured) | Change |
-|---|---:|---:|---:|
-| AR tok/s | 3,332 | 3,156 | -5.3% |
-| MTP tok/s at τ 3.649 | 4,964 | 4,875 | -1.8% |
-| MTP tok/s at τ 3.78 | 5,142 | 5,050 | -1.8% |
-| Saturated AR tok/s | 90,025 | 90,025 | +0.0% |
+1. **W11's measured serial build** (`claude/w11-suclose` ddd2f725). The 0.9 GHz units were priced at the model's 3-stage-add depths, plus one cycle a node for the LAT-4 multiply (a lower bound). They now use W11's measured depths in 0.9 GHz cycles: linear op 21 → 30, exp 49 → 71, sigmoid/silu 71 → 94, rsqrt 37 → 58, sqrt(softplus) 162 → 216, Engram gate 104 → 127, divide unchanged, and reducer tap 26 → 35 plus 3 → 4 cycles a tree level. The Sinkhorn unit is outside the serial build, so it keeps the one-cycle bound; its SFU front (row max and exp) takes the exp change (root-accepted).
+2. **W18b's interim shrunk layer die** (`claude/w18-die-assembly` 996f7982). Root ruled that the die be sized to the product's 5,289 pairs a die plus about 10%, not the old pack's 7,628 slots. W18b's interim die is 669 mm² with 5,968 pair and 1,160 BF16 slots, routed with no overflow. Its crossings replace the old ones: expert trunks 63 cycles (was 76), collective to SerDes 45 (was 48), and the field regions at the die's linear scale 0.9062. Die area, cost and power stay on the 815 mm² ledger until the p12 floorplan lands. The √-area sensitivity of the previous pass is superseded.
+3. **W11's streaming-unit depths at 1.2 GHz** (`claude/w11-stream` 540ef71c; the chunk and tile routes are still running). Indexer key to score 48 → 100 (+52), attention tile 33 → 72 (+39) and bank guard 20 → 44 (+24), each paid once a scores pass and once a p.v pass (W11: engine pipeline depths; the p.v pass reuses the tile).
 
-**Sensitivity: shrunk layer die (root ruling, 2026-09-30; `die_shrink_sensitivity`).** The layer die is still sized by the old pack (7,628 pair slots), but the product needs 5,289 pairs a die. Root ruled to shrink it to that count plus 10% margin, an area ratio of 0.763. Until W18b's floorplan of the shrunk die lands, every on-die crossing the model prices is scaled by the square root of that ratio (×0.873). These are the field broadcast and return, the expert trunks, and collective to SerDes. AR 3,156 → 3,186 (+1.0%), MTP at τ 3.649 4,875 → 4,895 (+0.4%), saturated 90,025 → 90,025. Die area, cost and power are not re-priced in this row; it is not the product.
+| Step | AR tok/s | MTP tok/s, τ 3.649 | MTP tok/s, τ 3.78 | Saturated tok/s |
+|---|---:|---:|---:|---:|
+| previous product (LAT-4 bound) | 3,332 | 4,964 | 5,142 | 90,025 |
+| 1. measured serial build | 3,156 | 4,875 | 5,050 | 90,025 |
+| 2. shrunk-die crossings | 3,178 | 4,889 | 5,065 | 90,025 |
+| 3. streaming depths (product) | 3,153 | 4,859 | 5,033 | 90,025 |
+
+**K arbiter with W18b's MERGE2 fix** (+1 response cycle; round trip 19/15/13/9/9/13/15/19 cycles over regions 0–7): -0.428% worst region, -0.316% region mean. It is not yet in the product.
+
+**Qwen layer 0: RTL against the model** (`qwen_l0_rtl_vs_model`). W12b measured TP-4 layer 0 bit-exact on 4 dies (G 6,144, SU width 64, SS wire stages, original ME adders; `claude/w12-qwen-rom` 42ecf382) at 4,669 cycles. At that configuration the model prices 2,460 cycles of layer chain plus 2 × 442 all-reduce, 3,344 in all: 28.4% short. With the RTL's collective latency (339) the gap is 1,531 cycles, so it lies in the layer body. The gap is not yet attributed; W12b is re-running with a per-instruction trace. Until then the headline table carries an **RTL-calibrated** Qwen row: the model's per-layer body × 1.3962, giving 6,107 tok/s against the model's 8,460. The model row includes KV_PREP (+216 cycles a token); W12b's LAT-7 ME +54 is counted once.
 
 **Clock-domain cases** (`clock_domain_cases`, all with the cap; the measured W11 FP32 add prices every serial chain):
 
@@ -857,9 +866,9 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 
 **Droop pre-ramp energy** (W18 67b0bd49), on the adopted product:
 
-- 50% cap + 256-cycle pre-ramp: +87.0 mJ per token, i.e. 585.1 / 296.5 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +99.8 mJ.
-- 1,024-cycle pre-ramp, no cap: +692.6 mJ per token, i.e. 1190.7 / 902.1 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +794.5 mJ.
-- 256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV): +174.0 mJ per token, i.e. 672.1 / 383.5 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +199.6 mJ.
+- 50% cap + 256-cycle pre-ramp: +87.0 mJ per token, i.e. 585.4 / 296.5 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +99.8 mJ.
+- 1,024-cycle pre-ramp, no cap: +692.6 mJ per token, i.e. 1191.0 / 902.1 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +794.5 mJ.
+- 256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV): +174.0 mJ per token, i.e. 672.4 / 383.5 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +199.6 mJ.
 
 The priced graph has 8.81 field-op starts per layer die per token, of which 6.51 follow an idle gap longer than 256 cycles (ASSUMED decay constant). W18's count was 6. The 1,024-cycle no-cap pre-ramp is rejected on energy.
 

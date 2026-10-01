@@ -275,21 +275,41 @@ def test_w11_measured_serial_step():
     r = _rec()
     pts = {p["label"]: p for p in r["v41_rom"]["points"] if p.get("role") == "product"}
     old = next(p for k, p in pts.items() if k.endswith("W11 LAT-4 serial mul"))
-    new = next(p for k, p in pts.items() if "MEASURED serial" in k)
+    new = next(p for k, p in pts.items() if k.endswith(U.SERIAL_TAG))
     assert new["serial"] == "w11_measured" and old.get("serial") is None
     assert new["ar_tokens_s_b1"] < old["ar_tokens_s_b1"] and new["mtp_tokens_s_b1"] < old["mtp_tokens_s_b1"]
     assert (new["stages"], new["dies"]) == (old["stages"], old["dies"])
+    fin = [p for p in pts.values() if p.get("product_final")]
+    assert len(fin) == 1 and fin[0]["label"].endswith(U.PRODUCT_TAG)
     h = r["headline_table"]["v41"][0]
-    assert abs(h["per_user_ar"] - new["ar_tokens_s_b1"]) < 0.5 and abs(h["per_user_mtp"] - new["mtp_tokens_s_b1"]) < 0.5
+    assert abs(h["per_user_ar"] - fin[0]["ar_tokens_s_b1"]) < 0.5 and abs(h["per_user_mtp"] - fin[0]["mtp_tokens_s_b1"]) < 0.5
 
 
-def test_die_shrink_crossing_sensitivity():
-    """Root ruling 2026-09-30: shrink the layer die to the owner file's pairs + ~10%; the sensitivity scales the
-    on-die crossings by sqrt(area ratio) and can only speed the token up."""
-    import math
+def test_w16b_pass2_steps():
+    """Shrunk-die interim crossings shorten the path; the W11 streaming depths lengthen it; the tier-3 rows are W19's
+    composed token; the Qwen RTL comparison and its calibrated row are recorded."""
+    import uarch_model as U
+    r = _rec()
+    pts = {p["label"]: p for p in r["v41_rom"]["points"] if p.get("role") == "product"}
+    ser = next(p for k, p in pts.items() if k.endswith(U.SERIAL_TAG))
+    shr = next(p for k, p in pts.items() if k.endswith(U.SHRINK_TAG))
+    fin = next(p for k, p in pts.items() if k.endswith(U.PRODUCT_TAG))
+    assert shr["ar_tokens_s_b1"] >= ser["ar_tokens_s_b1"] and fin["ar_tokens_s_b1"] <= shr["ar_tokens_s_b1"]
+    assert shr["die"]["expert_wire"] == 63 and shr["die"]["coll_stages"] == 45
+    t3 = [x for x in r["headline_table"]["v41"] if x["tier"] == "3"]
+    assert t3 and all(abs(x["per_user_ar"] - 1e6 / 431.55) < 0.1 for x in t3)
+    q = r["qwen_l0_rtl_vs_model"]
+    assert q["rtl"]["cycles"] == 4669 and q["rtl"]["me_extra"] == U.QWEN_W12_TP4_ME_EXTRA_SS   # the RTL ran without +54
+    assert abs(q["ratio"] - 4669 / q["model_layer_cycles"]) < 1e-3
+    qs = r["qwen_product_ss"]
+    assert qs["kv_prep_cycles"] == 216 and qs["rtl_calibrated"]["tokens_s_b1"] < qs["tokens_s_b1"]
+    assert U.QWEN_SS["me_lat_extra"] == U.QWEN_W12_TP4_ME_EXTRA_SS + 54                       # LAT-7 counted once
+
+
+def test_die_shrink_ruling():
+    """Root ruling 2026-09-30: shrink the layer die to the owner file's pairs + ~10%; W18b's interim die holds them."""
     import uarch_model as U
     own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
     assert U.DIE_SHRINK["pairs_needed"] == max(own["pairs_per_die_by_stage"])
     ds = _rec()["v41_rom"]["die_shrink_sensitivity"]
-    assert ds["role"] == "sensitivity" and abs(ds["crossing_scale"] - math.sqrt(ds["area_ratio"])) < 1e-12
-    assert ds["area_ratio"] < 1 and ds["ar_tokens_s_b1"] >= ds["product_ar"] and ds["mtp_tokens_s_b1"] >= ds["product_mtp"]
+    assert ds["role"] == "ruling" and ds["interim"]["pair_slots"] >= ds["pairs_needed"]
