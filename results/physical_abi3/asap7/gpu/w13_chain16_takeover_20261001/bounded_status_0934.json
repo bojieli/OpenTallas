@@ -1,0 +1,154 @@
+{
+  "schema": "opentallas.w13.bounded_authoritative_status.v1",
+  "observed_at": "2026-10-01T09:34:32.924328+00:00",
+  "exclusive_supervisor": {
+    "pid": 508855,
+    "start_ticks": "305066820",
+    "state": "S"
+  },
+  "driver_log_path": "/tmp/claude-1000/w13jobs/chain16/driver_recovery_20261001T091011Z.log",
+  "driver_log_size": 0,
+  "events_path": "/tmp/claude-1000/w13jobs/chain16/events.jsonl",
+  "current_launch_events": [
+    {
+      "config_sha256": "808af4528141ac9ed35f738dae09756b772416764c20b55def743a8a7c3c91ff",
+      "event": "successor_start",
+      "handle": {
+        "pid": 508855,
+        "start_ticks": "305066820",
+        "state": "R"
+      },
+      "utc": "2026-10-01T09:10:11.931050+00:00"
+    },
+    {
+      "branch": "q",
+      "event": "waiting",
+      "handles": [
+        {
+          "pid": 2089594,
+          "start_ticks": "302549468",
+          "state": "S"
+        }
+      ],
+      "utc": "2026-10-01T09:10:11.941296+00:00"
+    },
+    {
+      "branch": "v",
+      "event": "waiting",
+      "handles": [
+        {
+          "pid": 1901598,
+          "start_ticks": "302086726",
+          "state": "S"
+        }
+      ],
+      "utc": "2026-10-01T09:10:11.947271+00:00"
+    }
+  ],
+  "columns_worker": "ot-pve1",
+  "sm_worker": "not yet acquired; column waits pending",
+  "actual_remote_progress_record": "fresh_remote_progress.json",
+  "remote_progress_sha256": "5d6b8dbffdcf1dbe965987b4a8f76899ca559fcef2ef3c25be26cf2e4bc8b2fa",
+  "mem_available_gib": 131.94,
+  "next_guarded_dependencies": [
+    {
+      "branch": "q",
+      "next_sm": "ot_gpu_sm_q",
+      "column_dependencies": [
+        {
+          "block": "ot_gpu_tc_col",
+          "passed": false,
+          "issues": [
+            "missing_corner_record",
+            "missing_block_record"
+          ]
+        }
+      ],
+      "column_handles": [
+        {
+          "pid": 2089594,
+          "start_ticks": "302549468",
+          "state": "S",
+          "current": {
+            "pid": 2089594,
+            "start_ticks": "302549468",
+            "state": "S"
+          }
+        }
+      ],
+      "next_log_path": "/tmp/claude-1000/w13jobs/chain16/sm_q.log",
+      "log_exists": false,
+      "work": "/home/ubuntu/w13work/sm_q16",
+      "minimum_gib": 60,
+      "validated_peak_gib": 60
+    },
+    {
+      "branch": "v",
+      "next_sm": "ot_gpu_sm_v",
+      "column_dependencies": [
+        {
+          "block": "ot_gpu_tc16",
+          "passed": false,
+          "issues": [
+            "missing_corner_record",
+            "block_boundary_or_clock_not_closed"
+          ],
+          "block_record_sha256": "783cc80205a5765220d527acc0bfc0b1dd1063652ed077552d5e0eae1046f3d3"
+        },
+        {
+          "block": "ot_gpu_bd_col",
+          "passed": true,
+          "issues": [],
+          "record": "results/physical_abi3/asap7/chip/corners/ot_gpu_bd_col.json",
+          "record_sha256": "cbd6ee22703cb47fd00cefa615e8693793061801489f124e41fda957f80a2199",
+          "timing_model_sha256": {
+            "results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_ss.lib": "275bb730d70265c741aad318cecff9abb1063795e21674e2ca2a88f12aa65753",
+            "results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_ff.lib": "50afd6fd73f717312926be16de37ae0d959c175176593d7825f0491311bb86bf"
+          },
+          "block_record_sha256": "de9ea8998b431452dd20e8b7801c8eb08ee43ec9af8fbc3483d613b00e99da17"
+        }
+      ],
+      "column_handles": [
+        {
+          "pid": 1901598,
+          "start_ticks": "302086726",
+          "state": "S",
+          "current": {
+            "pid": 1901598,
+            "start_ticks": "302086726",
+            "state": "S"
+          }
+        }
+      ],
+      "next_log_path": "/tmp/claude-1000/w13jobs/chain16/sm_v.log",
+      "log_exists": false,
+      "work": "/home/ubuntu/w13work/sm_v16",
+      "minimum_gib": 60,
+      "validated_peak_gib": 60
+    }
+  ],
+  "floorplan": "Both qualified SMs -> actual SM LEF companion hashes -> floorplan verdict; no pending fallback",
+  "no_restart_or_checkout": true,
+  "predecessors_still_parked": [
+    {
+      "pid": 2089666,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089669,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089670,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 3047316,
+      "start_ticks": "304527912",
+      "state": "T"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "host": "ot-pve1",
+  "observed_at": "2026-10-01T09:33:53.745235+00:00",
+  "processes": [
+    {
+      "pid": 1412773,
+      "cmdline": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/chip_ot_gpu_tc16/base/5_2_route.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 6 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/chip_ot_gpu_tc16/base/5_2_route.json ",
+      "cwd": "permission unavailable",
+      "fd/1": "permission unavailable"
+    },
+    {
+      "pid": 1412774,
+      "cmdline": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 6 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/chip_ot_gpu_tc16/base/5_2_route.json ",
+      "cwd": "permission unavailable",
+      "fd/1": "permission unavailable"
+    },
+    {
+      "pid": 1449804,
+      "cmdline": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/chip_ot_gpu_tc_col/base/5_1_grt.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 6 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/chip_ot_gpu_tc_col/base/5_1_grt.json ",
+      "cwd": "permission unavailable",
+      "fd/1": "permission unavailable"
+    },
+    {
+      "pid": 1449805,
+      "cmdline": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 6 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/chip_ot_gpu_tc_col/base/5_1_grt.json ",
+      "cwd": "permission unavailable",
+      "fd/1": "permission unavailable"
+    }
+  ],
+  "logs": [
+    {
+      "work": "tc16_12",
+      "logdir": "/home/ubuntu/w13work/tc16_12/logs/asap7/chip_ot_gpu_tc16/base",
+      "recent": [
+        {
+          "path": "/home/ubuntu/w13work/tc16_12/logs/asap7/chip_ot_gpu_tc16/base/5_2_route.tmp.log",
+          "modified_at": "2026-10-01T09:25:41.868671+00:00",
+          "size": 12558,
+          "tail": [
+            "     M9          0",
+            "------------------",
+            "       1213308",
+            "",
+            "",
+            "[INFO DRT-0195] Start 1st optimization iteration.",
+            "    Completing 10% with 32175 violations.",
+            "    elapsed time = 00:08:51, memory = 14812.68 (MB).",
+            "    Completing 20% with 32175 violations.",
+            "    elapsed time = 00:18:43, memory = 14813.33 (MB).",
+            "    Completing 30% with 23767 violations.",
+            "    elapsed time = 00:26:41, memory = 15164.27 (MB)."
+          ]
+        },
+        {
+          "path": "/home/ubuntu/w13work/tc16_12/logs/asap7/chip_ot_gpu_tc16/base/5_1_grt.log",
+          "modified_at": "2026-10-01T04:43:18.722850+00:00",
+          "size": 165103,
+          "tail": [
+            "Design area 18674 um^2 73% utilization.",
+            "[INFO FLW-0007] clock clk period 833.000000",
+            "[INFO FLW-0008] Clock clk period 842.140",
+            "[INFO FLW-0009] Clock clk slack -53.463",
+            "write_sdc -no_timestamp /work/results/asap7/chip_ot_gpu_tc16/base/updated_clks.sdc",
+            "[INFO FLW-0011] Path endpoint path count 37577",
+            "write_db /work/results/asap7/chip_ot_gpu_tc16/base/5_1_grt.odb",
+            "write_sdc -no_timestamp /work/results/asap7/chip_ot_gpu_tc16/base/5_1_grt.sdc",
+            "Elapsed time: 2:30:22.52[h:]min:sec. CPU time: user 10100.35 sys 11.31 (112%). Peak memory: 2600884KB.",
+            "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+            "5_1_grt                   .odb         9022           2539 33662ed6bb86db55b401",
+            "5_1_grt                   .sdc                             37fb05d844ce9772fe47"
+          ]
+        }
+      ]
+    },
+    {
+      "work": "tc_col_13",
+      "logdir": "/home/ubuntu/w13work/tc_col_13/logs/asap7/chip_ot_gpu_tc_col/base",
+      "recent": [
+        {
+          "path": "/home/ubuntu/w13work/tc_col_13/logs/asap7/chip_ot_gpu_tc_col/base/5_1_grt.tmp.log",
+          "modified_at": "2026-10-01T09:25:13.843655+00:00",
+          "size": 4569,
+          "tail": [
+            "[INFO DRT-0079]   Complete 100 unique inst patterns.",
+            "[INFO DRT-0079]   Complete 200 unique inst patterns.",
+            "[INFO DRT-0079]   Complete 300 unique inst patterns.",
+            "[INFO DRT-0081]   Complete 323 unique inst patterns.",
+            "[INFO DRT-0082]   Complete 10000 groups.",
+            "[INFO DRT-0082]   Complete 20000 groups.",
+            "[INFO DRT-0082]   Complete 30000 groups.",
+            "[INFO DRT-0082]   Complete 40000 groups.",
+            "[INFO DRT-0082]   Complete 50000 groups.",
+            "[INFO DRT-0082]   Complete 60000 groups.",
+            "[INFO DRT-0082]   Complete 70000 groups.",
+            "[INFO DRT-0082]   Complete 80000 groups."
+          ]
+        },
+        {
+          "path": "/home/ubuntu/w13work/tc_col_13/logs/asap7/chip_ot_gpu_tc_col/base/4_1_cts.log",
+          "modified_at": "2026-10-01T06:43:01.255097+00:00",
+          "size": 310457,
+          "tail": [
+            "Took 24 seconds: estimate_parasitics -placement",
+            "Report metrics stage 4, cts final...",
+            "",
+            "==========================================================================",
+            "cts final report_design_area",
+            "--------------------------------------------------------------------------",
+            "Design area 37441 um^2 80% utilization.",
+            "write_db /work/results/asap7/chip_ot_gpu_tc_col/base/4_1_cts.odb",
+            "write_sdc -no_timestamp /work/results/asap7/chip_ot_gpu_tc_col/base/4_cts.sdc",
+            "Elapsed time: 38:04.98[h:]min:sec. CPU time: user 2065.05 sys 12.75 (90%). Peak memory: 2379260KB.",
+            "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+            "4_1_cts                   .odb         2284           2323 d583fe56357e20fbd924"
+          ]
+        }
+      ]
+    }
+  ],
+  "mem_available_kib": 138352680,
+  "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/sda1       776G  686G   90G  89% /\n"
+}
