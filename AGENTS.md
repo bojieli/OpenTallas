@@ -59,3 +59,9 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
 - Stage files by explicit path, never `git add -A`.
 - Run long jobs in pinned clean worktrees, not in the main checkout.
 - After editing any doc under `docs/`, regenerate the prose-figure census and sync its two untriaged-count annotations, then run `make check-figures`.
+
+## Fleet and retirement policy (user reaffirmed 2026-10-01)
+
+- Active tracks: Qwen3 ROM, DeepSeek V4.1 ROM, and GPU-organised HBM comparators for both models. Maximum per-user decode speed is primary; maximum batching throughput is secondary and must not delay the single-user path.
+- Use parallel subagents and local, all three PVE hosts and all six AGIdock VMs for simulation and place-and-route, subject to measured memory, disk and CPU headroom. Reuse live pinned jobs instead of duplicating them.
+- Remove retired legacy worktrees and build checkpoints to reclaim disk. Preserve unique source changes in lightweight refs or patches before retirement, and retain committed pass/failure evidence. Never remove sources or checkpoints still required by an active job or the current targets.
