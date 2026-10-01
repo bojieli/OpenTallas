@@ -1,0 +1,325 @@
+{
+  "all_manifest_live_and_commit_hashes_match": true,
+  "artifacts": {
+    "census.json": "2df2408f702a814f3128f2eb28d4f2f9d49d520c7e502cda52b4559777ed3b8f",
+    "retained_records.json": "0ed55889acb68ae72c42908981636f4cc40fcfc8a96a94da6bfdcb9e215e2659",
+    "source_pins.json": "165dc3b690052b2f551ed0f6b2bff6983f597a71b99ccd8739c72f6aa5c92a06"
+  },
+  "base_commit": "95182d990459829d210d06eebf39267bc865b445",
+  "boundary": "Read-only source and retained metadata census. No new proof, simulator compile, live build, source-list/RTL edits, payload reads or live process operations. Existing golden simulation PASS does not qualify replacement helpers. Hubble owns generic HDC proof extension.",
+  "compile_binding": {
+    "BP": 0,
+    "CUT": 379,
+    "FAST": 1,
+    "FRONT_PAR": 0,
+    "PHW": 6,
+    "PP": 1,
+    "actual_fadd_LATENCY": 8,
+    "defaults": {
+      "EARLY": 1,
+      "LV": 5,
+      "MTP": 1,
+      "NCH": 16,
+      "NCHB": 8,
+      "NSEG": 8
+    },
+    "driver": "tools/w17_current_fastpp_die_rt.py",
+    "pairs": [
+      {
+        "BF16": 0,
+        "XF": 4,
+        "prefix": "pq",
+        "top": "ot_v41_pair_w17w10"
+      },
+      {
+        "BF16": 1,
+        "XF": 8,
+        "prefix": "pb",
+        "top": "ot_v41_pair_w17w10"
+      }
+    ],
+    "preprocessor": [
+      "V41_RT for pq/pb/retn only; not needed for leaf-only tests",
+      "V41_ATT_CUT and HDC include path are die-side options, not common-prefix leaf requirements"
+    ],
+    "return_models": [
+      {
+        "BYPASS": 1,
+        "RD": 64,
+        "RST": 1,
+        "top": "ot_v41_retn_w17w10"
+      },
+      {
+        "D": 128,
+        "QD": 128,
+        "top": "ot_v41_ret_root"
+      }
+    ],
+    "supervisor": "tools/w17_current_L0_supervisor_v2.py"
+  },
+  "helper_source_sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+  "manifest_path": "results/rtl/w17_connected_token_preparation_20261001/L0_cli_recovery_launch.json",
+  "manifest_sha256": "8b32ae2fead63afbfe63db536f660d6a67ac3b11862789ba4a36d53b42bc21d0",
+  "minimum_compile_source_sets": {
+    "bmul2": [
+      "rtl/common/ot_prefix.sv",
+      "rtl/v41rom/ot_v41_bmul2.sv"
+    ],
+    "bterm2_w10": [
+      "rtl/common/ot_prefix.sv",
+      "rtl/v41rom/ot_v41_bterm.sv",
+      "rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "rtl/hdc/ot_hdc_delay.sv"
+    ],
+    "fadd": [
+      "rtl/common/ot_prefix.sv",
+      "rtl/v41rom/ot_v41_fadd.sv"
+    ],
+    "requirements": [
+      "SystemVerilog generate arrays, constant $clog2(W+1), widths positive; W=12/24/25/28/42 only in current common-prefix scope",
+      "For bterm instantiate TW=17 as actual element caller (HW=4,TRW=4,TW=HW+3+TRW+6); payload W=42 is localparam, not override",
+      "For fadd instantiate CUT=379; seven enabled cuts plus final output register = 8. LATENCY parameter does not select cuts; wrappers derive LAT from CUT",
+      "bmul2 has no LAT parameter and no valid output; five-cycle valid is tracked externally in bf16_lanes2",
+      "chain2 NCH=16 TW=8 at element and NCH=8 TW=8 in BF16 lanes; bf16_lanes2 TRW=TG=7. segtree2 NT=16 LV=5 QD=8 EARLY=1"
+    ]
+  },
+  "preserved_completed_files": [
+    {
+      "byte_identical": true,
+      "commit": "ca875c1183eb0cd8bacad6c42cd218e32e740730",
+      "path": "rtl/test/tb_w11_fastfp_prefix_sequential_gate.sv",
+      "sha256": "e092b45e0e3564e5830ab2424d6db68a902b693ebff3d3c7036e7b71b1d9489b"
+    },
+    {
+      "byte_identical": true,
+      "commit": "ca875c1183eb0cd8bacad6c42cd218e32e740730",
+      "path": "rtl/test/w11_fastfp_prefix_sequential_gate.cpp",
+      "sha256": "ec591aad27887fb8b62e921de67cca25bca58465b50ddd5be2c70f8cf08b2e2a"
+    },
+    {
+      "byte_identical": true,
+      "commit": "ca875c1183eb0cd8bacad6c42cd218e32e740730",
+      "path": "tests/test_w11_fastfp_prefix_sequential_gate.py",
+      "sha256": "4286dc7fa60d3c7da44536d2e4db482af372874327006f073d0dbdb23ff3990c"
+    },
+    {
+      "byte_identical": true,
+      "commit": "ca875c1183eb0cd8bacad6c42cd218e32e740730",
+      "path": "tools/w11_fastfp_prefix_sequential_gate.py",
+      "sha256": "9f84474bf68e79f97c6c6a414cff2be488b9d2e6bd820b8ba738e42482aa2cdd"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/build.log",
+      "sha256": "bdbbb328f81f83e7f3fc894280fdb283c670cff4283bd0de148ce0f55ecc5d6f"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/candidate.sv",
+      "sha256": "d1cdc8ffd09e109c8abe878a4df717d8ed59846be4115a5c2e6b11b7e0ba6ff4"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/seed_2654435769.log",
+      "sha256": "4e5e3461ed6448658a5096a2a3a8e9b810a05f7c8909d90ff1288af4e13045ca"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/seed_305419896.log",
+      "sha256": "a7c834d0684825ba030cbf5dabe7d493bf80d14ead715c5ce8cb7ffdc0126b39"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/seed_3221344269.log",
+      "sha256": "e325bb2202abd22fc31f0fb6a8f113513fd4143ad0d06304d1dfc8e734d24729"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/carry_mutant/build.log",
+      "sha256": "8f4db8c7ee9fdbe4d317b6047b19087b95ab130bad2e82d75bab114f119f02e2"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/carry_mutant/candidate.sv",
+      "sha256": "658048c7012ed59f8520cb756724b735994c29568f2223188d8cf9e5e7719a29"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/carry_mutant/seed_305419896.log",
+      "sha256": "00566cc1f2eaaaa30b3dbf619121bb0dbf6bf20bdd559a6da2410ef8a842e6ce"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/consumer_width_census.json",
+      "sha256": "b769a4447bedd9edb49875afe9d5a27c7610850b7c174a242b7b37acaf29e98f"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/generated/reference.sv",
+      "sha256": "d8338eeafe77d7476817d73c4136c3d0ee625312dbd4c1dec77e030eece80231"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/generic_extension_scope.json",
+      "sha256": "8b7ee36cead952568b9a25749d5b42e930350c22515c0dbbf4fa1d3c9ee67b36"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/pytest.log",
+      "sha256": "cf426ab35f3b06fccef8290fde5325d90af130a79da1d1752031518df77c4236"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/record.json",
+      "sha256": "08f8f63cee305edb5f0ed904db8e202258c210d737c99395e4918d77a9b67f87"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/reset_mutant/build.log",
+      "sha256": "a2dce0e5c602b5b1709a510ea038c4ec694571e021bbef7d34f37176df0e47de"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/reset_mutant/candidate.sv",
+      "sha256": "e7b41cc5e9f02ff5bc44bd7aba018210b34604acaa309d763c96c6249947814b"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/reset_mutant/seed_305419896.log",
+      "sha256": "f490524fe947e8036b13aa82a3876b03a13aa722675e9dffe872a980899910b5"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/build.log",
+      "sha256": "85218914c24e5617a1fbd508bf4fbc2b5da01aa5e502c419f08aa2191da8b08c"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_2654435769.log",
+      "sha256": "4e5e3461ed6448658a5096a2a3a8e9b810a05f7c8909d90ff1288af4e13045ca"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_305419896.log",
+      "sha256": "a7c834d0684825ba030cbf5dabe7d493bf80d14ead715c5ce8cb7ffdc0126b39"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_3221344269.log",
+      "sha256": "e325bb2202abd22fc31f0fb6a8f113513fd4143ad0d06304d1dfc8e734d24729"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/carry_mutant/build.log",
+      "sha256": "8cddc7791dbf0d3bbd17d6f02ceb59b0b6f70f41cf7524af87ca31465f9173a5"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/carry_mutant/seed_305419896.log",
+      "sha256": "00566cc1f2eaaaa30b3dbf619121bb0dbf6bf20bdd559a6da2410ef8a842e6ce"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/reset_mutant/build.log",
+      "sha256": "59abc0df2f51c167a4068be529a3859caa1b9983f861c1d876617918178fe777"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/reset_mutant/seed_305419896.log",
+      "sha256": "f490524fe947e8036b13aa82a3876b03a13aa722675e9dffe872a980899910b5"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_rerun_r2.json",
+      "sha256": "537c8d7febdff9a5ec187f399f622427adceafa0e382b563d11dc63ae4f91154"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_review.json",
+      "sha256": "83b357cb9b4ae69df4019a0895658f9bddbc39c263ddb4d8f407962d19bc97c0"
+    }
+  ],
+  "qualification": {
+    "actual_hardware": false,
+    "adoption": false,
+    "common_prefix_formal": false,
+    "common_prefix_sequential_substitution": false,
+    "field_simulator_substitution": false,
+    "source_selection": false,
+    "whole_provider": false
+  },
+  "remaining_gate": [
+    {
+      "cases": {
+        "ot_v41_inc": [
+          24,
+          25,
+          42
+        ],
+        "ot_v41_ksadd": [
+          12,
+          24,
+          28,
+          42
+        ]
+      },
+      "gate": "Seven combinational SAT equivalence cases of exact commonprefix source versus explicit W+1 behavioral addition",
+      "order": 1,
+      "requirements": [
+        "Unconstrained typed operands and cin/inc; compare full {cout,s}/{co,y}, not only used sum bits",
+        "Negative controls changing carry and low result bit must FAIL with retained witnesses",
+        "Source SHA must match 01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc; HDC generic proofs do not satisfy this gate"
+      ]
+    },
+    {
+      "gate": "Small dual-instance sequential equivalence tests for fadd CUT379, bmul2 LAT5, bterm2_w10 TW17 LAT11",
+      "order": 2,
+      "requirements": [
+        "Generated candidate replaces ONLY ot_v41_ksadd/inc bodies, unchanged namespaced consumer text and csa/delay dependencies",
+        "Compare every y/err/valid/fault/tag port each cycle, including bubbles, errors, reset held and async reset during every occupied stage",
+        "bmul2 external valid scoreboard must match five-cycle wrapper contract; bterm ov/tag eleven cycles; fadd eight cycles",
+        "Directed FP exceptions/subnormal/cancellation/rounding/overflow plus FP8/FP4 signed dot/scale rounding and seeded randoms",
+        "Carry and reset or latency mutants required to fail; do not invent payload reset where original pipeline payload is unreset"
+      ]
+    },
+    {
+      "gate": "Bounded wrapper integration before any future field-source substitution",
+      "order": 3,
+      "requirements": [
+        "Dual chain2 at NCH16 and NCH8, segtree2 NT16 LV5 QD8 EARLY1, bf16_lanes2 NCHB8 TRW7 CUT379",
+        "Test chain forwarding/hazard boundary at LAT8 and LAT8+1; tagged reduction/padding and queue pressure; reset with queued/inflight work",
+        "Match every public port/fault each cycle; use retained compile bindings; no full die build or checkpoint reads needed"
+      ]
+    }
+  ],
+  "schema": "opentallas.w11.field_common_prefix_coverage_gap.v1",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_count": 145,
+  "verdict": "CENSUS_COMPLETE_QUALIFICATION_GAP_OPEN"
+}
