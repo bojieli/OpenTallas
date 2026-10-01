@@ -51,6 +51,10 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
   - leaves pinned files byte-identical;
   - passes the hub routing-layer check;
   - is adopted only if the model prices it at 1% or more of per-user rate.
+- No numerical, performance or place-and-route risk (user, 2026-10-01):
+  - a lever is adopted only after its RTL measurement confirms a gain, and any new hardware closes at SS/FF in context. A lever that measures slower, or fails to close, is rejected rather than tuned.
+  - a contract change (class C) needs the pre-committed PPL/MMLU rule plus a numerical-stability check: no NaN/Inf, no FP8 saturation beyond the current contract's, and error and selection-flip rates within the noise floor across depth and context.
+  - Norm-after-matvec, rejected 2026-09-27, is now under that check (stream QC-NAM). It is adopted only on PASS.
 - HBM comparators take only what a real GPU generation or its software stack has (register and TMEM-style epilogues, fused all-reduce plus norm, in-switch reduction, collective overlap), never ROM-specific novelties.
 - Stage files by explicit path, never `git add -A`.
 - Run long jobs in pinned clean worktrees, not in the main checkout.
