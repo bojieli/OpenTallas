@@ -1,0 +1,327 @@
+{
+  "utc": "2026-10-01T12:20:01.154060+00:00",
+  "source_git": "5459b95bd3f441b88945d55bbe0dbcaaf987f840",
+  "pins": [
+    {
+      "path": "tools/uarch_model.py",
+      "source_git": "5459b95bd3f441b88945d55bbe0dbcaaf987f840",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    {
+      "path": "tools/arch_budget_qwen3.py",
+      "source_git": "5459b95bd3f441b88945d55bbe0dbcaaf987f840",
+      "sha256": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf"
+    },
+    {
+      "path": "tools/hbm_gpu_floorplan.py",
+      "source_git": "5459b95bd3f441b88945d55bbe0dbcaaf987f840",
+      "sha256": "2b7241963971fd9fc8991ffd9a0cf89aee11525ad4747cb49efad001bc531205"
+    },
+    {
+      "path": "tools/chip_assembly/floorplans.py",
+      "source_git": "5459b95bd3f441b88945d55bbe0dbcaaf987f840",
+      "sha256": "3a78ac42e27e5a01b8970620eff075e62c149abe8dc8d45da756f40a3865c94f"
+    },
+    {
+      "path": "results/floorplan/hbm_gpu/qwen_hbm_die.json",
+      "source_git": "5459b95bd3f441b88945d55bbe0dbcaaf987f840",
+      "sha256": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4"
+    },
+    {
+      "path": "results/floorplan/hbm_gpu/v41_hbm_die.json",
+      "source_git": "5459b95bd3f441b88945d55bbe0dbcaaf987f840",
+      "sha256": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67"
+    },
+    {
+      "path": "results/uarch/w16_gpu_hc_simt_contract_20261001/assumptions_r1.json",
+      "source_git": "5459b95bd3f441b88945d55bbe0dbcaaf987f840",
+      "sha256": "8e632ca52b641b8a7a541672b6803c1209de1cbc552c768a8c4758f908b1834d"
+    },
+    {
+      "path": "results/uarch/w16_w19_gpu_service_gate_20261001/qualification.json",
+      "source_git": "5459b95bd3f441b88945d55bbe0dbcaaf987f840",
+      "sha256": "ad1f147c190cc3051a8d1729f659d596c207091091deccf266ba030c4b2d6270"
+    },
+    {
+      "path": "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json",
+      "sha256": "afdd10370ea467af90429686ea64c7cd7a7f6722df193e67057e63f88dd2267e",
+      "scope": "historical measured-column area input, not currentSSFFsignoff"
+    },
+    {
+      "path": "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json",
+      "sha256": "52a59fd5e3feb1204f830053db3e9c56822884a37e081061a8d56cf49e063086",
+      "scope": "historical measured-column area input, not currentSSFFsignoff"
+    },
+    {
+      "path": "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json",
+      "sha256": "afdd10370ea467af90429686ea64c7cd7a7f6722df193e67057e63f88dd2267e",
+      "scope": "historical measured-column area input, not currentSSFFsignoff"
+    },
+    {
+      "path": "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json",
+      "sha256": "52a59fd5e3feb1204f830053db3e9c56822884a37e081061a8d56cf49e063086",
+      "scope": "historical measured-column area input, not currentSSFFsignoff"
+    }
+  ],
+  "screen_status": "ANALYTICAL_ONLY_NOT_PHYSICAL_READY",
+  "rows": [
+    {
+      "model": "qwen",
+      "replicas": 32,
+      "whole_element": {
+        "subparts": 4,
+        "int8_lanes": 128,
+        "bf16_lanes": 0,
+        "blockdot_lanes": 0,
+        "cols": 16,
+        "il": 8,
+        "ingest_Bpc": 128,
+        "k_max": 12288,
+        "x_bytes": 2,
+        "simt_lanes": 128,
+        "scratch_kb": 64,
+        "stack_levels": 5
+      },
+      "analytical_sm_area": {
+        "logic_um2": {
+          "mma_lanes_and_trees": 1919283,
+          "blockdot_and_trees": 0,
+          "stack": 32428,
+          "row_scale": 12532,
+          "simt": 149605,
+          "x_operand_regs": 19110
+        },
+        "logic_mm2": 2.133,
+        "hardened_columns": {
+          "lane_with_tree": 897.15,
+          "lane_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json",
+          "blockdot_with_tree": 2736.77,
+          "blockdot_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json"
+        },
+        "footprint_logic_mm2": 4.266,
+        "sram_kb": {
+          "x_store": 384.0,
+          "staging": 128,
+          "scratch": 64
+        },
+        "sram_macros": {
+          "x_store": 16,
+          "staging": 4,
+          "scratch": 2
+        },
+        "sram_mm2": 0.355,
+        "total_mm2": 4.621,
+        "macs_per_clk": 2048
+      },
+      "historical_sm_slot_mm2": 4.085,
+      "whole_baseline_slot_fit": false,
+      "slot_deficit_mm2": 0.5360000000000005,
+      "baseline32_sm_mm2": 147.872,
+      "historical32_slot_mm2": 130.72,
+      "available_core_mm2": 695.22,
+      "full_array_area_only_lower_bound_fit": true,
+      "actual_complete_sm_lef": null,
+      "actual32sm_shape_fit": null,
+      "rf_capacity_bytes": null,
+      "rf_bank_count": null,
+      "rf_area_mm2": null,
+      "rf_actual_ports_bits_per_cycle": null,
+      "simt_vector_bits": 4096,
+      "conditional_two_read_one_write_bits_per_cycle": {
+        "read": 8192,
+        "write": 4096
+      },
+      "conditional_three_read_one_write_bits_per_cycle": {
+        "read": 12288,
+        "write": 4096
+      },
+      "conditional_RF_note": "Arithmetic width floors only; neither operand count nor bank/port allocation is frozen. No free broadcast/port/reuse assumed.",
+      "shared_memory": {
+        "capacity_bytes": 65536,
+        "assumed_banks": 32,
+        "assumed_ports_per_bank": 1,
+        "word_bytes": 4,
+        "conditional_one_operation_bandwidth_bytes_per_cycle": 128,
+        "scope": "W16 unmeasured assumption; simultaneous read/write/transpose/collision service not certified"
+      },
+      "channel_screen": {
+        "historical": {
+          "x": 110.16,
+          "y": 293.76,
+          "v_wires": 2696,
+          "h_wires": 4104,
+          "tracks_per_um_v": 24.48,
+          "tracks_per_um_h": 14.06
+        },
+        "service_weight_bits_per_sm": 1088,
+        "service_clients_total": 36,
+        "service_layout": "4 quadrants x (8SM+1 injector)",
+        "actual_port_assignment": null
+      },
+      "physical_admission": "FAIL_CLOSED",
+      "open_gates": [
+        "Complete SIMT/RF/shared-memory HC/SU RTL and exact contract",
+        "Explicit RF capacity/banks/ports/fanout/area and shared-memory update/collision cost",
+        "Corrected request+return service allocation and no-double-counting ledger",
+        "Full32SM shape on real completeSM LEFs, service36clientport/corridors",
+        "Contextual SS/FF at unchanged targets; no smaller proxy"
+      ],
+      "new_PnR": false,
+      "slot_remaining_before_missing_resources_mm2": -0.5360000000000005,
+      "vector_serialization_screen": {
+        "full_fp32_vector_bytes": 512,
+        "conditional_shared_memory_whole_vector_operation_cycles_lower_bound": 4,
+        "conditional_shared_two_reads_one_write_cycles_lower_bound": 12,
+        "conditional_512bit_service_vector_beats_lower_bound": 8,
+        "caveat": "Width/capacity arithmetic only. Actual bank mapping, RF separate ports, operation count, arbitration, CDC and critical-chain pricing pending; no rate credit."
+      },
+      "admission_notes": "Whole32SM aggregate area fit cannot certify slot shape, RF ports or corridors. No undersized proxy or clock relaxation."
+    },
+    {
+      "model": "v41",
+      "replicas": 32,
+      "whole_element": {
+        "subparts": 4,
+        "int8_lanes": 0,
+        "bf16_lanes": 64,
+        "blockdot_lanes": 8,
+        "cols": 8,
+        "il": 8,
+        "ingest_Bpc": 128,
+        "k_max": 5120,
+        "x_bytes": 2,
+        "simt_lanes": 128,
+        "scratch_kb": 64,
+        "stack_levels": 3,
+        "group_slot": true,
+        "gs_cols": 8
+      },
+      "analytical_sm_area": {
+        "logic_um2": {
+          "mma_lanes_and_trees": 459341,
+          "blockdot_and_trees": 175153,
+          "stack": 9728,
+          "row_scale": 6266,
+          "simt": 149605,
+          "x_operand_regs": 9854
+        },
+        "logic_mm2": 0.81,
+        "hardened_columns": {
+          "lane_with_tree": 897.15,
+          "lane_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json",
+          "blockdot_with_tree": 2736.77,
+          "blockdot_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json"
+        },
+        "footprint_logic_mm2": 1.62,
+        "sram_kb": {
+          "x_store": 80.0,
+          "staging": 128,
+          "scratch": 64
+        },
+        "sram_macros": {
+          "x_store": 99,
+          "staging": 4,
+          "scratch": 2
+        },
+        "sram_mm2": 0.601,
+        "total_mm2": 2.221,
+        "macs_per_clk": 2560
+      },
+      "historical_sm_slot_mm2": 2.296,
+      "whole_baseline_slot_fit": true,
+      "slot_deficit_mm2": 0,
+      "baseline32_sm_mm2": 71.072,
+      "historical32_slot_mm2": 73.472,
+      "available_core_mm2": 660.08,
+      "full_array_area_only_lower_bound_fit": true,
+      "actual_complete_sm_lef": null,
+      "actual32sm_shape_fit": null,
+      "rf_capacity_bytes": null,
+      "rf_bank_count": null,
+      "rf_area_mm2": null,
+      "rf_actual_ports_bits_per_cycle": null,
+      "simt_vector_bits": 4096,
+      "conditional_two_read_one_write_bits_per_cycle": {
+        "read": 8192,
+        "write": 4096
+      },
+      "conditional_three_read_one_write_bits_per_cycle": {
+        "read": 12288,
+        "write": 4096
+      },
+      "conditional_RF_note": "Arithmetic width floors only; neither operand count nor bank/port allocation is frozen. No free broadcast/port/reuse assumed.",
+      "shared_memory": {
+        "capacity_bytes": 65536,
+        "assumed_banks": 32,
+        "assumed_ports_per_bank": 1,
+        "word_bytes": 4,
+        "conditional_one_operation_bandwidth_bytes_per_cycle": 128,
+        "scope": "W16 unmeasured assumption; simultaneous read/write/transpose/collision service not certified"
+      },
+      "channel_screen": {
+        "historical": {
+          "x": 110.16,
+          "y": 293.76,
+          "v_wires": 2696,
+          "h_wires": 4104,
+          "tracks_per_um_v": 24.48,
+          "tracks_per_um_h": 14.06
+        },
+        "service_weight_bits_per_sm": 1088,
+        "service_clients_total": 36,
+        "service_layout": "4 quadrants x (8SM+1 injector)",
+        "actual_port_assignment": null
+      },
+      "physical_admission": "FAIL_CLOSED",
+      "open_gates": [
+        "Complete SIMT/RF/shared-memory HC/SU RTL and exact contract",
+        "Explicit RF capacity/banks/ports/fanout/area and shared-memory update/collision cost",
+        "Corrected request+return service allocation and no-double-counting ledger",
+        "Full32SM shape on real completeSM LEFs, service36clientport/corridors",
+        "Contextual SS/FF at unchanged targets; no smaller proxy"
+      ],
+      "new_PnR": false,
+      "slot_remaining_before_missing_resources_mm2": 0.07499999999999973,
+      "vector_serialization_screen": {
+        "full_fp32_vector_bytes": 512,
+        "conditional_shared_memory_whole_vector_operation_cycles_lower_bound": 4,
+        "conditional_shared_two_reads_one_write_cycles_lower_bound": 12,
+        "conditional_512bit_service_vector_beats_lower_bound": 8,
+        "caveat": "Width/capacity arithmetic only. Actual bank mapping, RF separate ports, operation count, arbitration, CDC and critical-chain pricing pending; no rate credit."
+      },
+      "admission_notes": "Whole32SM aggregate area fit cannot certify slot shape, RF ports or corridors. No undersized proxy or clock relaxation."
+    }
+  ],
+  "corrected_service": {
+    "macros_per_client": 4,
+    "request_return_width_bits_each": 512,
+    "macro_count": 400,
+    "area_mm2": 162.284,
+    "SM_slot_fit": false,
+    "old_200_macro_contract_build_allowed": false
+  },
+  "service_cost_allocation": "Unresolved whether die/element boundaries and existing L2/staging costs overlap; do not sum162.284mm2 blindly or omit it",
+  "current_model_clock_labels_not_adopted": true,
+  "streaming_target_ghz": 1.2,
+  "serial_target_ghz": 0.9,
+  "tc16": "PinnedSSFAIL -31.06ps, no retry/SMlaunch",
+  "live_tc_col": "Independent existing route retained",
+  "supervisor_hold": "615596/start305293450 T; monitor626096 remains",
+  "adopt": false,
+  "current_route_observation": {
+    "utc": "2026-10-01T12:20:20Z",
+    "pid": 1449805,
+    "elapsed": "05:37:15",
+    "cpu": "06:24:56",
+    "rss_kib": 4400180,
+    "stage": "global_route timing repair",
+    "terminal": false,
+    "no_new_route": true
+  },
+  "guard_observation": {
+    "utc": "2026-10-01T12:20:17Z",
+    "supervisor_state": "T",
+    "monitor_status": "EXCLUSIVE",
+    "issues": []
+  }
+}

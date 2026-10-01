@@ -1,0 +1,10 @@
+{
+  "utc": "2026-10-01T12:17:53.240413+00:00",
+  "pid": 615596,
+  "start_ticks": "305293450",
+  "state": "S",
+  "argv": "python3 /tmp/claude-1000/w13jobs/chain17/w13_chain_successor.py /tmp/claude-1000/w13jobs/chain17/config.json ",
+  "live_children": [],
+  "events_sha256": "4ee3588916cecebcb65efeb78e2a1570c86e6583a73b97ad7912230ff364ff88",
+  "reason": "User stopstage: tc16 SS FAIL; completeGPU SIMT/RF/shared-memory and corrected slot/service admission incomplete. Hold future dispatch only, live tc_col independent."
+}
