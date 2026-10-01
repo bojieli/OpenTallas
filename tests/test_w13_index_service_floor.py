@@ -18,3 +18,13 @@ def test_query_cache_and_exception_shortcut_not_free():
  assert d['exceptional_only_branch_work']['branch_latency'] is None
  assert d['RF_known_active_read_bits_lower_bound']==37617664
  assert d['RF_known_active_write_bits_lower_bound']==54132736
+
+
+def test_source_pinned_missing_scale_handoff_expanded_floor():
+ d=build();assert d['source_scale_handoff_bridge']['shared_bytes']==35328
+ assert d['source_scale_handoff_bridge']['warp_issues']==524
+ assert d['expanded_shared_bytes_with_scale_handoff']==3828224
+ assert d['expanded_shared_warp_issues_with_scale_handoff']==38092
+ assert d['expanded_shared_serial_cycle_floors']=={'one_SM':29908,'ideal32SM':935}
+ assert d['source_initializer_still_unbound']['literal_fusion_actual_ops'] is None
+ assert d['pitch33_fullquerycache_plus_rawkeys_bytes']==67072
