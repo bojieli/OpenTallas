@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.w11-idx-ring-concurrent.v1",
   "status": "pass",
-  "git_head": "b8c094ec0fcf4fcfd00b42009696f889aeb07e83",
+  "git_head": "8671f2be2ea0bacadad9d7dae5d64026568b9f86",
   "simulator": "Verilator 4.038",
   "arbiter": "ot_hdc_v41x_idx_ring_port READ_FENCE=0: per pseudo-channel port the writer's request wins, the reader takes every other port-cycle; responses routed by tag bit 12",
   "cases": [
@@ -42,7 +42,7 @@
         "migrations": 6,
         "copied_sectors": 612
       },
-      "simulation_wall_seconds": 3.9
+      "simulation_wall_seconds": 6.6
     },
     {
       "name": "one_step",
@@ -81,7 +81,7 @@
         "migrations": 2,
         "copied_sectors": 204
       },
-      "simulation_wall_seconds": 3.2
+      "simulation_wall_seconds": 4.9
     },
     {
       "name": "one_step_migration",
@@ -120,7 +120,7 @@
         "migrations": 2,
         "copied_sectors": 204
       },
-      "simulation_wall_seconds": 1.7
+      "simulation_wall_seconds": 5.4
     },
     {
       "name": "two_steps",
@@ -159,7 +159,7 @@
         "migrations": 2,
         "copied_sectors": 204
       },
-      "simulation_wall_seconds": 4.3
+      "simulation_wall_seconds": 3.4
     }
   ],
   "summary": {
@@ -188,16 +188,17 @@
   "correctness_scope": "Concurrent writes are safe for another user's ring, and for the same user's next step (its new key and migrated keys land in slots outside every stack's current range); a scan that must see a write needs the fence (READ_FENCE = 1, used in the die).",
   "sources_sha256": {
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kdata_m.sv": "a2fa51f89198cb9c8313282ee9dbd7167ff857b33f5e9440b649ce5ba8045638",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "17c9e27ef872a4aa06fa4c462359b0ffea7a70e30660ec7a8ab683461c794bee",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "15a307570fd353d3f6c0848ee08adabf3f54575bed2be591bd19f47ee009737e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "3454bdf85be8fb19171c71937e852501e3388cfc2d0ae8ee5dd9ddd98ba60774",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": "bba9b5c064ccfcf2e198de955dc2bb6291fcf305c78ba5a708089e01b7d6f5a0",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_port.sv": "9bbb649dea5f5ff7a65fd1eef897b76e2774a6fbbcad91b1f3df4dd8a055ab15",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv": "85e919003fadf25e42cfbe641872fae703b490ef5d5abb0944396a5f06062ece",
     "rtl/test/tb_w11_idx_ring_concurrent.sv": "be21f8917a9cbe5493227495de6a205f7d1c648cada2d11d9162ee18afbc6008",
     "rtl/test/w11_idx_ring_concurrent.cpp": "4565f76b4e067402a3b9924beef064f8cebd21acc49399d1639d61260015c542",
-    "tools/w11_idx_ring_concurrent.py": "50ea1bd44aa3da1b9301df1de32f7976423e528677813915af54e13f91d84860"
+    "tools/w11_idx_ring_concurrent.py": "7c2cea729ffe5e996cd2ab15300b4de80eda0fae486ca7a5ae43724e2a5a4d23"
   }
 }

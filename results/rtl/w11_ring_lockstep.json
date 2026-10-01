@@ -1,7 +1,7 @@
 {
   "schema": "w11_ring_lockstep_v1",
   "status": "pass",
-  "git_head": "dd792fec6adf311671df74136abfdcc4f68da38f",
+  "git_head": "8671f2be2ea0bacadad9d7dae5d64026568b9f86",
   "reference_commit": "7361f422aab60007c0f1fafb7c1db59183a21f19",
   "simulator": "Verilator 4.038",
   "cases": [
@@ -16,7 +16,7 @@
       "requests": 3642286,
       "beats": 14559692,
       "mismatches": 0,
-      "wall_seconds": 3.7
+      "wall_seconds": 23.2
     },
     {
       "name": "die_seed2",
@@ -29,7 +29,7 @@
       "requests": 3724574,
       "beats": 14888810,
       "mismatches": 0,
-      "wall_seconds": 3.7
+      "wall_seconds": 23.1
     },
     {
       "name": "die_seed3",
@@ -42,7 +42,7 @@
       "requests": 3721034,
       "beats": 14874825,
       "mismatches": 0,
-      "wall_seconds": 5.0
+      "wall_seconds": 24.6
     },
     {
       "name": "wb32",
@@ -63,7 +63,7 @@
       "requests": 3637984,
       "beats": 14542269,
       "mismatches": 0,
-      "wall_seconds": 8.5
+      "wall_seconds": 40.5
     },
     {
       "name": "backpressure_long",
@@ -82,7 +82,7 @@
       "requests": 3783366,
       "beats": 15131511,
       "mismatches": 0,
-      "wall_seconds": 10.0
+      "wall_seconds": 88.0
     },
     {
       "name": "join_random",
@@ -96,7 +96,7 @@
       "cycles": 82580102,
       "beats": 29767242,
       "mismatches": 0,
-      "wall_seconds": 112.0
+      "wall_seconds": 385.5
     }
   ],
   "negative_controls": {
@@ -109,7 +109,7 @@
       "requests": 176886,
       "beats": 707012,
       "mismatches": 801,
-      "wall_seconds": 0.3
+      "wall_seconds": 0.8
     },
     "join_last": {
       "change": "(rem[q]>=17 && rem[q]<=32) -> (rem[q]>=17 && rem[q]<32)",
@@ -124,12 +124,13 @@
   },
   "claim": "Port-for-port, cycle-for-cycle equality of the 1.2 GHz forms with the compare forms under the benches' random stimulus; the kctl_ring form is exact for every scan whose block counts fit the HW-bit block counter (all the address space holds), which the benches' scans do.",
   "sources_sha256": {
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "30f0d2e9d1550beeb9055b95bb9909abbb11b84194b11a9a49610487f19cee8e",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "15a307570fd353d3f6c0848ee08adabf3f54575bed2be591bd19f47ee009737e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "3454bdf85be8fb19171c71937e852501e3388cfc2d0ae8ee5dd9ddd98ba60774",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
     "rtl/test/tb_w11_kctl_lockstep.sv": "b899c831e0c11afd4b8984652038ac4a5fad57960be62a2da87a593e25de4160",
     "rtl/test/tb_w11_join_lockstep.sv": "ec5dbdaeea38379b4b11af7c60007644c9ea086561573a957177dda7c0b93b15",
     "rtl/test/w11_lockstep.cpp": "39cbd990ccf34ec874aa7e221fcb3567466da844c201e6ccfa7737a2c196ac75",
-    "tools/w11_ring_lockstep.py": "418b0b7cc7bb092514dd7b0e758848ae48ec917404ba40c70da5fd35736f1fbc"
+    "tools/w11_ring_lockstep.py": "f8569ad5230de5a7ab03bdcdd868c47f19db711ae699846fe508a10c6c2cc71d"
   }
 }

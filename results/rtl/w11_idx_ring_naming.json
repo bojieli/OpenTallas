@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.w11-idx-ring-naming.v1",
   "status": "pass",
-  "git_head": "b8c094ec0fcf4fcfd00b42009696f889aeb07e83",
+  "git_head": "8671f2be2ea0bacadad9d7dae5d64026568b9f86",
   "simulator": "Verilator 5.050",
   "parameters": {
     "AW": 30,
@@ -46,7 +46,7 @@
     "steps_at_slot_past_1024": 44,
     "record_fifo_highwater": 1,
     "cycles": 154292,
-    "simulation_wall_seconds": 29.1,
+    "simulation_wall_seconds": 65.4,
     "simulation_log_sha256": "bb5331b7eb4ca5b6bff05a5c41f8bedf13f6b319a901c8166e1b7a9e57b1566f"
   },
   "negative_control": {
@@ -59,10 +59,11 @@
   "claim_boundary": "The die's ring writer path (ot_hdc_v41x_idx_pool_kwr RING = 1 -> ot_hdc_v41x_idx_ring_port WIDE_REC = 1) and the pooled adapter's ring reader arm, instantiated as the die does, at full ring capacity with timed HBM models; the key elements come from the bench (the SU store the core issues), not a decode step: the reduced vehicle provisions 128 positions (hdc_isa_v41.POS_MAX), so no die token reaches a slot past 1,024. The die-token evidence at full capacity is results/rtl/w11_die_idx_ring_mu_gate.json.",
   "sources_sha256": {
     "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kdata_m.sv": "a2fa51f89198cb9c8313282ee9dbd7167ff857b33f5e9440b649ce5ba8045638",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "17c9e27ef872a4aa06fa4c462359b0ffea7a70e30660ec7a8ab683461c794bee",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "15a307570fd353d3f6c0848ee08adabf3f54575bed2be591bd19f47ee009737e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "74fd4a4e2618a02163e331bc4c318a1f3d2743691492a17a1ac4158c2478b27e",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "3454bdf85be8fb19171c71937e852501e3388cfc2d0ae8ee5dd9ddd98ba60774",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": "bba9b5c064ccfcf2e198de955dc2bb6291fcf305c78ba5a708089e01b7d6f5a0",
@@ -70,6 +71,6 @@
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv": "85e919003fadf25e42cfbe641872fae703b490ef5d5abb0944396a5f06062ece",
     "rtl/test/tb_w11_idx_ring_naming.sv": "662b73a918eb9e42bd23227d4cb8223392c87e4ba2eb79b8ed3eed9571d835c4",
     "rtl/test/w11_idx_ring_naming.cpp": "d8d0e59005c3b239ceb4ffa0c7b2813bc1d7bdafbc82380dd125b14b53d58e39",
-    "tools/w11_idx_ring_naming.py": "9343de310ed1c7f4f319babac993c7ee7e6ba29e8b6ceb022500ca9f452c72a8"
+    "tools/w11_idx_ring_naming.py": "f58c42b30dba4b9460b31e6a3c6f0a013ef64ee1104ddff266d895f851e3f6cc"
   }
 }
