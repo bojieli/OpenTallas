@@ -8,9 +8,11 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def test_full_queue_epoch_and_pending_write_storage_not_free():
     r=model(ROOT);s=r['controller_extension_state']
-    assert s['queue_epoch_bits']==8*32*96*32==786432
-    assert s['write_pending_bits']==8*4*(16+32+34+256+64+1)==12896
-    assert s['total_bits']==799384
+    assert s['queue_transport_epoch_bits']==8*32*96*32==786432
+    assert s['queue_producer_epoch_bits']==8*32*96*64==1572864
+    assert s['queue_epoch_bits']==2359296
+    assert s['write_pending_bits']==8*4*(16+32+64+34+256+64+1)==14944
+    assert s['total_bits']==2374296
     assert not r['hardware_build_ready'] and r['total_token_cycles'] is None
     assert r['source_defaults']['LENW']==5 and r['proposed_geometry']['LENW']==6
 
@@ -44,5 +46,14 @@ def test_pending_depth_prices_stalls_and_perPC_not_stack_column_constraint():
 def test_full_fast_visibility_window_storage_is_priced_not_fourentry_screen():
     r=model(ROOT,write_depth=160)
     assert r['pending_write_service']['target_fast_visibility_window_fits']
-    assert r['controller_extension_state']['write_pending_bits']==8*160*403
+    assert r['controller_extension_state']['write_pending_bits']==8*160*467
     assert not r['hardware_build_ready']
+
+
+def test_source_epoch64_is_not_transport_epoch32_or_unpriced_highhalf():
+    r=model(ROOT)
+    assert r['source_epoch_contract']['producer_epoch_bits']==64
+    assert not r['source_epoch_contract']['source_epoch_narrowing_allowed']
+    assert r['controller_extension_state']['write_pending_fields']['producer_epoch']==64
+    assert r['additional_common36_held_epoch_bits']['total']==1024+512+512+4608
+    assert r['source_epoch_contract']['actual_binding'] is None
