@@ -8,6 +8,14 @@
     "tools/w19_hbm_tp96_isa.py": {
       "commit": "609af8387",
       "sha256": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6"
+    },
+    "rtl/gpu/ot_gpu_sm_v.sv": {
+      "commit": "609af8387",
+      "sha256": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c"
+    },
+    "results/rtl/w19_checkpoint_production_20261001/gpu-simd-lowering-candidate-r3.json": {
+      "commit": "14c57fd85",
+      "sha256": "c4aad8b9c059536e5f7e5ce9a94619341cb2895c53af0f7b6bba6805bc8d2436"
     }
   },
   "ranks": 96,
@@ -34,7 +42,7 @@
     "fence": "Externally visible write commit and drain, never request acceptance.",
     "barrier": "Finite consumer completion and workspace-reuse barriers."
   },
-  "graph_sha256": "59961c420b1921601cc0bb73a63381bd66b2f94bd2742846b5dba3e03ff34224",
+  "graph_sha256": "b3017c53096f4465619fcfd4bb0a067a104949dde7a7e03b0f000ecbca0a6b19",
   "phase_nodes": 11702,
   "phase_counts": {
     "operand_read_credit_wait": 800,
@@ -224,6 +232,8 @@
   },
   "payload_scope": "Source logical collective payload, not NoC transfer volume or timing; topology/multicast/ownership multiplicity pending.",
   "refill_scope": "1103 matrix refills require accepted256 physical descriptors and runtime expert IDs; no checkpoint-byte substitution. Expert_fetch nodes reserve descriptors; payload charged at matrix refill only.",
+  "matrix_ideal_issue_floor_cycles_sum": 52144,
+  "matrix_issue_floor_scope": "Arithmetic-only sum at one active AR column and ideal32SM whole-row waves; not complete matrix schedule, clock-qualified timing or full-token cycles.",
   "default_schedule_status": "BLOCKED_MISSING_KERNEL_OR_SERVICE_COSTS",
   "full_token_cycles": null,
   "full_token_time_ps": null
