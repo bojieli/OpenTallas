@@ -7,6 +7,7 @@ Uses full K and the busiest SM's actual TP-96 row slice from a pinned ISA dump.
 """
 from __future__ import annotations
 import argparse
+import ast
 import datetime
 import hashlib
 import json
@@ -36,6 +37,7 @@ def main():
     ap.add_argument('--dump', type=Path, default=ROOT / 'results/rtl/w19_sm_operands/ar_L0_oreduce.pkl')
     ap.add_argument('--work', type=Path, required=True)
     ap.add_argument('--record', type=Path, required=True)
+    ap.add_argument('--sm-source-commit', help='W13 immutable SM simulation source snapshot; exports without editing RTL')
     ap.add_argument('--limit', type=int, default=0, help='Debug subset, recorded explicitly')
     args = ap.parse_args()
     if args.record.exists():
@@ -52,6 +54,30 @@ def main():
         performance_adoption=False, token_cycle_count_available=False,
         production_transport_and_SSFF='W13 dependency; not established by this gate')
     (args.work / 'model_preflight.json').write_text(json.dumps(preflight, indent=2) + '\n')
+    sources = SOURCES
+    sm_snapshot = None
+    source_hashes = {p: digest(ROOT / p) for p in SOURCES}
+    if args.sm_source_commit:
+        pin = subprocess.check_output(['git', 'rev-parse', args.sm_source_commit + '^{commit}'], cwd=ROOT, text=True).strip()
+        source_list = subprocess.check_output(['git', 'show', pin + ':tools/rtl_gpu_sm_exact.py'], cwd=ROOT, text=True)
+        node = next(n for n in ast.parse(source_list).body if isinstance(n, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == 'SMV_SRC' for t in n.targets))
+        paths = [p for p in ast.literal_eval(node.value) if p != 'rtl/test/tb_gpu_sm_v.sv']
+        snapshot = args.work / 'sm_snapshot'
+        hashes, exported = {}, []
+        for path in paths:
+            data = subprocess.check_output(['git', 'show', pin + ':' + path], cwd=ROOT)
+            dst = snapshot / path
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.write_bytes(data)
+            hashes[path] = hashlib.sha256(data).hexdigest()
+            exported.append(str(dst.resolve()))
+        local = ['rtl/gpu/ot_gpu_expert_fetch.sv', 'rtl/hdc/kv/ot_hdc_hbm_model.sv', BENCH]
+        sources = exported + [str(ROOT / p) for p in local]
+        source_hashes = {p: digest(ROOT / p) for p in local}
+        sm_snapshot = dict(commit=pin, source_sha256=hashes,
+            compile_list_sha256=hashlib.sha256(source_list.encode()).hexdigest(),
+            claim='Unmodified W13 simulation snapshot; not in-context SS/FF qualification')
     W.V.set_arith('chunk8')
     dump = pickle.loads(args.dump.read_bytes())
     selected = [(key, e) for key, e in dump.items() if '.experts.' in str(e['w'])]
@@ -73,7 +99,7 @@ def main():
                 (directory / 'cfg.hex').write_text('\n'.join(cfg) + '\n')
                 k = tuple(sorted(params.items()))
                 if k not in cache:
-                    cache[k] = S.compile_tb(SOURCES, 'tb_w19_fetch_sm', params,
+                    cache[k] = S.compile_tb(sources, 'tb_w19_fetch_sm', params,
                         tempfile.mkdtemp(prefix='build_', dir=args.work))
                 result, meta = S.run_sim(cache[k], directory, 0)
                 meta['fixture_sha256'] = {p: digest(directory / p) for p in ('cfg.hex', 'lines.hex', 'x.hex')}
@@ -106,8 +132,9 @@ def main():
             'numerically. No router, multi-SM/rank runtime, complete token, production transport or SS/FF claim.',
         model_preflight=preflight, debug_limit=args.limit, dump_sha256=digest(args.dump),
         checkpoint_index_sha256=digest(ck.snap / 'model.safetensors.index.json'),
-        source_sha256={p: digest(ROOT / p) for p in SOURCES + ['tools/rtl_w19_fetch_sm.py',
-            'tools/w19_sm_real_ops.py', 'tools/rtl_gpu_sm_exact.py', 'tools/hdc_golden_v41.py', 'tools/hdc_golden.py']},
+        sm_snapshot=sm_snapshot,
+        source_sha256=dict(source_hashes, **{p: digest(ROOT / p) for p in ['tools/rtl_w19_fetch_sm.py',
+            'tools/w19_sm_real_ops.py', 'tools/rtl_gpu_sm_exact.py', 'tools/hdc_golden_v41.py', 'tools/hdc_golden.py']}),
         cases=cases, dependency='W13 SS/FF SM qualification remains pending; no duplicate hardening launched',
         model_update='Diagnostic per-op cycles only; padded fixture cycles are excluded from token repricing')
     args.record.write_text(json.dumps(record, indent=2) + '\n')
