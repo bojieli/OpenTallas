@@ -1,0 +1,1310 @@
+{
+  "verdict": "PASS_LEAN_RETENTION_ONLY",
+  "adopted": false,
+  "full_column_qualified": false,
+  "physical_admission": false,
+  "source_sha256": "cb23633abfb9e0125b5637efc6ba9c374cbed65c40adb33ed9d0752acd287eb0",
+  "liberty_sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+  "results": {
+    "collapsed": {
+      "returncode": 0,
+      "stages": {
+        "proc": {
+          "count": 8,
+          "cells": {
+            "$procdff$53": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$58": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$63": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$68": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$73": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$78": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$83": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$88": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "coarse": {
+          "count": 1,
+          "cells": {
+            "$procdff$53": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "techmap": {
+          "count": 1,
+          "cells": {
+            "$auto$ff.cc:337:slice$173": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "mapped": {
+          "count": 1,
+          "cells": {
+            "$auto$ff.cc:337:slice$173": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        }
+      }
+    },
+    "first_only": {
+      "returncode": 0,
+      "stages": {
+        "proc": {
+          "count": 8,
+          "cells": {
+            "$procdff$53": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$58": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$63": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$68": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$73": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$78": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$83": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$88": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "coarse": {
+          "count": 8,
+          "cells": {
+            "$procdff$53": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$58": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$63": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$68": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$73": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$78": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$83": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$88": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "techmap": {
+          "count": 8,
+          "cells": {
+            "$auto$ff.cc:337:slice$173": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$174": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$175": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$176": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$177": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$178": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$179": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$180": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "mapped": {
+          "count": 8,
+          "cells": {
+            "$auto$ff.cc:337:slice$173": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$174": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$175": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$176": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$177": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$178": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$179": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$180": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        }
+      }
+    },
+    "second_only": {
+      "returncode": 1,
+      "stages": {
+        "proc": {
+          "count": 8,
+          "cells": {
+            "$procdff$53": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$58": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$63": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$68": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$73": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$78": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$83": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$88": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "coarse": {
+          "count": 1,
+          "cells": {
+            "$procdff$53": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "techmap": {
+          "count": 1,
+          "cells": {
+            "$auto$ff.cc:337:slice$173": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        }
+      }
+    },
+    "both": {
+      "returncode": 0,
+      "stages": {
+        "proc": {
+          "count": 8,
+          "cells": {
+            "$procdff$53": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$58": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$63": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$68": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$73": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$78": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$83": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$88": {
+              "type": "$adff",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "coarse": {
+          "count": 8,
+          "cells": {
+            "$procdff$53": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$58": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$63": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$68": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$73": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$78": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$83": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$procdff$88": {
+              "type": "$adff",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "techmap": {
+          "count": 8,
+          "cells": {
+            "$auto$ff.cc:337:slice$173": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$174": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$175": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$176": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$177": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$178": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$179": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$180": {
+              "type": "$_DFF_PN1_",
+              "attributes": {
+                "keep": "00000000000000000000000000000001",
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        },
+        "mapped": {
+          "count": 8,
+          "cells": {
+            "$auto$ff.cc:337:slice$173": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$174": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$175": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$176": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$177": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$178": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$179": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            },
+            "$auto$ff.cc:337:slice$180": {
+              "type": "DFFASRHQNx1_ASAP7_75t_R",
+              "attributes": {
+                "src": "/work/retention_lean_orfs_r3/wake.sv:5.13-7.71"
+              }
+            }
+          },
+          "wake_wire_attributes": {
+            "g_wake.g_leaf[0].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[1].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[2].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[3].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[4].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[5].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[6].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            },
+            "g_wake.g_leaf[7].wake": {
+              "dont_touch": "00000000000000000000000000000001",
+              "keep": "00000000000000000000000000000001",
+              "src": "/work/retention_lean_orfs_r3/wake.sv:4.48-4.52"
+            }
+          }
+        }
+      }
+    }
+  },
+  "first_only_scope": "Control observation, not forced FAIL: techmap attribute propagation differs by Yosys version",
+  "evidence": {
+    "both_coarse.json": "78232389f5861339b180e68400ad6839bf97e6b9e91df604f684c5e1d80e68e8",
+    "first_only_coarse.json": "78232389f5861339b180e68400ad6839bf97e6b9e91df604f684c5e1d80e68e8",
+    "first_only_proc.json": "19306d23e850e133448d614c03724ee15da2f120d0c283407e2b2ce57d49f4be",
+    "second_only.ys": "b81288ebbf5e6594a9d70d3bf6d21f3f7cdcf9c869a8815274d84762dbfd5af1",
+    "second_only_proc.json": "19306d23e850e133448d614c03724ee15da2f120d0c283407e2b2ce57d49f4be",
+    "second_only.log": "c4a2049c3b1b4fc6dbaae5eadd511ddf2e7b4c7461327b2fd998a3182d89414a",
+    "collapsed.log": "9022721b504d3f8de59321f2ed4e910125fa67e24af82467dedbe1997ca83b21",
+    "both.ys": "55bb548075620aab5731b63373f4a6027570c32a911d81ac6482856d41fb826a",
+    "collapsed.ys": "9eb4eb500442df1dffdd27e058c90a1301eccd5c82d33b8046d7d54e670b7234",
+    "collapsed_mapped.json": "97d47a777408764210001e762f916bf21b0fa1bf3143f7e940fb9ef4619854f9",
+    "first_only.ys": "848e1397780c247fec1a6b84a4ecac303b42573f8cab21e48bad442ab386329d",
+    "first_only.log": "2964adcb37126bdec899614ae70ca7cd545b2e80c7c27420f2645a9a706b2f10",
+    "second_only_techmap.json": "692fc019753d6a8299f2f212a7c96c5e99cc4baaac39c2d9e93d97b9e59f56e3",
+    "collapsed_techmap.json": "692fc019753d6a8299f2f212a7c96c5e99cc4baaac39c2d9e93d97b9e59f56e3",
+    "first_only_techmap.json": "c6c1148108a4c08d9e1552f5d8328d555dbb076bc9b0fa828481e8fe041831f4",
+    "first_only_mapped.json": "85be375ec7b1713753a4e06784f84e44d04fcd2be140a970056b0998d8208859",
+    "second_only_coarse.json": "79874a759b56dbf2202ed06c498972c251b7cc08377474c607bb5d8f988cc524",
+    "wake.sv": "a35a2609ca1b7ccb7d425d423f08922f109f6b417848dcf8834c815d07d393a9",
+    "both_mapped.json": "85be375ec7b1713753a4e06784f84e44d04fcd2be140a970056b0998d8208859",
+    "both_techmap.json": "c6c1148108a4c08d9e1552f5d8328d555dbb076bc9b0fa828481e8fe041831f4",
+    "both.log": "ac0abea26960d7d6fb687ce504256bdd093c6e73fa9e7c6cb6e8eb0f47faa26d",
+    "collapsed_coarse.json": "79874a759b56dbf2202ed06c498972c251b7cc08377474c607bb5d8f988cc524",
+    "collapsed_proc.json": "19306d23e850e133448d614c03724ee15da2f120d0c283407e2b2ce57d49f4be",
+    "both_proc.json": "19306d23e850e133448d614c03724ee15da2f120d0c283407e2b2ce57d49f4be"
+  },
+  "pending": [
+    "actual full-column mapping: four ROM, eight distinct registered ENAs and full arithmetic flops",
+    "exact clock/reset/transitions",
+    "all-pin escape/phase/site legality and reserved capacity",
+    "fresh measured fleet lease before any qualified physical context"
+  ]
+}
