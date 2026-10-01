@@ -1,0 +1,124 @@
+{
+  "checkpoint_reads": 0,
+  "current_event_inventory": {
+    "actual_tree_data_isolation": false,
+    "conditional_row_cycles_range": [
+      104,
+      106
+    ],
+    "homes": 192,
+    "macros": 1500067,
+    "selected_data_transition_contract": {
+      "actual_token_bit_pattern_bound": false,
+      "both_child_request_demux_raw_input_bit_transitions_upper": 1924,
+      "guard": "Raw inputs to disabled NAND/MUX branches STILL toggle and consume pin/internal power; physical gate truth/event pricing belongs to Confucius. Do not equate inactive FF D hold with zero cone energy.",
+      "inactive_request_sibling_raw_input_bit_transitions_upper": 962,
+      "macro_CE_transitions_upper": 2,
+      "macro_addr_pin_transitions_upper": 23,
+      "macro_and_tag_capture_bit_transitions_upper": 2228,
+      "macro_output_bit_transitions_upper": 2192,
+      "one_packet_slot_write_bit_transitions_upper": 2432,
+      "request_bound_recipe": "At most51initial changes,22betweenbeats (wordlow3+beat3),onevalidclear; rowhighbits/epoch/layer/column/lease stable withinrow.",
+      "request_register_payload_and_valid_bit_transitions_upper": 74,
+      "request_selected_path_register_copies_upper": 49,
+      "response_register_bit_transitions_upper": 2148,
+      "response_selected_path_register_copies_upper": 49,
+      "root_control_upper_accepted_bit_write_events": 640,
+      "selected_response_MUX_raw_input_bit_transitions_upper": 27924,
+      "source_weight_values_read": false
+    },
+    "selected_wire_path_cycles_range": [
+      35,
+      36
+    ],
+    "ungated_FF_bits": 2073625150
+  },
+  "full_token_latency": null,
+  "geometry": {
+    "CTS_PHY_selector_control_area_placement": false,
+    "origins_SHA256": "25c9fbc0e1faadd7232b860bb665761b78fecc7a3f24811610d51acaaf5fc566",
+    "replacement_manifest_source": {
+      "commit": "2b98ba187",
+      "path": "results/quality/w16_engram_rom_constructive_home_20261001/sensitivity_192_role_repack_constants_retained.json",
+      "sha256": "7e9be0dada030a3ccc2d785b58124fab82e6415cb525738069c52ceefe67710e"
+    },
+    "retained_cell_rectangle_screen": "PASS_SCOPE_ONLY",
+    "retained_channels": 16,
+    "retained_hard_instances": 249
+  },
+  "headline_rate": null,
+  "jobs_launched": 0,
+  "next_correction": "Join constant-retained repack with all endpoint reassembly state, two-fragment service, full-word stored ACK, actual enable isolation and current ungated power before admission.",
+  "no_idle_clock_credit": true,
+  "no_overlap_credit": true,
+  "physical_admission": false,
+  "power_currency": {
+    "historical_200e_inventory_FF_bits": 2073429886,
+    "historical_200e_power_summary": {
+      "all_arcs_allocation_excess_W": "168.90298291846857280",
+      "all_arcs_clock_leak_data_pin_allocation_W": "643.46298291846857280",
+      "all_home_ungated_clock_W": "41065.64583684919412160",
+      "all_ungated_FF_bits": 2073429886,
+      "allocation_is_not_physical_minimum": true,
+      "full_retained_obstacle_placement": "FAIL; source receipt preserved",
+      "homes": 192,
+      "margin_before_data_PHY_hub_W": "254.37943524827198120",
+      "maximum_home_clock_and_leak_W": "220.18056475172801880",
+      "physical_macros": 1500067,
+      "selected_path_data_transition_enable_mask_and_macro_activity_proof_pending": true,
+      "table_copies": 1
+    },
+    "new_FF_bits_above_historical_200e": 195264,
+    "no_power_replication_or_halving_credit": true,
+    "old_200e_power_applies_to_current_repack": false
+  },
+  "preserved_fullwidth_route_failure": {
+    "available_tracks": 321,
+    "original_source_screen": {
+      "caveat": "Necessary additive cut allocation for one edge, not a routed global proof. Different layers or narrower/serialized response need explicit source capacity and latency/FF/mux/power repricing; no extra layers or free overlap assumed.",
+      "existing_HBM_corridor_demand": 640,
+      "existing_HBM_corridor_tracks": 1525,
+      "existing_spine_demand": 832,
+      "existing_spine_tracks": 1153,
+      "new_request_response_credit_tracks_per_edge": 341,
+      "over_by_tracks": 20,
+      "remaining_HBM_corridor_tracks": 885,
+      "remaining_spine_tracks": 321,
+      "verdict": "FAIL_SINGLE_FULLWIDTH_TREE_EDGE_ON_EXISTING_RESERVED_SPINE_LAYER_SET"
+    },
+    "required_tracks": 341,
+    "shortfall": 20
+  },
+  "schema": "opentallas.w17.DSROM-repacked-constraint-join.v1",
+  "serialized_candidate_requirements": {
+    "ACK_rule": "Fragment READY and second-fragment capture do not release consumer credit. Require matching complete-word storage and consumer acceptance, then stored-word ACK and reverse return.",
+    "additional_reassembly_state_at_all_physical_endpoints_not_selected_path_only": true,
+    "compiled_fragment_exactness_and_finite_calendar_bound": false,
+    "epoch_tag_no_wrap_reset_stale_duplicate_and_partial_fragment_gates_required": true,
+    "new_ungated_endpoint_state_power_bound": false,
+    "ready_control_tracks": 2,
+    "request_bits": 51,
+    "response_data_bits": 256,
+    "response_fragments_per_word": 2,
+    "separate_stored_word_ACK_tracks": 1,
+    "total_proposed_tracks": 310,
+    "track_margin": 11
+  },
+  "source_pins": {
+    "event_contract": {
+      "commit": "c8ea5395d",
+      "path": "results/quality/w16_engram_rom_constructive_home_20261001/repacked_192_enable_mask_contract.json",
+      "sha256": "9ddedc8aa5c90e3f0d8a292429d6da9540f6277a1f1e3301fe44350a8cab89f1"
+    },
+    "prior_join": {
+      "commit": "945aa520e",
+      "path": "results/quality/w16_w17_crom_finite_prefetch_20261001/whole_constraint_join.json",
+      "sha256": "cd0a5ebcf2d442dcc2adc26710d16531f869d05d5e33a9a91e1d4844607793b9"
+    },
+    "role_repack": {
+      "commit": "2b98ba187",
+      "path": "results/quality/w16_engram_rom_constructive_home_20261001/sensitivity_192_role_repack_constants_retained.json",
+      "sha256": "7e9be0dada030a3ccc2d785b58124fab82e6415cb525738069c52ceefe67710e"
+    }
+  }
+}
