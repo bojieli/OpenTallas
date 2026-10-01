@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.w10.wake.pinaccess.review.receipt.v1",
+  "verdict": "BOUNDED_DIAGNOSIS_READY_LEGAL_ACCESS_STILL_BLOCKED",
+  "base": "4ddc2ed49",
+  "model_prior_content_exact_reconstruction_sha256": "fdc40260ded435fe29340b83a44da01926ecfbeeca30f1a05c8914b8955da27e",
+  "model_new_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "existing_AST_or_source_changes": false,
+  "wake_originals_and_owner_jobs_changed": false,
+  "failed_c8_and_FRONT_PAR_records_preserved": true,
+  "calibration_v2_unchanged_and_v3_Turing_owned": true,
+  "model_tests": {
+    "passed": 8,
+    "skipped": 1
+  },
+  "necessary_checks_passed": [
+    "VIA45 M4 enclosure wider than 24nm port",
+    "2000nm2 M4/M5 area requires at least84nm straight metal at24nm width",
+    "mirrored origin requiredphase42nm is compatible with270nm site on2160nm commonperiod",
+    "inherited wake placement executable body unchanged after provenance comment",
+    "expanded slot crosses504um half-span reach and conditional extra stage repriced"
+  ],
+  "initial_projection": "retained initial_projection.json; superseded to expose missing SS wire-stage contingency; never adopted",
+  "bankmap": {
+    "pid": 2711389,
+    "state": "LIVE_NO_TERMINAL_OUTPUT"
+  },
+  "runtime_composed": {
+    "pid": 532447,
+    "owner": "W17",
+    "state": "LIVE_NO_TERMINAL_OUTPUT"
+  },
+  "review_tree_retirement": "safe after this commit/hand-off; no current qualification/build job requires review tree. Preserve refs. Agent will perform no further worktree edits.",
+  "observed_at": "2026-10-01T10:25:33.277504+00:00",
+  "files_sha256": {
+    "codex-w10-c8-site-readonly.tcl": "a96d1e3f6742d22d67be85f60f007baa7dae1f69c3194e613d3958e45b2f1291",
+    "review.json": "a9e04af0184d48ef20233929ec1ccf3fb60e3ab448c65af9cf03034c330e80a9",
+    "codex-w10-c8-local-access-rules-readonly.log": "0f7e9b470c77987a6a4ae53514d10d7ffb2c7d1034a3efffa2a2e26099c7df89",
+    "codex-w10-c8-local-access-rules-readonly.tcl": "7c19aecc810fa0b0c293c7b34bc6a074bf1f296b3749b5e081ff5c45e1bc00b5",
+    "inputs.json": "714ccc241080a55d4649d1c3992610d3b26b5276eab75a3ea6162229add9a61c",
+    "codex-w10-c8-local-access-readonly.log": "3bd49272be48f05ab956a34081e1d3338517014bea7f4fe503f2c3c0a7fb28cb",
+    "codex-w10-c8-site-readonly.log": "d80e3ded765340a6070e9f81c621999b2a6aa4801f562c2c16201750d377e5a0",
+    "initial_projection.json": "f9e208c49ca20ff370e3d0355c83010f2d5b1af2fb016400ac621c10798a0172",
+    "inspection_validation_attempts.json": "671e9e1cb0200fe49c4ec637cebf41f89efe04121dd729b94f5df21297c67f61",
+    "codex-w10-c8-local-access-readonly.tcl": "dee765866db2a44a10918ae5ff2633e8b055c72b7a93ce249786ed1c120b8ba1"
+  }
+}
