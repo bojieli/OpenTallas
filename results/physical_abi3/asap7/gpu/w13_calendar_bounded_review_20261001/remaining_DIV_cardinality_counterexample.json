@@ -1,0 +1,321 @@
+{
+  "scope": "Syntheticreviewcontrol; invalid negativeactive_lanes incorrectly closes candidatecalendar. No actualprogram or hardwareadmission.",
+  "source": "213b64f5bb4bf074dff663b6d1d6761fbe5178ed",
+  "graph_pin": {
+    "source_git": "2f85997f109847838b57068f0d2c76a1d1ca3e2e",
+    "path": "results/physical_abi3/asap7/gpu/w13_calendar_bounded_review_20261001/authoritative_one_op_control.json",
+    "sha256": "13ab7e95d0a5c53b9705db95d8f7ed4eacab078baf4930ee7397630f8dd307a5"
+  },
+  "lowerings": {
+    "0": {
+      "ordinary_lowering_complete": true,
+      "issue_RF_calendar_complete": true,
+      "shared_bank_map_complete": true,
+      "fabric_edge_calendar_complete": true,
+      "SFU_lowering_complete": true,
+      "required_instruction_events": 1,
+      "required_fabric_events": 0,
+      "dependencies": []
+    }
+  },
+  "observations": [
+    {
+      "active_lanes": -1,
+      "event": {
+        "graph_op": 0,
+        "sm": 0,
+        "partition": 0,
+        "opcode": "DIV",
+        "rf_read_tick": 0,
+        "issue_tick": 8,
+        "finish_tick": 84,
+        "RF_read_bits": 2048,
+        "RF_write_bits": 1024,
+        "peak_registers": 32,
+        "active_lanes": -1
+      },
+      "audit": {
+        "schema": "opentallas.w13.fullprogram-calendar-gate.v2",
+        "authoritative_graph_pin": {
+          "source_git": "2f85997f109847838b57068f0d2c76a1d1ca3e2e",
+          "path": "results/physical_abi3/asap7/gpu/w13_calendar_bounded_review_20261001/authoritative_one_op_control.json",
+          "sha256": "13ab7e95d0a5c53b9705db95d8f7ed4eacab078baf4930ee7397630f8dd307a5"
+        },
+        "modeled_service_calendar_closed": true,
+        "issues": [],
+        "graph_ops": 1,
+        "instruction_events": 1,
+        "fabric_events": 0,
+        "max_lane_credits": 0,
+        "common_tick_hz": 3600000000,
+        "serial_cycle_ticks": 4,
+        "fast_cycle_ticks": 3,
+        "physical_build_ready": false,
+        "hardware_adopted": false,
+        "speed_credit": 0,
+        "qualification": "Candidate calendar audit only; actual RTL, arithmetic, wirestage and contextual SS/FF remain mandatory."
+      }
+    },
+    {
+      "active_lanes": 0,
+      "event": {
+        "graph_op": 0,
+        "sm": 0,
+        "partition": 0,
+        "opcode": "DIV",
+        "rf_read_tick": 0,
+        "issue_tick": 8,
+        "finish_tick": 84,
+        "RF_read_bits": 2048,
+        "RF_write_bits": 1024,
+        "peak_registers": 32,
+        "active_lanes": 0
+      },
+      "audit": {
+        "schema": "opentallas.w13.fullprogram-calendar-gate.v2",
+        "authoritative_graph_pin": {
+          "source_git": "2f85997f109847838b57068f0d2c76a1d1ca3e2e",
+          "path": "results/physical_abi3/asap7/gpu/w13_calendar_bounded_review_20261001/authoritative_one_op_control.json",
+          "sha256": "13ab7e95d0a5c53b9705db95d8f7ed4eacab078baf4930ee7397630f8dd307a5"
+        },
+        "modeled_service_calendar_closed": true,
+        "issues": [],
+        "graph_ops": 1,
+        "instruction_events": 1,
+        "fabric_events": 0,
+        "max_lane_credits": 0,
+        "common_tick_hz": 3600000000,
+        "serial_cycle_ticks": 4,
+        "fast_cycle_ticks": 3,
+        "physical_build_ready": false,
+        "hardware_adopted": false,
+        "speed_credit": 0,
+        "qualification": "Candidate calendar audit only; actual RTL, arithmetic, wirestage and contextual SS/FF remain mandatory."
+      }
+    },
+    {
+      "active_lanes": 1,
+      "event": {
+        "graph_op": 0,
+        "sm": 0,
+        "partition": 0,
+        "opcode": "DIV",
+        "rf_read_tick": 0,
+        "issue_tick": 8,
+        "finish_tick": 84,
+        "RF_read_bits": 2048,
+        "RF_write_bits": 1024,
+        "peak_registers": 32,
+        "active_lanes": 1
+      },
+      "audit": {
+        "schema": "opentallas.w13.fullprogram-calendar-gate.v2",
+        "authoritative_graph_pin": {
+          "source_git": "2f85997f109847838b57068f0d2c76a1d1ca3e2e",
+          "path": "results/physical_abi3/asap7/gpu/w13_calendar_bounded_review_20261001/authoritative_one_op_control.json",
+          "sha256": "13ab7e95d0a5c53b9705db95d8f7ed4eacab078baf4930ee7397630f8dd307a5"
+        },
+        "modeled_service_calendar_closed": true,
+        "issues": [],
+        "graph_ops": 1,
+        "instruction_events": 1,
+        "fabric_events": 0,
+        "max_lane_credits": 0,
+        "common_tick_hz": 3600000000,
+        "serial_cycle_ticks": 4,
+        "fast_cycle_ticks": 3,
+        "physical_build_ready": false,
+        "hardware_adopted": false,
+        "speed_credit": 0,
+        "qualification": "Candidate calendar audit only; actual RTL, arithmetic, wirestage and contextual SS/FF remain mandatory."
+      }
+    },
+    {
+      "active_lanes": 2,
+      "event": {
+        "graph_op": 0,
+        "sm": 0,
+        "partition": 0,
+        "opcode": "DIV",
+        "rf_read_tick": 0,
+        "issue_tick": 8,
+        "finish_tick": 84,
+        "RF_read_bits": 2048,
+        "RF_write_bits": 1024,
+        "peak_registers": 32,
+        "active_lanes": 2
+      },
+      "audit": {
+        "schema": "opentallas.w13.fullprogram-calendar-gate.v2",
+        "authoritative_graph_pin": {
+          "source_git": "2f85997f109847838b57068f0d2c76a1d1ca3e2e",
+          "path": "results/physical_abi3/asap7/gpu/w13_calendar_bounded_review_20261001/authoritative_one_op_control.json",
+          "sha256": "13ab7e95d0a5c53b9705db95d8f7ed4eacab078baf4930ee7397630f8dd307a5"
+        },
+        "modeled_service_calendar_closed": false,
+        "issues": [
+          "single_scalar_DIV_overbooked"
+        ],
+        "graph_ops": 1,
+        "instruction_events": 1,
+        "fabric_events": 0,
+        "max_lane_credits": 0,
+        "common_tick_hz": 3600000000,
+        "serial_cycle_ticks": 4,
+        "fast_cycle_ticks": 3,
+        "physical_build_ready": false,
+        "hardware_adopted": false,
+        "speed_credit": 0,
+        "qualification": "Candidate calendar audit only; actual RTL, arithmetic, wirestage and contextual SS/FF remain mandatory."
+      }
+    }
+  ],
+  "verdict": "FAIL_CLOSED_REQUIRED_ACTIVE_LANE_CARDINALITY_NOT_VALIDATED",
+  "owner": "Boyle correction requested; W13doesnotimplementfix",
+  "reason": "Divider accounting increments byactive_lanes with no type/nonnegative/participation-domain validation. Negativeoccupancy cancels positiveoccupancy atsameSMissue tick. Zero-participation semantics must be explicit rather than assumed.",
+  "overbooking_mask_controls": [
+    {
+      "name": "two_positive_DIV_lanes_rejected",
+      "events": [
+        {
+          "graph_op": 0,
+          "sm": 0,
+          "partition": 0,
+          "opcode": "DIV",
+          "rf_read_tick": 0,
+          "issue_tick": 8,
+          "finish_tick": 84,
+          "RF_read_bits": 2048,
+          "RF_write_bits": 1024,
+          "peak_registers": 32,
+          "active_lanes": 1
+        },
+        {
+          "graph_op": 0,
+          "sm": 0,
+          "partition": 1,
+          "opcode": "DIV",
+          "rf_read_tick": 0,
+          "issue_tick": 8,
+          "finish_tick": 84,
+          "RF_read_bits": 2048,
+          "RF_write_bits": 1024,
+          "peak_registers": 32,
+          "active_lanes": 1
+        }
+      ],
+      "lowerings": {
+        "0": {
+          "ordinary_lowering_complete": true,
+          "issue_RF_calendar_complete": true,
+          "shared_bank_map_complete": true,
+          "fabric_edge_calendar_complete": true,
+          "SFU_lowering_complete": true,
+          "required_instruction_events": 2,
+          "required_fabric_events": 0,
+          "dependencies": []
+        }
+      },
+      "audit": {
+        "schema": "opentallas.w13.fullprogram-calendar-gate.v2",
+        "authoritative_graph_pin": {
+          "source_git": "2f85997f109847838b57068f0d2c76a1d1ca3e2e",
+          "path": "results/physical_abi3/asap7/gpu/w13_calendar_bounded_review_20261001/authoritative_one_op_control.json",
+          "sha256": "13ab7e95d0a5c53b9705db95d8f7ed4eacab078baf4930ee7397630f8dd307a5"
+        },
+        "modeled_service_calendar_closed": false,
+        "issues": [
+          "single_scalar_DIV_overbooked"
+        ],
+        "graph_ops": 1,
+        "instruction_events": 2,
+        "fabric_events": 0,
+        "max_lane_credits": 0,
+        "common_tick_hz": 3600000000,
+        "serial_cycle_ticks": 4,
+        "fast_cycle_ticks": 3,
+        "physical_build_ready": false,
+        "hardware_adopted": false,
+        "speed_credit": 0,
+        "qualification": "Candidate calendar audit only; actual RTL, arithmetic, wirestage and contextual SS/FF remain mandatory."
+      }
+    },
+    {
+      "name": "negative_lane_cancels_overbooking",
+      "events": [
+        {
+          "graph_op": 0,
+          "sm": 0,
+          "partition": 0,
+          "opcode": "DIV",
+          "rf_read_tick": 0,
+          "issue_tick": 8,
+          "finish_tick": 84,
+          "RF_read_bits": 2048,
+          "RF_write_bits": 1024,
+          "peak_registers": 32,
+          "active_lanes": 1
+        },
+        {
+          "graph_op": 0,
+          "sm": 0,
+          "partition": 1,
+          "opcode": "DIV",
+          "rf_read_tick": 0,
+          "issue_tick": 8,
+          "finish_tick": 84,
+          "RF_read_bits": 2048,
+          "RF_write_bits": 1024,
+          "peak_registers": 32,
+          "active_lanes": 1
+        },
+        {
+          "graph_op": 0,
+          "sm": 0,
+          "partition": 2,
+          "opcode": "DIV",
+          "rf_read_tick": 0,
+          "issue_tick": 8,
+          "finish_tick": 84,
+          "RF_read_bits": 2048,
+          "RF_write_bits": 1024,
+          "peak_registers": 32,
+          "active_lanes": -1
+        }
+      ],
+      "lowerings": {
+        "0": {
+          "ordinary_lowering_complete": true,
+          "issue_RF_calendar_complete": true,
+          "shared_bank_map_complete": true,
+          "fabric_edge_calendar_complete": true,
+          "SFU_lowering_complete": true,
+          "required_instruction_events": 3,
+          "required_fabric_events": 0,
+          "dependencies": []
+        }
+      },
+      "audit": {
+        "schema": "opentallas.w13.fullprogram-calendar-gate.v2",
+        "authoritative_graph_pin": {
+          "source_git": "2f85997f109847838b57068f0d2c76a1d1ca3e2e",
+          "path": "results/physical_abi3/asap7/gpu/w13_calendar_bounded_review_20261001/authoritative_one_op_control.json",
+          "sha256": "13ab7e95d0a5c53b9705db95d8f7ed4eacab078baf4930ee7397630f8dd307a5"
+        },
+        "modeled_service_calendar_closed": true,
+        "issues": [],
+        "graph_ops": 1,
+        "instruction_events": 3,
+        "fabric_events": 0,
+        "max_lane_credits": 0,
+        "common_tick_hz": 3600000000,
+        "serial_cycle_ticks": 4,
+        "fast_cycle_ticks": 3,
+        "physical_build_ready": false,
+        "hardware_adopted": false,
+        "speed_credit": 0,
+        "qualification": "Candidate calendar audit only; actual RTL, arithmetic, wirestage and contextual SS/FF remain mandatory."
+      }
+    }
+  ]
+}

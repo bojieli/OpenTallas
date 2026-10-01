@@ -1,0 +1,36 @@
+{
+  "source_program_pin": {
+    "source_git": "42c90ce67120dd1a3e7eaf54296aab9877696824",
+    "path": "results/rtl/w19_hbm_tp96_program_oreduce.json",
+    "sha256": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b"
+  },
+  "actual_source_operations": 2213,
+  "actual_source_layers_plus_head": 41,
+  "source_operation_dependency_fields": 0,
+  "audit": {
+    "schema": "opentallas.w13.fullprogram-calendar-gate.v2",
+    "authoritative_graph_pin": {
+      "source_git": "42c90ce67120dd1a3e7eaf54296aab9877696824",
+      "path": "results/rtl/w19_hbm_tp96_program_oreduce.json",
+      "sha256": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b"
+    },
+    "modeled_service_calendar_closed": false,
+    "issues": [
+      "authoritative_graph_unbound:'instructions'",
+      "empty_program"
+    ],
+    "graph_ops": 0,
+    "instruction_events": 0,
+    "fabric_events": 0,
+    "max_lane_credits": 0,
+    "common_tick_hz": 3600000000,
+    "serial_cycle_ticks": 4,
+    "fast_cycle_ticks": 3,
+    "physical_build_ready": false,
+    "hardware_adopted": false,
+    "speed_credit": 0,
+    "qualification": "Candidate calendar audit only; actual RTL, arithmetic, wirestage and contextual SS/FF remain mandatory."
+  },
+  "scope": "Layer-localID semanticTP96 program is source-bound but lacks flat authoritativeinstructions/dependencies required byv2. No edges invented. Missingcompletecalendar remainsrejected beforeeventaudit.",
+  "required": "Programowner mustpublish immutableflat/global-ID DAG with exactauthoritative dependencies and provenance toexistingTP96source; then bind fullissue/RF/shared/SFU/typedfabric calendars, not syntheticsequentialedges."
+}
