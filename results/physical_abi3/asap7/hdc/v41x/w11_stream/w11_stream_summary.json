@@ -1,0 +1,614 @@
+{
+ "schema": "opentallas.w11.stream_units.v1",
+ "claim": "V4.1 streaming-domain units at 0.833 ns (1.2 GHz): ORFS primary corner WC (SS setup), hold repaired and checked at WC and BC (FF), 60 ps setup / 25 ps hold uncertainty, yosys Kogge-Stone adders (ADDER_MAP_FILE empty, the asap7 default since 006001b1); fmax is the routed finish fmax at SS",
+ "latency_parameters": {
+  "FPL": "binary32 add latency: 3 = ot_hdc_fp32_add_fast (as built), 7 = ot_hdc_fp32_add_lat (closes 1,261 MHz SS, results/physical_abi3/asap7/hdc/w11_fp/w11_fp_latency_sweep.json)",
+  "FML": "product latency: indexer ot_hdc_v41x_bmul (3..5), attention ot_hdc_v41x_attn_bmul (3..6)",
+  "QL": "indexer block dot ot_hdc_v41x_q4dot (3..5)",
+  "default": "FPL = FML = QL = 3 is the as-built RTL, cycle for cycle",
+  "streaming_build": {
+   "indexer": {
+    "FPL": 7,
+    "FML": 5,
+    "QL": 5
+   },
+   "attention": {
+    "FPL": 7,
+    "FML": 6
+   }
+  }
+ },
+ "latency_cycles": {
+  "as_built": {
+   "idx_engine": 48,
+   "idx_chunk": 39,
+   "idx_tail": 8,
+   "attn_tile": 33,
+   "attn_guard_q": 20
+  },
+  "streaming": {
+   "idx_engine": 100,
+   "idx_chunk": 83,
+   "idx_tail": 16,
+   "attn_tile": 72,
+   "attn_guard_q": 44
+  },
+  "added": {
+   "idx_engine": 52,
+   "idx_chunk": 44,
+   "idx_tail": 8,
+   "attn_tile": 39,
+   "attn_guard_q": 24
+  },
+  "note": "idx_engine is key beat -> score beat valid (the campaign's lat_min; 48 as built at NB=4 IH=32). attn_tile is tile input -> ov (the engine's TLAT). Throughput stays II = 1: the sequential chunk sums are recurrences only along one key / one beat."
+ },
+ "units": [
+  {
+   "run": "st_tail7m5",
+   "top": "ot_hdc_v41x_idx_tail",
+   "params": {
+    "NCH": 4,
+    "NKT": 1,
+    "FPL": 7
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1323.9,
+   "setup_wns_ns": 0.07766160000000001,
+   "hold_wns_ns": 0.00197174,
+   "cell_area_um2": 1712.35,
+   "die_area_um2": 4605.52,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": [
+    [
+     "M2",
+     "M5"
+    ]
+   ],
+   "false_path_io": false,
+   "git_commit": "cd1b106168787b9b04c504f9f2cae17a33c8697d",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_tail7m5/physical.json"
+  },
+  {
+   "run": "st_tail7k",
+   "top": "ot_hdc_v41x_idx_tail",
+   "params": {
+    "NCH": 4,
+    "NKT": 1,
+    "FPL": 7
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1248.9,
+   "setup_wns_ns": 0.032312,
+   "hold_wns_ns": 0.00290366,
+   "cell_area_um2": 1704.8,
+   "die_area_um2": 4605.52,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "cd1b106168787b9b04c504f9f2cae17a33c8697d",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_tail7k/physical.json"
+  },
+  {
+   "run": "st_tail7",
+   "top": "ot_hdc_v41x_idx_tail",
+   "params": {
+    "NCH": 4,
+    "NKT": 1,
+    "FPL": 7
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1226.1,
+   "setup_wns_ns": 0.0174142,
+   "hold_wns_ns": 0.00314736,
+   "cell_area_um2": 1582.94,
+   "die_area_um2": 4102.91,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "9befe5f69df2b6d3d81dcbb311cfce3ebec2ae92",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_tail7/physical.json"
+  },
+  {
+   "run": "st_q4dot3",
+   "top": "ot_hdc_v41x_w11s_q4dot",
+   "params": {
+    "QL": 3
+   },
+   "status": "not_met",
+   "closed": false,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 896.5,
+   "setup_wns_ns": -0.282388,
+   "hold_wns_ns": 0.00874194,
+   "cell_area_um2": 844.678,
+   "die_area_um2": 2559.85,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "6db63d522b493da8cafca4a8d6c43d3f4ff8840f",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_q4dot3/physical.json"
+  },
+  {
+   "run": "st_q4dot4",
+   "top": "ot_hdc_v41x_w11s_q4dot",
+   "params": {
+    "QL": 4
+   },
+   "status": "not_met",
+   "closed": false,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1041.2,
+   "setup_wns_ns": -0.12740300000000002,
+   "hold_wns_ns": 0.00600423,
+   "cell_area_um2": 846.5,
+   "die_area_um2": 2615.1,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "6db63d522b493da8cafca4a8d6c43d3f4ff8840f",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_q4dot4/physical.json"
+  },
+  {
+   "run": "st_q4dot4b",
+   "top": "ot_hdc_v41x_w11s_q4dot",
+   "params": {
+    "QL": 4
+   },
+   "status": "not_met",
+   "closed": false,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1123.4,
+   "setup_wns_ns": -0.0571276,
+   "hold_wns_ns": 0.0102061,
+   "cell_area_um2": 827.284,
+   "die_area_um2": 2565.83,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "38032787e5d6d63ff153209922ae769902125838",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_q4dot4b/physical.json"
+  },
+  {
+   "run": "st_q4dot5",
+   "top": "ot_hdc_v41x_w11s_q4dot",
+   "params": {
+    "QL": 5
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1253.0,
+   "setup_wns_ns": 0.0349136,
+   "hold_wns_ns": 0.009649340000000001,
+   "cell_area_um2": 830.462,
+   "die_area_um2": 2666.59,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "6db63d522b493da8cafca4a8d6c43d3f4ff8840f",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_q4dot5/physical.json"
+  },
+  {
+   "run": "st_q4dot5b",
+   "top": "ot_hdc_v41x_w11s_q4dot",
+   "params": {
+    "QL": 5
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1212.8,
+   "setup_wns_ns": 0.00845801,
+   "hold_wns_ns": 0.0103682,
+   "cell_area_um2": 826.613,
+   "die_area_um2": 2631.48,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "38032787e5d6d63ff153209922ae769902125838",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_q4dot5b/physical.json"
+  },
+  {
+   "run": "st_bmul3",
+   "top": "ot_hdc_v41x_w11s_bmul",
+   "params": {
+    "ML": 3
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1230.7,
+   "setup_wns_ns": 0.0204754,
+   "hold_wns_ns": 0.007965429999999999,
+   "cell_area_um2": 186.799,
+   "die_area_um2": 651.015,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "6db63d522b493da8cafca4a8d6c43d3f4ff8840f",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_bmul3/physical.json"
+  },
+  {
+   "run": "st_bmul4",
+   "top": "ot_hdc_v41x_w11s_bmul",
+   "params": {
+    "ML": 4
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1234.2,
+   "setup_wns_ns": 0.022727900000000002,
+   "hold_wns_ns": 0.009847139999999999,
+   "cell_area_um2": 209.5,
+   "die_area_um2": 717.008,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "6db63d522b493da8cafca4a8d6c43d3f4ff8840f",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_bmul4/physical.json"
+  },
+  {
+   "run": "st_bmul5",
+   "top": "ot_hdc_v41x_w11s_bmul",
+   "params": {
+    "ML": 5
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1238.1,
+   "setup_wns_ns": 0.025287800000000003,
+   "hold_wns_ns": 0.00458611,
+   "cell_area_um2": 215.915,
+   "die_area_um2": 740.928,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "6db63d522b493da8cafca4a8d6c43d3f4ff8840f",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_bmul5/physical.json"
+  },
+  {
+   "run": "st_abmul3",
+   "top": "ot_hdc_v41x_w11s_attn_bmul",
+   "params": {
+    "ML": 3
+   },
+   "status": "not_met",
+   "closed": false,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 999.3,
+   "setup_wns_ns": -0.167665,
+   "hold_wns_ns": 0.00858865,
+   "cell_area_um2": 191.683,
+   "die_area_um2": 604.373,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "6db63d522b493da8cafca4a8d6c43d3f4ff8840f",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_abmul3/physical.json"
+  },
+  {
+   "run": "st_abmul4",
+   "top": "ot_hdc_v41x_w11s_attn_bmul",
+   "params": {
+    "ML": 4
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1222.3,
+   "setup_wns_ns": 0.014855,
+   "hold_wns_ns": 0.00691829,
+   "cell_area_um2": 206.365,
+   "die_area_um2": 690.323,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "6db63d522b493da8cafca4a8d6c43d3f4ff8840f",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_abmul4/physical.json"
+  },
+  {
+   "run": "st_abmul5",
+   "top": "ot_hdc_v41x_w11s_attn_bmul",
+   "params": {
+    "ML": 5
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1230.4,
+   "setup_wns_ns": 0.0202811,
+   "hold_wns_ns": 0.00746237,
+   "cell_area_um2": 218.656,
+   "die_area_um2": 710.596,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "6db63d522b493da8cafca4a8d6c43d3f4ff8840f",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_abmul5/physical.json"
+  },
+  {
+   "run": "st_abmul6",
+   "top": "ot_hdc_v41x_w11s_attn_bmul",
+   "params": {
+    "ML": 6
+   },
+   "status": "pass",
+   "closed": true,
+   "target_period_ns": 0.833,
+   "ss_fmax_mhz": 1222.4,
+   "setup_wns_ns": 0.014921799999999999,
+   "hold_wns_ns": 0.00765717,
+   "cell_area_um2": 236.415,
+   "die_area_um2": 740.166,
+   "drc": 0,
+   "max_slew_violations": 0,
+   "max_cap_violations": 0,
+   "hold_corners": [
+    "WC",
+    "BC"
+   ],
+   "primary_corner": [
+    "WC"
+   ],
+   "routing_layers": "default (M2-M9)",
+   "false_path_io": false,
+   "git_commit": "6db63d522b493da8cafca4a8d6c43d3f4ff8840f",
+   "worktree_dirty": false,
+   "record": "results/physical_abi3/asap7/hdc/v41x/w11_stream/st_abmul6/physical.json"
+  }
+ ],
+ "claimed_closed": [
+  "st_tail7m5",
+  "st_tail7k"
+ ],
+ "gates": {
+  "idx_reduced_lat755": {
+   "tool": "tools/rtl_hdc_v41x_idx_campaign.py --quick --only reduced --lat 7,5,5",
+   "latencies": {
+    "FPL": 7,
+    "FML": 5,
+    "QL": 5
+   },
+   "status": "pass",
+   "bit_exact": true,
+   "keys_per_cycle": 8.0,
+   "latency_cycles": 79,
+   "latency_cycles_as_built": 39,
+   "mixed": {
+    "keys": 521,
+    "checked": 521,
+    "errors": 0,
+    "faults_expected_and_raised": 58,
+    "expected_faults": 58
+   },
+   "back_to_back": {
+    "keys": 512,
+    "checked": 512,
+    "errors": 0,
+    "lat_min": 79
+   },
+   "vehicle": null,
+   "sources": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx.sv": "c613b098aa914c2b92d521e4e02ddb5cb55648d184463d51906ccd40d799fd86",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "394322289cd6eb70a1ca87487792b8433b79abc040d010c9c6c32692eccc512f",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv": "9d0638579b17a9f2323cf623d7f9e6330fd13a5ba8bdd358080cacebb3c2d676",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": "c23915f72aea5f98d191308b9c595a884a5fc3bae2e37a5749a950a3d75a43ee",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb",
+    "rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv": "a2c4e44ff1d581b6d2e5cfe8e221e2c4553e4cbedd750e20819d6d7b29f30136",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv": "c3c4b2f36875e44daf75818b5355aad5ad3cb4803acd6b1c1d5fccf49070c37c",
+    "rtl/test/tb_hdc_v41x_idx.vlt": "7f9e05e997e33ca236f59459aaceafdca840d5913fbb523fceead2003bfa7875",
+    "rtl/test/tb_hdc_v41x_idx.sv": "10ddd19d3e5b32043851fea31495c235987071d94086c3812900f1039d199aa1",
+    "rtl/test/tb_hdc_v41x_idx_hsum.sv": "5b82fd1d5555441cc6ac60379450b1eb5e4d9336142bdc40af66ba7cfaa40713",
+    "rtl/test/tb_hdc_v41x_idx_pool.sv": "3b4e708c564c167033632830a6bab4b908ab750ac2cb3d179c27fd69becb2b94",
+    "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/rtl_hdc_v41x_idx_campaign.py": "7950b464b054aec478b8c26eb0c7e98686c880c0e88150a90da40eaf37510362",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "afa7fbda71e1da3c1f5a7ca38309582a2c3567cfafe336f292fa24a5c80877ee"
+   }
+  },
+  "attn_lat76": {
+   "tool": "tools/rtl_hdc_v41x_attn_campaign.py run_tile / run_engine (FPL 7, FML 6; Verilator 5.050)",
+   "status": "pass",
+   "bit_exact": true,
+   "tile_h4_td16": {
+    "status": "pass",
+    "beats": 40,
+    "checked": 160,
+    "errors": 0,
+    "faults_expected_and_raised": 12,
+    "first_ov": 82
+   },
+   "tile_h16_td32": {
+    "status": "pass",
+    "beats": 120,
+    "checked": 1920,
+    "errors": 0,
+    "faults_expected_and_raised": 277,
+    "first_ov": 125
+   },
+   "engine_small": {
+    "bit_exact": true,
+    "latency": {
+     "first_score_after_row_entry_max": 105,
+     "first_score_after_row_entry_min": 84,
+     "last_pv_after_last_probability_max": 130
+    },
+    "qk_bubbles": 21,
+    "pv_bubbles": 12,
+    "cycles": 653
+   },
+   "note": "engine_small H4 D64 TD16 NL1: q.k / p.v bubbles from the 3-bank lifetime at FPL 7 (0 at FPL 3); bank-count study pending"
+  }
+ },
+ "notes": {
+  "idx_reduced_lat755": "run at 82dc6294 (pre keep-prefix merge); ot_hdc_fp32_add_lat is bit-identical across that merge (w11-fpk equivalence); the shipped-shape campaign re-runs at the merged sources",
+  "st_tail7": "pre keep-prefix adder (data only)",
+  "micro": "st_q4dot*/st_bmul*/st_abmul* are standalone hardening tops (data, not closure evidence); st_q4dot4b/5b are the moved-cut variant later reverted",
+  "pending": "st_chunk755m5 / st_tile76m5 (M2-M5, hub layer plan) running; M2-M9 st_chunk755k / st_tile76k / st_tile74k as data"
+ },
+ "source_sha256": {
+  "rtl/hdc/v41x/ot_hdc_v41x_idx.sv": "c613b098aa914c2b92d521e4e02ddb5cb55648d184463d51906ccd40d799fd86",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": "05f8cd0ae9fd50dcd6ec5699a90a51fd96e65d9c2dce6de5b876a5042549f477",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": "30ee8b9b1f024880d67748343dd76b389c381087b2404759b3e74104906ae8f9",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "20fa629458bd7794d979e0b38095bbec594d45fc1fc970ab718bfc221947ff6d",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_score_slice.sv": "f5f6f1146a9fe4fb28a232f7b5e423bb89ba8b41b8000f35c37ad8bed09bfea9",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_array.sv": "d8a841dd4b08dc7bf2463f89e197d1a8c02f6bc7574c1c1b74f5846c99456397",
+  "rtl/hdc/v41x/ot_hdc_v41x_w11s_tops.sv": "690590a026571f528941ac65a2c44ab95dbd3c9aa997c71b98f29f7f6dfa3f5f",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "602e46ad03d28e25a2c2819385cb75d8110d25fc204aed13542a4e14f8efd483",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "tools/w11_stream_record.py": "08a0fe026aaa55df007c52ea4813d6faac2c18092a67f602f162f1ace5563110"
+ }
+}

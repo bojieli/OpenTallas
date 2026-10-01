@@ -55,6 +55,7 @@ def main():
     ap.add_argument("--run", action="append", default=[], help="name=physical.json")
     ap.add_argument("--gate", action="append", default=[], help="name=gate.json (bit-exactness evidence)")
     ap.add_argument("--note", action="append", default=[], help="name=text")
+    ap.add_argument("--claim", action="append", default=[], help="run claimed closed (the test checks it)")
     a = ap.parse_args()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     rows = []
@@ -75,8 +76,11 @@ def main():
             setup_wns_ns=d.get("setup_wns_ns"), hold_wns_ns=d.get("hold_wns_ns"),
             cell_area_um2=d.get("area_um2"), die_area_um2=m.get("die_area_um2"),
             drc=m.get("drc_errors"), max_slew_violations=m.get("max_slew_violations"),
-            max_cap_violations=m.get("max_cap_violations"), hold_corners=d.get("hold_corners"),
+            max_cap_violations=m.get("max_cap_violations"),
+            hold_corners=[argv[i + 1] for i, x in enumerate(argv) if x == "--hold-corners"][0].split(","),
             primary_corner=[argv[i + 1] for i, x in enumerate(argv) if x == "--orfs-corner"],
+            routing_layers=[argv[i + 1:i + 3] for i, x in enumerate(argv) if x == "--routing-layers"] or "default (M2-M9)",
+            false_path_io="--false-path-io" in argv,
             git_commit=rec["git"]["commit"], worktree_dirty=rec["git"]["worktree_dirty"],
             record=str(dst.relative_to(ROOT))))
     gates = {}
@@ -110,7 +114,7 @@ def main():
                             note="idx_engine is key beat -> score beat valid (the campaign's lat_min; 48 as built at "
                                  "NB=4 IH=32). attn_tile is tile input -> ov (the engine's TLAT). Throughput stays "
                                  "II = 1: the sequential chunk sums are recurrences only along one key / one beat."),
-        units=rows, gates=gates, notes=dict(n.split("=", 1) for n in a.note),
+        units=rows, claimed_closed=a.claim, gates=gates, notes=dict(n.split("=", 1) for n in a.note),
         source_sha256={p: sha(ROOT / p) for p in srcs})
     (OUT_DIR / "w11_stream_summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     print(json.dumps(dict(units=[(r["run"], r["ss_fmax_mhz"], r["closed"]) for r in rows],
