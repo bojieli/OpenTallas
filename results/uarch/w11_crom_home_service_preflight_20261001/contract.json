@@ -12,6 +12,7 @@
     "spare_words": 3200
   },
   "checkpoint_payload_reads": 0,
+  "correction": "Previous30c76272f leakage parser matched default_cell_leakage_power; actual cell value52805.1442nW. Prior record retained in git; this correction is authoritative.",
   "gain_credit": 0,
   "jobs_launched": 0,
   "operand_gate": {
@@ -46,8 +47,8 @@
   },
   "schema": "opentallas.w11.crom-packed-home-service-preflight.v1",
   "source_macro_cost": {
-    "SS_leakage_W_per_bank": 0.0,
-    "SS_leakage_W_per_rank": 0.0,
+    "SS_leakage_W_per_bank": 5.2805144200000004e-05,
+    "SS_leakage_W_per_rank": 0.002376231489,
     "area_um2_per_bank": 7881.3648,
     "macro_area_mm2_per_rank": 0.354661416,
     "scope": "compiler-generated predictive macro Liberty/LEF; not current contextual silicon/route measurement"
