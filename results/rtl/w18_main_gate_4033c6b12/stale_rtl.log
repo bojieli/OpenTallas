@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/w18_main_provenance_fuwe71pg/tools/w18/hash_parallel_gate.py", line 168, in <module>
+    raise SystemExit(main())
+  File "/tmp/w18_main_provenance_fuwe71pg/tools/w18/hash_parallel_gate.py", line 115, in main
+    cached = validate_cached(a.exhaustive_record, a.exhaustive_log, expected) if a.exhaustive_log else None
+  File "/tmp/w18_main_provenance_fuwe71pg/tools/w18/hash_parallel_gate.py", line 67, in validate_cached
+    raise ValueError('Exhaustive provenance mismatch: ' + field)
+ValueError: Exhaustive provenance mismatch: sources
