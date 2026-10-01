@@ -25,7 +25,7 @@ def limits():
     os.sched_setaffinity(0,set(sorted(os.sched_getaffinity(0))[-2:]))
     resource.setrlimit(resource.RLIMIT_AS,(4*1024**3,4*1024**3))
     resource.setrlimit(resource.RLIMIT_CPU,(180,180))
-    resource.setrlimit(resource.RLIMIT_FSIZE,(16*1024**2,16*1024**2))
+    resource.setrlimit(resource.RLIMIT_FSIZE,(256*1024**2,256*1024**2))
 
 
 def run(cmd,log,remaining):
@@ -102,7 +102,7 @@ def main():
         prediction_commit=subprocess.check_output(['git','log','-1','--format=%H','--',PRED],cwd=ROOT,text=True).strip(),
         prediction_sha256=sha(pr),event_prediction_sha256=sha(eraw),
         selected_source_sha256={p:sha((ROOT/p).read_bytes()) for p in selected},bench_sha256=sha((ROOT/BENCH).read_bytes()),
-        caps=dict(workers=2,address_space_bytes=4*1024**3,total_wall_seconds=180,max_cycles=200000),
+        caps=dict(workers=2,address_space_bytes=4*1024**3,total_wall_seconds=180,max_cycles=200000,generated_file_bytes=256*1024**2),
         preflight=pred['preflight'],parent_coordination=dict(thread='01a0f95d-badc-74d3-bde3-f3eb28f089b8',queue_message='01a0f9c8-89f2-7113-845f-9026422df9d1',baseline_fixture_untouched=True),
         scope='Actual idx_hbm timing, same reset/start, explicit LENW4 BEATW4 TAG17 NPC32 REFPB3 CLK_PS1000; MEM_MODE0 fulladdress generated nonpoison2176sectors and128primeAPI rows, no competitors. No actual producer, checkpoint/fulltoken/physicalclock or adoption.',
         prior_negative='Original epoch512 rejection and prior stage-edge model failure retained in separate records; no tune-to-fit.',
