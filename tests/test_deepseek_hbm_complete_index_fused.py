@@ -59,8 +59,8 @@ class Fused(unittest.TestCase):
         self.assertTrue(np.array_equal(got,expected));self.assertTrue(np.array_equal(e,ee))
         self.assertEqual(run.counts['STORE'],32)
         q=np.ones((32,128),np.float32);prepared=F.prepare_query(q)
-        prepared.units[0].flags.writeable=True;prepared.units[0][0,0]=0
-        with self.assertRaises(ValueError):F.scores(q,np.ones((2,128),np.float32),np.ones(32,np.float32),5456,True,prepared)
+        with self.assertRaises(ValueError):prepared.units[0].flags.writeable=True
+        self.assertEqual(F.scores(q,np.ones((2,128),np.float32),np.ones(32,np.float32),5456,True,prepared)[0].tolist(),[4096.,4096.])
 
 class Proof(unittest.TestCase):
     def test_exhaustive_code_scale_lattice_and_costs(self):
@@ -95,3 +95,25 @@ class Proof(unittest.TestCase):
     def test_finite_is_not_arbitrary_f32_admission(self):
         q=np.ones((32,128),np.float32);q[0,0]=np.float32(1.123)
         with self.assertRaises(ValueError):F.prepare_query(q)
+
+class FactoryAuthority(unittest.TestCase):
+    def test_rehashed_foreign_cache_clone_and_revocation(self):
+        import dataclasses,hashlib,copy
+        q=np.ones((32,128),np.float32);keys=np.ones((2,128),np.float32);w=np.ones(32,np.float32)
+        p=F.prepare_query(q);u=tuple(np.zeros_like(a) for a in p.units)
+        fake=dataclasses.replace(p,units=u,decoded_hash=hashlib.sha256(b''.join(a.tobytes() for a in u+p.exponents)).hexdigest())
+        for foreign in [fake,dataclasses.replace(p),copy.copy(p),copy.deepcopy(p)]:
+            with self.assertRaisesRegex(ValueError,'foreign cloned'):F.scores(q,keys,w,5456,True,prepared=foreign)
+        got,_=F.scores(q,keys,w,5456,True,prepared=p)
+        self.assertEqual(got.tolist(),[4096.,4096.])
+        F.release_query(p)
+        with self.assertRaisesRegex(ValueError,'expired'):F.scores(q,keys,w,5456,True,prepared=p)
+        fresh=F.prepare_query(q);self.assertGreater(fresh.epoch,p.epoch)
+        self.assertEqual(F.scores(q,keys,w,5456,True,prepared=fresh)[0].tolist(),[4096.,4096.])
+    def test_identity_preserving_rehash_cannot_override_registry(self):
+        import hashlib
+        q=np.ones((32,128),np.float32);p=F.prepare_query(q)
+        altered=tuple(a.copy() for a in p.units);altered[0][0,0]=0
+        object.__setattr__(p,'units',altered)
+        object.__setattr__(p,'decoded_hash',hashlib.sha256(b''.join(a.tobytes() for a in p.units+p.exponents)).hexdigest())
+        with self.assertRaisesRegex(ValueError,'factory query metadata'):F.scores(q,np.ones((2,128),np.float32),np.ones(32,np.float32),5456,True,prepared=p)

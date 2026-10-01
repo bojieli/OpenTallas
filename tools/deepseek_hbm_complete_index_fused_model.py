@@ -69,7 +69,7 @@ def model():
     for name,size in regions.items():
         cursor=(cursor+255)//256*256;layout.append({'region':name,'offset':cursor,'bytes':size});cursor+=size
     inventory=T.inventory();invocations=sum(x['ranks'][0]['SM0_two_key_invocations'] for x in inventory)
-    return {'schema':'w19 finite fused unadmitted candidate r1','proof':lattice_proof(),
+    return {'schema':'w19 finite fused unadmitted candidate r2','proof':lattice_proof(),
         'source_pins':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [
             Path(__file__),ROOT/'tools/deepseek_hbm_complete_index_fused.py',ROOT/'tools/deepseek_hbm_complete_index.py',
             ROOT/'tools/w19_index32_integer_kernel.py',ROOT/'tools/hdc_golden_v41.py',ROOT/'tools/hdc_golden.py',
@@ -93,6 +93,10 @@ def model():
             'fallback live overlap and drain, shared layouts for every kernel phase',
             'Boyle full whole-token graph/lifetime/port join and physical clock qualification'],
         'source_fixture_only_opcode_counts':dict(receipt['fused_kernel'].counts),
+        'software_cache_authority':{'kind':'factory-owned identity/weakref registry, source pins, monotonic epoch, explicit release and trusted content digest',
+            'query_bytes_hashed_each_invocation':16384,'decoded_cache_bytes_hashed_each_finite_invocation':16896,
+            'authority_check_GPU_instructions_cycles_and_ports':None,
+            'old_r1_cache_authority_rejected':True,'known_945_issues_exclude_authority_cost_NOT_admission':True},
         'actual_token_rate':None,'hardware_admitted':False,'adopted':False,'RTL_written':False}
 
 if __name__=='__main__':print(json.dumps(model(),indent=2,sort_keys=True))

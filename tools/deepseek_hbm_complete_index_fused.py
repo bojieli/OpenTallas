@@ -8,6 +8,9 @@ from copy import deepcopy
 from dataclasses import dataclass
 from types import FunctionType
 import hashlib
+import itertools
+from pathlib import Path
+import weakref
 import numpy as np
 import deepseek_hbm_complete_index as X
 import deepseek_hbm_complete_index_blas as B
@@ -81,15 +84,50 @@ class Prepared:
     query_decoders:tuple
     exceptional:bool
     decoded_hash:str
+    epoch:int
+    source_pins:tuple
+
+# Process-local software authority, not a hardware capability or producer pin.
+# Identity is checked through a weak reference, so id reuse cannot renew a lease.
+_REGISTRY={}
+_EPOCHS=itertools.count(1)
+_SOURCE_PINS=tuple((Path(m.__file__).name,hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest())
+                   for m in (X,B,C,E,X.K,X.L,C.G,C.V)) + ((Path(__file__).name,hashlib.sha256(Path(__file__).read_bytes()).hexdigest()),)
+
+def _content(prepared):
+    return hashlib.sha256(b''.join(a.tobytes() for a in prepared.units+prepared.exponents)).hexdigest()
+
+def release_query(prepared):
+    record=_REGISTRY.get(id(prepared))
+    if record is None or record[0]() is not prepared:raise ValueError('foreign or expired query lease')
+    del _REGISTRY[id(prepared)]
+
+def _validate(prepared,q):
+    record=_REGISTRY.get(id(prepared))
+    if record is None or record[0]() is not prepared:raise ValueError('foreign cloned or expired query lease')
+    _,expected,units,exponents=record
+    actual=(prepared.query_hash,prepared.decoded_hash,prepared.exceptional,prepared.epoch,prepared.source_pins)
+    if actual!=expected:raise ValueError('altered factory query metadata')
+    if hashlib.sha256(q.tobytes()).hexdigest()!=expected[0]:raise ValueError('wrong produced query version')
+    if _content(prepared)!=expected[1]:raise ValueError('clobbered factory query content')
+    return units,exponents,expected[2]
 
 def prepare_query(q):
     q=np.asarray(q,np.float32)
     if q.shape!=(32,128):raise ValueError('actual32queryheads')
     exceptional,classification=classified(q)
     decoded=[] if exceptional else [X.decode(q[:,j*32:(j+1)*32]) for j in range(4)]
-    units=tuple(d[0].copy() for d in decoded);exponents=tuple(d[1].copy() for d in decoded)
-    for array in units+exponents:array.flags.writeable=False
-    return Prepared(hashlib.sha256(q.tobytes()).hexdigest(),units,exponents,classification,tuple(d[2] for d in decoded),exceptional,hashlib.sha256(b''.join(a.tobytes() for a in units+exponents)).hexdigest())
+    # Bytes-backed arrays cannot be made writeable by callers. Registry keeps
+    # these exact snapshots for consumption after validation.
+    def immutable(a):return np.frombuffer(a.tobytes(),dtype=a.dtype).reshape(a.shape)
+    units=tuple(immutable(d[0]) for d in decoded);exponents=tuple(immutable(d[1]) for d in decoded)
+    prepared=Prepared(hashlib.sha256(q.tobytes()).hexdigest(),units,exponents,classification,tuple(d[2] for d in decoded),exceptional,hashlib.sha256(b''.join(a.tobytes() for a in units+exponents)).hexdigest(),next(_EPOCHS),_SOURCE_PINS)
+    identity=id(prepared)
+    def expire(ref):
+        record=_REGISTRY.get(identity)
+        if record is not None and record[0] is ref:_REGISTRY.pop(identity,None)
+    _REGISTRY[identity]=(weakref.ref(prepared,expire),(prepared.query_hash,prepared.decoded_hash,prepared.exceptional,prepared.epoch,prepared.source_pins),units,exponents)
+    return prepared
 
 def decode_owned(values):
     values=np.asarray(values,np.float32);count=len(values)
@@ -110,19 +148,18 @@ def scores(q,keys,weights,original_batch_size,opt_in=False,prepared=None,trace=F
     q=np.asarray(q,np.float32);keys=np.asarray(keys,np.float32);weights=np.asarray(weights,np.float32)
     if q.shape!=(32,128) or keys.ndim!=2 or keys.shape[1]!=128 or not 1<=len(keys)<=64 or weights.shape!=(32,):raise ValueError('bounded actual source shape')
     prepared=prepare_query(q) if prepared is None else prepared
-    if prepared.query_hash!=hashlib.sha256(q.tobytes()).hexdigest():raise ValueError('wrong produced query version')
-    if prepared.decoded_hash!=hashlib.sha256(b''.join(a.tobytes() for a in prepared.units+prepared.exponents)).hexdigest():raise ValueError('clobbered prepared query version')
+    trusted_units,trusted_exponents,trusted_exceptional=_validate(prepared,q)
     special,key_classification=classified(keys)
-    if special or prepared.exceptional:
+    if special or trusted_exceptional:
         out,programs=B.source_sized_scores(q,keys,weights,original_batch_size)
         return out,{'path':'ordinary exceptional continuation','programs':prepared.query_classification+key_classification+programs,
             'GPU_dispatch_flag_gather_and_epoch_bound':False,'FP64_arithmetic':0}
     decoded=[decode_owned(keys[:,j*32:(j+1)*32]) for j in range(4)]
     memory={'weights':weights[None,:].view(np.uint32)}
     for block,(ku,ke,_) in enumerate(decoded):
-        memory.update({f'q{block}_{j}':prepared.units[block][:,j][None,:].view(np.uint32) for j in range(32)})
+        memory.update({f'q{block}_{j}':trusted_units[block][:,j][None,:].view(np.uint32) for j in range(32)})
         memory.update({f'k{block}_{j}':ku[:,j,None].view(np.uint32) for j in range(32)})
-        memory[f'eq{block}']=prepared.exponents[block][None,:].view(np.uint32)
+        memory[f'eq{block}']=trusted_exponents[block][None,:].view(np.uint32)
         memory[f'ek{block}']=ke[:,None].view(np.uint32)
     run=E.TracedSIMT((len(keys),32),memory,kernel='finite_fused_index') if trace else X.SIMT((len(keys),32),memory)
     run.run(program())
