@@ -1,0 +1,26 @@
+{
+  "observed_at": "2026-10-01T08:27:40.896805+00:00",
+  "softplus": {
+    "source_commit": "6aa4ff9785875036b76964cb6c85a86217838efc",
+    "status": "not_met",
+    "setup_wns_ns": -0.00583988,
+    "hold_wns_ns": -0.00189707,
+    "clock_ns": 1.111,
+    "corner": "WC setup; separate FF signoff not proven by this terminal record",
+    "routing": "M2-M6",
+    "adoption": "rejected/not_met; not tuned or restarted"
+  },
+  "rotate_square_small": {
+    "source_commit": "193e0203",
+    "status": "failed_build",
+    "worker": "155.103.253.191",
+    "job": "c735ef8655",
+    "exit_code": 1,
+    "reason": "Verilator signal 9 during N64 M16 build; no exact result",
+    "next": "Resource blocker, preserve failure and live larger campaigns. No duplicate/restart."
+  },
+  "evidence_sha256": {
+    "sp4_softplus_s.physical.json": "f856132f22c7f95d5cd2559a3a0815ca96a485ba64749beb493e26363a18d9af",
+    "square_small.failed.log": "651c6750dbc83797b0c58ad8c1ae0fbbbde5d014ee64a15518b9e87fcac9fe62"
+  }
+}
