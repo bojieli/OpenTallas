@@ -33,7 +33,7 @@
 // Interfaces (as ot_chip_v41x_ckv_sel_fetch)
 //   job     job_v/job_ready, window_count, published_source_count, per-stack
 //           region base/count (current user and source layer).
-//   ids     id_count/id_done, id_idx -> id_rank_in, id_gid (the die's owned
+//   ids     id_count/id_done, id_idx -> id_rank_in, id_gid (IDLAT = 1: one cycle later) (the die's owned
 //           list of ot_chip_v41x_ckv_sel_ids; non-owned entries are skipped).
 //   rows    o_v/o_ready, o_rank, o_gid, o_row (registered).
 //   hbm     NP = 4P ports (port q = stack * P + j): m_v/m_rdy/m_addr/m_tag,
@@ -74,7 +74,7 @@ endmodule
 //   hbm       m_v/m_rdy/m_addr/m_tag (tag {slot, sector}), s_v/s_tag/s_beat/s_data.
 //   row out   o_v/o_take (registered 2,304-bit row, its rank and id).
 //   S slots in one 1R1W SRAM of S*9 x 256 bits; issue, response write and readout in slot order.
-//   The response port and the fault outputs are registered (one cycle each).
+//   The request port, the response port and the fault outputs are registered (one cycle each).
 module ot_chip_v41x_ckv_pc_port #(
     parameter integer S = 16,
     parameter integer POS_W = 21,
@@ -91,10 +91,10 @@ module ot_chip_v41x_ckv_pc_port #(
     input  wire [POS_W-1:0] d_gid,
     input  wire [HAW-1:0] d_a0,
     output wire d_free,
-    output wire m_v,
+    output reg  m_v,
     input  wire m_rdy,
-    output wire [HAW-1:0] m_addr,
-    output wire [TAGW-1:0] m_tag,
+    output reg  [HAW-1:0] m_addr,
+    output reg  [TAGW-1:0] m_tag,
     input  wire s_v_in,
     input  wire [TAGW-1:0] s_tag_in,
     input  wire [3:0] s_beat_in,
@@ -113,9 +113,20 @@ module ot_chip_v41x_ckv_pc_port #(
     reg [TAGW-1:0] s_tag;
     reg [3:0] s_beat;
     reg [255:0] s_data;
+    reg poison;                          // NaN E4M3 scale byte in the incoming sector, found before the register
+    reg [7:0] waddr_q;                   // slot * 9 + sector of the incoming response, computed before the register
+    integer b;
+    reg poison_in;
+    always @(*) begin
+        poison_in = 1'b0;
+        for (b = 0; b < 32; b = b + 1) if (s_data_in[8*b +: 7] == 7'h7f) poison_in = 1'b1;
+    end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) s_v <= 1'b0; else s_v <= s_v_in;
-    always @(posedge clk) begin s_tag <= s_tag_in; s_beat <= s_beat_in; s_data <= s_data_in; end
+    always @(posedge clk) begin
+        s_tag <= s_tag_in; s_beat <= s_beat_in; s_data <= s_data_in; poison <= poison_in;
+        waddr_q <= 8'(32'(s_tag_in[4 +: SW]) * 9 + 32'(s_tag_in[3:0]));
+    end
     reg [S-1:0] busy, cmp;
     reg [3:0] got [0:S-1];
     reg [KW-1:0] rk [0:S-1];
@@ -123,30 +134,28 @@ module ot_chip_v41x_ckv_pc_port #(
     reg [HAW-1:0] a0 [0:S-1];
     reg [SW-1:0] al, ip, rp;
     reg [3:0] isec;
+    // the request leaves from an output register (m_v/m_addr/m_tag); the next one loads when it is
+    // empty or accepted this cycle
     wire iss_v = run && busy[ip] && !cmp[ip];
-    assign m_v = iss_v;
-    assign m_addr = a0[ip] + HAW'(isec);
-    assign m_tag = {ip, isec};
-    wire grant = iss_v && m_rdy;
+    wire can_load = !m_v || m_rdy;
+    wire grant = iss_v && can_load;
     wire [SW-1:0] rslot = s_tag[4 +: SW];
     wire [3:0] rsec = s_tag[3:0];
     wire rsp_bad = s_v && (rsec > 4'd8 || !busy[rslot] || s_beat != 0);
-    integer b;
-    reg poison;
-    always @(*) begin
-        poison = 1'b0;
-        for (b = 0; b < 32; b = b + 1) if (s_data[8*b +: 7] == 7'h7f) poison = 1'b1;
-    end
     wire rsp_poison = s_v && !rsp_bad && rsec == 4'd8 && poison;
     reg ro_act, ro_q;
+    reg [7:0] ro_addr;                   // readout address: rp * 9 at start, then +1
     reg [3:0] ro_k, ro_kq;
     wire ro_start = run && !ro_act && !ro_q && busy[rp] && got[rp] == 4'd9 && !o_v;
     wire [255:0] rdata;
     ot_chip_v41x_ckv_slot_ram #(.DEPTH(S * 9), .SRAM_MACRO(SRAM_MACRO)) u_ram (
-        .clk(clk), .we(s_v && !rsp_bad), .waddr(8'(32'(rslot) * 9 + 32'(rsec))), .wdata(s_data),
-        .re(ro_act), .raddr(8'(32'(rp) * 9 + 32'(ro_k))), .rdata(rdata));
+        .clk(clk), .we(s_v && !rsp_bad), .waddr(waddr_q), .wdata(s_data),
+        .re(ro_act), .raddr(ro_addr), .rdata(rdata));
     assign d_free = !busy[al];
-    assign busy_any = |busy || ro_act || ro_q || o_v || s_v;
+    reg busy_any_q;                      // registered status (one cycle late; the fetch's done waits two idle cycles)
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) busy_any_q <= 1'b0; else busy_any_q <= |busy || ro_act || ro_q || o_v || s_v || m_v || d_v;
+    assign busy_any = busy_any_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin fault_rsp <= 1'b0; fault_poison <= 1'b0; end
         else begin fault_rsp <= rsp_bad; fault_poison <= rsp_poison; end
@@ -154,6 +163,7 @@ module ot_chip_v41x_ckv_pc_port #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             busy <= 0; cmp <= 0; al <= 0; ip <= 0; rp <= 0; isec <= 0;
+            m_v <= 0; m_addr <= 0; m_tag <= 0;
             ro_act <= 0; ro_k <= 0; ro_q <= 0; ro_kq <= 0; o_v <= 0; o_rank <= 0; o_gid <= 0;
             for (i = 0; i < S; i = i + 1) got[i] <= 0;
         end else begin
@@ -163,15 +173,18 @@ module ot_chip_v41x_ckv_pc_port #(
                 al <= SW'((32'(al) + 1) % S);
             end
             if (grant) begin
+                m_v <= 1'b1; m_tag <= {ip, isec};
+                m_addr <= (isec == 4'd0) ? a0[ip] : m_addr + 1'b1;   // sectors of one row are consecutive
                 if (isec == 4'd8) begin
                     isec <= 0; cmp[ip] <= 1'b1; ip <= SW'((32'(ip) + 1) % S);
                 end else isec <= isec + 1'b1;
-            end
+            end else if (can_load) m_v <= 1'b0;
             if (s_v && !rsp_bad && !rsp_poison) got[rslot] <= got[rslot] + 1'b1;
             ro_q <= ro_act; ro_kq <= ro_k;
             if (ro_start) begin
-                ro_act <= 1; ro_k <= 0; o_rank <= rk[rp]; o_gid <= gd[rp];
+                ro_act <= 1; ro_k <= 0; o_rank <= rk[rp]; o_gid <= gd[rp]; ro_addr <= 8'(32'(rp) * 9);
             end else if (ro_act) begin
+                ro_addr <= ro_addr + 1'b1;
                 if (ro_k == 4'd8) begin
                     ro_act <= 0; busy[rp] <= 1'b0; got[rp] <= 0; rp <= SW'((32'(rp) + 1) % S);
                 end else ro_k <= ro_k + 1'b1;
@@ -195,6 +208,7 @@ module ot_chip_v41x_ckv_pc_fetch #(
     parameter integer K = 512,
     parameter integer MAX_CONTEXT = 1048576,
     parameter bit SRAM_MACRO = 0,
+    parameter bit IDLAT = 0,            // 1: id reads are synchronous (ot_chip_v41x_ckv_sel_ids RDREG = 1)
     parameter integer NP = 4 * P,
     parameter integer LP = (P > 1) ? $clog2(P) : 1,
     parameter integer SW = (S > 1) ? $clog2(S) : 1,
@@ -256,7 +270,19 @@ module ot_chip_v41x_ckv_pc_fetch #(
     wire [NP-1:0] p_free;                          // port has a free slot
     wire dispatch = run && e_v && owned && !e_range_bad && p_free[e_port];
     wire skip = run && e_v && !owned;
-    wire eload = run && cur < id_count && (!e_v || dispatch || skip);
+    wire consume = dispatch || skip;
+    reg idle_q;
+    wire idle_now = cur == id_count && id_done && !e_v && !k_v && !rd_p && p_busy_any == 0 && sv == 0 && !o_v &&
+                    !dispatch;
+    // IDLAT = 0: the entry loads from the combinational read at cur.
+    // IDLAT = 1: a read issued at cur returns next cycle (rd_p); it lands in the entry register or, if
+    // the entry is held, in a one-entry skid; a read is issued only when both will have room.
+    reg rd_p, k_v;
+    reg [KW-1:0] k_rank;
+    reg [POS_W-1:0] k_gid;
+    wire [1:0] occ_next = 2'(e_v && !consume) + 2'(k_v) + 2'(rd_p);
+    wire eload = IDLAT ? 1'b0 : (run && cur < id_count && (!e_v || consume));
+    wire issue = IDLAT && run && cur < id_count && occ_next <= 2'd1;
 
     // ---- ports ----
     wire [NP-1:0] p_busy_any, p_fault_rsp, p_fault_poison, p_ov;
@@ -342,6 +368,7 @@ module ot_chip_v41x_ckv_pc_fetch #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             run <= 0; cur <= 0; wcount <= 0; e_v <= 0; e_rank <= 0; e_gid <= 0;
+            rd_p <= 0; k_v <= 0; k_rank <= 0; k_gid <= 0; idle_q <= 0;
             done <= 0; fault <= 0; fault_code <= 0; st_owned_rows <= 0;
         end else begin
             if (|p_fault_rsp) begin fault <= 1; fault_code[1] <= 1; end
@@ -349,12 +376,27 @@ module ot_chip_v41x_ckv_pc_fetch #(
             if (run && e_v && owned && e_range_bad) begin fault <= 1; fault_code[0] <= 1; end
             if (job_v && !run) begin
                 run <= 1; cur <= 0; wcount <= window_count; done <= 0; e_v <= 0; st_owned_rows <= 0;
+                rd_p <= 0; k_v <= 0; idle_q <= 0;
             end else if (run) begin
-                if (eload) begin
+                if (IDLAT) begin
+                    rd_p <= issue;
+                    if (issue) cur <= cur + 1'b1;
+                    if (!e_v || consume) begin
+                        if (k_v) begin
+                            e_v <= 1; e_rank <= k_rank; e_gid <= k_gid;
+                            k_v <= rd_p; k_rank <= id_rank_in; k_gid <= id_gid;
+                        end else if (rd_p) begin
+                            e_v <= 1; e_rank <= id_rank_in; e_gid <= id_gid;
+                        end else e_v <= 0;
+                    end else if (rd_p) begin
+                        k_v <= 1; k_rank <= id_rank_in; k_gid <= id_gid;
+                    end
+                end else if (eload) begin
                     e_v <= 1; e_rank <= id_rank_in; e_gid <= id_gid; cur <= cur + 1'b1;
                 end else if (dispatch || skip) e_v <= 0;
                 if (dispatch) st_owned_rows <= st_owned_rows + 1;
-                if (cur == id_count && id_done && !e_v && p_busy_any == 0 && sv == 0 && !o_v) begin
+                idle_q <= idle_now;
+                if (idle_now && idle_q) begin
                     run <= 0; done <= 1;
                 end
             end
