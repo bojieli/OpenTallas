@@ -190,7 +190,7 @@ def test_adopted_product_row():
     ad = next(p for p in pts if "ADOPTED" in p["label"])
     assert ad["clock_hz"] == 1.2e9 and ad["field_concurrency"] == 0.5 and ad["bf16"] == "columns"
     assert list(ad["slow_domain"]) == [0.9e9, "w18"] and ad["elem_stages"] == 7
-    assert ad["added_latency"] == {"suffix:softplus_sqrt": -97}         # the v41x softplus (162, not 259)
+    assert ad["added_latency"] == {"suffix:softplus_sqrt": -97, "suffix:idx.topk_local": 8}   # v41x softplus; idx_tail 16
     import uarch_model as U                                   # the product stage count is the fit's own answer
     assert ad["stages"] == U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8")
     assert ad["dies"] == 4 * ad["stages"] + 4 + 36             # head group on 8192m8 ping-pong (4 dies), 36 tables
@@ -237,7 +237,7 @@ def test_product_stage_owner_file():
     import uarch_model as U
     own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
     r = _rec()
-    ad = next(p for p in r["v41_rom"]["points"] if p.get("role") == "product" and "SS wire" in p["label"])
+    ad = next(p for p in r["v41_rom"]["points"] if p.get("role") == "product" and "MEASURED serial" in p["label"])
     assert own["schema"] == "opentallas.v41.stage_owner_preflight.v1" and own["stage_count"] == ad["stages"]
     assert own["layer_dies"] == ad["layer_dies"] and len(own["layer_owners"]) == 40
     assert own["min_per_die_headroom_after_rounding_and_engram_spill_bytes"] > 0
@@ -246,3 +246,70 @@ def test_product_stage_owner_file():
     assert own["source_sha256"]["tools/uarch_model.py"] == __import__("hashlib").sha256(
         (ROOT / "tools/uarch_model.py").read_bytes()).hexdigest()
     assert U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8") == own["stage_count"]
+
+
+def test_followup_rows():
+    r = _rec()
+    ts = r["tau_sweep_1m"]
+    assert ts["headline_tau"] == 3.78 and "lmsys.org" in ts["source"]
+    rom = ts["rows"][0]
+    assert rom["tau_2.91"] < rom["tau_3.78"] < rom["tau_5.24"]
+    assert {x["design"][:10] for x in r["short_context_8k"]["rows"]} and r["short_context_8k"]["ctx"] == 8192
+    q = r["qwen_context_sweep"]["rows"]
+    rom = [x for x in q if x["design"].startswith("ROM option C (4 stacks")]
+    assert [x["ctx"] for x in rom] == [8192, 32768, 131072, 200000]
+    assert all(b["ar_tokens_s"] <= a["ar_tokens_s"] for a, b in zip(rom, rom[1:]))
+    hx = r["qwen_helix_200k"]["rows"]
+    assert hx[0]["extra_kv_dies"] == 0 and hx[-1]["ar_tokens_s"] > hx[0]["ar_tokens_s"]
+    assert r["gpu_calibration"]["published"][0]["tok_s_user"] == 368.0
+
+
+def test_w11_measured_serial_step():
+    """Named step (W16b): W11's measured serial build at 1.111 ns SS (ddd2f725) replaces the 3-stage-add depths
+    and the +1 LAT-4 multiply lower bound in the 0.9 GHz domain; it lengthens the chain, so AR and MTP drop,
+    the stage plan and die count do not move, and the product row is the one the headline table reads."""
+    import uarch_model as U
+    m = U.W11_SERIAL_MEASURED
+    assert (m["linear"], m["exp"], m["sigmoid"], m["silu"], m["rsqrt"], m["softplus"], m["gate"]) == (9, 22, 23, 23, 21, 54, 23)
+    assert (m["reduce_tap"], m["reduce_per_level"], m["div"], m["light_lane_ss_mhz"]) == (9, 1, 0, 929.0)
+    r = _rec()
+    pts = {p["label"]: p for p in r["v41_rom"]["points"] if p.get("role") == "product"}
+    old = next(p for k, p in pts.items() if k.endswith("W11 LAT-4 serial mul"))
+    new = next(p for k, p in pts.items() if k.endswith(U.SERIAL_TAG))
+    assert new["serial"] == "w11_measured" and old.get("serial") is None
+    assert new["ar_tokens_s_b1"] < old["ar_tokens_s_b1"] and new["mtp_tokens_s_b1"] < old["mtp_tokens_s_b1"]
+    assert (new["stages"], new["dies"]) == (old["stages"], old["dies"])
+    fin = [p for p in pts.values() if p.get("product_final")]
+    assert len(fin) == 1 and fin[0]["label"].endswith(U.PRODUCT_TAG)
+    h = r["headline_table"]["v41"][0]
+    assert abs(h["per_user_ar"] - fin[0]["ar_tokens_s_b1"]) < 0.5 and abs(h["per_user_mtp"] - fin[0]["mtp_tokens_s_b1"]) < 0.5
+
+
+def test_w16b_pass2_steps():
+    """Shrunk-die interim crossings shorten the path; the W11 streaming depths lengthen it; the tier-3 rows are W19's
+    composed token; the Qwen RTL comparison and its calibrated row are recorded."""
+    import uarch_model as U
+    r = _rec()
+    pts = {p["label"]: p for p in r["v41_rom"]["points"] if p.get("role") == "product"}
+    ser = next(p for k, p in pts.items() if k.endswith(U.SERIAL_TAG))
+    shr = next(p for k, p in pts.items() if k.endswith(U.SHRINK_TAG))
+    fin = next(p for k, p in pts.items() if k.endswith(U.PRODUCT_TAG))
+    assert shr["ar_tokens_s_b1"] >= ser["ar_tokens_s_b1"] and fin["ar_tokens_s_b1"] <= shr["ar_tokens_s_b1"]
+    assert shr["die"]["expert_wire"] == 63 and shr["die"]["coll_stages"] == 45
+    t3 = [x for x in r["headline_table"]["v41"] if x["tier"] == "3"]
+    assert t3 and all(abs(x["per_user_ar"] - 1e6 / 431.55) < 0.1 for x in t3)
+    q = r["qwen_l0_rtl_vs_model"]
+    assert q["rtl"]["cycles"] == 4669 and q["rtl"]["me_extra"] == U.QWEN_W12_TP4_ME_EXTRA_SS   # the RTL ran without +54
+    assert abs(q["ratio"] - 4669 / q["model_layer_cycles"]) < 1e-3
+    qs = r["qwen_product_ss"]
+    assert qs["kv_prep_cycles"] == 216 and qs["rtl_calibrated"]["tokens_s_b1"] < qs["tokens_s_b1"]
+    assert U.QWEN_SS["me_lat_extra"] == U.QWEN_W12_TP4_ME_EXTRA_SS + 54                       # LAT-7 counted once
+
+
+def test_die_shrink_ruling():
+    """Root ruling 2026-09-30: shrink the layer die to the owner file's pairs + ~10%; W18b's interim die holds them."""
+    import uarch_model as U
+    own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
+    assert U.DIE_SHRINK["pairs_needed"] == max(own["pairs_per_die_by_stage"])
+    ds = _rec()["v41_rom"]["die_shrink_sensitivity"]
+    assert ds["role"] == "ruling" and ds["interim"]["pair_slots"] >= ds["pairs_needed"]
