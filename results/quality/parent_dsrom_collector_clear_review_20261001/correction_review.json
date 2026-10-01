@@ -1,0 +1,32 @@
+{
+  "actual_K": 512,
+  "actual_NSLOT": 64,
+  "actual_interface_cases": 7,
+  "added_FF_bits": 0,
+  "added_cycles": 0,
+  "added_memory_ports": 0,
+  "all_cases_pass": true,
+  "clear_old_count_1_and_512_pass": true,
+  "companion_sha256": "178194b789c82b7731383447539097492c43c67646d927e3bc9a6c2893499cf6",
+  "contextual_SS_FF_qualified": false,
+  "default_opt_in": 0,
+  "disabled_fix_mutant_exact_fatal_rejected": true,
+  "hardware_admission": false,
+  "model_commits": [
+    "3837421e8891fb2dd01b918dbe3ee42c6191c75f",
+    "5d8931239eaa6363d76cc8f8363121850dde50c8"
+  ],
+  "model_tests": {
+    "passed": 2,
+    "seconds": 0.07
+  },
+  "original_and_default_off_failure_preserved": true,
+  "owner_commit": "3c109848ccb97a11d1caf48cf23be9c99f20c3e7",
+  "replay_sha256": "f34526d00c0df16e588e0605e535b0f629b32e289fad32a125073240245e8593",
+  "reset_pass": true,
+  "same_edge_arrival_rejected_without_capture": true,
+  "schema": "opentallas.parent.dsrom-collector-clear-correction-review.v1",
+  "scope": "Independent actual seven-module interface replay with source-pinned original modules and isolated opt-in companion. Synthetic 512 peer arrivals qualify local count/bitmap control only; real peer generations, nine visible backend writes and final attention retirement remain required.",
+  "verdict": "PASS_MODELED_LOCAL_CONTROL_FIX_NO_BROAD_ADMISSION",
+  "whole_epoch_peer_backend_final_attention_qualified": false
+}
