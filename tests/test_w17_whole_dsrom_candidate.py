@@ -22,6 +22,11 @@ def test_address_extents_and_serial_constant_port():
     assert r['constants']['resulting_required_words'] > 2**19
     assert r['constants']['resulting_required_words'] <= 2**20
     assert h['scalar_read_ports'] == 1 and not h['simultaneous_unrelated_reads']
+    service = r['constants']['source_bound_service_preflight']
+    assert service['capacity']['banks_per_rank'] == h['physical_4096x274_banks']
+    assert service['timing_preflight']['mandatory_capture_before_bank_lane_mux']
+    assert service['timing_preflight']['measured_capture_select_cycles'] is None
+    assert not service['admission']
     e = r['vocabulary_homes']['embedding']
     assert (32320 - 1) * 320 + 319 == e['physical_words_per_home'] - 1
     assert e['physical_words_per_home'] == e['physical_banks_per_home'] * 4096
