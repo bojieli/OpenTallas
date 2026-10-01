@@ -83,6 +83,9 @@ def test_source_RF_contract_unknown_or_widened_cannot_return_cycles():
     assert schedule(events,contracts,{},rf_contract=None)['candidate_cycles'] is None
     widened=dict(pinned_RF_contract(),read_ports_bank=5)
     assert schedule(events,contracts,{},rf_contract=widened)['candidate_cycles'] is None
+    supplied=pinned_RF_contract();supplied['read_latency_candidate']=0
+    assert schedule(events,contracts,{},rf_contract=supplied)['candidate_cycles'] is None
+    assert pinned_RF_contract()['read_latency_candidate']==2
 
 
 def test_allocator_residency_controls_RF_and_issue_parallelism():

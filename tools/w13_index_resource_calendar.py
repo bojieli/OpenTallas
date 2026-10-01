@@ -17,9 +17,14 @@ from w13_index_lane_allocation import allocate
 
 
 @lru_cache(maxsize=1)
-def pinned_RF_contract():
+def _pinned_RF_source():
     path='tools/w19_gpu_simd_contract.py';rev='922a6b673'
-    raw=subprocess.check_output(['git','show',rev+':'+path])
+    return subprocess.check_output(['git','show',rev+':'+path])
+
+
+def pinned_RF_contract():
+    # Cache immutable committed bytes, never a caller-mutable authority dict.
+    path='tools/w19_gpu_simd_contract.py';rev='922a6b673';raw=_pinned_RF_source()
     tree=ast.parse(raw)
     nodes=[n.value for n in ast.walk(tree) if isinstance(n,ast.keyword) and n.arg=='register_file']
     if len(nodes)!=1 or not isinstance(nodes[0],ast.Call):raise ValueError('ambiguous RF source contract')
