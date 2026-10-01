@@ -85,25 +85,39 @@ PROBE_ROWS = 256
 # Pre-registered (2026-10-01, before any full-model nfold result existed).  Quality: the deployment tool's own
 # rule (Q.THRESHOLD) applied to b_nam against a.  Stability: the user's rule, made operational.
 STABILITY_RULE = {
-    "rule": "b_nam is numerically stable iff (S1) no NaN or Inf appears anywhere in b_nam (every FP8 quantiser "
+    "rule": "b_nam is numerically stable iff ALL of: (S1) no NaN or Inf appears anywhere in b_nam (every FP8 quantiser "
             "input and output, every BF16 matvec input and output, every folded norm site, every logit); (S2) "
             "b_nam's FP8 saturation count is not above the contract b's, at every quantiser site and in total; "
-            "(S3) its error and selection-flip rates do not exceed the noise floor in a way that grows with depth: "
-            "for the free-running router flip rate, index query flip rate and hidden-state relative RMS, and for "
-            "the teacher-forced (one-layer) router flip rate and hidden relative RMS, the ratio X_L of b_nam to "
-            "the noise floor (a2, resp. a2_tf) FAILS when its mean over layers 30-39 exceeds X_RATIO_MAX and "
-            "exceeds its mean over layers 0-9 by more than X_GROWTH_MAX (relative); the same-input probe ratio "
-            "(b_nam's per-row error / b's against the FP64 un-quantised ideal, every folded site) FAILS on the "
-            "same test; (S4) nor in a way that grows with context: for the router and index flip rates by "
-            "position bucket (free-running and teacher-forced; buckets with >= 500 samples, BOS excluded) and "
-            "the per-token |NLL delta| by position bucket, the ratio to the noise floor at the longest bucket "
-            "FAILS when it exceeds X_RATIO_MAX and exceeds the ratio at the shortest bucket by more than "
-            "X_GROWTH_MAX.  Underflow-to-zero, amax-floor hits and FP8 quantisation error are reported per "
-            "site against b and gate only through S3 (their effect on the outputs).",
+            "(S3) against the noise floor, with depth: for the free-running router flip rate, index query flip rate "
+            "and hidden-state relative RMS, and the teacher-forced (one-layer) router flip rate, index flip rate and "
+            "hidden relative RMS, the ratio X_L of b_nam to the floor (a2, resp. a2_tf), and the same-input probe "
+            "ratio (b_nam's per-row error / b's, against the FP64 un-quantised ideal, every folded site), FAIL on "
+            "EITHER condition: mean over layers 30-39 above X_RATIO_MAX, OR mean over layers 30-39 above the mean "
+            "over layers 0-9 by more than X_GROWTH_MAX (relative); (S3b) against the current deployment contract: "
+            "the ratio b_nam / b (free-running) and b_nam_tf / b_tf (one-layer) of the router flip rate, index "
+            "query flip rate and hidden relative RMS is at most X_RATIO_MAX in EVERY layer (b = 0 with b_nam > 0 "
+            "is an infinite ratio; both 0 is 1); (S4) against the noise floor, with context: for the router and "
+            "index flip rates by position bucket (free-running and one-layer, summed over layers; buckets with >= "
+            "min_bucket_samples samples, BOS excluded) and the per-token |NLL delta| by position bucket, FAIL on "
+            "EITHER condition: ratio to the floor at the longest bucket above X_RATIO_MAX, OR above the ratio at "
+            "the shortest bucket by more than X_GROWTH_MAX; (S4b) the same position-bucketed rates and |NLL delta| "
+            "as ratios b_nam / b (b_nam_tf / b_tf) are at most X_RATIO_MAX in EVERY bucket.  Reported, not gating: "
+            "max |x| and p99.9 |x| entering every FP8 quantiser for b and b_nam side by side, per-site saturation, "
+            "underflow-to-zero, amax-floor hits, FP8 quantisation error; greedy first-divergence positions "
+            "against a and against b.",
     "X_RATIO_MAX": 1.10,
     "X_GROWTH_MAX": 0.10,
     "min_bucket_samples": 500,
+    "registered": "2026-10-01, tightened at the root's request (either condition fails; S3b/S4b against b) "
+                  "before any full-model result; only 3-layer smoke runs had been seen",
 }
+KNOWN_DEFECTS = {
+    "deployment_tool_scalar_division": "tools/deepseek_v41_deployment_quality.py (committed tool, record "
+        "deepseek_v41_flash_deployment_arithmetic.json) divides by Python scalars on CUDA (RMSNorm, hyper-connection "
+        "and Engram means), which PyTorch evaluates as x * (1/d): ~20% of quotients differ from the golden's IEEE "
+        "division by 1 ulp (measured). BF16 output rounding hides it in that tool's reduced-vehicle test; the "
+        "effect on quality is immaterial (a 1-ulp rstd change). This tool divides by IEEE rules (ieee_division), "
+        "for b and b_nam alike, and is bit-exact with the golden folded and unfolded."}
 
 
 # ======================================================================================
@@ -161,52 +175,56 @@ class Stats:
     def reset(self):
         self.q, self.mvs, self.norm, self.probe = {}, {}, {}, {}
 
-    # ---- an FP8 activation quantiser ----
+    # ---- an FP8 activation quantiser (GPU accumulators, no host sync per call) ----
+    QI = ("calls", "rows", "blocks", "elems", "nonzero", "floor_hits", "zero_blocks", "saturated",
+          "underflow_to_zero", "fp8_subnormal", "nan_in", "inf_in", "nan_out", "inf_out", "qerr_rows")
+    QF = ("max_abs", "qerr_max", "qerr_sum")
+
     def quant(self, site, x, xq, xe, folded, out):
         d = self.q.get(site)
+        dev = x.device
         if d is None:
-            d = self.q[site] = {"calls": 0, "rows": 0, "blocks": 0, "elems": 0, "nonzero": 0, "max_abs": 0.0,
-                                "floor_hits": 0, "zero_blocks": 0, "saturated": 0, "underflow_to_zero": 0,
-                                "fp8_subnormal": 0, "nan_in": 0, "inf_in": 0, "nan_out": 0, "inf_out": 0,
-                                "folded": bool(folded), "exp_min": 10 ** 9, "exp_max": -10 ** 9,
-                                "amax_log2_hist": torch.zeros(160, dtype=torch.int64, device=x.device),
-                                "qerr_log10_hist": torch.zeros(120, dtype=torch.int64, device=x.device),
-                                "qerr_max": 0.0, "qerr_sum": 0.0, "qerr_rows": 0}
+            d = self.q[site] = {"i": torch.zeros(len(self.QI), dtype=torch.int64, device=dev),
+                                "f": torch.zeros(len(self.QF), dtype=torch.float64, device=dev),
+                                "emin": torch.full((), 10 ** 9, dtype=torch.int64, device=dev),
+                                "emax": torch.full((), -10 ** 9, dtype=torch.int64, device=dev),
+                                "folded": bool(folded),
+                                "amax_log2_hist": torch.zeros(160, dtype=torch.int64, device=dev),
+                                "qerr_log10_hist": torch.zeros(120, dtype=torch.int64, device=dev),
+                                "abs_q4_hist": torch.zeros(800, dtype=torch.int64, device=dev)}
         M, K = x.shape
         xb = x.reshape(M, K // 32, 32)
         amax = xb.abs().amax(-1)
-        d["calls"] += 1
-        d["rows"] += M
-        d["blocks"] += amax.numel()
-        d["elems"] += x.numel()
         nz = x != 0
-        d["nonzero"] += int(nz.sum())
-        d["max_abs"] = max(d["max_abs"], _f(amax.max()) if amax.numel() else 0.0)
-        d["floor_hits"] += int((amax < Q.f32c(Q.GV.FP8_AMAX_FLOOR)).sum())
-        d["zero_blocks"] += int((amax == 0).sum())
-        d["nan_in"] += int(torch.isnan(x).sum())
-        d["inf_in"] += int(torch.isinf(x).sum())
-        d["saturated"] += int(((xb.abs() * Q.pow2(-xe)[..., None]) > 448.0).sum())
-        d["underflow_to_zero"] += int((nz & (xq == 0)).sum())
-        d["fp8_subnormal"] += int(((xq != 0) & (xq.abs() < 2.0 ** -6)).sum())
-        d["exp_min"] = min(d["exp_min"], int(xe.min()))
-        d["exp_max"] = max(d["exp_max"], int(xe.max()))
-        pos = amax > 0
-        if bool(pos.any()):
-            lg = torch.floor(torch.log2(amax[pos])).to(torch.int64) + 100
-            d["amax_log2_hist"] += torch.bincount(lg.clamp(0, 159), minlength=160)
         dq = (xq.reshape(M, K // 32, 32) * Q.pow2(xe)[..., None]).reshape(M, K)
         nx = x.double().norm(dim=-1)
         ok = nx > 0
-        if bool(ok.any()):
-            rel = ((dq.double() - x.double()).norm(dim=-1)[ok] / nx[ok])
-            d["qerr_max"] = max(d["qerr_max"], _f(rel.max()))
-            d["qerr_sum"] += _f(rel.sum())
-            d["qerr_rows"] += int(ok.sum())
-            lr = torch.floor(torch.log10(torch.clamp_min(rel, 1e-12)) * 20).to(torch.int64) + 120
-            d["qerr_log10_hist"] += torch.bincount(lr.clamp(0, 119), minlength=120)
-        d["nan_out"] += int(torch.isnan(out).sum())
-        d["inf_out"] += int(torch.isinf(out).sum())
+        rel = (dq.double() - x.double()).norm(dim=-1) / torch.where(ok, nx, torch.ones_like(nx))
+        cnt = torch.stack([
+            torch.ones((), dtype=torch.int64, device=dev), torch.full((), M, dtype=torch.int64, device=dev),
+            torch.full((), amax.numel(), dtype=torch.int64, device=dev),
+            torch.full((), x.numel(), dtype=torch.int64, device=dev), nz.sum(),
+            (amax < Q.f32c(Q.GV.FP8_AMAX_FLOOR)).sum(), (amax == 0).sum(),
+            ((xb.abs() * Q.pow2(-xe)[..., None]) > 448.0).sum(), (nz & (xq == 0)).sum(),
+            ((xq != 0) & (xq.abs() < 2.0 ** -6)).sum(), torch.isnan(x).sum(), torch.isinf(x).sum(),
+            torch.isnan(out).sum(), torch.isinf(out).sum(), ok.sum()])
+        d["i"] += cnt
+        relok = torch.where(ok, rel, torch.zeros_like(rel))
+        fl = torch.stack([amax.max().double() if amax.numel() else torch.zeros((), dtype=torch.float64, device=dev),
+                          relok.max(), relok.sum()])
+        d["f"] = torch.stack([torch.maximum(d["f"][0], fl[0]), torch.maximum(d["f"][1], fl[1]), d["f"][2] + fl[2]])
+        d["emin"] = torch.minimum(d["emin"], xe.min().to(torch.int64))
+        d["emax"] = torch.maximum(d["emax"], xe.max().to(torch.int64))
+        lg = torch.where(amax > 0, torch.floor(torch.log2(torch.where(amax > 0, amax, torch.ones_like(amax))))
+                         .to(torch.int64) + 100, torch.full_like(amax, -1, dtype=torch.int64))
+        lg = lg.reshape(-1)
+        d["amax_log2_hist"].scatter_add_(0, lg.clamp(0, 159), (lg >= 0).to(torch.int64))
+        lr = (torch.floor(torch.log10(torch.clamp_min(rel, 1e-12)) * 20).to(torch.int64) + 120).clamp(0, 119)
+        d["qerr_log10_hist"].scatter_add_(0, lr, ok.to(torch.int64))
+        ax = x.abs().reshape(-1)
+        lq = torch.where(ax > 0, torch.floor(torch.log2(torch.where(ax > 0, ax, torch.ones_like(ax))) * 4)
+                         .to(torch.int64) + 600, torch.zeros_like(ax, dtype=torch.int64))
+        d["abs_q4_hist"].scatter_add_(0, lq.clamp(0, 799), torch.ones_like(lq))      # bin 0 also holds the zeros
 
     # ---- a BF16-weight matvec ----
     def mv(self, site, x, out, folded):
@@ -216,12 +234,13 @@ class Stats:
                                   "inf_in": 0, "nan_out": 0, "inf_out": 0, "folded": bool(folded)}
         d["calls"] += 1
         d["rows"] += x.shape[0]
-        d["max_abs_in"] = max(d["max_abs_in"], _f(x.abs().max()))
-        d["max_abs_out"] = max(d["max_abs_out"], _f(torch.nan_to_num(out, 0.0, 0.0, 0.0).abs().max()))
-        d["nan_in"] += int(torch.isnan(x).sum())
-        d["inf_in"] += int(torch.isinf(x).sum())
-        d["nan_out"] += int(torch.isnan(out).sum())
-        d["inf_out"] += int(torch.isinf(out).sum())
+        v = torch.stack([x.abs().max().double(), torch.nan_to_num(out, 0.0, 0.0, 0.0).abs().max().double(),
+                         torch.isnan(x).sum().double(), torch.isinf(x).sum().double(),
+                         torch.isnan(out).sum().double(), torch.isinf(out).sum().double()]).tolist()
+        d["max_abs_in"] = max(d["max_abs_in"], v[0])
+        d["max_abs_out"] = max(d["max_abs_out"], v[1])
+        for k, j in (("nan_in", 2), ("inf_in", 3), ("nan_out", 4), ("inf_out", 5)):
+            d[k] += int(v[j])
 
     # ---- a norm feeding matvecs ----
     def normsite(self, tag, x, r, w, pos):
@@ -264,7 +283,21 @@ class Stats:
     def flush(self):
         out = {"quant": {}, "mv": dict(self.mvs), "norm": {}, "probe": {}}
         for s, d in self.q.items():
-            d = dict(d)
+            g = d
+            d = {k: int(v) for k, v in zip(self.QI, g["i"].tolist())}
+            d.update({k: float(v) for k, v in zip(self.QF, g["f"].tolist())})
+            d["exp_min"], d["exp_max"], d["folded"] = int(g["emin"]), int(g["emax"]), g["folded"]
+            d["amax_log2_hist"], d["qerr_log10_hist"] = g["amax_log2_hist"], g["qerr_log10_hist"]
+            h = g["abs_q4_hist"].tolist()
+            tot = sum(h)
+            for qn, frac in (("p99_abs", 0.99), ("p999_abs", 0.999), ("p50_abs", 0.5)):
+                c, k = 0, 0
+                for k, n in enumerate(h):
+                    c += n
+                    if c >= frac * tot:
+                        break
+                d[qn] = 0.0 if k == 0 else 2.0 ** ((k - 600 + 1) / 4)     # upper edge of the quarter-octave bin
+            d["abs_quarter_octave_hist"] = {str((i - 600) / 4): n for i, n in enumerate(h) if n and i}
             d["amax_log2_hist"] = {str(i - 100): int(c) for i, c in enumerate(d["amax_log2_hist"].tolist()) if c}
             d["qerr_log10_hist"] = {str((i - 120) / 20): int(c) for i, c in enumerate(d["qerr_log10_hist"].tolist())
                                     if c}
@@ -879,6 +912,7 @@ def run(args):
                     rec["name"] = s_["name"]
                 if s_["kind"] == "gen":
                     rec["prompt_len"] = s_["prompt_len"]
+                    rec["ids_next"] = np.array(s_["ids"][s_["prompt_len"]:])
                 if s_["kind"] in ("wt", "stress", "gen"):
                     lp = torch.log_softmax(l.double(), -1)
                     rec["nll"] = (-lp.gather(1, ids[1:, None])[:, 0]).cpu().numpy()
@@ -1012,7 +1046,7 @@ def _growth(series, floor, lo=range(0, 10), hi=range(30, 40)):
     x = np.array(series, dtype=float) / np.maximum(np.array(floor, dtype=float), 1e-30)
     lo_m = float(np.mean(x[[i for i in lo if i < len(x)]]))
     hi_m = float(np.mean(x[[i for i in hi if i < len(x)]]))
-    fail = hi_m > STABILITY_RULE["X_RATIO_MAX"] and hi_m > lo_m * (1 + STABILITY_RULE["X_GROWTH_MAX"])
+    fail = hi_m > STABILITY_RULE["X_RATIO_MAX"] or hi_m > lo_m * (1 + STABILITY_RULE["X_GROWTH_MAX"])
     return {"ratio_by_layer": [float(v) for v in x], "mean_layers_0_9": lo_m, "mean_layers_30_39": hi_m,
             "fails": bool(fail)}
 
@@ -1022,9 +1056,22 @@ def _growth_ctx(num, den, n):
     if len(keep) < 2:
         return {"buckets_used": keep, "fails": False, "note": "fewer than two usable buckets"}
     x = [num[k] / max(den[k], 1e-30) for k in keep]
-    fail = x[-1] > STABILITY_RULE["X_RATIO_MAX"] and x[-1] > x[0] * (1 + STABILITY_RULE["X_GROWTH_MAX"])
+    fail = x[-1] > STABILITY_RULE["X_RATIO_MAX"] or x[-1] > x[0] * (1 + STABILITY_RULE["X_GROWTH_MAX"])
     return {"buckets_used": [[POS_EDGES[k], POS_EDGES[k + 1]] for k in keep], "ratio": [float(v) for v in x],
             "fails": bool(fail)}
+
+
+def _ratio(n, d):
+    if d == 0:
+        return 1.0 if n == 0 else math.inf
+    return n / d
+
+
+def _every(num, den, labels):
+    r = [_ratio(float(a), float(b)) for a, b in zip(num, den)]
+    worst = int(np.argmax(r)) if r else 0
+    return {"ratio": r, "labels": labels, "max_ratio": max(r) if r else None,
+            "at": labels[worst] if r else None, "fails": bool(r and max(r) > STABILITY_RULE["X_RATIO_MAX"])}
 
 
 def _sum_layers(layers, key, m, field):
@@ -1110,6 +1157,19 @@ def stability(runs_named):
             probe[f"{mode}.{s}"] = g
     s3["probe_error_ratio"] = {"fails": any(v["fails"] for v in probe.values()), "sites": probe}
     crit["S3_no_growth_with_depth"] = {"pass": not any(v["fails"] for v in s3.values()), "tests": s3}
+    # ---- S3b: b_nam / b in every layer ----------------------------------------------------
+    s3b = {}
+    for name, (run_rec, _) in runs_named.items():
+        L_ = run_rec["layers"]
+        for mn, mb in (("b_nam", "b"), ("b_nam_tf", "b_tf")):
+            for key, sub in (("router", "flip_rate"), ("index", "query_flip_rate"), ("hidden_rel_rms", None)):
+                rows = [(l["layer"], l[key][mn], l[key][mb]) for l in L_ if mn in l[key] and mb in l[key]]
+                if not rows:
+                    continue
+                num = [r[1][sub] if sub else r[1] for r in rows]
+                den = [r[2][sub] if sub else r[2] for r in rows]
+                s3b[f"{name}.{key}.{mn}/{mb}"] = _every(num, den, [r[0] for r in rows])
+    crit["S3b_not_above_contract_every_layer"] = {"pass": not any(v["fails"] for v in s3b.values()), "tests": s3b}
     # ---- S4: context -----------------------------------------------------------------
     s4 = {}
     for name, (run_rec, per_seq) in runs_named.items():
@@ -1136,6 +1196,26 @@ def stability(runs_named):
                     cnt[k] = n[j]
                 s4[f"{name}.nll_delta_abs.{kind}"] = _growth_ctx(num, den, cnt)
     crit["S4_no_growth_with_context"] = {"pass": not any(v["fails"] for v in s4.values()), "tests": s4}
+    # ---- S4b: b_nam / b in every position bucket -------------------------------------------
+    s4b = {}
+    mins = STABILITY_RULE["min_bucket_samples"]
+    for name, (run_rec, per_seq) in runs_named.items():
+        L_ = run_rec["layers"]
+        for key, fld in (("router_by_pos", ("tokens", "flips")), ("index_by_pos", ("queries", "flips"))):
+            for mn, mb in (("b_nam", "b"), ("b_nam_tf", "b_tf")):
+                fn, tn = _sum_layers(L_, key, mn, fld)
+                fb, tb = _sum_layers(L_, key, mb, fld)
+                keep = [k for k in range(1, len(tn)) if min(tn[k], tb[k]) >= mins]
+                if keep:
+                    s4b[f"{name}.{key}.{mn}/{mb}"] = _every([fn[k] / tn[k] for k in keep], [fb[k] / tb[k] for k in keep],
+                                                           [[POS_EDGES[k], POS_EDGES[k + 1]] for k in keep])
+        bp = _by_position(per_seq, "wt", [m for m in ("a", "b", "b_nam") if m in per_seq])
+        if "b_nam" in bp and "b" in bp:
+            keep = [j for j, n in enumerate(bp["b_nam"]["tokens"]) if n >= mins and bp["b_nam"]["buckets"][j][0] > 0]
+            s4b[f"{name}.nll_delta_abs.wt.b_nam/b"] = _every([bp["b_nam"]["nll_delta_abs_mean"][j] for j in keep],
+                                                           [bp["b"]["nll_delta_abs_mean"][j] for j in keep],
+                                                           [bp["b_nam"]["buckets"][j] for j in keep])
+    crit["S4b_not_above_contract_every_bucket"] = {"pass": not any(v["fails"] for v in s4b.values()), "tests": s4b}
     return crit
 
 
@@ -1155,11 +1235,65 @@ def site_tables(layers, modes=("b", "b_nam", "b_tf", "b_nam_tf")):
                         "saturated": d["saturated"],
                         "underflow_to_zero_rate": d["underflow_to_zero"] / max(1, d["nonzero"]),
                         "fp8_subnormal_rate": d["fp8_subnormal"] / max(1, d["elems"]),
+                        "p50_abs": d.get("p50_abs"), "p99_abs": d.get("p99_abs"), "p999_abs": d.get("p999_abs"),
                         "qerr_mean": d["qerr_mean"], "qerr_max": d["qerr_max"],
                         "amax_log2_hist": d["amax_log2_hist"]}
             row[m] = {"quant": q, "norm": ins["norm"], "probe": ins.get("probe", {}),
                       "mv": {s: {k: d[k] for k in ("max_abs_in", "max_abs_out", "folded")} for s, d in ins["mv"].items()}}
         out.append(row)
+    return out
+
+
+def quantiser_side_by_side(layers, pairs=(("b", "b_nam"), ("b_tf", "b_nam_tf"))):
+    """per layer and FP8 quantiser site: max |x|, p99.9 |x| and saturation, contract vs nfold."""
+    out = []
+    for l in layers:
+        ins = l.get("instr", {})
+        row = {"layer": l["layer"]}
+        for mb, mn in pairs:
+            if mb not in ins or mn not in ins:
+                continue
+            for site in sorted(set(ins[mb]["quant"]) | set(ins[mn]["quant"])):
+                qb, qn = ins[mb]["quant"].get(site, {}), ins[mn]["quant"].get(site, {})
+                row.setdefault(mb + "|" + mn, {})[site] = {
+                    "folded": qn.get("folded"), "max_abs": [qb.get("max_abs"), qn.get("max_abs")],
+                    "p999_abs": [qb.get("p999_abs"), qn.get("p999_abs")],
+                    "saturated": [qb.get("saturated"), qn.get("saturated")],
+                    "floor_hits": [qb.get("floor_hits"), qn.get("floor_hits")],
+                    "underflow_to_zero": [qb.get("underflow_to_zero"), qn.get("underflow_to_zero")],
+                    "qerr_mean": [qb.get("qerr_mean"), qn.get("qerr_mean")]}
+        out.append(row)
+    return out
+
+
+def greedy_divergence(per_seq):
+    """first top-1 divergence (positions after the prompt) of every mode against the generated tokens, a, and b."""
+    ref = per_seq["a"]
+    idx = [i for i, r in enumerate(ref) if r["kind"] == "gen"]
+    out = {}
+    for m in per_seq:
+        rows = []
+        for i in idx:
+            P = int(ref[i]["prompt_len"])
+            arg = per_seq[m][i]["arg"][P - 1:]
+            gen = np.array(ref[i].get("ids_next", []))
+            row = {"name": ref[i]["name"], "generated": int(len(arg))}
+            for lab, other in (("vs_a", ref[i]["arg"][P - 1:]),
+                               ("vs_b", per_seq["b"][i]["arg"][P - 1:] if "b" in per_seq else None)):
+                if other is None:
+                    continue
+                dif = np.nonzero(arg != other)[0]
+                row[lab] = int(dif[0]) if dif.size else None
+                row[lab + "_agree"] = float((arg == other).mean())
+            if gen.size:
+                dif = np.nonzero(arg[:gen.size] != gen[:arg.size])[0]
+                row["vs_generated"] = int(dif[0]) if dif.size else None
+            rows.append(row)
+        def dist(k):
+            v = [r[k] if r.get(k) is not None else r["generated"] for r in rows if k in r]
+            return {"first_divergence": v, "median": float(np.median(v)) if v else None,
+                    "never_diverged": sum(1 for r in rows if k in r and r[k] is None)}
+        out[m] = {"sequences": rows, "vs_a": dist("vs_a"), "vs_b": dist("vs_b"), "vs_generated": dist("vs_generated")}
     return out
 
 
@@ -1185,6 +1319,7 @@ def finalize(run_dirs, out, meta):
     rec.update(meta)
     rec["threshold"] = Q.THRESHOLD
     rec["stability_rule"] = STABILITY_RULE
+    rec["known_defects"] = KNOWN_DEFECTS
     quality = {"acceptable": bool(ok_ppl and ok_mmlu), "ppl_rel_delta": ppl_rel,
                "ppl_rel_delta_ci95": bn["wikitext2"]["rel_delta_ppl_ci95"], "ppl_ok": bool(ok_ppl),
                "mmlu_questions": mmlu["b_nam"]["questions"], "mmlu_drop_pt": mmlu_drop,
@@ -1208,8 +1343,11 @@ def finalize(run_dirs, out, meta):
     for k, (rr, ps) in runs.items():
         if any(r["kind"] == "gen" for r in ps["a"]):
             rec["summary"][f"greedy_{k}"] = _seq_tables(ps, "gen", list(ps))
+            rec["summary"][f"greedy_first_divergence_{k}"] = greedy_divergence(ps)
     rec["runs"] = {k: {"args": rr["args"], "wall_s": rr["wall_s"]} for k, (rr, _) in runs.items()}
     rec["site_tables"] = {k: site_tables(rr["layers"]) for k, (rr, _) in runs.items()}
+    rec["quantiser_side_by_side"] = {k: quantiser_side_by_side(rr["layers"]) for k, (rr, _) in runs.items()}
+    rec["known_defects"] = KNOWN_DEFECTS
     rec["head_instr"] = {k: rr.get("head_instr", {}) for k, (rr, _) in runs.items()}
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text(json.dumps(_jsonable(rec), indent=1) + "\n")
