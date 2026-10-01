@@ -34,6 +34,13 @@ def test_reject_undersized_column(tmp_path):
     with pytest.raises(ValueError):mapped_guard(netlist(tmp_path),'column')
 
 
+@pytest.mark.parametrize('pin,old,new', [('CLK','clk','other_clk'),('D','next','different_enable')])
+def test_reject_functional_or_clock_perturbation(tmp_path,pin,old,new):
+    p=netlist(tmp_path)
+    p.write_text(p.read_text().replace(f'.{pin}({old})',f'.{pin}({new})',1))
+    with pytest.raises(ValueError):mapped_guard(p,'q')
+
+
 def test_existing_rom_contract_only(tmp_path):
     assert overlay(ROOT/'physical/abi3/w10_wake_pp_multicycle.sdc')==EXPECTED
     path=tmp_path/'bad.sdc';path.write_text('\n'.join(EXPECTED)+'\nset_false_path -from [all_inputs]\n')

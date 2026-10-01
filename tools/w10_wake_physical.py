@@ -23,13 +23,18 @@ def mapped_guard(netlist, mode):
             if pin in pins:
                 drivers[pins[pin].strip()] = (typ,name,pins)
     wakes=[]
+    wake_controls=[]
     for name,pins in icgs:
         net=pins['ENA'].strip()
         for _ in range(5):
             if net not in drivers: raise ValueError('ICG enable has no bounded FF driver: '+net)
             typ,driver,dp=drivers[net]
             if typ.startswith('DFF'):
-                wakes.append(driver);break
+                if dp.get('CLK','').strip()!=pins.get('CLK','').strip():
+                    raise ValueError('wake FF and ICG source clocks differ: '+name)
+                wakes.append(driver)
+                wake_controls.append({k:v.strip() for k,v in dp.items() if k not in ('Q','QN','VDD','VSS')})
+                break
             inputs=[v.strip() for k,v in dp.items() if k not in ('Y','Z','Q','QN','VDD','VSS')]
             if len(inputs)!=1:raise ValueError('ICG enable still has combinational control cone: '+name)
             net=inputs[0]
@@ -38,10 +43,13 @@ def mapped_guard(netlist, mode):
     flops = sum(typ.startswith('DFF') for typ,_,_ in cells)
     if len(macros)!=4 or len(icgs)!=8 or len(set(wakes))!=8:
         raise ValueError('macro or distinct wake/gate count differs from full-size model')
+    if any(c!=wake_controls[0] for c in wake_controls):
+        raise ValueError('wake clones have differing clock/data/reset controls')
     if mode=='column' and flops<88715*.8:
         raise ValueError('full column arithmetic endpoint count undersized')
     return dict(verdict='PASS_STRUCTURE_ONLY',macros=macros,icg_count=len(icgs),
                 distinct_wake_flops=wakes,flop_count=flops,
+                wake_control_pins=wake_controls[0],
                 mapped_netlist_sha256=hashlib.sha256(netlist.read_bytes()).hexdigest())
 
 
