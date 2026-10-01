@@ -11,7 +11,10 @@
 // each of the 16 lanes runs its own chunk chains (NCHB slots, one pipelined FP32 adder).  The 16 chunk sums
 // of a unit complete in the same cycle and meet in a 15-adder, 4-level pairwise tree whose root is the
 // golden level-4 node of that lane group; it leaves as one base node for the element's segment tree.
-// Latency: product 5 (ot_hdc_bmul) + chain 5 + tree 20.
+// Latency: product 5 (ot_v41_bmul2) + chain 5 + tree 20.
+// The product is ot_v41_bmul2 (= W13b's ot_hdc_bmul SPLIT = 1): two 8x4 partial products in stage 2, a keep-prefix add in
+// stage 3.  The single-stage 8x8 product was the column pair's SS endpoint (c1, ideal clock: u_m.s2_p[15], -154.7 ps,
+// 848 ps of product logic).  Bit-identical (SPLIT 0 vs 1: 4,393,224 cycles, 0 mismatches) and latency unchanged.
 // ---------------------------------------------------------------------------
 module ot_v41_bf16_lanes2 #(
     parameter integer NCHB = 8,
@@ -56,7 +59,7 @@ module ot_v41_bf16_lanes2 #(
     wire [TRW:0] ct [0:15];
     genvar l;
     generate for (l = 0; l < 16; l = l + 1) begin : g_l
-        ot_hdc_bmul u_m (.clk(clk), .rst_n(rst_n), .v(v_r), .a({w_r[16*l +: 16], 16'd0}), .b({x_r[16*l +: 16], 16'd0}),
+        ot_v41_bmul2 u_m (.clk(clk), .rst_n(rst_n), .v(v_r), .a({w_r[16*l +: 16], 16'd0}), .b({x_r[16*l +: 16], 16'd0}),
                          .y(prod[l]), .fault(pf[l]));
         reg [4:0] vp;
         always @(posedge clk or negedge rst_n) if (!rst_n) vp <= 5'd0; else vp <= {vp[3:0], v_r};
