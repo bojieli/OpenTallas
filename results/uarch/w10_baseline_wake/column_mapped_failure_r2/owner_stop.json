@@ -1,0 +1,18 @@
+{
+  "state": "FAIL_MAPPED_STRUCTURE_ABORT_FLOORPLAN",
+  "reason": "fourROM/eightICG but one wakeFF; no further floorplan closure value",
+  "pid": 1245036,
+  "startticks": "43966797",
+  "argv": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 4 -no_splash /OpenROAD-flow-scripts/flow/scripts/floorplan.tcl -metrics /work/logs/asap7/opentallas_ot_v41_rom_elem_wake_w10_asap7_w10_wake_column_r1/base/2_1_floorplan.json ",
+  "cgroup": "0::/system.slice/docker-9a4ce6ed03d5149b7f704a45c97d86013a762329335d1723863a31f3943897a2.scope\n",
+  "archive_sha256": "a88bb83c0b3fa6df541d8127a3161b8f89b4a67da87600c40fc88020718494a1",
+  "files": {
+    "logs/asap7/opentallas_ot_v41_rom_elem_wake_w10_asap7_w10_wake_column_r1/base/1_1_yosys_canonicalize.log": "df634f9f1807450216372b9b4e7779a54d93286bf1488b30c5c5502dcd2eb74f",
+    "logs/asap7/opentallas_ot_v41_rom_elem_wake_w10_asap7_w10_wake_column_r1/base/1_synth.log": "66e5efe533ab8b71fb00685164eac14d1398ba66851a1e814e05c6c519507577",
+    "logs/asap7/opentallas_ot_v41_rom_elem_wake_w10_asap7_w10_wake_column_r1/base/1_2_yosys.log": "0d849c950715e7dbbc037fb52497e09f19a66f0a4aff89f380e0719e71a7ffe6",
+    "logs/asap7/opentallas_ot_v41_rom_elem_wake_w10_asap7_w10_wake_column_r1/base/2_1_floorplan.tmp.log": "22d6929d30f3847a7123a6249939e4d39ed92723dea69980d714792733eb068a",
+    "config.mk": "14b9ef6cd9df515e74afc2858b46ea2f96835b45ce240cb1a8f3ab3a181542b0"
+  },
+  "cts_allowed": false,
+  "signal": "SIGTERM exact verified OpenROAD PID only"
+}
