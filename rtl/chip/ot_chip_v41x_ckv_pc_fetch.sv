@@ -74,7 +74,8 @@ endmodule
 //   hbm       m_v/m_rdy/m_addr/m_tag (tag {slot, sector}), s_v/s_tag/s_beat/s_data.
 //   row out   o_v/o_take (registered 2,304-bit row, its rank and id).
 //   S slots in one 1R1W SRAM of S*9 x 256 bits; issue, response write and readout in slot order.
-//   The request port, the response port and the fault outputs are registered (one cycle each).
+//   The request port, the response port (two stages to the SRAM), the SRAM read data, the free-slot
+//   status and the fault outputs are registered.
 module ot_chip_v41x_ckv_pc_port #(
     parameter integer S = 16,
     parameter integer POS_W = 21,
@@ -146,15 +147,34 @@ module ot_chip_v41x_ckv_pc_port #(
     reg ro_act, ro_q;
     reg [7:0] ro_addr;                   // readout address: rp * 9 at start, then +1
     reg [3:0] ro_k, ro_kq;
-    wire ro_start = run && !ro_act && !ro_q && busy[rp] && got[rp] == 4'd9 && !o_v;
+    reg ro_q2;                           // SRAM read data registered once more before o_row
+    reg [3:0] ro_kq2;
+    reg [255:0] rdata_q;
+    wire ro_start = run && !ro_act && !ro_q && !ro_q2 && busy[rp] && got[rp] == 4'd9 && !o_v;
     wire [255:0] rdata;
+    // the SRAM write is one register stage after the response register (macro pins near the macro)
+    reg we_q2;
+    reg [7:0] waddr_q2;
+    reg [255:0] wdata_q2;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) we_q2 <= 1'b0; else we_q2 <= s_v && !rsp_bad;
+    always @(posedge clk) begin waddr_q2 <= waddr_q; wdata_q2 <= s_data; end
     ot_chip_v41x_ckv_slot_ram #(.DEPTH(S * 9), .SRAM_MACRO(SRAM_MACRO)) u_ram (
-        .clk(clk), .we(s_v && !rsp_bad), .waddr(waddr_q), .wdata(s_data),
+        .clk(clk), .we(we_q2), .waddr(waddr_q2), .wdata(wdata_q2),
         .re(ro_act), .raddr(ro_addr), .rdata(rdata));
-    assign d_free = !busy[al];
+    // free-slot status registered: slots are allocated and released in ring order, so a slot is
+    // free iff fewer than S are occupied
+    reg [SW:0] occ;
+    reg d_free_q;
+    wire rel = ro_act && ro_k == 4'd8;
+    wire [SW:0] occ_n = occ + (SW+1)'(d_v) - (SW+1)'(rel);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin occ <= 0; d_free_q <= 1'b1; end
+        else begin occ <= occ_n; d_free_q <= occ_n < (SW+1)'(S); end
+    assign d_free = d_free_q;
     reg busy_any_q;                      // registered status (one cycle late; the fetch's done waits two idle cycles)
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) busy_any_q <= 1'b0; else busy_any_q <= |busy || ro_act || ro_q || o_v || s_v || m_v || d_v;
+        if (!rst_n) busy_any_q <= 1'b0; else busy_any_q <= |busy || ro_act || ro_q || ro_q2 || o_v || s_v || we_q2 || m_v || d_v;
     assign busy_any = busy_any_q;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin fault_rsp <= 1'b0; fault_poison <= 1'b0; end
@@ -164,7 +184,8 @@ module ot_chip_v41x_ckv_pc_port #(
         if (!rst_n) begin
             busy <= 0; cmp <= 0; al <= 0; ip <= 0; rp <= 0; isec <= 0;
             m_v <= 0; m_addr <= 0; m_tag <= 0;
-            ro_act <= 0; ro_k <= 0; ro_q <= 0; ro_kq <= 0; o_v <= 0; o_rank <= 0; o_gid <= 0;
+            ro_act <= 0; ro_k <= 0; ro_q <= 0; ro_kq <= 0; ro_q2 <= 0; ro_kq2 <= 0;
+            o_v <= 0; o_rank <= 0; o_gid <= 0;
             for (i = 0; i < S; i = i + 1) got[i] <= 0;
         end else begin
             if (d_v) begin
@@ -180,7 +201,7 @@ module ot_chip_v41x_ckv_pc_port #(
                 end else isec <= isec + 1'b1;
             end else if (can_load) m_v <= 1'b0;
             if (s_v && !rsp_bad && !rsp_poison) got[rslot] <= got[rslot] + 1'b1;
-            ro_q <= ro_act; ro_kq <= ro_k;
+            ro_q <= ro_act; ro_kq <= ro_k; ro_q2 <= ro_q; ro_kq2 <= ro_kq; rdata_q <= rdata;
             if (ro_start) begin
                 ro_act <= 1; ro_k <= 0; o_rank <= rk[rp]; o_gid <= gd[rp]; ro_addr <= 8'(32'(rp) * 9);
             end else if (ro_act) begin
@@ -189,9 +210,9 @@ module ot_chip_v41x_ckv_pc_port #(
                     ro_act <= 0; busy[rp] <= 1'b0; got[rp] <= 0; rp <= SW'((32'(rp) + 1) % S);
                 end else ro_k <= ro_k + 1'b1;
             end
-            if (ro_q) begin
-                for (i = 0; i < 9; i = i + 1) if (ro_kq == 4'(i)) o_row[256*i +: 256] <= rdata;
-                if (ro_kq == 4'd8) o_v <= 1;
+            if (ro_q2) begin
+                for (i = 0; i < 9; i = i + 1) if (ro_kq2 == 4'(i)) o_row[256*i +: 256] <= rdata_q;
+                if (ro_kq2 == 4'd8) o_v <= 1;
             end
             if (o_take) o_v <= 0;
         end

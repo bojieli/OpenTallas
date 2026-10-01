@@ -2616,5 +2616,15 @@
       }
     }
   ],
-  "status": "pass"
+  "status": "pass",
+  "currency": {
+    "state": "stale",
+    "stale_since": "7d19d16d",
+    "reason": "wide-fetch port timing iteration (registered d_free, two-stage SRAM write, registered read data); row-exact on reduced runs; full-geometry re-run queued",
+    "verdict_kept": "pass",
+    "moved": [
+      "rtl/chip/ot_chip_v41x_ckv_pc_fetch.sv"
+    ],
+    "marked": "2026-10-01 by W11 ckvsel"
+  }
 }
