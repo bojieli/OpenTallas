@@ -1,12 +1,17 @@
-"""Fusion audit (tools/fusion_audit.py -> results/uarch/fusion_audit.json): the record regenerates from its tool, is
-source-pinned, and its levels are ordered (each adopted level never slows the token)."""
+"""Historical fusion audit: original Git pins/replay, retained values, and candidate ordering.
+
+These estimates do not qualify adoption or the current product model.
+"""
 import json
-import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 REC = ROOT / "results/uarch/fusion_audit.json"
+sys.path.insert(0, str(ROOT / 'tools'))
+import fusion_audit_historical as H
 
 
 def _rec():
@@ -14,11 +19,7 @@ def _rec():
 
 
 def test_record_is_source_pinned():
-    r = _rec()
-    assert r["schema"] == "opentallas.uarch.fusion_audit.v1"
-    for p, h in r["source_sha256"].items():
-        import hashlib
-        assert hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h, p
+    H.verify(_rec())
 
 
 def test_levels_are_monotone_and_classes_are_marked():
@@ -37,8 +38,32 @@ def test_levels_are_monotone_and_classes_are_marked():
         assert c["cls"] in ("A", "B", "B*", "C")
 
 
-def test_record_regenerates_from_its_tool(tmp_path):
-    out = tmp_path / "fa.json"
-    subprocess.run([sys.executable, str(ROOT / "tools/fusion_audit.py"), "--out", str(out)], check=True, cwd=ROOT,
-                   capture_output=True)
-    assert json.loads(out.read_text()) == _rec()
+def test_record_regenerates_from_original_git_snapshot():
+    H.replay()
+
+
+def test_main_retained_pin_only_record_keeps_historical_scope():
+    cp = json.loads(H.CHECKPOINT.read_text())
+    for entry in cp['retained_pin_only_records']:
+        H.verify(json.loads(H.blob(entry['commit'], cp['record_path'])))
+
+
+@pytest.mark.parametrize('mutation', ['numerical_body', 'unrecorded_pin'])
+def test_reject_changed_history(mutation):
+    r = _rec()
+    if mutation == 'numerical_body':
+        r['v41_rom']['rows']['ar_levels']['L1_lane_local_us'] += 1
+    else:
+        r['source_sha256']['tools/uarch_model.py'] = '0' * 64
+    with pytest.raises(AssertionError):
+        H.verify(r)
+
+
+def test_publication_inventory_cannot_omit_a_source(tmp_path, monkeypatch):
+    cp = json.loads(H.CHECKPOINT.read_text())
+    cp['required_git_commits'].pop()
+    checkpoint = tmp_path / 'checkpoint.json'
+    checkpoint.write_text(json.dumps(cp))
+    monkeypatch.setattr(H, 'CHECKPOINT', checkpoint)
+    with pytest.raises(AssertionError, match='publication inventory drift'):
+        H.verify(_rec())
