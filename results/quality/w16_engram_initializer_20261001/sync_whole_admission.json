@@ -63,7 +63,11 @@
     "complete_margin_W": null,
     "complete_selected_phase_W": null,
     "old_3e66_e851_power_currency": false,
-    "provisional_positive_margin_permitted": false
+    "provisional_positive_margin_permitted": false,
+    "typed_branch_dynamic_is_all_activity_allocation_not_selected": true,
+    "typed_inventory_complete": false,
+    "typed_partial_ledger_bound": true,
+    "typed_partial_max_home_clock_and_all_leak_W": 370.2556724698059
   },
   "schema": "opentallas.DSROM-synchronous-whole-admission.v1",
   "source_pins": {
@@ -76,6 +80,11 @@
       "commit": "5b8c456a34965043ae9c6656725ca0565a5ce905",
       "path": "results/quality/w16_engram_rom_constructive_home_20261001/sync_branch_drain_inventory.json",
       "sha256": "9d4765094ecfcad99658747082d48e2501094ac2578991ed557f489008565426"
+    },
+    "typed_partial_power": {
+      "commit": "2b14a8e567786674010bbd18c864d265e4742672",
+      "path": "results/uarch/w10_engram_sync_drain_power_r1/budget.json",
+      "sha256": "176bb782c5f94dd7a6c7582739c8376c57f4192025872d46e04757f6b908d6c7"
     }
   }
 }

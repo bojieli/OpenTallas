@@ -14,6 +14,9 @@ def build():
         return json.loads(b)
     b=load('sync_branch','5b8c456a','results/quality/w16_engram_rom_constructive_home_20261001/sync_branch_drain_inventory.json')
     c=load('frozen_CROM','2a4980765','results/quality/w16_engram_initializer_20261001/frozen_closure.json')
+    typed=load('typed_partial_power','2b14a8e56','results/uarch/w10_engram_sync_drain_power_r1/budget.json')
+    assert typed['conditional_total_FF_bits']==4378995838 and typed['additional_branch_NAND2_cells']==20444736
+    assert not typed['complete_inventory'] and not typed['actual_power_qualified']
     storage=b['control_storage'];gate=b['synchronous_branch']
     assert storage['per_home_total']==sum(storage['per_home_roles'].values())==91170
     assert storage['conditional_total_register_bits']==storage['prior_all_E32_FF_preserved']+192*91170==4378995838
@@ -34,7 +37,10 @@ def build():
             branch_NAND2_equivalent_reservation=gate['conditional_branch_NAND2_equivalent_total'],
             synchronous_internal_hops=True,async_mailboxes_per_internal_hop=False,
             reservation_not_minimum=True,actual_complete_inventory=False),
-        power=dict(complete_selected_phase_W=None,complete_margin_W=None,
+        power=dict(typed_partial_ledger_bound=True,typed_inventory_complete=False,
+            typed_partial_max_home_clock_and_all_leak_W=max(float(h['clock_plus_all_leak_W']) for h in typed['homes']),
+            typed_branch_dynamic_is_all_activity_allocation_not_selected=True,
+            complete_selected_phase_W=None,complete_margin_W=None,
             provisional_positive_margin_permitted=False,old_3e66_e851_power_currency=False,
             clock_data_control_dynamic_all_required=True),
         physical_slots=dict(actual_all_added_register_gate_buffer_placement=None,
