@@ -53,7 +53,7 @@ def test_stage_plan_is_the_equal_byte_placement():
 def test_product_basis_and_stage_table():
     r = _rec()
     v = r["v41_rom"]
-    assert v["product"]["status"].startswith("200 dies: 39 TP-4 stages")      # BF16 columns at W10b's tiles
+    assert v["product"]["status"].startswith("208 dies: 41 TP-4 stages")      # W10b tiles + the VM-H hub block
     pb = v["product_basis"]
     assert pb["density"] == "analytical" and pb["overhead"] == 0.125 and pb["credit"] == "ring"
     cs = v["counts"]
@@ -246,7 +246,7 @@ def test_product_stage_owner_file():
     assert max(stages) <= own["stage_count"] - 1
     assert own["source_sha256"]["tools/uarch_model.py"] == __import__("hashlib").sha256(
         (ROOT / "tools/uarch_model.py").read_bytes()).hexdigest()
-    assert U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", U.PRODUCT_PITCH, "columns",
+    assert U.cons_min_stages("analytical", 0.125, "ring", U.PRODUCT_GEOM, U.PRODUCT_PITCH, "columns",
                              "4096m8") == own["stage_count"]
 
 
@@ -332,9 +332,12 @@ def test_w16b_followup_steps():
     fin = next(p for k, p in pts.items() if k.endswith(U.PRODUCT_TAG))
     assert vmh["vmh"] == U.VMH and stm.get("vmh") is None and fin["vmh"] == U.VMH
     assert vmh["ar_tokens_s_b1"] < stm["ar_tokens_s_b1"] and vmh["stages"] == stm["stages"] == 37
-    assert fin["stages"] == U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", "w10b_q", "columns", "4096m8")
-    assert fin["stages"] == 39 and fin["dies"] == 4 * 39 + fin["head_dies"] + 36
+    assert fin["stages"] == U.cons_min_stages("analytical", 0.125, "ring", "w10_refit_vmh", "w10b_q", "columns", "4096m8")
+    assert fin["stages"] == 41 and fin["dies"] == 4 * 41 + fin["head_dies"] + 36 and fin["hub_block"]
+    assert vmh["hub_block"] is False and fin["ar_tokens_s_b1"] < vmh["ar_tokens_s_b1"]
     hf = r["v41_rom"]["product"]["head_fit"]
+    assert hf["stages_w10b_tiles_only"] == 39 < fin["stages"]          # the VM-H block costs the field 25.9 mm2
+    assert abs(U.VMH_BLOCK["field_loss_mm2"] - (38.951 - 14.249) * 1.05) < 1e-3
     assert hf["dies"] == fin["head_dies"] and hf["dies_at_w10_q"] == 4 and hf["margin_storage_only_w10_q"] > 0
     assert U.CONS_PITCH["w10b_q"]["q_um"] == (510.84, 126.9)
     assert U._cons_pair_mm2("w10b_q", True) == 1002.89 * 142.56 / 1e6
@@ -348,3 +351,14 @@ def test_w16b_followup_steps():
     assert "rtl_calibrated" not in qs
     q = [x for x in r["headline_table"]["qwen"] if "RTL-attributed" in x["design"]]
     assert len(q) == 2
+
+
+def test_vmh_hub_block_in_dedicated_row():
+    """Root ruling 2026-10-01: W18b packs proposal_w11_p6, whose stream unit is now the measured VM-H SU+VM block."""
+    import uarch_model as U
+    rows = {r["design"]: r for r in json.loads((ROOT / "results/uarch/v41_dedicated_units.json").read_text())["rows"]}
+    su = rows["proposal_w11_p6"]["units"]["stream_unit"]
+    assert su["area_mm2"] == U.VMH_BLOCK["block_mm2"] == 38.951 and su["area_lanes_ledger_mm2"] == 14.249
+    assert rows["proposal"]["units"]["stream_unit"]["area_mm2"] == 14.249                 # the reference row unchanged
+    own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
+    assert own["stage_count"] == 41 and own["min_per_die_headroom_after_rounding_and_engram_spill_bytes"] > 0

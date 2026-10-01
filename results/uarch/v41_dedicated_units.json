@@ -147,6 +147,8 @@
       "sfu": null
      },
      "area_mm2": 0.332,
+     "area_lanes_ledger_mm2": 0.332,
+     "vmh_block": null,
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 640,
@@ -342,6 +344,8 @@
       "sfu": null
      },
      "area_mm2": 14.249,
+     "area_lanes_ledger_mm2": 14.249,
+     "vmh_block": null,
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 16,
@@ -534,7 +538,21 @@
       },
       "sfu": null
      },
-     "area_mm2": 14.249,
+     "area_mm2": 38.951,
+     "area_lanes_ledger_mm2": 14.249,
+     "vmh_block": {
+      "block_mm2": 38.951,
+      "w_um": 6365.0,
+      "h_um": 6119.5,
+      "sram_mm2": 10.893,
+      "network_footprint_mm2": 2.624,
+      "stream_unit_ledger_mm2": 14.249,
+      "switch_fraction": 0.05,
+      "budget_mm2": 45.0,
+      "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.H_rtl (root ruling 2026-10-01, option a; budget 38-45 mm2 with W11's measured lanes at 50% utilisation)",
+      "field_loss_mm2": 25.937,
+      "note": "ROOT RULING 2026-10-01: area_mm2 is the measured VM-H SU+VM block (lanes, VM SRAM, network); area_lanes_ledger_mm2 is the lane-only ledger estimate"
+     },
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 16,
@@ -579,7 +597,7 @@
      }
     }
    },
-   "hub_logic_mm2": 52.616,
+   "hub_logic_mm2": 77.318,
    "hub_avail_mm2": 233.7,
    "discrepancies": []
   },
@@ -727,7 +745,21 @@
       },
       "sfu": null
      },
-     "area_mm2": 14.249,
+     "area_mm2": 38.951,
+     "area_lanes_ledger_mm2": 14.249,
+     "vmh_block": {
+      "block_mm2": 38.951,
+      "w_um": 6365.0,
+      "h_um": 6119.5,
+      "sram_mm2": 10.893,
+      "network_footprint_mm2": 2.624,
+      "stream_unit_ledger_mm2": 14.249,
+      "switch_fraction": 0.05,
+      "budget_mm2": 45.0,
+      "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.H_rtl (root ruling 2026-10-01, option a; budget 38-45 mm2 with W11's measured lanes at 50% utilisation)",
+      "field_loss_mm2": 25.937,
+      "note": "ROOT RULING 2026-10-01: area_mm2 is the measured VM-H SU+VM block (lanes, VM SRAM, network); area_lanes_ledger_mm2 is the lane-only ledger estimate"
+     },
      "ops": {
       "L20.attn.softmax.max": {
        "vectors_per_row_set": 16,
@@ -772,7 +804,7 @@
      }
     }
    },
-   "hub_logic_mm2": 52.616,
+   "hub_logic_mm2": 77.318,
    "hub_avail_mm2": 233.7,
    "discrepancies": []
   }
@@ -850,12 +882,12 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "904ae42f1b8f2639022bd9879401862c6dfb89c2ee70dde87b78a2c6d7cbf44d",
+  "tools/uarch_model.py": "7f2f0dc77999d6919f48683453d981e0cd07c9c0166081b81c645178be0a2d64",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/rtl_hdc_v41x_vec_campaign.py": "7d05b86774dd90c4f4d8ed6665f87796ee61ef7569c9642c05a8f05630dc72a7",
   "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
   "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json": "d147f1c3fe358a6d79e3a59cc13048c99f0168f246c74b6065e82ea291be3955",
-  "results/rtl/v41_full_attention_numeric/result.json": "883442f90d7a7430e1a2b019e23da9fd724aedd706fe1cbbd5c43c0c4a942fba",
+  "results/rtl/v41_full_attention_numeric/result.json": "76dfb9a4e0bf05ae54781df77c32df89cdcf074622b393ec25e81951f3e7c4c7",
   "results/physical_abi3/asap7/hdc/v41x/w11/vec_light1024r/physical.json": "8d769cca3c2072c88e88e9769a3bd1873f6daf2e36b8358cad0a8cea9c8ae304",
   "results/rtl/v41x_su_softmax.json": "e07463655922bcfb21c8364479b3632cf71705c116941994f63d20539b35bc75"
  }

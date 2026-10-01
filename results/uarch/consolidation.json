@@ -6062,28 +6062,28 @@
    "src": "W18 (root relay 2026-09-30): no fast-start scheme meets 35 mV at L_eff 1-10 pH; a schedule-driven pre-ramp dummy-clocks the next op's pairs ahead of time",
    "product": {
     "50% cap + 256-cycle pre-ramp": {
-     "pre_ramp_mJ_per_token": 91.7,
-     "gated_mJ_b1": 672.9,
-     "gated_mJ_saturated": 308.6,
-     "gap_only_pre_ramp_mJ_per_token": 102.8,
-     "gap_only_gated_mJ_b1": 683.9,
-     "gap_only_gated_mJ_saturated": 319.7
+     "pre_ramp_mJ_per_token": 96.4,
+     "gated_mJ_b1": 695.5,
+     "gated_mJ_saturated": 313.3,
+     "gap_only_pre_ramp_mJ_per_token": 103.2,
+     "gap_only_gated_mJ_b1": 702.3,
+     "gap_only_gated_mJ_saturated": 320.1
     },
     "1,024-cycle pre-ramp, no cap": {
-     "pre_ramp_mJ_per_token": 730.1,
-     "gated_mJ_b1": 1311.2,
-     "gated_mJ_saturated": 946.9,
-     "gap_only_pre_ramp_mJ_per_token": 818.4,
-     "gap_only_gated_mJ_b1": 1399.5,
-     "gap_only_gated_mJ_saturated": 1035.2
+     "pre_ramp_mJ_per_token": 767.5,
+     "gated_mJ_b1": 1366.6,
+     "gated_mJ_saturated": 984.4,
+     "gap_only_pre_ramp_mJ_per_token": 821.5,
+     "gap_only_gated_mJ_b1": 1420.6,
+     "gap_only_gated_mJ_saturated": 1038.4
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
-     "pre_ramp_mJ_per_token": 183.5,
-     "gated_mJ_b1": 764.6,
-     "gated_mJ_saturated": 400.3,
-     "gap_only_pre_ramp_mJ_per_token": 205.6,
-     "gap_only_gated_mJ_b1": 786.8,
-     "gap_only_gated_mJ_saturated": 422.5
+     "pre_ramp_mJ_per_token": 192.9,
+     "gated_mJ_b1": 792.0,
+     "gated_mJ_saturated": 409.8,
+     "gap_only_pre_ramp_mJ_per_token": 206.4,
+     "gap_only_gated_mJ_b1": 805.5,
+     "gap_only_gated_mJ_saturated": 423.3
     }
    }
   },
@@ -6737,48 +6737,61 @@
   },
   "bf16_hub_unit_mm2": 19.79,
   "product": {
-   "status": "200 dies: 39 TP-4 stages (156 layer dies, BF16 COLUMNS (1,024 at W10b's 1,002.89 x 142.56 um column outline) with q pairs at W10b's 510.84 x 126.9 um tile (floorplan sizes; routed closure pending p12q4 / c5) -- USER DECISION: maximum per-user rate, die count free) + 8 head dies (8192m8 ping-pong; see head_fit: 4 at W10's tile, re-fit pending) + 36 Engram table dies (storage-only basis; ASAP7 feasibility 20).  Why the columns: on the full-token basis they give the highest per-user rate; W10's busiest-die op cycles favoured (iii), but its +20.7% pair pitch adds stages (hops) and its BF16 issue floors exceed the columns' full-width BF16 lanes.  References in bf16_full_token",
+   "status": "208 dies: 41 TP-4 stages (164 layer dies, BF16 COLUMNS (1,024 at W10b's 1,002.89 x 142.56 um column outline) with q pairs at W10b's 510.84 x 126.9 um tile (floorplan sizes; routed closure pending p12q4 / c5) and the measured VM-H SU+VM hub block (38.95 mm2; root ruling 2026-10-01) -- USER DECISION: maximum per-user rate, die count free) + 8 head dies (8192m8 ping-pong; see head_fit: 4 at W10's tile, re-fit pending) + 36 Engram table dies (storage-only basis; ASAP7 feasibility 20).  Why the columns: on the full-token basis they give the highest per-user rate; W10's busiest-die op cycles favoured (iii), but its +20.7% pair pitch adds stages (hops) and its BF16 issue floors exceed the columns' full-width BF16 lanes.  References in bf16_full_token",
    "bf16_full_token": {
     "option_ii cap 3": {
-     "stages": 34,
-     "dies": 176,
-     "ar": 2663.0,
-     "mtp": 4333.6,
-     "saturated": 73861.4,
-     "pipeline_hops_us": 14.148
+     "stages": 35,
+     "dies": 180,
+     "ar": 2660.4,
+     "mtp": 4331.5,
+     "saturated": 87498.3,
+     "pipeline_hops_us": 14.515
     },
     "option_iii": {
-     "stages": 36,
-     "dies": 184,
-     "ar": 2642.1,
-     "mtp": 4261.0,
-     "saturated": 73637.8,
-     "pipeline_hops_us": 14.882
+     "stages": 38,
+     "dies": 192,
+     "ar": 2634.7,
+     "mtp": 4242.2,
+     "saturated": 73552.6,
+     "pipeline_hops_us": 15.616
     }
    },
    "option_ii_area_breakeven_mm2_for_31_stages": 11.4,
    "head_fit": {
     "dies": 8,
     "depth": "8192m8 ping-pong",
-    "margin_storage_only": -0.0521,
+    "margin_storage_only": -0.1057,
     "margin_storage_only_w10_q": 0.0042,
     "margin_w18_floorplan_w10_q": 0.133,
-    "margin_w18_floorplan_scaled_estimate": 0.084,
+    "margin_w18_floorplan_scaled_estimate": 0.037,
     "dies_at_w10_q": 4,
     "on_4096m8": 8,
-    "status": "8 dies on the model's storage-only rule at the W10b tile (need 105.2% of one TP-4 group; 4 at W10's 476 um pair, CONFIRMED at floorplan level by W18 4ed60cbb).  W18's 13.3% floorplan margin scaled by the need ratio is ~8.4% (ESTIMATE): 4 head dies would likely hold at floorplan level -- pending a W18b head re-fit at the W10b tile and a root ruling",
+    "stages_w10b_tiles_only": 39,
+    "hub_block": {
+     "block_mm2": 38.951,
+     "w_um": 6365.0,
+     "h_um": 6119.5,
+     "sram_mm2": 10.893,
+     "network_footprint_mm2": 2.624,
+     "stream_unit_ledger_mm2": 14.249,
+     "switch_fraction": 0.05,
+     "budget_mm2": 45.0,
+     "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.H_rtl (root ruling 2026-10-01, option a; budget 38-45 mm2 with W11's measured lanes at 50% utilisation)",
+     "field_loss_mm2": 25.937
+    },
+    "status": "8 dies on the model's storage-only rule at the W10b tile (need 110.6% of one TP-4 group; 4 at W10's 476 um pair, CONFIRMED at floorplan level by W18 4ed60cbb).  W18's 13.3% floorplan margin scaled by the need ratio is ~3.7% (ESTIMATE): 4 head dies would likely hold at floorplan level -- pending a W18b head re-fit at the W10b tile and a root ruling",
     "table_dies_asap7_floorplan": {
      "dies": 20,
      "src": "W18 4ed60cbb head_table_fit.json (ASAP7 geometry feasibility row); the product stays 36 (storage-only)"
     }
    },
    "reference_for_comparisons": {
-    "stages": 39,
-    "layer_dies": 156,
+    "stages": 41,
+    "layer_dies": 164,
     "head_dies": 8,
     "table_dies": 36,
-    "dies": 200,
-    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 VM-H (12/12/12 slow stages, SU op +36.7 / red +44.9, issue x1.169) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um): stage re-fit",
+    "dies": 208,
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 VM-H (12/12/12 slow stages, SU op +36.7 / red +44.9, issue x1.169) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the VM-H hub block (SU+VM 38.95 mm2): one stage re-fit",
     "basis": "storage-only 75.0, BF16 on the standard pair, W10 budget pitch, 12.5%, ring credit, 4096m8"
    }
   },
@@ -6837,6 +6850,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -6995,6 +7009,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -7153,6 +7168,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -7311,6 +7327,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -7469,6 +7486,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -7627,6 +7645,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -7785,6 +7804,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -7943,6 +7963,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -8101,6 +8122,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 22.31,
      "ffn.combine_allreduce": 22.31,
@@ -8263,6 +8285,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 28.33,
      "ffn.combine_allreduce": 28.33,
@@ -8425,6 +8448,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 25.16,
      "ffn.combine_allreduce": 25.16,
@@ -8587,6 +8611,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 16.98,
      "ffn.combine_allreduce": 16.98,
@@ -8749,6 +8774,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 28.33,
      "ffn.combine_allreduce": 28.33,
@@ -8911,6 +8937,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 25.16,
      "ffn.combine_allreduce": 25.16,
@@ -9073,6 +9100,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 15.47,
      "ffn.combine_allreduce": 15.47,
@@ -9235,6 +9263,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 28.33,
      "ffn.combine_allreduce": 28.33,
@@ -9397,6 +9426,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 25.16,
      "ffn.combine_allreduce": 25.16,
@@ -9562,6 +9592,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.out_allreduce": 17.07,
      "ffn.combine_allreduce": 17.07,
@@ -9636,9 +9667,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -9730,6 +9761,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.wo_a": 21.17,
      "attn.out_allreduce": 17.07,
@@ -9804,9 +9836,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -9907,6 +9939,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.wo_a": 21.17,
      "attn.out_allreduce": 17.07,
@@ -9981,9 +10014,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -10075,6 +10108,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.wo_a": 21.17,
      "attn.out_allreduce": 17.07,
@@ -10149,9 +10183,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -10246,6 +10280,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.wo_a": 21.33,
      "attn.out_allreduce": 17.07,
@@ -10320,9 +10355,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -10417,6 +10452,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.wo_a": 21.67,
      "attn.out_allreduce": 19.13,
@@ -10491,9 +10527,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -10588,6 +10624,7 @@
      "field_scale": 1.0
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.wo_a": 21.67,
      "attn.out_allreduce": 19.13,
@@ -10662,9 +10699,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -10763,6 +10800,7 @@
      "src": "claude/w18-die-assembly 996f7982 shrink_p5_interim/shrunk_die.json"
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.wo_a": 21.53,
      "attn.out_allreduce": 18.93,
@@ -10837,9 +10875,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -10941,6 +10979,7 @@
      "src": "claude/w18-die-assembly 996f7982 shrink_p5_interim/shrunk_die.json"
     },
     "vmh": null,
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.wo_a": 21.53,
      "attn.out_allreduce": 18.93,
@@ -11015,9 +11054,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -11127,6 +11166,7 @@
      "su_issue": 1.1687,
      "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)"
     },
+    "hub_block": false,
     "critical_path_top_us": {
      "attn.wo_a": 22.2,
      "attn.out_allreduce": 19.27,
@@ -11201,9 +11241,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -11239,34 +11279,34 @@
     "silicon_mm2": 153220.0
    },
    {
-    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 VM-H (12/12/12 slow stages, SU op +36.7 / red +44.9, issue x1.169) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um): stage re-fit",
-    "stages": 39,
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 VM-H (12/12/12 slow stages, SU op +36.7 / red +44.9, issue x1.169) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the VM-H hub block (SU+VM 38.95 mm2): one stage re-fit",
+    "stages": 41,
     "bf16": "columns",
     "clock_hz": 1200000000.0,
-    "layer_dies": 156,
+    "layer_dies": 164,
     "head_dies": 8,
     "table_dies": 36,
-    "dies": 200,
-    "packages": 100,
-    "hbm_stacks": 656,
-    "busiest_die_macros": 9911,
-    "ar_tokens_s_b1": 2689.4,
-    "mtp_tokens_s_b1": 4497.2,
-    "ar_saturated_tokens_s": 89124.7,
-    "mtp_saturated_tokens_s": 45715.7,
-    "stage_hops": 38,
-    "pipeline_hops_us": 15.982,
+    "dies": 208,
+    "packages": 104,
+    "hbm_stacks": 688,
+    "busiest_die_macros": 9428,
+    "ar_tokens_s_b1": 2680.2,
+    "mtp_tokens_s_b1": 4474.8,
+    "ar_saturated_tokens_s": 89095.5,
+    "mtp_saturated_tokens_s": 45660.6,
+    "stage_hops": 40,
+    "pipeline_hops_us": 16.716,
     "cooling": {
      "limit_w_per_die": 474.56,
      "dyn_scale": 1.16,
-     "busiest_stage": 19,
-     "layer_die_static_w": 57.3,
-     "layer_die_mean_w_saturated": 129.7,
-     "layer_die_busiest_w_saturated": 274.3,
+     "busiest_stage": 20,
+     "layer_die_static_w": 61.5,
+     "layer_die_mean_w_saturated": 128.4,
+     "layer_die_busiest_w_saturated": 271.2,
      "fits": true,
      "cooling_ungated": {
-      "static_w": 710.2,
-      "mean_w": 761.2
+      "static_w": 714.4,
+      "mean_w": 761.7
      },
      "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
     },
@@ -11285,12 +11325,12 @@
     "chain_stages": null,
     "elem_stages": 7,
     "field_starts": {
-     "mean_starts_per_die": 8.36,
-     "mean_ramps_per_die": 6.18,
+     "mean_starts_per_die": 8.15,
+     "mean_ramps_per_die": 6.05,
      "held_cycles_per_token": 21804,
-     "max_ramps_per_die": 12,
+     "max_ramps_per_die": 7,
      "tau_cycles": 256,
-     "layer_die_ramps_per_token": 964,
+     "layer_die_ramps_per_token": 968,
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": true,
@@ -11313,71 +11353,72 @@
      "su_issue": 1.1687,
      "src": "claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)"
     },
+    "hub_block": true,
     "critical_path_top_us": {
      "attn.wo_a": 22.2,
      "attn.out_allreduce": 19.27,
      "ffn.combine_allreduce": 19.27,
-     "substage_hop0": 14.1,
+     "substage_hop0": 14.84,
      "attn.idx.score": 13.76,
      "ffn.softplus_sqrt": 12.7,
-     "ffn.experts_gu": 10.83,
+     "ffn.experts_gu": 11.37,
      "ffn.down": 10.77
     },
     "capacity_users_1m": 866,
     "static_w_ungated": {
-     "layer_dies": 8938.2,
+     "layer_dies": 10085.3,
      "head_dies": 738.5,
      "table_dies": 3324.4,
-     "total": 13001.1
+     "total": 14148.3
     },
     "energy": {
      "ar_b1": {
-      "tokens_s": 2689.4,
-      "ungated_mJ": 4933.43,
-      "gated_mJ": 581.13,
-      "ungated_static_w": 12875.4,
-      "gated_static_w": 1170.2,
-      "gated_system_w": 1562.9
+      "tokens_s": 2680.2,
+      "ungated_mJ": 5352.73,
+      "gated_mJ": 599.1,
+      "ungated_static_w": 13964.5,
+      "gated_static_w": 1223.9,
+      "gated_system_w": 1605.7
      },
      "ar_sat": {
-      "tokens_s": 89124.7,
-      "ungated_mJ": 290.48,
-      "gated_mJ": 216.85,
-      "ungated_static_w": 12875.4,
-      "gated_static_w": 6312.6,
-      "gated_system_w": 19326.5
+      "tokens_s": 89095.5,
+      "ungated_mJ": 299.17,
+      "gated_mJ": 216.91,
+      "ungated_static_w": 13964.5,
+      "gated_static_w": 6634.9,
+      "gated_system_w": 19325.3
      },
      "mtp_b1": {
-      "tokens_s": 4497.2,
-      "ungated_mJ": 3079.58,
-      "gated_mJ": 473.74,
-      "ungated_static_w": 12875.4,
-      "gated_static_w": 1156.6,
-      "gated_system_w": 2130.5
+      "tokens_s": 4474.8,
+      "ungated_mJ": 3331.27,
+      "gated_mJ": 480.66,
+      "ungated_static_w": 13964.5,
+      "gated_static_w": 1208.5,
+      "gated_system_w": 2150.9
      },
      "mtp_sat": {
-      "tokens_s": 45715.7,
-      "ungated_mJ": 498.21,
-      "gated_mJ": 298.46,
-      "ungated_static_w": 12875.4,
-      "gated_static_w": 3744.1,
-      "gated_system_w": 13644.5
+      "tokens_s": 45660.6,
+      "ungated_mJ": 516.43,
+      "gated_mJ": 296.09,
+      "ungated_static_w": 13964.5,
+      "gated_static_w": 3903.6,
+      "gated_system_w": 13519.7
      }
     },
-    "busiest_stage": 19,
+    "busiest_stage": 20,
     "busiest_stage_us": 11.22,
-    "layers_per_stage": 1.026,
+    "layers_per_stage": 0.976,
     "engram_dag_slack": {
      "L1": {
       "engram_ready_us": 1.779,
-      "residual_ready_us": 7.572,
-      "slack_us": 5.793,
+      "residual_ready_us": 7.961,
+      "slack_us": 6.182,
       "on_critical_path": false
      },
      "L14": {
       "engram_ready_us": 1.779,
-      "residual_ready_us": 125.358,
-      "slack_us": 123.579,
+      "residual_ready_us": 125.921,
+      "slack_us": 124.141,
       "on_critical_path": false
      }
     },
@@ -11387,9 +11428,9 @@
     "role": "product",
     "depth": "4096m8",
     "bf16_stage_reference": {
-     "option_ii cap 3 (reference)": 34,
-     "option_iii BF16_PAIR (reference)": 36,
-     "columns (product)": 39
+     "option_ii cap 3 (reference)": 35,
+     "option_iii BF16_PAIR (reference)": 38,
+     "columns (product)": 41
     },
     "engram": {
      "table_dies": 36,
@@ -11407,22 +11448,22 @@
      "link_utilisation_mtp_saturated": 0.0021
     },
     "cost": {
-     "silicon_usd": 115640,
-     "package_usd": 202000,
-     "hbm_usd": 236160,
-     "hardware_usd": 553800,
+     "silicon_usd": 120266,
+     "package_usd": 210080,
+     "hbm_usd": 247680,
+     "hardware_usd": 578026,
      "nre_usd": {
-      "low": 145000000.0,
-      "high": 445000000.0
+      "low": 149000000.0,
+      "high": 461000000.0
      },
      "capex_usd": {
-      "low": 698800,
-      "high": 998800
+      "low": 727026,
+      "high": 1039026
      },
-     "silicon_mm2": 163000.0
+     "silicon_mm2": 169520.0
     },
-    "cost_iso_package_usd": 2500000.0,
-    "silicon_mm2": 163000.0
+    "cost_iso_package_usd": 2600000.0,
+    "silicon_mm2": 169520.0
    }
   ],
   "refit": {
@@ -11472,6 +11513,12 @@
     "ring_free_mm2": 53.524,
     "core_gap_mm2": 13.84,
     "src": "W10 re-fit reproduced (claude/w10-v41-rom-element 1f598e0b), v1 HBM PHY 12.0 x 0.833 mm"
+   },
+   "w10_refit_vmh": {
+    "field_mm2": 556.8345516755843,
+    "ring_free_mm2": 53.524,
+    "core_gap_mm2": 13.84,
+    "src": "the W10 re-fit with the measured VM-H SU+VM block as the SU_VECTOR hub partition (root ruling 2026-10-01): the field less (38.951 - 14.249) x 1.05 mm2"
    },
    "w18_legal_phy": {
     "field_mm2": 565.519025626584,
@@ -13494,22 +13541,22 @@
    {
     "design": "V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)",
     "tier": "ROM",
-    "per_user_ar": 2689.4,
-    "per_user_mtp": 4497.2,
-    "per_user_mtp_headline_tau_3p78": 4658.7,
-    "saturated_tokens_s": 89124.7,
-    "mJ_b1": 672.9,
-    "mJ_saturated": 308.6,
+    "per_user_ar": 2680.2,
+    "per_user_mtp": 4474.8,
+    "per_user_mtp_headline_tau_3p78": 4635.4,
+    "saturated_tokens_s": 89095.5,
+    "mJ_b1": 695.5,
+    "mJ_saturated": 313.3,
     "capex_usd": {
-     "low": 698800,
-     "high": 998800
+     "low": 727026,
+     "high": 1039026
     },
-    "silicon_mm2": 163000.0,
+    "silicon_mm2": 169520.0,
     "users_1m": 866,
-    "system_w_saturated": 19326.5
+    "system_w_saturated": 19325.3
    },
    {
-    "design": "V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
+    "design": "V4.1 HBM tier 3 (idealised), equal area: 5 x TP-96 (480 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
     "tier": "3",
     "per_user_ar": 2317.2,
     "per_user_mtp": 5379.1,
@@ -13526,15 +13573,15 @@
      6248.3
     ],
     "saturated_note": "the model's column-pass bound (the audit prices single-user latency)",
-    "saturated_tokens_s": 101170.8,
-    "mJ_b1": 8286.29,
+    "saturated_tokens_s": 126463.5,
+    "mJ_b1": 9992.51,
     "mJ_saturated": 741.9,
     "capex_usd": {
-     "low": 1010712,
-     "high": 1010712
+     "low": 1259640,
+     "high": 1259640
     },
-    "silicon_mm2": 130752.0,
-    "users_1m": 31052
+    "silicon_mm2": 163440.0,
+    "users_1m": 38815
    },
    {
     "design": "V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
@@ -13755,14 +13802,14 @@
   "rows": [
    {
     "design": "V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)",
-    "tau_2.91": 3586.4,
-    "tau_3.649": 4497.2,
-    "tau_3.78": 4658.7,
-    "tau_4.5": 5546.0,
-    "tau_5.24": 6458.0
+    "tau_2.91": 3568.6,
+    "tau_3.649": 4474.8,
+    "tau_3.78": 4635.4,
+    "tau_4.5": 5518.4,
+    "tau_5.24": 6425.9
    },
    {
-    "design": "V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
+    "design": "V4.1 HBM tier 3 (idealised), equal area: 5 x TP-96 (480 right-sized dies, 1.2 GHz, SS wires; W19 composed token)",
     "tau_2.91": 4289.7,
     "tau_3.649": 5379.1,
     "tau_3.78": 5572.2,
@@ -13819,12 +13866,12 @@
   "rows": [
    {
     "design": "V4.1 ROM product (columns, 1.2 GHz SS)",
-    "ar": 3355.4,
-    "mtp": 5609.6,
+    "ar": 3341.0,
+    "mtp": 5574.9,
     "saturated": 115770.5,
-    "dies": 200,
-    "silicon_mm2": 163000.0,
-    "capex_usd": 698800,
+    "dies": 208,
+    "silicon_mm2": 169520.0,
+    "capex_usd": 727026,
     "users": 93722
    },
    {
@@ -14278,43 +14325,43 @@
  },
  "comparison_rule": {
   "v41_targets": {
-   "area": 163000.0,
-   "cost": 698800,
-   "power": 19326.5
+   "area": 169520.0,
+   "cost": 727026,
+   "power": 19325.3
   },
   "v41": [
    {
     "rule": "equal area",
-    "target": 163000.0,
-    "dies": 384,
+    "target": 169520.0,
+    "dies": 480,
     "tp": 96,
-    "replicas": 4,
+    "replicas": 5,
     "stacks_per_die": 4,
     "sm_per_die": 32,
-    "capacity_users_1m": 31052,
+    "capacity_users_1m": 38815,
     "capacity_users_per_group": 7763,
     "feasible": true,
     "weight_sweep_us": 37.4,
     "chain_us_ar": 317.9,
     "die_mm2": 340.5,
-    "silicon_mm2": 130752.0,
-    "static_w_ungated": 26676.0,
+    "silicon_mm2": 163440.0,
+    "static_w_ungated": 33345.0,
     "ar": {
      "batch1": {
       "batch": 1,
       "per_user_tokens_s": 3145.9,
       "aggregate_tokens_s": 3145.9,
-      "ungated_mJ": 9940.96,
-      "gated_mJ": 8286.29,
-      "gated_system_w": 26068.0
+      "ungated_mJ": 12060.85,
+      "gated_mJ": 9992.51,
+      "gated_system_w": 31436.0
      },
      "saturated": {
-      "batch": 128,
+      "batch": 160,
       "per_user_tokens_s": 790.4,
-      "aggregate_tokens_s": 101170.8,
+      "aggregate_tokens_s": 126463.5,
       "ungated_mJ": 877.97,
       "gated_mJ": 741.9,
-      "gated_system_w": 75058.0
+      "gated_system_w": 93823.0
      }
     },
     "mtp": {
@@ -14322,67 +14369,67 @@
       "batch": 1,
       "per_user_tokens_s": 6294.3,
       "aggregate_tokens_s": 6294.3,
-      "ungated_mJ": 5377.76,
-      "gated_mJ": 4049.82,
-      "gated_system_w": 25491.0
+      "ungated_mJ": 6437.29,
+      "gated_mJ": 4777.36,
+      "gated_system_w": 30070.0
      },
      "saturated": {
-      "batch": 16,
+      "batch": 20,
       "per_user_tokens_s": 3494.4,
-      "aggregate_tokens_s": 55909.9,
+      "aggregate_tokens_s": 69887.4,
       "ungated_mJ": 1616.77,
       "gated_mJ": 1445.11,
-      "gated_system_w": 80796.0
+      "gated_system_w": 100995.0
      }
     },
     "cost": {
-     "silicon_usd": 54912,
-     "package_usd": 387840,
-     "hbm_usd": 552960,
-     "hardware_usd": 995712,
+     "silicon_usd": 68640,
+     "package_usd": 484800,
+     "hbm_usd": 691200,
+     "hardware_usd": 1244640,
      "nre_usd": {
       "low": 15000000.0,
       "high": 15000000.0
      },
      "capex_usd": {
-      "low": 1010712,
-      "high": 1010712
+      "low": 1259640,
+      "high": 1259640
      },
-     "silicon_mm2": 130752.0
+     "silicon_mm2": 163440.0
     }
    },
    {
     "rule": "equal area",
-    "target": 163000.0,
-    "dies": 288,
+    "target": 169520.0,
+    "dies": 384,
     "tp": 96,
-    "replicas": 3,
+    "replicas": 4,
     "stacks_per_die": 6,
     "sm_per_die": 48,
-    "capacity_users_1m": 35751,
+    "capacity_users_1m": 47668,
     "capacity_users_per_group": 11917,
     "feasible": true,
     "weight_sweep_us": 24.9,
     "chain_us_ar": 309.5,
     "die_mm2": 426.2,
-    "silicon_mm2": 122745.6,
-    "static_w_ungated": 23605.6,
+    "silicon_mm2": 163660.8,
+    "static_w_ungated": 31474.1,
     "ar": {
      "batch1": {
       "batch": 1,
       "per_user_tokens_s": 3230.7,
       "aggregate_tokens_s": 3230.7,
-      "ungated_mJ": 8768.01,
-      "gated_mJ": 7342.23,
-      "gated_system_w": 23721.0
+      "ungated_mJ": 11203.54,
+      "gated_mJ": 9302.49,
+      "gated_system_w": 30054.0
      },
      "saturated": {
-      "batch": 96,
+      "batch": 128,
       "per_user_tokens_s": 790.4,
-      "aggregate_tokens_s": 75878.1,
+      "aggregate_tokens_s": 101170.8,
       "ungated_mJ": 925.39,
       "gated_mJ": 764.85,
-      "gated_system_w": 58035.0
+      "gated_system_w": 77380.0
      }
     },
     "mtp": {
@@ -14390,38 +14437,38 @@
       "batch": 1,
       "per_user_tokens_s": 6393.2,
       "aggregate_tokens_s": 6393.2,
-      "ungated_mJ": 4831.93,
-      "gated_mJ": 3675.01,
-      "gated_system_w": 23495.0
+      "ungated_mJ": 6062.69,
+      "gated_mJ": 4520.13,
+      "gated_system_w": 28898.0
      },
      "saturated": {
-      "batch": 35751,
+      "batch": 47668,
       "per_user_tokens_s": 1.2,
-      "aggregate_tokens_s": 42033.2,
+      "aggregate_tokens_s": 56044.2,
       "ungated_mJ": 1701.24,
       "gated_mJ": 1499.19,
-      "gated_system_w": 63016.0
+      "gated_system_w": 84021.0
      }
     },
     "cost": {
-     "silicon_usd": 57082,
-     "package_usd": 480960,
-     "hbm_usd": 622080,
-     "hardware_usd": 1160122,
+     "silicon_usd": 76109,
+     "package_usd": 641280,
+     "hbm_usd": 829440,
+     "hardware_usd": 1546829,
      "nre_usd": {
       "low": 15000000.0,
       "high": 15000000.0
      },
      "capex_usd": {
-      "low": 1175122,
-      "high": 1175122
+      "low": 1561829,
+      "high": 1561829
      },
-     "silicon_mm2": 122745.6
+     "silicon_mm2": 163660.8
     }
    },
    {
     "rule": "equal cost",
-    "target": 698800,
+    "target": 727026,
     "dies": 192,
     "tp": 96,
     "replicas": 2,
@@ -14489,7 +14536,7 @@
    },
    {
     "rule": "equal cost",
-    "target": 698800,
+    "target": 727026,
     "dies": 96,
     "tp": 96,
     "replicas": 1,
@@ -14557,7 +14604,7 @@
    },
    {
     "rule": "equal power",
-    "target": 19326.5,
+    "target": 19325.3,
     "dies": 96,
     "tp": 96,
     "replicas": 1,
@@ -14625,7 +14672,7 @@
    },
    {
     "rule": "equal power",
-    "target": 19326.5,
+    "target": 19325.3,
     "dies": 95,
     "tp": 95,
     "replicas": 1,
@@ -14757,40 +14804,40 @@
     "cycles_per_request": 13,
     "requests_on_path": 56,
     "added_us": 0.607,
-    "tokens_s_delta_pct": -0.292
+    "tokens_s_delta_pct": -0.291
    },
    "tt_1mm_mean": {
     "reach_mm": 1.0,
     "cycles_per_request": 10.0,
     "requests_on_path": 56,
     "added_us": 0.467,
-    "tokens_s_delta_pct": -0.225
+    "tokens_s_delta_pct": -0.224
    },
    "ss_0p75mm_worst": {
     "reach_mm": 0.75,
     "cycles_per_request": 15,
     "requests_on_path": 56,
     "added_us": 0.7,
-    "tokens_s_delta_pct": -0.337
+    "tokens_s_delta_pct": -0.336
    },
    "ss_0p75mm_mean": {
     "reach_mm": 0.75,
     "cycles_per_request": 11.0,
     "requests_on_path": 56,
     "added_us": 0.513,
-    "tokens_s_delta_pct": -0.248
+    "tokens_s_delta_pct": -0.247
    },
    "w18b_merge2_headreg_worst": {
     "cycles_per_request": 20,
     "requests_on_path": 56,
     "added_us": 0.933,
-    "tokens_s_delta_pct": -0.449
+    "tokens_s_delta_pct": -0.448
    },
    "w18b_merge2_headreg_mean": {
     "cycles_per_request": 15.0,
     "requests_on_path": 56,
     "added_us": 0.7,
-    "tokens_s_delta_pct": -0.337
+    "tokens_s_delta_pct": -0.336
    }
   },
   "regions_w18b_merge2_headreg": [
@@ -14823,7 +14870,7 @@
    13,
    15
   ],
-  "stages": 39,
+  "stages": 41,
   "basis": {
    "base_cycles": 7,
    "per_hop_cycles": 2,
@@ -14855,192 +14902,192 @@
  },
  "clock_domain_cases": {
   "a: all 1.2 GHz, chain adds 8 stages": {
-   "ar_tokens_s_b1": 2674.3,
-   "mtp_tokens_s_b1": 4328.9,
-   "ar_saturated_tokens_s": 89474.4,
-   "mtp_saturated_tokens_s": 45775.9,
-   "gated_mJ_b1": 583.16,
-   "gated_mJ_saturated": 216.66,
-   "busiest_stage_us": 11.18,
+   "ar_tokens_s_b1": 2669.0,
+   "mtp_tokens_s_b1": 4324.8,
+   "ar_saturated_tokens_s": 89560.0,
+   "mtp_saturated_tokens_s": 45744.0,
+   "gated_mJ_b1": 593.31,
+   "gated_mJ_saturated": 214.78,
+   "busiest_stage_us": 11.17,
    "critical_path_top_us": {
     "attn.wo_a": 21.17,
     "attn.out_allreduce": 17.07,
     "ffn.combine_allreduce": 17.07,
     "ffn.softplus_sqrt": 16.98,
     "attn.a_proj": 16.2,
-    "substage_hop0": 14.1,
+    "substage_hop0": 14.84,
     "attn.idx.score": 13.38,
     "ffn.swiglu": 11.91
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
-     "pre_ramp_mJ_per_token": 91.7,
-     "gated_mJ_b1": 674.9,
-     "gated_mJ_saturated": 308.4,
-     "gap_only_pre_ramp_mJ_per_token": 102.3,
-     "gap_only_gated_mJ_b1": 685.5,
-     "gap_only_gated_mJ_saturated": 319.0
+     "pre_ramp_mJ_per_token": 96.4,
+     "gated_mJ_b1": 689.7,
+     "gated_mJ_saturated": 311.2,
+     "gap_only_pre_ramp_mJ_per_token": 102.7,
+     "gap_only_gated_mJ_b1": 696.0,
+     "gap_only_gated_mJ_saturated": 317.5
     },
     "1,024-cycle pre-ramp, no cap": {
-     "pre_ramp_mJ_per_token": 730.1,
-     "gated_mJ_b1": 1313.2,
-     "gated_mJ_saturated": 946.7,
-     "gap_only_pre_ramp_mJ_per_token": 814.6,
-     "gap_only_gated_mJ_b1": 1397.8,
-     "gap_only_gated_mJ_saturated": 1031.3
+     "pre_ramp_mJ_per_token": 767.5,
+     "gated_mJ_b1": 1360.8,
+     "gated_mJ_saturated": 982.3,
+     "gap_only_pre_ramp_mJ_per_token": 817.5,
+     "gap_only_gated_mJ_b1": 1410.8,
+     "gap_only_gated_mJ_saturated": 1032.2
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
-     "pre_ramp_mJ_per_token": 183.5,
-     "gated_mJ_b1": 766.6,
-     "gated_mJ_saturated": 400.1,
-     "gap_only_pre_ramp_mJ_per_token": 204.7,
-     "gap_only_gated_mJ_b1": 787.9,
-     "gap_only_gated_mJ_saturated": 421.4
+     "pre_ramp_mJ_per_token": 192.9,
+     "gated_mJ_b1": 786.2,
+     "gated_mJ_saturated": 407.6,
+     "gap_only_pre_ramp_mJ_per_token": 205.4,
+     "gap_only_gated_mJ_b1": 798.7,
+     "gap_only_gated_mJ_saturated": 420.2
     }
    }
   },
   "a: all 1.2 GHz, chain adds 9 stages": {
-   "ar_tokens_s_b1": 2535.5,
-   "mtp_tokens_s_b1": 4233.5,
-   "ar_saturated_tokens_s": 89474.4,
-   "mtp_saturated_tokens_s": 44910.7,
-   "gated_mJ_b1": 604.88,
-   "gated_mJ_saturated": 216.66,
-   "busiest_stage_us": 11.18,
+   "ar_tokens_s_b1": 2530.7,
+   "mtp_tokens_s_b1": 4229.6,
+   "ar_saturated_tokens_s": 89560.0,
+   "mtp_saturated_tokens_s": 44880.0,
+   "gated_mJ_b1": 615.66,
+   "gated_mJ_saturated": 214.78,
+   "busiest_stage_us": 11.17,
    "critical_path_top_us": {
     "attn.wo_a": 21.17,
     "ffn.softplus_sqrt": 19.1,
     "attn.out_allreduce": 17.07,
     "ffn.combine_allreduce": 17.07,
     "attn.a_proj": 16.2,
-    "substage_hop0": 14.1,
+    "substage_hop0": 14.84,
     "ffn.swiglu": 13.4,
     "attn.idx.score": 13.38
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
-     "pre_ramp_mJ_per_token": 91.7,
-     "gated_mJ_b1": 696.6,
-     "gated_mJ_saturated": 308.4,
-     "gap_only_pre_ramp_mJ_per_token": 103.5,
-     "gap_only_gated_mJ_b1": 708.4,
-     "gap_only_gated_mJ_saturated": 320.2
+     "pre_ramp_mJ_per_token": 96.4,
+     "gated_mJ_b1": 712.1,
+     "gated_mJ_saturated": 311.2,
+     "gap_only_pre_ramp_mJ_per_token": 103.7,
+     "gap_only_gated_mJ_b1": 719.4,
+     "gap_only_gated_mJ_saturated": 318.5
     },
     "1,024-cycle pre-ramp, no cap": {
-     "pre_ramp_mJ_per_token": 730.1,
-     "gated_mJ_b1": 1335.0,
-     "gated_mJ_saturated": 946.7,
-     "gap_only_pre_ramp_mJ_per_token": 824.0,
-     "gap_only_gated_mJ_b1": 1428.9,
-     "gap_only_gated_mJ_saturated": 1040.6
+     "pre_ramp_mJ_per_token": 767.5,
+     "gated_mJ_b1": 1383.2,
+     "gated_mJ_saturated": 982.3,
+     "gap_only_pre_ramp_mJ_per_token": 825.6,
+     "gap_only_gated_mJ_b1": 1441.3,
+     "gap_only_gated_mJ_saturated": 1040.4
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
-     "pre_ramp_mJ_per_token": 183.5,
-     "gated_mJ_b1": 788.3,
-     "gated_mJ_saturated": 400.1,
-     "gap_only_pre_ramp_mJ_per_token": 207.1,
-     "gap_only_gated_mJ_b1": 811.9,
-     "gap_only_gated_mJ_saturated": 423.7
+     "pre_ramp_mJ_per_token": 192.9,
+     "gated_mJ_b1": 808.5,
+     "gated_mJ_saturated": 407.6,
+     "gap_only_pre_ramp_mJ_per_token": 207.5,
+     "gap_only_gated_mJ_b1": 823.1,
+     "gap_only_gated_mJ_saturated": 422.2
     }
    }
   },
   "b: 1.2 GHz field (LAT 7) + 0.9 GHz chain units (LAT 3), W18 CDC": {
-   "ar_tokens_s_b1": 3384.2,
-   "mtp_tokens_s_b1": 4707.1,
-   "ar_saturated_tokens_s": 88514.2,
-   "mtp_saturated_tokens_s": 49318.5,
-   "gated_mJ_b1": 500.05,
-   "gated_mJ_saturated": 217.71,
+   "ar_tokens_s_b1": 3369.6,
+   "mtp_tokens_s_b1": 4682.7,
+   "ar_saturated_tokens_s": 88485.4,
+   "mtp_saturated_tokens_s": 49254.4,
+   "gated_mJ_b1": 508.37,
+   "gated_mJ_saturated": 215.95,
    "busiest_stage_us": 11.3,
    "critical_path_top_us": {
     "attn.wo_a": 21.33,
     "attn.out_allreduce": 17.07,
     "ffn.combine_allreduce": 17.07,
     "attn.a_proj": 16.2,
-    "substage_hop0": 14.1,
+    "substage_hop0": 14.84,
     "attn.idx.score": 13.42,
     "ffn.router": 10.83,
-    "ffn.experts_gu": 9.87
+    "ffn.experts_gu": 10.4
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
-     "pre_ramp_mJ_per_token": 91.7,
-     "gated_mJ_b1": 591.8,
-     "gated_mJ_saturated": 309.4,
-     "gap_only_pre_ramp_mJ_per_token": 99.1,
-     "gap_only_gated_mJ_b1": 599.1,
-     "gap_only_gated_mJ_saturated": 316.8
+     "pre_ramp_mJ_per_token": 96.4,
+     "gated_mJ_b1": 604.8,
+     "gated_mJ_saturated": 312.4,
+     "gap_only_pre_ramp_mJ_per_token": 99.5,
+     "gap_only_gated_mJ_b1": 607.8,
+     "gap_only_gated_mJ_saturated": 315.4
     },
     "1,024-cycle pre-ramp, no cap": {
-     "pre_ramp_mJ_per_token": 730.1,
-     "gated_mJ_b1": 1230.1,
-     "gated_mJ_saturated": 947.8,
-     "gap_only_pre_ramp_mJ_per_token": 788.6,
-     "gap_only_gated_mJ_b1": 1288.7,
-     "gap_only_gated_mJ_saturated": 1006.4
+     "pre_ramp_mJ_per_token": 767.5,
+     "gated_mJ_b1": 1275.9,
+     "gated_mJ_saturated": 983.5,
+     "gap_only_pre_ramp_mJ_per_token": 791.8,
+     "gap_only_gated_mJ_b1": 1300.1,
+     "gap_only_gated_mJ_saturated": 1007.7
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
-     "pre_ramp_mJ_per_token": 183.5,
-     "gated_mJ_b1": 683.5,
-     "gated_mJ_saturated": 401.2,
-     "gap_only_pre_ramp_mJ_per_token": 198.2,
-     "gap_only_gated_mJ_b1": 698.2,
-     "gap_only_gated_mJ_saturated": 415.9
+     "pre_ramp_mJ_per_token": 192.9,
+     "gated_mJ_b1": 701.2,
+     "gated_mJ_saturated": 408.8,
+     "gap_only_pre_ramp_mJ_per_token": 199.0,
+     "gap_only_gated_mJ_b1": 707.3,
+     "gap_only_gated_mJ_saturated": 414.9
     }
    }
   },
   "b: 1.2 GHz field (LAT 7) + 0.8 GHz chain units (LAT 3), W18 CDC": {
-   "ar_tokens_s_b1": 3259.5,
-   "mtp_tokens_s_b1": 4623.5,
-   "ar_saturated_tokens_s": 87884.3,
-   "mtp_saturated_tokens_s": 48708.8,
-   "gated_mJ_b1": 512.1,
-   "gated_mJ_saturated": 218.42,
+   "ar_tokens_s_b1": 3245.9,
+   "mtp_tokens_s_b1": 4600.0,
+   "ar_saturated_tokens_s": 87855.9,
+   "mtp_saturated_tokens_s": 48646.2,
+   "gated_mJ_b1": 520.76,
+   "gated_mJ_saturated": 216.66,
    "busiest_stage_us": 11.38,
    "critical_path_top_us": {
     "attn.wo_a": 21.33,
     "attn.out_allreduce": 17.07,
     "ffn.combine_allreduce": 17.07,
     "attn.a_proj": 16.2,
-    "substage_hop0": 14.1,
+    "substage_hop0": 14.84,
     "attn.idx.score": 13.42,
     "ffn.router": 10.83,
-    "ffn.experts_gu": 9.87
+    "ffn.experts_gu": 10.4
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
-     "pre_ramp_mJ_per_token": 91.7,
-     "gated_mJ_b1": 603.8,
-     "gated_mJ_saturated": 310.1,
-     "gap_only_pre_ramp_mJ_per_token": 99.6,
-     "gap_only_gated_mJ_b1": 611.7,
-     "gap_only_gated_mJ_saturated": 318.0
+     "pre_ramp_mJ_per_token": 96.4,
+     "gated_mJ_b1": 617.2,
+     "gated_mJ_saturated": 313.1,
+     "gap_only_pre_ramp_mJ_per_token": 99.9,
+     "gap_only_gated_mJ_b1": 620.7,
+     "gap_only_gated_mJ_saturated": 316.6
     },
     "1,024-cycle pre-ramp, no cap": {
-     "pre_ramp_mJ_per_token": 730.1,
-     "gated_mJ_b1": 1242.2,
-     "gated_mJ_saturated": 948.5,
-     "gap_only_pre_ramp_mJ_per_token": 792.4,
-     "gap_only_gated_mJ_b1": 1304.5,
-     "gap_only_gated_mJ_saturated": 1010.8
+     "pre_ramp_mJ_per_token": 767.5,
+     "gated_mJ_b1": 1288.3,
+     "gated_mJ_saturated": 984.2,
+     "gap_only_pre_ramp_mJ_per_token": 795.5,
+     "gap_only_gated_mJ_b1": 1316.3,
+     "gap_only_gated_mJ_saturated": 1012.2
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
-     "pre_ramp_mJ_per_token": 183.5,
-     "gated_mJ_b1": 695.6,
-     "gated_mJ_saturated": 401.9,
-     "gap_only_pre_ramp_mJ_per_token": 199.1,
-     "gap_only_gated_mJ_b1": 711.2,
-     "gap_only_gated_mJ_saturated": 417.5
+     "pre_ramp_mJ_per_token": 192.9,
+     "gated_mJ_b1": 713.6,
+     "gated_mJ_saturated": 409.5,
+     "gap_only_pre_ramp_mJ_per_token": 199.9,
+     "gap_only_gated_mJ_b1": 720.7,
+     "gap_only_gated_mJ_saturated": 416.6
     }
    }
   },
   "c: all 0.9 GHz, LAT 3": {
-   "ar_tokens_s_b1": 2882.5,
-   "mtp_tokens_s_b1": 3756.4,
-   "ar_saturated_tokens_s": 71951.9,
-   "mtp_saturated_tokens_s": 38446.0,
-   "gated_mJ_b1": 538.5,
-   "gated_mJ_saturated": 209.73,
+   "ar_tokens_s_b1": 2870.5,
+   "mtp_tokens_s_b1": 3736.8,
+   "ar_saturated_tokens_s": 71926.6,
+   "mtp_saturated_tokens_s": 38401.9,
+   "gated_mJ_b1": 549.08,
+   "gated_mJ_saturated": 208.58,
    "busiest_stage_us": 13.9,
    "critical_path_top_us": {
     "attn.wo_a": 27.87,
@@ -15048,34 +15095,34 @@
     "ffn.combine_allreduce": 22.76,
     "attn.a_proj": 20.58,
     "attn.idx.score": 15.5,
-    "substage_hop0": 14.15,
+    "substage_hop0": 14.9,
     "ffn.router": 13.42,
     "attn.idx.topk_local": 13.08
    },
    "droop": {
     "50% cap + 256-cycle pre-ramp": {
-     "pre_ramp_mJ_per_token": 91.7,
-     "gated_mJ_b1": 630.2,
-     "gated_mJ_saturated": 301.5,
-     "gap_only_pre_ramp_mJ_per_token": 96.2,
-     "gap_only_gated_mJ_b1": 634.7,
-     "gap_only_gated_mJ_saturated": 305.9
+     "pre_ramp_mJ_per_token": 96.4,
+     "gated_mJ_b1": 645.5,
+     "gated_mJ_saturated": 305.0,
+     "gap_only_pre_ramp_mJ_per_token": 96.6,
+     "gap_only_gated_mJ_b1": 645.7,
+     "gap_only_gated_mJ_saturated": 305.2
     },
     "1,024-cycle pre-ramp, no cap": {
-     "pre_ramp_mJ_per_token": 730.1,
-     "gated_mJ_b1": 1268.6,
-     "gated_mJ_saturated": 939.8,
-     "gap_only_pre_ramp_mJ_per_token": 765.6,
-     "gap_only_gated_mJ_b1": 1304.1,
-     "gap_only_gated_mJ_saturated": 975.3
+     "pre_ramp_mJ_per_token": 767.5,
+     "gated_mJ_b1": 1316.6,
+     "gated_mJ_saturated": 976.1,
+     "gap_only_pre_ramp_mJ_per_token": 768.7,
+     "gap_only_gated_mJ_b1": 1317.8,
+     "gap_only_gated_mJ_saturated": 977.3
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
-     "pre_ramp_mJ_per_token": 183.5,
-     "gated_mJ_b1": 722.0,
-     "gated_mJ_saturated": 393.2,
-     "gap_only_pre_ramp_mJ_per_token": 192.4,
-     "gap_only_gated_mJ_b1": 730.9,
-     "gap_only_gated_mJ_saturated": 402.1
+     "pre_ramp_mJ_per_token": 192.9,
+     "gated_mJ_b1": 741.9,
+     "gated_mJ_saturated": 401.4,
+     "gap_only_pre_ramp_mJ_per_token": 193.2,
+     "gap_only_gated_mJ_b1": 742.2,
+     "gap_only_gated_mJ_saturated": 401.7
     }
    }
   }
@@ -16926,7 +16973,7 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "2420f8bbbc30b5eafecfb6054cdb4f1c71c1018cb7d3777788d096ce8212f384",
+  "tools/uarch_model.py": "7f2f0dc77999d6919f48683453d981e0cd07c9c0166081b81c645178be0a2d64",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",

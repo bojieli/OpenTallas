@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """The V4.1 ROM PRODUCT's layer-to-stage owner file (W16), in results/arch/v41_stage_owner_preflight.json's schema.
 
-    python3 tools/v41_stage_owner_product.py [--stages 39] [--out results/arch/v41_stage_owner_product.json]
+    python3 tools/v41_stage_owner_product.py [--stages 42] [--out results/arch/v41_stage_owner_product.json]
 
 The 40 layers' checkpoint bytes are cut into S equal-byte TP-4 stages, each cut at a whole routed-expert ID (a
 dense tensor is never cut), as tools/v41_stage_owner_preflight.py does for the 28-stage placement.  S defaults to the
 product's stage count from tools/uarch_model.py's consolidation fit (BF16 columns at W10b's 510.84 x 126.9 um q tile
-and 1,002.89 x 142.56 um column outline, 4096m8, storage-only density, 12.5% overhead, ring credit).  Headroom is against that fit's per-die field capacity;
+and 1,002.89 x 142.56 um column outline, the measured VM-H SU+VM hub block, 4096m8, storage-only density, 12.5% overhead, ring credit).  Headroom is against that fit's per-die field capacity;
 Engram spill is 0 (the product's 36 table dies hold every table row).
 """
 from __future__ import annotations
@@ -31,7 +31,7 @@ def digest(path):
 
 
 def derive(S=None):
-    S = S or U.cons_min_stages("analytical", U.CONS["overhead"], "ring", "w10_refit", PRODUCT["pitch"],
+    S = S or U.cons_min_stages("analytical", U.CONS["overhead"], "ring", U.PRODUCT_GEOM, PRODUCT["pitch"],
                                PRODUCT["bf16"], PRODUCT["depth"])
     cfg = U._V41_CFG
     dense, routed = cfg["layer_dense_weight_bytes"], cfg["layer_routed_weight_bytes"]
@@ -95,7 +95,7 @@ def derive(S=None):
     # storage-only density (the fit's own rule, U.cons_field_need_mm2)
     plan = U.cons_stage_plan(S)
     scale = U._cons_busiest_macros(S) / plan["busiest_macros"]
-    usable = U.cons_field_usable_mm2()
+    usable = U.cons_field_usable_mm2(geom=U.PRODUCT_GEOM)
     a = U.DENSITY["analytical"]["mm2_per_B"]
     dr = U.ROM_DEPTH_OPTS["8192m8"]["mb_per_mm2"] / U.ROM_DEPTH_OPTS[PRODUCT["depth"]]["mb_per_mm2"]
     fq, fb = U._cons_pair_mm2(PRODUCT["pitch"]), U._cons_pair_mm2(PRODUCT["pitch"], True)
@@ -110,7 +110,7 @@ def derive(S=None):
     srcs = [ROOT / "tools/uarch_model.py", ROOT / "configs/models/candidates/deepseek-v4.1-flash.json",
             ROOT / "results/floorplan/v41_die_macromap_expanded_woa.json", ROOT / "results/arch/v41_die_assembly.json",
             Path(__file__).resolve()]
-    H = U.cons_head_dies("analytical", U.CONS["overhead"], "ring", "w10_refit", PRODUCT["pitch"], "8192m8")
+    H = U.cons_head_dies("analytical", U.CONS["overhead"], "ring", U.PRODUCT_GEOM, PRODUCT["pitch"], "8192m8")
     return dict(schema="opentallas.v41.stage_owner_preflight.v1",
                 status="coarse_integer_candidate_not_executable",
                 claim_boundary="Whole routed-expert ID candidate from coarse checkpoint bytes only; no tensor image, "
@@ -118,7 +118,8 @@ def derive(S=None):
                 basis=f"W16 V4.1 ROM PRODUCT split: {S} TP-4 stages ({4 * S} layer dies) + {H} head dies (8192m8 "
                       "ping-pong) + 36 Engram table dies; BF16 columns (1,024 pairs, W10b's 1,002.89 x 142.56 um "
                       "column outline) with q pairs at W10b's 510.84 x 126.9 um 1.2 GHz tile (floorplan sizes, routed "
-                      "closure pending), 4096m8; capacity at the storage-only density (75.0 Mbit/mm2 + "
+                      "closure pending) and the measured VM-H SU+VM hub block (38.95 mm2, field "
+                      f"less {U.VMH_BLOCK['field_loss_mm2']} mm2; root ruling 2026-10-01), 4096m8; capacity at the storage-only density (75.0 Mbit/mm2 + "
                       "SECDED), 12.5% overhead, ring credit, 90% fill; Engram spill 0",
                 source_sha256={str(p.relative_to(ROOT)): digest(p) for p in srcs},
                 stage_count=S, layer_dies=4 * S, expert_count=n_exp, cut_count=len(cuts), cuts=cuts,
