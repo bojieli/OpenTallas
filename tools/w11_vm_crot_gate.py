@@ -90,8 +90,13 @@ _flags0 = G.su_flags
 LAST = {}                                  # case dir -> the strip's report
 
 
+SERIAL = dict(mlat=3, alat=3)              # ot_hdc_v41x_vec MLAT / ALAT of the benches (--mlat / --alat)
+
+
 def su_flags(vd, st):
     f = _flags0(vd, {k: v for k, v in st.items() if k != "VM_DIST_H"})
+    if (SERIAL["mlat"], SERIAL["alat"]) != (3, 3):
+        f += f" -GMLAT={SERIAL['mlat']} -GALAT={SERIAL['alat']}"
     if vd and st.get("VM_CROT"):
         f += " -GVM_CROT=1 " + " ".join(f"-G{k}={st[k]}" for k in SU_KEYS)
     return f
@@ -131,6 +136,8 @@ def install():
         return c
     C.parse_trace, C.compare, C.run_case = parse, compare, run
     run_one0 = SM.run_one
+    build0 = SM.build
+    SM.build = lambda *a, **k: build0(*a, **dict(k, mlat=SERIAL["mlat"], alat=SERIAL["alat"]))
 
     def run_one(exe, d, *a, **k):
         r = run_one0(exe, d, *a, **k)
@@ -292,13 +299,17 @@ def main():
     ap.add_argument("--jobs", type=int, default=8)
     ap.add_argument("--die-image", type=Path)
     ap.add_argument("--out", type=Path)
+    ap.add_argument("--mlat", type=int, default=3, help="ot_hdc_v41x_vec MLAT (the serial build: 5)")
+    ap.add_argument("--alat", type=int, default=3, help="ot_hdc_v41x_vec ALAT (the serial build: 4)")
     a = ap.parse_args()
+    SERIAL.update(mlat=a.mlat, alat=a.alat)
+    C.set_mlat(a.mlat, a.alat)
     a.scratch.mkdir(parents=True, exist_ok=True)
     st = crot_set(a.stages)
     parts = a.parts.split(",")
     install()
     t0 = time.time()
-    rec = dict(schema="opentallas.rtl.w11_vm_crot_gate.v1", parts=parts, stages=st,
+    rec = dict(schema="opentallas.rtl.w11_vm_crot_gate.v1", parts=parts, stages=st, mlat=a.mlat, alat=a.alat,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
                host=socket.gethostname(), git_head=subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
                                                                    capture_output=True, text=True).stdout.strip(),
@@ -332,7 +343,8 @@ def main():
     rec["status"] = "pass" if ok else "fail"
     rec["wall_seconds"] = round(time.time() - t0)
     rec["source_sha256"] = {s: sha(ROOT / s) for s in SOURCES if (ROOT / s).exists()}
-    out = a.out or ROOT / f"results/rtl/w11_vm_crot_gate_{'_'.join(parts)}.json"
+    tag = "" if (a.mlat, a.alat) == (3, 3) else f"_m{a.mlat}a{a.alat}"
+    out = a.out or ROOT / f"results/rtl/w11_vm_crot_gate_{'_'.join(parts)}{tag}.json"
     if out.exists():
         out = out.with_name(out.stem + "_" + datetime.datetime.now().strftime("%Y%m%dT%H%M%S") + ".json")
     out.write_text(json.dumps(rec, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)) + "\n")
