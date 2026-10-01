@@ -1,0 +1,130 @@
+{
+  "schema": "opentallas.w10.baseline.model.v1",
+  "verdict": "AUDIT_ONLY_NO_NEW_BUILD",
+  "scope": "existing FAST/PP/BP baseline; FRONT_PAR rejected and fixed off",
+  "defaults": {
+    "FAST": 0,
+    "PP": 0,
+    "BP": 0,
+    "FRONT_PAR": 0
+  },
+  "qualification": {
+    "FAST": 1,
+    "PP": 1,
+    "BP": 0,
+    "NB": 2,
+    "CUT": 379,
+    "LAT": 8
+  },
+  "protocol": {
+    "registered_input_cycles": 1,
+    "issue_to_capture_cycles": 3,
+    "bterm_latency_cycles": 11,
+    "adder_recurrence_cycles": 8,
+    "golden_chunk_terms": 8,
+    "minimum_chunk_round_cycles": 64,
+    "fifo_issue_order": "unchanged",
+    "arithmetic": "golden chunk8 rounding/tree unchanged"
+  },
+  "compute": {
+    "fp4_macs_per_cycle": 128,
+    "fp8_macs_per_cycle": 64,
+    "fp4_weight_macs_per_byte": 1.8686131386861313,
+    "fp8_weight_macs_per_byte": 0.9343065693430657,
+    "bf16_modes": {
+      "columns": {
+        "bp": 0,
+        "hold": 1,
+        "macs": 32,
+        "bf16_weight_bytes_per_cycle": 64,
+        "activation_macs_per_byte": 0.5,
+        "status": "existing exact gate; contextual SS/FF pending"
+      },
+      "pair_option_iii": {
+        "bp": 1,
+        "hold": 4,
+        "macs": 8,
+        "bf16_weight_bytes_per_cycle": 16,
+        "activation_macs_per_byte": 0.5,
+        "status": "existing exact gate; contextual SS/FF pending"
+      },
+      "pair_option_ii": {
+        "bp": 2,
+        "hold": 8,
+        "macs": 4,
+        "bf16_weight_bytes_per_cycle": 8,
+        "activation_macs_per_byte": 0.5,
+        "status": "existing exact gate; contextual SS/FF pending"
+      }
+    }
+  },
+  "ports": {
+    "rom_effective_bytes_per_cycle": 68.5,
+    "physical_rom_ports": 4,
+    "bytes_per_port_per_two_cycle_read": 34.25,
+    "quantized_x_payload_bytes_per_cycle": 64,
+    "quantized_x_exponent_bits": 20,
+    "bf16_column_x_bytes_per_cycle": 128,
+    "partial_data_bytes_per_cycle": 8,
+    "partial_metadata_bits_per_cycle": 60
+  },
+  "boundaries": {
+    "rom_capture_bits_per_cycle": 548,
+    "quantized_x_payload_bits": 512,
+    "bf16_x_payload_bits": 1024,
+    "added_hub_bits": 0,
+    "estimated_local_channel_tracks": 2881.1376,
+    "local_rom_plus_bf16_tracks": 1572,
+    "fits_estimated_channel": true,
+    "basis": "existing over-ROM track estimate, 50% availability; routed layer audit pending"
+  },
+  "replication": {
+    "macros_per_pair": 4,
+    "pp_word_mux_2to1_bits": 548,
+    "pp_select_logical_fanout_per_macro": 274,
+    "frontend_base_mux": "8:1 x 8-bit; original selected-address cone",
+    "demux": "two alternate macro enables per logical bank",
+    "frontend_parallel_replicas": 0
+  },
+  "area": {
+    "q_tile_um2": 64825.596,
+    "column_tile_um2": 142971.9984,
+    "rom_macro_um2": 31525.6,
+    "planned_new_hardware_um2": 0,
+    "fit": "existing outlines; c8 is column qualification, not q tile signoff"
+  },
+  "composition": {
+    "product_unchanged_lat7": {
+      "ar_tokens_s": 2786.8,
+      "token_us": 358.8345055260514,
+      "dies": 208,
+      "element_adder_stages": 7
+    },
+    "checked_in_lat8_audit": {
+      "ar_tokens_s": 2770.4,
+      "token_us": 360.9587063239965,
+      "dies": 208,
+      "element_adder_stages": 8
+    },
+    "product_adoption": false,
+    "stage_count": 41,
+    "pending": "whole-field fill/return calibration: inherited elem_fill=78 is not remeasured here"
+  },
+  "other_designs": {
+    "qwen_rom": "unchanged",
+    "qwen_hbm": "unchanged",
+    "v41_hbm": "unchanged"
+  },
+  "qualification_policy": "reuse live c8; no new PnR, no FRONT_PAR retry, no headline restatement",
+  "source_sha256": {
+    "tools/uarch_model.py": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+    "rtl/v41rom/ot_v41_rom_elem_q_w10.sv": "5eace5ca4ee8d319fb0e8ef3ea6a38f9ba07e55a18c15bf6b2e5d02692a2861a"
+  },
+  "preserved_parent_model": {
+    "commit": "bb01a425a66da3c8cc9686a0b87870d126413e16",
+    "sha256": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+    "exact_reconstruction": true,
+    "caveat_commit": "f1c01.. retained including later W19 additions"
+  }
+}

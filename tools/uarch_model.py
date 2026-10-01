@@ -5938,9 +5938,77 @@ def w10_frontend_model():
                                 "rtl/v41rom/ot_v41_rom_elem.sv", "rtl/v41rom/ot_v41_rom_elem_q.sv")})
 
 
+def w10_baseline_model():
+    """Audit the existing FAST/PP/BP element, without adopting or retuning a lever.
+
+    The default CUT has seven asserted cuts plus the base stage: LAT=8.
+    Keep the product LAT=7 row intact; expose the LAT=8 composition separately.
+    The pre-existing elem_fill=78 still requires whole-field RTL calibration.
+    """
+    cut, nb = 0b101111011, 2
+    lat = 1 + cut.bit_count()
+    stages = cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM,
+                             PRODUCT_PITCH, "columns", "4096m8")
+    head = cons_head_dies("analytical", CONS["overhead"], "ring", PRODUCT_GEOM,
+                         PRODUCT_PITCH, "8192m8")
+    def price(es):
+        r = cons_v41_rom(stages, head, cons_table_dies("analytical")["dies"], bf16="columns",
+                         clock_hz=PRODUCT_CLOCK_HZ, field_concurrency=FIELD_CONCURRENCY,
+                         added_latency=dict(SOFTPLUS_FIX, **W11_STREAM_SS, **PLUS_LAT),
+                         dyn_scale=PRODUCT_DYN_SCALE, slow_domain=(0.9e9, "w18"), elem_stages=es,
+                         ss_wire=True, serial=PRODUCT_SERIAL, die=DIE_SHRUNK_INTERIM,
+                         vmh=VMC_FUSED, hub_block=PRODUCT_HUB)
+        return dict(ar_tokens_s=r["ar_tokens_s_b1"], token_us=1e6/r["ar_tokens_s_b1"],
+                    dies=r["dies"], element_adder_stages=es)
+    q = CONS_PITCH[PRODUCT_PITCH]["q_um"]
+    bf = CONS_PITCH[PRODUCT_PITCH]["bf16_outline_um"]
+    tracks = FLOORPLAN["over_rom_tracks_per_100um"] * min(q[0], bf[0]) / 100 * 0.5
+    modes = {"columns": dict(bp=0, hold=1, macs=16*nb),
+             "pair_option_iii": dict(bp=1, hold=4, macs=4*nb),
+             "pair_option_ii": dict(bp=2, hold=8, macs=2*nb)}
+    for m in modes.values():
+        m.update(bf16_weight_bytes_per_cycle=2*m["macs"],
+                 activation_macs_per_byte=0.5, status="existing exact gate; contextual SS/FF pending")
+    return dict(schema="opentallas.w10.baseline.model.v1", verdict="AUDIT_ONLY_NO_NEW_BUILD",
+                scope="existing FAST/PP/BP baseline; FRONT_PAR rejected and fixed off",
+                defaults=dict(FAST=0, PP=0, BP=0, FRONT_PAR=0),
+                qualification=dict(FAST=1, PP=1, BP=0, NB=nb, CUT=cut, LAT=lat),
+                protocol=dict(registered_input_cycles=1, issue_to_capture_cycles=3,
+                              bterm_latency_cycles=11, adder_recurrence_cycles=lat,
+                              golden_chunk_terms=8, minimum_chunk_round_cycles=8*lat,
+                              fifo_issue_order="unchanged", arithmetic="golden chunk8 rounding/tree unchanged"),
+                compute=dict(fp4_macs_per_cycle=64*nb, fp8_macs_per_cycle=32*nb,
+                             fp4_weight_macs_per_byte=128/(274*nb/8),
+                             fp8_weight_macs_per_byte=64/(274*nb/8), bf16_modes=modes),
+                ports=dict(rom_effective_bytes_per_cycle=274*nb/8,
+                           physical_rom_ports=2*nb, bytes_per_port_per_two_cycle_read=274/8,
+                           quantized_x_payload_bytes_per_cycle=64, quantized_x_exponent_bits=20,
+                           bf16_column_x_bytes_per_cycle=128, partial_data_bytes_per_cycle=4*nb,
+                           partial_metadata_bits_per_cycle=(16+5+5+1+3)*nb),
+                boundaries=dict(rom_capture_bits_per_cycle=274*nb, quantized_x_payload_bits=512,
+                                bf16_x_payload_bits=1024, added_hub_bits=0,
+                                estimated_local_channel_tracks=tracks, local_rom_plus_bf16_tracks=274*nb+1024,
+                                fits_estimated_channel=(274*nb+1024)<=tracks,
+                                basis="existing over-ROM track estimate, 50% availability; routed layer audit pending"),
+                replication=dict(macros_per_pair=2*nb, pp_word_mux_2to1_bits=274*nb,
+                                 pp_select_logical_fanout_per_macro=274,
+                                 frontend_base_mux="8:1 x 8-bit; original selected-address cone",
+                                 demux="two alternate macro enables per logical bank",
+                                 frontend_parallel_replicas=0),
+                area=dict(q_tile_um2=q[0]*q[1], column_tile_um2=bf[0]*bf[1],
+                          rom_macro_um2=2*nb*7881.4, planned_new_hardware_um2=0,
+                          fit="existing outlines; c8 is column qualification, not q tile signoff"),
+                composition=dict(product_unchanged_lat7=price(7), checked_in_lat8_audit=price(lat),
+                                 product_adoption=False, stage_count=stages,
+                                 pending="whole-field fill/return calibration: inherited elem_fill=78 is not remeasured here"),
+                other_designs={k:"unchanged" for k in ("qwen_rom", "qwen_hbm", "v41_hbm")},
+                qualification_policy="reuse live c8; no new PnR, no FRONT_PAR retry, no headline restatement")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ctx", type=int, default=1048576)
+    ap.add_argument("--w10-baseline", action="store_true", help="audit existing FAST/PP/BP baseline only")
     ap.add_argument("--w10-frontend", action="store_true", help="size the separate opt-in W10 frontend only")
     ap.add_argument("--preset", action="append")
     ap.add_argument("--sweep", action="store_true")
@@ -5956,6 +6024,13 @@ def main(argv=None):
     ap.add_argument("--consolidation", action="store_true",
                     help="V4.1 ROM die consolidation, right-sized HBM dies, HBM die-count sweep, comparison rule")
     a = ap.parse_args(argv)
+    if a.w10_baseline:
+        payload = json.dumps(w10_baseline_model(), indent=2) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
     if a.w10_frontend:
         r = w10_frontend_model()
         payload = json.dumps(r, indent=2) + "\n"
