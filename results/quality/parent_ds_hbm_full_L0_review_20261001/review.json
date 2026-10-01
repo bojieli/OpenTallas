@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.parent.ds_hbm.full_L0.review.v1",
+  "artifact_sha256": "7c9003b4d0ef4a526d577f2a8f11b187a985de5cfbfba8bf18af67b25f8508aa",
+  "source_commit": "066dad0094fbba015d447eeea9593ce1cf57bd0a",
+  "source_pins_verified": [
+    "results/rtl/w19_hbm_tp96_program_oreduce.json",
+    "results/rtl/w19_checkpoint_production_20261001/resident-service-candidate-r1.json",
+    "tools/w19_hbm_tp96_isa.py",
+    "tools/hdc_golden_v41.py",
+    "tools/hdc_golden.py",
+    "tools/rtl_v41_fullshape_layer_campaign.py",
+    "tools/deepseek_hbm_complete_program.py",
+    "tools/deepseek_hbm_complete_executor.py",
+    "tools/deepseek_hbm_complete_memory.py",
+    "compiler/models/deepseek-v4.1-flash/inference_config.json",
+    "results/rtl/w17_v41_1m_reference_token.json",
+    "tools/w19_attention_lowered_proof.py",
+    "tools/w19_gpu_attention_dots.py",
+    "tools/w19_gpu_compare_lowering.py",
+    "tools/w19_gpu_norm_calendar.py",
+    "tools/w19_gpu_simd_contract.py",
+    "tools/w19_index32_integer_kernel.py"
+  ],
+  "retired_ops": 53,
+  "all96_h_pre_exact": true,
+  "CPU_wall_s": 23.177,
+  "verdict": "PASS_SOFTWARE_L0_ONLY",
+  "reference_injection": false,
+  "full_token_qualified": false,
+  "DUT_RTL_qualified": false,
+  "physical_qualified": false,
+  "speed_credit": 0
+}
