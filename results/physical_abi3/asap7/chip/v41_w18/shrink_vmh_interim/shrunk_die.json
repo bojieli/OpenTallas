@@ -1,0 +1,117 @@
+{
+ "schema": "opentallas.v41.w18_shrunk_die.v1",
+ "status": "SUPERSEDED by root's C_rotate ruling (2026-10-01), kept as evidence: VM-H hub (SU+VM block 38.951 mm2, W16b ee7446c2) on the shrunk die; tiles are OUTLINE PLACEHOLDERS at W10b's reported sizes (q pair 510.84 x 126.9, BF16 column pair 1002.89 x 142.56; pins from the p5 abstract)",
+ "need": {
+  "pairs": 4773,
+  "bf16_pairs": 1024,
+  "owner": "results/arch/v41_stage_owner_product.json @ W16b ee7446c2 (41 stages)"
+ },
+ "die": {
+  "um": [
+   30709.152,
+   24749.28
+  ],
+  "mm2": 760.0294,
+  "pair_slots": 5472,
+  "bf16_slots": 1140
+ },
+ "crossings_layer_split": {
+  "trunk_m8m9": {
+   "vm_xroot_to_farthest_cluster": {
+    "routed_um": 15289.3,
+    "cycles": 31
+   },
+   "farthest_cluster_to_vm": {
+    "routed_um": 18102.8,
+    "cycles": 36
+   }
+  },
+  "rest": {
+   "collective_to_farthest_serdes": {
+    "routed_um": 23063.5,
+    "cycles": 46
+   },
+   "collective_to_farthest_ucie": {
+    "routed_um": 17362.4,
+    "cycles": 35
+   },
+   "hbm_window": {
+    "routed_um": 13567.8,
+    "cycles": 27
+   },
+   "idx_keys": {
+    "routed_um": 21064.4,
+    "cycles": 42
+   },
+   "selected_kv": {
+    "routed_um": 13790.0,
+    "cycles": 28
+   },
+   "idx_topk": {
+    "routed_um": 19324.4,
+    "cycles": 39
+   },
+   "hub": {
+    "routed_um": 0,
+    "cycles": 0
+   }
+  }
+ },
+ "crossings_full": {
+  "vm_xroot_to_farthest_cluster": {
+   "routed_um": 16029.7,
+   "cycles": 32
+  },
+  "farthest_cluster_to_vm": {
+   "routed_um": 18732.1,
+   "cycles": 38
+  },
+  "collective_to_farthest_serdes": {
+   "routed_um": 23285.6,
+   "cycles": 47
+  },
+  "collective_to_farthest_ucie": {
+   "routed_um": 21675.2,
+   "cycles": 44
+  },
+  "hbm_window": {
+   "routed_um": 14123.1,
+   "cycles": 29
+  },
+  "idx_keys": {
+   "routed_um": 21008.8,
+   "cycles": 42
+  },
+  "selected_kv": {
+   "routed_um": 13586.3,
+   "cycles": 27
+  },
+  "idx_topk": {
+   "routed_um": 19491.0,
+   "cycles": 39
+  },
+  "hub": {
+   "routed_um": 0,
+   "cycles": 0
+  }
+ },
+ "hub_layers": "SU_VECTOR M1-M6, other hub parts M1-M5, trunks M8/M9; 0 overflow in all passes",
+ "ir_die_mesh_vdd_worst_mv": {
+  "ir_cap50_vdd2": 10.948,
+  "ir_peak": 34.641,
+  "ir_sat": 12.691
+ },
+ "files": {
+  "cluster16_psm.json": "ee31308516f0052256588b2baaecec17e988bebbf800ffb5f2d4c157e463acbf",
+  "die_route_full.json": "4663e5c9015709c350245036b52a99de845826e0d6c7cd4ffe4e18a0e1f84eef",
+  "die_route_split_rest.json": "4b694fcecf1505fab3f798571c3a89ce3c7a76c2434f0e377dd394fe875acb13",
+  "die_route_split_trunk.json": "95ce1709609e7190747974ea0868774555c7e9bbb6d2d427d9e05ee46424fab7",
+  "die_shrink.json": "fbda86b00d49769df13661130cc0ca7a4e757c47162eb396832499a2ae0eb9a1",
+  "floorplan.json": "466730db06e99fdcf29700cdc8f2188af1e02f73192cdab2a56b451c6fc1f053",
+  "ir_cap50_vdd2.json": "8b198e069f47cffb9f87ec31e7200db7a2d9ccd07c94cf8b36d6ccd750e80fd7",
+  "ir_peak.json": "53548a4ee21b7a5cad2f70e853199bb1c1cce3540f6fa11c52e4dc5059276b14",
+  "ir_sat.json": "d47f94b95a324c34678b7e1c2b8455cb57b7c763b9a27d02fa677ef636546a02",
+  "pack.json": "37e229b354502bced632aa5b2c47968a74f1567fcf798cbff57965e35a05d960",
+  "slots.json": "708c241f519377cf13ad348222d0e79be1a2ab9696ea3bf74480c8b04d916814"
+ }
+}

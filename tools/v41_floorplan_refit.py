@@ -73,6 +73,9 @@ def main(argv=None):
     ap.add_argument("--xroot", default="SU_VECTOR",
                     help="hub region holding the x-broadcast root (distributed VM in the SU region, W11); '' = VM")
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--vm-in-su", action="store_true",
+                    help="VM-H: the VM banks are inside the stream-unit block (its area carries them); the VM column "
+                         "keeps only the port/CDC logic and the always-on island")
     ap.add_argument("--svg-dir", type=Path, default=ROOT / "results/floorplan")
     a = ap.parse_args(argv)
     q = placed_strip(json.loads(a.q_pair.read_text()))
@@ -86,7 +89,7 @@ def main(argv=None):
                          replicas=u[k].get("replicas")) for k in ("indexer", "attention", "stream_unit")}
     P.REFIT = dict(strip_q_um=q["strip_um"] * g, strip_bf_um=b["strip_um"] * g, bf_pairs=BF16_PAIRS,
                    hub_mm2=hub, hub_scale={"HC": g, "GATHER": g}, hub_add_mm2={"VM": AON_MM2},
-                   xroot=a.xroot or None,
+                   xroot=a.xroot or None, vm_in_su=a.vm_in_su,
                    basis="W10 placed pairs + model hub + power switches + always-on island")
     import shutil
     import tempfile
@@ -100,7 +103,7 @@ def main(argv=None):
     rec["refit"] = dict(
         q_pair=dict(record=str(a.q_pair), sha256=sha(a.q_pair), **q),
         bf16_pair=dict(record=str(a.bf_pair), sha256=sha(a.bf_pair), **b),
-        hub_mm2=hub, hub_units=hub_basis, hub_record=str(a.hub.relative_to(ROOT)), hub_row=a.hub_row,
+        hub_mm2=hub, hub_units=hub_basis, hub_record=(str(a.hub.resolve().relative_to(ROOT)) if a.hub.resolve().is_relative_to(ROOT) else str(a.hub)), hub_row=a.hub_row,
         hub_record_sha256=sha(a.hub),
         power_gating=dict(switch_fraction=SWITCH_FRACTION, basis=SWITCH_BASIS, always_on_island_mm2=AON_MM2,
                           always_on=["VM (state retention)", "wake controller (staggered 1 us wake)",

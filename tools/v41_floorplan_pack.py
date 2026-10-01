@@ -300,7 +300,7 @@ def build(variant: str) -> dict:
                 for g in ("VM", "ATTENTION")}
     need_mm2 = {
         "ATTENTION": prof["soft"]["ATTENTION"]["mm2"] + 1.25 * sram_mm2["ATTENTION"],
-        "VM": 2.0 * sram_mm2["VM"],
+        "VM": 0.0 if (REFIT and REFIT.get("vm_in_su")) else 2.0 * sram_mm2["VM"],
         "COLLECTIVE": prof["soft"]["COLLECTIVE"]["mm2"],
         "GATHER": prof["soft"]["GATHER"]["mm2"],
         "SU_VECTOR": prof["soft"]["SU_VECTOR"]["mm2"],
@@ -348,7 +348,9 @@ def build(variant: str) -> dict:
         P.soft.append(dict(name=f"HUB_{k}", x=round(x, 3), y=round(y, 3), w=round(w, 3), h=round(h, 3),
                            kind=k, area_req_um2=a * 1e6))
     # Hub SRAMs on a grid inside their partition (ATTENTION: along its east edge, beside VM).
-    for g in ("VM", "ATTENTION"):
+    # VM-H (root 2026-10-01): the VM banks live in the SU_VECTOR lane-group tiles (its measured block carries
+    # them), so the VM column holds only the port / CDC logic and the always-on island -- no VM SRAMs here
+    for g in (("ATTENTION",) if (REFIT and REFIT.get("vm_in_su")) else ("VM", "ATTENTION")):
         part = next(p for p in parts if p[0] == g)
         _, px, py, pwid, phgt, _ = part
         items = [(k, m) for k, (n, m, gg) in hub_srams if gg == g for _ in range(n)]

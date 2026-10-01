@@ -37,7 +37,8 @@ def trial(s: float, a, work: Path) -> dict:
     nbf = math.ceil(a.bf16_pairs * (1 + a.margin))
     r = subprocess.run([sys.executable, str(ROOT / "tools/w18/pack.py"), "--hbm-phy", a.hbm_phy,
                         "--die-w-um", f"{BASE_W * s:.3f}", "--die-h-um", f"{BASE_H * s:.3f}",
-                        "--q-pair", a.q_pair, "--bf-pair", a.q_pair, "--output", str(pk), "--svg-dir", str(work)],
+                        "--q-pair", a.q_pair, "--bf-pair", a.q_pair, "--output", str(pk), "--svg-dir", str(work),
+                        *(["--hub", str(a.hub)] if a.hub else []), *(["--vm-in-su"] if a.vm_in_su else [])],
                        cwd=ROOT, capture_output=True, text=True)
     if r.returncode or not pk.exists():
         return dict(s=s, ok=False, why="pack failed: " + r.stderr[-300:])
@@ -69,6 +70,8 @@ def main(argv=None):
     ap.add_argument("--margin", type=float, default=0.10)
     ap.add_argument("--hbm-phy", default="ot_hbm3e_phy_v41x_aw30_e8p5")
     ap.add_argument("--q-pair", default=QP, help="pack re-fit strip source (the MAC strip width)")
+    ap.add_argument("--hub", type=Path, help="dedicated-units record for the hub (default: the pack's)")
+    ap.add_argument("--vm-in-su", action="store_true", help="VM-H: VM banks inside the SU block (no VM SRAMs in HUB_VM)")
     ap.add_argument("--lo", type=float, default=0.6)
     ap.add_argument("--hi", type=float, default=1.0)
     ap.add_argument("--work", type=Path, required=True)
@@ -101,6 +104,7 @@ def main(argv=None):
                inputs=dict(pair_lef=str(a.pair_lef), pair_lef_sha256=sha(a.pair_lef),
                            bf16_lef=str(a.bf16_lef) if a.bf16_lef else None,
                            bf16_lef_sha256=sha(a.bf16_lef) if a.bf16_lef else None,
+                           hub=str(a.hub) if a.hub else None, hub_sha256=sha(a.hub) if a.hub else None, vm_in_su=a.vm_in_su,
                            tool_sha256=sha(Path(__file__)), pack_sha256=sha(ROOT / "tools/w18/pack.py"),
                            floorplan_tool_sha256=sha(ROOT / "tools/w18/die_floorplan.py")))
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
