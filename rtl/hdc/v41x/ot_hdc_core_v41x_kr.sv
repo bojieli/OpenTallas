@@ -884,9 +884,11 @@ module ot_hdc_core_v41x #(
                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
             .clk(clk), .rst_n(rst_n), .go(e_go[1]), .ready(e_ready[1]), .idle(e_idle[1]),
             .i_nout(me_nout), .i_tiles(me_tiles), .i_k(me_k), .i_wbase(me_wbase), .i_xbase(me_xbase),
-            .i_xjs(me_xjs), .i_split(me_split), .i_round(me_round), .i_obase(me_obase), .i_ots(me_ots),
+            .i_xjs(me_xjs), .i_split(me_split), .i_round(me_round), .i_preloaded(1'b0), .i_obase(me_obase), .i_ots(me_ots),
             .i_ojs(me_ojs), .i_oen(me_oen), .i_amax(me_amax), .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
             .cfg_xs(cfg_me_xs), .wb_re(mb_re), .wb_addr(mb_addr), .wb_q(mb_q),
+            .shared_wr_v(), .shared_wr_p(), .shared_wr_e(), .shared_wr_d(),
+            .shared_rq_v(), .shared_rq_q(), .shared_rq_plg(), .shared_xr0('0),
             .x_re(e_vx_re[1*MP*G +: MP*G]), .x_addr(e_vx_addr[1*MP*G*AW +: MP*G*AW]), .x_q(vx_q),
             .ov(e_ov[1]), .o_we(e_we[1*MP*G +: MP*G]), .o_addr(e_addr[1*MP*G*AW +: MP*G*AW]),
             .o_mask(e_mask[1*MP*G*W +: MP*G*W]), .o_data(e_data[1*MP*G*W*32 +: MP*G*W*32]),
