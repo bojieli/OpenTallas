@@ -1,0 +1,139 @@
+{
+  "utc": "2026-10-01T11:51:45.572637+00:00",
+  "status": "BOTH_VERIFIED_READY_FOR_OWNER_STOP_COORDINATION",
+  "hosts": [
+    {
+      "host": "155.103.253.114",
+      "source_git": "182f92ebe5d084a40c9640ace53d1d53114a139f",
+      "source_status": "",
+      "worker": {
+        "pid": 2881377,
+        "start_ticks": "41332944",
+        "state": "R",
+        "argv": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s /home/ubuntu/w15work/keep/topk_4_256_1024_64_8/synth.ys "
+      },
+      "wrapper": {
+        "pid": 2876819,
+        "start_ticks": "41332583",
+        "state": "S",
+        "argv": "/bin/bash /tmp/claude-1000/w15p/jobs/harden.sh topk_4_256_1024_64_8 "
+      },
+      "outer_container_id": "b29dcdb82823c84d1cc6b0b59a0634cd084ac2b6ed7eb7cef3c85f5afc049c2e",
+      "verification": {
+        "utc": "2026-10-01T11:51:00.996646+00:00",
+        "host": "114",
+        "remote_manifest_sha256": "f851fd2115a15be1ee7c0f2dc0bab571941a2d227658560cb0849142ece037f4",
+        "matched_files": 9778,
+        "total_files": 9778,
+        "issues": [],
+        "status": "VERIFIED",
+        "scope": "live pre-stop snapshot; neither terminal nor SSFF qualification"
+      },
+      "archive_files": {
+        "source.bundle": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/114/source.bundle",
+          "bytes": 1110263736,
+          "sha256": "4ec6187f4588a67ea52d587d76cd60f55bdd78dd3897d54519f2f8ad7ef29a26"
+        },
+        "source.patch": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/114/source.patch",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "identity_before.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/114/identity_before.json",
+          "bytes": 7727,
+          "sha256": "387647a9ab0423b9d05c8fc6a99868f4f8c9835f7d627b22f57fe226b89f70ed"
+        },
+        "remote_files.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/114/remote_files.json",
+          "bytes": 2477638,
+          "sha256": "f851fd2115a15be1ee7c0f2dc0bab571941a2d227658560cb0849142ece037f4"
+        },
+        "verification.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/114/verification.json",
+          "bytes": 327,
+          "sha256": "762da4ad58689fdb233c88379b06da6f6be34743dc354d168221f22a5acf7729"
+        },
+        "container_snapshot.log": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/114/container_snapshot.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "archive_root": "/home/ubuntu/w15-agidock-evacuation-20261001/114",
+      "bundle_verification": "git bundle verify PASS; complete history",
+      "status": "VERIFIED_PRE_STOP_PARTIAL_CHECKPOINT",
+      "stopped_by_this_agent": false
+    },
+    {
+      "host": "155.103.253.133",
+      "source_git": "50f5165ba84ed035d3062d091a7f6d7479a8e9d1",
+      "source_status": "",
+      "worker": {
+        "pid": 285924,
+        "start_ticks": "43751818",
+        "state": "R",
+        "argv": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_w15_rom_oneshot_die_asap7_w15qwen256_sram/base/3_3_place_gp.json "
+      },
+      "wrapper": {
+        "pid": 2771832,
+        "start_ticks": "42674684",
+        "state": "S",
+        "argv": "/bin/bash /tmp/claude-1000/w15p/jobs/harden.sh qwen256_sram "
+      },
+      "outer_container_id": "f4b7ba655e2ce94fdab425a998375b336fcfeb18b664886cdf43ceae169ae61f",
+      "verification": {
+        "utc": "2026-10-01T11:51:07.648378+00:00",
+        "host": "133",
+        "remote_manifest_sha256": "c348222be7f22341e7867814ce7febf8a374c4d3dc26627fc507567b03ff69ac",
+        "matched_files": 10195,
+        "total_files": 10195,
+        "issues": [],
+        "status": "VERIFIED",
+        "scope": "live pre-stop snapshot; neither terminal nor SSFF qualification"
+      },
+      "archive_files": {
+        "source.bundle": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/133/source.bundle",
+          "bytes": 1116115030,
+          "sha256": "012b01bec7a61f29e14616d3796f877c8a9f7930e23549de399e546635ace1df"
+        },
+        "source.patch": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/133/source.patch",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "identity_before.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/133/identity_before.json",
+          "bytes": 7841,
+          "sha256": "b6148d4e8ea3e07ee2b7eb35aa887b27c0b4951c4c2c282d8085031a3829ed22"
+        },
+        "remote_files.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/133/remote_files.json",
+          "bytes": 2582230,
+          "sha256": "c348222be7f22341e7867814ce7febf8a374c4d3dc26627fc507567b03ff69ac"
+        },
+        "verification.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/133/verification.json",
+          "bytes": 329,
+          "sha256": "b419767fd46fcf701679c53657788759f5575a6960e84d7b0a7a1c96e2a15018"
+        },
+        "container_snapshot.log": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/133/container_snapshot.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "archive_root": "/home/ubuntu/w15-agidock-evacuation-20261001/133",
+      "bundle_verification": "git bundle verify PASS; complete history",
+      "status": "VERIFIED_PRE_STOP_PARTIAL_CHECKPOINT",
+      "stopped_by_this_agent": false
+    }
+  ],
+  "deadline": "Immediate evacuation completed; provider cutoff in few days, exact UTC cutoff not supplied",
+  "terminal_ssff_verdict": null,
+  "no_job_restart_or_migration_launched": true,
+  "caveat": "Yosys synthesis and OpenROAD global placement remain live; process-memory state is not recoverable from disk checkpoint. ORFS prior completed ODBs retained. Live log tail/final delta needs separate capture at owner stop. No PASS/FAIL invented. Remote sources and work not deleted.",
+  "w13_owner": "615596/start305293450 monitor626096/start305314538 EXCLUSIVE"
+}
