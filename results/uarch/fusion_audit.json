@@ -1,0 +1,1011 @@
+{
+ "schema": "opentallas.uarch.fusion_audit.v1",
+ "v41_rom": {
+  "rows": {
+   "ar_levels": {
+    "L0_unfused_us": 371.685,
+    "L1_lane_local_us": 352.381,
+    "L2_delivery_only_us": 344.081,
+    "L2_delivery_plus_element_epilogue_us": 341.53,
+    "L3_stream_reductions_us": 337.439,
+    "L3_fixed_function_only_us": 339.717,
+    "L5_plus_piggyback_us": 333.305,
+    "L5_plus_piggyback_and_hops_us": 328.472,
+    "L4_in_order_pipelined_exposure_us": 389.435,
+    "L4_in_order_blocking_exposure_us": 439.372,
+    "L6_C_plus_norm_after_matvec_and_online_softmax_us": 285.49
+   },
+   "ar": {
+    "unfused_us": 371.685,
+    "baseline_fused_us": 352.381,
+    "w16b_delivery_us": 344.081,
+    "staging_buffer_us": 339.939,
+    "staging_buffer_fixed_function_us": 343.997,
+    "staging_buffer_reductions_only_us": 349.812,
+    "rope_pairs_us": 352.381,
+    "quant_block_absmax_us": 351.136,
+    "norm_partial_piggyback_us": 346.825,
+    "hop_cut_through_us": 346.728,
+    "in_order_su_pipelined_us": 389.435,
+    "in_order_su_blocking_us": 439.372,
+    "C_norm_after_matvec_us": 313.117,
+    "C_online_softmax_us": 346.852,
+    "combined_AB_us": 328.472,
+    "combined_AB_plus_C_us": 285.49
+   },
+   "mtp_pass_levels": {
+    "L0_unfused_us": 780.696,
+    "L1_lane_local_us": 763.686,
+    "L2_delivery_only_us": 756.275,
+    "L2_delivery_plus_element_epilogue_us": 755.146,
+    "L3_stream_reductions_us": 751.986,
+    "L3_fixed_function_only_us": 753.023,
+    "L5_plus_piggyback_us": 747.853,
+    "L5_plus_piggyback_and_hops_us": 741.612,
+    "L4_in_order_pipelined_exposure_us": 845.302,
+    "L4_in_order_blocking_exposure_us": 904.87,
+    "L6_C_plus_norm_after_matvec_and_online_softmax_us": 696.487
+   },
+   "mtp_pass": {
+    "unfused_us": 780.696,
+    "baseline_fused_us": 763.686,
+    "w16b_delivery_us": 756.275,
+    "staging_buffer_us": 754.426,
+    "staging_buffer_fixed_function_us": 756.443,
+    "staging_buffer_reductions_only_us": 761.426,
+    "rope_pairs_us": 763.686,
+    "quant_block_absmax_us": 762.441,
+    "norm_partial_piggyback_us": 758.13,
+    "hop_cut_through_us": 757.445,
+    "in_order_su_pipelined_us": 845.302,
+    "in_order_su_blocking_us": 904.87,
+    "C_norm_after_matvec_us": 724.487,
+    "C_online_softmax_us": 758.157,
+    "combined_AB_us": 741.612,
+    "combined_AB_plus_C_us": 696.487
+   }
+  },
+  "graph_census": {
+   "su_ops": 1702,
+   "vector": 1366,
+   "reductions": 336,
+   "chain_starts": 706,
+   "chain_ends": 703,
+   "rope": 84,
+   "quant": 288,
+   "lane_local_chained": 496,
+   "on_baseline_critical_path": {
+    "su_ops": 1091,
+    "chain_starts": 447,
+    "reductions": 204
+   },
+   "staging_buffer": {
+    "ops": 974,
+    "ops_on_path": 565,
+    "fixed_function_ops": 707,
+    "long_tail_ops": 267,
+    "long_tail_families": {
+     "attn.exp": 40,
+     "attn.den": 40,
+     "attn.sink": 40,
+     "attn.normalize": 40,
+     "ffn.softplus_sqrt": 40,
+     "ffn.hc.pre_post": 40,
+     "attn.idx.q": 8,
+     "attn.cmp.norm.scale": 3,
+     "attn.cmp.pool": 3,
+     "attn.cmp.norm.rsqrt": 3,
+     "attn.cmp.norm.sumsq": 3,
+     "attn.cmp.row_qdq": 3,
+     "head.norm.rsqrt": 1,
+     "head.norm.scale": 1,
+     "head.hc_pre": 1,
+     "head.norm.sumsq": 1
+    },
+    "chain_starts_removed": 500,
+    "chain_starts_removed_frac": 0.708,
+    "chain_starts_removed_fixed": 368,
+    "reductions_removed": 212,
+    "reductions_removed_frac": 0.631,
+    "reductions_removed_fixed": 168,
+    "reduction_families": {
+     "attn.q_norm.sumsq": 40,
+     "attn.kv_norm.sumsq": 40,
+     "attn.max": 40,
+     "attn.den": 40,
+     "ffn.hc.sumsq": 40,
+     "attn.cmp.norm.sumsq": 4,
+     "attn.cmp.k_norm.sumsq": 4,
+     "knorm.sumsq": 2,
+     "head.norm.sumsq": 1,
+     "head.argmax": 1
+    },
+    "families": {
+     "attn.exp": 40,
+     "attn.den": 40,
+     "ffn.shared_quant": 40,
+     "attn.z_quant": 40,
+     "attn.q_norm.sumsq": 40,
+     "attn.q_rope": 40,
+     "attn.max": 40,
+     "attn.kv_norm.rsqrt": 40,
+     "attn.kv_norm.sumsq": 40,
+     "ffn.hc.rsqrt": 40,
+     "attn.q_quant": 40,
+     "attn.kv_norm.scale": 40,
+     "ffn.swiglu": 40,
+     "attn.kv_rope_qdq": 40,
+     "ffn.hc.sumsq": 40,
+     "attn.normalize": 40,
+     "attn.sink": 40,
+     "ffn.hc.pre_post": 40,
+     "ffn.bias": 40,
+     "ffn.shared_swiglu": 40,
+     "ffn.softplus_sqrt": 40,
+     "attn.q_norm.scale": 40,
+     "attn.q_norm.rsqrt": 40,
+     "attn.idx.q": 8,
+     "attn.cmp.norm.scale": 4,
+     "attn.cmp.k_norm.sumsq": 4,
+     "attn.cmp.k_norm.rsqrt": 4,
+     "attn.cmp.k_rope_qdq": 4,
+     "attn.cmp.norm.rsqrt": 4,
+     "attn.cmp.k_norm.scale": 4,
+     "attn.cmp.row_qdq": 4,
+     "attn.cmp.norm.sumsq": 4,
+     "attn.cmp.pool": 3,
+     "knorm.rsqrt": 2,
+     "knorm.scale": 2,
+     "knorm.sumsq": 2,
+     "head.norm.scale": 1,
+     "head.hc_pre": 1,
+     "head.norm.sumsq": 1,
+     "head.norm.rsqrt": 1,
+     "head.argmax": 1
+    },
+    "producer_kinds": {
+     "matvec": 255,
+     "collective": 124,
+     "kvscan": 80,
+     "hop": 41
+    },
+    "reductions_cross_die": 81,
+    "reductions_local": 131,
+    "reductions_after_one_elementwise": 44
+   },
+   "cdc_fifo_as_buffer": {
+    "producer_to_buffer_edges_on_path": 281,
+    "us_upper": 1.25,
+    "note": "if the staging buffer IS the 1.2 -> 0.9 GHz ratio FIFO, each producer -> buffer edge stops paying a separate crossing (W18: 3.0-3.75 slow cycles, charged 4); an upper bound, not re-solved"
+   },
+   "piggyback_reductions": 81,
+   "piggyback_on_path": 40,
+   "piggyback_families": {
+    "attn.q_norm.sumsq": 40,
+    "attn.kv_norm.sumsq": 40,
+    "attn.cmp.norm.sumsq": 1
+   },
+   "norm_after_matvec_instances": 165,
+   "norm_after_matvec_families": {
+    "attn.a_proj": 40,
+    "attn.wq_b": 40,
+    "ffn.router": 40,
+    "ffn.shared_gu": 40,
+    "attn.cmp.wk": 4,
+    "head.lm_head": 1
+   },
+   "hops": 44,
+   "hops_on_path": 42,
+   "online_softmax_instances": 40,
+   "independent_work": {
+    "su_us_on_path": 146.96,
+    "su_us_off_path": 92.02,
+    "off_to_on": 0.63,
+    "layer20": {
+     "on_us": 3.654,
+     "off_us": 3.253,
+     "off_path_ops_ns": [
+      [
+       "attn.hc.pre_post",
+       233.3
+      ],
+      [
+       "ffn.hc.pre_post",
+       233.3
+      ],
+      [
+       "ffn.shared_swiglu",
+       211.1
+      ],
+      [
+       "ffn.hc.sumsq",
+       195.6
+      ],
+      [
+       "attn.cmp.norm.sumsq",
+       185.6
+      ],
+      [
+       "attn.kv_norm.sumsq",
+       172.2
+      ],
+      [
+       "attn.cmp.k_norm.sumsq",
+       172.2
+      ],
+      [
+       "attn.hc.sumsq",
+       171.1
+      ],
+      [
+       "attn.hc.rsqrt",
+       143.3
+      ],
+      [
+       "attn.kv_norm.rsqrt",
+       143.3
+      ],
+      [
+       "attn.cmp.norm.rsqrt",
+       143.3
+      ],
+      [
+       "attn.cmp.k_norm.rsqrt",
+       143.3
+      ],
+      [
+       "ffn.hc.rsqrt",
+       143.3
+      ],
+      [
+       "ffn.weights",
+       140.0
+      ],
+      [
+       "attn.kv_rope_qdq",
+       123.3
+      ],
+      [
+       "attn.cmp.k_rope_qdq",
+       117.8
+      ]
+     ]
+    }
+   }
+  },
+  "isa_census": {
+   "tp1_full": {
+    "su_ops": 2650,
+    "by_operand_producer": {
+     "matvec": 1364,
+     "stream unit": 964,
+     "select/sinkhorn/gather": 320,
+     "constant/initial": 2
+    },
+    "patterns": {
+     "matvec -> silu*up": 280,
+     "stream unit -> scale": 253,
+     "stream unit -> rsqrt": 251,
+     "select/sinkhorn/gather -> scale": 240,
+     "matvec -> add/mix": 240,
+     "matvec -> kv_write": 160,
+     "matvec -> sigmoid": 160,
+     "matvec -> sumsq": 132,
+     "stream unit -> sumsq": 123,
+     "matvec -> max": 120,
+     "stream unit -> exp": 120,
+     "stream unit -> rope": 88,
+     "matvec -> scale": 80,
+     "matvec -> move/round": 51,
+     "matvec -> rope": 48,
+     "stream unit -> add/mix": 43,
+     "stream unit -> sum": 40,
+     "matvec -> divide": 40,
+     "matvec -> softplus_sqrt": 40,
+     "select/sinkhorn/gather -> seqsum": 40,
+     "stream unit -> move/round": 40,
+     "select/sinkhorn/gather -> divide": 40,
+     "matvec -> sum": 10,
+     "matvec -> exp": 3,
+     "stream unit -> divide": 3,
+     "stream unit -> engram_gate": 2,
+     "constant/initial -> move/round": 1,
+     "constant/initial -> sumsq": 1,
+     "stream unit -> max": 1
+    },
+    "producer_fed_op_kinds": {
+     "silu*up": 280,
+     "add/mix": 240,
+     "kv_write": 160,
+     "sigmoid": 160,
+     "sumsq": 132,
+     "max": 120,
+     "scale": 80,
+     "move/round": 51,
+     "rope": 48,
+     "divide": 40,
+     "softplus_sqrt": 40,
+     "sum": 10,
+     "exp": 3
+    },
+    "producer_fed_tags": {
+     "attn": 280,
+     "experts": 240,
+     "moe_sum": 240,
+     "hc_attn": 120,
+     "hc_ffn": 120,
+     "softmax": 80,
+     "gather": 76,
+     "out": 40,
+     "hc_post": 40,
+     "shared": 40,
+     "router": 40,
+     "indexer": 24,
+     "compressor": 10,
+     "index_key": 8,
+     "engram": 6
+    },
+    "tags": {
+     "attn": 400,
+     "hc_post": 320,
+     "experts": 240,
+     "moe_sum": 240,
+     "hc_attn": 200,
+     "attn_norm": 200,
+     "softmax": 200,
+     "hc_ffn": 200,
+     "ffn_norm": 200,
+     "router": 200,
+     "gather": 76,
+     "out": 40,
+     "shared": 40,
+     "compressor": 28,
+     "indexer": 24,
+     "index_key": 20,
+     "engram": 14,
+     "head": 5,
+     "embed": 2,
+     "indexer.cand": 1
+    }
+   },
+   "tp4_layer0": {
+    "su_ops": 64,
+    "by_operand_producer": {
+     "matvec": 26,
+     "stream unit": 21,
+     "collective": 9,
+     "select/sinkhorn/gather": 6,
+     "constant/initial": 2
+    },
+    "patterns": {
+     "matvec -> silu*up": 7,
+     "stream unit -> rsqrt": 6,
+     "stream unit -> scale": 6,
+     "select/sinkhorn/gather -> scale": 6,
+     "matvec -> add/mix": 6,
+     "collective -> sumsq": 4,
+     "matvec -> sigmoid": 4,
+     "matvec -> max": 3,
+     "stream unit -> exp": 3,
+     "stream unit -> sumsq": 2,
+     "collective -> scale": 2,
+     "stream unit -> rope": 2,
+     "matvec -> kv_write": 2,
+     "constant/initial -> move/round": 1,
+     "constant/initial -> sumsq": 1,
+     "matvec -> rope": 1,
+     "stream unit -> sum": 1,
+     "matvec -> divide": 1,
+     "matvec -> move/round": 1,
+     "matvec -> softplus_sqrt": 1,
+     "collective -> add/mix": 1,
+     "collective -> seqsum": 1,
+     "stream unit -> move/round": 1,
+     "collective -> divide": 1
+    },
+    "producer_fed_op_kinds": {
+     "silu*up": 7,
+     "add/mix": 7,
+     "sumsq": 4,
+     "sigmoid": 4,
+     "max": 3,
+     "scale": 2,
+     "kv_write": 2,
+     "divide": 2,
+     "rope": 1,
+     "move/round": 1,
+     "softplus_sqrt": 1,
+     "seqsum": 1
+    },
+    "producer_fed_tags": {
+     "attn": 7,
+     "experts": 6,
+     "moe_sum": 6,
+     "router": 4,
+     "hc_attn": 3,
+     "hc_ffn": 3,
+     "softmax": 2,
+     "hc_post": 2,
+     "out": 1,
+     "shared": 1
+    },
+    "tags": {
+     "attn": 10,
+     "hc_post": 8,
+     "experts": 6,
+     "moe_sum": 6,
+     "hc_attn": 5,
+     "attn_norm": 5,
+     "softmax": 5,
+     "hc_ffn": 5,
+     "ffn_norm": 5,
+     "router": 5,
+     "embed": 2,
+     "out": 1,
+     "shared": 1
+    }
+   },
+   "tp4_layer0_reductions": [
+    {
+     "tag": "embed",
+     "kind": "sumsq",
+     "operand_writers": [],
+     "placement": "local (stream-unit / replicated residual)"
+    },
+    {
+     "tag": "L0.attn_norm",
+     "kind": "sumsq",
+     "operand_writers": [
+      "SU"
+     ],
+     "placement": "local (stream-unit / replicated residual)"
+    },
+    {
+     "tag": "L0.attn",
+     "kind": "sumsq",
+     "operand_writers": [
+      "COLL"
+     ],
+     "placement": "cross-die (after the collective)"
+    },
+    {
+     "tag": "L0.attn",
+     "kind": "sumsq",
+     "operand_writers": [
+      "COLL"
+     ],
+     "placement": "cross-die (after the collective)"
+    },
+    {
+     "tag": "L0.hc_attn",
+     "kind": "max",
+     "operand_writers": [
+      "HE",
+      "SU"
+     ],
+     "placement": "local (matvec output)"
+    },
+    {
+     "tag": "L0.softmax",
+     "kind": "max",
+     "operand_writers": [
+      "ME"
+     ],
+     "placement": "local (matvec output)"
+    },
+    {
+     "tag": "L0.softmax",
+     "kind": "sum",
+     "operand_writers": [
+      "SU"
+     ],
+     "placement": "local (stream-unit / replicated residual)"
+    },
+    {
+     "tag": "L0.hc_post",
+     "kind": "sumsq",
+     "operand_writers": [
+      "COLL",
+      "SU"
+     ],
+     "placement": "cross-die (after the collective)"
+    },
+    {
+     "tag": "L0.ffn_norm",
+     "kind": "sumsq",
+     "operand_writers": [
+      "SU"
+     ],
+     "placement": "local (stream-unit / replicated residual)"
+    },
+    {
+     "tag": "L0.router",
+     "kind": "seqsum",
+     "operand_writers": [
+      "COLL",
+      "XU"
+     ],
+     "placement": "cross-die (after the collective)"
+    },
+    {
+     "tag": "L0.hc_ffn",
+     "kind": "max",
+     "operand_writers": [
+      "HE",
+      "SU"
+     ],
+     "placement": "local (matvec output)"
+    },
+    {
+     "tag": "L0.hc_post",
+     "kind": "sumsq",
+     "operand_writers": [
+      "COLL",
+      "SU"
+     ],
+     "placement": "cross-die (after the collective)"
+    }
+   ]
+  },
+  "ranked": {
+   "levels": [
+    {
+     "step": "L0_unfused_us",
+     "ar_us": 371.685,
+     "ar_tokens_s": 2690.449,
+     "mtp_pass_us": 780.696,
+     "mtp_tokens_s": 4512.893
+    },
+    {
+     "step": "L1_lane_local_us",
+     "ar_us": 352.381,
+     "ar_tokens_s": 2837.839,
+     "mtp_pass_us": 763.686,
+     "mtp_tokens_s": 4618.319
+    },
+    {
+     "step": "L2_delivery_only_us",
+     "ar_us": 344.081,
+     "ar_tokens_s": 2906.295,
+     "mtp_pass_us": 756.275,
+     "mtp_tokens_s": 4665.758
+    },
+    {
+     "step": "L2_delivery_plus_element_epilogue_us",
+     "ar_us": 341.53,
+     "ar_tokens_s": 2928.004,
+     "mtp_pass_us": 755.146,
+     "mtp_tokens_s": 4673.648
+    },
+    {
+     "step": "L3_stream_reductions_us",
+     "ar_us": 337.439,
+     "ar_tokens_s": 2963.503,
+     "mtp_pass_us": 751.986,
+     "mtp_tokens_s": 4694.493
+    },
+    {
+     "step": "L3_fixed_function_only_us",
+     "ar_us": 339.717,
+     "ar_tokens_s": 2943.623,
+     "mtp_pass_us": 753.023,
+     "mtp_tokens_s": 4687.211
+    },
+    {
+     "step": "L5_plus_piggyback_us",
+     "ar_us": 333.305,
+     "ar_tokens_s": 3000.253,
+     "mtp_pass_us": 747.853,
+     "mtp_tokens_s": 4721.483
+    },
+    {
+     "step": "L5_plus_piggyback_and_hops_us",
+     "ar_us": 328.472,
+     "ar_tokens_s": 3044.399,
+     "mtp_pass_us": 741.612,
+     "mtp_tokens_s": 4762.168
+    },
+    {
+     "step": "L4_in_order_pipelined_exposure_us",
+     "ar_us": 389.435,
+     "ar_tokens_s": 2567.825,
+     "mtp_pass_us": 845.302,
+     "mtp_tokens_s": 4172.622
+    },
+    {
+     "step": "L4_in_order_blocking_exposure_us",
+     "ar_us": 439.372,
+     "ar_tokens_s": 2275.974,
+     "mtp_pass_us": 904.87,
+     "mtp_tokens_s": 3890.925
+    },
+    {
+     "step": "L6_C_plus_norm_after_matvec_and_online_softmax_us",
+     "ar_us": 285.49,
+     "ar_tokens_s": 3502.752,
+     "mtp_pass_us": 696.487,
+     "mtp_tokens_s": 5082.886
+    }
+   ],
+   "baseline": {
+    "ar_us": 352.381,
+    "ar_tokens_s": 2837.839,
+    "mtp_pass_us": 763.686,
+    "mtp_tokens_s": 4618.319,
+    "unfused_ar_tokens_s": 2690.449
+   },
+   "interleaving": {
+    "dag_us": 352.381,
+    "in_order_pipelined_us": 389.435,
+    "in_order_blocking_us": 439.372,
+    "exposure_pipelined_pct": 10.515,
+    "exposure_blocking_pct": 24.687
+   },
+   "candidates": [
+    {
+     "candidate": "COMBINED A/B + C",
+     "cls": "C",
+     "ar_us_saved": 66.891,
+     "ar_tokens_s": 3502.752,
+     "ar_gain_pct": 23.43,
+     "mtp_pass_us_saved": 67.198,
+     "mtp_tokens_s": 5082.886,
+     "mtp_gain_pct": 10.059
+    },
+    {
+     "candidate": "C: norm scalar after the matvec",
+     "cls": "C",
+     "ar_us_saved": 39.264,
+     "ar_tokens_s": 3193.696,
+     "ar_gain_pct": 12.54,
+     "mtp_pass_us_saved": 39.199,
+     "mtp_tokens_s": 4878.535,
+     "mtp_gain_pct": 5.634
+    },
+    {
+     "candidate": "COMBINED levels 2-5 (delivery + buffer + piggyback + hop cut-through)",
+     "cls": "A/B",
+     "ar_us_saved": 23.909,
+     "ar_tokens_s": 3044.399,
+     "ar_gain_pct": 7.279,
+     "mtp_pass_us_saved": 22.074,
+     "mtp_tokens_s": 4762.168,
+     "mtp_gain_pct": 3.115
+    },
+    {
+     "candidate": "staging buffer + epilogue (FixPipe analogue), programmable",
+     "cls": "A/B",
+     "ar_us_saved": 12.442,
+     "ar_tokens_s": 2941.708,
+     "ar_gain_pct": 3.66,
+     "mtp_pass_us_saved": 9.26,
+     "mtp_tokens_s": 4678.677,
+     "mtp_gain_pct": 1.307
+    },
+    {
+     "candidate": "staging buffer, fixed-function epilogue only",
+     "cls": "A/B",
+     "ar_us_saved": 8.383,
+     "ar_tokens_s": 2906.999,
+     "ar_gain_pct": 2.437,
+     "mtp_pass_us_saved": 7.243,
+     "mtp_tokens_s": 4664.795,
+     "mtp_gain_pct": 1.006
+    },
+    {
+     "candidate": "REFERENCE (W16b): producer -> lane delivery",
+     "cls": "A",
+     "ar_us_saved": 8.3,
+     "ar_tokens_s": 2906.295,
+     "ar_gain_pct": 2.412,
+     "mtp_pass_us_saved": 7.411,
+     "mtp_tokens_s": 4665.758,
+     "mtp_gain_pct": 1.027
+    },
+    {
+     "candidate": "pipeline-hop cut-through",
+     "cls": "A",
+     "ar_us_saved": 5.653,
+     "ar_tokens_s": 2884.108,
+     "ar_gain_pct": 1.63,
+     "mtp_pass_us_saved": 6.24,
+     "mtp_tokens_s": 4657.604,
+     "mtp_gain_pct": 0.851
+    },
+    {
+     "candidate": "norm sum-of-squares partials piggybacked on the all-gather",
+     "cls": "B",
+     "ar_us_saved": 5.556,
+     "ar_tokens_s": 2883.297,
+     "ar_gain_pct": 1.602,
+     "mtp_pass_us_saved": 5.556,
+     "mtp_tokens_s": 4653.493,
+     "mtp_gain_pct": 0.762
+    },
+    {
+     "candidate": "C: online softmax",
+     "cls": "C",
+     "ar_us_saved": 5.529,
+     "ar_tokens_s": 2883.075,
+     "ar_gain_pct": 1.594,
+     "mtp_pass_us_saved": 5.529,
+     "mtp_tokens_s": 4653.323,
+     "mtp_gain_pct": 0.758
+    },
+    {
+     "candidate": "producer-side reduction tap only",
+     "cls": "B",
+     "ar_us_saved": 2.569,
+     "ar_tokens_s": 2858.68,
+     "ar_gain_pct": 0.734,
+     "mtp_pass_us_saved": 2.26,
+     "mtp_tokens_s": 4632.7,
+     "mtp_gain_pct": 0.311
+    },
+    {
+     "candidate": "block absmax on the stream (no segmented tree)",
+     "cls": "A",
+     "ar_us_saved": 1.244,
+     "ar_tokens_s": 2847.897,
+     "ar_gain_pct": 0.354,
+     "mtp_pass_us_saved": 1.244,
+     "mtp_tokens_s": 4626.151,
+     "mtp_gain_pct": 0.17
+    },
+    {
+     "candidate": "RoPE pairs co-located in a lane",
+     "cls": "A",
+     "ar_us_saved": 0.0,
+     "ar_tokens_s": 2837.839,
+     "ar_gain_pct": 0.0,
+     "mtp_pass_us_saved": 0.0,
+     "mtp_tokens_s": 4618.319,
+     "mtp_gain_pct": 0.0
+    }
+   ]
+  }
+ },
+ "v41_hbm": {
+  "source": {
+   "program": "results/rtl/w19_hbm_tp96_program_oreduce.json",
+   "ar": "results/uarch/w19_hbm_token_ar.json",
+   "mtp": "results/uarch/w19_hbm_token_mtp.json",
+   "collective_model": "results/rtl/w15_hbm_nvls.json configs.hbm_p48_ss_prod (gathers) / hbm_p48_ss (all-reduce fit)"
+  },
+  "ar_us": 495.23,
+  "mtp_pass_us": 994.39,
+  "parts_us_ar": {
+   "sm": 70.58,
+   "barrier": 22.29,
+   "collective": 283.73,
+   "local": 113.3,
+   "fetch": 5.33
+  },
+  "parts_us_mtp": {
+   "sm": 128.11,
+   "barrier": 22.29,
+   "collective": 586.42,
+   "local": 218.59,
+   "fetch": 38.97
+  },
+  "collectives_on_path": 265,
+  "collectives_by_tag": {
+   "x_projections_gather": 40,
+   "o-group tree reduce": 40,
+   "attn_out_gather": 40,
+   "router_gather": 40,
+   "expert_intermediate_gather": 40,
+   "ffn_out_gather": 40,
+   "indexer.q_gather": 8,
+   "96 x 512 index merge": 8,
+   "selected compressed-KV rows to the head dies": 8,
+   "argmax merge": 1
+  },
+  "collective_us_by_tag_ar": {
+   "o-group tree reduce": 41.84,
+   "x_projections_gather": 34.07,
+   "attn_out_gather": 34.07,
+   "router_gather": 34.07,
+   "expert_intermediate_gather": 34.07,
+   "ffn_out_gather": 34.07,
+   "96 x 512 index merge": 9.8,
+   "selected compressed-KV rows to the head dies": 8.01,
+   "indexer.q_gather": 6.81,
+   "argmax merge": 0.85
+  },
+  "collective_us_by_tag_mtp": {
+   "o-group tree reduce": 86.13,
+   "expert_intermediate_gather": 40.05,
+   "x_projections_gather": 34.07,
+   "attn_out_gather": 34.07,
+   "router_gather": 34.07,
+   "ffn_out_gather": 34.07,
+   "96 x 512 index merge": 25.94,
+   "selected compressed-KV rows to the head dies": 13.99,
+   "indexer.q_gather": 6.81,
+   "argmax merge": 0.85
+  },
+  "fixed_latency_us_per_gather": 0.777,
+  "candidates": [
+   {
+    "id": "H1",
+    "name": "all-gather + hc_post + hc_pre + norm sum-of-squares partial piggybacked (TRT-LLM fused all-reduce + residual + RMSNorm, on the gather)",
+    "instances": 80,
+    "ar_us_saved": 12.4,
+    "mtp_us_saved": 23.9,
+    "cls": "B*",
+    "exactness": "hc_post / hc_pre are element-wise (A); the sum of squares is B only if each rank's slice is a subtree of the golden's split tree -- 5,120 / 96 is not an integer, so the rank slices must be re-cut to tree-aligned runs or each rank sends several subtree partials; otherwise C",
+    "gpu_precedent": "TensorRT-LLM AllReduce+residual+RMSNorm fusion; NVLS"
+   },
+   {
+    "id": "H2",
+    "name": "merge expert_intermediate_gather + ffn_out_gather into one all-reduce (w2 K-split over ranks)",
+    "instances": 40,
+    "ar_us_saved": 29.5,
+    "mtp_us_saved": 8.0,
+    "cls": "C",
+    "exactness": "the FP4 w2's blocks accumulate sequentially from +0 in the golden; a K-split across ranks re-associates them -- a contract change",
+    "gpu_precedent": "Megatron row-parallel down projection"
+   },
+   {
+    "id": "H3",
+    "name": "overlap the router gather with the shared expert's matvecs (stream overlap)",
+    "instances": 40,
+    "ar_us_saved": 7.2,
+    "mtp_us_saved": 7.2,
+    "cls": "A",
+    "exactness": "schedule only",
+    "gpu_precedent": "CUDA streams / persistent-kernel overlap"
+   },
+   {
+    "id": "H4",
+    "name": "different parallel split (EP + smaller TP, TP-48) at equal cost",
+    "instances": 0,
+    "ar_us_saved": 0.0,
+    "mtp_us_saved": 0.0,
+    "cls": "A",
+    "exactness": "no change in count: the 6 collectives a layer are re-sharding points (a projection gather, the o-group reduce, two output gathers, the router gather, the expert intermediates); EP replaces the two expert gathers by a dispatch and a combine (same count) and TP-48 keeps the NVLS fixed latency (~0.78 us of a ~1.07 us average)"
+   },
+   {
+    "id": "H5",
+    "name": "TMEM-style accumulator + register epilogue in the SM (SwiGLU x route weight, z_quant, q RoPE, softplus_sqrt on the MMA output)",
+    "instances": 164,
+    "ar_us_saved": 6.1,
+    "mtp_us_saved": 11.8,
+    "cls": "A",
+    "exactness": "same element operations, same rounding points",
+    "gpu_precedent": "Blackwell TMEM + CUTLASS epilogue fusion"
+   }
+  ]
+ },
+ "qwen_rom": {
+  "source": "uarch_model.qwen_tp_point(4, 6144, 'board', SS, me_lat_extra) replay; program hdc_program.build_program at this commit",
+  "baseline_cycles": 135381,
+  "baseline_tokens_s": 8473.9,
+  "su_ops": 615,
+  "me_ops": 217,
+  "kinds": {
+   "rope": 144,
+   "rsqrt": 109,
+   "scale": 109,
+   "residual+sumsq": 72,
+   "sumsq": 37,
+   "scale->kv": 36,
+   "softmax(exp+sum)": 36,
+   "recip": 36,
+   "silu*up": 36
+  },
+  "note": "the Qwen layer program already applies the norm scalar AFTER the matvec (norm_fold: the qkv and gate/up matvecs start on the un-normalised x; INT8 rows norm-folded) -- candidate 8's class-C change is already in the Qwen contract",
+  "candidates": [
+   {
+    "name": "Q1 gate/up epilogue: rstd scale + SiLU*up on the ME output",
+    "ops_removed": 72,
+    "per_layer": 2,
+    "saved_cycles_range": [
+     144,
+     3888
+    ],
+    "tokens_s_range": [
+     8482.9,
+     8724.4
+    ]
+   },
+   {
+    "name": "Q2 qkv epilogue: per-head q/k-norm sum-of-squares tap + rsqrt + scale + RoPE (+ v scale to KV)",
+    "ops_removed": 324,
+    "per_layer": 9,
+    "saved_cycles_range": [
+     1728,
+     4968
+    ],
+    "tokens_s_range": [
+     8583.4,
+     8796.7
+    ]
+   },
+   {
+    "name": "Q3 p.v epilogue: reciprocal + normalise",
+    "ops_removed": 72,
+    "per_layer": 2,
+    "saved_cycles_range": [
+     -1620,
+     252
+    ],
+    "tokens_s_range": [
+     8373.7,
+     8489.7
+    ]
+   },
+   {
+    "name": "Q4 o / down output: residual add + sum of squares in the all-reduce delivery",
+    "ops_removed": 72,
+    "per_layer": 2,
+    "saved_cycles_range": [
+     -474,
+     282
+    ],
+    "tokens_s_range": [
+     8444.3,
+     8491.6
+    ]
+   },
+   {
+    "name": "Q5 scores epilogue: exp + running sum (two-pass max kept)",
+    "ops_removed": 36,
+    "per_layer": 1,
+    "saved_cycles_range": [
+     756,
+     4032
+    ],
+    "tokens_s_range": [
+     8521.4,
+     8734.0
+    ]
+   }
+  ],
+  "all_folded": {
+   "cycles_range": [
+    134847,
+    121959
+   ],
+   "saved_range": [
+    534,
+    13422
+   ],
+   "tokens_s_range": [
+    8507.4,
+    9406.4
+   ]
+  },
+  "method": "a folded stream op is replaced in place by a one-element op (keeping its waits / barriers); the range's low end adds the epilogue's pipeline depth back once per layer instance"
+ },
+ "qwen_hbm": {
+  "source": "results/arch/qwen3_budget.json dependency_chain 8192/spec_widths_reference_graph; results/uarch/hbm_gpu.json designs.qwen sm_count_sweep (token cycles at the SM count plateau)",
+  "token_cycles": 1247686,
+  "epilogue_fusable_stage_cycles_per_layer": 812,
+  "upper_bound_saved_frac": 0.023,
+  "note": "the Qwen HBM token is HBM-bandwidth bound (~1.25 M cycles a token); every epilogue / AR+norm fusion together removes at most this fraction of the dependent latency, all class A or B (TRT-LLM / CUTLASS precedents)"
+ },
+ "net_legs_slow_cycles": {
+  "bcast": 7,
+  "read": 18,
+  "write": 17,
+  "result": 7
+ },
+ "hub": {
+  "diameter_um": 10735,
+  "lane_array_side_um": 4890.1,
+  "reach_um": 748,
+  "src": "W11 crot (bank -> lane worst run 10,735 um at 748 um a stage, W15 0.9 GHz SS reach); VMC_BLOCK lane_side_um 4,890.1 (uarch_model)"
+ },
+ "source_sha256": {
+  "tools/fusion_audit.py": "6d93dd35e3f2c10c4a49ae5fa6519e8ca0d5475dd3305b42e372f6fc6ebcd34d",
+  "tools/uarch_model.py": "0116a42e7b6cd57eff53755f9e671478819f9a7c7f5eb29fc84f5236e8e9ecea",
+  "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
+  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+  "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+  "results/uarch/w19_hbm_token_ar.json": "ab41e0ad471686a602162980e16d4e48d83764088049cbaf2419373fb6fd1ca2",
+  "results/uarch/w19_hbm_token_mtp.json": "8d7998a64b22fe5ef322638c0cca5c501f6dfdce7b443dfe0c1212a3895e3dbb",
+  "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3"
+ }
+}
