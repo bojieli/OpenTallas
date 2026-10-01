@@ -1,10 +1,9 @@
 `timescale 1ns/1ps
-// Bench of the V4.1 SM macro top (rtl/gpu/ot_gpu_sm_v.sv) with its physical parts: the weight lines come
-// from a behavioural HBM share through the SM's own bulk-copy engine (reads return after LAT + jitter, in
-// any order, one line a cycle at most), the x fragments are written into the x-store macros, the row
-// scales into the scale macro.  Same vectors and result format as tb_gpu_sm (tools/rtl_gpu_sm_exact.py).
+// W19 bench-only integration: timing-faithful HBM -> expert fetch -> payload/tag
+// adapter -> unchanged SM bulk-copy/SRAM/arithmetic. All exponent bytes traverse
+// DRAM. Uses the existing full-K real-operand packing and golden result format.
 module tb_w19_fetch_sm;
-    parameter integer SUB = 4, LBS = 2, LSB = 16, NC = 2, XDEPTH = 128, RMAX = 256, LEV = 4, STALL = 0, CORRUPT = 0;
+    parameter integer SUB = 4, LBS = 2, LSB = 16, NC = 2, XDEPTH = 128, RMAX = 256, LEV = 4;
     localparam integer RW = $clog2(RMAX);
     localparam integer FRAGW = NC * (SUB * LBS * 266 + SUB * LSB * 16);
     reg clk = 0, rst_n = 0;
@@ -50,9 +49,11 @@ module tb_w19_fetch_sm;
     integer tq_w = 0, tq_r = 0, half = 0;
     reg [9:0] tags [0:511];
     reg [1023:0] weight_line;
+    wire stall_mode = cfg[7][0];
+    wire corrupt_mode = cfg[7][1];
     wire tag_room = tq_w - tq_r < 512;
-    wire allow_req = STALL == 0 || (cyc % 17 >= 7);
-    wire fsready = tq_w != tq_r && (STALL == 0 || cyc % 13 >= 5);
+    wire allow_req = !stall_mode || (cyc % 17 >= 7);
+    wire fsready = tq_w != tq_r && (!stall_mode || cyc % 13 >= 5);
     ot_gpu_expert_fetch #(.NSM(1), .NPC(NPC), .DEPTH(64), .MAX_OUT(32), .DQ(4)) fetch (
         .clk(clk), .rst_n(rst_n), .cfg_base(22'd0), .cfg_exp_lines(transport_lines),
         .cfg_off(16'd0), .cfg_lines(transport_lines), .e_valid(ev), .e_ready(evr), .e_id(expert_id),
@@ -109,7 +110,7 @@ module tb_w19_fetch_sm;
             for (kk = 1; kk < 4; kk = kk + 1)
                 hbm.mem[(expert_id * nlines * 2 + ii * 2 + 1) * 4 + kk] = 256'd0;
         end
-        if (CORRUPT) hbm.mem[expert_id * nlines * 8 + 4] =
+        if (corrupt_mode) hbm.mem[expert_id * nlines * 8 + 4] =
             hbm.mem[expert_id * nlines * 8 + 4] ^ 256'h1;
         $readmemh({dir, "/x.hex"}, xwords);
         fo = $fopen({dir, "/out.txt"}, "w");
@@ -125,7 +126,10 @@ module tb_w19_fetch_sm;
         t0 = $time;
         @(negedge clk); start = 0;
     end
+    reg [RMAX-1:0] seen_rows = 0;
     always @(posedge clk) if (rv) begin
+        if (rrow >= op_rows || seen_rows[rrow]) $fatal(1, "duplicate or out-of-range SM result");
+        seen_rows[rrow] = 1;
         if (nres == 0) t_first = $time;
         t_last = $time;
         $fwrite(fo, "%0d %h\n", rrow, rdata);
@@ -138,6 +142,7 @@ module tb_w19_fetch_sm;
         repeat (4) @(posedge clk);
         $fwrite(fo, "# cycles_start_to_done %0d first_result %0d last_result %0d lines %0d consumed %0d fault %0d released %0d drain_last_line_to_last_result %0d\n",
                 ($time - t0), t_first - t0, t_last - t0, nlines, consumed, fault, released, t_last - t_lastline);
+        if (nres != op_rows || consumed != nlines || fault) $fatal(1, "SM result/count/fault");
         if (fetched != 2*nlines || returned != nlines || tq_w != tq_r || half != 0 || !fidle)
             $fatal(1, "fetch did not drain exactly");
         $fwrite(fo, "# fetched %0d returned %0d first_req %0d first_sector %0d first_payload %0d fetch_stalls %0d refreshes %0d\n",

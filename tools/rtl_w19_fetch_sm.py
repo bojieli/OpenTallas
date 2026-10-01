@@ -69,7 +69,8 @@ def main():
                 cfg = (directory / 'cfg.hex').read_text().splitlines()
                 cfg[6] = f'{expert:08x}'
                 (directory / 'cfg.hex').write_text('\n'.join(cfg) + '\n')
-                params = dict(params, STALL=stall, CORRUPT=corrupt)
+                cfg[7] = f'{stall | (corrupt << 1):08x}'
+                (directory / 'cfg.hex').write_text('\n'.join(cfg) + '\n')
                 k = tuple(sorted(params.items()))
                 if k not in cache:
                     cache[k] = S.compile_tb(SOURCES, 'tb_w19_fetch_sm', params,
@@ -78,7 +79,13 @@ def main():
                 meta['fixture_sha256'] = {p: digest(directory / p) for p in ('cfg.hex', 'lines.hex', 'x.hex')}
                 meta['first_byte_cycles'] = meta.get('first_sector', 0) - meta.get('first_req', 0)
                 return result, meta
-            result = W.case(m, key, [entry], str(args.work), sim_runner=runner)
+            try:
+                result = W.case(m, key, [entry], str(args.work), sim_runner=runner)
+            except (subprocess.CalledProcessError, ValueError, OSError) as error:
+                cases.append(dict(op=key, expert_id=expert, stall=stall,
+                    corrupt_exponent=bool(corrupt), gate_pass=False, error=str(error)))
+                print(key, 'FAIL', str(error), flush=True)
+                continue
             result.update(expert_id=expert, stall=stall, corrupt_exponent=bool(corrupt))
             if corrupt:
                 passed = (not result['exact'] and result['accumulator_mismatches'] > 0
@@ -91,6 +98,7 @@ def main():
             print(key, expert, stall, corrupt, 'PASS' if passed else 'FAIL', result['rtl'], flush=True)
     record = dict(schema='opentallas.rtl.w19_fetch_sm.v1', status='pass' if all(c['gate_pass'] for c in cases) else 'fail',
         generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        simulator=subprocess.check_output(['iverilog', '-V'], text=True, stderr=subprocess.DEVNULL).splitlines()[0],
         source_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
         claim_boundary='RTL simulation: real routed-expert SM rows at full K, HBM model -> expert fetch -> bench '
             'payload/tag adapter -> unmodified ot_gpu_sm_v bulk copy, SRAM and arithmetic. Exact accumulator '
