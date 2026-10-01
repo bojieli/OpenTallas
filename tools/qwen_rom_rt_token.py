@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Qwen3-8B O4 ROM die pair at the W12 design point: connected TP-2 token by runtime composition.
+"""Qwen3-8B ROM token on a parameterised W12 die model by runtime composition.
 
 Builds (Verilator) the die model (TP sequencer + ot_qwen_rom_core: the production
-core, vector stream unit SW = 1,024, matrix engine = the W12 array spine), the
+core, parameterised vector stream unit, matrix engine = the W12 array spine), the
 collective, and ONE tile model (ot_qwen_rom_tile_logic) that the host instantiates
 G/4 times per die (rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp), then runs the
 stage list (36 layers + lm_head, or a prefix) and compares every layer's X and
-the token against the G = 5,120 ISA oracle (tools/qwen_o4_token_oracle.py).
+the token against the supplied ISA oracle (tools/qwen_o4_token_oracle.py).
 Writes a source-pinned record.  Wire stages (BD, XVM, NWS, TWS, ORD) are
 parameters, taken from the W12 floorplan.
 """
@@ -50,6 +50,23 @@ def sha(p: Path) -> str:
 
 def vector(path: Path):
     return [int(x, 16) for x in path.read_text().split()]
+
+
+def runtime_claim(design_point: dict) -> str:
+    """Use the record's actual parameters, not a fixed calibration/product label."""
+    d = design_point
+    return (f"Connected Qwen3-8B token 0 at position 0 (or the listed stage prefix), "
+            f"runtime composition at TP-{d['tp']}, G={d['groups_per_die']:,} groups per die, "
+            f"{d['tiles_per_die']:,} tile elements per die, SU width {d['su_width']}, "
+            f"tree cut {d['tree_cut']}, SMIN={d['smin']}, SMAX={d['smax']}, "
+            f"SU reducer time levels {d['su_reducer_time_levels']}, "
+            f"collective link latency {d['collective_lat_cycles']} cycles. "
+            "The production core, vector stream unit and array spine are composed by the host "
+            "with one compiled tile model and real checkpoint images. Embedding is preloaded; "
+            "stage sequencing (image-bank select, per-layer zero KV window) is the host's. "
+            "This record qualifies only the listed configuration; it does not establish another "
+            "SU width or TP configuration, product-rate ratios, or SS/FF closure. "
+            "Wire stages are parameters; physical timing is not simulated.")
 
 
 def main() -> None:
@@ -183,12 +200,8 @@ def main() -> None:
         "simulate_wall_seconds": round(wall, 1), "source_sha256": start_pins, "source_stable": stable,
         "stage_image_sha256": stage_pins, "oracle_sha256": sha(args.token_oracle / "oracle.json"),
         "binary_sha256": sha(binary), "generated_core_sha256": sha(core_sv), "steps": steps,
-        "claim_boundary": ("Connected Qwen3-8B token 0 at position 0 (or the listed stage prefix) on the W12 ROM die "
-                           "design point: G=5,120 TP-2 dies, the production core with the vector stream unit and the "
-                           "array spine, 1,280 tile elements a die composed by the host from one compiled tile model, "
-                           "real checkpoint images. Embedding preloaded; stage sequencing (image-bank select, per-layer "
-                           "zero KV window) is the host's. Wire stages are parameters; physical timing is not simulated."),
     }
+    result["claim_boundary"] = runtime_claim(result["design_point"])
     target = args.result or (out / "token_result.json")
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
