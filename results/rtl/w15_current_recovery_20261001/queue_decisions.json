@@ -52,6 +52,7 @@
       "child": 1772098,
       "future_step_to_skip": "line2 qwen256_sram (already live .133)"
     },
-    "implementation": "Only after queue ownership coordination: comment future line in place while preserving current line and file inode; do not kill waiting wrappers or live port children."
+    "implementation": "Only after queue ownership coordination: comment future line in place while preserving current line and file inode; do not kill waiting wrappers or live port children.",
+    "resolution": "Executed authorized future-only skip via SIGTERM outer drivers1771961/1772095 only; first-step child wrappers1771964/1772098 preserved. No queue or pinned source mutation. See wrapper_skip.json."
   }
 }
