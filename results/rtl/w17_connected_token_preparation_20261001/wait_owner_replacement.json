@@ -1,0 +1,31 @@
+{
+  "verdict": "REPLACED_WAIT_OWNER_NO_SCIENTIFIC_RESTART",
+  "old_pid": 848893,
+  "old_startticks": 305888581,
+  "old_source_commit": "3109f039c4ea9ac2189d31f27d98db3a97fd09a2",
+  "old_work": "/home/ubuntu/w17-current-L0-fastpp-20261001-r2",
+  "old_source": "/home/ubuntu/w17-current-fastpp-l0",
+  "old_launch_sha256": "07bff221b214e1d11d4ccee5332a56509f335c0e92d9c6ae0427ab02c354ebc2",
+  "old_state_sha256": "2c6a08fbbb2fd8d32318d4ce5af9dd7416bcf00fee2a9e3f90c25be9859e9b47",
+  "source_pins_verified": 143,
+  "no_children": true,
+  "no_stages": true,
+  "bridge_qualified": false,
+  "new_source": "/home/ubuntu/w17-current-fastpp-l0-measured-r3",
+  "new_source_commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+  "only_added_source": "tools/w17_current_L0_supervisor_v3.py",
+  "scientific_build_restart": false,
+  "signals": [
+    {
+      "pid": 848893,
+      "signal": "SIGTERM",
+      "scope": "WAIT-only supervisor, no children"
+    }
+  ],
+  "new_pid": 1116199,
+  "new_log": "/home/ubuntu/w17-current-L0-supervisor-20261001-r3.log",
+  "time": 1790860814.6748378,
+  "new_startticks": 306567097,
+  "new_wait_state_verified": true,
+  "new_no_children": true
+}
