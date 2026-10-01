@@ -1,0 +1,63 @@
+{
+  "verdict": "PASS_METADATA_CLASS_A_ENCODER_REPLAY_ONLY",
+  "source_pins": {
+    "candidate": {
+      "commit": "0fb58ac09c4415b4f143c97fed1fbfa4a5486aa9",
+      "path": "results/quality/w16_w17_integer_residency_20261001/candidate.json.gz",
+      "sha256": "eff58ce55fb268530aea3fdc981ef53e8009248baee276fc42af5ac335141c98"
+    },
+    "images": {
+      "commit": "1c4c5aefdfbbdd41dee75772761a95a3446104cc",
+      "path": "tools/v41_die_images_w17w10.py",
+      "sha256": "d5b8c15d76d7fe766e868c2889e78db0fc535929c5eeabe12cf2a38897e52780"
+    },
+    "order": {
+      "commit": "42e2471cf20dc081ea59f8f43478435848dc7256",
+      "path": "tools/v41_rom_ksplit_bankmap.py",
+      "sha256": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e"
+    },
+    "pair": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "path": "rtl/v41die/ot_v41_pair_w17w10.sv",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "scalar": {
+      "commit": "a2f76583279a984a1ce99d29fe1cbea537c5fbb9",
+      "path": "results/rtl/w17_connected_token_preparation_20261001/integer_candidate_scalar_replay.json",
+      "sha256": "4d9bc2c10bf00d428a065090ce5616c622ed3d698c9ac63035215129437c45eb"
+    },
+    "element": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "path": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    }
+  },
+  "cfg_words_encoded": 224000,
+  "stream_words": 224,
+  "affine_base_domain_slot_checks": 2046,
+  "negative_cases_rejected": [
+    "w1:stale_segment_base",
+    "w1:stale_PP_base",
+    "w1:corrupt_row_tag",
+    "w3:stale_segment_base",
+    "w3:stale_PP_base",
+    "w3:corrupt_row_tag",
+    "w2:stale_segment_base",
+    "w2:stale_PP_base",
+    "w2:corrupt_row_tag",
+    "base_overflow"
+  ],
+  "template_sha256": "a35eaa9221e9d59a11d13045d3d0718e8171f2de663eff5c9fdb7f53c08e9567",
+  "both_segment_base_bits": "41:29",
+  "PP_base_bits": "19:6 actual RTL14bit field; logical8192 aperture patches lower13 bits18:6, preserves bit19",
+  "inactive_pair_zero_clear_required": true,
+  "actual_loader_CW": 25,
+  "existing_loader_service_cycles": 27,
+  "candidate_affine_service_cycles": 6,
+  "candidate_family_cfg_cycles": 33,
+  "scope": "Exact immutable add_phase/phase_words encoding plus symbolic ROM address identities; no actual numeric checkpoint values, arithmetic RTL gate, SS/FF or complete residency proof",
+  "required_interface": "slot9 plus family2 local template selection; patch BOTH segment base and PP base, retain row/class/subblock fields; explicit zero clear for inactive/BF pairs; family-local stream base0",
+  "PHW6_full_residency_pass": false,
+  "launch_allowed": false,
+  "adopt": false
+}
