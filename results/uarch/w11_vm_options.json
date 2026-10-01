@@ -97,8 +97,8 @@
   "tree_flop_mm2_delta": 0.0188,
   "banks_replicas": "unchanged: every client's words spread over the 128 groups (<= 1.34 words a group a cycle, the widest the result scatter) and consecutive elements share a row in a group, so the class-X replica's one row a bank and the merging write queue (ot_v41_vm_group_phys K = 4, WQD = 16, one macro row write a bank a cycle) carry them; the queue depth is a measured gate item (wq_occ), not yet at full shape"
  },
- "generated_utc": "2026-09-30T19:34:48Z",
- "source_commit": "838ab6a250111e299de36a5dbdd39146b9564b7c",
+ "generated_utc": "2026-10-01T03:37:56Z",
+ "source_commit": "e1366fe0a34779fb710be20299eb795d019127d6",
  "basis": {
   "clock_ps": 1111.0,
   "wire_ps_per_um": 0.76,
@@ -1422,17 +1422,17 @@
   }
  },
  "source_sha256": {
-  "tools/w11_vm_options.py": "bb337b60669710180d08fc771660c469626ced0a2da55585ec68dbcfcac5de03",
-  "tools/uarch_model.py": "398b303a987e31927d2fb14c1a878ad85349e098905dc01f96cfa021a4875645",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
-  "tools/w11_vm_h.py": "5e24e7373073d5adf55b6303e0c0b9e71b8699c6ca0e57fa337d4a1d12ec84fb",
-  "tools/w11_vm_dist_spec.py": "ffb114db8415e567366447751091c6587bda3026efb2fabfa21720f3b4467920",
+  "tools/w11_vm_options.py": "9a70e96675336749eb34eadecc9f3c47e03bc5e2d896576109150ddb508d7be4",
+  "tools/uarch_model.py": "0116a42e7b6cd57eff53755f9e671478819f9a7c7f5eb29fc84f5236e8e9ecea",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
+  "tools/w11_vm_h.py": "62dfe8c143220dbc81cf922cd2c2a20c66fb775a60b60b81eea1752c8effd2ce",
+  "tools/w11_vm_dist_spec.py": "e5ec26840d0114e3aea047e1f7fda4f78a13f169fd371a251508b658489d45dc",
   "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "ffcc20a520ec7faebd26c184d6b59e9cf192d4ae199f5a7f149ceab19803fc04",
   "results/physical_abi3/asap7/chip/w11_vm_rot/lps10/physical.json": "287454b67c17612baeb0335275cd3a257ee6a968d9323ef2987168811c06720a",
   "results/physical_abi3/asap7/chip/w11_vm_rot/lps5/physical.json": "95f6b5dcde345f31af938419c512519f6721056112d443bf627009d5cfc683f0",
   "results/physical_abi3/asap7/chip/w11_vm_rot/lps8/physical.json": "d11732832bcdb078929760c600e9393d9f145c514faeaf47191d456da8cc7602",
-  "results/floorplan/v41_vm_dist_spec.json": "592a403eb06957b82a0fab6c10aecfbc7ee0d7d9628540ef3593129cfb46dbb3",
+  "results/floorplan/v41_vm_dist_spec.json": "d6e78c3e8351f3c8572051f42a92b203647dea878eb8a8ebc8ec1c433659bcdd",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
-  "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d"
+  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f"
  }
 }

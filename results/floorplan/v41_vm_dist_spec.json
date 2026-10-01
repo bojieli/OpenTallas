@@ -2458,14 +2458,14 @@
    "consequence": "such a vector needs one extra array cycle per extra row in a bank: the SU must split it (issue cost) or stall; neither exists in ot_hdc_v41x_vec"
   }
  ],
- "created_utc": "2026-09-30T19:30:43.715150+00:00",
- "source_commit": "838ab6a250111e299de36a5dbdd39146b9564b7c",
+ "created_utc": "2026-10-01T03:31:21.355993+00:00",
+ "source_commit": "e1366fe0a34779fb710be20299eb795d019127d6",
  "source_sha256": {
-  "tools/w11_vm_dist_spec.py": "ffb114db8415e567366447751091c6587bda3026efb2fabfa21720f3b4467920",
-  "tools/uarch_model.py": "398b303a987e31927d2fb14c1a878ad85349e098905dc01f96cfa021a4875645",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
+  "tools/w11_vm_dist_spec.py": "e5ec26840d0114e3aea047e1f7fda4f78a13f169fd371a251508b658489d45dc",
+  "tools/uarch_model.py": "0116a42e7b6cd57eff53755f9e671478819f9a7c7f5eb29fc84f5236e8e9ecea",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
-  "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d",
+  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
   "results/floorplan/v41_pack_expanded_woa.json": "6c36746d55fa21650355b10a1316b7938b408f4167e6eba529a80c3e1dc1cb58",
