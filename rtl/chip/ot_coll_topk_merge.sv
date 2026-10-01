@@ -28,8 +28,8 @@
 //              key == T while fewer than r equal keys were taken (ties to the
 //              lower id, since buffer order is id order).  Taken ids are
 //              compacted (prefix counts, one-hot slot select) into a staging
-//              buffer that emits OW = P/LW full words at a time (aligned).
-// Cycles (no stalls): (32/DIG) x (N*n/P + 7) + N*n/P + 9.
+//              buffer that emits OW = PF/LW full words at a time (aligned).
+// Cycles (no stalls): (32/DIG) x (N*n/P + 7) + N*n/PF + 9.
 // The candidate buffers are register files here (a synthesis stand-in for
 // the die's SRAM); all timing-critical logic is pipelined for 1.2 GHz at SS.
 // ---------------------------------------------------------------------------
@@ -38,13 +38,15 @@ module ot_coll_topk_merge #(
     parameter integer NMAX  = 512,            // candidates per rank (max); n % P == 0
     parameter integer LW    = 16,             // lanes (u32 elements) in one VM word
     parameter integer LDW   = 1,              // words a load beat: 1 (rank ld_rank) or N (word j is rank j)
-    parameter integer P     = 64,             // candidates a cycle (multiple of LW)
+    parameter integer P     = 64,             // HIST candidates a cycle (multiple of LW)
+    parameter integer PF    = P,              // FILTER candidates a cycle (divides P, multiple of LW): the filter's
+                                              // compactor is PF x PF, so a wide P keeps a narrow PF
     parameter integer DIG   = 4,              // radix bits per HIST pass (divides 32)
     parameter integer RB    = (N > 1) ? $clog2(N) : 1,
     parameter integer CAP   = N * NMAX,
     parameter integer CB    = $clog2(CAP + 1),
     parameter integer WB    = $clog2(CAP / LW),
-    parameter integer OW    = P / LW          // output words a cycle (max)
+    parameter integer OW    = PF / LW         // output words a cycle (max)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -76,7 +78,9 @@ module ot_coll_topk_merge #(
     localparam integer NBIN  = 1 << DIG;
     localparam integer RRB   = (NR > 1) ? $clog2(NR) : 1;
     localparam integer PB    = $clog2(P + 1);
-    localparam integer SB    = $clog2(2 * P + 1);
+    localparam integer SB    = $clog2(2 * PF + 1);
+    localparam integer FB    = $clog2(PF + 1);
+    localparam integer FQ    = P / PF;         // filter chunks per row
 
     function automatic [31:0] okey(input [31:0] x);
         reg [31:0] c;
@@ -150,16 +154,16 @@ module ot_coll_topk_merge #(
 
     // ---- FILTER: read -> compare -> take -> prefix -> compact -> stage/emit ------------------------------------
     reg              f0_v, f1_v, f2_v, f3_v, f4_v;
-    reg  [32*P-1:0]  f0_k, f0_i, f1_id, f2_id, f3_id;
+    reg  [32*PF-1:0]  f0_k, f0_i, f1_id, f2_id, f3_id;
     reg  [31:0]      f0_base, rbase;
-    reg  [RRB:0]     frow, frr;                     // row issued; row inside the rank
-    reg  [P-1:0]     f1_gt, f1_eq, f2_take, f3_take;
-    reg  [PB-1:0]    f3_tp [0:P-1];                 // take prefix counts
-    reg  [PB-1:0]    f3_n;
-    reg  [32*P-1:0]  f4_c;                          // compacted ids
-    reg  [PB-1:0]    f4_n;
+    reg  [RRB+8:0]   frow, frr, nfch, fpr;          // chunk issued; chunk inside the rank; chunks in use; per rank
+    reg  [PF-1:0]     f1_gt, f1_eq, f2_take, f3_take;
+    reg  [FB-1:0]    f3_tp [0:PF-1];                 // take prefix counts
+    reg  [FB-1:0]    f3_n;
+    reg  [32*PF-1:0]  f4_c;                          // compacted ids
+    reg  [FB-1:0]    f4_n;
     reg  [CB-1:0]    eq_left;
-    reg  [64*P-1:0]  stg;                           // 2P staging slots
+    reg  [64*PF-1:0]  stg;                           // 2PF staging slots
     reg  [SB-1:0]    stn;
     reg  [CB-1:0]    outw_left;
     wire [31:0]      T = prefix;
@@ -183,12 +187,12 @@ module ot_coll_topk_merge #(
             h2_v <= h1_v;
             case (st)
                 S_IDLE: if (go) begin
-                    if (nan_seen || k == 0 || n == 0 || (n % P) != 0 || n > NMAX || k > n * N) fault <= 1'b1;
+                    if (nan_seen || k == 0 || n == 0 || ((n * N) % P) != 0 || (n % PF) != 0 || n > NMAX || k > n * N) fault <= 1'b1;
                     else begin
                         busy <= 1'b1; stat_cycles <= 0; st <= S_HIST;
                         k_r <= k; n_r <= n; stride_r <= stride; rr <= k;
                         prefix <= 0; pass <= 0; row <= 0;
-                        nrow <= (n * N) / P; rpr <= n / P;
+                        nrow <= (n * N) / P; rpr <= n / P; nfch <= (n * N) / PF; fpr <= n / PF;
                         for (b = 0; b < NBIN; b = b + 1) cnt[b] <= 0;
                     end
                 end
@@ -227,19 +231,19 @@ module ot_coll_topk_merge #(
                 end
                 S_FILT, S_DRAIN: begin
                     // f0: read a row of keys and ids
-                    f0_v <= (st == S_FILT) && (frow < nrow);
-                    if ((st == S_FILT) && (frow < nrow)) begin
-                        f0_k <= kmem[frow[RRB-1:0]];
-                        f0_i <= imem[frow[RRB-1:0]];
+                    f0_v <= (st == S_FILT) && (frow < nfch);
+                    if ((st == S_FILT) && (frow < nfch)) begin
+                        f0_k <= kmem[frow / FQ][32*PF*(frow % FQ) +: 32*PF];
+                        f0_i <= imem[frow / FQ][32*PF*(frow % FQ) +: 32*PF];
                         f0_base <= rbase;
                         frow <= frow + 1'b1;
-                        if (frr == rpr - 1) begin frr <= 0; rbase <= rbase + stride_r; end
+                        if (frr == fpr - 1) begin frr <= 0; rbase <= rbase + stride_r; end
                         else frr <= frr + 1'b1;
                     end
-                    if (st == S_FILT && frow == nrow) st <= S_DRAIN;
+                    if (st == S_FILT && frow == nfch) st <= S_DRAIN;
                     // f1: compare with T, global ids
                     f1_v <= f0_v;
-                    for (l = 0; l < P; l = l + 1) begin
+                    for (l = 0; l < PF; l = l + 1) begin
                         f1_gt[l] <= f0_k[32*l +: 32] > T;
                         f1_eq[l] <= f0_k[32*l +: 32] == T;
                         f1_id[32*l +: 32] <= f0_base + f0_i[32*l +: 32];
@@ -248,46 +252,46 @@ module ot_coll_topk_merge #(
                     f2_v <= f1_v;
                     f2_id <= f1_id;
                     begin : take
-                        reg [PB-1:0] e;
-                        reg [P-1:0] t;
+                        reg [FB-1:0] e;
+                        reg [PF-1:0] t;
                         e = 0;
-                        for (l = 0; l < P; l = l + 1) begin
+                        for (l = 0; l < PF; l = l + 1) begin
                             t[l] = f1_gt[l] || (f1_eq[l] && (CB'(e) < eq_left));
                             e = e + f1_eq[l];
                         end
-                        f2_take <= f1_v ? t : {P{1'b0}};
+                        f2_take <= f1_v ? t : {PF{1'b0}};
                         if (f1_v) eq_left <= (CB'(e) < eq_left) ? eq_left - CB'(e) : {CB{1'b0}};
                     end
                     // f3: prefix counts of taken lanes
                     f3_v <= f2_v; f3_id <= f2_id; f3_take <= f2_take;
                     begin : pfx
-                        reg [PB-1:0] a;
+                        reg [FB-1:0] a;
                         a = 0;
-                        for (l = 0; l < P; l = l + 1) begin f3_tp[l] <= a; a = a + f2_take[l]; end
+                        for (l = 0; l < PF; l = l + 1) begin f3_tp[l] <= a; a = a + f2_take[l]; end
                         f3_n <= a;
                     end
                     // f4: compact: slot j <- the taken lane whose prefix count is j
-                    f4_v <= f3_v; f4_n <= f3_v ? f3_n : {PB{1'b0}};
-                    for (j = 0; j < P; j = j + 1) begin : cmp
+                    f4_v <= f3_v; f4_n <= f3_v ? f3_n : {FB{1'b0}};
+                    for (j = 0; j < PF; j = j + 1) begin : cmp
                         reg [31:0] x;
                         x = 0;
-                        for (l = j; l < P; l = l + 1) if (f3_take[l] && f3_tp[l] == j) x = x | f3_id[32*l +: 32];
+                        for (l = j; l < PF; l = l + 1) if (f3_take[l] && f3_tp[l] == j) x = x | f3_id[32*l +: 32];
                         f4_c[32*j +: 32] <= x;
                     end
-                    // f5: append at stn; emit OW full words once P ids are staged (aligned groups), and at the end the
+                    // f5: append at stn; emit OW full words once PF ids are staged (aligned groups), and at the end the
                     // rest, OW words a cycle, the last word zero-padded
                     begin : emit
-                        reg [64*P-1:0] s;
+                        reg [64*PF-1:0] s;
                         reg [SB-1:0] m;
                         reg [$clog2(OW+1)-1:0] w;
                         s = stg; m = stn;
                         if (f4_v && f4_n != 0) begin
-                            s = s | ({{(32*P){1'b0}}, f4_c & ((f4_n == P) ? {(32*P){1'b1}} :
-                                     (({{(32*P-1){1'b0}}, 1'b1} << (32 * f4_n)) - 1'b1))} << (32 * m));
+                            s = s | ({{(32*PF){1'b0}}, f4_c & ((f4_n == PF) ? {(32*PF){1'b1}} :
+                                     (({{(32*PF-1){1'b0}}, 1'b1} << (32 * f4_n)) - 1'b1))} << (32 * m));
                             m = m + f4_n;
                         end
                         w = 0;
-                        if (m >= P) w = OW;
+                        if (m >= PF) w = OW;
                         else if (st == S_DRAIN && !fpipe && m != 0) w = ($clog2(OW+1))'((m + LW - 1) / LW);
                         if (w != 0) begin
                             out_valid <= 1'b1; out_nw <= w;

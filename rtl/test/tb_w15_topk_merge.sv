@@ -2,7 +2,7 @@
 // W15b: ot_coll_topk_merge against tools/hdc_golden_v41.topk_lowest_index (tools/w15_topk_merge.py builds the
 // cases and checks the output).  +VEC=<dir>: cases.hex (per case: n, k, stride), score.hex / id.hex (per case
 // N*n/16 words, rank-major).  Prints one TOPK line per case and the ids to <dir>/out.hex.
-module tb_w15_topk_merge #(parameter integer N = 4, NMAX = 512, P = 64, DIG = 4, NCASE = 8);
+module tb_w15_topk_merge #(parameter integer N = 4, NMAX = 512, P = 64, PF = 64, DIG = 4, NCASE = 8);
     localparam integer RB = (N > 1) ? $clog2(N) : 1, CAP = N * NMAX, CB = $clog2(CAP + 1), WB = $clog2(CAP / 16);
     reg clk = 0, rst_n = 0;
     always #0.4165 clk = ~clk;
@@ -18,10 +18,10 @@ module tb_w15_topk_merge #(parameter integer N = 4, NMAX = 512, P = 64, DIG = 4,
     reg [CB-1:0] n = 16, k = 1;
     reg [31:0] stride = 0;
     wire busy, done, fault, ov, ol;
-    wire [512*(P/16)-1:0] od;  // LW = 16
-    wire [$clog2(P/16+1)-1:0] onw;
+    wire [512*(PF/16)-1:0] od;  // LW = 16
+    wire [$clog2(PF/16+1)-1:0] onw;
     wire [31:0] cyc;
-    ot_coll_topk_merge #(.N(N), .NMAX(NMAX), .P(P), .DIG(DIG)) dut (
+    ot_coll_topk_merge #(.N(N), .NMAX(NMAX), .P(P), .PF(PF), .DIG(DIG)) dut (
         .clk(clk), .rst_n(rst_n), .ld_valid(ld_valid), .ld_id(ld_id), .ld_rank(ld_rank), .ld_word(ld_word),
         .ld_data(ld_data), .go(go), .n(n), .k(k), .stride(stride), .busy(busy), .done(done), .fault(fault),
         .out_valid(ov), .out_nw(onw), .out_data(od), .out_last(ol), .stat_cycles(cyc));

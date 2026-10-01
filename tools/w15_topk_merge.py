@@ -83,6 +83,8 @@ def run(a):
     work.mkdir(parents=True, exist_ok=True)
     rng = np.random.default_rng(20260930)
     cs = cases(N, nmax, rng)
+    if a.cases:
+        cs = [c for c in cs if c[0] in a.cases.split(",")]
     CAP = N * nmax
     sc = np.zeros((len(cs), CAP // 16, 16), np.uint32)
     idw = np.zeros((len(cs), CAP // 16, 16), np.uint32)
@@ -102,7 +104,7 @@ def run(a):
     wr(work / "id.hex", idw)
     bd = work / "build"
     cmd = [str(VERILATOR), *VFLAGS, "-j", "8", "--top-module", "tb_w15_topk_merge", "-Mdir", str(bd),
-           f"-GN={N}", f"-GNMAX={nmax}", f"-GP={a.p}", f"-GDIG={a.dig}", f"-GNCASE={len(cs)}", *SRC]
+           f"-GN={N}", f"-GNMAX={nmax}", f"-GP={a.p}", f"-GPF={a.pf or a.p}", f"-GDIG={a.dig}", f"-GNCASE={len(cs)}", *SRC]
     r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     if r.returncode:
         sys.exit(r.stderr[-4000:])
@@ -126,8 +128,8 @@ def run(a):
                claim_boundary="Cycle-accurate RTL simulation (Verilator 5.050) of the select unit alone, loaded "
                               "with the gathered candidates; cycles are go -> done at the unit's clock (the "
                               "gather is the all-gather's, measured by tools/w15_collectives.py).",
-               parameters=dict(N=N, NMAX=nmax, P=a.p, DIG=a.dig),
-               cycle_model="(32/DIG) x (N*n/P + ~9) + N*n/P + ~9 (HIST passes, PICK, FILTER)",
+               parameters=dict(N=N, NMAX=nmax, P=a.p, PF=a.pf or a.p, DIG=a.dig),
+               cycle_model="(32/DIG) x (N*n/P + ~9) + N*n/PF + ~9 (HIST passes, PICK, FILTER)",
                golden="tools/hdc_golden_v41.topk_lowest_index over rank-major global scores, then sorted ids",
                cases=rows, all_exact=all(r["exact"] for r in rows),
                source_sha256={p: sha(ROOT / p) for p in [*SRC, "tools/w15_topk_merge.py", "tools/hdc_golden_v41.py"]},
@@ -148,6 +150,8 @@ def main(argv=None):
     r.add_argument("--nmax", type=int, default=2048)
     r.add_argument("--p", type=int, default=64)
     r.add_argument("--dig", type=int, default=4)
+    r.add_argument("--pf", type=int, default=0, help="filter width (default P)")
+    r.add_argument("--cases", default="", help="comma list of case names to run (default all)")
     r.add_argument("--work", required=True)
     r.add_argument("--out")
     a = ap.parse_args(argv)
