@@ -1,0 +1,7 @@
+{
+  "verdict": "FAIL_helper_assumption",
+  "actual_returncode": 1,
+  "error": "comparison coverage",
+  "cause": "token1 post_execution_comparisons is cumulative 78, not token-local 39",
+  "originals_modified": false
+}
