@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 import subprocess
 import numpy as np
@@ -51,7 +52,8 @@ def prepare(work):
     command=['iverilog','-g2012','-s','tb','-o','sim.vvp','tb.sv']+[Path(p).name for p in companions]+sources
     (work/'execute.py').write_text(EXECUTE)
     host_paths=companions+['tools/rtl_qwen_gu64_pipeline_gate.py','tools/hdc_golden.py',
-        'results/uarch/qwen_hbm_connected_20261001/GU_pipeline_before_RTL.json']
+        'results/uarch/qwen_hbm_connected_20261001/GU_pipeline_before_RTL.json',
+        'results/uarch/qwen_hbm_connected_20261001/GU_pipeline_sizing_correction_v2.json']
     record=dict(command=command,qualified_snapshot=snap,source_sha256={p:sha(ROOT/p) for p in host_paths},
         input_sha256={str(p.relative_to(work)):sha(p) for p in work.rglob('*') if p.is_file()},
         source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip())
@@ -81,6 +83,12 @@ def verify(work):
         if line.startswith('STATS '):stats.append(line)
     mismatch=sum(seen.get(i)!=int(expected[i]) for i in range(32))
     if len(stats)!=2:raise ValueError('Missing actual stall/wait statistics')
+    for epoch,line in zip([41,42],stats):
+        counts={k:int(v) for k,v in re.findall(r'([A-Za-z_]+)=\s*(\d+)',line)}
+        if counts.get('epoch')!=epoch or counts.get('steps')!=512:
+            raise ValueError('Missing complete accepted product schedule')
+        if any(counts.get(k,0)<=0 for k in ['memory_bubbles','result_stalls','commit_wait_cycles']):
+            raise ValueError('Required bubble/backpressure/commit-wait coverage absent')
     return dict(status='PASS' if mismatch==0 and len(seen)==32 else 'FAIL',mismatches=mismatch,
         rows=32,K=4096,split=64,epochs=2,full_token=False,physical_qualification=False,
         scope='Actual GU products/tree,16 reserved addressed entries,RTL BF16 row-scale multiply,finite backpressured L2 writes and matching commits; no36clientHBM/vector/KV/TP/fulltoken',

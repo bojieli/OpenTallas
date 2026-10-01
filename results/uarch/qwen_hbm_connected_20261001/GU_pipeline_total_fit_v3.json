@@ -1,0 +1,117 @@
+{
+  "schema": "opentallas.qwen-gu64-pipeline-sizing.v2",
+  "status": "model_before_RTL",
+  "full_token": false,
+  "adoption": false,
+  "physical_columns": 16,
+  "active_AR_columns": 1,
+  "SM_replicas": 32,
+  "MACs_per_active_column_fast_cycle": 128,
+  "weight_Bpc": 128,
+  "x_read_bits_per_active_column": 1024,
+  "L2_AR_payload_Bpc": 4,
+  "L2_physical_gather_bits_per_SM": 256,
+  "FIFO": {
+    "entries": 16,
+    "allocation": "Two fixed entries per circulating slot",
+    "entry_payload": "One scalar FP32 for the active AR column plus row/epoch/scale/packedstate",
+    "entry_fields_bits": {
+      "FP32_scalar": 32,
+      "global_row": 18,
+      "epoch": 16,
+      "BF16_scale": 16,
+      "packed_state": 3
+    },
+    "control_fields_bits": {
+      "reserved_slots": 8,
+      "product_counts": 56,
+      "clock_phase": 3,
+      "raw_cursor": 4,
+      "out_cursor": 4,
+      "held_output_id": 4,
+      "held_output_valid": 1,
+      "sticky_fault": 1,
+      "multiplier_id_delay": 28,
+      "multiplier_valid_delay": 8
+    },
+    "states": [
+      "free",
+      "reserved",
+      "raw",
+      "multiplying",
+      "ready",
+      "sent",
+      "committed"
+    ],
+    "release": "Only matching actual L2 commit releases credits; a ready handshake is insufficient",
+    "stored_bits": 1360,
+    "control_bits": 117,
+    "footprint_mm2_per_SM": 0.0008613864000000001,
+    "replicated_mm2": 0.027564364800000005
+  },
+  "element_area": {
+    "register_logic_um2": 430.69320000000005,
+    "mux_logic_um2": 597.2,
+    "mux_two_input_bit_equivalents": 2986,
+    "mux_unit_um2": 0.2,
+    "control_logic_assumption_um2": 512.0,
+    "additional_row_scale_mul_logic_um2": 783.267,
+    "total_incremental_footprint_mm2_per_SM": 0.004646320400000001,
+    "duplicate_AR_tensor_column_footprint_mm2": 0.239910375,
+    "conservative_unshared_companion_extra_mm2": 0.24455669540000002,
+    "conservative_unshared_SM_mm2": 4.8655566954000005,
+    "tensor_accounting": "Standalone RTL instantiates128additionalAR lanes unless later composition actually replaces/shares existingtensorcolumns; charge duplication for that organization, not fictional reuse",
+    "multiplier_accounting": "Conservative extra1 multiplier; baseline already contains16. Remove extra only after actual replacement/reuse composition proves it",
+    "baseline_SM_mm2": 4.621,
+    "composed_SM_mm2": 4.6256463204000005,
+    "historical_slot_mm2": 4.085,
+    "slot_fit": false,
+    "die_core_available_mm2": 688.44,
+    "composed_die_mm2": 152.1942115104,
+    "placement": "LocalrowFIFO/mux/multiplier beside TC result edge and quadrant L2 gather; slot abstract pending. Die budget is not slot fit",
+    "physical_build_ready": false
+  },
+  "ports": {
+    "result_write_rows_per_cycle": 2,
+    "scale_issue_rows_per_cycle": 1,
+    "scale_return_rows_per_cycle": 1,
+    "L2_send_rows_per_cycle": 1,
+    "L2_commit_rows_per_cycle": 1,
+    "scale_store": "Reservation captures actual broadcast BF16 scale once per row",
+    "boundary_metadata_bits": 38,
+    "mux_cost": "16-way addressed raw/ready selection and one active-column row-scale multiply; no global weight broadcast"
+  },
+  "phase": {
+    "IL": 8,
+    "counter": "Advances on every actual clock, including bubbles",
+    "acceptance": "Step slot must equal actual clock phase; reserve two row credits before first product",
+    "products_per_leaf": 64,
+    "slot_release": "Both rows committed; no slot/tag reuse while results are outstanding"
+  },
+  "latency": {
+    "product_and_64tree_cycles": 56,
+    "FIFO_capture_cycles": 1,
+    "last_burst_serialization_bound_cycles": 16,
+    "row_scale_cycles": 7,
+    "ready_register_cycles": 1,
+    "unstalled_tail_bound_cycles": 81,
+    "existing_model_drain_cycles": 89,
+    "backend": "Memory bubbles, ready stalls and L2 commit waits remain actual clock cycles, with no host replacement or hidden wait subtraction",
+    "pricing": "Keep existing89-cycle drain and GU72 extra-token allowance; no gain credited. Replace only from the matched connected measurement"
+  },
+  "gates": [
+    "Actual circulating phase with bubbles",
+    "Two-row result bursts under backpressure",
+    "RTL BF16 row scaling and global row/epoch tags",
+    "Matching actual L2 commits before credit reuse",
+    "Composed hub route and contextual SS/FF before adoption"
+  ],
+  "historical_U_scope": "bad304 generator pin used only for qualified computational constants; not current source-currency or physical qualification",
+  "supersedes_sizing": "f84f2e57e mistakenly budgeted512bit vector payload per entry and omitted explicit mux/multiplier/slot-fit pricing; historical record retained",
+  "source_sha256": {
+    "tools/uarch_model.py": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
+    "tools/uarch_qwen_gu64_pipeline.py": "9607d5e78ebcebe58cd2f2f8a1a0bad2698e2edcdc8ea68852bf9b58f0288370",
+    "results/uarch/qwen_hbm_connected_20261001/model_before_RTL.json": "d7c439d84deb26abfa7a5b22269d3fe4883b12a759f61636ce16d19291ae36c7",
+    "results/floorplan/hbm_gpu/qwen_hbm_die.json": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4"
+  }
+}
