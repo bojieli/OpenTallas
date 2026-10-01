@@ -1,0 +1,51 @@
+# host | start time | command/script | output dir | expected result file | depends-on
+155.103.253.39 | 2026-09-30T15:32:26Z | /home/ubuntu/w10qjobs/q/chainA.sh (route c2: BF16 column pair, WC 0.833 ns, IR PDN) | /tmp/claude-1000/w10pnr/rec | /tmp/claude-1000/w10pnr/rec/c2 | -
+155.103.253.39 | after c2 | /home/ubuntu/w10qjobs/post_route.sh c2 (SS/FF STA, ETM, LEF) | /tmp/claude-1000/w10pnr/post/c2 | /tmp/claude-1000/w10pnr/post/c2/done | c2 route
+155.103.253.191 | running | p12q route (q pair tile 476.28 x 126.9, WC, IR PDN) via run.sh | /tmp/claude-1000/w10pnr/rec | /tmp/claude-1000/w10pnr/rec/p12q | -
+same as p12q | after p12q | /home/ubuntu/w10qjobs/q/chainB.sh (SS/FF STA, ETM, LEF) | /tmp/claude-1000/w10pnr/post/p12q | /tmp/claude-1000/w10pnr/post/p12q/done | p12q route
+ot-pve2 | 2026-09-30T15:32:26Z | /home/ubuntu/w10qjobs/q/sweeps_pve2.sh (4 exactness sweeps, FAST+PP column element) | /tmp/claude-1000/w10out/final | /tmp/claude-1000/w10out/final/*.json | checkpoint rsync
+local | running | product bank map (distance-aware, 112 dies, old 28-stage owners) | /tmp/claude-1000/w10out/prod | v41_rom_ksplit_bankmap_product.json | -
+155.103.253.114 | 2026-09-30T15:32:35Z | /home/ubuntu/w10qjobs/q/chainC.sh (p12qm6 route: q pair with M6 2.7 um, then SS/FF STA+ETM) | /tmp/claude-1000/w10pnr/post/p12qm6 | /tmp/claude-1000/w10pnr/post/p12qm6/done | -
+# requeue 2026-09-30T19:13:08Z: c2 failed DPL-0033 (4 cells), p12q failed PSM-0069 (edge VSS rail); fixed and relaunched
+155.103.253.39 | 2026-09-30T19:13:08Z | /home/ubuntu/w10qjobs/q/chainA2.sh (c3 column pair route, density 0.5, then SS/FF STA+ETM+LEF) | /tmp/claude-1000/w10pnr/post/c3 | /tmp/claude-1000/w10pnr/post/c3/done | -
+155.103.253.191 | 2026-09-30T19:13:08Z | /home/ubuntu/w10qjobs/q/chainB2.sh (p12q2 q pair route, core inset, then post) | /tmp/claude-1000/w10pnr/post/p12q2 | /tmp/claude-1000/w10pnr/post/p12q2/done | -
+155.103.253.78 | 2026-09-30T19:13:08Z | /home/ubuntu/w10qjobs/q/chainC2.sh (p12qm62 q pair M6 2.7 um, then post) | /tmp/claude-1000/w10pnr/post/p12qm62 | /tmp/claude-1000/w10pnr/post/p12qm62/done | -
+ot-pve2 | 2026-09-30T19:14:07Z | /home/ubuntu/w10qjobs/q/sweeps_pve2.sh (4 exactness sweeps at d7701331782b27a54ac042372317167b9034a735) | /tmp/claude-1000/w10out/final | /tmp/claude-1000/w10out/final/*.json | -
+local | 2026-09-30T19:14:07Z | product bank map, 37-stage owners (W16), distance-aware, columns | /tmp/claude-1000/w10out/prod | v41_rom_ksplit_bankmap_product.json | -
+# requeue 2026-09-30T19:28:29Z: p12q2/p12qm62 MPL-0003 (0.54 inset too tight); inset 0.27
+155.103.253.191 | 2026-09-30T19:28:29Z | /home/ubuntu/w10qjobs/q/chainB3.sh (p12q3 route + post) | /tmp/claude-1000/w10pnr/post/p12q3 | done | -
+155.103.253.78 | 2026-09-30T19:28:29Z | /home/ubuntu/w10qjobs/q/chainC3.sh (p12qm63 route + post) | /tmp/claude-1000/w10pnr/post/p12qm63 | done | -
+local | 2026-09-30T19:28:29Z | /home/ubuntu/w10qjobs/q/link_lefs.sh (links p12q3/c3 LEF+ETM to W18b's p12q/c2 paths) | /tmp/claude-1000/w10pnr/post | LINKED | p12q3, c3
+# requeue 2026-10-01T00:12:31Z: p12q3/p12qm63 CTS legalise failed at 91-93% strip utilisation (476 tile too narrow); c3 1 overlap
+155.103.253.191 | 2026-10-01T00:12:31Z | /home/ubuntu/w10qjobs/q/chainB4.sh (p12q4: q pair at 510.84 x 126.9, then SS/FF STA+ETM+LEF) | /tmp/claude-1000/w10pnr/post/p12q4 | done | -
+155.103.253.39 | 2026-10-01T00:12:31Z | /home/ubuntu/w10qjobs/q/chainA4.sh (c4: column pair, PP gap 4.32, then post) | /tmp/claude-1000/w10pnr/post/c4 | done | -
+# requeue 2026-10-01T00:26:51Z (W10b): ot-pve2 sweeps killed (N=16 Verilator builds 19/299 objects after 5 h at load 175); W13b input: c1 SS worst endpoint is bmul's 8x8 product (-154.7 ps) -> ot_v41_bmul2 split product at 0798d2c0; sweeps rerun on it
+155.103.253.133 | 2026-10-01T00:26:51Z | /home/ubuntu/w10qjobs/q/chainA5.sh (c5: column pair = c4 + split BF16 product, then SS/FF STA+ETM+LEF) | /tmp/claude-1000/w10pnr/post/c5 | /tmp/claude-1000/w10pnr/post/c5/done | -
+local | 2026-10-01T00:26:51Z | /home/ubuntu/w10qjobs/q/sweeps_0798.sh (4 exactness sweeps at 0798d2c0, /home/ubuntu/w10s) | /tmp/claude-1000/w10out/final_0798 | /tmp/claude-1000/w10out/final_0798/DONE | -
+local | 2026-10-01T00:26:51Z | /home/ubuntu/w10qjobs/q/link_lefs5.sh (re-point post/c2 links at c5 after link_lefs.sh) | /tmp/claude-1000/w10pnr/post/c2 | LINKED_C5 | c5 post, link_lefs.sh
+# 2026-10-01T00:44:49Z W10b: c5 relaunched with hosts .133,.16,.39,.191 (was waiting: .133 8 GB < 12 GB floor, .16 load > cores)
+local | 2026-10-01T00:56:53Z | /home/ubuntu/w10qjobs/q/sweeps_0798b.sh (pair/multi/mutant at 0798d2c0, gcc -O0; replaces sweeps_0798.sh, single landed PASS 147/147) | /tmp/claude-1000/w10out/final_0798 | DONE | -
+# 2026-10-01T01:03:22Z W10b: sweeps_0798b relaunched with clean work dirs (stale -Os PCH broke the -O0 build)
+local | 2026-10-01T02:30:10Z | /home/ubuntu/w10qjobs/q/bankmap_07e4.sh (re-pin product bank map at merge 07e4a0fa, ~2.5 h) | /tmp/claude-1000/w10out/prod_07e4 | v41_rom_ksplit_bankmap_product.json | -
+local | 2026-10-01T02:51:09Z | /home/ubuntu/w10qjobs/q/bankmap_d417.sh (product bank map at d417de73, 41-stage owners; replaces bankmap_07e4, killed) | /tmp/claude-1000/w10out/prod_d417 | v41_rom_ksplit_bankmap_product.json | -
+# 2026-10-01T03:09:28Z W10b: c4 FAILED CTS DPL-0033 (24,805 hold buffers); p12q4 post-CTS setup -326 / hold -434 ps. Cause: I/O constrained against an ideal clock while the block's tree inserts ~0.43-0.51 ns (SS) -> all inputs hold-fail, outputs setup-fail. c5 killed (same SDC). Relaunch with insertion-aware I/O (inputs min 0.25 / max 0.667 ns, outputs min -0.30 / max -0.233 ns), 60/25 ps uncertainty unchanged. p12q4 left running as placeholder/internal evidence.
+155.103.253.191 | 2026-10-01T03:09:28Z | /home/ubuntu/w10qjobs/q/chainB5.sh (p12q5 q pair + post) | /tmp/claude-1000/w10pnr/post/p12q5 | done | -
+155.103.253.39 | 2026-10-01T03:09:28Z | /home/ubuntu/w10qjobs/q/chainA6.sh (c6 column pair, split BF16 product, + post) | /tmp/claude-1000/w10pnr/post/c6 | done | -
+local | 2026-10-01T03:09:28Z | /home/ubuntu/w10qjobs/q/link_final.sh (post/p12q <- p12q5 (p12q4 placeholder), post/c2 <- c6; replaces link_lefs*.sh) | /tmp/claude-1000/w10pnr/post | LINKED_FINAL | p12q5, c6
+# 2026-10-01T03:27:00Z W10b: bankmap_d417 killed (root: one re-pin wave: macromaps -> W10 refit packs -> bank map)
+local | 2026-10-01T03:29:21Z | /home/ubuntu/w10qjobs/q/bankmap_final.sh (product bank map at 330feeae, 41 stages, after re-pin wave) | /tmp/claude-1000/w10out/prod_330f | v41_rom_ksplit_bankmap_product.json | -
+local | 2026-10-01T03:31:26Z | /home/ubuntu/w10qjobs/q/bankmap_slots_interim.sh (bank map on W18b interim slots.json, scratch --slots tool) | /tmp/claude-1000/w10out/slots_interim | v41_rom_ksplit_bankmap_slots_interim.json | -
+# 2026-10-01T04:06:54Z W10b: c6 relaunched (undispatched 50 min): hosts .16,.133,.39,.78, floor 10 GB (c4 peak 7.1 GB). p12q4 FAILED GRT-0116 (congestion at the bottom-centre input region, 47% buffer nets: the input hold flood p12q5 removes)
+# 2026-10-01T04:21:05Z W10b: p12q5 CTS: setup -88 ps (internal), but 8,629 hold buffers: its 0.25 ns input min is an FF bound applied at the SS repair corner. SS-consistent I/O from the block's insertion L with the +-0.1 ns balance band: q L=0.46 (measured p12q5) -> in 0.36/0.727, out -0.56/-0.193; column L~0.60 (est.) -> in 0.50/0.867, out -0.70/-0.333. c6 killed in synth. p12q5 continues as a hedge.
+155.103.253.133 | 2026-10-01T04:21:05Z | /home/ubuntu/w10qjobs/q/chainB6.sh (p12q6 q pair + post) | /tmp/claude-1000/w10pnr/post/p12q6 | done | -
+155.103.253.78 | 2026-10-01T04:21:05Z | /home/ubuntu/w10qjobs/q/chainA7.sh (c7 column pair + post) | /tmp/claude-1000/w10pnr/post/c7 | done | -
+local | 2026-10-01T04:21:05Z | /home/ubuntu/w10qjobs/q/link_final.sh (post/p12q <- p12q6>p12q5>p12q4, post/c2 <- c7) | /tmp/claude-1000/w10pnr/post | LINKED_FINAL | p12q6, c7
+155.103.253.133 | 2026-10-01T05:12:15Z | /home/ubuntu/w10qjobs/q/chainB7.sh (p12q7: p12q6 I/O + pins over tile width; p12q5 FAILED GRT-0116, 954 overflows at the bottom pin edge) | /tmp/claude-1000/w10pnr/post/p12q7 | done | -
+# 2026-10-01T05:23:54Z W10b: bankmap_final (330feeae) killed: refit double-counts the VM (C_rotate SU+VM block as SU_VECTOR plus the legacy VM partition); fix pending W16b field confirmation, then ONE re-run
+local | 2026-10-01T05:37:10Z | /home/ubuntu/w10qjobs/q/bankmap_final2.sh (THE product bank map at 4b4b12e2: 41 stages, VM counted once) | /tmp/claude-1000/w10out/prod_4b4b | v41_rom_ksplit_bankmap_product.json | -
+155.103.253.39 | 2026-10-01T05:49:08Z | /home/ubuntu/w10qjobs/q/chainB8.sh (p12q8: spread pins + hold repair margin 0; p12q6 FAILED DPL-0033 with 7,830 hold buffers at 86% util; p12q7 never dispatched, replaced) | /tmp/claude-1000/w10pnr/post/p12q8 | done | -
+155.103.253.133 | 2026-10-01T06:03:07Z | /home/ubuntu/w10qjobs/q/chainB9.sh (p12q9: xs_q1/xs_e1 pins on top edge, hold margin 0; p12q8 FAILED FLW-0024: full-width pins sit under the ROMs) | /tmp/claude-1000/w10pnr/post/p12q9 | done | -
+155.103.253.78 | 2026-10-01T06:36:39Z | /home/ubuntu/w10qjobs/q/chainA8.sh (c8: column I/O at measured L~0.85, hold margin 0; c7 killed: 29,915 hold buffers from L=0.60 estimate, setup -448 ps at the root ICG enable) | /tmp/claude-1000/w10pnr/post/c8 | done | -
+local -> 155.103.253.39 | 2026-10-01T08:47:51.123220+00:00 | clean sparse tools pin a40250a2d tools/w18/queue_abstract_recovery.py, queued_c8_r1/live.json; read-only SS/FF + actual LEF/ETM after c8 AND old chain exit, existing remote_gate 8GB lease / 2 CPU Docker / no RTL or P&R retry | /home/ubuntu/w10-w18-recovery/queued_c8_r1; worker c8_actual_r1 | recovery.json diagnostic only, die_rebase_ready false | c8 route log EXIT and PID2897070 gone
+
+local | 2026-10-01T09:21:48.853740+00:00 | exclusive baseline wake owner w10-w18-recovery; W10-baseline-wake-owner.json; model first ungated FAST capture + registered wake/leaf ICG; FRONT_PAR0 mandatory, no c8 restart | /home/ubuntu/w10-w18-recovery/baseline_wake | prebuild/exact/physical evidence pending | LAT8 model, exact, leases
