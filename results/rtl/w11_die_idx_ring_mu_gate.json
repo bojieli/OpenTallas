@@ -353,5 +353,25 @@
     "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
     "tools/hdc_images_v41x.py": "42989b07a65e85bf4406774d8b049f9e4d38ef0b259187f7a744fc97024ffcc3",
     "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh": "138edb11cd58f3d7d69cc9b8a383a86653c583198a87965a3de656ca22a069c4"
+  },
+  "currency": {
+    "state": "stale",
+    "stale_since": "6694bcd1",
+    "reason": "VM-H-era die gate (VM-H moved to history by root); not re-run.  Its pinned sources moved after it ran: other streams' die RTL on main, and the W11 ring reader's 1.2 GHz forms (ot_hdc_v41x_idx_kstream_ring.sv kctl_ring, ot_hdc_v41x_idx_quarter_join.sv, ot_hdc_v41x_idx_ring_kwr.sv), which are port- and cycle-identical to the forms this gate ran (results/rtl/w11_ring_lockstep.json; ring gates and reader-rate records regenerated with unchanged cycle counts).",
+    "verdict_kept": "pass",
+    "moved_sources": [
+      "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+      "tools/rtl_hdc_v41x_decode_campaign.py"
+    ],
+    "marked": "claude/w11-kctl"
   }
 }
