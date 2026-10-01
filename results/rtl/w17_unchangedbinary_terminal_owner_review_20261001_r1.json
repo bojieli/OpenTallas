@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.w17.terminal_owner_archive_review.v1",
+  "utc": "2026-10-01T11:09:23.179508+00:00",
+  "owner": "codex/w17-stall-bounded",
+  "owner_worktree": "/home/ubuntu/w17-stall-bounded",
+  "ready_commits": {
+    "scope": "6a76b29faa701973baa30576d7e81f47d7598229",
+    "archive": "773d090d96fa329fdadf3ad6f79faf3e50db072e",
+    "stop": "2bf45c10bbfb54abb81584e5b274bcbbd36065be"
+  },
+  "raw_archive_sha256": {
+    "analysis.json": "a456a5241f994d58652592fc6b1ec7618ec733916492d6c7c2edbad9b4acd56a",
+    "launch.json": "efca96e8a0c7e07c92b9d180e2679497d39f5b9d699fc75b551ff083dac52302",
+    "progress.log": "b1875ec2a2d249f8e7d2379a5a6d7643ebcbf18bd56eb11335bccec710a640a2",
+    "run.log": "c23e7f8626e44c96ff029daa83db6af70948ab7e17712aff1a7ec9ba8168cbd9",
+    "terminal.json": "df529ebcc5946470380fd2d6684976c422ec97f8bd589b49d83497d03675f818"
+  },
+  "image_pins_verified": 20,
+  "source_pins_verified": 124,
+  "binary_sha256": "011c52ba8ae783fedc2c6695e29f37628963f58f5f2d3d9b05684ea60edf49f9",
+  "terminal_returncode": -15,
+  "stop_verdict": "FAILED_DEADLOCK_OWNER_STOP",
+  "stop_provenance": "Existing owner record reports user-authorized SIGTERM after diagnosis708a04573. This reviewer performed no stop/probe/restart.",
+  "last_progress": "CYC 24800 wall 4154.8 s pc 21 21 21 21",
+  "qualified_verdict": "L0_FAIL_OR_INCOMPLETE",
+  "done_ranks": [],
+  "vm": {
+    "r0": {
+      "expected_words": 524288,
+      "actual_words": 0,
+      "mismatches": 0,
+      "first": [],
+      "exact": false
+    },
+    "r1": {
+      "expected_words": 524288,
+      "actual_words": 0,
+      "mismatches": 0,
+      "first": [],
+      "exact": false
+    },
+    "r2": {
+      "expected_words": 524288,
+      "actual_words": 0,
+      "mismatches": 0,
+      "first": [],
+      "exact": false
+    },
+    "r3": {
+      "expected_words": 524288,
+      "actual_words": 0,
+      "mismatches": 0,
+      "first": [],
+      "exact": false
+    }
+  },
+  "scope": "L0_ONLY_TP4_CONNECTED_LAYER; not all40layers+head; no current-source qualification",
+  "adopt": false,
+  "other_owner_fix": "codex/w17-pc21-current-fix; W17.PC21-fix-owner.json; no overlapping fix or probe launched",
+  "composed_gate": "532447 and terminal watcher666107 pending, separate unchanged sources",
+  "actions": "Read-only review of authoritative raw/committed terminal records; all5 archived files byte-identical; stop and scope verified. No archive duplication, simulation, probe, restart, main/TASKS edit or push."
+}
