@@ -1,0 +1,73 @@
+{
+  "active_snapshots_removed": [],
+  "estimated_allocated_bytes_reclaimed": 4327317504,
+  "local_proc_cwd_fd_hits": [],
+  "other_checkout_status": {
+    "/tmp/claude-1000/wt/w12gb": "already absent at audit; not removed by this agent; no preservation provenance inferred",
+    "/tmp/claude-1000/wt/w12gc": "already absent at audit; not removed by this agent; no preservation provenance inferred",
+    "/tmp/claude-1000/wt/w12gd": "already absent at audit; not removed by this agent; no preservation provenance inferred"
+  },
+  "protected": [
+    "/tmp/claude-1000/wt/w12tm",
+    "pve1 /home/ubuntu/w12/rt_tp4d and /home/ubuntu/w12bwork/seg_src",
+    "pve2/pve3 /home/ubuntu/w12bwork/src and current physical workdirs"
+  ],
+  "queue_script_refs": "No executable local queue/script references found; historical manifest mentions retained.",
+  "remote_audit": {
+    "decision": "Retire only clean legacy checkout after preserving a5e7074dc84f0a39480174c63d21c54e04e10aaa in explicit ref; active W12 remote snapshots and w12tm protected.",
+    "owner": "W12b scoped continuation",
+    "path": "/tmp/claude-1000/wt/w12",
+    "remote_checks": [
+      {
+        "exit_code": 0,
+        "hits": [],
+        "host": "ot-pve1"
+      },
+      {
+        "exit_code": 0,
+        "hits": [],
+        "host": "ot-pve2"
+      },
+      {
+        "exit_code": 0,
+        "hits": [],
+        "host": "ot-pve3"
+      },
+      {
+        "exit_code": 0,
+        "hits": [],
+        "host": "155.103.253.39"
+      },
+      {
+        "exit_code": 0,
+        "hits": [],
+        "host": "155.103.253.191"
+      },
+      {
+        "exit_code": 0,
+        "hits": [],
+        "host": "155.103.253.78"
+      },
+      {
+        "exit_code": 0,
+        "hits": [],
+        "host": "155.103.253.133"
+      },
+      {
+        "exit_code": 0,
+        "hits": [],
+        "host": "155.103.253.114"
+      },
+      {
+        "exit_code": 0,
+        "hits": [],
+        "host": "155.103.253.16"
+      }
+    ]
+  },
+  "retired_at": "2026-10-01T08:58:00.110815+00:00",
+  "retired_checkout": "/tmp/claude-1000/wt/w12",
+  "source_commit": "a5e7074dc84f0a39480174c63d21c54e04e10aaa",
+  "source_preserved_ref": "codex/w12-retired-legacy-20261001",
+  "source_tree_clean": true
+}
