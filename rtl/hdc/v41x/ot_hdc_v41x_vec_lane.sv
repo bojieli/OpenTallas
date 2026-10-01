@@ -27,6 +27,9 @@
 //   +3    E2  U = T | T*B | T*imm1
 //   +1    OUT out = rnd?(U) -> vector memory / KV SRAM, and to the reducer
 // A linear op therefore writes 20 cycles after E, 21 after the emit decision (23 with a gather).
+// MLAT = 4 (the LAT-4 multiplier, ot_hdc_qmul_lat; W11 serial domain, 0.9 GHz at SS): M1, M2, E1, E2 are 4 deep
+// (E1's add waits one cycle), exp 56, sigmoid / SiLU 78, rsqrt 46, sqrt(softplus) 180, gate 111: a linear
+// op writes 25 cycles after the emit decision.
 //
 // Stages whose depth depends on the op (the fetch, M1, S) are INSERTION lines
 // (ot_hdc_v41x_ins): an element enters at the stage that leaves at its own
@@ -45,7 +48,9 @@ module ot_hdc_v41x_vec_lane #(
     parameter integer LN = 3,           // log2 lanes (offset terms)
     parameter integer KIND = 0,         // 0 light, 1 SFU, 2 full (lane 0)
     parameter integer KVT_SH = 9,
-    parameter integer LEAF = 0          // 1: the broadcast tree's LAST stage is this lane's own leaf register (below)
+    parameter integer LEAF = 0,         // 1: the broadcast tree's LAST stage is this lane's own leaf register (below)
+    parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4, or 5 (W11 serial domain, 0.9 GHz)
+    parameter integer ALAT = 3          // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -125,8 +130,20 @@ module ot_hdc_v41x_vec_lane #(
                      SFU_SPSQRT = 6, SFU_EGATE = 7;
     localparam [2:0] E1_BYP = 0, E1_MULC = 1, E1_ADDC = 2, E1_MULIMM = 3, E1_ADDIMM = 4;
     localparam [1:0] E2_BYP = 0, E2_MULB = 1, E2_MULIMM = 2;
-    localparam integer D_DIV = 19, D_EXP = 49, D_SIG = D_EXP + 3 + D_DIV;          // 71
-    localparam integer D_RSQ = 37, D_SQRT = 31, D_SP = 162, D_EG = 1 + 31 + 1 + D_SIG;   // 104
+    // stage depths; MLAT = 4 lengthens every multiplying stage by one (M1 / M2 / E1 / E2: 4) and the SFU chains
+    localparam integer D_DIV = 19, D_EXP = 7 * MLAT + 8 * ALAT + 4, D_SIG = D_EXP + ALAT + D_DIV;  // 49, 71
+    localparam integer D_RSQ = 1 + 9 * MLAT + 3 * ALAT, D_SQRT = 31;                                // 37
+    localparam integer D_SP = D_EXP + 11 * MLAT + 10 * ALAT + 50;                                    // 162
+    localparam integer D_EG = 1 + 31 + 1 + D_SIG;                                        // 104 (111)
+    // MLAT >= 4 is the serial-domain build: its integer adds and compares are keep-prefix adders
+    // (ot_hdc_kadd / _kge / _kinc over rtl/hdc/ot_hdc_prefix.sv) and its FP adds ot_hdc_fp32_add_lat3, so ABC
+    // cannot re-ripple them inside the lane; MLAT = 3 keeps the behavioural operators (the unit as it was)
+    localparam integer K = (MLAT != 3 || ALAT != 3) ? 1 : 0;
+    generate if (ALAT > MLAT || ALAT < 3 || ALAT > 4) begin : g_bad_alat
+        ot_hdc_v41x_vec_lane_ALAT_must_be_3_or_4_and_at_most_MLAT u_trap ();
+    end endgenerate
+    localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+                      H_SP = D_SP, H_EG = D_EG;
     localparam integer HAS_SFU = (KIND != 0);
     localparam integer FULL = (KIND == 2);
 
@@ -153,6 +170,15 @@ module ot_hdc_v41x_vec_lane #(
         end
     endfunction
 
+    // pre_a with its two compares supplied (le_v: okey(v) <= okey(imm), le_0: okey(+0) <= okey(imm))
+    function automatic [31:0] pre_a2(input [31:0] v, input relu, input amin, input [31:0] imm, input le_v, input le_0);
+        reg zero;
+        begin
+            zero = relu && v[31];
+            pre_a2 = !amin ? (zero ? 32'd0 : v) : zero ? (le_0 ? 32'd0 : imm) : (le_v ? v : imm);
+        end
+    endfunction
+
     // ---- LEAF: the broadcast's last register stage --------------------------------------------------
     // LEAF = 0: the lane uses its inputs as they arrive (the controller's broadcast register, or the tree's
     // leaf outside the lane).  LEAF = 1 (ot_hdc_v41x_vec with BCAST_STAGES > 0): the tree's last stage is
@@ -162,8 +188,8 @@ module ot_hdc_v41x_vec_lane #(
     // then one add / compare level (the liveness compares, the transposed-KV address, the gather index
     // address) instead of two adds feeding a three-input add.  Same cycle, same values: bit-exact.
     // Cost: 8 x 24-bit partials + 1 in-use bit, plus the fields F0 still reads (emit, no, ni, obase,
-    // aibase, aind, gsh, cpair, dst, srcs: 115 bits): 308 flops a lane, plus the two-cycle offset load
-    // below (242).  The offset load does not pass the leaf: it starts from the tree's stage (ld, ld_bank,
+    // aibase, aind, gsh, cpair, dst, srcs: 115 bits): 308 flops a lane, plus the three-cycle offset load
+    // below (604).  The offset load does not pass the leaf: it starts from the tree's stage (ld, ld_bank,
     // ld_c), where the lane without a leaf would have loaded in one cycle.
     reg [AW-1:0] off0 [0:4];
     reg [AW-1:0] off1 [0:4];
@@ -171,13 +197,19 @@ module ot_hdc_v41x_vec_lane #(
     //: slot (outer) and in-slot (inner) offsets of this lane for a slot size 2^ls
     wire [CW-1:0] d_o = lid >> ls;
     wire [CW-1:0] d_i = lid & ((1 << ls) - 1);
-    wire [CW-1:0] ol_c = o_v + d_o, il_c = i_v + d_i;
-    wire [AW-1:0] row_c = krow + d_o[AW-1:0];
+    wire [CW-1:0] ol_c, il_c;
+    wire [AW-1:0] row_c;
+    wire [2:0]    unused_c0;
+    ot_hdc_kadd #(.W(CW), .K(K)) u_olc (.a(o_v), .b(d_o), .cin(1'b0), .s(ol_c), .cout(unused_c0[0]));
+    ot_hdc_kadd #(.W(CW), .K(K)) u_ilc (.a(i_v), .b(d_i), .cin(1'b0), .s(il_c), .cout(unused_c0[1]));
+    ot_hdc_kadd #(.W(AW), .K(K)) u_rwc (.a(krow), .b(d_o[AW-1:0]), .cin(1'b0), .s(row_c), .cout(unused_c0[2]));
     wire          lin_c = (lid < (1 << lvw));
     wire [5*AW-1:0] sum_c;
     genvar gs;
     generate for (gs = 0; gs < 5; gs = gs + 1) begin : g_sum
-        assign sum_c[gs*AW +: AW] = vb[gs*AW +: AW] + (bank ? off1[gs] : off0[gs]);
+        wire unused_cs;
+        ot_hdc_kadd #(.W(AW), .K(K)) u_s (.a(vb[gs*AW +: AW]), .b(bank ? off1[gs] : off0[gs]), .cin(1'b0),
+                                          .s(sum_c[gs*AW +: AW]), .cout(unused_cs));
     end endgenerate
     // what F0 and the offset bank read: the partials and fields at the leaf
     wire             emit_e, ld_e, ldbank_e, lin_e, cpair_e;
@@ -220,11 +252,17 @@ module ot_hdc_v41x_vec_lane #(
 
     // ---- offsets: two banks, loaded by the op set-up --------------------------------------------
     // A lane's offset is the sum of the terms of its lane_id's set bits (LN terms).  LEAF = 0: in one cycle.
-    // LEAF = 1: over two -- the lower and upper halves of the terms are summed and registered, then added
-    // into the bank.  The load then lands one cycle later than the tree stage's ld: still >= 2 cycles before
-    // the op's first vector reaches the leaf (whose sums read the bank), and later still after the op two
-    // back (same bank) has left it.  Integer sums mod 2^AW: the same offsets.  Cost 5 x 2 x AW + 2 flops.
-    localparam integer LH = LN / 2;
+    // LEAF = 1: over THREE (W11 serial domain; the two-cycle form summed 5 terms in its first cycle and was
+    // the routed lane's worst path at 1.111 ns SS): cycle 1 sums the terms in three groups (bits [0, G1),
+    // [G1, G2), [G2, LN): at most ceil(LN/3) = 4 terms at LN = 10) and registers the three partials; cycle 2
+    // adds the first two; cycle 3 adds the third into the bank.  Integer sums mod 2^AW: the same offsets.
+    // Timing (ld_e is the tree stage's ld, one cycle before the leaf; the controller loads in the cycle
+    // before the op may promote, so its first vector reaches the tree stage >= 3 cycles after ld_e): the bank
+    // is written at the end of ld_e + 2 and read by the leaf's sums from ld_e + 3 on, so it lands in the
+    // cycle before its first use (the two-cycle load landed one cycle earlier).  The op two back (same bank)
+    // emitted its last vector >= 3 cycles before the load left the controller, so it read the bank >= 4
+    // cycles before the write.  Cost 5 x 5 x AW + 4 flops (604; was 5 x 2 x AW + 2 = 242).
+    localparam integer G1 = (LN + 2) / 3, G2 = 2 * ((LN + 2) / 3);
     generate if (LEAF == 0) begin : g_ld1
         integer s, k;
         reg [AW-1:0] acc;
@@ -238,41 +276,118 @@ module ot_hdc_v41x_vec_lane #(
                 end
             end
         end
-    end else begin : g_ld2
+    end else if (K == 0) begin : g_ld3
         integer s, k;
-        reg [AW-1:0] lo, hi;
-        reg          ldp_v, ldp_bank;
-        reg [AW-1:0] ldp_lo [0:4];
-        reg [AW-1:0] ldp_hi [0:4];
+        reg [AW-1:0] g0, g1, g2;
+        reg          ldp_v, ldq_v, ldp_bank, ldq_bank;
+        reg [AW-1:0] ldp_0 [0:4];
+        reg [AW-1:0] ldp_1 [0:4];
+        reg [AW-1:0] ldp_2 [0:4];
+        reg [AW-1:0] ldq_01 [0:4];
+        reg [AW-1:0] ldq_2 [0:4];
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) ldp_v <= 1'b0;
-            else ldp_v <= ld_e;
+            if (!rst_n) begin ldp_v <= 1'b0; ldq_v <= 1'b0; end
+            else begin ldp_v <= ld_e; ldq_v <= ldp_v; end
         end
         always @(posedge clk) begin
             if (ld_e) begin
                 ldp_bank <= ldbank_e;
                 for (s = 0; s < 5; s = s + 1) begin
-                    lo = {AW{1'b0}};
-                    hi = {AW{1'b0}};
+                    g0 = {AW{1'b0}};
+                    g1 = {AW{1'b0}};
+                    g2 = {AW{1'b0}};
                     for (k = 0; k < LN; k = k + 1)
                         if (lane_id[k]) begin
-                            if (k < LH) lo = lo + ldc_e[(s*LN + k)*AW +: AW];
-                            else        hi = hi + ldc_e[(s*LN + k)*AW +: AW];
+                            if (k < G1)      g0 = g0 + ldc_e[(s*LN + k)*AW +: AW];
+                            else if (k < G2) g1 = g1 + ldc_e[(s*LN + k)*AW +: AW];
+                            else             g2 = g2 + ldc_e[(s*LN + k)*AW +: AW];
                         end
-                    ldp_lo[s] <= lo;
-                    ldp_hi[s] <= hi;
+                    ldp_0[s] <= g0;
+                    ldp_1[s] <= g1;
+                    ldp_2[s] <= g2;
                 end
             end
-            if (ldp_v)
+            if (ldp_v) begin
+                ldq_bank <= ldp_bank;
+                for (s = 0; s < 5; s = s + 1) begin
+                    ldq_01[s] <= ldp_0[s] + ldp_1[s];
+                    ldq_2[s] <= ldp_2[s];
+                end
+            end
+            if (ldq_v)
                 for (s = 0; s < 5; s = s + 1)
-                    if (ldp_bank) off1[s] <= ldp_lo[s] + ldp_hi[s]; else off0[s] <= ldp_lo[s] + ldp_hi[s];
+                    if (ldq_bank) off1[s] <= ldq_01[s] + ldq_2[s]; else off0[s] <= ldq_01[s] + ldq_2[s];
+        end
+    end else begin : g_ld3k
+        // the same three cycles on keep-prefix adders: a group's (at most 4) masked terms in a two-level tree
+        reg          ldp_v, ldq_v, ldp_bank, ldq_bank;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin ldp_v <= 1'b0; ldq_v <= 1'b0; end
+            else begin ldp_v <= ld_e; ldq_v <= ldp_v; end
+        end
+        always @(posedge clk) begin
+            if (ld_e) ldp_bank <= ldbank_e;
+            if (ldp_v) ldq_bank <= ldp_bank;
+        end
+        genvar ss, jj, kk;
+        wire [5*AW-1:0] s_bus;                         // stream ss's offset, at the third cycle
+        integer s;
+        always @(posedge clk)
+            if (ldq_v)
+                for (s = 0; s < 5; s = s + 1)
+                    if (ldq_bank) off1[s] <= s_bus[s*AW +: AW]; else off0[s] <= s_bus[s*AW +: AW];
+        for (ss = 0; ss < 5; ss = ss + 1) begin : g_s
+            wire [3*AW-1:0] grp;                       // the three group sums of stream ss
+            for (jj = 0; jj < 3; jj = jj + 1) begin : g_j
+                localparam integer LO = (jj == 0) ? 0 : (jj == 1) ? G1 : G2;
+                localparam integer HI = (jj == 0) ? G1 : (jj == 1) ? G2 : LN;
+                wire [4*AW-1:0] t;                     // the group's masked terms, zero-padded to 4
+                for (kk = 0; kk < 4; kk = kk + 1) begin : g_t
+                    if (LO + kk < HI) begin : g_on
+                        assign t[kk*AW +: AW] = lane_id[LO + kk] ? ldc_e[(ss*LN + LO + kk)*AW +: AW] : {AW{1'b0}};
+                    end else begin : g_off
+                        assign t[kk*AW +: AW] = {AW{1'b0}};
+                    end
+                end
+                wire [AW-1:0] s01, s23;
+                wire [2:0]    unused_c;
+                if (HI - LO > 2) begin : g_4
+                    ot_hdc_kadd #(.W(AW), .K(1)) u_a (.a(t[0 +: AW]), .b(t[AW +: AW]), .cin(1'b0), .s(s01), .cout(unused_c[0]));
+                    ot_hdc_kadd #(.W(AW), .K(1)) u_b (.a(t[2*AW +: AW]), .b(t[3*AW +: AW]), .cin(1'b0), .s(s23), .cout(unused_c[1]));
+                    ot_hdc_kadd #(.W(AW), .K(1)) u_c (.a(s01), .b(s23), .cin(1'b0), .s(grp[jj*AW +: AW]), .cout(unused_c[2]));
+                end else if (HI - LO == 2) begin : g_2
+                    ot_hdc_kadd #(.W(AW), .K(1)) u_a (.a(t[0 +: AW]), .b(t[AW +: AW]), .cin(1'b0), .s(grp[jj*AW +: AW]), .cout(unused_c[0]));
+                    assign {s01, s23, unused_c[2:1]} = 0;
+                end else begin : g_1
+                    assign grp[jj*AW +: AW] = t[0 +: AW];
+                    assign {s01, s23, unused_c} = 0;
+                end
+            end
+            reg  [AW-1:0] p0, p1, p2, q01, q2;
+            wire [AW-1:0] s_01, s_all;
+            wire [1:0]    unused_q;
+            ot_hdc_kadd #(.W(AW), .K(1)) u_q (.a(p0), .b(p1), .cin(1'b0), .s(s_01), .cout(unused_q[0]));
+            ot_hdc_kadd #(.W(AW), .K(1)) u_o (.a(q01), .b(q2), .cin(1'b0), .s(s_all), .cout(unused_q[1]));
+            assign s_bus[ss*AW +: AW] = s_all;
+            always @(posedge clk) begin
+                if (ld_e) begin p0 <= grp[0 +: AW]; p1 <= grp[AW +: AW]; p2 <= grp[2*AW +: AW]; end
+                if (ldp_v) begin q01 <= s_01; q2 <= p2; end
+            end
         end
     end endgenerate
 
     // ---- F0: liveness, addresses ------------------------------------------------------------------
-    wire live0 = emit_e && lin_e && (ol_e < no_e) && (il_e < ni_e);
+    wire ol_ge, il_ge;
+    ot_hdc_kge #(.W(CW), .K(K)) u_olg (.a(ol_e), .b(no_e), .ge(ol_ge));
+    ot_hdc_kge #(.W(CW), .K(K)) u_ilg (.a(il_e), .b(ni_e), .ge(il_ge));
+    wire live0 = emit_e && lin_e && !ol_ge && !il_ge;
     // (il << 4) + row[3:0] is the concatenation {il, row[3:0]}
-    wire [AW-1:0] kvt = obase_e + ((row_e >> 4) << KVT_SH) + {il_e[AW-5:0], row_e[3:0]};
+    wire [AW-1:0] kvt, kvt1, vi_sum;
+    wire [2:0]    unused_c1;
+    ot_hdc_kadd #(.W(AW), .K(K)) u_kv1 (.a(obase_e), .b((row_e >> 4) << KVT_SH), .cin(1'b0), .s(kvt1), .cout(unused_c1[0]));
+    ot_hdc_kadd #(.W(AW), .K(K)) u_kv2 (.a(kvt1), .b({il_e[AW-5:0], row_e[3:0]}), .cin(1'b0), .s(kvt), .cout(unused_c1[1]));
+    ot_hdc_kadd #(.W(AW), .K(K)) u_via (.a(aibase_e), .b((aind_e == IND_I) ? il_e[AW-1:0] : ol_e[AW-1:0]), .cin(1'b0),
+                                        .s(vi_sum), .cout(unused_c1[2]));
     reg          f_v, f_g, f_par;
     reg [AW-1:0] f_a, f_b, f_c, f_d, f_o;
     reg [7:0]    f_src;
@@ -291,7 +406,7 @@ module ot_hdc_v41x_vec_lane #(
         f_par <= il_e[0];
         f_src <= srcs_e;
         f_cpair <= cpair_e;
-        vi_addr <= aibase_e + ((aind_e == IND_I) ? il_e[AW-1:0] : ol_e[AW-1:0]);
+        vi_addr <= vi_sum;
     end
     // ---- G1, G2: a gathered A (index from the vector memory, scaled by a power of two) ---------------
     reg          g1_v, g2_v, g1_par, g2_par, g1_cpair, g2_cpair;
@@ -304,10 +419,13 @@ module ot_hdc_v41x_vec_lane #(
     end
     reg [4:0] f_sh;
     always @(posedge clk) f_sh <= gsh_e;
+    wire [AW-1:0] g2_sum;
+    wire          unused_c2;
+    ot_hdc_kadd #(.W(AW), .K(K)) u_g2a (.a(g1_a), .b(vi_q[AW-1:0] << g1_sh), .cin(1'b0), .s(g2_sum), .cout(unused_c2));
     always @(posedge clk) begin
         g1_a <= f_a; g1_b <= f_b; g1_c <= f_c; g1_d <= f_d; g1_o <= f_o; g1_par <= f_par; g1_src <= f_src;
         g1_cpair <= f_cpair; g1_sh <= f_sh;
-        g2_a <= g1_a + (vi_q[AW-1:0] << g1_sh);
+        g2_a <= g2_sum;
         g2_b <= g1_b; g2_c <= g1_c; g2_d <= g1_d; g2_o <= g1_o; g2_par <= g1_par; g2_src <= g1_src;
         g2_cpair <= g1_cpair;
     end
@@ -342,18 +460,28 @@ module ot_hdc_v41x_vec_lane #(
     // BF16, and truncated + one BF16 ulp) side by side and selected by the rounding decision, so no compare
     // waits for the rounding carry (bit-identical for all inputs: tools/w11_equiv_clip.ys; W11 timing fix)
     wire [31:0] a_t  = {x_a[31:16], 16'd0};
-    wire [31:0] a_u  = {x_a[31:16] + 16'd1, 16'd0};
+    wire [15:0] a_hi1;
+    ot_hdc_kinc #(.W(16), .K(K)) u_au (.a(x_a[31:16]), .inc(1'b1), .y(a_hi1));
+    wire [31:0] a_u  = {a_hi1, 16'd0};
     wire        a_up = x_a[15] & ((|x_a[14:0]) | x_a[16]);
-    wire [31:0] a_mx = pre_a(x_a, cx_arelu, cx_amin, cx_imm3);
-    wire [31:0] a_mt = pre_a(a_t, cx_arelu, cx_amin, cx_imm3);
-    wire [31:0] a_mu = pre_a(a_u, cx_arelu, cx_amin, cx_imm3);
+    // pre_a's compares, as prefix compares: okey(v) <= okey(imm3) for the three candidates, and +0 <= imm3
+    wire [31:0] k_imm3 = okey(cx_imm3);
+    wire        le_x, le_t, le_u, le_0;
+    ot_hdc_kge #(.W(32), .K(K)) u_lex (.a(k_imm3), .b(okey(x_a)), .ge(le_x));
+    ot_hdc_kge #(.W(32), .K(K)) u_let (.a(k_imm3), .b(okey(a_t)), .ge(le_t));
+    ot_hdc_kge #(.W(32), .K(K)) u_leu (.a(k_imm3), .b(okey(a_u)), .ge(le_u));
+    ot_hdc_kge #(.W(32), .K(K)) u_le0 (.a(k_imm3), .b(32'h80000000), .ge(le_0));
+    wire [31:0] a_mx = pre_a2(x_a, cx_arelu, cx_amin, cx_imm3, le_x, le_0);
+    wire [31:0] a_mt = pre_a2(a_t, cx_arelu, cx_amin, cx_imm3, le_t, le_0);
+    wire [31:0] a_mu = pre_a2(a_u, cx_arelu, cx_amin, cx_imm3, le_u, le_0);
     wire [31:0] a_m  = !cx_arnd ? a_mx : a_up ? a_mu : a_mt;
     // clip(C, -imm3, imm3) = fmin(fmax(C, lo), hi) with its three comparisons side by side (bit-identical,
     // ties included: proven by tools/w11_equiv_clip.ys; the chained form was the lane's critical path, W11)
     wire [31:0] c_lo = {1'b1, cx_imm3[30:0]};
-    wire        c_ge_lo = okey(x_c) >= okey(c_lo);
-    wire        c_le_hi = okey(x_c) <= okey(cx_imm3);
-    wire        c_lohi  = okey(c_lo) <= okey(cx_imm3);
+    wire        c_ge_lo, c_le_hi, c_lohi;
+    ot_hdc_kge #(.W(32), .K(K)) u_cgl (.a(okey(x_c)), .b(okey(c_lo)), .ge(c_ge_lo));
+    ot_hdc_kge #(.W(32), .K(K)) u_clh (.a(k_imm3), .b(okey(x_c)), .ge(c_le_hi));
+    ot_hdc_kge #(.W(32), .K(K)) u_clo (.a(k_imm3), .b(okey(c_lo)), .ge(c_lohi));
     wire [31:0] c_m = !cx_cclip ? x_c : c_ge_lo ? (c_le_hi ? x_c : cx_imm3) : (c_lohi ? c_lo : cx_imm3);
     reg  [31:0] p_a, p_b, p_c, p_d;
     reg  [AW-1:0] p_o;
@@ -369,10 +497,12 @@ module ot_hdc_v41x_vec_lane #(
     wire p_div = (cp_m1 == M1_DIVB) || (cp_m1 == M1_DIVIMM);
     wire [31:0] mul1_y, byp1;
     wire f_m1;
-    ot_hdc_qmul u_m1 (clk, rst_n, p_v && p_mul, p_a, (cp_m1 == M1_AB) ? p_b : (cp_m1 == M1_AA) ? p_a : cp_imm1,
+    ot_hdc_qmul_lat #(MLAT) u_m1 (clk, rst_n, p_v && p_mul, p_a, (cp_m1 == M1_AB) ? p_b : (cp_m1 == M1_AA) ? p_a : cp_imm1,
                       mul1_y, f_m1);
-    wire [31:0] byp_in = (cp_m1 == M1_MAXB && okey(p_b) > okey(p_a)) ? p_b : p_a;
-    ot_hdc_delay #(.W(32), .D(3)) u_b1 (.clk(clk), .rst_n(rst_n), .d(byp_in), .q(byp1));
+    wire        ba_ge;                               // okey(p_a) >= okey(p_b), i.e. not (okey(p_b) > okey(p_a))
+    ot_hdc_kge #(.W(32), .K(K)) u_mxb (.a(okey(p_a)), .b(okey(p_b)), .ge(ba_ge));
+    wire [31:0] byp_in = (cp_m1 == M1_MAXB && !ba_ge) ? p_b : p_a;
+    ot_hdc_delay #(.W(32), .D(MLAT)) u_b1 (.clk(clk), .rst_n(rst_n), .d(byp_in), .q(byp1));
     localparam integer T1W = 32 * 3 + AW + 1;            // B, C', D, O, parity
     wire [T1W-1:0] t1;
     wire           v1;
@@ -382,15 +512,15 @@ module ot_hdc_v41x_vec_lane #(
         if (HAS_SFU != 0) begin : g_m1s
             ot_hdc_v41x_fdiv u_d1 (.clk(clk), .rst_n(rst_n), .v(p_v && p_div), .a(p_a),
                                    .b((cp_m1 == M1_DIVB) ? p_b : cp_imm1), .y(div1_y), .vo(), .fault(f_d1));
-            ot_hdc_v41x_ins #(.W(T1W), .K(2), .DEPTHS({16'd19, 16'd3}), .DMAX(19)) u_l1 (
+            ot_hdc_v41x_ins #(.W(T1W), .K(2), .DEPTHS({H_DIV, H_M}), .DMAX(19)) u_l1 (
                 .clk(clk), .rst_n(rst_n), .v(p_v), .sel({p_div, !p_div}), .d({p_b, p_c, p_d, p_o, p_par}),
                 .vo(v1), .q(t1), .coll(c1), .busy());
         end else begin : g_m1l
             assign div1_y = 32'd0; assign f_d1 = 1'b0; assign c1 = 1'b0;
-            ot_hdc_delay #(.W(T1W), .D(3)) u_t1 (.clk(clk), .rst_n(rst_n), .d({p_b, p_c, p_d, p_o, p_par}), .q(t1));
-            wire [3:0] vl;
-            ot_hdc_vline #(.D(3)) u_v1 (.clk(clk), .rst_n(rst_n), .v(p_v), .vd(vl));
-            assign v1 = vl[3];
+            ot_hdc_delay #(.W(T1W), .D(MLAT)) u_t1 (.clk(clk), .rst_n(rst_n), .d({p_b, p_c, p_d, p_o, p_par}), .q(t1));
+            wire [MLAT:0] vl;
+            ot_hdc_vline #(.D(MLAT)) u_v1 (.clk(clk), .rst_n(rst_n), .v(p_v), .vd(vl));
+            assign v1 = vl[MLAT];
         end
     endgenerate
     wire [31:0] m_b = t1[T1W-1 -: 32], m_c = t1[T1W-33 -: 32], m_d = t1[T1W-65 -: 32];
@@ -401,17 +531,17 @@ module ot_hdc_v41x_vec_lane #(
     // ---- M2 and Q -----------------------------------------------------------------------------------------
     wire [31:0] m2_y, q_y, m2_byp;
     wire f_m2, f_q;
-    ot_hdc_qmul u_m2 (clk, rst_n, v1 && cm_m2 != M2_BYP, P, (cm_m2 == M2_C) ? m_c : cm_imm1, m2_y, f_m2);
+    ot_hdc_qmul_lat #(MLAT) u_m2 (clk, rst_n, v1 && cm_m2 != M2_BYP, P, (cm_m2 == M2_C) ? m_c : cm_imm1, m2_y, f_m2);
     wire qneg = (cm_qm == QM_NEG) || (cm_qm == QM_ALT_NP && !m_par1) || (cm_qm == QM_ALT_PN && m_par1);
-    ot_hdc_qmul u_q (clk, rst_n, v1 && cm_qm != QM_OFF, m_c, {m_d[31] ^ qneg, m_d[30:0]}, q_y, f_q);
+    ot_hdc_qmul_lat #(MLAT) u_q (clk, rst_n, v1 && cm_qm != QM_OFF, m_c, {m_d[31] ^ qneg, m_d[30:0]}, q_y, f_q);
     wire [31:0] a2_b, a2_c, a2_d;
     wire [AW-1:0] a2_o;
     wire [1:0]  a2_m2;
-    ot_hdc_delay #(.W(32 * 4 + AW + 2), .D(3)) u_d2 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(32 * 4 + AW + 2), .D(MLAT)) u_d2 (.clk(clk), .rst_n(rst_n),
         .d({P, m_b, m_c, m_d, m_oa, cm_m2}), .q({m2_byp, a2_b, a2_c, a2_d, a2_o, a2_m2}));
-    wire [3:0] v2l;
-    ot_hdc_vline #(.D(3)) u_v2 (.clk(clk), .rst_n(rst_n), .v(v1), .vd(v2l));
-    wire v2 = v2l[3];
+    wire [MLAT:0] v2l;
+    ot_hdc_vline #(.D(MLAT)) u_v2 (.clk(clk), .rst_n(rst_n), .v(v1), .vd(v2l));
+    wire v2 = v2l[MLAT];
     wire [31:0] P2 = (a2_m2 == M2_BYP) ? m2_byp : m2_y;
     // ---- AD ------------------------------------------------------------------------------------------------
     reg [31:0] ad_y;
@@ -426,15 +556,15 @@ module ot_hdc_v41x_vec_lane #(
     end
     wire [31:0] add_y, add_byp;
     wire f_ad;
-    ot_hdc_qadd u_ad (clk, rst_n, v2 && ca_ad != AD_BYP, P2, ad_y, add_y, f_ad);
+    ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_ad (clk, rst_n, v2 && ca_ad != AD_BYP, P2, ad_y, add_y, f_ad);
     wire [31:0] r_b, r_c;
     wire [AW-1:0] r_o;
     wire [2:0]  r_ad;
-    ot_hdc_delay #(.W(32 * 3 + AW + 3), .D(3)) u_d3 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(32 * 3 + AW + 3), .D(ALAT)) u_d3 (.clk(clk), .rst_n(rst_n),
         .d({P2, a2_b, a2_c, a2_o, ca_ad}), .q({add_byp, r_b, r_c, r_o, r_ad}));
-    wire [3:0] v3l;
-    ot_hdc_vline #(.D(3)) u_v3 (.clk(clk), .rst_n(rst_n), .v(v2), .vd(v3l));
-    wire v3 = v3l[3];
+    wire [ALAT:0] v3l;
+    ot_hdc_vline #(.D(ALAT)) u_v3 (.clk(clk), .rst_n(rst_n), .v(v2), .vd(v3l));
+    wire v3 = v3l[ALAT];
     wire [31:0] R = (r_ad == AD_BYP) ? add_byp : add_y;
     // ---- S --------------------------------------------------------------------------------------------------
     localparam integer T4W = 32 * 3 + AW;                 // R, B, C', O
@@ -452,25 +582,25 @@ module ot_hdc_v41x_vec_lane #(
             wire [D_EXP:0] vs;                 // a sigmoid-chain element, along the exp
             ot_hdc_vline #(.D(D_EXP)) u_ve (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)), .vd(ve));
             ot_hdc_vline #(.D(D_EXP)) u_vs (.clk(clk), .rst_n(rst_n), .v(v3 && is_sig), .vd(vs));
-            ot_hdc_v41x_exp u_exp (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)),
+            ot_hdc_v41x_exp #(.LM(MLAT), .LA(ALAT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v3 && (is_exp || is_sig)),
                                    .x(is_exp ? R : {~R[31], R[30:0]}), .y(y_exp), .vo(), .fault(f_e));
-            ot_hdc_qadd u_den (clk, rst_n, vs[D_EXP], y_exp, 32'h3F800000, den, f_den);
+            ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_den (clk, rst_n, vs[D_EXP], y_exp, 32'h3F800000, den, f_den);
             wire silu_in = (ci_sfu == SFU_SILU);
             wire [31:0] num_in = silu_in ? R : 32'h3F800000;
-            ot_hdc_delay #(.W(32), .D(D_EXP + 3)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
-            wire [3:0] vdn;
-            ot_hdc_vline #(.D(3)) u_vdn (.clk(clk), .rst_n(rst_n), .v(vs[D_EXP]), .vd(vdn));
-            ot_hdc_v41x_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(vdn[3]), .a(num_d), .b(den), .y(y_div), .vo(),
+            ot_hdc_delay #(.W(32), .D(D_EXP + ALAT)) u_num (.clk(clk), .rst_n(rst_n), .d(num_in), .q(num_d));
+            wire [ALAT:0] vdn;
+            ot_hdc_vline #(.D(ALAT)) u_vdn (.clk(clk), .rst_n(rst_n), .v(vs[D_EXP]), .vd(vdn));
+            ot_hdc_v41x_fdiv u_div (.clk(clk), .rst_n(rst_n), .v(vdn[ALAT]), .a(num_d), .b(den), .y(y_div), .vo(),
                                     .fault(f_div));
             wire [6:0] sel;
             assign sel = {ci_sfu == SFU_EGATE, ci_sfu == SFU_SPSQRT, ci_sfu == SFU_SQRT, ci_sfu == SFU_RSQRT,
                           is_sig, is_exp, ci_sfu == SFU_NONE};
             if (FULL != 0) begin : g_full
                 ot_hdc_v41x_ins #(.W(T4W), .K(7),
-                    .DEPTHS({16'd104, 16'd162, 16'd31, 16'd37, 16'd71, 16'd49, 16'd0}), .DMAX(162)) u_l4 (
+                    .DEPTHS({H_EG, H_SP, H_SQRT, H_RSQ, H_SIG, H_EXP, 16'd0}), .DMAX(D_SP)) u_l4 (
                     .clk(clk), .rst_n(rst_n), .v(v3), .sel(sel), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4), .coll(c4), .busy());
             end else begin : g_vec
-                ot_hdc_v41x_ins #(.W(T4W), .K(3), .DEPTHS({16'd71, 16'd49, 16'd0}), .DMAX(71)) u_l4 (
+                ot_hdc_v41x_ins #(.W(T4W), .K(3), .DEPTHS({H_SIG, H_EXP, 16'd0}), .DMAX(D_SIG)) u_l4 (
                     .clk(clk), .rst_n(rst_n), .v(v3), .sel(sel[2:0]), .d({R, r_b, r_c, r_o}), .vo(v4), .q(t4),
                     .coll(c4), .busy());
             end
@@ -490,34 +620,42 @@ module ot_hdc_v41x_vec_lane #(
     // ---- E1 -------------------------------------------------------------------------------------------------
     wire [31:0] e1m, e1a, e1_byp;
     wire f_e1m, f_e1a;
-    ot_hdc_qmul u_e1m (clk, rst_n, v4 && (cs_e1 == E1_MULC || cs_e1 == E1_MULIMM), S,
+    ot_hdc_qmul_lat #(MLAT) u_e1m (clk, rst_n, v4 && (cs_e1 == E1_MULC || cs_e1 == E1_MULIMM), S,
                        (cs_e1 == E1_MULC) ? s_c : cs_imm2, e1m, f_e1m);
-    ot_hdc_qadd u_e1a (clk, rst_n, v4 && (cs_e1 == E1_ADDC || cs_e1 == E1_ADDIMM), S,
-                       (cs_e1 == E1_ADDC) ? s_c : cs_imm2, e1a, f_e1a);
+    wire [31:0] e1a3;
+    ot_hdc_qadd_lat #(.KEEP(K), .LAT(ALAT)) u_e1a (clk, rst_n, v4 && (cs_e1 == E1_ADDC || cs_e1 == E1_ADDIMM), S,
+                       (cs_e1 == E1_ADDC) ? s_c : cs_imm2, e1a3, f_e1a);
+    // E1 is MLAT deep (its multiply); the 3-cycle add waits MLAT - 3 more
+    ot_hdc_delay #(.W(32), .D(MLAT - ALAT)) u_e1ad (.clk(clk), .rst_n(rst_n), .d(e1a3), .q(e1a));
     wire [31:0] e_b;
     wire [AW-1:0] e_o;
     wire [2:0]  e_e1;
-    ot_hdc_delay #(.W(32 * 2 + AW + 3), .D(3)) u_d5 (.clk(clk), .rst_n(rst_n), .d({S, s_b, s_o, cs_e1}),
+    ot_hdc_delay #(.W(32 * 2 + AW + 3), .D(MLAT)) u_d5 (.clk(clk), .rst_n(rst_n), .d({S, s_b, s_o, cs_e1}),
                                                    .q({e1_byp, e_b, e_o, e_e1}));
-    wire [3:0] v5l;
-    ot_hdc_vline #(.D(3)) u_v5 (.clk(clk), .rst_n(rst_n), .v(v4), .vd(v5l));
-    wire v5 = v5l[3];
+    wire [MLAT:0] v5l;
+    ot_hdc_vline #(.D(MLAT)) u_v5 (.clk(clk), .rst_n(rst_n), .v(v4), .vd(v5l));
+    wire v5 = v5l[MLAT];
     wire [31:0] T = (e_e1 == E1_MULC || e_e1 == E1_MULIMM) ? e1m : (e_e1 == E1_ADDC || e_e1 == E1_ADDIMM) ? e1a :
                     e1_byp;
     // ---- E2 ---------------------------------------------------------------------------------------------------
     wire [31:0] e2m, e2_byp;
     wire f_e2;
-    ot_hdc_qmul u_me2 (clk, rst_n, v5 && ce_e2 != E2_BYP, T, (ce_e2 == E2_MULB) ? e_b : ce_imm1, e2m, f_e2);
+    ot_hdc_qmul_lat #(MLAT) u_me2 (clk, rst_n, v5 && ce_e2 != E2_BYP, T, (ce_e2 == E2_MULB) ? e_b : ce_imm1, e2m, f_e2);
     wire [AW-1:0] u_o;
     wire [1:0]  u_e2;
-    ot_hdc_delay #(.W(32 + AW + 2), .D(3)) u_d6 (.clk(clk), .rst_n(rst_n), .d({T, e_o, ce_e2}),
+    ot_hdc_delay #(.W(32 + AW + 2), .D(MLAT)) u_d6 (.clk(clk), .rst_n(rst_n), .d({T, e_o, ce_e2}),
                                                .q({e2_byp, u_o, u_e2}));
-    wire [3:0] v6l;
-    ot_hdc_vline #(.D(3)) u_v6 (.clk(clk), .rst_n(rst_n), .v(v5), .vd(v6l));
-    wire v6 = v6l[3];
+    wire [MLAT:0] v6l;
+    ot_hdc_vline #(.D(MLAT)) u_v6 (.clk(clk), .rst_n(rst_n), .v(v5), .vd(v6l));
+    wire v6 = v6l[MLAT];
     wire [31:0] U = (u_e2 == E2_BYP) ? e2_byp : e2m;
     // ---- OUT --------------------------------------------------------------------------------------------------
-    wire [31:0] out = co_rnd ? bf16(U) : U;
+    // bf16(U) = (U[31:16] + inc) << 16, inc = U[15] & (U[16] | U[14:0] != 0): round to nearest even.  The KV
+    // write is bf16(out) = bf16(U) whether or not out was rounded (bf16 of a BF16 value is itself)
+    wire [15:0] u_hi1;
+    ot_hdc_kinc #(.W(16), .K(K)) u_rnd (.a(U[31:16]), .inc(U[15] & (U[16] | (|U[14:0]))), .y(u_hi1));
+    wire [31:0] u_bf = {u_hi1, 16'd0};
+    wire [31:0] out = co_rnd ? u_bf : U;
     reg         ov_r;
     reg  [31:0] o_x;
     always @(posedge clk or negedge rst_n) begin
@@ -530,7 +668,7 @@ module ot_hdc_v41x_vec_lane #(
     end
     always @(posedge clk) begin
         vm_waddr <= u_o; vm_wdata <= out;
-        kv_waddr <= u_o; kv_wdata <= bf16(out);
+        kv_waddr <= u_o; kv_wdata <= u_bf;
         o_x <= out;
     end
     assign ro_v = ov_r;

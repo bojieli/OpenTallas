@@ -237,7 +237,7 @@ def test_product_stage_owner_file():
     import uarch_model as U
     own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
     r = _rec()
-    ad = next(p for p in r["v41_rom"]["points"] if p.get("role") == "product" and "SS wire" in p["label"])
+    ad = next(p for p in r["v41_rom"]["points"] if p.get("role") == "product" and "MEASURED serial" in p["label"])
     assert own["schema"] == "opentallas.v41.stage_owner_preflight.v1" and own["stage_count"] == ad["stages"]
     assert own["layer_dies"] == ad["layer_dies"] and len(own["layer_owners"]) == 40
     assert own["min_per_die_headroom_after_rounding_and_engram_spill_bytes"] > 0
@@ -262,3 +262,34 @@ def test_followup_rows():
     hx = r["qwen_helix_200k"]["rows"]
     assert hx[0]["extra_kv_dies"] == 0 and hx[-1]["ar_tokens_s"] > hx[0]["ar_tokens_s"]
     assert r["gpu_calibration"]["published"][0]["tok_s_user"] == 368.0
+
+
+def test_w11_measured_serial_step():
+    """Named step (W16b): W11's measured serial build at 1.111 ns SS (ddd2f725) replaces the 3-stage-add depths
+    and the +1 LAT-4 multiply lower bound in the 0.9 GHz domain; it lengthens the chain, so AR and MTP drop,
+    the stage plan and die count do not move, and the product row is the one the headline table reads."""
+    import uarch_model as U
+    m = U.W11_SERIAL_MEASURED
+    assert (m["linear"], m["exp"], m["sigmoid"], m["silu"], m["rsqrt"], m["softplus"], m["gate"]) == (9, 22, 23, 23, 21, 54, 23)
+    assert (m["reduce_tap"], m["reduce_per_level"], m["div"], m["light_lane_ss_mhz"]) == (9, 1, 0, 929.0)
+    r = _rec()
+    pts = {p["label"]: p for p in r["v41_rom"]["points"] if p.get("role") == "product"}
+    old = next(p for k, p in pts.items() if k.endswith("W11 LAT-4 serial mul"))
+    new = next(p for k, p in pts.items() if "MEASURED serial" in k)
+    assert new["serial"] == "w11_measured" and old.get("serial") is None
+    assert new["ar_tokens_s_b1"] < old["ar_tokens_s_b1"] and new["mtp_tokens_s_b1"] < old["mtp_tokens_s_b1"]
+    assert (new["stages"], new["dies"]) == (old["stages"], old["dies"])
+    h = r["headline_table"]["v41"][0]
+    assert abs(h["per_user_ar"] - new["ar_tokens_s_b1"]) < 0.5 and abs(h["per_user_mtp"] - new["mtp_tokens_s_b1"]) < 0.5
+
+
+def test_die_shrink_crossing_sensitivity():
+    """Root ruling 2026-09-30: shrink the layer die to the owner file's pairs + ~10%; the sensitivity scales the
+    on-die crossings by sqrt(area ratio) and can only speed the token up."""
+    import math
+    import uarch_model as U
+    own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
+    assert U.DIE_SHRINK["pairs_needed"] == max(own["pairs_per_die_by_stage"])
+    ds = _rec()["v41_rom"]["die_shrink_sensitivity"]
+    assert ds["role"] == "sensitivity" and abs(ds["crossing_scale"] - math.sqrt(ds["area_ratio"])) < 1e-12
+    assert ds["area_ratio"] < 1 and ds["ar_tokens_s_b1"] >= ds["product_ar"] and ds["mtp_tokens_s_b1"] >= ds["product_mtp"]

@@ -80,6 +80,7 @@ REF_CTX = 1048576
 REF_RECORD = ROOT / "results/rtl/w17_v41_1m_reference_token.json"
 REF_SHARDS = Path("/home/ubuntu/w17work/ref/ctx1048576_seed20260930")
 OUT = ROOT / "results/rtl/w19_hbm_tp96_isa.json"
+DUMP = dict(path=None, layers=set())       # --dump: rank 0's matvec operands, for the SM RTL cases
 
 
 class Defect(Exception):
@@ -254,7 +255,7 @@ class State:
     ckv[s], ik[s]: every compressed row / index key, with room for this token's appended group; slots[s]: the open
     group (position -> (kv, sc))."""
 
-    def __init__(self, m, ctx, seed, layers):
+    def __init__(self, m, ctx, seed, layers, extra=1):
         pos = ctx - 1
         h = hashlib.sha256()
         self.win, self.ckv, self.ik, self.n, self.slots, self.sha = {}, {}, {}, {}, {}, {}
@@ -277,8 +278,8 @@ class State:
             n_prev = pos // r if r > 1 else pos
             gk = m.lw(s, "attn.compressor.norm.weight")
             gi = m.lw(s, "attn.indexer.k_norm.weight")
-            ckv = np.empty((n_prev + 1, m.hd), dtype=F)
-            ik = np.empty((n_prev + 1, m.ihd), dtype=F)
+            ckv = np.empty((n_prev + extra, m.hd), dtype=F)
+            ik = np.empty((n_prev + extra, m.ihd), dtype=F)
             i = 0
             for blk in LC._gained(rng_of(1, s), n_prev, m.hd, gk):
                 ckv[i:i + len(blk)] = V.qdq_fp4_e4m3(blk.reshape(-1), 16).reshape(blk.shape)
@@ -345,9 +346,19 @@ class Rank:
 class Executor:
     def __init__(self, m, st: State, pos: int, hist, variant: str, log=print):
         self.m, self.st, self.pos, self.hist, self.variant, self.log = m, st, pos, hist, variant, log
-        self.ranks = [Rank(r) for r in range(TP)]
+        self.PR = [[Rank(r) for r in range(TP)]]      # per verify position: its own ranks' buffers / transients
+        self.ranks = self.PR[0]
+        self.dump, self.dump_layers = None, set()        # rank 0's matvec inputs/outputs (the SM RTL cases)
+        self.winapp = [dict() for _ in range(TP)]    # per die, per layer: the window rows this pass appended
+        self.cur = 0
         self.coll_log, self.sm_log = [], []
         self.fetch_log = []
+
+    def select(self, j, pos, hist):
+        """Execute position j of a verify block next (its buffers, position and token history)."""
+        while len(self.PR) <= j:
+            self.PR.append([Rank(r) for r in range(TP)])
+        self.cur, self.ranks, self.pos, self.hist = j, self.PR[j], pos, hist
 
     def ranks_of(self, spec):
         if spec == "all":
@@ -441,6 +452,11 @@ class Executor:
                 else:
                     raise Defect(f"op {op['id']}: unknown matvec fn {fn}")
             rk.put(op["out"], out, lo=r0, n=n)
+            if self.dump is not None and L in self.dump_layers and rk.r == 0:
+                xin = rk.get(op["x"]) if fn != "wo_a_part" else rk.get("o_own")
+                self.dump[f"L{L}.op{op['id']}.p{self.cur}"] = dict(
+                    tag=op["tag"], fn=fn, fmt=op["fmt"], k=op["k"], w=name if isinstance(name, str) else list(name),
+                    rows=[int(r0), int(r1)], x=np.asarray(xin, dtype=F).copy(), out=np.asarray(out, dtype=F).copy())
         self.sm_log.append(dict(op=op["id"], layer=L, tag=op["tag"], n=n, k=op["k"], fmt=op["fmt"],
                                 rows_per_die_max=int(rmax)))
 
@@ -592,7 +608,9 @@ class Executor:
         kv = V.rmsnorm_bf16(rk.get("kvraw"), m.lw(L, "attn.kv_norm.weight"), m.eps)
         row = V.qdq_fp8(V.rope_tail(kv, cs))
         rk.put("win_new", row)
-        rk.win[L] = np.concatenate([self.st.win[L], row[None, :]])[-m.window:]
+        app = self.winapp[rk.r].setdefault(L, [])
+        app.append(row)
+        rk.win[L] = np.concatenate([self.st.win[L], np.stack(app)])[-m.window:]
 
     def cs(self, L):
         return V.rope_cs(self.m.freqs_yarn if self.m.ratio[L] > 0 else self.m.freqs_plain, self.pos)
@@ -839,6 +857,8 @@ def run(layers, head, variant, log=print, program_out=None):
         if not state_check["match"]:
             raise SystemExit(f"synthetic state digest {st.state_sha256} != reference {want.get('state_sha256')}")
     ex = Executor(m, st, pos, hist, variant, log)
+    if DUMP["path"]:
+        ex.dump, ex.dump_layers = {}, set(DUMP["layers"])
     first = layers[0]
     if first == 0:
         h = np.repeat(ck.rows("embed.weight", [hist[-1]]), m.hc, axis=0).astype(F)
@@ -955,6 +975,9 @@ def run(layers, head, variant, log=print, program_out=None):
                         else "fail", tokens_agree_all_ranks=all(int(rk.get("token")[0]) == tok for rk in ex.ranks))
         log(f"head: token {tok} (reference {ref['next_token']}) logits "
             f"{'BIT-EXACT' if head_res['verdict'] == 'pass' else 'MISMATCH'}")
+    if DUMP["path"]:
+        import pickle
+        Path(DUMP["path"]).write_bytes(pickle.dumps(ex.dump))
     if program_out:
         Path(program_out).write_text(json.dumps(dict(schema=SCHEMA + ".program", tp=TP, head_dies=HEAD_DIES,
                                                       key_block=KEY_BLOCK, position=pos, variant=variant,
@@ -962,6 +985,163 @@ def run(layers, head, variant, log=print, program_out=None):
     return dict(context=ctx, position=pos, seed=seed, variant=variant, state_check=state_check, layers=results,
                 head=head_res, collectives=ex.coll_log, sm_ops=ex.sm_log, expert_fetch=ex.fetch_log,
                 model_init_sha256=init_sha)
+
+
+MTP_DIR = Path("/home/ubuntu/w19work/mtp")
+
+
+def region_checks(ex, L, gz, has, js_experts, sel_sha=None):
+    """The per-layer golden comparison of the current position (gz(key) -> golden array, has(key) -> bool)."""
+    R = ex.ranks
+    regs = []
+    if has(f"L{L}.engram"):
+        regs.append(check(f"L{L}.engram", gz(f"L{L}.engram"), [(rk.r, rk.get("engram_h")) for rk in R]))
+    regs += [check(f"L{L}.attn_norm", gz(f"L{L}.attn_norm"), [(rk.r, rk.get("attn_x")) for rk in R]),
+             check(f"win{L}", gz(f"win{L}"), [(rk.r, rk.get("win_new")) for rk in R]),
+             check(f"L{L}.attn", gz(f"L{L}.attn"), [(rk.r, rk.get("y")) for rk in R]),
+             check(f"L{L}.ffn_norm", gz(f"L{L}.ffn_norm"), [(rk.r, rk.get("ffn_x")) for rk in R]),
+             check(f"L{L}.router", gz(f"L{L}.router"), [(rk.r, rk.get("router")) for rk in R]),
+             check(f"L{L}.ffn", gz(f"L{L}.ffn"), [(rk.r, rk.get("yf")) for rk in R]),
+             check(f"block{L}", gz(f"block{L}"), [(rk.r, rk.get("h")) for rk in R]),
+             check(f"pre{L}", gz(f"pre{L}"), [(rk.r, rk.get("pre")) for rk in R])]
+    for s in ex.m.kv_src:
+        if has(f"ckv{s}"):
+            owner = [rk for rk in R if "new_ckv" in rk.mem]
+            regs.append(check(f"ckv{s}", gz(f"ckv{s}"), [(rk.r, rk.get("new_ckv")) for rk in owner]))
+            regs.append(check(f"ik{s}", gz(f"ik{s}"), [(rk.r, rk.get("new_ik")) for rk in owner]))
+    if has(f"L{L}.index_scores"):
+        want = gz(f"L{L}.index_scores")
+        got = np.full(len(want), np.nan)
+        for rk in R:
+            got[rk.get("is_i")] = rk.get("is_v")
+        regs.append(check(f"L{L}.index_scores", want, [(-1, got)]))
+    if sel_sha:
+        sel = R[0].get("sel").astype(np.int64)
+        ok = hashlib.sha256(sel.tobytes()).hexdigest() == sel_sha and \
+            all(np.array_equal(rk.get("sel"), R[0].get("sel")) for rk in R)
+        regs.append(dict(region=f"L{L}.index_select", bit_exact=bool(ok), ranks_checked=TP, first_bad=[]))
+    regs.append(dict(region=f"L{L}.experts", bit_exact=ex.route_ids == js_experts, ranks_checked=TP,
+                     first_bad=[] if ex.route_ids == js_experts else [dict(got=ex.route_ids, want=js_experts)]))
+    return regs
+
+
+def run_mtp(layers, head, variant, log=print, mtp_dir=MTP_DIR):
+    """The 6-position MTP verify pass (tools/w19_v41_mtp_golden.py's block) on the 96 ranks, layer-major: every
+    position's ops of layer L run before layer L + 1, positions in order (the golden's forward_positions order).
+    A position's window row, compressor slot, index selection, candidates and experts are its own; the program
+    batches the positions' columns into one weight pass and one collective per op (counted once, bytes summed)."""
+    ref = json.loads(REF_RECORD.read_text())
+    ctx, seed = ref["context"], ref["seed"]
+    pos0 = ctx - 1
+    hj = json.loads((mtp_dir / "mtp_L00.json").read_text())
+    tokens = hj["tokens"]
+    P = len(tokens)
+    hist0 = list(ref["token_history"])
+    hists = [hist0 + tokens[1:1 + j] for j in range(P)]
+    ck = LC.Checkpoint()
+    m, init_sha = LC.build_model(ck, engram=True)
+    assert layers[0] == 0
+    t1 = time.time()
+    st = State(m, ctx, seed, set(range(m.L)) if set(layers) == set(range(m.L)) else set(layers), extra=P)
+    log(f"state built {time.time() - t1:.0f} s: {st.n}")
+    ex = Executor(m, st, pos0, hist0, variant, log)
+    if DUMP["path"]:
+        ex.dump, ex.dump_layers = {}, set(DUMP["layers"])
+    for j in range(P):
+        ex.select(j, pos0 + j, hists[j])
+        h = np.repeat(ck.rows("embed.weight", [tokens[j]]), m.hc, axis=0).astype(F)
+        for rk in ex.ranks:
+            rk.put("h", h)
+            rk.put("pre", np.array([1, 0, 0, 0], dtype=F))
+    results = []
+    for L in layers:
+        tl = time.time()
+        z = np.load(mtp_dir / f"mtp_L{L:02d}.npz")
+        js = json.loads((mtp_dir / f"mtp_L{L:02d}.json").read_text())
+        files = set(z.files)
+        per_pos, colls, ops_n, routes, defect = [], [], None, [], None
+        for j in range(P):
+            ex.select(j, pos0 + j, hists[j])
+            comp = Compiler(m, pos0 + j, variant)
+            ops = comp.compile_layer(L, first=(L == layers[0]))
+            ops_n = len(ops)
+            gz = (lambda k, j=j: z[f"{k}@{j}"])
+            has = (lambda k, j=j: f"{k}@{j}" in files)
+            regs = [check("input", gz("h_in"), [(rk.r, rk.get("h")) for rk in ex.ranks])]
+            n0 = len(ex.coll_log)
+            split_at = next(o["id"] for o in ops if o["kind"] == "all_gather"
+                            and o["tag"] == "expert_intermediate_gather")
+            try:
+                ex.run(ops[:split_at + 1])
+                ex.split_ea()
+                ex.run(ops[split_at + 1:])
+            except Defect as e:
+                defect = f"position {j}: {e}"
+                log(f"L{L} DEFECT {defect}")
+                break
+            colls.append(ex.coll_log[n0:])
+            regs += region_checks(ex, L, gz, has, js["experts"][j],
+                                  (js.get("index_select_sha256") or {}).get(str(j)))
+            routes.append(list(ex.route_ids))
+            per_pos.append(dict(position=pos0 + j, verdict="pass" if all(x["bit_exact"] for x in regs) else "fail",
+                                regions=regs))
+            for rk in ex.ranks:
+                rk.clear(keep=("h", "pre", "sel"))
+        ok = defect is None and len(per_pos) == P and all(p["verdict"] == "pass" for p in per_pos)
+        union = sorted(set(x for r in routes for x in r))
+        # batched: one collective per op over all positions' columns
+        tags = {}
+        for cl in colls:
+            for c in cl:
+                t = tags.setdefault(c["tag"], dict(bytes=0, positions=0))
+                t["bytes"] += c["bytes"]
+                t["positions"] += 1
+        results.append(dict(layer=L, verdict="pass" if ok else "fail", defect=defect, positions=per_pos,
+                            union_experts=union, n_union=len(union), union_matches_golden=union == js["union_experts"],
+                            collectives_batched=len(tags), collective_bytes=int(sum(t["bytes"] for t in tags.values())),
+                            collectives=tags, ops_per_position=ops_n, wall_s=round(time.time() - tl, 1)))
+        log(f"L{L:02d} MTP x{P} {'PASS' if ok else 'FAIL'} union {len(union)} experts, collectives {len(tags)} "
+            f"({sum(t['bytes'] for t in tags.values())} B) {time.time() - tl:.0f} s"
+            + ("" if ok else f" bad: {[(p['position'], [x['region'] for x in p['regions'] if not x['bit_exact']]) for p in per_pos if p['verdict'] != 'pass']}"))
+        for k in [k for k in m.w if k.startswith(f"layers.{L}.")]:
+            del m.w[k]
+        for w in ex.winapp:
+            w.pop(L, None)
+        for rks in ex.PR:
+            for rk in rks:
+                rk.win.pop(L, None)
+        if not ok:
+            break
+    head_res = None
+    if head and len(results) == m.L and all(r["verdict"] == "pass" for r in results):
+        hz = np.load(mtp_dir / "mtp_head.npz")
+        hjs = json.loads((mtp_dir / "mtp_head.json").read_text())
+        targets, exact = [], []
+        for j in range(P):
+            ex.select(j, pos0 + j, hists[j])
+            ex.run(Compiler(m, pos0 + j, variant).compile_head())
+            lg = np.zeros(129280, dtype=F)
+            for rk in ex.ranks:
+                r0, r1 = even(129280)[rk.r]
+                lg[r0:r1] = rk.get("logits", r0, r1)
+            targets.append(int(ex.ranks[0].get("token")[0]))
+            exact.append(bool(np.array_equal(G.bits(lg), G.bits(hz[f"logits@{j}"]))))
+        drafts = tokens[1:]
+        acc = 0
+        while acc < len(drafts) and drafts[acc] == targets[acc]:
+            acc += 1
+        head_res = dict(targets=targets, golden_targets=hjs["targets"], logits_bit_exact=exact, accepted=acc,
+                        position0_token=targets[0], reference_next_token=ref["next_token"],
+                        verdict="pass" if all(exact) and targets == hjs["targets"] and
+                        targets[0] == ref["next_token"] else "fail")
+        log(f"MTP head: targets {targets} accepted {acc} logits exact {exact}")
+    if DUMP["path"]:
+        import pickle
+        Path(DUMP["path"]).write_bytes(pickle.dumps(ex.dump))
+    return dict(mode="mtp_verify", context=ctx, positions=[pos0 + j for j in range(P)], tokens=tokens, seed=seed,
+                variant=variant, layers=results, head=head_res, sm_ops=ex.sm_log[:200],
+                expert_fetch=ex.fetch_log, model_init_sha256=init_sha,
+                mean_union_experts=float(np.mean([r["n_union"] for r in results])) if results else None)
 
 
 SOURCES = ("tools/w19_hbm_tp96_isa.py", "tools/hdc_golden_v41.py", "tools/hdc_golden.py",
@@ -984,19 +1164,40 @@ def main() -> int:
     ap.add_argument("--variant", default="gather", choices=("gather", "oreduce"))
     ap.add_argument("--record", type=Path)
     ap.add_argument("--program-out", type=Path)
+    ap.add_argument("--mtp", action="store_true", help="the 6-position verify pass (tools/w19_v41_mtp_golden.py)")
+    ap.add_argument("--mtp-dir", type=Path, default=MTP_DIR)
+    ap.add_argument("--dump", type=Path, help="pickle of rank 0's matvec operands (x, out, rows) per op")
+    ap.add_argument("--dump-layers", default="0")
+    ap.add_argument("--compile-only", action="store_true", help="write the program (--program-out) and exit")
     a = ap.parse_args()
     if V.ARITH != "chunk8":
         raise SystemExit("HDC_V41_ARITH must be chunk8 (the reference token's contract)")
     layers = parse_layers(a.layers)
+    if a.compile_only:
+        ck = LC.Checkpoint()
+        m, _ = LC.build_model(ck, engram=False)
+        pos = REF_CTX - 1
+        prog = [dict(layer=L, ops=Compiler(m, pos, a.variant).compile_layer(L, first=(L == layers[0])))
+                for L in layers]
+        if a.head:
+            prog.append(dict(layer="head", ops=Compiler(m, pos, a.variant).compile_head()))
+        Path(a.program_out).write_text(json.dumps(dict(schema=SCHEMA + ".program", tp=TP, head_dies=HEAD_DIES,
+                                                       key_block=KEY_BLOCK, position=pos, variant=a.variant,
+                                                       compiled_only=True, layers=prog), default=list) + "\n")
+        print("wrote", a.program_out)
+        return 0
+    if a.dump:
+        DUMP["path"], DUMP["layers"] = a.dump, set(parse_layers(a.dump_layers))
     t0 = time.time()
-    res = run(layers, a.head, a.variant, program_out=a.program_out)
+    res = run_mtp(layers, a.head, a.variant, mtp_dir=a.mtp_dir) if a.mtp else \
+        run(layers, a.head, a.variant, program_out=a.program_out)
     res["wall_s"] = round(time.time() - t0, 1)
     passed = all(r["verdict"] == "pass" for r in res["layers"]) and len(res["layers"]) == len(layers) and \
         (res["head"] is None or res["head"]["verdict"] == "pass")
     print(f"{'PASS' if passed else 'FAIL'}: {len(res['layers'])} layers, head {res['head']}")
     if a.record:
         head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
-        key = f"{a.variant}:L{a.layers}" + (":head" if a.head else "")
+        key = ("mtp:" if a.mtp else "") + f"{a.variant}:L{a.layers}" + (":head" if a.head else "")
         rec = dict(schema=SCHEMA, status="pass" if passed else "fail")
         old = json.loads(a.record.read_text()) if a.record.exists() else {}
         runs = dict(old.get("runs", {}))

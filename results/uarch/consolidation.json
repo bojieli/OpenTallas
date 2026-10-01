@@ -1,6 +1,22 @@
 {
  "schema": "opentallas.uarch.consolidation.v1",
  "v41_rom": {
+  "die_shrink_sensitivity": {
+   "slots_now": 7628,
+   "pairs_needed": 5289,
+   "margin": 0.1,
+   "src": "root ruling 2026-09-30; W18b claude/w18-die-assembly 510f376e; v41_stage_owner_product.json",
+   "area_ratio": 0.7627031987414788,
+   "crossing_scale": 0.8733288033389709,
+   "role": "sensitivity",
+   "ar_tokens_s_b1": 3186.5,
+   "mtp_tokens_s_b1": 4894.6,
+   "ar_saturated_tokens_s": 90025.4,
+   "product_ar": 3155.9,
+   "product_mtp": 4874.9,
+   "product_saturated": 90025.4,
+   "note": "crossings (field broadcast/return, expert trunks, collective->SerDes) x sqrt(area ratio); die area, cost and power not re-priced; PENDING W18b's floorplan of the shrunk die"
+  },
   "counts": [
    {
     "bf16": "standard_pair",
@@ -4842,27 +4858,27 @@
    "product": {
     "50% cap + 256-cycle pre-ramp": {
      "pre_ramp_mJ_per_token": 87.0,
-     "gated_mJ_b1": 568.3,
+     "gated_mJ_b1": 585.1,
      "gated_mJ_saturated": 296.5,
-     "gap_only_pre_ramp_mJ_per_token": 99.2,
-     "gap_only_gated_mJ_b1": 580.4,
-     "gap_only_gated_mJ_saturated": 308.6
+     "gap_only_pre_ramp_mJ_per_token": 99.8,
+     "gap_only_gated_mJ_b1": 597.9,
+     "gap_only_gated_mJ_saturated": 309.3
     },
     "1,024-cycle pre-ramp, no cap": {
      "pre_ramp_mJ_per_token": 692.6,
-     "gated_mJ_b1": 1173.9,
+     "gated_mJ_b1": 1190.7,
      "gated_mJ_saturated": 902.1,
-     "gap_only_pre_ramp_mJ_per_token": 789.3,
-     "gap_only_gated_mJ_b1": 1270.6,
-     "gap_only_gated_mJ_saturated": 998.7
+     "gap_only_pre_ramp_mJ_per_token": 794.5,
+     "gap_only_gated_mJ_b1": 1292.6,
+     "gap_only_gated_mJ_saturated": 1003.9
     },
     "256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV)": {
      "pre_ramp_mJ_per_token": 174.0,
-     "gated_mJ_b1": 655.3,
+     "gated_mJ_b1": 672.1,
      "gated_mJ_saturated": 383.5,
-     "gap_only_pre_ramp_mJ_per_token": 198.3,
-     "gap_only_gated_mJ_b1": 679.6,
-     "gap_only_gated_mJ_saturated": 407.8
+     "gap_only_pre_ramp_mJ_per_token": 199.6,
+     "gap_only_gated_mJ_b1": 697.7,
+     "gap_only_gated_mJ_saturated": 409.1
     }
    }
   },
@@ -5521,16 +5537,16 @@
     "option_ii cap 3": {
      "stages": 32,
      "dies": 168,
-     "ar": 3288.4,
-     "mtp": 4746.6,
+     "ar": 3116.7,
+     "mtp": 4665.4,
      "saturated": 74909.6,
      "pipeline_hops_us": 13.414
     },
     "option_iii": {
      "stages": 36,
      "dies": 184,
-     "ar": 3248.5,
-     "mtp": 4655.0,
+     "ar": 3080.9,
+     "mtp": 4576.8,
      "saturated": 74756.3,
      "pipeline_hops_us": 14.882
     }
@@ -5554,7 +5570,7 @@
     "head_dies": 4,
     "table_dies": 36,
     "dies": 188,
-    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 LAT-4 serial mul",
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz)",
     "basis": "storage-only 75.0, BF16 on the standard pair, W10 budget pitch, 12.5%, ring credit, 4096m8"
    }
   },
@@ -5606,6 +5622,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -5757,6 +5774,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -5908,6 +5926,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -6059,6 +6078,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -6210,6 +6230,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -6361,6 +6382,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -6512,6 +6534,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -6663,6 +6686,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 18.85,
      "ffn.combine_allreduce": 18.85,
@@ -6814,6 +6838,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 22.31,
      "ffn.combine_allreduce": 22.31,
@@ -6969,6 +6994,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 28.33,
      "ffn.combine_allreduce": 28.33,
@@ -7124,6 +7150,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 25.16,
      "ffn.combine_allreduce": 25.16,
@@ -7279,6 +7306,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 16.98,
      "ffn.combine_allreduce": 16.98,
@@ -7434,6 +7462,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 28.33,
      "ffn.combine_allreduce": 28.33,
@@ -7589,6 +7618,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 25.16,
      "ffn.combine_allreduce": 25.16,
@@ -7744,6 +7774,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 15.47,
      "ffn.combine_allreduce": 15.47,
@@ -7899,6 +7930,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 28.33,
      "ffn.combine_allreduce": 28.33,
@@ -8054,6 +8086,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 25.16,
      "ffn.combine_allreduce": 25.16,
@@ -8212,6 +8245,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.out_allreduce": 17.07,
      "ffn.combine_allreduce": 17.07,
@@ -8372,6 +8406,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.wo_a": 21.17,
      "attn.out_allreduce": 17.07,
@@ -8541,6 +8576,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.wo_a": 21.17,
      "attn.out_allreduce": 17.07,
@@ -8701,6 +8737,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.wo_a": 21.17,
      "attn.out_allreduce": 17.07,
@@ -8864,6 +8901,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": false,
+    "serial": null,
     "critical_path_top_us": {
      "attn.wo_a": 21.33,
      "attn.out_allreduce": 17.07,
@@ -9027,6 +9065,7 @@
      "layer_die_starts_per_token": 1304
     },
     "ss_wire": true,
+    "serial": null,
     "critical_path_top_us": {
      "attn.wo_a": 21.67,
      "attn.out_allreduce": 19.13,
@@ -9118,6 +9157,170 @@
      "link_Bps_per_package": 26352941176.47059,
      "link_utilisation_ar_saturated": 0.0025,
      "link_utilisation_mtp_saturated": 0.0023
+    },
+    "cost": {
+     "silicon_usd": 108702,
+     "package_usd": 189880,
+     "hbm_usd": 218880,
+     "hardware_usd": 517462,
+     "nre_usd": {
+      "low": 139000000.0,
+      "high": 421000000.0
+     },
+     "capex_usd": {
+      "low": 656462,
+      "high": 938462
+     },
+     "silicon_mm2": 153220.0
+    },
+    "cost_iso_package_usd": 2350000.0,
+    "silicon_mm2": 153220.0
+   },
+   {
+    "label": "PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz)",
+    "stages": 37,
+    "bf16": "columns",
+    "clock_hz": 1200000000.0,
+    "layer_dies": 148,
+    "head_dies": 4,
+    "table_dies": 36,
+    "dies": 188,
+    "packages": 94,
+    "hbm_stacks": 608,
+    "busiest_die_macros": 10448,
+    "ar_tokens_s_b1": 3155.9,
+    "mtp_tokens_s_b1": 4874.9,
+    "ar_saturated_tokens_s": 90025.4,
+    "mtp_saturated_tokens_s": 48272.6,
+    "stage_hops": 36,
+    "pipeline_hops_us": 15.249,
+    "cooling": {
+     "limit_w_per_die": 474.56,
+     "dyn_scale": 1.16,
+     "busiest_stage": 18,
+     "layer_die_static_w": 57.3,
+     "layer_die_mean_w_saturated": 133.9,
+     "layer_die_busiest_w_saturated": 281.8,
+     "fits": true,
+     "cooling_ungated": {
+      "static_w": 710.2,
+      "mean_w": 764.2
+     },
+     "basis": "per-pair ICG adopted: die static less the field clock + on-die dynamic energy (busy pairs' clock included) at the saturated rate; busiest = its own pair-seconds + its occupancy share of the rest"
+    },
+    "field_concurrency": 0.5,
+    "added_latency": {
+     "suffix:softplus_sqrt": -97,
+     "suffix:idx.topk_local": 8
+    },
+    "slow_domain": [
+     900000000.0,
+     "w18"
+    ],
+    "chain_stages": null,
+    "elem_stages": 7,
+    "field_starts": {
+     "mean_starts_per_die": 8.81,
+     "mean_ramps_per_die": 6.51,
+     "held_cycles_per_token": 13973,
+     "max_ramps_per_die": 13,
+     "tau_cycles": 256,
+     "layer_die_ramps_per_token": 964,
+     "layer_die_starts_per_token": 1304
+    },
+    "ss_wire": true,
+    "serial": "w11_measured",
+    "critical_path_top_us": {
+     "attn.wo_a": 21.67,
+     "attn.out_allreduce": 19.13,
+     "ffn.combine_allreduce": 19.13,
+     "attn.idx.score": 13.42,
+     "substage_hop0": 13.36,
+     "ffn.softplus_sqrt": 11.07,
+     "ffn.experts_gu": 10.6,
+     "ffn.down": 10.53
+    },
+    "capacity_users_1m": 866,
+    "static_w_ungated": {
+     "layer_dies": 8479.8,
+     "head_dies": 369.3,
+     "table_dies": 3324.4,
+     "total": 12173.5
+    },
+    "energy": {
+     "ar_b1": {
+      "tokens_s": 3155.9,
+      "ungated_mJ": 3964.77,
+      "gated_mJ": 498.07,
+      "ungated_static_w": 12054.2,
+      "gated_static_w": 1113.6,
+      "gated_system_w": 1571.9
+     },
+     "ar_sat": {
+      "tokens_s": 90025.4,
+      "ungated_mJ": 279.11,
+      "gated_mJ": 209.43,
+      "ungated_static_w": 12054.2,
+      "gated_static_w": 5780.6,
+      "gated_system_w": 18853.7
+     },
+     "mtp_b1": {
+      "tokens_s": 4874.9,
+      "ungated_mJ": 2687.92,
+      "gated_mJ": 434.34,
+      "ungated_static_w": 12054.2,
+      "gated_static_w": 1068.1,
+      "gated_system_w": 2117.4
+     },
+     "mtp_sat": {
+      "tokens_s": 48272.6,
+      "ungated_mJ": 464.94,
+      "gated_mJ": 285.56,
+      "ungated_static_w": 12054.2,
+      "gated_static_w": 3395.3,
+      "gated_system_w": 13784.9
+     }
+    },
+    "busiest_stage": 18,
+    "busiest_stage_us": 11.11,
+    "layers_per_stage": 1.081,
+    "engram_dag_slack": {
+     "L1": {
+      "engram_ready_us": 1.63,
+      "residual_ready_us": 6.242,
+      "slack_us": 4.611,
+      "on_critical_path": false
+     },
+     "L14": {
+      "engram_ready_us": 1.63,
+      "residual_ready_us": 106.099,
+      "slack_us": 104.468,
+      "on_critical_path": false
+     }
+    },
+    "density": "analytical",
+    "bf16_mode": "columns",
+    "role": "product",
+    "depth": "4096m8",
+    "bf16_stage_reference": {
+     "option_ii cap 3 (reference)": 32,
+     "option_iii BF16_PAIR (reference)": 36,
+     "columns (product)": 37
+    },
+    "engram": {
+     "table_dies": 36,
+     "table_packages": 18,
+     "rows_per_token": 48,
+     "expected_max_rows_per_die_per_layer": 3.78,
+     "engram_l1_latency_us": 1.874,
+     "engram_l1_slack_us": 3.57,
+     "engram_l14_slack_us": 65.2,
+     "hops": "unchanged: table package -> one 51.2T switch -> layer package (2 switched legs)",
+     "latency_basis": "rack critical_paths: 2 switched legs + the 396 ns port read of all 48 rows at ONE port (an upper bound for any table-die count) + serialisation into the consumer port",
+     "bytes_per_token": 13312,
+     "link_Bps_per_package": 26352941176.47059,
+     "link_utilisation_ar_saturated": 0.0025,
+     "link_utilisation_mtp_saturated": 0.0022
     },
     "cost": {
      "silicon_usd": 108702,
@@ -11192,11 +11395,11 @@
    {
     "design": "V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)",
     "tier": "ROM",
-    "per_user_ar": 3332.1,
-    "per_user_mtp": 4963.8,
-    "per_user_mtp_headline_tau_3p78": 5142.0,
+    "per_user_ar": 3155.9,
+    "per_user_mtp": 4874.9,
+    "per_user_mtp_headline_tau_3p78": 5049.9,
     "saturated_tokens_s": 90025.4,
-    "mJ_b1": 568.3,
+    "mJ_b1": 585.1,
     "mJ_saturated": 296.5,
     "capex_usd": {
      "low": 656462,
@@ -11425,11 +11628,11 @@
   "rows": [
    {
     "design": "V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp)",
-    "tau_2.91": 3958.5,
-    "tau_3.649": 4963.8,
-    "tau_3.78": 5142.0,
-    "tau_4.5": 6121.4,
-    "tau_5.24": 7128.1
+    "tau_2.91": 3887.6,
+    "tau_3.649": 4874.9,
+    "tau_3.78": 5049.9,
+    "tau_4.5": 6011.8,
+    "tau_5.24": 7000.4
    },
    {
     "design": "V4.1 HBM tier 3 (idealised), equal area: 4 x TP-96 (384 right-sized dies, 1.2 GHz, SS wires; W19 audit central)",
@@ -11489,8 +11692,8 @@
   "rows": [
    {
     "design": "V4.1 ROM product (columns, 1.2 GHz SS)",
-    "ar": 3572.9,
-    "mtp": 5784.6,
+    "ar": 3368.6,
+    "mtp": 5663.1,
     "saturated": 115770.5,
     "dies": 188,
     "silicon_mm2": 153220.0,
@@ -14423,7 +14626,7 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "398b303a987e31927d2fb14c1a878ad85349e098905dc01f96cfa021a4875645",
+  "tools/uarch_model.py": "f6d0208d766a0cdebd30866ac4415c13040f229db0f7e4360427fb6644484850",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
