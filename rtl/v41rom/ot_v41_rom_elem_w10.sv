@@ -59,6 +59,9 @@ module ot_v41_rom_elem_w10 #(
     parameter integer FAST = 0,
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer PP = 0,
+    // W10 SS frontend: remove class selection from the address carry/compare
+    // cone. Opt-in, no added cycles or changes to capture/walker sequencing.
+    parameter integer FRONT_PAR = 0,
     // BF16_PAIR (root decision 2026-09-30, option iii): BF16 rows on the standard pair.  A BF16 word (16 weights,
     // lane l = element b of golden chunk 16u + l) is held 4 cycles; 4 multipliers per macro take lanes 4k..4k+3 in
     // cycle k into 4 chunk chains (NCH >= 24 slots: slot = 4 x word-in-round + k); at the round b = 7 the 4 chunk
@@ -280,7 +283,26 @@ module ot_v41_rom_elem_w10 #(
         ot_v41_walk_w10 #(.N(NSEG)) u_nw (.q(n_q), .b(n_b), .c(n_c), .j(n_j), .nu(nu_p), .base(base_live),
                                        .qlast(qlast), .sbs(2'd3), .nx(n_nx));
     end
-    wire hit_q = n_run && !fam && xs_v_e && xs_p_e == n_pair && xs_b_e == n_b && xs_pos_e == n_pos;
+    wire pair_match;
+    if (FRONT_PAR != 0) begin : g_front_par
+        wire [NSEG-1:0] class_match;
+        for (genvar fc = 0; fc < NSEG; fc = fc + 1) begin : g_class
+            // The assignment truncates BEFORE equality, just like n_pair.
+            // Keep the independent cones so mapping cannot pull a base mux
+            // back ahead of the adder on the n_c -> hit -> nB enable path.
+            (* keep *) wire [7:0] expected_pair;
+`ifdef W10_MUTANT_FRONT_PAIR
+            assign expected_pair = c_u0[fc] + {2'd0, n_q, n_j} + 8'd1;
+`else
+            assign expected_pair = c_u0[fc] + {2'd0, n_q, n_j};
+`endif
+            assign class_match[fc] = (n_c == SW'(fc)) && (xs_p_e == expected_pair);
+        end
+        assign pair_match = |class_match;
+    end else begin : g_front_serial
+        assign pair_match = xs_p_e == n_pair;
+    end
+    wire hit_q = n_run && !fam && xs_v_e && pair_match && xs_b_e == n_b && xs_pos_e == n_pos;
     // BF16: capture, in slot order, every slice of this round (b) whose unit lies in a live class's sub-block
     reg        bn_run;
     reg [2:0]  bn_q;

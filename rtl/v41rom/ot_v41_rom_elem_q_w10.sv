@@ -7,6 +7,7 @@ module ot_v41_rom_elem_q_w10 #(
     parameter integer EARLY = 0,
     parameter integer FAST = 0,
     parameter integer PP = 0,
+    parameter integer FRONT_PAR = 0,
     parameter INSTANCE = ""
 ) (
     input  wire         clk,
@@ -34,7 +35,7 @@ module ot_v41_rom_elem_q_w10 #(
     output wire         busy,
     output wire         fault
 );
-    ot_v41_rom_elem_w10 #(.BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .INSTANCE(INSTANCE)) u_e (
+    ot_v41_rom_elem_w10 #(.BF16(0), .NB(NB), .MTP(MTP), .EARLY(EARLY), .FAST(FAST), .PP(PP), .FRONT_PAR(FRONT_PAR), .INSTANCE(INSTANCE)) u_e (
         .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_a(cfg_a), .cfg_d(cfg_d), .go(go), .go_bf(1'b0),
         .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1),
         .xs_e1(xs_e1), .xs_pos(xs_pos), .xb_pos(3'd0), .ppos(ppos), .xb_v(1'b0), .xb_b(3'd0), .xb_sv(4'd0), .xb_u(32'd0), .xb_d(1024'd0),
