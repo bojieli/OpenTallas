@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/home/ubuntu/w18work/karb16/pregionh/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_chip_v41x_karb_pregion\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_cl",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -653.62,
+  "tns_ps": -1740744.7,
+  "worst_register_d_slack_ps": -294.250854,
+  "worst_reg_to_reg_slack_ps": -294.25,
+  "worst_input_to_reg_slack_ps": 106.67,
+  "worst_output_port_slack_ps": -653.619446,
+  "violating_d_pins": 6449,
+  "errors": [],
+  "odb_sha256": "7b42e5eaa3fbd3618441d0ccf68f753f4078f725b938d694b05a0de1fda6a53d",
+  "spef_sha256": "4c3670784ec6c9ca395debfb2371a1b1c2312c4e3effb60075d70342315af05c",
+  "sdc_sha256": "31d82881f222198f3b4467350248483a6eb061649130e377168283b5591dbab7"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": -202.69,
+  "tns_ps": -3408.8,
+  "worst_register_d_slack_ps": 18.821527,
+  "worst_reg_to_reg_slack_ps": 18.82,
+  "worst_input_to_reg_slack_ps": 75.06,
+  "worst_output_port_slack_ps": 398.209076,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "7b42e5eaa3fbd3618441d0ccf68f753f4078f725b938d694b05a0de1fda6a53d",
+  "spef_sha256": "4c3670784ec6c9ca395debfb2371a1b1c2312c4e3effb60075d70342315af05c",
+  "sdc_sha256": "31d82881f222198f3b4467350248483a6eb061649130e377168283b5591dbab7"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": false,
+ "w18b_verdict": "NOT CLOSED at SS, but the slices are no longer the limiter: four HARDENED pslice macros (SS +35 / FF +22 ps each, ETMs) in their PHY windows 10.8 um above the edge, region glue above, 1,062 x 160 um; routed, FF hold +18.8 ps (closes). SS r2r -294.3 ps is now REGION GLUE: the pair-stage queue count (g_pair.g_pq[0].u_pq.n) -> 4:1 response select -> s_data across the 1 mm region (~530 um of BUFx6f repeaters). Next: a registered head per pair queue before the final select (as proot HEADREG), +1 response cycle."
+}
