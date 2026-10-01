@@ -17,3 +17,19 @@ PYTHONPATH=. python3 tests/test_w10_q_elaboration_inventory.py
 ```
 
 Ram owns integer residency, descriptor and complete design-point composition. The root physical owner retains sole all-port escape/spatial clock/PG review. This source inventory supplies those owners with actual current Q storage and clocks; it does not qualify a footprint. Physical admission remains false.
+
+## Finite construction hypothesis
+
+`construction.json` prices a deliberately conservative NAND2/ASR-DFF Boolean implementation of every retained primitive, register, memory read/write mux and decoder, reset/enable selector, eight ICGs and conditional clock reserve. Unsupported primitives raise an error. Palette areas come from the recovered actual-worker LEF, joined by SHA. It allocates 107510.52888 um2 standard cells and 246546.516960 um2 for cell placement at unchanged 50% density plus four ROMs. This is an analytical allocation, not actual mapped area, a legal geometry, or a lower bound; its size cannot refute an optimized implementation.
+
+At Ram's 3749 resident q pairs, this construction allocates 924.302892083040 mm2 per stage/rank before the separately priced 17.9871561456 mm2 q configuration, BF reserve, hub, legal corridors, taps/hold repair and PG. Those terms cannot be hidden in a slot or credited from historical q dimensions. The conservative construction does not establish a feasible complete-owner design point. A tighter current-source construction or actual mapping requires a separate budget qualification; no physical build is admitted by this record.
+
+Reproduce construction with:
+
+```sh
+PYTHONPATH=. python3 tools/w10_q_constructive_area_bound.py --netlist /home/ubuntu/w10-w18-recovery/baseline_wake/q_elaboration_model_r2/q_coarse.json --lef /home/ubuntu/w10-w18-recovery/baseline_wake/local_fit_r1/actual_worker_R.lef --output /home/ubuntu/w10-w18-recovery/baseline_wake/q_elaboration_model_r2/construction_replay.json
+cmp /home/ubuntu/w10-w18-recovery/baseline_wake/q_elaboration_model_r2/construction_replay.json results/uarch/w10_q_elaboration_inventory_r1/construction.json
+PYTHONPATH=. python3 tests/test_w10_q_constructive_area_bound.py
+```
+
+Power has no finite qualified complete-element bound here: operating-voltage envelope, actual storage/macro clock capacitances, slew/load domain and cell internal-energy maxima remain separate required inputs. Setting activity to one removes free gating credit but does not supply those inputs. The conditional wire component must reconcile with existing modeled clock power before any delta is claimed. No synthesized root-stop provider or physical stop credit exists.
