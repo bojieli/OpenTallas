@@ -1,0 +1,184 @@
+{
+  "schema": "w11.controller-CTS-reach.v1",
+  "observed_UTC": "2026-10-01T20:30:29.771813+00:00",
+  "source_commit": "b819b7d2963875b1a8f99f1506b6307044b3caf0",
+  "path_report_commit": "91d60f2bc",
+  "ODB_provenance_commit": "7d7810126",
+  "native_query": {
+    "elapsed_seconds": 16.61447048187256,
+    "threads": 1,
+    "address_space_cap_bytes": 12884901888,
+    "CPU_limit_seconds": 30,
+    "wall_timeout_seconds": 45,
+    "local_available_RAM_before_kB": 160960500,
+    "local_load1_before": 10.92,
+    "local_CPU": 32,
+    "operation": "saved CTS db load and placement/ITerm read only; no STA, libraries, database writes, route or flow operations"
+  },
+  "endpoint_source": {
+    "instance": "_1780513_",
+    "native_D_net": "u_eng.g_pskid.pop",
+    "RTL_register_stem": "u_eng.e_ld_mode",
+    "authority": "p_go and g_pskid.pop are identical p_v_i && p_ready_i; unique native flop D=pop matches e_ld_mode<=p_go; source engine line696",
+    "QN_net": "_0421577_",
+    "prebuffer_native_connections": 9538,
+    "prebuffer_input_loads": 9537,
+    "x_um": 161.514,
+    "y_um": 116.1
+  },
+  "endpoint_destination": {
+    "instance": "_1701638_",
+    "D_net": "_0016015_",
+    "QN_net": "_0409780_",
+    "RTL_register_stem_inferred": "u_eng.g_t[UNRESOLVED].u_t.r_ld_w[862]",
+    "exact_RTL_tile_index": null,
+    "classification": "Controller E1 load-mode broadcast/data-select to characterization tile registered load-word boundary; not FP32/controller arithmetic chain",
+    "classification_scope": "Source e_p_w[862] has exact native flop D=p_w_i[862]; NOR selects it with e_ld_mode; upper512 query bits are zero-extended in1024bit ldw. Destination XNOR fold matches stub r_ld_w=ld_w XOR repeated16bitibf and then6XNORlevels feed16sameD 32-bit-spaced head-output flops. Register bit/stem is source-structural inference, not preserved RTL alias.",
+    "x_um": 460.404,
+    "y_um": 86.13,
+    "downstream_characterization_head_flop_count": 16
+  },
+  "placement": {
+    "endpoint_manhattan_um": 328.86,
+    "endpoint_euclidean_um": 300.38880305364245,
+    "selected_cell_origin_polyline_um": 1387.152,
+    "polyline_is_actual_routed_wirelength": false,
+    "selected_hops": [
+      {
+        "start": "_1780513_",
+        "end": "place348018",
+        "manhattan_um": 6.263999999999982
+      },
+      {
+        "start": "place348018",
+        "end": "wire408299",
+        "manhattan_um": 43.847999999999985
+      },
+      {
+        "start": "wire408299",
+        "end": "place348017",
+        "manhattan_um": 140.23800000000003
+      },
+      {
+        "start": "place348017",
+        "end": "place348016",
+        "manhattan_um": 81.53999999999999
+      },
+      {
+        "start": "place348016",
+        "end": "place348015",
+        "manhattan_um": 129.168
+      },
+      {
+        "start": "place348015",
+        "end": "place347952",
+        "manhattan_um": 19.81800000000004
+      },
+      {
+        "start": "place347952",
+        "end": "place347951",
+        "manhattan_um": 0.9720000000000653
+      },
+      {
+        "start": "place347951",
+        "end": "place347944",
+        "manhattan_um": 1.8360000000000127
+      },
+      {
+        "start": "place347944",
+        "end": "place347941",
+        "manhattan_um": 4.0499999999999545
+      },
+      {
+        "start": "place347941",
+        "end": "_1028526_",
+        "manhattan_um": 10.638000000000034
+      },
+      {
+        "start": "_1028526_",
+        "end": "place306880",
+        "manhattan_um": 47.304
+      },
+      {
+        "start": "place306880",
+        "end": "place306879",
+        "manhattan_um": 103.62600000000003
+      },
+      {
+        "start": "place306879",
+        "end": "place306878",
+        "manhattan_um": 111.72599999999998
+      },
+      {
+        "start": "place306878",
+        "end": "wire386705",
+        "manhattan_um": 93.906
+      },
+      {
+        "start": "wire386705",
+        "end": "place306877",
+        "manhattan_um": 131.868
+      },
+      {
+        "start": "place306877",
+        "end": "place306876",
+        "manhattan_um": 57.88800000000002
+      },
+      {
+        "start": "place306876",
+        "end": "place306875",
+        "manhattan_um": 37.04399999999997
+      },
+      {
+        "start": "place306875",
+        "end": "wire381059",
+        "manhattan_um": 65.61
+      },
+      {
+        "start": "wire381059",
+        "end": "wire381058",
+        "manhattan_um": 136.94400000000002
+      },
+      {
+        "start": "wire381058",
+        "end": "_1077589_",
+        "manhattan_um": 141.58800000000002
+      },
+      {
+        "start": "_1077589_",
+        "end": "_1701638_",
+        "manhattan_um": 21.275999999999982
+      }
+    ],
+    "max_per_hop_um": 141.58800000000002,
+    "max_current_selected_output_fanout": 17
+  },
+  "minimum_stage_pricing": {
+    "measured_reach_reference_um": 504,
+    "reach_model_commit": "3c6f66ceffb189c57f1c90d37a0eb4a7e892240a",
+    "reach_model_path": "tools/uarch_model.py",
+    "reach_model_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "reach_scope": "W15 SS/FF 547-bit routed span; no automatic timing transfer to this9537-load control tree",
+    "straight_geometry_segment_count": 1,
+    "preserved_center_polyline_segment_count": 3,
+    "observed_data_delay_ps": 1479.86,
+    "observed_comb_buffers_wire_delay_ps": 1387.7099999999998,
+    "ideal_data_delay_divided_by_period_stage_count": 2,
+    "conditional_per_stage_comb_budget_ps": 660.49,
+    "conditional_preserved_delay_stage_count": 3,
+    "conditional_budget_assumptions": "Same92.15ps clkq,20.36ps setup,60ps uncertainty; zero interstage skew/CRPR; unchanged total combinational delay and perfect partition. New endpoints/fanout/routing unqualified.",
+    "conditional_extra_streaming_cycles": 2,
+    "conditional_extra_latency_ps_per_traversal": 1666,
+    "true_qualified_minimum_stages": null,
+    "aligned_data_and_control_added_state_bits": null,
+    "whole_token_added_cycles": null,
+    "whole_token_latency": null
+  },
+  "baseline_closure_condition": "Retained internal SS setup and FF hold fail. Guard337084 preserves endpoints only. Actual controller-to-consumer boundary with aligned load mode/data and contextual setup/hold must be qualified before baseline adoption. No RTL proposal is applied and no rejected lever is tuned.",
+  "current_GRT_may_change_result_but_closure_assumed": false,
+  "physical_admission": false,
+  "SS_FF_final_route_verdict": null,
+  "new_PnR_jobs": 0,
+  "reroutes": 0,
+  "constraint_changes": 0
+}
