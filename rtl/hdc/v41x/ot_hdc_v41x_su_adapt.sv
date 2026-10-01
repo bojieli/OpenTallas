@@ -44,7 +44,8 @@ module ot_hdc_v41x_su_adapt #(
     parameter integer BCAST_STAGES = 0, // ot_hdc_v41x_vec: controller -> lane broadcast tree stages
     parameter integer RET_STAGES = 0,   // ot_hdc_v41x_vec: lane / reducer -> vector-memory write stages
     parameter integer MLAT = 3,         // ot_hdc_v41x_vec: multiplier latency (3, 4 or 5: W11 serial domain)
-    parameter integer ALAT = 3          // ot_hdc_v41x_vec: FP add latency (3, or 4)
+    parameter integer ALAT = 3,         // ot_hdc_v41x_vec: FP add latency (3, or 4)
+    parameter integer KR_DEPTH = 0      // ot_hdc_v41x_vec: operator-fusion lane registers (0: none)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -74,6 +75,12 @@ module ot_hdc_v41x_su_adapt #(
     input  wire [31:0]       i_imm1, i_imm2, i_imm3,
     input  wire [2:0]        i_m,
     input  wire [AW-1:0]     i_xps, i_ops,
+    // operator fusion (tools/w11_su_fuse.py): lane-register write / read streams and entries, SFU-width layout
+    input  wire              i_krw,
+    input  wire [5:0]        i_krwb,
+    input  wire [3:0]        i_krr,
+    input  wire [5:0]        i_krrb,
+    input  wire              i_krlw,
     // the vector unit's memory ports
     output wire [N-1:0]      vi_re,
     output wire [N*AW-1:0]   vi_addr,
@@ -117,6 +124,14 @@ module ot_hdc_v41x_su_adapt #(
     reg              wait_prev;            // the latched op waits for the previous op's completion
     reg  [7:0]       seq;                  // the unit's sequence number of the next op it accepts
     reg  [7:0]       prev_seq;             // seq of the last op accepted before the latched one
+    // Operator fusion.  A KR consumer whose KR producer is the PREVIOUS op (that op wrote kr_wb == this kr_rb)
+    // chases it vector by vector (lead 1, mul 1: vector v reads what its vector v wrote; the unit takes the
+    // credit at the lanes' OUT stage and requires everything older landed) instead of waiting for its
+    // completion.  The pass (tools/w11_su_fuse.py) never lets such a consumer read its producer through the
+    // vector memory.  Any other KR consumer keeps the completion wait.
+    reg              krw, krlw, last_krw, kr_prev;
+    reg  [5:0]       krwb, krrb, last_krwb;
+    reg  [3:0]       krr;
 
     wire             v_ready, v_idle, v_fault, v_ofault;
     wire             v_go = pend;
@@ -127,13 +142,17 @@ module ot_hdc_v41x_su_adapt #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             pend <= 1'b0; cp <= 3'd0; seq <= 8'd0; any_op <= 1'b0; cls_last <= 9'd0;
-            dbg_ops <= 0;
+            dbg_ops <= 0; last_krw <= 1'b0; kr_prev <= 1'b0;
         end else begin
             if (go && !pend) begin
                 pend <= 1'b1; cp <= 3'd0; m_r <= (i_m == 3'd0) ? 3'd1 : i_m;
                 cls_last <= cls_in; any_op <= 1'b1;
                 prev_seq <= seq - 8'd1;
                 wait_prev <= any_op && ((i_chase != 0) || (CLS_DRAIN != 0 && cls_in != cls_last));
+                kr_prev <= (KR_DEPTH > 0) && any_op && i_krr != 4'd0 && last_krw && last_krwb == i_krrb &&
+                           (i_m <= 3'd1);
+                last_krw <= (KR_DEPTH > 0) && i_krw && (i_m <= 3'd1);
+                last_krwb <= i_krwb;
             end else if (v_acc) begin
                 dbg_ops <= dbg_ops + 1'b1;
                 seq <= seq + 8'd1;
@@ -154,6 +173,7 @@ module ot_hdc_v41x_su_adapt #(
         rnd <= i_rnd; redsq <= i_redsq; redwhole <= i_redwhole; redtree <= i_redtree; redrnd <= i_redrnd;
         m1 <= i_m1; qm <= i_qm; ad <= i_ad; sfu <= i_sfu; e1 <= i_e1;
         imm1 <= i_imm1; imm2 <= i_imm2; imm3 <= i_imm3;
+        krw <= i_krw; krwb <= i_krwb; krr <= i_krr; krrb <= i_krrb; krlw <= i_krlw;
     end
     // copy cp's stream offsets
     wire [AW-1:0] xo = cp * xps;
@@ -164,7 +184,7 @@ module ot_hdc_v41x_su_adapt #(
     wire        retire_o, dbg_emit, dbg_ret, dbg_res;
     wire [7:0]  dbg_eseq, dbg_rseq, dbg_sseq;
     ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .AW(AW), .NW(NW), .KVT_SH(KVT_SH), .BCAST_STAGES(BCAST_STAGES),
-                     .RET_STAGES(RET_STAGES), .MLAT(MLAT), .ALAT(ALAT)) u_vec (
+                     .RET_STAGES(RET_STAGES), .MLAT(MLAT), .ALAT(ALAT), .KR_DEPTH(KR_DEPTH)) u_vec (
         .clk(clk), .rst_n(rst_n), .go(v_go), .ready(v_ready), .idle(v_idle),
         .i_nout(nout), .i_nin(nin),
         .i_asrc(asrc), .i_bsrc(bsrc), .i_csrc(csrc), .i_dsrc(dsrc),
@@ -180,8 +200,11 @@ module ot_hdc_v41x_su_adapt #(
         .i_red(red), .i_redsq(redsq), .i_redwhole(redwhole), .i_redtree(redtree), .i_redrnd(redrnd),
         .i_rbase(rbase + ((red != 2'd0) ? oo : {AW{1'b0}})), .i_rso(rso),
         .i_imm1(imm1), .i_imm2(imm2), .i_imm3(imm3),
-        //: a chasing op (every copy) waits for the completion of the op accepted before it
-        .i_ch_src(wait_prev ? CH_SELF : CH_NONE), .i_ch_seq(prev_seq), .i_ch_lead(16'hFFFF), .i_ch_mul(16'd0),
+        .i_krw(krw), .i_krwb(krwb), .i_krr(krr), .i_krrb(krrb), .i_krlw(krlw),
+        //: a chasing op (every copy) waits for the completion of the op accepted before it; a KR consumer of
+        //  the previous op chases it vector by vector
+        .i_ch_src((wait_prev || kr_prev) ? CH_SELF : CH_NONE), .i_ch_seq(prev_seq),
+        .i_ch_lead(kr_prev ? 16'd1 : 16'hFFFF), .i_ch_mul(kr_prev ? 16'd256 : 16'd0),
         .x_seq(8'd0), .x_dseq(8'hFF), .x_cnt(16'd0),
         .cr_seq(cr_seq), .cr_dseq(cr_dseq), .cr_rseq(cr_rseq), .cr_cnt(cr_cnt),
         .vi_re(vi_re), .vi_addr(vi_addr), .vi_q(vi_q),

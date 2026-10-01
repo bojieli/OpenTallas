@@ -50,7 +50,8 @@ module ot_hdc_v41x_vec_lane #(
     parameter integer KVT_SH = 9,
     parameter integer LEAF = 0,         // 1: the broadcast tree's LAST stage is this lane's own leaf register (below)
     parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4, or 5 (W11 serial domain, 0.9 GHz)
-    parameter integer ALAT = 3          // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
+    parameter integer ALAT = 3,         // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
+    parameter integer KR_DEPTH = 0      // OPERATOR FUSION: lane register file entries (0 none; else a power of 2)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -102,6 +103,12 @@ module ot_hdc_v41x_vec_lane #(
     input  wire [31:0]       ce_imm1,
     input  wire              co_rnd,                   // at OUT in
     input  wire [1:0]        co_dst,
+    // ---- operator fusion (KR_DEPTH > 0): in the cycle the memory answers (the one before X), the streams
+    //      {D, C, B, A} that take lane register ck_ri instead; at OUT, write `out` to lane register co_kwi
+    input  wire [3:0]        ck_r,
+    input  wire [5:0]        ck_ri,
+    input  wire              co_krw,
+    input  wire [5:0]        co_kwi,
     // ---- scalar side pipe (lane 0)
     output wire              side_v,
     output wire [31:0]       side_x,
@@ -451,9 +458,12 @@ module ot_hdc_v41x_vec_lane #(
         x_o <= m_o; x_par <= m_par;
     end
     // ---- X: capture (the memories answered during the cycle before) --------------------------------------
+    // A stream of a fused op takes the lane register (KR, written at OUT below) instead of the memory's word
     reg [31:0] x_a, x_b, x_c, x_d;
+    wire [31:0] kr_q;
     always @(posedge clk) begin
-        x_a <= rd_q[31:0]; x_b <= rd_q[63:32]; x_c <= rd_q[95:64]; x_d <= rd_q[127:96];
+        x_a <= ck_r[0] ? kr_q : rd_q[31:0]; x_b <= ck_r[1] ? kr_q : rd_q[63:32];
+        x_c <= ck_r[2] ? kr_q : rd_q[95:64]; x_d <= ck_r[3] ? kr_q : rd_q[127:96];
     end
     // ---- PRE ------------------------------------------------------------------------------------------
     // A' = min(relu(rnd?(A)), imm3), evaluated for the three values rnd?(A) can take (A itself, A truncated to
@@ -671,6 +681,18 @@ module ot_hdc_v41x_vec_lane #(
         kv_waddr <= u_o; kv_wdata <= u_bf;
         o_x <= out;
     end
+    // ---- the lane register file (operator fusion): KR_DEPTH words, written at OUT, read at the capture ----------
+    generate if (KR_DEPTH > 0) begin : g_kr
+        localparam integer KA = $clog2(KR_DEPTH);
+        if (KR_DEPTH < 2 || (1 << KA) != KR_DEPTH || KA > 6) begin : g_bad_kr
+            ot_hdc_v41x_vec_lane_KR_DEPTH_must_be_a_power_of_2_from_2_to_64 u_trap ();
+        end
+        reg [31:0] kr [0:KR_DEPTH-1];
+        always @(posedge clk) if (v6 && co_krw) kr[co_kwi[KA-1:0]] <= out;
+        assign kr_q = kr[ck_ri[KA-1:0]];
+    end else begin : g_nokr
+        assign kr_q = 32'd0;
+    end endgenerate
     assign ro_v = ov_r;
     assign ro_x = o_x;
     // ---- status ---------------------------------------------------------------------------------------------------

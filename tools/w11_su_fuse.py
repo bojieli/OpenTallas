@@ -185,6 +185,7 @@ def analyse(views, regions):
     lwe = np.zeros(len(U), dtype=np.int64)
     blocked = {}                                      # region id -> last op writing it at region level
     edges, reject = {}, collections.Counter()
+    src_of = {}                                       # (consumer, stream) -> producers whose writes it reads
     for k, v in enumerate(views):
         if not v.su:
             for r in v.writes:
@@ -200,6 +201,7 @@ def analyse(views, regions):
             pk = lwk[ix]
             if (pk < 0).all():
                 continue
+            src_of[(k, s)] = set(np.unique(pk[pk >= 0]).tolist())
             if (pk < 0).any():
                 reject["partly_older_or_result"] += 1
                 continue
@@ -227,6 +229,11 @@ def analyse(views, regions):
             ix = np.searchsorted(U, v.out)
             lwk[ix] = k
             lwe[ix] = np.arange(len(v.out))
+    # a KR consumer may read nothing of its KR producer through memory: its early credit leads the landing
+    for (p, c, s) in list(edges):
+        if any(p in src for (c2, s2), src in src_of.items() if c2 == c and (p, c, s2) not in edges):
+            edges.pop((p, c, s))
+            reject["producer_also_read_from_memory"] += 1
     return edges, reject
 
 
@@ -363,6 +370,55 @@ def v41_views(prog, D, N, M, lw_ops=frozenset()):
     return out
 
 
+def bench_views(ops, N, M, lw_ops=frozenset()):
+    """Views of bench ops (tools/rtl_hdc_v41x_vec_campaign field dicts, DYN already resolved): every op is a
+    stream op over one memory region."""
+    out = []
+    for k, g in enumerate(ops):
+        g = dict(g)
+        if k in lw_ops:
+            g["krlw"] = 1
+        vec, lane, lay = placement(g, N, M)
+        sa, w = stream_addrs(g)
+        streams = {s: (None if (a is None or isinstance(a, tuple)) else a) for s, a in sa.items()}
+        out.append(View(su=True, skip=False, n=g["nout"] * g["nin"], nv=lay["nv"], vw=lay["vw"], vec=vec,
+                        lane=lane, pred=0, streams=streams, out=w, res=result_addrs(g), reads={"VM"},
+                        writes={"VM"}, tag=f"op{k}", bad=lay["bad"]))
+    return out
+
+
+def fuse_bench(ops, N, M, depth=KR_DEPTH, lw=True):
+    """The pass on a bench program (the campaign's fused programs).  Returns (fused ops, report)."""
+    regions = Regions({"VM": 0})
+    lw_ops = frozenset()
+    if lw:
+        vs = bench_views(ops, N, M)
+        trial = frozenset(k for k, v in enumerate(vs) if v.vw == N and -(-v.n // M) - v.nv < ROT_READ + ROT_WRITE)
+        e0, _ = analyse(vs, regions)
+        e1, _ = analyse(bench_views(ops, N, M, trial), regions)
+        lw_ops = frozenset(x for (p, c, s) in set(e1) - set(e0) for x in (p, c) if x in trial)
+    vs = bench_views(ops, N, M, lw_ops)
+    edges, alloc, need, reject = form_chains([vs], regions, depth)
+    kr_r = collections.defaultdict(int)
+    for (p, c, s) in edges:
+        kr_r[c] |= {"a": 1, "b": 2, "c": 4, "d": 8}[s]
+    out = []
+    for k, g in enumerate(ops):
+        g = dict(g)
+        if k in alloc["w"]:
+            g["krw"], g["krwb"] = 1, alloc["w"][k]
+            if k not in need:
+                g["dst"] = I.DST_NONE
+        if k in kr_r:
+            g["krr"], g["krrb"] = kr_r[k], alloc["r"][k]
+        if k in lw_ops and (k in alloc["w"] or k in kr_r):
+            g["krlw"] = 1
+        out.append(g)
+    return out, dict(edges=len(edges), producers=len(alloc["w"]), elided=sum(1 for p in alloc["w"] if p not in need),
+                     lw=len([k for k in lw_ops if k in alloc["w"] or k in kr_r]), peak=alloc["peak"],
+                     rejects=dict(reject))
+
+
 def fuse(prog, Ds, N, M, regions, depth=KR_DEPTH, on=True, lw=False, strict=False):
     """The V4.1 pass.  prog: [(f, reads, writes, tag)] in issue order; Ds: DYN resolvers of the positions it must
     be legal at.  Returns (program, report); on=False returns the program unchanged."""
@@ -471,6 +527,21 @@ def report(prog, views, edges, need, alloc, N, M):
         b["max_len"] = max(b["max_len"], c["length"])
         b["path_edges"] = b.get("path_edges", 0) + c["path_edges"]
     hist = collections.Counter(c["length"] for c in chains)
+    # per op class: ops in chains, chain heads (no KR read: they start from memory) and tails (no KR write)
+    readers = {c for _, c, _ in edges}
+    writers = {p for p, _, _ in edges}
+    by_class = collections.defaultdict(lambda: dict(ops=0, heads=0, tails=0, middles=0, reads_avoided=0,
+                                                    writes_avoided=0))
+    for c in chains:
+        for k in c["ops"]:
+            f = prog[k][0]
+            cls = op_class(f)
+            b = by_class[cls]
+            b["ops"] += 1
+            b["heads" if k not in readers else "tails" if k not in writers else "middles"] += 1
+            b["reads_avoided"] += sum(n for (p, c2, s), n in edges.items() if c2 == k)
+            if k in alloc["w"] and k not in need:
+                b["writes_avoided"] += views[k].n
     return dict(N=N, M=M, su_ops=sum(1 for v in views if v.su), su_ops_active=len(su), edges=len(edges),
                 consumer_ops=len({c for _, c, _ in edges}), chains=len(chains),
                 ops_in_chains=sum(c["length"] for c in chains),
@@ -481,7 +552,16 @@ def report(prog, views, edges, need, alloc, N, M):
                 vm_elem_writes_total=su_writes, vm_elem_writes_avoided=sum(c["vm_elem_writes_avoided"] for c in chains),
                 path_edges=sum(c["path_edges"] for c in chains),
                 cycles_saved_c_rotate_upper=sum(c["path_edges"] for c in chains) * (ROT_READ + ROT_WRITE),
-                kr_peak_entries=alloc["peak"], by_category=dict(by_cat), chains_detail=chains)
+                kr_peak_entries=alloc["peak"], by_category=dict(by_cat), by_op_class=dict(by_class),
+                chain_heads=len(writers - readers), chain_tails=len(readers - writers), chains_detail=chains)
+
+
+def op_class(f):
+    """light / sfu (exp, sigmoid, SiLU) / divide / scalar (lane-0 side pipe), + '+red' when it reduces."""
+    sfu = f.get("sfu", 0)
+    c = ("scalar" if sfu in (I.SFU_RSQRT, I.SFU_SQRT, I.SFU_SPSQRT, I.SFU_EGATE) else
+         "sfu" if sfu else "divide" if f.get("m1", 0) in (I.M1_DIVB, I.M1_DIVIMM) else "light")
+    return c + ("+red" if f.get("red", 0) else "")
 
 
 def stats_su_ops(prog):
@@ -533,6 +613,7 @@ def main():
     ap.add_argument("--lw", action="store_true")
     ap.add_argument("--positions", default="")
     ap.add_argument("--out", default="")
+    ap.add_argument("--depths", default="", help="a depth curve (comma list); --depth is the full depth")
     a = ap.parse_args()
     if a.shape == "shipped":
         prog, mk, regions = shipped_program()
@@ -542,12 +623,68 @@ def main():
         prog, mk, regions, _, _ = reduced_program()
         N, M = a.N or 16, a.M or 8
         pos = [int(x) for x in a.positions.split(",")] if a.positions else [0, 1, 2, 3, 7, 8, 15, 16, 31, 33, 64, 127]
-    _, rep = fuse(prog, [mk(p) for p in pos], N, M, regions, depth=a.depth, lw=a.lw)
+    Ds = [mk(p) for p in pos]
+    if a.depths:
+        rec = sweep(prog, Ds, N, M, regions, [int(x) for x in a.depths.split(",")], a.depth, a.lw)
+        rec.update(shape=a.shape, positions=pos, inputs=pins())
+        print(json.dumps({k: v for k, v in rec.items() if k != "at_depth"}, indent=1))
+        if a.out:
+            Path(a.out).write_text(json.dumps(rec, indent=1) + "\n")
+        return
+    _, rep = fuse(prog, Ds, N, M, regions, depth=a.depth, lw=a.lw)
     rep["positions"] = pos
     det = rep.pop("chains_detail")
     print(json.dumps(rep, indent=1))
     if a.out:
         Path(a.out).write_text(json.dumps(dict(rep, chains_detail=det), indent=1) + "\n")
+
+
+# per fused hop on a chain's dependent path, under C_rotate (results/uarch/w11_vm_options.json C_rotate, claude/w11-crot):
+# the consumer skips the operand read (16 stages) and the producer's element write (16) -- its control broadcast
+# (5) stays; at root's fixed 42 cycles per SU op the hop saves 42 - 5 = 37
+SAVE_PER_HOP = dict(c_rotate_class_stages=ROT_READ + ROT_WRITE, c_rotate_fixed_42_per_op=42 - 5)
+SU_PERIOD_NS = 1.111                      # the serial domain (AGENTS.md clock domains)
+# lane register file area, ASAP7 (estimate before the route): a D flop per bit at the hardened lane's 0.295 um2,
+# plus a read multiplexer of depth - 1 two-input muxes per bit at 0.087 um2 and the write enables
+FLOP_UM2, MUX2_UM2 = 0.295, 0.087
+
+
+def kr_area_um2(depth):
+    return round(32 * depth * FLOP_UM2 + 32 * (depth - 1) * MUX2_UM2 + depth * 0.5, 1)
+
+
+def sweep(prog, Ds, N, M, regions, depths, full_depth, lw):
+    """The depth curve: the pass at each KR depth (a value that does not fit stays in the vector memory)."""
+    lw_ops = choose_lw(prog, Ds, N, M, regions) if lw else frozenset()
+    vps = [v41_views(prog, D, N, M, lw_ops) for D in Ds]
+    rows, at = [], {}
+    for d in sorted(set(depths) | {full_depth}):
+        edges, alloc, need, reject = form_chains(vps, regions, d)
+        rep = report(prog, vps[0], edges, need, alloc, N, M)
+        rep["rejects"] = dict(reject)
+        det = rep.pop("chains_detail")
+        rows.append(dict(depth=d, edges=rep["edges"], chains=rep["chains"], ops_in_chains=rep["ops_in_chains"],
+                         path_edges=rep["path_edges"], vm_elem_reads_avoided=rep["vm_elem_reads_avoided"],
+                         vm_elem_writes_avoided=rep["vm_elem_writes_avoided"], kr_peak_entries=rep["kr_peak_entries"],
+                         cycles_saved_per_token={k: rep["path_edges"] * v for k, v in SAVE_PER_HOP.items()},
+                         kr_bits_per_lane=32 * d, kr_area_um2_per_lane_estimate=kr_area_um2(d)))
+        at[d] = dict(rep, chains=[dict(ops=c["ops"], length=c["length"], path_edges=c["path_edges"],
+                                       category=c["category"], tag=c["tag"]) for c in det])
+    full = rows[-1]
+    for r in rows:
+        r["fraction_of_peak_edges"] = round(r["edges"] / max(1, full["edges"]), 4)
+        r["fraction_of_peak_reads_avoided"] = round(r["vm_elem_reads_avoided"] / max(1, full["vm_elem_reads_avoided"]), 4)
+        r["fraction_of_peak_writes_avoided"] = round(r["vm_elem_writes_avoided"] / max(1, full["vm_elem_writes_avoided"]), 4)
+        r["fraction_of_peak_cycles"] = round(r["path_edges"] / max(1, full["path_edges"]), 4)
+    return dict(schema="opentallas.w11.su_fuse_stats/1", N=N, M=M, lw=lw, kr_lw_ops=len(lw_ops),
+                save_per_hop_cycles=SAVE_PER_HOP, su_period_ns=SU_PERIOD_NS, depth_curve=rows,
+                at_depth={str(k): v for k, v in at.items()})
+
+
+def pins():
+    files = ["tools/w11_su_fuse.py", "tools/hdc_isa_v41.py", "tools/hdc_program_v41.py", "tools/hdc_replay_v41.py",
+             "tools/rtl_hdc_v41x_vec_campaign.py"]
+    return {f: hashlib.sha256((ROOT / f).read_bytes()).hexdigest() for f in files}
 
 
 if __name__ == "__main__":

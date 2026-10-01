@@ -244,10 +244,20 @@ FIELDS = [
 # kr_r (bit 0 A, 1 B, 2 C, 3 D): those streams read KR entry kr_rb + v instead of their memory source; kr_lw:
 # lay the op at the SFU lanes' width, so a light op's element e sits where an SFU op's does.  The program
 # generator only fuses ops whose element e lands on the same lane in the same vector.  All zero: unfused.
+# PRODUCER-SIDE DELIVERY (RESERVED encoding, no RTL yet; W16b / the fusion-audit stream price it): xkr on a
+# NON-SU op (matvec / field output, collective, scan, the reducer's broadcast, a staging-buffer epilogue)
+# delivers its outputs straight into the SU lanes' KR at entry xkr_wb + (vector), skipping the vector-memory
+# read at a chain's start.  xkr_map, the element -> (entry, lane) mapping, is that of the CONSUMING chain's
+# layout: 0 FLAT (output j at entry xkr_wb + j div VW, lane j mod VW), 1 ROWS (output (o, i) of rows of the
+# producer's row length r: slot S = pow2ceil(r) capped at VW, VW/S rows a vector, as the SU packs a no x r op),
+# 2 SCALAR BROADCAST (a reduced scalar k to every lane of entry xkr_wb + k), 3 reserved.  VW = N, or M with
+# xkr_lw.  xkr_epi: an epilogue applied on the way in (0 none; 1-15 reserved for the staging buffer's fixed
+# functions).  All must be 0 until a unit implements them.
 # Appended after every existing field of both profiles, so no existing offset moves.
 KR_AW = 6
 KR_DEPTH = 1 << KR_AW
-FUSE_FIELDS = [("kr_w", 1), ("kr_wb", KR_AW), ("kr_r", 4), ("kr_rb", KR_AW), ("kr_lw", 1)]
+FUSE_FIELDS = [("kr_w", 1), ("kr_wb", KR_AW), ("kr_r", 4), ("kr_rb", KR_AW), ("kr_lw", 1),
+               ("xkr", 1), ("xkr_wb", KR_AW), ("xkr_lw", 1), ("xkr_map", 2), ("xkr_epi", 4)]
 
 
 def fields_for(*, full_shape=False):

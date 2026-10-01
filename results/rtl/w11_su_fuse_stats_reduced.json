@@ -1,0 +1,11058 @@
+{
+ "schema": "opentallas.w11.su_fuse_stats/1",
+ "N": 16,
+ "M": 8,
+ "lw": true,
+ "kr_lw_ops": 40,
+ "save_per_hop_cycles": {
+  "c_rotate_class_stages": 32,
+  "c_rotate_fixed_42_per_op": 37
+ },
+ "su_period_ns": 1.111,
+ "depth_curve": [
+  {
+   "depth": 8,
+   "edges": 11,
+   "chains": 11,
+   "ops_in_chains": 22,
+   "path_edges": 11,
+   "vm_elem_reads_avoided": 448,
+   "vm_elem_writes_avoided": 160,
+   "kr_peak_entries": 8,
+   "cycles_saved_per_token": {
+    "c_rotate_class_stages": 352,
+    "c_rotate_fixed_42_per_op": 407
+   },
+   "kr_bits_per_lane": 256,
+   "kr_area_um2_per_lane_estimate": 99.0,
+   "fraction_of_peak_edges": 0.0157,
+   "fraction_of_peak_reads_avoided": 0.002,
+   "fraction_of_peak_writes_avoided": 0.0007,
+   "fraction_of_peak_cycles": 0.0158
+  },
+  {
+   "depth": 16,
+   "edges": 454,
+   "chains": 132,
+   "ops_in_chains": 586,
+   "path_edges": 454,
+   "vm_elem_reads_avoided": 71328,
+   "vm_elem_writes_avoided": 70720,
+   "kr_peak_entries": 10,
+   "cycles_saved_per_token": {
+    "c_rotate_class_stages": 14528,
+    "c_rotate_fixed_42_per_op": 16798
+   },
+   "kr_bits_per_lane": 512,
+   "kr_area_um2_per_lane_estimate": 200.8,
+   "fraction_of_peak_edges": 0.6486,
+   "fraction_of_peak_reads_avoided": 0.3118,
+   "fraction_of_peak_writes_avoided": 0.3144,
+   "fraction_of_peak_cycles": 0.6523
+  },
+  {
+   "depth": 24,
+   "edges": 454,
+   "chains": 132,
+   "ops_in_chains": 586,
+   "path_edges": 454,
+   "vm_elem_reads_avoided": 71328,
+   "vm_elem_writes_avoided": 70720,
+   "kr_peak_entries": 10,
+   "cycles_saved_per_token": {
+    "c_rotate_class_stages": 14528,
+    "c_rotate_fixed_42_per_op": 16798
+   },
+   "kr_bits_per_lane": 768,
+   "kr_area_um2_per_lane_estimate": 302.6,
+   "fraction_of_peak_edges": 0.6486,
+   "fraction_of_peak_reads_avoided": 0.3118,
+   "fraction_of_peak_writes_avoided": 0.3144,
+   "fraction_of_peak_cycles": 0.6523
+  },
+  {
+   "depth": 32,
+   "edges": 454,
+   "chains": 132,
+   "ops_in_chains": 586,
+   "path_edges": 454,
+   "vm_elem_reads_avoided": 71328,
+   "vm_elem_writes_avoided": 70720,
+   "kr_peak_entries": 10,
+   "cycles_saved_per_token": {
+    "c_rotate_class_stages": 14528,
+    "c_rotate_fixed_42_per_op": 16798
+   },
+   "kr_bits_per_lane": 1024,
+   "kr_area_um2_per_lane_estimate": 404.4,
+   "fraction_of_peak_edges": 0.6486,
+   "fraction_of_peak_reads_avoided": 0.3118,
+   "fraction_of_peak_writes_avoided": 0.3144,
+   "fraction_of_peak_cycles": 0.6523
+  },
+  {
+   "depth": 40,
+   "edges": 700,
+   "chains": 212,
+   "ops_in_chains": 912,
+   "path_edges": 696,
+   "vm_elem_reads_avoided": 228768,
+   "vm_elem_writes_avoided": 224960,
+   "kr_peak_entries": 40,
+   "cycles_saved_per_token": {
+    "c_rotate_class_stages": 22272,
+    "c_rotate_fixed_42_per_op": 25752
+   },
+   "kr_bits_per_lane": 1280,
+   "kr_area_um2_per_lane_estimate": 506.2,
+   "fraction_of_peak_edges": 1.0,
+   "fraction_of_peak_reads_avoided": 1.0,
+   "fraction_of_peak_writes_avoided": 1.0,
+   "fraction_of_peak_cycles": 1.0
+  },
+  {
+   "depth": 64,
+   "edges": 700,
+   "chains": 212,
+   "ops_in_chains": 912,
+   "path_edges": 696,
+   "vm_elem_reads_avoided": 228768,
+   "vm_elem_writes_avoided": 224960,
+   "kr_peak_entries": 40,
+   "cycles_saved_per_token": {
+    "c_rotate_class_stages": 22272,
+    "c_rotate_fixed_42_per_op": 25752
+   },
+   "kr_bits_per_lane": 2048,
+   "kr_area_um2_per_lane_estimate": 811.6,
+   "fraction_of_peak_edges": 1.0,
+   "fraction_of_peak_reads_avoided": 1.0,
+   "fraction_of_peak_writes_avoided": 1.0,
+   "fraction_of_peak_cycles": 1.0
+  }
+ ],
+ "at_depth": {
+  "8": {
+   "N": 16,
+   "M": 8,
+   "su_ops": 2649,
+   "su_ops_active": 2610,
+   "edges": 11,
+   "consumer_ops": 11,
+   "chains": [
+    {
+     "ops": [
+      223,
+      225
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      226,
+      228
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      230,
+      232
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L2.index_key"
+    },
+    {
+     "ops": [
+      824,
+      826
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      827,
+      829
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      831,
+      833
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L8.index_key"
+    },
+    {
+     "ops": [
+      1434,
+      1436
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1437,
+      1439
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1441,
+      1443
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L14.index_key"
+    },
+    {
+     "ops": [
+      2034,
+      2036
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L20.compressor"
+    },
+    {
+     "ops": [
+      2038,
+      2040
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L20.index_key"
+    }
+   ],
+   "ops_in_chains": 22,
+   "chain_length_hist": {
+    "2": 11
+   },
+   "producers_writing_vm_still": 6,
+   "producers_vm_write_elided": 5,
+   "vm_elem_reads_total": 1191585,
+   "vm_elem_reads_avoided": 448,
+   "vm_elem_writes_total": 447605,
+   "vm_elem_writes_avoided": 160,
+   "path_edges": 11,
+   "cycles_saved_c_rotate_upper": 352,
+   "kr_peak_entries": 8,
+   "by_category": {
+    "compressor": {
+     "chains": 7,
+     "ops_fused": 14,
+     "edges": 7,
+     "reads_avoided": 320,
+     "writes_avoided": 64,
+     "max_len": 2,
+     "path_edges": 7
+    },
+    "index_key": {
+     "chains": 4,
+     "ops_fused": 8,
+     "edges": 4,
+     "reads_avoided": 128,
+     "writes_avoided": 96,
+     "max_len": 2,
+     "path_edges": 4
+    }
+   },
+   "by_op_class": {
+    "sfu": {
+     "ops": 3,
+     "heads": 3,
+     "tails": 0,
+     "middles": 0,
+     "reads_avoided": 0,
+     "writes_avoided": 0
+    },
+    "divide": {
+     "ops": 3,
+     "heads": 0,
+     "tails": 3,
+     "middles": 0,
+     "reads_avoided": 192,
+     "writes_avoided": 0
+    },
+    "light+red": {
+     "ops": 8,
+     "heads": 8,
+     "tails": 0,
+     "middles": 0,
+     "reads_avoided": 0,
+     "writes_avoided": 160
+    },
+    "light": {
+     "ops": 8,
+     "heads": 0,
+     "tails": 8,
+     "middles": 0,
+     "reads_avoided": 256,
+     "writes_avoided": 0
+    }
+   },
+   "chain_heads": 11,
+   "chain_tails": 11,
+   "rejects": {
+    "placement_same_width": 935,
+    "placement_width": 1035,
+    "gather_pair_or_region_read": 256,
+    "other_unit_wrote_between": 170,
+    "several_producers": 39,
+    "partly_older_or_result": 1,
+    "producer_also_read_from_memory": 81
+   }
+  },
+  "16": {
+   "N": 16,
+   "M": 8,
+   "su_ops": 2649,
+   "su_ops_active": 2610,
+   "edges": 454,
+   "consumer_ops": 454,
+   "chains": [
+    {
+     "ops": [
+      5,
+      6,
+      7,
+      9
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L0.attn_norm"
+    },
+    {
+     "ops": [
+      49,
+      50,
+      51,
+      53
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L0.ffn_norm"
+    },
+    {
+     "ops": [
+      87,
+      88,
+      89,
+      90,
+      91,
+      92
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L0.moe_sum"
+    },
+    {
+     "ops": [
+      108,
+      109,
+      110,
+      112
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L1.attn_norm"
+    },
+    {
+     "ops": [
+      152,
+      153,
+      154,
+      156
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L1.ffn_norm"
+    },
+    {
+     "ops": [
+      190,
+      191,
+      192,
+      193,
+      194,
+      195
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L1.moe_sum"
+    },
+    {
+     "ops": [
+      202,
+      203,
+      204,
+      206
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L2.attn_norm"
+    },
+    {
+     "ops": [
+      223,
+      225
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      226,
+      228
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      230,
+      232
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L2.index_key"
+    },
+    {
+     "ops": [
+      273,
+      274,
+      275,
+      277
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L2.ffn_norm"
+    },
+    {
+     "ops": [
+      311,
+      312,
+      313,
+      314,
+      315,
+      316
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L2.moe_sum"
+    },
+    {
+     "ops": [
+      323,
+      324,
+      325,
+      327
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L3.attn_norm"
+    },
+    {
+     "ops": [
+      369,
+      370,
+      371,
+      373
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L3.ffn_norm"
+    },
+    {
+     "ops": [
+      407,
+      408,
+      409,
+      410,
+      411,
+      412
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L3.moe_sum"
+    },
+    {
+     "ops": [
+      419,
+      420,
+      421,
+      423
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L4.attn_norm"
+    },
+    {
+     "ops": [
+      465,
+      466,
+      467,
+      469
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L4.ffn_norm"
+    },
+    {
+     "ops": [
+      503,
+      504,
+      505,
+      506,
+      507,
+      508
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L4.moe_sum"
+    },
+    {
+     "ops": [
+      515,
+      516,
+      517,
+      519
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L5.attn_norm"
+    },
+    {
+     "ops": [
+      561,
+      562,
+      563,
+      565
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L5.ffn_norm"
+    },
+    {
+     "ops": [
+      599,
+      600,
+      601,
+      602,
+      603,
+      604
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L5.moe_sum"
+    },
+    {
+     "ops": [
+      611,
+      612,
+      613,
+      615
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L6.attn_norm"
+    },
+    {
+     "ops": [
+      657,
+      658,
+      659,
+      661
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L6.ffn_norm"
+    },
+    {
+     "ops": [
+      695,
+      696,
+      697,
+      698,
+      699,
+      700
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L6.moe_sum"
+    },
+    {
+     "ops": [
+      707,
+      708,
+      709,
+      711
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L7.attn_norm"
+    },
+    {
+     "ops": [
+      753,
+      754,
+      755,
+      757
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L7.ffn_norm"
+    },
+    {
+     "ops": [
+      791,
+      792,
+      793,
+      794,
+      795,
+      796
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L7.moe_sum"
+    },
+    {
+     "ops": [
+      803,
+      804,
+      805,
+      807
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L8.attn_norm"
+    },
+    {
+     "ops": [
+      824,
+      826
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      827,
+      829
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      831,
+      833
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L8.index_key"
+    },
+    {
+     "ops": [
+      874,
+      875,
+      876,
+      878
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L8.ffn_norm"
+    },
+    {
+     "ops": [
+      912,
+      913,
+      914,
+      915,
+      916,
+      917
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L8.moe_sum"
+    },
+    {
+     "ops": [
+      924,
+      925,
+      926,
+      928
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L9.attn_norm"
+    },
+    {
+     "ops": [
+      970,
+      971,
+      972,
+      974
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L9.ffn_norm"
+    },
+    {
+     "ops": [
+      1008,
+      1009,
+      1010,
+      1011,
+      1012,
+      1013
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L9.moe_sum"
+    },
+    {
+     "ops": [
+      1020,
+      1021,
+      1022,
+      1024
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L10.attn_norm"
+    },
+    {
+     "ops": [
+      1066,
+      1067,
+      1068,
+      1070
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L10.ffn_norm"
+    },
+    {
+     "ops": [
+      1104,
+      1105,
+      1106,
+      1107,
+      1108,
+      1109
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L10.moe_sum"
+    },
+    {
+     "ops": [
+      1116,
+      1117,
+      1118,
+      1120
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L11.attn_norm"
+    },
+    {
+     "ops": [
+      1162,
+      1163,
+      1164,
+      1166
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L11.ffn_norm"
+    },
+    {
+     "ops": [
+      1200,
+      1201,
+      1202,
+      1203,
+      1204,
+      1205
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L11.moe_sum"
+    },
+    {
+     "ops": [
+      1212,
+      1213,
+      1214,
+      1216
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L12.attn_norm"
+    },
+    {
+     "ops": [
+      1258,
+      1259,
+      1260,
+      1262
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L12.ffn_norm"
+    },
+    {
+     "ops": [
+      1296,
+      1297,
+      1298,
+      1299,
+      1300,
+      1301
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L12.moe_sum"
+    },
+    {
+     "ops": [
+      1308,
+      1309,
+      1310,
+      1312
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L13.attn_norm"
+    },
+    {
+     "ops": [
+      1354,
+      1355,
+      1356,
+      1358
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L13.ffn_norm"
+    },
+    {
+     "ops": [
+      1392,
+      1393,
+      1394,
+      1395,
+      1396,
+      1397
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L13.moe_sum"
+    },
+    {
+     "ops": [
+      1413,
+      1414,
+      1415,
+      1417
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L14.attn_norm"
+    },
+    {
+     "ops": [
+      1434,
+      1436
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1437,
+      1439
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1441,
+      1443
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L14.index_key"
+    },
+    {
+     "ops": [
+      1484,
+      1485,
+      1486,
+      1488
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L14.ffn_norm"
+    },
+    {
+     "ops": [
+      1522,
+      1523,
+      1524,
+      1525,
+      1526,
+      1527
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L14.moe_sum"
+    },
+    {
+     "ops": [
+      1534,
+      1535,
+      1536,
+      1538
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L15.attn_norm"
+    },
+    {
+     "ops": [
+      1580,
+      1581,
+      1582,
+      1584
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L15.ffn_norm"
+    },
+    {
+     "ops": [
+      1618,
+      1619,
+      1620,
+      1621,
+      1622,
+      1623
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L15.moe_sum"
+    },
+    {
+     "ops": [
+      1630,
+      1631,
+      1632,
+      1634
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L16.attn_norm"
+    },
+    {
+     "ops": [
+      1676,
+      1677,
+      1678,
+      1680
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L16.ffn_norm"
+    },
+    {
+     "ops": [
+      1714,
+      1715,
+      1716,
+      1717,
+      1718,
+      1719
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L16.moe_sum"
+    },
+    {
+     "ops": [
+      1726,
+      1727,
+      1728,
+      1730
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L17.attn_norm"
+    },
+    {
+     "ops": [
+      1772,
+      1773,
+      1774,
+      1776
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L17.ffn_norm"
+    },
+    {
+     "ops": [
+      1810,
+      1811,
+      1812,
+      1813,
+      1814,
+      1815
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L17.moe_sum"
+    },
+    {
+     "ops": [
+      1822,
+      1823,
+      1824,
+      1826
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L18.attn_norm"
+    },
+    {
+     "ops": [
+      1868,
+      1869,
+      1870,
+      1872
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L18.ffn_norm"
+    },
+    {
+     "ops": [
+      1906,
+      1907,
+      1908,
+      1909,
+      1910,
+      1911
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L18.moe_sum"
+    },
+    {
+     "ops": [
+      1918,
+      1919,
+      1920,
+      1922
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L19.attn_norm"
+    },
+    {
+     "ops": [
+      1964,
+      1965,
+      1966,
+      1968
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L19.ffn_norm"
+    },
+    {
+     "ops": [
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L19.moe_sum"
+    },
+    {
+     "ops": [
+      2014,
+      2015,
+      2016,
+      2018
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L20.attn_norm"
+    },
+    {
+     "ops": [
+      2034,
+      2036
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L20.compressor"
+    },
+    {
+     "ops": [
+      2038,
+      2040
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L20.index_key"
+    },
+    {
+     "ops": [
+      2081,
+      2082,
+      2083,
+      2085
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L20.ffn_norm"
+    },
+    {
+     "ops": [
+      2119,
+      2120,
+      2121,
+      2122,
+      2123,
+      2124
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L20.moe_sum"
+    },
+    {
+     "ops": [
+      2131,
+      2132,
+      2133,
+      2135
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L21.attn_norm"
+    },
+    {
+     "ops": [
+      2177,
+      2178,
+      2179,
+      2181
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L21.ffn_norm"
+    },
+    {
+     "ops": [
+      2215,
+      2216,
+      2217,
+      2218,
+      2219,
+      2220
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L21.moe_sum"
+    },
+    {
+     "ops": [
+      2227,
+      2228,
+      2229,
+      2231
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L22.attn_norm"
+    },
+    {
+     "ops": [
+      2273,
+      2274,
+      2275,
+      2277
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L22.ffn_norm"
+    },
+    {
+     "ops": [
+      2311,
+      2312,
+      2313,
+      2314,
+      2315,
+      2316
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L22.moe_sum"
+    },
+    {
+     "ops": [
+      2323,
+      2324,
+      2325,
+      2327
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L23.attn_norm"
+    },
+    {
+     "ops": [
+      2369,
+      2370,
+      2371,
+      2373
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L23.ffn_norm"
+    },
+    {
+     "ops": [
+      2407,
+      2408,
+      2409,
+      2410,
+      2411,
+      2412
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L23.moe_sum"
+    },
+    {
+     "ops": [
+      2419,
+      2420,
+      2421,
+      2423
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L24.attn_norm"
+    },
+    {
+     "ops": [
+      2473,
+      2474,
+      2475,
+      2477
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L24.ffn_norm"
+    },
+    {
+     "ops": [
+      2511,
+      2512,
+      2513,
+      2514,
+      2515,
+      2516
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L24.moe_sum"
+    },
+    {
+     "ops": [
+      2523,
+      2524,
+      2525,
+      2527
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L25.attn_norm"
+    },
+    {
+     "ops": [
+      2569,
+      2570,
+      2571,
+      2573
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L25.ffn_norm"
+    },
+    {
+     "ops": [
+      2607,
+      2608,
+      2609,
+      2610,
+      2611,
+      2612
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L25.moe_sum"
+    },
+    {
+     "ops": [
+      2619,
+      2620,
+      2621,
+      2623
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L26.attn_norm"
+    },
+    {
+     "ops": [
+      2665,
+      2666,
+      2667,
+      2669
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L26.ffn_norm"
+    },
+    {
+     "ops": [
+      2703,
+      2704,
+      2705,
+      2706,
+      2707,
+      2708
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L26.moe_sum"
+    },
+    {
+     "ops": [
+      2715,
+      2716,
+      2717,
+      2719
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L27.attn_norm"
+    },
+    {
+     "ops": [
+      2761,
+      2762,
+      2763,
+      2765
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L27.ffn_norm"
+    },
+    {
+     "ops": [
+      2799,
+      2800,
+      2801,
+      2802,
+      2803,
+      2804
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L27.moe_sum"
+    },
+    {
+     "ops": [
+      2811,
+      2812,
+      2813,
+      2815
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L28.attn_norm"
+    },
+    {
+     "ops": [
+      2865,
+      2866,
+      2867,
+      2869
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L28.ffn_norm"
+    },
+    {
+     "ops": [
+      2903,
+      2904,
+      2905,
+      2906,
+      2907,
+      2908
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L28.moe_sum"
+    },
+    {
+     "ops": [
+      2915,
+      2916,
+      2917,
+      2919
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L29.attn_norm"
+    },
+    {
+     "ops": [
+      2961,
+      2962,
+      2963,
+      2965
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L29.ffn_norm"
+    },
+    {
+     "ops": [
+      2999,
+      3000,
+      3001,
+      3002,
+      3003,
+      3004
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L29.moe_sum"
+    },
+    {
+     "ops": [
+      3011,
+      3012,
+      3013,
+      3015
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L30.attn_norm"
+    },
+    {
+     "ops": [
+      3057,
+      3058,
+      3059,
+      3061
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L30.ffn_norm"
+    },
+    {
+     "ops": [
+      3095,
+      3096,
+      3097,
+      3098,
+      3099,
+      3100
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L30.moe_sum"
+    },
+    {
+     "ops": [
+      3107,
+      3108,
+      3109,
+      3111
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L31.attn_norm"
+    },
+    {
+     "ops": [
+      3153,
+      3154,
+      3155,
+      3157
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L31.ffn_norm"
+    },
+    {
+     "ops": [
+      3191,
+      3192,
+      3193,
+      3194,
+      3195,
+      3196
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L31.moe_sum"
+    },
+    {
+     "ops": [
+      3203,
+      3204,
+      3205,
+      3207
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L32.attn_norm"
+    },
+    {
+     "ops": [
+      3257,
+      3258,
+      3259,
+      3261
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L32.ffn_norm"
+    },
+    {
+     "ops": [
+      3295,
+      3296,
+      3297,
+      3298,
+      3299,
+      3300
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L32.moe_sum"
+    },
+    {
+     "ops": [
+      3307,
+      3308,
+      3309,
+      3311
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L33.attn_norm"
+    },
+    {
+     "ops": [
+      3353,
+      3354,
+      3355,
+      3357
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L33.ffn_norm"
+    },
+    {
+     "ops": [
+      3391,
+      3392,
+      3393,
+      3394,
+      3395,
+      3396
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L33.moe_sum"
+    },
+    {
+     "ops": [
+      3403,
+      3404,
+      3405,
+      3407
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L34.attn_norm"
+    },
+    {
+     "ops": [
+      3449,
+      3450,
+      3451,
+      3453
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L34.ffn_norm"
+    },
+    {
+     "ops": [
+      3487,
+      3488,
+      3489,
+      3490,
+      3491,
+      3492
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L34.moe_sum"
+    },
+    {
+     "ops": [
+      3499,
+      3500,
+      3501,
+      3503
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L35.attn_norm"
+    },
+    {
+     "ops": [
+      3545,
+      3546,
+      3547,
+      3549
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L35.ffn_norm"
+    },
+    {
+     "ops": [
+      3583,
+      3584,
+      3585,
+      3586,
+      3587,
+      3588
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L35.moe_sum"
+    },
+    {
+     "ops": [
+      3595,
+      3596,
+      3597,
+      3599
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L36.attn_norm"
+    },
+    {
+     "ops": [
+      3649,
+      3650,
+      3651,
+      3653
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L36.ffn_norm"
+    },
+    {
+     "ops": [
+      3687,
+      3688,
+      3689,
+      3690,
+      3691,
+      3692
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L36.moe_sum"
+    },
+    {
+     "ops": [
+      3699,
+      3700,
+      3701,
+      3703
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L37.attn_norm"
+    },
+    {
+     "ops": [
+      3745,
+      3746,
+      3747,
+      3749
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L37.ffn_norm"
+    },
+    {
+     "ops": [
+      3783,
+      3784,
+      3785,
+      3786,
+      3787,
+      3788
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L37.moe_sum"
+    },
+    {
+     "ops": [
+      3795,
+      3796,
+      3797,
+      3799
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L38.attn_norm"
+    },
+    {
+     "ops": [
+      3841,
+      3842,
+      3843,
+      3845
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L38.ffn_norm"
+    },
+    {
+     "ops": [
+      3879,
+      3880,
+      3881,
+      3882,
+      3883,
+      3884
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L38.moe_sum"
+    },
+    {
+     "ops": [
+      3891,
+      3892,
+      3893,
+      3895
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L39.attn_norm"
+    },
+    {
+     "ops": [
+      3937,
+      3938,
+      3939,
+      3941
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L39.ffn_norm"
+    },
+    {
+     "ops": [
+      3975,
+      3976,
+      3977,
+      3978,
+      3979,
+      3980
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L39.moe_sum"
+    },
+    {
+     "ops": [
+      3985,
+      3986,
+      3987,
+      3989
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "head"
+    }
+   ],
+   "ops_in_chains": 586,
+   "chain_length_hist": {
+    "2": 11,
+    "4": 81,
+    "6": 40
+   },
+   "producers_writing_vm_still": 8,
+   "producers_vm_write_elided": 446,
+   "vm_elem_reads_total": 1191585,
+   "vm_elem_reads_avoided": 71328,
+   "vm_elem_writes_total": 447605,
+   "vm_elem_writes_avoided": 70720,
+   "path_edges": 454,
+   "cycles_saved_c_rotate_upper": 14528,
+   "kr_peak_entries": 10,
+   "by_category": {
+    "rmsnorm": {
+     "chains": 81,
+     "ops_fused": 324,
+     "edges": 243,
+     "reads_avoided": 38880,
+     "writes_avoided": 38560,
+     "max_len": 4,
+     "path_edges": 243
+    },
+    "moe": {
+     "chains": 40,
+     "ops_fused": 240,
+     "edges": 200,
+     "reads_avoided": 32000,
+     "writes_avoided": 32000,
+     "max_len": 6,
+     "path_edges": 200
+    },
+    "compressor": {
+     "chains": 7,
+     "ops_fused": 14,
+     "edges": 7,
+     "reads_avoided": 320,
+     "writes_avoided": 64,
+     "max_len": 2,
+     "path_edges": 7
+    },
+    "index_key": {
+     "chains": 4,
+     "ops_fused": 8,
+     "edges": 4,
+     "reads_avoided": 128,
+     "writes_avoided": 96,
+     "max_len": 2,
+     "path_edges": 4
+    }
+   },
+   "by_op_class": {
+    "light": {
+     "ops": 491,
+     "heads": 121,
+     "tails": 129,
+     "middles": 241,
+     "reads_avoided": 58176,
+     "writes_avoided": 57760
+    },
+    "light+red": {
+     "ops": 89,
+     "heads": 8,
+     "tails": 0,
+     "middles": 81,
+     "reads_avoided": 12960,
+     "writes_avoided": 12960
+    },
+    "sfu": {
+     "ops": 3,
+     "heads": 3,
+     "tails": 0,
+     "middles": 0,
+     "reads_avoided": 0,
+     "writes_avoided": 0
+    },
+    "divide": {
+     "ops": 3,
+     "heads": 0,
+     "tails": 3,
+     "middles": 0,
+     "reads_avoided": 192,
+     "writes_avoided": 0
+    }
+   },
+   "chain_heads": 132,
+   "chain_tails": 132,
+   "rejects": {
+    "placement_same_width": 935,
+    "placement_width": 1035,
+    "gather_pair_or_region_read": 256,
+    "other_unit_wrote_between": 170,
+    "several_producers": 39,
+    "partly_older_or_result": 1,
+    "producer_also_read_from_memory": 81
+   }
+  },
+  "24": {
+   "N": 16,
+   "M": 8,
+   "su_ops": 2649,
+   "su_ops_active": 2610,
+   "edges": 454,
+   "consumer_ops": 454,
+   "chains": [
+    {
+     "ops": [
+      5,
+      6,
+      7,
+      9
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L0.attn_norm"
+    },
+    {
+     "ops": [
+      49,
+      50,
+      51,
+      53
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L0.ffn_norm"
+    },
+    {
+     "ops": [
+      87,
+      88,
+      89,
+      90,
+      91,
+      92
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L0.moe_sum"
+    },
+    {
+     "ops": [
+      108,
+      109,
+      110,
+      112
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L1.attn_norm"
+    },
+    {
+     "ops": [
+      152,
+      153,
+      154,
+      156
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L1.ffn_norm"
+    },
+    {
+     "ops": [
+      190,
+      191,
+      192,
+      193,
+      194,
+      195
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L1.moe_sum"
+    },
+    {
+     "ops": [
+      202,
+      203,
+      204,
+      206
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L2.attn_norm"
+    },
+    {
+     "ops": [
+      223,
+      225
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      226,
+      228
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      230,
+      232
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L2.index_key"
+    },
+    {
+     "ops": [
+      273,
+      274,
+      275,
+      277
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L2.ffn_norm"
+    },
+    {
+     "ops": [
+      311,
+      312,
+      313,
+      314,
+      315,
+      316
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L2.moe_sum"
+    },
+    {
+     "ops": [
+      323,
+      324,
+      325,
+      327
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L3.attn_norm"
+    },
+    {
+     "ops": [
+      369,
+      370,
+      371,
+      373
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L3.ffn_norm"
+    },
+    {
+     "ops": [
+      407,
+      408,
+      409,
+      410,
+      411,
+      412
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L3.moe_sum"
+    },
+    {
+     "ops": [
+      419,
+      420,
+      421,
+      423
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L4.attn_norm"
+    },
+    {
+     "ops": [
+      465,
+      466,
+      467,
+      469
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L4.ffn_norm"
+    },
+    {
+     "ops": [
+      503,
+      504,
+      505,
+      506,
+      507,
+      508
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L4.moe_sum"
+    },
+    {
+     "ops": [
+      515,
+      516,
+      517,
+      519
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L5.attn_norm"
+    },
+    {
+     "ops": [
+      561,
+      562,
+      563,
+      565
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L5.ffn_norm"
+    },
+    {
+     "ops": [
+      599,
+      600,
+      601,
+      602,
+      603,
+      604
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L5.moe_sum"
+    },
+    {
+     "ops": [
+      611,
+      612,
+      613,
+      615
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L6.attn_norm"
+    },
+    {
+     "ops": [
+      657,
+      658,
+      659,
+      661
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L6.ffn_norm"
+    },
+    {
+     "ops": [
+      695,
+      696,
+      697,
+      698,
+      699,
+      700
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L6.moe_sum"
+    },
+    {
+     "ops": [
+      707,
+      708,
+      709,
+      711
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L7.attn_norm"
+    },
+    {
+     "ops": [
+      753,
+      754,
+      755,
+      757
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L7.ffn_norm"
+    },
+    {
+     "ops": [
+      791,
+      792,
+      793,
+      794,
+      795,
+      796
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L7.moe_sum"
+    },
+    {
+     "ops": [
+      803,
+      804,
+      805,
+      807
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L8.attn_norm"
+    },
+    {
+     "ops": [
+      824,
+      826
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      827,
+      829
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      831,
+      833
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L8.index_key"
+    },
+    {
+     "ops": [
+      874,
+      875,
+      876,
+      878
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L8.ffn_norm"
+    },
+    {
+     "ops": [
+      912,
+      913,
+      914,
+      915,
+      916,
+      917
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L8.moe_sum"
+    },
+    {
+     "ops": [
+      924,
+      925,
+      926,
+      928
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L9.attn_norm"
+    },
+    {
+     "ops": [
+      970,
+      971,
+      972,
+      974
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L9.ffn_norm"
+    },
+    {
+     "ops": [
+      1008,
+      1009,
+      1010,
+      1011,
+      1012,
+      1013
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L9.moe_sum"
+    },
+    {
+     "ops": [
+      1020,
+      1021,
+      1022,
+      1024
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L10.attn_norm"
+    },
+    {
+     "ops": [
+      1066,
+      1067,
+      1068,
+      1070
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L10.ffn_norm"
+    },
+    {
+     "ops": [
+      1104,
+      1105,
+      1106,
+      1107,
+      1108,
+      1109
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L10.moe_sum"
+    },
+    {
+     "ops": [
+      1116,
+      1117,
+      1118,
+      1120
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L11.attn_norm"
+    },
+    {
+     "ops": [
+      1162,
+      1163,
+      1164,
+      1166
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L11.ffn_norm"
+    },
+    {
+     "ops": [
+      1200,
+      1201,
+      1202,
+      1203,
+      1204,
+      1205
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L11.moe_sum"
+    },
+    {
+     "ops": [
+      1212,
+      1213,
+      1214,
+      1216
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L12.attn_norm"
+    },
+    {
+     "ops": [
+      1258,
+      1259,
+      1260,
+      1262
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L12.ffn_norm"
+    },
+    {
+     "ops": [
+      1296,
+      1297,
+      1298,
+      1299,
+      1300,
+      1301
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L12.moe_sum"
+    },
+    {
+     "ops": [
+      1308,
+      1309,
+      1310,
+      1312
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L13.attn_norm"
+    },
+    {
+     "ops": [
+      1354,
+      1355,
+      1356,
+      1358
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L13.ffn_norm"
+    },
+    {
+     "ops": [
+      1392,
+      1393,
+      1394,
+      1395,
+      1396,
+      1397
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L13.moe_sum"
+    },
+    {
+     "ops": [
+      1413,
+      1414,
+      1415,
+      1417
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L14.attn_norm"
+    },
+    {
+     "ops": [
+      1434,
+      1436
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1437,
+      1439
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1441,
+      1443
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L14.index_key"
+    },
+    {
+     "ops": [
+      1484,
+      1485,
+      1486,
+      1488
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L14.ffn_norm"
+    },
+    {
+     "ops": [
+      1522,
+      1523,
+      1524,
+      1525,
+      1526,
+      1527
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L14.moe_sum"
+    },
+    {
+     "ops": [
+      1534,
+      1535,
+      1536,
+      1538
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L15.attn_norm"
+    },
+    {
+     "ops": [
+      1580,
+      1581,
+      1582,
+      1584
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L15.ffn_norm"
+    },
+    {
+     "ops": [
+      1618,
+      1619,
+      1620,
+      1621,
+      1622,
+      1623
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L15.moe_sum"
+    },
+    {
+     "ops": [
+      1630,
+      1631,
+      1632,
+      1634
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L16.attn_norm"
+    },
+    {
+     "ops": [
+      1676,
+      1677,
+      1678,
+      1680
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L16.ffn_norm"
+    },
+    {
+     "ops": [
+      1714,
+      1715,
+      1716,
+      1717,
+      1718,
+      1719
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L16.moe_sum"
+    },
+    {
+     "ops": [
+      1726,
+      1727,
+      1728,
+      1730
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L17.attn_norm"
+    },
+    {
+     "ops": [
+      1772,
+      1773,
+      1774,
+      1776
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L17.ffn_norm"
+    },
+    {
+     "ops": [
+      1810,
+      1811,
+      1812,
+      1813,
+      1814,
+      1815
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L17.moe_sum"
+    },
+    {
+     "ops": [
+      1822,
+      1823,
+      1824,
+      1826
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L18.attn_norm"
+    },
+    {
+     "ops": [
+      1868,
+      1869,
+      1870,
+      1872
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L18.ffn_norm"
+    },
+    {
+     "ops": [
+      1906,
+      1907,
+      1908,
+      1909,
+      1910,
+      1911
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L18.moe_sum"
+    },
+    {
+     "ops": [
+      1918,
+      1919,
+      1920,
+      1922
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L19.attn_norm"
+    },
+    {
+     "ops": [
+      1964,
+      1965,
+      1966,
+      1968
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L19.ffn_norm"
+    },
+    {
+     "ops": [
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L19.moe_sum"
+    },
+    {
+     "ops": [
+      2014,
+      2015,
+      2016,
+      2018
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L20.attn_norm"
+    },
+    {
+     "ops": [
+      2034,
+      2036
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L20.compressor"
+    },
+    {
+     "ops": [
+      2038,
+      2040
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L20.index_key"
+    },
+    {
+     "ops": [
+      2081,
+      2082,
+      2083,
+      2085
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L20.ffn_norm"
+    },
+    {
+     "ops": [
+      2119,
+      2120,
+      2121,
+      2122,
+      2123,
+      2124
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L20.moe_sum"
+    },
+    {
+     "ops": [
+      2131,
+      2132,
+      2133,
+      2135
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L21.attn_norm"
+    },
+    {
+     "ops": [
+      2177,
+      2178,
+      2179,
+      2181
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L21.ffn_norm"
+    },
+    {
+     "ops": [
+      2215,
+      2216,
+      2217,
+      2218,
+      2219,
+      2220
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L21.moe_sum"
+    },
+    {
+     "ops": [
+      2227,
+      2228,
+      2229,
+      2231
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L22.attn_norm"
+    },
+    {
+     "ops": [
+      2273,
+      2274,
+      2275,
+      2277
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L22.ffn_norm"
+    },
+    {
+     "ops": [
+      2311,
+      2312,
+      2313,
+      2314,
+      2315,
+      2316
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L22.moe_sum"
+    },
+    {
+     "ops": [
+      2323,
+      2324,
+      2325,
+      2327
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L23.attn_norm"
+    },
+    {
+     "ops": [
+      2369,
+      2370,
+      2371,
+      2373
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L23.ffn_norm"
+    },
+    {
+     "ops": [
+      2407,
+      2408,
+      2409,
+      2410,
+      2411,
+      2412
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L23.moe_sum"
+    },
+    {
+     "ops": [
+      2419,
+      2420,
+      2421,
+      2423
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L24.attn_norm"
+    },
+    {
+     "ops": [
+      2473,
+      2474,
+      2475,
+      2477
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L24.ffn_norm"
+    },
+    {
+     "ops": [
+      2511,
+      2512,
+      2513,
+      2514,
+      2515,
+      2516
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L24.moe_sum"
+    },
+    {
+     "ops": [
+      2523,
+      2524,
+      2525,
+      2527
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L25.attn_norm"
+    },
+    {
+     "ops": [
+      2569,
+      2570,
+      2571,
+      2573
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L25.ffn_norm"
+    },
+    {
+     "ops": [
+      2607,
+      2608,
+      2609,
+      2610,
+      2611,
+      2612
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L25.moe_sum"
+    },
+    {
+     "ops": [
+      2619,
+      2620,
+      2621,
+      2623
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L26.attn_norm"
+    },
+    {
+     "ops": [
+      2665,
+      2666,
+      2667,
+      2669
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L26.ffn_norm"
+    },
+    {
+     "ops": [
+      2703,
+      2704,
+      2705,
+      2706,
+      2707,
+      2708
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L26.moe_sum"
+    },
+    {
+     "ops": [
+      2715,
+      2716,
+      2717,
+      2719
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L27.attn_norm"
+    },
+    {
+     "ops": [
+      2761,
+      2762,
+      2763,
+      2765
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L27.ffn_norm"
+    },
+    {
+     "ops": [
+      2799,
+      2800,
+      2801,
+      2802,
+      2803,
+      2804
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L27.moe_sum"
+    },
+    {
+     "ops": [
+      2811,
+      2812,
+      2813,
+      2815
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L28.attn_norm"
+    },
+    {
+     "ops": [
+      2865,
+      2866,
+      2867,
+      2869
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L28.ffn_norm"
+    },
+    {
+     "ops": [
+      2903,
+      2904,
+      2905,
+      2906,
+      2907,
+      2908
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L28.moe_sum"
+    },
+    {
+     "ops": [
+      2915,
+      2916,
+      2917,
+      2919
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L29.attn_norm"
+    },
+    {
+     "ops": [
+      2961,
+      2962,
+      2963,
+      2965
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L29.ffn_norm"
+    },
+    {
+     "ops": [
+      2999,
+      3000,
+      3001,
+      3002,
+      3003,
+      3004
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L29.moe_sum"
+    },
+    {
+     "ops": [
+      3011,
+      3012,
+      3013,
+      3015
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L30.attn_norm"
+    },
+    {
+     "ops": [
+      3057,
+      3058,
+      3059,
+      3061
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L30.ffn_norm"
+    },
+    {
+     "ops": [
+      3095,
+      3096,
+      3097,
+      3098,
+      3099,
+      3100
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L30.moe_sum"
+    },
+    {
+     "ops": [
+      3107,
+      3108,
+      3109,
+      3111
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L31.attn_norm"
+    },
+    {
+     "ops": [
+      3153,
+      3154,
+      3155,
+      3157
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L31.ffn_norm"
+    },
+    {
+     "ops": [
+      3191,
+      3192,
+      3193,
+      3194,
+      3195,
+      3196
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L31.moe_sum"
+    },
+    {
+     "ops": [
+      3203,
+      3204,
+      3205,
+      3207
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L32.attn_norm"
+    },
+    {
+     "ops": [
+      3257,
+      3258,
+      3259,
+      3261
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L32.ffn_norm"
+    },
+    {
+     "ops": [
+      3295,
+      3296,
+      3297,
+      3298,
+      3299,
+      3300
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L32.moe_sum"
+    },
+    {
+     "ops": [
+      3307,
+      3308,
+      3309,
+      3311
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L33.attn_norm"
+    },
+    {
+     "ops": [
+      3353,
+      3354,
+      3355,
+      3357
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L33.ffn_norm"
+    },
+    {
+     "ops": [
+      3391,
+      3392,
+      3393,
+      3394,
+      3395,
+      3396
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L33.moe_sum"
+    },
+    {
+     "ops": [
+      3403,
+      3404,
+      3405,
+      3407
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L34.attn_norm"
+    },
+    {
+     "ops": [
+      3449,
+      3450,
+      3451,
+      3453
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L34.ffn_norm"
+    },
+    {
+     "ops": [
+      3487,
+      3488,
+      3489,
+      3490,
+      3491,
+      3492
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L34.moe_sum"
+    },
+    {
+     "ops": [
+      3499,
+      3500,
+      3501,
+      3503
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L35.attn_norm"
+    },
+    {
+     "ops": [
+      3545,
+      3546,
+      3547,
+      3549
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L35.ffn_norm"
+    },
+    {
+     "ops": [
+      3583,
+      3584,
+      3585,
+      3586,
+      3587,
+      3588
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L35.moe_sum"
+    },
+    {
+     "ops": [
+      3595,
+      3596,
+      3597,
+      3599
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L36.attn_norm"
+    },
+    {
+     "ops": [
+      3649,
+      3650,
+      3651,
+      3653
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L36.ffn_norm"
+    },
+    {
+     "ops": [
+      3687,
+      3688,
+      3689,
+      3690,
+      3691,
+      3692
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L36.moe_sum"
+    },
+    {
+     "ops": [
+      3699,
+      3700,
+      3701,
+      3703
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L37.attn_norm"
+    },
+    {
+     "ops": [
+      3745,
+      3746,
+      3747,
+      3749
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L37.ffn_norm"
+    },
+    {
+     "ops": [
+      3783,
+      3784,
+      3785,
+      3786,
+      3787,
+      3788
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L37.moe_sum"
+    },
+    {
+     "ops": [
+      3795,
+      3796,
+      3797,
+      3799
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L38.attn_norm"
+    },
+    {
+     "ops": [
+      3841,
+      3842,
+      3843,
+      3845
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L38.ffn_norm"
+    },
+    {
+     "ops": [
+      3879,
+      3880,
+      3881,
+      3882,
+      3883,
+      3884
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L38.moe_sum"
+    },
+    {
+     "ops": [
+      3891,
+      3892,
+      3893,
+      3895
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L39.attn_norm"
+    },
+    {
+     "ops": [
+      3937,
+      3938,
+      3939,
+      3941
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L39.ffn_norm"
+    },
+    {
+     "ops": [
+      3975,
+      3976,
+      3977,
+      3978,
+      3979,
+      3980
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L39.moe_sum"
+    },
+    {
+     "ops": [
+      3985,
+      3986,
+      3987,
+      3989
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "head"
+    }
+   ],
+   "ops_in_chains": 586,
+   "chain_length_hist": {
+    "2": 11,
+    "4": 81,
+    "6": 40
+   },
+   "producers_writing_vm_still": 8,
+   "producers_vm_write_elided": 446,
+   "vm_elem_reads_total": 1191585,
+   "vm_elem_reads_avoided": 71328,
+   "vm_elem_writes_total": 447605,
+   "vm_elem_writes_avoided": 70720,
+   "path_edges": 454,
+   "cycles_saved_c_rotate_upper": 14528,
+   "kr_peak_entries": 10,
+   "by_category": {
+    "rmsnorm": {
+     "chains": 81,
+     "ops_fused": 324,
+     "edges": 243,
+     "reads_avoided": 38880,
+     "writes_avoided": 38560,
+     "max_len": 4,
+     "path_edges": 243
+    },
+    "moe": {
+     "chains": 40,
+     "ops_fused": 240,
+     "edges": 200,
+     "reads_avoided": 32000,
+     "writes_avoided": 32000,
+     "max_len": 6,
+     "path_edges": 200
+    },
+    "compressor": {
+     "chains": 7,
+     "ops_fused": 14,
+     "edges": 7,
+     "reads_avoided": 320,
+     "writes_avoided": 64,
+     "max_len": 2,
+     "path_edges": 7
+    },
+    "index_key": {
+     "chains": 4,
+     "ops_fused": 8,
+     "edges": 4,
+     "reads_avoided": 128,
+     "writes_avoided": 96,
+     "max_len": 2,
+     "path_edges": 4
+    }
+   },
+   "by_op_class": {
+    "light": {
+     "ops": 491,
+     "heads": 121,
+     "tails": 129,
+     "middles": 241,
+     "reads_avoided": 58176,
+     "writes_avoided": 57760
+    },
+    "light+red": {
+     "ops": 89,
+     "heads": 8,
+     "tails": 0,
+     "middles": 81,
+     "reads_avoided": 12960,
+     "writes_avoided": 12960
+    },
+    "sfu": {
+     "ops": 3,
+     "heads": 3,
+     "tails": 0,
+     "middles": 0,
+     "reads_avoided": 0,
+     "writes_avoided": 0
+    },
+    "divide": {
+     "ops": 3,
+     "heads": 0,
+     "tails": 3,
+     "middles": 0,
+     "reads_avoided": 192,
+     "writes_avoided": 0
+    }
+   },
+   "chain_heads": 132,
+   "chain_tails": 132,
+   "rejects": {
+    "placement_same_width": 935,
+    "placement_width": 1035,
+    "gather_pair_or_region_read": 256,
+    "other_unit_wrote_between": 170,
+    "several_producers": 39,
+    "partly_older_or_result": 1,
+    "producer_also_read_from_memory": 81
+   }
+  },
+  "32": {
+   "N": 16,
+   "M": 8,
+   "su_ops": 2649,
+   "su_ops_active": 2610,
+   "edges": 454,
+   "consumer_ops": 454,
+   "chains": [
+    {
+     "ops": [
+      5,
+      6,
+      7,
+      9
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L0.attn_norm"
+    },
+    {
+     "ops": [
+      49,
+      50,
+      51,
+      53
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L0.ffn_norm"
+    },
+    {
+     "ops": [
+      87,
+      88,
+      89,
+      90,
+      91,
+      92
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L0.moe_sum"
+    },
+    {
+     "ops": [
+      108,
+      109,
+      110,
+      112
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L1.attn_norm"
+    },
+    {
+     "ops": [
+      152,
+      153,
+      154,
+      156
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L1.ffn_norm"
+    },
+    {
+     "ops": [
+      190,
+      191,
+      192,
+      193,
+      194,
+      195
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L1.moe_sum"
+    },
+    {
+     "ops": [
+      202,
+      203,
+      204,
+      206
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L2.attn_norm"
+    },
+    {
+     "ops": [
+      223,
+      225
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      226,
+      228
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      230,
+      232
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L2.index_key"
+    },
+    {
+     "ops": [
+      273,
+      274,
+      275,
+      277
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L2.ffn_norm"
+    },
+    {
+     "ops": [
+      311,
+      312,
+      313,
+      314,
+      315,
+      316
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L2.moe_sum"
+    },
+    {
+     "ops": [
+      323,
+      324,
+      325,
+      327
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L3.attn_norm"
+    },
+    {
+     "ops": [
+      369,
+      370,
+      371,
+      373
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L3.ffn_norm"
+    },
+    {
+     "ops": [
+      407,
+      408,
+      409,
+      410,
+      411,
+      412
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L3.moe_sum"
+    },
+    {
+     "ops": [
+      419,
+      420,
+      421,
+      423
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L4.attn_norm"
+    },
+    {
+     "ops": [
+      465,
+      466,
+      467,
+      469
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L4.ffn_norm"
+    },
+    {
+     "ops": [
+      503,
+      504,
+      505,
+      506,
+      507,
+      508
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L4.moe_sum"
+    },
+    {
+     "ops": [
+      515,
+      516,
+      517,
+      519
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L5.attn_norm"
+    },
+    {
+     "ops": [
+      561,
+      562,
+      563,
+      565
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L5.ffn_norm"
+    },
+    {
+     "ops": [
+      599,
+      600,
+      601,
+      602,
+      603,
+      604
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L5.moe_sum"
+    },
+    {
+     "ops": [
+      611,
+      612,
+      613,
+      615
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L6.attn_norm"
+    },
+    {
+     "ops": [
+      657,
+      658,
+      659,
+      661
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L6.ffn_norm"
+    },
+    {
+     "ops": [
+      695,
+      696,
+      697,
+      698,
+      699,
+      700
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L6.moe_sum"
+    },
+    {
+     "ops": [
+      707,
+      708,
+      709,
+      711
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L7.attn_norm"
+    },
+    {
+     "ops": [
+      753,
+      754,
+      755,
+      757
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L7.ffn_norm"
+    },
+    {
+     "ops": [
+      791,
+      792,
+      793,
+      794,
+      795,
+      796
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L7.moe_sum"
+    },
+    {
+     "ops": [
+      803,
+      804,
+      805,
+      807
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L8.attn_norm"
+    },
+    {
+     "ops": [
+      824,
+      826
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      827,
+      829
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      831,
+      833
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L8.index_key"
+    },
+    {
+     "ops": [
+      874,
+      875,
+      876,
+      878
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L8.ffn_norm"
+    },
+    {
+     "ops": [
+      912,
+      913,
+      914,
+      915,
+      916,
+      917
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L8.moe_sum"
+    },
+    {
+     "ops": [
+      924,
+      925,
+      926,
+      928
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L9.attn_norm"
+    },
+    {
+     "ops": [
+      970,
+      971,
+      972,
+      974
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L9.ffn_norm"
+    },
+    {
+     "ops": [
+      1008,
+      1009,
+      1010,
+      1011,
+      1012,
+      1013
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L9.moe_sum"
+    },
+    {
+     "ops": [
+      1020,
+      1021,
+      1022,
+      1024
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L10.attn_norm"
+    },
+    {
+     "ops": [
+      1066,
+      1067,
+      1068,
+      1070
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L10.ffn_norm"
+    },
+    {
+     "ops": [
+      1104,
+      1105,
+      1106,
+      1107,
+      1108,
+      1109
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L10.moe_sum"
+    },
+    {
+     "ops": [
+      1116,
+      1117,
+      1118,
+      1120
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L11.attn_norm"
+    },
+    {
+     "ops": [
+      1162,
+      1163,
+      1164,
+      1166
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L11.ffn_norm"
+    },
+    {
+     "ops": [
+      1200,
+      1201,
+      1202,
+      1203,
+      1204,
+      1205
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L11.moe_sum"
+    },
+    {
+     "ops": [
+      1212,
+      1213,
+      1214,
+      1216
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L12.attn_norm"
+    },
+    {
+     "ops": [
+      1258,
+      1259,
+      1260,
+      1262
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L12.ffn_norm"
+    },
+    {
+     "ops": [
+      1296,
+      1297,
+      1298,
+      1299,
+      1300,
+      1301
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L12.moe_sum"
+    },
+    {
+     "ops": [
+      1308,
+      1309,
+      1310,
+      1312
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L13.attn_norm"
+    },
+    {
+     "ops": [
+      1354,
+      1355,
+      1356,
+      1358
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L13.ffn_norm"
+    },
+    {
+     "ops": [
+      1392,
+      1393,
+      1394,
+      1395,
+      1396,
+      1397
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L13.moe_sum"
+    },
+    {
+     "ops": [
+      1413,
+      1414,
+      1415,
+      1417
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L14.attn_norm"
+    },
+    {
+     "ops": [
+      1434,
+      1436
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1437,
+      1439
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1441,
+      1443
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L14.index_key"
+    },
+    {
+     "ops": [
+      1484,
+      1485,
+      1486,
+      1488
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L14.ffn_norm"
+    },
+    {
+     "ops": [
+      1522,
+      1523,
+      1524,
+      1525,
+      1526,
+      1527
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L14.moe_sum"
+    },
+    {
+     "ops": [
+      1534,
+      1535,
+      1536,
+      1538
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L15.attn_norm"
+    },
+    {
+     "ops": [
+      1580,
+      1581,
+      1582,
+      1584
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L15.ffn_norm"
+    },
+    {
+     "ops": [
+      1618,
+      1619,
+      1620,
+      1621,
+      1622,
+      1623
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L15.moe_sum"
+    },
+    {
+     "ops": [
+      1630,
+      1631,
+      1632,
+      1634
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L16.attn_norm"
+    },
+    {
+     "ops": [
+      1676,
+      1677,
+      1678,
+      1680
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L16.ffn_norm"
+    },
+    {
+     "ops": [
+      1714,
+      1715,
+      1716,
+      1717,
+      1718,
+      1719
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L16.moe_sum"
+    },
+    {
+     "ops": [
+      1726,
+      1727,
+      1728,
+      1730
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L17.attn_norm"
+    },
+    {
+     "ops": [
+      1772,
+      1773,
+      1774,
+      1776
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L17.ffn_norm"
+    },
+    {
+     "ops": [
+      1810,
+      1811,
+      1812,
+      1813,
+      1814,
+      1815
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L17.moe_sum"
+    },
+    {
+     "ops": [
+      1822,
+      1823,
+      1824,
+      1826
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L18.attn_norm"
+    },
+    {
+     "ops": [
+      1868,
+      1869,
+      1870,
+      1872
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L18.ffn_norm"
+    },
+    {
+     "ops": [
+      1906,
+      1907,
+      1908,
+      1909,
+      1910,
+      1911
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L18.moe_sum"
+    },
+    {
+     "ops": [
+      1918,
+      1919,
+      1920,
+      1922
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L19.attn_norm"
+    },
+    {
+     "ops": [
+      1964,
+      1965,
+      1966,
+      1968
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L19.ffn_norm"
+    },
+    {
+     "ops": [
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L19.moe_sum"
+    },
+    {
+     "ops": [
+      2014,
+      2015,
+      2016,
+      2018
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L20.attn_norm"
+    },
+    {
+     "ops": [
+      2034,
+      2036
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L20.compressor"
+    },
+    {
+     "ops": [
+      2038,
+      2040
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L20.index_key"
+    },
+    {
+     "ops": [
+      2081,
+      2082,
+      2083,
+      2085
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L20.ffn_norm"
+    },
+    {
+     "ops": [
+      2119,
+      2120,
+      2121,
+      2122,
+      2123,
+      2124
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L20.moe_sum"
+    },
+    {
+     "ops": [
+      2131,
+      2132,
+      2133,
+      2135
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L21.attn_norm"
+    },
+    {
+     "ops": [
+      2177,
+      2178,
+      2179,
+      2181
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L21.ffn_norm"
+    },
+    {
+     "ops": [
+      2215,
+      2216,
+      2217,
+      2218,
+      2219,
+      2220
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L21.moe_sum"
+    },
+    {
+     "ops": [
+      2227,
+      2228,
+      2229,
+      2231
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L22.attn_norm"
+    },
+    {
+     "ops": [
+      2273,
+      2274,
+      2275,
+      2277
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L22.ffn_norm"
+    },
+    {
+     "ops": [
+      2311,
+      2312,
+      2313,
+      2314,
+      2315,
+      2316
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L22.moe_sum"
+    },
+    {
+     "ops": [
+      2323,
+      2324,
+      2325,
+      2327
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L23.attn_norm"
+    },
+    {
+     "ops": [
+      2369,
+      2370,
+      2371,
+      2373
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L23.ffn_norm"
+    },
+    {
+     "ops": [
+      2407,
+      2408,
+      2409,
+      2410,
+      2411,
+      2412
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L23.moe_sum"
+    },
+    {
+     "ops": [
+      2419,
+      2420,
+      2421,
+      2423
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L24.attn_norm"
+    },
+    {
+     "ops": [
+      2473,
+      2474,
+      2475,
+      2477
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L24.ffn_norm"
+    },
+    {
+     "ops": [
+      2511,
+      2512,
+      2513,
+      2514,
+      2515,
+      2516
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L24.moe_sum"
+    },
+    {
+     "ops": [
+      2523,
+      2524,
+      2525,
+      2527
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L25.attn_norm"
+    },
+    {
+     "ops": [
+      2569,
+      2570,
+      2571,
+      2573
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L25.ffn_norm"
+    },
+    {
+     "ops": [
+      2607,
+      2608,
+      2609,
+      2610,
+      2611,
+      2612
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L25.moe_sum"
+    },
+    {
+     "ops": [
+      2619,
+      2620,
+      2621,
+      2623
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L26.attn_norm"
+    },
+    {
+     "ops": [
+      2665,
+      2666,
+      2667,
+      2669
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L26.ffn_norm"
+    },
+    {
+     "ops": [
+      2703,
+      2704,
+      2705,
+      2706,
+      2707,
+      2708
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L26.moe_sum"
+    },
+    {
+     "ops": [
+      2715,
+      2716,
+      2717,
+      2719
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L27.attn_norm"
+    },
+    {
+     "ops": [
+      2761,
+      2762,
+      2763,
+      2765
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L27.ffn_norm"
+    },
+    {
+     "ops": [
+      2799,
+      2800,
+      2801,
+      2802,
+      2803,
+      2804
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L27.moe_sum"
+    },
+    {
+     "ops": [
+      2811,
+      2812,
+      2813,
+      2815
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L28.attn_norm"
+    },
+    {
+     "ops": [
+      2865,
+      2866,
+      2867,
+      2869
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L28.ffn_norm"
+    },
+    {
+     "ops": [
+      2903,
+      2904,
+      2905,
+      2906,
+      2907,
+      2908
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L28.moe_sum"
+    },
+    {
+     "ops": [
+      2915,
+      2916,
+      2917,
+      2919
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L29.attn_norm"
+    },
+    {
+     "ops": [
+      2961,
+      2962,
+      2963,
+      2965
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L29.ffn_norm"
+    },
+    {
+     "ops": [
+      2999,
+      3000,
+      3001,
+      3002,
+      3003,
+      3004
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L29.moe_sum"
+    },
+    {
+     "ops": [
+      3011,
+      3012,
+      3013,
+      3015
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L30.attn_norm"
+    },
+    {
+     "ops": [
+      3057,
+      3058,
+      3059,
+      3061
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L30.ffn_norm"
+    },
+    {
+     "ops": [
+      3095,
+      3096,
+      3097,
+      3098,
+      3099,
+      3100
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L30.moe_sum"
+    },
+    {
+     "ops": [
+      3107,
+      3108,
+      3109,
+      3111
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L31.attn_norm"
+    },
+    {
+     "ops": [
+      3153,
+      3154,
+      3155,
+      3157
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L31.ffn_norm"
+    },
+    {
+     "ops": [
+      3191,
+      3192,
+      3193,
+      3194,
+      3195,
+      3196
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L31.moe_sum"
+    },
+    {
+     "ops": [
+      3203,
+      3204,
+      3205,
+      3207
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L32.attn_norm"
+    },
+    {
+     "ops": [
+      3257,
+      3258,
+      3259,
+      3261
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L32.ffn_norm"
+    },
+    {
+     "ops": [
+      3295,
+      3296,
+      3297,
+      3298,
+      3299,
+      3300
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L32.moe_sum"
+    },
+    {
+     "ops": [
+      3307,
+      3308,
+      3309,
+      3311
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L33.attn_norm"
+    },
+    {
+     "ops": [
+      3353,
+      3354,
+      3355,
+      3357
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L33.ffn_norm"
+    },
+    {
+     "ops": [
+      3391,
+      3392,
+      3393,
+      3394,
+      3395,
+      3396
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L33.moe_sum"
+    },
+    {
+     "ops": [
+      3403,
+      3404,
+      3405,
+      3407
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L34.attn_norm"
+    },
+    {
+     "ops": [
+      3449,
+      3450,
+      3451,
+      3453
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L34.ffn_norm"
+    },
+    {
+     "ops": [
+      3487,
+      3488,
+      3489,
+      3490,
+      3491,
+      3492
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L34.moe_sum"
+    },
+    {
+     "ops": [
+      3499,
+      3500,
+      3501,
+      3503
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L35.attn_norm"
+    },
+    {
+     "ops": [
+      3545,
+      3546,
+      3547,
+      3549
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L35.ffn_norm"
+    },
+    {
+     "ops": [
+      3583,
+      3584,
+      3585,
+      3586,
+      3587,
+      3588
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L35.moe_sum"
+    },
+    {
+     "ops": [
+      3595,
+      3596,
+      3597,
+      3599
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L36.attn_norm"
+    },
+    {
+     "ops": [
+      3649,
+      3650,
+      3651,
+      3653
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L36.ffn_norm"
+    },
+    {
+     "ops": [
+      3687,
+      3688,
+      3689,
+      3690,
+      3691,
+      3692
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L36.moe_sum"
+    },
+    {
+     "ops": [
+      3699,
+      3700,
+      3701,
+      3703
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L37.attn_norm"
+    },
+    {
+     "ops": [
+      3745,
+      3746,
+      3747,
+      3749
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L37.ffn_norm"
+    },
+    {
+     "ops": [
+      3783,
+      3784,
+      3785,
+      3786,
+      3787,
+      3788
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L37.moe_sum"
+    },
+    {
+     "ops": [
+      3795,
+      3796,
+      3797,
+      3799
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L38.attn_norm"
+    },
+    {
+     "ops": [
+      3841,
+      3842,
+      3843,
+      3845
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L38.ffn_norm"
+    },
+    {
+     "ops": [
+      3879,
+      3880,
+      3881,
+      3882,
+      3883,
+      3884
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L38.moe_sum"
+    },
+    {
+     "ops": [
+      3891,
+      3892,
+      3893,
+      3895
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L39.attn_norm"
+    },
+    {
+     "ops": [
+      3937,
+      3938,
+      3939,
+      3941
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L39.ffn_norm"
+    },
+    {
+     "ops": [
+      3975,
+      3976,
+      3977,
+      3978,
+      3979,
+      3980
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L39.moe_sum"
+    },
+    {
+     "ops": [
+      3985,
+      3986,
+      3987,
+      3989
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "head"
+    }
+   ],
+   "ops_in_chains": 586,
+   "chain_length_hist": {
+    "2": 11,
+    "4": 81,
+    "6": 40
+   },
+   "producers_writing_vm_still": 8,
+   "producers_vm_write_elided": 446,
+   "vm_elem_reads_total": 1191585,
+   "vm_elem_reads_avoided": 71328,
+   "vm_elem_writes_total": 447605,
+   "vm_elem_writes_avoided": 70720,
+   "path_edges": 454,
+   "cycles_saved_c_rotate_upper": 14528,
+   "kr_peak_entries": 10,
+   "by_category": {
+    "rmsnorm": {
+     "chains": 81,
+     "ops_fused": 324,
+     "edges": 243,
+     "reads_avoided": 38880,
+     "writes_avoided": 38560,
+     "max_len": 4,
+     "path_edges": 243
+    },
+    "moe": {
+     "chains": 40,
+     "ops_fused": 240,
+     "edges": 200,
+     "reads_avoided": 32000,
+     "writes_avoided": 32000,
+     "max_len": 6,
+     "path_edges": 200
+    },
+    "compressor": {
+     "chains": 7,
+     "ops_fused": 14,
+     "edges": 7,
+     "reads_avoided": 320,
+     "writes_avoided": 64,
+     "max_len": 2,
+     "path_edges": 7
+    },
+    "index_key": {
+     "chains": 4,
+     "ops_fused": 8,
+     "edges": 4,
+     "reads_avoided": 128,
+     "writes_avoided": 96,
+     "max_len": 2,
+     "path_edges": 4
+    }
+   },
+   "by_op_class": {
+    "light": {
+     "ops": 491,
+     "heads": 121,
+     "tails": 129,
+     "middles": 241,
+     "reads_avoided": 58176,
+     "writes_avoided": 57760
+    },
+    "light+red": {
+     "ops": 89,
+     "heads": 8,
+     "tails": 0,
+     "middles": 81,
+     "reads_avoided": 12960,
+     "writes_avoided": 12960
+    },
+    "sfu": {
+     "ops": 3,
+     "heads": 3,
+     "tails": 0,
+     "middles": 0,
+     "reads_avoided": 0,
+     "writes_avoided": 0
+    },
+    "divide": {
+     "ops": 3,
+     "heads": 0,
+     "tails": 3,
+     "middles": 0,
+     "reads_avoided": 192,
+     "writes_avoided": 0
+    }
+   },
+   "chain_heads": 132,
+   "chain_tails": 132,
+   "rejects": {
+    "placement_same_width": 935,
+    "placement_width": 1035,
+    "gather_pair_or_region_read": 256,
+    "other_unit_wrote_between": 170,
+    "several_producers": 39,
+    "partly_older_or_result": 1,
+    "producer_also_read_from_memory": 81
+   }
+  },
+  "40": {
+   "N": 16,
+   "M": 8,
+   "su_ops": 2649,
+   "su_ops_active": 2610,
+   "edges": 700,
+   "consumer_ops": 700,
+   "chains": [
+    {
+     "ops": [
+      5,
+      6,
+      7,
+      9
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L0.attn_norm"
+    },
+    {
+     "ops": [
+      43,
+      44,
+      45,
+      46
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L0.hc_post"
+    },
+    {
+     "ops": [
+      49,
+      50,
+      51,
+      53
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L0.ffn_norm"
+    },
+    {
+     "ops": [
+      87,
+      88,
+      89,
+      90,
+      91,
+      92
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L0.moe_sum"
+    },
+    {
+     "ops": [
+      93,
+      94,
+      95,
+      96,
+      99,
+      101,
+      105
+     ],
+     "length": 7,
+     "path_edges": 4,
+     "category": "hc_post",
+     "tag": "L0.hc_post"
+    },
+    {
+     "ops": [
+      108,
+      109,
+      110,
+      112
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L1.attn_norm"
+    },
+    {
+     "ops": [
+      146,
+      147,
+      148,
+      149
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L1.hc_post"
+    },
+    {
+     "ops": [
+      152,
+      153,
+      154,
+      156
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L1.ffn_norm"
+    },
+    {
+     "ops": [
+      190,
+      191,
+      192,
+      193,
+      194,
+      195
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L1.moe_sum"
+    },
+    {
+     "ops": [
+      196,
+      197,
+      198,
+      199
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L1.hc_post"
+    },
+    {
+     "ops": [
+      202,
+      203,
+      204,
+      206
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L2.attn_norm"
+    },
+    {
+     "ops": [
+      223,
+      225
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      226,
+      228
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      230,
+      232
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L2.index_key"
+    },
+    {
+     "ops": [
+      267,
+      268,
+      269,
+      270
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L2.hc_post"
+    },
+    {
+     "ops": [
+      273,
+      274,
+      275,
+      277
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L2.ffn_norm"
+    },
+    {
+     "ops": [
+      311,
+      312,
+      313,
+      314,
+      315,
+      316
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L2.moe_sum"
+    },
+    {
+     "ops": [
+      317,
+      318,
+      319,
+      320
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L2.hc_post"
+    },
+    {
+     "ops": [
+      323,
+      324,
+      325,
+      327
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L3.attn_norm"
+    },
+    {
+     "ops": [
+      363,
+      364,
+      365,
+      366
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L3.hc_post"
+    },
+    {
+     "ops": [
+      369,
+      370,
+      371,
+      373
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L3.ffn_norm"
+    },
+    {
+     "ops": [
+      407,
+      408,
+      409,
+      410,
+      411,
+      412
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L3.moe_sum"
+    },
+    {
+     "ops": [
+      413,
+      414,
+      415,
+      416
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L3.hc_post"
+    },
+    {
+     "ops": [
+      419,
+      420,
+      421,
+      423
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L4.attn_norm"
+    },
+    {
+     "ops": [
+      459,
+      460,
+      461,
+      462
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L4.hc_post"
+    },
+    {
+     "ops": [
+      465,
+      466,
+      467,
+      469
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L4.ffn_norm"
+    },
+    {
+     "ops": [
+      503,
+      504,
+      505,
+      506,
+      507,
+      508
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L4.moe_sum"
+    },
+    {
+     "ops": [
+      509,
+      510,
+      511,
+      512
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L4.hc_post"
+    },
+    {
+     "ops": [
+      515,
+      516,
+      517,
+      519
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L5.attn_norm"
+    },
+    {
+     "ops": [
+      555,
+      556,
+      557,
+      558
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L5.hc_post"
+    },
+    {
+     "ops": [
+      561,
+      562,
+      563,
+      565
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L5.ffn_norm"
+    },
+    {
+     "ops": [
+      599,
+      600,
+      601,
+      602,
+      603,
+      604
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L5.moe_sum"
+    },
+    {
+     "ops": [
+      605,
+      606,
+      607,
+      608
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L5.hc_post"
+    },
+    {
+     "ops": [
+      611,
+      612,
+      613,
+      615
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L6.attn_norm"
+    },
+    {
+     "ops": [
+      651,
+      652,
+      653,
+      654
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L6.hc_post"
+    },
+    {
+     "ops": [
+      657,
+      658,
+      659,
+      661
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L6.ffn_norm"
+    },
+    {
+     "ops": [
+      695,
+      696,
+      697,
+      698,
+      699,
+      700
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L6.moe_sum"
+    },
+    {
+     "ops": [
+      701,
+      702,
+      703,
+      704
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L6.hc_post"
+    },
+    {
+     "ops": [
+      707,
+      708,
+      709,
+      711
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L7.attn_norm"
+    },
+    {
+     "ops": [
+      747,
+      748,
+      749,
+      750
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L7.hc_post"
+    },
+    {
+     "ops": [
+      753,
+      754,
+      755,
+      757
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L7.ffn_norm"
+    },
+    {
+     "ops": [
+      791,
+      792,
+      793,
+      794,
+      795,
+      796
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L7.moe_sum"
+    },
+    {
+     "ops": [
+      797,
+      798,
+      799,
+      800
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L7.hc_post"
+    },
+    {
+     "ops": [
+      803,
+      804,
+      805,
+      807
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L8.attn_norm"
+    },
+    {
+     "ops": [
+      824,
+      826
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      827,
+      829
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      831,
+      833
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L8.index_key"
+    },
+    {
+     "ops": [
+      868,
+      869,
+      870,
+      871
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L8.hc_post"
+    },
+    {
+     "ops": [
+      874,
+      875,
+      876,
+      878
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L8.ffn_norm"
+    },
+    {
+     "ops": [
+      912,
+      913,
+      914,
+      915,
+      916,
+      917
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L8.moe_sum"
+    },
+    {
+     "ops": [
+      918,
+      919,
+      920,
+      921
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L8.hc_post"
+    },
+    {
+     "ops": [
+      924,
+      925,
+      926,
+      928
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L9.attn_norm"
+    },
+    {
+     "ops": [
+      964,
+      965,
+      966,
+      967
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L9.hc_post"
+    },
+    {
+     "ops": [
+      970,
+      971,
+      972,
+      974
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L9.ffn_norm"
+    },
+    {
+     "ops": [
+      1008,
+      1009,
+      1010,
+      1011,
+      1012,
+      1013
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L9.moe_sum"
+    },
+    {
+     "ops": [
+      1014,
+      1015,
+      1016,
+      1017
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L9.hc_post"
+    },
+    {
+     "ops": [
+      1020,
+      1021,
+      1022,
+      1024
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L10.attn_norm"
+    },
+    {
+     "ops": [
+      1060,
+      1061,
+      1062,
+      1063
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L10.hc_post"
+    },
+    {
+     "ops": [
+      1066,
+      1067,
+      1068,
+      1070
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L10.ffn_norm"
+    },
+    {
+     "ops": [
+      1104,
+      1105,
+      1106,
+      1107,
+      1108,
+      1109
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L10.moe_sum"
+    },
+    {
+     "ops": [
+      1110,
+      1111,
+      1112,
+      1113
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L10.hc_post"
+    },
+    {
+     "ops": [
+      1116,
+      1117,
+      1118,
+      1120
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L11.attn_norm"
+    },
+    {
+     "ops": [
+      1156,
+      1157,
+      1158,
+      1159
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L11.hc_post"
+    },
+    {
+     "ops": [
+      1162,
+      1163,
+      1164,
+      1166
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L11.ffn_norm"
+    },
+    {
+     "ops": [
+      1200,
+      1201,
+      1202,
+      1203,
+      1204,
+      1205
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L11.moe_sum"
+    },
+    {
+     "ops": [
+      1206,
+      1207,
+      1208,
+      1209
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L11.hc_post"
+    },
+    {
+     "ops": [
+      1212,
+      1213,
+      1214,
+      1216
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L12.attn_norm"
+    },
+    {
+     "ops": [
+      1252,
+      1253,
+      1254,
+      1255
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L12.hc_post"
+    },
+    {
+     "ops": [
+      1258,
+      1259,
+      1260,
+      1262
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L12.ffn_norm"
+    },
+    {
+     "ops": [
+      1296,
+      1297,
+      1298,
+      1299,
+      1300,
+      1301
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L12.moe_sum"
+    },
+    {
+     "ops": [
+      1302,
+      1303,
+      1304,
+      1305
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L12.hc_post"
+    },
+    {
+     "ops": [
+      1308,
+      1309,
+      1310,
+      1312
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L13.attn_norm"
+    },
+    {
+     "ops": [
+      1348,
+      1349,
+      1350,
+      1351
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L13.hc_post"
+    },
+    {
+     "ops": [
+      1354,
+      1355,
+      1356,
+      1358
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L13.ffn_norm"
+    },
+    {
+     "ops": [
+      1392,
+      1393,
+      1394,
+      1395,
+      1396,
+      1397
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L13.moe_sum"
+    },
+    {
+     "ops": [
+      1398,
+      1399,
+      1400,
+      1401,
+      1404,
+      1406,
+      1410
+     ],
+     "length": 7,
+     "path_edges": 4,
+     "category": "hc_post",
+     "tag": "L13.hc_post"
+    },
+    {
+     "ops": [
+      1413,
+      1414,
+      1415,
+      1417
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L14.attn_norm"
+    },
+    {
+     "ops": [
+      1434,
+      1436
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1437,
+      1439
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1441,
+      1443
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L14.index_key"
+    },
+    {
+     "ops": [
+      1478,
+      1479,
+      1480,
+      1481
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L14.hc_post"
+    },
+    {
+     "ops": [
+      1484,
+      1485,
+      1486,
+      1488
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L14.ffn_norm"
+    },
+    {
+     "ops": [
+      1522,
+      1523,
+      1524,
+      1525,
+      1526,
+      1527
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L14.moe_sum"
+    },
+    {
+     "ops": [
+      1528,
+      1529,
+      1530,
+      1531
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L14.hc_post"
+    },
+    {
+     "ops": [
+      1534,
+      1535,
+      1536,
+      1538
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L15.attn_norm"
+    },
+    {
+     "ops": [
+      1574,
+      1575,
+      1576,
+      1577
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L15.hc_post"
+    },
+    {
+     "ops": [
+      1580,
+      1581,
+      1582,
+      1584
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L15.ffn_norm"
+    },
+    {
+     "ops": [
+      1618,
+      1619,
+      1620,
+      1621,
+      1622,
+      1623
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L15.moe_sum"
+    },
+    {
+     "ops": [
+      1624,
+      1625,
+      1626,
+      1627
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L15.hc_post"
+    },
+    {
+     "ops": [
+      1630,
+      1631,
+      1632,
+      1634
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L16.attn_norm"
+    },
+    {
+     "ops": [
+      1670,
+      1671,
+      1672,
+      1673
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L16.hc_post"
+    },
+    {
+     "ops": [
+      1676,
+      1677,
+      1678,
+      1680
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L16.ffn_norm"
+    },
+    {
+     "ops": [
+      1714,
+      1715,
+      1716,
+      1717,
+      1718,
+      1719
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L16.moe_sum"
+    },
+    {
+     "ops": [
+      1720,
+      1721,
+      1722,
+      1723
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L16.hc_post"
+    },
+    {
+     "ops": [
+      1726,
+      1727,
+      1728,
+      1730
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L17.attn_norm"
+    },
+    {
+     "ops": [
+      1766,
+      1767,
+      1768,
+      1769
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L17.hc_post"
+    },
+    {
+     "ops": [
+      1772,
+      1773,
+      1774,
+      1776
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L17.ffn_norm"
+    },
+    {
+     "ops": [
+      1810,
+      1811,
+      1812,
+      1813,
+      1814,
+      1815
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L17.moe_sum"
+    },
+    {
+     "ops": [
+      1816,
+      1817,
+      1818,
+      1819
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L17.hc_post"
+    },
+    {
+     "ops": [
+      1822,
+      1823,
+      1824,
+      1826
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L18.attn_norm"
+    },
+    {
+     "ops": [
+      1862,
+      1863,
+      1864,
+      1865
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L18.hc_post"
+    },
+    {
+     "ops": [
+      1868,
+      1869,
+      1870,
+      1872
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L18.ffn_norm"
+    },
+    {
+     "ops": [
+      1906,
+      1907,
+      1908,
+      1909,
+      1910,
+      1911
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L18.moe_sum"
+    },
+    {
+     "ops": [
+      1912,
+      1913,
+      1914,
+      1915
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L18.hc_post"
+    },
+    {
+     "ops": [
+      1918,
+      1919,
+      1920,
+      1922
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L19.attn_norm"
+    },
+    {
+     "ops": [
+      1958,
+      1959,
+      1960,
+      1961
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L19.hc_post"
+    },
+    {
+     "ops": [
+      1964,
+      1965,
+      1966,
+      1968
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L19.ffn_norm"
+    },
+    {
+     "ops": [
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L19.moe_sum"
+    },
+    {
+     "ops": [
+      2008,
+      2009,
+      2010,
+      2011
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L19.hc_post"
+    },
+    {
+     "ops": [
+      2014,
+      2015,
+      2016,
+      2018
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L20.attn_norm"
+    },
+    {
+     "ops": [
+      2034,
+      2036
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L20.compressor"
+    },
+    {
+     "ops": [
+      2038,
+      2040
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L20.index_key"
+    },
+    {
+     "ops": [
+      2075,
+      2076,
+      2077,
+      2078
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L20.hc_post"
+    },
+    {
+     "ops": [
+      2081,
+      2082,
+      2083,
+      2085
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L20.ffn_norm"
+    },
+    {
+     "ops": [
+      2119,
+      2120,
+      2121,
+      2122,
+      2123,
+      2124
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L20.moe_sum"
+    },
+    {
+     "ops": [
+      2125,
+      2126,
+      2127,
+      2128
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L20.hc_post"
+    },
+    {
+     "ops": [
+      2131,
+      2132,
+      2133,
+      2135
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L21.attn_norm"
+    },
+    {
+     "ops": [
+      2171,
+      2172,
+      2173,
+      2174
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L21.hc_post"
+    },
+    {
+     "ops": [
+      2177,
+      2178,
+      2179,
+      2181
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L21.ffn_norm"
+    },
+    {
+     "ops": [
+      2215,
+      2216,
+      2217,
+      2218,
+      2219,
+      2220
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L21.moe_sum"
+    },
+    {
+     "ops": [
+      2221,
+      2222,
+      2223,
+      2224
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L21.hc_post"
+    },
+    {
+     "ops": [
+      2227,
+      2228,
+      2229,
+      2231
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L22.attn_norm"
+    },
+    {
+     "ops": [
+      2267,
+      2268,
+      2269,
+      2270
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L22.hc_post"
+    },
+    {
+     "ops": [
+      2273,
+      2274,
+      2275,
+      2277
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L22.ffn_norm"
+    },
+    {
+     "ops": [
+      2311,
+      2312,
+      2313,
+      2314,
+      2315,
+      2316
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L22.moe_sum"
+    },
+    {
+     "ops": [
+      2317,
+      2318,
+      2319,
+      2320
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L22.hc_post"
+    },
+    {
+     "ops": [
+      2323,
+      2324,
+      2325,
+      2327
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L23.attn_norm"
+    },
+    {
+     "ops": [
+      2363,
+      2364,
+      2365,
+      2366
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L23.hc_post"
+    },
+    {
+     "ops": [
+      2369,
+      2370,
+      2371,
+      2373
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L23.ffn_norm"
+    },
+    {
+     "ops": [
+      2407,
+      2408,
+      2409,
+      2410,
+      2411,
+      2412
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L23.moe_sum"
+    },
+    {
+     "ops": [
+      2413,
+      2414,
+      2415,
+      2416
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L23.hc_post"
+    },
+    {
+     "ops": [
+      2419,
+      2420,
+      2421,
+      2423
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L24.attn_norm"
+    },
+    {
+     "ops": [
+      2467,
+      2468,
+      2469,
+      2470
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L24.hc_post"
+    },
+    {
+     "ops": [
+      2473,
+      2474,
+      2475,
+      2477
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L24.ffn_norm"
+    },
+    {
+     "ops": [
+      2511,
+      2512,
+      2513,
+      2514,
+      2515,
+      2516
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L24.moe_sum"
+    },
+    {
+     "ops": [
+      2517,
+      2518,
+      2519,
+      2520
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L24.hc_post"
+    },
+    {
+     "ops": [
+      2523,
+      2524,
+      2525,
+      2527
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L25.attn_norm"
+    },
+    {
+     "ops": [
+      2563,
+      2564,
+      2565,
+      2566
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L25.hc_post"
+    },
+    {
+     "ops": [
+      2569,
+      2570,
+      2571,
+      2573
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L25.ffn_norm"
+    },
+    {
+     "ops": [
+      2607,
+      2608,
+      2609,
+      2610,
+      2611,
+      2612
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L25.moe_sum"
+    },
+    {
+     "ops": [
+      2613,
+      2614,
+      2615,
+      2616
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L25.hc_post"
+    },
+    {
+     "ops": [
+      2619,
+      2620,
+      2621,
+      2623
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L26.attn_norm"
+    },
+    {
+     "ops": [
+      2659,
+      2660,
+      2661,
+      2662
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L26.hc_post"
+    },
+    {
+     "ops": [
+      2665,
+      2666,
+      2667,
+      2669
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L26.ffn_norm"
+    },
+    {
+     "ops": [
+      2703,
+      2704,
+      2705,
+      2706,
+      2707,
+      2708
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L26.moe_sum"
+    },
+    {
+     "ops": [
+      2709,
+      2710,
+      2711,
+      2712
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L26.hc_post"
+    },
+    {
+     "ops": [
+      2715,
+      2716,
+      2717,
+      2719
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L27.attn_norm"
+    },
+    {
+     "ops": [
+      2755,
+      2756,
+      2757,
+      2758
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L27.hc_post"
+    },
+    {
+     "ops": [
+      2761,
+      2762,
+      2763,
+      2765
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L27.ffn_norm"
+    },
+    {
+     "ops": [
+      2799,
+      2800,
+      2801,
+      2802,
+      2803,
+      2804
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L27.moe_sum"
+    },
+    {
+     "ops": [
+      2805,
+      2806,
+      2807,
+      2808
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L27.hc_post"
+    },
+    {
+     "ops": [
+      2811,
+      2812,
+      2813,
+      2815
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L28.attn_norm"
+    },
+    {
+     "ops": [
+      2859,
+      2860,
+      2861,
+      2862
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L28.hc_post"
+    },
+    {
+     "ops": [
+      2865,
+      2866,
+      2867,
+      2869
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L28.ffn_norm"
+    },
+    {
+     "ops": [
+      2903,
+      2904,
+      2905,
+      2906,
+      2907,
+      2908
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L28.moe_sum"
+    },
+    {
+     "ops": [
+      2909,
+      2910,
+      2911,
+      2912
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L28.hc_post"
+    },
+    {
+     "ops": [
+      2915,
+      2916,
+      2917,
+      2919
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L29.attn_norm"
+    },
+    {
+     "ops": [
+      2955,
+      2956,
+      2957,
+      2958
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L29.hc_post"
+    },
+    {
+     "ops": [
+      2961,
+      2962,
+      2963,
+      2965
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L29.ffn_norm"
+    },
+    {
+     "ops": [
+      2999,
+      3000,
+      3001,
+      3002,
+      3003,
+      3004
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L29.moe_sum"
+    },
+    {
+     "ops": [
+      3005,
+      3006,
+      3007,
+      3008
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L29.hc_post"
+    },
+    {
+     "ops": [
+      3011,
+      3012,
+      3013,
+      3015
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L30.attn_norm"
+    },
+    {
+     "ops": [
+      3051,
+      3052,
+      3053,
+      3054
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L30.hc_post"
+    },
+    {
+     "ops": [
+      3057,
+      3058,
+      3059,
+      3061
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L30.ffn_norm"
+    },
+    {
+     "ops": [
+      3095,
+      3096,
+      3097,
+      3098,
+      3099,
+      3100
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L30.moe_sum"
+    },
+    {
+     "ops": [
+      3101,
+      3102,
+      3103,
+      3104
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L30.hc_post"
+    },
+    {
+     "ops": [
+      3107,
+      3108,
+      3109,
+      3111
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L31.attn_norm"
+    },
+    {
+     "ops": [
+      3147,
+      3148,
+      3149,
+      3150
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L31.hc_post"
+    },
+    {
+     "ops": [
+      3153,
+      3154,
+      3155,
+      3157
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L31.ffn_norm"
+    },
+    {
+     "ops": [
+      3191,
+      3192,
+      3193,
+      3194,
+      3195,
+      3196
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L31.moe_sum"
+    },
+    {
+     "ops": [
+      3197,
+      3198,
+      3199,
+      3200
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L31.hc_post"
+    },
+    {
+     "ops": [
+      3203,
+      3204,
+      3205,
+      3207
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L32.attn_norm"
+    },
+    {
+     "ops": [
+      3251,
+      3252,
+      3253,
+      3254
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L32.hc_post"
+    },
+    {
+     "ops": [
+      3257,
+      3258,
+      3259,
+      3261
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L32.ffn_norm"
+    },
+    {
+     "ops": [
+      3295,
+      3296,
+      3297,
+      3298,
+      3299,
+      3300
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L32.moe_sum"
+    },
+    {
+     "ops": [
+      3301,
+      3302,
+      3303,
+      3304
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L32.hc_post"
+    },
+    {
+     "ops": [
+      3307,
+      3308,
+      3309,
+      3311
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L33.attn_norm"
+    },
+    {
+     "ops": [
+      3347,
+      3348,
+      3349,
+      3350
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L33.hc_post"
+    },
+    {
+     "ops": [
+      3353,
+      3354,
+      3355,
+      3357
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L33.ffn_norm"
+    },
+    {
+     "ops": [
+      3391,
+      3392,
+      3393,
+      3394,
+      3395,
+      3396
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L33.moe_sum"
+    },
+    {
+     "ops": [
+      3397,
+      3398,
+      3399,
+      3400
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L33.hc_post"
+    },
+    {
+     "ops": [
+      3403,
+      3404,
+      3405,
+      3407
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L34.attn_norm"
+    },
+    {
+     "ops": [
+      3443,
+      3444,
+      3445,
+      3446
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L34.hc_post"
+    },
+    {
+     "ops": [
+      3449,
+      3450,
+      3451,
+      3453
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L34.ffn_norm"
+    },
+    {
+     "ops": [
+      3487,
+      3488,
+      3489,
+      3490,
+      3491,
+      3492
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L34.moe_sum"
+    },
+    {
+     "ops": [
+      3493,
+      3494,
+      3495,
+      3496
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L34.hc_post"
+    },
+    {
+     "ops": [
+      3499,
+      3500,
+      3501,
+      3503
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L35.attn_norm"
+    },
+    {
+     "ops": [
+      3539,
+      3540,
+      3541,
+      3542
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L35.hc_post"
+    },
+    {
+     "ops": [
+      3545,
+      3546,
+      3547,
+      3549
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L35.ffn_norm"
+    },
+    {
+     "ops": [
+      3583,
+      3584,
+      3585,
+      3586,
+      3587,
+      3588
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L35.moe_sum"
+    },
+    {
+     "ops": [
+      3589,
+      3590,
+      3591,
+      3592
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L35.hc_post"
+    },
+    {
+     "ops": [
+      3595,
+      3596,
+      3597,
+      3599
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L36.attn_norm"
+    },
+    {
+     "ops": [
+      3643,
+      3644,
+      3645,
+      3646
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L36.hc_post"
+    },
+    {
+     "ops": [
+      3649,
+      3650,
+      3651,
+      3653
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L36.ffn_norm"
+    },
+    {
+     "ops": [
+      3687,
+      3688,
+      3689,
+      3690,
+      3691,
+      3692
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L36.moe_sum"
+    },
+    {
+     "ops": [
+      3693,
+      3694,
+      3695,
+      3696
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L36.hc_post"
+    },
+    {
+     "ops": [
+      3699,
+      3700,
+      3701,
+      3703
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L37.attn_norm"
+    },
+    {
+     "ops": [
+      3739,
+      3740,
+      3741,
+      3742
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L37.hc_post"
+    },
+    {
+     "ops": [
+      3745,
+      3746,
+      3747,
+      3749
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L37.ffn_norm"
+    },
+    {
+     "ops": [
+      3783,
+      3784,
+      3785,
+      3786,
+      3787,
+      3788
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L37.moe_sum"
+    },
+    {
+     "ops": [
+      3789,
+      3790,
+      3791,
+      3792
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L37.hc_post"
+    },
+    {
+     "ops": [
+      3795,
+      3796,
+      3797,
+      3799
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L38.attn_norm"
+    },
+    {
+     "ops": [
+      3835,
+      3836,
+      3837,
+      3838
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L38.hc_post"
+    },
+    {
+     "ops": [
+      3841,
+      3842,
+      3843,
+      3845
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L38.ffn_norm"
+    },
+    {
+     "ops": [
+      3879,
+      3880,
+      3881,
+      3882,
+      3883,
+      3884
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L38.moe_sum"
+    },
+    {
+     "ops": [
+      3885,
+      3886,
+      3887,
+      3888
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L38.hc_post"
+    },
+    {
+     "ops": [
+      3891,
+      3892,
+      3893,
+      3895
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L39.attn_norm"
+    },
+    {
+     "ops": [
+      3931,
+      3932,
+      3933,
+      3934
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L39.hc_post"
+    },
+    {
+     "ops": [
+      3937,
+      3938,
+      3939,
+      3941
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L39.ffn_norm"
+    },
+    {
+     "ops": [
+      3975,
+      3976,
+      3977,
+      3978,
+      3979,
+      3980
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L39.moe_sum"
+    },
+    {
+     "ops": [
+      3981,
+      3982,
+      3983,
+      3984
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L39.hc_post"
+    },
+    {
+     "ops": [
+      3985,
+      3986,
+      3987,
+      3989
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "head"
+    }
+   ],
+   "ops_in_chains": 912,
+   "chain_length_hist": {
+    "2": 11,
+    "4": 159,
+    "6": 40,
+    "7": 2
+   },
+   "producers_writing_vm_still": 9,
+   "producers_vm_write_elided": 687,
+   "vm_elem_reads_total": 1191585,
+   "vm_elem_reads_avoided": 228768,
+   "vm_elem_writes_total": 447605,
+   "vm_elem_writes_avoided": 224960,
+   "path_edges": 696,
+   "cycles_saved_c_rotate_upper": 22272,
+   "kr_peak_entries": 40,
+   "by_category": {
+    "rmsnorm": {
+     "chains": 81,
+     "ops_fused": 324,
+     "edges": 243,
+     "reads_avoided": 38880,
+     "writes_avoided": 38560,
+     "max_len": 4,
+     "path_edges": 243
+    },
+    "hc_post": {
+     "chains": 80,
+     "ops_fused": 326,
+     "edges": 246,
+     "reads_avoided": 157440,
+     "writes_avoided": 154240,
+     "max_len": 7,
+     "path_edges": 242
+    },
+    "moe": {
+     "chains": 40,
+     "ops_fused": 240,
+     "edges": 200,
+     "reads_avoided": 32000,
+     "writes_avoided": 32000,
+     "max_len": 6,
+     "path_edges": 200
+    },
+    "compressor": {
+     "chains": 7,
+     "ops_fused": 14,
+     "edges": 7,
+     "reads_avoided": 320,
+     "writes_avoided": 64,
+     "max_len": 2,
+     "path_edges": 7
+    },
+    "index_key": {
+     "chains": 4,
+     "ops_fused": 8,
+     "edges": 4,
+     "reads_avoided": 128,
+     "writes_avoided": 96,
+     "max_len": 2,
+     "path_edges": 4
+    }
+   },
+   "by_op_class": {
+    "light": {
+     "ops": 731,
+     "heads": 201,
+     "tails": 129,
+     "middles": 401,
+     "reads_avoided": 160576,
+     "writes_avoided": 210720
+    },
+    "light+red": {
+     "ops": 175,
+     "heads": 8,
+     "tails": 84,
+     "middles": 83,
+     "reads_avoided": 68000,
+     "writes_avoided": 14240
+    },
+    "sfu": {
+     "ops": 3,
+     "heads": 3,
+     "tails": 0,
+     "middles": 0,
+     "reads_avoided": 0,
+     "writes_avoided": 0
+    },
+    "divide": {
+     "ops": 3,
+     "heads": 0,
+     "tails": 3,
+     "middles": 0,
+     "reads_avoided": 192,
+     "writes_avoided": 0
+    }
+   },
+   "chain_heads": 212,
+   "chain_tails": 216,
+   "rejects": {
+    "placement_same_width": 935,
+    "placement_width": 1035,
+    "gather_pair_or_region_read": 256,
+    "other_unit_wrote_between": 170,
+    "several_producers": 39,
+    "partly_older_or_result": 1,
+    "producer_also_read_from_memory": 81
+   }
+  },
+  "64": {
+   "N": 16,
+   "M": 8,
+   "su_ops": 2649,
+   "su_ops_active": 2610,
+   "edges": 700,
+   "consumer_ops": 700,
+   "chains": [
+    {
+     "ops": [
+      5,
+      6,
+      7,
+      9
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L0.attn_norm"
+    },
+    {
+     "ops": [
+      43,
+      44,
+      45,
+      46
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L0.hc_post"
+    },
+    {
+     "ops": [
+      49,
+      50,
+      51,
+      53
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L0.ffn_norm"
+    },
+    {
+     "ops": [
+      87,
+      88,
+      89,
+      90,
+      91,
+      92
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L0.moe_sum"
+    },
+    {
+     "ops": [
+      93,
+      94,
+      95,
+      96,
+      99,
+      101,
+      105
+     ],
+     "length": 7,
+     "path_edges": 4,
+     "category": "hc_post",
+     "tag": "L0.hc_post"
+    },
+    {
+     "ops": [
+      108,
+      109,
+      110,
+      112
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L1.attn_norm"
+    },
+    {
+     "ops": [
+      146,
+      147,
+      148,
+      149
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L1.hc_post"
+    },
+    {
+     "ops": [
+      152,
+      153,
+      154,
+      156
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L1.ffn_norm"
+    },
+    {
+     "ops": [
+      190,
+      191,
+      192,
+      193,
+      194,
+      195
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L1.moe_sum"
+    },
+    {
+     "ops": [
+      196,
+      197,
+      198,
+      199
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L1.hc_post"
+    },
+    {
+     "ops": [
+      202,
+      203,
+      204,
+      206
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L2.attn_norm"
+    },
+    {
+     "ops": [
+      223,
+      225
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      226,
+      228
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L2.compressor"
+    },
+    {
+     "ops": [
+      230,
+      232
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L2.index_key"
+    },
+    {
+     "ops": [
+      267,
+      268,
+      269,
+      270
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L2.hc_post"
+    },
+    {
+     "ops": [
+      273,
+      274,
+      275,
+      277
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L2.ffn_norm"
+    },
+    {
+     "ops": [
+      311,
+      312,
+      313,
+      314,
+      315,
+      316
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L2.moe_sum"
+    },
+    {
+     "ops": [
+      317,
+      318,
+      319,
+      320
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L2.hc_post"
+    },
+    {
+     "ops": [
+      323,
+      324,
+      325,
+      327
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L3.attn_norm"
+    },
+    {
+     "ops": [
+      363,
+      364,
+      365,
+      366
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L3.hc_post"
+    },
+    {
+     "ops": [
+      369,
+      370,
+      371,
+      373
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L3.ffn_norm"
+    },
+    {
+     "ops": [
+      407,
+      408,
+      409,
+      410,
+      411,
+      412
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L3.moe_sum"
+    },
+    {
+     "ops": [
+      413,
+      414,
+      415,
+      416
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L3.hc_post"
+    },
+    {
+     "ops": [
+      419,
+      420,
+      421,
+      423
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L4.attn_norm"
+    },
+    {
+     "ops": [
+      459,
+      460,
+      461,
+      462
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L4.hc_post"
+    },
+    {
+     "ops": [
+      465,
+      466,
+      467,
+      469
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L4.ffn_norm"
+    },
+    {
+     "ops": [
+      503,
+      504,
+      505,
+      506,
+      507,
+      508
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L4.moe_sum"
+    },
+    {
+     "ops": [
+      509,
+      510,
+      511,
+      512
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L4.hc_post"
+    },
+    {
+     "ops": [
+      515,
+      516,
+      517,
+      519
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L5.attn_norm"
+    },
+    {
+     "ops": [
+      555,
+      556,
+      557,
+      558
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L5.hc_post"
+    },
+    {
+     "ops": [
+      561,
+      562,
+      563,
+      565
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L5.ffn_norm"
+    },
+    {
+     "ops": [
+      599,
+      600,
+      601,
+      602,
+      603,
+      604
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L5.moe_sum"
+    },
+    {
+     "ops": [
+      605,
+      606,
+      607,
+      608
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L5.hc_post"
+    },
+    {
+     "ops": [
+      611,
+      612,
+      613,
+      615
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L6.attn_norm"
+    },
+    {
+     "ops": [
+      651,
+      652,
+      653,
+      654
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L6.hc_post"
+    },
+    {
+     "ops": [
+      657,
+      658,
+      659,
+      661
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L6.ffn_norm"
+    },
+    {
+     "ops": [
+      695,
+      696,
+      697,
+      698,
+      699,
+      700
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L6.moe_sum"
+    },
+    {
+     "ops": [
+      701,
+      702,
+      703,
+      704
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L6.hc_post"
+    },
+    {
+     "ops": [
+      707,
+      708,
+      709,
+      711
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L7.attn_norm"
+    },
+    {
+     "ops": [
+      747,
+      748,
+      749,
+      750
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L7.hc_post"
+    },
+    {
+     "ops": [
+      753,
+      754,
+      755,
+      757
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L7.ffn_norm"
+    },
+    {
+     "ops": [
+      791,
+      792,
+      793,
+      794,
+      795,
+      796
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L7.moe_sum"
+    },
+    {
+     "ops": [
+      797,
+      798,
+      799,
+      800
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L7.hc_post"
+    },
+    {
+     "ops": [
+      803,
+      804,
+      805,
+      807
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L8.attn_norm"
+    },
+    {
+     "ops": [
+      824,
+      826
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      827,
+      829
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L8.compressor"
+    },
+    {
+     "ops": [
+      831,
+      833
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L8.index_key"
+    },
+    {
+     "ops": [
+      868,
+      869,
+      870,
+      871
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L8.hc_post"
+    },
+    {
+     "ops": [
+      874,
+      875,
+      876,
+      878
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L8.ffn_norm"
+    },
+    {
+     "ops": [
+      912,
+      913,
+      914,
+      915,
+      916,
+      917
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L8.moe_sum"
+    },
+    {
+     "ops": [
+      918,
+      919,
+      920,
+      921
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L8.hc_post"
+    },
+    {
+     "ops": [
+      924,
+      925,
+      926,
+      928
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L9.attn_norm"
+    },
+    {
+     "ops": [
+      964,
+      965,
+      966,
+      967
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L9.hc_post"
+    },
+    {
+     "ops": [
+      970,
+      971,
+      972,
+      974
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L9.ffn_norm"
+    },
+    {
+     "ops": [
+      1008,
+      1009,
+      1010,
+      1011,
+      1012,
+      1013
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L9.moe_sum"
+    },
+    {
+     "ops": [
+      1014,
+      1015,
+      1016,
+      1017
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L9.hc_post"
+    },
+    {
+     "ops": [
+      1020,
+      1021,
+      1022,
+      1024
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L10.attn_norm"
+    },
+    {
+     "ops": [
+      1060,
+      1061,
+      1062,
+      1063
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L10.hc_post"
+    },
+    {
+     "ops": [
+      1066,
+      1067,
+      1068,
+      1070
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L10.ffn_norm"
+    },
+    {
+     "ops": [
+      1104,
+      1105,
+      1106,
+      1107,
+      1108,
+      1109
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L10.moe_sum"
+    },
+    {
+     "ops": [
+      1110,
+      1111,
+      1112,
+      1113
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L10.hc_post"
+    },
+    {
+     "ops": [
+      1116,
+      1117,
+      1118,
+      1120
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L11.attn_norm"
+    },
+    {
+     "ops": [
+      1156,
+      1157,
+      1158,
+      1159
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L11.hc_post"
+    },
+    {
+     "ops": [
+      1162,
+      1163,
+      1164,
+      1166
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L11.ffn_norm"
+    },
+    {
+     "ops": [
+      1200,
+      1201,
+      1202,
+      1203,
+      1204,
+      1205
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L11.moe_sum"
+    },
+    {
+     "ops": [
+      1206,
+      1207,
+      1208,
+      1209
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L11.hc_post"
+    },
+    {
+     "ops": [
+      1212,
+      1213,
+      1214,
+      1216
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L12.attn_norm"
+    },
+    {
+     "ops": [
+      1252,
+      1253,
+      1254,
+      1255
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L12.hc_post"
+    },
+    {
+     "ops": [
+      1258,
+      1259,
+      1260,
+      1262
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L12.ffn_norm"
+    },
+    {
+     "ops": [
+      1296,
+      1297,
+      1298,
+      1299,
+      1300,
+      1301
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L12.moe_sum"
+    },
+    {
+     "ops": [
+      1302,
+      1303,
+      1304,
+      1305
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L12.hc_post"
+    },
+    {
+     "ops": [
+      1308,
+      1309,
+      1310,
+      1312
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L13.attn_norm"
+    },
+    {
+     "ops": [
+      1348,
+      1349,
+      1350,
+      1351
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L13.hc_post"
+    },
+    {
+     "ops": [
+      1354,
+      1355,
+      1356,
+      1358
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L13.ffn_norm"
+    },
+    {
+     "ops": [
+      1392,
+      1393,
+      1394,
+      1395,
+      1396,
+      1397
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L13.moe_sum"
+    },
+    {
+     "ops": [
+      1398,
+      1399,
+      1400,
+      1401,
+      1404,
+      1406,
+      1410
+     ],
+     "length": 7,
+     "path_edges": 4,
+     "category": "hc_post",
+     "tag": "L13.hc_post"
+    },
+    {
+     "ops": [
+      1413,
+      1414,
+      1415,
+      1417
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L14.attn_norm"
+    },
+    {
+     "ops": [
+      1434,
+      1436
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1437,
+      1439
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L14.compressor"
+    },
+    {
+     "ops": [
+      1441,
+      1443
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L14.index_key"
+    },
+    {
+     "ops": [
+      1478,
+      1479,
+      1480,
+      1481
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L14.hc_post"
+    },
+    {
+     "ops": [
+      1484,
+      1485,
+      1486,
+      1488
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L14.ffn_norm"
+    },
+    {
+     "ops": [
+      1522,
+      1523,
+      1524,
+      1525,
+      1526,
+      1527
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L14.moe_sum"
+    },
+    {
+     "ops": [
+      1528,
+      1529,
+      1530,
+      1531
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L14.hc_post"
+    },
+    {
+     "ops": [
+      1534,
+      1535,
+      1536,
+      1538
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L15.attn_norm"
+    },
+    {
+     "ops": [
+      1574,
+      1575,
+      1576,
+      1577
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L15.hc_post"
+    },
+    {
+     "ops": [
+      1580,
+      1581,
+      1582,
+      1584
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L15.ffn_norm"
+    },
+    {
+     "ops": [
+      1618,
+      1619,
+      1620,
+      1621,
+      1622,
+      1623
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L15.moe_sum"
+    },
+    {
+     "ops": [
+      1624,
+      1625,
+      1626,
+      1627
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L15.hc_post"
+    },
+    {
+     "ops": [
+      1630,
+      1631,
+      1632,
+      1634
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L16.attn_norm"
+    },
+    {
+     "ops": [
+      1670,
+      1671,
+      1672,
+      1673
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L16.hc_post"
+    },
+    {
+     "ops": [
+      1676,
+      1677,
+      1678,
+      1680
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L16.ffn_norm"
+    },
+    {
+     "ops": [
+      1714,
+      1715,
+      1716,
+      1717,
+      1718,
+      1719
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L16.moe_sum"
+    },
+    {
+     "ops": [
+      1720,
+      1721,
+      1722,
+      1723
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L16.hc_post"
+    },
+    {
+     "ops": [
+      1726,
+      1727,
+      1728,
+      1730
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L17.attn_norm"
+    },
+    {
+     "ops": [
+      1766,
+      1767,
+      1768,
+      1769
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L17.hc_post"
+    },
+    {
+     "ops": [
+      1772,
+      1773,
+      1774,
+      1776
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L17.ffn_norm"
+    },
+    {
+     "ops": [
+      1810,
+      1811,
+      1812,
+      1813,
+      1814,
+      1815
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L17.moe_sum"
+    },
+    {
+     "ops": [
+      1816,
+      1817,
+      1818,
+      1819
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L17.hc_post"
+    },
+    {
+     "ops": [
+      1822,
+      1823,
+      1824,
+      1826
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L18.attn_norm"
+    },
+    {
+     "ops": [
+      1862,
+      1863,
+      1864,
+      1865
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L18.hc_post"
+    },
+    {
+     "ops": [
+      1868,
+      1869,
+      1870,
+      1872
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L18.ffn_norm"
+    },
+    {
+     "ops": [
+      1906,
+      1907,
+      1908,
+      1909,
+      1910,
+      1911
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L18.moe_sum"
+    },
+    {
+     "ops": [
+      1912,
+      1913,
+      1914,
+      1915
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L18.hc_post"
+    },
+    {
+     "ops": [
+      1918,
+      1919,
+      1920,
+      1922
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L19.attn_norm"
+    },
+    {
+     "ops": [
+      1958,
+      1959,
+      1960,
+      1961
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L19.hc_post"
+    },
+    {
+     "ops": [
+      1964,
+      1965,
+      1966,
+      1968
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L19.ffn_norm"
+    },
+    {
+     "ops": [
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L19.moe_sum"
+    },
+    {
+     "ops": [
+      2008,
+      2009,
+      2010,
+      2011
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L19.hc_post"
+    },
+    {
+     "ops": [
+      2014,
+      2015,
+      2016,
+      2018
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L20.attn_norm"
+    },
+    {
+     "ops": [
+      2034,
+      2036
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "compressor",
+     "tag": "L20.compressor"
+    },
+    {
+     "ops": [
+      2038,
+      2040
+     ],
+     "length": 2,
+     "path_edges": 1,
+     "category": "index_key",
+     "tag": "L20.index_key"
+    },
+    {
+     "ops": [
+      2075,
+      2076,
+      2077,
+      2078
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L20.hc_post"
+    },
+    {
+     "ops": [
+      2081,
+      2082,
+      2083,
+      2085
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L20.ffn_norm"
+    },
+    {
+     "ops": [
+      2119,
+      2120,
+      2121,
+      2122,
+      2123,
+      2124
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L20.moe_sum"
+    },
+    {
+     "ops": [
+      2125,
+      2126,
+      2127,
+      2128
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L20.hc_post"
+    },
+    {
+     "ops": [
+      2131,
+      2132,
+      2133,
+      2135
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L21.attn_norm"
+    },
+    {
+     "ops": [
+      2171,
+      2172,
+      2173,
+      2174
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L21.hc_post"
+    },
+    {
+     "ops": [
+      2177,
+      2178,
+      2179,
+      2181
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L21.ffn_norm"
+    },
+    {
+     "ops": [
+      2215,
+      2216,
+      2217,
+      2218,
+      2219,
+      2220
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L21.moe_sum"
+    },
+    {
+     "ops": [
+      2221,
+      2222,
+      2223,
+      2224
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L21.hc_post"
+    },
+    {
+     "ops": [
+      2227,
+      2228,
+      2229,
+      2231
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L22.attn_norm"
+    },
+    {
+     "ops": [
+      2267,
+      2268,
+      2269,
+      2270
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L22.hc_post"
+    },
+    {
+     "ops": [
+      2273,
+      2274,
+      2275,
+      2277
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L22.ffn_norm"
+    },
+    {
+     "ops": [
+      2311,
+      2312,
+      2313,
+      2314,
+      2315,
+      2316
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L22.moe_sum"
+    },
+    {
+     "ops": [
+      2317,
+      2318,
+      2319,
+      2320
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L22.hc_post"
+    },
+    {
+     "ops": [
+      2323,
+      2324,
+      2325,
+      2327
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L23.attn_norm"
+    },
+    {
+     "ops": [
+      2363,
+      2364,
+      2365,
+      2366
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L23.hc_post"
+    },
+    {
+     "ops": [
+      2369,
+      2370,
+      2371,
+      2373
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L23.ffn_norm"
+    },
+    {
+     "ops": [
+      2407,
+      2408,
+      2409,
+      2410,
+      2411,
+      2412
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L23.moe_sum"
+    },
+    {
+     "ops": [
+      2413,
+      2414,
+      2415,
+      2416
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L23.hc_post"
+    },
+    {
+     "ops": [
+      2419,
+      2420,
+      2421,
+      2423
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L24.attn_norm"
+    },
+    {
+     "ops": [
+      2467,
+      2468,
+      2469,
+      2470
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L24.hc_post"
+    },
+    {
+     "ops": [
+      2473,
+      2474,
+      2475,
+      2477
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L24.ffn_norm"
+    },
+    {
+     "ops": [
+      2511,
+      2512,
+      2513,
+      2514,
+      2515,
+      2516
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L24.moe_sum"
+    },
+    {
+     "ops": [
+      2517,
+      2518,
+      2519,
+      2520
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L24.hc_post"
+    },
+    {
+     "ops": [
+      2523,
+      2524,
+      2525,
+      2527
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L25.attn_norm"
+    },
+    {
+     "ops": [
+      2563,
+      2564,
+      2565,
+      2566
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L25.hc_post"
+    },
+    {
+     "ops": [
+      2569,
+      2570,
+      2571,
+      2573
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L25.ffn_norm"
+    },
+    {
+     "ops": [
+      2607,
+      2608,
+      2609,
+      2610,
+      2611,
+      2612
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L25.moe_sum"
+    },
+    {
+     "ops": [
+      2613,
+      2614,
+      2615,
+      2616
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L25.hc_post"
+    },
+    {
+     "ops": [
+      2619,
+      2620,
+      2621,
+      2623
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L26.attn_norm"
+    },
+    {
+     "ops": [
+      2659,
+      2660,
+      2661,
+      2662
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L26.hc_post"
+    },
+    {
+     "ops": [
+      2665,
+      2666,
+      2667,
+      2669
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L26.ffn_norm"
+    },
+    {
+     "ops": [
+      2703,
+      2704,
+      2705,
+      2706,
+      2707,
+      2708
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L26.moe_sum"
+    },
+    {
+     "ops": [
+      2709,
+      2710,
+      2711,
+      2712
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L26.hc_post"
+    },
+    {
+     "ops": [
+      2715,
+      2716,
+      2717,
+      2719
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L27.attn_norm"
+    },
+    {
+     "ops": [
+      2755,
+      2756,
+      2757,
+      2758
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L27.hc_post"
+    },
+    {
+     "ops": [
+      2761,
+      2762,
+      2763,
+      2765
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L27.ffn_norm"
+    },
+    {
+     "ops": [
+      2799,
+      2800,
+      2801,
+      2802,
+      2803,
+      2804
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L27.moe_sum"
+    },
+    {
+     "ops": [
+      2805,
+      2806,
+      2807,
+      2808
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L27.hc_post"
+    },
+    {
+     "ops": [
+      2811,
+      2812,
+      2813,
+      2815
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L28.attn_norm"
+    },
+    {
+     "ops": [
+      2859,
+      2860,
+      2861,
+      2862
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L28.hc_post"
+    },
+    {
+     "ops": [
+      2865,
+      2866,
+      2867,
+      2869
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L28.ffn_norm"
+    },
+    {
+     "ops": [
+      2903,
+      2904,
+      2905,
+      2906,
+      2907,
+      2908
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L28.moe_sum"
+    },
+    {
+     "ops": [
+      2909,
+      2910,
+      2911,
+      2912
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L28.hc_post"
+    },
+    {
+     "ops": [
+      2915,
+      2916,
+      2917,
+      2919
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L29.attn_norm"
+    },
+    {
+     "ops": [
+      2955,
+      2956,
+      2957,
+      2958
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L29.hc_post"
+    },
+    {
+     "ops": [
+      2961,
+      2962,
+      2963,
+      2965
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L29.ffn_norm"
+    },
+    {
+     "ops": [
+      2999,
+      3000,
+      3001,
+      3002,
+      3003,
+      3004
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L29.moe_sum"
+    },
+    {
+     "ops": [
+      3005,
+      3006,
+      3007,
+      3008
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L29.hc_post"
+    },
+    {
+     "ops": [
+      3011,
+      3012,
+      3013,
+      3015
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L30.attn_norm"
+    },
+    {
+     "ops": [
+      3051,
+      3052,
+      3053,
+      3054
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L30.hc_post"
+    },
+    {
+     "ops": [
+      3057,
+      3058,
+      3059,
+      3061
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L30.ffn_norm"
+    },
+    {
+     "ops": [
+      3095,
+      3096,
+      3097,
+      3098,
+      3099,
+      3100
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L30.moe_sum"
+    },
+    {
+     "ops": [
+      3101,
+      3102,
+      3103,
+      3104
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L30.hc_post"
+    },
+    {
+     "ops": [
+      3107,
+      3108,
+      3109,
+      3111
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L31.attn_norm"
+    },
+    {
+     "ops": [
+      3147,
+      3148,
+      3149,
+      3150
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L31.hc_post"
+    },
+    {
+     "ops": [
+      3153,
+      3154,
+      3155,
+      3157
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L31.ffn_norm"
+    },
+    {
+     "ops": [
+      3191,
+      3192,
+      3193,
+      3194,
+      3195,
+      3196
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L31.moe_sum"
+    },
+    {
+     "ops": [
+      3197,
+      3198,
+      3199,
+      3200
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L31.hc_post"
+    },
+    {
+     "ops": [
+      3203,
+      3204,
+      3205,
+      3207
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L32.attn_norm"
+    },
+    {
+     "ops": [
+      3251,
+      3252,
+      3253,
+      3254
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L32.hc_post"
+    },
+    {
+     "ops": [
+      3257,
+      3258,
+      3259,
+      3261
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L32.ffn_norm"
+    },
+    {
+     "ops": [
+      3295,
+      3296,
+      3297,
+      3298,
+      3299,
+      3300
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L32.moe_sum"
+    },
+    {
+     "ops": [
+      3301,
+      3302,
+      3303,
+      3304
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L32.hc_post"
+    },
+    {
+     "ops": [
+      3307,
+      3308,
+      3309,
+      3311
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L33.attn_norm"
+    },
+    {
+     "ops": [
+      3347,
+      3348,
+      3349,
+      3350
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L33.hc_post"
+    },
+    {
+     "ops": [
+      3353,
+      3354,
+      3355,
+      3357
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L33.ffn_norm"
+    },
+    {
+     "ops": [
+      3391,
+      3392,
+      3393,
+      3394,
+      3395,
+      3396
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L33.moe_sum"
+    },
+    {
+     "ops": [
+      3397,
+      3398,
+      3399,
+      3400
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L33.hc_post"
+    },
+    {
+     "ops": [
+      3403,
+      3404,
+      3405,
+      3407
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L34.attn_norm"
+    },
+    {
+     "ops": [
+      3443,
+      3444,
+      3445,
+      3446
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L34.hc_post"
+    },
+    {
+     "ops": [
+      3449,
+      3450,
+      3451,
+      3453
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L34.ffn_norm"
+    },
+    {
+     "ops": [
+      3487,
+      3488,
+      3489,
+      3490,
+      3491,
+      3492
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L34.moe_sum"
+    },
+    {
+     "ops": [
+      3493,
+      3494,
+      3495,
+      3496
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L34.hc_post"
+    },
+    {
+     "ops": [
+      3499,
+      3500,
+      3501,
+      3503
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L35.attn_norm"
+    },
+    {
+     "ops": [
+      3539,
+      3540,
+      3541,
+      3542
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L35.hc_post"
+    },
+    {
+     "ops": [
+      3545,
+      3546,
+      3547,
+      3549
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L35.ffn_norm"
+    },
+    {
+     "ops": [
+      3583,
+      3584,
+      3585,
+      3586,
+      3587,
+      3588
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L35.moe_sum"
+    },
+    {
+     "ops": [
+      3589,
+      3590,
+      3591,
+      3592
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L35.hc_post"
+    },
+    {
+     "ops": [
+      3595,
+      3596,
+      3597,
+      3599
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L36.attn_norm"
+    },
+    {
+     "ops": [
+      3643,
+      3644,
+      3645,
+      3646
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L36.hc_post"
+    },
+    {
+     "ops": [
+      3649,
+      3650,
+      3651,
+      3653
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L36.ffn_norm"
+    },
+    {
+     "ops": [
+      3687,
+      3688,
+      3689,
+      3690,
+      3691,
+      3692
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L36.moe_sum"
+    },
+    {
+     "ops": [
+      3693,
+      3694,
+      3695,
+      3696
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L36.hc_post"
+    },
+    {
+     "ops": [
+      3699,
+      3700,
+      3701,
+      3703
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L37.attn_norm"
+    },
+    {
+     "ops": [
+      3739,
+      3740,
+      3741,
+      3742
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L37.hc_post"
+    },
+    {
+     "ops": [
+      3745,
+      3746,
+      3747,
+      3749
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L37.ffn_norm"
+    },
+    {
+     "ops": [
+      3783,
+      3784,
+      3785,
+      3786,
+      3787,
+      3788
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L37.moe_sum"
+    },
+    {
+     "ops": [
+      3789,
+      3790,
+      3791,
+      3792
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L37.hc_post"
+    },
+    {
+     "ops": [
+      3795,
+      3796,
+      3797,
+      3799
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L38.attn_norm"
+    },
+    {
+     "ops": [
+      3835,
+      3836,
+      3837,
+      3838
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L38.hc_post"
+    },
+    {
+     "ops": [
+      3841,
+      3842,
+      3843,
+      3845
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L38.ffn_norm"
+    },
+    {
+     "ops": [
+      3879,
+      3880,
+      3881,
+      3882,
+      3883,
+      3884
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L38.moe_sum"
+    },
+    {
+     "ops": [
+      3885,
+      3886,
+      3887,
+      3888
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L38.hc_post"
+    },
+    {
+     "ops": [
+      3891,
+      3892,
+      3893,
+      3895
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L39.attn_norm"
+    },
+    {
+     "ops": [
+      3931,
+      3932,
+      3933,
+      3934
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L39.hc_post"
+    },
+    {
+     "ops": [
+      3937,
+      3938,
+      3939,
+      3941
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "L39.ffn_norm"
+    },
+    {
+     "ops": [
+      3975,
+      3976,
+      3977,
+      3978,
+      3979,
+      3980
+     ],
+     "length": 6,
+     "path_edges": 5,
+     "category": "moe",
+     "tag": "L39.moe_sum"
+    },
+    {
+     "ops": [
+      3981,
+      3982,
+      3983,
+      3984
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "hc_post",
+     "tag": "L39.hc_post"
+    },
+    {
+     "ops": [
+      3985,
+      3986,
+      3987,
+      3989
+     ],
+     "length": 4,
+     "path_edges": 3,
+     "category": "rmsnorm",
+     "tag": "head"
+    }
+   ],
+   "ops_in_chains": 912,
+   "chain_length_hist": {
+    "2": 11,
+    "4": 159,
+    "6": 40,
+    "7": 2
+   },
+   "producers_writing_vm_still": 9,
+   "producers_vm_write_elided": 687,
+   "vm_elem_reads_total": 1191585,
+   "vm_elem_reads_avoided": 228768,
+   "vm_elem_writes_total": 447605,
+   "vm_elem_writes_avoided": 224960,
+   "path_edges": 696,
+   "cycles_saved_c_rotate_upper": 22272,
+   "kr_peak_entries": 40,
+   "by_category": {
+    "rmsnorm": {
+     "chains": 81,
+     "ops_fused": 324,
+     "edges": 243,
+     "reads_avoided": 38880,
+     "writes_avoided": 38560,
+     "max_len": 4,
+     "path_edges": 243
+    },
+    "hc_post": {
+     "chains": 80,
+     "ops_fused": 326,
+     "edges": 246,
+     "reads_avoided": 157440,
+     "writes_avoided": 154240,
+     "max_len": 7,
+     "path_edges": 242
+    },
+    "moe": {
+     "chains": 40,
+     "ops_fused": 240,
+     "edges": 200,
+     "reads_avoided": 32000,
+     "writes_avoided": 32000,
+     "max_len": 6,
+     "path_edges": 200
+    },
+    "compressor": {
+     "chains": 7,
+     "ops_fused": 14,
+     "edges": 7,
+     "reads_avoided": 320,
+     "writes_avoided": 64,
+     "max_len": 2,
+     "path_edges": 7
+    },
+    "index_key": {
+     "chains": 4,
+     "ops_fused": 8,
+     "edges": 4,
+     "reads_avoided": 128,
+     "writes_avoided": 96,
+     "max_len": 2,
+     "path_edges": 4
+    }
+   },
+   "by_op_class": {
+    "light": {
+     "ops": 731,
+     "heads": 201,
+     "tails": 129,
+     "middles": 401,
+     "reads_avoided": 160576,
+     "writes_avoided": 210720
+    },
+    "light+red": {
+     "ops": 175,
+     "heads": 8,
+     "tails": 84,
+     "middles": 83,
+     "reads_avoided": 68000,
+     "writes_avoided": 14240
+    },
+    "sfu": {
+     "ops": 3,
+     "heads": 3,
+     "tails": 0,
+     "middles": 0,
+     "reads_avoided": 0,
+     "writes_avoided": 0
+    },
+    "divide": {
+     "ops": 3,
+     "heads": 0,
+     "tails": 3,
+     "middles": 0,
+     "reads_avoided": 192,
+     "writes_avoided": 0
+    }
+   },
+   "chain_heads": 212,
+   "chain_tails": 216,
+   "rejects": {
+    "placement_same_width": 935,
+    "placement_width": 1035,
+    "gather_pair_or_region_read": 256,
+    "other_unit_wrote_between": 170,
+    "several_producers": 39,
+    "partly_older_or_result": 1,
+    "producer_also_read_from_memory": 81
+   }
+  }
+ },
+ "shape": "reduced",
+ "positions": [
+  0,
+  1,
+  2,
+  3,
+  7,
+  8,
+  15,
+  16,
+  31,
+  33,
+  64,
+  127
+ ],
+ "inputs": {
+  "tools/w11_su_fuse.py": "8386bf3fd755d05b100006d25d05eac7ddf2030cee3ed582d7d80f5ddcd8cdeb",
+  "tools/hdc_isa_v41.py": "ff7a78181af39be1b39894c7e4798a69a80013a403841437ff4aabd1d51f49b7",
+  "tools/hdc_program_v41.py": "1c18659af654886275ca99ef0cbe1181dbb875595ad579a0bad906502b35955f",
+  "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "64350d71df875996c250b22d01268613ee47bcb2f4346cfed2ec10ecd4d022a8"
+ }
+}

@@ -922,7 +922,7 @@ class Builder:
             self.rmsnorm("X", 160, lay.cb["norm"], "XN", "head", have_ss="SS")
             self.me(lay.mat["head"], V_["XN"], 0, {"XN"}, set(), "head", me_amax=1, me_oen=0)
         self.emit(dict(unit=I.UNIT_END, wait=31), set(), set(), "end")
-        return schedule(self.prog)
+        return fuse_program(schedule(self.prog), self.prog, self.lay)
 
     # -- multi-token prediction (Layout(mtp=...)) ------------------------------------------
     def ctl(self, op, tag, slot=0, lane=0, wait=0):
@@ -1051,6 +1051,37 @@ class Builder:
 
 
 SU_BATCH = True                  # the stream unit's lane multiplier (its copies) serves batched slots
+
+
+# ---- SU operator fusion (W11; tools/w11_su_fuse.py) ------------------------------------------------------------
+# HDC_V41_SU_FUSE="N,M,depth": compile the one-position program for a vector unit of N light / M SFU lanes with
+# `depth` lane registers -- the chain-forming pass sets kr_w / kr_r / kr_lw (and drops element writes nothing
+# else reads); the ISA model then keeps the lane registers exactly as that unit does (Machine.kr_geom).  Unset:
+# the program is unchanged.
+FUSE_ENV = "HDC_V41_SU_FUSE"
+FUSE_POSITIONS = (0, 1, 2, 3, 7, 8, 15, 16, 17, 31, 32, 33, 63, 64, 65, 127)
+
+
+def fuse_geom():
+    v = os.environ.get(FUSE_ENV, "")
+    if not v:
+        return None
+    N, M, d = (int(x) for x in v.split(","))
+    return N, M, d
+
+
+def fuse_program(prog, entries, lay, geom=None):
+    """The fusion pass over a scheduled one-position program (entries: the builder's (f, reads, writes, tag))."""
+    geom = geom or fuse_geom()
+    if not geom or lay.mtp:
+        return prog
+    import w11_su_fuse as FU
+    N, M, d = geom
+    pe = [(f, r, w, t) for f, (_, r, w, t) in zip(prog, entries)]
+    Ds = [(lambda dv: (lambda sel: dv[sel]))(I.dyn_values(0, p)) for p in FUSE_POSITIONS]
+    out, rep_ = FU.fuse(pe, Ds, N, M, FU.Regions(lay.vm.map), depth=d, lw=True)
+    fuse_program.report = rep_
+    return [f for f, *_ in out]
 
 
 def su_shift(f, p):
@@ -1456,14 +1487,16 @@ class Machine:
         self.trace = {}
 
     # ---- operator fusion: the stream unit's lane register files (tools/w11_su_fuse.py) ----------------------
-    kr_geom = None                     # (N, M): the vector unit the fused program was compiled for
+    kr_geom = None                     # (N, M) of the unit a fused program was compiled for (else HDC_V41_SU_FUSE)
 
     def kr_place(self, f, no, ni):
         """(vector, lane) of each element of a fused op on the unit kr_geom: KR is indexed by them, exactly as
         the hardware is, so a compiler error (overlapping ranges, a misplaced element) shows as a wrong value."""
         import w11_su_fuse as FU
+        if self.kr_geom is None and fuse_geom():
+            self.kr_geom = fuse_geom()[:2]
         if self.kr_geom is None:
-            raise ValueError("a fused stream op (kr_w / kr_r) needs Machine.kr_geom = (N, M)")
+            raise ValueError("a fused stream op (kr_w / kr_r) needs Machine.kr_geom = (N, M) or HDC_V41_SU_FUSE")
         N, M = self.kr_geom
         if not hasattr(self, "kr"):
             self.kr = np.full((I.KR_DEPTH + 4096, N), np.nan, dtype=F)
