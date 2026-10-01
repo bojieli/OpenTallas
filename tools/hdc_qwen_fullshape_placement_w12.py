@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+"""Checkpoint-free address preflight for the shipped Qwen3-8B TP2 INT8 image.
+
+This computes the matrix ROM geometry used by hdc_program.Layout.place_matrix.
+It does not emit weights, a program, or a golden/RTL shard verdict.
+"""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+
+import hdc_golden as G
+import hdc_isa as I
+import hdc_program as P
+
+ROOT = Path(__file__).resolve().parents[1]
+CONFIG = ROOT / 'compiler/models/qwen3-8b/config.json'
+LOCK = ROOT / 'compiler/models/qwen3-8b/checkpoint_source.json'
+# Lane groups per die.  6,144 is the published O4 die; the microarchitecture
+# model (tools/uarch_model.py, docs/MICROARCH_MODEL.md) chooses 5,120, which is
+# selected with QWEN_O4_GROUPS=5120 for every tool that imports this constant.
+GROUPS, W, IL = int(os.environ.get('QWEN_O4_GROUPS', '6144')), I.W_LANES, I.INTERLEAVE
+# Tensor-parallel dies (QWEN_O4_TP): 2 is the published O4 package; 4 is the 2026-09-30 product
+# (two packages of two dies, 8 q / 2 kv heads a die).
+TP = int(os.environ.get('QWEN_O4_TP', '2'))
+EMBED_CODES_PER_WORD = 64  # tools/hdc_qwen_int8_image_w12.py separate embedding ROM
+
+
+def rtl_split(n, k, groups):
+    """K-split under the engine's tiling rule (rtl/hdc/ot_hdc_matvec.sv): a
+    round covers floor(G/S) tiles, fewest cycles, the smaller split on a tie.
+    hdc_golden.split_for prices a round as G/S fractional tiles; the two agree
+    whenever S divides G (every shipped matrix at G = 6,144) and differ at
+    G = 5,120, where split_for would pick S = 2,048 for o/down (2.5 tiles a
+    round) which the engine runs as 2.  arch_budget_qwen3.split_rounds is the
+    same rule."""
+    tiles = -(-n // (W * IL))
+    best = None
+    s = 1
+    while s <= groups:
+        if k % s == 0:
+            cycles = -(-tiles // (groups // s)) * (k // s) * IL
+            if best is None or cycles < best[0]:
+                best = (cycles, s)
+        s *= 2
+    return best[1]
+
+
+def matrix(base, name, n, k, groups=GROUPS):
+    if n <= 0 or k <= 0 or groups <= 0 or k % W:
+        raise ValueError(f'{name}: invalid matrix/group dimensions')
+    split = rtl_split(n, k, groups)
+    if groups % split:
+        raise ValueError(f'{name}: K split {split} does not divide {groups} groups')
+    kc = k // split
+    per_round = groups // split
+    tiles = (n + W * IL - 1) // (W * IL)
+    rounds = (tiles + per_round - 1) // per_round
+    words = rounds * kc * IL
+    return {'name': name, 'base': base, 'end': base + words, 'words': words,
+            'rows': n, 'columns': k, 'split': split, 'k_per_split': kc,
+            'tiles_per_round': per_round, 'rounds': rounds,
+            'scale_rows': n, 'scale_words': (n + W - 1) // W}
+
+
+def placement(config=None, groups=GROUPS):
+    config = json.loads(CONFIG.read_text()) if config is None else config
+    shape = (config['hidden_size'], config['num_hidden_layers'], config['num_attention_heads'],
+             config['num_key_value_heads'], config['head_dim'], config['intermediate_size'],
+             config['vocab_size'])
+    if shape != (4096, 36, 32, 8, 128, 12288, 151936):
+        raise ValueError(f'not shipped Qwen3-8B config: {shape}')
+    h, layers, nh, kv, hd, ff, vocab = shape
+    matrices = []
+    base = scale_base = 0
+    # Both TP2 dies have the same matrix geometry; row contents and vocab
+    # indices differ.  Code ROM words are 8*W*G bits, exactly as the reduced
+    # INT8 image writer; each output row gets one BF16 post-tree scale.
+    dims = [('qkv', (nh // TP + 2 * kv // TP) * hd, h),
+            ('o', h, nh // TP * hd), ('gu', 2 * ff // TP, h), ('down', h, ff // TP)]
+    for layer in range(layers):
+        for name, n, k in dims:
+            row = matrix(base, f'L{layer:02d}.{name}', n, k, groups)
+            row['scale_base'] = scale_base
+            row['scale_end'] = scale_base + row['scale_words']
+            matrices.append(row)
+            base = row['end']
+            scale_base = row['scale_end']
+    head = matrix(base, 'lm_head', vocab // TP, h, groups)
+    head['scale_base'] = scale_base
+    head['scale_end'] = scale_base + head['scale_words']
+    matrices.append(head)
+    base = head['end']
+    scale_base = head['scale_end']
+    embed_words = (vocab * h + EMBED_CODES_PER_WORD - 1) // EMBED_CODES_PER_WORD
+    embedding_element_base = base * W * groups
+    a_limit = 1 << I.A
+    n_limit = 1 << I.N
+    blockers = []
+    if embed_words > a_limit:
+        blockers.append('separate INT8 embedding code-word address exceeds ISA AW24')
+    if embedding_element_base + vocab * h > a_limit:
+        blockers.append('legacy hdc_program embedding element address exceeds ISA AW24; separate INT8 embed ROM requires a new base contract')
+    if vocab > n_limit:
+        blockers.append('vocabulary token and argmax index exceed NW16')
+    if vocab // TP > n_limit:
+        blockers.append('lm_head me_nout exceeds ISA NW16; emit row chunks with argmax continuation')
+    if max(P.VM['GU'] + ff, P.VM['ACT'] + ff // 2, P.VM['QKV'] + (nh // 2 + kv) * hd) > I.VM_ELEMS:
+        blockers.append('fixed vector-memory placement exceeds VM_ELEMS=4096')
+    if config['max_position_embeddings'] > I.T_MAX:
+        blockers.append('shipped context exceeds T_MAX=64 KV provision')
+    blockers.append('TP2 norm fold is absent from hdc_program.Layout/build_program')
+    blockers.append('reduced INT8 scale image aliases matrix-word bases; shipped image needs independent dense scale-base addressing')
+    blockers.append('DFlash drafter fc S4096 / verify-slot ISA image is not emitted')
+    blockers.append('fullshape stage program/ROM depth and deployed INT8 golden are not validated')
+    return {'schema': 'opentallas.qwen-o4-fullshape-placement.v1',
+            'status': 'blocked' if blockers else 'ready_for_image',
+            'config_sha256': hashlib.sha256(CONFIG.read_bytes()).hexdigest(),
+            'checkpoint_lock_sha256': hashlib.sha256(LOCK.read_bytes()).hexdigest(),
+            'tp': TP, 'identical_geometry_per_die': True,
+            'groups': groups, 'lanes': W, 'interleave': IL,
+            'matrix_code_words_per_die': base,
+            'matrix_code_word_bits': 8 * W * groups,
+            'matrix_scale_words_per_die': scale_base,
+            'embedding_code_words_per_die': embed_words,
+            'embedding_codes_per_word': EMBED_CODES_PER_WORD,
+            'embedding_element_address_base': embedding_element_base,
+            'embedding_scale_rows_per_die': vocab,
+            'matrix_scale_rows_per_die': sum(x['scale_rows'] for x in matrices),
+            'matrices_per_die': matrices, 'blockers': blockers,
+            'claim_boundary': 'Analytical INT8 ROM placement only; no checkpoint image, ISA program, or RTL comparison.'}
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument('--out', type=Path)
+    args = ap.parse_args()
+    report = placement()
+    data = json.dumps(report, indent=2) + '\n'
+    if args.out:
+        args.out.write_text(data)
+    else:
+        print(data, end='')
+
+
+if __name__ == '__main__':
+    main()
