@@ -21,9 +21,12 @@ def budget(fallback_rows=64):
       'payload_valid_bytes':payload,'read_port_bytes':32*(sectors+metadata_sectors),
       'write_port_bytes':32*(sectors+metadata_sectors),'mixed_commands':2*(sectors+metadata_sectors),
       'shared_750B_fast_cycle_port_floor':(64*(sectors+metadata_sectors)+749)//750,
+      'port_floor_scope':{'quad_count':1,'tile_assignment':'entire tile to one quad, hypothetical','combined_read_write_bytes_per_fast_cycle':750,'global_four_quad_floor':None,'actual_quad_assignment':None,'excludes':['requests and acknowledgments','wire headers','controller latency and turnaround','reverse CDC','dependencies and other traffic']},
       'single_stack_command_floor':2*(sectors+metadata_sectors),
       'balanced_four_stack_command_floor':(2*(sectors+metadata_sectors)+3)//4,
-      'command_distribution_actual':None,'shared_regions':regions,'shared_peak_bytes':55936,
+      'balanced_four_stack_command_floor_status':'hypothetical even split; NOT actual stack/PC/address skew or qualification',
+      'command_distribution_actual':None,'producer_consumer_exact_gate_passed':False,
+      'transport_test_scope':'struct uint32 byte copy only; no actual producer/consumer qualification','shared_regions':regions,'shared_peak_bytes':55936,
       'shared_capacity_bytes':65536,'double_buffer_fits':False,
       'key_address_formula':'base512_aligned + local_row*512; descriptor separate base32_aligned + local_row*32',
       'descriptor_fields_bits':{'format':8,'valid_length':16,'owner_rank':8,'address':64,'source_epoch':64,'source_hash_ref':64,'reserved':32},
@@ -43,12 +46,12 @@ def receipt():
     pins={}
     for path in ['tools/hdc_golden_v41.py','tools/w19_hbm_tp96_isa.py','tools/deepseek_hbm_complete_executor.py']:
         blob=subprocess.check_output(['git','show','bb38a691e:'+path]);pins[path]={'source_git':'bb38a691e','sha256':hashlib.sha256(blob).hexdigest()}
-    return {'schema':'w13.index-format-screen.v1','source_pins':pins,'baseline_066_preserved':True,
+    return {'schema':'w13.index-format-screen.v2','source_pins':pins,'baseline_066_preserved':True,
       'all_f32':budget(64),'tagged_mixed_endpoints':[budget(0),budget(64)],
       'domain_rejection':'Inf source scale255 / NaN scale256 cannot imply byte-scale packed admission; no clamp/escape/unreachable assumption',
       'selection':'none: allF32 capacity candidate; tagged packed requires actual exact producer/consumer and both format calendars',
       'open_gates':['source-produced F32 callback bytes and exact consumer instruction binding','packed finite exact gate incl scale253 overflow','descriptor publication/writevisible ACK and reverseCDC','actual per-stack mixed read/write commands/row turnaround','RF score liveness and full arithmetic op calendar','shared return scatter/mux routes and bank service','32SM placement/owner routing and contextual SSFF'],
-      'hardware_launch':False}
+      'hardware_launch':False,'format_descriptor_join':{'owner':'Halley','source_git':None,'descriptor_bytes':None,'format_tags':None,'lengths':None,'actual_producer_output_bits':None,'consumer_source':None,'physical_ACK_event_calendar':None,'status':'BLOCKED_AWAIT_SOURCE_BOUND_ARTIFACT'},'baseline_screen_preserved':'2e2ac1d01:results/physical_abi3/asap7/gpu/w13_index_format_screen_20261001/screen.json'}
 
 if __name__=='__main__':
     import sys

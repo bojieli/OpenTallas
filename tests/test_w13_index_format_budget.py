@@ -22,3 +22,13 @@ def test_transpose_banks():
     for i in range(32):
         assert len({(i*33+j)%32 for j in range(32)})==32
         assert len({(j*33+i)%32 for j in range(32)})==32
+
+
+def test_port_floor_scope_is_single_quad_and_no_qualification():
+    b=budget(64)
+    assert b['shared_750B_fast_cycle_port_floor']==93
+    assert b['port_floor_scope']['quad_count']==1
+    assert b['port_floor_scope']['global_four_quad_floor'] is None
+    assert b['balanced_four_stack_command_floor']==544
+    assert b['command_distribution_actual'] is None
+    assert not b['producer_consumer_exact_gate_passed']
