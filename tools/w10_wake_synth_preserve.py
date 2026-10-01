@@ -30,7 +30,8 @@ def companion(original):
     branch = '} elseif { !$::env(SYNTH_HIERARCHICAL) } {\n  # Perform standard coarse-level synthesis script, flatten right away\n' + first
     if original.count(branch) != 1:
         raise ValueError('ORFS normal flat branch drift')
-    original = original.replace(branch, branch[:-len(first)] + '  proc\n  flatten\n' + retain('proc') + '\n' + first)
+    # Tcl reserves proc for procedure definitions; call the Yosys command explicitly.
+    original = original.replace(branch, branch[:-len(first)] + '  yosys proc\n  flatten\n' + retain('proc') + '\n' + first)
     fine = '  synth -top $::env(DESIGN_NAME) -run fine: -noabc {*}$synth_full_args'
     if original.count(fine) != 1:
         raise ValueError('ORFS fine synthesis branch drift')

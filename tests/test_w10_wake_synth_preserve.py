@@ -19,6 +19,7 @@ def test_narrow_driver_selection_has_eight_count_barriers():
     assert 'setattr -set keep 1 @ot_wake_techmap' in patched
     assert 'opt -fast\n  hierarchy -check' in patched
     assert 'log_cmd abc {*}$abc_args' in patched
+    assert '  yosys proc\n  flatten\n' in patched
 
 
 @pytest.mark.parametrize('old,new',[
