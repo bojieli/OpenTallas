@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.window_epoch9.handoff.v1",
+  "verdict": "PASS_BOUNDED_CORRECTNESS_ONLY",
+  "review_reference": "Parent substantive contract PASS 347956207; explicit bounded verification authorization 2026-10-01",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "candidate_commit": "c09f3fe1500e17f14f2f75e88c03e49bb82995e4",
+  "contract_commit": "df0987b9a705e85bb439359bed2f93eac8994829",
+  "measured_compile_and_runtime_seconds": 11.439451147802174,
+  "healthy_metrics": {
+    "requests": 2176,
+    "responses": 2176,
+    "rows": 128,
+    "packed_beats": 32,
+    "epoch_changes": 128,
+    "final_epoch": 126,
+    "max_pending": 8,
+    "out_of_order_returns": 1099,
+    "held_return_cycles_PC_sum": 1043,
+    "request_stalls": 293,
+    "sink_holds": 30,
+    "per_PC_admissions_and_consumptions": 68
+  },
+  "negative_controls": {
+    "original_epoch512": "Actual outer owner mux rejects 0x4000; no backend admission/publication. Unchanged original source arm.",
+    "stale_duplicate_unknown_sector_poison": "Each faults code6 and suppresses publication/new requests; external fault drain UNQUALIFIED."
+  },
+  "healthy_encoding": {
+    "client16": "{2b00,epoch9,sector5}",
+    "backend17": "{1b1,2b00,epoch9,sector5}",
+    "counter_and_compare_bits": 9,
+    "metadata_bits": 53,
+    "metadata_delta_bits": -2,
+    "payload_delta_bits": 0,
+    "healthy_added_cycles": 0
+  },
+  "wrap_preconditions": [
+    "Epoch advances only from empty WINDOW transport; previous row consumes all16 code replies and scale reply exactly once.",
+    "Actual nested mux and unpipelined KARB admission/retirement conserve source pending against all per-PC queued/held entries.",
+    "No replay/retry/hidden CDC state and no delayed duplicate after retirement; a ghost with same tag after512 epochs is not distinguishable.",
+    "Fault stops normal pending bookkeeping; reset/recovery requires externally proven quiescence of every affected owner and transport. No per-token reset assumption."
+  ],
+  "limits": [
+    "Seed510 is a test-only quiescent initialization to exercise wrap, not actual producer epoch provenance or a512-epoch lifetime stress.",
+    "Synthetic nonpoison full-address data; no idx_hbm timing replay, payload checkpoints, actual producer or full-token qualification.",
+    "No competitors, WIN_STACK0, PIPE_OUT/RSP0; no claim of contender fairness or additional pipeline/CDC safety.",
+    "No candidate timing gain, hardware clock closure, adoption or across-token retention."
+  ],
+  "next_cheapest_necessary_gate": "Reuse parent connected credit1 baseline fixture with these isolated candidate copies and unchanged actual idx_hbm, explicit LENW4/BEATW4/TAG17/NPC32/REFPB3/CLK_PS1000. Source-pin a composed eight-credit timing expectation first, then compare identical prime provenance, full128x17 addresses/data, empty/no-competitor conditions, per-PC conservation and final drain. Parent owns this fixture; do not duplicate.",
+  "fault_recovery_readiness": "Healthy connected gate ready. Fault recovery is deliberately absent: model/design an explicit external transport-quiescence acknowledgement before reset/restart, with delayed stale/duplicate injections across recovery. No product adoption until that applicable system contract and gain/context SS/FF gates pass.",
+  "preservation": "Original RTL/uarch byte-identical; main/live untouched. Compile artifacts local only; committed source hashes, commands and logs preserve all outcomes."
+}
