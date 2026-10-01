@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.current-state-docs.v1",
+  "base_commit": "518363bd15436faf64846f2f6ec7a004731151ae",
+  "source_sha256": {
+    "results/rtl/w11_lane_terminal_20261001/summary.json": "ed6df1dd8077635a386727af8c236d134b15ab8c241e29567c5ac2b549857d23",
+    "results/rtl/w19_production_continuation_20261001.json": "9240e7a5c078c3066943cc080920722171a7d96c56802ebbe2351bcce7cac3de",
+    "results/rtl/w17_recovery_89eace_validation_20261001.json": "50b9b633157a03c76ca45d8940f75b8ce4d5780e3bb1df4af33db8add81f5dac",
+    "results/rtl/qwen_rom_w12_runtime/terminal_20261001/verification.json": "1ae044c78589e4854e8638ef1d9230bb61acb66744f3b5c03624381cc56a22c5",
+    "results/physical_abi3/asap7/chip/w10_w18_recovery_20261001/physical_status.json": "e9e04a6039dc42cfa1d4bd9d282e62f44d7578b6b39ff29fc83078f3db8da232",
+    "results/quality/qcnam_w16_recovery_20261001/integration_review.json": "284b11b8f0dafb399f35f694ee5c3cbc48ff66b6bf23c28c3762a92aa372d48d",
+    "results/quality/w16_parent_pin_audit_20261001.json": "426c58b1449fe80a21c5fdb19191931974290bb843de1948ccebfd88e37f9e69",
+    "results/maintenance/local_disk_recovery_20261001/owner_coordination.json": "c37f6d85f669e1b97d959a684cf11fb9857a81629d3a344063057006bbabbca8",
+    "AGENTS.md": "3debe7c829f1fe9b43058b9460989ce6349cb39043f21bf9b51989cb27ef396b"
+  },
+  "scope": "Atlas current-status notice; historical headline/abstract/table retained at original values and explicitly scoped; three-target integrated plan and TASKS; no RTL/source/model/rate changes.",
+  "headline_policy": "No new numerical headline; historical lead retained in folded audit section to preserve bound anchors.",
+  "w11": "N64/M16 KR40 rejected slower; no tuning/restart; N16/M8 gain unadopted; reduced old wired-die record is another vehicle with overallFAIL. No product fusion qualification.",
+  "qc": "Live evaluations and pinned watcher unchanged; no final verdict or adoption.",
+  "census": {
+    "untriaged": 3997,
+    "annotations": [
+      "docs/EVIDENCE_LEDGER.md",
+      "docs/UNIFIED_EXECUTION_CHECKLIST.md"
+    ]
+  },
+  "checks": {
+    "census": "PASS regenerated/current; both annotations synchronized",
+    "diff_check": "PASS",
+    "figures": "PASS make check-figures exit0",
+    "headline_bundle": "204 bound/204 total,409 agreeing occurrences; no new stale pin or headline",
+    "final_readiness": "Existing blocked RTL/physical gates retained; check passes without promotion",
+    "iteration_logs": {
+      "current-state-docs-check-figures.log": {
+        "path": "/tmp/current-state-docs-check-figures.log",
+        "sha256": "664e887a2b7d2aaa2c794f7a4f3461cba34ace032752eb7e346efcc084810a8a"
+      },
+      "current-state-docs-check-figures-r2.log": {
+        "path": "/tmp/current-state-docs-check-figures-r2.log",
+        "sha256": "cd74cbaaa9a782bac5433efeca45871dde630b4dc56ca13c8d94a37c10dcf7b4"
+      },
+      "current-state-docs-check-figures-r3.log": {
+        "path": "/tmp/current-state-docs-check-figures-r3.log",
+        "sha256": "941d86fc50c5438cced82bccf02c52076c7981ad02d42be4515880470f64d364"
+      }
+    },
+    "iteration_scope": "Initial sparse evidence omissions restored; bound historical lead anchor retained after draft anchor drift. Final pass; no evidence verdict replaced."
+  }
+}
