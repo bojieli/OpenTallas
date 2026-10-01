@@ -39,3 +39,20 @@ class Service(unittest.TestCase):
             if epoch>>32:
                 memory['descriptor3'][0,:2]=0
                 self.assertNotEqual(P.authority_execute(memory,trace=True).stores['authority_difference'][0,0],0)
+    def test_diverse_fixture_has_distinct_heads_keys_scales_and_weights(self):
+        qr,kr,w=P.fixture_inputs('diverse-r2');q,k=P.fixture_decoded(qr,kr)
+        self.assertEqual(len({row.tobytes() for row in q}),32)
+        self.assertNotEqual(k[0].tobytes(),k[1].tobytes())
+        self.assertEqual(len(set(w.tolist())),32)
+        self.assertTrue(np.all(np.isfinite(q)) and np.all(np.isfinite(k)))
+        e=np.array([P.X.decode(q[:,b*32:(b+1)*32])[1] for b in range(4)])
+        self.assertGreater(len(set(e.reshape(-1).tolist())),4)
+    def test_diverse_source_bits_reject_swapped_head_address(self):
+        qr,kr,w=P.fixture_inputs('diverse-r2');q,k=P.fixture_decoded(qr,kr);model=P.plan()
+        runner=P.E.TracedSIMT((1,32),{'input':q[:,0].view(np.uint32)[None,:]},kernel='head_alias_negative').run([P.ins('LOAD','v','input')])
+        event=runner.trace[0];base=model['fallback_local2_nonalias_regions']['query']['base']
+        event['source_mapped_shared_accesses']=[{'warp':0,'lane':lane,'address':base+4*lane,'bytes':4} for lane in range(32)]
+        self.assertEqual(P.validate_mapped_values([runner],model,q,k,w)['verdict'],'PASS')
+        wrong=next(head for head in range(1,32) if q.view(np.uint32)[head,0]!=q.view(np.uint32)[0,0])
+        event['source_mapped_shared_accesses'][0]['address']=base+4*wrong
+        with self.assertRaisesRegex(AssertionError,'mapped LOAD differs'):P.validate_mapped_values([runner],model,q,k,w)

@@ -90,7 +90,28 @@ def plan():
         'actual_timestamps':None,'hardware_admitted':False,'actual_token_rate':None,'wholejoin_owner':'Boyle','RTL_written':False}
 
 
-def traces():
+def fixture_inputs(kind='ones-r1'):
+    if kind=='ones-r1':return np.ones((32,128),np.float32),np.ones((2,128),np.float32),np.ones(32,np.float32)
+    if kind!='diverse-r2':raise ValueError('unknown retained fixture')
+    rng=np.random.default_rng(20261002)
+    lattice=np.array([0,.5,-.5,1,-1,1.5,-1.5,2,-2,3,-3,4,-4,6,-6],np.float32)
+    exponents=[-126,-80,-20,-3,0,3,16,32]
+    qraw=np.empty((32,128),np.float32);kraw=np.empty((2,128),np.float32)
+    for head in range(32):
+        for block in range(4):
+            terms=rng.choice(lattice,32);terms[(head+block*3)%32]=6
+            qraw[head,block*32:(block+1)*32]=(terms.astype(np.float64)*2.**exponents[(head*3+block*5)%8]).astype(np.float32)
+    for key in range(2):
+        for block in range(4):
+            terms=rng.choice(lattice,32);terms[(key*7+block*11)%32]=6
+            exponent=[[-7,1,-2,8],[3,-5,4,-1]][key][block]
+            kraw[key,block*32:(block+1)*32]=(terms.astype(np.float64)*2.**exponent).astype(np.float32)
+    return qraw,kraw,np.linspace(-2.25,3.75,32,dtype=np.float32)
+
+def fixture_decoded(qraw,kraw):
+    return np.stack([F.C.V.qdq_fp4_e8m0(row) for row in qraw]),np.stack([F.C.V.qdq_fp4_e8m0(row) for row in kraw])
+
+def traces(fixture='ones-r1'):
     """Execute all current local phases; no global module mutation or source edit."""
     runs=[];counter=iter(range(10000))
     def make(shape,memory,initial=None):
@@ -103,8 +124,10 @@ def traces():
     proxy.decode=FunctionType(X.decode.__code__,{**X.decode.__globals__,'SIMT':make})
     proxy.block=FunctionType(X.block.__code__,{**X.block.__globals__,'SIMT':make})
     classify=FunctionType(F.classified.__code__,{**F.classified.__globals__,'X':proxy})
-    raw=np.ones(128,np.float32);row=F.C.V.qdq_fp4_e8m0(raw)
-    q=np.tile(row,(32,1));keys=np.tile(row,(2,1));weights=np.ones(32,np.float32)
+    qraw,kraw,weights=fixture_inputs(fixture);q,keys=fixture_decoded(qraw,kraw)
+    initial_q=q.copy();initial_keys=keys.copy()
+    with np.errstate(over='ignore',invalid='ignore'):
+        finite_expected=Consumer.reference_scores(q,keys[np.arange(5456)%2],weights,np.arange(5456))[:2]
     classify(q);classify(keys)
     query_decoders=[proxy.decode(q[:,b*32:(b+1)*32]) for b in range(4)]
     for _,_,runner in query_decoders:
@@ -150,16 +173,22 @@ def traces():
     sanitize=FunctionType(B.sanitize.__code__,{**B.sanitize.__globals__,'X':proxy})
     binary=FunctionType(B.binary.__code__,{**B.binary.__globals__,'X':proxy})
     fallback=FunctionType(B.source_sized_scores.__code__,{**B.source_sized_scores.__globals__,'X':proxy,'sanitize':sanitize,'binary':binary})
-    # Distinct current produced raw exceptional values expose NaN/Inf branches.
-    raw[0]=np.nan
-    with np.errstate(over='ignore',invalid='ignore'):q=np.tile(F.C.V.qdq_fp4_e8m0(raw),(32,1))
-    raw[0]=np.inf
-    with np.errstate(over='ignore',invalid='ignore'):keys[1]=F.C.V.qdq_fp4_e8m0(raw)
+    # Only selected source heads/blocks become exceptional in diverse-r2.
+    if fixture=='ones-r1':
+        raw=np.ones(128,np.float32);raw[0]=np.nan
+        with np.errstate(over='ignore',invalid='ignore'):q=np.tile(F.C.V.qdq_fp4_e8m0(raw),(32,1))
+        raw[0]=np.inf
+        with np.errstate(over='ignore',invalid='ignore'):keys[1]=F.C.V.qdq_fp4_e8m0(raw)
+    else:
+        fallback_qraw=qraw.copy();fallback_kraw=kraw.copy()
+        fallback_qraw[3,32+5]=np.nan;fallback_qraw[17,96+7]=np.inf
+        fallback_kraw[1,64+11]=np.inf
+        with np.errstate(over='ignore',invalid='ignore'):q,keys=fixture_decoded(fallback_qraw,fallback_kraw)
     fallback_out,_=fallback(q,keys,weights,5456)
     with np.errstate(over='ignore',invalid='ignore'):
         expected=Consumer.reference_scores(q,keys[np.arange(5456)%2],weights,np.arange(5456))[:2]
     if not np.array_equal(fallback_out.astype(np.float64).view(np.uint64),expected.view(np.uint64)):raise AssertionError('traced exceptional path differs from original fullmacro source')
-    if finite_output!=[0x45800000,0x45800000]:raise AssertionError('finite currentproduced source mismatch')
+    if not np.array_equal(np.array(finite_output,np.uint32).view(np.float32).astype(np.float64).view(np.uint64),finite_expected.view(np.uint64)):raise AssertionError('finite currentproduced source mismatch')
     proposal=plan();base=lambda n:proposal['fallback_local2_nonalias_regions'][n]['base']
     extra={r['name']:r['base'] for r in proposal['retained_query_authority_extra_regions']}
     def addresses(phase,symbol,warp,lane,store):
@@ -206,7 +235,14 @@ def traces():
                     else:entry['lastread']=event['id']
             event['source_mapped_shared_accesses']=mapped
             event['mapping_kind']='proposal byteaddresses, NOT provider placement/timestamps'
-    return {'fixture':'synthetic actualQDQ32queries/2keys; production5456 macro policy, not checkpoint',
+    validation=validate_mapped_values(runs[:finite_runs],proposal,initial_q,initial_keys,weights)
+    return {'fixture':fixture+' synthetic actualQDQ32queries/2keys; production5456 macro policy, not checkpoint',
+        'fixture_source_bits':{'query_raw_F32_bits':qraw.view(np.uint32).tolist(),'key_raw_F32_bits':kraw.view(np.uint32).tolist(),'initial_decoded_query_bits':initial_q.view(np.uint32).tolist(),'initial_decoded_key_bits':initial_keys.view(np.uint32).tolist(),'weights_F32_bits':weights.view(np.uint32).tolist()},
+        'fallback_query_nonfinite_head_count':int(np.any(~np.isfinite(q),axis=1).sum()),
+        'fallback_query_nonfinite_block_count':int(np.any(~np.isfinite(q.reshape(32,4,32)),axis=2).sum()),
+        'fallback_query_finite_block_count':int(np.all(np.isfinite(q.reshape(32,4,32)),axis=2).sum()),
+        'mapped_value_validation':validation,
+        'finite_compared_original_full5456_F64_ABI':True,
         'finite_firstwrite_lastread_word_endpoints':endpoint_ledger,
 
         'finite_phase_count':finite_runs,'fallback_phase_count':len(runs)-finite_runs,
@@ -215,5 +251,28 @@ def traces():
         'phases':[{'kernel':r.kernel,'shape':list(r.shape),'counts':dict(r.counts),'metrics':dict(r.metrics),'events':r.trace,
                    'crossphase_producer_dependency_binding':'finite q/keyunits exact sourceSTORE events and scaleRF producers attached; scaleSTORE bridge/provider mappings remain UNBOUND','shared_physical_address_mapping':None,'hardware_cycles':None} for r in runs],
         'RF_versions':'actual executed laneSSA, not allocated physical RF','provider_events_actual':False}
+
+def validate_mapped_values(runs,proposal,q,keys,weights):
+    base=lambda n:proposal['fallback_local2_nonalias_regions'][n]['base']
+    initial={base('query')+4*(term*33+head):int(q.view(np.uint32)[head,term]) for head in range(32) for term in range(128)}
+    initial.update({base('keys')+4*(row*128+term):int(keys.view(np.uint32)[row,term]) for row in range(2) for term in range(128)})
+    initial.update({base('weights')+4*head:int(weights.view(np.uint32)[head]) for head in range(32)})
+    written={};loads=stores=external=0
+    for runner in runs:
+        for event in runner.trace:
+            if event['opcode'] not in ['LOAD','STORE']:continue
+            groups=event['operand_reads'][0]['values'] if event['opcode']=='LOAD' else event['shared_write_values']
+            bits={(group['warp'],lane):value for group in groups for lane,value in zip(group['lanes'],group['bits'])}
+            for access in event['source_mapped_shared_accesses']:
+                address=access['address'];value=bits[(access['warp'],access['lane'])]
+                if event['opcode']=='STORE':written[address]=value;stores+=1
+                else:
+                    loads+=1
+                    if address in written:expected=written[address]
+                    else:
+                        if address not in initial:raise AssertionError('uninitialized mapped address')
+                        expected=initial[address];external+=1
+                    if value!=expected:raise AssertionError('mapped LOAD differs from current STORE/fixture bits')
+    return {'LOAD_lanes_checked':loads,'STORE_lanes_checked':stores,'initial_external_LOADs_fixture_only_provider_UNBOUND':external,'verdict':'PASS','hardware_provider_bound':False}
 
 if __name__=='__main__':print(json.dumps(plan(),indent=2,sort_keys=True))
