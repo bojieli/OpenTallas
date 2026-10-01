@@ -1455,6 +1455,23 @@ class Machine:
         self.logits = []
         self.trace = {}
 
+    # ---- operator fusion: the stream unit's lane register files (tools/w11_su_fuse.py) ----------------------
+    kr_geom = None                     # (N, M): the vector unit the fused program was compiled for
+
+    def kr_place(self, f, no, ni):
+        """(vector, lane) of each element of a fused op on the unit kr_geom: KR is indexed by them, exactly as
+        the hardware is, so a compiler error (overlapping ranges, a misplaced element) shows as a wrong value."""
+        import w11_su_fuse as FU
+        if self.kr_geom is None:
+            raise ValueError("a fused stream op (kr_w / kr_r) needs Machine.kr_geom = (N, M)")
+        N, M = self.kr_geom
+        if not hasattr(self, "kr"):
+            self.kr = np.full((I.KR_DEPTH + 4096, N), np.nan, dtype=F)
+        g = FU.bench_op(f, lambda sel: self.dyn[sel])
+        g.update(nout=no, nin=ni)
+        vec, lane, _ = FU.placement(g, N, M)
+        return vec, lane
+
     def wrom_f32(self, e):
         return G.from_bits(self.wrom[e].astype(np.uint32) << 16)
 
@@ -1477,7 +1494,7 @@ class Machine:
             f = prog[n]
             if stop is not None and n >= stop:
                 break
-            f = {name: f.get(name, 0) for name, _ in I.FIELDS} | {"_tag": f.get("_tag", "")}
+            f = {name: f.get(name, 0) for name, _ in I.fields_for()} | {"_tag": f.get("_tag", "")}
             if f["unit"] == I.UNIT_CTL:
                 if f["ctl"] == I.CTL_END:
                     if self.mtp and self.accepted is None:
@@ -1700,6 +1717,16 @@ class Machine:
         ec = ea ^ 1 if f["c_pair"] else self.addr(f, "c", no, ni)
         c = self.fetch(f, "c", ec)
         dd = self.fetch(f, "d", self.addr(f, "d", no, ni))
+        krp = None
+        if f.get("kr_r", 0) or f.get("kr_w", 0):
+            krp = self.kr_place(f, no, ni)
+            if f.get("kr_r", 0):
+                kv_ = self.kr[f["kr_rb"] + krp[0], krp[1]]
+                rk = f["kr_r"]
+                a = kv_.copy() if rk & 1 else a
+                b = kv_.copy() if rk & 2 else b
+                c = kv_.copy() if rk & 4 else c
+                dd = kv_.copy() if rk & 8 else dd
         imm1, imm2, imm3 = (u32f(f[k]) for k in ("imm1", "imm2", "imm3"))
         if f["a_rnd"]:
             a = G.to_bf16(a)
@@ -1762,6 +1789,8 @@ class Machine:
                 vals = G.to_bf16(vals)
             for k, x in enumerate(vals):
                 self.vm[f["r_base"] + k * f["r_so"]] = x
+        if f.get("kr_w", 0):
+            self.kr[f["kr_wb"] + krp[0], krp[1]] = out
         if f["dst"]:
             if f["dst"] == I.DST_KVT:
                 o, i = np.meshgrid(np.arange(no), np.arange(ni), indexing="ij")

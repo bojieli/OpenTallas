@@ -238,16 +238,28 @@ FIELDS = [
 ]
 
 
+# OPERATOR FUSION (W11, user decision 2026-10-01; tools/w11_su_fuse.py).  Every SU lane holds a lane register
+# file KR of KR_DEPTH 32-bit entries.  kr_w: the op also writes its element results to KR entry kr_wb + v (v the
+# op's vector index; one element of a vector per lane) -- dst may then be NONE when nothing else reads them;
+# kr_r (bit 0 A, 1 B, 2 C, 3 D): those streams read KR entry kr_rb + v instead of their memory source; kr_lw:
+# lay the op at the SFU lanes' width, so a light op's element e sits where an SFU op's does.  The program
+# generator only fuses ops whose element e lands on the same lane in the same vector.  All zero: unfused.
+# Appended after every existing field of both profiles, so no existing offset moves.
+KR_AW = 6
+KR_DEPTH = 1 << KR_AW
+FUSE_FIELDS = [("kr_w", 1), ("kr_wb", KR_AW), ("kr_r", 4), ("kr_rb", KR_AW), ("kr_lw", 1)]
+
+
 def fields_for(*, full_shape=False):
     if not full_shape:
-        return FIELDS
+        return FIELDS + FUSE_FIELDS
     # Preserve the reduced instruction contract. The full-shape image is a
     # separate, wider profile so existing RTL images keep their exact offsets.
     widened = [(name, FULL_XU_K if name == "xu_k" else
              FULL_A if width == A else FULL_N if width == N else
              FULL_D if width == D else width)
             for name, width in FIELDS]
-    return widened + FULL_EXTRA_FIELDS
+    return widened + FULL_EXTRA_FIELDS + FUSE_FIELDS
 
 
 def layout_for(*, full_shape=False):

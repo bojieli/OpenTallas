@@ -456,7 +456,8 @@ def check_reducer_claim(rng, trials=3000):
 def layout(f, N, M):
     no, ni = f["nout"], f["nin"]
     scalar = f["sfu"] in SCALAR_SFU
-    sfuc = f["sfu"] in VEC_SFU or f["m1"] in (I.M1_DIVB, I.M1_DIVIMM)
+    # kr_lw (operator fusion): a light op laid at the SFU width, so its elements sit where an SFU op's do
+    sfuc = f["sfu"] in VEC_SFU or f["m1"] in (I.M1_DIVB, I.M1_DIVIMM) or bool(f.get("krlw", 0))
     vw = 1 if scalar else (M if sfuc else N)
     lvw = int(math.log2(vw))
     red = f["red"] != 0
