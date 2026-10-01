@@ -1,0 +1,50 @@
+{
+  "prior_verdict": "FAIL_INCOMPLETE_CALENDAR_VALIDATION",
+  "failed_commits": [
+    "d4780ea76",
+    "8e52c0faa"
+  ],
+  "review_source_git": "7c236cdc6",
+  "review_path": "results/quality/parent_hbm_calendar_gate_review_20261001/review.json",
+  "review_sha256": "709efee41c5d3fc28cd929fb1b8b0393a03299c6ed054fda72552668a4b27b3d",
+  "prior_records_unchanged": true,
+  "canonical_basis_source_git": "9fffce2ef",
+  "RF_operand_cycles": 2,
+  "clock_hz": {
+    "serial": 900000000,
+    "fast": 1200000000,
+    "common_tick": 3600000000
+  },
+  "candidate_latencies": {
+    "FADD": {
+      "core": 7,
+      "RF_to_writeback": 9
+    },
+    "FMUL": {
+      "core": 7,
+      "RF_to_writeback": 9
+    },
+    "INT_ADD_FCMP": {
+      "core": 7,
+      "RF_to_writeback": 9
+    },
+    "SHFL": {
+      "core": 5,
+      "RF_to_writeback": 7
+    },
+    "DIV_SCALAR": {
+      "core": 19,
+      "RF_to_writeback": 21,
+      "units_per_SM": 1,
+      "II": 1
+    },
+    "DIV_WARP32": {
+      "minimum_RF_to_last_lane_core_finish": 52,
+      "includes_RF": 2,
+      "scalar_issues": 32,
+      "not_vector_DIV21": true
+    }
+  },
+  "qualifications": "ALL latencies candidate only. Opcode aliases and INT/SFU variants require explicit semantics and modeled hardware binding; no native EXP/RECIP/RSQRT or implicit FMA.",
+  "physical_admission": "FAIL_CLOSED"
+}
