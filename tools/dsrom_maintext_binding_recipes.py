@@ -32,8 +32,11 @@ def main():
    recipes[k]=item
   elif local in ('hc_attn_fn','hc_ffn_fn'):
    item=base(k,r);R,K=r['stored_shape'];words=R*((K+63)//64)
-   item.update(recipe='pack_he_fp32 HHW8 alternative',output_format='FP32_HCP_8bank',reference_banks=8,reference_bank_word_bits=256,reference_read_boundary_bits=2048,reference_address_count_per_rank=words,reference_image_bytes_per_rank=words*256,consumer='tile.hbank[8*depth] hb_re[8]/hb_q[8*HHW*32]; distinctfrom HROM768 path',existing_L0_rank0_image_record=layout['matrices'][local] if k.startswith('layers.0.') else None,qualification='source-declared alternative only, no hardenedbank adoption or physicalcopies',authoritative_HROM768_reference='93431e3c56af686d7c52c5c06a9f5cae39fed609;20480words/matrix/reference rank')
-   if k.startswith('layers.0.'):assert words==layout['matrices'][local]['word_count']
+   item.update(recipe='pack_he_fp32 HHW8 alternative',output_format='FP32_HCP_8bank',reference_banks=8,reference_bank_word_bits=256,reference_read_boundary_bits=2048,reference_address_count_per_rank=words,reference_address_count_per_bank_per_rank=words,reference_total_bank_words_per_rank=words*8,reference_bytes_per_bank_word=256//8,reference_bytes_per_8bank_address=8*(256//8),reference_image_bytes_per_rank=words*8*(256//8),reference_address_count_scope='same7680addressdepth on each of8banks; not total bankword count',consumer='tile.hbank[8*depth] hb_re[8]/hb_q[8*HHW*32]; distinctfrom HROM768 path',existing_L0_rank0_image_record=layout['matrices'][local] if k.startswith('layers.0.') else None,qualification='source-declared alternative only, no hardenedbank adoption or physicalcopies',authoritative_HROM768_reference='93431e3c56af686d7c52c5c06a9f5cae39fed609;20480words/matrix/reference rank')
+   assert words*8*(256//8)==R*K*4
+   if k.startswith('layers.0.'):
+    assert words==layout['matrices'][local]['word_count']
+    assert words*8*(256//8)==layout['matrices'][local]['output_image_bytes']
    recipes[k]=item
  for k in ('embed.weight','head.weight'):
   r=cat['tensors'][k];item=base(k,r);R,K=r['stored_shape'];assert r['dtype']=='BF16'
