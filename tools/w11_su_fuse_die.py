@@ -87,6 +87,12 @@ def main():
     ap.add_argument("--suret", type=int, default=0)
     a, rest = ap.parse_known_args()
     FUSE.update(sukr=a.sukr, subcast=a.subcast, suret=a.suret)
+    # the pinned Verilator (as the vector-unit campaigns use): the PATH one (4.038) resolves the bench's
+    # hierarchical references inside generate branches that are not built (the index pool's) and fails
+    pinned = Path(os.environ.get("OPENTALLAS_TOOLS_ROOT", Path.home() / ".local/opentallas-tools")) / "verilator-5.050/bin"
+    if pinned.exists():
+        os.environ["PATH"] = f"{pinned}:{os.environ.get('PATH', '')}"
+    FUSE["verilator"] = subprocess.run(["verilator", "--version"], capture_output=True, text=True).stdout.strip()
     _swap()
     D.defines, D.images, D.breakdown = defines, images, breakdown
     D.TOOLS += [ROOT / "tools/hdc_program_v41_fuse.py", ROOT / "tools/hdc_isa_v41_fuse.py", ROOT / "tools/w11_su_fuse.py",
