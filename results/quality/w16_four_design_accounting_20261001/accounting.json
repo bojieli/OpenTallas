@@ -1,0 +1,564 @@
+{
+  "rows": [
+    {
+      "design": "Qwen3-8B ROM option C",
+      "context_tokens": 8192,
+      "dies": 4,
+      "capacity": {
+        "stacks": 16,
+        "physical_bytes": 360000000000.0,
+        "usable_bytes": 324000000000.0,
+        "capacity_efficiency": 0.9,
+        "reserve_bytes": 36000000000.0,
+        "shared_weights_in_hbm_bytes": 0,
+        "per_user_logical_kv_and_index_bytes": 603979776.0,
+        "usable_after_shared_weights_bytes": 324000000000.0,
+        "modeled_users": 536,
+        "busiest_die": {
+          "stacks": 4,
+          "usable_bytes": 81000000000.0,
+          "per_user_bytes": 150994944.0,
+          "users": 536,
+          "kv_heads_per_die": 2,
+          "placement": "TP-4 whole GQA heads; two of eight KV heads per die"
+        },
+        "rule": "busiest-die shard limit; aggregate division is not the capacity rule"
+      },
+      "weight_storage": {
+        "location": "ROM, shared by users",
+        "hbm_payload_equivalent_bytes": 7571792640.0,
+        "rom_bit_reference": {
+          "stored_bits_per_die": 37522495552,
+          "drafter_bits_per_die": 4404019200,
+          "target_bits_total": 66236952704,
+          "cirom_mbit_mm2": 148.0703032713784
+        },
+        "payload_equivalent_is_not_physical_rom_bits": true,
+        "rom_bit_reference_scope": "Original TP-2 placement bit ledger; target_bits_total is repartitioned over the four-die option C. stored_bits_per_die is not a current TP-4 per-die measurement."
+      },
+      "cost": {
+        "low": 29113,
+        "high": 35113
+      },
+      "cost_components": {
+        "die_usd": 2313,
+        "package_usd": 4040,
+        "hbm_usd": 5760.0,
+        "hardware_usd": 12113
+      },
+      "critical_path": {
+        "total_us": 118.19822175732217,
+        "additive_parts_us": {
+          "layer_body": 83.39999999999999,
+          "collectives": 26.67666666666667,
+          "kv_prep": 0.18,
+          "head_embedding_and_other": 2.7408333333333417,
+          "droop_schedule": 5.200721757322171
+        },
+        "clock_hz": 1200000000.0,
+        "rtl_attributed_as_built": {
+          "cycles": 184362,
+          "body_ratio": 1.0923,
+          "tokens_s_b1": 6222.5,
+          "label": "RTL-attributed, as built: per-layer body x 1.0923 (W12b 2,687 / model 2,460) + 2 all-reduces at the measured 991 cycles (2 serialized 128-word TP segments; W12b a17a3c79)"
+        },
+        "rtl_attributed_body_only": {
+          "cycles": 144834,
+          "body_ratio": 1.0923,
+          "tokens_s_b1": 7920.8,
+          "label": "RTL-attributed, body only: per-layer body x 1.0923; all-reduces at the model's 442 cycles, PENDING W12b's one-segment fix (79783ff9, unmeasured; est. ~620 at LAT 339)"
+        },
+        "calibration": "Analytical SS target row. RTL-attributed alternatives are separate, not folded into this row."
+      }
+    },
+    {
+      "design": "Qwen3-8B HBM TP-2",
+      "context_tokens": 8192,
+      "dies": 2,
+      "capacity": {
+        "stacks": 8,
+        "physical_bytes": 180000000000.0,
+        "usable_bytes": 162000000000.0,
+        "capacity_efficiency": 0.9,
+        "reserve_bytes": 18000000000.0,
+        "shared_weights_in_hbm_bytes": 7571792640.0,
+        "per_user_logical_kv_and_index_bytes": 603979776.0,
+        "usable_after_shared_weights_bytes": 154428207360.0,
+        "modeled_users": 255,
+        "busiest_die": null,
+        "rule": "floor((usable HBM - one shared weight copy) / per-user state)"
+      },
+      "cost": {
+        "low": 20104,
+        "high": 20104
+      },
+      "cost_components": {
+        "silicon_usd": 204,
+        "package_usd": 2020,
+        "hbm_usd": 2880,
+        "hardware_usd": 5104,
+        "nre_usd": {
+          "low": 15000000.0,
+          "high": 15000000.0
+        },
+        "capex_usd": {
+          "low": 20104,
+          "high": 20104
+        },
+        "silicon_mm2": 531.6
+      },
+      "critical_path": {
+        "total_us": 1135.6566911704472,
+        "additive_parts_us": {
+          "weight_hbm": 1051.630986663056,
+          "kv_hbm": 83.88553120221364,
+          "exposed_tail_and_dependency_stalls": 0.1401733051775409
+        },
+        "clock_hz": 1098640000.0,
+        "peak_staging_bytes": 4194304,
+        "overlap": "Prefetched fluid stream. HBM weight/KV service plus exposed residual equals total; dependent-op latency is overlapped and must not be added again.",
+        "dependency_latency_sum_us": 80.99508483215612
+      }
+    },
+    {
+      "design": "DeepSeek-V4.1 ROM product model",
+      "context_tokens": 1048576,
+      "dies": 208,
+      "capacity": {
+        "stacks": 688,
+        "physical_bytes": 15480000000000.0,
+        "usable_bytes": 13932000000000.0,
+        "capacity_efficiency": 0.9,
+        "reserve_bytes": 1548000000000.0,
+        "shared_weights_in_hbm_bytes": 0,
+        "per_user_logical_kv_and_index_bytes": 935936000,
+        "usable_after_shared_weights_bytes": 13932000000000.0,
+        "modeled_users": 866,
+        "busiest_die": {
+          "stacks": 4,
+          "usable_bytes": 81000000000.0,
+          "per_user_bytes": 93458432.0,
+          "compressed_and_index_bytes": 93323264.0,
+          "window_ring_bytes": 135168,
+          "window_rings": 2,
+          "users": 866,
+          "placement": "TP-4 stage; uncompressed source layer is the busiest state shard"
+        },
+        "rule": "busiest-die shard limit; aggregate division is not the capacity rule"
+      },
+      "weight_storage": {
+        "location": "ROM, shared by users; no checkpoint charged to HBM",
+        "checkpoint_payload_equivalent_bytes": 510286023000
+      },
+      "cost": {
+        "low": 727026,
+        "high": 1039026
+      },
+      "cost_components": {
+        "silicon_usd": 120266,
+        "package_usd": 210080,
+        "hbm_usd": 247680,
+        "hardware_usd": 578026,
+        "nre_usd": {
+          "low": 149000000.0,
+          "high": 461000000.0
+        },
+        "capex_usd": {
+          "low": 727026,
+          "high": 1039026
+        },
+        "silicon_mm2": 169520.0
+      },
+      "critical_path": {
+        "total_us": 358.8374129458856,
+        "additive_parts_us": {
+          "join": 0.0,
+          "op": 2.0653333333333332,
+          "vector": 120.2463333333334,
+          "reduce": 26.75555555555564,
+          "matvec": 91.03000000000006,
+          "collective": 67.41704583333329,
+          "kvscan": 21.53010994071523,
+          "hop": 16.891368282948033,
+          "select": 12.901666666666648
+        },
+        "complete_family_breakdown_us": {
+          "attn.wo_a": 21.8,
+          "attn.out_allreduce": 19.31,
+          "ffn.combine_allreduce": 19.31,
+          "substage_hop0": 14.84,
+          "attn.idx.score": 13.76,
+          "ffn.softplus_sqrt": 12.71,
+          "ffn.experts_gu": 10.97,
+          "ffn.down": 10.37,
+          "attn.a_proj": 10.31,
+          "ffn.router": 9.83,
+          "attn.idx.topk_local": 9.81,
+          "attn.wq_b": 9.63,
+          "attn.wo_b": 9.47,
+          "attn.a_allgather": 9.27,
+          "ffn.router_allgather": 9.05,
+          "attn.exp": 8.87,
+          "ffn.swiglu": 8.8,
+          "head.lm_head": 8.66,
+          "attn.rows_allgather": 8.04,
+          "attn.scores": 7.77,
+          "attn.q_norm.rsqrt": 7.3,
+          "attn.sink": 6.86,
+          "attn.normalize": 6.59,
+          "attn.norm.rsqrt": 5.92,
+          "ffn.norm.rsqrt": 5.92,
+          "attn.q_norm.sumsq": 5.64,
+          "attn.max": 5.62,
+          "attn.hc_post": 5.52,
+          "ffn.hc_post": 5.52,
+          "attn.den": 5.44,
+          "attn.norm.sumsq": 4.76,
+          "ffn.norm.sumsq": 4.76,
+          "attn.z_quant": 4.09,
+          "ffn.route_w": 3.97,
+          "attn.quant": 3.91,
+          "attn.q_quant": 3.91,
+          "ffn.quant2": 3.91,
+          "attn.q_norm.scale": 3.88,
+          "ffn.bias": 3.73,
+          "ffn.hc_pre": 3.51,
+          "attn.hc_pre": 3.34,
+          "attn.norm.scale": 3.3,
+          "ffn.norm.scale": 3.3,
+          "attn.q_rope": 3.16,
+          "attn.idx.topk_merge": 2.22,
+          "attn.gather": 2.03,
+          "token.return": 1.68,
+          "ffn.top6": 1.27,
+          "attn.idx.topk_final": 0.96,
+          "ffn.top6_order": 0.87,
+          "attn.idx.q": 0.86,
+          "eng.gate": 0.79,
+          "head.hop": 0.37,
+          "eng.dot": 0.28,
+          "eng.add": 0.24,
+          "head.argmax_merge": 0.22,
+          "head.norm.rsqrt": 0.15,
+          "head.argmax": 0.14,
+          "head.norm.sumsq": 0.12,
+          "head.hc_pre": 0.09,
+          "head.norm.scale": 0.08,
+          "embed": 0.03,
+          "token": 0.0
+        },
+        "rounded_family_sum_us": 358.8400000000001,
+        "streaming_clock_hz": 1200000000.0,
+        "serial_domain": [
+          900000000.0,
+          "w18"
+        ],
+        "in_order_su_exposure_caveat": {
+          "pipelined": {
+            "ar_tokens_s_b1": 2526.0,
+            "mtp_tokens_s_b1": 4161.7,
+            "ar_pct": -9.4,
+            "mtp_pct": -9.3
+          },
+          "blocking": {
+            "ar_tokens_s_b1": 2243.0,
+            "mtp_tokens_s_b1": 3897.0,
+            "ar_pct": -19.5,
+            "mtp_pct": -15.1
+          },
+          "basis": {
+            "ar_us_pipelined": 37.054,
+            "ar_us_blocking": 86.991,
+            "mtp_pass_us_pipelined": 81.616,
+            "mtp_pass_us_blocking": 141.184,
+            "src": "claude/fusion-audit a86b17cd results/uarch/fusion_audit.json v41_rom.rows (L4_in_order_*)"
+          },
+          "label": "CAVEAT (FA): in-order SU issue with drain on dependence; product overlap remains uncalibrated. W11 u2517 is a reduced historical vehicle with overall FAIL; its model / RTL ratio is not a product correction"
+        },
+        "scope": "Solved product DAG with modeled fusion/interleaving. Complete families include rounding; core NAM variant is not part of this exact-fusion estimate."
+      }
+    },
+    {
+      "design": "DeepSeek-V4.1 HBM TP-96",
+      "context_tokens": 1048576,
+      "dies": 96,
+      "capacity": {
+        "stacks": 384,
+        "physical_bytes": 8640000000000.0,
+        "usable_bytes": 7776000000000.0,
+        "capacity_efficiency": 0.9,
+        "reserve_bytes": 864000000000.0,
+        "shared_weights_in_hbm_bytes": 510286023000,
+        "per_user_logical_kv_and_index_bytes": 935936000,
+        "usable_after_shared_weights_bytes": 7265713977000.0,
+        "modeled_users": 7763,
+        "busiest_die": null,
+        "rule": "floor((usable HBM - one shared weight copy) / per-user state)"
+      },
+      "cost": {
+        "low": 263928,
+        "high": 263928
+      },
+      "cost_components": {
+        "silicon_usd": 13728,
+        "package_usd": 96960,
+        "hbm_usd": 138240,
+        "hardware_usd": 248928,
+        "nre_usd": {
+          "low": 15000000.0,
+          "high": 15000000.0
+        },
+        "capex_usd": {
+          "low": 263928,
+          "high": 263928
+        },
+        "silicon_mm2": 32688.0
+      },
+      "critical_path": {
+        "analytical_chain_us": 317.87114570291163,
+        "analytical_parts_us": {
+          "sm_matvec": 63.52583333333323,
+          "x_broadcast_fill": 6.5666666666666575,
+          "dedicated_and_su": 103.77031236957843,
+          "verify_extra_issue": 0.0,
+          "barrier": 13.708333333333336,
+          "collective_latency": 125.9,
+          "collective_bytes": 1.5,
+          "pipeline_hops": 0.9,
+          "control": 2.0
+        },
+        "parallel_weight_sweep_us": 37.4,
+        "analytical_total_us": 317.87114570291163,
+        "rule": "max(chain, parallel weight sweep); no double counting",
+        "w19_composed_total_us": 442.14,
+        "w19_composed_parts_us": {
+          "sm": 70.58,
+          "barrier": 22.29,
+          "collective": 240.46,
+          "local": 103.48,
+          "fetch": 5.33
+        },
+        "w19_scope": "Source-composed modeled token, not connected full-token RTL or contextual SS/FF acceptance; separate from the analytical chain.",
+        "mtp_verify_us": 715.82,
+        "mtp_verify_parts_us": {
+          "sm": 128.11,
+          "barrier": 22.29,
+          "collective": 326.81,
+          "local": 199.64,
+          "fetch": 38.97
+        },
+        "drafter_us": 49.9
+      }
+    }
+  ],
+  "deepseek_logical_state": {
+    "compressed_kv_bytes": 754974720,
+    "index_bytes": 178257920,
+    "window_bytes": 2703360
+  },
+  "qwen_kv_format": "fp8",
+  "hbm_alternatives": [
+    {
+      "design": "Qwen HBM, 1 right-sized die(s) x 6 stacks (388.9 mm2 each)",
+      "dies": 1,
+      "stacks": 6,
+      "silicon_mm2": 388.9,
+      "ar_tokens_s_b1": 660.4,
+      "dflash_tokens_s_b1": 2002.6,
+      "saturated_tokens_s": 5328.4,
+      "capacity_users": 188,
+      "gated_mJ_b1": 355.8,
+      "gated_mJ_sat": 128.1,
+      "gated_system_w": 682.5,
+      "cost": {
+        "silicon_usd": 173,
+        "package_usd": 1670,
+        "hbm_usd": 2160,
+        "hardware_usd": 4003,
+        "nre_usd": {
+          "low": 15000000.0,
+          "high": 15000000.0
+        },
+        "capex_usd": {
+          "low": 19003,
+          "high": 19003
+        },
+        "silicon_mm2": 388.9
+      },
+      "demonstrated": true,
+      "basis": "bandwidth-bound: tok/s x (stacks / 8) of the 2-die W13 design (its barrier and TP exchange are hidden under the stream); DFlash at its best block"
+    },
+    {
+      "design": "Qwen HBM, 2 right-sized die(s) x 4 stacks (265.8 mm2 each)",
+      "dies": 2,
+      "stacks": 8,
+      "silicon_mm2": 531.6,
+      "ar_tokens_s_b1": 880.5,
+      "dflash_tokens_s_b1": 2670.1,
+      "saturated_tokens_s": 7104.5,
+      "capacity_users": 255,
+      "gated_mJ_b1": 355.8,
+      "gated_mJ_sat": 128.1,
+      "gated_system_w": 910.0,
+      "cost": {
+        "silicon_usd": 204,
+        "package_usd": 2020,
+        "hbm_usd": 2880,
+        "hardware_usd": 5104,
+        "nre_usd": {
+          "low": 15000000.0,
+          "high": 15000000.0
+        },
+        "capex_usd": {
+          "low": 20104,
+          "high": 20104
+        },
+        "silicon_mm2": 531.6
+      },
+      "demonstrated": true,
+      "basis": "bandwidth-bound: tok/s x (stacks / 8) of the 2-die W13 design (its barrier and TP exchange are hidden under the stream); DFlash at its best block"
+    },
+    {
+      "design": "Qwen HBM, 1 right-sized die(s) x 4 stacks (265.8 mm2 each)",
+      "dies": 1,
+      "stacks": 4,
+      "silicon_mm2": 265.8,
+      "ar_tokens_s_b1": 440.2,
+      "dflash_tokens_s_b1": 1335.0,
+      "saturated_tokens_s": 3552.2,
+      "capacity_users": 121,
+      "gated_mJ_b1": 355.8,
+      "gated_mJ_sat": 128.1,
+      "gated_system_w": 455.0,
+      "cost": {
+        "silicon_usd": 102,
+        "package_usd": 1670,
+        "hbm_usd": 1440,
+        "hardware_usd": 3212,
+        "nre_usd": {
+          "low": 15000000.0,
+          "high": 15000000.0
+        },
+        "capex_usd": {
+          "low": 18212,
+          "high": 18212
+        },
+        "silicon_mm2": 265.8
+      },
+      "demonstrated": true,
+      "basis": "bandwidth-bound: tok/s x (stacks / 8) of the 2-die W13 design (its barrier and TP exchange are hidden under the stream); DFlash at its best block"
+    }
+  ],
+  "manufacturing_cost_assumptions": {
+    "wafer_usd": 16988.0,
+    "wafer_basis": "S. Khan, A. Mann, 'AI Chips: What They Are and Why They Matter', CSET 2020: TSMC 5 nm wafer ~ $16,988 (estimate; cited)",
+    "wafer_d_mm": 300.0,
+    "edge_exclusion_mm": 3.0,
+    "d0_per_cm2": 0.1,
+    "d0_basis": "TSMC 2020 Technology Symposium: N5 D0 ~0.10-0.11 /cm2 at the HVM ramp, < 0.1 after (reported by AnandTech / Tom's Hardware); cited",
+    "alpha": 3.0,
+    "alpha_basis": "ASSUMED negative-binomial clustering (Stapper); no harvesting or redundancy on any design",
+    "package_usd": {
+      "cowos_l_2die": 1100.0,
+      "cowos_s_1die": 750.0
+    },
+    "package_basis": "Raymond James via Silicon Analysts: CoWoS-S ~$750 (H100: 814 mm2 + 5-6 HBM stacks, ~2,500 mm2 interposer), CoWoS-L ~$1,100 (B200); cited analyst estimates",
+    "test_assembly_usd": 920.0,
+    "test_basis": "Raymond James (H100 test and assembly ~$920 a package); cited analyst estimate",
+    "hbm_stack_usd": 360.0,
+    "hbm_basis": "economics section (ASSUMED $360 a 24 GB stack; RJ's H100 80 GB HBM3 at ~$1,350 is ~$17/GB)",
+    "mask_sets": {
+      "v41_rom_bases": 3,
+      "hbm_die": 1,
+      "qwen_rom_bases": 1
+    },
+    "mask_basis": "via-programmable ROM (adopted): base sets x $15M + 1 x $0.5M (low) .. 2 x $1M (high) coding masks per ROM die; every HBM comparator die design also pays one full set; / 1,000 production units"
+  },
+  "inherited_model_caveats": [
+    {
+      "id": "vm_per_op_latency",
+      "lesson": "Per-op network latency on the latency-bound SU chain was invisible in the throughput-style VM pricing. The VM was priced by port widths (vm_read_elems / vm_write_elems) and a few client wire stages, i.e. as bandwidth; the SU softmax / norm / Sinkhorn chains are dependent ops, so each op pays the VM network's full latency (control broadcast, operand read, element write or result tree).  W11's VM-H measured that at +36.7 slow cycles a vector op and +44.9 a reduction: -14.5% AR on the full-shape token, 82% of the 3,153 -> 2,680 drop (results/uarch/v41_vm_waterfall.json); more lanes or ports buy nothing (issue is not the bind).  Rule: any shared network on a dependent chain is priced as per-op latency on the chain, not as bandwidth.",
+      "src": "root 2026-10-01; W11 claude/w11-vmh-land 3cc18731; W16b waterfall"
+    },
+    {
+      "id": "rotate_span_is_the_hub_diameter",
+      "lesson": "A rotate network's latency is set by the hub's diameter, not by the lane-to-strip distance.  The rotate maps element slot p to lane (p - base) mod 1,024 and every (slot, lane) pair is realised by some base, so a fixed-latency strip pays the worst bank -> lane run on every op.  W18b's compact placement brought every lane within 1,787 um of the strip, yet C_rotate's per-op extra rose from the unplaced 37 to 42 (10,735 um bank -> lane at 748 um a stage).  Rule: price a network from the placed worst path of the access pattern it must serve, never from an unplaced geometry.",
+      "src": "W11 claude/w11-crot v41_vm_crot_stages.json; W18b 32155a8f; root 2026-10-01"
+    }
+  ],
+  "schema": "opentallas.w16.four-design-modeled-accounting.v1",
+  "observed_utc": "2026-10-01T09:50:08.925473+00:00",
+  "basis": "58fd89dabd68b3023258af5734930e36fdeb7604",
+  "source_sha256": {
+    "tools/uarch_model.py": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
+    "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+    "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "configs/hardware/architectures.json": "fd3b286eebe534f52547ff7fe9e23b1d9c3024e7afb72e15f8b1824511b7d04e",
+    "configs/hardware/technology_inputs.json": "ffdfebb683709790aafb33dc8e45b207072dd81cb111fcf5bd75429cebbd56f9",
+    "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
+    "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
+    "results/arch/v41_rack.json": "98ffbb563a56131b0b1f550ffbce499b6dffce085bf93bd3943712c225f10523",
+    "results/arch/qwen_gpu_calibration.json": "6ae77c9ccad72c915cb8903ee2c61843265248b9dbbdce96a2f88a7c63676ee9",
+    "results/arch/v41_hbm_region_preflight.json": "33568e6f414f44adcf3ac4d1052c7bcd9bd26d5aa155822b7e8f3dea41165f24",
+    "results/speculative/dflash_block_acceptance.json": "b1b92957d24db13ea7f80ce27bc526d17f8a81cc839498faeb5697681bd5e31c",
+    "results/rtl/gpu_sm_exact.json": "b7c54f9292d4dca213385acd4530ee7fbb32e86cff97fa11f95ae998a501db01",
+    "results/rtl/gpu_sm_blockdot_exact.json": "378f0773409cb87a45f77c97a404cc18c41686344f7d577b6b3492d295840a1d",
+    "results/rtl/gpu_supply_barrier.json": "fbdd1295c6fc95fb08827ad616264530d739ace7ae7cf5d097b1b6784503e968",
+    "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+    "results/arch/v41_die_assembly.json": "9966fa08a48e9e904e23c093312ffd0a2ee2d7fe4eb197b70215c07f52224189",
+    "results/arch/v41_die_placement.json": "03d81990492168618e27173328f14c2d8df32047c59b035c76d08ad19d2f307a",
+    "results/floorplan/v41_die_macromap_expanded_woa.json": "01f10d3d3f03cfa93ca5212803883e54daa7d05a936938ac2f78dbbcf785c775",
+    "results/floorplan/v41_rom_capacity.json": "acde8d01c7cb3ba48ec410d8a48cb4bc8bde3a44e53e383b9713684b3e29ef9b",
+    "results/floorplan/qwen_o4_rom_placement.json": "4d8f33abd67692c5ac515326490be3a7b5561997216fb4f02ed89d622f57d43d",
+    "results/floorplan/hbm_gpu/qwen_hbm_die.json": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4",
+    "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+    "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+    "results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json": "bf31d25157899c0cb6e52565c4e2e4d706ffcda69fe366f1bafa8b110c800596",
+    "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json": "afdd10370ea467af90429686ea64c7cd7a7f6722df193e67057e63f88dd2267e",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_actquant/physical.json": "fc825c0d0cf3f34af62f5135924158c2a30beb55de3aaea5c5d78db0c6fef688",
+    "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/points.json": "ade84990d12c79cedd1d725bff27e3a00025b47211a3c9c7d8bc9baec2d9c222",
+    "configs/models/qwen3-8b.json": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_fp4qdq/physical.json": "419ce4d0aaeec8813601eb663f6c12ad04b984ff1281ca12b79270a6b5c39785",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_softplus/physical.json": "6371bfe96d03da05e786d2609cee1cd8ae83642421f4dc854a169931eca3b188",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_select_k512/physical.json": "8b37711a30f55b837c531c9758c6ef4f4c80ae014de79f2fe8391536cc1a53ea",
+    "results/rtl/hdc_v41_cand_campaign.json": "b83aad197d0fff78cf5663d0ce4b790b7ddb24bddb83093eb4a8ad662efd4789",
+    "results/rtl/hdc_v41_sinkhorn_campaign.json": "7d4b6b697c4394c70378e7e5d6aa97b40b4762bad85c2475ef52234bcd4e541a",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_blockdot/physical.json": "e9a17536e3033715f4163e22d332e4543b11ba44706da107799f463d98034175",
+    "results/uarch/consolidation.json": "30d3e7d27125a8f0e4c0b99625ed9961113fe7cbc842b3a949d1ac0f239450ef",
+    "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json": "ae9fbf54ee73a41bfad7a589ee252eda0712972572a112242e7ce81491b1897c",
+    "configs/models/decode_graph_shapes.json": "acf80bb9339fbe9b841727555f0e97dfa866d089b04e0bb220d5d497dad917ac",
+    "results/speculative/v41_flash_dspark_onpolicy_greedy.json": "6fdf2ff2f3e74910e485ea326f61446f8818e455d4c6dd86f5addb277873636d",
+    "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json": "52a59fd5e3feb1204f830053db3e9c56822884a37e081061a8d56cf49e063086",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json": "3b85a8c972bbd49062a8d43c4fc0b0a57d9c470f19eb36335b6edec2a5e50d6c",
+    "results/physical_abi3/asap7/hdc/ot_hdc_matvec/physical.json": "06b8f9204b64cf575bea19c5935bd0cf63fd7554030146d8f18f78cd7d5497d4",
+    "results/rtl/w15_collectives.json": "11045ba5947b50fbe0bb6b73c5afc33d1587cbf0408ba63b38f77275f4f50738",
+    "results/rtl/hdc_v41_tselect_scale_campaign.json": "ee7dde83a8d3f68b355549d54bdec5fbd6c5005c6ddb769c21a1286c8c9a592e",
+    "configs/hardware/power_scenarios.json": "727435b50f6acb1f6c542a095715388cf5e3ba1e4713b8ffd3cf5b48a6242a59",
+    "results/quality/w16_four_design_accounting_20261001/generate.py": "3f9513271bf036e112b85533952afc71575ee3796f4f6b6702c20959a396a4a7",
+    "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+    "src/opentallas/schema.py": "3db3395f04361e81a4df0eea1a23f5fe1c4eb08a6381cbc71187ead60e1ab1bb",
+    "src/opentallas/deployment.py": "0bc3fa600ef54277e8b83c96ac9bd2cabc22fa28f43315b75ed63cd8711cf9f4",
+    "src/opentallas/noc.py": "5257a63e494102910f8a75cbd0b00ef7fc03c4b54a13d9838bae7f10692b8afc",
+    "src/opentallas/operations.py": "69b30f06c44c7ae3a5cf7e49422cb60d6ba358dde68ef0e69f344fd67d1f56ed",
+    "src/opentallas/workload.py": "e5c950fc1a7789a0159db1f3b0676513ebb622e5e43ae07905fbdee1118f2613",
+    "src/opentallas/analytical.py": "016b1863bb40f6a77af52aebefd3fe58b7f47b336110d3d0b7a49f86e5480c2a",
+    "src/opentallas/__init__.py": "ef4a3e374cbbe6977e8f1cf0897c5f731a6ccf945c53a8517f2f05eaf20f7ab2",
+    "src/opentallas/critical_path.py": "7241aca955b554b7701bb4feb22c88def6ff5ac9161c9348098c611d2e08079f",
+    "tools/hdc_timing.py": "f7135f8007a3fc5ad24274c7a5b0ed8c16d24205210620afba8f6061a0edae36",
+    "tools/collective_exposure.py": "cd6aad7745ec3d27b161e1dd4291e7b5ab812c4afc682bac85ef030a3184b67b",
+    "tools/dflash_step_timing.py": "7a43daf9c4f7118176aa0229b77ed2b9da4e713516d9accd6b099f1f63b76a17",
+    "tools/power_scenarios.py": "322b344f5f8aea476d1ad1a83f85ac31f71fe612691728f905bb0eef5696767f",
+    "src/opentallas/roofline.py": "99d38d95ba0f68190c7f2d8d937c3b92836ebeb9728d28e4f81ac4c006632143",
+    "tools/wafer_vs_array_study.py": "173b92baecfe94931785e56da36b831cdc4f1af2eebcece0abaa35eb067c3e41",
+    "tools/run_roofline_studies.py": "3be761ded0e9a4202df2940cb6ea2b2c6c1bf0e61034be50fc8501ff2a369b95"
+  },
+  "extraction": "Reused committed consolidation with all declared source pins matching current files; independently reconstructed selected ROM/HBM paths and capacity. A redundant whole-sweep CPU extraction was stopped after establishing exact pin equivalence; no verdict was discarded.",
+  "objective": "Minimum single-user decode latency primary; independent-request batching secondary.",
+  "qualification": "Modeled accounting only. No full-product timing, hardware adoption or SS/FF claim. No headline edits. Costs are manufacturing capex with model mask assumptions, not GPU purchase prices; capacity counts storage fit, not concurrent speed or throughput.",
+  "shared_weights_rule": "One weight copy per TP group shared by users. Replicated independent groups duplicate weights; this artifact uses one group per design.",
+  "nam_adoption": false,
+  "full_qcnam_verdict": null,
+  "nam_scope": "Definitive completed-core failure excludes the tested DeepSeek QC-NAM variant as eligible gain; full verdict remains pending all-lane guard. Exact fusion remains separately gated.",
+  "calibration": "Historical reduced W11 cycle ratios are not multiplied into these product rows. Qwen body/collective attribution and DeepSeek in-order exposure remain separate caveats."
+}
