@@ -60,6 +60,7 @@ def audit_actual_callbacks(graph_pin, callback_pin, repo=ROOT):
                          verdict='FAIL_CLOSED_UNBOUND_PHYSICAL_EVENT_CLOCKS'))
     if seen!=set(deps):issues.append('actual_callback_fullgraph_coverage_mismatch')
     memory=record.get('memory_events',record.get('collective_events',[]))
+    memory_provider_trace=record.get('memory',{}).get('trace',[])
     if 'instruction_events' in record and 'fabric_events' in record and 'lowerings' in record:
         timed=audit(graph_pin,record['instruction_events'],record['fabric_events'],record['lowerings'],repo)
         issues.extend(timed['issues'])
@@ -70,6 +71,9 @@ def audit_actual_callbacks(graph_pin, callback_pin, repo=ROOT):
                 actual_trace_rows=len(trace),actual_memory_or_collective_rows=len(memory),
                 fullgraph_trace_coverage=seen==set(deps),per_op_event_admission=rows,
                 actual_memory_or_collective_callbacks=memory,
+                actual_memory_provider_trace=memory_provider_trace,
+                actual_memory_provider_summary=record.get('memory',{}).get('events',{}),
+                actual_memory_provider_trace_rows=len(memory_provider_trace),
                 resource_calendar_audit=timed,issues=sorted(set(issues)),
                 modeled_service_calendar_closed=not issues,
                 physical_build_ready=False,hardware_adopted=False,speed_credit=0,

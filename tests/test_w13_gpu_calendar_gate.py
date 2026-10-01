@@ -14,10 +14,11 @@ def source_graphs(tmp_path_factory):
     subprocess.run(['git','-C',str(REPO),'config','user.name','test'],check=True)
     for name,ops in [('one',[{'id':0,'dependencies':[]}]),('two',[{'id':0,'dependencies':[]},{'id':1,'dependencies':[]}]),('dependency',[{'id':0,'dependencies':[]},{'id':1,'dependencies':[0]}])]:
         (REPO/(name+'.json')).write_text(json.dumps({'instructions':ops}))
-    subprocess.run(['git','-C',str(REPO),'add','one.json','two.json','dependency.json'],check=True)
+    (REPO/'actual_callbacks.json').write_text(json.dumps({'trace':[{'id':0,'dependencies':[],'cycles':None,'provider_kind':'software_functional_unqualified'}],'memory_events':[{'event':'software_consumer_done','cycles':None}]}))
+    subprocess.run(['git','-C',str(REPO),'add','one.json','two.json','dependency.json','actual_callbacks.json'],check=True)
     subprocess.run(['git','-C',str(REPO),'commit','-qm','authoritative graph test fixtures'],check=True)
     rev=subprocess.check_output(['git','-C',str(REPO),'rev-parse','HEAD'],text=True).strip()
-    for name in ['one','two','dependency']:
+    for name in ['one','two','dependency','actual_callbacks']:
         PINS[name]=dict(source_git=rev,path=name+'.json',sha256=hashlib.sha256((REPO/(name+'.json')).read_bytes()).hexdigest())
 
 
@@ -96,3 +97,19 @@ def test_read_response_requires_matching_request_and_ordered_service():
     assert 'read_response_service_order' in run([0],[ins()],[response],l)['issues']
     response['service_tick']=999999
     assert 'read_response_service_order' in run([0],[ins()],[request,response],l)['issues']
+
+
+def test_actual_fullgraph_software_callbacks_are_preserved_not_promoted_to_clocks():
+    j=g.audit_actual_callbacks(PINS['one'],PINS['actual_callbacks'],repo=REPO)
+    assert j['fullgraph_trace_coverage']
+    assert j['per_op_event_admission'][0]['callback_dependency_binding_pass']
+    assert j['actual_trace_rows']==1 and j['actual_memory_or_collective_rows']==1
+    assert j['per_op_event_admission'][0]['actual_callback']['cycles'] is None
+    assert not j['modeled_service_calendar_closed'] and not j['physical_build_ready']
+    assert 'actual_physical_instruction_fabric_callbacks_unbound' in j['issues']
+
+
+def test_actual_callback_source_hash_is_verified():
+    pin=dict(PINS['actual_callbacks'],sha256='0'*64)
+    with pytest.raises(ValueError,match='callback_source_hash_mismatch'):
+        g.audit_actual_callbacks(PINS['one'],pin,repo=REPO)
