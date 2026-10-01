@@ -1,0 +1,135 @@
+{
+  "schema": "opentallas.common-gpu-write-commit-ports.v2",
+  "status": "FROZEN_PORT_PROPOSAL_AWAITING_RAM_MODEL_ADMISSION",
+  "controller_owner": "Qwen common service",
+  "DeepSeek_adapter_owner": "Halley SIMT/RF/staging",
+  "engine_RTL_build_ready": false,
+  "physical_build_ready": false,
+  "adoption": false,
+  "full_token": false,
+  "geometry": {
+    "controllers_per_rank": 4,
+    "sector_bits": 256,
+    "address_bits_parameter": {
+      "Qwen": 34,
+      "DeepSeek": 27
+    },
+    "tag_bits": 16,
+    "clients": {
+      "Qwen": 36,
+      "DeepSeek": "model-bound consumer population"
+    },
+    "write_transactions_per_controller": 4,
+    "reserved_ACK_entries_per_controller": 4,
+    "fast_clock_target_hz": 1200000000,
+    "consumer_clock_target_hz": 900000000
+  },
+  "ports": {
+    "client_patch_request": [
+      "valid",
+      "ready",
+      "client_id",
+      "sector[AW-1:0]",
+      "tag[15:0]",
+      "data[255:0]",
+      "byte_mask[31:0]",
+      "epoch"
+    ],
+    "backend_request": [
+      "valid",
+      "ready",
+      "write",
+      "sector[AW-1:0]",
+      "length",
+      "tag[15:0]",
+      "data[255:0]"
+    ],
+    "backend_read_response": [
+      "valid",
+      "ready",
+      "sector[AW-1:0]",
+      "tag[15:0]",
+      "data[255:0]"
+    ],
+    "internal_WR_scheduled": [
+      "valid",
+      "sector[AW-1:0]",
+      "tag[15:0]",
+      "column_time_ps"
+    ],
+    "internal_write_visible": [
+      "valid",
+      "ready",
+      "sector[AW-1:0]",
+      "tag[15:0]",
+      "visible_time_ps"
+    ],
+    "client_ACK": [
+      "valid",
+      "ready",
+      "client_id",
+      "sector[AW-1:0]",
+      "tag[15:0]",
+      "epoch",
+      "status"
+    ]
+  },
+  "lifecycle": [
+    "reserve transaction and ACK slot plus exclusive sector lock before submit",
+    "full-sector write or locked RMW read",
+    "actual read return merges opaque bytes in RTL",
+    "actual write request acceptance keeps lock/credit",
+    "actual DRAM scheduler WR event binds sector/tag/column time",
+    "actual backing write becomes visible after scheduled CWL+burst and actual memory visibility",
+    "registered ACK held stable through finite CDC and consumer ready stalls",
+    "consumer ACK handshake returns completion credit and releases lock; only then publish fence"
+  ],
+  "invariants": [
+    "no memory-modulo alias",
+    "no ACK from request acceptance or free-running latency timer",
+    "tag/generation not reused until independent complete controller drain proof",
+    "all shared reads and writes consult sector lock",
+    "read/write/RMW share actual controller command and byte budgets",
+    "visible event must match scheduled transaction and cannot precede data burst end",
+    "CDC consumer handshake, not fast-side FIFO enqueue, returns ownership"
+  ],
+  "RAM_admission_required": [
+    "price four transaction data/mask/lock/state entries and four ACK slots per controller",
+    "price sector routing crossbar arbitration and finite landing queues for every consumer",
+    "price both CDC directions, completion return and clockphase schedule",
+    "compose Qwen KV/vector/TP and DeepSeek SIMD/RF/staging instruction calendars and waits",
+    "price throughput limit from only four writes/controller including RMW read/write and consumerACK retention",
+    "derive full-size legal SM/controller/L2 macro floorplan before PnR",
+    "price actual publication state/committed-row tracking plus reader ownership and reuse fences; echoed request metadata is not stored generation proof"
+  ],
+  "reference": {
+    "revision": "f91b15c0c",
+    "path": "tools/w19_write_commit_contract.py",
+    "sha256": "9c5d100c9584f9f466df525a3a3e36decb430d635cae5d357cde92baad73067a",
+    "scope": "model lifecycle reference, no implemented common controller"
+  },
+  "qualified_components": {
+    "L2_RTL": "8924de5aa",
+    "L2_terminal": "7917ae1e5",
+    "scope": "checkpoint-payload macro transport and request metadata retention only; no generation publication proof"
+  },
+  "historical_v1_sha256": "2c599f89a24b22fc40665c18dd52e2969b675f291f104cf48c39fc86a8063b6f",
+  "publication_contract": [
+    {
+      "macro_unit_scope": "rsp_epoch/rsp_id echo requested metadata only; macro unit stores no generation tags and proves no epoch publication",
+      "publish_prerequisite": "Actual matching writecommit(row,epoch,producer_transaction_id) must be observed for every consumed row before a descriptor/fence publishes",
+      "reader_reservation": "Service validates descriptor epoch, committed row range and producer identity before macro read; retain reader ownership until actual consumer completion handshake",
+      "reuse": "Overwrite or new epoch descriptor is blocked while any reader owns the region; memory response acceptance does not release reader ownership",
+      "invalid_requests": "Stale epoch, uncommitted row, mismatched producer ID and unknown descriptor fail closed; never relabel old data with a new echoed epoch",
+      "expected_negative_gates": [
+        "read before required writecommit",
+        "stale requested epoch despite correct SRAM bytes",
+        "overwrite attempt while one of multiple readers outstanding",
+        "macro response accepted but consumer completion stalled",
+        "delayed old ACK after epoch retirement",
+        "publication before all producer rows committed"
+      ],
+      "model_admission": "Actual publication bitmap/descriptor capacity, reader counters, replay/epoch checks, arbitration and fences must be area/latency priced; no free host scoreboard"
+    }
+  ]
+}
