@@ -2350,5 +2350,5 @@
   "6": 16,
   "7": 20
  },
- "w18_note": "W18b: proot MERGE2 + HEADREG + replicated ingress pointers + split stats counters (ot_chip_v41x_stat_ctr32); pregion pair queues with replicated pointers and the centre queue (CENTREQ): 54/54 runs pass, arms identical, KV prefetch pass, hash bad=0 ('multi' is the known criterion artifact). Uncontended K round trip 20/16/14/10/10/14/16/20 (the centre queue sits on the B/K response path inside the region; the K round-trip probe is unchanged)."
+ "w18_note": "W18b: proot MERGE2 + HEADREG + replicated ingress pointers + split stats counters (ot_chip_v41x_stat_ctr32), run 03:25-03:32Z BEFORE the pregion centre queue (ff674d6f; its own full run follows its P&R in karb19): 54/54 runs pass, arms identical, KV prefetch pass, hash bad=0 ('multi' is the known criterion artifact). Uncontended K round trip 20/16/14/10/10/14/16/20."
 }
