@@ -67,7 +67,7 @@ module tb_v41_tp_layer0_collectives;
         assign ready4=1'b1;
         ot_chip_v41x_coll_dma #(.WA(WA),.FW(FW),.TAGW(32),.N(N),.GW(GW),.VM_ALWAYS_READY(1)) u_dma (
             .clk(clk),.rst_n(rst_n),.go(go),.mode(mode),.rnd(rnd),.tag(tag),
-            .src(src),.n(n),.dst(dst),.topk(1'b0),.ibase('0),.tk_k(16'd0),.tk_stride(32'd0),.busy(busy[s]),.fault(dma_fault[s]),
+            .src(src),.n(n),.dst(dst),.busy(busy[s]),.fault(dma_fault[s]),
             .words_out(words_out),.words_in(words_in),
             .vm_re(re),.vm_raddr(raddr),.vm_rq(rq),.vm_we(we),.vm_waddr(waddr),.vm_wdata(wdata),
             .vm_ready4(ready4),.vm_we4(we4),.vm_waddr4(waddr4),.vm_wdata4(wdata4),

@@ -3,9 +3,9 @@
 
 Link-layer RTL:     rtl/link/ot_link_{afifo,tx,rx}.sv (synthesizable), rtl/link/ot_link_chan_model.sv (analog PHY and
                     channel, simulation only).
-Benches:            rtl/test/tb_w15_link_unit.sv    one link direction
-                    rtl/test/tb_w15_v41_tp4.sv      the V4.1 TP-4 group (2 packages x 2 dies), 12 layer-0 collectives
-                    rtl/test/tb_w15_qwen_tp2.sv     the Qwen TP-2 pair, 73 exchanges of a token
+Benches:            rtl/test/tb_w15b_link_unit.sv    one link direction
+                    rtl/test/tb_w15b_v41_tp4.sv     the V4.1 TP-4 group (2 packages x 2 dies), 12 layer-0 collectives
+                    rtl/test/tb_w15b_qwen_tp2.sv    the Qwen TP-2 pair, 73 exchanges of a token
 
 Subcommands:
     qwen-fixture DIR [--lanes L] [--h H]      partials, golden sums and gather words for the Qwen bench
@@ -173,31 +173,34 @@ def qwen_fixture(outdir: Path, lanes: int, H: int, seed: int = 20260929) -> dict
 # ---------------------------------------------------------------------------------------------------------------
 BUILD = Path(os.environ.get("W15_BUILD", "/tmp/claude-1000/w15b"))
 VEC = Path(os.environ.get("W15_VEC", "/tmp/claude-1000/w15v"))
-LINK_SRC = ["rtl/link/ot_link_afifo.sv", "rtl/link/ot_link_crc32.sv", "rtl/link/ot_link_tx.sv", "rtl/link/ot_link_rx.sv",
-            "rtl/link/ot_link_chan_model.sv"]
+# W15b (2026-10-01): the SS-pipelined link layer, the engines' FPLAT / FIFO_SRAM / pacing levers and the TOPK DMA live
+# in NEW modules (ot_w15_*), so the originals that main's records pin stay byte-identical; tb_w15b_* benches use them
+LINK_SRC = ["rtl/link/ot_link_afifo.sv", "rtl/link/ot_link_crc32.sv", "rtl/link/ot_link_crc32_pipe.sv",
+            "rtl/link/ot_w15_link_tx.sv", "rtl/link/ot_w15_link_rx.sv", "rtl/link/ot_link_chan_model.sv"]
 SRAM_SRC = ["rtl/link/ot_fifo_sram_fwft.sv",
             "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
             "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
             "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"]
-FPLAT_SRC = ["rtl/hdc/ot_hdc_fp32_add_lat.sv"]
+FPLAT_SRC = ["rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv"]   # main: LAT adder uses the keep-prefix adders
 TB_SRC = {
-    "tb_w15_v41_tp4": ["rtl/test/tb_w15_v41_tp4.sv", *LINK_SRC, "rtl/chip/ot_chip_v41x_coll_dma.sv",
-                       "rtl/chip/ot_chip_v41x_coll_transpose.sv", "rtl/rom/ot_rom_oneshot_px.sv",
-                       "rtl/hdc/ot_hdc_fastfp.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC, *FPLAT_SRC, "rtl/chip/ot_coll_topk_merge.sv"],
-    "tb_w15_qwen_tp2": ["rtl/test/tb_w15_qwen_tp2.sv", *LINK_SRC, "rtl/rom/ot_rom_oneshot_allreduce.sv",
-                        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fastfp.sv", *SRAM_SRC, *FPLAT_SRC],
-    "tb_w15_link_unit": ["rtl/test/tb_w15_link_unit.sv", *LINK_SRC],
-    "tb_w15_crc32": ["rtl/test/tb_w15_crc32.sv", "rtl/link/ot_link_crc32.sv"],
+    "tb_w15b_v41_tp4": ["rtl/test/tb_w15b_v41_tp4.sv", *LINK_SRC, "rtl/chip/ot_w15_coll_dma.sv",
+                        "rtl/chip/ot_chip_v41x_coll_transpose.sv", "rtl/rom/ot_w15_rom_oneshot_px.sv",
+                        "rtl/hdc/ot_hdc_fastfp.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC, *FPLAT_SRC,
+                        "rtl/chip/ot_coll_topk_merge.sv"],
+    "tb_w15b_qwen_tp2": ["rtl/test/tb_w15b_qwen_tp2.sv", *LINK_SRC, "rtl/rom/ot_w15_rom_oneshot_allreduce.sv",
+                         "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fastfp.sv", *SRAM_SRC, *FPLAT_SRC],
+    "tb_w15b_link_unit": ["rtl/test/tb_w15b_link_unit.sv", *LINK_SRC],
+    "tb_w15b_crc32": ["rtl/test/tb_w15b_crc32.sv", "rtl/link/ot_link_crc32.sv", "rtl/link/ot_link_crc32_pipe.sv"],
     "tb_w15_v41_hbm_nvls": ["rtl/test/tb_w15_v41_hbm_nvls.sv", *LINK_SRC, "rtl/link/ot_link_nvls_switch.sv",
                             "rtl/hdc/ot_hdc_fastfp.sv"],
 }
 UNIT = {   # name -> (top, -G overrides): the link direction alone, both link classes; the CRC equivalence
-    "unit_ucie": ("tb_w15_link_unit", dict(WIRE_TX=22, WIRE_RX=22, DREL=65, AW_TX=6)),
-    "unit_board": ("tb_w15_link_unit", dict(FRAME_CYCLES=2, ENC_STAGES=4, DEC_STAGES=59, T_LINK=0.93407,
+    "unit_ucie": ("tb_w15b_link_unit", dict(WIRE_TX=22, WIRE_RX=22, DREL=65, AW_TX=6)),
+    "unit_board": ("tb_w15b_link_unit", dict(FRAME_CYCLES=2, ENC_STAGES=4, DEC_STAGES=59, T_LINK=0.93407,
                                             DLY_NS=56.868, JSTATIC_NS=3.0, WANDER_NS=0.2, WIRE_TX=29, WIRE_RX=29,
                                             DREL=206, AW_TX=6)),
-    "crc_par": ("tb_w15_crc32", dict(W=2300)),
-    "crc_ser": ("tb_w15_crc32", dict(W=2300, MASK_MAX_W=16)),
+    "crc_par": ("tb_w15b_crc32", dict(W=2300)),
+    "crc_ser": ("tb_w15b_crc32", dict(W=2300, MASK_MAX_W=16)),
 }
 
 
@@ -211,7 +214,7 @@ def unit_checks():
                            text=True)
         assert r.returncode == 0, r.stderr[-2000:]
         exe = str(d / f"V{top}")
-        if top == "tb_w15_crc32":
+        if top == "tb_w15b_crc32":
             out[name] = dict(parameters=gen, line=[l for l in subprocess.run([exe], capture_output=True, text=True)
                                                    .stdout.splitlines() if "CRCCHK" in l][0])
             continue
@@ -347,72 +350,72 @@ def hbm_fixture(outdir: Path, P: int, seed: int = 96, ops=None) -> dict:
 # bench configurations: name -> (top, verilator -G overrides, fixture)
 CONFIGS = {
     # V4.1 TP-4: the adopted engine contract (RELAY 1, receive depth 256) and the levers
-    "v41_r1d256": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=256), "l0"),
-    "v41_r0d256": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256), "l0"),
-    "v41_r1d1024": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=1024), "l0"),
-    "v41_r0d1024": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024), "l0"),
+    "v41_r1d256": ("tb_w15b_v41_tp4", dict(RELAY=1, DEPTH=256), "l0"),
+    "v41_r0d256": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=256), "l0"),
+    "v41_r1d1024": ("tb_w15b_v41_tp4", dict(RELAY=1, DEPTH=1024), "l0"),
+    "v41_r0d1024": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024), "l0"),
     # PROPOSED placement (W3 die assembly rung 5, claude/w3-v41-die-assembly 01ef74dc, docs/V41_DIE_ASSEMBLY_RUNG5.md:
     # one collective at the transport-channel crossing; collective <-> UCIe / SerDes 14.62 mm): 17 stages at the
     # model's loaded 0.76 ps/um, 14 at W3's measured loaded corridor reach (1.06-1.10 mm/cycle); RELAY=0 uses
     # the direct T1 link to every partner-package die (option (b) is a full mesh)
-    "v41p17_r0d256": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "l0"),
-    "v41p17_r1d256": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=256, U_WIRE=17, X_WIRE=17), "l0"),
-    "v41p17_r0d1024": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "l0"),
-    "v41p14_r0d256": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=14, X_WIRE=14), "l0"),
-    "v41p17_r0d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "sweep"),
-    "v41p17_r0d1024_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep"),
+    "v41p17_r0d256": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "l0"),
+    "v41p17_r1d256": ("tb_w15b_v41_tp4", dict(RELAY=1, DEPTH=256, U_WIRE=17, X_WIRE=17), "l0"),
+    "v41p17_r0d1024": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "l0"),
+    "v41p14_r0d256": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=14, X_WIRE=14), "l0"),
+    "v41p17_r0d256_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "sweep"),
+    "v41p17_r0d1024_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep"),
     # 2x engine: 32 FP32 lanes (128 B records), adopted placement / direct T1 / depth 1,024 (in 128 B words: 512)
-    "v41p17_r0d512_w32": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32, X_NL=1),
+    "v41p17_r0d512_w32": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32, X_NL=1),
                           "l0w32"),
-    "v41p17_r0d512_w32_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32,
+    "v41p17_r0d512_w32_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32,
                                                        X_NL=1), "sweepw32"),
-    "v41p17_r0d1024_even_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep_even"),
+    "v41p17_r0d1024_even_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep_even"),
     # receive FIFOs in 1R1W SRAM macros (root 2026-09-29): must reproduce the flop configs' cycles and results
-    "v41p17_r0d512_w32_sram": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32, X_NL=1,
+    "v41p17_r0d512_w32_sram": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32, X_NL=1,
                                                       FIFO_SRAM=1, SRAM_MACRO=1), "l0w32"),
-    "v41p17_r0d512_w32_sram_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32,
+    "v41p17_r0d512_w32_sram_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32,
                                                             X_NL=1, FIFO_SRAM=1, SRAM_MACRO=1), "sweepw32"),
     # payload sweep (bandwidth and the latency fit) on the same binaries
-    "v41_r1d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=256), "sweep"),
-    "v41_r0d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256), "sweep"),
-    "v41_r1d1024_sweep": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=1024), "sweep"),
-    "v41_r0d1024_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024), "sweep"),
+    "v41_r1d256_sweep": ("tb_w15b_v41_tp4", dict(RELAY=1, DEPTH=256), "sweep"),
+    "v41_r0d256_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=256), "sweep"),
+    "v41_r1d1024_sweep": ("tb_w15b_v41_tp4", dict(RELAY=1, DEPTH=1024), "sweep"),
+    "v41_r0d1024_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024), "sweep"),
     # Qwen TP-2: the host binding's engine (16 lanes, depth 16) and wider / deeper engines
-    "q16d16": ("tb_w15_qwen_tp2", dict(LANES=16, DEPTH=16), "q16"),
-    "q16d128": ("tb_w15_qwen_tp2", dict(LANES=16, DEPTH=128), "q16"),
-    "q256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64), "q256"),
-    "q256d16": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=16), "q256"),
-    "q256d128": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=128), "q256"),
+    "q16d16": ("tb_w15b_qwen_tp2", dict(LANES=16, DEPTH=16), "q16"),
+    "q16d128": ("tb_w15b_qwen_tp2", dict(LANES=16, DEPTH=128), "q16"),
+    "q256d64": ("tb_w15b_qwen_tp2", dict(LANES=256, DEPTH=64), "q256"),
+    "q256d16": ("tb_w15b_qwen_tp2", dict(LANES=256, DEPTH=16), "q256"),
+    "q256d128": ("tb_w15b_qwen_tp2", dict(LANES=256, DEPTH=128), "q256"),
     # 1.2 GHz @ SS (AGENTS.md 2026-09-30): 0.833 ns core; the 128 B engine out-runs a 13-lane T1 link (154 vs
     # 137 GB/s), so the T1 transmit is paced deterministically at 7/8 bundle a cycle (under the link's 0.892);
     # without pacing the link backpressure reached the engine through the CDC credit return and 2 of 14
     # deterministic runs moved a last-transmit cycle by one (results kept identical); wire stages from the SS segment sweep (504 um per stage,
     # results/rtl/w15_collectives.json physical.wire_reach), engine tree adders ot_hdc_fp32_add_lat LAT 7
-    "v41ss_p30_w32": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
+    "v41ss_p30_w32": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
                                              FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833, X_PACE_NUM=7, X_PACE_DEN=8), "l0w32"),
-    "v41ss_p30_w32_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
+    "v41ss_p30_w32_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
                                                    FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
                                                    X_PACE_NUM=7, X_PACE_DEN=8), "sweepw32"),
-    "v41ss_p30_w32_d1024": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
+    "v41ss_p30_w32_d1024": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
                                                    FIFO_SRAM=0, FPLAT=1, ADD_LAT=7, T_CORE=0.833, X_PACE_NUM=7, X_PACE_DEN=8), "l0w32"),
     # W18 collective lane map (claude/w18-die-assembly 133f7ca4, results/physical_abi3/asap7/chip/v41_w18/
     # collective_lane_map.json; root-adopted): engine at the link edge centre, VM -> engine 30 stages, engine ->
     # critical-peer lanes <= 2 at 504 um/stage: 32 stages between the VM-side stream and the PHY on each die
-    "v41ss_lm_w32": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
+    "v41ss_lm_w32": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
                                             FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
                                             X_PACE_NUM=7, X_PACE_DEN=8), "l0w32"),
-    "v41ss_lm_w32_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
+    "v41ss_lm_w32_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
                                                   FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
                                                   X_PACE_NUM=7, X_PACE_DEN=8), "sweepw32"),
     # COLL_TOPK_MERGE end to end (W17's L20 contract): one gather of the scores and ids, the select on every die;
     # the SS lane-map engine (32 lanes, 128 B words) and the die's 16-lane contract width
-    "v41ss_lm_w32_topk": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
+    "v41ss_lm_w32_topk": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
                                                  FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
                                                  X_PACE_NUM=7, X_PACE_DEN=8, TOPK=1, TK_NMAX=2048), "topkw32"),
-    "v41ss_lm_w16_topk": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=16,
+    "v41ss_lm_w16_topk": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=16,
                                                  FIFO_SRAM=0, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
                                                  X_PACE_NUM=7, X_PACE_DEN=8, TOPK=1, TK_NMAX=2048), "topkw16"),
-    "qss_256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0, FPLAT=1, ADD_LAT=7,
+    "qss_256d64": ("tb_w15b_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0, FPLAT=1, ADD_LAT=7,
                                            T_CORE=0.833, U_WIRE=29), "q256"),
     "hbm_p48": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48), X_WIRE=16, U_WIRE=16), "hbm48"),
     "hbm_p6": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6), X_WIRE=16, U_WIRE=16), "hbm6"),
@@ -426,8 +429,8 @@ CONFIGS = {
     "hbm_p48_ss_prod": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48, HBM_T_SS), X_WIRE=16, U_WIRE=16),
                         "hbm48_ss_prod"),
     "hbm_p6_ss_prod": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6, HBM_T_SS), X_WIRE=16, U_WIRE=16), "hbm6_ss_prod"),
-    "q256d64_sram": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0), "q256"),
-    "q1024": ("tb_w15_qwen_tp2", dict(LANES=1024, DEPTH=16, U_NL=1, U_T=0.95), "q1024"),
+    "q256d64_sram": ("tb_w15b_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0), "q256"),
+    "q1024": ("tb_w15b_qwen_tp2", dict(LANES=1024, DEPTH=16, U_NL=1, U_T=0.95), "q1024"),
 }
 
 
@@ -488,7 +491,7 @@ def run(name: str, seed: int, det: int, drel: dict, extra: dict | None = None) -
     log = r.stdout + r.stderr
     (out / "log.txt").write_text(log)
     res = dict(seed=seed, det=det, drel=drel, extra=extra or {}, fatal=("%Fatal" in log) or ("%Error" in log))
-    if top in ("tb_w15_v41_tp4", "tb_w15_v41_hbm_nvls"):
+    if top in ("tb_w15b_v41_tp4", "tb_w15_v41_hbm_nvls"):
         ops = [dict(zip(("op", "die", "mode", "words", "issue", "first_tx", "last_tx", "first_vm", "last_vm",
                          "done", "writes", "expect"), map(int, m.groups()))) for m in OPL.finditer(log)]
         links = [dict(src=int(m[1]), dst=int(m[2]), cls=m[3], age_min=int(m[4]), age_max=int(m[5]),
@@ -562,7 +565,7 @@ def seeds(n):
 def campaign_config(name, ncal=24, nmeas=12, jobs=16):
     from concurrent.futures import ThreadPoolExecutor
     top = CONFIGS[name][0]
-    classes = ["ucie", "board"] if top in ("tb_w15_v41_tp4", "tb_w15_v41_hbm_nvls") else ["ucie"]
+    classes = ["ucie", "board"] if top in ("tb_w15b_v41_tp4", "tb_w15_v41_hbm_nvls") else ["ucie"]
     build(name)
     big = {k[0]: 4000 for k in (CLASS_KEYS[c] for c in classes)}          # release far beyond any arrival
     cal_jobs = [(s, 0, big, None) for s in seeds(ncal)] + \
@@ -760,7 +763,7 @@ def summarize_qwen(res, clock_hz):
                 exchanges=len(rows))
 
 
-CLOCK = {"tb_w15_v41_tp4": 1 / 0.92e-9, "tb_w15_qwen_tp2": 1 / 0.9102e-9, "tb_w15_v41_hbm_nvls": 1.0339e9}
+CLOCK = {"tb_w15b_v41_tp4": 1 / 0.92e-9, "tb_w15b_qwen_tp2": 1 / 0.9102e-9, "tb_w15_v41_hbm_nvls": 1.0339e9}
 
 
 def config_record(c):
@@ -774,16 +777,16 @@ def config_record(c):
                release_delay_cycles=c["drel"],
                free_running=dict(det=0, runs=len(cal), all_passed=all(r["passed"] for r in cal),
                                  distinct_timings=len({r["timing_sha256"] for r in cal}),
-                                 distinct_results=len({r["vm_sha256"] for r in cal}) if top != "tb_w15_qwen_tp2" else None,
+                                 distinct_results=len({r["vm_sha256"] for r in cal}) if top != "tb_w15b_qwen_tp2" else None,
                                  seeds=[r["seed"] for r in cal], corner_channels=[r["extra"] for r in cal if r["extra"]]),
                deterministic=dict(det=1, runs=len(meas), all_passed=all(r["passed"] for r in meas),
                                   distinct_timings=len({r["timing_sha256"] for r in meas}),
-                                  distinct_results=len({r["vm_sha256"] for r in meas}) if top != "tb_w15_qwen_tp2" else None,
+                                  distinct_results=len({r["vm_sha256"] for r in meas}) if top != "tb_w15b_qwen_tp2" else None,
                                   timing_sha256=meas[0]["timing_sha256"], result_sha256=meas[0]["vm_sha256"],
                                   late_faults=sum(1 for r in meas for l in r.get("links", []) if l["faults"][2]),
                                   seeds=[r["seed"] for r in meas],
                                   corner_channels=[r["extra"] for r in meas if r["extra"]]))
-    if top in ("tb_w15_v41_tp4", "tb_w15_v41_hbm_nvls"):
+    if top in ("tb_w15b_v41_tp4", "tb_w15_v41_hbm_nvls"):
         rows = summarize_v41(meas[0], clock)
         if fix.endswith("_prod"):
             slot = hbm_slot_bytes(1e9 / clock)
@@ -813,7 +816,7 @@ def config_record(c):
 
 
 def pins():
-    files = sorted({*LINK_SRC, "rtl/link/ot_link_port_harden.sv", *[p for v in TB_SRC.values() for p in v],
+    files = sorted({*LINK_SRC, "rtl/link/ot_w15_link_port_harden.sv", *[p for v in TB_SRC.values() for p in v],
                     "tools/w15_collectives.py", "tools/rtl_v41_tp_layer0_collectives.py", "tools/hdc_golden.py",
                     "results/rtl/hdc_v41x_fullshape_program_bind.json", "configs/hardware/technology.json",
                     "results/floorplan/v41_pack_expanded_woa.json", "tools/uarch_model.py"})
@@ -953,8 +956,8 @@ def main(argv=None):
     elif a.cmd == "unit":
         rec = json.loads(a.out.read_text())
         rec["unit_checks"] = unit_checks()
-        rec["unit_checks_source_sha256"] = {p: sha(ROOT / p) for p in sorted({*TB_SRC["tb_w15_link_unit"],
-                                                                             *TB_SRC["tb_w15_crc32"]})}
+        rec["unit_checks_source_sha256"] = {p: sha(ROOT / p) for p in sorted({*TB_SRC["tb_w15b_link_unit"],
+                                                                             *TB_SRC["tb_w15b_crc32"]})}
         a.out.write_text(json.dumps(rec, indent=1, sort_keys=True, default=str) + "\n")
         print(json.dumps({k: {kk: vv for kk, vv in v.items() if kk != "runs"} for k, v in rec["unit_checks"].items()},
                          indent=1))

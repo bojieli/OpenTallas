@@ -1,9 +1,9 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // W15: the Qwen3-8B TP-2 pair's UCIe exchanges end to end.  Two dies, each on
-// its own clock, each with the one-shot engine ot_rom_oneshot_die N=2 exactly
+// its own clock, each with the one-shot engine ot_w15_rom_oneshot_die N=2 exactly
 // as rtl/test/hostbinding/ot_qwen_tp_host_binding.sv binds it (LANES, DEPTH
-// parameters), joined by two ot_link_tx -> ot_link_chan_model -> ot_link_rx
+// parameters), joined by two ot_w15_link_tx -> ot_link_chan_model -> ot_w15_link_rx
 // UCIe-A link directions with the floorplan's hub-to-edge wire stages.
 //
 // A token's exchange sequence: EXCH exchanges, the first EXCH-1 all-reduces of
@@ -12,10 +12,11 @@
 // each next exchange GAP cycles after its own last result word.  Every result
 // word is checked against the golden sum p0 + p1 (tools/hdc_golden.add).
 // ---------------------------------------------------------------------------
-module tb_w15_qwen_tp2 #(
+module tb_w15b_qwen_tp2 #(
     parameter integer LANES = 16,
     parameter integer DEPTH = 16,
     parameter integer ADD_LAT = 5,
+    parameter integer FIFO_SRAM = 0, SRAM_MACRO = 0, FPLAT = 0,
     parameter integer H = 4096,
     parameter integer EXCH = 73,
     parameter real    T_CORE = 0.9102,
@@ -81,7 +82,7 @@ module tb_w15_qwen_tp2 #(
         wire [31:0] nw = gatherx ? 1 : WPE;
         assign iv[s] = (st == 1) && (k < nw);
         wire [FW-1:0] ind = gatherx ? gat[s] : part[s*WPE + k];
-        ot_rom_oneshot_die #(.N(N), .RANK(s), .LANES(LANES), .TAGW(32), .DEPTH(DEPTH), .ADD_LAT(ADD_LAT)) u_e (
+        ot_w15_rom_oneshot_die #(.N(N), .RANK(s), .LANES(LANES), .TAGW(32), .DEPTH(DEPTH), .ADD_LAT(ADD_LAT), .FPLAT(FPLAT), .FIFO_SRAM(FIFO_SRAM), .SRAM_MACRO(SRAM_MACRO)) u_e (
             .clk(clk[s]), .rst_n(rst_n[s]), .in_valid(iv[s]), .in_ready(ir[s]), .in_data(ind),
             .in_last(k == nw - 1), .in_mode(gatherx), .in_tag(e[31:0]),
             .tx_valid(txv[s]), .tx_rec(txr[s*PW +: PW]), .tx_ready(txrdy[s*N +: N]), .cr_in(crin[s*N +: N]),
@@ -132,7 +133,7 @@ module tb_w15_qwen_tp2 #(
         assign crin[s*N + s] = 1'b0;
         assign rxv[T*N + T] = 1'b0;
         assign rxr[(T*N + T)*PW +: PW] = {PW{1'b0}};
-        ot_link_tx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(6), .NL(U_NL), .FRAME_CYCLES(U_FC)) u_tx (
+        ot_w15_link_tx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(6), .NL(U_NL), .FRAME_CYCLES(U_FC)) u_tx (
             .clk(clk[s]), .rst_n(rst_n[s]), .now(now[s]), .vc_valid(txv[s]), .vc_ready(rdy), .vc_rec(txr[s*PW +: PW]),
             .cr_pulse(crout[s*N + T]), .lclk(lu[s]), .lrst_n(rst_u[s]), .f_valid(fv), .f_data(fd), .fault(f0),
             .stat_bundles(), .stat_gated_stall());
@@ -141,7 +142,7 @@ module tb_w15_qwen_tp2 #(
             .rclk(rclk), .rf_valid(rfv), .rf_data(rfd));
         reg rr = 0;
         always @(posedge rclk) rr <= ($realtime > 40.0);
-        ot_link_rx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(6), .NL(U_NL), .FRAME_CYCLES(U_FC)) u_rx (
+        ot_w15_link_rx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(6), .NL(U_NL), .FRAME_CYCLES(U_FC)) u_rx (
             .rclk(rclk), .rrst_n(rr), .f_valid(rfv), .f_data(rfd), .clk(clk[T]), .rst_n(rst_n[T]), .now(now[T]), .det(DET[0]), .drel(TSW'(U_DREL)),
             .vc_valid(ovv), .vc_rec(orec), .cr_pulse(crin[T*N + s]), .fault_crc(f1), .fault_late(f2),
             .fault_ovf(f3), .stat_min_age(amin), .stat_max_age(amax), .stat_max_wait(), .stat_bundles());

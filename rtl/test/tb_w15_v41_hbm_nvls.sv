@@ -4,11 +4,11 @@
 // switch tier with deterministic in-switch reduction, end to end in RTL.
 //
 //   dies      2*P, each on its own clock; a package is two dies on UCIe-A
-//             (ot_link_tx/rx, the package-internal step of the comparator's
+//             (ot_w15_link_tx/rx, the package-internal step of the comparator's
 //             fabric); the even die leads the package on the switch link.
 //   switch    ot_link_nvls_switch (P ports), its own clock; every die link to
-//             it is a full-KP4 RS(544,514) 112G rack-cable link (ot_link_tx ->
-//             ot_link_chan_model -> ot_link_rx), both directions.
+//             it is a full-KP4 RS(544,514) 112G rack-cable link (ot_w15_link_tx ->
+//             ot_link_chan_model -> ot_w15_link_rx), both directions.
 //   ALL-REDUCE  each package adds its two dies' partials (d_even + d_odd,
 //             binary32 RNE), the switch adds the P package sums in its fixed
 //             pairwise tree and multicasts; the leader forwards the result to
@@ -168,7 +168,7 @@ module tb_w15_v41_hbm_nvls #(
         // leader's forward of every downlink record to its partner
         wire dl_v;
         wire [PW-1:0] dl_r;
-        ot_link_tx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(5), .NL(NL), .FRAME_CYCLES(1), .HUBFC(0)) u_t10 (
+        ot_w15_link_tx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(5), .NL(NL), .FRAME_CYCLES(1), .HUBFC(0)) u_t10 (
             .clk(clk[D1]), .rst_n(rst_n[D1]), .now(now[D1]), .vc_valid(pv[1]), .vc_ready(), .vc_rec(pr[PW +: PW]),
             .cr_pulse(1'b0), .lclk(lu[D1]), .lrst_n(rst_u[D1]), .f_valid(uv10), .f_data(uf10), .fault(fu0),
             .stat_bundles(), .stat_gated_stall());
@@ -176,12 +176,12 @@ module tb_w15_v41_hbm_nvls #(
             .WANDER_NS(U_WAN), .clk_tx(lu[D1]), .f_valid(uv10), .f_data(uf10), .seed(seed0 * 977 + 4 * p),
             .flip_at(-1), .rclk(urc10), .rf_valid(urv10), .rf_data(urf10));
         reg rr10 = 0; always @(posedge urc10) rr10 <= ($realtime > 40.0);
-        ot_link_rx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(6), .NL(NL), .FRAME_CYCLES(1)) u_r10 (
+        ot_w15_link_rx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(6), .NL(NL), .FRAME_CYCLES(1)) u_r10 (
             .rclk(urc10), .rrst_n(rr10), .f_valid(urv10), .f_data(urf10), .clk(clk[D0]), .rst_n(rst_n[D0]),
             .now(now[D0]), .det(DET[0]), .drel(TSW'(U_DREL)), .vc_valid(u10_v), .vc_rec(u10_r), .cr_pulse(),
             .fault_crc(fu1), .fault_late(fu2), .fault_ovf(fu3), .stat_min_age(), .stat_max_age(), .stat_max_wait(),
             .stat_bundles());
-        ot_link_tx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(5), .NL(NL), .FRAME_CYCLES(1), .HUBFC(0)) u_t01 (
+        ot_w15_link_tx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(5), .NL(NL), .FRAME_CYCLES(1), .HUBFC(0)) u_t01 (
             .clk(clk[D0]), .rst_n(rst_n[D0]), .now(now[D0]), .vc_valid(dl_v), .vc_ready(), .vc_rec(dl_r),
             .cr_pulse(1'b0), .lclk(lu[D0]), .lrst_n(rst_u[D0]), .f_valid(uv01), .f_data(uf01), .fault(fu4),
             .stat_bundles(), .stat_gated_stall());
@@ -190,7 +190,7 @@ module tb_w15_v41_hbm_nvls #(
             .flip_at(-1), .rclk(urc01), .rf_valid(urv01), .rf_data(urf01));
         reg rr01 = 0; always @(posedge urc01) rr01 <= ($realtime > 40.0);
         wire [TSW-1:0] ua10min, ua10max, ua01min, ua01max;
-        ot_link_rx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(6), .NL(NL), .FRAME_CYCLES(1)) u_r01 (
+        ot_w15_link_rx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(U_WIRE), .AW(6), .NL(NL), .FRAME_CYCLES(1)) u_r01 (
             .rclk(urc01), .rrst_n(rr01), .f_valid(urv01), .f_data(urf01), .clk(clk[D1]), .rst_n(rst_n[D1]),
             .now(now[D1]), .det(DET[0]), .drel(TSW'(U_DREL)), .vc_valid(u01_v), .vc_rec(u01_r), .cr_pulse(),
             .fault_crc(fu5), .fault_late(fu6), .fault_ovf(fu7), .stat_min_age(ua01min), .stat_max_age(ua01max),
@@ -231,7 +231,7 @@ module tb_w15_v41_hbm_nvls #(
         wire [FRW-1:0] xf, xrf, sxf, sxrf;
         wire [PW-1:0] dr;
         wire [TSW-1:0] xamin, xamax, sxamin, sxamax;
-        ot_link_tx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(X_WIRE), .AW(5), .NL(NL), .FRAME_CYCLES(1),
+        ot_w15_link_tx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(X_WIRE), .AW(5), .NL(NL), .FRAME_CYCLES(1),
                      .ENC_STAGES(X_ENC), .HUBFC(0)) u_tx_up (
             .clk(clk[D0]), .rst_n(rst_n[D0]), .now(now[D0]), .vc_valid(up_v), .vc_ready(), .vc_rec(up_r),
             .cr_pulse(1'b0), .lclk(lx[D0]), .lrst_n(rst_x[D0]), .f_valid(xv), .f_data(xf), .fault(fx0),
@@ -240,13 +240,13 @@ module tb_w15_v41_hbm_nvls #(
             .WANDER_NS(X_WAN), .clk_tx(lx[D0]), .f_valid(xv), .f_data(xf), .seed(seed0 * 977 + 4 * p + 2),
             .flip_at(-1), .rclk(xrc), .rf_valid(xrv), .rf_data(xrf));
         reg rup = 0; always @(posedge xrc) rup <= ($realtime > 40.0);
-        ot_link_rx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(1), .AW(6), .NL(NL), .FRAME_CYCLES(1),
+        ot_w15_link_rx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(1), .AW(6), .NL(NL), .FRAME_CYCLES(1),
                      .DEC_STAGES(X_DEC)) u_rx_up (
             .rclk(xrc), .rrst_n(rup), .f_valid(xrv), .f_data(xrf), .clk(sclk), .rst_n(srst), .now(snow),
             .det(DET[0]), .drel(TSW'(X_DREL)), .vc_valid(sw_iv[p]), .vc_rec(sw_ir[p*PW +: PW]),
             .cr_pulse(), .fault_crc(fx1), .fault_late(fx2), .fault_ovf(fx3), .stat_min_age(xamin),
             .stat_max_age(xamax), .stat_max_wait(), .stat_bundles());
-        ot_link_tx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(1), .AW(5), .NL(NL), .FRAME_CYCLES(1),
+        ot_w15_link_tx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(1), .AW(5), .NL(NL), .FRAME_CYCLES(1),
                      .ENC_STAGES(X_ENC), .HUBFC(0)) u_tx_dn (
             .clk(sclk), .rst_n(srst), .now(snow), .vc_valid(sw_ov), .vc_ready(), .vc_rec(sw_or), .cr_pulse(1'b0),
             .lclk(slx), .lrst_n(srst_x), .f_valid(sxv), .f_data(sxf), .fault(fx4), .stat_bundles(),
@@ -255,7 +255,7 @@ module tb_w15_v41_hbm_nvls #(
             .WANDER_NS(X_WAN), .clk_tx(slx), .f_valid(sxv), .f_data(sxf), .seed(seed0 * 977 + 4 * p + 3),
             .flip_at(-1), .rclk(sxrc), .rf_valid(sxrv), .rf_data(sxrf));
         reg rdn = 0; always @(posedge sxrc) rdn <= ($realtime > 40.0);
-        ot_link_rx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(X_WIRE), .AW(6), .NL(NL), .FRAME_CYCLES(1),
+        ot_w15_link_rx #(.NVC(1), .PW(PW), .CW(1), .TSW(TSW), .WIRE(X_WIRE), .AW(6), .NL(NL), .FRAME_CYCLES(1),
                      .DEC_STAGES(X_DEC)) u_rx_dn (
             .rclk(sxrc), .rrst_n(rdn), .f_valid(sxrv), .f_data(sxrf), .clk(clk[D0]), .rst_n(rst_n[D0]),
             .now(now[D0]), .det(DET[0]), .drel(TSW'(X_DREL)), .vc_valid(dv), .vc_rec(dr),

@@ -32,7 +32,7 @@ module tb_v41x_coll_dma_gw4 #(parameter integer WORDS=266, parameter integer PIP
     always @(*) for(integer r=0;r<4;r=r+1) o_data[r*FW+:FW]=payload(r,sent);
     ot_chip_v41x_coll_dma #(.WA(WA),.FW(FW),.TAGW(8),.N(4),.GW(4),.VM_ALWAYS_READY(PIPE)) dut (
         .clk(clk),.rst_n(rst_n),.go(go),.mode(1'b1),.rnd(1'b0),.tag(8'd7),
-        .src(WA'(SRC)),.n(WA'(WORDS)),.dst(WA'(DST)),.topk(1'b0),.ibase('0),.tk_k(16'd0),.tk_stride(32'd0),
+        .src(WA'(SRC)),.n(WA'(WORDS)),.dst(WA'(DST)),
         .busy(busy),.fault(fault),.words_out(words_out),.words_in(words_in),
         .vm_re(vm_re),.vm_raddr(vm_raddr),.vm_rq(vm_rq),
         .vm_we(vm_we),.vm_waddr(vm_waddr),.vm_wdata(vm_wdata),

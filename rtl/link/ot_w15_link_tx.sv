@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// ot_link_tx: transmit half of one direction of a die-to-die link (W15).
+// ot_w15_link_tx: transmit half of one direction of a die-to-die link (W15).
 //
 // One physical link direction (UCIe-A in a package, or a 112G PAM4 SerDes
 // board link between packages) carrying NVC virtual channels of engine
@@ -45,7 +45,7 @@
 // Slot format: {valid, ts[TSW], dv[NVC], cm[CW], rec[NVC][PW]}.
 // Frame format: {crc32, slot[FRAME_CYCLES*NL-1], ..., slot[0]}.
 // ---------------------------------------------------------------------------
-module ot_link_tx #(
+module ot_w15_link_tx #(
     parameter integer NVC          = 1,
     parameter integer PW           = 547,
     parameter integer CW           = 2,
@@ -60,7 +60,18 @@ module ot_link_tx #(
     parameter integer RESERVE      = 2,
     parameter integer HUBFC        = 1,        // 0: no hub credit loop (the edge FIFO drains faster than
                                                //    one bundle a core cycle; overflow is still latched)
-    parameter integer BW           = TSW + NVC + CW + NVC * PW,   // bundle
+    parameter integer PACE_NUM     = 0,        // >0: DETERMINISTIC PACING -- bundles only on slots of a token bucket
+    parameter integer PACE_DEN     = 1,        //     (PACE_NUM / PACE_DEN bundles a core cycle, set below the link's
+                                               //     drain rate), so no backpressure ever reaches the engine
+                                               //     through the phase-dependent CDC credit return; credit pulses
+                                               //     are accumulated and sent as counts (CNTW bits per credit)
+    parameter integer CRC_PIPE     = 1,        // 1: the frame CRC in two more link-clock stages (ot_link_crc32_pipe:
+                                               //    slots registered, then CHUNK-bit partial parities registered) --
+                                               //    the one-cycle CRC was the SS critical path of the hardened port
+                                               //    (e9ec0311 port_qwen: 1.52 ns at SS); +2 link cycles of latency
+    parameter integer CNTW         = (PACE_NUM > 0) ? 3 : 1,
+    parameter integer CFW          = CW * CNTW,
+    parameter integer BW           = TSW + NVC + CFW + NVC * PW,  // bundle
     parameter integer SW           = BW + 1,                       // slot
     parameter integer NS           = FRAME_CYCLES * NL,            // slots per frame
     parameter integer FRW          = NS * SW + 32                  // frame
@@ -88,18 +99,63 @@ module ot_link_tx #(
     wire [NL-1:0]  lovf;
     reg  [CRW-1:0] hub_cr;
     wire [CRW-1:0] ret;                                   // entries freed at the edge, after the return wire
-    assign vc_ready = (HUBFC == 0 || hub_cr > RESERVE) ? {NVC{1'b1}} : ~GATED;
+    // pacing bucket (PACE_NUM > 0): capacity DEN + NUM - 1, so an idle link banks at most one extra bundle
+    localparam integer PB = $clog2(PACE_DEN + PACE_NUM + 1) + 1;
+    reg  [PB-1:0]  pace;
+    wire           slot = (PACE_NUM == 0) || (pace >= PACE_DEN);
+    // paced links need no hub credit loop (the pace is below the drain rate; an edge-FIFO overflow still latches
+    // fault): the loop's return crosses the CDC, so its phase-dependent refill would reach the engine as
+    // non-deterministic backpressure once the hub<->edge round trip exceeds the FIFO (SS wire: 2 x 32 stages)
+    localparam integer FC_ON = (HUBFC != 0) && (PACE_NUM == 0);
+    assign vc_ready = ((FC_ON == 0 || hub_cr > RESERVE) && slot) ? {NVC{1'b1}} : ~GATED;
     wire [NVC-1:0] dv = vc_valid;
-    wire           bv = (|dv) || (|cr_pulse);
-    wire [BW-1:0]  bundle = {now, dv, cr_pulse, vc_rec};
+    // credit field: the pulses themselves (CNTW 1, unpaced), or counts accumulated to the next slot
+    reg  [CNTW-1:0] ccnt [0:CW-1];
+    reg  [CFW-1:0]  cfield;
+    reg             cpend, covf;
+    integer c;
+    always @(*) begin
+        cpend = 1'b0; covf = 1'b0;
+        for (c = 0; c < CW; c = c + 1) begin
+            if (PACE_NUM == 0) cfield[c*CNTW +: CNTW] = cr_pulse[c];
+            else begin
+                cfield[c*CNTW +: CNTW] = ccnt[c] + cr_pulse[c];
+                if (ccnt[c] == {CNTW{1'b1}} && cr_pulse[c]) covf = 1'b1;
+            end
+            if (cfield[c*CNTW +: CNTW] != 0) cpend = 1'b1;
+        end
+    end
+    // paced: a credit-only bundle would take a data slot, so pending credits ride the next data bundle and go
+    // alone only when they have waited CAGE cycles or a count is near its limit (deterministic: a function of
+    // the local cycle stream only)
+    localparam integer CAGE = 8;
+    reg  [3:0]     cwait;
+    reg            cfull;
+    always @(*) begin
+        cfull = 1'b0;
+        for (c = 0; c < CW; c = c + 1) if (cfield[c*CNTW +: CNTW] >= {1'b1, {(CNTW-1){1'b0}}}) cfull = 1'b1;
+    end
+    wire           cgo = (PACE_NUM == 0) ? cpend : (cpend && (cwait >= CAGE - 1 || cfull));
+    wire           bv = slot && ((|dv) || cgo);
+    wire [BW-1:0]  bundle = {now, dv, cfield, vc_rec};
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            hub_cr <= CAP; fault <= 1'b0; stat_bundles <= 0; stat_gated_stall <= 0;
+            hub_cr <= CAP; fault <= 1'b0; stat_bundles <= 0; stat_gated_stall <= 0; pace <= PACE_DEN; cwait <= 0;
+            for (c = 0; c < CW; c = c + 1) ccnt[c] <= 0;
         end else begin
+            cwait <= (bv || !cpend) ? 4'd0 : (cwait == 4'hF ? cwait : cwait + 1'b1);
+            if (PACE_NUM != 0) begin
+                // capacity DEN + NUM - 1: a smaller cap drops the fractional refill (capped at DEN, 7/8 pacing
+                // gave one slot every 2 cycles) -- the same bucket rule as ot_rom_ucie_link
+                pace <= ((bv ? pace - PACE_DEN : pace) + PACE_NUM > PACE_DEN + PACE_NUM - 1) ? PACE_DEN + PACE_NUM - 1
+                        : (bv ? pace - PACE_DEN : pace) + PACE_NUM;
+                for (c = 0; c < CW; c = c + 1) ccnt[c] <= bv ? 0 : cfield[c*CNTW +: CNTW];
+                if (covf || ((|(dv & ~GATED)) && !slot)) fault <= 1'b1;   // count overflow / ungated off-slot
+            end
             hub_cr <= hub_cr - (bv ? 1'b1 : 1'b0) + ret;
-            if ((HUBFC != 0 && bv && hub_cr == 0) || (|lovf)) fault <= 1'b1;
+            if ((FC_ON != 0 && bv && hub_cr == 0) || (|lovf)) fault <= 1'b1;
             if (bv) stat_bundles <= stat_bundles + 1;
-            if (HUBFC != 0 && hub_cr <= RESERVE) stat_gated_stall <= stat_gated_stall + 1;
+            if (FC_ON != 0 && hub_cr <= RESERVE) stat_gated_stall <= stat_gated_stall + 1;
         end
     end
 
@@ -185,21 +241,39 @@ module ot_link_tx #(
     end endgenerate
     reg          fv0;
     reg [FRW-1:0] fd0;
+    wire         fe = (fk == FRAME_CYCLES - 1);           // the frame's last cycle: it leaves
     always @(posedge lclk or negedge lrst_n) begin
         if (!lrst_n) begin
-            rl <= 0; fk <= 0; acc <= 0; fv0 <= 1'b0;
+            rl <= 0; fk <= 0; acc <= 0;
         end else begin
             rl <= (rl + npop) % NL;
-            if (fk == FRAME_CYCLES - 1) begin
-                fk <= 0; acc <= 0; fv0 <= 1'b1;
+            if (fe) begin
+                fk <= 0; acc <= 0;
             end else begin
-                fk <= fk + 1'b1; acc <= full_slots; fv0 <= 1'b0;
+                fk <= fk + 1'b1; acc <= full_slots;
             end
         end
     end
-    wire [31:0] fcrc;
-    ot_link_crc32 #(.W(NS * SW)) u_crc (.d(full_slots), .crc(fcrc));
-    always @(posedge lclk) if (fk == FRAME_CYCLES - 1) fd0 <= {fcrc, full_slots};
+    generate if (CRC_PIPE == 0) begin : g_crc1
+        wire [31:0] fcrc;
+        ot_link_crc32 #(.W(NS * SW)) u_crc (.d(full_slots), .crc(fcrc));
+        always @(posedge lclk or negedge lrst_n) if (!lrst_n) fv0 <= 1'b0; else fv0 <= fe;
+        always @(posedge lclk) if (fe) fd0 <= {fcrc, full_slots};
+    end else begin : g_crc3
+        // slots -> register (a); partial parities of (a) -> register (b); frame = {crc, slots} -> fd0
+        reg              fva, fvb;
+        reg [NS*SW-1:0]  fda, fdb;
+        wire [31:0]      fcrc;
+        ot_link_crc32_pipe #(.W(NS * SW)) u_crc (.clk(lclk), .en(fva), .d(fda), .crc(fcrc));
+        always @(posedge lclk or negedge lrst_n)
+            if (!lrst_n) begin fva <= 1'b0; fvb <= 1'b0; fv0 <= 1'b0; end
+            else begin fva <= fe; fvb <= fva; fv0 <= fvb; end
+        always @(posedge lclk) begin
+            if (fe) fda <= full_slots;
+            if (fva) fdb <= fda;
+            if (fvb) fd0 <= {fcrc, fdb};
+        end
+    end endgenerate
 
     // ---- PCS / FEC encoder pipeline --------------------------------------------------------------------
     generate if (ENC_STAGES == 0) begin : g_noenc

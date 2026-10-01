@@ -935,8 +935,6 @@ module ot_chip_v41x_die #(
                             .VM_ALWAYS_READY(FULL_SHAPE)) u_cdma (
         .clk(clk), .rst_n(rn), .go(cmd_go), .mode(cmd_mode), .rnd(FULL_SHAPE ? core_coll_rnd : 1'b0),
         .tag(cmd_tag), .src(cmd_src), .n(cmd_n), .dst(cmd_dst),
-        // COLL_TOPK_MERGE (op 2): the core's ibase / k / stride fields are not wired yet (W17); op[1] still faults
-        .topk(1'b0), .ibase('0), .tk_k(16'd0), .tk_stride(32'd0),
         .busy(coll_busy), .fault(dma_fault), .words_out(), .words_in(),
         .vm_re(xb_re), .vm_raddr(xb_raddr), .vm_rq(xb_rq), .vm_we(xb_we),
         .vm_waddr(xb_waddr), .vm_wdata(xb_wdata), .vm_ready4(1'b1),

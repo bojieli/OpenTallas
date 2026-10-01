@@ -16,7 +16,7 @@
 //
 // Three modules:
 //
-// ot_rom_oneshot_die    the per-die engine (what sits on each die; this is the
+// ot_w15_rom_oneshot_die    the per-die engine (what sits on each die; this is the
 //                       block routed on ASAP7).  One local port from the die's
 //                       sequencer; a broadcast transmit bundle to the N-1 links;
 //                       N-1 receive ports; a credit per (source, destination).
@@ -27,13 +27,13 @@
 //                       every die; a sender transmits only while it holds a
 //                       credit for every destination FIFO, so a FIFO can never
 //                       overflow (an overflow is still checked and faults).
-// ot_rom_ucie_link      the link model: LAT cycles of flight (hop latency of
+// ot_w15_rom_ucie_link      the link model: LAT cycles of flight (hop latency of
 //                       configs/hardware/technology.json links.rom_package_ucie,
 //                       10 ns, times the clock) and a byte-rate limit
 //                       (BPC_NUM / BPC_DEN bytes per cycle, a token bucket of
 //                       4 TB/s per die pair and direction divided by the clock);
 //                       credits return over the same link, LAT cycles too.
-// ot_rom_oneshot_allreduce  the package: N engines and N(N-1) links, a
+// ot_w15_rom_oneshot_allreduce  the package: N engines and N(N-1) links, a
 //                       point-to-point full mesh ("every die in a four-die
 //                       package has a direct link to every other").
 //
@@ -43,13 +43,16 @@
 // index must agree on mode and tag (the step and segment they belong to) on
 // every source, or the die faults: a collective never mixes two steps.
 // ---------------------------------------------------------------------------
-module ot_rom_oneshot_die #(
+module ot_w15_rom_oneshot_die #(
     parameter integer N       = 4,
     parameter integer RANK    = 0,
     parameter integer LANES   = 16,           // binary32 lanes per word
     parameter integer TAGW    = 32,
     parameter integer DEPTH   = 16,           // receive FIFO words per source (power of two)
     parameter integer ADD_LAT = 5,            // ot_fp32_add_rne_pipe latency
+    parameter integer FPLAT = 0,              // 1: ot_hdc_fp32_add_lat #(ADD_LAT) (3..7 stages) in place of the rne pipe
+    parameter integer FIFO_SRAM = 0,          // 1: receive FIFOs in 1R1W SRAM macros (rtl/link/ot_fifo_sram_fwft.sv)
+    parameter integer SRAM_MACRO = 0,         //    macro kind (0 64x512, 1 256x256, 2 128x256); DEPTH <= its words
     parameter integer FW      = 32 * LANES,
     parameter integer PW      = FW + 2 + TAGW, // record: {tag, mode, last, data}
     parameter integer RB      = (N > 1) ? $clog2(N) : 1
@@ -106,6 +109,8 @@ module ot_rom_oneshot_die #(
     wire [N-1:0] push;
     wire [N*PW-1:0] push_rec;
     genvar g;
+    wire [N-1:0]  s_hv;                  // FIFO_SRAM: head valid / head of each source FIFO
+    wire [PW-1:0] s_head [0:N-1];
     generate
         for (g = 0; g < N; g = g + 1) begin : g_src
             if (g == RANK) begin : g_loc
@@ -123,10 +128,22 @@ module ot_rom_oneshot_die #(
     reg  [PW-1:0] head [0:N-1];
     always @(*) begin
         for (r = 0; r < N; r = r + 1) begin
-            nonempty[r] = (cnt[r] != 0);
-            head[r] = mem[r*DEPTH + rp[r]];
+            nonempty[r] = (FIFO_SRAM != 0) ? s_hv[r] : (cnt[r] != 0);
+            head[r] = (FIFO_SRAM != 0) ? s_head[r] : mem[r*DEPTH + rp[r]];
         end
     end
+    generate if (FIFO_SRAM != 0) begin : g_sram
+        for (g = 0; g < N; g = g + 1) begin : g_f
+            ot_fifo_sram_fwft #(.W(PW), .DEPTH(DEPTH), .MACRO(SRAM_MACRO)) u_f (
+                .clk(clk), .rst_n(rst_n), .push(push[g]), .wdata(push_rec[g*PW +: PW]), .pop(pop),
+                .hv(s_hv[g]), .head(s_head[g]), .ovf());
+        end
+    end else begin : g_nosram
+        for (g = 0; g < N; g = g + 1) begin : g_f
+            assign s_hv[g] = 1'b0;
+            assign s_head[g] = {PW{1'b0}};
+        end
+    end endgenerate
     wire head_mode = head[0][FW + 1];
 
     // -- pop: a word index leaves every FIFO at once ---------------------------------------
@@ -159,7 +176,7 @@ module ot_rom_oneshot_die #(
             for (r = 0; r < N; r = r + 1) begin
                 if (r != RANK) cr[r] <= cr[r] - (fire ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
                 if (push[r]) begin
-                    mem[r*DEPTH + wp[r]] <= push_rec[r*PW +: PW];
+                    if (FIFO_SRAM == 0) mem[r*DEPTH + wp[r]] <= push_rec[r*PW +: PW];
                     wp[r] <= wp[r] + 1'b1;
                 end
                 if (pop) rp[r] <= rp[r] + 1'b1;
@@ -219,10 +236,17 @@ module ot_rom_oneshot_die #(
             wire [2*LANES-1:0] le;
             genvar l;
             for (l = 0; l < LANES; l = l + 1) begin : g_lane
-                ot_fp32_add_rne_pipe u_add (
-                    .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
-                    .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
-                    .y(sum[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
+                if (FPLAT != 0) begin : g_lat
+                    ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_add (
+                        .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
+                        .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
+                        .y(sum[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
+                end else begin : g_pipe
+                    ot_fp32_add_rne_pipe u_add (
+                        .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
+                        .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
+                        .y(sum[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
+                end
             end
             assign sv[g] = lv[0];
             assign serr[g] = (|le) || edl[ADD_LAT-1];
@@ -290,7 +314,7 @@ endmodule
 // rate of BPC_NUM / BPC_DEN bytes per cycle (token bucket; a record costs its
 // flit bytes).  Credits travel back with the same latency.
 // ---------------------------------------------------------------------------
-module ot_rom_ucie_link #(
+module ot_w15_rom_ucie_link #(
     parameter integer PW         = 546,
     parameter integer LAT        = 11,
     parameter integer FLIT_BYTES = 64,
@@ -339,7 +363,7 @@ endmodule
 // ---------------------------------------------------------------------------
 // The package: N dies' engines on a full mesh of UCIe links.
 // ---------------------------------------------------------------------------
-module ot_rom_oneshot_allreduce #(
+module ot_w15_rom_oneshot_allreduce #(
     parameter integer N          = 4,
     parameter integer LANES      = 16,
     parameter integer TAGW       = 32,
@@ -378,7 +402,7 @@ module ot_rom_oneshot_allreduce #(
     genvar s, t;
     generate
         for (s = 0; s < N; s = s + 1) begin : g_die
-            ot_rom_oneshot_die #(.N(N), .RANK(s), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH)) u_die (
+            ot_w15_rom_oneshot_die #(.N(N), .RANK(s), .LANES(LANES), .TAGW(TAGW), .DEPTH(DEPTH)) u_die (
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(in_valid[s]), .in_ready(in_ready[s]), .in_data(in_data[s*FW +: FW]),
                 .in_last(in_last[s]), .in_mode(in_mode[s]), .in_tag(in_tag[s*TAGW +: TAGW]),
@@ -395,7 +419,7 @@ module ot_rom_oneshot_allreduce #(
                     assign rxr[(s*N + t)*PW +: PW] = {PW{1'b0}};
                 end else begin : g_link
                     // link s -> t: data to die t's port s, credits from die t's port s back to s
-                    ot_rom_ucie_link #(.PW(PW), .LAT(LAT), .FLIT_BYTES(FW / 8), .BPC_NUM(BPC_NUM),
+                    ot_w15_rom_ucie_link #(.PW(PW), .LAT(LAT), .FLIT_BYTES(FW / 8), .BPC_NUM(BPC_NUM),
                                        .BPC_DEN(BPC_DEN)) u_link (
                         .clk(clk), .rst_n(rst_n),
                         .in_valid(txv[s]), .in_rec(txr[s*PW +: PW]), .in_ready(txrdy[s*N + t]),
