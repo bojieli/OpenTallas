@@ -189,19 +189,19 @@ BLOCKS.update({
     "ot_gpu_tc_col": Block(
         "ot_gpu_tc_col", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 220.0, 220.0,
         [(r"^w$", "N"), (r"^x$", "W"), (r"^(ov|y|otag|fault)$", "E")],
-        params={"L": 32, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25, "CORNER": "WC", "ADDER_MAP_FILE": ""},
+        params={"L": 32, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 40, "CORNER": "WC", "ADDER_MAP_FILE": ""},
         record="results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l32_092/physical.json",
         notes="exact tensor-core column: 32 BF16 x BF16 -> FP32 lanes, circulating IL-8 adders, 32-leaf tree",
         peak_gb=16.0),
     "ot_gpu_tc16": Block(
         "ot_gpu_tc16", GPU_FP + ["rtl/gpu/ot_gpu_tc_col.sv"], 164.0, 164.0,
         [(r"^w$", "N"), (r"^x$", "W"), (r"^(ov|y|otag|fault)$", "E")],
-        default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25, "CORNER": "WC", "ADDER_MAP_FILE": ""},
+        default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 40, "CORNER": "WC", "ADDER_MAP_FILE": ""},
         notes="V4.1 SM BF16 column: 16 exact lanes + 16-leaf tree (ot_gpu_tc_col L=16)", peak_gb=12.0),
     "ot_gpu_bd_col": Block(
         "ot_gpu_bd_col", GPU_FP + ["rtl/v41rom/ot_v41_bterm.sv", "rtl/v41rom/ot_v41_bterm2.sv", "rtl/gpu/ot_gpu_bd_col.sv"], 104.0, 104.0,
         [(r"^(wq|we)$", "N"), (r"^(xq|xe)$", "W"), (r"^(ov|y|otag|fault)$", "E")],
-        params={"LB": 2, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 25, "CORNER": "WC", "ADDER_MAP_FILE": ""},
+        params={"LB": 2, "TAGW": 16}, default_edge="S", orfs_extra={"NUM_CORES": 6, "HOLD_SLACK_MARGIN": 40, "CORNER": "WC", "ADDER_MAP_FILE": ""},
         record="results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json",
         notes="V4.1 SM block-dot column: 2 exact k32 FP8/FP4 lanes + tree", peak_gb=12.0),
 })
