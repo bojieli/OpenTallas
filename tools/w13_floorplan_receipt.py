@@ -55,10 +55,14 @@ def main():
     p.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
     p.add_argument('--floorplan-dir', type=Path)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--available-kib', type=int, help='Fresh worker MemAvailable in KiB; mandatory for admission')
+    memory_args = p.add_mutually_exclusive_group(required=True)
+    memory_args.add_argument('--available-kib', type=int, help='Fresh worker MemAvailable in KiB')
+    memory_args.add_argument('--local-memory', action='store_true', help='Read this worker MemAvailable immediately before admission')
     p.add_argument('--lease-floor-gib', type=float, default=55)
     p.add_argument('--admission-only', action='store_true')
     args = p.parse_args()
+    if args.local_memory:
+        args.available_kib = int(next(line.split()[1] for line in Path('/proc/meminfo').read_text().splitlines() if line.startswith('MemAvailable:')))
     from chip_assembly.floorplans import BLOCKS
     peak = max(BLOCKS[b].peak_gb for b in SMS.values())
     if args.available_kib is None or args.available_kib < 0 or args.lease_floor_gib <= 0:
