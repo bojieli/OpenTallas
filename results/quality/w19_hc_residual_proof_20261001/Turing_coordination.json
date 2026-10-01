@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.w19.hc-residual.coordination.v1",
+  "time": "2026-10-01T12:15:49.337647+00:00",
+  "owner": "QC/W19 CPU-only residual helper; codex/w19-hc-residual-proof",
+  "paths": [
+    "tools/w19_hc_residual_proof.py",
+    "tests/test_w19_hc_residual_proof.py",
+    "results/quality/w19_hc_residual_proof_20261001/"
+  ],
+  "model_gate": "/home/ubuntu/OpenTallas/results/uarch/w16_w19_gpu_service_gate_20261001/qualification.json",
+  "model_gate_sha256": "ad1f147c190cc3051a8d1729f659d596c207091091deccf266ba030c4b2d6270",
+  "gate_verdict": "REFUSED_PENDING_GPU_LOWERING_AND_RESOURCES",
+  "priced_composed_latency_us": null,
+  "Turing_request": "Price4x5120 residual/pre/post at modeled32SM128lanes. One candidate lane owns hidden-coordinate d; hc_pre four separate coefficient products then left-to-right3adds and BF16RNE; hc_post k-major four separate comb[j,k]*res[j] products then3adds, separate post[k]*y plus mix[k], final BF16RNE. Preserve original res[j,d] across pre/block until allfour post outputs consume it; never overwrite carry early or transposecomb. Consider coefficient broadcast frommix producer into lane registers, BF16pre edge tosynthetic block (not actualattention/FFN), retainedfour residual scalars, yscalar,4mix partials/one sequential accumulator and stagedfour BF16outputs, register lifetime/ports/warp issue/shared/DMA boundaries; no free broadcast/overlap or RFfitclaim.",
+  "semantics": "golden shortseqsum starts term0; canonical+0 everymul/add; BF16rounding only atgoldenoutputedges; fullF32pre/post/comb",
+  "dependency": "Consume existing committed mixes archive; do not rerunmixes/evaluator. Synthetic identity block y=preoutput disclosed, no deployed block execution/trajectoryclaim.",
+  "GPU_campaign_authorized": false,
+  "model_eligibility_claimed": false,
+  "QC": "unchangedcompletefinalFAIL/adoptfalse",
+  "Turing_acknowledgement": "not observed"
+}
