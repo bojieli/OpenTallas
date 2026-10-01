@@ -25,6 +25,7 @@ import argparse
 import copy
 import dataclasses
 import json
+import hashlib
 import math
 import sys
 from pathlib import Path
@@ -632,6 +633,14 @@ def area_ledger(d: dict):
         + out["return_adders"] + out["bf16_chain"] + out["blockdot_chain"]
     hub = out["indexer"] + out["attention"] + out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"] \
         + d.get("su_vm_ports_mm2", 0.0)
+    blk = d.get("vmh_block")
+    if blk:
+        # ROOT RULINGS 2026-10-01: the measured SU+VM block (VM-H, then C_rotate for the product) replaces the SU
+        # lanes, SFU lanes and VM ports (its SRAM is the VM; the rest is lane logic and network)
+        hub += blk["block_mm2"] - (out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"]
+                                   + d.get("su_vm_ports_mm2", 0.0))
+        out["vm_ports"] = blk["sram_mm2"]
+        out["vmh_block_mm2"] = blk["block_mm2"]
     out["rom_field_strip_used_mm2"] = strip
     out["rom_field_strip_avail_mm2"] = FLOORPLAN["rom_field_strip_mm2"]
     out["hub_logic_mm2"] = hub
@@ -875,7 +884,12 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20, positions: in
         ports_total=ports, vm_banks_256b=banks,
         area_element_um2=dict(light=round(light), sfu=round(sfu)),
         area_basis=("hardened" if aL and aS else u["area_basis"]), hardened=dict(light=qL, sfu=qS),
-        area_mm2=round(((N - M) * light + M * sfu) / 1e6, 3),
+        area_mm2=(d["vmh_block"]["block_mm2"] if d.get("vmh_block") else round(((N - M) * light + M * sfu) / 1e6, 3)),
+        area_lanes_ledger_mm2=round(((N - M) * light + M * sfu) / 1e6, 3),
+        vmh_block=(dict(d["vmh_block"], note="ROOT RULINGS 2026-10-01: area_mm2 is the measured SU+VM block of the "
+                                             "product's VM option (lanes, VM SRAM, network); area_lanes_ledger_mm2 is "
+                                             "the lane-only ledger estimate")
+                   if d.get("vmh_block") else None),
         ops={f"L{layer}.attn.softmax.{k}": v for k, v in sm.items()},
         softmax_issue_vectors=sum(v["vectors"] for v in sm.values()),
         # a dependent op pays its issue, its pipeline depth, the broadcast tree to the farthest lane and the
@@ -3153,6 +3167,30 @@ CONS_REFIT = dict(
              "p5 is not closed (886 MHz, WNS -209 ps, 1 DRC): a wider strip to close it lowers the slot count",
              "no placed BF16 pair exists (q2 failed at detailed placement): p5 stands in for the BF16 columns"])
 CONS_FIELD_MM2 = CONS_REFIT["slots"] * CONS_REFIT["pair_footprint_mm2"]           # the ROM/MAC slot field, 582.8 mm2
+# ROOT RULING 2026-10-01 (option a): the measured VM-H SU+VM block is the product's hub block -- 128 lane-group tiles
+# (8 SU lanes + 12 ot_sram_1r1w_256x256 each), 38.95 mm2 at 6,365 x 6,119 um (claude/w11-vmh-land 3cc18731
+# results/uarch/w11_vm_options.json options.H_rtl: footprint 38.951, SRAM 10.893, network footprint 2.624 mm2).  It
+# replaces the dedicated-unit row's lane-only stream unit (14.249 mm2; W11: measured light lane 9,536 um2 cells, x2.3
+# the ledger's 4,085).  The re-fit's hub partition SU_VECTOR is the stream unit x (1 + SWITCH_FRACTION 0.05,
+# tools/v41_floorplan_refit.py), so the slot field gives up (38.951 - 14.249) x 1.05 = 25.9 mm2 on the 815 mm2 basis
+# (dies are free: the stage fit grows instead of the die)
+VMH_BLOCK = dict(block_mm2=38.951, w_um=6365.0, h_um=6119.5, sram_mm2=10.893, network_footprint_mm2=2.624,
+                 stream_unit_ledger_mm2=14.249, switch_fraction=0.05, budget_mm2=45.0,
+                 src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.H_rtl (root ruling "
+                     "2026-10-01, option a; budget 38-45 mm2 with W11's measured lanes at 50% utilisation)")
+VMH_BLOCK["field_loss_mm2"] = round((VMH_BLOCK["block_mm2"] - VMH_BLOCK["stream_unit_ledger_mm2"])
+                                    * (1 + VMH_BLOCK["switch_fraction"]), 3)
+VMH_BLOCK["option"] = "H_rtl"
+# ROOT RULING 2026-10-01 (after the VM waterfall): W11's C_rotate is the PRODUCT's VM -- central: the lane array as a
+# 4,890 um square with the VM strip (1,536 SRAM macros + VM logic + rotate/Benes network, 3,004 um deep) along one
+# side; 38.60 mm2 (claude/w11-vmh-land 3cc18731 w11_vm_options.json options.C_rotate).  VM-H stays a REFERENCE row
+VMC_BLOCK = dict(block_mm2=38.601, lane_array_mm2=23.913, lane_side_um=4890.1, vm_block_mm2=14.688, vm_depth_um=3003.7,
+                 sram_mm2=10.893, network_footprint_mm2=2.274, stream_unit_ledger_mm2=14.249, switch_fraction=0.05,
+                 option="C_rotate",
+                 src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.C_rotate (root ruling "
+                     "2026-10-01: the product's VM)")
+VMC_BLOCK["field_loss_mm2"] = round((VMC_BLOCK["block_mm2"] - VMC_BLOCK["stream_unit_ledger_mm2"])
+                                    * (1 + VMC_BLOCK["switch_fraction"]), 3)
 CONS_SLIVER_MM2 = CONS_REFIT["whitespace_mm2"] - CONS_REFIT["unused_slots_mm2"]   # whitespace outside the field
 # Where that whitespace is (measured on the reproduced re-fit's rectangles): the die-edge ring outside the core
 # (1.02-1.09 mm wide: die 814.98 - core 696.56 = 118.43 mm2) less the edge I/O instances in it (HBM PHYs, SerDes,
@@ -3163,6 +3201,14 @@ CONS_SLIVER_MM2 = CONS_REFIT["whitespace_mm2"] - CONS_REFIT["unused_slots_mm2"] 
 CONS_GEOM = dict(
     w10_refit=dict(field_mm2=CONS_FIELD_MM2, ring_free_mm2=118.426 - 64.902, core_gap_mm2=13.84,
                    src="W10 re-fit reproduced (claude/w10-v41-rom-element 1f598e0b), v1 HBM PHY 12.0 x 0.833 mm"),
+    w10_refit_vmh=dict(field_mm2=CONS_FIELD_MM2 - VMH_BLOCK["field_loss_mm2"], ring_free_mm2=118.426 - 64.902,
+                       core_gap_mm2=13.84,
+                       src="the W10 re-fit with the measured VM-H SU+VM block as the SU_VECTOR hub partition (root "
+                           "ruling 2026-10-01): the field less (38.951 - 14.249) x 1.05 mm2"),
+    w10_refit_crot=dict(field_mm2=CONS_FIELD_MM2 - VMC_BLOCK["field_loss_mm2"], ring_free_mm2=118.426 - 64.902,
+                        core_gap_mm2=13.84,
+                        src="the W10 re-fit with W11's C_rotate SU+VM block as the SU_VECTOR hub partition (root "
+                            "ruling 2026-10-01, the product): the field less (38.601 - 14.249) x 1.05 mm2"),
     w18_legal_phy=dict(field_mm2=9637 * CONS_REFIT["pair_footprint_mm2"], ring_free_mm2=138.836 - 65.001,
                        core_gap_mm2=13.72,
                        src="claude/w18-die-assembly 4f9de5b5 results/floorplan/v41_pack_refit_w18_e8p5.json (sha256 "
@@ -3181,13 +3227,19 @@ CONS_PITCH = dict(w10_budget=dict(q_um=(485.136, 120.96), src="root hard budget 
                   w18_measured=dict(q_um=(522.72, 140.40), src="W18 d1e3c0aa pair_w10p5_abstract.json tiling ch8.64"),
                   w10_q_1p2=dict(q_um=(476.0, 126.9), src="W10 (2026-09-30): the q pair at 1.2 GHz, 4096m8 ping-pong, WC "
                                                           "floorplan cells 21.9k um2 at 85% logic utilisation"),
+                  w10b_q=dict(q_um=(510.84, 126.9), src="W10b (2026-10-01): the q pair widened 7.3% after p12q3/p12qm63 "
+                                                        "failed CTS legalisation at 91-93% strip utilisation; p12q4 "
+                                                        "routes at this fixed --die-area (closure pending)",
+                              bf16_outline_um=(1002.89, 142.56)),
                   w10_iii_1p2=dict(q_um=(574.0, 126.9), src="W10 (2026-09-30): the BF16_PAIR (iii) pair at 1.2 GHz, 32.3k "
                                                             "um2 cells (+20.7% tile)"))
 # ROOT RULING 2026-09-30: the 1,024 BF16-capable pairs (2,048 BF16 macros) sit in their own columns at a 1,019 um
 # pitch (the BF16 element strip), at the row pitch of the variant
 CONS_BF16 = dict(
     pairs=1024,
-    columns_outline_um=(1063.7, 131.76),
+    columns_outline_um=(1063.7, 131.76),   # W10's planned outline: the named steps before the W10b re-fit
+    columns_outline_w10b_um=(1002.89, 142.56),   # W10b (2026-10-01): c4/c5 route at this fixed --die-area, density
+                                                 # 0.5 (BF16 split 8x4 + 8x4, still 5 cycles); the product's outline
     columns_src="W10 (root relay 2026-09-30): the BF16 pair's PLANNED outline, 1,063.7 x 131.76 um = 0.1402 mm2 "
                 "(four 12 um capture channels + margins), until q7 confirms; the earlier 1,019 um x row pitch is "
                 "superseded",
@@ -3290,7 +3342,29 @@ SHRINK_TAG = SERIAL_TAG + " + W18b shrunk-die interim crossings (669 mm2)"
 # 2026-09-30): both are engine pipeline depths, paid once a scores pass AND once a p.v pass (the p.v pass reuses the
 # tile after the softmax); throughput (II 1) unchanged
 W11_STREAM_SS = {"suffix:idx.score": 52, "suffix:.attn.scores": 39 + 24, "suffix:.attn.pv": 39 + 24}
-PRODUCT_TAG = SHRINK_TAG + " + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass)"
+STREAM_TAG = SHRINK_TAG + " + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass)"
+# W11 VM-H (claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json, option H_rtl; W11 answer 2026-10-01): the
+# distributed VM's client stages replace VM_DIST one-for-one in SLOW (0.9 GHz) cycles at 748 um/stage -- x gather
+# 6 -> 12, result scatter 6 -> 12, collective write 6 -> 12 -- and every SU op pays the per-op network average of the
+# full-shape L0 program (control broadcast 5 + hold, per-class network stages, result tree 8): +36.706 slow cycles a
+# vector op, +44.909 a reduction, issue x1.1687 (unpacked layout).  The graph's SU nodes carry no su_bcast / su_ret
+# stages, so nothing is double counted; the CDC stays W18's FIFO.  Cross-check: die decode +5.0% vs flat (W11).
+VMH = dict(x_gather=12, ret_scatter=12, coll_write=12, su_op_extra=36.706, su_red_extra=44.909, su_issue=1.1687,
+           src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)")
+VMH_TAG = STREAM_TAG + " + W11 VM-H (12/12/12 slow stages, SU op +36.7 / red +44.9, issue x1.169)"
+# W11 C_rotate (3cc18731 options.C_rotate design_keys): client stages 8/8/8 slow cycles; per SU op the control
+# broadcast 5 + operand read 16 + element write 16 = 37, a reduction 5 + 16 + result tree 8 = 29; issue ratio 1.0
+VMC = dict(x_gather=8, ret_scatter=8, coll_write=8, su_op_extra=37, su_red_extra=29, su_issue=1.0,
+           src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (C_rotate)")
+PRODUCT_PITCH = "w10b_q"
+VMH_REF_GEOM = "w10_refit_vmh"   # the measured VM-H block (reference row)
+PRODUCT_GEOM = "w10_refit_crot"  # ROOT RULING 2026-10-01: W11's C_rotate SU+VM block in the hub (the product)
+PRODUCT_HUB = VMC_BLOCK
+W10B_TAG = "W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um)"
+VMH_REF_TAG = (VMH_TAG + f" + {W10B_TAG} and the VM-H hub block (SU+VM 38.95 mm2): one stage re-fit -- REFERENCE "
+               "(measured VM-H)")
+PRODUCT_TAG = (STREAM_TAG + f" + W11 C_rotate VM (8/8/8 slow stages, SU op +37 / red +29, issue x1.0) + {W10B_TAG} and "
+               "the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit (root ruling 2026-10-01)")
 QWEN_W12_TP4_ME_EXTRA_SS = 41 + 5 * 5 + 38 + 1 + 7   # W12 c6e6b845 at the 504 um reach: 112 cycles an ME op
 PRODUCT_CLOCK_HZ = 1.2e9   # USER DECISION (AGENTS.md e7479589): 0.833 ns at SS for all logic in all four designs
 PRODUCT_DYN_SCALE = 1.16   # root 2026-09-30: dynamic energy about +16% at 1.2 GHz (ASSUMED: the voltage for the clock)
@@ -3302,7 +3376,9 @@ SS_DERATE = 1.27     # USER DECISION 2026-09-30: sign-off at SS (setup) / FF (ho
 def _cons_pair_mm2(pitch, bf16=False):
     x, y = CONS_PITCH[pitch]["q_um"]
     if bf16:
-        return CONS_BF16["columns_outline_um"][0] * CONS_BF16["columns_outline_um"][1] / 1e6
+        # the BF16 column outline travels with the tile variant: W10b's pair carries its own measured column outline
+        bx, by = CONS_PITCH[pitch].get("bf16_outline_um", CONS_BF16["columns_outline_um"])
+        return bx * by / 1e6
     return x * y / 1e6
 CONS_MACRO_MM2 = ROM_MACRO_UM2 / 1e6
 CONS_STRIP_PER_PAIR_MM2 = CONS_REFIT["pair_footprint_mm2"] - 2 * CONS_MACRO_MM2    # MAC strip + gaps of one pair
@@ -3442,6 +3518,14 @@ def cons_head_dies(density, overhead=None, credit="ring", geom="w10_refit", pitc
     m = (b["head"] + b["mtp"]) / 4 * _cons_busiest_macros(28) / cons_stage_plan(28)["payload_per_die_B"]
     need = _cons_need(m / 2, per_die, density, pitch, 0, depth)
     return 4 * math.ceil(need / cons_field_usable_mm2(overhead, credit, geom) - 1e-9)
+
+
+def cons_head_need_ratio(pitch, overhead=None, credit="ring", geom="w10_refit", depth="8192m8"):
+    """The head group's storage-only need against ONE TP-4 group of usable field (1 - this is the 4-die margin)."""
+    b = _V41_PLACE["bytes"]
+    per_die = (b["embed"] + b["head"] + b["mtp"]) / 4
+    m = (b["head"] + b["mtp"]) / 4 * _cons_busiest_macros(28) / cons_stage_plan(28)["payload_per_die_B"]
+    return _cons_need(m / 2, per_die, "analytical", pitch, 0, depth) / cons_field_usable_mm2(overhead, credit, geom)
 
 
 def cons_table_dies(density, overhead=None):
@@ -3674,7 +3758,7 @@ SOFTPLUS_FIX = {"suffix:softplus_sqrt": -97, "suffix:idx.topk_local": 8}   # + W
 
 
 def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_stages=None, ss_wire=False, d=None,
-                 serial=None, die=None):
+                 serial=None, die=None, vmh=None):
     """Re-time a priced V4.1 graph (one pass of P positions): the field-concurrency cap on every field read, W10's
     two-pass BF16 on wo_a, the latency inventory, and optionally a slower clock domain for the serial-chain units
     (slow = (hz, cdc_cycles)): their issue and depth stretch by clock / hz, and each crossing into the domain adds
@@ -3730,6 +3814,22 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
         for name, nd in g.nodes.items():
             if nd["kind"] in SLOW_KINDS:
                 nd["depth"] += _w11_serial_cycles(name, nd, levels) / slow[0]
+    if vmh and slow:
+        # W11 VM-H: client stages in slow cycles replace VM_DIST's (fast-cycle) 6/6/6; per-op network extras on SU ops
+        hz = slow[0]
+        for name, nd in g.nodes.items():
+            u = nd.get("_uarch")
+            if u:
+                nd["depth"] += ((vmh["x_gather"] + vmh["ret_scatter"]) / hz
+                                - (d.get("vm_x_gather_stages", 0) + d.get("vm_ret_scatter_stages", 0)) * cyc)
+            elif nd["kind"] == "collective" and d.get("vm_coll_write_stages"):
+                nd["depth"] += vmh["coll_write"] / hz - d["vm_coll_write_stages"] * cyc
+            elif nd["kind"] == "vector":
+                nd["depth"] += vmh["su_op_extra"] / hz
+                nd["issue"] *= vmh["su_issue"]
+            elif nd["kind"] == "reduce":
+                nd["depth"] += vmh["su_red_extra"] / hz
+                nd["issue"] *= vmh["su_issue"]
     es = elem_stages or MODEL_ELEM_ADD_STAGES
     for name, nd in g.nodes.items():
         u = nd.get("_uarch")
@@ -3750,7 +3850,7 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
 
 def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16="columns", clock_hz=None,
                  field_concurrency=1.0, added_latency=None, dyn_scale=1.0, slow_domain=None, chain_stages=None,
-                 elem_stages=None, ss_wire=False, serial=None, die=None):
+                 elem_stages=None, ss_wire=False, serial=None, die=None, vmh=None, hub_block=None):
     """The V4.1 ROM array at S TP-4 stages, n_head head dies and n_table Engram table dies: AR and MTP m = 1 per
     user, the busiest-stage saturated aggregate, energy (ungated and the adopted stage power gating, 1 us wake),
     KV capacity, HBM stacks and die counts.  Same model pieces as the economics and levers sections."""
@@ -3759,6 +3859,7 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
     with _cons_clock(clock_hz), _cons_stages(S):
         d = copy.deepcopy(PRESETS["proposal"])
         d["macros"] = round(BASE["macros"] * plan["busiest_macros"] / cons_stage_plan(28)["busiest_macros"])
+        d["vmh_block"] = hub_block or None   # the measured SU+VM block's area in the hub (power; root 2026-10-01)
         r1, g1 = _v41_graph(d, 1)
         # energy BEFORE re-timing: the field's pair-seconds per token are the work, not the (capped, stretched)
         # issue time -- the 50% cap halves the concurrent pairs and doubles the time, same pair-seconds
@@ -3773,12 +3874,12 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
                               else [(_cons_stage_of(name, nd, plan), 1.0)]):
                     pair_s[s0] = pair_s.get(s0, 0.0) + busy_pairs(nd) * nd["issue"] * f
         T1 = _cons_adjust(g1, 1, r1["clock_hz"], bf16, field_concurrency, lat, slow_domain, chain_stages, elem_stages,
-                          ss_wire, d, serial, die)
+                          ss_wire, d, serial, die, vmh)
         r1["T_us"], r1["tokens_s"] = T1 * 1e6, 1 / T1
         occ = _cons_occupancy(g1, plan)
         _, gv = _v41_graph(d, V41_POSITIONS)
         Tp = _cons_adjust(gv, V41_POSITIONS, r1["clock_hz"], bf16, field_concurrency, lat, slow_domain, chain_stages,
-                          elem_stages, ss_wire, d, serial, die)
+                          elem_stages, ss_wire, d, serial, die, vmh)
         occ_v = _cons_occupancy(gv, plan)
         win1, _ = _cons_windows(g1, plan)
         fstarts = cons_field_starts(g1, plan, r1["clock_hz"])
@@ -3861,7 +3962,7 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
                 cooling=_cons_cooling(die_static, die_static_ungated, cats, pair_s, pp, dyn_scale, sat, S, tot),
                 field_concurrency=field_concurrency, added_latency=dict(lat), slow_domain=slow_domain,
                 chain_stages=chain_stages, elem_stages=elem_stages, field_starts=fstarts, ss_wire=ss_wire, serial=serial,
-                die=(die or DIE_OLD),
+                die=(die or DIE_OLD), vmh=vmh, hub_block=(hub_block or {}).get("option"),
                 critical_path_top_us=_cons_top(g1),
                 capacity_users_1m=users, static_w_ungated=dict({k: round(v, 1) for k, v in static.items()},
                                                              total=round(P_static, 1)),
@@ -4239,26 +4340,47 @@ def consolidation(ec=None, lv=None):
     # USER DECISION 2026-09-30 (final): maximum per-user rate, die count free -> BF16 COLUMNS are the product: on the
     # full-token basis they beat (iii) and (ii) (the busiest-die op cycles favoured (iii), but its +20.7% pair pitch
     # adds stages, i.e. hops, and its BF16 issue floors sit above the columns' full-width BF16 lanes)
-    Sp = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8")
+    Sp = cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, PRODUCT_PITCH, "columns", "4096m8")
+    # the W10b tiles alone (the 815 mm2 field with the ledger hub): 39 stages; with the C_rotate block: Sp; with the
+    # VM-H block (reference row): Sh
+    Sp_w10b = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", PRODUCT_PITCH, "columns", "4096m8")
+    Sh = cons_min_stages("analytical", CONS["overhead"], "ring", VMH_REF_GEOM, PRODUCT_PITCH, "columns", "4096m8")
+    hh = cons_head_dies("analytical", CONS["overhead"], "ring", VMH_REF_GEOM, PRODUCT_PITCH, "8192m8")
+    # the named steps before the W10b tile re-fit run at the previous q pitch (W10 476 x 126.9 um)
+    Sp_prev = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8")
+    hp_prev = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "8192m8")
     # ROOT 2026-09-30: the head group on 8192m8 WITH ping-pong (2 macros a slot, alternate reads, 2-cycle macro path:
     # 1,667 ps against 8192m8's SS clk->q 1,004 + 25 + 60 ps) fits 4 dies -- 0.4% margin at the storage-only density,
     # 13.3% at W18's floorplan (claude/w18-die-assembly 4ed60cbb head_table_fit.json): CONFIRMED at floorplan level
-    hp = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "8192m8")
-    head_fit = dict(dies=hp, depth="8192m8 ping-pong", margin_storage_only=0.004, margin_w18_floorplan=0.133,
-                    on_4096m8=cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "4096m8"),
-                    status="CONFIRMED at floorplan level (W18 4ed60cbb); 168 dies if the head group were on 4096m8",
+    hp = cons_head_dies("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, PRODUCT_PITCH, "8192m8")
+    # W10b (2026-10-01): the wider q pair (510.84 um) takes the head group's storage-only need from 99.6% to 105.2% of
+    # one TP-4 group, so the model's rule gives 8 head dies.  W18's floorplan margin (13.3% at the 476 um pair) scaled
+    # by the same need ratio is ~8% -- an ESTIMATE, not a floorplan; the product follows the model's rule until W18b
+    # re-fits the head group at the W10b tile (root to rule)
+    r_prev, r_new = cons_head_need_ratio("w10_q_1p2"), cons_head_need_ratio(PRODUCT_PITCH, geom=PRODUCT_GEOM)
+    head_fit = dict(dies=hp, depth="8192m8 ping-pong", margin_storage_only=round(1 - r_new, 4),
+                    margin_storage_only_w10_q=round(1 - r_prev, 4), margin_w18_floorplan_w10_q=0.133,
+                    margin_w18_floorplan_scaled_estimate=round(1 - (1 - 0.133) * r_new / r_prev, 3),
+                    dies_at_w10_q=hp_prev,
+                    on_4096m8=cons_head_dies("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, PRODUCT_PITCH, "4096m8"),
+                    stages_w10b_tiles_only=Sp_w10b, stages_vmh_reference=Sh, hub_block=PRODUCT_HUB,
+                    status=(f"{hp} dies on the model's storage-only rule at the W10b tile (need {r_new:.1%} of one "
+                            f"TP-4 group; {hp_prev} at W10's 476 um pair, CONFIRMED at floorplan level by W18 "
+                            f"4ed60cbb).  W18's 13.3% floorplan margin scaled by the need ratio is ~"
+                            f"{1 - (1 - 0.133) * r_new / r_prev:.1%} (ESTIMATE): 4 head dies would likely hold at "
+                            "floorplan level -- pending a W18b head re-fit at the W10b tile and a root ruling"),
                     table_dies_asap7_floorplan=dict(dies=20, src="W18 4ed60cbb head_table_fit.json (ASAP7 geometry "
                                                                  "feasibility row); the product stays 36 (storage-only)"))
-    bf16_ref = {k: cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", pt, bfm, "4096m8")
-                for k, pt, bfm in (("option_ii cap 3 (reference)", "w10_q_1p2", "option_ii"),
+    bf16_ref = {k: cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, pt, bfm, "4096m8")
+                for k, pt, bfm in (("option_ii cap 3 (reference)", PRODUCT_PITCH, "option_ii"),
                                    ("option_iii BF16_PAIR (reference)", "w10_iii_1p2", "option_iii"),
-                                   ("columns (product)", "w10_q_1p2", "columns"))}
+                                   ("columns (product)", PRODUCT_PITCH, "columns"))}
     bf16_full_token = {}
-    for k, pt_, bfm in (("option_ii cap 3", "w10_q_1p2", "option_ii"), ("option_iii", "w10_iii_1p2", "option_iii")):
-        S_ = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", pt_, bfm, "4096m8")
+    for k, pt_, bfm in (("option_ii cap 3", PRODUCT_PITCH, "option_ii"), ("option_iii", "w10_iii_1p2", "option_iii")):
+        S_ = cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, pt_, bfm, "4096m8")
         q_ = cons_v41_rom(S_, 4, cons_table_dies("analytical")["dies"], 1.0, None, bfm, PRODUCT_CLOCK_HZ,
                           FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), PRODUCT_DYN_SCALE, (0.9e9, "w18"),
-                          None, 7, True, PRODUCT_SERIAL, DIE_SHRUNK_INTERIM)
+                          None, 7, True, PRODUCT_SERIAL, DIE_SHRUNK_INTERIM, VMC, PRODUCT_HUB)
         bf16_full_token[k] = dict(stages=S_, dies=q_["dies"], ar=q_["ar_tokens_s_b1"], mtp=q_["mtp_tokens_s_b1"],
                                   saturated=q_["ar_saturated_tokens_s"], pipeline_hops_us=q_["pipeline_hops_us"])
     prod = {}
@@ -4275,11 +4397,19 @@ def consolidation(ec=None, lv=None):
                                   SOFTPLUS_FIX, None, 7),
                                  (SERIAL_TAG, FIELD_CONCURRENCY, SOFTPLUS_FIX, None, 7),
                                  (SHRINK_TAG, FIELD_CONCURRENCY, SOFTPLUS_FIX, None, 7),
+                                 (STREAM_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
+                                 (VMH_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
+                                 (VMH_REF_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
                                  (PRODUCT_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7)):
-        pt = cons_v41_rom(Sp, hp, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ, fc, lat, PRODUCT_DYN_SCALE,
+        fin = tag == PRODUCT_TAG
+        S_, h_, vm_, blk_ = ((Sp, hp, VMC, PRODUCT_HUB) if fin else (Sh, hh, VMH, VMH_BLOCK) if tag == VMH_REF_TAG
+                             else (Sp_prev, hp_prev, VMH if "VM-H" in tag else None, None))
+        pt = cons_v41_rom(S_, h_, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ,
+                          fc, lat, PRODUCT_DYN_SCALE,
                           (0.9e9, "w18") if tag.startswith("ADOPTED") else None, cs, es, "SS wire" in tag,
                           PRODUCT_SERIAL if "MEASURED serial" in tag else None,
-                          DIE_SHRUNK_INTERIM if "shrunk-die" in tag else None)
+                          DIE_SHRUNK_INTERIM if "shrunk-die" in tag else None, vm_, blk_)
+        pt["vm_option"] = (blk_ or {}).get("option") or ("H_rtl" if vm_ is VMH else None)
         pt["product_final"] = tag == PRODUCT_TAG
         pt.update(label=f"PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: {tag}", density="analytical",
                   bf16_mode="columns", role="product", depth="4096m8", bf16_stage_reference=bf16_ref)
@@ -4438,10 +4568,12 @@ def consolidation(ec=None, lv=None):
                              depth_options=ROM_DEPTH_OPTS, depth_src=ROM_DEPTH_SRC),
                      bf16_hub_unit_mm2=round(cons_bf16_hub_mm2(), 2),
                      product=dict(status=f"{head['dies']} dies: {head['stages']} TP-4 stages ({head['layer_dies']} layer "
-                                         "dies, BF16 COLUMNS (1,024 at W10's 1,063.7 x 131.76 um planned outline) with q "
-                                         "pairs at W10's 476 x 126.9 um tile -- USER DECISION: maximum per-user rate, die "
-                                         f"count free) + {head['head_dies']} head dies (8192m8 ping-pong, fit confirmed at "
-                                         f"floorplan level) + {head['table_dies']} Engram table dies (storage-only basis; "
+                                         "dies, BF16 COLUMNS (1,024 at W10b's 1,002.89 x 142.56 um column outline) with q "
+                                         "pairs at W10b's 510.84 x 126.9 um tile (floorplan sizes; routed closure "
+                                         "pending p12q4 / c5) and W11's C_rotate SU+VM hub block (38.60 mm2; root "
+                                         "rulings 2026-10-01; measured VM-H kept as a reference row) -- USER DECISION: maximum per-user rate, die "
+                                         f"count free) + {head['head_dies']} head dies (8192m8 ping-pong; see head_fit: "
+                                         f"{hp_prev} at W10's tile, re-fit pending) + {head['table_dies']} Engram table dies (storage-only basis; "
                                          "ASAP7 feasibility 20).  Why the columns: on the full-token basis they give the "
                                          "highest per-user rate; W10's busiest-die op cycles favoured (iii), but its +20.7% "
                                          "pair pitch adds stages (hops) and its BF16 issue floors exceed the columns' "
@@ -4484,9 +4616,9 @@ def consolidation(ec=None, lv=None):
                                    "low (die area x yield, packages, stacks, NRE / 1,000); HBM beyond 96 dies adds "
                                    "whole TP-96 replicas"),
         karb=cons_karb_delta(Sp, clock_hz=PRODUCT_CLOCK_HZ),
+        model_caveats=MODEL_CAVEATS,
         clock_basis=dict(clock_hz=PRODUCT_CLOCK_HZ, note="USER DECISION (AGENTS.md e7479589): every design at 1.2 GHz SS "
                          "for equal footing -- V4.1 ROM product rows, the V4.1 HBM sweep and comparison rule (cycle terms "
-                         "at 1.2 GHz; fabric and HBM stream seconds unchanged), the Qwen ROM product; the Qwen HBM "
                          "comparator is HBM-bandwidth bound, so its rate does not move with the clock",
                          v41_hbm_96x4_tt=v41_hbm_n(96, 4, ec, gr)["ar"]["batch1"]["per_user_tokens_s"],
                          v41_hbm_96x4_1p2=v41_hbm_n(96, 4, ec, gr, clock_hz=PRODUCT_CLOCK_HZ)["ar"]["batch1"]["per_user_tokens_s"],
@@ -4715,7 +4847,10 @@ KARB = dict(base_cycles=7, per_hop_cycles=2,
                 "likely SS reach of 0.75 mm (W15 measuring); region distances here reproduce those counts")
 
 
-KARB_W18B_MERGE2 = (19, 15, 13, 9, 9, 13, 15, 19)   # W18b 996f7982 relay: shrunk die, MERGE2 +1 response cycle
+# W18b e909156c (root relay 2026-10-01): MERGE2 alone fails SS (-212 ps); MERGE2 + HEADREG (54/54 equivalence-clean,
+# P&R running) adds +2 to the K round trip on the shrunk die (MERGE2's 19/15/13/9/9/13/15/19 superseded until the P&R
+# verdict)
+KARB_W18B_HEADREG = (20, 16, 14, 10, 10, 14, 16, 20)
 
 
 def karb_region_cycles(reach_mm):
@@ -4743,14 +4878,14 @@ def cons_karb_delta(S=None, reach_mm=None, clock_hz=None):
             dt = n * c / clock
             out[f"{tag}_{kind}"] = dict(reach_mm=reach, cycles_per_request=round(c, 2), requests_on_path=n,
                                         added_us=round(dt * 1e6, 3), tokens_s_delta_pct=round(-dt / (T + dt) * 100, 3))
-    # W18b (996f7982, root relay): MERGE2 on proot (equivalence-clean 54/54) adds +1 response cycle in every region:
-    # the K round trip on the shrunk die is 19/15/13/9/9/13/15/19 (regions 0-7); still not in the product
-    cyc = KARB_W18B_MERGE2
+    # W18b (e909156c, root relay): MERGE2 + HEADREG on proot (equivalence-clean 54/54, P&R running): the K round trip
+    # on the shrunk die is 20/16/14/10/10/14/16/20 (regions 0-7); a row only, not in the product
+    cyc = KARB_W18B_HEADREG
     for kind, c in (("worst", max(cyc)), ("mean", sum(cyc) / len(cyc))):
         dt = n * c / clock
-        out[f"w18b_merge2_{kind}"] = dict(cycles_per_request=round(c, 2), requests_on_path=n, added_us=round(dt * 1e6, 3),
+        out[f"w18b_merge2_headreg_{kind}"] = dict(cycles_per_request=round(c, 2), requests_on_path=n, added_us=round(dt * 1e6, 3),
                                           tokens_s_delta_pct=round(-dt / (T + dt) * 100, 3))
-    return dict(rows=out, regions_w18b_merge2=list(KARB_W18B_MERGE2), regions_tt=karb_region_cycles(KARB["reach_mm_tt"]),
+    return dict(rows=out, regions_w18b_merge2_headreg=list(KARB_W18B_HEADREG), regions_tt=karb_region_cycles(KARB["reach_mm_tt"]),
                 regions_ss=karb_region_cycles(KARB["reach_mm_ss"]), stages=S, basis=KARB)
 
 
@@ -4828,10 +4963,10 @@ def cons_headline_table(head, rule, qwen, ec, pc):
               per_user_ar=qs["tokens_s_b1"], saturated_tokens_s=pc["saturated_tokens_s"],
               mJ_b1=round(pc["mJ_b1"] + QWEN_SS["droop_mJ"], 1), mJ_saturated=round(pc["mJ_saturated"] + QWEN_SS["droop_mJ"], 1),
               capex_usd=pc["capex_usd"], users_8k=pc["capacity_users"]),
-         dict(design=f"Qwen ROM option C at 1.2 GHz SS, RTL-CALIBRATED (per-layer body x {qs['rtl_calibrated']['ratio']}, "
-                     "W12b measured L0; pending attribution)", tier="ROM",
-              per_user_ar=qs["rtl_calibrated"]["tokens_s_b1"], saturated_tokens_s=pc["saturated_tokens_s"],
-              capex_usd=pc["capex_usd"], users_8k=pc["capacity_users"])]
+         *[dict(design=f"Qwen ROM option C at 1.2 GHz SS, {qs[k]['label']}", tier="ROM",
+                per_user_ar=qs[k]["tokens_s_b1"], saturated_tokens_s=pc["saturated_tokens_s"],
+                capex_usd=pc["capex_usd"], users_8k=pc["capacity_users"])
+           for k in ("rtl_attributed_as_built", "rtl_attributed_body_only")]]
     for row in qwen[1:3]:
         q.append(dict(design=row["design"] + " (tier 3, idealised; DFlash W19 audit -14%)", tier="3",
                       per_user_ar=row["ar_tokens_s_b1"],
@@ -5207,10 +5342,24 @@ QWEN_L0_RTL = dict(cycles=4669, total_cycles=4676, collective_lat_cycles=339, su
                        "(stages.L0.cycles)")
 
 
+# W12b ATTRIBUTION (claude/w12-qwen-rom a17a3c79, itrace results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64_itrace.txt):
+# each all-reduce is 2 serialized 128-word TP segments (8-bit count field), ~497 cycles each -> 991 an all-reduce, 1,982
+# a layer against the model's 884 (1,098 of the 1,325-cycle gap); the body excluding collectives is 2,687 cycles against
+# the model's 2,460 (+9.2%, ME latency per op).  Stage spans: QKV 431, attn 87, PV+O ME 769, O AR 991, post 69, gate/up
+# 528, SiLU 119, down 480, down AR 991, tail 222.  W12b's one-segment fix (79783ff9: a 256-word all-reduce is ONE TP
+# segment, count 0 encodes 256) is NOT measured (estimate ~620 an all-reduce at LAT 339; TP-4 L0 re-run pending)
+QWEN_L0_ATTR = dict(body_cycles=2687, allreduce_cycles=991, allreduces_per_layer=2, segments_per_allreduce=2,
+                    segment_cycles=497,
+                    spans=dict(qkv=431, attn=87, pv_o_me=769, o_ar=991, post=69, gate_up=528, silu=119, down=480,
+                               down_ar=991, tail=222),
+                    src="claude/w12-qwen-rom a17a3c79 results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64_itrace.txt",
+                    fix_pending="claude/w12-qwen-rom 79783ff9 one-segment all-reduce, NOT measured (est. ~620 cycles)")
+
+
 def qwen_l0_rtl_vs_model():
     """The model's layer at W12b's RTL configuration (position 0, SU width 64, ME extra 112, TP-4, G 6,144, SS) against
-    the measured layer 0: the layer chain plus its two all-reduces.  Until the gap is attributed per stage, the
-    product carries an RTL-CALIBRATED row that scales the per-layer body by the measured ratio (root 2026-09-30)."""
+    the measured layer 0: the layer chain plus its two all-reduces, with W12b's per-stage attribution (body and
+    all-reduces separately), which replaces the single RTL-calibrated ratio (root 2026-10-01)."""
     m = QWEN_L0_RTL
     p = qwen_tp_point(4, m["groups"], "board", clock_hz=PRODUCT_CLOCK_HZ, me_lat_extra=m["me_extra"], ctx=1,
                       su_width=m["su_width"])
@@ -5222,8 +5371,11 @@ def qwen_l0_rtl_vs_model():
                 model_short_pct=round(100 * (1 - model / m["cycles"]), 1),
                 model_layer_cycles_at_rtl_collective=round(model_rtl_coll, 1),
                 gap_cycles_at_rtl_collective=round(m["cycles"] - model_rtl_coll, 1),
-                status="UNATTRIBUTED: per-stage RTL cycles requested from W12b (QKV, attention, O, gate/up, down, "
-                       "collectives)")
+                attribution=dict(QWEN_L0_ATTR, model_body_cycles=p["layer_chain_cycles"],
+                                 body_ratio=round(QWEN_L0_ATTR["body_cycles"] / p["layer_chain_cycles"], 4),
+                                 allreduce_gap_cycles=round(2 * (QWEN_L0_ATTR["allreduce_cycles"] - ar), 1),
+                                 body_gap_cycles=round(QWEN_L0_ATTR["body_cycles"] - p["layer_chain_cycles"], 1)),
+                status="ATTRIBUTED (W12b a17a3c79): body +9.2% (ME latency per op), all-reduce 2 serialized TP segments")
 
 
 def qwen_product_ss():
@@ -5231,17 +5383,123 @@ def qwen_product_ss():
     cyc = p["cycles"] + QWEN_KV_PREP_CYCLES_TOKEN
     out = dict(p, cycles=cyc, tokens_s_b1=round(p["clock_hz"] / cyc * QWEN_SS["droop_rate"], 1), droop=QWEN_SS,
                kv_prep_cycles=QWEN_KV_PREP_CYCLES_TOKEN)
-    # RTL-CALIBRATED (root 2026-09-30, labelled): the per-layer body (36 x (layer chain + 2 all-reduces)) x the
-    # measured layer-0 ratio; the head and embedding stay at the model
+    # RTL-ATTRIBUTED rows (root 2026-10-01, replacing the single RTL-calibrated ratio): the layer chain (body) x W12b's
+    # measured body / the model's body at the L0 configuration, and the two all-reduces a layer either as built
+    # (2 serialized TP segments, 991 cycles each) or at the model's latency (W12b's one-segment fix, unmeasured);
+    # the head, embedding and KV_PREP stay at the model
     cal = qwen_l0_rtl_vs_model()
-    body = 36 * (p["layer_chain_cycles"] + 2 * p["exchange"]["per_allreduce_cycles"])
-    cyc_c = cyc + body * (cal["ratio"] - 1)
-    out["rtl_calibrated"] = dict(cycles=round(cyc_c), body_cycles=round(body), ratio=cal["ratio"],
-                                 tokens_s_b1=round(p["clock_hz"] / cyc_c * QWEN_SS["droop_rate"], 1),
-                                 label=f"RTL-calibrated: model per-layer body x measured L0 {QWEN_L0_RTL['cycles']:,} / "
-                                       f"model {cal['model_layer_cycles']:,.0f} (W12b 42ecf382); the body includes the "
-                                       "LAT-7 ME +54, so the scale is slightly pessimistic; pending per-stage attribution")
+    att = cal["attribution"]
+    chain, ar = p["layer_chain_cycles"], p["exchange"]["per_allreduce_cycles"]
+    body_add = 36 * chain * (att["body_ratio"] - 1)
+    ar_add = 36 * 2 * (QWEN_L0_ATTR["allreduce_cycles"] - ar)
+    for key, c, lab in (
+            ("rtl_attributed_as_built", cyc + body_add + ar_add,
+             f"RTL-attributed, as built: per-layer body x {att['body_ratio']} (W12b {QWEN_L0_ATTR['body_cycles']:,} / "
+             f"model {att['model_body_cycles']:,.0f}) + 2 all-reduces at the measured {QWEN_L0_ATTR['allreduce_cycles']} "
+             "cycles (2 serialized 128-word TP segments; W12b a17a3c79)"),
+            ("rtl_attributed_body_only", cyc + body_add,
+             f"RTL-attributed, body only: per-layer body x {att['body_ratio']}; all-reduces at the model's "
+             f"{ar:,.0f} cycles, PENDING W12b's one-segment fix (79783ff9, unmeasured; est. ~620 at LAT 339)")):
+        out[key] = dict(cycles=round(c), body_ratio=att["body_ratio"],
+                        tokens_s_b1=round(p["clock_hz"] / c * QWEN_SS["droop_rate"], 1), label=lab)
     return out
+
+
+# The model's own caveats: lessons where its pricing hid a cost that a measurement or a finer model exposed
+MODEL_CAVEATS = [
+    dict(id="vm_per_op_latency",
+         lesson="Per-op network latency on the latency-bound SU chain was invisible in the throughput-style VM pricing. "
+                "The VM was priced by port widths (vm_read_elems / vm_write_elems) and a few client wire stages, i.e. "
+                "as bandwidth; the SU softmax / norm / Sinkhorn chains are dependent ops, so each op pays the VM "
+                "network's full latency (control broadcast, operand read, element write or result tree).  W11's VM-H "
+                "measured that at +36.7 slow cycles a vector op and +44.9 a reduction: -14.5% AR on the full-shape "
+                "token, 82% of the 3,153 -> 2,680 drop (results/uarch/v41_vm_waterfall.json); more lanes or ports buy "
+                "nothing (issue is not the bind).  Rule: any shared network on a dependent chain is priced as "
+                "per-op latency on the chain, not as bandwidth.",
+         src="root 2026-10-01; W11 claude/w11-vmh-land 3cc18731; W16b waterfall"),
+]
+
+
+def _vm_waterfall_job(job):
+    tag, vmh, pitch, block, lanes, hub = job
+    if lanes:
+        PRESETS["proposal"] = dict(PRESETS["proposal"], su_lanes=lanes[0], sfu_lanes=lanes[1])
+    g = CONS_GEOM["w10_refit"]
+    f0 = g["field_mm2"]
+    loss = 0.0 if block is None else (block - 14.249) * 1.05
+    g["field_mm2"] = f0 - loss
+    try:
+        S = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", pitch, "columns", "4096m8")
+        H = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", pitch, "8192m8")
+    finally:
+        g["field_mm2"] = f0
+    hubd = dict(hub, block_mm2=block) if hub else None
+    p = cons_v41_rom(S, H, cons_table_dies("analytical")["dies"], 1.0, None, "columns", PRODUCT_CLOCK_HZ,
+                     FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), PRODUCT_DYN_SCALE, (0.9e9, "w18"), None,
+                     7, True, PRODUCT_SERIAL, DIE_SHRUNK_INTERIM, vmh, hubd)
+    return tag, dict(stages=S, dies=p["dies"], hub_block_mm2=block, ar_tokens_s_b1=round(p["ar_tokens_s_b1"], 1),
+                     mtp_tokens_s_b1=round(p["mtp_tokens_s_b1"], 1),
+                     ar_saturated_tokens_s=round(p["ar_saturated_tokens_s"], 1), vm=vmh)
+
+
+def cons_vm_waterfall(procs=None):
+    """Root 2026-10-01: the waterfall from the pre-VM-H product (3,153 AR) to the measured VM-H product, component by
+    component, and the VM levers at the product basis (W10b tiles, the block's hub area, 0.9 GHz SU domain)."""
+    from multiprocessing import get_context
+    novm = dict(x_gather=6 * 0.9 / 1.2, ret_scatter=6 * 0.9 / 1.2, coll_write=6 * 0.9 / 1.2, su_op_extra=0.0,
+                su_red_extra=0.0, su_issue=1.0, src="VM_DIST 6/6/6 fast cycles (no VM-H)")
+    H = dict(VMH)
+    C = dict(VMC)
+    CX = dict(x_gather=18, ret_scatter=18, coll_write=18, su_op_extra=57, su_red_extra=49, su_issue=1.0,
+              src="W11 3cc18731 options.C (central full crossbar, 74.66 mm2)")
+    steps, cum = [("previous product (VM_DIST 6/6/6, ledger hub, W10 q 476 um)", None, "w10_q_1p2", None, None, None)], dict(novm)
+    names = dict(x_gather="VM-H x gather 6 -> 12 stages", ret_scatter="VM-H result scatter 6 -> 12",
+                 coll_write="VM-H collective write 6 -> 12", su_op_extra="VM-H SU op network latency +36.7 slow cycles",
+                 su_red_extra="VM-H reduction network latency +44.9", su_issue="VM-H issue x1.169")
+    for k in ("x_gather", "ret_scatter", "coll_write", "su_op_extra", "su_red_extra", "su_issue"):
+        cum = dict(cum, **{k: H[k]})
+        steps.append((names[k], dict(cum), "w10_q_1p2", None, None, None))
+    steps.append(("W10b tiles (q 510.84 um): 37 -> 39 stages", H, PRODUCT_PITCH, None, None, None))
+    steps.append(("VM-H hub block 38.95 mm2: 39 -> 41 stages (measured VM-H reference)", H, PRODUCT_PITCH,
+                  VMH_BLOCK["block_mm2"], None, VMH_BLOCK))
+    shrink = lambda f: dict(H, su_op_extra=5 + (H["su_op_extra"] - 5) * f, su_red_extra=5 + (H["su_red_extra"] - 5) * f)
+    levers = [
+        ("(a) C_rotate instead of H (PRODUCT, root ruling)", C, PRODUCT_PITCH, VMC_BLOCK["block_mm2"], None, VMC_BLOCK),
+        ("(b) SU 2,048 / SFU 512 lanes, network unchanged (optimistic; block ~63 mm2)", H, PRODUCT_PITCH,
+         VMH_BLOCK["block_mm2"] + 24.0, (2048, 512), VMH_BLOCK),
+        ("(b) SU 2,048 / SFU 512 lanes, network stages x1.41", dict(shrink(1.41), x_gather=17, ret_scatter=17,
+                                                                    coll_write=17), PRODUCT_PITCH,
+         VMH_BLOCK["block_mm2"] + 24.0, (2048, 512), VMH_BLOCK),
+        ("(c) flat VM as buildable = W11 option C (central crossbar, 74.66 mm2)", CX, PRODUCT_PITCH, 74.664, None,
+         VMH_BLOCK),
+        ("(c) flat VM with no network (NOT physical; reference)", None, PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None,
+         VMH_BLOCK),
+        ("(d) VM-H per-op network latency -25%", shrink(0.75), PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None, VMH_BLOCK),
+        ("(d) VM-H per-op network latency -50%", shrink(0.5), PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None, VMH_BLOCK),
+        ("(d) VM-H client stages 12 -> 8 only", dict(H, x_gather=8, ret_scatter=8, coll_write=8), PRODUCT_PITCH,
+         VMH_BLOCK["block_mm2"], None, VMH_BLOCK),
+        ("(d) VM-H issue x1.169 -> 1.0 only", dict(H, su_issue=1.0), PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None,
+         VMH_BLOCK),
+        ("(d) compact C_rotate, 3,850 um each way (W11 sensitivity: one-way 8, op/red +21): NEXT DESIGN STEP",
+         dict(C, su_op_extra=21, su_red_extra=21), PRODUCT_PITCH, VMC_BLOCK["block_mm2"], None, VMC_BLOCK)]
+    jobs = steps + levers
+    with get_context("fork").Pool(procs or len(jobs)) as pool:
+        res = dict(pool.map(_vm_waterfall_job, jobs))
+    wf, prev = [], None
+    for j in steps:
+        r = dict(res[j[0]], step=j[0])
+        r["delta_ar"] = None if prev is None else round(r["ar_tokens_s_b1"] - prev, 1)
+        prev = r["ar_tokens_s_b1"]
+        wf.append(r)
+    ref = wf[-1]["ar_tokens_s_b1"]
+    lv = [dict(res[j[0]], lever=j[0], vs_vmh_reference_pct=round(100 * (res[j[0]]["ar_tokens_s_b1"] / ref - 1), 1))
+          for j in levers]
+    return dict(schema="opentallas.uarch.v41_vm_waterfall.v1", waterfall=wf, levers=lv,
+                total_drop_ar=round(wf[-1]["ar_tokens_s_b1"] - wf[0]["ar_tokens_s_b1"], 1),
+                ruling="ROOT 2026-10-01: (a) C_rotate is the product basis; the compact C_rotate placement (3,850 um "
+                       "each way) is the next design step with W11 and W18b; measured VM-H stays a reference row",
+                caveat=MODEL_CAVEATS[0]["lesson"],
+                source_sha256={"tools/uarch_model.py": hashlib.sha256((ROOT / "tools/uarch_model.py").read_bytes()).hexdigest()})
 
 
 def qwen_helix_scaleout(ec, ctx=200000, extra=(0, 4, 8, 16)):
@@ -5346,6 +5604,7 @@ def main(argv=None):
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
     ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
     ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
+    ap.add_argument("--vm-waterfall", action="store_true", help="the VM waterfall and levers (root 2026-10-01)")
     ap.add_argument("--economics", action="store_true", help="batch, energy and cost of every design and GPU tier")
     ap.add_argument("--levers", action="store_true", help="V4.1 static-power gating, adaptive MTP, ROM mask cost")
     ap.add_argument("--consolidation", action="store_true",
@@ -5428,12 +5687,23 @@ def main(argv=None):
                                                    sweep=rows, nccl_allreduce_s_assumed=NCCL_ALLREDUCE_S),
                                               indent=1, default=str) + "\n")
         return
+    if a.vm_waterfall:
+        w = cons_vm_waterfall()
+        for r in w["waterfall"]:
+            print(f"{r['ar_tokens_s_b1']:8.1f} {r['delta_ar'] or 0:+8.1f}  {r['stages']} / {r['dies']}  {r['step']}")
+        for r in w["levers"]:
+            print(f"{r['ar_tokens_s_b1']:8.1f} {r['vs_vmh_reference_pct']:+6.1f}%  {r['stages']} / {r['dies']}  {r['lever']}")
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(json.dumps(w, indent=1, default=str) + "\n")
+        return
     if a.dedicated:
         rows = [dedicated_ledger(copy.deepcopy(PRESETS[n]), a.ctx) for n in (a.preset or ("as_built", "proposal"))]
         # root decisions of 2026-09-29 (W11): 16 NK=4 index slices, NL=4 attention with the two-word loader;
         # single position and the MTP verify pass (6 positions, m = 1)
         w11 = dict(copy.deepcopy(PRESETS["proposal"]), idx_macs=262144, att_macs=32768, att_pwords=2,
-                   su_bcast_stages=SU_BCAST_STAGES_W1, su_ret_stages=SU_RET_STAGES_W1)
+                   su_bcast_stages=SU_BCAST_STAGES_W1, su_ret_stages=SU_RET_STAGES_W1,
+                   vmh_block=PRODUCT_HUB)   # ROOT RULINGS 2026-10-01: the product's SU+VM block (W18b packs this row)
         for P in (1, 6):
             rows.append(dedicated_ledger(dict(w11, name=f"proposal_w11_p{P}"), a.ctx, positions=P))
         for r in rows:
