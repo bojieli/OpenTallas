@@ -1,0 +1,32 @@
+{
+  "verdict": "FAILED_DEADLOCK_OWNER_STOP",
+  "reason": "User-authorized stop after read-only PC21 capturedKV circularwait diagnosis708a04573; not simulated watchdog, no PASS",
+  "identity": {
+    "pid": 620383,
+    "startticks": 305304190,
+    "argv": "/home/ubuntu/w17work/dierun2/v41_die_rt /home/ubuntu/w17work/die/ctx1048576_s20260930 /home/ubuntu/w17-fulltoken-unchanged-20261001-r1 200000 ",
+    "ppid": 620382
+  },
+  "wrapper": {
+    "pid": 620382,
+    "startticks": 305304190,
+    "argv": "timeout --signal=TERM --kill-after=30s 28800s /home/ubuntu/w17work/dierun2/v41_die_rt /home/ubuntu/w17work/die/ctx1048576_s20260930 /home/ubuntu/w17-fulltoken-unchanged-20261001-r1 200000 ",
+    "ppid": 557551
+  },
+  "source_commit": "d2e6290288a15f498461f0309225884aefcdac7f",
+  "binary_sha256": "011c52ba8ae783fedc2c6695e29f37628963f58f5f2d3d9b05684ea60edf49f9",
+  "progress_tail": [
+    "CYC 23400 wall 4011.7 s pc 21 21 21 21",
+    "CYC 23600 wall 4033.9 s pc 21 21 21 21",
+    "CYC 23800 wall 4054.2 s pc 21 21 21 21",
+    "CYC 24000 wall 4074.7 s pc 21 21 21 21",
+    "CYC 24200 wall 4093.9 s pc 21 21 21 21",
+    "CYC 24400 wall 4113.4 s pc 21 21 21 21",
+    "CYC 24600 wall 4134.1 s pc 21 21 21 21",
+    "CYC 24800 wall 4154.8 s pc 21 21 21 21"
+  ],
+  "scope": "L0_ONLY; noDONE; currentrun has no finalVM dump, previous12000 diagnostic partialVM preserved separately",
+  "probe_commit": "708a04573",
+  "signal": "SIGTERM to owned timeout wrapper620382 forwards to its sole binary620383; no otherjobs signalled",
+  "time": 1790852408.8637447
+}
