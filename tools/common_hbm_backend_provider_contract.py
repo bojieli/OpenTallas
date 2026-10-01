@@ -51,6 +51,56 @@ def compose():
             'Exact fulladdress loader/backing and36client ownership/tag map plus RMW lock consultation',
             'Legal fullsize32SM/L2/controller/RF floorplan before anyPnR'],
         generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+class BurstVisibilityModel:
+    """Finite contract bench with supplied WR issues, not a DRAM scheduler."""
+    def __init__(self,capacity_sectors=632812500):
+        self.capacity=capacity_sectors;self.slots={};self.memory={};self.cycle=0;self.tags=set()
+    @property
+    def now(self):return (self.cycle*2500+2)//3
+    def address(self,sector):
+        if not isinstance(sector,int) or not 0<=sector<self.capacity:raise ValueError('finite fulladdress capacity')
+    def preload(self,sector,data):
+        self.address(sector)
+        if len(data)!=32:raise ValueError('sector bytes')
+        self.memory[sector]=bytes(data)
+    def reserve(self,tag,sector,data):
+        self.address(sector)
+        if not 0<=tag<65536 or tag in self.tags:raise ValueError('tag reuse without proven drain')
+        if len(data)!=32:raise ValueError('sector bytes')
+        if len(self.slots)==4 or any(e['sector']==sector for e in self.slots.values()):return None
+        self.tags.add(tag);self.slots[tag]=dict(sector=sector,data=bytes(data),reserved_ps=self.now,column=None,due=None,scheduled_pending=False,committed=False,visible=None)
+        return tag
+    def WR_issue(self,tag,sector,column_ps):
+        e=self.slots.get(tag)
+        if e is None or e['sector']!=sector or e['column'] is not None or not e['reserved_ps']<=column_ps<=self.now:raise ValueError('actual scheduled WR identity/time')
+        e['column']=column_ps;e['due']=column_ps+7274;e['scheduled_pending']=True
+    def tick(self,cycles=1):
+        if not isinstance(cycles,int) or cycles<1:raise ValueError('positive cycles')
+        for _ in range(cycles):
+            self.cycle+=1
+            for e in self.slots.values():
+                if e['due'] is not None and not e['committed'] and e['due']<=self.now:
+                    self.memory[e['sector']]=e['data'];e['committed']=True;e['visible']=self.now
+    def take_scheduled(self,tag):
+        e=self.slots.get(tag)
+        if e is None or not e['scheduled_pending']:raise ValueError('unknown/duplicate schedule event')
+        e['scheduled_pending']=False
+        return dict(tag=tag,sector=e['sector'],column_ps=e['column'])
+    def peek_visible(self,tag):
+        e=self.slots.get(tag)
+        if e is None or not e['committed'] or e['scheduled_pending']:return None
+        return dict(tag=tag,sector=e['sector'],visible_ps=e['visible'])
+    def take_visible(self,tag):
+        event=self.peek_visible(tag)
+        if event is None:raise ValueError('visible event requires delivered schedule and actual backing commit')
+        del self.slots[tag]
+        return event
+    def read(self,sector,publication_permission):
+        self.address(sector)
+        if not publication_permission:raise ValueError('external ownership/publication not granted')
+        if sector not in self.memory:raise ValueError('no loaded or written checkpoint backing')
+        return self.memory[sector]
+
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True)
     a=p.parse_args();x=compose()
