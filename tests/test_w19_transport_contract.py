@@ -136,3 +136,27 @@ def test_later_write_cannot_pass_earlier_read_or_write():
     assert p.issue(0,3) is None
     p.commit(0,tag,0,True)
     assert p.issue(0,3) is not None
+
+
+def test_paired_code_scale_publication_requires_both_controllers():
+    p=T.Protocol(writes=1)
+    for stack,sector in [(0,64),(2,96)]:
+        assert p.enqueue(stack,3,sector,bytes([stack+1])*32)
+    fence=p.fence(); code=p.issue(0,3); scale=p.issue(2,3)
+    p.commit(0,code,0,True)
+    assert not p.fence_ready(fence)
+    with pytest.raises(ValueError): p.commit(2,scale,1,True)
+    assert not p.fence_ready(fence)
+    p.commit(2,scale,0,True)
+    assert p.fence_ready(fence)
+
+
+def test_finite_write_credits_survive_commit_stall():
+    p=T.Protocol(depth=2,writes=1)
+    assert p.enqueue(1,3,64,bytes(32)); first=p.issue(1,3)
+    assert p.enqueue(1,3,128,bytes(32))
+    assert p.issue(1,3) is None
+    p.commit(1,first,0,True)
+    second=p.issue(1,3)
+    assert second is not None and second != first
+    with pytest.raises(ValueError): p.commit(1,first,0,True)
