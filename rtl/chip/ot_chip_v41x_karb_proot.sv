@@ -42,7 +42,8 @@ module ot_chip_v41x_karb_proot #(
     parameter bit     MERGE2 = 1'b1,
     parameter bit     HEADREG = 1'b1,
     // ingress queue pointer copies (ot_chip_v41x_karb_q2r): one per ~43 payload bits
-    parameter integer IQREP = 8
+    parameter integer IQREP = 8,
+    parameter bit     DLOAD_ON_VALID = 1'b1
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -98,7 +99,11 @@ module ot_chip_v41x_karb_proot #(
         .in_d({pc_of(k_addr), k_addr, k_len, k_tag, k_we, k_wdata, k_wstrb}),
         .out_v(iq_v), .out_rdy(disp), .out_d(iq_d));
     integer i;
-    always @(posedge clk) if (disp) begin
+    // W18b: the dispatch payload register loads the queue head whenever the queue holds one (enable = iq_v, a
+    // flop compare), not on disp: d_* is only read while d_v is high, which is exactly the cycle after a disp, and
+    // then it holds the dispatched entry.  The 344-bit load no longer waits for the credit lookup (iq_pc -> cred
+    // 32:1 -> disp), which with the enable fan-out was the SS-critical path (-179 ps).
+    always @(posedge clk) if (DLOAD_ON_VALID ? iq_v : disp) begin
         d_lpc <= iq_pc[1:0];
         {d_addr, d_len, d_tag, d_we, d_wdata, d_wstrb} <= iq_d[PW-1:0];
     end
