@@ -1,0 +1,80 @@
+{
+  "utc": "2026-10-01T11:28:32Z",
+  "status": "LIVE_NOT_TERMINAL",
+  "host": "ot-pve1",
+  "observation": "2026-10-01T11:28:32Z",
+  "comparison": "2026-10-01T10:30:34Z",
+  "wall_delta_seconds": 3478,
+  "load1": 162.78,
+  "cpus": 28,
+  "cpu_admission": "FAIL",
+  "columns": [
+    {
+      "pid": 1412774,
+      "elapsed": "06:45:12",
+      "cpu": "07:45:11",
+      "cpu_delta_seconds": 4514,
+      "rss_kib": 15359860,
+      "progress": "third optimization iteration60%,746 violations",
+      "log": "/home/ubuntu/w13work/tc16_12/logs/asap7/chip_ot_gpu_tc16/base/5_2_route.tmp.log"
+    },
+    {
+      "pid": 1449805,
+      "elapsed": "04:45:27",
+      "cpu": "05:36:56",
+      "cpu_delta_seconds": 4159,
+      "rss_kib": 4396748,
+      "progress": "pin access completed; detailed placement263s; post-repair incremental global routing",
+      "log": "/home/ubuntu/w13work/tc_col_13/logs/asap7/chip_ot_gpu_tc_col/base/5_1_grt.tmp.log"
+    }
+  ],
+  "qualification": [
+    {
+      "root": "/home/ubuntu/w13wt/tc",
+      "block": "ot_gpu_tc_col",
+      "exit_code": 1,
+      "audit": {
+        "columns": [
+          {
+            "block": "ot_gpu_tc_col",
+            "issues": [
+              "missing_corner_record"
+            ],
+            "passed": false
+          }
+        ],
+        "passed": false,
+        "schema": "opentallas.w13.column_corner_gate.v1",
+        "scope": "column corner prerequisite only; SM context and boundary closure remain required",
+        "tool_sha256": "829f271ed92351faebe44c901c9ffdb1abc4098d3b2f63f5bed903b0af7aacda"
+      },
+      "source_git": "000ba0898f5120a66d5905ccff333ebbbe28394d"
+    },
+    {
+      "root": "/tmp/claude-1000/wt/w13-t16",
+      "block": "ot_gpu_tc16",
+      "exit_code": 1,
+      "audit": {
+        "columns": [
+          {
+            "block": "ot_gpu_tc16",
+            "issues": [
+              "missing_corner_record"
+            ],
+            "passed": false
+          }
+        ],
+        "passed": false,
+        "schema": "opentallas.w13.column_corner_gate.v1",
+        "scope": "column corner prerequisite only; SM context and boundary closure remain required",
+        "tool_sha256": "829f271ed92351faebe44c901c9ffdb1abc4098d3b2f63f5bed903b0af7aacda"
+      },
+      "source_git": "000ba0898f5120a66d5905ccff333ebbbe28394d"
+    }
+  ],
+  "owner": "615596/start305293450",
+  "monitor": "626096/start305314538",
+  "no_sm_dispatch": true,
+  "policy": "Pinned columns retained irrespective future GU64 arithmetic; only source-pin-matched terminal evidence qualifies; unconditional fresh CPU+60GiB RAM admission before synth.",
+  "complete_gpu_scope": "Column arithmetic qualification only. Complete GPU SM requires modeled128SIMT FP32 lanes/SM, RF and64KB shared scratchpad path, HC/SU contract, corrected fully composed area, contextual SS/FF actualLEFs and32SM/corridor fit. Matrix-only SM is not complete GPU."
+}
