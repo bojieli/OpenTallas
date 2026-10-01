@@ -53,6 +53,7 @@ def argv(mode, work, output):
     sources += ['rtl/v41rom/ot_v41_rom_elem_q_wake_w10.sv']
     sources += [f'physical/asap7_memory_macros/{n}/{n}_bb.v' for n in ['ot_rom_8192x274_m8','ot_rom_4096x274_m8']]
     params=dict(model['mode_binding']['common'],**{k:v for k,v in binding.items() if k!='top'})
+    params.pop('LAT')  # derived localparam (1 + CUT.popcount), not a top parameter
     if mode=='q':
         params={k:v for k,v in params.items() if k in ['NB','FAST','PP','MTP','EARLY','FRONT_PAR','WAKE_REG']}
     shape=model['elements'][mode]['outline_um']
