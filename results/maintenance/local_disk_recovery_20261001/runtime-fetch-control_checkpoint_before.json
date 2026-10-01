@@ -1,0 +1,651 @@
+{
+  "path": "/tmp/claude-1000/w19/runtime-fetch-control",
+  "owner": "W19 owner retired checkpoints",
+  "ready_commit": "f1a463bf2",
+  "timestamp": 1790844438.1418939,
+  "live_pids": [],
+  "files": [
+    {
+      "relative_path": "full/build_zor1hy1q/sim.vvp",
+      "bytes": 31151731,
+      "sha256": "1c285bf65d1e212bff0d4ee004fc4835e5ab40f00523f99b0f5d96ecdd18de17",
+      "preserved": false,
+      "reason": "generated Icarus compiled simulator"
+    },
+    {
+      "relative_path": "full/model_preflight.json",
+      "bytes": 1979,
+      "sha256": "0a01a5415bfcdcca6bc973e1b4d3316cf048e1a8703eb47f5c089e84e90e43d0",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_10e6hcjk/cfg.hex",
+      "bytes": 72,
+      "sha256": "42f285dd7699f384d03a5047573a0065127444ba0add76d9d6c480cf881935b1",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_10e6hcjk/lines.hex",
+      "bytes": 6552,
+      "sha256": "06ce7464cf781688f154672d3b161f7053cbc7db5e9021b76a9ee53f8dd48a1c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_10e6hcjk/out.txt",
+      "bytes": 246,
+      "sha256": "2f9f7445ab257892e79340766fce8c3f22f4cb7f6b089189352e4788e6358419",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_10e6hcjk/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_53md_wju/cfg.hex",
+      "bytes": 72,
+      "sha256": "d31f5786a49d99f5c746366ffd99b1500007a71dd2dc03abdcb0cf9044928782",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_53md_wju/lines.hex",
+      "bytes": 6552,
+      "sha256": "57122711f41f643ec8deb20a1d25bd54ca2cbb7cccbf848d87b5c70c29e2f41c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_53md_wju/out.txt",
+      "bytes": 246,
+      "sha256": "acacee8a3c6679fa3bd85e236058c0eec4959babda18092fc27a465c193b3e73",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_53md_wju/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_6zmck5ri/cfg.hex",
+      "bytes": 72,
+      "sha256": "604b3930bead982086cc9029da2c37e428c9aa21b1ca5c885c80d37bf8d85a88",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_6zmck5ri/lines.hex",
+      "bytes": 6552,
+      "sha256": "6925b8435935ebe44d77f160b3fd1f65317707916c859d469de2f1663e0ac37e",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_6zmck5ri/out.txt",
+      "bytes": 247,
+      "sha256": "9421b540d928b927d8c704f68899560d8f64aaa7275a7a8d7a223ead3f96a395",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_6zmck5ri/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_8ugyly5j/cfg.hex",
+      "bytes": 72,
+      "sha256": "e4787f09b830e0c6d3d389d93d52323238b12730afcdd026b87bd4f0a2c82ddf",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_8ugyly5j/lines.hex",
+      "bytes": 6552,
+      "sha256": "45a1e1fd10a5564e4204f56ea285992f3e2bf117a711e92e7a35f07fd4a7b060",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_8ugyly5j/out.txt",
+      "bytes": 247,
+      "sha256": "7f438ef3133ca3bc61f44fa7a1e0b9ab35ba8a97fad3bfc252424c4d75013e2a",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_8ugyly5j/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_eo29l50s/cfg.hex",
+      "bytes": 72,
+      "sha256": "d62bf20b94892dc633916cc4ed6e970feff502a31851a8eb4fff22c90a76071a",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_eo29l50s/lines.hex",
+      "bytes": 6552,
+      "sha256": "57122711f41f643ec8deb20a1d25bd54ca2cbb7cccbf848d87b5c70c29e2f41c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_eo29l50s/out.txt",
+      "bytes": 247,
+      "sha256": "c9e3e228cc914a6fa0d7f1ca0ed0ca87d6e5310f11c1115ea3d40b91d8072b1e",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_eo29l50s/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_g0ud2tul/cfg.hex",
+      "bytes": 72,
+      "sha256": "5719a5f5722d0dd494a8ddf0dffa57991985f6f4c1bd45b2dbda17680fd1ba5c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_g0ud2tul/lines.hex",
+      "bytes": 6552,
+      "sha256": "6925b8435935ebe44d77f160b3fd1f65317707916c859d469de2f1663e0ac37e",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_g0ud2tul/out.txt",
+      "bytes": 247,
+      "sha256": "996df4ed778b222676bf33379c69ae0cfa0ee7f7ce74ed083c472684957518a0",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_g0ud2tul/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_h0gi8gp5/cfg.hex",
+      "bytes": 72,
+      "sha256": "d31f5786a49d99f5c746366ffd99b1500007a71dd2dc03abdcb0cf9044928782",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_h0gi8gp5/lines.hex",
+      "bytes": 6552,
+      "sha256": "45a1e1fd10a5564e4204f56ea285992f3e2bf117a711e92e7a35f07fd4a7b060",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_h0gi8gp5/out.txt",
+      "bytes": 246,
+      "sha256": "999f370afb47f5282ad3324beb92751164cc0d0e97d4acbca6948860d7af5488",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_h0gi8gp5/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_kopkipfg/cfg.hex",
+      "bytes": 72,
+      "sha256": "e4787f09b830e0c6d3d389d93d52323238b12730afcdd026b87bd4f0a2c82ddf",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_kopkipfg/lines.hex",
+      "bytes": 6552,
+      "sha256": "57122711f41f643ec8deb20a1d25bd54ca2cbb7cccbf848d87b5c70c29e2f41c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_kopkipfg/out.txt",
+      "bytes": 247,
+      "sha256": "e85959aa96ca111a2259e56fba3450f1fdc86f3204620f1a68aaf64ec47d83b9",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_kopkipfg/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_mjlwi27a/cfg.hex",
+      "bytes": 72,
+      "sha256": "d62bf20b94892dc633916cc4ed6e970feff502a31851a8eb4fff22c90a76071a",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_mjlwi27a/lines.hex",
+      "bytes": 6552,
+      "sha256": "45a1e1fd10a5564e4204f56ea285992f3e2bf117a711e92e7a35f07fd4a7b060",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_mjlwi27a/out.txt",
+      "bytes": 247,
+      "sha256": "d3643970e6b686ba165faab162edf48b74e46afcdc708cb0784a59a39a243429",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_mjlwi27a/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_o5j17wqq/cfg.hex",
+      "bytes": 72,
+      "sha256": "42f285dd7699f384d03a5047573a0065127444ba0add76d9d6c480cf881935b1",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_o5j17wqq/lines.hex",
+      "bytes": 6552,
+      "sha256": "936fbe629e40026de580f9e2b709386994c22052af034ba6b300818497987031",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_o5j17wqq/out.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_o5j17wqq/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_o8y0fipd/cfg.hex",
+      "bytes": 72,
+      "sha256": "4fcca834f7fe2a753ae9222ffbfec87c27015450c38d77d54fa002c4ab0fef5e",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_o8y0fipd/lines.hex",
+      "bytes": 6552,
+      "sha256": "06ce7464cf781688f154672d3b161f7053cbc7db5e9021b76a9ee53f8dd48a1c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_o8y0fipd/out.txt",
+      "bytes": 247,
+      "sha256": "43085bc63f0113df55beb14006317ec2eec3ab92634c0b29dbcb2a0d93e7c970",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_o8y0fipd/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_ow2mehi3/cfg.hex",
+      "bytes": 72,
+      "sha256": "604b3930bead982086cc9029da2c37e428c9aa21b1ca5c885c80d37bf8d85a88",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_ow2mehi3/lines.hex",
+      "bytes": 6552,
+      "sha256": "48254f5da15eb2a20fb028829b7c746a3c1a7d7183073aafa3f2371ea245fcd4",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_ow2mehi3/out.txt",
+      "bytes": 247,
+      "sha256": "1471b0a5622d0304823bdaa0c478175051be7dc622d6160d4735d7224c4acce4",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_ow2mehi3/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_qkxki04w/cfg.hex",
+      "bytes": 72,
+      "sha256": "ca0229a554504605e7e3f3807f49dd4b3c1a50e68c6d65e9771b50d4f6843174",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_qkxki04w/lines.hex",
+      "bytes": 6552,
+      "sha256": "48254f5da15eb2a20fb028829b7c746a3c1a7d7183073aafa3f2371ea245fcd4",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_qkxki04w/out.txt",
+      "bytes": 246,
+      "sha256": "301c14cd0fdb9eecae628edb39c677a967ed393e57981c600c0bde1679368429",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_qkxki04w/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_w8vaby18/cfg.hex",
+      "bytes": 72,
+      "sha256": "ca0229a554504605e7e3f3807f49dd4b3c1a50e68c6d65e9771b50d4f6843174",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_w8vaby18/lines.hex",
+      "bytes": 6552,
+      "sha256": "6925b8435935ebe44d77f160b3fd1f65317707916c859d469de2f1663e0ac37e",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_w8vaby18/out.txt",
+      "bytes": 246,
+      "sha256": "99d07cf39f5182bd3234ff5a1af5c131464d0a089e5f19e3d736505369bfc7b9",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_w8vaby18/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_y2inmdv9/cfg.hex",
+      "bytes": 72,
+      "sha256": "65d46d987ffcb0e90c64e1c3ba40843c5c43ba5f396cac33f8407e76a5a987b6",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_y2inmdv9/lines.hex",
+      "bytes": 6552,
+      "sha256": "06ce7464cf781688f154672d3b161f7053cbc7db5e9021b76a9ee53f8dd48a1c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_y2inmdv9/out.txt",
+      "bytes": 247,
+      "sha256": "2679e017f3122db756b69feb51111c9962d33a2112c5faac4034c4276d649f2e",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_y2inmdv9/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_zr0cpxke/cfg.hex",
+      "bytes": 72,
+      "sha256": "5719a5f5722d0dd494a8ddf0dffa57991985f6f4c1bd45b2dbda17680fd1ba5c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_zr0cpxke/lines.hex",
+      "bytes": 6552,
+      "sha256": "48254f5da15eb2a20fb028829b7c746a3c1a7d7183073aafa3f2371ea245fcd4",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_zr0cpxke/out.txt",
+      "bytes": 247,
+      "sha256": "4f3587e8ff8a60f4679b170c5461de7d06f916267060023526c4d492f3d4503e",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/s_zr0cpxke/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "bytes": 6673,
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "bytes": 6668,
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/common/ot_prefix.sv",
+      "bytes": 2757,
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/gpu/ot_gpu_bd_col.sv",
+      "bytes": 6488,
+      "sha256": "6bb9a1468b9d0e54e93b75ff697461ba2d277cc2657c5337d8b97e01a2263af0",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/gpu/ot_gpu_bulk_copy.sv",
+      "bytes": 6787,
+      "sha256": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/gpu/ot_gpu_fadd.sv",
+      "bytes": 1725,
+      "sha256": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/gpu/ot_gpu_issue.sv",
+      "bytes": 7358,
+      "sha256": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/gpu/ot_gpu_sm_v.sv",
+      "bytes": 11348,
+      "sha256": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/gpu/ot_gpu_stack.sv",
+      "bytes": 6310,
+      "sha256": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/gpu/ot_gpu_tc_col.sv",
+      "bytes": 5979,
+      "sha256": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/gpu/ot_gpu_tree.sv",
+      "bytes": 2607,
+      "sha256": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/hdc/ot_hdc_delay.sv",
+      "bytes": 1395,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/hdc/ot_hdc_fastfp.sv",
+      "bytes": 19069,
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "bytes": 12112,
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "bytes": 11377,
+      "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "bytes": 10519,
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/hdc/ot_hdc_fpu.sv",
+      "bytes": 5251,
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/hdc/ot_hdc_sfu.sv",
+      "bytes": 7751,
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/hdc/v41/ot_hdc_blockdot.sv",
+      "bytes": 16915,
+      "sha256": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "bytes": 11904,
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/sim/ot_hdc_prefix_vec.sv",
+      "bytes": 3280,
+      "sha256": "dd4cd5d6b650b83a32dfd56f8af739fe295573be64babcde4554cb713d1fe55c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/v41rom/ot_v41_bmul2.sv",
+      "bytes": 4494,
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/v41rom/ot_v41_bterm.sv",
+      "bytes": 11773,
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/v41rom/ot_v41_bterm2.sv",
+      "bytes": 12540,
+      "sha256": "6672d9e22d8a7a1c0ef293abc6970446cfa6c8e7c768c7b4706ee1cb94fcc708",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "full/sm_snapshot/rtl/v41rom/ot_v41_fadd.sv",
+      "bytes": 11535,
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    }
+  ],
+  "metadata_archive": "runtime-fetch-control_checkpoint_metadata.tar.gz",
+  "metadata_blob": "f8ad314b10effb91ba7ac82326e9985efd4ec1df",
+  "preserved_ref": "refs/maintenance/disk-recovery-20261001/checkpoint-runtime-fetch-control",
+  "allocated_bytes_before": 33431552,
+  "free_before": 219477336064
+}

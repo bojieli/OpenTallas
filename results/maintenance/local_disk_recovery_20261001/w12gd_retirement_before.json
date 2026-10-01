@@ -1,0 +1,16 @@
+{
+  "path": "/tmp/claude-1000/wt/w12gd",
+  "owner_retirement": "Qwen owner handoff",
+  "timestamp": 1790844054.2321727,
+  "live_pids": [],
+  "manifest_references": [],
+  "head": "5560c98d4b6a55ef28d7d57b853e96008e30d13d",
+  "status_sha256": "1bdaff98e0ca963e462dd4dce56b006b8f94a201cc06434f333fd6ab4288d90e",
+  "status": " M rtl/hdc/ot_hdc_fastfp.sv\n M rtl/hdc/ot_hdc_matvec.sv\n M rtl/hdc/ot_qwen_me_array.sv\n M rtl/hdc/ot_qwen_rom_tile.sv\n M rtl/test/tb_qwen_me_partition.sv\n M tools/qwen_rom_floorplan_w12.py\n M tools/rtl_qwen_me_partition_gate.py\n",
+  "preserved_head_ref": "refs/maintenance/disk-recovery-20261001/w12gd",
+  "dirty_archive_commit": "a1426e3dffcc438eaceaec2a9c5fa4755fc3fcb0",
+  "dirty_archive_ref": "refs/maintenance/disk-recovery-20261001/w12gd-dirty",
+  "unique_source_bytes": 159295,
+  "allocated_bytes_before": 4325363712,
+  "free_before": 80256716800
+}
