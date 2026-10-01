@@ -31,6 +31,7 @@ if not advanced:
  analysis['next_action']='HE internal progress probe against existing die0 archive: adapter load count/state, HCP active/run/output index, valid/last at5900 and10500; no repeat of this unchanged watchdog diagnostic'
  write(BASE/'analysis.json',analysis);write(Q/'W17.HE-progress-next.json',analysis)
  with open(Q/'W17.manifest','a') as f:f.write('\n# Unchangedbinary diagnostic did not advance all ranks beyondPC9; terminal analysed '+str(BASE/'analysis.json')+'; HE progress probe required, no fulltoken queued.\n')
+ subprocess.run([sys.executable,str(pathlib.Path(__file__).with_name('he_progress_probe_20261001.py'))],check=False)
  sys.exit(0)
 # Image-derived HE service envelope, diagnostic safety factor not performance calibration.
 sys.path.insert(0,receipt['source']+'/tools')
