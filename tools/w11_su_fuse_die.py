@@ -46,8 +46,10 @@ _defines = D.defines
 
 
 def defines(lanes=None):
+    # -Wno-TIMESCALEMOD (as the campaign's own lint passes): the SU's elaboration-time trap instances name
+    # modules that do not exist in branches never built, which this Verilator reports as timescale-less modules
     return _defines(lanes) + [f"+define+OT_SUKR={FUSE['sukr']}", f"+define+OT_SUBCAST={FUSE['subcast']}",
-                              f"+define+OT_SURET={FUSE['suret']}"]
+                              f"+define+OT_SURET={FUSE['suret']}", "-Wno-TIMESCALEMOD"]
 
 
 def images(out, *extra, lanes=None):
