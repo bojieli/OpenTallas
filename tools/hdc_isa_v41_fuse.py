@@ -18,8 +18,11 @@ collective, scan, the reducer's broadcast, a staging-buffer epilogue) delivers i
 at entry xkr_wb (6) + vector; VW = N, or M with xkr_lw (1); xkr_map (2) the element -> (entry, lane) mapping of
 the CONSUMING chain's layout: 0 FLAT (output j at entry xkr_wb + j div VW, lane j mod VW), 1 ROWS (rows of the
 producer's length r in slots S = pow2ceil(r) capped at VW, VW/S rows a vector, as the SU packs a no x r op),
-2 SCALAR BROADCAST (reduced scalar k to every lane of entry xkr_wb + k), 3 reserved; xkr_epi (4) an epilogue
-applied on the way in (0 none, 1-15 reserved).
+2 SCALAR BROADCAST (reduced scalar k to every lane of entry xkr_wb + k), 3 reserved; xkr_epi (4) the epilogue
+applied on the way in: 0 none, 1-15 an index into the staging buffer's PROGRAM STORE of short micro-programs run
+by its programmable lanes (not fixed function units; the fusion audit's 15 functions -- sumsq / max / sum taps,
+rsqrt, scale, RoPE, FP8 / FP4 qdq, SiLU*up*w, residual / mHC post mix, bias, sqrt(softplus), exp(x - max),
+normalise with sink, sigmoid mix -- are store contents, loaded per program, not encodings).
 """
 from pathlib import Path
 
