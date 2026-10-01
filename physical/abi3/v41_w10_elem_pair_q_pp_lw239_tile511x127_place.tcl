@@ -36,10 +36,10 @@ proc ot_row_orient {block y dbu} {
     error "No placement row at Y=$y"
 }
 set ot_macros {
-    {g_mac[0].g_pp.u_rom0} 14.160 6.160 R0 0
-    {g_mac[0].g_pp.u_rom1} 14.160 73.390 MX 0
-    {g_mac[1].g_pp.u_rom0} 863.440 6.160 MY 0
-    {g_mac[1].g_pp.u_rom1} 863.440 73.390 R180 0
+    {u_e.g_mac[0].g_pp.u_rom0} 5.400 0.540 R0 0
+    {u_e.g_mac[0].g_pp.u_rom1} 5.400 63.450 MX 0
+    {u_e.g_mac[1].g_pp.u_rom0} 380.160 0.540 MY 0
+    {u_e.g_mac[1].g_pp.u_rom1} 380.160 63.450 R180 0
 }
 set nfixed 0
 set nunused 0
