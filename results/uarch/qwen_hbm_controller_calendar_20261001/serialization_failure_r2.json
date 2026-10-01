@@ -1,0 +1,10 @@
+{
+  "schema": "Qwen_controller_calendar_serialization_failure_r2",
+  "status": "FAIL_MODEL_SERIALIZATION_NOT_DUT",
+  "source_sha256": "9ae90246155fade22b84b152f9afc4a0a29dca46338e4bf66689d0667f2ffd1b",
+  "test_command": "python3 -m pytest -q tests/test_qwen_hbm_controller_calendar_r2.py",
+  "passed": 10,
+  "failed": 1,
+  "failure": "dict(**event,ps=string) duplicated the existing ps key while serializing a completed fixture timeline; test/model generation failed after calendar construction.",
+  "actual_DUT_failure": false
+}
