@@ -3,9 +3,9 @@
 
 Link-layer RTL:     rtl/link/ot_link_{afifo,tx,rx}.sv (synthesizable), rtl/link/ot_link_chan_model.sv (analog PHY and
                     channel, simulation only).
-Benches:            rtl/test/tb_w15_link_unit.sv    one link direction
-                    rtl/test/tb_w15_v41_tp4.sv      the V4.1 TP-4 group (2 packages x 2 dies), 12 layer-0 collectives
-                    rtl/test/tb_w15_qwen_tp2.sv     the Qwen TP-2 pair, 73 exchanges of a token
+Benches:            rtl/test/tb_w15b_link_unit.sv    one link direction
+                    rtl/test/tb_w15b_v41_tp4.sv     the V4.1 TP-4 group (2 packages x 2 dies), 12 layer-0 collectives
+                    rtl/test/tb_w15b_qwen_tp2.sv    the Qwen TP-2 pair, 73 exchanges of a token
 
 Subcommands:
     qwen-fixture DIR [--lanes L] [--h H]      partials, golden sums and gather words for the Qwen bench
@@ -173,24 +173,34 @@ def qwen_fixture(outdir: Path, lanes: int, H: int, seed: int = 20260929) -> dict
 # ---------------------------------------------------------------------------------------------------------------
 BUILD = Path(os.environ.get("W15_BUILD", "/tmp/claude-1000/w15b"))
 VEC = Path(os.environ.get("W15_VEC", "/tmp/claude-1000/w15v"))
-LINK_SRC = ["rtl/link/ot_link_afifo.sv", "rtl/link/ot_link_crc32.sv", "rtl/link/ot_link_tx.sv", "rtl/link/ot_link_rx.sv",
-            "rtl/link/ot_link_chan_model.sv"]
+# W15b (2026-10-01): the SS-pipelined link layer, the engines' FPLAT / FIFO_SRAM / pacing levers and the TOPK DMA live
+# in NEW modules (ot_w15_*), so the originals that main's records pin stay byte-identical; tb_w15b_* benches use them
+LINK_SRC = ["rtl/link/ot_link_afifo.sv", "rtl/link/ot_link_crc32.sv", "rtl/link/ot_link_crc32_pipe.sv",
+            "rtl/link/ot_w15_link_tx.sv", "rtl/link/ot_w15_link_rx.sv", "rtl/link/ot_link_chan_model.sv"]
+SRAM_SRC = ["rtl/link/ot_fifo_sram_fwft.sv",
+            "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+            "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+            "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"]
+FPLAT_SRC = ["rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_prefix.sv"]   # main: LAT adder uses the keep-prefix adders
 TB_SRC = {
-    "tb_w15_v41_tp4": ["rtl/test/tb_w15_v41_tp4.sv", *LINK_SRC, "rtl/chip/ot_chip_v41x_coll_dma.sv",
-                       "rtl/chip/ot_chip_v41x_coll_transpose.sv", "rtl/rom/ot_rom_oneshot_px.sv",
-                       "rtl/hdc/ot_hdc_fastfp.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv"],
-    "tb_w15_qwen_tp2": ["rtl/test/tb_w15_qwen_tp2.sv", *LINK_SRC, "rtl/rom/ot_rom_oneshot_allreduce.sv",
-                        "rtl/proto/ot_fp32_add_rne_pipe.sv"],
-    "tb_w15_link_unit": ["rtl/test/tb_w15_link_unit.sv", *LINK_SRC],
-    "tb_w15_crc32": ["rtl/test/tb_w15_crc32.sv", "rtl/link/ot_link_crc32.sv"],
+    "tb_w15b_v41_tp4": ["rtl/test/tb_w15b_v41_tp4.sv", *LINK_SRC, "rtl/chip/ot_w15_coll_dma.sv",
+                        "rtl/chip/ot_chip_v41x_coll_transpose.sv", "rtl/rom/ot_w15_rom_oneshot_px.sv",
+                        "rtl/hdc/ot_hdc_fastfp.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC, *FPLAT_SRC,
+                        "rtl/chip/ot_coll_topk_merge.sv"],
+    "tb_w15b_qwen_tp2": ["rtl/test/tb_w15b_qwen_tp2.sv", *LINK_SRC, "rtl/rom/ot_w15_rom_oneshot_allreduce.sv",
+                         "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fastfp.sv", *SRAM_SRC, *FPLAT_SRC],
+    "tb_w15b_link_unit": ["rtl/test/tb_w15b_link_unit.sv", *LINK_SRC],
+    "tb_w15b_crc32": ["rtl/test/tb_w15b_crc32.sv", "rtl/link/ot_link_crc32.sv", "rtl/link/ot_link_crc32_pipe.sv"],
+    "tb_w15_v41_hbm_nvls": ["rtl/test/tb_w15_v41_hbm_nvls.sv", *LINK_SRC, "rtl/link/ot_link_nvls_switch.sv",
+                            "rtl/hdc/ot_hdc_fastfp.sv"],
 }
 UNIT = {   # name -> (top, -G overrides): the link direction alone, both link classes; the CRC equivalence
-    "unit_ucie": ("tb_w15_link_unit", dict(WIRE_TX=22, WIRE_RX=22, DREL=58, AW_TX=6)),
-    "unit_board": ("tb_w15_link_unit", dict(FRAME_CYCLES=2, ENC_STAGES=4, DEC_STAGES=59, T_LINK=0.93407,
+    "unit_ucie": ("tb_w15b_link_unit", dict(WIRE_TX=22, WIRE_RX=22, DREL=65, AW_TX=6)),
+    "unit_board": ("tb_w15b_link_unit", dict(FRAME_CYCLES=2, ENC_STAGES=4, DEC_STAGES=59, T_LINK=0.93407,
                                             DLY_NS=56.868, JSTATIC_NS=3.0, WANDER_NS=0.2, WIRE_TX=29, WIRE_RX=29,
-                                            DREL=199, AW_TX=6)),
-    "crc_par": ("tb_w15_crc32", dict(W=2300)),
-    "crc_ser": ("tb_w15_crc32", dict(W=2300, MASK_MAX_W=16)),
+                                            DREL=206, AW_TX=6)),
+    "crc_par": ("tb_w15b_crc32", dict(W=2300)),
+    "crc_ser": ("tb_w15b_crc32", dict(W=2300, MASK_MAX_W=16)),
 }
 
 
@@ -204,7 +214,7 @@ def unit_checks():
                            text=True)
         assert r.returncode == 0, r.stderr[-2000:]
         exe = str(d / f"V{top}")
-        if top == "tb_w15_crc32":
+        if top == "tb_w15b_crc32":
             out[name] = dict(parameters=gen, line=[l for l in subprocess.run([exe], capture_output=True, text=True)
                                                    .stdout.splitlines() if "CRCCHK" in l][0])
             continue
@@ -221,35 +231,206 @@ def unit_checks():
 
 VFLAGS = ["--binary", "--timing", "-CFLAGS", "-O0", "-Wno-fatal", "-Wno-WIDTH", "-Wno-TIMESCALEMOD", "-Wno-lint",
           "-Wno-style", "-Wno-MULTIDRIVEN"]
+# ---------------------------------------------------------------------------------------------------------------
+# V4.1 HBM comparator: TP-96 (48 two-die packages) through one NVLink-class switch tier with in-switch reduction
+# ---------------------------------------------------------------------------------------------------------------
+HBM_T_CORE = 1 / 1.0339e9            # the HBM die clock (results/floorplan/hbm_gpu/v41_hbm_die.json clock_hz)
+HBM_SWITCH = {
+    "switch_core_ns": dict(value=250.0, grade="published (upper bound, used as the value)",
+                           source="Broadcom Scale-Up Ethernet Framework Spec RM104 (2025) Appendix A Fig. 22: 'Switch "
+                                  "Tx+Rx Latency <250ns' (tools/sync_cost_table.py r-sue); the comparator's alpha = "
+                                  "2 x 209 + 250 = 668 ns (tools/arch_hbm_switched_v41.py)"),
+    "in_switch_reduction": dict(value="fixed pairwise tree over the port (package) index, binary32 RNE",
+                                grade="ASSUMED (deterministic order)",
+                                source="NVLS / SHARP in-network reduction is the comparator's headline "
+                                       "(arch_hbm_switched_v41 nvl_0p9_nvls); a FIXED-order tree is our requirement "
+                                       "for bit-identical results, not a published NVSwitch property"),
+    "switch_clock_ns": dict(value=HBM_T_CORE * 1e9, grade="ASSUMED", source="switch core at the die clock"),
+    "link": dict(value="112G PAM4, full RS(544,514) KP4 over <= 0.8 m rack cable, 68 lanes (0.9 TB/s payload)",
+                 grade="derived", source="configs/hardware/technology.json links.rom_rack_cable_serdes (hop 209 ns: "
+                 "channel 200 + CDC 4 + endpoint 5); 0.9 TB/s per package per direction (arch_hbm_switched_v41)"),
+    "kp4_codeword_ns": dict(value=5440 / (68 * 112.0), grade="derived", source="5,440 bits / (68 x 112 Gb/s)"),
+    "channel_components_ns": dict(value=dict(tx_pcs_fec_encode=4.0, tx_analog=3.0, flight_0p8m=3.7, rx_afe_dsp=50.0,
+                                              codeword=round(5440 / (68 * 112.0), 3), rx_deskew=10.0,
+                                              rs544_decode=round(200 - 4 - 3 - 3.7 - 50 - 5440 / (68 * 112.0) - 10, 2)),
+                                  grade="ASSUMED split of the 200 ns channel",
+                                  source="flight: 4.6 ns/m twinax (Broadcom SUE); RS544 decode the remainder "
+                                         "(IEEE P802.3ck gustlin_3ck_01_1118: 50-100 ns processing + interleave)"),
+    "wire_stages": dict(value=16, grade="floorplan",
+                        source="results/floorplan/hbm_gpu/v41_hbm_die.json crossings tp_root_to_ucie (14.7 mm, 16 "
+                               "cycles); the SerDes edge is ASSUMED at the same distance"),
+}
+
+
+HBM_T_SS = 0.833                     # the product clock, 1.2 GHz at SS (AGENTS.md, user decision 2026-09-30)
+
+
+def hbm_params(P, t=None):
+    """Bench parameters for P packages; t: die and switch clock period in ns (default the HBM die's 1.0339 GHz)."""
+    t = HBM_T_CORE * 1e9 if t is None else t
+    xt = HBM_SWITCH["kp4_codeword_ns"]["value"]
+    c = HBM_SWITCH["channel_components_ns"]["value"]
+    L = math.ceil(math.log2(P))
+    core = round(HBM_SWITCH["switch_core_ns"]["value"] / t)
+    return dict(P=P, T_CORE=t, T_SW=t, X_T=round(xt, 5), X_ENC=round(c["tx_pcs_fec_encode"] / xt),
+                X_DEC=round((c["rx_deskew"] + c["rs544_decode"]) / xt), SW_PIPE=core - (2 + 3 * L),
+                )
+
+
+def hbm_x_dly():
+    c = HBM_SWITCH["channel_components_ns"]["value"]
+    return round(c["tx_analog"] + c["flight_0p8m"] + c["rx_afe_dsp"] + c["codeword"], 3)
+
+
+HBM_WORDS = (1, 2, 4, 8)
+# The V4.1 HBM comparator's two TP-96 gathers the feasibility audit adds (tools/hbm_feasibility_audit.py): the
+# row-split expert intermediate (6 routed experts x 2,304 x BF16 = 27,648 B a token, 288 B a rank) and the 96-way
+# indexer top-k merge (512 (score, position) candidates x 8 B = 4,096 B a rank, 393,216 B a token).
+HBM_PROD_GATHERS = {"expert_intermediate_gather": 6 * 2304 * 2 // 96, "index_merge_96way": 512 * 8}
+HBM_PORT_BPS = 0.9e12                # package switch port payload a direction (tools/arch_hbm_switched_v41.py)
+
+
+def hbm_slot_bytes(t_ns):
+    """Product bytes one bench record slot stands for.  The bench moves one 64 B record a switch cycle on each
+    package's downlink (and one a die cycle on the UCIe forward); its frame carries a whole record, so the bench's
+    timing does not depend on the record width.  A product gather of B bytes a rank is therefore timed as
+    ceil(B / slot) records a rank, slot = the 0.9 TB/s port's bytes a clock (the audit's own B / PKG_LINK_BPS term)."""
+    return HBM_PORT_BPS * t_ns * 1e-9
+
+
+def hbm_prod_ops(t_ns):
+    """8 descriptors: the two product gathers in slots, back to back as a MoE layer then an indexer layer issue them,
+    with a 1-record all-reduce between (the layer's output reduction)."""
+    slot = hbm_slot_bytes(t_ns)
+    g1, g2 = (math.ceil(b / slot) for b in HBM_PROD_GATHERS.values())
+    return [dict(mode=1, words=g1), dict(mode=0, words=1), dict(mode=1, words=g2), dict(mode=0, words=1),
+            dict(mode=1, words=g1), dict(mode=1, words=g2), dict(mode=0, words=1), dict(mode=1, words=g2)]
+
+
+def hbm_fixture(outdir: Path, P: int, seed: int = 96, ops=None) -> dict:
+    import hdc_golden as G
+    outdir.mkdir(parents=True, exist_ok=True)
+    N, MAXW, LANES = 2 * P, 8, 16
+    if ops is None:
+        ops = [dict(mode=0, words=w) for w in HBM_WORDS] + [dict(mode=1, words=w) for w in HBM_WORDS]
+    assert len(ops) == 8 and all(1 <= o["words"] <= MAXW for o in ops), ops
+    rng = np.random.default_rng(seed)
+    part = np.zeros((len(ops), N, MAXW, LANES), dtype=np.uint32)
+    exp = np.zeros((len(ops), MAXW, LANES), dtype=np.uint32)
+    for oi, o in enumerate(ops):
+        v = (np.exp2(rng.uniform(-6, 6, size=(N, MAXW, LANES))) * rng.choice([-1, 1], size=(N, MAXW, LANES))
+             ).astype(np.float32)
+        v[1::7] = -v[0::7][:len(v[1::7])]                     # exact cancellations across dies
+        part[oi] = G.bits(v)
+        if o["mode"] == 0:
+            for k in range(o["words"]):
+                for ln in range(LANES):
+                    s = [G.add(v[2 * q, k, ln], v[2 * q + 1, k, ln]) for q in range(P)]   # in-package d0 + d1
+                    while len(s) > 1:                                                   # the switch's tree
+                        s = [G.add(s[2 * i], s[2 * i + 1]) for i in range(len(s) // 2)] + ([s[-1]] if len(s) % 2 else [])
+                    exp[oi, k, ln] = G.bits(s[0]).item()
+
+    def wr(path, arr):
+        with path.open("w") as f:
+            for lanes in arr.reshape(-1, LANES):
+                f.write("".join(f"{int(x):08x}" for x in lanes[::-1]) + "\n")
+    wr(outdir / "part.hex", part)
+    wr(outdir / "expected.hex", exp)
+    (outdir / "desc.hex").write_text("".join(f"{(o['mode'] << 31) | (i << 15) | o['words']:08x}\n"
+                                             for i, o in enumerate(ops)))
+    meta = dict(schema="w15_v41_hbm_nvls_fixture_v1", P=P, dies=N, ops=ops, seed=seed,
+                reference="in-package d_2p + d_2p+1, then the switch's pairwise tree over packages (odd element "
+                          "passes), tools/hdc_golden.add (binary32 RNE, +0 canonical)",
+                images_sha256={p: sha(outdir / p) for p in ("part.hex", "expected.hex", "desc.hex")},
+                golden_sha256=sha(ROOT / "tools/hdc_golden.py"))
+    (outdir / "manifest.json").write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n")
+    return meta
+
+
 # bench configurations: name -> (top, verilator -G overrides, fixture)
 CONFIGS = {
     # V4.1 TP-4: the adopted engine contract (RELAY 1, receive depth 256) and the levers
-    "v41_r1d256": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=256), "l0"),
-    "v41_r0d256": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256), "l0"),
-    "v41_r1d1024": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=1024), "l0"),
-    "v41_r0d1024": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024), "l0"),
+    "v41_r1d256": ("tb_w15b_v41_tp4", dict(RELAY=1, DEPTH=256), "l0"),
+    "v41_r0d256": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=256), "l0"),
+    "v41_r1d1024": ("tb_w15b_v41_tp4", dict(RELAY=1, DEPTH=1024), "l0"),
+    "v41_r0d1024": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024), "l0"),
     # PROPOSED placement (W3 die assembly rung 5, claude/w3-v41-die-assembly 01ef74dc, docs/V41_DIE_ASSEMBLY_RUNG5.md:
     # one collective at the transport-channel crossing; collective <-> UCIe / SerDes 14.62 mm): 17 stages at the
     # model's loaded 0.76 ps/um, 14 at W3's measured loaded corridor reach (1.06-1.10 mm/cycle); RELAY=0 uses
     # the direct T1 link to every partner-package die (option (b) is a full mesh)
-    "v41p17_r0d256": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "l0"),
-    "v41p17_r1d256": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=256, U_WIRE=17, X_WIRE=17), "l0"),
-    "v41p17_r0d1024": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "l0"),
-    "v41p14_r0d256": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=14, X_WIRE=14), "l0"),
-    "v41p17_r0d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "sweep"),
-    "v41p17_r0d1024_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep"),
+    "v41p17_r0d256": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "l0"),
+    "v41p17_r1d256": ("tb_w15b_v41_tp4", dict(RELAY=1, DEPTH=256, U_WIRE=17, X_WIRE=17), "l0"),
+    "v41p17_r0d1024": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "l0"),
+    "v41p14_r0d256": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=14, X_WIRE=14), "l0"),
+    "v41p17_r0d256_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=256, U_WIRE=17, X_WIRE=17), "sweep"),
+    "v41p17_r0d1024_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep"),
+    # 2x engine: 32 FP32 lanes (128 B records), adopted placement / direct T1 / depth 1,024 (in 128 B words: 512)
+    "v41p17_r0d512_w32": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32, X_NL=1),
+                          "l0w32"),
+    "v41p17_r0d512_w32_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32,
+                                                       X_NL=1), "sweepw32"),
+    "v41p17_r0d1024_even_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=17, X_WIRE=17), "sweep_even"),
+    # receive FIFOs in 1R1W SRAM macros (root 2026-09-29): must reproduce the flop configs' cycles and results
+    "v41p17_r0d512_w32_sram": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32, X_NL=1,
+                                                      FIFO_SRAM=1, SRAM_MACRO=1), "l0w32"),
+    "v41p17_r0d512_w32_sram_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=17, X_WIRE=17, LANES=32,
+                                                            X_NL=1, FIFO_SRAM=1, SRAM_MACRO=1), "sweepw32"),
     # payload sweep (bandwidth and the latency fit) on the same binaries
-    "v41_r1d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=256), "sweep"),
-    "v41_r0d256_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=256), "sweep"),
-    "v41_r1d1024_sweep": ("tb_w15_v41_tp4", dict(RELAY=1, DEPTH=1024), "sweep"),
-    "v41_r0d1024_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=1024), "sweep"),
+    "v41_r1d256_sweep": ("tb_w15b_v41_tp4", dict(RELAY=1, DEPTH=256), "sweep"),
+    "v41_r0d256_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=256), "sweep"),
+    "v41_r1d1024_sweep": ("tb_w15b_v41_tp4", dict(RELAY=1, DEPTH=1024), "sweep"),
+    "v41_r0d1024_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024), "sweep"),
     # Qwen TP-2: the host binding's engine (16 lanes, depth 16) and wider / deeper engines
-    "q16d16": ("tb_w15_qwen_tp2", dict(LANES=16, DEPTH=16), "q16"),
-    "q16d128": ("tb_w15_qwen_tp2", dict(LANES=16, DEPTH=128), "q16"),
-    "q256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64), "q256"),
-    "q256d16": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=16), "q256"),
-    "q256d128": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=128), "q256"),
-    "q1024": ("tb_w15_qwen_tp2", dict(LANES=1024, DEPTH=16, U_NL=1, U_T=0.95), "q1024"),
+    "q16d16": ("tb_w15b_qwen_tp2", dict(LANES=16, DEPTH=16), "q16"),
+    "q16d128": ("tb_w15b_qwen_tp2", dict(LANES=16, DEPTH=128), "q16"),
+    "q256d64": ("tb_w15b_qwen_tp2", dict(LANES=256, DEPTH=64), "q256"),
+    "q256d16": ("tb_w15b_qwen_tp2", dict(LANES=256, DEPTH=16), "q256"),
+    "q256d128": ("tb_w15b_qwen_tp2", dict(LANES=256, DEPTH=128), "q256"),
+    # 1.2 GHz @ SS (AGENTS.md 2026-09-30): 0.833 ns core; the 128 B engine out-runs a 13-lane T1 link (154 vs
+    # 137 GB/s), so the T1 transmit is paced deterministically at 7/8 bundle a cycle (under the link's 0.892);
+    # without pacing the link backpressure reached the engine through the CDC credit return and 2 of 14
+    # deterministic runs moved a last-transmit cycle by one (results kept identical); wire stages from the SS segment sweep (504 um per stage,
+    # results/rtl/w15_collectives.json physical.wire_reach), engine tree adders ot_hdc_fp32_add_lat LAT 7
+    "v41ss_p30_w32": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
+                                             FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833, X_PACE_NUM=7, X_PACE_DEN=8), "l0w32"),
+    "v41ss_p30_w32_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
+                                                   FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
+                                                   X_PACE_NUM=7, X_PACE_DEN=8), "sweepw32"),
+    "v41ss_p30_w32_d1024": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=1024, U_WIRE=30, X_WIRE=30, LANES=32, X_NL=1,
+                                                   FIFO_SRAM=0, FPLAT=1, ADD_LAT=7, T_CORE=0.833, X_PACE_NUM=7, X_PACE_DEN=8), "l0w32"),
+    # W18 collective lane map (claude/w18-die-assembly 133f7ca4, results/physical_abi3/asap7/chip/v41_w18/
+    # collective_lane_map.json; root-adopted): engine at the link edge centre, VM -> engine 30 stages, engine ->
+    # critical-peer lanes <= 2 at 504 um/stage: 32 stages between the VM-side stream and the PHY on each die
+    "v41ss_lm_w32": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
+                                            FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
+                                            X_PACE_NUM=7, X_PACE_DEN=8), "l0w32"),
+    "v41ss_lm_w32_sweep": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
+                                                  FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
+                                                  X_PACE_NUM=7, X_PACE_DEN=8), "sweepw32"),
+    # COLL_TOPK_MERGE end to end (W17's L20 contract): one gather of the scores and ids, the select on every die;
+    # the SS lane-map engine (32 lanes, 128 B words) and the die's 16-lane contract width
+    "v41ss_lm_w32_topk": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
+                                                 FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
+                                                 X_PACE_NUM=7, X_PACE_DEN=8, TOPK=1, TK_NMAX=2048), "topkw32"),
+    "v41ss_lm_w16_topk": ("tb_w15b_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=16,
+                                                 FIFO_SRAM=0, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
+                                                 X_PACE_NUM=7, X_PACE_DEN=8, TOPK=1, TK_NMAX=2048), "topkw16"),
+    "qss_256d64": ("tb_w15b_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0, FPLAT=1, ADD_LAT=7,
+                                           T_CORE=0.833, U_WIRE=29), "q256"),
+    "hbm_p48": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48), X_WIRE=16, U_WIRE=16), "hbm48"),
+    "hbm_p6": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6), X_WIRE=16, U_WIRE=16), "hbm6"),
+    # the same benches at the 1.2 GHz product clock (dies and switch at 0.833 ns; the channel and switch core are
+    # nanosecond figures, so only the cycle counts move), and the audit's product gathers (_prod: same binaries,
+    # fixture hbm_prod_ops) -- the collective list of W19's TP-96 audit
+    "hbm_p48_ss": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48, HBM_T_SS), X_WIRE=16, U_WIRE=16), "hbm48"),
+    "hbm_p6_ss": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6, HBM_T_SS), X_WIRE=16, U_WIRE=16), "hbm6"),
+    "hbm_p48_prod": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48), X_WIRE=16, U_WIRE=16), "hbm48_prod"),
+    "hbm_p6_prod": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6), X_WIRE=16, U_WIRE=16), "hbm6_prod"),
+    "hbm_p48_ss_prod": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48, HBM_T_SS), X_WIRE=16, U_WIRE=16),
+                        "hbm48_ss_prod"),
+    "hbm_p6_ss_prod": ("tb_w15_v41_hbm_nvls", dict(hbm_params(6, HBM_T_SS), X_WIRE=16, U_WIRE=16), "hbm6_ss_prod"),
+    "q256d64_sram": ("tb_w15b_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0), "q256"),
+    "q1024": ("tb_w15b_qwen_tp2", dict(LANES=1024, DEPTH=16, U_NL=1, U_T=0.95), "q1024"),
 }
 
 
@@ -257,7 +438,16 @@ def verilator_version():
     return subprocess.run([str(VERILATOR), "--version"], capture_output=True, text=True).stdout.strip()
 
 
+HBM_FIXTURES = {"hbm48": (48, None), "hbm6": (6, None), "hbm48_prod": (48, hbm_prod_ops(HBM_T_CORE * 1e9)),
+                "hbm6_prod": (6, hbm_prod_ops(HBM_T_CORE * 1e9)), "hbm48_ss_prod": (48, hbm_prod_ops(HBM_T_SS)),
+                "hbm6_ss_prod": (6, hbm_prod_ops(HBM_T_SS))}
+
+
 def binary_name(name):
+    if name.endswith("_prod"):
+        return name[:-len("_prod")]
+    if name.endswith("_even_sweep"):
+        return name[:-len("_even_sweep")]
     return name[:-len("_sweep")] if name.endswith("_sweep") else name
 
 
@@ -297,11 +487,11 @@ def run(name: str, seed: int, det: int, drel: dict, extra: dict | None = None) -
     out.mkdir(parents=True, exist_ok=True)
     args = [str(exe), f"+SEED={seed}", f"+VEC={VEC / fix}", f"+DET={det}", f"+OUT={out / 'vm.hex'}"]
     args += [f"+{k}={v}" for k, v in drel.items()] + [f"+{k}={v}" for k, v in (extra or {}).items()]
-    r = subprocess.run(args, capture_output=True, text=True, timeout=3600)
+    r = subprocess.run(args, capture_output=True, text=True, timeout=6 * 3600 if top == "tb_w15_v41_hbm_nvls" else 3600)
     log = r.stdout + r.stderr
     (out / "log.txt").write_text(log)
     res = dict(seed=seed, det=det, drel=drel, extra=extra or {}, fatal=("%Fatal" in log) or ("%Error" in log))
-    if top == "tb_w15_v41_tp4":
+    if top in ("tb_w15b_v41_tp4", "tb_w15_v41_hbm_nvls"):
         ops = [dict(zip(("op", "die", "mode", "words", "issue", "first_tx", "last_tx", "first_vm", "last_vm",
                          "done", "writes", "expect"), map(int, m.groups()))) for m in OPL.finditer(log)]
         links = [dict(src=int(m[1]), dst=int(m[2]), cls=m[3], age_min=int(m[4]), age_max=int(m[5]),
@@ -327,7 +517,11 @@ def run(name: str, seed: int, det: int, drel: dict, extra: dict | None = None) -
     return res
 
 
-GUARD = 1                  # cycles of release margin beyond the worst arrival seen over the sweep and its corners
+GUARD = 3                  # cycles of release margin beyond the worst arrival seen over the sweep and its corners:
+                           # 1 for the RX head register (4fad2dc5: a bundle is releasable the cycle after it is
+                           # visible) + 1 for the RX prefetch register (HEAD_PIPE, the SS release path) + 1 for
+                           # clock phases the sweep did not draw (the HBM TP-12 bench found a downlink arrival one
+                           # cycle past 14 sampled phases at the upper channel corner)
 CLASS_KEYS = {"ucie": ("U_DREL", "U_DLY", "U_JS"), "board": ("X_DREL", "X_DLY", "X_JS")}
 CHAN_DEFAULT = {"U_DLY": LINKS["ucie_a"]["phy_adapter_tx_rx_ns"]["value"],
                 "U_JS": LINKS["ucie_a"]["static_latency_variation_ns"]["value"],
@@ -335,18 +529,19 @@ CHAN_DEFAULT = {"U_DLY": LINKS["ucie_a"]["phy_adapter_tx_rx_ns"]["value"],
                 "X_JS": LINKS["board_112g"]["static_latency_variation_ns"]["value"]}
 
 
-def corners(classes):
+def corners(classes, top=None):
     """Static latency pinned at the bottom and at the top of its range (the seeds draw the inside)."""
     lo = {}
     hi = {}
+    cd = dict(CHAN_DEFAULT, **({"X_DLY": hbm_x_dly()} if top == "tb_w15_v41_hbm_nvls" else {}))
     for c in classes:
         _, dk, jk = CLASS_KEYS[c]
-        lo.update({dk: CHAN_DEFAULT[dk], jk: 0.0})
-        hi.update({dk: round(CHAN_DEFAULT[dk] + CHAN_DEFAULT[jk], 4), jk: 0.0})
+        lo.update({dk: cd[dk], jk: 0.0})
+        hi.update({dk: round(cd[dk] + cd[jk], 4), jk: 0.0})
     return [lo, hi]
 
 
-def arrivals(res, classes):
+def arrivals(res, classes, qwen_wire=None):
     """Hub-to-hub arrival latency (edge age + edge-to-hub wire) per link class, from a det=0 run."""
     out = {}
     if "links" in res:
@@ -355,7 +550,7 @@ def arrivals(res, classes):
             a[0] = min(a[0], l["age_min"] + l["wire"])
             a[1] = max(a[1], l["age_max"] + l["wire"])
     else:
-        w = QWEN_WIRE
+        w = QWEN_WIRE if qwen_wire is None else qwen_wire
         out["ucie"] = [min(res["link_age_min"]) + w, max(res["link_age_max"]) + w]
     return out
 
@@ -370,21 +565,21 @@ def seeds(n):
 def campaign_config(name, ncal=24, nmeas=12, jobs=16):
     from concurrent.futures import ThreadPoolExecutor
     top = CONFIGS[name][0]
-    classes = ["ucie", "board"] if top == "tb_w15_v41_tp4" else ["ucie"]
+    classes = ["ucie", "board"] if top in ("tb_w15b_v41_tp4", "tb_w15_v41_hbm_nvls") else ["ucie"]
     build(name)
     big = {k[0]: 4000 for k in (CLASS_KEYS[c] for c in classes)}          # release far beyond any arrival
     cal_jobs = [(s, 0, big, None) for s in seeds(ncal)] + \
-        [(1000 + i, 0, big, c) for i, c in enumerate(corners(classes))]
+        [(1000 + i, 0, big, c) for i, c in enumerate(corners(classes, top))]
     with ThreadPoolExecutor(jobs) as ex:
         cal = list(ex.map(lambda a: run(name, *a), cal_jobs))
     arr = {}
     for r in cal:
-        for c, (lo, hi) in arrivals(r, classes).items():
+        for c, (lo, hi) in arrivals(r, classes, CONFIGS[name][1].get("U_WIRE")).items():
             a = arr.setdefault(c, [10 ** 9, 0])
             a[0], a[1] = min(a[0], lo), max(a[1], hi)
     drel = {CLASS_KEYS[c][0]: arr[c][1] + GUARD for c in classes}
     meas_jobs = [(s, 1, drel, None) for s in seeds(nmeas)] + \
-        [(2000 + i, 1, drel, c) for i, c in enumerate(corners(classes))]
+        [(2000 + i, 1, drel, c) for i, c in enumerate(corners(classes, top))]
     with ThreadPoolExecutor(jobs) as ex:
         meas = list(ex.map(lambda a: run(name, *a), meas_jobs))
     return dict(name=name, classes=classes, calibration=cal, arrival_cycles=arr, drel=drel, measured=meas)
@@ -404,7 +599,8 @@ def summarize_v41(runs, clock_hz):
         lat = last_vm - issue + 1
         words = four[0]["words"]
         recv_bytes = four[0]["writes"] * 64                                # per die, result words committed
-        rows.append(dict(op=k, mode="all_gather" if four[0]["mode"] else "all_reduce", words_per_rank=words,
+        rows.append(dict(op=k, mode={0: "all_reduce", 1: "all_gather", 2: "topk_merge"}[four[0]["mode"]],
+                         words_per_rank=words,
                          issue_to_last_commit_cycles=lat,
                          issue_to_last_commit_ns=round(lat / clock_hz * 1e9, 1),
                          issue_to_first_commit_cycles=first_vm - issue + 1,
@@ -432,14 +628,14 @@ def fit(rows):
 SWEEP_WORDS = (1, 8, 36, 80, 160, 320)
 
 
-def v41_sweep_fixture(outdir: Path) -> dict:
+def v41_sweep_fixture(outdir: Path, sweep_words=SWEEP_WORDS) -> dict:
     """12 descriptors for the payload sweep: all-gathers and all-reduces of 1..320 words per rank, operands and
     golden built exactly as tools/rtl_v41_tp_layer0_collectives.prepare builds the layer-0 fixture (pairwise
     ((r0+r1)+(r2+r3)) FP32 RNE, BF16 RNE on rnd)."""
     import hdc_golden as G
     import rtl_v41_tp_layer0_collectives as L0
     outdir.mkdir(parents=True, exist_ok=True)
-    ds = [dict(mode=1, rnd=0, words=w) for w in SWEEP_WORDS] + [dict(mode=0, rnd=1, words=w) for w in SWEEP_WORDS]
+    ds = [dict(mode=1, rnd=0, words=w) for w in sweep_words] + [dict(mode=0, rnd=1, words=w) for w in sweep_words]
     OPS, RANKS, MAXW, LANES = 12, 4, L0.MAXW, L0.LANES
     part = np.zeros((OPS, RANKS, MAXW, LANES), dtype=np.uint32)
     exp = np.zeros((OPS, RANKS * MAXW, LANES), dtype=np.uint32)
@@ -481,6 +677,72 @@ def v41_sweep_fixture(outdir: Path) -> dict:
     return meta
 
 
+TOPK_OPS = [  # (name, n, k, stride, score kind): the L20 uses (W17 contract) and stress
+    ("l20_index_topk", 512, 512, 262144, "bf16"), ("l20_candidate_blocks", 2048, 2048, 32768, "blocks"),
+    ("index_ties", 512, 512, 262144, "ties"), ("small_k", 512, 37, 262144, "bf16"), ("argmax_k1", 512, 1, 262144, "bf16"),
+    ("k_over_rank", 512, 2048, 262144, "bf16"), ("l20_index_topk_b", 512, 512, 262144, "bf16"),
+    ("l20_candidate_blocks_b", 2048, 2048, 32768, "blocks"), ("zeros_inf", 512, 700, 262144, "zinf"),
+    ("l20_index_topk_c", 512, 512, 262144, "bf16"), ("cand_small_k", 2048, 100, 32768, "blocks"),
+    ("l20_candidate_blocks_c", 2048, 2048, 32768, "blocks")]
+
+
+def v41_topk_fixture(outdir: Path, lanes: int, seed: int = 20260930) -> dict:
+    """12 COLL_TOPK_MERGE descriptors for tb_w15_v41_tp4 (TOPK=1): per rank the n/LANES score words then the
+    n/LANES local-id words (ids 0..n-1, ascending); expected = the k global ids of
+    hdc_golden_v41.topk_lowest_index over the rank-major scores, ascending, LANES a word, zero-padded."""
+    import hdc_golden_v41 as GV
+    outdir.mkdir(parents=True, exist_ok=True)
+    N, MAXW, OPS = 4, 320, 12
+    rng = np.random.default_rng(seed)
+    part = np.zeros((OPS, N, MAXW, lanes), np.uint32)
+    exp = np.zeros((OPS, N * MAXW, lanes), np.uint32)
+    desc, desc2 = [], []
+
+    def bf16(x):
+        b = np.asarray(x, np.float32).view(np.uint32).astype(np.uint64)
+        return ((b + 0x7FFF + ((b >> 16) & 1)) >> 16 << 16).astype(np.uint32).view(np.float32)
+    for oi, (name, n, k, stride, kind) in enumerate(TOPK_OPS):
+        if kind == "bf16":
+            s = bf16(rng.normal(0, 4, (N, n)))
+        elif kind == "blocks":
+            s = bf16(rng.normal(0, 8, (N, n)))
+            s[1, 7] = np.inf
+        elif kind == "ties":
+            s = rng.choice(np.array([0.0, 1.0, 2.0, -1.0], np.float32), size=(N, n))
+        else:
+            s = rng.choice(np.array([0.0, -0.0, 1.0, -np.inf, np.inf, -2.0], np.float32), size=(N, n))
+        s = s.astype(np.float32)
+        nw = n // lanes
+        assert 2 * nw <= MAXW and n % lanes == 0
+        for r in range(N):
+            part[oi, r, :nw] = s[r].view(np.uint32).reshape(nw, lanes)
+            part[oi, r, nw:2 * nw] = np.arange(n, dtype=np.uint32).reshape(nw, lanes)
+        gid = (np.arange(N)[:, None] * stride + np.arange(n)[None, :]).reshape(-1)
+        ids = np.array(sorted(int(gid[i]) for i in GV.topk_lowest_index(s.reshape(-1), k)), np.uint32)
+        pad = np.zeros(-(-k // lanes) * lanes, np.uint32)
+        pad[:k] = ids
+        exp[oi, :len(pad) // lanes] = pad.reshape(-1, lanes)
+        desc.append((1 << 29) | (oi << 15) | nw)
+        desc2.append((k << 32) | stride)
+
+    def wr(path, arr):
+        with path.open("w") as f:
+            for w in arr.reshape(-1, lanes):
+                f.write("".join(f"{int(x):08x}" for x in w[::-1]) + "\n")
+    wr(outdir / "part.hex", part)
+    wr(outdir / "expected.hex", exp)
+    (outdir / "desc.hex").write_text("".join(f"{x:08x}\n" for x in desc))
+    (outdir / "desc2.hex").write_text("".join(f"{x:016x}\n" for x in desc2))
+    meta = dict(schema="w15_v41_topk_fixture_v1", lanes=lanes, ops=[dict(zip(("name", "n", "k", "stride", "kind"), o))
+                                                                     for o in TOPK_OPS],
+                images_sha256={p: sha(outdir / p) for p in ("part.hex", "expected.hex", "desc.hex", "desc2.hex")},
+                golden_sha256=sha(ROOT / "tools/hdc_golden_v41.py"),
+                contract="W17 L20 COLL_TOPK_MERGE (claude/w17-isa-l20): global id = rank * stride + local, "
+                         "top k by (score desc, id asc), ids ascending")
+    (outdir / "manifest.json").write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n")
+    return meta
+
+
 def summarize_qwen(res, clock_hz):
     ex = {}
     for e in res["exchanges"]:
@@ -501,31 +763,42 @@ def summarize_qwen(res, clock_hz):
                 exchanges=len(rows))
 
 
-CLOCK = {"tb_w15_v41_tp4": 1 / 0.92e-9, "tb_w15_qwen_tp2": 1 / 0.9102e-9}
+CLOCK = {"tb_w15b_v41_tp4": 1 / 0.92e-9, "tb_w15b_qwen_tp2": 1 / 0.9102e-9, "tb_w15_v41_hbm_nvls": 1.0339e9}
 
 
 def config_record(c):
     name = c["name"]
     top, gen, fix = CONFIGS[name]
-    clock = CLOCK[top]
+    clock = 1 / (gen["T_CORE"] * 1e-9) if "T_CORE" in gen else CLOCK[top]
     cal, meas = c["calibration"], c["measured"]
-    rec = dict(top=top, parameters=gen, fixture=fix, fixture_manifest_sha256=sha(VEC / fix / "manifest.json"),
+    rec = dict(top=top, parameters=gen, fixture=fix, record_bytes=4 * gen.get("LANES", 16), fixture_manifest_sha256=sha(VEC / fix / "manifest.json"),
                binary=binary_name(name), clock_hz=clock, release_guard_cycles=GUARD,
                arrival_hub_to_hub_cycles={k: dict(min=v[0], max=v[1]) for k, v in c["arrival_cycles"].items()},
                release_delay_cycles=c["drel"],
                free_running=dict(det=0, runs=len(cal), all_passed=all(r["passed"] for r in cal),
                                  distinct_timings=len({r["timing_sha256"] for r in cal}),
-                                 distinct_results=len({r["vm_sha256"] for r in cal}) if top == "tb_w15_v41_tp4" else None,
+                                 distinct_results=len({r["vm_sha256"] for r in cal}) if top != "tb_w15b_qwen_tp2" else None,
                                  seeds=[r["seed"] for r in cal], corner_channels=[r["extra"] for r in cal if r["extra"]]),
                deterministic=dict(det=1, runs=len(meas), all_passed=all(r["passed"] for r in meas),
                                   distinct_timings=len({r["timing_sha256"] for r in meas}),
-                                  distinct_results=len({r["vm_sha256"] for r in meas}) if top == "tb_w15_v41_tp4" else None,
+                                  distinct_results=len({r["vm_sha256"] for r in meas}) if top != "tb_w15b_qwen_tp2" else None,
                                   timing_sha256=meas[0]["timing_sha256"], result_sha256=meas[0]["vm_sha256"],
                                   late_faults=sum(1 for r in meas for l in r.get("links", []) if l["faults"][2]),
                                   seeds=[r["seed"] for r in meas],
                                   corner_channels=[r["extra"] for r in meas if r["extra"]]))
-    if top == "tb_w15_v41_tp4":
+    if top in ("tb_w15b_v41_tp4", "tb_w15_v41_hbm_nvls"):
         rows = summarize_v41(meas[0], clock)
+        if fix.endswith("_prod"):
+            slot = hbm_slot_bytes(1e9 / clock)
+            names = {math.ceil(b / slot): k for k, b in HBM_PROD_GATHERS.items()}
+            for r in rows:
+                if r["mode"] == "all_gather":
+                    r["product_collective"] = names[r["words_per_rank"]]
+                    r["product_bytes_per_rank"] = HBM_PROD_GATHERS[names[r["words_per_rank"]]]
+                    r["slot_bytes_per_rank"] = round(r["words_per_rank"] * slot, 1)
+            rec["slot_bytes"] = round(slot, 1)
+            rec["slot_basis"] = hbm_slot_bytes.__doc__.split("\n")[0] + " ... " + \
+                "one record = %.1f B at the 0.9 TB/s port and this clock; gathers rounded up to whole records" % slot
         rec["collectives"] = rows
         rec["fit"] = fit(rows)
         rec["sum_issue_to_last_commit_cycles"] = sum(r["issue_to_last_commit_cycles"] for r in rows)
@@ -543,7 +816,7 @@ def config_record(c):
 
 
 def pins():
-    files = sorted({*LINK_SRC, "rtl/link/ot_link_port_harden.sv", *[p for v in TB_SRC.values() for p in v],
+    files = sorted({*LINK_SRC, "rtl/link/ot_w15_link_port_harden.sv", *[p for v in TB_SRC.values() for p in v],
                     "tools/w15_collectives.py", "tools/rtl_v41_tp_layer0_collectives.py", "tools/hdc_golden.py",
                     "results/rtl/hdc_v41x_fullshape_program_bind.json", "configs/hardware/technology.json",
                     "results/floorplan/v41_pack_expanded_woa.json", "tools/uarch_model.py"})
@@ -562,9 +835,14 @@ def campaign(names, ncal, nmeas, out: Path):
     for n in names:
         c = campaign_config(n, ncal, nmeas)
         cfgs[n] = config_record(c)
+        write_record(out, old, cfgs)                     # after every config: a later failure keeps the earlier
         print(n, json.dumps({k: cfgs[n][k] for k in ("release_delay_cycles", "arrival_hub_to_hub_cycles")}),
               "det timings", cfgs[n]["deterministic"]["distinct_timings"], "free timings",
               cfgs[n]["free_running"]["distinct_timings"], flush=True)
+    return write_record(out, old, cfgs)
+
+
+def write_record(out, old, cfgs):
     rec = dict(schema="w15_collectives_v1",
                claim_boundary="Cycle-accurate RTL simulation (Verilator 5.050, --timing) of the die-side collective "
                               "engines, DMA, behavioural VM and a synthesizable link layer (framing, CRC-32, credit "
@@ -574,12 +852,65 @@ def campaign(names, ncal, nmeas, out: Path):
                               "operands are the synthetic arithmetic stress fixture, not a model token.",
                git=git_state(), source_sha256=pins(), verilator=verilator_version(), verilator_flags=VFLAGS,
                links=dict(LINKS, board_stages=board_stages()), configs=cfgs)
-    for k in ("model_feed", "physical", "unit_checks", "unit_checks_source_sha256"):
+    for k in ("model_feed", "physical", "unit_checks", "unit_checks_source_sha256", "fixed_floor"):
         if k in old:
             rec[k] = old[k]
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rec, indent=1, sort_keys=True, default=str) + "\n")
     return rec
+
+
+def merge(inputs, out: Path):
+    """One record from several campaign outputs run at different commits: every config carries the git state,
+    source pins and Verilator of the campaign that produced it (`provenance`); a later input replaces an earlier
+    config of the same name only when listed later on the command line."""
+    cfgs, prov = {}, []
+    for i, p in enumerate(inputs):
+        d = json.loads(Path(p).read_text())
+        prov.append(dict(input=str(p), git=d["git"], source_sha256=d["source_sha256"], verilator=d["verilator"],
+                         configs=sorted(d["configs"])))
+        for n, c in d["configs"].items():
+            cfgs[n] = dict(c, provenance=i)
+    rec = dict(schema="w15_collectives_merged_v1", claim_boundary=json.loads(Path(inputs[-1]).read_text())
+               ["claim_boundary"], campaigns=prov, links=dict(LINKS, board_stages=board_stages()),
+               verilator_flags=VFLAGS, configs=cfgs)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rec, indent=1, sort_keys=True, default=str) + "\n")
+    return rec
+
+
+SWEEP_WORDS_EVEN = (2, 8, 36, 80, 160, 320)
+
+
+def widen_fixture(src: Path, dst: Path, k: int = 2) -> dict:
+    """The same operands and golden images for a k-times wider engine: k consecutive 16-lane words (64 B) of a rank
+    become one 16k-lane word (element e keeps its value: lane l of wide word w is element (w*k*16 + l)), descriptor
+    word counts divide by k.  Every count in the source must be a multiple of k."""
+    dst.mkdir(parents=True, exist_ok=True)
+    desc = [int(x, 16) for x in (src / "desc.hex").read_text().split()]
+    OPS, RANKS, MAXW = 12, 4, 320
+    new_desc = []
+    for d in desc:
+        n = d & 0x7FFF
+        assert n % k == 0, (d, k)
+        new_desc.append((d & ~0x7FFF) | (n // k))
+    (dst / "desc.hex").write_text("".join(f"{x:08x}\n" for x in new_desc))
+    for name in ("part.hex", "expected.hex"):
+        lines = (src / name).read_text().split()
+        assert len(lines) == OPS * RANKS * MAXW
+        out = []
+        # part: one MAXW block per (op, rank); expected: one contiguous RANKS x MAXW region per op
+        bs = MAXW if name == "part.hex" else RANKS * MAXW
+        for blk in range(OPS * RANKS * MAXW // bs):
+            b = lines[blk * bs:(blk + 1) * bs]
+            w = ["".join(b[i * k + j] for j in reversed(range(k))) for i in range(bs // k)]
+            out += w + ["0" * len(w[0])] * (bs - len(w))
+        (dst / name).write_text("\n".join(out) + "\n")
+    meta = dict(schema="w15_v41_widened_fixture_v1", widen=k, source_manifest_sha256=sha(src / "manifest.json"),
+                images_sha256={p: sha(dst / p) for p in ("part.hex", "expected.hex", "desc.hex")},
+                note="element values and golden identical to the source fixture; only the word packing changes")
+    (dst / "manifest.json").write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n")
+    return meta
 
 
 def main(argv=None):
@@ -592,6 +923,13 @@ def main(argv=None):
     sub.add_parser("links")
     sf = sub.add_parser("sweep-fixture")
     sf.add_argument("dir", type=Path)
+    sub.add_parser("topk-fixture", help="write the COLL_TOPK_MERGE fixtures topkw16 / topkw32 under W15_VEC")
+    hf = sub.add_parser("hbm-fixture", help="write the HBM NVLS fixtures (HBM_FIXTURES) under W15_VEC")
+    hf.add_argument("names", nargs="*")
+    mg = sub.add_parser("merge", help="merge campaign records (each keeps its git state and source pins)")
+    mg.add_argument("--out", type=Path, required=True)
+    mg.add_argument("--schema-note", default="")
+    mg.add_argument("inputs", nargs="+", type=Path)
     cp = sub.add_parser("campaign")
     cp.add_argument("--config", action="append")
     cp.add_argument("--ncal", type=int, default=24)
@@ -602,15 +940,24 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "qwen-fixture":
         print(json.dumps(qwen_fixture(a.dir, a.lanes, a.h), indent=1))
+    elif a.cmd == "topk-fixture":
+        for lanes in (16, 32):
+            print(lanes, json.dumps(v41_topk_fixture(VEC / f"topkw{lanes}", lanes)["images_sha256"]))
+    elif a.cmd == "hbm-fixture":
+        for n in a.names or HBM_FIXTURES:
+            P, ops = HBM_FIXTURES[n]
+            print(n, json.dumps(hbm_fixture(VEC / n, P, ops=ops)["images_sha256"]))
+    elif a.cmd == "merge":
+        merge(a.inputs, a.out)
     elif a.cmd == "sweep-fixture":
         print(json.dumps(v41_sweep_fixture(a.dir)["images_sha256"]))
     elif a.cmd == "campaign":
-        campaign(a.config or list(CONFIGS), a.ncal, a.nmeas, a.out)
+        campaign(a.config or [n for n in CONFIGS if not n.startswith("hbm_")], a.ncal, a.nmeas, a.out)
     elif a.cmd == "unit":
         rec = json.loads(a.out.read_text())
         rec["unit_checks"] = unit_checks()
-        rec["unit_checks_source_sha256"] = {p: sha(ROOT / p) for p in sorted({*TB_SRC["tb_w15_link_unit"],
-                                                                             *TB_SRC["tb_w15_crc32"]})}
+        rec["unit_checks_source_sha256"] = {p: sha(ROOT / p) for p in sorted({*TB_SRC["tb_w15b_link_unit"],
+                                                                             *TB_SRC["tb_w15b_crc32"]})}
         a.out.write_text(json.dumps(rec, indent=1, sort_keys=True, default=str) + "\n")
         print(json.dumps({k: {kk: vv for kk, vv in v.items() if kk != "runs"} for k, v in rec["unit_checks"].items()},
                          indent=1))
