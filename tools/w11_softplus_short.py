@@ -47,28 +47,29 @@ UNIT_NAME = {0: "softplus_s vs ot_hdc_v41x_softplus (sp, r, fault)",
              1: "exp_s vs ot_hdc_v41x_exp (y, fault)",
              2: "fsqrt4 vs ot_hdc_fsqrt (y, fault)"}
 # (new module, new depth, replaced chain, its depth)
-DEPTHS = [("ot_hdc_v41x_softplus_s", 107, "ot_hdc_v41x_softplus", 162),
-          ("ot_hdc_v41x_exp_s", 33, "ot_hdc_v41x_exp", 49),
-          ("ot_hdc_hstep", 4, "ot_hdc_qmul -> ot_hdc_qadd", 6),
+DEPTHS = [("ot_hdc_v41x_softplus_s (PCUT 1)", 124, "ot_hdc_v41x_softplus", 162),
+          ("ot_hdc_v41x_exp_s (PCUT 1)", 40, "ot_hdc_v41x_exp", 49),
+          ("ot_hdc_hstep (CUT 1)", 5, "ot_hdc_qmul -> ot_hdc_qadd", 6),
           ("ot_hdc_fsqrt4", 16, "ot_hdc_fsqrt", 31),
           ("ot_hdc_v41x_spdiv (from the exp's last Horner result)", 19,
            "exp exponent step + ot_hdc_qadd + ot_hdc_v41x_fdiv", 1 + 3 + 19),
-          ("ot_hdc_fp32_mul_x2", 3, "ot_hdc_qmul -> ot_hdc_qmul(., 2)", 6),
+          ("ot_hdc_fp32_mul_x2 (CUT 1)", 4, "ot_hdc_qmul -> ot_hdc_qmul(., 2)", 6),
           ("ot_hdc_addpos2", 2, "ot_hdc_qadd", 3)]
-# softplus_s schedule: (step, cycles before, cycles after)
-SCHEDULE = [("t = exp(-|x|) (to the last Horner result)", 48, 32),
+# softplus_s schedule at PCUT 1: (step, cycles before, cycles after)
+SCHEDULE = [("t = exp(-|x|) (to the last Horner result)", 48, 39),
             ("exponent step + RN(t + 2) + t / den", 1 + 3 + 19, 19),
-            ("u2 = u*u", 3, 3), ("8 Horner steps", 48, 32), ("l = 2 RN(u p)", 6, 3),
+            ("u2 = u*u", 3, 4), ("8 Horner steps", 48, 40), ("l = 2 RN(u p)", 6, 4),
             ("sp = max(x,0) + l", 3, 2), ("sqrt", 31, 16)]
-HARD = {"sp3_softplus_s": "ot_hdc_v41x_softplus_s (PCUT 1, v3)", "sp3n_softplus_s": "ot_hdc_v41x_softplus_s0 (PCUT 0, v3)",
-        "sp3_exp": "ot_hdc_v41x_exp_s (PCUT 1, v3)", "sp3n_exp": "ot_hdc_v41x_exp_s0 (PCUT 0, v3)",
-        "sp3_hstep": "ot_hdc_hstep (CUT 1, v3)", "sp3_sqrt4": "ot_hdc_fsqrt4 (v3)", "sp3_spdiv": "ot_hdc_v41x_spdiv (v3)",
+HARD = {"sp4_softplus_s": "ot_hdc_v41x_softplus_s (v4 PCUT 1, --routing-layers M2 M6)",
+        "sp4f_softplus_s": "ot_hdc_v41x_softplus_s (v4 PCUT 1, default layers)",
+        "sp4_exp": "ot_hdc_v41x_exp_s (v4 PCUT 1)", "sp4_hstep": "ot_hdc_hstep (v4 CUT 1)",
+        "sp4_mulx2": "ot_hdc_fp32_mul_x2 (v4 CUT 1)", "sp4_addpos2": "ot_hdc_addpos2 (v4)",
+        "sp3_sqrt4": "ot_hdc_fsqrt4 (v3; unchanged in v4)", "sp3_spdiv": "ot_hdc_v41x_spdiv (v3; unchanged in v4)",
+        "sp3_softplus_s": "ot_hdc_v41x_softplus_s (v3 a96526b7, PCUT 1: input -> multiplier stage 1 missed by 2.5 ps)",
+        "sp3n_exp": "ot_hdc_v41x_exp_s0 (v3, PCUT 0)",
         "sp2_softplus_s": "ot_hdc_v41x_softplus_s (v2 832683ab: PCUT 1, behavioural adders)",
-        "s9_v41x_softplus": "ot_hdc_v41x_softplus (baseline, DEPTH 162)",
-        "sp_softplus_s": "ot_hdc_v41x_softplus_s (v1 fc339ffb: PCUT 0, behavioural adders)", "sp_base": "ot_hdc_v41x_softplus",
-        "sp_hstep": "ot_hdc_hstep", "sp_exp": "ot_hdc_v41x_exp_s", "sp_sqrt4": "ot_hdc_fsqrt4",
-        "sp_sqrt_old": "ot_hdc_fsqrt", "sp_spdiv": "ot_hdc_v41x_spdiv", "sp_fdiv_old": "ot_hdc_v41x_fdiv",
-        "sp_mulx2": "ot_hdc_fp32_mul_x2", "sp_addpos2": "ot_hdc_addpos2"}
+        "sp_softplus_s": "ot_hdc_v41x_softplus_s (v1 fc339ffb: PCUT 0, behavioural adders)",
+        "s9_v41x_softplus": "ot_hdc_v41x_softplus (baseline, DEPTH 162)"}
 
 
 def sha(p: Path) -> str:
@@ -245,15 +246,19 @@ def record(args):
         evidence_sources_equal_to_head_but_comments=logic,
         simulator="Verilator 4.038",
         clock_domain="serial chain, 0.9 GHz (1.111 ns) at SS setup / FF hold, 60/25 ps (AGENTS.md)",
-        depth=dict(before=162, after=107, saved_cycles=55, saved_ns_at_0p9GHz=round(55 / 0.9, 1),
+        depth=dict(before=162, after=124, saved_cycles=38, saved_ns_at_0p9GHz=round(38 / 0.9, 1),
+                   serial_build_reference=dict(mlat=5, alat=4, depth=216,
+                                               note="ot_hdc_v41x_softplus #(LM 5, LA 4), main's serial-domain SU"),
+                   pcut0_depth=107,
                    units=[dict(new=a, depth=b, replaces=c, replaced_depth=d) for a, b, c, d in DEPTHS],
                    schedule=[dict(step=s, before=b, after=a) for s, b, a in SCHEDULE]),
         model=dict(tools_arch_budget_v41_SFU_DEPTH_softplus_now=259,
-                   stream_unit_side_pipe_before=162, stream_unit_side_pipe_after=107,
-                   note="SFU_DEPTH['fastfp']['softplus'] is the side pipe's S depth: 107 with this unit "
-                        "(162 as committed in ot_hdc_v41x_vec; 259 is the five-stage ot_hdc_softplus). "
-                        "The unit is not yet wired into ot_hdc_v41x_vec (its S-stage depth list and "
-                        "the campaign's SFU_DEPTH would change 162 -> 107)."),
+                   stream_unit_side_pipe_before=162, stream_unit_side_pipe_serial_build=216,
+                   stream_unit_side_pipe_after=124,
+                   note="SFU_DEPTH['fastfp']['softplus'] is the side pipe's S depth: 124 with this unit "
+                        "(162 as committed in ot_hdc_v41x_vec at MLAT 3, 216 at the serial build's MLAT 5 / "
+                        "ALAT 4; 259 is the five-stage ot_hdc_softplus). The unit is not yet wired into "
+                        "ot_hdc_v41x_vec."),
         exactness=dict(pcut=1, exhaustive=eq, random_units=u3, prefix_adder_proofs=proofs,
                        pcut0=pc0,
                        prefix_adder_note="Simulated with rtl/test/ot_hdc_prefix_sim.sv (behavioural adds); "

@@ -38,12 +38,12 @@ def test_random_units_cover_every_constant():
 def test_depths_are_the_rtl_localparams():
     src = (ROOT / NEW).read_text()
     rec = _record()["depth"]
-    assert re.search(r"localparam integer DEPTH  = T_SP \+ 16;\s+// 107", src)
-    assert re.search(r"localparam integer DEPTH = T_P \+ 1;\s+// 33", src)
+    assert re.search(r"localparam integer DEPTH  = T_SP \+ 16;\s+// 124 \(107 at PCUT = 0\)", src)
+    assert re.search(r"localparam integer DEPTH = T_P \+ 1;\s+// 40 \(33 at PCUT = 0\)", src)
     assert re.search(r"localparam integer DEPTH = ND \+ 3;\s+// 16", src)
     assert rec["before"] == sum(b for _, b, _ in SCHEDULE) == 162
-    assert rec["after"] == sum(a for _, _, a in SCHEDULE) == 107
-    assert rec["saved_cycles"] == 55
+    assert rec["after"] == sum(a for _, _, a in SCHEDULE) == 124
+    assert rec["saved_cycles"] == 38
     assert [u["depth"] for u in rec["units"]] == [d[1] for d in DEPTHS]
 
 
