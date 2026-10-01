@@ -85,12 +85,13 @@ def square_geometry(fp):
     parts = fp["hub"]["parts"]
     V = parts["HUB_VM"]
     lanes = []
+    # each arm holds 32 lane-group tiles, 4 across x 8 along (W18b: 403 x 491 um, the same 0.198 mm2 a group)
     for k, r in parts.items():
         if r["kind"].startswith("SU_VECTOR"):
-            nx, ny = max(1, int(r["w"] // TILE_UM)), max(1, int(r["h"] // TILE_UM))
+            nx, ny = (4, 8) if r["h"] >= r["w"] else (8, 4)
             for i in range(nx):
                 for j in range(ny):
-                    lanes.append((r["x"] + TILE_UM * (i + 0.5), r["y"] + TILE_UM * (j + 0.5)))
+                    lanes.append((r["x"] + r["w"] / nx * (i + 0.5), r["y"] + r["h"] / ny * (j + 0.5)))
     corners = [(V["x"], V["y"]), (V["x"] + V["w"], V["y"]), (V["x"], V["y"] + V["h"]), (V["x"] + V["w"], V["y"] + V["h"])]
     c = (V["x"] + V["w"] / 2, V["y"] + V["h"] / 2)
     md = lambda p, q: abs(p[0] - q[0]) + abs(p[1] - q[1])
