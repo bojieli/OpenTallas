@@ -13,7 +13,9 @@ PINS={
  'clock_slot':('0cdd92fd35f142c8f0fa170426113a5b2a64e153','results/uarch/w10_clock_tree_site_budget_r1/receipt.json'),
  'spatial_clock':('38695f435d25f4eade8ea7b050cefecd1f301fa7','results/uarch/w10_spatial_clock_preflight_r1/preflight.json'),
  'rootstop':('bf097e43e1b01902c21af0e71b6e0b1ae337961e','results/quality/w10_clock_provider_join_r1/join.json'),
- 'ckv_write_failure':('d4391b2e0','results/quality/parent_ckv_writepath_review_20261001/receipt.json')}
+ 'ckv_write_failure':('d4391b2e0','results/quality/parent_ckv_writepath_review_20261001/receipt.json'),
+ 'ckv_lease':('2723dbc74','results/rtl/w17_connected_token_preparation_20261001/ckv_publication_lease_model.json'),
+ 'engram_contract':('a9d1fad2835d96e4c0585a150b6a9d484b9791cc','results/quality/w16_dsrom_engram_contract_20261001/summary.json')}
 def blob(pin):return subprocess.check_output(['git','show',pin[0]+':'+pin[1]],cwd=ROOT)
 def sha(b):return hashlib.sha256(b).hexdigest()
 
@@ -95,6 +97,12 @@ def compose(data):
             current_connected_write_path_qualified=False,
             corrected_path_exactness_qualified=False,
             corrected_path_composed_service_bound_available=False),
+        current_baseline_model_inputs=dict(
+            CKV_exclusive_publication_candidate=data['ckv_lease'],
+            CKV_cost_composition='2952 fast cycles cover nine serialized writes, sampling, turnover and publish only; add prelease drain, CDC, consumer acceptance and final credit return. Conditional timing envelope still needs refresh/provider validation.',
+            Engram_actual_header_demand_and_candidate_ports=data['engram_contract'],
+            Engram_cost_composition='Immutable table backing, projection/constants, working buffers, raw lookup traffic and TP delivery are distinct. Neither proposed ROM nor HBM home receives fit or latency credit until actual address/bank/codec/port/route contracts are bound.',
+            complete_product_feasibility=False),
         unresolved=['Avicenna sourceboundnonexpert census then actualTP4consumer/codec/segment proof','Godel actualtemplateword/basepatch classA gate','CurrentqPPfullmap/pin/clock/site footprint +descriptor realization/area/port contract','ActualdenseHC andownerhub physicalplacement/completebankallocator','Root/leaf clock+PG/CDC/NoC/collective/SU/CKV staging+SSFF +fullstageproviders'],
         connected_stage_cycles=None,full_token_cycles=None,full_token_rate=None,physical_admission=False,engine_RTL_build_ready=False,adopt=False,jobs_launched=0)
 
