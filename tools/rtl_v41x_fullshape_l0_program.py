@@ -20,10 +20,22 @@ def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+LAYERS = {0: (BINDER, PROGRAM, RECORD, 113),
+          20: (ROOT / "results/rtl/hdc_v41x_fullshape_1m_s20260930_l20_program_bind_rope_hbm.json",
+               ROOT / "results/rtl/hdc_v41x_fullshape_l20_program.hex",
+               ROOT / "results/rtl/hdc_v41x_fullshape_l20_program.json", 144)}
+
+
 def main() -> None:
+    import argparse
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--layer", type=int, default=0, choices=sorted(LAYERS))
+    layer = ap.parse_args().layer
+    BINDER, PROGRAM, RECORD, count = LAYERS[layer]
     bound = json.loads(BINDER.read_text())
-    if (bound["layer"], bound["rank"], bound["instruction_count"], bound["rope_mode"]) != (0, 0, 113, "hbm_cache"):
-        raise ValueError("production L0 program identity changed")
+    if (bound["layer"], bound["rank"], bound["instruction_count"], bound["rope_mode"]) != (layer, 0, count,
+                                                                                          "hbm_cache"):
+        raise ValueError(f"production L{layer} program identity changed")
     words = []
     tags = {}
     for pc, row in enumerate(bound["instruction_trace"]):
@@ -48,14 +60,15 @@ def main() -> None:
     record = {
         "schema": "opentallas.rtl.v41x_fullshape_l0_program.v1",
         "status": "encoded_input_only",
-        "claim_boundary": "Production tagged-RoPE L0 ISA encoded and decoded exactly for 113 instructions. The binder remains blocked on full table placement and packed QE adapter; no RTL execution verdict.",
+        "claim_boundary": ("Production tagged-RoPE L0 ISA encoded and decoded exactly for 113 instructions. The binder remains blocked on full table placement and packed QE adapter; no RTL execution verdict." if layer == 0 else
+                           f"Production tagged-RoPE L{layer} ISA (1M seed-20260930 token bind) encoded and decoded exactly for {count} instructions; uses the ISA-level COLL_TOPK_MERGE / NEWBLK contracts the die does not implement yet. No RTL execution verdict."),
         "instructions": len(words), "instruction_bits": I.FULL_INSTR_BITS,
         "program_sha256": sha(PROGRAM), "tags": tags,
         "source_sha256": {str(path.relative_to(ROOT)): sha(path) for path in
                           (BINDER, ROOT / "tools/hdc_isa_v41.py", Path(__file__))},
     }
     RECORD.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
-    print(f"PASS: {len(words)} production L0 instructions encoded exactly")
+    print(f"PASS: {len(words)} production L{layer} instructions encoded exactly")
 
 
 if __name__ == "__main__":
