@@ -57,7 +57,7 @@ module ot_gpu_bd_col #(
         reg         v_l;
         always @(posedge clk) begin xq_l <= xq[256*l +: 256]; wq_l <= wq[256*l +: 256]; xe_l <= xe[10*l +: 10]; we_l <= we[10*l +: 10]; end
         always @(posedge clk or negedge rst_n) if (!rst_n) v_l <= 1'b0; else v_l <= v;
-        ot_v41_bterm2 #(.TW(1), .DEC_P0(1), .SH16_P1(1)) u_bt (.clk(clk), .rst_n(rst_n), .v(v_l), .fp4(fp4_l),
+        ot_v41_bterm2 #(.TW(1), .DEC_P0(1), .P2M(10)) u_bt (.clk(clk), .rst_n(rst_n), .v(v_l), .fp4(fp4_l),
             .xq(xq_l), .xe(xe_l), .wq(wq_l), .we(we_l),
             .tag(1'b0), .ov(tv_l[l]), .y(term[32*l +: 32]), .f(tf_l[l]), .otag());
     end endgenerate

@@ -16,7 +16,11 @@ module ot_v41_bterm2 #(
     // mux level moved from P2 (the DEC_P0 route's -8.7 ps SS path p1_sh -> shifter -> CSA 32 -> 7) into P1
     // (product + negate; the whole shift in P1 failed at -77.7 ps).  Arithmetic and latency unchanged; costs
     // 32 x (25 - 14) flops.  Default 0 (W10 netlist).
-    parameter integer SH16_P1 = 0
+    parameter integer SH16_P1 = 0,
+    // P2M (W13): operands left by P2's carry-save tree (32 -> P2M), the rest of the tree (P2M -> 2) in P3.
+    // 7 = W10's cut (4 levels / 4 levels); 10 moves one 3:2 level from P2 to P3 (3 / 5), for the P2 path
+    // shift -> CSA that misses SS by 9-29 ps in the bd_col routes.  Arithmetic and latency unchanged.
+    parameter integer P2M = 7
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -107,11 +111,11 @@ module ot_v41_bterm2 #(
             terms[W*i +: W] = (SH16_P1 != 0) ? {{(W-25){p1_q[25*i + 24]}}, p1_q[25*i +: 25]} << p1_sl[4*i +: 4]
                                               : {{(W-9){p1_p[i][8]}}, p1_p[i]} << p1_sh[i];
     end
-    wire [7*W-1:0] c7;
-    ot_v41_csa #(.N(32), .M(7), .W(W)) u_csa1 (.d(terms), .q(c7));
+    wire [P2M*W-1:0] c7;
+    ot_v41_csa #(.N(32), .M(P2M), .W(W)) u_csa1 (.d(terms), .q(c7));
     reg               p2_v, p2_first, p2_last, p2_nan;
     reg signed [10:0] p2_es;
-    reg [7*W-1:0]     p2_c;
+    reg [P2M*W-1:0]   p2_c;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) p2_v <= 1'b0;
         else p2_v <= p1_v;
@@ -123,7 +127,7 @@ module ot_v41_bterm2 #(
 
     // -- P3: CSA 7 -> 2 ------------------------------------------------------------------------
     wire [2*W-1:0] c2;
-    ot_v41_csa #(.N(7), .M(2), .W(W)) u_csa2 (.d(p2_c), .q(c2));
+    ot_v41_csa #(.N(P2M), .M(2), .W(W)) u_csa2 (.d(p2_c), .q(c2));
     reg               p3_v, p3_first, p3_last, p3_nan;
     reg signed [10:0] p3_es;
     reg [W-1:0]       p3_a, p3_b;

@@ -47,7 +47,12 @@ endmodule
 // nonfinite operand FAILS CLOSED through `fault` (and y = +0) -- the qualified
 // pipe would round or refuse there.  LATENCY 5, like the FP32 pipe, so a
 // lane's schedule does not depend on which multiplier it has.
-module ot_hdc_bmul (
+module ot_hdc_bmul #(
+    // SPLIT = 1 (W13, 1.2 GHz at SS): stage 2 forms the two 8x4 partial products and stage 3 adds them (a
+    // keep-prefix add) before its normalise select; the single-stage 8x8 product missed SS by 92 ps in the
+    // ot_gpu_tc16 route.  Bit-identical, latency unchanged (5).  Default 0: the original netlist.
+    parameter integer SPLIT = 0
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -90,6 +95,7 @@ module ot_hdc_bmul (
     // stage 2: the 8x8 product
     reg        s2_v, s2_s, s2_z, s2_nf;
     reg [15:0] s2_p;
+    reg [11:0] s2_lo, s2_hi;                   // SPLIT: the two 8x4 partial products
     reg signed [10:0] s2_e;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s2_v <= 1'b0;
@@ -97,8 +103,18 @@ module ot_hdc_bmul (
     end
     always @(posedge clk) begin
         s2_s <= s1_s; s2_z <= s1_z; s2_nf <= s1_nf; s2_e <= s1_e;
-        s2_p <= s1_a * s1_b;
+        if (SPLIT == 0) s2_p <= s1_a * s1_b;
+        else begin s2_lo <= s1_a * s1_b[3:0]; s2_hi <= s1_a * s1_b[7:4]; end
     end
+    wire [15:0] pq;
+    generate if (SPLIT != 0) begin : g_split
+        wire [11:0] hi_sum;
+        wire        hi_co;
+        ot_hdc_ksadd_k #(.W(12)) u_ph (.a(s2_hi), .b({4'd0, s2_lo[11:4]}), .cin(1'b0), .s(hi_sum), .cout(hi_co));
+        assign pq = {hi_sum, s2_lo[3:0]};
+    end else begin : g_one
+        assign pq = s2_p;
+    end endgenerate
     // stage 3: normalise (leading bit 15 or 14) and bias
     reg        s3_v, s3_s, s3_z, s3_nf;
     reg [22:0] s3_f;
@@ -109,8 +125,8 @@ module ot_hdc_bmul (
     end
     always @(posedge clk) begin
         s3_s <= s2_s; s3_z <= s2_z; s3_nf <= s2_nf;
-        if (s2_p[15]) begin s3_f <= {s2_p[14:0], 8'd0}; s3_be <= s2_e + 11'sd128; end
-        else          begin s3_f <= {s2_p[13:0], 9'd0}; s3_be <= s2_e + 11'sd127; end
+        if (pq[15]) begin s3_f <= {pq[14:0], 8'd0}; s3_be <= s2_e + 11'sd128; end
+        else        begin s3_f <= {pq[13:0], 9'd0}; s3_be <= s2_e + 11'sd127; end
     end
     // stage 4: encode; a subnormal result shifts right by 1 - biased (<= 7)
     reg        s4_v, s4_bad;
