@@ -65,6 +65,60 @@ module ot_hdc_mul24_csa (
     assign cs = csa(l6[0 +: 48], l6[48 +: 48], l6[96 +: 48]);
 endmodule
 
+// The first two carry-save levels of ot_hdc_mul24_rows (24 partial products -> 11 rows), and
+// the remaining five (11 -> 8 as ot_hdc_mul24_rows's third level, then ot_hdc_mul24_csa's four):
+// the same tree with its register one level earlier (CUT = 1), for the input-to-stage-1 path.
+module ot_hdc_mul24_rows11 (
+    input  wire [23:0]      a,
+    input  wire [23:0]      b,
+    output wire [48*11-1:0] rows
+);
+    function automatic [95:0] csa;
+        input [47:0] r0, r1, r2;
+        begin
+            csa[47:0] = r0 ^ r1 ^ r2;
+            csa[95:48] = ((r0 & r1) | (r0 & r2) | (r1 & r2)) << 1;
+        end
+    endfunction
+    wire [48*24-1:0] l0;
+    wire [48*16-1:0] l1;
+    genvar i;
+    generate
+        for (i = 0; i < 24; i = i + 1) begin : g_pp
+            assign l0[48*i +: 48] = {24'd0, a & {24{b[i]}}} << i;
+        end
+        for (i = 0; i < 8; i = i + 1) begin : g_l1
+            assign l1[96*i +: 96] = csa(l0[144*i +: 48], l0[144*i + 48 +: 48], l0[144*i + 96 +: 48]);
+        end
+        for (i = 0; i < 5; i = i + 1) begin : g_l2
+            assign rows[96*i +: 96] = csa(l1[144*i +: 48], l1[144*i + 48 +: 48], l1[144*i + 96 +: 48]);
+        end
+        assign rows[480 +: 48] = l1[720 +: 48];
+    endgenerate
+endmodule
+
+module ot_hdc_mul24_csa11 (
+    input  wire [48*11-1:0] l2,
+    output wire [95:0]      cs
+);
+    function automatic [95:0] csa;
+        input [47:0] r0, r1, r2;
+        begin
+            csa[47:0] = r0 ^ r1 ^ r2;
+            csa[95:48] = ((r0 & r1) | (r0 & r2) | (r1 & r2)) << 1;
+        end
+    endfunction
+    wire [48*8-1:0] rows;
+    genvar i;
+    generate
+        for (i = 0; i < 3; i = i + 1) begin : g_l3
+            assign rows[96*i +: 96] = csa(l2[144*i +: 48], l2[144*i + 48 +: 48], l2[144*i + 96 +: 48]);
+        end
+        assign rows[288 +: 96] = l2[432 +: 96];
+    endgenerate
+    ot_hdc_mul24_csa u_cs (.rows(rows), .cs(cs));
+endmodule
+
 // ---------------------------------------------------------------------------
 // Horner step y = RN(RN(a*b) + K), K a positive normal constant, LATENCY 4 + CUT.
 //   F1  the multiplier's stage 1 (decode, normalise, partial products, three
@@ -121,11 +175,18 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000, parameter integer CUT =
     wire [11:0] power;
     wire power_c;
     ot_hdc_ksadd_k #(.W(12)) u_pw (.a(a_power), .b(b_power), .cin(1'b0), .s(power), .cout(power_c));
-    wire [48*8-1:0] rows;
-    ot_hdc_mul24_rows u_rows (.a(a_raw << a_lz[4:0]), .b(b_raw << b_lz[4:0]), .rows(rows));
+    localparam integer NR = CUT ? 11 : 8;           // rows registered after stage 1
+    wire [48*NR-1:0] rows;
+    generate
+        if (CUT) begin : g_r11
+            ot_hdc_mul24_rows11 u_rows (.a(a_raw << a_lz[4:0]), .b(b_raw << b_lz[4:0]), .rows(rows));
+        end else begin : g_r8
+            ot_hdc_mul24_rows u_rows (.a(a_raw << a_lz[4:0]), .b(b_raw << b_lz[4:0]), .rows(rows));
+        end
+    endgenerate
 
     reg        s1_nf, s1_zero, s1_sign;
-    reg [48*8-1:0] s1_rows;
+    reg [48*NR-1:0] s1_rows;
     reg signed [11:0] s1_power;
     always @(posedge clk) begin
         s1_nf <= nonfinite; s1_zero <= zero; s1_sign <= a[31] ^ b[31];
@@ -134,7 +195,13 @@ module ot_hdc_hstep #(parameter [31:0] K = 32'h3F800000, parameter integer CUT =
 
     // -- F1b (CUT = 1): the tree's last four carry-save levels (8 rows -> 2), a register before the prefix add
     wire [95:0] cs;
-    ot_hdc_mul24_csa u_cs (.rows(s1_rows), .cs(cs));
+    generate
+        if (CUT) begin : g_c11
+            ot_hdc_mul24_csa11 u_cs (.l2(s1_rows), .cs(cs));
+        end else begin : g_c8
+            ot_hdc_mul24_csa u_cs (.rows(s1_rows), .cs(cs));
+        end
+    endgenerate
     wire        s1b_nf, s1b_zero, s1b_sign;
     wire [95:0] s1b_cs;
     wire [11:0] s1b_pw;
@@ -252,10 +319,17 @@ module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1, parameter integer CUT 
     wire [11:0] power;
     wire power_c;
     ot_hdc_ksadd_k #(.W(12)) u_pw (.a(a_power), .b(b_power), .cin(1'b0), .s(power), .cout(power_c));
-    wire [48*8-1:0] rows;
-    ot_hdc_mul24_rows u_rows (.a(a_raw << a_lz[4:0]), .b(b_raw << b_lz[4:0]), .rows(rows));
+    localparam integer NR = CUT ? 11 : 8;           // rows registered after stage 1
+    wire [48*NR-1:0] rows;
+    generate
+        if (CUT) begin : g_r11
+            ot_hdc_mul24_rows11 u_rows (.a(a_raw << a_lz[4:0]), .b(b_raw << b_lz[4:0]), .rows(rows));
+        end else begin : g_r8
+            ot_hdc_mul24_rows u_rows (.a(a_raw << a_lz[4:0]), .b(b_raw << b_lz[4:0]), .rows(rows));
+        end
+    endgenerate
     reg        s1_v, s1_byp, s1_nf, s1_sign;
-    reg [48*8-1:0] s1_rows;
+    reg [48*NR-1:0] s1_rows;
     reg signed [11:0] s1_power;
     always @(posedge clk or negedge rst_n) if (!rst_n) s1_v <= 1'b0; else s1_v <= v;
     always @(posedge clk) begin
@@ -264,7 +338,13 @@ module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1, parameter integer CUT 
     end
     // -- stage 1b (CUT = 1): the tree's last four carry-save levels, a register before the prefix add --
     wire [95:0] cs;
-    ot_hdc_mul24_csa u_cs (.rows(s1_rows), .cs(cs));
+    generate
+        if (CUT) begin : g_c11
+            ot_hdc_mul24_csa11 u_cs (.l2(s1_rows), .cs(cs));
+        end else begin : g_c8
+            ot_hdc_mul24_csa u_cs (.rows(s1_rows), .cs(cs));
+        end
+    endgenerate
     wire        s1b_v, s1b_byp, s1b_nf, s1b_sign;
     wire [95:0] s1b_cs;
     wire [11:0] s1b_pw;

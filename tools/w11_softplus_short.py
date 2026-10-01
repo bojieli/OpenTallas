@@ -36,7 +36,8 @@ TB = "rtl/test/tb_w11_spshort.sv"
 HARNESS = "rtl/test/hdc_v41_harness.cpp"
 LIB = ["rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
        "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_fastfp.sv",
-       "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv"]
+       "rtl/hdc/v41/ot_hdc_fsqrt.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv", "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+       "rtl/hdc/ot_hdc_fastfp_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv"]
 PREFIX = "rtl/hdc/ot_hdc_prefix.sv"            # synthesised: keep-level Kogge-Stone
 PREFIX_SIM = "rtl/test/ot_hdc_prefix_sim.sv"   # simulated: behavioural adds, proved equal per width
 KSADD_WIDTHS = (8, 9, 12, 24, 26, 28, 31, 33, 48, 51)
@@ -59,7 +60,12 @@ SCHEDULE = [("t = exp(-|x|) (to the last Horner result)", 48, 32),
             ("exponent step + RN(t + 2) + t / den", 1 + 3 + 19, 19),
             ("u2 = u*u", 3, 3), ("8 Horner steps", 48, 32), ("l = 2 RN(u p)", 6, 3),
             ("sp = max(x,0) + l", 3, 2), ("sqrt", 31, 16)]
-HARD = {"sp_softplus_s": "ot_hdc_v41x_softplus_s", "sp_base": "ot_hdc_v41x_softplus",
+HARD = {"sp3_softplus_s": "ot_hdc_v41x_softplus_s (PCUT 1, v3)", "sp3n_softplus_s": "ot_hdc_v41x_softplus_s0 (PCUT 0, v3)",
+        "sp3_exp": "ot_hdc_v41x_exp_s (PCUT 1, v3)", "sp3n_exp": "ot_hdc_v41x_exp_s0 (PCUT 0, v3)",
+        "sp3_hstep": "ot_hdc_hstep (CUT 1, v3)", "sp3_sqrt4": "ot_hdc_fsqrt4 (v3)", "sp3_spdiv": "ot_hdc_v41x_spdiv (v3)",
+        "sp2_softplus_s": "ot_hdc_v41x_softplus_s (v2 832683ab: PCUT 1, behavioural adders)",
+        "s9_v41x_softplus": "ot_hdc_v41x_softplus (baseline, DEPTH 162)",
+        "sp_softplus_s": "ot_hdc_v41x_softplus_s (v1 fc339ffb: PCUT 0, behavioural adders)", "sp_base": "ot_hdc_v41x_softplus",
         "sp_hstep": "ot_hdc_hstep", "sp_exp": "ot_hdc_v41x_exp_s", "sp_sqrt4": "ot_hdc_fsqrt4",
         "sp_sqrt_old": "ot_hdc_fsqrt", "sp_spdiv": "ot_hdc_v41x_spdiv", "sp_fdiv_old": "ot_hdc_v41x_fdiv",
         "sp_mulx2": "ot_hdc_fp32_mul_x2", "sp_addpos2": "ot_hdc_addpos2"}
@@ -162,7 +168,17 @@ def random_units(d):
                 hstep_checked_total=sum(h["checked"] for h in hs.values()), pass_=ok)
 
 
+PHYS_DIR = ROOT / "results/physical_abi3/asap7/hdc/w11_softplus_short"
+
+
+def _orfs_corner(r):
+    argv = list(map(str, (r.get("runner") or {}).get("argv", [])))
+    return argv[argv.index("--orfs-corner") + 1] if "--orfs-corner" in argv else None
+
+
 def physical(d):
+    """Summaries of the routed records; each record is copied into PHYS_DIR/<name>.json (committed)."""
+    PHYS_DIR.mkdir(parents=True, exist_ok=True)
     out = {}
     for name, top in HARD.items():
         p = Path(d) / name / "physical.json"
@@ -170,14 +186,17 @@ def physical(d):
             out[name] = dict(top=top, status="missing")
             continue
         r = json.loads(p.read_text())
+        (PHYS_DIR / f"{name}.json").write_text(p.read_text())
         g = r.get("design", {})
         per = g.get("clock_period_ns")
         wns = g.get("setup_wns_ns")
         out[name] = dict(top=top, status=r.get("status"), closed=g.get("closed"), clock_period_ns=per,
                          setup_wns_ns=wns, hold_wns_ns=g.get("hold_wns_ns"), fmax_hz=g.get("fmax_hz"),
                          area_um2=g.get("area_um2"), clock_uncertainty_ns=g.get("clock_uncertainty_ns"),
-                         clock_hold_uncertainty_ns=g.get("clock_hold_uncertainty_ns"),
-                         corner=r.get("orfs_corner") or g.get("orfs_corner"))
+                         clock_hold_uncertainty_ns=g.get("clock_uncertainty_hold_ns"),
+                         setup_corner=_orfs_corner(r),
+                         hold_corners=r.get("place_and_route", {}).get("signal_integrity_constraints", {}).get("hold_corners"),
+                         record=str((PHYS_DIR / f"{name}.json").relative_to(ROOT)))
     return out
 
 
@@ -209,6 +228,12 @@ def record(args):
     ph = physical(args.phys)
     head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     proofs = prove(Path(args.u3) / "prefix_proofs")
+    pc0 = None
+    if args.eq0:
+        e0 = exhaustive(args.eq0)
+        pc0 = dict(exhaustive={k: v for k, v in e0.items() if not k.startswith("fsqrt4")},
+                   random_units=random_units(args.u3_0),
+                   note="PCUT 0 (DEPTH 107) build of the same source; the radix-4 sqrt has no PCUT")
     logic = same_logic(args.evidence_commit)
     ok = (all(v["pass_"] for v in eq.values()) and u3["pass_"] and all(v == "proved" for v in proofs.values())
           and all(bool(v) for v in logic.values()))
@@ -229,7 +254,8 @@ def record(args):
                         "(162 as committed in ot_hdc_v41x_vec; 259 is the five-stage ot_hdc_softplus). "
                         "The unit is not yet wired into ot_hdc_v41x_vec (its S-stage depth list and "
                         "the campaign's SFU_DEPTH would change 162 -> 107)."),
-        exactness=dict(exhaustive=eq, random_units=u3, prefix_adder_proofs=proofs,
+        exactness=dict(pcut=1, exhaustive=eq, random_units=u3, prefix_adder_proofs=proofs,
+                       pcut0=pc0,
                        prefix_adder_note="Simulated with rtl/test/ot_hdc_prefix_sim.sv (behavioural adds); "
                                          "synthesised with rtl/hdc/ot_hdc_prefix.sv; SAT-equal at every width used.",
                        runner="tb_w11_spshort UNIT=u: Vtb +N=2^32/P +LO=k*2^32/P for k < P "
@@ -255,6 +281,8 @@ def main():
     r = sp.add_parser("record")
     r.add_argument("--eq", nargs="+", required=True)
     r.add_argument("--u3", required=True)
+    r.add_argument("--eq0", nargs="*", default=[])
+    r.add_argument("--u3-0", dest="u3_0")
     r.add_argument("--phys", required=True)
     r.add_argument("--limitation", default="")
     r.add_argument("--evidence-commit", required=True, help="commit the benches and routes were built from")
