@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+// OPERATOR-FUSION BUILD of ot_hdc_v41x_vec (W11; tools/w11_su_fuse.py): the SAME module as rtl/hdc/v41x/ot_hdc_v41x_vec.sv
+// plus lane register file KR_DEPTH, the KR read line, KR emit-stamp credits, kr_lw layout.  With KR_DEPTH = 0 it is functionally the original.  A source list picks this file or the
+// original, never both; the original (pinned by committed records) is unchanged.
 // ---------------------------------------------------------------------------
 // VECTOR (STREAM) UNIT of the re-specified DeepSeek-V4.1-Flash decode die
 // (docs/ARCH_SPEC_V41.md section 6 item 2).  It implements the op set of
@@ -156,7 +159,10 @@ module ot_hdc_v41x_vec #(
     parameter integer BCAST_STAGES = 0, // register stages of the pipelined controller -> lane broadcast tree
     parameter integer RET_STAGES = 0,   // register stages of the lane / reducer -> vector-memory write path
     parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4 or 5 (W11 serial domain)
-    parameter integer ALAT = 3          // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
+    parameter integer ALAT = 3,         // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
+    parameter integer KR_DEPTH = 0,     // OPERATOR FUSION: lane register entries (0: none -- the unit as it was)
+    parameter integer RD_XLAT = 0       // operand-read cycles beyond today's (a longer VM fetch, e.g. C_rotate): the
+                                        // KR read follows the memory's answer, so its line and the KR credit move too
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -185,6 +191,13 @@ module ot_hdc_v41x_vec #(
     input  wire              i_redsq, i_redwhole, i_redtree, i_redrnd,
     input  wire [AW-1:0]     i_rbase, i_rso,
     input  wire [31:0]       i_imm1, i_imm2, i_imm3,
+    // ---- operator fusion (KR_DEPTH > 0; tools/hdc_isa_v41.py FUSE_FIELDS): write the elements to lane register
+    //      kr_wb + v; read the streams of kr_r (A, B, C, D) from lane register kr_rb + v; kr_lw: SFU-width layout
+    input  wire              i_krw,
+    input  wire [5:0]        i_krwb,
+    input  wire [3:0]        i_krr,
+    input  wire [5:0]        i_krrb,
+    input  wire              i_krlw,
     // ---- chaining (see the protocol above)
     input  wire [1:0]        i_ch_src,
     input  wire [7:0]        i_ch_seq,
@@ -310,6 +323,9 @@ module ot_hdc_v41x_vec #(
     reg [7:0]    q_chseq, q_seq, seq_ctr;
     reg [15:0]   q_chlead, q_chmul;
     reg          q_bank, nbank;
+    reg          q_krw, q_krlw;
+    reg [5:0]    q_krwb, q_krrb;
+    reg [3:0]    q_krr;
     always @(posedge clk) if (accept) begin
         q_nout <= i_nout; q_nin <= i_nin;
         q_asrc <= i_asrc; q_bsrc <= i_bsrc; q_csrc <= i_csrc; q_dsrc <= i_dsrc; q_aind <= i_aind; q_dst <= i_dst;
@@ -325,6 +341,9 @@ module ot_hdc_v41x_vec #(
         q_imm1 <= i_imm1; q_imm2 <= i_imm2; q_imm3 <= i_imm3;
         q_chsrc <= i_ch_src; q_chseq <= i_ch_seq; q_chlead <= i_ch_lead; q_chmul <= i_ch_mul;
         q_seq <= seq_ctr; q_bank <= nbank;
+        // without lane registers the fields are ignored: the unit is bit and cycle identical to the unfused one
+        q_krw <= (KR_DEPTH > 0) && i_krw; q_krwb <= i_krwb; q_krr <= (KR_DEPTH > 0) ? i_krr : 4'd0;
+        q_krrb <= i_krrb; q_krlw <= (KR_DEPTH > 0) && i_krlw;
     end
 
     // ---- S1: flatten test ------------------------------------------------------------------------
@@ -353,7 +372,8 @@ module ot_hdc_v41x_vec #(
     // ---- S2: layout, depths, offset terms ---------------------------------------------------------
     wire scalar_c = (q_sfu == SFU_RSQRT || q_sfu == SFU_SQRT || q_sfu == SFU_SPSQRT || q_sfu == SFU_EGATE);
     wire sfu_c = (q_sfu == SFU_EXP || q_sfu == SFU_SIGM || q_sfu == SFU_SILU || q_m1 == M1_DIVB || q_m1 == M1_DIVIMM);
-    wire [3:0] c_lvw = scalar_c ? 4'd0 : sfu_c ? LM[3:0] : LN[3:0];
+    // kr_lw: a light op of a fused chain is laid at the SFU width, so its element e sits where an SFU op's does
+    wire [3:0] c_lvw = scalar_c ? 4'd0 : (sfu_c || q_krlw) ? LM[3:0] : LN[3:0];
     wire red_on = (q_red != RED_NONE);
     // slot size: pow2ceil(max(ni, 8 if reducing)); a whole-op reduction over unflattened rows takes the
     // largest power of two dividing ni, so a vector never straddles a row and every vector is an
@@ -448,6 +468,9 @@ module ot_hdc_v41x_vec #(
     reg [15:0]       a_chlead, a_chmul, a_mark, a_nv;
     reg [23:0]       a_acc;
     reg [AW-1:0]     a_istep_h1, a_istep_h3;
+    reg              a_krw;
+    reg [5:0]        a_krwb, a_krrb;
+    reg [3:0]        a_krr;
     // previous op (SELF_VEC chaining)
     reg              pv_v;
     reg [15:0]       pv_mark, pv_nv;
@@ -461,6 +484,18 @@ module ot_hdc_v41x_vec #(
     wire             ret_i_last, ret_p_last, res_i_last, res_p_last;
     reg [9:0]        cpF, cpM, cpS, cpT, cpR;
     reg [7:0]        rseq_r;
+    // OPERATOR FUSION: vector credits for a lane-register (KR) consumer, from its producer's EMIT times.  The
+    // lane pipeline never stalls, so the producer's vector v writes KR at the lanes' OUT stage in cycle
+    // W = e_v + BCAST_STAGES + dS + 2 MLAT exactly (e_v its emit, dS its emit -> S-out depth; visible from W + 1),
+    // and a consumer emitted at t reads KR in cycle t + 3 + BCAST_STAGES + RD_XLAT (its operand capture).  So
+    // vector v may go once t - e_v >= G = dS + 2 MLAT - 2 - RD_XLAT: the broadcast tree, the read and write
+    // networks and the landing (RET_STAGES, DI) all drop out.  A KR producer records e_v for v < 64 in kts
+    // (one 16-bit stamp a vector, one copy in the controller); its consumer reads stamp v before it overwrites
+    // it with its own.  A stamp older than 2^15 cycles belongs to a completed producer, which done() covers.
+    reg  [15:0]      kcyc;
+    reg  [15:0]      kts [0:63];
+    reg  [9:0]       pv_g;
+    reg              pv_krw;
 
     // position of the vector, its end
     wire [CW-1:0] S_sz = 1 << a_ls;
@@ -475,7 +510,15 @@ module ot_hdc_v41x_vec #(
     wire [15:0] pv_cnt = r_tot - pv_mark;
     wire        pv_neg = pv_cnt[15];
     wire [7:0]  ds = i_dseq - a_chseq;
-    wire        pv_ok  = !ds[7] || (pv_v && pv_seq == a_chseq && !pv_neg && pv_cnt >= need);
+    wire        pv_ok0 = !ds[7] || (pv_v && pv_seq == a_chseq && !pv_neg && pv_cnt >= need);
+    // a KR consumer: vector need - 1 of its producer must be G cycles old; everything before its producer must
+    // have landed (the consumer's memory reads)
+    wire [15:0] kneed = need - 16'd1;
+    wire [15:0] kage = kcyc - kts[kneed[5:0]];
+    wire [7:0]  dp = i_dseq - (a_chseq - 8'd1);
+    wire        pk_ok  = !ds[7] || (pv_v && pv_seq == a_chseq && pv_krw && need != 16'd0 && need <= pv_nv &&
+                                    kneed < 16'd64 && !kage[15] && kage >= {6'd0, pv_g} && !dp[7]);
+    wire        pv_ok  = (KR_DEPTH > 0 && a_krr != 4'd0) ? pk_ok : pv_ok0;
     wire [7:0]  dx = x_dseq - a_chseq;
     wire [7:0]  dr = i_rseq - a_chseq;
     wire ch_ok = (a_chsrc == CH_NONE) ? 1'b1 :
@@ -501,11 +544,12 @@ module ot_hdc_v41x_vec #(
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            a_v <= 1'b0; a_started <= 1'b0; pv_v <= 1'b0; e_tot <= 0; r_tot <= 0; rp_tot <= 0;
+            a_v <= 1'b0; a_started <= 1'b0; pv_v <= 1'b0; e_tot <= 0; r_tot <= 0; rp_tot <= 0; kcyc <= 0;
             cpF <= 0; cpM <= 0; cpS <= 0; cpT <= 0; cpR <= 0;
         end else begin
             e_tot <= e_tot + (emit ? 16'd1 : 16'd0);
             r_tot <= r_tot + (ret_i ? 16'd1 : 16'd0);
+            kcyc <= kcyc + 16'd1;
             rp_tot <= rp_tot + (ret_p ? 16'd1 : 16'd0);
             cpF <= emit ? a_dF : (cpF != 0) ? cpF - 10'd1 : 10'd0;
             cpM <= emit ? a_dM : (cpM != 0) ? cpM - 10'd1 : 10'd0;
@@ -517,6 +561,7 @@ module ot_hdc_v41x_vec #(
             if (emit && !a_started) a_started <= 1'b1;
             if (emit && last_v) begin
                 pv_v <= 1'b1; pv_mark <= a_started ? a_mark : e_tot; pv_nv <= a_nv + 16'd1; pv_seq <= a_seq;
+                pv_g <= a_dS + (H_M[9:0] << 1) - 10'd2 - RD_XLAT[9:0]; pv_krw <= a_krw;
             end
             if (promote) begin a_v <= 1'b1; a_started <= 1'b0; end
             else if (emit && last_v) a_v <= 1'b0;
@@ -542,6 +587,7 @@ module ot_hdc_v41x_vec #(
             a_obase <= q_obase; a_aibase <= q_aibase;
             a_seq <= q_seq; a_chseq <= q_chseq; a_chlead <= q_chlead; a_chmul <= q_chmul;
             a_nv <= 0; a_acc <= 0;
+            a_krw <= q_krw; a_krwb <= q_krwb; a_krr <= q_krr; a_krrb <= q_krrb;
         end else if (emit) begin
             if (!a_started) a_mark <= e_tot;
             a_nv <= a_nv + 16'd1;
@@ -565,6 +611,8 @@ module ot_hdc_v41x_vec #(
             end
         end
     end
+    // KR producer emit stamps (operator fusion)
+    always @(posedge clk) if (KR_DEPTH > 0 && emit && a_krw && a_nv < 16'd64) kts[a_nv[5:0]] <= kcyc;
     // a half stream's inner stride at slot size 1 (its term is 0; it moves by si every other index)
     always @(posedge clk) if (promote) begin a_istep_h1 <= q_bsi; a_istep_h3 <= q_dsi; end
 
@@ -585,7 +633,8 @@ module ot_hdc_v41x_vec #(
     // Control pipe: one control word a vector, through the lanes' stage structure
     // =========================================================================================
     // datapath fields
-    localparam integer WD = 8 + 4 + 32 + 3 + 32 + 2 + 3 + 3 + 32 + 3 + 3 + 2 + 1 + 2;       // 130
+    // (+ 17: the lane-register read streams and entry, at the capture; the write flag and entry, at OUT)
+    localparam integer WD = 8 + 4 + 32 + 3 + 32 + 2 + 3 + 3 + 32 + 3 + 3 + 2 + 1 + 2 + 17;  // 147
     // retire meta: seq, lastv, red, sq, redrnd, lt, L, span, seglast, nres, rbase, rsh, lastres
     localparam integer WR = 8 + 1 + 2 + 1 + 1 + 4 + 3 + 1 + 1 + 8 + AW + 5 + 1;
     localparam integer WC = WD + WR;
@@ -594,6 +643,7 @@ module ot_hdc_v41x_vec #(
     wire [WC-1:0] cw0 = {a_dsrc, a_csrc, a_bsrc, a_asrc,
                          a_arnd, a_arelu, a_amin, a_cclip, a_imm3,
                          a_m1, a_imm1, a_m2, a_qm, a_ad, a_imm2, a_sfu, a_e1, a_e2, a_rnd, a_dst,
+                         a_krr, a_krrb + a_nv[5:0], a_krw, a_krwb + a_nv[5:0],
                          a_seq, last_v, a_red, a_redsq, a_redrnd, a_lt, a_L, a_span, a_wnf ? last_v : wrap, nres, rrow, a_rsh,
                          last_v && (a_red != RED_NONE)};
     // BROADCAST register: every lane input of the emitted vector (and its control word) is registered once
@@ -692,6 +742,22 @@ module ot_hdc_v41x_vec #(
     `define CW_E2(w)    w[WC-126 -: 2]
     `define CW_RND(w)   w[WC-128]
     `define CW_DST(w)   w[WC-129 -: 2]
+    `define CW_KRR(w)   w[WC-131 -: 4]
+    `define CW_KRI(w)   w[WC-135 -: 6]
+    `define CW_KRW(w)   w[WC-141]
+    `define CW_KWI(w)   w[WC-142 -: 6]
+    // KR read line: the read streams and entry reach the lanes in the cycle their memory answers (the cycle
+    // before X: depth 2, or 4 with a gather), so the capture takes the lane register instead of the word
+    wire [9:0] ckx;
+    wire       ck_v, col_k, bz_k;
+    generate if (KR_DEPTH > 0) begin : g_krl
+        localparam [15:0] KD0 = 2 + RD_XLAT, KD1 = 4 + RD_XLAT;
+        ot_hdc_v41x_ins #(.W(10), .K(2), .DEPTHS({KD1, KD0}), .DMAX(4 + RD_XLAT)) u_ck (.clk(clk), .rst_n(rst_n),
+            .v(t_emit), .sel({t_gather, !t_gather}), .d({`CW_KRR(t_cw), `CW_KRI(t_cw)}), .vo(ck_v), .q(ckx),
+            .coll(col_k), .busy(bz_k));
+    end else begin : g_nokrl
+        assign {ckx, ck_v, col_k, bz_k} = 13'd0;
+    end endgenerate
     // PRE -> M1 inputs
     reg  [WC-1:0] cwp;
     reg           vp;
@@ -760,7 +826,8 @@ module ot_hdc_v41x_vec #(
     genvar l;
     generate for (l = 0; l < N; l = l + 1) begin : g_lane
         ot_hdc_v41x_vec_lane #(.AW(AW), .CW(CW), .LN(LN), .KIND((l == 0) ? 2 : (l < M) ? 1 : 0),
-                               .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0), .MLAT(MLAT), .ALAT(ALAT)) u_lane (
+                               .KVT_SH(KVT_SH), .LEAF((BCAST_STAGES > 0) ? 1 : 0), .MLAT(MLAT), .ALAT(ALAT),
+                               .KR_DEPTH(KR_DEPTH)) u_lane (
             .clk(clk), .rst_n(rst_n), .lane_id(l[10:0]),
             .ld(tr_ld), .ld_bank(tr_ldbank), .ld_c(tr_ldc),
             .emit(tr_emit), .bank(tr_bank), .o_v(tr_ov), .i_v(tr_iv), .no(tr_no), .ni(tr_ni), .ls(tr_ls), .lvw(tr_lvw),
@@ -778,6 +845,7 @@ module ot_hdc_v41x_vec #(
             .cs_sfu(`CW_SFU(cws)), .cs_e1(`CW_E1(cws)), .cs_imm2(`CW_IMM2(cws)),
             .ce_e2(`CW_E2(cwe)), .ce_imm1(`CW_IMM1(cwe)),
             .co_rnd(`CW_RND(cwo)), .co_dst(`CW_DST(cwo)),
+            .ck_r(ckx[9:6] & {4{ck_v}}), .ck_ri(ckx[5:0]), .co_krw(`CW_KRW(cwo)), .co_kwi(`CW_KWI(cwo)),
             .side_v(l_sv[l]), .side_x(l_sx[l*32 +: 32]), .side_y(side_y),
             .vm_we(l_vm_we[l]), .vm_waddr(l_vm_waddr[l*AW +: AW]), .vm_wdata(l_vm_wdata[l*32 +: 32]),
             .kv_we(l_kv_we[l]), .kv_waddr(l_kv_waddr[l*AW +: AW]), .kv_wdata(l_kv_wdata[l*32 +: 32]),
@@ -872,14 +940,14 @@ module ot_hdc_v41x_vec #(
     // =========================================================================================
     // Status
     // =========================================================================================
-    wire pipe_live = b_emit || bt_live || rt_live || bz_f || vp || bz_m || (|vml) || bz_s || (|vsl);
+    wire pipe_live = b_emit || bt_live || rt_live || bz_f || bz_k || vp || bz_m || (|vml) || bz_s || (|vsl);
     wire idle_c = (pst == 2'd0) && !a_v && !pipe_live && !red_busy;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin idle <= 1'b1; fault <= 1'b0; order_fault <= 1'b0; end
         else begin
             idle <= idle_c && !accept;
             fault <= (|l_fault) || side_f || red_f || (promote && p_bad);
-            order_fault <= (|l_coll) || col_f || col_m || col_s;
+            order_fault <= (|l_coll) || col_f || col_k || col_m || col_s;
         end
     end
     `undef CW_SRCS
@@ -899,4 +967,8 @@ module ot_hdc_v41x_vec #(
     `undef CW_E2
     `undef CW_RND
     `undef CW_DST
+    `undef CW_KRR
+    `undef CW_KRI
+    `undef CW_KRW
+    `undef CW_KWI
 endmodule

@@ -1,4 +1,18 @@
 `timescale 1ns/1ps
+// OPERATOR-FUSION BUILD of ot_hdc_core_v41x (W11; tools/w11_su_fuse.py).  The SAME module as
+// rtl/hdc/v41x/ot_hdc_core_v41x.sv plus: the fusion fields (ot_hdc_isa_v41_fuse.svh) decoded beside the SU fields
+// and passed to the SU adapter, and SUKR / SUBCAST / SURET defaulting from the macros OT_SUKR / OT_SUBCAST /
+// OT_SURET (0 when undefined) so a bench that does not set them builds it as the original.  A source list picks
+// this file or the original, never both; the original (pinned by committed records) is unchanged.
+`ifndef OT_SUKR
+`define OT_SUKR 0
+`endif
+`ifndef OT_SUBCAST
+`define OT_SUBCAST 0
+`endif
+`ifndef OT_SURET
+`define OT_SURET 0
+`endif
 // ---------------------------------------------------------------------------
 // Hardwired decode core, DeepSeek-V4.1 configuration: decodes one token of the
 // reduced DeepSeek-V4.1-Flash (tools/hdc_program_v41.py, format
@@ -99,8 +113,9 @@ module ot_hdc_core_v41x #(
     // M 256, W1 hub placement, 0.92 ns, 0.76 ps/um) is SUBCAST 4 (controller at the lane array's centre ->
     // corner lane, 3,458 um) and SURET 5 (farthest lane -> HUB_VM, 3,850 um): results/rtl/w11_su_spec.json
     // wire_stage_derivation
-    parameter integer SUBCAST = 0,         // broadcast-tree register stages, controller -> lanes
-    parameter integer SURET = 0,           // return register stages, lanes / reducer -> vector memory
+    parameter integer SUBCAST = `OT_SUBCAST, // broadcast-tree register stages, controller -> lanes
+    parameter integer SURET = `OT_SURET,     // return register stages, lanes / reducer -> vector memory
+    parameter integer SUKR = `OT_SUKR,       // SU operator fusion: lane register entries (0: none; the fields are ignored)
     // HE: ot_hdc_v41x_hcp geometry
     parameter integer HHW   = 8,           // HCP lanes per group (8 x HHW FP32 MAC lanes)
     parameter integer HTL   = 9,           // HCP tail levels
@@ -358,6 +373,7 @@ module ot_hdc_core_v41x #(
     output reg               wrel_v           // an instruction marked wrel issued
 );
     `include "ot_hdc_isa_v41_profiles.svh"
+    `include "ot_hdc_isa_v41_fuse.svh"     // operator fusion (tools/hdc_isa_v41_fuse.py)
     localparam integer LG = $clog2(W * G);
 
     // -- sequencer -----------------------------------------------------------------------------
@@ -437,6 +453,9 @@ module ot_hdc_core_v41x #(
     reg          b_half, c_pair, a_rnd, a_relu, a_min, c_clip, rnd, red_sq, red_whole, red_tree, red_rnd;
     reg [2:0]    m1, qm, ad, sfu, e1;
     reg [31:0]   imm1, imm2, imm3;
+    reg          kr_w, kr_lw;
+    reg [5:0]    kr_wb, kr_rb;
+    reg [3:0]    kr_r;
     // QE
     reg [1:0]    qe_mode;
     reg          qe_fp4, qe_ind, qe_unrounded;
@@ -722,6 +741,7 @@ module ot_hdc_core_v41x #(
         red <= `F(RED); red_sq <= `F(RED_SQ); red_whole <= `F(RED_WHOLE); red_tree <= `F(RED_TREE); red_rnd <= `F(RED_RND);
         r_base <= `F(R_BASE); r_so <= `F(R_SO);
         imm1 <= `F(IMM1); imm2 <= `F(IMM2); imm3 <= `F(IMM3);
+        kr_w <= `F(KR_W); kr_wb <= `F(KR_WB); kr_r <= `F(KR_R); kr_rb <= `F(KR_RB); kr_lw <= `F(KR_LW);
         qe_mode <= `F(QE_MODE); qe_fp4 <= `F(QE_FP4); qe_ind <= `F(QE_IND);
         qe_unrounded <= FULL_SHAPE ? `F(QE_UNROUNDED) : 1'b0;
         qe_xbase <= `F(QE_XBASE); qe_wbase <= `F(QE_WBASE); qe_ibase <= `F(QE_IBASE);
@@ -1012,7 +1032,7 @@ module ot_hdc_core_v41x #(
     generate if (X_SU != 0) begin : g_su_x
         wire [SUN-1:0] raw_kv_we;
         ot_hdc_v41x_su_adapt #(.N(SUN), .M(SUM), .LV(SULV), .AW(AW), .NW(NW), .CLS_DRAIN((NSLOT > 1) ? 1 : 0),
-                               .BCAST_STAGES(SUBCAST), .RET_STAGES(SURET))
+                               .BCAST_STAGES(SUBCAST), .RET_STAGES(SURET), .KR_DEPTH(SUKR))
             u_su (
             .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
             .i_nout(su_nout), .i_nin(su_nin), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src),
@@ -1026,6 +1046,7 @@ module ot_hdc_core_v41x #(
             .i_red(red), .i_redsq(red_sq), .i_redwhole(red_whole), .i_redtree(red_tree), .i_redrnd(red_rnd),
             .i_rbase(r_base), .i_rso(r_so), .i_imm1(imm1), .i_imm2(imm2), .i_imm3(imm3),
             .i_m(mx_m), .i_xps(mx_xps), .i_ops(mx_ops),
+            .i_krw(kr_w), .i_krwb(kr_wb), .i_krr(kr_r), .i_krrb(kr_rb), .i_krlw(kr_lw),
             .vi_re(xs_vi_re), .vi_addr(xs_vi_addr), .vi_q(xs_vi_q),
             .rd_addr(xs_rd_addr), .rd_re(xs_rd_re), .rd_src(xs_rd_src), .rd_q(xs_rd_q),
             .vm_we(xs_vm_we), .vm_waddr(xs_vm_waddr), .vm_wdata(xs_vm_wdata),

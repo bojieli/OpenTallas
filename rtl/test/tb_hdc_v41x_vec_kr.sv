@@ -1,4 +1,6 @@
 `timescale 1ns/1ps
+// OPERATOR-FUSION BUILD of tb_hdc_v41x_vec (tools/rtl_hdc_v41x_vec_kr_campaign.py): KR_DEPTH and the fusion fields of
+// the program word (tb_hdc_v41x_vec_kr_fields.svh); the original bench is unchanged.
 // ---------------------------------------------------------------------------
 // Performance and bit-exactness bench of the V4.1 vector stream unit
 // (rtl/hdc/v41x/ot_hdc_v41x_vec.sv), driven by tools/rtl_hdc_v41x_vec_campaign.py.
@@ -40,9 +42,10 @@ module tb_hdc_v41x_vec #(
     parameter integer BCAST_STAGES = 0,
     parameter integer RET_STAGES = 0,
     parameter integer MLAT = 3,
-    parameter integer ALAT = 3
+    parameter integer ALAT = 3,
+    parameter integer KR_DEPTH = 0
 ) (input wire clk);
-    `include "tb_hdc_v41x_vec_fields.svh"
+    `include "tb_hdc_v41x_vec_kr_fields.svh"
     localparam integer AW = 24, NR = N / 8;
     reg [31:0] vm [0:(1<<VMA)-1];
     reg [31:0] kv [0:(1<<KVA)-1];
@@ -120,7 +123,8 @@ module tb_hdc_v41x_vec #(
     wire [NR*32-1:0]  res_data;
     wire dbg_emit, dbg_ret, dbg_res;
     wire [7:0] dbg_eseq, dbg_rseq, dbg_sseq;
-    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES), .RET_STAGES(RET_STAGES), .MLAT(MLAT), .ALAT(ALAT)) dut (
+    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES), .RET_STAGES(RET_STAGES), .MLAT(MLAT), .ALAT(ALAT),
+                      .KR_DEPTH(KR_DEPTH)) dut (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(w[F_NOUT +: 16]), .i_nin(w[F_NIN +: 16]),
         .i_asrc(w[F_ASRC +: 2]), .i_bsrc(w[F_BSRC +: 2]), .i_csrc(w[F_CSRC +: 2]), .i_dsrc(w[F_DSRC +: 2]),
@@ -136,6 +140,8 @@ module tb_hdc_v41x_vec #(
         .i_red(w[F_RED +: 2]), .i_redsq(w[F_REDSQ]), .i_redwhole(w[F_REDWHOLE]), .i_redtree(w[F_REDTREE]),
         .i_redrnd(w[F_REDRND]), .i_rbase(w[F_RBASE +: 24]), .i_rso(w[F_RSO +: 24]),
         .i_imm1(w[F_IMM1 +: 32]), .i_imm2(w[F_IMM2 +: 32]), .i_imm3(w[F_IMM3 +: 32]),
+        .i_krw(w[F_KRW]), .i_krwb(w[F_KRWB +: 6]), .i_krr(w[F_KRR +: 4]), .i_krrb(w[F_KRRB +: 6]),
+        .i_krlw(w[F_KRLW]),
         .i_ch_src(w[F_CH_SRC +: 2]), .i_ch_seq(w[F_CH_SEQ +: 8]), .i_ch_lead(w[F_CH_LEAD +: 16]),
         .i_ch_mul(w[F_CH_MUL +: 16]),
         .x_seq(x_seq), .x_dseq(x_dseq), .x_cnt(x_cnt),

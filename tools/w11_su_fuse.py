@@ -47,9 +47,10 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import hdc_isa_v41 as I                           # noqa: E402
-import rtl_hdc_v41x_vec_campaign as C             # noqa: E402
+import hdc_isa_v41_fuse as IF                      # noqa: E402
+import rtl_hdc_v41x_vec_kr_campaign as C          # noqa: E402
 
-KR_DEPTH = I.KR_DEPTH
+KR_DEPTH = IF.KR_DEPTH
 # C_rotate (tools/w11_vm_options.py price_C("rotate"), results/uarch/w11_vm_options.json on claude/w11-crot):
 # the operand read and the element write each cross 16 register stages between the central VM strip and a lane
 ROT_READ, ROT_WRITE = 16, 16
@@ -613,6 +614,7 @@ def main():
     ap.add_argument("--lw", action="store_true")
     ap.add_argument("--positions", default="")
     ap.add_argument("--out", default="")
+    ap.add_argument("--interleave", action="store_true", help="level 4: interleaving estimate (unfused, fused)")
     ap.add_argument("--depths", default="", help="a depth curve (comma list); --depth is the full depth")
     a = ap.parse_args()
     if a.shape == "shipped":
@@ -624,6 +626,20 @@ def main():
         N, M = a.N or 16, a.M or 8
         pos = [int(x) for x in a.positions.split(",")] if a.positions else [0, 1, 2, 3, 7, 8, 15, 16, 31, 33, 64, 127]
     Ds = [mk(p) for p in pos]
+    if a.interleave:
+        out = {}
+        for d in (0, a.depth):
+            edges = set()
+            if d:
+                vps = [v41_views(prog, D, N, M) for D in Ds]
+                edges, *_ = form_chains(vps, regions, d)
+            out[f"kr{d}"] = interleave(prog, Ds[-1], N, M, edges)
+        rec = dict(schema="opentallas.w11.su_interleave/1", shape=a.shape, N=N, M=M, position=pos[-1], inputs=pins(),
+                   unfused=out["kr0"], fused=out[f"kr{a.depth}"])
+        print(json.dumps(rec, indent=1))
+        if a.out:
+            Path(a.out).write_text(json.dumps(rec, indent=1) + "\n")
+        return
     if a.depths:
         rec = sweep(prog, Ds, N, M, regions, [int(x) for x in a.depths.split(",")], a.depth, a.lw)
         rec.update(shape=a.shape, positions=pos, inputs=pins())
@@ -682,9 +698,77 @@ def sweep(prog, Ds, N, M, regions, depths, full_depth, lw):
 
 
 def pins():
-    files = ["tools/w11_su_fuse.py", "tools/hdc_isa_v41.py", "tools/hdc_program_v41.py", "tools/hdc_replay_v41.py",
-             "tools/rtl_hdc_v41x_vec_campaign.py"]
+    files = ["tools/w11_su_fuse.py", "tools/hdc_isa_v41.py", "tools/hdc_isa_v41_fuse.py", "tools/hdc_program_v41.py",
+             "tools/hdc_replay_v41.py", "tools/rtl_hdc_v41x_vec_kr_campaign.py"]
     return {f: hashlib.sha256((ROOT / f).read_bytes()).hexdigest() for f in files}
+
+
+
+# ---- dataflow level 4 (pass-level estimate only): interleaving independent chains ---------------------------------
+def interleave(prog, D, N, M, edges=frozenset(), leg=42, fused_leg=5, mlat=5, alat=4):
+    """How much of the SU's dependent-latency the static order could hide by interleaving independent ops.
+    Runs of consecutive stream ops (any other unit's op ends a run: nothing moves across it) are scheduled two
+    ways on one in-order issue port: as emitted, and by a list scheduler (ready ops first, longest remaining path
+    first).  Op k issues its nv_k vectors one a cycle; its results are usable L_k = nv_k + depth_k + leg after
+    it starts (depth: the unit's emit -> write, tools/rtl_hdc_v41x_vec_kr_campaign.layout at mlat / alat; leg: the
+    VM round trip, C_rotate's fixed 42 per op; fused_leg for a consumer reading its producer from lane registers
+    -- the control broadcast).  Dependences: region read-after-write / write-after-read / write-after-write
+    between the run's stream ops (conservative)."""
+    C.set_mlat(mlat, alat)
+    fused = {(p, c) for (p, c, s) in edges}
+    runs, cur = [], []
+    for k, (f, r, w, t) in enumerate(prog):
+        if f["unit"] == I.UNIT_SU and max(1, f.get("mx_m", 0)) == 1:
+            g = bench_op(f, D)
+            if g["nout"] and g["nin"]:
+                lay = C.layout(g, N, M)
+                cur.append((k, set(r), set(w), lay["nv"], lay["dP"]))
+            continue
+        if cur:
+            runs.append(cur)
+        cur = []
+    if cur:
+        runs.append(cur)
+    tot_in = tot_ls = 0
+    multi = indep_pairs = 0
+    for run in runs:
+        n = len(run)
+        deps = [[j for j in range(i) if (run[i][1] & run[j][2]) or (run[i][2] & (run[j][1] | run[j][2]))]
+                for i in range(n)]
+        lat = [run[i][3] + run[i][4] + leg for i in range(n)]
+
+        def L(i, j):              # j's results usable by i
+            return run[j][3] + run[j][4] + (fused_leg if (run[j][0], run[i][0]) in fused else leg)
+
+        def sched(order_fn):
+            done, start, t, left = {}, {}, 0, set(range(n))
+            while left:
+                i = order_fn(left, done, start, t)
+                s = max([t] + [start[j] + L(i, j) for j in deps[i]])
+                start[i] = s
+                t = s + run[i][3]
+                done[i] = True
+                left.remove(i)
+            return max(start[i] + lat[i] for i in range(n)) - min(start.values())
+
+        tail = [0] * n
+        for i in reversed(range(n)):
+            tail[i] = lat[i] + max([tail[j] for j in range(i + 1, n) if i in deps[j]] + [0])
+        t_in = sched(lambda left, done, start, t: min(left))
+
+        def pick(left, done, start, t):
+            ready = [i for i in left if all(j in done for j in deps[i])]
+            return min(ready, key=lambda i: (max([t] + [start[j] + L(i, j) for j in deps[i]]), -tail[i]))
+        t_ls = sched(pick)
+        tot_in += t_in
+        tot_ls += t_ls
+        multi += n > 1
+        indep_pairs += sum(1 for i in range(1, n) if (i - 1) not in deps[i])
+    return dict(runs=len(runs), runs_multi_op=multi, adjacent_independent_pairs=indep_pairs,
+                su_cycles_in_order=tot_in, su_cycles_interleaved=tot_ls, hidden=tot_in - tot_ls,
+                leg=leg, fused_leg=fused_leg, mlat=mlat, alat=alat,
+                basis="sum over runs of consecutive stream ops of their makespan on one in-order issue port; "
+                      "an upper bound on what interleaving hides (other units' ops bound each run)")
 
 
 if __name__ == "__main__":

@@ -82,7 +82,6 @@ module ot_hdc_v41x_vec_tile #(
         .i_rnd(i_rnd), .i_dst(i_dst), .i_obase(i_obase), .i_oso(i_oso), .i_osi(i_osi), .i_orow(i_orow),
         .i_red(i_red), .i_redsq(i_redsq), .i_redwhole(i_redwhole), .i_redtree(i_redtree), .i_redrnd(i_redrnd),
         .i_rbase(i_rbase), .i_rso(i_rso), .i_imm1(i_imm1), .i_imm2(i_imm2), .i_imm3(i_imm3),
-        .i_krw(1'b0), .i_krwb(6'd0), .i_krr(4'd0), .i_krrb(6'd0), .i_krlw(1'b0),
         .i_ch_src(i_ch_src), .i_ch_seq(i_ch_seq), .i_ch_lead(i_ch_lead), .i_ch_mul(i_ch_mul),
         .x_seq(x_seq), .x_dseq(x_dseq), .x_cnt(x_cnt),
         .cr_seq(cr_seq), .cr_dseq(cr_dseq), .cr_rseq(cr_rseq), .cr_cnt(cr_cnt),
@@ -160,7 +159,6 @@ module ot_hdc_v41x_vec_lane64 #(
         .cx_cclip(cx_cclip), .cx_imm3(cx_imm3), .cp_m1(cp_m1), .cp_imm1(cp_imm1), .cm_m1(cm_m1), .cm_m2(cm_m2),
         .cm_qm(cm_qm), .cm_imm1(cm_imm1), .ca_ad(ca_ad), .ca_imm2(ca_imm2), .ci_sfu(ci_sfu), .cs_sfu(cs_sfu),
         .cs_e1(cs_e1), .cs_imm2(cs_imm2), .ce_e2(ce_e2), .ce_imm1(ce_imm1), .co_rnd(co_rnd), .co_dst(co_dst),
-        .ck_r(4'd0), .ck_ri(6'd0), .co_krw(1'b0), .co_kwi(6'd0),
         .side_v(), .side_x(), .side_y(32'd0),
         .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .kv_we(kv_we), .kv_waddr(kv_waddr),
         .kv_wdata(kv_wdata), .ro_v(ro_v), .ro_x(ro_x), .fault(fault), .coll(coll));

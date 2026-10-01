@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // W11 OPERATOR FUSION: the N = 1,024 stream unit's lane WITH its lane register file (KR_DEPTH 32-bit
-// entries; tools/w11_su_fuse.py, ot_hdc_v41x_vec_lane KR_DEPTH), as fixed-parameter hardening tops beside
+// entries; tools/w11_su_fuse.py; ot_hdc_v41x_vec_lane KR_DEPTH of ot_hdc_v41x_vec_lane_kr.sv, the fusion build of the
+// lane: route it with that file in place of ot_hdc_v41x_vec_lane.sv), as fixed-parameter hardening tops beside
 // ot_hdc_v41x_w11_phys.sv's lane1024r: the same broadcast-tree stage register in front of the lane, plus the
 // four KR control inputs (read streams and entry at the capture, write flag and entry at OUT) in it.
 //   ot_hdc_v41x_vec_light1024rk  KIND 0 (light) lane, KR_DEPTH 32

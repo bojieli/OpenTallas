@@ -51,15 +51,6 @@
 `ifndef HDC_HHW
 `define HDC_HHW 8
 `endif
-`ifndef HDC_SUKR
-`define HDC_SUKR 0
-`endif
-`ifndef HDC_SUBCAST
-`define HDC_SUBCAST 0
-`endif
-`ifndef HDC_SURET
-`define HDC_SURET 0
-`endif
 module tb_hdc_core_v41x (input wire clk);
     localparam integer INSTR_BITS = 1536;
     localparam integer W = 16, G = 4, BL = 16, QLB = 272, AW = 24, NW = 16, PAW = 14, HNL = 3;
@@ -253,8 +244,7 @@ module tb_hdc_core_v41x (input wire clk);
     reg [AW-1:0] cfg [0:15];                   // tools/hdc_images_v41x.py cfg.hex: [0] the index keys' KV word base
     ot_hdc_core_v41x #(.SW(SW), .HS(HS), .X_HE(`HDC_X_HE), .X_ME(`HDC_X_ME), .X_ATT(`HDC_X_ATT), .X_IDX(`HDC_X_IDX),
                        .X_SEL(`HDC_X_SEL), .X_EG(`HDC_X_EG), .XSQ(XSQ), .XSW(XSW),
-                       .X_SU(`HDC_X_SU), .SUN(SUN), .SUM(SUM), .SUKR(`HDC_SUKR),
-                       .SUBCAST(`HDC_SUBCAST), .SURET(`HDC_SURET),
+                       .X_SU(`HDC_X_SU), .SUN(SUN), .SUM(SUM),
                        .HHW(HHW), .HBAW(HBAW), .MG(MG), .MBAW(MBAW)) dut (
         .cfg_ik_base(cfg[0]), .idx_user_base_sec(28'd0), .cfg_me_xs(cfg[1][3:0]),
         .ikh_req_v(ikh_req_v), .ikh_req_rdy(ikh_req_rdy), .ikh_req_addr(ikh_req_addr), .ikh_req_len(ikh_req_len),

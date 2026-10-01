@@ -922,7 +922,7 @@ class Builder:
             self.rmsnorm("X", 160, lay.cb["norm"], "XN", "head", have_ss="SS")
             self.me(lay.mat["head"], V_["XN"], 0, {"XN"}, set(), "head", me_amax=1, me_oen=0)
         self.emit(dict(unit=I.UNIT_END, wait=31), set(), set(), "end")
-        return schedule(fuse_entries(self.prog, self.lay))
+        return schedule(self.prog)
 
     # -- multi-token prediction (Layout(mtp=...)) ------------------------------------------
     def ctl(self, op, tag, slot=0, lane=0, wait=0):
@@ -1051,38 +1051,6 @@ class Builder:
 
 
 SU_BATCH = True                  # the stream unit's lane multiplier (its copies) serves batched slots
-
-
-# ---- SU operator fusion (W11; tools/w11_su_fuse.py) ------------------------------------------------------------
-# HDC_V41_SU_FUSE="N,M,depth": compile the one-position program for a vector unit of N light / M SFU lanes with
-# `depth` lane registers -- the chain-forming pass sets kr_w / kr_r / kr_lw (and drops element writes nothing
-# else reads); the ISA model then keeps the lane registers exactly as that unit does (Machine.kr_geom).  Unset:
-# the program is unchanged.
-FUSE_ENV = "HDC_V41_SU_FUSE"
-FUSE_POSITIONS = (0, 1, 2, 3, 7, 8, 15, 16, 17, 31, 32, 33, 63, 64, 65, 127)
-
-
-def fuse_geom():
-    v = os.environ.get(FUSE_ENV, "")
-    if not v:
-        return None
-    N, M, d = (int(x) for x in v.split(","))
-    return N, M, d
-
-
-def fuse_entries(entries, lay, geom=None):
-    """The fusion pass over the builder's (f, reads, writes, tag) entries, BEFORE schedule(): schedule() then lets
-    a lane-register consumer of the previous stream op chase it vector by vector (su_chase) instead of draining.
-    Region read / write sets are unchanged (a value kept in lane registers still counts as its region)."""
-    geom = geom or fuse_geom()
-    if not geom or lay.mtp:
-        return entries
-    import w11_su_fuse as FU
-    N, M, d = geom
-    Ds = [(lambda dv: (lambda sel: dv[sel]))(I.dyn_values(0, p)) for p in FUSE_POSITIONS]
-    out, rep_ = FU.fuse(entries, Ds, N, M, FU.Regions(lay.vm.map), depth=d, lw=True)
-    fuse_entries.report = rep_
-    return out
 
 
 def su_shift(f, p):
@@ -1403,15 +1371,7 @@ def schedule(prog, chain=False):
         for u in I.UNITS:
             if u == own:
                 c = reads & wr[u]
-                if u == I.UNIT_SU and c and f.get("kr_r", 0) and last_su is not None and last_su.get("kr_w", 0) \
-                        and last_su.get("kr_wb", 0) == f.get("kr_rb", 0) and not (reads & rw[u]) and not chain \
-                        and max(1, f.get("mx_m", 0)) == 1 and max(1, last_su.get("mx_m", 0)) == 1:
-                    # operator fusion: a lane-register consumer of the previous stream op chases it vector by
-                    # vector; the unit's KR credit requires every older op landed (its memory reads), and the
-                    # pass never lets it read its KR producer through memory (ot_hdc_v41x_su_adapt kr_prev)
-                    chase = 1
-                    c = set()
-                elif u == I.UNIT_SU and c and CHASE and chain:
+                if u == I.UNIT_SU and c and CHASE and chain:
                     if cls_change:
                         c = reads & rw[u]          # the element pipeline drains; a reducer may still write
                     elif not (reads & rw[u]):
@@ -1495,25 +1455,6 @@ class Machine:
         self.logits = []
         self.trace = {}
 
-    # ---- operator fusion: the stream unit's lane register files (tools/w11_su_fuse.py) ----------------------
-    kr_geom = None                     # (N, M) of the unit a fused program was compiled for (else HDC_V41_SU_FUSE)
-
-    def kr_place(self, f, no, ni):
-        """(vector, lane) of each element of a fused op on the unit kr_geom: KR is indexed by them, exactly as
-        the hardware is, so a compiler error (overlapping ranges, a misplaced element) shows as a wrong value."""
-        import w11_su_fuse as FU
-        if self.kr_geom is None and fuse_geom():
-            self.kr_geom = fuse_geom()[:2]
-        if self.kr_geom is None:
-            raise ValueError("a fused stream op (kr_w / kr_r) needs Machine.kr_geom = (N, M) or HDC_V41_SU_FUSE")
-        N, M = self.kr_geom
-        if not hasattr(self, "kr"):
-            self.kr = np.full((I.KR_DEPTH + 4096, N), np.nan, dtype=F)
-        g = FU.bench_op(f, lambda sel: self.dyn[sel])
-        g.update(nout=no, nin=ni)
-        vec, lane, _ = FU.placement(g, N, M)
-        return vec, lane
-
     def wrom_f32(self, e):
         return G.from_bits(self.wrom[e].astype(np.uint32) << 16)
 
@@ -1536,7 +1477,7 @@ class Machine:
             f = prog[n]
             if stop is not None and n >= stop:
                 break
-            f = {name: f.get(name, 0) for name, _ in I.fields_for()} | {"_tag": f.get("_tag", "")}
+            f = {name: f.get(name, 0) for name, _ in I.FIELDS} | {"_tag": f.get("_tag", "")}
             if f["unit"] == I.UNIT_CTL:
                 if f["ctl"] == I.CTL_END:
                     if self.mtp and self.accepted is None:
@@ -1759,16 +1700,6 @@ class Machine:
         ec = ea ^ 1 if f["c_pair"] else self.addr(f, "c", no, ni)
         c = self.fetch(f, "c", ec)
         dd = self.fetch(f, "d", self.addr(f, "d", no, ni))
-        krp = None
-        if f.get("kr_r", 0) or f.get("kr_w", 0):
-            krp = self.kr_place(f, no, ni)
-            if f.get("kr_r", 0):
-                kv_ = self.kr[f["kr_rb"] + krp[0], krp[1]]
-                rk = f["kr_r"]
-                a = kv_.copy() if rk & 1 else a
-                b = kv_.copy() if rk & 2 else b
-                c = kv_.copy() if rk & 4 else c
-                dd = kv_.copy() if rk & 8 else dd
         imm1, imm2, imm3 = (u32f(f[k]) for k in ("imm1", "imm2", "imm3"))
         if f["a_rnd"]:
             a = G.to_bf16(a)
@@ -1831,8 +1762,6 @@ class Machine:
                 vals = G.to_bf16(vals)
             for k, x in enumerate(vals):
                 self.vm[f["r_base"] + k * f["r_so"]] = x
-        if f.get("kr_w", 0):
-            self.kr[f["kr_wb"] + krp[0], krp[1]] = out
         if f["dst"]:
             if f["dst"] == I.DST_KVT:
                 o, i = np.meshgrid(np.arange(no), np.arange(ni), indexing="ij")
