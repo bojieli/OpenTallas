@@ -61,7 +61,7 @@ X_CLASSES = {"he": ("he",), "me": ("me",), "att": ("att",), "idx": ("idx",), "se
 # partial sum is exact and the order cannot change the result
 UNITS = X_UNITS           # set by main(): the units built re-specified
 IDX_POOL = False          # X_IDX=2: replicated four-stack pooled correctness path
-PARAMS = {"hhw": 8, "mg": 8, "sun": 16, "sum": 8}      # engine geometry of the build
+PARAMS = {"hhw": 8, "mg": 8, "sun": 16, "sum": 8, "sukr": 0, "subcast": 0, "suret": 0}      # engine geometry of the build
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
        [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
                                            "ot_hdc_reduce", "ot_hdc_accept")] +
@@ -256,7 +256,9 @@ def breakdown(trace, tags, cycles):
 def defines(lanes=None):
     return [f"+define+HDC_SW={lanes or I.SU_LANES}", f"+define+HDC_HHW={PARAMS['hhw']}",
             f"+define+HDC_MG={PARAMS['mg']}",
-            f"+define+HDC_SUN={PARAMS['sun']}", f"+define+HDC_SUM={PARAMS['sum']}"] + \
+            f"+define+HDC_SUN={PARAMS['sun']}", f"+define+HDC_SUM={PARAMS['sum']}",
+            f"+define+HDC_SUKR={PARAMS['sukr']}", f"+define+HDC_SUBCAST={PARAMS['subcast']}",
+            f"+define+HDC_SURET={PARAMS['suret']}"] + \
         [f"+define+HDC_X_{u.upper()}={2 if u == 'idx' and IDX_POOL else int(u in UNITS)}" for u in X_UNITS]
 
 
@@ -280,6 +282,8 @@ def build(scratch: Path, lanes=None) -> Path:
 
 def images(out: Path, *extra, lanes=None):
     env = dict(os.environ, HDC_SW=str(lanes or I.SU_LANES), HDC_V41_ARITH=arith(),
+               # operator fusion (tools/w11_su_fuse.py): the program fused for the vector unit's lanes and KR depth
+               **({"HDC_V41_SU_FUSE": f"{PARAMS['sun']},{PARAMS['sum']},{PARAMS['sukr']}"} if PARAMS["sukr"] else {}),
                HDC_V41_IDX_FUSED=str(int("idx" in UNITS)))
     r = subprocess.run([sys.executable, str(ROOT / "tools/hdc_program_v41.py"), "--out", str(out), *extra],
                        capture_output=True, text=True, env=env)
@@ -519,6 +523,9 @@ def main() -> int:
     parser.add_argument("--mg", type=int, default=8, help="ME weight tile chunk units (8*mg lanes)")
     parser.add_argument("--sun", type=int, default=16, help="vector-unit light lanes")
     parser.add_argument("--sum", type=int, default=8, help="vector-unit SFU lanes")
+    parser.add_argument("--sukr", type=int, default=0, help="vector-unit lane registers (operator fusion; 0 off)")
+    parser.add_argument("--subcast", type=int, default=0, help="vector-unit broadcast-tree stages (SUBCAST)")
+    parser.add_argument("--suret", type=int, default=0, help="vector-unit return stages (SURET)")
     parser.add_argument("--fp", choices=("rtl", "dpi"), default="rtl",
                         help="bit-level RTL or bit-equivalent host-float stand-ins for the large full-core simulator")
     parser.add_argument("--single-only", action="store_true", help="stop after the bit-exact single decode step")
@@ -545,6 +552,7 @@ def main() -> int:
     PARAMS["hhw"] = args.hhw
     PARAMS["mg"] = args.mg
     PARAMS["sun"], PARAMS["sum"] = args.sun, args.sum
+    PARAMS["sukr"], PARAMS["subcast"], PARAMS["suret"] = args.sukr, args.subcast, args.suret
     PARAMS["fp"] = args.fp
     single_output = args.single_output or args.output.with_name(args.output.stem + ".single.json")
     result = run(args.ngen, args.context, [int(x) for x in args.sweep_lanes.split(",") if x],

@@ -51,7 +51,8 @@ module ot_hdc_v41x_vec_lane #(
     parameter integer LEAF = 0,         // 1: the broadcast tree's LAST stage is this lane's own leaf register (below)
     parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4, or 5 (W11 serial domain, 0.9 GHz)
     parameter integer ALAT = 3,         // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
-    parameter integer KR_DEPTH = 0      // OPERATOR FUSION: lane register file entries (0 none; else a power of 2)
+    parameter integer KR_DEPTH = 0      // OPERATOR FUSION: lane register file entries (0 none; 2..64; the pass never
+                                        // addresses past KR_DEPTH - 1)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -684,8 +685,8 @@ module ot_hdc_v41x_vec_lane #(
     // ---- the lane register file (operator fusion): KR_DEPTH words, written at OUT, read at the capture ----------
     generate if (KR_DEPTH > 0) begin : g_kr
         localparam integer KA = $clog2(KR_DEPTH);
-        if (KR_DEPTH < 2 || (1 << KA) != KR_DEPTH || KA > 6) begin : g_bad_kr
-            ot_hdc_v41x_vec_lane_KR_DEPTH_must_be_a_power_of_2_from_2_to_64 u_trap ();
+        if (KR_DEPTH < 2 || KR_DEPTH > 64) begin : g_bad_kr
+            ot_hdc_v41x_vec_lane_KR_DEPTH_must_be_2_to_64 u_trap ();
         end
         reg [31:0] kr [0:KR_DEPTH-1];
         always @(posedge clk) if (v6 && co_krw) kr[co_kwi[KA-1:0]] <= out;

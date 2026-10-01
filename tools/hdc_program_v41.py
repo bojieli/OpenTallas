@@ -922,7 +922,7 @@ class Builder:
             self.rmsnorm("X", 160, lay.cb["norm"], "XN", "head", have_ss="SS")
             self.me(lay.mat["head"], V_["XN"], 0, {"XN"}, set(), "head", me_amax=1, me_oen=0)
         self.emit(dict(unit=I.UNIT_END, wait=31), set(), set(), "end")
-        return fuse_program(schedule(self.prog), self.prog, self.lay)
+        return schedule(fuse_entries(self.prog, self.lay))
 
     # -- multi-token prediction (Layout(mtp=...)) ------------------------------------------
     def ctl(self, op, tag, slot=0, lane=0, wait=0):
@@ -1070,18 +1070,19 @@ def fuse_geom():
     return N, M, d
 
 
-def fuse_program(prog, entries, lay, geom=None):
-    """The fusion pass over a scheduled one-position program (entries: the builder's (f, reads, writes, tag))."""
+def fuse_entries(entries, lay, geom=None):
+    """The fusion pass over the builder's (f, reads, writes, tag) entries, BEFORE schedule(): schedule() then lets
+    a lane-register consumer of the previous stream op chase it vector by vector (su_chase) instead of draining.
+    Region read / write sets are unchanged (a value kept in lane registers still counts as its region)."""
     geom = geom or fuse_geom()
     if not geom or lay.mtp:
-        return prog
+        return entries
     import w11_su_fuse as FU
     N, M, d = geom
-    pe = [(f, r, w, t) for f, (_, r, w, t) in zip(prog, entries)]
     Ds = [(lambda dv: (lambda sel: dv[sel]))(I.dyn_values(0, p)) for p in FUSE_POSITIONS]
-    out, rep_ = FU.fuse(pe, Ds, N, M, FU.Regions(lay.vm.map), depth=d, lw=True)
-    fuse_program.report = rep_
-    return [f for f, *_ in out]
+    out, rep_ = FU.fuse(entries, Ds, N, M, FU.Regions(lay.vm.map), depth=d, lw=True)
+    fuse_entries.report = rep_
+    return out
 
 
 def su_shift(f, p):
@@ -1402,7 +1403,15 @@ def schedule(prog, chain=False):
         for u in I.UNITS:
             if u == own:
                 c = reads & wr[u]
-                if u == I.UNIT_SU and c and CHASE and chain:
+                if u == I.UNIT_SU and c and f.get("kr_r", 0) and last_su is not None and last_su.get("kr_w", 0) \
+                        and last_su.get("kr_wb", 0) == f.get("kr_rb", 0) and not (reads & rw[u]) and not chain \
+                        and max(1, f.get("mx_m", 0)) == 1 and max(1, last_su.get("mx_m", 0)) == 1:
+                    # operator fusion: a lane-register consumer of the previous stream op chases it vector by
+                    # vector; the unit's KR credit requires every older op landed (its memory reads), and the
+                    # pass never lets it read its KR producer through memory (ot_hdc_v41x_su_adapt kr_prev)
+                    chase = 1
+                    c = set()
+                elif u == I.UNIT_SU and c and CHASE and chain:
                     if cls_change:
                         c = reads & rw[u]          # the element pipeline drains; a reducer may still write
                     elif not (reads & rw[u]):
