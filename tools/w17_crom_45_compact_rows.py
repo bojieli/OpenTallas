@@ -1,5 +1,5 @@
 """Preserve45 bank conflicts; compact per-stage rows without new macros."""
-import argparse,gzip,hashlib,json,subprocess,struct
+import argparse,gzip,hashlib,json,subprocess,struct,math,re
 from collections import defaultdict
 import w17_crom_finite_prefetch as C
 
@@ -13,7 +13,12 @@ def build():
     load('shallow_LEF','d2c28c279','physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8.lef')
     load('shallow_SS','d2c28c279','physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8_ss.lib')
     load('shallow_FF','d2c28c279','physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8_ff.lib')
-    calendar=C.build(route=11);pins['calendar']=calendar['source_pins']
+    wire=load('SS_wire_model','541a1d2f','tools/uarch_model.py').decode()
+    fp=json.loads(load('SU_geometry','541a1d2f','results/floorplan/v41_pack_refit_w10_interim.json'))
+    region=next(z for z in fp['soft_regions'] if z[0]=='HUB_SU_VECTOR')
+    reach=float(re.search(r'^WIRE_REACH_SS_UM\s*=\s*([0-9.]+)',wire,re.M)[1])
+    route=math.ceil((region[4]+region[5])/reach);assert route==17
+    calendar=C.build(route=route);pins['calendar']=calendar['source_pins']
     stages=[];maxrows=0;reqmax=0;fillmax=0;digest=hashlib.sha256()
     for s in union['ranks'][0]['stages']:
         perbank=defaultdict(set)
@@ -43,6 +48,8 @@ def build():
     assert len(stages)==41 and maxrows<=1024
     capture_slack=1000/1.2-small['timing']['ss']['clk_to_q_ps']-25-60
     return dict(schema='opentallas.CROM45-stage-row-compaction.v1',source_pins=pins,
+        SS_route_basis=dict(reach_um=reach,envelope_um=region[4]+region[5],stages_each_direction=route,
+            historical11_qualified=False,actual1152bit_bus_capacity_and_reach_bound=False),
         max_regular_rows_per_bank=maxrows,stages=stages,
         exact_address_roundtrip_digest=digest.hexdigest(),
         nominal_service_ports=dict(banks=45,logical64_slots_per_bank=3,capture_coefficients=135,selected_FP32_outputs=16,
@@ -58,7 +65,7 @@ def build():
             baseline4096_depth_rule_preserved=False,requires_explicit_model_contract_choice=True,
             new_macro_generated=False,physical_clock_endpoints_added=90,
             actual3macro_bank_capture_route_power_SSFF_unbound=True)],
-        latency_comparison='Row renumbering preserves45bank waves; current11cycle finitecalendar retained as candidate only, not actual route.',
+        latency_comparison='Row renumbering preserves45bank waves; current17cycle SSminimum finitecalendar retained as candidate only, not actual route.',
         full_token_cycles=None,hardware_admission=False,
         missing=['L1invalidsource','newrow requestcatalog compiler publication','actual135macro port/capture/clock/power placement',
             'actual compacthome ownership/routing and SU nonoverlap'],

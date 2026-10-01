@@ -1,5 +1,5 @@
 """Actual encoded491PC local immutable coefficient placement, no checkpoint reads."""
-import argparse,ast,gzip,hashlib,json,math,struct,subprocess,types
+import argparse,ast,gzip,hashlib,json,math,re,struct,subprocess,types
 from collections import defaultdict
 import w17_crom_finite_prefetch as C
 
@@ -15,6 +15,12 @@ def build(readonly_banks=6):
     pins={}
     def raw(name,ref,path,gz=False):
         b=subprocess.check_output(['git','show',ref+':'+path]);pins[name]=dict(commit=ref,path=path,sha256=digest(b));return gzip.decompress(b) if gz else b
+    wire=raw('SS_wire_model','541a1d2f','tools/uarch_model.py').decode()
+    fp=json.loads(raw('SU_geometry','541a1d2f','results/floorplan/v41_pack_refit_w10_interim.json'))
+    region=next(z for z in fp['soft_regions'] if z[0]=='HUB_SU_VECTOR')
+    reach=float(re.search(r'^WIRE_REACH_SS_UM\s*=\s*([0-9.]+)',wire,re.M)[1])
+    route=math.ceil((region[4]+region[5])/reach)
+    assert reach==504 and route==17
     demand=json.loads(raw('demand',*C.SOURCES['demand'],True))
     audit=json.loads(raw('program',*C.SOURCES['encoded_audit']))
     isa=types.ModuleType('isa');isa.__file__=C.__file__;exec(compile(raw('ISA',*C.SOURCES['ISA']),'<pinned>','exec'),isa.__dict__)
@@ -111,7 +117,7 @@ def build(readonly_banks=6):
         assert count==rec['one_port_cycles_within_emit_dedup']
         service=[]
         for credit in (2,4,128):
-            ticks=sum(12+C.credit_calendar(n,credit,route=11)['last_cache_write_and_reverse_credit_tick'] for _,n in waves_all)
+            ticks=sum(12+C.credit_calendar(n,credit,route=route)['last_cache_write_and_reverse_credit_tick'] for _,n in waves_all)
             ticks=max(ticks,math.ceil(count/16)*3)
             service.append(dict(credits=credit,finite_fill_and_reverse_credit_ticks=ticks,actual_absolute_PC_release=None))
         stage['commands'].append(dict(PC=rec['global_instruction'],coefficient_reads=count,
@@ -163,6 +169,8 @@ def build(readonly_banks=6):
                 source_invalid_words=valid.count(0),complete_image_SHA256=digest(values) if 0 not in valid else None))
         rankvalues.append(dict(rank=rank,homes=homes))
     return dict(schema='opentallas.CROM-stage-local.v1',source_pins=pins,
+        SS_route_basis=dict(reach_um=reach,envelope_um=region[4]+region[5],
+            stages_each_direction=route,historical11_qualified=False,actual1152bit_bus_capacity_and_reach_bound=False),
         regular_element=dict(stage_count_per_rank=41,reference_rank_count=4,candidate_home_count=164,
             storage_minimum_banks=storage_minimum,nominal_bank_FP32_supply_per_fast_cycle=3*banks,
             maximum_stage_words=maximum,max_stage_ids=[k for k,v in unions.items() if len(v)==maximum],

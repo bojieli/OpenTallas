@@ -5,6 +5,8 @@ from tools.w17_crom_45_compact_rows import build
 def record():return build()
 
 def test_actual_rowmax_and_port_preservation(record):
+    assert record['SS_route_basis']['stages_each_direction']==17
+    assert not record['SS_route_basis']['actual1152bit_bus_capacity_and_reach_bound']
     assert record['max_regular_rows_per_bank']==250
     assert len(record['stages'])==41
     assert sum(s['all_address_roundtrip_checks'] for s in record['stages'])==549760

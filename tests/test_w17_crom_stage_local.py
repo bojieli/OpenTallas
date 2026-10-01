@@ -5,6 +5,9 @@ from tools.w17_crom_stage_local import build
 def record():return build()
 
 def test_actual_max_regular_capacity_and_catalog(record):
+    assert record['SS_route_basis']['stages_each_direction']==17
+    assert record['SS_route_basis']['reach_um']==504
+    assert not record['SS_route_basis']['historical11_qualified']
     e=record['regular_element']
     assert e['maximum_stage_words']==33648 and e['max_stage_ids']==[14]
     assert e['storage_minimum_banks']==3 and e['readonly_banks_per_home']==6 and e['capacity_words_per_home']==73728
