@@ -72,6 +72,38 @@ F = np.float32
 SCHEMA = "opentallas.rtl.w17_l0_fullshape_isa.v1"
 PROGRAM = ROOT / "results/rtl/hdc_v41x_fullshape_l0_program.hex"
 PROGRAM_RECORD = ROOT / "results/rtl/hdc_v41x_fullshape_l0_program.json"
+PROGRAM_L20 = ROOT / "results/rtl/hdc_v41x_fullshape_l20_program.hex"
+# The ISA-level contracts the layer-20 program adds (RTL owners: collective engine W15b, core DYN routing W17).
+CONTRACT_L20 = {
+    "COLL_TOPK_MERGE": {
+        "coll_op": 2,
+        "descriptor": {"coll_src": "n scores, FP32 VM elements (BF16-valued index scores; candidate block maxima or "
+                                   "+inf for the pinned block)",
+                       "coll_ibase": "n local ids, u32 bit patterns in FP32 VM containers, ascending (an XU SELECT "
+                                     "output); score i belongs to id i",
+                       "coll_n": "n, static, a multiple of 16 (512 index, 2048 candidate)",
+                       "coll_k": "k <= 4 n (here k = n)",
+                       "coll_d_stride": "DYN selector (FULL profile field appended at offset 1961, 6 bits): global id = "
+                                        "rank * dyn[coll_d_stride] + local id (SC1 for the index, ceil(SC1/8) for "
+                                        "the candidate blocks)",
+                       "coll_dst": "k global ids, u32, one per VM element (16 per word), ascending, on every rank"},
+        "order": "(score descending, global id ascending) over the 4n pairs; values compared as reals: -0 == +0 "
+                 "(canonicalise before an order-preserving u32 map), -inf the least value, no masking",
+        "golden": "hdc_golden_v41.topk_lowest_index over the global score array, then sorted",
+        "padding": "entries past a rank's live count must hold -inf (not emitted: the program's contexts have SC1 >= "
+                   "512 and >= 2048 blocks; n_pos >= 65,533)",
+        "zeros": "no -0 reaches these regions (csum from +0, zero-canonicalising adds); canonicalise anyway",
+        "status": "the die faults coll_op[1] today (rtl/chip/ot_chip_v41x_die.sv coll_issue_bad)"},
+    "DYN": {"NEWBLK": "FULL_DYN slot 52, rank-aware: owner = (NC1 - 1) // SC1; on the owner rank ((NC1 - 1) - "
+                      "RANK * SC1) // 8, else ceil(SC1 / 8) (a pad slot one past the rank's last block)",
+            "coll_d_stride": "the core resolves the DYN selector into the collective request like any DYN field"},
+    "key_partition": "contiguous quarters: rank r's index keys are global rows [r * SC1, (r + 1) * SC1), SC1 = "
+                     "ceil(NC1 / 4); the fused index op's row r is global key r * SC1 + r",
+    "stores": "the index-key write (SU KVT, 128 wide) is global key row POS; the compressed-row write (QE QDQ4E, "
+              "element address row * 512) is global row POS; the selected-row gather (SU a_ind IND_O into KV/KVT, "
+              "a_base 0, a_so 512) reads global compressed rows by id -- HBM stores, not the vector memory",
+    "deviation": "indexer weights_proj replicated per rank (32 x 5120 BF16, 320 KB) instead of the model's output "
+                 "split: the exact head sum needs all 32 head weights on every rank"}
 GOLDEN_RECORD = ROOT / "results/rtl/hdc_v41x_fullshape_golden.json"
 ROPE_CACHE = ROOT / "results/rtl/v41x_rope_hbm_cache.json"
 BIND = {1048576: ROOT / "results/rtl/hdc_v41x_fullshape_1m_program_bind_rope_hbm.json",
@@ -81,20 +113,23 @@ SCRATCH = Path("/home/ubuntu/w17work/isa/scratch")
 # the headline 1M reference token (claude/w17-ref): seed 20260930 -> 21946, margin 3.149
 REF_SEED = 20260930
 REF_RECORD = ROOT / "results/rtl/w17_v41_1m_reference_token.json"
-SEEDED = {(1048576, REF_SEED): dict(bind=ROOT / "results/rtl/hdc_v41x_fullshape_1m_s20260930_program_bind_rope_hbm.json",
-                                    scratch=Path("/home/ubuntu/w17work/isa/scratch_s20260930"))}
+SEEDED = {(1048576, REF_SEED, 0): dict(bind=ROOT / "results/rtl/hdc_v41x_fullshape_1m_s20260930_program_bind_rope_hbm.json",
+                                       scratch=Path("/home/ubuntu/w17work/isa/scratch_s20260930")),
+          (1048576, REF_SEED, 20): dict(
+              bind=ROOT / "results/rtl/hdc_v41x_fullshape_1m_s20260930_l20_program_bind_rope_hbm.json",
+              scratch=Path("/home/ubuntu/w17work/isa/scratch_s20260930"))}
 
 
-def case(ctx: int, seed: int = LC.SEED) -> tuple[Path, Path]:
-    """(bind record, scratch dir) of a context and golden seed."""
-    if seed == LC.SEED:
+def case(ctx: int, seed: int = LC.SEED, layer: int = 0) -> tuple[Path, Path]:
+    """(bind record, scratch dir) of a context, golden seed and layer."""
+    if seed == LC.SEED and layer == 0:
         return BIND[ctx], SCRATCH
-    c = SEEDED[(ctx, seed)]
+    c = SEEDED[(ctx, seed, layer)]
     return c["bind"], c["scratch"]
 
 
-def case_key(ctx: int, seed: int = LC.SEED) -> str:
-    return str(ctx) if seed == LC.SEED else f"{ctx}_seed{seed}"
+def case_key(ctx: int, seed: int = LC.SEED, layer: int = 0) -> str:
+    return (str(ctx) if seed == LC.SEED else f"{ctx}_seed{seed}") + (f"_L{layer}" if layer else "")
 VM_ELEMS = 1 << 19
 TP, W, IL, GR, BL = 4, I.W_LANES, I.INTERLEAVE, I.GROUPS, I.BL
 HD, TROWS, WINDOW, SCAN_CAP, TOPK = 512, 640, 128, 16384, 512
@@ -121,7 +156,7 @@ def cdiv(a, b):
 
 
 # -- DYN table: ot_hdc_core_v41x.sv, FULL_SHAPE, one slot ----------------------------------------------------------
-def full_dyn(pos: int, tok: int = 0) -> list[int]:
+def full_dyn(pos: int, tok: int = 0, rank: int = 0) -> list[int]:
     p1 = pos + 1
     n2 = p1 >> 1
     ns1, ns2 = min(p1, TOPK), min(n2, TOPK)
@@ -147,11 +182,13 @@ def full_dyn(pos: int, tok: int = 0) -> list[int]:
           ("ceil", "SC1", 16): cdiv(sc1, 16), ("ceil", "SC1", 8): cdiv(sc1, 8), ("ceil", "SC2", 16): cdiv(sc2, 16),
           ("ceil", "SCR", 16): cdiv(scr, 16), ("ceil", "T0", 32): cdiv(win, 32),
           ("ceil", "T1", 32): cdiv(win + ns1, 32), ("ceil", "T2", 32): cdiv(win + ns2, 32),
-          "WINM1": win - 1, "WIN_ROW": win * HD, "WINM1_ROW": (win - 1) * HD}
+          "WINM1": win - 1, "WIN_ROW": win * HD, "WINM1_ROW": (win - 1) * HD,
+          # rank-aware (the core's RANK parameter): contiguous key quarters, candidate blocks of 8
+          "NEWBLK": ((p1 - 1) - rank * sc1) // 8 if (p1 - 1) // sc1 == rank else cdiv(sc1, 8)}
     for key, slot in I.FULL_DYN.items():
         d[slot] = fd[key]
     # the emitter's symbolic selectors, resolved by hdc_replay_v41.dyn_values, must agree with the core's table
-    dv = R.dyn_values(R.SHIPPED, pos)
+    dv = R.dyn_values(R.SHIPPED, pos, rank)
     for key, slot in I.FULL_DYN.items():
         if R.resolve(key, dv) != d[slot]:
             raise Defect(f"DYN {key}: core {d[slot]} vs emitter {R.resolve(key, dv)} at pos {pos}")
@@ -159,7 +196,7 @@ def full_dyn(pos: int, tok: int = 0) -> list[int]:
 
 
 # -- golden shard and the rank images ------------------------------------------------------------------------------
-def load_golden(ctx: int, scratch: Path, seed: int = LC.SEED) -> dict:
+def load_golden(ctx: int, scratch: Path, seed: int = LC.SEED, layer: int = 0) -> dict:
     if seed == LC.SEED:
         rec = json.loads(GOLDEN_RECORD.read_text())["contexts"][str(ctx)]
         state_sha = rec["initial_state_segments"][0]["description"]["sha256"]["win0"]
@@ -168,24 +205,29 @@ def load_golden(ctx: int, scratch: Path, seed: int = LC.SEED) -> dict:
         if (rec["context"], rec["seed"]) != (ctx, seed):
             raise SystemExit(f"{REF_RECORD.name} is not the ctx {ctx} seed {seed} token")
         state_sha = None       # the record pins the whole state digest only; rows re-derived from the seed
-    L0 = rec["layers"][0]
-    z = np.load(scratch / f"ctx{ctx}_L00.npz")
-    js = json.loads((scratch / f"ctx{ctx}_L00.json").read_text())
+    L0 = rec["layers"][layer]
+    assert L0["layer"] == layer
+    z = np.load(scratch / f"ctx{ctx}_L{layer:02d}.npz")
+    js = json.loads((scratch / f"ctx{ctx}_L{layer:02d}.json").read_text())
     got_in, got_out = LC.digest(z["h_in"], z["pre_in"]), LC.digest(z["h_out"], z["pre_out"])
     if got_in != L0["input_sha256"] or got_out != L0["output_sha256"]:
         raise SystemExit(f"ctx {ctx}: golden shard I/O sha256 differs from its golden record")
     for k, v in js["trace_sha256"].items():
         if LC.digest(z[k]) != v:
             raise SystemExit(f"ctx {ctx}: golden trace array {k} differs from its shard record")
-    return dict(z={k: z[k] for k in z.files}, shard=js, record=L0, position=rec["position"],
+    extra = {}
+    if js.get("ctx_out", {}).get("cand_file"):
+        extra["cand"] = np.load(scratch / js["ctx_out"]["cand_file"])["cand"]
+    return dict(z={k: z[k] for k in z.files}, shard=js, record=L0, position=rec["position"], layer=layer, **extra,
                 experts=js["experts"], state_sha=state_sha, seed=seed,
                 token_history=js.get("token_history", rec.get("token_history")))
 
 
 def rank_images(ctx: int, rank: int, scratch: Path, golden: dict) -> tuple[dict, Path, dict]:
-    d = scratch / "images" / f"ctx{ctx}_L00_r{rank}"
+    L = golden["layer"]
+    d = scratch / "images" / f"ctx{ctx}_L{L:02d}_r{rank}"
     man = json.loads((d / "manifest.json").read_text())
-    if (man["context"], man["layer"], man["rank"], man["tp"]) != (ctx, 0, rank, TP):
+    if (man["context"], man["layer"], man["rank"], man["tp"]) != (ctx, L, rank, TP):
         raise SystemExit(f"{d}: image manifest identity mismatch")
     if man["golden_shard"]["input_sha256"] != golden["record"]["input_sha256"] or \
             man["golden_shard"]["experts"] != golden["experts"]:
@@ -238,8 +280,8 @@ class BoundLayout:
         self.bind = json.loads(bind_path.read_text())
         self.bind_path = bind_path
         b = self.bind
-        if b["instruction_count"] != 113 or b["rope_mode"] != "hbm_cache":
-            raise SystemExit(f"{bind_path}: not the production tagged-RoPE L0 bind")
+        if b["instruction_count"] != {0: 113, 20: 144}[b.get("layer", 0)] or b["rope_mode"] != "hbm_cache":
+            raise SystemExit(f"{bind_path}: not a production tagged-RoPE layer bind")
         self.layout_path = ROOT / b.get("layout_path", "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json")
         self.qe_path = ROOT / b.get("qe_stream_path", "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json")
         if sha(self.layout_path) != b["layout_sha256"] or sha(self.qe_path) != b["qe_stream_sha256"]:
@@ -284,13 +326,16 @@ class BoundLayout:
 # -- one rank ------------------------------------------------------------------------------------------------------
 class Rank:
     def __init__(self, r, lay: BoundLayout, man, img: Path, golden: dict, win_rows: np.ndarray, rope: dict,
-                 consts: dict, pos: int):
+                 consts: dict, pos: int, stores=None):
         self.r, self.lay, self.man, self.img, self.pos = r, lay, man, img, pos
+        # an indexed layer's HBM stores (shared by the ranks, global row ids): {"ckv": [rows, 512],
+        # "ik": [rows, 128], "n": live rows}; the rank scans its contiguous key quarter
+        self.stores = stores
         self.vm = np.zeros(VM_ELEMS, dtype=F)
         self.ok = np.zeros(VM_ELEMS, dtype=bool)
         self.unwritten = []                     # (pc, operand, first address, count)
         self.log = []                           # this rank's engine log (weight ops: matrix, expert)
-        self.dyn = full_dyn(pos)
+        self.dyn = full_dyn(pos, rank=r)
         self.rope_tab, self.rope_held = rope, {}
         self.consts = consts
         self.m = type("M", (), dict(hc_eps=F(consts["hc_eps"]["value"]),
@@ -378,6 +423,14 @@ class Rank:
         if mode == I.QE_QDQ8:
             self.write(ob, V.qdq_fp8(x))
             return
+        if mode == I.QE_QDQ4E and self.stores is not None:
+            # full shape: the compressed-KV row of the source layer's HBM store, element address row * hd
+            row, rem = divmod(ob, HD)
+            if rem or nb * 32 != HD or row != self.stores["n"]:
+                raise Defect(f"PC {pc}: compressed-row write {ob} is not the next global row {self.stores['n']}")
+            self.stores["ckv_new"][self.r] = (row, V.qdq_fp4_e4m3(x, 16))
+            log.append(dict(pc=pc, unit="QE", ckv_row=int(row)))
+            return
         if mode in (I.QE_QDQ4, I.QE_QDQ4E):
             self.write(ob, V.qdq_fp4_e8m0(x) if mode == I.QE_QDQ4 else V.qdq_fp4_e4m3(x, 16))
             return
@@ -414,9 +467,11 @@ class Rank:
         K = f["me_k"] + d[f["me_d_k"]]
         if n == 0 or tiles == 0 or K == 0:
             return
-        if max(1, f["mx_m"]) != 1 or f["me_fuse"]:
-            raise Defect(f"PC {pc}: multi-position / fused ME op in the layer program")
-        if f["me_wsrc"]:
+        if max(1, f["mx_m"]) != 1:
+            raise Defect(f"PC {pc}: multi-position ME op in the layer program")
+        if f["me_fuse"]:
+            self.me_index(f, pc, n, tiles, K, log)
+        elif f["me_wsrc"]:
             self.me_att(f, pc, n, tiles, K, log)
         else:
             self.me_weight(f, pc, n, tiles, K, log)
@@ -428,11 +483,11 @@ class Rank:
         ob = f["me_obase"] + d[f["me_d_obase"]]
         name, m = self.lay.engine_matrix("me", wb)
         S = 1 << f["me_split"]
-        if name == "gate":
+        if name != "wo_a":
             if wb != m["base_word"] or n != m["nrows"] or K * S != m["ncols"]:
-                raise Defect(f"PC {pc}: ME gate descriptor does not cover its image")
-            wmat = self.dense_w("gate")
-            label = "gate"
+                raise Defect(f"PC {pc}: ME {name} descriptor does not cover its image")
+            wmat = self.dense_w(name)
+            label = name
         elif name == "wo_a":
             groups = R.SHIPPED["o_groups"] // TP
             gw = m["word_count"] // groups
@@ -441,8 +496,6 @@ class Rank:
                 raise Defect(f"PC {pc}: ME wo_a descriptor is not one local o-group")
             wmat = self.dense_w("wo_a")[g * n:(g + 1) * n]
             label = f"wo_a.group{g}"
-        else:
-            raise Defect(f"PC {pc}: ME weight op on unexpected matrix {name}")
         per_round = GR // S
         rr, q, j, l = (a.reshape(-1) for a in np.meshgrid(np.arange(tiles), np.arange(per_round), np.arange(IL),
                                                           np.arange(W), indexing="ij"))
@@ -463,6 +516,47 @@ class Rank:
         if f["me_oen"]:
             self.write(0, acc, idx=(ob + t * f["me_ots"] + j * f["me_ojs"]) * W + l)
         log.append(dict(pc=pc, unit="ME", matrix=label, rows=int(n), k=int(K * S)))
+
+    def me_index(self, f, pc, n, tiles, K, log):
+        """The fused indexer op (ot_hdc_v41x_idx_adapt.sv; Machine.me_fused), full shape: per key row r < n of
+        the rank's quarter (global key rank * SC1 + r),
+            IS[r] = to_bf16(csum_hh to_bf16(relu(to_bf16(dots_q4(q[hh], key))) * wts[hh]))
+        over the 2^hg * IL heads, q[hh] at xbase + (hh / IL) * xcs + (hh % IL) * xjs + k * xks, wts[hh] at
+        me_wts + hh; written as element obase * 16 + r."""
+        st = self.stores
+        if st is None:
+            raise Defect(f"PC {pc}: fused index op without index keys")
+        nh = IL << f["me_hg"]
+        ihd = K
+        if f["me_ks"] != 1 or f["me_js"] != 0 or not f["me_mmode"] or not f["me_round"] or \
+                tiles * (GR >> f["me_hg"]) * W < n:
+            raise Defect(f"PC {pc}: fused index op outside the engine's shapes")
+        hh = np.arange(nh)[:, None]
+        k = np.arange(ihd)[None, :]
+        xa = f["me_xbase"] + (hh // IL) * f["me_xcs"] + k * f["me_xks"] + (hh % IL) * f["me_xjs"]
+        q = G.to_bf16(self.read(xa, "idx_q", pc).reshape(xa.shape))
+        wts = self.read(f["me_wts"] + np.arange(nh), "idx_wts", pc)
+        sc1 = self.dyn[I.FULL_DYN["SC1"]]
+        g0 = self.r * sc1
+        live = st["n"] + 1                      # the keys before this position + its own (written at PC ik)
+        if st["ik_new"] is None:
+            raise Defect(f"PC {pc}: index scan before the position's key was written")
+        out = np.full(n, -np.inf, dtype=F)
+        for c0 in range(0, n, 32768):
+            c1 = min(n, c0 + 32768)
+            g = g0 + np.arange(c0, c1)
+            ok = g < live
+            if not ok.any():
+                continue
+            keys = st["ik"][np.minimum(g[ok], st["n"] - 1)].astype(F)
+            if (g[ok] == st["n"]).any():
+                keys[g[ok] == st["n"]] = st["ik_new"]
+            score = G.to_bf16(V.dots_q4(q, keys))                                  # [heads, keys]
+            terms = G.to_bf16(G.mul(np.maximum(score, F(0)).astype(F), wts[:, None]))
+            out[c0:c1][ok] = G.to_bf16(V.csum(terms.T))
+        ob = (f["me_obase"] + self.dyn[f["me_d_obase"]]) * W
+        self.write(ob, out)
+        log.append(dict(pc=pc, unit="ME", matrix="index_scores", heads=nh, rows=int(n), first_key=int(g0)))
 
     def me_att(self, f, pc, n, tiles, K, log):
         """ot_hdc_v41x_att_adapt.sv, PACKED_KV: q.k (ks == 1) or p.v (ks != 1) over chronological rows."""
@@ -531,6 +625,18 @@ class Rank:
             raise Defect(f"PC {pc}: XU op {op} not in the layer-0 program")
 
     # -- SU (tools/hdc_program_v41.Machine.su1, full-shape operands) -------------------------------------------------
+    def ckv_rows(self, ids, pc):
+        st = self.stores
+        if ids.min() < 0 or ids.max() > st["n"]:
+            raise Defect(f"PC {pc}: selected compressed row outside the store (max {ids.max()}, rows {st['n'] + 1})")
+        rows = st["ckv"][np.minimum(ids, st["n"] - 1)].astype(F)
+        new = ids == st["n"]
+        if new.any():
+            if st["ckv_new"][self.r] is None:
+                raise Defect(f"PC {pc}: the position's compressed row is selected before it is written")
+            rows[new] = st["ckv_new"][self.r][1]
+        return rows
+
     def addr(self, f, s, no, ni, idx=None):
         o, i = np.meshgrid(np.arange(no), np.arange(ni), indexing="ij")
         if s in "bd" and f["b_half"]:
@@ -588,7 +694,14 @@ class Rank:
             cnt = ni if f["a_ind"] == I.IND_I else no
             idx = G.bits(self.read(f["a_ibase"] + np.arange(cnt), "su_index", pc)).astype(np.int64)
         ea = self.addr(f, "a", no, ni, idx)
-        a = self.fetch(f, "a", ea, pc)
+        ckv_gather = self.stores is not None and f["a_ind"] == I.IND_O and f["dst"] in (I.DST_KV, I.DST_KVT)
+        if ckv_gather:
+            # full shape: the selected rows (global compressed-row ids) of the source's HBM store
+            if f["a_src"] != I.SRC_VM or f["a_base"] != 0 or f["a_so"] != HD or f["a_si"] != 1 or ni != HD:
+                raise Defect(f"PC {pc}: selected-row gather outside the compressed-store contract")
+            a = self.ckv_rows(idx, pc).reshape(-1)
+        else:
+            a = self.fetch(f, "a", ea, pc)
         b = self.fetch(f, "b", self.addr(f, "b", no, ni), pc) if (f["m1"] in (I.M1_AB, I.M1_DIVB, I.M1_MAXB) or
                                                                  f["ad"] == I.AD_NEGB or f["e2"] == I.E2_MULB) \
             else np.zeros(no * ni, dtype=F)
@@ -656,6 +769,16 @@ class Rank:
             self.write(0, out, idx=self.addr(f, "o", no, ni))
         elif f["dst"] in (I.DST_KV, I.DST_KVT):
             val = G.to_bf16(out).reshape(no, ni)
+            if f["dst"] == I.DST_KVT and self.stores is not None and ni == self.stores["ihd"]:
+                # the position's index key into the layer's index-key store (global key row dyn[o_d])
+                row0 = self.dyn[f["o_d"]]
+                if f["o_base"] != 0 or no != 1 or row0 != self.stores["n"]:
+                    raise Defect(f"PC {pc}: index-key write to row {row0}, not the next key {self.stores['n']}")
+                self.stores["ik_new_by_rank"][self.r] = val[0]
+                if self.stores["ik_new"] is None or self.r == 0:
+                    self.stores["ik_new"] = val[0]
+                log.append(dict(pc=pc, unit="SU", ik_row=int(row0)))
+                return
             if f["dst"] == I.DST_KVT:        # row dyn[o_d] + o, dimension i
                 row0 = self.dyn[f["o_d"]]
                 if f["o_base"] != 0 or ni != HD or not (0 <= row0 and row0 + no <= TROWS):
@@ -677,10 +800,30 @@ def collective(ranks, f, pc, log):
         raise Defect(f"PC {pc}: a collective must drain every unit (wait {f['wait']})")
     if n <= 0 or n % 16 or src % 16 or dst % 16:
         raise Defect(f"PC {pc}: collective count / alignment not in whole 16-lane words")
-    out_n = n if op == I.COLL_ALL_REDUCE_SUM else TP * n
+    out_n = {I.COLL_ALL_REDUCE_SUM: n, I.COLL_TOPK_MERGE: f["coll_k"]}.get(op, TP * n)
     if not (src + n <= dst or dst + out_n <= src):
         raise Defect(f"PC {pc}: collective source and destination overlap")
     parts = [rk.read(src + np.arange(n), "coll_src", pc) for rk in ranks]
+    if op == I.COLL_TOPK_MERGE:
+        # every rank's n (score, local id) pairs, global id = rank * dyn[coll_d_stride] + local id; the top k
+        # by (score desc, global id asc), written ascending as u32 ids on every rank
+        k, ib = f["coll_k"], f["coll_ibase"]
+        if not 0 < k <= TP * n or ib % 16 or not (ib + n <= dst or dst + k <= ib):
+            raise Defect(f"PC {pc}: TOPK_MERGE k / id base outside the contract")
+        strides = [rk.dyn[f["coll_d_stride"]] for rk in ranks]
+        if len(set(strides)) != 1:
+            raise Defect(f"PC {pc}: ranks disagree on the merge stride")
+        ids = np.concatenate([G.bits(rk.read(ib + np.arange(n), "coll_ids", pc)).astype(np.int64) + r * strides[0]
+                              for r, rk in enumerate(ranks)])
+        vals = np.concatenate(parts).astype(np.float64)
+        vals = np.where(vals == 0, 0.0, vals)                  # -0 == +0 (values; the golden compares values)
+        order = np.lexsort((ids, -vals))[:k]
+        res = np.sort(ids[order]).astype(np.uint32).view(F)
+        for rk in ranks:
+            rk.write(dst, res)
+        log.append(dict(pc=pc, unit="COLL", op="topk_merge", n=int(n), k=int(k), stride=int(strides[0]),
+                        seq=int(f["coll_seq"])))
+        return
     if op == I.COLL_ALL_GATHER:
         res = np.concatenate(parts)
     elif op == I.COLL_ALL_REDUCE_SUM:
@@ -695,32 +838,77 @@ def collective(ranks, f, pc, log):
                     seq=int(f["coll_seq"]), rnd=int(f["coll_rnd"])))
 
 
-def checkpoints(bind):
-    """(name, golden array, VM region, element count, after PC) of the golden comparison points."""
+def checkpoints(bind, L=0):
+    """(name, golden key, VM region, element count, after PC) of the golden comparison points of layer L."""
     tr = bind["instruction_trace"]
     last = lambda tag: max(r["pc"] for r in tr if r["tag"] == tag)  # noqa: E731
     first_w = lambda tag, reg: min(r["pc"] for r in tr if r["tag"] == tag and reg in r["writes"])  # noqa: E731
     end = len(tr) - 1
-    return [("L0.attn_norm", "L0.attn_norm", "XN", 5120, last("L0.attn_norm")),
-            ("L0.attn", "L0.attn", "Y", 5120, last("L0.out.wo_b_reduce")),
-            ("L0.ffn_norm", "L0.ffn_norm", "XN", 5120, last("L0.ffn_norm")),
-            ("L0.router", "L0.router", "BI", 384, first_w("L0.router", "BI")),
-            ("L0.ffn", "L0.ffn", "YALL", 5120, last("L0.moe_sum.y_gather")),
-            ("block0", "block0", "H", 20480, end),
-            ("h_out", "h_out", "H", 20480, end),
-            ("pre0", "pre0", "PF", 4, end),
-            ("pre_out", "pre_out", "PF", 4, end)]
+    cps = [(f"L{L}.attn_norm", f"L{L}.attn_norm", "XN", 5120, last(f"L{L}.attn_norm")),
+           (f"L{L}.attn", f"L{L}.attn", "Y", 5120, last(f"L{L}.out.wo_b_reduce")),
+           (f"L{L}.ffn_norm", f"L{L}.ffn_norm", "XN", 5120, last(f"L{L}.ffn_norm")),
+           (f"L{L}.router", f"L{L}.router", "BI", 384, first_w(f"L{L}.router", "BI")),
+           (f"L{L}.ffn", f"L{L}.ffn", "YALL", 5120, last(f"L{L}.moe_sum.y_gather")),
+           (f"block{L}", f"block{L}", "H", 20480, end),
+           ("h_out", "h_out", "H", 20480, end),
+           (f"pre{L}", f"pre{L}", "PF", 4, end),
+           ("pre_out", "pre_out", "PF", 4, end)]
+    if L == 20:
+        fused = [r["pc"] for r in tr if r["tag"] == f"L{L}.indexer" and r["fields"].get("me_fuse")]
+        cps += [(f"L{L}.index_scores (rank quarter)", "index_scores", "IS", None, fused[0]),
+                (f"L{L}.index_select", "sel", "SELG", 512, last(f"L{L}.indexer.topk_merge")),
+                (f"L{L}.candidate_blocks", "cand", "CAND", 2048, last(f"L{L}.candidates.topk_merge")),
+                (f"win{L} (window row, KVQ)", f"win{L}", "KVQ", 512, first_w(f"L{L}.attn", "KVQ")),
+                (f"ik{L} (index key)", f"ik{L}", "store:ik", 128, end),
+                (f"ckv{L} (compressed row)", f"ckv{L}", "store:ckv", 512, end)]
+    return cps
+
+
+def golden_of(golden, gkey, rk, cnt):
+    """The golden array a comparison point expects on rank rk (FP32 bit patterns or u32 ids)."""
+    z, L = golden["z"], golden["layer"]
+    if gkey == "index_scores":
+        sc1 = rk.dyn[I.FULL_DYN["SC1"]]
+        return z[f"L{L}.index_scores"][rk.r * sc1:(rk.r + 1) * sc1].astype(F)
+    if gkey == "sel":
+        return np.asarray(golden["shard"]["ctx_out"]["sel"], dtype=np.uint32).view(F)
+    if gkey == "cand":
+        blocks = np.nonzero(golden["cand"].reshape(-1, 8).any(axis=1))[0]
+        return blocks.astype(np.uint32).view(F)
+    return z[gkey].reshape(-1).astype(F)
+
+
+def got_of(rk, reg, V_, n, pc_state=None):
+    if reg == "store:ik":
+        v = rk.stores["ik_new_by_rank"][rk.r]
+        return (np.full(n, np.nan, F) if v is None else v), v is not None
+    if reg == "store:ckv":
+        v = rk.stores["ckv_new"][rk.r]
+        return (np.full(n, np.nan, F) if v is None else v[1]), v is not None
+    return rk.vm[V_[reg]:V_[reg] + n], bool(rk.ok[V_[reg]:V_[reg] + n].all())
+
+
+def indexed_stores(m, st, L):
+    """The layer's HBM stores entering the token: compressed rows and index keys (global row ids)."""
+    ckv = np.stack(st["ckv"][L]).astype(F)
+    ik = np.stack(st["ik"][L]).astype(F)
+    assert len(ckv) == len(ik)
+    return dict(ckv=ckv, ik=ik, n=len(ckv), ihd=ik.shape[1], ik_new=None,
+                ik_new_by_rank={r: None for r in range(TP)}, ckv_new={r: None for r in range(TP)})
 
 
 def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=print, snap=None,
-                on_pc=None, ranks_out=None, seed=LC.SEED) -> dict:
+                on_pc=None, ranks_out=None, seed=LC.SEED, layer=0) -> dict:
     """snap: {pc: None} filled with every rank's VM after pc; on_pc(pc, ranks): called after every PC;
     ranks_out: a list that receives the four Rank objects (final VM, per-rank weight-op logs `rk.log`)."""
-    golden = load_golden(ctx, scratch, seed)
+    L = layer
+    golden = load_golden(ctx, scratch, seed, L)
     pos = golden["position"]
     lay = BoundLayout(bind_path)
     if lay.selected != golden["experts"]:
         raise SystemExit(f"bind {bind_path.name} selected experts {lay.selected} != golden {golden['experts']}")
+    if lay.bind.get("layer", 0) != L:
+        raise SystemExit(f"bind {bind_path.name} is not layer {L}")
     words = [int(x, 16) for x in program.read_text().split()]
     tr = lay.bind["instruction_trace"]
     if len(words) != len(tr):
@@ -734,20 +922,27 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
         if diff:
             raise SystemExit(f"PC {pc}: encoded program differs from bind {bind_path.name} in {diff}")
         fields.append(d)
-    # the model constants, synthetic window, RoPE coefficients
+    # the model constants, synthetic window / state, RoPE coefficients
     consts = KC.load("deepseek-v4.1-flash")
     man = json.loads(KC.OUT.read_text())["models"]["deepseek-v4.1-flash"]
     consts = dict(consts, _sinkhorn_iters=man["unit_parameters"]["sinkhorn_iters"]["value"])
     ck = LC.Checkpoint()
     m, _ = LC.build_model(ck, engram=False)
-    st, sdesc = LC.synthetic_state(m, ctx, seed=seed, layers=[0])
-    if golden["state_sha"] is not None and sdesc["sha256"]["win0"] != golden["state_sha"]:
+    st, sdesc = LC.synthetic_state(m, ctx, seed=seed, layers=[L])
+    if golden["state_sha"] is not None and sdesc["sha256"][f"win{L}"] != golden["state_sha"]:
         raise SystemExit(f"ctx {ctx}: synthetic window rows differ from the golden record")
-    win = np.stack(st["win"][0]).astype(F)
-    cs = V.rope_cs(m.freqs_plain, pos)
-    rope = {(0, pos): cs}
+    win = np.stack(st["win"][L]).astype(F)
+    stores = indexed_stores(m, st, L) if L in R.KV_SRC else None
+    state_check = None
+    if stores is not None:
+        state_check = {k: sdesc["sha256"][f"{k}{L}"] for k in ("ckv", "ik")}
+        state_check["rows"] = stores["n"]
+    del st
+    yarn = bool(R.RATIO[L])
+    cs = V.rope_cs(m.freqs_yarn if yarn else m.freqs_plain, pos)
+    rope = {(int(yarn), pos): cs}
     cache = json.loads(ROPE_CACHE.read_text())["fixtures"]
-    fx = {199999: "plain200k", 1048575: "plain1m"}.get(pos)
+    fx = {(0, 199999): "plain200k", (0, 1048575): "plain1m", (1, 199999): "yarn200k"}.get((int(yarn), pos))
     rope_check = None
     if fx:
         pairs = np.stack(cs, axis=-1).astype("<f4")
@@ -758,10 +953,10 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
     ranks, rank_pins = [], {}
     for r in range(TP):
         man_r, img, pin = rank_images(ctx, r, scratch, golden)
-        ranks.append(Rank(r, lay, man_r, img, golden, win, rope, consts, pos))
+        ranks.append(Rank(r, lay, man_r, img, golden, win, rope, consts, pos, stores=stores))
         rank_pins[str(r)] = pin
     V_ = ranks[0].V
-    cps = checkpoints(lay.bind)
+    cps = checkpoints(lay.bind, L)
     results, trace = [], []
     defects = []
     for pc, f in enumerate(fields):
@@ -769,7 +964,7 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
         unit = f["unit"]
         try:
             if f["pred"] != I.PRED_ALWAYS:
-                raise Defect(f"PC {pc}: predicated instruction in the layer-0 program")
+                raise Defect(f"PC {pc}: predicated instruction in the layer program")
             if unit == I.UNIT_CTL and f["ctl"] == I.CTL_END:
                 pass
             elif unit == I.UNIT_COLL:
@@ -782,7 +977,7 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
                      I.UNIT_XU: lambda: rk.xu(f, pc, lg), I.UNIT_HE: lambda: rk.he(f, pc, lg)}[unit]()
         except Defect as exc:
             defects.append(dict(pc=pc, tag=f["_tag"], defect=str(exc)))
-            log_fn(f"ctx {ctx} DEFECT {exc}")
+            log_fn(f"ctx {ctx} L{L} DEFECT {exc}")
             break
         if on_pc is not None:
             on_pc(pc, ranks)
@@ -791,21 +986,21 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
         for name, gkey, reg, cnt, at in cps:
             if at != pc:
                 continue
-            want = golden["z"][gkey].reshape(-1).astype(F)
             per_rank = []
             for rk in ranks:
-                got = rk.vm[V_[reg]:V_[reg] + cnt]
-                wr = rk.ok[V_[reg]:V_[reg] + cnt].all()
+                want = golden_of(golden, gkey, rk, cnt)
+                got, wr = got_of(rk, reg, V_, len(want))
                 bad = np.nonzero(G.bits(got) != G.bits(want))[0]
-                per_rank.append(dict(rank=rk.r, written=bool(wr), mismatches=int(bad.size),
+                per_rank.append(dict(rank=rk.r, written=bool(wr), mismatches=int(bad.size), elements=len(want),
                                      first_mismatch=int(bad[0]) if bad.size else None,
                                      got=f"0x{int(G.bits(got[bad[0]])):08x}" if bad.size else None,
                                      want=f"0x{int(G.bits(want[bad[0]])):08x}" if bad.size else None))
             ok = all(x["mismatches"] == 0 and x["written"] for x in per_rank)
-            results.append(dict(region=name, golden_array=gkey, vm_region=reg, vm_base=int(V_[reg]),
-                                elements=cnt, after_pc=at, after_tag=tr[at]["tag"], bit_exact=ok,
-                                golden_sha256=LC.digest(want), per_rank=per_rank))
-            log_fn(f"ctx {ctx} PC {at:3d} {name:13s} {'BIT-EXACT' if ok else 'MISMATCH'} "
+            results.append(dict(region=name, golden_array=gkey, vm_region=reg,
+                                vm_base=int(V_[reg]) if reg in V_ else None,
+                                elements=per_rank[0]["elements"], after_pc=at, after_tag=tr[at]["tag"],
+                                bit_exact=ok, per_rank=per_rank))
+            log_fn(f"ctx {ctx} L{L} PC {at:3d} {name:32s} {'BIT-EXACT' if ok else 'MISMATCH'} "
                    f"{[x['mismatches'] for x in per_rank]}")
     if ranks_out is not None:
         ranks_out.extend(ranks)
@@ -813,16 +1008,17 @@ def run_context(ctx: int, scratch: Path, bind_path: Path, program: Path, log_fn=
     unwritten = {str(rk.r): rk.unwritten for rk in ranks if rk.unwritten}
     exact = bool(results) and all(x["bit_exact"] for x in results) and not defects and not unwritten \
         and len(results) == len(cps)
-    return dict(context=ctx, position=pos, seed=seed, verdict="pass" if exact else "fail",
+    return dict(context=ctx, position=pos, seed=seed, layer=L, verdict="pass" if exact else "fail",
                 experts=golden["experts"], regions=results, defects=defects, unwritten_reads=unwritten,
                 instructions_executed=len(fields) if not defects else defects[0]["pc"],
-                engine_log_rank0=trace, rope=rope_check,
+                engine_log_rank0=trace, rope=rope_check, state_rows=state_check,
                 inputs=dict(golden_shard_input_sha256=golden["record"]["input_sha256"],
                             golden_shard_output_sha256=golden["record"]["output_sha256"],
-                            window_rows_sha256=golden["state_sha"] or sdesc["sha256"]["win0"],
+                            window_rows_sha256=golden["state_sha"] or sdesc["sha256"][f"win{L}"],
                             window_rows_check="golden record win0 digest" if golden["state_sha"] else
                             "re-derived from the seed (the reference record pins only the whole-state digest); "
                             "checked through the bit-exact attention output", rank_images=rank_pins,
+                            program=str(program.relative_to(ROOT)), program_sha256=sha(program),
                             bind=str(bind_path.relative_to(ROOT)), bind_sha256=sha(bind_path),
                             layout=str(lay.layout_path.relative_to(ROOT)), layout_sha256=sha(lay.layout_path),
                             qe_stream=str(lay.qe_path.relative_to(ROOT)), qe_stream_sha256=sha(lay.qe_path)))
@@ -848,20 +1044,23 @@ def main() -> int:
     ap.add_argument("--record", type=Path)
     ap.add_argument("--fixes", type=Path, help="JSON list of the program fixes this run verifies")
     ap.add_argument("--seed", type=int, default=LC.SEED, help="golden seed (20260930: the 1M reference token)")
+    ap.add_argument("--layer", type=int, default=0, help="0 (sliding) or 20 (ratio-1 KV / index / candidate source)")
     a = ap.parse_args()
+    if a.layer == 20 and a.program == PROGRAM:
+        a.program = PROGRAM_L20
     ctxs = a.context or [1048576, 200000]
     out = {}
     for ctx in ctxs:
-        bind, scratch = case(ctx, a.seed)
-        scratch = a.scratch if a.seed == LC.SEED else scratch
-        key = case_key(ctx, a.seed)
-        out[key] = run_context(ctx, scratch, bind, a.program, seed=a.seed)
+        bind, scratch = case(ctx, a.seed, a.layer)
+        scratch = a.scratch if (a.seed == LC.SEED and a.layer == 0) else scratch
+        key = case_key(ctx, a.seed, a.layer)
+        out[key] = run_context(ctx, scratch, bind, a.program, seed=a.seed, layer=a.layer)
         print(f"ctx {key}: {out[key]['verdict']}")
     if a.record:
         head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
         rec = dict(schema=SCHEMA,
                    status="pass" if all(v["verdict"] == "pass" for v in out.values()) else "fail",
-                   claim_boundary="ISA-level execution of the encoded full-shape TP-4 layer-0 program on four "
+                   claim_boundary=f"ISA-level execution of the encoded full-shape TP-4 layer-{a.layer} program on four "
                                   "ranks (program dataflow, addresses, strides, counts, DYN, constants, "
                                   "collectives) against the released-checkpoint golden on synthetic "
                                   "golden-consistent KV state. Weight-engine arithmetic is the golden's on the "
@@ -871,7 +1070,8 @@ def main() -> int:
                    program_sha256=sha(a.program),
                    fixes=json.loads(a.fixes.read_text()) if a.fixes else [],
                    contexts=out,
-                   headline=f"1048576_seed{REF_SEED}",
+                   headline=f"1048576_seed{REF_SEED}" + (f"_L{a.layer}" if a.layer else ""),
+                   **({"contract": CONTRACT_L20} if a.layer == 20 else {}),
                    source_sha256={s: sha(ROOT / s) for s in SOURCES},
                    reproduction="python3 tools/rtl_v41_fullshape_layer_campaign.py --steps images --contexts C "
                                 "--layers 0 --rank R --scratch SCRATCH (R = 0..3, SCRATCH holding the golden "
@@ -882,8 +1082,13 @@ def main() -> int:
             rec["contexts"] = {**old.get("contexts", {}), **out}
             rec["status"] = "pass" if all(v["verdict"] == "pass" for v in rec["contexts"].values()) else "fail"
             rec["fixes"] = rec["fixes"] or old.get("fixes", [])
-            if "failed_runs" in old:
-                rec["failed_runs"] = old["failed_runs"]
+            rec["failed_runs"] = list(old.get("failed_runs", []))
+            for k in out:                 # a failed verdict is never overwritten: it moves to failed_runs
+                if old.get("contexts", {}).get(k, {}).get("verdict") == "fail":
+                    rec["failed_runs"].append(dict(key=k, program_sha256=old.get("program_sha256"),
+                                                   source_commit=old.get("source_commit"), **{
+                                                       x: old["contexts"][k].get(x) for x in
+                                                       ("verdict", "defects", "regions")}))
         a.record.write_text(json.dumps(rec, indent=1) + "\n")
         print("wrote", a.record)
     return 0 if all(v["verdict"] == "pass" for v in out.values()) else 1

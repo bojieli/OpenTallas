@@ -126,6 +126,11 @@ FULL_EXTRA_FIELDS = [
     ("coll_seq", 8), ("coll_rnd", 1),
     ("qe_unrounded", 1),  # send a LINQ FP32 partial to a later TP all-reduce
 ]
+# Full-profile fields at FIXED offsets from the top of the 2048-bit word, so fields appended after the extra
+# fields (W11's operator-fusion fields) never move them.  COLL_TOPK_MERGE: rank r's local ids at coll_ibase become
+# global ids r * dyn[coll_d_stride] + id (tools/v41_fullshape_isa.py collective(); results/rtl/
+# w17_l20_fullshape_isa.json contract).
+FULL_FIXED_FIELDS = {"coll_d_stride": (FULL_INSTR_BITS - FULL_D, FULL_D)}
 
 A = 24   # address / stride width
 N = 16   # count width
@@ -151,6 +156,9 @@ FULL_DYN_KEYS = (
     ("ceil", "SC1", 16), ("ceil", "SC1", 8), ("ceil", "SC2", 16),
     ("ceil", "SCR", 16), ("ceil", "T0", 32), ("ceil", "T1", 32), ("ceil", "T2", 32),
     "WINM1", "WIN_ROW", "WINM1_ROW",
+    # RANK-AWARE (the core's RANK parameter): the local candidate block holding the newest position on its
+    # owner rank, else the pad block one past the rank's last (layer-20 candidate pin)
+    "NEWBLK",
 )
 # Existing numeric DYN selectors retain their reduced meanings. Symbolic
 # selectors from the shipped-shape emitter occupy additional full-mode slots.
@@ -256,6 +264,10 @@ def layout_for(*, full_shape=False):
         out[name] = (off, width)
         off += width
     assert off <= (FULL_INSTR_BITS if full_shape else INSTR_BITS), off
+    if full_shape:
+        for name, (foff, width) in FULL_FIXED_FIELDS.items():
+            assert off <= foff and foff + width <= FULL_INSTR_BITS, (name, off, foff)
+            out[name] = (foff, width)
     return out
 
 
@@ -314,7 +326,7 @@ def emit_core_profiles():
         full_off, full_width = FULL_LAYOUT[name]
         lines.append(f"localparam integer O_{name.upper()} = FULL_SHAPE ? {full_off} : {off};")
         lines.append(f"localparam integer W_{name.upper()} = FULL_SHAPE ? {full_width} : {width};")
-    for name, _ in FULL_EXTRA_FIELDS:
+    for name in [n for n, _ in FULL_EXTRA_FIELDS] + list(FULL_FIXED_FIELDS):
         full_off, full_width = FULL_LAYOUT[name]
         lines.append(f"localparam integer O_{name.upper()} = {full_off};")
         lines.append(f"localparam integer W_{name.upper()} = {full_width};")

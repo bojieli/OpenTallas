@@ -31,8 +31,9 @@ FULL_NAMES = MATRIX_ORDER + tuple(f"exp{i}.{family}" for family in FAMILY_ORDER 
 DEFAULT_OTHER = ROOT / "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json"
 
 
-def full_names(selected) -> tuple[str, ...]:
-    return MATRIX_ORDER + tuple(f"exp{i}.{family}" for family in FAMILY_ORDER for i in selected)
+def full_names(selected, layer=0) -> tuple[str, ...]:
+    dense = MATRIX_ORDER + (("indexer.wq_b",) if layer == 20 else ())
+    return dense + tuple(f"exp{i}.{family}" for family in FAMILY_ORDER for i in selected)
 
 
 def digest(path: Path) -> str:
@@ -188,11 +189,11 @@ def verify_numeric_samples(logical: np.ndarray, codes: np.ndarray,
 def build(manifest_path: Path, source_dir: Path, out_dir: Path,
           names: tuple[str, ...] | None = None, other_path: Path = DEFAULT_OTHER) -> dict:
     manifest = json.loads(manifest_path.read_text())
-    if manifest.get("layer") != 0 or manifest.get("rank") != 0 or manifest.get("tp") != 4:
-        raise ValueError("this gate supports shipped TP4 layer0 rank0 only")
+    if manifest.get("layer") not in (0, 20) or manifest.get("rank") != 0 or manifest.get("tp") != 4:
+        raise ValueError("this gate supports shipped TP4 layer 0 / 20, rank 0 only")
     # The token's router selection (the image manifest's populated experts); the 200K shard is SELECTED.
     selected = tuple(manifest.get("experts_populated", SELECTED))
-    FULL = full_names(selected)
+    FULL = full_names(selected, manifest["layer"])
     if names is None:
         names = FULL
     if len(names) != len(set(names)) or any(name not in FULL for name in names):
@@ -264,7 +265,7 @@ def build(manifest_path: Path, source_dir: Path, out_dir: Path,
                 layout_tool_sha256=digest(Path(__file__)),
                 source_commit=manifest.get("source_commit"), source_sha256=manifest.get("source_sha256"),
                 checkpoint=manifest.get("checkpoint"),
-                layer=0, rank=0, context=manifest.get("context"), matrices=matrices,
+                layer=manifest["layer"], rank=0, context=manifest.get("context"), matrices=matrices,
                 selected_expert_ids=list(selected), all_experts_materialized=False,
                 expert_family_coverage={f"exp.{family}": list(selected) for family in FAMILY_ORDER},
                 expert_access_policy="only materialized selected IDs; other slots fail closed",

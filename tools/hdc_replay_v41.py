@@ -71,8 +71,9 @@ def cdiv(a, b):
     return -(-a // b)
 
 
-def dyn_values(s, pos):
-    """Symbolic DYN selectors of the shape-generic program at `pos` (one die of a group of s['tp'])."""
+def dyn_values(s, pos, rank=0):
+    """Symbolic DYN selectors of the shape-generic program at `pos` (one die of a group of s['tp']); `rank` only
+    moves the rank-aware NEWBLK."""
     tp = s["tp"]
     win = min(s["window"], pos + 1)
     nc1, nc2 = pos + 1, (pos + 1) >> 1
@@ -81,7 +82,20 @@ def dyn_values(s, pos):
     return dict(WIN=win, WINM1=win - 1, WIN_ROW=win * s["hd"], WINM1_ROW=(win - 1) * s["hd"],
                 NC1=nc1, NC2=nc2, NS1=ns1, NS2=ns2, T0=win, T1=win + ns1, T2=win + ns2,
                 SC1=cdiv(nc1, tp), SC2=cdiv(nc2, tp), SCR=cdiv(min(nc1, cap), tp), NSL1=min(s["topk"], cdiv(nc1, tp)),
-                NSL2=min(s["topk"], cdiv(nc2, tp)), NSLR=min(s["topk"], cdiv(min(nc1, cap), tp)))
+                NSL2=min(s["topk"], cdiv(nc2, tp)), NSLR=min(s["topk"], cdiv(min(nc1, cap), tp)),
+                NEWBLK=newblk(s, pos, rank))
+
+
+def newblk(s, pos, rank):
+    """Layer-20 candidate pin: the local block (of s['cand_b'] positions) holding the newest position on the rank
+    that owns it in the contiguous key quarters (rank r holds [r * SC1, (r + 1) * SC1)), else the rank's pad block
+    ceil(SC1 / cand_b) -- a scratch slot one past its last block."""
+    nc1 = pos + 1
+    sc1 = cdiv(nc1, s["tp"])
+    owner = (nc1 - 1) // sc1
+    if rank == owner:
+        return ((nc1 - 1) - rank * sc1) // s["cand_b"]
+    return cdiv(sc1, s["cand_b"])
 
 
 def resolve(sel, dv):
@@ -109,8 +123,9 @@ class ShapeLayout:
     def rname(self, name, j):
         return name
 
-    def __init__(self, s, tp_exact=False, constant_bases=None, rope_storage="crom_fixture"):
+    def __init__(self, s, tp_exact=False, constant_bases=None, rope_storage="crom_fixture", layer=0):
         self.s = s
+        self.layer = layer
         self.tp_exact = tp_exact
         self.constant_bases = constant_bases
         if rope_storage not in ("crom_fixture", "hbm_cache"):
@@ -119,12 +134,15 @@ class ShapeLayout:
             raise ValueError("HBM RoPE cache requires exact TP full-shape emission")
         self.rope_storage = rope_storage
         if constant_bases is not None:
-            required = {"rope_plain", "L0.attn_norm", "L0.ffn_norm", "L0.q_norm", "L0.kv_norm",
-                        "L0.attn_sink", "L0.gate_bias", "L0.hc_attn_scale", "L0.hc_attn_base",
-                        "L0.hc_ffn_scale", "L0.hc_ffn_base"}
+            L = layer
+            required = {"rope_yarn" if RATIO[L] else "rope_plain"} | {
+                f"L{L}.{n}" for n in ("attn_norm", "ffn_norm", "q_norm", "kv_norm", "attn_sink", "gate_bias",
+                                      "hc_attn_scale", "hc_attn_base", "hc_ffn_scale", "hc_ffn_base")}
+            if L in KV_SRC:
+                required |= {f"L{L}.cnorm", f"L{L}.knorm"}
             missing = required - constant_bases.keys()
             if missing:
-                raise ValueError(f"TP layer-0 CROM bases missing: {sorted(missing)}")
+                raise ValueError(f"TP layer-{L} CROM bases missing: {sorted(missing)}")
             if any(not isinstance(v, int) or v < 0 or v >= 1 << 30 for v in constant_bases.values()):
                 raise ValueError("CROM bases must be nonnegative 30-bit word addresses")
         G = s["groups"]
@@ -162,6 +180,16 @@ class ShapeLayout:
                 v(name, n)
             for k in range(s["k_exp"] + 1):
                 v(f"ACTALL{k}", s["moe_ff"])
+            # indexed layers: the compressor's local rows, the selected scores / global ids, candidate blocks
+            v("CKAL", hd // tp)
+            # TOPK_MERGE destinations are 4-word (64-element) aligned (ot_chip_v41x_coll_dma GW = 4)
+            v("SV", s["topk"])
+            v("SELG", s["topk"], align=64)
+            nblk = cdiv(s["pmax"] // tp, s["cand_b"]) + 16         # + the pad block slot (NEWBLK)
+            v("BLK", nblk)
+            v("CBSEL", s["cand_k"])
+            v("CBSV", s["cand_k"])
+            v("CAND", s["cand_k"], align=64)
         for L in KV_SRC:
             v(f"SLOT{L}", 4 * hd)
             v(f"CKV{L}", (s["pmax"] // RATIO[L]) * hd)
@@ -182,7 +210,9 @@ class ShapeLayout:
                 self.mat[(L, "cwkv")] = self.place((2 if RATIO[L] == 2 else 1) * hd // tp, D)
                 self.mat[(L, "iwk")] = self.place(s["ihd"], hd)
             if L in IDX_SRC:
-                self.mat[(L, "iwp")] = self.place(s["ih"] // tp, D)
+                # exact TP: weights_proj is replicated (32 x 5120 BF16) so every rank has all 32 head weights
+                # for its key quarter's head sum (the model's output split would need a sub-16 gather)
+                self.mat[(L, "iwp")] = self.place(s["ih"] if tp_exact else s["ih"] // tp, D)
             q = self.qplace
             self.qmat[(L, "wq_a")] = q(s["q_rank"] // tp, D)
             self.qmat[(L, "wkv")] = q(hd // tp, D)
@@ -301,15 +331,22 @@ class ShapeBuilder(P.Builder):
         super().linq(mat, x, out, reads, writes, tag, pred, **over)
         self.prog[-1][0]["_macs"] = mat["macs"]
 
-    def coll(self, op, src, dst, n, reads, writes, tag, rnd=0):
-        """v1 blocking collective; addresses and count are VM elements."""
+    def coll(self, op, src, dst, n, reads, writes, tag, rnd=0, ibase=0, k=0, stride=None):
+        """v1 blocking collective; addresses and count are VM elements.  COLL_TOPK_MERGE: n (score, local id)
+        pairs a rank at src / ibase, global id = rank * dyn[stride] + local id, the top k global ids (ascending)
+        to dst on every rank."""
         assert self.tp_exact and self.s["tp"] == 4
         assert n > 0 and n % 16 == 0 and src % 16 == 0 and dst % 16 == 0
-        out_n = n if op == I.COLL_ALL_REDUCE_SUM else self.s["tp"] * n
+        out_n = {I.COLL_ALL_REDUCE_SUM: n, I.COLL_TOPK_MERGE: k}.get(op, self.s["tp"] * n)
         assert src + n <= dst or dst + out_n <= src, (src, dst, n)
-        self.emit(dict(unit=I.UNIT_COLL, wait=31, coll_op=op, coll_src=src, coll_dst=dst,
-                       coll_n=n, coll_k=0, coll_ibase=0, coll_seq=self.coll_seq & 255,
-                       coll_rnd=rnd), reads, writes, tag)
+        f = dict(unit=I.UNIT_COLL, wait=31, coll_op=op, coll_src=src, coll_dst=dst, coll_n=n, coll_k=k,
+                 coll_ibase=ibase, coll_seq=self.coll_seq & 255, coll_rnd=rnd)
+        if op == I.COLL_TOPK_MERGE:
+            # ot_chip_v41x_coll_dma: n a multiple of 64 elements (GW = 4), dst 4-word aligned, n <= 2048
+            assert n % 64 == 0 and dst % 64 == 0 and n <= 2048
+            assert 0 < k <= 4 * n and ibase % 16 == 0 and (ibase + n <= dst or dst + k <= ibase) and stride
+            f["coll_d_stride"] = stride
+        self.emit(f, reads, writes, tag)
         self.coll_seq += 1
 
     # -- composite operations (literals -> shape) --------------------------------------------------------------
@@ -461,6 +498,82 @@ class ShapeBuilder(P.Builder):
         self.qdq(I.QE_QDQ4E, "LAT", hd // 32, V_[f"CKV{L}"], {f"CKV{L}"}, t, pred,
                  dsel=DY["CKV2"] if r == 2 else DY["ROW"])
 
+    def compressor_tp(self, L):
+        """Exact TP-4 compressor of a ratio-1 KV source (layer 20): the rank's 128 latent rows, BF16, all-gathered;
+        the RMS norm; the index key (wk, k_norm, RoPE at the position, FP4 UE8M0) written as global key row pos;
+        the latent's RoPE and FP4 (E4M3 per 16) row written as global compressed row pos.  The key and row writes
+        address the layer's index-key and compressed-KV stores (HBM, global row ids), not the vector memory."""
+        s, V_, lay = self.s, self.V, self.lay
+        hd, ihd, tp = s["hd"], s["ihd"], s["tp"]
+        t = f"L{L}.compressor"
+        if RATIO[L] != 1:
+            raise ValueError("exact TP compressor: ratio 1 only (the ratio-2 slot ring is not emitted yet)")
+        self.me(lay.mat[(L, "cwkv")], V_["XN"], V_["CKAL"], {"XN"}, {"CKAL"}, t)
+        self.bf16("CKAL", hd // tp, "CKAL", t)
+        self.coll(I.COLL_ALL_GATHER, V_["CKAL"], V_["CKA"], hd // tp, {"CKAL"}, {"CKA"}, t + ".latent_gather")
+        self.sumsq("CKA", hd, "SS", t)
+        self.rmsnorm("CKA", hd, lay.const(f"L{L}.cnorm"), "LAT", t, have_ss="SS")
+        t2 = f"L{L}.index_key"
+        self.me(lay.mat[(L, "iwk")], V_["LAT"], V_["IKA"], {"LAT"}, {"IKA"}, t2)
+        self.bf16("IKA", ihd, "IKA", t2, sq="SS")
+        self.rmsnorm("IKA", ihd, lay.const(f"L{L}.knorm"), "IKN", t2, have_ss="SS")
+        self.rope("IKN", V_["IKN"], 1, ihd, "rope_yarn", DY["ROPE"], False, t2)
+        self.qdq(I.QE_QDQ4, "IKN", ihd // 32, V_["IKQ"], {"IKQ"}, t2)
+        self.kvt_write("IKQ", f"IK{L}", 0, DY["POS"], t2, width=ihd)
+        self.rope("LAT", V_["LAT"], 1, hd, "rope_yarn", DY["ROPE"], False, t)
+        self.qdq(I.QE_QDQ4E, "LAT", hd // 32, 0, {f"CKV{L}"}, t, dsel=DY["ROW"])
+
+    def indexer_tp(self, L):
+        """Exact TP-4 indexer of layer 20: the index query (replicated wq_b), the head weights (replicated
+        weights_proj), the fused index score over the rank's key quarter (global keys [rank * SC1, + SC1)), the
+        local top-NSL1, the selected scores, and the COLL_TOPK_MERGE to the global top-k ids (ascending)."""
+        s, V_, lay = self.s, self.V, self.lay
+        ih, ihd, topk = s["ih"], s["ihd"], s["topk"]
+        t = f"L{L}.indexer"
+        if RATIO[L] != 1 or max(x for x in KV_SRC if x <= L) != L:
+            raise ValueError("exact TP indexer: the ratio-1 source layer only")
+        self.linq(lay.qmat[(L, "iwq_b")], "QR", "IQ", set(), set(), t)
+        self.rope("IQ", V_["IQ"], ih, ihd, "rope_yarn", DY["ROPE"], False, t)
+        self.qdq(I.QE_QDQ4, "IQ", ih * ihd // 32, V_["IQQ"], {"IQQ"}, t)
+        self.me(lay.mat[(L, "iwp")], V_["XN"], V_["WP"], {"XN"}, {"WP"}, t)
+        self.su({"WP"}, {"WTS"}, t, su_nout=1, su_nin=ih, a_base=V_["WP"], a_si=1, a_rnd=1,
+                m1=I.M1_AIMM, imm1=self.imm("index_w_scale"), rnd=1, dst=I.DST_VM, o_base=V_["WTS"], o_si=1,
+                _imm={"imm1": "index_w_scale"})
+        assert ih == IL * self.lay.G
+        self.me(dict(n=0, tiles=0, k=ihd, base=0), V_["IQQ"], V_["IS"], {"IQQ", "WTS", f"IK{L}"}, {"IS"}, t,
+                me_xcs=IL * ihd, me_wsrc=1, me_ts=ihd, me_ks=1, me_js=0, me_jsh=3, me_xks=1, me_xjs=ihd,
+                me_ots=1, me_ojs=0, me_mmode=1, me_d_nout="SC1", me_d_tiles=("ceil", "SC1", 16), me_hg=2,
+                me_ogs=0, me_fuse=1, me_wts=V_["WTS"])
+        self.xu({"IS"}, {"SEL"}, t, xu_op=I.XU_SEL, xu_src=V_["IS"], xu_dst=V_["SEL"], xu_d_n="SC1",
+                xu_d_k="NSL1")
+        self.su({"IS", "SEL"}, {"SV"}, t, su_nout=1, su_nin=0, su_d_nin="NSL1", a_base=V_["IS"], a_si=1,
+                a_ind=I.IND_I, a_ibase=V_["SEL"], dst=I.DST_VM, o_base=V_["SV"], o_si=1)
+        self.coll(I.COLL_TOPK_MERGE, V_["SV"], V_["SELG"], topk, {"SV", "SEL"}, {"SELG"}, t + ".topk_merge",
+                  ibase=V_["SEL"], k=topk, stride="SC1")
+
+    def candidates_tp(self, L):
+        """Exact TP-4 candidate blocks of layer 20 (hdc_golden_v41.Model.candidate_blocks): each rank's block
+        maxima over its key quarter's index scores (blocks of cand_b positions), the newest position's block
+        pinned to +inf on its owner rank (rank-aware DYN NEWBLK; other ranks write their pad slot), the local
+        top-cand_k blocks, their scores, and the COLL_TOPK_MERGE to the global top-cand_k block ids (ascending,
+        region CAND), the mask the later layers' selections read."""
+        s, V_ = self.s, self.V
+        cb, ck = s["cand_b"], s["cand_k"]
+        t = f"L{L}.candidates"
+        nb = ("ceil", "SC1", cb)
+        self.su({"IS"}, {"BLK"}, t, su_nout=0, su_d_nout=nb, su_nin=cb, a_base=V_["IS"], a_so=cb, a_si=1,
+                red=I.RED_MAX, r_base=V_["BLK"], r_so=1)
+        # +inf = (any finite value) + inf: the operand is a head weight (always finite), so the op never reads
+        # the pad slot a non-owner rank pins
+        self.su({"WTS"}, {"BLK"}, t, su_nout=1, su_nin=1, a_base=V_["WTS"], ad=I.AD_IMM,
+                imm2=self.imm("cand_pin"), dst=I.DST_VM, o_base=V_["BLK"], o_d="NEWBLK",
+                _imm={"imm2": "cand_pin"})
+        self.xu({"BLK"}, {"CBSEL"}, t, xu_op=I.XU_SEL, xu_src=V_["BLK"], xu_dst=V_["CBSEL"], xu_d_n=nb, xu_k=ck)
+        self.su({"BLK", "CBSEL"}, {"CBSV"}, t, su_nout=1, su_nin=ck, a_base=V_["BLK"], a_si=1, a_ind=I.IND_I,
+                a_ibase=V_["CBSEL"], dst=I.DST_VM, o_base=V_["CBSV"], o_si=1)
+        self.coll(I.COLL_TOPK_MERGE, V_["CBSV"], V_["CAND"], ck, {"CBSV", "CBSEL"}, {"CAND"},
+                  t + ".topk_merge", ibase=V_["CBSEL"], k=ck, stride=nb)
+
     def ksel(self, L):
         """(scan count, local selection count) selectors of an index source."""
         r = RATIO[L]
@@ -550,17 +663,28 @@ class ShapeBuilder(P.Builder):
         self.rope("Q", V_["Q"], hdd, hd, table, DY["ROPE"], False, t)
         if r > 0:
             src = max(x for x in KV_SRC if x <= L)
-            if L == src:
-                self.compressor(L)
-            if L in IDX_SRC:
-                self.indexer(L)
+            if self.tp_exact:
+                if L == src:
+                    self.compressor_tp(L)
+                if L in IDX_SRC:
+                    self.indexer_tp(L)
+                if L == CAND_SRC:
+                    self.candidates_tp(L)
+            else:
+                if L == src:
+                    self.compressor(L)
+                if L in IDX_SRC:
+                    self.indexer(L)
             nsel = "NS2" if r == 2 else "NS1"
             ta = f"L{L}.gather"
-            self.su({f"CKV{src}", "SEL"}, {f"KT{L}"}, ta, su_nout=0, su_d_nout=nsel, su_nin=hd,
-                    a_base=V_[f"CKV{src}"], a_so=hd, a_si=1, a_ind=I.IND_O, a_ibase=V_["SEL"], dst=I.DST_KVT,
+            # exact TP: the selected rows are global compressed-row ids (SELG) of the source's HBM store (address
+            # space of the compressed-KV store: element row * hd), staged as local attention rows WIN ..
+            sel, cbase = ("SELG", 0) if self.tp_exact else ("SEL", V_[f"CKV{src}"])
+            self.su({f"CKV{src}", sel}, {f"KT{L}"}, ta, su_nout=0, su_d_nout=nsel, su_nin=hd,
+                    a_base=cbase, a_so=hd, a_si=1, a_ind=I.IND_O, a_ibase=V_[sel], dst=I.DST_KVT,
                     o_base=0, o_d="WIN" if self.tp_exact else DY["POS1"])
-            self.su({f"CKV{src}", "SEL"}, {f"KR{L}"}, ta, su_nout=0, su_d_nout=nsel, su_nin=hd,
-                    a_base=V_[f"CKV{src}"], a_so=hd, a_si=1, a_ind=I.IND_O, a_ibase=V_["SEL"], dst=I.DST_KV,
+            self.su({f"CKV{src}", sel}, {f"KR{L}"}, ta, su_nout=0, su_d_nout=nsel, su_nin=hd,
+                    a_base=cbase, a_so=hd, a_si=1, a_ind=I.IND_O, a_ibase=V_[sel], dst=I.DST_KV,
                     o_base=0, o_d="WIN_ROW" if self.tp_exact else DY["ROW1"], o_so=hd, o_si=1)
         Tn = {0: "T0", 1: "T1", 2: "T2"}[r]
         if hook and P.ATTN_HOOK == "qkv":
@@ -724,8 +848,8 @@ class ShapeBuilder(P.Builder):
         s, V_, lay = self.s, self.V, self.lay
         D = s["dim"]
         layers = range(40) if layers is None else layers
-        if self.tp_exact and list(layers) != [0]:
-            raise ValueError("exact TP emission currently supports only layer 0")
+        if self.tp_exact and list(layers) not in ([0], [20]):
+            raise ValueError("exact TP emission currently supports layers 0 and 20")
         if embed:
             self.xu(set(), {"EH"}, "embed", xu_op=I.XU_EHASH, xu_src=0)
             self.su(set(), {"PF"}, "embed", su_nout=1, su_nin=4, a_src=I.SRC_CLO, a_base=0, a_si=1,
@@ -764,6 +888,19 @@ def build(shape, su_lanes=8, engram_inline=True, layers=None, embed=True, head=T
     I.SU_LANES = su_lanes
     try:
         return ShapeBuilder(ShapeLayout(shape), engram_inline).build(layers, embed, head)
+    finally:
+        I.SU_LANES = old
+
+
+def build_tp_layer(layer, shape=SHIPPED, su_lanes=8, constant_bases=None, rope_storage="hbm_cache"):
+    """Exact TP=4 program of one layer (0: sliding; 20: the ratio-1 KV / index / candidate source)."""
+    if shape["tp"] != 4:
+        raise ValueError("the exact collective sequence is defined for tp=4")
+    old = I.SU_LANES
+    I.SU_LANES = su_lanes
+    try:
+        return ShapeBuilder(ShapeLayout(shape, tp_exact=True, constant_bases=constant_bases,
+                                       rope_storage=rope_storage, layer=layer)).build([layer], False, False)
     finally:
         I.SU_LANES = old
 
