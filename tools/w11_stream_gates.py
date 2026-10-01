@@ -53,6 +53,7 @@ def gate_idx(a, lat):
             return exe
         cmd = ["verilator", "--cc", "--exe", "--build", "-O3", "--x-assign", "fast", "--x-initial", "fast",
                "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-DECLFILENAME", "-Wno-UNOPTFLAT",
+               "-Wno-TIMESCALEMOD",   # ot_hdc_fp32_add_lat.sv names an unresolved CUTS trap module in an untaken branch
                "--top-module", "tb_hdc_v41x_idx", f"-GNK={nk}", f"-GIH={ih}", f"-GNB={nb}", f"-GFD={fd}",
                *[f"-G{k}={v}" for k, v in lat.items()],
                "-CFLAGS", "-DVTOP=Vtb_hdc_v41x_idx -O1", "-j", str(jobs), "--Mdir", str(obj),
@@ -100,6 +101,7 @@ def gate_arr(a, lat):
         obj.mkdir(parents=True, exist_ok=True)
         cmd = [A.VERILATOR, "--cc", "--exe", "--build", "-O3", "--x-assign", "fast", "--x-initial", "fast",
                "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-DECLFILENAME", "-Wno-UNOPTFLAT",
+               "-Wno-TIMESCALEMOD",   # ot_hdc_fp32_add_lat.sv names an unresolved CUTS trap module in an untaken branch
                "--top-module", "tb_hdc_v41x_idx_array", f"-GNS={ns}", f"-GNK={nk}",
                *[f"-G{x}={v}" for x, v in lat.items()],
                "-CFLAGS", "-DVTOP=Vtb_hdc_v41x_idx_array -O1", "-j", str(jobs), "--Mdir", str(obj),
