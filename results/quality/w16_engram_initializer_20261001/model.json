@@ -100,10 +100,13 @@
       "complete_initialization_us": null,
       "conditional_compute_transport_us": "4.403333333333333333333333333",
       "homes": 8,
+      "input_quartets_resident": 1,
       "layers_serial_per_home": 1,
       "publication_and_consumer_rebind_us": null,
       "resident_bytes_per_home": 409600,
+      "second_layer_input_reload_in_ingress_cost": false,
       "setup_ingress_us": null,
+      "shared_input_replacement_requires_output_visibility_and_idle": true,
       "spare_bytes_per_home": 114688,
       "staging_bits": 2621440
     },
@@ -115,10 +118,13 @@
       "complete_initialization_us": null,
       "conditional_compute_transport_us": "8.806666666666666666666666667",
       "homes": 4,
+      "input_quartets_resident": 1,
       "layers_serial_per_home": 2,
       "publication_and_consumer_rebind_us": null,
       "resident_bytes_per_home": 491520,
+      "second_layer_input_reload_in_ingress_cost": true,
       "setup_ingress_us": null,
+      "shared_input_replacement_requires_output_visibility_and_idle": true,
       "spare_bytes_per_home": 32768,
       "staging_bits": 1310720
     }

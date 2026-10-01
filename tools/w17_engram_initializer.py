@@ -29,6 +29,9 @@ def build():
         resident = 327680 + layers*81920
         points.append(dict(homes=homes, layers_serial_per_home=layers,
             capacity_bytes_per_home=524288, resident_bytes_per_home=resident,
+            input_quartets_resident=1,
+            shared_input_replacement_requires_output_visibility_and_idle=True,
+            second_layer_input_reload_in_ingress_cost=(layers == 2),
             spare_bytes_per_home=524288-resident, SRAM_macros=homes*64,
             SRAM_macro_area_mm2=str(Decimal('174.096')*Decimal('29.700')*64*homes/1000000),
             staging_bits=homes*327680,
