@@ -40,7 +40,9 @@ module ot_chip_v41x_karb_proot #(
     // per-region response queue depth (= the region's credits), 8 bits a region, region 0 in [7:0]
     parameter [8*NREG-1:0] EPCS = {NREG{8'd4}},
     parameter bit     MERGE2 = 1'b1,
-    parameter bit     HEADREG = 1'b1
+    parameter bit     HEADREG = 1'b1,
+    // ingress queue pointer copies (ot_chip_v41x_karb_q2r): one per ~43 payload bits
+    parameter integer IQREP = 8
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -91,7 +93,7 @@ module ot_chip_v41x_karb_proot #(
     wire [LPC-1:0] iq_pc = iq_d[LPC+PW-1 -: LPC];
     reg  [CW-1:0]  cred [0:NPC-1];
     wire           disp = iq_v && cred[iq_pc] != 0;
-    ot_chip_v41x_karb_q2 #(.W(LPC + PW)) u_iq (
+    ot_chip_v41x_karb_q2r #(.W(LPC + PW), .NREP(IQREP)) u_iq (
         .clk(clk), .rst_n(rst_n), .in_v(k_v), .in_rdy(k_rdy),
         .in_d({pc_of(k_addr), k_addr, k_len, k_tag, k_we, k_wdata, k_wstrb}),
         .out_v(iq_v), .out_rdy(disp), .out_d(iq_d));
