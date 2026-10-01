@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.w11-idx-reader-rate.v1",
   "status": "pass",
-  "git_head": "0e8df511a1c1f84380cdee4abf16812ba3680d2e",
+  "git_head": "ac8a288acc0c027f17c0cf88d506c220e65f4a29",
   "simulator": "Verilator 4.038",
   "target": {
     "sectors_per_cycle": 108.8,
@@ -197,8 +197,8 @@
           "reads_per_pc_max": 6
         }
       ],
-      "build_wall_seconds": 76.6,
-      "simulation_wall_seconds": 0.02
+      "build_wall_seconds": 327.9,
+      "simulation_wall_seconds": 0.08
     },
     {
       "name": "legacy_n1040",
@@ -280,8 +280,8 @@
           "reads_per_pc_max": 20
         }
       ],
-      "build_wall_seconds": 80.8,
-      "simulation_wall_seconds": 0.02
+      "build_wall_seconds": 328.2,
+      "simulation_wall_seconds": 0.03
     },
     {
       "name": "legacy_n262144",
@@ -363,8 +363,8 @@
           "reads_per_pc_max": 4352
         }
       ],
-      "build_wall_seconds": 77.4,
-      "simulation_wall_seconds": 0.9
+      "build_wall_seconds": 384.1,
+      "simulation_wall_seconds": 9.77
     },
     {
       "name": "legacy_pipe_collector",
@@ -446,8 +446,8 @@
           "reads_per_pc_max": 4352
         }
       ],
-      "build_wall_seconds": 78.8,
-      "simulation_wall_seconds": 0.7
+      "build_wall_seconds": 322.3,
+      "simulation_wall_seconds": 1.44
     },
     {
       "name": "legacy_pipe_collector_quantum1",
@@ -529,8 +529,8 @@
           "reads_per_pc_max": 4352
         }
       ],
-      "build_wall_seconds": 81.8,
-      "simulation_wall_seconds": 0.88
+      "build_wall_seconds": 330.3,
+      "simulation_wall_seconds": 8.82
     },
     {
       "name": "legacy_pipe_collector_no_refresh",
@@ -613,8 +613,8 @@
           "reads_per_pc_max": 4352
         }
       ],
-      "build_wall_seconds": 80.0,
-      "simulation_wall_seconds": 0.47
+      "build_wall_seconds": 349.0,
+      "simulation_wall_seconds": 5.3
     },
     {
       "name": "quarter_stack_n65",
@@ -697,7 +697,7 @@
           "reads_per_pc_max": 4
         }
       ],
-      "build_wall_seconds": 23.1,
+      "build_wall_seconds": 139.1,
       "simulation_wall_seconds": 0.01
     },
     {
@@ -781,7 +781,7 @@
           "reads_per_pc_max": 24
         }
       ],
-      "build_wall_seconds": 21.9,
+      "build_wall_seconds": 140.5,
       "simulation_wall_seconds": 0.01
     },
     {
@@ -865,8 +865,8 @@
           "reads_per_pc_max": 4355
         }
       ],
-      "build_wall_seconds": 28.4,
-      "simulation_wall_seconds": 0.38
+      "build_wall_seconds": 153.5,
+      "simulation_wall_seconds": 0.35
     },
     {
       "name": "quarter_stack_n262144_placement2",
@@ -949,8 +949,8 @@
           "reads_per_pc_max": 4355
         }
       ],
-      "build_wall_seconds": 30.0,
-      "simulation_wall_seconds": 0.38
+      "build_wall_seconds": 126.5,
+      "simulation_wall_seconds": 0.36
     },
     {
       "name": "quarter_stack_n1048576",
@@ -1033,8 +1033,8 @@
           "reads_per_pc_max": 17416
         }
       ],
-      "build_wall_seconds": 28.5,
-      "simulation_wall_seconds": 0.76
+      "build_wall_seconds": 152.8,
+      "simulation_wall_seconds": 6.6
     },
     {
       "name": "quarter_stack_n1048576_placement2",
@@ -1117,8 +1117,8 @@
           "reads_per_pc_max": 17412
         }
       ],
-      "build_wall_seconds": 27.2,
-      "simulation_wall_seconds": 0.77
+      "build_wall_seconds": 141.9,
+      "simulation_wall_seconds": 9.24
     },
     {
       "name": "quarter_stack_n262144_clk1000",
@@ -1201,8 +1201,8 @@
           "reads_per_pc_max": 4355
         }
       ],
-      "build_wall_seconds": 19.8,
-      "simulation_wall_seconds": 0.18
+      "build_wall_seconds": 178.3,
+      "simulation_wall_seconds": 3.2
     },
     {
       "name": "sensitivity_ga96_n1048576",
@@ -1285,8 +1285,8 @@
           "reads_per_pc_max": 17416
         }
       ],
-      "build_wall_seconds": 19.4,
-      "simulation_wall_seconds": 0.91
+      "build_wall_seconds": 151.8,
+      "simulation_wall_seconds": 13.79
     },
     {
       "name": "sensitivity_wb64_ga60_n262144",
@@ -1369,8 +1369,8 @@
           "reads_per_pc_max": 4355
         }
       ],
-      "build_wall_seconds": 16.9,
-      "simulation_wall_seconds": 0.17
+      "build_wall_seconds": 138.4,
+      "simulation_wall_seconds": 3.1
     },
     {
       "name": "sensitivity_wb64_ga60_n1048576",
@@ -1453,8 +1453,8 @@
           "reads_per_pc_max": 17416
         }
       ],
-      "build_wall_seconds": 18.7,
-      "simulation_wall_seconds": 0.64
+      "build_wall_seconds": 180.7,
+      "simulation_wall_seconds": 11.76
     }
   ],
   "short_case_check": "legacy layout N=65/1,040/262,144 reproduce the committed gate cycles (80, 132, 9278); quarter-stack N=65 and 1,040 pass the exact per-beat key/mask/last/refusal checks",
@@ -1466,7 +1466,7 @@
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_range.sv": "6e47d8e09370a84244b3e69de9438a6cd57fddecac357fa9f537198b2f88603d",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_collect_pipe.sv": "8351314bfd728ee2dda14ad62f03bdd100ff54b0a0824619daa4ee14b94b3325",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "d3832452c0f1716756380a97df34582aa5acddc952c84453a1a23a05c6e8a77b",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "3454bdf85be8fb19171c71937e852501e3388cfc2d0ae8ee5dd9ddd98ba60774",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_ranges.sv": "d6956ae3b1519df1cbac709e2c65134fc6c4e81ba4188d9acf073371407fc065",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_range_pc_arb.sv": "298084d727242936b12fbacab8f00a181fc29afeea50b727b03254ce9b83424a",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_quarter_collect.sv": "923de29d3940ba86ced334baa3d14eb637c43c7a6bf2c0c2531a0516d82803ad",
