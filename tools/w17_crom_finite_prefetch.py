@@ -83,7 +83,7 @@ def build():
     for r in audit['ranks']:
         data=raw((PIN,PREFIX+f".rank{r['rank']}.templates.bin.gz"))
         assert sha(gzip.decompress(data))==r['encoded_template_sha256']
-    timeline=[];gamma_count=0
+    timeline=[];gamma_count=0;maximum_selector=0;old_selector_aliases=0
     for rec in records:
         f=isa.decode(int.from_bytes(encoded[rec['global_instruction']*256:(rec['global_instruction']+1)*256],'little'),full_shape=True)
         isgamma=any(o.get('tensor')=='norm.weight' or str(o.get('tensor','')).endswith(('attn_norm.weight','ffn_norm.weight')) for o in rec['operand_demands'])
@@ -100,6 +100,13 @@ def build():
             addresses={a for _,_,a in uses};waves=bank_waves(addresses)
             fill_packets=0;wave_packets=[]
             for wave in waves:
+                landing={address:index for index,address in enumerate(sorted(wave))}
+                for _,_,address in uses:
+                    if address in landing:
+                        index=landing[address]
+                        maximum_selector=max(maximum_selector,index)
+                        old_selector_aliases+=int((index & 127)!=index)
+                        assert (index & 255)==index
                 # One packet per16-lane group/operand with a16-bit write mask.
                 # No arbitrary135-to1024 instantaneous broadcast is assumed.
                 targets={(oi,lane//16) for oi,lane,a in uses if a in wave}
@@ -193,7 +200,8 @@ def build():
         authoritative_current_buffer_reservation=budget,
         compiler_control_storage=dict(request_bank_wave_entries=readwaves_total,
             request_bits_per_entry=45*(12+1+3),request_parallel_ROM_columns=3,
-            fill_packet_entries=packets_total,fill_selector_bits_per_entry=16*(7+1)+1+6,
+            fill_packet_entries=packets_total,fill_selector_bits_per_entry=16*(8+1)+1+6,
+            selector_bits=8,
             request4096pages=request_pages,fill4096pages=fill_pages,
             total4096x274_macros=control_macros,macro_area_mm2=str(D(control_macros)*D('7881.3648')/D(1000000)),
             mandatory_raw_capture_FF_bits=control_macros*274,
@@ -210,6 +218,11 @@ def build():
         cold_deadline='All81 gamma home refills precede their actual global_instruction firstemit; fillvalid only after last accepted value+matching tag and returned credit. Never issue on partial refill. Other491-command dependencies preserve ISA order; no overlap with unpriced arithmetic.',
         generic_staging_source_correction='Actual source max2 CROM operands; two1024lane FP32operand emit buffers doublebuffered=131072bits, rather than cb50 earlier106496taggedunique store. cb50 historical receipt retained; revised characterization required.',
         full_operator_critical_path_ticks=None,physical_admission=False,hardware_build_ready=False,
+        selector_control_exactness=dict(maximum_actual_selector=maximum_selector,
+            old7bit_alias_uses=old_selector_aliases,old7bit_format_rejected=True,
+            preserved_failed_model_commit='bc1ec8b8f73ce5594a2b65ac7856b88c3f6b027c',
+            independent_negative_receipt_commit='785cdfa41',
+            corrected_entry_bits=151,actual_compiled_control_image_bound=False),
         classA_exact_metadata=True,full_RTL_exactness=False,adoption=False,headline_rate=None,
         checkpoint_reads=0,jobs_launched=0)
     return out

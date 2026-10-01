@@ -29,3 +29,16 @@ def test_actual_cold_cache_and_ports_not_capacity_credit():
     assert r['staging']['no_all_layer_reuse']
     assert r['bank_placement']['ports_per_bank']==1
     assert not r['hardware_build_ready'] and r['full_operator_critical_path_ticks'] is None
+    assert r['compiler_control_storage']['selector_bits']==8
+    assert r['compiler_control_storage']['fill_selector_bits_per_entry']==151
+    assert r['compiler_control_storage']['total4096x274_macros']==16
+    assert r['selector_control_exactness']['maximum_actual_selector']==134
+    assert r['selector_control_exactness']['old7bit_alias_uses']>0
+    assert not r['selector_control_exactness']['actual_compiled_control_image_bound']
+
+def test_high_selector_negative_preserves_actual_first_gamma_alias():
+    landing=next(sorted(wave) for wave in C.bank_waves(set(range(1808,1808+1024)))
+                 if len(wave)>128 and sorted(wave)[128]==2069)
+    assert landing[128]==2069 and landing[128 & 127]==1941
+    assert all((index & 255)==index for index in range(135))
+    assert all((index & 127)!=index for index in range(128,135))

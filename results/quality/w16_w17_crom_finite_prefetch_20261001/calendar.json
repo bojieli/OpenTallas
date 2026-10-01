@@ -27176,7 +27176,7 @@
     "descriptor_capture_page_mux_and_fanout_extra_cycles": null,
     "fill4096pages": 10,
     "fill_packet_entries": 38103,
-    "fill_selector_bits_per_entry": 135,
+    "fill_selector_bits_per_entry": 151,
     "macro_area_mm2": "0.1261018368",
     "mandatory_raw_capture_FF_bits": 4384,
     "page_select_mux_bits": 3288,
@@ -27184,6 +27184,7 @@
     "request_bank_wave_entries": 4540,
     "request_bits_per_entry": 720,
     "request_parallel_ROM_columns": 3,
+    "selector_bits": 8,
     "source_proof": "Enumerated immutable ISA emit coordinates and exact bank/lane destinations; no coefficient tensor payload or producer changed.",
     "tag_state_FF_enable_screen_mm2": "0.007832376",
     "tag_valid_and_epoch_state_FF_bits": 5372,
@@ -27280,6 +27281,15 @@
   "power_clock_profile": "No root stop, ungated newFF/register/route costs require immutable characterization. Neither128credit nor layer-local port proposal admitted.",
   "rank_equivalent_calendars": 4,
   "schema": "opentallas.w17.CROM-finite-prefetch-candidate.v1",
+  "selector_control_exactness": {
+    "actual_compiled_control_image_bound": false,
+    "corrected_entry_bits": 151,
+    "independent_negative_receipt_commit": "785cdfa41",
+    "maximum_actual_selector": 134,
+    "old7bit_alias_uses": 24906,
+    "old7bit_format_rejected": true,
+    "preserved_failed_model_commit": "bc1ec8b8f73ce5594a2b65ac7856b88c3f6b027c"
+  },
   "serial_scalar_issue_only_us": "458.1333333333333333333333333",
   "source_pins": {
     "ISA": {
