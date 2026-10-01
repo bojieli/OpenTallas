@@ -87,7 +87,9 @@ module ot_hdc_v41x_idx_kctl_ring #(
     reg [NPC-1:0]  bsy_g;                     // per-generator copies of busy (fanout); each copy's next
                                               // state reads its own output, so synthesis cannot merge them
     reg [9:0]      first_skip;
-    wire [HW+9:0] cmd_span=cmd_nkeys+{{HW{1'b0}},cmd_skip};
+    // command-side adds as explicit log-depth adders (ot_hdc_prefix.sv: synthesis keeps the prefix levels)
+    wire [HW+9:0] cmd_span;
+    ot_hdc_ksadd_k #(.W(HW+10)) u_span (.a(cmd_nkeys), .b({{HW{1'b0}}, cmd_skip}), .cin(1'b0), .s(cmd_span), .cout());
     // segment 2 follows segment 1's (possibly partial) last super-block
     reg [HW-1:0]   base2;
     reg [HW+9:0]   span2;
@@ -106,8 +108,11 @@ module ot_hdc_v41x_idx_kctl_ring #(
     function automatic [4:0] bsmall(input [9:0] lo);   // blocks of a partial super-block
         bsmall = (lo != 0) ? 5'(1 + ((11'(lo) + 11'd63) >> 6)) : 5'd0;
     endfunction
-    wire [10:0]    c_lo = {1'b0, cmd_nkeys[9:0]} + {1'b0, cmd_skip};
+    wire [10:0]    c_lo;
+    ot_hdc_ksadd_k #(.W(10)) u_clo (.a(cmd_nkeys[9:0]), .b(cmd_skip), .cin(1'b0), .s(c_lo[9:0]), .cout(c_lo[10]));
     wire [10:0]    c_m = ((cmd_nkeys[HW+9:10] != 0) || c_lo[10]) ? 11'd1024 : c_lo;  // sbkeys(cmd_span)
+    wire [10:0]    c_m7;                                   // c_m + 7: need(0, c_m) = c_m7 >> 3
+    ot_hdc_ksadd_k #(.W(11)) u_cm7 (.a(c_m), .b(11'd7), .cin(1'b0), .s(c_m7), .cout());
     wire           c_hz1 = (cmd_nkeys[HW+9:10] == 0) && !c_lo[10];    // cmd_span < 1,024
     wire           c_hz2 = (cmd_nkeys2[HW+9:10] == 0);
     wire [4:0]     c_bs1 = bsmall(c_lo[9:0]), c_bs2 = bsmall(cmd_nkeys2[9:0]);
@@ -230,9 +235,10 @@ module ot_hdc_v41x_idx_kctl_ring #(
     wire           q_in = qsel[d_q];
     wire [6:0]     d_qk = (d_kb > {d_q, 4'd0}) ? d_kb - {d_q, 4'd0} : 7'd0;   // keys left from this quarter
     wire           d_live = run && d_more;
-    wire           do_scale = d_live && (d_bidx == 0) && all_in;
-    wire           do_q = d_live && (d_bidx != 0) && q_in && (qz[d_q] || dr_ready);
-    wire           d_step = do_scale || (do_q && d_q == 3);
+    reg            d_b0;                      // d_bidx == 0
+    wire           do_scale = dsc_g[0];
+    wire           do_q = dq_g[0];
+    wire           d_step = dst_g[0];
     // keys of the code block after the head (the head's next d_bidx); a scale block
     // (n_bidx 0) has none, so the head's own d_m serves
     wire [4:0]     n_bidx = (d_bidx == 16) ? 5'd0 : d_bidx + 5'd1;
@@ -264,7 +270,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
             rset = rr_v[pe] && lval[pe] == 3'd1;
             iset = bsy_g[pe] && iss_w[pe];
             ival = (nx_len[pe] == 3'd0);
-            clr  = busy && (do_scale || (do_q && pe[4:3] == d_qg));
+            clr  = busy && (dsc_g[pe / 8] || (dq_g[pe / 8] && pe[4:3] == d_qg));
             // the next cc of entries d_slot, +1, +2, 0, 1
             v0 = hc[pe];
             if (rset && rr_s[pe] == d_slot) v0 = 1'b1;
@@ -284,8 +290,8 @@ module ot_hdc_v41x_idx_kctl_ring #(
             if (rset && rr_s[pe] == 1) z1 = 1'b1;
             if (iset && nx_hi[pe][SW-1:0] == 1) z1 = ival;
             if (clr && d_slot == 1) z1 = 1'b0;
-            hc_n[pe] = cmd_acc ? z0 : (d_step ? v1 : v0);
-            hn_n[pe] = cmd_acc ? z1 : (d_step ? v2 : v1);
+            hc_n[pe] = cmd_acc ? z0 : (dst_g[pe / 8] ? v1 : v0);
+            hn_n[pe] = cmd_acc ? z1 : (dst_g[pe / 8] ? v2 : v1);
         end
     end
     always @(posedge clk)
@@ -298,6 +304,20 @@ module ot_hdc_v41x_idx_kctl_ring #(
         assign g_n[gg] = &hn[8*gg +: 8];
     end endgenerate
 
+    // g_abs + 1 per generator as a log-depth incrementer
+    wire [HW-1:0]  g_abs_inc [0:NPC-1];
+    genvar ga;
+    generate for (ga = 0; ga < NPC; ga = ga + 1) begin : g_inc
+        ot_hdc_inc_k #(.W(HW)) u_inc (.a(g_abs[ga]), .inc(1'b1), .y(g_abs_inc[ga]), .co());
+    end endgenerate
+    // the drain decision, computed once per 8-generator group (kept as separate hierarchy so synthesis
+    // cannot merge the copies): each copy drives its group's lookahead / completion state only
+    wire [3:0] dsc_g, dq_g, dst_g;
+    genvar gd;
+    generate for (gd = 0; gd < 4; gd = gd + 1) begin : g_dec
+        ot_hdc_v41x_idx_kdec u_dec (.live(d_live), .b0(d_b0), .adv(adv), .all_a(all_a), .all_b(all_b), .qa(qa), .qb(qb),
+            .qz(qz), .d_q(d_q), .dr_ready(dr_ready), .do_scale(dsc_g[gd]), .do_q(dq_g[gd]), .d_step(dst_g[gd]));
+    end endgenerate
     // a < b as a 3-level prefix tree over (up to) 8 bits
     function automatic lt_tree(input [SW-1:0] a, input [SW-1:0] b);
         reg [7:0] g1, e1;
@@ -390,17 +410,17 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     // lookahead: dl' = nx_hi' - d_hi', eg' = g_hi' - d_hi'
                     // (the late selects pick among values precomputed from registers)
                     if (prep_w[pf]) begin
-                        dl[pf] <= d_step ? eg_m[pf] : eg[pf];
-                        dl_m[pf] <= d_step ? eg_m[pf] - 1'b1 : eg_m[pf];
-                        ga_ok[pf] <= d_step ? (eg[pf] != 0 && eg[pf] <= GA) : (eg[pf] < GA);
-                    end else if (d_step) begin
+                        dl[pf] <= dst_g[pf / 8] ? eg_m[pf] : eg[pf];
+                        dl_m[pf] <= dst_g[pf / 8] ? eg_m[pf] - 1'b1 : eg_m[pf];
+                        ga_ok[pf] <= dst_g[pf / 8] ? (eg[pf] != 0 && eg[pf] <= GA) : (eg[pf] < GA);
+                    end else if (dst_g[pf / 8]) begin
                         dl[pf] <= dl_m[pf];
                         dl_m[pf] <= dl_m[pf] - 1'b1;
                         ga_ok[pf] <= (dl[pf] != 0 && dl[pf] <= GA);
                     end
-                    if (prep_w[pf] && !d_step) begin
+                    if (prep_w[pf] && !dst_g[pf / 8]) begin
                         eg[pf] <= eg_p[pf]; eg_p[pf] <= eg_p[pf] + 1'b1; eg_m[pf] <= eg[pf];
-                    end else if (!prep_w[pf] && d_step) begin
+                    end else if (!prep_w[pf] && dst_g[pf / 8]) begin
                         eg[pf] <= eg_m[pf]; eg_m[pf] <= eg_m[pf] - 1'b1; eg_p[pf] <= eg[pf];
                     end
                     if (prep_w[pf]) begin
@@ -459,7 +479,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                 end
                 first_skip<=cmd_skip;
                 base2 <= cmd_base2; span2 <= cmd_nkeys2; m2 <= sbkeys(cmd_nkeys2);
-                d_abs <= cmd_base; d_abs1 <= cmd_base + 1'b1; d_fold <= fold(cmd_base); d_bidx <= 0;
+                d_abs <= cmd_base; d_abs1 <= cmd_base + 1'b1; d_fold <= fold(cmd_base); d_bidx <= 0; d_b0 <= 1'b1;
                 r_span <= cmd_span; b2p1 <= cmd_base2 + 1'b1; fb2 <= fold(cmd_base2);
                 d_m <= c_m; d_q <= 0; d_kb <= 0; qz <= 4'b1111;
                 d_more <= c_more; d_wrapn <= 1'b0;
@@ -490,7 +510,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                 nx_v[p] <= 1'b0;
                     g_hi[p] <= 0; g_hi1[p] <= 1; g_abs[p] <= cmd_base; g_bidx[p] <= 0;
                     g_m[p] <= c_m; g_col[p] <= p[4:0] ^ fold(cmd_base);
-                    g_need[p] <= need(5'd0, c_m);
+                    g_need[p] <= 8'(c_m7 >> 3);
                     g_low[p] <= c_nz1 ? lower(5'd0, cmd_skip) : 8'd0;
                             end else begin
                     if (req_v[p] && req_rdy[p]) req_v[p] <= 1'b0;
@@ -531,7 +551,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                             na = base2; nb = 5'd0; nm = m2;
                             g_rem[p] <= span2;
                         end else begin
-                            na = g_abs[p] + 1'b1;
+                            na = g_abs_inc[p];
                             if (g_bidx[p] == 16) begin
                                 nb = 5'd0; nm = sbkeys_dec(g_rem[p]);
                                 g_rem[p] <= g_rem[p] - 1024;
@@ -546,13 +566,15 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     end
                     nx_v[p] <= prep || (nx_v[p] && !iss);
                             end
+            // drain clears, each bank group from its own copy of the decision
+            if (busy) for (p = 0; p < NPC; p = p + 1)
+                if (dsc_g[p / 8] || (dq_g[p / 8] && p[4:3] == d_qg)) cc[p][d_slot] <= 1'b0;
             if (busy) begin
                 // drain
                 if (do_scale) begin
                     dr_scale <= 1'b1;
                     dr_slot <= d_slot;
                     dr_fold <= d_fold;
-                    for (p = 0; p < NPC; p = p + 1) cc[p][d_slot] <= 1'b0;
                 end else if (do_q) begin
                     if (d_qk != 0) begin
                         dr_quarter <= 1'b1;
@@ -562,7 +584,6 @@ module ot_hdc_v41x_idx_kctl_ring #(
                         dr_sidx <= {d_bidx[3:0] - 4'd1, d_q};
                         dr_nkeys <= (d_qk >= 16) ? 5'd16 : d_qk[4:0];
                     end
-                    for (p = 0; p < NPC; p = p + 1) if (p[4:3] == d_qg) cc[p][d_slot] <= 1'b0;
                     d_q <= d_q + 1;
                 end
                 if (d_step) begin
@@ -583,11 +604,11 @@ module ot_hdc_v41x_idx_kctl_ring #(
                         d_l1 <= d_l1 - 1'b1;
                     end
                     if (d_wrapn) begin
-                        d_abs <= base2; d_abs1 <= b2p1; d_fold <= fb2; d_bidx <= 0; d_rem <= span2; d_m <= m2; d_kb <= 0; qz <= 4'b1111;
+                        d_abs <= base2; d_abs1 <= b2p1; d_fold <= fb2; d_bidx <= 0; d_b0 <= 1'b1; d_rem <= span2; d_m <= m2; d_kb <= 0; qz <= 4'b1111;
                     end else begin
                         d_abs <= d_abs1; d_abs1 <= d_abs1 + 1'b1;
                         d_fold <= fold(d_abs1);
-                        d_bidx <= n_bidx;
+                        d_bidx <= n_bidx; d_b0 <= (n_bidx == 0);
                         d_kb <= n_kb; qz <= qzof(n_kb);
                         if (d_bidx == 16) begin
                             d_rem <= d_rem - 1024;
@@ -696,4 +717,20 @@ module ot_hdc_v41x_idx_kstream_ring #(
         .o_kv(o_kv), .o_key(o_key));
     assign dbusy = 1'b0;
     end endgenerate
+endmodule
+
+// the key stream's drain decision (one copy per generator group in ot_hdc_v41x_idx_kctl_ring)
+(* keep_hierarchy *)
+module ot_hdc_v41x_idx_kdec (
+    input  wire       live, b0, adv, all_a, all_b,
+    input  wire [3:0] qa, qb, qz,
+    input  wire [1:0] d_q,
+    input  wire       dr_ready,
+    output wire       do_scale, do_q, d_step
+);
+    wire       all_in = adv ? all_b : all_a;
+    wire [3:0] qsel = adv ? qb : qa;
+    assign do_scale = live && b0 && all_in;
+    assign do_q = live && !b0 && qsel[d_q] && (qz[d_q] || dr_ready);
+    assign d_step = do_scale || (do_q && d_q == 2'd3);
 endmodule

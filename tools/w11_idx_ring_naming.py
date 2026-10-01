@@ -34,7 +34,7 @@ V = "rtl/hdc/v41x/"
 SOURCES = [V + f for f in (
     "ot_hdc_v41x_idx_hbm.sv", "ot_hdc_v41x_idx_kstream.sv", "ot_hdc_v41x_idx_kstream_ring.sv",
     "ot_hdc_v41x_idx_quarter_join.sv", "ot_hdc_v41x_idx_ring_ranges.sv", "ot_hdc_v41x_idx_ring_kwr.sv",
-    "ot_hdc_v41x_idx_ring_port.sv", "ot_hdc_v41x_idx_pool_kwr.sv", "ot_hdc_v41x_idx_kdata_m.sv")] + ["rtl/test/tb_w11_idx_ring_naming.sv", "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"]
+    "ot_hdc_v41x_idx_ring_port.sv", "ot_hdc_v41x_idx_pool_kwr.sv", "ot_hdc_v41x_idx_kdata_m.sv")] + ["rtl/test/tb_w11_idx_ring_naming.sv", "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v", "rtl/hdc/ot_hdc_prefix.sv"]
 CPP = "rtl/test/w11_idx_ring_naming.cpp"
 TOP = "tb_w11_idx_ring_naming"
 PARAMS = {"AW": 30, "HW": 23, "RSB": 64, "RTAIL": 32, "KB": 7444668, "MEM_WORDS": 1055017, "UA": 1, "UB": 865,

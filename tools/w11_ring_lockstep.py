@@ -28,10 +28,11 @@ V = "rtl/hdc/v41x/"
 KCTL = V + "ot_hdc_v41x_idx_kstream_ring.sv"
 JOIN = V + "ot_hdc_v41x_idx_quarter_join.sv"
 KS = V + "ot_hdc_v41x_idx_kstream.sv"
+PREFIX = "rtl/hdc/ot_hdc_prefix.sv"
 TB_K = "rtl/test/tb_w11_kctl_lockstep.sv"
 TB_J = "rtl/test/tb_w11_join_lockstep.sv"
 CPP = "rtl/test/w11_lockstep.cpp"
-SOURCES = [KCTL, JOIN, KS, TB_K, TB_J, CPP, "tools/w11_ring_lockstep.py"]
+SOURCES = [KCTL, JOIN, KS, PREFIX, TB_K, TB_J, CPP, "tools/w11_ring_lockstep.py"]
 RE = re.compile(r"W11_(KCTL|JOIN)_LOCKSTEP (PASS|FAIL) (\S+)=(\d+) cycles=(\d+) (?:requests=(\d+) )?beats=(\d+) mismatches=(\d+)")
 
 KCTL_RUNS = [
@@ -89,18 +90,19 @@ def main() -> int:
         tmp = Path(td)
         kref = tmp / "kctl_ref.sv"; kref.write_text(module_text(KCTL, REF_COMMIT, "ot_hdc_v41x_idx_kctl_ring",
                                                                   "ot_hdc_v41x_idx_kctl_ring_ref"))
-        knew = tmp / "kctl_new.sv"; knew.write_text(module_text(KCTL, None, "ot_hdc_v41x_idx_kctl_ring", None))
+        knew = tmp / "kctl_new.sv"; knew.write_text(module_text(KCTL, None, "ot_hdc_v41x_idx_kctl_ring", None)
+                                                     + module_text(KCTL, None, "ot_hdc_v41x_idx_kdec", None))
         jref = tmp / "join_ref.sv"; jref.write_text(module_text(JOIN, REF_COMMIT, "ot_hdc_v41x_idx_quarter_join",
                                                                   "ot_hdc_v41x_idx_quarter_join_ref"))
         jnew = tmp / "join_new.sv"; jnew.write_text(module_text(JOIN, None, "ot_hdc_v41x_idx_quarter_join", None))
-        jobs = [("kctl_ring", n, p, sd, [ROOT / TB_K, kref, knew], "tb_w11_kctl_lockstep") for n, p, sd in KCTL_RUNS]
+        jobs = [("kctl_ring", n, p, sd, [ROOT / TB_K, ROOT / PREFIX, kref, knew], "tb_w11_kctl_lockstep") for n, p, sd in KCTL_RUNS]
         jobs += [("quarter_join", n, p, sd, [ROOT / TB_J, jref, jnew], "tb_w11_join_lockstep") for n, p, sd in JOIN_RUNS]
         for mname, (path, old, new, params) in MUTANTS.items():
             src = knew if path == KCTL else jnew
             text = src.read_text()
             assert text.count(old) == 1, mname
             mut = tmp / f"{mname}.sv"; mut.write_text(text.replace(old, new))
-            files = [ROOT / TB_K, kref, mut] if path == KCTL else [ROOT / TB_J, jref, mut]
+            files = [ROOT / TB_K, ROOT / PREFIX, kref, mut] if path == KCTL else [ROOT / TB_J, jref, mut]
             top = "tb_w11_kctl_lockstep" if path == KCTL else "tb_w11_join_lockstep"
             jobs.append(("mutant", mname, params, 1, files, top))
 
