@@ -1,0 +1,351 @@
+{
+  "schema": "opentallas.w19.non_sm_parent_inventory_audit.v1",
+  "observed_at": "2026-10-01T10:41:53.375698+00:00",
+  "status": "PASS_AT_STORED_METADATA_SCOPE",
+  "inventory_sha256": "cd75fe06068663949dc605d7e64305b08b869fb109d4f0018f862855c9b26742",
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "programme_sha256": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+  "unique_tensors_verified": 542,
+  "stored_bytes": 204240953808,
+  "groups": {
+    "embedding": {
+      "tensors": 1,
+      "stored_bytes": 1323827200,
+      "dtype_bytes": {
+        "BF16": 1323827200
+      }
+    },
+    "other_text_objects_unclassified": {
+      "tensors": 537,
+      "stored_bytes": 159094208,
+      "dtype_bytes": {
+        "F32": 157428160,
+        "BF16": 1666048
+      }
+    },
+    "Engram_table": {
+      "tensors": 4,
+      "stored_bytes": 202758032400,
+      "dtype_bytes": {
+        "F8_E8M0": 6144182800,
+        "F8_E4M3": 196613849600
+      }
+    }
+  },
+  "header_bindings": {
+    "model-00002-of-00048.safetensors": {
+      "framed_header_sha256": "129528c27f70585ccbef06de790837dc4f7a7fbe06fcab08e807212f4621d034",
+      "header_bytes": 344,
+      "resolved_blob_name": "4320066fc6958e5bc01d8c3feba79b7454b59f0f4b7299ab7145ed44bbf4ecec",
+      "file_bytes": 1323858272,
+      "full_blob_rehashed": false
+    },
+    "model-00003-of-00048.safetensors": {
+      "framed_header_sha256": "ff66dd94d7eb6ef5cc1457b2ac13b422c14e9891914c786af995edaa4f10a614",
+      "header_bytes": 258136,
+      "resolved_blob_name": "e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+      "file_bytes": 7389759032,
+      "full_blob_rehashed": false
+    },
+    "model-00004-of-00048.safetensors": {
+      "framed_header_sha256": "f02a4b31fc5b310ed6e77dcb3b96473df806794ed2996c5711181ee852538411",
+      "header_bytes": 258136,
+      "resolved_blob_name": "79456c9db0cda3b8115fe1c726fe3db1a34b434584a3991917088a0ab56a39de",
+      "file_bytes": 7389759032,
+      "full_blob_rehashed": false
+    },
+    "model-00047-of-00048.safetensors": {
+      "framed_header_sha256": "9055d06658af74f431f6675f6880f187b24a3f648b3f70ae949edc328b7702fc",
+      "header_bytes": 656,
+      "resolved_blob_name": "824db4881320407ac340736d14dcee5ecd748c27d0f5836b8127ecc2e3781b0f",
+      "file_bytes": 101535150936,
+      "full_blob_rehashed": false
+    },
+    "model-00013-of-00048.safetensors": {
+      "framed_header_sha256": "5c844570348abb72d04657672d5f81ff262ab1ba596dff85ad1ddd60cc3c42aa",
+      "header_bytes": 260472,
+      "resolved_blob_name": "41d87a4c81fec1550f9cb975db05598a18ee0161c2664e8e1a0c7b60742755a6",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00014-of-00048.safetensors": {
+      "framed_header_sha256": "ba69bf37728caeb1daa8763b9576732c2ea4b43fc90f02bfaacdcab4ae21e45d",
+      "header_bytes": 260472,
+      "resolved_blob_name": "e7ca4a12688a5819829ead3a03282aedb380e438bc41a00e969f70952c6d0eb9",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00015-of-00048.safetensors": {
+      "framed_header_sha256": "30e7bf8c2236a5c00cca7bcc2fc3ddd80c4d1290f4a731b4ef8862637e1fca2f",
+      "header_bytes": 260472,
+      "resolved_blob_name": "fa9d49314bbb25118b3d52c573ed66a4d0acfb01dcb26d8367f43c66a52f46c4",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00016-of-00048.safetensors": {
+      "framed_header_sha256": "8e5dc969144c6ff9363c595f83d9cbb4957144b685c7759674de5f586d4fe3d8",
+      "header_bytes": 260472,
+      "resolved_blob_name": "07d08bce9d73d416eaca0f42843440a8c45c5f939eff1a3690fb460d8dd7f623",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00017-of-00048.safetensors": {
+      "framed_header_sha256": "b092419551bc23f939f4bc75dc0a18c603da376f2766af321727f456e7291f4d",
+      "header_bytes": 261440,
+      "resolved_blob_name": "3d35e330a6c28cd59a06a1caab8b0048f7e12cc037d728736f74431c4c0a1a4c",
+      "file_bytes": 7405956128,
+      "full_blob_rehashed": false
+    },
+    "model-00048-of-00048.safetensors": {
+      "framed_header_sha256": "ffc9da89096525ea191d967531f8063db66327b0880a9d2f4d7d73a42d641f28",
+      "header_bytes": 664,
+      "resolved_blob_name": "976330f4954338e1ad8b508c32aa912032c7ad908959fd53c8307650fe4520ed",
+      "file_bytes": 101537926640,
+      "full_blob_rehashed": false
+    },
+    "model-00018-of-00048.safetensors": {
+      "framed_header_sha256": "b16e9ed3a18d70b6aa03ff240dac72591e81060774fabd988923ef60896d6aa9",
+      "header_bytes": 260472,
+      "resolved_blob_name": "48bd0c28b7f441f131f562cb664366d7726447a3698da3dd56ebbfeb1b916c75",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00019-of-00048.safetensors": {
+      "framed_header_sha256": "bad7bf329a0fb3802ec1db1e01726fe322543aca9966ef74d952d81752f0100f",
+      "header_bytes": 260472,
+      "resolved_blob_name": "b7a25cb64a959ca5e5a99e239bb1ba2092b9bcf022bec4ba71f7441334107bd1",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00020-of-00048.safetensors": {
+      "framed_header_sha256": "99a1e14c1c319351d84d577d518ce1b5ad89905731b87d346aad4e3fb2dc0a45",
+      "header_bytes": 260472,
+      "resolved_blob_name": "8aea8c4026ba4b93e82b4ed1b6b4620d02b6aaac88d211aaf577acea443aff84",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00021-of-00048.safetensors": {
+      "framed_header_sha256": "2f878ebc68e16c1f94b1fa11e46f264f8f523f7471e0d0c7a8d2d6351e656d6e",
+      "header_bytes": 260472,
+      "resolved_blob_name": "4cb6558dedfdc75a6be472e27bc3e830d8443a3371854e61dc54454a1b5b18f7",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00022-of-00048.safetensors": {
+      "framed_header_sha256": "deb4903850578c39001d10148cf8dec587de68ac5be44ff739644fbe0b83efe2",
+      "header_bytes": 260472,
+      "resolved_blob_name": "81031b68c967539a7c51d1b12d37d18de926ca3045ec554ccdd49a83b4dc0084",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00005-of-00048.safetensors": {
+      "framed_header_sha256": "f921056a11b2bee72e36ea301b533dd4d67cc8ae6fcc4c24f642516a2e3c4f31",
+      "header_bytes": 259096,
+      "resolved_blob_name": "4a42dc78698bee6b1a821aa01c9650749ef1f716143751f1cdb815c6400280a9",
+      "file_bytes": 7405953784,
+      "full_blob_rehashed": false
+    },
+    "model-00023-of-00048.safetensors": {
+      "framed_header_sha256": "3daa085f9ef36b6f2b11c0608ae16d8c163d7106eb318ffddb9700816f87481b",
+      "header_bytes": 261280,
+      "resolved_blob_name": "096723fc8afa9886b976fb63aabef159406dc483e6f2a41e3fe386435b0436cc",
+      "file_bytes": 7400713088,
+      "full_blob_rehashed": false
+    },
+    "model-00024-of-00048.safetensors": {
+      "framed_header_sha256": "ca757ef80d54a5271140663fe1fd675a52ad2fd9b589f4ccedc5eec3dbbd2255",
+      "header_bytes": 260472,
+      "resolved_blob_name": "c9438ff607bd902fdeb38267d36239ccf60d38595988364562b862791841da75",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00025-of-00048.safetensors": {
+      "framed_header_sha256": "f5593669946de6d1c7eeba5541c14352d89a8ee6dacd0cb3c15cc304e58c9bcb",
+      "header_bytes": 260472,
+      "resolved_blob_name": "4227ef9fe34d10de584d67250845fab905cbd8462fd84d9da24d772f223db6b4",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00026-of-00048.safetensors": {
+      "framed_header_sha256": "8b28e31da8cb6ce1c58056c94a89a3e6c464b4ba321f6846463eac8fc84b91bf",
+      "header_bytes": 260472,
+      "resolved_blob_name": "0af8c8f1b96b502eda652a0549cf55cd8a4d472a34d27ef9bf1c1d7c4567ca3f",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00027-of-00048.safetensors": {
+      "framed_header_sha256": "31269efb9aca4e77e770ec2161939d13735d9a83485281eff7e8b8afc77d4dd0",
+      "header_bytes": 260808,
+      "resolved_blob_name": "3066bd03043726d2400302cb9af759ec4e3957a935d56e241b83b52870322e28",
+      "file_bytes": 7395337384,
+      "full_blob_rehashed": false
+    },
+    "model-00028-of-00048.safetensors": {
+      "framed_header_sha256": "f8bbdcbb568c9dad45d780b23c7ae962fcd04adb3abc685cec46036539b437ca",
+      "header_bytes": 260472,
+      "resolved_blob_name": "9bc915075568b75e2aec9c645cc0fece6287f115c32031a52ab4f9ba9d12fde6",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00029-of-00048.safetensors": {
+      "framed_header_sha256": "cba716ddb64d109550a114eb9aedab2cd8b61367193d16a1ffc50e8a48c42ac6",
+      "header_bytes": 260472,
+      "resolved_blob_name": "d153dd9cde7c4aa7ea9896cf7aa25b49447af573f90ad14cfaaa532fbbd19434",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00030-of-00048.safetensors": {
+      "framed_header_sha256": "2d96f856ed545b76eadfcde7656f808ab0af745d949b382bb6e6bd103d15692d",
+      "header_bytes": 260472,
+      "resolved_blob_name": "3c9ccd96e908e00f02a70930b0821a6c53e5301376a261284a092e1aea7bb5da",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00031-of-00048.safetensors": {
+      "framed_header_sha256": "3b061de8ce5a963c86aa820e7444d1f9f3632c33ffb1d2604fd4813f61ed8839",
+      "header_bytes": 260808,
+      "resolved_blob_name": "0de7b6d7142df18ad45a215e9c0ef004f78cdbfefd59cc16345b2bc004047343",
+      "file_bytes": 7395337384,
+      "full_blob_rehashed": false
+    },
+    "model-00032-of-00048.safetensors": {
+      "framed_header_sha256": "2ecd0c0958382db2459ab9e0d519509e71429faa79d5797dce103589f31eae39",
+      "header_bytes": 260472,
+      "resolved_blob_name": "6a5aaa73c6f97294bd079914ba44209ecf3d0491c8b95ef9995655511e35aee6",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00006-of-00048.safetensors": {
+      "framed_header_sha256": "758bbceaef14ca838a4b6dec90cf3946dfa0d7b35e223153587f6354c0fbb0a1",
+      "header_bytes": 258136,
+      "resolved_blob_name": "020a6df51a2853452561d91268a65481f7a7d7954ed47f8e6c9ce69a4a134f77",
+      "file_bytes": 7389759032,
+      "full_blob_rehashed": false
+    },
+    "model-00033-of-00048.safetensors": {
+      "framed_header_sha256": "099872f6b55c62ac3a126399950c32addcbaa8323bcb949ca9e3c5835a18abe5",
+      "header_bytes": 260472,
+      "resolved_blob_name": "386e3e91f7f02f7e2c25f398b3a63379051c2077839b3081f7556e18c29a69c9",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00034-of-00048.safetensors": {
+      "framed_header_sha256": "fdf13a88a5f8d71f9178082acf7de279928767df3a073d78ade53405bf49021d",
+      "header_bytes": 260472,
+      "resolved_blob_name": "9deab3c4f27c956f91cd989d9a1f6cf4bbb91858ce3f7164caa5ae61125c943f",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00035-of-00048.safetensors": {
+      "framed_header_sha256": "5b2c5c669d6cf0b27bd49ea7ba72df747b17fe8d80493941a04c562ece572340",
+      "header_bytes": 260808,
+      "resolved_blob_name": "226573bc07f35091b0ec27b0056ab3059f9bc1c0afd0bc104c93c86dd029cad2",
+      "file_bytes": 7395337384,
+      "full_blob_rehashed": false
+    },
+    "model-00036-of-00048.safetensors": {
+      "framed_header_sha256": "79602d58ae094cbe25b92749640e2b4c967b233749e9c827879a233a62b068e0",
+      "header_bytes": 260472,
+      "resolved_blob_name": "90d6a85c1eb0cae68c6c7bffa11b60654ea00353d27a0ae17701b72e239894cd",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00037-of-00048.safetensors": {
+      "framed_header_sha256": "8c9968b922facdddbdd634f9a80df732cefe864ef67fc1c358706ced841bb879",
+      "header_bytes": 260472,
+      "resolved_blob_name": "207aef18f995fdfe7506175aabd700aa62dcf6f488c7cc375e9de06f56891b83",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00038-of-00048.safetensors": {
+      "framed_header_sha256": "8a8c9fa0231cdd292756cc9b1d8a2214f69b4b36091ed2b1461f3180659feb65",
+      "header_bytes": 260472,
+      "resolved_blob_name": "cbbaa0b0807311807a696efec09f9b5a5d63bdf68b82378e1fc7402a2533c627",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00039-of-00048.safetensors": {
+      "framed_header_sha256": "053e342f8388030f03e6c02e7d077b1adf5aea3839a9005fe19c62cabe6d8989",
+      "header_bytes": 260808,
+      "resolved_blob_name": "f4cf191547b50efbc35c4ed1f36cfb26043d94f987c49d54b15ef2d632a14a77",
+      "file_bytes": 7395337384,
+      "full_blob_rehashed": false
+    },
+    "model-00040-of-00048.safetensors": {
+      "framed_header_sha256": "6d5225cc55821348122025f204c292651d22b810833509e0af83eb928f72d8e5",
+      "header_bytes": 260472,
+      "resolved_blob_name": "e991bfc416055c45ddb89f1447eae1e67dba2816e7580044ffff3db7e2af27a3",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00041-of-00048.safetensors": {
+      "framed_header_sha256": "1da3f66ed02aac282013916f5221d2437cb7d465cbcad83c3b4cd5b84ddc2d37",
+      "header_bytes": 260472,
+      "resolved_blob_name": "48a1c08afadf4e73223c587f9c6ad6f32aef57c01342ae75e96b07a001711d42",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00042-of-00048.safetensors": {
+      "framed_header_sha256": "e115fc9ad378fe162d382445f523f58904d5e8965c3970bb8cc7d7f004a53db6",
+      "header_bytes": 260472,
+      "resolved_blob_name": "e1a4d5d30ae51bafda75078d49b05a585c924b0af9b3481c075b04341507c2ef",
+      "file_bytes": 7389761368,
+      "full_blob_rehashed": false
+    },
+    "model-00007-of-00048.safetensors": {
+      "framed_header_sha256": "1283c3fff6a48f347c929c106c95f2ffcd7e9768b5ae414588d0a9f5dc70968f",
+      "header_bytes": 258136,
+      "resolved_blob_name": "40f8b52f763f6380d41257e1af04eee3aad300af6a418c38e49ff99e3604163a",
+      "file_bytes": 7389759032,
+      "full_blob_rehashed": false
+    },
+    "model-00008-of-00048.safetensors": {
+      "framed_header_sha256": "cab61806b0231bd4928bd852dee3df6ad0b3e62f0fbbb9445a76e8c8d67a60c8",
+      "header_bytes": 258136,
+      "resolved_blob_name": "d62cca4e698f030d4b96ec624c08bed7ad604cec13077da6d6b06669281c4650",
+      "file_bytes": 7389759032,
+      "full_blob_rehashed": false
+    },
+    "model-00009-of-00048.safetensors": {
+      "framed_header_sha256": "a064ee45313ab51341b00b17a74859feb2f91af858f28398d89df07ea1b48a38",
+      "header_bytes": 258136,
+      "resolved_blob_name": "1ca62e4c294df31aee69a782974cb14269264fdc08465ab4835760258f05d6ef",
+      "file_bytes": 7389759032,
+      "full_blob_rehashed": false
+    },
+    "model-00010-of-00048.safetensors": {
+      "framed_header_sha256": "8b32e2ebfee9bf12080f41f13cd85425780f3d3536af943c4f345872b7ba84ae",
+      "header_bytes": 258136,
+      "resolved_blob_name": "dd33c9750a40cbfcdfb19cd8335d955f533e3a18b790c0ee43d1e5d77911595c",
+      "file_bytes": 7389759032,
+      "full_blob_rehashed": false
+    },
+    "model-00011-of-00048.safetensors": {
+      "framed_header_sha256": "9ea69355f30af20a80c3cbb1652184ed86c085e976178cee0a9283382e643e21",
+      "header_bytes": 259096,
+      "resolved_blob_name": "a9b309f90e0d1e2252a224ed6b057b9c82c27d3a49cff64bfbfef12efd067f7c",
+      "file_bytes": 7405953784,
+      "full_blob_rehashed": false
+    },
+    "model-00012-of-00048.safetensors": {
+      "framed_header_sha256": "423a05803c18836ca5c4a764689ec6c95d2205814feadb881fea79c3ce8ab783",
+      "header_bytes": 258136,
+      "resolved_blob_name": "b359227eceb3f839c80de19dddf946648ca89425d9b719ff44702cf5e8cfbe0e",
+      "file_bytes": 7389759032,
+      "full_blob_rehashed": false
+    },
+    "model-00043-of-00048.safetensors": {
+      "framed_header_sha256": "032804db9bc5aadc7a7933ff37f499f99dfbc5cb62b85abd1cddc2ee3569bc9d",
+      "header_bytes": 176,
+      "resolved_blob_name": "d762b688f138e00a24eac96f27b842715bb4b534ecc9ca39076bed2b8c33201e",
+      "file_bytes": 1323837624,
+      "full_blob_rehashed": false
+    }
+  },
+  "physical_stack_reservations": null,
+  "full_stack_address_width": null,
+  "physical_format_or_replication_qualified": false,
+  "adopt": false,
+  "scope": "Verifies framed source headers (8-byte length prefix plus header), shapes/dtypes/data offsets and stored-byte accounting, index and programme identity. Blob filenames and sizes verified; full tensor data blobs not rehashed. Source bytes are not emitted resident image bytes or accepted placement."
+}
