@@ -24,6 +24,8 @@ module ot_chip_v41x_karb_pregion #(
     // to their windows, the final 2:1 merge at the region centre), so no response wire spans more than half a
     // 4-PC region in one cycle; adds one cycle to the K response path.  0 = the original single 4:1 select (fd6e9a81).
     parameter bit     PAIRSTAGE  = 1'b1,
+    parameter bit     CENTREQ    = 1'b1,  // W18b: registered queue at the region centre (with PAIRSTAGE)
+    parameter integer PQREP      = 6,     // pointer copies in the pair / centre queues (~46 bits each)
     parameter bit     HIER       = 1'b0   // W18b: slices are hardened macros (synthesis of the region only)
 ) (
     input  wire                  clk,
@@ -98,15 +100,29 @@ module ot_chip_v41x_karb_pregion #(
             assign pin_d[k*RW +: RW] = lo ? qd[(2*k)*RW +: RW] : qd[(2*k+1)*RW +: RW];
             assign qpop[2*k]   = prdy[k] && lo;
             assign qpop[2*k+1] = prdy[k] && !lo && qv[2*k+1];
-            ot_chip_v41x_karb_q2 #(.W(RW)) u_pq (
+            ot_chip_v41x_karb_q2r #(.W(RW), .NREP(PQREP)) u_pq (
                 .clk(clk), .rst_n(rst_n), .in_v(pv[k]), .in_rdy(prdy[k]), .in_d(pin_d[k*RW +: RW]),
                 .out_v(pout_v[k]), .out_rdy(pout_rdy[k]), .out_d(pout_d[k*RW +: RW]));
         end
         // level 2 at the region centre: lower pair first, one send per credit
         wire fsel = !pout_v[0];
-        assign send = (pout_v[0] || pout_v[1]) && cred != 0;
-        assign pout_rdy = {send && fsel, send && !fsel};
-        assign fin_d = fsel ? pout_d[RW +: RW] : pout_d[0 +: RW];
+        if (CENTREQ) begin : g_cq
+            // W18b: a registered two-entry queue at the region centre (replicated pointers) takes the 2:1 pair
+            // select, so the 1 mm pair-queue -> s_data path is cut in two (+1 response cycle); its in_rdy is a flop
+            wire cq_v, cq_rdy; wire [RW-1:0] cq_d;
+            wire cq_in = pout_v[0] || pout_v[1];
+            assign pout_rdy = {cq_rdy && fsel, cq_rdy && !fsel};
+            ot_chip_v41x_karb_q2r #(.W(RW), .NREP(PQREP)) u_cq (
+                .clk(clk), .rst_n(rst_n), .in_v(cq_in), .in_rdy(cq_rdy),
+                .in_d(fsel ? pout_d[RW +: RW] : pout_d[0 +: RW]),
+                .out_v(cq_v), .out_rdy(send), .out_d(cq_d));
+            assign send = cq_v && cred != 0;
+            assign fin_d = cq_d;
+        end else begin : g_nocq
+            assign send = (pout_v[0] || pout_v[1]) && cred != 0;
+            assign pout_rdy = {send && fsel, send && !fsel};
+            assign fin_d = fsel ? pout_d[RW +: RW] : pout_d[0 +: RW];
+        end
         always @(*) begin sel = 2'd0; any = 1'b0; end
     end else begin : g_flat
         always @(*) begin
