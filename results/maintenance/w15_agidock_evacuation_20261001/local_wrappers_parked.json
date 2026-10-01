@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-01T11:52:42.474497+00:00",
+  "supervisors": [
+    {
+      "pid": 2243725,
+      "start_ticks": "302868673",
+      "argv": "/bin/bash /tmp/claude-1000/w15b/jobs/lane.sh 155.103.253.114 /tmp/claude-1000/w15b/jobs/lane5_133h ",
+      "action": "SIGSTOP only lane supervisor; current remote_gate and SSH preserved"
+    },
+    {
+      "pid": 2243728,
+      "start_ticks": "302868674",
+      "argv": "/bin/bash /tmp/claude-1000/w15b/jobs/lane.sh 155.103.253.114 /tmp/claude-1000/w15b/jobs/lane5_133h ",
+      "action": "SIGSTOP only lane supervisor; current remote_gate and SSH preserved"
+    },
+    {
+      "pid": 2675199,
+      "start_ticks": "303731649",
+      "argv": "/bin/bash /tmp/claude-1000/w15b/jobs/lane.sh 155.103.253.133 /tmp/claude-1000/w15b/jobs/lane6_133 ",
+      "action": "SIGSTOP only lane supervisor; current remote_gate and SSH preserved"
+    },
+    {
+      "pid": 2675202,
+      "start_ticks": "303731650",
+      "argv": "/bin/bash /tmp/claude-1000/w15b/jobs/lane.sh 155.103.253.133 /tmp/claude-1000/w15b/jobs/lane6_133 ",
+      "action": "SIGSTOP only lane supervisor; current remote_gate and SSH preserved"
+    }
+  ],
+  "future_skips": [
+    "topk_4_256_1024_256_8",
+    "topk_4_256_256_64_8",
+    "tg89_1000"
+  ],
+  "reason": "User provider retirement: all6AGI new dispatch disabled; verified current checkpoint evacuation before orderly stop"
+}

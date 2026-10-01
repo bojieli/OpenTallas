@@ -1,0 +1,201 @@
+{
+  "utc": "2026-10-01T11:57:03.143405+00:00",
+  "status": "STOPPED_AUTO_REMOVED_VERIFIED_PARTIAL_CHECKPOINTS",
+  "preservation_commit": "77e3a81c2",
+  "hosts": [
+    {
+      "host": "155.103.253.114",
+      "stop": {
+        "utc": "2026-10-01T11:53:39.565359+00:00",
+        "identities_before": [
+          {
+            "pid": 2881377,
+            "start_ticks": "41332944",
+            "argv": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s /home/ubuntu/w15work/keep/topk_4_256_1024_64_8/synth.ys "
+          },
+          {
+            "pid": 2876819,
+            "start_ticks": "41332583",
+            "argv": "/bin/bash /tmp/claude-1000/w15p/jobs/harden.sh topk_4_256_1024_64_8 "
+          }
+        ],
+        "source_git": "182f92ebe5d084a40c9640ace53d1d53114a139f",
+        "actions": [
+          {
+            "container": "b29dcdb82823c84d1cc6b0b59a0634cd084ac2b6ed7eb7cef3c85f5afc049c2e",
+            "returncode": 0,
+            "stdout": "b29dcdb82823c84d1cc6b0b59a0634cd084ac2b6ed7eb7cef3c85f5afc049c2e\n",
+            "stderr": ""
+          }
+        ],
+        "processes_after": [
+          {
+            "pid": 2881377,
+            "exists": false
+          },
+          {
+            "pid": 2876819,
+            "exists": false
+          }
+        ],
+        "containers_after": [
+          {
+            "container": "b29dcdb82823c84d1cc6b0b59a0634cd084ac2b6ed7eb7cef3c85f5afc049c2e",
+            "inspect_rc": 1,
+            "inspect": "[]\n",
+            "stderr": "error: no such object: b29dcdb82823c84d1cc6b0b59a0634cd084ac2b6ed7eb7cef3c85f5afc049c2e\n"
+          }
+        ],
+        "scope": "USER_PROVIDER_RETIREMENT_PARTIAL_NO_SSFF_VERDICT"
+      },
+      "terminal_absence": {
+        "utc": "2026-10-01T11:54:45.404823+00:00",
+        "host": "155.103.253.114",
+        "heavy_processes": [],
+        "running_container_ids": [],
+        "heavy_count": 0,
+        "running_container_count": 0,
+        "scope": "read-only terminal absence; wholehost source audit required before API removal"
+      },
+      "terminal_checkpoint_verification": {
+        "utc": "2026-10-01T11:56:17.610290+00:00",
+        "host": "114",
+        "status": "VERIFIED_TERMINAL_PARTIAL",
+        "matched_files": 4,
+        "total_files": 4,
+        "issues": [],
+        "manifest_sha256": "825e63bc531a6edb0d18b642024252e50c202e5916b8f24028f7604014a2947e",
+        "ssff_verdict": null
+      },
+      "files": {
+        "stop.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/114/stop.json",
+          "sha256": "8828ec862568e4daa510da394401ecaa710c458d5e78441cd612ee8e8eb82502"
+        },
+        "terminal_absence.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/114/terminal_absence.json",
+          "sha256": "57a52dbcb53c919bfe15a3a959aa8869ec7aafc98afaa1c12a8d9beb4844e09d"
+        },
+        "terminal_verification.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/114/terminal_verification.json",
+          "sha256": "08b0e3bab68c61c28b644009f61d1af842da116426a560e31a3d8e0e9db9868c"
+        },
+        "remote_terminal_files.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/114/remote_terminal_files.json",
+          "sha256": "825e63bc531a6edb0d18b642024252e50c202e5916b8f24028f7604014a2947e"
+        }
+      }
+    },
+    {
+      "host": "155.103.253.133",
+      "stop": {
+        "utc": "2026-10-01T11:53:20.027484+00:00",
+        "identities_before": [
+          {
+            "pid": 285924,
+            "start_ticks": "43751818",
+            "argv": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_w15_rom_oneshot_die_asap7_w15qwen256_sram/base/3_3_place_gp.json "
+          },
+          {
+            "pid": 2771832,
+            "start_ticks": "42674684",
+            "argv": "/bin/bash /tmp/claude-1000/w15p/jobs/harden.sh qwen256_sram "
+          }
+        ],
+        "source_git": "50f5165ba84ed035d3062d091a7f6d7479a8e9d1",
+        "actions": [
+          {
+            "container": "71829e410a585b7dadebfbc9d6309f96608a300c5eee7e276b4c71cc7344efc7",
+            "returncode": 0,
+            "stdout": "71829e410a585b7dadebfbc9d6309f96608a300c5eee7e276b4c71cc7344efc7\n",
+            "stderr": ""
+          },
+          {
+            "container": "f4b7ba655e2ce94fdab425a998375b336fcfeb18b664886cdf43ceae169ae61f",
+            "returncode": 0,
+            "stdout": "f4b7ba655e2ce94fdab425a998375b336fcfeb18b664886cdf43ceae169ae61f\n",
+            "stderr": ""
+          }
+        ],
+        "processes_after": [
+          {
+            "pid": 285924,
+            "exists": false
+          },
+          {
+            "pid": 2771832,
+            "exists": false
+          }
+        ],
+        "containers_after": [
+          {
+            "container": "71829e410a585b7dadebfbc9d6309f96608a300c5eee7e276b4c71cc7344efc7",
+            "inspect_rc": 1,
+            "inspect": "[]\n",
+            "stderr": "error: no such object: 71829e410a585b7dadebfbc9d6309f96608a300c5eee7e276b4c71cc7344efc7\n"
+          },
+          {
+            "container": "f4b7ba655e2ce94fdab425a998375b336fcfeb18b664886cdf43ceae169ae61f",
+            "inspect_rc": 1,
+            "inspect": "[]\n",
+            "stderr": "error: no such object: f4b7ba655e2ce94fdab425a998375b336fcfeb18b664886cdf43ceae169ae61f\n"
+          }
+        ],
+        "scope": "USER_PROVIDER_RETIREMENT_PARTIAL_NO_SSFF_VERDICT"
+      },
+      "terminal_absence": {
+        "utc": "2026-10-01T11:54:45.392876+00:00",
+        "host": "155.103.253.133",
+        "heavy_processes": [],
+        "running_container_ids": [],
+        "heavy_count": 0,
+        "running_container_count": 0,
+        "scope": "read-only terminal absence; wholehost source audit required before API removal"
+      },
+      "terminal_checkpoint_verification": {
+        "utc": "2026-10-01T11:56:21.894894+00:00",
+        "host": "133",
+        "status": "VERIFIED_TERMINAL_PARTIAL",
+        "matched_files": 50,
+        "total_files": 50,
+        "issues": [],
+        "manifest_sha256": "665ba9f7a3357a4467aa4fa8c002155364f8842a4ac6fa699fefc5fcfef2b8a0",
+        "ssff_verdict": null
+      },
+      "files": {
+        "stop.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/133/stop.json",
+          "sha256": "f7842ac3f83c0749a5d4676bf49741eb04f2d62b247097598abecaeb9ca8f975"
+        },
+        "terminal_absence.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/133/terminal_absence.json",
+          "sha256": "fe871e3869bcc55d45c1ad0f704e3fef221c61283cff6229de886a8510255ff0"
+        },
+        "terminal_verification.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/133/terminal_verification.json",
+          "sha256": "52b64b8db4f7daf001460be6ca929a29f979d7914da401808325b0a6d50ea625"
+        },
+        "remote_terminal_files.json": {
+          "path": "/home/ubuntu/w15-agidock-evacuation-20261001/133/remote_terminal_files.json",
+          "sha256": "665ba9f7a3357a4467aa4fa8c002155364f8842a4ac6fa699fefc5fcfef2b8a0"
+        }
+      }
+    }
+  ],
+  "provider_retirement_not_engineering_verdict": true,
+  "ssff_verdict": null,
+  "archive_root": "/home/ubuntu/w15-agidock-evacuation-20261001",
+  "wholehost_audit_owner": "Avicenna agent01a0f698-2d29-7910-b17b-a3110baecc79",
+  "sole_api_worker": "Parent899585; no API action by this agent",
+  "w13": "615596/626096 EXCLUSIVE, PVE columns untouched",
+  "future_lanes": "Exact local parked supervisors retired after remote workers absent/no live children; no restart",
+  "wrapper_snapshots_sha256": {
+    "qwen256_sram.log": "1bfc8ddca1835aaf533daec2ee4cfe9d3548480152fad98009ae53e6b51ab177",
+    "lane5_133h.progress": "73caaae4e2fade25aaf7f8d0244867e3d043272ac02cc59522289b7cb841a2d0",
+    "lane6_133": "ba19753a11ff57ed50b75925ab791da98d1804132d05d01a1f4f35294af75162",
+    "lane5_133h": "59194b767c23a61bd2c5a9e08841a5e1c3c3400a391b94669f9722c30387c3de",
+    "lane6_133.progress": "4bb9808efdc67dd8e9e621407c76f85cf938800e51296b8a5e36b5b762e298aa",
+    "lane.sh": "07dd148d99e4d0c17f713f0033b6d9db1d86772da9c132b38e89c60ed8bee7ea",
+    "topk_4_256_1024_64_8.log": "a8b2b0b569789d12c988e0b759a4bd96677c0ebda0db782652b9c1945b305cf0"
+  }
+}

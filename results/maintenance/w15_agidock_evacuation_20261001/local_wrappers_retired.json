@@ -1,0 +1,30 @@
+{
+  "utc": "2026-10-01T11:54:44.942447+00:00",
+  "supervisors": [
+    {
+      "pid": 2675202,
+      "start_ticks": "303731650",
+      "argv": "/bin/bash /tmp/claude-1000/w15b/jobs/lane.sh 155.103.253.133 /tmp/claude-1000/w15b/jobs/lane6_133 ",
+      "action": "Retired exact stopped lane supervisor after remote terminal and no live children"
+    },
+    {
+      "pid": 2675199,
+      "start_ticks": "303731649",
+      "argv": "/bin/bash /tmp/claude-1000/w15b/jobs/lane.sh 155.103.253.133 /tmp/claude-1000/w15b/jobs/lane6_133 ",
+      "action": "Retired exact stopped lane supervisor after remote terminal and no live children"
+    },
+    {
+      "pid": 2243728,
+      "start_ticks": "302868674",
+      "argv": "/bin/bash /tmp/claude-1000/w15b/jobs/lane.sh 155.103.253.114 /tmp/claude-1000/w15b/jobs/lane5_133h ",
+      "action": "Retired exact stopped lane supervisor after remote terminal and no live children"
+    },
+    {
+      "pid": 2243725,
+      "start_ticks": "302868673",
+      "argv": "/bin/bash /tmp/claude-1000/w15b/jobs/lane.sh 155.103.253.114 /tmp/claude-1000/w15b/jobs/lane5_133h ",
+      "action": "Retired exact stopped lane supervisor after remote terminal and no live children"
+    }
+  ],
+  "future_dispatch": "DISABLED_NO_RESTART"
+}

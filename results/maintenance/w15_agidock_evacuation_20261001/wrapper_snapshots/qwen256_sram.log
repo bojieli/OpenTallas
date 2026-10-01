@@ -1,0 +1,59 @@
+[remote_gate] worker 155.103.253.133 (floor 16 GB), job 87b0c1cf03: /tmp/claude-1000/w15p/jobs/harden.sh qwen256_sram
+FAILED: FlowError: ORFS place-and-route failed with exit 143:
+t density:       0.1645
+[INFO GPL-0024] Movable insts average area:      0.142 um^2
+[INFO GPL-0025] Ideal bin area:                  0.861 um^2
+[INFO GPL-0026] Ideal bin count:               2330582
+[INFO GPL-0027] Total bin area:             2006398.590 um^2
+[INFO GPL-0028] Bin count (X, Y):        1024 ,   1024
+[INFO GPL-0029] Bin size (W * H):       1.383 *  1.383 um
+[INFO GPL-0030] Number of bins:                1048576
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9909 |  1.515406e+07 |   +0.00% |  7.38e-14 |      
+       10 |   0.9798 |  1.797337e+07 |  +18.60% |  8.11e-14 |      
+       20 |   0.9724 |  1.878860e+07 |   +4.54% |  1.20e-13 |      
+       30 |   0.9673 |  1.925355e+07 |   +2.47% |  1.85e-13 |      
+       40 |   0.9645 |  1.959628e+07 |   +1.78% |  2.90e-13 |      
+       50 |   0.9624 |  1.986450e+07 |   +1.37% |  4.58e-13 |      
+       60 |   0.9610 |  2.000768e+07 |   +0.72% |  7.34e-13 |      
+       70 |   0.9605 |  2.000762e+07 |   -0.00% |  1.19e-12 |      
+       80 |   0.9598 |  1.993005e+07 |   -0.39% |  1.94e-12 |      
+       90 |   0.9590 |  1.985963e+07 |   -0.35% |  3.16e-12 |      
+      100 |   0.9582 |  1.985565e+07 |   -0.02% |  5.15e-12 |      
+      110 |   0.9566 |  1.991908e+07 |   +0.32% |  8.34e-12 |      
+      120 |   0.9541 |  2.000798e+07 |   +0.45% |  1.34e-11 |      
+      130 |   0.9511 |  2.010070e+07 |   +0.46% |  2.17e-11 |      
+      140 |   0.9479 |  2.019115e+07 |   +0.45% |  3.50e-11 |      
+      150 |   0.9442 |  2.028726e+07 |   +0.48% |  5.64e-11 |      
+      160 |   0.9393 |  2.040834e+07 |   +0.60% |  9.07e-11 |      
+      170 |   0.9330 |  2.058675e+07 |   +0.87% |  1.45e-10 |      
+      180 |   0.9247 |  2.088016e+07 |   +1.43% |  2.29e-10 |      
+      190 |   0.9123 |  2.136094e+07 |   +2.30% |  3.55e-10 |      
+      200 |   0.8914 |  2.247118e+07 |   +5.20% |  5.20e-10 |      
+      210 |   0.8643 |  2.364461e+07 |   +5.22% |  7.36e-10 |      
+      220 |   0.8375 |  2.457131e+07 |   +3.92% |  1.08e-09 |      
+      230 |   0.8088 |  2.516106e+07 |   +2.40% |  1.64e-09 |      
+      240 |   0.7767 |  2.541686e+07 |   +1.02% |  2.59e-09 |      
+      250 |   0.7448 |  2.615280e+07 |   +2.90% |  3.95e-09 |      
+      260 |   0.7088 |  2.757048e+07 |   +5.42% |  5.50e-09 |      
+      270 |   0.6907 |  2.791278e+07 |   +1.24% |  8.45e-09 |      
+      280 |   0.6644 |  2.817363e+07 |   +0.93% |  1.34e-08 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 288, overflow: 0.631, keep resizer changes at: 1, HPWL: 29045849073
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |   1213653
+
+Elapsed time: 0:45.70[h:]min:sec. CPU time: user 43.15 sys 2.54 (99%). Peak memory: 3658372KB.
+Elapsed time: 38:33.66[h:]min:sec. CPU time: user 2441.64 sys 163.63 (112%). Peak memory: 6264796KB.
+Elapsed time: 13:09.59[h:]min:sec. CPU time: user 1345.92 sys 124.25 (186%). Peak memory: 6663684KB.
+Elapsed time: 0:11.03[h:]min:sec. CPU time: user 9.55 sys 1.48 (99%). Peak memory: 1742420KB.
+Elapsed time: 1:07.67[h:]min:sec. CPU time: user 64.99 sys 2.68 (99%). Peak memory: 3528924KB.
+Elapsed time: 6:19.27[h:]min:sec. CPU time: user 1559.83 sys 7.52 (413%). Peak memory: 6937460KB.
+Elapsed time: 0:19.71[h:]min:sec. CPU time: user 17.35 sys 2.36 (99%). Peak memory: 2879816KB.
+
+partial record written to /tmp/claude-1000/w15p/out/qwen256_sram/physical.json
+[remote_gate] worker 155.103.253.133 job 87b0c1cf03 finished rc=0; 0 worktree files returned

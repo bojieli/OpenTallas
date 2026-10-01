@@ -1,0 +1,55 @@
+{
+  "utc": "2026-10-01T11:53:20.027484+00:00",
+  "identities_before": [
+    {
+      "pid": 285924,
+      "start_ticks": "43751818",
+      "argv": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_w15_rom_oneshot_die_asap7_w15qwen256_sram/base/3_3_place_gp.json "
+    },
+    {
+      "pid": 2771832,
+      "start_ticks": "42674684",
+      "argv": "/bin/bash /tmp/claude-1000/w15p/jobs/harden.sh qwen256_sram "
+    }
+  ],
+  "source_git": "50f5165ba84ed035d3062d091a7f6d7479a8e9d1",
+  "actions": [
+    {
+      "container": "71829e410a585b7dadebfbc9d6309f96608a300c5eee7e276b4c71cc7344efc7",
+      "returncode": 0,
+      "stdout": "71829e410a585b7dadebfbc9d6309f96608a300c5eee7e276b4c71cc7344efc7\n",
+      "stderr": ""
+    },
+    {
+      "container": "f4b7ba655e2ce94fdab425a998375b336fcfeb18b664886cdf43ceae169ae61f",
+      "returncode": 0,
+      "stdout": "f4b7ba655e2ce94fdab425a998375b336fcfeb18b664886cdf43ceae169ae61f\n",
+      "stderr": ""
+    }
+  ],
+  "processes_after": [
+    {
+      "pid": 285924,
+      "exists": false
+    },
+    {
+      "pid": 2771832,
+      "exists": false
+    }
+  ],
+  "containers_after": [
+    {
+      "container": "71829e410a585b7dadebfbc9d6309f96608a300c5eee7e276b4c71cc7344efc7",
+      "inspect_rc": 1,
+      "inspect": "[]\n",
+      "stderr": "error: no such object: 71829e410a585b7dadebfbc9d6309f96608a300c5eee7e276b4c71cc7344efc7\n"
+    },
+    {
+      "container": "f4b7ba655e2ce94fdab425a998375b336fcfeb18b664886cdf43ceae169ae61f",
+      "inspect_rc": 1,
+      "inspect": "[]\n",
+      "stderr": "error: no such object: f4b7ba655e2ce94fdab425a998375b336fcfeb18b664886cdf43ceae169ae61f\n"
+    }
+  ],
+  "scope": "USER_PROVIDER_RETIREMENT_PARTIAL_NO_SSFF_VERDICT"
+}

@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-01T11:53:39.565359+00:00",
+  "identities_before": [
+    {
+      "pid": 2881377,
+      "start_ticks": "41332944",
+      "argv": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s /home/ubuntu/w15work/keep/topk_4_256_1024_64_8/synth.ys "
+    },
+    {
+      "pid": 2876819,
+      "start_ticks": "41332583",
+      "argv": "/bin/bash /tmp/claude-1000/w15p/jobs/harden.sh topk_4_256_1024_64_8 "
+    }
+  ],
+  "source_git": "182f92ebe5d084a40c9640ace53d1d53114a139f",
+  "actions": [
+    {
+      "container": "b29dcdb82823c84d1cc6b0b59a0634cd084ac2b6ed7eb7cef3c85f5afc049c2e",
+      "returncode": 0,
+      "stdout": "b29dcdb82823c84d1cc6b0b59a0634cd084ac2b6ed7eb7cef3c85f5afc049c2e\n",
+      "stderr": ""
+    }
+  ],
+  "processes_after": [
+    {
+      "pid": 2881377,
+      "exists": false
+    },
+    {
+      "pid": 2876819,
+      "exists": false
+    }
+  ],
+  "containers_after": [
+    {
+      "container": "b29dcdb82823c84d1cc6b0b59a0634cd084ac2b6ed7eb7cef3c85f5afc049c2e",
+      "inspect_rc": 1,
+      "inspect": "[]\n",
+      "stderr": "error: no such object: b29dcdb82823c84d1cc6b0b59a0634cd084ac2b6ed7eb7cef3c85f5afc049c2e\n"
+    }
+  ],
+  "scope": "USER_PROVIDER_RETIREMENT_PARTIAL_NO_SSFF_VERDICT"
+}
