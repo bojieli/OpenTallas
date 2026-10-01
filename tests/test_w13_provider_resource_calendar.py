@@ -7,7 +7,7 @@ from w13_provider_resource_calendar import write_calendar
 
 def request(i,pc=None,ready=0):
     return {'id':str(i),'producer_result_id':'writer:'+str(i),'payload_sha256':'source-bound-test-fixture',
-        'epoch':1,'tag':i,'stack':0,'PC':i if pc is None else pc,'sector':i,
+        'epoch':1,'tag':i,'die':0,'stack':0,'PC':i if pc is None else pc,'sector':i,
         'earliest_column_ps':0,'DRAM_eligibility_source_event':'fixture-open-row:'+str(i),
         'DRAM_eligibility_valid_until_ps':1000000,
         'ACK_ready_ps':ready,'byte_mask':(1<<32)-1}
@@ -54,6 +54,15 @@ def test_capacity_stall_cannot_reuse_expired_DRAM_eligibility():
 
 def test_descriptor_epoch64_must_not_truncate_into_controller_epoch32():
     q=request(0);q['epoch']=1<<32
-    with pytest.raises(ValueError,match='identity/address aperture'):run([q])
+    d=run([q]);assert d['calendar'] is None
+    assert d['issues']==['source_epoch_LE64_capture_or_generation_mapping_unbound']
+    assert not run([request(0)])['source_epoch_LE64_whole_domain_qualified']
+
+
+def test_die_identity_separates_pending_capacity_and_same_address_order():
+    a=request(0);b=request(1,pc=0);b['die']=1;b['sector']=a['sector']
+    d=run([a,b],1)
+    assert [e['pending_reserved_and_column_ps'] for e in d['calendar']]==['0','0']
+    del b['die'];assert run([b])['calendar'] is None
     q=request(0);q['DRAM_eligibility_source_event']=None
     assert run([q])['calendar'] is None
