@@ -1,0 +1,18 @@
+{
+  "qwen": {
+    "runtime_source_git": "defc45332c52a173d47f882595ddd78c4ce22fde",
+    "original_path": "/home/ubuntu/qwen-hbm-complete-runs-20261001/checkpoint_full36_two_tokens_defc45332_r1/execution/token0_execution.json",
+    "sha256": "a6b05229734fbe1bd4fc82b80e6d432b282d21694765e33c5e7d83aed5d37fe3",
+    "trace_rows": 1737,
+    "memory_rows": 504,
+    "physical_ticks": "UNBOUND; do not convert CPUwall/cyclesnull"
+  },
+  "deepseek": {
+    "runtime_source_git": "066dad009",
+    "source_git": "9b1db53f5be5539c7dedbb7c00f4e32717b66fb3",
+    "path": "results/rtl/deepseek_hbm_complete_20261001/checkpoint-full-40-head-r1.json",
+    "sha256": "15ae3e9197c1ad4e2860cb3b127e7c045a5e61c7d15e3186b2b94f85e413e59e",
+    "operator_rows": 2213,
+    "no_new_scalar_metrics": "Actualsource066 has no7d primitivecostmetrics; not invented"
+  }
+}
