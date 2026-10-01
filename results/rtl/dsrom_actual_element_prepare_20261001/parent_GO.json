@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.dsrom-actual-element-parent-go.v1",
+  "prepared_commit": "4e5b407df0750a045880b5dcb81d9d0761b36e60",
+  "source_pins_verified": 20,
+  "new_artifact_pins_verified": 4,
+  "targeted_tests_passed": 5,
+  "exact_geometry_and_qualified_wrapper_binding_reviewed": true,
+  "GO": "BOUNDED_EXISTING_SOURCE_DIFFERENTIAL_VERIFICATION_ONLY",
+  "constraints": "Proposed argv only; run within one parent-approved fresh pinned worktree cgroup with two CPU affinity/CPUQuota200%, MemoryMax4GiB/Swap0. Shared deadline for sum of both builds600s and sum of both simulations60s; whole-cgroup hard kill on exhaustion, no fallback, auto retry, shape reduction, fullfield/die build, watcher or live restart.",
+  "optional_negative_control": "Actual commonadder sum-bit mutant on qcase only within remaining aggregate caps; require explicitDIFF, not arbitrary crash/compiletimeout. Do not replace originalpositive records.",
+  "hardware_admission": false,
+  "live_source_selection": false,
+  "fault_coverage_limit": "Continuous comparison only; legaltraffic does not establish nonzero overflow fault. Preserve that limit."
+}
