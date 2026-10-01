@@ -101,6 +101,8 @@ def verify(directory,repo=None):
         elif kind=='software_backing_commit_and_publication':
             if event['tag'] not in pending:raise ValueError('publication before actual software backing')
             published.add(pending.pop(event['tag']))
+        elif kind=='persistent_KV_read':
+            if any((event['layer'],event['die'],position) not in published for position in range(event['positions'])):raise ValueError('persistent KV read before generation publication')
         elif kind=='software_reader_lease_acquired':
             key=(event['layer'],event['die'],event['position'])
             if key not in published or event['lease'] in active:raise ValueError('reader before generation publication')
@@ -134,7 +136,7 @@ def verify(directory,repo=None):
         for die in range(2):
             a=np.load(folder/f'token{position}_head.d{die}.scaled.npy',allow_pickle=False);row=outputs[position,f'head.d{die}.scaled']
             if row['shape']!=list(a.shape) or row['sha256']!=hashlib.sha256(a.tobytes()).hexdigest():raise ValueError('head bytes vs actual output trace')
-    if r['actual_RTL_executed'] or r['token_cycles'] is not None or r['token_rate'] is not None or terminal['actual_RTL_executed']:raise ValueError('software/RTL qualification boundary')
+    if r['actual_RTL_executed'] or r['token_cycles'] is not None or r['token_rate'] is not None or terminal['actual_RTL_executed'] or terminal['fulltoken_RTL']:raise ValueError('software/RTL qualification boundary')
     if repo is not None:
         for name,digest in r['source_sha256'].items():
             if hashlib.sha256(subprocess.check_output(['git','show',r['source_commit']+':'+name],cwd=repo)).hexdigest()!=digest:raise ValueError('immutable worker source pin')

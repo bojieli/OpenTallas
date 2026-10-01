@@ -66,3 +66,34 @@ def test_second_token_ctx1_read_and_premature_consumer_release_rejected(tmp_path
     events=token['memory_events'];index=next(i for i,row in enumerate(events) if row['event']=='software_reader_lease_released' and row['lease']==72)
     events[index-1],events[index]=events[index],events[index-1];replace_raw(directory,name,json.dumps(token))
     with pytest.raises(ValueError,match='before both consumers'):verify(directory)
+
+def test_self_rehashed_second_token_read_before_current_generation_publication_rejected(tmp_path):
+    directory=mutant(tmp_path);name='token1_execution.json.gz'
+    token=json.loads(gzip.decompress((directory/name).read_bytes()))
+    events=token['memory_events']
+    index=next(i for i,event in enumerate(events) if event['event']=='persistent_KV_read' and event['positions']==2)
+    events[index-1],events[index]=events[index],events[index-1]
+    replace_raw(directory,name,json.dumps(token))
+    with pytest.raises(ValueError,match='persistent KV read before generation publication'):verify(directory)
+
+def test_self_rehashed_read_requires_earlier_generation_publication_too(tmp_path):
+    directory=mutant(tmp_path);name='token1_execution.json.gz'
+    token=json.loads(gzip.decompress((directory/name).read_bytes()))
+    # Preserve the token-0 prefix, counts and bytes. Publish position 1 for a
+    # different layer and read it: checking only the newest generation would
+    # accept the read even though position 0 was never published for that layer.
+    events=token['memory_events']
+    write=next(event for event in events if event['event']=='write_accepted_not_published' and event['position']==1)
+    read=next(event for event in events if event['event']=='persistent_KV_read' and event['positions']==2)
+    write['layer']=36;read['layer']=36
+    replace_raw(directory,name,json.dumps(token))
+    with pytest.raises(ValueError,match='persistent KV read before generation publication'):verify(directory)
+
+@pytest.mark.parametrize('flag',['actual_RTL_executed','fulltoken_RTL'])
+def test_self_rehashed_terminal_rtl_flags_rejected(tmp_path,flag):
+    directory=mutant(tmp_path)
+    terminal=json.loads((directory/'terminal.json').read_text());terminal[flag]=True
+    replace_raw(directory,'terminal.json',json.dumps(terminal))
+    lines=(directory/'run.log').read_text().splitlines();lines[-1]=json.dumps(terminal)
+    replace_raw(directory,'run.log','\n'.join(lines)+'\n')
+    with pytest.raises(ValueError,match='software/RTL qualification boundary'):verify(directory)

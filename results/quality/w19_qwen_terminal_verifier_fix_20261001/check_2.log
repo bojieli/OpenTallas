@@ -1,0 +1,10 @@
+{
+  "read_before_publication": {
+    "verifier_accepts": false,
+    "error": "persistent KV read before generation publication"
+  },
+  "terminal_fulltoken_RTL_true": {
+    "verifier_accepts": false,
+    "error": "software/RTL qualification boundary"
+  }
+}
