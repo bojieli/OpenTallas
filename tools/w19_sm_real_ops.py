@@ -50,7 +50,7 @@ def sm_rows(r0, r1):
 
 
 def smv_real(name, fmt, w, X, gs=True, SUB=4, LBS=2, LSB=16, xdepth=128, rmax=256, lev=4, workdir=None,
-             exe_cache={}):
+             exe_cache={}, sim_runner=None):
     """rtl_gpu_sm_exact.smv_case with given weights and inputs.  w: Q8 (FP8/FP4) or BF16 array; X: NC inputs.
     Returns (FP32 accumulators [NC][R] from the RTL or None, golden FP32 [NC][R], meta)."""
     e4m3_codes, e2m1_codes = S._codes()
@@ -135,9 +135,12 @@ def smv_real(name, fmt, w, X, gs=True, SUB=4, LBS=2, LSB=16, xdepth=128, rmax=25
     (d / "cfg.hex").write_text("\n".join(f"{v:08x}" for v in (R, c, Gn, fmt_code, len(lines), int(gs), 0, 0)) + "\n")
     params = dict(SUB=SUB, LBS=LBS, LSB=LSB, NC=NC, XDEPTH=xdepth, RMAX=rmax, LEV=lev)
     key = ("v",) + tuple(sorted(params.items()))
-    if key not in exe_cache:
-        exe_cache[key] = S.compile_tb(S.SMV_SRC, "tb_gpu_sm_v", params, tempfile.mkdtemp(prefix="b_", dir=workdir))
-    res, meta = S.run_sim(exe_cache[key], d, 0)
+    if sim_runner is None:
+        if key not in exe_cache:
+            exe_cache[key] = S.compile_tb(S.SMV_SRC, "tb_gpu_sm_v", params, tempfile.mkdtemp(prefix="b_", dir=workdir))
+        res, meta = S.run_sim(exe_cache[key], d, 0)
+    else:
+        res, meta = sim_runner(params, d)
     acc = [np.full(R, np.nan, dtype=F) for _ in range(NC)]
     for r in range(R):
         h = res.get(r)
@@ -153,7 +156,7 @@ def smv_real(name, fmt, w, X, gs=True, SUB=4, LBS=2, LSB=16, xdepth=128, rmax=25
 FMT = {"fp8": "v41_fp8", "fp4": "v41_fp4", "bf16": "v41_bf16"}
 
 
-def case(m, key, ents, workdir):
+def case(m, key, ents, workdir, sim_runner=None):
     """One op on SM 0 of die 0: ents = the op's dump entries (one per position)."""
     e0 = ents[0]
     r0, r1 = e0["rows"]
@@ -177,7 +180,7 @@ def case(m, key, ents, workdir):
     fmt = FMT[e0["fmt"]]
     if fmt != "v41_bf16" and not isinstance(w, V.Q8):
         fmt = "v41_bf16"
-    acc, gold, meta = smv_real(key, fmt, w, X, workdir=workdir)
+    acc, gold, meta = smv_real(key, fmt, w, X, workdir=workdir, sim_runner=sim_runner)
     rnd = fn in ("linear_q", "linear_bf16", "wo_a")
     mism_acc = mism_out = 0
     for n, e in enumerate(ents):
