@@ -18,6 +18,56 @@ def read(pin,path):
 
 CODEC_PIN='93431e3c56af686d7c52c5c06a9f5cae39fed609'
 CODEC='results/quality/w16_dsrom_nonexpert_codec_views_20261001/contract.json'
+MAIN_BINDING_PIN='0ea91467ef8a3b1703baaef06eb57078d0ec1644'
+MAIN_BINDING='results/quality/w16_dsrom_maintext_binding_recipes_20261001/contract.json'
+
+def vocabulary_address(token):
+    """Logical proposed quarter mapping only; never truncate to a ROM aperture."""
+    if not isinstance(token,int) or isinstance(token,bool) or not 0<=token<129280:
+        raise ValueError('token outside complete vocabulary')
+    owner,row=divmod(token,32320)
+    return {'logical_rank':owner,'local_row':row,'word_start':row*80,'word_end_exclusive':(row+1)*80,
+            'actual_owner':None,'physical_home':None}
+
+def constant_writer_contract():
+    recipes,ref=read(MAIN_BINDING_PIN,MAIN_BINDING)
+    assert ref['sha256']=='8e3790d4a389a7803eeb6735f1bda9069d0cf1657269df109a72fed4e5894534'
+    r=recipes['recipes']
+    candidate,candidate_ref=read('84eabdef1338455ecd0b0ee76f47745cc724b206',
+        'results/quality/w16_dsrom_embedding_head_home_20261001/contract.json')
+    assert candidate_ref['sha256']=='cf8bdb0f34b8a56058f7d23cc205aa81e81945e03bd5c70a7909424b0f370755'
+    return {'source':ref,'final_norm':r['norm.weight'],
+        'head':r['head.weight'],'embedding':r['embed.weight'],
+        'wo_a_existing_producer':r['layers.0.attn.wo_a.weight'],
+        'CROM':{'word_bits':64,'low':'FP32','high':'zero32',
+            'HC_scale_source_elements':3,'HC_scale_repeat_counts':[4,4,16],
+            'HC_scale_output_words':24,'HC_scale_output_bytes':192,
+            'sink_words_per_rank':16,'sink_bytes_per_rank':128,
+            'current_full_program_base_manifest':None},
+        'vocabulary_mapping':{'scope':'logical proposal, not actual ownership or image qualification',
+            'rows_per_rank':32320,'BF16_per_1024bit_word':64,'words_per_row':80,
+            'owner':'token // 32320','local_row':'token % 32320',
+            'local_word_start':'local_row * 80','quarter_words':2585600,
+            'default_depth_words':524288,'capacity_deficit_words':2061312,
+            'minimum_quarter_address_bits':22,'actual_owner':None,'full_image_writer':None,
+            'address_truncation_allowed':False,'embedding_head_alias_binding':None},
+        'later_ROM_candidate':{'source':candidate_ref,'contract':candidate,
+            'scope':'distinct 274bit candidate; does not bind legacy 1024bit WROM writer',
+            'words_per_tensor_per_rank':10342400,'combined_head_embed_words_per_rank':20684800,
+            'BF1024_pair_field_words':16777216,'combined_capacity_deficit_words':3907584,
+            'CROM_unpack_bank_issue_proof':None},
+        'ISA_execution_admitted':False,
+        'blockers':['headnorm base0 is a template placeholder, not a final_norm binding',
+            'head and embedding complete image writer, actual owner and local address unbound',
+            'default WROM aperture cannot fit even one vocabulary quarter',
+            'wo_a ME32 producer does not bind the candidate 274bit field',
+            'combined head/embed 274bit candidate exceeds BF1024 pair field; allocator unbound'],
+        'jobs_launched':0}
+
+def require_actual_constant_writer_binding(contract):
+    """Refuse runnable export until an authoritative binding replaces this proposal."""
+    if not contract.get('ISA_execution_admitted'):
+        raise ValueError('actual constants/full-image writer unbound: '+ '; '.join(contract['blockers']))
 
 def build_contract(program):
     F.validate_program(program)
@@ -75,6 +125,7 @@ def build_contract(program):
                 'sha256':hashlib.sha256(subprocess.check_output(['git','show',F.PIN+':tools/v41_fullshape_weight_layout.py'],cwd=F.ROOT)).hexdigest()}},
         'program_canonical_sha256':hashlib.sha256(json.dumps(program,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
         'matrix_views':views,'corrected_reference_word_totals':codec['summary'],
+        'constant_writer_contract':constant_writer_contract(),
         'word_count_policy':'FP8/BF16 totals already sum4referenceviews; HE1638400 perreferenceRANK,6553600 allfourcopies. No automatic physical allocation of reference replicas; Ram alone assigns physical homes. Do not sum these summary totals again with individual views.',
         'source_census_config_sha256':census['config_sha256'],
         'source_config_scope':'Checkpoint census config hash kept distinct from repo inference-config hash; only individual tensor/TP views validated here',
