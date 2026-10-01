@@ -2,8 +2,8 @@
  "schema": "opentallas.rtl.w17_l0_fullshape_isa.v1",
  "status": "pass",
  "claim_boundary": "ISA-level execution of the encoded full-shape TP-4 layer-20 program on four ranks (program dataflow, addresses, strides, counts, DYN, constants, collectives) against the released-checkpoint golden on synthetic golden-consistent KV state. Weight-engine arithmetic is the golden's on the rank's image slice; no engine microarchitecture, RTL, cycle or physical verdict.",
- "generated_utc": "2026-10-01T03:11:41Z",
- "source_commit": "47407ede08d4c3f31a7d7ad964003f800a3d5d61",
+ "generated_utc": "2026-10-01T04:27:39Z",
+ "source_commit": "7902e45fda1bb20652ad5a4c6d5b9f22fb7f80a1",
  "arith": "chunk8",
  "program": "results/rtl/hdc_v41x_fullshape_l20_program.hex",
  "program_sha256": "355a0095061e6a1ae4f39670b1199194a65537de76535dcb0df9f65b20113d56",
@@ -3910,11 +3910,11 @@
     "program": "results/rtl/hdc_v41x_fullshape_l20_program.hex",
     "program_sha256": "355a0095061e6a1ae4f39670b1199194a65537de76535dcb0df9f65b20113d56",
     "bind": "results/rtl/hdc_v41x_fullshape_1m_s20260930_l20_program_bind_rope_hbm.json",
-    "bind_sha256": "aabed2d25065800055781f76cfdd78752563ca4f92c6e2ef8f2952e895bb12f0",
+    "bind_sha256": "269deb20fd02a7114982b522c679decb475da8232181e4a75bb0ce9cd51498dd",
     "layout": "results/rtl/hdc_v41x_fullshape_1m_s20260930_l20_token_selected_rom_layout.json",
     "layout_sha256": "554e1d32b8a18ad4053bced1d4a8e8d27c369a94376ca078d168081ec5fdad09",
     "qe_stream": "results/rtl/hdc_v41x_fullshape_qe_stream_1m_s20260930_l20_rank0.json",
-    "qe_stream_sha256": "c16499ec1cb3c310d0036cb0c2c6d6189ed4451d96ff3896293aaf36d7550897"
+    "qe_stream_sha256": "e0576a4385de27daa83f89bbf0e833ce325613065cf849758686ab808dac8c6f"
    }
   }
  },
@@ -3957,7 +3957,7 @@
   "tools/rtl_v41x_fullshape_l0_program.py": "1e4f4b7c81ee7c88ef23847f564220f2d3ef221b5084dda25651347bb6caf5ff",
   "results/rtl/v41_program_constants.json": "3b59c2233ffe26f3cdedcd4e4ad6706be6c138913cca31a404cb7dc0ee24319d",
   "results/rtl/hdc_v41x_fullshape_l0_program.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
-  "results/rtl/hdc_v41x_fullshape_l0_program.json": "806674af5f059b9fcf060ba4ecfbd7fec19e99ec6a6a0ee2c53ee7aa93ad54ae",
+  "results/rtl/hdc_v41x_fullshape_l0_program.json": "bb86b4d8068fa9f6b7684136f6859200955c3a51e468015f5a8dfd7218cbb95e",
   "results/rtl/hdc_v41x_fullshape_golden.json": "7736dad12d1ad49dd316b7d1947017c01c7d8be585ac6a408d504e21b7efe8c3",
   "results/rtl/v41x_rope_hbm_cache.json": "655549cf3f704668cf526fffa79886915ad22e105ddeae8a490ec0961cead484",
   "results/rtl/w17_v41_1m_reference_token.json": "ea7256eb1ac7a7895441f5a31dfb8ce5d05224d7c860e21c4b9c6ce1e6da8e56",

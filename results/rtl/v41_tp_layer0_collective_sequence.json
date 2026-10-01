@@ -1126,15 +1126,15 @@
   },
   "passed": true,
   "program_bind_record": "results/rtl/hdc_v41x_fullshape_program_bind.json",
-  "program_bind_sha256": "75220f110eea08b1ff44f4136a6e2748f1987ba5695643e742155796f37ce58b",
+  "program_bind_sha256": "a53b50c26ea44d41b7ccabe6f324189b818998511eb814c3c9dcae890e3964dd",
   "program_bind_sources": {
-    "results/rtl/v41_program_constants.json": "3b59c2233ffe26f3cdedcd4e4ad6706be6c138913cca31a404cb7dc0ee24319d",
+    "results/rtl/v41_program_constants.json": "0ef0b72b91f52ec48f694671f06b828e828ab7e992d835cc68d5c19aeda380f1",
     "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
     "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
-    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
-    "tools/hdc_replay_v41.py": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
-    "tools/v41_fullshape_program_bind.py": "56fccd6e6daf22d4627e1e8e201ccab86f74195bc033d7676a6dcc69ffac90ab",
-    "tools/v41_program_constants.py": "3000d5e199f960ff7139eaf198ac60d1690454f907bfc90385c28ba88b6bb6e4"
+    "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692",
+    "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
+    "tools/v41_fullshape_program_bind.py": "a16feef80ee81197a970e71be080d131d9a89cb7eb89d3b4f06a0de0174597f0",
+    "tools/v41_program_constants.py": "3289aac34f35967fc1aa33158657786b859b656856a4dd1c5007e2890f878a26"
   },
   "schema": "v41_tp_layer0_collective_sequence_v1",
   "scope": "exact emitted 12 blocking COLL descriptors with deterministic synthetic BF16/FP32 operands through persistent four-rank adopted links, engines, DMA and behavioral VM; producers, full layer, HBM and route omitted",

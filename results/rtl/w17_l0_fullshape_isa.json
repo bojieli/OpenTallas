@@ -2,8 +2,8 @@
  "schema": "opentallas.rtl.w17_l0_fullshape_isa.v1",
  "status": "pass",
  "claim_boundary": "ISA-level execution of the encoded full-shape TP-4 layer-0 program on four ranks (program dataflow, addresses, strides, counts, DYN, constants, collectives) against the released-checkpoint golden on synthetic golden-consistent KV state. Weight-engine arithmetic is the golden's on the rank's image slice; no engine microarchitecture, RTL, cycle or physical verdict.",
- "generated_utc": "2026-10-01T03:16:25Z",
- "source_commit": "47407ede08d4c3f31a7d7ad964003f800a3d5d61",
+ "generated_utc": "2026-10-01T04:13:35Z",
+ "source_commit": "7902e45fda1bb20652ad5a4c6d5b9f22fb7f80a1",
  "arith": "chunk8",
  "program": "results/rtl/hdc_v41x_fullshape_l0_program.hex",
  "program_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
@@ -1902,11 +1902,11 @@
     "program": "results/rtl/hdc_v41x_fullshape_l0_program.hex",
     "program_sha256": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
     "bind": "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json",
-    "bind_sha256": "8d6f583d975d02459f312a0ded7e00d59dd3ef02bf6dce109b9568277f94cf56",
+    "bind_sha256": "ffcc20a520ec7faebd26c184d6b59e9cf192d4ae199f5a7f149ceab19803fc04",
     "layout": "results/rtl/hdc_v41x_fullshape_token_selected_rom_layout.json",
     "layout_sha256": "62923ec77d9663bd5b90c14d693ea41815c9bcb64db5782bc230c6219e2ff6b2",
     "qe_stream": "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json",
-    "qe_stream_sha256": "60963710be5d9c0ba3515933eef4351e693dd8edcc30e9cb628233a72b0f20be"
+    "qe_stream_sha256": "f069de06f0cae6e64404d56dd6542394bdcf19961643543e1731ba663ec546fb"
    }
   },
   "1048576_seed20260930": {
