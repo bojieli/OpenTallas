@@ -14784,7 +14784,7 @@
       "mtp_pass_us_blocking": 141.184,
       "src": "claude/fusion-audit a86b17cd results/uarch/fusion_audit.json v41_rom.rows (L4_in_order_*)"
      },
-     "label": "CAVEAT (FA): in-order SU issue with drain on dependence; replaced by the die-token model / RTL ratio when measured"
+     "label": "CAVEAT (FA): in-order SU issue with drain on dependence; product overlap remains uncalibrated. W11 u2517 is a reduced historical vehicle with overall FAIL; its model / RTL ratio is not a product correction"
     }
    },
    {
@@ -18281,7 +18281,7 @@
   }
  },
  "source_sha256": {
-  "tools/uarch_model.py": "c85d9588ffd08641af364151bc7e0923324eea3520a63d41451e11716a62312f",
+  "tools/uarch_model.py": "f1c01de3bce32312105ba4aa0d106f783170d29b13dddb6d667ca965e9ac1574",
   "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
   "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
   "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",

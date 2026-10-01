@@ -5063,8 +5063,9 @@ HBM_TMEM = dict(ar_us=11.6, ar_us_fa_w19_program=6.1, mtp_pass_us=11.8, qwen_us=
 # FA (claude/fusion-audit a86b17cd, results/uarch/fusion_audit.json v41_rom rows): the product graph's solve assumes
 # perfect SU interleaving; the die issues SU ops in order and drains on a dependent pair.  An in-order SU in graph
 # emission order adds 37.05 us to the AR token if pipelined and 86.99 us if blocking (MTP pass +81.62 / +141.18 us),
-# measured on the L1 fused product.  ROOT RULING 2026-10-01: a caveat row, applied additively to the headline, until the
-# die-token calibration (W11-fuse f0551ea7 issue trace) replaces it with the measured model / RTL ratio
+# measured on the L1 fused product.  ROOT RULING 2026-10-01: a caveat row, applied additively to the headline.
+# W11's u2517 reduced historical vehicle measured 398,676 cycles against 344,131 model cycles (overall FAIL).
+# That trace scopes a reduced-vehicle caveat; it cannot replace this product exposure with a raw ratio.
 FA_INORDER = dict(ar_us_pipelined=37.054, ar_us_blocking=86.991, mtp_pass_us_pipelined=81.616, mtp_pass_us_blocking=141.184,
                   src="claude/fusion-audit a86b17cd results/uarch/fusion_audit.json v41_rom.rows (L4_in_order_*)")
 
@@ -5077,13 +5078,15 @@ def cons_in_order_caveat(ar, mtp):
         m = V41_TAU / (V41_TAU / mtp + FA_INORDER[f"mtp_pass_us_{k}"] * 1e-6)
         out[k] = dict(ar_tokens_s_b1=round(a, 1), mtp_tokens_s_b1=round(m, 1), ar_pct=round(100 * (a / ar - 1), 1),
                       mtp_pct=round(100 * (m / mtp - 1), 1))
-    return dict(out, basis=FA_INORDER, label="CAVEAT (FA): in-order SU issue with drain on dependence; replaced by the "
-                                             "die-token model / RTL ratio when measured")
+    return dict(out, basis=FA_INORDER, label="CAVEAT (FA): in-order SU issue with drain on dependence; product overlap "
+                                             "remains uncalibrated. W11 u2517 is a reduced historical vehicle "
+                                             "with overall FAIL; its model / RTL ratio is not a product correction")
 
 
 def cons_headline_table(head, rule, qwen, ec, pc):
-    """USER DECISION 2026-09-30: the V4.1 ROM headline is saturated throughput, energy per token and cost at EQUAL
-    MANUFACTURING COST; per-user speed is claimed only against real GPUs (tier 1 measured, tier 2 calibrated) and
+    """USER OBJECTIVE: minimum single-user decode latency first; saturated throughput is secondary.
+    Energy and cost comparisons use EQUAL MANUFACTURING COST; per-user speed is claimed against real GPUs
+    (tier 1 measured, tier 2 calibrated) and
     reported against the idealised HBM machine (tier 3).  Qwen ROM keeps its per-user claim.  Every row names its
     point; ROM energies include the adopted 256-cycle pre-ramp."""
     dr = cons_droop(head)["50% cap + 256-cycle pre-ramp"]
