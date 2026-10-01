@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-01T11:05:44.231618+00:00",
+  "pins": [
+    {
+      "source_git": "01d23a255195661f51fabf30decd0fa66a5de281",
+      "path": "results/uarch/qwen_hbm_connected_20261001/GU_pipeline_total_fit_v3.json",
+      "sha256": "2ee9ebe9e21d0bd74bdf2a25cb72acf25935721fc0414efbe1f6632bea1c7234"
+    },
+    {
+      "source_git": "01d23a255195661f51fabf30decd0fa66a5de281",
+      "path": "results/uarch/qwen_hbm_connected_20261001/GU_pipeline_sizing_correction_v2.json",
+      "sha256": "f0342703bd8342041d89085e5dfbc4f67abe5822a78b3538d067e38f24de9c98"
+    },
+    {
+      "source_git": "8454788247b5f6d348a00f181c1a3640ccecbdc2",
+      "path": "results/uarch/qwen_hbm_connected_20261001/model_before_RTL.json",
+      "sha256": "d7c439d84deb26abfa7a5b22269d3fe4883b12a759f61636ce16d19291ae36c7"
+    }
+  ],
+  "qualification": "NOT_PHYSICAL_READY",
+  "baseline_sm_mm2": 4.621,
+  "historical_slot_mm2": 4.085,
+  "gu_increment_mm2": 0.0046463204,
+  "unshared_ar128_mm2": 0.239910375,
+  "unshared_total_sm_mm2": 4.8655566954,
+  "replicas": 32,
+  "service": {
+    "quadrants": 4,
+    "clients_per_quadrant": 9,
+    "sm_per_quadrant": 8,
+    "line_bytes": 128,
+    "credits_per_client": 512,
+    "weight_vertical_bits": 1088,
+    "weight_vertical_capacity_bits": 2696,
+    "vector_horizontal_bits": 2368,
+    "vector_horizontal_capacity_bits": 4104,
+    "allocation": "Actual 36-client service-port and corridor assignment required; read returns and write budget shared"
+  },
+  "required": "Current full-shape actual SM LEFs and corrected-model 32-SM slot/corridor fit before physical admission or baseline qualification. Die aggregate area alone is insufficient. No fictional column reuse credit.",
+  "live_pinned_columns_unchanged": true,
+  "live_queue_unchanged": true,
+  "new_physical_jobs": 0
+}
