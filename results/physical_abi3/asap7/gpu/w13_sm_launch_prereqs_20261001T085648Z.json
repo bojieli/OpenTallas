@@ -1,0 +1,507 @@
+{
+  "active_remote_column_source_pins": [
+    {
+      "block": "ot_gpu_tc_col",
+      "commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+      "root": "/home/ubuntu/w13wt/tc",
+      "sources": {
+        "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+        "rtl/gpu/ot_gpu_fadd.sv": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+        "rtl/gpu/ot_gpu_tc_col.sv": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940",
+        "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+        "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+        "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+        "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+        "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+      }
+    },
+    {
+      "block": "ot_gpu_tc16",
+      "commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+      "root": "/tmp/claude-1000/wt/w13-t16",
+      "sources": {
+        "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+        "rtl/gpu/ot_gpu_fadd.sv": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+        "rtl/gpu/ot_gpu_tc_col.sv": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940",
+        "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+        "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+        "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+        "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+        "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+      }
+    }
+  ],
+  "main_head_observed_read_only": "518363bd15436faf64846f2f6ec7a004731151ae",
+  "model_sizing_basis": {
+    "path": "tools/uarch_model.py",
+    "record": "results/uarch/hbm_gpu.json",
+    "record_sha256": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731",
+    "sha256": "9c9819e21f167e425ad89ae84b84249627fb8d28a1ca625a3274fe7c495119ee",
+    "statement": "existing sized GPU SM organization; no new hardware or architecture change"
+  },
+  "observed_utc": "2026-10-01T08:56:48.244187+00:00",
+  "predecessor_processes": [
+    {
+      "pid": 2089666,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089669,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089670,
+      "start_ticks": "302549576",
+      "state": "T"
+    }
+  ],
+  "preserved_failure_pins": {
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_bterm2pre_block.json": "abe108ef9237e4eeba8b5b0bf4f9eb0b9644b4f4be282598fb9f6e1f9f035e16",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_bterm2pre_corners.json": "4290fa3965c58bcbe514fd63ed203e7f82a5d37c8083bf692fd57b4d5ded216d",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_decp0_block.json": "068d91ac566fc64b7ea4e766be57d8a45b7ff937aa93b3fb6642f7194d078b6a",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_decp0_corners.json": "fb04114efa70f913cf4820db7df48c2f19deec65afbc288394f8033320c69dd2",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_sh16_block.json": "a4d1e068f9cd22778e0b1dd887d77915c10190a90b307c23cca612a8e2123c81",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_sh16_corners.json": "ed399e9323ac3011e3f34a260e3b61b5dbbafb2e907d742197bf3d5a9fd54f53",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_shdup_block.json": "33a7027d3c3ee3c6af2ef3ddeaabe5a35dcacb2dda8d8d27ea0b581ab8553295",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_shdup_corners.json": "d3429de2a31e07feb4c39635a26cc7088a8d37f1420c8fb7581a4178120fcfed",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_termp1_block.json": "ce957fb0622930cbad7ddaf9f5af410393a6498c921bda1ba4f70fd1b4a9ed45",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_termp1_corners.json": "bc757a64df065c04789981d3a6a3683a4d7cc01cea94fda2bd9e0c095b5c8fc1",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_w10lat8_block.json": "f4687df02bd53459cb46541404a06af8fa9c7202fc9ba259d5665cfa53c7bd7b",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_w10lat8_corners.json": "744dfb05e63deb056324493866d3c2a32bd7ec4aa78d029864915b5fb2398643",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_w11lat7_lanefp4_block.json": "ed9d815a972cd287977ce839f2bb619b5e69341751bcde50330a666dc258e8e2",
+    "results/physical_abi3/asap7/gpu/harden_attempts/bd_col_104um_wc0833_w11lat7_lanefp4_corners.json": "5910bb6a0216075388090314131b5f57fa7fd2145ac5a713270ca55d48a3955c",
+    "results/physical_abi3/asap7/gpu/harden_attempts/ot_gpu_bd_col_run1_hold_fail.json": "94d6b2b4f265412a7fa27a3c6c7a599f76791f486920cee27787c08d4b2ec2a1",
+    "results/physical_abi3/asap7/gpu/harden_attempts/ot_gpu_tc16_180um_tt_corner_sta.json": "daaa25a71d23ff464e2b9fda71fa28926d91c405f28cd0731ac80c3e6341611e",
+    "results/physical_abi3/asap7/gpu/harden_attempts/ot_gpu_tc16_run2_hold_fail.json": "2725031ee3050ee31e184f7cf28c752a9de51b68c3c338bb20f5829602a7a788",
+    "results/physical_abi3/asap7/gpu/harden_attempts/ot_gpu_tc_col_run1_local_hold_io_fail.json": "f989646e2d886851e35c8645856171636569af3d51447623fd5b9c02d3164356",
+    "results/physical_abi3/asap7/gpu/harden_attempts/tc16_164um_wc0833_lat7_bmul1_block.json": "e1ee2f5bb2bce9233e89ecafa15f3aa3f6c51e270c878502bd37643c5af7ba51",
+    "results/physical_abi3/asap7/gpu/harden_attempts/tc16_164um_wc0833_lat7_bmul1_corners.json": "2281f8fa344a4b383ced7d160da0597107ab788f09d05c0766526ec57580efb0",
+    "results/physical_abi3/asap7/gpu/harden_attempts/tc16_164um_wc0833_w11lat7_block.json": "d40f01eefa737bee1765fcb3d60998bfc20bfab2cf5358ab6a47f7e7ccf47791",
+    "results/physical_abi3/asap7/gpu/harden_attempts/tc16_164um_wc0833_w11lat7_corners.json": "a71d64e9d682c5fb10ef90fb6fab9a7121b5c39c3987daede5993f63ecec9bc4"
+  },
+  "published_w19_source_commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+  "published_w19_source_tag": "w19-evidence/w13-sm-000ba089",
+  "remote_progress_snapshot": "    PID    PPID STAT     ELAPSED     TIME %CPU   RSS COMMAND\n1311601 1301735 S       07:48:00 00:00:55  0.1 11856 python3 tools/chip_assembly/harden.py --block ot_gpu_tc16 --work /home/ubuntu/w13work/tc16_12 --phase pnr --budget results/physical_abi3/asap7/chip/budgets/gpu_sm_v41.json\n1392456 1343492 S       05:01:05 00:00:35  0.1 12048 python3 tools/chip_assembly/harden.py --block ot_gpu_tc_col --work /home/ubuntu/w13work/tc_col_13 --phase pnr --budget results/physical_abi3/asap7/chip/budgets/gpu_sm_qwen.json\n1412774 1412773 Rl      04:13:28 04:29:39  106 14608508 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 6 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/chip_ot_gpu_tc16/base/5_2_route.json\n1449805 1449804 Rl      02:13:43 02:25:59  109 1455192 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 6 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/chip_ot_gpu_tc_col/base/5_1_grt.json\n2026-10-01 08:46:42.923981741 +0000 556556 /home/ubuntu/w13work/tc16_12/flow.log\n2026-10-01 08:49:19.201613550 +0000 559569 /home/ubuntu/w13work/tc_col_13/flow.log\n    Completing 40% with 5515 violations.\n    elapsed time = 00:46:42, memory = 11648.82 (MB).\n    Completing 50% with 5515 violations.\n    elapsed time = 00:58:36, memory = 12484.08 (MB).\n    Completing 60% with 11120 violations.\n    elapsed time = 01:10:34, memory = 12673.69 (MB).\n    Completing 70% with 11120 violations.\n    elapsed time = 01:25:30, memory = 12673.69 (MB).\n    Completing 80% with 15162 violations.\n    elapsed time = 01:36:54, memory = 13877.33 (MB).\n    Completing 90% with 15162 violations.\n    elapsed time = 01:53:17, memory = 13842.53 (MB).\n[INFO DRT-0076]   Complete 1000 pins.\n[INFO DRT-0078]   Complete 1788 pins.\n[INFO DRT-0079]   Complete 100 unique inst patterns.\n[INFO DRT-0079]   Complete 200 unique inst patterns.\n[INFO DRT-0079]   Complete 300 unique inst patterns.\n[INFO DRT-0081]   Complete 323 unique inst patterns.\n[INFO DRT-0082]   Complete 10000 groups.\n[INFO DRT-0082]   Complete 20000 groups.\n[INFO DRT-0082]   Complete 30000 groups.\n[INFO DRT-0082]   Complete 40000 groups.\n[INFO DRT-0082]   Complete 50000 groups.\n[INFO DRT-0082]   Complete 60000 groups.\n",
+  "schema": "opentallas.w13.sm_launch_prerequisites.v1",
+  "sm_inputs": [
+    {
+      "budget": {
+        "path": "results/physical_abi3/asap7/chip/budgets/gpu_hbm_die_qwen.json",
+        "sha256": "1545def6149eadf823ea4968b7ff72013b56a7430fcb00dea11166a011610211"
+      },
+      "columns_now": [
+        {
+          "block": "ot_gpu_tc_col",
+          "issues": [
+            "missing_corner_record",
+            "missing_block_record"
+          ],
+          "passed": false
+        }
+      ],
+      "macros": [
+        {
+          "lef": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/ot_gpu_tc_col.lef",
+          "liberty_tt_reference": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/ot_gpu_tc_col_typ.lib",
+          "name": "ot_gpu_tc_col",
+          "state": "child macro models subject to terminal column qualification"
+        },
+        {
+          "lef": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+          "liberty_tt_reference": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib",
+          "name": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "views": {
+            "ff": {
+              "has_declared_corner_and_clock_to_output_arc": true,
+              "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib",
+              "sha256": "b61a1754a9745d3a2039fcc7417f63f72082f4767028fdd4686b0ef18a075b1f"
+            },
+            "ss": {
+              "has_declared_corner_and_clock_to_output_arc": true,
+              "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib",
+              "sha256": "a2dc21cb376ff58354fd4fe666ab6b4616336ae911ff252766408d3dc4a09a39"
+            }
+          }
+        },
+        {
+          "lef": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef",
+          "liberty_tt_reference": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib",
+          "name": "ot_sram_1r1w_256x256_m2_r2c2",
+          "views": {
+            "ff": {
+              "has_declared_corner_and_clock_to_output_arc": true,
+              "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib",
+              "sha256": "592e1919daaac25556526000751db205eab1515a53fc0dc05ab3daae2958a12c"
+            },
+            "ss": {
+              "has_declared_corner_and_clock_to_output_arc": true,
+              "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib",
+              "sha256": "f08869109c2b5657c81d86d6fec22f4e5c8ce0811db8b551872fa85362e79258"
+            }
+          }
+        }
+      ],
+      "params": {
+        "NC": 16
+      },
+      "sm": "ot_gpu_sm_q",
+      "sources": [
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_delay.sv",
+          "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+          "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_fpu.sv",
+          "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_sfu.sv",
+          "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_fastfp.sv",
+          "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_prefix.sv",
+          "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/common/ot_prefix.sv",
+          "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/v41rom/ot_v41_fadd.sv",
+          "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/v41rom/ot_v41_bmul2.sv",
+          "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_fadd.sv",
+          "sha256": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_tree.sv",
+          "sha256": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_issue.sv",
+          "sha256": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_stack.sv",
+          "sha256": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_tc_col.sv",
+          "sha256": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_bulk_copy.sv",
+          "sha256": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_xstore.sv",
+          "sha256": "990094f52f6a13f1618730bb2b61f02b7d439df872e31509b0cb83ae9eb770ca"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_sm_q.sv",
+          "sha256": "8e0aa477664f385a8536b1610c508fdd637bb020377adf744671c960d984b06f"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+          "sha256": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+          "sha256": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01"
+        }
+      ]
+    },
+    {
+      "budget": {
+        "path": "results/physical_abi3/asap7/chip/budgets/gpu_hbm_die_v41.json",
+        "sha256": "3153f88284f294caec4d3a8850af24f8c7e1825f4f01c1a99fba9a4baeb30e43"
+      },
+      "columns_now": [
+        {
+          "block": "ot_gpu_tc16",
+          "block_record_sha256": "783cc80205a5765220d527acc0bfc0b1dd1063652ed077552d5e0eae1046f3d3",
+          "issues": [
+            "missing_corner_record",
+            "block_boundary_or_clock_not_closed"
+          ],
+          "passed": false
+        },
+        {
+          "block": "ot_gpu_bd_col",
+          "block_record_sha256": "de9ea8998b431452dd20e8b7801c8eb08ee43ec9af8fbc3483d613b00e99da17",
+          "issues": [],
+          "passed": true,
+          "record": "results/physical_abi3/asap7/chip/corners/ot_gpu_bd_col.json",
+          "record_sha256": "cbd6ee22703cb47fd00cefa615e8693793061801489f124e41fda957f80a2199",
+          "timing_model_sha256": {
+            "results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_ff.lib": "50afd6fd73f717312926be16de37ae0d959c175176593d7825f0491311bb86bf",
+            "results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_ss.lib": "275bb730d70265c741aad318cecff9abb1063795e21674e2ca2a88f12aa65753"
+          }
+        }
+      ],
+      "macros": [
+        {
+          "lef": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16.lef",
+          "liberty_tt_reference": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16_typ.lib",
+          "name": "ot_gpu_tc16",
+          "state": "child macro models subject to terminal column qualification"
+        },
+        {
+          "lef": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col.lef",
+          "liberty_tt_reference": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_typ.lib",
+          "name": "ot_gpu_bd_col",
+          "state": "child macro models subject to terminal column qualification"
+        },
+        {
+          "lef": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+          "liberty_tt_reference": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib",
+          "name": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "views": {
+            "ff": {
+              "has_declared_corner_and_clock_to_output_arc": true,
+              "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib",
+              "sha256": "b61a1754a9745d3a2039fcc7417f63f72082f4767028fdd4686b0ef18a075b1f"
+            },
+            "ss": {
+              "has_declared_corner_and_clock_to_output_arc": true,
+              "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib",
+              "sha256": "a2dc21cb376ff58354fd4fe666ab6b4616336ae911ff252766408d3dc4a09a39"
+            }
+          }
+        },
+        {
+          "lef": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+          "liberty_tt_reference": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+          "name": "ot_sram_1r1w_128x256_m1_r2c2",
+          "views": {
+            "ff": {
+              "has_declared_corner_and_clock_to_output_arc": true,
+              "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+              "sha256": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84"
+            },
+            "ss": {
+              "has_declared_corner_and_clock_to_output_arc": true,
+              "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
+              "sha256": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0"
+            }
+          }
+        }
+      ],
+      "params": {
+        "NC": 8
+      },
+      "sm": "ot_gpu_sm_v",
+      "sources": [
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_delay.sv",
+          "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+          "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_fpu.sv",
+          "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_sfu.sv",
+          "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_fastfp.sv",
+          "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_prefix.sv",
+          "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/common/ot_prefix.sv",
+          "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/v41rom/ot_v41_fadd.sv",
+          "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/v41rom/ot_v41_bmul2.sv",
+          "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_fadd.sv",
+          "sha256": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_tree.sv",
+          "sha256": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_issue.sv",
+          "sha256": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_stack.sv",
+          "sha256": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_tc_col.sv",
+          "sha256": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/v41rom/ot_v41_bterm.sv",
+          "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/v41rom/ot_v41_bterm2.sv",
+          "sha256": "6672d9e22d8a7a1c0ef293abc6970446cfa6c8e7c768c7b4706ee1cb94fcc708"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_bd_col.sv",
+          "sha256": "6bb9a1468b9d0e54e93b75ff697461ba2d277cc2657c5337d8b97e01a2263af0"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_bulk_copy.sv",
+          "sha256": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "rtl/gpu/ot_gpu_sm_v.sv",
+          "sha256": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+          "sha256": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a"
+        },
+        {
+          "matches_published_w19_source": true,
+          "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+          "sha256": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571"
+        }
+      ]
+    }
+  ],
+  "status": {
+    "constraints": "833 ps streaming period; SS setup uncertainty 60 ps; FF hold uncertainty 25 ps, unchanged",
+    "in_context_sm_ss_ff": "not launched; blocked pending full column gates",
+    "jobs_restarted_or_duplicated": 0,
+    "production_136_byte_adapter": "ongoing in W19 per user; this historical source/exactness baseline does not certify that adapter",
+    "tc16_terminal_gate": "pending live route",
+    "tc_col_terminal_gate": "pending live route"
+  },
+  "stream_commit": "956e57f2e8aa9f776a8889679864a68b73d24ae2",
+  "successor": {
+    "bundle_pins": {
+      "/tmp/claude-1000/w13jobs/chain15/w13_chain_successor.py": "aeceba8f3a46ca1d9fc649d0c5bf4d0aeebb821acf377505e529fa73a01aeb10",
+      "/tmp/claude-1000/w13jobs/chain15/w13_column_corner_gate.py": "829f271ed92351faebe44c901c9ffdb1abc4098d3b2f63f5bed903b0af7aacda"
+    },
+    "config_sha256": "364e7fd4cc4cc423c43a3badaa452d6e70f88cad670f463577c38a582031a71a",
+    "events": [
+      "{\"config_sha256\": \"364e7fd4cc4cc423c43a3badaa452d6e70f88cad670f463577c38a582031a71a\", \"event\": \"successor_start\", \"handle\": {\"pid\": 3047316, \"start_ticks\": \"304527912\", \"state\": \"R\"}, \"utc\": \"2026-10-01T07:40:22.880467+00:00\"}",
+      "{\"branch\": \"q\", \"event\": \"waiting\", \"handles\": [{\"pid\": 2089594, \"start_ticks\": \"302549468\", \"state\": \"S\"}], \"utc\": \"2026-10-01T07:40:22.901364+00:00\"}",
+      "{\"branch\": \"v\", \"event\": \"waiting\", \"handles\": [{\"pid\": 1901598, \"start_ticks\": \"302086726\", \"state\": \"S\"}], \"utc\": \"2026-10-01T07:40:22.902265+00:00\"}"
+    ],
+    "handle": {
+      "pid": 3047316,
+      "start_ticks": "304527912",
+      "state": "S"
+    }
+  }
+}
