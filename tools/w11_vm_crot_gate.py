@@ -54,9 +54,10 @@ import w11_vm_dist_gate as G               # noqa: E402
 import w11_su_softmax_spec as SM           # noqa: E402
 
 STAGES_REC = ROOT / "results/floorplan/v41_vm_crot_stages.json"
-CROT = [ROOT / "rtl/chip/ot_v41_vm_crot.sv", ROOT / "rtl/v41rom/ot_v41_ret.sv",
-        # the stream unit's serial-build primitives (MLAT / ALAT > 3), absent from the die's source list
-        ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv", ROOT / "rtl/hdc/ot_hdc_fp32_mul_lat.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv"]
+CROT = [ROOT / "rtl/chip/ot_v41_vm_crot.sv", ROOT / "rtl/v41rom/ot_v41_ret.sv"]
+# the stream unit's serial-build primitives (MLAT / ALAT > 3): in the SU bench's library already, absent from the die's
+SERIAL_SRCS = [ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv", ROOT / "rtl/hdc/ot_hdc_fp32_mul_lat.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv"]
+BUILD_PAR = int(os.environ.get("OT_CROT_BUILD_PAR", "2"))   # parallel Verilator builds (memory: a 32 GB worker)
 VMCROT = re.compile(r"VMCROT roots=(\d+) rows=(\d+) nonlocal=(\d+) e=(\d+) wr_nonlocal=(\d+) cr_rd=(\d+) "
                     r"lead_hazards=(\d+)")
 SU_KEYS = ("CR_LEAD", "CR_RD", "CR_GX", "CR_WR", "CR_RES")
@@ -117,7 +118,18 @@ def crot_fields(text):
     return dict(roots=g[0], rows=g[1], nonlocal_rows=g[2], e=g[3], wr_nonlocal=g[4], cr_rd=g[5], lead_hazards=g[6])
 
 
+class _Pool:
+    """concurrent.futures for w11_vm_dist_gate with its build pools capped at BUILD_PAR workers."""
+    def __getattr__(self, k):
+        return getattr(cf, k)
+
+    @staticmethod
+    def ThreadPoolExecutor(n=None, *a, **k):
+        return cf.ThreadPoolExecutor(min(n or BUILD_PAR, BUILD_PAR), *a, **k)
+
+
 def install():
+    G.cf = _Pool()
     G.su_flags = su_flags
     for p in CROT:
         if p not in G.DIST:
@@ -275,7 +287,7 @@ def die_part(scratch: Path, image: Path | None, st: dict, jobs: int, variants=("
     """The reduced decode step (token 3582 at position 7 -> 3118) through the die bench, flat vs C_rotate."""
     import w11_vm_dist_die_gate as D
     G.ds.setup("dpi")
-    for p in CROT + ([serial_parts(scratch)] if (SERIAL["mlat"], SERIAL["alat"]) != (3, 3) else []):
+    for p in CROT + (SERIAL_SRCS + [serial_parts(scratch)] if (SERIAL["mlat"], SERIAL["alat"]) != (3, 3) else []):
         if p not in G.DIST:
             G.DIST.append(p)
     die_st = dict(VM_DIST_H=0, VM_CROT=1, X_GATHER_STAGES=st["X_GATHER_STAGES"],
@@ -358,7 +370,7 @@ def main():
         rec["lat"] = {}
         cfgs = [(64, 16)] + ([(1024, 256)] if a.n1024 else [])
         for N, M in cfgs:
-            with cf.ThreadPoolExecutor(2) as ex:
+            with cf.ThreadPoolExecutor(1 if N >= 1024 else 2) as ex:     # N = 1,024: ~31 GiB a build
                 fl = ex.submit(G.su_build, N, M, a.scratch / f"lat_vd0_N{N}", 0, st)
                 cr = ex.submit(G.su_build, N, M, a.scratch / f"lat_vd1_N{N}", 1, st)
                 exes = dict(flat=fl.result()[0], crot=cr.result()[0])
