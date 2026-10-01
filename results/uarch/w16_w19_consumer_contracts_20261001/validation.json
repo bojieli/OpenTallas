@@ -1,0 +1,41 @@
+{
+  "artifacts": {
+    "check.log": "ab78351e6ecd05d107cec1f014bb00e4eb5090a697f1be251ed0444c71ab4347",
+    "check_r2.log": "ab78351e6ecd05d107cec1f014bb00e4eb5090a697f1be251ed0444c71ab4347",
+    "contracts.json": "e7d0ba88839a3e3e6f9dd9e5565362e7dd996217b55bb802e7e731422e2dfa81",
+    "contracts_r2.json": "e7e716fce661085e76d7843abee3a02369e279c7f44853bf64efcdbbbebbdb10",
+    "historical_source_drift.log": "1ba704f49ea983e9f77622b728bd90d650b3a04aaf46ad85dfcbe75832696985",
+    "initial_test_scope_failure.log": "628ace17f00acc875a03a2e8388dad9d7ee4937c3c33370fc4fd5d829fda5fad",
+    "source_r1.py": "16b8b2d685ccdbf9d54746c1ff8f5a7bf06a315c6fbfc1689cefcc82f328428a",
+    "tests.log": "a4ba55c7ec7daeede2ecfea3dda9a793665ee142066911215af4f033a9e8412a",
+    "tests.xml": "276a6bd98524642b57b315b1050cfde8df70533f37d97777c3ac723cb1f9e4bc",
+    "tests_r2.log": "a4ba55c7ec7daeede2ecfea3dda9a793665ee142066911215af4f033a9e8412a",
+    "tests_r2.xml": "b2a77b99e92dbe05d65d3c16c1625c89d1ca8316ddf0c56a376a62bc7318059e"
+  },
+  "authoritative_receipt": "contracts_r2.json",
+  "check": "PASS",
+  "framed_headers_parent_verified": 44,
+  "hardware_or_generator_changes": false,
+  "initial_test_failure": "Test wrongly assumed compressor owner63 for all source layers; actual ratio1 layer20 owner31. Formula-based assertion corrected; original failure log retained.",
+  "inventory_reused": true,
+  "measured_service_cycles": null,
+  "new_contract_tests": 9,
+  "parent_verification_sha256": "414e3f2fcec87d736f22930d62fa05e6f61f134eae1ba2ce9e2d56217c0ca73d",
+  "physical_or_replica_contracts": 0,
+  "prior_receipt": "contracts.json retained with source_r1.py; contracts_r2.json narrows HC names to actual golden fn/scale/base without changing actual output mappings",
+  "prior_resident_bounds_tests": 19,
+  "pytest": {
+    "errors": "0",
+    "failures": "0",
+    "hostname": "ubuntu",
+    "name": "pytest",
+    "skipped": "0",
+    "tests": "28",
+    "time": "2.920",
+    "timestamp": "2026-10-01T10:47:42.673233+00:00"
+  },
+  "required_integration_dependency": "39247f980 provides w16_w19_resident_bounds.py; current main parent verification required",
+  "schema": "opentallas.w16.w19.consumer_validation.v1",
+  "source_families": 22,
+  "source_tensors": 542
+}
