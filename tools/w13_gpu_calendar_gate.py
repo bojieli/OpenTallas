@@ -46,6 +46,22 @@ def audit_actual_callbacks(graph_pin, callback_pin, repo=ROOT):
     if hashlib.sha256(raw).hexdigest()!=callback_pin['sha256']:raise ValueError('callback_source_hash_mismatch')
     record=json.loads(raw);issues=[];rows=[];seen=set()
     trace=record.get('trace',record.get('operator_receipts',[]))
+    original_callback_pin=None
+    if not trace and 'operations' in record and 'actual_software_callbacks' in record:
+        certificate=record['actual_software_callbacks']
+        original_path=certificate['execution_evidence']
+        original_raw=subprocess.check_output(['git','show',callback_pin['source_git']+':'+original_path],cwd=repo)
+        if hashlib.sha256(original_raw).hexdigest()!=certificate['execution_evidence_sha256']:raise ValueError('original_callback_hash_mismatch')
+        original=json.loads(original_raw);receipts=original['operator_receipts']
+        if len(receipts)!=len(record['operations']):raise ValueError('annotated_callback_count_mismatch')
+        trace=[]
+        for operation,receipt in zip(record['operations'],receipts):
+            actual=operation['actual_software_callbacks']
+            if (operation['pc'],operation['layer'],operation['source_op_id'],operation['function'],actual['completed'],actual['CPU_wall_s'],actual['numerical_backend_at_execution'])!=(receipt['pc'],receipt['layer'],receipt['source_op_id'],receipt['function'],receipt['completed'],receipt['CPU_wall_s'],receipt['numerical_backend']):raise ValueError('annotated_callback_identity_mismatch')
+            trace.append(dict(id=operation['pc'],dependencies=operation['dependencies'],actual_software_callbacks=actual,
+                              raw_runtime_callback=receipt,dependency_binding='Source-compiler certified serial ordering; not a measured hardware dependency timestamp.'))
+        original_callback_pin=dict(source_git=callback_pin['source_git'],path=original_path,sha256=hashlib.sha256(original_raw).hexdigest())
+        record=dict(record,memory=original['memory'],collective_events=original['collective_events'])
     for event in trace:
         key=event.get('id',event.get('pc'))
         if key in seen:issues.append('duplicate_actual_graph_op:'+str(key))
@@ -68,6 +84,7 @@ def audit_actual_callbacks(graph_pin, callback_pin, repo=ROOT):
         timed=None;issues.append('actual_physical_instruction_fabric_callbacks_unbound')
     return dict(schema='opentallas.w13.actual-fullgraph-callback-admission.v2',
                 authoritative_graph_pin=graph_pin,actual_callback_pin=callback_pin,
+                original_runtime_callback_pin=original_callback_pin,
                 actual_trace_rows=len(trace),actual_memory_or_collective_rows=len(memory),
                 fullgraph_trace_coverage=seen==set(deps),per_op_event_admission=rows,
                 actual_memory_or_collective_callbacks=memory,
