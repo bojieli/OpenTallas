@@ -1,0 +1,190 @@
+{
+  "time_unix": 1790882625.3558307,
+  "status": "CONNECTED_L0_LIVE_NO_EXACT_VERDICT",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_status": "",
+  "launch_pins_checked": 145,
+  "mismatches": [],
+  "state": {
+    "time": 1790882433.388142,
+    "pid": 1307441,
+    "state": "RUN_STAGE",
+    "stage": "connected_L0",
+    "command": [
+      "/usr/bin/python3",
+      "/home/ubuntu/w17-current-fastpp-l0-cli-r4/tools/w17_current_fastpp_die_rt_cli_v4.py",
+      "run",
+      "--work",
+      "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build",
+      "--images",
+      "/home/ubuntu/w17-current-L0-fastpp-20261001-r3/images",
+      "--out",
+      "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/L0_output",
+      "--threads",
+      "8",
+      "--max-cycles",
+      "400000",
+      "--fast",
+      "1",
+      "--pp",
+      "1"
+    ],
+    "admission": {
+      "mem_GiB": 160.31863403320312,
+      "disk_GiB": 175.9898910522461,
+      "load1": 10.6552734375,
+      "affinity": 32,
+      "compiler_jobs": 8,
+      "memory_floor_GiB": 128,
+      "pass_admission": true
+    }
+  },
+  "binary": {
+    "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/v41_die_rt",
+    "sha256": "dbd8546a7860d36dbfa446e240ba5be2ed5b5daf6b3db4d5a90c020e4d42f6c8",
+    "bytes": 427955416
+  },
+  "linked_archive_pins": {
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die0/Vdie0__ALL.a": {
+      "sha256": "28848a7253c2950b34c44829e496343fa10401a2682ef9481bf581e30b0155e9",
+      "bytes": 92061266
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die1/Vdie1__ALL.a": {
+      "sha256": "86ab0c04faa631043916a80a045a803ee67c03c126126b9c2a4c5e22b061ca84",
+      "bytes": 92061154
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die2/Vdie2__ALL.a": {
+      "sha256": "0fac3364189c041fa743d4d0e81887a65c9847fcdbd56eab1279dca44f8959a0",
+      "bytes": 92061266
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die3/Vdie3__ALL.a": {
+      "sha256": "e37ca363293f9831ecab0cfba91d0307e085cc0e0658dc2c2a23792e929b9ad0",
+      "bytes": 92061322
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pq/Vpq__ALL.a": {
+      "sha256": "798d2e7f7da250bcf8e49aa002e43fafcd491f0fe806111176b797f77046c669",
+      "bytes": 562636
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pb/Vpb__ALL.a": {
+      "sha256": "028009205f02b00c67bbe78fc5a5e9ca56f26a7c1fdb076554bc0e4d7b115861",
+      "bytes": 2732652
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/retn/Vretn__ALL.a": {
+      "sha256": "7b517acbc186315695112f8b3c781fd18809ab4cf58dfb2f5599598b3ca52431",
+      "bytes": 35368
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/root/Vroot__ALL.a": {
+      "sha256": "a340099dda7de29295a217794295bd4b51cfe636e347d124d9a4185bfa596593",
+      "bytes": 36418
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vattn__ALL.a": {
+      "sha256": "f497877a581db6c47af7a74c883917a5383d7323d33da055f7b0ef7c2ee4e0d1",
+      "bytes": 124022076
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_merge_6/libot_hdc_v41x_attn_merge_6.a": {
+      "sha256": "de5bdf4a329f941dd45ea441013bb73ae81b7dfb319a216f8337eecfd1a1ab1c",
+      "bytes": 831748
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_qadd/libot_hdc_qadd.a": {
+      "sha256": "f93999440fa586c33caa8d8d3aa97389d60a84a461124fef5796179b8cfcc4c1",
+      "bytes": 95610
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_staging_3/libot_hdc_v41x_attn_staging_3.a": {
+      "sha256": "4b668f76dbbeaa8c8be1a91b4d903ce5819271b9c9c1298de45cfce02c90aa8c",
+      "bytes": 285920
+    },
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_tile_e/libot_hdc_v41x_attn_tile_e.a": {
+      "sha256": "a4fdf73f0b420da2db1a2945a5ad5a2e8b7055d83dc49bd9ea896a37d5fd37b2",
+      "bytes": 3185442
+    }
+  },
+  "live_processes": [
+    {
+      "PID": 1307359,
+      "startticks": 307093847,
+      "cmdline": "/usr/bin/python3 /home/ubuntu/w17-current-fastpp-l0-cli-r4/tools/w17_current_L0_supervisor_v4.py "
+    },
+    {
+      "PID": 1968038,
+      "startticks": 308728969,
+      "cmdline": "/usr/bin/python3 /home/ubuntu/w17-current-fastpp-l0-cli-r4/tools/w17_current_fastpp_die_rt_cli_v4.py run --work /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build --images /home/ubuntu/w17-current-L0-fastpp-20261001-r3/images --out /home/ubuntu/w17-current-L0-fastpp-20261001-r4/L0_output --threads 8 --max-cycles 400000 --fast 1 --pp 1 "
+    },
+    {
+      "PID": 1968071,
+      "startticks": 308728976,
+      "cmdline": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/v41_die_rt /home/ubuntu/w17-current-L0-fastpp-20261001-r3/images /home/ubuntu/w17-current-L0-fastpp-20261001-r4/L0_output 400000 "
+    }
+  ],
+  "rank3_compile_exit": 0,
+  "rank3_compile_seconds": 3113.8,
+  "PHW6_build": {
+    "steps": [
+      {
+        "log": "verilate_pq.log",
+        "seconds": 1.1,
+        "returncode": 0,
+        "max_rss_kib": 140544
+      },
+      {
+        "log": "build_pq.log",
+        "seconds": 3.6,
+        "returncode": 0,
+        "max_rss_kib": 316104
+      },
+      {
+        "log": "verilate_pb.log",
+        "seconds": 5.5,
+        "returncode": 0,
+        "max_rss_kib": 665088
+      },
+      {
+        "log": "build_pb.log",
+        "seconds": 10.4,
+        "returncode": 0,
+        "max_rss_kib": 340284
+      },
+      {
+        "log": "verilate_retn.log",
+        "seconds": 0.1,
+        "returncode": 0,
+        "max_rss_kib": 32768
+      },
+      {
+        "log": "build_retn.log",
+        "seconds": 0.6,
+        "returncode": 0,
+        "max_rss_kib": 164544
+      },
+      {
+        "log": "verilate_root.log",
+        "seconds": 0.1,
+        "returncode": 0,
+        "max_rss_kib": 32256
+      },
+      {
+        "log": "build_root.log",
+        "seconds": 0.6,
+        "returncode": 0,
+        "max_rss_kib": 166572
+      }
+    ]
+  },
+  "link_exit": 0,
+  "link_seconds": 8.3,
+  "image_binding_receipt": {
+    "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/reused_image_pins.json",
+    "sha256": "94c52c988dc7bbf5db7b559972244e8e9e41f9386934f431e15ffab521499e8d"
+  },
+  "result_present": false,
+  "required_exact": [
+    "All4 ranks DONE",
+    "All4 actual_words==words==524288",
+    "All4 pass_exact",
+    "Complete same-source producer risingedge/settle feedback composition; no component/pageproof substitution"
+  ],
+  "protected_CTS": 1857363,
+  "relaunched": false,
+  "source_overlay_changed": false,
+  "scope": "Current TP4 L0 only; not indexedL20/all40+head or physical qualification",
+  "progress_tail": "CYC 400 wall 62.3 s pc 5 5 5 5\n"
+}
