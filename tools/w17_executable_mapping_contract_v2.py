@@ -175,17 +175,22 @@ def validate(plan, root=ROOT):
         if any(k not in h for k in required):
             errors.append('hop calendar/ports/route/area/replica accounting incomplete')
             continue
+        try:
+            wire=hop_wire_bits(h)
+        except (ValueError,KeyError,TypeError) as e:
+            errors.append(str(e))
+            continue
         if h['source_stage'] not in ids or h['destination_stage'] not in ids:
             errors.append('hop endpoints outside physical inventory')
         if h['routing_tracks'] > h['channel_capacity_tracks']:
             errors.append('hop exceeds channel capacity')
         if any(type(h[k]) is not int or h[k] <= 0 for k in ('replicas', 'boundary_bits_per_cycle')):
             errors.append('hop replica/port capacity unbound')
-        if h['area_mm2'] <= 0 or h['routing_tracks'] <= 0:
+        if type(h['area_mm2']) not in (int,float) or not h['area_mm2'] > 0 or h['routing_tracks'] <= 0:
             errors.append('hop area/tracks unpriced')
         try:
             finite_calendar(h['payload_bits'], h['beat_bits'], h['capacity_beats'],
-                            h['latency_ticks'], h['source_domain'], h['dest_domain'],wire_bits=hop_wire_bits(h))
+                            h['latency_ticks'], h['source_domain'], h['dest_domain'],wire_bits=wire)
         except ValueError as e:
             errors.append(str(e))
     return errors
