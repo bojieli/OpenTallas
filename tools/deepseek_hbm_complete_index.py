@@ -36,7 +36,7 @@ class SIMT:
             if not warps:continue
             args=[self.array(self.memory[i['src'][0]])] if code=='LOAD' else [self.read(x) for x in i['src']]
             self.counts[code]+=warps
-            self.metrics['serial_instruction_candidate_cycles']+=warps*(9 if code in ['FADD','FMUL'] else 5 if code.startswith('FCMP') else 2 if code=='LOAD' else 3)
+            self.metrics['legacy_interpreter_proxy_cycles_NOT_service_budget']+=warps*(9 if code in ['FADD','FMUL'] else 5 if code.startswith('FCMP') else 2 if code=='LOAD' else 3)
             self.metrics['RF_read_bits_including_immediates']+=warps*32*32*len(i['src'])
             if code.startswith('B'):
                 a,b=[x.view(np.int32) for x in args];take=(a==b) if code=='BEQ' else (a<b) if code=='BLT' else (a>b)
@@ -76,7 +76,9 @@ class SIMT:
             self.metrics['RF_write_bits']+=warps*32*32
             old=self.regs.get(i['dst'],np.zeros(self.shape,np.uint32));self.regs[i['dst']]=np.where(mask,r,old).astype(np.uint32)
         return self
-    def summary(self):return {'warp_opcodes':dict(self.counts),'costs':dict(self.metrics),'full_GPU_cycles':None,'branch_reconvergence_and_routes_qualified':False}
+    def summary(self):return {'warp_opcodes':dict(self.counts),'costs':dict(self.metrics),'full_GPU_cycles':None,'branch_reconvergence_and_routes_qualified':False,
+                             'legacy_interpreter_timing_adopted':False,'canonical_service_cycles':None,
+                             'timing_authority':'deepseek_hbm_complete_canonical; FCMP9 and unknown integer variants UNBOUND; proxy counters forbidden in service budget'}
 
 
 def decode_program():
