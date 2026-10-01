@@ -40,14 +40,15 @@ def bank_waves(addresses,ports=45):
     assert set().union(*out)==set(addresses) if out else not addresses
     return out
 
-def credit_calendar(packet_count,credits,route=75,payload_cycles=1):
+def credit_calendar(packet_count,credits,route=75,payload_cycles=1,reverse_route=None):
     """One source packet per fastcycle, credits through actual cache write.
 
     Explicit hypothetical fixed bounded sink, fast->slowCDC4slow, one slow
     cache write, reverseCDC31ticks. Stall beyond bound invalidates scenario.
     Credits are not returned at serializer acceptance.
     """
-    if credits<1 or packet_count<0 or route<0 or payload_cycles<1:
+    if reverse_route is None:reverse_route=route
+    if credits<1 or packet_count<0 or route<0 or reverse_route<0 or payload_cycles<1:
         raise ValueError('invalid finite service capacity')
     available=[0]*credits;source=0;last=0
     for _ in range(packet_count):
@@ -55,10 +56,12 @@ def credit_calendar(packet_count,credits,route=75,payload_cycles=1):
         launch=max(source,available[i]);source=launch+payload_cycles*3
         arrival=launch+(payload_cycles+route)*3+16
         write=((arrival+3)//4)*4+4
-        release=ceildiv(write+31,3)*3
+        release=ceildiv(write+31+reverse_route*3+3,3)*3
         available[i]=release;last=max(last,release)
     return dict(packets=packet_count,credits=credits,source_packet_cycles=payload_cycles,
-        route_fast_cycles=route,last_cache_write_and_reverse_credit_tick=last,
+        route_fast_cycles=route,reverse_route_fast_cycles=reverse_route,
+        reverse_credit_serialization_fast_cycles=1,
+        last_cache_write_and_reverse_credit_tick=last,
         first_credit_return_not_at_acceptance=True,actual_sink_stall_bound=False)
 
 def build():
@@ -184,7 +187,9 @@ def build():
             control_catalog_read_ports_and_MAC_coexistence=None,
             added_forward_reverse_control_tracks=1024+64+64,
             existing_spine_tracks=832,corridor_capacity=1153,corridors_required=ceildiv(832+1152,1153),
-            route_fast_cycles=75,fast_to_slow_CDC_ticks=16,reverse_CDC_ticks=31,
+            route_fast_cycles=75,reverse_route_fast_cycles=75,
+            reverse_credit_serialization_fast_cycles=1,
+            fast_to_slow_CDC_ticks=16,reverse_CDC_ticks=31,
             sink_cache_write_slow_cycles=1,actual_receiver_ready_bound=False),
         finite_packet_credit_area_screens=[dict(credits=c,TX_fullpacket_bits=c*672,
             RX_landing_fullpacket_bits=c*672,route_pipeline_bits=75*1024,
@@ -223,6 +228,12 @@ def build():
             preserved_failed_model_commit='bc1ec8b8f73ce5594a2b65ac7856b88c3f6b027c',
             independent_negative_receipt_commit='785cdfa41',
             corrected_entry_bits=151,actual_compiled_control_image_bound=False),
+        reverse_route_correction=dict(preserved_incomplete_calendar_commit='1360ff9e12f130a656dbbca0b00c02de860584db',
+            defect='Earlier return priced reverse CDC but omitted physical return route and credit serialization.',
+            forward_and_reverse_envelope_fast_cycles=75,
+            actual_local_home_coordinates_bound=False,
+            reverse_credit_pipeline_storage_power_additional_unpriced=True,
+            historical_credit_power_budget_not_requalified=True),
         classA_exact_metadata=True,full_RTL_exactness=False,adoption=False,headline_rate=None,
         checkpoint_reads=0,jobs_launched=0)
     return out

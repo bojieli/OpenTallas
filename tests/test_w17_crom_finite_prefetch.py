@@ -16,6 +16,11 @@ def test_credit_release_waits_for_receiver_and_reverse():
     assert x['last_cache_write_and_reverse_credit_tick']>y['last_cache_write_and_reverse_credit_tick']
     assert x['last_cache_write_and_reverse_credit_tick']>354*3
     assert not x['actual_sink_stall_bound']
+    no_return_wire=C.credit_calendar(354,2,reverse_route=0)
+    assert x['last_cache_write_and_reverse_credit_tick']>no_return_wire['last_cache_write_and_reverse_credit_tick']
+    one=C.credit_calendar(1,2)
+    zero=C.credit_calendar(1,2,reverse_route=0)
+    assert one['last_cache_write_and_reverse_credit_tick']-zero['last_cache_write_and_reverse_credit_tick']==75*3
     import pytest
     with pytest.raises(ValueError):C.credit_calendar(1,0)
 
