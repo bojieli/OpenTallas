@@ -40,6 +40,19 @@ def reference(w, x):
     return golden.csum(mul(w, x[None, :]))
 
 
+def reference_stages(w, x):
+    validate(w, x)
+    products = mul(w, x[None, :]).reshape(ROWS, CHUNKS, 8)
+    chunks = np.zeros((ROWS, CHUNKS), np.float32)
+    for j in range(8):
+        chunks = add(chunks, products[:, :, j])
+    stage = np.pad(chunks, ((0, 0), (0, PAD - CHUNKS)))
+    yield stage
+    while stage.shape[1] > 1:
+        stage = add(stage[:, 0::2], stage[:, 1::2])
+        yield stage
+
+
 def contract():
     return {
         "modeled_sms": SMS, "modeled_fp32_lanes_per_sm": THREADS,
@@ -109,16 +122,24 @@ def gpu(w, x):
     a = torch.empty((ROWS * PAD,), device="cuda", dtype=torch.float32)
     b = torch.empty((ROWS * PAD // 2,), device="cuda", dtype=torch.float32)
     compiled = [chunk[(ROWS * PAD // THREADS,)](wg, xg, a, K, PAD, ROWS, THREADS, num_warps=4, enable_fp_fusion=False)]
+    stages = iter(reference_stages(w, x))
+    audit = []
+    def check_stage(buffer, width):
+        expected = next(stages)
+        actual = buffer[:ROWS * width].cpu().numpy().reshape(ROWS, width)
+        audit.append({"width": width, "mismatched_F32_bits": int(np.count_nonzero(expected.view(np.uint32) != actual.view(np.uint32))), "golden_sha256": sha(expected.tobytes()), "gpu_sha256": sha(actual.tobytes())})
+    check_stage(a, PAD)
     width = PAD
     while width > 1:
         compiled.append(pair[(triton.cdiv(ROWS * (width // 2), THREADS),)](a, b, width, ROWS, THREADS, num_warps=4, enable_fp_fusion=False))
         a, b = b, a
         width //= 2
+        check_stage(a, width)
     result = a[:ROWS].cpu().numpy()
     ptx = "\n".join(c.asm["ptx"] for c in compiled)
     if "fma.rn.f32" in ptx or "mma.sync" in ptx or "add.ftz" in ptx or "mul.ftz" in ptx:
         raise RuntimeError("PTX violates separate gradual-underflow F32 arithmetic")
-    return result, ptx, [{"registers": c.n_regs, "shared_bytes": c.metadata.shared} for c in compiled]
+    return result, ptx, [{"registers": c.n_regs, "shared_bytes": c.metadata.shared} for c in compiled], audit
 
 
 def controls():
@@ -141,6 +162,8 @@ def controls():
     w[:, 0] = np.nextafter(np.float32(0), np.float32(1))
     w[:, 1] = -0.0
     yield "gradual_underflow_signed_zero", w, x
+    w = np.full((ROWS, K), -0.0, np.float32)
+    yield "canonical_positive_zero", w, x
 
 
 def checkpoint_fixtures(snapshot):
@@ -156,7 +179,7 @@ def checkpoint_fixtures(snapshot):
             raise ValueError("checkpoint HC coefficients must actually be F32")
         rng = np.random.default_rng(190032)
         x = to_bf16(rng.normal(size=K).astype(np.float32))
-        yield name, w, x, {"snapshot": str(snapshot), "shard": str(shard.resolve()), "index_sha256": sha(index_path.read_bytes()), "tensor": name, "tensor_sha256": sha(w.tobytes()), "activation_origin": "seeded synthetic BF16; not a measured model activation"}
+        yield name, w, x, {"snapshot": str(snapshot), "revision": snapshot.name, "source_dtype": "F32", "shard": str(shard.resolve()), "index_sha256": sha(index_path.read_bytes()), "tensor": name, "tensor_sha256": sha(w.tobytes()), "activation_origin": "seeded synthetic BF16; not a measured model activation"}
 
 
 def run(out, snapshot):
@@ -172,7 +195,7 @@ def run(out, snapshot):
         fixtures += list(checkpoint_fixtures(snapshot))
     for i, (name, w, x, provenance) in enumerate(fixtures):
         ref = reference(w, x)
-        got, ptx, resources = gpu(w, x)
+        got, ptx, resources, stage_audit = gpu(w, x)
         diff = int(np.count_nonzero(ref.view(np.uint32) != got.view(np.uint32)))
         # Negative controls are evidence of sensitivity, not alternative criteria.
         bf16 = reference(to_bf16(w), x)
@@ -192,9 +215,9 @@ def run(out, snapshot):
             fma_diff = int(fused.view(np.uint32) != ref[0].view(np.uint32))
         np.savez_compressed(out / f"fixture_{i}.npz", coefficients=w, activation=x, golden=ref, gpu=got)
         (out / f"fixture_{i}.ptx").write_text(ptx)
-        records.append({"name": name, "shape": list(w.shape), "provenance": provenance, "coefficient_sha256": sha(w.tobytes()), "activation_sha256": sha(x.tobytes()), "mismatched_F32_bits": diff, "BF16_coefficient_mutation_differences": int(np.count_nonzero(bf16.view(np.uint32) != ref.view(np.uint32))), "sequential_chunk_mutation_differences": int(np.count_nonzero(serial.view(np.uint32) != ref.view(np.uint32))), "FMA_mutation_difference": fma_diff, "compiled_resources_per_pass": resources})
+        records.append({"name": name, "shape": list(w.shape), "provenance": provenance, "coefficient_sha256": sha(w.tobytes()), "activation_sha256": sha(x.tobytes()), "mismatched_F32_bits": diff, "BF16_coefficient_mutation_differences": int(np.count_nonzero(bf16.view(np.uint32) != ref.view(np.uint32))), "sequential_chunk_mutation_differences": int(np.count_nonzero(serial.view(np.uint32) != ref.view(np.uint32))), "FMA_mutation_difference": fma_diff, "compiled_resources_per_pass": resources, "reduction_stage_audit": stage_audit})
     sensitivity = any(r["BF16_coefficient_mutation_differences"] for r in records) and any(r["sequential_chunk_mutation_differences"] for r in records) and any(r["FMA_mutation_difference"] for r in records)
-    report = {"schema": "opentallas.w19.hc-simd-exact-software.v1", "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip(), "source_pins": {str(p.relative_to(repo)): sha(p.read_bytes()) for p in [Path(__file__).resolve(), repo / "tools/hdc_golden.py", repo / "tools/hdc_golden_v41.py"]}, "device": torch.cuda.get_device_name(), "torch": torch.__version__, "triton": triton.__version__, "contract": contract(), "fixtures": records, "negative_controls_sensitive": sensitivity, "verdict": "PASS" if sensitivity and all(r["mismatched_F32_bits"] == 0 for r in records) else "FAIL", "scope": "HC full-F32 coefficient dot only; not full HC sigmoid/Sinkhorn or deployment HC activation attribution; Blackwell software witness, Turing analytical mapping remains unqualified", "artifacts": {p.name: sha(p.read_bytes()) for p in sorted(out.iterdir())}}
+    report = {"schema": "opentallas.w19.hc-simd-exact-software.v1", "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip(), "source_pins": {str(p.relative_to(repo)): sha(p.read_bytes()) for p in [Path(__file__).resolve(), repo / "tools/hdc_golden.py", repo / "tools/hdc_golden_v41.py", repo / "tests/test_w19_hc_simd_proof.py"]}, "device": torch.cuda.get_device_name(), "torch": torch.__version__, "triton": triton.__version__, "contract": contract(), "fixtures": records, "negative_controls_sensitive": sensitivity, "verdict": "PASS" if sensitivity and all(r["mismatched_F32_bits"] == 0 and all(s["mismatched_F32_bits"] == 0 for s in r["reduction_stage_audit"]) for r in records) else "FAIL", "scope": "HC full-F32 coefficient dot only; not full HC sigmoid/Sinkhorn or deployment HC activation attribution; Blackwell software witness, Turing analytical mapping remains unqualified", "artifacts": {p.name: sha(p.read_bytes()) for p in sorted(out.iterdir())}}
     (out / "proof.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"verdict": report["verdict"], "fixtures": len(records), "report": str(out / "proof.json")}))
     return report["verdict"] == "PASS"

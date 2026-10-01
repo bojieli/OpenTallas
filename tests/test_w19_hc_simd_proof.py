@@ -30,6 +30,14 @@ def test_subnormal_survives_and_zero_is_positive():
     assert np.all(proof.reference(w, x).view(np.uint32) == 0)
 
 
+def test_padded_reduction_boundaries_match_golden():
+    _, w, x = next(proof.controls())
+    stages = list(proof.reference_stages(w, x))
+    assert [s.shape[1] for s in stages] == [4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1]
+    assert np.all(stages[0][:, 2560:].view(np.uint32) == 0)
+    assert np.array_equal(stages[-1][:, 0].view(np.uint32), proof.reference(w, x).view(np.uint32))
+
+
 @pytest.mark.parametrize("bad", ["shape", "dtype", "activation", "nan"])
 def test_reject_unsupported_fixture(bad):
     _, w, x = next(proof.controls())
