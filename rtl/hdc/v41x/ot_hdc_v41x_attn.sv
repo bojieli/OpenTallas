@@ -1028,7 +1028,8 @@ module ot_hdc_v41x_attn_merge_phs #(
     integer j;
     always @(posedge clk) begin
         f32 = 32'd0;
-        for (j = 0; j < H; j = j + 1) f32 = f32 ^ iy[j*32 +: 32];
-        oy <= {H{f32 ^ {{(32-MLEV){1'b0}}, iblk}}}; of_ <= if_;
+        for (j = 0; j < H; j = j + 1) f32 = f32 ^ ((iy[j*32 +: 32] << j) | (iy[j*32 +: 32] >> (32 - j)));
+        for (j = 0; j < H; j = j + 1) oy[j*32 +: 32] <= f32 ^ {{(32-MLEV){1'b0}}, iblk} ^ {j[4:0], 27'd0};
+        of_ <= if_;
     end
 endmodule

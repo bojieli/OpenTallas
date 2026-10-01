@@ -107,18 +107,23 @@ module ot_v41_attn_eng_ctl_phys #(
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(e_sc_cr),
         .p_v(e_p_v), .p_w(p_w), .p_ready(e_p_ready), .pv_v(pv_v), .pv_c(pv_c), .pv_y(pv_y), .pv_f(pv_f),
         .pv_cr(e_pv_cr), .qk_iss(e_qk_iss), .pv_iss(e_pv_iss));
+    // folds rotate each 32-bit slice by its index, so replicated slices do not cancel (synthesis would
+    // otherwise prove the stubbed datapath constant and delete the broadcast sinks)
+    function automatic [31:0] rot(input [31:0] v, input integer k);
+        rot = (k % 32 == 0) ? v : ((v << (k % 32)) | (v >> (32 - k % 32)));
+    endfunction
     function automatic [31:0] fold(input [NT*H*32-1:0] x, input integer n);
         integer i;
         begin
             fold = 32'd0;
-            for (i = 0; i < n; i = i + 1) fold = fold ^ x[i*32 +: 32];
+            for (i = 0; i < n; i = i + 1) fold = fold ^ rot(x[i*32 +: 32], i);
         end
     endfunction
     function automatic [31:0] fold_sc(input [NL*H*32-1:0] x);
         integer i;
         begin
             fold_sc = 32'd0;
-            for (i = 0; i < NL * H; i = i + 1) fold_sc = fold_sc ^ x[i*32 +: 32];
+            for (i = 0; i < NL * H; i = i + 1) fold_sc = fold_sc ^ rot(x[i*32 +: 32], i);
         end
     endfunction
     always @(posedge clk) begin
@@ -167,12 +172,13 @@ module ot_hdc_v41x_attn_tile #(
         for (i = 0; i < PWORDS*TD*16; i = i + 1) f[i % (H*32)] = f[i % (H*32)] ^ r_ld_w[i];
         for (i = 0; i < TD*18; i = i + 1) f[(i * 7) % (H*32)] = f[(i * 7) % (H*32)] ^ r_ib[i];
     end
-    reg [31:0] f32;
+    reg [31:0] f32, g32;
     integer j;
     always @(posedge clk) begin
         f32 = 32'd0;
-        for (j = 0; j < H; j = j + 1) f32 = f32 ^ f[j*32 +: 32];
-        oy <= {H{f32 ^ {20'd0, r_ld_v, r_ld_mode, r_ld_w2v, r_ld_grp, r_ld_bank[0]}}};
+        for (j = 0; j < H; j = j + 1) f32 = f32 ^ ((f[j*32 +: 32] << j) | (f[j*32 +: 32] >> (32 - j)));
+        g32 = f32 ^ {20'd0, r_ld_v, r_ld_mode, r_ld_w2v, r_ld_grp, r_ld_bank[0]};
+        for (j = 0; j < H; j = j + 1) oy[j*32 +: 32] <= g32 ^ {j[4:0], 27'd0};   // distinct per head
         oflt <= {H{r_ibank[0]}};
     end
 endmodule
