@@ -1,0 +1,86 @@
+{
+  "kind": "single_read_cap_snapshot_during_bf_build",
+  "utc": "2026-10-01T23:40:17Z",
+  "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dsrom-actual-element-bounded-2515825.service",
+  "files": {
+    "memory.max": "4294967296",
+    "memory.swap.max": "0",
+    "memory.peak": "2527051776",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "cpu.max": null
+  },
+  "processes": [
+    {
+      "pid": 2515948,
+      "comm": "python3",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    },
+    {
+      "pid": 2517773,
+      "comm": "perl",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    },
+    {
+      "pid": 2517776,
+      "comm": "verilator_bin",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    },
+    {
+      "pid": 2517990,
+      "comm": "sh",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    },
+    {
+      "pid": 2517991,
+      "comm": "make",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    },
+    {
+      "pid": 2518092,
+      "comm": "g++",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    },
+    {
+      "pid": 2518093,
+      "comm": "cc1plus",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    },
+    {
+      "pid": 2520307,
+      "comm": "g++",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    },
+    {
+      "pid": 2520308,
+      "comm": "cc1plus",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    }
+  ]
+}
