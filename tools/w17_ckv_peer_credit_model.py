@@ -69,6 +69,7 @@ def build():
    reject('reverse_ACK_not_drained' if total==0 else 'reverse_pending_'+str(total),lambda token=token:p.store_ack(token)) if total==0 else None
    while p.reverse_pending[token]:p.ack_depart(token,p.reverse_pending[token][0])
    p.store_ack(token);total+=1
+  if row==0:reject('only_one_row_three_ACKs_not_full_coverage',p.close)
  reject('duplicate_ACK',lambda:p.store_ack(t));p.visible.remove(8);reject('missing_ninth_visible_WR',p.close);p.write_visible_requirement(8)
  p.consumer_requirements=False;reject('missing_final_consumer_requirements',p.close);p.consumer_requirements=True;p.close()
  p.begin(0,owners,routes,routes);reject('reused_epoch_still_requires_full_coverage',p.close)
