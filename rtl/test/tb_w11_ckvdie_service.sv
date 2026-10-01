@@ -8,7 +8,9 @@
 //   +lat (HBM), +llink (board), +lucie, +ri (cycles a row on a board link)
 // Output lines: "ROW <die> <pass> <rank> <hex 2304>" for every streamed row, "HBMW <die> <stack> <sector> <hex>"
 // for every owner write, "CKVDIE ..." summary.
-module tb_w11_ckvdie_service (input wire clk);
+module tb_w11_ckvdie_service;
+    reg clk = 1'b0;
+    always #1 clk = ~clk;
     localparam integer K = 512, KW = 10, POS_W = 21, AW = 30, VWA = 15, HAW = 30;
     reg [511:0] idw [0:31];
     reg [1023:0] nwm [0:15];
@@ -40,6 +42,7 @@ module tb_w11_ckvdie_service (input wire clk);
     reg sel_v = 0, nw_we = 0; reg [AW-1:0] nw_addr = 0; reg [1023:0] nw_data = 0;
     reg job_v = 0;
     integer phase = 0, nwk = 0, jobs = 0, t_sel = 0;
+    reg [3:0] jdone = 0;                // per-die job_done latched for the current job
     // per-die wires
     wire [3:0] vm_re; wire [4*VWA-1:0] vm_raddr; reg [4*512-1:0] vm_rq;
     wire [16-1:0] c_v, c_we; reg [16-1:0] c_rdy, c_sv; wire [16*HAW-1:0] c_addr; wire [16*16-1:0] c_tag;
@@ -102,9 +105,10 @@ module tb_w11_ckvdie_service (input wire clk);
             nw_we <= 1'b1; nw_addr <= AW'(cfg[2]) + AW'(32 * nwk); nw_data <= nwm[nwk];
             nwk = nwk + 1; if (nwk == 16) phase = 1;
         end else if (phase == 1 && cyc > 40) begin sel_v <= 1'b1; t_sel = cyc; phase = 2; end
-        else if (phase == 2 && cyc > t_sel + 4 && &jr) begin job_v <= 1'b1; phase = 3; jobs = jobs + 1; end
-        else if (phase == 3 && &jd) phase = 4;
-        else if (phase == 4 && &jr) begin job_v <= 1'b1; phase = 5; jobs = jobs + 1; end
+        else if (phase == 2 && cyc > t_sel + 4 && &jr) begin job_v <= 1'b1; phase = 3; jobs = jobs + 1; jdone = 0; end
+        else if (phase == 3 && &jdone) phase = 4;
+        else if (phase == 4 && &jr) begin job_v <= 1'b1; phase = 5; jobs = jobs + 1; jdone = 0; end
+        jdone = jdone | jd;
         // VM: ids at cfg[1]
         for (d = 0; d < 4; d = d + 1)
             if (vm_re[d]) vm_rq[d*512 +: 512] <= idw[32'(vm_raddr[d*VWA +: VWA]) - 32'(cfg[1])];
@@ -168,7 +172,7 @@ module tb_w11_ckvdie_service (input wire clk);
             end
             if (rows_out[d] % K == 0) pass[d] = pass[d] + 1;
         end
-        if ((phase == 5 && &jd) || cyc > 200000 || |flt) begin
+        if ((phase == 5 && &jdone) || cyc > 200000 || |flt) begin
             $display("CKVDIE cycles=%0d jobs=%0d rows=%0d,%0d,%0d,%0d ready_cycles=%0d,%0d,%0d,%0d hbm_miss=%0d hbm_writes=%0d faults=%0h,%0h,%0h,%0h timeout=%0d",
                      cyc, jobs, rows_out[0], rows_out[1], rows_out[2], rows_out[3],
                      ctr[0 +: 32], ctr[32 +: 32], ctr[64 +: 32], ctr[96 +: 32], hbm_miss, hbm_w,

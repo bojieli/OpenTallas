@@ -75,7 +75,7 @@ def golden_rows(ids, gold_npz):
     new = z["ckv20"].astype(np.float32)
     ck = LC.Checkpoint()
     m, _ = LC.build_model(ck, engram=False)
-    st, desc = LC.synthetic_state(m, 1048576, seed=LC.SEED, layers=[20])
+    st, desc = LC.synthetic_state(m, 1048576, seed=20260930, layers=[20])   # the headline token's seed (W17)
     src = m.kv_of[20]
     ckv = st["ckv"][src]
     n = len(ckv)
@@ -137,7 +137,7 @@ def prep(a, out):
 
 def build(b):
     b.mkdir(parents=True, exist_ok=True)
-    cmd = [str(VL), "--binary", "-j", "8", "-Wno-fatal", "-Wno-WIDTH", "-Wno-TIMESCALEMOD", "-Mdir", str(b),
+    cmd = [str(VL), "--binary", "--timing", "-j", "8", "-Wno-fatal", "-Wno-WIDTH", "-Wno-TIMESCALEMOD", "-Mdir", str(b),
            "--top-module", "tb_w11_ckvdie_service", "--x-assign", "unique", "--x-initial", "unique",
            *[str(ROOT / s) for s in SRC], "-CFLAGS", "-O1"]
     subprocess.run(cmd, check=True, capture_output=True)
