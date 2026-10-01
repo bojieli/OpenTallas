@@ -1,0 +1,21 @@
+{
+  "observed_at": "2026-10-01T09:01:21.749396+00:00",
+  "retired": [
+    {
+      "path": "/home/ubuntu/w10b-frontend-codex",
+      "head": "540d0727330edc86b0096bce9693d9fb74f5b259",
+      "reason": "rejected frontend source; source refs and committed failure/gates retained; no active process cwd"
+    },
+    {
+      "path": "/home/ubuntu/w10b-frontend-exact-run",
+      "head": "465a1e205d6f5de00a0e353edcf8190466e9b273",
+      "reason": "rejected frontend source; source refs and committed failure/gates retained; no active process cwd"
+    }
+  ],
+  "protected": [
+    "/home/ubuntu/w10q",
+    "/home/ubuntu/w10s",
+    "/home/ubuntu/w10b-prereq-review",
+    "/home/ubuntu/w10b-front-physical-r1"
+  ]
+}
