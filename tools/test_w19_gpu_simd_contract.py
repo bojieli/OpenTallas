@@ -1,3 +1,5 @@
+import ast
+from pathlib import Path
 import unittest
 
 from w19_gpu_simd_contract import (admit_controller_request,build,chunk_program,
@@ -64,6 +66,17 @@ class GPUContract(unittest.TestCase):
         self.assertEqual([o['attributes']['half'] for o in program if o['op']=='BF16_WIDEN'],[0,1]*4)
         self.assertEqual([o['attributes']['offset'] for o in program if o['op']=='SHFL_PAIR'],[1,2,4,8,16])
         self.assertEqual(program[-1]['attributes']['predicate'],'lane == 0')
+
+    def test_scalar_negation_matches_golden_sign_bit_operation(self):
+        source=Path(__file__).resolve().parent/'hdc_golden.py'
+        functions={n.name:n for n in ast.parse(source.read_text()).body if isinstance(n,ast.FunctionDef)}
+        ret=functions['neg'].body[0].value
+        self.assertEqual(ret.func.id,'from_bits')
+        self.assertIsInstance(ret.args[0].op,ast.BitXor)
+        self.assertEqual(ret.args[0].right.args[0].value,0x80000000)
+        contract=self.c['numerical_contract']['unary_negation']
+        self.assertEqual(contract['operation'],'BIT_XOR')
+        self.assertFalse(contract['canonicalize_zero'])
 
     def test_controller_lengths_and_aperture_controls(self):
         for bad in [0,17,31]:
