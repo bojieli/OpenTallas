@@ -1,0 +1,4044 @@
+{
+  "cases": [
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm0.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "a6227ccb6219d08e38eb932867f460ba57d3c761fe046c9b9415b2fe4ea430ed",
+      "qkv_rows": [
+        0,
+        96
+      ],
+      "reused_from": "/tmp/w19-qwen-sm-parallel/d0_sm0",
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "76d4c9e049299836c95eeb832c31cc713f11fb9133d98254162213db3da32892",
+      "sm": 0,
+      "sources": [
+        {
+          "bf16_sha256": "51f62a7fef76cc896fe5f6d34f583271d97ee3833f00f434440516ca3b875e62",
+          "rows": [
+            0,
+            96
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm1.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "eb2df110bc69164115e5c2aff33dfac474a2290aba8f684c8879cb155081e527",
+      "qkv_rows": [
+        96,
+        192
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "10c06abc833771853ccfd67e3a45810e71358e2dc5a9949d866c5944278383c2",
+      "sm": 1,
+      "sources": [
+        {
+          "bf16_sha256": "ab127f81ba392ce0799e157c4190746c755dc74be85ef9c0c0deccb21547c84f",
+          "rows": [
+            96,
+            192
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm2.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "70c07569c4eb47d9daeaebec2669daadba51d04af87fdae80f6cac2ef76c0f15",
+      "qkv_rows": [
+        192,
+        288
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "20a7106e74976a7e52c38d330acc3abab9a3a272a170beb74707daee840747db",
+      "sm": 2,
+      "sources": [
+        {
+          "bf16_sha256": "0d2717a717b252e854277b4c7deb5d6435405fe195f266bd36052196ea60dac5",
+          "rows": [
+            192,
+            288
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm3.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "34d4184a7e59334d4afa8b37a56ab3e08fbe648127091265f639aa01623a420e",
+      "qkv_rows": [
+        288,
+        384
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "e4f2b24a6bd4329a0ed2f8079337692c4401a5668187b8da3ce873444df9425e",
+      "sm": 3,
+      "sources": [
+        {
+          "bf16_sha256": "d9a257acd857efdd4e24734a0b58d8950b3e61b39df50218d284326fb2ddd5da",
+          "rows": [
+            288,
+            384
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm4.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "692501cdfb1898c57010c31d2c9068db47193a1acd2725148de09f2b5cd1084e",
+      "qkv_rows": [
+        384,
+        480
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "df5c7622b41b13d5c7b0c56880e7d51870048fc6f1fdfb288a7b48f97cf18e3d",
+      "sm": 4,
+      "sources": [
+        {
+          "bf16_sha256": "6e90fb223d76914b9bd77594b84827908ce497be4bb839fcaecb9444adb4fcb5",
+          "rows": [
+            384,
+            480
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm5.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "0cb6b2ede092d6b72109f7ec6d7259aa505b4a491d0d314d8e1bc4dbfb402438",
+      "qkv_rows": [
+        480,
+        576
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "230b5f30a4539271741dab8c4bcbec5140d4030b09ffd0521dcade58a6368566",
+      "sm": 5,
+      "sources": [
+        {
+          "bf16_sha256": "76c6881f894619466363ae9906054ea3e3889a9b91c99bde4515fafe18ac6757",
+          "rows": [
+            480,
+            576
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm6.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "780353d882262f07dd952cfdbb8fdabef50d0f7aefce225f28b3416b0a2748e1",
+      "qkv_rows": [
+        576,
+        672
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "4a02de6cfd42469062416edc74c202c4ccc6046e7db3dd0eb50546c3babc4143",
+      "sm": 6,
+      "sources": [
+        {
+          "bf16_sha256": "2252dda85c13f9385c125faff36dd1cb616af1f0c51fef7d1f8876e660b38f54",
+          "rows": [
+            576,
+            672
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm7.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "6935cf9b16b46212566ebfe0307b3d987f86af2d249fd3ed9f027510b196f356",
+      "qkv_rows": [
+        672,
+        768
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "8fbb26e6654c551dc480fdbbe3e1fe3e4f26a164f6823246c6d9e6e5a3592726",
+      "sm": 7,
+      "sources": [
+        {
+          "bf16_sha256": "665e6d11c23b8a9084a2640bfdb2ac76dcb24e2c165b555574aca11d5d4d34c1",
+          "rows": [
+            672,
+            768
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm8.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "a867ad797baeb01eb43ff072e97958a4ce52a3edecb43632fc1f64403c695f48",
+      "qkv_rows": [
+        768,
+        864
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "fd1809186a0971ed812d6d7423c480e8ed8729fcb15f72e4dcb9d4a02943799d",
+      "sm": 8,
+      "sources": [
+        {
+          "bf16_sha256": "ca06f8df7ac41c464c8f4eea27a7404a74470e99c1fe1f7849b48eb016e2a086",
+          "rows": [
+            768,
+            864
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm9.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "d9ed9c449063b057cb9f0f93cf0d2b095e27b8b5a5269b9d8f369a656f2206e6",
+      "qkv_rows": [
+        864,
+        960
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "dce7c098adcec67e21b5e9347975ded142bbee81f56a41990261db402869acbe",
+      "sm": 9,
+      "sources": [
+        {
+          "bf16_sha256": "66a54ad3f6dfe7209b34232d70988a8289c61f9d0c0d8001968c04092c11fc23",
+          "rows": [
+            864,
+            960
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm10.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "8fa843f60715f6ca741a559f23925841d993eed44c523baef88fb3922fb5b123",
+      "qkv_rows": [
+        960,
+        1056
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "1fd17d2a73217a56640fe45a5ceb4fac06b6f1682ef119784526a140f7698261",
+      "sm": 10,
+      "sources": [
+        {
+          "bf16_sha256": "8f1fd3b5048de161b8f49ecb3f3bd6d0a669148f5bbeacf3cd254159ee120470",
+          "rows": [
+            960,
+            1056
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm11.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "1d5a06fdc825db5c9bdb7353ce925a2c5065b667a131cd8e9c78faf9c1febd8f",
+      "qkv_rows": [
+        1056,
+        1152
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "2fd1029ac1fc5625e665b907c23ed11e776468f08ba95b2835d6d0e39e7dd78f",
+      "sm": 11,
+      "sources": [
+        {
+          "bf16_sha256": "d4404bc91f7a8c372f5dd11a8177b17fbfa50cce4e73501c9b96b88e29ca8b84",
+          "rows": [
+            1056,
+            1152
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm12.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "cf35ce8a61699a5cb0d60c6e0c4e9b5eaf265f85de06ae7bb3e7fac6bd0ff061",
+      "qkv_rows": [
+        1152,
+        1248
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "c22a5b130c3b6313db573637b5a1bcca74405c02b954acb8319dad27d487f824",
+      "sm": 12,
+      "sources": [
+        {
+          "bf16_sha256": "ff3e0d45a6ddaeab41b1be98bc2c6a7f97c28b1b0aa29ecaee19079107527db3",
+          "rows": [
+            1152,
+            1248
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm13.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "53778e9acab53d102dcdd1cb44bc949a2a5924839d6185db3ab2105eef9e99d2",
+      "qkv_rows": [
+        1248,
+        1344
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "cf2faaf19c834b5e721a22634e555a76e99a701d1abbfbbbe57254d18176d566",
+      "sm": 13,
+      "sources": [
+        {
+          "bf16_sha256": "e54726c10df9eef5b61fa49cb0724487a2e621179ae5700c1916bf3b625f95a8",
+          "rows": [
+            1248,
+            1344
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm14.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "563d8a47ba55202d5d54703500e867fecb67921e0b32036bea4b86f60b4bc1aa",
+      "qkv_rows": [
+        1344,
+        1440
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "b7c1e8df87e575ea21a7e5877113b9bd1d5c622768c91474a4b042fbbb935973",
+      "sm": 14,
+      "sources": [
+        {
+          "bf16_sha256": "6693503ddb64c30cc53d7e0a66e8b9764d7459e0abd12d0c7c9d81ff137eb8cb",
+          "rows": [
+            1344,
+            1440
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm15.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "e1d62edba69916bc2e2ec72db928701a9e5b6dc760c926df3102d7231a957d0d",
+      "qkv_rows": [
+        1440,
+        1536
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "c65afc1492459b76e4fd6bb854215c12e3f30efef6b66a3c09b353729f7c137e",
+      "sm": 15,
+      "sources": [
+        {
+          "bf16_sha256": "792ba84ce4226a426c641bb03c4e81e3566d92fd178ce0691b76d52704e1d6d1",
+          "rows": [
+            1440,
+            1536
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm16.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "e122ced04a8b19c7974893599284ba2d2c5b44f1ae25fb58926d4d91cdda2d75",
+      "qkv_rows": [
+        1536,
+        1632
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "552030a9ebdbc06397d361f9fbfd53bd5a32089ca8f2cf0b1c35a1eb9b90dce5",
+      "sm": 16,
+      "sources": [
+        {
+          "bf16_sha256": "7223ff8e538dda807ac9ee62ab13472e8019ab1d27800520547289bf50fc961d",
+          "rows": [
+            1536,
+            1632
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm17.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "d7ac5a3c4dd217617a74b688b3b70661d4ddad11da3372d0bcdfa3a7e105cdb7",
+      "qkv_rows": [
+        1632,
+        1728
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "e68623645bc57ab1972288e574433c9dd845e04dc9723e7c2e22ff5c0aa6703a",
+      "sm": 17,
+      "sources": [
+        {
+          "bf16_sha256": "7f44052cf69d718b004f6fcf71a99da2f027401c2ad6b958e935a6e2c89ebfbb",
+          "rows": [
+            1632,
+            1728
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm18.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "164f53cb49f99b86b46ee06acbef5b78d6d1a948c3c74661b62f3b66cb35cd9c",
+      "qkv_rows": [
+        1728,
+        1824
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "30095d9009f541b5646d2f54f2e8d41118053cbb3ab571ead5cca55c8cc42011",
+      "sm": 18,
+      "sources": [
+        {
+          "bf16_sha256": "0af5a5c15dc0dfc35c85507634dea712e44bc25bd6d83cbc97633ea660a72e6f",
+          "rows": [
+            1728,
+            1824
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm19.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "6edd96ce12b3d8249b6e5bea8626b209f232221271f2654d02d0eb244eaca0f1",
+      "qkv_rows": [
+        1824,
+        1920
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "ccbbdbf0ba869569b2a3948fccc4bd8511bfa2f27a0be3f897dc2b02ad031999",
+      "sm": 19,
+      "sources": [
+        {
+          "bf16_sha256": "8a0bc454de97d110460ac0bf7cdfb9b048102d52a4e6b610b75e714b74aeb852",
+          "rows": [
+            1824,
+            1920
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm20.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "cd3d305f82715c2c988c77629ab19dc3826034cdf2ed986236bc1d043e4a1d0a",
+      "qkv_rows": [
+        1920,
+        2016
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "895e5cf7003dd905eeafc72d98c7e8599c01bc164b2a2fcad3d681d2225c0c1e",
+      "sm": 20,
+      "sources": [
+        {
+          "bf16_sha256": "74fcdb7975011f8c06dfc91030b9601dd0a9e7a4251e69c46ce278e9244867b9",
+          "rows": [
+            1920,
+            2016
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm21.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "498a4ddd88bc307b96adfedfd3d4fef87bb38c0896d0a1138f6c888fd2ff4f2b",
+      "qkv_rows": [
+        2016,
+        2112
+      ],
+      "reused_from": "/tmp/w19-qwen-sm-retry21",
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "137ba4ee935471ddd5260b18e97f72bed69cb7beab3242810c4219a2f64ecbc0",
+      "sm": 21,
+      "sources": [
+        {
+          "bf16_sha256": "1d3471f0ef3200e7efee3ab6e23fd49862073fe5e38a3f6f519e7fa2d4d75e35",
+          "rows": [
+            2016,
+            2048
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        },
+        {
+          "bf16_sha256": "d3714651119eb749959d74e4d232d1fefe7e463a49636336c9d524248feefb41",
+          "rows": [
+            0,
+            64
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm22.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "cdf395a1695b1f876024cb759daa77f0972d9843abca2549348f2fe79fdedc3d",
+      "qkv_rows": [
+        2112,
+        2208
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "2737860660c20b3b5f0f4c2cefbffc3867d7d4826058072b6dc747defbed4d72",
+      "sm": 22,
+      "sources": [
+        {
+          "bf16_sha256": "b72fa2474ebe640e7abaf6f776281a971a378c40fe1a631fead2f5e89dae577c",
+          "rows": [
+            64,
+            160
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm23.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "ad494efbc8ca332c8570eab54b4aa86f5a7f01e042872a127acb51745eafd6b5",
+      "qkv_rows": [
+        2208,
+        2304
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "feda337aaaec5824507fd39bf815453ba77b277cd1f1969f16b61b4b327e3000",
+      "sm": 23,
+      "sources": [
+        {
+          "bf16_sha256": "b3ab103eba369e30c54de2a7e03d260346a0acdf6e0069ebf6f2b66fa1028ae0",
+          "rows": [
+            160,
+            256
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm24.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "2f711109cb415d215180288f52a1045bf5ad16bd5542b62aa2cffcd3cd29df1a",
+      "qkv_rows": [
+        2304,
+        2400
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "b695c25138f56211cad4b3befda9ca6292fe9dce125bb7350d28ac2b5f8b442c",
+      "sm": 24,
+      "sources": [
+        {
+          "bf16_sha256": "b31b849be79b7195c94cf178ec3276f183007aa01fe22f6b6013fd4801f9aad1",
+          "rows": [
+            256,
+            352
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm25.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "88e0a1bb5bcb29b8312dab46a7393d775d0b11a1db2b8591ffdc24ecd109496e",
+      "qkv_rows": [
+        2400,
+        2496
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "70ff68c7b1e7ee38f2547a6dc68e7830ac1cc0ddcdb29438bd62e0f3e72617a0",
+      "sm": 25,
+      "sources": [
+        {
+          "bf16_sha256": "685600561fc877c6705cb3bb166642b50287e982d0b8debad2c9fbeeff7f96bb",
+          "rows": [
+            352,
+            448
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm26.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "a8b9434d985ae5f5f610418d7f65265c4f5f482ee914b3753412f9b712957023",
+      "qkv_rows": [
+        2496,
+        2592
+      ],
+      "reused_from": "/tmp/w19-qwen-sm-parallel/d0_sm26",
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "3054f2fcd72e6b5951fe4dc6ac862b2ae84aeda7ca27221acec29c417aeda6a9",
+      "sm": 26,
+      "sources": [
+        {
+          "bf16_sha256": "a70d8d22f1fb626224eda4a5891bd0d3f55f1710ab47d26b2ba1a9c530a784e9",
+          "rows": [
+            448,
+            512
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        },
+        {
+          "bf16_sha256": "8fad1e3997b06cec83d4f48dcf572a60a15bedef4f3b1aa9b10844113ac115c7",
+          "rows": [
+            0,
+            32
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm27.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "64959d50c4528031673a0711671b3c81e7288f1b3c1437e3292f6e6aabeaefe5",
+      "qkv_rows": [
+        2592,
+        2688
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "9204b0068a072f413df9ba7766c6aee42580baf2e4b1ce9bb3c1c184af0f1e33",
+      "sm": 27,
+      "sources": [
+        {
+          "bf16_sha256": "ec5960c227319234c72a95a91227605aa53910494a505549c59d0a60a13279d4",
+          "rows": [
+            32,
+            128
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm28.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "fc2bdf2a058ad53b7b1511964541ba473c5a61abd47ab43161123b9a011904b0",
+      "qkv_rows": [
+        2688,
+        2784
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "f70efd40cafb113ef41eff0661dbee0fc1cdf87f3b0a9b7eeb52745d857e37bb",
+      "sm": 28,
+      "sources": [
+        {
+          "bf16_sha256": "de8645cf3ffca6fb87097c5a07a90eb887b4bf460fa440684426fbb0e3f9c0d0",
+          "rows": [
+            128,
+            224
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm29.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "8e99e986ee7e220dc03266a8fd7bb089deb311e3bee1fc4d011f1cac3f702da9",
+      "qkv_rows": [
+        2784,
+        2880
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "befbf9e1cecddfd842cf84bebded787cfcab21e7445dd2d0e7838ee783469ed5",
+      "sm": 29,
+      "sources": [
+        {
+          "bf16_sha256": "1d22b6578d495a7d03d6ecf016a991addfdb8ad9c704518922c5656cc358d665",
+          "rows": [
+            224,
+            320
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm30.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "55e56c1fde8ae309e4fdefd9b946758b7970cff87967c1baa1bdbe17411a9941",
+      "qkv_rows": [
+        2880,
+        2976
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "3082eb02158e932ab565b31fbec8d3b8ac865b57fc3f4e687376c993ebd707ad",
+      "sm": 30,
+      "sources": [
+        {
+          "bf16_sha256": "a37d643bcf2855046ced7635c75fd44d2d81b709d851218a5e12d5895cb193d3",
+          "rows": [
+            320,
+            416
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "exact": true,
+      "file": "d0_sm31.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "5c86f1cbff9c454ddc6b607d7ce16ab68426c7c472e12d2e09596c245eb4cb4e",
+      "qkv_rows": [
+        2976,
+        3072
+      ],
+      "reused_from": "/tmp/w19-qwen-sm-parallel/d0_sm31",
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "9abc25a6724d975548397bacd1c83b38ba4ed68280885db54f9feca91da3157b",
+      "sm": 31,
+      "sources": [
+        {
+          "bf16_sha256": "1e622bd0a800e7c84c8673e72dc242a7b4b9cf5c45e88d082f5f3d9901b26c97",
+          "rows": [
+            416,
+            512
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm0.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "401289810606276ba9fc9cd6a00373b15febb18632ebc369f40fe26b43cddf43",
+      "qkv_rows": [
+        0,
+        96
+      ],
+      "reused_from": "/tmp/w19-qwen-sm-parallel/d1_sm0",
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "16d342d1d9f17693b25220e6a83cb9dfc80b8481ff91f7828961977a52014497",
+      "sm": 0,
+      "sources": [
+        {
+          "bf16_sha256": "a1121c5e56331767dd87f0eb79291a2cf6cd49c7ee81b9aacadbdb3e6280ec69",
+          "rows": [
+            2048,
+            2144
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm1.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "0f06e52e79da385e826bbf63257457624b3b4b346c8b9edee6090343eaf0a86e",
+      "qkv_rows": [
+        96,
+        192
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "83ab09a6d6937c95abec51091b7d1c3167ec7a71804d74b9abff484a0eaaa557",
+      "sm": 1,
+      "sources": [
+        {
+          "bf16_sha256": "5e1e2b1abd0c7aacf7338f8a18c965465c8306bf85daa3314f1e6a4f384a5597",
+          "rows": [
+            2144,
+            2240
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm2.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "344b556ecce926f55b7673dd3d326e11c6c1b0112694d01de00c271f5520b95a",
+      "qkv_rows": [
+        192,
+        288
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "4233ba9a05c4538757a506cf6f11346110c9584c8c2015e5acc15fa85aea6e48",
+      "sm": 2,
+      "sources": [
+        {
+          "bf16_sha256": "0e9df15fdb4f96bda27d9fb68e069b63f82006a29ae1b84486d9e7414868a767",
+          "rows": [
+            2240,
+            2336
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm3.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "fe624c56d40ee4d4e686d1552f491393a10df2d3ce54bc455dde02458db423d5",
+      "qkv_rows": [
+        288,
+        384
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "8fb4cf0086a23a629ebd0a04cf8f2d9c9d9d7f940454ace33ddac842fbf2d94d",
+      "sm": 3,
+      "sources": [
+        {
+          "bf16_sha256": "c10829c92701b138c2f8137e7813dfea3be8619ea6c42843081facf313631a7d",
+          "rows": [
+            2336,
+            2432
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm4.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "35d6e5c4d19f156346235f0d3758ee000d1355f7b3666b46e02d955e4254e085",
+      "qkv_rows": [
+        384,
+        480
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "4b82a7a9b29a70186477c0d72327df292e42a9298c627f28252d9f066e684045",
+      "sm": 4,
+      "sources": [
+        {
+          "bf16_sha256": "44fdf50e774be145da03f2fdae9822c41666feb1d8ce84b63127d7a477207381",
+          "rows": [
+            2432,
+            2528
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm5.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "0c5c00699ecb30282e9a33f72471b641399dd1a9b401b9e40a13ed8e11219caa",
+      "qkv_rows": [
+        480,
+        576
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "8dd09a4d1d2684a4e411673e7873280f1fa0c61f089400811067cabab8639325",
+      "sm": 5,
+      "sources": [
+        {
+          "bf16_sha256": "b171d69feb79e4ed69fb2eb3288cf3b9f90209af6442f266eb4a8c5a695d30e7",
+          "rows": [
+            2528,
+            2624
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm6.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "a7985719bdbd148ffea42b8c6c5f6131b75782818a99980cd36acef66df39dea",
+      "qkv_rows": [
+        576,
+        672
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "b4b9fdb0307b44850db4558cf46a3a8134e6a1fa1b81f08a33f83a69ec2519be",
+      "sm": 6,
+      "sources": [
+        {
+          "bf16_sha256": "85a4b85e588ca0d5a8e18fb2201cb4263707b6f23bb050db31d640d86d7ce818",
+          "rows": [
+            2624,
+            2720
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm7.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "e497f60f89dbedcb6f3da9bbba9dccf0a1135aebe0496571fd6095bc2fa24893",
+      "qkv_rows": [
+        672,
+        768
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "3dffcda8c0bcf15e204ac6aa843a26a86a6409d801fc0aad89424ba8fabf64d3",
+      "sm": 7,
+      "sources": [
+        {
+          "bf16_sha256": "0ba05846c2815169a8fd3ee0c54f6013589c268a82b9af642bfa781e7acd729b",
+          "rows": [
+            2720,
+            2816
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm8.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "8a7d7da2c854d7a881e1147d96edb4de9d33bf2509bac9b0654919513596e31a",
+      "qkv_rows": [
+        768,
+        864
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "1652a34e7aaad372c13893d0929fad2c764cced22728fb3ee4a16e7e43273d46",
+      "sm": 8,
+      "sources": [
+        {
+          "bf16_sha256": "f32ca80f757639234fdb55348fe6441bc2b632925a6ec276246c138b19335402",
+          "rows": [
+            2816,
+            2912
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm9.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "7c2eea8850cddf88b4ff42c8f87b8350ab4363c84b2e6e91afa5e8d9cb30c8b0",
+      "qkv_rows": [
+        864,
+        960
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "b6fa65f0d9db60485f26aa1f51cd848dec303611243d2a33e236e31a94151f51",
+      "sm": 9,
+      "sources": [
+        {
+          "bf16_sha256": "b198414701ff612f51426ed82c3555cab3fa7225dab440e46314f3d4e99a1875",
+          "rows": [
+            2912,
+            3008
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm10.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "aade4c85c2843c213e9083b26c814e3364a7bc38e1d0d45a355b097eb4dddac9",
+      "qkv_rows": [
+        960,
+        1056
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "e2d32c10db5b23f97170d8b43808c99c18bcae87b7f1d55f4e551188915b7405",
+      "sm": 10,
+      "sources": [
+        {
+          "bf16_sha256": "ed9fe731d02268e10480d5f4710ec00e33f2846aba7d73c5a83d0bfac076aba0",
+          "rows": [
+            3008,
+            3104
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm11.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "a57058e9b16dc27feec72584c263ddc51124681db9a27de5f3945eb9dca7db76",
+      "qkv_rows": [
+        1056,
+        1152
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "4120a2eadfd7c7f168d9c0c103c9c07808cf20016b42ab1206739cc0075448d1",
+      "sm": 11,
+      "sources": [
+        {
+          "bf16_sha256": "e2fca0796e2e826ece0d956401c73dfeeaa90b5c91ba5a4aade08f61d2635e45",
+          "rows": [
+            3104,
+            3200
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm12.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "e2874ca8af87a81375950e07735d7409ca576ec1e9c5e1d1c51764cce7c48138",
+      "qkv_rows": [
+        1152,
+        1248
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "ba10a55bde746c7b25730d501797be08ae13f33f837b18dba719fa8d9d8e5b73",
+      "sm": 12,
+      "sources": [
+        {
+          "bf16_sha256": "5ac6dd14b8c613bfe3da53b924674284865a7b63bb9017b4ada44bc89e096f31",
+          "rows": [
+            3200,
+            3296
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm13.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "f9b6b4dec6ccecb5f056afa542638aa623a73817f834d47965c3f215cef5f8f9",
+      "qkv_rows": [
+        1248,
+        1344
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "f9425235c685a9f4c67dffbd2a2292c2e7d1fc9779c36c1817f34c672bf0eccc",
+      "sm": 13,
+      "sources": [
+        {
+          "bf16_sha256": "20edfb4602be56ea63b0d55f62911b3b4943fb14f07d52c59a474f3b96a3bfc0",
+          "rows": [
+            3296,
+            3392
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm14.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "76f6019b9d0991c6a39efd093b06997289f50ff23dd2a97debbf639ad14034bc",
+      "qkv_rows": [
+        1344,
+        1440
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "4bbae851c5317fd058ebe57558e348e94773630ec76213b8f975f31802b91337",
+      "sm": 14,
+      "sources": [
+        {
+          "bf16_sha256": "5def2c3f0d96873ddf6f20711a64c9adb6f2fc6205e07a825d3aa2160531bb49",
+          "rows": [
+            3392,
+            3488
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm15.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "f09ea2d39ae3b0f23fc3e44373c6b860beaa4db03cfdc803fde5d6796ce17f40",
+      "qkv_rows": [
+        1440,
+        1536
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "094d96f960ebfedd379858520cebd8810b707f35d267f752c87d63a77624b4c0",
+      "sm": 15,
+      "sources": [
+        {
+          "bf16_sha256": "b1f9a0d19f6d28892334890cd9dbe2a828dd650a0fec15dcf828fdbb3dc61b9e",
+          "rows": [
+            3488,
+            3584
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm16.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "ec1f96a27506d78ce72924619c4c7c2e45ad3d3eff23421d25b3afd2d7af7c22",
+      "qkv_rows": [
+        1536,
+        1632
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "5914a4aac039ac1818a6c0d8f077170406bfe9210207043b383829a0a036f86e",
+      "sm": 16,
+      "sources": [
+        {
+          "bf16_sha256": "6c2e78dab68030a6532f7f68ae6afd0c18d9f294ffa9b6cc2f336b570fb7cf95",
+          "rows": [
+            3584,
+            3680
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm17.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "97f56175eabafd7acf823471a3824c736c48e0870936424928727814ef736b7f",
+      "qkv_rows": [
+        1632,
+        1728
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "b0ed903ebd54690ecbb8a646f1841bedc8809a96ced53bc003771660dc659e9f",
+      "sm": 17,
+      "sources": [
+        {
+          "bf16_sha256": "ef850b7136df5925ec7b5808dd53aefc884dcc2b83be64940fd5353e3f331159",
+          "rows": [
+            3680,
+            3776
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm18.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "fa3380465ef4972807be3be9fc6a93c045213928dba6b02c3b8807052912afaf",
+      "qkv_rows": [
+        1728,
+        1824
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "ad895810189eab99941406eec6e9c37c8f4b96f05de33c0149e7646d2330761c",
+      "sm": 18,
+      "sources": [
+        {
+          "bf16_sha256": "3fbe20a41de6e82c1a1cce3053f9958575617f80d5ebbb0753ed46653f8bfc84",
+          "rows": [
+            3776,
+            3872
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm19.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "692300a61ed457b7a1a895fef1c52eb56bfd71251bf5be5413707e7fa0d19031",
+      "qkv_rows": [
+        1824,
+        1920
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "5b17d67485fe006a1381bea94345f33e0fda9eb1b77780e44c5c516ee891dcac",
+      "sm": 19,
+      "sources": [
+        {
+          "bf16_sha256": "9327f52660673a3dd3b383d26b0ae2c32255ee23410d74e022b777aed9a630ef",
+          "rows": [
+            3872,
+            3968
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm20.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "fd71cb17043d95e56bb62da892ae94fe3afe692aa6e89314f7bffd2102f0d5f3",
+      "qkv_rows": [
+        1920,
+        2016
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "be260125c117d947c92d3c789feff72730198cb724661ab1460e62304cd0dafe",
+      "sm": 20,
+      "sources": [
+        {
+          "bf16_sha256": "a1be1bcfcba2979a2420067c1fd6b6a085658c88cfbaa5b9516f54a3919e1a13",
+          "rows": [
+            3968,
+            4064
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm21.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "44b430ef6683270178e8670ce49bbe0ccc950cfb7d761f8bacfff73c084f65e1",
+      "qkv_rows": [
+        2016,
+        2112
+      ],
+      "reused_from": "/tmp/w19-qwen-sm-parallel/d1_sm21",
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "052d3a9444e3e7dc92064dc5c3700818fe413e6bbad42c0950dcff11192384b4",
+      "sm": 21,
+      "sources": [
+        {
+          "bf16_sha256": "2b6cc5bd4921eb4832d915b060da18e1e0d2a5694931c5ae4c18580354266cc4",
+          "rows": [
+            4064,
+            4096
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        },
+        {
+          "bf16_sha256": "669e33079a73266480e486adcf4c612cc3ae8ad903a614be6cc09c2317dfb656",
+          "rows": [
+            512,
+            576
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm22.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "69dc3876299ee4c7b1c54821d275daf2159a81aef1297c607ac5e1a2a5eb81b2",
+      "qkv_rows": [
+        2112,
+        2208
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "e573fad81a365fe64b1d8e1cc3b9434909b842c675006f5bb936249b2ab64800",
+      "sm": 22,
+      "sources": [
+        {
+          "bf16_sha256": "4d27814f0f3cdfd5adfa00208fa95850d5fe78728ebb65229787faffc02d0aec",
+          "rows": [
+            576,
+            672
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm23.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "6211389a5b903171a3f4ed56b7be412951933289d01146e3b41c744704ef28d6",
+      "qkv_rows": [
+        2208,
+        2304
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "c4f9e0b13a28b57212fd8a9bd07f575c728010031533e176c2797201aa2b94a2",
+      "sm": 23,
+      "sources": [
+        {
+          "bf16_sha256": "01b58d81863995fed8b55992956fa5457fda804c14ddfc1572bd70aa7c7bab0d",
+          "rows": [
+            672,
+            768
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm24.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "91363ff5671138e8c56c66d546d01508d04518270d5caeb5ab5470216568f545",
+      "qkv_rows": [
+        2304,
+        2400
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "190cff16672ab133bfea189e1bae3e917c9b6e62a193ed6485347ede910d7df5",
+      "sm": 24,
+      "sources": [
+        {
+          "bf16_sha256": "da5001283340bcbc4cfcc84f3227f5f9dfb71010c53726d166095031fe105418",
+          "rows": [
+            768,
+            864
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm25.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "202925147def12637a69994eb84e8ce34690e05216308086ada6e2d99a468c2a",
+      "qkv_rows": [
+        2400,
+        2496
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "77b2793a61ccf51fdb4f3eea7b6f79c6cb6216a694a069fb2e3207cba239de61",
+      "sm": 25,
+      "sources": [
+        {
+          "bf16_sha256": "9350d6866bcee90598c9ba0c5d7f3484018872537cd66b98d97d2cae945a23fb",
+          "rows": [
+            864,
+            960
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm26.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "a045709c3d9a1989bd102eb36f39fec7b228a866efb511e0da354966e684919e",
+      "qkv_rows": [
+        2496,
+        2592
+      ],
+      "reused_from": "/tmp/w19-qwen-sm-parallel/d1_sm26",
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "d0112e4f77d43a0333464521c4e6398afe54a1f9a062e0ad0b32f4f4405bd74d",
+      "sm": 26,
+      "sources": [
+        {
+          "bf16_sha256": "9502e720fd1d8b4edb72271948101fad662a134c4bd9e5ecad685fc5d32d1c17",
+          "rows": [
+            960,
+            1024
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        },
+        {
+          "bf16_sha256": "1a4ece6ad1c3030d2442779f296a9230a44e625c69026b90953697ef1cd2c9f6",
+          "rows": [
+            512,
+            544
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm27.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "74010868d1f1285ea783af89139e699e2194a3b95941cd1c629d70fa0ebe2540",
+      "qkv_rows": [
+        2592,
+        2688
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "965a05d3e1deac726968293e07f0d9dd0bdb846f35505acedcf3ebcf9dad2d72",
+      "sm": 27,
+      "sources": [
+        {
+          "bf16_sha256": "d541d8d9e75fafea96a290e1a34ef0d00bea39bf259d9c9edf8f828fe61be341",
+          "rows": [
+            544,
+            640
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm28.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "f653a81c05e8b334498055ceb290d5425e9c180f327db755994aa394238cc746",
+      "qkv_rows": [
+        2688,
+        2784
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "db1cfa55ee80c8402378ec90e9c41afea9b301339a60e11b2d6d785a401c6838",
+      "sm": 28,
+      "sources": [
+        {
+          "bf16_sha256": "a40094d30f64dd7b55e1cc5b6b0b33a0ba0d3884c8977a3d08d725a25ff13b3e",
+          "rows": [
+            640,
+            736
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm29.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "68276860d02f960ee9ead5e052c66dfd4362148c4508461f08e8d3d39a9f34f0",
+      "qkv_rows": [
+        2784,
+        2880
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "0b9da6b02098bcdf22a6361e9bfc410567ae0310548a7d47a9d6b008ee6c88c3",
+      "sm": 29,
+      "sources": [
+        {
+          "bf16_sha256": "d58b062a965a7176669c53d5caeb279cb8516b7eb0783c37b8f5822442224a87",
+          "rows": [
+            736,
+            832
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm30.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "f192080a436f5981fdaf2c94af5bf380df23dec3bfc96c9bd0d2cbd221df9d1d",
+      "qkv_rows": [
+        2880,
+        2976
+      ],
+      "reused_from": null,
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "c075bb35a5d9cce124644756a741568d3891193b5450afcd9b83925686db0433",
+      "sm": 30,
+      "sources": [
+        {
+          "bf16_sha256": "f4cf664324f1af4d6ac74df229940c9c57103fabf706de4167044eb6eaa2e0ba",
+          "rows": [
+            832,
+            928
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "exact": true,
+      "file": "d1_sm31.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "7f7c00f10004e067a97f4091623e87a8a80825dbaef48aef7e2aa4496bb80a48",
+      "qkv_rows": [
+        2976,
+        3072
+      ],
+      "reused_from": "/tmp/w19-qwen-sm-recovery-d1-sm31",
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "9aff0e3b804d039fb230d89b395f39d3d8f43ca231e83dce1885ed237a233ac7",
+      "sm": 31,
+      "sources": [
+        {
+          "bf16_sha256": "27c2fca2a57214c12b9a6b4459ac6c18e433dbddcb6ff0c4c80f76e8bab3eb35",
+          "rows": [
+            928,
+            1024
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    }
+  ],
+  "claim_boundary": "All 64 model QKV row partitions through real-checkpoint GPU SM bulk-copy/SRAM/MMA/row-scale RTL, with host full-QKV gather and norm scalar check. Independent behavioral HBM shares and bench release; no production shared HBM/L2/NoC/barrier, physical NC16, full RTL layer or token verdict.",
+  "compile_receipt": {
+    "compile_log_sha256": "259c4710fb5ee72b57bc910d8f56386a5825d54d41d0bd59436794634a575ad4",
+    "driver_pid": 396468,
+    "executable": "/tmp/w19-qwen-sm-2f781e517/build/sim.vvp",
+    "executable_sha256": "7a7477ed6696445aadbde62c85798ce901ffff4d3453b29ca18d63604eaf8996",
+    "first_simulation_pid": 398332,
+    "preflight": "/tmp/claude-1000/wt/w19-qwen-hbm/results/uarch/w19_qwen_hbm_checkpoint_preflight_w13.json",
+    "preflight_sha256": "105051ee965857cef96b489a17b58a89a0b20badf9638cedd0d454a7f7bd076a",
+    "scope": "Successful elaboration from clean 2f781e517; binary reused, first simulation preserved; serial driver stopped to dispatch remaining cases in parallel",
+    "source_commit": "2f781e517",
+    "testbench_params": {
+      "JIT": 55,
+      "LAT": 550,
+      "LEV": 5,
+      "LS": 32,
+      "NC": 1,
+      "NXM": 1,
+      "RMAX": 256,
+      "SUB": 4,
+      "XDEPTH": 96
+    }
+  },
+  "model_feedback": {
+    "adoption": false,
+    "connected_die_stage_cycles": null,
+    "full_token_cycles": null,
+    "max_partition_cycles": 4785
+  },
+  "operand_manifest": {
+    "arithmetic": "Existing W8 folded-weight TP2 contract, input BF16, FP32 tree then BF16 row scale then separate rstd multiply",
+    "cases": [
+      {
+        "die": 0,
+        "file": "d0_sm0.npz",
+        "qkv_rows": [
+          0,
+          96
+        ],
+        "sha256": "76d4c9e049299836c95eeb832c31cc713f11fb9133d98254162213db3da32892",
+        "sm": 0,
+        "sources": [
+          {
+            "bf16_sha256": "51f62a7fef76cc896fe5f6d34f583271d97ee3833f00f434440516ca3b875e62",
+            "rows": [
+              0,
+              96
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm1.npz",
+        "qkv_rows": [
+          96,
+          192
+        ],
+        "sha256": "10c06abc833771853ccfd67e3a45810e71358e2dc5a9949d866c5944278383c2",
+        "sm": 1,
+        "sources": [
+          {
+            "bf16_sha256": "ab127f81ba392ce0799e157c4190746c755dc74be85ef9c0c0deccb21547c84f",
+            "rows": [
+              96,
+              192
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm2.npz",
+        "qkv_rows": [
+          192,
+          288
+        ],
+        "sha256": "20a7106e74976a7e52c38d330acc3abab9a3a272a170beb74707daee840747db",
+        "sm": 2,
+        "sources": [
+          {
+            "bf16_sha256": "0d2717a717b252e854277b4c7deb5d6435405fe195f266bd36052196ea60dac5",
+            "rows": [
+              192,
+              288
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm3.npz",
+        "qkv_rows": [
+          288,
+          384
+        ],
+        "sha256": "e4f2b24a6bd4329a0ed2f8079337692c4401a5668187b8da3ce873444df9425e",
+        "sm": 3,
+        "sources": [
+          {
+            "bf16_sha256": "d9a257acd857efdd4e24734a0b58d8950b3e61b39df50218d284326fb2ddd5da",
+            "rows": [
+              288,
+              384
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm4.npz",
+        "qkv_rows": [
+          384,
+          480
+        ],
+        "sha256": "df5c7622b41b13d5c7b0c56880e7d51870048fc6f1fdfb288a7b48f97cf18e3d",
+        "sm": 4,
+        "sources": [
+          {
+            "bf16_sha256": "6e90fb223d76914b9bd77594b84827908ce497be4bb839fcaecb9444adb4fcb5",
+            "rows": [
+              384,
+              480
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm5.npz",
+        "qkv_rows": [
+          480,
+          576
+        ],
+        "sha256": "230b5f30a4539271741dab8c4bcbec5140d4030b09ffd0521dcade58a6368566",
+        "sm": 5,
+        "sources": [
+          {
+            "bf16_sha256": "76c6881f894619466363ae9906054ea3e3889a9b91c99bde4515fafe18ac6757",
+            "rows": [
+              480,
+              576
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm6.npz",
+        "qkv_rows": [
+          576,
+          672
+        ],
+        "sha256": "4a02de6cfd42469062416edc74c202c4ccc6046e7db3dd0eb50546c3babc4143",
+        "sm": 6,
+        "sources": [
+          {
+            "bf16_sha256": "2252dda85c13f9385c125faff36dd1cb616af1f0c51fef7d1f8876e660b38f54",
+            "rows": [
+              576,
+              672
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm7.npz",
+        "qkv_rows": [
+          672,
+          768
+        ],
+        "sha256": "8fbb26e6654c551dc480fdbbe3e1fe3e4f26a164f6823246c6d9e6e5a3592726",
+        "sm": 7,
+        "sources": [
+          {
+            "bf16_sha256": "665e6d11c23b8a9084a2640bfdb2ac76dcb24e2c165b555574aca11d5d4d34c1",
+            "rows": [
+              672,
+              768
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm8.npz",
+        "qkv_rows": [
+          768,
+          864
+        ],
+        "sha256": "fd1809186a0971ed812d6d7423c480e8ed8729fcb15f72e4dcb9d4a02943799d",
+        "sm": 8,
+        "sources": [
+          {
+            "bf16_sha256": "ca06f8df7ac41c464c8f4eea27a7404a74470e99c1fe1f7849b48eb016e2a086",
+            "rows": [
+              768,
+              864
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm9.npz",
+        "qkv_rows": [
+          864,
+          960
+        ],
+        "sha256": "dce7c098adcec67e21b5e9347975ded142bbee81f56a41990261db402869acbe",
+        "sm": 9,
+        "sources": [
+          {
+            "bf16_sha256": "66a54ad3f6dfe7209b34232d70988a8289c61f9d0c0d8001968c04092c11fc23",
+            "rows": [
+              864,
+              960
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm10.npz",
+        "qkv_rows": [
+          960,
+          1056
+        ],
+        "sha256": "1fd17d2a73217a56640fe45a5ceb4fac06b6f1682ef119784526a140f7698261",
+        "sm": 10,
+        "sources": [
+          {
+            "bf16_sha256": "8f1fd3b5048de161b8f49ecb3f3bd6d0a669148f5bbeacf3cd254159ee120470",
+            "rows": [
+              960,
+              1056
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm11.npz",
+        "qkv_rows": [
+          1056,
+          1152
+        ],
+        "sha256": "2fd1029ac1fc5625e665b907c23ed11e776468f08ba95b2835d6d0e39e7dd78f",
+        "sm": 11,
+        "sources": [
+          {
+            "bf16_sha256": "d4404bc91f7a8c372f5dd11a8177b17fbfa50cce4e73501c9b96b88e29ca8b84",
+            "rows": [
+              1056,
+              1152
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm12.npz",
+        "qkv_rows": [
+          1152,
+          1248
+        ],
+        "sha256": "c22a5b130c3b6313db573637b5a1bcca74405c02b954acb8319dad27d487f824",
+        "sm": 12,
+        "sources": [
+          {
+            "bf16_sha256": "ff3e0d45a6ddaeab41b1be98bc2c6a7f97c28b1b0aa29ecaee19079107527db3",
+            "rows": [
+              1152,
+              1248
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm13.npz",
+        "qkv_rows": [
+          1248,
+          1344
+        ],
+        "sha256": "cf2faaf19c834b5e721a22634e555a76e99a701d1abbfbbbe57254d18176d566",
+        "sm": 13,
+        "sources": [
+          {
+            "bf16_sha256": "e54726c10df9eef5b61fa49cb0724487a2e621179ae5700c1916bf3b625f95a8",
+            "rows": [
+              1248,
+              1344
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm14.npz",
+        "qkv_rows": [
+          1344,
+          1440
+        ],
+        "sha256": "b7c1e8df87e575ea21a7e5877113b9bd1d5c622768c91474a4b042fbbb935973",
+        "sm": 14,
+        "sources": [
+          {
+            "bf16_sha256": "6693503ddb64c30cc53d7e0a66e8b9764d7459e0abd12d0c7c9d81ff137eb8cb",
+            "rows": [
+              1344,
+              1440
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm15.npz",
+        "qkv_rows": [
+          1440,
+          1536
+        ],
+        "sha256": "c65afc1492459b76e4fd6bb854215c12e3f30efef6b66a3c09b353729f7c137e",
+        "sm": 15,
+        "sources": [
+          {
+            "bf16_sha256": "792ba84ce4226a426c641bb03c4e81e3566d92fd178ce0691b76d52704e1d6d1",
+            "rows": [
+              1440,
+              1536
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm16.npz",
+        "qkv_rows": [
+          1536,
+          1632
+        ],
+        "sha256": "552030a9ebdbc06397d361f9fbfd53bd5a32089ca8f2cf0b1c35a1eb9b90dce5",
+        "sm": 16,
+        "sources": [
+          {
+            "bf16_sha256": "7223ff8e538dda807ac9ee62ab13472e8019ab1d27800520547289bf50fc961d",
+            "rows": [
+              1536,
+              1632
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm17.npz",
+        "qkv_rows": [
+          1632,
+          1728
+        ],
+        "sha256": "e68623645bc57ab1972288e574433c9dd845e04dc9723e7c2e22ff5c0aa6703a",
+        "sm": 17,
+        "sources": [
+          {
+            "bf16_sha256": "7f44052cf69d718b004f6fcf71a99da2f027401c2ad6b958e935a6e2c89ebfbb",
+            "rows": [
+              1632,
+              1728
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm18.npz",
+        "qkv_rows": [
+          1728,
+          1824
+        ],
+        "sha256": "30095d9009f541b5646d2f54f2e8d41118053cbb3ab571ead5cca55c8cc42011",
+        "sm": 18,
+        "sources": [
+          {
+            "bf16_sha256": "0af5a5c15dc0dfc35c85507634dea712e44bc25bd6d83cbc97633ea660a72e6f",
+            "rows": [
+              1728,
+              1824
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm19.npz",
+        "qkv_rows": [
+          1824,
+          1920
+        ],
+        "sha256": "ccbbdbf0ba869569b2a3948fccc4bd8511bfa2f27a0be3f897dc2b02ad031999",
+        "sm": 19,
+        "sources": [
+          {
+            "bf16_sha256": "8a0bc454de97d110460ac0bf7cdfb9b048102d52a4e6b610b75e714b74aeb852",
+            "rows": [
+              1824,
+              1920
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm20.npz",
+        "qkv_rows": [
+          1920,
+          2016
+        ],
+        "sha256": "895e5cf7003dd905eeafc72d98c7e8599c01bc164b2a2fcad3d681d2225c0c1e",
+        "sm": 20,
+        "sources": [
+          {
+            "bf16_sha256": "74fcdb7975011f8c06dfc91030b9601dd0a9e7a4251e69c46ce278e9244867b9",
+            "rows": [
+              1920,
+              2016
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm21.npz",
+        "qkv_rows": [
+          2016,
+          2112
+        ],
+        "sha256": "137ba4ee935471ddd5260b18e97f72bed69cb7beab3242810c4219a2f64ecbc0",
+        "sm": 21,
+        "sources": [
+          {
+            "bf16_sha256": "1d3471f0ef3200e7efee3ab6e23fd49862073fe5e38a3f6f519e7fa2d4d75e35",
+            "rows": [
+              2016,
+              2048
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          },
+          {
+            "bf16_sha256": "d3714651119eb749959d74e4d232d1fefe7e463a49636336c9d524248feefb41",
+            "rows": [
+              0,
+              64
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm22.npz",
+        "qkv_rows": [
+          2112,
+          2208
+        ],
+        "sha256": "2737860660c20b3b5f0f4c2cefbffc3867d7d4826058072b6dc747defbed4d72",
+        "sm": 22,
+        "sources": [
+          {
+            "bf16_sha256": "b72fa2474ebe640e7abaf6f776281a971a378c40fe1a631fead2f5e89dae577c",
+            "rows": [
+              64,
+              160
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm23.npz",
+        "qkv_rows": [
+          2208,
+          2304
+        ],
+        "sha256": "feda337aaaec5824507fd39bf815453ba77b277cd1f1969f16b61b4b327e3000",
+        "sm": 23,
+        "sources": [
+          {
+            "bf16_sha256": "b3ab103eba369e30c54de2a7e03d260346a0acdf6e0069ebf6f2b66fa1028ae0",
+            "rows": [
+              160,
+              256
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm24.npz",
+        "qkv_rows": [
+          2304,
+          2400
+        ],
+        "sha256": "b695c25138f56211cad4b3befda9ca6292fe9dce125bb7350d28ac2b5f8b442c",
+        "sm": 24,
+        "sources": [
+          {
+            "bf16_sha256": "b31b849be79b7195c94cf178ec3276f183007aa01fe22f6b6013fd4801f9aad1",
+            "rows": [
+              256,
+              352
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm25.npz",
+        "qkv_rows": [
+          2400,
+          2496
+        ],
+        "sha256": "70ff68c7b1e7ee38f2547a6dc68e7830ac1cc0ddcdb29438bd62e0f3e72617a0",
+        "sm": 25,
+        "sources": [
+          {
+            "bf16_sha256": "685600561fc877c6705cb3bb166642b50287e982d0b8debad2c9fbeeff7f96bb",
+            "rows": [
+              352,
+              448
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm26.npz",
+        "qkv_rows": [
+          2496,
+          2592
+        ],
+        "sha256": "3054f2fcd72e6b5951fe4dc6ac862b2ae84aeda7ca27221acec29c417aeda6a9",
+        "sm": 26,
+        "sources": [
+          {
+            "bf16_sha256": "a70d8d22f1fb626224eda4a5891bd0d3f55f1710ab47d26b2ba1a9c530a784e9",
+            "rows": [
+              448,
+              512
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          },
+          {
+            "bf16_sha256": "8fad1e3997b06cec83d4f48dcf572a60a15bedef4f3b1aa9b10844113ac115c7",
+            "rows": [
+              0,
+              32
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm27.npz",
+        "qkv_rows": [
+          2592,
+          2688
+        ],
+        "sha256": "9204b0068a072f413df9ba7766c6aee42580baf2e4b1ce9bb3c1c184af0f1e33",
+        "sm": 27,
+        "sources": [
+          {
+            "bf16_sha256": "ec5960c227319234c72a95a91227605aa53910494a505549c59d0a60a13279d4",
+            "rows": [
+              32,
+              128
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm28.npz",
+        "qkv_rows": [
+          2688,
+          2784
+        ],
+        "sha256": "f70efd40cafb113ef41eff0661dbee0fc1cdf87f3b0a9b7eeb52745d857e37bb",
+        "sm": 28,
+        "sources": [
+          {
+            "bf16_sha256": "de8645cf3ffca6fb87097c5a07a90eb887b4bf460fa440684426fbb0e3f9c0d0",
+            "rows": [
+              128,
+              224
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm29.npz",
+        "qkv_rows": [
+          2784,
+          2880
+        ],
+        "sha256": "befbf9e1cecddfd842cf84bebded787cfcab21e7445dd2d0e7838ee783469ed5",
+        "sm": 29,
+        "sources": [
+          {
+            "bf16_sha256": "1d22b6578d495a7d03d6ecf016a991addfdb8ad9c704518922c5656cc358d665",
+            "rows": [
+              224,
+              320
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm30.npz",
+        "qkv_rows": [
+          2880,
+          2976
+        ],
+        "sha256": "3082eb02158e932ab565b31fbec8d3b8ac865b57fc3f4e687376c993ebd707ad",
+        "sm": 30,
+        "sources": [
+          {
+            "bf16_sha256": "a37d643bcf2855046ced7635c75fd44d2d81b709d851218a5e12d5895cb193d3",
+            "rows": [
+              320,
+              416
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm31.npz",
+        "qkv_rows": [
+          2976,
+          3072
+        ],
+        "sha256": "9abc25a6724d975548397bacd1c83b38ba4ed68280885db54f9feca91da3157b",
+        "sm": 31,
+        "sources": [
+          {
+            "bf16_sha256": "1e622bd0a800e7c84c8673e72dc242a7b4b9cf5c45e88d082f5f3d9901b26c97",
+            "rows": [
+              416,
+              512
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm0.npz",
+        "qkv_rows": [
+          0,
+          96
+        ],
+        "sha256": "16d342d1d9f17693b25220e6a83cb9dfc80b8481ff91f7828961977a52014497",
+        "sm": 0,
+        "sources": [
+          {
+            "bf16_sha256": "a1121c5e56331767dd87f0eb79291a2cf6cd49c7ee81b9aacadbdb3e6280ec69",
+            "rows": [
+              2048,
+              2144
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm1.npz",
+        "qkv_rows": [
+          96,
+          192
+        ],
+        "sha256": "83ab09a6d6937c95abec51091b7d1c3167ec7a71804d74b9abff484a0eaaa557",
+        "sm": 1,
+        "sources": [
+          {
+            "bf16_sha256": "5e1e2b1abd0c7aacf7338f8a18c965465c8306bf85daa3314f1e6a4f384a5597",
+            "rows": [
+              2144,
+              2240
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm2.npz",
+        "qkv_rows": [
+          192,
+          288
+        ],
+        "sha256": "4233ba9a05c4538757a506cf6f11346110c9584c8c2015e5acc15fa85aea6e48",
+        "sm": 2,
+        "sources": [
+          {
+            "bf16_sha256": "0e9df15fdb4f96bda27d9fb68e069b63f82006a29ae1b84486d9e7414868a767",
+            "rows": [
+              2240,
+              2336
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm3.npz",
+        "qkv_rows": [
+          288,
+          384
+        ],
+        "sha256": "8fb4cf0086a23a629ebd0a04cf8f2d9c9d9d7f940454ace33ddac842fbf2d94d",
+        "sm": 3,
+        "sources": [
+          {
+            "bf16_sha256": "c10829c92701b138c2f8137e7813dfea3be8619ea6c42843081facf313631a7d",
+            "rows": [
+              2336,
+              2432
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm4.npz",
+        "qkv_rows": [
+          384,
+          480
+        ],
+        "sha256": "4b82a7a9b29a70186477c0d72327df292e42a9298c627f28252d9f066e684045",
+        "sm": 4,
+        "sources": [
+          {
+            "bf16_sha256": "44fdf50e774be145da03f2fdae9822c41666feb1d8ce84b63127d7a477207381",
+            "rows": [
+              2432,
+              2528
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm5.npz",
+        "qkv_rows": [
+          480,
+          576
+        ],
+        "sha256": "8dd09a4d1d2684a4e411673e7873280f1fa0c61f089400811067cabab8639325",
+        "sm": 5,
+        "sources": [
+          {
+            "bf16_sha256": "b171d69feb79e4ed69fb2eb3288cf3b9f90209af6442f266eb4a8c5a695d30e7",
+            "rows": [
+              2528,
+              2624
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm6.npz",
+        "qkv_rows": [
+          576,
+          672
+        ],
+        "sha256": "b4b9fdb0307b44850db4558cf46a3a8134e6a1fa1b81f08a33f83a69ec2519be",
+        "sm": 6,
+        "sources": [
+          {
+            "bf16_sha256": "85a4b85e588ca0d5a8e18fb2201cb4263707b6f23bb050db31d640d86d7ce818",
+            "rows": [
+              2624,
+              2720
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm7.npz",
+        "qkv_rows": [
+          672,
+          768
+        ],
+        "sha256": "3dffcda8c0bcf15e204ac6aa843a26a86a6409d801fc0aad89424ba8fabf64d3",
+        "sm": 7,
+        "sources": [
+          {
+            "bf16_sha256": "0ba05846c2815169a8fd3ee0c54f6013589c268a82b9af642bfa781e7acd729b",
+            "rows": [
+              2720,
+              2816
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm8.npz",
+        "qkv_rows": [
+          768,
+          864
+        ],
+        "sha256": "1652a34e7aaad372c13893d0929fad2c764cced22728fb3ee4a16e7e43273d46",
+        "sm": 8,
+        "sources": [
+          {
+            "bf16_sha256": "f32ca80f757639234fdb55348fe6441bc2b632925a6ec276246c138b19335402",
+            "rows": [
+              2816,
+              2912
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm9.npz",
+        "qkv_rows": [
+          864,
+          960
+        ],
+        "sha256": "b6fa65f0d9db60485f26aa1f51cd848dec303611243d2a33e236e31a94151f51",
+        "sm": 9,
+        "sources": [
+          {
+            "bf16_sha256": "b198414701ff612f51426ed82c3555cab3fa7225dab440e46314f3d4e99a1875",
+            "rows": [
+              2912,
+              3008
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm10.npz",
+        "qkv_rows": [
+          960,
+          1056
+        ],
+        "sha256": "e2d32c10db5b23f97170d8b43808c99c18bcae87b7f1d55f4e551188915b7405",
+        "sm": 10,
+        "sources": [
+          {
+            "bf16_sha256": "ed9fe731d02268e10480d5f4710ec00e33f2846aba7d73c5a83d0bfac076aba0",
+            "rows": [
+              3008,
+              3104
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm11.npz",
+        "qkv_rows": [
+          1056,
+          1152
+        ],
+        "sha256": "4120a2eadfd7c7f168d9c0c103c9c07808cf20016b42ab1206739cc0075448d1",
+        "sm": 11,
+        "sources": [
+          {
+            "bf16_sha256": "e2fca0796e2e826ece0d956401c73dfeeaa90b5c91ba5a4aade08f61d2635e45",
+            "rows": [
+              3104,
+              3200
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm12.npz",
+        "qkv_rows": [
+          1152,
+          1248
+        ],
+        "sha256": "ba10a55bde746c7b25730d501797be08ae13f33f837b18dba719fa8d9d8e5b73",
+        "sm": 12,
+        "sources": [
+          {
+            "bf16_sha256": "5ac6dd14b8c613bfe3da53b924674284865a7b63bb9017b4ada44bc89e096f31",
+            "rows": [
+              3200,
+              3296
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm13.npz",
+        "qkv_rows": [
+          1248,
+          1344
+        ],
+        "sha256": "f9425235c685a9f4c67dffbd2a2292c2e7d1fc9779c36c1817f34c672bf0eccc",
+        "sm": 13,
+        "sources": [
+          {
+            "bf16_sha256": "20edfb4602be56ea63b0d55f62911b3b4943fb14f07d52c59a474f3b96a3bfc0",
+            "rows": [
+              3296,
+              3392
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm14.npz",
+        "qkv_rows": [
+          1344,
+          1440
+        ],
+        "sha256": "4bbae851c5317fd058ebe57558e348e94773630ec76213b8f975f31802b91337",
+        "sm": 14,
+        "sources": [
+          {
+            "bf16_sha256": "5def2c3f0d96873ddf6f20711a64c9adb6f2fc6205e07a825d3aa2160531bb49",
+            "rows": [
+              3392,
+              3488
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm15.npz",
+        "qkv_rows": [
+          1440,
+          1536
+        ],
+        "sha256": "094d96f960ebfedd379858520cebd8810b707f35d267f752c87d63a77624b4c0",
+        "sm": 15,
+        "sources": [
+          {
+            "bf16_sha256": "b1f9a0d19f6d28892334890cd9dbe2a828dd650a0fec15dcf828fdbb3dc61b9e",
+            "rows": [
+              3488,
+              3584
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm16.npz",
+        "qkv_rows": [
+          1536,
+          1632
+        ],
+        "sha256": "5914a4aac039ac1818a6c0d8f077170406bfe9210207043b383829a0a036f86e",
+        "sm": 16,
+        "sources": [
+          {
+            "bf16_sha256": "6c2e78dab68030a6532f7f68ae6afd0c18d9f294ffa9b6cc2f336b570fb7cf95",
+            "rows": [
+              3584,
+              3680
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm17.npz",
+        "qkv_rows": [
+          1632,
+          1728
+        ],
+        "sha256": "b0ed903ebd54690ecbb8a646f1841bedc8809a96ced53bc003771660dc659e9f",
+        "sm": 17,
+        "sources": [
+          {
+            "bf16_sha256": "ef850b7136df5925ec7b5808dd53aefc884dcc2b83be64940fd5353e3f331159",
+            "rows": [
+              3680,
+              3776
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm18.npz",
+        "qkv_rows": [
+          1728,
+          1824
+        ],
+        "sha256": "ad895810189eab99941406eec6e9c37c8f4b96f05de33c0149e7646d2330761c",
+        "sm": 18,
+        "sources": [
+          {
+            "bf16_sha256": "3fbe20a41de6e82c1a1cce3053f9958575617f80d5ebbb0753ed46653f8bfc84",
+            "rows": [
+              3776,
+              3872
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm19.npz",
+        "qkv_rows": [
+          1824,
+          1920
+        ],
+        "sha256": "5b17d67485fe006a1381bea94345f33e0fda9eb1b77780e44c5c516ee891dcac",
+        "sm": 19,
+        "sources": [
+          {
+            "bf16_sha256": "9327f52660673a3dd3b383d26b0ae2c32255ee23410d74e022b777aed9a630ef",
+            "rows": [
+              3872,
+              3968
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm20.npz",
+        "qkv_rows": [
+          1920,
+          2016
+        ],
+        "sha256": "be260125c117d947c92d3c789feff72730198cb724661ab1460e62304cd0dafe",
+        "sm": 20,
+        "sources": [
+          {
+            "bf16_sha256": "a1be1bcfcba2979a2420067c1fd6b6a085658c88cfbaa5b9516f54a3919e1a13",
+            "rows": [
+              3968,
+              4064
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm21.npz",
+        "qkv_rows": [
+          2016,
+          2112
+        ],
+        "sha256": "052d3a9444e3e7dc92064dc5c3700818fe413e6bbad42c0950dcff11192384b4",
+        "sm": 21,
+        "sources": [
+          {
+            "bf16_sha256": "2b6cc5bd4921eb4832d915b060da18e1e0d2a5694931c5ae4c18580354266cc4",
+            "rows": [
+              4064,
+              4096
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          },
+          {
+            "bf16_sha256": "669e33079a73266480e486adcf4c612cc3ae8ad903a614be6cc09c2317dfb656",
+            "rows": [
+              512,
+              576
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm22.npz",
+        "qkv_rows": [
+          2112,
+          2208
+        ],
+        "sha256": "e573fad81a365fe64b1d8e1cc3b9434909b842c675006f5bb936249b2ab64800",
+        "sm": 22,
+        "sources": [
+          {
+            "bf16_sha256": "4d27814f0f3cdfd5adfa00208fa95850d5fe78728ebb65229787faffc02d0aec",
+            "rows": [
+              576,
+              672
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm23.npz",
+        "qkv_rows": [
+          2208,
+          2304
+        ],
+        "sha256": "c4f9e0b13a28b57212fd8a9bd07f575c728010031533e176c2797201aa2b94a2",
+        "sm": 23,
+        "sources": [
+          {
+            "bf16_sha256": "01b58d81863995fed8b55992956fa5457fda804c14ddfc1572bd70aa7c7bab0d",
+            "rows": [
+              672,
+              768
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm24.npz",
+        "qkv_rows": [
+          2304,
+          2400
+        ],
+        "sha256": "190cff16672ab133bfea189e1bae3e917c9b6e62a193ed6485347ede910d7df5",
+        "sm": 24,
+        "sources": [
+          {
+            "bf16_sha256": "da5001283340bcbc4cfcc84f3227f5f9dfb71010c53726d166095031fe105418",
+            "rows": [
+              768,
+              864
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm25.npz",
+        "qkv_rows": [
+          2400,
+          2496
+        ],
+        "sha256": "77b2793a61ccf51fdb4f3eea7b6f79c6cb6216a694a069fb2e3207cba239de61",
+        "sm": 25,
+        "sources": [
+          {
+            "bf16_sha256": "9350d6866bcee90598c9ba0c5d7f3484018872537cd66b98d97d2cae945a23fb",
+            "rows": [
+              864,
+              960
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm26.npz",
+        "qkv_rows": [
+          2496,
+          2592
+        ],
+        "sha256": "d0112e4f77d43a0333464521c4e6398afe54a1f9a062e0ad0b32f4f4405bd74d",
+        "sm": 26,
+        "sources": [
+          {
+            "bf16_sha256": "9502e720fd1d8b4edb72271948101fad662a134c4bd9e5ecad685fc5d32d1c17",
+            "rows": [
+              960,
+              1024
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          },
+          {
+            "bf16_sha256": "1a4ece6ad1c3030d2442779f296a9230a44e625c69026b90953697ef1cd2c9f6",
+            "rows": [
+              512,
+              544
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm27.npz",
+        "qkv_rows": [
+          2592,
+          2688
+        ],
+        "sha256": "965a05d3e1deac726968293e07f0d9dd0bdb846f35505acedcf3ebcf9dad2d72",
+        "sm": 27,
+        "sources": [
+          {
+            "bf16_sha256": "d541d8d9e75fafea96a290e1a34ef0d00bea39bf259d9c9edf8f828fe61be341",
+            "rows": [
+              544,
+              640
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm28.npz",
+        "qkv_rows": [
+          2688,
+          2784
+        ],
+        "sha256": "db1cfa55ee80c8402378ec90e9c41afea9b301339a60e11b2d6d785a401c6838",
+        "sm": 28,
+        "sources": [
+          {
+            "bf16_sha256": "a40094d30f64dd7b55e1cc5b6b0b33a0ba0d3884c8977a3d08d725a25ff13b3e",
+            "rows": [
+              640,
+              736
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm29.npz",
+        "qkv_rows": [
+          2784,
+          2880
+        ],
+        "sha256": "0b9da6b02098bcdf22a6361e9bfc410567ae0310548a7d47a9d6b008ee6c88c3",
+        "sm": 29,
+        "sources": [
+          {
+            "bf16_sha256": "d58b062a965a7176669c53d5caeb279cb8516b7eb0783c37b8f5822442224a87",
+            "rows": [
+              736,
+              832
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm30.npz",
+        "qkv_rows": [
+          2880,
+          2976
+        ],
+        "sha256": "c075bb35a5d9cce124644756a741568d3891193b5450afcd9b83925686db0433",
+        "sm": 30,
+        "sources": [
+          {
+            "bf16_sha256": "f4cf664324f1af4d6ac74df229940c9c57103fabf706de4167044eb6eaa2e0ba",
+            "rows": [
+              832,
+              928
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm31.npz",
+        "qkv_rows": [
+          2976,
+          3072
+        ],
+        "sha256": "9aff0e3b804d039fb230d89b395f39d3d8f43ca231e83dce1885ed237a233ac7",
+        "sm": 31,
+        "sources": [
+          {
+            "bf16_sha256": "27c2fca2a57214c12b9a6b4459ac6c18e433dbddcb6ff0c4c80f76e8bab3eb35",
+            "rows": [
+              928,
+              1024
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      }
+    ],
+    "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "claim_boundary": "Golden producer operands; no RTL norm, embedding, or complete token.",
+    "embedding_bf16_sha256": "6f57745a3765e8651c07b849d199577ec673d24cc40beb25bbaa72c6aadf73bb",
+    "layer": 0,
+    "norm_bf16_sha256": "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530",
+    "position": 0,
+    "rstd_bits": "4209fe78",
+    "schema": "opentallas.w19-qwen-hbm-checkpoint-operands.v1",
+    "source_sha256": {
+      "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "tools/hdc_qwen_int8_image.py": "eeb9cbfff631194e987c1120d58ea618158288c1acfec98abdcb602fe0defa5d",
+      "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+      "tools/w19_qwen_hbm_checkpoint.py": "b9994814e23f1ddb99f3bc2b775d1bfcca893123b6de7ada59dfa5aab9239e39"
+    },
+    "split": 256,
+    "status": "real_checkpoint_producer_exact",
+    "token": 0
+  },
+  "remaining_full_token_exit": [
+    "All 32 SM row slices per die, all 36 layers and vocabulary head",
+    "RTL norm/QK/RoPE/FP8 KV/attention/SFU/residual and ordered TP scale composition",
+    "L2 gather, x broadcast and 32-SM barrier runtime; physical 16-column element",
+    "Bit-exact reference token and every checkpoint boundary with connected RTL cycle count fed to unified model",
+    "In-context SS setup/FF hold, 60ps/25ps uncertainties and hub routing gate"
+  ],
+  "replica_count": {
+    "partitions_tested": 64,
+    "physical_cols": 16,
+    "sm_per_die": 32,
+    "tested_active_cols": 1,
+    "tp_dies": 2
+  },
+  "schema": "opentallas.w19-qwen-hbm-full-qkv-partitions.v1",
+  "sm_snapshot": {
+    "commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "prefix_equivalence": {
+      "path": "results/rtl/ot_hdc_prefix_vec_equiv.json",
+      "sha256": "79a9889cf3ab92fc043baab9afc035629a110206a5bf6e3404f53fb1252ca4ce",
+      "widths": [
+        {
+          "W": 28,
+          "equivalent": true,
+          "module": "ot_hdc_ksadd_k"
+        },
+        {
+          "W": 9,
+          "equivalent": true,
+          "module": "ot_hdc_ksadd_k"
+        },
+        {
+          "W": 12,
+          "equivalent": true,
+          "module": "ot_hdc_ksadd_k"
+        },
+        {
+          "W": 24,
+          "equivalent": true,
+          "module": "ot_hdc_inc_k"
+        },
+        {
+          "W": 25,
+          "equivalent": true,
+          "module": "ot_hdc_inc_k"
+        }
+      ]
+    },
+    "source_sha256": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+      "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+      "rtl/gpu/ot_gpu_fadd.sv": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+      "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+      "rtl/gpu/ot_gpu_sm_q.sv": "8e0aa477664f385a8536b1610c508fdd637bb020377adf744671c960d984b06f",
+      "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+      "rtl/gpu/ot_gpu_tc_col.sv": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940",
+      "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+      "rtl/gpu/ot_gpu_xstore.sv": "990094f52f6a13f1618730bb2b61f02b7d439df872e31509b0cb83ae9eb770ca",
+      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "rtl/sim/ot_hdc_prefix_vec.sv": "dd4cd5d6b650b83a32dfd56f8af739fe295573be64babcde4554cb713d1fe55c",
+      "rtl/test/tb_gpu_sm_q.sv": "6b34330e15229579e141e0d647aa7d1074976c5cb443d94514d3be220c34b78e",
+      "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    }
+  },
+  "source_commit": "a8a1a79c83bf1a1c9c9697c530498591e05cc427",
+  "source_sha256": {
+    "tools/w19_qwen_hbm_checkpoint.py": "b9994814e23f1ddb99f3bc2b775d1bfcca893123b6de7ada59dfa5aab9239e39",
+    "tools/w19_qwen_hbm_qkv_stage.py": "4fad3fc93c0e5d17fed3218edf44906d82ab9c80d6ef3126e74ee32ac33406a6"
+  },
+  "stage_outputs": {
+    "d0_qkv_fp32.hex": "0ab65e21ac50ccabf032df6ee6eb5aa1fac6e586ee725ede909673e209586085",
+    "d1_qkv_fp32.hex": "0c879a99d1476b00517ba105a1e3091c3ed86d94abfba9fafcf8a06356e6da01"
+  },
+  "status": "pass"
+}
