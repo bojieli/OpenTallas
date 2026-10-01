@@ -76,6 +76,10 @@ def main(argv=None):
     ap.add_argument("--vm-in-su", action="store_true",
                     help="VM-H: the VM banks are inside the stream-unit block (its area carries them); the VM column "
                          "keeps only the port/CDC logic and the always-on island")
+    ap.add_argument("--c-rotate-strip-mm2", type=float, default=0.0,
+                    help="C_rotate: full-height VM strip of this area in the middle of the SU lane array (implies --vm-in-su)")
+    ap.add_argument("--c-rotate-centre", action="store_true",
+                    help="C_rotate: COLLECTIVE / GATHER at the ends of the VM strip column (no separate VM column)")
     ap.add_argument("--svg-dir", type=Path, default=ROOT / "results/floorplan")
     a = ap.parse_args(argv)
     q = placed_strip(json.loads(a.q_pair.read_text()))
@@ -89,7 +93,8 @@ def main(argv=None):
                          replicas=u[k].get("replicas")) for k in ("indexer", "attention", "stream_unit")}
     P.REFIT = dict(strip_q_um=q["strip_um"] * g, strip_bf_um=b["strip_um"] * g, bf_pairs=BF16_PAIRS,
                    hub_mm2=hub, hub_scale={"HC": g, "GATHER": g}, hub_add_mm2={"VM": AON_MM2},
-                   xroot=a.xroot or None, vm_in_su=a.vm_in_su,
+                   xroot=a.xroot or None, vm_in_su=a.vm_in_su or bool(a.c_rotate_strip_mm2),
+                   **(dict(c_rotate=dict(strip_mm2=a.c_rotate_strip_mm2 * g, centre=a.c_rotate_centre)) if a.c_rotate_strip_mm2 else {}),
                    basis="W10 placed pairs + model hub + power switches + always-on island")
     import shutil
     import tempfile

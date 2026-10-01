@@ -325,6 +325,19 @@ def build(variant: str) -> dict:
     vm_col_w = max(snap_up((2 * max(need_mm2["COLLECTIVE"], need_mm2["GATHER"]) * HUB_SLACK
                             + need_mm2["VM"] * vm_factor) * 1e6 / hub_h, X_STEP),
                    snap_up(2 * cat["ot_sram_1rw_2048x128_m4_r2c2"]["width_um"] + 24, X_STEP))
+    crot = REFIT.get("c_rotate") if REFIT else None
+    if crot:
+        # C_rotate (root 2026-10-01): the VM is a FULL-HEIGHT strip in the middle of the SU lane array
+        # (SU_VECTOR | VM | SU_VECTOR_E), so every lane is within half the array width of the strip; the VM column
+        # keeps COLLECTIVE (below) and GATHER (above) only.  need_mm2["SU_VECTOR"] is the whole block (lanes + strip).
+        strip_mm2 = crot["strip_mm2"]                       # already scaled by the refit's switch fraction
+        lanes_mm2 = need_mm2["SU_VECTOR"] - strip_mm2
+        strip_w = snap_up(strip_mm2 * 1e6 * HUB_SLACK / hub_h, X_STEP)
+        half_w = snap_up(lanes_mm2 / 2 * 1e6 * HUB_SLACK / hub_h, X_STEP)
+        widths["SU_VECTOR"] = 2 * half_w + strip_w
+        vm_col_w = snap_up(2 * max(need_mm2["COLLECTIVE"], need_mm2["GATHER"]) * HUB_SLACK * 1e6 / hub_h, X_STEP)
+        if crot.get("centre"):
+            vm_col_w = 0.0      # COLLECTIVE / GATHER sit at the bottom / top of the strip column instead
     hub_w = widths["ATTENTION"] + vm_col_w + widths["SU_VECTOR"] + widths["HC"]
     cx = core_x0 + core_w / 2
     hub_x = snap_dn(cx - vm_col_w / 2 - widths["ATTENTION"], X_STEP)
@@ -334,15 +347,35 @@ def build(variant: str) -> dict:
     x = hub_x
     parts.append(("ATTENTION", x, hub_y, widths["ATTENTION"], hub_h, need_mm2["ATTENTION"]))
     x += widths["ATTENTION"]
-    # VM column: VM centred vertically (on the core centre), COLLECTIVE below, GATHER above.
-    vm_h = snap_up(need_mm2["VM"] * 1e6 * vm_factor / vm_col_w, Y_STEP)
-    vm_y = snap_dn(core_y0 + core_h / 2 - vm_h / 2, Y_STEP)
-    parts.append(("COLLECTIVE", x, hub_y, vm_col_w, vm_y - hub_y, need_mm2["COLLECTIVE"]))
-    parts.append(("VM", x, vm_y, vm_col_w, vm_h, need_mm2["VM"]))
-    parts.append(("GATHER", x, vm_y + vm_h, vm_col_w, hub_y + hub_h - vm_y - vm_h, need_mm2["GATHER"]))
-    x += vm_col_w
-    parts.append(("SU_VECTOR", x, hub_y, widths["SU_VECTOR"], hub_h, need_mm2["SU_VECTOR"]))
-    x += widths["SU_VECTOR"]
+    if crot and crot.get("centre"):
+        # strip column = GATHER (top) | VM strip | COLLECTIVE (bottom), all at the strip width, centred in the SU array
+        ch = snap_up(need_mm2["COLLECTIVE"] * 1e6 * HUB_SLACK / strip_w, Y_STEP)
+        gh = snap_up(need_mm2["GATHER"] * 1e6 * HUB_SLACK / strip_w, Y_STEP)
+        parts.append(("SU_VECTOR", x, hub_y, half_w, hub_h, lanes_mm2 / 2))
+        parts.append(("COLLECTIVE", x + half_w, hub_y, strip_w, ch, need_mm2["COLLECTIVE"]))
+        parts.append(("VM", x + half_w, hub_y + ch, strip_w, hub_h - ch - gh, strip_mm2 + need_mm2["VM"]))
+        parts.append(("GATHER", x + half_w, hub_y + hub_h - gh, strip_w, gh, need_mm2["GATHER"]))
+        parts.append(("SU_VECTOR_E", x + half_w + strip_w, hub_y, half_w, hub_h, lanes_mm2 / 2))
+        x += widths["SU_VECTOR"]
+    elif crot:
+        mid = snap_dn(hub_y + hub_h / 2, Y_STEP)
+        parts.append(("COLLECTIVE", x, hub_y, vm_col_w, mid - hub_y, need_mm2["COLLECTIVE"]))
+        parts.append(("GATHER", x, mid, vm_col_w, hub_y + hub_h - mid, need_mm2["GATHER"]))
+        x += vm_col_w
+        parts.append(("SU_VECTOR", x, hub_y, half_w, hub_h, lanes_mm2 / 2))
+        parts.append(("VM", x + half_w, hub_y, strip_w, hub_h, strip_mm2 + need_mm2["VM"]))
+        parts.append(("SU_VECTOR_E", x + half_w + strip_w, hub_y, half_w, hub_h, lanes_mm2 / 2))
+        x += widths["SU_VECTOR"]
+    else:
+        # VM column: VM centred vertically (on the core centre), COLLECTIVE below, GATHER above.
+        vm_h = snap_up(need_mm2["VM"] * 1e6 * vm_factor / vm_col_w, Y_STEP)
+        vm_y = snap_dn(core_y0 + core_h / 2 - vm_h / 2, Y_STEP)
+        parts.append(("COLLECTIVE", x, hub_y, vm_col_w, vm_y - hub_y, need_mm2["COLLECTIVE"]))
+        parts.append(("VM", x, vm_y, vm_col_w, vm_h, need_mm2["VM"]))
+        parts.append(("GATHER", x, vm_y + vm_h, vm_col_w, hub_y + hub_h - vm_y - vm_h, need_mm2["GATHER"]))
+        x += vm_col_w
+        parts.append(("SU_VECTOR", x, hub_y, widths["SU_VECTOR"], hub_h, need_mm2["SU_VECTOR"]))
+        x += widths["SU_VECTOR"]
     parts.append(("HC", x, hub_y, widths["HC"], hub_h, need_mm2["HC"]))
     for k, x, y, w, h, a in parts:
         P.soft.append(dict(name=f"HUB_{k}", x=round(x, 3), y=round(y, 3), w=round(w, 3), h=round(h, 3),

@@ -88,7 +88,8 @@ def model(fp: dict, pk: dict, probes: bool = True, subroots: int = 0, hub_inset:
             cl.append(C(nm, master, "phy_hbm", mm(x), mm(y), mm(lm["w"]), mm(lm["h"]), orient="R0",
                         basis="legal v2 PHY abstract"))
     B = D.Bus
-    xr, vm = hub["su_vector"], hub["vm"]
+    # C_rotate (SU_VECTOR | VM strip | SU_VECTOR_E): the x root and the result sink are both on the VM strip
+    xr, vm = (hub["vm"] if "su_vector_e" in hub else hub["su_vector"]), hub["vm"]
     groups: dict[str, list] = {}
     for c in (c for c in cl if c.kind == "tile"):
         side = "w" if c.cx < xr.cx else "e"

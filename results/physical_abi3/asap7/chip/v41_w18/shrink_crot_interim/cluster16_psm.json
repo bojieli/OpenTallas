@@ -1,0 +1,117 @@
+{
+ "schema": "opentallas.v41.w18_pdn.v1",
+ "meta": {
+  "level": "cluster",
+  "rows": 16,
+  "size_um": [
+   1003.104,
+   2177.28
+  ],
+  "pair": {
+   "name": "ot_v41_rom_elem_q",
+   "w": 510.84,
+   "h": 126.9,
+   "signal_pins": 734,
+   "pin_edges": {
+    "S": 734,
+    "N": 0,
+    "W": 0,
+    "E": 0
+   },
+   "power_layers": [
+    "M6"
+   ],
+   "obs_layers": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "M7"
+   ]
+  },
+  "pair_w": 0.2663,
+  "tiles_per_pair": 4,
+  "cluster_w": 4.2608,
+  "grid": {
+   "M7": {
+    "width": 0.544,
+    "pitch": 10.8,
+    "spacing": 4.856
+   },
+   "M8": {
+    "width": 2.0,
+    "pitch": 16.0,
+    "spacing": 6.0
+   },
+   "pair_M6": {
+    "width": 0.288,
+    "pitch": 5.4,
+    "spacing": 2.412
+   }
+  },
+  "sources": "STRAPS (M8 cluster pins)",
+  "loads": "pair current-map tiles, current at tile centre on M7",
+  "pair_lef_sha256": "557540078c7477ca1d2d42311734d5035fa2bcab468bfcbb6924c2139e2c65bb",
+  "floorplan_sha256": "cc9d4c62bee86d8f12d249a59da18dbc9f8d34e88f60830a19d1f74f8165feb6"
+ },
+ "run": {
+  "wall_s": 78.3,
+  "docker_rc": 0,
+  "stdout": "rc=0\n",
+  "host": "local",
+  "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
+ },
+ "tags": {
+  "OT_STAT": [
+   "insts=64"
+  ],
+  "OT_PDN": [
+   "status=PASS special_wire_shapes=61466"
+  ],
+  "OT_TIME": [
+   "pdn_s=0",
+   "psm_s=76"
+  ],
+  "OT_PSM": [
+   "net=VDD status=PASS",
+   "net=VSS status=PASS"
+  ],
+  "OT_IR": [
+   "net=VDD status=PASS",
+   "net=VSS status=PASS"
+  ]
+ },
+ "ir": {
+  "VDD": {
+   "Supply voltage": 0.7,
+   "Worstcase voltage": 0.683,
+   "Average voltage": 0.7,
+   "Average IR drop": 0.000131,
+   "Worstcase IR drop": 0.0172,
+   "Percentage drop": 2.46
+  },
+  "VSS": {
+   "Supply voltage": 0.0,
+   "Worstcase voltage": 0.0198,
+   "Average voltage": 0.00015,
+   "Average IR drop": 0.00015,
+   "Worstcase IR drop": 0.0198,
+   "Percentage drop": 2.83
+  }
+ },
+ "peak_rss_kb": "1628224",
+ "errors": [],
+ "tool_sha256": "53f09d96c0b08e5c827169df37185b1458498273a91ebff8ece77ffff0da57c7",
+ "image": "openroad/orfs:latest",
+ "switch_ring": {
+  "cells": 117792,
+  "band_um": 2.16,
+  "r_on_total_mohm": 7.7467,
+  "current_a": 6.087,
+  "drop_mv": 47.153,
+  "area_um2": 13739.3,
+  "basis": "ASSUMED: one header cell = the pull-up of an ASAP7 INVx4 (tools/mem_compiler asap7.calibration tt inv4_r_kohm 0.9125 kohm), 0.432 x 0.27 um; no ASAP7 power-switch cell is characterised"
+ }
+}

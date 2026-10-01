@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.v41.w18_shrunk_die.v1",
+ "status": "INTERIM: compact C_rotate hub (root 2026-10-01) on the shrunk die; tiles are OUTLINE PLACEHOLDERS at W10b's reported sizes (q pair 510.84 x 126.9, BF16 column pair 1002.89 x 142.56); the detached chain re-derives it on W10b's abstracts",
+ "hub": {
+  "form": "SU lane array split in two halves on either side of a FULL-HEIGHT VM strip (SU_VECTOR | VM | SU_VECTOR_E); COLLECTIVE / GATHER column west of SU_VECTOR; x root and result sink on the strip",
+  "inputs": "SU block 38.951 mm2 (W16b ee7446c2 row; bcedc122 has 38.601), VM strip 14.69 mm2 (W11 C_rotate), x1.05 power switches",
+  "lane_to_strip": {
+   "worst_um": 1786.8,
+   "worst_stages_at_481um": 4,
+   "target_um": 3850,
+   "within_target": true,
+   "basis": "rectangle-bound, lane-tile corner to the nearest strip edge; W11's alternative (4,890 um lane square, strip on one side) is ~4,890+ um"
+  },
+  "layers": "SU halves M1-M7, VM strip and other hub parts M1-M5, trunks M8/M9"
+ },
+ "need": {
+  "pairs": 4773,
+  "bf16_pairs": 1024,
+  "owner": "results/arch/v41_stage_owner_product.json @ W16b ee7446c2 (41 stages)"
+ },
+ "die": {
+  "um": [
+   31202.064,
+   25144.56
+  ],
+  "mm2": 784.5622,
+  "pair_slots": 5530,
+  "bf16_slots": 1296
+ },
+ "crossings_layer_split": {
+  "trunk_m8m9": {
+   "vm_xroot_to_farthest_cluster": {
+    "routed_um": 17306.8,
+    "cycles": 35
+   },
+   "farthest_cluster_to_vm": {
+    "routed_um": 17214.3,
+    "cycles": 35
+   }
+  },
+  "rest": {
+   "collective_to_farthest_serdes": {
+    "routed_um": 23156.0,
+    "cycles": 46
+   },
+   "collective_to_farthest_ucie": {
+    "routed_um": 17473.4,
+    "cycles": 35
+   },
+   "hbm_window": {
+    "routed_um": 14104.6,
+    "cycles": 28
+   },
+   "idx_keys": {
+    "routed_um": 20120.4,
+    "cycles": 40
+   },
+   "selected_kv": {
+    "routed_um": 13993.6,
+    "cycles": 28
+   },
+   "idx_topk": {
+    "routed_um": 21508.6,
+    "cycles": 43
+   },
+   "hub": {
+    "routed_um": 4960.7,
+    "cycles": 10
+   }
+  }
+ },
+ "ir_die_mesh_vdd_worst_mv": {
+  "ir_cap50_vdd2": 11.16,
+  "ir_peak": 35.31,
+  "ir_sat": 12.691
+ },
+ "ir_note": "die-mesh term at the adopted scheme 11.2 mV/rail (was 10.2): the adopted rail-to-rail stack moves from 65.8 to ~67.8 mV, still within 70",
+ "rejected_variant": {
+  "form": "COLLECTIVE / GATHER at the ends of the strip column (centre_variant/)",
+  "die_mm2": 760.0294,
+  "lane_worst_um": 2424.0,
+  "why": "lanes 2,424 um (6 stages) and collective->SerDes 56 cycles vs 1,787 um (4) and 46"
+ },
+ "files": {
+  "centre_variant/die_route_split_rest.json": "ef562106a808263870a1590fffbe4ba704a086a3ec47935385fa9e6b2a618346",
+  "centre_variant/die_route_split_trunk.json": "1ba517ac18a820cbd959dc7ef7473614aff187b96aabdc4dff12e442f9298519",
+  "centre_variant/die_shrink.json": "e6b9e851013de140d71447e27d243e3b244d0319005f0fcbfd335338372af371",
+  "centre_variant/floorplan.json": "b7ea27022f2989f4fd857f9e7bc974b6419c10d99180c6be7e74d8cf566280a9",
+  "centre_variant/hub_distances.json": "e353affe0798a4a71b473bc1a7e56accda8cf9a68aeeac5b68717801ff4c6ba4",
+  "cluster16_psm.json": "717ee15e81d3662dc96f1dfeb461d8f69891a9f513deae52181ab2f87adae859",
+  "die_route_full.json": "13e3746e6ce98f3a30d2c05653cfa1d2963c7f69da2a15807ef636e06fc3df63",
+  "die_route_split_rest.json": "f347696212d1816f043df35832fa570506a4d6042da53623638896b07b3ab679",
+  "die_route_split_trunk.json": "4e93b8862e5111dff1a18997998ae3198407617c71abb0e2e3dc8b5a09b058ee",
+  "die_shrink.json": "d8797c92d7a4f9ede63c9bc7e46a7e968e241671aab7481682845262aaf82287",
+  "floorplan.json": "cc9d4c62bee86d8f12d249a59da18dbc9f8d34e88f60830a19d1f74f8165feb6",
+  "hub_distances.json": "29eba6334d8c80e4826b8c9280c1ca142d3014c02a174294bb1de4d58146db77",
+  "ir_cap50_vdd2.json": "2cd146b0ba2c3f31d6078f2a93de574346feb41feab9c7f226a026798aed3d3d",
+  "ir_peak.json": "a4ea4bbb5ace15389ba27abfe71d669ad5e603e02f3cbbd9cfb6b6f4aa0948e3",
+  "ir_sat.json": "d590a74c715eb7e5f259fff449deba6e642d9898a9fed466e3658041e3e7d32d",
+  "pack.json": "9dc24861cf8a7be43663bd51c204e2c3896670092e576d27c9c665c5ecaeede1",
+  "slots.json": "7063ef31bd1e42ac6522b95fe7e49fde9758ec1cd488634371c3844e37709cf5"
+ }
+}

@@ -38,7 +38,9 @@ def trial(s: float, a, work: Path) -> dict:
     r = subprocess.run([sys.executable, str(ROOT / "tools/w18/pack.py"), "--hbm-phy", a.hbm_phy,
                         "--die-w-um", f"{BASE_W * s:.3f}", "--die-h-um", f"{BASE_H * s:.3f}",
                         "--q-pair", a.q_pair, "--bf-pair", a.q_pair, "--output", str(pk), "--svg-dir", str(work),
-                        *(["--hub", str(a.hub)] if a.hub else []), *(["--vm-in-su"] if a.vm_in_su else [])],
+                        *(["--hub", str(a.hub)] if a.hub else []), *(["--vm-in-su"] if a.vm_in_su else []),
+                        *(["--c-rotate-strip-mm2", str(a.c_rotate_strip_mm2)] if a.c_rotate_strip_mm2 else []),
+                        *(["--c-rotate-centre"] if a.c_rotate_centre else [])],
                        cwd=ROOT, capture_output=True, text=True)
     if r.returncode or not pk.exists():
         return dict(s=s, ok=False, why="pack failed: " + r.stderr[-300:])
@@ -72,6 +74,8 @@ def main(argv=None):
     ap.add_argument("--q-pair", default=QP, help="pack re-fit strip source (the MAC strip width)")
     ap.add_argument("--hub", type=Path, help="dedicated-units record for the hub (default: the pack's)")
     ap.add_argument("--vm-in-su", action="store_true", help="VM-H: VM banks inside the SU block (no VM SRAMs in HUB_VM)")
+    ap.add_argument("--c-rotate-strip-mm2", type=float, default=0.0, help="C_rotate VM strip area (mm2)")
+    ap.add_argument("--c-rotate-centre", action="store_true")
     ap.add_argument("--lo", type=float, default=0.6)
     ap.add_argument("--hi", type=float, default=1.0)
     ap.add_argument("--work", type=Path, required=True)
@@ -104,7 +108,7 @@ def main(argv=None):
                inputs=dict(pair_lef=str(a.pair_lef), pair_lef_sha256=sha(a.pair_lef),
                            bf16_lef=str(a.bf16_lef) if a.bf16_lef else None,
                            bf16_lef_sha256=sha(a.bf16_lef) if a.bf16_lef else None,
-                           hub=str(a.hub) if a.hub else None, hub_sha256=sha(a.hub) if a.hub else None, vm_in_su=a.vm_in_su,
+                           hub=str(a.hub) if a.hub else None, hub_sha256=sha(a.hub) if a.hub else None, vm_in_su=a.vm_in_su, c_rotate_strip_mm2=a.c_rotate_strip_mm2 or None, c_rotate_centre=a.c_rotate_centre,
                            tool_sha256=sha(Path(__file__)), pack_sha256=sha(ROOT / "tools/w18/pack.py"),
                            floorplan_tool_sha256=sha(ROOT / "tools/w18/die_floorplan.py")))
     a.output.write_text(json.dumps(rec, indent=1) + "\n")

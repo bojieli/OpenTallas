@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.v41.w18_hub_lane_vm_distance.v1",
+ "floorplan": "/home/ubuntu/w18work/rebase_crot_centre/out/qbf/floorplan.json",
+ "floorplan_sha256": "b7ea27022f2989f4fd857f9e7bc974b6419c10d99180c6be7e74d8cf566280a9",
+ "vm_strip_um": [
+  17111.088,
+  9365.76,
+  2153.088,
+  6639.84
+ ],
+ "reach_um": 481.25,
+ "reach_basis": "root: 3,850 um = 8 stages at 0.9 GHz",
+ "target_um": 3850.0,
+ "halves": {
+  "HUB_SU_VECTOR": {
+   "rect_um": [
+    15332.976,
+    8719.92,
+    1778.112,
+    7307.28
+   ],
+   "worst_to_strip_um": 2424.0,
+   "worst_stages": 6,
+   "within_target": true,
+   "stage_histogram": {
+    "0": 36,
+    "1": 386,
+    "2": 448,
+    "3": 449,
+    "4": 338,
+    "5": 23,
+    "6": 1
+   }
+  },
+  "HUB_SU_VECTOR_E": {
+   "rect_um": [
+    19264.176,
+    8719.92,
+    1778.112,
+    7307.28
+   ],
+   "worst_to_strip_um": 2424.0,
+   "worst_stages": 6,
+   "within_target": true,
+   "stage_histogram": {
+    "0": 36,
+    "1": 386,
+    "2": 448,
+    "3": 449,
+    "4": 338,
+    "5": 23,
+    "6": 1
+   }
+  }
+ },
+ "basis": "rectangle-bound: lane tile corners to the nearest VM strip edge (Manhattan); W11's tile footprint refines it",
+ "tool_sha256": "b9cb9e1fc3022c6ab1ae8e1df2abf96eacec900aee1e339f844840800ab9c7d1"
+}
