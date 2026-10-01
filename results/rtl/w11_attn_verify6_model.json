@@ -4176,5 +4176,16 @@
   "guard_tight": true,
   "default_identical": true,
   "status": "pass"
+ },
+ "currency": {
+  "state": "stale",
+  "stale_since": "945e8e7c",
+  "reason": "(1) the engine and its PHYS stubs gained REPL=2 (an extra decision->copy register stage for the 0.833 ns controller closure) and a slot-addressed p FIFO; REPL=1/NSTAGE=2 as run here is unchanged in function but the file moved; the full-geometry REPL=2 re-run is queued (tools/w11_attn_verify6.py via /tmp/claude-1000/w11s/queue/q_ilv_r2.sh) and will replace this record. (2) results/rtl/w11_su_spec.json moved with the SU-close landing; this record uses it only for L0 = configs.N1024_M256_B4R5.cases.T640.chained first exp write, which is still 188 (chain end 451) in the new file.",
+  "verdict_kept": "pass",
+  "moved": [
+   "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+   "results/rtl/w11_su_spec.json"
+  ],
+  "marked": "2026-10-01 by W11 attention (claude/w11-attn)"
  }
 }
