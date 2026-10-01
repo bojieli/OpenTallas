@@ -5,6 +5,94 @@ from pathlib import Path
 import w11_dsrom_crom_demand as D
 I=D.I
 WORD_BITS=274;WORD_BYTES=35
+MODEL_PIN='1360ff9e12f130a656dbbca0b00c02de860584db'
+MODEL_PATH='results/quality/w16_w17_crom_finite_prefetch_20261001/calendar.json'
+DEMAND_PIN='f4bce8fa0'
+DEMAND_PATH='results/uarch/w11_crom_demand_20261001/demand_v2.json.gz'
+CONTROL_FORMAT={'control_word_bits':274,'serialized_bytes_per_word':35,'serialized_top6_bits_zero':True,
+    'request_bank_fields':'45x16bits:row[11:0],valid[12],lane-mask[15:13]; 3x274 columns, bits720..821zero',
+    'fill_fields':'selectors16x8bits[127:0],mask[143:128],operand[144],group[150:145],padding[273:151]zero',
+    'landing_order':'sort selected logical addresses decoded from bank requests; compact indices0..134'}
+
+def git_bytes(pin,path):
+    import subprocess
+    return subprocess.check_output(['git','show',pin+':'+path],cwd=D.ROOT)
+
+def validate_source_binding(metadata):
+    """Expectations come only from fixed immutable pins, never supplied metadata."""
+    import ast
+    if Path(I.__file__).read_bytes()!=git_bytes('d2c28c279','tools/hdc_isa_v41.py'):
+        raise ValueError('source binding: ISA decoder drift')
+    def address_functions(raw):
+        return [ast.dump(n,include_attributes=False) for n in ast.parse(raw).body
+                if isinstance(n,ast.FunctionDef) and n.name in ('clog','batches')]
+    if address_functions(Path(D.__file__).read_bytes())!=address_functions(git_bytes('7ed62357d','tools/w11_dsrom_crom_demand.py')):
+        raise ValueError('source binding: lane address algorithm drift')
+    modelraw=git_bytes(MODEL_PIN,MODEL_PATH);model=json.loads(modelraw)
+    expected_model={'commit':MODEL_PIN,'path':MODEL_PATH,'sha256':hashlib.sha256(modelraw).hexdigest()}
+    if metadata.get('model_source')!=expected_model:raise ValueError('source binding: corrected model')
+    auditraw=D.obj(D.PREFIX+'.json');audit=json.loads(auditraw)
+    if metadata.get('encoded_program_source')!={'commit':D.PIN,'path':D.PREFIX+'.json','sha256':hashlib.sha256(auditraw).hexdigest()}:
+        raise ValueError('source binding: encoded audit')
+    demand=json.loads(gzip.decompress(git_bytes(DEMAND_PIN,DEMAND_PATH)))
+    records=demand['ranks'][0]['records'];rank_bindings=[];encoded=None
+    manraw=gzip.decompress(git_bytes('70f73928f','results/uarch/w11_dsrom_crom_writer_20261001/manifest.json.gz'))
+    manifest=json.loads(manraw)
+    if hashlib.sha256(manraw).hexdigest()!=audit['manifest_uncompressed_sha256']:
+        raise ValueError('source binding: actual image manifest SHA')
+    if len(audit['ranks'])!=4 or len(records)!=491:raise ValueError('immutable input inventory')
+    for rank in audit['ranks']:
+        n=rank['rank'];raw=gzip.decompress(D.obj(D.PREFIX+f'.rank{n}.templates.bin.gz'))
+        if len(raw)!=4778*256 or hashlib.sha256(raw).hexdigest()!=rank['encoded_template_sha256']:
+            raise ValueError('source binding: rank encoded SHA/extent')
+        if manifest['rank_images'][n]['image_sha256']!=rank['CROM_image_sha256'] or demand['ranks'][n]['records']!=records:
+            raise ValueError('source binding: rank image/demand')
+        rank_bindings.append({k:rank[k] for k in ('rank','CROM_image_sha256','encoded_template_sha256')})
+        if n==0:encoded=raw
+    if metadata.get('rank_program_image_bindings')!=rank_bindings:
+        raise ValueError('source binding: rank ownership')
+    control=model['compiler_control_storage']
+    if control['selector_bits']!=8 or control['fill_selector_bits_per_entry']!=151:
+        raise ValueError('immutable corrected control geometry')
+    counts={'commands_per_rank':491,'coefficient_uses_per_rank':549760,
+        'bank_waves':control['request_bank_wave_entries'],
+        'request_control_words':control['request_bank_wave_entries']*3,
+        'fill_control_words':control['fill_packet_entries']}
+    if metadata.get('counts')!=counts:raise ValueError('source binding: command/use/model counts')
+    if metadata.get('format')!=CONTROL_FORMAT:
+        raise ValueError('source binding: control word format')
+    commands=metadata.get('commands')
+    if not isinstance(commands,list) or len(commands)!=491:raise ValueError('source binding: complete491commands')
+    # Build authoritative stage boundaries and semantic operand roles from the audit.
+    roles={};offset=0;rank=audit['ranks'][0]
+    for stage in rank['stages']+[dict(layer='head',instruction_count=7,bindings=rank['head_bindings'],unbound=[])]:
+        for b in stage['bindings']:
+            if b['kind']=='checkpoint_CROM':roles.setdefault(offset+b['instruction'],[]).append((stage['layer'],b))
+        for b in stage.get('unbound',[]):
+            roles.setdefault(offset+b['instruction'],[]).append((stage['layer'],dict(b,kind='unbound_generated')))
+        offset+=stage['instruction_count']
+    if offset!=4778 or len(roles)!=491:raise ValueError('immutable stage/command role inventory')
+    authority=[]
+    for command,rec in zip(commands,records):
+        pc=rec['global_instruction'];f=I.decode(int.from_bytes(encoded[pc*256:(pc+1)*256],'little'),full_shape=True)
+        if f['unit']!=I.UNIT_SU or rec['pred']!=f['pred'] or pc not in roles:
+            raise ValueError('immutable demand/ISA command disagreement')
+        expected={'layer':rec['layer'],'pc':pc,'pred':f['pred'],'operands':rec['operand_demands']}
+        if any(command.get(k)!=v for k,v in expected.items()):raise ValueError('source binding: PC/layer/pred/operand metadata')
+        bindings={b['operand']:(layer,b) for layer,b in roles[pc]}
+        if len(bindings)!=len(rec['operand_demands']):raise ValueError('immutable operand role count')
+        for o in rec['operand_demands']:
+            axis=o['operand'];layer,b=bindings[axis]
+            if layer!=rec['layer'] or b['kind']!=o['kind'] or f[axis+'_src']!=I.SRC_CLO:
+                raise ValueError('source binding: operand role/source')
+            if o['base']!=f[axis+'_base'] or o['outer_stride']!=f[axis+'_so'] or o['inner_stride']!=f[axis+'_si']:
+                raise ValueError('source binding: encoded operand base/strides')
+            if o['half_inner']!=bool(axis in 'bd' and f['b_half']) or o['logical_uses']!=f['su_nin']*f['su_nout']:
+                raise ValueError('source binding: encoded half/count')
+            if b['kind']=='checkpoint_CROM' and (o['tensor']!=b['tensor'] or o['base']!=b['actual_address']):
+                raise ValueError('source binding: selected tensor/image address')
+        authority.append((expected,f))
+    return counts,authority
 
 def encode_fill(selectors,mask,operand,group):
     if len(selectors)!=16 or not 0<=mask<2**16 or operand not in (0,1) or not 0<=group<64:
@@ -160,10 +248,7 @@ def build(model_pin,model_path):
         'encoded_program_source':{'commit':D.PIN,'path':D.PREFIX+'.json','sha256':hashlib.sha256(auditraw).hexdigest()},
         'rank_program_image_bindings':rank_bindings,'commands':catalog,'counts':{'commands_per_rank':491,'coefficient_uses_per_rank':covered,
             'bank_waves':wave_count,'request_control_words':len(requests)//WORD_BYTES,'fill_control_words':len(fills)//WORD_BYTES},
-        'format':{'control_word_bits':274,'serialized_bytes_per_word':35,'serialized_top6_bits_zero':True,
-            'request_bank_fields':'45x16bits:row[11:0],valid[12],lane-mask[15:13]; 3x274 columns, bits720..821zero',
-            'fill_fields':'selectors16x8bits[127:0],mask[143:128],operand[144],group[150:145],padding[273:151]zero',
-            'landing_order':'sort selected logical addresses decoded from bank requests; compact indices0..134'},
+        'format':dict(CONTROL_FORMAT),
         'old_7bit_mutants':mutants,'old_failure_pin':'785cdfa41','old_model_pin':'bc1ec8b8f','same_coefficient_producer':True,
         'runtime_context_requirement':'rank/imageSHA/layer/PC/burst/epoch and held landing valid; catalog word is not a substitute for live tag/credit checking',
         'generated_product_physical_home':None,'scope':'Exact software control metadata roundtrip only. Generated Engram symbolicappend follows model, source L1 remainsunbound. All predicated command branches enumerated, not a runtime completion proof.',
@@ -172,31 +257,41 @@ def build(model_pin,model_path):
 
 def verify_serialized(metadata,requests,fills):
     """Replay persisted words and every lane destination against immutable ISA."""
-    expected_counts=metadata['counts'];covered=0
+    expected_counts,authority=validate_source_binding(metadata);covered=0
     for data in (requests,fills):
         if len(data)%WORD_BYTES:raise ValueError('serialized word extent')
         if any(data[i+34]&252 for i in range(0,len(data),WORD_BYTES)):raise ValueError('serialized top bits')
     if len(requests)//WORD_BYTES!=expected_counts['request_control_words'] or len(fills)//WORD_BYTES!=expected_counts['fill_control_words']:
         raise ValueError('serialized catalog count')
-    encoded=gzip.decompress(D.obj(D.PREFIX+'.rank0.templates.bin.gz'))
-    for command in metadata['commands']:
-        pc=command['pc'];f=I.decode(int.from_bytes(encoded[pc*256:(pc+1)*256],'little'),full_shape=True)
+    request_cursor=0;fill_cursor=0;wave_count=0
+    for command,(expected,f) in zip(metadata['commands'],authority):
         coords_list=list(D.batches(f))
         if len(coords_list)!=len(command['bursts']):raise ValueError('burst metadata mismatch')
-        for burst,coords in zip(command['bursts'],coords_list):
+        for bi,(burst,coords) in enumerate(zip(command['bursts'],coords_list)):
             uses=[]
-            for oi,o in enumerate(command['operands']):
+            for oi,o in enumerate(expected['operands']):
                 for lane,(outer,inner) in enumerate(coords):
                     a=o['base']+outer*o['outer_stride']+(inner//2 if o['half_inner'] else inner)*o['inner_stride']
-                    if o['kind']=='unbound_generated':a+=508800+(20480 if command['layer']==14 else 0)
+                    if o['kind']=='unbound_generated':a+=508800+(20480 if expected['layer']==14 else 0)
                     uses.append((oi,lane,a))
+            if burst.get('burst')!=bi or burst.get('coefficient_uses')!=len(uses):raise ValueError('source binding: burst identity/count')
+            expected_landings=list(bank_waves({a for _,_,a in uses}))
+            if len(burst['waves'])!=len(expected_landings):raise ValueError('source binding: wave count')
             waves=[]
-            for wave in burst['waves']:
+            for wave,landing in zip(burst['waves'],expected_landings):
                 rs=wave['request_start_word'];fs=wave['fill_start_word'];fc=wave['fill_words']
+                landing_set=set(landing)
+                groups={(op,lane//16) for op,lane,a in uses if a in landing_set}
+                if rs!=request_cursor or fs!=fill_cursor or fc!=len(groups) or wave.get('landing_values')!=len(landing):
+                    raise ValueError('source binding: wave catalog addresses/extents')
                 r=[int.from_bytes(requests[i*WORD_BYTES:(i+1)*WORD_BYTES],'little') for i in range(rs,rs+3)]
                 ff=[int.from_bytes(fills[i*WORD_BYTES:(i+1)*WORD_BYTES],'little') for i in range(fs,fs+fc)]
+                if decode_requests(r)!=landing:raise ValueError('source binding: bank wave addresses')
                 waves.append({'requests':r,'fills':ff})
+                request_cursor+=3;fill_cursor+=fc;wave_count+=1
             verify_waves(waves,uses);covered+=len(uses)
+    if request_cursor!=expected_counts['request_control_words'] or fill_cursor!=expected_counts['fill_control_words'] or wave_count!=expected_counts['bank_waves']:
+        raise ValueError('source binding: complete control word consumption')
     if covered!=expected_counts['coefficient_uses_per_rank']:raise ValueError('total coverage mismatch')
     return covered
 

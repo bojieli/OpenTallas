@@ -57,3 +57,52 @@ def test_request_masks_rows_padding_and_duplicate_bank_rejected():
  with pytest.raises(ValueError,match='padding'):C.decode_requests([0,0,1<<273])
  with pytest.raises(ValueError):C.decode_fill(1<<151)
  with pytest.raises(ValueError):C.decode_fill(255 | 1<<128)
+
+
+@pytest.fixture(scope='module')
+def actual_catalog():
+ import gzip,json
+ pin='3c99ce15f';prefix='results/uarch/w11_crom_control_catalog_20261001/compiled_v2/'
+ m=json.loads(gzip.decompress(C.git_bytes(pin,prefix+'catalog.json.gz')))
+ r=gzip.decompress(C.git_bytes(pin,prefix+'request-controls.bin.gz'))
+ f=gzip.decompress(C.git_bytes(pin,prefix+'fill-controls.bin.gz'))
+ return m,r,f
+
+
+def test_original_immutable_catalog_passes_corrected_guard(actual_catalog):
+ m,r,f=actual_catalog
+ assert C.verify_serialized(m,r,f)==549760
+
+
+@pytest.mark.parametrize('mutation',['pred','empty','drop','duplicate','reorder','pc','layer',
+ 'base','inner_stride','outer_stride','half','logical_uses','operand_axis','tensor',
+ 'counts','model_pin','model_sha','audit_sha','rank_sha','image_sha','rank_order','burst','wave_offset','wave_count','format'])
+def test_mutable_metadata_cannot_define_expected_source(actual_catalog,mutation):
+ m,r,f=actual_catalog;m=copy.deepcopy(m)
+ command=m['commands'][0];operand=command['operands'][0]
+ if mutation=='pred':command['pred']^=1
+ elif mutation=='empty':m['commands']=[];m['counts']['coefficient_uses_per_rank']=0
+ elif mutation=='drop':m['commands'].pop()
+ elif mutation=='duplicate':m['commands'][-1]=copy.deepcopy(command)
+ elif mutation=='reorder':m['commands'][0],m['commands'][1]=m['commands'][1],m['commands'][0]
+ elif mutation=='pc':command['pc']+=1
+ elif mutation=='layer':command['layer']=1
+ elif mutation=='base':operand['base']+=1
+ elif mutation=='inner_stride':operand['inner_stride']+=1
+ elif mutation=='outer_stride':operand['outer_stride']+=1
+ elif mutation=='half':operand['half_inner']=not operand['half_inner']
+ elif mutation=='logical_uses':operand['logical_uses']=0
+ elif mutation=='operand_axis':operand['operand']='d'
+ elif mutation=='tensor':operand['tensor']='norm.weight'
+ elif mutation=='counts':m['counts']['bank_waves']-=1
+ elif mutation=='model_pin':m['model_source']['commit']='bc1ec8b8f'
+ elif mutation=='model_sha':m['model_source']['sha256']='0'*64
+ elif mutation=='audit_sha':m['encoded_program_source']['sha256']='0'*64
+ elif mutation=='rank_sha':m['rank_program_image_bindings'][0]['encoded_template_sha256']='0'*64
+ elif mutation=='image_sha':m['rank_program_image_bindings'][0]['CROM_image_sha256']='0'*64
+ elif mutation=='rank_order':m['rank_program_image_bindings'].reverse()
+ elif mutation=='burst':command['bursts'][0]['burst']=1
+ elif mutation=='wave_offset':command['bursts'][0]['waves'][0]['fill_start_word']=1
+ elif mutation=='wave_count':command['bursts'][0]['waves'].pop()
+ elif mutation=='format':m['format']['fill_fields']='16x7bitselectors'
+ with pytest.raises(ValueError,match='source binding'):C.verify_serialized(m,r,f)
