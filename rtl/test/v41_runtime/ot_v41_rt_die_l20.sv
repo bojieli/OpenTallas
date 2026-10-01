@@ -1,5 +1,9 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
+// L20 COPY (W11 CKV, one die model for the indexed layer): ot_v41_rt_die with the die's CKV_SELECTED path
+// (rtl/chip/ckvsel/ot_chip_v41x_die.sv + core/tile copies) and its all-gather ports ckv_ag_*; the host
+// (v41_die_rt.cpp) carries ckv_ag_tx of die s to ckv_ag_rx of the other three dies (UCIe 11 / board 142 cycles,
+// 2 cycles a row on a board link).  W11's ring worker adds its X_IDX / IDX_RING parameters to THIS file.
 // SIMULATION ONLY (W17 runtime composition of the adopted V4.1 layer die, tools/v41_die_rt.py):
 // one layer die of a TP-4 group -- ot_chip_v41x_die FULL_SHAPE = 1 with X_ROM = 1 (every weight op on the ROM
 // field through the spine) and the attention engine cut (V41_ATT_CUT) -- whose ROM field (ot_v41_pair,
@@ -15,7 +19,10 @@
 //                                                   RoPE table rows of the step's position)
 // The ROM-field images are the host's (per-element words and configuration served through DPI).
 // ---------------------------------------------------------------------------
-module ot_v41_rt_die #(
+module ot_v41_rt_die_l20 #(
+    parameter integer CKV_SELECTED = 1,
+    parameter integer CKV_BASE = 1 << 22,
+    parameter integer CKV_NSLOT = 64,
     parameter integer RANK = 0,
     parameter integer K_MEM = 1 << 24,
     parameter integer ROM_R = 128,
@@ -83,11 +90,24 @@ module ot_v41_rt_die #(
     input  wire [3:0]        bl_ccr_in,
     input  wire [1:0]        bl_crx_valid,
     input  wire [2*CL_PW-1:0] bl_crx_rec,
-    output wire [3:0]        bl_ccr_out
+    output wire [3:0]        bl_ccr_out,
+    // CKV all-gather (CKV_SELECTED)
+    output wire              ckv_ag_tx_valid,
+    input  wire              ckv_ag_tx_ready,
+    output wire [9:0]        ckv_ag_tx_rank,
+    output wire [20:0]       ckv_ag_tx_gid,
+    output wire [2303:0]     ckv_ag_tx_row,
+    input  wire [2:0]        ckv_ag_rx_valid,
+    input  wire [29:0]       ckv_ag_rx_rank,
+    input  wire [62:0]       ckv_ag_rx_gid,
+    input  wire [3*2304-1:0] ckv_ag_rx_row,
+    output wire [31:0]       ckv_cycles_to_ready,
+    output wire [5:0]        ckv_fault_code
 );
     ot_chip_v41x_die #(.FULL_SHAPE(1), .RANK(RANK), .X_ROM(1), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW),
                        .ROM_BST(ROM_BST), .X_ATT(1), .X_ME(0), .X_IDX(0), .X_SEL(0), .X_EG(0), .W_HBM(0),
-                       .WINDOW_HBM_ATTENTION(1), .K_MEM(K_MEM), .SUN(SUN), .SUM(SUM),
+                       .WINDOW_HBM_ATTENTION(1), .CKV_SELECTED(CKV_SELECTED != 0), .CKV_BASE(CKV_BASE),
+                       .CKV_NSLOT(CKV_NSLOT), .K_MEM(K_MEM), .SUN(SUN), .SUM(SUM),
                        .CL_LANES(CL_LANES), .CL_DEPTH(CL_DEPTH), .CL_RELAY(CL_RELAY)) dut (
         .clk(clk), .rst_n(rst_n), .rom_fb(rom_fb), .rom_fr(rom_fr), .rom_ffault(rom_ffault),
         .att_to(att_to), .att_from(att_from),
@@ -128,6 +148,10 @@ module ot_v41_rt_die #(
         .bl_ctx_valid(bl_ctx_valid), .bl_ctx_ready(bl_ctx_ready), .bl_ctx_rec(bl_ctx_rec), .bl_ccr_in(bl_ccr_in),
         .bl_crx_valid(bl_crx_valid), .bl_crx_rec(bl_crx_rec), .bl_ccr_out(bl_ccr_out),
         .fault(fault), .unit_busy(unit_busy), .issue_unit(issue_unit),
+        .ckv_ag_tx_valid(ckv_ag_tx_valid), .ckv_ag_tx_ready(ckv_ag_tx_ready), .ckv_ag_tx_rank(ckv_ag_tx_rank),
+        .ckv_ag_tx_gid(ckv_ag_tx_gid), .ckv_ag_tx_row(ckv_ag_tx_row), .ckv_ag_rx_valid(ckv_ag_rx_valid),
+        .ckv_ag_rx_rank(ckv_ag_rx_rank), .ckv_ag_rx_gid(ckv_ag_rx_gid), .ckv_ag_rx_row(ckv_ag_rx_row),
+        .ckv_cycles_to_ready(ckv_cycles_to_ready), .ckv_fault_code(ckv_fault_code),
         .qs_fetched(), .qs_consumed(), .qs_why(), .kb_records(), .kb_writes(), .kb_highwater(), .kb_stalls(),
         .hbm_refreshes(), .hbm_w_reads(), .rtr_drops(), .kv_ops(), .kv_words(), .kv_sectors_written(),
         .kv_refetches(), .kv_wq_high(), .kv_hold_cycles(), .kv_hbm_grants(), .kv_fault_code(),
