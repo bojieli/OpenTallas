@@ -1,0 +1,12 @@
+{
+  "original_audit_preserved": true,
+  "problem": "W19 record commit carries a newer W15 result than its composed input hash.",
+  "resolution": {
+    "path": "results/rtl/w15_hbm_nvls.json",
+    "commit": "d5ce14e7963035403af6257263e922451bca75da",
+    "sha256": "df0116a511d0519d3faea923845c4450e58d818913866dad7d0b34c3a260db6f",
+    "archived": "w15_nvls_pinned.json"
+  },
+  "all_other_generator_and_input_pins_match": true,
+  "full_rtl_or_ss_ff_signoff_claimed": false
+}

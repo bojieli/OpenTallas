@@ -1,0 +1,182 @@
+{
+  "checks": {
+    "w19_ar.json": {
+      "tools/w19_hbm_token_compose.py": {
+        "commit": "c350be7f02d9d04578d1de4935847e59dc015590",
+        "expected": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38",
+        "observed": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38",
+        "match": true
+      },
+      "results/rtl/w19_hbm_tp96_program_oreduce.json": {
+        "commit": "71b3ffc5",
+        "expected": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+        "observed": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+        "match": true
+      },
+      "results/rtl/w19_sm_real_ops.json": {
+        "commit": "71b3ffc5",
+        "expected": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+        "observed": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+        "match": true
+      },
+      "results/rtl/w19_sm_real_ops_oreduce.json": {
+        "commit": "71b3ffc5",
+        "expected": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
+        "observed": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
+        "match": true
+      },
+      "results/rtl/w19_expert_fetch.json": {
+        "commit": "71b3ffc5",
+        "expected": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+        "observed": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+        "match": true
+      },
+      "results/rtl/w15_hbm_nvls.json": {
+        "commit": "71b3ffc5",
+        "expected": "df0116a511d0519d3faea923845c4450e58d818913866dad7d0b34c3a260db6f",
+        "observed": "c26c3e51a1058eb9b9a4918bc9ce22a2167268ea158050bbee5ab891595caef2",
+        "match": false
+      },
+      "results/rtl/w15_topk_merge_hbm96_p1024f256.json": {
+        "commit": "71b3ffc5",
+        "expected": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e",
+        "observed": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e",
+        "match": true
+      }
+    },
+    "w19_ar_fused.json": {
+      "tools/w19_hbm_token_compose.py": {
+        "commit": "c350be7f02d9d04578d1de4935847e59dc015590",
+        "expected": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38",
+        "observed": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38",
+        "match": true
+      },
+      "results/rtl/w19_hbm_tp96_program_oreduce.json": {
+        "commit": "71b3ffc5",
+        "expected": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+        "observed": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+        "match": true
+      },
+      "results/rtl/w19_sm_real_ops.json": {
+        "commit": "71b3ffc5",
+        "expected": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+        "observed": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+        "match": true
+      },
+      "results/rtl/w19_sm_real_ops_oreduce.json": {
+        "commit": "71b3ffc5",
+        "expected": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
+        "observed": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
+        "match": true
+      },
+      "results/rtl/w19_expert_fetch.json": {
+        "commit": "71b3ffc5",
+        "expected": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+        "observed": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+        "match": true
+      },
+      "results/rtl/w15_hbm_nvls.json": {
+        "commit": "71b3ffc5",
+        "expected": "df0116a511d0519d3faea923845c4450e58d818913866dad7d0b34c3a260db6f",
+        "observed": "c26c3e51a1058eb9b9a4918bc9ce22a2167268ea158050bbee5ab891595caef2",
+        "match": false
+      },
+      "results/rtl/w15_topk_merge_hbm96_p1024f256.json": {
+        "commit": "71b3ffc5",
+        "expected": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e",
+        "observed": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e",
+        "match": true
+      }
+    },
+    "w19_mtp.json": {
+      "tools/w19_hbm_token_compose.py": {
+        "commit": "c350be7f02d9d04578d1de4935847e59dc015590",
+        "expected": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38",
+        "observed": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38",
+        "match": true
+      },
+      "results/rtl/w19_hbm_tp96_program_oreduce.json": {
+        "commit": "71b3ffc5",
+        "expected": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+        "observed": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+        "match": true
+      },
+      "results/rtl/w19_sm_real_ops.json": {
+        "commit": "71b3ffc5",
+        "expected": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+        "observed": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+        "match": true
+      },
+      "results/rtl/w19_sm_real_ops_oreduce.json": {
+        "commit": "71b3ffc5",
+        "expected": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
+        "observed": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
+        "match": true
+      },
+      "results/rtl/w19_expert_fetch.json": {
+        "commit": "71b3ffc5",
+        "expected": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+        "observed": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+        "match": true
+      },
+      "results/rtl/w15_hbm_nvls.json": {
+        "commit": "71b3ffc5",
+        "expected": "df0116a511d0519d3faea923845c4450e58d818913866dad7d0b34c3a260db6f",
+        "observed": "c26c3e51a1058eb9b9a4918bc9ce22a2167268ea158050bbee5ab891595caef2",
+        "match": false
+      },
+      "results/rtl/w15_topk_merge_hbm96_p1024f256.json": {
+        "commit": "71b3ffc5",
+        "expected": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e",
+        "observed": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e",
+        "match": true
+      }
+    },
+    "w19_mtp_fused.json": {
+      "tools/w19_hbm_token_compose.py": {
+        "commit": "c350be7f02d9d04578d1de4935847e59dc015590",
+        "expected": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38",
+        "observed": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38",
+        "match": true
+      },
+      "results/rtl/w19_hbm_tp96_program_oreduce.json": {
+        "commit": "71b3ffc5",
+        "expected": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+        "observed": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+        "match": true
+      },
+      "results/rtl/w19_sm_real_ops.json": {
+        "commit": "71b3ffc5",
+        "expected": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+        "observed": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+        "match": true
+      },
+      "results/rtl/w19_sm_real_ops_oreduce.json": {
+        "commit": "71b3ffc5",
+        "expected": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
+        "observed": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
+        "match": true
+      },
+      "results/rtl/w19_expert_fetch.json": {
+        "commit": "71b3ffc5",
+        "expected": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+        "observed": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+        "match": true
+      },
+      "results/rtl/w15_hbm_nvls.json": {
+        "commit": "71b3ffc5",
+        "expected": "df0116a511d0519d3faea923845c4450e58d818913866dad7d0b34c3a260db6f",
+        "observed": "c26c3e51a1058eb9b9a4918bc9ce22a2167268ea158050bbee5ab891595caef2",
+        "match": false
+      },
+      "results/rtl/w15_topk_merge_hbm96_p1024f256.json": {
+        "commit": "71b3ffc5",
+        "expected": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e",
+        "observed": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e",
+        "match": true
+      }
+    }
+  },
+  "pass_all": false,
+  "consequence": "Preserve mismatches; records are model composition evidence, not accepted end-to-end provenance or physical sign-off."
+}
