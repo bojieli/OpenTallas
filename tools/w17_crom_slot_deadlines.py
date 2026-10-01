@@ -49,7 +49,7 @@ def build():
             if ow>0 and oh>0: blockers.append(dict(region=z[0],overlap_um2=str(ow*oh)))
         assert any(z['region']=='HUB_HC' for z in blockers)
         cases.append(dict(credits=credit,
-            unchanged_height_right_extension_blockers=blockers,,retained_SU_core_mm2=str(su),added_CROM_capture_control_mm2=str(added),
+            unchanged_height_right_extension_blockers=blockers,retained_SU_core_mm2=str(su),added_CROM_capture_control_mm2=str(added),
             SU_slot_mm2=str(area),exclusive_area_deficit_mm2=str(deficit),
             minimum_required_width_um_at_current_height=str((su+added)*1000000/rh),
             placement_verdict='FAIL_EXISTING_SU_PLUS_CROM_EXCEEDS_SLOT',

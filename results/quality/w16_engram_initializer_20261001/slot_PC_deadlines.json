@@ -6895,7 +6895,13 @@
       "full_token_ticks": null,
       "minimum_required_width_um_at_current_height": "2220.457854501139193556933185",
       "placement_verdict": "FAIL_EXISTING_SU_PLUS_CROM_EXCEEDS_SLOT",
-      "retained_SU_core_mm2": "11.956"
+      "retained_SU_core_mm2": "11.956",
+      "unchanged_height_right_extension_blockers": [
+        {
+          "overlap_um2": "605155.0719999999999999999700",
+          "region": "HUB_HC"
+        }
+      ]
     },
     {
       "SU_slot_mm2": "12.80498927616",
@@ -13783,7 +13789,13 @@
       "full_token_ticks": null,
       "minimum_required_width_um_at_current_height": "2221.116882398134901711439623",
       "placement_verdict": "FAIL_EXISTING_SU_PLUS_CROM_EXCEEDS_SLOT",
-      "retained_SU_core_mm2": "11.956"
+      "retained_SU_core_mm2": "11.956",
+      "unchanged_height_right_extension_blockers": [
+        {
+          "overlap_um2": "609135.1787199999999999999834",
+          "region": "HUB_HC"
+        }
+      ]
     },
     {
       "SU_slot_mm2": "12.80498927616",
@@ -20671,7 +20683,13 @@
       "full_token_ticks": null,
       "minimum_required_width_um_at_current_height": "2261.949940338049064801568378",
       "placement_verdict": "FAIL_EXISTING_SU_PLUS_CROM_EXCEEDS_SLOT",
-      "retained_SU_core_mm2": "11.956"
+      "retained_SU_core_mm2": "11.956",
+      "unchanged_height_right_extension_blockers": [
+        {
+          "overlap_um2": "855740.7155200000000000000114",
+          "region": "HUB_HC"
+        }
+      ]
     }
   ],
   "catalog_padded_layout_encoded": false,
