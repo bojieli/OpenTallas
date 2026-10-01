@@ -28,10 +28,10 @@ def join():
         rows.append({'name':w['name'],'format':fmt,'flags':flags,'valid_length':length,'epoch':epoch,
             'descriptor_sector_hex':desc.hex(),'payload_sector_sha256':hashlib.sha256(payload).hexdigest(),
             'produced_F32_sha256':sha,'payload_sectors':len(payload)//32,'descriptor_sectors':1,
-            'writer_and_reader_commands':2*sectors,'writer_and_reader_port_bytes':64*sectors,
+            'writer_and_reader_sector_transfers':2*sectors,'production_command_count':None,'software_payload_request_length_sectors':len(payload)//32,'physical_command_grouping_bound':False,'writer_and_reader_port_bytes':64*sectors,
             'software_bit_exact':w['bit_exact'],'ordinary_GPU_producer_lowered':w['producer_receipt'].get('ordinary_GPU_producer_lowered'),
             'actual_controller_addresses':None,'stack_PC_distribution':None,'physical_visible_ACK':None})
-    return {'schema':'w13.index-descriptor-byte-join.v1','producer_evidence_pin':{'source_git':REV,'path':PATH,'sha256':hashlib.sha256(b).hexdigest()},
+    return {'schema':'w13.index-descriptor-byte-join.v2','producer_evidence_pin':{'source_git':REV,'path':PATH,'sha256':hashlib.sha256(b).hexdigest()},
       'producer_source_git':d['source_commit'],'verified_source_pins':pins,'rows':rows,
       'actual_software_row_events':d['actual_software_row_events'],'software_outstanding_leases':d['outstanding_row_leases'],
       'software_outstanding_publications':d['outstanding_publications'],'checkpoint_data_reads':d['checkpoint_data_reads'],
@@ -39,7 +39,7 @@ def join():
       'old_screen_descriptor_superseded':'89c proposed address/owner/hash descriptor fields were candidate-only; actual descriptor does not contain them',
       'routing_metadata_gate':'owner/global-key/base-address/source provenance must be bound separately; not inferred from descriptor',
       'scope':'eight source-produced software microfixture rows; not full checkpoint callbacks or physical transactions',
-      'physical_calendar':None,'nonfinite_score_consumer':'reference-only; ordinary hardware unresolved',
+      'superseded_label':'a104421d4 writer_and_reader_commands meant sector transfers; not production commands; old bytes preserved','physical_calendar':None,'nonfinite_score_consumer':'reference-only; ordinary hardware unresolved',
       'physical_admission':'FAIL_CLOSED','rate_credit':0,'hardware_launch':False,'baseline_066_preserved':True}
 
 if __name__=='__main__':
