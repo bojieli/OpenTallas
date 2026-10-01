@@ -43,12 +43,12 @@ def main():
     ap.add_argument('--jobs', type=int, default=4, help='Independent operand simulations; source builds are serialized')
     ap.add_argument('--limit', type=int, default=0, help='Debug subset, recorded explicitly')
     ap.add_argument('--simulation-host', help='SSH destination for bounded vvp jobs; builds and checkpoint packing stay local')
+    ap.add_argument('--remote-vvp', default='vvp', help='Remote runtime command matching local Icarus bytecode version')
     ap.add_argument('--ssh-key', type=Path)
     ap.add_argument('--remote-work', default='/home/ubuntu/w19-production-sim')
     args = ap.parse_args()
     if args.jobs < 1 or args.jobs > 4:
         raise SystemExit('Bounded campaign requires 1..4 simulation slots')
-    local_run = S.run_sim
     executions = []
     if args.simulation_host:
         ssh = ['ssh'] + (['-i', str(args.ssh_key)] if args.ssh_key else [])
@@ -58,7 +58,7 @@ def main():
             subprocess.run(ssh + [args.simulation_host, 'mkdir -p ' + shlex.quote(remote)], check=True)
             subprocess.run(scp + [str(exe)] + [str(directory / p) for p in ('cfg.hex', 'lines.hex', 'x.hex')]
                 + [args.simulation_host + ':' + remote + '/'], check=True)
-            command = 'cd ' + shlex.quote(remote) + ' && vvp -n sim.vvp +DIR=. +GAP=0 > sim.log 2>&1'
+            command = 'cd ' + shlex.quote(remote) + ' && ' + args.remote_vvp + ' -n sim.vvp +DIR=. +GAP=0 > sim.log 2>&1'
             outcome = subprocess.run(ssh + [args.simulation_host, command])
             subprocess.run(scp + [args.simulation_host + ':' + remote + '/sim.log', str(directory / 'sim.log')], check=True)
             outcome.check_returncode()
