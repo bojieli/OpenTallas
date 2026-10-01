@@ -215,10 +215,10 @@ module ot_w11_kctl_ring_phys (
         .dr_q(dr_q), .dr_fold(dr_fold), .dr_sidx(dr_sidx), .dr_nkeys(dr_nkeys), .dr_ready(dr_ready_q));
 endmodule
 
-// the quarter join with its handshakes captured in flip-flops: i_valid / o_ready come from, and
-// i_ready goes to, registers (the streams' queue heads and the consumer's), so the combinational
-// i_valid / o_ready -> take -> i_ready and beat-enable paths are timed register to register rather
-// than between unbudgeted top-level pins.  Data buses as ot_w11_quarter_join_phys.
+// the quarter join with every input captured from a flip-flop and the combinational i_ready captured
+// into one (the streams' queue heads, the command source and the consumer's registers), so every
+// path through the join is timed register to register; its registered outputs leave on pins (an IO
+// budget for the top level: route with --false-path-io).  Data buses as ot_w11_quarter_join_phys.
 module ot_w11_join_hs_phys (
     input  wire clk, rst_n, sen,
     input  wire [63:0] sin,
@@ -239,13 +239,19 @@ module ot_w11_join_hs_phys (
     wire [4*16*544-1:0] i_key;
     wire [64*544-1:0] o_key;
     reg  [3:0] i_valid_q;
-    reg  o_ready_q;
+    reg  o_ready_q, cmd_v_q;
+    reg  [29:0] cmd_nkeys_q;
+    reg  [39:0] cmd_skip_q;
+    reg  [63:0] i_kv_q;
     wire [3:0] i_ready;
-    always @(posedge clk) begin i_valid_q <= i_valid; o_ready_q <= o_ready; i_ready_q <= i_ready; end
+    always @(posedge clk) begin
+        i_valid_q <= i_valid; o_ready_q <= o_ready; i_ready_q <= i_ready;
+        cmd_v_q <= cmd_v; cmd_nkeys_q <= cmd_nkeys; cmd_skip_q <= cmd_skip; i_kv_q <= i_kv;
+    end
     ot_w11_phys_sin #(.N(4*16*544)) u_in (.clk(clk), .sen(sen), .sin(sin), .q(i_key));
     ot_hdc_v41x_idx_quarter_join dut (
-        .clk(clk), .rst_n(rst_n), .cmd_v(cmd_v), .cmd_nkeys(cmd_nkeys), .cmd_skip(cmd_skip), .busy(busy),
-        .fault(fault), .i_valid(i_valid_q), .i_ready(i_ready), .i_kv(i_kv), .i_key(i_key), .o_valid(o_valid),
+        .clk(clk), .rst_n(rst_n), .cmd_v(cmd_v_q), .cmd_nkeys(cmd_nkeys_q), .cmd_skip(cmd_skip_q), .busy(busy),
+        .fault(fault), .i_valid(i_valid_q), .i_ready(i_ready), .i_kv(i_kv_q), .i_key(i_key), .o_valid(o_valid),
         .o_ready(o_ready_q), .o_kv(o_kv), .o_last(o_last), .o_key(o_key), .o_ref(o_ref));
     ot_w11_phys_sout #(.N(64*544)) u_out (.clk(clk), .d(o_key), .q(sout));
 endmodule
