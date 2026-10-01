@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.parent_checks.v1",
+  "source_commit": "f6f9427ec",
+  "commands": [
+    {
+      "argv": [
+        "pytest",
+        "-q",
+        "tests/test_w11_controller_endpoints.py",
+        "tests/test_abi3_physical_env.py",
+        "tests/test_abi3_physical_sdc_constraints.py",
+        "tests/test_abi3_physical_memory_macros.py",
+        "tools/test_w17_runtime_integration.py"
+      ],
+      "exit_code": 0,
+      "passed": 869,
+      "skipped": 561,
+      "log": "pytest.log"
+    },
+    {
+      "argv": [
+        "make",
+        "check-figures"
+      ],
+      "exit_code": 0,
+      "log": "check_figures.log"
+    }
+  ],
+  "scope": "Controller/physical driver unit checks and runtime source-binding checks. Optional environment-dependent cases are skipped. No physical flow or full-token numerical acceptance is established.",
+  "artifact_sha256": {
+    "check_figures.log": "867f8c2a21c2b9e01cafa9e48b4d5bdb05c6996273c192f9b812c89da5506a73",
+    "pytest.log": "30f83d64effac1186f57e1bd70f96c937b35d4be6b0eb42ca3f5498e5a90cb64"
+  },
+  "adoption": false
+}
