@@ -1,0 +1,63 @@
+// W18b: black box of the hardened K-arb slice (routed pslice, SS +35 / FF +22 ps; odb 8c65416e)
+(* blackbox *)
+module ot_chip_v41x_karb_pslice #(
+    parameter integer AW    = 28,
+    parameter integer TAGW  = 16,
+    parameter integer LENW  = 4,
+    parameter integer BEATW = 4,
+    parameter integer DW    = 256,
+    parameter integer KQ    = 4,
+    parameter integer RQ    = 3,
+    parameter bit     K_RD_FENCE = 1'b1
+) (
+    input  wire                 clk,
+    input  wire                 rst_n,
+    input  wire                 b_v,
+    output wire                 b_rdy,
+    input  wire [AW-1:0]        b_addr,
+    input  wire [LENW-1:0]      b_len,
+    input  wire [TAGW-1:0]      b_tag,
+    input  wire                 b_we,
+    input  wire [DW-1:0]        b_wdata,
+    input  wire [DW/8-1:0]      b_wstrb,
+    output wire                 b_wr_done,
+    output wire                 b_rsp_v,
+    input  wire                 b_rsp_rdy,
+    output wire [TAGW-1:0]      b_rsp_tag,
+    output wire [BEATW-1:0]     b_rsp_beat,
+    output wire [DW-1:0]        b_rsp_data,
+    // K request from the region tap
+    input  wire                 kin_v,
+    input  wire [AW-1:0]        kin_addr,
+    input  wire [LENW-1:0]      kin_len,
+    input  wire [TAGW-1:0]      kin_tag,
+    input  wire                 kin_we,
+    input  wire [DW-1:0]        kin_wdata,
+    input  wire [DW/8-1:0]      kin_wstrb,
+    output wire                 k_pop,
+    output wire                 k_wr_done,
+    // K response to the region's queue
+    output wire                 ks_v,
+    output wire [TAGW-1:0]      ks_tag,
+    output wire [BEATW-1:0]     ks_beat,
+    output wire [DW-1:0]        ks_data,
+    input  wire                 ks_cr,
+    // the pseudo-channel
+    output wire                 h_v,
+    input  wire                 h_rdy,
+    output wire [AW-1:0]        h_addr,
+    output wire [LENW-1:0]      h_len,
+    output wire [TAGW:0]        h_tag,
+    output wire                 h_we,
+    output wire [DW-1:0]        h_wdata,
+    output wire [DW/8-1:0]      h_wstrb,
+    input  wire                 h_wr_done,
+    input  wire                 r_v,
+    output wire                 r_rdy,
+    input  wire [TAGW:0]        r_tag,
+    input  wire [BEATW-1:0]     r_beat,
+    input  wire [DW-1:0]        r_data,
+    output wire                 b_grant,
+    output wire                 contend
+);
+endmodule

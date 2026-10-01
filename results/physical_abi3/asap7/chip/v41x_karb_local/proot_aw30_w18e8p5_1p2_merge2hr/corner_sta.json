@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/home/ubuntu/w18work/karb13/_merge2hr/proot/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_chip_v41x_karb_proot\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -595.42,
+  "tns_ps": -253560.2,
+  "worst_register_d_slack_ps": -198.918991,
+  "worst_reg_to_reg_slack_ps": -198.92,
+  "worst_input_to_reg_slack_ps": 417.11,
+  "worst_output_port_slack_ps": -595.423889,
+  "violating_d_pins": 900,
+  "errors": [],
+  "odb_sha256": "2e0cb2933c8776d330d40226c2ae5f597460853cff717ad98ace8e2ae4e073c5",
+  "spef_sha256": "c4746f64be176889d961f0180ab85fe9522c1228f6a4e3585c059c69a495ce0e",
+  "sdc_sha256": "431f573c18c79f8217dd355fd74237505b8867967ad9a2394d1c8aff2a80e18c"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 8.95,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 8.947288,
+  "worst_reg_to_reg_slack_ps": 8.95,
+  "worst_input_to_reg_slack_ps": 45.08,
+  "worst_output_port_slack_ps": 496.990173,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "2e0cb2933c8776d330d40226c2ae5f597460853cff717ad98ace8e2ae4e073c5",
+  "spef_sha256": "c4746f64be176889d961f0180ab85fe9522c1228f6a4e3585c059c69a495ce0e",
+  "sdc_sha256": "431f573c18c79f8217dd355fd74237505b8867967ad9a2394d1c8aff2a80e18c"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": false,
+ "w18b_verdict": "NOT CLOSED at SS: r2r -198.9 ps (MERGE2 -211.8, flat -406.8); FF hold +9.0. The response side is no longer critical: the worst path is now the INGRESS two-entry queue's read pointer u_iq.rp fanning out (~600 loads, 6 buffer levels, ~700 ps) to the 344-bit dispatch register d_* (rp select + disp enable). A wide-register select at 750 um spread; next lever: harden the root as replicated sub-blocks or register the ingress head."
+}

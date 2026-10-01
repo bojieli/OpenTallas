@@ -91,16 +91,17 @@ def plan(pack_rec: dict, pair: dict, rows: int, row_ch: float, col_gap: float, s
                [(c["x"], c["y"], c["w"], c["h"]) for c in vcorr]
     need = pairs_needed or pack_rec["capacity"]["used_pair_rows"]
     kinds = [pair] + ([bf16] if bf16 else [])
-    pw, ph = max(k["w"] for k in kinds), max(k["h"] for k in kinds)
     two_sided = any(k["pin_edges"]["N"] and k["pin_edges"]["S"] for k in kinds)
-    cl_w = snap_up(pw, X_STEP)                        # pair origins on the joint grid (pins on track)
-    # one pair + its pin channel (south of the pair); with pins on both N and S edges (inputs S, outputs N)
-    # adjacent rows share the channel between them and the band gets one more channel on top
-    row_pitch = snap_up(ph + row_ch, Y_STEP)
+    # per kind: the column width (pair origins on the joint grid, pins on track) and the row pitch (one pair +
+    # its pin channel; with pins on both N and S edges adjacent rows share the channel between them and the
+    # band gets one more channel on top).  BF16 column pairs may be wider and taller than the q pair.
+    geo = {}
+    for kn, k in (("q", pair), ("bf16", bf16)):
+        if k:
+            w_ = snap_up(k["w"], X_STEP)
+            geo[kn] = dict(w=w_, rp=snap_up(k["h"] + row_ch, Y_STEP), cp=snap_up(w_ + col_gap, X_STEP))
+    cl_w, row_pitch, col_pitch = geo["q"]["w"], geo["q"]["rp"], geo["q"]["cp"]
     band_h = rows * row_pitch
-    col_pitch = snap_up(cl_w + col_gap, X_STEP)
-    ncols = int((cx1 - cx0 + col_gap) // col_pitch)
-    x0 = snap_dn(cx0 + ((cx1 - cx0 + col_gap) - ncols * col_pitch) / 2, X_STEP)
     bands = []
     y = cy0
     top_ch = snap_up(row_ch, Y_STEP) if two_sided else 0.0
@@ -115,49 +116,67 @@ def plan(pack_rec: dict, pair: dict, rows: int, row_ch: float, col_gap: float, s
 
     vm = soft["HUB_VM"]
     hx, hy = vm["x"] + vm["w"] / 2, vm["y"] + vm["h"] / 2
-    clusters = []
-    for c in range(ncols):
-        xc = x0 + c * col_pitch
-        for b, (yb, n) in enumerate(bands):
-            # every contiguous run of clear pair rows in this band is one cluster (column segment)
-            segs = []
-            cur = []
-            for r in range(n):
-                yy = yb + r * row_pitch
-                if clear(xc, yy, cl_w, row_pitch):
-                    cur.append(r)
-                elif cur:
+
+    def layout(seq):
+        """seq: list of column kinds west to east; returns the clusters (column segments between spines)."""
+        span = sum(geo[k]["cp"] for k in seq) - col_gap
+        xc = snap_dn(cx0 + ((cx1 - cx0) - span) / 2, X_STEP)
+        out = []
+        for c, kn in enumerate(seq):
+            gk = geo[kn]
+            for b, (yb, n) in enumerate(bands):
+                nr = int((n * row_pitch + 1e-6) // gk["rp"])
+                segs, cur = [], []
+                for r in range(nr):
+                    if clear(xc, yb + r * gk["rp"], gk["w"], gk["rp"]):
+                        cur.append(r)
+                    elif cur:
+                        segs.append(cur)
+                        cur = []
+                if cur:
                     segs.append(cur)
-                    cur = []
-            if cur:
-                segs.append(cur)
-            for s in segs:
-                y0c = yb + s[0] * row_pitch
-                clusters.append(dict(col=c, band=b, x=round(xc, 3), y=round(y0c, 3), w=cl_w,
-                                     h=round(len(s) * row_pitch, 3), rows=len(s)))
-    for cl in clusters:
-        cl["dist_um"] = round(abs(cl["x"] + cl["w"] / 2 - hx) + abs(cl["y"] + cl["h"] / 2 - hy), 1)
-        cl["kind"] = "q"
+                for s in segs:
+                    y0c = yb + s[0] * gk["rp"]
+                    cl = dict(col=c, band=b, x=round(xc, 3), y=round(y0c, 3), w=gk["w"], h=round(len(s) * gk["rp"], 3),
+                              rows=len(s), row_pitch_um=gk["rp"], kind=kn)
+                    cl["dist_um"] = round(abs(cl["x"] + cl["w"] / 2 - hx) + abs(cl["y"] + cl["h"] / 2 - hy), 1)
+                    out.append(cl)
+            xc += gk["cp"]
+        return out
+
+    ncols = int((cx1 - cx0 + col_gap) // col_pitch)
+    seq = ["q"] * ncols
+    clusters = layout(seq)
     bf16_cols = []
     if bf16 and bf16_pairs:
         # dedicated BF16 COLUMNS (root, 2026-09-30): whole columns, spread evenly over the columns ordered by
-        # their distance from VM (so the BF16 slots see the same distance mix as the q slots)
-        colcap = {}
+        # their distance from VM (so the BF16 slots see the same distance mix as the q slots); a BF16 column
+        # takes the place of ceil(cp_bf / cp_q) q columns
+        take = math.ceil(geo["bf16"]["cp"] / col_pitch - 1e-9)
+        dist = {}
         for cl in clusters:
-            colcap[cl["col"]] = colcap.get(cl["col"], 0) + cl["rows"]
-        order = sorted(colcap, key=lambda c: min(x["dist_um"] for x in clusters if x["col"] == c))
-        tot = sum(colcap.values())
-        k = 1
-        while True:
+            dist[cl["col"]] = min(dist.get(cl["col"], 1e18), cl["dist_um"])
+        order = sorted(dist, key=lambda c: dist[c])
+        for k in range(1, ncols // take + 1):
             step = len(order) / k
-            pick = [order[int(i * step)] for i in range(k)]
-            if sum(colcap[c] for c in pick) * need / tot >= bf16_pairs or k == len(order):
+            pick = sorted({order[int(i * step)] for i in range(k)})
+            s2, c = [], 0
+            while c < ncols:
+                if c in pick and c + take <= ncols:
+                    s2.append("bf16")
+                    c += take
+                else:
+                    s2.append("q")
+                    c += 1
+            # the BF16 columns replace q columns, so the row stays inside the core
+            while sum(geo[x]["cp"] for x in s2) - col_gap > cx1 - cx0 + 1e-6:
+                i = max(i for i, x in enumerate(s2) if x == "q")
+                s2.pop(i)
+            cand = layout(s2)
+            if sum(cl["rows"] for cl in cand if cl["kind"] == "bf16") >= bf16_pairs:
                 break
-            k += 1
-        bf16_cols = sorted(pick)
-        for cl in clusters:
-            if cl["col"] in bf16_cols:
-                cl["kind"] = "bf16"
+        seq, clusters = s2, cand
+        bf16_cols = [i for i, x in enumerate(seq) if x == "bf16"]
     clusters.sort(key=lambda c: (c["dist_um"], c["x"], c["y"]))
     used = []
     left = {"q": need - bf16_pairs, "bf16": bf16_pairs}
@@ -184,14 +203,15 @@ def plan(pack_rec: dict, pair: dict, rows: int, row_ch: float, col_gap: float, s
                 for yy in (far["y"], far["y"] + far["h"]))
     return dict(
         die=dict(w_um=die_w, h_um=die_h, core=g["core"]),
-        bf16=dict(bf16, pairs=bf16_pairs, columns=bf16_cols,
+        bf16=dict(bf16, pairs=bf16_pairs, columns=bf16_cols, pitch_um=[geo["bf16"]["cp"], geo["bf16"]["rp"]],
                   slots=sum(c["rows"] for c in clusters if c["kind"] == "bf16")) if bf16 else None,
         pin_channels="shared between rows, one extra per band (pins on N and S)" if two_sided else "south of each row",
         pair=dict(pair, pitch_um=[col_pitch, row_pitch],
                   pack_pitch_um=[g["pair_pitch_um"], g["rom_v_pitch_um"]],
                   pitch_vs_pack=[round(col_pitch / g["pair_pitch_um"], 4), round(row_pitch / g["rom_v_pitch_um"], 4)]),
         cluster_rule=dict(rows=rows, row_channel_um=row_ch, col_gap_um=col_gap, spine_h_um=spine_h,
-                          row_pitch_um=row_pitch, col_pitch_um=col_pitch, columns=ncols, bands=len(bands)),
+                          row_pitch_um=row_pitch, col_pitch_um=col_pitch, columns=len(seq), bands=len(bands),
+                          column_kinds="".join("B" if k == "bf16" else "q" for k in seq)),
         capacity=dict(pairs_needed=need, pair_slots=cap, closes=left <= 0, short=max(0, left), short_by_kind=short,
                       clusters_used=len(used), clusters_total=len(clusters),
                       full_clusters_used=sum(1 for c in used if c["used_rows"] == rows)),
@@ -241,9 +261,8 @@ def main(argv=None):
     if a.slots_out:
         vm = out["hub"]["parts"]["HUB_VM"]
         hx, hy = vm["x"] + vm["w"] / 2, vm["y"] + vm["h"] / 2
-        rp = out["cluster_rule"]["row_pitch_um"]
-        slots = [dict(cluster=c["name"], x=c["x"], y=round(c["y"] + r * rp, 3), kind=c["kind"],
-                      dist_um=round(abs(c["x"] + c["w"] / 2 - hx) + abs(c["y"] + r * rp + rp / 2 - hy), 1))
+        slots = [dict(cluster=c["name"], x=c["x"], y=round(c["y"] + r * c["row_pitch_um"], 3), kind=c["kind"],
+                      dist_um=round(abs(c["x"] + c["w"] / 2 - hx) + abs(c["y"] + (r + 0.5) * c["row_pitch_um"] - hy), 1))
                  for c in out["clusters"] for r in range(c["used_rows"])]
         slots.sort(key=lambda s: (s["dist_um"], s["x"], s["y"]))
         a.slots_out.write_text(json.dumps(dict(schema="opentallas.v41.w18_slot_list.v1", floorplan=str(a.output),

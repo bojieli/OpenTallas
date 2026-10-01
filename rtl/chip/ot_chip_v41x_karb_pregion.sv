@@ -23,7 +23,8 @@ module ot_chip_v41x_karb_pregion #(
     // W18 (1.2 GHz SS): 1 = registered queue heads and a registered pair stage (PCs 0/1 and 2/3 merge next
     // to their windows, the final 2:1 merge at the region centre), so no response wire spans more than half a
     // 4-PC region in one cycle; adds one cycle to the K response path.  0 = the original single 4:1 select (fd6e9a81).
-    parameter bit     PAIRSTAGE  = 1'b1
+    parameter bit     PAIRSTAGE  = 1'b1,
+    parameter bit     HIER       = 1'b0   // W18b: slices are hardened macros (synthesis of the region only)
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -120,6 +121,26 @@ module ot_chip_v41x_karb_pregion #(
     generate for (p = 0; p < 4; p = p + 1) begin : g_s
         wire [TAGW-1:0] st; wire [BEATW-1:0] sb; wire [DW-1:0] sdt;
         assign sd[p*RW +: RW] = {st, sb, sdt};
+        if (HIER) begin : g_h
+        // W18b: the slice is a hardened macro (physical/w18/ot_chip_v41x_karb_pslice, AW=30, routed at
+        // 0.833 ns); its black box carries the widths, so no parameter overrides
+        ot_chip_v41x_karb_pslice u_s (
+            .clk(clk), .rst_n(rst_n),
+            .b_v(b_v[p]), .b_rdy(b_rdy[p]), .b_addr(b_addr[p*AW +: AW]), .b_len(b_len[p*LENW +: LENW]),
+            .b_tag(b_tag[p*TAGW +: TAGW]), .b_we(b_we[p]), .b_wdata(b_wdata[p*DW +: DW]),
+            .b_wstrb(b_wstrb[p*DW/8 +: DW/8]), .b_wr_done(b_wr_done[p]),
+            .b_rsp_v(b_rsp_v[p]), .b_rsp_rdy(b_rsp_rdy[p]), .b_rsp_tag(b_rsp_tag[p*TAGW +: TAGW]),
+            .b_rsp_beat(b_rsp_beat[p*BEATW +: BEATW]), .b_rsp_data(b_rsp_data[p*DW +: DW]),
+            .kin_v(t_v && t_lpc == p), .kin_addr(t_addr), .kin_len(t_len), .kin_tag(t_tag), .kin_we(t_we),
+            .kin_wdata(t_wdata), .kin_wstrb(t_wstrb), .k_pop(pop[p]), .k_wr_done(kwd[p]),
+            .ks_v(sv[p]), .ks_tag(st), .ks_beat(sb), .ks_data(sdt), .ks_cr(qcr[p]),
+            .h_v(h_v[p]), .h_rdy(h_rdy[p]), .h_addr(h_addr[p*AW +: AW]), .h_len(h_len[p*LENW +: LENW]),
+            .h_tag(h_tag[p*(TAGW+1) +: TAGW+1]), .h_we(h_we[p]), .h_wdata(h_wdata[p*DW +: DW]),
+            .h_wstrb(h_wstrb[p*DW/8 +: DW/8]), .h_wr_done(h_wr_done[p]),
+            .r_v(r_v[p]), .r_rdy(r_rdy[p]), .r_tag(r_tag[p*(TAGW+1) +: TAGW+1]),
+            .r_beat(r_beat[p*BEATW +: BEATW]), .r_data(r_data[p*DW +: DW]),
+            .b_grant(bg[p]), .contend(ct[p]));
+        end else begin : g_f
         ot_chip_v41x_karb_pslice #(.AW(AW), .TAGW(TAGW), .LENW(LENW), .BEATW(BEATW), .DW(DW), .KQ(KQ), .RQ(RQ),
                                    .K_RD_FENCE(K_RD_FENCE)) u_s (
             .clk(clk), .rst_n(rst_n),
@@ -137,6 +158,7 @@ module ot_chip_v41x_karb_pregion #(
             .r_v(r_v[p]), .r_rdy(r_rdy[p]), .r_tag(r_tag[p*(TAGW+1) +: TAGW+1]),
             .r_beat(r_beat[p*BEATW +: BEATW]), .r_data(r_data[p*DW +: DW]),
             .b_grant(bg[p]), .contend(ct[p]));
+        end
         wire qrdy;
         ot_chip_v41x_karb_qh #(.W(RW), .DEPTH(RQ)) u_q (   // W18: registered head (qn-equivalent)
             .clk(clk), .rst_n(rst_n), .in_v(sv[p]), .in_rdy(qrdy), .in_d(sd[p*RW +: RW]),

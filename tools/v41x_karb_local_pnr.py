@@ -203,6 +203,31 @@ def pregion_case() -> dict:
                           "tap_top_um": [575, 745], "send_top_um": [950, 1120]}}
 
 
+def pregion_hier_case() -> dict:
+    """W18b: the region built from four HARDENED pslice macros (floorplan -> hardened element -> replicate) at
+    PREGION_H (>= 2 x the slice's 64 um: slices along the PHY edge, region glue above them)."""
+    c = pregion_case()
+    args = c["args"]
+    srcs = [i + 1 for i, x in enumerate(args) if x == "--source"]
+    keep = [args[i] for i in srcs if "pslice" not in args[i] and "karb_slice" not in args[i]]
+    out, i = [], 0
+    while i < len(args):
+        if args[i] == "--source":
+            i += 2
+            continue
+        out.append(args[i])
+        i += 1
+    for s in keep + ["physical/w18/ot_chip_v41x_karb_pslice/ot_chip_v41x_karb_pslice_bb.v"]:
+        out += ["--source", s]
+    out += ["--param", "HIER=1", "--macro-view", "ot_chip_v41x_karb_pslice=physical/w18/ot_chip_v41x_karb_pslice",
+            "--macro-place-halo", "1", "1", "--orfs-var", "MACRO_PLACEMENT_TCL=/src/physical/w18/karb_pregion_hier_place.tcl",
+            "--orfs-var", "PDN_TCL=/src/physical/w18pdn/pdn_karb_hier.tcl"]
+    c["args"] = out
+    c["nickname"] = c["nickname"].replace("pregion", "pregionh")
+    c["output"] = c["output"].replace("pregion_aw30", "pregionh_aw30")
+    return c
+
+
 def proot_case(w: float = 750.0) -> dict:
     h = PROOT_H
     rw = TAGW + BEATW + DW
@@ -250,7 +275,7 @@ CASES = {"slice": slice_case, "region": region_case, "stack_ep": stack_ep_case, 
          # endpoint at the stack end (outermost region at 11.25 mm) and a mid-distance region (2.25 mm)
          "trunk_end": lambda: trunk_case(11400.0, "_end"), "trunk_mid": lambda: trunk_case(3150.0, "_mid"),
          # the pipelined partition (ot_chip_v41x_hbm_karb_pipe)
-         "pslice": pslice_case, "pregion": pregion_case, "proot": proot_case,
+         "pslice": pslice_case, "pregion": pregion_case, "pregionh": pregion_hier_case, "proot": proot_case,
          "link600": lambda: link_case(600.0), "link450": lambda: link_case(450.0),
          "link900": lambda: link_case(900.0),
          "link_1000": link_case, "link_750": lambda: link_case(750.0), "link_1250": lambda: link_case(1250.0)}
