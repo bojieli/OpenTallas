@@ -1,0 +1,69 @@
+{
+  "actual_macro_count": 1500067,
+  "checkpoint_reads": 0,
+  "fleet_clock_W": "41065.64583684919412160",
+  "focused_tests_passed": 3,
+  "fresh_geometry_and_all_retained_obstacle_outputs_byte_identical": true,
+  "hardware_runtime_admission": false,
+  "headline_rate_credit": null,
+  "interpretation": "Exact integer inventory and conditional ungated clock/leak reservation reproduce. Core/hub rectangle fit does not clear retained constants/channels/field obstacles. All-arcs allocation is a screen, not physical power minimum. Whole owner must supply explicit role replacement, legal placement, selected-data waveforms, actual shared ports, CTS/PHY/IR, contextual SS/FF and full-token composition.",
+  "maximum_home_clock_leak_data_pin_allocation_W": "643.46298291846857280",
+  "maximum_home_clock_plus_leak_W": "220.18056475172801880",
+  "maximum_home_margin_before_data_PHY_hub_W": "254.37943524827198120",
+  "new_RTL_or_PnR_jobs": false,
+  "owner_commits": [
+    "65eb60a9dacc2a75f576c3940ad7a21a72c6a608",
+    "35c3d7e319a662d61fc269f0e7c36e46676ce1a4",
+    "200e52bdf03eb4223285458e9bda335f9e84c91e"
+  ],
+  "physical_admission": false,
+  "retained_obstacle_screen": [
+    {
+      "actual_macros_per_home": 6675,
+      "candidate_macros_with_any_retained_obstacle_overlap": 4520,
+      "overlap_pairs_by_kind": {
+        "channel:horizontal_spine": 352,
+        "channel:vertical_hbm_corridor": 83,
+        "hard:ENGRAM.spill": 54,
+        "hard:ROM_MAC.dense_QE": 18,
+        "hard:ROM_MAC.expert": 6298,
+        "hard:VM.CONSTANT_HE": 9,
+        "soft:ROM_MAC_strip": 3169
+      }
+    },
+    {
+      "actual_macros_per_home": 6676,
+      "candidate_macros_with_any_retained_obstacle_overlap": 4521,
+      "overlap_pairs_by_kind": {
+        "channel:horizontal_spine": 352,
+        "channel:vertical_hbm_corridor": 83,
+        "hard:ENGRAM.spill": 54,
+        "hard:ROM_MAC.dense_QE": 18,
+        "hard:ROM_MAC.expert": 6299,
+        "hard:VM.CONSTANT_HE": 9,
+        "soft:ROM_MAC_strip": 3170
+      }
+    },
+    {
+      "actual_macros_per_home": 8192,
+      "candidate_macros_with_any_retained_obstacle_overlap": 5827,
+      "overlap_pairs_by_kind": {
+        "channel:horizontal_spine": 448,
+        "channel:vertical_hbm_corridor": 83,
+        "hard:ENGRAM.spill": 54,
+        "hard:ROM_MAC.dense_QE": 18,
+        "hard:ROM_MAC.expert": 8133,
+        "hard:VM.CONSTANT_HE": 9,
+        "soft:ROM_MAC_strip": 4082
+      }
+    }
+  ],
+  "schema": "parent.engram192.typed-power-geometry-review.v1",
+  "source_sha256": {
+    "results/quality/w16_engram_rom_constructive_home_20261001/sensitivity_192_homes.json": "cc1b938638f7e90ce1643c01fa15cd42aee641a607648bea43509992b00a97dd",
+    "results/quality/w16_engram_rom_constructive_home_20261001/sensitivity_192_obstacle_screen.json": "34eb6e7da846c273968482d0a058b190231ed784060ea9b92005ec91fc1d6683",
+    "results/uarch/w10_engram192_power_r1/budget.json": "e9cb675a6544b325c045a2a773638b503a672dec185a6976848053cec2afac22"
+  },
+  "storage_FF_bits": 2073429886,
+  "typed192_power_regeneration_byte_identical": true
+}
