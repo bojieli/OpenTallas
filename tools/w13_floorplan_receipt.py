@@ -3,6 +3,8 @@
 import argparse
 import hashlib
 import json
+import math
+import os
 from pathlib import Path
 
 CHIP = Path('results/physical_abi3/asap7/chip')
@@ -19,6 +21,11 @@ def admission(available_kib, lease_floor_gib, modeled_peak_gib):
             'available_kib': available_kib, 'lease_floor_gib': lease_floor_gib,
             'modeled_peak_gib': modeled_peak_gib, 'required_gib': required,
             'scope': 'Fresh MemAvailable prerequisite only; existing lease and queue ownership still required.'}
+
+
+def cpu_admission(load1, cpus):
+    return {'passed': math.isfinite(load1) and load1 >= 0 and cpus > 0 and load1 < cpus,
+            'load1': load1, 'cpus': cpus, 'policy': 'Fresh one-minute load below available CPU count; RAM fit alone is insufficient.'}
 
 
 def receipt(root, floorplan_dir):
@@ -68,9 +75,11 @@ def main():
     if args.available_kib is None or args.available_kib < 0 or args.lease_floor_gib <= 0:
         p.error('Supply fresh nonnegative --available-kib and positive --lease-floor-gib')
     memory = admission(args.available_kib, args.lease_floor_gib, peak)
+    cpu = cpu_admission(os.getloadavg()[0], len(os.sched_getaffinity(0)))
     result = {'schema': 'opentallas.w13.sm_admission.v1', 'passed': memory['passed']} if args.admission_only else receipt(args.root.resolve(), args.floorplan_dir or args.root / 'results/floorplan/hbm_gpu')
     result['memory_admission'] = memory
-    result['passed'] = result['passed'] and memory['passed']
+    result['cpu_admission'] = cpu
+    result['passed'] = result['passed'] and memory['passed'] and cpu['passed']
     args.output.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))
     return 0 if result['passed'] else 1
