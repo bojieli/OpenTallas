@@ -71,6 +71,12 @@ def build() -> dict:
     qwen_hbm = read(qwen_hbm_p, used)
     qwen_route = read(qwen_route_p, used)
     used["tools/final_number_readiness.py"] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    from w11_physical_terminal_gate import build as w11_terminal_gate
+    w11 = w11_terminal_gate(ROOT)
+    used.update(w11['source_sha256'])
+    w11_gate_p = "results/uarch/w11_physical_terminal_gate_20261001.json"
+    if read(w11_gate_p, used) != w11:
+        raise ValueError("stale composed W11 physical terminal gate")
 
     contexts = g.get("contexts", {})
     golden_ok = g.get("status") == "golden_only" and all(
@@ -90,6 +96,12 @@ def build() -> dict:
     model_ar = old.get("row_split_measured_gathers", 0)
     load_ar = ld.get("proposed_wo_load_ar_tok_s", 0)
     required = {
+        "v41_w11_composed_physical_admission": gate(
+            w11['physical_admission'] is True,
+            {"CKV": w11['CKV'], "controller": w11['controller'],
+             "graph_sha256": w11['graph_sha256'], "connected_rate_credit": False},
+            "model-admitted CKV hub route and controller with SS setup/independent FF hold at 833/60/25 ps; no credit from failed terminals",
+            w11_gate_p),
         "v41_reference_200k_1m": gate(golden_ok,
             {str(c): contexts.get(str(c), {}).get("layer_count") for c in (200_000, 1_048_576)},
             "40 source-pinned golden layers at both contexts (reference only)", golden_p),
