@@ -1,0 +1,1879 @@
+{
+  "BF_root_reserve": {
+    "buffers": 107,
+    "separate_from_Q_root_54": true,
+    "source": "results/uarch/w10_clock_tree_site_budget_r1/receipt.json"
+  },
+  "Q_trace_projections": [
+    {
+      "case": "fp8_wq_a_whole_rows",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4171113975883462172809667674",
+      "conditional_clock_energy_J": "4.602129086724753264E-7",
+      "drain_only_cycles": 127,
+      "element": "e0",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          1284
+        ]
+      ],
+      "leaf_cycles": 1287,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 1324,
+      "source_trace_sha256": "360c4acbffb3787cafdd92df2fd6659035151137d416d66d72fda1a5a162b58a",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          1318,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp8_wq_a_whole_rows",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4171113975883462172809667674",
+      "conditional_clock_energy_J": "4.602129086724753264E-7",
+      "drain_only_cycles": 127,
+      "element": "e1",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          1284
+        ]
+      ],
+      "leaf_cycles": 1287,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 1324,
+      "source_trace_sha256": "360c4acbffb3787cafdd92df2fd6659035151137d416d66d72fda1a5a162b58a",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          1318,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp8_tiny_one_row",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4082917897043365755353901996",
+      "conditional_clock_energy_J": "1.874739801059078776E-7",
+      "drain_only_cycles": 128,
+      "element": "e0",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          511
+        ]
+      ],
+      "leaf_cycles": 514,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 551,
+      "source_trace_sha256": "5ed24cbcb8823961657c93fa3ad5ce861c7ce0ef0f8cf9bbe4a96528ee5a3eda",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          545,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp8_tiny_one_row",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4082917897043365755353901996",
+      "conditional_clock_energy_J": "1.874739801059078776E-7",
+      "drain_only_cycles": 128,
+      "element": "e1",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          511
+        ]
+      ],
+      "leaf_cycles": 514,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 551,
+      "source_trace_sha256": "5ed24cbcb8823961657c93fa3ad5ce861c7ce0ef0f8cf9bbe4a96528ee5a3eda",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          545,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp8_wq_a_ksplit",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4145620218874179709554140127",
+      "conditional_clock_energy_J": "3.254311871816231072E-7",
+      "drain_only_cycles": 127,
+      "element": "e0",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          902
+        ]
+      ],
+      "leaf_cycles": 905,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 942,
+      "source_trace_sha256": "666bca40916f9e9759ffeff129dbf1a7bff80ae25ecea3bc510b55a385df9b6d",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          936,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp8_wq_a_ksplit",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4145620218874179709554140127",
+      "conditional_clock_energy_J": "3.254311871816231072E-7",
+      "drain_only_cycles": 127,
+      "element": "e1",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          902
+        ]
+      ],
+      "leaf_cycles": 905,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 942,
+      "source_trace_sha256": "666bca40916f9e9759ffeff129dbf1a7bff80ae25ecea3bc510b55a385df9b6d",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          936,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp8_wq_b",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4069648814301636638848920863",
+      "conditional_clock_energy_J": "1.885603950626424976E-7",
+      "drain_only_cycles": 127,
+      "element": "e0",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          514
+        ]
+      ],
+      "leaf_cycles": 517,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 556,
+      "source_trace_sha256": "ef7305c99d826d3a8e8bd6b4542ddec440ec5ff893217556cc356cc6e3973a14",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          548,
+          8
+        ]
+      ]
+    },
+    {
+      "case": "fp8_wq_b",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4084276376205002279136690647",
+      "conditional_clock_energy_J": "1.892381387641651056E-7",
+      "drain_only_cycles": 128,
+      "element": "e1",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          516
+        ]
+      ],
+      "leaf_cycles": 519,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 556,
+      "source_trace_sha256": "ef7305c99d826d3a8e8bd6b4542ddec440ec5ff893217556cc356cc6e3973a14",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          550,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp8_wo_b_kquarter",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4055662684396188834408602151",
+      "conditional_clock_energy_J": "1.885883148244227808E-7",
+      "drain_only_cycles": 127,
+      "element": "e0",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          514
+        ]
+      ],
+      "leaf_cycles": 517,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 558,
+      "source_trace_sha256": "ea7d00f9f1ef93b5bf20ed62dc8616af934476afd82b1150c22d050d7bc7c56b",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          548,
+          10
+        ]
+      ]
+    },
+    {
+      "case": "fp8_wo_b_kquarter",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4084812951128344017204301075",
+      "conditional_clock_energy_J": "1.899438022274679968E-7",
+      "drain_only_cycles": 127,
+      "element": "e1",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          518
+        ]
+      ],
+      "leaf_cycles": 521,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 558,
+      "source_trace_sha256": "ea7d00f9f1ef93b5bf20ed62dc8616af934476afd82b1150c22d050d7bc7c56b",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          552,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp4_expert_w1",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4094273481917140667889908257",
+      "conditional_clock_energy_J": "2.231379047644841664E-7",
+      "drain_only_cycles": 127,
+      "element": "e0",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          612
+        ]
+      ],
+      "leaf_cycles": 615,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 654,
+      "source_trace_sha256": "861de8a010ce669abb81d927ea856829e994338cf687bf363891c4f788be39c6",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          646,
+          8
+        ]
+      ]
+    },
+    {
+      "case": "fp4_expert_w1",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4106709146165261915596330275",
+      "conditional_clock_energy_J": "2.238156484660067744E-7",
+      "drain_only_cycles": 127,
+      "element": "e1",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          34,
+          614
+        ]
+      ],
+      "leaf_cycles": 617,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 654,
+      "source_trace_sha256": "861de8a010ce669abb81d927ea856829e994338cf687bf363891c4f788be39c6",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          30
+        ],
+        [
+          648,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp8_wq_b_two_rows_per_element",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4082762698897884634650455927",
+      "conditional_clock_energy_J": "2.238714879895673408E-7",
+      "drain_only_cycles": 127,
+      "element": "e0",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          38,
+          614
+        ]
+      ],
+      "leaf_cycles": 617,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 658,
+      "source_trace_sha256": "f3cf4c93acdf93d90234abf41dea6af45635b637f80561020f4c118cfba7b465",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          34
+        ],
+        [
+          652,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp8_wq_b_two_rows_per_element",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4082762698897884634650455927",
+      "conditional_clock_energy_J": "2.238714879895673408E-7",
+      "drain_only_cycles": 127,
+      "element": "e1",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          38,
+          614
+        ]
+      ],
+      "leaf_cycles": 617,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 658,
+      "source_trace_sha256": "f3cf4c93acdf93d90234abf41dea6af45635b637f80561020f4c118cfba7b465",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          34
+        ],
+        [
+          652,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp4_two_experts_w1_w3",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4082762698897884634650455927",
+      "conditional_clock_energy_J": "2.238714879895673408E-7",
+      "drain_only_cycles": 127,
+      "element": "e0",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          38,
+          614
+        ]
+      ],
+      "leaf_cycles": 617,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 658,
+      "source_trace_sha256": "f3cf4c93acdf93d90234abf41dea6af45635b637f80561020f4c118cfba7b465",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          34
+        ],
+        [
+          652,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "fp4_two_experts_w1_w3",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4082762698897884634650455927",
+      "conditional_clock_energy_J": "2.238714879895673408E-7",
+      "drain_only_cycles": 127,
+      "element": "e1",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          38,
+          614
+        ]
+      ],
+      "leaf_cycles": 617,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 658,
+      "source_trace_sha256": "f3cf4c93acdf93d90234abf41dea6af45635b637f80561020f4c118cfba7b465",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          34
+        ],
+        [
+          652,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4056931852335129463345195730",
+      "conditional_clock_energy_J": "1.899996417510285632E-7",
+      "drain_only_cycles": 127,
+      "element": "e0",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          38,
+          518
+        ]
+      ],
+      "leaf_cycles": 521,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 562,
+      "source_trace_sha256": "64f8e9b9c58201a25bff323b019fd2474aa2e7015f86ddf51b7ad04f9a738127",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          34
+        ],
+        [
+          556,
+          6
+        ]
+      ]
+    },
+    {
+      "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
+      "clock_scope": "Actual Q-XF4 protocol projected onto Q construction, not source-mapped power measurement",
+      "conditional_average_clock_W": "0.4056931852335129463345195730",
+      "conditional_clock_energy_J": "1.899996417510285632E-7",
+      "drain_only_cycles": 127,
+      "element": "e1",
+      "enabled_intervals": [
+        [
+          1,
+          3
+        ],
+        [
+          38,
+          518
+        ]
+      ],
+      "leaf_cycles": 521,
+      "reset_all_storage_all_arc_extra_budget_J": "5.6018914972416E-9",
+      "reset_scope": "Extra full all-arc storage charge on every reset-root edge; conservative overlap, not actual reset energy",
+      "root_cycles": 562,
+      "source_trace_sha256": "64f8e9b9c58201a25bff323b019fd2474aa2e7015f86ddf51b7ad04f9a738127",
+      "stopped_intervals": [
+        [
+          0,
+          1
+        ],
+        [
+          4,
+          34
+        ],
+        [
+          556,
+          6
+        ]
+      ]
+    }
+  ],
+  "actual_power_qualified": false,
+  "characterized_voltage_ceiling_V": "0.77",
+  "compatible_event_proof": {
+    "FF": {
+      "buffer": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "5.24393",
+            "fall_max_fJ": "3.06325",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "Y",
+            "rail": "VDD",
+            "rise_max_fJ": "2.18068",
+            "trigger_pin": "A"
+          },
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "5.24499",
+            "fall_max_fJ": "2.66629",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "Y",
+            "rail": "VSS",
+            "rise_max_fJ": "2.5787",
+            "trigger_pin": "A"
+          }
+        ],
+        "event_cycle_fJ": {
+          "A": "10.48892"
+        },
+        "fixed_conditions": {}
+      },
+      "icg_off": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.872459",
+            "fall_max_fJ": "0.677052",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0.195407",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.715222",
+            "fall_max_fJ": "0.152153",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0.563069",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "1.310042",
+            "fall_max_fJ": "0.713272",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VDD",
+            "rise_max_fJ": "0.59677",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "1.312745",
+            "fall_max_fJ": "0.66814",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VSS",
+            "rise_max_fJ": "0.644605",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "1.61052",
+            "fall_max_fJ": "1.61052",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "1.06",
+            "fall_max_fJ": "1.06",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "1.339926",
+            "fall_max_fJ": "0.736841",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VDD",
+            "rise_max_fJ": "0.603085",
+            "trigger_pin": "SE"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "1.340956",
+            "fall_max_fJ": "0.651256",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VSS",
+            "rise_max_fJ": "0.6897",
+            "trigger_pin": "SE"
+          }
+        ],
+        "event_cycle_fJ": {
+          "CLK": "4.258201",
+          "ENA": "2.622787",
+          "SE": "2.680882"
+        },
+        "fixed_conditions": {
+          "ENA": false,
+          "SE": false
+        }
+      },
+      "icg_on": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "1.24642",
+            "fall_max_fJ": "1.24642",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.629856",
+            "fall_max_fJ": "0.629856",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "1.310042",
+            "fall_max_fJ": "0.713272",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VDD",
+            "rise_max_fJ": "0.59677",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "1.312745",
+            "fall_max_fJ": "0.66814",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VSS",
+            "rise_max_fJ": "0.644605",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "1.34738",
+            "fall_max_fJ": "1.34738",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.675503",
+            "fall_max_fJ": "0.675503",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.0645403",
+            "fall_max_fJ": "0.0330657",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VDD",
+            "rise_max_fJ": "0.0314746",
+            "trigger_pin": "SE"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.1505742",
+            "fall_max_fJ": "0.0743019",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VSS",
+            "rise_max_fJ": "0.0762723",
+            "trigger_pin": "SE"
+          }
+        ],
+        "event_cycle_fJ": {
+          "CLK": "3.899159",
+          "ENA": "2.622787",
+          "SE": "0.2151145"
+        },
+        "fixed_conditions": {
+          "ENA": true,
+          "SE": false
+        }
+      },
+      "storage": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 8,
+            "cycle_max_fJ": "1.415053",
+            "fall_max_fJ": "0.968407",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0.446646",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 8,
+            "cycle_max_fJ": "1.408058",
+            "fall_max_fJ": "0.832667",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0.575391",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.968908",
+            "fall_max_fJ": "0.567628",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "D",
+            "rail": "VDD",
+            "rise_max_fJ": "0.40128",
+            "trigger_pin": "D"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.969087",
+            "fall_max_fJ": "0.415301",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "D",
+            "rail": "VSS",
+            "rise_max_fJ": "0.553786",
+            "trigger_pin": "D"
+          },
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "1.724914",
+            "fall_max_fJ": "0.852301",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.872613",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "1.980202",
+            "fall_max_fJ": "0.975252",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VSS",
+            "rise_max_fJ": "1.00495",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.946851",
+            "fall_max_fJ": "0",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.946851",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.780332",
+            "fall_max_fJ": "0",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.780332",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 6,
+            "cycle_max_fJ": "0.937609",
+            "fall_max_fJ": "0.937609",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "SETN"
+          },
+          {
+            "conditional_arcs": 6,
+            "cycle_max_fJ": "0.646988",
+            "fall_max_fJ": "0.646988",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "SETN"
+          },
+          {
+            "conditional_arcs": 5,
+            "cycle_max_fJ": "0.1480974",
+            "fall_max_fJ": "0.0747676",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "RESETN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.0733298",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 5,
+            "cycle_max_fJ": "0.226799",
+            "fall_max_fJ": "0.112641",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "RESETN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.114158",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.540368",
+            "fall_max_fJ": "0.402193",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SETN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.138175",
+            "trigger_pin": "SETN"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.585258",
+            "fall_max_fJ": "0.13785",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SETN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.447408",
+            "trigger_pin": "SETN"
+          }
+        ],
+        "event_cycle_fJ": {
+          "CLK": "6.528227",
+          "D": "1.937995",
+          "RESETN": "2.1020794",
+          "SETN": "2.710223"
+        },
+        "fixed_conditions": {
+          "RESETN": true,
+          "SETN": true
+        }
+      }
+    },
+    "SS": {
+      "buffer": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "2.49160",
+            "fall_max_fJ": "1.45422",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "Y",
+            "rail": "VDD",
+            "rise_max_fJ": "1.03738",
+            "trigger_pin": "A"
+          },
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "2.45743",
+            "fall_max_fJ": "1.2333",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "Y",
+            "rail": "VSS",
+            "rise_max_fJ": "1.22413",
+            "trigger_pin": "A"
+          }
+        ],
+        "event_cycle_fJ": {
+          "A": "4.94903"
+        },
+        "fixed_conditions": {}
+      },
+      "icg_off": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.414504",
+            "fall_max_fJ": "0.307699",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0.106805",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.3288071",
+            "fall_max_fJ": "0.0664671",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0.26234",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.686833",
+            "fall_max_fJ": "0.374079",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VDD",
+            "rise_max_fJ": "0.312754",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.690231",
+            "fall_max_fJ": "0.351157",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VSS",
+            "rise_max_fJ": "0.339074",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.759093",
+            "fall_max_fJ": "0.759093",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.433141",
+            "fall_max_fJ": "0.433141",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.701425",
+            "fall_max_fJ": "0.385307",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VDD",
+            "rise_max_fJ": "0.316118",
+            "trigger_pin": "SE"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.703406",
+            "fall_max_fJ": "0.340035",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VSS",
+            "rise_max_fJ": "0.363371",
+            "trigger_pin": "SE"
+          }
+        ],
+        "event_cycle_fJ": {
+          "CLK": "1.9355451",
+          "ENA": "1.377064",
+          "SE": "1.404831"
+        },
+        "fixed_conditions": {
+          "ENA": false,
+          "SE": false
+        }
+      },
+      "icg_on": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.589643",
+            "fall_max_fJ": "0.589643",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.225249",
+            "fall_max_fJ": "0.225249",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.686833",
+            "fall_max_fJ": "0.374079",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VDD",
+            "rise_max_fJ": "0.312754",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.690231",
+            "fall_max_fJ": "0.351157",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VSS",
+            "rise_max_fJ": "0.339074",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.587735",
+            "fall_max_fJ": "0.587735",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.1938",
+            "fall_max_fJ": "0.1938",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.0333094",
+            "fall_max_fJ": "0.0187601",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VDD",
+            "rise_max_fJ": "0.0145493",
+            "trigger_pin": "SE"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.0878282",
+            "fall_max_fJ": "0.0415654",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VSS",
+            "rise_max_fJ": "0.0462628",
+            "trigger_pin": "SE"
+          }
+        ],
+        "event_cycle_fJ": {
+          "CLK": "1.596427",
+          "ENA": "1.377064",
+          "SE": "0.1211376"
+        },
+        "fixed_conditions": {
+          "ENA": true,
+          "SE": false
+        }
+      },
+      "storage": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 8,
+            "cycle_max_fJ": "0.761294",
+            "fall_max_fJ": "0.530179",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0.231115",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 8,
+            "cycle_max_fJ": "0.757675",
+            "fall_max_fJ": "0.454319",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0.303356",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.449003",
+            "fall_max_fJ": "0.267055",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "D",
+            "rail": "VDD",
+            "rise_max_fJ": "0.181948",
+            "trigger_pin": "D"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.449391",
+            "fall_max_fJ": "0.183023",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "D",
+            "rail": "VSS",
+            "rise_max_fJ": "0.266368",
+            "trigger_pin": "D"
+          },
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "0.969683",
+            "fall_max_fJ": "0.483697",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.485986",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "1.111344",
+            "fall_max_fJ": "0.550923",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.560421",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.506051",
+            "fall_max_fJ": "0",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.506051",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.411722",
+            "fall_max_fJ": "0",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.411722",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 6,
+            "cycle_max_fJ": "0.500275",
+            "fall_max_fJ": "0.500275",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "SETN"
+          },
+          {
+            "conditional_arcs": 6,
+            "cycle_max_fJ": "0.346057",
+            "fall_max_fJ": "0.346057",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "SETN"
+          },
+          {
+            "conditional_arcs": 5,
+            "cycle_max_fJ": "0.0843364",
+            "fall_max_fJ": "0.0449453",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "RESETN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.0393911",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 5,
+            "cycle_max_fJ": "0.1328013",
+            "fall_max_fJ": "0.0644723",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "RESETN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.068329",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.2546446",
+            "fall_max_fJ": "0.188714",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SETN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.0659306",
+            "trigger_pin": "SETN"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.2961468",
+            "fall_max_fJ": "0.0780098",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SETN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.218137",
+            "trigger_pin": "SETN"
+          }
+        ],
+        "event_cycle_fJ": {
+          "CLK": "3.599996",
+          "D": "0.898394",
+          "RESETN": "1.1349107",
+          "SETN": "1.3971234"
+        },
+        "fixed_conditions": {
+          "RESETN": true,
+          "SETN": true
+        }
+      }
+    },
+    "TT": {
+      "buffer": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "3.15693",
+            "fall_max_fJ": "1.87734",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "Y",
+            "rail": "VDD",
+            "rise_max_fJ": "1.27959",
+            "trigger_pin": "A"
+          },
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "3.17246",
+            "fall_max_fJ": "1.59882",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "Y",
+            "rail": "VSS",
+            "rise_max_fJ": "1.57364",
+            "trigger_pin": "A"
+          }
+        ],
+        "event_cycle_fJ": {
+          "A": "6.32939"
+        },
+        "fixed_conditions": {}
+      },
+      "icg_off": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.557674",
+            "fall_max_fJ": "0.411585",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0.146089",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.4297475",
+            "fall_max_fJ": "0.0878635",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0.341884",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.892322",
+            "fall_max_fJ": "0.488483",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VDD",
+            "rise_max_fJ": "0.403839",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.895083",
+            "fall_max_fJ": "0.455297",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VSS",
+            "rise_max_fJ": "0.439786",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "1.00553",
+            "fall_max_fJ": "1.00553",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.566401",
+            "fall_max_fJ": "0.566401",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.910145",
+            "fall_max_fJ": "0.502446",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VDD",
+            "rise_max_fJ": "0.407699",
+            "trigger_pin": "SE"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.910676",
+            "fall_max_fJ": "0.439686",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VSS",
+            "rise_max_fJ": "0.47099",
+            "trigger_pin": "SE"
+          }
+        ],
+        "event_cycle_fJ": {
+          "CLK": "2.5593525",
+          "ENA": "1.787405",
+          "SE": "1.820821"
+        },
+        "fixed_conditions": {
+          "ENA": false,
+          "SE": false
+        }
+      },
+      "icg_on": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.777937",
+            "fall_max_fJ": "0.777937",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.305683",
+            "fall_max_fJ": "0.305683",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.892322",
+            "fall_max_fJ": "0.488483",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VDD",
+            "rise_max_fJ": "0.403839",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.895083",
+            "fall_max_fJ": "0.455297",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "ENA",
+            "rail": "VSS",
+            "rise_max_fJ": "0.439786",
+            "trigger_pin": "ENA"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.781754",
+            "fall_max_fJ": "0.781754",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 2,
+            "cycle_max_fJ": "0.269281",
+            "fall_max_fJ": "0.269281",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "GCLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.0443448",
+            "fall_max_fJ": "0.0230525",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VDD",
+            "rise_max_fJ": "0.0212923",
+            "trigger_pin": "SE"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.1141691",
+            "fall_max_fJ": "0.0562162",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SE",
+            "rail": "VSS",
+            "rise_max_fJ": "0.0579529",
+            "trigger_pin": "SE"
+          }
+        ],
+        "event_cycle_fJ": {
+          "CLK": "2.134655",
+          "ENA": "1.787405",
+          "SE": "0.1585139"
+        },
+        "fixed_conditions": {
+          "ENA": true,
+          "SE": false
+        }
+      },
+      "storage": {
+        "compatible_arc_proof": [
+          {
+            "conditional_arcs": 8,
+            "cycle_max_fJ": "0.977203",
+            "fall_max_fJ": "0.684263",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VDD",
+            "rise_max_fJ": "0.29294",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 8,
+            "cycle_max_fJ": "0.971732",
+            "fall_max_fJ": "0.582925",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "CLK",
+            "rail": "VSS",
+            "rise_max_fJ": "0.388807",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.584001",
+            "fall_max_fJ": "0.348273",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "D",
+            "rail": "VDD",
+            "rise_max_fJ": "0.235728",
+            "trigger_pin": "D"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.584006",
+            "fall_max_fJ": "0.236909",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "D",
+            "rail": "VSS",
+            "rise_max_fJ": "0.347097",
+            "trigger_pin": "D"
+          },
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "1.229715",
+            "fall_max_fJ": "0.608053",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.621662",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 1,
+            "cycle_max_fJ": "1.413494",
+            "fall_max_fJ": "0.698269",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.715225",
+            "trigger_pin": "CLK"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.658458",
+            "fall_max_fJ": "0",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.658458",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.532006",
+            "fall_max_fJ": "0",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.532006",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 6,
+            "cycle_max_fJ": "0.6342",
+            "fall_max_fJ": "0.6342",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VDD",
+            "rise_max_fJ": "0",
+            "trigger_pin": "SETN"
+          },
+          {
+            "conditional_arcs": 6,
+            "cycle_max_fJ": "0.431542",
+            "fall_max_fJ": "0.431542",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "QN",
+            "rail": "VSS",
+            "rise_max_fJ": "0",
+            "trigger_pin": "SETN"
+          },
+          {
+            "conditional_arcs": 5,
+            "cycle_max_fJ": "0.1089005",
+            "fall_max_fJ": "0.0552598",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "RESETN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.0536407",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 5,
+            "cycle_max_fJ": "0.1727773",
+            "fall_max_fJ": "0.0855654",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "RESETN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.0872119",
+            "trigger_pin": "RESETN"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.3368106",
+            "fall_max_fJ": "0.248768",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SETN",
+            "rail": "VDD",
+            "rise_max_fJ": "0.0880426",
+            "trigger_pin": "SETN"
+          },
+          {
+            "conditional_arcs": 3,
+            "cycle_max_fJ": "0.388157",
+            "fall_max_fJ": "0.104064",
+            "maximum_compatible_arcs": 1,
+            "owner_pin": "SETN",
+            "rail": "VSS",
+            "rise_max_fJ": "0.284093",
+            "trigger_pin": "SETN"
+          }
+        ],
+        "event_cycle_fJ": {
+          "CLK": "4.592144",
+          "D": "1.168007",
+          "RESETN": "1.4721418",
+          "SETN": "1.7907096"
+        },
+        "fixed_conditions": {
+          "RESETN": true,
+          "SETN": true
+        }
+      }
+    }
+  },
+  "existing_leaf_ICG_suppression_preserved": true,
+  "family_clock_allocations": {
+    "expert_w1": {
+      "active_count_binding": "Ram allocator handoff; not a source-pinned fulltoken stage program yet",
+      "active_qpairs": 832,
+      "conditional_active_leaf_clock_W": "338.33252354034831360",
+      "conditional_existing_ICG_clock_W": "0.0389920788480",
+      "conditional_root_clock_W": "17.11204181869559808",
+      "conditional_total_clock_W": "355.48355743789191168",
+      "drain_policy": "127 drain cycles are already in observed enabled intervals; use interval union, never add them twice",
+      "resident_qpairs": 1024
+    },
+    "expert_w2": {
+      "active_count_binding": "Ram allocator handoff; not a source-pinned fulltoken stage program yet",
+      "active_qpairs": 1024,
+      "conditional_active_leaf_clock_W": "416.40925974196715520",
+      "conditional_existing_ICG_clock_W": "0.0383302926336",
+      "conditional_root_clock_W": "17.11204181869559808",
+      "conditional_total_clock_W": "433.55963185329635328",
+      "drain_policy": "127 drain cycles are already in observed enabled intervals; use interval union, never add them twice",
+      "resident_qpairs": 1024
+    },
+    "expert_w3": {
+      "active_count_binding": "Ram allocator handoff; not a source-pinned fulltoken stage program yet",
+      "active_qpairs": 832,
+      "conditional_active_leaf_clock_W": "338.33252354034831360",
+      "conditional_existing_ICG_clock_W": "0.0389920788480",
+      "conditional_root_clock_W": "17.11204181869559808",
+      "conditional_total_clock_W": "355.48355743789191168",
+      "drain_policy": "127 drain cycles are already in observed enabled intervals; use interval union, never add them twice",
+      "resident_qpairs": 1024
+    }
+  },
+  "frequency_Hz": "1.2E+9",
+  "icg": {
+    "always_source_clk_inputs": 8,
+    "enabled_internal_W": "0.0000374319264",
+    "stopped_internal_W": "0.0000408787296",
+    "wake_transition_energy_J": "2.0982296E-14"
+  },
+  "input_files": {
+    "duty": {
+      "path": "results/quality/w10_clock_duty_r1/ledger.json",
+      "sha256": "3730812d2c366d05bb25cfd6235faeb4e98b52495ed509d0d56a0cf88422ec09"
+    },
+    "inventory": {
+      "path": "results/uarch/w10_q_elaboration_inventory_r1/inventory.json",
+      "sha256": "06bada78345cfaa8aa283ccf956f1e9fe490c7538eef49aa2758f9ea9c2ad255"
+    }
+  },
+  "leaf": {
+    "buffers": 1060,
+    "conditional_enabled_clock_W": "0.40664966771676480",
+    "conditional_stopped_clock_W": "0",
+    "endpoint_and_buffer_input_fF": "16328.543360",
+    "guarded_wire_fF": "154209.730400",
+    "macro_clock_inputs": 4,
+    "storage_clock_bits": 29555,
+    "worst_enabled_storage_D_internal_W": "0.0687329306700"
+  },
+  "leakage_storage_buffer_icg_macro_W": "0.00283666681496",
+  "no_doublecount": "Clock term replaces matching construction clock charge only; does not subtract historical TT pair power.",
+  "physical_admission": false,
+  "remaining": [
+    "full-stage source-pinned activity/count interval union",
+    "non-clock actual construction pin/wire loads and data event costs",
+    "reset energy and glitch multiplicity",
+    "spatial phase/RC/SSFF/PG/IR"
+  ],
+  "root": {
+    "buffers": 54,
+    "conditional_clock_W": "0.01671097833856992",
+    "endpoint_and_buffer_input_fF": "728.797304",
+    "guarded_wire_fF": "7853.004000",
+    "storage_clock_bits": 1267,
+    "worst_storage_D_internal_W": "0.0029465275980"
+  },
+  "root_stop_credit": 0,
+  "schema": "w10_q_existing_icg_clock_ledger_v1",
+  "source_sha256": {
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/physical_src_r2/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib": "40cc08ccdde7dd3daf88aed4dee67f5656c47164d137afe45753720daf522f32",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/physical_src_r2/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/physical_src_r2/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib": "b922c7425f6b3f7cefb69baa121b353cb6084be096cfb69cf7c7ea208c92f941",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/INVBUF_FF.cells.lib": "2a5a7080ffa69fc1cfc7856d51da5b81c80bf18a326fdfd82e162ce2968d4001",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/INVBUF_SS.cells.lib": "4223a8bc20e3c2c59656b4863a41400153e02bf9e6841511afbb08e2dcf6341b",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/INVBUF_TT.cells.lib": "f79a842c446fed82cb91afad4fce6ccb63b33a9ad37a0566fb08aab7aa88f296",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/SEQ_FF.cells.lib": "cb1c8660861d175fb22501571104a9bb1ae98818028e9c51e8a5faf23deb4aff",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/SEQ_SS.cells.lib": "d1384482af90f3b85c760a8def053387cba872ceeff34af3435ba6f0e396a82d",
+    "/home/ubuntu/w10-w18-recovery/baseline_wake/q_power_envelope_r1/SEQ_TT.cells.lib": "3ec87fff4b4cbcff99a71b63db4a5de40d6d4ea3cb344b65b29736162d5a16ce"
+  }
+}
