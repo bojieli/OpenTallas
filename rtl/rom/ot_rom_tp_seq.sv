@@ -18,7 +18,7 @@
 //                    rank order (strictly greater wins, so a tie keeps the
 //                    lower die, i.e. the lower vocabulary row)
 //   [9:2]   vw     vector-memory word
-//   [17:10] nw     words
+//   [17:10] nw     words (an all-reduce's 0 is 256 words: one 4,096-element FP32 vector at 16 lanes)
 //   [47:32] base   program word of the segment's first instruction
 //   [63:48] row0   vocabulary row of this die's lm_head row 0
 //
@@ -94,7 +94,7 @@ module ot_rom_tp_seq #(
     reg [DAW-1:0] seg;
     reg [1:0]     kind;
     reg [VWA-1:0] vw;
-    reg [7:0]     nw;
+    reg [8:0]     nw;
     reg [NW-1:0]  row0;
 
     assign core_start = (st == S_RUN);
@@ -114,12 +114,12 @@ module ot_rom_tp_seq #(
     reg [FW-1:0] q_d [0:QD-1];
     reg [1:0]    q_w, q_r;
     reg [2:0]    q_n;
-    reg [7:0]    rd_k, tx_k, rx_k;
+    reg [8:0]    rd_k, tx_k, rx_k;
     reg          rd_v;
     assign c_valid = (st == S_COLL) && (q_n != 0);
     assign c_data  = q_d[q_r];
     assign c_mode  = (kind == K_ARGMAX);
-    assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 8'd0 : nw - 1'b1));
+    assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 9'd0 : nw - 1'b1));
     wire   c_fire  = c_valid && c_ready;
     wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && (q_n + rd_v) < QD;
 
@@ -127,7 +127,7 @@ module ot_rom_tp_seq #(
     reg [31:0]   best_v;
     wire [31:0]  g_val = r_data[31:0];
     wire [NW-1:0] g_idx = r_data[32 +: NW];
-    wire [7:0]   rx_total = (kind == K_ARGMAX) ? N : nw;
+    wire [8:0]   rx_total = (kind == K_ARGMAX) ? N : nw;
 
     always @(*) begin
         vm_re = rd_go;
@@ -153,7 +153,8 @@ module ot_rom_tp_seq #(
                 end
                 S_DESC: begin desc_re <= 1'b1; desc_addr <= seg; st <= S_DLAT; end
                 S_DLAT: if (!desc_re) begin
-                    kind <= desc_q[1:0]; vw <= desc_q[2 +: 8]; nw <= desc_q[10 +: 8];
+                    kind <= desc_q[1:0]; vw <= desc_q[2 +: 8];
+                    nw <= (desc_q[1:0] == K_AR && desc_q[10 +: 8] == 8'd0) ? 9'd256 : {1'b0, desc_q[10 +: 8]};
                     prog_base <= desc_q[32 +: PAW];
                     row0 <= (QWEN_FULLSHAPE != 0) ?
                             ({desc_q[19:18], desc_q[63:48]}) : desc_q[48 +: NW];

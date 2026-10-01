@@ -47,7 +47,9 @@ endmodule
 // nonfinite operand FAILS CLOSED through `fault` (and y = +0) -- the qualified
 // pipe would round or refuse there.  LATENCY 5, like the FP32 pipe, so a
 // lane's schedule does not depend on which multiplier it has.
-module ot_hdc_bmul (
+module ot_hdc_bmul #(
+    parameter integer LAT = 5           // 6: the product is cut after its carry-save rows (1.2 GHz @ SS)
+) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -90,18 +92,28 @@ module ot_hdc_bmul (
     // stage 2: the 8x8 product, a carry-save tree and a kept prefix adder (a flattened `*` is re-mapped by
     // ABC as a ripple carry chain: -496 ps at 0.833 ns SS); the product is unchanged
     wire [15:0] p8x8;
-    ot_hdc_mul8x8_cs u_m (.a(s1_a), .b(s1_b), .p(p8x8));
     reg        s2_v, s2_s, s2_z, s2_nf;
     reg [15:0] s2_p;
     reg signed [10:0] s2_e;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) s2_v <= 1'b0;
-        else s2_v <= s1_v;
-    end
-    always @(posedge clk) begin
-        s2_s <= s1_s; s2_z <= s1_z; s2_nf <= s1_nf; s2_e <= s1_e;
-        s2_p <= p8x8;
-    end
+    generate if (LAT >= 6) begin : g_cut
+        // the 8x8 product's two carry-save rows registered: stage 1b, every side signal delayed with it
+        wire [15:0] ps, pc;
+        ot_hdc_mul8x8_cs #(.CUT(1)) u_m (.a(s1_a), .b(s1_b), .p(), .rs(ps), .rc(pc));
+        reg [15:0] r_s, r_c;
+        reg        b_v, b_s, b_z, b_nf;
+        reg signed [10:0] b_e;
+        always @(posedge clk or negedge rst_n) if (!rst_n) b_v <= 1'b0; else b_v <= s1_v;
+        always @(posedge clk) begin r_s <= ps; r_c <= pc; b_s <= s1_s; b_z <= s1_z; b_nf <= s1_nf; b_e <= s1_e; end
+        wire c_unused;
+        ot_hdc_ksa #(.W(16)) u_a (.a(r_s), .b(r_c), .cin(1'b0), .s(p8x8), .cout(c_unused));
+        always @(posedge clk or negedge rst_n) if (!rst_n) s2_v <= 1'b0; else s2_v <= b_v;
+        always @(posedge clk) begin s2_s <= b_s; s2_z <= b_z; s2_nf <= b_nf; s2_e <= b_e; s2_p <= p8x8; end
+    end else begin : g_nocut
+        ot_hdc_mul8x8_cs u_m (.a(s1_a), .b(s1_b), .p(p8x8), .rs(), .rc());
+        always @(posedge clk or negedge rst_n) if (!rst_n) s2_v <= 1'b0; else s2_v <= s1_v;
+        always @(posedge clk) begin s2_s <= s1_s; s2_z <= s1_z; s2_nf <= s1_nf; s2_e <= s1_e; s2_p <= p8x8; end
+    end endgenerate
+
     // stage 3: normalise (leading bit 15 or 14) and bias
     reg        s3_v, s3_s, s3_z, s3_nf;
     reg [22:0] s3_f;
@@ -140,10 +152,12 @@ module ot_hdc_bmul (
 endmodule
 
 // 8 x 8 unsigned product: AND array, 3:2 carry-save levels (8 -> 6 -> 4 -> 3 -> 2 rows), kept Kogge-Stone final add
-module ot_hdc_mul8x8_cs (
+module ot_hdc_mul8x8_cs #(parameter integer CUT = 0) (
     input  wire [7:0]  a,
     input  wire [7:0]  b,
-    output wire [15:0] p
+    output wire [15:0] p,
+    output wire [15:0] rs,          // the two carry-save rows (p = rs + rc)
+    output wire [15:0] rc
 );
     function automatic [31:0] csa;        // {carry, sum} of three 16-bit rows
         input [15:0] r0, r1, r2;
@@ -169,6 +183,8 @@ module ot_hdc_mul8x8_cs (
     assign l3[0 +: 32]  = csa(l2[0 +: 16], l2[16 +: 16], l2[32 +: 16]);
     assign l3[32 +: 16] = l2[48 +: 16];
     assign l4 = csa(l3[0 +: 16], l3[16 +: 16], l3[32 +: 16]);
+    assign rs = l4[0 +: 16];
+    assign rc = l4[16 +: 16];
     // kept prefix levels (as ot_hdc_ksa, local so this file stands alone)
     localparam integer L = 4;
     generate

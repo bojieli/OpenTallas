@@ -82,12 +82,14 @@ def program_geometry(vm):
         P.VM, P.GR, P.S_STRIDE = prior
 
 
-def split_collectives(program):
-    """Fit 4096-element T1 reductions into the TP descriptor's 8-bit counts."""
+def split_collectives(program, max_words=256):
+    """Fit all-reduces into the TP descriptor's count (256 words since the count encodes 256 as 0; a 4,096-element
+    reduction was two serialized 128-word segments, each paying the link's round trip: 991 cycles an all-reduce
+    at LAT 339 against ~620 as one segment).  max_words=128 restores the legacy split."""
     out = []
     for f in program:
         coll = f.get('_coll')
-        if coll and coll[0] == P.COLL_ALLREDUCE and coll[2] == 256:
+        if coll and coll[0] == P.COLL_ALLREDUCE and coll[2] == 256 and max_words < 256:
             kind, word, _, row0 = coll
             for offset in (0, 128):
                 out.append(dict(f, _coll=(kind, word + offset, 128, row0)))
@@ -134,7 +136,7 @@ def profile(die, matrix_rows=None, post_scale_bases=None):
     for f in program:
         if f.get('_coll'):
             _, word, count, row0 = f['_coll']
-            if word >= 256 or count >= 256 or row0 >= 65536:
+            if word >= 256 or count > 256 or row0 >= 65536:
                 raise ValueError('TP segment descriptor width exceeded')
     if len(words) >= (1 << 12):
         raise ValueError('first-layer program exceeds PAW12')

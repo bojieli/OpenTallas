@@ -17,9 +17,12 @@ def test_first_layer_program_round_trip_and_die_order():
     a, b = F.profile(0), F.profile(1)
     assert (P.VM, P.GR, P.S_STRIDE) == before
     assert a['program_hex'] == b['program_hex']
-    assert a['program_words'] == len(a['program_hex']) == 31
-    assert a['segment_count'] == 5
-    assert a['allreduce_segments'] == 4
+    # each 4,096-element all-reduce is ONE 256-word segment (the descriptor count encodes 256 as 0; it was two
+    # serialized 128-word segments, 31 words / 5 segments / 4 all-reduce segments)
+    assert a['program_words'] == len(a['program_hex']) == 29
+    assert a['segment_count'] == 3
+    assert a['allreduce_segments'] == 2
+    assert [QI.decode_descriptor(int(w, 16))['words'] for w in a['descriptor_hex']][:2] == [256, 256]
     assert a['descriptor_hex'] == b['descriptor_hex']
     assert all(len(word) == 16 for word in a['descriptor_hex'])
     assert a['vm_elems'] <= 1 << I.A

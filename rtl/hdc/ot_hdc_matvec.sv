@@ -85,7 +85,8 @@ module ot_hdc_matvec #(
     parameter integer ACC_LAT = 5,       // lane accumulator / split-tree adder latencies (ot_hdc_matvec_part)
     parameter integer TREE_LAT = 3,
     parameter integer FAST_ISSUE = 0,
-    parameter integer KV_PREP = 0
+    parameter integer KV_PREP = 0,
+    parameter integer MUL_LAT = 5
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -148,7 +149,7 @@ module ot_hdc_matvec #(
     wire active;
     ot_hdc_matvec_part #(.W(W), .G(G), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(INT8_WEIGHT),
                          .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .SMIN(SMIN), .ORD(ORD),
-                         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP)) u_p (
+                         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
@@ -205,7 +206,9 @@ module ot_hdc_matvec_part #(
     // FAST_ISSUE: the 1.2 GHz issue loop (pipelined per-op products, keep-prefix loop adds); 0: the original
     parameter integer FAST_ISSUE = 0,
     // KV_PREP: cycles a KV-sourced op waits after its go for the pipelined per-group KV offsets (3), 0: none
-    parameter integer KV_PREP = 0
+    parameter integer KV_PREP = 0,
+    // MUL_LAT: the lane's BF16 product latency (5: ot_hdc_bmul; 6: its product cut after the carry-save rows)
+    parameter integer MUL_LAT = 5
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -284,7 +287,7 @@ module ot_hdc_matvec_part #(
     localparam integer LW = $clog2(W);
     localparam integer LG = $clog2(G);
     localparam integer FB = IL - ACC_LAT; // circulation delay after the adder
-    localparam integer SD = 5 + ACC_LAT;  // S3 -> the lane sums (products at +5, the accumulator add)
+    localparam integer SD = MUL_LAT + ACC_LAT;  // S3 -> the lane sums (products at +MUL_LAT, the accumulator add)
     localparam integer TA = TREE_LAT;     // split-tree adder: ot_hdc_qadd (rtl/hdc/ot_hdc_fastfp.sv), LATENCY 3, or ot_hdc_ladd
     localparam integer TL = TA + 1;       // split-tree cycles per level: the adder + 1 output register
     localparam integer OD = TL * LG;      // split tree
@@ -433,11 +436,32 @@ end else begin : g_issue_fast
     reg [NW-1:0]     kc_a;
     localparam [NW:0]   WNB = W;
     localparam [NW-1:0] ONE = 1, TWO = 2;
-    always @(posedge clk) begin
+    //: three stages (the first use is IL >= 3 cycles after the go): the shifted terms, their kept sum, the result
+    localparam integer NB_GT = PRW;
+    reg [AW+PRW-1:0] tsh [0:NB_GT-1];
+    reg [AW+PRW-1:0] osh [0:NB_GT-1];
+    reg [NW:0]       kpad_a;
+    always @(posedge clk) begin : p_terms
+        integer b;
+        for (b = 0; b < NB_GT; b = b + 1) begin
+            tsh[b] <= (((GT >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ts_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+            osh[b] <= (((GT >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ots_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+        end
         pr_a <= GT >> split_r;
-        tsg_a <= mul_gt_shr(ts_r, split_r);
-        otsg_a <= mul_gt_shr(ots_r, split_r);
-        kc_a <= wsrc_r ? ((ktot_r + ((1 << split_r) - 1)) >> split_r) : ktot_r;
+        kpad_a <= {1'b0, ktot_r} + ((1 << split_r) - 1);
+    end
+    wire [AW+PRW-1:0] tsum, osum;
+    wire [NB_GT*(AW+PRW)-1:0] tsh_flat, osh_flat;
+    ot_hdc_ksum #(.W(AW+PRW), .N(NB_GT)) u_ts (.rows(tsh_flat), .s(tsum));
+    ot_hdc_ksum #(.W(AW+PRW), .N(NB_GT)) u_os (.rows(osh_flat), .s(osum));
+    genvar tb;
+    for (tb = 0; tb < NB_GT; tb = tb + 1) begin : g_fl
+        assign tsh_flat[tb*(AW+PRW) +: AW+PRW] = tsh[tb];
+        assign osh_flat[tb*(AW+PRW) +: AW+PRW] = osh[tb];
+    end
+    always @(posedge clk) begin
+        tsg_a <= tsum; otsg_a <= osum;
+        kc_a <= wsrc_r ? kpad_a[NW-1:0] >> split_r : ktot_r;       // ceil(K/S) (K + S - 1 < 2^NW)
         tstep_r <= !wsrc_r ? ts_r : tsg_a[AW-1:0];
         ot_step <= otsg_a[AW-1:0];
         nb_step <= pr_a * (W * IL);
@@ -546,23 +570,34 @@ end endgenerate
         end
     end else if (LANES) begin : g_kv_addr_prep
         //: the per-group offset q*ts + c*wcs is constant through the op: a free-running three-stage pipeline
-        //: (split -> q, c; the two products; their sum) from the go's latched fields, ready after KV_PREP = 3
-        reg [31:0]   q_p [0:G-1];
-        reg [31:0]   c_p [0:G-1];
-        reg [AW-1:0] p1 [0:G-1];
-        reg [AW-1:0] p2 [0:G-1];
+        //: from the go's latched fields: (1) q, c; (2) the shifted rows of both products reduced carry-save to two;
+        //: (3) their kept prefix sum -- ready after KV_PREP = 3
+        localparam integer QW = $clog2(GT) + 1;       // q < GT
+        localparam integer CW = 16;                   // c < 2^split
+        reg [QW-1:0] q_p [0:G-1];
+        reg [CW-1:0] c_p [0:G-1];
         reg [AW-1:0] off [0:G-1];
-        genvar gq;
+        genvar gq, rb;
         for (gq = 0; gq < G; gq = gq + 1) begin : g_off
-            wire [AW-1:0] a_s;
-            wire [AW+31:0] pq = q_p[gq] * ts_r;
-            wire [AW+31:0] pc = c_p[gq] * wcs_r;
+            wire [AW-1:0] a_s, osum;
+            wire [(QW+CW)*AW-1:0] rows;
+            for (rb = 0; rb < QW; rb = rb + 1) begin : g_rq
+                assign rows[rb*AW +: AW] = q_p[gq][rb] ? (ts_r << rb) : {AW{1'b0}};
+            end
+            for (rb = 0; rb < CW; rb = rb + 1) begin : g_rc
+                assign rows[(QW+rb)*AW +: AW] = c_p[gq][rb] ? (wcs_r << rb) : {AW{1'b0}};
+            end
+            reg [AW-1:0] r_s, r_c;
+            wire [31:0] qv = (gb + gq) >> split_r;
+            wire [31:0] cv = (gb + gq) & ((1 << split_r) - 1);
+            wire [AW-1:0] cs_s, cs_c;
+            ot_hdc_csa_tree #(.W(AW), .N(QW+CW)) u_cs (.rows(rows), .s(cs_s), .c(cs_c));
+            ot_hdc_kadd #(.W(AW)) u_sum (.a(r_s), .b(r_c), .s(osum));
             always @(posedge clk) begin
-                q_p[gq] <= (gb + gq) >> split_r;
-                c_p[gq] <= (gb + gq) & ((1 << split_r) - 1);
-                p1[gq] <= pq[AW-1:0];
-                p2[gq] <= pc[AW-1:0];
-                off[gq] <= p1[gq] + p2[gq];
+                q_p[gq] <= qv[QW-1:0];
+                c_p[gq] <= cv[CW-1:0];
+                r_s <= cs_s; r_c <= cs_c;
+                off[gq] <= osum;
             end
             ot_hdc_kadd #(.W(AW)) u_ka (.a(cur), .b(off[gq]), .s(a_s));
             always @(posedge clk)
@@ -659,6 +694,12 @@ end endgenerate
     reg [GL*32-1:0]   s2_x, s3_x;
     reg [G-1:0]      s1_gm, s1b_gm, s2_gm;
     integer l;
+    //: the BF16 round of x: x + 0x7FFF + x[16] as a kept prefix add (bit-identical to the flattened `+`)
+    wire [GL*32-1:0] x_rnd;
+    genvar xr;
+    generate for (xr = 0; xr < GL; xr = xr + 1) begin : g_xrnd
+        ot_hdc_kadd #(.W(32)) u_r (.a(s2_x[32*xr +: 32]), .b(32'h7FFF + {31'd0, s2_x[32*xr + 16]}), .s(x_rnd[32*xr +: 32]));
+    end endgenerate
     generate if (LANES) begin : g_operand
         always @(posedge clk) begin
             s1_gm <= m_gm; s1b_gm <= s1_gm; s2_gm <= s1b_gm;
@@ -674,8 +715,7 @@ end endgenerate
             s3_w <= s2_w;
             for (l = 0; l < G; l = l + 1)
                 s3_x[32*l +: 32] <= !s2_gm[l] ? 32'd0 :
-                                    s2_round ? ((s2_x[32*l +: 32] + 32'h7FFF + {31'd0, s2_x[32*l + 16]}) & 32'hFFFF0000)
-                                             : s2_x[32*l +: 32];
+                                    s2_round ? (x_rnd[32*l +: 32] & 32'hFFFF0000) : s2_x[32*l +: 32];
         end
     end endgenerate
     wire [TW-1:0] a_tag;
@@ -686,8 +726,8 @@ end endgenerate
     end endgenerate
     wire [SD+OD+XDD:0] vline;
     ot_hdc_vline #(.D(SD + OD + XDD)) u_v (.clk(clk), .rst_n(rst_n), .v(s3_v), .vd(vline));
-    wire [5:0] fl_first;
-    ot_hdc_vline #(.D(5)) u_first (.clk(clk), .rst_n(rst_n), .v(s3_first && s3_v), .vd(fl_first));
+    wire [MUL_LAT:0] fl_first;
+    ot_hdc_vline #(.D(MUL_LAT)) u_first (.clk(clk), .rst_n(rst_n), .v(s3_first && s3_v), .vd(fl_first));
     // split and KV flag reach the tree's first level here 10 cycles after S3
     // (PART 2: its first level, LV0 + 1, TL*LV0 + XD cycles later)
     wire [3:0] t_split;
@@ -706,20 +746,20 @@ end endgenerate
                 wire f0, f1;
                 //: every product is BF16 x BF16 (weights, x rounded; BF16 KV, q and
                 //: probabilities rounded), so every lane has the small exact multiplier
-                ot_hdc_bmul u_mul (.clk(clk), .rst_n(rst_n), .v(s3_v),
+                ot_hdc_bmul #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rst_n), .v(s3_v),
                                    .a(s3_w[32*LI +: 32]), .b(s3_x[32*g +: 32]), .y(prod), .fault(f0));
                 // add input at c+8; the circulating sum from IL cycles earlier.
                 //: The first-element select is made one cycle early into acc_q: the
                 //: flag fans out to every lane bit (G*W*32 loads), and registering the
                 //: mux gives its buffer tree a whole cycle instead of sharing one with
                 //: the adder's alignment logic (me_iter11: -98 ps on this path).
-                always @(posedge clk) acc_q <= fl_first[4] ? 32'd0 : fb_pre;
+                always @(posedge clk) acc_q <= fl_first[MUL_LAT-1] ? 32'd0 : fb_pre;
                 assign acc_in = acc_q;
                 if (ACC_LAT == 5) begin : g_fadd
-                    ot_hdc_fadd u_add (clk, rst_n, vline[5], acc_in, prod,
+                    ot_hdc_fadd u_add (clk, rst_n, vline[MUL_LAT], acc_in, prod,
                                        sum[32*LI +: 32], f1);
                 end else begin : g_ladd
-                    ot_hdc_ladd #(.LAT(ACC_LAT)) u_add (clk, rst_n, vline[5], acc_in, prod,
+                    ot_hdc_ladd #(.LAT(ACC_LAT)) u_add (clk, rst_n, vline[MUL_LAT], acc_in, prod,
                                                        sum[32*LI +: 32], f1);
                 end
                 ot_hdc_delay #(.W(32), .D(FB - 1)) u_fb (.clk(clk), .rst_n(rst_n), .d(sum[32*LI +: 32]), .q(fb_pre));
@@ -1180,4 +1220,57 @@ module ot_hdc_kadd #(parameter integer W = 24) (
 );
     wire c;
     ot_hdc_ksa #(.W(W)) u (.a(a), .b(b), .cin(1'b0), .s(s), .cout(c));
+endmodule
+
+// N rows of W bits reduced carry-save (3:2 per level) to two, kept-level boundaries
+module ot_hdc_csa_tree #(parameter integer W = 24, parameter integer N = 8) (
+    input  wire [N*W-1:0] rows,
+    output wire [W-1:0]   s,
+    output wire [W-1:0]   c
+);
+    function automatic integer nxt(input integer n);
+        nxt = (n <= 2) ? n : 2 * (n / 3) + (n % 3);
+    endfunction
+    function automatic integer cnt(input integer l);
+        integer i, n;
+        begin n = N; for (i = 0; i < l; i = i + 1) n = nxt(n); cnt = n; end
+    endfunction
+    function automatic integer depth(input integer d);
+        integer n, l;
+        begin n = N; l = 0; while (n > 2) begin n = nxt(n); l = l + 1; end depth = l; end
+    endfunction
+    localparam integer L = depth(0);
+    genvar l, i;
+    generate
+        for (l = 0; l <= L; l = l + 1) begin : g_l
+            localparam integer NL = cnt(l);
+            (* keep *) wire [((NL > 0) ? NL : 1)*W-1:0] r;
+            if (l == 0) begin : g0
+                assign r = rows;
+            end else begin : gn
+                localparam integer NP = cnt(l - 1);
+                for (i = 0; i < NP / 3; i = i + 1) begin : g_c
+                    wire [W-1:0] x = g_l[l-1].r[(3*i)*W +: W], y = g_l[l-1].r[(3*i+1)*W +: W],
+                                 z = g_l[l-1].r[(3*i+2)*W +: W];
+                    assign r[(2*i)*W +: W] = x ^ y ^ z;
+                    assign r[(2*i+1)*W +: W] = ((x & y) | (x & z) | (y & z)) << 1;
+                end
+                for (i = 0; i < NP % 3; i = i + 1) begin : g_p
+                    assign r[(2*(NP/3)+i)*W +: W] = g_l[l-1].r[(3*(NP/3)+i)*W +: W];
+                end
+            end
+        end
+    endgenerate
+    assign s = g_l[L].r[0 +: W];
+    assign c = (cnt(L) > 1) ? g_l[L].r[W +: W] : {W{1'b0}};
+endmodule
+
+// the sum (mod 2^W) of N rows: carry-save tree, then a kept prefix add
+module ot_hdc_ksum #(parameter integer W = 24, parameter integer N = 8) (
+    input  wire [N*W-1:0] rows,
+    output wire [W-1:0]   s
+);
+    wire [W-1:0] a, b;
+    ot_hdc_csa_tree #(.W(W), .N(N)) u_t (.rows(rows), .s(a), .c(b));
+    ot_hdc_kadd #(.W(W)) u_a (.a(a), .b(b), .s(s));
 endmodule

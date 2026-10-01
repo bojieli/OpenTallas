@@ -31,17 +31,20 @@ def decode_instruction(word):
 
 
 def encode_descriptor(kind, vm_word, words, program_base, row0):
-    if not (0 <= kind < 4 and 0 <= vm_word < 256 and 0 <= words < 256
+    # an all-reduce of 256 words (a 4,096-element FP32 vector at 16 lanes) is one segment: its 8-bit count
+    # encodes 256 as 0 (rtl/rom/ot_rom_tp_seq.sv; an empty all-reduce is never emitted)
+    if not (0 <= kind < 4 and 0 <= vm_word < 256 and 0 <= words < 256 + (kind == P.COLL_ALLREDUCE)
+            and not (kind == P.COLL_ALLREDUCE and words == 0)
             and 0 <= program_base < (1 << 16) and 0 <= row0 < (1 << 18)):
         raise ValueError('TP descriptor field exceeds fullshape layout')
-    return (kind | (vm_word << 2) | (words << 10)
+    return (kind | (vm_word << 2) | ((words & 255) << 10)
             | ((row0 >> 16) << DESC_ROW_HIGH_OFFSET)
             | (program_base << 32) | ((row0 & 0xFFFF) << 48))
 
 
 def decode_descriptor(word):
     return {'kind': word & 3, 'vm_word': (word >> 2) & 255,
-            'words': (word >> 10) & 255, 'program_base': (word >> 32) & 0xFFFF,
+            'words': ((word >> 10) & 255) or (256 if (word & 3) == P.COLL_ALLREDUCE else 0), 'program_base': (word >> 32) & 0xFFFF,
             'row0': ((word >> 48) & 0xFFFF) | (((word >> DESC_ROW_HIGH_OFFSET) & 3) << 16)}
 
 

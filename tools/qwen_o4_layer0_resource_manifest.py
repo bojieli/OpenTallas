@@ -62,7 +62,7 @@ def trace(manifest: dict, program: list[int], descriptors: list[int]) -> tuple[l
     bases = [(word >> 32) & 0xFFFF for word in descriptors]
     segments = []
     for i, word in enumerate(descriptors):
-        kind, vw, count = word & 3, (word >> 2) & 0xFF, (word >> 10) & 0xFF
+        kind, vw, count = word & 3, (word >> 2) & 0xFF, ((word >> 10) & 0xFF) or (256 if (word & 3) == 1 else 0)
         segments.append({"segment": i, "pc_first": bases[i],
                          "pc_last": (bases[i + 1] if i + 1 < len(bases) else len(program)) - 1,
                          "collective_kind": {0: "END", 1: "ALLREDUCE", 2: "ARGMAX"}.get(kind, "INVALID"),
