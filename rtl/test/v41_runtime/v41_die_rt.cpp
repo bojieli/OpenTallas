@@ -310,6 +310,10 @@ struct DieBase {
     virtual uint32_t cycles() = 0;
     virtual uint32_t fault() = 0;
     virtual uint32_t pc() = 0;
+    virtual uint32_t busy() = 0;
+    virtual uint64_t dstate() = 0;
+    virtual uint32_t dwords() = 0;
+    virtual uint32_t issue() = 0;
     virtual void cfg(const std::string& name, uint64_t v) = 0;
     virtual uint32_t vm_word(int a) = 0;
     // collective ports
@@ -382,6 +386,10 @@ template <class DIE> struct Die : DieBase {
     uint32_t cycles() override { return d->cycles; }
     uint32_t fault() override { return d->fault; }
     uint32_t pc() override { return d->dbg_pc; }
+    uint32_t busy() override { return d->unit_busy; }
+    uint64_t dstate() override { return d->dbg_state; }
+    uint32_t dwords() override { return d->dbg_words; }
+    uint32_t issue() override { return d->issue_unit; }
     void cfg(const std::string& n, uint64_t v) override {
         if (n == "cfg_ik_base") d->cfg_ik_base = v;
         else if (n == "window_region_valid") d->window_region_valid = v;
@@ -479,6 +487,7 @@ int main(int argc, char** argv) {
     uint8_t rst = 0;
     int max_settle = 0;
     std::vector<uint32_t> rec;
+    long n_utx = 0, n_urx = 0, n_btx = 0, n_brx = 0;
     auto link_step = [&]() {
         // senders' outputs after the edge enter the lines; deliveries due now drive receivers' inputs
         for (int s = 0; s < 4; s++) {
@@ -486,12 +495,13 @@ int main(int argc, char** argv) {
             if (dies[s]->ucie_tx_v() || dies[s]->ucie_cr()) {
                 dies[s]->ucie_tx(rec);
                 rx[peer].u.q.push_back({cyc + LAT_U, {uint8_t(dies[s]->ucie_tx_v() | (dies[s]->ucie_cr() << 1)), rec}});
+                n_utx += dies[s]->ucie_tx_v();
             }
             uint8_t bv = dies[s]->bl_tx_v(), bc = dies[s]->bl_cr();
             for (int J = 0; J < 2; J++) {
                 int dst = 2 * (1 - pkg) + J;
                 uint8_t v = (bv >> J) & 1, c = (bc >> (2 * J)) & 3;
-                if (v || c) { dies[s]->bl_tx(rec); rx[dst].x[s % 2].q.push_back({cyc + LAT_X, {uint8_t(v | (c << 1)), rec}}); }
+                if (v || c) { dies[s]->bl_tx(rec); rx[dst].x[s % 2].q.push_back({cyc + LAT_X, {uint8_t(v | (c << 1)), rec}}); n_btx += v; }
             }
         }
         static const std::vector<uint32_t> zero(64, 0);
@@ -499,13 +509,13 @@ int main(int argc, char** argv) {
             uint8_t uv = 0, ucr = 0, bv = 0, bcr = 0;
             std::vector<uint32_t> ur = zero, b0 = zero, b1 = zero;
             if (!rx[d].u.q.empty() && rx[d].u.q.front().first <= cyc) {
-                auto& e = rx[d].u.q.front().second; uv = e.first & 1; ucr = e.first >> 1; ur = e.second; ur.resize(64, 0);
+                auto& e = rx[d].u.q.front().second; uv = e.first & 1; ucr = e.first >> 1; ur = e.second; ur.resize(64, 0); n_urx += uv;
                 rx[d].u.q.pop_front();
             }
             for (int J = 0; J < 2; J++)
                 if (!rx[d].x[J].q.empty() && rx[d].x[J].q.front().first <= cyc) {
                     auto& e = rx[d].x[J].q.front().second;
-                    bv |= (e.first & 1) << J; bcr |= (e.first >> 1) << (2 * J);
+                    bv |= (e.first & 1) << J; bcr |= (e.first >> 1) << (2 * J); n_brx += e.first & 1;
                     (J ? b1 : b0) = e.second; (J ? b1 : b0).resize(64, 0);
                     rx[d].x[J].q.pop_front();
                 }
@@ -584,6 +594,9 @@ int main(int argc, char** argv) {
     for (auto& d : dies) d->start(0, tok, pos, user);
     auto t1 = std::chrono::steady_clock::now();
     std::vector<long> done_at(4, -1);
+    // no-progress watchdog: if no die's PC changes for WD cycles, dump every die's state and stop
+    long WD = 5000; if (const char* e = getenv("RT_WATCHDOG")) WD = atol(e);
+    std::vector<uint32_t> lastpc(4, ~0u); long last_move = cyc;
     while (cyc < maxc) {
         tick();
         for (int d = 0; d < 4; d++) if (done_at[d] < 0 && dies[d]->done()) {
@@ -592,7 +605,25 @@ int main(int argc, char** argv) {
         }
         bool all = true; for (long x : done_at) all &= x >= 0;
         if (all) break;
-        for (int d = 0; d < 4; d++) if (dies[d]->fault()) { printf("FAULT die=%d cyc=%ld code=%02x\n", d, cyc, dies[d]->fault()); fflush(stdout); }
+        for (int d = 0; d < 4; d++) if (dies[d]->pc() != lastpc[d]) { lastpc[d] = dies[d]->pc(); last_move = cyc; }
+        if (cyc - last_move > WD) {
+            printf("WATCHDOG no PC change for %ld cycles at cyc %ld\n", WD, cyc);
+            for (int d = 0; d < 4; d++)
+                printf("  die %d pc %u unit_busy %02x issue_unit %u fault %02x done %d state %08lx words %08x\n", d,
+                       dies[d]->pc(), dies[d]->busy(), dies[d]->issue(), dies[d]->fault(), int(dies[d]->done()),
+                       (unsigned long)dies[d]->dstate(), dies[d]->dwords());
+            printf("  links: ucie tx %ld rx %ld  bl tx %ld rx %ld\n", n_utx, n_urx, n_btx, n_brx);
+            fflush(stdout);
+            break;
+        }
+        bool anyf = false;
+        for (int d = 0; d < 4; d++) if (dies[d]->fault()) {
+            anyf = true;
+            printf("FAULT die=%d cyc=%ld code=%02x pc %u state %016lx words %08x\n", d, cyc, dies[d]->fault(), dies[d]->pc(),
+                   (unsigned long)dies[d]->dstate(), dies[d]->dwords());
+            fflush(stdout);
+        }
+        if (anyf && !getenv("RT_CONTINUE_ON_FAULT")) break;
         if (cyc % 200 == 0) {
             double el = std::chrono::duration<double>(std::chrono::steady_clock::now() - t1).count();
             FILE* pf = fopen((out + "/progress.log").c_str(), "a");

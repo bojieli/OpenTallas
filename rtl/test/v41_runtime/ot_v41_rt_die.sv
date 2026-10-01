@@ -22,8 +22,8 @@ module ot_v41_rt_die #(
     parameter integer ROM_PHW = 6,
     parameter integer ROM_SAW = 16,
     parameter integer ROM_BST = 17,
-    parameter integer SUN = 16,
-    parameter integer SUM = 8,
+    parameter integer SUN = 64,             // >= 64 at full shape: the SU's span depth L = log2(ceil(n/SUN)) <= LV (7)
+    parameter integer SUM = 16,
     parameter integer CL_LANES = 16,
     parameter integer CL_DEPTH = 256,
     parameter integer CL_RELAY = 0,
@@ -58,6 +58,9 @@ module ot_v41_rt_die #(
     output wire [4:0]        unit_busy,
     output wire [2:0]        issue_unit,
     output wire [13:0]       dbg_pc,           // the core's program counter (observability only)
+    output wire [63:0]       dbg_state,        // {core st, d_unit, idles, coll_busy, waited, cdma busy/mode, e/o valid-ready}
+    output wire [31:0]       dbg_words,        // {cdma words_out[15:0], words_in[15:0]}
+    output reg  [23:0]       dbg_fs,           // sticky fault sources, one bit each (index map below)
     // ROM field
     output wire [ROM_FBW-1:0] rom_fb,
     input  wire [ROM_FRW-1:0] rom_fr,
@@ -130,6 +133,46 @@ module ot_v41_rt_die #(
         .rope_region_ok(), .rope_fault(), .rope_hbm_grants(), .rope_hbm_wait_cycles());
 
     assign dbg_pc = dut.u_tile.u_core.pc;
+    wire [31:0] dbg_faults = {11'd0, dut.u_tile.qrom_rom_fault, dut.u_tile.rope_read_fault, dut.u_tile.idx_user_fault, dut.u_tile.kb_ring_fault,
+        dut.u_tile.u_core.coll_fault, dut.u_tile.u_core.rope_pf_fault, dut.u_tile.u_core.win_fault,
+        dut.u_tile.u_core.win_capture_fault, dut.u_tile.u_core.rom_fault_w, dut.u_tile.u_core.he_fault,
+        dut.u_tile.u_core.xu_fault, dut.u_tile.u_core.qe_fault, dut.u_tile.u_core.su_fault, dut.u_tile.u_core.me_fault,
+        dut.u_tile.u_core.e_fault, dut.u_tile.u_core.fuse_orphan, 1'b0};
+    // sticky copy of the fault sources (a source may pulse: the core latches the OR)
+    reg [31:0] dbg_fsticky;
+    always @(posedge clk or negedge rst_n) if (!rst_n) dbg_fsticky <= 32'd0; else dbg_fsticky <= dbg_fsticky | dbg_faults
+        | {31'd0, dut.u_tile.u_core.FULL_SHAPE != 0 && dut.u_tile.u_core.st == 4'd6 && dut.u_tile.u_core.d_unit == 3'd0 &&
+           (dut.u_tile.u_core.d_ctl == 3'd5 || dut.u_tile.u_core.d_ctl == 3'd6) && !dut.u_tile.u_core.rope_ctl_ok};
+    assign dbg_state = {dbg_fsticky, 4'(dut.u_tile.u_core.st), dut.u_tile.u_core.d_unit, dut.u_tile.u_core.idles,
+                        dut.coll_busy, dut.u_tile.u_core.waited, dut.u_cdma.busy, dut.u_cdma.e_mode, dut.u_cdma.fault,
+                        dut.e_valid, dut.e_ready, dut.o_valid, dut.o_ready, 7'd0};
+    // dbg_fs: 0 me 1 su 2 qe 3 xu 4 he 5 rom 6 coll 7 rope_pf 8 win 9 win_cap 10 qrom 11 rope_read 12 idx_user
+    //         13 kb_ring 14..17 e_fault[0..3] 18 fuse_orphan 19 rope ctl 20 key_user(die) 21 core.fault 22 t_fault
+    wire [23:0] fs_now;
+    assign fs_now[0] = dut.u_tile.u_core.me_fault;
+    assign fs_now[1] = dut.u_tile.u_core.su_fault;
+    assign fs_now[2] = dut.u_tile.u_core.qe_fault;
+    assign fs_now[3] = dut.u_tile.u_core.xu_fault;
+    assign fs_now[4] = dut.u_tile.u_core.he_fault;
+    assign fs_now[5] = dut.u_tile.u_core.rom_fault_w;
+    assign fs_now[6] = dut.u_tile.u_core.coll_fault;
+    assign fs_now[7] = dut.u_tile.u_core.rope_pf_fault;
+    assign fs_now[8] = dut.u_tile.u_core.win_fault;
+    assign fs_now[9] = dut.u_tile.u_core.win_capture_fault;
+    assign fs_now[10] = dut.u_tile.qrom_rom_fault;
+    assign fs_now[11] = dut.u_tile.rope_read_fault;
+    assign fs_now[12] = dut.u_tile.idx_user_fault;
+    assign fs_now[13] = dut.u_tile.kb_ring_fault;
+    assign fs_now[17:14] = dut.u_tile.u_core.e_fault;
+    assign fs_now[18] = dut.u_tile.u_core.fuse_orphan;
+    assign fs_now[19] = dut.u_tile.u_core.st == 4'd6 && dut.u_tile.u_core.d_unit == 3'd0 &&
+                        (dut.u_tile.u_core.d_ctl == 3'd5 || dut.u_tile.u_core.d_ctl == 3'd6) && !dut.u_tile.u_core.rope_ctl_ok;
+    assign fs_now[20] = dut.key_user_fault;
+    assign fs_now[21] = dut.u_tile.u_core.fault;
+    assign fs_now[22] = dut.t_fault;
+    assign fs_now[23] = 1'b0;
+    always @(posedge clk or negedge rst_n) if (!rst_n) dbg_fs <= 24'd0; else dbg_fs <= dbg_fs | fs_now;
+    assign dbg_words = {dut.u_cdma.words_out[15:0], dut.u_cdma.words_in[15:0]};
     // ---- images ---------------------------------------------------------------------------------------
     string dir;
     integer fd, i;
