@@ -177,8 +177,9 @@ def observations(records, fault='none'):
         yield record
 
 
-def check_records(expected, records, fault='none'):
+def check_records(expected, records, fault='none', indexed_raw=False):
     offsets = {key: 0 for key in expected}
+    seen = {key: set() for key in expected}
     last_cycle = {key: -1 for key in expected}
     count = 0
     for record in observations(records, fault):
@@ -192,19 +193,24 @@ def check_records(expected, records, fault='none'):
             raise ValueError('unknown boundary/die or DUT fault')
         width, words = expected[key]
         index = record['index']
-        if index != offsets[key] or index >= len(words):
+        unordered = indexed_raw and key[1] == 'raw_qkv_bits'
+        if (not 0 <= index < len(words) or index in seen[key] or
+                (not unordered and index != offsets[key])):
             raise ValueError('duplicate, missing, or reordered boundary element')
         if not 0 <= record['bits'] < 1 << width or record['cycle'] < last_cycle[key] or record['cycle'] < 0:
             raise ValueError('width overflow or cycle order fault')
         if record['bits'] != words[index]:
             raise ValueError(f'bit mismatch {key} index{index}')
         offsets[key] += 1
+        seen[key].add(index)
         last_cycle[key] = record['cycle']
         count += 1
     if any(offsets[key] != len(words) for key, (_, words) in expected.items()):
         raise ValueError('incomplete full-head boundary census')
     return dict(status='observed_boundary_bits_exact', elements=count,
-                fault_control=fault, full_token=False, runtime_admission=False,
+                fault_control=fault, indexed_raw=indexed_raw,
+                boundaries_checked=[list(key) for key in sorted(expected)],
+                full_token=False, runtime_admission=False,
                 claim='Checker proves trace bits only; actual RTL origin, shared service, RC and timing require owner receipts')
 
 
@@ -216,19 +222,24 @@ def main():
     ck = sub.add_parser('check'); ck.add_argument('--bundle', type=Path, required=True)
     ck.add_argument('--trace', type=Path, required=True); ck.add_argument('--out', type=Path, required=True)
     ck.add_argument('--fault', choices=FAULTS, default='none')
+    ck.add_argument('--raw-only', action='store_true', help='Partial raw readback gate; numerical boundaries remain unqualified')
+    ck.add_argument('--indexed-raw', action='store_true', help='Permit independently arriving raw rows only; keep numerical stages ordered')
     a = ap.parse_args()
     if a.command == 'export':
         result = export(a.bundle, a.enable)
     else:
         try:
             expected = load_expected(a.bundle)
+            if a.raw_only:
+                expected = {key: value for key, value in expected.items() if key[1] == 'raw_qkv_bits'}
             with a.trace.open() as f:
-                result = check_records(expected, (json.loads(line) for line in f), a.fault)
+                result = check_records(expected, (json.loads(line) for line in f), a.fault, a.indexed_raw)
         except (ValueError, KeyError, TypeError) as error:
             save(a.out, dict(status='fail', error=str(error), trace_sha256=sha(a.trace),
                             fault_control=a.fault, full_token=False, runtime_admission=False))
             raise SystemExit(1)
-        result.update(trace_sha256=sha(a.trace), manifest_sha256=sha(a.bundle / 'manifest.json'))
+        result.update(trace_sha256=sha(a.trace), manifest_sha256=sha(a.bundle / 'manifest.json'),
+                      raw_only=a.raw_only, vector_KV_RTL_qualified=False)
         save(a.out, result)
     print(json.dumps({k: v for k, v in result.items() if k != 'artifacts'}, sort_keys=True))
 
