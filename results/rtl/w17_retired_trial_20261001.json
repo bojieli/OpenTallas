@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.w17.worktree_retirement.v1",
+ "observed_utc": "2026-10-01T07:51:36.328532+00:00",
+ "removed_worktree": "/tmp/claude-1000/wt/w17-trial",
+ "size_kib": 4232792,
+ "preserved_commit": "2d4780a721703b897b9374d148d4f8eeb1dd6d7a",
+ "preserved_ref": "codex/w17-retired-trial-20261001",
+ "authorization": "User explicitly authorized deletion of old unused W17 worktrees.",
+ "checks": {
+  "clean": true,
+  "local_process_refs": [],
+  "remote_process_refs": {
+   "ot-pve1": [],
+   "ot-pve2": [],
+   "ot-pve3": [],
+   "155.103.253.39": [],
+   "155.103.253.114": [],
+   "155.103.253.78": [],
+   "155.103.253.133": [],
+   "155.103.253.191": [],
+   "155.103.253.16": []
+  },
+  "queue_and_w17_scratch_refs": [],
+  "own_result_and_tool_path_refs": []
+ },
+ "preserved_worktrees": [
+  "w17-fs (live)",
+  "w17-l20 (dirty)",
+  "w17-l20rtl (historical L20 source)",
+  "w17-l20run (active)",
+  "agent-aee45011cf95f4ed8 (dirty legacy)"
+ ]
+}
