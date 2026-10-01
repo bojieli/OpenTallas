@@ -24,7 +24,7 @@ import uarch_model as U
 ROOT = Path(__file__).resolve().parents[1]
 BENCH = 'rtl/test/tb_w19_fetch_sm.sv'
 SOURCES = [s for s in S.SMV_SRC if s != 'rtl/test/tb_gpu_sm_v.sv'] + [
-    'rtl/gpu/ot_gpu_expert_fetch.sv', 'rtl/hdc/kv/ot_hdc_hbm_model.sv', BENCH]
+    'rtl/hdc/ot_hdc_prefix.sv', 'rtl/gpu/ot_gpu_expert_fetch.sv', 'rtl/hdc/kv/ot_hdc_hbm_model.sv', BENCH]
 
 
 def digest(p):

@@ -1,0 +1,8 @@
+{
+  "schema": "opentallas.rtl.w19_fetch_sm.attempt.v1",
+  "status": "fail",
+  "source_commit": "89f6a20a",
+  "stage": "elaboration",
+  "error": "Legacy SM source list omits ot_hdc_prefix.sv required by current ot_hdc_fp32_add_lat.sv; no simulation verdict",
+  "log_sha256": "1ca2e39c58422fdb2c114f944c7a7fe3b97634f873c7b594c457a4e56ca85595"
+}
