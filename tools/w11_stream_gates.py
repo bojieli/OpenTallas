@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import time
@@ -51,7 +52,8 @@ def gate_idx(a, lat):
         stamp = hashlib.sha256(b"".join(p.read_bytes() for p in rtl + [vlt, tb, C.HARNESS])).hexdigest()
         if exe.exists() and (obj / "stamp").exists() and (obj / "stamp").read_text() == stamp:
             return exe
-        cmd = ["verilator", "--cc", "--exe", "--build", "-O3", "--x-assign", "fast", "--x-initial", "fast",
+        # OT_VERILATOR (5.x) when set: Verilator 4.038 runs out of memory elaborating the shipped NB=4 engine
+        cmd = [os.environ.get("OT_VERILATOR", "verilator"), "--cc", "--exe", "--build", "-O3", "--x-assign", "fast", "--x-initial", "fast",
                "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-DECLFILENAME", "-Wno-UNOPTFLAT",
                "-Wno-TIMESCALEMOD",   # ot_hdc_fp32_add_lat.sv names an unresolved CUTS trap module in an untaken branch
                "--top-module", "tb_hdc_v41x_idx", f"-GNK={nk}", f"-GIH={ih}", f"-GNB={nb}", f"-GFD={fd}",
