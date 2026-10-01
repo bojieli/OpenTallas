@@ -153,6 +153,12 @@ module ot_hdc_v41x_attn_tile #(
     output reg  [H-1:0]      oflt
 );
     reg r_ld_v, r_ld_mode, r_ld_w2v, r_iv;
+    reg [15:0] ibf;
+    integer k;
+    always @* begin
+        ibf = 16'd0;
+        for (k = 0; k < TD*18; k = k + 1) ibf[k % 16] = ibf[k % 16] ^ ib[k];
+    end
     reg [BW-1:0] r_ld_bank, r_ibank;
     reg [7:0] r_ld_grp;
     reg [PWORDS*TD*16-1:0] r_ld_w;
@@ -162,7 +168,10 @@ module ot_hdc_v41x_attn_tile #(
         else begin r_ld_v <= ld_v; r_iv <= iv; ov <= r_iv; end
     end
     always @(posedge clk) begin
-        r_ld_mode <= ld_mode; r_ld_bank <= ld_bank; r_ld_grp <= ld_grp; r_ld_w <= ld_w; r_ld_w2v <= ld_w2v;
+        // every tile receives the same broadcast ld_w; mixing in a fold of this tile's own ib keeps the 64 sink
+        // registers distinct (synthesis merges identical flops across instances; the real tiles are separate macros)
+        r_ld_mode <= ld_mode; r_ld_bank <= ld_bank; r_ld_grp <= ld_grp; r_ld_w <= ld_w ^ {(PWORDS*TD*16/16){ibf}};
+        r_ld_w2v <= ld_w2v;
         r_ibank <= ibank; r_ib <= ib;
     end
     integer i;
