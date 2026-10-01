@@ -42,7 +42,7 @@ def build():
   'expanded_shared_serial_cycle_floors':{'one_SM':math.ceil(expanded/128),'ideal32SM':math.ceil(expanded/4096)},
   'source_initializer_still_unbound':{'accumulator_bytes_if_shared':8192,'warp_STORE_issues':64,'literal_fusion_actual_ops':None},
   'pitch33_fullquerycache_plus_rawkeys_bytes':67072,
-  '32SM_partition_replication_is_not_free':{'query_refill_extra_shared_bytes':1047552,'padding_zero_init_extra_bytes':122880,'qdecode_replication':32,'keydecode_inflation':16,'additional_actual_ports_lease_timeline':None},,'source_manifest_pin':{'git':'efdfcb483','path':PATH,'sha256':hashlib.sha256(b).hexdigest()},
+  '32SM_partition_replication_is_not_free':{'query_refill_extra_shared_bytes':1047552,'padding_zero_init_extra_bytes':122880,'qdecode_replication':32,'keydecode_inflation':16,'additional_actual_ports_lease_timeline':None},'source_manifest_pin':{'git':'efdfcb483','path':PATH,'sha256':hashlib.sha256(b).hexdigest()},
   'source_lowerer_pin':{'git':'922a6b673','path':'tools/deepseek_hbm_complete_index_blas.py','sha256':hashlib.sha256(src).hexdigest()},
   'phases':phases,'combined_shared_bytes':shared,'warp_shared_issues':issues,
   'exceptional_only_branch_work':{'divergent_branch_counter':d['executed_whole64_metrics']['divergent_warp_branches'],'exact_active_lane_RF_extra_bits':None,'branch_latency':None,'cost_not_zero':True},
