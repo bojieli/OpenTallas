@@ -74,7 +74,7 @@ module ot_gpu_tc_col #(
         wire f0, f1;
         // a bubble multiplies by +0: the slot's sum holds
         wire [15:0] wg = v_ql[l] ? w_q[16*l +: 16] : 16'd0;
-        ot_hdc_bmul #(.SPLIT(1)) u_mul (.clk(clk), .rst_n(rst_n), .v(v_q), .a({wg, 16'd0}),
+        ot_v41_bmul2 u_mul (.clk(clk), .rst_n(rst_n), .v(v_q), .a({wg, 16'd0}),
                            .b({x_q[16*l +: 16], 16'd0}), .y(prod), .fault(f0));
         wire [31:0] acc_in = fl[5] ? 32'd0 : fb_pre;
         ot_gpu_fadd #(.LAT(ALAT)) u_add (.clk(clk), .rst_n(rst_n), .v(vl[5]), .a(acc_in), .b(prod), .y(sum[32*l +: 32]), .fault(f1));

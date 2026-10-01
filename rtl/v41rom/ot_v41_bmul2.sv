@@ -1,53 +1,13 @@
 `timescale 1ns/1ps
-// Thin wrappers over the binary32 pipes: one result per cycle, LATENCY = 5,
-// IEEE RNE with gradual underflow and canonical +0 zeros.  The adder is the
-// qualified rtl/proto pipe; the multiplier is its stage-rebalanced copy
-// ot_hdc_fp32_mul_pipe (1,275 vs 1,052 MHz routed alone on ASAP7), proven
-// cycle-equivalent by rtl/test/tb_hdc_mul_equiv.sv.
-// A nonfinite operand or an overflow raises `fault` on a valid result; the
-// decode core ORs every fault into one sticky status bit.
-module ot_hdc_fadd (
-    input  wire        clk,
-    input  wire        rst_n,
-    input  wire        v,
-    input  wire [31:0] a,
-    input  wire [31:0] b,
-    output wire [31:0] y,
-    output wire        fault
-);
-    wire [1:0] err;
-    wire vo;
-    ot_fp32_add_rne_pipe u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b),
-                            .y(y), .err(err), .valid_out(vo));
-    assign fault = vo && (err != 2'd0);
-endmodule
-
-module ot_hdc_fmul (
-    input  wire        clk,
-    input  wire        rst_n,
-    input  wire        v,
-    input  wire [31:0] a,
-    input  wire [31:0] b,
-    output wire [31:0] y,
-    output wire        fault
-);
-    wire [1:0] err;
-    wire vo;
-    ot_hdc_fp32_mul_pipe u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b),
-                            .y(y), .err(err), .valid_out(vo));
-    assign fault = vo && (err != 2'd0);
-endmodule
-
-// BF16 x BF16 -> FP32 multiply, exact.  Two 8-bit significands give at most 16
-// significant bits, so the binary32 product needs no rounding whenever it is
-// normal, or subnormal by at most 7 bits of shift; there it is bit-identical
-// to ot_fp32_mul_rne_pipe on the same operands (RN of an exact value is that
-// value).  Operands arrive as binary32 words whose low 16 bits are ignored.
-// A zero operand gives +0.  A product too small to be exact, an overflow or a
-// nonfinite operand FAILS CLOSED through `fault` (and y = +0) -- the qualified
-// pipe would round or refuse there.  LATENCY 5, like the FP32 pipe, so a
-// lane's schedule does not depend on which multiplier it has.
-module ot_hdc_bmul (
+// ---------------------------------------------------------------------------
+// ot_v41_bmul2: ot_hdc_bmul (rtl/hdc/ot_hdc_fpu.sv) with the 8x8 significand product split across stages 2 and 3,
+// for the 1.2 GHz BF16 column lanes (ot_v41_bf16_lanes2).  Stage 2 forms the two 8x4 partial products, stage 3 adds
+// them (ot_v41_ksadd, keep-prefix) before its normalise select.  The single-stage product was the column pair's SS
+// endpoint (c1, ideal clock: u_m.s2_p[15] at -154.7 ps, 848 ps of product logic).  Same split as W13b's ot_hdc_bmul
+// SPLIT = 1 (claude/w13-blockdot12 a2f92966); a separate module so the 40 records pinning ot_hdc_fpu.sv stay current.
+// Bit-identical to ot_hdc_bmul (y and fault), LATENCY 5, same ports.
+// ---------------------------------------------------------------------------
+module ot_v41_bmul2 (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -87,9 +47,9 @@ module ot_hdc_bmul (
         s1_a <= da[17:10]; s1_b <= db[17:10];
         s1_e <= $signed(da[9:0]) + $signed(db[9:0]);
     end
-    // stage 2: the 8x8 product
+    // stage 2: the two 8x4 partial products of the significand product
     reg        s2_v, s2_s, s2_z, s2_nf;
-    reg [15:0] s2_p;
+    reg [11:0] s2_lo, s2_hi;                   // the two 8x4 partial products
     reg signed [10:0] s2_e;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s2_v <= 1'b0;
@@ -97,8 +57,14 @@ module ot_hdc_bmul (
     end
     always @(posedge clk) begin
         s2_s <= s1_s; s2_z <= s1_z; s2_nf <= s1_nf; s2_e <= s1_e;
-        s2_p <= s1_a * s1_b;
+        s2_lo <= s1_a * s1_b[3:0]; s2_hi <= s1_a * s1_b[7:4];
     end
+    // stage 3 first adds the partial products: a*b = a*b[7:4]*16 + a*b[3:0]; the high 12 bits are a 12-bit
+    // keep-prefix add (<= 255*15 + 239 = 4064, no carry out).
+    wire [11:0] hi_sum;
+    wire        hi_co;
+    ot_v41_ksadd #(.W(12)) u_ph (.a(s2_hi), .b({4'd0, s2_lo[11:4]}), .cin(1'b0), .s(hi_sum), .cout(hi_co));
+    wire [15:0] pq = {hi_sum, s2_lo[3:0]};
     // stage 3: normalise (leading bit 15 or 14) and bias
     reg        s3_v, s3_s, s3_z, s3_nf;
     reg [22:0] s3_f;
@@ -109,8 +75,8 @@ module ot_hdc_bmul (
     end
     always @(posedge clk) begin
         s3_s <= s2_s; s3_z <= s2_z; s3_nf <= s2_nf;
-        if (s2_p[15]) begin s3_f <= {s2_p[14:0], 8'd0}; s3_be <= s2_e + 11'sd128; end
-        else          begin s3_f <= {s2_p[13:0], 9'd0}; s3_be <= s2_e + 11'sd127; end
+        if (pq[15]) begin s3_f <= {pq[14:0], 8'd0}; s3_be <= s2_e + 11'sd128; end
+        else          begin s3_f <= {pq[13:0], 9'd0}; s3_be <= s2_e + 11'sd127; end
     end
     // stage 4: encode; a subnormal result shifts right by 1 - biased (<= 7)
     reg        s4_v, s4_bad;
@@ -135,3 +101,4 @@ module ot_hdc_bmul (
         else begin y <= s4_y; fault <= s4_v && s4_bad; end
     end
 endmodule
+
