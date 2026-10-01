@@ -1,0 +1,30 @@
+{
+  "schema": "parent.ckv-peer-credit-model-coverage-review.v1",
+  "source_pin": {
+    "commit": "316884ae047943f0911fc0013f0f9e089e621b32",
+    "path": "tools/w17_ckv_peer_credit_model.py",
+    "sha256": "7fd53f8e3de42673c77299717b0a2544e368a047e2cd34576bf46c36c5641654"
+  },
+  "counterexamples": [
+    {
+      "case": "zero_expected_rows",
+      "model_closed": true,
+      "reserved_rows": 0,
+      "visible_writes_bound": false,
+      "final_event": "synthetic_boolean"
+    },
+    {
+      "case": "one_row_only",
+      "model_closed": true,
+      "reserved_rows": 1,
+      "completed_destination_acks": 3,
+      "expected_selection_rows": 512,
+      "visible_writes_bound": false,
+      "reverse_ack_hops_bound": false
+    }
+  ],
+  "scope": "Synthetic ownership model permits closure without required row coverage, write visibility or actual consumer/ACK provider. This is a model-admission gap, not an additional actual-RTL observation. Existing delayed old-peer RTL failure is separate immutable evidence.",
+  "next_requirement": "Expected ID set and own-row completion;9 visibleWR;allhop/reverseACK drain;actual finalattention event;negative controls before mapping into RTL.",
+  "actual_transport_qualified": false,
+  "hardware_admission": false
+}
