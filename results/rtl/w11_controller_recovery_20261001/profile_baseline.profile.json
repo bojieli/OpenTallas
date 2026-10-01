@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.w11-controller-synthesis-profile.v1",
+  "source_commit": "76fc6a8eda95dbe716484c8a9966687c51217738",
+  "parameters": {
+    "BREG": 1,
+    "D": 512,
+    "NSTAGE": 2,
+    "PHYS": 1,
+    "REPL": 2
+  },
+  "model": {
+    "H": 16,
+    "D": 512,
+    "TD": 32,
+    "NL": 4,
+    "tiles": 64,
+    "products_per_cycle": 32768,
+    "kv_in_bits": 16960,
+    "q_bits": 8192,
+    "p_in_bits": 1024,
+    "pv_out_bits": 32768
+  },
+  "claim": "Elaboration and generic optimization only. No mapped sequential or SS/FF timing claim.",
+  "source_sha256": {
+    "rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv": "7ae782292122ad0dbfc3d45574e53039517540a05cbe900678dafff76f090eb1",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "44f91e6c2c065a6782ce646701ea2172e253e416fed27d0a378311a5c5f6ca6b"
+  },
+  "stages": {
+    "elaborated": {
+      "register_bits_total": 343097,
+      "register_bits_by_region": {
+        "other": 80511,
+        "merge_sinks": 33856,
+        "staging": 34490,
+        "tile_sinks": 137408,
+        "transposer_sinks": 56832
+      },
+      "module_instances": {
+        "$paramod$f2106ddc4ccb7564b7d6de62c1927a0be0fdbd89\\ot_hdc_v41x_attn": 1,
+        "ot_hdc_qadd": 960,
+        "$paramod$53845c73c2e05433ffa160ccd5b61f65b1d0ca6d\\ot_hdc_v41x_attn_merge_phs": 64,
+        "$paramod$b9eb02c97ab10829d2c37e8317ed550d5055c989\\ot_hdc_v41x_attn_staging": 2,
+        "$paramod$d39246b80dba5dfbf6c6e2dec873d036c1c60f7b\\ot_hdc_v41x_attn_tile": 64,
+        "$paramod$a8481a4fee77ebc9dcb15d4b52705578e218a396\\ot_hdc_v41x_attn_tr_phs": 16,
+        "$paramod$9afac85c1fcb3fa6d6964c491f59d0d15445bf54\\ot_hdc_v41x_attn_tr_phs": 16,
+        "$paramod$de7ddd3cea23a980080ada07a53e3396dd9aeb53\\ot_hdc_v41x_attn_tr_phs": 16,
+        "$paramod$7d0bea9865d2a040f92f743053fcc6a2e5beed89\\ot_hdc_v41x_attn_tr_phs": 16,
+        "$paramod$a76780a3516baa881b2d8367a1f826b7832984ec\\ot_hdc_v41x_dly": 1,
+        "$paramod\\ot_hdc_v41x_vdly\\D=s32'00000000000000000000000000001101": 1,
+        "$paramod$5452dbadbcf3da91f9b3a13e672366771527c6c1\\ot_hdc_v41x_dly": 1,
+        "$paramod$4cf45f17184b17fdd28d3a2a25f31d33b5c102da\\ot_hdc_v41x_dly": 1
+      }
+    },
+    "optimized": {
+      "register_bits_total": 338023,
+      "register_bits_by_region": {
+        "other": 135803,
+        "merge_sinks": 32785,
+        "staging": 34217,
+        "tile_sinks": 135203,
+        "transposer_sinks": 15
+      },
+      "module_instances": {}
+    }
+  }
+}
