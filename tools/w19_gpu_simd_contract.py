@@ -13,10 +13,14 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 EVIDENCE=ROOT/'results/rtl/w19_checkpoint_production_20261001'
+CONSTANTS={'@F32_POS_ZERO':dict(dtype='F32',bits='0x00000000',readonly=True,
+                              source='golden csum acc=np.zeros(...,dtype=F)')}
+OPCODE_ARITY={'LDS32':0,'LDS_PACKED_BF16':0,'BF16_WIDEN':1,
+              'FMUL':2,'FADD':2,'SHFL_PAIR':1,'STS_PARTIAL':1}
 
 
-def instruction(op,dst=None,src=(),lat=3,shared=False):
-    return dict(op=op,dst=dst,src=list(src),latency=lat,shared=shared)
+def instruction(op,dst=None,src=(),lat=3,shared=False,**attributes):
+    return dict(op=op,dst=dst,src=list(src),latency=lat,shared=shared,attributes=attributes)
 
 
 def chunk_program(norm=False):
@@ -24,14 +28,17 @@ def chunk_program(norm=False):
     if not norm:
         ops.extend(instruction('LDS32',f'w{k}',lat=2,shared=True) for k in range(8))
     ops.extend(instruction('LDS_PACKED_BF16',f'b{k}',lat=2,shared=True) for k in range(4))
-    ops.extend(instruction('BF16_WIDEN',f'x{k}',[f'b{k//2}']) for k in range(8))
+    ops.extend(instruction('BF16_WIDEN',f'x{k}',[f'b{k//2}'],half=k%2) for k in range(8))
     # Product and add are separate instructions: no FMA contraction.
     ops.extend(instruction('FMUL',f'p{k}',[f'x{k}',f'x{k}' if norm else f'w{k}'],9) for k in range(8))
-    ops.extend(instruction('FADD','sum',[f'p{k}']+(['sum'] if k else []),9) for k in range(8))
+    # Keep acc as the LEFT operand and term as the RIGHT, including the first
+    # addition. Loading p0 as sum would omit the golden +0 rounding point.
+    ops.extend(instruction('FADD','sum',['sum' if k else '@F32_POS_ZERO',f'p{k}'],9) for k in range(8))
     for level in range(5):
-        ops.extend([instruction('SHFL_PAIR',f'other{level}',['sum']),
-                    instruction('FADD','sum',['sum',f'other{level}'],9)])
-    ops.append(instruction('STS_PARTIAL',src=['sum'],shared=True))
+        ops.extend([instruction('SHFL_PAIR',f'other{level}',['sum'],offset=1<<level),
+                    instruction('FADD','sum',['sum',f'other{level}'],9,
+                                predicate=f'lane % {1<<(level+1)} == 0')])
+    ops.append(instruction('STS_PARTIAL',src=['sum'],shared=True,predicate='lane == 0'))
     return ops
 
 
@@ -45,8 +52,14 @@ def schedule_warps(program,warps):
     if not 0<warps<=32:raise ValueError('resident warp limit32')
     written=set()
     for op in program:
+        if op['op'] not in OPCODE_ARITY or len(op['src'])!=OPCODE_ARITY[op['op']]:
+            raise ValueError('invalid opcode operand arity')
+        if op['dst'] in CONSTANTS or (op['dst'] and op['dst'].startswith('@')):
+            raise ValueError('write to readonly/unknown constant')
+        if (op['dst'] is None)!=(op['op']=='STS_PARTIAL'):
+            raise ValueError('invalid opcode destination')
         if op['latency']<1:raise ValueError('nonpositive instruction latency')
-        if not set(op['src'])<=written:raise ValueError('read of unwritten RF register')
+        if not set(op['src'])<=written|CONSTANTS.keys():raise ValueError('read of unwritten RF register or unknown constant')
         if op['dst']:written.add(op['dst'])
     pc=[0]*warps;ready=[{} for _ in range(warps)]
     cursor=[0]*4;cycle=0;issued=Counter();shared_cycles=0
@@ -61,7 +74,7 @@ def schedule_warps(program,warps):
                 if pc[w]==len(program):continue
                 op=program[pc[w]]
                 if op['shared'] and shared_used:continue
-                if any(ready[w].get(r,0)>cycle for r in op['src']):continue
+                if any(ready[w].get(r,0)>cycle for r in op['src'] if r not in CONSTANTS):continue
                 write_cycle=cycle+op['latency']
                 if op['dst'] and write_cycle in rf_writes[partition]:continue
                 if op['dst']:
@@ -229,7 +242,12 @@ def build():
       supersedes='609af8387 consumer compute/service organisation only; resident address allocations retained as capacity candidate. Dedicated HCP and wide SU are arithmetic/profile references, not GPU units.',
       source_pins={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in sources},
       numerical_contract=dict(arithmetic='chunk8',fusion=[],host_arithmetic=False,
-                              fullshape_connected_exactness=False),
+                              fullshape_connected_exactness=False,
+                              constants=CONSTANTS,opcode_arity=OPCODE_ARITY,
+                              immediate_service='readonly canonicalF32+0 provided by ordinary immediate operand mux,ready atcycle0,noRFregisterwrite; keep normal ADD latency',
+                              projection_and_norm_initial_add='FADD(@F32_POS_ZERO,p0), thenFADD(sum,p1)..FADD(sum,p7); no first-term bypass',
+                              unary_negation='Every NEG in scalar recipes means golden G.neg: sign inversion with canonical+0, not bare sign-bit flip for zero',
+                              primitive_zero_contract='FP32 ADD/MUL/DIV apply golden canonical+0 at their own rounding points; ordinary SIMD operand mux/primitive exactness pending'),
       organisation=dict(sm_count=32,simt_lanes_sm=128,partitions_sm=4,warp_threads=32,resident_warps_sm=32,
                         modeled_fp32_lanes_die=4096,implemented_general_simd_lanes=0,
                         statement='Current ot_gpu_sm_v is matrix-only. SIMD/RF/standard divider/INT/shuffle path is proposed additional implementation of model-budgeted GPU organisation, not existing RTL or dedicated HCP/SU adoption.'),

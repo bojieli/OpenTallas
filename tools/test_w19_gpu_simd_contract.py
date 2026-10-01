@@ -37,11 +37,33 @@ class GPUContract(unittest.TestCase):
             self.assertEqual(sum(s['rf_write_slots']),s['instructions']['LDS32']+s['instructions']['LDS_PACKED_BF16']+s['instructions']['BF16_WIDEN']+s['instructions']['FMUL']+s['instructions']['FADD']+s['instructions']['SHFL_PAIR'])
 
     def test_scoreboard_dependency_cost(self):
-        independent=[instruction('LDS32','x',lat=2),instruction('FMUL','a',['x'],9),instruction('FMUL','b',['x'],9)]
-        dependent=[instruction('LDS32','x',lat=2),instruction('FMUL','a',['x'],9),instruction('FMUL','b',['a'],9)]
+        independent=[instruction('LDS32','x',lat=2),instruction('FMUL','a',['x','x'],9),instruction('FMUL','b',['x','x'],9)]
+        dependent=[instruction('LDS32','x',lat=2),instruction('FMUL','a',['x','x'],9),instruction('FMUL','b',['a','x'],9)]
         self.assertGreater(schedule_warps(dependent,1)['cycles'],schedule_warps(independent,1)['cycles'])
         with self.assertRaises(ValueError):schedule_warps([instruction('FADD','x',['missing'],9)],1)
         with self.assertRaises(ValueError):schedule_warps(chunk_program(),33)
+
+    def test_canonical_zero_initial_add_and_constant_scoreboard(self):
+        for norm in [False,True]:
+            program=chunk_program(norm)
+            adds=[op for op in program if op['op']=='FADD']
+            self.assertEqual(adds[0]['src'],['@F32_POS_ZERO','p0'])
+            for k in range(1,8):self.assertEqual(adds[k]['src'],['sum',f'p{k}'])
+            schedule_warps(program,1)
+        constants=self.c['numerical_contract']['constants']
+        self.assertEqual(constants['@F32_POS_ZERO']['bits'],'0x00000000')
+        bad=chunk_program();next(op for op in bad if op['op']=='FADD')['src']=['p0']
+        with self.assertRaisesRegex(ValueError,'arity'):schedule_warps(bad,1)
+        bad=chunk_program();next(op for op in bad if op['op']=='FADD')['src']=['@F32_NEG_ZERO','p0']
+        with self.assertRaisesRegex(ValueError,'unknown constant'):schedule_warps(bad,1)
+        with self.assertRaisesRegex(ValueError,'constant'):
+            schedule_warps([instruction('LDS32','@F32_POS_ZERO',lat=2)],1)
+
+    def test_tree_pairing_masks_and_bf16_halves(self):
+        program=chunk_program()
+        self.assertEqual([o['attributes']['half'] for o in program if o['op']=='BF16_WIDEN'],[0,1]*4)
+        self.assertEqual([o['attributes']['offset'] for o in program if o['op']=='SHFL_PAIR'],[1,2,4,8,16])
+        self.assertEqual(program[-1]['attributes']['predicate'],'lane == 0')
 
     def test_controller_lengths_and_aperture_controls(self):
         for bad in [0,17,31]:
