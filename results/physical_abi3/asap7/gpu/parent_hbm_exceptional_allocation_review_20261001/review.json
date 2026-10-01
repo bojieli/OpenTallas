@@ -1,0 +1,53 @@
+{
+  "RF_limit_registers_per_lane": 32,
+  "allocation_fresh_core_semantic_equal": true,
+  "allocation_owner_commits": [
+    "bea9714b1",
+    "44fcb1590"
+  ],
+  "allocation_record_sha256": "ed8693058c740f2ea4f6ea4eb1aeedde7e6e2376f8e286702750d000f3482cdf",
+  "checkpoint_reads": 0,
+  "focused_allocation_calendar_tests_passed": 10,
+  "focused_producer_codec_consumer_tests_passed": 11,
+  "fresh_producer_source_commit": "f52605e0e1654893e18bfc959d2e0dfc2ae5388d",
+  "hardware_admission": false,
+  "independent_latest_lane_version_and_result_identity_recount": {
+    "classify": 2180,
+    "exceptional_blocks": 3081,
+    "finite_blocks": 12065
+  },
+  "independent_physical_register_interval_nonoverlap": true,
+  "peak_candidate_registers_per_lane": {
+    "classify": 2,
+    "exceptional_blocks": 7,
+    "finite_blocks": 22
+  },
+  "producer_fresh_equal_except_current_commit": true,
+  "producer_owner_commits": [
+    "73cf0440d",
+    "0dac17bf9"
+  ],
+  "real_producer_rows": 1,
+  "resident_source_warps": 4,
+  "retained_allocation_annotations": {
+    "focused_tests_passed": 10,
+    "tool_sha256": "d29e82c26def80098e3d6e1f9d9375c459fc594d8cf161ca28aefee62ebdb337",
+    "tool_source_git": "bea9714b17a6dee8581cd207dbc6ac271bf7b3aa"
+  },
+  "retained_producer_source_commit": "73cf0440db2a864367fd554e5bb41eb3622ce3ae",
+  "schema": "parent_hbm_executed_producer_and_lane_allocation_review.v1",
+  "scope": "Executed ordinary instruction software witness and conservative ordinal allocation; no physical clock or all-domain score admission.",
+  "source_NaN_shape_counterexample_bits": {
+    "one_key": "0x7fc10000",
+    "two_keys": "0x7fc20000"
+  },
+  "source_record_sha256": "1b51feb6b724f22cc874c311fbd214b0169d77395c196b3cd3ad8b8a7a31d1e7",
+  "unclosed": [
+    "complete source shape and exceptional score lowering",
+    "actual physical opcode latency,RF reads/writebacks and residency join",
+    "whole shared phase lifetimes and descriptor write visibility",
+    "ordinary GPU HBM controller and ACK CDC drain",
+    "contextual SS setup FF hold and die routing/power"
+  ],
+  "whole_token_or_full64tile_execution": false
+}
