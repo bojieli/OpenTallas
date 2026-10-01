@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.v41.w18_hub_lane_vm_distance.v1",
+ "rotate_span": {
+  "lane_tiles": 128,
+  "worst_bank_to_lane_um": 10750.9,
+  "via_centre_um": 10750.9,
+  "stages": {
+   "748um": 15
+  }
+ },
+ "floorplan": "results/physical_abi3/asap7/chip/v41_w18/shrink_crot_interim/centred_strip/floorplan.json",
+ "floorplan_sha256": "3605f78eb3c1aa111053c7d3213d1652a3eacf9c1dc64fb86c0165c3c327022f",
+ "vm_strip_um": [
+  14349.744,
+  8814.96,
+  2163.024,
+  7274.88
+ ],
+ "reach_um": 748.0,
+ "reach_basis": "",
+ "target_um": 3850.0,
+ "halves": {
+  "HUB_SU_VECTOR": {
+   "rect_um": [
+    12589.344,
+    8814.96,
+    1760.4,
+    7274.88
+   ],
+   "worst_to_strip_um": 1760.4,
+   "worst_stages": 3,
+   "within_target": true,
+   "stage_histogram": {
+    "1": 697,
+    "2": 697,
+    "3": 287
+   }
+  },
+  "HUB_SU_VECTOR_E": {
+   "rect_um": [
+    16512.768,
+    8814.96,
+    1760.4,
+    7274.88
+   ],
+   "worst_to_strip_um": 1760.4,
+   "worst_stages": 3,
+   "within_target": true,
+   "stage_histogram": {
+    "0": 41,
+    "1": 656,
+    "2": 697,
+    "3": 287
+   }
+  }
+ },
+ "basis": "rectangle-bound: lane tile corners to the nearest VM strip edge (Manhattan); W11's tile footprint refines it",
+ "tool_sha256": "0fa8cc4f81bd8cddef8ef655b172b0c5b529d16aab5b3c7abdf5f825c0cc710c"
+}

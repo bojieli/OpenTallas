@@ -1,0 +1,94 @@
+{
+ "schema": "opentallas.v41.w18_hub_lane_vm_distance.v1",
+ "rotate_span": {
+  "lane_tiles": 108,
+  "worst_bank_to_lane_um": 9058.2,
+  "via_centre_um": 9058.2,
+  "stages": {
+   "748um": 13
+  }
+ },
+ "floorplan": "/home/ubuntu/w18work/rebase_sq_plus/out/qbf/floorplan.json",
+ "floorplan_sha256": "2a1afe3897c61f64694afaa168362a1f3b67ed3f546e3ed741888f36b528fca4",
+ "vm_strip_um": [
+  13349.664,
+  10390.464,
+  3966.624,
+  3966.624
+ ],
+ "reach_um": 748.0,
+ "reach_basis": "",
+ "target_um": 3850.0,
+ "halves": {
+  "HUB_SU_VECTOR": {
+   "rect_um": [
+    11735.28,
+    10390.464,
+    1614.384,
+    3966.624
+   ],
+   "worst_to_strip_um": 1614.4,
+   "worst_stages": 3,
+   "within_target": true,
+   "stage_histogram": {
+    "0": 41,
+    "1": 738,
+    "2": 779,
+    "3": 123
+   }
+  },
+  "HUB_SU_VECTOR_E": {
+   "rect_um": [
+    17316.288,
+    10390.464,
+    1614.384,
+    3966.624
+   ],
+   "worst_to_strip_um": 1614.4,
+   "worst_stages": 3,
+   "within_target": true,
+   "stage_histogram": {
+    "0": 41,
+    "1": 738,
+    "2": 779,
+    "3": 123
+   }
+  },
+  "HUB_SU_VECTOR_N": {
+   "rect_um": [
+    13349.664,
+    14357.088,
+    3966.624,
+    1614.384
+   ],
+   "worst_to_strip_um": 1614.4,
+   "worst_stages": 3,
+   "within_target": true,
+   "stage_histogram": {
+    "0": 41,
+    "1": 738,
+    "2": 779,
+    "3": 123
+   }
+  },
+  "HUB_SU_VECTOR_S": {
+   "rect_um": [
+    13349.664,
+    8776.08,
+    3966.624,
+    1614.384
+   ],
+   "worst_to_strip_um": 1614.4,
+   "worst_stages": 3,
+   "within_target": true,
+   "stage_histogram": {
+    "0": 41,
+    "1": 738,
+    "2": 779,
+    "3": 123
+   }
+  }
+ },
+ "basis": "rectangle-bound: lane tile corners to the nearest VM strip edge (Manhattan); W11's tile footprint refines it",
+ "tool_sha256": "0fa8cc4f81bd8cddef8ef655b172b0c5b529d16aab5b3c7abdf5f825c0cc710c"
+}

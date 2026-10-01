@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.v41.w18_hub_m89_capacity.v1",
+ "hub_rect_um": [
+  5244.048,
+  9117.36,
+  16101.072,
+  6429.888
+ ],
+ "bank_um": [
+  13298.688,
+  10348.992,
+  3966.624,
+  3966.624
+ ],
+ "layers": {
+  "M8": {
+   "direction": "horizontal",
+   "capacity": 2169536.0,
+   "used_trunk": 156317.0,
+   "used_rest": 490646.0,
+   "used_pct": 29.82,
+   "free_wires_across_hub_section": 55874,
+   "free_wires_per_um": 8.69,
+   "free_wires_across_bank_square": 34469,
+   "free_after_pdn_across_bank_square": 22190
+  },
+  "M9": {
+   "direction": "vertical",
+   "capacity": 2168576.0,
+   "used_trunk": 68912.0,
+   "used_rest": 260585.0,
+   "used_pct": 15.19,
+   "free_wires_across_hub_section": 171077,
+   "free_wires_per_um": 10.63,
+   "free_wires_across_bank_square": 42146,
+   "free_after_pdn_across_bank_square": 29722
+  }
+ },
+ "k": 32,
+ "basis": "bundled GCell capacity is after the die PDN reserve already applied by die_route (M8/M9 power share); usage of the M8/M9 trunk pass + the charged rest pass",
+ "inputs": {
+  "/home/ubuntu/w18work/rebase_sq_square/out/qbf/split_trunk": "06cf2db205a1e1ff1230b6c600a2c678e1622e393d3ddfcea907a6408faea569",
+  "/home/ubuntu/w18work/rebase_sq_square/out/qbf/split_rest": "4b46b8cef2be5017e7ddce831871060dab087643ef52797a322b23ae4fe0d22f",
+  "floorplan": "98d35dc3e973e03b8fe56738d86ec89ee6c6968ed029fa38a99717d2f5500b14",
+  "tool_sha256": "b3f53182d88d2332619a61a4f33632b290dd24e2d3ea1d9a3c233823e327692d"
+ }
+}

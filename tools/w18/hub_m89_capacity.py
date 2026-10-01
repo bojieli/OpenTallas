@@ -56,12 +56,15 @@ def main(argv=None):
         span_blocks = len(cols) if horiz else len(rows)
         free = max(0.0, cap - use_t - use_r)
         sect_um = hr[3] if horiz else hr[2]
-        free_wires_section = free / max(1, span_blocks) * a.k
+        # a 4x4 block sums 4 GCells along the track direction, so per cut divide by 4 as well
+        free_wires_section = free / max(1, span_blocks) / 4 * a.k
+        pdn = 0.25 * cap / max(1, span_blocks) / 4 * a.k     # the die PDN's M8/M9 power share (25%) not reserved in the split passes
         out[L] = dict(direction="horizontal" if horiz else "vertical", capacity=cap, used_trunk=use_t, used_rest=use_r,
                       used_pct=round(100 * (use_t + use_r) / cap, 2) if cap else None,
                       free_wires_across_hub_section=round(free_wires_section),
                       free_wires_per_um=round(free_wires_section / sect_um, 2),
-                      free_wires_across_bank_square=round(free_wires_section / sect_um * (vm["h"] if horiz else vm["w"])))
+                      free_wires_across_bank_square=round(free_wires_section / sect_um * (vm["h"] if horiz else vm["w"])),
+                      free_after_pdn_across_bank_square=round((free_wires_section - pdn) / sect_um * (vm["h"] if horiz else vm["w"])))
     rec = dict(schema="opentallas.v41.w18_hub_m89_capacity.v1", hub_rect_um=hr, bank_um=[vm["x"], vm["y"], vm["w"], vm["h"]],
                layers=out, k=a.k,
                basis="bundled GCell capacity is after the die PDN reserve already applied by die_route (M8/M9 power share); "

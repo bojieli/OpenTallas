@@ -1,0 +1,146 @@
+{
+ "schema": "opentallas.v41.w18_hub_square.v1",
+ "ruling": "root 2026-10-01 (free fix): square C_rotate hub -- central bank square inside the SU+VM square, or 2x2, whichever gives the shorter worst bank->lane path once the crossings are re-routed",
+ "inputs": "SU+VM block 38.601 mm2 (W16b 8b665e92), VM bank area 14.69 mm2 (W11), x1.05 switches; owner max 4,773 pairs + 1,024 BF16 columns (+10%); W10b tile OUTLINES (placeholders until the abstracts land)",
+ "strip_reference": {
+  "rotate_worst_bank_to_lane_um": 10750.9,
+  "stages_at_748um": 15
+ },
+ "square": {
+  "die_um": [
+   30607.2,
+   24667.2
+  ],
+  "die_mm2": 754.9939,
+  "rotate_worst_bank_to_lane_um": 9859.0,
+  "rotate_stages_at_748um": 14,
+  "rotate_stages_at_481um": 21.0,
+  "overflow": {
+   "trunk": 0,
+   "rest": 0
+  },
+  "crossings_cycles_at_504um": {
+   "vm_xroot_to_farthest_cluster": 31,
+   "farthest_cluster_to_vm": 31,
+   "collective_to_farthest_serdes": 39,
+   "collective_to_farthest_ucie": 41,
+   "hbm_window": 33,
+   "idx_keys": 47,
+   "selected_kv": 31,
+   "idx_topk": 38,
+   "hub": 7
+  },
+  "ir_die_mesh_vdd_worst_mv": 11.16,
+  "m89_over_hub": {
+   "used_pct": {
+    "M8": 29.82,
+    "M9": 15.19
+   },
+   "free_wires_across_bank_after_pdn": {
+    "M8": 22190,
+    "M9": 29722
+   }
+  }
+ },
+ "plus_su_m7": {
+  "die_um": [
+   30709.152,
+   24749.28
+  ],
+  "die_mm2": 760.0294,
+  "rotate_worst_bank_to_lane_um": 9058.2,
+  "rotate_stages_at_748um": 13,
+  "rotate_stages_at_481um": 19.0,
+  "overflow": {
+   "trunk": 0,
+   "rest": 4416
+  },
+  "crossings_cycles_at_504um": {
+   "vm_xroot_to_farthest_cluster": 32,
+   "farthest_cluster_to_vm": 31,
+   "collective_to_farthest_serdes": 43,
+   "collective_to_farthest_ucie": 45,
+   "hbm_window": 32,
+   "idx_keys": 47,
+   "selected_kv": 30,
+   "idx_topk": 42,
+   "hub": 8
+  },
+  "ir_die_mesh_vdd_worst_mv": 10.948,
+  "m89_over_hub": {
+   "used_pct": {
+    "M8": 27.89,
+    "M9": 17.67
+   },
+   "free_wires_across_bank_after_pdn": {
+    "M8": 23313,
+    "M9": 28434
+   }
+  },
+  "verdict": "NEGATIVE: rest pass overflows 4,416 with the SU arms at M1-M7"
+ },
+ "plus": {
+  "die_um": [
+   30709.152,
+   24749.28
+  ],
+  "die_mm2": 760.0294,
+  "rotate_worst_bank_to_lane_um": 9058.2,
+  "rotate_stages_at_748um": 13,
+  "rotate_stages_at_481um": 19.0,
+  "overflow": {
+   "trunk": 0,
+   "rest": 0
+  },
+  "crossings_cycles_at_504um": {
+   "vm_xroot_to_farthest_cluster": 32,
+   "farthest_cluster_to_vm": 31,
+   "collective_to_farthest_serdes": 43,
+   "collective_to_farthest_ucie": 43,
+   "hbm_window": 32,
+   "idx_keys": 47,
+   "selected_kv": 30,
+   "idx_topk": 38,
+   "hub": 6
+  },
+  "ir_die_mesh_vdd_worst_mv": 10.948,
+  "m89_over_hub": {
+   "used_pct": {
+    "M8": 27.89,
+    "M9": 17.67
+   },
+   "free_wires_across_bank_after_pdn": {
+    "M8": 23313,
+    "M9": 28434
+   }
+  }
+ },
+ "adopted": "PLUS (central bank square b = 3.93 mm, four lane arms of depth 1.6 mm on its sides, corners = COLLECTIVE, GATHER and two HC pieces), SU arms at M1-M6 (W11's lane closes at M6), bank square and other hub parts at M1-M5, trunks M8/M9: worst bank->lane 9,058 um (13 stages at 748 um) against 10,751 um (15) for the strip and 9,859 (14) for the square ring; 2x2 not built: a fixed-latency rotate spans the union of the four blocks, so its worst bank->lane path is no shorter than the square's",
+ "rotate_on_m89": "over the hub M8 is 28% and M9 18% used by the trunk + rest passes; after the die PDN's 25% power share ~23k (M8, horizontal) and ~28k (M9, vertical) wires remain across the 3.93 mm bank square. The rotate legs (W11: ~4 x 32 Kb read + 32 Kb write = ~160 Kb, spread over four arms, ~40 Kb per arm) fit about 60% on M8/M9; the rest stays on M5-M7 inside the arms. Reach on the trunk layers is W11's sweep (claude/w11-reach).",
+ "files": {
+  "plus/die_route_split_rest.json": "202a2ec77252be29c2780a946d21c525dfe2d524232521a62785936f8445fb21",
+  "plus/die_route_split_rest_su6.json": "07b3ce58bbc6999b421c36627305566a83120e6c70bd47888341bc4c1ac8c627",
+  "plus/die_route_split_trunk.json": "12b24127db36eaa9fffe6cf2af7b46fbe2ce400e3ce0e8aaef62a650cdb90922",
+  "plus/die_shrink.json": "fc8c14711e87625181caad5ffaf7134b4bf376cf2dc6e788efc82345805813d3",
+  "plus/floorplan.json": "2a1afe3897c61f64694afaa168362a1f3b67ed3f546e3ed741888f36b528fca4",
+  "plus/hub_distances.json": "6f32ab17f2e3845f66016466f7204accfeddbdbff1821507405ec9d1b463cabc",
+  "plus/hub_m89.json": "c64ca8020dd738e8fe88d07b04d665b51e9df2816e00abb1380e13bc69080118",
+  "plus/ir_cap50_vdd2.json": "096566d91116b5f957a6c01d03c920da9582a670fc095d92eece595e903f04dc",
+  "plus/ir_peak.json": "6e30e11688ee04647fc07fd74225ef09a62ef308f29a83c9b402bee2e878c9a5",
+  "plus/ir_sat.json": "26310b22608ba0aa18c09102568bbc97ca25a146f47a3d3cecd5facbe54d7d39",
+  "plus/pack.json": "2b1af504e5dec06ca114abd29b01574fa5decafcf01002aab6e9cabb7e0be57f",
+  "plus/slots.json": "4c143586414a255b87aa214237d1534b1539757c2793e9b1ef379c1ad07c5719",
+  "square/die_route_split_rest.json": "e1306dfe3de90440380cbb10486f75363e47afef99ff2cd3f963e28046dc745f",
+  "square/die_route_split_trunk.json": "de77db5c7d4dab6eb4522af3e5fdd9ad237bfdfdcdb8569c30c42ea4c3f2d6c1",
+  "square/die_shrink.json": "bda09cfb22b64b11a292d812378a011204861bdd92f455c2f184a454d4c592f0",
+  "square/floorplan.json": "98d35dc3e973e03b8fe56738d86ec89ee6c6968ed029fa38a99717d2f5500b14",
+  "square/hub_distances.json": "093be49bbc413eeb2059ad1943838ae2627b9b12b6387f5a5cbb12c41a7ccd41",
+  "square/hub_m89.json": "61c9b0f6be8fed4116ed6fdadea0440915c3ed702f1088a4e808ce2db581fdf7",
+  "square/ir_cap50_vdd2.json": "f5af50cd3b08f8911ffeaceebecc32dcd53f04cb85a49ab6759c98709fe59b59",
+  "square/ir_peak.json": "5edf0a2f8794968366a0be9c3d239b8f6948b2bfa02a63e10b8935ff94d9a007",
+  "square/ir_sat.json": "f1bdd8434c246f28d76cb5d781515e2684c38c3af0af6cb1ef408b4d15251bf5",
+  "square/pack.json": "c4ceff534bf864aa30127f633a62ad2c2baa0c73091a930b22e5a95a388f8412",
+  "square/slots.json": "0930bf0432bef400a4722e35e46a645fbb1b9028fe1f3817098453c7c69ccadc",
+  "strip_reference_hub_distances.json": "8396103b112ee9ddd8818a59e5ebae1f73723d153b84005cc736350eb10d003c"
+ }
+}

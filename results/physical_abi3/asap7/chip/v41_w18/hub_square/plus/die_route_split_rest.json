@@ -1,0 +1,646 @@
+{
+ "schema": "opentallas.v41.w18_die_route.v1",
+ "status": "bundled_die_global_route",
+ "claim_boundary": "die-level placement of the real-element floorplan (ROM clusters of the routed W10 p5 pair; hub, service and link blocks are PLACEHOLDERS) and bundled global route of the top-level channel nets; crossing cycles from routed 2-pin probe paths and the routed ASAP7 wire model; real-technology detailed route and timing of the channels are in the channel records",
+ "manifest": {
+  "k": 32,
+  "congestion_iterations": 20,
+  "signal_layers": "M2-M9",
+  "layer_adjustment": null,
+  "region_adjustments": 24166,
+  "hub_obs": {
+   "su_vector*": 7
+  },
+  "classes": [
+   "hbm_window",
+   "hub",
+   "idx_keys",
+   "idx_topk",
+   "link_serdes",
+   "link_serdes_probe",
+   "link_ucie",
+   "link_ucie_probe",
+   "selected_kv"
+  ],
+  "hub_obs_top": 5,
+  "obs_top": "M7",
+  "m8_m9_reserve": 0.0,
+  "m2_m7_adjustment": 0.25,
+  "growth": [],
+  "bundle_nets": 694,
+  "wires": 22146,
+  "instances": 427,
+  "buses": 25
+ },
+ "run": {
+  "host": "local",
+  "wall_s": 108.6,
+  "rc": 0
+ },
+ "global_route": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow_h": 0,
+    "overflow_v": 0,
+    "overflow_total": 0
+   },
+   "M2": {
+    "resource": 5281939,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow_h": 0,
+    "overflow_v": 0,
+    "overflow_total": 0
+   },
+   "M3": {
+    "resource": 5675144,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow_h": 0,
+    "overflow_v": 0,
+    "overflow_total": 0
+   },
+   "M4": {
+    "resource": 4313752,
+    "demand": 77060,
+    "usage_pct": 1.79,
+    "overflow_h": 1,
+    "overflow_v": 0,
+    "overflow_total": 139
+   },
+   "M5": {
+    "resource": 4246859,
+    "demand": 121749,
+    "usage_pct": 2.87,
+    "overflow_h": 0,
+    "overflow_v": 1,
+    "overflow_total": 4
+   },
+   "M6": {
+    "resource": 4312406,
+    "demand": 88112,
+    "usage_pct": 2.04,
+    "overflow_h": 6,
+    "overflow_v": 0,
+    "overflow_total": 1319
+   },
+   "M7": {
+    "resource": 4252602,
+    "demand": 76713,
+    "usage_pct": 1.8,
+    "overflow_h": 0,
+    "overflow_v": 1,
+    "overflow_total": 1
+   },
+   "M8": {
+    "resource": 14628974,
+    "demand": 70037,
+    "usage_pct": 0.48,
+    "overflow_h": 7,
+    "overflow_v": 0,
+    "overflow_total": 2644
+   },
+   "M9": {
+    "resource": 14608584,
+    "demand": 48833,
+    "usage_pct": 0.33,
+    "overflow_h": 0,
+    "overflow_v": 4,
+    "overflow_total": 309
+   }
+  },
+  "total": {
+   "resource": 57320260,
+   "demand": 482504,
+   "usage_pct": 0.84,
+   "overflow_h": 14,
+   "overflow_v": 6,
+   "overflow_total": 4416
+  },
+  "total_wirelength_bundle_um": 9047484.0,
+  "grt_runtime": "00:01:02",
+  "errors": [],
+  "elapsed_s": null
+ },
+ "peak_rss_kb": 2737928,
+ "layer_share_by_class": {
+  "attn": {
+   "M4": 1.5,
+   "M5": 1.5,
+   "M6": 3.4,
+   "M7": 24.5,
+   "M8": 68.4,
+   "M9": 0.7
+  },
+  "coll": {
+   "M4": 2.0,
+   "M5": 1.6,
+   "M6": 21.4,
+   "M7": 14.4,
+   "M8": 43.2,
+   "M9": 17.4
+  },
+  "hbm_window": {
+   "M4": 15.9,
+   "M5": 26.2,
+   "M6": 10.1,
+   "M7": 25.8,
+   "M8": 17.7,
+   "M9": 4.2
+  },
+  "idx_keys": {
+   "M4": 17.4,
+   "M5": 27.5,
+   "M6": 18.0,
+   "M7": 16.3,
+   "M8": 12.4,
+   "M9": 8.5
+  },
+  "idx_topk": {
+   "M5": 5.5,
+   "M6": 10.0,
+   "M7": 53.6,
+   "M8": 28.6,
+   "M9": 2.3
+  },
+  "link": {
+   "M4": 10.1,
+   "M5": 13.2,
+   "M6": 25.3,
+   "M7": 7.0,
+   "M8": 20.6,
+   "M9": 23.8
+  },
+  "pv": {
+   "M4": 2.2,
+   "M5": 1.8,
+   "M6": 2.2,
+   "M7": 9.3,
+   "M8": 81.4,
+   "M9": 3.1
+  },
+  "q": {
+   "M4": 1.7,
+   "M5": 1.4,
+   "M6": 2.8,
+   "M7": 25.1,
+   "M8": 65.4,
+   "M9": 3.6
+  },
+  "selected_kv": {
+   "M4": 20.9,
+   "M5": 41.8,
+   "M6": 14.7,
+   "M7": 14.4,
+   "M8": 8.2
+  },
+  "vm": {
+   "M4": 2.0,
+   "M5": 1.9,
+   "M6": 26.4,
+   "M7": 17.2,
+   "M8": 36.9,
+   "M9": 15.5
+  }
+ },
+ "wire_model": {
+  "ps_per_um": 0.5997,
+  "overhead_ps": 189.5,
+  "points": [
+   {
+    "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L1000/physical.json",
+    "link_um": 1000,
+    "period_ps": 808.6
+   },
+   {
+    "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L2000/physical.json",
+    "link_um": 2000,
+    "period_ps": 1350.0
+   },
+   {
+    "record": "results/physical_abi3/asap7/rom/ot_rom_express_link/d0_w64_L3000/physical.json",
+    "link_um": 3000,
+    "period_ps": 2008.0
+   }
+  ],
+  "basis": "least-squares fit of routed fmax period vs LINK_UM over the express-link records",
+  "reach_um": 504.0,
+  "reach_basis": "W15 SS sweep at 0.833 ns: 504 um per register stage (M2-M9)"
+ },
+ "crossings": {
+  "collective_to_farthest_serdes": {
+   "routed_um": 21453.1,
+   "cycles": 43,
+   "model_cycles": 22
+  },
+  "collective_to_farthest_ucie": {
+   "routed_um": 22193.5,
+   "cycles": 45,
+   "model_cycles": 16
+  },
+  "hbm_window": {
+   "max_routed_um": 16011.1,
+   "max_cycles": 32,
+   "per_net": {
+    "hbm_window.hbm_service_s0": 24,
+    "hbm_window.hbm_service_s1": 32,
+    "hbm_window.hbm_service_n0": 24,
+    "hbm_window.hbm_service_n1": 32
+   }
+  },
+  "idx_keys": {
+   "max_routed_um": 23193.0,
+   "max_cycles": 47,
+   "per_net": {
+    "idx_keys.hbm_service_s0": 24,
+    "idx_keys.hbm_service_s1": 47,
+    "idx_keys.hbm_service_n0": 24,
+    "idx_keys.hbm_service_n1": 46
+   }
+  },
+  "selected_kv": {
+   "max_routed_um": 14826.5,
+   "max_cycles": 30,
+   "per_net": {
+    "selected_kv.hbm_service_s0": 24,
+    "selected_kv.hbm_service_s1": 30,
+    "selected_kv.hbm_service_n0": 24,
+    "selected_kv.hbm_service_n1": 30
+   }
+  },
+  "idx_topk": {
+   "max_routed_um": 20805.2,
+   "max_cycles": 42,
+   "per_net": {
+    "idx_topk.hbm_service_s0": 42,
+    "idx_topk.hbm_service_s1": 22,
+    "idx_topk.hbm_service_n0": 38,
+    "idx_topk.hbm_service_n1": 22
+   }
+  },
+  "hub": {
+   "max_routed_um": 3905.6,
+   "max_cycles": 8,
+   "per_net": {
+    "vm_coll": 8,
+    "coll_vm": 8,
+    "pv_preload": 5,
+    "q_attn": 7,
+    "attn_out": 7
+   }
+  }
+ },
+ "classes": {
+  "link_serdes": {
+   "nets": 1,
+   "wires": 512,
+   "max_routed_um": 37038.5,
+   "max_cycles": null,
+   "max_manhattan_um": 23672.5
+  },
+  "link_serdes_probe": {
+   "nets": 1,
+   "wires": 1,
+   "max_routed_um": 21453.1,
+   "max_cycles": 43,
+   "max_manhattan_um": 23672.5
+  },
+  "link_ucie": {
+   "nets": 1,
+   "wires": 512,
+   "max_routed_um": 23563.2,
+   "max_cycles": null,
+   "max_manhattan_um": 23546.8
+  },
+  "link_ucie_probe": {
+   "nets": 1,
+   "wires": 1,
+   "max_routed_um": 22193.5,
+   "max_cycles": 45,
+   "max_manhattan_um": 23546.8
+  },
+  "hbm_window": {
+   "nets": 4,
+   "wires": 1024,
+   "max_routed_um": 16011.1,
+   "max_cycles": 32,
+   "max_manhattan_um": 25220.6
+  },
+  "idx_keys": {
+   "nets": 4,
+   "wires": 16384,
+   "max_routed_um": 23193.0,
+   "max_cycles": 47,
+   "max_manhattan_um": 25220.6
+  },
+  "selected_kv": {
+   "nets": 4,
+   "wires": 128,
+   "max_routed_um": 14826.5,
+   "max_cycles": 30,
+   "max_manhattan_um": 25220.6
+  },
+  "idx_topk": {
+   "nets": 4,
+   "wires": 128,
+   "max_routed_um": 20805.2,
+   "max_cycles": 42,
+   "max_manhattan_um": 18767.4
+  },
+  "hub": {
+   "nets": 5,
+   "wires": 3456,
+   "max_routed_um": 3905.6,
+   "max_cycles": 8,
+   "max_manhattan_um": 6453.2
+  }
+ },
+ "nets": [
+  {
+   "id": "link_serdes.tx",
+   "cls": "link_serdes",
+   "bits": 512,
+   "sinks": 45,
+   "basis": "ASSUMED 512-bit link flit (W3)",
+   "centre_manhattan_um": 23672.5,
+   "routed_um": 37038.5,
+   "routed_is_path": false,
+   "cycles": null
+  },
+  {
+   "id": "link_serdes.far",
+   "cls": "link_serdes_probe",
+   "bits": 1,
+   "sinks": 1,
+   "basis": "probe farthest lane",
+   "centre_manhattan_um": 23672.5,
+   "routed_um": 21453.1,
+   "routed_is_path": true,
+   "cycles": 43
+  },
+  {
+   "id": "link_ucie.tx",
+   "cls": "link_ucie",
+   "bits": 512,
+   "sinks": 17,
+   "basis": "ASSUMED 512-bit link flit (W3)",
+   "centre_manhattan_um": 23546.8,
+   "routed_um": 23563.2,
+   "routed_is_path": false,
+   "cycles": null
+  },
+  {
+   "id": "link_ucie.far",
+   "cls": "link_ucie_probe",
+   "bits": 1,
+   "sinks": 1,
+   "basis": "probe farthest lane",
+   "centre_manhattan_um": 23546.8,
+   "routed_um": 22193.5,
+   "routed_is_path": true,
+   "cycles": 45
+  },
+  {
+   "id": "hbm_window.hbm_service_s0",
+   "cls": "hbm_window",
+   "bits": 256,
+   "sinks": 1,
+   "basis": "ledger hbm_window",
+   "centre_manhattan_um": 12269.7,
+   "routed_um": 11661.3,
+   "routed_is_path": true,
+   "cycles": 24
+  },
+  {
+   "id": "idx_keys.hbm_service_s0",
+   "cls": "idx_keys",
+   "bits": 4096,
+   "sinks": 1,
+   "basis": "index keys at the measured reader rate",
+   "centre_manhattan_um": 12269.7,
+   "routed_um": 11790.9,
+   "routed_is_path": true,
+   "cycles": 24
+  },
+  {
+   "id": "selected_kv.hbm_service_s0",
+   "cls": "selected_kv",
+   "bits": 32,
+   "sinks": 1,
+   "basis": "ledger selected_kv",
+   "centre_manhattan_um": 12269.7,
+   "routed_um": 11753.9,
+   "routed_is_path": true,
+   "cycles": 24
+  },
+  {
+   "id": "idx_topk.hbm_service_s0",
+   "cls": "idx_topk",
+   "bits": 32,
+   "sinks": 1,
+   "basis": "index partial top-k -> SU selector (pack crossing)",
+   "centre_manhattan_um": 18722.9,
+   "routed_um": 20805.2,
+   "routed_is_path": true,
+   "cycles": 42
+  },
+  {
+   "id": "hbm_window.hbm_service_s1",
+   "cls": "hbm_window",
+   "bits": 256,
+   "sinks": 1,
+   "basis": "ledger hbm_window",
+   "centre_manhattan_um": 25218.9,
+   "routed_um": 15881.6,
+   "routed_is_path": true,
+   "cycles": 32
+  },
+  {
+   "id": "idx_keys.hbm_service_s1",
+   "cls": "idx_keys",
+   "bits": 4096,
+   "sinks": 1,
+   "basis": "index keys at the measured reader rate",
+   "centre_manhattan_um": 25218.9,
+   "routed_um": 23193.0,
+   "routed_is_path": true,
+   "cycles": 47
+  },
+  {
+   "id": "selected_kv.hbm_service_s1",
+   "cls": "selected_kv",
+   "bits": 32,
+   "sinks": 1,
+   "basis": "ledger selected_kv",
+   "centre_manhattan_um": 25218.9,
+   "routed_um": 14826.5,
+   "routed_is_path": true,
+   "cycles": 30
+  },
+  {
+   "id": "idx_topk.hbm_service_s1",
+   "cls": "idx_topk",
+   "bits": 32,
+   "sinks": 1,
+   "basis": "index partial top-k -> SU selector (pack crossing)",
+   "centre_manhattan_um": 18765.6,
+   "routed_um": 10698.8,
+   "routed_is_path": true,
+   "cycles": 22
+  },
+  {
+   "id": "hbm_window.hbm_service_n0",
+   "cls": "hbm_window",
+   "bits": 256,
+   "sinks": 1,
+   "basis": "ledger hbm_window",
+   "centre_manhattan_um": 12271.4,
+   "routed_um": 11661.3,
+   "routed_is_path": true,
+   "cycles": 24
+  },
+  {
+   "id": "idx_keys.hbm_service_n0",
+   "cls": "idx_keys",
+   "bits": 4096,
+   "sinks": 1,
+   "basis": "index keys at the measured reader rate",
+   "centre_manhattan_um": 12271.4,
+   "routed_um": 11624.3,
+   "routed_is_path": true,
+   "cycles": 24
+  },
+  {
+   "id": "selected_kv.hbm_service_n0",
+   "cls": "selected_kv",
+   "bits": 32,
+   "sinks": 1,
+   "basis": "ledger selected_kv",
+   "centre_manhattan_um": 12271.4,
+   "routed_um": 11753.9,
+   "routed_is_path": true,
+   "cycles": 24
+  },
+  {
+   "id": "idx_topk.hbm_service_n0",
+   "cls": "idx_topk",
+   "bits": 32,
+   "sinks": 1,
+   "basis": "index partial top-k -> SU selector (pack crossing)",
+   "centre_manhattan_um": 18724.6,
+   "routed_um": 18787.7,
+   "routed_is_path": true,
+   "cycles": 38
+  },
+  {
+   "id": "hbm_window.hbm_service_n1",
+   "cls": "hbm_window",
+   "bits": 256,
+   "sinks": 1,
+   "basis": "ledger hbm_window",
+   "centre_manhattan_um": 25220.6,
+   "routed_um": 16011.1,
+   "routed_is_path": true,
+   "cycles": 32
+  },
+  {
+   "id": "idx_keys.hbm_service_n1",
+   "cls": "idx_keys",
+   "bits": 4096,
+   "sinks": 1,
+   "basis": "index keys at the measured reader rate",
+   "centre_manhattan_um": 25220.6,
+   "routed_um": 23063.5,
+   "routed_is_path": true,
+   "cycles": 46
+  },
+  {
+   "id": "selected_kv.hbm_service_n1",
+   "cls": "selected_kv",
+   "bits": 32,
+   "sinks": 1,
+   "basis": "ledger selected_kv",
+   "centre_manhattan_um": 25220.6,
+   "routed_um": 14622.9,
+   "routed_is_path": true,
+   "cycles": 30
+  },
+  {
+   "id": "idx_topk.hbm_service_n1",
+   "cls": "idx_topk",
+   "bits": 32,
+   "sinks": 1,
+   "basis": "index partial top-k -> SU selector (pack crossing)",
+   "centre_manhattan_um": 18767.4,
+   "routed_um": 10698.8,
+   "routed_is_path": true,
+   "cycles": 22
+  },
+  {
+   "id": "vm_coll",
+   "cls": "hub",
+   "bits": 512,
+   "sinks": 1,
+   "basis": "ledger",
+   "centre_manhattan_um": 5581.0,
+   "routed_um": 3905.6,
+   "routed_is_path": true,
+   "cycles": 8
+  },
+  {
+   "id": "coll_vm",
+   "cls": "hub",
+   "bits": 2048,
+   "sinks": 1,
+   "basis": "ledger",
+   "centre_manhattan_um": 5581.0,
+   "routed_um": 3757.5,
+   "routed_is_path": true,
+   "cycles": 8
+  },
+  {
+   "id": "pv_preload",
+   "cls": "hub",
+   "bits": 128,
+   "sinks": 1,
+   "basis": "ledger",
+   "centre_manhattan_um": 6453.2,
+   "routed_um": 2295.2,
+   "routed_is_path": true,
+   "cycles": 5
+  },
+  {
+   "id": "q_attn",
+   "cls": "hub",
+   "bits": 256,
+   "sinks": 1,
+   "basis": "ledger vm_he",
+   "centre_manhattan_um": 6453.2,
+   "routed_um": 3276.3,
+   "routed_is_path": true,
+   "cycles": 7
+  },
+  {
+   "id": "attn_out",
+   "cls": "hub",
+   "bits": 512,
+   "sinks": 1,
+   "basis": "ASSUMED",
+   "centre_manhattan_um": 6453.2,
+   "routed_um": 3035.6,
+   "routed_is_path": true,
+   "cycles": 7
+  }
+ ],
+ "inputs": {
+  "floorplan": "/home/ubuntu/w18work/rebase_sq_plus/out/qbf/floorplan.json",
+  "floorplan_sha256": "2a1afe3897c61f64694afaa168362a1f3b67ed3f546e3ed741888f36b528fca4",
+  "pack": "/home/ubuntu/w18work/rebase_sq_plus/out/qbf/pack.json",
+  "pack_sha256": "2b1af504e5dec06ca114abd29b01574fa5decafcf01002aab6e9cabb7e0be57f",
+  "tool_sha256": "af9f857f723fde3cc4a7ca1eb354ecaa472cc595b86f0b8cd20a30b19a0f4472",
+  "v41_die_sha256": "c2e45b6502db022904dd1db0e270f1da72ca56cd5ec1f3acca945d538a34339b"
+ }
+}
