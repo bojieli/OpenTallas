@@ -65,6 +65,34 @@
    "currency": "current"
   },
   {
+   "run": "sc_r6",
+   "note": "the N=1,024 reducer, MLAT 5 / ALAT 4, second attempt (70 GB floor): the runner's flat yosys OOM-killed",
+   "top": "ot_hdc_v41x_vec_red1024",
+   "parameters": {
+    "ALAT": 4,
+    "MLAT": 5
+   },
+   "status": "error",
+   "closed": false,
+   "clock_period_ns": null,
+   "ss_fmax_mhz": null,
+   "setup_wns_ps": null,
+   "hold_wns_ps": null,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": null,
+   "cell_area_um2": null,
+   "die_area_um2": null,
+   "drc": null,
+   "signal_integrity_clean": null,
+   "commit": "34bb747ca3b1f7054cfe8e49edcab46fce620426",
+   "worktree_dirty": false,
+   "currency": "current"
+  },
+  {
    "run": "sc_r5",
    "note": "the reducer, first attempt: yosys OOM-killed at a 32 GB floor",
    "top": "ot_hdc_v41x_vec_red1024",
@@ -118,6 +146,36 @@
    "die_area_um2": null,
    "drc": null,
    "signal_integrity_clean": null,
+   "commit": "61a46c6aef6f37e5c1bb13893157e40b39cd9ba3",
+   "worktree_dirty": false,
+   "currency": "stale"
+  },
+  {
+   "run": "sc_l5m5u15",
+   "note": "sc_l5 on M2-M5 at 15% utilisation: routes, misses by 0.4 ps (900 MHz)",
+   "top": "ot_hdc_v41x_vec_light1024r",
+   "parameters": {
+    "ALAT": 4,
+    "MLAT": 5
+   },
+   "status": "not_met",
+   "closed": false,
+   "clock_period_ns": 1.111,
+   "ss_fmax_mhz": 899.8,
+   "setup_wns_ps": -0.4,
+   "hold_wns_ps": 3.3,
+   "uncertainty_setup_hold_ps": [
+    60,
+    25
+   ],
+   "corner": "setup WC (SS), hold WC+BC (FF)",
+   "routing_layers": [
+    "M2 M5"
+   ],
+   "cell_area_um2": 9942.71,
+   "die_area_um2": 50234.3,
+   "drc": 2,
+   "signal_integrity_clean": true,
    "commit": "61a46c6aef6f37e5c1bb13893157e40b39cd9ba3",
    "worktree_dirty": false,
    "currency": "stale"
