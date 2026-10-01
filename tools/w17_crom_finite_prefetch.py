@@ -22,6 +22,8 @@ SOURCES={
  'buffer_reservation':('cda48d1f7','results/uarch/w10_crom_staging_correction_r1/budget.json'),
  'cell_palette':('6da3c7a60','results/uarch/w10_q_elaboration_inventory_r1/construction.json'),
  'compiled_control_receipt':('3c99ce15f','results/uarch/w11_crom_control_catalog_20261001/verification.json'),
+ 'compiled_control_source_guard':('458081904','results/uarch/w11_crom_control_source_guard_20261001/verification.json'),
+ 'guarded_catalog_compiler':('04b75f90504cec9b3c6d2c1fa853df201506d40d','tools/w11_dsrom_crom_control_catalog.py'),
 }
 
 def raw(pin):return subprocess.check_output(['git','show',pin[0]+':'+pin[1]])
@@ -165,6 +167,14 @@ def build(route=75):
     assert compiled['verification']['persisted_word_roundtrip_per_rank_uses']==549760
     assert compiled['verification']['no_missing_or_duplicate_destinations']
     assert not compiled['hardware_admission']
+    guard=json.loads(blobs['compiled_control_source_guard'])
+    assert sha(blobs['guarded_catalog_compiler'])==guard['source_sha256']
+    assert guard['positive_old_catalog_coefficient_uses']==549760
+    assert guard['original_artifacts_byte_identical'] and not guard['hardware_admission']
+    for name,expected in guard['original_artifacts'].items():
+        artifact=raw(('3c99ce15f','results/uarch/w11_crom_control_catalog_20261001/compiled_v2/'+name))
+        assert sha(artifact)==expected['compressed_sha256']
+        assert sha(gzip.decompress(artifact))==expected['uncompressed_sha256']
     tag_valid_state=2*(256+2+6+8+32+13+1)+2*(256+2+6+13+10+32+1)+4096
     out=dict(schema='opentallas.w17.CROM-finite-prefetch-candidate.v1',source_pins=pins,
         commands=timeline,rank_equivalent_calendars=4,commands_per_rank=491,gamma_commands_per_rank=81,
@@ -239,7 +249,11 @@ def build(route=75):
         compiled_software_catalog=dict(receipt=pins['compiled_control_receipt'],
             metadata_roundtrip_uses_per_rank=549760,physical_pages=control_macros,
             counts_match_current_calendar=True,
-            compiler_sha256=compiled['compiler_sha256'],
+            compiler_sha256=guard['source_sha256'],
+            preserved_original_compiler_sha256=compiled['compiler_sha256'],
+            immutable_source_guard_receipt=pins['compiled_control_source_guard'],
+            original_catalog_artifacts_hashes_verified_unchanged=True,
+            immutable_source_guard_software_closed=True,
             format=compiled['control_format'],
             scope='Persisted software catalog encode/decode exactness; not coefficient payload repack, physical home or runtime acceptance.',
             original_receipt_reverse_route_gap_priced_here=True,

@@ -62,7 +62,7 @@
     "total_banks": 7380
   },
   "software_control_catalog_exact": {
-    "compiler_sha256": "1aa69792cc188f64169b5919d862dd252ea7dfe5f7581bc3fd77a4308f3a38fe",
+    "compiler_sha256": "a8417b23f889f0225f574b13674be01ae38e2d89963a1f8102d90064453dc470",
     "counts_match_current_calendar": true,
     "format": {
       "control_word_bits": 274,
@@ -72,9 +72,17 @@
       "serialized_bytes_per_word": 35,
       "serialized_top6_bits_zero": true
     },
+    "immutable_source_guard_receipt": {
+      "commit": "458081904",
+      "path": "results/uarch/w11_crom_control_source_guard_20261001/verification.json",
+      "sha256": "33deede935c1785204de7560e38affefb9218a17236241e078492c59e69c1b56"
+    },
+    "immutable_source_guard_software_closed": true,
     "metadata_roundtrip_uses_per_rank": 549760,
+    "original_catalog_artifacts_hashes_verified_unchanged": true,
     "original_receipt_reverse_route_gap_priced_here": true,
     "physical_pages": 16,
+    "preserved_original_compiler_sha256": "1aa69792cc188f64169b5919d862dd252ea7dfe5f7581bc3fd77a4308f3a38fe",
     "receipt": {
       "commit": "3c99ce15f",
       "path": "results/uarch/w11_crom_control_catalog_20261001/verification.json",
@@ -105,6 +113,11 @@
         "path": "results/uarch/w11_crom_control_catalog_20261001/verification.json",
         "sha256": "2b5cc5b68baded583fd95739a731745543ccdaab6605b17d45a23b6460ca7e44"
       },
+      "compiled_control_source_guard": {
+        "commit": "458081904",
+        "path": "results/uarch/w11_crom_control_source_guard_20261001/verification.json",
+        "sha256": "33deede935c1785204de7560e38affefb9218a17236241e078492c59e69c1b56"
+      },
       "demand": {
         "commit": "f4bce8fa0",
         "path": "results/uarch/w11_crom_demand_20261001/demand_v2.json.gz",
@@ -129,6 +142,11 @@
         "commit": "3fdbeb823",
         "path": "results/uarch/w11_crom_gamma_interleave_20261001/verification.json",
         "sha256": "34ddfe4c6f2b7615da1bfc50eea94a70c1f4b9a69a914dcc39512e8f6f3eb6c3"
+      },
+      "guarded_catalog_compiler": {
+        "commit": "04b75f90504cec9b3c6d2c1fa853df201506d40d",
+        "path": "tools/w11_dsrom_crom_control_catalog.py",
+        "sha256": "a8417b23f889f0225f574b13674be01ae38e2d89963a1f8102d90064453dc470"
       },
       "rank0_encoded": {
         "commit": "4080bb5fd",

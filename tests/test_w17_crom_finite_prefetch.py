@@ -43,6 +43,9 @@ def test_actual_cold_cache_and_ports_not_capacity_credit():
     assert r['compiled_software_catalog']['counts_match_current_calendar']
     assert r['compiled_software_catalog']['metadata_roundtrip_uses_per_rank']==549760
     assert not r['compiled_software_catalog']['runtime_tags_credits_ports_and_contextual_SSFF_bound']
+    assert r['compiled_software_catalog']['immutable_source_guard_software_closed']
+    assert r['compiled_software_catalog']['original_catalog_artifacts_hashes_verified_unchanged']
+    assert r['compiled_software_catalog']['compiler_sha256']=='a8417b23f889f0225f574b13674be01ae38e2d89963a1f8102d90064453dc470'
 
 def test_high_selector_negative_preserves_actual_first_gamma_alias():
     landing=next(sorted(wave) for wave in C.bank_waves(set(range(1808,1808+1024)))
