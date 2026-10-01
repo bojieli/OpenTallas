@@ -34,6 +34,48 @@ def authoritative_dependencies(pin, repo):
     return deps
 
 
+def audit_actual_callbacks(graph_pin, callback_pin, repo=ROOT):
+    """Audit immutable actual outputs without inventing hardware timestamps.
+
+    Software traces are useful coverage/dependency evidence, but cannot become
+    instruction/fabric clocks. Preserve every row and report its timing gap.
+    Genuine timed callbacks must provide the resource-event schema to audit().
+    """
+    deps=authoritative_dependencies(graph_pin,repo)
+    raw=subprocess.check_output(['git','show',callback_pin['source_git']+':'+callback_pin['path']],cwd=repo)
+    if hashlib.sha256(raw).hexdigest()!=callback_pin['sha256']:raise ValueError('callback_source_hash_mismatch')
+    record=json.loads(raw);issues=[];rows=[];seen=set()
+    trace=record.get('trace',record.get('operator_receipts',[]))
+    for event in trace:
+        key=event.get('id',event.get('pc'))
+        if key in seen:issues.append('duplicate_actual_graph_op:'+str(key))
+        seen.add(key)
+        declared=event.get('dependencies')
+        matches=key in deps and isinstance(declared,list) and set(declared)==deps[key]
+        if not matches:issues.append('actual_callback_dependency_unbound_or_mismatch:'+str(key))
+        rows.append(dict(graph_op=key,actual_callback=event,
+                         authoritative_dependencies=sorted(deps.get(key,set())),
+                         callback_dependency_binding_pass=matches,
+                         physical_issue_RF_writeback_tick_binding=False,
+                         verdict='FAIL_CLOSED_UNBOUND_PHYSICAL_EVENT_CLOCKS'))
+    if seen!=set(deps):issues.append('actual_callback_fullgraph_coverage_mismatch')
+    memory=record.get('memory_events',record.get('collective_events',[]))
+    if 'instruction_events' in record and 'fabric_events' in record and 'lowerings' in record:
+        timed=audit(graph_pin,record['instruction_events'],record['fabric_events'],record['lowerings'],repo)
+        issues.extend(timed['issues'])
+    else:
+        timed=None;issues.append('actual_physical_instruction_fabric_callbacks_unbound')
+    return dict(schema='opentallas.w13.actual-fullgraph-callback-admission.v2',
+                authoritative_graph_pin=graph_pin,actual_callback_pin=callback_pin,
+                actual_trace_rows=len(trace),actual_memory_or_collective_rows=len(memory),
+                fullgraph_trace_coverage=seen==set(deps),per_op_event_admission=rows,
+                actual_memory_or_collective_callbacks=memory,
+                resource_calendar_audit=timed,issues=sorted(set(issues)),
+                modeled_service_calendar_closed=not issues,
+                physical_build_ready=False,hardware_adopted=False,speed_credit=0,
+                clock_policy='Software cycles/walltime are not converted to hardware ticks; source timing gaps remain explicit.')
+
+
 def audit(graph_pin, instruction_events, fabric_events, lowerings, repo=ROOT):
     issues=[];seen=set();issue=Counter();rf_issue=Counter();rf_reads=Counter();writes=Counter();write_bits=Counter();shared=Counter();divider=Counter()
     try: deps=authoritative_dependencies(graph_pin,repo)
