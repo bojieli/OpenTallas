@@ -681,6 +681,12 @@
    "ss_setup_reg_to_reg_ps": -353.0,
    "ff_hold_reg_to_reg_ps": -2.63
   },
+  "karb/pregionh_aw30_w18e8p5_1p2_h160cq": {
+   "record": "results/physical_abi3/asap7/chip/v41x_karb_local/pregionh_aw30_w18e8p5_1p2_h160cq/corner_sta.json",
+   "sha256": "8d7c46c2b9451355967c189c2cc019183f1f83ff7e56db936fd58fa896d76069",
+   "ss_setup_reg_to_reg_ps": -224.37,
+   "ff_hold_reg_to_reg_ps": 10.7
+  },
   "karb/pregionh_aw30_w18e8p5_1p2_h160g11": {
    "record": "results/physical_abi3/asap7/chip/v41x_karb_local/pregionh_aw30_w18e8p5_1p2_h160g11/corner_sta.json",
    "sha256": "0d40ca46bf1b6ebd874657a6bf032ed51186f187e6118b64a7ac620b24d121b9",
@@ -782,7 +788,7 @@
   "status": "INTERIM on W10b tile outlines (q pair 510.84 x 126.9, BF16 column pair 1002.89 x 142.56 um)",
   "die_and_hub": {
    "record": "results/physical_abi3/asap7/chip/v41_w18/hub_square/hub_square.json",
-   "sha256": "91ca91c95001db51c77e60cef7029c146f49eeed675caa6d4c13459b0eb80c08",
+   "sha256": "f83fe931ec022a849b5e39002f8000175206766374e7d686467e96c59f20793a",
    "adopted": "PLUS (central bank square b = 3.93 mm, four lane arms of depth 1.6 mm on its sides, corners = COLLECTIVE, GATHER and two HC pieces), SU arms at M1-M6 (W11's lane closes at M6), bank square and other hub parts at M1-M5, trunks M8/M9: worst bank->lane 9,058 um (13 stages at 748 um) against 10,751 um (15) for the strip and 9,859 (14) for the square ring; 2x2 not built: a fixed-latency rotate spans the union of the four blocks, so its worst bank->lane path is no shorter than the square's",
    "plus": {
     "die_um": [
