@@ -102,11 +102,16 @@ def build():
     for layer,suffix in [(0,''),(20,'_l20')]:
         path=f'results/rtl/hdc_v41x_fullshape_1m_s20260930{suffix}_program_bind_rope_hbm.json'
         d=json.loads(raw[path])
-        ops=[x for x in d['instruction_trace'] if x.get('fields',{}).get('me_mmode')]
+        all_mmode=[x for x in d['instruction_trace'] if x.get('fields',{}).get('me_mmode')]
+        ops=[x for x in all_mmode if x['tag'] in (f'L{layer}.scores',f'L{layer}.pv')]
+        if layer==0:
+            assert len(all_mmode)==2
         assert len(ops)==2 and [x['tag'] for x in ops]==[f'L{layer}.scores',f'L{layer}.pv']
         traces.append(dict(layer=layer,path=path,position=d['position'],
             descriptors=[dict(pc=x['pc'],tag=x['tag'],fields=x['fields']) for x in ops],
             end_pc=d['instruction_trace'][-1]['pc'],
+            other_mmode_ops=[dict(pc=x['pc'],tag=x['tag'],fields=x['fields']) for x in all_mmode if x not in ops],
+            counting_scope='Only named WINDOW scores/PV candidates. L0 has exactly2mmodeops. L20 also has an indexer SC1 operation: do not equate everymmodeop to WINDOWrefill or claim wholeindexed-layer epochcount without its routing proof.',
             window_rows_per_descriptor=128,
             epoch_advances_if_credit1=0,maximum_if_credit8_and_two_refills=256,
             retention_qualification='Eligible only exact L0 shapes and completion. L20 T1/640 shapes do not match the L0 retention signatures; this separate layer example supplies no full40 composition.'))
@@ -170,7 +175,9 @@ def build():
             fixes_required='Counter width/advance AND returned epoch comparison must agree at9bits. Masking only outgoing11bit epoch leaves receive comparison broken; backend widening to17 does not free client owner bits.',
             wrap='No reset everytoken. Natural9bit modulo wrap only on drained row boundary; whole active row carries oneimmutable epoch,user,row.',
             alternative='Reserveepoch0 wouldneed511->1 compare/select; unnecessary for this source predicate. Proposed minimum uses0 and adds no wrapstate.'),
-        drain_wrap_contract=dict(normal_drain_witness='At validscale response edge: all16code received, scaleissued andunique scaleaccepted, pending becomes0, issued==received==17ones, state becomesIDLE. No next-row request until next prefetch acceptance/epochadvance.',
+        drain_wrap_contract=dict(source_conservation_argument='Defaultdirect path has no request/responsepipeline: WINDOWgrant iff KV/RoPEselects legalWINDOW, KARB grantsK atpc_of(address), and backend req_ready. The same valid/readyedge enqueues one read. Onreturn, backendbit16=1 andclientowner00 selectWINDOW; onlylowestreadyKPC is routed; WINDOWs_rdy=1 propagates to thatPC r_rdy. Sameedge popsbackendreturn and consumes source response. idx_hbm generates one return per admittedread, removes eachqueuedread once, and has no retrypath. Under validreply/nonpoison and exclusiveWINDOWsource, perPC accepted-consumed counts all WINDOWqueued/scheduled/heldreturns; sum=pending. Thus validscale response with pending0 afteredge certifies no WINDOWtransportentries remain for the unchangeddirect path.',
+            source_conservation_status='SOURCE_DERIVED_CONDITIONAL; connectedRTLcounter gate pending, not numerical/timingproof',
+            normal_drain_witness='At validscale response edge: all16code received, scaleissued andunique scaleaccepted, pending becomes0, issued==received==17ones, state becomesIDLE. No next-row request until next prefetch acceptance/epochadvance.',
             transport_preconditions=['same clock/pre-edge handshakes, actual default PIPE_OUT/RSP0 and no hidden CDC/replayfifo',
                 'Each WINDOW grant admits exactlyonebackend read; each visible ready response pops exactlyone backend return and commits source once',
                 'WINDOW accepted-minus-consumed perPC equals outstanding transport WINDOW entries; no unsolicitedduplicate/replayedresponses',
@@ -201,8 +208,10 @@ def build():
             credit1_delta='No behaviorchange underminimumproposal; its unused refillmetadata mayalreadyprune.',
             new_frequency_or_token_rate_claim=False),
         bounded_connected_gate_prerequisites=dict(ready_for_build=False,
-            next_gate='Parent review of9bitepoch encoding AND complete rowdrain conservation contract; discharge defaultpath conservation fromsource before authorizing RTL/bench.',
-            requirements=['Ownerapproved opt-in candidate encoding, no originalsourceoverlay; keep old epoch512 admissionFAIL as separatebaseline',
+            next_gate='Bounded connected128x17credit1/8 memory-service gate through actual owner muxes, directKARB admission and unchangedidx_hbm OOO/heldreturns, legalexisting epochs1..128. Preserve separate oldepoch512 expectedrejection. Proposed9bitwrap needs an approvedcandidate implementation before a later wrapgate; no buildrun now.',
+            legal_first_window_model_ready=True,
+            proposed_wrap_RTL_implemented=False,
+            requirements=['For unchangedsourcefirst128test, initialize epoch0 froma verifiedquiescentreset and keep alladmitted epochs<=511. Candidate9bitwrapqualification requires a separatelyapproved implementation; nevermask11bit tags at an ownerboundary.',
                 'All original RTL and tools/uarch_model.py sourcepins verified; standalone addedmodelpaths only',
                 'Bind actual16bitclient/15bitinnermux/17bitbackend and both responseownerselectors, defaultdirectKARB andCLK_PS1000event alignment',
                 'Check all512epochs/staticpacking plus seeded510->511->0->1 healthyrowdrain, heldrequestbackpressure, simultaneousvalidgrant/reply, OOOreturns',

@@ -50,7 +50,7 @@ def row_span(credits, latency):
 def tag_failure():
     # Source has EPOCH_W=TAGW-5=11; the composed mux permits only tag[13:0].
     failures = [e for e in range(1, 2048) if ((e << 5) >> 14) != 0]
-    return dict(status='FAIL_COMPOSED_EPOCH_OWNER_BUDGET', declared_epoch_bits=11,
+    return dict(status='FAIL_COMPOSED_EPOCH_OWNER_BUDGET', applies='REFILL_CREDITS>1 FR_PIPE only; default1 and WC/WS sector tags unaffected', declared_epoch_bits=11,
                 sector_bits=5, reserved_client_owner_bits=2, safe_epoch_bits=9,
                 safe_epoch_values=[0,511], first_bad_epoch=failures[0],
                 first_bad_sector=0, first_bad_client_tag_hex=hex(failures[0]<<5),
@@ -283,7 +283,7 @@ def build():
             whole_layer_or_token='NOT_PRICED',adopted=False),
         next_cheapest_necessary_gate=dict(name='COMPOSED_TAG_ADMISSIBILITY_STATIC_GATE',
             run_in_this_task='Static integer counterexample recorded; no RTL bench/build run.',
-            explicit_next='Parent must establish an owner-approved epoch/owner-tag contract that passes every reachable refill tag through the existing WINDOW->KV/RoPE->KARB path, including safe drain/wrap; retain epoch512 FAIL. No timing benchmark is meaningful as a readiness gate until that contract is resolved.',
+            explicit_next='See standalone w17_window_epoch_contract.py: current1 safe; qualify legalfirst128 throughactualowner muxes+KARB+idx_hbm OOO/heldreturns. Retain epoch512FAIL;9bitwrap remains proposal pendingimplementation/drainqualification.',
             benchmark_or_build_requested_now=False))
 
 
