@@ -1,0 +1,34 @@
+read_liberty -lib /out/macro_default.lib
+read_liberty -lib /out/macro.lib
+read_liberty -lib /out/seq.lib
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_rom_elem_wake_w10.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_rom_elem_q_wake_w10.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_bterm.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_chain.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_segtree.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_bf16_lanes.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_fadd.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_bmul2.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_bterm2_w10.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_chain2.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_segtree2.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/v41rom/ot_v41_bf16_lanes2.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/hdc/ot_hdc_fpu.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/hdc/ot_hdc_cg.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/common/ot_prefix.sv
+read_verilog -sv -DSYNTHESIS /out/src/rtl/proto/ot_fp32_add_rne_pipe.sv
+hierarchy -check -top ot_v41_rom_elem_q_wake_w10 -chparam NB 2 -chparam MTP 1 -chparam EARLY 1 -chparam FAST 1 -chparam PP 1 -chparam FRONT_PAR 0 -chparam WAKE_REG 1
+proc
+flatten
+select -assert-count 8 w:u_e.g_wake.g_leaf*.wake
+select -set wakes w:u_e.g_wake.g_leaf*.wake %ci t:$adff %i
+select -assert-count 8 @wakes
+setattr -set keep 1 @wakes
+select -clear
+opt -full
+memory_collect
+check
+stat
+write_json /out/q_coarse.json
