@@ -48,8 +48,11 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
     layout = json.loads(layout_path.read_text())
     shard = json.loads(shard_path.read_text())
     qe = json.loads(qe_path.read_text())
-    _require(layout["layer"] == shard["layer"] == 0 and layout["rank"] == shard["rank"] == 0,
-             "binder requires layer 0, rank 0")
+    L = shard["layer"]
+    _require(layout["layer"] == L and L in (0, 20) and layout["rank"] == shard["rank"] == 0,
+             "binder requires layer 0 or 20, rank 0")
+    indexed = L == 20
+    _require(rope_mode == "hbm_cache" or not indexed, "layer 20 binds the production HBM RoPE cache only")
     _require(sha(shard_path) == layout["source_image_manifest_sha256"], "source shard hash changed")
     _require(sha(layout_path) == qe["other_engine_layout_sha256"] and
              sha(shard_path) == qe["source_image_manifest_sha256"],
@@ -66,8 +69,10 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
     expected = {"wq_a", "wkv", "wq_b", "wo_b", "shared.w1", "shared.w3", "shared.w2",
                 "gate", "wo_a", "hc_attn_fn", "hc_ffn_fn"}
     expected |= {f"exp{e}.{w}" for e in selected for w in ("w1", "w3", "w2")}
+    if indexed:
+        expected |= {"indexer.wq_b", "compressor.wkv", "indexer.wk", "indexer.weights_proj"}
     _require(expected <= mats.keys(), f"missing matrix images: {sorted(expected - mats.keys())}")
-    _require(len(expected) == 29, "unexpected token-selected matrix count")
+    _require(len(expected) == (33 if indexed else 29), "unexpected token-selected matrix count")
     for name in expected:
         item = mats[name]
         _require(item["word_count"] > 0 and item["base_word"] >= 0,
@@ -92,7 +97,9 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
                                    for e, x in zip(selected, records)),
                  f"expert family {w} is not addressable by QE index/stride")
     names = ("attn_norm", "ffn_norm", "q_norm", "kv_norm", "attn_sink", "gate.bias",
-             "hc_attn_scale", "hc_attn_base", "hc_ffn_scale", "hc_ffn_base", "pre0")
+             "hc_attn_scale", "hc_attn_base", "hc_ffn_scale", "hc_ffn_base", "pre0") + \
+        (("compressor.norm", "indexer.k_norm") if indexed else ())
+    const_key = {"gate.bias": "gate_bias", "compressor.norm": "cnorm", "indexer.k_norm": "knorm"}
     _require(set(names) <= consts.keys(), "missing shipped layer constant")
     context = str(shard["context"])
     if rope_mode == "sparse_fixture":
@@ -115,41 +122,48 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
     else:
         capacity = json.loads(DEFAULT_ROPE_HBM.read_text())
         cache = json.loads(DEFAULT_ROPE_CACHE.read_text())
-        _require(context in capacity["scenarios"] and "plain" in
-                 capacity["scenarios"][context]["stages"][0]["table_kinds"],
-                 "no HBM plain table capacity at this context/stage")
-        fixture = cache["fixtures"]["plain200k" if int(context) == 200000 else "plain1m"]
-        _require(cache["status"] == "pass" and fixture["position"] == shard["position"],
+        tkind = "yarn" if indexed else "plain"
+        _require(context in capacity["scenarios"] and any(
+                 tkind in st["table_kinds"] for st in capacity["scenarios"][context]["stages"]),
+                 f"no HBM {tkind} table capacity at this context")
+        fx = f"{tkind}{'200k' if int(context) == 200000 else '1m'}"
+        fixture = cache["fixtures"].get(fx)
+        _require(cache["status"] == "pass" and (fixture is None or fixture["position"] == shard["position"]),
                  "HBM RoPE cache fixture does not match token position")
-        rope_source = dict(storage="hbm_read_only_table", kind="plain",
+        rope_source = dict(storage="hbm_read_only_table", kind=tkind, cache_fixture=fx if fixture else None,
                            position=shard["position"], pair_count=32, bytes_per_position=256,
                            capacity_record_sha256=sha(DEFAULT_ROPE_HBM),
                            cache_record_sha256=sha(DEFAULT_ROPE_CACHE),
                            physical_region_base_sector=None, full_table_image_sha256=None,
                            claim_boundary="HBM capacity plus one-position cache proof; full table image "
                                           "and physical HBM region not yet bound")
-        bases = {"rope_plain": 0}
+        bases = {"rope_yarn" if indexed else "rope_plain": 0}
     for name in names:
-        key = "L0." + ("gate_bias" if name == "gate.bias" else name)
-        bases[key] = consts[name]["base_word"]
+        bases[f"L{L}." + const_key.get(name, name)] = consts[name]["base_word"]
     lay = R.ShapeLayout(R.SHIPPED, tp_exact=True, constant_bases=bases,
-                        rope_storage="hbm_cache" if rope_mode == "hbm_cache" else "crom_fixture")
-    qnames = {"wq_a": (0, "wq_a"), "wkv": (0, "wkv"), "wq_b": (0, "wq_b"),
-              "wo_b": (0, "wo_b")}
+                        rope_storage="hbm_cache" if rope_mode == "hbm_cache" else "crom_fixture", layer=L)
+    qnames = {"wq_a": (L, "wq_a"), "wkv": (L, "wkv"), "wq_b": (L, "wq_b"),
+              "wo_b": (L, "wo_b")}
+    if indexed:
+        qnames["indexer.wq_b"] = (L, "iwq_b")
     for name, key in qnames.items():
         lay.qmat[key]["base"] = mats[name]["base_word"]
     for w in ("w1", "w3", "w2"):
-        lay.qmat[(0, "shared", w)]["base"] = mats[f"shared.{w}"]["base_word"]
-        lay.qmat[(0, "exp", 0, w)]["base"] = mats[f"exp{selected[0]}.{w}"]["expert_id_base"]
-    lay.qmat[(0, "exp_stride")] = mats[f"exp{selected[0]}.w1"]["expert_stride_words"]
+        lay.qmat[(L, "shared", w)]["base"] = mats[f"shared.{w}"]["base_word"]
+        lay.qmat[(L, "exp", 0, w)]["base"] = mats[f"exp{selected[0]}.{w}"]["expert_id_base"]
+    lay.qmat[(L, "exp_stride")] = mats[f"exp{selected[0]}.w1"]["expert_stride_words"]
     for w in ("w1", "w3", "w2"):
-        lay.qmat[(0, "exp_stride", w)] = mats[f"exp{selected[0]}.{w}"]["expert_stride_words"]
-    lay.mat[(0, "gate")]["base"] = mats["gate"]["base_word"]
-    lay.mat[(0, "wo_a")]["base"] = mats["wo_a"]["base_word"]
-    lay.mat[(0, "attn", "fn")]["base"] = mats["hc_attn_fn"]["base_word"]
-    lay.mat[(0, "ffn", "fn")]["base"] = mats["hc_ffn_fn"]["base_word"]
+        lay.qmat[(L, "exp_stride", w)] = mats[f"exp{selected[0]}.{w}"]["expert_stride_words"]
+    lay.mat[(L, "gate")]["base"] = mats["gate"]["base_word"]
+    lay.mat[(L, "wo_a")]["base"] = mats["wo_a"]["base_word"]
+    lay.mat[(L, "attn", "fn")]["base"] = mats["hc_attn_fn"]["base_word"]
+    lay.mat[(L, "ffn", "fn")]["base"] = mats["hc_ffn_fn"]["base_word"]
+    if indexed:
+        lay.mat[(L, "cwkv")]["base"] = mats["compressor.wkv"]["base_word"]
+        lay.mat[(L, "iwk")]["base"] = mats["indexer.wk"]["base_word"]
+        lay.mat[(L, "iwp")]["base"] = mats["indexer.weights_proj"]["base_word"]
     lay.cb["rope_plain"] = 0
-    program = R.ShapeBuilder(lay).build([0], embed=False, head=False)
+    program = R.ShapeBuilder(lay).build([L], embed=False, head=False)
     # Packing is an additional gate: the full ISA must preserve every bound
     # address/count and collective field without truncation.
     for pc, fields in enumerate(program):
@@ -203,7 +217,7 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
                 blockers.append(f"QE PC {pc} {name} expert={eid}: streams [{address},{end}) "
                                 f"but image ends at {image_end}")
     wo_a = [(pc, f) for pc, f in enumerate(program)
-            if f["unit"] == I.UNIT_ME and f.get("_tag") == "L0.out" and f.get("me_wsrc") == 0]
+            if f["unit"] == I.UNIT_ME and f.get("_tag") == f"L{L}.out" and f.get("me_wsrc") == 0]
     _require(len(wo_a) == lay.ogr_d, "one wo_a descriptor required per local o-group")
     group_k = R.SHIPPED["heads"] // R.SHIPPED["o_groups"] * R.SHIPPED["hd"]
     group_rows = R.SHIPPED["o_rank"]
@@ -231,14 +245,14 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
                 x != expected_x or output != expected_output):
             blockers.append(f"ME wo_a group {g} descriptor does not match selected image/activation")
     for pc, f in enumerate(program):
-        if f["unit"] == I.UNIT_ME and f.get("_tag") == "L0.router" and not f.get("me_wsrc"):
+        if f["unit"] == I.UNIT_ME and f.get("_tag") == f"L{L}.router" and not f.get("me_wsrc"):
             gate = mats["gate"]
             _require(f["me_wbase"] == gate["base_word"] and
                      f["me_nout"] == gate["nrows"] and
                      f["me_k"] * (1 << f["me_split"]) == gate["ncols"],
                      f"ME gate descriptor/image mismatch at PC {pc}")
-        if f["unit"] == I.UNIT_HE and f.get("_tag") in ("L0.hc_attn", "L0.hc_ffn"):
-            name = "hc_attn_fn" if f["_tag"] == "L0.hc_attn" else "hc_ffn_fn"
+        if f["unit"] == I.UNIT_HE and f.get("_tag") in (f"L{L}.hc_attn", f"L{L}.hc_ffn"):
+            name = "hc_attn_fn" if f["_tag"] == f"L{L}.hc_attn" else "hc_ffn_fn"
             image = mats[name]
             _require(f["he_wbase"] == image["base_word"] and
                      f["he_nout"] == image["nrows"] and
@@ -260,14 +274,16 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
                  "production RoPE requires one CTL5 prefetch and one CTL6 release")
         pre_pc, pre = controls[0]
         rel_pc, rel = controls[1]
-        _require(len(tagged) == 3 and paired_crom == tagged and
+        n_rope = 6 if indexed else 3        # KVN, Q, ACC (+ IKN, LAT, IQ at an indexed layer)
+        kind = 1 if indexed else 0
+        _require(len(tagged) == n_rope and paired_crom == tagged and
                  pre_pc < min(tagged) <= max(tagged) < rel_pc,
                  "production RoPE SU reads are not held between CTL5 and CTL6")
-        _require(pre.get("ctl_lane") == rel.get("ctl_lane") == 0 and
+        _require(pre.get("ctl_lane", 0) == rel.get("ctl_lane", 0) == kind and
                  pre.get("ctl_slot") == rel.get("ctl_slot") == 0 and
                  rel.get("wait", 0) & (1 << (I.UNIT_SU - 1)),
                  "production plain RoPE kind/position or SU drain mismatch")
-        _require(all(program[pc]["b_base"] == program[pc]["d_base"] == (2 << 28)
+        _require(all(program[pc]["b_base"] == program[pc]["d_base"] == ((2 + kind) << 28)
                      and program[pc]["b_d"] == program[pc]["d_d"] == I.DYN["ROPE"]
                      and program[pc]["su_nin"] == 64 and program[pc].get("b_half") == 1
                      for pc in tagged), "production RoPE tag or position selector mismatch")
@@ -284,8 +300,11 @@ def bind(layout_path: Path, shard_path: Path, qe_path: Path = DEFAULT_QE,
             # field -> the constants-manifest entry (tools/v41_program_constants.py) the immediate encodes
             row["imm_sources"] = dict(f["_imm"])
         instruction_trace.append(row)
+    if indexed:
+        blockers.append("COLL_TOPK_MERGE (index top-k, candidate blocks) and the rank-aware NEWBLK DYN are "
+                        "ISA-level contracts (results/rtl/w17_l20_fullshape_isa.json); the die faults coll_op[1]")
     return dict(schema="opentallas.v41x.fullshape.program_bind.v1",
-                status="runnable" if not blockers else "blocked", layer=0, rank=0,
+                status="runnable" if not blockers else "blocked", layer=L, rank=0,
                 layout_path=_rel(layout_path), layout_sha256=sha(layout_path),
                 shard_path=_rel(shard_path), shard_sha256=sha(shard_path),
                 qe_stream_path=_rel(qe_path), qe_stream_sha256=sha(qe_path), rope_mode=rope_mode,

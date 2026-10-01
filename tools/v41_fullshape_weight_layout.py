@@ -696,7 +696,15 @@ def rtl_engine_preflight(layout: dict) -> dict:
     }
 
 
+INDEXED_ME = ("compressor.wkv", "indexer.wk", "indexer.weights_proj")
+INDEXED_CROM = ("compressor.norm", "indexer.k_norm")
+
+
 def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -> dict:
+    return assemble_token_layer(manifest_path, image_dir, out_dir)
+
+
+def assemble_token_layer(manifest_path: Path, image_dir: Path, out_dir: Path) -> dict:
     """Address-plan all supported weights of one token-selected layer-0 shard.
 
     Routed experts occupy their absolute 0..383 IDs in three fixed-stride
@@ -704,8 +712,10 @@ def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -
     Unsupported/absent inputs are listed so a consumer must fail closed.
     """
     manifest = json.loads(manifest_path.read_text())
-    if manifest.get("layer") != 0 or manifest.get("rank") != 0 or manifest.get("context") not in (200000, 1048576):
-        raise ValueError("assembler is pinned to L0/rank0 at the 200K or 1M shard")
+    layer = manifest.get("layer")
+    if layer not in (0, 20) or manifest.get("rank") != 0 or manifest.get("context") not in (200000, 1048576):
+        raise ValueError("assembler is pinned to L0 / L20, rank 0, at the 200K or 1M shard")
+    indexed = layer == 20
     out_dir.mkdir(parents=True, exist_ok=True)
     record_paths = []
     qe_base = 0
@@ -723,7 +733,8 @@ def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -
         record_paths.append(path)
         return data
 
-    dense_qe = ("wq_a", "wkv", "wq_b", "wo_b", "shared.w1", "shared.w3", "shared.w2")
+    dense_qe = ("wq_a", "wkv", "wq_b", "wo_b", "shared.w1", "shared.w3", "shared.w2") + \
+        (("indexer.wq_b",) if indexed else ())
     for name in dense_qe:
         entry = emit(name, "qe", qe_base)["matrices"][name]
         qe_base += entry["word_count"]
@@ -739,7 +750,7 @@ def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -
                 raise ValueError("routed expert stride differs within family")
         qe_base = region_base + 384 * stride
     me_base = 0
-    for name in ("gate", "wo_a"):
+    for name in ("gate", "wo_a") + (INDEXED_ME if indexed else ()):
         entry = emit(name, "me", me_base)["matrices"][name]
         me_base += entry["word_count"]
     he_base = 0
@@ -749,7 +760,7 @@ def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -
     crom_base = 0
     constants = ("attn_norm", "ffn_norm", "q_norm", "kv_norm",
                  "hc_attn_scale", "hc_attn_base", "hc_ffn_scale", "hc_ffn_base",
-                 "attn_sink", "gate.bias")
+                 "attn_sink", "gate.bias") + (INDEXED_CROM if indexed else ())
     for name in constants:
         entry = emit(name, "crom", crom_base)["constants"][name]
         crom_base += entry["word_count"]
@@ -762,6 +773,8 @@ def assemble_token_layer0(manifest_path: Path, image_dir: Path, out_dir: Path) -
     combined = combine_layout_records(record_paths)
     validate_expert_access(combined, list(manifest["experts_populated"]))
     known = {f"w.{name}" for name in (*dense_qe, "gate", "wo_a", "hc_attn_fn", "hc_ffn_fn", *constants)}
+    if indexed:
+        known |= {f"w.{name}" for name in INDEXED_ME}
     known |= {f"w.exp{eid}.{kind}" for eid in manifest["experts_populated"]
               for kind in ("w1", "w3", "w2")}
     missing = sorted(k for k in manifest["files"] if k.startswith("w.") and

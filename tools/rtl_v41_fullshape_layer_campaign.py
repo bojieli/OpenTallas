@@ -752,7 +752,9 @@ def die_slices(L, rank, s, experts, eng):
     if L in R_IDX_SRC():
         out += [("indexer.wq_b", P + "attn.indexer.wq_b.weight", None, None),
                 ("indexer.wq_b.scale", P + "attn.indexer.wq_b.scale", None, None),
-                ("indexer.weights_proj", P + "attn.indexer.weights_proj.weight", rr(s["ih"]), None)]
+                # replicated (32 x 5120 BF16): the exact TP program's head sum needs all 32 head weights on every
+                # rank (deviation from the output split of the TP plan; 320 KB a die)
+                ("indexer.weights_proj", P + "attn.indexer.weights_proj.weight", None, None)]
     if eng:
         n = (s["hc"] + 1) * D
         out += [("engram.wkv", P + "engram.wkv.weight", rr(n), None), ("engram.wkv.scale", P + "engram.wkv.scale", sb(n), None),
@@ -770,7 +772,7 @@ def R_IDX_SRC():
     return R.IDX_SRC
 
 
-def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=print, seed=SEED):
+def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=print, seed=SEED, state=True):
     """The full-shape image set of die `rank` of layer L's tensor group for the token at position ctx - 1."""
     import hdc_replay_v41 as R
     t0 = time.time()
@@ -800,28 +802,29 @@ def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=pr
         a, dt = _raw(ck, tensor, rows, cols)
         put(f"w.{name}", a, dt, tensor=tensor, rows=rows, cols=cols)
     # KV / index state entering this layer (the synthetic state + the rows earlier layers of this token appended)
-    st, sdesc = synthetic_state(m, ctx, seed=seed, layers=[L])
-    win = np.stack(st["win"][L])
-    c8, e8 = pack_fp8_ue8m0(win)
-    put("kv.window.codes", c8, "F8_E4M3", rows=len(win), note="127 rows before this position, oldest first")
-    put("kv.window.scale", e8, "F8_E8M0")
-    if s["ratio"][L]:
-        src = m.kv_of[L]
-        ckv, ik = np.stack(st["ckv"][src]), np.stack(st["ik"][src])
-        if L > src:
-            zs = np.load(scratch / f"ctx{ctx}_L{src:02d}.npz")
-            if f"ckv{src}" in zs:
-                ckv = np.concatenate([ckv, zs[f"ckv{src}"][None]])
-                ik = np.concatenate([ik, zs[f"ik{src}"][None]])
-        nib, sc = pack_fp4_e4m3(ckv)
-        put(f"kv.ckv{src}.codes", nib, "E2M1 packed (low nibble first)", rows=len(ckv))
-        put(f"kv.ckv{src}.scale", sc, "F8_E4M3 per 16")
-        lo, hi = rank * -(-len(ik) // s["tp"]), min(len(ik), (rank + 1) * -(-len(ik) // s["tp"]))
-        kn, ks = pack_fp4_ue8m0(ik[lo:hi])
-        put(f"kv.ik{src}.codes", kn, "E2M1 packed", rows=[lo, hi], note="this rank's contiguous quarter")
-        put(f"kv.ik{src}.scale", ks, "F8_E8M0 per 32")
-        if st["slots"].get(src):
-            put(f"kv.slots{src}", np.stack([np.stack(p) for p in st["slots"][src]]), "F32 (kv, gate) pairs")
+    st, sdesc = synthetic_state(m, ctx, seed=seed, layers=[L]) if state else (None, None)
+    if state:
+        win = np.stack(st["win"][L])
+        c8, e8 = pack_fp8_ue8m0(win)
+        put("kv.window.codes", c8, "F8_E4M3", rows=len(win), note="127 rows before this position, oldest first")
+        put("kv.window.scale", e8, "F8_E8M0")
+        if s["ratio"][L]:
+            src = m.kv_of[L]
+            ckv, ik = np.stack(st["ckv"][src]), np.stack(st["ik"][src])
+            if L > src:
+                zs = np.load(scratch / f"ctx{ctx}_L{src:02d}.npz")
+                if f"ckv{src}" in zs:
+                    ckv = np.concatenate([ckv, zs[f"ckv{src}"][None]])
+                    ik = np.concatenate([ik, zs[f"ik{src}"][None]])
+            nib, sc = pack_fp4_e4m3(ckv)
+            put(f"kv.ckv{src}.codes", nib, "E2M1 packed (low nibble first)", rows=len(ckv))
+            put(f"kv.ckv{src}.scale", sc, "F8_E4M3 per 16")
+            lo, hi = rank * -(-len(ik) // s["tp"]), min(len(ik), (rank + 1) * -(-len(ik) // s["tp"]))
+            kn, ks = pack_fp4_ue8m0(ik[lo:hi])
+            put(f"kv.ik{src}.codes", kn, "E2M1 packed", rows=[lo, hi], note="this rank's contiguous quarter")
+            put(f"kv.ik{src}.scale", ks, "F8_E8M0 per 32")
+            if st["slots"].get(src):
+                put(f"kv.slots{src}", np.stack([np.stack(p) for p in st["slots"][src]]), "F32 (kv, gate) pairs")
     if eng:
         li = m.engram.layer_ids.index(L)
         ids = m.engram.hashes(token_history(ctx, seed=seed), li)
@@ -832,7 +835,7 @@ def images(ctx, L, rank, scratch: Path, out_dir: Path, all_experts=False, log=pr
         put(f"io.{k}", z[k], "F32 (BF16 values for h)")
     man["golden"] = golden_pin()
     man["golden_shard"] = {k: shard[k] for k in ("input_sha256", "output_sha256", "experts", "kind")}
-    man["state"] = sdesc
+    man["state"] = sdesc if state else "not packed (--no-state): weights and I/O only"
     man["bytes"] = sum((out_dir / f"{n}.bin").stat().st_size for n in man["files"])
     man["wall_s"] = round(time.time() - t0, 1)
     (out_dir / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
@@ -1073,7 +1076,7 @@ def constraints(contexts=(1048576, 200000)) -> tuple[str, dict]:
          f"after: bit-exact, same order of bytes"),
         ("shared expert w2 (FP8)", f"{D} x {ff}", f"{D} x {ff // tp}", "K", "**NO**, same reason; same fix"),
         ("indexer wq_b (FP8)", f"{s['ih'] * s['ihd']} x {s['q_rank']}", "replicated", "none", "yes"),
-        ("indexer weights_proj (BF16)", f"{s['ih']} x {D}", f"{s['ih'] // tp} x {D}", "output rows; all-gather",
+        ("indexer weights_proj (BF16)", f"{s['ih']} x {D}", f"{s['ih']} x {D}", "replicated (exact TP head sum)",
          "yes"),
         ("indexer keys (state)", "n x 128", "ceil(n / 4) x 128 contiguous", "positions; top-512 merge",
          "yes: top-k of the union = top-k of the per-die top-k's (ties to the lower GLOBAL index)"),
@@ -1268,6 +1271,7 @@ def main() -> int:
                     help="golden: seed of the synthetic state and token history (default reproduces existing records)")
     ap.add_argument("--rank", type=int, default=0, help="images: the die's rank in its tensor group")
     ap.add_argument("--all-experts", action="store_true", help="images: every routed expert, not only the token's")
+    ap.add_argument("--no-state", action="store_true", help="images: weights and I/O only, no KV / index state")
     ap.add_argument("--constraints-md", type=Path, default=Path("/tmp/claude-1000/v41_fullshape_layer0_constraints.md"))
     a = ap.parse_args()
     steps = a.steps.split(",")
@@ -1280,7 +1284,7 @@ def main() -> int:
         for ctx in map(int, a.contexts.split(",")):
             for L in parse_layers(a.layers):
                 images(ctx, L, a.rank, a.scratch, a.scratch / "images" / f"ctx{ctx}_L{L:02d}_r{a.rank}",
-                       all_experts=a.all_experts, seed=a.seed)
+                       all_experts=a.all_experts, seed=a.seed, state=not a.no_state)
     if "constraints" in steps:
         md, _ = constraints(tuple(map(int, a.contexts.split(","))))
         a.constraints_md.write_text(md)

@@ -3,7 +3,7 @@
   "claim_boundary": "Emitter constants and their provenance; no execution verdict.",
   "golden": "tools/hdc_golden_v41.py",
   "golden_sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
-  "tool_sha256": "3289aac34f35967fc1aa33158657786b859b656856a4dd1c5007e2890f878a26",
+  "tool_sha256": "3000d5e199f960ff7139eaf198ac60d1690454f907bfc90385c28ba88b6bb6e4",
   "models": {
     "deepseek-v4.1-flash": {
       "config": "compiler/models/deepseek-v4.1-flash/inference_config.json",
@@ -80,6 +80,14 @@
           "source_key": "Model.moe: den = add(total, F(<literal>))",
           "derivation": "release code literal, parsed from the golden source",
           "used_by": "router weight denominator (imm2, AD_IMM)"
+        },
+        "cand_pin": {
+          "value": Infinity,
+          "f32_bits": "0x7f800000",
+          "source_file": "tools/hdc_golden_v41.py",
+          "source_key": "Model.candidate_blocks: bs[(n - 1) // b] = np.inf",
+          "derivation": "release code: the newest position's block always kept, parsed from the golden source",
+          "used_by": "layer-20 candidate pin (imm2, AD_IMM: block max + inf = +inf)"
         },
         "count_hc_dim": {
           "value": 20480.0,
@@ -213,6 +221,14 @@
           "source_key": "Model.moe: den = add(total, F(<literal>))",
           "derivation": "release code literal, parsed from the golden source",
           "used_by": "router weight denominator (imm2, AD_IMM)"
+        },
+        "cand_pin": {
+          "value": Infinity,
+          "f32_bits": "0x7f800000",
+          "source_file": "tools/hdc_golden_v41.py",
+          "source_key": "Model.candidate_blocks: bs[(n - 1) // b] = np.inf",
+          "derivation": "release code: the newest position's block always kept, parsed from the golden source",
+          "used_by": "layer-20 candidate pin (imm2, AD_IMM: block max + inf = +inf)"
         },
         "count_hc_dim": {
           "value": 640.0,
