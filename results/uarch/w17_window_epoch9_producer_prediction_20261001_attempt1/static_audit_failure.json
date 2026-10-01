@@ -1,0 +1,10 @@
+{
+  "verdict": "FAIL_STATIC_EDGE_ORDER_PRESERVED",
+  "no_RTL_run": true,
+  "issues": [
+    "Model let producer newly registered DRAIN state accept block on issue316; actual blk_v only after316 so first acceptance317.",
+    "Retained cold refill counter origin is schedule dispatch D+1, not descriptor accept D.",
+    "Retained-hit done sample must stage+131 for32beats, not stage+129."
+  ],
+  "action": "Correct pure model before fixture preparation/run; no measured timing fit."
+}
