@@ -38,7 +38,7 @@ def admission():
  return dict(mem_GiB=mem/2**30,disk_GiB=disk/2**30,load1=load,affinity=cores,compiler_jobs=jobs,memory_floor_GiB=floor,pass_admission=mem>=floor*2**30 and disk>=80*2**30 and load+jobs<=.6*cores)
 def cleanpins():
  assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT).strip(),'source tree dirty'
- return {str(p.relative_to(ROOT)):sha(p) for p in DRIVER.all_sources()+[MODEL,ROOT/'tools/w17_current_fastpp_die_field.py',ROOT/'tools/v41_die_images_w17w10.py',ROOT/'tools/w17_current_fastpp_die_rt.py',ROOT/'results/rtl/w17_L0_cli_recovery_20261001/reuse.json',pathlib.Path(__file__)]}
+ return {str(p.relative_to(ROOT)):sha(p) for p in DRIVER.all_sources()+[MODEL,ROOT/'tools/w17_current_fastpp_die_field.py',ROOT/'tools/v41_die_images_w17w10.py',ROOT/'tools/w17_current_fastpp_die_rt.py',ROOT/'tools/w17_current_fastpp_die_rt_cli_v4.py',ROOT/'results/rtl/w17_L0_cli_recovery_20261001/reuse.json',pathlib.Path(__file__)]}
 def execute(cmd,stage,base):
  assert cleanpins()==base
  # CPU+RAM+disk preflight inside the held existing lease before EACH heavy stage.
