@@ -111,7 +111,7 @@ def replay(t,rows=128,retain=0):
         req=None;sel=next((p for p,v in enumerate(b.offers) if v),None);reply=b.s[sel]['r'][0] if sel is not None else None
         ack=b.write_offer
         if c==writer_start+15:producer_full=True
-        if c==writer_start+16:
+        if c==writer_start+17:
             assert producer_full;producer_draining=True
         if write_state=='IDLE' and producer_draining:
             block=producer_idx;producer_idx+=1
@@ -140,7 +140,7 @@ def replay(t,rows=128,retain=0):
                 # Actual retention adds capture + registered response dispatch edge.
                 if op==1:
                     stages.append(c+2);refills.append(0);op_last.append(None)
-                    issue_due=c+3;done_due=c+4*((rows+3)//4)+3
+                    issue_due=c+3;done_due=c+4*((rows+3)//4)+5
                     life_done.append(done_due);sch='RUN'
                 else:pf_due=c+2;sch='SEND'
             else:pf_due=c+1;sch='SEND'
@@ -161,7 +161,7 @@ def replay(t,rows=128,retain=0):
             if sec==16:
                 assert pending==0 and received==131071;source='IDLE';last_response=c
                 if row==127:
-                    op_last.append(c);stages.append(c+2);refills.append(c-starts[op]+1)
+                    op_last.append(c);stages.append(c+2);refills.append(c-starts[op]+1-retain)
                     issue_due=c+3;done_due=c+4*((rows+3)//4)+5
                     life_done.append(done_due);sch='RUN'
                 else:row+=1;pf_due=c+2
