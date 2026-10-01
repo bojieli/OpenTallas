@@ -44,7 +44,10 @@
 // ranks.  A die instantiates its own table with OWN = 1 << DIE_ID; a bench
 // modelling four dies may share one table with OWN = 4'b1111.
 //   own_count[d]  ranks listed so far (final when done)
-//   own_idx[d] -> own_rank[d] (the rank), own_gid[d] (its id)
+//   own_idx[d] -> own_rank[d] (the rank), own_gid[d] (its id), one list read
+// RDREG = 1: every read port (owned lists and rd_*) returns the entry addressed
+// in the PREVIOUS cycle from a register (the timing-closed form; the wide
+// fetch and the collector use it).  RDREG = 0: combinational reads.
 //
 // Throughput: one sel beat (W entries) per cycle; s_ready is held high on
 // the open port.  Latency: an entry is readable two cycles after its beat is
@@ -58,6 +61,7 @@ module ot_chip_v41x_ckv_sel_ids #(
     parameter integer K = 512,
     parameter integer NRD = 2,
     parameter [3:0] OWN = 4'b0000,     // dies whose owned-rank lists are kept
+    parameter bit RDREG = 0,           // 1: every read port is synchronous (data one cycle after the address)
     parameter integer KW = $clog2(K + 1)
 ) (
     input  wire                 clk,
@@ -173,8 +177,8 @@ module ot_chip_v41x_ckv_sel_ids #(
     genvar od;
     generate for (od = 0; od < 4; od = od + 1) begin : g_own
         if (OWN[od]) begin : g_on
-            reg [KW-1:0] lb [0:W-1][0:BD-1];
-            reg [KW-1:0] comp [0:W-1];                  // compacted owned ranks of this beat
+            reg [KW+POS_W-1:0] lb [0:W-1][0:BD-1];      // {rank, id}: one read gives both
+            reg [KW+POS_W-1:0] comp [0:W-1];            // compacted owned {rank, id} of this beat
             reg [$clog2(W+1)-1:0] nown;
             reg [KW-1:0] oc;
             integer a;
@@ -184,7 +188,7 @@ module ot_chip_v41x_ckv_sel_ids #(
                 for (a = 0; a < W; a = a + 1) comp[a] = 0;
                 for (a = 0; a < W; a = a + 1)
                     if (a < n && r_idx[a*IW + 4 +: 2] == 2'(od)) begin
-                        comp[nown[LW-1:0]] = count + KW'(a);
+                        comp[nown[LW-1:0]] = {count + KW'(a), POS_W'(r_idx[a*IW +: IW])};
                         nown = nown + 1'b1;
                     end
             end
@@ -203,9 +207,16 @@ module ot_chip_v41x_ckv_sel_ids #(
                     if (wr_ok && 32'(j) < 32'(nown)) lb[ob][row] <= comp[j];
             end
             wire [KW-1:0] oi = own_idx[od*KW +: KW];
-            wire [KW-1:0] rk = lb[oi[LW-1:0]][oi >> LW];
-            assign own_rank[od*KW +: KW] = rk;
-            assign own_gid[od*POS_W +: POS_W] = tab_rd(rk);
+            wire [KW+POS_W-1:0] ent = lb[oi[LW-1:0]][oi >> LW];
+            if (RDREG) begin : g_r
+                reg [KW+POS_W-1:0] q;
+                always @(posedge clk) q <= ent;
+                assign own_rank[od*KW +: KW] = q[POS_W +: KW];
+                assign own_gid[od*POS_W +: POS_W] = q[POS_W-1:0];
+            end else begin : g_c
+                assign own_rank[od*KW +: KW] = ent[POS_W +: KW];
+                assign own_gid[od*POS_W +: POS_W] = ent[POS_W-1:0];
+            end
         end else begin : g_off
             assign own_count[od*KW +: KW] = 0;
             assign own_rank[od*KW +: KW] = 0;
@@ -215,7 +226,15 @@ module ot_chip_v41x_ckv_sel_ids #(
 
     genvar r;
     generate for (r = 0; r < NRD; r = r + 1) begin : g_rd
-        wire [POS_W-1:0] g = tab_rd(rd_rank[r*KW +: KW]);
+        wire [POS_W-1:0] g0 = tab_rd(rd_rank[r*KW +: KW]);
+        wire [POS_W-1:0] g;
+        if (RDREG) begin : g_r
+            reg [POS_W-1:0] q;
+            always @(posedge clk) q <= g0;
+            assign g = q;
+        end else begin : g_c
+            assign g = g0;
+        end
         assign rd_gid[r*POS_W +: POS_W] = g;
         assign rd_die[r*2 +: 2] = g[5:4];
         assign rd_stack[r*2 +: 2] = g[7:6];
