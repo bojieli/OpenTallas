@@ -1,0 +1,37 @@
+{
+  "pairs": [
+    {
+      "unfused": "u00",
+      "fused": "f00",
+      "unfused_cycles": 326676,
+      "fused_cycles": 318034,
+      "saved_cycles": 8642,
+      "fraction_saved": 0.0264543462023534,
+      "unfused_SU_busy": 172533,
+      "fused_SU_busy": 163005,
+      "functional_exact": "PASS",
+      "original_overall": [
+        "fail",
+        "fail"
+      ],
+      "adoption": false
+    },
+    {
+      "unfused": "u2517",
+      "fused": "f2517",
+      "unfused_cycles": 398676,
+      "fused_cycles": 376638,
+      "saved_cycles": 22038,
+      "fraction_saved": 0.055277970080968006,
+      "unfused_SU_busy": 256096,
+      "fused_SU_busy": 233937,
+      "functional_exact": "PASS",
+      "original_overall": [
+        "fail",
+        "fail"
+      ],
+      "adoption": false
+    }
+  ],
+  "claim": "Terminal reduced die pairs with identical source input hashes and matching wire stages, all memories/logits and token exact. Original overall FAIL retained; source90b pin-equivalence gate separate. No SS/FF or hardware adoption."
+}
