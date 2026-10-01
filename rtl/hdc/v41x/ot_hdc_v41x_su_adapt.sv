@@ -47,7 +47,9 @@ module ot_hdc_v41x_su_adapt #(
     parameter integer VMD_NG = 0,       // ot_hdc_v41x_vec: distributed-VM option H lane groups (0: off)
     parameter integer ROT_STAGES = 17,
     parameter integer GATH_STAGES = 18,
-    parameter integer SCAL_STAGES = 8
+    parameter integer SCAL_STAGES = 8,
+    parameter integer MLAT = 3,         // ot_hdc_v41x_vec: multiplier latency (3, 4 or 5: W11 serial domain)
+    parameter integer ALAT = 3          // ot_hdc_v41x_vec: FP add latency (3, or 4)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -169,7 +171,7 @@ module ot_hdc_v41x_su_adapt #(
     ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .AW(AW), .NW(NW), .KVT_SH(KVT_SH), .BCAST_STAGES(BCAST_STAGES),
                      .RES_STAGES(RES_STAGES), .VMD_NG(VMD_NG), .ROT_STAGES(ROT_STAGES), .GATH_STAGES(GATH_STAGES),
                      .SCAL_STAGES(SCAL_STAGES),
-                     .RET_STAGES(RET_STAGES)) u_vec (
+                     .RET_STAGES(RET_STAGES), .MLAT(MLAT), .ALAT(ALAT)) u_vec (
         .clk(clk), .rst_n(rst_n), .go(v_go), .ready(v_ready), .idle(v_idle),
         .i_nout(nout), .i_nin(nin),
         .i_asrc(asrc), .i_bsrc(bsrc), .i_csrc(csrc), .i_dsrc(dsrc),

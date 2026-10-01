@@ -83,6 +83,32 @@ def coll_us(nbytes_die: float, coll: dict, kind: str = "all_gather") -> float:
     return c["fixed_us"] + nbytes_die * c["us_per_byte"]
 
 
+def w15_prod(rec: dict, config: str) -> dict:
+    """W15b's product-port pricing (results/rtl/w15_hbm_nvls.json reading_guide): a gather of B bytes a rank costs
+    fixed + slope x ceil(B / slot_bytes) cycles (slot = 0.9 TB/s port x clock period); the all-reduce fit is per
+    bench record and is applied per slot of the multicast output (W15b's extrapolation for the grouped reduce);
+    the top-k merge adds the ot_coll_topk_merge select, 9 x (P x k / 64) cycles (W15b ESTIMATE, measurement queued)."""
+    cfg = rec["configs"][config + "_prod"]
+    ar = rec["configs"][config]["fit"]["all_reduce"]
+    return dict(kind="w15_prod", hz=cfg["clock_hz"], slot=cfg["slot_bytes"], ag=cfg["fit"]["all_gather"], ar=ar,
+                source=f"results/rtl/w15_hbm_nvls.json configs.{config}_prod (gathers) / {config} (all-reduce fit)")
+
+
+def prod_us(op: dict, coll: dict, P: int) -> tuple[float, str]:
+    hz, slot = coll["hz"], coll["slot"]
+    k = op["kind"]
+    if k == "all_reduce":
+        n = math.ceil(P * op["bytes"] / slot)                         # the multicast output a die receives
+        return (coll["ar"]["fixed_cycles"] + coll["ar"]["cycles_per_word"] * n) / hz * 1e6, "extrapolated"
+    per_rank = P * op["bytes"] / TP
+    cyc = coll["ag"]["fixed_cycles"] + coll["ag"]["cycles_per_word"] * math.ceil(per_rank / slot)
+    how = "measured-fit"
+    if k == "topk_merge" and op.get("what") in ("sel", "cand"):
+        cyc += 9 * (TP * op["k"] / 64) * P                            # select over the gathered candidates
+        how = "fit + select ESTIMATE"
+    return cyc / hz * 1e6, how
+
+
 def w15_fit(rec: dict, config: str) -> dict:
     """W15's record layout: configs.<name>.fit.{all_gather,all_reduce}.{fixed_cycles, cycles_per_word} with 64-B
     words per rank and clock_hz."""
@@ -189,7 +215,14 @@ def compose(prog: dict, sm: SMTable, coll: dict, fetch_us: float, m: dict, mtp: 
                 if op["tag"].startswith(OFF_PATH_COLL):       # ready at token start / only masks later layers
                     t["off_path_collectives"] = t.get("off_path_collectives", 0) + 1
                     continue
-                t["collective"] += coll_us(P * op["bytes"] / TP, coll, "all_reduce" if k == "all_reduce" else "all_gather")
+                if coll.get("kind") == "w15_prod":
+                    us, how = prod_us(op, coll, P)
+                    if how != "measured-fit":
+                        flags.add(f"collective {op['tag']}: {how}")
+                    t["collective"] += us
+                else:
+                    t["collective"] += coll_us(P * op["bytes"] / TP, coll,
+                                               "all_reduce" if k == "all_reduce" else "all_gather")
                 ncoll += 1
             elif k == "expert_fetch":
                 if mtp:
@@ -227,8 +260,7 @@ def main() -> int:
     prog = json.loads(a.program.read_text())
     sm = SMTable([json.loads(p.read_text()) for p in a.sm], "ar")
     if a.coll:
-        coll = w15_fit(json.loads(a.coll.read_text()), a.coll_config)
-        coll["source"] = f"{a.coll} configs.{a.coll_config}"
+        coll = w15_prod(json.loads(a.coll.read_text()), a.coll_config)
     else:
         coll = dict(fixed_us=0.83, us_per_byte=1 / 0.9e12 * 1e6, source="PENDING: audit scratch W15 NVLS P=6 "
                     "(0.81-0.89 us), slope at the 0.9 TB/s package link")

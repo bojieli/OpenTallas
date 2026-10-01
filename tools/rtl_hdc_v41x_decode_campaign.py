@@ -73,7 +73,7 @@ RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mu
                                                "ot_hdc_sinkhorn_mc", "ot_hdc_v41_matvec",
                                                "ot_hdc_v41_stream", "ot_hdc_v41_qe", "ot_hdc_v41_xu",
                                                "ot_hdc_v41_hcproj")] +
-       [ROOT / "rtl/hdc/ot_hdc_fastfp.sv"] +
+       [ROOT / "rtl/hdc/ot_hdc_fastfp.sv", ROOT / "rtl/hdc/ot_hdc_fastfp_lat.sv"] +
        [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_hcp", "ot_hdc_v41x_he_adapt",
                                                  "ot_hdc_v41x_wgt_bdot", "ot_hdc_v41x_wgt_red", "ot_hdc_v41x_wgt_mac",
                                                  "ot_hdc_v41x_wgt_tile", "ot_hdc_v41x_me_adapt",

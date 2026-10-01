@@ -52,7 +52,9 @@ module tb_hdc_v41x_vec #(
     parameter integer SU_EWR_STAGES = 1,
     parameter integer ROT_STAGES = 17,
     parameter integer GATH_STAGES = 18,
-    parameter integer SCAL_STAGES = 8
+    parameter integer SCAL_STAGES = 8,
+    parameter integer MLAT = 3,
+    parameter integer ALAT = 3
 ) (input wire clk);
     `include "tb_hdc_v41x_vec_fields.svh"
     localparam integer AW = 24, NR = N / 8;
@@ -148,7 +150,7 @@ module tb_hdc_v41x_vec #(
     ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES),
                       .RET_STAGES(VM_DIST ? SU_EWR_STAGES : RET_STAGES), .RES_STAGES(VM_DIST ? SU_RES_STAGES : -1),
                       .VMD_NG((VM_DIST != 0 && VM_DIST_H != 0) ? N / 8 : 0), .ROT_STAGES(ROT_STAGES),
-                      .GATH_STAGES(GATH_STAGES), .SCAL_STAGES(SCAL_STAGES)) dut (
+                      .GATH_STAGES(GATH_STAGES), .SCAL_STAGES(SCAL_STAGES), .MLAT(MLAT), .ALAT(ALAT)) dut (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(w[F_NOUT +: 16]), .i_nin(w[F_NIN +: 16]),
         .i_asrc(w[F_ASRC +: 2]), .i_bsrc(w[F_BSRC +: 2]), .i_csrc(w[F_CSRC +: 2]), .i_dsrc(w[F_DSRC +: 2]),

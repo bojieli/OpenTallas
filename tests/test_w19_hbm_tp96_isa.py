@@ -84,3 +84,11 @@ def test_grouped_o_reduce_token_is_bit_exact():
     assert res["head"]["verdict"] == "pass" and res["head"]["logits_sha256"] == REF["logits_sha256"]
     prog = json.loads((ROOT / "results/rtl/w19_hbm_tp96_program_oreduce.json").read_text())
     assert not any(op["tag"] == "o_gather" for lay in prog["layers"] for op in lay["ops"])
+
+
+def test_grouped_o_reduce_mtp_verify_is_bit_exact():
+    rec = json.loads((ROOT / "results/rtl/w19_hbm_tp96_isa_mtp_oreduce.json").read_text())
+    res = rec["runs"]["mtp:oreduce:L0-39:head"]["result"]
+    assert rec["status"] == "pass" and res["variant"] == "oreduce" and len(res["layers"]) == 40
+    assert all(l["verdict"] == "pass" and l["union_matches_golden"] for l in res["layers"])
+    assert res["head"]["verdict"] == "pass" and all(res["head"]["logits_bit_exact"])

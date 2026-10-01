@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.rtl.hdc_v41x_vec_campaign/1",
- "generated_at": "2026-09-30T12:45:38Z",
+ "generated_at": "2026-09-29T22:46:15Z",
  "wire_stages": {
   "BCAST_STAGES": 0,
   "RET_STAGES": 0
@@ -27,9 +27,9 @@
   "pass_": true
  },
  "verilator_build_seconds": {
-  "N16_M8": 684.8,
-  "N64_M16": 1559.5,
-  "N1024_M256": 17956.7
+  "N16_M8": 0.0,
+  "N64_M16": 0.0,
+  "N1024_M256": 0.0
  },
  "random_N1024_skipped_seeds": [
   1007
@@ -3446,20 +3446,27 @@
   "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "1b0a5ccbbe8c156f4920bc31a48af545b96441203df156299d91b302752909c4",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "0ba8c77b349a8116958f09f3948116c8183f558f10b3228b55bcb55f1108b315",
   "rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": "cc9aad507db760a2d7086558c1fde3cb4bd0062730fd4c2447d9634e43b4b00a",
-  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "d9e93b5a7d8902b2f20f85a4c1aa69fbcaee33cb224d0eff7876c24dcff4f003",
-  "rtl/test/tb_hdc_v41x_vec.sv": "95235895dd804bbd06267eb5507b3db8441a27562815c779317c6f06ba928acf",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "569db2f33b015cc80d0f6eccd2b6d6036f25ebf56a1ea1140265bec10efa6453",
+  "rtl/test/tb_hdc_v41x_vec.sv": "6347b84fd02065ba4f1e51ea22ffec3c6066b8f19c54d971390a82716542d15e",
   "rtl/test/tb_hdc_v41x_vec_sfu.sv": "c5f1af065d397535bc74a60f65eaf656b83df75a1ae47389e4c2ccb7db9804e3",
   "rtl/test/tb_hdc_v41x_vec_fields.svh": "61ac19567f2a5daead21db62f7ab7704bc68085aeeb1ca249b6ffcb18f5964b2",
   "rtl/test/hdc_v41_harness.cpp": "f2a82a2ea843a1f8b04fd94e94adea61037a9fa6aef45f6b0c8550abe5a6dce1",
-  "tools/rtl_hdc_v41x_vec_campaign.py": "37ff7e5dfdb7debb25e25bc245aa063b3fde6878c805514342bf6c455300ab81",
+  "tools/rtl_hdc_v41x_vec_campaign.py": "7d05b86774dd90c4f4d8ed6665f87796ee61ef7569c9642c05a8f05630dc72a7",
   "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
   "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
-  "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d",
+  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
   "tools/hdc_isa_v41.py": "5e7b6b83ef463ed8c4eedf97ba74cedf07b2c9406239b7014473b586e206c692"
  },
- "git_head": "8f0d2e6349b8e8be8d33114bb15de415c57a32aa",
+ "git_head": "5de2c368eb35bdd11b6026ad41afd065a0f88765",
  "git_dirty_tracked_files": [],
  "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
  "verilator_extra_flags": "--unroll-count 4 -fno-dfg",
- "reused_builds": false
+ "reused_builds": true,
+ "currency": {
+  "state": "stale",
+  "stale_since": "61a46c6aef6f37e5c1bb13893157e40b39cd9ba3",
+  "reason": "W11 serial-domain change (claude/w11-suclose): MLAT/ALAT parameters, keep-prefix arithmetic and the three-cycle offset load were added; the unit is built at MLAT=3/ALAT=3 by default and that build is cycle-identical (rtl_hdc_v41x_vec_campaign at N16/N64 + vehicle + perf64, 3/3 at B4R5: every perf section equal to hdc_v41x_vec_campaign_wire.json; w11_su_softmax_spec N16 at 0:0 and 4:5: cycles equal).  The N1024 regeneration on these sources is queued (/tmp/claude-1000/w11s/queue/q_regen.sh); this marker is removed with it.",
+  "verdict_kept": "all random / vehicle / perf checks pass (spec rows as graded)",
+  "marked": "2026-09-30 W11 SU-close"
+ }
 }

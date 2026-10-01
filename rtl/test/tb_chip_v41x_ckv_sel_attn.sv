@@ -108,7 +108,7 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
     wire [8*KW-1:0] rd_rank; wire [8*POS_W-1:0] rd_gid; wire [16-1:0] rd_die, rd_stack; wire [8*POS_W-1:0] rd_local;
     wire id_fault; wire [3:0] id_fc;
     wire [4*KW-1:0] own_count, own_idx, own_rank; wire [4*POS_W-1:0] own_gid;
-    ot_chip_v41x_ckv_sel_ids #(.NRD(8), .OWN(4'b1111)) u_ids (
+    ot_chip_v41x_ckv_sel_ids #(.NRD(8), .OWN(4'b1111), .RDREG(WIDE != 0)) u_ids (
         .clk(clk), .rst_n(rst_n), .clr(id_clr), .exp_n(KW'(nsel)),
         .s_valid(s_valid), .s_ready(s_ready), .s_last(s_last), .s_lv(s_lv), .s_idx(s_idx),
         .count(id_count), .done(id_done), .done_cycle_count(id_cycles),
@@ -131,7 +131,7 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
         assign rd_rank[d*KW +: KW] = fidx;
         assign own_idx[d*KW +: KW] = fidx;
         if (WIDE) begin : g_w
-            ot_chip_v41x_ckv_pc_fetch #(.DIE_ID(d), .P(PPS), .S(SPP), .SRAM_MACRO(SRAM_MACRO != 0)) u_f (
+            ot_chip_v41x_ckv_pc_fetch #(.DIE_ID(d), .P(PPS), .S(SPP), .SRAM_MACRO(SRAM_MACRO != 0), .IDLAT(1)) u_f (
                 .clk(clk), .rst_n(rst_n), .job_v(job_go), .job_ready(f_ready[d]),
                 .window_count(8'(wcount)), .published_source_count(POS_W'(npub)),
                 .region_base_sector(rbase), .region_sector_count(rcount),
@@ -183,7 +183,7 @@ module tb_chip_v41x_ckv_sel_attn (input wire clk);
     wire c_done, c_fault; wire [2:0] c_on, c_take; wire [KW-1:0] c_orank, c_ahead;
     wire [4*POS_W-1:0] c_ogid; wire [4*2304-1:0] c_orow;
     wire [2:0] c_fc;
-    ot_chip_v41x_ckv_sel_collect #(.NSRC(4), .NOUT(4)) u_col (
+    ot_chip_v41x_ckv_sel_collect #(.NSRC(4), .NOUT(4), .RDREG(WIDE != 0)) u_col (
         .clk(clk), .rst_n(rst_n), .clr(job_go), .exp_n(KW'(nsel)),
         .src_v(c_sv), .src_rank(c_srank), .src_gid(c_sgid), .src_row(c_srow),
         .tab_rank(rd_rank[4*KW +: 4*KW]), .tab_gid(rd_gid[4*POS_W +: 4*POS_W]),
