@@ -1,0 +1,146 @@
+{
+  "schema": "w13.index-source-service-floor.v2",
+  "source_phase_model_pin": {
+    "git": "e416630f0",
+    "path": "tools/deepseek_hbm_complete_index_blas_model.py",
+    "sha256": "3ff99eadd4cc93a0f12320d57729784ca57c919a97224916896e97ac07931d67"
+  },
+  "source_scale_handoff_bridge": {
+    "shared_bytes": 35328,
+    "warp_issues": 524,
+    "source_handoff": "X.decode returns regs[e]; X.block initializes external eq/ek without a source STORE/LOAD",
+    "candidate_added_ops": {
+      "STORE": 12,
+      "LOAD": 512
+    },
+    "producer_consumer_barrier": "scale STORE-visible before finite block LOAD",
+    "actual_visibility_ticks": null,
+    "qualified_cycles": null
+  },
+  "expanded_shared_bytes_with_scale_handoff": 3828224,
+  "expanded_shared_warp_issues_with_scale_handoff": 38092,
+  "expanded_shared_serial_cycle_floors": {
+    "one_SM": 29908,
+    "ideal32SM": 935
+  },
+  "source_initializer_still_unbound": {
+    "accumulator_bytes_if_shared": 8192,
+    "warp_STORE_issues": 64,
+    "literal_fusion_actual_ops": null
+  },
+  "pitch33_fullquerycache_plus_rawkeys_bytes": 67072,
+  "32SM_partition_replication_is_not_free": {
+    "query_refill_extra_shared_bytes": 1047552,
+    "padding_zero_init_extra_bytes": 122880,
+    "qdecode_replication": 32,
+    "keydecode_inflation": 16,
+    "additional_actual_ports_lease_timeline": null
+  },
+  "source_manifest_pin": {
+    "git": "efdfcb483",
+    "path": "results/rtl/deepseek_hbm_complete_20261001/index-blas-production-candidate-r1.json.gz",
+    "sha256": "af953d108166fd824dbaa09803e12234196ff8953f22f71608689acfd74b9b08"
+  },
+  "source_lowerer_pin": {
+    "git": "922a6b673",
+    "path": "tools/deepseek_hbm_complete_index_blas.py",
+    "sha256": "9816eb9a56ba0b4e9b1bf54c6a6cee45b2e3db083060836a8f29a2d2b3a0cebc"
+  },
+  "phases": {
+    "query_sanitize_decode_once_per_call": {
+      "bytes": 81920,
+      "warp_shared_issues": 640,
+      "scope": "32queries x128terms; conditional caching across keytiles requires capacity/lease proof"
+    },
+    "key_sanitize_decode": {
+      "bytes": 163840,
+      "warp_shared_issues": 1280
+    },
+    "finite_integer_block_always": {
+      "bytes": 1081344,
+      "warp_shared_issues": 16384
+    },
+    "exceptional_selection_merge_always": {
+      "bytes": 2195456,
+      "warp_shared_issues": 17152,
+      "scope": "q/k loads and classify executed every term; not exceptional-only shortcut"
+    },
+    "connected_finish_always": {
+      "bytes": 270336,
+      "warp_shared_issues": 2112
+    }
+  },
+  "combined_shared_bytes": 3792896,
+  "warp_shared_issues": 37568,
+  "exceptional_only_branch_work": {
+    "divergent_branch_counter": 11432,
+    "exact_active_lane_RF_extra_bits": null,
+    "branch_latency": null,
+    "cost_not_zero": true
+  },
+  "RF_known_full_lane_two_register_warp_counts": {
+    "finite_IMUL": 8192,
+    "finite_loop_IADD": 8192,
+    "decode_FMUL": 384,
+    "weight_FMUL": 64,
+    "ordered_block_csum_FADD": 512
+  },
+  "RF_known_active_read_bits_lower_bound": 37617664,
+  "RF_known_active_write_bits_lower_bound": 54132736,
+  "RF_read_including_immediates_NOT_lower_bound": 783331328,
+  "RF_write_fullwarp_counter_NOT_active_lane_lower_bound": 375089152,
+  "RF_unknown_remainder_active_counts": null,
+  "capacity_floor_cases": [
+    {
+      "SMs": 1,
+      "shared_combined_bytes_per_serial_cycle": 128,
+      "RF_register_read_bits_per_serial_cycle": 8192,
+      "RF_logical_write_bits_per_serial_cycle": 4096,
+      "shared_serial_cycle_floor": 29632,
+      "RF_active_read_serial_cycle_floor": 4592,
+      "RF_active_write_serial_cycle_floor": 13216,
+      "max_service_serial_cycle_floor": 29632,
+      "nominal_target_service_floor_us": 32.92444444444445,
+      "scope": "one64key fixture;32SM row ideal global capacity over one die, assumes distribution but no assignment proof",
+      "actual_port_event_schedule": null
+    },
+    {
+      "SMs": 32,
+      "shared_combined_bytes_per_serial_cycle": 4096,
+      "RF_register_read_bits_per_serial_cycle": 262144,
+      "RF_logical_write_bits_per_serial_cycle": 131072,
+      "shared_serial_cycle_floor": 926,
+      "RF_active_read_serial_cycle_floor": 144,
+      "RF_active_write_serial_cycle_floor": 413,
+      "max_service_serial_cycle_floor": 926,
+      "nominal_target_service_floor_us": 1.028888888888889,
+      "scope": "one64key fixture;32SM row ideal global capacity over one die, assumes distribution but no assignment proof",
+      "actual_port_event_schedule": null
+    }
+  ],
+  "ordinary_opcode_issue_reconvergence_latency_floor": null,
+  "query_full_cache_scope": {
+    "raw_query_bytes": 16384,
+    "decoded_units_bytes": 16384,
+    "query_exponents_bytes": 512,
+    "query_cache_bytes": 33280,
+    "plus64raw_keys_bytes": 66048,
+    "shared_capacity_bytes": 65536,
+    "strategy_verdict": "FAIL_FULL_QUERY_CACHE_PLUS_FULL_RAW_KEY_TILE_BEFORE_OTHER_BUFFERS",
+    "cachequeryonce_not_admitted": true,
+    "block_streaming_lifetimes_and_banks": null
+  },
+  "no_incompatible_fit_transfer": true,
+  "full_program_rank_to_die_SM_mapping": null,
+  "all_domain_exact_gate": false,
+  "actual_provider_ACK_CDC_and_leases": null,
+  "SS_FF": null,
+  "whole_token_latency": null,
+  "rate_credit": 0,
+  "hardware_launch": false,
+  "tool_source_git": "9dd1b15a8039b5adb631e54fd658c11aa17feb13",
+  "tool_sha256": "a2beac970b12e3356e4542a2a0416ccb959d9acc9c5df5e29915716f40de189d",
+  "focused_tests_passed": 3,
+  "prior_floor_preserved": "0b14dd2d1 service_floor_r1.json; executedkernel-counter floor excluded mandatoryscale bridge",
+  "failed_draft_source": "ccafda9d3 syntax-invalid draft; not runnable; no receipt or admission"
+}
