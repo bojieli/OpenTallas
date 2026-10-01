@@ -292,6 +292,9 @@ def main() -> int:
     ap.add_argument("--density", type=float, help="override the global placement density")
     ap.add_argument("--orfs-var", action="append", help="KEY=VALUE passed to run_abi3_physical --orfs-var")
     ap.add_argument("--step-tcl", action="append", help="HOOK=path passed to run_abi3_physical --step-tcl")
+    ap.add_argument("--balanced-clock", action="store_true",
+                    help="W18b: CTS with macro clustering 1 (each hard macro clock pin its own driver; TritonCTS balances "
+                         "the ETM insertion) -- the die-level balanced-clock method (tools/w18/clock_balance.py)")
     ap.add_argument("--pregion-h", type=float, default=0.0, help="pregion block height (um)")
     ap.add_argument("--tag", default="", help="suffix for the nickname and the output record directory")
     ap.add_argument("--abstract", action="store_true",
@@ -332,6 +335,9 @@ def main() -> int:
         args[args.index("--place-density") + 1] = f"{a.density:g}"
     for v in a.orfs_var or []:
         args += ["--orfs-var", v]
+    if a.balanced_clock:
+        args += ["--orfs-var", "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -macro_clustering_size 1 "
+                               "-macro_clustering_max_diameter 20"]
     for v in a.step_tcl or []:
         args += ["--step-tcl", v]
     if a.tag:
