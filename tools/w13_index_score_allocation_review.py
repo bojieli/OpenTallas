@@ -13,7 +13,7 @@ def build():
  reserve=d['RF_address_loop_regs'];counts=d['executed_whole64_metrics']
  return {'schema':'w13.index-selected-score-allocation-review.v1','source_manifest_pin':{'git':'efdfcb483','path':PATH,'sha256':hashlib.sha256(b).hexdigest()},
   'verified_source_sha256':d['source_sha256'],'fixture_kind':d['fixture_kind'],
-  'actual_source_produced_key_rows':len(d['produced_key_bits']),'distinct_produced_key_rows':len({tuple(r) for r in d['produced_key_bits']}),
+  'actual_source_produced_key_rows':len(d['produced_key_bits']),'distinct_raw_key_rows':len({tuple(r) for r in d['raw_key_bits']}),'distinct_produced_key_rows':len({tuple(r) for r in d['produced_key_bits']}),
   'selected_trace_events':len(events),'whole64_SSA_expanded':d['whole64_SSA_expanded'],
   'conservative_symbol_interval_peak':peak,'peak_event_index':index,'peak_live_symbols':[k for k,(s,e) in spans.items() if s<=index<=e],
   'address_loop_reserved_registers':reserve,'combined_strategy_register_demand':peak+reserve,'registers_per_thread':32,

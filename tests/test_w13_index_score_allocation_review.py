@@ -11,7 +11,7 @@ def test_source_trace_capacity_rejection_scope():
  assert not d['physical_register_assignments_admitted'] and not d['physical_admission']
 
 def test_actual_tile_metrics_not_static_proxy_or_old_fit():
- d=build();assert d['actual_source_produced_key_rows']==64 and d['distinct_produced_key_rows']==64
+ d=build();assert d['actual_source_produced_key_rows']==64 and d['distinct_raw_key_rows']==64 and d['distinct_produced_key_rows']==60
  assert not d['whole64_SSA_expanded'] and not d['old_joint_63488_fit_reusable']
  assert d['executed_whole64_software_metrics']['shared_requested_bytes']==3792896
  assert d['executed_whole64_software_metrics']['shared_warp_issues']==37568
