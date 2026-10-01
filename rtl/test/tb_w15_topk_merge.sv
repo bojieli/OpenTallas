@@ -18,7 +18,7 @@ module tb_w15_topk_merge #(parameter integer N = 4, NMAX = 512, P = 64, DIG = 4,
     reg [CB-1:0] n = 16, k = 1;
     reg [31:0] stride = 0;
     wire busy, done, fault, ov, ol;
-    wire [512*(P/16)-1:0] od;
+    wire [512*(P/16)-1:0] od;  // LW = 16
     wire [$clog2(P/16+1)-1:0] onw;
     wire [31:0] cyc;
     ot_coll_topk_merge #(.N(N), .NMAX(NMAX), .P(P), .DIG(DIG)) dut (

@@ -5,7 +5,7 @@ module tb_w15_crc32 #(parameter integer W = 2300, parameter integer MASK_MAX_W =
   reg [W-1:0] d; wire [31:0] c, cp;
   reg clk = 0;
   ot_link_crc32 #(.W(W), .MASK_MAX_W(MASK_MAX_W)) u (.d(d), .crc(c));
-  ot_link_crc32_pipe #(.W(W)) up (.clk(clk), .en(1'b1), .d(d), .crc(cp));
+  ot_link_crc32_pipe #(.W(W), .MASK_MAX_W(MASK_MAX_W)) up (.clk(clk), .en(1'b1), .d(d), .crc(cp));
   function automatic [31:0] ser(input [W-1:0] x);
     integer b; reg [31:0] q;
     begin q = 32'hFFFFFFFF;

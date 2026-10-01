@@ -76,8 +76,10 @@ endmodule
 // d had at the en edge.  Latency: crc is valid the cycle after en.
 // ---------------------------------------------------------------------------
 module ot_link_crc32_pipe #(
-    parameter integer W     = 64,
-    parameter integer CHUNK = 256
+    parameter integer W          = 64,
+    parameter integer CHUNK      = 256,
+    parameter integer MASK_MAX_W = 8192       // above: the serial definition, registered (simulation form, as
+                                              // ot_link_crc32's; the very wide Qwen engine frames are never hardened)
 ) (
     input  wire         clk,
     input  wire         en,
@@ -110,11 +112,12 @@ module ot_link_crc32_pipe #(
             init_term = c;
         end
     endfunction
+    generate if (W <= MASK_MAX_W) begin : g_par
     localparam [32*W-1:0] M = masks(0);
     localparam [31:0]     I0 = init_term(0);
     reg [31:0] part [0:NC-1];
     genvar c, i;
-    generate for (c = 0; c < NC; c = c + 1) begin : g_c
+    for (c = 0; c < NC; c = c + 1) begin : g_c
         localparam integer LO = c * CHUNK;
         localparam integer N = (W - LO < CHUNK) ? (W - LO) : CHUNK;
         wire [31:0] p;
@@ -122,7 +125,7 @@ module ot_link_crc32_pipe #(
             assign p[i] = ^(d[LO +: N] & M[i*W + LO +: N]);
         end
         always @(posedge clk) if (en) part[c] <= p;
-    end endgenerate
+    end
     reg [31:0] x;
     integer k;
     always @(*) begin
@@ -130,4 +133,18 @@ module ot_link_crc32_pipe #(
         for (k = 0; k < NC; k = k + 1) x = x ^ part[k];
     end
     assign crc = x;
+    end else begin : g_ser
+        function automatic [31:0] ser(input [W-1:0] v);
+            integer b;
+            reg [31:0] q;
+            begin
+                q = 32'hFFFF_FFFF;
+                for (b = W - 1; b >= 0; b = b - 1) q = step0(q) ^ (v[b] ? POLY : 32'h0);
+                ser = q;
+            end
+        endfunction
+        reg [31:0] r;
+        always @(posedge clk) if (en) r <= ser(d);
+        assign crc = r;
+    end endgenerate
 endmodule

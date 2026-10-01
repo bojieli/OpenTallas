@@ -28,7 +28,7 @@
 //              key == T while fewer than r equal keys were taken (ties to the
 //              lower id, since buffer order is id order).  Taken ids are
 //              compacted (prefix counts, one-hot slot select) into a staging
-//              buffer that emits up to P/16 full 512-bit words a cycle.
+//              buffer that emits OW = P/LW full words at a time (aligned).
 // Cycles (no stalls): (32/DIG) x (N*n/P + 7) + N*n/P + 9.
 // The candidate buffers are register files here (a synthesis stand-in for
 // the die's SRAM); all timing-critical logic is pipelined for 1.2 GHz at SS.
@@ -36,13 +36,15 @@
 module ot_coll_topk_merge #(
     parameter integer N     = 4,              // ranks
     parameter integer NMAX  = 512,            // candidates per rank (max); n % P == 0
-    parameter integer P     = 64,             // candidates a cycle (multiple of 16)
+    parameter integer LW    = 16,             // lanes (u32 elements) in one VM word
+    parameter integer LDW   = 1,              // words a load beat: 1 (rank ld_rank) or N (word j is rank j)
+    parameter integer P     = 64,             // candidates a cycle (multiple of LW)
     parameter integer DIG   = 4,              // radix bits per HIST pass (divides 32)
     parameter integer RB    = (N > 1) ? $clog2(N) : 1,
     parameter integer CAP   = N * NMAX,
     parameter integer CB    = $clog2(CAP + 1),
-    parameter integer WB    = $clog2(CAP / 16),
-    parameter integer OW    = P / 16          // output words a cycle (max)
+    parameter integer WB    = $clog2(CAP / LW),
+    parameter integer OW    = P / LW          // output words a cycle (max)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -50,8 +52,8 @@ module ot_coll_topk_merge #(
     input  wire              ld_valid,
     input  wire              ld_id,
     input  wire [RB-1:0]     ld_rank,
-    input  wire [WB-1:0]     ld_word,         // word index inside the rank (n / 16 words); n stable while loading
-    input  wire [511:0]      ld_data,
+    input  wire [WB-1:0]     ld_word,         // word index inside the rank (n / LW words); n stable while loading
+    input  wire [32*LW*LDW-1:0] ld_data,
     // command
     input  wire              go,
     input  wire [CB-1:0]     n,               // candidates per rank
@@ -60,15 +62,16 @@ module ot_coll_topk_merge #(
     output reg               busy,
     output reg               done,            // one cycle, after the last output word
     output reg               fault,           // NaN score, or a bad command
-    // result: out_nw words (16 ids each, word 0 in the low bits) a cycle, in order; the last word zero-padded
+    // result: out_nw words (LW ids each, word 0 in the low bits) a cycle, in order, in aligned groups of OW
+    // words (only the last group may be short; the last word zero-padded)
     output reg               out_valid,
     output reg  [$clog2(OW+1)-1:0] out_nw,
-    output reg  [512*OW-1:0] out_data,
+    output reg  [32*LW*OW-1:0] out_data,
     output reg               out_last,
     output reg  [31:0]       stat_cycles      // go -> done
 );
     localparam integer NR    = CAP / P;        // P-lane rows
-    localparam integer QW    = P / 16;         // words per row
+    localparam integer QW    = P / LW;         // words per row
     localparam integer NPASS = 32 / DIG;
     localparam integer NBIN  = 1 << DIG;
     localparam integer RRB   = (NR > 1) ? $clog2(NR) : 1;
@@ -90,14 +93,16 @@ module ot_coll_topk_merge #(
     reg [32*P-1:0] kmem [0:NR-1];
     reg [32*P-1:0] imem [0:NR-1];
     reg            nan_seen;
-    reg [WB:0]     wpr;                             // words per rank (n / 16)
-    wire [WB+RB:0] fw = ld_rank * wpr + ld_word;
-    integer ln;
-    always @(posedge clk) if (ld_valid) begin
-        if (ld_id) imem[fw / QW][512*(fw % QW) +: 512] <= ld_data;
-        else for (ln = 0; ln < 16; ln = ln + 1)
-            kmem[fw / QW][32*(16*(fw % QW) + ln) +: 32] <= okey(ld_data[32*ln +: 32]);
-    end
+    reg [WB:0]     wpr;                             // words per rank (n / LW)
+    integer ln, lj;
+    always @(posedge clk) if (ld_valid)
+        for (lj = 0; lj < LDW; lj = lj + 1) begin : wr
+            reg [WB+RB:0] fw;
+            fw = (LDW == 1 ? ld_rank : lj[RB-1:0]) * wpr + ld_word;
+            if (ld_id) imem[fw / QW][32*LW*(fw % QW) +: 32*LW] <= ld_data[32*LW*lj +: 32*LW];
+            else for (ln = 0; ln < LW; ln = ln + 1)
+                kmem[fw / QW][32*(LW*(fw % QW) + ln) +: 32] <= okey(ld_data[32*(LW*lj + ln) +: 32]);
+        end
 
     // ---- control ------------------------------------------------------------------------------------------
     localparam [2:0] S_IDLE = 3'd0, S_HIST = 3'd1, S_PICK = 3'd2, S_FILT = 3'd3, S_DRAIN = 3'd4;
@@ -164,13 +169,13 @@ module ot_coll_topk_merge #(
         if (!rst_n) begin
             st <= S_IDLE; busy <= 1'b0; done <= 1'b0; fault <= 1'b0; out_valid <= 1'b0; out_last <= 1'b0;
             out_nw <= 0; pass <= 0; row <= 0; pk <= 0; stn <= 0; stat_cycles <= 0; nan_seen <= 1'b0;
-            wpr <= NMAX / 16; h0_v <= 1'b0; h1_v <= 1'b0; h2_v <= 1'b0;
+            wpr <= NMAX / LW; h0_v <= 1'b0; h1_v <= 1'b0; h2_v <= 1'b0;
             {f0_v, f1_v, f2_v, f3_v, f4_v} <= 5'b0;
             for (b = 0; b < NBIN; b = b + 1) cnt[b] <= 0;
         end else begin
-            if (!busy) wpr <= n[CB-1:4];
+            if (!busy) wpr <= (WB+1)'(n / LW);
             if (ld_valid && !ld_id)
-                for (ln = 0; ln < 16; ln = ln + 1) if (isnan(ld_data[32*ln +: 32])) nan_seen <= 1'b1;
+                for (ln = 0; ln < LW * LDW; ln = ln + 1) if (isnan(ld_data[32*ln +: 32])) nan_seen <= 1'b1;
             done <= 1'b0; out_valid <= 1'b0; out_last <= 1'b0; out_nw <= 0;
             if (busy) stat_cycles <= stat_cycles + 1;
             h0_v <= (st == S_HIST) && (row < nrow);
@@ -214,7 +219,7 @@ module ot_coll_topk_merge #(
                         row <= 0;
                         if (pass == NPASS - 1) begin
                             st <= S_FILT; frow <= 0; frr <= 0; rbase <= 0; stn <= 0;
-                            eq_left <= rr - pgt; outw_left <= (k_r + 15) >> 4;
+                            eq_left <= rr - pgt; outw_left <= (k_r + LW - 1) / LW;
                         end else begin
                             pass <= pass + 1'b1; st <= S_HIST;
                         end
@@ -269,7 +274,8 @@ module ot_coll_topk_merge #(
                         for (l = j; l < P; l = l + 1) if (f3_take[l] && f3_tp[l] == j) x = x | f3_id[32*l +: 32];
                         f4_c[32*j +: 32] <= x;
                     end
-                    // f5: append at stn, emit every full word (or the zero-padded tail at the end)
+                    // f5: append at stn; emit OW full words once P ids are staged (aligned groups), and at the end the
+                    // rest, OW words a cycle, the last word zero-padded
                     begin : emit
                         reg [64*P-1:0] s;
                         reg [SB-1:0] m;
@@ -280,18 +286,19 @@ module ot_coll_topk_merge #(
                                      (({{(32*P-1){1'b0}}, 1'b1} << (32 * f4_n)) - 1'b1))} << (32 * m));
                             m = m + f4_n;
                         end
-                        w = (m >> 4) > OW ? OW : m >> 4;
-                        if (w == 0 && st == S_DRAIN && !fpipe && m != 0) begin
-                            w = 1; m = 16;                          // the tail word, zeros above the last id
-                        end
+                        w = 0;
+                        if (m >= P) w = OW;
+                        else if (st == S_DRAIN && !fpipe && m != 0) w = ($clog2(OW+1))'((m + LW - 1) / LW);
                         if (w != 0) begin
                             out_valid <= 1'b1; out_nw <= w;
-                            out_data <= s[512*OW-1:0] & ((w == OW) ? {(512*OW){1'b1}} :
-                                        (({{(512*OW-1){1'b0}}, 1'b1} << (512 * w)) - 1'b1));
+                            out_data <= s[32*LW*OW-1:0] & ((m >= SB'(32'(w) * LW)) ?
+                                        ((w == OW) ? {(32*LW*OW){1'b1}} :
+                                         (({{(32*LW*OW-1){1'b0}}, 1'b1} << (32 * LW * w)) - 1'b1)) :
+                                        (({{(32*LW*OW-1){1'b0}}, 1'b1} << (32 * m)) - 1'b1));
                             out_last <= (outw_left == CB'(w));
                             outw_left <= outw_left - CB'(w);
-                            s = s >> (512 * w);
-                            m = m - 16 * w;
+                            s = s >> (32 * LW * w);
+                            m = (m >= SB'(32'(w) * LW)) ? m - SB'(32'(w) * LW) : {SB{1'b0}};
                         end
                         stg <= s; stn <= m;
                     end

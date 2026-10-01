@@ -183,7 +183,7 @@ FPLAT_SRC = ["rtl/hdc/ot_hdc_fp32_add_lat.sv"]
 TB_SRC = {
     "tb_w15_v41_tp4": ["rtl/test/tb_w15_v41_tp4.sv", *LINK_SRC, "rtl/chip/ot_chip_v41x_coll_dma.sv",
                        "rtl/chip/ot_chip_v41x_coll_transpose.sv", "rtl/rom/ot_rom_oneshot_px.sv",
-                       "rtl/hdc/ot_hdc_fastfp.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC, *FPLAT_SRC],
+                       "rtl/hdc/ot_hdc_fastfp.sv", "rtl/proto/ot_fp32_add_rne_pipe.sv", *SRAM_SRC, *FPLAT_SRC, "rtl/chip/ot_coll_topk_merge.sv"],
     "tb_w15_qwen_tp2": ["rtl/test/tb_w15_qwen_tp2.sv", *LINK_SRC, "rtl/rom/ot_rom_oneshot_allreduce.sv",
                         "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/hdc/ot_hdc_fastfp.sv", *SRAM_SRC, *FPLAT_SRC],
     "tb_w15_link_unit": ["rtl/test/tb_w15_link_unit.sv", *LINK_SRC],
@@ -404,6 +404,14 @@ CONFIGS = {
     "v41ss_lm_w32_sweep": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
                                                   FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
                                                   X_PACE_NUM=7, X_PACE_DEN=8), "sweepw32"),
+    # COLL_TOPK_MERGE end to end (W17's L20 contract): one gather of the scores and ids, the select on every die;
+    # the SS lane-map engine (32 lanes, 128 B words) and the die's 16-lane contract width
+    "v41ss_lm_w32_topk": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=32, X_NL=1,
+                                                 FIFO_SRAM=1, SRAM_MACRO=1, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
+                                                 X_PACE_NUM=7, X_PACE_DEN=8, TOPK=1, TK_NMAX=2048), "topkw32"),
+    "v41ss_lm_w16_topk": ("tb_w15_v41_tp4", dict(RELAY=0, DEPTH=512, U_WIRE=32, X_WIRE=32, LANES=16,
+                                                 FIFO_SRAM=0, FPLAT=1, ADD_LAT=7, T_CORE=0.833,
+                                                 X_PACE_NUM=7, X_PACE_DEN=8, TOPK=1, TK_NMAX=2048), "topkw16"),
     "qss_256d64": ("tb_w15_qwen_tp2", dict(LANES=256, DEPTH=64, FIFO_SRAM=1, SRAM_MACRO=0, FPLAT=1, ADD_LAT=7,
                                            T_CORE=0.833, U_WIRE=29), "q256"),
     "hbm_p48": ("tb_w15_v41_hbm_nvls", dict(hbm_params(48), X_WIRE=16, U_WIRE=16), "hbm48"),
@@ -588,7 +596,8 @@ def summarize_v41(runs, clock_hz):
         lat = last_vm - issue + 1
         words = four[0]["words"]
         recv_bytes = four[0]["writes"] * 64                                # per die, result words committed
-        rows.append(dict(op=k, mode="all_gather" if four[0]["mode"] else "all_reduce", words_per_rank=words,
+        rows.append(dict(op=k, mode={0: "all_reduce", 1: "all_gather", 2: "topk_merge"}[four[0]["mode"]],
+                         words_per_rank=words,
                          issue_to_last_commit_cycles=lat,
                          issue_to_last_commit_ns=round(lat / clock_hz * 1e9, 1),
                          issue_to_first_commit_cycles=first_vm - issue + 1,
@@ -661,6 +670,72 @@ def v41_sweep_fixture(outdir: Path, sweep_words=SWEEP_WORDS) -> dict:
                 golden_sha256=sha(ROOT / "tools/hdc_golden.py"),
                 operands="tools/rtl_v41_tp_layer0_collectives.operand (gathers); cancellation +-1e10 partials "
                          "(reduces: pairwise and rank-linear folds differ)")
+    (outdir / "manifest.json").write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n")
+    return meta
+
+
+TOPK_OPS = [  # (name, n, k, stride, score kind): the L20 uses (W17 contract) and stress
+    ("l20_index_topk", 512, 512, 262144, "bf16"), ("l20_candidate_blocks", 2048, 2048, 32768, "blocks"),
+    ("index_ties", 512, 512, 262144, "ties"), ("small_k", 512, 37, 262144, "bf16"), ("argmax_k1", 512, 1, 262144, "bf16"),
+    ("k_over_rank", 512, 2048, 262144, "bf16"), ("l20_index_topk_b", 512, 512, 262144, "bf16"),
+    ("l20_candidate_blocks_b", 2048, 2048, 32768, "blocks"), ("zeros_inf", 512, 700, 262144, "zinf"),
+    ("l20_index_topk_c", 512, 512, 262144, "bf16"), ("cand_small_k", 2048, 100, 32768, "blocks"),
+    ("l20_candidate_blocks_c", 2048, 2048, 32768, "blocks")]
+
+
+def v41_topk_fixture(outdir: Path, lanes: int, seed: int = 20260930) -> dict:
+    """12 COLL_TOPK_MERGE descriptors for tb_w15_v41_tp4 (TOPK=1): per rank the n/LANES score words then the
+    n/LANES local-id words (ids 0..n-1, ascending); expected = the k global ids of
+    hdc_golden_v41.topk_lowest_index over the rank-major scores, ascending, LANES a word, zero-padded."""
+    import hdc_golden_v41 as GV
+    outdir.mkdir(parents=True, exist_ok=True)
+    N, MAXW, OPS = 4, 320, 12
+    rng = np.random.default_rng(seed)
+    part = np.zeros((OPS, N, MAXW, lanes), np.uint32)
+    exp = np.zeros((OPS, N * MAXW, lanes), np.uint32)
+    desc, desc2 = [], []
+
+    def bf16(x):
+        b = np.asarray(x, np.float32).view(np.uint32).astype(np.uint64)
+        return ((b + 0x7FFF + ((b >> 16) & 1)) >> 16 << 16).astype(np.uint32).view(np.float32)
+    for oi, (name, n, k, stride, kind) in enumerate(TOPK_OPS):
+        if kind == "bf16":
+            s = bf16(rng.normal(0, 4, (N, n)))
+        elif kind == "blocks":
+            s = bf16(rng.normal(0, 8, (N, n)))
+            s[1, 7] = np.inf
+        elif kind == "ties":
+            s = rng.choice(np.array([0.0, 1.0, 2.0, -1.0], np.float32), size=(N, n))
+        else:
+            s = rng.choice(np.array([0.0, -0.0, 1.0, -np.inf, np.inf, -2.0], np.float32), size=(N, n))
+        s = s.astype(np.float32)
+        nw = n // lanes
+        assert 2 * nw <= MAXW and n % lanes == 0
+        for r in range(N):
+            part[oi, r, :nw] = s[r].view(np.uint32).reshape(nw, lanes)
+            part[oi, r, nw:2 * nw] = np.arange(n, dtype=np.uint32).reshape(nw, lanes)
+        gid = (np.arange(N)[:, None] * stride + np.arange(n)[None, :]).reshape(-1)
+        ids = np.array(sorted(int(gid[i]) for i in GV.topk_lowest_index(s.reshape(-1), k)), np.uint32)
+        pad = np.zeros(-(-k // lanes) * lanes, np.uint32)
+        pad[:k] = ids
+        exp[oi, :len(pad) // lanes] = pad.reshape(-1, lanes)
+        desc.append((1 << 29) | (oi << 15) | nw)
+        desc2.append((k << 32) | stride)
+
+    def wr(path, arr):
+        with path.open("w") as f:
+            for w in arr.reshape(-1, lanes):
+                f.write("".join(f"{int(x):08x}" for x in w[::-1]) + "\n")
+    wr(outdir / "part.hex", part)
+    wr(outdir / "expected.hex", exp)
+    (outdir / "desc.hex").write_text("".join(f"{x:08x}\n" for x in desc))
+    (outdir / "desc2.hex").write_text("".join(f"{x:016x}\n" for x in desc2))
+    meta = dict(schema="w15_v41_topk_fixture_v1", lanes=lanes, ops=[dict(zip(("name", "n", "k", "stride", "kind"), o))
+                                                                     for o in TOPK_OPS],
+                images_sha256={p: sha(outdir / p) for p in ("part.hex", "expected.hex", "desc.hex", "desc2.hex")},
+                golden_sha256=sha(ROOT / "tools/hdc_golden_v41.py"),
+                contract="W17 L20 COLL_TOPK_MERGE (claude/w17-isa-l20): global id = rank * stride + local, "
+                         "top k by (score desc, id asc), ids ascending")
     (outdir / "manifest.json").write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n")
     return meta
 
@@ -845,6 +920,7 @@ def main(argv=None):
     sub.add_parser("links")
     sf = sub.add_parser("sweep-fixture")
     sf.add_argument("dir", type=Path)
+    sub.add_parser("topk-fixture", help="write the COLL_TOPK_MERGE fixtures topkw16 / topkw32 under W15_VEC")
     hf = sub.add_parser("hbm-fixture", help="write the HBM NVLS fixtures (HBM_FIXTURES) under W15_VEC")
     hf.add_argument("names", nargs="*")
     mg = sub.add_parser("merge", help="merge campaign records (each keeps its git state and source pins)")
@@ -861,6 +937,9 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "qwen-fixture":
         print(json.dumps(qwen_fixture(a.dir, a.lanes, a.h), indent=1))
+    elif a.cmd == "topk-fixture":
+        for lanes in (16, 32):
+            print(lanes, json.dumps(v41_topk_fixture(VEC / f"topkw{lanes}", lanes)["images_sha256"]))
     elif a.cmd == "hbm-fixture":
         for n in a.names or HBM_FIXTURES:
             P, ops = HBM_FIXTURES[n]
