@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.qwen-su-fuse.v1",
+ "tp": 4,
+ "su_width": 64,
+ "kr_depth": 64,
+ "positions": [
+  0,
+  100,
+  8191
+ ],
+ "su_ops_per_layer": 20,
+ "edges": [
+  {
+   "producer": 4,
+   "consumer": 6,
+   "stream": "a",
+   "elements": 1280
+  },
+  {
+   "producer": 19,
+   "consumer": 20,
+   "stream": "c",
+   "elements": 4096
+  },
+  {
+   "producer": 28,
+   "consumer": 29,
+   "stream": "c",
+   "elements": 4096
+  }
+ ],
+ "kr_peak_entries": 64,
+ "producers_keeping_vm_write": [
+  4,
+  28
+ ],
+ "vm_element_reads_per_layer": 60452,
+ "vm_element_reads_avoided": 9472,
+ "vm_element_writes_per_layer": 30236,
+ "vm_element_writes_avoided": 4096,
+ "rejects": {
+  "placement_same_width": 16,
+  "other_unit_wrote_between": 2
+ },
+ "cycles_note": "about 0 cycles in the as-built unit: KR read/write sit where the VM read/write sit and dependents still drain (results/uarch/qwen_su_overlap_spec.md)",
+ "pass_core": "tools/w11_su_fuse.py (claude/w11-fuse)",
+ "sources": {
+  "tools/qwen_su_fuse.py": "db5d6c8ba7a9afacfaf4302055cfc6ac7a03fbd78a0ed3645c8b51a0ca999836",
+  "tools/hdc_qwen_fullshape_program.py": "737d9a8c5b671ee08d33f6806cc21b7c98fe69037cfc5c325e5b4350b6c146f6",
+  "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09"
+ },
+ "manifest_sha256": "92b1824bf8b20945bacea01734ad284a8a0a2a84d260edad7f9c7623b5aa2b49",
+ "pass_core_source": "claude/w11-fuse 86e88836 tools/w11_su_fuse.py (+ hdc_isa_v41_fuse.py, rtl_hdc_v41x_vec_kr_campaign.py), on PYTHONPATH until it lands on main",
+ "finding": "Qwen layer chains are mostly cross-lane: of 20 SU ops a layer, 3 KR edges are legal (q/k head norm sum -> scale, post-TP scale -> residual+RMS twice); 16 rejects are placement (scalar broadcast reads with stride 0, RoPE's rotate-half pair reads i+-64), 2 are the ME/collective writing in between. KR saves 16% of VM element reads and 14% of writes a layer, about 0 cycles. Depth 64 entries a lane (32 keeps one edge only)."
+}
