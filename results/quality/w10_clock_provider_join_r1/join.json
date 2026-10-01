@@ -1,0 +1,195 @@
+{
+  "RTL_changed": false,
+  "adopt": false,
+  "clock_accounting": {
+    "existing_endpoint_or_TT_switching_added_again": false,
+    "gated_buffers": 3766,
+    "retained_vector_duty_scope": "a820 actual-vector windows only; no new full-token activity or rate",
+    "root_buffers": 107,
+    "source_clock_rule": "Charge root separately whenever source runs. Do not derive whole-token off-time from host skipping, leaf quiet, r_v arrival or aggregate stage busy.",
+    "stop_duty_credit": false,
+    "wire_delta_fF": null,
+    "wire_only_baseline_fF": null
+  },
+  "current_top_PG_controller_instantiations": {
+    "rtl/chip/ot_chip_v41x_die.sv": 0,
+    "rtl/chip/ot_chip_v41x_pdie.sv": 0,
+    "rtl/v41die/ot_v41_fieldtop_w17w10.sv": 0,
+    "rtl/w17_runtime/chip/ot_chip_v41x_die.sv": 0
+  },
+  "eligibility": {
+    "credit_scope": "Zero stop-cycle credit while providers are incomplete; not a claim about actual future root activity or operating power.",
+    "credited_power_reduction_W": null,
+    "credited_root_stop_cycles": 0,
+    "host_quiet_used_as_provider": false,
+    "physical_root_stop_qualified": false,
+    "runtime_skip_used_as_provider": false,
+    "standalone_pg_used_as_connected_provider": false,
+    "unpriced_model_fields": [
+      "cfg_load_cycles",
+      "go_delivery_cycles",
+      "beat_and_return_drain_cycles",
+      "consumer_accept_and_reverse_credit_cycles",
+      "CDC_cycles",
+      "prewake_cycles",
+      "root_clock_RC_energy",
+      "SSFF_in_context",
+      "physical_stage_profile"
+    ],
+    "unqualified_events": [
+      "configuration",
+      "go",
+      "beat",
+      "drain",
+      "outputcredit",
+      "prewake"
+    ]
+  },
+  "event_providers": [
+    {
+      "binding": "signal identities only",
+      "event": "configuration",
+      "missing": "configuration outstanding counter/walker completion and broadcast pipeline occupancy exported in hardware to root controller",
+      "observed_sources": [
+        "spine f_cfg_go after broadcast stages",
+        "host bcast m.cfg_go/m.cfg_ph/m.cfg_np",
+        "pair ld_run"
+      ]
+    },
+    {
+      "binding": "signal identities only",
+      "event": "go",
+      "missing": "hardware go acceptance plus pending propagation and active selected-stage work, not host bus_go helper",
+      "observed_sources": [
+        "spine go",
+        "f_go",
+        "f_go_bf",
+        "pair go && act"
+      ]
+    },
+    {
+      "binding": "signal identities only",
+      "event": "beat",
+      "missing": "beat-quiet covers producer, all broadcast pipeline stages and pending downstream beats before req_off",
+      "observed_sources": [
+        "spine f_xs_v/f_xb_v",
+        "host pair xs_v/xb_v"
+      ]
+    },
+    {
+      "binding": "partial signal candidates only",
+      "event": "drain",
+      "missing": "synthesizable all-element/all-return-stage drain completion and committed VM writes; runtime-only retn quiet branch cannot transfer to root-stop",
+      "observed_sources": [
+        "pair busy/quiet/pv",
+        "return node quiet/o_v",
+        "spine r_v and w_we"
+      ]
+    },
+    {
+      "binding": "UNBOUND",
+      "event": "outputcredit",
+      "missing": "no return ready/credit port in current spine; require actual acknowledged credits or model-bound fixed-rate consumer acceptance/port reservation and outstanding-write count",
+      "observed_sources": [
+        "return r_v",
+        "VM w_we"
+      ]
+    },
+    {
+      "binding": "UNBOUND",
+      "event": "prewake",
+      "missing": "producer/router-owned next physicalstage request, powered-clock/rail acknowledgement and finite forward/CDC horizon; current L0 has no connected multi-stage provider",
+      "observed_sources": []
+    }
+  ],
+  "hardware_jobs_launched": 0,
+  "model_required": {
+    "CDC_cycles": null,
+    "SSFF_in_context": null,
+    "beat_and_return_drain_cycles": null,
+    "cfg_load_cycles": null,
+    "consumer_accept_and_reverse_credit_cycles": null,
+    "go_delivery_cycles": null,
+    "physical_stage_profile": null,
+    "prewake_cycles": null,
+    "root_clock_RC_energy": null
+  },
+  "next_action": "Require source-bound connected providers and model-priced cycles/ports/fanout/retention/CDC before RTL; full spatial PG/clock fit before any heavy job.",
+  "ownership": {
+    "model_schedule": "Ram01a0f697-9c82-7572-8900-dd7b15d59ebf: integer residency and model-priced whole-stage event joins",
+    "physical_clock": "Current owner: fullmapped slot/clock obligations and power accounting",
+    "runtime_providers": "Godel01a0f697-9bf5-7840-bd23-58a583e983fd: actual consumer ack or fixed-rate reservation/outstanding writes and producer/router prewake",
+    "spatial_PG_escape": "Sole root01a0f65d-bcde-75d0-a540-0a013866cb8a"
+  },
+  "physical_admission": false,
+  "remaining": {
+    "IR_drop_V": null,
+    "actual_root_stop_waveform": null,
+    "actual_slew_load": null,
+    "operating_voltage_V": null,
+    "peak_current_A": null,
+    "physical_phase": null,
+    "total_power_W": null,
+    "whole_token_activity": null
+  },
+  "schema": "opentallas.w10.w17-clock-provider-join.v1",
+  "source_pins": {
+    "results/quality/w10_clock_source_contract_r1/contract.json": {
+      "commit": "850d9c79bc3767b4ad4ca5d5106b9c97aecf08cc",
+      "sha256": "a032b0dc5f76091e9457dc93ef2c2c5c83d7cfa0b2b6709d7b9d6650d56401ff"
+    },
+    "results/rtl/w17_connected_token_preparation_20261001/rootstop_provider_requirements.json": {
+      "commit": "4ad1baf66d6411bf01ebd14ad97b4abecbd9ecf9",
+      "sha256": "03eac4769c66d795d169b3b4efb5958384884ca3e1e211a2ccb982fecaae2ab9"
+    },
+    "rtl/chip/ot_chip_v41x_die.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "sha256": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2"
+    },
+    "rtl/chip/ot_chip_v41x_pdie.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "sha256": "a437bb187205e34ae3a72c22aaaf9bbedd80438c60f23da5b59b7aa5a9fd8546"
+    },
+    "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+    },
+    "rtl/v41die/ot_v41_fieldtop_w17w10.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "sha256": "e2d372c5388535c1cc08ae1648c367fcfc721ecb96579646b962edf3698d8ec8"
+    },
+    "rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "rtl/v41die/ot_v41_retn_w17w10.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+    },
+    "rtl/v41die/ot_v41_spine_w17w10.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd"
+    },
+    "rtl/w17_runtime/chip/ot_chip_v41x_die.sv": {
+      "commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+      "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054"
+    }
+  },
+  "source_semantics": {
+    "hardware_return_quiet": "Outside V41_RT the return quiet output is tied0; runtime queue inspection is not a physical root-stop provider",
+    "host_RT_SKIP": "Software evaluation skipping only, does not drive a physical root ICG",
+    "output_write": "r_v drives registered w_we; producer write-enable is not consumer acceptance/visibility",
+    "pair_quiet": "Partial !e_busy/!ld_run/!c_v/... candidate, not all-stage/credit/prewake completion",
+    "return_arrival": "rows_left decremented by countones(r_v); arrival count is not acknowledged output completion",
+    "spine_ready": "GO admission/state idle, not a return-ready handshake"
+  },
+  "stop_condition_requirements": [
+    "no outstanding cfg/go/beat in producer or transport",
+    "all element/walker partials and return pipelines drained",
+    "consumer acceptance/completion and output credits accounted, no pending writes",
+    "persistent KV/state retained or priced protocol; no reset of currenttoken state",
+    "nextstage prewake request/ack/horizon bound to actualproducer decisions before data arrival"
+  ],
+  "token_runtime_source_commit": "76ffc2aa0df086016c57edc2abb128a29a05099c",
+  "verdict": "SOURCE_BOUND_PARTIAL_SIGNALS_NO_PHYSICAL_ROOTSTOP_CREDIT"
+}
