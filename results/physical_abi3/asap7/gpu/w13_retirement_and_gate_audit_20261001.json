@@ -1,0 +1,395 @@
+{
+  "schema": "opentallas.w13.scoped-retirement-and-admission-audit.v1",
+  "utc": "2026-10-01T15:58:03.578591+00:00",
+  "parent_snapshot_commit": "d3469c6e835a15a2e59d9a30dafaf72baec725ff",
+  "scope": "Ownership/retirement audit only. No signals, route/hardwarejobs or externalBoylemodel edits.",
+  "user_cleanup_authorization": "Unused W13worktrees/checkpoints only; live,dirty,historicalpinned sources and otherstream files preserved.",
+  "local_worktrees": [
+    {
+      "path": "/tmp/claude-1000/wt/w13-hbm",
+      "head": "8ebcfc4b229fc319ea3511d4699574969166e372",
+      "dirty": [
+        "?? results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/",
+        "?? results/physical_abi3/asap7/chip/blocks/ot_gpu_tc_col.json",
+        "?? results/physical_abi3/asap7/chip/boundary/ot_gpu_tc_col.json"
+      ],
+      "size_kib": 4235356,
+      "queue_script_refs": [
+        "/tmp/claude-1000/queue/W13b.whole_sm_input_caps_handoff_r1.json",
+        "/tmp/claude-1000/w13jobs/jobs/tccol_092.sh",
+        "/tmp/claude-1000/w13jobs/jobs/harden_tccol.sh",
+        "/tmp/claude-1000/w13jobs/jobs/cv2.sh",
+        "/tmp/claude-1000/w13jobs/jobs/bdcol_092.sh",
+        "/tmp/claude-1000/w13jobs/jobs/harden_bd_col.sh",
+        "/tmp/claude-1000/w13jobs/jobs/tccol_091.sh",
+        "/tmp/claude-1000/w13jobs/jobs/harden_tc16.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain_smv.sh",
+        "/tmp/claude-1000/w13jobs/jobs/stack_092.sh",
+        "/tmp/claude-1000/w13jobs/jobs/harden2_tc16.sh",
+        "/tmp/claude-1000/w13jobs/jobs/harden2_tc_col.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain_smq.sh",
+        "/tmp/claude-1000/w13jobs/jobs/tccol16_092.sh",
+        "/tmp/claude-1000/w13jobs/jobs/barrier_092.sh"
+      ],
+      "retire": false,
+      "reference_matching": "Absolute path or boundedworktreebasename; includes historical/relative scripts conservatively.",
+      "ownership": "owned",
+      "decision": "RETAIN",
+      "reason": "Active passive-intake destination, unique committed and untracked evidence; never retire active owned stream.",
+      "estimated_gib": 4.039150238037109
+    },
+    {
+      "path": "/tmp/claude-1000/wt/w13-t16",
+      "head": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+      "dirty": [
+        " M results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16.lef",
+        " M results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16_typ.lib",
+        " M results/physical_abi3/asap7/chip/blocks/ot_gpu_tc16.json",
+        " M results/physical_abi3/asap7/chip/boundary/ot_gpu_tc16.json",
+        "?? results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16_ff.lib",
+        "?? results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16_ss.lib",
+        "?? results/physical_abi3/asap7/chip/corners/"
+      ],
+      "size_kib": 4230788,
+      "queue_script_refs": [
+        "/tmp/claude-1000/queue/W13b.manifest",
+        "/tmp/claude-1000/w13jobs/jobs/chain12v2.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain13.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain14.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain12v.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain12.sh"
+      ],
+      "retire": false,
+      "reference_matching": "Absolute path or boundedworktreebasename; includes historical/relative scripts conservatively.",
+      "ownership": "owned",
+      "decision": "RETAIN",
+      "reason": "Dirty terminal SSFAIL copyback and historical000ba089 source pin.",
+      "estimated_gib": 4.034793853759766
+    },
+    {
+      "path": "/tmp/claude-1000/wt/w13-smq12",
+      "head": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+      "dirty": [],
+      "size_kib": 4229888,
+      "queue_script_refs": [
+        "/tmp/claude-1000/queue/W13b.manifest",
+        "/tmp/claude-1000/w13jobs/jobs/chain13.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain14.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain12.sh"
+      ],
+      "retire": false,
+      "reference_matching": "Absolute path or boundedworktreebasename; includes historical/relative scripts conservatively.",
+      "ownership": "legacy_W13_read_only_inventory_not_current_owned_tree",
+      "decision": "RETAIN",
+      "reason": "Clean but still referenced by parked originalchain14.",
+      "estimated_gib": 4.033935546875
+    },
+    {
+      "path": "/tmp/claude-1000/wt/w13-smv13",
+      "head": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+      "dirty": [],
+      "size_kib": 4229952,
+      "queue_script_refs": [
+        "/tmp/claude-1000/queue/W13b.manifest",
+        "/tmp/claude-1000/w13jobs/jobs/chain14.sh"
+      ],
+      "retire": false,
+      "reference_matching": "Absolute path or boundedworktreebasename; includes historical/relative scripts conservatively.",
+      "ownership": "legacy_W13_read_only_inventory_not_current_owned_tree",
+      "decision": "RETAIN",
+      "reason": "Clean but still referenced by parked originalchain14.",
+      "estimated_gib": 4.03399658203125
+    },
+    {
+      "path": "/tmp/claude-1000/wt/w13-smv12",
+      "head": "a087912804e735affdf6e25273ae842a5f99e622",
+      "dirty": [],
+      "size_kib": 4202428,
+      "queue_script_refs": [
+        "/tmp/claude-1000/queue/W13b.manifest",
+        "/tmp/claude-1000/w13jobs/jobs/chain12v2.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain13.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain12v.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain12.sh"
+      ],
+      "retire": false,
+      "reference_matching": "Absolute path or boundedworktreebasename; includes historical/relative scripts conservatively.",
+      "ownership": "legacy_W13_read_only_inventory_not_current_owned_tree",
+      "decision": "RETAIN",
+      "reason": "Historical long-job/pathfinding sourcea0879128 and referenced prior scripts; preserve.",
+      "estimated_gib": 4.007747650146484
+    },
+    {
+      "path": "/tmp/claude-1000/wt/w13-tc",
+      "head": "f7b5566e16f99648477f7794dfd0afeda91e15ed",
+      "dirty": [],
+      "size_kib": 4200936,
+      "queue_script_refs": [
+        "/tmp/claude-1000/queue/W13b.manifest",
+        "/tmp/claude-1000/w13jobs/jobs/harden3_tc_col.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain13.sh",
+        "/tmp/claude-1000/w13jobs/jobs/chain12.sh"
+      ],
+      "retire": false,
+      "reference_matching": "Absolute path or boundedworktreebasename; includes historical/relative scripts conservatively.",
+      "ownership": "legacy_W13_read_only_inventory_not_current_owned_tree",
+      "decision": "RETAIN",
+      "reason": "Historical long-job sourcef7b5566e and referenced prior scripts; preserve.",
+      "estimated_gib": 4.006324768066406
+    }
+  ],
+  "remote_snapshot": {
+    "utc": "2026-10-01T15:52:53.717678+00:00",
+    "load": [
+      152.337890625,
+      149.8583984375,
+      147.89208984375
+    ],
+    "cpu_affinity": 28,
+    "handles": [
+      {
+        "pid": 1603669,
+        "state": "R",
+        "start_ticks": "44664461",
+        "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 6 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/chip_ot_gpu_tc_col/base/5_2_route.json ",
+        "rss_kib": 7469676,
+        "cwd_access": "unreadable; failclosed for path retirement"
+      },
+      {
+        "pid": 1392456,
+        "state": "S",
+        "start_ticks": "41324698",
+        "command": "python3 tools/chip_assembly/harden.py --block ot_gpu_tc_col --work /home/ubuntu/w13work/tc_col_13 --phase pnr --budget results/physical_abi3/asap7/chip/budgets/gpu_sm_qwen.json ",
+        "rss_kib": 12048,
+        "cwd": "/home/ubuntu/w13wt/tc"
+      },
+      {
+        "pid": 1533879,
+        "state": "R",
+        "start_ticks": "44067228",
+        "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 28 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_hdc_v41x_vec_sfu1024r_asap7_w11sc_s2/base/5_2_route.json ",
+        "rss_kib": 28670900,
+        "cwd_access": "unreadable; failclosed for path retirement"
+      },
+      {
+        "pid": 1502922,
+        "state": "R",
+        "start_ticks": "43375863",
+        "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 28 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_hdc_v41x_idx_chunk_asap7_w11st_chunk755m5/base/5_2_route.json ",
+        "rss_kib": 30795400,
+        "cwd_access": "unreadable; failclosed for path retirement"
+      },
+      {
+        "pid": 1539789,
+        "state": "S",
+        "start_ticks": "44180834",
+        "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 28 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_w11_quarter_join_phys_asap7_w11rjoin/base/5_1_grt.json ",
+        "rss_kib": 11388216,
+        "cwd_access": "unreadable; failclosed for path retirement"
+      },
+      {
+        "pid": 1509052,
+        "state": "R",
+        "start_ticks": "43498693",
+        "command": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s /home/ubuntu/w11tmp/abi3-physical-a3gn7k3f/synth.ys ",
+        "rss_kib": 6548808,
+        "cwd": "/tmp/claude-1000/wt/w11-st6"
+      }
+    ],
+    "mem_available_kib": 96239748,
+    "disk": "/dev/sda1        812807076 724876772  87913920      90% /",
+    "dirs": [
+      {
+        "path": "/home/ubuntu/w13work/tc16_12",
+        "retain": true,
+        "du_kib_reported": "2835696",
+        "du_rc": 0,
+        "decision": "RETAIN",
+        "reason": "Completed rejectedTC16; terminal corner/raw routed evidence retained, no tuning/retry.",
+        "estimated_gib": 2.7043304443359375
+      },
+      {
+        "path": "/home/ubuntu/w13work/sm_v12",
+        "retain": true,
+        "du_kib_reported": "1437456",
+        "du_rc": 0,
+        "decision": "RETAIN",
+        "reason": "Historical stoppedpathfinding checkpoints; no complete archival/retirement proof, sourcepin preserved.",
+        "estimated_gib": 1.3708648681640625
+      },
+      {
+        "path": "/home/ubuntu/w13work/tc_col_13",
+        "retain": true,
+        "du_kib_reported": "2409704",
+        "du_rc": 0,
+        "decision": "RETAIN",
+        "reason": "Original live detailroute; source/current checkpoints protected.",
+        "estimated_gib": 2.2980728149414062
+      },
+      {
+        "path": "/home/ubuntu/w13work/camp_w19",
+        "retain": true,
+        "du_kib_reported": "882876",
+        "du_rc": 0,
+        "decision": "RETAIN",
+        "reason": "W19historical production-shape campaign evidence; no complete archive/retirement proof; do nottouch otherowner continuation.",
+        "estimated_gib": 0.8419761657714844
+      },
+      {
+        "path": "/home/ubuntu/w13work/camp_lanes",
+        "retain": true,
+        "du_kib_reported": "1050740",
+        "du_rc": 0,
+        "decision": "RETAIN",
+        "reason": "Campaign build/fixture artifacts with historicalmanifest references; no complete archive/retirement proof.",
+        "estimated_gib": 1.0020637512207031
+      },
+      {
+        "path": "/home/ubuntu/w13work/camp_blockdot",
+        "retain": true,
+        "du_kib_reported": "295788",
+        "du_rc": 0,
+        "decision": "RETAIN",
+        "reason": "Campaign build/fixture artifacts with historicalmanifest references; no complete archive/retirement proof.",
+        "estimated_gib": 0.2820854187011719
+      }
+    ],
+    "corners_present": false
+  },
+  "local_process_handles": [
+    {
+      "pid": 2089594,
+      "start_ticks": "302549468",
+      "state": "S"
+    },
+    {
+      "pid": 615596,
+      "start_ticks": "305293450",
+      "state": "T"
+    },
+    {
+      "pid": 626096,
+      "start_ticks": "305314538",
+      "state": "S"
+    },
+    {
+      "pid": 698869,
+      "start_ticks": "305497198",
+      "state": "S"
+    },
+    {
+      "pid": 2089666,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089669,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089670,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 3047316,
+      "start_ticks": "304527912",
+      "state": "T"
+    }
+  ],
+  "retired_supervisors": [
+    {
+      "pid": 508855,
+      "historical_start_ticks": "305066820",
+      "status": "ABSENT_NO_RESTART"
+    },
+    {
+      "pid": 504803,
+      "historical_start_ticks": "305058737",
+      "status": "ABSENT_NO_RESTART"
+    },
+    {
+      "pid": 495285,
+      "historical_start_ticks": "305041193",
+      "status": "ABSENT_NO_RESTART"
+    }
+  ],
+  "owner_coordination_sha256": "f25829367c5204f297181c60dabc608ebc969ef314606d506530f860facf6b27",
+  "cleanup_decision": {
+    "safe_owned_worktree_deletions": [],
+    "safe_remote_checkpoint_deletions": [],
+    "deleted_paths": [],
+    "bytes_reclaimed": 0,
+    "reason": "Ownedtrees are live/dirty historicalpins; cleanlegacytargets remain parkeddriver references; remotecheckpoints lack complete archival and retirement proof. Unreadable container cwd prevents pathretirement inference. Pythoncaches totalunder2MiB were leftalone as immaterial toheadroom."
+  },
+  "geometry_intake": {
+    "review_commit": "d3469c6e835a15a2e59d9a30dafaf72baec725ff",
+    "review_path": "results/quality/parent_hbm_geometry_correction_review_20261001/review.json",
+    "review_sha256": "216a0c25e3f3fac7223dd7251ef67a7b8300e5a0f722efd9ab881b1981380b19",
+    "candidate_path": "results/physical_abi3/asap7/gpu/w13_distributed_geometry_correction_20261001/candidate_v2.json",
+    "candidate_sha256": "7e6726d9523e9ad846388bb6492f8963979bf21578396063b276c252180c97eb",
+    "rows": [
+      {
+        "model": "qwen",
+        "SMs": 32,
+        "partition_regions": 69,
+        "service_macros": 656,
+        "independent_containment_nonoverlap_partition_pass": true,
+        "same_array_dimensions_as_original": true
+      },
+      {
+        "model": "v41",
+        "SMs": 32,
+        "partition_regions": 69,
+        "service_macros": 656,
+        "independent_containment_nonoverlap_partition_pass": true,
+        "same_array_dimensions_as_original": true
+      }
+    ],
+    "verdict": "PASS_ANALYTICAL_GEOMETRY_ONLY",
+    "qualification": "Analytical containment only,32SM/69regions/656service macros each. No fullprogram demand calendar or contextual SSFF qualification.",
+    "physical_admission": false,
+    "engine_admission": false,
+    "rate_credit": 0
+  },
+  "calendar_failure_preserved": {
+    "review_commit": "7c236cdc6fba6c211ea529dee8325f45f1d57e44",
+    "review_path": "results/quality/parent_hbm_calendar_gate_review_20261001/review.json",
+    "review_sha256": "709efee41c5d3fc28cd929fb1b8b0393a03299c6ed054fda72552668a4b27b3d",
+    "verdict": "FAIL_INCOMPLETE_CALENDAR_VALIDATION",
+    "failed_owner_commits": [
+      "d4780ea76",
+      "8e52c0faa"
+    ],
+    "counterexample_kinds": [
+      "callback_omits_source_graph_dependency",
+      "service_after_consumer_and_credit_return"
+    ],
+    "consequence": "Focused5PASS neverestablishesengineadmission. Source-authoritative0->1dependency canbeomitted; service_tick999999 afterconsumer160/credit345 accepted. Boyleowns dependency/causal request-read-write chronologyfix; no duplicatevalidator orqualification byW13.",
+    "qualified_service_calendar": false
+  },
+  "admission": {
+    "status": "FAIL_CLOSED_MODEL_ADMISSION_HOLD",
+    "TC16": "PreservedFAIL SS-31.06ps FFhold+5.22ps, no tuning/retry",
+    "soleTCcol": "2089594/start302549468; remote1603669/start44664461 detailroute pendingbothcorners",
+    "SM_launch_events": 0,
+    "new_dispatch": false,
+    "physical_admission": false,
+    "engine_admission": false,
+    "full_program_rate_credit": false,
+    "geometry_cannot_override_calendar_failure": true
+  },
+  "validation": {
+    "owned_scope_and_dirty_status_checked": 2,
+    "clean_referenced_legacy_worktrees_checked": 2,
+    "historical_source_trees_preserved": 2,
+    "live_local_start_tick_checks": 8,
+    "retired_supervisors_absent_checks": 3,
+    "protected_otherowner_remote_jobs_checked": 4,
+    "candidate_hash_matches_parent_review": true,
+    "main_TASKS_docs_changes": false,
+    "externalmodels_changes": false,
+    "process_mutations": false
+  }
+}
