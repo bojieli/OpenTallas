@@ -1,0 +1,60 @@
+import json
+
+import pytest
+
+from tools import w13_terminal_intake as intake
+
+
+def fixture(tmp_path):
+    root = tmp_path / "producer"
+    root.mkdir()
+    source = root / "rtl/top.sv"
+    source.parent.mkdir()
+    source.write_text("module top; endmodule\n")
+    log = tmp_path / "wrapper.log"
+    log.write_text("worker finished rc=1\n")
+    job = {"root": str(root), "block": "ot_gpu_tc16", "handle": {"pid": 5, "start_ticks": "old"},
+           "source_commit": "pinned", "source_sha256": {"rtl/top.sv": intake.digest(source)},
+           "wrapper_log": str(log), "initial_artifact_sha256": {}}
+    return root, job
+
+
+def test_failure_copied_byte_identically_without_qualification(tmp_path):
+    root, job = fixture(tmp_path)
+    corner = root / intake.CHIP / "corners/ot_gpu_tc16.json"
+    corner.parent.mkdir(parents=True)
+    corner.write_text('{"closed_signoff": false, "corners": {"SS": {"setup_wns_ps": -92.4}}}\n')
+    original = corner.read_bytes()
+    dest = tmp_path / "archive"
+    row = intake.archive(job, dest, "configpin")
+    assert row["fresh_corner_record"]
+    assert row["producer_claimed_closed_signoff"] is False
+    assert row["source_pin_mismatches"] == []
+    assert (dest / corner.relative_to(root)).read_bytes() == original == corner.read_bytes()
+    with pytest.raises(FileExistsError):
+        intake.archive(job, dest, "configpin")
+
+
+def test_inherited_record_is_not_new_terminal_evidence(tmp_path):
+    root, job = fixture(tmp_path)
+    corner = root / intake.CHIP / "corners/ot_gpu_tc16.json"
+    corner.parent.mkdir(parents=True)
+    corner.write_text(json.dumps({"closed_signoff": True}))
+    job["initial_artifact_sha256"][str(corner.relative_to(root))] = intake.digest(corner)
+    row = intake.archive(job, tmp_path / "archive", "configpin")
+    assert not row["fresh_corner_record"]
+    assert row["status"] == "producer_ended_without_new_corner_record"
+
+
+def test_missing_record_and_source_drift_are_retained(tmp_path):
+    root, job = fixture(tmp_path)
+    (root / "rtl/top.sv").write_text("changed")
+    row = intake.archive(job, tmp_path / "archive", "configpin")
+    assert row["producer_claimed_closed_signoff"] is None
+    assert row["source_pin_mismatches"] == ["rtl/top.sv"]
+
+
+def test_reused_pid_is_not_original_live_wrapper(monkeypatch):
+    monkeypatch.setattr(intake, "identity", lambda pid: {"pid": pid, "start_ticks": "new", "state": "S"})
+    assert not intake.handle_live({"pid": 5, "start_ticks": "old"})
+    assert intake.handle_live({"pid": 5, "start_ticks": "new"})
