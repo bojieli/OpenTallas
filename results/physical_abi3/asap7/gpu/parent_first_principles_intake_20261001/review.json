@@ -1,0 +1,37 @@
+{
+  "schema": "parent.first-principles-intake.v1",
+  "reviewed_commits": [
+    "49d15868b",
+    "d2cabe7ce",
+    "87362cef6"
+  ],
+  "independent_diverse_phase_scan": {
+    "source_manifest_sha256": "bbb260a4fcda3feb5ac73767bb76e08737fffaee55f94d57b26a313d775abd2d",
+    "external_first_read_events": 515,
+    "external_first_read_lane_words": 13120,
+    "all_event_address_digests_exact": true,
+    "all_opcode_warp_counts_exact": true,
+    "unmapped_shared_events": 1349,
+    "actual_provider_publication_bound": false
+  },
+  "refill_source_review": {
+    "git": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+    "source_sha256_matches": 14,
+    "replay_cases": 26,
+    "replay_json_equal": true,
+    "scope": "CONDITIONAL_SCALAR_EXPECTATION_NOT_RTL_MEASURED",
+    "actual_live_bank_state_and_deadline_proof": false
+  },
+  "mandatory_refill_gate_review": {
+    "test_result": "3 passed in 0.46s",
+    "CLI_record_equal": true,
+    "isolated_exact_commit_extraction": true,
+    "hardware_admission": false
+  },
+  "limitations": [
+    "Conditional cold replay is not measured refill progress or an exact live deadline.",
+    "Source admission audit is not observed handshake/deadlock proof.",
+    "No actual operand provider or opcode service timing is supplied.",
+    "No live modifications, watchdog changes, RTL builds or physical jobs."
+  ]
+}
