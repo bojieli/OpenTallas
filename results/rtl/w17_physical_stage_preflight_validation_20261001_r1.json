@@ -1,0 +1,15 @@
+{
+  "status": "PASS_PREFLIGHT_VALIDATION_ONLY",
+  "exact_owner_record_accepted": true,
+  "rejected_mutants": [
+    "layercoverage",
+    "expertgap",
+    "expertowner",
+    "diecount",
+    "pairinventory",
+    "source_identity_rewrite"
+  ],
+  "model_source_pins_verified": 5,
+  "physical_execution_or_RTL_gate": false,
+  "no_product_adoption": true
+}
