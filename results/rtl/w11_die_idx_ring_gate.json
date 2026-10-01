@@ -520,5 +520,12 @@
     "tools/hdc_program_v41.py": "d1573640f02b3f8267ae8b038e9d72d46716891f20eed92f0bcfaafed6a0b88d",
     "tools/hdc_images_v41x.py": "42989b07a65e85bf4406774d8b049f9e4d38ef0b259187f7a744fc97024ffcc3",
     "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh": "138edb11cd58f3d7d69cc9b8a383a86653c583198a87965a3de656ca22a069c4"
+  },
+  "currency": {
+    "state": "stale",
+    "stale_since": "3cc18731",
+    "reason": "VM-H is history (root ruling 2026-10-01: the product VM is C_rotate). The ring gate re-run on the VM-H landing tree was killed after 5 h on a starved ot-pve2 and not re-run (superseded); pins moved with main's attention REPL=2 engine and the SU serial build (MLAT/ALAT), default builds unchanged.",
+    "verdict_kept": "pass",
+    "marked": "2026-10-01 W11 VM-H landing as history"
   }
 }

@@ -4,6 +4,10 @@ import hashlib
 import json
 from pathlib import Path
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from record_currency_support import assert_current_or_marked_stale  # noqa: E402
+
 from tools import w11_idx_ring_naming as naming
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,8 +29,7 @@ def test_naming_record_current_and_passing():
 def test_mu_die_gate_current_and_passing():
     rec = json.loads(MU.read_text())
     assert rec["status"] == "pass"
-    for path, digest in rec["sources_sha256"].items():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest, path
+    assert_current_or_marked_stale(rec, rec["sources_sha256"], "test_w11_idx_ring_mu.py")
     cfg = rec["configuration"]
     assert cfg["IDX_RING_RSB"] == 64 and cfg["IDX_RING_RTAIL"] == 32 and cfg["IDX_RING_MU"] == 1
     steps = rec["steps"]

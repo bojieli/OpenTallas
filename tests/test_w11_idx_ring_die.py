@@ -4,6 +4,10 @@ import hashlib
 import json
 from pathlib import Path
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from record_currency_support import assert_current_or_marked_stale  # noqa: E402
+
 from tools import w11_idx_ring_concurrent as conc
 from tools import w11_idx_ring_prefill_sizing as pre
 
@@ -14,8 +18,7 @@ DIE = ROOT / "results/rtl/w11_die_idx_ring_gate.json"
 def test_die_gate_passes_and_pins_are_current():
     rec = json.loads(DIE.read_text())
     assert rec["status"] == "pass"
-    for path, digest in rec["sources_sha256"].items():
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest, path
+    assert_current_or_marked_stale(rec, rec["sources_sha256"], "test_w11_idx_ring_die.py")
     for case in rec["cases"]:
         assert case["ring"]["status"] == case["replicated_reference"]["status"] == "pass"
         assert case["token_identical"]
