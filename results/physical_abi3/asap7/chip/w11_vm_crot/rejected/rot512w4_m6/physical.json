@@ -1,0 +1,200 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-01T04:46:25.386290+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 5427.875,
+    "block": "ot_v41_vm_rot",
+    "cells": 44333,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.0,
+    "parameters": {
+      "LPS": 7,
+      "N": 512,
+      "W": 4
+    },
+    "sources": [
+      {
+        "path": "rtl/chip/ot_v41_vm_rot.sv",
+        "sha256": "9dc430d44919f75f003205fb8051e29632e1ca2bdee196fec39e43c25d5fd644",
+        "size_bytes": 2208
+      }
+    ],
+    "top": "ot_v41_vm_rot"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n  805235          25.61%\nM5         Vertical      1044988        775473          25.79%\nM6         Horizontal     726694        492208          32.27%\n---------------------------------------------------------------\n\n[INFO GRT-0101] Running extra iterations to remove congestion.\n[INFO GRT-0102] Start extra iteration 1/30\n[INFO GRT-0102] Start extra iteration 2/30\n[INFO GRT-0102] Start extra iteration 3/30\n[INFO GRT-0102] Start extra iteration 4/30\n[INFO GRT-0102] Start extra iteration 5/30\n[INFO GRT-0102] Start extra iteration 6/30\n[INFO GRT-0102] Start extra iteration 7/30\n[INFO GRT-0102] Start extra iteration 8/30\n[INFO GRT-0102] Start extra iteration 9/30\n[INFO GRT-0102] Start extra iteration 10/30\n[INFO GRT-0102] Start extra iteration 11/30\n[INFO GRT-0102] Start extra iteration 12/30\n[INFO GRT-0102] Start extra iteration 13/30\n[INFO GRT-0102] Start extra iteration 14/30\n[INFO GRT-0102] Start extra iteration 15/30\n[INFO GRT-0102] Start extra iteration 16/30\n[INFO GRT-0102] Start extra iteration 17/30\n[INFO GRT-0102] Start extra iteration 18/30\n[INFO GRT-0102] Start extra iteration 19/30\n[INFO GRT-0102] Start extra iteration 20/30\n[INFO GRT-0102] Start extra iteration 21/30\n[INFO GRT-0102] Start extra iteration 22/30\n[INFO GRT-0102] Start extra iteration 23/30\n[INFO GRT-0102] Start extra iteration 24/30\n[INFO GRT-0102] Start extra iteration 25/30\n[INFO GRT-0102] Start extra iteration 26/30\n[INFO GRT-0102] Start extra iteration 27/30\n[INFO GRT-0102] Start extra iteration 28/30\n[INFO GRT-0102] Start extra iteration 29/30\n[INFO GRT-0102] Start extra iteration 30/30\n[INFO GRT-0197] Via related to pin nodes: 588200\n[INFO GRT-0198] Via related Steiner nodes: 9356\n[INFO GRT-0199] Via filling finished.\n[INFO GRT-0111] Final number of vias: 854451\n[INFO GRT-0112] Final usage 3D: 4010866\n\n[INFO GRT-0096] Final congestion report:\nLayer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion\n---------------------------------------------------------------------------------------\nM1                   0             0            0.00%             0 /  0 /  0\nM2              872280        460688           52.81%             5 /  0 / 1081\nM3             1048785        560615           53.45%             0 / 13 / 6569\nM4              805235        213860           26.56%             4 /  0 / 995\nM5              775473        177218           22.85%             0 /  7 / 3407\nM6              492208         35132            7.14%             3 /  0 / 395\n---------------------------------------------------------------------------------------\nTotal          3993981       1447513           36.24%            12 / 20 / 12447\n\n[INFO GRT-0018] Total wirelength: 998226 um\n[INFO GRT-0014] Routed nets: 96374\n[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.\nwrite_db /work/results/asap7/opentallas_ot_v41_vm_rot_asap7_w11crrot512w4_m6/base/5_1_grt-failed.odb\nError: global_route.tcl, 175 GRT-0116\n\nElapsed time: 0:04.43[h:]min:sec. CPU time: user 4.16 sys 0.27 (100%). Peak memory: 412544KB.\nElapsed time: 0:25.76[h:]min:sec. CPU time: user 32.83 sys 5.91 (150%). Peak memory: 561744KB.\nElapsed time: 0:03.85[h:]min:sec. CPU time: user 3.63 sys 0.21 (100%). Peak memory: 378648KB.\nElapsed time: 0:03.81[h:]min:sec. CPU time: user 3.57 sys 0.24 (100%). Peak memory: 351656KB.\nElapsed time: 0:04.61[h:]min:sec. CPU time: user 4.36 sys 0.25 (100%). Peak memory: 392008KB.\nElapsed time: 0:41.36[h:]min:sec. CPU time: user 475.61 sys 0.50 (1151%). Peak memory: 485644KB.\nElapsed time: 0:04.64[h:]min:sec. CPU time: user 4.35 sys 0.29 (100%). Peak memory: 394516KB.\nElapsed time: 5:12.47[h:]min:sec. CPU time: user 2518.50 sys 55.34 (823%). Peak memory: 1214072KB.\nElapsed time: 1:21.39[h:]min:sec. CPU time: user 121.64 sys 14.53 (167%). Peak memory: 785256KB.\nElapsed time: 1:16.05[h:]min:sec. CPU time: user 99.04 sys 10.03 (143%). Peak memory: 915776KB.\nElapsed time: 4:03.83[h:]min:sec. CPU time: user 304.70 sys 9.68 (128%). Peak memory: 1321364KB.\nElapsed time: 16:47.95[h:]min:sec. CPU time: user 2018.54 sys 58.64 (206%). Peak memory: 1968304KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/opentallas_ot_v41_vm_rot_asap7_w11crrot512w4_m6/base/5_1_grt.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-01T04:14:55.868342+00:00",
+  "git": {
+    "commit": "6a43fad2348555586f8afa0543befa8a11ef9c9d",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--clock-period-ns",
+      "1.111",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--keep-heavy-artifacts",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--io-delay-fraction",
+      "0",
+      "--slew-margin-percent",
+      "40",
+      "--stages",
+      "synth,pnr",
+      "--force",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--nickname-tag",
+      "w11crrot512w4_m6",
+      "--output",
+      "/tmp/claude-1000/w11crot/hard/rot512w4_m6/physical.json",
+      "--top",
+      "ot_v41_vm_rot",
+      "--source",
+      "rtl/chip/ot_v41_vm_rot.sv",
+      "--param",
+      "N=512",
+      "--param",
+      "LPS=7",
+      "--param",
+      "W=4",
+      "--orfs-var",
+      "CORE_UTILIZATION=20",
+      "--routing-layers",
+      "M2",
+      "M6"
+    ],
+    "driver": {
+      "commit": "6a43fad2348555586f8afa0543befa8a11ef9c9d",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/claude-1000/wt/w11-cr3/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "1238d12389efa5e176c5411959510bbf7bf5ac88448583858e5c03f3ad803fb6",
+      "tree": "/tmp/claude-1000/wt/w11-cr3"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/claude-1000/wt/w11-cr3"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 1111.0,
+    "cell_area_um2": 5427.875,
+    "cell_count": 44333,
+    "cell_types_used": 16,
+    "chip_area_um2": 5428.03194,
+    "combinational_cell_count": 38178,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "87fa4d5eb576c1bf75ccbfb2b5054d3349ab2d551b0016ec457203b642747958",
+      "raw_netlist_sha256": "87fa4d5eb576c1bf75ccbfb2b5054d3349ab2d551b0016ec457203b642747958",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 1790.0,
+    "sequential_cell_count": 6155,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 1.111,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

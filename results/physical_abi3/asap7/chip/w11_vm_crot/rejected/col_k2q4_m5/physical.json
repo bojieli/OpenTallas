@@ -1,0 +1,171 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-01T03:55:13.236805+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_v41_vm_group_phys",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.0,
+    "parameters": {
+      "K": 2,
+      "NB": 2,
+      "RA": 8,
+      "RC": 6,
+      "RDREG": 1,
+      "WQD": 4
+    },
+    "sources": [
+      {
+        "path": "rtl/chip/ot_v41_vm_group_phys.sv",
+        "sha256": "bbbf529178d7dd10d047417f4f6d0a51ad636f2e38fa95073a83e8ae5e5c1678",
+        "size_bytes": 11476
+      }
+    ],
+    "top": "ot_v41_vm_group_phys"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\nent        0.8 u\nmax displacement          105.9 u\noriginal HPWL         3431613.6 u\nlegalized HPWL        3538432.0 u\ndelta HPWL                    3 %\n\nTook 700 seconds: detailed_placement\n[WARNING DPL-0005] Overlap check failed (31).\n hold136708 (BUFx2_ASAP7_75t_R) overlaps hold108275 (BUFx2_ASAP7_75t_R)\n hold149612 (BUFx2_ASAP7_75t_R) overlaps hold108266 (BUFx2_ASAP7_75t_R)\n hold158693 (BUFx2_ASAP7_75t_R) overlaps hold149747 (BUFx2_ASAP7_75t_R)\n hold162150 (BUFx2_ASAP7_75t_R) overlaps hold107975 (BUFx2_ASAP7_75t_R)\n wire95255 (BUFx16f_ASAP7_75t_R) overlaps wire94031 (BUFx16f_ASAP7_75t_R)\n wire95342 (BUFx16f_ASAP7_75t_R) overlaps hold136361 (BUFx2_ASAP7_75t_R)\n wire98322 (BUFx16f_ASAP7_75t_R) overlaps hold110052 (BUFx2_ASAP7_75t_R)\n wire98816 (BUFx16f_ASAP7_75t_R) overlaps hold158685 (BUFx2_ASAP7_75t_R)\n wire98819 (BUFx16f_ASAP7_75t_R) overlaps hold136308 (BUFx2_ASAP7_75t_R)\n wire98822 (BUFx16f_ASAP7_75t_R) overlaps hold137202 (BUFx2_ASAP7_75t_R)\n wire98840 (BUFx16f_ASAP7_75t_R) overlaps wire98824 (BUFx16f_ASAP7_75t_R)\n wire98860 (BUFx16f_ASAP7_75t_R) overlaps wire98827 (BUFx16f_ASAP7_75t_R)\n wire98867 (BUFx16f_ASAP7_75t_R) overlaps hold136716 (BUFx2_ASAP7_75t_R)\n wire98873 (BUFx16f_ASAP7_75t_R) overlaps hold134998 (BUFx2_ASAP7_75t_R)\n wire98883 (BUFx16f_ASAP7_75t_R) overlaps wire94139 (BUFx16f_ASAP7_75t_R)\n wire98933 (BUFx16f_ASAP7_75t_R) overlaps wire98863 (BUFx16f_ASAP7_75t_R)\n wire98934 (BUFx16f_ASAP7_75t_R) overlaps hold149746 (BUFx2_ASAP7_75t_R)\n wire98987 (BUFx16f_ASAP7_75t_R) overlaps wire94153 (BUFx16f_ASAP7_75t_R)\n wire99013 (BUFx16f_ASAP7_75t_R) overlaps wire98970 (BUFx16f_ASAP7_75t_R)\n wire99032 (BUFx16f_ASAP7_75t_R) overlaps wire98985 (BUFx16f_ASAP7_75t_R)\n wire99034 (BUFx16f_ASAP7_75t_R) overlaps hold158702 (BUFx2_ASAP7_75t_R)\n wire99039 (BUFx16f_ASAP7_75t_R) overlaps hold149752 (BUFx2_ASAP7_75t_R)\n wire99040 (BUFx16f_ASAP7_75t_R) overlaps hold170488 (BUFx2_ASAP7_75t_R)\n wire99048 (BUFx16f_ASAP7_75t_R) overlaps hold136697 (BUFx2_ASAP7_75t_R)\n wire99108 (BUFx16f_ASAP7_75t_R) overlaps hold136328 (BUFx2_ASAP7_75t_R)\n wire99152 (BUFx16f_ASAP7_75t_R) overlaps wire99146 (BUFx16f_ASAP7_75t_R)\n wire99198 (BUFx16f_ASAP7_75t_R) overlaps place80477 (BUFx2_ASAP7_75t_R)\n wire99249 (BUFx16f_ASAP7_75t_R) overlaps wire99149 (BUFx16f_ASAP7_75t_R)\n wire99256 (BUFx16f_ASAP7_75t_R) overlaps hold135340 (BUFx2_ASAP7_75t_R)\n wire99270 (BUFx16f_ASAP7_75t_R) overlaps hold107732 (BUFx2_ASAP7_75t_R)\n wire99287 (BUFx16f_ASAP7_75t_R) overlaps wire99105 (BUFx16f_ASAP7_75t_R)\n[WARNING DPL-0011] Padding check failed (31).\n hold136708\n hold149612\n hold158693\n hold162150\n wire95255\n wire95342\n wire98322\n wire98816\n wire98819\n wire98822\n wire98840\n wire98860\n wire98867\n wire98873\n wire98883\n wire98933\n wire98934\n wire98987\n wire99013\n wire99032\n wire99034\n wire99039\n wire99040\n wire99048\n wire99108\n wire99152\n wire99198\n wire99249\n wire99256\n wire99270\n wire99287\n[ERROR DPL-0033] detailed placement checks failed during check placement.\nError: cts.tcl, 83 DPL-0033\n\nElapsed time: 0:06.38[h:]min:sec. CPU time: user 5.91 sys 0.45 (99%). Peak memory: 496524KB.\nElapsed time: 3:27.33[h:]min:sec. CPU time: user 224.19 sys 9.36 (112%). Peak memory: 739296KB.\nElapsed time: 5:52.12[h:]min:sec. CPU time: user 510.04 sys 180.03 (195%). Peak memory: 840420KB.\nElapsed time: 0:04.19[h:]min:sec. CPU time: user 3.87 sys 0.32 (99%). Peak memory: 394236KB.\nElapsed time: 0:10.31[h:]min:sec. CPU time: user 9.87 sys 0.43 (99%). Peak memory: 560228KB.\nElapsed time: 1:28.72[h:]min:sec. CPU time: user 442.39 sys 1.04 (499%). Peak memory: 963096KB.\nElapsed time: 0:04.63[h:]min:sec. CPU time: user 4.26 sys 0.35 (99%). Peak memory: 492768KB.\nElapsed time: 12:55.56[h:]min:sec. CPU time: user 3365.77 sys 98.48 (446%). Peak memory: 2637196KB.\nElapsed time: 2:43.80[h:]min:sec. CPU time: user 232.65 sys 29.43 (159%). Peak memory: 1104964KB.\nElapsed time: 3:41.50[h:]min:sec. CPU time: user 261.79 sys 20.85 (127%). Peak memory: 2101316KB.\nElapsed time: 26:56.07[h:]min:sec. CPU time: user 2680.68 sys 100.84 (172%). Peak memory: 2788244KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_ot_v41_vm_group_phys_asap7_w11crcol_k2q4_m5/base/4_1_cts.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-01T02:54:20.605655+00:00",
+  "git": {
+    "commit": "1024ac0f58d3a435654abde57d1f21f1b45b6963",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--clock-period-ns",
+      "1.111",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--keep-heavy-artifacts",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--io-delay-fraction",
+      "0",
+      "--slew-margin-percent",
+      "40",
+      "--stages",
+      "pnr",
+      "--force",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--nickname-tag",
+      "w11crcol_k2q4_m5",
+      "--output",
+      "/tmp/claude-1000/w11crot/hard/col_k2q4_m5/physical.json",
+      "--top",
+      "ot_v41_vm_group_phys",
+      "--source",
+      "rtl/chip/ot_v41_vm_group_phys.sv",
+      "--param",
+      "RC=6",
+      "--param",
+      "NB=2",
+      "--param",
+      "RA=8",
+      "--param",
+      "K=2",
+      "--param",
+      "WQD=4",
+      "--param",
+      "RDREG=1",
+      "--macro-view",
+      "ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+      "--macro-place-halo",
+      "5",
+      "5",
+      "--routing-layers",
+      "M2",
+      "M5"
+    ],
+    "driver": {
+      "commit": "1024ac0f58d3a435654abde57d1f21f1b45b6963",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/claude-1000/wt/w11-cr1/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "1238d12389efa5e176c5411959510bbf7bf5ac88448583858e5c03f3ad803fb6",
+      "tree": "/tmp/claude-1000/wt/w11-cr1"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/claude-1000/wt/w11-cr1"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 1.111,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
