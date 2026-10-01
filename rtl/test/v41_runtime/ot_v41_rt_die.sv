@@ -207,6 +207,15 @@ module ot_v41_rt_die #(
         if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[2].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
         fd = $fopen({dir, "/hbmsparse3.hex"}, "r");
         if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[3].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
+        // indexed layers: the compressed rows this die owns, '<sector> <word>' on stack k (ckv_s<k>.hex)
+        fd = $fopen({dir, "/ckv_s0.hex"}, "r");
+        if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[0].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
+        fd = $fopen({dir, "/ckv_s1.hex"}, "r");
+        if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[1].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
+        fd = $fopen({dir, "/ckv_s2.hex"}, "r");
+        if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[2].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
+        fd = $fopen({dir, "/ckv_s3.hex"}, "r");
+        if (fd != 0) begin while ($fscanf(fd, "%h %h\n", sa, sw) == 2) dut.g_hbm[3].u_hbm.u_k.mem[sa] = sw; $fclose(fd); end
     end
     // final vector memory dump on request (the host calls it through DPI export)
     export "DPI-C" function v41rt_vm_word;
