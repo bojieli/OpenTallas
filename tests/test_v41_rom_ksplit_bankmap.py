@@ -111,15 +111,18 @@ def test_product_bank_map_distance_aware_all_dies():
     for p, h in rec["source_sha256"].items():
         assert hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h, p
     rule = rec["rule"]
-    assert rule["bf16_pair"]["enabled"] and rule["bf16_pair"]["word_hold_cycles"] == 4
+    assert rule["bf16_pair"] is None                       # product: dedicated BF16 columns (root, 2026-09-30)
+    assert "v41_stage_owner_product.json" in " ".join(rec["source_sha256"])
     assert rule["chain_recurrence_cycles"] == 8
     da = rule["distance_aware"]
     assert set(da["critical"]) == {"a_proj", "wq_b", "cmp.wk", "wo_a", "wo_b", "router", "shared_gu", "down"}
-    assert len(rec["dies"]) == 112
+    assert len(rec["dies"]) == 148                         # 37 TP-4 stages (W16 product owners)
     assert rec["all_capacity_ok"] and all(d["capacity_ok"] and d["max_address"] <= S.DEPTH for d in rec["dies"])
     whole = max(r["wire"]["farthest_um"] for r in rec["phase_vs_model"].values() if r.get("wire"))
     for ph in da["critical"]:
         w = rec["phase_vs_model"][ph]["wire"]
+        if w is None:                                      # the phase has no rows on the busiest die
+            continue
         assert w["farthest_um"] <= whole and w["wire_cycles"] == 2 * math.ceil(w["farthest_um"] / da["reach_um"]) \
             + da["gather_scatter_cycles"], ph
     for d in rec["dies"]:
