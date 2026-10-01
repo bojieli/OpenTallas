@@ -1,0 +1,12 @@
+{
+  "schema": "Qwen_controller_events_fixture_failure_r1",
+  "status": "FAIL_TEST_FIXTURE_TIME_REVERSAL_NOT_DUT",
+  "command": "python3 -m pytest -q tests/test_qwen_hbm_controller_events_r1.py",
+  "passed": 9,
+  "failed": 1,
+  "test": "test_every_shift_and_return_keeps_acceptance_epochs",
+  "failure": "Loop reused time100000 after its previous take at100002; Controller.advance correctly rejected time reversal.",
+  "correction": "Advance each return test iteration by3ps; immutable hold assertions still cover all15 reorder displacements and all16 returns.",
+  "actual_DUT_failure": false,
+  "record_is_immutable": true
+}
