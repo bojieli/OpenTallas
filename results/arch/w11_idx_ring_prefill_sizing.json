@@ -89,7 +89,7 @@
     "reading": "The ring writer places one 1M-context die slice (262,144 keys) in ~1.3 ms, inside every modelled burst ingest of that die's bytes (NIC-bound 9.6 ms; package-port-bound 3.5 ms) and hundreds of times faster than streamed ingest needs. If the keys arrived as one contiguous chunk at the package-port rate the writer would trail them by up to ~0.6 ms, under 0.03% of the time to first token. It does not bind prefill. It is, however, slower than the key-ingest engine rate the prefill model assumes (~14 vs ~22.6 GB/s)."
   },
   "source_sha256": {
-    "results/rtl/w11_idx_ring_gate.json": "11af182e5892367e446477c7d375aa7592e7ff9cb0c8f869e7491fc2d017778b",
+    "results/rtl/w11_idx_ring_gate.json": "1688300271d443f88ca08d06ba881ac510fd4109c7cf2885911549f4ee28c142",
     "results/arch/prefill_ingest.json": "dc7ef4c9991d0711667417438b8b88fcd3961d2295a4c725acfac9735485f9b2",
     "tools/w11_idx_ring_prefill_sizing.py": "d10192fcc2c8cf210c982d66517b155a11d65dac161cab8984791be925652b3d"
   }

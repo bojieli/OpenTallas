@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.w11-idx-ring-gate.v1",
   "status": "pass",
-  "git_head": "8671f2be2ea0bacadad9d7dae5d64026568b9f86",
+  "git_head": "eb317e3c28077647c4478f264e9570d823cdd52b",
   "simulator": "Verilator 4.038",
   "layout": {
     "placement": "stack q holds position quarter q (Qs = 8 floor(N/32)); key position p in ring slot p mod C of the user's per-stack ring; ring = RSB super-blocks + one RTAIL-key tail super-block; user region at block KB + user x UBLK on every stack; placement is a function of (user, N) alone",
@@ -47,8 +47,8 @@
         "CLK_PS": 967
       },
       "passed": true,
-      "build_wall_seconds": 190.9,
-      "simulation_wall_seconds": 47.7,
+      "build_wall_seconds": 160.1,
+      "simulation_wall_seconds": 42.5,
       "ring": {
         "slots": 2080,
         "blocks_per_user_per_stack": 36,
@@ -250,8 +250,8 @@
         "CLK_PS": 967
       },
       "passed": true,
-      "build_wall_seconds": 197.2,
-      "simulation_wall_seconds": 909.0,
+      "build_wall_seconds": 169.5,
+      "simulation_wall_seconds": 668.4,
       "ring": {
         "slots": 65568,
         "blocks_per_user_per_stack": 1090,
@@ -429,8 +429,8 @@
         "CLK_PS": 967
       },
       "passed": false,
-      "build_wall_seconds": 190.0,
-      "simulation_wall_seconds": 0.3,
+      "build_wall_seconds": 171.0,
+      "simulation_wall_seconds": 0.2,
       "ring": {
         "slots": 2080,
         "blocks_per_user_per_stack": 36,
@@ -452,7 +452,7 @@
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kdata_m.sv": "a2fa51f89198cb9c8313282ee9dbd7167ff857b33f5e9440b649ce5ba8045638",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
-    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "15a307570fd353d3f6c0848ee08adabf3f54575bed2be591bd19f47ee009737e",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "29daec7d8f81c30c97f81aa4c21820f3a5bb5c9b949e8035cfa2288d95bab0a1",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_join.sv": "3454bdf85be8fb19171c71937e852501e3388cfc2d0ae8ee5dd9ddd98ba60774",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_kwr.sv": "bba9b5c064ccfcf2e198de955dc2bb6291fcf305c78ba5a708089e01b7d6f5a0",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv": "85e919003fadf25e42cfbe641872fae703b490ef5d5abb0944396a5f06062ece",
