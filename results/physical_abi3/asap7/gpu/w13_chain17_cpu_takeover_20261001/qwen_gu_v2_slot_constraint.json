@@ -1,0 +1,17 @@
+{
+  "utc": "2026-10-01T11:04:07.098674+00:00",
+  "source": "user parent handoff; current main reported584",
+  "historical_sm_slot_mm2": 4.085,
+  "corrected_u_baseline_mm2": 4.621,
+  "gu_pipeline_increment_mm2": 0.004646,
+  "required_sm_count": 32,
+  "verdict": "HISTORICAL_SLOT_UNDERSIZED_FOR_CORRECTED_BASELINE",
+  "scope": "model qualification constraint; not measured physical result",
+  "required_evidence": [
+    "source-matched live column terminal SS/FF corners",
+    "matching contextual SM SS/FF closure and actual LEF dimensions",
+    "32-SM floorplan fit priced against corrected baseline model"
+  ],
+  "policy": "Historical closed_against_budget or actual LEF hash alone does not prove corrected baseline fit. Preserve live pinned columns/chain17 CPU+RAM guard; no extra PnR, duplicate run, optional TMEM or undersized-slot baseline claim. Reconcile corrected model source and slot before downstream baseline qualification.",
+  "live_bundle_modified": false
+}
