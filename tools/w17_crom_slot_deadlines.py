@@ -39,7 +39,17 @@ def build():
                 actual_program_absolute_release_tick=None))
             t+=fill+delivery['consumer_local_cache_read_ticks']
         assert len(commands)==491 and sum(z['coefficient_reads'] for z in commands)==549760
-        cases.append(dict(credits=credit,retained_SU_core_mm2=str(su),added_CROM_capture_control_mm2=str(added),
+        required_width=(su+added)*1000000/rh
+        blockers=[]
+        for z in fp['soft_regions']:
+            if z[0]==region[0] or z[1]=='ROM_MAC_strip': continue
+            zx,zy,zw,zh=map(lambda a:D(str(a)),z[2:])
+            ow=min(x+required_width,zx+zw)-max(x,zx)
+            oh=min(y+rh,zy+zh)-max(y,zy)
+            if ow>0 and oh>0: blockers.append(dict(region=z[0],overlap_um2=str(ow*oh)))
+        assert any(z['region']=='HUB_HC' for z in blockers)
+        cases.append(dict(credits=credit,
+            unchanged_height_right_extension_blockers=blockers,,retained_SU_core_mm2=str(su),added_CROM_capture_control_mm2=str(added),
             SU_slot_mm2=str(area),exclusive_area_deficit_mm2=str(deficit),
             minimum_required_width_um_at_current_height=str((su+added)*1000000/rh),
             placement_verdict='FAIL_EXISTING_SU_PLUS_CROM_EXCEEDS_SLOT',
