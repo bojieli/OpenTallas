@@ -1,0 +1,549 @@
+{
+  "adoption": false,
+  "base_design": {
+    "barrier": {
+      "arrive_cycles": 25,
+      "basis": "derived from the floorplan, measured in RTL (tb_gpu_barrier)",
+      "boundary_cycles": 64,
+      "levels": 2,
+      "max_leaf_um": 4253.5,
+      "max_trunk_um": 6489.3,
+      "measured_round_trip_cycles": 48,
+      "release_cycles": 24,
+      "round_trip_cycles": 49,
+      "source": "results/floorplan/hbm_gpu/qwen_hbm_die.json",
+      "x_broadcast_tail_cycles": 16
+    },
+    "bulk_copy": {
+      "basis": "3.6 TB/s x 500 ns (ASSUMED loaded latency)",
+      "descriptor_bytes": 4096,
+      "in_flight_B_die": 1800000.0,
+      "in_flight_B_sm": 56250.0,
+      "measured": [
+        {
+          "B_per_cycle": 1.6,
+          "outstanding_lines": 7,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "B_per_cycle": 3.7,
+          "outstanding_lines": 16,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "B_per_cycle": 14.9,
+          "outstanding_lines": 64,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "B_per_cycle": 59.5,
+          "outstanding_lines": 256,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "B_per_cycle": 101.0,
+          "outstanding_lines": 440,
+          "share_B_per_cycle": 102.4
+        },
+        {
+          "B_per_cycle": 102.5,
+          "outstanding_lines": 512,
+          "share_B_per_cycle": 102.4
+        }
+      ],
+      "measured_source": "results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy, 128 B lines, 500 ns +- 50 ns loaded latency)",
+      "note": "Little's law gives 440 lines of 128 B; with latency jitter the full share needs 512",
+      "outstanding_descriptors_sm": 14,
+      "outstanding_lines_sm": 512,
+      "outstanding_sectors_sm": 879
+    },
+    "clock_hz": 1098640000.0,
+    "die_fit": {
+      "core_avail_mm2": 688.44,
+      "dedicated_mm2": 0.0,
+      "fits": true,
+      "l2_mm2": 4.13,
+      "sm_array_mm2": 147.87,
+      "used_mm2": 152.0
+    },
+    "drain_basis": "measured (RTL)",
+    "drain_cycles": 89,
+    "drain_formula_cycles": 108,
+    "element": {
+      "bf16_lanes": 0,
+      "blockdot_lanes": 0,
+      "cols": 16,
+      "il": 8,
+      "ingest_Bpc": 128,
+      "int8_lanes": 128,
+      "k_max": 12288,
+      "scratch_kb": 64,
+      "simt_lanes": 128,
+      "stack_levels": 5,
+      "subparts": 4,
+      "x_bytes": 2
+    },
+    "hbm_Bpc": 3276.8,
+    "l2": {
+      "macros": 256,
+      "mb_per_slice": 2,
+      "mm2": 4.13,
+      "role": "x/result gather and broadcast, TP-exchange staging, KV-write coalescing; weights bypass it (bulk copy lands in SM SMEM, no reuse at decode)",
+      "slices": 4
+    },
+    "measured": {
+      "qwen_barrier_cycles": 48,
+      "qwen_drain_cycles": 89,
+      "sources": [
+        "results/rtl/gpu_sm_exact.json",
+        "results/rtl/gpu_sm_exact.json",
+        "results/rtl/gpu_sm_blockdot_exact.json",
+        "results/rtl/gpu_supply_barrier.json"
+      ],
+      "v41_barrier_cycles": 62,
+      "v41_drain_cycles": 95
+    },
+    "model": "qwen",
+    "noc": {
+      "mapping": "each SM's weight rows live in its own quadrant's stack: no weight byte crosses the die",
+      "result_gather_bits_per_sm": 256,
+      "weight_port_bits_per_sm": 1088,
+      "weight_wires_per_quadrant": 8704,
+      "x_broadcast_bits": 2048
+    },
+    "sm_area": {
+      "footprint_logic_mm2": 4.266,
+      "hardened_columns": {
+        "blockdot_with_tree": 2736.77,
+        "blockdot_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json",
+        "lane_with_tree": 897.15,
+        "lane_with_tree_source": "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json"
+      },
+      "logic_mm2": 2.133,
+      "logic_um2": {
+        "blockdot_and_trees": 0,
+        "mma_lanes_and_trees": 1919283,
+        "row_scale": 12532,
+        "simt": 149605,
+        "stack": 32428,
+        "x_operand_regs": 19110
+      },
+      "macs_per_clk": 2048,
+      "sram_kb": {
+        "scratch": 64,
+        "staging": 128,
+        "x_store": 384.0
+      },
+      "sram_macros": {
+        "scratch": 2,
+        "staging": 4,
+        "x_store": 16
+      },
+      "sram_mm2": 0.355,
+      "total_mm2": 4.621
+    },
+    "sm_count": 32,
+    "sm_count_basis": "8 per stack quadrant; >= the 0.5%-of-unbounded minimum",
+    "sm_count_min": 28,
+    "sm_count_sweep": [
+      {
+        "cycles": 4081061,
+        "n_sm": 8,
+        "tokens_s_pkg": 269.2
+      },
+      {
+        "cycles": 2750369,
+        "n_sm": 12,
+        "tokens_s_pkg": 399.5
+      },
+      {
+        "cycles": 2085023,
+        "n_sm": 16,
+        "tokens_s_pkg": 526.9
+      },
+      {
+        "cycles": 1685815,
+        "n_sm": 20,
+        "tokens_s_pkg": 651.7
+      },
+      {
+        "cycles": 1419677,
+        "n_sm": 24,
+        "tokens_s_pkg": 773.9
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 28,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 32,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 36,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 40,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 44,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 48,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 52,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 56,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 60,
+        "tokens_s_pkg": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "n_sm": 64,
+        "tokens_s_pkg": 880.5
+      }
+    ],
+    "staging_kb_per_sm": 128,
+    "staging_sweep": [
+      {
+        "cycles": 1299389,
+        "staging_kb_per_sm": 16,
+        "tokens_s": 845.5
+      },
+      {
+        "cycles": 1273842,
+        "staging_kb_per_sm": 32,
+        "tokens_s": 862.5
+      },
+      {
+        "cycles": 1257262,
+        "staging_kb_per_sm": 64,
+        "tokens_s": 873.8
+      },
+      {
+        "cycles": 1247686,
+        "staging_kb_per_sm": 128,
+        "tokens_s": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "staging_kb_per_sm": 256,
+        "tokens_s": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "staging_kb_per_sm": 512,
+        "tokens_s": 880.5
+      },
+      {
+        "cycles": 1247686,
+        "staging_kb_per_sm": 1024,
+        "tokens_s": 880.5
+      }
+    ],
+    "token": {
+      "additive_model_tokens_s": 871.6,
+      "boundaries": 181,
+      "chain_cycles_if_serial": 1087004,
+      "cycles": 1247686,
+      "exposed_over_hbm_cycles": 154,
+      "hbm_cycles": 1247532,
+      "note": "the stream prefetches through every boundary; only what the SMEM staging cannot absorb and the last op's tail are exposed",
+      "tokens_s": 880.5
+    }
+  },
+  "blocks": {
+    "GU_exact64": {
+      "active_leaves_per_row": 64,
+      "arithmetic": "Two disjoint64-leaf trees, each preserving its row golden; bypass128-leaf combine, never add padding or combine rows",
+      "exposed_last_pair_cycles_per_token": 72,
+      "gate": "New format/subtree/row metadata path needs exactness and in-context SS/FF; current W13 does not qualify it",
+      "independent_rows_per_issue": 2,
+      "physical_lanes": 128,
+      "replicas": 32,
+      "result_FIFO_bits_per_SM": 8736,
+      "result_FIFO_footprint_mm2_per_SM": 0.005094835200000001,
+      "row_scale": "16-entry addressed result FIFO serializes the two-row bursts through the existing row-scale multiplier; original rounding preserved",
+      "weight_Bpc": 128,
+      "x_fragment_bits_per_column": 2048
+    },
+    "KV_attention": {
+      "arithmetic": "Interleaved attention chunks and empty+0 leaves in the golden order, not contiguous dense K grouping",
+      "formats": {
+        "BF16": {
+          "active_lanes": 64,
+          "weight_B_per_lane": 2
+        },
+        "FP8_E4M3": {
+          "active_lanes": 128,
+          "weight_B_per_lane": 1
+        }
+      },
+      "gate": "No host-produced current-token KV; format and interleaved-tree gates required",
+      "replicas": 32,
+      "weight_line_B": 128,
+      "writer": "RTL-produced K/V rounded toFP8, coalesced as actual128B head rows and committed through shared HBM"
+    },
+    "L2_vector": {
+      "barrier": "Release only after every actual result is committed; no host gather or fixture insertion",
+      "broadcast_bits": 2048,
+      "bytes_per_slice": 2097152,
+      "gather_bits_per_SM": 256,
+      "mux_demux": "32 addressed producers, four banked slices, 32 addressed consumers",
+      "read_Bpc_per_slice": 256,
+      "reduction_order": "Golden chunk8/tree order, carried by explicit row/leaf indices; arrival order never defines the arithmetic tree",
+      "replicas": 4,
+      "write_Bpc_per_SM": 32
+    },
+    "SIMT_SFU": {
+      "CDC": "Producer/results FIFO between fast1.2GHz and serial0.9GHz, four fast cycles each way",
+      "CDC_fast_cycles_per_operation": 8,
+      "clock_hz": 900000000.0,
+      "lanes_per_SM": 128,
+      "local_read_Bpc_per_SM": 1536,
+      "local_write_Bpc_per_SM": 512,
+      "network_fast_cycles_per_operation": 44,
+      "replicas": 32,
+      "rounding": "Preserve norm scalar, row scale, ordered TP reduction, post-TP scale and FP8 KV conversion as separate golden points",
+      "serial_clock_extra_fast_cycles_per_token": 18900,
+      "tree_levels_128": 7,
+      "tree_levels_4096": 12
+    },
+    "row_descriptor": {
+      "addressing": "RTL global row offset addresses L2 and scale SRAM; RTL argmax uses global row for ties",
+      "alternatives": {
+        "resize_RMAX4096": {
+          "coverage": "Template default is4096, but existing RMAX256 gate is not head coverage; new in-context gates required",
+          "tile_transitions": 0
+        },
+        "selected": "256-row RTL tiling with global offsets, continuous weight stream and one final barrier"
+      },
+      "global_row_bits": 18,
+      "local_tile_transition_cycles": 4,
+      "logical_scale_rows_per_SM": 4096,
+      "physical_scale_bytes_per_SM": 8192,
+      "replicas": 32,
+      "rows_per_tile": 256,
+      "transport": "One uninterrupted bulk-copy descriptor covers all row tiles; ring is not reset or refetched at tile boundaries",
+      "whole_operation_barriers": 1
+    },
+    "shared_HBM_NoC": {
+      "arbitration": "Read requests consume credits; read data and write data share one byte budget. Write acknowledgements consume no data budget.",
+      "clients_per_quadrant": 9,
+      "control_bits": 596,
+      "credits_per_client": 512,
+      "data_Bpc_per_quadrant": 718.2027397260274,
+      "elastic_packet_bits": 77472,
+      "fanout": "No weight broadcast across dies or quadrants; L2 injector shares controller capacity",
+      "footprint_mm2_estimate": 0.045529257600000005,
+      "loaded_round_trip_cycles": 675,
+      "memory_line_bytes": 128,
+      "multiplexer_cost": "9-way grant/route per quadrant; per-SM weight routes stay quadrant-local",
+      "physical_request_and_return_lanes_per_quadrant": 9,
+      "replicas": 4,
+      "request_metadata_bits": 52,
+      "requested_Bpc_per_quadrant": 750,
+      "response_packet_bits": 1044,
+      "setup_cycles": 2,
+      "worst_jitter_cycles": 55
+    }
+  },
+  "causality": {
+    "KV": "RTL-produced current-token K/V -> FP8 RTL writer -> same shared HBM service -> later attention read",
+    "acceptance": "All36layers+head, actual32SMs perTP2die, golden checkpoints and token, realistic shared-memory traffic, contextual routing and SS/FF",
+    "activation": "RTL result -> L2 commit -> RTL norm/vector/attention/residual -> next layer -> head",
+    "fixtures": "Host may initialize checkpoint weights/constants and starting token state; no host activation, norm, gather, K/V or inter-layer replacement"
+  },
+  "floorplan_fit": {
+    "GU_result_FIFO_mm2": 0.16303472640000002,
+    "available_mm2": 688.44,
+    "existing_mm2": 152.0,
+    "fits": true,
+    "new_controller_mm2": 0.045529257600000005
+  },
+  "full_token": false,
+  "latency": {
+    "GU_last_pair_cycles": 72,
+    "assumed_HBM_bytes_s": 3600000000000.0,
+    "composed_stream_cycles_estimate": 1423110,
+    "credit_limited_worst_case_bytes_s": 3447373150684.9316,
+    "fast_clock_target_hz": 1200000000.0,
+    "format_selector_cycles": 362,
+    "note": "Conservative sizing estimate, not a headline. Explicit serial-clock, vector-network, CDC, result-commit and format-selector costs are added without claiming overlap. Replace only with matched connected measurements.",
+    "result_commit_cycles": 1991,
+    "row_tile_transition_cycles_per_token": 180,
+    "row_tiling_vs_RMAX4096_extra_cycles": 180,
+    "scale_preload_excess_cycles": 1699,
+    "serial_clock_extra_cycles": 18900,
+    "serial_clock_target_hz": 900000000.0,
+    "token_cycles_estimate": 1459418,
+    "vector_network_and_CDC_cycles": 13104
+  },
+  "matrix_contracts": [
+    {
+      "K": 4096,
+      "K_groups": 2,
+      "active_leaves": 128,
+      "bulk_copy_descriptors_per_sm": 1,
+      "descriptor_count_per_sm": 1,
+      "global_barriers_per_matrix": 1,
+      "golden_split": 256,
+      "independent_rows_per_weight_line": 1,
+      "name": "L00.qkv",
+      "needs_exact_subtree_bypass": false,
+      "products_per_chunk": 16,
+      "row_tiles_256": 1,
+      "rows_die": 3072,
+      "rows_max_sm": 96,
+      "scale_bytes_die": 6144,
+      "scale_preload_cycles": 96,
+      "scale_storage_bytes_sm": 8192,
+      "tail_rows": 96,
+      "tile_transition_cycles": 0
+    },
+    {
+      "K": 2048,
+      "K_groups": 16,
+      "active_leaves": 128,
+      "bulk_copy_descriptors_per_sm": 1,
+      "descriptor_count_per_sm": 1,
+      "global_barriers_per_matrix": 1,
+      "golden_split": 2048,
+      "independent_rows_per_weight_line": 1,
+      "name": "L00.o",
+      "needs_exact_subtree_bypass": false,
+      "products_per_chunk": 1,
+      "row_tiles_256": 1,
+      "rows_die": 4096,
+      "rows_max_sm": 128,
+      "scale_bytes_die": 8192,
+      "scale_preload_cycles": 128,
+      "scale_storage_bytes_sm": 8192,
+      "tail_rows": 128,
+      "tile_transition_cycles": 0
+    },
+    {
+      "K": 4096,
+      "K_groups": 1,
+      "active_leaves": 64,
+      "bulk_copy_descriptors_per_sm": 1,
+      "descriptor_count_per_sm": 2,
+      "global_barriers_per_matrix": 1,
+      "golden_split": 64,
+      "independent_rows_per_weight_line": 2,
+      "name": "L00.gu",
+      "needs_exact_subtree_bypass": true,
+      "products_per_chunk": 64,
+      "row_tiles_256": 2,
+      "rows_die": 12288,
+      "rows_max_sm": 384,
+      "scale_bytes_die": 24576,
+      "scale_preload_cycles": 384,
+      "scale_storage_bytes_sm": 8192,
+      "tail_rows": 128,
+      "tile_transition_cycles": 4
+    },
+    {
+      "K": 6144,
+      "K_groups": 16,
+      "active_leaves": 128,
+      "bulk_copy_descriptors_per_sm": 1,
+      "descriptor_count_per_sm": 1,
+      "global_barriers_per_matrix": 1,
+      "golden_split": 2048,
+      "independent_rows_per_weight_line": 1,
+      "name": "L00.down",
+      "needs_exact_subtree_bypass": false,
+      "products_per_chunk": 3,
+      "row_tiles_256": 1,
+      "rows_die": 4096,
+      "rows_max_sm": 128,
+      "scale_bytes_die": 8192,
+      "scale_preload_cycles": 128,
+      "scale_storage_bytes_sm": 8192,
+      "tail_rows": 128,
+      "tile_transition_cycles": 0
+    },
+    {
+      "K": 4096,
+      "K_groups": 8,
+      "active_leaves": 128,
+      "bulk_copy_descriptors_per_sm": 1,
+      "descriptor_count_per_sm": 10,
+      "global_barriers_per_matrix": 1,
+      "golden_split": 1024,
+      "independent_rows_per_weight_line": 1,
+      "name": "lm_head",
+      "needs_exact_subtree_bypass": false,
+      "products_per_chunk": 4,
+      "row_tiles_256": 10,
+      "rows_die": 75968,
+      "rows_max_sm": 2374,
+      "scale_bytes_die": 151936,
+      "scale_preload_cycles": 2374,
+      "scale_storage_bytes_sm": 8192,
+      "tail_rows": 70,
+      "tile_transition_cycles": 36
+    }
+  ],
+  "physical": {
+    "SIMT_lanes_per_SM": 128,
+    "active_AR_columns": 1,
+    "active_GU_MACs_per_fast_cycle": 4096,
+    "active_QKV_MACs_per_fast_cycle": 4096,
+    "columns_per_SM": 16,
+    "lane_local_register_bytes_per_SM": 65536,
+    "physical_MACs_per_fast_cycle": 65536,
+    "physical_SM_count": 32,
+    "tensor_lanes_per_SM": 128
+  },
+  "ports_and_routes": {
+    "assignment": "Separate shoreline/quadrant weight corridors and central vector corridors; a shared vertical corridor would overflow and is forbidden",
+    "gate": "Analytical corridor allocation only; composed hub routing-layer gate and SS/FF remain mandatory",
+    "vector_horizontal": {
+      "bits": 2368,
+      "capacity": 4104
+    },
+    "weight_vertical": {
+      "bits": 1088,
+      "capacity": 2696
+    }
+  },
+  "prerequisite_gates": [
+    "Active64 GU subtree bypass (no K rechunking/padding)",
+    "INT8/BF16/FP8 KV format-compatible SM and interleaved attention tree order",
+    "RTL row tiling/global scale/result offsets and head argmax ties",
+    "Connected shared HBM/L2/NoC/barrier and actual vector/KV/TP producer-consumer execution"
+  ],
+  "schema": "opentallas.qwen-hbm-connected-sizing.v1",
+  "source_sha256": {
+    "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
+    "results/floorplan/hbm_gpu/qwen_hbm_die.json": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4",
+    "results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092/physical.json": "52a59fd5e3feb1204f830053db3e9c56822884a37e081061a8d56cf49e063086",
+    "results/physical_abi3/asap7/gpu/ot_gpu_tc_col_l16_092/physical.json": "afdd10370ea467af90429686ea64c7cd7a7f6722df193e67057e63f88dd2267e",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_qwen_fullshape_placement_w12.py": "574814f497ff0b94f8fbf4bde5161db8739d9ad64668f6435020592d52dfd5c4",
+    "tools/uarch_model.py": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
+    "tools/uarch_qwen_hbm_connected.py": "95eb358e9f5773906f23c2bf78a812de49534ae582de1720a189a544fa60b364"
+  },
+  "status": "model_before_controller_RTL"
+}
