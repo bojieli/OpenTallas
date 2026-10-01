@@ -2541,6 +2541,7 @@
     "required_contract": [
       "Writable CKV routing through both actual muxes",
       "Completion ownership for the untagged controller write-done response",
+      "Actual backend backing-store update and done delayed through CWL plus BURST; legacy column-issue done is not visibility",
       "Finite per-stack write credit retained until visibility completion",
       "Publish row only after all nine sector writes are visible",
       "Persistent next-token state and exact context/address range guards"
@@ -2548,6 +2549,7 @@
     "required_model_costs": [
       "Write requests plus controller command/burst service",
       "Completion routing, reverse CDC and publication fence latency",
+      "Backend delayed-visibility queue, full-address backing store and write-buffer reservation",
       "Owner/credit registers, arbitration, staging, ports and routing area"
     ],
     "current_connected_write_path_qualified": false,
