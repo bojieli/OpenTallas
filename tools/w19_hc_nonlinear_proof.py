@@ -215,9 +215,16 @@ def compare(actual, expected):
     return len(actual)
 
 
+def release_config(raw):
+    cfg = raw["text_config"] if "text_config" in raw else raw
+    if cfg["hidden_size"] != 5120 or cfg["hc_mult"] != 4:
+        raise ValueError("released normative HC shape mismatch")
+    return cfg
+
+
 def fixtures(snapshot):
     from safetensors import safe_open
-    cfg = json.loads((snapshot / "config.json").read_text())
+    cfg = release_config(json.loads((snapshot / "config.json").read_text()))
     idx = snapshot / "model.safetensors.index.json"
     mapping = json.loads(idx.read_text())["weight_map"]
     for prefix in ("layers.0.hc_attn_", "layers.39.hc_ffn_"):

@@ -26,6 +26,14 @@ def test_full_shape_all_boundaries_match_original_method():
         assert np.array_equal(a.view(np.uint32), b.view(np.uint32))
 
 
+def test_released_config_is_nested_and_shape_bound():
+    raw = {"hidden_size": 5120, "hc_mult": 4, "hc_sinkhorn_iters": 20, "rms_norm_eps": 1e-20, "hc_eps": 1e-6}
+    assert P.release_config({"text_config": raw}) is raw
+    assert P.release_config(raw) is raw
+    with pytest.raises(ValueError):
+        P.release_config({"text_config": dict(raw, hidden_size=640)})
+
+
 def test_oracle_restores_global_state_even_on_failure():
     old = (P.G.add, P.V.add, P.V.ARITH, sys.gettrace())
     with pytest.raises(RuntimeError):
