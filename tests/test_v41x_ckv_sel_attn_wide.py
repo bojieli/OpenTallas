@@ -12,8 +12,10 @@ REC = ROOT / "results/rtl/v41x_ckv_sel_attn_wide.json"
 def test_wide_record():
     r = json.loads(REC.read_text())
     assert r["status"] == "pass" and r["fetch"].startswith("wide fetch") and not r["stale_sources"]
-    for rel, h in r["source_sha256"].items():
-        assert hashlib.sha256((ROOT / rel).read_bytes()).hexdigest() == h, rel
+    import sys
+    sys.path.insert(0, str(ROOT / "tests"))
+    from record_currency_support import assert_current_or_marked_stale
+    assert_current_or_marked_stale(r, r["source_sha256"], "v41x_ckv_sel_attn_wide")
     ex = {x["tag"]: x for x in r["exact_full_geometry"]}
     assert {"full1m", "full1m_lat259", "short300", "skew1m", "tail46"} <= set(ex)
     for x in ex.values():

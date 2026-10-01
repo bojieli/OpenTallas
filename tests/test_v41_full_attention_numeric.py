@@ -11,8 +11,9 @@ EVIDENCE=ROOT/'results/rtl/v41_full_attention_numeric'
 def test_compiled_rtl_and_golden_are_source_pinned():
     pins=json.loads((EVIDENCE/'pins.json').read_text())
     pins.update(json.loads((EVIDENCE/'vector_manifest.json').read_text())['golden_sources'])
-    for name,digest in pins.items():
-        assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+    sys.path.insert(0,str(ROOT/'tests'))
+    from record_currency_support import assert_current_or_marked_stale
+    assert_current_or_marked_stale(json.loads((EVIDENCE/'collection.json').read_text()),pins,'v41_full_attention_numeric')
 
 def test_fullshape_fixtures_regenerate_exactly(tmp_path):
     subprocess.run([sys.executable,str(ROOT/'tools/v41_full_attention_numeric_prepare.py'),

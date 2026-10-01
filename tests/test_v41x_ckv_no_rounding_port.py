@@ -24,7 +24,8 @@ def test_fetches_never_read_the_rounding_port():
 
 def test_merger_forwards_raw_codes_as_fmt1():
     m = _src("rtl/chip/ot_chip_v41x_ckv_stream_merge.sv")
-    assert "{1'b1, 120'b0, c_rows[l*2304 + 2048 + 16*g +: 16]" in m and "c_rows[l*2304 + 128*g +: 128]}" in m
+    assert "{1'b1, 120'b0, cr[2048 + 16*g +: 16], cr[128*g +: 128]}" in m      # raw E4M3 scales + E2M1 nibbles
+    assert "c_rows_q[32'(sl)*2304 +: 2304]" in m and "c_rows_q <= c_rows" in m
     assert "q_fp8" not in m and "fp4_decode" not in m
     for p in ("rtl/chip/ot_chip_v41x_ckv_sel_collect.sv", "rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
               "rtl/test/tb_chip_v41x_ckv_sel_attn.sv"):

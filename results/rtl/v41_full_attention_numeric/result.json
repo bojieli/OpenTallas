@@ -1,6 +1,6 @@
 {
   "scope": "Synthetic golden inputs at actual H16 D512 TD32 NL4 T640. No checkpoint, HBM or softmax execution claim.",
-  "executable_sha256": "a08ad6e5b7ef12bfc33f9650f55d542f7c5af2e8488ada51216711e9def53ea2",
+  "executable_sha256": "5979962dbaf23baebe536abcd7591afb8e21beef91f845f6af277ffd0962efba",
   "manifest_sha256": "6a3c8cc59623ab38d6f1ccfb319a1ba08a083f68ccb4db363b5c99d3e3c3a478",
   "results": [
     {
@@ -20,7 +20,21 @@
         "cycles": 225,
         "timeout": 0
       },
-      "wall_seconds": 55.47229182100273
+      "job_fields": {
+        "job": 0,
+        "T": 128,
+        "qk_first": 23,
+        "qk_last": 54,
+        "qk_beats": 32,
+        "pv_first": 120,
+        "pv_last": 175,
+        "pv_beats": 32,
+        "last_score": 103,
+        "last_p": 168,
+        "last_pv": 225
+      },
+      "plusargs": [],
+      "wall_seconds": 61.50570365303429
     },
     {
       "name": "mixed640",
@@ -39,7 +53,21 @@
         "cycles": 609,
         "timeout": 0
       },
-      "wall_seconds": 158.67369063399383
+      "job_fields": {
+        "job": 0,
+        "T": 640,
+        "qk_first": 23,
+        "qk_last": 182,
+        "qk_beats": 160,
+        "pv_first": 248,
+        "pv_last": 559,
+        "pv_beats": 160,
+        "last_score": 231,
+        "last_p": 552,
+        "last_pv": 609
+      },
+      "plusargs": [],
+      "wall_seconds": 168.38497106701834
     },
     {
       "name": "mixed640wide",
@@ -58,7 +86,21 @@
         "cycles": 609,
         "timeout": 0
       },
-      "wall_seconds": 158.89917012001388
+      "job_fields": {
+        "job": 0,
+        "T": 640,
+        "qk_first": 23,
+        "qk_last": 182,
+        "qk_beats": 160,
+        "pv_first": 248,
+        "pv_last": 559,
+        "pv_beats": 160,
+        "last_score": 231,
+        "last_p": 552,
+        "last_pv": 609
+      },
+      "plusargs": [],
+      "wall_seconds": 173.1367831180105
     },
     {
       "name": "tail129",
@@ -77,7 +119,21 @@
         "cycles": 234,
         "timeout": 0
       },
-      "wall_seconds": 56.440440842998214
+      "job_fields": {
+        "job": 0,
+        "T": 129,
+        "qk_first": 23,
+        "qk_last": 55,
+        "qk_beats": 33,
+        "pv_first": 121,
+        "pv_last": 184,
+        "pv_beats": 40,
+        "last_score": 104,
+        "last_p": 170,
+        "last_pv": 234
+      },
+      "plusargs": [],
+      "wall_seconds": 74.78478283196455
     }
   ],
   "status": "pass"

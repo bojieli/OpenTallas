@@ -32,6 +32,7 @@ module ot_chip_v41x_ckv_sel_collect #(
     parameter integer POS_W = 21,
     parameter integer K = 512,
     parameter integer NOUT = 4,
+    parameter bit RDREG = 0,        // 1: table read ports are synchronous; sources are registered one cycle
     parameter integer KW = $clog2(K + 1)
 ) (
     input  wire                   clk,
@@ -59,6 +60,18 @@ module ot_chip_v41x_ckv_sel_collect #(
     reg [K-1:0] present;
     reg [KW-1:0] nexp, rd;
     reg [KW:0] npresent;
+    // RDREG: the sources are registered while the table read (addressed by the raw source ranks) completes
+    reg [NSRC-1:0] q_v;
+    reg [NSRC*KW-1:0] q_rank;
+    reg [NSRC*POS_W-1:0] q_gid;
+    reg [NSRC*2304-1:0] q_row;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q_v <= 0; else q_v <= (clr ? '0 : src_v);
+    always @(posedge clk) begin q_rank <= src_rank; q_gid <= src_gid; q_row <= src_row; end
+    wire [NSRC-1:0] w_v = RDREG ? q_v : src_v;
+    wire [NSRC*KW-1:0] w_rank = RDREG ? q_rank : src_rank;
+    wire [NSRC*POS_W-1:0] w_gid = RDREG ? q_gid : src_gid;
+    wire [NSRC*2304-1:0] w_row = RDREG ? q_row : src_row;
     assign tab_rank = src_rank;
     assign o_rank = rd;
     integer oj;
@@ -81,10 +94,10 @@ module ot_chip_v41x_ckv_sel_collect #(
     reg [KW:0] nwr;
     always @(*) begin
         dup = 1'b0; nwr = 0;
-        for (i = 0; i < NSRC; i = i + 1) if (src_v[i]) begin
+        for (i = 0; i < NSRC; i = i + 1) if (w_v[i]) begin
             nwr = nwr + 1'b1;
             for (j = 0; j < i; j = j + 1)
-                if (src_v[j] && src_rank[j*KW +: KW] == src_rank[i*KW +: KW]) dup = 1'b1;
+                if (w_v[j] && w_rank[j*KW +: KW] == w_rank[i*KW +: KW]) dup = 1'b1;
         end
     end
 
@@ -97,15 +110,15 @@ module ot_chip_v41x_ckv_sel_collect #(
             max_present_ahead <= 0;
         end else begin
             if (dup) begin fault <= 1; fault_code[1] <= 1; end
-            for (i = 0; i < NSRC; i = i + 1) if (src_v[i]) begin
-                if (src_rank[i*KW +: KW] >= nexp) begin fault <= 1; fault_code[0] <= 1; end
-                else if (present[src_rank[i*KW +: KW]]) begin fault <= 1; fault_code[1] <= 1; end
-                else if (src_gid[i*POS_W +: POS_W] != tab_gid[i*POS_W +: POS_W]) begin
+            for (i = 0; i < NSRC; i = i + 1) if (w_v[i]) begin
+                if (w_rank[i*KW +: KW] >= nexp) begin fault <= 1; fault_code[0] <= 1; end
+                else if (present[w_rank[i*KW +: KW]]) begin fault <= 1; fault_code[1] <= 1; end
+                else if (w_gid[i*POS_W +: POS_W] != tab_gid[i*POS_W +: POS_W]) begin
                     fault <= 1; fault_code[2] <= 1;
                 end else begin
-                    buf_row[src_rank[i*KW +: KW]] <= src_row[i*2304 +: 2304];
-                    buf_gid[src_rank[i*KW +: KW]] <= src_gid[i*POS_W +: POS_W];
-                    present[src_rank[i*KW +: KW]] <= 1'b1;
+                    buf_row[w_rank[i*KW +: KW]] <= w_row[i*2304 +: 2304];
+                    buf_gid[w_rank[i*KW +: KW]] <= w_gid[i*POS_W +: POS_W];
+                    present[w_rank[i*KW +: KW]] <= 1'b1;
                 end
             end
             npresent <= npresent + nwr;
