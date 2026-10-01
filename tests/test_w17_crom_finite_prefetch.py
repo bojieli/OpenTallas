@@ -40,6 +40,9 @@ def test_actual_cold_cache_and_ports_not_capacity_credit():
     assert r['selector_control_exactness']['maximum_actual_selector']==134
     assert r['selector_control_exactness']['old7bit_alias_uses']>0
     assert not r['selector_control_exactness']['actual_compiled_control_image_bound']
+    assert r['compiled_software_catalog']['counts_match_current_calendar']
+    assert r['compiled_software_catalog']['metadata_roundtrip_uses_per_rank']==549760
+    assert not r['compiled_software_catalog']['runtime_tags_credits_ports_and_contextual_SSFF_bound']
 
 def test_high_selector_negative_preserves_actual_first_gamma_alias():
     landing=next(sorted(wave) for wave in C.bank_waves(set(range(1808,1808+1024)))

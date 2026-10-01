@@ -21,6 +21,7 @@ SOURCES={
  'floorplan':('541a1d2f','results/floorplan/v41_pack_refit_w10_interim.json'),
  'buffer_reservation':('cda48d1f7','results/uarch/w10_crom_staging_correction_r1/budget.json'),
  'cell_palette':('6da3c7a60','results/uarch/w10_q_elaboration_inventory_r1/construction.json'),
+ 'compiled_control_receipt':('3c99ce15f','results/uarch/w11_crom_control_catalog_20261001/verification.json'),
 }
 
 def raw(pin):return subprocess.check_output(['git','show',pin[0]+':'+pin[1]])
@@ -157,6 +158,13 @@ def build():
     request_pages=ceildiv(readwaves_total,4096)
     fill_pages=ceildiv(packets_total,4096)
     control_macros=3*request_pages+fill_pages
+    compiled=json.loads(blobs['compiled_control_receipt'])
+    assert compiled['counts']==dict(bank_waves=readwaves_total,coefficient_uses_per_rank=549760,
+        commands_per_rank=491,fill_control_words=packets_total,request_control_words=3*readwaves_total)
+    assert len(compiled['control_page_images'])==control_macros
+    assert compiled['verification']['persisted_word_roundtrip_per_rank_uses']==549760
+    assert compiled['verification']['no_missing_or_duplicate_destinations']
+    assert not compiled['hardware_admission']
     tag_valid_state=2*(256+2+6+8+32+13+1)+2*(256+2+6+13+10+32+1)+4096
     out=dict(schema='opentallas.w17.CROM-finite-prefetch-candidate.v1',source_pins=pins,
         commands=timeline,rank_equivalent_calendars=4,commands_per_rank=491,gamma_commands_per_rank=81,
@@ -228,6 +236,14 @@ def build():
             preserved_failed_model_commit='bc1ec8b8f73ce5594a2b65ac7856b88c3f6b027c',
             independent_negative_receipt_commit='785cdfa41',
             corrected_entry_bits=151,actual_compiled_control_image_bound=False),
+        compiled_software_catalog=dict(receipt=pins['compiled_control_receipt'],
+            metadata_roundtrip_uses_per_rank=549760,physical_pages=control_macros,
+            counts_match_current_calendar=True,
+            compiler_sha256=compiled['compiler_sha256'],
+            format=compiled['control_format'],
+            scope='Persisted software catalog encode/decode exactness; not coefficient payload repack, physical home or runtime acceptance.',
+            original_receipt_reverse_route_gap_priced_here=True,
+            runtime_tags_credits_ports_and_contextual_SSFF_bound=False),
         reverse_route_correction=dict(preserved_incomplete_calendar_commit='1360ff9e12f130a656dbbca0b00c02de860584db',
             defect='Earlier return priced reverse CDC but omitted physical return route and credit serialization.',
             forward_and_reverse_envelope_fast_cycles=75,

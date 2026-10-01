@@ -30117,6 +30117,28 @@
     }
   ],
   "commands_per_rank": 491,
+  "compiled_software_catalog": {
+    "compiler_sha256": "1aa69792cc188f64169b5919d862dd252ea7dfe5f7581bc3fd77a4308f3a38fe",
+    "counts_match_current_calendar": true,
+    "format": {
+      "control_word_bits": 274,
+      "fill_fields": "selectors16x8bits[127:0],mask[143:128],operand[144],group[150:145],padding[273:151]zero",
+      "landing_order": "sort selected logical addresses decoded from bank requests; compact indices0..134",
+      "request_bank_fields": "45x16bits:row[11:0],valid[12],lane-mask[15:13]; 3x274 columns, bits720..821zero",
+      "serialized_bytes_per_word": 35,
+      "serialized_top6_bits_zero": true
+    },
+    "metadata_roundtrip_uses_per_rank": 549760,
+    "original_receipt_reverse_route_gap_priced_here": true,
+    "physical_pages": 16,
+    "receipt": {
+      "commit": "3c99ce15f",
+      "path": "results/uarch/w11_crom_control_catalog_20261001/verification.json",
+      "sha256": "2b5cc5b68baded583fd95739a731745543ccdaab6605b17d45a23b6460ca7e44"
+    },
+    "runtime_tags_credits_ports_and_contextual_SSFF_bound": false,
+    "scope": "Persisted software catalog encode/decode exactness; not coefficient payload repack, physical home or runtime acceptance."
+  },
   "compiler_control_storage": {
     "actual_control_image_or_decompressor_bound": false,
     "descriptor_capture_page_mux_and_fanout_extra_cycles": null,
@@ -30262,6 +30284,11 @@
       "commit": "6da3c7a60",
       "path": "results/uarch/w10_q_elaboration_inventory_r1/construction.json",
       "sha256": "bdb28e8586fe774c5240a04da95527540a07073b36d5852889fdca90251c6faa"
+    },
+    "compiled_control_receipt": {
+      "commit": "3c99ce15f",
+      "path": "results/uarch/w11_crom_control_catalog_20261001/verification.json",
+      "sha256": "2b5cc5b68baded583fd95739a731745543ccdaab6605b17d45a23b6460ca7e44"
     },
     "demand": {
       "commit": "f4bce8fa0",
