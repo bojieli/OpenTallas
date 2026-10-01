@@ -1,4 +1,14 @@
 {
+  "ACK_credit_required_owner_fields": [
+    "source_home",
+    "consumer_rank",
+    "layer",
+    "column",
+    "row",
+    "image_sha256",
+    "epoch",
+    "tag"
+  ],
   "acceptance_order": [
     "first fragment accepted",
     "second matching fragment accepted",
@@ -30,6 +40,14 @@
   "physical_deadline": null,
   "physical_events_bound": false,
   "preserved_unsafe_rule": "READY or second-fragment capture as consumer credit is rejected.",
+  "preserved_unscoped_ACK_counterexample": {
+    "ACK_and_credit_called_without_identity": true,
+    "prior_row_released": true,
+    "scope": "Model validator gap only; not a physical ACK or DUT failure.",
+    "source_sha256": "2526ed18a1facd4d1334e2b71d0eaa5e197f081e5d91f03979558266df4ce6f5",
+    "verdict": "FAIL_MODEL_ACK_IDENTITY_SCOPE"
+  },
+  "prior_unscoped_row_ACK_checker_commit": "3700e9b837236688b751a59bf83ee2db8d59804f",
   "schema": "opentallas.w17.Engram-fragment-credit-checker.v1",
   "source_pins": {
     "event_contract": {
