@@ -1,8 +1,9 @@
+// Experimental companion: FAST/PP/BP default off; no adoption or clock claim.
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// ot_v41_pair_w17w10: one ROM-field element of the adopted V4.1 layer die (W17 die integration).
+// ot_v41_pair_w17w10: one ROM-field element of an experimental V4.1 FAST/PP runtime baseline (W17 die integration).
 //
-//   W10's ot_v41_rom_elem at the adopted point (NB = 2: a W1 macro pair sharing one front end, MTP,
+//   W10's ot_v41_rom_elem_w10 experimental baseline (NB = 2: a W1 macro pair sharing one front end, MTP,
 //   fill cuts) + its per-element CONFIGURATION ROM and loader (root decision 2026-09-30 (b)).
 //
 // Configuration ROM.  Every phase the die runs has, for every element, the element's 3*NSEG+1 = 25

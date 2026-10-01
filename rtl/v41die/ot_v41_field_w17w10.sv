@@ -1,6 +1,7 @@
+// Experimental companion: FAST/PP/BP default off; no adoption or clock claim.
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// ROM field of the adopted V4.1 layer die (W17 die integration of W10's element).
+// ROM field of an experimental V4.1 FAST/PP runtime baseline (W17 die integration of W10's element).
 //
 //   ot_v41_retn_w17w10   one return-tree node (rtl/v41die/ot_v41_retn_w17w10.sv): W10 ot_v41_ret_node + RST wire stages.
 //                 (exactly the per-level stage of ot_v41_rom_array).

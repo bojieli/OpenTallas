@@ -1,5 +1,6 @@
+// Experimental companion: FAST/PP/BP default off; no adoption or clock claim.
 `timescale 1ns/1ps
-// ot_v41_retn_w17w10: one return-tree node of the adopted V4.1 ROM field (W17): W10's ot_v41_ret_node followed by RST
+// ot_v41_retn_w17w10: one return-tree node of an experimental FAST/PP runtime baseline (W17): W10's ot_v41_ret_node followed by RST
 // wire register stages -- exactly the per-level stage of W10's ot_v41_rom_array.  Used by ot_v41_field_w17w10 and, as a
 // separately compiled model, by the runtime composition (rtl/test/v41_runtime).
 module ot_v41_retn_w17w10 #(

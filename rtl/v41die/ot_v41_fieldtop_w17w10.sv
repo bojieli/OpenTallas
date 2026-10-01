@@ -1,7 +1,8 @@
+// Experimental companion: FAST/PP/BP default off; no adoption or clock claim.
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
 // ot_v41_fieldtop_w17w10: the spine, a vector-memory model and the ROM field -- the unit of the W17 runtime-
-// composition equivalence gate (tools/v41_field_rt_gate.py).
+// composition equivalence gate (tools/w17_w10_field_rt_gate.py).
 //
 // Flat (default): everything in one model.  RT_CUT defined: the field is NOT instantiated; its broadcast
 // inputs become outputs (fb_*) and its root outputs become inputs (fr_*), so the runtime host composes

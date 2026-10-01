@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""ROM-field images of the adopted V4.1 layer die (W17 die integration of W10's element).
+"""ROM-field images for the experimental W17/W10 FAST/PP runtime baseline.
 
-Library used by the runtime-composition gate (tools/v41_field_rt_gate.py) and the full-shape die runs.
+FAST/PP/BP default off; FRONT_PAR remains zero. No adoption or headline-clock claim.
+Library used by the runtime-composition gate (tools/w17_w10_field_rt_gate.py) only; it does not enable full-shape runtime adoption.
 
 A PHASE is one or more weight matrices sharing one x vector and one x family (FP8/FP4 = the FP8-quantised x of
 golden linear_q; BF16 = the BF16 x of golden mv / linear_bf16), as in tools/v41_rom_ksplit_bankmap.py.  For a
-field of NP element PAIRS (ot_v41_pair, NB = 2: each pair slot holds one segment structure for the two rows
-2R, 2R + 1 of a "super row" R) cut into R_REG return regions (ot_v41_field), a phase is placed with W10's
+field of NP element PAIRS (ot_v41_pair_w17w10, NB = 2: each pair slot holds one segment structure for the two rows
+2R, 2R + 1 of a "super row" R) cut into R_REG return regions (ot_v41_field_w17w10), a phase is placed with W10's
 rules -- golden-aligned K segments (model split), element read order, disjoint classes, LPT by words -- plus
 one W17 rule the multi-root return needs: ALL segments of a super row lie in ONE region (region = super row
 mod R_REG), so each row finishes in its region's root.

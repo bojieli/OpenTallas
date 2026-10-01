@@ -1,6 +1,7 @@
+// Experimental companion: FAST/PP/BP default off; no adoption or clock claim.
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// ot_v41_spine_w17w10: the ROM-field front end of the adopted V4.1 layer die (W17; root decisions 2026-09-30
+// ot_v41_spine_w17w10: the ROM-field front end of an experimental V4.1 FAST/PP runtime baseline (W17; root decisions 2026-09-30
 // (a)-(c)).  One weight PHASE at a time (tools/v41_rom_ksplit_bankmap.py: one or more matrices that share
 // one x vector and one x family):
 //

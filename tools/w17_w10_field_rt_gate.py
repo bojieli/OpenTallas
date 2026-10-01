@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-"""W17 runtime-composition equivalence gate of the adopted V4.1 ROM field (spine + W10 element pairs + multi-root
+"""W17 runtime-composition equivalence gate of an experimental FAST/PP runtime baseline (spine + W10 element pairs + multi-root
 return), against the flat RTL, on real DeepSeek-V4.1-Flash layer-0 weight slices.
 
-    python3 tools/v41_field_rt_gate.py --snapshot <HF snapshot dba1be0a...> --workdir DIR \
-        [--np 16 --regions 4 --nbf 4] [--result results/rtl/w17_field_rt_gate.json]
+FAST/PP/BP default off; FRONT_PAR remains zero. No adoption or headline-clock claim.
+    python3 tools/w17_w10_field_rt_gate.py --snapshot <HF snapshot dba1be0a...> --workdir DIR \
+        [--fast 1 --pp 1 --bp 0] [--np 16 --regions 4 --nbf 8] [--result results/rtl/w17_w10_field_rt_gate.json]
 
 Flat reference: rtl/v41die/ot_v41_fieldtop_w17w10.sv (spine, vector memory, ot_v41_field_w17w10) in one Verilator model.
 Composition:    the same top with RT_CUT (field removed) + ot_v41_pair_w17w10 (two builds: FP8/FP4-only and BF16-capable,
                 V41_RT: ROM and configuration words served by the host) instantiated per pair + ot_v41_retn_w17w10 per
-                return node + ot_v41_ret_root per region, wired by rtl/test/v41_runtime/v41_field_rt_gate.cpp.
+                return node + ot_v41_ret_root per region, wired by rtl/test/v41_runtime/w17_w10_field_rt_gate.cpp.
 Checks: (1) every public port of the top equal on every cycle; (2) every vector-memory write equals golden
 linear_q / csum(mul(w, bf16(x))) under R-ARITH chunk8 (tools/hdc_golden_v41.py) bit for bit, FP32 or BF16 by the
 phase's row format, every row of every position; (3) the wrong-edge negative control (consumers see same-edge
-values) fails.  Simulation only: no hardware is added by the composition.
+values) fails; (4) composed-host bank/parity mapping mutants fail. Actual FAST LAT is 8,
+not the model's assumed 7; measured cycles are validation evidence, not product timing qualification.  Simulation only: no hardware is added by the composition.
 """
 from __future__ import annotations
 

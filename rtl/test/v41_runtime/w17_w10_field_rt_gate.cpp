@@ -1,13 +1,14 @@
-// W17 runtime-composition equivalence gate of the adopted V4.1 ROM field (tools/v41_field_rt_gate.py).
+// Experimental companion: FAST/PP/BP default off; no adoption or clock claim.
+// W17 runtime-composition equivalence gate of an experimental FAST/PP runtime baseline (tools/w17_w10_field_rt_gate.py).
 //
-// Reference: Vflat = ot_v41_fieldtop (spine + vector memory + ot_v41_field: NP element pairs, return tree,
+// Reference: Vflat = ot_v41_fieldtop_w17w10 (spine + vector memory + ot_v41_field_w17w10: NP element pairs, return tree,
 //            R region roots; the via-programmed ROM model and the configuration ROM read from image files).
-// Candidate: Vcut  = ot_v41_fieldtop with RT_CUT (the field removed, its wires exposed), plus
-//            Vpq / Vpb   ot_v41_pair (FP8/FP4-only, BF16-capable) compiled ONCE each with V41_RT (ROM words and
+// Candidate: Vcut  = ot_v41_fieldtop_w17w10 with RT_CUT (the field removed, its wires exposed), plus
+//            Vpq / Vpb   ot_v41_pair_w17w10 (FP8/FP4-only, BF16-capable) compiled ONCE each with V41_RT (ROM words and
 //                        configuration words served by this host through DPI), instantiated per pair,
-//            Vretn       ot_v41_retn, instantiated per return-tree node inside a region,
+//            Vretn       ot_v41_retn_w17w10, instantiated per return-tree node inside a region,
 //            Vroot       ot_v41_ret_root, instantiated per region,
-//            wired by this host exactly as ot_v41_field wires them.
+//            wired by this host exactly as ot_v41_field_w17w10 wires them.
 //
 // Clock discipline: every model evaluates its rising edge with the inputs present before the edge; only
 // then does the host copy producer outputs to consumer inputs (no model ever sees a value registered on
@@ -15,7 +16,7 @@
 // --wrong-edge (negative control): models are evaluated one after another and each one's outputs are
 // copied to its consumers immediately, so consumers see same-edge values.  It must fail.
 //
-// Compared on every cycle: every public port of ot_v41_fieldtop (ready, idle, o_we, o_addr, o_data, fault,
+// Compared on every cycle: every public port of ot_v41_fieldtop_w17w10 (ready, idle, o_we, o_addr, o_data, fault,
 // phase_cycles).  The candidate's vector-memory writes and per-op phase cycles are printed for the golden
 // check.   Usage: gate DIR OPS [--wrong-edge] [--no-ref]
 // Compile-time: NP, NR (regions), NBF, PHW, VAW.
