@@ -50,7 +50,6 @@ module tb_w19_fetch_sm;
     reg [9:0] tags [0:511];
     reg [1023:0] weight_line;
     wire stall_mode = cfg[7][0];
-    wire corrupt_mode = cfg[7][1];
     wire tag_room = tq_w - tq_r < 512;
     wire allow_req = !stall_mode || (cyc % 17 >= 7);
     wire fsready = tq_w != tq_r && (!stall_mode || cyc % 13 >= 5);
@@ -110,7 +109,7 @@ module tb_w19_fetch_sm;
             for (kk = 1; kk < 4; kk = kk + 1)
                 hbm.mem[(expert_id * nlines * 2 + ii * 2 + 1) * 4 + kk] = 256'd0;
         end
-        if (corrupt_mode) hbm.mem[expert_id * nlines * 8 + 4] =
+        if (cfg[7][1]) hbm.mem[expert_id * nlines * 8 + 4] =
             hbm.mem[expert_id * nlines * 8 + 4] ^ 256'h1;
         $readmemh({dir, "/x.hex"}, xwords);
         fo = $fopen({dir, "/out.txt"}, "w");
