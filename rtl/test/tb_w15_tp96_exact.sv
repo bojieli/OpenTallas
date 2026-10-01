@@ -63,6 +63,7 @@ module tb_w15_tp96_exact #(
         if (!$value$plusargs("STALL=%d",STALL)) STALL=0;
         if (!$value$plusargs("BAD_ORDER=%d",BAD_ORDER)) BAD_ORDER=0;
         if (!$value$plusargs("BAD_TAG=%d",BAD_TAG)) BAD_TAG=0;
+        if (BAD_ORDER && BAD_TAG) $fatal(1,"negative injections must be isolated");
         if (P != 48 || LANES != 16 || LAND_DEPTH != 128) $fatal(1, "TP96 preflight shape mismatch");
         for (integer a=0;a<N;a=a+1) begin accepted[a]=0;credit_wait[a]=0;end
         if (!$value$plusargs("SEED=%d", seed)) seed = 1;
@@ -135,6 +136,7 @@ module tb_w15_tp96_exact #(
     wire [N-1:0] lf;
     reg rep = 0, dump = 0;
     reg  [N-1:0] fin = 0;
+    reg [N-1:0] negative_seen = 0;
     generate for (p = 0; p < P; p = p + 1) begin : g_pkg
         localparam integer D0 = 2 * p, D1 = 2 * p + 1;
         // producers: each die streams its op's words, one a cycle, from issue
@@ -214,16 +216,28 @@ module tb_w15_tp96_exact #(
                     integer src, idx;
                     x = rr[j*PW +: PW];
                     src = integer'(x[PW-1 -: 8]); idx = integer'(x[PW-9 -: 16]);
-                    if (x[FW+9:FW+2] != op[7:0] || x[FW+1] != md || x[FW] != (idx==n_-1))
-                        $fatal(1,"tag mismatch op=%0d die=%0d",op,DD);
+                    if (x[FW+9:FW+2] != op[7:0] || x[FW+1] != md || x[FW] != (idx==n_-1)) begin
+                        if (BAD_TAG && op==0 && idx==0 && src==255 && x[FW+9:FW+2]==1 &&
+                            x[FW+1:FW]==0 && !negative_seen[DD]) begin
+                            negative_seen[DD] <= 1;
+                            $display("NEG_REJECT kind=tag die=%0d op=%0d idx=%0d",DD,op,idx);
+                        end else $fatal(1,"tag mismatch op=%0d die=%0d",op,DD);
+                    end else if (BAD_TAG && op==0 && idx==0)
+                        $fatal(1,"negative tag witness missing die=%0d",DD);
                     if (idx>=n_ || (md && src>=N)) $fatal(1,"invalid source/index");
                     if (seen[(md ? src*MAXW : 0)+idx]) $fatal(1,"duplicate result op=%0d die=%0d",op,DD);
                     seen[(md ? src*MAXW : 0)+idx] <= 1;
                     if (md) begin
                         if (src >= N || idx >= n_ || x[FW-1:0] !== part[(op*N + src)*MAXW + idx])
                             $fatal(1, "gather mismatch op=%0d die=%0d src=%0d idx=%0d", op, DD, src, idx);
-                    end else if (src != 255 || idx >= n_ || x[FW-1:0] !== expw[op*MAXW + idx])
-                        $fatal(1, "reduce mismatch op=%0d die=%0d idx=%0d", op, DD, idx);
+                    end else if (src != 255 || idx >= n_ || x[FW-1:0] !== expw[op*MAXW + idx]) begin
+                        if (BAD_ORDER && op==0 && idx==0 && src==255 &&
+                            x[FW-1:0]=={LANES{32'h40000000}} && !negative_seen[DD]) begin
+                            negative_seen[DD] <= 1;
+                            $display("NEG_REJECT kind=order die=%0d op=%0d idx=%0d",DD,op,idx);
+                        end else $fatal(1,"reduce mismatch op=%0d die=%0d idx=%0d",op,DD,idx);
+                    end else if (BAD_ORDER && op==0 && idx==0)
+                        $fatal(1,"negative order witness missing die=%0d",DD);
                     got <= got + 1;
                     wr[op] = wr[op] + 1;
                 end
@@ -376,6 +390,20 @@ module tb_w15_tp96_exact #(
                      g_pkg[p].sxamin, g_pkg[p].sxamax, X_WIRE);
         end
     end endgenerate
+    initial begin : negative_finish
+        wait (ready);
+        if (BAD_ORDER || BAD_TAG) begin
+            wait (&negative_seen); #0.01;
+            if ((|lf) || sw_fault) $fatal(1,"unexpected link/switch fault in negative control");
+            if (BAD_ORDER) begin
+                $display("NEG_DONE kind=order endpoints=%0d",N);
+                $fatal(1,"expected order rejection across all96 endpoints");
+            end else begin
+                $display("NEG_DONE kind=tag endpoints=%0d",N);
+                $fatal(1,"expected tag rejection across all96 endpoints");
+            end
+        end
+    end
     initial begin : finish
         wait (&fin);
         repeat (20) @(posedge clk[0]);

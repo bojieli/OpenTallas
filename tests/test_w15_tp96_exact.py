@@ -10,13 +10,21 @@ def test_order_witness():
     packages=[np.float32(2**24),np.float32(1),np.float32(-2**24),np.float32(1)]+[np.float32(0)]*44
     ordered=C.tree(packages)
     packages[1],packages[2]=packages[2],packages[1]
-    assert G.bits(ordered).item()!=G.bits(C.tree(packages)).item()
+    assert G.bits(ordered).item()==0x3f800000
+    assert G.bits(C.tree(packages)).item()==0x40000000
 
-def test_negative_requires_specific_rejection():
-    assert C.parse('reduce mismatch op=0 die=95','order')['passed']
-    assert not C.parse('W15TIMEOUT','order')['passed']
-    assert C.parse('tag mismatch op=0 die=0','tag')['passed']
-    assert not C.parse('reduce mismatch','tag')['passed']
+def negative_log(kind, ranks=range(96)):
+    return '\n'.join([f'NEG_REJECT kind={kind} die={d} op=0 idx=0' for d in ranks]+[f'NEG_DONE kind={kind} endpoints=96',f'expected {kind} rejection across all96 endpoints'])
+
+def test_negative_requires_all96_specific_rejections():
+    for kind in ['order','tag']:
+        assert C.parse(negative_log(kind),kind)['passed']
+        assert not C.parse(negative_log(kind,range(95)),kind)['passed']
+        assert not C.parse(negative_log(kind,[0]*96),kind)['passed']
+        assert not C.parse(negative_log(kind)+'\nW15TIMEOUT',kind)['passed']
+    assert not C.parse(negative_log('order'),'tag')['passed']
+    assert not C.parse('reduce mismatch op=0 die=95','order')['passed']
+    assert not C.parse('tag mismatch op=0 die=0','tag')['passed']
 
 def test_isa_or_partial_rows_cannot_pass():
     with pytest.raises(AssertionError):C.parse('PASS 96 ISA endpoints W15DONE faults=0')

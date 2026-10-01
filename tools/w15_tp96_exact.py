@@ -11,6 +11,7 @@ import sys
 import numpy as np
 import hdc_golden as G
 import w15_collectives as W
+import w15_tp96_measurement_admission as A
 
 ROOT=Path(__file__).resolve().parents[1]
 TOP='tb_w15_tp96_exact'
@@ -93,8 +94,16 @@ def fixture(out):
 
 def parse(text,negative=None):
     if negative:
-        witness='reduce mismatch' if negative=='order' else 'tag mismatch'
-        return dict(passed=witness in text,expected_rejection=negative,witness=witness)
+        assert negative in {'order','tag'}
+        rows=re.findall(r'NEG_REJECT kind=(order|tag) die=(\d+) op=(\d+) idx=(\d+)',text)
+        expected={(str(d),'0','0') for d in range(96)}
+        witness=f'expected {negative} rejection across all96 endpoints'
+        passed=(len(rows)==96 and all(x[0]==negative for x in rows)
+                and {(x[1],x[2],x[3]) for x in rows}==expected
+                and f'NEG_DONE kind={negative} endpoints=96' in text and witness in text
+                and not any(x in text for x in ['W15TIMEOUT','witness missing','unexpected link/switch fault']))
+        return dict(passed=passed,expected_rejection=negative,witness=witness,
+                    rejected_endpoints=len({x[1] for x in rows if x[0]==negative}),required_endpoints=96)
     ops=[tuple(map(int,m)) for m in W.OPL.findall(text)]
     credits=[tuple(map(int,m)) for m in re.findall(r'CREDIT die=(\d+) waiting=(\d+) consumer_stall=(\d+) landing_peak=(\d+) accepted=(\d+)',text)]
     bp=[tuple(map(int,m)) for m in re.findall(r'BACKPRESSURE pkg=(\d+) forward=(\d+) downlink=(\d+)',text)]
@@ -114,17 +123,19 @@ def parse(text,negative=None):
     if timing['qualified']:result['cycles']=timing['cycles']
     return result
 
-def campaign(out,build):
+def campaign(out,build,legacy_archive=A.LEGACY_ARCHIVE,legacy_commit=None):
     assert_no_live_tp96()
     if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip():raise SystemExit('clean pinned worktree required')
     assert not out.exists() and not build.exists(),'use new immutable output/build paths'
-    pre=json.loads((ROOT/'results/uarch/w15_tp96_collective_preflight_20261001.json').read_text())
-    for p,h in pre['source_sha256'].items():assert sha(ROOT/p)==h,p
+    pre=json.loads((ROOT/A.PREFLIGHT_RELATIVE).read_text())
+    A.check_preflight(ROOT,pre,SOURCES)
+    legacy_binding=A.check_legacy_archive(ROOT,legacy_archive,legacy_commit)
     out.mkdir(parents=True);build.mkdir(parents=True)
     fixture(out/'fixture')
-    pins={p:sha(ROOT/p) for p in SOURCES+['tools/w15_tp96_exact.py','tools/w15_tp96_preflight.py','tools/hdc_golden.py','tools/uarch_model.py','results/rtl/w15_tp96_w19_prerequisites_input_20261001.json']}
-    record=dict(schema='w15_tp96_exact_v1',source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
-                source_sha256=pins,preflight_sha256=sha(ROOT/'results/uarch/w15_tp96_collective_preflight_20261001.json'),
+    pins={p:sha(ROOT/p) for p in sorted(pre['source_sha256'])}
+    record=dict(schema='w15_tp96_exact_v2',source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+                source_sha256=pins,preflight_sha256=sha(ROOT/A.PREFLIGHT_RELATIVE),legacy_terminal_binding=legacy_binding,
+                preflight_path=A.PREFLIGHT_RELATIVE,
                 claims='Actual 96-endpoint collective rounds only; no full-token rate, hardware adoption or SS/FF claim.',cases={})
     cases=[('normal',0,0,0,None),('stalled',1,0,0,None),('bad_order',0,1,0,'order'),('bad_tag',0,0,1,'tag')]
     for name,stall,order,tag,negative in cases:
@@ -156,4 +167,4 @@ def campaign(out,build):
     if not record['passed']:raise SystemExit(1)
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--build',type=Path,required=True);a=p.parse_args();campaign(a.out.resolve(),a.build.resolve())
+    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--legacy-terminal-archive',type=Path,default=A.LEGACY_ARCHIVE);p.add_argument('--legacy-terminal-commit');a=p.parse_args();campaign(a.out.resolve(),a.build.resolve(),a.legacy_terminal_archive,a.legacy_terminal_commit)

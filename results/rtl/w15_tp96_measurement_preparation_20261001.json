@@ -1,0 +1,69 @@
+{
+  "actual_guard_observation": "existing TP96 runner/binary live: PID 595164; do not duplicate",
+  "admission_status": "BLOCKED_LEGACY_LIVE",
+  "campaign_launched": false,
+  "claim_boundary": "Prepared current-model measurement prerequisite only. No new exactRTL campaign, fulltoken, productrate, hardware adoption or SSFF closure.",
+  "exact_order_witness": {
+    "lanes": 16,
+    "native_fp32_bits": "3f800000",
+    "swapped_fp32_bits": "40000000"
+  },
+  "full_harness_lint_rc": 0,
+  "legacy_functional_and_latency_status": "functional pending; latency unqualified; original250 source/output untouched",
+  "lint_log_sha256": "6cef0b4b2f5c5487c800b9d1125fcd016fd298bdb3a9926b37f9d639a9c8f3f8",
+  "model_golden_and_engine_byte_identical_to_base": [
+    "rtl/link/ot_link_afifo.sv",
+    "rtl/link/ot_link_crc32.sv",
+    "rtl/link/ot_link_crc32_pipe.sv",
+    "rtl/link/ot_w15_link_tx.sv",
+    "rtl/link/ot_w15_link_rx.sv",
+    "rtl/link/ot_link_chan_model.sv",
+    "rtl/link/ot_link_nvls_switch.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "tools/uarch_model.py",
+    "tools/hdc_golden.py",
+    "tools/w15_collectives.py"
+  ],
+  "negative_scope": "all96 checker contract + parser/admission controls + fullharness lint only; actualRTL negative runs pending",
+  "no_main_tasks_push": true,
+  "preflight_path": "results/uarch/w15_tp96_measurement_preflight_20261001.json",
+  "preflight_sha256": "0d305f0ee44c5465f5de686832a29ee206f531912690495aa4fdb045751a6585",
+  "remaining_prerequisites": [
+    "legacy terminal committed archive and source/binary validation",
+    "legacy functional failure, if any, requires diagnosis before measurement-only retry",
+    "clean pin with all22 hashes matching including current unified model",
+    "new output/build paths, no equivalent live job, parent fleet coordination; allAGI newdispatch disabled"
+  ],
+  "schema": "w15_tp96_measurement_preparation_v1",
+  "source_base_main": "5787da6085d1440f2a423af2a8246fc522245f9e",
+  "source_sha256": {
+    "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+    "results/rtl/w15_tp96_w19_prerequisites_input_20261001.json": "7229fe83f1dd636409e070bb3975dd614656e084998eeb2977902e0e30573ff8",
+    "results/uarch/economics.json": "4f584946473201c60fcf1ac2c0509b0816ae138f134629cf50f5ed8f081166db",
+    "results/uarch/economics_levers.json": "e0992d14d084a80c1cc1ef99cb3561a84b349f9c2c8285111e602b91f2b157df",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "rtl/link/ot_link_chan_model.sv": "78591c5d4f60a1559f088263c163eb363a5193d226091a0fe3d70e7dc8ee7446",
+    "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+    "rtl/link/ot_link_crc32_pipe.sv": "c117c3008b950b371cccded0581a647606f55e49b608129cbab3b3aec844d8bb",
+    "rtl/link/ot_link_nvls_switch.sv": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+    "rtl/link/ot_w15_link_rx.sv": "5f089b28bd4b2966b3a98e0f7fb3b3cdd755268eda844caf899b8df7a596efaa",
+    "rtl/link/ot_w15_link_tx.sv": "ccee74339f743012aed3de51fe0a085f1d9b04e54d6343f5ced37fc49cdc9bc0",
+    "rtl/test/tb_w15_tp96_exact.sv": "5c2b5685ec3f8aaa4381fdce4ea0125041fd1a96c74bf22f71738485ab37695c",
+    "rtl/test/w15_tp96_measure_counter.sv": "bc4eafc867dca2d3120ba7225b75f339e46595a8ad321185423f40936208e44b",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/w15_collectives.py": "314f6aee76d233bbb074ed5fde77e08079f0250e3ef8ac6e15e41cc09849ad2a",
+    "tools/w15_tp96_exact.py": "db99494cdef22a64f4fe5ca2461e0232a70f0dee8c4fcff93fb2f4d6f179a048",
+    "tools/w15_tp96_measurement_admission.py": "820490f0d86839f1ddcb89a8c064b19c7e1842a006800d1884e58e6f85cc0d60",
+    "tools/w15_tp96_measurement_preflight.py": "b8dc24a651883674fc3623c70debf922eb7846d18462acb41732cab018777090",
+    "tools/w15_tp96_preflight.py": "43dd83d5452f5fc03d01d16b6151f59186b9619f6744ec0199ba4e3d7f99a587",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6"
+  },
+  "test_sources_sha256": {
+    "tests/test_w15_tp96_exact.py": "91c5bb7e4f5d9736e6b0e3c8e4a9bd19519f99fa6acff1b08da5982da6cd4b93",
+    "tests/test_w15_tp96_measurement.py": "a324075cc168410472c2dd4dd003c96d61d0652f80f1aa2a0f1f1cc90d0b49f6",
+    "tests/test_w15_tp96_measurement_admission.py": "9c24fa129ce9ea1ad12c2138862fd264bcc2ef74a3028bca11a5b6abc83f6977"
+  },
+  "tests_observed_passed": 38
+}
