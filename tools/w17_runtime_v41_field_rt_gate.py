@@ -2,13 +2,13 @@
 """W17 runtime-composition equivalence gate of the adopted V4.1 ROM field (spine + W10 element pairs + multi-root
 return), against the flat RTL, on real DeepSeek-V4.1-Flash layer-0 weight slices.
 
-    python3 tools/v41_field_rt_gate.py --snapshot <HF snapshot dba1be0a...> --workdir DIR \
+    python3 tools/w17_runtime_v41_field_rt_gate.py --snapshot <HF snapshot dba1be0a...> --workdir DIR \
         [--np 16 --regions 4 --nbf 4] [--result results/rtl/w17_field_rt_gate.json]
 
-Flat reference: rtl/v41die/ot_v41_fieldtop.sv (spine, vector memory, ot_v41_field) in one Verilator model.
+Flat reference: rtl/w17_runtime/v41die/ot_v41_fieldtop.sv (spine, vector memory, ot_v41_field) in one Verilator model.
 Composition:    the same top with RT_CUT (field removed) + ot_v41_pair (two builds: FP8/FP4-only and BF16-capable,
                 V41_RT: ROM and configuration words served by the host) instantiated per pair + ot_v41_retn per
-                return node + ot_v41_ret_root per region, wired by rtl/test/v41_runtime/v41_field_rt_gate.cpp.
+                return node + ot_v41_ret_root per region, wired by rtl/w17_runtime/test/v41_runtime/v41_field_rt_gate.cpp.
 Checks: (1) every public port of the top equal on every cycle; (2) every vector-memory write equals golden
 linear_q / csum(mul(w, bf16(x))) under R-ARITH chunk8 (tools/hdc_golden_v41.py) bit for bit, FP32 or BF16 by the
 phase's row format, every row of every position; (3) the wrong-edge negative control (consumers see same-edge
@@ -31,21 +31,21 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import hdc_golden_v41 as G  # noqa: E402
-import v41_die_images as I  # noqa: E402
+import w17_runtime_v41_die_images as I  # noqa: E402
 from rtl_v41_rom_array import Ckpt, Mat  # noqa: E402
 
 VERILATOR = os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
 RT = ROOT / "rtl/test/v41_runtime"
 W10 = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_ret", "ot_v41_rom_elem", "ot_v41_bterm", "ot_v41_chain",
                                               "ot_v41_segtree", "ot_v41_bf16_lanes")]
-COMMON = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_delay")] + \
+COMMON = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_delay", "ot_hdc_cg")] + \
          [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/hdc/v41/ot_hdc_actquant.sv"]
 VIA_ROM = ROOT / "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v"
 RT_ROM = RT / "ot_rom_8192x274_m8_rt.sv"
-DIE = [ROOT / f"rtl/v41die/{n}.sv" for n in ("ot_v41_pair", "ot_v41_retn", "ot_v41_field", "ot_v41_spine", "ot_v41_fieldtop")]
-HOST = [RT / "v41_field_rt_gate.cpp", ROOT / "rtl/test/qwen_runtime/qwen_rt_matvec.hpp"]
+DIE = [ROOT / f"rtl/w17_runtime/v41die/{n}.sv" for n in ("ot_v41_pair", "ot_v41_retn", "ot_v41_field", "ot_v41_spine", "ot_v41_fieldtop")]
+HOST = [ROOT / "rtl/w17_runtime/test/v41_runtime/v41_field_rt_gate.cpp", ROOT / "rtl/test/qwen_runtime/qwen_rt_matvec.hpp"]
 SOURCES = sorted(set(W10 + COMMON + [VIA_ROM, RT_ROM] + DIE + HOST +
-                     [Path(__file__), ROOT / "tools/v41_die_images.py", ROOT / "tools/rtl_v41_rom_array.py",
+                     [Path(__file__), ROOT / "tools/w17_runtime_v41_die_images.py", ROOT / "tools/rtl_v41_rom_array.py",
                       ROOT / "tools/v41_rom_ksplit_bankmap.py", ROOT / "tools/hdc_golden_v41.py",
                       ROOT / "tools/hdc_golden.py"]))
 SEED = 20260930
@@ -69,7 +69,8 @@ def phases(ck: Ckpt):
         ("mixed_down_fp4_e141_w2_fp8_shared_w2", [Mat(ck, L + "ffn.experts.141.w2", "fp4", 16, 2304, r0=1280),
                                                   Mat(ck, L + "ffn.shared_experts.w2", "fp8", 16, 2304, r0=1280)],
          (False, False), 0, 1),
-        ("bf16_router_gate_fp32_bf16", [Mat(ck, L + "ffn.gate", "bf16", 32, 5120, r0=96)], (True, False), 16, 1),
+        ("bf16_router_gate_fp32_bf16", [Mat(ck, L + "ffn.gate", "bf16", 8, 5120, r0=96)], (True, False), 4, 1),
+        ("bf16_l2_compressor_wkv_fp32", [Mat(ck, "layers.2.attn.compressor.wkv", "bf16", 4, 5120, r0=384)], (True, True), 0, 1),
         ("fp8_wq_b_mtp2", [Mat(ck, L + "attn.wq_b", "fp8", 16, 1280, r0=9000)], (False, False), 0, 2),
     ]
 
@@ -94,13 +95,13 @@ def build(a, out: Path):
     top_p = [f"-GNP={a.np}", f"-GR={a.regions}", f"-GNBF={a.nbf}", f"-GPHW={PHW}", f"-GVAW={VAW}"]
     models = [
         ("flat", "ot_v41_fieldtop", DIE + [VIA_ROM], top_p, []),
-        ("cut", "ot_v41_fieldtop", [ROOT / "rtl/v41die/ot_v41_spine.sv", ROOT / "rtl/v41die/ot_v41_fieldtop.sv"],
+        ("cut", "ot_v41_fieldtop", [ROOT / "rtl/w17_runtime/v41die/ot_v41_spine.sv", ROOT / "rtl/w17_runtime/v41die/ot_v41_fieldtop.sv"],
          top_p, ["-DRT_CUT"]),
-        ("pq", "ot_v41_pair", [ROOT / "rtl/v41die/ot_v41_pair.sv", RT_ROM], [f"-GPHW={PHW}", "-GBF16=0", "-GXF=4"],
+        ("pq", "ot_v41_pair", [ROOT / "rtl/w17_runtime/v41die/ot_v41_pair.sv", RT_ROM], [f"-GPHW={PHW}", "-GBF16=0", "-GXF=4"],
          ["-DV41_RT"]),
-        ("pb", "ot_v41_pair", [ROOT / "rtl/v41die/ot_v41_pair.sv", RT_ROM], [f"-GPHW={PHW}", "-GBF16=1", "-GXF=8"],
+        ("pb", "ot_v41_pair", [ROOT / "rtl/w17_runtime/v41die/ot_v41_pair.sv", RT_ROM], [f"-GPHW={PHW}", "-GBF16=1", "-GXF=8"],
          ["-DV41_RT"]),
-        ("retn", "ot_v41_retn", [ROOT / "rtl/v41die/ot_v41_retn.sv"], ["-GRD=64", "-GRST=1", "-GBYPASS=1"], []),
+        ("retn", "ot_v41_retn", [ROOT / "rtl/w17_runtime/v41die/ot_v41_retn.sv"], ["-GRD=64", "-GRST=1", "-GBYPASS=1"], []),
         ("root", "ot_v41_ret_root", [], ["-GD=128", "-GQD=128"], []),
     ]
     for prefix, top, files, params, extra in models:
@@ -121,7 +122,7 @@ def build(a, out: Path):
                f"{vroot}/include/verilated_dpi.cpp"]
     gate = out / "gate"
     run("link", ["g++", "-std=c++20", "-O2", "-pthread", f"-DNP={a.np}", f"-DNR={a.regions}", f"-DNBF={a.nbf}",
-                 f"-DPHW={PHW}", f"-DVAW={VAW}", *sorted(includes), RT / "v41_field_rt_gate.cpp",
+                 f"-DPHW={PHW}", f"-DVAW={VAW}", *sorted(includes), ROOT / "rtl/w17_runtime/test/v41_runtime/v41_field_rt_gate.cpp",
                  "-Wl,--start-group", *archives, "-Wl,--end-group", *runtime, "-o", gate])
     return gate, steps
 
@@ -132,12 +133,14 @@ def main() -> int:
     ap.add_argument("--workdir", type=Path, required=True)
     ap.add_argument("--np", type=int, default=16)
     ap.add_argument("--regions", type=int, default=4)
-    ap.add_argument("--nbf", type=int, default=4)
+    ap.add_argument("--nbf", type=int, default=8)
     ap.add_argument("--jobs", type=int, default=8)
     ap.add_argument("--threads", type=int, default=4)
     ap.add_argument("--reuse", action="store_true")
     ap.add_argument("--result", type=Path)
     a = ap.parse_args()
+    if (a.result or (a.workdir / "result.json")).exists():
+        raise SystemExit("Existing verdict preserved; choose a new result path")
     G.set_arith("chunk8")
     out = a.workdir.resolve()
     img = out / "img"

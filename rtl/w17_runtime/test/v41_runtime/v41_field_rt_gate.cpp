@@ -48,7 +48,9 @@ static std::unordered_map<const void*, PairMem*> g_cfgscope;
 
 extern "C" void v41rt_rom_register(const char* inst) {
     if (!g_reg) { printf("FATAL rom register outside construction\n"); exit(3); }
-    g_romscope[svGetScope()] = {g_reg, (inst && inst[0] == 'b') ? 1 : 0};
+    if (getenv("RT_ROMDBG")) printf("ROMREG %p inst=[%s] scope=%s\n", (void*)g_reg, inst ? inst : "(null)", svGetNameFromScope(svGetScope()));
+    // Verilator passes the string parameter space-padded (" b"): the second macro's suffix is its last character
+    g_romscope[svGetScope()] = {g_reg, (inst && inst[0] && inst[strlen(inst) - 1] == 'b') ? 1 : 0};
 }
 extern "C" void v41rt_rom_read(int addr, svBitVecVal* q) {
     auto it = g_romscope.find(svGetScope());
@@ -266,7 +268,14 @@ int main(int argc, char** argv) {
         else if (!same(ref->o_data, cut.o_data)) bad = "o_data";
         else if (ref->fault != cut.fault) bad = "fault";
         else if (ref->phase_cycles != cut.phase_cycles) bad = "phase_cycles";
-        if (bad) { printf("FAIL case=0 tick=%ld port=%s\n", cyc, bad); fflush(stdout); exit(1); }
+        if (bad) {
+            for (int k = 0; k < NR; k++)
+                printf("DIAG port %d ref we=%d a=%lu d=%08lx | cut we=%d a=%lu d=%08lx\n", k,
+                       int((uint64_t(ref->o_we) >> k) & 1), (unsigned long)getb(ref->o_addr, VAW * k, VAW),
+                       (unsigned long)getb(ref->o_data, 32 * k, 32), int((uint64_t(cut.o_we) >> k) & 1),
+                       (unsigned long)getb(cut.o_addr, VAW * k, VAW), (unsigned long)getb(cut.o_data, 32 * k, 32));
+            printf("FAIL case=0 tick=%ld port=%s\n", cyc, bad); fflush(stdout); exit(1);
+        }
     };
     auto tick = [&](const Op* o, bool go) {
         // inputs before the edge
@@ -292,6 +301,25 @@ int main(int argc, char** argv) {
         fld.eval_all(0, rst);
         cyc++;
         check();
+        if (getenv("RT_LEAF"))
+            for (int g = 0; g < NP; g++)
+                for (int m = 0; m < 2; m++) {
+                    Node n = fld.leaf(g, m);
+                    if (n.v) printf("L %ld pair=%d m=%d row=%u seg=%u nseg=%u val=%08x\n", cyc, g, m, (n.t >> 13) & 0xffff,
+                                    (n.t >> 8) & 31, n.t & 31, n.d);
+                }
+        if (getenv("RT_BEATS") && cut.fb_xs_v) {
+            printf("B %ld p=%u b=%u sv=%u e0=%u e1=%u q0=", cyc, cut.fb_xs_p, cut.fb_xs_b, cut.fb_xs_sv, cut.fb_xs_e0, cut.fb_xs_e1);
+            for (int k = 7; k >= 0; k--) printf("%08x", cut.fb_xs_q0[k]);
+            printf(" q1=");
+            for (int k = 7; k >= 0; k--) printf("%08x", cut.fb_xs_q1[k]);
+            printf("\n");
+        }
+        if (getenv("RT_BEATS") && (cut.fb_go || cut.fb_cfg_go)) printf("G %ld go=%d cfg=%d\n", cyc, cut.fb_go, cut.fb_cfg_go);
+        if (ref && getenv("RT_REFW"))
+            for (int k = 0; k < NR; k++)
+                if ((uint64_t(ref->o_we) >> k) & 1)
+                    printf("R %lu %08lx\n", (unsigned long)getb(ref->o_addr, VAW * k, VAW), (unsigned long)getb(ref->o_data, 32 * k, 32));
         for (int k = 0; k < NR; k++)
             if ((uint64_t(cut.o_we) >> k) & 1) {
                 printf("W %lu %08lx\n", (unsigned long)getb(cut.o_addr, VAW * k, VAW), (unsigned long)getb(cut.o_data, 32 * k, 32));

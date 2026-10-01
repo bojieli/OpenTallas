@@ -85,7 +85,7 @@ class RuntimeIntegration(unittest.TestCase):
             self.assertIn('ot_coll_topk_merge.sv', names)
             self.assertIn('ot_hdc_fp32_add_lat.sv', names)
         self.assertIn(R.ROOT / 'tools/w11_ckvdie_src_l20.txt', R.all_sources(True))
-        self.assertIn(R.ROOT / 'tools/rtl_chip_v41x_die_smoke.py', R.all_sources(False))
+        self.assertIn(R.ROOT / 'tools/w17_runtime_rtl_chip_v41x_die_smoke.py', R.all_sources(False))
 
 
 if __name__ == '__main__':

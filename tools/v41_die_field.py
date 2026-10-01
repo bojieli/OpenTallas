@@ -25,7 +25,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-import v41_die_images as I  # noqa: E402
+import w17_runtime_v41_die_images as I  # noqa: E402
 from rtl_v41_rom_array import Ckpt, Mat  # noqa: E402
 
 
@@ -86,7 +86,7 @@ def main() -> int:
                params=dict(np=a.np, active=a.active, regions=a.regions, nbf=a.nbf, depth=a.depth, phw=a.phw),
                rom_fill_max_words=int(fld.fill.max()), stream_words=len(fld.stream), phases=fld.phases,
                checkpoint_header_sha256=ck.pins,
-               source_sha256={str(p.relative_to(ROOT)): sha(p) for p in (Path(__file__), ROOT / "tools/v41_die_images.py",
+               source_sha256={str(p.relative_to(ROOT)): sha(p) for p in (Path(__file__), ROOT / "tools/w17_runtime_v41_die_images.py",
                                                                          ROOT / "tools/v41_rom_ksplit_bankmap.py",
                                                                          ROOT / "tools/rtl_v41_rom_array.py")},
                wall_s=round(time.time() - t0, 1))

@@ -37,7 +37,7 @@ rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv
 rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv
 rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv
 rtl/hdc/v41x/ot_hdc_v41x_attn.sv
-rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv
+rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv
 rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv
 rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv
 rtl/hdc/v41x/ot_hdc_v41x_sel.sv
@@ -114,7 +114,7 @@ rtl/chip/ckvsel/ot_chip_v41x_tile.sv
 rtl/chip/ckvsel/ot_chip_v41x_die.sv
 rtl/chip/ot_coll_topk_merge.sv
 rtl/v41die/ot_v41_rom_adapt.sv
-rtl/v41die/ot_v41_spine.sv
+rtl/w17_runtime/v41die/ot_v41_spine.sv
 rtl/test/v41_runtime/ot_v41_rt_die_l20.sv
 rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv
 rtl/hdc/v41x/ot_hdc_v41x_idx_ring_ranges.sv

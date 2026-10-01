@@ -35,7 +35,7 @@ W10 = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_ret", "ot_v41_rom_elem", "o
                                               "ot_v41_segtree", "ot_v41_bf16_lanes")]
 LEAF = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_delay", "ot_hdc_cg")] + \
        [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv"]
-DIE_EXTRA = [ROOT / "rtl/v41die/ot_v41_rom_adapt.sv", ROOT / "rtl/v41die/ot_v41_spine.sv",
+DIE_EXTRA = [ROOT / "rtl/v41die/ot_v41_rom_adapt.sv", ROOT / "rtl/w17_runtime/v41die/ot_v41_spine.sv",
              ROOT / "rtl/hdc/v41/ot_hdc_actquant.sv", RT / "ot_v41_rt_die.sv"]
 ATTN = [ROOT / f"rtl/hdc/v41x/{n}.sv" for n in ("ot_hdc_v41x_attn_tile", "ot_hdc_v41x_attn", "ot_hdc_v41x_attn_staging")] + \
        [ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
@@ -51,7 +51,7 @@ def sha(p: Path) -> str:
 
 
 def die_sources() -> list[Path]:
-    import rtl_chip_v41x_die_smoke as D
+    import w17_runtime_rtl_chip_v41x_die_smoke as D
     return [Path(p) for p in D.sources("rtl")]
 
 
@@ -60,10 +60,10 @@ def l20_sources() -> list[Path]:
 
 
 def all_sources(l20: bool = False) -> list[Path]:
-    die = l20_sources() + [ROOT / "tools/w11_ckvdie_src_l20.txt"] if l20 else die_sources() + DIE_EXTRA + [ROOT / "tools/rtl_chip_v41x_die_smoke.py",
+    die = l20_sources() + [ROOT / "tools/w11_ckvdie_src_l20.txt"] if l20 else die_sources() + DIE_EXTRA + [ROOT / "tools/w17_runtime_rtl_chip_v41x_die_smoke.py",
                                                         ROOT / "tools/rtl_hdc_v41x_decode_campaign.py"]
     return sorted(set(die + W10 + LEAF + ATTN + [ATTN_VLT] + HOST +
-                      [ROOT / "rtl/v41die/ot_v41_pair.sv", ROOT / "rtl/v41die/ot_v41_retn.sv",
+                      [ROOT / "rtl/w17_runtime/v41die/ot_v41_pair.sv", ROOT / "rtl/w17_runtime/v41die/ot_v41_retn.sv",
                        RT / "ot_rom_8192x274_m8_rt.sv", Path(__file__)]))
 
 
@@ -101,9 +101,9 @@ def build(a) -> dict:
                         *[f"-G{k}={v}" for k, v in CL.items()]], die_sources() + DIE_EXTRA))
     for pre, bf, xf in (("pq", 0, 4), ("pb", 1, 8)):
         models.append((pre, "ot_v41_pair", ["-DV41_RT", f"-GPHW={ROM_PHW}", f"-GBF16={bf}", f"-GXF={xf}"],
-                       [ROOT / "rtl/v41die/ot_v41_pair.sv", RT / "ot_rom_8192x274_m8_rt.sv", *W10, *LEAF]))
+                       [ROOT / "rtl/w17_runtime/v41die/ot_v41_pair.sv", RT / "ot_rom_8192x274_m8_rt.sv", *W10, *LEAF]))
     models.append(("retn", "ot_v41_retn", ["-DV41_RT", "-GRD=64", "-GRST=1", "-GBYPASS=1"],
-                   [ROOT / "rtl/v41die/ot_v41_retn.sv", *W10, *LEAF]))
+                   [ROOT / "rtl/w17_runtime/v41die/ot_v41_retn.sv", *W10, *LEAF]))
     models.append(("root", "ot_v41_ret_root", ["-GD=128", "-GQD=128"], [*W10, *LEAF]))
     for pre, top, extra, files in models:
         if a.only and pre not in a.only.split(","):
