@@ -157,7 +157,11 @@ def compose():
                      reader_ticket_epoch_identity_match=32*36*(2*72+2),
                      descriptor_epoch_match=32*(2*16-1),
                      bitmap_and_reader_update_control=32*(256*8+36*16+128))
-    pub_area = (sum(pub_mux.values())+sum(pub_gates.values()))*.2/.5/1e6
+    pub_gates['client_RR_prefix_control'] = 32*36*4
+    pub_regs = dict(request_capture=32*75, row_and_reader_match_capture=32*(256+36+1),
+                    intermediate_row_reader_mux=32*(16*35+8*74),
+                    final_row_reader_mux=32*(35+74+1), update_capture=32*80, client_RR_pointer=32*6)
+    pub_area = (sum(pub_regs.values())*.2916+(sum(pub_mux.values())+sum(pub_gates.values()))*.2)/.5/1e6
     routing = {}
     bundles = {
         'one_stack_PC_to_local_mux': pcs*(width+1)+outputs*(5+1),
@@ -215,8 +219,9 @@ def compose():
             banks=32, rows_per_bank=256, readers_per_bank=36, descriptor_bits_per_bank=42,
             storage_bits_owner_record=373312, storage_footprint_mm2_owner_record=pub['candidate_storage']['register_footprint_mm2'],
             storage_not_recharged_here=True, mux_bit_equivalents=pub_mux, control_gate_equivalents=pub_gates,
+            lookup_pipeline_register_bits=pub_regs,
             additional_lookup_control_footprint_mm2=pub_area,
-            lookup_ports_per_bank_cycle=1, aggregate_lookup_ports_per_cycle=32,
+            physical_lookup_ports_per_bank=1, aggregate_physical_lookup_ports=32,
             latency='registeredrequest decode1 + parallel row/reader equality1 + tuple/ticket mux2 + publication/reader update1 =5fast cycles before read admission; producer drain and consumer completion fences additional',
             matched_row_mux_levels=8, matched_reader_mux_levels=6,
             worst_case_client_RR_grants=36, bounded_lookup_wait_cycles_if_ready=36*5,
