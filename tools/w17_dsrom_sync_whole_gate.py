@@ -1,5 +1,6 @@
 """Exact synchronous candidate admission gate; incomplete power has no margin."""
 import argparse,hashlib,json,subprocess
+from decimal import Decimal
 
 def gamma_delivery_gate(words,cycles,ports=16):
     if words<0 or cycles<0 or ports!=16 or cycles*ports<words:
@@ -38,7 +39,7 @@ def build():
             synchronous_internal_hops=True,async_mailboxes_per_internal_hop=False,
             reservation_not_minimum=True,actual_complete_inventory=False),
         power=dict(typed_partial_ledger_bound=True,typed_inventory_complete=False,
-            typed_partial_max_home_clock_and_all_leak_W=max(float(h['clock_plus_all_leak_W']) for h in typed['homes']),
+            typed_partial_max_home_clock_and_all_leak_W=max(typed['homes'],key=lambda h:Decimal(h['clock_plus_all_leak_W']))['clock_plus_all_leak_W'],
             typed_branch_dynamic_is_all_activity_allocation_not_selected=True,
             complete_selected_phase_W=None,complete_margin_W=None,
             provisional_positive_margin_permitted=False,old_3e66_e851_power_currency=False,
