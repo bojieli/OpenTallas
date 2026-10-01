@@ -21,6 +21,8 @@ PINS = {
     'packed_KV': ('8d68f3854', 'tools/qwen_hbm_complete_isa.py'),
     'corrected_stack_floor': ('df92353aa', 'tools/w13_qwen_kv_rmw_model.py'),
     'finite_join': ('2185eadf5', 'tools/w16_hbm_finite_service_join.py'),
+    'callback_clock_and_budget': ('55c5b90228cea12f5a295e4b5ba162ace7de7aef', 'tools/common_wrack_completion_calendar.py'),
+    'program_config': ('defc45332', 'compiler/models/qwen3-8b/config.json'),
 }
 
 def sector_descriptors(graph, instruction, position):
@@ -76,6 +78,9 @@ def model(repo=ROOT):
         commit = subprocess.check_output(['git', 'rev-parse', revision], cwd=repo, text=True).strip()
         raw = subprocess.check_output(['git', 'show', commit+':'+path], cwd=repo)
         pins[name] = dict(commit=commit, path=path, sha256=hashlib.sha256(raw).hexdigest())
+        if name in ('program', 'packed_KV', 'callback_clock_and_budget', 'program_config'):
+            if (ROOT/path).read_bytes() != raw:
+                raise ValueError('local model prerequisite differs from immutable source pin: '+name)
     demands = []
     for position in (0, 1):
         for link in links:
