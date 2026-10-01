@@ -33,6 +33,7 @@ def definitions(data,names):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--source-pin',default='HEAD',help='Immutable source base; main may be audited without checkout')
     ap.add_argument('--w17-pin',default='a7ee63c37')
     ap.add_argument('--w17-base',default='b93ee074')
     ap.add_argument('--work',type=Path,required=True)
@@ -40,7 +41,7 @@ def main():
     a=ap.parse_args()
     if a.record.exists():raise SystemExit('Refusing to overwrite companion audit evidence')
     a.work.mkdir(parents=True,exist_ok=True)
-    source=git('rev-parse','HEAD').decode().strip()
+    source=git('rev-parse',a.source_pin+'^{commit}').decode().strip()
     parent=git('rev-parse','main').decode().strip()
     pin=git('rev-parse',a.w17_pin+'^{commit}').decode().strip()
     base=git('rev-parse',a.w17_base+'^{commit}').decode().strip()
