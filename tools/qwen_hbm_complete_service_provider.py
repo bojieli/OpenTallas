@@ -153,6 +153,7 @@ def model(repo=ROOT):
             'Sector-store consumer accepts ACK, stores completion bit, retires; reverse credit CDC then releases sector credit/lock.',
             'Only all272 matching completion bits publish the writer generation; KV_FENCE consumes matching publication.',
             'KV_READ leases every requested prior/current generation; SCORES and PV result visibility and DUT retirement precede lease release.',
+            'Sole writer context remains allocated until its mandatory encoded KV_READ lease was acquired and released after SCORES/PV result visibility and DUT retirement.',
             'Generation reuse requires zero readers; sector credits are not held until later attention consumers.'],
         missing_costs=dict(controller_loaded_schedule=None, forward_NoC=None, reverse_ACK_NoC=None,
             actual_CDC_provider=None, scoreboard_accept_store_retire=None, arbitration36_clients=None,
@@ -217,7 +218,7 @@ class CallbackProvider:
                 raise ValueError('actual produced K/V dependencies required')
         rows = sector_descriptors(self.graph, self.graph['instructions'][writer], position)
         self.writers[key] = dict(die=link['die'], epoch=epoch, client=client,
-            reserve=now, descriptors=rows, completed={}, released=False)
+            reserve=now, descriptors=rows, completed={}, released=False, read_acquired=False)
 
     def reserve_sector(self, key, ordinal, tag, reserve_ps):
         w = self.writers[key]; now = self.time(reserve_ps)
@@ -310,6 +311,7 @@ class CallbackProvider:
             raise ValueError('persistent previous/current generation unpublished')
         if len(self.leases) >= 72: raise ValueError('finite reader leases exhausted')
         self.leases[key] = dict(generations=generations, landed=now)
+        w['read_acquired'] = True
 
     def release_read(self, key, consumer_done_ps):
         link = self.links[key[1]]; lease = self.leases[key]; now = self.time(consumer_done_ps)
@@ -322,6 +324,13 @@ class CallbackProvider:
     def release_writer_context(self, key):
         if key not in self.published or any(key in x['generations'] for x in self.leases.values()) or any(s['key']==key for s in self.slots.values()):
             raise ValueError('generation/context reused with live reader or sector transaction')
+        if not self.writers[key]['read_acquired']:
+            raise ValueError('mandatory encoded KV_READ lease not yet acquired/completed')
+        link = self.links[key[1]]
+        if any((key[0], instruction) not in self.retired for instruction in (link['read'], link['scores'], link['pv'])):
+            raise ValueError('mandatory KV_READ/SCORES/PV result visibility and DUT retirement required')
+        if self.writers[key]['released']:
+            raise ValueError('duplicate writer context release')
         self.writers[key]['released'] = True
 
 if __name__ == '__main__':

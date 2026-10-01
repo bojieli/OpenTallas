@@ -60,6 +60,11 @@ def test_supplied_272_sector_callbacks_publish_without_holding_all_sector_credit
     assert not provider.slots and not provider.locks
     assert len(provider.writers[key]['completed']) == 272
     provider.publish(key, 42, final)
+    # Regression: absence of a lease is not proof that the mandatory reader
+    # has completed. Previously this release stranded the encoded KV_READ.
+    with pytest.raises(ValueError, match='mandatory encoded KV_READ lease'):
+        provider.release_writer_context(key)
+    assert not provider.writers[key]['released']
     writer = key[1]; link = provider.links[writer]
     provider.retire(0, writer, final, final)
     provider.retire(0, link['fence'], final, final)
@@ -74,6 +79,23 @@ def test_supplied_272_sector_callbacks_publish_without_holding_all_sector_credit
     provider.release_read(key, final)
     provider.release_writer_context(key)
     assert not provider.leases
+
+def test_published_writer_context_cannot_release_before_mandatory_read():
+    provider, key = started()
+    for ordinal in range(272):
+        final = sector(provider, key, ordinal, ordinal, ordinal*100000)
+    provider.publish(key, 42, final)
+    with pytest.raises(ValueError, match='mandatory encoded KV_READ lease'):
+        provider.release_writer_context(key)
+    assert not provider.writers[key]['released']
+    writer = key[1]; link = provider.links[writer]
+    provider.retire(0, writer, final, final)
+    provider.retire(0, link['fence'], final, final)
+    provider.acquire_read(key, 42, final)
+    provider.retire(0, link['read'], final, final)
+    assert key in provider.leases
+    with pytest.raises(ValueError, match='live reader'):
+        provider.release_writer_context(key)
 
 def test_four_sector_credits_and_sector_lock_are_finite():
     provider, key = started()
