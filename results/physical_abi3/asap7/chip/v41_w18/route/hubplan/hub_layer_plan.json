@@ -149,7 +149,7 @@
    "hub_obs_top": 7
   }
  },
- "adopted": "SU_VECTOR obstructs M1-M7 (SU lanes own M2-M7; W11 is routing the light lane at M6 and M7 caps), every other hub part stays at M1-M5, the x/result trunks cross on M8/M9 above: 0 overflow in the full route and in both layer-split passes; crossings unchanged against the M5 baseline (x root 30, result 33, SerDes 45, UCIe 34, HBM window 24, index keys 39, top-k 38, selected KV 24).",
+ "adopted": "SU_VECTOR obstructs M1-M6 (W11: the SU light lane closes routed with M6 as its top layer, 922 MHz SS, +26.5/+2.6 ps, 0 DRC; claude/w11-suclose-ll e0ddadf4 ll_m6), every other hub part stays at M1-M5, the x/result trunks cross on M8/M9 above (M7 free over SU): layer-split route su6s 0 overflow in both passes, crossings x root 30 / result 33, SerDes 45, UCIe 34, HBM window 24, index keys 39, top-k 38, selected KV 24. M7 for SU (su7, su7s) also routes and is the fallback (W11 ll_m7 closes at 926 MHz).",
  "negative": "every hub part capped at M7 (all7s): the non-trunk pass overflows 7,230 and HBM window/index keys grow to 33/48 cycles -- only SU may take M6/M7",
  "note": "all6 (every hub part at M6, full route) is 0 overflow but UCIe grows 34 -> 41 (the collective->UCIe bus detours around the hub)",
  "files": {
@@ -164,5 +164,14 @@
   "su7s_r.json": "1e01a9a7e39aaf8ffac33da48825dc65e39d337472d73231830c16191268f792",
   "su7s_t.json": "c6ad02aa7308e0ab72c39acf0ae647ce4e1aae82e3daf9d4a8330437eef528df"
  },
- "tool_sha256": "78a28a9df7039133c8ea87fe6634e318a53af63c8a939f0a4c55ccbd554b780f"
+ "tool_sha256": "78a28a9df7039133c8ea87fe6634e318a53af63c8a939f0a4c55ccbd554b780f",
+ "su_lane_evidence": {
+  "branch": "claude/w11-suclose-ll",
+  "sha": "e0ddadf4",
+  "records": [
+   "results/physical_abi3/asap7/hdc/v41x/w11_serial/ll_m6",
+   "results/physical_abi3/asap7/hdc/v41x/w11_serial/ll_m7"
+  ],
+  "note": "SFU lane and reducer at M6 still to be confirmed by W11"
+ }
 }
