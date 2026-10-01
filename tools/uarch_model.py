@@ -1518,18 +1518,18 @@ def gpu_payload_transport_model(payloads=24, tag_depth=16):
     Load-time swizzle: issue-order 128-B weights + eight UE8M0 bytes,
     tightly concatenated, padded only at the descriptor's final 128-B line.
     The existing fetch ring supplies four 32-B sectors per ordered line.
-    A finite 256-B reservoir joins those bytes to an SM request-tag FIFO.
+    A finite 16-sector (512-B) window joins those bytes to an SM request-tag FIFO.
     """
     if payloads <= 0 or tag_depth < 2 or tag_depth & (tag_depth - 1):
         raise ValueError("positive payload count and power-of-two tag depth required")
     physical_lines = math.ceil(payloads * 136 / 128)
-    # ASSUMED mux area: 0.2 um2 per 2:1 bit mux. Sixteen 8-B alignment
-    # phases require four barrel levels; pop shift is a fixed wire selection.
-    mux_bits = 2048 * 4 + 1088 * (tag_depth - 1)
-    storage_bits = 2048 + tag_depth * 10 + 5 * 24 + 64
+    # ASSUMED mux area: 0.2 um2 per 2:1 bit mux. Five sector reads from
+    # a 16-sector window, four 8-B phases, and the bounded tag FIFO.
+    mux_bits = 5 * 256 * 15 + 1088 * 2 + 1088 * (tag_depth - 1)
+    storage_bits = 4096 + tag_depth * 10 + 5 * 24 + 128
     logic_um2 = storage_bits * DFF_UM2 + mux_bits * 0.2 + 512
     footprint_mm2 = logic_um2 / GPU_LOGIC_UTIL / 1e6
-    tracks = 1024 + 1088 + 2 * (32 + 10 + 24) + 16
+    tracks = 1024 + 1088 + 4 * (24 + 16) + 2 * (32 + 10 + 24) + 16
     channel_tracks = int(64 * 4 / 0.08)
     # Added supply service versus an ideal 128-B payload. Existing MMA
     # drain remains unchanged; this is not a composed token measurement.
@@ -1541,7 +1541,8 @@ def gpu_payload_transport_model(payloads=24, tag_depth=16):
         compute=dict(macs_per_cycle=0, intensity_macs_per_byte=0, arithmetic="none"),
         ports_Bpc=dict(fetch_read=128, reservoir_write=128, reservoir_read=136, sm_response_write=136),
         boundaries_bits_pc=dict(fetch=1024, sm=1088, request_tag=42),
-        replicas_per_die=32, tag_depth=tag_depth, reservoir_bytes=256,
+        replicas_per_die=32, tag_depth=tag_depth, reservoir_bytes=512, sector_window=16,
+        assembly="five 32-B sectors per 136-B record; four 8-B phases; per-sector duplicate/epoch validation",
         mux_bit_equivalents=mux_bits, storage_bits=storage_bits,
         fanout="SM-local ready/valid; no new die-wide broadcast", demux="one local SM response",
         footprint_mm2_per_sm=round(footprint_mm2, 6), footprint_mm2_die=round(32 * footprint_mm2, 4),
