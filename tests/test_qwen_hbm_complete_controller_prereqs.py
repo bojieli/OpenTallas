@@ -57,3 +57,22 @@ def test_source_epoch64_is_not_transport_epoch32_or_unpriced_highhalf():
     assert r['controller_extension_state']['write_pending_fields']['producer_epoch']==64
     assert r['additional_common36_held_epoch_bits']['total']==1024+512+512+4608
     assert r['source_epoch_contract']['actual_binding'] is None
+
+
+def test_immutable_descriptor_writer_reader_retains_highhalf_and_max_epoch():
+    import ast,struct,subprocess
+    from types import SimpleNamespace
+    from qwen_hbm_complete_controller_prereqs import EPOCH_REV,EPOCH_SOURCE
+    raw=subprocess.check_output(['git','show',EPOCH_REV+':'+EPOCH_SOURCE],cwd=ROOT)
+    tree=ast.parse(raw)
+    functions=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ('descriptor','parse_descriptor')]
+    assert len(functions)==2
+    ns={'struct':struct,'C':SimpleNamespace(PACKED=1,DECODED_F32=2)}
+    exec(compile(ast.Module(body=functions,type_ignores=[]),'immutable-descriptor','exec'),ns)
+    for epoch in (1,1<<32,(1<<64)-1):
+        encoded=ns['descriptor'](1,68,epoch)
+        assert ns['parse_descriptor'](encoded)==(1,68,epoch)
+        if epoch>=1<<32:
+            truncated=bytearray(encoded);truncated[12:16]=bytes(4)
+            assert ns['parse_descriptor'](truncated)[2]!=epoch
+    with pytest.raises(ValueError):ns['descriptor'](1,68,1<<64)

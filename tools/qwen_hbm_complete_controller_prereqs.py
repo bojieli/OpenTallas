@@ -10,6 +10,8 @@ import subprocess
 
 REV='4535be1001d69bc43669e0fdf0401896be4034a6'
 SOURCE='rtl/hdc/kv/ot_hdc_hbm_model.sv'
+EPOCH_REV='e5d9ad00a'
+EPOCH_SOURCE='tools/deepseek_hbm_complete_packed_index_provider.py'
 
 def model(repo,qd=64,rqd=32,write_depth=4):
     if min(qd,rqd,write_depth)<1 or qd<32:
@@ -19,6 +21,10 @@ def model(repo,qd=64,rqd=32,write_depth=4):
                    b'parameter integer BEATW    = 4',b'parameter integer QD       = 64',
                    b'parameter integer RQD      = 32',b'parameter integer CLK_PS   = 1000',b'last_col[p] + BURST_PS',b'for (p = 0; p < NPC; p = p + 1)',b'mem[q_addr[p][slot] % MEM_WORDS] = q_data[p][slot];'):
         if needle not in raw:raise ValueError('pinned controller source audit changed')
+    epoch_commit=subprocess.check_output(['git','rev-parse',EPOCH_REV],cwd=repo,text=True).strip()
+    epoch_raw=subprocess.check_output(['git','show',epoch_commit+':'+EPOCH_SOURCE],cwd=repo)
+    for needle in (b"struct.pack('<4sBBHQ'",b"struct.unpack('<4sBBHQ'",b'0<=epoch<2**64'):
+        if needle not in epoch_raw:raise ValueError('immutable producer epoch format changed')
     instances=2*4;pcs=32
     # Conservative explicit epoch storage at every queue entry. A global
     # session epoch alternative needs a separately proved drain and is not
@@ -58,6 +64,7 @@ def model(repo,qd=64,rqd=32,write_depth=4):
         pending_release='Backing-visible storage may release only after transferring to separately finite held completion storage; otherwise include RSP and consumer ready residence.')
     return dict(schema='Qwen_controller_source_extension_prerequisites_r3',
         source_pin=dict(commit=REV,path=SOURCE,sha256=hashlib.sha256(raw).hexdigest()),
+        producer_epoch_format_source_pin=dict(commit=epoch_commit,path=EPOCH_SOURCE,sha256=hashlib.sha256(epoch_raw).hexdigest()),
         source_defaults=dict(NPC=2,AW=24,TAGW=16,LENW=5,BEATW=4,QD=64,RQD=32),
         proposed_geometry=dict(dies=2,stacks_per_die=4,NPC=pcs,AW=34,TAGW=16,LENW=6,BEATW=5,QD=qd,RQD=rqd,write_pending_depth_per_stack=write_depth),
         controller_extension_state=dict(queue_epoch_bits=epoch_bits,queue_transport_epoch_bits=transport_epoch_bits,queue_producer_epoch_bits=producer_epoch_bits,write_pending_fields=write_fields,write_pending_bits=write_bits,write_pointer_bits=write_pointer_bits,total_bits=total,storage_only_area_mm2=total*.2916/.5/1e6),
