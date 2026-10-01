@@ -64,8 +64,11 @@ slots[2:0]=i%8;slots[5:3]=i%8;@(negedge clk);
 end
 v=0;first=0;last=0;repeat(160) @(negedge clk);
 if(n!=16) $fatal(1,"missing rows %d",n);
+if(fault) $fatal(1,"late arithmetic/tag fault");
+$display("COMPLETE GU64 rows=16 trailing=160 fault=0");
 $finish;
 end
+initial begin #20000;$fatal(1,"TIMEOUT");end
 endmodule
 ''')
     companion='rtl/gpu/ot_gpu_qwen_gu64_pair.sv'
@@ -75,6 +78,23 @@ endmodule
     exe=work/'sim.vvp'
     command=['iverilog','-g2012','-s','tb','-o','sim.vvp','tb.sv','companion.sv']
     command += [str(Path(p).relative_to(work)) for p in sources]
+    # Executed on the worker, with actual process return codes retained even
+    # when compilation or simulation fails. No host timing is erased here.
+    (work/'execute.py').write_text('''import hashlib,json,subprocess,time
+from pathlib import Path
+def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+p=json.load(open('prepared.json'));t=time.monotonic()
+with open('compile.log','w') as f:
+ c=subprocess.run(p['command'],stdout=f,stderr=f)
+rc=None
+with open('run.log','w') as f:
+ if c.returncode==0: rc=subprocess.run(['vvp','sim.vvp'],stdout=f,stderr=f).returncode
+r=dict(compile_rc=c.returncode,run_rc=rc,elapsed_host_seconds=time.monotonic()-t,
+ prepared_sha256=sha('prepared.json'),compile_log_sha256=sha('compile.log'),
+ run_log_sha256=sha('run.log'),executable_sha256=sha('sim.vvp') if Path('sim.vvp').exists() else None)
+with open('execution.json','x') as f:json.dump(r,f,indent=2)
+raise SystemExit(c.returncode if c.returncode else (rc if rc is not None else 1))
+''')
     prepared=dict(command=command,qualified_snapshot=snap,
         source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest()
             for p in [companion,'tools/rtl_qwen_gu64_pair_gate.py','tools/hdc_golden.py']})
@@ -82,10 +102,7 @@ endmodule
         for p in work.rglob('*') if p.is_file()}
     (work/'prepared.json').write_text(json.dumps(prepared,indent=2)+'\n')
     if prepare_only:return dict(status='PREPARED',full_token=False,**prepared)
-    with (work/'compile.log').open('w') as log:
-        subprocess.run(command,cwd=work,check=True,stdout=log,stderr=log,timeout=600)
-    with (work/'run.log').open('w') as log:
-        subprocess.run(['vvp',str(exe)],cwd=work,check=True,stdout=log,stderr=log,timeout=600)
+    subprocess.run(['python3','execute.py'],cwd=work,timeout=1200)
     return verify(work)
 
 
@@ -93,9 +110,24 @@ def verify(work):
     prepared=json.loads((work/'prepared.json').read_text())
     for p,h in prepared['input_sha256'].items():
         assert hashlib.sha256((work/p).read_bytes()).hexdigest()==h,p
+    execution=json.loads((work/'execution.json').read_text())
+    for key,p in [('prepared_sha256','prepared.json'),('compile_log_sha256','compile.log'),
+                  ('run_log_sha256','run.log'),('executable_sha256','sim.vvp')]:
+        assert execution[key]==hashlib.sha256((work/p).read_bytes()).hexdigest(),key
+    if execution['compile_rc']!=0 or execution['run_rc']!=0:
+        raise ValueError('Nonzero or missing actual compile/run return code')
+    log=(work/'run.log').read_text()
+    if any(word in log.upper() for word in ('FATAL','TIMEOUT')):
+        raise ValueError('Fatal/timeout evidence cannot establish PASS')
+    marker='COMPLETE GU64 rows=16 trailing=160 fault=0'
+    lines=log.splitlines()
+    if lines.count(marker)!=1:
+        raise ValueError('Missing or duplicate positive bench completion marker')
+    if any(line.startswith('RESULT ') for line in lines[lines.index(marker)+1:]):
+        raise ValueError('Results after completion marker')
     expected=np.load(work/'expected.npy',allow_pickle=False)
     seen={}
-    for line in (work/'run.log').read_text().splitlines():
+    for line in lines:
         if line.startswith('RESULT '):
             _,row,slot,bits,cycle=line.split();row=int(row)
             assert row not in seen and int(slot)==(row-250)//2
@@ -105,6 +137,7 @@ def verify(work):
         mismatches=mismatches,rows=16,K=4096,golden_split=64,full_token=False,
         scope='Actual INT8 products, ordered circulating sums and two independent64 trees; no row scale, shared service, attention or connected token',
         qualified_snapshot=prepared['qualified_snapshot'],source_sha256=prepared['source_sha256'],
+        execution=execution,
         output_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in work.iterdir() if p.is_file()})
 
 
