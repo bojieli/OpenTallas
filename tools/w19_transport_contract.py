@@ -106,7 +106,7 @@ def build():
             endpoint_local_rank_and_stack=True, destination_byte_bits=32,
             modulo_or_reload=False),
         tags=dict(wire_bits=16, read_slot_bits=12,
-            policy='Wire bit15 distinguishes writes. Read bits11:0 index4096 slots and bits14:12 generation; write bits3:0 index16 slots and bits14:4 generation. No live slot reuse. Generation cannot wrap before a drained epoch transition.',
+            policy='Wire bit15 distinguishes writes. Read bits11:0 index4096 slots and bits14:12 generation; write bits3:0 index16 slots and bits14:4 generation. No live slot reuse. Generation cannot wrap before a drained epoch transition. Admission reserves remaining generation budget so already accepted descriptors cannot deadlock at wrap.',
             epoch_bits=16, reset='Quiesce ingress; drain descriptors, all read returns, writes and RMW locks; fence then increment epoch. Hard reset with outstanding work invalidates residence and forbids continuation.',
             duplicate='Reject duplicate/unissued sector or commit, stale epoch and out-of-range tag; do not count them as completed work'),
         protocol=dict(queue='Four 16-entry descriptor queues/controller; oldest eligible round-robin. Ownership and same-sector hazards checked before grant.',
@@ -168,7 +168,12 @@ class Protocol:
         if kind != 3 and sector+3 >= (1<<27):
             raise ValueError('line crosses aperture')
         q = self.queues[stack][kind]
-        if len(q) == self.depth:
+        write = kind == 3
+        generations = self.write_generation[stack] if write else self.read_generation[stack]
+        live = sum(st == stack and (r['kind']==3) == write for (st,_),r in self.pending.items())
+        queued = sum(len(qq) for k,qq in enumerate(self.queues[stack]) if (k==3)==write)
+        generation_budget = sum((2048 if write else 8)-g for g in generations)-live-queued
+        if len(q) == self.depth or generation_budget <= 0:
             return False
         if self.sequence[stack] == (1<<32)-1:
             raise ValueError('sequence wrap requires drained epoch transition')

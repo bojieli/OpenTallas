@@ -66,9 +66,9 @@ def test_tag_generation_prevents_retired_duplicate_alias():
     for _ in range(7):
         finish(p,0,new); p.deliver(0,new)
         if _<6: new=read(p)
+    assert not p.enqueue(0,2,16)  # reject before creating an undrainable queue
+    p.reset_epoch()
     assert p.enqueue(0,2,16)
-    assert p.issue(0,2) is None  # generation wrap is never silent
-    with pytest.raises(ValueError): p.reset_epoch()  # queued descriptor too
 
 
 def test_cross_controller_fence_waits_queued_committed_and_delivered():
