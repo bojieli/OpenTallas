@@ -1,0 +1,72 @@
+{
+  "schema": "opentallas.legacy_worktree_review.v1",
+  "worktrees": [
+    {
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-aff24445f286ec29e",
+      "head": "9a0d0f6d 2026-10-01T03:26:58+00:00 AGENTS: no numerical/performance/P&R risk \u2014 adopt levers only on measured gain and SS/FF closure; class-C changes need PPL/MMLU plus a stability check; norm-after-matvec re-evaluated (user decision 2026-10-01)",
+      "clean": false,
+      "status": "?? docs/ARCHITECTURE_ATLAS_FEASIBILITY_REVIEW_2026_09_27.md\n?? node_modules/\n?? package-lock.json\n?? package.json\n"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/qwen-o4-reprice",
+      "head": "fdb5070b 2026-09-28T09:31:54+00:00 rtl: argmax area probe (one G x W compare tree, NS per-slot running bests)",
+      "clean": false,
+      "status": " M docs/HEADLINE_BUNDLE.md\n M results/arch/decode_roofline.json\n M results/arch/figures/decode_roofline_qwen3.html\n M results/arch/figures/sync_cost_table.html\n M results/arch/headline_bundle.json\n M results/arch/power_assumptions.json\n M results/arch/power_scenarios.json\n M results/arch/qwen3_budget.json\n M results/arch/qwen3_utilization.json\n M results/arch/qwen_gpu_calibration.json\n M results/arch/qwen_power_levers.json\n M results/arch/v41_die_assembly.json\n M results/speculative/dflash_step_timing.json\n M tools/arch_budget_qwen3.py\n M tools/dflash_step_timing.py\n?? results/arch/qwen_o4_dflash_reprice.json\n?? tools/qwen_o4_dflash_reprice.py\n"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-aba48a0892384d054",
+      "head": "632c1072 2026-09-28T08:29:38+00:00 Helper-exchange campaign: 128-word receive-buffer variant; stimulus uniqueness test",
+      "clean": false,
+      "status": " M tools/rtl_v41_helper_exchange_campaign.py\n M tools/v41_stage_rebalance.py\n?? tests/test_v41_helper_exchange_campaign.py\n"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-ae209d91fb211a7dd",
+      "head": "c063840f 2026-09-26T15:33:25+00:00 results(dft): halt DFT on the as-built blocks; land the matrix-engine scan route and the gate-bench sizing lesson",
+      "clean": false,
+      "status": " M docs/MEMORY_COMPILERS_AND_BIST.md\n M results/rtl/hdc_decode_campaign_memory_macros.json\n M results/rtl/hdc_kv_stream_campaign_memory_macros.json\n"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-a617e8fc25350daf6",
+      "head": "7b605b99 2026-09-28T09:24:27+00:00 Merge main c2d5d426 (packed window KV codec and block producer) into claude/v41x-die-top",
+      "clean": false,
+      "status": " M rtl/chip/ot_chip_v41x_hbm3e_phy.sv\n M rtl/chip/ot_chip_v41x_kv_prefetch.sv\n M rtl/test/tb_chip_v41x_kv_prefetch.sv\n?? rtl/chip/ot_chip_v41x_kv_codec.sv\n"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/codex-v41x-array-kv-hbm",
+      "head": "d0be2644 2026-09-28T05:31:29+00:00 Pin compiled attention KV HBM array token gate launch",
+      "clean": false,
+      "status": " M rtl/hdc/v41x/ot_hdc_core_v41x.sv\n M rtl/test/tb_hdc_core_v41x_whbm.sv\n M tools/rtl_hdc_v41x_array_campaign.py\n M tools/rtl_hdc_v41x_whbm_campaign.py\n?? results/rtl/hdc_v41x_me0_exact.json\n?? results/rtl/hdc_v41x_me0_whbm_single.json\n?? rtl/chip/ot_chip_v41x_hbm_karb.sv\n?? rtl/chip/ot_chip_v41x_kv_prefetch.sv\n?? rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv\n?? rtl/test/tb_hdc_v41x_me0_exact.sv\n?? rtl/test/tb_hdc_v41x_weight_window.sv\n?? tools/rtl_hdc_v41x_me0_exact_campaign.py\n?? tools/v41x_me0_exact_fixture.py\n"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-a2e48e1556312503c",
+      "head": "2caa7764 2026-09-27T12:48:11+00:00 results(v41x sel): route AW9 full slice at 0.92 ns",
+      "clean": false,
+      "status": " M results/rtl/hdc_v41x_sel_campaign.json\n M results/rtl/hdc_v41x_sel_cand_campaign.json\n"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-a4d9433214702ebc9",
+      "head": "7c7ab8e1 2026-09-27T10:46:41+00:00 results: regenerate every roofline study and dependent layer with the repriced ROM links",
+      "clean": false,
+      "status": " M README.md\n M docs/ANALYTICAL_REPORT.md\n M docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md\n M docs/UNIFIED_EXECUTION_CHECKLIST.md\n M results/roofline/speculative/sota_block_diffusion/REPORT.md\n"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-aee45011cf95f4ed8",
+      "head": "6ec0a193 2026-09-28T09:15:38+00:00 tools: full-shape V4.1 layer-sharded campaign (golden shards, images, constraints, assembly)",
+      "clean": false,
+      "status": " M tools/rtl_v41_fullshape_layer_campaign.py\n?? rtl/test/hdc_v41x_fullshape_shard_harness.cpp\n?? rtl/test/tb_hdc_v41x_fullshape_shard.sv\n?? tools/rtl_v41_fullshape_shard.py\n?? tools/v41_chunk8_stream_model.py\n"
+    },
+    {
+      "path": "/home/ubuntu/OpenTallas/.claude/worktrees/agent-a6236a4f6a0fe35c1",
+      "head": "1e62c40f 2026-09-27T13:27:57+00:00 record source-current HCP merged-pick 0.92 ns route closure",
+      "clean": false,
+      "status": " M results/rtl/hdc_v41x_hcp_campaign.json\n"
+    }
+  ],
+  "action": "All dirty legacy worktrees preserved; current stream owners tasked to assess outstanding work against current architecture.",
+  "delegated": {
+    "qwen-o4-reprice": "W12b",
+    "agent-aee45011cf95f4ed8": "W17",
+    "agent-a617e8fc25350daf6": "W18b",
+    "agent-aba48a0892384d054": "W15b"
+  }
+}
