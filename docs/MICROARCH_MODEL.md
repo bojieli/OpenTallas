@@ -687,14 +687,14 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 - **Qwen ROM** keeps its per-user claim.
 - ROM energies include the adopted 256-cycle pre-ramp.
 - GPU cost is the purchase price; the ROM and tier-3 cost is manufacturing capex (low NRE).
-- The V4.1 tier-3 per-user rates are W19's COMPOSED token (`claude/w19-hbm-token` 23648fc3): every term priced along the executed TP-96 program, collectives on W15b's committed P=48 NVLS record and W15b's MEASURED 96-way top-k select (3,875 cycles at P = 64; blocking, so the MTP pass charges its 6 positions in series). Lane-local fusion applies to the comparator too, for fairness: AR 481.5 → 465.2 µs (2,077 → 2,150 tok/s), MTP verify pass 885.5 → 854.0 µs plus the audit's 49.9 µs drafter. The grouped o-reduce is still extrapolated from the all-reduce fit. The audit's central figures stay in the record as a reference. Qwen DFlash keeps the audit's −14%. The exact-order extra gather does not apply to the ROM array, which sums experts in id order inside the element.
+- The V4.1 tier-3 per-user rates are W19's COMPOSED token (`claude/w19-hbm-token` 71b3ffc5): every term priced along the executed TP-96 program, collectives on W15b's committed P=48 NVLS record and W15b's MEASURED wide 96-way top-k select (419 cycles at P = 1,024 / PF = 256; one unit, the MTP pass's 6 positions in series). Lane-local fusion applies to the comparator too, for fairness: AR 458.5 → 442.1 µs (2,181 → 2,262 tok/s), MTP verify pass 747.3 → 715.8 µs plus the audit's 49.9 µs drafter. Named step H5 (a TMEM-style SM epilogue, W13b; modelled, RTL pending): 2,323 AR / 4,840 MTP. The grouped o-reduce is still extrapolated from the all-reduce fit. The audit's central figures stay in the record as a reference. Qwen DFlash keeps the audit's −14%. The exact-order extra gather does not apply to the ROM array, which sums experts in id order inside the element.
 
 | Design | Tier | Per-user AR | Per-user MTP | Saturated tok/s | mJ/token, B = 1 / saturated | Capex | Users at 1M |
 |---|---|---:|---:|---:|---:|---:|---:|
-| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | ROM | 2,838 | 4,618 | 89,972 | 672 / 312 | $727k | 866 |
-| V4.1 HBM tier 3 (idealised), equal area: 5 x TP-96 (480 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3 | 2,150 | 4,037 | 126,464 | 9,993 / 742 | $1,260k | 38,815 |
-| V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3 | 2,150 | 4,037 | 50,585 | 4,874 / 742 | $513k | 15,526 |
-| V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3 | 2,150 | 4,037 | 25,293 | 3,168 / 742 | $264k | 7,763 |
+| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | ROM | 2,787 | 4,589 | 89,972 | 680 / 312 | $727k | 866 |
+| V4.1 HBM tier 3 (idealised), equal area: 5 x TP-96 (480 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3 | 2,262 | 4,765 | 126,464 | 9,993 / 742 | $1,260k | 38,815 |
+| V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3 | 2,262 | 4,765 | 50,585 | 4,874 / 742 | $513k | 15,526 |
+| V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3 | 2,262 | 4,765 | 25,293 | 3,168 / 742 | $264k | 7,763 |
 | DeepSeek-V4.1-Flash on 8x B200 (tier 2, calibrated) | 2 | 278 | 539 | 13,018 | 19,852 / 423 | $200k | 839 |
 | DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance) | 1 | — | 368 | — | 14,978 / — | — | — |
 
@@ -715,10 +715,10 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 
 | Design | τ 2.91 | τ 3.649 | τ 3.78 | τ 4.5 | τ 5.24 |
 |---|---:|---:|---:|---:|---:|
-| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | 3,683 | 4,618 | 4,784 | 5,695 | 6,632 |
-| V4.1 HBM tier 3 (idealised), equal area: 5 x TP-96 (480 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3,219 | 4,037 | 4,182 | 4,978 | 5,797 |
-| V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3,219 | 4,037 | 4,182 | 4,978 | 5,797 |
-| V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3,219 | 4,037 | 4,182 | 4,978 | 5,797 |
+| V4.1 ROM array (product basis, 1.2 GHz SS, SS wires, 50% cap + pre-ramp) | 3,660 | 4,589 | 4,754 | 5,659 | 6,590 |
+| V4.1 HBM tier 3 (idealised), equal area: 5 x TP-96 (480 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3,800 | 4,765 | 4,936 | 5,877 | 6,843 |
+| V4.1 HBM tier 3 (idealised), equal cost: 2 x TP-96 (192 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3,800 | 4,765 | 4,936 | 5,877 | 6,843 |
+| V4.1 HBM tier 3 (idealised), equal power: 1 x TP-96 (96 right-sized dies, 1.2 GHz, SS wires; W19 composed token) | 3,800 | 4,765 | 4,936 | 5,877 | 6,843 |
 | DeepSeek-V4.1-Flash on 8x B200 (tier 2, calibrated) | 430 | 539 | 558 | 664 | 774 |
 | DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance) | 294 | 368 | 381 | 454 | 528 |
 
@@ -727,7 +727,7 @@ This is a user-approved study (W16, 2026-09-30). The physical floorplans leave s
 | Design | AR tok/s | MTP tok/s | Saturated | Dies / GPUs | Silicon mm² | Capex |
 |---|---:|---:|---:|---:|---:|---:|
 | V4.1 ROM product (columns, 1.2 GHz SS) | 3,341 | 5,575 | 115,770 | 208 | 169,520 | 727,026 |
-| V4.1 HBM tier 3, equal cost (2 x TP-96), W19 composed/model ratio at 1M applied at ctx | 2,287 | 5,055 | 98,515 | 192 | 65,376 | 512,856 |
+| V4.1 HBM tier 3, equal cost (2 x TP-96), W19 composed/model ratio at 1M applied at ctx | 2,406 | 5,967 | 98,515 | 192 | 65,376 | 512,856 |
 | V4.1-Flash, 8x B200 (tier 2, calibrated) | 283 | 548 | — | 8 | 12,800 | 200,000 |
 | V4.1-Flash, 8x B300 (tier 2; = B200 within the model, ASSUMED) | 283 | 548 | — | 8 | 12,800 | — |
 
@@ -829,8 +829,10 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 | PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 VM-H (12/12/12 slow stages, SU op +36.7 / red +44.9, issue x1.169) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the VM-H hub block (SU+VM 38.95 mm2): one stage re-fit -- REFERENCE (measured VM-H) | 1.2 | 41 / 208 | 2,680 | 4,475 | 89,096 | 599 / 217 |
 | PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM, square layout (8/8/8 slow stages, SU op +37 / red +29, issue x1.0) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2) -- SUPERSEDED (unplaced geometry) | 1.2 | 41 / 208 | 2,737 | 4,549 | 89,972 | 590 / 216 |
 | PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's compact hub (x 8 / scatter 7 / collective 13 slow stages, SU op +42 / red +32, issue x1.0) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit | 1.2 | 41 / 208 | 2,690 | 4,513 | 89,972 | 597 / 216 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's compact hub (x 8 / scatter 7 / collective 13 slow stages, SU op +42 / red +32, issue x1.0) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion (conservative; modelled; RTL pending) | 1.2 | 41 / 208 | 2,838 | 4,618 | 89,972 | 576 / 216 |
-| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's compact hub (x 8 / scatter 7 / collective 13 slow stages, SU op +42 / red +32, issue x1.0) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion, optimistic (BOUND; modelled; RTL pending) | 1.2 | 41 / 208 | 2,879 | 4,646 | 89,972 | 570 / 216 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's compact hub (x 8 / scatter 7 / collective 13 slow stages, SU op +42 / red +32, issue x1.0) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion on W11's fused families (conservative; modelled; RTL pending) | 1.2 | 41 / 208 | 2,749 | 4,561 | 89,972 | 588 / 216 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's plus hub (SU op +37 / red +28, issue x1.0; index top-k +1) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit | 1.2 | 41 / 208 | 2,733 | 4,546 | 89,972 | 591 / 216 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's plus hub (SU op +37 / red +28, issue x1.0; index top-k +1) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion on W11's fused families (conservative; modelled; RTL pending) | 1.2 | 41 / 208 | 2,787 | 4,589 | 89,972 | 583 / 216 |
+| PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build (1.111 ns SS, MLAT 5 / ALAT 4, light lane 929 MHz) + W18b shrunk-die interim crossings (669 mm2) + W11 streaming depths (idx +52; attn tile +39 and bank guard +24 a scores and a p.v pass) + W11 C_rotate VM on W18b's plus hub (SU op +37 / red +28, issue x1.0; index top-k +1) + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit + lane-local operator fusion on W11's fused families, optimistic (BOUND; modelled; RTL pending) | 1.2 | 41 / 208 | 2,799 | 4,599 | 89,972 | 581 / 216 |
 
 **More stages buy no throughput.** 28 → 34 stages costs 0.8% AR (+2.2 µs of hops) and leaves the saturated rate flat (76,962 vs 77,180). The reason is that the layer-20 index scan, which does not split, sets the stage period at about 13 µs.
 
@@ -853,8 +855,9 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 3. **W11's streaming-unit depths at 1.2 GHz** (`claude/w11-stream` 540ef71c; the chunk and tile routes are still running). Indexer key to score 48 → 100 (+52), attention tile 33 → 72 (+39) and bank guard 20 → 44 (+24), each paid once a scores pass and once a p.v pass (W11: engine pipeline depths; the p.v pass reuses the tile).
 4. **W11's VM-H distributed VM** (`claude/w11-vmh-land` 3cc18731, `results/uarch/w11_vm_options.json`, H_rtl). The client stages replace VM_DIST's 6/6/6 one-for-one in 0.9 GHz cycles at 748 µm a stage: x gather, result scatter and collective write 12/12/12. Every SU op pays the full-shape L0 program's per-op network average: +36.7 slow cycles a vector op, +44.9 a reduction, and issue × 1.169. These already contain the control broadcast (5) and the result tree (8), and the graph's SU nodes carry no separate broadcast or return stages, so nothing is counted twice (W11's +5.0% die-decode figure is the reduced vehicle at older stage counts, a correctness and hold-mechanism gate, not a full-shape rate; the full-shape L0 program, where 48 of 62 ops need the network, is this row's basis).
 5. **One stage re-fit: W10b's tiles and the measured VM-H hub block — REFERENCE row.** The q pair widens to 510.84 × 126.9 µm (was 476.28; p12q3 failed CTS legalisation at 91–93% strip utilisation) and the BF16 column pair is 1,002.89 × 142.56 µm at density 0.5; latency is unchanged (BF16 split 8×4 + 8×4, still 5 cycles). These are floorplan sizes; routed closure (p12q4, c5) is pending. The tiles alone fit 39 stages. The hub then carries W11's measured VM-H SU+VM block, 38.951 mm² at 6,365 × 6,119 µm (128 tiles of 8 lanes and 12 VM SRAMs), in place of the lane-only 14.249 mm² stream unit (the measured light lane is 2.3× the ledger's). With the re-fit's 5% power-switch allowance the slot field gives up 25.9 mm². Dies are free, so the stage fit grows instead of the die: 41 stages, 208 dies. Root kept this as the measured VM-H reference and did not promote it.
-6. **W11's C_rotate VM on W18b's compact hub** (root rulings 2026-10-01). C_rotate keeps the VM in a central strip: no issue penalty (ratio 1.0), so it wins the saturated rate. W18b placed it compactly (`claude/w18-die-assembly` 32155a8f: a 2,163 × 7,273 µm VM strip between two 1,787 µm SU halves), and W11 re-derived its stages there (`claude/w11-crot` `v41_vm_crot_stages.json`, provisional; 748 µm a stage at 1.111 ns): broadcast 7, operand read 18, element write 17, result 7, x gather 8, scatter 7, collective write 13, so **+42 slow cycles an op and +32 a reduction**. The rotate realises every (bank slot, lane) pair, so every op pays the hub's worst bank → lane run (10,735 µm), not the 1,787 µm lane-to-strip distance. W11's earlier square layout priced 37 / 29 (2,737 AR); it was never placed and is **superseded**. The block is 38.601 mm², the slot field less 25.57 mm²: **41 TP-4 stages** + 8 head + 36 table = **208 dies** (8 head dies on the model's storage-only rule; a W18b head re-fit may restore 4). The owner file is `results/arch/v41_stage_owner_product.json`. Measured VM-H stays the comparison row.
-7. **Lane-local operator fusion, the PRODUCT** (USER RULE, AGENTS.md a6e86359; **modelled; RTL pending**). A dependent SU op pays the VM network only at a chain boundary (a VM read when an input comes from a matvec, collective, scan, select, Sinkhorn or hop; a VM write when a consumer is outside the SU) and at a true cross-lane move (a reduction's result tree, a quantiser's segmented absmax tree, a RoPE rotation). Conservative mode (the headline) keeps the control broadcast on every op and RoPE as a rotation: 2,690 → **2,838 AR**, 4,513 → **4,618 MTP** (τ 3.649). Optimistic mode (one broadcast a chain, RoPE pairs lane-local) is the bound: 2,879 AR, 4,646 MTP.
+6. **W11's C_rotate VM on W18b's placed hubs** (root rulings 2026-10-01). C_rotate keeps the VM in central banks: no issue penalty (ratio 1.0), so it wins the saturated rate. The rotate realises every (bank slot, lane) pair, so every op pays the hub's worst bank → lane run, not the lane-to-bank distance. On W18b's strip hub (32155a8f: a 2,163 × 7,273 µm VM strip between two 1,787 µm SU halves; 10,735 µm worst) W11's stages are broadcast 7, read 18, write 17, result 7: **+42 an op, +32 a reduction** (2,690 AR, a reference row). On W18b's **plus-shaped hub** (dfce8d40: a 3.93 mm central bank square with four 1.6 mm lane arms; 9,058 µm worst) W11's square-hub stages (`claude/w11-crot` 57318ff3) are broadcast 6, read 16, write 15, result 6: **+37 / +28** (2,733 AR, 4,546 MTP unfused; the client stages are carried from the strip, and the plus die's index top-k crossing adds 1 cycle). All at 748 µm a stage (W15's 0.9 GHz reach). W11's earlier unplaced square layout (37 / 29, 2,737 AR) is superseded. The block is 38.601 mm², the slot field less 25.57 mm²: **41 TP-4 stages** + 8 head + 36 table = **208 dies** (8 head dies on the model's storage-only rule; a W18b head re-fit may restore 4). The plus die's other crossings (760 mm²) wait for its die gate; the product keeps the interim die's. Measured VM-H stays the comparison row.
+7. **Lane-local operator fusion, the PRODUCT** (USER RULE, AGENTS.md a6e86359; **modelled; RTL pending**). A fused edge removes only network legs (the consumer's VM read, the producer's VM write when every consumer is fused); the producer's compute depth stays on the path and no element-level overlap is assumed. Root priced it only on the families W11's measured fusion pass fuses on the shipped program (`claude/w11-fuse` a8ce0e4d: hc_post, rmsnorm hc_pre → norm out, MoE expert sum, compressor, index key); softmax, router, SwiGLU and the quantisers fuse nothing. Conservative mode (the headline): 2,733 → **2,787 AR**, 4,546 → **4,589 MTP** (τ 3.649); the optimistic bound is 2,799 AR. The priced graph does not carry the 240 expert-sum adds a token nor hc_post's sub-ops (FA's class-B note), so this undercounts; it is raised only when the graph carries them and the RTL confirms.
+   **CAVEAT (FA, in-order SU issue):** the graph's solve assumes perfect SU interleaving; the die issues SU ops in order and drains on a dependent pair. Pipelined in-order issue gives 2,526 AR (-9.4%) / 4,162 MTP; op-by-op 2,243 AR (-19.5%) / 3,897 MTP. The die-token calibration replaces this with a measured model / RTL ratio; W11's interleaving pass (L4) is a prerequisite of the fusion gain.
 
 | Step | AR tok/s | MTP tok/s, τ 3.649 | MTP tok/s, τ 3.78 | Saturated tok/s |
 |---|---:|---:|---:|---:|
@@ -865,9 +868,11 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 | 4. VM-H distributed VM | 2,697 | 4,518 | 4,681 | 89,148 |
 | 5. W10b tiles + VM-H hub re-fit (comparison row) | 2,680 | 4,475 | 4,635 | 89,096 |
 | C_rotate square layout, 37 / 29 (superseded, unplaced) | 2,737 | 4,549 | 4,712 | 89,972 |
-| 6. C_rotate on the compact hub, 42 / 32 | 2,690 | 4,513 | 4,675 | 89,972 |
-| 7. + lane-local fusion, conservative (PRODUCT; modelled, RTL pending) | 2,838 | 4,618 | 4,784 | 89,972 |
-| 7. bound: fusion, optimistic | 2,879 | 4,646 | 4,813 | 89,972 |
+| C_rotate on the strip hub, 42 / 32 (reference) | 2,690 | 4,513 | 4,675 | 89,972 |
+| C_rotate strip + fusion (reference) | 2,749 | 4,561 | 4,725 | 89,972 |
+| 6. C_rotate on the plus hub, 37 / 28 | 2,733 | 4,546 | 4,709 | 89,972 |
+| 7. + lane-local fusion on W11 families, conservative (PRODUCT; modelled, RTL pending) | 2,787 | 4,589 | 4,754 | 89,972 |
+| 7. bound: fusion, optimistic | 2,799 | 4,599 | 4,764 | 89,972 |
 
 **The VM waterfall** (`--vm-waterfall`, `results/uarch/v41_vm_waterfall.json`; root 2026-10-01). From the pre-VM-H product to the measured VM-H reference: -472.8 tok/s AR. The VM-H steps are cumulative at 37 stages; the per-op network latency on the SU chain is most of it.
 
@@ -888,10 +893,12 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 | Lever | AR tok/s | vs VM-H reference | MTP tok/s, τ 3.649 | Stages / dies |
 |---|---:|---:|---:|---|
 | (a) C_rotate, W11 square layout (37 / 29): SUPERSEDED, unplaced geometry | 2,736.7 | +2.1% | 4,548.9 | 41 / 208 |
-| (a) C_rotate on W18b's compact hub (42 / 32), unfused: PRODUCT basis | 2,690.4 | +0.4% | 4,512.9 | 41 / 208 |
-| (a) C_rotate on W18b's compact hub, fused conservative: PRODUCT (modelled; RTL pending) | 2,837.8 | +5.9% | 4,618.3 | 41 / 208 |
-| (a) C_rotate on W18b's compact hub, fused optimistic: BOUND | 2,878.8 | +7.4% | 4,646.3 | 41 / 208 |
-| (a) VM-H, fused conservative (comparison) | 2,825.8 | +5.4% | 4,575.5 | 41 / 208 |
+| (a) C_rotate on W18b's strip hub (42 / 32), unfused: reference | 2,690.4 | +0.4% | 4,512.9 | 41 / 208 |
+| (a) C_rotate on W18b's strip hub, fused conservative: reference | 2,749.0 | +2.6% | 4,560.8 | 41 / 208 |
+| (a) C_rotate on W18b's plus hub (37 / 28), unfused: PRODUCT basis | 2,733.4 | +2.0% | 4,545.9 | 41 / 208 |
+| (a) C_rotate on W18b's plus hub, fused conservative: PRODUCT (modelled; RTL pending) | 2,786.8 | +4.0% | 4,589.0 | 41 / 208 |
+| (a) C_rotate on W18b's plus hub, fused optimistic: BOUND | 2,799.5 | +4.5% | 4,599.0 | 41 / 208 |
+| (a) VM-H, fused conservative (comparison) | 2,743.2 | +2.4% | 4,525.9 | 41 / 208 |
 | (a) C_rotate on the compact hub at 481 um a stage (61 / 46; sensitivity: the 1.2 GHz reach) | 2,519.9 | -6.0% | 4,374.4 | 41 / 208 |
 | (b) SU 2,048 / SFU 512 lanes, network unchanged (optimistic; block ~63 mm2) | 2,682.4 | +0.1% | 4,507.1 | 44 / 220 |
 | (b) SU 2,048 / SFU 512 lanes, network stages x1.41 | 2,541.8 | -5.2% | 4,394.2 | 44 / 220 |
@@ -905,13 +912,23 @@ At the ruled basis, **today's 28 stages do not fit a layer die**.
 
 More lanes or VM ports buy nothing because the SU chain is latency-bound (removing the 1.169 issue ratio alone gains 0.3%). The only buildable flat VM is W11's central crossbar, slower and twice the area. The rate is in the per-op network latency: about 8.5 tok/s a slow cycle. The compact C_rotate placement is W11's distance sensitivity, not yet a placed design.
 
-**K arbiter with W18b's MERGE2 + HEADREG fix** (`claude/w18-die-assembly` e909156c; MERGE2 alone fails SS by 212 ps; MERGE2 + HEADREG is equivalence-clean 54/54 with P&R running; +2 on the round trip: 20/16/14/10/10/14/16/20 cycles over regions 0–7): -0.448% worst region, -0.336% region mean. It is a row only, not in the product.
+**K arbiter with W18b's MERGE2 + HEADREG + centre-queue fix** (`claude/w18-die-assembly` f53e3be0; 54/54 equivalence-clean; pregion still fails SS by 224 ps; +3 on the round trip: 21/17/15/11/11/15/17/21 cycles over regions 0–7): -0.47% worst region, -0.358% region mean. It is a row only, not in the product.
 
 **Qwen layer 0: RTL against the model** (`qwen_l0_rtl_vs_model`). W12b measured TP-4 layer 0 bit-exact on 4 dies (G 6,144, SU width 64, SS wire stages, original ME adders; `claude/w12-qwen-rom` 42ecf382) at 4,669 cycles. At that configuration the model prices 2,460 cycles of layer chain plus 2 × 442 all-reduce, 3,344 in all: 28.4% short.
 
 W12b's per-instruction trace (a17a3c79) attributes the gap. Each all-reduce is 2 serialized 128-word TP segments (the count field is 8 bits), about 497 cycles each, so 991 an all-reduce: 1,098 of the gap. The body without collectives is 2,687 cycles against the model's 2,460 (× 1.0923, ME latency per op). Stage spans: QKV 431, attention 87, PV + O ME 769, O all-reduce 991, post 69, gate/up 528, SiLU 119, down 480, down all-reduce 991, tail 222.
 
 Two attributed rows replace the single calibrated ratio. **As built:** the per-layer body × 1.0923 and the all-reduces at the measured 991 cycles give 6,222 tok/s. **Body only:** the same body with the all-reduces at the model's latency gives 7,921 tok/s; it waits on W12b's one-segment all-reduce (79783ff9, not yet measured). The model row is 8,460 tok/s. All three include KV_PREP (+216 cycles a token), and W12b's LAT-7 ME +54 is counted once.
+
+**Qwen ROM dataflow named steps** (USER DECISION AGENTS.md a4f314fb; W12b corrected, 800717d0; modelled, RTL pending):
+
+| Step | Model row tok/s | As-built attributed row tok/s |
+|---|---:|---:|
+| L1 lane registers (KR), no overlap | 8,460 | 6,222 |
+| L1 + overlap (KR credit, SU chase), estimate | 8,825 | 6,418 |
+| + one-segment all-reduce (as built), estimate | 8,825 | 7,541 |
+
+Lane registers alone save about nothing on Qwen: the vstream drains on every SFU class change and releases dependents only on a full drain, so the saving needs the per-vector credit (overlap). W12b's earlier 13,455 / 11,346-cycle bounds are withdrawn: they removed each op's pipeline depth, which a register file does not.
 
 **Clock-domain cases** (`clock_domain_cases`, all with the cap; the measured W11 FP32 add prices every serial chain):
 
@@ -929,9 +946,9 @@ Two attributed rows replace the single calibrated ratio. **As built:** the per-l
 
 **Droop pre-ramp energy** (W18 67b0bd49), on the adopted product:
 
-- 50% cap + 256-cycle pre-ramp: +96.4 mJ per token, i.e. 672.3 / 312.3 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +104.2 mJ.
-- 1,024-cycle pre-ramp, no cap: +767.5 mJ per token, i.e. 1343.4 / 983.4 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +829.5 mJ.
-- 256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV): +192.9 mJ per token, i.e. 768.7 / 408.7 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +208.4 mJ.
+- 50% cap + 256-cycle pre-ramp: +96.4 mJ per token, i.e. 679.5 / 312.3 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +103.2 mJ.
+- 1,024-cycle pre-ramp, no cap: +767.5 mJ per token, i.e. 1350.5 / 983.4 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +821.7 mJ.
+- 256-cycle pre-ramp, no cap (64 mV at 2 pH: fails 35 mV): +192.9 mJ per token, i.e. 775.9 / 408.7 mJ at B = 1 / saturated; ramped only after an idle gap longer than 256 cycles: +206.5 mJ.
 
 The priced graph has 8.15 field-op starts per layer die per token, of which 6.05 follow an idle gap longer than 256 cycles (ASSUMED decay constant). W18's count was 6. The 1,024-cycle no-cap pre-ramp is rejected on energy.
 
