@@ -53,7 +53,7 @@ def test_stage_plan_is_the_equal_byte_placement():
 def test_product_basis_and_stage_table():
     r = _rec()
     v = r["v41_rom"]
-    assert v["product"]["status"].startswith("188 dies: 37 TP-4 stages")      # BF16 columns (user decision)
+    assert v["product"]["status"].startswith("200 dies: 39 TP-4 stages")      # BF16 columns at W10b's tiles
     pb = v["product_basis"]
     assert pb["density"] == "analytical" and pb["overhead"] == 0.125 and pb["credit"] == "ring"
     cs = v["counts"]
@@ -206,8 +206,9 @@ def test_adopted_product_row():
     c = ad["cooling"]
     assert c["layer_die_mean_w_saturated"] <= c["layer_die_busiest_w_saturated"] < c["limit_w_per_die"] and c["fits"]
     assert c["cooling_ungated"]["mean_w"] > 3 * c["layer_die_mean_w_saturated"]
-    # the comparison rule's reference is the adopted row
-    assert abs(r["comparison_rule"]["v41_targets"]["power"] - ad["energy"]["ar_sat"]["gated_system_w"]) < 1.0
+    # the comparison rule's reference is the final product row
+    fin = next(p for p in r["v41_rom"]["points"] if p.get("product_final"))
+    assert abs(r["comparison_rule"]["v41_targets"]["power"] - fin["energy"]["ar_sat"]["gated_system_w"]) < 1.0
 
 
 def test_clock_cases_and_droop():
@@ -237,7 +238,7 @@ def test_product_stage_owner_file():
     import uarch_model as U
     own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
     r = _rec()
-    ad = next(p for p in r["v41_rom"]["points"] if p.get("role") == "product" and "MEASURED serial" in p["label"])
+    ad = next(p for p in r["v41_rom"]["points"] if p.get("product_final"))
     assert own["schema"] == "opentallas.v41.stage_owner_preflight.v1" and own["stage_count"] == ad["stages"]
     assert own["layer_dies"] == ad["layer_dies"] and len(own["layer_owners"]) == 40
     assert own["min_per_die_headroom_after_rounding_and_engram_spill_bytes"] > 0
@@ -245,7 +246,8 @@ def test_product_stage_owner_file():
     assert max(stages) <= own["stage_count"] - 1
     assert own["source_sha256"]["tools/uarch_model.py"] == __import__("hashlib").sha256(
         (ROOT / "tools/uarch_model.py").read_bytes()).hexdigest()
-    assert U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8") == own["stage_count"]
+    assert U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", U.PRODUCT_PITCH, "columns",
+                             "4096m8") == own["stage_count"]
 
 
 def test_followup_rows():
@@ -293,8 +295,8 @@ def test_w16b_pass2_steps():
     pts = {p["label"]: p for p in r["v41_rom"]["points"] if p.get("role") == "product"}
     ser = next(p for k, p in pts.items() if k.endswith(U.SERIAL_TAG))
     shr = next(p for k, p in pts.items() if k.endswith(U.SHRINK_TAG))
-    fin = next(p for k, p in pts.items() if k.endswith(U.PRODUCT_TAG))
-    assert shr["ar_tokens_s_b1"] >= ser["ar_tokens_s_b1"] and fin["ar_tokens_s_b1"] <= shr["ar_tokens_s_b1"]
+    stm = next(p for k, p in pts.items() if k.endswith(U.STREAM_TAG))
+    assert shr["ar_tokens_s_b1"] >= ser["ar_tokens_s_b1"] and stm["ar_tokens_s_b1"] <= shr["ar_tokens_s_b1"]
     assert shr["die"]["expert_wire"] == 63 and shr["die"]["coll_stages"] == 45
     t3 = [x for x in r["headline_table"]["v41"] if x["tier"] == "3"]
     assert t3 and all(abs(x["per_user_ar"] - 1e6 / 431.55) < 0.1 for x in t3)
@@ -302,7 +304,9 @@ def test_w16b_pass2_steps():
     assert q["rtl"]["cycles"] == 4669 and q["rtl"]["me_extra"] == U.QWEN_W12_TP4_ME_EXTRA_SS   # the RTL ran without +54
     assert abs(q["ratio"] - 4669 / q["model_layer_cycles"]) < 1e-3
     qs = r["qwen_product_ss"]
-    assert qs["kv_prep_cycles"] == 216 and qs["rtl_calibrated"]["tokens_s_b1"] < qs["tokens_s_b1"]
+    assert qs["kv_prep_cycles"] == 216
+    assert (qs["rtl_attributed_as_built"]["tokens_s_b1"] < qs["rtl_attributed_body_only"]["tokens_s_b1"]
+            < qs["tokens_s_b1"])
     assert U.QWEN_SS["me_lat_extra"] == U.QWEN_W12_TP4_ME_EXTRA_SS + 54                       # LAT-7 counted once
 
 
@@ -310,6 +314,37 @@ def test_die_shrink_ruling():
     """Root ruling 2026-09-30: shrink the layer die to the owner file's pairs + ~10%; W18b's interim die holds them."""
     import uarch_model as U
     own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
-    assert U.DIE_SHRINK["pairs_needed"] == max(own["pairs_per_die_by_stage"])
+    # the ruling sized the die at 37 stages (5,289 pairs); W10b's 39-stage re-fit needs fewer pairs a die, so the
+    # interim die still holds the owner file's (re-sizing to the 39-stage owner file is W18b's, pending a root ruling)
+    assert U.DIE_SHRINK["pairs_needed"] == 5289 >= max(own["pairs_per_die_by_stage"])
     ds = _rec()["v41_rom"]["die_shrink_sensitivity"]
     assert ds["role"] == "ruling" and ds["interim"]["pair_slots"] >= ds["pairs_needed"]
+
+
+def test_w16b_followup_steps():
+    """W11 VM-H slows the SU chain; W10b's wider tiles re-fit the product to 39 stages; the K arbiter row is MERGE2 +
+    HEADREG (+2, not in the product); the Qwen rows are attributed (body and all-reduce separately)."""
+    import uarch_model as U
+    r = _rec()
+    pts = {p["label"]: p for p in r["v41_rom"]["points"] if p.get("role") == "product"}
+    stm = next(p for k, p in pts.items() if k.endswith(U.STREAM_TAG))
+    vmh = next(p for k, p in pts.items() if k.endswith(U.VMH_TAG))
+    fin = next(p for k, p in pts.items() if k.endswith(U.PRODUCT_TAG))
+    assert vmh["vmh"] == U.VMH and stm.get("vmh") is None and fin["vmh"] == U.VMH
+    assert vmh["ar_tokens_s_b1"] < stm["ar_tokens_s_b1"] and vmh["stages"] == stm["stages"] == 37
+    assert fin["stages"] == U.cons_min_stages("analytical", 0.125, "ring", "w10_refit", "w10b_q", "columns", "4096m8")
+    assert fin["stages"] == 39 and fin["dies"] == 4 * 39 + fin["head_dies"] + 36
+    hf = r["v41_rom"]["product"]["head_fit"]
+    assert hf["dies"] == fin["head_dies"] and hf["dies_at_w10_q"] == 4 and hf["margin_storage_only_w10_q"] > 0
+    assert U.CONS_PITCH["w10b_q"]["q_um"] == (510.84, 126.9)
+    assert U._cons_pair_mm2("w10b_q", True) == 1002.89 * 142.56 / 1e6
+    k = r["karb"]
+    assert k["regions_w18b_merge2_headreg"] == [20, 16, 14, 10, 10, 14, 16, 20]
+    assert k["rows"]["w18b_merge2_headreg_worst"]["tokens_s_delta_pct"] < k["rows"]["ss_0p75mm_worst"]["tokens_s_delta_pct"]
+    a = r["qwen_l0_rtl_vs_model"]["attribution"]
+    assert (a["body_cycles"], a["allreduce_cycles"]) == (2687, 991)
+    assert abs(a["body_ratio"] - 2687 / a["model_body_cycles"]) < 1e-4
+    qs = r["qwen_product_ss"]
+    assert "rtl_calibrated" not in qs
+    q = [x for x in r["headline_table"]["qwen"] if "RTL-attributed" in x["design"]]
+    assert len(q) == 2
