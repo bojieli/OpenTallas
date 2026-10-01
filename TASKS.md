@@ -1,6 +1,6 @@
 # OpenTallas critical-path tracker
 
-Updated 2026-09-30. **Root: Claude (`claude-main`).** Active plan: [integrated design plan](docs/INTEGRATED_PHYSICAL_PLAN.md). The priorities are:
+Updated 2026-10-01. **Integration owner: Codex; integration and publication branch: `main`.** Claude checkpoints are being continued by ten Codex workers after the credit interruption. Active plan: [integrated design plan](docs/INTEGRATED_PHYSICAL_PLAN.md). The priorities are:
 1. 1.2 GHz SS closure of every element;
 2. full-shape RTL tokens (V4.1 ROM, Qwen ROM, HBM);
 3. the V4.1 die rebase on p12 with the BF16 columns;
@@ -11,35 +11,43 @@ Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash 
 Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
 
-## Model-first build streams (updated 2026-09-30): see docs/INTEGRATED_PHYSICAL_PLAN.md and docs/MICROARCH_MODEL.md
+## Model-first build streams (updated 2026-10-01)
 
-Rule: every stream builds only what the microarchitecture model sizes, and stops and reports on any discrepancy. Sign-off is SS setup / FF hold at 60/25 ps; TT is pathfinding only. Streams with a `b` suffix succeed the finished first phase of the same stream.
+Every stream builds only what the unified microarchitecture model sizes. Sign-off requires SS setup / FF hold with 60/25 ps uncertainty; TT remains pathfinding. Workers own separate worktrees; the integration owner reviews prerequisites, commits and pushes directly to `main`. Long runs retain their original clean source pins.
 
-| Stream | Scope | Status and records | Next deliverable |
-|---|---|---|---|
-| W10 | V4.1 ROM element (q pair + BF16 column element, 1.2 GHz, p12, PDN) | [x] Element final RTL (ICG, registered BF16 bounds and chain forwarding), frozen interface, pair-mode bank map, exactness re-run, ROM depth study: `results/uarch/v41_rom_element_interface.json`, `results/uarch/v41_rom_depth_study.json`, `results/uarch/v41_rom_array_exactness.json`. [x] Per-corner macro liberty in P&R and sign-off. [~] BF16 columns adopted (37 stages / 188 dies); p12 q pair at 476 x 126.9 um; BF16 column element at 1.2 GHz on branch | BF16 column element and q pair closed at SS/FF |
-| W11 | V4.1 hub units (VM-H landing, CKV, ILV (a), serial/streaming closure, shared FP primitives) | [x] FP32 add/mul latency sweep at SS: `results/physical_abi3/asap7/hdc/w11_fp/w11_fp_latency_sweep.json`. [x] Index ring at the HBM rate: `results/rtl/w11_idx_reader_rate.json`, `results/rtl/w11_die_idx_ring_gate.json`. [x] Two-user die ring gate at full capacity: `results/rtl/w11_die_idx_ring_mu_gate.json`. [x] Attention two-word loader: `results/rtl/w11_attn_ploader.json`. [!] Verify-6 exactness claim withdrawn for the real MTP row order (`results/rtl/w11_attn_verify6.json`). [x] Selected-CKV path with wide fetch exact at full geometry (merged on main after this branch point: `results/rtl/v41x_ckv_sel_attn_wide.json`). [~] VM-H die decode exact (branch) | SU lanes, softplus and attention controller closed at SS; ILV option (a) exact |
-| W12 / W12b | Qwen ROM, option C: 4 dies / 2 packages, TP-4, G=6,144, INT8 (TP-4 token, tile, die, droop) | [x] W12: G=6144 tile/spine RTL and tile P&R inputs. [~] W12b: TP-2 L0 exact at G=6,144; full token exact through layer 9; TP-4 ISA oracle token 50994 (margin 4.31) on branch | TP-4 RTL token; die droop analysis |
-| W13 / W13b | HBM comparators, GPU organisation (SMs) | [x] W13: SM exactness and 1.2 GHz SS SM datapath (LAT-7 add/mul, bterm2 block-dot): `results/rtl/gpu_sm_exact.json`, `results/rtl/gpu_sm_blockdot_exact.json`; HBM die floorplans `results/floorplan/hbm_gpu/`. [~] W13b: SM columns at SS | SM columns closed at SS |
-| W14 | Model economics: batch sweep, energy per token, cost | [x] `results/uarch/economics.json`, `results/uarch/economics_levers.json` (feeds W16's restatement) | folded into W16 |
-| W15 / W15b | Deterministic hardware collectives, measured end to end; links | [x] W15: measured collectives adopted in the model: `results/rtl/w15_collectives.json`. [~] W15b: SS campaign, switch TP-96 record, thick metal | committed P = 6 / 48 NVLS records |
-| W16 | uarch model and records | [~] Regenerating `results/uarch/*` on the calibrated model (two clock domains, 188-die V4.1 ROM, Qwen option C, audited HBM, tau 3.78). Do not edit docs/MICROARCH_MODEL.md (W16 owns it) | restated headlines |
-| W17 | V4.1 full-shape token (L0 4-die RTL, then indexed layer, then full) | [x] TP-4 L0 ISA executor bit-exact at 1M and 200K: `results/rtl/w17_l0_fullshape_isa.json`; program constants `results/rtl/v41_program_constants.json`; robust 1M reference token 21946 (margin 3.149, replicated): `results/rtl/w17_v41_1m_reference_token.json`. [x] Field runtime-composition gate 160/160 (branch). [~] L0 4-die RTL run | L0 4-die RTL run exact |
-| W18 / W18b | V4.1 die assembly | [x] W18: PHY v41x_legal e8p5, K-arb pslice and ratio FIFO closed at SS, IR options, clock plan, lane map, head/table die fits, peak current and droop: `results/physical_abi3/asap7/chip/v41_w18/die_assembly.json` (route `route/die_route_k32_ph5.json`, 0 overflow; IR `ir/ir_options.json`, 104.3 -> 65.8 mV recommended; `peak_current.json`; `head_table_fit.json`). [~] W18b: one rebase on p12 with the BF16 columns | die record on the final element |
-| W19 | HBM full-shape token | [x] TP-96 V4.1 HBM token bit-exact at ISA level on 96 ranks (40 layers + head, 1M, token 21946, logits sha equal): `results/rtl/w19_hbm_tp96_isa.json`, `results/rtl/w19_hbm_tp96_program.json`. [x] HBM feasibility audit (no architectural blocker): `results/uarch/hbm_feasibility_audit.json`. [~] Expert fetch RTL, MTP golden, composition | expert-fetch RTL with measured first-byte latency |
+| Stream / worker | Current evidence and remaining work |
+|---|---|
+| W10b / Pasteur | [!] Original p12q4/5/6/8/9 failures are preserved in `results/physical_abi3/asap7/chip/v41_w10_elem/ss_route_failures/`. p12q9 global-route SS slack is −159.86 ps; detailed route failed. [~] Continue the live c8 route and bank-map product generation. Size a frontend candidate before RTL, then exactness and unchanged SS/FF gates. Legacy W10 is not the active implementation stream. |
+| W11 / Bernoulli | [x] Recovery records preserve stopped failures and verify generated-code identity for explicit dormant-port tie-offs: `results/rtl/w11_checkpoint_recovery_20261001/checkpoint.json`. This is not fresh token or timing qualification. [~] Unfused comparisons, rotate memory, CKV selection, softplus and K-control jobs remain live. Diagnose the full 64-tile attention-controller elaboration guard without lowering it; gate fusion on exactness, measured gain and SS/FF. |
+| W12b / Dewey | [x] Full TP-2 RTL token 50994 is exact at 151,557 cycles, with source/binary/vector verification: `results/rtl/qwen_rom_w12_runtime/terminal_20261001/verification.json`. [~] TP-4 vectors exact through layer 7 at the recovery checkpoint; later layers pending. Continue the segmented all-reduce exactness/latency gate and live tile/spine routes. Original tile route failures remain archived. |
+| W13b / Hume | [x] Boundary-dot corner evidence passes SS/FF; the committed corner gate requires complete source and memory timing provenance. [~] TC16 and column routes remain live; qualify both corners before downstream SM assembly. See `results/physical_abi3/asap7/gpu/w13_revalidation_20261001T073327Z.json` and `tools/w13_column_corner_gate.py`. |
+| W14 / W16b / integration owner | [x] All six model records regenerated successfully from the pinned label correction; numeric fields unchanged. Consolidation source pins and explanatory labels are refreshed. Keep measured input scopes explicit and calibrate against full-shape RTL tokens before headline adoption. Reduced fusion traces do not establish full-shape token rates. |
+| W15b / Volta | [x] Eight merge regressions already fixed upstream; passing logs and original TT failures now preserved in `results/rtl/w15b_resume_20261001/review.json`. [!] Pending SRAM campaign has a source/binary provenance mismatch and is not promoted. Resolve complete binding or run a clean pinned focused campaign; reuse live link/top-k routes. |
+| W17 / Schrodinger | [x] ISA and branch field-composition gates retain their stated scope. [~] L0 four-die builds and L20 ranks 0/1/3 continue. Rank 2 was killed by kernel OOM; a source-pinned retry supervisor waits for live ranks and resource headroom before serial retry. Require valid archives and child statuses, then exact execution. Runtime prerequisites must land together. |
+| W18b / Peirce | [!] KSREG slice/region timing and power-connectivity failures are retained; rejected clock changes are not adopted. [~] Finish source-bound K-arbiter exhaustive-gate provenance and the live karb21 route. The die rebase waits for qualified final W10 abstracts; a LEF alone does not satisfy SS/FF acceptance. |
+| W19 / Euler | [x] TP-96 ISA, expert-fetch and MTP checkpoints exist on the worker branch. [~] Continue missing real RTL token composition and integration prerequisites. ISA execution is not a full RTL token. HBM elements retain GPU organisation. |
+| QC-NAM / Leibniz | [x] Tightened stability rule committed as `d2631dd9` before full results. [~] Core, generation, long-context and MMLU jobs continue in the pinned worktree. Preserve thresholds and publish immutable results after all runs finish; adoption requires the complete quality and stability PASS. |
+| FA / Meitner | [x] Audit handoff `a4376b05` prepared with source-pinned scheduling estimates and focused verification. [ ] Review prerequisites and regenerate the parent census before integration. Estimates are not measured RTL gains; levels 2/3/5 exactness, routing, SS/FF and model pricing remain open. |
+
+## Integration and maintenance checkpoint — 2026-10-01
+
+- [x] Fast-forwarded `main` through upstream `f449a0d9` and reviewed recovery integration `20fa4e6e`: W10 failed routes, W11 checkpoint evidence, W12 terminal evidence, W13 corner gate, W15 provenance records and W16 source-pin refreshes.
+- [~] Ten workers continue the Claude checkpoints independently; detached local and remote jobs are reused. Ready commits land only after their source and runtime prerequisites are reviewed.
+- [x] Removed ten verified unused clean worktrees, preserving their heads in `codex/archive-unused/*`: `results/maintenance/worktree_cleanup_20261001.json`. W11 separately retired two clean checkouts with retained refs. Dirty legacy directories and live-job worktrees are preserved; their inventory is `results/maintenance/other_claude_worktrees_20261001.json`.
+- [!] Full DeepSeek ROM/HBM RTL tokens, complete die physical closure, numerical quality acceptance and calibrated headline rates remain open. Historical PASS records retain their original source pins and scope; failed verdicts are not overwritten.
 
 User decisions (2026-09-29/30):
 - Build all four designs in parallel; no legacy work.
 - Headlines stay pending until calibration, then are restated together.
 - V4.1 ROM keeps MTP at m=1; Qwen ROM is autoregressive only; HBM comparators keep speculation.
 - Clock 1.2 GHz at SS. The V4.1 ROM runs two domains (1.2 GHz streaming, 0.9 GHz serial chain) on 4096-row macros in ping-pong.
-- V4.1 ROM: dedicated BF16 columns, 37 stages / 188 dies.
+- V4.1 ROM: dedicated BF16 columns. The original 37-stage / 188-die choice is a historical sizing checkpoint; current composed geometry and latency are owned by the unified model and still require physical validation.
 - Qwen ROM: option C (4 dies, 2 packages, TP-4, G=6,144, INT8, FP8 KV).
 - Density: storage-only 75 Mbit/mm2 at N5 + ECC for every die class.
 - MTP acceptance: third-party tau 3.78 (V4-Flash arena-hard, LMSYS DSpark, cap-accept ceiling), with sensitivities 5.24 / 2.91.
 - V4.1 positioning: equal-cost throughput, energy and cost are the headline. Per-user speed is claimed against real GPUs (tiers 1-2) and reported honestly against tier 3.
 
-## Current critical path and owners
+## Historical architecture owner snapshot (before the 2026-10-01 recovery)
 
 | Owner | Current work / next acceptance |
 | --- | --- |
@@ -57,7 +65,7 @@ Additional active owners: `ds_softmax_composition` closes actual SU exp/SUM and 
 
 Additional Qwen helper `qwen_tp_host_binding` owns TP sequencer/collective runtime binding; main execution owner keeps controller/MAC/memory integration. TP/collective standalone host binding passed and is integrated. Local per-PC K arbiter prototype approved with explicit four-cycle minimum traversal and finite queues; no die-fit approval.
 
-## Latest integrated evidence
+## Historical integrated evidence (scope retained)
 
 - Actual SU softmax and output division pass H16/T128 and T640 against full-VM golden. Live QK/SU/PV chain is next; staged actual QK→SU→PV→divide now exact atT128/T640; live HBM integration and combined timing remain open.
 
