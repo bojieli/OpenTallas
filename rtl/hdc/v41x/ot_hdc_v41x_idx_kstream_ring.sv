@@ -189,6 +189,9 @@ module ot_hdc_v41x_idx_kctl_ring #(
     initial if (GA + 2 > (1 << EW)) $fatal(1, "ot_hdc_v41x_idx_kctl_ring: GA + 1 must fit EW bits");
     reg [EW-1:0]   eg     [0:NPC-1];          // g_hi - d_hi
     reg [EW-1:0]   dl     [0:NPC-1];          // nx_hi - d_hi
+    reg [EW-1:0]   eg_p   [0:NPC-1];          // eg + 1
+    reg [EW-1:0]   eg_m   [0:NPC-1];          // eg - 1
+    reg [EW-1:0]   dl_m   [0:NPC-1];          // dl - 1
     reg [NPC-1:0]  ga_ok;                     // dl < GA
     reg [NPC-1:0]  nx_v;
     reg [BW-1:0]   nx_hi  [0:NPC-1];
@@ -199,6 +202,8 @@ module ot_hdc_v41x_idx_kctl_ring #(
     // -- drain state ------------------------------------------------------------------
     reg [BW-1:0]   d_hi;                      // head block (relative), low BW bits
     reg [UW-1:0]   d_hu1;                     // d_hi[BW-1:SW] + 1
+    reg [BW-1:0]   dhc  [0:3];                // copies of d_hi for the return gate (8 channels each)
+    reg [UW-1:0]   dhu1c[0:3];
     reg [HW-1:0]   d_abs;                     // base + d_hi
     reg [4:0]      d_fold;                    // fold(d_abs)
     reg [4:0]      d_bidx;                    // block within its super-block (0 = scales)
@@ -215,7 +220,6 @@ module ot_hdc_v41x_idx_kctl_ring #(
                                               // the head is last cycle's d_slot + 1: qb
     reg            all_a, all_b;              // all 32 banks complete, same two entries
     reg [3:0]      qz;                        // qz[q]: quarter q of the head block has no keys (d_kb <= 16 q)
-    reg [3:0]      grp_a, grp_b;              // combinational: per 8-bank group, the two entries complete
     wire [SW-1:0]  d_slot = d_hi[SW-1:0];
     reg  [WB-1:0]  d_oh;                      // one-hot d_slot
     wire [WB-1:0]  d_oh1 = {d_oh[WB-2:0], d_oh[WB-1]};   // one-hot d_slot + 1
@@ -244,17 +248,55 @@ module ot_hdc_v41x_idx_kctl_ring #(
     function automatic [3:0] qzof(input [6:0] kb);
         qzof = {kb <= 7'd48, kb <= 7'd32, kb <= 7'd16, kb == 7'd0};
     endfunction
-    integer gb, gc2;
+    // hc[p] = cc[p][d_slot], hn[p] = cc[p][d_slot + 1], kept as registers: their next values are
+    // the next cc of the entries the next head and its successor name (this edge's response,
+    // issue and drain writes applied in the main block's order), so the drain's completion test
+    // reads 32 + 32 flops instead of two 128-way selects of the completion array.
+    reg  [NPC-1:0] hc, hn;
+    wire [WB-1:0]  d_oh2 = {d_oh1[WB-2:0], d_oh1[WB-1]};  // one-hot d_slot + 2
+    wire [SW-1:0]  e1 = d_slot + 1'b1, e2 = d_slot + 2'd2;
+    wire           cmd_acc = !busy && cmd_v;
+    reg  [NPC-1:0] hc_n, hn_n;
+    reg            v0, v1, v2, z0, z1, rset, iset, ival, clr;
+    integer pe;
     always @* begin
-        for (gb = 0; gb < 4; gb = gb + 1) begin
-            grp_a[gb] = 1'b1;
-            grp_b[gb] = 1'b1;
-            for (gc2 = 0; gc2 < 8; gc2 = gc2 + 1) begin
-                if ((cc[8 * gb + gc2] & d_oh) == 0) grp_a[gb] = 1'b0;
-                if ((cc[8 * gb + gc2] & d_oh1) == 0) grp_b[gb] = 1'b0;
-            end
+        for (pe = 0; pe < NPC; pe = pe + 1) begin
+            rset = rr_v[pe] && lval[pe] == 3'd1;
+            iset = bsy_g[pe] && iss_w[pe];
+            ival = (nx_len[pe] == 3'd0);
+            clr  = busy && (do_scale || (do_q && pe[4:3] == d_qg));
+            // the next cc of entries d_slot, +1, +2, 0, 1
+            v0 = hc[pe];
+            if (rset && rr_s[pe] == d_slot) v0 = 1'b1;
+            if (iset && nx_hi[pe][SW-1:0] == d_slot) v0 = ival;
+            if (clr) v0 = 1'b0;
+            v1 = hn[pe];
+            if (rset && rr_s[pe] == e1) v1 = 1'b1;
+            if (iset && nx_hi[pe][SW-1:0] == e1) v1 = ival;
+            v2 = |(cc[pe] & d_oh2);
+            if (rset && rr_s[pe] == e2) v2 = 1'b1;
+            if (iset && nx_hi[pe][SW-1:0] == e2) v2 = ival;
+            z0 = cc[pe][0];
+            if (rset && rr_s[pe] == 0) z0 = 1'b1;
+            if (iset && nx_hi[pe][SW-1:0] == 0) z0 = ival;
+            if (clr && d_slot == 0) z0 = 1'b0;
+            z1 = cc[pe][1];
+            if (rset && rr_s[pe] == 1) z1 = 1'b1;
+            if (iset && nx_hi[pe][SW-1:0] == 1) z1 = ival;
+            if (clr && d_slot == 1) z1 = 1'b0;
+            hc_n[pe] = cmd_acc ? z0 : (d_step ? v1 : v0);
+            hn_n[pe] = cmd_acc ? z1 : (d_step ? v2 : v1);
         end
     end
+    always @(posedge clk)
+        if (!rst_n) begin hc <= '0; hn <= '0; end
+        else begin hc <= hc_n; hn <= hn_n; end
+    wire [3:0] g_c, g_n;
+    genvar gg;
+    generate for (gg = 0; gg < 4; gg = gg + 1) begin : g_grp
+        assign g_c[gg] = &hc[8*gg +: 8];
+        assign g_n[gg] = &hn[8*gg +: 8];
+    end endgenerate
 
     // a < b as a 3-level prefix tree over (up to) 8 bits
     function automatic lt_tree(input [SW-1:0] a, input [SW-1:0] b);
@@ -285,9 +327,11 @@ module ot_hdc_v41x_idx_kctl_ring #(
     generate
         for (gq = 0; gq < NPC; gq = gq + 1) begin : g_rr
             wire [BW-1:0] t = rsp_tag[gq*TAGW +: BW];
-            wire          bor = lt_tree(t[SW-1:0], d_hi[SW-1:0]);
+            wire [BW-1:0] dh = dhc[gq / 8];
+            wire          bor = lt_tree(t[SW-1:0], dh[SW-1:0]);
             if (UW > 0) begin : g_u
-                assign rsp_rdy[gq] = bor ? (t[BW-1:SW] == d_hu1) : (t[BW-1:SW] == d_hi[BW-1:SW]);
+                wire e_0 = (t[BW-1:SW] == dh[BW-1:SW]), e_1 = (t[BW-1:SW] == dhu1c[gq / 8]);
+                assign rsp_rdy[gq] = bor ? e_1 : e_0;
             end else begin : g_n
                 assign rsp_rdy[gq] = 1'b1;
             end
@@ -341,19 +385,24 @@ module ot_hdc_v41x_idx_kctl_ring #(
                 for (pf = 0; pf < NPC; pf = pf + 1) if (!bsy_g[pf]) begin
                     g_more[pf] <= c_more; g_wrapn[pf] <= 1'b0;
                     g_first[pf] <= c_nz1; g_lo16[pf] <= 1'b1;
-                    eg[pf] <= 0; dl[pf] <= 0; ga_ok[pf] <= 1'b1;
+                    eg[pf] <= 0; eg_p[pf] <= 1; eg_m[pf] <= '1; dl[pf] <= 0; dl_m[pf] <= '1; ga_ok[pf] <= 1'b1;
                 end else begin
                     // lookahead: dl' = nx_hi' - d_hi', eg' = g_hi' - d_hi'
                     // (the late selects pick among values precomputed from registers)
                     if (prep_w[pf]) begin
-                        dl[pf] <= d_step ? eg[pf] - 1'b1 : eg[pf];
+                        dl[pf] <= d_step ? eg_m[pf] : eg[pf];
+                        dl_m[pf] <= d_step ? eg_m[pf] - 1'b1 : eg_m[pf];
                         ga_ok[pf] <= d_step ? (eg[pf] != 0 && eg[pf] <= GA) : (eg[pf] < GA);
                     end else if (d_step) begin
-                        dl[pf] <= dl[pf] - 1'b1;
+                        dl[pf] <= dl_m[pf];
+                        dl_m[pf] <= dl_m[pf] - 1'b1;
                         ga_ok[pf] <= (dl[pf] != 0 && dl[pf] <= GA);
                     end
-                    if (prep_w[pf] && !d_step) eg[pf] <= eg[pf] + 1'b1;
-                    else if (!prep_w[pf] && d_step) eg[pf] <= eg[pf] - 1'b1;
+                    if (prep_w[pf] && !d_step) begin
+                        eg[pf] <= eg_p[pf]; eg_p[pf] <= eg_p[pf] + 1'b1; eg_m[pf] <= eg[pf];
+                    end else if (!prep_w[pf] && d_step) begin
+                        eg[pf] <= eg_m[pf]; eg_m[pf] <= eg_m[pf] - 1'b1; eg_p[pf] <= eg[pf];
+                    end
                     if (prep_w[pf]) begin
                         if (ph != 0) begin
                             // block g_hi < 3: more = g_hi + 1 < nblk, wrap next = g_hi + 2 == nblk1
@@ -386,11 +435,11 @@ module ot_hdc_v41x_idx_kctl_ring #(
             dr_quarter <= 1'b0;
             // quarter completion for the next cycle (one-hot entry select, AND-OR; quarter order)
             for (b = 0; b < 4; b = b + 1) begin
-                qa[b] <= grp_a[b[1:0] ^ d_fold[4:3]];
-                qb[b] <= grp_b[b[1:0] ^ d_fold_n[4:3]];
+                qa[b] <= g_c[b[1:0] ^ d_fold[4:3]];
+                qb[b] <= g_n[b[1:0] ^ d_fold_n[4:3]];
             end
-            all_a <= &grp_a;
-            all_b <= &grp_b;
+            all_a <= &hc;
+            all_b <= &hn;
             adv <= 1'b0;
             // responses: registered, then counted
             for (p = 0; p < NPC; p = p + 1) begin
@@ -406,6 +455,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     // (d_hi, d_hu1 set the return gate, an output: they move only on a command)
                     run <= 1'b1; busy <= 1'b1; ph <= 2'd1;
                     d_hi <= 0; d_oh <= WB'(1); d_hu1 <= 1;
+                    for (b = 0; b < 4; b = b + 1) begin dhc[b] <= 0; dhu1c[b] <= 1; end
                 end
                 first_skip<=cmd_skip;
                 base2 <= cmd_base2; span2 <= cmd_nkeys2; m2 <= sbkeys(cmd_nkeys2);
@@ -519,6 +569,10 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     adv <= 1'b1;
                     d_hi <= d_hi1; d_oh <= d_oh1;
                     d_hu1 <= d_hi1[BW-1:SW] + 1'b1;
+                    for (b = 0; b < 4; b = b + 1) begin
+                        dhc[b] <= dhc[b] + 1'b1;
+                        dhu1c[b] <= UW'((dhc[b] + 1'b1) >> SW) + 1'b1;
+                    end
                     if (ph != 0) begin
                         d_more <= !t_n[d_hi[1:0] + 2'd1];
                         d_wrapn <= t_1[3'(d_hi[1:0]) + 3'd2];
