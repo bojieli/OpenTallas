@@ -64,7 +64,8 @@ def all_sources(l20: bool = False) -> list[Path]:
                                                         ROOT / "tools/rtl_hdc_v41x_decode_campaign.py"]
     return sorted(set(die + W10 + LEAF + ATTN + [ATTN_VLT] + HOST +
                       [ROOT / "rtl/w17_runtime/v41die/ot_v41_pair.sv", ROOT / "rtl/w17_runtime/v41die/ot_v41_retn.sv",
-                       RT / "ot_rom_8192x274_m8_rt.sv", Path(__file__)]))
+                       RT / "ot_rom_8192x274_m8_rt.sv",
+                       ROOT / "rtl/hdc/v41/ot_hdc_isa_v41_profiles.svh", Path(__file__)]))
 
 
 def run(cmd, log: Path, cwd=None):
