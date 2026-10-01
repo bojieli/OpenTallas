@@ -45,7 +45,8 @@ def main():
             log = run.stdout + run.stderr
             (a.work/(name+'.log')).write_text(log)
             cov = re.search(r'PASS cycles=(\d+) hits=(\d+) issues=(\d+) rows=(\d+) nonzero=(\d+) classes=(\d+) wraps=(\d+) qadv=(\d+) restarts=(\d+) rejected=(\d+)',log)
-            passed = bool(cov) and run.returncode == 0 if name == 'positive' else run.returncode != 0 and 'public control' in log
+            passed = bool(cov) and run.returncode == 0 if name == 'positive' else run.returncode != 0 and any(
+                message in log for message in ('public control', 'frontend divergence'))
             row = dict(name=name, returncode=run.returncode, passed=passed,
                        log_sha256=hashlib.sha256(log.encode()).hexdigest())
             if cov:
