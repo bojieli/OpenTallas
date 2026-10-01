@@ -6,7 +6,7 @@
 The 40 layers' checkpoint bytes are cut into S equal-byte TP-4 stages, each cut at a whole routed-expert ID (a
 dense tensor is never cut), as tools/v41_stage_owner_preflight.py does for the 28-stage placement.  S defaults to the
 product's stage count from tools/uarch_model.py's consolidation fit (BF16 columns at W10b's 510.84 x 126.9 um q tile
-and 1,002.89 x 142.56 um column outline, the measured VM-H SU+VM hub block, 4096m8, storage-only density, 12.5% overhead, ring credit).  Headroom is against that fit's per-die field capacity;
+and 1,002.89 x 142.56 um column outline, the product's measured SU+VM hub block (C_rotate), 4096m8, storage-only density, 12.5% overhead, ring credit).  Headroom is against that fit's per-die field capacity;
 Engram spill is 0 (the product's 36 table dies hold every table row).
 """
 from __future__ import annotations
@@ -118,8 +118,9 @@ def derive(S=None):
                 basis=f"W16 V4.1 ROM PRODUCT split: {S} TP-4 stages ({4 * S} layer dies) + {H} head dies (8192m8 "
                       "ping-pong) + 36 Engram table dies; BF16 columns (1,024 pairs, W10b's 1,002.89 x 142.56 um "
                       "column outline) with q pairs at W10b's 510.84 x 126.9 um 1.2 GHz tile (floorplan sizes, routed "
-                      "closure pending) and the measured VM-H SU+VM hub block (38.95 mm2, field "
-                      f"less {U.VMH_BLOCK['field_loss_mm2']} mm2; root ruling 2026-10-01), 4096m8; capacity at the storage-only density (75.0 Mbit/mm2 + "
+                      f"closure pending) and W11's {U.PRODUCT_HUB['option']} SU+VM hub block "
+                      f"({U.PRODUCT_HUB['block_mm2']} mm2, field less {U.PRODUCT_HUB['field_loss_mm2']} mm2; root "
+                      "rulings 2026-10-01), 4096m8; capacity at the storage-only density (75.0 Mbit/mm2 + "
                       "SECDED), 12.5% overhead, ring credit, 90% fill; Engram spill 0",
                 source_sha256={str(p.relative_to(ROOT)): digest(p) for p in srcs},
                 stage_count=S, layer_dies=4 * S, expert_count=n_exp, cut_count=len(cuts), cuts=cuts,

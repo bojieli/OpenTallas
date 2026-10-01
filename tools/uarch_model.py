@@ -25,6 +25,7 @@ import argparse
 import copy
 import dataclasses
 import json
+import hashlib
 import math
 import sys
 from pathlib import Path
@@ -632,13 +633,14 @@ def area_ledger(d: dict):
         + out["return_adders"] + out["bf16_chain"] + out["blockdot_chain"]
     hub = out["indexer"] + out["attention"] + out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"] \
         + d.get("su_vm_ports_mm2", 0.0)
-    if d.get("vmh_block"):
-        # ROOT RULING 2026-10-01: the measured VM-H SU+VM block replaces the SU lanes, SFU lanes and VM ports (its
-        # SRAM is the VM; the rest is lane logic and network)
-        hub += VMH_BLOCK["block_mm2"] - (out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"]
-                                         + d.get("su_vm_ports_mm2", 0.0))
-        out["vm_ports"] = VMH_BLOCK["sram_mm2"]
-        out["vmh_block_mm2"] = VMH_BLOCK["block_mm2"]
+    blk = d.get("vmh_block")
+    if blk:
+        # ROOT RULINGS 2026-10-01: the measured SU+VM block (VM-H, then C_rotate for the product) replaces the SU
+        # lanes, SFU lanes and VM ports (its SRAM is the VM; the rest is lane logic and network)
+        hub += blk["block_mm2"] - (out["su_lanes"] + out["sfu_lanes"] + out["vm_ports"]
+                                   + d.get("su_vm_ports_mm2", 0.0))
+        out["vm_ports"] = blk["sram_mm2"]
+        out["vmh_block_mm2"] = blk["block_mm2"]
     out["rom_field_strip_used_mm2"] = strip
     out["rom_field_strip_avail_mm2"] = FLOORPLAN["rom_field_strip_mm2"]
     out["hub_logic_mm2"] = hub
@@ -882,10 +884,11 @@ def dedicated_ledger(d: dict, ctx: int = 1048576, layer: int = 20, positions: in
         ports_total=ports, vm_banks_256b=banks,
         area_element_um2=dict(light=round(light), sfu=round(sfu)),
         area_basis=("hardened" if aL and aS else u["area_basis"]), hardened=dict(light=qL, sfu=qS),
-        area_mm2=(VMH_BLOCK["block_mm2"] if d.get("vmh_block") else round(((N - M) * light + M * sfu) / 1e6, 3)),
+        area_mm2=(d["vmh_block"]["block_mm2"] if d.get("vmh_block") else round(((N - M) * light + M * sfu) / 1e6, 3)),
         area_lanes_ledger_mm2=round(((N - M) * light + M * sfu) / 1e6, 3),
-        vmh_block=(dict(VMH_BLOCK, note="ROOT RULING 2026-10-01: area_mm2 is the measured VM-H SU+VM block (lanes, "
-                                       "VM SRAM, network); area_lanes_ledger_mm2 is the lane-only ledger estimate")
+        vmh_block=(dict(d["vmh_block"], note="ROOT RULINGS 2026-10-01: area_mm2 is the measured SU+VM block of the "
+                                             "product's VM option (lanes, VM SRAM, network); area_lanes_ledger_mm2 is "
+                                             "the lane-only ledger estimate")
                    if d.get("vmh_block") else None),
         ops={f"L{layer}.attn.softmax.{k}": v for k, v in sm.items()},
         softmax_issue_vectors=sum(v["vectors"] for v in sm.values()),
@@ -3177,6 +3180,17 @@ VMH_BLOCK = dict(block_mm2=38.951, w_um=6365.0, h_um=6119.5, sram_mm2=10.893, ne
                      "2026-10-01, option a; budget 38-45 mm2 with W11's measured lanes at 50% utilisation)")
 VMH_BLOCK["field_loss_mm2"] = round((VMH_BLOCK["block_mm2"] - VMH_BLOCK["stream_unit_ledger_mm2"])
                                     * (1 + VMH_BLOCK["switch_fraction"]), 3)
+VMH_BLOCK["option"] = "H_rtl"
+# ROOT RULING 2026-10-01 (after the VM waterfall): W11's C_rotate is the PRODUCT's VM -- central: the lane array as a
+# 4,890 um square with the VM strip (1,536 SRAM macros + VM logic + rotate/Benes network, 3,004 um deep) along one
+# side; 38.60 mm2 (claude/w11-vmh-land 3cc18731 w11_vm_options.json options.C_rotate).  VM-H stays a REFERENCE row
+VMC_BLOCK = dict(block_mm2=38.601, lane_array_mm2=23.913, lane_side_um=4890.1, vm_block_mm2=14.688, vm_depth_um=3003.7,
+                 sram_mm2=10.893, network_footprint_mm2=2.274, stream_unit_ledger_mm2=14.249, switch_fraction=0.05,
+                 option="C_rotate",
+                 src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json options.C_rotate (root ruling "
+                     "2026-10-01: the product's VM)")
+VMC_BLOCK["field_loss_mm2"] = round((VMC_BLOCK["block_mm2"] - VMC_BLOCK["stream_unit_ledger_mm2"])
+                                    * (1 + VMC_BLOCK["switch_fraction"]), 3)
 CONS_SLIVER_MM2 = CONS_REFIT["whitespace_mm2"] - CONS_REFIT["unused_slots_mm2"]   # whitespace outside the field
 # Where that whitespace is (measured on the reproduced re-fit's rectangles): the die-edge ring outside the core
 # (1.02-1.09 mm wide: die 814.98 - core 696.56 = 118.43 mm2) less the edge I/O instances in it (HBM PHYs, SerDes,
@@ -3191,6 +3205,10 @@ CONS_GEOM = dict(
                        core_gap_mm2=13.84,
                        src="the W10 re-fit with the measured VM-H SU+VM block as the SU_VECTOR hub partition (root "
                            "ruling 2026-10-01): the field less (38.951 - 14.249) x 1.05 mm2"),
+    w10_refit_crot=dict(field_mm2=CONS_FIELD_MM2 - VMC_BLOCK["field_loss_mm2"], ring_free_mm2=118.426 - 64.902,
+                        core_gap_mm2=13.84,
+                        src="the W10 re-fit with W11's C_rotate SU+VM block as the SU_VECTOR hub partition (root "
+                            "ruling 2026-10-01, the product): the field less (38.601 - 14.249) x 1.05 mm2"),
     w18_legal_phy=dict(field_mm2=9637 * CONS_REFIT["pair_footprint_mm2"], ring_free_mm2=138.836 - 65.001,
                        core_gap_mm2=13.72,
                        src="claude/w18-die-assembly 4f9de5b5 results/floorplan/v41_pack_refit_w18_e8p5.json (sha256 "
@@ -3334,10 +3352,19 @@ STREAM_TAG = SHRINK_TAG + " + W11 streaming depths (idx +52; attn tile +39 and b
 VMH = dict(x_gather=12, ret_scatter=12, coll_write=12, su_op_extra=36.706, su_red_extra=44.909, su_issue=1.1687,
            src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (H_rtl)")
 VMH_TAG = STREAM_TAG + " + W11 VM-H (12/12/12 slow stages, SU op +36.7 / red +44.9, issue x1.169)"
+# W11 C_rotate (3cc18731 options.C_rotate design_keys): client stages 8/8/8 slow cycles; per SU op the control
+# broadcast 5 + operand read 16 + element write 16 = 37, a reduction 5 + 16 + result tree 8 = 29; issue ratio 1.0
+VMC = dict(x_gather=8, ret_scatter=8, coll_write=8, su_op_extra=37, su_red_extra=29, su_issue=1.0,
+           src="claude/w11-vmh-land 3cc18731 results/uarch/w11_vm_options.json (C_rotate)")
 PRODUCT_PITCH = "w10b_q"
-PRODUCT_GEOM = "w10_refit_vmh"   # ROOT RULING 2026-10-01: the measured VM-H SU+VM block in the hub
-PRODUCT_TAG = (VMH_TAG + " + W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um) and the VM-H hub block "
-               "(SU+VM 38.95 mm2): one stage re-fit")
+VMH_REF_GEOM = "w10_refit_vmh"   # the measured VM-H block (reference row)
+PRODUCT_GEOM = "w10_refit_crot"  # ROOT RULING 2026-10-01: W11's C_rotate SU+VM block in the hub (the product)
+PRODUCT_HUB = VMC_BLOCK
+W10B_TAG = "W10b tiles (q 510.84 x 126.9, BF16 column 1002.89 x 142.56 um)"
+VMH_REF_TAG = (VMH_TAG + f" + {W10B_TAG} and the VM-H hub block (SU+VM 38.95 mm2): one stage re-fit -- REFERENCE "
+               "(measured VM-H)")
+PRODUCT_TAG = (STREAM_TAG + f" + W11 C_rotate VM (8/8/8 slow stages, SU op +37 / red +29, issue x1.0) + {W10B_TAG} and "
+               "the C_rotate hub block (SU+VM 38.60 mm2): one stage re-fit (root ruling 2026-10-01)")
 QWEN_W12_TP4_ME_EXTRA_SS = 41 + 5 * 5 + 38 + 1 + 7   # W12 c6e6b845 at the 504 um reach: 112 cycles an ME op
 PRODUCT_CLOCK_HZ = 1.2e9   # USER DECISION (AGENTS.md e7479589): 0.833 ns at SS for all logic in all four designs
 PRODUCT_DYN_SCALE = 1.16   # root 2026-09-30: dynamic energy about +16% at 1.2 GHz (ASSUMED: the voltage for the clock)
@@ -3823,7 +3850,7 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
 
 def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16="columns", clock_hz=None,
                  field_concurrency=1.0, added_latency=None, dyn_scale=1.0, slow_domain=None, chain_stages=None,
-                 elem_stages=None, ss_wire=False, serial=None, die=None, vmh=None, hub_block=False):
+                 elem_stages=None, ss_wire=False, serial=None, die=None, vmh=None, hub_block=None):
     """The V4.1 ROM array at S TP-4 stages, n_head head dies and n_table Engram table dies: AR and MTP m = 1 per
     user, the busiest-stage saturated aggregate, energy (ungated and the adopted stage power gating, 1 us wake),
     KV capacity, HBM stacks and die counts.  Same model pieces as the economics and levers sections."""
@@ -3832,7 +3859,7 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
     with _cons_clock(clock_hz), _cons_stages(S):
         d = copy.deepcopy(PRESETS["proposal"])
         d["macros"] = round(BASE["macros"] * plan["busiest_macros"] / cons_stage_plan(28)["busiest_macros"])
-        d["vmh_block"] = bool(hub_block)     # the measured VM-H block's area in the hub (power; root 2026-10-01)
+        d["vmh_block"] = hub_block or None   # the measured SU+VM block's area in the hub (power; root 2026-10-01)
         r1, g1 = _v41_graph(d, 1)
         # energy BEFORE re-timing: the field's pair-seconds per token are the work, not the (capped, stretched)
         # issue time -- the 50% cap halves the concurrent pairs and doubles the time, same pair-seconds
@@ -3935,7 +3962,7 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
                 cooling=_cons_cooling(die_static, die_static_ungated, cats, pair_s, pp, dyn_scale, sat, S, tot),
                 field_concurrency=field_concurrency, added_latency=dict(lat), slow_domain=slow_domain,
                 chain_stages=chain_stages, elem_stages=elem_stages, field_starts=fstarts, ss_wire=ss_wire, serial=serial,
-                die=(die or DIE_OLD), vmh=vmh, hub_block=bool(hub_block),
+                die=(die or DIE_OLD), vmh=vmh, hub_block=(hub_block or {}).get("option"),
                 critical_path_top_us=_cons_top(g1),
                 capacity_users_1m=users, static_w_ungated=dict({k: round(v, 1) for k, v in static.items()},
                                                              total=round(P_static, 1)),
@@ -4314,8 +4341,11 @@ def consolidation(ec=None, lv=None):
     # full-token basis they beat (iii) and (ii) (the busiest-die op cycles favoured (iii), but its +20.7% pair pitch
     # adds stages, i.e. hops, and its BF16 issue floors sit above the columns' full-width BF16 lanes)
     Sp = cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, PRODUCT_PITCH, "columns", "4096m8")
-    # the W10b tiles alone (the 815 mm2 field with the ledger hub): 39 stages; with the VM-H block: Sp
+    # the W10b tiles alone (the 815 mm2 field with the ledger hub): 39 stages; with the C_rotate block: Sp; with the
+    # VM-H block (reference row): Sh
     Sp_w10b = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", PRODUCT_PITCH, "columns", "4096m8")
+    Sh = cons_min_stages("analytical", CONS["overhead"], "ring", VMH_REF_GEOM, PRODUCT_PITCH, "columns", "4096m8")
+    hh = cons_head_dies("analytical", CONS["overhead"], "ring", VMH_REF_GEOM, PRODUCT_PITCH, "8192m8")
     # the named steps before the W10b tile re-fit run at the previous q pitch (W10 476 x 126.9 um)
     Sp_prev = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "columns", "4096m8")
     hp_prev = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", "w10_q_1p2", "8192m8")
@@ -4333,7 +4363,7 @@ def consolidation(ec=None, lv=None):
                     margin_w18_floorplan_scaled_estimate=round(1 - (1 - 0.133) * r_new / r_prev, 3),
                     dies_at_w10_q=hp_prev,
                     on_4096m8=cons_head_dies("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, PRODUCT_PITCH, "4096m8"),
-                    stages_w10b_tiles_only=Sp_w10b, hub_block=VMH_BLOCK,
+                    stages_w10b_tiles_only=Sp_w10b, stages_vmh_reference=Sh, hub_block=PRODUCT_HUB,
                     status=(f"{hp} dies on the model's storage-only rule at the W10b tile (need {r_new:.1%} of one "
                             f"TP-4 group; {hp_prev} at W10's 476 um pair, CONFIRMED at floorplan level by W18 "
                             f"4ed60cbb).  W18's 13.3% floorplan margin scaled by the need ratio is ~"
@@ -4350,7 +4380,7 @@ def consolidation(ec=None, lv=None):
         S_ = cons_min_stages("analytical", CONS["overhead"], "ring", PRODUCT_GEOM, pt_, bfm, "4096m8")
         q_ = cons_v41_rom(S_, 4, cons_table_dies("analytical")["dies"], 1.0, None, bfm, PRODUCT_CLOCK_HZ,
                           FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), PRODUCT_DYN_SCALE, (0.9e9, "w18"),
-                          None, 7, True, PRODUCT_SERIAL, DIE_SHRUNK_INTERIM, VMH, True)
+                          None, 7, True, PRODUCT_SERIAL, DIE_SHRUNK_INTERIM, VMC, PRODUCT_HUB)
         bf16_full_token[k] = dict(stages=S_, dies=q_["dies"], ar=q_["ar_tokens_s_b1"], mtp=q_["mtp_tokens_s_b1"],
                                   saturated=q_["ar_saturated_tokens_s"], pipeline_hops_us=q_["pipeline_hops_us"])
     prod = {}
@@ -4369,13 +4399,17 @@ def consolidation(ec=None, lv=None):
                                  (SHRINK_TAG, FIELD_CONCURRENCY, SOFTPLUS_FIX, None, 7),
                                  (STREAM_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
                                  (VMH_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
+                                 (VMH_REF_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7),
                                  (PRODUCT_TAG, FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), None, 7)):
         fin = tag == PRODUCT_TAG
-        pt = cons_v41_rom(Sp if fin else Sp_prev, hp if fin else hp_prev, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ,
+        S_, h_, vm_, blk_ = ((Sp, hp, VMC, PRODUCT_HUB) if fin else (Sh, hh, VMH, VMH_BLOCK) if tag == VMH_REF_TAG
+                             else (Sp_prev, hp_prev, VMH if "VM-H" in tag else None, None))
+        pt = cons_v41_rom(S_, h_, t_a, 1.0, None, "columns", PRODUCT_CLOCK_HZ,
                           fc, lat, PRODUCT_DYN_SCALE,
                           (0.9e9, "w18") if tag.startswith("ADOPTED") else None, cs, es, "SS wire" in tag,
                           PRODUCT_SERIAL if "MEASURED serial" in tag else None,
-                          DIE_SHRUNK_INTERIM if "shrunk-die" in tag else None, VMH if "VM-H" in tag else None, fin)
+                          DIE_SHRUNK_INTERIM if "shrunk-die" in tag else None, vm_, blk_)
+        pt["vm_option"] = (blk_ or {}).get("option") or ("H_rtl" if vm_ is VMH else None)
         pt["product_final"] = tag == PRODUCT_TAG
         pt.update(label=f"PRODUCT BASIS 4096m8 @ 1.2 GHz SS, BF16 columns: {tag}", density="analytical",
                   bf16_mode="columns", role="product", depth="4096m8", bf16_stage_reference=bf16_ref)
@@ -4536,8 +4570,8 @@ def consolidation(ec=None, lv=None):
                      product=dict(status=f"{head['dies']} dies: {head['stages']} TP-4 stages ({head['layer_dies']} layer "
                                          "dies, BF16 COLUMNS (1,024 at W10b's 1,002.89 x 142.56 um column outline) with q "
                                          "pairs at W10b's 510.84 x 126.9 um tile (floorplan sizes; routed closure "
-                                         "pending p12q4 / c5) and the measured VM-H SU+VM hub block (38.95 mm2; root "
-                                         "ruling 2026-10-01) -- USER DECISION: maximum per-user rate, die "
+                                         "pending p12q4 / c5) and W11's C_rotate SU+VM hub block (38.60 mm2; root "
+                                         "rulings 2026-10-01; measured VM-H kept as a reference row) -- USER DECISION: maximum per-user rate, die "
                                          f"count free) + {head['head_dies']} head dies (8192m8 ping-pong; see head_fit: "
                                          f"{hp_prev} at W10's tile, re-fit pending) + {head['table_dies']} Engram table dies (storage-only basis; "
                                          "ASAP7 feasibility 20).  Why the columns: on the full-token basis they give the "
@@ -4582,6 +4616,7 @@ def consolidation(ec=None, lv=None):
                                    "low (die area x yield, packages, stacks, NRE / 1,000); HBM beyond 96 dies adds "
                                    "whole TP-96 replicas"),
         karb=cons_karb_delta(Sp, clock_hz=PRODUCT_CLOCK_HZ),
+        model_caveats=MODEL_CAVEATS,
         clock_basis=dict(clock_hz=PRODUCT_CLOCK_HZ, note="USER DECISION (AGENTS.md e7479589): every design at 1.2 GHz SS "
                          "for equal footing -- V4.1 ROM product rows, the V4.1 HBM sweep and comparison rule (cycle terms "
                          "comparator is HBM-bandwidth bound, so its rate does not move with the clock",
@@ -5370,6 +5405,103 @@ def qwen_product_ss():
     return out
 
 
+# The model's own caveats: lessons where its pricing hid a cost that a measurement or a finer model exposed
+MODEL_CAVEATS = [
+    dict(id="vm_per_op_latency",
+         lesson="Per-op network latency on the latency-bound SU chain was invisible in the throughput-style VM pricing. "
+                "The VM was priced by port widths (vm_read_elems / vm_write_elems) and a few client wire stages, i.e. "
+                "as bandwidth; the SU softmax / norm / Sinkhorn chains are dependent ops, so each op pays the VM "
+                "network's full latency (control broadcast, operand read, element write or result tree).  W11's VM-H "
+                "measured that at +36.7 slow cycles a vector op and +44.9 a reduction: -14.5% AR on the full-shape "
+                "token, 82% of the 3,153 -> 2,680 drop (results/uarch/v41_vm_waterfall.json); more lanes or ports buy "
+                "nothing (issue is not the bind).  Rule: any shared network on a dependent chain is priced as "
+                "per-op latency on the chain, not as bandwidth.",
+         src="root 2026-10-01; W11 claude/w11-vmh-land 3cc18731; W16b waterfall"),
+]
+
+
+def _vm_waterfall_job(job):
+    tag, vmh, pitch, block, lanes, hub = job
+    if lanes:
+        PRESETS["proposal"] = dict(PRESETS["proposal"], su_lanes=lanes[0], sfu_lanes=lanes[1])
+    g = CONS_GEOM["w10_refit"]
+    f0 = g["field_mm2"]
+    loss = 0.0 if block is None else (block - 14.249) * 1.05
+    g["field_mm2"] = f0 - loss
+    try:
+        S = cons_min_stages("analytical", CONS["overhead"], "ring", "w10_refit", pitch, "columns", "4096m8")
+        H = cons_head_dies("analytical", CONS["overhead"], "ring", "w10_refit", pitch, "8192m8")
+    finally:
+        g["field_mm2"] = f0
+    hubd = dict(hub, block_mm2=block) if hub else None
+    p = cons_v41_rom(S, H, cons_table_dies("analytical")["dies"], 1.0, None, "columns", PRODUCT_CLOCK_HZ,
+                     FIELD_CONCURRENCY, dict(SOFTPLUS_FIX, **W11_STREAM_SS), PRODUCT_DYN_SCALE, (0.9e9, "w18"), None,
+                     7, True, PRODUCT_SERIAL, DIE_SHRUNK_INTERIM, vmh, hubd)
+    return tag, dict(stages=S, dies=p["dies"], hub_block_mm2=block, ar_tokens_s_b1=round(p["ar_tokens_s_b1"], 1),
+                     mtp_tokens_s_b1=round(p["mtp_tokens_s_b1"], 1),
+                     ar_saturated_tokens_s=round(p["ar_saturated_tokens_s"], 1), vm=vmh)
+
+
+def cons_vm_waterfall(procs=None):
+    """Root 2026-10-01: the waterfall from the pre-VM-H product (3,153 AR) to the measured VM-H product, component by
+    component, and the VM levers at the product basis (W10b tiles, the block's hub area, 0.9 GHz SU domain)."""
+    from multiprocessing import get_context
+    novm = dict(x_gather=6 * 0.9 / 1.2, ret_scatter=6 * 0.9 / 1.2, coll_write=6 * 0.9 / 1.2, su_op_extra=0.0,
+                su_red_extra=0.0, su_issue=1.0, src="VM_DIST 6/6/6 fast cycles (no VM-H)")
+    H = dict(VMH)
+    C = dict(VMC)
+    CX = dict(x_gather=18, ret_scatter=18, coll_write=18, su_op_extra=57, su_red_extra=49, su_issue=1.0,
+              src="W11 3cc18731 options.C (central full crossbar, 74.66 mm2)")
+    steps, cum = [("previous product (VM_DIST 6/6/6, ledger hub, W10 q 476 um)", None, "w10_q_1p2", None, None, None)], dict(novm)
+    names = dict(x_gather="VM-H x gather 6 -> 12 stages", ret_scatter="VM-H result scatter 6 -> 12",
+                 coll_write="VM-H collective write 6 -> 12", su_op_extra="VM-H SU op network latency +36.7 slow cycles",
+                 su_red_extra="VM-H reduction network latency +44.9", su_issue="VM-H issue x1.169")
+    for k in ("x_gather", "ret_scatter", "coll_write", "su_op_extra", "su_red_extra", "su_issue"):
+        cum = dict(cum, **{k: H[k]})
+        steps.append((names[k], dict(cum), "w10_q_1p2", None, None, None))
+    steps.append(("W10b tiles (q 510.84 um): 37 -> 39 stages", H, PRODUCT_PITCH, None, None, None))
+    steps.append(("VM-H hub block 38.95 mm2: 39 -> 41 stages (measured VM-H reference)", H, PRODUCT_PITCH,
+                  VMH_BLOCK["block_mm2"], None, VMH_BLOCK))
+    shrink = lambda f: dict(H, su_op_extra=5 + (H["su_op_extra"] - 5) * f, su_red_extra=5 + (H["su_red_extra"] - 5) * f)
+    levers = [
+        ("(a) C_rotate instead of H (PRODUCT, root ruling)", C, PRODUCT_PITCH, VMC_BLOCK["block_mm2"], None, VMC_BLOCK),
+        ("(b) SU 2,048 / SFU 512 lanes, network unchanged (optimistic; block ~63 mm2)", H, PRODUCT_PITCH,
+         VMH_BLOCK["block_mm2"] + 24.0, (2048, 512), VMH_BLOCK),
+        ("(b) SU 2,048 / SFU 512 lanes, network stages x1.41", dict(shrink(1.41), x_gather=17, ret_scatter=17,
+                                                                    coll_write=17), PRODUCT_PITCH,
+         VMH_BLOCK["block_mm2"] + 24.0, (2048, 512), VMH_BLOCK),
+        ("(c) flat VM as buildable = W11 option C (central crossbar, 74.66 mm2)", CX, PRODUCT_PITCH, 74.664, None,
+         VMH_BLOCK),
+        ("(c) flat VM with no network (NOT physical; reference)", None, PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None,
+         VMH_BLOCK),
+        ("(d) VM-H per-op network latency -25%", shrink(0.75), PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None, VMH_BLOCK),
+        ("(d) VM-H per-op network latency -50%", shrink(0.5), PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None, VMH_BLOCK),
+        ("(d) VM-H client stages 12 -> 8 only", dict(H, x_gather=8, ret_scatter=8, coll_write=8), PRODUCT_PITCH,
+         VMH_BLOCK["block_mm2"], None, VMH_BLOCK),
+        ("(d) VM-H issue x1.169 -> 1.0 only", dict(H, su_issue=1.0), PRODUCT_PITCH, VMH_BLOCK["block_mm2"], None,
+         VMH_BLOCK),
+        ("(d) compact C_rotate, 3,850 um each way (W11 sensitivity: one-way 8, op/red +21): NEXT DESIGN STEP",
+         dict(C, su_op_extra=21, su_red_extra=21), PRODUCT_PITCH, VMC_BLOCK["block_mm2"], None, VMC_BLOCK)]
+    jobs = steps + levers
+    with get_context("fork").Pool(procs or len(jobs)) as pool:
+        res = dict(pool.map(_vm_waterfall_job, jobs))
+    wf, prev = [], None
+    for j in steps:
+        r = dict(res[j[0]], step=j[0])
+        r["delta_ar"] = None if prev is None else round(r["ar_tokens_s_b1"] - prev, 1)
+        prev = r["ar_tokens_s_b1"]
+        wf.append(r)
+    ref = wf[-1]["ar_tokens_s_b1"]
+    lv = [dict(res[j[0]], lever=j[0], vs_vmh_reference_pct=round(100 * (res[j[0]]["ar_tokens_s_b1"] / ref - 1), 1))
+          for j in levers]
+    return dict(schema="opentallas.uarch.v41_vm_waterfall.v1", waterfall=wf, levers=lv,
+                total_drop_ar=round(wf[-1]["ar_tokens_s_b1"] - wf[0]["ar_tokens_s_b1"], 1),
+                ruling="ROOT 2026-10-01: (a) C_rotate is the product basis; the compact C_rotate placement (3,850 um "
+                       "each way) is the next design step with W11 and W18b; measured VM-H stays a reference row",
+                caveat=MODEL_CAVEATS[0]["lesson"],
+                source_sha256={"tools/uarch_model.py": hashlib.sha256((ROOT / "tools/uarch_model.py").read_bytes()).hexdigest()})
+
+
 def qwen_helix_scaleout(ec, ctx=200000, extra=(0, 4, 8, 16)):
     """Long-context KV scale-out (root 2026-09-30): extra HBM + attention dies hold context slices (KV split by
     position, Helix-style) with an exact ordered merge of the partial softmax; weights stay on the 4 ROM dies.  Per
@@ -5472,6 +5604,7 @@ def main(argv=None):
     ap.add_argument("--spec", action="store_true", help="speculation (MTP / DFlash) rows")
     ap.add_argument("--fabric", action="store_true", help="collective-latency sweep and GPU tiers")
     ap.add_argument("--dedicated", action="store_true", help="the dedicated-unit ledger (W11) of each preset only")
+    ap.add_argument("--vm-waterfall", action="store_true", help="the VM waterfall and levers (root 2026-10-01)")
     ap.add_argument("--economics", action="store_true", help="batch, energy and cost of every design and GPU tier")
     ap.add_argument("--levers", action="store_true", help="V4.1 static-power gating, adaptive MTP, ROM mask cost")
     ap.add_argument("--consolidation", action="store_true",
@@ -5554,13 +5687,23 @@ def main(argv=None):
                                                    sweep=rows, nccl_allreduce_s_assumed=NCCL_ALLREDUCE_S),
                                               indent=1, default=str) + "\n")
         return
+    if a.vm_waterfall:
+        w = cons_vm_waterfall()
+        for r in w["waterfall"]:
+            print(f"{r['ar_tokens_s_b1']:8.1f} {r['delta_ar'] or 0:+8.1f}  {r['stages']} / {r['dies']}  {r['step']}")
+        for r in w["levers"]:
+            print(f"{r['ar_tokens_s_b1']:8.1f} {r['vs_vmh_reference_pct']:+6.1f}%  {r['stages']} / {r['dies']}  {r['lever']}")
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(json.dumps(w, indent=1, default=str) + "\n")
+        return
     if a.dedicated:
         rows = [dedicated_ledger(copy.deepcopy(PRESETS[n]), a.ctx) for n in (a.preset or ("as_built", "proposal"))]
         # root decisions of 2026-09-29 (W11): 16 NK=4 index slices, NL=4 attention with the two-word loader;
         # single position and the MTP verify pass (6 positions, m = 1)
         w11 = dict(copy.deepcopy(PRESETS["proposal"]), idx_macs=262144, att_macs=32768, att_pwords=2,
                    su_bcast_stages=SU_BCAST_STAGES_W1, su_ret_stages=SU_RET_STAGES_W1,
-                   vmh_block=True)   # ROOT RULING 2026-10-01: the measured VM-H SU+VM block (W18b packs this row)
+                   vmh_block=PRODUCT_HUB)   # ROOT RULINGS 2026-10-01: the product's SU+VM block (W18b packs this row)
         for P in (1, 6):
             rows.append(dedicated_ledger(dict(w11, name=f"proposal_w11_p{P}"), a.ctx, positions=P))
         for r in rows:

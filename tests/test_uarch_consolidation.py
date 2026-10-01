@@ -322,25 +322,29 @@ def test_die_shrink_ruling():
 
 
 def test_w16b_followup_steps():
-    """W11 VM-H slows the SU chain; W10b's wider tiles re-fit the product to 39 stages; the K arbiter row is MERGE2 +
-    HEADREG (+2, not in the product); the Qwen rows are attributed (body and all-reduce separately)."""
+    """W11 VM-H slows the SU chain; W10b's wider tiles and the hub block re-fit the stages; the product's VM is
+    C_rotate (root 2026-10-01) with measured VM-H kept as a reference row; the K arbiter row is MERGE2 + HEADREG
+    (+2, not in the product); the Qwen rows are attributed (body and all-reduce separately)."""
     import uarch_model as U
     r = _rec()
     pts = {p["label"]: p for p in r["v41_rom"]["points"] if p.get("role") == "product"}
     stm = next(p for k, p in pts.items() if k.endswith(U.STREAM_TAG))
     vmh = next(p for k, p in pts.items() if k.endswith(U.VMH_TAG))
+    ref = next(p for k, p in pts.items() if k.endswith(U.VMH_REF_TAG))
     fin = next(p for k, p in pts.items() if k.endswith(U.PRODUCT_TAG))
-    assert vmh["vmh"] == U.VMH and stm.get("vmh") is None and fin["vmh"] == U.VMH
+    assert vmh["vmh"] == U.VMH and stm.get("vmh") is None and ref["vmh"] == U.VMH and fin["vmh"] == U.VMC
     assert vmh["ar_tokens_s_b1"] < stm["ar_tokens_s_b1"] and vmh["stages"] == stm["stages"] == 37
-    assert fin["stages"] == U.cons_min_stages("analytical", 0.125, "ring", "w10_refit_vmh", "w10b_q", "columns", "4096m8")
-    assert fin["stages"] == 41 and fin["dies"] == 4 * 41 + fin["head_dies"] + 36 and fin["hub_block"]
-    assert vmh["hub_block"] is False and fin["ar_tokens_s_b1"] < vmh["ar_tokens_s_b1"]
+    assert ref["stages"] == 41 and ref["hub_block"] == "H_rtl" and not ref["product_final"]
+    assert fin["stages"] == U.cons_min_stages("analytical", 0.125, "ring", "w10_refit_crot", "w10b_q", "columns", "4096m8")
+    assert fin["stages"] == 41 and fin["dies"] == 4 * 41 + fin["head_dies"] + 36 and fin["hub_block"] == "C_rotate"
+    assert vmh["hub_block"] is None and ref["ar_tokens_s_b1"] < fin["ar_tokens_s_b1"]       # C_rotate beats VM-H
     hf = r["v41_rom"]["product"]["head_fit"]
-    assert hf["stages_w10b_tiles_only"] == 39 < fin["stages"]          # the VM-H block costs the field 25.9 mm2
-    assert abs(U.VMH_BLOCK["field_loss_mm2"] - (38.951 - 14.249) * 1.05) < 1e-3
+    assert hf["stages_w10b_tiles_only"] == 39 < fin["stages"] and hf["stages_vmh_reference"] == ref["stages"]
+    assert abs(U.VMC_BLOCK["field_loss_mm2"] - (38.601 - 14.249) * 1.05) < 1e-3
     assert hf["dies"] == fin["head_dies"] and hf["dies_at_w10_q"] == 4 and hf["margin_storage_only_w10_q"] > 0
     assert U.CONS_PITCH["w10b_q"]["q_um"] == (510.84, 126.9)
     assert U._cons_pair_mm2("w10b_q", True) == 1002.89 * 142.56 / 1e6
+    assert any(c["id"] == "vm_per_op_latency" for c in r["model_caveats"])
     k = r["karb"]
     assert k["regions_w18b_merge2_headreg"] == [20, 16, 14, 10, 10, 14, 16, 20]
     assert k["rows"]["w18b_merge2_headreg_worst"]["tokens_s_delta_pct"] < k["rows"]["ss_0p75mm_worst"]["tokens_s_delta_pct"]
@@ -354,11 +358,33 @@ def test_w16b_followup_steps():
 
 
 def test_vmh_hub_block_in_dedicated_row():
-    """Root ruling 2026-10-01: W18b packs proposal_w11_p6, whose stream unit is now the measured VM-H SU+VM block."""
+    """Root rulings 2026-10-01: W18b packs proposal_w11_p6, whose stream unit is the product's measured SU+VM block
+    (C_rotate)."""
     import uarch_model as U
     rows = {r["design"]: r for r in json.loads((ROOT / "results/uarch/v41_dedicated_units.json").read_text())["rows"]}
     su = rows["proposal_w11_p6"]["units"]["stream_unit"]
-    assert su["area_mm2"] == U.VMH_BLOCK["block_mm2"] == 38.951 and su["area_lanes_ledger_mm2"] == 14.249
+    assert su["area_mm2"] == U.VMC_BLOCK["block_mm2"] == 38.601 and su["area_lanes_ledger_mm2"] == 14.249
+    assert su["vmh_block"]["option"] == "C_rotate"
     assert rows["proposal"]["units"]["stream_unit"]["area_mm2"] == 14.249                 # the reference row unchanged
     own = json.loads((ROOT / "results/arch/v41_stage_owner_product.json").read_text())
     assert own["stage_count"] == 41 and own["min_per_die_headroom_after_rounding_and_engram_spill_bytes"] > 0
+
+
+def test_vm_waterfall_record():
+    """Root 2026-10-01: the committed waterfall from the pre-VM-H product to measured VM-H, and the levers."""
+    import uarch_model as U
+    w = json.loads((ROOT / "results/uarch/v41_vm_waterfall.json").read_text())
+    r = _rec()
+    pts = {p["label"]: p for p in r["v41_rom"]["points"] if p.get("role") == "product"}
+    stm = next(p for k, p in pts.items() if k.endswith(U.STREAM_TAG))
+    ref = next(p for k, p in pts.items() if k.endswith(U.VMH_REF_TAG))
+    fin = next(p for k, p in pts.items() if p.get("product_final"))
+    wf = w["waterfall"]
+    assert abs(wf[0]["ar_tokens_s_b1"] - stm["ar_tokens_s_b1"]) < 0.5
+    assert abs(wf[-1]["ar_tokens_s_b1"] - ref["ar_tokens_s_b1"]) < 0.5
+    assert abs(sum(x["delta_ar"] for x in wf[1:]) - w["total_drop_ar"]) < 0.5
+    big = min(wf[1:], key=lambda x: x["delta_ar"])
+    assert "SU op network latency" in big["step"]                                  # the dominant term
+    lv = {x["lever"]: x for x in w["levers"]}
+    ca = next(x for k, x in lv.items() if k.startswith("(a) C_rotate"))
+    assert abs(ca["ar_tokens_s_b1"] - fin["ar_tokens_s_b1"]) < 0.5 and ca["vs_vmh_reference_pct"] > 0
