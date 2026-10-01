@@ -145,7 +145,10 @@ module ot_hdc_core_v41x #(
     parameter integer CR_RD = 8,
     parameter integer CR_GX = 1,
     parameter integer CR_WR = 8,
-    parameter integer CR_RES = 8
+    parameter integer CR_RES = 8,
+    // the stream unit's multiplier / FP add latency (ot_hdc_v41x_vec MLAT / ALAT; the W11 serial build is 5 / 4)
+    parameter integer SU_MLAT = 3,
+    parameter integer SU_ALAT = 3
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -1079,7 +1082,8 @@ module ot_hdc_core_v41x #(
                                .RES_STAGES(VM_CROT ? CR_RES : VM_DIST ? SU_RES_STAGES : SURET),
                                .VMD_NG((VM_DIST != 0 && VM_DIST_H != 0 && VM_CROT == 0) ? SUN / 8 : 0), .ROT_STAGES(SU_ROT_STAGES),
                                .GATH_STAGES(SU_GATH_STAGES), .SCAL_STAGES(SU_SCAL_STAGES),
-                               .RD_LEAD(VM_CROT ? CR_LEAD : -1), .CROT_GX(VM_CROT ? CR_GX : 0))
+                               .RD_LEAD(VM_CROT ? CR_LEAD : -1), .CROT_GX(VM_CROT ? CR_GX : 0),
+                               .MLAT(SU_MLAT), .ALAT(SU_ALAT))
             u_su (
             .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
             .i_nout(su_nout), .i_nin(su_nin), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src),

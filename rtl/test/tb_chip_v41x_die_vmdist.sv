@@ -45,7 +45,9 @@ module tb_chip_v41x_die_vmdist #(
     parameter integer CR_RD = 8,
     parameter integer CR_GX = 1,
     parameter integer CR_WR = 8,
-    parameter integer CR_RES = 8
+    parameter integer CR_RES = 8,
+    parameter integer SU_MLAT = 3,
+    parameter integer SU_ALAT = 3
 ) (input wire clk);
     localparam integer W = 16, VOCAB = 4040, KV_WORDS = 32768, VM_ELEMS = 65536;
     localparam integer IKH_WORDS = 1 << 18, HMEM = 1 << 20, QROM_WORDS = 1 << 16;
@@ -73,7 +75,7 @@ module tb_chip_v41x_die_vmdist #(
                        .COLL_WRITE_STAGES(COLL_WRITE_STAGES), .SUBCAST(SUBCAST), .SURET(SURET),
                        .SU_EWR_STAGES(SU_EWR_STAGES), .VM_DIST_H(VM_DIST_H), .SU_ROT_STAGES(SU_ROT_STAGES),
                        .SU_GATH_STAGES(SU_GATH_STAGES), .SU_SCAL_STAGES(SU_SCAL_STAGES), .VM_CROT(VM_CROT),
-                       .CR_LEAD(CR_LEAD), .CR_RD(CR_RD), .CR_GX(CR_GX), .CR_WR(CR_WR), .CR_RES(CR_RES)) dut (
+                       .CR_LEAD(CR_LEAD), .CR_RD(CR_RD), .CR_GX(CR_GX), .CR_WR(CR_WR), .CR_RES(CR_RES), .SU_MLAT(SU_MLAT), .SU_ALAT(SU_ALAT)) dut (
         .clk(clk), .rst_n(rst_n),
         .host_mode(1'b1), .host_start(start), .host_token(token), .host_pos(pos), .host_entry(14'd0),
         .host_prime_v(prime_v), .host_prime_first(prime_first), .host_prime_cid(prime_cid),

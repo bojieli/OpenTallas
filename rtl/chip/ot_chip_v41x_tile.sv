@@ -119,7 +119,9 @@ module ot_chip_v41x_tile #(
     parameter integer CR_RD = 8,
     parameter integer CR_GX = 1,
     parameter integer CR_WR = 8,
-    parameter integer CR_RES = 8
+    parameter integer CR_RES = 8,
+    parameter integer SU_MLAT = 3,
+    parameter integer SU_ALAT = 3
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -397,7 +399,7 @@ module ot_chip_v41x_tile #(
                        .SUBCAST(SUBCAST), .SURET(SURET), .SU_EWR_STAGES(SU_EWR_STAGES), .VM_DIST_H(VM_DIST_H),
                        .SU_ROT_STAGES(SU_ROT_STAGES), .SU_GATH_STAGES(SU_GATH_STAGES), .SU_SCAL_STAGES(SU_SCAL_STAGES),
                        .VM_CROT(VM_CROT), .CR_LEAD(CR_LEAD), .CR_RD(CR_RD), .CR_GX(CR_GX), .CR_WR(CR_WR),
-                       .CR_RES(CR_RES)) u_core (
+                       .CR_RES(CR_RES), .SU_MLAT(SU_MLAT), .SU_ALAT(SU_ALAT)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .done(done), .acc_n(acc_n), .acc_tok(), .next_token(next_token), .next_val(next_val), .cycles(cycles),
         .fault(core_fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),

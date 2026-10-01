@@ -128,6 +128,8 @@ module ot_chip_v41x_die #(
     parameter integer CR_GX = 1,
     parameter integer CR_WR = 8,
     parameter integer CR_RES = 8,
+    parameter integer SU_MLAT = 3,
+    parameter integer SU_ALAT = 3,
     parameter integer LWIN    = 10,
     parameter integer LAW     = 12,
     parameter integer NPC_W   = 8,
@@ -483,7 +485,7 @@ module ot_chip_v41x_die #(
                         .SUBCAST(SUBCAST), .SURET(SURET), .SU_EWR_STAGES(SU_EWR_STAGES), .VM_DIST_H(VM_DIST_H),
                         .SU_ROT_STAGES(SU_ROT_STAGES), .SU_GATH_STAGES(SU_GATH_STAGES), .SU_SCAL_STAGES(SU_SCAL_STAGES),
                         .VM_CROT(VM_CROT), .CR_LEAD(CR_LEAD), .CR_RD(CR_RD), .CR_GX(CR_GX), .CR_WR(CR_WR),
-                        .CR_RES(CR_RES)) u_tile (
+                        .CR_RES(CR_RES), .SU_MLAT(SU_MLAT), .SU_ALAT(SU_ALAT)) u_tile (
         .clk(clk), .rst_n(rn),
         .start(t_start), .token(t_token), .pos(t_pos), .entry(host_mode ? host_entry : 14'd0),
         .done(core_done), .next_token(core_next_token), .next_val(core_next_val), .cycles(core_cycles),

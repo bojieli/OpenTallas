@@ -38,16 +38,20 @@ ds, core = G.ds, G.core
 OUT = ROOT / "results/rtl/w11_vm_dist_gate_die.json"
 
 
-def build(obj: Path, vd: int, st: dict, jobs: int) -> tuple[Path, dict]:
+def build(obj: Path, vd: int, st: dict, jobs: int, extra=()) -> tuple[Path, dict]:
+    """extra: -G flags for every variant (e.g. the stream unit's serial build, -GSU_MLAT=5 -GSU_ALAT=4)."""
     obj.mkdir(parents=True, exist_ok=True)
     exe = obj / "Vtb_chip_v41x_die_vmdist"
     flags = [f"-GVM_DIST={vd}", *[f"-G{k}={v}" for k, v in st.items()]]
     if not vd:
         flags = ["-GVM_DIST=0"]
+    flags += list(extra)
     srcs = G.die_sources() + [G.TB_DIE, G.HARNESS_DIE, core.SVH, core.VLT]
     if G.reusable(obj, exe, flags + ["-O0"], srcs):
         return exe, dict(reused=True)
-    cmd = ["/usr/bin/time", "-v", ds.VERILATOR, "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH",
+    # /usr/bin/time -v reports the build's peak RSS; a host without it (the remote job image) builds without
+    timer = ["/usr/bin/time", "-v"] if Path("/usr/bin/time").exists() else []
+    cmd = [*timer, ds.VERILATOR, "--cc", "--exe", "--build", "-O1", "-Wno-fatal", "-Wno-WIDTH",
            "-Wno-UNUSED", "-Wno-BLKSEQ", "-Wno-IMPORTSTAR", "-Wno-MODDUP", "-Wno-TIMESCALEMOD", "-Wno-VARHIDDEN",
            "-Wno-UNOPTFLAT", "-Wno-MULTIDRIVEN", "--top-module", "tb_chip_v41x_die_vmdist", "-DOT_VM_DIST", *flags,
            "-Mdir", str(obj), f"-I{core.SVH.parent}", str(core.VLT), *map(str, G.die_sources()), str(G.TB_DIE),
