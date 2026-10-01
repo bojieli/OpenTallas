@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.qwen-rom-w12.wire-budget.v1",
+ "reach_um_per_stage": 504.0,
+ "reach_basis": "W15 SS segment sweep at 0.833 ns (results/rtl/w15_collectives.json physical.wire_reach)",
+ "floorplan": "results/floorplan/qwen_rom_w12/floorplan_tp4_g6144_ss504_estimate.json",
+ "floorplan_sha256": "9aa07f0c3e7ceeafecb666485c72404fa4494b140e0d25b637fd3f3d777c06e7",
+ "tile_um": [
+  518.4,
+  386.64
+ ],
+ "connections": [
+  {
+   "name": "instruction broadcast + x network: spine -> farthest tile",
+   "distance_um": 20518.2,
+   "stages": 41,
+   "bits": 65916,
+   "um_per_stage": 500.4,
+   "within_reach": true,
+   "rtl_param": "BD (includes the tile input register and XVM = 1)"
+  },
+  {
+   "name": "split-tree level 3: child -> node host",
+   "distance_um": 970.9,
+   "stages": 2,
+   "bits": 786432,
+   "um_per_stage": 485.4,
+   "within_reach": true,
+   "rtl_param": "NWS (uniform: the max over levels)"
+  },
+  {
+   "name": "split-tree level 4: child -> node host",
+   "distance_um": 1357.6,
+   "stages": 3,
+   "bits": 393216,
+   "um_per_stage": 452.5,
+   "within_reach": true,
+   "rtl_param": "NWS (uniform: the max over levels)"
+  },
+  {
+   "name": "split-tree level 5: child -> node host",
+   "distance_um": 1936.0,
+   "stages": 4,
+   "bits": 196608,
+   "um_per_stage": 484.0,
+   "within_reach": true,
+   "rtl_param": "NWS (uniform: the max over levels)"
+  },
+  {
+   "name": "split-tree level 6: child -> node host",
+   "distance_um": 2322.6,
+   "stages": 5,
+   "bits": 98304,
+   "um_per_stage": 464.5,
+   "within_reach": true,
+   "rtl_param": "NWS (uniform: the max over levels)"
+  },
+  {
+   "name": "split-tree level 7: child -> node host",
+   "distance_um": 1225.8,
+   "stages": 3,
+   "bits": 49152,
+   "um_per_stage": 408.6,
+   "within_reach": true,
+   "rtl_param": "NWS (uniform: the max over levels)"
+  },
+  {
+   "name": "split-tree level 7 words -> spine top",
+   "distance_um": 18971.6,
+   "stages": 38,
+   "bits": 24576,
+   "um_per_stage": 499.3,
+   "within_reach": true,
+   "rtl_param": "TWS"
+  },
+  {
+   "name": "result write: port groups -> VM",
+   "distance_um": 3037.2,
+   "stages": 7,
+   "bits": 24576,
+   "um_per_stage": 433.9,
+   "within_reach": true,
+   "rtl_param": "ORD"
+  },
+  {
+   "name": "TP exchange: spine -> UCIe PHY (one way)",
+   "distance_um": 14347.0,
+   "stages": 29,
+   "bits": 512,
+   "um_per_stage": 494.7,
+   "within_reach": true,
+   "rtl_param": "not in the RTL (ot_rom_oneshot_allreduce LAT 11 is the link hop); priced per crossing"
+  }
+ ],
+ "all_within_reach": true,
+ "not_covered": [
+  "the in-tile pin-to-first-register and last-register-to-pin segments of each tile port (untimed by the tile route's --false-path-io): jobs/tile_corners.sh reports them unconstrained at SS (corner_ss_in2reg.rpt, corner_ss_reg2out.rpt); each must fit the budget a corridor stage leaves for its last / first hop",
+  "the KV fill network (service bands -> tiles, kvw_*): not yet a floorplan connection",
+  "corridor stage distances are Manhattan estimates from macro placement, not a routed die"
+ ],
+ "tool_sha256": "0d911209509fe06658ad17426b0e0d29bc3231d010aef528056d5e191fa6d566"
+}

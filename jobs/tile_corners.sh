@@ -28,6 +28,11 @@ puts "OTC reg2reg_setup_wns [sta::worst_slack_cmd max]"
 report_checks -path_delay max -digits 1 -fields {slew cap fanout} > /work/corner_${c}_max.rpt
 report_checks -path_delay min -digits 1 > /work/corner_${c}_min.rpt
 report_checks -path_delay max -group_path_count 2000 -endpoint_path_count 1 -format end > /work/corner_${c}_ends.rpt
+# --false-path-io routes: the in-tile segments (input pin -> first register, last register -> output pin) are
+# the ends of the corridor wire stages; report them unconstrained so the stage budget can be checked
+report_checks -unconstrained -from [all_inputs] -path_delay max -group_path_count 5000 -endpoint_path_count 1 -format end > /work/corner_${c}_in2reg.rpt
+report_checks -unconstrained -to [all_outputs] -path_delay max -group_path_count 5000 -endpoint_path_count 1 -format end > /work/corner_${c}_reg2out.rpt
+report_checks -unconstrained -from [all_inputs] -path_delay max -digits 1 > /work/corner_${c}_in2reg_worst.rpt
 TCL
   docker run --rm -u $(id -u):$(id -g) -v $(pwd):/src:ro -v $K/orfs:/work openroad/orfs:latest bash -lc \
     "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash -threads 8 /work/corner_$c.tcl" > $K/corner_$c.log 2>&1

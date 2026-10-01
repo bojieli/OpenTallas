@@ -15,7 +15,7 @@ N=opentallas_ot_qwen_rom_tile_asap7_w12_tile_$TAG
 if [ -f $KEEP/orfs/results/asap7/$N/base/6_final.odb ]; then
   bash jobs/tile_corners.sh $KEEP $N > $OUT/corners.log 2>&1
   mkdir -p $OUT/corners
-  cp $KEEP/corner_ss.log $KEEP/corner_ff.log $KEEP/orfs/corner_*_max.rpt $KEEP/orfs/corner_*_min.rpt $KEEP/orfs/corner_ss_ends.rpt $OUT/corners/ 2>/dev/null
+  cp $KEEP/corner_ss.log $KEEP/corner_ff.log $KEEP/orfs/corner_*_max.rpt $KEEP/orfs/corner_*_min.rpt $KEEP/orfs/corner_ss_ends.rpt $KEEP/orfs/corner_ss_in2reg*.rpt $KEEP/orfs/corner_ss_reg2out.rpt $OUT/corners/ 2>/dev/null
   for r in 6_finish.rpt 6_report.json; do cp $KEEP/orfs/reports/asap7/$N/base/$r $OUT/corners/ 2>/dev/null; done
   cp $KEEP/orfs/logs/asap7/$N/base/6_report.json $OUT/corners/ 2>/dev/null
 fi
