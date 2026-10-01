@@ -6,6 +6,8 @@ Goal: full-shape bit-exact ROM/HBM results for Qwen3-8B and DeepSeek-V4.1-Flash 
 
 Statuses: `[x]` complete at the stated scope; `[~]` active; `[!]` measured blocker; `[ ]` queued. Component results are not full-token rates.
 
+- [x] **Independent narrow correction review:** boundedparent410fe3a07 integrated for1360 CROM selectors andd934/dc615 Qwen context lifetime. Four selector tests/ten callback tests PASS, both regenerated payloads equal; independent272-sector early-release probe now rejects while mandatory read still acquires. Old785cdf/084 failures preserved. Reversewire/provider/fullcost/physical qualification remains open.
+
 - [x] **Bounded Qwen lifetime correction and Engram mapping review:** ownerd93488856/dc615ec47 integrated; ten focused callback tests PASS and fresh r2 model payload identical. Mandatory encoded KV_READ acquisition/completion plus SCORES/PV visibility/retirement now precede writer-context release; duplicate release rejects. Original084 earlyrelease failure and r1 retained. Supplied-callback model only; actual controller, clocks and fullstate/port/latency cost join remain unbound. Boundedparent9e75557a1 Engram mapping review integrated: all1500067 macro inverse coverage/96homes and candidate/inventory byteexact verified, physical/clock/delivery gates false.
 - [!] **CROM return path omission:** Ram source audit reportsbc1/1360 credit calendar prices reverse CDC but omits reverse75-wire travel. Retained397.38/990.37/1619.56us candidate partials therefore do not represent even a complete conditional roundtrip. Actual forward/reverse home topology, finite receiver/returnservice and whole deadline/cost join required; existing W10 reviewer assigned source-bound correction with Ram. No rate or hardware credit.
 
