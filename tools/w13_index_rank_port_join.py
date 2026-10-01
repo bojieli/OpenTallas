@@ -36,10 +36,21 @@ def build():
         rowsum+=n;tilesum+=full+bool(tail);fullsum+=full;bytesum+=b;issuesum+=commands
       ops.append({'pc':o['pc'],'layer':o['layer'],'authoritative_dependencies':o['dependencies'],'ranks':rank})
     assert len(ops)==8
+    rank_floors=[]
+    for rank_id in range(96):
+      fulltiles=sum(o['ranks'][rank_id]['full64tiles'] for o in ops)
+      issues=fulltiles*work(64)['source_shaped_shared_issues']
+      cycles=(issues+31)//32
+      rank_floors.append({'logical_rank':rank_id,'full64tiles':fulltiles,
+        'fulltile_shared_issues':issues,'ideal32SM_aggregate_pool_cycles':cycles,
+        'candidate_0p9GHz_microseconds':cycles/900,
+        'historical_budget_microseconds':442,
+        'budget_verdict':'FAIL_CURRENT_LOWERING_BUDGET' if cycles>442*900 else 'UNQUALIFIED',
+        'scope':'full tiles only; pool total work before rounding; rank-to-die placement unbound'})
     control_pins=[]
     for rev,path in [('c01fc4b72','tools/engram_clock_boundary_capture.py'),('5b8c456a3','tools/engram_sync_branch_drain_inventory.py')]:
       raw=subprocess.check_output(['git','show',rev+':'+path]);control_pins.append({'git':rev,'path':path,'sha256':hashlib.sha256(raw).hexdigest()})
-    return {'schema':'w13.index-rank-port-join.v1','source_pins':[
+    return {'schema':'w13.index-rank-port-join.v2','source_pins':[
       {'git':'1c37cdaa9','path':G,'sha256':hashlib.sha256(gb).hexdigest()},
       {'git':'922a6b673','path':C,'sha256':hashlib.sha256(cb).hexdigest()},
       {'git':'e416630f0','path':'tools/deepseek_hbm_complete_index_blas_model.py','sha256':hashlib.sha256(modelblob).hexdigest()}],
@@ -47,6 +58,9 @@ def build():
       'aggregate_tiles_across_source_ranks':tilesum,'aggregate_full64tiles':fullsum,
       'aggregate_tailtiles':tilesum-fullsum,'source_shaped_shared_bytes_across_ranks':bytesum,
       'source_shaped_shared_issues_across_ranks':issuesum,
+      'per_rank_aggregate_pool_lower_floors':rank_floors,
+      'historical_442us_budget_verdict':'FAIL_CURRENT_LOWERING_BUDGET',
+      'lower_floor_exclusions':['tails','finite result STORE bridge','replication/refill/padding','other graph operations','bank conflicts','dependencies','provider/ACK/CDC service'],
       'model_port_contract':{'SMs_per_candidate_die':32,'lanes_per_SM':128,'resident_warps_per_SM':32,
         'RF_32bit_read_ports_per_lane':2,'RF_logical_write_ports_per_lane':1,'RF_read_bits_per_serial_cycle_per_SM':8192,
         'RF_write_bits_per_serial_cycle_per_SM':4096,'physical_RF_readcopy_writes':2,
