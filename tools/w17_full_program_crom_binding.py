@@ -57,8 +57,25 @@ def validate_encoded(words, bindings):
   axis=binding['operand']
   if op['unit']!=F.I.UNIT_SU or op[axis+'_base']!=binding['actual_address']:
    raise ValueError('encoded CROM operand differs from authoritative semantic binding')
-  if binding['kind']=='checkpoint_CROM' and not binding['tensor_base']<=op[axis+'_base']<binding['tensor_end']:
-   raise ValueError('encoded CROM extent outside tensor')
+  if binding['kind']=='checkpoint_CROM':
+   # These immutable checkpoint operands are direct, static low-FP32 reads.
+   # Held RoPE-cache operands have a separate provider and are not qualified here.
+   if op[axis+'_src']!=F.I.SRC_CLO:
+    raise ValueError('encoded CROM source class differs from checkpoint binding')
+   flags=[axis+'_d','su_d_nout','su_d_nin']
+   if axis=='a':flags+=['a_ind']
+   if axis=='b':flags+=['b_half']
+   flags+=['c_pair']
+   if any(op.get(k,0)!=0 for k in flags):
+    raise ValueError('dynamic or paired addressing on static checkpoint CROM operand')
+   no,ni=op['su_nout'],op['su_nin']
+   if no<1 or ni<1:raise ValueError('invalid static CROM iteration extent')
+   extent=(no-1)*op[axis+'_so']+(ni-1)*op[axis+'_si']+1
+   if extent!=binding['extent_words']:
+    raise ValueError('decoded CROM extent differs from authoritative binding')
+   base=op[axis+'_base']
+   if not binding['tensor_base']<=base or base+extent>binding['tensor_end']:
+    raise ValueError('encoded CROM extent outside tensor')
  return True
 
 def build():

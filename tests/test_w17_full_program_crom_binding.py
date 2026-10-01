@@ -21,14 +21,20 @@ def test_all_encoded_operands_match_actual_manifest(record,rank):
  assert r['bound_checkpoint_operands']==729
  assert [x['layer'] for x in r['unbound_generated_operands']]==[1,14]
  assert record['non_CROM_encoded_bits_unchanged'] and not record['full_program_executable']
-@pytest.mark.parametrize('fault',['address','unit','extent'])
+@pytest.mark.parametrize('fault',['address','unit','extent','stride','source','dynamic','outer_stride','dynamic_inner','paired'])
 def test_encoded_mutants_rejected(record,fault):
  r=record['ranks'][0];data=gzip.decompress(RECEIPT.with_name(RECEIPT.stem+'.rank0.templates.bin.gz').read_bytes())
  words=[int.from_bytes(data[i:i+256],'little') for i in range(0,len(data),256)]
- binding=copy.deepcopy(next(x for x in r['stages'][0]['bindings'] if x['kind']=='checkpoint_CROM'))
+ binding=copy.deepcopy(next(x for x in r['stages'][0]['bindings'] if x.get('tensor')=='layers.0.attn_norm.weight'))
  i=binding['instruction'];decoded=B.F.I.decode(words[i],full_shape=True)
  if fault=='address':decoded[binding['operand']+'_base']+=1
  elif fault=='unit':decoded['unit']=B.F.I.UNIT_ME
+ elif fault=='stride':decoded[binding['operand']+'_si']=127
+ elif fault=='source':decoded[binding['operand']+'_src']=B.F.I.SRC_VM
+ elif fault=='dynamic':decoded[binding['operand']+'_d']=1
+ elif fault=='outer_stride':decoded['su_nout']=2;decoded[binding['operand']+'_so']=127
+ elif fault=='dynamic_inner':decoded['su_d_nin']=1
+ elif fault=='paired':decoded['c_pair']=1
  else:binding['tensor_end']=binding['actual_address']
  words[i]=B.F.I.encode(full_shape=True,**decoded)
  with pytest.raises(ValueError):B.validate_encoded(words,[binding])
