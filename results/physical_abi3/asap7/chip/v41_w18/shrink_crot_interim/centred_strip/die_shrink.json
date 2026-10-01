@@ -1,0 +1,282 @@
+{
+ "schema": "opentallas.v41.w18_die_shrink.v1",
+ "ruling": "root 2026-09-30: shrink the layer die to the pair need + ~10% (q pairs and BF16 columns); keep the HBM PHY edge constraint (4 stacks on 8.5 mm edges) as the lower bound",
+ "need": {
+  "pairs": 4773,
+  "bf16_pairs": 1024,
+  "margin": 0.1
+ },
+ "chosen": {
+  "s": 0.9719,
+  "ok": true,
+  "die_um": [
+   30906.144,
+   24906.96
+  ],
+  "die_mm2": 769.7781,
+  "legal": true,
+  "overlaps": 0,
+  "errors": [],
+  "slots": 5412,
+  "short_by_kind": {
+   "q": 0,
+   "bf16": 0
+  },
+  "bf16_slots": 1241,
+  "need": 5251,
+  "bf16_need": 1127,
+  "vm_to_farthest_cluster": {
+   "L_um": 25047.6,
+   "cycles": 23,
+   "cluster": "cl_c0_b9_y21323",
+   "model_cycles": 16
+  },
+  "pack": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/pack_0.9719.json",
+  "floorplan": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/floorplan_0.9719.json"
+ },
+ "base_die_um": [
+  31799.952,
+  25628.4
+ ],
+ "area_ratio": 0.9445,
+ "trials": [
+  {
+   "s": 0.8,
+   "ok": false,
+   "die_um": [
+    25439.616,
+    20502.72
+   ],
+   "die_mm2": 521.5813,
+   "legal": true,
+   "overlaps": 0,
+   "errors": [],
+   "slots": 2215,
+   "short_by_kind": {
+    "q": 3124,
+    "bf16": 0
+   },
+   "bf16_slots": 1215,
+   "need": 5251,
+   "bf16_need": 1127,
+   "vm_to_farthest_cluster": {
+    "L_um": 19025.1,
+    "cycles": 18,
+    "cluster": "cl_c27_b0_y1436",
+    "model_cycles": 16
+   },
+   "pack": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/pack_0.8000.json",
+   "floorplan": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/floorplan_0.8000.json"
+  },
+  {
+   "s": 0.9,
+   "ok": false,
+   "die_um": [
+    28619.568,
+    23064.48
+   ],
+   "die_mm2": 660.0955,
+   "legal": true,
+   "overlaps": 0,
+   "errors": [],
+   "slots": 4217,
+   "short_by_kind": {
+    "q": 1064,
+    "bf16": 0
+   },
+   "bf16_slots": 1157,
+   "need": 5251,
+   "bf16_need": 1127,
+   "vm_to_farthest_cluster": {
+    "L_um": 23190.6,
+    "cycles": 21,
+    "cluster": "cl_c0_b0_y1436",
+    "model_cycles": 16
+   },
+   "pack": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/pack_0.9000.json",
+   "floorplan": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/floorplan_0.9000.json"
+  },
+  {
+   "s": 0.95,
+   "ok": false,
+   "die_um": [
+    30209.76,
+    24345.36
+   ],
+   "die_mm2": 735.4675,
+   "legal": true,
+   "overlaps": 0,
+   "errors": [],
+   "slots": 4852,
+   "short_by_kind": {
+    "q": 556,
+    "bf16": 0
+   },
+   "bf16_slots": 1284,
+   "need": 5251,
+   "bf16_need": 1127,
+   "vm_to_farthest_cluster": {
+    "L_um": 24596.8,
+    "cycles": 22,
+    "cluster": "cl_c0_b0_y1436",
+    "model_cycles": 16
+   },
+   "pack": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/pack_0.9500.json",
+   "floorplan": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/floorplan_0.9500.json"
+  },
+  {
+   "s": 0.9625,
+   "ok": false,
+   "die_um": [
+    30607.2,
+    24667.2
+   ],
+   "die_mm2": 754.9939,
+   "legal": true,
+   "overlaps": 0,
+   "errors": [],
+   "slots": 5000,
+   "short_by_kind": {
+    "q": 348,
+    "bf16": 0
+   },
+   "bf16_slots": 1224,
+   "need": 5251,
+   "bf16_need": 1127,
+   "vm_to_farthest_cluster": {
+    "L_um": 24758.8,
+    "cycles": 23,
+    "cluster": "cl_c0_b0_y1436",
+    "model_cycles": 16
+   },
+   "pack": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/pack_0.9625.json",
+   "floorplan": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/floorplan_0.9625.json"
+  },
+  {
+   "s": 0.9688,
+   "ok": false,
+   "die_um": [
+    30807.648,
+    24827.04
+   ],
+   "die_mm2": 764.8627,
+   "legal": true,
+   "overlaps": 0,
+   "errors": [],
+   "slots": 5343,
+   "short_by_kind": {
+    "q": 22,
+    "bf16": 0
+   },
+   "bf16_slots": 1241,
+   "need": 5251,
+   "bf16_need": 1127,
+   "vm_to_farthest_cluster": {
+    "L_um": 25111.5,
+    "cycles": 23,
+    "cluster": "cl_c0_b0_y1436",
+    "model_cycles": 16
+   },
+   "pack": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/pack_0.9688.json",
+   "floorplan": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/floorplan_0.9688.json"
+  },
+  {
+   "s": 0.9719,
+   "ok": true,
+   "die_um": [
+    30906.144,
+    24906.96
+   ],
+   "die_mm2": 769.7781,
+   "legal": true,
+   "overlaps": 0,
+   "errors": [],
+   "slots": 5412,
+   "short_by_kind": {
+    "q": 0,
+    "bf16": 0
+   },
+   "bf16_slots": 1241,
+   "need": 5251,
+   "bf16_need": 1127,
+   "vm_to_farthest_cluster": {
+    "L_um": 25047.6,
+    "cycles": 23,
+    "cluster": "cl_c0_b9_y21323",
+    "model_cycles": 16
+   },
+   "pack": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/pack_0.9719.json",
+   "floorplan": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/floorplan_0.9719.json"
+  },
+  {
+   "s": 0.975,
+   "ok": true,
+   "die_um": [
+    31004.64,
+    24986.88
+   ],
+   "die_mm2": 774.7092,
+   "legal": true,
+   "overlaps": 0,
+   "errors": [],
+   "slots": 5454,
+   "short_by_kind": {
+    "q": 0,
+    "bf16": 0
+   },
+   "bf16_slots": 1252,
+   "need": 5251,
+   "bf16_need": 1127,
+   "vm_to_farthest_cluster": {
+    "L_um": 24671.5,
+    "cycles": 23,
+    "cluster": "cl_c1_b0_y1436",
+    "model_cycles": 16
+   },
+   "pack": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/pack_0.9750.json",
+   "floorplan": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/floorplan_0.9750.json"
+  },
+  {
+   "s": 1.0,
+   "ok": true,
+   "die_um": [
+    31799.952,
+    25628.4
+   ],
+   "die_mm2": 814.9819,
+   "legal": true,
+   "overlaps": 0,
+   "errors": [],
+   "slots": 5966,
+   "short_by_kind": {
+    "q": 0,
+    "bf16": 0
+   },
+   "bf16_slots": 1148,
+   "need": 5251,
+   "bf16_need": 1127,
+   "vm_to_farthest_cluster": {
+    "L_um": 24255.5,
+    "cycles": 22,
+    "cluster": "cl_c2_b9_y21323",
+    "model_cycles": 16
+   },
+   "pack": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/pack_1.0000.json",
+   "floorplan": "/home/ubuntu/w18work/rebase_crot_c/out/qbf/shrink/floorplan_1.0000.json"
+  }
+ ],
+ "inputs": {
+  "pair_lef": "/home/ubuntu/w18work/rebase_crot_c/out/q.lef",
+  "pair_lef_sha256": "557540078c7477ca1d2d42311734d5035fa2bcab468bfcbb6924c2139e2c65bb",
+  "bf16_lef": "/home/ubuntu/w18work/rebase_crot_c/out/bf16.lef",
+  "bf16_lef_sha256": "63b7482473b297bbce58786f22c9c2a3702a58f8fb2d0d06bd982decc5f55c37",
+  "hub": "/home/ubuntu/w18work/rebase_crot_c/out/v41_dedicated_units.json",
+  "hub_sha256": "0d2214b49b7c87795b3c2549c51b5994909a89077e57a397982679869c4bd00e",
+  "vm_in_su": false,
+  "c_rotate_strip_mm2": 14.69,
+  "c_rotate_centre": false,
+  "tool_sha256": "427850b543dbae9e82db1fdf08a08dd7165d4cc49b3c1b2a89548ca5d900b567",
+  "pack_sha256": "3b8b1d8fc5a9622a1b849ee3005e6533b369e49d217aad90ad1fe05c4a16d913",
+  "floorplan_tool_sha256": "47e8865c534f8161faebc56394f0d769168d572120ae09af5a8c03b0c7ac3ba4"
+ }
+}

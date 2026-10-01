@@ -87,6 +87,18 @@
   "centre_variant/die_shrink.json": "e6b9e851013de140d71447e27d243e3b244d0319005f0fcbfd335338372af371",
   "centre_variant/floorplan.json": "b7ea27022f2989f4fd857f9e7bc974b6419c10d99180c6be7e74d8cf566280a9",
   "centre_variant/hub_distances.json": "e353affe0798a4a71b473bc1a7e56accda8cf9a68aeeac5b68717801ff4c6ba4",
+  "centred_strip/die_route_full.json": "7d257527e39d03cda937127a09367c9a1139149ed3e1b1a7efc162a0e43b3bb0",
+  "centred_strip/die_route_split_rest.json": "2abdda603d1cd85b073465dcedc57fced62c23aaec0925a6388a8cf032a69dfe",
+  "centred_strip/die_route_split_trunk.json": "0fcfb2da950517ffed41d262af9e30d89ae3fa8cc3f74d38cd48aa16c16551b9",
+  "centred_strip/die_route_vm_strip_m7_negative.json": "450b4ac22fc2b5088b83406a4e3277d9abcfda18a39a011d856cdce0020aacea",
+  "centred_strip/die_shrink.json": "46a16e42aa0d946b81d794b67cf52e82eae5f96718d2c13068f938f21fd44daa",
+  "centred_strip/floorplan.json": "3605f78eb3c1aa111053c7d3213d1652a3eacf9c1dc64fb86c0165c3c327022f",
+  "centred_strip/hub_distances.json": "d9ee228640f88b157eba5c976001fab5f9bb5ea5102c753c38732aa8ae9b7ceb",
+  "centred_strip/ir_cap50_vdd2.json": "1a47545b584eecc77a90b0c07182e4dc345221ce467e71abc26961456c9e91b5",
+  "centred_strip/ir_peak.json": "aaa478353989a7ebe8f177d3bd370dfa661eead1d9010fb2b145f0e5d0b900d1",
+  "centred_strip/ir_sat.json": "efeb8e5037e184930d2047b712c6fd493ee42954b2e2883035e1b9c0e608ad20",
+  "centred_strip/pack.json": "f625387c3b80bc4818981a48daa411a51c79d4287b7a84497dd316ef7b554822",
+  "centred_strip/slots.json": "5bd399ba9a18e874885f23cd4c227e893c27bfbb452af85da1ae63f176810f1f",
   "cluster16_psm.json": "717ee15e81d3662dc96f1dfeb461d8f69891a9f513deae52181ab2f87adae859",
   "die_route_full.json": "13e3746e6ce98f3a30d2c05653cfa1d2963c7f69da2a15807ef636e06fc3df63",
   "die_route_split_rest.json": "f347696212d1816f043df35832fa570506a4d6042da53623638896b07b3ab679",
@@ -99,5 +111,61 @@
   "ir_sat.json": "d590a74c715eb7e5f259fff449deba6e642d9898a9fed466e3658041e3e7d32d",
   "pack.json": "9dc24861cf8a7be43663bd51c204e2c3896670092e576d27c9c665c5ecaeede1",
   "slots.json": "7063ef31bd1e42ac6522b95fe7e49fde9758ec1cd488634371c3844e37709cf5"
+ },
+ "adopted": {
+  "what": "strip CENTRED on the core (the x root and result sink are on it); SU block 38.601 mm2 (W16b 8b665e92), owner max 4,773 pairs",
+  "die": {
+   "um": [
+    30906.144,
+    24906.96
+   ],
+   "mm2": 769.7781
+  },
+  "crossings_layer_split": {
+   "trunk_m8m9": {
+    "vm_xroot_to_farthest_cluster": {
+     "routed_um": 14511.8,
+     "cycles": 29
+    },
+    "farthest_cluster_to_vm": {
+     "routed_um": 14771.0,
+     "cycles": 30
+    }
+   },
+   "rest": {
+    "collective_to_farthest_serdes": {
+     "routed_um": 19953.8,
+     "cycles": 40
+    },
+    "collective_to_farthest_ucie": {
+     "routed_um": 20305.5,
+     "cycles": 41
+    },
+    "hbm_window": {
+     "routed_um": 15418.8,
+     "cycles": 31
+    },
+    "idx_keys": {
+     "routed_um": 23137.5,
+     "cycles": 46
+    },
+    "selected_kv": {
+     "routed_um": 14530.4,
+     "cycles": 29
+    },
+    "idx_topk": {
+     "routed_um": 18213.8,
+     "cycles": 37
+    },
+    "hub": {
+     "routed_um": 4534.9,
+     "cycles": 9
+    }
+   }
+  },
+  "lane_to_strip_worst_um": 1760.4,
+  "ir_die_mesh_vdd_worst_mv": 10.948,
+  "tradeoff": "x root/result 29/30 (from 35/35) and SerDes 40, at index keys 46 (from 40), UCIe 41 (from 35), HBM window 31 (from 28): attention moves west with the hub",
+  "negative": "VM strip at M1-M7 as well as the SU halves: overflow 74,415 (index keys 64 cycles) -- the strip must stay at M5 so die buses cross it on M6/M7 (centred_strip/die_route_vm_strip_m7_negative.json)"
  }
 }

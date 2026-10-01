@@ -341,6 +341,9 @@ def build(variant: str) -> dict:
     hub_w = widths["ATTENTION"] + vm_col_w + widths["SU_VECTOR"] + widths["HC"]
     cx = core_x0 + core_w / 2
     hub_x = snap_dn(cx - vm_col_w / 2 - widths["ATTENTION"], X_STEP)
+    if crot:
+        # C_rotate: the x root and result sink are on the VM strip, so the STRIP is centred on the core
+        hub_x = snap_dn(cx - strip_w / 2 - half_w - vm_col_w - widths["ATTENTION"], X_STEP)
     hub_y = snap_dn(core_y0 + (core_h - hub_h) / 2, Y_STEP)
     hub = (hub_x, hub_y, hub_w, hub_h)
     parts = []
