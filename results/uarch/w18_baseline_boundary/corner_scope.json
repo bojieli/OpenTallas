@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.w18.baseline.corner_scope.v1",
+  "verdict": "PRESERVED_SS_FF_FAILURES_NOT_BUILD_QUALIFIED",
+  "adopted": false,
+  "source_files": {
+    "/home/ubuntu/w18work/karb19/pregionh/orfs/w18_sta_ss.log": "4baf93434be3b883d69a41fb82abc49a951cf60a38b685bac4a708b4826cbf02",
+    "/home/ubuntu/w18work/karb19/pregionh/orfs/w18_sta_ff.log": "265524bf7597ef4857762d6ad45642bc9e03234447eaab372b57801e6b2360b9",
+    "/home/ubuntu/w18work/karb19/pregionh/orfs/w18_sta_ss.tcl": "5cd26bae6b2cc32ea2307737376c3cfc6730150bf39bb3b77301507978bd181d",
+    "/home/ubuntu/w18work/karb19/pregionh/orfs/w18_sta_ff.tcl": "ac91d9855116b8952d5a0a2423515b39a801e6765079a225876482bd629d88bb",
+    "/home/ubuntu/w18work/karb19/pregionh_h160cq.corner.json": "cb9e027361ab4617639a04e6467798909484986b8cea411483bf066cae9e3f66"
+  },
+  "setup_ss": {
+    "corner": "ss",
+    "check": "setup",
+    "worst_slack_ps": -669.49,
+    "tns_ps": -1623765.5,
+    "worst_register_d_slack_ps": -224.37175,
+    "worst_reg_to_reg_slack_ps": -224.37,
+    "worst_input_to_reg_slack_ps": 240.68,
+    "worst_output_port_slack_ps": -669.485168,
+    "violating_d_pins": 6959,
+    "errors": [],
+    "odb_sha256": "ccb5b60cfb31709ad50bbb3cad75e8573191b2f96c563bbba03f2ba3dcc3cc15",
+    "spef_sha256": "f66c1bc9e1720b224b351621a78483690fdc75340770e921284f7ec3dcad02ae",
+    "sdc_sha256": "31d82881f222198f3b4467350248483a6eb061649130e377168283b5591dbab7"
+  },
+  "hold_ff": {
+    "corner": "ff",
+    "check": "hold",
+    "worst_slack_ps": -218.36,
+    "tns_ps": -3469.2,
+    "worst_register_d_slack_ps": 10.695278,
+    "worst_reg_to_reg_slack_ps": 10.7,
+    "worst_input_to_reg_slack_ps": 67.16,
+    "worst_output_port_slack_ps": 404.611053,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "ccb5b60cfb31709ad50bbb3cad75e8573191b2f96c563bbba03f2ba3dcc3cc15",
+    "spef_sha256": "f66c1bc9e1720b224b351621a78483690fdc75340770e921284f7ec3dcad02ae",
+    "sdc_sha256": "31d82881f222198f3b4467350248483a6eb061649130e377168283b5591dbab7"
+  },
+  "ss_worst_output": {
+    "start": "g_s[0].g_h.u_s/h_wdata[213]",
+    "end": "h_wdata[213]",
+    "macro_delay_ps": 806.6,
+    "slack_ps": -669.485168
+  },
+  "ff_worst_macro_input": {
+    "start": "h_rdy[0]",
+    "end": "g_s[0].g_h.u_s/h_rdy",
+    "arrival_ps": 191.97,
+    "required_ps": 410.34,
+    "slack_ps": -218.36
+  },
+  "reported_async_examples": {
+    "ss_recovery_slack_ps": 240.68,
+    "ff_removal_slack_ps": 67.16,
+    "scope": "reported examples only; not exhaustive macro recovery/removal acceptance"
+  },
+  "response_macro_output_min_path": {
+    "verdict": "NOT_REPORTED_BY_EXISTING_BOUNDED_LOG",
+    "pending": true
+  },
+  "boundary_load": {
+    "ks_v_reported_cap": 32.033,
+    "ks_v_slew_ps": 244.683,
+    "interpretation": "reported cap units retained verbatim; new boundary flop changes load/slew and hold buffers, cannot transplant the 585ps delay"
+  },
+  "gates": [
+    "FF response-macro-output min path and all macro recovery/removal paths",
+    "full macro edge capacity/slots/tracks/power",
+    "atomic valid/control/payload exact stalls and credit return/reset",
+    "whole context SS/FF including outputs and macro inputs"
+  ]
+}
