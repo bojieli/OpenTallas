@@ -13,8 +13,12 @@ def validate(plan):
     expected = [f'layer{i}' for i in range(40)] + ['final_norm', 'vocabulary_head']
     if [s.get('id') for s in stages] != expected:
         errors.append('ordered coverage must be layers0..39, final_norm, vocabulary_head')
-    if plan.get('dut_lifetime') != 'single_persistent_instance_per_rank':
-        errors.append('DUT instances must persist across all stages')
+    if plan.get('dut_lifetime') != 'persistent_per_physical_stage_and_rank':
+        errors.append('actual DUT KV must persist per modeled physical stage/rank')
+    if plan.get('transport') != 'finite_hardware_ready_valid':
+        errors.append('stage hops require finite hardware ready/valid transport')
+    if plan.get('host_activation_arithmetic') or plan.get('host_activation_gather'):
+        errors.append('host arithmetic/gather cannot transport token activation')
     for i, s in enumerate(stages):
         sid = s.get('id', str(i))
         if s.get('reset') or s.get('reconstruct_dut'):
@@ -34,12 +38,16 @@ def validate(plan):
 
 def template():
     ids = [f'layer{i}' for i in range(40)] + ['final_norm','vocabulary_head']
-    return dict(dut_lifetime='single_persistent_instance_per_rank', stages=[dict(
+    return dict(dut_lifetime='persistent_per_physical_stage_and_rank',
+        transport='finite_hardware_ready_valid', host_activation_arithmetic=False,
+        host_activation_gather=False, physical_stage_mapping='UNBOUND_W16_MODEL',
+        physical_stage_count=None, conditional_stage_count_candidate=45, stages=[dict(
         id=s, activation_from='token_input' if i==0 else ids[i-1]+'.rtl_output',
         current_kv_from=s+'.dut_kv_writer' if i<40 else None,
         golden_role='comparison_only', reset=False, reconstruct_dut=False,
         golden_activation_load=False,golden_current_kv_load=False,reload_state=False,
-        fixture_reload='exact_weights_and_constants_only', implementation='UNBOUND')
+        physical_stage='UNBOUND_W16_MODEL', rom_weights='stage_specific_pinned',
+        implementation='UNBOUND')
         for i,s in enumerate(ids)])
 
 def audit():
@@ -50,8 +58,10 @@ def audit():
             stage_reload_export='export "DPI-C" function v41rt_stage_reload' in wrapper,
             persistent_stage_loop='w17_connected_stage_loop' in host),
         missing_connections=[
-            'new source-selected wrapper: quiescent program/weight/constant reload preserving DUT VM/HBM KV/index/window state',
-            'persistent host stage controller and correct L0/indexed-L20 mode support in same DUT or a proven RTL state-transfer interface',
+            'W16 source-pinned physical stage count/mapping: conditional45 must not be inferred from42 functional operations',
+            'replicated full-size stage/rank DUTs with stage-specific ROM weights and persistent actual KV',
+            'finite hardware ready/valid stage-hop transport at modeled latency/capacity, no host activation gather/arithmetic',
+            'top-level connected stage control with appropriate L0/indexed-layer organization at each physical stage',
             'all40 program/image generation consumes prior RTL activation, never per-layer golden H/PF/SSX',
             'connected current-token compressed-KV producer, not CKV own-row reencode fixture',
             'final norm and vocabulary head RTL paths and complete output/state comparison',
@@ -69,7 +79,7 @@ def selftest():
         bad=copy.deepcopy(good); bad['stages'][20][key]=value; assert validate(bad), key
     bad=copy.deepcopy(good);bad['stages'].pop();assert validate(bad)
     return dict(symbolic_valid_plan=True, rejected_mutants=len(mutations)+1,
-                scope='contract validation only; all stage implementations remain UNBOUND')
+                scope='functional-edge validation only; physical mapping/count and stage implementations remain UNBOUND')
 
 if __name__=='__main__':
     ap=argparse.ArgumentParser();ap.add_argument('--plan',type=pathlib.Path);ap.add_argument('--output',type=pathlib.Path,required=True);a=ap.parse_args()

@@ -12,8 +12,10 @@
     "persistent_stage_loop": false
   },
   "missing_connections": [
-    "new source-selected wrapper: quiescent program/weight/constant reload preserving DUT VM/HBM KV/index/window state",
-    "persistent host stage controller and correct L0/indexed-L20 mode support in same DUT or a proven RTL state-transfer interface",
+    "W16 source-pinned physical stage count/mapping: conditional45 must not be inferred from42 functional operations",
+    "replicated full-size stage/rank DUTs with stage-specific ROM weights and persistent actual KV",
+    "finite hardware ready/valid stage-hop transport at modeled latency/capacity, no host activation gather/arithmetic",
+    "top-level connected stage control with appropriate L0/indexed-layer organization at each physical stage",
     "all40 program/image generation consumes prior RTL activation, never per-layer golden H/PF/SSX",
     "connected current-token compressed-KV producer, not CKV own-row reencode fixture",
     "final norm and vocabulary head RTL paths and complete output/state comparison",
@@ -25,10 +27,16 @@
   "symbolic_checks": {
     "symbolic_valid_plan": true,
     "rejected_mutants": 8,
-    "scope": "contract validation only; all stage implementations remain UNBOUND"
+    "scope": "functional-edge validation only; physical mapping/count and stage implementations remain UNBOUND"
   },
   "plan_template": {
-    "dut_lifetime": "single_persistent_instance_per_rank",
+    "dut_lifetime": "persistent_per_physical_stage_and_rank",
+    "transport": "finite_hardware_ready_valid",
+    "host_activation_arithmetic": false,
+    "host_activation_gather": false,
+    "physical_stage_mapping": "UNBOUND_W16_MODEL",
+    "physical_stage_count": null,
+    "conditional_stage_count_candidate": 45,
     "stages": [
       {
         "id": "layer0",
@@ -40,7 +48,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -53,7 +62,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -66,7 +76,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -79,7 +90,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -92,7 +104,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -105,7 +118,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -118,7 +132,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -131,7 +146,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -144,7 +160,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -157,7 +174,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -170,7 +188,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -183,7 +202,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -196,7 +216,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -209,7 +230,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -222,7 +244,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -235,7 +258,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -248,7 +272,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -261,7 +286,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -274,7 +300,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -287,7 +314,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -300,7 +328,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -313,7 +342,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -326,7 +356,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -339,7 +370,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -352,7 +384,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -365,7 +398,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -378,7 +412,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -391,7 +426,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -404,7 +440,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -417,7 +454,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -430,7 +468,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -443,7 +482,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -456,7 +496,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -469,7 +510,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -482,7 +524,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -495,7 +538,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -508,7 +552,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -521,7 +566,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -534,7 +580,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -547,7 +594,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -560,7 +608,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       },
       {
@@ -573,7 +622,8 @@
         "golden_activation_load": false,
         "golden_current_kv_load": false,
         "reload_state": false,
-        "fixture_reload": "exact_weights_and_constants_only",
+        "physical_stage": "UNBOUND_W16_MODEL",
+        "rom_weights": "stage_specific_pinned",
         "implementation": "UNBOUND"
       }
     ]
