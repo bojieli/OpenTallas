@@ -1,0 +1,107 @@
+{
+  "direct_suite_count": 26,
+  "first_package_byte_identity_count": 25,
+  "first_suite_count": 24,
+  "mutant_witness_numeric_replays": [
+    {
+      "mutation": "direct_add_drop_carry",
+      "signals": {
+        "a": 1125899906842624,
+        "actual": 0,
+        "b": 1125899906842624,
+        "cin": 0,
+        "equal": 0,
+        "expected": 2251799813685248
+      },
+      "verified": true
+    },
+    {
+      "mutation": "direct_add_flip_sum_bit0",
+      "signals": {
+        "a": 0,
+        "actual": 1,
+        "b": 0,
+        "cin": 0,
+        "equal": 0,
+        "expected": 0
+      },
+      "verified": true
+    },
+    {
+      "mutation": "direct_inc_drop_carry",
+      "signals": {
+        "a": 2147483647,
+        "actual": 0,
+        "equal": 0,
+        "expected": 2147483648,
+        "inc": 1
+      },
+      "verified": true
+    },
+    {
+      "mutation": "direct_inc_flip_sum_bit0",
+      "signals": {
+        "a": 792724348,
+        "actual": 792724349,
+        "equal": 0,
+        "expected": 792724348,
+        "inc": 0
+      },
+      "verified": true
+    }
+  ],
+  "proof_record_sha256": "1c33cee0e186a37203ac453fd8880da9dfcd830561e9cdcaf0861c721d5acb94",
+  "schema": "DSROM_direct_generic_prefix_SAT_validation_r1",
+  "scope": "Direct-width combinational proof availability only. Actual live elaboration and full conditional AW/CW/K footprint unproved. No sequential/hardware/timing/rate/adoption/stand-in-use qualification.",
+  "six_width_package_artifact_hashes_verified": true,
+  "six_width_record_sha256": "1a67497a1057b1893779170feb95fe626eabc0008dd35e985ecbc6090357ae2d",
+  "six_width_suite_count": 17,
+  "source_byte_identity_checks": [
+    {
+      "isolated_equals_pin": true,
+      "live_equals_pin": true,
+      "path": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc"
+    },
+    {
+      "isolated_equals_pin": true,
+      "live_equals_pin": true,
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+    },
+    {
+      "isolated_equals_pin": true,
+      "live_equals_pin": true,
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7"
+    },
+    {
+      "isolated_equals_pin": true,
+      "live_equals_pin": true,
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+      "isolated_equals_pin": true,
+      "live_equals_pin": true,
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "sha256": "3292e2e8fa73ac1cbef5042171364e9ced031cf5c5af5f95ec83ac559456309a"
+    }
+  ],
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "test_command": [
+    "/home/ubuntu/bin/python",
+    "-m",
+    "pytest",
+    "-o",
+    "addopts=",
+    "-q",
+    "tests/test_dsrom_prefix_sat.py",
+    "tests/test_dsrom_generic_prefix_sat.py",
+    "tests/test_dsrom_direct_generic_prefix_sat.py"
+  ],
+  "test_count": 67,
+  "test_log_sha256": "1bdcb729f2b7885fb8c00b4c7fc57c8a69d7322ba82b5c3dade49b3bd29a92f0",
+  "test_returncode": 0,
+  "tests_yosys_version": "Yosys 0.9 (git sha1 1979e0b)"
+}
