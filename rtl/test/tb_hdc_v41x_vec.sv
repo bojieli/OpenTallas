@@ -54,7 +54,16 @@ module tb_hdc_v41x_vec #(
     parameter integer GATH_STAGES = 18,
     parameter integer SCAL_STAGES = 8,
     parameter integer MLAT = 3,
-    parameter integer ALAT = 3
+    parameter integer ALAT = 3,
+    // C_rotate VM (VM_DIST = 1, VM_CROT = 1): the central strip rtl/chip/ot_v41_vm_crot.sv in place of the lane-group
+    // banks; the unit reads CR_RD after the strip (BCAST_STAGES = CR_LEAD + CR_RD, RD_LEAD = CR_LEAD), writes
+    // elements CR_WR and results CR_RES later (ot_hdc_core_v41x VM_CROT); the strip counts lead hazards
+    parameter integer VM_CROT = 0,
+    parameter integer CR_LEAD = 1,
+    parameter integer CR_RD = 8,
+    parameter integer CR_GX = 1,
+    parameter integer CR_WR = 8,
+    parameter integer CR_RES = 8
 ) (input wire clk);
     `include "tb_hdc_v41x_vec_fields.svh"
     localparam integer AW = 24, NR = N / 8;
@@ -147,10 +156,13 @@ module tb_hdc_v41x_vec #(
     wire [7:0] dbg_eseq, dbg_rseq, dbg_sseq;
     wire [4*N*32-1:0] rd_q_u;
     wire [N*32-1:0]   vi_q_u;
-    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(BCAST_STAGES),
-                      .RET_STAGES(VM_DIST ? SU_EWR_STAGES : RET_STAGES), .RES_STAGES(VM_DIST ? SU_RES_STAGES : -1),
-                      .VMD_NG((VM_DIST != 0 && VM_DIST_H != 0) ? N / 8 : 0), .ROT_STAGES(ROT_STAGES),
-                      .GATH_STAGES(GATH_STAGES), .SCAL_STAGES(SCAL_STAGES), .MLAT(MLAT), .ALAT(ALAT)) dut (
+    localparam integer CROT = (VM_DIST != 0 && VM_CROT != 0) ? 1 : 0;
+    ot_hdc_v41x_vec #(.N(N), .M(M), .LV(LV), .BCAST_STAGES(CROT ? CR_LEAD + CR_RD : BCAST_STAGES),
+                      .RET_STAGES(CROT ? CR_WR : VM_DIST ? SU_EWR_STAGES : RET_STAGES),
+                      .RES_STAGES(CROT ? CR_RES : VM_DIST ? SU_RES_STAGES : -1),
+                      .VMD_NG((VM_DIST != 0 && VM_DIST_H != 0 && !CROT) ? N / 8 : 0), .ROT_STAGES(ROT_STAGES),
+                      .GATH_STAGES(GATH_STAGES), .SCAL_STAGES(SCAL_STAGES), .MLAT(MLAT), .ALAT(ALAT),
+                      .RD_LEAD(CROT ? CR_LEAD : -1), .CROT_GX(CROT ? CR_GX : 0)) dut (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
         .i_nout(w[F_NOUT +: 16]), .i_nin(w[F_NIN +: 16]),
         .i_asrc(w[F_ASRC +: 2]), .i_bsrc(w[F_BSRC +: 2]), .i_csrc(w[F_CSRC +: 2]), .i_dsrc(w[F_DSRC +: 2]),
@@ -258,9 +270,38 @@ module tb_hdc_v41x_vec #(
         d_wd[(N + NR)*32 +: XVMAX*32] = x_d[XD-1];
     end
     reg bd_load = 1'b0, bd_dump = 1'b0;
-    ot_v41_vm_dist #(.NG(N / 8), .VMA(VMA), .NL(N), .NRD(NRD), .NWR(NWR)) u_vmd (
-        .clk(clk), .rst_n(rst_n), .rd_re(d_re), .rd_addr(d_ra), .rd_cls(d_rc), .rd_q(d_q),
-        .wr_we(d_we), .wr_addr(d_wa), .wr_data(d_wd), .bd_load(bd_load), .bd_dump(bd_dump), .fault(d_fault));
+    wire [31:0] lead_hz;
+    if (CROT) begin : g_crot
+        // the central strip: the same bank array behind the rotate network (no return roots on this bench)
+        wire [31:0] c_rows, c_nl, c_wnl; wire c_e;
+        ot_v41_vm_crot #(.NG(N / 8), .VMA(VMA), .NL(N), .NRD(NRD), .NWR(NWR), .NROOT(1), .CR_RD(CR_RD)) u_vmc (
+            .clk(clk), .rst_n(rst_n), .rd_re(d_re), .rd_addr(d_ra), .rd_cls(d_rc), .rd_q(d_q),
+            .wr_we(d_we), .wr_addr(d_wa), .wr_data(d_wd), .rt_v(1'b0), .rt_tag(32'd0), .rt_d(32'd0), .rt_e(1'b0),
+            .ret_obase({VMA{1'b0}}), .ret_ps({VMA{1'b0}}), .ret_rs({VMA{1'b0}}), .ret_fmt(1'b0), .ret_clr(1'b0),
+            .ret_rows(c_rows), .ret_nonlocal(c_nl), .ret_e(c_e), .wr_nonlocal(c_wnl), .bd_load(bd_load),
+            .bd_dump(bd_dump), .fault(d_fault), .lead_hazards(lead_hz));
+        integer bj;
+        always @(posedge clk) begin
+            if (cyc == 1) for (bj = 0; bj < (1 << VMA); bj = bj + 1) u_vmc.u_vmd.bd_img[bj] = vm[bj];
+            if (quiet == 7 || cyc == TMAX) begin
+                for (bj = 0; bj < (1 << VMA); bj = bj + 1) vm[bj] = u_vmc.u_vmd.bd_img[bj];
+                u_vmc.report();
+            end
+        end
+    end else begin : g_vmd
+        assign lead_hz = 32'd0;
+        ot_v41_vm_dist #(.NG(N / 8), .VMA(VMA), .NL(N), .NRD(NRD), .NWR(NWR)) u_vmd (
+            .clk(clk), .rst_n(rst_n), .rd_re(d_re), .rd_addr(d_ra), .rd_cls(d_rc), .rd_q(d_q),
+            .wr_we(d_we), .wr_addr(d_wa), .wr_data(d_wd), .bd_load(bd_load), .bd_dump(bd_dump), .fault(d_fault));
+        integer bj;
+        always @(posedge clk) begin
+            if (cyc == 1) for (bj = 0; bj < (1 << VMA); bj = bj + 1) u_vmd.bd_img[bj] = vm[bj];
+            if (quiet == 7 || cyc == TMAX) begin
+                for (bj = 0; bj < (1 << VMA); bj = bj + 1) vm[bj] = u_vmd.bd_img[bj];
+                u_vmd.report();
+            end
+        end
+    end
     // the other sources (constant / weight ROM) and the KV SRAM stay flat; a VM-sourced read takes the banks'
     reg [4*N-1:0] was_vm;
     reg [4*N*32-1:0] rq_mix;
@@ -298,16 +339,10 @@ module tb_hdc_v41x_vec #(
     for (gv = 0; gv < N; gv = gv + 1) begin : g_vi
         assign vi_q_u[gv*32 +: 32] = vi_live[gv] ? d_q[(4*N + gv)*32 +: 32] : vi_hold[gv*32 +: 32];
     end
-    // the flat image in (cycle 1, before reset leaves) and out (two cycles before the dump below)
-    integer bi;
+    // the flat image in (cycle 1, before reset leaves) and out (two cycles before the dump), in the branches above
     always @(posedge clk) begin
         bd_load <= (cyc == 1);
-        if (cyc == 1) for (bi = 0; bi < (1 << VMA); bi = bi + 1) u_vmd.bd_img[bi] = vm[bi];
         bd_dump <= (quiet == 5 || cyc == TMAX - 1);
-        if (quiet == 7 || cyc == TMAX) begin
-            for (bi = 0; bi < (1 << VMA); bi = bi + 1) vm[bi] = u_vmd.bd_img[bi];
-            u_vmd.report();
-        end
         if (d_fault) $display("F %0d vmdist", cyc);
     end
 `else

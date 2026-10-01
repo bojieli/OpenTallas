@@ -111,7 +111,15 @@ module ot_chip_v41x_tile #(
     parameter integer SU_ROT_STAGES = 17,
     parameter integer SU_GATH_STAGES = 18,
     parameter integer SU_SCAL_STAGES = 8,
-    parameter integer COLL_WRITE_STAGES = 15
+    parameter integer COLL_WRITE_STAGES = 15,
+    // C_ROTATE VM (VM_DIST = 1, VM_CROT = 1; rtl/chip/ot_v41_vm_crot.sv): the central banked strip in place of the
+    // lane-group banks, and the stream unit's strip round trip (ot_hdc_core_v41x VM_CROT, CR_*)
+    parameter integer VM_CROT = 0,
+    parameter integer CR_LEAD = 1,
+    parameter integer CR_RD = 8,
+    parameter integer CR_GX = 1,
+    parameter integer CR_WR = 8,
+    parameter integer CR_RES = 8
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -387,7 +395,9 @@ module ot_chip_v41x_tile #(
                        .VM_DIST(VM_DIST), .X_GATHER_STAGES(X_GATHER_STAGES),
                        .RET_SCATTER_STAGES(RET_SCATTER_STAGES), .SU_RES_STAGES(SU_RES_STAGES),
                        .SUBCAST(SUBCAST), .SURET(SURET), .SU_EWR_STAGES(SU_EWR_STAGES), .VM_DIST_H(VM_DIST_H),
-                       .SU_ROT_STAGES(SU_ROT_STAGES), .SU_GATH_STAGES(SU_GATH_STAGES), .SU_SCAL_STAGES(SU_SCAL_STAGES)) u_core (
+                       .SU_ROT_STAGES(SU_ROT_STAGES), .SU_GATH_STAGES(SU_GATH_STAGES), .SU_SCAL_STAGES(SU_SCAL_STAGES),
+                       .VM_CROT(VM_CROT), .CR_LEAD(CR_LEAD), .CR_RD(CR_RD), .CR_GX(CR_GX), .CR_WR(CR_WR),
+                       .CR_RES(CR_RES)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .token(token), .pos(pos), .entry(entry),
         .done(done), .acc_n(acc_n), .acc_tok(), .next_token(next_token), .next_val(next_val), .cycles(cycles),
         .fault(core_fault), .prime_v(prime_v), .prime_first(prime_first), .prime_cid(prime_cid),
@@ -711,9 +721,33 @@ module ot_chip_v41x_tile #(
     `undef RD
     `undef WR
     reg bd_load = 1'b0, bd_dump = 1'b0;
-    ot_v41_vm_dist #(.NG(SUN / 8), .VMA(VM_AW), .NL(SUN), .NRD(NRD), .NWR(NWR), .WE0(W_XS)) u_vmd (
-        .clk(clk), .rst_n(rst_n), .rd_re(d_re), .rd_addr(d_ra), .rd_cls(d_rc), .rd_q(d_q),
-        .wr_we(d_we), .wr_addr(d_wa), .wr_data(d_wd), .bd_load(bd_load), .bd_dump(bd_dump), .fault(vm_fault));
+    reg [1:0] bd_st = 2'd0;
+    reg done_q = 1'b0, dump_q = 1'b0;
+    integer bi;
+    if (VM_CROT != 0) begin : g_crot
+        // C_rotate: the central strip (the same bank array; no return roots on this tile: the element array's rows
+        // arrive as the result-scatter writes)
+        wire [31:0] c_rows, c_nl, c_wnl, lead_hz; wire c_e;
+        ot_v41_vm_crot #(.NG(SUN / 8), .VMA(VM_AW), .NL(SUN), .NRD(NRD), .NWR(NWR), .WE0(W_XS), .NROOT(1),
+                         .CR_RD(CR_RD)) u_vmc (
+            .clk(clk), .rst_n(rst_n), .rd_re(d_re), .rd_addr(d_ra), .rd_cls(d_rc), .rd_q(d_q),
+            .wr_we(d_we), .wr_addr(d_wa), .wr_data(d_wd), .rt_v(1'b0), .rt_tag(32'd0), .rt_d(32'd0), .rt_e(1'b0),
+            .ret_obase({VM_AW{1'b0}}), .ret_ps({VM_AW{1'b0}}), .ret_rs({VM_AW{1'b0}}), .ret_fmt(1'b0),
+            .ret_clr(1'b0), .ret_rows(c_rows), .ret_nonlocal(c_nl), .ret_e(c_e), .wr_nonlocal(c_wnl),
+            .bd_load(bd_load), .bd_dump(bd_dump), .fault(vm_fault), .lead_hazards(lead_hz));
+        always @(posedge clk) begin
+            if (bd_st == 2'd0) for (bi = 0; bi < (1 << VM_AW); bi = bi + 1) u_vmc.u_vmd.bd_img[bi] = vm[bi];
+            if (dump_q) for (bi = 0; bi < (1 << VM_AW); bi = bi + 1) vm[bi] = u_vmc.u_vmd.bd_img[bi];
+        end
+    end else begin : g_vmd
+        ot_v41_vm_dist #(.NG(SUN / 8), .VMA(VM_AW), .NL(SUN), .NRD(NRD), .NWR(NWR), .WE0(W_XS)) u_vmd (
+            .clk(clk), .rst_n(rst_n), .rd_re(d_re), .rd_addr(d_ra), .rd_cls(d_rc), .rd_q(d_q),
+            .wr_we(d_we), .wr_addr(d_wa), .wr_data(d_wd), .bd_load(bd_load), .bd_dump(bd_dump), .fault(vm_fault));
+        always @(posedge clk) begin
+            if (bd_st == 2'd0) for (bi = 0; bi < (1 << VM_AW); bi = bi + 1) u_vmd.bd_img[bi] = vm[bi];
+            if (dump_q) for (bi = 0; bi < (1 << VM_AW); bi = bi + 1) vm[bi] = u_vmd.bd_img[bi];
+        end
+    end
 
     // ---- read data: a port holds its last word between reads, as the flat memory's output registers do ---
     reg [NRD-1:0]    live;
@@ -743,20 +777,13 @@ module ot_chip_v41x_tile #(
     initial begin live = 0; hold = 0; xs_was_vm = 0; end
 
     // ---- simulation image: vm -> banks at the first edges, banks -> vm when done rises -----------------
-    reg [1:0] bd_st = 2'd0;
-    reg done_q = 1'b0, dump_q = 1'b0;
-    integer bi;
     always @(posedge clk) begin
-        if (bd_st == 2'd0) begin
-            for (bi = 0; bi < (1 << VM_AW); bi = bi + 1) u_vmd.bd_img[bi] = vm[bi];
-            bd_st <= 2'd1;
-        end
+        if (bd_st == 2'd0) bd_st <= 2'd1;
         bd_load <= (bd_st == 2'd0);
         if (bd_st == 2'd1) bd_st <= 2'd2;
         done_q <= done;
         bd_dump <= done && !done_q;
         dump_q <= bd_dump;
-        if (dump_q) for (bi = 0; bi < (1 << VM_AW); bi = bi + 1) vm[bi] = u_vmd.bd_img[bi];
     end
     always @(posedge clk) if (vm_fault) $display("VMDIST_FAULT");
 `else

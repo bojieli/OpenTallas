@@ -130,7 +130,22 @@ module ot_hdc_core_v41x #(
     parameter integer VM_DIST_H = 0,
     parameter integer SU_ROT_STAGES = 17,
     parameter integer SU_GATH_STAGES = 18,
-    parameter integer SU_SCAL_STAGES = 8
+    parameter integer SU_SCAL_STAGES = 8,
+    // C_ROTATE VM (rtl/chip/ot_v41_vm_crot.sv, root ruling 2026-10-01; needs VM_DIST = 1): the central banked strip
+    // with a rotate network between banks and lanes; every SU op pays the strip round trip, no per-op decision.
+    //   CR_LEAD  controller -> strip address stages (emit -> the strip's read)
+    //   CR_RD    strip -> lane operand stages (bank register, rotate mux stages, wire)
+    //   CR_GX    extra stages of a gathered A (the permutation network beyond the rotate)
+    //   CR_WR    lane -> strip element-write stages
+    //   CR_RES   reducer -> strip result stages
+    // The stream unit is then built with BCAST_STAGES = CR_LEAD + CR_RD, RET_STAGES = CR_WR, RES_STAGES = CR_RES,
+    // RD_LEAD = CR_LEAD, CROT_GX = CR_GX (SUBCAST / SU_EWR / SU_RES / VM_DIST_H are ignored).  0: as before.
+    parameter integer VM_CROT = 0,
+    parameter integer CR_LEAD = 1,
+    parameter integer CR_RD = 8,
+    parameter integer CR_GX = 1,
+    parameter integer CR_WR = 8,
+    parameter integer CR_RES = 8
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -1059,10 +1074,12 @@ module ot_hdc_core_v41x #(
     generate if (X_SU != 0) begin : g_su_x
         wire [SUN-1:0] raw_kv_we;
         ot_hdc_v41x_su_adapt #(.N(SUN), .M(SUM), .LV(SULV), .AW(AW), .NW(NW), .CLS_DRAIN((NSLOT > 1) ? 1 : 0),
-                               .BCAST_STAGES(SUBCAST), .RET_STAGES(VM_DIST ? SU_EWR_STAGES : SURET),
-                               .RES_STAGES(VM_DIST ? SU_RES_STAGES : SURET),
-                               .VMD_NG((VM_DIST != 0 && VM_DIST_H != 0) ? SUN / 8 : 0), .ROT_STAGES(SU_ROT_STAGES),
-                               .GATH_STAGES(SU_GATH_STAGES), .SCAL_STAGES(SU_SCAL_STAGES))
+                               .BCAST_STAGES(VM_CROT ? CR_LEAD + CR_RD : SUBCAST),
+                               .RET_STAGES(VM_CROT ? CR_WR : VM_DIST ? SU_EWR_STAGES : SURET),
+                               .RES_STAGES(VM_CROT ? CR_RES : VM_DIST ? SU_RES_STAGES : SURET),
+                               .VMD_NG((VM_DIST != 0 && VM_DIST_H != 0 && VM_CROT == 0) ? SUN / 8 : 0), .ROT_STAGES(SU_ROT_STAGES),
+                               .GATH_STAGES(SU_GATH_STAGES), .SCAL_STAGES(SU_SCAL_STAGES),
+                               .RD_LEAD(VM_CROT ? CR_LEAD : -1), .CROT_GX(VM_CROT ? CR_GX : 0))
             u_su (
             .clk(clk), .rst_n(rst_n), .go(su_go), .ready(su_ready), .idle(su_idle),
             .i_nout(su_nout), .i_nin(su_nin), .i_chase(su_chase), .i_asrc(a_src), .i_bsrc(b_src),

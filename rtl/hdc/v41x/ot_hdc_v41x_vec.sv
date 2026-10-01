@@ -175,6 +175,20 @@ module ot_hdc_v41x_vec #(
     // an X stream (gathered A, half streams, other strides) crosses the class-X trees, XI_ELEMS elements a
     // cycle: its op emits a vector every ceil(lanes / XI_ELEMS) cycles
     parameter integer XI_ELEMS = 64,
+    // C_ROTATE VM (rtl/chip/ot_v41_vm_crot.sv; root ruling 2026-10-01): the central banked strip with a rotate
+    // network between the banks and the lanes.  Every op pays the strip round trip, no per-op class decision.
+    // The caller builds the unit with BCAST_STAGES = CR_LEAD + CR_RD (the lanes take their operands CR_RD
+    // stages after the strip read them, the control word is padded to match) and RET_STAGES / RES_STAGES =
+    // the lane -> strip write and reducer -> strip result stages, and sets
+    //   RD_LEAD  the cycles from emit to the strip's READ (CR_LEAD).  This unit's own consumers' credits lead
+    //            the landing by RD_LEAD, not by BCAST_STAGES: the read happens at the strip, CR_RD before the
+    //            lanes see its data (-1: BCAST_STAGES, the unit as before)
+    //   CROT_GX  extra cycles a gathered-A op is held (the permutation network's levels beyond the rotate's)
+    // Every vector of every op then arrives CR_RD later than its strip read, as in the strip's pipeline; the
+    // strip (ot_v41_vm_crot lead_hazards) checks that no operand's word was written in the CR_RD cycles between
+    // the strip read and the lanes' read here, so the values are the pipeline's.
+    parameter integer RD_LEAD = -1,
+    parameter integer CROT_GX = 0,
     parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4 or 5 (W11 serial domain)
     parameter integer ALAT = 3          // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
 ) (
@@ -258,9 +272,11 @@ module ot_hdc_v41x_vec #(
     localparam integer NR = N / 8;
     localparam integer CW = 24;
     // this unit's own consumers read BCAST_STAGES after their emit: their credits lead the landing by that much
-    localparam integer DI = (RET_STAGES > BCAST_STAGES) ? RET_STAGES - BCAST_STAGES : 0;
+    // (C_rotate: by RD_LEAD, the cycles from emit to the strip's read)
+    localparam integer LEADC = (RD_LEAD < 0) ? BCAST_STAGES : RD_LEAD;
+    localparam integer DI = (RET_STAGES > LEADC) ? RET_STAGES - LEADC : 0;
     localparam integer RS = (RES_STAGES < 0) ? RET_STAGES : RES_STAGES;
-    localparam integer DIR = (RS > BCAST_STAGES) ? RS - BCAST_STAGES : 0;
+    localparam integer DIR = (RS > LEADC) ? RS - LEADC : 0;
     localparam [1:0] IND_NONE = 0, IND_I = 1, IND_O = 2;
     localparam [1:0] DST_NONE = 0, DST_KVT = 3;
     localparam [2:0] M1_DIVB = 4, M1_DIVIMM = 5;
@@ -503,7 +519,7 @@ module ot_hdc_v41x_vec #(
         h_wr = (hk_e == HK_R);
         h_wx = (hk_e == HK_X);
     end
-    wire [7:0] c_hold = (VMD_NG == 0) ? 8'd0 :
+    wire [7:0] c_hold = (VMD_NG == 0) ? ((q_aind != IND_NONE) ? 8'(CROT_GX) : 8'd0) :
                         8'((h_b ? SCAL_STAGES : 0) + (h_x ? GATH_STAGES : h_r ? ROT_STAGES : 0) +
                            (h_wx ? GATH_STAGES : h_wr ? ROT_STAGES : 0));
     wire [CW-1:0] h_use = 1 << (c_ls + c_nsh);

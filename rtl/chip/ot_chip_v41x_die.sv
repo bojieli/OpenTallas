@@ -121,6 +121,13 @@ module ot_chip_v41x_die #(
     parameter integer SU_GATH_STAGES = 18,
     parameter integer SU_SCAL_STAGES = 8,
     parameter integer COLL_WRITE_STAGES = 15,
+    // C_rotate VM (ot_chip_v41x_tile VM_CROT; rtl/chip/ot_v41_vm_crot.sv)
+    parameter integer VM_CROT = 0,
+    parameter integer CR_LEAD = 1,
+    parameter integer CR_RD = 8,
+    parameter integer CR_GX = 1,
+    parameter integer CR_WR = 8,
+    parameter integer CR_RES = 8,
     parameter integer LWIN    = 10,
     parameter integer LAW     = 12,
     parameter integer NPC_W   = 8,
@@ -474,7 +481,9 @@ module ot_chip_v41x_die #(
                         .VM_DIST(VM_DIST), .X_GATHER_STAGES(X_GATHER_STAGES), .RET_SCATTER_STAGES(RET_SCATTER_STAGES),
                         .SU_RES_STAGES(SU_RES_STAGES), .COLL_WRITE_STAGES(COLL_WRITE_STAGES),
                         .SUBCAST(SUBCAST), .SURET(SURET), .SU_EWR_STAGES(SU_EWR_STAGES), .VM_DIST_H(VM_DIST_H),
-                        .SU_ROT_STAGES(SU_ROT_STAGES), .SU_GATH_STAGES(SU_GATH_STAGES), .SU_SCAL_STAGES(SU_SCAL_STAGES)) u_tile (
+                        .SU_ROT_STAGES(SU_ROT_STAGES), .SU_GATH_STAGES(SU_GATH_STAGES), .SU_SCAL_STAGES(SU_SCAL_STAGES),
+                        .VM_CROT(VM_CROT), .CR_LEAD(CR_LEAD), .CR_RD(CR_RD), .CR_GX(CR_GX), .CR_WR(CR_WR),
+                        .CR_RES(CR_RES)) u_tile (
         .clk(clk), .rst_n(rn),
         .start(t_start), .token(t_token), .pos(t_pos), .entry(host_mode ? host_entry : 14'd0),
         .done(core_done), .next_token(core_next_token), .next_val(core_next_val), .cycles(core_cycles),

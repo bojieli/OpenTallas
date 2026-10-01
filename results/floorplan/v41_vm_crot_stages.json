@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.floorplan.w11_vm_crot_stages.v1",
+ "generated_utc": "2026-10-01T02:42:32+00:00",
+ "floorplan": {
+  "branch": "claude/w18-die-assembly",
+  "commit": "32155a8ffe8714d3fc98387acf0bb96e9d6cec9d",
+  "path": "results/physical_abi3/asap7/chip/v41_w18/shrink_crot_interim/floorplan.json",
+  "sha256": "cc9d4c62bee86d8f12d249a59da18dbc9f8d34e88f60830a19d1f74f8165feb6"
+ },
+ "rotate_record": "results/physical_abi3/asap7/chip/w11_vm_rot/su_wc_lps7/physical.json",
+ "basis": {
+  "period_ns": 1.111,
+  "clock": "SU / VM serial domain 0.9 GHz, SS setup / FF hold, 60/25 ps",
+  "wire_reach_um": 748.0,
+  "wire_reach_source": "tools/uarch_model.SS_REACH_UM (W15 measured, 1.111 ns SS)",
+  "rotate_levels": 10,
+  "permutation_levels": 19,
+  "mux_levels_per_stage": 7,
+  "distances": "Manhattan, rectangle-bound (W18b): no pin plan inside the strip; M1-M5 in the strip, M1-M7 in the SU halves; the reach is W15's routed figure, not re-measured on M5",
+  "rotate_span": "every (bank slot, lane) pair is realised by some base, so the fixed pipeline pays the hub's farthest bank -> farthest lane distance on every op"
+ },
+ "geometry": {
+  "strip_um": [
+   2163.5,
+   7272.7
+  ],
+  "su_half_um": [
+   1786.8,
+   7272.7
+  ],
+  "tiles_per_side": 64,
+  "tile_um": 433.0,
+  "tile_grid_fits": {
+   "west": [
+    4,
+    16
+   ],
+   "east": [
+    4,
+    16
+   ]
+  },
+  "worst_bank_to_lane_um": 10735.2,
+  "row_aligned_tile_to_strip_um": 1515.5,
+  "controller_to_farthest_bank_um": 4718.1,
+  "controller_to_farthest_tile_um": 6017.1,
+  "controller_pair_to_farthest_bank_um": 2899.9,
+  "strip_centre_to_farthest_bank_um": 4718.1,
+  "collective_centre_to_strip_centre_um": 4878.1,
+  "collective_to_farthest_bank_um": 9596.2
+ },
+ "rtl_parameters": {
+  "CR_LEAD": 7,
+  "CR_RD": 18,
+  "CR_GX": 1,
+  "CR_WR": 17,
+  "CR_RES": 7,
+  "X_GATHER_STAGES": 8,
+  "RET_SCATTER_STAGES": 7,
+  "COLL_WRITE_STAGES": 13
+ },
+ "variants": {
+  "controller_pair": {
+   "CR_LEAD": 4,
+   "CR_RD": 18,
+   "CR_GX": 1,
+   "CR_WR": 17,
+   "CR_RES": 7,
+   "X_GATHER_STAGES": 8,
+   "RET_SCATTER_STAGES": 7,
+   "COLL_WRITE_STAGES": 13
+  },
+  "row_aligned_only": {
+   "note": "NOT a fixed pipeline: the stages a base = 0 mod 1,024 op would need; the ruling's fixed-latency strip pays the worst case on every op",
+   "CR_RD": 6,
+   "CR_WR": 5
+  },
+  "reach_481um": {
+   "CR_LEAD": 10,
+   "CR_RD": 26,
+   "CR_GX": 1,
+   "CR_WR": 25,
+   "CR_RES": 10,
+   "X_GATHER_STAGES": 11,
+   "RET_SCATTER_STAGES": 10,
+   "COLL_WRITE_STAGES": 20,
+   "note": "481 um a stage (W18b commit 32155a8f / W16b); not used for the RTL"
+  }
+ },
+ "design_keys": {
+  "control_broadcast": 7,
+  "control_word_to_lanes": 9,
+  "operand_read": 18,
+  "gather_read": 19,
+  "element_write": 17,
+  "reduce_result": 7,
+  "x_gather": 8,
+  "ret_scatter": 7,
+  "coll_write": 13,
+  "rotate_mux_levels": 10,
+  "rotate_mux_stages": 2,
+  "benes_mux_levels": 19,
+  "benes_mux_stages": 3,
+  "note": "control_broadcast is controller -> strip (the address); the control word to the lanes (control_word_to_lanes) rides in parallel, inside control_broadcast + operand_read"
+ },
+ "per_su_op": {
+  "element_op_extra_cycles": 42,
+  "reduce_op_extra_cycles": 32,
+  "gathered_op_extra_cycles": 43,
+  "basis": "emit -> strip read (CR_LEAD) -> lanes (CR_RD) ... lanes -> strip (CR_WR | CR_RES); the controller -> lane control word (controller_to_farthest_tile) rides in parallel"
+ },
+ "compared_to_priced": {
+  "record": "results/uarch/w11_vm_options.json C_rotate",
+  "compact_assumption": "every lane within ~3,850 um of the strip: 8 stages each way, su_op_extra ~21",
+  "finding": "the 3,850 um framing bounds the lane -> strip-edge leg only; the rotate moves data along the strip's full height, so the worst bank -> lane leg is the hub's 10,735 um"
+ },
+ "source_sha256": {
+  "tools/w11_vm_crot_stages.py": "f651435ab3f3590dde2b5cc37d825f43e71c190b45645ccec4ecec738dcd89ba",
+  "tools/uarch_model.py": "9c9819e21f167e425ad89ae84b84249627fb8d28a1ca625a3274fe7c495119ee"
+ }
+}
