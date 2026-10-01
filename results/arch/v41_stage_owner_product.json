@@ -4,7 +4,7 @@
   "claim_boundary": "Whole routed-expert ID candidate from coarse checkpoint bytes only; no tensor image, stage program, data-dependent schedule, inter-stage packet or bit-exact RTL proof.",
   "basis": "W16 V4.1 ROM PRODUCT split: 41 TP-4 stages (164 layer dies) + 8 head dies (8192m8 ping-pong) + 36 Engram table dies; BF16 columns (1,024 pairs, W10b's 1,002.89 x 142.56 um column outline) with q pairs at W10b's 510.84 x 126.9 um 1.2 GHz tile (floorplan sizes, routed closure pending) and W11's C_rotate SU+VM hub block (38.601 mm2, field less 25.57 mm2; root rulings 2026-10-01), 4096m8; capacity at the storage-only density (75.0 Mbit/mm2 + SECDED), 12.5% overhead, ring credit, 90% fill; Engram spill 0",
   "source_sha256": {
-    "tools/uarch_model.py": "1d653eba8142370583d461ef9481eaa8529add2cda1a950705fbef340c1d9c7f",
+    "tools/uarch_model.py": "c85d9588ffd08641af364151bc7e0923324eea3520a63d41451e11716a62312f",
     "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
     "results/floorplan/v41_die_macromap_expanded_woa.json": "01f10d3d3f03cfa93ca5212803883e54daa7d05a936938ac2f78dbbcf785c775",
     "results/arch/v41_die_assembly.json": "9966fa08a48e9e904e23c093312ffd0a2ee2d7fe4eb197b70215c07f52224189",
