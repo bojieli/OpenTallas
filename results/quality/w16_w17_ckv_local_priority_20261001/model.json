@@ -1,6 +1,11 @@
 {
   "K": 512,
   "KW": 10,
+  "actual_failure_source_pin": {
+    "commit": "ef81265e7307f17f10ecd5c852e3105c61677031",
+    "path": "results/rtl/w17_connected_token_preparation_20261001/ckv_collector_clear_counterexample.json",
+    "sha256": "e4b54f6ff84acff290780d7b18d934b8e63090a5a6cbd54f49873df5373bf747"
+  },
   "actual_original_counterexample": {
     "nwr": 0,
     "original_next_count": 1,
@@ -44,8 +49,18 @@
     "Newsel with old count512 and nwr0 resets0.",
     "No newsel retains unchanged0..5 count addition.",
     "Keep same ports, arrays and old pinned source; opt-in isolated companion.",
-    "Same-edge peer writes remain prohibited/unqualified until epoch/drain contract; counter fix does not fix present bit priority."
+    "On newsel+wv!=0 block collector writes and assert sticky fault; never allow present[] reset override.",
+    "Clear+noarrival, normalincrement and sameedgearrival negative gates before local exactness."
   ],
+  "same_edge_arrival_guard": {
+    "added_clocked_state_bits": 0,
+    "counter_and_collision_guard_total_allocated_area_mm2": "0.00003592512",
+    "counter_and_collision_guard_total_allocated_area_um2": "35.92512",
+    "existing_write_enable_sources": 5,
+    "extra_NAND2_equivalent_allocation": 32,
+    "policy": "On new selection, block all five collector writes/count/stat updates and fault if any wv source asserted. Do not forgive old epoch/peer traffic.",
+    "scope": "Control enable/OR/fault gate screen only; existing512x2304 array/write data unchanged. No timing/power closure."
+  },
   "schema": "opentallas.w17.ckv-counter-priority-model.v1",
   "source_pin": {
     "commit": "9345c1fc048b2e19255e5c27b2bfde6f64360f29",
