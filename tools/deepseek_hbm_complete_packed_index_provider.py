@@ -123,3 +123,18 @@ class PackedIndexExecutor(E.Executor):
             v.qdq_fp4_e8m0=self.packed_index_producer.qdq_fp4_e8m0
             self.bound_handlers[name]=FunctionType(original.__code__,{**original.__globals__,'V':v},
                                                    original.__name__,original.__defaults__,original.__closure__)
+    def f_index_scores(self,rk,op):
+        import deepseek_hbm_complete_index_consumer as Consumer
+        n,source=op['n'],op['src']
+        if self.st.n[source]<n:raise ValueError('index before row publication')
+        ids=self.owned(rk,n);q=rk.get('iqf').reshape(32,128);w=rk.get('iw')
+        # CPU source fallback must retain the source's full macro shape. Read
+        # through finite row service, then cache produced copies in software.
+        # This full-rank cache is not RF/shared memory or a GPU admission claim.
+        tiles=[self.st.ik[source][ids[start:start+64]] for start in range(0,len(ids),64)]
+        keys=np.concatenate(tiles) if tiles else np.empty((0,128),np.float32)
+        scores,receipt=Consumer.route_scores(q,keys,w,self.warp_backend,ids)
+        receipt.update(pc=None if self.current is None else self.current['pc'],rank=rk.r,rows=len(ids),
+                       physical_provider_bound=False)
+        self.index_receipts.append(receipt)
+        rk.put('is_i',ids.astype(np.int64),n=len(ids));rk.put('is_v',scores,n=len(ids))

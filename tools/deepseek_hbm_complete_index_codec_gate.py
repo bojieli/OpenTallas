@@ -6,6 +6,7 @@ import deepseek_hbm_complete_index_codec as C
 import deepseek_hbm_complete_index_codec_model as Model
 import deepseek_hbm_complete_packed_index_provider as P
 import deepseek_hbm_complete_memory as Memory
+import deepseek_hbm_complete_index_consumer as Consumer
 
 
 def gate():
@@ -40,6 +41,19 @@ def gate():
             'descriptor_sector_hex':header.hex(),'initialized_payload_sector_hex':raw.hex(),
             'producer_receipt':binding.receipts[-1],'bit_exact':True})
     memory.fence()
+    query=np.stack([binding.qdq_fp4_e8m0(np.linspace(-2,3,128,dtype=np.float32)) for _ in range(32)])
+    weights=np.ones(32,np.float32);consumers=[]
+    for name,indices in [('finite_normal',[5,6]),('actual_exceptional_returned_rows',list(range(8)))]:
+        keys=state[indices]
+        scores,receipt=Consumer.route_scores(query,keys,weights,ids=np.array(indices,np.int64))
+        expected=Consumer.reference_scores(query,keys,weights,np.array(indices,np.int64))
+        if not np.array_equal(scores.view(np.uint64),expected.view(np.uint64)):
+            raise AssertionError('actual source score consumer mismatch '+name)
+        consumers.append({'name':name,'current_query_F32_sha256':hashlib.sha256(query.tobytes()).hexdigest(),
+                         'returned_key_F32_sha256':hashlib.sha256(keys.tobytes()).hexdigest(),
+                         'actual_F64_ABI_score_bits':scores.view(np.uint64).tolist(),
+                         'reference_F64_ABI_score_sha256':hashlib.sha256(expected.tobytes()).hexdigest(),
+                         'receipt':receipt,'bit_exact':True})
     old=root/'results/rtl/deepseek_hbm_complete_20261001/index-producer-domain-r1.json'
     original=json.loads(old.read_text())
     for path,digest in original['source_pins'].items():
@@ -51,7 +65,8 @@ def gate():
     return {'schema':'opentallas.deepseek.index-tagged-producer-gate.v1','verdict':'PASS',
         'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),
         'source_pins':{**model['source_pins'],**{p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths}},
-        'witnesses':witnesses,'actual_software_row_events':state.row_events,
+        'witnesses':witnesses,'actual_returned_row_score_consumer_witnesses':consumers,
+        'actual_software_row_events':state.row_events,
         'actual_software_memory':memory.summary(),'outstanding_row_leases':len(state.leases),
         'outstanding_publications':len(state.publications),'checkpoint_data_reads':0,
         'fixture':'synthetic boundary values; no retained checkpoint or full token execution',
