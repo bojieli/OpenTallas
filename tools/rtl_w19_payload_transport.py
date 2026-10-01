@@ -12,6 +12,7 @@ import hashlib
 import json
 import pickle
 import re
+import shlex
 import subprocess
 import tempfile
 import threading
@@ -41,7 +42,40 @@ def main():
     ap.add_argument('--sm-source-commit', help='W13 immutable SM simulation source snapshot; exports without editing RTL')
     ap.add_argument('--jobs', type=int, default=4, help='Independent operand simulations; source builds are serialized')
     ap.add_argument('--limit', type=int, default=0, help='Debug subset, recorded explicitly')
+    ap.add_argument('--simulation-host', help='SSH destination for bounded vvp jobs; builds and checkpoint packing stay local')
+    ap.add_argument('--ssh-key', type=Path)
+    ap.add_argument('--remote-work', default='/home/ubuntu/w19-production-sim')
     args = ap.parse_args()
+    if args.jobs < 1 or args.jobs > 4:
+        raise SystemExit('Bounded campaign requires 1..4 simulation slots')
+    local_run = S.run_sim
+    executions = []
+    if args.simulation_host:
+        ssh = ['ssh'] + (['-i', str(args.ssh_key)] if args.ssh_key else [])
+        scp = ['scp', '-q'] + (['-i', str(args.ssh_key)] if args.ssh_key else [])
+        def remote_run(exe, directory, gap):
+            remote = args.remote_work + '/' + directory.name
+            subprocess.run(ssh + [args.simulation_host, 'mkdir -p ' + shlex.quote(remote)], check=True)
+            subprocess.run(scp + [str(exe)] + [str(directory / p) for p in ('cfg.hex', 'lines.hex', 'x.hex')]
+                + [args.simulation_host + ':' + remote + '/'], check=True)
+            command = 'cd ' + shlex.quote(remote) + ' && vvp -n sim.vvp +DIR=. +GAP=0 > sim.log 2>&1'
+            outcome = subprocess.run(ssh + [args.simulation_host, command])
+            subprocess.run(scp + [args.simulation_host + ':' + remote + '/sim.log', str(directory / 'sim.log')], check=True)
+            outcome.check_returncode()
+            subprocess.run(scp + [args.simulation_host + ':' + remote + '/out.txt', str(directory / 'out.txt')], check=True)
+            executions.append(dict(directory=directory.name, host=args.simulation_host, executable_sha256=digest(exe),
+                output_sha256=digest(directory / 'out.txt'), log_sha256=digest(directory / 'sim.log')))
+            res, meta = {}, {}
+            for line in (directory / 'out.txt').read_text().splitlines():
+                if line.startswith('#'):
+                    toks = line[1:].split()
+                    for i in range(0, len(toks)-1, 2):
+                        meta[toks[i]] = int(toks[i+1]) if toks[i+1].lstrip('-').isdigit() else toks[i+1]
+                    if 'TIMEOUT' in line: meta['timeout'] = True
+                else:
+                    row, value = line.split(); res[int(row)] = value
+            return res, meta
+        S.run_sim = remote_run
     if args.record.exists():
         raise SystemExit('Use a fresh record path; previous verdicts are immutable')
     if subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=no'], cwd=ROOT).strip():
@@ -50,6 +84,9 @@ def main():
     # Candidate is already sized/committed in the unified model before this build.
     model = U.hbm_gpu_design('v41')
     preflight = U.gpu_payload_transport_model()
+    preflight.update(model_source_sha256=digest(ROOT / 'tools/uarch_model.py'),
+        element=model['element'], sm_count=model['sm_count'], bulk_copy=model['bulk_copy'],
+        source_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip())
     (args.work / 'model_preflight.json').write_text(json.dumps(preflight, indent=2) + '\n')
     proto_src = ['rtl/gpu/ot_gpu_payload_assemble.sv', 'rtl/test/tb_w19_payload_protocol.sv']
     proto_dir = args.work / 'protocol'
@@ -165,6 +202,7 @@ def main():
         sm_snapshot=sm_snapshot, protocol=protocol,
         source_sha256=dict(source_hashes, **{p: digest(ROOT / p) for p in ['tools/rtl_w19_payload_transport.py',
             'tools/w19_sm_real_ops.py', 'tools/rtl_gpu_sm_exact.py', 'tools/hdc_golden_v41.py', 'tools/hdc_golden.py', 'tools/rtl_v41_fullshape_layer_campaign.py']}),
+        executions=executions, simulation_host=args.simulation_host or 'local',
         cases=cases, dependency='W13 SS/FF SM qualification remains pending; no duplicate hardening launched',
         model_update='Compact adapter service cycles measured; token model/headline adoption remains OFF pending full runtime/SSFF')
     args.record.write_text(json.dumps(record, indent=2) + '\n')
