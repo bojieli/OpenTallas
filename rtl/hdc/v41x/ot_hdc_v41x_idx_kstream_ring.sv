@@ -111,8 +111,14 @@ module ot_hdc_v41x_idx_kctl_ring #(
     wire [10:0]    c_lo;
     ot_hdc_ksadd_k #(.W(10)) u_clo (.a(cmd_nkeys[9:0]), .b(cmd_skip), .cin(1'b0), .s(c_lo[9:0]), .cout(c_lo[10]));
     wire [10:0]    c_m = ((cmd_nkeys[HW+9:10] != 0) || c_lo[10]) ? 11'd1024 : c_lo;  // sbkeys(cmd_span)
-    wire [10:0]    c_m7;                                   // c_m + 7: need(0, c_m) = c_m7 >> 3
-    ot_hdc_ksadd_k #(.W(11)) u_cm7 (.a(c_m), .b(11'd7), .cin(1'b0), .s(c_m7), .cout());
+    // need(0, c_m) = (c_m + 7) >> 3: 128 when the span saturates, else (nkeys[9:0] + skip + 7) >> 3,
+    // the three-operand sum as one carry-save level and one log-depth add
+    wire [11:0]    c_x = {2'b00, cmd_nkeys[9:0]}, c_y = {2'b00, cmd_skip}, c_z = 12'd7;
+    wire [11:0]    c_cs = c_x ^ c_y ^ c_z;
+    wire [11:0]    c_cc = {(c_x[10:0] & c_y[10:0]) | (c_x[10:0] & c_z[10:0]) | (c_y[10:0] & c_z[10:0]), 1'b0};
+    wire [11:0]    c_s7;
+    ot_hdc_ksadd_k #(.W(12)) u_cs7 (.a(c_cs), .b(c_cc), .cin(1'b0), .s(c_s7), .cout());
+    wire [7:0]     c_need0 = ((cmd_nkeys[HW+9:10] != 0) || c_lo[10]) ? 8'd128 : 8'(c_s7 >> 3);
     wire           c_hz1 = (cmd_nkeys[HW+9:10] == 0) && !c_lo[10];    // cmd_span < 1,024
     wire           c_hz2 = (cmd_nkeys2[HW+9:10] == 0);
     wire [4:0]     c_bs1 = bsmall(c_lo[9:0]), c_bs2 = bsmall(cmd_nkeys2[9:0]);
@@ -129,8 +135,8 @@ module ot_hdc_v41x_idx_kctl_ring #(
     wire [HW-1:0]  l_1 [0:3];
     genvar gj;
     generate for (gj = 0; gj < 4; gj = gj + 1) begin : g_ld
-        assign l_n[gj] = r_n - HW'(gj);
-        assign l_1[gj] = r_b1 - HW'(gj + 1);
+        ot_hdc_ksadd_k #(.W(HW)) u_ln (.a(r_n), .b(~HW'(gj)), .cin(1'b1), .s(l_n[gj]), .cout());
+        ot_hdc_ksadd_k #(.W(HW)) u_l1 (.a(r_b1), .b(~HW'(gj + 1)), .cin(1'b1), .s(l_1[gj]), .cout());
     end endgenerate
 
     function automatic [4:0] fold(input [HW-1:0] b);
@@ -209,6 +215,13 @@ module ot_hdc_v41x_idx_kctl_ring #(
     reg [UW-1:0]   d_hu1;                     // d_hi[BW-1:SW] + 1
     reg [BW-1:0]   dhc  [0:3];                // copies of d_hi for the return gate (8 channels each)
     reg [UW-1:0]   dhu1c[0:3];
+    wire [BW-1:0]  dhc_inc [0:3];             // dhc + 1
+    wire [UW-1:0]  dhu_inc [0:3];             // (dhc + 1)[BW-1:SW] + 1
+    genvar gh;
+    generate for (gh = 0; gh < 4; gh = gh + 1) begin : g_dhc
+        ot_hdc_inc_k #(.W(BW)) u_i (.a(dhc[gh]), .inc(1'b1), .y(dhc_inc[gh]), .co());
+        ot_hdc_inc_k #(.W(UW)) u_u (.a(dhc_inc[gh][BW-1:SW]), .inc(1'b1), .y(dhu_inc[gh]), .co());
+    end endgenerate
     reg [HW-1:0]   d_abs;                     // base + d_hi
     reg [4:0]      d_fold;                    // fold(d_abs)
     reg [4:0]      d_bidx;                    // block within its super-block (0 = scales)
@@ -260,7 +273,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
     // reads 32 + 32 flops instead of two 128-way selects of the completion array.
     reg  [NPC-1:0] hc, hn;
     wire [WB-1:0]  d_oh2 = {d_oh1[WB-2:0], d_oh1[WB-1]};  // one-hot d_slot + 2
-    wire [SW-1:0]  e1 = d_slot + 1'b1, e2 = d_slot + 2'd2;
+    reg  [SW-1:0]  e1, e2;                    // d_slot + 1, d_slot + 2
     wire           cmd_acc = !busy && cmd_v;
     reg  [NPC-1:0] hc_n, hn_n;
     reg            v0, v1, v2, z0, z1, rset, iset, ival, clr;
@@ -270,7 +283,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
             rset = rr_v[pe] && lval[pe] == 3'd1;
             iset = bsy_g[pe] && iss_w[pe];
             ival = (nx_len[pe] == 3'd0);
-            clr  = busy && (dsc_g[pe / 8] || (dq_g[pe / 8] && pe[4:3] == d_qg));
+            clr  = busy && (dsc_g[pe / 4] || (dq_g[pe / 4] && pe[4:3] == d_qg));
             // the next cc of entries d_slot, +1, +2, 0, 1
             v0 = hc[pe];
             if (rset && rr_s[pe] == d_slot) v0 = 1'b1;
@@ -290,8 +303,8 @@ module ot_hdc_v41x_idx_kctl_ring #(
             if (rset && rr_s[pe] == 1) z1 = 1'b1;
             if (iset && nx_hi[pe][SW-1:0] == 1) z1 = ival;
             if (clr && d_slot == 1) z1 = 1'b0;
-            hc_n[pe] = cmd_acc ? z0 : (dst_g[pe / 8] ? v1 : v0);
-            hn_n[pe] = cmd_acc ? z1 : (dst_g[pe / 8] ? v2 : v1);
+            hc_n[pe] = cmd_acc ? z0 : (dst_g[pe / 4] ? v1 : v0);
+            hn_n[pe] = cmd_acc ? z1 : (dst_g[pe / 4] ? v2 : v1);
         end
     end
     always @(posedge clk)
@@ -310,11 +323,11 @@ module ot_hdc_v41x_idx_kctl_ring #(
     generate for (ga = 0; ga < NPC; ga = ga + 1) begin : g_inc
         ot_hdc_inc_k #(.W(HW)) u_inc (.a(g_abs[ga]), .inc(1'b1), .y(g_abs_inc[ga]), .co());
     end endgenerate
-    // the drain decision, computed once per 8-generator group (kept as separate hierarchy so synthesis
+    // the drain decision, computed once per 4-generator group (kept as separate hierarchy so synthesis
     // cannot merge the copies): each copy drives its group's lookahead / completion state only
-    wire [3:0] dsc_g, dq_g, dst_g;
+    wire [7:0] dsc_g, dq_g, dst_g;
     genvar gd;
-    generate for (gd = 0; gd < 4; gd = gd + 1) begin : g_dec
+    generate for (gd = 0; gd < 8; gd = gd + 1) begin : g_dec
         ot_hdc_v41x_idx_kdec u_dec (.live(d_live), .b0(d_b0), .adv(adv), .all_a(all_a), .all_b(all_b), .qa(qa), .qb(qb),
             .qz(qz), .d_q(d_q), .dr_ready(dr_ready), .do_scale(dsc_g[gd]), .do_q(dq_g[gd]), .d_step(dst_g[gd]));
     end endgenerate
@@ -366,6 +379,8 @@ module ot_hdc_v41x_idx_kctl_ring #(
     reg [7:0]    gn,glo;
     reg [8:0]    ge,lo_sec,hi_sec,col_sec;
     reg [2:0]    gl;
+    reg [3:0]    wv;
+    reg [1:0]    go;
     reg [10:0]   nm;
     reg [HW-1:0] na;
     reg          iss, prep, nf;
@@ -410,17 +425,17 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     // lookahead: dl' = nx_hi' - d_hi', eg' = g_hi' - d_hi'
                     // (the late selects pick among values precomputed from registers)
                     if (prep_w[pf]) begin
-                        dl[pf] <= dst_g[pf / 8] ? eg_m[pf] : eg[pf];
-                        dl_m[pf] <= dst_g[pf / 8] ? eg_m[pf] - 1'b1 : eg_m[pf];
-                        ga_ok[pf] <= dst_g[pf / 8] ? (eg[pf] != 0 && eg[pf] <= GA) : (eg[pf] < GA);
-                    end else if (dst_g[pf / 8]) begin
+                        dl[pf] <= dst_g[pf / 4] ? eg_m[pf] : eg[pf];
+                        dl_m[pf] <= dst_g[pf / 4] ? eg_m[pf] - 1'b1 : eg_m[pf];
+                        ga_ok[pf] <= dst_g[pf / 4] ? (eg[pf] != 0 && eg[pf] <= GA) : (eg[pf] < GA);
+                    end else if (dst_g[pf / 4]) begin
                         dl[pf] <= dl_m[pf];
                         dl_m[pf] <= dl_m[pf] - 1'b1;
                         ga_ok[pf] <= (dl[pf] != 0 && dl[pf] <= GA);
                     end
-                    if (prep_w[pf] && !dst_g[pf / 8]) begin
+                    if (prep_w[pf] && !dst_g[pf / 4]) begin
                         eg[pf] <= eg_p[pf]; eg_p[pf] <= eg_p[pf] + 1'b1; eg_m[pf] <= eg[pf];
-                    end else if (!prep_w[pf] && dst_g[pf / 8]) begin
+                    end else if (!prep_w[pf] && dst_g[pf / 4]) begin
                         eg[pf] <= eg_m[pf]; eg_m[pf] <= eg_m[pf] - 1'b1; eg_p[pf] <= eg[pf];
                     end
                     if (prep_w[pf]) begin
@@ -476,6 +491,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     run <= 1'b1; busy <= 1'b1; ph <= 2'd1;
                     d_hi <= 0; d_oh <= WB'(1); d_hu1 <= 1;
                     for (b = 0; b < 4; b = b + 1) begin dhc[b] <= 0; dhu1c[b] <= 1; end
+                    e1 <= SW'(1); e2 <= SW'(2);
                 end
                 first_skip<=cmd_skip;
                 base2 <= cmd_base2; span2 <= cmd_nkeys2; m2 <= sbkeys(cmd_nkeys2);
@@ -510,7 +526,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                 nx_v[p] <= 1'b0;
                     g_hi[p] <= 0; g_hi1[p] <= 1; g_abs[p] <= cmd_base; g_bidx[p] <= 0;
                     g_m[p] <= c_m; g_col[p] <= p[4:0] ^ fold(cmd_base);
-                    g_need[p] <= 8'(c_m7 >> 3);
+                    g_need[p] <= c_need0;
                     g_low[p] <= c_nz1 ? lower(5'd0, cmd_skip) : 8'd0;
                             end else begin
                     if (req_v[p] && req_rdy[p]) req_v[p] <= 1'b0;
@@ -533,17 +549,20 @@ module ot_hdc_v41x_idx_kctl_ring #(
                         gc = g_col[p];
                         gn = g_need[p];
                         glo = g_low[p];
-                        col_sec={2'b00,gc,2'b00};
-                        lo_sec=({1'b0,glo}>col_sec) ? {1'b0,glo} : col_sec;
-                        hi_sec=({1'b0,gn}<col_sec+4) ? {1'b0,gn} : col_sec+4;
-                        ge=(hi_sec>lo_sec) ? hi_sec-lo_sec : 9'd0;
-                        gl=ge[2:0];
+                        // sector {gc, i} of the column is wanted iff glo <= it < gn: the length is the
+                        // count, the offset the first (the range [max(glo, 4 gc), min(gn, 4 gc + 4)) of
+                        // the compare form; equal for every gc, glo, gn, checked exhaustively; the
+                        // offset and address leave the unit only with a nonzero length)
+                        wv[0] = ({1'b0, glo} <= {2'b00, gc, 2'd0}) && ({1'b0, gn} > {2'b00, gc, 2'd0});
+                        wv[1] = ({1'b0, glo} <= {2'b00, gc, 2'd1}) && ({1'b0, gn} > {2'b00, gc, 2'd1});
+                        wv[2] = ({1'b0, glo} <= {2'b00, gc, 2'd2}) && ({1'b0, gn} > {2'b00, gc, 2'd2});
+                        wv[3] = ({1'b0, glo} <= {2'b00, gc, 2'd3}) && ({1'b0, gn} > {2'b00, gc, 2'd3});
+                        gl = 3'(wv[0]) + 3'(wv[1]) + 3'(wv[2]) + 3'(wv[3]);
+                        go = wv[0] ? 2'd0 : wv[1] ? 2'd1 : wv[2] ? 2'd2 : 2'd3;
                         nx_hi[p] <= g_hi[p];
                         nx_len[p] <= gl;
-                        nx_off[p]<=2'(lo_sec-col_sec);
-                        // lo_sec - col_sec < 4 whenever the length is nonzero, the only case
-                        // the address leaves the unit
-                        nx_addr[p] <= {g_abs[p], gc, 2'(lo_sec-col_sec)};
+                        nx_off[p] <= go;
+                        nx_addr[p] <= {g_abs[p], gc, go};
                         g_hi[p] <= g_hi1[p]; g_hi1[p] <= g_hi1[p] + 1'b1;
                         nf = g_first[p] && g_lo16[p] && !g_wrapn[p];
                         if (g_wrapn[p]) begin
@@ -568,7 +587,7 @@ module ot_hdc_v41x_idx_kctl_ring #(
                             end
             // drain clears, each bank group from its own copy of the decision
             if (busy) for (p = 0; p < NPC; p = p + 1)
-                if (dsc_g[p / 8] || (dq_g[p / 8] && p[4:3] == d_qg)) cc[p][d_slot] <= 1'b0;
+                if (dsc_g[p / 4] || (dq_g[p / 4] && p[4:3] == d_qg)) cc[p][d_slot] <= 1'b0;
             if (busy) begin
                 // drain
                 if (do_scale) begin
@@ -590,9 +609,10 @@ module ot_hdc_v41x_idx_kctl_ring #(
                     adv <= 1'b1;
                     d_hi <= d_hi1; d_oh <= d_oh1;
                     d_hu1 <= d_hi1[BW-1:SW] + 1'b1;
+                    e1 <= e2; e2 <= e2 + 1'b1;
                     for (b = 0; b < 4; b = b + 1) begin
-                        dhc[b] <= dhc[b] + 1'b1;
-                        dhu1c[b] <= UW'((dhc[b] + 1'b1) >> SW) + 1'b1;
+                        dhc[b] <= dhc_inc[b];
+                        dhu1c[b] <= dhu_inc[b];
                     end
                     if (ph != 0) begin
                         d_more <= !t_n[d_hi[1:0] + 2'd1];
