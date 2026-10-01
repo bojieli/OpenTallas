@@ -132,7 +132,7 @@ def trace():
         physical_PC_counts=need(0,16),accepted_sectors=m.landing.accepted,
         delivered_lines=len(events),first_delivery_cycle=min(e['cycle'] for e in events),
         last_delivery_cycle=max(e['cycle'] for e in events),exact_bytes_sha256=hashlib.sha256(actual).hexdigest(),
-        SM_credits_after_delivery=dict(m.credits),SM_ring_lines_awaiting_consumers=len(m.ring_lines),
+        SM_credits_after_delivery={str(k):v for k,v in sorted(m.credits.items())},SM_ring_lines_awaiting_consumers=len(m.ring_lines),
         scope='Finite cycle oracle only; source wait/preparation/CDC/physical clocks excluded')
 
 

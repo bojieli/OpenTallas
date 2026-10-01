@@ -145,3 +145,9 @@ def test_32PC_bursts_expose_synchronized_landing_collision():
     assert r['sector_bank_collision_cycles']>0
     assert r['last_delivery_cycle']>7
     assert r['serial_request_grant_cycles']==8
+
+
+def test_record_JSON_roundtrip_is_identical():
+    import json
+    r=M.build()
+    assert json.loads(json.dumps(r))==r
