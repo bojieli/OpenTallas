@@ -1853,7 +1853,8 @@ def w15_collective_s(cfg, op, payload, span):
     c = w15_record()["configs"]
     rec = c.get(cfg + "_sweep") or c[cfg]
     f = rec["fit"]["all_reduce" if op == "all_reduce" else "all_gather"]
-    words = math.ceil(payload / 64) if op == "all_reduce" else math.ceil(payload / max(1, span) / 64)
+    wb = rec.get("record_bytes", 64)            # bytes per engine record (16 FP32 lanes = 64 B)
+    words = math.ceil(payload / wb) if op == "all_reduce" else math.ceil(payload / max(1, span) / wb)
     return (f["fixed_cycles"] + f["cycles_per_word"] * max(1, words)) / rec["clock_hz"]
 
 

@@ -51,6 +51,9 @@ module ot_rom_oneshot_die_px #(
     parameter integer PAIRWISE = 0,            // full-shape wo_b: ((r0+r1)+(r2+r3))
     parameter integer GW       = 1,            // gather words emitted per cycle (divides N)
     parameter integer OUT_BP   = 0,            // GW=N gather may hold output until out_ready
+    parameter integer FPLAT    = 0,            // 1: ot_hdc_fp32_add_lat #(ADD_LAT) (3..7 stages, bit-identical to the fast add)
+    parameter integer FIFO_SRAM = 0,           // 1: receive FIFOs in 1R1W SRAM macros (rtl/link/ot_fifo_sram_fwft.sv)
+    parameter integer SRAM_MACRO = 1,          //    macro kind (0 64x512, 1 256x256, 2 128x256); DEPTH/2 <= its words
     parameter integer FW       = 32 * LANES,
     parameter integer PW       = FW + 3 + TAGW, // {tag, mode, last, par, data}
     parameter integer RB       = (N > 1) ? $clog2(N) : 1
@@ -128,6 +131,7 @@ module ot_rom_oneshot_die_px #(
     reg           ppar;                                 // index parity of the next pop
     wire [2*N-1:0] push;
     wire [2*N-1:0] clash;
+    wire [2*N-1:0] hvf;                                 // head valid per (source, parity) FIFO
     wire [N-1:0]  nonempty;
     wire [PW-1:0] head [0:N-1];
     wire [PW-1:0] hd [0:2*N-1];
@@ -144,18 +148,25 @@ module ot_rom_oneshot_die_px #(
                 wire [PW-1:0] rec = (g == RANK) ? tx_rec : (pd_ ? rx_rec[g*PW +: PW] : rl_rx_rec[g*PW +: PW]);
                 assign push[F] = pd_ || pr_;
                 assign clash[F] = pd_ && pr_;
-                reg [PW-1:0] m [0:PD-1];
-                reg [DB-1:0] wp, rp;
-                always @(posedge clk) if (push[F]) m[wp] <= rec;
-                always @(posedge clk or negedge rst_n)
-                    if (!rst_n) begin wp <= 0; rp <= 0; end
-                    else begin
-                        if (push[F]) wp <= wp + 1'b1;
-                        if (pop && ppar == q) rp <= rp + 1'b1;
-                    end
-                assign hd[F] = m[rp];
+                if (FIFO_SRAM != 0) begin : g_sram
+                    ot_fifo_sram_fwft #(.W(PW), .DEPTH(PD), .MACRO(SRAM_MACRO)) u_f (
+                        .clk(clk), .rst_n(rst_n), .push(push[F]), .wdata(rec), .pop(pop && ppar == q),
+                        .hv(hvf[F]), .head(hd[F]), .ovf());
+                end else begin : g_flop
+                    reg [PW-1:0] m [0:PD-1];
+                    reg [DB-1:0] wp, rp;
+                    always @(posedge clk) if (push[F]) m[wp] <= rec;
+                    always @(posedge clk or negedge rst_n)
+                        if (!rst_n) begin wp <= 0; rp <= 0; end
+                        else begin
+                            if (push[F]) wp <= wp + 1'b1;
+                            if (pop && ppar == q) rp <= rp + 1'b1;
+                        end
+                    assign hd[F] = m[rp];
+                    assign hvf[F] = cnt[F] != 0;
+                end
             end
-            assign nonempty[g] = ppar ? (cnt[2*g + 1] != 0) : (cnt[2*g] != 0);
+            assign nonempty[g] = ppar ? hvf[2*g + 1] : hvf[2*g];
             assign head[g] = ppar ? hd[2*g + 1] : hd[2*g];
             // a record landing from a partner-package source is relayed to the package peer the cycle it lands
             if (RELAY != 0 && g != RANK && (g / PKG_DIES) != MYPKG) begin : g_on
@@ -257,7 +268,17 @@ module ot_rom_oneshot_die_px #(
             if (!rst_n) err_delay <= 0;
             else err_delay <= {err_delay[ADD_LAT-2:0], (|ae) || (|ce)};
         for (g = 0; g < LANES; g = g + 1) begin : g_lane
-            if (ADD_LAT == 3) begin : g_fast
+            if (FPLAT != 0) begin : g_lat
+                ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_ab (.clk(clk), .rst_n(rst_n), .valid_in(red_in),
+                    .a(s0_d[0][32*g +: 32]), .b(s0_d[1][32*g +: 32]),
+                    .y(ab[32*g +: 32]), .err(ae[2*g +: 2]), .valid_out(av[g]));
+                ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_cd (.clk(clk), .rst_n(rst_n), .valid_in(red_in),
+                    .a(s0_d[2][32*g +: 32]), .b(s0_d[3][32*g +: 32]),
+                    .y(cd[32*g +: 32]), .err(ce[2*g +: 2]), .valid_out(cv[g]));
+                ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_y (.clk(clk), .rst_n(rst_n), .valid_in(av[g]),
+                    .a(ab[32*g +: 32]), .b(cd[32*g +: 32]),
+                    .y(y[32*g +: 32]), .err(ye[2*g +: 2]), .valid_out(yv[g]));
+            end else if (ADD_LAT == 3) begin : g_fast
                 ot_hdc_fp32_add_fast u_ab (.clk(clk), .rst_n(rst_n), .valid_in(red_in),
                     .a(s0_d[0][32*g +: 32]), .b(s0_d[1][32*g +: 32]),
                     .y(ab[32*g +: 32]), .err(ae[2*g +: 2]), .valid_out(av[g]));
@@ -309,7 +330,12 @@ module ot_rom_oneshot_die_px #(
             wire [LANES-1:0] lv;
             wire [2*LANES-1:0] le;
             for (genvar l = 0; l < LANES; l = l + 1) begin : g_lane
-                if (ADD_LAT == 3) begin : g_fast
+                if (FPLAT != 0) begin : g_lat
+                    ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_add (
+                        .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
+                        .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
+                        .y(sum[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
+                end else if (ADD_LAT == 3) begin : g_fast
                     ot_hdc_fp32_add_fast u_add (
                         .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
                         .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),

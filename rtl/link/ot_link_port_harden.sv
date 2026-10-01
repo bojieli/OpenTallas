@@ -9,7 +9,9 @@
 // CDC paths are timed as if synchronous.  The hub-to-edge wire stages are NOT
 // here (WIRE = 0 / 1): they are a routed repeated-wire crossing, hardened as
 // ot_rom_express_link at the record width.  The PHY encoder/decoder pipelines
-// (ENC/DEC stages) are hard IP stand-ins and excluded.
+// (ENC/DEC stages) are hard IP stand-ins and excluded, except one decoder
+// output register (DEC_STAGES 1) so the receive CRC is timed register to
+// register (with --false-path-io an input-fed CRC would not be timed at all).
 // ---------------------------------------------------------------------------
 module ot_link_port_harden #(
     parameter integer NVC          = 1,
@@ -53,7 +55,7 @@ module ot_link_port_harden #(
         .cr_pulse(tx_cr_pulse), .lclk(clk), .lrst_n(rst_n), .f_valid(tx_f_valid), .f_data(tx_f_data),
         .fault(tx_fault), .stat_bundles(), .stat_gated_stall());
     ot_link_rx #(.NVC(NVC), .PW(PW), .CW(CW), .TSW(TSW), .WIRE(1), .AW(AW_RX), .NL(NL),
-                 .FRAME_CYCLES(FRAME_CYCLES), .DEC_STAGES(0)) u_rx (
+                 .FRAME_CYCLES(FRAME_CYCLES), .DEC_STAGES(1)) u_rx (
         .rclk(clk), .rrst_n(rst_n), .f_valid(rx_f_valid), .f_data(rx_f_data), .clk(clk), .rst_n(rst_n),
         .now(now), .det(det), .drel(drel), .vc_valid(rx_vc_valid), .vc_rec(rx_vc_rec), .cr_pulse(rx_cr_pulse),
         .fault_crc(f1), .fault_late(f2), .fault_ovf(f3), .stat_min_age(), .stat_max_age(), .stat_max_wait(),

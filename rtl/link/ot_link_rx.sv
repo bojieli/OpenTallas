@@ -44,7 +44,14 @@ module ot_link_rx #(
     parameter integer FRAME_CYCLES = 1,
     parameter integer DEC_STAGES   = 0,
     parameter integer SYNC         = 2,
-    parameter integer BW           = TSW + NVC + CW + NVC * PW,
+    parameter integer CRC_PIPE     = 1,        // 1: CRC check over two recovered-clock stages (partials registered)
+    parameter integer HEAD_PIPE    = 1,        // 1: FIFO head -> prefetch register -> release register, due by an
+                                               //    equality against a precomputed time; age statistics and the
+                                               //    late check pipelined (the one-cycle age compare was the SS
+                                               //    critical path of the hardened port, e9ec0311: 1.52 ns)
+    parameter integer CNTW         = 1,        // credit counts per bundle (ot_link_tx PACE_NUM > 0: 3)
+    parameter integer CFW          = CW * CNTW,
+    parameter integer BW           = TSW + NVC + CFW + NVC * PW,
     parameter integer SW           = BW + 1,
     parameter integer NS           = FRAME_CYCLES * NL,
     parameter integer FRW          = NS * SW + 32
@@ -98,16 +105,28 @@ module ot_link_rx #(
     reg          cv;
     reg [NS*SW-1:0] cs;
     wire [31:0]  dcrc;
-    ot_link_crc32 #(.W(NS * SW)) u_crc (.d(dd[NS*SW-1:0]), .crc(dcrc));
+    wire         kv;                                      // the frame whose CRC dcrc is
+    wire [FRW-1:0] kd;
+    generate if (CRC_PIPE == 0) begin : g_crc1
+        ot_link_crc32 #(.W(NS * SW)) u_crc (.d(dd[NS*SW-1:0]), .crc(dcrc));
+        assign kv = dv; assign kd = dd;
+    end else begin : g_crc2
+        reg          kv_r;
+        reg [FRW-1:0] kd_r;
+        ot_link_crc32_pipe #(.W(NS * SW)) u_crc (.clk(rclk), .en(dv), .d(dd[NS*SW-1:0]), .crc(dcrc));
+        always @(posedge rclk or negedge rrst_n) if (!rrst_n) kv_r <= 1'b0; else kv_r <= dv;
+        always @(posedge rclk) if (dv) kd_r <= dd;
+        assign kv = kv_r; assign kd = kd_r;
+    end endgenerate
     always @(posedge rclk or negedge rrst_n) begin
         if (!rrst_n) begin
             cv <= 1'b0; fault_crc <= 1'b0;
         end else begin
-            cv <= dv && (dcrc == dd[FRW-1 -: 32]);
-            if (dv && dcrc != dd[FRW-1 -: 32]) fault_crc <= 1'b1;
+            cv <= kv && (dcrc == kd[FRW-1 -: 32]);
+            if (kv && dcrc != kd[FRW-1 -: 32]) fault_crc <= 1'b1;
         end
     end
-    always @(posedge rclk) if (dv) cs <= dd[NS*SW-1:0];
+    always @(posedge rclk) if (kv) cs <= kd[NS*SW-1:0];
 
     // ---- deframe: NL slots a cycle into the lanes, in order -------------------------------------------
     localparam integer FCB = (FRAME_CYCLES > 1) ? $clog2(FRAME_CYCLES) : 1;
@@ -165,39 +184,104 @@ module ot_link_rx #(
         if (!rrst_n) fault_ovf <= 1'b0;
         else if (|lovf) fault_ovf <= 1'b1;
 
-    // ---- core side: in-order read, release -------------------------------------------------------------
+    // ---- core side ------------------------------------------------------------------------------------------
     reg  [LB-1:0]  rn;
     wire           hv = !lempty[rn];
     wire [BW-1:0]  hb = lhead[rn*BW +: BW];
     wire [TSW-1:0] hts = hb[BW-1 -: TSW];
-    wire [TSW-1:0] age = now - hts;
     wire [TSW-1:0] RELAGE = drel - WIRE;
-    wire           go = hv && (!det || (age >= RELAGE));
-    reg            seen;                                  // the current head was already visible
+    reg            hr_v, hr_due;
+    reg  [BW-1:0]  hr;
+    wire [TSW-1:0] hr_ts = hr[BW-1 -: TSW];
+    wire           go = hr_v && (!det || hr_due);
     reg  [15:0]    waiting;
     integer q;
     always @(*) begin
-        lrd = 0;
-        if (go) lrd[rn] = 1'b1;
         waiting = 0;
         for (q = 0; q < NL; q = q + 1) waiting = waiting + lcnt[q*(AW+1) +: AW+1];
     end
+    generate if (HEAD_PIPE == 0) begin : g_head1
+    // In-order read into a head register; whether that register is due NEXT cycle is computed and registered
+    // with it, so the release decision is a flop (the hardened 0.92 ns port's critical path was lane mux -> age
+    // -> compare -> pop pointer).  A bundle visible at the FIFO at age a is in the register at a + 1, so
+    // deterministic release needs every arrival at a <= RELAGE - 1: the late check is one cycle stricter than
+    // the release point (the calibrated drel carries one guard cycle).
+    wire [TSW-1:0] age = now - hts;
+    wire           ld = hv && (!hr_v || go);
+    reg            seen;                                  // the current FIFO head was already visible
+    always @(*) begin
+        lrd = 0;
+        if (ld) lrd[rn] = 1'b1;
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            rn <= 0; seen <= 1'b0; fault_late <= 1'b0;
+            rn <= 0; seen <= 1'b0; fault_late <= 1'b0; hr_v <= 1'b0; hr_due <= 1'b0;
             stat_min_age <= {TSW{1'b1}}; stat_max_age <= 0; stat_max_wait <= 0; stat_bundles <= 0;
         end else begin
-            if (go) rn <= (rn == NL - 1) ? 0 : rn + 1'b1;
-            seen <= hv && !go;
+            if (ld) rn <= (rn == NL - 1) ? 0 : rn + 1'b1;
+            hr_v <= ld || (hr_v && !go);
+            hr_due <= ld ? (TSW'(age + 1'b1) >= RELAGE) : (TSW'(now + 1'b1 - hr_ts) >= RELAGE);
+            seen <= hv && !ld;
             if (hv && !seen) begin
                 if (age < stat_min_age) stat_min_age <= age;
                 if (age > stat_max_age) stat_max_age <= age;
-                if (det && age > RELAGE) fault_late <= 1'b1;
+                if (det && age >= RELAGE) fault_late <= 1'b1;
             end
             if (waiting > stat_max_wait) stat_max_wait <= waiting;
             if (go) stat_bundles <= stat_bundles + 1;
         end
     end
+    always @(posedge clk) if (ld) hr <= hb;
+    end else begin : g_head3
+    // FIFO head -> prefetch register (pb) -> release register (hr).  hr is due next cycle when its stamp equals
+    // m1 = now + 1 - RELAGE (a register, advanced with the free-running global counter now): a 16-bit equality
+    // from a register instead of lane mux -> subtract -> magnitude compare.  A bundle visible at the FIFO at age a
+    // is in pb at a + 1 and in hr at a + 2 at the earliest, so deterministic release needs every arrival at
+    // a <= RELAGE - 2 (the late check; the calibrated drel carries the extra guard cycle).  A late bundle is
+    // released at once after fault_late latches (fail closed, never stuck).  The first-visibility age and its
+    // statistics are pipelined: stamp and time registered, subtracted, then compared (2 cycles later, same values).
+    reg            pv;
+    reg  [BW-1:0]  pb;
+    wire [TSW-1:0] pts = pb[BW-1 -: TSW];
+    wire           ld = pv && (!hr_v || go);             // pb -> hr
+    wire           pf = hv && (!pv || ld);               // FIFO head -> pb
+    reg  [TSW-1:0] m1;
+    reg            seen, v1, v2;
+    reg  [TSW-1:0] ts1, now1, age2;
+    always @(*) begin
+        lrd = 0;
+        if (pf) lrd[rn] = 1'b1;
+    end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            rn <= 0; seen <= 1'b0; fault_late <= 1'b0; hr_v <= 1'b0; hr_due <= 1'b0; pv <= 1'b0; m1 <= 0;
+            v1 <= 1'b0; v2 <= 1'b0;
+            stat_min_age <= {TSW{1'b1}}; stat_max_age <= 0; stat_max_wait <= 0; stat_bundles <= 0;
+        end else begin
+            m1 <= TSW'(now + 2'd2 - RELAGE);
+            if (pf) rn <= (rn == NL - 1) ? 0 : rn + 1'b1;
+            pv <= pf || (pv && !ld);
+            hr_v <= ld || (hr_v && !go);
+            hr_due <= (ld ? (pts == m1) : (hr_ts == m1)) || fault_late;
+            seen <= hv && !pf;
+            v1 <= hv && !seen;
+            v2 <= v1;
+            if (v2) begin
+                if (age2 < stat_min_age) stat_min_age <= age2;
+                if (age2 > stat_max_age) stat_max_age <= age2;
+                if (det && age2 >= TSW'(RELAGE - 1'b1)) fault_late <= 1'b1;
+            end
+            if (waiting > stat_max_wait) stat_max_wait <= waiting;
+            if (go) stat_bundles <= stat_bundles + 1;
+        end
+    end
+    always @(posedge clk) begin
+        if (pf) pb <= hb;
+        if (ld) hr <= pb;
+        ts1 <= hts; now1 <= now;
+        age2 <= now1 - ts1;
+    end
+    end endgenerate
 
     // ---- edge -> hub wire --------------------------------------------------------------------------------
     reg  [WIRE-1:0] wv;
@@ -210,13 +294,26 @@ module ot_link_rx #(
             for (i = 1; i < WIRE; i = i + 1) wv[i] <= wv[i-1];
         end
     always @(posedge clk) begin
-        wd[0] <= hb;
+        wd[0] <= hr;
         for (i = 1; i < WIRE; i = i + 1) wd[i] <= wd[i-1];
     end
     wire [BW-1:0] ob = wd[WIRE-1];
     wire [NVC-1:0] odv = ob[BW-TSW-1 -: NVC];
-    wire [CW-1:0]  ocm = ob[NVC*PW +: CW];
+    wire [CFW-1:0] ocm = ob[NVC*PW +: CFW];
     assign vc_valid = wv[WIRE-1] ? odv : {NVC{1'b0}};
-    assign cr_pulse = wv[WIRE-1] ? ocm : {CW{1'b0}};
+    generate if (CNTW == 1) begin : g_pulse
+        assign cr_pulse = wv[WIRE-1] ? ocm : {CW{1'b0}};
+    end else begin : g_count
+        // counts -> one pulse per cycle per credit (the engine takes one a cycle); deterministic, as the bundles are
+        reg [CNTW+3:0] pend [0:CW-1];
+        genvar cc;
+        for (cc = 0; cc < CW; cc = cc + 1) begin : g_c
+            wire [CNTW+3:0] tot = pend[cc] + (wv[WIRE-1] ? ocm[cc*CNTW +: CNTW] : 0);
+            assign cr_pulse[cc] = tot != 0;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) pend[cc] <= 0;
+                else pend[cc] <= tot - (tot != 0 ? 1'b1 : 1'b0);
+        end
+    end endgenerate
     assign vc_rec   = ob[NVC*PW-1:0];
 endmodule

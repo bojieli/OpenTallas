@@ -50,6 +50,9 @@ module ot_rom_oneshot_die #(
     parameter integer TAGW    = 32,
     parameter integer DEPTH   = 16,           // receive FIFO words per source (power of two)
     parameter integer ADD_LAT = 5,            // ot_fp32_add_rne_pipe latency
+    parameter integer FPLAT = 0,              // 1: ot_hdc_fp32_add_lat #(ADD_LAT) (3..7 stages) in place of the rne pipe
+    parameter integer FIFO_SRAM = 0,          // 1: receive FIFOs in 1R1W SRAM macros (rtl/link/ot_fifo_sram_fwft.sv)
+    parameter integer SRAM_MACRO = 0,         //    macro kind (0 64x512, 1 256x256, 2 128x256); DEPTH <= its words
     parameter integer FW      = 32 * LANES,
     parameter integer PW      = FW + 2 + TAGW, // record: {tag, mode, last, data}
     parameter integer RB      = (N > 1) ? $clog2(N) : 1
@@ -106,6 +109,8 @@ module ot_rom_oneshot_die #(
     wire [N-1:0] push;
     wire [N*PW-1:0] push_rec;
     genvar g;
+    wire [N-1:0]  s_hv;                  // FIFO_SRAM: head valid / head of each source FIFO
+    wire [PW-1:0] s_head [0:N-1];
     generate
         for (g = 0; g < N; g = g + 1) begin : g_src
             if (g == RANK) begin : g_loc
@@ -123,10 +128,22 @@ module ot_rom_oneshot_die #(
     reg  [PW-1:0] head [0:N-1];
     always @(*) begin
         for (r = 0; r < N; r = r + 1) begin
-            nonempty[r] = (cnt[r] != 0);
-            head[r] = mem[r*DEPTH + rp[r]];
+            nonempty[r] = (FIFO_SRAM != 0) ? s_hv[r] : (cnt[r] != 0);
+            head[r] = (FIFO_SRAM != 0) ? s_head[r] : mem[r*DEPTH + rp[r]];
         end
     end
+    generate if (FIFO_SRAM != 0) begin : g_sram
+        for (g = 0; g < N; g = g + 1) begin : g_f
+            ot_fifo_sram_fwft #(.W(PW), .DEPTH(DEPTH), .MACRO(SRAM_MACRO)) u_f (
+                .clk(clk), .rst_n(rst_n), .push(push[g]), .wdata(push_rec[g*PW +: PW]), .pop(pop),
+                .hv(s_hv[g]), .head(s_head[g]), .ovf());
+        end
+    end else begin : g_nosram
+        for (g = 0; g < N; g = g + 1) begin : g_f
+            assign s_hv[g] = 1'b0;
+            assign s_head[g] = {PW{1'b0}};
+        end
+    end endgenerate
     wire head_mode = head[0][FW + 1];
 
     // -- pop: a word index leaves every FIFO at once ---------------------------------------
@@ -159,7 +176,7 @@ module ot_rom_oneshot_die #(
             for (r = 0; r < N; r = r + 1) begin
                 if (r != RANK) cr[r] <= cr[r] - (fire ? 1'b1 : 1'b0) + (cr_in[r] ? 1'b1 : 1'b0);
                 if (push[r]) begin
-                    mem[r*DEPTH + wp[r]] <= push_rec[r*PW +: PW];
+                    if (FIFO_SRAM == 0) mem[r*DEPTH + wp[r]] <= push_rec[r*PW +: PW];
                     wp[r] <= wp[r] + 1'b1;
                 end
                 if (pop) rp[r] <= rp[r] + 1'b1;
@@ -219,10 +236,17 @@ module ot_rom_oneshot_die #(
             wire [2*LANES-1:0] le;
             genvar l;
             for (l = 0; l < LANES; l = l + 1) begin : g_lane
-                ot_fp32_add_rne_pipe u_add (
-                    .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
-                    .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
-                    .y(sum[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
+                if (FPLAT != 0) begin : g_lat
+                    ot_hdc_fp32_add_lat #(.LAT(ADD_LAT)) u_add (
+                        .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
+                        .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
+                        .y(sum[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
+                end else begin : g_pipe
+                    ot_fp32_add_rne_pipe u_add (
+                        .clk(clk), .rst_n(rst_n), .valid_in(sv[g-1]),
+                        .a(sum[g-1][32*l +: 32]), .b(pg[32*l +: 32]),
+                        .y(sum[g][32*l +: 32]), .err(le[2*l +: 2]), .valid_out(lv[l]));
+                end
             end
             assign sv[g] = lv[0];
             assign serr[g] = (|le) || edl[ADD_LAT-1];

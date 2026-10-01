@@ -16,7 +16,7 @@ module tb_v41x_coll_dma;
     reg [31:0] mem[0:31];
     ot_chip_v41x_coll_dma #(.WA(5),.FW(32),.TAGW(8),.N(4)) dut (
       .clk(clk),.rst_n(rst_n),.go(go),.mode(mode),.rnd(rnd),.tag(tag),
-      .src(src),.n(n),.dst(dst),.busy(busy),.fault(fault),
+      .src(src),.n(n),.dst(dst),.topk(1'b0),.ibase('0),.tk_k(16'd0),.tk_stride(32'd0),.busy(busy),.fault(fault),
       .words_out(words_out),.words_in(words_in),.vm_re(vm_re),.vm_raddr(vm_raddr),
       .vm_rq(vm_rq),.vm_we(vm_we),.vm_waddr(vm_waddr),.vm_wdata(vm_wdata),
       .e_valid(e_valid),.e_ready(1'b1),.e_data(e_data),.e_last(e_last),
