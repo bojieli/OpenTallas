@@ -1,0 +1,18 @@
+DIRECT code=38 scale127=3f80 scale128=4000
+WRITE column=0 beat=0 side_scale=127 actual=3f80 golden=3f80
+WRITE column=0 beat=1 side_scale=128 actual=3f80 golden=4000
+WRITE column=0 beat=2 side_scale=126 actual=3f80 golden=3f00
+WRITE column=0 beat=3 side_scale=129 actual=3f80 golden=4080
+WRITE column=0 beat=4 side_scale=125 actual=3f80 golden=3e80
+WRITE column=0 beat=5 side_scale=130 actual=3f80 golden=4100
+WRITE column=0 beat=6 side_scale=124 actual=3f80 golden=3e00
+WRITE column=0 beat=7 side_scale=131 actual=3f80 golden=4180
+WRITE column=1 beat=0 side_scale=127 actual=3f80 golden=3f80
+WRITE column=1 beat=1 side_scale=127 actual=3f80 golden=3f80
+WRITE column=1 beat=2 side_scale=127 actual=3f80 golden=3f80
+WRITE column=1 beat=3 side_scale=127 actual=3f80 golden=3f80
+WRITE column=1 beat=4 side_scale=127 actual=3f80 golden=3f80
+WRITE column=1 beat=5 side_scale=127 actual=3f80 golden=3f80
+WRITE column=1 beat=6 side_scale=127 actual=3f80 golden=3f80
+WRITE column=1 beat=7 side_scale=127 actual=3f80 golden=3f80
+COUNTEREXAMPLE_CONFIRMED writes=16 mismatched_BF16_elements=224 uniform_control_writes=8
