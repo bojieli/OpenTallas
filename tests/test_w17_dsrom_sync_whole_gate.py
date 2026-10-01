@@ -18,7 +18,12 @@ def test_incomplete_inventory_has_no_positive_margin():
 
 def test_refill_bandwidth_or_watchdog_never_qualifies_service():
     r=build();w=r['WINDOW_refill']
-    assert w['mandatory'] and w['actual_run_source_receipt'] is None
+    assert w['mandatory'] and w['actual_run_source_receipt']['commit'].startswith('d2cabe7ce')
+    assert w['actual_source_backend']['CLK_PS']==1000
+    assert w['actual_source_fixture']['WINDOW_REFILL_CREDITS']==1
+    assert w['warm_descriptor_requires_cold_refill']
+    assert len(w['conditional_scalar_replay_cases'])==26
+    assert w['actual_measured_runtime_refill_cycles'] is None
     assert w['actual_PC24_request_response_refresh_stall_counters'] is None
     assert w['cold_refill_absolute_dependency_calendar'] is None
     assert w['warm_retention_image_user_row_epoch_reset_lifetime'] is None

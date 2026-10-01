@@ -13,6 +13,19 @@ def build():
         b=subprocess.check_output(['git','show',ref+':'+path])
         pins[name]=dict(commit=subprocess.check_output(['git','rev-parse',ref]).decode().strip(),path=path,sha256=hashlib.sha256(b).hexdigest())
         return json.loads(b)
+    window=load('actual_L0_WINDOW_source_receipt','d2cabe7ce','results/rtl/w17_connected_token_preparation_20261001/L0_PC24_actual_HBM_service_binding.json')
+    scalar=load('conditional_WINDOW_scalar_receipt','d2cabe7ce','results/rtl/w17_connected_token_preparation_20261001/L0_PC24_window_service_scalar.json')
+    for path,expected in window['source_sha256'].items():
+        source=subprocess.check_output(['git','show',window['source_commit']+':'+path])
+        if hashlib.sha256(source).hexdigest()!=expected:
+            raise ValueError('WINDOW actual source receipt mismatch: '+path)
+    code=subprocess.check_output(['git','show','d2cabe7ce:tools/w17_L0_window_service_expectation.py'])
+    if hashlib.sha256(code).hexdigest()!=window['conditional_expectation']['tool_sha256']:
+        raise ValueError('WINDOW scalar tool source mismatch')
+    env={'__name__':'pinned_conditional_replay'};exec(compile(code,'<pinned WINDOW scalar>','exec'),env)
+    cases=[env['replay'](c,3,e) for e in (1,2) for c in range(12200,13401,100)]
+    if cases!=scalar['cases']:
+        raise ValueError('WINDOW conditional scalar replay mismatch')
     b=load('sync_branch','5b8c456a','results/quality/w16_engram_rom_constructive_home_20261001/sync_branch_drain_inventory.json')
     c=load('frozen_CROM','2a4980765','results/quality/w16_engram_initializer_20261001/frozen_closure.json')
     typed=load('typed_partial_power','2b14a8e56','results/uarch/w10_engram_sync_drain_power_r1/budget.json')
@@ -54,7 +67,17 @@ def build():
             selected_FP32_ports=16,gamma5120_minimum_fast_cycles=320,
             gamma414720_minimum_fast_cycles=25920,
             legacy_faster_delivery_assumptions_usable=False,complete_image=False),
-        WINDOW_refill=dict(mandatory=True,actual_run_source_receipt=None,
+        WINDOW_refill=dict(mandatory=True,actual_run_source_receipt=pins['actual_L0_WINDOW_source_receipt'],
+            source_profile_scope='pinned L0 runtime only; no automatic all40/head provider transfer',
+            source_receipt_verified_file_count=len(window['source_sha256']),
+            actual_source_backend=window['actual_backend'],
+            actual_source_fixture=window['fixture'],
+            conditional_scalar_replay_cases=cases,
+            conditional_scalar_scope=scalar['scope'],
+            watchdog_risk=window['watchdog_risk'],
+            actual_measured_runtime_refill_cycles=None,
+            warm_retention_disabled_for_audited_L0=True,
+            warm_descriptor_requires_cold_refill=True,
             actual_backend_clock_parameter_forwarding_and_effective_CLK_PS=None,
             actual_refresh_timing_bank_policy_and_interference=None,
             actual_request_outstanding_and_return_credit_limits=None,
