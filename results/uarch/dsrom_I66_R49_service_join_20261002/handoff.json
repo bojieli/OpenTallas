@@ -1,0 +1,19 @@
+{
+  "home_commit": "4cc368a46ca8894b102bb34ccd674168571cd282",
+  "next_binding_owner": "Nash capture/gather and Maxwell named physical endpoints; current PHW10 accepted consumer journal required",
+  "no_build_or_job": true,
+  "parent_home_intake": "9fc38ba99",
+  "preserved_failures": [
+    "old common overlap47.844um",
+    "e899 single-cut timing/hold FAIL",
+    "unchanged source default ACK_TIMEOUT1024 FAIL"
+  ],
+  "protected_predecessor": "e119299b35820d04f6e7d65fec825a43490d7bde",
+  "provider_commit": "fff6dc9c0b609955b2db2ac8565eb6ab0baadaf2",
+  "replay": "python3 tools/dsrom_I66_R49_service_join.py --out /tmp/FRESH-R49-JOIN.json",
+  "scope": "Additive metadata and causal-contract validation only; no runtime/RTL/physical admission",
+  "tests": {
+    "independent_selected_provider": 22,
+    "new_join": 12
+  }
+}

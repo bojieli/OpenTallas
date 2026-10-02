@@ -1,0 +1,61 @@
+{
+  "ABI_selected": false,
+  "actual_consumer_deadline": null,
+  "candidate_reply_bits": 240,
+  "candidate_request_bits": 187,
+  "conditional_final_home_visibility_edge": 13480,
+  "conditional_first_attempt_packet_ACK_bound_edges": 2931,
+  "conditional_last_packet_debt_edge": 17495,
+  "credits": {
+    "gather_sink_seats": null,
+    "proposed_CDC_flits_per_direction": 4,
+    "read_pipeline_outstanding": null,
+    "root_seats_per_physical_shard": [
+      320,
+      256
+    ],
+    "wire_packet_per_direction": 1
+  },
+  "finite_actual_service": "BOUND_MISSING",
+  "full_token_qualified": false,
+  "global_context_bits": 169,
+  "hardware_admitted": false,
+  "home_common_gap_um": 4.32,
+  "new_jobs": false,
+  "origin_rule": "max(actual source indexed owner response, input producer ready); translate entire envelope by supplied accepted origin, never treat unknown as zero",
+  "physical_bindings_missing": [
+    "common circuit physical shard and separate per-shard selector paths",
+    "capture/read/gather/VM/consumer named pins, legal escapes, vias and route RC",
+    "feedback BUF PG feeds and clock/reset ingress sites/load/skew/release",
+    "CDC clock phase, FIFO adequacy, credits and named endpoints"
+  ],
+  "physical_fit": false,
+  "physical_shard_seats": [
+    320,
+    256
+  ],
+  "required_distinct_observations": [
+    "indexed owner response and input producer ready",
+    "reserve sink seat before scalar read acceptance",
+    "tagged row capture and physical shard",
+    "last accepted packet delivery then matching packet ACK",
+    "same-context ordered formatter output and actual home VM post-NBA visibility",
+    "source healthy idle and all packet debts before context reuse",
+    "actual consumer VM read and registered X tag in the same enrolled PHW10 journal"
+  ],
+  "reserved_resources": [
+    "one neighbor credit and RX wholepacket space",
+    "5120word VM frame and64word assembly sink",
+    "576 tagged nonready roots capture",
+    "all finite link/out grants and CDC FIFO allocation"
+  ],
+  "scope": "SOURCE_MODEL_JOIN_NOT_ACTUAL_SERVICE_OR_CURRENT_PROGRAM_CALIBRATION",
+  "separate_physical_shard_bits": 1,
+  "typed_paths": {
+    "feedback": "same-cell loop: storage QN -> restore -> two BUF -> feedback NAND -> final NAND -> storage D",
+    "feedback_routed_hold_closed": false,
+    "forward": "capture write and scalar read/gather paths require separate typed source mapping; feedback-only BUFs excluded",
+    "forward_SS_FF_closed": false,
+    "shared_restore_load_characterized": false
+  }
+}
