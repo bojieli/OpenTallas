@@ -1,0 +1,14 @@
+{
+  "verdict": "FAIL_NATIVE_LEGACY_ORDER_TRANSFER",
+  "source": "inputs/ot_hdc_v41_matvec.sv.u_add/acc_q/fb_pre",
+  "K": 5120,
+  "BF16_exact_nonzero_products": {
+    "0": 1073741824,
+    "8": -1073741824,
+    "9": 1
+  },
+  "remaining_products": 0,
+  "legacy_sequential_FP32": 1.0,
+  "golden_chunk8_640leaves_padded1024_FP32": 0.0,
+  "source_derived_symbolic_numerical_witness_not_RTL_measurement": true
+}
