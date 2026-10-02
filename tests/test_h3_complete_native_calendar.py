@@ -12,6 +12,59 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_pc0_projection_preserves_phase_padding_and96rank_scope(self):
+        base=ROOT/c.OUT/'provider_shared_driver_join_r2'
+        inputs=json.loads((base/'pc0_projection_inputs.json').read_text())
+        actual=c.project_pc0_provider_journal(**inputs)
+        self.assertEqual(actual,json.loads((base/'pc0_96rank_projection.json').read_text()))
+        self.assertEqual(actual['sector_transactions_upper_all_ranks'],149409408)
+        self.assertEqual(actual['provider_events_upper_all_ranks'],1097372832)
+        self.assertIsNone(actual['exact_full_PC0_event_count'])
+        self.assertFalse(actual['production_96rank_prefix_completed'])
+        bad=copy.deepcopy(inputs);bad['phase_schema']['write'].remove('write_residence_reserved')
+        with self.assertRaisesRegex(ValueError,'phase schema'):c.project_pc0_provider_journal(**bad)
+        bad=copy.deepcopy(inputs);bad['packet']['sector_transactions_upper_per_rank']=1
+        with self.assertRaisesRegex(ValueError,'below byte floor'):c.project_pc0_provider_journal(**bad)
+
+    def test_pc0_phase_row_upper_does_not_use_sample_density_for_admission(self):
+        base=ROOT/c.OUT/'provider_shared_driver_join_r2'
+        record=json.loads((base/'pc0_phase_row_upper.json').read_text())
+        self.assertFalse(record['empirical_event_density_used_for_this_bound'])
+        self.assertIsNone(record['actual_sqlite_footprint'])
+        self.assertIsNone(record['actual_PC0_runtime_seconds'])
+        self.assertEqual(len(record['phase_rows']['read']),7)
+        self.assertEqual(len(record['phase_rows']['write']),8)
+        for rows in record['phase_rows'].values():
+            for row in rows:
+                self.assertGreater(row['zlib_bytes_upper'],row['json_bytes_upper'])
+                self.assertEqual(row['journal_reserve_bytes_upper'],8*(row['zlib_bytes_upper']+64))
+        self.assertFalse(record['full_prefix_executed'])
+
+    def test_actual_provider_shared_join_retains_both_mirror_and_source_journal_evidence(self):
+        base=ROOT/c.OUT/'provider_shared_driver_join_r2'
+        result=json.loads(gzip.decompress((base/'execution.json.gz').read_bytes()))
+        self.assertEqual(len(result['actual_source_receipts']),512)
+        self.assertEqual(result['actual_shared_movements']['scratch64'],9216)
+        self.assertEqual(len(result['actual_movement_calls']),1152)
+        mirror=result['actual_RF_mirror_journal']
+        self.assertEqual(mirror['actual_RF_mirrors'],2);self.assertEqual(mirror['required_write_sectors'],2048)
+        self.assertTrue(mirror['all_required_mirror_sectors_reverse_drained'])
+        self.assertTrue(result['source_global_view_released']);self.assertFalse(result['source_version_retired'])
+        self.assertEqual(result['total_operand_and_staging_bound_bytes'],41472)
+        for receipt in result['actual_source_receipts']:
+            self.assertTrue(receipt['source_operand_proof']['matching_reverse_drained'])
+            self.assertTrue(receipt['source_operand_proof']['dispatch_binding_checked'])
+        self.assertEqual(result['production_calls_closed'],0);self.assertFalse(result['full_program_executed'])
+
+    def test_full_driver_and_provider_join_refuse_unpinned_family_callbacks(self):
+        class Callback:
+            def run(self):return 'golden operator'
+            def run_buffer(self):return 'golden operator'
+        with self.assertRaisesRegex(ValueError,'exact df6'):
+            c.execute_ds_provider_group128(Callback(),10,0,generation=1,identity={},source_store_view={},shared_factory=None,primitive_sources={})
+        with self.assertRaisesRegex(ValueError,'exact retained'):
+            c.execute_ds_driver_with_group128(Callback(),None,shared_factory=None,primitive_sources={})
+
     def group_execution_fixture(self, *, failure=None, capture_journals=False):
         import ast,hashlib,sys,tempfile
         import numpy as np

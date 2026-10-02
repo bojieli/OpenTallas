@@ -1578,7 +1578,7 @@ def execute_ds_group128_tiles(plan, PC, rank, generation, source, shared_factory
         whole_token_latency=None,hardware_admitted=False)
 
 
-def bind_executed_group_shared64(control, program, inventory_call, existing_interval_id, external_bounds):
+def bind_executed_group_shared64(control, program, inventory_call, existing_interval_id, external_bounds, *, journal_reader=None):
     """Export actual executed source spans into the selected-interval ABI.
 
     Positive bounds are explicit provisional model inputs, not the software
@@ -1592,13 +1592,17 @@ def bind_executed_group_shared64(control, program, inventory_call, existing_inte
     template=inventory_call['template']
     if hashlib.sha256(json.dumps(program['templates'][template],sort_keys=True,separators=(',',':')).encode()).hexdigest()!=template:
         raise ValueError('retained selected template source identity mismatch')
-    journals={r['journal_id']:r['events'] for r in control['control_disk_journal_events']};commands=[]
+    journals={r['journal_id']:r['events'] for r in control.get('control_disk_journal_events',[])};commands=[]
+    movement_calls=control.get('actual_movement_calls',control.get('control_movement_calls'))
+    if not isinstance(movement_calls,list) or not movement_calls:raise ValueError('executed movement journal calls required')
+    if not journals and not callable(journal_reader):raise ValueError('actual archived journal reader required')
     chain=hashlib.sha256()
-    for call in control['control_movement_calls']:
+    for call in movement_calls:
         ref=call['source_reference'];binding=call['binding'];owner=call['owner']
         if ref['template']!=inventory_call['template'] or (owner['PC'],owner['rank'],owner['generation'])!=(control['PC'],control['rank'],control['generation']):
             raise ValueError('executed source template/generation differs from selected call')
-        proof=call['proof'];events=journals[call['journal_id']][call['journal_start']:call['journal_end']]
+        proof=call['proof']
+        events=(journal_reader(call['journal_id'],call['journal_start'],call['journal_end']) if journal_reader is not None else journals[call['journal_id']][call['journal_start']:call['journal_end']])
         actual=verify_ds_operand_journal(program,ref['template'],ref,binding,events)
         if actual!=proof or proof['sector32_transactions']!=16 or not proof['matching_reverse_drained']:
             raise ValueError('actual executed source journal span changed')
@@ -1618,6 +1622,189 @@ def bind_executed_group_shared64(control, program, inventory_call, existing_inte
         origin='executed64-tile directed software kernel; source/output provider controls, not a released-checkpoint token',
         cost_bound_scope='explicit provisional endpoint-model edges; measured endpoint costs UNKNOWN',
         existing_RF_I64_RMW_C0_provider_charges_added=0,production_calls_closed=0,whole_program_executed=False,hardware_admitted=False)
+
+
+def project_pc0_provider_journal(packet, phase_schema, calibration):
+    """Source-phase event bounds and measured host projections, never admission.
+
+    Original byte totals do not resolve every instruction's sector padding.
+    Preserve the producer upper transaction bound and price its ambiguous
+    padding as writes for a conservative event upper bound.
+    """
+    if packet['PC']!=0 or packet['rank_calls']!=96 or packet['sector32_bytes']!=32:
+        raise ValueError('actual PC0/96rank/sector32 packet required')
+    common=['request_accept','software_owned_issue','software_service_phases_reserved',
+            'consumer_accept','reverse_credit_accept','validated_reverse_grant']
+    if sorted(phase_schema['read'])!=sorted(common+['software_read_capture']) or sorted(phase_schema['write'])!=sorted(common+['write_residence_reserved','software_backing_visible']):
+        raise ValueError('actual provider read/write phase schema mismatch')
+    read=(positive(packet['original_staged_read_bytes_per_rank'],'read bytes')+31)//32
+    write=(positive(packet['original_staged_write_bytes_per_rank'],'write bytes')+31)//32
+    upper=positive(packet['sector_transactions_upper_per_rank'],'producer transaction upper')
+    if upper<read+write:raise ValueError('producer sector upper below byte floor')
+    padding=upper-read-write;ranks=96
+    lower_events=read*len(phase_schema['read'])+write*len(phase_schema['write'])
+    upper_events=lower_events+padding*max(map(len,phase_schema.values()))
+    events=positive(calibration['total_events'],'measured calibration events')
+    seconds=calibration['wall_seconds']
+    if not isinstance(seconds,(int,float)) or not math.isfinite(seconds) or seconds<=0:raise ValueError('positive measured host runtime required')
+    footprint=positive(calibration['journal_sqlite_bytes'],'measured SQLite bytes')
+    reserved=positive(calibration['actual_journal_reserved_bytes'],'measured reservation')
+    if reserved<footprint:raise ValueError('actual conservative reservation below disk bytes')
+    total=upper_events*ranks
+    return dict(schema='H4_PC0_96RANK_PHASE_JOURNAL_PROJECTION_V1',PC=0,ranks=ranks,
+        sector_transactions_upper_per_rank=upper,sector_transactions_upper_all_ranks=upper*ranks,
+        read_sector_byte_floor_per_rank=read,write_sector_byte_floor_per_rank=write,
+        unresolved_instruction_padding_sectors_per_rank=padding,
+        provider_events_byte_floor_per_rank=lower_events,provider_events_upper_per_rank=upper_events,
+        provider_events_upper_all_ranks=total,read_phase_events=phase_schema['read'],write_phase_events=phase_schema['write'],
+        projected_sqlite_bytes=math.ceil(total*footprint/events),
+        projected_conservative_journal_reservation_bytes=math.ceil(total*reserved/events),
+        projected_serial_host_seconds=total*seconds/events,
+        projection_scope='measured rank0 publication event density/runtime extrapolated; native arithmetic/checkpoint IO, cache contention and metadata growth additional UNKNOWN',
+        exact_full_PC0_event_count=None,physical_disk_guaranteed=False,production_96rank_prefix_completed=False,
+        calibration_is_qualification=False,arbitrary_caps_injected=False,
+        native_group_staging_bytes=packet['group_staging_bytes_retained'],whole_prefix_latency=None,hardware_admitted=False)
+
+
+def execute_ds_provider_group128(continuation, PC, rank, *, generation, identity, source_store_view,
+                                 shared_factory, primitive_sources, movement_observer=None):
+    """Join df6 actual source backing/publication to journalled64KiB shared.
+
+    The original global source-version lease remains live until all64 tiles and
+    actual mirrored writer/readback reverse completion. No full LOAD view is
+    materialized. This path is also callable by the complete source driver.
+    """
+    import numpy as np
+    origin=Path(continuation.run.__func__.__code__.co_filename)
+    if not origin.is_file() or hashlib.sha256(origin.read_bytes()).hexdigest()!='1fbcc6ba439d1b1bc8798aa300d9c5f65c116e638a04d0b66b65b9aede5ae96b':
+        raise ValueError('exact df6 provider continuation source required')
+    provider=continuation.provider;plan=continuation.plan
+    if continuation.failed or (PC,rank,generation) in continuation.completed:raise ValueError('failed or completed provider continuation; no retry')
+    if generation!=provider.generation:raise ValueError('provider generation mismatch')
+    continuation.bridge._check();parent=plan.parents[PC];writer=parent['writes'][0]
+    if (identity.get('PC'),identity.get('rank'),identity.get('generation'),identity.get('version'))!=(PC,rank,generation,writer['version']) or source_store_view!=writer['native_result_binding']:
+        raise ValueError('exact source writer identity/result binding required')
+    if not identity.get('home_indices') or provider._leased(writer['version']) or any(k[:3]==(PC,rank,generation) for k in provider.views):
+        raise ValueError('concrete unleased writer and unique live operation required')
+    source_version=parent['provider_bindings'][parent['new_template']]['parts']['version']
+    lease={'parts':dict(version=source_version,leased_versions=[source_version],source_ranks=list(range(64)),provenance_certified=False,data=None)}
+    provider.views[PC,rank,generation,id(lease)]=lease
+    source_receipts=[];publication=None;result_journal=None;released=0;pending_tiles=set();output=np.empty(8192,np.float32)
+    class Source:
+        def acquire(self,span,owner):
+            if not provider._leased(source_version):raise ValueError('actual global source lease lost')
+            loc=provider.locations.get((source_version,span['source_rank']))
+            if loc is None or list(loc['shape'])!=[1024] or np.dtype(loc['dtype'])!=np.dtype('float32'):
+                raise ValueError('actual retained1024 F32 source backing required')
+            first=span['local_word_first'];words,loc,receipt=continuation.bridge._read_words(source_version,span['source_rank'],np.arange(first,first+128))
+            tile=plan.tile(PC,rank,owner['tile']//8,(owner['tile']%8)*128)
+            receipt=dict(receipt);receipt['source_operand_proof']=continuation.receive(tile,span,loc,receipt,f'group:{PC}:{rank}:{generation}:{source_version}')
+            source_receipts.append(receipt);raw=words.tobytes()
+            return dict(version=source_version,rank=span['source_rank'],generation=generation,first=first,words=128,
+                lease=(owner['tile'],span['source_rank']),state='visible',data=raw,payload_sha256=hashlib.sha256(raw).hexdigest())
+        def release(self,record,owner):
+            nonlocal released
+            # Logical tile consumption can finish early; the parent version
+            # lease must NOT release before the final real writer ACK/reverse.
+            released+=1
+            if released==512:
+                if publication is None or len(pending_tiles)!=64:raise ValueError('source release before complete publication')
+                provider.release_views(PC,rank,generation,lease)
+    class Output:
+        def write_span(self,tile,owner,raw):
+            nonlocal publication,result_journal
+            ordinal=tile['tile_ordinal'];first=tile['output_flat_word_first']
+            if ordinal in pending_tiles or ordinal!=len(pending_tiles):raise ValueError('output tile duplicate/out of source order')
+            output[first:first+128]=np.frombuffer(raw,np.float32);pending_tiles.add(ordinal)
+            if len(pending_tiles)==64:
+                engine=provider.rf.get(rank);start=len(engine.events) if engine is not None else 0
+                publication=provider.publish(identity,{'data':output},source_store_view)
+                engine=provider.rf[rank];end=len(engine.events)
+                prove=continuation.run.__func__.__globals__['prove_sector_span']
+                transactions=prove(engine.events[start:end],model='DeepSeek',rank=rank,PC=PC,generation=generation)
+                if not any(t['direction']=='write' for t in transactions) or any((engine.live,engine.queue,engine.calendar,engine.resident)):
+                    raise ValueError('actual writer/readback reverse debt retained')
+                if publication.get('identity')!=identity or publication.get('pending_obligations')!=0 or publication['payload_sha256']['data']!=hashlib.sha256(output.tobytes()).hexdigest():
+                    raise ValueError('actual provider publication owner/payload/debt mismatch')
+                if [e['event'] for e in publication['events']]!=['software_backing_visible','consumer_accept','validated_reverse_grant']:
+                    raise ValueError('actual provider publication visibility/consumer/reverse order')
+                written={t['identity']['sector'] for t in transactions if t['direction']=='write'};required=set()
+                for i in identity['home_indices']:
+                    home=provider.homes[i]
+                    if home['version']!=writer['version'] or rank not in home['rank_group'] or home['home']['class']!='RF':raise ValueError('actual mirrored writer home identity')
+                    for copy in range(2):
+                        base=(home['SM']*2+copy)*262144+home['home']['slot_first']*512
+                        required.update(range(base//32,(base+home['word_count']*4+31)//32))
+                if not required or not required<=written:raise ValueError('actual both-mirror backing visibility/reverse incomplete')
+                result_journal=dict(journal_id=engine.events.id,start=start,end=end,sector_transactions=len(transactions),
+                    actual_RF_mirrors=2,required_write_sectors=len(required),all_required_mirror_sectors_reverse_drained=True)
+            return dict(version=writer['version'],rank=rank,generation=generation,first=first,bytes=512,
+                payload_sha256=hashlib.sha256(raw).hexdigest(),pending_obligations=0,
+                state='actual_published' if publication is not None else 'unpublished_charged_staging')
+    try:
+        result=execute_ds_group128_tiles(plan,PC,rank,generation,Source(),shared_factory,primitive_sources,Output(),movement_observer=movement_observer)
+        if provider._leased(source_version) or released!=512 or publication is None:raise ValueError('actual group global view not retired')
+        continuation.completed.add((PC,rank,generation))
+        result.update(actual_source_receipts=source_receipts,actual_publication=publication,actual_result_journal=result_journal,
+            source_global_view_released=True,source_version_retired=False,
+            unpublished_output_staging_bytes=32768,total_operand_and_staging_bound_bytes=41472,
+            actual_RF_mirror_journal=result_journal,actual_provider_writer=True,production_payload_provenance='caller-retained producer backing; qualification belongs to full driver/input receipts',
+            production_calls_closed=0)
+        return result
+    except Exception:
+        continuation.failed=True
+        raise
+
+
+def execute_ds_driver_with_group128(driver, continuation, *, shared_factory, primitive_sources, observer=None):
+    """Full source-PC dispatch with current group continuation; opt-in only.
+
+    All other families execute the existing driver run_buffer/kernel machinery.
+    A missing binding faults with completed-PC and live provider evidence intact;
+    this does not skip arithmetic or turn an absent producer into a successful PC.
+    """
+    source=Path(driver.run_buffer.__func__.__code__.co_filename)
+    if not source.is_file() or hashlib.sha256(source.read_bytes()).hexdigest()!='3cbfc171ab3ff28439637a4ac4e3adb7bd332d87e015e03a7dabfc2d0d1443e0':
+        raise ValueError('exact retained full native driver required; no family callback')
+    if continuation.provider is not driver.provider:raise ValueError('driver/continuation actual provider differs')
+    if len(driver.native['instructions'])!=2213 or driver.native is not continuation.provider.native or driver.generation!=continuation.provider.generation:
+        raise ValueError('complete current2213PC/provider native object and generation required')
+    if driver.retired:raise ValueError('fresh full driver required; no replay over live partial state')
+    calls=[]
+    for op in driver.native['instructions']:
+        if not set(op['dependencies'])<=driver.retired:raise ValueError('source dependency not retired')
+        views=None
+        for owned in op['rank_bindings']:
+            if owned.get('empty_owned_extent'):continue
+            rank=owned['rank']
+            if op['family']=='all_reduce':
+                write=op['writes'][0]
+                indices=[i for i in write['home_indices'] if rank in driver.homes[i]['rank_group']]
+                identity=dict(PC=op['pc'],version=write['version'],rank=rank,generation=driver.generation,home_indices=indices)
+                record=execute_ds_provider_group128(continuation,op['pc'],rank,generation=driver.generation,identity=identity,
+                    source_store_view=write['native_result_binding'],shared_factory=shared_factory,primitive_sources=primitive_sources,movement_observer=observer)
+                if observer is not None:observer(dict(event='actual_group_call_completed',PC=op['pc'],rank=rank,record=record))
+                calls.append(dict(PC=op['pc'],rank=rank,output_sha256=record['output_sha256']))
+            else:
+                views=driver.provider.read_views(op,owned,driver.generation)
+                if owned.get('buffer_programs'):
+                    if set(views)!={b['write_version'] for b in owned['buffer_programs']}:raise ValueError('exact independent collective buffer view set')
+                    for buffer in owned['buffer_programs']:
+                        bindings={name:dict(value) for name,value in op['provider_bindings'][buffer['template']].items()}
+                        for name,required in bindings.items():
+                            if name=='parts':required.update(version=buffer['read_version'],additional_versions=[buffer['read_version']])
+                            elif required['kind']=='explicit_auxiliary_provider':required['identity_from_versions']=[buffer['read_version']]
+                        driver.run_buffer(op,owned,buffer['template'],bindings,views[buffer['write_version']],[w for w in op['writes'] if w['version']==buffer['write_version']])
+                else:driver.run_buffer(op,owned,owned['template'],op['provider_bindings'][owned['template']],views,op['writes'])
+        retired=driver.provider.retire_operation(op['pc'],driver.generation)
+        if retired!=dict(PC=op['pc'],generation=driver.generation,pending_obligations=0,source_consumers_released=True):raise ValueError('actual source operation retirement debt')
+        driver.retired.add(op['pc'])
+        for read in op['reads']:
+            if driver.last_use[read['version']]==op['pc']:driver.provider.release_version(read['version'],driver.generation)
+    drained=driver.provider.drain(driver.generation)
+    if drained!=dict(generation=driver.generation,pending_obligations=0,live_consumers=0):raise ValueError('full driver terminal debt')
+    return dict(schema='H4_DS_FULL_DRIVER_GROUP128_DISPATCH_V1',PCs_retired=len(driver.retired),actual_group_calls=calls,
+        status='FULL_NATIVE_DRIVER_SOFTWARE_COMPLETED',full_program_executed=True,group_movement_observer_present=observer is not None,hardware_admitted=False,whole_token_latency=None)
 
 
 def reprice_h4_intervals(execution, *, costs=None):
