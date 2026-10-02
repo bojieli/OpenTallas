@@ -1,0 +1,23 @@
+{
+  "artifacts": {
+    "current-generated-core.sv.gz": "c771caecfde212682c5045c0b71f7e5e039fc5917bb3a27e2db725f7b2ff5843",
+    "focused-tests-r1.log": "719d8182cd5e3c0278d6a6593f0f3bfcaab7d461a852f1c267e343c0ec799933",
+    "readiness-r1.json": "54551ff4f74a54f42cdcf461205888c6d38592f6a8d2d62aa8b85b2f3bf92f3d",
+    "retained-export-audit.json": "f9f3dc796b47ab785c6012b470875a32af73311beca60bbf1322b808d09d8191",
+    "source-observer-contract-r1.json": "f4bad88141b8a47e73de9dc4f33020f87f346609b6ab88932a10251a09880e48"
+  },
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "rtl/rom/ot_qwen_tp_seq_w12.sv": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+    "tests/test_qwen_rom_accepted_stage_journal.py": "20acd0afdf458bffa3e139664ec7592219de03b13ed6b1e64fe023c85e265687",
+    "tools/qwen_rom_accepted_stage_journal.py": "27c7e6fdf6e4f2ae723b1a13f3cf62351c468a91cb1c1528c3d8c0b24b898d3b",
+    "tools/qwen_rom_arithmetic_contract_w12.py": "8a1a3cd678e1e31da246b76489e8fa4461e79ddc6cc683fd71f43b316cb5a54d",
+    "tools/qwen_rom_kv_production_join.py": "2cf13c419d3056af10be64f9c687318ea6d5506cf1d0755f1be890130a999eaa",
+    "tools/qwen_rom_program_kv_journal.py": "d5c26866f37ad7a7b616d36b2b6dc2ccb5d56632028731139b513889abadfa69",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea"
+  },
+  "status": "SOURCE_CONTRACT_READY_ACTUAL_ACCEPTED_STATE_ABSENT"
+}
