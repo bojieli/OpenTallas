@@ -345,3 +345,351 @@ def test_executor_reads_scattered_provider_words_and_rejects_missing_home():
     assert m.read_version(value['version'])[256]==7  # actual home backing is read, not register shadow
     m.provider_payloads.pop(home['provider_ref'])
     with pytest.raises(ValueError,match='unpublished provider'): m.read_version(value['version'])
+
+
+class TiledOracleWeights:
+    """TEST only: materialize small raw fixture weights for the source oracle."""
+    def __init__(self,p): self.p=p; self.raw=N.TileFixtureWeights(p)
+    def matrix(self,key):
+        d=self.p['weight_descriptors'][key]
+        assert d['rows']*d['K']<65536
+        q=np.empty((d['rows'],d['K']),np.int8)
+        for r in range(0,d['rows'],128):
+            for k in range(0,d['K'],32):
+                q[r:r+128,k:k+32]=self.raw.matrix_tile(key,r,min(128,d['rows']-r),k,min(32,d['K']-k))
+        return q,self.raw.scale_tile(key,0,d['rows'])
+    def constant(self,layer,kind):
+        count=self.p['config']['head_dim'] if kind in ('q','k') else self.p['config']['hidden_size']
+        return self.raw.gamma_tile(layer,kind,0,count)
+    def embedding(self,token):
+        codes,scale=self.raw.embedding_tile(token,0,self.p['config']['hidden_size'])
+        return G.mul(codes.astype(np.float32),scale)
+
+
+def test_tiled_every_PC_bits_source_oracle_two_layers_context_boundaries():
+    p=compile_program(small(),context=32,groups=16)
+    m=N.TiledMachine(N.compile_tiled(p)); oracle=SoftwareGPUProvider(m.p,TiledOracleWeights(m.p)); seen=set()
+    for pos in range(17):
+        expected={}
+        G.execute(m.p,oracle,3,pos,observer=lambda op,out:expected.update({op['id']:copy.deepcopy(out)}))
+        def observe(op,store):
+            seen.add(op['opcode'])
+            if op['opcode'] in ('KV_WRITE','KV_FENCE'): return
+            for version,value in zip(op['writes'],expected[op['pc']]): exact(store.debug_snapshot(version),value)
+        result=m.run(3,pos,observe if pos in (0,1,15,16) else None)
+        assert result['RF_workspace_peak_vectors']<=32
+        assert result['shared_tile_peak_bytes']<=16384
+        assert result['temporary_HBM_bytes']==0
+        assert not m.store.pages and not m.store.live and not m.memory.leases
+    assert seen==set(OPCODES)
+
+
+def test_tiled_analytical_counts_match_per_PC_execution():
+    p=compile_program(small(1),context=32,groups=16); m=N.TiledMachine(N.compile_tiled(p))
+    for position in range(2):
+        previous={}; tile_previous={}
+        def observe(op,store):
+            counts=N.tiled_counts(p['instructions'][op['pc']],p,position)['logical_counts']
+            for primitive in ('FADD','FMUL'):
+                value=m.vm.word_counts[primitive]
+                assert value-previous.get(primitive,0)==counts.get(primitive+'_words',0),(op['pc'],primitive)
+                previous[primitive]=value
+            for key in ('code_tile_reads','code_payload_bytes','code_sectors32','BF16_pack_windows'):
+                value=m.counters[key]
+                assert value-tile_previous.get(key,0)==counts.get(key,0),(op['pc'],key)
+                tile_previous[key]=value
+        # counters are cumulative; establish each token's starting value.
+        previous.update(m.vm.word_counts); tile_previous.update(m.counters)
+        m.run(3,position,observe)
+
+
+def test_tiled_fullshape_compiler_actual_homes_and_counts():
+    n=N.compile_tiled(); p=n['source_program']
+    assert n['coverage']['PCs']==1737 and len(n['coverage']['families'])==21
+    assert len(n['operands'])==2027
+    assert len(n['provider_binding']['version_homes'])==31232
+    assert n['provider_binding_pin']['commit']==N.PROVIDER_COMMIT
+    assert n['feasibility']['temporary_HBM_bytes']==0
+    assert n['feasibility']['RF_workspace_vectors']==32
+    assert n['feasibility']['shared_reserved_bytes']==17408<65536
+    for source,op in zip(p['instructions'],n['operations']):
+        assert op['provider_binding']==n['provider_binding']['operations'][op['pc']]
+        assert op['reads'] and op['writes']
+        if op['opcode']=='MATRIX':
+            d=p['weight_descriptors'][source['attributes']['weight']]
+            c=op['calendar_export']['counts_full_context']['logical_counts']
+            assert c['FMUL_words']==d['rows']*d['K']
+            assert c['FADD_words']==d['rows']*(d['K']+d['split']-1)
+            assert c['code_payload_bytes']==d['rows']*d['K']
+    assert N.canonical(n)==N.canonical(N.compile_tiled())
+
+
+def test_tiled_whole36layer_no_highlevel_oracle(monkeypatch):
+    m=N.TiledMachine(N.compile_tiled(compile_program(small(36),context=32,groups=16)))
+    def forbidden(*a,**k): raise AssertionError('high-level oracle callback')
+    monkeypatch.setattr(SoftwareGPUProvider,'execute',forbidden)
+    for name in ('exp','rsqrt','reciprocal','matrix','rstd','chunk8','bf16','fp8_encode','fp8_decode'):
+        monkeypatch.setattr(G,name,forbidden)
+    monkeypatch.setattr(N.TileWords,'debug_snapshot',forbidden)
+    for pos in range(2):
+        r=m.run(3,pos)
+        assert r['PCs']==1737 and r['RF_workspace_peak_vectors']<=32
+        assert r['tile_counts']['code_tile_reads']>0
+        assert r['transfer_counts']['RF_write_ACK']>0
+        assert r['temporary_HBM_bytes']==0
+
+
+def test_tiled_BF16_exception_bits_source_contract():
+    bits=np.array([0,0x80000000,1,0x007fffff,0x3f808000,0x3f818000,0x7f7fffff,
+                   0x7f800000,0xff800000,0x7fc00000,0x7fffffff,0xffc12345,0x7f800001],np.uint32)
+    vm=N.NativePrimitiveVM()
+    result=vm.run_qwen(N.tile_microcode()['bf16'],{'x':bits.view(np.float32)})
+    exact(result,G.bf16(bits.view(np.float32)))
+
+
+def test_tiled_provider_visibility_bounds_and_RF_mirrors():
+    n=N.compile_tiled(compile_program(small(1),context=32,groups=16)); s=N.TileWords(n)
+    v=next(x['version'] for x in n['operands'] if x['name']=='token')
+    with pytest.raises(ValueError,match='unpublished'): s.read(v,0,1)
+    s.reserve(v,0,'U32'); s.write(v,0,np.array([3],np.uint32)); s.publish(v)
+    with pytest.raises(ValueError,match='aperture'): s.read(v,1,1)
+    key=next(iter(s.pages)); s.pages[key][1][0]^=1
+    with pytest.raises(ValueError,match='mirror'): s.read(v,0,1)
+    with pytest.raises(ValueError,match='SSA'): s.reserve(v,0)
+
+
+def ds_reference_machine():
+    import ast
+    path=N.ROOT/N.OUT/'tiled_r1/Peirce_native_76d564c9a.py.source'
+    tree=ast.parse(path.read_text())
+    nodes=[x for x in tree.body if isinstance(x,ast.ClassDef) and x.name=='Machine']
+    ns={'np':np}; exec(compile(ast.Module(body=nodes,type_ignores=[]),str(path),'exec'),ns)
+    native=next(ast.literal_eval(x.value) for x in tree.body if isinstance(x,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='NATIVE' for t in x.targets))
+    return ns['Machine'],native
+
+
+def test_common_ABI_every_Peirce_primitive_adapter():
+    Ref,native=ds_reference_machine(); vm=N.NativePrimitiveVM()
+    assert native<=N.COMMON_NATIVE
+    f=np.array([1.25,-2.5,0,4],np.float32); u=np.array([1,2,3,4],np.uint32)
+    cases={
+      'IOTA':([],{},[4]),
+      'RESHAPE':([f],{},[2,2]),'SLICE':([f],{'axis':0,'start':0,'stop':4,'step':2},[2]),
+      'TRANSPOSE':([f.reshape(2,2)],{'axes':[1,0]},[2,2]),'CONCAT':([f[:2],f[2:]],{'axis':0},[4]),
+      'BROADCAST':([f[:1]],{},[4]),'TAKE':([f,u[:2]],{'axis':0},[2]),
+      'SCATTER':([f,np.array(2,np.int64),np.array(8,np.float32)],{'axis':0},[4]),
+      'FADD':([f,f],{},[4]),'FMUL':([f,f],{},[4]),'SQRT':([np.abs(f)],{},[4]),
+      'FMAX':([f,f[::-1]],{},[4]),'FMIN':([f,f[::-1]],{},[4]),
+      'SELECT':([u,f,f[::-1]],{},[4]),'BITCAST_U':([f],{},[4]),'BITCAST_F':([u],{},[4]),
+      'I2F':([u],{},[4]),'F2I':([f],{},[4]),'LDEXP':([f,u],{},[4]),
+      'ASSERT':([u],{},[4]),'PACKET_COMMIT':([f],{'lease':'source:1','lease_state':'visible'},[4]),
+    }
+    for op in ('FCMP_GT','FCMP_LT','FCMP_EQ'): cases[op]=([f,f[::-1]],{},[4])
+    for op in ('SHR','SHL','AND','OR','XOR','IADD','ISUB','IMUL','IMOD'): cases[op]=([u,u],{},[4])
+    for op,(args,attrs,shape) in cases.items():
+        code=[]; memory={}; providers={}
+        for i,a in enumerate(args):
+            dtype='F32' if a.dtype==np.float32 else 'I64' if a.dtype==np.int64 else 'U32'
+            name='input'+str(i); memory[name]=a; providers[name]={'value':a,'lease':name,'state':'visible'}
+            code.append(dict(op='LOAD',dst=name,src=[],shape=list(a.shape),attrs={'name':name,'dtype':dtype}))
+        code.append(dict(op=op,dst='out',src=list(memory),shape=shape,attrs=attrs))
+        p={'code':code,'outputs':{'out':'out'}}
+        exact(vm.run_ds(p,providers)['out'],Ref(p,memory).run()['out'])
+    for dtype,value in [('F32',f),('U32',u),('I64',u.astype(np.int64))]:
+        at={'dtype':dtype,'bits':value.view(np.uint32).tolist()} if dtype=='F32' else {'dtype':dtype,'value':value.tolist()}
+        p={'code':[dict(op='CONST',dst='out',src=[],shape=[4],attrs=at)],'outputs':{'out':'out'}}
+        exact(vm.run_ds(p,{})['out'],Ref(p,{}).run()['out'])
+    # DIV is separately covered with the explicit source restoring provider.
+    assert set(cases)|{'LOAD','CONST','DIV'}==native
+
+
+def test_common_ABI_rejects_missing_providers_and_illegal_semantics():
+    vm=N.NativePrimitiveVM()
+    for op,args in [('DIV',[np.float32(1),np.float32(3)]),('GOLDEN_MATRIX',[])]:
+        with pytest.raises(ValueError): vm.primitive(op,args)
+    with pytest.raises(ValueError,match='outer tile'): vm.primitive('FADD',[np.zeros(129,np.float32),np.float32(1)])
+    with pytest.raises(ValueError,match='shift'): vm.primitive('SHR',[np.uint32(1),np.uint32(32)])
+    with pytest.raises(ValueError,match='F2I'): vm.primitive('F2I',[np.float32(np.nan)])
+    with pytest.raises(ValueError,match='NaN'): vm.primitive('FP8_UNPACK',[np.uint8(127)])
+    p={'code':[dict(op='LOAD',dst='x',src=[],shape=[1],attrs={'name':'v','dtype':'F32'})],'outputs':{'x':'x'}}
+    with pytest.raises(ValueError,match='lease'): vm.run_ds(p,{'v':np.array([1],np.float32)})
+
+
+def test_common_DIV_restoring_provider_exception_rounding_and_DS_adapter():
+    import h3_exact_scalar_contract as scalar
+    Ref,_=ds_reference_machine()
+    patterns=[(0x3f800000,0x40400000),(0x00800000,0x43800000),(0x80000001,0x40000000),
+              (0x7f7fffff,0x3f000000),(0,0x45a00000),(0x3f800000,0),(0x7f800000,0x3f800000),
+              (0x80000000,0x3f800000),(0x3f800001,0x3f800002)]
+    a=np.array([x for x,y in patterns],np.uint32).view(np.float32)
+    b=np.array([y for x,y in patterns],np.uint32).view(np.float32)
+    values,faults=N.restoring_DIV_provider(a,b)
+    expected=[scalar.div_contract(x,y) for x,y in patterns]
+    np.testing.assert_array_equal(values.view(np.uint32),[x for x,y in expected])
+    np.testing.assert_array_equal(faults,[y for x,y in expected])
+    code=[dict(op='LOAD',dst=x,src=[],shape=[len(a)],attrs={'name':x,'dtype':'F32'}) for x in ('a','b')]
+    code.append(dict(op='DIV',dst='out',src=['a','b'],shape=[len(a)],attrs={}))
+    p={'code':code,'outputs':{'out':'out'}}
+    vm=N.NativePrimitiveVM(div=N.restoring_DIV_provider)
+    ref=Ref(p,{'a':a,'b':b},div=N.restoring_DIV_provider)
+    exact(vm.run_ds(p,{x:{'value':v,'state':'visible','lease':x} for x,v in [('a',a),('b',b)]})['out'],ref.run()['out'])
+    assert vm.fault and ref.fault
+    assert vm.error_events==ref.error_events
+
+
+def test_tiled_calendar_finite_and_costs_cannot_disappear():
+    n=N.compile_tiled(compile_program(small(1),context=32,groups=16))
+    calendar=N.materialize_tile_calendar(n,{k:1 for k in N.TILE_COSTS})
+    assert len(calendar['operations'])==57
+    assert calendar['resources']['outstanding_tiles']==1
+    assert calendar['resources']['source_sector_credits_used']<=calendar['resources']['source_sector_credits_available']
+    assert calendar['resources']['RF_vectors']==32
+    previous=0
+    for op in calendar['operations']:
+        assert op['start']==previous and op['end']>op['start']
+        assert all(x>0 for x in op['service_budget'].values())
+        previous=op['end']
+    for costs in ({},{k:0 for k in N.TILE_COSTS},{k:float('nan') for k in N.TILE_COSTS}):
+        with pytest.raises(ValueError,match='positive'): N.materialize_tile_calendar(n,costs)
+
+
+def test_tiled_full4096_RSTD_exact_mean_and_rounds():
+    n=N.compile_tiled(); m=N.TiledMachine(n)
+    op=next(o for o in n['operations'] if o['opcode']=='RSTD')
+    m.position=0
+    version=op['reads'][0]; x=np.resize(np.array([0.25,-0.5,1,0.00390625,2,-4,0,8],np.float32),4096)
+    m.store.reserve(version,0)
+    for start in range(0,4096,128): m.store.write(version,start,x[start:start+128])
+    m.store.publish(version); m.execute(op)
+    exact(m.store.debug_snapshot(op['writes'][0]),G.rstd(x,op['attributes']['epsilon']))
+    assert m.vm.peak_vectors<=32
+    assert m.vm.counts['DIV']==0
+    assert np.float32(1/4096).view(np.uint32)==0x39800000
+
+
+def test_tiled_matrix_rows129_K256_exact_split_tree_and_conversion():
+    n=N.compile_tiled(); m=N.TiledMachine(n)
+    op=next(o for o in n['operations'] if o['opcode']=='MATRIX'); out=op['writes'][0]
+    m.store.reserve(out,0)
+    x=np.resize(np.array([1.00390625,1e8,-1e8,-1,0.03125],np.float32),256)
+    q=((np.arange(129*256).reshape(129,256)%9)-4).astype(np.int8)
+    m.dot(129,256,256,lambda indexes:x[indexes],lambda r,n,k,t:q[r:r+n,k:k+t],out,0,True,True)
+    m.store.publish(out)
+    actual=np.concatenate([m.store.read(out,i,min(128,129-i)) for i in range(0,129,128)])
+    exact(actual,G.matrix(q,G.bf16(x),256))
+    assert m.vm.peak_vectors<=32 and m.peak_shared<=8192
+    assert m.counters['code_tile_reads']==16
+    # Interleaved K with empty source leaves, separate three-level padded tree.
+    m2=N.TiledMachine(n); m2.store.reserve(out,0)
+    w=q[:3,:3].astype(np.float32); y=np.array([1e8,-1e8,1],np.float32)
+    m2.dot(3,3,8,lambda indexes:y[indexes],lambda r,n,kk:w[r:r+n,kk],out,0)
+    m2.store.publish(out); exact(m2.store.read(out,0,3),G.matrix(w,y,8,True))
+
+
+def test_tiled_raw_HBM_byte_provider_complete_program():
+    p=compile_program(small(1),context=32,groups=16); native=N.compile_tiled(p)
+    ext={e['provider_ref']:e for a in native['provider_binding']['allocation'] for e in a['extents']}
+    raw=N.TileFixtureWeights(p); backing={}
+    def put(rank,name,offset,data):
+        base=ext[f'Qwen.rank{rank}.extent.{name}']['base']+offset
+        for i,byte in enumerate(data): backing[rank,base+i]=byte
+    for key,d in p['weight_descriptors'].items():
+        prefix='head' if d['layer'] is None else f'L{d["layer"]}.{d["name"]}'
+        q=raw.matrix_tile(key,0,d['rows'],0,d['K'])
+        put(d['die'],prefix+'.codes',0,q.tobytes())
+        put(d['die'],prefix+'.scales',0,(raw.scale_tile(key,0,d['rows']).view(np.uint32)>>16).astype('<u2').tobytes())
+    for rank in range(2):
+        h=p['config']['hidden_size']; hd=p['config']['head_dim']
+        for token in range(p['config']['vocab_size']):
+            codes,scale=raw.embedding_tile(token,0,h); put(rank,'embedding',token*h,codes.tobytes())
+            put(rank,'embedding',p['config']['vocab_size']*h+2*token,np.array([int(scale.view(np.uint32))>>16],'<u2').tobytes())
+        put(rank,'L0.qk_norm',0,np.full(2*hd,0x3f80,dtype='<u2').tobytes())
+        put(rank,'final_norm',0,np.full(h,0x3f80,dtype='<u2').tobytes())
+        for pos in range(2):
+            co,si=raw.rope_tile(pos,p['config']['rope_theta'],0,hd//2)
+            put(rank,'rope_table',4*pos*hd,np.concatenate([co,si]).astype('<f4').tobytes())
+    class Backend:
+        def read_tile_bytes(self,record):
+            rank=int(record['provider_ref'].split('.')[1][4:])
+            return dict(provider_ref=record['provider_ref'],lease=record['lease'],state='visible',reverse_grant_ACK=True,
+                        payloads=[bytes(backing[rank,r['address']+i] for i in range(r['bytes'])) for r in record['byte_ranges']])
+    actual=N.TiledMachine(native,N.HBMByteTileProvider(Backend())); expected=N.TiledMachine(native)
+    for pos in range(2): assert actual.run(3,pos)['next_token']==expected.run(3,pos)['next_token']
+    assert actual.counters['immutable_HBM_sectors32']>0
+    bad=copy.deepcopy(native); first=bad['operations'][0]; first['provider_binding']['external_providers']=[]
+    with pytest.raises(ValueError,match='unbound external'): N.TiledMachine(bad).run(3,0)
+
+
+def test_common_extra_primitives_FP8_all_finite_codes_and_signed_integer():
+    vm=N.NativePrimitiveVM()
+    for sign in (0,128):
+        codes=(np.arange(127,dtype=np.uint8)|sign)
+        values=vm.primitive('FP8_UNPACK',[codes])
+        encoded=vm.primitive('FP8_PACK',[values])
+        expected=codes.copy(); expected[0]=0
+        np.testing.assert_array_equal(encoded,expected)
+    np.testing.assert_array_equal(vm.primitive('FCMP_NE',[np.array([np.nan,1],np.float32),np.array([np.nan,1],np.float32)]),[1,0])
+    np.testing.assert_array_equal(vm.primitive('SHR',[np.array([-8,8],np.int64),np.array([2,2],np.int64)]),[-2,2])
+
+
+def test_tiled_physical_export_all_primitives_matches_runtime_per_PC():
+    p=compile_program(small(1),context=32,groups=16); m=N.TiledMachine(N.compile_tiled(p)); previous={}
+    def observe(op,store):
+        expected=N.physical_tile_export(p['instructions'][op['pc']],p,0)['native_primitive_commands']
+        actual={k:v-previous.get(k,0) for k,v in m.vm.counts.items() if v!=previous.get(k,0)}
+        assert actual==expected,(op['pc'],actual,expected)
+        previous.update(m.vm.counts)
+    m.run(3,0,observe)
+    for profile in N.tile_kernel_ABI().values():
+        for step in profile['steps']:
+            assert step['native_steps'] and step['reads']
+            assert np.prod(step['write']['shape_max'])<=128
+            assert step['write']['RF_vectors_max']<=2
+
+
+def test_common_adapter_fault_suppresses_packet_and_oversize_IOTA():
+    vm=N.NativePrimitiveVM()
+    vm.primitive('LDEXP',[np.float32(1),np.uint32(1024)])
+    assert vm.fault
+    with pytest.raises(ValueError,match='publication'): vm.primitive('PACKET_COMMIT',[np.float32(1)])
+    with pytest.raises(ValueError,match='IOTA'): N.NativePrimitiveVM().primitive('IOTA',[],shape=[129])
+
+
+def test_sector_and_interleaved_cache_counts_do_not_assume_alignment():
+    sectors=0
+    for r in range(0,129,128):
+        for k in range(0,48,32):
+            touched=set()
+            for row in range(r,min(129,r+128)):
+                touched.update(range((row*48+k)//32,(row*48+k+min(32,48-k)-1)//32+1))
+            sectors+=len(touched)
+    assert N.code_sector_count(129,48)==sectors
+    assert N.interleaved_BF16_windows(256,16)==32
+
+
+def test_tiled_packed_KV_state_checks_actual_r17_extent_bytes():
+    n=N.compile_tiled(compile_program(small(1),context=32,groups=16)); m=N.TiledMachine(n)
+    m.run(3,0)
+    memory=m.memory; assert isinstance(memory,N.BoundKVStorage)
+    assert memory.bit(0,0,0) and memory.bit(0,1,0)
+    assert (memory.record(0,0)>>88)&3==3
+    assert (memory.record(0,0)>>90)&3==3
+    state=memory.state[0]; memory.bytes[0,state['base']]=0
+    with pytest.raises(ValueError,match='prefix'): memory.acquire({'key':(0,0,0),'tag':0},0,0,0)
+    assert memory.counters['state_write_sectors32']>0
+    assert memory.counters['state_read_sectors32']>0
+
+
+def test_tiled_actual_r17_full_context_spill_home_retires_byte_backing():
+    n=N.compile_tiled(); s=N.TileWords(n)
+    operand=next(v for v in n['operands'] if any(h.get('home',{}).get('class')=='spill' for h in v['homes']))
+    version=operand['version']; s.reserve(version,8191)
+    values=np.arange(128,dtype=np.float32)
+    s.write(version,0,values); s.publish(version)
+    exact(s.read(version,0,128),values)
+    assert any(k[0]=='HBM' for k in s.pages)
+    assert s.counters['HBM_read_sectors32']==16
+    assert s.counters['HBM_write_sectors32']==16
+    assert s.counters['NoC_source_write_bits']==0
+    s.retire(operand['retire_pc'])
+    assert not s.live and not s.owners and not s.pages and not s.published
