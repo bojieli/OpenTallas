@@ -39,3 +39,19 @@ def test_original_exact_body_and_candidate_non_ROM_functions_unchanged():
     new=new.replace(' .ROM_HOLD_DIRECT_CAPTURE(ROM_HOLD_DIRECT_CAPTURE),','')
     marker='    // -- KV slice'
     assert old[old.index(marker):]==new[new.index(marker):]
+
+
+def test_actual_terminal_fullvector_formal_fourstate_and_pinned_source_readback():
+    import gzip,hashlib
+    r=json.loads((BASE/'literal_r1.json').read_text())
+    t=json.loads((BASE/'terminal_r1/terminal_receipt.json').read_text())
+    assert r['status']=='PASS_LITERAL_FORMAL_AND_FOURSTATE' and r['source_stable']
+    for p,digest in r['source_sha256'].items():
+        assert hashlib.sha256((ROOT/p).read_bytes()).hexdigest()==digest
+    logs=BASE/'terminal_r1/literal'
+    assert 'Status: PASSED' in gzip.decompress((logs/'formal_base.log.gz').read_bytes()).decode()
+    assert 'Temporal induction successful.' in gzip.decompress((logs/'formal_induction.log.gz').read_bytes()).decode()
+    assert 'checks=77 unknown_selected=7' in gzip.decompress((logs/'positive_simulation.log.gz').read_bytes()).decode()
+    assert 'four-state selected output mismatch' in gzip.decompress((logs/'wrong_metadata_simulation.log.gz').read_bytes()).decode()
+    assert not t['active_handles'] and not t['tile_PR'] and not t['hardware_adoption']
+    assert t['rejected_partition_diagnostic']['status']=='FAIL'

@@ -1,0 +1,67 @@
+{
+  "CPU_limit": null,
+  "FSIZE": "unlimited",
+  "Maxwell_model_commit": "645ae1dd79eed8c20319574e4143b3c0c7b5551d",
+  "SMTBMC_pid": 911926,
+  "Z3_pid": 911929,
+  "active_handles": [],
+  "actual_pin_wire_skew_bound": false,
+  "affinity": "CPU0",
+  "contextual_SS_FF_closed": false,
+  "defaultoff": true,
+  "focused_test": "taskset -c 0 python3 -m pytest -q tests/test_qwen_rom_hold_capture_literal_gate.py tests/test_qwen_rom_hold_capture_proof.py",
+  "formal_base": "PASS4steps",
+  "formal_solver_returncodes": {
+    "base": 0,
+    "build": 0,
+    "induction": 0
+  },
+  "formal_unbounded_induction": "PASS",
+  "fourstate_checks": 77,
+  "full_width": {
+    "ROM_banks": 5,
+    "captured_bits": 2560,
+    "columns": 2,
+    "consumer_output_bits": 512,
+    "macro_output_bits": 2660
+  },
+  "hardware_adoption": false,
+  "induction_terminal_lines": [
+    "##   0:08:48  Temporal induction successful.",
+    "##   0:08:49  Status: PASSED"
+  ],
+  "mapped_replica_preservation_verified": false,
+  "negative_metadata_mutant_rejected": true,
+  "next": "Parentreview: actualliteral variant proof gatePASS permits Maxwell-admitted fullgeometry mapped SS/FF and80local-selector preservation characterization. No tileP&R. Archimedes mustjoin complete pins/OBS/PG, RC/skew/controlbuffers/fulltile occupancy.",
+  "normal_terminal": true,
+  "observed_SAT_RSS_KiB": 691712,
+  "observed_Z3_RSS_KiB": 116276,
+  "previous_progress": "literal_progress_r1.json",
+  "processes_stopped": false,
+  "rejected_partition_diagnostic": {
+    "ignored_for_qualification": true,
+    "reason": "Partition expander replaced one conditionally guarded assertion with8 assertions without a begin/end. Seven asserts became unconditional, incorrectly demanding unobservable capture equality. This is a failed diagnostic harness, not candidate counterevidence. Fullvector proofs didnot use it.",
+    "rerun": false,
+    "source_commit": "f586d7eea",
+    "status": "FAIL"
+  },
+  "replay": "taskset -c 0 python3 tools/qwen_rom_hold_capture_literal_gate.py --workdir /tmp/qwen-hold-literal-fresh --result /tmp/qwen-hold-literal-fresh.json",
+  "schema": "opentallas.qwen-rom-hold-capture-literal-terminal.v1",
+  "scope": "Actual source bodies extracted verbatim, defaultoff and enabled variant, full5bank10macro-pin/2560capture widths. Shared CE-hold response fixture and arbitrary fullwidth formal payloads. No ROM-array timing, engine, current token or contextual SS/FF credit.",
+  "selected_XZ_checks": 7,
+  "source_bytes_match_commit": true,
+  "source_implementation_commit": "b9af1afb4",
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_rom_tile_hold_capture_candidate.sv": "7d266efbf0a074b1d92c374bcd58fc32707ef573e767d5262d5a64ff2c9c7151",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/test/qwen_rom_capture/tb_qwen_rom_hold_capture_equivalence.sv": "7e4ac158072c9c8a20c689409a86889231a4cea736eac6a83e1ef7ad6c1ade45",
+    "tools/qwen_rom_hold_capture_gate_prepare.py": "80127d1582694bc0ae82c545443e1d04d87b725a89aa79d725edac9c0b6fca55",
+    "tools/qwen_rom_hold_capture_literal_gate.py": "b50c219fe2b3702b8b352302246038f7e426b03ad75c52ec3ae92be3a359fe55"
+  },
+  "source_stable": true,
+  "status": "PASS_LITERAL_FORMAL_AND_FOURSTATE",
+  "supervisor_pid": 909823,
+  "tile_PR": false,
+  "wall_limit": null,
+  "whole_vector_Yosys_SAT_induction": "PASS"
+}

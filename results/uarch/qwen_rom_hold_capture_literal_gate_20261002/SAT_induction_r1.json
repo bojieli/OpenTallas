@@ -1,0 +1,17 @@
+{
+  "PnR": false,
+  "clock_unchanged": true,
+  "formal_source_sha256": {
+    "formal_candidate.sv": "e8b4ff958784e713f64073204be4ae2fb8ff1c8a24bced3187f049c910bd3170",
+    "formal_miter.sv": "cf9769eb3b5abf5e0724cf8256b2ec7dbb9841e7f78e675f7dea5d2e9de70554",
+    "formal_original.sv": "4b667e84e552dcc6b9ab26a3de2cc13d9c817f954c14c676af82e704b61d3cdd"
+  },
+  "log_sha256": "e0807fb571d5503ff5c5d7a6d408c333f2d42aa9b06b06eb160fb4b476dc4e3c",
+  "no_RTL_changes": true,
+  "original_Z3_induction_retained": true,
+  "proof_script_sha256": "ec0103369847f3aef4a88ad0f8ce0b2d02e256d0af2c171a247b595b8e0b9dcf",
+  "returncode": 0,
+  "source_commit": "b9af1afb4",
+  "status": "PASS_ACTUAL_HDL_SAT_INDUCTION",
+  "uninitialized_capture_bits_arbitrary": true
+}
