@@ -1,0 +1,73 @@
+{
+  "PC_count": 1737,
+  "actual_payload_or_receipt_synthesized": false,
+  "actual_provider_staging_span_join_complete": false,
+  "actual_scratch_capacity_bytes": 65536,
+  "admission": {
+    "C0_H1_context_already_charged_gate_equivalents_per_SM": 16,
+    "actual_installed_H1_owner_gates": false,
+    "context_control_fanout_per_SM": {
+      "RF_grant": 6,
+      "shared_grant": 2
+    },
+    "context_new_clock_domains": 0,
+    "context_replica_count_per_rank": 32,
+    "existing_C0_command_latch_recharged": false,
+    "extra_reference_arbiter_area_adopted": false,
+    "finite_external_consumer_reverse_bound": null,
+    "hardware_qualified": false,
+    "incremental_fair_arbiter_gate_equivalents_adopted": 0,
+    "installed_parent_owner_grant_producer": null,
+    "minimal_successor": "enforce existing atomic owner at ALL host-read/host-write/SIMD contender gates; no fair arbiter justified by excluded three-valid stimulus",
+    "program_pins": {
+      "DeepSeek": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+      "Qwen": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+    },
+    "same_edge_combinational_gate_is_not_context_timing_qualification": true,
+    "schema": "H4_C0_SOURCE_PROGRAM_CONSTRAINED_OWNER_ADMISSION_V1",
+    "source_context_excludes_simultaneous_three_valid_admission": true,
+    "source_pins": {
+      "Qwen_actual_native_terminal.json": "32f67fcfa909528ef40807c96bc15b91aa3bb57bda6a22c09b36ab66a1a49a04",
+      "Qwen_actual_supervisor_terminal.json": "8813f4731240865f5af3c227afdc4df23d680ca582327474c05f1f4aff356473",
+      "rtl/gpu/ot_gpu_hbm_rf_shared_context.sv": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90",
+      "tools/h3_qwen_bounded_native.py": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b",
+      "tools/h4_c0_bridge.py": "19904b9fa7481e5ba0e27e9d4f17b1308abf3ee2df20a553f5c5ae5b0add996c",
+      "tools/h4_c0_ds_native_execution.py": "2ef4c0ea75bfe1781b58de80346bb6518e9e8bf807e095135e817d189e63bd8e",
+      "tools/h4_c0_v1_owner_lock_addressed.py": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528",
+      "tools/hbm_provider_microvm_r21.py": "3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2"
+    },
+    "transaction_sink_capture_is_not_final_version_retirement": true,
+    "unconstrained_H1_three_valid_starvation_is_actual_program_deadlock_proof": false,
+    "whole_token_latency": null
+  },
+  "column64_transactions": 5067505664,
+  "command_shapes_arithmetic_changed": false,
+  "cost_rule": "replace old packed128 shared dot costs once with exact row-major64 demand; retain all RF/C0/V1/provider/I64 costs; never add on top",
+  "endpoint_sequence_field_bits": 40,
+  "fill64_transactions": 269246464,
+  "full_program_shared_packet_sequence_bits": 33,
+  "hardware_qualified": false,
+  "installed_tile_gather_endpoint": false,
+  "local_read_write_control_edges": {
+    "read": 3,
+    "write": 2
+  },
+  "position": 8191,
+  "program_DAG_PCs": {
+    "DeepSeek": 2213,
+    "Qwen": 1737
+  },
+  "retained_packed128_column_transactions": 134627328,
+  "retained_packed128_fill_transactions": 134623232,
+  "schema": "H4_QWEN_SOURCE_ROW_MAJOR_SHARED64_SPAN_COMPILER_V1",
+  "shared_dot_PC_count": 434,
+  "source_cache_payload_base": "lease-relative offset0; physical connector translation not inferred",
+  "source_double_tile_reservation_bytes": 16384,
+  "source_pins": {
+    "emitter": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b",
+    "native": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+  },
+  "source_program_canonical_sha256": "28e898a2643b1e02cdb77f171b0d037ef8832c730a0f828f8c39fa607952ab15",
+  "total_tile_leases": 11874816,
+  "whole_token_latency": null
+}
