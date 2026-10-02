@@ -1,0 +1,68 @@
+{
+  "source_PIN": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "selected_core": "Actual original fastpp FSM/start/instruction-fetch/DYN/decode/admission plus opt-in cancellation overlay; actual SUN256 SUM64 SU and full BL16 IL8 NBMAX192 CHUNK8 MP1 QE retained; inactive ME/XU/HE/ROM dispatch fatal. No whole engine/core/die execution.",
+  "source_default_inverse": "c8+67929 identity records unchanged; actual core cone byteidentical. Only added fixture guard-fault ingress changed.",
+  "selected_owner": "STACK2 /17-bit owner100|epoch9|sector5; selected WINDOW/mux/KARB/idx source-bound simulated ownership. Other B/CKV owners preserved and independently counted.",
+  "actual_runtime_gates_pending": [
+    "23 positive cases: ISSUE,registered GO,POISON,SU_SUFFIX,WC,WS and17 QE suffix cuts",
+    "4 failing mutants: physical QE gate,PCadvance,scalar suppression,frozen VMstore loss",
+    "Immediate knownfault stop, accepted fixed QE suffix16 good-or-poison terminals+VM writes continue, localcancelACK distinct from ownerzero",
+    "Accepted WCWS ownership persists through selected simulated drain, no forced reset/restart without independent certificates"
+  ],
+  "synthetic_interfaces": [
+    {
+      "interface": "Instruction/descriptor program",
+      "scope": "Synthetic finite encoded PC20 QDQ8 +PC21 selected packed SU program and test start, not actual fulltoken program."
+    },
+    {
+      "interface": "QE WQR read memory",
+      "scope": "Synchronous synthetic BF16 1.0 backing with a directed block8/lane0 nonfinite case, full AW30 rangechecks. No checkpoint/producer payload."
+    },
+    {
+      "interface": "QE raw VM output",
+      "scope": "512-word synthetic synchronous masked VM shadow sink with explicit aperture/mask/bitmap. Accepted stores actually copied afterfreeze. Not actual shared VM fabric/retirement provider."
+    },
+    {
+      "interface": "SU data input ports",
+      "scope": "Actual SU engine arithmetic and retirement under fixture-driven ports; core_vs_q/core_vr_q fixture zero inputs. QE shadow data are not a qualified VM readback path into SU. No producer-to-SU arithmetic/fulltoken claim."
+    },
+    {
+      "interface": "Fault ingress guard",
+      "scope": "New hierarchy observes registered producer DRAIN metadata intent before freeze-gated valid. Synthetic observer, not exported production raw-intent or independent fault provider. fault_pulse is adversarial test stimulus; src_fault is selected-source sticky fault."
+    },
+    {
+      "interface": "Backend data/service",
+      "scope": "Pinned idx_hbm simulation arrays/scheduling/registered return and finite request ownership; synthetic B/CKV competitors and hold_return gate. No actual HBM controller/PHY completion."
+    },
+    {
+      "interface": "Visibility",
+      "scope": "h_tcol+CWL+BURST projected deadline oracle only; retrospective command time cannot certify causal PHY completion."
+    },
+    {
+      "interface": "Recovery certificates",
+      "scope": "Delivery,causalvisibility,provenance inputs heldfalse. Backend projected readiness/localACK cannot enable actual restart. No positive physical restart qualification."
+    },
+    {
+      "interface": "Clock/reset",
+      "scope": "Single synthetic fixture clock+asynchronous reset. No actual streaming/serial clock crossing, CDC,SSFF or physical clock qualification."
+    }
+  ],
+  "ghost_fence_limitation": "After512 epoch reuse an identical wire packet cannot be detected by WINDOW/1bit token. Closed provider suppressing old delivery remains required; no production provider qualified.",
+  "cost": {
+    "provider_bits": 259,
+    "core_bits": 8,
+    "producer_receipt_bits": 2,
+    "concrete_bits": 269,
+    "reserved_envelope_bits": 278,
+    "new_design_bits_for_this_fixture_fix": 0,
+    "new_design_ports_for_this_fixture_fix": 0,
+    "healthy_added_cycles": 0,
+    "future_production_guard_fault_port_and_route_cost": "Absent/not qualified; simulation hierarchy is not a physical provider.",
+    "slot_routing_SSFF": false
+  },
+  "runtime_PASS": false,
+  "source_cancel_qualified": false,
+  "physical_causal_provider": false,
+  "fulltoken": false,
+  "adoption": false
+}

@@ -1,0 +1,13 @@
+{
+  "status": "PASS_STATIC_FEEDBACK_SOURCE_PLAN_CONTROLS_NO_BUILD",
+  "tests_total_PASS": 64,
+  "guard_controls_PASS": 12,
+  "test_log_sha256": "f9d2f42acd2a08c89a1189cad80aa8486510c6d344646a21e92ffaf35a1fdfef",
+  "old_guard_loop_no_fixed_point_witness": true,
+  "new_guard_admitted_before_valid_suppression": true,
+  "fault_to_stop_added_cycles": 0,
+  "actual_source_cone_byteidentical": true,
+  "bench_changed_requires_fresh_generation": true,
+  "syntax_runtime_qualification": false,
+  "physical_provider": false
+}
