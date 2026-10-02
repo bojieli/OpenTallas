@@ -1,0 +1,15 @@
+{
+  "PG_scope": "selector-specific including corridor: do not substitute q bottom PDN",
+  "actual_cell_placement": false,
+  "dimensions_DBU_site": [
+    54,
+    270
+  ],
+  "expected": 189450,
+  "formed_write_station_pins_unknown": true,
+  "no_clock_reset_data_retiming": true,
+  "per_segment_BUF_cells": 5,
+  "required": "disjoint legal DFF/BUF/clock/reset sites, all macro/PG/OBS/via exclusions, source endpoint access and bank/formed-write pin geometry",
+  "source_aligned_data_station_bits": 189450,
+  "source_station_max_span_um": 334.3397338562824
+}
