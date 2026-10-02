@@ -1,0 +1,14 @@
+{
+  "terminal": "terminal_r1/record.json",
+  "raw_artifacts": "terminal_r1/K{256,272}/{mapped.v,mapped.json,synth.log,synth.ys,ss.log,ff.log,ss.tcl,ff.tcl}.gz",
+  "source_commit": "68524a625ec0ea5963410637cdaafe58f9123d64",
+  "model_admission": "6e7c88e7",
+  "review": "review.json",
+  "mapping_runs_per_width": 1,
+  "STA_runs_per_corner_per_width": 1,
+  "no_duplicate_or_resynthesis": true,
+  "no_context_adoption": true,
+  "replay": "decompress exact mapped netlist and Tcl; rewrite artifact/library paths only, using unchanged inputs from dsrom_secded_fullwidth_characterization_20261002; all five raw corner families loaded separately",
+  "full_corrector_negative_unchanged": "9c3aeed6c",
+  "raw_live_workdir": "/tmp/dsrom-clean-checker-68524a625-r1"
+}
