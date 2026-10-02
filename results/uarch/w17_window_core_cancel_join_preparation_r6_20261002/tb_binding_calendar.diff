@@ -1,0 +1,26 @@
+--- rtl/test/w17_window_core_cancel_join_r5/tb.sv
++++ rtl/test/w17_window_core_cancel_join_r6/tb.sv
+@@ -1217,18 +1217,18 @@
+    default: core_prog_q<=2048'h000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f8;
+   endcase
+  end
+- if(core_wxr_re) begin
+-  if(core_wxr_addr < 54720 || core_wxr_addr+31 >= 55232)
++ if(core_wqr_re) begin
++  if(core_wqr_addr < 54720 || core_wqr_addr+31 >= 55232)
+    $fatal(1,"real QE input full-address aperture");
+-  core_wxr_q <= {32{32'h3f800000}};
+-  if(cut=="POISON" && core_wxr_addr==54720+8*32) core_wxr_q[31:0]<=32'h7fc00000;
++  core_wqr_q <= {32{32'h3f800000}};
++  if(cut=="POISON" && core_wqr_addr==54720+8*32) core_wqr_q[31:0]<=32'h7fc00000;
+  end
+  if(core.g_cancel.u_impl.qe_go_e && core.g_cancel.u_impl.qe_ready_e) begin
+   if(local_edge-start_edge!=7) $fatal(1,"declared actual QE admission calendar mismatch");
+   qe_accepts++;
+  end
+  if(core.g_cancel.u_impl.rec_su_go && core.g_cancel.u_impl.su_ready) begin
+-  if(local_edge-start_edge!=44) $fatal(1,"declared actual SU admission calendar mismatch");
++  if(local_edge-start_edge!=43) $fatal(1,"declared actual SU admission calendar mismatch");
+   su_accepts++;
+  end
+  if(core.g_cancel.u_impl.rec_terminal) begin
