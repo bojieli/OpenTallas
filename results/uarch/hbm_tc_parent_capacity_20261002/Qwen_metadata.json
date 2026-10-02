@@ -1,0 +1,111 @@
+{
+  "ODB_payload_reads": false,
+  "canonical_source_attributes_and_parameters": [
+    {
+      "attributes": "attribute \\hdlname \"ot_gpu_sm_q\"\nattribute \\top 1\nattribute \\dynports 1\n",
+      "module": "\\ot_gpu_sm_q",
+      "parameters": [
+        "\\SUB 4",
+        "\\LS 32",
+        "\\NC 16",
+        "\\IL 8",
+        "\\RMAX 4096",
+        "\\LEV 5",
+        "\\NXM 16",
+        "\\MAX_OUT 512"
+      ]
+    },
+    {
+      "attributes": "attribute \\hdlname \"ot_hdc_fmul\"\n",
+      "module": "\\ot_hdc_fmul",
+      "parameters": []
+    },
+    {
+      "attributes": "attribute \\dynports 1\nattribute \\hdlname \"ot_gpu_stack\"\n",
+      "module": "$paramod$840ee5082dad598c55f9065f394bcc2af9983bd3\\ot_gpu_stack",
+      "parameters": [
+        "\\LEV 5",
+        "\\IL 8",
+        "\\TAGW 12"
+      ]
+    },
+    {
+      "attributes": "attribute \\dynports 1\nattribute \\hdlname \"ot_gpu_tree\"\n",
+      "module": "$paramod$44a6c09660c933120f80705a1ee2478b9037e5f5\\ot_gpu_tree",
+      "parameters": [
+        "\\N 4",
+        "\\TAGW 16"
+      ]
+    },
+    {
+      "attributes": "attribute \\dynports 1\nattribute \\hdlname \"ot_hdc_delay\"\n",
+      "module": "$paramod$b686f83e6efde0d2bf543040395fc076c20cc18a\\ot_hdc_delay",
+      "parameters": [
+        "\\W 512",
+        "\\D 5",
+        "\\RESET 0"
+      ]
+    },
+    {
+      "attributes": "attribute \\hdlname \"ot_hdc_fadd\"\n",
+      "module": "\\ot_hdc_fadd",
+      "parameters": []
+    }
+  ],
+  "extractor_sha256": "a014c45c879c6ea4b955e4df928754c1ef79295a26a8cd774f622ab0da0c8c00",
+  "files": {
+    "/home/ubuntu/w13work/sm_q/logs/asap7/chip_ot_gpu_sm_q/base/1_2_yosys.log": {
+      "bytes": 21675,
+      "liberty_frontends": [],
+      "path": "/home/ubuntu/w13work/sm_q/logs/asap7/chip_ot_gpu_sm_q/base/1_2_yosys.log",
+      "sha256": "6aa4af2fc8fda905a0b00fb1e9b41e8617959cdc544dc4d0e0da7aaac4115276"
+    },
+    "/home/ubuntu/w13work/sm_q/results/asap7/chip_ot_gpu_sm_q/base/1_1_yosys_canonicalize.rtlil": {
+      "bytes": 3342189,
+      "path": "/home/ubuntu/w13work/sm_q/results/asap7/chip_ot_gpu_sm_q/base/1_1_yosys_canonicalize.rtlil",
+      "sha256": "46ef2e1c9051adaee8801eb72e1b354a251e8fd74e25f60b9382cf85250445f1"
+    },
+    "/home/ubuntu/w13work/sm_q/views/ot_gpu_tc_col.lef": {
+      "bytes": 156230,
+      "path": "/home/ubuntu/w13work/sm_q/views/ot_gpu_tc_col.lef",
+      "sha256": "f7289349e696d8945ad227bb2786938bf1daaf810425bcd4da8081481fef7e8b"
+    },
+    "/home/ubuntu/w13work/sm_q/views/ot_sram_1r1w_1024x256_m2_r2c2.lef": {
+      "bytes": 150234,
+      "path": "/home/ubuntu/w13work/sm_q/views/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+      "sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4"
+    },
+    "/home/ubuntu/w13work/sm_q/views/ot_sram_1r1w_256x256_m2_r2c2.lef": {
+      "bytes": 145697,
+      "path": "/home/ubuntu/w13work/sm_q/views/ot_sram_1r1w_256x256_m2_r2c2.lef",
+      "sha256": "72036137c53eda29ac3b432fb704791ac864ad9b5c32dc81e2e71bbe906862bf"
+    }
+  },
+  "host": "ot-pve3",
+  "retained_macro_views": {
+    "ot_gpu_tc_col": {
+      "path": "/home/ubuntu/w13work/sm_q/views/ot_gpu_tc_col.lef",
+      "sha256": "f7289349e696d8945ad227bb2786938bf1daaf810425bcd4da8081481fef7e8b",
+      "size_um": [
+        250.0,
+        250.0
+      ]
+    },
+    "ot_sram_1r1w_1024x256_m2_r2c2": {
+      "path": "/home/ubuntu/w13work/sm_q/views/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+      "sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+      "size_um": [
+        174.744,
+        70.47
+      ]
+    },
+    "ot_sram_1r1w_256x256_m2_r2c2": {
+      "path": "/home/ubuntu/w13work/sm_q/views/ot_sram_1r1w_256x256_m2_r2c2.lef",
+      "sha256": "72036137c53eda29ac3b432fb704791ac864ad9b5c32dc81e2e71bbe906862bf",
+      "size_um": [
+        172.8,
+        41.04
+      ]
+    }
+  }
+}

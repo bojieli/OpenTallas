@@ -1,0 +1,115 @@
+{
+  "FAIL_unchanged": true,
+  "arithmetic_gate_owner": "Epicurus",
+  "arithmetic_static_witness_commit": "b33395215e09a8517f2da77d3f043435005ab8fe",
+  "artifacts": [
+    {
+      "bytes": 4603,
+      "path": "results/uarch/hbm_tc_parent_capacity_20261002/DS_metadata.json",
+      "sha256": "5a503f04f38ebceb22dac4b1bac7e5a8b72092df3419b4cfbd9ff98d0c8da8ce"
+    },
+    {
+      "bytes": 219747,
+      "path": "results/uarch/hbm_tc_parent_capacity_20261002/DS_retained.json.gz",
+      "sha256": "dbee791002c0f79aee9538e5f1ef60cdf1b8fd33dfc46aaaa6cda9abe5cc73d0"
+    },
+    {
+      "bytes": 3823,
+      "path": "results/uarch/hbm_tc_parent_capacity_20261002/Qwen_metadata.json",
+      "sha256": "dff055bfa9504d6d1568ebbb7fc3e004ab5f51a991c947d457c8a8e879a1e1f0"
+    },
+    {
+      "bytes": 199768,
+      "path": "results/uarch/hbm_tc_parent_capacity_20261002/Qwen_retained.json.gz",
+      "sha256": "71f67b6caa959047dbf550eab2016a5395e61c41e8cc4898699876323a439f1a"
+    },
+    {
+      "bytes": 1896,
+      "path": "results/uarch/hbm_tc_parent_capacity_20261002/host_activity_snapshot.json",
+      "sha256": "8bcc9b44c0c011ec08168de48cdae7c4c6ce04ab13ce9bca39bfae2bc5d408b7"
+    },
+    {
+      "bytes": 6433289,
+      "path": "results/uarch/hbm_tc_parent_capacity_20261002/model.json",
+      "sha256": "56c1f650b5f2b67e1cb02554a8dc811f6782e7fdc876e247ecfe940b87c6088b"
+    }
+  ],
+  "byte_identical_model_reproduction": true,
+  "events": {
+    "DS": 97,
+    "Qwen": 434,
+    "actual_ready_commit_composition_verified": false
+  },
+  "host_activity_snapshot": "results/uarch/hbm_tc_parent_capacity_20261002/host_activity_snapshot.json",
+  "main_HEAD": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "no_RTL_PnR": true,
+  "no_admission": true,
+  "no_checkpoint_payload_reads": true,
+  "no_decap_credit": true,
+  "no_job_mutations": true,
+  "original_pins": [
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "unchanged": true
+    },
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "tools/chip_assembly/floorplans.py",
+      "sha256": "3a78ac42e27e5a01b8970620eff075e62c149abe8dc8d45da756f40a3865c94f",
+      "unchanged": true
+    },
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "tools/chip_assembly/tcl/pdn_block.tcl",
+      "sha256": "33da1f61502ead8da388a1d8ab8ceb26b88eb0179d1f72a52f08c7b356caaf7a",
+      "unchanged": true
+    },
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "tools/chip_assembly/tcl/pdn_sm.tcl",
+      "sha256": "2d2c33d3082c1c4c20c3aa7b84e2b91de492ce489425b8dcdce6e99723e959dc",
+      "unchanged": true
+    },
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "results/physical_abi3/asap7/gpu/w13_tc_col_terminal_20261001T2112Z/receipt.json",
+      "sha256": "f6464972f70582e47ec0848c5e8a910e767423aa1dc06e72de3e880deecbf2d1",
+      "unchanged": true
+    },
+    {
+      "git": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "path": "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z/receipt.json",
+      "sha256": "246a444047d1cdc624e7b43ad73d6e6ee24c444efe446007c644f85d4c63df0b",
+      "unchanged": true
+    }
+  ],
+  "retained_dead_logic_and_import_counts_match": true,
+  "schema": "hbm-parent-capacity-validation-v1",
+  "summary": {
+    "deepseek_v41": {
+      "actual_remaining_row_sites": 33820593,
+      "actual_stdcell_area_um2": 44631.66906000001,
+      "actual_stdcell_count": 317108,
+      "actual_unique_FF": 77192,
+      "current_full_goal_fit_verified": false,
+      "missing_current_target_packages_and_geometry": true
+    },
+    "qwen": {
+      "actual_remaining_row_sites": 73312707,
+      "actual_stdcell_area_um2": 120971.17854,
+      "actual_stdcell_count": 899542,
+      "actual_unique_FF": 185341,
+      "current_full_goal_fit_verified": false,
+      "missing_current_target_packages_and_geometry": true
+    }
+  },
+  "tests": {
+    "command": "python3 -m unittest discover -s tools -p 'test_hbm_tc_*.py' -v",
+    "failed": 0,
+    "new_tests": 7,
+    "passed": 58
+  },
+  "twice_extracted_retained_live_census_and_source_hashes_identical": true
+}
