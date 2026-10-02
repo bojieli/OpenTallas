@@ -1,0 +1,50 @@
+..F
+=================================== FAILURES ===================================
+_________ test_bounded_tiles_preserve_native_family_bits[argmax_local] _________
+
+family = 'argmax_local'
+
+    @pytest.mark.parametrize('family',sorted(N.FAMILIES))
+    def test_bounded_tiles_preserve_native_family_bits(family):
+        p=N.recipe(family,F.TOY,F.ATTR);inputs=F.fixture(p)
+        expected=N.Machine(p,inputs,N.primitive_div).run()
+        provider=T.ArrayProvider(p,inputs,(1,'operand_v0',0,1,0));vm=T.TileExecutor(p,provider)
+>       got,receipt=vm.run()
+
+tests/test_h3_deepseek_bounded_tiles.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/h3_deepseek_bounded_tiles.py:214: in run
+    vals=[self.value(root,j) for j in range(off,min(n,off+TILE))];tile=np.asarray(vals)
+tools/h3_deepseek_bounded_tiles.py:214: in <listcomp>
+    vals=[self.value(root,j) for j in range(off,min(n,off+TILE))];tile=np.asarray(vals)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <h3_deepseek_bounded_tiles.TileExecutor object at 0x737112f76140>
+root = 'v224', index = 0
+
+    def value(self,root,index):
+        # Explicit continuations avoid the host recursion limit and tensor stack.
+        stack=[{'key':(root,index),'deps':None,'args':[],'cursor':0}]
+        while stack:
+            self.max_frames=max(self.max_frames,len(stack))
+            if len(stack)>FRAME_CAP:raise ValueError('continuation stack cap')
+            f=stack[-1];key=f['key'];ins=self.code[key[0]]
+            if key in self.cache:
+                v=self.cache[key];self.cache.move_to_end(key);stack.pop()
+                if stack:stack[-1]['args'].append(v);stack[-1]['cursor']+=1
+                else:return v
+                continue
+            if f['deps'] is None:f['deps']=self._deps(ins,key[1])
+            # Dynamic address dependency may require a second continuation.
+            if ins['op'] in ('TAKE','SCATTER') and f['cursor']==len(f['deps']) and len(f['deps'])==1:
+                f['deps']=self._deps(ins,key[1])
+            if f['cursor']<len(f['deps']):
+                stack.append({'key':f['deps'][f['cursor']],'deps':None,'args':[],'cursor':0});continue
+            v=self._primitive(ins,key[1],f['args']);self.counts[ins['op']]+=1
+>           if sum(self.counts.values())>self.work_limit:raise RuntimeError('finite native work budget exhausted')
+E           RuntimeError: finite native work budget exhausted
+
+tools/h3_deepseek_bounded_tiles.py:201: RuntimeError
+=========================== short test summary info ============================
+FAILED tests/test_h3_deepseek_bounded_tiles.py::test_bounded_tiles_preserve_native_family_bits[argmax_local]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
