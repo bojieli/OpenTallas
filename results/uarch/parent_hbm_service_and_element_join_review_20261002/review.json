@@ -1,0 +1,41 @@
+{
+  "status": "PREPARATION_AND_MODEL_VERIFIED_ONLY",
+  "reviewed_tree": "56506fb5bacb993107ff11f7df45f6f03363f667",
+  "utc": "2026-10-02T03:04:31.383114+00:00",
+  "element": {
+    "tests": 11,
+    "full_target_element_shape_preserved": true,
+    "immutable_inputs_preserved": true,
+    "numerical_runtime": "PENDING_NEW_BOUND_RUNNER_GO",
+    "physical": "OPEN",
+    "initial_parent_test_failure": "Three FileNotFound errors due to not-yet-intaken dcfbc5f78 owner r2 receipt dependency; resolved by71ebac7dd without source/test edits."
+  },
+  "hbm": {
+    "tests": 17,
+    "qwen_service_mm2_per_stack": 16.6015872,
+    "qwen_required_mm2_per_stack": 16.582108825564255,
+    "qwen_residents_per_die": 676,
+    "DS_residents_per_die": 292,
+    "native_PHY_period_ps": 1000,
+    "PHY_aw_len_beat": [
+      31,
+      6,
+      5
+    ],
+    "added_service_mm2_per_die": 26.3430144,
+    "hardware_provider": "MISSING_ACTUAL_ENDPOINT_IMPLEMENTATION",
+    "DS_service_fit": "UNPROVEN",
+    "full_SM_timing": "UNPROVEN",
+    "rate_credit": false,
+    "adopted": false
+  },
+  "artifact_sha256": {
+    "results/uarch/parent_hbm_service_and_element_join_review_20261002/element_preparation_tests.log": "fcacb97756e8c96069a7afe791223312b16336d109cdd6e977273d9269be2cb9",
+    "results/uarch/parent_hbm_service_and_element_join_review_20261002/hbm_composition_tests.log": "77609a6cd237c389f24cfee29996e19fd03fbfe4f3f5b4d3ed7a7f96b2969d52"
+  },
+  "claims": {
+    "fulltoken": false,
+    "SS_FF": false,
+    "adoption": false
+  }
+}
