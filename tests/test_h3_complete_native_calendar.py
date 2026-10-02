@@ -12,6 +12,102 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_forward_leaf_source_counts_dynamic_refs_and_G0_interface(self):
+        N,S=c.load_ds_forward_builders();native={'templates':{},'instructions':[]};dispatch={'templates':{},'PC_dispatch':[],
+            'source_program_sha256':'a'*64}
+        cases=[('linear_q',{'rows':3,'k':32},{'fmt':'fp8'},'forward_streaming_Q8_matvec',S.model(3,32,'fp8')),
+            ('mv',{'rows':3,'k':8},{},'forward_streaming_float_matvec',S.float_model(3,8,False)),
+            ('linear_bf16',{'rows':2,'k':24},{},'forward_streaming_float_matvec',S.float_model(2,24,True)),
+            ('index_scores',{'rows':2,'heads':2,'width':32},{},'forward_streaming_index_rows',S.index_model(2,2,32)),
+            ('all_gather',{'n':3,'ranks':2},{},'forward_streaming_gather_columns',S.gather_model(2,3))]
+        for pc,(family,shape,attrs,path,plan) in enumerate(cases):
+            tid='template'+str(pc);program=N.recipe(family,shape,attrs)
+            program.update(family=family,shape_parameters=shape,source_attributes=attrs);native['templates'][tid]=program
+            counts=plan['opcode_scalar_evaluations'];dispatch['templates'][tid]={'family':family,'execution_path':path,'plan':plan,
+                'executed_primitive_scalar_projection':counts}
+            native['instructions'].append({'pc':pc,'family':family,'dependencies':[],'rank_bindings':[{'rank':0,'template':tid,'buffer_programs':[]}]})
+            dispatch['PC_dispatch'].append({'pc':pc,'family':family,'dependencies':[],
+                'calls':[{'rank':0,'template':tid,'SM_partition':'block256%32'}],'projected_executed_primitive_scalars':counts})
+        catalog=c.compile_ds_forward_leaf_catalog(dispatch,native,N,S)
+        self.assertEqual(catalog['PCs'],5);self.assertEqual(len(catalog['execution_paths']),4)
+        self.assertLess(sum(catalog['native_batches128'].values()),sum(catalog['native_scalars'].values()))
+        bad=copy.deepcopy(dispatch);bad['templates']['template0']['plan']['weight_format']='fp4'
+        with self.assertRaisesRegex(ValueError,'format source mismatch'):c.compile_ds_forward_leaf_catalog(bad,native,N,S)
+        bad=copy.deepcopy(dispatch);bad['PC_dispatch'][0]['calls'][0]['rank']=1
+        with self.assertRaisesRegex(ValueError,'PC/rank/template source mismatch'):c.compile_ds_forward_leaf_catalog(bad,native,N,S)
+        call=catalog['templates']['template3']['calls'][1];leaf=catalog['leaves'][call['leaf']]
+        actual=S.index_program(2,32,1,1,3)
+        index=next(i for i,n in enumerate(actual['code']) if n['attrs']!=leaf['program']['code'][i]['attrs'])
+        node=actual['code'][index]
+        ref={'parent_template':'template3','call_index':1,'invocation_index':1,'template':call['leaf'],
+            'source_parameters':{'first':1,'rank':3},'code_index':index,'opcode':node['op'],'attrs':node['attrs'],
+            'result_shape':node['shape'],'operand':'dst','value':node['dst'],'logical_byte_offset':0,'payload_bytes':8}
+        self.assertEqual(c.resolve_ds_forward_leaf_reference(catalog,N,S,ref,expected_rank=3)[1],node['dst'])
+        with self.assertRaisesRegex(ValueError,'row/rank source binding mismatch'):
+            c.resolve_ds_forward_leaf_reference(catalog,N,S,ref,expected_rank=4)
+        bad=copy.deepcopy(ref);bad['attrs']=leaf['program']['code'][index]['attrs']
+        with self.assertRaisesRegex(ValueError,'attrs shape mismatch'):c.resolve_ds_forward_leaf_reference(catalog,N,S,bad,expected_rank=3)
+        q={'operations':[{'pc':0,'opcode':'EMBED','calendar_export':{'physical_primitives':{
+            'native_primitive_commands':{'I2F':2},'kernel_invocations':{'convert':2}}}}]}
+        g=c.compile_g0_source_interface(q,catalog)
+        self.assertEqual(g['Qwen']['native_commands']['I2F'],2);self.assertEqual(g['DeepSeek']['PCs'],5)
+        self.assertEqual(g['RF_port_contract']['port_bits'],4096)
+        self.assertTrue(all(x['measured_cycles'] is None for x in g['opcode_cost_contract'].values()))
+        self.assertFalse(g['hardware_full_native_claim'])
+
+    def test_forward_parent_provider_home_resolves_source_and_preserves_missing_receipts(self):
+        cat={'source_program_sha256':'source','templates':{'t':{'execution_path':'forward_streaming_Q8_matvec'}},
+            'PC_bindings':[{'pc':0,'family':'linear_q','dependencies':[], 'bindings':[{'rank':3,'template':'t'}]}]}
+        native={'residence_archive':'canonical.json.gz','instructions':[{'reads':[{'version':'x'}],'writes':[{'version':'y'}],
+            'provider_bindings':{'t':{'activation':{'kind':'versioned_operand','version':'x'},
+                'weight':{'kind':'immutable_parameter_provider','logical_tensor':'weight'}}}}]}
+        residence={'homes':[{'version':'x','rank_group':[3],'SM':0,'home':{'class':'RF','slot_first':32,'vectors':1},
+            'birth_pc':-1,'retire_pc':0}]}
+        interface=c.compile_ds_forward_parent_interface(cat,native,residence)
+        self.assertEqual(interface['missing_version_home_refs'],['y'])
+        self.assertEqual(c.resolve_ds_forward_parent_home(interface,residence,pc=0,version='x',rank=3,SM=0)[1]['home']['slot_first'],32)
+        self.assertFalse(interface['physical_admission'])
+        self.assertEqual(interface['PC_bindings'][0]['provider_refill_writeback_ACK_reverse'],'UNKNOWN_NO_DYNAMIC_PARENT_PROVIDER_RECEIPT')
+        with self.assertRaisesRegex(ValueError,'rank missing'):c.resolve_ds_forward_parent_home(interface,residence,pc=0,version='x',rank=4,SM=0)
+        with self.assertRaisesRegex(ValueError,'UNKNOWN actual parent physical home'):c.resolve_ds_forward_parent_home(interface,residence,pc=0,version='y',rank=3,SM=0)
+        with self.assertRaisesRegex(ValueError,'version missing'):c.resolve_ds_forward_parent_home(interface,residence,pc=0,version='forged',rank=3,SM=0)
+        bad=copy.deepcopy(residence);bad['homes'][0]['birth_pc']=1
+        with self.assertRaisesRegex(ValueError,'UNKNOWN actual parent physical home'):c.resolve_ds_forward_parent_home(interface,bad,pc=0,version='x',rank=3,SM=0)
+
+    def test_C0_source_join_resolves_instructions_versions_and_rank_intervals(self):
+        digest=lambda x:c.hashlib.sha256(c.json.dumps(x,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+        code=[{'op':'LOAD','src':[],'dst':'v0','shape':[1],'attrs':{'provider':'input','dtype':'F32'}}]
+        q={'microcode':{'convert':[{'op':'ITOF','dst':'out','src':['a']}]},'operations':[
+            {'pc':0,'opcode':'EMBED','reads':['token'],'writes':['x'],'dependencies':[],
+             'calendar_export':{'physical_primitives':{'kernel_invocations':{'convert':2},'native_primitive_commands':{'I2F':2}}}}]}
+        d={'templates':{'t':{'code':code}},'instructions':[{'pc':0,'family':'embed','reads':[{'version':'token'}],
+            'writes':[{'version':'x'}],'dependencies':[], 'rank_bindings':[{'rank':0,'template':'t','SM_partition':'block256%32'}]}]}
+        catalog={'source_program_sha256':'ds','templates':{'t':{'execution_path':'source_order_live_range_stages'}},
+            'leaves':{'t':{}},'native_batches128':{'LOAD':1}}
+        transition=['accepted','complete','mirrored_visible_ACK','consumer_accept','reverse_grant','retire']
+        common={'source_PC':0,'dependency_completed_PC_ids':[],'source_version_refs':['token'],'destination_version_refs':['x'],
+            'family_hardware_admitted':False,'source_numeric_payload_executed':False,'state_transition_order':transition}
+        qr=dict(common,model='Qwen',program_sha256='q',family='EMBED',native_command_counts={'I2F':2},
+            ordered_leaf_bindings=[{'kernel':'convert','invocations':2,'ordered_lowered_leaf_opcodes':['I2F'],
+                'source_order_sha256':digest(q['microcode']['convert'])}])
+        dr=dict(common,model='DeepSeek',program_sha256='ds',family='embed',rank_template_calls=[{'rank':0,'template_refs':['t'],
+            'buffer_programs':[],'row_interval':None,'empty_owned_extent':False,'SM_partition':'block256%32'}])
+        lowering={'schema':'H4_C0_FULL_PC_STATIC_DISPATCH_LOWERING_V1','RTL_admission':False,
+            'complete_dynamic_numeric_execution':False,'dispatch':[qr,dr],'DS_template_catalog':{'t':{
+                'ordered_source_code_sha256':digest(code),'ordered_steps':1,'opcode_records':{'LOAD':1},
+                'bounded_emitter':'source_order_live_range_stages'}}}
+        call=lambda x:c.join_c0_source_lowering(x,q,d,catalog,{'ITOF':'I2F'},qwen_sha256='q')
+        self.assertEqual(call(lowering)['programs']['DeepSeek']['PCs'],1)
+        self.assertIsNone(call(lowering)['shared64_movements'])
+        for change,message in [('sequence','instruction sequence'),('version','identity/version'),('rank','rank/template'),('source','code/continuation'),('claim','qualify dynamic')]:
+            bad=copy.deepcopy(lowering)
+            if change=='sequence':bad['dispatch'][0]['ordered_leaf_bindings'][0]['ordered_lowered_leaf_opcodes']=['FADD']
+            elif change=='version':bad['dispatch'][1]['destination_version_refs']=['wrong']
+            elif change=='rank':bad['dispatch'][1]['rank_template_calls'][0]['rank']=1
+            elif change=='source':bad['DS_template_catalog']['t']['ordered_source_code_sha256']='wrong'
+            else:bad['complete_dynamic_numeric_execution']=True
+            with self.assertRaisesRegex(ValueError,message):call(bad)
+
     def test_H4_reprice_64B_transactions_and_dispatch_preserves_provider_charge(self):
         e={'explicit_provisional_latency':{'shared_beat128':8,'native_batch':32},
             'ordered_PC_ticks':90,'ordered_PC_intervals':[{'pc':0,'start':0,'end':90,
@@ -352,8 +448,21 @@ class FiniteCalendarTests(unittest.TestCase):
 
     def test_final_ds_portable_closure_and_iota_execution(self):
         import hashlib
+        import shutil
+        import tempfile
         import numpy as np
-        base=ROOT / 'results/uarch/h3_complete_native_calendar_20261002/final_ds_bed325f89'
+        archive=ROOT / 'results/uarch/h3_complete_native_calendar_20261002/final_ds_bed325f89'
+        temporary=tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        base=Path(temporary.name)/'portable'
+        shutil.copytree(archive,base)
+        # The native program has one canonical committed home. Reconstruct the
+        # portable package for this check rather than rely on an untracked copy.
+        canonical=ROOT/'results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz'
+        pins=c.read_json(base/'producer_pins.json')
+        self.assertEqual(hashlib.sha256(canonical.read_bytes()).hexdigest(),
+                         pins['files']['program_final.json.gz']['sha256'])
+        shutil.copyfile(canonical,base/'program_final.json.gz')
         coverage=c.read_json(base/'coverage.json')
         sources=c.verify_portable_producer(base/'program_final.json.gz',coverage)
         self.assertEqual(len(sources),18)

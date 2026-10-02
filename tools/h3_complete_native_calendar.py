@@ -66,6 +66,271 @@ def source_bytes(path, commit=None):
     return raw
 
 
+def load_ds_forward_builders():
+    """Compile pinned builder definitions only; no runtime numerical/provider run."""
+    import numpy as np
+    base=ROOT/OUT/'final_ds_bed325f89';pins=read_json(base/'producer_pins.json')['files']
+    path=base/'h3_deepseek_complete_native.py.source';raw=path.read_bytes()
+    if hashlib.sha256(raw).hexdigest()!=pins[path.name]['sha256']:raise ValueError('DS builder source pin mismatch')
+    N=types.ModuleType('source_pinned_DS_builder');N.__dict__.update(np=np,Counter=Counter,math=math)
+    tree=ast.parse(raw);body=[n for n in tree.body if isinstance(n,ast.FunctionDef) or isinstance(n,ast.ClassDef) and n.name=='Builder'
+        or isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id in ('NATIVE','FAMILIES') for t in n.targets)]
+    exec(compile(ast.Module(body=body,type_ignores=[]),str(path),'exec'),N.__dict__)
+    N.Builder.topk=N.native_topk
+    path=ROOT/OUT/'bounded_provider_milestone/ds/h3_deepseek_streaming_linear.py.source';raw=path.read_bytes()
+    files=read_json(path.parent/'files_sha256.json');key='tools/h3_deepseek_streaming_linear.py'
+    if hashlib.sha256(raw).hexdigest()!=files[key]:raise ValueError('DS forward builder source pin mismatch')
+    S=types.ModuleType('source_pinned_DS_forward_builder');S.__dict__.update(N=N,np=np,Counter=Counter,math=math)
+    tree=ast.parse(raw);body=[n for n in tree.body if isinstance(n,ast.FunctionDef) or isinstance(n,ast.Assign)
+        and any(isinstance(t,ast.Name) and t.id in ('K_BLOCK','ROW_TILE') for t in n.targets)]
+    exec(compile(ast.Module(body=body,type_ignores=[]),str(path),'exec'),S.__dict__)
+    return N,S
+
+
+def compile_ds_forward_leaf_catalog(dispatch, native_program, N, S):
+    """Actual retained forward builder leaves and source-derived loop counts.
+
+    Catalogs code, not exporter opcode strings. Index row/ rank constants are
+    parameterized source builder arguments; their hardware dispatch stays open.
+    Source whole-array SSA remains catalogued for staged families.
+    """
+    leaves={};templates={};paths=Counter()
+    def leaf(program,builder,args):
+        raw=json.dumps(program,sort_keys=True,separators=(',',':')).encode();key=hashlib.sha256(raw).hexdigest()
+        if key not in leaves:
+            counts=Counter();batches=Counter()
+            for node in program['code']:
+                n=max(1,math.prod(node['shape']));counts[node['op']]+=n;batches[node['op']]+=ceil(n,128)
+            leaves[key]={('program_ref' if builder=='retained_original_template' else 'program'):
+                ('results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz#/templates/'+args[0] if builder=='retained_original_template' else program),
+                'code_sha256':hashlib.sha256(json.dumps(program['code'],sort_keys=True,separators=(',',':')).encode()).hexdigest(),
+                'native_scalars':dict(counts),'native_batches128':dict(batches),
+                'source_builder':builder,'source_builder_args':args,
+                'hardware_command_binding':False}
+        return key
+    for tid,t in dispatch['templates'].items():
+        source=native_program['templates'][tid];plan=t['plan'];path=t['execution_path'];calls=[]
+        sh=source['shape_parameters'];family=source['family']
+        if t['family']!=family:raise ValueError('forward leaf family source mismatch')
+        if path in ('forward_streaming_Q8_matvec','forward_streaming_float_matvec'):
+            if plan['rows']!=sh.get('rows',4) or plan['fullK']!=sh.get('k',32):raise ValueError('forward leaf matrix shape source mismatch')
+        if path=='forward_streaming_Q8_matvec' and plan['weight_format']!=source['source_attributes'].get('fmt','fp8'):
+            raise ValueError('forward leaf matrix format source mismatch')
+        if path=='forward_streaming_float_matvec' and plan['round_output_BF16']!=(family=='linear_bf16'):
+            raise ValueError('forward leaf rounding source mismatch')
+        def add(program,builder,args,reps,phase,parameters=None):
+            if reps:
+                calls.append({'leaf':leaf(program,builder,args),'repetitions':positive(reps,'source forward leaf repetitions'),
+                    'source_phase':phase,'dynamic_source_parameters':parameters or {}})
+        if path=='forward_streaming_Q8_matvec':
+            rows=plan['rows'];blocks=plan['blocks'];chunks=plan['chunks8'];padded=plan['tree_padded_chunks'];fmt=plan['weight_format']
+            add(S.quant_program(),'quant_program',[],blocks,'quantize_once_per_Kblock')
+            for nr,reps in [(128,rows//128),(rows%128,int(rows%128>0))]:
+                if not reps:continue
+                add(S.block_program(nr,fmt),'block_program',[nr,fmt],blocks*reps,'source_row_tile_then_Kblock_dot')
+                add(S.add_program(nr),'add_program',[nr],(chunks*8+padded-1)*reps,'sequential_chunk8_then_adjacent_carry_tree')
+                add(S.pack_program(nr),'pack_program',[nr],reps,'BF16_final_once_per_row_tile')
+        elif path=='forward_streaming_float_matvec':
+            rows=plan['rows'];chunks=ceil(plan['fullK'],8);padded=plan['padded_tree_chunks']
+            add(S.pack_program(8),'pack_program',[8],chunks,'BF16_input_chunk8_once')
+            for nr,reps in [(128,rows//128),(rows%128,int(rows%128>0))]:
+                if not reps:continue
+                add(S.float_block_program(nr),'float_block_program',[nr],chunks*reps,'source_row_tile_then_Kchunk8_dot')
+                add(S.add_program(nr),'add_program',[nr],(padded-1)*reps,'source_padded_adjacent_carry_tree')
+                if plan['round_output_BF16']:add(S.pack_program(nr),'pack_program',[nr],reps,'BF16_final_once')
+        elif path=='forward_streaming_index_rows':
+            h=plan['heads'];w=plan['fullK'];rows=plan['rows']
+            add(S.query_program(h,w),'query_program',[h,w],1,'query_decode_once')
+            add(S.index_program(h,w,1,0,0),'index_program',[h,w,1,0,0],rows,'source_independent_key_rows',
+                {'first':{'minimum':0,'maximum_exclusive':rows,'source_loop':'for first in range(rows)'},
+                 'rank':{'minimum':0,'maximum_exclusive':96,'source_binding':'actual call rank'}})
+        elif path=='forward_streaming_gather_columns':
+            n=plan['elements'];ranks=plan['ranks']
+            for width,reps in [(128,n//128),(n%128,int(n%128>0))]:
+                if reps:add(N.recipe('all_gather',{'n':width,'ranks':ranks},{}),'recipe_all_gather',[width,ranks],reps,'source_column_tiles_rank_order')
+        elif path=='source_order_live_range_stages':
+            add(source,'retained_original_template',[tid],1,'source_order_live_range_stages')
+        else:raise ValueError('unsupported forward source path '+path)
+        counts=Counter();batches=Counter()
+        for call in calls:
+            record=leaves[call['leaf']]
+            counts.update({op:n*call['repetitions'] for op,n in record['native_scalars'].items()})
+            batches.update({op:n*call['repetitions'] for op,n in record['native_batches128'].items()})
+        if dict(counts)!=t['executed_primitive_scalar_projection']:raise ValueError('forward leaf instruction/repetition source count mismatch '+tid)
+        templates[tid]={'execution_path':path,'calls':calls,'native_scalars':dict(counts),'native_batches128':dict(batches),
+            'source_loop_plan':plan,'ordered_dynamic_loop_trace_executed':False,'shared64_movements':None}
+        paths[path]+=1
+    pcs=[];totals=Counter();batch_totals=Counter()
+    for op in dispatch['PC_dispatch']:
+        original=native_program['instructions'][op['pc']]
+        expected=[]
+        for rb in original['rank_bindings']:
+            if rb.get('empty_owned_extent'):continue
+            ids=[b['template'] for b in rb['buffer_programs']] if rb.get('buffer_programs') else [rb['template']]
+            expected.extend((rb['rank'],tid) for tid in ids)
+        if op['family']!=original['family'] or op['dependencies']!=original['dependencies'] or [(c['rank'],c['template']) for c in op['calls']]!=expected:
+            raise ValueError('forward leaf actual PC/rank/template source mismatch')
+        counts=Counter();batches=Counter();bindings=[]
+        for call in op['calls']:
+            t=templates[call['template']];counts.update(t['native_scalars']);batches.update(t['native_batches128'])
+            bindings.append({'rank':call['rank'],'template':call['template'],'SM_partition':call['SM_partition'],
+                'leaf_call_refs':list(range(len(t['calls'])))})
+        if dict(counts)!=op['projected_executed_primitive_scalars']:raise ValueError('all-PC forward leaf source count mismatch')
+        pcs.append({'pc':op['pc'],'family':op['family'],'dependencies':op['dependencies'],'bindings':bindings,
+            'native_scalars':dict(counts),'native_batches128':dict(batches),'shared64_movements':None})
+        totals.update(counts);batch_totals.update(batches)
+    return {'schema':'H4_DS_SOURCE_RESOLVED_FORWARD_LEAF_CATALOG_V1','PCs':len(pcs),'families':len({r['family'] for r in pcs}),
+        'leaves':leaves,'templates':templates,'PC_bindings':pcs,'execution_paths':dict(paths),
+        'native_scalars':dict(totals),'native_batches128':dict(batch_totals),
+        'cost_scope':'actual source128-lane batch obligation counts; positive provisional service inputs required; no RTL rate/clock conversion',
+        'source_program_sha256':dispatch['source_program_sha256'],'actual_shared64_movements':None,
+        'hardware_full_native_claim':False,'numerical_or_provider_execution':False}
+
+
+def join_c0_source_lowering(lowering, qwen, native, catalog, qwen_aliases, *, qwen_sha256):
+    """Validate reviewed static control records against actual native sources.
+
+    This joins identities and continuations; dynamic movement/leases stay open.
+    """
+    def digest(x):return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    if lowering.get('schema')!='H4_C0_FULL_PC_STATIC_DISPATCH_LOWERING_V1':raise ValueError('C0 static lowering schema mismatch')
+    if lowering.get('RTL_admission') or lowering.get('complete_dynamic_numeric_execution'):raise ValueError('C0 static source cannot qualify dynamic execution')
+    index={}
+    for row in lowering['dispatch']:
+        key=(row['model'],row['source_PC'])
+        if key in index:raise ValueError('C0 duplicate PC')
+        index[key]=row
+    expected=set();totals={};qcommands=Counter()
+    for model,ops in [('Qwen',qwen['operations']),('DeepSeek',native['instructions'])]:
+        for op in ops:
+            key=(model,op['pc']);expected.add(key)
+            if key not in index:raise ValueError('C0 missing PC')
+            row=index[key];sha=qwen_sha256 if model=='Qwen' else catalog['source_program_sha256']
+            versions=lambda side:op[side] if model=='Qwen' else [v['version'] for v in op[side]]
+            if (row['program_sha256']!=sha or row['family']!=op.get('opcode',op.get('family')) or
+                row['dependency_completed_PC_ids']!=op['dependencies'] or row['source_version_refs']!=versions('reads') or
+                row['destination_version_refs']!=versions('writes')):raise ValueError('C0 PC source identity/version/dependency mismatch')
+            if row['family_hardware_admitted'] or row['source_numeric_payload_executed']:raise ValueError('C0 static PC qualification mismatch')
+            if row['state_transition_order']!=['accepted','complete','mirrored_visible_ACK','consumer_accept','reverse_grant','retire']:
+                raise ValueError('C0 ACK/lease transition mismatch')
+            if model=='Qwen':
+                export=op['calendar_export']['physical_primitives'];kernels=export['kernel_invocations'];bound={};count=Counter()
+                for binding in row['ordered_leaf_bindings']:
+                    k=binding['kernel']
+                    if k in bound or k not in kernels:raise ValueError('C0 Qwen kernel binding mismatch')
+                    code=qwen['microcode'][k];sequence=[]
+                    for step in code:
+                        name=step['op'];sequence.extend(['BITCAST_U','XOR','BITCAST_F'] if name=='NEG' else ['COPY'] if name=='MOV' else [qwen_aliases.get(name,name)])
+                    if binding['invocations']!=kernels[k] or binding['ordered_lowered_leaf_opcodes']!=sequence or binding['source_order_sha256']!=digest(code):
+                        raise ValueError('C0 Qwen retained instruction sequence mismatch')
+                    bound[k]=binding;count.update({name:n*kernels[k] for name,n in Counter(sequence).items()})
+                if set(bound)!=set(kernels) or dict(count)!=export['native_primitive_commands'] or dict(count)!=row['native_command_counts']:
+                    raise ValueError('C0 Qwen primitive repetition mismatch')
+                qcommands.update(count)
+            else:
+                calls=[]
+                for rb in op['rank_bindings']:
+                    ids=sorted(({rb['template']} if 'template' in rb else set())|{b['template'] for b in rb.get('buffer_programs',[])})
+                    calls.append({'rank':rb['rank'],'template_refs':ids,'buffer_programs':rb.get('buffer_programs',[]),
+                        'row_interval':rb.get('row_interval'),'empty_owned_extent':rb.get('empty_owned_extent',False),'SM_partition':rb.get('SM_partition')})
+                if row['rank_template_calls']!=calls:raise ValueError('C0 DS rank/template interval mismatch')
+        totals[model]={'PCs':len(ops),'families':len({o.get('opcode',o.get('family')) for o in ops})}
+    if set(index)!=expected:raise ValueError('C0 extra PC')
+    if set(lowering['DS_template_catalog'])!=set(catalog['templates']):raise ValueError('C0 template coverage mismatch')
+    for tid,t in catalog['templates'].items():
+        code=native['templates'][tid]['code'];record=lowering['DS_template_catalog'][tid]
+        if (record['ordered_source_code_sha256']!=digest(code) or record['ordered_steps']!=len(code) or
+            record['opcode_records']!=dict(Counter(n['op'] for n in code)) or record['bounded_emitter']!=t['execution_path']):
+            raise ValueError('C0 retained DS code/continuation source mismatch')
+    return {'schema':'H4_C0_SOURCE_FORWARD_CONTINUATION_JOIN_V1','status':'PASS_STATIC_SOURCE_AND_FORWARD_LEAF_JOIN',
+        'programs':totals,'DS_templates':len(catalog['templates']),'DS_forward_leaves':len(catalog['leaves']),
+        'Qwen_native_command_counts':dict(qcommands),'DS_source128lane_batches':catalog['native_batches128'],
+        'ordered_dynamic_movement_executed':False,'shared64_movements':None,'hardware_full_native_claim':False,
+        'remaining_gate':'actual ordered bounded continuation operand spans, concrete provider/home generation, finite leases and mirrored ACK receipts',
+        'C0_state_transition_order':['accepted','complete','mirrored_visible_ACK','consumer_accept','reverse_grant','retire']}
+
+
+def compile_ds_forward_parent_interface(catalog, native, residence):
+    """Actual parent versions/providers/home references, never fabricated leases."""
+    pcs=[];versions=set()
+    for row in catalog['PC_bindings']:
+        bindings=[b for b in row['bindings'] if catalog['templates'][b['template']]['execution_path'].startswith('forward_')]
+        if not bindings:continue
+        op=native['instructions'][row['pc']];provider_bindings={}
+        for tid in sorted({b['template'] for b in bindings}):
+            if tid not in op['provider_bindings']:raise ValueError('forward parent provider declaration missing')
+            provider_bindings[tid]=op['provider_bindings'][tid]
+            for provider in provider_bindings[tid].values():
+                if provider.get('version'):versions.add(provider['version'])
+                versions.update(provider.get('additional_versions',[]))
+        declared=[v['version'] for side in ('reads','writes') for v in op[side]];versions.update(declared)
+        pcs.append({'pc':row['pc'],'family':row['family'],'dependencies':row['dependencies'],
+            'reads':op['reads'],'writes':op['writes'],'actual_rank_template_calls':bindings,
+            'parent_provider_bindings':provider_bindings,
+            'provider_refill_writeback_ACK_reverse':'UNKNOWN_NO_DYNAMIC_PARENT_PROVIDER_RECEIPT'})
+    homes=defaultdict(list)
+    for index,home in enumerate(residence['homes']):
+        if home['version'] in versions:homes[home['version']].append(index)
+    return {'schema':'H4_DS_FORWARD_ACTUAL_PARENT_PROVIDER_HOME_INTERFACE_V1','PC_bindings':pcs,
+        'source_program_sha256':catalog['source_program_sha256'],'residence_archive':native['residence_archive'],
+        'version_home_refs':dict(homes),'missing_version_home_refs':sorted(versions-set(homes)),
+        'home_ref_encoding':'canonical residence archive /homes/<index>; retain rank_group, SM, concrete home and birth/retire',
+        'native_leaf_reference_fields':['parent_template','call_index','invocation_index','template','code_index','opcode','attrs',
+            'result_shape','operand','value','logical_byte_offset','payload_bytes','source_parameters for dynamic index'],
+        'provider_receipt_required':['PC/version/rank/SM/generation','parent LOAD provider declaration','source tile/window view',
+            'concrete provider/home identity','accepted finite refill/writeback credit','visible two-mirror ACK',
+            'consumer capture','matched reverse grant','source last use'],
+        'fixture_observer_scope':'CPU fixture observation cannot close a parent provider movement or hardware gate',
+        'physical_admission':False,'hardware_full_native_claim':False}
+
+
+def resolve_ds_forward_parent_home(interface, residence, *, pc, version, rank, SM):
+    rows=[r for r in interface['PC_bindings'] if r['pc']==pc]
+    if len(rows)!=1:raise ValueError('actual forward parent PC required')
+    row=rows[0]
+    if not any(b['rank']==rank for b in row['actual_rank_template_calls']):raise ValueError('actual forward parent rank missing')
+    allowed={v['version'] for side in ('reads','writes') for v in row[side]}
+    for group in row['parent_provider_bindings'].values():
+        for provider in group.values():
+            if provider.get('version'):allowed.add(provider['version'])
+            allowed.update(provider.get('additional_versions',[]))
+    if version not in allowed:raise ValueError('actual forward parent version missing')
+    if type(SM)!=int or not 0<=SM<32:raise ValueError('actual forward SM extent')
+    matches=[]
+    for index in interface['version_home_refs'].get(version,[]):
+        home=residence['homes'][index]
+        if home['version']!=version:raise ValueError('canonical parent home version mismatch')
+        if home['SM']==SM and rank in home.get('rank_group',[home.get('rank',0)]):
+            retirement=home.get('retire_pc')
+            if home['birth_pc']<=pc and (retirement is None or pc<=retirement):matches.append((index,home))
+    if len(matches)!=1:raise ValueError('UNKNOWN actual parent physical home absent or ambiguous for PC/version/rank/SM')
+    return matches[0]
+
+
+def resolve_ds_forward_leaf_reference(catalog, N, S, ref, *, expected_rank):
+    """Existing importer hook: resolve actual source leaf/iteration, not strings."""
+    if not isinstance(ref,dict):raise ValueError('structured source forward leaf reference required')
+    tid=ref.get('parent_template');ci=ref.get('call_index');iteration=ref.get('invocation_index')
+    if tid not in catalog['templates']:raise ValueError('forward parent template unknown')
+    calls=catalog['templates'][tid]['calls']
+    if type(ci)!=int or not 0<=ci<len(calls):raise ValueError('forward leaf call index out of range')
+    call=calls[ci];key=call['leaf']
+    if ref.get('template')!=key:raise ValueError('forward leaf id does not match source call')
+    if type(iteration)!=int or not 0<=iteration<call['repetitions']:raise ValueError('forward invocation out of range')
+    record=catalog['leaves'][key]
+    if 'program' not in record:raise ValueError('staged source uses retained native template resolver')
+    program=record['program']
+    if hashlib.sha256(json.dumps(program['code'],sort_keys=True,separators=(',',':')).encode()).hexdigest()!=record['code_sha256']:
+        raise ValueError('forward leaf retained source code hash mismatch')
+    if call['dynamic_source_parameters']:
+        parameters=ref.get('source_parameters',{})
+        if record['source_builder']!='index_program' or parameters!={'first':iteration,'rank':expected_rank} or not 0<=expected_rank<96:
+            raise ValueError('forward dynamic row/rank source binding mismatch')
+        h,w,n,_,_=record['source_builder_args'];program=S.index_program(h,w,n,iteration,expected_rank)
+    elif ref.get('source_parameters',{}):raise ValueError('unexpected forward dynamic source parameters')
+    return resolve_ds_movement_reference({'templates':{key:program}},key,ref)
+
+
 def native_value_specs(program, template_id):
     widths={};specs={}
     for definition,i in enumerate(program['templates'][template_id]['code']):
@@ -76,6 +341,52 @@ def native_value_specs(program, template_id):
         else:w=max((widths[v] for v in i['src']),default=8 if op=='IOTA' else 4)
         widths[i['dst']]=w;specs[i['dst']]={'bytes':max(1,math.prod(i['shape']))*w,'width':w,'definition':definition}
     return specs
+
+
+def compile_g0_source_interface(qwen, ds_catalog):
+    """Both-program source instruction demand for Popper G0; no hardware credit."""
+    caps=read_json(ROOT/OUT/'h4_actual_config_e844/inputs/primitive_capabilities.json')
+    opcodes={r['opcode'] for r in caps if r['implementation_requirement']=='V1'}
+    qrows=[];qtotals=Counter();dstotals=Counter();drows=[]
+    for op in qwen['operations']:
+        counts={k:v for k,v in op['calendar_export']['physical_primitives']['native_primitive_commands'].items() if k in opcodes}
+        qtotals.update(counts);qrows.append({'pc':op['pc'],'family':op['opcode'],'G0_native_commands':counts,
+            'source_kernel_invocations':op['calendar_export']['physical_primitives']['kernel_invocations']})
+    for op in ds_catalog['PC_bindings']:
+        counts={k:v for k,v in op['native_batches128'].items() if k in opcodes}
+        dstotals.update(counts);drows.append({'pc':op['pc'],'family':op['family'],'G0_native_batches128':counts,
+            'actual_rank_template_leaf_refs':op['bindings']})
+    records=[]
+    for tid,t in ds_catalog['templates'].items():
+        if t['execution_path']=='source_order_live_range_stages':continue
+        for j,call in enumerate(t['calls']):
+            leaf=ds_catalog['leaves'][call['leaf']];program=leaf['program'];specs=native_value_specs({'templates':{'leaf':program}},'leaf')
+            for i,node in enumerate(program['code']):
+                if node['op'] not in opcodes:continue
+                n=max(1,math.prod(node['shape']));width=specs[node['dst']]['width']
+                records.append({'template':tid,'leaf':call['leaf'],'call_index':j,'code_index':i,
+                    'opcode':node['op'],'attrs':node['attrs'],'shape':node['shape'],'src':node['src'],'dst':node['dst'],
+                    'invocation_repetitions':call['repetitions'],'native_batches128_per_invocation':ceil(n,128),
+                    'output_word_bits':width*8,'output_RF_vectors_per128batch':ceil(min(128,n)*width,512),
+                    'source_typed_bytes':{s:specs[s]['bytes'] for s in node['src']},
+                    'source_RF_whole_operand_vector_upper':sum(ceil(specs[s]['bytes'],512) for s in node['src']),
+                    'dynamic_source_parameters':call['dynamic_source_parameters'],
+                    'operand_window_movement_binding':'UNKNOWN unless actual bounded continuation/provider route resolves'})
+    return {'schema':'H4_G0_BOTH_PROGRAM_SOURCE_PORT_COST_INTERFACE_V1','owner':'Popper V1/G0; C0 Sagan; finite composition Dewey',
+        'Qwen':{'PCs':len(qrows),'families':len({r['family'] for r in qrows}),'native_commands':dict(qtotals),'PC_bindings':qrows},
+        'DeepSeek':{'PCs':len(drows),'families':len({r['family'] for r in drows}),'native_batches128':dict(dstotals),'PC_bindings':drows},
+        'DS_forward_instruction_records':records,
+        'opcode_cost_contract':{op:{'provisional_service_ticks_per128batch':32,'measured_cycles':None,
+            'exact_source_semantics_gate':'attrs, dtype, shifts/overflow, signedness, predicates, converts and I64 paired words; no FP arithmetic substitution',
+            'routing_area_qualification':None,'area_um2_per_replica':None} for op in sorted(opcodes)},
+        'RF_port_contract':{'read_ports':2,'logical_write_ports':1,'port_bits':4096,'mirrored_physical_write_copies':2,
+            'transaction_credit':1,'release':'two-mirror visible_ACK','workspace_vectors':32,'logical_vectors':512,
+            'I64':'two32-bit words; up to two4096-bit result transactions per128lane batch; paired-word execution and carry/predicate gate required'},
+        'replicas':{'Qwen_ranks':2,'DeepSeek_ranks':96,'SMs_per_rank':32},
+        'C0_interface':'h4_actual_config_e844/C0_Sagan_interface.json',
+        'routing':'actual operand/result/control bit demand, mux/demux/fanout and channel/slot fit required before RTL; UNKNOWN measured fit',
+        'cost_integration':'replace retained native term exactly once with opcode table only after source-exact interface gate; no add-on double charge',
+        'hardware_full_native_claim':False,'numerical_execution':False}
 
 
 def resolve_ds_movement_reference(program, template_id, ref, specs=None):
@@ -548,7 +859,7 @@ def audit_ds_bounded_dispatch(dispatch, *, costs=None):
         'physical_admission':False,'clock_admission':False,'automatic_scalar_fallback':False}
 
 
-def compose_ds_full_program_services(dispatch, *, bridge=None, native_program=None, costs=None):
+def compose_ds_full_program_services(dispatch, *, bridge=None, native_program=None, leaf_catalog=None, costs=None):
     """All-PC finite service composition using retained producer projections.
 
     One dispatch per primitive scalar is an explicit conservative command upper,
@@ -678,19 +989,27 @@ def compose_ds_full_program_services(dispatch, *, bridge=None, native_program=No
     rows=[];tick=0;commands=shared_reads=shared_writes=0;unknown_calls=0;count=Counter()
     dispatch_cost=sum(v for k,v in costs.items() if k.startswith('C0_'))
     for op,old in zip(dispatch['PC_dispatch'],baseline['PC_intervals']):
-        by_rank=defaultdict(lambda:{'native':Counter(),'read64':0,'write64':0,'unknown':[],'templates':[]})
+        by_rank=defaultdict(lambda:{'native':Counter(),'batches':Counter(),'read64':0,'write64':0,'unknown':[],'templates':[]})
         for call in op['calls']:
             key=call['template'];r=by_rank[call['rank']];r['native'].update(dispatch['templates'][key]['executed_primitive_scalar_projection'])
+            if leaf_catalog is not None:
+                entry=leaf_catalog['templates'][key]
+                if entry['native_scalars']!=dispatch['templates'][key]['executed_primitive_scalar_projection']:
+                    raise ValueError('C0 forward leaf native source mismatch')
+                r['batches'].update(entry['native_batches128'])
             r['templates'].append(key);s=summaries[key]
             if s['read64'] is None:r['unknown'].append(key);unknown_calls+=1
             else:r['read64']+=s['read64'];r['write64']+=s['write64'];shared_reads+=s['read64'];shared_writes+=s['write64']
         rank_rows=[]
         for old_rank in old['ranks']:
-            rank=old_rank['rank'];r=by_rank[rank];n=sum(r['native'].values());commands+=n;count.update(r['native'])
+            rank=old_rank['rank'];r=by_rank[rank]
+            n=sum(r['batches'].values()) if leaf_catalog is not None else sum(r['native'].values())
+            commands+=n;count.update(r['native'])
             c0=n*dispatch_cost;shared=r['read64']*costs['scratch64_read']+r['write64']*costs['scratch64_write_ACK']
             duration=old_rank['end']-old_rank['start']+c0+shared
             rank_rows.append({'rank':rank,'start':tick,'end':tick+duration,
                 'native_scalar_command_upper_by_opcode':dict(r['native']),'C0_command_upper':n,
+                **({'C0_source_leaf_batches128_by_opcode':dict(r['batches'])} if leaf_catalog is not None else {}),
                 'C0_ticks':c0,'shared_known_ticks':shared,
                 'scratch64_reads':None if r['unknown'] else r['read64'],
                 'scratch64_writes_ACK':None if r['unknown'] else r['write64'],
@@ -711,7 +1030,8 @@ def compose_ds_full_program_services(dispatch, *, bridge=None, native_program=No
         tick=end
     return {'schema':'H4_DS_ALL_PC_FINITE_KNOWN_SERVICE_COMPOSITION_V1','PCs':len(rows),
         'families':baseline['families'],'PC_intervals':rows,'source_program_sha256':dispatch['source_program_sha256'],
-        'native_scalar_commands_upper_by_opcode':dict(count),'C0_scalar_command_upper':commands,
+        'native_scalar_commands_upper_by_opcode':dict(count),'C0_scalar_command_upper':sum(count.values()),
+        **({'C0_source128lane_commands':commands} if leaf_catalog is not None else {}),
         'known_service_software_ticks':tick,'complete_service_software_ticks':None,
         'scratch64_read_transactions':None if unknown_calls else shared_reads,
         'scratch64_write_ACK_transactions':None if unknown_calls else shared_writes,
@@ -720,7 +1040,8 @@ def compose_ds_full_program_services(dispatch, *, bridge=None, native_program=No
         'constrained_extent_successor_demand':baseline['constrained_extent_successor_demand'],
         'explicit_provisional_costs':costs,'retained_baseline_provisional_costs':baseline['explicit_provisional_costs'],
         'status':'PARTIAL_KNOWN_SERVICE_COST_WITH_EXPLICIT_SHARED_UNKNOWNS' if unknown_calls else 'PASS_ALL_PC_NATIVE_AND_SHARED_COST_JOIN_WITH_CHECKPOINT_GAP',
-        'native_command_count_scope':'one command per scalar is conservative upper; actual vector/loop bridge needed',
+        'native_command_count_scope':'source-resolved forward/original128lane batches with actual source loop repetitions; hardware command bridge still required' if leaf_catalog is not None else
+            'one command per scalar is conservative upper; actual vector/loop bridge needed',
         'checkpoint_traffic_cost':'UNKNOWN_NOT_INCLUDED_IN_KNOWN_SUBTOTAL',
         'ordered_full_native_trace':False,'arithmetic_or_provider_rerun':False,'r22_augmentation_applied':False,
         'hardware_full_native_claim':False,'clock_admission':False,'physical_admission':False}
@@ -2714,7 +3035,10 @@ def main():
     ap.add_argument('--ds-full-native-source',type=Path)
     ap.add_argument('--ds-shared-bridge',type=Path)
     ap.add_argument('--ds-shared-bridge-source',type=Path)
+    ap.add_argument('--ds-shared-bridge-commit')
     ap.add_argument('--ds-native-source-commit')
+    ap.add_argument('--ds-forward-leaves',action='store_true')
+    ap.add_argument('--c0-source-commit')
     args = ap.parse_args()
     if args.ds_full_program_cost:
         dispatch=read_json(args.ds_full_program_cost)
@@ -2722,28 +3046,68 @@ def main():
         native_raw=source_bytes(args.ds_full_native_source,args.ds_native_source_commit)
         digest=hashlib.sha256(native_raw).hexdigest()
         if digest!=dispatch['source_program_sha256']:raise ValueError('full native source pin mismatch')
-        bridge=read_json(args.ds_shared_bridge) if args.ds_shared_bridge else None
+        bridge_raw=source_bytes(args.ds_shared_bridge,args.ds_shared_bridge_commit) if args.ds_shared_bridge else None
+        bridge=json.loads(gzip.decompress(bridge_raw) if str(args.ds_shared_bridge).endswith('.gz') else bridge_raw) if bridge_raw is not None else None
+        bridge_source_raw=None
         if bridge is not None:
             if args.ds_shared_bridge_source is None:raise ValueError('bridge producer source bytes required')
-            if hashlib.sha256(args.ds_shared_bridge_source.read_bytes()).hexdigest()!=bridge.get('bridge_source_sha256'):
+            bridge_source_raw=source_bytes(args.ds_shared_bridge_source,args.ds_shared_bridge_commit)
+            if hashlib.sha256(bridge_source_raw).hexdigest()!=bridge.get('bridge_source_sha256'):
                 raise ValueError('bridge producer source bytes pin mismatch')
-        native_program=json.loads(gzip.decompress(native_raw)) if bridge is not None else None
-        result=compose_ds_full_program_services(dispatch,bridge=bridge,native_program=native_program)
+        native_program=json.loads(gzip.decompress(native_raw)) if bridge is not None or args.ds_forward_leaves else None
+        catalog=None;c0join=None;c0pins={};parent_interface=None;residence_path=None;residence_raw=None
+        if args.c0_source_commit and not args.ds_forward_leaves:raise ValueError('C0 join requires source forward leaves')
+        if args.ds_forward_leaves:
+            N,S=load_ds_forward_builders();catalog=compile_ds_forward_leaf_catalog(dispatch,native_program,N,S)
+            residence_path=Path(native_program['residence_archive']);residence_raw=source_bytes(residence_path,args.ds_native_source_commit)
+            parent_interface=compile_ds_forward_parent_interface(catalog,native_program,json.loads(gzip.decompress(residence_raw)))
+        if args.c0_source_commit:
+            path=Path('results/uarch/h4_c0_bridge_model_20261002/dispatch_lowering.json.gz')
+            raw=source_bytes(path,args.c0_source_commit);c0pins[str(path)]=hashlib.sha256(raw).hexdigest()
+            lowering=json.loads(gzip.decompress(raw))
+            path=Path('tools/h3_qwen_bounded_native.py');raw=source_bytes(path,args.c0_source_commit)
+            c0pins[str(path)]=hashlib.sha256(raw).hexdigest()
+            aliases=next(ast.literal_eval(n.value) for n in ast.parse(raw).body if isinstance(n,ast.Assign)
+                and any(isinstance(t,ast.Name) and t.id=='QWEN_ALIASES' for t in n.targets))
+            qpath=ROOT/OUT/'bounded_provider_milestone/Qwen_tiled.json.gz'
+            c0join=join_c0_source_lowering(lowering,read_json(qpath),native_program,catalog,aliases,
+                qwen_sha256=hashlib.sha256(qpath.read_bytes()).hexdigest())
+        result=compose_ds_full_program_services(dispatch,bridge=bridge,native_program=native_program,leaf_catalog=catalog)
         inputs=[args.ds_full_program_cost,args.ds_full_native_source,Path(__file__)]
         if args.ds_shared_bridge:inputs.extend([args.ds_shared_bridge,args.ds_shared_bridge_source])
+        if residence_path is not None:inputs.append(residence_path)
+        if args.ds_forward_leaves:inputs.extend([ROOT/OUT/'final_ds_bed325f89/h3_deepseek_complete_native.py.source',
+            ROOT/OUT/'bounded_provider_milestone/ds/h3_deepseek_streaming_linear.py.source',
+            ROOT/OUT/'bounded_provider_milestone/Qwen_tiled.json.gz',
+            ROOT/OUT/'final_ds_bed325f89/producer_pins.json',ROOT/OUT/'bounded_provider_milestone/ds/files_sha256.json',
+            ROOT/OUT/'h4_actual_config_e844/inputs/primitive_capabilities.json'])
         manifest={'schema':'H4_DS_FULL_PROGRAM_COST_MANIFEST_V1','PCs':result['PCs'],'families':result['families'],
             'source_sha256':{str(p.relative_to(ROOT)) if p.is_absolute() and p.is_relative_to(ROOT) else str(p):
-                hashlib.sha256(native_raw if p==args.ds_full_native_source else p.read_bytes()).hexdigest() for p in inputs},
+                hashlib.sha256(native_raw if p==args.ds_full_native_source else bridge_raw if p==args.ds_shared_bridge else
+                    bridge_source_raw if p==args.ds_shared_bridge_source else residence_raw if p==residence_path else p.read_bytes()).hexdigest() for p in inputs},
             'native_source_commit':args.ds_native_source_commit,
             'status':result['status'],'unknown_shared_template_calls':result['unknown_shared_template_calls'],
             'complete_service_software_ticks':None,'hardware_full_native_claim':False,
-            'scope':'all-PC instruction-dependent scalar upper, retained provider projections and optional actual shared bridge; no arithmetic/provider replay'}
+            'scope':('all-PC source-resolved instruction/128lane obligations, retained provider costs, actual shared movement UNKNOWN; no arithmetic/provider replay' if catalog is not None else
+                'all-PC instruction-dependent scalar upper, retained provider projections and optional actual shared bridge; no arithmetic/provider replay')}
+        if args.ds_shared_bridge_commit:manifest['shared_bridge_source_commit']=args.ds_shared_bridge_commit
+        if args.c0_source_commit:manifest.update(C0_source_commit=args.c0_source_commit,C0_source_sha256=c0pins)
         summary={k:v for k,v in result.items() if k not in ('PC_intervals','template_shared_bindings','constrained_extent_successor_demand')}
         summary['unbound_physical_workspace_ranks']=len(result['constrained_extent_successor_demand'])
         artifacts={'manifest.json':manifest,'summary.json':summary,'full_program_costs.json.gz':result}
+        if parent_interface is not None:artifacts['forward_parent_provider_interface.json.gz']=parent_interface
+        if c0join is not None:artifacts['C0_forward_source_join.json']=c0join
+        if catalog is not None:
+            qwen=read_json(ROOT/OUT/'bounded_provider_milestone/Qwen_tiled.json.gz')
+            g0=compile_g0_source_interface(qwen,catalog)
+            if c0join is not None:g0.update(C0_source_commit=args.c0_source_commit,C0_source_sha256=c0pins,
+                C0_interface='results/uarch/h4_c0_bridge_model_20261002/dispatch_lowering.json.gz; verified by C0_forward_source_join.json')
+            artifacts.update({'forward_leaf_catalog.json.gz':catalog,'G0_both_program_interface.json.gz':g0})
         if args.verify:
             for name,value in artifacts.items():
-                if read_json(args.out/name)!=value:raise ValueError('DS full cost replay mismatch: '+name)
+                raw=(json.dumps(value,sort_keys=True,indent=2)+'\n').encode()
+                expected=gzip.compress(raw,mtime=0) if name.endswith('.gz') else raw
+                if (args.out/name).read_bytes()!=expected:raise ValueError('DS full cost byte-exact replay mismatch: '+name)
         else:
             args.out.mkdir(parents=True,exist_ok=False)
             for name,value in artifacts.items():
