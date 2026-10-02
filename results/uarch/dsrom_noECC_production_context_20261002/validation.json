@@ -1,5 +1,5 @@
 {
-  "tests_PASS": 36,
+  "tests_PASS": 42,
   "byteidentical_replay": true,
   "all_q_BF_Verilog_instances_match_original_JSON_master_census": true,
   "q_physical_masters": 59,
@@ -15,5 +15,20 @@
   "SS_FF_closed": false,
   "main_checkpoint_read": "c1f8fbd75e5db67dfa470fff6b885d9f5ad72a91",
   "raw_master_source": "Pinned image af971398; actualasap7 RVT cells andtechnology LEF",
-  "dontuse_scope": "Existing mappedinstances are legitimatephysicalmasters; platformdontuse controls NEW choices. Read retainednetlist, skipsynthesis; keep8WAKE protected. Any remapping requires separatelypinned/priced evidence."
+  "dontuse_scope": "Existing mappedinstances are legitimatephysicalmasters; platformdontuse controls NEW choices. Read retainednetlist, skipsynthesis; keep8WAKE protected. Any remapping requires separatelypinned/priced evidence.",
+  "byteidentical_production_and_cut_replay": true,
+  "installed_CTS_PDN_not_prebuild_requirement": true,
+  "source_PDNextension_q_um": 6.48,
+  "actual_WAKEDFF_to_inverter_to_ICGENA_bijection": true,
+  "sourceclock_slots": 16,
+  "actual_grid_cut_lanes": 6,
+  "SSmacro_clkq_max_ps": 839.0934,
+  "Macro_capture_setup_edges": 2,
+  "cap_to_lane_and_arithmetic_edges": 1,
+  "Maxwell_composition": "5cc5b1029",
+  "q_residual_after_full_pin_buffer_floor_um2": 399.37535995471853,
+  "prebuild_missing": [
+    "finite branch wirecap/slew/buffer and exclusion construction beyond pinfloor",
+    "numeric source-parent driverarrival/slew and output receiverload constraints; nozeroIO"
+  ]
 }
