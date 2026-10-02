@@ -35,7 +35,6 @@ SOURCES = [
  'tools/qwen_hbm_endpoint_preflight_r14.py',
  'tools/qwen_hbm_complete_program.py', 'tools/hdc_golden.py',
  'tools/qwen_o4_kv_slice_map_w12.py',
- 'rtl/test/model_ready_hbm_r14/tb_hbm_finite_stage.sv',
 ]
 
 @dataclass(frozen=True)
@@ -132,7 +131,6 @@ class Delivery:
             raise ValueError('sector locked')
         if len(sectors) != 136:
             raise ValueError('source writer descriptor count')
-        if self.serial >= 2**32: raise ValueError('transport generation exhausted; drain required')
         token = self.serial; self.serial += 1
         self.live[token] = dict(owner=owner, position=position, sectors=sectors,
                                 active={}, ack=set(), retired=set())
@@ -236,32 +234,26 @@ class Delivery:
 class PublishedProvider:
     """Read existing executor.PersistentMemory raw bytes without re-encoding.
 
-    Its TP/extent identity is checked. Existing TP2 backing is projected to
-    TP4 homes by global head identity (source die=rank//2,head=2*(rank%2)+head).
-    This is storage translation only; TP2 numerical evidence is not transferred. Software fence is software publication,
+    Its TP/extent identity is checked. Software fence is software publication,
     never promoted to r14 backing completion. Caller explicitly binds one user
     and epoch; no state from another epoch is borrowed.
     """
     def __init__(self, memory, user, epoch):
         c = memory.program['config']
-        if (memory.program['TP'] not in (2,4) or c['head_dim'] != 128 or
+        if (memory.program['TP'] != 4 or c['head_dim'] != 128 or
             c['num_key_value_heads'] != 8 or memory.program['context_capacity'] != 8192):
             raise ValueError('provider geometry differs from ROM TP4')
         self.memory, self.user, self.epoch = memory, user, epoch
-        self.provider_tp = memory.program['TP']
     def validate(self, owner, count):
         if owner.user != self.user or owner.epoch != self.epoch or not 0 < count <= 8192:
             raise ValueError('provider owner')
-        rank = owner.rank if self.provider_tp == 4 else owner.rank//2
         for p in range(count):
-            if (owner.layer, rank, p) not in self.memory.published:
+            if (owner.layer, owner.rank, p) not in self.memory.published:
                 raise ValueError('actual provider prefix absent')
     def read_byte(self, owner, kind, head, position, dim):
         self.validate(owner, position+1)
         # Actual provider dictionary lookup deliberately refuses missing state.
-        rank = owner.rank if self.provider_tp == 4 else owner.rank//2
-        head = head if self.provider_tp == 4 else (owner.rank%2)*2+head
-        return self.memory.bytes[self.memory._address(rank, owner.layer,
+        return self.memory.bytes[self.memory._address(owner.rank, owner.layer,
                                                      kind, head, position, dim)]
 
 
@@ -358,7 +350,7 @@ def burst_assembly():
                 prior16_slot_proposal_sufficient=False,
                 slot_retirement='registered masked SRAM fill accepted and write visibility precede credit return')
 
-def report(full_calendar=False, progress_dir=None):
+def report(full_calendar=False):
     from qwen_rom_kv_residence_gate import generate
     reconciliation = generate(); pins = {}
     for p in SOURCES:
@@ -366,9 +358,6 @@ def report(full_calendar=False, progress_dir=None):
         original = subprocess.check_output(['git', 'show', BASE+':'+p], cwd=ROOT)
         if raw != original: raise ValueError('pinned original changed: '+p)
         pins[p] = hashlib.sha256(raw).hexdigest()
-    macros = json.loads((ROOT/'physical/asap7_memory_macros/index.json').read_text())['macros']
-    service_macro_area = (64*macros['ot_sram_1r1w_64x512_m1_r2c2']['area_um2']+
-                          32*macros['ot_sram_1r1w_128x256_m1_r2c2']['area_um2'])/1e6
     read = int(reconciliation['byte_ledger']['existing_fp8_kv_read_bytes_per_TP4_die'])
     assert read == 36*4194304
     # 128B striping gives equal131072-sector layer /4 stack extents.
@@ -401,10 +390,6 @@ def report(full_calendar=False, progress_dir=None):
             sectors = list(range(layer*16384, (layer+1)*16384))
             sectors += list(range(36*16384+layer*16384,36*16384+(layer+1)*16384))
             rows.append(dict(layer=layer, **calendar(sectors)))
-            if progress_dir is not None:
-                with (progress_dir/f'layer_{layer:02d}.json').open('x') as f:
-                    json.dump(dict(read=rows[-1],writer=writer_rows[-1]),f,indent=2); f.write('\n')
-                print(f'layer{layer}: read_cycles={rows[-1]["cycles_1p2GHz"]} write_cycles={writer_rows[-1]["cycles_1p2GHz"]}',flush=True)
     delivery = (sum(int(r['cycles_1p2GHz']) for r in rows)+
                 sum(int(r['cycles_1p2GHz']) for r in writer_rows)) if rows else None
     composition = compose(model_point['cycles'],delivery,
@@ -425,7 +410,7 @@ def report(full_calendar=False, progress_dir=None):
       source_ports=dict(sector_bridge=dict(bytes=32,len=1,outstanding=1,write_completion='request acceptance only'),
         r14=dict(stacks_per_rank=4,pseudo_channels_per_stack=32,request_entries_per_PC=64,
           return_entries_per_PC=32,tags_per_stack=4096,write_residence_per_stack=4,
-          reverse_wire_bits=404,return_wire_bits=467,command_bits_per_stack=339,commands_per_edge=1,owner_lookup_edges=12,
+          command_bits_per_stack=339,commands_per_edge=1,owner_lookup_edges=12,
           return_arbitration_edges=7,owned_bits=465,request_bits=455),
         tile=dict(fill_data_bytes_per_edge=64,mask_bits=512,address_bits=7,
           addressed_fill_bits=1048,replicas=1536,macro_write_bytes_per_edge=32,
@@ -434,7 +419,7 @@ def report(full_calendar=False, progress_dir=None):
         reserved_response_bytes_per_stack=16384,assembly_entries_per_stack=1024,
         assembly_payload_bits_per_slot=787,burst_record_bits_per_slot=236,
         payload_storage_bits_per_rank=4*(16384*8+1024*787+16*236),
-        directory_bits_per_rank=36*(16+32+14+2+1),
+        directory_bits_per_rank=36*(32+14+2+1),
         fill_lanes_per_rank=1,fill_capacity_bytes_per_stream_edge=64,
         stack_boundary_bytes_per_service_edge=32,service_target_Hz=1000000000,
         stream_target_Hz=1200000000,serial_target_Hz=900000000,
@@ -442,7 +427,7 @@ def report(full_calendar=False, progress_dir=None):
         byte_mask_to_bit_mask='each valid raw code expands to8 mask bits; no BF16 streamer conversion',
         area='payload/register lower bound only; allocator/CAM/mux/retirement/quarantine/CDC/control area still required',
         assembly_area_lower_bound_mm2=4*1024*787*.2916/1e6,
-        actual_bridge_payload_bits_per_rank=4*(5*(455+467+404)+3*(2*26+7)),
+        actual_bridge_payload_bits_per_rank=4*5*(455+465+210),
         writer_pending_descriptor_bits_per_rank=136*(34+2+32+256+3),
         source_address_map_rows_per_tile=54, historical_dimension_rows=44,
         macros_still_fit=True,
@@ -450,16 +435,6 @@ def report(full_calendar=False, progress_dir=None):
         fill_demux_outputs=1536,fill_demux_data_mask_bits=1024,
         destination_selector_bits=11,required_parallel_signal_tracks_at_fill_boundary=1048,
         channel_capacity=None,slot_fit=None,macs_per_cycle=0,
-        actual_service_macro_count_per_stack=96,
-        actual_service_macro_area_mm2_per_stack=service_macro_area,
-        actual_service_macro_area_mm2_per_rank=4*service_macro_area,
-        inherited_service_slot_mm2_per_stack=16.6015872,
-        inherited_slot_is_not_current_fit=True,
-        boundary_tracks=dict(request_per_stack=455,return_per_stack=467,reverse_per_stack=404,
-                             command_per_stack=339,fill_lane=1048),
-        macro_port_bytes_per_edge=dict(request_ram_read=64,request_ram_write=64,
-            return_ram_read=64,return_ram_write=64,context_ram_read=32,context_ram_write=32),
-        finite_control='136 pending writer descriptors per rank, one writer and reader per rank,144 total layer-directory entries, transport generations32bit with drain-before-wrap',
         compute_intensity_MAC_per_byte=0,communication_intensity='one raw byte per existing KV byte, masks additional'),
       ledger=dict(reconciliation=reconciliation['byte_ledger'],
         replacement='arch_budget_qwen3.rom_token max(compute,KV bound) replaced with compute+finite service-proven overlap; uarch_model.qwen_tp_point compute cycles lack exposed KV waits',
@@ -481,7 +456,7 @@ def report(full_calendar=False, progress_dir=None):
       handoff=dict(Euclid='consume Homes.tile and masked fill tuples only after owner ACK/reader lease/visibility contract; keep tilecontrol/resettiming untouched',
         Maxwell='compose finite service once, bind actual dispatch/release trace and all write/RMW costs; qualify scheduling guard then overlap',
         Kepler='TP4 wrapper and retained tag quarantine/reverse credit identity required; r14 read credits currently accept unvalidated identity'),
-      blockers=['existing TP2 raw-state provider now translated by global head identity; actual ROM TP4 producer/stage owner state still unconnected',
+      blockers=['actual ROM FP8 state provider and emitted-stage owner binding not connected',
         'r14 tag freed on owned acceptance before consumer reverse credit; adapter must retain identity and quarantine tag',
         'r14 read reverse credit validation missing; no inherited runtime PASS',
         'calendar conservative scan/return reservations not measured service; full-program releases and runtime arithmetic identity unresolved',
@@ -494,13 +469,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--result',type=Path,required=True)
     ap.add_argument('--full-calendar',action='store_true')
-    ap.add_argument('--progress-dir',type=Path)
     args = ap.parse_args()
     if args.result.exists(): ap.error('immutable result already exists')
-    if args.progress_dir is not None:
-        if not args.full_calendar: ap.error('progress requires full calendar')
-        args.progress_dir.mkdir(parents=True,exist_ok=False)
-    result = report(args.full_calendar,args.progress_dir)
+    result = report(args.full_calendar)
     args.result.parent.mkdir(parents=True,exist_ok=True)
     with args.result.open('x') as f: json.dump(result,f,indent=2,sort_keys=True);f.write('\n')
     print(result['status'])
