@@ -87,6 +87,42 @@ class FiniteCalendarTests(unittest.TestCase):
         for phase in ['complete','mirrored_visible_ACK','consumer_accept','reverse_grant','retire']:s.transition('add',phase)
         s.release(a);s.release(b);self.assertFalse(s.live)
 
+    def test_DS_shared_bridge_positive_counts_and_negative_capacity_alias_empty(self):
+        t={'execution_path':'source_order_live_range_stages','reference_scalar_fallback_admitted':False,
+            'no_recomputed_dependency_scalars':True,'plan':{'workspace_upper_bytes':512},
+            'executed_primitive_scalar_projection':{'LOAD':2,'FADD':2},
+            'provider_transfer_projection':{'read_512B_fragments_upper':1,'write_512B_fragments_upper':1}}
+        d={'schema':'H3_DS_FORWARD_BOUNDED_POLYNOMIAL_DISPATCH_V2','automatic_scalar_fallback_templates':0,
+            'workspace':{'rank_cap_bytes':33554432,'base':None},'source_program_sha256':'a'*64,'templates':{'kernel':t},
+            'PC_dispatch':[{'pc':0,'family':'test','dependencies':[],
+                'calls':[{'rank':0,'template':'kernel','SM_partition':'block256%32'}],
+                'projected_executed_primitive_scalars':t['executed_primitive_scalar_projection'],
+                'provider_transfer_projection':t['provider_transfer_projection']}]}
+        b={'schema':'H4_DS_NATIVE_SHARED_MOVEMENT_BRIDGE_V1','source_program_sha256':'a'*64,
+            'source_dispatch_sha256':c.hashlib.sha256(json.dumps(d,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
+            'scratch_beat_bytes':64,'scratch_capacity_bytes':65536,'bridge_source_sha256':'b'*64,
+            'templates':{'kernel':{'execution_path':t['execution_path'],'native_primitive_scalars':t['executed_primitive_scalar_projection'],
+            'ordered_movements':[{'source_step':0,'event':'acquire','lease':'v','base':0,'bytes':128},
+                {'source_step':1,'event':'read64','lease':'v','byte_address':0,'span_bytes':128,'repetitions':3,'native_instruction_ref':'kernel/code/1'},
+                {'source_step':2,'event':'write64_ACK','lease':'v','byte_address':0,'span_bytes':64,'repetitions':2,'native_instruction_ref':'kernel/code/2'},
+                {'source_step':3,'event':'release_after_ACK_reverse','lease':'v'}]}}}
+        unknown=c.compose_ds_full_program_services(d);self.assertIsNone(unknown['scratch64_read_transactions'])
+        bound=c.compose_ds_full_program_services(d,bridge=b)
+        self.assertEqual(bound['scratch64_read_transactions'],6);self.assertEqual(bound['scratch64_write_ACK_transactions'],2)
+        self.assertEqual(bound['known_service_software_ticks']-unknown['known_service_software_ticks'],64)
+        self.assertIsNone(bound['complete_service_software_ticks']);self.assertFalse(bound['hardware_full_native_claim'])
+        bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements'][0]['bytes']=65537
+        with self.assertRaisesRegex(ValueError,'lease extent'):c.compose_ds_full_program_services(d,bridge=bad)
+        bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements'].insert(1,
+            {'source_step':0,'event':'acquire','lease':'other','base':0,'bytes':64})
+        with self.assertRaisesRegex(ValueError,'live alias'):c.compose_ds_full_program_services(d,bridge=bad)
+        bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements']=[]
+        with self.assertRaisesRegex(ValueError,'implicit zero'):c.compose_ds_full_program_services(d,bridge=bad)
+        bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements'][1]['repetitions']=0
+        with self.assertRaisesRegex(ValueError,'positive explicit'):c.compose_ds_full_program_services(d,bridge=bad)
+        bad=copy.deepcopy(b);bad['source_program_sha256']='c'*64
+        with self.assertRaisesRegex(ValueError,'source mismatch'):c.compose_ds_full_program_services(d,bridge=bad)
+
     def test_ordered_native_SM_services_reject_alias_missing_read_and_RTL_credit(self):
         p={'providers':{'input':{'shape':[256],'dtype':'F32'}},'code':[
             {'op':'LOAD','dst':'x','src':[],'shape':[256],'attrs':{'name':'input','dtype':'F32'}},
@@ -237,6 +273,12 @@ class FiniteCalendarTests(unittest.TestCase):
     def test_DS_bounded_all_PC_finite_reservations_and_extent_gap(self):
         dispatch=c.read_json(ROOT/c.OUT/'bounded_provider_milestone/ds/forward_dispatch_milestone.json.gz')
         proof=c.audit_ds_bounded_dispatch(dispatch)
+        full=c.compose_ds_full_program_services(dispatch)
+        self.assertEqual(full['PCs'],2213);self.assertEqual(full['families'],30)
+        self.assertEqual(full['native_scalar_commands_upper_by_opcode'],proof['primitive_scalars'])
+        self.assertGreater(full['known_service_software_ticks'],proof['estimated_service_ticks'])
+        self.assertIsNone(full['complete_service_software_ticks']);self.assertIsNone(full['scratch64_read_transactions'])
+        self.assertTrue(all(not pc['shared_scope_complete'] for pc in full['PC_intervals']))
         self.assertEqual((proof['PCs'],proof['families']),(2213,30))
         self.assertFalse(proof['physical_admission']);self.assertFalse(proof['ordered_full_native_trace'])
         top=proof['PC_intervals'][127]['ranks'][0]

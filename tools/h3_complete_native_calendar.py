@@ -496,6 +496,126 @@ def audit_ds_bounded_dispatch(dispatch, *, costs=None):
         'physical_admission':False,'clock_admission':False,'automatic_scalar_fallback':False}
 
 
+def compose_ds_full_program_services(dispatch, *, bridge=None, costs=None):
+    """All-PC finite service composition using retained producer projections.
+
+    One dispatch per primitive scalar is an explicit conservative command upper,
+    not an invented vector speedup. Bridge64B scratch demand is additive only
+    when a pinned movement trace actually binds that template; absent is UNKNOWN.
+    No numerical executor/provider payload or r22 augmentation runs here.
+    """
+    baseline=audit_ds_bounded_dispatch(dispatch)
+    costs=dict(costs or {'C0_fetch':2,'C0_decode':2,'C0_home_scoreboard':12,
+        'C0_accept':2,'C0_complete':2,'C0_reverse_retire':2,'scratch64_read':8,'scratch64_write_ACK':8,
+        'atomic_collective_admit':2})
+    required={'C0_fetch','C0_decode','C0_home_scoreboard','C0_accept','C0_complete',
+              'C0_reverse_retire','scratch64_read','scratch64_write_ACK','atomic_collective_admit'}
+    if set(costs)!=required:raise ValueError('complete all-PC service cost table required')
+    for key,value in costs.items():positive(value,key)
+    bridge_templates={}
+    if bridge is not None:
+        if bridge.get('schema')!='H4_DS_NATIVE_SHARED_MOVEMENT_BRIDGE_V1':raise ValueError('actual shared movement bridge schema')
+        if bridge.get('source_program_sha256')!=dispatch['source_program_sha256']:
+            raise ValueError('shared movement program source mismatch')
+        if bridge.get('source_dispatch_sha256')!=hashlib.sha256(
+                json.dumps(dispatch,sort_keys=True,separators=(',',':')).encode()).hexdigest():
+            raise ValueError('shared movement dispatch content mismatch')
+        if bridge.get('scratch_beat_bytes')!=64 or bridge.get('scratch_capacity_bytes')!=65536:
+            raise ValueError('actual scratch64B/64KiB ABI required')
+        if not re.fullmatch('[0-9a-f]{64}',bridge.get('bridge_source_sha256','')):
+            raise ValueError('bridge producer source pin required')
+        bridge_templates=bridge['templates']
+        if not set(bridge_templates)<=set(dispatch['templates']):raise ValueError('unknown bridge native template')
+    summaries={}
+    for key,t in dispatch['templates'].items():
+        r=bridge_templates.get(key)
+        if r is None:
+            summaries[key]={'status':'UNKNOWN_UNBOUND_SHARED_MOVEMENT','read64':None,'write64':None}
+            continue
+        if r.get('execution_path')!=t['execution_path'] or r.get('native_primitive_scalars')!=t['executed_primitive_scalar_projection']:
+            raise ValueError('bridge native instruction count/path mismatch')
+        movements=r.get('ordered_movements');reads=writes=0;leases={};last_step=-1
+        if not isinstance(movements,list):raise ValueError('ordered shared movement commands required')
+        for m in movements:
+            step=m['source_step'];kind=m['event'];identity=m['lease']
+            if type(step)!=int or step<last_step or step<0:raise ValueError('shared source step order')
+            last_step=step
+            if kind=='acquire':
+                base=m['base'];size=m['bytes']
+                if identity in leases or type(base)!=int or type(size)!=int or base<0 or size<=0 or base%64 or size%64 or base+size>65536:
+                    raise ValueError('finite shared concrete lease extent')
+                if any(base<b+n and b<base+size for b,n in leases.values()):raise ValueError('shared live alias')
+                leases[identity]=(base,size)
+            elif kind=='release_after_ACK_reverse':
+                if identity not in leases:raise ValueError('unmatched shared retirement')
+                del leases[identity]
+            elif kind in ('read64','write64_ACK'):
+                if identity not in leases:raise ValueError('shared movement missing live lease')
+                count=positive(m['repetitions'],'actual shared instruction repetitions')
+                base,size=leases[identity];address=m['byte_address'];span=m['span_bytes']
+                if type(address)!=int or type(span)!=int or address%64 or span<=0 or span%64 or address<base or address+span>base+size:
+                    raise ValueError('shared instruction address extent')
+                if not isinstance(m.get('native_instruction_ref'),str) or not m['native_instruction_ref']:
+                    raise ValueError('instruction-dependent shared reference required')
+                if kind=='read64':reads+=count*span//64
+                else:writes+=count*span//64
+            else:raise ValueError('unknown shared bridge movement event')
+        if leases:raise ValueError('shared lease retained past template retirement')
+        if not movements and (r.get('zero_shared_reason')!='source-proved lane-local RF-only' or not r.get('zero_shared_proof_ref')):
+            raise ValueError('empty shared movement is not implicit zero')
+        summaries[key]={'status':'BOUND_SOFTWARE_MOVEMENT_TRACE','read64':reads,'write64':writes,
+                        'bridge_source_sha256':bridge['bridge_source_sha256']}
+    rows=[];tick=0;commands=shared_reads=shared_writes=0;unknown_calls=0;count=Counter()
+    dispatch_cost=sum(v for k,v in costs.items() if k.startswith('C0_'))
+    for op,old in zip(dispatch['PC_dispatch'],baseline['PC_intervals']):
+        by_rank=defaultdict(lambda:{'native':Counter(),'read64':0,'write64':0,'unknown':[],'templates':[]})
+        for call in op['calls']:
+            key=call['template'];r=by_rank[call['rank']];r['native'].update(dispatch['templates'][key]['executed_primitive_scalar_projection'])
+            r['templates'].append(key);s=summaries[key]
+            if s['read64'] is None:r['unknown'].append(key);unknown_calls+=1
+            else:r['read64']+=s['read64'];r['write64']+=s['write64'];shared_reads+=s['read64'];shared_writes+=s['write64']
+        rank_rows=[]
+        for old_rank in old['ranks']:
+            rank=old_rank['rank'];r=by_rank[rank];n=sum(r['native'].values());commands+=n;count.update(r['native'])
+            c0=n*dispatch_cost;shared=r['read64']*costs['scratch64_read']+r['write64']*costs['scratch64_write_ACK']
+            duration=old_rank['end']-old_rank['start']+c0+shared
+            rank_rows.append({'rank':rank,'start':tick,'end':tick+duration,
+                'native_scalar_command_upper_by_opcode':dict(r['native']),'C0_command_upper':n,
+                'C0_ticks':c0,'shared_known_ticks':shared,
+                'scratch64_reads':None if r['unknown'] else r['read64'],
+                'scratch64_writes_ACK':None if r['unknown'] else r['write64'],
+                'bound_shared_read64_subtotal':r['read64'],'bound_shared_write64_subtotal':r['write64'],
+                'unknown_shared_templates':r['unknown'],'baseline_provider_and_native_ticks_charged_once':old_rank['end']-old_rank['start'],
+                'workspace_peak_upper':old_rank['workspace_peak_upper'],'resources':old_rank['resources'],
+                'C0_and_scratch_transaction_credits_per_SM':1,'scoreboard_entries_per_SM':512,
+                'RF_credit_held_until':'two-mirror visible_ACK','ordered_executor_templates':r['templates']})
+        collective=op['family'] in ('all_gather','all_reduce','topk_merge')
+        # all_gather's existing provisional admission is already in baseline.
+        collective_delta=costs['atomic_collective_admit'] if collective and op['family']!='all_gather' else 0
+        end=max(r['end'] for r in rank_rows)+collective_delta
+        rows.append({'pc':op['pc'],'family':op['family'],'start':tick,'end':end,'ranks':rank_rows,
+            'dependencies':op['dependencies'],'atomic_collective_participants':sorted(by_rank) if collective else [],
+            'global_collective_credit':int(collective),'additional_atomic_admission_ticks':collective_delta,
+            'actual_collective_payload_route_ticks':None if collective else 'not a collective PC',
+            'shared_scope_complete':not any(r['unknown_shared_templates'] for r in rank_rows)})
+        tick=end
+    return {'schema':'H4_DS_ALL_PC_FINITE_KNOWN_SERVICE_COMPOSITION_V1','PCs':len(rows),
+        'families':baseline['families'],'PC_intervals':rows,'source_program_sha256':dispatch['source_program_sha256'],
+        'native_scalar_commands_upper_by_opcode':dict(count),'C0_scalar_command_upper':commands,
+        'known_service_software_ticks':tick,'complete_service_software_ticks':None,
+        'scratch64_read_transactions':None if unknown_calls else shared_reads,
+        'scratch64_write_ACK_transactions':None if unknown_calls else shared_writes,
+        'bound_scratch64_read_subtotal':shared_reads,'bound_scratch64_write_ACK_subtotal':shared_writes,
+        'unknown_shared_template_calls':unknown_calls,'template_shared_bindings':summaries,
+        'constrained_extent_successor_demand':baseline['constrained_extent_successor_demand'],
+        'explicit_provisional_costs':costs,'retained_baseline_provisional_costs':baseline['explicit_provisional_costs'],
+        'status':'PARTIAL_KNOWN_SERVICE_COST_WITH_EXPLICIT_SHARED_UNKNOWNS' if unknown_calls else 'PASS_ALL_PC_NATIVE_AND_SHARED_COST_JOIN_WITH_CHECKPOINT_GAP',
+        'native_command_count_scope':'one command per scalar is conservative upper; actual vector/loop bridge needed',
+        'checkpoint_traffic_cost':'UNKNOWN_NOT_INCLUDED_IN_KNOWN_SUBTOTAL',
+        'ordered_full_native_trace':False,'arithmetic_or_provider_rerun':False,'r22_augmentation_applied':False,
+        'hardware_full_native_claim':False,'clock_admission':False,'physical_admission':False}
+
+
 def compile_ssa_finite_sm_services(program, *, rank, provider_bindings, workspace=None, costs=None):
     """Ordered native stage issue templates and bounded last-use allocation.
 
@@ -2480,7 +2600,46 @@ def main():
     ap.add_argument('--ds-stage-workspace', type=Path)
     ap.add_argument('--ds-stage-rank', type=int, default=0)
     ap.add_argument('--h4-cost-join', type=Path)
+    ap.add_argument('--ds-full-program-cost',type=Path)
+    ap.add_argument('--ds-full-native-source',type=Path)
+    ap.add_argument('--ds-shared-bridge',type=Path)
+    ap.add_argument('--ds-shared-bridge-source',type=Path)
     args = ap.parse_args()
+    if args.ds_full_program_cost:
+        dispatch=read_json(args.ds_full_program_cost)
+        if args.ds_full_native_source is None:raise ValueError('actual source native artifact required')
+        digest=hashlib.sha256(args.ds_full_native_source.read_bytes()).hexdigest()
+        if digest!=dispatch['source_program_sha256']:raise ValueError('full native source pin mismatch')
+        bridge=read_json(args.ds_shared_bridge) if args.ds_shared_bridge else None
+        if bridge is not None:
+            if args.ds_shared_bridge_source is None:raise ValueError('bridge producer source bytes required')
+            if hashlib.sha256(args.ds_shared_bridge_source.read_bytes()).hexdigest()!=bridge.get('bridge_source_sha256'):
+                raise ValueError('bridge producer source bytes pin mismatch')
+        result=compose_ds_full_program_services(dispatch,bridge=bridge)
+        inputs=[args.ds_full_program_cost,args.ds_full_native_source,Path(__file__)]
+        if args.ds_shared_bridge:inputs.extend([args.ds_shared_bridge,args.ds_shared_bridge_source])
+        manifest={'schema':'H4_DS_FULL_PROGRAM_COST_MANIFEST_V1','PCs':result['PCs'],'families':result['families'],
+            'source_sha256':{str(p.relative_to(ROOT)) if p.is_absolute() and p.is_relative_to(ROOT) else str(p):
+                hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs},
+            'status':result['status'],'unknown_shared_template_calls':result['unknown_shared_template_calls'],
+            'complete_service_software_ticks':None,'hardware_full_native_claim':False,
+            'scope':'all-PC instruction-dependent scalar upper, retained provider projections and optional actual shared bridge; no arithmetic/provider replay'}
+        summary={k:v for k,v in result.items() if k not in ('PC_intervals','template_shared_bindings','constrained_extent_successor_demand')}
+        summary['unbound_physical_workspace_ranks']=len(result['constrained_extent_successor_demand'])
+        artifacts={'manifest.json':manifest,'summary.json':summary,'full_program_costs.json.gz':result}
+        if args.verify:
+            for name,value in artifacts.items():
+                if read_json(args.out/name)!=value:raise ValueError('DS full cost replay mismatch: '+name)
+        else:
+            args.out.mkdir(parents=True,exist_ok=False)
+            for name,value in artifacts.items():
+                raw=(json.dumps(value,sort_keys=True,indent=2)+'\n').encode()
+                (args.out/name).write_bytes(gzip.compress(raw,mtime=0) if name.endswith('.gz') else raw)
+        print(json.dumps({'PCs':result['PCs'],'families':result['families'],'status':result['status'],
+            'known_service_software_ticks':result['known_service_software_ticks'],
+            'unknown_shared_template_calls':result['unknown_shared_template_calls'],'hardware_full_native_claim':False}))
+        print('PASS_DS_FULL_SOURCE_PINNED_COST_REPLAY' if args.verify else 'PASS_DS_FULL_KNOWN_SERVICE_COMPOSITION')
+        return
     if args.h4_cost_join:
         folder=args.h4_cost_join
         pins=read_json(folder/'inputs.json')
