@@ -1,0 +1,16 @@
+test_actual_ROM_ports (__main__.ServiceG0) ... ok
+test_actual_density_and_storage_only_slot_refusal (__main__.ServiceG0) ... ok
+test_caller_mutant_refused_even_with_rehashed_input (__main__.ServiceG0) ... ok
+test_compaction_and_fanout_costs_are_not_omitted (__main__.ServiceG0) ... ok
+test_compiled_storage_not_active_extent (__main__.ServiceG0) ... ok
+test_exact_replay (__main__.ServiceG0) ... ok
+test_latency_three_way_and_conditional_composition (__main__.ServiceG0) ... ok
+test_native_calendar_mutant_refused (__main__.ServiceG0) ... ok
+test_no_new_hardware_or_clock_or_Qwen_substitution (__main__.ServiceG0) ... ok
+test_pin_mutant_refused (__main__.ServiceG0) ... ok
+test_program_and_calendar_call_join (__main__.ServiceG0) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.526s
+
+OK
