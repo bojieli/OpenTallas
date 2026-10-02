@@ -1,0 +1,25 @@
+{
+  "parameters": {
+    "ACK": 26001,
+    "capacity": 1,
+    "captured_credit_delay": 7,
+    "consumer_first": 2,
+    "consumer_step": 4,
+    "issue_step": 3,
+    "shard_return_delays": [
+      9,
+      12
+    ],
+    "visible": "40*(row+1)"
+  },
+  "raw_journal_sha256": "97c8aedf9266a82d902f25790a0f15b08302ce980ed0c9e4d0b6f05620edf2bb",
+  "result": {
+    "actual_consumer_deadline": null,
+    "actual_provider_qualified": false,
+    "capacity": 1,
+    "peak_source_credit_debt": 1,
+    "rows": 576,
+    "separate_downstream_seat_assumed": false
+  },
+  "scope": "SYNTHETIC_PROTOCOL_CONTROL_ONLY_NOT_ACTUAL_SERVICE_CADENCE_OR_PAYLOAD"
+}

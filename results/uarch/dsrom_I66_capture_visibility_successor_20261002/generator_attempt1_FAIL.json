@@ -1,0 +1,8 @@
+{
+  "command": "python tools/dsrom_I66_capture_visibility_successor.py --out results/uarch/dsrom_I66_capture_visibility_successor_20261002/model.json",
+  "error": "IsADirectoryError: inputs/__pycache__",
+  "reason": "dynamic independent checker import generated __pycache__; generator iterated inputs directory instead of declared source manifest",
+  "repair": "enumerate exact origins entries and origins.json; numerical model/expectations/source inputs unchanged",
+  "tests_PASS": 9,
+  "verdict": "GENERATOR_SOURCE_PIN_ENUMERATION_FAIL"
+}
