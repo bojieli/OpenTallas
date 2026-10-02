@@ -1,0 +1,16 @@
+{
+  "status": "BLOCKED_SOURCE_JOIN",
+  "tests": {
+    "test_qwen_rom_completion_gate": {
+      "passed": 3
+    }
+  },
+  "final_error": "Current parent runtime die source absent; unchanged original capture remains valid at historical scope. Missing model bridge also independently observed.",
+  "earlier_attempts": "r1 used wrong successor location; r2 lacked sparse price-failure hydration. Both preserved; finalr3 used correct external packet/successor and hydrated predecessor. No numerical/physical rerun.",
+  "missing_source": "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv",
+  "missing_model_function": "qwen_rom_physical_successor",
+  "packet_sha256": "d768614a28dccd768c3d064063f9a599e76f1c23e3a117d5fddb96e62ec3fcaa",
+  "adoption": false,
+  "physical_credit": false,
+  "heavy_jobs": 0
+}
