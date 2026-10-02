@@ -1,0 +1,8 @@
+{
+  "status": "STATIC_REVIEW_FAIL_NO_COMPILE",
+  "causes": [
+    "Unanchored header close matched comment: fastpp zero forwarded ports",
+    "SU readiness depended on producer readiness gated by rec_stop: combinational feedback"
+  ],
+  "compiler_invocations": 0
+}
