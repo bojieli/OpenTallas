@@ -1,0 +1,46 @@
+.....F                                                                   [100%]
+=================================== FAILURES ===================================
+______ test_actual_state_window_backing_visible_read_lease_and_duplicate _______
+
+endpoint = (<ds_hbm_storage_home_binding_r41.bound_class.<locals>.Bound object at 0x7a0969e62f80>, {'PC': 5, 'generation': 1, 'ho... 0, ...}, {'native_store_view': 'source producer extent; every declared home receives own commit', 'result': 'window'})
+
+    def test_actual_state_window_backing_visible_read_lease_and_duplicate(endpoint):
+        p,i,v=endpoint
+        data=np.arange(128*512,dtype=np.float32).reshape(128,512)
+>       receipt=p.publish(i,{'data':data},v)
+
+tests/test_ds_hbm_storage_home_binding_r41.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/ds_hbm_storage_home_binding_r41.py:62: in publish
+    return super().publish(identity,fields,source_store_view)
+tools/h3_ds_connected_provider_r37.py:68: in publish
+    receipt=super().publish(identity,fields,source_store_view)
+tools/h3_ds_query_provider_r36.py:64: in publish
+    if not compound:return super().publish(identity,fields,source_store_view)
+tools/h3_ds_history_provider_r36.py:30: in publish
+    receipt=super().publish(identity,fields,source_store_view)
+tools/h3_ds_checkpoint_provider_r30.py:228: in publish
+    if identity['home_indices'] and self.homes[identity['home_indices'][0]]['home']['class']=='HBM_NATIVE_STATE':return self.publish_state(identity,fields,source_store_view)
+tools/h3_ds_checkpoint_provider_r30.py:285: in publish_state
+    for off in range(0,len(words),128):s.write(t,off,words[off:off+128])
+tools/hbm_provider_microvm_r21.py:247: in write
+    self.transaction(sector,True,bytes(data))
+tools/hbm_provider_microvm_r21.py:189: in transaction
+    t=self.provider.submit(self.identity(sector),write,payload);v=self.provider.wait(t);self.provider.finish(t);return v
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <hbm_bound_event_journal_r30.BoundSectorProvider object at 0x7a09108083d0>
+identity = Identity(target='DeepSeek', rank=0, epoch=1, pc=5, serial=3741, sector=1052316)
+write = True
+payload = b'\x00\xc0\xe9F\x00\xc2\xe9F\x00\xc4\xe9F\x00\xc6\xe9F\x00\xc8\xe9F\x00\xca\xe9F\x00\xcc\xe9F\x00\xce\xe9F'
+
+    def submit(self,identity,write=False,payload=b''):
+        if self.events.closed:raise ValueError('retired provider cannot accept requests')
+        # Reserve a conservative host-journal allowance BEFORE source admission.
+        # Metadata reserve only, not an extra physical queue or data buffer.
+>       if self.events.budget.cap-self.events.budget.used<65536*(len(self.live)+1):raise BufferError('journal capacity before request acceptance')
+E       BufferError: journal capacity before request acceptance
+
+tools/hbm_bound_event_journal_r30.py:62: BufferError
+=========================== short test summary info ============================
+FAILED tests/test_ds_hbm_storage_home_binding_r41.py::test_actual_state_window_backing_visible_read_lease_and_duplicate
