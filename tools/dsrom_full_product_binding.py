@@ -93,13 +93,14 @@ def prepare():
                 'rendezvous': 'id -> all4 exact original collective rank node IDs; same start after prior readiness, never mutual peer-completion dependencies',
                 'ordered_grains': 'golden contiguous indivisible owners, area_um2_by_rank[4], q_pairs_by_rank[4], BF_pairs_by_rank[4], tensor_assignment evidence; footprint includes mandatory RNE/WAKE exactly once',
                 'owner_groups': 'actual ordered assignment; candidate_id DS4096-TP4-S58-PAIR1 / TP4; exactly58 layer groups, other head/table roles explicitly priced, no automatic replacement count',
-                'compiled_field': 'NP, NBF, physical_macros_per_pair=4, source_receipts for exact site/bank mapping; all unused q/BF compiled sites charged, not active-only allocation',
+                'compiled_field': 'NP, NBF, physical_macros_per_pair=4, source_receipts; resident_site_groups must declare every compiled pair source-matched physicalclass/BF mask and shared immutable q/BF word intervals; dual q_on_BF requires actual dual-compute abstract proof, no overlapping capacity',
                 'capacity_ledger': '26x33mm minus unique source-receipted service/routing_clock_PG/return debits; per-group service replication; compiled_NP/R/NBF/RD/ROOTD/RST defines declared return (not active mask), resizing requires full allocator padded topology binding; no native-area discount without native binding',
                 'provider_ABI': 'explicit original HDC unit support; a 274-bit field cannot be called ME32/QE without a bound adapter',
                 'coverage_receipts': 'provider contracts and independent allocator verification, never a bare boolean'},
             'readiness': {'ISA_execution': False, 'RTL_build': False, 'physical_admission': False, 'full_token_rate': False},
             'return_source': return_source_receipt(),
-            'resource_compiler_sha256': hashlib.sha256((ROOT/'tools/dsrom_finite_resources.py').read_bytes()).hexdigest(), 'jobs_launched': 0}
+            'resource_compiler_sha256': hashlib.sha256((ROOT/'tools/dsrom_finite_resources.py').read_bytes()).hexdigest(),
+            'resident_compiler_sha256': hashlib.sha256((ROOT/'tools/dsrom_resident_site_binding.py').read_bytes()).hexdigest(), 'jobs_launched': 0}
 
 def pack_ordered(grains, capacity_um2):
     """Minimum contiguous groups for fixed ordered atoms and common rank capacity.
@@ -213,6 +214,30 @@ def validate_padding(allocation, groups, capacity):
         raise ValueError('allocator field / return compiled topology mismatch')
     if not compiled.get('source_receipts'):
         raise ValueError('compiled field site and BF mapping receipts required')
+    if compiled.get('resident_site_groups') is not None:
+        import dsrom_resident_site_binding as resident
+        records=compiled['resident_site_groups']
+        if len(records)!=4*len(groups):
+            raise ValueError('resident site group/rank census')
+        expected={(i,r) for i in range(len(groups)) for r in range(4)}
+        if {(x['group_index'],x['rank']) for x in records}!=expected:
+            raise ValueError('duplicate or missing resident group/rank')
+        results=[]
+        for record in records:
+            priced=resident.validate(record['sites'],np,nbf)
+            # Full site frames replace USED+UNUSED catalogue frames, never add
+            # those same pair frames a second time. Extra repair/control must
+            # be separately owned and charged once above this full-site floor.
+            increment=Fraction(str(record['extra_nonoverlapping_repair_control_um2']))
+            if increment<0 or not record.get('source_receipts'):
+                raise ValueError('resident frame/repair reconciliation receipts')
+            total=Fraction(str(priced['physical_frame_um2']))+increment
+            if total>capacity:
+                raise ValueError('resident full compiled field and mandatory growth exceed allowance')
+            results.append(dict(priced,group_index=record['group_index'],rank=record['rank'],
+                extra_nonoverlapping_repair_control_um2=float(increment),
+                full_resident_reservation_um2=float(total)))
+        return results
     atoms = {a['id']:a for a in allocation['ordered_grains']}
     results = []
     for group in groups:
@@ -296,6 +321,8 @@ def compose(demand, allocation, *, fixture_only=False):
             raise ValueError("full product demand source currency")
         if demand.get("resource_compiler_sha256") != hashlib.sha256((ROOT/"tools/dsrom_finite_resources.py").read_bytes()).hexdigest():
             raise ValueError("shared resource compiler source currency")
+        if demand.get("resident_compiler_sha256") != hashlib.sha256((ROOT/"tools/dsrom_resident_site_binding.py").read_bytes()).hexdigest():
+            raise ValueError("resident site compiler source currency")
         F.validate_program(demand["functional_program"])
         if digest(demand["functional_program"]) != demand["functional_program_sha256"]:
             raise ValueError("functional emitter identity")
@@ -308,6 +335,8 @@ def compose(demand, allocation, *, fixture_only=False):
         raise ValueError('full tensor/format/constant coverage verification required')
     capacity = field_capacity(allocation['capacity_ledger'])
     groups = pack_ordered(allocation['ordered_grains'], capacity) if fixture_only else allocator_groups(allocation, capacity)
+    if not fixture_only and allocation['compiled_field'].get('resident_site_groups') is None:
+        raise ValueError('actual source bank/site residency required; exclusive q/BF count proxy is not product binding')
     padding = [] if fixture_only else validate_padding(allocation, groups, capacity)
     owner_group = {a: i for i, g in enumerate(groups) for a in g['owners']}
     bindings = allocation['bindings']

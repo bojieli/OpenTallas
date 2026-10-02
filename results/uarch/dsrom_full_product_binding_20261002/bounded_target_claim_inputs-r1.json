@@ -1,0 +1,49 @@
+{
+  "Qwen_HBM": {
+    "connected_measurement": false,
+    "failure": "Qwen/CXX failed: OUTPUT_CAP",
+    "memory_terminal_observation": {
+      "memory.current": "9282805760",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+      "memory.max": "103079215104",
+      "memory.peak": "76751917056",
+      "memory.swap.max": "0"
+    },
+    "physical_credit": false,
+    "source_commit": "575a9d988e444d38f9fdaef8a1004799319ab76d",
+    "token_credit": false,
+    "verdict": "FAIL_INCOMPLETE"
+  },
+  "Qwen_ROM": {
+    "binary_sha256": "f16129f24be3113b1bca7486aa92966a22c363636065c1fe6f70d1ec2beb574a",
+    "claim_boundary": "Qualified exact full token at the original captured host-serviced TP4 position-zero scope. No persistent HBM/window qualification, current physical implementation, macro-local KV, SS/FF closure, calibrated token rate or adoption credit.",
+    "replay_expected": {
+      "checkpoint_status": "bit_exact",
+      "current_source_joined": false,
+      "full_token_exact_at_runtime_scope": true,
+      "status": "pass"
+    },
+    "rtl_logit_bits": "419c72b5",
+    "rtl_token": 50994,
+    "status": "pass",
+    "tested_configuration": "Original TP4/G6144/SU64/LV7 position-zero token, MEM_EXTRA1, host stage/image service, embedding preload and zero KV reset.",
+    "total_cycles": 171090
+  },
+  "ROM_persistent_KV_qualified": false,
+  "SS_FF_or_rate_credit": false,
+  "current_source_joined": false,
+  "input_receipts": [
+    {
+      "commit": "2d4a21d121381833194bd1d09ab80d2ac8242586",
+      "path": "results/rtl/qwen_rom_TP4_terminal_20261002/terminal_manifest.json",
+      "sha256": "3aa197d53a24e4d2e5590f0666700395ba60cdca45ed9c05e224d1b13fa2ed54"
+    },
+    {
+      "commit": "98af942facd4953c031643ead1fba29ddfc068f5",
+      "path": "results/rtl/hbm_qwen_r9_parent_terminal_checkpoint_20261002/verdict.json",
+      "sha256": "050e1ea327f12c2f8c9d543ac0b5a42a3c4dc42412717eb53e8282225a109c9c"
+    }
+  ],
+  "qualification_transfer": false,
+  "schema": "opentallas.bounded-current-target-claim-inputs.v1"
+}

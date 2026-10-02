@@ -1,0 +1,991 @@
+{
+  "full_token_rate": false,
+  "geometry": {
+    "RF_copies": 2,
+    "RF_vector_bytes": 512,
+    "RF_vectors_per_SM": 512,
+    "SM_per_rank": 32,
+    "kernel_workspace_RF_vectors": 32,
+    "kernel_workspace_shared_bytes": 8192,
+    "lanes": 128,
+    "matrix_capture_bytes": {
+      "DeepSeek": 131072,
+      "Qwen": 262144
+    },
+    "ranks": {
+      "DeepSeek": 96,
+      "Qwen": 2
+    },
+    "shared_beat_bytes": 64,
+    "shared_bytes_per_SM": 65536
+  },
+  "hardware_or_timing_credit": false,
+  "input_receipts": [
+    {
+      "commit": "66c452d3feb949cc8cb6321907ef883e232aff4d",
+      "path": "results/uarch/h3_versioned_lowering_20261002/model.json",
+      "sha256": "3c44ccfd634210accf6024af38e0209f288355dfec8bbb6d419077a73e9ec7be"
+    },
+    {
+      "commit": "66c452d3feb949cc8cb6321907ef883e232aff4d",
+      "path": "results/uarch/h3_versioned_lowering_20261002/Qwen.json.gz",
+      "sha256": "97539f0ec3337bd0ea810528dd40bc1c8894098a46b03a77facc0bcb5b33d33a"
+    },
+    {
+      "commit": "66c452d3feb949cc8cb6321907ef883e232aff4d",
+      "path": "results/uarch/h3_versioned_lowering_20261002/DeepSeek.json.gz",
+      "sha256": "51d51e87556335e6e73fe8e98c41c1cef313ee05d9f5de6d31c6691c6528076e"
+    }
+  ],
+  "jobs_launched": 0,
+  "required_bindings": [
+    "Actual matrix rank/row/K to32SM ownership and physical capture to versioned RF home",
+    "Measured matching-native II19 and mirrored RF visibility/lease timing; missing endpoint duration never zero",
+    "Golden ordered reduction chunk/subtree movement over finite shared global channels/CDC/banks",
+    "Version-owned shared/L2/HBM spill/refill ports and backpressure; no spill capacity deletion"
+  ],
+  "schema": "opentallas.H3.actual32SM-provider-binding-prerequisites.v1",
+  "targets": {
+    "DeepSeek": {
+      "duration_scope": "native and mixed endpoints remain unbound; serial graph expression is not calibrated full-token rate",
+      "missing_endpoints": {
+        "BF16_round_pack": 370,
+        "EXP_poly_INT_compare": 402,
+        "Engram_E4M3_ue8_provider": 2,
+        "Engram_deployment_shape": 2,
+        "Engram_weight_product": 2,
+        "HBM_weight_stream": 1103,
+        "HC_matrix_coefficients": 80,
+        "IEEE_sqrt_RNE": 42,
+        "INT_bit_seed": 123,
+        "QDQ4_decode_to_RF": 8,
+        "QDQ4_paired_append_visible": 4,
+        "QDQ4_quantizer": 8,
+        "QDQ8_encode_decode": 40,
+        "QK_PV_ordered_chunk8_tree": 40,
+        "RoPE_table": 132,
+        "Sinkhorn20_loop": 80,
+        "addressed_capture_to_RF": 1103,
+        "bias_provider": 40,
+        "candidate_global_ID_lookup": 5,
+        "clamp_compare": 280,
+        "compare_global_ID_tie": 19,
+        "cross_lane_coefficients": 80,
+        "division": 523,
+        "full_shape_native_column_row_descriptor_map": 1103,
+        "gamma_provider": 1,
+        "gather_owned_extent_certificate": 212,
+        "global_slice_lane_route": 40,
+        "index_WK_matrix": 4,
+        "integer_dot_single_round": 8,
+        "matrix_xstore_loader": 1103,
+        "mixed_lane_transpose": 8,
+        "norm_gamma_provider": 120,
+        "ordered_chunk8_tree": 203,
+        "ordered_head32_chunk8_tree": 8,
+        "ordered_pool_and_norm": 4,
+        "ordered_seq4_BF16": 161,
+        "ordered_seq6_den": 40,
+        "ordered_seq7_from_positive_zero": 40,
+        "ordered_topk": 9,
+        "owned_block_max": 1,
+        "packed68B_row_provider": 8,
+        "paired_row_generation": 8,
+        "partial_buffer_merge": 280,
+        "persistent_open_group_owner": 4,
+        "pin_newest_block": 1,
+        "rank8_pairwise_reduce_route": 40,
+        "rank96_gather_route": 212,
+        "rank96_ordered_topk_route": 10,
+        "routed_expert_descriptor_to_bulk_copy": 40,
+        "router_top6_connect": 40,
+        "select_negative_infinity": 4,
+        "selected_owner_write_visible": 40,
+        "selected_packed288B_row_route": 8,
+        "sign_bit_XOR": 40,
+        "sink_constant_provider": 40,
+        "softplus_EXP_DIV": 40,
+        "token_history_hash_MOD96": 2,
+        "unrounded_denominator": 40,
+        "weight_resident_base_provider": 40,
+        "weight_scale_provider": 8
+      },
+      "operand_SM_home_census": {
+        "external_or_unbound": 3173
+      },
+      "storage_demand": [
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 0,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 1,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 2,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 3,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 4,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 5,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 6,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 7,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 8,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 9,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 10,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 11,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 12,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 13,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 14,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 15,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 16,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 17,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 18,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 19,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 20,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 21,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 22,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 23,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 24,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 25,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 26,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 27,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 28,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 29,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 30,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 31,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 32,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 33,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 34,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 35,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 36,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 37,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 38,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 39,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 40,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 41,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 42,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 43,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 44,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 45,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 46,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 47,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 48,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 49,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 50,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 51,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 52,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 53,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 54,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 55,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 56,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 57,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 58,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 59,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 60,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 61,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 62,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 63,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 64,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 65,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 66,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 67,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 68,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 69,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 70,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 71,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 72,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 73,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 74,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 75,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 76,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 77,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 78,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 79,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 80,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 81,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 82,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 83,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 84,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 85,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 86,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 87,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 88,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 89,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 90,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 91,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 92,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 93,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 94,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 502,
+          "peak_spill_arena_bytes": 175104,
+          "rank": 95,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        }
+      ],
+      "summary": {
+        "all_hidden_external_operand_layouts_bound": false,
+        "all_macros_expanded_to_native_instructions": false,
+        "all_operations_hardware_admitted": false,
+        "complete_macro_graph_visited": true,
+        "immutable_versions": 3173,
+        "native_path_operations": 161,
+        "operations": 2213
+      }
+    },
+    "Qwen": {
+      "duration_scope": "native and mixed endpoints remain unbound; serial graph expression is not calibrated full-token rate",
+      "missing_endpoints": {
+        "BF16_round_pack": 72,
+        "EXP_poly_INT_compare": 144,
+        "FP8_quantizer": 72,
+        "HBM_embedding_decode_to_RF": 1,
+        "HBM_weight_stream": 290,
+        "INT_bit_seed": 217,
+        "KV_tile_loader": 144,
+        "RF_spill_refill_with_versioned_owner": 2,
+        "RF_tail_padding_and_compiler_dispatch": 72,
+        "addressed_capture_to_RF": 290,
+        "compare_global_ID_tie": 2,
+        "constant_table_to_RF": 144,
+        "cross_SM_scalar_broadcast": 217,
+        "full_shape_native_column_row_descriptor_map": 290,
+        "gamma_provider": 145,
+        "interleaved_context_tree": 72,
+        "interleaved_head_tree": 72,
+        "matrix_xstore_loader": 290,
+        "ordered_chunk8_tree": 289,
+        "ordered_max_tree": 74,
+        "post_reduce_scale_provider": 72,
+        "publication_generation": 72,
+        "published_KV_decode_to_RF": 72,
+        "rank2_ordered_FP32_add_route": 72,
+        "rank2_winner_route": 1,
+        "reader_retirement": 72,
+        "reciprocal_division": 144,
+        "row_scale_to_RF": 146,
+        "scalar_lane_broadcast": 216,
+        "selected_owner_write_visible": 144,
+        "sign_bit_XOR": 144,
+        "split_gate_up_lane_route": 72,
+        "view_lane_remap": 72
+      },
+      "operand_SM_home_census": {
+        "external_or_unbound": 2027
+      },
+      "storage_demand": [
+        {
+          "SM": 0,
+          "peak_RF_vectors": 258,
+          "peak_spill_arena_bytes": 34078720,
+          "rank": 0,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        },
+        {
+          "SM": 0,
+          "peak_RF_vectors": 258,
+          "peak_spill_arena_bytes": 34078720,
+          "rank": 1,
+          "shared_reserved_bytes": 8192,
+          "shared_staging_required_not_implemented": true
+        }
+      ],
+      "summary": {
+        "all_hidden_external_operand_layouts_bound": false,
+        "all_macros_expanded_to_native_instructions": false,
+        "all_operations_hardware_admitted": false,
+        "complete_macro_graph_visited": true,
+        "immutable_versions": 2027,
+        "native_path_operations": 362,
+        "operations": 1737
+      }
+    }
+  },
+  "unified_model_join": {
+    "RF_physical_bits_per_SM": 4194304,
+    "RF_physical_bytes_total": {
+      "DeepSeek_HBM": 1610612736,
+      "Qwen_HBM": 33554432
+    },
+    "replicas_per_target": {
+      "DeepSeek_HBM": 3072,
+      "Qwen_HBM": 64
+    },
+    "route_tracks_area_slot_and_unknown_service_terms": "Maxwell admission required",
+    "serial_GHz": 0.9,
+    "shared_physical_bits_per_SM": 524288,
+    "shared_physical_bytes_total": {
+      "DeepSeek_HBM": 201326592,
+      "Qwen_HBM": 4194304
+    },
+    "streaming_GHz": 1.2,
+    "symbols": [
+      "hbm_gpu_design",
+      "gpu_payload_transport_model",
+      "HBM_W19",
+      "HBM_TMEM"
+    ],
+    "tool": "tools/uarch_model.py"
+  }
+}
