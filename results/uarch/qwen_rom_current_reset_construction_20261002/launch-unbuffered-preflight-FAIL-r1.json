@@ -1,0 +1,17 @@
+{
+  "status": "FAIL_DECLARED80PS_SLEW_ALLOCATION_RETAINED",
+  "scope": "Analytical unbuilt join allocation, not mapped timing",
+  "slew_minmax_ps": {
+    "ss": [
+      89.67895344227429,
+      90.6951515978125
+    ],
+    "ff": [
+      38.68975305451389,
+      39.870590388888886
+    ]
+  },
+  "limit_ps": 80,
+  "unbuffered_selected": false,
+  "source_clock_or_hold_uncertainty_relaxed": false
+}
