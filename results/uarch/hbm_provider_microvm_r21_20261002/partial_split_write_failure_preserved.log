@@ -1,0 +1,46 @@
+...............F                                                         [100%]
+=================================== FAILURES ===================================
+________ test_split64_read_lease_blocks_overwrite_until_actual_consumer ________
+
+    def test_split64_read_lease_blocks_overwrite_until_actual_consumer():
+        p,s,v=setup_vm();t=Tensor('Qwen',0,65536,(2,),'I64',131072)
+>       data=np.array([2**40,-2**42],np.int64);s.write(t,0,data)
+
+tests/test_hbm_provider_microvm_r21.py:177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <hbm_provider_microvm_r21.Storage object at 0x76e8d9335e70>
+t = Tensor(target='Qwen', rank=0, base=65536, shape=(2,), dtype='I64', highword_base=131072)
+start = 0, values = array([ 1099511627776, -4398046511104])
+
+    def write(self,t,start,values):
+        a=np.asarray(values,dtype=DTYPE[t.dtype]).reshape(-1)
+        if len(a)>self.tile or start<0 or start+len(a)>t.count:raise ValueError('write tile aperture')
+        self.peak_lanes=max(self.peak_lanes,len(a));raw=a.tobytes();byte=t.base+start*DTYPE[t.dtype].itemsize;parts={};key=(t.target,t.rank,t.base,t.highword_base)
+        if t.highword_base is not None:
+            if t.dtype!='I64' or key in self.codec_locks or self.codec_readers.get(key,0):raise Backpressure('split64 write owner or retained reader')
+            self.codec_locks.add(key);self.codec_generation+=1
+            self.codec_events.append({'event':'split64_write_lease_accept','tick':self.provider.now,'epoch':self.epoch,'pc':self.pc,'words':len(a),'low_base':t.base,'high_base':t.highword_base,'generation':self.codec_generation,'hardware':False})
+        for i,v in enumerate(raw):
+            address=byte+i if t.highword_base is None else ((t.base if i%8<4 else t.highword_base)+(start+i//8)*4+i%4)
+            sector,off=divmod(address,32);parts.setdefault(sector,{})[off]=v
+        for sector,changes in parts.items():
+            if len(changes)==32:data=bytearray(changes[i] for i in range(32))
+            else:
+                key=(t.target,t.rank,sector)
+                if key not in self.provider.backing:
+                    # Explicit initialized padded destination owned by this arena.
+                    self.provider.seed(t.target,t.rank,sector*32,bytes(32))
+                data=bytearray(self.transaction(sector)) # actual software RMW read/retire.
+                for off,v in changes.items():data[off]=v
+            self.transaction(sector,True,bytes(data))
+        if t.highword_base is not None:
+            self.provider.now+=32
+            for i in range(start,start+len(a)):self.codec_versions[key,i]=self.codec_generation
+            self.codec_events.append({'event':'split64_both_streams_visible_granted_publication','tick':self.provider.now,'epoch':self.epoch,'pc':self.pc,'words':len(a),'low_base':t.base,'high_base':t.highword_base,'generation':self.codec_generation,'codec_ticks':32,'hardware':False})
+>           self.codec_locks.remove(key)
+E           KeyError: ('Qwen', 0, 4096)
+
+tools/hbm_provider_microvm_r21.py:248: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_hbm_provider_microvm_r21.py::test_split64_read_lease_blocks_overwrite_until_actual_consumer
