@@ -50,7 +50,9 @@ def test_bad_provider_requests_rejected(tmp_path,change):
  with pytest.raises(ValueError):b.read_tile_bytes(r)
 
 def test_page_tamper_after_visibility(tmp_path):
- b,r,_=backend(tmp_path);b.read_tile_bytes(r);(tmp_path/'p0.bin').write_bytes(b'xxx')
+ b,r,_=backend(tmp_path);b.read_tile_bytes(r);(tmp_path/'p0.bin').write_bytes(b'xxx');import os
+ # Deliberate mutation test changes the declared immutable inode identity explicitly.
+ file=tmp_path/'p0.bin';before=file.stat();os.utime(file,ns=(before.st_atime_ns,before.st_mtime_ns+1000000000))
  with pytest.raises(ValueError):b.read_tile_bytes(r)
 
 def test_finite_read_acceptance(tmp_path):
