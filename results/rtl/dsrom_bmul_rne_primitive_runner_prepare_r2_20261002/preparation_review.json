@@ -1,0 +1,96 @@
+{
+  "GO_template": "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/parent_GO.template.json",
+  "artifact_sha256": {
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/default_preflight.json": "be249f53ed8bd73aa23a647f33b3a362b559775b14ddfa438600aa984a4b8998",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/default_preflight_r2.json": "be249f53ed8bd73aa23a647f33b3a362b559775b14ddfa438600aa984a4b8998",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/expected_contract.json": "27c0488d7f00102137eb2b32f9c74c035fdbea385e04a72c55443d931312b966",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/installed_help.txt": "163792edc666155765bbb78b29afb77bc1d5191a6093dff1d3827c184929a0be",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/installed_make_rules.txt": "bd0d8c21debce6afe65db69b9b8721711ff3422f985617e8fce0bc5a2ac809e0",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/parent_GO.template.json": "67842b06f542016e8aec71ec1792fc0e6dd0d928d7b40dd4149f52d2b78e8d11",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/r1_build_failure_diagnosis.json": "d8cbe253fa576f98c6a0bcb0b899ac2f373e230e4e11e4b6b100d50bbd732530",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/r1_generated_Vtb_bmul_rne_primitive.mk.txt": "30cb662e39fe50a6a5fd4d4371286fb45b73508c992705620feae6c8d9dda055",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/r1_generated_Vtb_bmul_rne_primitive_classes.mk.txt": "b49ffc973dc29531fbb9b0e0a2045840ce06e9c5decbdbc8b219fcb0aacb7565",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/runner.diff": "8288f2dcb8a8e865afe89b43883b7936caa024aa2fa123839b238dd852896cf4",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/runner_plan.json": "5ed16adada8c8a96be7c83b64004ff6b3da0be71fd681642d8147e0e73bd4168",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/sourceplan.diff": "0b24e6f92375ac8e040c75d58ea84d6912e83c41425ac97c1dee32cef4b1af4b",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/sourceplan.json": "c846abfae781242bb89b5f25335f83174275518ce4dc1c5679ce0cfaec2da6ae",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/static_tests_r1.log": "fe865dae25ec6395f55865d25b707d0d65e43f17ef9942073e4dfc4f68465473",
+    "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/static_tests_r2.log": "5ac1f7a8cf359c4ad853bdc3301f683d977323c416385f75444df5f673c7abe7",
+    "tests/test_dsrom_bmul_rne_primitive_runner_r2.py": "23dfd6fcfbb412ce9455de384c407887102c675f67db146853ec5194a6f6c650",
+    "tools/run_dsrom_bmul_rne_primitive_r2.py": "76112674c63527e167132b96e8fbe23ceea725e20b8ab2d58769c4aa6f941506"
+  },
+  "base_commit": "98512d31a410ab01ce8cc4118045a21be168230e",
+  "caps_unchanged": {
+    "aggregate_disk_bound_poll_seconds": 0.1,
+    "automatic_retries": 0,
+    "build_log_bytes": 8388608,
+    "build_summed_seconds": 60,
+    "core_bytes": 0,
+    "cpu_affinity": [
+      0
+    ],
+    "cpu_quota_percent": 100,
+    "each_sim_log_bytes": 262144,
+    "fallback": false,
+    "kill": "Alllimitviolations usecgroup.kill=1; timeoutreceipt failure cannotpreventkill. RuntimeMax70+independentwholewatchdog+SIGTERMwholekill. Logstoredbyteshardbounded; inheritedRLIMIT_FSIZE hardboundsregularfiles; aggregategenerated/outputbytes sampled0.1s, overshootpossibleuntilwholekill, explicitlynot a filesystemquota.",
+    "launcher_log_hard_bytes": 8388608,
+    "memory_max_bytes": 536870912,
+    "memory_swap_max_bytes": 0,
+    "output_aggregate_bytes": 33554432,
+    "output_files": 64,
+    "per_file_hard_bytes": 8388608,
+    "receipt_max_bytes": 4194304,
+    "simulate_summed_seconds": 10,
+    "whole_cgroup_seconds": 70,
+    "work_aggregate_bytes": 536870912,
+    "work_files": 4096
+  },
+  "commands": {
+    "default_preflight": "python3 tools/run_dsrom_bmul_rne_primitive_r2.py",
+    "proposed_only_after_new_GO": "python3 tools/run_dsrom_bmul_rne_primitive_r2.py --execute --go-commit <FRESH_R2_PARENT_GO_COMMIT> --work /tmp/opentallas-bmul-rne-build-20261002-r2 --output /tmp/opentallas-bmul-rne-execution-20261002-r2"
+  },
+  "compile_argv_only_change": [
+    "-MAKEFLAGS",
+    "VM_PARALLEL_BUILDS=0"
+  ],
+  "current_test_log": "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/static_tests_r2.log",
+  "default_preflight": "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/default_preflight_r2.json",
+  "earlier_test_log_preserved": "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/static_tests_r1.log",
+  "expected_completion_unchanged": {
+    "baseline_defaultoff_original_comparisons": 708,
+    "baseline_negative_witnesses": 2,
+    "encoder_assertions": 840,
+    "encoder_vectors": 420,
+    "execution_plan": "One shared binary withmode0positive thenmode1..8 selectedby+MUTANT; modeonlyselects assertioncontrol, immutable operandsunchanged; no separate HDL compilation per mutant.",
+    "mutant_PASS_condition": "Positive ref/candidate independent oracle checks pass, selected mutant emits explicit DIFF and exact coverage completes. Compile/crash/missing DIFF never qualifies control.",
+    "mutant_modes": [
+      "truncation",
+      "tie_away",
+      "shift_offbyone",
+      "negative_zero",
+      "old_range",
+      "underflow_fault",
+      "zero_nonfinite_bypass",
+      "refusal_no_fault"
+    ],
+    "product_assertions": 1416,
+    "product_vectors": 708
+  },
+  "generated_package_sha256_unchanged": "5a31e5c4046b465686ed72f80246370e0e2e3450ab3257104cce48b5b08732f3",
+  "inputs_oracle_RTL_checks": "Primitive preparer verify() regenerated same26-file hashes; expectation/operand SVH/bench/RTL/model/oldrunner and all previous tracked files unchanged. Original numerical failure and primitive build failure remain failures, no numerical gate qualified.",
+  "make_rules_pinned": {
+    "help_knob": "-MAKEFLAGS <flags>",
+    "installed_make_rules": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.mk",
+    "make_assignment": "VM_PARALLEL_BUILDS=0",
+    "proof": "Installed rules lines228..239 select VK_OBJS __ALL.o; lines289..290 generic %.o rule compiles .cpp directly, no PCH dependency/include. Parallel fast/slow object rules lines292..296 are not reachable from target VK_OBJS. Same HDL and runtime checks.",
+    "resource_effect": "One amalgamated translation unit instead of separate generated objects. Peak/time unmeasured; exact unchanged hard caps and stop-on-first-failure apply. No compile performed.",
+    "sha256": "bd0d8c21debce6afe65db69b9b8721711ff3422f985617e8fce0bc5a2ac809e0"
+  },
+  "physical_wake_expansion": false,
+  "resource_model": "Optional PCH removed by amalgamated compile path. One larger translation unit; unmeasured peak memory/build time. Agreed candidate remains1CPU512MiBswap060build10sim70whole with hard8MiB perfile; failure stops with no caplift/fallback/retry. No hardware area/ports/state/latency change.",
+  "source_model_sha256_unchanged": "fa2a50136448c51cd82b07ac1ce8dfd9bcbb13a626b195ddfcc5e3e1f1d7a0e8",
+  "sourceplan": "results/rtl/dsrom_bmul_rne_primitive_runner_prepare_r2_20261002/sourceplan.json",
+  "static_mock_tests_PASS": 19,
+  "status": "R2_PREPARE_ONLY_NO_COMPILE_SIM_SERVICE",
+  "supported_semantics": "Installed --help has -MAKEFLAGS <flags>, no direct --no-pch. Installed verilated.mk conditional selects __ALL.o when VM_PARALLEL_BUILDS != 1. GNU make command-line assignment overrides generated ordinary assignment=1; isolated inspect-only make test confirmed origin=command line and objects=inspect_fixture__ALL.o. No recipe, generated HDL or compiler executed."
+}
