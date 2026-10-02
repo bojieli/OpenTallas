@@ -1,0 +1,118 @@
+{
+  "authorization": "Fewer COMPLETE weight+adjacent-compute elements per die with more dies; depth4096 and2macros/logicalslot unchanged; TP4/golden reduction order retained. Total model storage/compute preserved. No depth/count sweep.",
+  "budget": "compiled_whole_budget-r6.json",
+  "current_S58_FAIL_preserved": true,
+  "current_review_candidate": "DS4096-TP4-S58-PAIR1",
+  "fixed_vs_scaling": [
+    {
+      "mm2": 418.26916414007,
+      "named_service_mm2_already_inside": 90.44685198583997,
+      "qualification": "inherited reservation; actual clockPG/exclusions not proved",
+      "scaling": "Fixed per replicated service island until its actual endpoint/provider replication changes; every added die/island must be charged. No linear scaling with active field sites.",
+      "term": "inherited service/routes/clockPG"
+    },
+    {
+      "active_pairs": 3375,
+      "charged_padding_mm2": 46.739254716,
+      "compiled_pairs": 4096,
+      "mm2": 322.1036365536,
+      "q_padding_pairs": 721,
+      "scaling": "Actual compiled q-only count*64825.596um2 + BF-dual count*142971.9984um2. All NP sites, not active mask; whole dual abstract unqualified.",
+      "term": "compiled complete q/BF field frames"
+    },
+    {
+      "bits": 69771008,
+      "mm2": 52.897587425279994,
+      "proxy_not_actual_area": true,
+      "scaling": "Exact compiledNP/R/RD/ROOTD/RST declarations. Active mask has no effect. Native FF/control/route containment unbound.",
+      "term": "declared return"
+    },
+    {
+      "bits": 5033164800,
+      "mm2": 69.19074349056,
+      "provider": "c1037db16 prospective per-pair72; not five-pair274 proposal",
+      "scaling": "CompiledNP*48*25*2^PHW bits; discrete4096x72 macro count and per-pair mux. PHW is max actual resident phases, not token eventcount.",
+      "term": "configuration storage/mux",
+      "unqualified": true
+    },
+    {
+      "mm2": 12.987328389120002,
+      "scaling": "BF_dual instances and actual repair containment; no second full BF frame; proxy not measured disjoint growth.",
+      "term": "RNE"
+    },
+    {
+      "mm2": 1.63214534656,
+      "scaling": "All compiled q/BF sites by class, including padding; containment not certified.",
+      "term": "WAKE"
+    },
+    {
+      "mm2": 47.208013178655904,
+      "no_containment_credit_total_mm2": 924.2886185238459,
+      "scaling": "Unknown; neither linear scaling nor removal permitted before provider/instance containment map.",
+      "term": "unresolved native residual"
+    }
+  ],
+  "new_candidate_count_selected": false,
+  "new_jobs": 0,
+  "physical_or_rate_admission": false,
+  "reconciliation": {
+    "all_other_ECC_HE_CROM_dispatch_halo_PDN_CTS_hold_terms_need_unique_provider_ledger": true,
+    "configuration_outside_weight_element": true,
+    "named_service_already_in_inherited_debit": true,
+    "padding_charged_once": true,
+    "residual_retained_no_subtraction": true,
+    "return_NP8192_to4096_declaration_shrink_bound_native_area_unqualified": true
+  },
+  "schema": "opentallas.dsrom.coordinated-fixed-scaling-one-successor-plan.v1",
+  "single_successor_selection_after_provider_first": {
+    "compiled_capacity_gate": "Source fieldNP must be power of two. Keeping NP4096 with fewer active3375 sites does not shrink declared hardware. Any smaller compiledNP must preserve real BF IDs/root regions/indivisible owners and fit all mandatory providers.",
+    "first_gate": "Same S58 provider-first reservation terminal export: earlyHE/CROM and finiteECC before shallow weights; all tensor/row/K/root/format/site/address constraints verified.",
+    "golden_order": "Contiguous legal owner cuts; fixedTP4; same ordered sibling reductions/round points; collective changes remain separately priced alternative.",
+    "if_sameS58_FAIL": "Use failing indivisible owner/resource and compiled hardware budget as constraints; derive ONE next ordered ownership split with fewer complete compiled elements per die and additional ownership groups; no independent trial counts.",
+    "if_sameS58_PASS": "Consume exact surviving owner map; evaluate corrected whole budget and physical packing before selecting it.",
+    "minimum_rule": "Minimum groups only under the declared exact owner/packing policy and complete fixed service/cfg/return/repair/exclusion ledger; policy failure is not an architectural minimum.",
+    "owner": "Nash allocator; Maxwell ordered-stage/calendar consumer; Archimedes packing; Kepler service/repair containment",
+    "storage_compute_conservation": "Every tensor/header/provider word plus finiteECC remains resident exactly once per required replica; each weight retains adjacent compute. Per-die parallel capacity decreases; MACs/weight-byte of unchanged element does not."
+  },
+  "single_user_latency_required_before_adoption": {
+    "TPcollective": "FixedTP4 plan has no assumed reassociation; alternative TP changes require separate exact arithmetic and full-token comparison.",
+    "config": "Source declared27cfg cycles per phase; prospective ROM/ECC/keylookup/drain additions require source-bound acceptance; no free overlap.",
+    "crossings": "Price only actual nonoverlapped new producer-to-consumer cut edges, endpoint lanes/serialization/skids/CDC/ready/complete ownership and stage registers. Added spatial ranks do not automatically add serial hops.",
+    "event_graph": "All4778 descriptors +66runtime actions +41consumer fences +embed/head bindings; dynamic selected expert and actual phase changes, not all resident phasecount.",
+    "field_reuse": "Fewer local complete elements require actual issue-round/reuse changes from row/K map; no nominal active-pair ratio shortcut.",
+    "old_390_061_us_and_plus17hops": "Historical conditional S58 prices only, not current allocation/calendar calibration.",
+    "shared_services": "Charge finite globally shared calendar II/accept/completion and added fixed island replication/ports."
+  },
+  "source_receipts": [
+    {
+      "commit": "24d509c135d4b9fa13a9bad504aad8a6cf69fc7a",
+      "path": "results/uarch/dsrom_fixed4096_owner_compiler_20261002/closure_r2/closure.json",
+      "sha256": "229aa835e9d8d9cafe0bb80418eb9c51e885b14e56f0dd369cb6901b553ed560"
+    },
+    {
+      "commit": "c1037db16959ba8973e8a68052cfb7e62b93cdad",
+      "path": "results/uarch/dsrom_cfg_phase_capacity_20261002/model.json",
+      "sha256": "f00ae7314c96791da03f7179f7679ddbba5d7b06d12fe5406d2861c5ce7aaf50"
+    },
+    {
+      "commit": "c1b460ae0665909cd41b393ea037ebf58ce9f057",
+      "path": "results/uarch/dsrom_shared_complete_pair_candidate_r20_20261002/shared_candidate.json",
+      "sha256": "82551ea5d075eff9c3fbad608e3d3a261d29ecdc51aaaf9322d4a7fa1e3aa606"
+    },
+    {
+      "commit": "c9b4730bd57e523857a91f7dc9f61eea7f4f68d5",
+      "path": "results/uarch/dsrom_service_hub_arch_handoff_20261002/inventory_service_join.json",
+      "sha256": "848a7efb93614485844833877bcd3f2d7821f1ee3c549b70ba56f6ba028d2342"
+    },
+    {
+      "commit": "63f9fe2d6a7c9ada57c8cbfb0cf365b3ef349c24",
+      "path": "results/uarch/dsrom_current4096_field_receipts_20261002/receipt-r4.json",
+      "sha256": "f8a2f1333f31dcded2bf068ce4a21a9741f9cf2e88e58baba0b71386802a4223"
+    },
+    {
+      "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.json",
+      "sha256": "056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093"
+    }
+  ]
+}
