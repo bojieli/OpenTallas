@@ -1,0 +1,146 @@
+{
+  "G0_hardware_admitted": false,
+  "base_source_commit": "f9b61212bf257269645dc2a666e590d0089719c3",
+  "commands": [
+    "python -m pytest -q tests/test_h4_v1_g0_model.py",
+    "python tools/h4_v1_g0_model.py --out results/uarch/h4_v1_g0_model_20261002/intake/run --verify"
+  ],
+  "existing_sources_byte_identical": true,
+  "external_source_pins": [
+    {
+      "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+      "path": "rtl/gpu/ot_gpu_rf_service.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    {
+      "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+      "path": "rtl/gpu/ot_gpu_full_sm_service.sv",
+      "sha256": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896"
+    },
+    {
+      "commit": "e844837ed6dcaa669761e7e394c5b93b61255e75",
+      "path": "results/uarch/h4_native_rtl_binding_audit_20261002/primitive_capabilities.json",
+      "sha256": "ba1f13f4957f165c10fd36d9a9e600ee726de8a6985444eca16b009fb9f405fe"
+    },
+    {
+      "commit": "e844837ed6dcaa669761e7e394c5b93b61255e75",
+      "path": "results/uarch/h4_native_rtl_binding_audit_20261002/hardware_inventory.json",
+      "sha256": "d2510a49dce061129409d0ad028c19253f78afd5260215f7bf8381a52855ffa6"
+    },
+    {
+      "commit": "e844837ed6dcaa669761e7e394c5b93b61255e75",
+      "path": "results/uarch/h4_native_rtl_binding_audit_20261002/family_bindings.json.gz",
+      "sha256": "5bdc7b20a289ab9677c3e6e78e3dc204da2faada259426e5d80fd0224d3af865"
+    },
+    {
+      "commit": "655f22b2b",
+      "path": "results/uarch/h4_c0_bridge_model_20261002/dispatch_lowering.json.gz",
+      "sha256": "0fdbbe6cf6f106454fd9420062326d764b78188a6b76120bef3664a5bb168a28"
+    },
+    {
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "results/uarch/h3_qwen_complete_native_20261002/bounded_r2/Qwen_tiled.json.gz",
+      "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+    },
+    {
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz",
+      "sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313"
+    },
+    {
+      "commit": "0601e4ac7fca0ada63252733d303cb601b24b507",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_strict_shared_refs_r2/run/full_program_costs.json.gz",
+      "sha256": "6835d6da6ccc652f32877baaf69cea96e19b8165317ec2382bcb60319dd9ddab"
+    },
+    {
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "tools/h3_qwen_bounded_native.py",
+      "sha256": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b"
+    },
+    {
+      "commit": "655f22b2b",
+      "path": "tools/h4_c0_model.py",
+      "sha256": "7cdd0f0a2020f028044bdd43462e21c9e35fb0874c38b84ff9c8aa9ed79bd855"
+    },
+    {
+      "commit": "655f22b2b",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    {
+      "commit": "0601e4ac7fca0ada63252733d303cb601b24b507",
+      "path": "tools/h3_complete_native_calendar.py",
+      "sha256": "e4a7c9fe8c4e43c958e3aab821e76e64e333de80ea7fc286920ec8eea603a4f9"
+    }
+  ],
+  "files": {
+    "Dewey_Sagan_handoff.json": {
+      "bytes": 124342,
+      "sha256": "0a927bdbbdfe9b3151873e2c080a4b7ad6801050e66212028197265a36364a5e"
+    },
+    "final/model.json": {
+      "bytes": 2972203,
+      "sha256": "5c187d503c11fdde701ca9e394d05675a468bc21a908578bca863a6a19cb0c94"
+    },
+    "generation.log": {
+      "bytes": 41277,
+      "sha256": "2f5a3e308d6e0b63bbc9b6e864d2eef31063d4df7952e6ee4fc696325b39d1dc"
+    },
+    "generation_final.log": {
+      "bytes": 41277,
+      "sha256": "2f5a3e308d6e0b63bbc9b6e864d2eef31063d4df7952e6ee4fc696325b39d1dc"
+    },
+    "intake/generation.log": {
+      "bytes": 41277,
+      "sha256": "2f5a3e308d6e0b63bbc9b6e864d2eef31063d4df7952e6ee4fc696325b39d1dc"
+    },
+    "intake/replay.json": {
+      "bytes": 41303,
+      "sha256": "116acb45459d83fe27620dfc4c784fa497a2dbacfe05ff2b1b34e3a1db4b2bc6"
+    },
+    "intake/replay.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intake/run/model.json": {
+      "bytes": 2972620,
+      "sha256": "9538e72448ad2ddd438faf483dfc6a8f5a76decb31a6057647f4daed033c27b0"
+    },
+    "intake/tests.txt": {
+      "bytes": 80,
+      "sha256": "511fb971caf59261241ec2a3919d9d10c7dcb9ec044ee07d50b2db465184f057"
+    },
+    "intake/tests_complete.txt": {
+      "bytes": 80,
+      "sha256": "a82a0b51cd86fa0131904e08c34ef556963104f0e3677f688117e093ebf2d3fe"
+    },
+    "run/model.json": {
+      "bytes": 2968573,
+      "sha256": "a7a149981f71e1292df81e66c825fa6029105836c3004533ecf33514b4abdb04"
+    },
+    "tests.txt": {
+      "bytes": 80,
+      "sha256": "fe9dca0451129aaabdd76ea13e310b61a52091a146a1f9fe5b72b851eb33547f"
+    },
+    "tests_final.txt": {
+      "bytes": 80,
+      "sha256": "511fb971caf59261241ec2a3919d9d10c7dcb9ec044ee07d50b2db465184f057"
+    }
+  },
+  "immutable_intermediate_pass_records_retained": [
+    "run",
+    "final"
+  ],
+  "replay": "PASS_EXACT_PINNED_V1_MODEL_REPLAY",
+  "schema": "opentallas.H4.V1.source-pinned-sizing-manifest.v1",
+  "source_sha256": {
+    "tests/test_h4_v1_g0_model.py": "7efc4b8aea92ae9f16a8bd200ca4363607b8347dd6cbfa31ad9b412e195d060f",
+    "tools/h4_v1_g0_model.py": "a41262dec4fa827a4ecccd32cfee55ccfc14c612e6f8a528e99585d2cf59c884"
+  },
+  "tests": {
+    "count": 27,
+    "log": "intake/tests_complete.txt",
+    "scope": "Necessary CPU/source semantic, finite credit/tag/ACK, count/model/reconciliation gates; NEVER hardware opcode coverage",
+    "status": "PASS"
+  }
+}
