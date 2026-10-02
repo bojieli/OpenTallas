@@ -1,0 +1,20 @@
+{
+  "ABI_snapshots": {
+    "inputs/Dewey_C0_interface.json": "13410f4b8728ea04c265fff1ed5af5a3c591af47f84d4b624a4eddffe9a66ace",
+    "inputs/Sagan_dynamic_leaf_checkpoint.json": "4b9a7fc001f42be564a9ad090b5f32a2220b738604567067b479eae04f34b888",
+    "inputs/Sagan_shared_bridge_contract.json": "81a2b93d9cedca12d5f44b9bd37a4679843be83ffc6e3ffc1ac04ac92f87201b"
+  },
+  "parent": {
+    "tools/h3_deepseek_full_token_driver.py": "3cbfc171ab3ff28439637a4ac4e3adb7bd332d87e015e03a7dabfc2d0d1443e0"
+  },
+  "prior_dependency_record": "results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/dependency_sha256.json",
+  "worker": {
+    "tests/test_ds_checkpoint_provider_r31.py": "863cf6d672e8d36a6d9f7e4c6cf0f91afae6c33b915500227a84cd47a5e66df0",
+    "tools/ds_hbm_finite_state_homes_r30.py": "1c1f61f3a7ff45e076ccacd99ecc6049db4436117ea5e327e09fba1bdb784823",
+    "tools/h3_ds_checkpoint_join_r31.py": "d474d33472940f88b5d8668a57b25677317d752e74ed3b28074be844683378e8",
+    "tools/h3_ds_checkpoint_provider_r30.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
+    "tools/h3_ds_checkpoint_provider_r31.py": "12debf3d035611c0751459a5b15925a988998b2857f0fed50b75ab7072146ecc",
+    "tools/hbm_bound_event_journal_r30.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0",
+    "tools/hbm_provider_microvm_r21.py": "3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2"
+  }
+}

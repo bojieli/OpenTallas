@@ -1,0 +1,33 @@
+{
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "hidden_r27_worktree_dependency": false,
+  "local": {
+    "tests/test_ds_hbm_checkpoint_finite_homes_r30.py": "3439f49346e4d97ddcb6539091d17d497f14231e11468c389f08c37db32b8cd3",
+    "tools/ds_hbm_finite_state_homes_r30.py": "1c1f61f3a7ff45e076ccacd99ecc6049db4436117ea5e327e09fba1bdb784823",
+    "tools/h3_ds_checkpoint_join_r30.py": "9b772c0c3f5add6a408cb4ddc43adf627144d370ba180d40329c956cf837378d",
+    "tools/h3_ds_checkpoint_provider_r30.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
+    "tools/hbm_bound_event_journal_r30.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0",
+    "tools/hbm_provider_microvm_r21.py": "3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2"
+  },
+  "parent_checkout_required": {
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/uarch/h3_deepseek_bounded_tiles_20261002/forward_dispatch_milestone.json.gz": "765edfc5efc8fc0d6f40946451d8beb4a54b3253de9e93ecd7f02bb72874af2f",
+    "results/uarch/h3_deepseek_complete_native_20261002/dependencies/h3_exact_scalar_contract.py": "d96ac1b3d02b68ad62532f1f8c0eab63b9a64c4b43cc0218aab78d68ed38a132",
+    "results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313",
+    "results/uarch/h3_distributed_norm_endpoint_20261002/DeepSeek.json.gz": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424",
+    "tools/deepseek_hbm_complete_memory.py": "ea1bbe4f09973438323adad64154311d22bb493be13af2c68f3521af0aaa8719",
+    "tools/h3_deepseek_bounded_compile.py": "eb8e5af9242576770819cb9dd6fa26deea627fc1a3eade33506cf98c4b05cc33",
+    "tools/h3_deepseek_bounded_tiles.py": "1528e177d21783827f5b970112853038540207b487654a10d9af46d1d020d1de",
+    "tools/h3_deepseek_complete_native.py": "f69471b8b4df22b8634d0636361370f92e8b13399a9f395b3e842be66a854daf",
+    "tools/h3_deepseek_full_token_driver.py": "3cbfc171ab3ff28439637a4ac4e3adb7bd332d87e015e03a7dabfc2d0d1443e0",
+    "tools/h3_deepseek_staged_native.py": "13b34676646f9686150572ab314a3146d038883317ad76ffb0201269035f976f",
+    "tools/h3_deepseek_streaming_linear.py": "e938187d1701bffe8ace7c565fe8fc6567eed476f85ddd16e174de63a62e7bc9",
+    "tools/h3_native_microop_adapter.py": "cf3e7c0b6390f1586bc8f92cb0f6af8f04a48402299afbf80acf53b493a60e1a",
+    "tools/h3_versioned_lowering.py": "900dec4186274cbe3e41cf2eea4abfa76d7d58182d96c3e6b55ea04409e58e91",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6"
+  },
+  "whole_checkpoint_payload_hashes_verified": false
+}

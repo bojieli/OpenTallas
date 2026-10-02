@@ -1,0 +1,34 @@
+{
+  "Qwen_runtime_ROM_decoder_removal_credit": 0,
+  "ROM_contract_tests_passed": 2,
+  "ROM_physical_area_credit": 0,
+  "arithmetic_changed": false,
+  "auxiliary_requests_unbound": 671,
+  "check_figures": "PASS; all four target gate bundles remain blocked",
+  "current_loaded_Qwen_control_timing_still_failed": true,
+  "full_DS_native_PCs": 2213,
+  "full_DS_token_GO": false,
+  "live_jobs_changed": false,
+  "missing_initial_window_versions": 40,
+  "next_required_work": [
+    "actual retained-context/aux/expert route/wo_a and view bindings",
+    "C0 parent refill/writeback ACK and reverse mapping",
+    "contextual physical element/selector and Qwen clock/reset control closure"
+  ],
+  "parent_base": "843729bb9",
+  "prepared_record_exact_replay": true,
+  "provider_artifact_hashes_verified": 24,
+  "provider_tests_passed": 9,
+  "provider_ticks_not_hardware_cycles": true,
+  "source_commits": [
+    "b9a962896",
+    "c71e7e983",
+    "769d5d4aa",
+    "0b94c9666"
+  ],
+  "source_writes_bound": 56,
+  "state_capacity_bytes_per_rank": 33554432,
+  "state_fragment_homes_added": 4616,
+  "state_not_shared_scratch": true,
+  "status": "PASS_BOUNDED_SOFTWARE_AND_SOURCE_CENSUS_NOT_FULL_TOKEN_OR_PHYSICAL_ADMISSION"
+}
