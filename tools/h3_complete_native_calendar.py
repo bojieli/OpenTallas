@@ -2026,6 +2026,159 @@ def project_pc0_provider_journal(packet, phase_schema, calibration):
         native_group_staging_bytes=packet['group_staging_bytes_retained'],whole_prefix_latency=None,hardware_admitted=False)
 
 
+def h1_rf_control_step(state, *, read=False, write=False, response_ready=False, ack_ready=False):
+    """Exact pinned H1 control recurrence; edges, never provider ticks.
+
+    State is (read_pending,rsp_valid,ack_valid,prefer_write). SRAM payload and
+    numerical arithmetic are outside this handshake proof.
+    """
+    pending,response,ack,prefer=state
+    idle=not (pending or response or ack)
+    read_go=bool(read and idle and (not write or not prefer))
+    write_go=bool(write and idle and (not read or prefer))
+    return (read_go,True if pending else response and not response_ready,
+            True if write_go else ack and not ack_ready,
+            True if read_go else False if write_go else prefer),dict(read_accept=read_go,write_accept=write_go)
+
+
+def derive_h1_production_wait_obligations(sources, rank_die_SM):
+    """Source control proof including reachable non-finite credit-hold cases.
+
+    A finite resource count cannot bound an unconstrained ready/grant input.
+    Export exact self-loops rather than fabricate a positive timeout contract.
+    """
+    pins={
+        'ot_gpu_rf_service.sv':'c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0',
+        'ot_gpu_scratch_service.sv':'ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02',
+        'ot_gpu_full_sm_service.sv':'39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896',
+        'ot_gpu_hbm_rf_shared_context.sv':'707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90',
+        'ot_gpu_rf_visibility_fence.sv':'d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3'}
+    if set(sources)!=set(pins) or any(hashlib.sha256(sources[n]).hexdigest()!=p for n,p in pins.items()):
+        raise ValueError('exact actual H1/context/fence sources required')
+    expected={(r,r,s) for r in range(96) for s in range(32)}
+    actual={(x['rank'],x['die'],x['SM']) for x in rank_die_SM}
+    if len(rank_die_SM)!=3072 or actual!=expected:raise ValueError('complete actual96die32SM inventory required')
+    traces={}
+    for name,request in [('read',dict(read=True)),('write',dict(write=True))]:
+        state=(False,False,False,False);rows=[]
+        for edge in range(3 if name=='read' else 2):
+            before=state;state,accepted=h1_rf_control_step(state,**(request if edge==0 else {}),response_ready=True,ack_ready=True)
+            rows.append(dict(edge=edge,before=list(before),after=list(state),**accepted))
+        if any(state[:3]):raise ValueError('source leaf control did not drain')
+        traces[name]=rows
+    witnesses=[]
+    for kind,state,inputs in [('RF_response',(False,True,False,True),dict(write=True,response_ready=False)),
+                              ('RF_ACK',(False,False,True,False),dict(read=True,ack_ready=False))]:
+        after,accept=h1_rf_control_step(state,**inputs)
+        if after!=state or any(accept.values()):raise ValueError('actual reachable blocked state proof')
+        witnesses.append(dict(endpoint=kind,reachable_state=list(state),inputs=inputs,self_loop_state=list(after),
+            repeat_count='arbitrary',credit_releases=False,finite_upper='UNBOUNDED_BY_CURRENT_SOURCE'))
+    return dict(schema='H4_ACTUAL_H1_SOURCE_WAIT_OBLIGATIONS_V1',status='FAIL_FINITE_PRODUCTION_WAIT_ADMISSION',
+        source_pins=pins,inventory=dict(dies=96,SM_per_die=32,SM_instances=3072,
+            RF_external_request_ports_per_SM=['host_read','host_write','SIMD'],RF_external_request_ports_total=9216,
+            shared_request_ports_per_SM=1,shared_request_ports_total=3072,
+            RF_banks_per_operand_copy=64,RF_operand_copies=2,RF_macro_instances=3072*128,
+            shared_macro_instances=3072*2,
+            external_provider_to_host_mux='NOT_IMPLEMENTED_IN_THIS_CONTEXT',
+            complete_C0_GU_KV_matrix_to_L2_contender_inventory='UNBOUND; request aliases are not extra physical ports'),
+        source_leaf_edges=dict(RF_read_accept_capture_consume=3,RF_write_accept_ACK_consume=2,
+            shared64_read_accept_capture_consume=3,shared64_write_accept_done_consume=2,
+            mirror_writes='both copies receive same write_go edge',ACK_assertion='registered on same accepted write edge',
+            visibility='vector_ACK_visible observes pending && host_ack_valid; not an additional guessed1edge',
+            evidence_kind='DERIVED_RTL_CONTROL_EDGES_NOT_MEASURED_CONTEXT'),
+        all_ready_positive_control=traces,unbounded_reachable_credit_hold_witnesses=witnesses,
+        additional_nonfinite_source_cases=[
+            dict(source='ot_gpu_scratch_service.sv',condition='done=1,done_ready=0',consequence='ready remains0; done holds'),
+            dict(source='ot_gpu_full_sm_service.sv',condition='state=DONE,simd_done_ready=0',consequence='state remainsDONE; host ports masked'),
+            dict(source='ot_gpu_hbm_rf_shared_context.sv',condition='rf_owner_grant=0 or persistent collision',consequence='all RF ready masked; no grant arbiter exists here'),
+            dict(source='ot_gpu_rf_visibility_fence.sv',condition='pending=1,ack_retire_enable=0',consequence='host_ack_ready=0; pending owner cannot retire'),
+            dict(source='ot_gpu_rf_visibility_fence.sv',condition='fence_valid=1,fence_ready=0',consequence='active owner remains held')],
+        finite_fairness_scope='H1 read/write alternate and host/SIMD alternate only after the selected service drains; no bounded external-owner grant follows',
+        drain_term='previous held sinks must be source-bound; otherwise unbounded',
+        consumer_term='source-bound maximum ready-low duration required',
+        reverse_term='no source-connected reverse lease endpoint in these H1 ports; C0/V1 software owner is not its RTL implementation',
+        actual_backend_term='selected L2 reservation not installed; bank arbiter/backend-to-owner bridge absent',
+        finite_contender_count_alone_sufficient=False,new_cost_charges=0,provisional_1_1_1_admitted=False,
+        software_ticks_converted=False,whole_token_latency_ns=None,hardware_qualified=False)
+
+
+def join_ds_pc10_home_lineage(original_native, original_homes, manifest,
+                              bound_native, bound_homes, *, state_source, binding_source):
+    """Prove the exact R41 extension, never merely accept a matching prefix.
+
+    Regenerates every appended state home and every changed write reference
+    from the immutable compiler sources. This is source lineage only: it does
+    not certify producer bytes, installed physical storage or endpoint waits.
+    """
+    import ast, copy, math
+    pins={
+        'state': '1c1f61f3a7ff45e076ccacd99ecc6049db4436117ea5e327e09fba1bdb784823',
+        'binding': 'feaba8f44842282ad9c2cd314f0640a196f56dbd6ec546527d23942d5dcbe3f1'}
+    for name,raw in [('state',state_source),('binding',binding_source)]:
+        if not isinstance(raw,bytes) or hashlib.sha256(raw).hexdigest()!=pins[name]:
+            raise ValueError('exact immutable '+name+' lineage source required')
+    canonical=lambda x:json.dumps(x,sort_keys=True,separators=(',',':')).encode()
+    content=lambda x:hashlib.sha256(canonical(x)).hexdigest()
+    # Execute only the actual retained allocator/compiler functions. No peer
+    # factory import, checkpoint access, provider construction or native VM.
+    namespace=dict(copy=copy,math=math,json=json,hashlib=hashlib)
+    for raw,names in [(state_source,{'BASE','CAP','FLOAT','INTEGER','output_spec','compile_directory','patch_homes'}),
+                      (binding_source,{'canonical','bind_storage'})]:
+        tree=ast.parse(raw)
+        selected=[]
+        for node in tree.body:
+            if isinstance(node,ast.FunctionDef) and node.name in names:selected.append(node)
+            elif isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id in names for t in node.targets):selected.append(node)
+        exec(compile(ast.Module(body=selected,type_ignores=[]),'source_pinned_R41_lineage','exec'),namespace)
+    if len(bound_homes)<len(original_homes) or canonical(bound_homes[:len(original_homes)])!=canonical(original_homes):
+        raise ValueError('original physical home prefix changed')
+    expected_native,expected_homes,directory,binding=namespace['bind_storage'](original_native,original_homes,manifest)
+    if content(bound_homes)!=content(expected_homes):
+        raise ValueError('complete source-regenerated home extension mismatch')
+    if content(bound_native)!=content(expected_native):
+        raise ValueError('complete source-regenerated native write lineage mismatch')
+    return dict(schema='H4_PC10_EXACT_R41_HOME_LINEAGE_V1',status='PASS_EXACT_SOURCE_REGENERATED_HOME_LINEAGE',
+        original_homes=len(original_homes),bound_homes=len(bound_homes),appended_state_homes=len(directory['rows']),
+        source_pins=pins,original_home_content_sha256=content(original_homes),bound_home_content_sha256=content(bound_homes),
+        original_native_content_sha256=content(original_native),bound_native_content_sha256=content(bound_native),
+        state_directory_content_sha256=content(directory),original_source_native_sha256=manifest['native_program_sha256'],
+        original_physical_prefix_unchanged=True,all_native_arithmetic_and_templates_unchanged=True,
+        source_mapping_only=True,production_PC9_bytes_verified=False,production_calls_closed=0,
+        physical_endpoint_waits=None,selected_L2_reservation_installed=False,whole_token_latency_ns=None,hardware_qualified=False)
+
+
+def production_pc10_with_home_lineage(endpoint_module, provider, original_native, manifest,
+                                       *, native_source, state_source, binding_source):
+    """Additive constructor for R41 providers; original endpoint guards remain.
+
+    No provider directory is temporarily substituted and no source refusal is
+    suppressed. The original constructor is first exercised on its exact
+    retained directory. Only a fully regenerated extension permits rebinding.
+    ready/execute retain the original PC9 publication and executor checks.
+    """
+    from types import SimpleNamespace
+    source=Path(endpoint_module.__file__)
+    if hashlib.sha256(source.read_bytes()).hexdigest()!='5013e5695ef6ae80fa1988d5f5529f766d8dad60ae7254ff2139fd29834329fc':
+        raise ValueError('exact production endpoint implementation required')
+    native_pin='c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264'
+    if (hashlib.sha256(native_source).hexdigest()!=native_pin or manifest['native_program_sha256']!=native_pin
+            or json.loads(gzip.decompress(native_source))!=original_native):
+        raise ValueError('exact retained original native artifact required')
+    original_homes=endpoint_module.decoded(endpoint_module.inputs(),'homes.json.gz')['homes']
+    lineage=join_ds_pc10_home_lineage(original_native,original_homes,manifest,provider.native,provider.homes,
+        state_source=state_source,binding_source=binding_source)
+    lineage['original_native_artifact_sha256']=native_pin
+    if len(provider.native['instructions'])!=2213:raise ValueError('complete2213PC production native required')
+    # R41 may change only missing output references. PC9/PC10 physical RF
+    # read/write indices must remain exactly those of the retained endpoint.
+    for pc in (9,10):
+        if provider.native['instructions'][pc]!=original_native['instructions'][pc]:
+            raise ValueError('PC9/PC10 physical native endpoint changed')
+    adapter=endpoint_module.ProductionPC10(SimpleNamespace(homes=original_homes))
+    adapter.homes=provider.homes;adapter.provider=provider;adapter.home_lineage=lineage
+    return adapter
+
+
 def execute_ds_provider_group128(continuation, PC, rank, *, generation, identity, source_store_view,
                                  shared_factory, primitive_sources, movement_observer=None):
     """Join df6 actual source backing/publication to journalled64KiB shared.

@@ -12,6 +12,68 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_actual_H1_leaf_edges_and_nonfinite_hold_source_proof(self):
+        base=ROOT/c.OUT/'pc10_exact_home_lineage_r1'
+        sources={p.name[:-3]:gzip.decompress(p.read_bytes()) for p in base.glob('ot_gpu*.sv.gz')}
+        inventory=[dict(rank=r,die=r,SM=s) for r in range(96) for s in range(32)]
+        proof=c.derive_h1_production_wait_obligations(sources,inventory)
+        self.assertEqual(proof['inventory']['SM_instances'],3072)
+        self.assertEqual(proof['inventory']['RF_external_request_ports_total'],9216)
+        self.assertEqual(len(proof['all_ready_positive_control']['read']),3)
+        self.assertEqual(len(proof['all_ready_positive_control']['write']),2)
+        self.assertFalse(proof['finite_contender_count_alone_sufficient']);self.assertFalse(proof['software_ticks_converted'])
+        for row in proof['unbounded_reachable_credit_hold_witnesses']:
+            after,accepted=c.h1_rf_control_step(tuple(row['reachable_state']),**row['inputs'])
+            self.assertEqual(list(after),row['reachable_state']);self.assertFalse(any(accepted.values()))
+        with self.assertRaisesRegex(ValueError,'inventory'):c.derive_h1_production_wait_obligations(sources,inventory[:-1])
+        with self.assertRaisesRegex(ValueError,'actual H1'):c.derive_h1_production_wait_obligations(dict(sources,**{'ot_gpu_rf_service.sv':b'fake'}),inventory)
+
+    def test_actual_H1_persistent_read_write_alternate_only_when_sinks_drain(self):
+        state=(False,False,False,False);grants=[]
+        for edge in range(20):
+            state,events=c.h1_rf_control_step(state,read=True,write=True,response_ready=True,ack_ready=True)
+            if events['read_accept']:grants.append('read')
+            if events['write_accept']:grants.append('write')
+        self.assertEqual(grants,['read','write']*4)
+        held=(False,True,False,True)
+        self.assertEqual(c.h1_rf_control_step(held,read=True,write=True)[0],held)
+
+    def lineage_fixture(self):
+        base=ROOT/c.OUT/'pc10_exact_home_lineage_r1'
+        state=gzip.decompress((base/'ds_hbm_finite_state_homes_r30.py.gz').read_bytes())
+        binding=gzip.decompress((base/'ds_hbm_storage_home_binding_r41.py.gz').read_bytes())
+        native={'templates':{'t':{'code':[{'op':'CONST','src':[],'dst':'v','shape':[4],'attrs':{'dtype':'F32'}}],
+            'outputs':{'data':'v'}}},'instructions':[{'pc':0,'rank_bindings':[{'rank':0,'template':'t'}],
+            'writes':[{'version':'produced','home_indices':[],'native_result_binding':{'result':'data'}}]}]}
+        homes=[{'version':'original','rank_group':[0],'home':{'class':'RF','slot_first':7}}]
+        manifest={'native_program_sha256':'a'*64,'initial_versions':[], 'query_field_homes':{'rows':[]}}
+        ns={'__name__':'retained_fixture'};exec(state,ns)
+        directory=ns['compile_directory'](native,manifest['native_program_sha256'])
+        bound,bound_homes=ns['patch_homes'](copy.deepcopy(native),copy.deepcopy(homes),directory)
+        for h in bound_homes[len(homes):]:h['word_count']=h['binding']['bytes']//4
+        return native,homes,manifest,bound,bound_homes,state,binding
+
+    def test_exact_lineage_regenerates_extension_without_mutating_input(self):
+        n,h,m,b,bh,s,t=self.lineage_fixture();original=copy.deepcopy((n,h,m,b,bh))
+        proof=c.join_ds_pc10_home_lineage(n,h,m,b,bh,state_source=s,binding_source=t)
+        self.assertEqual((n,h,m,b,bh),original)
+        self.assertEqual(proof['appended_state_homes'],1)
+        self.assertFalse(proof['production_PC9_bytes_verified']);self.assertIsNone(proof['physical_endpoint_waits'])
+        self.assertFalse(proof['hardware_qualified']);self.assertFalse(proof['selected_L2_reservation_installed'])
+
+    def test_exact_lineage_refuses_prefix_extension_native_and_source_mutants(self):
+        n,h,m,b,bh,s,t=self.lineage_fixture()
+        for target,key,value in [('prefix','slot_first',8),('extension','base',33554944),('native','home_indices',[])]:
+            bn=copy.deepcopy(b);hh=copy.deepcopy(bh)
+            if target=='prefix':hh[0]['home'][key]=value
+            elif target=='extension':hh[1]['home'][key]=value
+            else:bn['instructions'][0]['writes'][0][key]=value
+            with self.assertRaisesRegex(ValueError,'prefix changed|extension mismatch|write lineage mismatch'):
+                c.join_ds_pc10_home_lineage(n,h,m,bn,hh,state_source=s,binding_source=t)
+        with self.assertRaisesRegex(ValueError,'immutable state'):
+            c.join_ds_pc10_home_lineage(n,h,m,b,bh,state_source=s+b'\n',binding_source=t)
+        with self.assertRaises(ValueError):c.join_ds_pc10_home_lineage(n,h,m,b,bh[:-1],state_source=s,binding_source=t)
+
     def test_compact_typed_journal_roundtrip_digest_index_and_online_drain(self):
         import tempfile,hashlib,sys
         sys.path.insert(0,'/home/ubuntu/OpenTallas/tools')
