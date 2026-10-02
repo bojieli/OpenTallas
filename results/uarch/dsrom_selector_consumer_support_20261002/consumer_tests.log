@@ -1,0 +1,15 @@
+test_actual_pin_and_wrong_anchor (__main__.ConsumerContract) ... ok
+test_actual_vm_collision_and_absent_drain_refused (__main__.ConsumerContract) ... ok
+test_collector_role_mapping_preserves_actual_observations (__main__.ConsumerContract) ... ok
+test_foreign_destination_and_extra_duplicate_writer_refused (__main__.ConsumerContract) ... ok
+test_foreign_identity_wrong_clock_and_offered_basis (__main__.ConsumerContract) ... ok
+test_independent_consumer_clocks_and_exact_visibility (__main__.ConsumerContract) ... ok
+test_missing_duplicate_cfg_or_root (__main__.ConsumerContract) ... ok
+test_source_expected_rows_not_recalibrated_from_trace (__main__.ConsumerContract) ... ok
+test_waveform_consumers_different_clocks_and_preNBA_values (__main__.ConsumerContract) ... ok
+test_write_offer_or_unsettled_readback_not_final_visibility (__main__.ConsumerContract) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.010s
+
+OK

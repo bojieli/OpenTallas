@@ -1,0 +1,68 @@
+{
+  "G0": "REFUSE_CURRENT_SLOT_AND_UNCLOSED_CONTEXT",
+  "MTP_headline": {
+    "local_pooled_tau": "historical sensitivity only; superseded for headline",
+    "numeric_provenance_pending": true,
+    "policy": "third-party agentic median per-request committed tokens / complete elapsed decode",
+    "qualified_rate": null
+  },
+  "PR_admitted": false,
+  "PVE2_PVE3": "drain-only",
+  "area_pass": false,
+  "clock_branch_basis": {
+    "ff": 17,
+    "ss": 15
+  },
+  "clock_branch_basis_is_not_selector_stage_timing": true,
+  "clock_policy": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "period_ps": 833
+  },
+  "complete_proxy_extra_over_current_charged_proxy_mm2": 0.17358111108000007,
+  "current_bbox_DBU": [
+    1000000,
+    8953200,
+    3125440,
+    9663840
+  ],
+  "current_old_full_proxy_mm2": 1.50883850628,
+  "current_reserved_rectangle_mm2": 1.5104226816,
+  "engine_RTL_admitted": false,
+  "minimum_area_only_bbox_DBU": [
+    1000000,
+    8953200,
+    3125440,
+    9744763
+  ],
+  "minimum_bbox_is_not_placement_or_corridor_acceptance": true,
+  "minimum_extra_height_DBU": 80923,
+  "minimum_height_same_width_DBU": 791563,
+  "new_jobs": 0,
+  "remaining": [
+    "Archimedes accepts complete selector state+logic reservation once, no old-store duplicate credit",
+    "Archimedes checks enlarged rectangle against retained controller, corridor, root/VM routes and clock/PG",
+    "Maxwell prices relocated load/result transport and actual serial caller residence",
+    "source-construction stage arcs + full-context SS setup/FF hold acceptance"
+  ],
+  "required_complete_construction_proxy_mm2": 1.6824196173600001,
+  "schema": "TOPK_CURRENT_SELECTOR_RESERVATION_RECONCILIATION_V1",
+  "sourcepins": {
+    "full": {
+      "commit": "aa745a879e20e3db598f7be9345cb7ad3b1d5d2f",
+      "path": "results/uarch/topk_balanced_filter_successor_model_20261002/model.json",
+      "sha256": "5757ddcce52cd366018bf604c3601341f52e978c250ddf8ab96c307ed9f9db47"
+    },
+    "parent": {
+      "commit": "d2b3fde765a9cb1b97ec03864dbf7e48f0cf51f4",
+      "path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/model.json",
+      "sha256": "86d2594ea5c6154ebd087e4b84e017a7cda0433c2acbf24ee71addb970600028"
+    },
+    "policy": {
+      "commit": "d4b9a4a6966bf211df81136b3df886a980f4bd36",
+      "path": "results/uarch/ds_mtp_agentic_headline_policy_20261002.json",
+      "sha256": "17233614b13066c1786333e4bbb29f8e77c7ef7079d3d52bd987d2b9a9d3493e"
+    }
+  },
+  "uncovered_complete_proxy_mm2": 0.1719969357600002
+}
