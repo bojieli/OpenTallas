@@ -1,0 +1,100 @@
+{
+  "available_owner_join": "09358afc825bc531d95575dff710ee554ab9ba60 packing reservation/header interfaces only, plus20f2b9806 corrected service FAIL and2b1a99a3f latency attribution",
+  "candidate_id": "DS4096-TP4-S58-PAIR1",
+  "current_L0_runtime": {
+    "NBF_is_capability_mask_not_BF_workload": true,
+    "all_L0_not_product_stage_program": true,
+    "descriptor_count": 28,
+    "format_counts": {
+      "bf16": 3,
+      "fp4": 18,
+      "fp8": 7
+    },
+    "logical_depth8192_PP1_two4096_macros_per_slot": true,
+    "params": {
+      "BP": 0,
+      "FAST": 1,
+      "FRONT_PAR": 0,
+      "PP": 1,
+      "active": 6899,
+      "actual_add_LAT": 8,
+      "depth": 8192,
+      "nbf": 1024,
+      "np": 8192,
+      "phw": 6,
+      "regions": 128
+    },
+    "physical_geometry_not_equal_to_product4773_pairs": true,
+    "selected_expert_ids": [
+      61,
+      69,
+      112,
+      170,
+      299,
+      357
+    ],
+    "source_format_to_engine_format_conversions": [
+      {
+        "cols": [
+          0,
+          4096
+        ],
+        "fmt": "bf16",
+        "note": "wo_a ships FP8 (32x32 UE8M0); the golden dequantises it to BF16 (to_bf16(Q8.dense())) -- the ME weight is that BF16 matrix",
+        "pc": 37,
+        "rows": [
+          0,
+          1024
+        ],
+        "source_fmt": "fp8",
+        "tensor": "layers.0.attn.wo_a.weight"
+      },
+      {
+        "cols": [
+          0,
+          4096
+        ],
+        "fmt": "bf16",
+        "note": "wo_a ships FP8 (32x32 UE8M0); the golden dequantises it to BF16 (to_bf16(Q8.dense())) -- the ME weight is that BF16 matrix",
+        "pc": 38,
+        "rows": [
+          1024,
+          2048
+        ],
+        "source_fmt": "fp8",
+        "tensor": "layers.0.attn.wo_a.weight"
+      }
+    ],
+    "stream_words": 2200,
+    "unselected_expert_count_per_layer": 378
+  },
+  "current_candidate_capacity_FAIL": true,
+  "explicit_uncovered_obligations": [
+    "Constants/CROM metadata and HE service ownership",
+    "All unselected routed experts, not just six runtime selections",
+    "Dense/shared/BF16 logical engine formats includingFP8 wo_a cast toBF16 by golden",
+    "Head/embed/drafter/Engram table roles",
+    "Full138469120bit return state and regional sibling ownership"
+  ],
+  "fullmodel_current_emitted_stage_program_and_bankmap_found": false,
+  "historical_product_bankmap_scope": "Original 4b4b pinned product bankmap, historical model/geometry; not current8wake fixed-density slot qualification or headline rates",
+  "historical_product_bankmap_terminal": "FAIL_model_mismatch",
+  "no_generator_or_RTL_execution": true,
+  "ownership_map_available": false,
+  "physical_GO": false,
+  "planned_allphase_owner_commit": "8d42f592a93744c51ae40671a9e3d63e4eee8230",
+  "planned_allphase_scope": "L0 emitted phases and L20 descriptor reconstruction only; not full-model stage program/bank ownership",
+  "request_to_Nash": "Reuse current cfg+program decoding to export physical4096 address/ordered row-region nodes for all selectedL0 calls, with coverage ledger. Keep full-model product stage/bank owner gap explicit; do not infer4773orBF724 fit from runtimeNP/active.",
+  "retained_product_owner_claim_boundary": "Whole routed-expert ID candidate from coarse checkpoint bytes only; no tensor image, stage program, data-dependent schedule, inter-stage packet or bit-exact RTL proof.",
+  "retained_product_owner_status": "coarse_integer_candidate_not_executable",
+  "runtime_L0_L20_program_pin_audit_path": "results/rtl/w17_existing_images_scale_pin_audit_20261001.json",
+  "schema": "opentallas.DSROM.current-owner-program-lookup.v1",
+  "source_pins": {
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/arch/v41_stage_owner_product.json": "8e1a3d2730372f597550004deed4da2c6a5408a6cd2b432a44d215b157970651",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/floorplan/v41_stage17_bankmap.json": "70e707fb4ab3a630618f3557ae47bd1bc85bd03017adbf4baf00f2dce3cd17af",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/rtl/dsrom_cadence_admission_prepare_20261002/L0_metadata/current_field_phases.json": "ab6563697a6729a921d4b429844538a63510f801b72f54c7d84058be68af1502",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/rtl/dsrom_cadence_admission_prepare_20261002/L0_metadata/current_weights.json": "b8db5c8be5b5dd1967518db19e1e849f836cc5271c7dde6e3508847d4c4c93cd",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/uarch/w10_bankmap_4b4b_terminal_20261001/terminal.json": "88c92359053557f86a83d0936996465108039a8103b7ed3eadb94a17a0abdf1a"
+  },
+  "stage17_bankmap_status": "rejected_as_complete_deployed_die_mapping"
+}
