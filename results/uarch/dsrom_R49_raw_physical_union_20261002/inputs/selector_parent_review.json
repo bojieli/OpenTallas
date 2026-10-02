@@ -1,0 +1,48 @@
+{
+  "scope": "prepared default-off fullshape selector and literal transport cuts; source/static review only",
+  "owner_commits": [
+    "6430309068468c41954abf25355ba35505675f82",
+    "545f2fa1ca39ce0a8147873e6909b956edc2b07e",
+    "a4e504d36d18db31ebc5d7325c52955f8257be79"
+  ],
+  "initial_parent_test_failure_preserved": {
+    "status": "COLLECTION_ERROR",
+    "reason": "candidate package requires prepare_topk_station_caller_fence absent from main",
+    "resolution": "integrated unchanged prerequisite643030906; no private PYTHONPATH or guard relaxation"
+  },
+  "parent_tests": 62,
+  "parent_test_exit": 0,
+  "milestone_artifact_hashes_verified": 165,
+  "fresh_generated_gate_artifacts_byte_exact": 93,
+  "fresh_generated_literal_cut_artifacts_byte_exact": 15,
+  "fullshape_cases_prepared": 37,
+  "fault_cases_prepared": 15,
+  "reset_regions_prepared": 4,
+  "mutants_prepared": 3,
+  "prepared_verifier_tests_are_not_actual_HDL_runs": true,
+  "core_added_state_bits": 127140,
+  "transport_existing_payload_FF": 475954,
+  "transport_present_FF": 226,
+  "transport_total_FF": 476180,
+  "transport_repeater_BUF": 965012,
+  "transport_terminal_BUF": 476180,
+  "transport_present_ties": 229,
+  "core_ASR_tie_bits_separate": 35,
+  "transport_cuts_edges": [
+    99,
+    99,
+    28
+  ],
+  "functional_backend_semantics_unverified": true,
+  "current_capture_timing_failure_retained": true,
+  "consumer_deadline": null,
+  "complete_physical_slot_clock_reset_PG_join": false,
+  "compile_admitted": false,
+  "actual_HDL_compiled": false,
+  "HDL_equivalence": false,
+  "physical_qualified": false,
+  "fulltoken_qualified": false,
+  "rate_credit": false,
+  "next": "owner backend semantic review plus existing-vs-incremental complete ledgers and composed capture/gather deadline before any admitted build",
+  "make_check_figures_exit": 0
+}

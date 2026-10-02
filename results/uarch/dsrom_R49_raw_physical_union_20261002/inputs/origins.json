@@ -1,0 +1,92 @@
+[
+  {
+    "commit": "dd28d3f625bac35e811ab98f4375cf6a9f7c8375",
+    "copy": "R49.json",
+    "path": "results/uarch/dsrom_capture_shard_join_r49_20261002/model.json",
+    "sha256": "1a75456348de769a591a8d765c754da002e460752675ea012abfb48894f83f71"
+  },
+  {
+    "commit": "115766782",
+    "copy": "Maxwell_home.json",
+    "path": "results/uarch/dsrom_capture_home_20261002/model.json",
+    "sha256": "c952055e1d46c3d86095965ee0bc92162256649f398d723ef70b5e7b13c0a0a0"
+  },
+  {
+    "commit": "115766782",
+    "copy": "capture.json.gz",
+    "path": "results/uarch/dsrom_capture_home_20261002/inputs/capture.json.gz",
+    "sha256": "951910802701c2f0d7922dfd14e54da39cc4a2d39e92ea03b4a02419aa0c694d"
+  },
+  {
+    "commit": "115766782",
+    "copy": "cell_LEF.json.gz",
+    "path": "results/uarch/dsrom_capture_home_20261002/inputs/cell_LEF.json.gz",
+    "sha256": "007ab8c4d064f668c503257c26444ee7751fab732926f49d6517d76534d61207"
+  },
+  {
+    "commit": "115766782",
+    "copy": "services.json.gz",
+    "path": "results/uarch/dsrom_capture_home_20261002/inputs/services.json.gz",
+    "sha256": "99cd991bbb0f5135a38b9bd6e05241b6cfa85167bfa3aea37598abe10917c488"
+  },
+  {
+    "commit": "115766782",
+    "copy": "field.json.gz",
+    "path": "results/uarch/dsrom_capture_home_20261002/inputs/field.json.gz",
+    "sha256": "527ce659bb50db911baee236ec2d0298cbd8f44aaf68426f6bfc3aa71d914f2e"
+  },
+  {
+    "commit": "115766782",
+    "copy": "cfg.json.gz",
+    "path": "results/uarch/dsrom_capture_home_20261002/inputs/cfg.json.gz",
+    "sha256": "1340321aa101959123236eca5da37eac6f44ab64af6292e3e4c21bfe9d18f18b"
+  },
+  {
+    "commit": "115766782",
+    "copy": "bands.json.gz",
+    "path": "results/uarch/dsrom_capture_home_20261002/inputs/bands.json.gz",
+    "sha256": "721e4a189d5f79a043770edc87027336089a37f85716ab9e8bfadfecec17bae3"
+  },
+  {
+    "commit": "a4e504d36",
+    "copy": "Epic_allowed_cut.json",
+    "path": "results/rtl/dsrom_selector_allowed_cut_prepare_20261002/model.json",
+    "sha256": "7a1aedba1d44a5d5b66543babe3b7a8125d801a07df98ef0bc18158ce38c5e62"
+  },
+  {
+    "commit": "545f2fa1c",
+    "copy": "Epic_core.json",
+    "path": "results/rtl/dsrom_balanced_selector_candidate_prepare_20261002/implementation_model.json",
+    "sha256": "3e723748844ca5031657ca21ac13a202000dbd06eec54e9017ad980be2cf8ac7"
+  },
+  {
+    "commit": "115766782",
+    "copy": "frames.json.gz",
+    "path": "results/uarch/dsrom_capture_home_20261002/inputs/frames.json.gz",
+    "sha256": "d130d68fdcd0a611e4c515987f7c37f3877b03553f1286cf6f25ba64a8225403"
+  },
+  {
+    "commit": "a4715047d",
+    "copy": "prior_selector_station.json",
+    "path": "results/uarch/dsrom_selector_allowed_terminal_model_20261002/model.json",
+    "sha256": "526b640282104e8b95a2b35dfbad6be3d12b8656b29bb10333835fe28a2830f3"
+  },
+  {
+    "commit": "a4715047d",
+    "copy": "selector_parent_review.json",
+    "path": "results/uarch/native_software_parent_intake_20261002/DS_selector_preparation_parent_review.json",
+    "sha256": "cc149c72d974e7eb120875df115f1e06a14d8ff9c1592a21754632f077fe4000"
+  },
+  {
+    "commit": "4cc368a46",
+    "copy": "Maxwell_R49_home.json",
+    "path": "results/uarch/dsrom_capture_home_r49_20261002/model.json",
+    "sha256": "05beef441966843bb925370d33b514015fbd0ea236442bf8e82a67d8923b270c"
+  },
+  {
+    "commit": "5ff80ab93455caddfce7c2adaed91e0cef0e3b78",
+    "copy": "Epic_selector_join_r2.json",
+    "sha256": "36e4e1346a8ec184b3ea995c3b42067a56f24578eebde05179304a2e5b36ff6f",
+    "source": "results/uarch/dsrom_selector_join_admissibility_20261002/model_r2.json"
+  }
+]

@@ -1,0 +1,72 @@
+{
+  "actual_VM_consumer_pin_and_clock_domain": null,
+  "added_reservation_mm2": 0.01683051048,
+  "baseline_FFbits": 41227,
+  "baseline_feedback_BUF_count": 82454,
+  "build_admitted": false,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "canonical_geometry_commit": "1f8e7e65dfc28474028b40bcc2005210b77f314e",
+  "common_home_shard": null,
+  "common_required_mm2": 0.032892100919999986,
+  "common_reserved_mm2": 0.0450086787,
+  "control_feedback_BUF_count": 2966,
+  "corrected_full_owner_body_reservation_mm2": 0.09663352811999999,
+  "empty_routing_rows_not_borrowed_for_BUFs": true,
+  "enclosure_mm2": 0.14023044,
+  "feedback_BUF_master": "BUFx4_ASAP7_75t_R",
+  "feedback_characterization_source_required": true,
+  "held_pipeline_credit_C": null,
+  "implemented_CDC": null,
+  "local_region_L1_projection_not_route_bound": true,
+  "new_context_bits": 169,
+  "new_jobs": [],
+  "new_reply_bits": 239,
+  "new_request_bits": 186,
+  "no_whole_reticle_addition_to_already_charged_enclosure": true,
+  "owner": "Maxwell",
+  "preserve_R0_active_MX_select_PG_phase": true,
+  "proposed_common_reserved_bbox_DBU": [
+    11188476,
+    15567120,
+    11294586,
+    15991290
+  ],
+  "proposed_raw_bit_pitch_DBU": 2970,
+  "proposed_raw_templates": [
+    {
+      "extra_width_DBU": 52164,
+      "proposed_bbox_DBU": [
+        10979226,
+        15567120,
+        11184156,
+        15739920
+      ],
+      "seats": 320,
+      "shard": 0
+    },
+    {
+      "extra_width_DBU": 52164,
+      "proposed_bbox_DBU": [
+        10979226,
+        15567120,
+        11184156,
+        15705360
+      ],
+      "seats": 256,
+      "shard": 1
+    }
+  ],
+  "proxy_common_area_fits": true,
+  "raw_feedback_BUF_count": 79488,
+  "remaining_interior_before_token_VM_route_forward_hold_mm2": 0.03713272308,
+  "reported_added_body_um2": 8415.25524,
+  "schema": 1,
+  "source_actual_single_clk": true,
+  "source_forward_hold_screen_and_legal_wire_R_C": null,
+  "source_prototype_commit": null,
+  "status": "WIP_USER_REPORTED_TYPED_FEEDBACK_REPAIR_NOT_PINNED_OR_ADMITTED",
+  "target_SU_GHz": 0.9,
+  "target_streaming_GHz": 1.2,
+  "typed_same_flop_feedback_not_interregister_path": true,
+  "upstream_clock_reset_input_budget_known": false
+}
