@@ -1,0 +1,39 @@
+{
+  "FSIZE": "infinity",
+  "actual_resource_lease": null,
+  "compile_argv": [
+    "--binary",
+    "--timing",
+    "--assert",
+    "-Wno-SPECIFYIGN",
+    "--top-module",
+    "bench_dsrom_selector_mappedprimitive_prepare",
+    "--Mdir",
+    "<fresh_build>",
+    "<fresh_package>/bench_dsrom_selector_mappedprimitive_prepare.sv",
+    "<fresh_package>/library/asap7sc7p5t_SEQ_RVT_TT_220101.v",
+    "<fresh_package>/library/asap7sc7p5t_INVBUF_RVT_TT_201020.v",
+    "<fresh_package>/library/asap7sc7p5t_SIMPLE_RVT_TT_201020.v"
+  ],
+  "compile_once": true,
+  "component_GO_distinct_from_integrated_GO": true,
+  "consumer_deadline_is_not_component_precondition": true,
+  "first_failure_and_partial_outputs_preserved": true,
+  "fullshape_selector_gate_replaced": false,
+  "kernel_memory_and_disk_guard": "fresh measured fleet admission/lease required; parent chosen actual capacity bounds, not guessed pilot limits",
+  "live1950286": "untouched",
+  "one_owner_handle_and_no_retry": true,
+  "per_process_AS_cap": null,
+  "physical_admitted": false,
+  "run_argv": [
+    "<fresh_build>/Vbench_dsrom_selector_mappedprimitive_prepare",
+    "+MODE=<0 then1 then2 then3>"
+  ],
+  "run_cwd": "<fresh_package>; inputs.mem only DUT fixture data, assertions.json checker only",
+  "status": "COMPONENT_SOURCE_AND_MODEL_REVIEW_REQUIRED_NO_LAUNCH",
+  "tool_path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "tool_source": "results/rtl/dsrom_balanced_selector_candidate_prepare_20261002/compile_proposal.json",
+  "version": "5.050",
+  "wall_or_CPU_time_cap": null,
+  "warning_policy": "SPECIFYIGN specifically allowed for functional-only ignored timing checks; no blanket warning suppression/no Wno-fatal; any other failure terminal, no retry"
+}

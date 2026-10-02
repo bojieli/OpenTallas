@@ -1,0 +1,6 @@
+{
+  "HDL_executed": false,
+  "cause": "Existing545/a4 milestone keys relative to their results directory were treated as repo-root paths. Correct resolution now distinguishes tools/tests/results root paths from manifest-relative paths. No source or pinned evidence changed.",
+  "exception": "FileNotFoundError: allowed_terminal_tests.log",
+  "status": "PREPARATION_AUDIT_PATH_RESOLUTION_FAILURE"
+}

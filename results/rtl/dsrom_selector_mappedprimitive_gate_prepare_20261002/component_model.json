@@ -1,0 +1,81 @@
+{
+  "FSIZE": "infinity",
+  "MACs_per_cycle": 0,
+  "area_role": "testbench duplicates one payload and one present terminal connection for functional backend diagnosis, not new engine hardware or placed area",
+  "clock_root_contract": {
+    "FF_clock_pin_sum_fF": 1.025162,
+    "ICG_added": false,
+    "SS_clock_pin_sum_fF": 0.88062,
+    "fixture_clock_capture_credit": false,
+    "fixture_direct_common_clk_sinks": 2,
+    "fixture_period_ps": 833,
+    "phase_ps": {
+      "fall_compare_settle": 1,
+      "high_wait_to_fall": 415,
+      "input_settle": 1,
+      "low_wait_to_rise": 415,
+      "rise_compare_settle": 1
+    },
+    "source_clock_distribution_or_wire_credit": false
+  },
+  "compile_GO": false,
+  "compiler_resource_plan": "fresh measured host CPU/RAM/disk admission and owned handle before GO; no arbitrary wall/CPU-time, FSIZE or guessed AS caps; preserve incremental artifacts and first failure",
+  "component_cell_area_um2": 1.58922,
+  "component_source_cells": {
+    "AND2x2_ASAP7_75t_R": 2,
+    "BUFx4_ASAP7_75t_R": 6,
+    "DFFASRHQNx1_ASAP7_75t_R": 1,
+    "DFFHQNx1_ASAP7_75t_R": 1,
+    "INVx1_ASAP7_75t_R": 2,
+    "TIEHIx1_ASAP7_75t_R": 1
+  },
+  "engine_state_or_stage_or_port_increment": 0,
+  "existing_capture_e899_FAIL_preserved": true,
+  "expected_counts": {
+    "assertions": 252,
+    "async_events": 7,
+    "mutants": 3,
+    "steps": 33
+  },
+  "full_gate_preservation": {
+    "fault_cases": 15,
+    "legal_cases": 37,
+    "mutants": 3,
+    "not_replaced_by_primitive_gate": true,
+    "reset_regions": 4
+  },
+  "geometry_retained": "N4 NMAX2048 LDW4 P64 PF64 DIG8 CB14; cuts99/99/28 unchanged and source-pinned",
+  "input_bytes_per_vector": 4,
+  "input_word_bits": 32,
+  "integrated_deadline_admitted": false,
+  "live1950286": "untouched",
+  "new_PVE2_PVE3_jobs": false,
+  "no_unreviewed_standins": true,
+  "official_sources_unchanged": true,
+  "physical_admitted": false,
+  "physical_boundary_tracks": null,
+  "probe_result_bits_per_event": 4,
+  "replicas_in_test": 1,
+  "reset_contract": {
+    "RESETN_assert_deassert_while_clk_low_and_D_stable": true,
+    "RESETN_sinks": 1,
+    "SETN_one_sink_TIEHI": 1,
+    "X_or_metastability_or_recovery_removal_credit": false,
+    "fall_check_settle_ps": 1,
+    "reset_check_settle_ps": 1,
+    "simultaneous_input_change_qualified": false
+  },
+  "runtime_limit": null,
+  "schema": "opentallas.selector.mappedprimitive.component-G0.v1",
+  "scope": "Official primitive backend connection/transfer gate only; no replacement for fullshape selector or transport gate",
+  "source_pins": {
+    "results/rtl/dsrom_balanced_selector_candidate_prepare_20261002/compile_proposal.json": "24046624434c58992a0a2ff0b35d36dd8c5e00e51d1ca924b6bdda26272fce00",
+    "results/rtl/dsrom_balanced_selector_candidate_prepare_20261002/gate_r4/artifact_manifest.json": "2d18488b320038a991a7dfe09edcd5235c269d9b32037a5d09822d6d9368e47f",
+    "results/rtl/dsrom_selector_allowed_cut_prepare_20261002/model.json": "7a1aedba1d44a5d5b66543babe3b7a8125d801a07df98ef0bc18158ce38c5e62",
+    "results/rtl/dsrom_selector_allowed_cut_prepare_20261002/package_r2/artifact_manifest.json": "d70015d46d89e4e93705371d36266e24f6d5a1ada57d6a8b2bf2fe1561f27a44",
+    "results/uarch/dsrom_selector_join_admissibility_20261002/model_r2.json": "36e4e1346a8ec184b3ea995c3b42067a56f24578eebde05179304a2e5b36ff6f"
+  },
+  "status": "COMPONENT_MODEL_PREPARED_PARENT_REVIEW_AND_FRESH_GO_REQUIRED",
+  "token_latency_credit": false,
+  "token_latency_delta": 0
+}

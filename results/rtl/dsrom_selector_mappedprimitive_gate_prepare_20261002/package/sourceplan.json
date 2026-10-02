@@ -1,0 +1,30 @@
+{
+  "ICG_added": false,
+  "backend_5_050_delayed_setuphold_outputs_supported_source_review": true,
+  "compile_GO": false,
+  "component_model_sha256": "b374347315dfa050a617cd20627a5b71362de58b92f95b397e2d19843927ba90",
+  "component_reset_and_freeclock_root_contract_explicit": true,
+  "expectations_assertions_only": true,
+  "full_gate_fault_cases_retained": 15,
+  "fullshape_selector_and_transport_qualification": false,
+  "immutable_input_only": true,
+  "integrated_parent_admitted": false,
+  "minimum_functional_primitive_scope": true,
+  "official_library_sources_byte_identical": true,
+  "one_compile_runtime_MODE_selection": true,
+  "physical_admitted": false,
+  "profiles": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "source_inventory": [
+    "bench_dsrom_selector_mappedprimitive_prepare.sv",
+    "library/asap7sc7p5t_SEQ_RVT_TT_220101.v",
+    "library/asap7sc7p5t_INVBUF_RVT_TT_201020.v",
+    "library/asap7sc7p5t_SIMPLE_RVT_TT_201020.v"
+  ],
+  "timing_violation_fourstate_or_metastability_credit": false,
+  "top": "bench_dsrom_selector_mappedprimitive_prepare"
+}

@@ -1,0 +1,6 @@
+{
+  "HDL_executed": false,
+  "cause": "Test forbade the substring assertions anywhere, including legitimate terminal assertion-count label; corrected to refuse assertion-image readmemh and expectation-driven DUT .D ports. No bench/oracle/library change.",
+  "log": "static_tests_r1.log",
+  "status": "STATIC_TEST_FAILURE_PRESERVED"
+}

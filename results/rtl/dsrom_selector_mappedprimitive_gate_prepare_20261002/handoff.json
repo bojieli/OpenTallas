@@ -1,0 +1,43 @@
+{
+  "Arch_Maxwell_next": "Allocate core70,406BUF clock floor/home and legal station378DBU clock/reset/PG union independently; retain 0.01192127868mm2 core-slot colocation deficit and actualroot/deadline unknowns.",
+  "HDL_frontend_executed": false,
+  "PVE2_PVE3_newjobs": false,
+  "capture_e899_FAIL_preserved": true,
+  "compile_plan": "compile_plan.json",
+  "component_model": "component_model.json",
+  "exact_DIFFERENCE_required_not_compile_or_crash": true,
+  "existing_job1950286": "untouched",
+  "expected_normal": {
+    "assertions": 252,
+    "async_events": 7,
+    "steps": 33
+  },
+  "fixtures": "immutable32word input-only image; expected assertions never feed cell D",
+  "fresh_GO_template": "parent_GO_template.json",
+  "fresh_resource_lease_required": true,
+  "full_parent_deadline_not_a_component_frontend_precondition": true,
+  "integrated_deadline_admitted": false,
+  "lease_reserved": false,
+  "mutant_controls": {
+    "1": "omit QN restore in observed payload",
+    "2": "disconnect actual ASR RESETN from fixture reset",
+    "3": "bypass actual two-AND control fence"
+  },
+  "next": "Parent component model/source/backend warning policy review, fresh capacity-based launcher lease and source-bound GO; compile once then normal and exact mutants, retain terminal first failure without retry. Fullshape gate remains subsequent separate source-bound GO.",
+  "official_SEQ_INVBUF_SIMPLE_byte_identical": true,
+  "one_compile_modes": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "package": "package/",
+  "physical_admitted": false,
+  "preflight": "tool_preflight.json",
+  "primitive_backend_actualPASS": false,
+  "root_contract": "one direct fixture root/two CLK sinks, ordinary step833ps; seven reset events each add1ps low-phase settle, no frequency or real clockgate credit",
+  "scope": "Independent minimum official mapped primitive functional gate; full geometry source package preserved, not qualified by primitive PASS",
+  "status": "COMPONENT_G0_SOURCE_PACKAGE_READY_FOR_REVIEW_NO_LAUNCH",
+  "tests": 12,
+  "wall_CPUtime_FSIZE_AS_restrictive_caps": false
+}
