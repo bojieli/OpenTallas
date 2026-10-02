@@ -1,0 +1,29 @@
+{
+  "actual_new_SSFF_qualification": false,
+  "area_margin_mm2": 98.64309987539411,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "corrected_area_screen_mm2": 759.3569001246059,
+  "cost_scope": "LEF cell proxy plus fixed requested corridors; clock/reset32way tree is positively priced, electrically unadmitted; inherited418.269164 retained, no return or oldclock containment subtraction",
+  "exact_capture_model_origin": "ef6da37de6f6c641936615f61825628c2db7b8d4",
+  "gates": {
+    "Arch": "Place reviewed64banks/shard and immutable field/service/endpoint corridor union; actual named PG/OBS/via/pin construction, native73-clock-root/reset-release SSFF budgets",
+    "Maxwell": "Compose returned disjoint geometry/credit/IO construction before contextual build; no source-state calendar duplication",
+    "Nash": "Bind physical endpoint credits and exclusive512b VM lease/scalar drain to accepted owner deadlines; default1024 timeout remains FAIL"
+  },
+  "model": "model.json",
+  "necessary_deficit_mm2": null,
+  "next_independent_fleet_job": null,
+  "preserved_failures": [
+    "default ACK_TIMEOUT1024 FAIL for requested1337 paths",
+    "historical I66 r1 calibration FAIL",
+    "unbuffered enable overload FAIL",
+    "old S58 corrected-capacity FAIL"
+  ],
+  "provider_boundary": "330forward+12reverse per direction; credit-advertisement producer and actual PHY remain unbound;1337 is requested clock-BUF-derived geometry, not characterized data latency",
+  "reason_no_job": "No source-matched physical route/clock/reset/credit admission yet; no duplicate map/runtime or PVE2/3 tasks",
+  "reproduction": "python3 tools/dsrom_I66_current_spatial_envelope.py --out /tmp/FRESH-spatial.json",
+  "schema": 1,
+  "selected_die_or_NP_change": false,
+  "status": "COMPOSED_MODEL_ONLY_NO_FIT_OR_BUILD_ADMISSION",
+  "tests": "python3 -m pytest -q tests/test_dsrom_I66_current_spatial_envelope.py tests/test_dsrom_I66_capture_banks.py tests/test_dsrom_I66_stage_provider.py"
+}

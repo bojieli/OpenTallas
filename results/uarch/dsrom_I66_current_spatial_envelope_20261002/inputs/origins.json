@@ -1,0 +1,64 @@
+[
+  {
+    "copy": "spatial_request.json.gz",
+    "current_source": "results/uarch/dsrom_I66_stage_provider_20261002/inputs/Maxwell_requested_envelope_WIP.json",
+    "origin_commit": "fff6dc9c0b609955b2db2ac8565eb6ab0baadaf2",
+    "sha256": "27faf55d22739ea6e0cafe688df28635643c600beb619e7bdbde3d6dea9d8193",
+    "source_sha256": "4280d2cc6b96e14537875f1446c39ff215f9c32843686dd51ceb298d5c771f88"
+  },
+  {
+    "copy": "provider.json.gz",
+    "current_source": "results/uarch/dsrom_I66_stage_provider_20261002/model.json",
+    "origin_commit": "04bb228ec",
+    "sha256": "b9d28c2923dc90df55fbd2970c4640b4c2eeb29e13edef0343e139a2a76cafe7",
+    "source_sha256": "fcbe20a9fe2270fa02e22954a9126aa7737def706a447a5682cbdfba39e2f3ff"
+  },
+  {
+    "copy": "clock_union.json.gz",
+    "current_source": "results/uarch/dsrom_noECC_strip_clock_construction_20261002/validation_and_handoff.json",
+    "origin_commit": "283ed0249",
+    "sha256": "8237d67c4ecf376264217dd76005655cd8f764bc8da76c8eaf6f0b15a160b033",
+    "source_sha256": "527d02809784e418588acb35e47e3885c30640ed2c0d74c1d5438fb2e61d7a69"
+  },
+  {
+    "copy": "owners.json.gz",
+    "current_source": "results/uarch/dsrom_I66_PAR2_calendar_join_20261002/inputs/I66_node_binding.json",
+    "origin_commit": "5a373d0fd11fe9445660af9872fd410b94788e38",
+    "sha256": "500844de26433449bf7fd095547dfd49bc674c242a98b297e677c9ea13bea5a1",
+    "source_sha256": "5bc99771da34369537d6f403075b4c483406da9949e3f2a3199e40fe3e3289b4"
+  },
+  {
+    "copy": "capture.json.gz",
+    "current_source": "results/uarch/dsrom_I66_capture_banks_20261002/model.json",
+    "origin_commit": "ef6da37de6f6c641936615f61825628c2db7b8d4",
+    "sha256": "e9b2bc35a623202e3a792d375c8af85e0f2debec9e4ee9ef4534c361849427dd",
+    "source_sha256": "7fc51d71aeeeb8d392e099b044b4aa7eab8345bd026f8a9fd516cc4049ce898d"
+  },
+  {
+    "copy": "caller.json.gz",
+    "current_source": "results/uarch/dsrom_selected_parent_caller_20261002/r7/model.json",
+    "origin_commit": "b32857642896e6f15333682feafaf9c0b3011061",
+    "sha256": "44588e7409c80b5e1d9b165869c139e28db2b0ad2690bf62f2b3a6fe650194d4",
+    "source_sha256": "9353f8dd2fb56e8814d97af1d163ccba824947b8b8ae23bf49d7eb2d4c9584de"
+  },
+  {
+    "copy": "enable.json.gz",
+    "current_source": "results/uarch/dsrom_noECC_enable_distribution_20261002/model.json",
+    "origin_commit": "8d6baed75",
+    "sha256": "bf3e2c15c74891b918a6c7bc5a3cca92af2e11a7f3c1d035f02b493f81f81bf7",
+    "source_sha256": "921e4cb4f9de2563de5b158ffcf6312eab1cd8f3d194655c8a5a34283efb136b"
+  },
+  {
+    "copy": "cells.lef.gz",
+    "current_source": "results/uarch/dsrom_noECC_production_context_20261002/inputs/cells.lef.gz",
+    "origin_commit": "caf70e22ac9e739fe0b323960d409016c1d19b74",
+    "sha256": "06c31275c8197e4078e5336e0e893f6daf6ca3002b02e8c53a14ca170471b9d0"
+  },
+  {
+    "copy": "terminal.json.gz",
+    "current_source": "results/uarch/dsrom_selector_allowed_terminal_model_20261002/model.json",
+    "origin_commit": "3ea659641",
+    "sha256": "6db505de389bd7281c1cd831bc4c56fad9d0475402498f8fb65bd5f253606d12",
+    "source_sha256": "526b640282104e8b95a2b35dfbad6be3d12b8656b29bb10333835fe28a2830f3"
+  }
+]
