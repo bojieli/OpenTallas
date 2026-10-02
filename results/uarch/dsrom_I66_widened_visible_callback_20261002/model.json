@@ -1,0 +1,118 @@
+{
+  "C": null,
+  "RTL_GO": false,
+  "actual_consumer_deadline": null,
+  "actual_current_journal": null,
+  "candidate_header_bits": 144,
+  "codec_metadata_comparator_replay_control_cost": null,
+  "command_delta_bits_per_disjoint_staging_copy": 16,
+  "command_flits_at256": 1,
+  "compiled_encoder_or_collector": false,
+  "credit_release": "only this matched actual visibility observation plus positive captured return; packetACK cannot substitute",
+  "current_enrollment": "current PHW10 source/binary/fourprogram/field+compiled callback closure and actual journal required separately",
+  "gather_owner": "one owner in HUB_GATHER region; actual endpoint pin/clock/route and exclusive VM lease unbound",
+  "header_delta_bits_per_disjoint_live_metadata_copy": 16,
+  "header_fields_MSB_to_LSB": [
+    [
+      "generation",
+      32
+    ],
+    [
+      "operation_sequence",
+      32
+    ],
+    [
+      "owner_stage",
+      6
+    ],
+    [
+      "packet_kind",
+      3
+    ],
+    [
+      "packet_ordinal",
+      3
+    ],
+    [
+      "payload_bits",
+      18
+    ],
+    [
+      "rank",
+      2
+    ],
+    [
+      "user",
+      32
+    ],
+    [
+      "reserved",
+      16
+    ]
+  ],
+  "header_flits_at256": 1,
+  "native_callback": {
+    "address": "VM19 alias rejection at observer: raw full address must equal resolved address",
+    "block_write": "xa/xb eachwrite16words without mask; observe all16 and every competing writer; lease/assembly/arbitration must be source-owned and priced",
+    "collector_resolution": "same native clock; no prediction, new eval, getter, or hardware debug port",
+    "collisions": "reject overlapping enabled writers even when data equal; final contents alone cannot prove ownership",
+    "error": "source error can still write; observation must not label it healthy",
+    "healthy_epoch": "rst_n/synchronizedreset accepted and matching generation required for healthy callback; does not claim tile write always block is reset-gated",
+    "hierarchy": "dut.u_tile",
+    "local_write": "X_ROM!=0 && rom_we[q]; full address rom_waddr[q*AW+:AW], data rom_wdata[32*q+:32]",
+    "no_hardware_write_reset_gate": true,
+    "postNBA": "after the same rising-edge eval has settled: inspect vm[resolved_address]; same edge plus explicit postNBA ordinal",
+    "preedge": "snapshot every enabled VM write after source mask/port/address expansion, plus producer context and raw row; record old VM reads separately",
+    "remote_path": "xa/xb existing512 ports are concrete write points, not an implemented exclusive gather provider",
+    "sampled_writer_classes": [
+      "ww_h",
+      "rom",
+      "vw_me",
+      "vw_su",
+      "vw_rd",
+      "xs_vm",
+      "xs_res",
+      "vw_xe",
+      "ww_q",
+      "ww_x",
+      "xa",
+      "xb"
+    ],
+    "source_link": "u_core.g_rom.u_spine registered w_we/w_addr/w_data -> tile rom_we/rom_waddr/rom_wdata -> vm NBA"
+  },
+  "new_command_bits": 237,
+  "new_jobs": false,
+  "old_command_bits": 221,
+  "original_CRC_function_unchanged": true,
+  "original_TX_RX_MAX_FLITS": 256,
+  "proposed_common_owner": {
+    "adopted": false,
+    "physical_shard": 0,
+    "reason": "one phase lease and larger320-seat shard"
+  },
+  "register_calendar": null,
+  "reserved_bits_retained": 16,
+  "scope": "SOURCE_PINNED_CALLBACK_PLAN_AND_SOFTWARE_CHECK_ONLY",
+  "source_sha256": {
+    "core.sv.txt": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+    "runtime_spine.sv.txt": "a55235b091ceaa0c2b84c2a6097800426e3fc5476a245523f8f5b385ddf119a3",
+    "tile.sv.txt": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+  },
+  "source_whole_header_flit_policy": {
+    "actual_codec_CRC_service_qualified": false,
+    "header_bits": 144,
+    "header_flits": 1,
+    "input5120words_packet_flits": [
+      256,
+      256,
+      131
+    ],
+    "max_payload_flits": 255,
+    "proposed_packet_shapes_unchanged": true,
+    "result576writer63_packet_flits": 143
+  },
+  "stations": null,
+  "supersedes_header_alternative_only": "b35f4479beec117896a314222dcb4cde53cf9957",
+  "user_bits": 32,
+  "visibility_credit_policy": "actual VMvisible then positive captured return; no downstream lease assumption"
+}
