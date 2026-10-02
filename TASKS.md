@@ -8,6 +8,8 @@ Integration/publication is coordinated by Codex. Workers use isolated worktrees 
 
 ## Immediate closure schedule — current parent review (2026-10-02)
 
+Qwen ROM's first balanced successor clock construction is rejected for admission: its cell-area lower bound is 157,385.59 µm² against 125,000 µm², a clock cut needs 325 tracks against 64 reserved, and provider SS slew is 83.99 ps against 80 ps. These source-model screens are not extracted timing. Parent verifies 40 focused tests and preserved failure artifacts. Ampere now constructs local subtree balancing and joins reset/launch/startup/PG; Euclid proves owned binary initialization. No map/P&R or second-position run is admitted from the failed construction. Evidence: `results/uarch/native_software_parent_intake_20261002/Qwen_clock_construction_parent_review.json`.
+
 Latest connected diagnostic: the exact intended program now has accepted descriptor → first read ownership association and a reply after 53 source cycles. Parent replays the raw attribution, checks 105 generated-header members, seven artifact pins and six live input pins; 88 focused tests pass. This is an experimental X_ROM0 prefix, not the PHW10/I66 whole program. Finite service upper bound and completion deadline remain missing. Hubble/Nash close those source bounds and current-program admission before expanding connected execution. Evidence: `results/uarch/native_software_parent_intake_20261002/D1_enrolled_source_parent_review.json`.
 
 All baseline closure lanes run concurrently. Optional fusion, batching tuning and a second Qwen ROM decode position remain deferred. New heavy jobs use localhost, PVE1 and the 128 GB VM; PVE2/PVE3 only finish existing jobs. Preserve live pinned jobs and avoid duplicate builds.
