@@ -1,0 +1,18 @@
+{
+  "status": "PASS_WITH_EXPLICIT_SCOPE",
+  "owner_commit": "618ab5516",
+  "evidence_sha256_verified": 44,
+  "runtime_receipts_revalidated": 8,
+  "successful_compiles": 5,
+  "peak_memory_bytes": 638758912,
+  "sampled_output_peak_bytes": 156503446,
+  "prior_failures_preserved": true,
+  "scope": "Prepared connected selected-owner bookkeeping, drain/restart and projected visibility with semantic controls",
+  "not_proven": [
+    "actual producer-wide cancellation",
+    "causal physical HBM completion",
+    "full token",
+    "context SS/FF timing"
+  ],
+  "next": "Connect real source-producer cancel/quiescence adapter and conventional causal service provider after model review"
+}
