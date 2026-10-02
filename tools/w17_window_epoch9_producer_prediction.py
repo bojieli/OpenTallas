@@ -199,7 +199,15 @@ def main():
     for name,rows,ret in [('L0_no_retain',128,0),('L0_retain',128,1),('source_COUNT1_boundary',1,0)]:
         cases[name],events=replay(t,rows,ret)
         file=out/(name+'_events.jsonl');file.write_text(''.join(json.dumps(x,separators=(',',':'))+'\n' for x in events));hashes[name]=sha(file.read_bytes())
-    r=dict(schema='opentallas.window_epoch9.producer_prediction.v1',source_commit=PIN,idx_sha256=sha(raw),generator_sha256=sha(Path(__file__).read_bytes()),params=t,cases=cases,event_sha256=hashes,
+    prior=json.loads((ROOT/'results/uarch/w17_window_epoch9_producer_lifecycle_20261001/model.json').read_bytes())
+    timing=json.loads((ROOT/'results/uarch/w17_window_epoch9_timing_prediction_20261001_attempt1/prediction.json').read_bytes())
+    pins=dict(prior['source_sha256'],**timing['source_sha256'])
+    assert all(sha((ROOT/p).read_bytes())==h and sha(subprocess.check_output(['git','show',PIN+':'+p],cwd=ROOT))==h for p,h in pins.items())
+    candidate={p:sha((ROOT/p).read_bytes()) for p in ('rtl/test/w17_window_epoch9_candidate/ot_chip_v41x_window_kv_prefetch.sv','rtl/test/w17_window_epoch9_candidate/ot_chip_v41x_window_attn_source.sv')}
+    assert all(h==timing['candidate_added_sha256'][p] for p,h in candidate.items())
+    r=dict(schema='opentallas.window_epoch9.producer_prediction.v1',source_commit=PIN,idx_sha256=sha(raw),generator_sha256=sha(Path(__file__).read_bytes()),source_sha256=pins,candidate_sha256=candidate,
+        dependency_sha256={'tools/w17_window_epoch9_timing_model.py':sha((ROOT/'tools/w17_window_epoch9_timing_model.py').read_bytes())},
+        prepared_fixture_sha256={p:sha((ROOT/p).read_bytes()) for p in ('rtl/test/w17_window_epoch9_producer/tb.sv','rtl/test/w17_window_epoch9_producer/transport_body.svh')},params=t,cases=cases,event_sha256=hashes,
         verdict='MODELED_PREPARED_NOT_BUILT_PENDING_PARENT_GO',
         visibility_contract=dict(lag_ps=7274,publication='row_valid proves logical ordered write acknowledgements only, not immediate physical visibility; existing consumers use it only to enter HBM refill. Packed/stage4 consumers need staged read replies; direct scalar banked reads fault.',
             earliest_prefetch_waiting_descriptor='Final WRissueI, observedackA=I+1; earliest prefetchA+1, requestA+2, READcolumn >=(A+2)*1000+REQ10000 >=last_WRcol+13000, even COUNT1.',
