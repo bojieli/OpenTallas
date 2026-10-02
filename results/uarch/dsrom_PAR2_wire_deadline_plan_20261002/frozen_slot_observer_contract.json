@@ -1,0 +1,83 @@
+{
+  "Russell_QKV_disjoint": true,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "clock_branch_basis": {
+    "ff": 17,
+    "ss": 15
+  },
+  "composed_model_commit": "6893cddc870f9de9ca98c2affbbb387148038d45",
+  "current_screen_mm2": 744.7902508320059,
+  "diecount_change_selected": false,
+  "geometry_G0": {
+    "actual_cell_row_channel_OBS_PDN_union_available": false,
+    "cfg_macros": 14336,
+    "compiled_pairs": 2048,
+    "complete_q_BF_frame_inventory_preserved": true,
+    "fullslot_SS_FF_clock_closure": false,
+    "physical_build_admitted": false,
+    "reservation_no_overlap": true,
+    "reticle_dimensions_um": [
+      33000,
+      26000
+    ],
+    "weight_macros": 8192
+  },
+  "inherited_debit": "retain418 fixed allowance and row-whitespace noncontainment policy; no subtraction or assumed free old field allocation",
+  "layout_endpoint_limits": "frame and macroabstract geometry available; routed capture D pins and full CTS/PG/OBS union still absent; no fabricated wire lengths/tracks",
+  "main_currency": {
+    "all8_complete_map_inputs": "exact currentmain bytes, including decompressed element/join",
+    "selector_aa745": "frozen source receipt"
+  },
+  "observer_owner": "Nash sole existing source chain; Maxwell destination validator",
+  "physical_owner": "Archimedes",
+  "review_main": "5cb27e9464d756630ad9636116d94e0025324826",
+  "selector_latency": {
+    "added_stream_cycles_per_call": 142,
+    "added_stream_cycles_per_position": 1278,
+    "calls_per_position": 9,
+    "conditional_ns_at_1p2GHz": 1065,
+    "conditional_sixposition_ns": 6390,
+    "drafter_and_commit_rollback_extra_unknown": true,
+    "fulltoken_latency_credit": false,
+    "sixposition_verification_only_upper_no_overlap_cycles": 7668,
+    "source_count_not_actual_token_schedule": true
+  },
+  "selector_owner": "Epicurus",
+  "slot": {
+    "actual_mapped_fullslot_not_available": true,
+    "balanced_filter_full_G0_not_closed": true,
+    "does_not_displace_preserved_controller_and_corridors": true,
+    "full_proxy_mm2": 1.6824196173600001,
+    "inherited_state_charge_is_candidateFF_plus_remaining_state": true,
+    "new_location_transport_latency_unpriced": true,
+    "old_complete_slot_replaced_not_added": true,
+    "old_storage_only_0p06177_not_additional_credit": true,
+    "old_store_location_not_reused_or_credited": true,
+    "only_additional_full_proxy_charge_mm2": 1.3155131592,
+    "prior_full_proxy_replaced_mm2": 1.5104226816,
+    "proxy_not_variant_adoption": true,
+    "reserved_rectangle_mm2": 1.6848787968,
+    "single_full_slot_bbox_DBU": [
+      1000000,
+      8953200,
+      3125440,
+      9745920
+    ],
+    "state_already_priced_mm2": 0.3693656376,
+    "state_bits": 698354
+  },
+  "source_callbacks": {
+    "VM_path": "Vcut___024root::dsrom_source_cut__DOT__dut__DOT__vm",
+    "initial_destination": "record all576 actual destination values before op; nonzero sentinel for zero-output synthetic fixture, initialized before simulation only",
+    "no_new_ack_or_pool": true,
+    "source_edge_basis": "preedge offers accepted at actual sink; destination visibility postNBA after cut.eval rising edge",
+    "visibility": "for each saved accepted address after rising eval, read actual dut.vm[address], emit VM_write_visible edge/address/value sampling postNBA",
+    "writer_drain": "all4 VlWide o_we words zero; no !VlWide expression"
+  },
+  "source_runtime_terminal": "r3 all5 templatesPASS; host linkFAIL; no runtime receipt",
+  "successor_gate": "bound physical deficit plus complete6position+drafter+commitrollback latency; no independent sweeps",
+  "tests": {
+    "destination_validator_and_wire_map": 19,
+    "fixtures": "synthetic tests only; not runtime evidence"
+  }
+}
