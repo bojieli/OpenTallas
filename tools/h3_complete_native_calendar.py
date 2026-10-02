@@ -2135,6 +2135,800 @@ def prove_reserved_h1_fair_owner(contract):
         complete_production_wait_admission=False,whole_token_latency_ns=None,hardware_qualified=False)
 
 
+def qwen_shared64_layout(rows, columns, word_bytes, *, base=0, region_end=16384):
+    """Exact retained row-major tile bytes -> one actual64B scratch port.
+
+    Each column is gathered from its physical beats; no packed-column port is
+    fabricated. Unused read bytes still occupy the whole64B response port.
+    """
+    if (type(rows)is not int or not 1<=rows<=128 or type(columns)is not int
+            or not 1<=columns<=32 or word_bytes not in (1,4)
+            or type(base)is not int or base<0 or base%64):raise ValueError('concrete bounded row-major tile geometry required')
+    size=rows*columns*word_bytes
+    if base+size>region_end or region_end>65536:raise ValueError('finite source scratch region exhausted')
+    writes=list(range(base//64,(base+size-1)//64+1));reads=[]
+    for col in range(columns):
+        beats={}
+        for row in range(rows):
+            address=base+(row*columns+col)*word_bytes
+            beat=address//64;offset=address%64
+            if offset+word_bytes>64:raise ValueError('source word straddles actual beat')
+            beats.setdefault(beat,[]).append(dict(row=row,byte_offset=offset,word_bytes=word_bytes))
+        reads.append(dict(column=col,beat_reads=[dict(beat_address=b,byte_address=64*b,selected_words=words,
+            payload_bytes=64) for b,words in sorted(beats.items())],useful_bytes=rows*word_bytes))
+    return dict(rows=rows,columns=columns,word_bytes=word_bytes,base=base,payload_bytes=size,
+        row_stride_bytes=columns*word_bytes,fill_write_beat_addresses=writes,column_reads=reads,
+        old_packed128_fill_transactions=(size+127)//128,fill64_transactions=len(writes),column64_transactions=sum(len(r['beat_reads']) for r in reads),
+        old_packed128_read_transactions=columns*((rows*word_bytes+127)//128),
+        assembly_endpoint='source-order gather from selected byte lanes into <=128word RF vector; actual movement hardware unbound',
+        source_cache_lease='hold tile bytes across ALL ordered column consumers; reverse only after final column source capture',
+        payload_ports_per_transaction={'shared_read_bits':512,'shared_write_bits':512})
+
+
+def qwen_source_word_home(operand, word, PC):
+    """Retained TileWords.key translation; version lease never implied by ACK."""
+    if type(word)is not int or word<0 or not operand['birth_pc']<=PC<=operand['retire_pc']:
+        raise ValueError('live actual Qwen source word/version required')
+    rank=min(h['rank'] for h in operand['homes']);sm=(word//256)%32;local=(word//8192)*256+word%256
+    homes=[h for h in operand['homes'] if h['rank']==rank and h['SM']==sm]
+    if len(homes)!=1 or local>=homes[0]['word_count']:raise ValueError('actual source home coordinate exhausted')
+    h=homes[0];physical=h['home'];out=dict(version=operand['version'],rank=rank,SM=sm,
+        provider_ref=h['provider_ref'],lease=operand['lease'],retire_PC=operand['retire_pc'],
+        logical_word=word,local_word=local,class_=physical['class'])
+    if physical['class']=='RF':
+        slot=physical['slot_first']+local//128
+        if not 0<=slot<512:raise ValueError('actual RF slot exhaustion')
+        out.update(slot=slot,lane=local%128,word_bytes=4,mirror_byte_offsets=[slot*512+(local%128)*4+m*262144 for m in (0,1)])
+    elif physical['class']=='spill':out.update(byte_address=physical['global_byte_base']+4*local,word_bytes=4)
+    else:raise ValueError('unsupported source data home class')
+    return out
+
+
+def iter_qwen_shared64_packets(plan,PC,generation,*,native):
+    """Lazy complete packet expansion; no event cap or numerical callback.
+
+    Source data are required at runtime. These are compiler descriptors, not
+    synthetic actual-consumer/ACK/reverse receipts. Each packet reserves one
+    physical shared transaction; one tile lease spans every fill/column packet.
+    """
+    if type(generation)is not int or not 0<generation<2**64:raise ValueError('full source generation required')
+    if not 0<=PC<1737 or plan['PCs'][PC]['PC']!=PC:raise ValueError('actual source PC required')
+    canonical=json.dumps(native,sort_keys=True,separators=(',',':')).encode()
+    if hashlib.sha256(canonical).hexdigest()!=plan['source_program_canonical_sha256']:raise ValueError('packet expansion actual native source mismatch')
+    operands={v['version']:v for v in native['operands']};row=plan['PCs'][PC]
+    sequence=1+sum(r['shared64_fill_transactions']+r['shared64_column_transactions'] for r in plan['PCs'][:PC])
+    c=native['source_program']['config'];T=plan['position']+1
+    op=native['operations'][PC];family=op['opcode']
+    if not row['dot_tiles']:return
+    if family=='MATRIX':
+        descriptor=native['source_program']['weight_descriptors'][op['attributes']['weight']]
+        R,K,S,heads=descriptor['rows'],descriptor['K'],descriptor['split'],1
+    else:
+        R,K,S,heads=(T,c['head_dim'],op['attributes']['split'],c['num_attention_heads']//2) if family=='SCORES' else (c['head_dim'],T,op['attributes']['split'],c['num_attention_heads']//2)
+    def ordered_instances():
+        for head in range(heads):
+            for r0 in range(0,R,128):
+                if family=='MATRIX':
+                    # Codecache survives contiguous source split boundaries.
+                    chunks=((0,b,min(32,K-b)) for b in range(0,K,32))
+                else:
+                    chunks=((split,b,min(16,len(range(split,K,S))-b))
+                            for split in range(S) for b in range(0,len(range(split,K,S)),16))
+                for split,begin,width in chunks:
+                    matches=[(di,d) for di,d in enumerate(row['dot_tiles'])
+                        if d['row_start']<=r0<d['row_start']+128*d['row_repeat']
+                        and d['column_chunk_start']<=begin<d['column_chunk_start']+d['column_chunk_step']*d['column_chunk_repeat']
+                        and d.get('split_start',0)<=split<d.get('split_start',0)+d.get('split_repeat',1)
+                        and plan['layouts'][d['layout']]['columns']==width]
+                    if len(matches)!=1:raise ValueError('source-ordered tile descriptor unresolved')
+                    yield head,r0,split,begin,matches[0]
+    for head,r0,split,begin,(di,d) in ordered_instances():
+        l=plan['layouts'][d['layout']];n,k,w=l['rows'],l['columns'],l['word_bytes']
+        tag=sequence
+        if not 0<tag<2**40:raise ValueError('actual finite endpoint owner sequence exhausted')
+        owner=(generation,PC,tag,0,0)
+        def source_word(r,col):
+            if w==1:
+                bindings=d['immutable_extent_bindings']
+                if len(bindings)!=1:raise ValueError('unique actual code provider required')
+                ext=bindings[0];address=ext['base']+(r0+r)*ext['K']+begin+col
+                if not ext['base']<=address<ext['base']+ext['bytes']:raise ValueError('actual code extent exhausted')
+                return dict(provider_ref=ext['provider_ref'],rank=ext['rank'],byte_address=address,
+                    word_bytes=1,lease=f'PC{PC}.{ext["provider_ref"]}',kind='immutable_checkpoint_code')
+            kval=split+(begin+col)*d['source_K_stride'];group=head//native['operations'][PC]['attributes']['head_groups']
+            word=(group*T*c['head_dim']+(r0+r)*c['head_dim']+kval if row['family']=='SCORES'
+                  else (group*T+kval)*c['head_dim']+r0+r)
+            return qwen_source_word_home(operands[d['source_weight_version']],word,PC)
+        count=l['fill64_transactions']+l['column64_transactions'];ordinal=0
+        for beat in l['fill_write_beat_addresses']:
+            sources=[]
+            for offset in range(0,64,w):
+                byte=64*beat+offset-l['base']
+                if byte>=l['payload_bytes']:continue
+                r,col=divmod(byte//w,k)
+                sources.append(dict(destination_byte_offset=offset,source=source_word(r,col)))
+            yield dict(owner=owner,sequence=sequence,PC=PC,descriptor=di,head=head,row_start=r0,
+                split=split,column_chunk_start=begin,phase='shared_fill64',shared_beat_address=beat,
+                payload_bytes=64,sources=sources,unused_tail='zero fill inside reserved tile lease only',
+                local_reference_service_edges=2,actual_payload_sha256=None,
+                eligible_for_tile_owner_release=False,actual_owner_released=False,actual_consumer_reverse_receipt=None)
+            sequence+=1;ordinal+=1
+        for column in l['column_reads']:
+            for beat in column['beat_reads']:
+                last=ordinal+1==count
+                yield dict(owner=owner,sequence=sequence,PC=PC,descriptor=di,head=head,row_start=r0,
+                    split=split,column_chunk_start=begin,phase='shared_column_read64',
+                    shared_beat_address=beat['beat_address'],payload_bytes=64,
+                    column=column['column'],selected_words=beat['selected_words'],
+                    local_reference_service_edges=3,actual_payload_sha256=None,
+                    eligible_for_tile_owner_release=last,actual_owner_released=False,
+                    release_guard='last selected column captured AND actual matching reverse accepted',
+                    actual_consumer_reverse_receipt=None)
+                sequence+=1;ordinal+=1
+        if ordinal!=count:raise ValueError('lossless source tile packet count mismatch')
+
+def compile_qwen_shared64_spans(qwen_raw, emitter_raw, *, position=None):
+    """All dot-loop shared spans, source-bound and compressed by exact repeats."""
+    if hashlib.sha256(qwen_raw).hexdigest()!='ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc':
+        raise ValueError('exact bounded Qwen native archive required')
+    if hashlib.sha256(emitter_raw).hexdigest()!='282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b':
+        raise ValueError('exact retained Qwen bounded emitter required')
+    q=json.loads(gzip.decompress(qwen_raw));p=q['source_program'];c=p['config']
+    extents={e['provider_ref']:e for a in q['provider_binding']['allocation'] for e in a['extents']}
+    if position is None:position=p['context_capacity']-1
+    if type(position)is not int or not 0<=position<p['context_capacity']:raise ValueError('source position aperture')
+    T=position+1;nh=c['num_attention_heads']//2;hd=c['head_dim'];layouts={};rows_out=[]
+    def layout(n,k,w):
+        key=f'rowmajor.{n}x{k}.word{w}'
+        if key not in layouts:layouts[key]=qwen_shared64_layout(n,k,w)
+        return key
+    for op in q['operations']:
+        family=op['opcode'];descriptors=[];fill=read=oldread=oldfill=tiles=0
+        if family=='MATRIX':
+            d=p['weight_descriptors'][op['attributes']['weight']];R,K,S=d['rows'],d['K'],d['split']
+            # Codes use contiguous split stripes, unlike the strided FP32 path.
+            visited=S*(K//S)
+            if visited!=K:raise ValueError('source code split truncates K; exact successor needed')
+            cg=[(0,K//32,32,32)] if K//32 else []
+            if K%32:cg.append((32*(K//32),1,K%32,32))
+            heads=1;w=1
+        elif family in ('SCORES','PV'):
+            R,K,S=(T,hd,op['attributes']['split']) if family=='SCORES' else (hd,T,op['attributes']['split'])
+            heads=nh;w=4;cg=[]
+            # s in [0,K%S) has floor(K/S)+1 indexes; all others floor.
+            for split_start,split_count,length in [(0,K%S,K//S+1),(K%S,S-K%S,K//S)]:
+                if not split_count or not length:continue
+                if length//16:cg.append((0,length//16,16,16,split_start,split_count,S))
+                if length%16:cg.append((16*(length//16),1,length%16,16,split_start,split_count,S))
+        else:
+            rows_out.append(dict(PC=op['pc'],family=family,dot_tiles=[],shared64_fill_transactions=0,
+                shared64_column_transactions=0,scope='no shared cache access in retained dot method; other provider staging accounted separately'))
+            continue
+        rg=[(0,R//128,128)] if R//128 else []
+        if R%128:rg.append((128*(R//128),1,R%128))
+        for row_start,row_count,n in rg:
+            for group in cg:
+                begin,chunk_count,k,chunk_step=group[:4]
+                repeats=heads*row_count*chunk_count*(group[5] if w==4 else 1)
+                key=layout(n,k,w);l=layouts[key]
+                desc=dict(layout=key,head_repeat=heads,row_start=row_start,row_repeat=row_count,row_step=128,
+                    column_chunk_start=begin,column_chunk_repeat=chunk_count,column_chunk_step=chunk_step,
+                    tile_repeat=repeats,PC=op['pc'],source_operand_versions=op['reads'],source_output_versions=op['writes'],
+                    physical_worker={'rank':0,'SM':0,'scope':'retained serialized bounded worker; not installed connector'},
+                    ordered_steps=['reserve_tile_lease','fill_each64B_beat','consume_fill_ACK',
+                        'for_each_column_in_source_order:read_each_referenced64B_beat_then_capture_selected_words',
+                        'release_tile_after_last_column_capture','match_tile_reverse_grant'],
+                    actual_consumer_reverse_bound=None,actual_column_assembly_bound=None)
+                if w==1:
+                    desc.update(code_block_start=begin,code_block_step=32,weight_descriptor=d['key'],
+                        external_code_providers=[e['provider_ref'] for e in op['provider_binding']['external_providers'] if e['provider_ref'].endswith('.codes')],
+                        split_order={'S':S,'stripe_K':K//S,'cache_survives_adjacent_split_boundary':True},
+                        immutable_extent_bindings=[{'provider_ref':e['provider_ref'],'rank':extents[e['provider_ref']]['rank'],
+                            'base':extents[e['provider_ref']]['base'],'bytes':extents[e['provider_ref']]['bytes'],
+                            'source_byte_formula':'base+(row_start+row)*K+code_block_start+column',
+                            'K':K,'row_count':n,'column_count':k}
+                            for e in op['provider_binding']['external_providers'] if e['provider_ref'].endswith('.codes')])
+                else:desc.update(split_start=group[4],split_repeat=group[5],source_K_stride=group[6],
+                    source_K_index='split + (column_chunk_start + column)*source_K_stride',
+                    source_weight_version=op['reads'][1],
+                    source_word_formula=('(head//head_groups)*T*head_dim+(row_start+row)*head_dim+source_K_index'
+                        if family=='SCORES' else '((head//head_groups)*T+source_K_index)*head_dim+row_start+row'),
+                    source_home_decoder='retained TileWords.key: SM=(word//256)%32;local=(word//8192)*256+word%256; rank=min(source homes)',
+                    source_home_binding_sha256=hashlib.sha256(json.dumps(next(v['homes'] for v in q['operands'] if v['version']==op['reads'][1]),sort_keys=True,separators=(',',':')).encode()).hexdigest())
+                descriptors.append(desc);tiles+=repeats;fill+=repeats*l['fill64_transactions'];read+=repeats*l['column64_transactions'];oldread+=repeats*l['old_packed128_read_transactions'];oldfill+=repeats*l['old_packed128_fill_transactions']
+        rows_out.append(dict(PC=op['pc'],family=family,dot_tiles=descriptors,shared64_fill_transactions=fill,
+            shared64_column_transactions=read,old_packed128_column_transactions=oldread,old_packed128_fill_transactions=oldfill,tile_leases=tiles,
+            source_reference='tools/h3_qwen_bounded_native.py:TiledMachine.dot / MATRIX,SCORES,PV branches',
+            local_shared_reference_edges=2*fill+3*read,
+            local_reference_excludes='operand gather/merge, RF, native arithmetic, admission, consumer/reverse, CDC, provider staging'))
+    if len(rows_out)!=1737:raise ValueError('every source PC must be mapped')
+    return dict(schema='H4_QWEN_SOURCE_ROW_MAJOR_SHARED64_SPAN_COMPILER_V1',position=position,
+        source_pins={'native':hashlib.sha256(qwen_raw).hexdigest(),'emitter':hashlib.sha256(emitter_raw).hexdigest()},
+        source_program_canonical_sha256=hashlib.sha256(json.dumps(q,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
+        full_program_shared_packet_sequence_bits=(sum(r['shared64_fill_transactions']+r['shared64_column_transactions'] for r in rows_out)+1).bit_length(),
+        endpoint_sequence_field_bits=40,actual_payload_or_receipt_synthesized=False,
+        PC_count=1737,shared_dot_PC_count=sum(bool(r['dot_tiles']) for r in rows_out),layouts=layouts,PCs=rows_out,
+        fill64_transactions=sum(r['shared64_fill_transactions'] for r in rows_out),
+        column64_transactions=sum(r['shared64_column_transactions'] for r in rows_out),
+        retained_packed128_column_transactions=sum(r.get('old_packed128_column_transactions',0) for r in rows_out),
+        retained_packed128_fill_transactions=sum(r.get('old_packed128_fill_transactions',0) for r in rows_out),
+        total_tile_leases=sum(r.get('tile_leases',0) for r in rows_out),
+        actual_scratch_capacity_bytes=65536,source_double_tile_reservation_bytes=16384,
+        source_cache_payload_base='lease-relative offset0; physical connector translation not inferred',
+        local_read_write_control_edges={'read':3,'write':2},
+        command_shapes_arithmetic_changed=False,installed_tile_gather_endpoint=False,
+        actual_provider_staging_span_join_complete=False,whole_token_latency=None,hardware_qualified=False,
+        cost_rule='replace old packed128 shared dot costs once with exact row-major64 demand; retain all RF/C0/V1/provider/I64 costs; never add on top')
+
+
+def install_compact_provider_journals_preserving_constructor(modules):
+    """Retain exact r30 constructor provenance used by ProductionSharedFactory.
+
+    Must run before construction in a fresh producer process. Source bytes,
+    primitive numerical code and existing instances are never changed.
+    """
+    from inspect import getmodule
+    original=None
+    for module in modules:
+        candidate=getattr(module,'BoundSectorProvider',None)
+        if candidate is not None and hasattr(candidate.__init__,'__code__'):
+            path=Path(candidate.__init__.__code__.co_filename)
+            if path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest()=='1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0':
+                original=candidate;break
+    if original is None:raise ValueError('exact original r30 constructor required')
+    base=original.__bases__[0]
+    if hashlib.sha256(Path(base.__init__.__code__.co_filename).read_bytes()).hexdigest()!='3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2':
+        raise ValueError('exact r21 source provider required')
+    namespace=original.__init__.__globals__;events=namespace['DiskEvents'];owner=getmodule(events)
+    if owner is None or owner not in modules or namespace is not vars(owner):
+        raise ValueError('actual canonical r30 journal module must be explicitly included')
+    class ConstructorPinnedProvider(original):
+        __init__=original.__init__
+        def log(self,event,t,**kw):
+            self.events.validator.tag_capacity=self.tags;self.events.validator.write_capacity=self.write_cap
+            payload=t.payload if t.write and event in ('request_accept','software_backing_visible') else t.returned if event=='software_read_capture' else None
+            if payload is not None:kw['payload_sha256']=hashlib.sha256(payload).hexdigest()
+            return original.log(self,event,t,**kw)
+    replacements={original:ConstructorPinnedProvider,events:CompactDiskEvents,owner.JournalBudget:CompactJournalBudget}
+    changed=[];pins={}
+    for module in modules:
+        path=Path(module.__file__);pins[module.__name__]=dict(path=str(path),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+        for name,value in list(vars(module).items()):
+            if isinstance(value,type) and value in replacements:
+                setattr(module,name,replacements[value]);changed.append(module.__name__+':'+name)
+    if namespace['DiskEvents'] is not CompactDiskEvents:raise ValueError('exact constructor compact journal alias not installed')
+    return dict(schema='H4_R46_COMPACT_EXACT_CONSTRUCTOR_INSTALL_V1',changed_aliases=sorted(changed),source_pins=pins,
+        original_constructor_object_retained=ConstructorPinnedProvider.__init__ is original.__init__,
+        original_constructor_source_sha256='1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0',
+        payload_checksums='actual write admission/visibility and actual read capture bytes',
+        production_factory_constructor_guard_preserved=True,immutable_files_modified=False,existing_instances_modified=False,
+        all_events_indexes_and_dictionary_required=True,hardware_qualified=False)
+
+
+def _actual_provider_checkpoint_plan(providers, owner_state):
+    """Exact sparse backing images, including uninitialised byte masks.
+
+    Caller must freeze the runtime at a drained boundary. Logical version/home
+    leases are serialized in owner_state, never inferred from tag drainage.
+    This is a provider checkpoint primitive, not a complete driver resume.
+    """
+    if not providers or len({name for name,p in providers})!=len(providers):raise ValueError('unique actual provider names required')
+    entries=[];records=0
+    for name,p in providers:
+        if not isinstance(name,str) or not name:raise ValueError('explicit provider identity required')
+        ctor=next((cls.__init__ for cls in type(p).__mro__ if hasattr(cls.__init__,'__code__') and
+            Path(cls.__init__.__code__.co_filename).is_file() and
+            hashlib.sha256(Path(cls.__init__.__code__.co_filename).read_bytes()).hexdigest()=='3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2'),None)
+        if ctor is None:raise ValueError('actual retained sector backing source required')
+        if p.live or p.queue or p.calendar or p.resident or p.faults:raise ValueError('actual provider checkpoint requires drained fault-free owners')
+        targets=sorted({key[0] for key in p.backing})
+        if any(not isinstance(target,str) for target in targets):raise ValueError('source target must be a string')
+        for key,data in p.backing.items():
+            if len(key)!=3 or any(type(v)is not int or not 0<=v<1<<64 for v in key[1:]) or len(data)!=32 or any(v is not None and (type(v)is not int or not 0<=v<=255) for v in data):
+                raise ValueError('exact actual32B sparse backing schema required')
+        entries.append(dict(name=name,targets=targets,sectors=len(p.backing),
+            extents=[dict(target=k[0],rank=k[1],extents=v) for k,v in sorted(p.extents.items())],
+            tags=p.tags,queue=p.qd,write_residence=p.write_cap,read_ticks=p.read_ticks,write_ticks=p.write_ticks,reverse_ticks=p.reverse_ticks,
+            generations=list(p.generations),accept_sequence=p.accept_sequence,order=p.order,now=p.now,
+            allocation_identity=getattr(p,'allocation_identity',None)))
+        records+=len(p.backing)
+    header=dict(schema='H4_ACTUAL_DRAINED_SECTOR_CHECKPOINT_V1',source_sector_sha256='3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2',providers=entries,owner_state=owner_state,
+        full_driver_state_coverage_asserted=False,hardware_qualified=False)
+    raw=json.dumps(header,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
+    # uint64 target/rank/sector, uint32 initialization mask, actual32 payload.
+    return header,raw,16+len(raw)+60*records+32
+
+
+def write_actual_provider_checkpoint(path, providers, owner_state, available_disk_bytes):
+    """Stream all actual sectors; atomic rename with exact temporary coexistence."""
+    import os,struct,tempfile
+    path=Path(path);header,raw,size=_actual_provider_checkpoint_plan(providers,owner_state)
+    old=path.stat().st_size if path.exists() else 0
+    if type(available_disk_bytes)is not int or available_disk_bytes<size:
+        raise BufferError('actual checkpoint temporary disk reservation insufficient; no payload written')
+    path.parent.mkdir(parents=True,exist_ok=True);digest=hashlib.sha256()
+    temp=None
+    try:
+        with tempfile.NamedTemporaryFile(dir=path.parent,prefix=path.name+'.atomic-',delete=False) as f:
+            temp=Path(f.name)
+            def emit(raw):f.write(raw);digest.update(raw)
+            emit(b'H4CPSE01'+struct.pack('<Q',len(raw)));emit(raw)
+            for (name,p),entry in zip(providers,header['providers']):
+                targets={target:i for i,target in enumerate(entry['targets'])}
+                for (target,rank,sector),data in p.backing.items():
+                    mask=sum(1<<i for i,v in enumerate(data) if v is not None)
+                    payload=bytes(0 if v is None else v for v in data)
+                    emit(struct.pack('<QQQI',targets[target],rank,sector,mask)+payload)
+            f.write(digest.digest());f.flush();os.fsync(f.fileno())
+        if temp.stat().st_size!=size:raise ValueError('source-sized checkpoint byte count changed')
+        # Runtime must remain frozen throughout both passes; detect changed owner metadata.
+        if _actual_provider_checkpoint_plan(providers,owner_state)[1]!=raw:raise ValueError('actual provider changed during checkpoint')
+        os.replace(temp,path);temp=None
+        fd=os.open(path.parent,os.O_RDONLY)
+        try:os.fsync(fd)
+        finally:os.close(fd)
+    finally:
+        if temp is not None:temp.unlink(missing_ok=True)
+    return dict(schema='H4_ACTUAL_PROVIDER_CHECKPOINT_WRITE_RECEIPT_V1',path=str(path),checkpoint_bytes=size,
+        existing_checkpoint_bytes=old,atomic_peak_bytes=old+size,additional_free_disk_required_bytes=size,
+        content_sha256=digest.hexdigest(),actual_sector_records=sum(x['sectors'] for x in header['providers']),
+        actual_provider_images=True,uninitialized_byte_masks_retained=True,expected_payload_input=False,
+        runtime_exclusive_boundary_required=True,complete_runtime_resume_qualified=False,hardware_qualified=False)
+
+
+def restore_actual_provider_checkpoint(path, providers):
+    """Validate entire checkpoint before changing any fresh, drained provider."""
+    import struct
+    path=Path(path)
+    with path.open('rb') as f:
+        size=path.stat().st_size
+        if size<48:raise ValueError('checkpoint truncated')
+        digest=hashlib.sha256();remaining=size-32
+        while remaining:
+            block=f.read(min(1<<20,remaining))
+            if not block:raise ValueError('checkpoint truncated')
+            digest.update(block);remaining-=len(block)
+        if f.read(32)!=digest.digest():raise ValueError('actual checkpoint payload digest mismatch')
+        f.seek(0)
+        if f.read(8)!=b'H4CPSE01':raise ValueError('actual checkpoint framing mismatch')
+        length=struct.unpack('<Q',f.read(8))[0]
+        if length>size-48:raise ValueError('checkpoint header extent')
+        header=json.loads(f.read(length))
+        if header['source_sector_sha256']!='3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2':raise ValueError('checkpoint source mismatch')
+        current,raw,bound=_actual_provider_checkpoint_plan(providers,header['owner_state'])
+        if len(header['providers'])!=len(current['providers']):raise ValueError('checkpoint provider inventory mismatch')
+        for saved,fresh in zip(header['providers'],current['providers']):
+            if fresh['sectors'] or any(saved[k]!=fresh[k] for k in ['name','extents','tags','queue','write_residence','read_ticks','write_ticks','reverse_ticks','allocation_identity']):
+                raise ValueError('fresh actual provider identity/configuration required')
+        expected=16+length+60*sum(e['sectors'] for e in header['providers'])+32
+        if expected!=size:raise ValueError('checkpoint complete record framing mismatch')
+        start=f.tell()
+        # Verify all identities/extent/masks before mutating fresh provider images.
+        for (name,p),entry in zip(providers,header['providers']):
+            previous=set()
+            for _ in range(entry['sectors']):
+                target,rank,sector,mask=struct.unpack('<QQQI',f.read(28));payload=f.read(32)
+                if target>=len(entry['targets']):raise ValueError('checkpoint target dictionary mismatch')
+                key=(entry['targets'][target],rank,sector)
+                if key in previous:raise ValueError('checkpoint duplicate source sector')
+                previous.add(key)
+                if not any(e['base']<sector*32+32 and sector*32<e['base']+e['bytes'] for e in p.extents.get(key[:2],[])):raise ValueError('checkpoint sector outside actual extent')
+                for offset in range(32):
+                    if mask>>offset&1:p.aperture(key[:2],sector*32+offset,1)
+        f.seek(start)
+        for (name,p),entry in zip(providers,header['providers']):
+            for _ in range(entry['sectors']):
+                target,rank,sector,mask=struct.unpack('<QQQI',f.read(28));payload=f.read(32)
+                p.backing[(entry['targets'][target],rank,sector)]=[v if mask>>i&1 else None for i,v in enumerate(payload)]
+            for attr in ['generations','accept_sequence','order','now']:setattr(p,attr,entry[attr])
+    return dict(owner_state=header['owner_state'],content_sha256=digest.hexdigest(),
+        actual_sector_records=sum(e['sectors'] for e in header['providers']),
+        complete_runtime_resume_qualified=False,hardware_qualified=False)
+
+
+def compose_selected_owner_wait_calendar(commands_raw, model_raw, requirements_raw, admission):
+    """Join every actual selected command to its parent/child finite credit DAG.
+
+    Known local edges stay separate from unknown ACK/sink/reverse/CDC bounds.
+    The proposed merge is opt-in unqualified model cost, never installed credit.
+    """
+    b=ROOT/OUT/'c0_program_shared64_r1';pins=json.loads((b/'Popper_selected_r4_pins.json').read_bytes())
+    for name,raw in [('selected_r4/commands.json.gz',commands_raw),('selected_r4/model.json',model_raw),('owner_wait_requirements_r4.json',requirements_raw)]:
+        if hashlib.sha256(raw).hexdigest()!=pins['artifacts'][name]:raise ValueError('exact selected r4 source command pin required')
+    commands=json.loads(gzip.decompress(commands_raw));model=json.loads(model_raw);requirements=json.loads(requirements_raw)
+    if admission['programs']['DeepSeek']['PCs']!=2213 or not admission['source_context_excludes_simultaneous_three_valid_admission']:
+        raise ValueError('complete source constrained program owner admission required')
+    PCrows={r['PC']:r for r in admission['programs']['DeepSeek']['PC_DAG']}
+    rows=[];local=Counter();unknown=Counter();resource_last={}
+    def add(command,kind,phases):
+        pc=command['PC'];resource=(kind,command.get('die',command.get('rank')),command['SM'])
+        previous=resource_last.get(resource);nodes=[]
+        for phase,edges,label in phases:
+            dependencies=[nodes[-1]['id']] if nodes else []
+            if not nodes and previous is not None:dependencies.append(previous)
+            identifier=command['id']+':'+phase
+            nodes.append(dict(id=identifier,phase=phase,dependencies=dependencies,
+                source_bound_edges=edges,edge_scope=label))
+            if edges is None:unknown[phase]+=1
+            else:local[phase]+=edges
+        resource_last[resource]=nodes[-1]['id']
+        rows.append(dict(command=command['id'],PC=pc,program_dependencies=PCrows[pc]['dependencies'],
+            physical_resource=list(resource),physical_credit=1,parent_owner=command.get('outer_owner',command.get('owner')),
+            parent_lease_retained_until='matching actual parent consumer/reverse; child reverse does not release parent',
+            phases=nodes,hardware_finite_wait_admitted=False))
+    for command in commands['RMW']:
+        add(command,'RF',[(p,e,l) for p,e,l in [
+            ('parent_admit',None,'installed parent grant unknown'),('read_pair',3,'matched local source edges'),
+            ('read_ACK_consume',None,'actual reserved sink unknown'),('read_reverse',None,'actual reverse/CDC unknown'),
+            ('opaque_merge',1,'proposed uninstalled register edge; SS/FF unknown'),('both_copy_write',2,'matched common H1 ACK source edges'),
+            ('write_ACK_consume',None,'actual reserved sink unknown'),('write_reverse',None,'actual reverse/CDC unknown'),
+            ('readback_pair',3,'matched local source edges'),('readback_ACK_consume',None,'actual reserved sink unknown'),
+            ('readback_reverse',None,'actual reverse/CDC unknown'),('parent_consumer',None,'actual consumer unknown'),
+            ('parent_reverse',None,'actual reverse lease grant unknown')]])
+    # Inspect the retained command family dynamically; every child is included.
+    shared=next(v for k,v in commands.items() if isinstance(v,list) and len(v)==9216)
+    parents={};parent_order=[]
+    for command in shared:
+        key=json.dumps(command['outer_owner'],sort_keys=True,separators=(',',':'))
+        if key not in parents:parents[key]=[];parent_order.append(key)
+        parents[key].append(command)
+    outer_rows=[]
+    for parent_index,key in enumerate(parent_order):
+        children=parents[key];first=children[0];resource=('shared64',first['die'],first['SM'])
+        prior=resource_last.get(resource);prefix='PC10.shared_parent.'+str(parent_index)
+        admit=dict(id=prefix+':admit',phase='parent_admit',dependencies=[] if prior is None else [prior],source_bound_edges=None,edge_scope='actual source parent exclusion gate unknown')
+        resource_last[resource]=admit['id']
+        for command in children:
+            read='read' in command['kind'].lower();service='shared_read64' if read else 'shared_write64'
+            add(command,'shared64',[('child_admit',None,'actual parent gate unknown'),
+                (service,3 if read else 2,'matched local source edges'),('ACK_consume',None,'actual reserved sink unknown'),
+                ('child_reverse',None,'actual reverse/CDC unknown')])
+        consume=dict(id=prefix+':consume',phase='parent_consumer',dependencies=[resource_last[resource]],source_bound_edges=None,edge_scope='actual whole tile capture unknown')
+        reverse=dict(id=prefix+':reverse',phase='parent_reverse',dependencies=[consume['id']],source_bound_edges=None,edge_scope='actual matching reverse lease unknown')
+        resource_last[resource]=reverse['id']
+        outer_rows.append(dict(owner=first['outer_owner'],children=len(children),physical_resource=list(resource),physical_parent_credit=1,phases=[admit,consume,reverse]))
+        for phase in [admit,consume,reverse]:unknown[phase['phase']]+=1
+        if len(children)>144:raise ValueError('actual parent shared child counter capacity exceeded')
+    if len(commands['RMW'])!=288 or local['shared_read64']!=13824 or local['shared_write64']!=9216:
+        raise ValueError('selected primitive family/count reconciliation differs')
+    return dict(schema='HBM_SELECTED_R4_PARENT_CHILD_OWNER_CALENDAR_JOIN_V1',source_pins=pins,
+        RMW_commands=288,shared64_children=9216,shared_scope='directed PC10 rank0 retained journal; not actual96rank production',
+        RF_scope='actual all96PC0 partial RF commands',program_PC_coverage=2213,calendar_rows=rows,shared_parent_rows=outer_rows,
+        known_local_reference_edge_terms=dict(local),unknown_phase_occurrences=dict(unknown),
+        parent_shared_max_children_per_tile=144,physical_shared_capacity_bytes_per_SM=65536,
+        physical_RF_mirrors=2,SMs_per_rank=32,per_physical_unit_child_credit=1,
+        proposed_merge_local_edge_increment=288,merge_SS_FF_and_distribution_qualified=False,
+        cost_reconciliation='replace old corresponding RF/shared local service once; C0/V1/I64/provider unchanged',
+        additional_C0_V1_I64_provider_cost=0,independent_mirror_ACK_cost_added=0,
+        unconstrained_continuous_contender_credit=False,cache_contenders_or_grants_bound=False,
+        actual_consumer_reverse_endpoint_bounds=None,whole_token_latency=None,hardware_qualified=False)
+
+
+def compose_actual_checkpoint_storage_admission(journal_projection, checkpoint_projection, *, available_bytes, additional_new_bytes):
+    """Peirce actual measure_state result + all new source journal components.
+
+    An absent actual checkpoint is UNKNOWN, never a source/sample compression
+    estimate. Existing retained journal bytes already reduce available bytes.
+    """
+    positive(available_bytes,'fresh available disk');positive(journal_projection['complete_disk_reservation_bytes'],'complete source journal reservation')
+    if type(additional_new_bytes)is not int or additional_new_bytes<0:raise ValueError('explicit additional new disk bytes required')
+    if checkpoint_projection is None:
+        return dict(schema='HBM_ACTUAL_CHECKPOINT_STORAGE_JOIN_V1',status='UNKNOWN_ACTUAL_CHECKPOINT_PAYLOAD_AND_METADATA',
+            journal_new_bytes=journal_projection['complete_disk_reservation_bytes'],checkpoint_new_bytes=None,
+            atomic_temporary_peak_bytes=None,required_new_disk_bytes=None,available_bytes=available_bytes,
+            actual_runtime_GO=False,full_program_GO=False,hardware_qualified=False)
+    required_fields=['payload_bytes','typed_state_metadata_bytes','filesystem_reservation_bytes','old_journal_bytes']
+    if any(type(checkpoint_projection.get(k))is not int or checkpoint_projection[k]<0 for k in required_fields):
+        raise ValueError('complete actual Peirce checkpoint measurement required')
+    amount=checkpoint_projection['filesystem_reservation_bytes']
+    if amount<checkpoint_projection['payload_bytes']+checkpoint_projection['typed_state_metadata_bytes'] or amount==0:
+        raise ValueError('actual checkpoint payload/metadata cannot be omitted')
+    # Fresh destination's atomic directory is renamed, not copied; the old
+    # checkpoint must be accounted in available_bytes or additional_new_bytes.
+    required=journal_projection['complete_disk_reservation_bytes']+amount+additional_new_bytes
+    return dict(schema='HBM_ACTUAL_CHECKPOINT_STORAGE_JOIN_V1',status='PASS_COMPONENT_STORAGE_ARITHMETIC' if required<=available_bytes else 'REFUSE_ACTUAL_STORAGE_HEADROOM',
+        journal_new_bytes=journal_projection['complete_disk_reservation_bytes'],checkpoint_new_bytes=amount,
+        atomic_temporary_peak_bytes=amount,additional_new_bytes=additional_new_bytes,
+        required_new_disk_bytes=required,available_bytes=available_bytes,headroom_bytes=available_bytes-required,
+        old_journal_bytes_already_in_used_space=checkpoint_projection['old_journal_bytes'],
+        measured_checkpoint_provenance_and_constructor_review_required=True,
+        actual_runtime_GO=False,full_program_GO=False,hardware_qualified=False)
+
+
+def project_ds_collective_continuation_obligations(native_raw, runtime_raw, inventory_raw):
+    """Retain new fullgraph obligations without treating prefix10 as full scope."""
+    b=ROOT/OUT/'c0_program_shared64_r1'
+    pins=json.loads((b/'Sagan_fullgraph_source_pins.json').read_bytes())
+    for name,raw in [('tools/h4_c0_ds_runtime_bindings.py',runtime_raw),
+        ('results/uarch/h4_c0_ds_fullgraph_runtime_bindings_20261002/r5/summary.json',inventory_raw)]:
+        if hashlib.sha256(raw).hexdigest()!=pins[name]:raise ValueError('exact fullgraph successor source pin required')
+    if hashlib.sha256(native_raw).hexdigest()!='c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264':
+        raise ValueError('canonical complete native source required')
+    native=json.loads(gzip.decompress(native_raw));inventory=json.loads(inventory_raw)
+    proof_raw=(b/'Sagan_writer_semantic_match.json').read_bytes()
+    if hashlib.sha256(proof_raw).hexdigest()!=pins['Sagan_writer_semantic_match.json']:raise ValueError('writer semantic proof pin mismatch')
+    proof=json.loads(proof_raw)
+    semantics=[dict(PC=o['pc'],writers=[{k:v for k,v in w.items() if k!='home_indices'} for w in o['writes']]) for o in native['instructions']]
+    if hashlib.sha256(json.dumps(semantics,sort_keys=True,separators=(',',':')).encode()).hexdigest()!=proof['writer_semantics_sha256'] or proof['effective_artifact_sha256']!=inventory['effective_native']['artifact_sha256']:
+        raise ValueError('canonical/effective writer semantic closure differs')
+    aliases=[];specialists=[];sectors=0;words=0
+    for op in native['instructions']:
+        grouped=defaultdict(list)
+        for w in op['writes']:
+            buf=w.get('native_result_binding',{}).get('buffer')
+            if buf is not None:grouped[buf].append(w)
+        for buffer,writers in grouped.items():
+            for w in writers[1:]:
+                counts=w['element_counts']
+                if len(counts)!=96:raise ValueError('full96 rank alias extent required')
+                aliases.append(dict(PC=op['pc'],version=w['version'],buffer=buffer,
+                    element_counts=counts,rank_publications=len(counts),
+                    logical_32B_sectors=sum(ceil(v*4,32) for v in counts),
+                    source_home_indices=w['home_indices'],physical_endpoint_wait=None))
+                words+=sum(counts);sectors+=sum(ceil(v*4,32) for v in counts)
+        for template,bindings in op['provider_bindings'].items():
+            for name,binding in bindings.items():
+                if name in ('route_weight','expert_outputs','query_codes','query_exp') and binding.get('kind')=='versioned_operand':
+                    specialists.append(dict(PC=op['pc'],template=template,operand=name,
+                        leased_versions=sorted({binding['version'],*binding.get('additional_versions',[])}),
+                        exact_acquired_fragment_transaction_count=None,actual_retirement_receipt=None))
+    if len(aliases)!=inventory['collective_alias_versions_requiring_additive_publication'] or len(aliases)!=280:
+        raise ValueError('fullgraph collective alias census mismatch')
+    return dict(schema='DS_FULLGRAPH_SUCCESSOR_PUBLICATION_AND_ACQUISITION_PROJECTION_V1',
+        native_source_sha256=hashlib.sha256(native_raw).hexdigest(),source_pins=pins,
+        canonical_writer_dimensions_match_effective_native_except_home_indices=True,
+        effective_native=inventory['effective_native'],
+        scope='continuation obligation projection, not prefix10 disk admission or production execution',
+        alias_versions=len(aliases),alias_rank_publications=sum(x['rank_publications'] for x in aliases),
+        alias_logical_32bit_words=words,alias_logical_payload_bytes=words*4,
+        alias_logical_32B_sectors=sectors,alias_publications=aliases,specialist_source_bindings=specialists,
+        alias_all_images_raw_checkpoint_atomic_temp_plus_final_scenario_bytes=2*words*4,
+        checkpoint_scenario_conditions='all alias images persisted as independent raw FP32; actual live-version checkpoint scope still required',
+        installed_alias_physical_transactions=None,complete_continuation_event_count=None,
+        complete_continuation_journal_disk_reservation=None,actual_payload_checkpoint_disk_reservation=None,
+        required_to_size_complete_continuation=['effective290730-home catalog physical span translation',
+            'actual specialist acquisition fragment/phase records per leased version',
+            'source checkpoint serialization of actual sparse provider storage and live leases',
+            'atomic temporary disk plus retained checkpoint disk coexistence'],
+        prefix10_projection_includes_PC11_2212=False,source_successor_executed=False,
+        missing_terms_are_not_zero=True,hardware_qualified=False)
+
+
+def project_r46_compact_shared_journal(projection,shared_model,sources):
+    """Exact PC10 shared source schema; all other conservative costs retained."""
+    required={'tools/ds_hbm_pc10_projection_r46.py','tools/ds_hbm_pc10_journal_model_r44.py',
+              'tools/h4_hbm_w19_pc10_endpoints.py','tools/hbm_provider_microvm_r21.py'}
+    expected=json.loads((ROOT/OUT/'c0_program_shared64_r1'/'R46_source_pins.json').read_bytes())
+    if set(sources)!=required:raise ValueError('complete R46 projection/shared/provider sources required')
+    for name,raw in sources.items():
+        if hashlib.sha256(raw).hexdigest()!=expected[name]:raise ValueError('exact R46 source schema pin required')
+    if hashlib.sha256(json.dumps(projection,sort_keys=True,separators=(',',':')).encode()).hexdigest()!=expected['projection_canonical']:
+        raise ValueError('exact complete R46 projection required')
+    if hashlib.sha256(json.dumps(shared_model,sort_keys=True,separators=(',',':')).encode()).hexdigest()!=expected['shared_union_canonical']:
+        raise ValueError('exact source-derived shared union required')
+    schema=shared_model['conservative_union_schema'];frames=compact_source_frame_upper(schema)
+    factory=sources['tools/h4_hbm_w19_pc10_endpoints.py'].decode()
+    if not all(x in factory for x in ['tags=1,allocation_identity=dict(owner,die=rank,address_class=\'shared\')',
+         "memory.p.allocation_identity=dict(owner,die=rank,address_class='shared')",'chunks.append(self.p.wait(tx));self.p.finish(tx)']):
+        raise ValueError('actual single tag synchronous shared factory/owner metadata source changed')
+    # All successful phase variants are subsets of the retained union schema.
+    # Allow checksum-bearing variants as emitted by the exact-constructor adapter.
+    augmented=dict(schema,payload_sha256='f'*64);frame=max(frames['frame_bytes_upper'],compact_source_frame_upper(augmented)['frame_bytes_upper'])
+    transactions=96*64*18*16;events=transactions*8;journals=96*32;contexts=96*64
+    if shared_model['sector_transactions']!=transactions or shared_model['maximum_allocated_shared_journals']!=journals:
+        raise ValueError('actual PC10 source transaction/journal count mismatch')
+    union_bytes=len(json.dumps(augmented,sort_keys=True,separators=(',',':')).encode())
+    # Each tile owner may produce all8 source phase descriptors, with/without a
+    # payload checksum. Bound full metadata as well even though integers move to
+    # frames. This reserves complete per-context definitions, not a sampled ratio.
+    dictionaries=8*(union_bytes+256)*(8*2)*contexts+131072
+    record_bytes=events*frame;indexes=16*((events+127)//128)+journals*16
+    fixed=journals*131072 # retained source per-journal page/padding envelope
+    headroom=65536*(journals+1) # exact original preacceptance allowance; one tag/journal
+    shared_upper=record_bytes+dictionaries+indexes+fixed+headroom
+    components=dict(projection['components']);old=components['additional_PC10_shared_sector_journals']
+    if old!=shared_model['shared_only_journal_reservation_bytes']:raise ValueError('complete projection shared component pin mismatch')
+    components['additional_PC10_shared_sector_journals']=shared_upper
+    return dict(schema='H4_R46_COMPLETE_CONSERVATIVE_PLUS_SOURCE_COMPACT_SHARED_BOUND_V1',source_pins=expected,
+        original_complete_projection_bytes=projection['complete_conservative_inherited_projection_bytes'],
+        original_shared_component_bytes=old,compact_shared_component_bytes=shared_upper,
+        components=components,complete_disk_reservation_bytes=sum(components.values()),
+        transactions=transactions,maximum_events=events,journals=journals,source_owner_contexts=contexts,
+        encoded_frame_upper_bytes=frame,typed_record_upper_bytes=record_bytes,
+        full_source_context_dictionary_upper_bytes=dictionaries,sparse_indexes_upper_bytes=indexes,
+        per_journal_fixed_envelope_bytes=fixed,original_preacceptance_headroom_bytes=headroom,
+        integer_and_dictionary_ID_width=64,source_payload_digest_bytes=32,
+        source_addressed_RF_refinement_used=False,sampled_compression_ratio_used=False,
+        original_RF_native_calls_receipts_comparisons_retirement_reservations_retained=True,
+        codec_install_API='install_compact_provider_journals_preserving_constructor',
+        source_projection_accepted_provider_requests=0,PC10_numerical_launch_performed=False,
+        required_before_GO=['current exact constructor/provider alias installation receipt',
+            'fresh complete preflight against same source pins','actual state checkpoint/same-instance64PC9 witnessed publications',
+            'current host disk reservation and parent source review','all compact event/index/dictionary files archived'],
+        actual_state_restored=False,expected_output_bytes_used_as_input=False,hardware_qualified=False)
+
+
+def join_qwen_actual_terminal_demands(qraw,emitter_raw,terminal_raw,supervisor_raw):
+    """Observed full position0 demand joined once; finite service is separate."""
+    pins=json.loads((ROOT/OUT/'c0_program_shared64_r1'/'source_pins.json').read_bytes())
+    for name,raw in [('Qwen_actual_native_terminal.json',terminal_raw),('Qwen_actual_supervisor_terminal.json',supervisor_raw)]:
+        if hashlib.sha256(raw).hexdigest()!=pins[name]:raise ValueError('exact actual Qwen terminal pin required')
+    t=json.loads(terminal_raw);s=json.loads(supervisor_raw);n=t['native']
+    if (t['verdict']!='PASS_TRAINED_NATIVE_TOKEN_POSTCHECKED' or n['PCs']!=1737 or t['position']!=0
+            or t['oracle_callbacks']!=0 or s['exit_code']!=0 or s['native_terminal']!=t
+            or s['native_terminal_sha256']!=hashlib.sha256(terminal_raw).hexdigest()):
+        raise ValueError('complete actual source terminal identity required')
+    comparisons=t['post_execution_comparisons']
+    if len(comparisons)!=39 or sum(c['values'] for c in comparisons)!=303488 or any(c['bit_mismatches'] or c['actual_nonfinite'] or c['reference_nonfinite'] for c in comparisons):
+        raise ValueError('exact retained full layer/norm/head comparison scope required')
+    plan=compile_qwen_shared64_spans(qraw,emitter_raw,position=0);counts=n['tile_counts']
+    if (plan['retained_packed128_column_transactions']!=counts['shared_read_beats128']
+            or plan['retained_packed128_fill_transactions']!=counts['shared_write_beats128']
+            or plan['total_tile_leases']!=counts['tile_reserve_ACK_reverse_release']):
+        raise ValueError('actual runtime dot-counter/source span reconciliation differs')
+    return dict(schema='H4_QWEN_ACTUAL_FULL1737_DEMAND_ONCE_JOIN_V1',source_pins={k:pins[k] for k in ['Qwen_actual_native_terminal.json','Qwen_actual_supervisor_terminal.json']},
+        position=0,input_token=t['input_token'],PCs=1737,layers=36,comparison_values=303488,
+        independent_comparisons=39,next_token=n['next_token'],bit_mismatches=0,
+        observed_primitive_commands=n['primitive_counts'],observed_primitive_words=n['primitive_word_counts'],
+        observed_source_transfers=n['transfer_counts'],observed_KV_state_transfers=n['KV_state_transfer_counts'],
+        observed_tile_counts=counts,
+        source_counter_reconciliation='PASS_EXACT_ALL_DOT_TILES_AND_BOTH_PACKED128_COUNTERS',
+        compiler64B_dot_demand={'fill':plan['fill64_transactions'],'column_read':plan['column64_transactions']},
+        actual_RF_workspace_peak_vectors=n['RF_workspace_peak_vectors'],actual_shared_tile_peak_bytes=n['shared_tile_peak_bytes'],
+        actual_shared64_backend_journal_observed=False,
+        actual_KV_payload_lifecycle_observation_scope='terminal counters only; strict parent instrumentation gate remains separate',
+        CPU_elapsed_time_used_as_hardware_cycles=False,
+        cost_reconciliation='use actual position0 demand, not full-context reservation; replace corresponding native/dot costs once; provider/RF/C0/I64 costs separate',
+        finite_owner_consumer_reverse_service_from_counts=False,
+        actual_installed_L2_reservation=None,whole_token_latency=None,hardware_qualified=False)
+
+
+def derive_source_sector_provider_progress(raw):
+    """Actual FIFO/ordered-hazard/synchronous consumer source proof, software units.
+
+    This closes this existing actor's SOFTWARE wait contract only. Positive
+    provisional costs are the retained constructor's explicit parameters.
+    No source step/pop, host duration or virtual tick is a hardware clock.
+    """
+    expected=json.loads((ROOT/OUT/'c0_program_shared64_r1'/'source_pins.json').read_bytes())['tools/hbm_provider_microvm_r21.py']
+    if hashlib.sha256(raw).hexdigest()!=expected:raise ValueError('actual sector provider source pin mismatch')
+    tree=ast.parse(raw);provider=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='SectorProvider')
+    init=next(n for n in provider.body if isinstance(n,ast.FunctionDef) and n.name=='__init__')
+    defaults={a.arg:ast.literal_eval(v) for a,v in zip(init.args.kwonlyargs,init.args.kw_defaults)}
+    costs_node=next(n.value for n in ast.walk(init) if isinstance(n,ast.Assign) and
+        any(isinstance(t,ast.Attribute) and t.attr=='costs' for t in n.targets))
+    costs={ast.literal_eval(k):defaults[v.id] if isinstance(v,ast.Name) else ast.literal_eval(v)
+        for k,v in zip(costs_node.keys,costs_node.values)}
+    if any(type(v)is not int or v<=0 for v in costs.values()):raise ValueError('actual positive explicit provider costs required')
+    source=raw.decode()
+    required=['t=self.queue[0]','self.queue.pop(0)',
+        "x.accepted_order<t.accepted_order", "self.schedule(t,'complete'",
+        'v=self.provider.wait(t);self.provider.finish(t);return v',
+        'self.consume(t);self.reverse(t,t.identity,t.tag,t.generation)',
+        "while t.state!='released':self.step()"]
+    if not all(x in source for x in required):raise ValueError('actual ordered FIFO/consumer/reverse path changed')
+    forward=sum(costs[k] for k in ['admission','forward_CDC','owner_lookup','held_accept'])
+    read=forward+costs['read_service'];write=forward+costs['write_visibility']+costs['write_service']
+    reverse=sum(costs[k] for k in ['consume','reverse_CDC','owner_lookup','held_accept','reverse_grant','retire'])
+    cap=defaults['tags'];hold=max(read,write)+reverse
+    return dict(schema='H4_ACTUAL_SOURCE_SECTOR_PROVIDER_SOFTWARE_PROGRESS_V1',source_sha256=expected,
+        cost_scope='explicit positive provisional abstract SOFTWARE ticks from actual constructor; never RTL cycles or ns',
+        capacities={k:defaults[k] for k in ['tags','queue','write_residence']},costs=costs,
+        accepted_predecessor_limit=cap-1,
+        FIFO_admission='new submissions append; full tags/queue refuse admission; no accepted owner bypass by younger request',
+        hazard_order='only strictly smaller accepted_order can block RAW/WAR; accepted-order hazard graph cannot cycle',
+        actual_consumer_path='Storage.transaction -> wait -> finish -> consume -> matching reverse -> grant -> return',
+        synchronous_callback_future_PC_dependency=False,
+        service_reservation_software_ticks={'read_to_capture':read,'write_to_visible':write,'reverse_to_tag_release':reverse},
+        conservative_accepted_owner_release_upper_software_ticks=cap*hold,
+        bound_conditions=['actual synchronous transaction/finish actor','initialized exact source extent',
+            'positive retained constructor costs','no cancellation/reset while live','no substituted asynchronous consumer callback'],
+        faults='uninitialized read/identity/extent/reverse mismatch fails closed; no success or free service',
+        asynchronous_held_consumer_upper=None,
+        current_full_program_every_provider_actor_connected=False,
+        actual_physical_HBM_controller_latency=None,actual_C0_H1_V1_CDC_instantiation=None,
+        L2_controller_service_bound=None,hardware_cycles_or_ns=None,hardware_qualified=False)
+
+
+def analyze_c0_program_owner_admission(ds_raw,qwen_raw,source_files):
+    """Actual program DAG + guarded source software lease exclusion.
+
+    This proves a statement about the emitted software contract, not an
+    installed hardware request gate or a bounded external ready signal.
+    """
+    demands=inventory_h1_program_demands(ds_raw,qwen_raw)
+    required={'tools/h4_c0_bridge.py','tools/h4_c0_v1_owner_lock_addressed.py',
+              'tools/h3_qwen_bounded_native.py','tools/h4_c0_ds_native_execution.py',
+              'rtl/gpu/ot_gpu_hbm_rf_shared_context.sv'}
+    if set(source_files)!=required:raise ValueError('complete emitted DAG/owner source inventory required')
+    expected=json.loads((ROOT/OUT/'c0_program_shared64_r1'/'source_pins.json').read_bytes())
+    for name,raw in source_files.items():
+        if hashlib.sha256(raw).hexdigest()!=expected[name]:raise ValueError('actual C0 owner/emitter source pin mismatch')
+    owner=source_files['tools/h4_c0_v1_owner_lock_addressed.py'].decode();bridge=source_files['tools/h4_c0_bridge.py'].decode()
+    if not all(x in owner for x in ["if physical in self.live:","if s['provider_pending'] or s['read_pending']", "if not s['consumer'] or not s['reverse'] or s['provider_pending']", "del self.live[token[0]]"]):
+        raise ValueError('actual atomic owner exclusion/release source guard changed')
+    if "if self.pc is None or self.pending:" not in bridge:raise ValueError('actual single emitted command gate missing')
+    context=source_files['rtl/gpu/ot_gpu_hbm_rf_shared_context.sv'].decode()
+    if not all(x in context for x in ['wire grant=rf_owner_grant[sm] && !collision',
+        '.host_rd_valid(host_rd_valid[sm] && grant)', '.host_wr_valid(host_wr_valid[sm] && grant)',
+        '.simd_valid(simd_valid[sm] && grant)']):raise ValueError('actual H1 context admission predicates changed')
+    out={}
+    for name,raw,key in [('DeepSeek',ds_raw,'instructions'),('Qwen',qwen_raw,'operations')]:
+        ops=json.loads(gzip.decompress(raw))[key];producers={};rows=[]
+        for op in ops:
+            for v in op['writes']:
+                version=v if isinstance(v,str) else v['version']
+                if version in producers:raise ValueError('duplicate version producer')
+                producers[version]=op['pc']
+        for op in ops:
+            pc=op['pc'];deps=op['dependencies']
+            if any(type(d)is not int or not 0<=d<pc for d in deps):raise ValueError('source DAG backward/noncausal PC dependency')
+            versions=[v if isinstance(v,str) else v['version'] for v in op['reads']]
+            reads=[]
+            for v in versions:
+                birth=producers.get(v,-1)
+                if birth>=pc:raise ValueError('source version read before production')
+                reads.append(dict(version=v,producer_PC=birth))
+            provider_reads=set()
+            if name=='DeepSeek':
+                for bindings in op.get('provider_bindings',{}).values():
+                    for binding in bindings.values():
+                        provider_reads.update(([binding['version']] if 'version' in binding else [])+
+                            binding.get('additional_versions',[])+binding.get('identity_from_versions',[]))
+                for owned in op.get('rank_bindings',[]):
+                    provider_reads.update(b['read_version'] for b in owned.get('buffer_programs',[]))
+            extra=[]
+            for version in sorted(provider_reads-set(versions)):
+                birth=producers.get(version,-1)
+                if birth>=pc:raise ValueError('provider source version read before production')
+                extra.append(dict(version=version,producer_PC=birth))
+            rows.append(dict(PC=pc,dependencies=deps,read_producers=reads,additional_provider_read_producers=extra,
+                atomic_release_requires=['own command capture','all local/provider pending drained','matching reverse grant'],
+                future_version_readers_do_not_hold_RF_command_owner=True))
+        out[name]=dict(PCs=len(ops),PC_DAG=rows,finite_source_PC_order=True,
+            program_lease_static_priority_starvation='NOT_REACHABLE_IF_SOURCE_ATOMIC_EXCLUSION_AND_SERIAL_EMISSION_ARE_ENFORCED',
+            evidence_scope='actual source software contract; dynamic installed contender gating remains unknown')
+    return dict(schema='H4_C0_SOURCE_PROGRAM_CONSTRAINED_OWNER_ADMISSION_V1',programs=out,
+        program_pins=demands['source_pins'],source_pins=expected,
+        source_context_excludes_simultaneous_three_valid_admission=True,
+        installed_parent_owner_grant_producer=None,
+        C0_H1_context_already_charged_gate_equivalents_per_SM=16,
+        incremental_fair_arbiter_gate_equivalents_adopted=0,
+        context_control_fanout_per_SM={'RF_grant':6,'shared_grant':2},
+        context_replica_count_per_rank=32,context_new_clock_domains=0,
+        same_edge_combinational_gate_is_not_context_timing_qualification=True,
+        unconstrained_H1_three_valid_starvation_is_actual_program_deadlock_proof=False,
+        minimal_successor='enforce existing atomic owner at ALL host-read/host-write/SIMD contender gates; no fair arbiter justified by excluded three-valid stimulus',
+        existing_C0_command_latch_recharged=False,extra_reference_arbiter_area_adopted=False,
+        transaction_sink_capture_is_not_final_version_retirement=True,
+        actual_installed_H1_owner_gates=False,finite_external_consumer_reverse_bound=None,
+        whole_token_latency=None,hardware_qualified=False)
+
+
+def verify_finite_owner_dependency_graph(nodes):
+    """Reject capture/reverse waiting on a command blocked by the same owner."""
+    byid={n['id']:n for n in nodes}
+    if len(byid)!=len(nodes):raise ValueError('duplicate endpoint DAG node')
+    indegree={key:0 for key in byid};successors={key:[] for key in byid}
+    for node in nodes:
+        bound=node.get('source_bound_edges')
+        if bound is not None and (type(bound)is not int or bound<=0):raise ValueError('missing costs cannot be zero or negative')
+        for dep in node['dependencies']:
+            if dep not in byid:raise ValueError('missing actual endpoint DAG reference '+str(dep))
+            indegree[node['id']]+=1;successors[dep].append(node['id'])
+    ready=[key for key,n in indegree.items() if n==0];heapq.heapify(ready);order=[]
+    while ready:
+        key=heapq.heappop(ready);order.append(key)
+        for child in successors[key]:
+            indegree[child]-=1
+            if indegree[child]==0:heapq.heappush(ready,child)
+    if len(order)!=len(nodes):
+        raise ValueError('actual owner/consumer/reverse dependency deadlock at '+str(next(k for k,n in indegree.items() if n)))
+    return dict(topological_order=order,finite_order=True,
+        missing_service_bounds=[n['id'] for n in nodes if n.get('source_bound_edges') is None],
+        hardware_finite_wait_admitted=False)
+
+
 def inventory_h1_program_demands(ds_raw, qwen_raw):
     """Pinned source demand units, never scalar-to-port or CPU-to-clock credit."""
     pins={'DeepSeek':'c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264',
