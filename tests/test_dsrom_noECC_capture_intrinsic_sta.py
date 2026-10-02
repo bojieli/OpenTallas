@@ -40,5 +40,12 @@ class CaptureTimingContracts(unittest.TestCase):
             self.assertFalse(self.record[key])
     def test_first_evidence_cannot_be_overwritten(self):
         with self.assertRaises(ValueError):m.prepare(self.work)
+    def test_timing_templates_preserved_per_family(self):
+        for corner in ('ss','ff'):
+            for family in ('ao','invbuf','oa','simple','seq'):
+                s=(self.work/f'{family}_{corner}.lib').read_text()
+                defined=set(re.findall(r'\b(?:lu_table_template|power_lut_template)\s*\(([^)]+)\)',s))
+                used=set(re.findall(r'\b(?:cell_rise|cell_fall|rise_transition|fall_transition|rise_constraint|fall_constraint)\s*\(([^)]+)\)',s))
+                self.assertFalse(used-defined)
 
 if __name__=='__main__':unittest.main()
