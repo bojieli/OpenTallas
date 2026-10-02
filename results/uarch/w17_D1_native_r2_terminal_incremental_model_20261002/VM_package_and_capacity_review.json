@@ -1,0 +1,12 @@
+{
+  "local_packages": "binutils\t2.38-4ubuntu2.12\ng++-11\t11.4.0-1ubuntu1~22.04.3\ngcc-11\t11.4.0-1ubuntu1~22.04.3\nlibc6:amd64\t2.35-0ubuntu3.14\nlibc6-dev:amd64\t2.35-0ubuntu3.14\nlibstdc++-11-dev:amd64\t11.4.0-1ubuntu1~22.04.3\nlinux-libc-dev:amd64\t5.15.0-187.197\n",
+  "container_packages": "binutils\t2.38-4ubuntu2.12\ng++-11\t11.4.0-1ubuntu1~22.04.3\ngcc-11\t11.4.0-1ubuntu1~22.04.3\nlibc6:amd64\t2.35-0ubuntu3.15\nlibc6-dev:amd64\t2.35-0ubuntu3.15\nlibstdc++-11-dev:amd64\t11.4.0-1ubuntu1~22.04.3\nlinux-libc-dev:amd64\t5.15.0-194.204\n",
+  "actual_fresh_survey": "2026-10-02T11:43:34Z\n64\n 11:43:34 up  8:54,  1 user,  load average: 0.08, 0.14, 0.10\nMemTotal:       131810932 kB\nMemFree:        98075376 kB\nMemAvailable:   117206664 kB\nBuffers:          182404 kB\nFilesystem         1B-blocks        Used     Available Use% Mounted on\n/dev/sda1      1065316089856 20669919232 1044629393408   2% /\ntmpfs            67487199232 12731686912   54755512320  19% /tmp\n",
+  "compiler_and_runtime_hashes_match": true,
+  "host_toolchain_selected": false,
+  "container_sysroot_admitted": false,
+  "metadata_probe_only": true,
+  "compile_invocations": 0,
+  "blocker": "glibc/libc-dev .14 vs .15; linuxlibc187 vs194; matching tool hashes do not prove full sysheader/CRT/link ABI equivalence.",
+  "next_required": "Exact local package/sysroot capture with file manifest/transport SHA, compiler/runtime/header/CRT closure and retained PCH -H acceptance under exact original flags in candidate container. No rebuilding PCH/frontend to hide mismatch."
+}

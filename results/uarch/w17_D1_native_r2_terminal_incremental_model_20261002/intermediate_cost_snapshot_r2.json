@@ -1,0 +1,198 @@
+{
+  "utc": "2026-10-02T11:25:56Z",
+  "elapsed_s": 487.98724818229675,
+  "cgroup_cpu_s": 7376.228367,
+  "active_TUs": [
+    {
+      "pid": 620018,
+      "tu": "Vtb_D1_scope_core___024root__0.cpp",
+      "wall_s": 457.25,
+      "cpu_s": 456.75,
+      "rss_bytes": 385085440
+    },
+    {
+      "pid": 620020,
+      "tu": "Vtb_D1_scope_core___024root__5.cpp",
+      "wall_s": 457.25,
+      "cpu_s": 456.73,
+      "rss_bytes": 363012096
+    },
+    {
+      "pid": 620022,
+      "tu": "Vtb_D1_scope_core___024root__6.cpp",
+      "wall_s": 457.25,
+      "cpu_s": 455.15,
+      "rss_bytes": 360361984
+    },
+    {
+      "pid": 620023,
+      "tu": "Vtb_D1_scope_core___024root__4.cpp",
+      "wall_s": 457.25,
+      "cpu_s": 456.82,
+      "rss_bytes": 357220352
+    },
+    {
+      "pid": 620029,
+      "tu": "Vtb_D1_scope_core___024root__10.cpp",
+      "wall_s": 457.25,
+      "cpu_s": 456.64,
+      "rss_bytes": 383913984
+    },
+    {
+      "pid": 624474,
+      "tu": "Vtb_D1_scope_core___024root__16.cpp",
+      "wall_s": 327.1100000003353,
+      "cpu_s": 325.68,
+      "rss_bytes": 377815040
+    },
+    {
+      "pid": 627025,
+      "tu": "Vtb_D1_scope_core___024root__18.cpp",
+      "wall_s": 259.67000000039116,
+      "cpu_s": 259.47,
+      "rss_bytes": 367353856
+    },
+    {
+      "pid": 627841,
+      "tu": "Vtb_D1_scope_core___024root__19.cpp",
+      "wall_s": 238.20000000018626,
+      "cpu_s": 236.06,
+      "rss_bytes": 357466112
+    },
+    {
+      "pid": 628045,
+      "tu": "Vtb_D1_scope_core___024root__20.cpp",
+      "wall_s": 233.57000000029802,
+      "cpu_s": 232.15,
+      "rss_bytes": 358510592
+    },
+    {
+      "pid": 629261,
+      "tu": "Vtb_D1_scope_core___024root__22.cpp",
+      "wall_s": 200.0500000002794,
+      "cpu_s": 199.83,
+      "rss_bytes": 436920320
+    },
+    {
+      "pid": 629886,
+      "tu": "Vtb_D1_scope_core___024root__23.cpp",
+      "wall_s": 186.01000000024214,
+      "cpu_s": 185.57,
+      "rss_bytes": 378327040
+    },
+    {
+      "pid": 631136,
+      "tu": "Vtb_D1_scope_core___024root__24.cpp",
+      "wall_s": 148.12000000011176,
+      "cpu_s": 146.79,
+      "rss_bytes": 388034560
+    },
+    {
+      "pid": 632851,
+      "tu": "Vtb_D1_scope_core___024root__25.cpp",
+      "wall_s": 101.43000000016764,
+      "cpu_s": 101.42,
+      "rss_bytes": 362835968
+    },
+    {
+      "pid": 633307,
+      "tu": "Vtb_D1_scope_core___024root__26.cpp",
+      "wall_s": 90.72999999998137,
+      "cpu_s": 90.5,
+      "rss_bytes": 364081152
+    },
+    {
+      "pid": 633994,
+      "tu": "Vtb_D1_scope_core___024root__27.cpp",
+      "wall_s": 71.65000000037253,
+      "cpu_s": 71.63,
+      "rss_bytes": 355155968
+    },
+    {
+      "pid": 636003,
+      "tu": "Vtb_D1_scope_core___024root__28.cpp",
+      "wall_s": 13.470000000204891,
+      "cpu_s": 13.47,
+      "rss_bytes": 350142464
+    }
+  ],
+  "objects": [
+    {
+      "path": "Vtb_D1_scope_core.o",
+      "bytes": 41312,
+      "mtime_ns": 1790939900072491089
+    },
+    {
+      "path": "Vtb_D1_scope_core__Dpi_Export__0.o",
+      "bytes": 3664,
+      "mtime_ns": 1790939899853486907
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__1.o",
+      "bytes": 479456,
+      "mtime_ns": 1790940255235279591
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__11.o",
+      "bytes": 170496,
+      "mtime_ns": 1790940096999253552
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__12.o",
+      "bytes": 170496,
+      "mtime_ns": 1790940118463663903
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__13.o",
+      "bytes": 170496,
+      "mtime_ns": 1790940123101752578
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__14.o",
+      "bytes": 170496,
+      "mtime_ns": 1790940149210251781
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__15.o",
+      "bytes": 169896,
+      "mtime_ns": 1790940156622393514
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__17.o",
+      "bytes": 168896,
+      "mtime_ns": 1790940285018849376
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__2.o",
+      "bytes": 293136,
+      "mtime_ns": 1790940208546386522
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__21.o",
+      "bytes": 105528,
+      "mtime_ns": 1790940265938484346
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__3.o",
+      "bytes": 437128,
+      "mtime_ns": 1790940343197962558
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__7.o",
+      "bytes": 448160,
+      "mtime_ns": 1790940170662662002
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__8.o",
+      "bytes": 209160,
+      "mtime_ns": 1790940029509963607
+    },
+    {
+      "path": "Vtb_D1_scope_core___024root__9.o",
+      "bytes": 309616,
+      "mtime_ns": 1790940045612271333
+    }
+  ],
+  "aggregate_cpu_less_active_s": 3231.568367,
+  "limits": "Residual CPU includes PCH/compiler driver/assembler/supervisor; not exact completed-TU CPU. Only current root family is sampled."
+}
