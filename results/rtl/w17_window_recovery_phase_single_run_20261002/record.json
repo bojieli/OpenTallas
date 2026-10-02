@@ -1,0 +1,119 @@
+{
+  "verdict": "FAIL_PRESERVED_NO_RETRY",
+  "aggregate_memory_stats": {
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.peak": "637964288"
+  },
+  "plan_sha256": "3b8a24174fcf35c26c14aebf08959a46f8f9a9b0fe73ee27e197625966937745",
+  "GO_commit": "1d884e8f8eb1e6c014a86ac57bd301bc72b56a29",
+  "sampled_output_peak_bytes": 155887624,
+  "live_output_bytes_terminal": 155886868,
+  "output_resource_model_sha256": "284e5ee3b7f95da19b91d2d1b74ba3547c4705ec851bd6e8cc52b20043c297d9",
+  "steps": [
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/obj",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/window_prefetch_recovery.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/kv_reqmux_recovery.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/kv_rope_reqmux_recovery.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/hbm_karb_recovery.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/idx_hbm_recovery.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/sources/tb.sv"
+      ],
+      "returncode": 0,
+      "wall_seconds": 16.02799649303779,
+      "log": "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/compile.log",
+      "log_sha256": "76ed3082d336e8dec763cf732b615dd920e5b295562666e853931452237ef7a6"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/obj/Vtb",
+        "+CASE=READ_HELD"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.1025195699185133,
+      "log": "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/case0.log",
+      "log_sha256": "61946d3d68bfcea622bfd04c014f1c61fdf26202d2e021d8c4d7bec91c0a955b"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/obj/Vtb",
+        "+CASE=WC_INTENT"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.10253798495978117,
+      "log": "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/case1.log",
+      "log_sha256": "70556201e584a8b2fcb92a4550a89e3fa905f4b1e0db637e11e29696af69e869"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/obj/Vtb",
+        "+CASE=WS_VISIBLE"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.10257532307878137,
+      "log": "/tmp/window-recovery-phase-single-run-20261002-r1/baseline/case2.log",
+      "log_sha256": "a782a0ae171315bc9a617d6ef52b5f45a94502adf9fa17b8587e3da07a18231f"
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/obj",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/sources/window_prefetch_recovery.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/sources/kv_reqmux_recovery.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/sources/kv_rope_reqmux_recovery.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/sources/hbm_karb_recovery.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/sources/idx_hbm_recovery.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/sources/tb.sv"
+      ],
+      "returncode": 0,
+      "wall_seconds": 16.076838358771056,
+      "log": "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/compile.log",
+      "log_sha256": "1299626b450dd370f94bcd9c1f836d863d7d8eaf40c805100d1cb2f6f43f11c2"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/obj/Vtb",
+        "+CASE=READ_HELD",
+        "+CONTROL=discard_retirement_omitted"
+      ],
+      "returncode": 1,
+      "wall_seconds": 0.10301866894587874,
+      "log": "/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/case0.log",
+      "log_sha256": "b67ffb6e968d2b92c2f7d34c37576fc7043ff746593e543d73cf2dced15ddd0b"
+    }
+  ],
+  "source_manifest_sha256": "340f4aee12dc22b6424839870ced96d32c83a2ec7bbdcc3a585b0791a9bbc529",
+  "scope": "Local connected source fault drain/restart, simulation provider only. No producer-wide cancellation, global reset, physical PHY, fulltoken or QDQ8-based fence credit.",
+  "ghost_limitation": "Oracle distinguishes hidden operation0/512, wire fields identical. Hostile post-fence emission violates provider provenance; WINDOW has no detection claim. Uncertified provenance prohibits restart.",
+  "visibility_oracle_scope": "Pinned idx schedule h_tcol/last_wr+CWL6250+BURST1024 projected deadline only. Scheduled command times can be retrospective relative to actual dispatch; this is not causal PHY completion. No fixed-floor/ACK-as-visible replacement.",
+  "physical_credit": false,
+  "service_provider_admission": false,
+  "physical_drain_admission": false,
+  "wholeprovider_admission": false
+}

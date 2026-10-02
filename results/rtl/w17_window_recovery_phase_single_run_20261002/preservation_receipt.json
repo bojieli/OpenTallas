@@ -1,0 +1,60 @@
+{
+  "verdict": "FAIL_PRESERVED_NO_RETRY",
+  "reviewed_commit": "2f208e1b8732daa57de0eb073697368464d4c0a8",
+  "GO_commit": "1d884e8f8eb1e6c014a86ac57bd301bc72b56a29",
+  "user": "ubuntu",
+  "UID": 1000,
+  "manager": "systemd --user",
+  "unit": "w17-recovery-phase-20261002-r1.service",
+  "output": "/tmp/window-recovery-phase-single-run-20261002-r1",
+  "terminal": "MainPID=0\nResult=exit-code\nExecMainStartTimestamp=Fri 2026-10-02 01:44:35 UTC\nExecMainExitTimestamp=Fri 2026-10-02 01:45:08 UTC\nExecMainStatus=1\nActiveState=failed\n",
+  "source_plan_revalidation": "PASS",
+  "snapshot_hashes_match": {
+    "baseline": true,
+    "discard_retirement_omitted": true
+  },
+  "original_failed_build_retained": {
+    "baseline": true,
+    "discard_retirement_omitted": true
+  },
+  "baseline_closure_and_reclamation_verified": true,
+  "failed_mutant_obj_retained": true,
+  "sampled_generated_output_peak_bytes": 155887624,
+  "peak_output_headroom_bytes": 112547832,
+  "aggregate_memory_stats": {
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.peak": "637964288"
+  },
+  "completed_compiles": 2,
+  "positive_cases_passed": 3,
+  "accepted_negative_controls": 0,
+  "negative_control_attempted": "discard_retirement_omitted",
+  "expected_negative": {
+    "args": [
+      "+CASE=READ_HELD",
+      "+CONTROL=discard_retirement_omitted"
+    ],
+    "seconds": 4,
+    "expected": "FAIL",
+    "marker": "bounded recovery case timeout; ownership retained"
+  },
+  "observed_negative_returncode": 1,
+  "observed_negative_fatal": "bounded recovery case timeout; ownership retained",
+  "later_jobs_not_executed": [
+    "accepted_WS_intent_dropped",
+    "issue_ACK_as_visibility",
+    "provider_ghost_assumption"
+  ],
+  "no_retry": true,
+  "expectation_unchanged": true,
+  "no_cap_changes": true,
+  "physical_provider_qualified": false,
+  "producer_cancel_implemented": false,
+  "fulltoken_qualified": false,
+  "notes": [
+    "Negative control did fail, but not with the declared receipt; not accepted as gate qualification.",
+    "Observed runtime return1 and wrong semantic marker preserved; no reinterpretation as expected SIGABRT.",
+    "Baseline generated-file closure hashes retained; successfully closed obj reclaimed. Current failed mutant obj/binary/source retained.",
+    "Sampled output peak is monitored samples, not a continuous measurement."
+  ]
+}
