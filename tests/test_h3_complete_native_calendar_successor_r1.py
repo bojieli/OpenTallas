@@ -7,11 +7,27 @@ from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
+# Resolve the canonical dependency before legacy tests can leave another
+# checkout on sys.path. Preserve the imported module and its runtime functions.
+import sys
+_collection_path=list(sys.path)
+try:
+    sys.path.insert(0,str(ROOT/'tools'))
+    import h3_complete_native_calendar as _canonical_original
+finally:
+    sys.path[:]=_collection_path
+if Path(_canonical_original.__file__).resolve()!=ROOT/'tools/h3_complete_native_calendar.py':
+    raise ValueError('canonical original calendar imported from another checkout')
 spec = importlib.util.spec_from_file_location('h3calendar', ROOT / 'tools/h3_complete_native_calendar_successor_r1.py')
 c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class AdditiveFiniteCalendarTests(unittest.TestCase):
+    def setUp(self):
+        import sys
+        saved_path=list(sys.path)
+        self.addCleanup(lambda: sys.path.__setitem__(slice(None),saved_path))
+
     def test_additive_module_has_own_executor_globals_and_preserves_original_pin(self):
         import hashlib,ast
         original=ROOT/'tools/h3_complete_native_calendar.py'
@@ -135,7 +151,7 @@ class AdditiveFiniteCalendarTests(unittest.TestCase):
 
     def test_compact_installer_preserves_exact_constructor_and_actual_payload_replay(self):
         import sys,tempfile,hashlib
-        sys.path.insert(0,'/home/ubuntu/OpenTallas/tools')
+        sys.path.insert(0,str(ROOT/'tools'))
         import hbm_bound_event_journal_r30 as original
         from hbm_provider_microvm_r21 import Identity
         saved={name:getattr(original,name) for name in ['BoundSectorProvider','DiskEvents','JournalBudget']}
@@ -205,7 +221,7 @@ class AdditiveFiniteCalendarTests(unittest.TestCase):
 
     def test_actual_provider_checkpoint_preserves_payload_masks_identity_and_atomic_disk(self):
         import tempfile,sys
-        sys.path.insert(0,'/home/ubuntu/OpenTallas/tools')
+        sys.path.insert(0,str(ROOT/'tools'))
         from hbm_provider_microvm_r21 import SectorProvider,Identity
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'state.bin';p=SectorProvider({('DeepSeek',95):[dict(base=0,bytes=64)]},tags=1)
@@ -232,7 +248,7 @@ class AdditiveFiniteCalendarTests(unittest.TestCase):
 
     def test_actual_provider_checkpoint_refuses_live_owner_without_clearing_debt(self):
         import sys,tempfile
-        sys.path.insert(0,'/home/ubuntu/OpenTallas/tools')
+        sys.path.insert(0,str(ROOT/'tools'))
         from hbm_provider_microvm_r21 import SectorProvider,Identity
         p=SectorProvider({('DeepSeek',0):[dict(base=0,bytes=32)]})
         tx=p.submit(Identity('DeepSeek',0,1,9,0,0),write=True,payload=bytes(32))
