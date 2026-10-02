@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import unittest
 import hashlib
+import gzip
 
 ROOT=Path(__file__).resolve().parents[1]
 BASE=ROOT/'results/uarch/dsrom_noECC_capture_intrinsic_20261002'
@@ -27,8 +28,14 @@ class CaptureTerminal(unittest.TestCase):
                 self.assertAlmostEqual(r['conservative_remaining_wire_skew_ps']+r['capture_setup_plus_mux_subtotal_max_ps'],767.5732666666668)
                 self.assertTrue(r['remaining_is_diagnostic_not_admitted_bound'])
     def test_protected_original_failure_records(self):
-        for name in self.t['original_failures']:
-            self.assertEqual(json.loads((BASE/name/'record.json').read_text())['status'],'FIRST_FAILURE_PRESERVED')
+        receipts=json.loads((BASE/'historical_failure_manifest.json').read_text())
+        self.assertEqual({r['name'] for r in receipts},set(self.t['original_failures']))
+        for r in receipts:
+            packed=(BASE/r['copy']).read_bytes()
+            self.assertEqual(hashlib.sha256(packed).hexdigest(),r['archive_sha256'])
+            raw=gzip.decompress(packed)
+            self.assertEqual(hashlib.sha256(raw).hexdigest(),r['raw_record_sha256'])
+            self.assertEqual(json.loads(raw)['status'],'FIRST_FAILURE_PRESERVED')
     def test_no_extra_source_edge_or_zero_parent_IO(self):
         self.assertTrue(self.t['no_new_pipeline_edge'])
         self.assertTrue(self.t['installed_CTS_not_a_prebuild_requirement'])

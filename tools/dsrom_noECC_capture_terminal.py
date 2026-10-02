@@ -2,7 +2,7 @@
 """Price reported capture subtotal; keep model diagnostics separate from physics."""
 import argparse, gzip, hashlib, json, re, shutil
 from pathlib import Path
-from dsrom_secded_fullwidth_characterize import merged,block
+from dsrom_noECC_liberty import cell_bodies,block
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'results/uarch/dsrom_noECC_capture_intrinsic_20261002'
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
@@ -48,7 +48,7 @@ def archive(work,out=OUT):
     for item in r['runs']:
         case,corner=item['case'],item['corner'];d=dest/case;d.mkdir(exist_ok=True)
         text=(work/case/(corner+'.log')).read_text()
-        paths,v=parse(text,merged(corner)[1])
+        paths,v=parse(text,cell_bodies(corner))
         bytype={t:[p for p in paths if p['type']==t] for t in ('max','min')}
         for t,p in bytype.items():
             if len(p)!=1088 or len({x['endpoint'] for x in p})!=1088:raise ValueError('Full capture endpoint coverage missing')

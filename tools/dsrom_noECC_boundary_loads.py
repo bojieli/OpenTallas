@@ -2,13 +2,13 @@
 """Actual retained element pin loads and output drivers; no invented parent IO."""
 import gzip, hashlib, json, re
 from pathlib import Path
-from dsrom_secded_fullwidth_characterize import block, merged
+from dsrom_noECC_liberty import block, cell_bodies
 ROOT=Path(__file__).resolve().parents[1]
 MAP=ROOT/'results/uarch/dsrom_noECC_WAKE_cell_retention_20261002/terminal'
 OUT=ROOT/'results/uarch/dsrom_noECC_capture_intrinsic_20261002'
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def build():
-    libs={corner:merged(corner)[1] for corner in ('ss','ff')}
+    libs={corner:cell_bodies(corner) for corner in ('ss','ff')}
     result={}
     for case in ('q','bfcolumn'):
         path=MAP/case/'retained_mapped.json.gz'

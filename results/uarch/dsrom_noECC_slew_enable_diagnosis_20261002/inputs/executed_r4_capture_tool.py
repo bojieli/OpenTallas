@@ -2,12 +2,12 @@
 """Full retained maps: macro-to-capture intrinsic SS/FF timing, no synthesis/P&R."""
 import argparse, gzip, hashlib, json, re, resource, shutil, subprocess, time
 from pathlib import Path
-from dsrom_noECC_liberty import library_text
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT/'results/uarch/dsrom_noECC_production_context_20261002'
 MAP = ROOT/'results/uarch/dsrom_noECC_WAKE_cell_retention_20261002/terminal'
 MAC = ROOT/'results/uarch/dsrom_noECC_physical_transition_20261002/inputs'
+LIB = ROOT/'results/uarch/dsrom_secded_fullwidth_characterization_20261002/inputs'
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def regex_names(names, suffix):
     return '^('+'|'.join(re.escape(n.removeprefix('\\')) for n in names)+')/'+suffix+'$'
@@ -31,12 +31,17 @@ def prepare(work):
         sta_binary_sha256=sha(Path(shutil.which('sta'))), inputs={}, runs=[])
     for corner in ('ss','ff'):
         for family in ('ao','invbuf','oa','simple','seq'):
-            original=ROOT/'results/uarch/dsrom_noECC_capture_intrinsic_20261002/terminal_r4'/f'{family}_{corner}.lib.gz'
-            text=library_text(f'{family}_{corner}.lib')
+            original=LIB/f'{family}_{corner}.lib.gz'
+            text=gzip.decompress(original.read_bytes()).decode()
+            # Preserve the entire library including templates after cell groups.
+            # Namespace templates within their original family, never splice headers.
+            names=re.findall(r'\b(?:lu_table_template|power_lut_template)\s*\(([^)]+)\)',text)
+            for name in names:
+                text=re.sub(r'\b'+re.escape(name)+r'\b',family+'_'+name,text)
             p=work/f'{family}_{corner}.lib';p.write_text(text)
             record['inputs'][f'{family}_{corner}_archive']=sha(original)
             record['inputs'][f'{family}_{corner}_prepared']=sha(p)
-        (work/f'macro_{corner}.lib').write_text(library_text(f'macro_{corner}.lib'))
+        shutil.copyfile(MAC/f'macro_{corner}.lib',work/f'macro_{corner}.lib')
         record['inputs'][f'macro_{corner}_lib']=sha(work/f'macro_{corner}.lib')
     for case,c in source['cases'].items():
         d=work/case; d.mkdir()
