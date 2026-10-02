@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.verilator5050.fatal_exit_policy.v1",
+  "status": "SOURCE_AND_RETAINED_EXECUTION_AUDIT_NO_NEW_EXECUTION",
+  "compiler_version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "runtime_file_pins": {
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp": "689d3f48fe0da03ec085c26b197e8a3f11cc88baa55c6d836845570511e7ab0f",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.h": "c0432fe7bbb2d4100583048a2ec52ec346441ca2cba5dde41f28d952d2b6d7c5",
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.mk": "bd0d8c21debce6afe65db69b9b8721711ff3422f985617e8fce0bc5a2ac809e0"
+  },
+  "retained_binary": {
+    "sha256": "2fa28664e4ce005298a2e6743b5b4e71713170f3faaae676781088a47735cf65",
+    "bytes": 624728
+  },
+  "generated_main_sha256": "012330e660c5d37b46b5fe124a67962d26e1a1fe2285e00e1c7b9dc4d880b301",
+  "generated_watchdog_sha256": "f30c55b38ec572428d555602b18dd66696159b690592913b593d1138c9204e90",
+  "retained_runtime_log_sha256": "b67ffb6e968d2b92c2f7d34c37576fc7043ff746593e543d73cf2dced15ddd0b",
+  "failure_commit": "397202976a9480184eb9a794cfa844e4ffaed50f",
+  "clarification_commit": "ac358f9ad2139c4f082d2413ddc37ea7f5212559",
+  "callpath": [
+    "generated main Verilated::debug(0), context threads1, commandArgs, eval; no custom fatal handler",
+    "source tb.sv:584 $fatal(1, exact timeout marker) generates VL_WRITEF_NX %Fatal then VL_STOP_MT(...584,...false)",
+    "VL_STOP_MT posts vl_stop_maybe -> vl_stop; default fatalOnError=true invokes vl_fatal",
+    "vl_fatal prints %Error source:line Verilog $stop, flushes, prints Aborting..., exit callbacks",
+    "Verilated::debug() false selects std::exit(1); nonzero debug selects std::abort()"
+  ],
+  "debug_policy": "Default generated compile has no -DVL_DEBUG / user fatal/stop override; no runtime +verilator+debug args. Without VL_DEBUG debug() constant0; generated main explicitly debug0. Literal Aborting text does not establish SIGABRT.",
+  "observed_returncode": 1,
+  "observed_expected_marker_matches": true,
+  "new_selected_policy": {
+    "accepted_negative_returncode": 1,
+    "required_log": "exact three-line %Fatal from pinned bench basename/line/top/marker + matching absolute source %Error Verilog $stop + Aborting; no extra errors or unrelated fatal",
+    "cap_requirement": "verified actual service caps; runtime memory.events oom/oom_kill/oom_group_kill zero and max zero; supervised stage/output bounds intact",
+    "rejected": [
+      "generic nonzero",
+      "SIGABRT or other signals",
+      "right marker at wrong source/line/top",
+      "right marker plus another error",
+      "exit1 without Verilator fatal trailer",
+      "any memory limit/OOM event",
+      "external timeout/output cap"
+    ]
+  },
+  "budget_change": false,
+  "compile_option_change": false,
+  "tiny_selfcheck_needed": false,
+  "tiny_selfcheck_reason": "Pinned runtime source + actual retained generated main/callsite/compile commands and measured binary exit provide direct evidence; no new build needed.",
+  "not_qualification": "Later mutant/ghost runtime semantics remain unqualified until fresh authorized gate; old failure unchanged."
+}
