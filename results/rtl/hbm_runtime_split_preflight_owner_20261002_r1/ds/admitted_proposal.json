@@ -1,7 +1,7 @@
 {
   "GO": false,
   "H2_P1_P2_scope": "Kepler/Archimedes shoreline ownership/PHY/CDC/serviceclock and contextualSSFF remain separate; this directedfixture supplies no clock/physical/tokencredit.",
-  "acceptance": "Fresh fullgeometry Qwenfrontend+coldCXX+exactthinarchive/ELFreceipt only. No Qwen runtime or numerical credit.",
+  "acceptance": "Qualified complete DS ELF exclusivecopy, actual fullbench4cases+reset markers and trace PASS. DirectedDS only; Qwen not covered.",
   "archive_repair_model": {
     "Qwen_CXX_archive_binary_size_time_memory": "Unmeasured; preserve any cap/failure. DS object total is a measured lower bound for standard archive size, not thin/binary size.",
     "caps_unchanged": true,
@@ -20,128 +20,57 @@
   "calibration_model_sha256": "2f793082d1f877152445bbc4608849c6cf79e1b554e198f82f481aa33cea33c8",
   "caps": {
     "FSIZE_bytes": 1073741824,
-    "build_jobs": 16,
+    "build_jobs": 1,
     "disk_min_free_GiB": 12,
     "fresh_parent_admission_required": true,
     "memory_GiB": 32,
     "no_PVE2_PVE3": true,
     "output_cap_GiB": 8,
     "proposed_local_CPUs": [
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23
+      0
     ],
     "sequential_targets": true,
     "swap_GiB": 0,
-    "whole_timeout_s": 2130
+    "whole_timeout_s": 7110
   },
   "commands": {
-    "Qwen": [
+    "DS": [
       {
         "argv": [
-          "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
-          "--cc",
-          "--exe",
-          "--main",
-          "--timing",
-          "--assert",
-          "--top-module",
-          "tb_connected_rf_visibility",
-          "-GQWEN=1",
-          "--prefix",
-          "Vconnected",
-          "--Mdir",
-          "<fresh-output>/Qwen/obj",
-          "--threads",
-          "1",
-          "--compiler",
-          "gcc",
-          "-O0",
-          "--unroll-count",
-          "512",
-          "-Wno-fatal",
-          "--output-split",
-          "10000",
-          "--output-split-cfuncs",
-          "500",
-          "-CFLAGS",
-          "-O0",
-          "rtl/gpu/ot_gpu_fadd.sv",
-          "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-          "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
-          "rtl/hdc/ot_hdc_fastfp.sv",
-          "rtl/hdc/ot_hdc_prefix.sv",
-          "rtl/gpu/ot_gpu_tree.sv",
-          "rtl/gpu/ot_gpu_issue.sv",
-          "rtl/gpu/ot_gpu_stack.sv",
-          "rtl/gpu/ot_gpu_tc_col.sv",
-          "rtl/gpu/ot_gpu_bulk_copy.sv",
-          "rtl/hdc/ot_hdc_fpu.sv",
-          "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
-          "rtl/proto/ot_fp32_add_rne_pipe.sv",
-          "rtl/hdc/ot_hdc_sfu.sv",
-          "rtl/hdc/ot_hdc_delay.sv",
-          "rtl/v41rom/ot_v41_bterm.sv",
-          "rtl/v41rom/ot_v41_bterm2.sv",
-          "rtl/gpu/ot_gpu_bd_col.sv",
-          "rtl/hdc/v41/ot_hdc_blockdot.sv",
-          "rtl/gpu/ot_gpu_sm_v.sv",
-          "rtl/gpu/ot_gpu_xstore.sv",
-          "rtl/gpu/ot_gpu_sm_q.sv",
-          "rtl/gpu/ot_gpu_full_sm_service.sv",
-          "rtl/gpu/ot_gpu_rf_service.sv",
-          "rtl/gpu/ot_gpu_scratch_service.sv",
-          "rtl/test/full_sm_service/sram_models.sv",
-          "rtl/gpu/ot_gpu_rf_visibility_fence.sv",
-          "rtl/test/hbm_rf_visibility/ot_gpu_matrix_capture_audit.sv",
-          "rtl/test/hbm_rf_visibility/scale_sram_model.sv",
-          "rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv"
+          "<pinned-python>",
+          "tools/hbm_DS_binary_reuse_r8.py",
+          "--manifest",
+          "results/uarch/hbm_runtime_calibration_r8_20261002/qualified_DS_binary.json",
+          "--destination",
+          "<fresh-output>/DS/obj/Vconnected",
+          "--proposal",
+          "<fresh-output>/proposal.json",
+          "--go",
+          "<fresh-output>/GO.json",
+          "--go-commit",
+          "<fresh-GO-commit>"
         ],
-        "phase": "frontend",
+        "phase": "reuse_binary",
         "timeout_s": 300
       },
       {
         "argv": [
-          "<pinned-python>",
-          "tools/hbm_cxx_thin_archive_gate_r7.py",
-          "--object-root",
-          "<fresh-output>/Qwen/obj",
-          "--",
-          "/usr/bin/make",
-          "-C",
-          "<fresh-output>/Qwen/obj",
-          "-f",
-          "Vconnected.mk",
-          "-j16",
-          "CXX=/usr/bin/g++",
-          "LINK=/usr/bin/g++",
-          "OPT_FAST=-O0",
-          "OPT_SLOW=-O0",
-          "OPT_GLOBAL=-O0",
-          "-B",
-          "DEPS=",
-          "VM_USER_DIR=",
-          "OBJCACHE=",
-          "VPATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
-          "PYTHON3=/usr/bin/python3",
-          "PERL=/usr/bin/perl",
-          "AR=/usr/bin/ar --thin"
+          "<fresh-output>/DS/obj/Vconnected"
         ],
-        "phase": "CXX",
-        "timeout_s": 1800
+        "phase": "simulation",
+        "stdout": "<fresh-output>/DS/actual_sim.log",
+        "timeout_s": 6780
+      },
+      {
+        "argv": [
+          "python3",
+          "tools/check_hbm_rf_connected_trace.py",
+          "<fresh-output>/DS/actual_sim.log",
+          "--out",
+          "<fresh-output>/DS/trace_verdict.json"
+        ],
+        "phase": "trace",
+        "timeout_s": 30
       }
     ]
   },
@@ -156,7 +85,7 @@
   "gate_tool_sha256": {
     "tools/check_hbm_rf_connected_trace.py": "86eac7499ce56b1602ad47f1dfa0b0348357cd08f4428d03197849944ad5065c",
     "tools/full_sm_rf_verilator_gate.py": "91e1da08977a0ffb87166ee47977ed977e0790be7a8e45df4ed4dc4d0ac5ef0a",
-    "tools/hbm_DS_binary_reuse_r8.py": "63ae0d2ac844d647f294fede70cd70c73e1b8c12abf44f069e819b2087ce3c91",
+    "tools/hbm_DS_binary_reuse_r8.py": "20f87be7beb5246d8c33ce460eef031fc11c8677d4f38adcec145a9389bc69c5",
     "tools/hbm_cxx_thin_archive_gate_r7.py": "8dd2cfaf330fbec786de030e9b4ae7c6f8e6bd422d74bb8fdfc57f4c150e114b",
     "tools/hbm_ds_frontend_copy_r6.py": "8c95e2e355159d93bc9eab9491ef29cc0843e320cb91197453dca0e3e63d019a",
     "tools/hbm_ds_frontend_copy_r7.py": "8b0048f9bf5e95becfbf07386e4e0fe633936c68b000df52e8e587239798c60a",
@@ -339,24 +268,9 @@
     },
     "caps": {
       "aggregate_output_bytes": 8589934592,
-      "build_jobs": 16,
+      "build_jobs": 1,
       "cpus": [
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
+        0
       ],
       "disk_headroom_bytes": 12884901888,
       "kill_grace_s": 5,
@@ -365,7 +279,7 @@
       "poll_s": 1,
       "sequential_targets": true,
       "swap_bytes": 0,
-      "whole_wall_s": 2130
+      "whole_wall_s": 7110
     },
     "fresh_Qwen_frontend": true,
     "independent_targets": true,
@@ -400,7 +314,7 @@
     "remaining_DS_frontend_budget_s": 41.395131062716246,
     "retained_generated_DS_CXX": "ALL regular generated files copied exclusively to newobject directory and hash checked; no hardlinks, no old artifact edits, no existing objects/binary accepted. Old absolute .d targets excluded via make DEPS=. No generated-code rewriting.",
     "risks": "Remaining slow/support compiler costs, maximum TU critical path, archive/link cost, cache contention and Qwen frontend remain unmeasured. 1800s is a budget, not an expected completion time; 32GiB Qwen frontend remains unqualified. Preserve every failure, no automatic retry.",
-    "scope": "Fresh fullgeometry Qwenfrontend+coldCXX+exactthinarchive/ELFreceipt only. No Qwen runtime or numerical credit."
+    "scope": "Qualified complete DS ELF exclusivecopy, actual fullbench4cases+reset markers and trace PASS. DirectedDS only; Qwen not covered."
   },
   "reuse_inventory_pin": {
     "complete_exclusive_copy": true,
@@ -428,7 +342,7 @@
       "<pinned-python>",
       "tools/run_hbm_runtime_calibration_r8.py",
       "--proposal",
-      "results/uarch/hbm_runtime_calibration_r8_20261002/Qwen_prepared_gate.json",
+      "results/uarch/hbm_runtime_calibration_r8_20261002/DS_prepared_gate.json",
       "--go",
       "<fresh-target-GO.json>",
       "--go-commit",
@@ -437,31 +351,16 @@
       "<fresh-output>"
     ],
     "external_monitor_required": "Parent monitors named service terminal result/memory.events and preserves OOM/SIGKILL/whole-timeout if runner cannot write final verdict",
-    "parent_launch_affinity": "taskset --cpu-list 8-23; exact kernel mask, no cpu.max claim",
+    "parent_launch_affinity": "taskset --cpu-list 0; exact kernel mask, no cpu.max claim",
     "path": "tools/run_hbm_runtime_calibration_r8.py",
     "permission_or_configuration_changes": false,
     "requires_named_service": true
   },
   "runner_caps": {
     "aggregate_output_bytes": 8589934592,
-    "build_jobs": 16,
+    "build_jobs": 1,
     "cpus": [
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23
+      0
     ],
     "disk_headroom_bytes": 12884901888,
     "kill_grace_s": 5,
@@ -470,7 +369,7 @@
     "poll_s": 1,
     "sequential_targets": true,
     "swap_bytes": 0,
-    "whole_wall_s": 2130
+    "whole_wall_s": 7110
   },
   "runtime_model_path": "results/uarch/hbm_runtime_calibration_r8_20261002/model.json",
   "runtime_model_sha256": "f5ea8bd16fb04b08d0cbc5f39adef4dfb51723306416535212c76f7eff49f98c",
@@ -509,7 +408,7 @@
     "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
     "rtl/v41rom/ot_v41_bterm2.sv": "7bcef5af5f27d2c8f43f8d185d0a6a3932ec003aa9a10979d166fdd0396154f9"
   },
-  "target": "Qwen",
+  "target": "DS",
   "task": "H1",
   "verified_toolchain": {
     "files_sha256": {

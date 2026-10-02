@@ -17,6 +17,8 @@ def verify(m,require_root=True):
    if I.digest(f)!=h:raise ValueError('qualified compiler/runtime changed: '+f)
  committed=subprocess.check_output(['git','show',m['GO_commit']+':'+m['GO_record_path']],cwd=ROOT)
  if committed!=(prior/'GO.json').read_bytes():raise ValueError('original committed build GO mismatch')
+ oldgo=json.loads(committed);oldp=json.loads((prior/'proposal.json').read_text());oldv=json.loads((prior/'verdict.json').read_text())
+ if oldgo['source_commit']!=m['source_commit'] or oldv['source_commit']!=m['source_commit'] or oldp['source_sha256']!=m['source_sha256'] or oldp['gate_tool_sha256']!=m['gate_tool_sha256'] or oldp['verified_toolchain']['files_sha256']!=m['verified_tool_files_sha256'] or oldv['binary_sha256'].get('DS/obj/Vconnected')!=m['binary']['sha256']:raise ValueError('qualified source/tool/frame provenance mismatch')
  c=json.loads((prior/'DS-CXX-end.json').read_text());a=json.loads((prior/'DS/CXX_archive_receipt.json').read_text())
  if c['exit_code']!=0 or c['termination_reason'] is not None or a!=m['actual_archive_receipt'] or a['archive_members']!=a['generated_objects'] or a['binary_sha256']!=m['binary']['sha256']:raise ValueError('qualified complete CXX/archive required')
  if c['argv']!=m['CXX_argv']:raise ValueError('qualified frame argv changed')
