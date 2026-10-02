@@ -1,0 +1,20 @@
+{
+  "actual_exit_code": 1,
+  "artifact_sha256": {
+    "frontend.log": "ce094f9000b9dd6ea0b1eb56d167f7fa230e6bb801dc6b519453d9d6b6e48469",
+    "service_terminal.txt": "20b44324af5af5655bcb7e985510a3d2246f20ef3bc3835fefb9aab565fd655c",
+    "start.json": "22dfac451daf401109a9de6200e0aa3e558837f3c0525baa276dcbeb12926626",
+    "verdict.json": "98bd662cedc2966047b1ad2addee6ab762bd6a8627e99a7b76977fd189ce4b7c"
+  },
+  "cause": "Window signals live under dut.g_packed_kv; observation wrapper uses dut.w_* root paths. Engine source is unchanged.",
+  "error_count": 20,
+  "native_compile_credit": false,
+  "next_action": "Observation-only scope correction, source manifest/tests rebind, separately reviewed successor; no engine edits or forced ready.",
+  "original_PC24_cause": "UNOBSERVED",
+  "process_terminal": "MainPID=0\nExecMainStatus=1\nActiveState=failed\nInvocationID=71ed2f8b5ed04e8dbbfc119864b4d6c6\n",
+  "runtime_credit": false,
+  "schema": "opentallas.D1.frontend-parent-terminal.v1",
+  "token_credit": false,
+  "verdict": "FAIL_FRONTEND_HIERARCHICAL_OBSERVER_SCOPE",
+  "wall_s": 1.001602556090802
+}
