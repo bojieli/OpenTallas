@@ -1,0 +1,53 @@
+{
+  "adoption": false,
+  "model_l0_attribution": {
+    "attribution": {
+      "allreduce_cycles": 991,
+      "allreduce_gap_cycles": 1098.0,
+      "allreduces_per_layer": 2,
+      "body_cycles": 2687,
+      "body_gap_cycles": 227,
+      "body_ratio": 1.0923,
+      "fix_pending": "claude/w12-qwen-rom 79783ff9 one-segment all-reduce, NOT measured (est. ~620 cycles)",
+      "model_body_cycles": 2460,
+      "segment_cycles": 497,
+      "segments_per_allreduce": 2,
+      "spans": {
+        "attn": 87,
+        "down": 480,
+        "down_ar": 991,
+        "gate_up": 528,
+        "o_ar": 991,
+        "post": 69,
+        "pv_o_me": 769,
+        "qkv": 431,
+        "silu": 119,
+        "tail": 222
+      },
+      "src": "claude/w12-qwen-rom a17a3c79 results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64_itrace.txt"
+    },
+    "gap_cycles_at_rtl_collective": 1531,
+    "model_allreduce_cycles": 442.0,
+    "model_layer_chain_cycles": 2460,
+    "model_layer_cycles": 3344.0,
+    "model_layer_cycles_at_rtl_collective": 3138,
+    "model_short_pct": 28.4,
+    "ratio": 1.3962,
+    "rtl": {
+      "collective_lat_cycles": 339,
+      "cycles": 4669,
+      "groups": 6144,
+      "me_extra": 112,
+      "position": 0,
+      "src": "claude/w12-qwen-rom 42ecf382 results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64.json (stages.L0.cycles)",
+      "su_width": 64,
+      "total_cycles": 4676,
+      "tp": 4
+    },
+    "status": "ATTRIBUTED (W12b a17a3c79): body +9.2% (ME latency per op), all-reduce 2 serialized TP segments"
+  },
+  "model_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "new_engine_or_pnr_allowed": false,
+  "schema": "opentallas.qwen-rom-sidecar-model-scope.v1",
+  "scope": "Existing unified TP4/G6144/SU64/position0 calibration; no hardware sizing or changed headline. Physical LAT7/KV_PREP variant is distinct from running arithmetic; build/P&R remains blocked on contextual source/model join."
+}
