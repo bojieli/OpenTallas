@@ -1,0 +1,17 @@
+{
+  "preparation_tests": "guard reuse and feedback tests passed",
+  "independent_validation": "163 source pins; 23 positive cases; four mutants; exact loop-free baseline frontend closure validated",
+  "source_commit": "eaeb7c1e0d3e15dc188ec3768bcefded25fadcd0",
+  "actual_geometry": "SUN256 SUM64 BL16 IL8 NBMAX192 CHUNK8 MP1",
+  "fresh_service": "w17-recovery-resource-guard-parent-20261002-r1",
+  "runtime_scope": "finite core/SU/QE fixture and selected owner cancellation only",
+  "fulltoken": false,
+  "physical_provider": false,
+  "adoption": false,
+  "memory_cap_bytes": 34359738368,
+  "whole_seconds": 2400,
+  "CPU": [
+    30,
+    31
+  ]
+}
