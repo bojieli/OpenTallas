@@ -43,5 +43,9 @@
   "library_limits_exceeded": true,
   "physical_closure": false,
   "adoption": false,
-  "next": "priced contextual control distribution and reset/input/clock context, not automatic timing tuning"
+  "next": "priced contextual control distribution and reset/input/clock context, not automatic timing tuning",
+  "SS_failure_scope": "internal code_rd_q control setup,85loads",
+  "FF_negative_scope": "reset removal and zero-delay external address hold, not proven internal data hold failure",
+  "scope_record_sha256": "137c3d83e0997bc0fe5231425be4bf03d184191a22f61d6668f4b93fdd960b6b",
+  "contextual_reset_address_producers_qualified": false
 }
