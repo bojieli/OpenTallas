@@ -2026,6 +2026,355 @@ def project_pc0_provider_journal(packet, phase_schema, calibration):
         native_group_staging_bytes=packet['group_staging_bytes_retained'],whole_prefix_latency=None,hardware_admitted=False)
 
 
+class H1ControlContext:
+    """Control-only recurrence of the exact H1 fullSM/RF source; no FP oracle."""
+    def __init__(self):
+        self.state='IDLE';self.rf=(False,False,False,False);self.prefer_simd=False;self.alu=0
+    def step(self, *, host_read=False, host_write=False, simd=False,
+             response_ready=False, ack_ready=False, simd_done_ready=False):
+        pending,rv,ack,prefer=self.rf;idle=self.state=='IDLE'
+        choose=simd and (not host_read and not host_write or self.prefer_simd)
+        rd=self.state=='READ' or idle and not choose and host_read
+        wr=self.state=='WRITE' or idle and not choose and host_write
+        rf_idle=not(pending or rv or ack)
+        rr=rf_idle and (not wr or not prefer);ww=rf_idle and (not rd or prefer)
+        grants=dict(host_read=bool(host_read and idle and not choose and rr),
+                    host_write=bool(host_write and idle and not choose and ww),
+                    SIMD=bool(simd and idle and rr and ww and choose))
+        self.rf,_=h1_rf_control_step(self.rf,read=bool(rd),write=bool(wr),
+            response_ready=self.state=='OPERATE' or idle and response_ready,
+            ack_ready=self.state=='ACK' or idle and ack_ready)
+        next_state=self.state
+        if self.state=='IDLE':
+            if grants['SIMD']:next_state='READ';self.prefer_simd=False
+            elif grants['host_read'] or grants['host_write']:self.prefer_simd=True
+        elif self.state=='READ' and rr:next_state='OPERATE'
+        elif self.state=='OPERATE' and rv:next_state='WAIT_ALU'
+        elif self.state=='WAIT_ALU' and self.alu&64:next_state='WRITE'
+        elif self.state=='WRITE' and ww:next_state='ACK'
+        elif self.state=='ACK' and ack:next_state='DONE'
+        elif self.state=='DONE' and simd_done_ready:next_state='IDLE'
+        self.alu=((self.alu<<1)|int(self.state=='OPERATE' and rv))&127
+        self.state=next_state
+        return grants
+    def drained(self):return self.state=='IDLE' and not any(self.rf[:3])
+    def control_identity(self):return [self.state,list(self.rf),self.prefer_simd,self.alu]
+
+
+def prove_reserved_h1_fair_owner(contract):
+    """Constructive mutual-exclusion selector, bounded by executed H1 services.
+
+    New default-off software control policy, not an installed arbiter. Sources
+    hold pending descriptors; no unpriced payload FIFO or third RF port appears.
+    All accepted commands reserve sink acceptance through local credit clear.
+    Outer provider/version reverse remains a separate admission dependency.
+    """
+    services=contract['service_edges'];ports=['host_read','host_write','SIMD']
+    if [services[p] for p in ports]!=[3,2,14]:raise ValueError('matched actual H1 reference edge contract required')
+    reference={}
+    for port in ports:
+        context=H1ControlContext();trace=[]
+        for edge in range(services[port]):
+            grant=context.step(host_read=edge==0 and port=='host_read',host_write=edge==0 and port=='host_write',
+                simd=edge==0 and port=='SIMD',response_ready=True,ack_ready=True,simd_done_ready=True)
+            trace.append(dict(edge=edge,grant=grant,state=context.control_identity()))
+        if not context.drained() or sum(r['grant'][port] for r in trace)!=1:raise ValueError('executed H1 leaf service recurrence mismatch')
+        reference[port]=trace
+    # Even with ALL sinks ready, H1's nested preferences can starve host write:
+    # each intervening SIMD write resets RF prefer_write to0. This is distinct
+    # from response backpressure and proves why outer selection is necessary.
+    baseline=H1ControlContext();prefix=[]
+    for edge in range(3):
+        g=baseline.step(host_read=edge==0,response_ready=True,ack_ready=True,simd_done_ready=True)
+        prefix.append(dict(edge=edge,grant=g,state=baseline.control_identity()))
+    if not baseline.drained() or not baseline.prefer_simd or baseline.rf[3] is not True:
+        raise ValueError('nested starvation seed not reachable from actual reset')
+    start=baseline.control_identity();cycle=[]
+    for edge in range(17):
+        grant=baseline.step(host_read=True,host_write=True,simd=True,response_ready=True,ack_ready=True,simd_done_ready=True)
+        cycle.append(dict(edge=edge,grant=grant,state=baseline.control_identity()))
+    if baseline.control_identity()!=start or any(r['grant']['host_write'] for r in cycle):
+        raise ValueError('source-supported nested preference starvation cycle changed')
+    # Explicit rotating source grant: only ONE of the context's three RF
+    # request valids reaches H1. The actual wrapper's collision predicate is
+    # therefore false. Advance after the reserved sink/local idle completion.
+    fair=H1ControlContext();cursor=0;active=None;trace=[];grants=Counter()
+    for edge in range(3*sum(services[p] for p in ports)):
+        selected=ports[cursor] if active is None else None
+        g=fair.step(host_read=selected=='host_read',host_write=selected=='host_write',simd=selected=='SIMD',
+            response_ready=True,ack_ready=True,simd_done_ready=True)
+        if selected:
+            if g[selected] is not True or sum(g.values())!=1:raise ValueError('finite source grant not accepted at reserved idle')
+            active=selected;grants[selected]+=1
+        trace.append(dict(edge=edge,selected=selected,grant=g,state=fair.control_identity()))
+        if fair.drained():active=None;cursor=(cursor+1)%3
+    if active is not None or grants!=Counter({p:3 for p in ports}):raise ValueError('finite rotating owner failed drainage/fairness')
+    bounds={p:dict(other_two_holds=sum(services[q] for q in ports if q!=p),
+        arrival_at_drained_boundary_wait_upper=sum(services[q] for q in ports if q!=p),
+        arrival_during_one_prior_hold_wait_upper=max(services[q] for q in ports)+sum(services[q] for q in ports if q!=p),
+        local_service_edges=services[p]) for p in ports}
+    return dict(schema='H4_RESERVED_H1_ROTATING_OWNER_POLICY_V1',status='PASS_CONSTRUCTIVE_FINITE_LOCAL_OWNER_POLICY',
+        default_enabled=False,hardware_policy_installed=False,physical_request_fan_in=3,
+        request_sources=ports,per_SM_outstanding_source_credit=1,provider_wide_payload_FIFO_added=0,
+        source_leaf_traces=reference,baseline_nested_starvation_cycle=cycle,
+        baseline_starvation_reachable_prefix_from_reset=prefix,
+        baseline_starvation_state_repeats=True,baseline_starved_port='host_write',
+        constructive_rotation_trace=trace,all_persistent_ports_granted=dict(grants),local_wait_bounds=bounds,
+        before_admission_requirements=['exact source owner/version/home','sink acceptance slot reserved','all prior local RF credit drained'],
+        policy_register_bits_per_SM=2,policy_register_area_um2_per_SM=2*.2916,
+        policy_control_gate_upper_ASSUMED=18,gate_area_um2_ASSUMED=.3,placement_utilization_ASSUMED=.5,
+        incremental_control_footprint_um2_per_SM=(2*.2916+18*.3)/.5,
+        replicas_per_die=32,source_ports_and_payload_widths_changed=False,
+        physical_route_clock_gate_cost_qualified=False,
+        local_visibility='same accepted write edge reaches both copies; consume matching registered ACK before release',
+        local_reverse='actual H1 response/ACK/done valid clears at pre-reserved acceptance; counted in3/2/14 service',
+        atomic_C0_V1_boundary='rotate only when the external atomic owner is released; these local bounds cover standalone H1 transactions, not a whole typed V1 command',
+        unfinished_atomic_command_may_not_release_on_local_RF_idle=True,
+        C0_provider_reverse_source_bound=False,V1_integer_service_source_bound=False,
+        every_external_provider_alias_inventory_complete=False,
+        complete_production_wait_admission=False,whole_token_latency_ns=None,hardware_qualified=False)
+
+
+def inventory_h1_program_demands(ds_raw, qwen_raw):
+    """Pinned source demand units, never scalar-to-port or CPU-to-clock credit."""
+    pins={'DeepSeek':'c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264',
+          'Qwen':'ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc'}
+    for name,raw in [('DeepSeek',ds_raw),('Qwen',qwen_raw)]:
+        if hashlib.sha256(raw).hexdigest()!=pins[name]:raise ValueError('exact native program artifact pin required '+name)
+    ds=json.loads(gzip.decompress(ds_raw));q=json.loads(gzip.decompress(qwen_raw))
+    profiles={};rows=[]
+    for tid,t in ds['templates'].items():
+        instances=Counter();elements=Counter()
+        for ins in t['code']:
+            shape=ins['shape']
+            if any(type(x)is not int or x<0 for x in shape):raise ValueError('concrete native result extent required')
+            extent=1
+            for x in shape:extent*=x
+            instances[ins['op']]+=1;elements[ins['op']]+=extent
+        profiles[tid]=dict(code_sha256=hashlib.sha256(json.dumps(t['code'],sort_keys=True,separators=(',',':')).encode()).hexdigest(),
+            instruction_instances=dict(instances),declared_result_elements=dict(elements))
+    totals=Counter();element_totals=Counter();template_calls=0
+    for op in ds['instructions']:
+        calls=Counter()
+        for owned in op['rank_bindings']:
+            if owned.get('empty_owned_extent'):continue
+            ids=[b['template'] for b in owned['buffer_programs']] if owned['buffer_programs'] else [owned['template']]
+            for tid in ids:
+                if tid not in profiles:raise ValueError('unresolved actual source template')
+                calls[tid]+=1
+        counts=Counter();elements=Counter()
+        for tid,n in calls.items():
+            counts.update({k:v*n for k,v in profiles[tid]['instruction_instances'].items()})
+            elements.update({k:v*n for k,v in profiles[tid]['declared_result_elements'].items()})
+        totals.update(counts);element_totals.update(elements);template_calls+=sum(calls.values())
+        rows.append(dict(PC=op['pc'],family=op['family'],source_template_calls=dict(calls),
+            source_instruction_instances=dict(counts),source_declared_result_elements=dict(elements),
+            physical_RF_command_count=None,physical_shared64_command_count=None,
+            source_dependencies=op['dependencies'],native_outer_loops=op['native_outer_loops']))
+    if [r['PC'] for r in rows]!=list(range(2213)):raise ValueError('complete ordered DS PC inventory required')
+    qrows=[];qtotals=Counter();budgets=Counter()
+    for op in q['operations']:
+        exp=op['calendar_export'];counts=exp['physical_primitives']['native_primitive_commands']
+        if any(type(v)is not int or v<0 for v in counts.values()):raise ValueError('finite source primitive command counts required')
+        qtotals.update(counts);budgets.update(exp['conservative_serial_service_budget'])
+        qrows.append(dict(PC=op['pc'],family=op['opcode'],native_primitive_commands=counts,
+            exported_kernel_invocations=exp['physical_primitives']['kernel_invocations'],
+            provisional_source_service_budget=exp['conservative_serial_service_budget'],
+            source_shared_beat_bytes=exp['counts_full_context']['ports']['shared_beat_bytes'],
+            physical_shared_beat_bytes=64,physical_shared_transactions=None))
+    if [r['PC'] for r in qrows]!=list(range(1737)):raise ValueError('complete ordered Qwen PC inventory required')
+    return dict(schema='H4_H1_BOTH_PINNED_PROGRAM_DEMAND_INVENTORY_V1',source_pins=pins,
+        DeepSeek=dict(PCs=2213,families=len({r['family'] for r in rows}),template_calls=template_calls,
+            source_instruction_instances=dict(totals),source_declared_result_elements=dict(element_totals),
+            templates=profiles,PC_inventory=rows,
+            units='retained c65 template instructions and declared result shapes per exported rank/buffer binding; not executed scalar count or RF commands',
+            corrected_group128_continuation_replaces_template_demand='separate actual dispatch/group-tile journal; never add both',
+            current_actual_group_continuation_physical_counts=None),
+        Qwen=dict(PCs=1737,families=len({r['family'] for r in qrows}),native_primitive_commands=dict(qtotals),
+            provisional_source_service_budget=dict(budgets),PC_inventory=qrows,
+            units='producer bounded_r2 native primitive command counts; service budget is provisional and is not calibrated H1 edges',
+            shared_geometry_reconciliation='old128B export requires actual64B address/span splitting; transaction count stays unknown until span join'),
+        H1_directed_endpoint_eligible_opcodes=['FADD','FMUL'],
+        eligibility_is_not_operand_routing_or_full_program_hardware_coverage=True,
+        replacement_rule='replace matched local endpoint costs once; preserve C0/RF/I64/provider charges outside replaced component',
+        complete_dynamic_movement_join=False,whole_token_latency=None,hardware_qualified=False)
+
+
+def h1_clock_crossing_obligations(sources, expected_pins):
+    """Source-sized finite CDC inventory and a concrete held-route selfloop."""
+    names={'rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv',
+           'rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv','rtl/model_ready_hbm_r14/ot_hbm_r14_route.sv'}
+    if set(sources)!=names or set(expected_pins)!=names:raise ValueError('complete actual bridge/fifo/route source inventory required')
+    for name,raw in sources.items():
+        if hashlib.sha256(raw).hexdigest()!=expected_pins[name]:raise ValueError('actual CDC source pin mismatch')
+    bridge=sources['rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv'].decode()
+    fifo=sources['rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv'].decode()
+    route=sources['rtl/model_ready_hbm_r14/ot_hbm_r14_route.sv'].decode()
+    if not all(s in bridge for s in ['WIDTH=471','EDGES(38)','first(', 'second(']):raise ValueError('actual CDC geometry changed')
+    if not all(s in fifo for s in ['mem[0:1]','rgw1<=rg','rgw2<=rgw1','wgr1<=wg','wgr2<=wgr1']):raise ValueError('actual finite two-entry CDC changed')
+    if not all(s in route for s in ['assign ir=!live','assign ov=live&&left==0','if(ov&&ore)live<=0']):raise ValueError('actual held-route lifecycle changed')
+    # Exact reachable route state after countdown. ore=0 leaves packet/live/left
+    # unchanged on every further edge; no source-derived maximum sink wait.
+    live,left=True,38
+    for _ in range(38):
+        if live and left:left-=1
+    if not (live and left==0):raise ValueError('route countdown replay failed')
+    for _ in range(100):
+        ore=False
+        if live and left:left-=1
+        if live and left==0 and ore:live=False
+    return dict(schema='H4_H1_ACTUAL_CDC_OBLIGATIONS_V1',source_pins=expected_pins,
+        bridge_width_bits=471,FIFO_entries_each=2,FIFO_count=2,route_packet_registers=1,
+        in_flight_storage_bits=5*471,route_hold_fast_edges=38,
+        synchronizer_stages_each_direction=2,
+        forward_path=['source_to_FAST_FIFO2','FAST_held_route38','FAST_to_destination_FIFO2'],
+        finite_capacity_requires_admission_credit=True,
+        route_counterexample=dict(reachable_state={'live':True,'left':0},sink_ready=False,
+            repeated_edges=100,identity_unchanged=live and left==0,maximum_sink_wait=None),
+        reverse_credit='each FIFO read pointer returns through two write-domain synchronizer stages; no release before synchronized pointer',
+        source_destination_clock_periods=None,phase_alignment=None,reset_online_rendezvous_bound=None,
+        source_H1_C0_V1_bridge_instantiation_mapping=None,outer_provider_ACK_reverse_bound=None,
+        status='FAIL_FULL_PRODUCTION_FINITE_CDC_ADMISSION',bound_kind='SOURCE_CONTROL_NOT_MEASURED_CONTEXT',
+        hardware_cycles_or_ns=None,hardware_qualified=False)
+
+
+def h1_calibrated_service_contract(verdict, review, logs, sources):
+    """Retained actual128 H1 execution, separate functional/physical gates."""
+    canonical=lambda x:json.dumps(x,sort_keys=True,separators=(',',':')).encode()
+    if (hashlib.sha256(canonical(verdict)).hexdigest()!='250847b80746a737a64b89542e10cc0325b532d1c753f5aa92071f918c1fe607'
+            or hashlib.sha256(canonical(review)).hexdigest()!='871dc7c9d4ba5caa38b9faf9b41ae7f0c98b296a8329f671d9542720463c4ba5'):
+        raise ValueError('immutable reviewed actual H1 execution receipt required')
+    if (verdict.get('verdict')!='PASS_DIRECTED_FULL128_AND_STORAGE_ONLY'
+            or verdict.get('arithmetic_exact_PASS') is not True
+            or review.get('all_source_pins_verified') is not True
+            or review.get('all_five_log_hashes_verified') is not True):
+        raise ValueError('actual directed H1 execution receipt required')
+    for name,raw in logs.items():
+        if hashlib.sha256(raw).hexdigest()!=verdict['logs_sha256'].get(name):
+            raise ValueError('retained H1 executed log source pin')
+    if set(logs)!={'actual_sim.log','storage_sim.log'}:raise ValueError('both actual H1 execution logs required')
+    for name,raw in sources.items():
+        if hashlib.sha256(raw).hexdigest()!=verdict['source_sha256'].get(name):
+            raise ValueError('actual H1 executed RTL/bench source pin')
+    required={'rtl/gpu/ot_gpu_rf_service.sv','rtl/gpu/ot_gpu_scratch_service.sv',
+        'rtl/gpu/ot_gpu_full_sm_service.sv','rtl/test/full_sm_service/tb_full_service_exact.sv',
+        'rtl/test/full_sm_service/tb_storage.sv'}
+    if set(sources)!=required:raise ValueError('complete H1 service and executed bench sources required')
+    bench=sources['rtl/test/full_sm_service/tb_full_service_exact.sv'].decode()
+    if 'cycles!=12' not in bench or 'PASS full128 SIMD' not in logs['actual_sim.log'].decode():
+        raise ValueError('actual measured12edge SIMD completion missing')
+    if 'PASS storage: 512 RF vectors' not in logs['storage_sim.log'].decode():
+        raise ValueError('actual exhaustive RF/shared execution missing')
+    return dict(schema='H4_H1_MATCHED_EXECUTION_EDGE_CONTRACT_V1',
+        evidence='MATCHING_RTL_FUNCTIONAL_HARNESS_NOT_PHYSICAL_CONTEXT',
+        source_commit=verdict['source_commit'],source_pins={k:hashlib.sha256(v).hexdigest() for k,v in sources.items()},
+        executed_logs={k:hashlib.sha256(v).hexdigest() for k,v in logs.items()},
+        service_edges={'host_read':3,'host_write':2,'SIMD':14,'shared_read':3,'shared_write':2},
+        edge_definition='accepted-edge counts as first edge; include one final sink-consumption edge',
+        SIMD_done_after_accept_edges=12,SIMD_accept_through_sink_release_edges=14,
+        RF_shared_edges_kind='DERIVED_SOURCE_CONTROL_CHECKED_BY_EXECUTED_STORAGE_CASES',
+        SIMD_edges_kind='MEASURED_DIRECTED_RTL_BENCH12_PLUS_ACCEPT_AND_DONE_CONSUMPTION',
+        native_SIMD_opcodes=['FADD','FMUL'],unsupported_V1_opcodes='integer/convert/bit/predicate endpoints have no executed bridge in this receipt',
+        sink_policy_required='sink acceptance slot reserved before command admission; no external ready wait in this local service',
+        local_reverse='response/ACK/done consumption clears actual H1 held credit; outer C0/provider reverse is separate',
+        full_parent_bridge_verified=False,SS_FF_verified=False,hardware_clock_ns=None,hardware_qualified=False)
+
+
+def compile_reserved_h1_publications(projection, homes, contract):
+    """Actual PC0 publications -> finite source-port service reservations.
+
+    This replaces a local RF-service contribution only. It never converts the
+    provider's sector timestamps or prices missing C0/V1/L2/global reverse.
+    Conservative RMW uses the actual full vector ports and both mirror writes.
+    """
+    canonical=lambda x:json.dumps(x,sort_keys=True,separators=(',',':')).encode()
+    if (hashlib.sha256(canonical(projection)).hexdigest()!='6c1e01754858273eab48e004b200d8b5aa67cece24499a4431f1d2400292c043'
+            or hashlib.sha256(canonical(homes)).hexdigest()!='1bcca827d883ea69049c950e64260214e626bba3ec67985e38f61a8e994ba94a'):
+        raise ValueError('exact actual PC0 publication/home source pin required')
+    if (projection.get('raw_journal_SHA256')!='6b4f32a19ab71908e90d51d9e6d292d73932c8d8d28d974fefc92f5b859940de'
+            or projection.get('transactions')!=738816 or len(projection.get('publications',[]))!=384):
+        raise ValueError('complete actual96 PC0 publication source required')
+    if contract.get('service_edges')!={'host_read':3,'host_write':2,'SIMD':14,'shared_read':3,'shared_write':2}:
+        raise ValueError('matched actual H1 finite local service contract required')
+    source_ids=set();packets=[];by_endpoint=Counter();clients={};sequence=Counter();leases={}
+    for publication in projection['publications']:
+        identity=publication['identity'];rank=identity['rank'];version=identity['version']
+        key=(rank,version)
+        if key in source_ids or identity['PC']!=0 or identity['generation']!=1 or not 0<=rank<96:
+            raise ValueError('unique actual PC0 publication owner required')
+        source_ids.add(key)
+        phases=[e['event'] for e in publication['terminal_events']]
+        if phases!=['software_backing_visible','consumer_accept','validated_reverse_grant']:
+            raise ValueError('actual publication lifecycle incomplete')
+        for index in identity['home_indices']:
+            h=homes[index]
+            if h['version']!=version or rank not in h['rank_group'] or h['birth_pc']!=0 or h['home']['class']!='RF':
+                raise ValueError('exact actual publication RF reference required')
+            sm=h['SM'];base=h['home']['slot_first'];words=h['word_count'];vectors=ceil(words,128)
+            if not 0<=sm<32 or words<=0 or vectors>h['home']['vectors'] or base+vectors>512:
+                raise ValueError('actual finite512vector RF extent required')
+            endpoint=(rank,sm);client=(rank,sm,version,index)
+            clients[client]=dict(rank=rank,die=rank,SM=sm,version=version,provider_reference=index,
+                source_publication_payload_sha256=publication['payload_sha256'],source_ports=['host_read','host_write'],
+                published_words=words,RF_vectors=vectors,global_version_retire_PC=h['retire_pc'])
+            parent_sequence=sequence[endpoint]+1
+            for ordinal in range(vectors):
+                slot=base+ordinal;valid=min(128,words-ordinal*128)
+                physical=(rank,sm,slot)
+                if physical in leases and leases[physical]!=version:raise ValueError('simultaneous actual PC0 RF version lease alias')
+                leases[physical]=version
+                kinds=(['host_read'] if valid<128 else [])+['host_write','host_read']
+                for position,kind in enumerate(kinds):
+                    first=by_endpoint[endpoint];cost=contract['service_edges'][kind];sequence[endpoint]+=1
+                    packet=dict(PC=0,rank=rank,die=rank,SM=sm,generation=1,sequence=sequence[endpoint],
+                        provider_reference=index,version=version,RF_slot=slot,active_words=valid,
+                        RF_page=slot//128,RF_row=slot%128,
+                        physical_mirror_byte_addresses=[(2*sm+copy)*262144+slot*512 for copy in (0,1)],
+                        reference_instance=f'die{rank}/g_sm[{sm}]/u_service/g_enabled/u_rf',
+                        source_version_lease_retire_PC=h['retire_pc'],
+                        local_port_credit_release_does_not_retire_version=True,
+                        port=kind,role='partial_vector_RMW_read' if valid<128 and position==0 else 'both_mirror_write' if kind=='host_write' else 'actual_publication_readback',
+                        start_local_reference_edge=first,finish_local_reference_edge=first+cost,source_service_edges=cost,
+                        source_owner=[1,0,parent_sequence,rank,sm],fragment_sequence=sequence[endpoint],
+                        parent_publication_owner=[0,rank,version,identity['generation']],
+                        C0_owner_must_hold_across_all_home_packets=True,
+                        request_acceptance='at reserved idle edge; this is an explicit precondition, not a backend wait estimate',
+                        request_to_read_capture_edges=1 if kind=='host_read' else None,
+                        registered_ACK_assertion='accepted write edge; both physical copy write_go receipts required' if kind=='host_write' else 'not a write',
+                        sink_consume_edge=first+cost-1,local_reverse_idle_edge=first+cost,
+                        read_pair_response_bytes=1024 if kind=='host_read' else 0,
+                        RF_read_addresses=[slot,slot] if kind=='host_read' else [],
+                        physical_mirror_write_bytes=1024 if kind=='host_write' else 0,
+                        used_operand_read_ports=[True,False] if kind=='host_read' else [],
+                        visibility='both copy write_go observed with matching common host_ACK; consumer and local credit release reserved',
+                        outer_provider_reverse='SOURCE_SOFTWARE_RECEIPT_ONLY; physical endpoint not bound')
+                    # Same reference is owned through capture/ACK, sink, local
+                    # reverse readiness. Source order avoids a competing alias.
+                    packets.append(packet);by_endpoint[endpoint]+=cost
+    if {r for r,v in source_ids}!=set(range(96)) or len(source_ids)!=384:
+        raise ValueError('all96 actual source ranks/publications required')
+    counts=Counter(p['role'] for p in packets)
+    return dict(schema='H4_ACTUAL_PC0_RESERVED_H1_LOCAL_CALENDAR_V1',
+        scope='all actual96 PC0 RF publications only; opt-in reserved-sink software compiler policy, not installed production owner',
+        source_publications=384,source_ranks=96,registered_version_home_clients=len(clients),
+        client_inventory=list(clients.values()),packets=packets,packet_counts=dict(counts),
+        per_SM_reference_edge_upper=[dict(rank=r,die=r,SM=s,local_reference_edges=n) for (r,s),n in sorted(by_endpoint.items())],
+        serialized_per_die_reference_edge_upper=max(sum(n for (r,s),n in by_endpoint.items() if r==rank) for rank in range(96)),
+        max_one_SM_reference_edges=max(by_endpoint.values()),
+        local_policy='source-ordered one request and reserved response/ACK acceptance per physical SM; no accepted owner waits on an unreserved sink',
+        partial_RMW_assembly=dict(affected_writes=counts['partial_vector_RMW_read'],
+            source_required='preserve untouched lanes from actual read response, merge exact source words before write; H1 host ports do not implement that merge',
+            physical_merge_endpoint_bound=False,merge_delay_credited_as_zero=False),
+        actual_H1_external_RF_request_port_inventory_per_SM=['host_read','host_write','SIMD'],
+        physical_SM_inventory_count=96*32,local_outstanding_credit_per_SM=1,
+        every_unused_RF_pair_payload_charged=True,partial_vector_RMW_read_charged=True,
+        H1_service_replacement_cost_keys=['RF_read_pair','RF_both_mirror_write'],
+        old_service_cost_must_be_replaced_not_added=True,existing_V1_C0_I64_provider_cost_added=0,
+        outer_C0_V1_provider_wait_admission='FAIL_MISSING_SOURCE_CONNECTED_ARB_CONSUMER_REVERSE_CONTRACT',
+        registered_version_clients_are_not_implemented_physical_arbiters=True,
+        selected_L2_path_used=False,whole_token_latency_ns=None,hardware_qualified=False)
+
+
 def h1_rf_control_step(state, *, read=False, write=False, response_ready=False, ack_ready=False):
     """Exact pinned H1 control recurrence; edges, never provider ticks.
 

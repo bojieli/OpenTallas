@@ -1,0 +1,35 @@
+{
+  "V1_integer_hardware_coverage_from_H1_receipt": [],
+  "count": 22,
+  "current_H1_executed_SIMD_opcodes": [
+    "FADD",
+    "FMUL"
+  ],
+  "model_source_path": "tools/h4_v1_g0_model.py",
+  "native_V1_opcodes": [
+    "AND",
+    "F2I",
+    "FCMP_EQ",
+    "FCMP_GT",
+    "FCMP_LT",
+    "FCMP_NE",
+    "FMAX",
+    "FMIN",
+    "FP8_PACK",
+    "FP8_UNPACK",
+    "I2F",
+    "IADD",
+    "IMOD",
+    "IMUL",
+    "IOTA",
+    "ISUB",
+    "LDEXP",
+    "OR",
+    "SELECT",
+    "SHL",
+    "SHR",
+    "XOR"
+  ],
+  "no_CPU_primitive_credit_as_RTL": true,
+  "sha256": "a41262dec4fa827a4ecccd32cfee55ccfc14c612e6f8a528e99585d2cf59c884"
+}

@@ -12,6 +12,112 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_both_pinned_program_demand_inventory_keeps_units_and_unknowns(self):
+        base=ROOT/c.OUT/'h1_matched_execution_publication_r1'
+        inventory=c.read_json(base/'both_program_demand_inventory.json.gz')
+        self.assertEqual((inventory['DeepSeek']['PCs'],inventory['Qwen']['PCs']),(2213,1737))
+        self.assertEqual((inventory['DeepSeek']['families'],inventory['Qwen']['families']),(30,21))
+        for name in ['DeepSeek','Qwen']:
+            rows=inventory[name]['PC_inventory']
+            self.assertEqual([r['PC'] for r in rows],list(range(inventory[name]['PCs'])))
+        from collections import Counter
+        totals=Counter()
+        for r in inventory['Qwen']['PC_inventory']:
+            totals.update(r['native_primitive_commands'])
+            self.assertEqual(r['source_shared_beat_bytes'],128)
+            self.assertEqual(r['physical_shared_beat_bytes'],64)
+            self.assertIsNone(r['physical_shared_transactions'])
+        self.assertEqual(dict(totals),inventory['Qwen']['native_primitive_commands'])
+        totals=Counter()
+        for r in inventory['DeepSeek']['PC_inventory']:
+            totals.update(r['source_instruction_instances'])
+            for tid in r['source_template_calls']:self.assertIn(tid,inventory['DeepSeek']['templates'])
+            self.assertIsNone(r['physical_RF_command_count'])
+        self.assertEqual(dict(totals),inventory['DeepSeek']['source_instruction_instances'])
+        self.assertFalse(inventory['complete_dynamic_movement_join'])
+        self.assertIsNone(inventory['whole_token_latency'])
+        with self.assertRaisesRegex(ValueError,'artifact pin'):
+            c.inventory_h1_program_demands(b'forged opcode counts',b'forged export')
+
+    def test_actual_CDC_finite_storage_retains_backpressure_and_reverse_unknown(self):
+        base=ROOT/c.OUT/'h1_matched_execution_publication_r1'
+        pins=json.loads((base/'CDC_source_pins.json').read_bytes())
+        sources={n:gzip.decompress((base/(Path(n).name+'.gz')).read_bytes()) for n in pins}
+        proof=c.h1_clock_crossing_obligations(sources,pins)
+        self.assertEqual(proof['in_flight_storage_bits'],2355)
+        self.assertEqual(proof['route_hold_fast_edges'],38)
+        self.assertTrue(proof['route_counterexample']['identity_unchanged'])
+        self.assertIsNone(proof['route_counterexample']['maximum_sink_wait'])
+        self.assertIsNone(proof['source_H1_C0_V1_bridge_instantiation_mapping'])
+        self.assertIsNone(proof['hardware_cycles_or_ns'])
+        bad=dict(sources);name=next(iter(bad));bad[name]+=b'forged'
+        with self.assertRaisesRegex(ValueError,'pin mismatch'):c.h1_clock_crossing_obligations(bad,pins)
+        with self.assertRaisesRegex(ValueError,'complete actual'):
+            c.h1_clock_crossing_obligations({},pins)
+
+    def calibrated_H1(self):
+        base=ROOT/c.OUT/'h1_matched_execution_publication_r1'
+        sources={name:gzip.decompress((base/(Path(name).name+'.gz')).read_bytes()) for name in [
+            'rtl/gpu/ot_gpu_rf_service.sv','rtl/gpu/ot_gpu_scratch_service.sv','rtl/gpu/ot_gpu_full_sm_service.sv',
+            'rtl/test/full_sm_service/tb_full_service_exact.sv','rtl/test/full_sm_service/tb_storage.sv']}
+        verdict=json.loads((base/'verdict.json').read_bytes());review=json.loads((base/'review.json').read_bytes())
+        logs={n:(base/n).read_bytes() for n in ['actual_sim.log','storage_sim.log']}
+        return base,verdict,review,logs,sources,c.h1_calibrated_service_contract(verdict,review,logs,sources)
+
+    def test_matched_executed_H1_contract_rejects_receipt_log_and_source_mutants(self):
+        base,v,r,logs,sources,contract=self.calibrated_H1()
+        self.assertEqual(contract['SIMD_done_after_accept_edges'],12)
+        self.assertEqual(contract['SIMD_accept_through_sink_release_edges'],14)
+        self.assertFalse(contract['SS_FF_verified']);self.assertIsNone(contract['hardware_clock_ns'])
+        altered=copy.deepcopy(v);altered['source_commit']='forged'
+        with self.assertRaisesRegex(ValueError,'immutable'):c.h1_calibrated_service_contract(altered,r,logs,sources)
+        with self.assertRaisesRegex(ValueError,'log source pin'):c.h1_calibrated_service_contract(v,r,dict(logs,**{'actual_sim.log':logs['actual_sim.log']+b'\n'}),sources)
+        with self.assertRaisesRegex(ValueError,'bench source pin'):c.h1_calibrated_service_contract(v,r,logs,dict(sources,**{'rtl/gpu/ot_gpu_rf_service.sv':b'wrong'}))
+
+    def test_source_nested_arbitration_starves_write_without_sink_stalls_and_policy_fixes_it(self):
+        base,v,r,logs,sources,contract=self.calibrated_H1();proof=c.prove_reserved_h1_fair_owner(contract)
+        self.assertTrue(proof['baseline_starvation_state_repeats'])
+        self.assertEqual(proof['baseline_starvation_reachable_prefix_from_reset'][-1]['state'],proof['baseline_nested_starvation_cycle'][-1]['state'])
+        self.assertFalse(any(t['grant']['host_write'] for t in proof['baseline_nested_starvation_cycle']))
+        self.assertEqual(proof['all_persistent_ports_granted'],{'host_read':3,'host_write':3,'SIMD':3})
+        self.assertEqual(proof['local_wait_bounds']['host_write']['arrival_at_drained_boundary_wait_upper'],17)
+        self.assertEqual(proof['local_wait_bounds']['host_read']['arrival_at_drained_boundary_wait_upper'],16)
+        self.assertEqual(proof['local_wait_bounds']['SIMD']['arrival_at_drained_boundary_wait_upper'],5)
+        self.assertFalse(proof['complete_production_wait_admission']);self.assertFalse(proof['hardware_policy_installed'])
+        self.assertTrue(proof['unfinished_atomic_command_may_not_release_on_local_RF_idle'])
+        bad=copy.deepcopy(contract);bad['service_edges']['SIMD']=1
+        with self.assertRaisesRegex(ValueError,'actual H1'):c.prove_reserved_h1_fair_owner(bad)
+
+    def test_actual96_publication_packets_bind_real_homes_and_pay_partial_RMW(self):
+        base,v,r,logs,sources,contract=self.calibrated_H1()
+        projection=json.loads(gzip.decompress((base/'PC0_projection.json.gz').read_bytes()))
+        homes={int(k):v for k,v in json.loads(gzip.decompress((base/'PC0_home_subset.json.gz').read_bytes())).items()}
+        cal=c.compile_reserved_h1_publications(projection,homes,contract)
+        self.assertEqual(cal['registered_version_home_clients'],2208)
+        self.assertEqual(cal['packet_counts'],{'partial_vector_RMW_read':288,'both_mirror_write':15648,'actual_publication_readback':15648})
+        self.assertEqual(cal['max_one_SM_reference_edges'],64)
+        self.assertEqual(cal['serialized_per_die_reference_edge_upper'],824)
+        self.assertFalse(cal['partial_RMW_assembly']['physical_merge_endpoint_bound'])
+        self.assertFalse(cal['partial_RMW_assembly']['merge_delay_credited_as_zero'])
+        self.assertEqual(cal['existing_V1_C0_I64_provider_cost_added'],0)
+        self.assertIsNone(cal['whole_token_latency_ns'])
+        parent_owners={}
+        for packet in cal['packets']:
+            h=homes[packet['provider_reference']];self.assertEqual(h['version'],packet['version'])
+            self.assertIn(packet['rank'],h['rank_group']);self.assertEqual(packet['SM'],h['SM'])
+            key=(packet['rank'],packet['SM'],packet['provider_reference'])
+            parent_owners.setdefault(key,packet['source_owner']);self.assertEqual(parent_owners[key],packet['source_owner'])
+            self.assertTrue(packet['C0_owner_must_hold_across_all_home_packets'])
+            if packet['port']=='host_write':self.assertEqual(packet['physical_mirror_write_bytes'],1024)
+            else:
+                self.assertEqual(packet['read_pair_response_bytes'],1024)
+                self.assertEqual(packet['RF_read_addresses'],[packet['RF_slot'],packet['RF_slot']])
+        corrupt=copy.deepcopy(projection);corrupt['publications'][0]['terminal_events'].pop()
+        with self.assertRaisesRegex(ValueError,'source pin'):c.compile_reserved_h1_publications(corrupt,homes,contract)
+        broken=dict(homes);index=projection['publications'][0]['identity']['home_indices'][0]
+        broken[index]=dict(homes[index],version='foreign')
+        with self.assertRaisesRegex(ValueError,'source pin'):c.compile_reserved_h1_publications(projection,broken,contract)
+
     def test_actual_H1_leaf_edges_and_nonfinite_hold_source_proof(self):
         base=ROOT/c.OUT/'pc10_exact_home_lineage_r1'
         sources={p.name[:-3]:gzip.decompress(p.read_bytes()) for p in base.glob('ot_gpu*.sv.gz')}
