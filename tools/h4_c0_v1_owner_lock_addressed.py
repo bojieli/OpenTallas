@@ -5,13 +5,14 @@ No RTL or installed rank/SM map is fabricated. A connection inventory is an
 explicit input; software protocol controls do not certify installed hardware.
 V1's existing command lease and costs are loaded from the immutable owner pin.
 """
-import copy, functools, hashlib, json, pathlib, threading, types, re, collections
+import ast, copy, functools, hashlib, json, pathlib, threading, types, re, collections
 from h4_c0_model import pinned, H1, NATIVE, ROOT
 from h4_c0_bridge import AdmissionError
 from uarch_model import DFF_UM2,GPU_LOGIC_UTIL
 
 V1='f7fa8e290d419f6de3356385c0b55ded768c2090'
-OUT=ROOT/'results/uarch/h4_c0_v1_owner_lock_20261002'
+PHYSICAL_JOIN='45caee33b2c5cf4f50f679607bfe71be27c48539'
+OUT=ROOT/'results/uarch/h4_c0_v1_owner_lock_addressed_20261002'
 
 @functools.lru_cache(maxsize=1)
 def v1_api():
@@ -20,6 +21,14 @@ def v1_api():
     module.__file__=str(ROOT/'tools/h4_v1_g0_model.py')
     exec(compile(raw,'V1@'+V1,'exec'),module.__dict__)
     return module
+
+@functools.lru_cache(maxsize=1)
+def serialized_owner_class():
+    raw=pinned('tools/h4_v1_physical_join.py',PHYSICAL_JOIN)
+    nodes=[n for n in ast.parse(raw).body if isinstance(n,ast.ClassDef) and n.name=='SerializedOwner']
+    if len(nodes)!=1:raise AdmissionError('pinned composed SerializedOwner missing')
+    ns={};exec(compile(ast.Module(body=nodes,type_ignores=[]),'SerializedOwner@'+PHYSICAL_JOIN,'exec'),ns)
+    return ns['SerializedOwner']
 
 def canonical(value):return json.dumps(value,sort_keys=True,separators=(',',':'))
 
@@ -45,6 +54,8 @@ class PhysicalBindings:
             recorded=json.loads(raw)
             if recorded.get('schema')!='C0_PHYSICAL_RF_CONNECTION_MAP_V1' or recorded.get('bindings')!=inventory['bindings']:
                 raise AdmissionError('physical mapping differs from immutable connection inventory')
+            if recorded.get('connection_state')!='INSTALLED_NATIVE_CONNECTION':
+                raise AdmissionError('candidate floorplan mapping is not installed native connection')
         for row in inventory['bindings']:
             model=row['model'];rank=row['rank'];sm=row['SM']
             if model not in ('Qwen','DeepSeek') or type(rank)!=int or not 0<=rank<(2 if model=='Qwen' else 96) or type(sm)!=int or not 0<=sm<32:
@@ -75,6 +86,7 @@ class AtomicV1Owners:
             required={'model','family','source_PC','program_sha256','template_id','ordered_step_index',
                 'owner_tag','generation','rank','SM','opcode','source_bittypes','destination_bittype',
                 'source_version_home_refs','destination_version_home_ref','predicate','active_lanes','source_attrs_rounding'}
+            required.add('response_stall_bound')
             if not required<=set(command):raise AdmissionError('complete C0/V1 typed command required')
             c=copy.deepcopy(command);model=c['model'];rank=c['rank'];sm=c['SM']
             if type(rank)!=int or type(sm)!=int or type(c['active_lanes'])!=int:
@@ -106,8 +118,11 @@ class AtomicV1Owners:
             if len(pairs)!=cost['RF_read_pair_transactions']:raise AdmissionError('serialized read pair count mismatch')
             identity=(rank,sm,c['owner_tag'],c['generation'])
             lease=v1_api().CommandLease();lease.accept(identity,cost)
+            ticket=(c['generation'],c['source_PC'],c['owner_tag'],rank,sm)
+            serialized=serialized_owner_class()(rank=rank,SM=sm,generation=c['generation'],response_stall_bound=c['response_stall_bound'])
+            serialized.accept(ticket,[word['slot'] for word in words],c['destination_version_home_ref']['RF_vectors'])
             token=(physical,model,rank,sm,c['owner_tag'],c['generation'])
-            self.live[physical]=dict(token=token,identity=identity,command=c,binding=binding,cost=cost,lease=lease,
+            self.live[physical]=dict(token=token,identity=identity,C0_ticket=ticket,serialized=serialized,command=c,binding=binding,cost=cost,lease=lease,
                 read_pairs=pairs,read_pending=None,writes=c['destination_version_home_ref']['RF_vectors'],write_pending=None,
                 consumer=False,reverse=False,provider_pending={},last_sequence=-1,last_fragment_sequence=-1,fragment_count=0)
             self.watermarks[physical]=watermark
@@ -133,28 +148,36 @@ class AtomicV1Owners:
             s=self.owner(token);lease=s['lease'].live
             if s['provider_pending'] or s['read_pending'] is not None or lease['computed'] or pair!=lease['reads'] or pair>=lease['required_reads']:
                 raise AdmissionError('read pair order/credit/provider return not drained')
+            addresses=s['serialized'].read(s['C0_ticket'])
+            if list(addresses)!=[word['slot'] for word in s['read_pairs'][pair]['source_words']]:raise AdmissionError('composed read home disagreement')
             s['read_pending']=pair;return copy.deepcopy(s['read_pairs'][pair])
-    def read_return(self,token,pair):
+    def read_return(self,token,pair,*,stalls=0):
         with self.guard:
             s=self.owner(token)
             if s['read_pending']!=pair:raise AdmissionError('matching accepted read response required')
+            s['serialized'].return_read(s['C0_ticket'],stalls=stalls)
             s['lease'].read_return(s['identity']);s['read_pending']=None
-    def compute_complete(self,token):
+    def compute_complete(self,token,*,native_ticks=None):
         with self.guard:
             s=self.owner(token)
             if s['read_pending'] is not None or s['provider_pending']:raise AdmissionError('source return still owned')
+            ticks=s['cost']['native_only_replacement_ticks'] if native_ticks is None else native_ticks
+            s['serialized'].complete(s['C0_ticket'],native_ticks=ticks)
             s['lease'].compute_complete(s['identity'])
     def write_accept(self,token,word):
         with self.guard:
             s=self.owner(token);lease=s['lease'].live
             if not lease['computed'] or s['provider_pending'] or s['write_pending'] is not None or word!=lease['writes'] or word>=lease['required_writes']:
                 raise AdmissionError('low/high write order/credit')
+            address=s['serialized'].write(s['C0_ticket'])
+            if address!=s['writes'][word]:raise AdmissionError('composed destination home disagreement')
             s['write_pending']={'word':word,'mirror_mask':0};return s['writes'][word]
-    def write_mirror_ACK(self,token,word,mirror):
+    def write_mirror_ACK(self,token,word,mirror,*,stalls=0):
         with self.guard:
             s=self.owner(token);pending=s['write_pending']
             if pending is None or pending['word']!=word or mirror not in (0,1) or pending['mirror_mask']&(1<<mirror):
                 raise AdmissionError('matching low/high mirror ACK required')
+            s['serialized'].ack(s['C0_ticket'],mirror,stalls=stalls)
             pending['mirror_mask']|=1<<mirror
             if pending['mirror_mask']==3:
                 s['lease'].write_ACK(s['identity'],3);s['write_pending']=None
@@ -163,7 +186,7 @@ class AtomicV1Owners:
             s=self.owner(token);lease=s['lease'].live
             if s['consumer'] or s['write_pending'] is not None or lease['writes']!=lease['required_writes'] or s['provider_pending']:
                 raise AdmissionError('all low/high mirror ACK and provider returns required')
-            s['consumer']=True
+            s['serialized'].consumer(s['C0_ticket']);s['consumer']=True
     def provider_accept(self,token,fragment):
         """Reserve one actual mapped fragment; caller supplies Kepler evidence.
 
@@ -224,6 +247,8 @@ class AtomicV1Owners:
     def retire(self,token):
         with self.guard:
             s=self.owner(token)
+            if not s['consumer'] or not s['reverse'] or s['provider_pending']:raise AdmissionError('consumer/provider/reverse ownership remains')
+            s['serialized'].retire(s['C0_ticket'],reverse_grant=True)
             s['lease'].retire(s['identity'],s['consumer'],s['reverse'])
             del self.live[token[0]];self.trace.append(dict(event='atomic_retire',owner=token))
     def contender_allowed(self,physical,contender_token=None):
@@ -234,12 +259,13 @@ class AtomicV1Owners:
 def export_contract():
     paths=['rtl/gpu/ot_gpu_full_sm_service.sv','rtl/gpu/ot_gpu_rf_service.sv','rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv']
     pins={path:dict(commit=H1,sha256=hashlib.sha256(pinned(path,H1)).hexdigest()) for path in paths}
+    pins['tools/h4_v1_physical_join.py']=dict(commit=PHYSICAL_JOIN,sha256=hashlib.sha256(pinned('tools/h4_v1_physical_join.py',PHYSICAL_JOIN)).hexdigest())
     pins['tools/h4_v1_g0_model.py']=dict(commit=V1,sha256=hashlib.sha256(pinned('tools/h4_v1_g0_model.py',V1)).hexdigest())
     worst=v1_api().command_cost('SELECT',[32,64,64],64,128)
-    return dict(schema='H4_C0_ATOMIC_V1_OWNER_CONTRACT_V1',V1_pin=V1,H1_pin=H1,source_pins=pins,
+    return dict(schema='H4_C0_ATOMIC_V1_OWNER_CONTRACT_V1',V1_pin=V1,H1_pin=H1,composed_owner_pin=PHYSICAL_JOIN,composed_owner_API='SerializedOwner',source_pins=pins,
         atomic_owner_fields=['physical_RF_id','model','rank','SM','owner_tag','generation'],
         owner_tag_policy='C0 allocates globally monotonic(generation,owner_tag) per physical RF, not reset-to1 per source PC; stale retired tags never alias a later command',
-        source_join_fields=['family','source_PC','program_sha256','template_id','ordered_step_index','source_bittypes','destination_bittype','source_version_home_refs','destination_version_home_ref','predicate','active_lanes','source_attrs_rounding'],
+        source_join_fields=['family','source_PC','program_sha256','template_id','ordered_step_index','source_bittypes','destination_bittype','source_version_home_refs','destination_version_home_ref','predicate','active_lanes','source_attrs_rounding','response_stall_bound'],
         worst_case=worst,source_read_word_order=['predicate.low','a.low','a.high','b.low','b.high'],
         serialized_read_pairs=[['predicate.low','a.low'],['a.high','b.low'],['b.high','unused duplicate b.high']],
         ordered_destination_writes=['low:both mirror ACK','high:both mirror ACK'],
@@ -255,9 +281,12 @@ def export_contract():
         provider_return_guard='actual addressed software backing/return, matching consumer accept and validated reverse grant; same source payload; no event synthesis',
         provider_writeback_guard='both low/high mirrored ACK first, then actual addressed store/consumer/reverse; no retirement while any accepted fragment remains',
         RF_cost_reconciliation='Dewey reconcile V1 RF pair/write delta with existing highword/RMW ledger once; C0 keeps its own positive fetch/decode/scoreboard/reverse charges',
+        composed_owner_ticket_fields=['generation','PC','sequence','rank','SM'],
+        RF_latency_once='3*read_pairs+2*write_vectors+native_only_ticks+observed_response_stalls; C0 positive phases and existing provider/highword/RMW calendar kept separately',
+        source_baseline_rank_SM_mapping_pin=PHYSICAL_JOIN,source_baseline_rank_SM_mapping_scope='32SM/rank candidate floorplan identity, not installed hardened native endpoints',
         current_unknown_shared_calls=189476,RTL_written=False,hardware_admitted=False,physical_or_clock_admitted=False)
 
-def owner_model():
+def standalone_owner_bound():
     """Additive owner-gate control bound; no duplicate V1 captures/latch area.
 
     The command's immutable identity, source homes, V1 data captures and finite
@@ -290,6 +319,34 @@ def owner_model():
                           'new_measured_latency':None,'stall_and_clock_cost':'UNKNOWN_UNTIL_CONNECTED_PORT_GATING_AND_Dewey_COMPOSITION'},
         adoption='MANDATORY_MODEL_INTERFACE_ONLY; installed map, provider causal receipts, C0/V1 source join and physical gates still block RTL',
         headline_rate_changed=False,hardware_admitted=False)
+
+def owner_model():
+    """Compose with Popper's existing reservation, never add whole gate twice."""
+    standalone=standalone_owner_bound()
+    # Ticket and bounded-stall counter already exist in the reviewed composed
+    # owner. New provider/watermark flags use its remaining reserved state.
+    bits=standalone['incremental_state_bits_per_physical_RF']+128+64
+    state_extra=max(0,bits-448)
+    match_equivalents=537;gate_extra=max(0,match_equivalents-512)
+    return dict(schema='H4_C0_V1_COMPOSED_OWNER_BOUND_V2',source_join_pin=PHYSICAL_JOIN,
+        fields_bits=standalone['fields_bits'],composed_ticket_bits=128,bounded_stall_counter_bits=64,
+        total_required_state_bits=bits,existing_V1_state_reservation_bits=448,
+        incremental_state_bits_per_physical_RF=state_extra,
+        total_match_gate_equivalents_upper=match_equivalents,existing_V1_match_gate_reservation=512,
+        incremental_match_gate_equivalents_upper=gate_extra,
+        incremental_logic_um2_per_SM_bounds=[state_extra*DFF_UM2+gate_extra*g for g in (0.1,0.3)],
+        area_scope='Conservative analytical reservation reconciliation, not synthesis or physical measurement',
+        new_V1_capture_bits=0,new_command_latch_bits=0,new_RF_payload_ports=0,
+        routing=dict(C0_source_control_tracks=1152,C0_command512_already_in_V1=True,
+            residual_C0_cut_incidence_upper=640,proposed_owner_ticket_request_response_bits=256,
+            proposed_exclusion_flags_bits=8,incremental_cut_incidence_upper=904,
+            physical_cut_allocation='UNKNOWN requires distributed cuts/actual macro obstacles; not sum-of-widths route admission'),
+        replicas=dict(Qwen_ranks=2,DeepSeek_ranks=96,SMs_per_rank=32),
+        latency=dict(serialized_read_pair_ticks=3,serialized_mirrored_write_ticks=2,
+            worst_RF_ticks_once=13,native_only_ticks='pinned V1 command_cost',
+            C0_control_ticks=22,provider_and_highword_RMW='Existing Dewey terms retained once',
+            response_stall_bound='Mandatory command input; exceeded bound retains owner'),
+        old_slot_deficit_repaired=False,hardware_admitted=False,RTL_allowed=False,headline_rate_changed=False)
 
 def binding_requests():
     source=ROOT/'results/uarch/h4_c0_bridge_model_20261002/model.json'

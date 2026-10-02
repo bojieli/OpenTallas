@@ -1,0 +1,47 @@
+{
+  "actual_connector_installed": false,
+  "actual_program_scope": {
+    "DS_PCs": 2213,
+    "Qwen_PCs": 1737
+  },
+  "additive_extensions": [
+    "tools/h4_c0_forward_observer_addressed.py",
+    "tools/h4_c0_v1_owner_lock_addressed.py"
+  ],
+  "full_program_movement_PASS": false,
+  "hardware_admitted": false,
+  "historical_artifact_hashes_verified": 11,
+  "historical_source_origins_verified": 8,
+  "model_records_byteidentical_to_reviewed_worker": 4,
+  "parent_final_focused_tests_passed": 91,
+  "parent_test_log": "results/uarch/native_software_parent_intake_20261002/Qwen_C0_parent_final_tests_PASS.log",
+  "preserved_pinned_originals": {
+    "tools/h4_c0_forward_observer.py": {
+      "origin": "main",
+      "sha256": "b968934fa94be395ba9aff9eadd984a7a7973f1da8bfe9be269badef675eb128"
+    },
+    "tools/h4_c0_v1_owner_lock.py": {
+      "origin": "0feb3ee484147ee05af700fdda4d9dda109570c7",
+      "sha256": "38fd7d803d856d7cd29c1e43c95254754cf907bf7d84e532e2e44f4f8bc48b22"
+    },
+    "tools/test_h4_c0_v1_owner_lock.py": {
+      "origin": "0feb3ee484147ee05af700fdda4d9dda109570c7",
+      "sha256": "3b88466b493ac849662fcf6bcaccad312147eb4334961db2426af7d30524ead9"
+    }
+  },
+  "remaining_required": [
+    "source-bound r33 lowered40window template/dispatch integration, not implicitold128catalog reuse",
+    "fullordered typed operand windows and continuations",
+    "Qwen actual addressed reverse-grant journal",
+    "expandedSMslot/distributedRFandC0cuts and installed connector",
+    "connectedhardwarefamilies/RFACK and SSFF"
+  ],
+  "remaining_unknown_shared_calls": 189476,
+  "route_refusal_bug_fixed_at_separate_main_r33": true,
+  "schema": "opentallas.HBM.C0-provider-parent-review.v1",
+  "successor_source_hashes_verified": 11,
+  "worker_commits": [
+    "0feb3ee484147ee05af700fdda4d9dda109570c7",
+    "d9ae79e82c415a495125e5196512cf46d9683f61"
+  ]
+}

@@ -183,7 +183,7 @@ class ParentProviderJoin:
             full_program_movement_executed=False,hardware_qualified=False,RTL_allowed=False,jobs=[])
 
 def emit(output):
-    from h4_c0_v1_owner_lock import export_contract,owner_model
+    from h4_c0_v1_owner_lock_addressed import export_contract,owner_model
     output=pathlib.Path(output)
     if output.exists():raise ValueError('fresh evidence directory required; preserve historical verdicts')
     root=pathlib.Path(__file__).resolve().parents[1]
@@ -207,8 +207,8 @@ def emit(output):
         next_G0='Popper expanded SM slot and actual distributed RF/scratch/C0 cuts plus installed rank/SM connector; Kepler actual route-fence lifecycle PASS; Dewey full ordered typed-window join',
         jobs=[],engine_RTL_written=False)
     for name,record in records.items():(output/name).write_text(json.dumps(record,sort_keys=True,indent=2)+'\n')
-    paths=['tools/h4_c0_parent_provider_join.py','tools/h4_c0_provider_movement.py','tools/h4_c0_v1_owner_lock.py','tools/h4_c0_forward_observer.py',
-        'tools/test_h4_c0_parent_provider_join.py','tools/test_h4_c0_provider_movement.py','tools/test_h4_c0_v1_owner_lock.py','tools/uarch_model.py']
+    paths=['tools/h4_c0_parent_provider_join.py','tools/h4_c0_provider_movement.py','tools/h4_c0_v1_owner_lock.py','tools/h4_c0_v1_owner_lock_addressed.py','tools/h4_c0_forward_observer.py','tools/h4_c0_forward_observer_addressed.py',
+        'tools/test_h4_c0_parent_provider_join.py','tools/test_h4_c0_provider_movement.py','tools/test_h4_c0_v1_owner_lock.py','tools/test_h4_c0_v1_owner_lock_addressed.py','tools/uarch_model.py']
     manifest=dict(source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths},
         records_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in output.iterdir()},hardware_qualified=False)
     (output/'manifest.json').write_text(json.dumps(manifest,sort_keys=True,indent=2)+'\n')

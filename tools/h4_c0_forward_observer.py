@@ -20,18 +20,12 @@ class ProviderTap:
     def guard(self):
         if len(self.events)>=self.max_events:raise ValueError('finite observer provider trace capacity exhausted')
     def __getattr__(self,name):return getattr(self.backend,name)
-    def record(self,kind,key,data, movement_receipt=None):
+    def record(self,kind,key,data):
         row=dict(sequence=len(self.events),kind=kind,key=list(key),
             payload_bytes=len(data),payload_sha256=hashlib.sha256(data).hexdigest(),
             workspace_extent=getattr(self.backend,'workspace_extent',None),
             actual_address_receipt=None,validated_reverse_grant=None,
             qualification='functional provider call/return only')
-        if movement_receipt is not None:
-            if movement_receipt.get('status')!='SOFTWARE_ADDRESSED_MOVEMENT_REVERSE_DRAINED' or movement_receipt.get('key')!=list(key) or movement_receipt.get('payload_sha256')!=row['payload_sha256']:
-                raise ValueError('actual movement receipt not bound to this provider return')
-            row['actual_address_receipt']=movement_receipt
-            row['validated_reverse_grant']='software sector journal identity/tag/generation verified'
-            row['qualification']='actual addressed software provider movement; no RTL/full-program qualification'
         if self.on_event:row['source_output_origin']=self.on_event(kind,key,data)
         identity=json.dumps(key,separators=(',',':'))
         if kind.startswith('write'):
@@ -46,8 +40,7 @@ class ProviderTap:
     def transact(self,key,*,write=False,payload=None):
         self.guard()
         result=self.backend.transact(key,write=write,payload=payload)
-        self.record('write_return' if write else 'read_return',key,payload if write else result,
-                    movement_receipt=getattr(self.backend,'last_receipt',None))
+        self.record('write_return' if write else 'read_return',key,payload if write else result)
         return result
     def write_object(self,key,data):
         self.guard()

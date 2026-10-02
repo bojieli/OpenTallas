@@ -2,7 +2,7 @@
 import copy, hashlib, importlib.util, pathlib, sys, tempfile, types, unittest
 from h4_c0_model import pinned
 from h4_c0_provider_movement import AddressedMovement, prove_sector_span
-from h4_c0_forward_observer import ProviderTap
+from h4_c0_forward_observer_addressed import ProviderTap
 
 PIN='f240f42fbeb67e402e922b4a4aae30b8a8873ce1'
 
@@ -72,7 +72,7 @@ class MovementTests(unittest.TestCase):
         self.assertEqual(self.m.last_receipt['status'],'FAILED_EVIDENCE_RETAINED')
         with self.assertRaisesRegex(ValueError,'quarantined'):self.m.transact(self.key,write=True,payload=b'x'*64)
     def test_actual_provider_refill_drives_atomic_owner_and_keeps_calendar(self):
-        from test_h4_c0_v1_owner_lock import controls,fragment
+        from test_h4_c0_v1_owner_lock_addressed import controls,fragment
         lock,c=controls();c.update(source_PC=7,generation=11,SM=3)
         # Explicit protocol-only connection for the parent scratch SM3.
         for binding in lock.bindings.mapping.values():binding['SM']=3
@@ -87,7 +87,7 @@ class MovementTests(unittest.TestCase):
         self.assertFalse(lock.contender_allowed(token[0]))
         lock.read_accept(token,0)
     def test_actual_payload_mismatch_retains_atomic_provider_debt(self):
-        from test_h4_c0_v1_owner_lock import controls,fragment
+        from test_h4_c0_v1_owner_lock_addressed import controls,fragment
         lock,c=controls();c.update(source_PC=7,generation=11,SM=3)
         lock.bindings.mapping={(m,0,3):dict(b,SM=3) for (m,_,_),b in lock.bindings.mapping.items()}
         for home in c['source_version_home_refs']+[c['destination_version_home_ref']]:home.update(generation=11,SM=3)
@@ -100,7 +100,7 @@ class MovementTests(unittest.TestCase):
     def test_actual_DS_source_operand_provider_and_V1_owner_composition(self):
         from h4_c0_parent_provider_join import ParentProviderJoin
         from h4_c0_ordered_movement import strict_api
-        from test_h4_c0_v1_owner_lock import controls,fragment
+        from test_h4_c0_v1_owner_lock_addressed import controls,fragment
         join=ParentProviderJoin();api=strict_api();choice=None
         for pc in join.catalog['PC_bindings']:
             for binding in pc['bindings']:
