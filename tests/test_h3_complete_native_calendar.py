@@ -12,6 +12,46 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_source_pinned_primitive_vms_and_finite_negative_controls(self):
+        import hashlib
+        import numpy as np
+        base = ROOT / 'results/uarch/h3_complete_native_calendar_20261002'
+        ds = base / 'inputs/h3_deepseek_complete_native.py.source'
+        q = base / 'final_qwen_8fab95560/h3_qwen_complete_native.py.source'
+        memory = {'x': np.array([16777216], np.float32), 'y': np.array([1], np.float32)}
+        ssa = {'code': [
+            {'op':'LOAD','dst':'a','src':[],'shape':[1],'attrs':{'name':'x','dtype':'F32'}},
+            {'op':'LOAD','dst':'b','src':[],'shape':[1],'attrs':{'name':'y','dtype':'F32'}},
+            {'op':'FADD','dst':'out','src':['a','b'],'shape':[1],'attrs':{}}], 'outputs':{'out':'out'}}
+        kwargs = dict(snapshot=ds, source_sha256=hashlib.sha256(ds.read_bytes()).hexdigest(),
+                      scratch_bytes=24, instruction_limit=10)
+        result = c.execute_primitive_vm('DeepSeek', ssa, memory, **kwargs)
+        np.testing.assert_array_equal(result['outputs']['out'], memory['x'])
+        self.assertEqual([e['op'] for e in result['events']], ['LOAD','LOAD','FADD'])
+        with self.assertRaisesRegex(ValueError, 'capacity exhausted'):
+            c.execute_primitive_vm('DeepSeek', ssa, memory, **{**kwargs,'scratch_bytes':16})
+        with self.assertRaisesRegex(ValueError, 'unbound native provider'):
+            c.execute_primitive_vm('DeepSeek', ssa, {'x':memory['x']}, **kwargs)
+        bad = copy.deepcopy(ssa); bad['code'][2]['op'] = 'DIV'
+        with self.assertRaisesRegex(ValueError, 'exact DIV provider required'):
+            c.execute_primitive_vm('DeepSeek', bad, memory, **kwargs)
+        with self.assertRaisesRegex(ValueError, 'pin mismatch'):
+            c.execute_primitive_vm('DeepSeek', ssa, memory, **{**kwargs,'source_sha256':'0'*64})
+        recipe = {'recipe':[{'op':'FADD','dst':'out','src':['x','y']}], 'outputs':['out']}
+        kwargs = dict(snapshot=q, source_sha256=hashlib.sha256(q.read_bytes()).hexdigest(),
+                      scratch_bytes=12, instruction_limit=10)
+        result = c.execute_primitive_vm('Qwen', recipe, memory, **kwargs)
+        np.testing.assert_array_equal(result['outputs']['out'], memory['x'])
+        self.assertEqual(result['primitive_counts'], {'FADD':1})
+        with self.assertRaisesRegex(ValueError, 'scratch capacity exhausted'):
+            c.execute_primitive_vm('Qwen', recipe, memory, **{**kwargs,'scratch_bytes':8})
+        load = {'recipe':[{'op':'LOAD_WEIGHT','dst':'out','key':'w'}], 'outputs':['out']}
+        with self.assertRaisesRegex(ValueError, 'unbound native weight provider'):
+            c.execute_primitive_vm('Qwen', load, memory, **kwargs)
+        loop = {'recipe':[{'op':'FOR','var':'i','start':'0','stop':'100','step':'1','body':[]}], 'outputs':[]}
+        with self.assertRaisesRegex(ValueError, 'loop capacity exhausted'):
+            c.execute_primitive_vm('Qwen', loop, {}, **kwargs)
+
     def test_parallel_positive_and_shared_serialization(self):
         cal = c.Calendar({'r0': 1, 'r1': 1, 'link': 1})
         cal.add('a', [], 7, {'r0': 1})
@@ -98,7 +138,7 @@ class FiniteCalendarTests(unittest.TestCase):
         table = {'values': {k: 2 for k in ['admit','RF_read','RF_write_ACK','consume','retire',
             'HBM_read_sector','HBM_write_sector','forward_CDC','reverse_CDC','visibility_fence','native:FMUL','native:STAGE_OPERAND','owner_lookup','owner_held_accept','validated_reverse_grant']}}
         program = c.bind_recipe(native, plan, macro, 0, table)
-        loop = program['primitive_tree'][-1]
+        loop = program['primitive_tree'][-1]['body'][0]
         self.assertEqual(loop['count'], 8)
         self.assertEqual(loop['duration'], 8*loop['iteration_stride']+2)
         self.assertGreater(program['finite_scratch_bytes'], 0)
@@ -148,6 +188,24 @@ class FiniteCalendarTests(unittest.TestCase):
         self.assertEqual(c.verify_native_program(p),{})
         p['scratch_homes']['b']={'byte_offset':0,'buffer_bytes':512,'buffers':1}
         with self.assertRaisesRegex(ValueError,'alias'):c.verify_native_program(p)
+
+    def test_producer_temporary_allocations_and_exact_counts_gate(self):
+        native={'source_program':{'context_capacity':8},'operands':[{'version':'a','shape':[8]}]}
+        plan={'pc':0,'recipe':[{'op':'FMUL','dst':'out0','src':['input0','f32(2)'],'round_point':'FP32_RNE'}],
+            'temporary_storage':{'spill_bytes':512,'allocations':{'out0':{'bytes':32,'version':'PC0.tmp.out0',
+              'lease':'PC0.workspace','release_after':'PC0.retire',
+              'home':{'class_':'spill','byte_offset':0,'base_by_rank':{'0':4096}}}}},
+            'calendar_counts_full_context':{'by_primitive':{'FMUL':{'native_vector_beats':1}}}}
+        macro={'reads':['a'],'opcode':'FMUL','golden_contract':'F32 product'}
+        table={'values':{k:2 for k in ['admit','RF_read','RF_write_ACK','consume','retire','HBM_read_sector',
+            'HBM_write_sector','forward_CDC','reverse_CDC','visibility_fence','owner_lookup','owner_held_accept',
+            'validated_reverse_grant','native:STAGE_OPERAND','native:FMUL']}}
+        result=c.bind_recipe(native,plan,macro,0,table)
+        self.assertEqual(result['finite_scratch_bytes'],512)
+        self.assertEqual(result['scratch_homes']['out0']['buffers'],1)
+        self.assertEqual(result['producer_vector_count_gate'],'PASS_EXACT_EXPORTED_NATIVE_COUNTS')
+        plan['calendar_counts_full_context']['by_primitive']['FMUL']['native_vector_beats']=2
+        with self.assertRaisesRegex(ValueError,'vector count mismatch'):c.bind_recipe(native,plan,macro,0,table)
 
     def test_actual_r17_provider_homes_and_release_controls(self):
         path = ROOT / 'results/uarch/h3_complete_native_calendar_20261002/inputs/Qwen_provider_binding.json.gz'

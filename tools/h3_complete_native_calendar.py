@@ -14,6 +14,7 @@ import gzip
 import hashlib
 import heapq
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,6 +49,106 @@ def read_json(path):
         with gzip.open(path, 'rt') as f:
             return json.load(f)
     return json.loads(Path(path).read_text())
+
+
+def execute_primitive_vm(target, program, payloads, *, snapshot, source_sha256,
+                         scratch_bytes, instruction_limit, weights=None, storage=None, div=None):
+    """Execute producer instructions, with explicit finite software admission.
+
+    DS accepts an SSA template; Qwen accepts a recipe and an expression environment.
+    Payloads are caller-supplied arrays, never an opcode/golden callback. This is
+    a primitive numerical adapter, not a complete DS provider orchestrator.
+    Scratch bounds cover resident tensor values; NumPy process/transient memory
+    and hardware residence remain separate gates. No numerical runtime is used
+    as a calendar latency. DIV requires an explicit primitive provider.
+    """
+    import numpy as np
+    positive(scratch_bytes, 'VM scratch bytes')
+    positive(instruction_limit, 'VM instruction limit')
+    raw = Path(snapshot).read_bytes()
+    if hashlib.sha256(raw).hexdigest() != source_sha256:
+        raise ValueError('primitive VM source pin mismatch')
+    tree = ast.parse(raw)
+    namespace = {'np': np, '__name__': 'h3_pinned_primitive_vm', '__file__': str(snapshot)}
+    if target == 'DeepSeek':
+        # Only the producer's primitive machine is loaded; no compiler/module
+        # side effects or high-level source operator dispatch can execute.
+        machine = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'Machine')
+        exec(compile(ast.Module(body=[machine], type_ignores=[]), str(snapshot), 'exec'), namespace)
+        code = program['code']
+        if len(code) > instruction_limit:
+            raise ValueError('finite VM instruction capacity exhausted')
+        live = {}; last = {}; peak = 0
+        for pc, ins in enumerate(code):
+            for name in ins['src']: last[name] = pc
+        for name in program['outputs'].values(): last[name] = len(code)
+        for pc, ins in enumerate(code):
+            if ins['dst'] in live or any(name not in live for name in ins['src']):
+                raise ValueError('VM SSA alias or premature version consumption')
+            # Eight bytes accommodates every producer scalar type, including
+            # integer addressing, before any payload execution/allocation.
+            live[ins['dst']] = math.prod(ins['shape']) * 8
+            peak = max(peak, sum(live.values()))
+            if peak > scratch_bytes:
+                raise ValueError('finite VM scratch capacity exhausted')
+            live = {name: size for name, size in live.items() if last.get(name, -1) > pc}
+        vm = namespace['Machine'](program, payloads, div=div)
+        outputs = vm.run()
+        return {'outputs': outputs, 'events': vm.events, 'fault': vm.fault,
+                'resident_tensor_bound_bytes': peak, 'source_sha256': source_sha256}
+    if target != 'Qwen':
+        raise ValueError('unsupported primitive VM target')
+    # Qwen's module defines primitive helpers and its addressed storage class;
+    # its __main__ compile/run path is never executed here.
+    old_path = list(sys.path)
+    try:
+        sys.path.insert(0, str(ROOT / 'tools'))
+        exec(compile(tree, str(snapshot), 'exec'), namespace)
+    finally:
+        sys.path[:] = old_path
+    base = namespace['Machine']
+    class BoundedMachine(base):
+        def nodes(self, nodes, env, operation):
+            for node in nodes:
+                self.executed += 1
+                if self.executed > instruction_limit:
+                    raise ValueError('finite VM instruction capacity exhausted')
+                if node['op'] == 'FOR':
+                    start, stop, step = (int(self.value(node[k], env)) for k in ('start', 'stop', 'step'))
+                    if start < 0 or stop < 0 or step <= 0:
+                        raise ValueError('loop aperture')
+                    if len(range(start, stop, step)) > instruction_limit - self.executed:
+                        raise ValueError('finite VM loop capacity exhausted')
+                    for index in range(start, stop, step):
+                        env[node['var']] = index
+                        self.nodes(node['body'], env, operation)
+                else:
+                    super().nodes([node], env, operation)
+                size = sum(value.nbytes for value in env.values() if isinstance(value, np.ndarray))
+                self.peak = max(self.peak, size)
+                if size > scratch_bytes:
+                    raise ValueError('finite VM scratch capacity exhausted')
+    vm = BoundedMachine.__new__(BoundedMachine)
+    vm.weights = weights; vm.storage = storage
+    vm.lease_by_version = {}; vm.expression_cache = {}; vm.primitive_counts = Counter()
+    vm.executed = 0; vm.peak = 0
+    env = dict(payloads)
+    if sum(v.nbytes for v in env.values() if isinstance(v, np.ndarray)) > scratch_bytes:
+        raise ValueError('finite VM scratch capacity exhausted')
+    # Loads/publication require explicit provider objects. Missing bindings
+    # fail before instruction dispatch rather than silently installing fixtures.
+    def check(nodes):
+        for node in nodes:
+            if node['op'] == 'FOR': check(node['body'])
+            elif node['op'].startswith('LOAD_') and weights is None:
+                raise ValueError('unbound native weight provider')
+            elif node['op'] in {'BEGIN_WRITE', 'WRITE_BYTES', 'COMMIT_PUBLISH', 'ACQUIRE', 'READ_BYTES', 'CONSUMER_DONE'} and storage is None:
+                raise ValueError('unbound native storage provider')
+    check(program['recipe'])
+    vm.nodes(program['recipe'], env, program)
+    return {'outputs': {name: env[name] for name in program['outputs']},
+            'primitive_counts': dict(vm.primitive_counts), 'executed_instructions': vm.executed,
+            'resident_tensor_bound_bytes': vm.peak, 'source_sha256': source_sha256}
 
 
 class Calendar:
@@ -444,13 +545,14 @@ def shape_expression(expr, env):
         if isinstance(node, ast.Attribute) and node.attr != 'shape':
             raise ValueError('shape expression attribute')
         if isinstance(node, ast.Call) and (not isinstance(node.func, ast.Name) or node.func.id not in
-                ('reshape', 'transpose', 'concat', 'zeros', 'arange', 'f32', 'int', 'min', 'max')):
+                ('reshape', 'transpose', 'concat', 'zeros', 'arange', 'f32', 'int', 'min', 'max', 'pow2ceil', 'log2ceil', 'bitlength')):
             raise ValueError('non-shape call: ' + expr)
     helpers = {'reshape': shape_reshape,
         'transpose': lambda v: Shape(tuple(reversed(v.shape))), 'concat': shape_concat,
         'zeros': lambda s: Shape(s), 'arange': lambda n: Shape((n,)),
         'f32': lambda n: Shape(), 'int': lambda n: n if isinstance(n, int) else Shape(),
-        'min': min, 'max': max}
+        'min': min, 'max': max, 'pow2ceil': lambda n: 1 << (max(1,int(n))-1).bit_length(),
+        'log2ceil': lambda n: (max(1,int(n))-1).bit_length(), 'bitlength': lambda n: int(n).bit_length()}
     return eval(compile(tree, '<shape-only-native-index>', 'eval'), {'__builtins__': {}, **helpers}, env)
 
 
@@ -525,10 +627,12 @@ def bind_recipe(native, plan, macro, rank, table):
                 env[f'input{i}'] = context - 1
             if macro['opcode'] == 'ARGMAX_REDUCE':
                 env[f'input{i}'] = Shape((2,))
+    exported_allocations = plan.get('temporary_storage', {}).get('allocations')
+    element_bytes = 4 if exported_allocations else 8
     def register(name, shape):
         if name:
             name = name.split('[')[0]
-            size = max(8, 8 * math.prod(shape))
+            size = max(element_bytes, element_bytes * math.prod(shape))
             buffers[name] = max(buffers.get(name, 0), ceil(size, 512) * 512)
     for key, val in env.items():
         if isinstance(val, Shape):
@@ -575,8 +679,8 @@ def bind_recipe(native, plan, macro, rank, table):
                     local_env[name] = result
                 register(name, result.shape)
         batches = max(1, ceil(math.prod(result.shape), 128))
-        read_batches = sum(max(1, ceil(math.prod(as_shape(a).shape) * 8, 512)) for a in args)
-        write_batches = max(1, ceil(math.prod(result.shape) * 8, 512)) if dst else 1
+        read_batches = sum(max(1, ceil(math.prod(as_shape(a).shape) * element_bytes, 512)) for a in args)
+        write_batches = max(1, ceil(math.prod(result.shape) * element_bytes, 512)) if dst else 1
         # A source recipe may have three-input SELECT or CONCAT. Decompose RF
         # operand reads into serial pairs, retaining values in the finite arena.
         operand_pairs = max(1, ceil(len(args), 2))
@@ -594,12 +698,12 @@ def bind_recipe(native, plan, macro, rank, table):
             costs['visibility_fence'] + costs['forward_CDC'] + costs['consume'] + costs['reverse_CDC'] +
             costs['validated_reverse_grant'] + costs['retire'])
         if op.startswith('LOAD') or op in ('WRITE_BYTES', 'READ_BYTES', 'PACKET_COMMIT'):
-            stages['provider_visibility'] = max(1, ceil(math.prod(result.shape) * 8, 32)) * (
+            stages['provider_visibility'] = max(1, ceil(math.prod(result.shape) * element_bytes, 32)) * (
                 costs['HBM_write_sector' if op in ('WRITE_BYTES', 'PACKET_COMMIT') else 'HBM_read_sector'] +
                 costs['visibility_fence'] + ownership + costs['validated_reverse_grant'])
         index = serial[0]; serial[0] += 1; stats[op] += batches
         return {'kind': 'primitive', 'index': index, 'op': op, 'source_instruction': node,
-            'rounding': rounding, 'shape': list(result.shape), 'batches128': batches, 'scratch_element_bytes': 8,
+            'rounding': rounding, 'shape': list(result.shape), 'batches128': batches, 'scratch_element_bytes': element_bytes,
             'RF_read_batches': read_batches, 'RF_write_batches': write_batches,
             'operand_pair_reads': operand_pairs, 'storage_sectors32': sectors, 'scratch_read_sectors32': read_sectors, 'scratch_write_sectors32': write_sectors,
             'owner_lookup_edges_per_sector': 2 * costs['owner_lookup'],
@@ -624,10 +728,36 @@ def bind_recipe(native, plan, macro, rank, table):
                     record = {'kind': 'loop', 'count': 0, 'body': [], 'duration': costs['admit'],
                               'explicit_empty_loop_control_cycles': costs['admit']}
                 else:
-                    children, duration = walk(body, local_env, path + (i,))
-                    record = {'kind': 'loop', 'count': count, 'iteration_start': start, 'iteration_step': step,
-                        'iteration_stride': duration, 'body': children, 'duration': duration * count + costs['admit'],
-                        'control_cycles': costs['admit'], 'ordering': 'iteration-major exact body order'}
+                    groups = [(start, count)]
+                    if node['op'] == 'FOR' and node['var'] == 'tree_level':
+                        groups = [(index, 1) for index in range(start, stop, step)]
+                    elif node['op'] == 'FOR' and node['var'] == 'g' and count > 1:
+                        groups = [(start, count - 1), (start + step * (count - 1), 1)]
+                    elif node['op'] == 'FOR' and node['var'] == 's':
+                        knode = next((n for n in body if n['op'] == 'FOR' and n['var'] == 'k'), None)
+                        if knode:
+                            groups = []; last_trip = None
+                            for index in range(start, stop, step):
+                                local_env[node['var']] = index
+                                bounds = [shape_expression(knode[k], local_env) for k in ('start', 'stop', 'step')]
+                                trip = len(range(*bounds))
+                                if trip != last_trip:
+                                    groups.append([index, 1]); last_trip = trip
+                                else:
+                                    groups[-1][1] += 1
+                    segments = []; total = 0
+                    for index, repeat in groups:
+                        if node['op'] == 'FOR':
+                            local_env[node['var']] = index
+                        children, duration = walk(body, local_env, path + (i, index))
+                        segment = {'kind': 'loop', 'count': repeat, 'iteration_start': index,
+                            'iteration_step': step, 'iteration_stride': duration, 'body': children,
+                            'duration': duration * repeat + costs['admit'], 'control_cycles': costs['admit'],
+                            'offset': total, 'ordering': 'iteration-major exact body order'}
+                        segments.append(segment); total += segment['duration']
+                    record = {'kind': 'loop', 'count': 1, 'body': segments, 'duration': total + costs['admit'],
+                        'control_cycles': costs['admit'], 'source_loop_count': count,
+                        'ordering': 'contiguous source iteration groups; shrinking trees and tail extents explicit'}
                     if node['op'] == 'FOR':
                         local_env[node['var']] = start + step * (count - 1)
             else:
@@ -659,18 +789,48 @@ def bind_recipe(native, plan, macro, rank, table):
         'version': macro['reads'][int(name[5:])], 'source': 'macro RF/persistent read landing'}
         for name in list(env) if name.startswith('input') and name[5:].isdigit()]
     tree, duration = walk(prefix + nodes, env)
-    arena = {}; cursor = 0
-    for name, size in sorted(buffers.items()):
-        arena[name] = {'byte_offset': cursor, 'buffer_bytes': size, 'buffers': 2,
-                       'version_buffer': 'iteration-local producer parity; read old parity before mirrored ACK switch'}
-        cursor += 2 * size
-    return {'schema': 'H3_ORDERED_PRIMITIVE_CALENDAR_V1', 'duration': duration,
+    arena = {}; cursor = 0; producer_homes = {}
+    if exported_allocations:
+        for name, allocation in exported_allocations.items():
+            home = allocation['home']; producer_homes[name] = allocation
+            if home['class_'] == 'spill':
+                size = ceil(allocation['bytes'], 512) * 512
+                arena[name] = {'byte_offset': home['byte_offset'], 'buffer_bytes': size, 'buffers': 1,
+                    'base_by_rank': home['base_by_rank'], 'version': allocation['version'],
+                    'lease': allocation['lease'], 'release_after': allocation['release_after']}
+                cursor = max(cursor, home['byte_offset'] + size)
+            elif home['class_'] == 'RF':
+                if any(not 3 <= slot < 32 for slot in home['vector_slots']):
+                    raise ValueError('producer native workspace RF aperture')
+            else:
+                raise ValueError('producer native temporary home class')
+        if cursor != plan['temporary_storage']['spill_bytes']:
+            raise ValueError('producer native scratch extent mismatch')
+    else:
+        for name, size in sorted(buffers.items()):
+            arena[name] = {'byte_offset': cursor, 'buffer_bytes': size, 'buffers': 2,
+                           'version_buffer': 'iteration-local producer parity; read old parity before mirrored ACK switch'}
+            cursor += 2 * size
+    result = {'schema': 'H3_ORDERED_PRIMITIVE_CALENDAR_V1', 'duration': duration,
         'primitive_tree': tree, 'finite_scratch_bytes': cursor, 'scratch_homes': arena,
+        'producer_temporary_homes': producer_homes,
+        'producer_counts_full_context': plan.get('calendar_counts_full_context'),
+        'producer_native_finite_export': plan.get('calendar_export', {}).get('schema'),
         'source_arithmetic': macro['golden_contract'], 'source_recipe_sha256': hashlib.sha256(encode(nodes)).hexdigest(),
         'provider_refs': native.get('provider_requirements', 'Peirce LOAD/provider program descriptors'),
         'storage_scope': 'finite logical successor arena per rank; does not alias source scratch',
-        'scratch_layout': '8 bytes per logical element: F32/U32 lowword plus explicit padded highword; I64 retains both32bit words. Two RF staging vectors per128 logical values; no I64 truncation.',
+        'scratch_layout': ('producer finite RF/refill/spill allocations consumed exactly; no independently sized double buffers' if exported_allocations else
+            '8 bytes per logical element: F32/U32 lowword plus padded highword; I64 retains both32bit words; two RF staging vectors per128 logical values'),
         'no_tensor_value_evaluation': True}
+    if plan.get('calendar_counts_full_context'):
+        expected = {op: counts['native_vector_beats'] for op, counts in
+                    plan['calendar_counts_full_context']['by_primitive'].items()}
+        observed = verify_native_program(result)
+        if any(observed.get(op, 0) != count for op, count in expected.items()):
+            raise ValueError('producer native vector count mismatch at PC' + str(plan['pc']))
+        result['producer_vector_count_gate'] = 'PASS_EXACT_EXPORTED_NATIVE_COUNTS'
+    return result
+
 
 
 def validate_native_lowering(native, graph, homes, ranks):
@@ -1016,6 +1176,7 @@ def compile_target(target, graph, layout, table, native=None, providers=None):
         if 'native_program_ref' in e and e['end'] - e['start'] != programs[e['native_program_ref']]['duration']:
             raise ValueError('native enclosing reservation duration')
     demands = [] if providers else extent_demands(layout)
+    workspace_layout = {p['rank']: p for p in (native or {}).get('storage', {}).get('software_provider_layout', [])}
     for rank, size in sorted(scratch_peaks.items()):
         if size:
             demands.append({'rank_group': [rank], 'class': 'native_temporary_scratch',
@@ -1026,8 +1187,12 @@ def compile_target(target, graph, layout, table, native=None, providers=None):
                 'status': 'CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED',
                 'constraints': ['distinct from all version spill, checkpoint and persistent extents',
                     'capacity >= maximum bound recipe arena; no modulo alias',
-                    'primitive consumes old double buffer before ACK switches generation'],
-                'calendar_binding': 'finite logical arena; resident physical base needs provider binding'})
+                    'producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse'],
+                'calendar_binding': ('producer concrete software base and lease; physical residence unqualified' if rank in workspace_layout else
+                                     'finite logical arena; resident physical base needs provider binding'),
+                'producer_workspace_layout': workspace_layout.get(rank),
+                'bounded_tiled_allocation': False,
+                'admission_scope': 'outside retained source spill extent; software workspace reservation only'})
     persistent_caps = {}
     for (vid, rank), entries in homes.items():
         for h in entries:
@@ -1048,6 +1213,8 @@ def compile_target(target, graph, layout, table, native=None, providers=None):
         'provider_resource_contract': providers['resource_contract'] if providers else None,
         'cycles': cal.ends[last_pc], 'cycle_unit': table['unit'],
         'latency_calibration': table['calibration'], 'hardware_clock_claim': False,
+        'physical_base_and_lease_bindings_complete': False,
+        'software_schedule_coverage_scope': 'all source PCs and actual instruction expansions; physical bases/leases remain separate admission',
         'RTL_or_physical_admission': False, 'CPU_numerical_oracle_cycles': False,
         'source_backed_extent_admission': not bool(demands), 'constrained_extent_successors': demands,
         'home_binding': 'actual provider lookup when supplied; otherwise exact distributed RF/spill homes; persistent finite logical objects, physical bases separate gate',
@@ -1076,6 +1243,7 @@ def main():
     ap.add_argument('--verify', action='store_true')
     ap.add_argument('--native-lowering', type=Path, action='append', default=[])
     ap.add_argument('--qwen-providers', type=Path)
+    ap.add_argument('--target', choices=('Qwen', 'DeepSeek'), action='append')
     args = ap.parse_args()
     providers = read_json(args.qwen_providers) if args.qwen_providers else None
     native = {}
@@ -1111,7 +1279,10 @@ def main():
     if not args.verify:
         args.out.mkdir(parents=True, exist_ok=False)
     digests = {}; summaries = {}
-    for target in graphs:
+    targets = args.target or list(graphs)
+    if len(targets) != len(set(targets)):
+        raise ValueError('duplicate target')
+    for target in targets:
         result = compile_target(target, graphs[target], layouts[target], table, native.get(target), providers if target == 'Qwen' else None)
         raw = encode(result); path = args.out / (target + '.json.gz')
         if args.verify:
@@ -1131,7 +1302,8 @@ def main():
         'replay': 'python tools/h3_complete_native_calendar.py --verify --out ' + str(args.out) +
             ''.join(' --native-lowering ' + str(p) for p in args.native_lowering) +
             (' --cycles ' + str(args.cycles) if args.cycles else '') +
-            (' --qwen-providers ' + str(args.qwen_providers) if args.qwen_providers else '')}
+            (' --qwen-providers ' + str(args.qwen_providers) if args.qwen_providers else '') +
+            ''.join(' --target ' + t for t in (args.target or []))}
     path = args.out / 'manifest.json'
     if args.verify:
         if read_json(path) != manifest:
