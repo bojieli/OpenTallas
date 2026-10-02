@@ -12,6 +12,101 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def r33_pair(self):
+        import hashlib,subprocess,math
+        from collections import Counter
+        code=[{'op':'LOAD','dst':'w','src':[],'shape':[128,512],'attrs':{'name':'window','dtype':'F32'}},
+            {'op':'SLICE','dst':'trim','src':['w'],'shape':[127,512],'attrs':{'axis':0,'start':1,'step':1,'stop':None}},
+            {'op':'LOAD','dst':'row','src':[],'shape':[1,512],'attrs':{'name':'kv','dtype':'F32'}},
+            {'op':'FADD','dst':'arithmetic','src':['row','row'],'shape':[1,512],'attrs':{}},
+            {'op':'CONCAT','dst':'out','src':['trim','row'],'shape':[128,512],'attrs':{'axis':0}},
+            {'op':'PACKET_COMMIT','dst':'commit','src':['out'],'shape':[128,512],'attrs':{}}]
+        t={'code':code,'family':'q_norm_kv_row','providers':{'window':{'shape':[128,512],'dtype':'F32'}},'shape_parameters':{'window':128}}
+        tid='old';binding={'version':'input_window','view':'original128'}
+        op={'pc':0,'family':'q_norm_kv_row','reads':[{'version':'input_window'}],
+            'writes':[{'version':'output_window','native_result_binding':{'result':'window'}}],'dependencies':[],
+            'provider_bindings':{tid:{'window':binding}},'rank_bindings':[{'rank':r,'template':tid} for r in range(2)]}
+        native={'templates':{tid:t},'instructions':[op]};native_sha=hashlib.sha256(gzip.compress(json.dumps(native,sort_keys=True,separators=(',',':')).encode(),mtime=0)).hexdigest()
+        counts=Counter();batches=Counter()
+        for n in code:
+            elements=math.prod(n['shape']);counts[n['op']]+=elements;batches[n['op']]+=c.ceil(elements,128)
+        calls=[{'rank':r,'template':tid,'SM_partition':'bounded'} for r in range(2)]
+        dispatch={'source_program_sha256':native_sha,'templates':{tid:{'execution_path':'source_order_live_range_stages'}},
+            'PC_dispatch':[{'pc':0,'calls':calls,'rank_bindings':op['rank_bindings'],'provider_bindings':op['provider_bindings'],
+                'baseline_once_scalars':{k:v*2 for k,v in counts.items()},'projected_executed_primitive_scalars':{k:v*2 for k,v in counts.items()}}]}
+        catalog={'source_program_sha256':native_sha,'templates':{tid:{'calls':[{'leaf':'old_leaf','repetitions':1}],
+            'execution_path':'source_order_live_range_stages','native_scalars':dict(counts),'native_batches128':dict(batches),
+            'source_loop_plan':{'primitive_scalars':sum(counts.values())}}},'leaves':{},
+            'PC_bindings':[{'pc':0,'bindings':calls,'native_scalars':{k:v*2 for k,v in counts.items()},'native_batches128':{k:v*2 for k,v in batches.items()}}],
+            'native_scalars':{k:v*2 for k,v in counts.items()},'native_batches128':{k:v*2 for k,v in batches.items()}}
+        contract=subprocess.check_output(['git','show','ca99e5d04:tools/ds_hbm_window_contract_r33.py'],cwd=ROOT)
+        prepare=subprocess.check_output(['git','show','ca99e5d04:tools/ds_hbm_window_rope_prepare_r33.py'],cwd=ROOT)
+        current,current_dispatch,witness,_,_=c.derive_ds_r33_source_pair(native,dispatch,contract,prepare,1048575)
+        homes={'rows':[{'PC_first_consumer':0,'rank':r,'version':'input_window','shape':[127,512],
+            'bytes':127*2048,'reservation_bytes':127*2048,'base':33554432,'generation':1,'source_payload_required':True} for r in range(2)]}
+        return [native,dispatch,current,current_dispatch,witness,catalog,homes]
+
+    def test_r33_adapter_changes_only_source_LOAD_count_and_keeps128row_cost_fit(self):
+        args=self.r33_pair();adapter,catalog,overlay=c.adapt_ds_r33_calendar(*args)
+        self.assertEqual(adapter['primitive_scalar_delta']['LOAD'],-1024)
+        self.assertEqual(adapter['native_batches128_delta']['LOAD'],-8)
+        self.assertEqual(adapter['primitive_scalar_delta']['FADD'],0)
+        self.assertTrue(adapter['original128row_cost_reservations_retained'])
+        self.assertFalse(adapter['physical_cost_replacement_applied'])
+        self.assertIsNone(adapter['matching_current_movement_bridge'])
+        ctx=adapter['source_context'];c.require_ds_calendar_source_context(adapter,ctx['native_sha256'],ctx['dispatch_content_sha256'],ctx['catalog_content_sha256'])
+        with self.assertRaisesRegex(ValueError,'mixed'):c.require_ds_calendar_source_context(adapter,args[1]['source_program_sha256'],ctx['dispatch_content_sha256'],ctx['catalog_content_sha256'])
+        tid=args[4][0]['new_template'];load=overlay['native_templates'][tid]['code'][0]
+        ref={'source_context':ctx,'pc':0,'rank':0,'parent_template':tid,'call_index':0,'invocation_index':0,
+            'template':tid,'code_index':0,'opcode':'LOAD','attrs':load['attrs'],'result_shape':load['shape'],
+            'operand':'dst','value':'w','logical_byte_offset':0,'payload_bytes':127*2048}
+        resolved=c.resolve_ds_r33_window_reference(adapter,catalog,overlay,ref)
+        self.assertEqual(resolved[2],127*2048)
+        bad=copy.deepcopy(ref);bad['payload_bytes']=128*2048
+        with self.assertRaises(ValueError):c.resolve_ds_r33_window_reference(adapter,catalog,overlay,bad)
+        bad=copy.deepcopy(ref);bad['source_context']['native_sha256']=args[1]['source_program_sha256']
+        with self.assertRaisesRegex(ValueError,'mixed'):c.resolve_ds_r33_window_reference(adapter,catalog,overlay,bad)
+
+    def test_r33_adapter_rejects_old_dispatch_catalog_counts_and_home_views(self):
+        args=self.r33_pair()
+        for index in (3,):
+            bad=copy.deepcopy(args);bad[index]=copy.deepcopy(args[1])
+            with self.assertRaisesRegex(ValueError,'dispatch/native'):c.adapt_ds_r33_calendar(*bad)
+        bad=copy.deepcopy(args);bad[3]['PC_dispatch'][0]['calls'][0]['template']='old'
+        with self.assertRaisesRegex(ValueError,'mixes old'):c.adapt_ds_r33_calendar(*bad)
+        bad=copy.deepcopy(args);bad[3]['PC_dispatch'][0]['projected_executed_primitive_scalars']['LOAD']+=512
+        with self.assertRaisesRegex(ValueError,'perPC dispatch'):c.adapt_ds_r33_calendar(*bad)
+        bad=copy.deepcopy(args);bad[5]['source_program_sha256']='forged'
+        with self.assertRaisesRegex(ValueError,'baseline catalog'):c.adapt_ds_r33_calendar(*bad)
+        bad=copy.deepcopy(args);bad[6]['rows'][0]['bytes']=128*2048
+        with self.assertRaisesRegex(ValueError,'home span'):c.adapt_ds_r33_calendar(*bad)
+
+    def test_r33_adapter_rejects_unrelated_arithmetic_and_provider_alias_mutations(self):
+        import hashlib
+        args=self.r33_pair();bad=copy.deepcopy(args);tid=bad[4][0]['new_template']
+        bad[2]['templates'][tid]['code'][3]['op']='FMUL'
+        bad[3]['source_program_sha256']=hashlib.sha256(gzip.compress(json.dumps(bad[2],sort_keys=True,separators=(',',':')).encode(),mtime=0)).hexdigest()
+        with self.assertRaisesRegex(ValueError,'template source identity'):c.adapt_ds_r33_calendar(*bad)
+        bad=copy.deepcopy(args);bad[2]['instructions'][0]['provider_bindings'][tid]['window']['version']='aliased_window'
+        bad[3]['source_program_sha256']=hashlib.sha256(gzip.compress(json.dumps(bad[2],sort_keys=True,separators=(',',':')).encode(),mtime=0)).hexdigest()
+        with self.assertRaisesRegex(ValueError,'source version/position'):c.adapt_ds_r33_calendar(*bad)
+
+    def test_r33_provider_home_join_proves_disjoint_spans_without_inventing_ACKs(self):
+        args=self.r33_pair();adapter,_,_=c.adapt_ds_r33_calendar(*args)
+        produced={'rows':[{'PC':0,'rank':r,'version':'output_window','source_template':'old','shape':[128,512],
+            'bytes':128*2048,'reservation_bytes':128*2048,'base':33554432+262144,'dtype':'F32'} for r in range(2)]}
+        joined=c.bind_ds_r33_window_provider_homes(adapter,produced,args[-1])
+        self.assertEqual(joined['rank_window_pairs'],2)
+        self.assertTrue(all(r['output_shape_source_equivalence_proved'] for r in joined['bindings']))
+        self.assertTrue(all(r['actual_refill_visible_ACK_reverse_receipt'] is None for r in joined['bindings']))
+        self.assertFalse(joined['source_payloads_supplied'])
+        bad=copy.deepcopy(produced);bad['rows'][0]['base']=33554432
+        with self.assertRaisesRegex(ValueError,'alias'):c.bind_ds_r33_window_provider_homes(adapter,bad,args[-1])
+        bad=copy.deepcopy(produced);bad['rows'][0]['shape']=[127,512]
+        with self.assertRaisesRegex(ValueError,'output source shape'):c.bind_ds_r33_window_provider_homes(adapter,bad,args[-1])
+        bad=copy.deepcopy(produced);bad['rows'].pop()
+        with self.assertRaisesRegex(ValueError,'home missing'):c.bind_ds_r33_window_provider_homes(adapter,bad,args[-1])
+
     def tp96_inputs(self):
         folder=ROOT/c.OUT/'tp96_literal_collective_join_r1/inputs'
         return (json.loads((folder/'normal_record.json').read_bytes()),

@@ -479,6 +479,196 @@ def compose_v1_native_component_successor(ds, qwen_fixture, qwen, model):
         'hardware_admitted':False,'clock_or_ns_conversion':None}
 
 
+def derive_ds_r33_source_pair(native, dispatch, contract_source, prepare_source, position):
+    """Execute only the producer's metadata lowering and dispatch count adapter."""
+    import copy
+    ns={'copy':copy,'hashlib':hashlib,'json':json}
+    nodes=[n for n in ast.parse(contract_source).body if isinstance(n,ast.FunctionDef)]
+    exec(compile(ast.Module(body=nodes,type_ignores=[]),'pinned_r33_window_contract','exec'),ns)
+    lowered,witness=ns['lower_full_native'](native,position,'pretrimmed127')
+    raw=gzip.compress(ns['canonical'](lowered),mtime=0)
+    main=next(n for n in ast.parse(prepare_source).body if isinstance(n,ast.FunctionDef) and n.name=='main')
+    start=next(i for i,n in enumerate(main.body) if isinstance(n,ast.Assign) and
+        any(isinstance(t,ast.Name) and t.id=='joined' for t in n.targets))
+    selected=main.body[start:start+3]
+    if not isinstance(selected[-1],ast.For):raise ValueError('r33 producer dispatch adapter source changed')
+    env={'copy':copy,'Counter':Counter,'math':math,'hashlib':hashlib,
+        'dispatch':dispatch,'lowered':lowered,'witness':witness,'raw':raw}
+    exec(compile(ast.Module(body=selected,type_ignores=[]),'pinned_r33_dispatch_adapter','exec'),env)
+    return lowered,env['joined'],witness,raw,gzip.compress(ns['canonical'](env['joined']),mtime=0)
+
+
+def adapt_ds_r33_calendar(original, old_dispatch, current, current_dispatch, witness, catalog, initial_homes):
+    """Current source/count identities, explicitly separate from old cost fit.
+
+    No 128-row physical reservation is removed and no new movement is certified.
+    Exported template overlay makes new leaf references locally resolvable.
+    """
+    import copy
+    canonical=lambda v:json.dumps(v,sort_keys=True,separators=(',',':')).encode()
+    if catalog['source_program_sha256']!=old_dispatch['source_program_sha256']:
+        raise ValueError('r33 baseline catalog/native source mismatch')
+    digest=hashlib.sha256(gzip.compress(canonical(current),mtime=0)).hexdigest()
+    if current_dispatch['source_program_sha256']!=digest:raise ValueError('r33 current dispatch/native source mismatch')
+    if len(original['instructions'])!=len(current['instructions']) or len(current_dispatch['PC_dispatch'])!=len(current['instructions']):
+        raise ValueError('r33 complete PC source coverage')
+    remap={};by_pc=defaultdict(list)
+    for row in witness:remap[row['old_template']]=row['new_template'];by_pc[row['PC']].append(row)
+    expected_pcs={o['pc'] for o in original['instructions'] if o['family']=='q_norm_kv_row'}
+    if set(by_pc)!=expected_pcs:raise ValueError('r33 window witness PC coverage')
+    updated=copy.deepcopy(catalog);overlay={'native_templates':{},'instruction_patches':{},'dispatch_templates':{},'dispatch_PC_patches':{}}
+    changed=[];total_delta=Counter();batch_delta=Counter();old_new_leaves={}
+    for old,new in remap.items():
+        before=original['templates'][old];after=current['templates'][new]
+        if hashlib.sha256(canonical(after)).hexdigest()!=new:raise ValueError('r33 new template source identity')
+        normalized=copy.deepcopy(after)
+        loads=[i for i,n in enumerate(before['code']) if n['op']=='LOAD' and n['attrs'].get('name')=='window']
+        if len(loads)!=1:raise ValueError('r33 actual window LOAD source')
+        index=loads[0];load=before['code'][index]
+        slices=[i for i,n in enumerate(before['code']) if n['op']=='SLICE' and n['src']==[load['dst']]]
+        if len(slices)!=1 or before['code'][slices[0]]['attrs']['start']!=1:raise ValueError('r33 actual window drop source')
+        sl=slices[0]
+        if after['code'][index]['shape']!=[127,512] or after['code'][sl]['attrs']['start']!=0:
+            raise ValueError('r33 requires explicit127 LOAD/drop0 source')
+        normalized['code'][index]['shape']=load['shape']
+        normalized['code'][sl]['attrs']['start']=1
+        normalized['providers']['window']['shape']=before['providers']['window']['shape']
+        normalized['shape_parameters']['window']=before['shape_parameters']['window']
+        if normalized!=before:raise ValueError('r33 changes arithmetic or unrelated native semantics')
+        counts=Counter();batches=Counter()
+        for n in after['code']:
+            elements=max(1,math.prod(n['shape']));counts[n['op']]+=elements;batches[n['op']]+=ceil(elements,128)
+        delta={k:counts[k]-catalog['templates'][old]['native_scalars'].get(k,0) for k in counts}
+        if {k:v for k,v in delta.items() if v}!= {'LOAD':-512}:raise ValueError('r33 source movement count delta')
+        if current_dispatch['templates'][new]['executed_primitive_scalar_projection']!=dict(counts):
+            raise ValueError('r33 dispatch template counts do not resolve source')
+        leaf=hashlib.sha256(canonical(after)).hexdigest();oldleaf=catalog['templates'][old]['calls'][0]['leaf'];old_new_leaves[oldleaf]=leaf
+        updated['leaves'][leaf]={'program_ref':'r33_source_overlay.json.gz#/native_templates/'+new,
+            'code_sha256':hashlib.sha256(canonical(after['code'])).hexdigest(),'native_scalars':dict(counts),
+            'native_batches128':dict(batches),'source_builder':'retained_r33_window_template','source_builder_args':[new],
+            'hardware_command_binding':False}
+        t=copy.deepcopy(catalog['templates'][old]);t['calls'][0]['leaf']=leaf
+        t['retained_128row_capacity_plan']=t.pop('source_loop_plan')
+        t.update(native_scalars=dict(counts),native_batches128=dict(batches),
+            source_loop_plan={'primitive_scalars':sum(counts.values()),'scalar_evaluations_by_opcode':dict(counts),
+                '128lane_batches':sum(batches.values()),'matching_physical_service_cost':None,'fits':None},
+            actual_shared_movement_source_context=None)
+        updated['templates'][new]=t
+        overlay['native_templates'][new]=after;overlay['dispatch_templates'][new]=current_dispatch['templates'][new]
+    for pc,(before,after,oldrow,row) in enumerate(zip(original['instructions'],current['instructions'],old_dispatch['PC_dispatch'],current_dispatch['PC_dispatch'])):
+        if before['pc']!=pc or after['pc']!=pc or row['pc']!=pc:raise ValueError('r33 source PC order')
+        if pc not in by_pc:
+            if before!=after or oldrow!=row:raise ValueError('r33 nonwindow PC changed')
+            continue
+        if before['family']!=after['family'] or before['reads']!=after['reads'] or before['writes']!=after['writes'] or before['dependencies']!=after['dependencies']:
+            raise ValueError('r33 version/dependency identity changed')
+        expected_op=copy.deepcopy(before)
+        for joined in by_pc[pc]:
+            old,new=joined['old_template'],joined['new_template']
+            bindings=expected_op['provider_bindings'].pop(old)
+            window=after['provider_bindings'][new]['window'];position=window.get('window_position')
+            if (bindings['window']['version']!=joined['input_version'] or window['version']!=joined['input_version'] or
+                type(position)!=int or position<127):raise ValueError('r33 window source version/position')
+            if any(b.get('position',position)!=position for b in bindings.values()):raise ValueError('r33 source position changed')
+            bindings['window'].update(view='explicit pretrimmed127 old window, [127, 512]',
+                window_representation='pretrimmed127',window_position=position)
+            expected_op['provider_bindings'][new]=bindings
+            for binding in expected_op['rank_bindings']:
+                if binding.get('template')==old:binding['template']=new
+        if after!=expected_op:raise ValueError('r33 unrelated provider/rank instruction mutation')
+        expected=[dict(c,template=remap.get(c['template'],c['template'])) for c in oldrow['calls']]
+        if row['calls']!=expected or row['rank_bindings']!=after['rank_bindings'] or row['provider_bindings']!=after['provider_bindings']:
+            raise ValueError('r33 current PC mixes old template/provider calls')
+        entry=updated['PC_bindings'][pc];scalars=Counter();batch=Counter()
+        for call in row['calls']:
+            t=updated['templates'][call['template']];scalars.update(t['native_scalars']);batch.update(t['native_batches128'])
+        if dict(scalars)!=row['projected_executed_primitive_scalars']:raise ValueError('r33 perPC dispatch source counts')
+        for k in set(scalars)|set(entry['native_scalars']):total_delta[k]+=scalars[k]-entry['native_scalars'].get(k,0)
+        for k in set(batch)|set(entry['native_batches128']):batch_delta[k]+=batch[k]-entry['native_batches128'].get(k,0)
+        entry.update(native_scalars=dict(scalars),native_batches128=dict(batch))
+        for binding in entry['bindings']:binding['template']=remap.get(binding['template'],binding['template'])
+        homes=[(i,h) for i,h in enumerate(initial_homes['rows']) if h['PC_first_consumer']==pc]
+        if len(homes)!=len(row['calls']) or {h['rank'] for _,h in homes}!={c['rank'] for c in row['calls']}:
+            raise ValueError('r33 initial window homes/consumer ranks mismatch')
+        versions={w['input_version'] for w in by_pc[pc]}
+        if any(h['shape']!=[127,512] or h['bytes']!=127*2048 or h['generation']!=1 or h['version'] not in versions or not h['source_payload_required'] for _,h in homes):
+            raise ValueError('r33 current concrete window home span/generation')
+        changed.append({'pc':pc,'source_calls':len(row['calls']),'template_joins':by_pc[pc],
+            'LOAD_scalar_delta':-512*len(row['calls']),'LOAD_batches128_delta':-4*len(row['calls']),
+            'window_homes':[{'rank':h['rank'],'base':h['base'],'bytes':h['bytes'],'generation':h['generation'],
+                'version':h['version'],'home_ref':'results/uarch/ds_hbm_window_retirement_r33_20261002/initial_window_homes.json.gz#/rows/'+str(i)} for i,h in homes],
+            'physical_cost_source':'original128row reservation retained','matching_physical_movement_cost':None})
+        overlay['instruction_patches'][str(pc)]=after;overlay['dispatch_PC_patches'][str(pc)]=row
+    for k,v in total_delta.items():updated['native_scalars'][k]+=v
+    for k,v in batch_delta.items():updated['native_batches128'][k]+=v
+    updated.update(source_program_sha256=digest,source_dispatch_sha256=hashlib.sha256(canonical(current_dispatch)).hexdigest(),
+        retained_cost_source_program_sha256=old_dispatch['source_program_sha256'],
+        source_context_requires_explicit_adapter=True,actual_shared64_movements=None)
+    context={'native_sha256':digest,'dispatch_content_sha256':updated['source_dispatch_sha256'],
+        'catalog_content_sha256':hashlib.sha256(canonical(updated)).hexdigest()}
+    return {'schema':'H4_DS_R33_SOURCE_COUNT_CALENDAR_ADAPTER_V1','source_context':context,'PCs':len(current['instructions']),
+        'changed_window_PCs':changed,'primitive_scalar_delta':dict(total_delta),'native_batches128_delta':dict(batch_delta),
+        'original128row_cost_reservations_retained':True,'physical_cost_replacement_applied':False,
+        'matching_current_movement_bridge':None,'hardware_admitted':False},updated,overlay
+
+
+def require_ds_calendar_source_context(adapter, native_sha256, dispatch_content_sha256, catalog_content_sha256):
+    if adapter['source_context']!={'native_sha256':native_sha256,'dispatch_content_sha256':dispatch_content_sha256,
+        'catalog_content_sha256':catalog_content_sha256}:raise ValueError('mixed native/dispatch/catalog source context')
+
+
+def resolve_ds_r33_window_reference(adapter, catalog, overlay, ref):
+    """Explicit importer ABI for current staged references, not original DPATH."""
+    if ref.get('source_context')!=adapter['source_context']:raise ValueError('mixed r33 movement source context')
+    digest=lambda value:hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    require_ds_calendar_source_context(adapter,catalog['source_program_sha256'],catalog['source_dispatch_sha256'],digest(catalog))
+    tid=ref.get('parent_template');pc=ref.get('pc');rank=ref.get('rank')
+    if tid not in overlay['native_templates'] or type(pc)!=int or not 0<=pc<len(catalog['PC_bindings']):
+        raise ValueError('r33 actual window template/PC reference required')
+    if not any(b['rank']==rank and b['template']==tid for b in catalog['PC_bindings'][pc]['bindings']):
+        raise ValueError('r33 movement rank/template not owned by source PC')
+    calls=catalog['templates'][tid]['calls'];ci=ref.get('call_index');iteration=ref.get('invocation_index')
+    if type(ci)!=int or not 0<=ci<len(calls) or type(iteration)!=int or not 0<=iteration<calls[ci]['repetitions']:
+        raise ValueError('r33 staged leaf invocation reference')
+    key=calls[ci]['leaf'];program=overlay['native_templates'][tid]
+    if ref.get('template')!=key or digest(program)!=key or digest(program['code'])!=catalog['leaves'][key]['code_sha256']:
+        raise ValueError('r33 retained template/leaf source identity')
+    return resolve_ds_movement_reference({'templates':{key:program}},key,ref)
+
+
+def bind_ds_r33_window_provider_homes(adapter, produced, initial):
+    """Explicit old-output/new-read home join; no payload, lease or ACK invented."""
+    rank_extents=defaultdict(list)
+    for rows in (produced['rows'],initial['rows']):
+        for home in rows:
+            rank_extents[home['rank']].append((home['base'],home['base']+home['reservation_bytes']))
+    for rank,extents in rank_extents.items():
+        for start,end in sorted(extents):
+            if start<33554432 or end>67108864:raise ValueError('r33 finite32MiB state extent')
+        for (_,end),(start,_) in zip(sorted(extents),sorted(extents)[1:]):
+            if end>start:raise ValueError('r33 initial/produced state home alias')
+    index={(h['PC'],h['version'],h['rank']):(i,h) for i,h in enumerate(produced['rows'])}
+    if len(index)!=len(produced['rows']):raise ValueError('r33 duplicate output home identity')
+    rows=[]
+    for changed in adapter['changed_window_PCs']:
+        for home in changed['window_homes']:
+            joins=[j for j in changed['template_joins'] if j['input_version']==home['version']]
+            if len(joins)!=1:raise ValueError('r33 window input version source join')
+            j=joins[0];key=(changed['pc'],j['output_version'],home['rank'])
+            if key not in index:raise ValueError('r33 actual produced window home missing')
+            i,out=index[key]
+            if out['source_template']!=j['old_template'] or out['shape']!=[128,512] or out['bytes']!=128*2048 or out['dtype']!='F32':
+                raise ValueError('r33 output source shape/typed home mismatch')
+            rows.append({'pc':changed['pc'],'rank':home['rank'],'current_template':j['new_template'],
+                'input':home,'output':{'version':out['version'],'base':out['base'],'bytes':out['bytes'],
+                    'home_ref':'results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/finite_state_homes.json#/rows/'+str(i)},
+                'output_shape_source_equivalence_proved':True,'initial_generation':1,
+                'output_generation_or_lease':None,'actual_refill_visible_ACK_reverse_receipt':None})
+    return {'schema':'H4_DS_R33_CONCRETE_WINDOW_PROVIDER_SOURCE_JOIN_V1','source_context':adapter['source_context'],
+        'rank_window_pairs':len(rows),'bindings':rows,'extent_bytes_per_rank':33554432,'AW':27,
+        'hardware_address_translation':None,'source_payloads_supplied':False,'hardware_admitted':False}
+
+
 def reconcile_tp96_literal_collectives(record, preflight, fixture, log, operations, costs):
     """Join literal transport receipts, retaining source and clock distinctions.
 
@@ -3441,6 +3631,8 @@ def main():
     ap.add_argument('--ds-native-source-commit')
     ap.add_argument('--ds-forward-leaves',action='store_true')
     ap.add_argument('--provider-v1-join',action='store_true')
+    ap.add_argument('--ds-r33-calendar-source-join',action='store_true')
+    ap.add_argument('--r33-source-commit',default='433ccff91c9ed6f0e61761bdbffa11f4878d6339')
     ap.add_argument('--tp96-collective-inputs',type=Path)
     ap.add_argument('--tp96-endpoint-cycles',type=Path)
     ap.add_argument('--v1-source-commit',default='f7fa8e290d419f6de3356385c0b55ded768c2090')
@@ -3450,6 +3642,78 @@ def main():
     ap.add_argument('--parent-state-receipts',type=Path)
     ap.add_argument('--c0-source-commit')
     args = ap.parse_args()
+    if args.ds_r33_calendar_source_join:
+        pins={}
+        def pinned(path,commit=args.r33_source_commit):
+            raw=subprocess.check_output(['git','show',commit+':'+path],cwd=ROOT)
+            pins[path]={'commit':commit,'sha256':hashlib.sha256(raw).hexdigest()};return raw
+        def decoded(path,commit=args.r33_source_commit):
+            raw=pinned(path,commit);return json.loads(gzip.decompress(raw) if path.endswith('.gz') else raw)
+        folder='results/uarch/ds_hbm_window_retirement_r33_20261002/'
+        bridge=decoded(folder+'bridge.json');native_raw=pinned('results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz')
+        dispatch_raw=pinned('results/uarch/h3_deepseek_bounded_tiles_20261002/forward_dispatch_milestone.json.gz')
+        if hashlib.sha256(native_raw).hexdigest()!=bridge['original_native_sha256'] or hashlib.sha256(dispatch_raw).hexdigest()!=bridge['original_dispatch_sha256']:
+            raise ValueError('r33 original native/dispatch producer source pins')
+        original=json.loads(gzip.decompress(native_raw));dispatch=json.loads(gzip.decompress(dispatch_raw))
+        contract=pinned('tools/ds_hbm_window_contract_r33.py');prepare=pinned('tools/ds_hbm_window_rope_prepare_r33.py')
+        current,current_dispatch,witness,current_raw,current_dispatch_raw=derive_ds_r33_source_pair(original,dispatch,contract,prepare,bridge['position'])
+        if (hashlib.sha256(current_raw).hexdigest()!=bridge['lowered_native_sha256'] or
+            hashlib.sha256(current_dispatch_raw).hexdigest()!=bridge['lowered_dispatch_sha256'] or witness!=bridge['window_template_joins']):
+            raise ValueError('r33 actual producer native/dispatch/witness regeneration mismatch')
+        catalog=decoded(OUT+'/ds_forward_leaf_join_r3/review/forward_leaf_catalog.json.gz','781046c9775880183bd7f45a06ab101e98c66cac')
+        homes=decoded(folder+'initial_window_homes.json.gz');produced=decoded('results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/finite_state_homes.json')
+        import copy
+        env={'copy':copy,'hashlib':hashlib,'json':json}
+        exec(compile(ast.Module(body=[n for n in ast.parse(contract).body if isinstance(n,ast.FunctionDef)],type_ignores=[]),'pinned_r33_initial_home_allocator','exec'),env)
+        expected=env['initial_home_directory'](original,produced,bridge['position'],bridge['representation'])
+        if json.loads(json.dumps(expected))!=homes:raise ValueError('r33 initial home allocator replay mismatch')
+        adapter,current_catalog,overlay=adapt_ds_r33_calendar(original,dispatch,current,current_dispatch,witness,catalog,homes)
+        window_provider=bind_ds_r33_window_provider_homes(adapter,produced,homes)
+        g0=decoded(OUT+'/ds_forward_leaf_join_r3/review/G0_both_program_interface.json.gz','781046c9775880183bd7f45a06ab101e98c66cac')
+        for row,current_pc in zip(g0['DeepSeek']['PC_bindings'],current_catalog['PC_bindings']):
+            if row['pc']!=current_pc['pc'] or any(current_pc['native_batches128'][k]!=v for k,v in row['G0_native_batches128'].items()):
+                raise ValueError('r33 unexpectedly changes source V1/G0 arithmetic demand')
+            row['actual_rank_template_leaf_refs']=current_pc['bindings']
+        g0['r33_source_context']=adapter['source_context'];g0['current_r33_C0_static_template_binding']=None
+        g0['original_V1_cost_reservation_retained']=True
+        rope=decoded(folder+'source_owned_rope_bindings.json.gz')
+        expected_refs={str(o['pc'])+'/'+key+'/'+name for o in current['instructions'] for key,bs in o['provider_bindings'].items()
+            for name,b in bs.items() if b['kind']=='explicit_auxiliary_provider' and name in ('rope_cos','rope_sin')}
+        if set(rope)!=expected_refs:raise ValueError('r33 RoPE references mix source template contexts')
+        for ref,binding in rope.items():
+            pc,key,name=ref.split('/');actual=current['instructions'][int(pc)]['provider_bindings'][key][name]
+            spec=current['templates'][key]['providers'][name]
+            if binding['source_binding']!=actual or binding['shape']!=spec['shape'] or binding['dtype']!=spec['dtype']:
+                raise ValueError('r33 actual coefficient provider/template binding')
+            path=folder+'rope_images/'+Path(binding['path']).name
+            image=pinned(path) if path not in pins else subprocess.check_output(['git','show',args.r33_source_commit+':'+path],cwd=ROOT)
+            if hashlib.sha256(image).hexdigest()!=binding['sha256']:raise ValueError('r33 immutable coefficient image pin')
+        adapter['source_owned_RoPE_bindings']=len(rope)
+        prior=decoded(OUT+'/provider_v1_mtp_join_r4/final_physical/summary.json','a67150839')
+        adapter['retained_128row_cost_summary']=prior
+        adapter['full_program_cost_reprice']=None;adapter['Sagan_original_DPATH_catalog_admitted_for_r33']=False
+        context=adapter['source_context']
+        require_ds_calendar_source_context(adapter,hashlib.sha256(current_raw).hexdigest(),
+            hashlib.sha256(json.dumps(current_dispatch,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
+            hashlib.sha256(json.dumps(current_catalog,sort_keys=True,separators=(',',':')).encode()).hexdigest())
+        manifest={'schema':'H4_DS_R33_CALENDAR_SOURCE_MANIFEST_V1','source_pins':pins,
+            'calendar_tool_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            'current_source_context':context,'current_native_gzip_sha256':bridge['lowered_native_sha256'],
+            'current_dispatch_gzip_sha256':bridge['lowered_dispatch_sha256'],
+            'derived_bulk_artifacts_stored':False,'old_cost_fit_retained':True,'hardware_admitted':False}
+        summary={k:v for k,v in adapter.items() if k!='changed_window_PCs'}
+        summary.update(changed_window_PCs=len(adapter['changed_window_PCs']),changed_source_calls=sum(r['source_calls'] for r in adapter['changed_window_PCs']))
+        artifacts={'manifest.json':manifest,'summary.json':summary,'source_count_adapter.json.gz':adapter,
+            'r33_current_catalog.json.gz':current_catalog,'r33_source_overlay.json.gz':overlay,
+            'r33_window_provider_join.json.gz':window_provider,'r33_current_G0_interface.json.gz':g0}
+        if not args.verify:args.out.mkdir(parents=True,exist_ok=False)
+        for name,item in artifacts.items():
+            raw=(json.dumps(item,sort_keys=True,indent=2)+'\n').encode();raw=gzip.compress(raw,mtime=0) if name.endswith('.gz') else raw
+            if args.verify:
+                if (args.out/name).read_bytes()!=raw:raise ValueError('r33 source adapter replay mismatch '+name)
+            else:(args.out/name).write_bytes(raw)
+        print(json.dumps(summary,sort_keys=True));print('PASS_R33_CALENDAR_SOURCE_REPLAY' if args.verify else 'PASS_R33_CALENDAR_SOURCE_ADAPTER')
+        return
     if args.tp96_collective_inputs:
         folder=args.tp96_collective_inputs
         if args.tp96_endpoint_cycles is None:raise ValueError('explicit provisional TP96 endpoint cycle inputs required')
