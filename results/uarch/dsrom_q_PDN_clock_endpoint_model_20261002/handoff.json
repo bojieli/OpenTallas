@@ -16,6 +16,12 @@
   "dependencies": [
     "5cc5b1029a686446f5c726e64f94a0c993afc99c (already parent reviewed; additive model/retained map chain unchanged)"
   ],
+  "independent_clean_archive_review": {
+    "manifest_defect": "old duplicated source-root handoff entry rejected; successor manifest has unique relative paths and current hashes",
+    "model_byte_replay": "PASS",
+    "path": "/tmp/dsrom-q-PDN-d870-clean-review-20261002",
+    "prior_focused_tests": 27
+  },
   "independent_in_process_byte_replay": "PASS",
   "new_jobs": 0,
   "next_owner_bindings": {
@@ -39,8 +45,8 @@
   "source_snapshot_diff_check": "Only exact archived technology LEF has pre-existing trailing whitespace; preserved byte-identical. New tool/test/JSON/other inputs diff-check PASS.",
   "test_command": "python -m pytest -q tests/test_dsrom_q_PDN_clock_endpoint_model.py tests/test_dsrom_retained_WAKE_context_admission.py tests/test_dsrom_PAR2_mapped_q_growth_join.py tests/test_dsrom_PAR2_complete_selector_wire_join.py tests/test_dsrom_I66_terminal_destination_review.py",
   "tests": {
-    "focused_total": 27,
-    "new": 7,
+    "focused_total": 28,
+    "new": 8,
     "verdict": "PASS"
   }
 }

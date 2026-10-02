@@ -56,3 +56,11 @@ def test_default_via_missing_rejected():
 def test_union_boundary_and_duplicate():
     assert M.union_area([[0,0,10,10],[5,0,15,10],[0,0,10,10]])==150
     assert M.area(M.overlap([0,0,10,10],[10,0,20,10]))==0
+
+def test_manifest_portable_unique_and_exact():
+    import hashlib,json
+    pins=json.loads((M.BASE/'artifact_sha256.json').read_text())
+    assert len(pins)==9
+    for name,digest in pins.items():
+        assert not Path(name).is_absolute()
+        assert hashlib.sha256((M.C.G.P.ROOT/name).read_bytes()).hexdigest()==digest
