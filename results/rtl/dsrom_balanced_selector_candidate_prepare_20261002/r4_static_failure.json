@@ -1,0 +1,7 @@
+{
+  "verdict": "FAIL_STATIC_DECLARATION_AUDITOR",
+  "log": "static_tests_r4.log",
+  "diagnosis": "Auditor evaluated unrelated baseline declaration width containing P before filtering names. Move width evaluation after generated-register selection; do not alter RTL or priced bit target.",
+  "HDL_compiled": false,
+  "oracle_changed": false
+}
