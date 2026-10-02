@@ -16,10 +16,12 @@
     "actual macro read/capture timing",
     "finite producer/consumer identity, credits and ownership",
     "SRAM/HBM/link/control-state protection",
-    "immutable historical ECC pass/failure evidence"
+    "immutable historical ECC pass/failure evidence",
+    "configuration/descriptor payload validity, address bounds and transaction identity checks"
   ],
   "reticle_or_SSFF_closed": false,
   "schema": "opentallas.rom_reliability_policy.v1",
+  "scope": "All ROM storage, including weight and configuration ROM; no mandatory ROM ECC. Preserve semantic descriptor/identity/address checks and mutable control-state protection.",
   "targets": [
     "qwen3_8b_rom",
     "deepseek_v4_1_rom"
