@@ -1,0 +1,126 @@
+{
+  "observed_UTC": "2026-10-02T11:47:51.353205+00:00",
+  "host": "ot-pve3",
+  "exit": 0,
+  "stderr": "",
+  "data": {
+    "system_timers": {
+      "exit": 0,
+      "stdout": "NEXT                        LEFT           LAST                        PASSED       UNIT                           ACTIVATES\nFri 2026-10-02 13:34:22 UTC 1h 46min left  Thu 2026-10-01 18:45:29 UTC 17h ago      apt-daily.timer                apt-daily.service\nFri 2026-10-02 17:17:48 UTC 5h 29min left  Fri 2026-10-02 00:39:29 UTC 11h ago      motd-news.timer                motd-news.service\nSat 2026-10-03 00:00:00 UTC 12h left       Fri 2026-10-02 00:00:00 UTC 11h ago      dpkg-db-backup.timer           dpkg-db-backup.service\nSat 2026-10-03 00:00:00 UTC 12h left       Fri 2026-10-02 00:00:00 UTC 11h ago      logrotate.timer                logrotate.service\nSat 2026-10-03 03:18:53 UTC 15h left       Fri 2026-10-02 03:23:59 UTC 8h ago       man-db.timer                   man-db.service\nSat 2026-10-03 06:06:10 UTC 18h left       Fri 2026-10-02 06:15:09 UTC 5h 32min ago apt-daily-upgrade.timer        apt-daily-upgrade.service\nSat 2026-10-03 09:12:41 UTC 21h left       Fri 2026-10-02 09:12:39 UTC 2h 35min ago update-notifier-download.timer update-notifier-download.service\nSat 2026-10-03 09:22:18 UTC 21h left       Fri 2026-10-02 09:22:18 UTC 2h 25min ago systemd-tmpfiles-clean.timer   systemd-tmpfiles-clean.service\nSat 2026-10-03 10:44:16 UTC 22h left       Sat 2026-09-26 09:02:23 UTC 6 days ago   update-notifier-motd.timer     update-notifier-motd.service\nSun 2026-10-04 03:10:39 UTC 1 day 15h left Sun 2026-09-27 03:11:32 UTC 5 days ago   e2scrub_all.timer              e2scrub_all.service\nMon 2026-10-05 00:36:03 UTC 2 days left    Mon 2026-09-28 00:59:00 UTC 4 days ago   fstrim.timer                   fstrim.service\nn/a                         n/a            n/a                         n/a          apport-autoreport.timer        apport-autoreport.service\nn/a                         n/a            n/a                         n/a          snapd.snap-repair.timer        snapd.snap-repair.service\nn/a                         n/a            n/a                         n/a          ua-timer.timer                 ua-timer.service\n\n14 timers listed.\n",
+      "stderr": ""
+    },
+    "user_timers": {
+      "exit": 0,
+      "stdout": "NEXT LEFT LAST PASSED UNIT ACTIVATES\n\n0 timers listed.\n",
+      "stderr": ""
+    },
+    "user_running": {
+      "exit": 0,
+      "stdout": "  UNIT       LOAD   ACTIVE SUB     DESCRIPTION\n  init.scope loaded active running System and Service Manager\n\nLOAD   = Reflects whether the unit definition was properly loaded.\nACTIVE = The high-level unit activation state, i.e. generalization of SUB.\nSUB    = The low-level unit activation state, values depend on unit type.\n1 loaded units listed.\n",
+      "stderr": ""
+    },
+    "containers": {
+      "exit": 0,
+      "stdout": "CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES\n",
+      "stderr": ""
+    },
+    "user_cron": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "no crontab for ubuntu\n"
+    },
+    "possible_project_wrappers_or_workers": [],
+    "load": [
+      0.09521484375,
+      0.0390625,
+      0.0078125
+    ],
+    "artifacts": {
+      "/home/ubuntu/w11ckv_phys/merge_m5b/physical.json": {
+        "exists": true,
+        "sha256": "d60c1fc7611ec27475144231d14735ed805902551a3fa4e5c92177006c38383e"
+      },
+      "/tmp/claude-1000/w11s/hard/kc_portn3/physical.json": {
+        "exists": true,
+        "sha256": "7149409b00fff7ad15029f5777b821552d25f46ee8b98b2ca095eb065e1ae5fb"
+      },
+      "/tmp/claude-1000/w11st/attn_d8/results.txt": {
+        "exists": true,
+        "sha256": "3673f440ca7991729cca95037f0597ea57f0fee6d01ca39998302f4a6d62349c"
+      },
+      "/tmp/claude-1000/w11st/attn_d8/at_eng3.py": {
+        "exists": true,
+        "sha256": "20ce0ec6af480559318730c668b66851f8958dddd3b239b2ba55f87b1023e45e"
+      }
+    },
+    "source_roots": {
+      "/home/ubuntu/w11ckv_wt": {
+        "HEAD": {
+          "exit": 0,
+          "stdout": "d982a59053b4adda2ea2ce7fbd44ba22794685ab\n",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": " M rtl/chip/ot_chip_v41x_ckv_pc_fetch.sv\n M rtl/chip/ot_chip_v41x_ckv_sel_collect.sv\n M rtl/chip/ot_chip_v41x_ckv_sel_ids.sv\n M rtl/chip/ot_chip_v41x_ckv_stream_merge.sv\n M rtl/chip/ot_chip_v41x_karb_pregion.sv\n M rtl/chip/ot_chip_v41x_karb_pslice.sv\n?? rtl/chip/ot_chip_v41_droop_ctrl.sv\n?? rtl/chip/ot_chip_v41_pg_ctrl.sv\n?? rtl/chip/ot_chip_v41_preramp.sv\n?? rtl/chip/ot_chip_v41_ratio_fifo.sv\n?? rtl/chip/ot_chip_v41_xcap.sv\n?? rtl/chip/ot_chip_v41x_karb_qh.sv\n?? rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv\n",
+          "stderr": ""
+        },
+        "refs": {
+          "exit": 0,
+          "stdout": "refs/heads/master\n",
+          "stderr": ""
+        }
+      },
+      "/home/ubuntu/w11kc-wt2": {
+        "HEAD": {
+          "exit": 0,
+          "stdout": "4a7183a066dc41c6b68e2933837a6acfdbba00e2\n",
+          "stderr": ""
+        },
+        "status": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "refs": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      }
+    }
+  },
+  "registry": {
+    "ot-pve2": {
+      "project": "pve",
+      "project_name": "pve",
+      "vm": "ot-pve2",
+      "cpu": 28,
+      "physical_ram_gb": 227,
+      "ram_gb": 454,
+      "disabled": true,
+      "admission_hold_reason": "Explicit user drain: no new tasks or next-stage starts; existing jobs finish normally; release only on explicit user authorization",
+      "admission_hold_utc": "20261002T032345Z",
+      "admission_hold_owner": "user",
+      "draining": true
+    },
+    "ot-pve3": {
+      "project": "pve",
+      "project_name": "pve",
+      "vm": "ot-pve3",
+      "cpu": 28,
+      "physical_ram_gb": 108,
+      "ram_gb": 216,
+      "disabled": true,
+      "admission_hold_reason": "Explicit user drain: no new tasks or next-stage starts; existing jobs finish normally; release only on explicit user authorization",
+      "admission_hold_utc": "20261002T032345Z",
+      "admission_hold_owner": "user",
+      "draining": true
+    }
+  },
+  "signals": 0,
+  "new_jobs": 0,
+  "retired_from_admission": true,
+  "source_or_result_deletions": 0,
+  "retention_completion": "PENDING_PARENT_BASELINE_JOB_TERMINAL_REVIEW"
+}

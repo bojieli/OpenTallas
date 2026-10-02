@@ -1,0 +1,25 @@
+{
+  "scope": "future_native_large_or_costly_builds",
+  "elapsed_time_limit": null,
+  "per_file_limit": null,
+  "per_process_address_space_limit": null,
+  "admission_basis": [
+    "fresh measured host CPU/memory/disk headroom",
+    "real source/object/PCH inventory with byte hashes",
+    "fleet-capacity justified reservation; no small-pilot carryover"
+  ],
+  "execution": "completion or actual error; preserve incremental objects and all terminal failures",
+  "protective_bounds": "only reviewed actual fleet-capacity justified reservations and aggregate disk/headroom guards",
+  "existing_live_D1": "source966eca710dd35786be462e595f7d8f9392fbcc4b and current CXX/link flags remain untouched; no restart",
+  "implementation": "pure validation helper, owner must bind evidence hashes and integrate into future source-bound launcher; not installed or execution-admitted",
+  "opaque_shell_wrappers": "source review required; explicit argv validation is not claimed to inspect arbitrary shell payloads",
+  "steady_monitoring": "retain real memory/disk progress samples; admission reserve subtraction is pre-build only, not double counting live RSS",
+  "Hubble": "owns disjoint shard/migration; no duplicate D1 build",
+  "PVE2_PVE3": "no new design jobs; sources/results/checkpoints retained pending terminal/dependency review",
+  "tests": {
+    "native_policy": 6,
+    "existing_FSIZE_policy": 5
+  },
+  "source_or_build_modifications": 0,
+  "new_experiments_launched": 0
+}

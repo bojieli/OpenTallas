@@ -1,0 +1,65 @@
+{
+  "root": "/home/ubuntu/w11ckv_wt",
+  "HEAD": "d982a59053b4adda2ea2ce7fbd44ba22794685ab",
+  "files": {
+    "rtl/chip/ot_chip_v41x_ckv_pc_fetch.sv": {
+      "sha256": "a122069df0e03619fc126e052f2fb195b387a61fe995a36750e94ce9d52b9c1b"
+    },
+    "rtl/chip/ot_chip_v41x_ckv_sel_collect.sv": {
+      "sha256": "e25d4f04685dbf3cfa4a0323f9050bbd5b0655027b47f197f4316d5bec1bd09c"
+    },
+    "rtl/chip/ot_chip_v41x_ckv_sel_ids.sv": {
+      "sha256": "22a8c3224c140293bfe5f8a4f957f7baa3e58b8baab37c99c62e4084486403ad"
+    },
+    "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv": {
+      "sha256": "c7a963dbcd146d2395a305d5145bf879d5557ea1d2646480973cf42e17f94166"
+    },
+    "rtl/chip/ot_chip_v41x_karb_pregion.sv": {
+      "sha256": "41b99296a692978f1ab8e69a1485dd2fd3bcac75026b69f136ed980959813023"
+    },
+    "rtl/chip/ot_chip_v41x_karb_pslice.sv": {
+      "sha256": "2df9d5ccd396d76426037ae01f036e71922e385088281358af272cf8119d5499"
+    },
+    "rtl/chip/ot_chip_v41_droop_ctrl.sv": {
+      "sha256": "1cae496dc82ee5050149a703d136d6e97b15dc708893ec5c59c29347a4afd706"
+    },
+    "rtl/chip/ot_chip_v41_pg_ctrl.sv": {
+      "sha256": "e2efddf0f5f4203ba9b0d079805b3242898e92acf2d9c0172b1f24263cf21018"
+    },
+    "rtl/chip/ot_chip_v41_preramp.sv": {
+      "sha256": "281a8e7aed8d6ad66e809c830819e3ec8a5ce0d32966ada24b5b28e1306a4e90"
+    },
+    "rtl/chip/ot_chip_v41_ratio_fifo.sv": {
+      "sha256": "56fec932b1f673eb10169dab58d4b1510af94f9d1ec4bdf75d17f1378f690284"
+    },
+    "rtl/chip/ot_chip_v41_xcap.sv": {
+      "sha256": "3fa0d011795f2762504e05b598ccf7c08077e6534f6ec5c7b52713db112e5802"
+    },
+    "rtl/chip/ot_chip_v41x_karb_qh.sv": {
+      "sha256": "4e1df73be39514a48481613810f2956aae8de2149e972127879f1b87156e0860"
+    },
+    "rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv": {
+      "sha256": "676be336ffd721ae2e9c9cdd7ed64c5742671abc3952911acdd4cdfcb0b58463"
+    }
+  },
+  "tracked_changed": [
+    "rtl/chip/ot_chip_v41x_ckv_pc_fetch.sv",
+    "rtl/chip/ot_chip_v41x_ckv_sel_collect.sv",
+    "rtl/chip/ot_chip_v41x_ckv_sel_ids.sv",
+    "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv",
+    "rtl/chip/ot_chip_v41x_karb_pregion.sv",
+    "rtl/chip/ot_chip_v41x_karb_pslice.sv"
+  ],
+  "untracked": [
+    "rtl/chip/ot_chip_v41_droop_ctrl.sv",
+    "rtl/chip/ot_chip_v41_pg_ctrl.sv",
+    "rtl/chip/ot_chip_v41_preramp.sv",
+    "rtl/chip/ot_chip_v41_ratio_fifo.sv",
+    "rtl/chip/ot_chip_v41_xcap.sv",
+    "rtl/chip/ot_chip_v41x_karb_qh.sv",
+    "rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv"
+  ],
+  "patch_sha256": "a0173d20479bd371e33a90055c9b462020fecb55d2ccf2f9b4cc3671622f959d",
+  "remote_sources_changed": false,
+  "remote_sources_deleted": false
+}

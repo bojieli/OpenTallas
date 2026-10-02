@@ -1,0 +1,10 @@
+test_aggregate_budget_allows_single_large_build_artifact (__main__.Policy) ... ok
+test_no_process_limit_mutation (__main__.Policy) ... ok
+test_only_fsize_property_changes_no_cap_relaxation (__main__.Policy) ... ok
+test_prlimit_container_and_service_bypass_controls (__main__.Policy) ... ok
+test_service_and_kernel_both_soft_hard_checked (__main__.Policy) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.000s
+
+OK

@@ -1,0 +1,28 @@
+{
+  "observed_UTC": "2026-10-02T11:49:32.029511+00:00",
+  "files": {
+    "ot-pve3.terminal-evidence.v2.json": {
+      "sha256": "ffa5fb2b5e5ad55dd27c1d658b92bbd23272565c50f92d4566a779759d63bdee",
+      "bytes": 2999053
+    },
+    "ot-pve3.results-review.required.json": {
+      "sha256": "17b732d9abd5d687ce22638bb6ac9eacec02f22b86071479f9b00ba6455e7321",
+      "bytes": 809
+    },
+    "pve3.queue-guard.receipt.json": {
+      "sha256": "89010a0828680cc4fbd2d5df9eff59e498269ad91181ed200df7077c0de88b23",
+      "bytes": 601
+    },
+    "coordinator.status.v2.json": {
+      "sha256": "1095360f68ab0d5a2f1e6e9e645626ccb33c3ab49cc2ee53accb5471854f9eff",
+      "bytes": 284
+    },
+    "drain.status.v2.json": {
+      "sha256": "1cd3d0379eb3ca88495f9aca49b368e262352b8e36d9b0fa2bee07ce33063099",
+      "bytes": 32371
+    }
+  },
+  "remote_artifact_deletion_authorized": false,
+  "full_retention_review_complete": false,
+  "note": "Retained terminal snapshot includes reports/logs/metadata text and checkpoint hashes; heavy checkpoint payloads remain on PVE3 and must not be deleted pending owner dependency review."
+}
