@@ -1,0 +1,8 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+ACTUAL_CORE_CANCEL_PASS cut=ISSUE prefix=8 qe=0 terminal=0 vm=0 capture=0 blocks=0 acceptedWR=0 faultcycle=7 localACKcycle=14 suppressed=0 sinkWords=0 frozenFrames=0
+- /tmp/opentallas-core-guard-frontend-result-20261002-r1/baseline/sources/tb.sv:1374: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17ns; walltime 1.090 s; speed 15.140 ns/s
+- Verilator: cpu 1.008 s on 1 threads; allocated 173 MB
+[Inferior 1 (process 3659542) exited normally]
