@@ -1,0 +1,18 @@
+{
+  "tests": "3 PASS, executed original full decoder and source-extracted checker at both full widths;803? no headline scope",
+  "terminal_vectors": {
+    "K256": 37860,
+    "K272": 42316
+  },
+  "scope": "source Boolean/clean-data equivalence only; not handshake/epoch RTL or physical closure",
+  "test_log_sha256": "cd0c19870d144f5f6d986dbc2543d92f839667377f1337e206b1f16158346f6c",
+  "source_tool_sha256": "8c050f135c5bf0265a72dfa4f9d235de6610d9d5177192ce36a45cf3c6f9c93f",
+  "headroom": {
+    "available_RAM_MiB": 159855,
+    "free_disk_MiB": 1217140,
+    "load": "26.87/27.57/27.51",
+    "plan": "one local mapping at a time, both unchanged checker widths; no PVE2/3 or VM admission"
+  },
+  "engine_RTL": false,
+  "admission": "6e7c88e7ae1f7d8f4b5308a3d1e5d993bc7eec20"
+}
