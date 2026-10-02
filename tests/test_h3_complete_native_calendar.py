@@ -98,30 +98,54 @@ class FiniteCalendarTests(unittest.TestCase):
                 'calls':[{'rank':0,'template':'kernel','SM_partition':'block256%32'}],
                 'projected_executed_primitive_scalars':t['executed_primitive_scalar_projection'],
                 'provider_transfer_projection':t['provider_transfer_projection']}]}
+        program={'templates':{'kernel':{'code':[
+            {'op':'LOAD','dst':'x','src':[],'shape':[2],'attrs':{'dtype':'F32','name':'input'}},
+            {'op':'FADD','dst':'y','src':['x','x'],'shape':[2],'attrs':{}}],'outputs':{'out':'y'}}}}
+        def ref(index,operand,value):
+            node=program['templates']['kernel']['code'][index]
+            return {'template':'kernel','code_index':index,'opcode':node['op'],'attrs':node['attrs'],
+                'result_shape':node['shape'],'operand':operand,'value':value,'logical_byte_offset':0,'payload_bytes':8}
         b={'schema':'H4_DS_NATIVE_SHARED_MOVEMENT_BRIDGE_V1','source_program_sha256':'a'*64,
             'source_dispatch_sha256':c.hashlib.sha256(json.dumps(d,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
             'scratch_beat_bytes':64,'scratch_capacity_bytes':65536,'bridge_source_sha256':'b'*64,
             'templates':{'kernel':{'execution_path':t['execution_path'],'native_primitive_scalars':t['executed_primitive_scalar_projection'],
-            'ordered_movements':[{'source_step':0,'event':'acquire','lease':'v','base':0,'bytes':128},
-                {'source_step':1,'event':'read64','lease':'v','byte_address':0,'span_bytes':128,'repetitions':3,'native_instruction_ref':'kernel/code/1'},
-                {'source_step':2,'event':'write64_ACK','lease':'v','byte_address':0,'span_bytes':64,'repetitions':2,'native_instruction_ref':'kernel/code/2'},
-                {'source_step':3,'event':'release_after_ACK_reverse','lease':'v'}]}}}
+            'ordered_movements':[{'source_step':0,'event':'acquire','lease':'v','base':0,'bytes':64,'value':'x','logical_byte_offset':0,'payload_bytes':8},
+                {'source_step':0,'event':'write64_ACK','lease':'v','byte_address':0,'span_bytes':64,'repetitions':1,'native_instruction_ref':ref(0,'dst','x')},
+                {'source_step':1,'event':'read64','lease':'v','byte_address':0,'span_bytes':64,'repetitions':1,'native_instruction_ref':ref(1,'src:0','x')},
+                {'source_step':1,'event':'read64','lease':'v','byte_address':0,'span_bytes':64,'repetitions':1,'native_instruction_ref':ref(1,'src:1','x')},
+                {'source_step':1,'event':'acquire','lease':'out','base':64,'bytes':64,'value':'y','logical_byte_offset':0,'payload_bytes':8},
+                {'source_step':1,'event':'write64_ACK','lease':'out','byte_address':64,'span_bytes':64,'repetitions':1,'native_instruction_ref':ref(1,'dst','y')},
+                {'source_step':1,'event':'release_after_ACK_reverse','lease':'v'},
+                {'source_step':1,'event':'release_after_ACK_reverse','lease':'out'}]}}}
+        def run(bridge):return c.compose_ds_full_program_services(d,bridge=bridge,native_program=program)
         unknown=c.compose_ds_full_program_services(d);self.assertIsNone(unknown['scratch64_read_transactions'])
-        bound=c.compose_ds_full_program_services(d,bridge=b)
-        self.assertEqual(bound['scratch64_read_transactions'],6);self.assertEqual(bound['scratch64_write_ACK_transactions'],2)
-        self.assertEqual(bound['known_service_software_ticks']-unknown['known_service_software_ticks'],64)
+        bound=run(b)
+        self.assertEqual(bound['scratch64_read_transactions'],2);self.assertEqual(bound['scratch64_write_ACK_transactions'],2)
+        self.assertEqual(bound['known_service_software_ticks']-unknown['known_service_software_ticks'],32)
         self.assertIsNone(bound['complete_service_software_ticks']);self.assertFalse(bound['hardware_full_native_claim'])
         bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements'][0]['bytes']=65537
-        with self.assertRaisesRegex(ValueError,'lease extent'):c.compose_ds_full_program_services(d,bridge=bad)
+        with self.assertRaisesRegex(ValueError,'lease extent'):run(bad)
         bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements'].insert(1,
             {'source_step':0,'event':'acquire','lease':'other','base':0,'bytes':64})
-        with self.assertRaisesRegex(ValueError,'live alias'):c.compose_ds_full_program_services(d,bridge=bad)
+        with self.assertRaisesRegex(ValueError,'live alias'):run(bad)
         bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements']=[]
-        with self.assertRaisesRegex(ValueError,'implicit zero'):c.compose_ds_full_program_services(d,bridge=bad)
+        with self.assertRaisesRegex(ValueError,'incomplete native movement'):run(bad)
         bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements'][1]['repetitions']=0
-        with self.assertRaisesRegex(ValueError,'positive explicit'):c.compose_ds_full_program_services(d,bridge=bad)
+        with self.assertRaisesRegex(ValueError,'positive explicit'):run(bad)
         bad=copy.deepcopy(b);bad['source_program_sha256']='c'*64
-        with self.assertRaisesRegex(ValueError,'source mismatch'):c.compose_ds_full_program_services(d,bridge=bad)
+        with self.assertRaisesRegex(ValueError,'source mismatch'):run(bad)
+        for field,value,error in [('native_instruction_ref','kernel/code/1','structured retained'),
+                                  ('native_instruction_ref',ref(1,'dst','y'),'read-write role mismatch')]:
+            bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements'][2][field]=value
+            with self.assertRaisesRegex(ValueError,error):run(bad)
+        for field,value,error in [('code_index',999,'out of range'),('value','y','value mismatch'),
+                                  ('payload_bytes',12,'span out of range'),('opcode','FMUL','opcode attrs shape mismatch')]:
+            bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements'][2]['native_instruction_ref'][field]=value
+            with self.assertRaisesRegex(ValueError,error):run(bad)
+        bad=copy.deepcopy(b);del bad['templates']['kernel']['ordered_movements'][3]
+        with self.assertRaisesRegex(ValueError,'incomplete native movement'):run(bad)
+        bad=copy.deepcopy(b);bad['templates']['kernel']['ordered_movements'].insert(4,copy.deepcopy(b['templates']['kernel']['ordered_movements'][3]))
+        with self.assertRaisesRegex(ValueError,'duplicate native movement'):run(bad)
 
     def test_ordered_native_SM_services_reject_alias_missing_read_and_RTL_credit(self):
         p={'providers':{'input':{'shape':[256],'dtype':'F32'}},'code':[
@@ -143,6 +167,22 @@ class FiniteCalendarTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'provider live alias'):
             c.compile_ssa_finite_sm_services(p,rank=0,provider_bindings=binding,
                 workspace={'AW':27,'base':0,'bytes':33554432,'occupied_extents':[{'base':0,'bytes':512}]})
+
+    def test_actual_retained_PC127_refs_resolve_typed_source_operands_and_canonical_blob(self):
+        base=ROOT/c.OUT/'ds_finite_sm_services_fd722'
+        template=c.read_json(base/'PC127_rank0_template.json.gz');tid='7b7fc026294cd82667b919531738f73d9fcf810922fc9041c707f12eb78d2f9b'
+        p={'templates':{tid:template}};node=template['code'][0]
+        ref={'template':tid,'code_index':0,'opcode':node['op'],'attrs':node['attrs'],'result_shape':node['shape'],
+             'operand':'dst','value':node['dst'],'logical_byte_offset':0,'payload_bytes':64}
+        role,symbol,size,offset,payload=c.resolve_ds_movement_reference(p,tid,ref)
+        self.assertEqual(role,(0,'dst'));self.assertEqual(size,196608);self.assertEqual(payload,64)
+        bad=copy.deepcopy(ref);bad['attrs']['name']='fabricated'
+        with self.assertRaisesRegex(ValueError,'attrs shape mismatch'):c.resolve_ds_movement_reference(p,tid,bad)
+        bad=copy.deepcopy(ref);bad['logical_byte_offset']=196608
+        with self.assertRaisesRegex(ValueError,'span out of range'):c.resolve_ds_movement_reference(p,tid,bad)
+        raw=c.source_bytes(Path('results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz'),'91e3b8cc2791fa3fe1322df3d72b3f76dbd184f6')
+        self.assertEqual(c.hashlib.sha256(raw).hexdigest(),'c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313')
+        with self.assertRaisesRegex(ValueError,'immutable source commit'):c.source_bytes(Path('unused'),'main')
 
     def test_native_workspace_exhaustion_returns_precise_successor(self):
         p={'providers':{'input':{'shape':[4194305],'dtype':'I64'}},'code':[

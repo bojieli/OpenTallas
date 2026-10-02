@@ -15,6 +15,7 @@ import hashlib
 import heapq
 import json
 import sys
+import subprocess
 import types
 from pathlib import Path
 
@@ -50,6 +51,57 @@ def read_json(path):
         with gzip.open(path, 'rt') as f:
             return json.load(f)
     return json.loads(Path(path).read_text())
+
+
+def source_bytes(path, commit=None):
+    """Read an immutable canonical blob without duplicating a producer artifact."""
+    path=Path(path)
+    if commit is None:return path.read_bytes()
+    if not re.fullmatch('[0-9a-f]{7,40}',commit):raise ValueError('immutable source commit required')
+    relative=path.relative_to(ROOT) if path.is_absolute() else path
+    if relative.is_absolute() or '..' in relative.parts:raise ValueError('source blob path escape')
+    raw=subprocess.check_output(['git','show',commit+':'+relative.as_posix()],cwd=ROOT)
+    local=ROOT/relative
+    if local.exists() and local.read_bytes()!=raw:raise ValueError('canonical source bytes differ from pinned commit')
+    return raw
+
+
+def native_value_specs(program, template_id):
+    widths={};specs={}
+    for definition,i in enumerate(program['templates'][template_id]['code']):
+        op=i['op']
+        if op in ('LOAD','CONST'):w=8 if i['attrs']['dtype']=='I64' else 4
+        elif op=='F2I':w=8
+        elif op in ('I2F','FADD','FMUL','DIV','SQRT','LDEXP','BITCAST_U','BITCAST_F') or op.startswith('FCMP'):w=4
+        else:w=max((widths[v] for v in i['src']),default=8 if op=='IOTA' else 4)
+        widths[i['dst']]=w;specs[i['dst']]={'bytes':max(1,math.prod(i['shape']))*w,'width':w,'definition':definition}
+    return specs
+
+
+def resolve_ds_movement_reference(program, template_id, ref, specs=None):
+    """Resolve an exact retained SSA instruction and its typed operand."""
+    if not isinstance(ref,dict) or ref.get('template')!=template_id:
+        raise ValueError('structured retained native instruction reference required')
+    index=ref.get('code_index');code=program['templates'][template_id]['code']
+    if type(index)!=int or not 0<=index<len(code):raise ValueError('native instruction index out of range')
+    node=code[index]
+    specs=specs if specs is not None else native_value_specs(program,template_id)
+    if ref.get('opcode')!=node['op'] or ref.get('attrs')!=node['attrs'] or ref.get('result_shape')!=node['shape']:
+        raise ValueError('native instruction opcode attrs shape mismatch')
+    operand=ref.get('operand')
+    if operand=='dst':symbol=node['dst'];definition=index
+    elif isinstance(operand,str) and re.fullmatch('src:[0-9]+',operand):
+        j=int(operand[4:])
+        if j>=len(node['src']):raise ValueError('native operand index out of range')
+        symbol=node['src'][j];definition=specs.get(symbol,{}).get('definition')
+        if definition is None or definition>=index:raise ValueError('native source definition missing')
+    else:raise ValueError('native operand role required')
+    if ref.get('value')!=symbol:raise ValueError('native operand value mismatch')
+    size=specs[symbol]['bytes'];width=specs[symbol]['width']
+    offset=ref.get('logical_byte_offset');payload=ref.get('payload_bytes')
+    if type(offset)!=int or type(payload)!=int or offset<0 or payload<=0 or offset%width or payload%width or offset+payload>size:
+        raise ValueError('native operand typed span out of range')
+    return (index,operand),symbol,size,offset,payload
 
 
 def reprice_h4_intervals(execution, *, costs=None):
@@ -496,7 +548,7 @@ def audit_ds_bounded_dispatch(dispatch, *, costs=None):
         'physical_admission':False,'clock_admission':False,'automatic_scalar_fallback':False}
 
 
-def compose_ds_full_program_services(dispatch, *, bridge=None, costs=None):
+def compose_ds_full_program_services(dispatch, *, bridge=None, native_program=None, costs=None):
     """All-PC finite service composition using retained producer projections.
 
     One dispatch per primitive scalar is an explicit conservative command upper,
@@ -514,6 +566,7 @@ def compose_ds_full_program_services(dispatch, *, bridge=None, costs=None):
     for key,value in costs.items():positive(value,key)
     bridge_templates={}
     if bridge is not None:
+        if native_program is None:raise ValueError('retained native code required for shared bridge validation')
         if bridge.get('schema')!='H4_DS_NATIVE_SHARED_MOVEMENT_BRIDGE_V1':raise ValueError('actual shared movement bridge schema')
         if bridge.get('source_program_sha256')!=dispatch['source_program_sha256']:
             raise ValueError('shared movement program source mismatch')
@@ -532,9 +585,20 @@ def compose_ds_full_program_services(dispatch, *, bridge=None, costs=None):
         if r is None:
             summaries[key]={'status':'UNKNOWN_UNBOUND_SHARED_MOVEMENT','read64':None,'write64':None}
             continue
+        if t['execution_path']!='source_order_live_range_stages':
+            summaries[key]={'status':'UNKNOWN_FORWARD_LEAF_CONTINUATION_NOT_RESOLVED',
+                'read64':None,'write64':None}
+            continue
+        if key not in native_program['templates']:raise ValueError('bridge retained template missing')
+        code=native_program['templates'][key]['code']
+        specs=native_value_specs(native_program,key)
+        native_counts=Counter()
+        for node in code:native_counts[node['op']]+=max(1,math.prod(node['shape']))
+        if dict(native_counts)!=t['executed_primitive_scalar_projection']:
+            raise ValueError('retained instruction projection mismatch')
         if r.get('execution_path')!=t['execution_path'] or r.get('native_primitive_scalars')!=t['executed_primitive_scalar_projection']:
             raise ValueError('bridge native instruction count/path mismatch')
-        movements=r.get('ordered_movements');reads=writes=0;leases={};last_step=-1
+        movements=r.get('ordered_movements');reads=writes=0;leases={};last_step=-1;covered=defaultdict(list)
         if not isinstance(movements,list):raise ValueError('ordered shared movement commands required')
         for m in movements:
             step=m['source_step'];kind=m['event'];identity=m['lease']
@@ -544,27 +608,73 @@ def compose_ds_full_program_services(dispatch, *, bridge=None, costs=None):
                 base=m['base'];size=m['bytes']
                 if identity in leases or type(base)!=int or type(size)!=int or base<0 or size<=0 or base%64 or size%64 or base+size>65536:
                     raise ValueError('finite shared concrete lease extent')
-                if any(base<b+n and b<base+size for b,n in leases.values()):raise ValueError('shared live alias')
-                leases[identity]=(base,size)
+                if any(base<e['base']+e['bytes'] and e['base']<base+size for e in leases.values()):raise ValueError('shared live alias')
+                value=m.get('value');offset=m.get('logical_byte_offset');payload=m.get('payload_bytes')
+                if value not in specs or type(offset)!=int or type(payload)!=int or offset<0 or offset%64 or payload<=0 or offset+payload>specs[value]['bytes'] or size!=ceil(payload,64)*64:
+                    raise ValueError('shared lease does not resolve retained value span')
+                leases[identity]={'base':base,'bytes':size,'value':value,'offset':offset,'payload':payload,'written':[]}
             elif kind=='release_after_ACK_reverse':
                 if identity not in leases:raise ValueError('unmatched shared retirement')
                 del leases[identity]
             elif kind in ('read64','write64_ACK'):
                 if identity not in leases:raise ValueError('shared movement missing live lease')
                 count=positive(m['repetitions'],'actual shared instruction repetitions')
-                base,size=leases[identity];address=m['byte_address'];span=m['span_bytes']
+                lease=leases[identity];base,size=lease['base'],lease['bytes'];address=m['byte_address'];span=m['span_bytes']
                 if type(address)!=int or type(span)!=int or address%64 or span<=0 or span%64 or address<base or address+span>base+size:
                     raise ValueError('shared instruction address extent')
-                if not isinstance(m.get('native_instruction_ref'),str) or not m['native_instruction_ref']:
-                    raise ValueError('instruction-dependent shared reference required')
+                role,symbol,typed_bytes,offset,payload=resolve_ds_movement_reference(native_program,key,m.get('native_instruction_ref'),specs)
+                if role[0]!=step or (kind=='read64')!=(role[1]!='dst'):
+                    raise ValueError('native movement step/read-write role mismatch')
+                if span!=ceil(payload,64)*64 or count!=1:
+                    raise ValueError('native movement span/repetitions not resolved from source')
+                if symbol!=lease['value'] or offset<lease['offset'] or offset+payload>lease['offset']+lease['payload'] or address!=base+offset-lease['offset']:
+                    raise ValueError('shared movement does not match actual value/home slice')
+                if kind=='read64' and not any(a<=offset and offset+payload<=b for a,b in lease['written']):
+                    raise ValueError('shared read before source write visibility')
+                if kind=='write64_ACK':lease['written'].append((offset,offset+payload))
+                covered[role].append((offset,offset+payload))
                 if kind=='read64':reads+=count*span//64
                 else:writes+=count*span//64
             else:raise ValueError('unknown shared bridge movement event')
         if leases:raise ValueError('shared lease retained past template retirement')
-        if not movements and (r.get('zero_shared_reason')!='source-proved lane-local RF-only' or not r.get('zero_shared_proof_ref')):
-            raise ValueError('empty shared movement is not implicit zero')
+        # RF alternatives must resolve the same complete operand obligations.
+        # No exported proof string can suppress missing reads/writes.
+        routes=r.get('RF_operand_routes',[])
+        rf_homes=r.get('RF_value_homes',{});last={}
+        for i,node in enumerate(code):
+            for symbol in node['src']:last[symbol]=i
+        for symbol in native_program['templates'][key]['outputs'].values():last[symbol]=len(code)
+        for symbol,home in rf_homes.items():
+            if symbol not in specs:raise ValueError('RF home unknown source value')
+            slot=home.get('slot_first');vectors=home.get('vectors')
+            if type(slot)!=int or type(vectors)!=int or slot<0 or slot+vectors>32 or vectors!=ceil(specs[symbol]['bytes'],512):
+                raise ValueError('RF source value home capacity')
+        for a,ha in rf_homes.items():
+            for b,hb in rf_homes.items():
+                if a>=b:continue
+                simultaneous=specs[a]['definition']<=last.get(b,specs[b]['definition']) and specs[b]['definition']<=last.get(a,specs[a]['definition'])
+                if simultaneous and ha['slot_first']<hb['slot_first']+hb['vectors'] and hb['slot_first']<ha['slot_first']+ha['vectors']:
+                    raise ValueError('RF live source value home alias')
+        for route in routes:
+            role,symbol,size,offset,payload=resolve_ds_movement_reference(native_program,key,route.get('native_instruction_ref'),specs)
+            slot=route.get('slot_first');vectors=route.get('vectors')
+            if type(slot)!=int or type(vectors)!=int or slot<0 or vectors<1 or slot+vectors>32 or vectors!=ceil(payload,512):
+                raise ValueError('finite source-resolved RF operand route')
+            if route.get('visibility_guard')!='two-mirror visible_ACK':raise ValueError('RF route missing mirrored ACK')
+            if rf_homes.get(symbol)!={'slot_first':slot,'vectors':vectors} or offset!=0 or payload!=size:
+                raise ValueError('RF route does not match source value home')
+            covered[role].append((offset,offset+payload))
+        for i,node in enumerate(code):
+            for operand in ['dst']+['src:'+str(j) for j in range(len(node['src']))]:
+                spans=sorted(covered[(i,operand)]);cursor=0
+                for start,end in spans:
+                    if start!=cursor:raise ValueError('incomplete or duplicate native movement operand coverage')
+                    cursor=end
+                symbol=node['dst'] if operand=='dst' else node['src'][int(operand[4:])];size=specs[symbol]['bytes']
+                if cursor!=size:raise ValueError('incomplete native movement operand coverage')
         summaries[key]={'status':'BOUND_SOFTWARE_MOVEMENT_TRACE','read64':reads,'write64':writes,
-                        'bridge_source_sha256':bridge['bridge_source_sha256']}
+                        'bridge_source_sha256':bridge['bridge_source_sha256'],
+                        'actual_source_instruction_operand_coverage':True}
     rows=[];tick=0;commands=shared_reads=shared_writes=0;unknown_calls=0;count=Counter()
     dispatch_cost=sum(v for k,v in costs.items() if k.startswith('C0_'))
     for op,old in zip(dispatch['PC_dispatch'],baseline['PC_intervals']):
@@ -2604,23 +2714,27 @@ def main():
     ap.add_argument('--ds-full-native-source',type=Path)
     ap.add_argument('--ds-shared-bridge',type=Path)
     ap.add_argument('--ds-shared-bridge-source',type=Path)
+    ap.add_argument('--ds-native-source-commit')
     args = ap.parse_args()
     if args.ds_full_program_cost:
         dispatch=read_json(args.ds_full_program_cost)
         if args.ds_full_native_source is None:raise ValueError('actual source native artifact required')
-        digest=hashlib.sha256(args.ds_full_native_source.read_bytes()).hexdigest()
+        native_raw=source_bytes(args.ds_full_native_source,args.ds_native_source_commit)
+        digest=hashlib.sha256(native_raw).hexdigest()
         if digest!=dispatch['source_program_sha256']:raise ValueError('full native source pin mismatch')
         bridge=read_json(args.ds_shared_bridge) if args.ds_shared_bridge else None
         if bridge is not None:
             if args.ds_shared_bridge_source is None:raise ValueError('bridge producer source bytes required')
             if hashlib.sha256(args.ds_shared_bridge_source.read_bytes()).hexdigest()!=bridge.get('bridge_source_sha256'):
                 raise ValueError('bridge producer source bytes pin mismatch')
-        result=compose_ds_full_program_services(dispatch,bridge=bridge)
+        native_program=json.loads(gzip.decompress(native_raw)) if bridge is not None else None
+        result=compose_ds_full_program_services(dispatch,bridge=bridge,native_program=native_program)
         inputs=[args.ds_full_program_cost,args.ds_full_native_source,Path(__file__)]
         if args.ds_shared_bridge:inputs.extend([args.ds_shared_bridge,args.ds_shared_bridge_source])
         manifest={'schema':'H4_DS_FULL_PROGRAM_COST_MANIFEST_V1','PCs':result['PCs'],'families':result['families'],
             'source_sha256':{str(p.relative_to(ROOT)) if p.is_absolute() and p.is_relative_to(ROOT) else str(p):
-                hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs},
+                hashlib.sha256(native_raw if p==args.ds_full_native_source else p.read_bytes()).hexdigest() for p in inputs},
+            'native_source_commit':args.ds_native_source_commit,
             'status':result['status'],'unknown_shared_template_calls':result['unknown_shared_template_calls'],
             'complete_service_software_ticks':None,'hardware_full_native_claim':False,
             'scope':'all-PC instruction-dependent scalar upper, retained provider projections and optional actual shared bridge; no arithmetic/provider replay'}
