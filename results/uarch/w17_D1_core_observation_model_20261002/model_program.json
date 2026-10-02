@@ -1,0 +1,211 @@
+{
+  "status": "SOURCE_MODEL_PROGRAM_PREPARED_NO_BUILD_NO_GO",
+  "source_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_pins": {
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": {
+      "path": "results/uarch/w17_D1_portable_successor_20261002/source_authority/rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+      "sha256": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a"
+    },
+    "rtl/chip/ot_chip_v41x_die.sv": {
+      "path": "results/uarch/w17_D1_portable_successor_20261002/source_authority/rtl/chip/ot_chip_v41x_die.sv",
+      "sha256": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2"
+    },
+    "rtl/test/v41_runtime/ot_v41_rt_die.sv": {
+      "path": "results/uarch/w17_D1_portable_successor_20261002/source_authority/rtl/test/v41_runtime/ot_v41_rt_die.sv",
+      "sha256": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65"
+    },
+    "tools/hdc_isa_v41.py": {
+      "path": "tools/hdc_isa_v41.py",
+      "sha256": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3"
+    },
+    "results/uarch/w17_D1_PC24_inputs_20261002/record.json": {
+      "path": "results/uarch/w17_D1_PC24_inputs_20261002/record.json",
+      "sha256": "2f8c03fd6964268fc19d3fcfac4504bce702e9eafcdc447c145e28381c2de510"
+    },
+    "results/uarch/w17_owner_progress_resource_r2_20261002/model.json": {
+      "path": "results/uarch/w17_owner_progress_resource_r2_20261002/model.json",
+      "sha256": "d9cac55e26920360a97b5f517fdfb75cf599fb9d5ca45e4373d3e4cf06cd3294"
+    }
+  },
+  "parent_owned_current_callback_job": "w17-D1-callback-fixture-parent-20261002-r1; terminalFAIL: compile413.632s PASS, firstHEALTHY20s cap with empty event log; no restart and no qualification transfer",
+  "program": {
+    "words_hex": [
+      "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040040001000200000400000002000000200000000040000000010000100200000000000000000000008000040000000004004000000400040011",
+      "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f8"
+    ],
+    "fields": [
+      {
+        "unit": 1,
+        "wait": 2,
+        "pred": 0,
+        "me_nout": 128,
+        "me_tiles": 4,
+        "me_k": 512,
+        "me_wsrc": 1,
+        "me_wbase": 0,
+        "me_ts": 512,
+        "me_ks": 1,
+        "me_js": 0,
+        "me_xbase": 0,
+        "me_xks": 1,
+        "me_xjs": 512,
+        "me_xcs": 4096,
+        "me_hg": 1,
+        "me_round": 1,
+        "me_mmode": 1,
+        "me_oen": 1,
+        "me_obase": 1024,
+        "me_ots": 16,
+        "me_ojs": 128,
+        "me_ogs": 1024
+      },
+      {
+        "unit": 0,
+        "wait": 31,
+        "ctl": 0
+      }
+    ],
+    "original_program": false,
+    "entry": 0,
+    "token": 0,
+    "pos": 127,
+    "user": 0,
+    "cfg_ik_base": 268435456,
+    "first_ME_class": "MC_A=1; wsrc1 and wbase0<cfg_ik_base",
+    "no_instruction_force": true,
+    "no_original_PC24_relabel": true,
+    "operand_source": "Explicit finite synthetic VM/source diagnostic data only; no golden/checkpoint payload",
+    "scope": "Stop diagnostic after first qualified real-core ME issue; END is future engine drain only, no completion bound claimed"
+  },
+  "real_binding": {
+    "core": "original ot_hdc_core_v41x, no cancellation derivative",
+    "FULL_SHAPE": 1,
+    "KV_HBM": 1,
+    "X_SU": 1,
+    "SUN": 256,
+    "SUM": 64,
+    "NSLOT": 1,
+    "X_ROM": 1,
+    "X_ME": 0,
+    "X_ATT": 1,
+    "X_IDX": 0,
+    "X_SEL": 0,
+    "X_EG": 0,
+    "W_HBM": 0,
+    "AW": 30,
+    "NW": 21,
+    "INSTR_BITS": 2048,
+    "descriptor": "original ot_chip_v41x_attn_desc_lifecycle L0_ONLY1",
+    "source": "original WINDOW_HBM_ATTENTION service128rows credit1 banked stage; real mux/KARB/timed backend",
+    "geometry_shrink": false,
+    "ready_fabrication": false,
+    "port_ready_idle_owner": "real attention adapter state and real engine-slot idle vectors; no forced e_ready/e_idle",
+    "selected_attention_engine": "V41_ATT_CUT runtime adapter plus exact actual native attention endpoint OR full actual engine; choice/closure/price must be frozen before GO, no stub",
+    "unavailable_ckv": true
+  },
+  "sample_protocol": {
+    "pre_NBA": [
+      "state",
+      "unit",
+      "me_cls",
+      "waited",
+      "q_gate",
+      "m0_gate",
+      "me_ready",
+      "kv_ok",
+      "kvd_v",
+      "win_idle",
+      "fault",
+      "descriptor_accept",
+      "descriptor_gen",
+      "source grant identity",
+      "read return tag/beat/poison",
+      "selected writer_ACK pending identity"
+    ],
+    "post_NBA": [
+      "registered me_go",
+      "st",
+      "pc",
+      "source publication",
+      "sticky fault"
+    ],
+    "decode_gate": "win_idle can block S_DEC before kvd_v is announced; decode gate must be sampled as well as S_ISSUE",
+    "progress": "Only actual owned descriptor accept, selected request/qualified callback/publication; never PC/busy/static ready or predicted time"
+  },
+  "reference": {
+    "descriptor_accept": 12300,
+    "first_request": 12302,
+    "first_reply": 12355,
+    "last_reply": 136667,
+    "staged": 136669,
+    "stream_done": 136800,
+    "refill": 124368,
+    "requests": 2176,
+    "replies": 2176,
+    "request_reply_min": 34,
+    "request_reply_max": 241,
+    "descriptor_to_stage": 124369,
+    "descriptor_to_stream_done": 124500,
+    "universal_deadline": false,
+    "actual_core_issue_deadline": null,
+    "actual_original_run": false
+  },
+  "calendar_alignment": {
+    "proposed_core_start_pre_NBA": 12294,
+    "NSLOT": 1,
+    "source_schedule": [
+      "12294 START accepted -> S_DYN",
+      "12295 DYN -> FETCH",
+      "12296 FETCH -> WAIT",
+      "12297 WAIT -> CAP",
+      "12298 CAP -> DEC",
+      "12299 DEC and idle writer -> ISSUE; kvd_v registers high",
+      "12300 real descriptor/source accept if actual owner prerequisites hold"
+    ],
+    "not_measured": true,
+    "core_start_to_source_accept_bound": null,
+    "warning": "Source phase expectation only; assert descriptor/source accepts at12300 before enabling cold-calendar envelope. No epoch/reset/timestamp force."
+  },
+  "cases": [
+    {
+      "name": "COLD_REAL_CORE",
+      "expected": "kv_ok blocks issue until real staged descriptor; kvd_v pulse cannot grant stale readiness"
+    },
+    {
+      "name": "WRITER_PENDING",
+      "expected": "real producer capture/drain holds win_idle; observe S_DEC and fourbits; preserve32actualACKs, warm backend calendar BOUND_MISSING"
+    },
+    {
+      "name": "HOLD_REQUEST",
+      "expected": "real source offer has no accepted read; no progress credit"
+    },
+    {
+      "name": "HOLD_RETURN",
+      "expected": "one accepted read with no qualified return; outstanding remains pending"
+    },
+    {
+      "name": "ENGINE_NOT_READY",
+      "expected": "real adapter busy transaction, me_ready false; no forced ready, exact earlier engine owner program still required"
+    }
+  ],
+  "resources": {
+    "inherit_12GiB_GO": false,
+    "fixture_reference_only": "128source leaf and old full-SUN profile5,686,992,896-byte aggregate frontend; old selected cone not proof of actual X_ATT1 closure",
+    "full_parent_reference_only": "Prior full L0 lint31.88GiB peak is full-parent context, not this core-only measurement",
+    "price_status": "SOURCE_CLOSURE_AND_REAL_ATTENTION_ENDPOINT_BINDING_REQUIRED_BEFORE_COMPILER_GO",
+    "cost": "No ROM field models/whole-L0 images/payloads; actual full-SUN core and original primitives retained; no stubs/pruned ancestors",
+    "new_jobs": 0
+  },
+  "missing_bounds": [
+    "Actual owner descriptor accept to first read under runtime reset/start and arbitration",
+    "Warm WRITER->read bank/refresh/queue calendar with other requesters",
+    "Attention adapter loading/engine-ready/service/retirement bound for accepted ME",
+    "Real provider/PHY completion/cancel ownership; callback alone insufficient"
+  ],
+  "service_status": "BOUND_MISSING",
+  "actual_original_cause": "UNOBSERVED",
+  "hardware_qualification": false,
+  "compiler_invocations": 0,
+  "simulations": 0,
+  "fresh_GO_required": true
+}
