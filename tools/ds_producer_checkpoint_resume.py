@@ -42,6 +42,52 @@ def unwrap(provider):
     return provider.provider if type(provider).__name__ == 'Observed' else provider
 
 
+def shared_factory(p,engine):
+    shared=getattr(getattr(engine,'groups',None),'shared',None)
+    if shared is None:return None
+    from h4_hbm_w19_pc10_endpoints import ProductionSharedFactory
+    if type(shared) is not ProductionSharedFactory or set(vars(shared))!={'budget','memories','sources'}:
+        raise ValueError('exact PC10 shared factory schema required')
+    if shared.budget is not p.journal_budget:raise ValueError('shared journal ownership mismatch')
+    return shared
+
+
+def validate_shared(p,engine):
+    shared=shared_factory(p,engine)
+    if shared is None:return
+    from h4_hbm_w19_pc10_endpoints import RF_BYTES, SHARED_BYTES, inputs
+    if shared.sources!=inputs():raise ValueError('shared immutable source contract mismatch')
+    if len(shared.memories)>96*32:raise ValueError('shared capacity')
+    for key,memory in shared.memories.items():
+        if set(vars(memory))!={'extent','p','serial','owner'}:raise ValueError('unknown shared memory state')
+        owner=memory.owner;rank,sm=key
+        if (type(rank)is not int or not 0<=rank<96 or type(sm)is not int or not 0<=sm<32
+            or owner.get('rank')!=rank or owner.get('SM')!=sm or owner.get('PC')!=10
+            or type(owner.get('generation'))is not int or owner['generation']!=p.generation
+            or set(owner)-{'PC','rank','SM','generation','tile','template'}):
+            raise ValueError('shared source owner identity mismatch')
+        if 10 not in engine.retired:raise ValueError('unretired shared source owner')
+        if 'tile' in owner and (type(owner['tile'])is not int or owner['tile']<0):raise ValueError('shared tile identity')
+        if 'template' in owner and not isinstance(owner['template'],str):raise ValueError('shared template identity')
+        extent=dict(base=RF_BYTES+sm*SHARED_BYTES,bytes=SHARED_BYTES,rank=rank,SM=sm)
+        port=memory.p
+        if set(vars(port))!=set(PORT_STATE)|{'live','queue','events','calendar','resident','faults'}:
+            raise ValueError('unknown shared provider state')
+        if memory.extent!=extent or port.extents!={('DeepSeek',rank):[dict(base=extent['base'],bytes=SHARED_BYTES)]}:
+            raise ValueError('shared exact finite extent mismatch')
+        if port.allocation_identity!=dict(owner,die=rank,address_class='shared'):
+            raise ValueError('shared allocation identity mismatch')
+        if any(getattr(port,f) for f in ('live','queue','calendar','resident','faults')) or port.events.closed:
+            raise ValueError('live shared reverse/provider debt')
+        if type(memory.serial)is not int or not 0<=memory.serial<=2**40 or memory.serial!=port.accept_sequence:
+            raise ValueError('shared serial/accepted sequence mismatch')
+        if port.tags!=1 or len(port.generations)!=1:raise ValueError('shared source tag geometry')
+        for (target,r,sector),data in port.backing.items():
+            if target!='DeepSeek' or r!=rank or not extent['base']<=sector*32<extent['base']+SHARED_BYTES or len(data)!=32:
+                raise ValueError('shared backing address mismatch')
+            if any(v is not None and (type(v)is not int or not 0<=v<256) for v in data):raise ValueError('shared byte validity')
+
+
 def quiescent(provider, engine):
     p = unwrap(provider)
     unknown=set(vars(p))-PROVIDER_FIELDS
@@ -67,9 +113,7 @@ def quiescent(provider, engine):
         raise ValueError('live/partial paired history')
     for obj in (getattr(p, 'C0_source_views', None), getattr(engine, 'groups', None)):
         if obj is not None and obj.failed: raise ValueError('failed bridge/group')
-    groups=getattr(engine,'groups',None)
-    if groups is not None and getattr(getattr(groups,'shared',None),'memories',{}):
-        raise ValueError('shared source owners require separate schema before checkpoint')
+    validate_shared(p,engine)
     retired = engine.retired
     if not retired or any(type(pc) is not int for pc in retired) or retired != set(range(max(retired)+1)):
         raise ValueError('complete retired prefix required')
@@ -80,7 +124,8 @@ def identity(p, engine):
     manifest = dict(p.manifest)
     manifest.pop('journal_root', None)  # sole permitted coldconstructor relocation
     source = {}
-    for obj in (p, engine):
+    shared=shared_factory(p,engine)
+    for obj in (p, engine) if shared is None else (p,engine,shared):
         for cls in type(obj).__mro__:
             try: path = inspect.getsourcefile(cls)
             except TypeError: path = None
@@ -101,7 +146,8 @@ def identity(p, engine):
         retention_policy_sha256=hashlib.sha256(canonical({'unconsumed_plan':getattr(engine,'unconsumed_plan',{}),
             'pc10_endpoint_scope':getattr(engine,'pc10_endpoint_scope',{})})).hexdigest(),
         revision=p.revision, generation=p.generation, source_sha256=source,
-        immutable_inputs_sha256=hashlib.sha256(canonical(images)).hexdigest())
+        immutable_inputs_sha256=hashlib.sha256(canonical(images)).hexdigest(),
+        shared_sources_sha256={} if shared is None else {k:hashlib.sha256(v).hexdigest() for k,v in sorted(shared.sources.items())})
 
 
 def verify_inputs(p):
@@ -209,13 +255,15 @@ def read_tree(v, payload):
 
 def inventory(p, engine):
     p = quiescent(p, engine)
-    ports = list(p.rf.values()) + list(p.state.values())
+    shared=shared_factory(p,engine)
+    ports = list(p.rf.values()) + list(p.state.values()) + ([] if shared is None else [m.p for m in shared.memories.values()])
     arrays = [a for k,a in p.published.items() if k not in getattr(p,'source_images',{})]
     return dict(retired_PCs=sorted(engine.retired), produced_locations=len(p.locations),
         produced_and_initial_cached_array_bytes=sum(a.nbytes for a in arrays),
         raw_sectors=sum(len(x.backing) for x in ports),
         raw_sector_payload_bytes=32*sum(len(x.backing) for x in ports),
         future_source_windows=len(getattr(p,'source_images',{})),
+        retained_shared_homes=0 if shared is None else len(shared.memories),
         external_source_inputs=verify_inputs(p),
         metadata_bytes='priced exactly by serialized closure before publication',
         same_home_restore=True, hardware_qualified=False)
@@ -283,6 +331,44 @@ def validate_backing(p):
                 covered.update(chosen.tolist());raw=words[chosen].tobytes()
                 for copy in range(2):check(p.rf[rank],(h['SM']*2+copy)*RF_SM+h['home']['slot_first']*512,raw)
             if covered!=set(range(len(words))):raise ValueError('partial owned home')
+    validate_query_fields(p)
+
+
+def validate_query_fields(p):
+    """Read addressed field backing directly; no new requests or credits."""
+    visible=getattr(p,'query_visible',{})
+    if not visible:return
+    from ds_hbm_history_codec_r36 import decode
+    manifest={ (b['version'],b['rank'],b['field']):b for b in p.manifest['query_field_homes']['rows'] }
+    if p.query_homes!=manifest:raise ValueError('query field manifest home mismatch')
+    for (version,rank),identity in visible.items():
+        if identity['version']!=version or identity['rank']!=rank or identity['generation']!=p.generation:
+            raise ValueError('query visible source identity mismatch')
+        if (version,rank) not in p.locations or (version,rank) not in p.published or p.locations[version,rank]['pc']!=identity['PC']:
+            raise ValueError('query visible parent publication missing')
+        if identity['home_indices']!=p.locations[version,rank].get('indices'):
+            raise ValueError('query visible parent home identity mismatch')
+        op=p.native['instructions'][identity['PC']]
+        if op['pc']!=identity['PC'] or op['family']!='index_q':raise ValueError('query visible source opcode mismatch')
+        arrays={};intervals=[]
+        for field in ('query_codes','query_exp'):
+            b=manifest[version,rank,field];dtype=np.dtype({'U32':'<u4','I64':'<i8'}[b['dtype']])
+            size=int(np.prod(b['shape']))*dtype.itemsize
+            if (b['PC'],b['generation'])!=(identity['PC'],p.generation) or size!=b['bytes'] or size>b['reservation_bytes'] or b['base']%32 or not 33554432<=b['base'] or b['base']+b['reservation_bytes']>67108864:
+                raise ValueError('query exact field extent/identity mismatch')
+            lo,hi=b['base'],b['base']+b['reservation_bytes']
+            if any(lo<end and start<hi for start,end in intervals):raise ValueError('query field alias')
+            intervals.append((lo,hi));raw=bytearray()
+            for address in range(lo,lo+size,32):
+                data=p.state[rank].backing.get(('DeepSeek',rank,address//32));n=min(32,lo+size-address)
+                if data is None or len(data)!=32 or any(v is None for v in data[:n]):raise ValueError('query field backing missing')
+                raw.extend(data[:n])
+            arrays[field]=np.frombuffer(raw,dtype=dtype).reshape(b['shape'])
+        exp=arrays['query_exp']
+        if exp.dtype==np.uint32:exp=exp.view(np.int32).astype(np.int64)
+        actual=decode(arrays['query_codes'],exp,'FP4E8');parent=p.published[version,rank]
+        if parent.dtype!=np.float32 or parent.shape!=(32,128) or not np.array_equal(actual.view(np.uint32),parent.view(np.uint32)):
+            raise ValueError('query codec/actual parent bit identity mismatch')
 
 
 def snapshot_state(p,engine):
@@ -295,6 +381,10 @@ def snapshot_state(p,engine):
     if hasattr(p,'history'):extra['history']={'visible':p.history.visible,'sequence':p.history.sequence}
     if hasattr(engine,'groups'):extra['group_completed']=engine.groups.completed
     if hasattr(engine,'unconsumed_retired'):extra['unconsumed_retired']=engine.unconsumed_retired
+    shared=shared_factory(p,engine)
+    if shared is not None:
+        extra['shared']={key:dict(extent=m.extent,owner=m.owner,serial=m.serial,
+            port={f:getattr(m.p,f) for f in PORT_STATE}) for key,m in shared.memories.items()}
     return dict(provider=state,ports=ports,immutable_published_keys=[k for k in p.published if k in source_images],
                 source_image_keys=list(source_images),retired=engine.retired,extra=extra)
 
@@ -352,6 +442,8 @@ def restore(path, factory, *, expected_seal, enabled=False):
     provider,engine=factory(); p=unwrap(provider)
     if p.views or p.memories or p.locations or engine.retired or p.rf or p.state:
         raise ValueError('restore requires exact cold empty producer')
+    shared=shared_factory(p,engine)
+    if shared is not None and shared.memories:raise ValueError('restore requires cold empty shared factory')
     if identity(p,engine)!=closure['identity']: raise ValueError('cold source/manifest/home/retention mismatch')
     verify_inputs(p)
     lock_shards(p,closure['opened_checkpoint_shards'])
@@ -380,6 +472,15 @@ def restore(path, factory, *, expected_seal, enabled=False):
     for key in saved['immutable_published_keys']: p.published[key]=p.source_images[key].check()
     engine.retired.clear();engine.retired.update(saved['retired'])
     extra=saved['extra']
+    if 'shared' in extra:
+        if shared is None:raise ValueError('cold shared factory missing')
+        for key,s in extra['shared'].items():
+            memory=shared(s['owner'])
+            if key!=(s['owner']['rank'],s['owner']['SM']) or memory.extent!=s['extent']:
+                raise ValueError('restored shared finite home mismatch')
+            memory.serial=s['serial']
+            for field,value in s['port'].items():setattr(memory.p,field,value)
+            memory.p.backing=CompactSectors(memory.p.backing)
     if 'history' in extra:
         p.history.visible=extra['history']['visible'];p.history.sequence=extra['history']['sequence']
     if 'group_completed' in extra:
