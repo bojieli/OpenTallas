@@ -61,3 +61,25 @@ def test_site_id_faults_refused(fault):
     elif fault=='padding_overlap':c['padding_site_IDs']=[1,2,3]
     else:c['padding_site_IDs']=[2]
     with pytest.raises(ValueError):R.validate_site_ids(c,2)
+
+
+def test_S58_all4096_compiled_sites_charged_with721_q_padding():
+    # Source-shaped census fixture, not an executed tensor ownership map.
+    np,nbf,active_count,regions=4096,724,3375,128
+    bf=R.rtl_bf_sites(np,nbf);active=set()
+    base,extra=divmod(active_count,regions)
+    for region in range(regions):
+        ids=list(range(region*32,(region+1)*32))
+        region_bf=[p for p in ids if p in bf]
+        active.update(region_bf+[p for p in ids if p not in bf][:base+(region<extra)-len(region_bf)])
+    padding=set(range(np))-active
+    assert len(active)==3375 and bf<=active
+    assert len(padding)==721 and not padding&bf
+    c={'compiled_NP':np,'BF_DUAL_site_IDs':sorted(bf),'Q_ONLY_site_IDs':sorted(set(range(np))-bf),
+       'weight_active_site_IDs':sorted(active),'padding_site_IDs':sorted(padding)}
+    x=R.validate_site_ids(c,nbf)
+    assert x['physical4096_macros']==16384
+    assert x['physical_frame_um2']/1e6==pytest.approx(322.1036365536)
+    active_only=(2651*R.Q_FRAME+724*R.BF_FRAME)/10**6
+    assert x['physical_frame_um2']/1e6-float(active_only)==pytest.approx(46.739254716)
+    assert not x['physical_or_SSFF_qualification_transferred']
