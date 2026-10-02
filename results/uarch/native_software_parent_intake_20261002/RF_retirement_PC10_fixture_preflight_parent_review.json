@@ -1,0 +1,38 @@
+{
+  "status": "PASS_PARENT_FOCUSED_REVIEW",
+  "base": "6bb3ac9e7b05185e3e87ca0cdbe2dd8df1909359",
+  "candidate_source": "86b1bea7e",
+  "tests_passed": 55,
+  "test_groups": {
+    "R45": 11,
+    "R44_PC10": 17,
+    "independent_RF_diagnoses": 11,
+    "selector_fixture_and_preservation": 16
+  },
+  "actual_constructor_preflight": {
+    "artifacts_hash_verified": 9,
+    "external_generated_artifacts_hash_verified": 4,
+    "expected_outputs": 1568,
+    "native_PCs_executed": 0,
+    "journal_events": 0,
+    "retirement_path_executed": false
+  },
+  "cold_models": [
+    "R45 original/candidate owned submodels",
+    "R44 resource model",
+    "R44 shared journal model"
+  ],
+  "cold_replay_scope_note": "R45 report wrapper includes additional metadata; cold comparison covers its two owned model subobjects, not full wrapped record.",
+  "repair_scope": "Opt-in release of witnessed, successfully retired zero-consumer outputs after drained owners and zero leases. Arithmetic and alias checks unchanged.",
+  "preserved_failure": "R43 fails at first PC9 RF publication after 1504 PC0..8 output witnesses.",
+  "PC10_numerical_GO": false,
+  "selector_fixture": {
+    "cold_artifacts_verified": 79,
+    "cases": 37,
+    "HDL_execution": false,
+    "compile_admitted": false
+  },
+  "full_token_qualified": false,
+  "physical_qualified": false,
+  "performance_qualified": false
+}
