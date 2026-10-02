@@ -127,6 +127,7 @@ dfflibmap -liberty {lib}
 abc -liberty {lib}
 clean
 stat -liberty {lib}
+rename -enumerate c:*
 write_verilog -noattr -noexpr {workdir/'mapped.v'}
 write_json {workdir/'mapped.json'}
 ''')
