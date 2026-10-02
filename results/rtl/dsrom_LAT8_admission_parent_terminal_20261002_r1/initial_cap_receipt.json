@@ -1,0 +1,40 @@
+{
+  "CPUQuota_property_is_enforced": false,
+  "cgroup.procs": "3905341",
+  "cgroup.threads": "3905341\n3905342",
+  "cpu.max": null,
+  "cpu_affinity": [
+    0,
+    1
+  ],
+  "cpu_bound_policy": "KERNEL_INHERITED_TASK_AFFINITY_CPUS_0_1",
+  "cpu_quota_proof_accepted": false,
+  "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "memory.max": "4294967296",
+  "memory.oom.group": "1",
+  "memory.peak": "9363456",
+  "memory.swap.max": "0",
+  "metric_read_errors": {
+    "cpu.max": {
+      "errno": 2,
+      "message": "[Errno 2] No such file or directory: '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dsrom-lat8-image-admission-3904315.service/cpu.max'",
+      "type": "FileNotFoundError"
+    }
+  },
+  "task_affinity_audit": {
+    "errors": [],
+    "gone_threads": [],
+    "tasks": {
+      "3905341": [
+        0,
+        1
+      ],
+      "3905342": [
+        0,
+        1
+      ]
+    },
+    "valid": true,
+    "verification": "Every enumerated live thread, including descendants; background observations sampled0.1s. Kernel clone/exec inherit parent affinity; vanished short-lived threads are recorded, not falsely reported observed."
+  }
+}
