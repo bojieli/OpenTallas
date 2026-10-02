@@ -6,8 +6,8 @@ class NoECC(unittest.TestCase):
  def setUpClass(cls):cls.r=m.build()
  def test_only_same_candidate(self):self.assertEqual(self.r['candidate'],'DS4096-TP4-S58-PAR2-NP2048');self.assertEqual(self.r['physical']['stages'],58);self.assertEqual(self.r['physical']['TP'],4)
  def test_only_ROM_protection_removed(self):
-  for k in ('SRAM_protection','HBM_protection','link_protection','transaction_identity_generation_nonce_and_fault_checks'):self.assertTrue(self.r['scope'][k])
-  for k in ('ROM_weight_ECC','ROM_configuration_ECC','ROM_sidecar_mirror_ECC'):self.assertFalse(self.r['scope'][k])
+  for k in ('SRAM_protection','HBM_protection','link_protection','ROM_configuration_ECC','transaction_identity_generation_nonce_and_fault_checks'):self.assertTrue(self.r['scope'][k])
+  for k in ('ROM_weight_ECC','ROM_sidecar_mirror_ECC'):self.assertFalse(self.r['scope'][k])
  def test_no_macro_credit(self):
   p=self.r['physical'];self.assertEqual(p['original_and_mirror_macros_removed'],0);self.assertEqual(p['field_macros_per_shard'],8192);self.assertEqual(p['cfg_macros_per_shard'],14336);self.assertEqual(p['ROM_macro_body_area_credit_mm2'],0);self.assertTrue(p['no_repack_or_new_weights_in_freed_ECC_roles'])
  def test_area_union(self):
@@ -31,5 +31,5 @@ class NoECC(unittest.TestCase):
   x=self.r['full_topk_slot'];self.assertAlmostEqual(x['already_inherited_store_mm2'],.3075936768);self.assertAlmostEqual(x['additional_state_only_debit_once_mm2'],.0617719608);self.assertAlmostEqual(x['same_candidate_screen_with_topk_state_only_mm2'],727.2228976728057)
  def test_complete_filter_gate(self):
   x=self.r['full_topk_slot'];self.assertTrue(x['balanced_filter_quota_prefix_compaction_logic_state_stages_unpriced']);self.assertFalse(x['full_slot_G0']['engine_RTL_admitted']);self.assertTrue(x['adjacent_common_controller_and_corridor_displacement_not_free'])
- def test_byte_model(self):self.assertEqual(self.r,json.loads((m.OUT/'model-r3.json').read_text()))
+ def test_byte_model(self):self.assertEqual(self.r,json.loads((m.OUT/'model-r5.json').read_text()))
 if __name__=='__main__':unittest.main()
