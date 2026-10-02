@@ -1,0 +1,21 @@
+--- pinned_field
++++ proposed_field
+@@ -33,6 +33,9 @@
+     parameter integer RST = 1,
+     parameter integer RD = 64,
+     parameter integer ROOTD = 128,
++    parameter integer FIX_SECOND_ROW_INDEX = 0,
++    parameter integer WAKE_REG = 0,
++    parameter integer GRADUAL_RNE = 0,
+     parameter integer PHW = 6
+ ) (
+     input  wire         clk,
+@@ -91,7 +94,7 @@
+         wire [9:0] pseg, pnseg;
+         wire [5:0] ppos;
+         ot_v41_pair_w17w10 #(.NSEG(NSEG), .NCH(NCH), .XF(is_bf(g) ? XFB : XFQ), .LV(LV), .BF16(is_bf(g) ? 1 : 0),
+-                      .FAST(FAST), .PP(PP), .BP(BP), .MTP(MTP), .EARLY(EARLY), .PHW(PHW), .INSTANCE($sformatf("e%0d", g))) u_p (
++                      .FAST(FAST), .PP(PP), .BP(BP), .MTP(MTP), .EARLY(EARLY), .FIX_SECOND_ROW_INDEX(FIX_SECOND_ROW_INDEX), .WAKE_REG(WAKE_REG), .GRADUAL_RNE(GRADUAL_RNE), .PHW(PHW), .INSTANCE($sformatf("e%0d", g))) u_p (
+             .clk(clk), .rst_n(rst_n), .cfg_go(cfg_go), .cfg_ph(cfg_ph), .cfg_np(cfg_np), .go(go), .go_bf(go_bf),
+             .xs_v(xs_v), .xs_p(xs_p), .xs_b(xs_b), .xs_sv(xs_sv), .xs_q0(xs_q0), .xs_e0(xs_e0), .xs_q1(xs_q1),
+             .xs_e1(xs_e1), .xs_pos(xs_pos), .xb_pos(xb_pos), .xb_v(xb_v), .xb_b(xb_b), .xb_sv(xb_sv),
