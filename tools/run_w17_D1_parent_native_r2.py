@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+import resource
 from pathlib import Path
 import shutil
 import signal
@@ -39,6 +40,9 @@ def run(go_path):
     if sha(model_path) != go['model_sha256'] or sha(__file__) != go['runner_sha256']:
         raise ValueError('Model/runner hash')
     model = json.loads(model_path.read_bytes()); caps = model['caps']
+    resource.setrlimit(resource.RLIMIT_FSIZE, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
+    if resource.getrlimit(resource.RLIMIT_FSIZE) != (resource.RLIM_INFINITY, resource.RLIM_INFINITY):
+        raise ValueError('Unlimited file size required')
     contract = json.loads((ROOT / model['contract']).read_bytes())
     front = Path(go['frontend_output'])
     review(front, contract, ROOT); verify_host_tools(ROOT)
@@ -57,15 +61,14 @@ def run(go_path):
         raise ValueError('Fresh output/disk headroom')
     out.mkdir(); start = time.monotonic()
     receipt = {'source_commit': go['source_commit'], 'GO_sha256': sha(go_path), 'model_sha256': sha(model_path),
-               'frontend_receipt_sha256': sha(front / 'verdict.json'), 'runtime_authorized': False, 'phases': []}
+               'frontend_receipt_sha256': sha(front / 'verdict.json'), 'runtime_authorized': False,
+               'file_size_limits': list(resource.getrlimit(resource.RLIMIT_FSIZE)), 'phases': []}
     (out / 'start.json').write_text(json.dumps(receipt, indent=2, sort_keys=True) + '\n')
     shutil.copytree(front / 'obj', out / 'obj')
     compiler = model['compiler']
     wrapper = out / 'cxx_capped'
-    wrapper.write_text('#!/bin/sh\nbuild_fsize=' + str(caps['CXX_file_bytes']) +
-                       '\nfor arg in "$@"; do\n  if [ "$arg" = "c++-header" ]; then build_fsize=' +
-                       str(caps['PCH_file_bytes']) + '; fi\ndone\nexec /usr/bin/prlimit --as=' +
-                       str(caps['CXX_AS']) + ' --fsize="$build_fsize" -- ' + compiler + ' "$@"\n')
+    wrapper.write_text('#!/bin/sh\nexec /usr/bin/prlimit --as=' +
+                       str(caps['CXX_AS']) + ' --fsize=unlimited:unlimited -- ' + compiler + ' "$@"\n')
     wrapper.chmod(0o755)
     substitutions = {'{ROOT}': str(ROOT), '{OUT}': str(out), '{GXX}': compiler,
                      '{VINC}': model['verilator_include'], '{CXX}': str(wrapper)}
@@ -75,7 +78,7 @@ def run(go_path):
             for key, value in substitutions.items(): item = item.replace(key, value)
             if '{' in item: raise ValueError('Unresolved command')
             argv.append(item)
-        argv = ['/usr/bin/prlimit', '--fsize=' + str(caps['archive_file_bytes'])] + (
+        argv = ['/usr/bin/prlimit', '--fsize=unlimited:unlimited'] + (
             ['--as=' + str(caps['link_AS'])] if phase == 'link' else []) + ['--'] + argv
         log_path = out / (phase + '.log'); reason = None; phase_start = time.monotonic()
         with log_path.open('wb') as log:

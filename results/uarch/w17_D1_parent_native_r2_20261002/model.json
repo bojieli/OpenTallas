@@ -1,8 +1,6 @@
 {
   "caps": {
     "CXX_AS": 3221225472,
-    "CXX_file_bytes": 536870912,
-    "PCH_file_bytes": 4294967296,
     "affinity": [
       8,
       9,
@@ -21,7 +19,7 @@
       22,
       23
     ],
-    "archive_file_bytes": 3221225472,
+    "file_size_limit": "unlimited",
     "host_disk_reserve": 17179869184,
     "host_memory_reserve": 34359738368,
     "link_AS": 4294967296,
@@ -76,7 +74,7 @@
     "time_fit_measured": false
   },
   "output_budget": {
-    "basis": "Both fresh PCHs hit512MiB artifact cap, so old1GiB total was insufficient. Separate4GiB/header fail caps and8GiB totalPCH reservation; total17.6GB fits20GiB. This is an explicit experiment envelope, not a measured complete-PCH size or a completion guarantee.",
+    "basis": "Aggregate20GiB output reservation retained; individual PCH/object/archive/ELF sizes are uncapped per explicit user instruction. Component allowances are estimates, not individual enforcement limits.",
     "binary_dependency_temp_log_allowance_bytes": 1073741824,
     "object_allowance_bytes": 2147483648,
     "ordinary_archive_allowance_bytes": 2147483648,
@@ -86,17 +84,15 @@
   },
   "previous_failure": "results/rtl/w17_D1_parent_native_20261002_r1/terminal/parent_review.json",
   "resource_reprice": {
-    "PCH_file_cap_bytes": 4294967296,
-    "basis": "Ordinary archive has explicit 2GiB allowance; 3GiB archive/link fail cap makes this allocation internally consistent. Per-CXX 512MiB file cap stays. No clock, arithmetic, source, geometry or compiler code-model change.",
-    "new_archive_link_file_cap_bytes": 3221225472,
-    "ordinary_object_file_cap_bytes": 536870912,
-    "original_global_file_cap_bytes": 536870912
+    "basis": "User requested removal of recurring artificial per-file caps. Keep aggregate output monitoring, host free-space reserve, memory and CPU policy. Compiler AS limits are unchanged. Historical failed runs remain immutable.",
+    "file_size_limit": "unlimited",
+    "previous_global_file_cap_bytes": 536870912
   },
   "source_files_sha256": {
-    "tools/run_w17_D1_parent_native_r2.py": "2608594747cc95ac141a3bd09db26fb96e06b9c9e1d688adff0681c0b1b2ef43",
+    "tools/run_w17_D1_parent_native_r2.py": "7856dbb1f9b573021d66df41bb32a56a601587ae1ac09f17d0f4e03155fd1125",
     "tools/w17_D1_generated_native_guard.py": "7b124d592b413c0783467865e32ea07d5d4a6e55b809cc51819218f42505e733"
   },
   "source_frontend_commit": "6b94aa3088dfeaa8284e66615fbd8b948f8c65c2",
-  "status": "PREPARED_PCH_SERIALIZATION_SUCCESSOR_NOT_RUN",
+  "status": "PREPARED_UNLIMITED_FILE_SIZE_SUCCESSOR_NOT_RUN",
   "verilator_include": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include"
 }
