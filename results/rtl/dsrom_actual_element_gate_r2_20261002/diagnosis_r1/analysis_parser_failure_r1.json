@@ -1,0 +1,10 @@
+{
+  "status": "FAIL_ANALYSIS_PARSER_ONLY",
+  "analysis_script": "source_contract_audit.py",
+  "script_sha256": "cafa9b134666d14e19cb6d9947c01ede525ca613542399e7fba1696076fb19ec",
+  "failure": "AssertionError at line42: expression expected decoder masks, but first regex hit was default member initialization",
+  "exact_first_expression": "0",
+  "exact_first_file": "obj_q/Vtb_q___024root__2__Slow.cpp",
+  "resolution": "New source_contract_audit_r2.py selects the actual decoder update instead of member initialization. All four ref/candidate DUT updates verified. This is read-only analysis, no HDL retry or source change.",
+  "simulation_retries": 0
+}
