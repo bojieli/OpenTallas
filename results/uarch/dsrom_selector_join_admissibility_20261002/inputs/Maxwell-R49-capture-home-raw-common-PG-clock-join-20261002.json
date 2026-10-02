@@ -1,0 +1,90 @@
+{
+  "C_and_stage_cuts_unselected": true,
+  "Hubble_overlap_receipt": "/tmp/Hubble-capture-endpoint-ownership-review-20261002.json",
+  "actual_CDC_or_accepted_deadline": null,
+  "base_main": "03a8cf4fe0f47f516d8daecec4d92a6e14692e12",
+  "body_with_baseline_feedback_mm2": 0.09663352811999999,
+  "branch": "codex/dsrom-capture-home-r49-20261002",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cold_bytes_equal": true,
+  "commit": "4cc368a46ca8894b102bb34ccd674168571cd282",
+  "common_required_mm2": 0.032892100919999986,
+  "common_reserved_mm2": 0.0450086787,
+  "common_shift_um": 52.164,
+  "controls_and_PG_not_free_space": true,
+  "corrected_common_bbox_DBU": [
+    11188476,
+    15567120,
+    11294586,
+    15991290
+  ],
+  "failed_e899_cut_not_adopted": true,
+  "hold_closed": false,
+  "interior_remaining_before_new_tokens_VM_forward_hold_routes_mm2": 0.03713272308,
+  "island_area_and_reticle_screen_unchanged": true,
+  "new_gap_um": 4.32,
+  "new_jobs": [],
+  "next_Arch": "Construct M2+ power vias and allowed named signal escapes for wider R0 rows/MX selectors, full CLK/reset/SETN ingress and downstream typed forward-hold. Literal feedback-only pins supplied; their L1 projections do not certify routes.",
+  "next_Hubble": "Actual accepted fullprogram consumer/home-visibility and clock-domain identity remains required; no observer restart.",
+  "next_Nash": "Bind local64-bank read-token/sink credits and common serializer ownership; physical shard identity preserved. Freeze typed feedback prototype before timing adoption; C/stall delivery and accepted deadlines not0.",
+  "no_crossdie576_combinational_mux": true,
+  "no_ready_field_capacity576_preserved": true,
+  "old_overlap_um": 47.844,
+  "original_RTL_or_uarch_or_docs_edits": [],
+  "owner": "Maxwell",
+  "physical_build_admitted": false,
+  "physical_fit": false,
+  "predecessor_geometry": "1f8e7e65dfc28474028b40bcc2005210b77f314e",
+  "predecessor_record_is_historical_not_overwritten": true,
+  "prototype_typed_hold_source_sha256": null,
+  "provider_owner": "Kepler ABI/transport; Nash causal read-token controller; Arch legal site/wire/clock/PG",
+  "raw_homes": [
+    {
+      "actual_physical_shard_die": 0,
+      "baseline_feedback_BUFs": 44160,
+      "bbox_DBU": [
+        10979226,
+        15567120,
+        11184156,
+        15739920
+      ],
+      "raw_reserved_um2": 35411.904,
+      "record_bits": 22080,
+      "seats": 320,
+      "shard": 0
+    },
+    {
+      "actual_physical_shard_die": 1,
+      "baseline_feedback_BUFs": 35328,
+      "bbox_DBU": [
+        10979226,
+        15567120,
+        11184156,
+        15705360
+      ],
+      "raw_reserved_um2": 28329.5232,
+      "record_bits": 17664,
+      "seats": 256,
+      "shard": 1
+    }
+  ],
+  "replay_command": "python3 tools/dsrom_capture_home_r49.py --out /tmp/FRESH-home-r49.json",
+  "schema": 1,
+  "source_physical_shard_ABI_bits": [
+    170,
+    187,
+    240
+  ],
+  "source_pins": {
+    "results/uarch/dsrom_capture_home_20261002/model.json": "c952055e1d46c3d86095965ee0bc92162256649f398d723ef70b5e7b13c0a0a0",
+    "results/uarch/dsrom_capture_shard_join_r49_20261002/model.json": "1a75456348de769a591a8d765c754da002e460752675ea012abfb48894f83f71",
+    "tests/test_dsrom_capture_home_r49.py": "117b9b886a8c44e9d481bec1377a2bdb184ba8cba993b6a9506e93a7de7cd1f7",
+    "tools/dsrom_capture_home.py": "e47d74085179ba108d95550de0bf5e0abc07fece5bb57946d09a2738574ba5e8",
+    "tools/dsrom_capture_home_r49.py": "509bb43c1d205c9d4cfbe76cd943bd23ccd67013629e6f2a378800dd55a35e0c",
+    "tools/dsrom_capture_shard_join_r49.py": "8cd29bc33fa8aacee14425dbbac554dd9ccc60d8842a9dc6932d2fa5c4306ebd"
+  },
+  "source_shard_origin": "c710ef8f4e60c245f26a7353fb9751c0db2bb647",
+  "test_command": "python3 -m pytest -q tests/test_dsrom_capture_home_r49.py tests/test_dsrom_capture_home.py tests/test_dsrom_capture_shard_join_r49.py",
+  "tests_passed": 37,
+  "worktree": "/home/ubuntu/dsrom-capture-home-20261002"
+}
