@@ -53,6 +53,11 @@ def all_nested_source_references(native):
             for index, item in enumerate(value): walk(item, path + [index], op)
         elif isinstance(value, str) and value in producers:
             if len(path) == 3 and path[0] == 'writes' and path[2] == 'version': return
+            if len(path) == 3 and path[0] == 'source_outputs' and path[2] == 'version':
+                # Exact duplicate producer declaration, not a data reader.
+                # A source_outputs version without the actual writer is not
+                # excluded: conservatively retain that unmatched reference.
+                if value in {w['version'] for w in op['writes']} and producers[value] == op['pc']: return
             if path[-1] == 'write_version': return
             references[value].append(dict(PC=op['pc'], path=path))
     for op in native['instructions']: walk(op, [], op)
@@ -169,7 +174,7 @@ def pressure(native, homes):
         directory_vs_source_lifetime_mismatch_samples=retire_mismatches[:30],
         no_source_read_consumer_versions=dead, provider_binding_edges_missing_from_driver_read_graph=missing_read_edges,
         full_native_nested_reference_audit=True,
-        external_contracts_not_in_native_not_silently_assumed= True,
+        external_contracts_not_in_native_not_silently_assumed=True,
         resource_repair_adopted=False, original_homes_unchanged=True,
         required_release_contract='zero-reader output eligible only after actual producer publication/capture/mirrorACK, observer evidence and all owning readers/consumer/reverse obligations close; future-use versions remain retained',
         full_allocator_timing_route_model_complete=False)

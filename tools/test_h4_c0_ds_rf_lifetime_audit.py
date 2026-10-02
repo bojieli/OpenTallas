@@ -37,5 +37,12 @@ class LifetimeTests(unittest.TestCase):
         self.assertEqual(refs['a'][0]['PC'], 1)
         self.assertEqual(refs['a'][0]['path'][-2:], ['identity_from_versions', 0])
 
+    def test_source_output_declaration_is_not_a_hidden_reader(self):
+        n, _ = self.case(False)
+        n['instructions'][0]['source_outputs'] = [dict(version='a')]
+        self.assertNotIn('a', all_nested_source_references(n))
+        n['instructions'][1]['source_outputs'] = [dict(version='a')]
+        self.assertEqual(all_nested_source_references(n)['a'][0]['PC'], 1)
+
 
 if __name__ == '__main__': unittest.main()
