@@ -1,0 +1,13 @@
+{
+  "delegation_root": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service",
+  "files": {
+    "cgroup.controllers": "memory pids",
+    "cgroup.subtree_control": "memory pids",
+    "pids.current": "140",
+    "pids.max": "max",
+    "memory.current": "16327761920",
+    "memory.max": "max",
+    "cpu.max": "UNAVAILABLE"
+  },
+  "purpose": "read-only parent delegation inventory; no changes/permissions requested"
+}
