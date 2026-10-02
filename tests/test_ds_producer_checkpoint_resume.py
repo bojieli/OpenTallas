@@ -164,3 +164,109 @@ def test_partial_sector_validity_survives_typed_capture(tmp_path):
     v=C.verify_checkpoint(dest,source_contract=c,next_pc=1,constructor_contract={'identity':C.identity(p2,e2),'checkpoint_receipt':r})
     C.restore_quiescent(v,e2,p2,w2)
     assert p2.rf[0].backing['DeepSeek',0,9999]==[3]+[None]*31
+
+
+def state_constructor(root,journal):
+    p,e,w=constructor(root,journal)
+    p.homes[0].update(home={'class':'HBM_NATIVE_STATE'},binding={
+        'PC':0,'version':'v0','rank':0,'source_result':'out','shape':[32],
+        'dtype':'F32','base':33554432,'reservation_bytes':128})
+    return p,e,w
+
+
+def test_actual_state_without_cached_publication_resume_and_native_consumer(tmp_path):
+    p,e,w=state_constructor(tmp_path,'statefirst')
+    e.execute_operation(e.native['instructions'][0]);w.seen.add((0,'v0',0,1,'data'))
+    assert ('v0',0) not in p.published
+    c={'identity':C.identity(p,e)};dest=tmp_path/'statecheckpoint'
+    receipt=C.capture_quiescent(e,p,w,boundary_pc=0,destination=dest,source_contract=c)
+    for op in e.native['instructions'][1:]:e.execute_operation(op)
+    continuous=p.restore('v2',0).tobytes()
+    p2,e2,w2=state_constructor(tmp_path,'statecold')
+    v=C.verify_checkpoint(dest,source_contract=c,next_pc=1,
+        constructor_contract={'identity':C.identity(p2,e2),'checkpoint_receipt':receipt})
+    C.restore_quiescent(v,e2,p2,w2)
+    assert ('v0',0) not in p2.published
+    C.execute_remaining(e2,stop_after=2)
+    assert p2.restore('v2',0).tobytes()==continuous
+
+
+@pytest.mark.parametrize('mutant',['missing_byte','binding_identity','aperture','extent'])
+def test_state_owned_bytes_and_exact_home_negatives(tmp_path,mutant):
+    import copy
+    p,e,w=state_constructor(tmp_path,'statenegative');e.execute_operation(e.native['instructions'][0])
+    loc=p.locations['v0',0];loc['binding']=copy.deepcopy(loc['binding'])
+    if mutant=='missing_byte':
+        p.state[0].backing['DeepSeek',0,33554432//32]=[None]*32
+    elif mutant=='binding_identity':loc['binding']['version']='different'
+    elif mutant=='aperture':loc['binding']['base']=0
+    else:loc['shape']=(64,)
+    with pytest.raises(ValueError):C.validate_backing(p)
+
+
+def test_complete_future_program_and_fullgraph_state_bound(tmp_path):
+    p,e,w=constructor(tmp_path,'fullgraph');e.execute_operation(e.native['instructions'][0])
+    w.seen.add((0,'v0',0,1,'data'))
+    p.fullgraph_source_sha=hashlib.sha256(C.canonical(p.native)).hexdigest()
+    p.fullgraph_source_failed=False
+    c={'identity':C.identity(p,e)};dest=tmp_path/'fullgraphcheckpoint'
+    r=C.capture_quiescent(e,p,w,boundary_pc=0,destination=dest,source_contract=c)
+    p2,e2,w2=constructor(tmp_path,'fullgraphcold')
+    p2.fullgraph_source_sha=p.fullgraph_source_sha;p2.fullgraph_source_failed=False
+    v=C.verify_checkpoint(dest,source_contract=c,next_pc=1,
+        constructor_contract={'identity':C.identity(p2,e2),'checkpoint_receipt':r})
+    C.restore_quiescent(v,e2,p2,w2)
+    assert p2.fullgraph_source_sha==p.fullgraph_source_sha
+    # A change confined to an unexecuted future PC must refuse enrollment.
+    p2.native['instructions'][2]['source_op']['layer']=1
+    assert C.identity(p2,e2)!=c['identity']
+    with pytest.raises(ValueError,match='source identity'):C.quiescent(p2,e2)
+    p2.fullgraph_source_sha=hashlib.sha256(C.canonical(p2.native)).hexdigest()
+    p2.fullgraph_source_failed=True
+    with pytest.raises(ValueError,match='failed'):C.quiescent(p2,e2)
+
+
+def test_future_use_alias_visibility_and_generation_counters_preserved(tmp_path):
+    p,e,w=constructor(tmp_path,'aliases');e.execute_operation(e.native['instructions'][0])
+    w.seen.add((0,'v0',0,1,'data'))
+    # Addressed alias is produced through the actual publisher, not copied
+    # from expected values; the existing distinct RF home is retained.
+    alias=p.restore('v0',0)
+    p.publish({'PC':1,'rank':0,'generation':1,'version':'v1','home_indices':[1]},
+        {'data':alias},{'result':'out'})
+    p.retire_operation(1,1);e.retired.add(1);w.seen.add((1,'v1',0,1,'data'))
+    e.last_use={'v0':2212,'v1':2212};e.unconsumed_plan={'future_aliases':['v0','v1'],'last_PC':2212}
+    c={'identity':C.identity(p,e)};dest=tmp_path/'aliascheckpoint'
+    r=C.capture_quiescent(e,p,w,boundary_pc=1,destination=dest,source_contract=c)
+    p2,e2,w2=constructor(tmp_path,'aliascold')
+    e2.last_use=dict(e.last_use);e2.unconsumed_plan=dict(e.unconsumed_plan)
+    v=C.verify_checkpoint(dest,source_contract=c,next_pc=2,
+        constructor_contract={'identity':C.identity(p2,e2),'checkpoint_receipt':r})
+    C.restore_quiescent(v,e2,p2,w2)
+    assert set(p2.locations)==set(p.locations)
+    assert p2.rf[0].generations==p.rf[0].generations
+    assert p2.restore('v0',0).tobytes()==p2.restore('v1',0).tobytes()==alias.tobytes()
+    assert e2.last_use==e.last_use and e2.unconsumed_plan==e.unconsumed_plan
+
+
+def test_storage_join_never_hides_checkpoint_or_doublecharges_existing_journal(tmp_path):
+    p,e,w,c,d,r=captured(tmp_path)
+    projection=C.project_checkpoint(e,p,w,boundary_pc=0,destination=tmp_path/'projection')
+    n=projection['filesystem_reservation_bytes'];future=913249523376
+    failed=C.join_storage_projection(projection,continuation_new_bytes=future,
+        other_new_bytes=100,available_bytes=891025633280)
+    assert failed['status']=='REFUSE_STORAGE_HEADROOM'
+    passed=C.join_storage_projection(projection,continuation_new_bytes=future,
+        other_new_bytes=100,available_bytes=future+n+100)
+    assert passed['headroom_bytes']==0 and passed['required_new_bytes']==future+n+100
+    for invalid in (None,True,0,-1):
+        with pytest.raises(ValueError):C.join_storage_projection(projection,
+            continuation_new_bytes=invalid,other_new_bytes=0,available_bytes=future)
+
+
+def test_capture_projection_bounds_all_committed_files_including_source_metadata(tmp_path):
+    p,e,w=constructor(tmp_path,'metadata');e.execute_operation(e.native['instructions'][0]);w.seen.add((0,'v0',0,1,'data'))
+    c={'identity':C.identity(p,e),'reviewed_metadata':'x'*100000};dest=tmp_path/'metadatacapture'
+    C.capture_quiescent(e,p,w,boundary_pc=0,destination=dest,source_contract=c)
+    projection=json.loads((dest/'actual_observations.json').read_text())['projection']
+    assert sum(f.stat().st_size for f in dest.iterdir())<=projection['filesystem_reservation_bytes']

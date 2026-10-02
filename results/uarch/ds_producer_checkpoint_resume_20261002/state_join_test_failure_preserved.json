@@ -1,0 +1,7 @@
+{
+  "status": "TEST_OBSERVER_ORDER_FAILURE_PRESERVED",
+  "test": "test_future_use_alias_visibility_and_generation_counters_preserved",
+  "observed": "generations [36,0,0,0] versus [28,0,0,0] after resumed side performed two extra actual restore reads",
+  "correction": "Compare tag generations immediately after restore, before subsequent actual reads advance tags. No provider or arithmetic expectations changed.",
+  "production_execution": false
+}

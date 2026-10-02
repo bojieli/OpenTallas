@@ -12,7 +12,8 @@ import numpy as np
 
 SCHEMA = 'DS_ACTUAL_PRODUCER_QUIESCENT_RESUME_V1'
 STATE = ('published', 'locations', 'backing', 'seq', 'query_visible', 'routes',
-         'route_consumers', 'engram_owners', 'field_locations')
+         'route_consumers', 'engram_owners', 'field_locations',
+         'fullgraph_source_sha', 'fullgraph_source_failed')
 PORT_STATE = ('extents', 'tags', 'qd', 'write_cap', 'read_ticks', 'write_ticks',
               'reverse_ticks', 'costs', 'cost_scope', 'accept_sequence', 'backing',
               'generations', 'now', 'order', 'allocation_identity')
@@ -49,6 +50,11 @@ def quiescent(provider, engine):
     if unknown:raise ValueError('unknown engine object state: '+','.join(sorted(unknown)))
     if engine.provider is not provider: raise ValueError('exact engine/provider object')
     if p.generation != engine.generation: raise ValueError('generation mismatch')
+    if hasattr(p,'fullgraph_source_sha') or hasattr(p,'fullgraph_source_failed'):
+        if getattr(p,'fullgraph_source_failed',None) is not False:
+            raise ValueError('failed or incomplete fullgraph source')
+        if getattr(p,'fullgraph_source_sha',None)!=hashlib.sha256(canonical(p.native)).hexdigest():
+            raise ValueError('fullgraph source identity mismatch')
     for name in ('views', 'memories', 'pending_routes', 'history_view_leases'):
         if getattr(p, name, None): raise ValueError('live owner: ' + name)
     for name in ('rf', 'state'):
@@ -219,7 +225,14 @@ def validate_backing(p):
     """Check source homes against retained raw bytes without manufacturing ACKs.
     This is a read-only checkpoint check, not runtime provider consumption.
     """
-    from h3_ds_checkpoint_provider_r30 import RF_SM
+    from h3_ds_checkpoint_provider_r30 import RF_SM, DTYPES
+    def owned_bytes(port, base, size):
+        for address in range(base,base+size,32):
+            sector,within=divmod(address,32)
+            backing=port.backing.get(('DeepSeek',rank,sector))
+            n=min(32-within,base+size-address)
+            if backing is None or len(backing)!=32 or any(v is None for v in backing[within:within+n]):
+                raise ValueError('owned backing missing or partially valid')
     def check(port, base, raw):
         for offset in range(0,len(raw),32):
             address=base+offset;sector,within=divmod(address,32)
@@ -231,6 +244,27 @@ def validate_backing(p):
             if any(v is None for v in actual) or bytes(actual)!=wanted:
                 raise ValueError('owned backing/produced bytes mismatch')
     for (version,rank),loc in p.locations.items():
+        if loc.get('kind')=='state_fragment':
+            # publish_state deliberately retains only addressed backing, not a
+            # published ndarray. Validate that actual source binding verbatim;
+            # never reconstruct this publication from a comparison witness.
+            b=loc['binding'];shape=tuple(loc['shape']);dtype=np.dtype(loc['dtype'])
+            size=int(np.prod(shape))*dtype.itemsize
+            if (b['PC'],b['version'],b['rank'])!=(loc['pc'],version,rank):
+                raise ValueError('state source identity mismatch')
+            matches=[h for h in p.homes if h.get('version')==version and rank in h.get('rank_group',[]) and h.get('binding')==b]
+            if len(matches)!=1 or matches[0]['home']['class']!='HBM_NATIVE_STATE':
+                raise ValueError('state source home mismatch')
+            if shape!=tuple(b['shape']) or dtype!=DTYPES[b['dtype']] or size>b['reservation_bytes'] or size%4:
+                raise ValueError('state shape/type/extent mismatch')
+            if b['base']%32 or not 33554432<=b['base'] or b['base']+b['reservation_bytes']>67108864 or rank not in p.state:
+                raise ValueError('state finite aperture mismatch')
+            owned_bytes(p.state[rank],b['base'],size)
+            if (version,rank) in p.published:
+                a=p.published[version,rank]
+                if a.shape!=shape or a.dtype!=dtype:raise ValueError('owned shape/type mismatch')
+                check(p.state[rank],b['base'],np.ascontiguousarray(a).tobytes())
+            continue
         if (version,rank) not in p.published:raise ValueError('owned publication missing')
         a=p.published[version,rank]
         if tuple(loc['shape'])!=a.shape or np.dtype(loc['dtype'])!=a.dtype:
@@ -385,7 +419,7 @@ def project_checkpoint(engine, provider, witness, *, boundary_pc, destination):
     model['typed_state_metadata_bytes']=metadata
     witness_metadata={'seen':[list(k) for k in sorted(witness.seen)],
         'initialization_provenance':witness.initialization_provenance,'observation_journal':witness.events.summary()}
-    model['metadata_bytes_upper']=metadata+len(canonical(identity(p,engine)))+len(canonical(checkpoint_shards(p)))+len(canonical(witness_metadata))+len(canonical(model))+16384
+    model['metadata_bytes_upper']=metadata+2*len(canonical(identity(p,engine)))+len(canonical(checkpoint_shards(p)))+len(canonical(witness_metadata))+2*len(canonical(model))+16384
     model['filesystem_reservation_bytes']=model['payload_bytes']+model['metadata_bytes_upper']
     dest=Path(destination);parent=dest.parent
     if dest.exists(): raise ValueError('fresh destination')
@@ -396,10 +430,36 @@ def project_checkpoint(engine, provider, witness, *, boundary_pc, destination):
     return model
 
 
+def join_storage_projection(projection, *, continuation_new_bytes, other_new_bytes, available_bytes):
+    """Compose newly allocated disk only; existing journals already reduce free.
+    The runner supplies reviewed incremental journal/index/dictionary demand.
+    This is an admission calculation, not a filesystem capacity reservation.
+    """
+    for v in (continuation_new_bytes,other_new_bytes,available_bytes):
+        if type(v) is not int or v<0:raise ValueError('exact nonnegative disk byte projection required')
+    if continuation_new_bytes==0:raise ValueError('positive continuation projection required')
+    checkpoint=projection['filesystem_reservation_bytes']
+    if type(checkpoint) is not int or checkpoint<=0:raise ValueError('positive checkpoint projection required')
+    required=checkpoint+continuation_new_bytes+other_new_bytes
+    return dict(status='PASS_STORAGE_PROJECTION' if available_bytes>=required else 'REFUSE_STORAGE_HEADROOM',
+        checkpoint_new_bytes=checkpoint,continuation_new_bytes=continuation_new_bytes,
+        other_new_bytes=other_new_bytes,required_new_bytes=required,available_bytes=available_bytes,
+        headroom_bytes=available_bytes-required,old_journal_bytes_already_in_used_space=projection['old_journal_bytes'],
+        physical_qualified=False,capacity_reservation_acquired=False)
+
+
 def capture_quiescent(engine, provider, witness, *, boundary_pc, destination, source_contract):
     projection=project_checkpoint(engine,provider,witness,boundary_pc=boundary_pc,destination=destination)
     if not source_contract or source_contract.get('identity')!=identity(unwrap(provider),engine):
         raise ValueError('explicit exact capture source contract')
+    # Source-contract extensions are caller-owned metadata of arbitrary size.
+    # Charge them before any payload write, rather than hiding them in margin.
+    extra=len(canonical(source_contract))
+    projection['metadata_bytes_upper']+=extra
+    projection['filesystem_reservation_bytes']+=extra
+    stat=os.statvfs(Path(destination).parent)
+    if stat.f_bavail*stat.f_frsize<projection['filesystem_reservation_bytes']:
+        raise ValueError('checkpoint aggregate metadata disk headroom')
     seal=save(provider,engine,destination,enabled=True)
     root=Path(destination)
     # Witness seen identities are metadata of actual observations only; expected
