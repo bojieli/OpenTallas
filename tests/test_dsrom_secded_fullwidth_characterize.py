@@ -14,6 +14,7 @@ def test_both_corner_complete_cells_and_capture_load():
     assert set(sc)==set(fc)
     assert len(sc)>100
     assert 0<m.dcap(sc)<2 and 0<m.dcap(fc)<2
+    assert m.input_pins(sc['XOR2xp5_ASAP7_75t_R'])=={'A','B'}
     assert 'FAKE' not in ss and 'FAKE' not in ff
 def test_receipt_all_inputs_unchanged():
     r=json.loads((m.OUT/'inputs/receipt.json').read_text())
