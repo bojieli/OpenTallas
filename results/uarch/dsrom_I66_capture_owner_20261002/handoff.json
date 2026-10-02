@@ -1,0 +1,49 @@
+{
+  "arithmetic_or_fulltoken_credit": false,
+  "build_admitted": false,
+  "contexts": {
+    "baseline_frozen_bits": 123,
+    "compound_with_route": 170,
+    "frozen_bits": 169,
+    "mandatory_extra_key_PC_bits": 46,
+    "reply": 240,
+    "request": 187
+  },
+  "external_current_source_inputs_archived": true,
+  "full_model_ready": false,
+  "generation_or_link_ACK_never_alias_raw_root": true,
+  "model": "model.json",
+  "new_RTL": false,
+  "new_external_dependency_merges_required": false,
+  "new_jobs": false,
+  "next_single_gate": "Join R49 named local selector/drain/gather/VM owner endpoints with Hubble accepted consumer timestamps and Maxwell/Arch routes; derive ONE capacity and all typed forward/control cuts, then composed deadline and contextual build admission",
+  "observed_native_scope": "576 source writers415..420, spineidle421, phase_retire422; no wholeprogram origin transfer",
+  "physical_unknowns": [
+    "common owner/shard and replication",
+    "selector/control register stations and forward SS/FF geometry",
+    "actual named signal escapes, PG and clock/reset union",
+    "positive CDC request/reply/credit provider",
+    "enrolled actual consumer acceptance and causal visibility deadline"
+  ],
+  "prerequisites": [
+    "ef6da37de6f6c641936615f61825628c2db7b8d4",
+    "b991b7b67c3329bbd770010f972ab3f5a2c16e7a",
+    "e899350628dcef8ebfa55e7f398cb74d37839337",
+    "04bb228ecc6f468c036a5e392bf66ad65ef738a0 and its parent-intaken ancestry"
+  ],
+  "proposed_registered_successor": "two local64root capture/drain owners -> credited registered local read -> finite ordered gather -> existing source formatter -> exclusively owned VM publication; freshpacketACK separate from causalvisible fence",
+  "repro": [
+    "python -m pytest -q tests/test_dsrom_I66_capture_owner.py tests/test_dsrom_I66_capture_drain_calendar.py tests/test_dsrom_I66_capture_join_ledger.py tests/test_dsrom_I66_capture_timing.py tests/test_dsrom_I66_capture_cells.py tests/test_dsrom_I66_capture_banks.py",
+    "python tools/dsrom_I66_capture_owner.py --out results/uarch/dsrom_I66_capture_owner_20261002/model.json --verify"
+  ],
+  "software_checks": "held/outoforder/stale/duplicate/earlyACK/sameedge/alias/zeroCDCcredit/visibility negatives; source math unchanged",
+  "source_original_changed": false,
+  "source_pin_count": 40,
+  "tests": 84,
+  "timeout": {
+    "Maxwell_selected_provider_proposes4096": true,
+    "capture_model_selects4096": false,
+    "source_default1024_FAIL_preserved": true
+  },
+  "verdict": "PASS_FINITE_SOFTWARE_OWNERSHIP_CONTRACT_PHYSICAL_AND_DEADLINE_PENDING"
+}
