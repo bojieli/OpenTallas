@@ -6,6 +6,19 @@ This file is a current dependency queue, not an append-only integration diary. `
 
 Integration/publication is coordinated by Codex. Workers use isolated worktrees and submit bounded reviewed changes; the main publisher owns main. Existing W streams remain provenance labels, not an instruction to restart historical agents. The prior tracker and plan are retained in the [source-pinned history snapshot](results/maintenance/research_plan_rewrite_20261002/history_manifest.json); all historical pass/failure records remain authoritative at their original scope.
 
+## Immediate closure schedule — current parent review (2026-10-02)
+
+All baseline closure lanes run concurrently. Optional fusion, batching tuning and a second Qwen ROM decode position remain deferred. New heavy jobs use localhost, PVE1 and the 128 GB VM; PVE2/PVE3 only finish existing jobs. Preserve live pinned jobs and avoid duplicate builds.
+
+| Target | First closure deliverable | Parallel owners / independent work |
+|---|---|---|
+| DeepSeek ROM | Repair the source-bound FF hold failure in same-edge enable replicas, then join actual clock/reset, power/pin escape and legal selector stations before contextual SS/FF implementation. Keep S58/PAR2/NP2048 until an actual priced deficit. | Archimedes: enable and hold; Maxwell: caller/field and reticle composition; Epicurus: exact selector/fence and fixed transport. Hubble/Nash independently establish current program admission and descriptor/read identity, then connected execution. |
+| Qwen ROM | Establish a driven/initialized source contract and a balanced clock/reset implementation for the complete mapped tile. The present clock-skew and retained-control failures block physical admission. | Euclid: source transitions and operand/control identity; Ampere: retained controls, clock/reset and PG context. Reuse the completed TP4 position-zero token where identities match. |
+| HBM, Qwen and DeepSeek | Complete actual checkpoint operand acquisition, native numerical execution and memory publication/retirement; qualify integrated matrix/RF/shared/service physical boundaries independently. | Goodall: preserve live Qwen token and collect outputs/state. Kepler/Sagan: real DeepSeek provider initialization and source-bound PC prefix, then full token. Dewey: lossless compact lifecycle journal and finite calendars. Popper: composed endpoint timing/area. |
+
+Parent-reviewed DeepSeek selector construction reproduces 4,210 packet-bit mappings and 226 cycles/call (2,034 for nine calls), with 12 focused tests passing and cold artifacts byte-identical. Its area ledger is partial: global clock/reset, hold repair, PG/pin escape and route detours remain open. Conditional FF hold failures remain FAIL; no P&R, whole-die closure or token-rate credit follows from this construction. Evidence: `results/uarch/native_software_parent_intake_20261002/DS_selector_physical_join_parent_review.json`.
+
+
 ## Immediate parallel completion schedule
 
 Updated 2026-10-02 after the owner requested maximum parallelism across the three targets. All seven lanes below are P0 completion prerequisites and run concurrently; none waits for another target. Existing expensive jobs remain pinned and are not restarted. Optional fusion, new architecture surveys, secondary batching and a second Qwen ROM decode position do not consume this queue.
