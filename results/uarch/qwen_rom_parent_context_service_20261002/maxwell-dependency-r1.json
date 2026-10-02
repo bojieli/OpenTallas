@@ -1,0 +1,158 @@
+{
+  "actual_production_policy_qualified": false,
+  "authoritative_model": "results/uarch/qwen_rom_parent_context_service_20261002/model-r4.json",
+  "blocking_dependency": "Remaining known-budget number is conditional, not a slot fit. No named baseline receipt, actual PHY shoreline service or extracted controller/arbiter/route/clock/PG fit exists; fullresidency minimum131.504169984mm2 remains outside67.35other-service budget.",
+  "build_admitted": false,
+  "claim": "Finite source-sized candidate and explicit3k deficit only. No actual sustained PHY bandwidth or complete slot proof.",
+  "counterparty": "Maxwell whole-rank slot/debit",
+  "debit_join": {
+    "PHY": "Four source PHY footprint40.00784006016mm2 is charged only if absent from named baseline; no new PHY bandwidth or replicas claimed.",
+    "complete_named_Maxwell_receipt": false,
+    "complete_slot_fit": false,
+    "existing_KV": "Replace useful KV read byte charge once. Same mutable HBM homes and current windows; no full-refill surcharge.",
+    "existing_owner": "Current4owners/32PC request+return arrays perstack included once. Proposedadditional52fullowners price exact state/macro delta; full original384service macros remain once.",
+    "existing_tile_capture": "All508bits/tile and source BD/XVM/MEM_EXTRA remain in current tile/parent source budget. Increment0;379root hold is a new proposed FF bank.",
+    "global_distribution": "Total required83600instruction and65536x buffers priced; root/array placement and named baseline credits pending. These cell counts do not automatically enlarge747.652allocated array footprint.",
+    "known_new_service_cell_mm2": 15.061739829440002,
+    "no_baseline_refund_or_doublecharge_claim": true,
+    "parent_interface_cell_reservation_mm2": 0.0384992919,
+    "remaining_if_all_new_debits_and_PHY_outside_baseline_mm2": 6.730039986500074
+  },
+  "default_enabled": false,
+  "live_jobs": [],
+  "minimum_binding": [
+    "Name which of existing4owners,384service+128tail macros, assembly, fourPHY40.00784006016mm2 and global fanout are in747.652allocated baseline",
+    "Keep existing508bits/tile capture charged once; full source128beat producer FIFO charged once;52 extra full32PC owner contexts are1664 new macros",
+    "Reserve all priced arbitration, full-native-tag routing, quarantine, dual-window/fulloperand stage, per-domain collectors and unknown controller/protection/PG/OBS wiring",
+    "Separate fill1048, clock64, reset64, instruction379, go1, x128, ready1:1685 required vs1360 nominal tracks;325 deficit.1536tile sinks are not1536global lanes"
+  ],
+  "model_sha256": "5666f8fb189e02ce1e638a26a62993a766fb1da90c7dad8edc2f13d53496483d",
+  "next_necessary_output": "Actual producer/state/accepted-demand journal joined to finite command/owner/return/grant/global-fill/window calendar and named baseline slots. Preserve all original numerical and physical failures.",
+  "owns": [
+    "Named baseline components, service slots and physical signal channels"
+  ],
+  "parent": "28d01b35ac5c82595e5c8a96200cd1f6ecb4269f",
+  "source_area": {
+    "clock_reset_collector_buffers": 4140024,
+    "collector_cell_reservation_um2": 422530.84944,
+    "collector_wire_total_um": 132480768,
+    "control_protection_CTS_reset_decoder_PG_OBS_route_cost": "Named endpoint placements, dynamic fanout, protection and extracted collector timing required. Finite collector32umsegment/count priced, no complete fit credit.",
+    "extra_context_macros": 1664,
+    "extra_owner_FF": 11116196,
+    "extra_owner_macro_logic_reservation_um2": 13070903.640080001,
+    "extra_route_mux_arb_reservation_um2": 254973.23208000002,
+    "full_actual_context_macros_retained_per_owner": 32,
+    "inherited_owner_replacement_credit": 0,
+    "known_incremental_mm2": 15.061739829440002,
+    "leaf_wire_segment_bound_um": 32,
+    "literal_full_residency_increment_mm2": 179.32386816,
+    "new_clock_sinks": 14452616,
+    "new_reset_sink_upper": 14450952,
+    "per_domain_replica_collector_allocation": [
+      {
+        "clock_sinks": 213805,
+        "domain": "service",
+        "name": "extra_owner",
+        "replicas": 52,
+        "reset_sink_upper": 213773
+      },
+      {
+        "clock_sinks": 35184,
+        "domain": "FAST_stream",
+        "name": "route455_delta",
+        "replicas": 4,
+        "reset_sink_upper": 35184
+      },
+      {
+        "clock_sinks": 36108,
+        "domain": "FAST_stream",
+        "name": "route467_delta",
+        "replicas": 4,
+        "reset_sink_upper": 36108
+      },
+      {
+        "clock_sinks": 31257,
+        "domain": "FAST_stream",
+        "name": "route404_delta",
+        "replicas": 4,
+        "reset_sink_upper": 31257
+      },
+      {
+        "clock_sinks": 292500,
+        "domain": "FAST_stream",
+        "name": "producer_route",
+        "replicas": 1,
+        "reset_sink_upper": 292500
+      },
+      {
+        "clock_sinks": 7622,
+        "domain": "serial",
+        "name": "producer_source_FIFO_metadata",
+        "replicas": 1,
+        "reset_sink_upper": 7622
+      },
+      {
+        "clock_sinks": 7522,
+        "domain": "stream",
+        "name": "producer_destination_FIFO",
+        "replicas": 1,
+        "reset_sink_upper": 7522
+      },
+      {
+        "clock_sinks": 63328,
+        "domain": "service",
+        "name": "quarantine_per_stack",
+        "replicas": 4,
+        "reset_sink_upper": 63328
+      },
+      {
+        "clock_sinks": 1537,
+        "domain": "stream",
+        "name": "window_operand_stage_per_tile",
+        "replicas": 1536,
+        "reset_sink_upper": 1537
+      },
+      {
+        "clock_sinks": 340,
+        "domain": "stream",
+        "name": "window_leases",
+        "replicas": 1,
+        "reset_sink_upper": 340
+      },
+      {
+        "clock_sinks": 608,
+        "domain": "service",
+        "name": "return_arbiter",
+        "replicas": 4,
+        "reset_sink_upper": 608
+      }
+    ],
+    "producer_CDC_and_source_fifo_reservation_um2": 181226.54232,
+    "quarantine_FF": 253312,
+    "quarantine_cell_reservation_um2": 107105.37984,
+    "shared_return_arbiter_cell_reservation_um2": 14892.12864,
+    "stage_window_cell_reservation_um2": 1010108.05704,
+    "useful_full_residency_min_increment_mm2": 131.50416998400001
+  },
+  "wire": {
+    "allocation_scope": "Deterministic current-slot row-spine wiring price, not a routed die or an optional design sweep.",
+    "deficit": 325,
+    "grid_columns": 64,
+    "grid_h_um": 32659.199999999997,
+    "grid_rows": 24,
+    "grid_w_um": 22892.544,
+    "instruction_um": 217411205.76000005,
+    "local_mailbox_segments_um": 66176,
+    "nominal_RC_extracted": false,
+    "nominal_cap_fF": 43923316.11579297,
+    "nominal_resistance_ohm_per_um": 0.0265684,
+    "ready_um": 572134.7520000001,
+    "root_to_remote_service_mailbox_global_segments": "Ampere must allocate real endpoint coordinates; not hidden in32umlocal tails.",
+    "separate_channel_allocation_required": true,
+    "shared_corridor_admitted": false,
+    "shared_tile_cut_nominal_capacity": 1360,
+    "shared_tile_cut_tracks_required": 1685,
+    "total_allocated_um": 264933446.62400004,
+    "x_um": 46883930.112
+  }
+}
