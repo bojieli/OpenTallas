@@ -1,0 +1,15 @@
+{
+  "candidate_id": "DS4096-TP4-S58-PAIR1",
+  "capacity_current_FAIL": true,
+  "files": {
+    "latency-attribution-r2.json": "9d90e0c59b43e32a6e987f2adb2a28dda6c64a46a37f4f8ebd5675b457e88b34",
+    "latency-attribution.json": "562f1288d922a74c326cc5e9c349e3160d76931dece1cc46380fa8d15a0d0d55",
+    "latency-tests.log": "cfc14fd2dc11c362cccf5421245ca5ab0e9d286b54a604a80bd2dd5522f6feb9",
+    "tests/test_dsrom_S58_latency_attribution.py": "fb08311fd5ed0e9f0794891c75f6b35dd127d9299c0c8ba2cc737d41a45755a2",
+    "tools/dsrom_S58_latency_attribution.py": "2d98cd5d5f6c4cf29276d8bb0c168e8a556ba632d94bfbd3fa8ccb939a993b23"
+  },
+  "no_new_counts_or_hardware": true,
+  "raw_dag_exposed_attribution_reproduced": true,
+  "schema": "opentallas.DSROM.S58.latency-receipt.v1",
+  "tests_PASS": 13
+}
