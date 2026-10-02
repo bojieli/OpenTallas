@@ -1,0 +1,61 @@
+{
+  "inputs": {
+    "allocator_attempt4.json": {
+      "path": "/home/ubuntu/w17-dsrom-fixed4096-owner-compiler/results/uarch/dsrom_fixed4096_owner_compiler_20261002/attempt4/model.json",
+      "provenance": "Uncommitted owner record captured read-only; not final allocator adoption",
+      "sha256": "c2f46478992164a76f9dc1dd1559b4ee657c7f0aa622f93b43a0add6709b6f56"
+    },
+    "allocator_attempt8.json": {
+      "path": "/home/ubuntu/w17-dsrom-fixed4096-owner-compiler/results/uarch/dsrom_fixed4096_owner_compiler_20261002/attempt8/model.json",
+      "provenance": "Uncommitted owner record captured read-only; not final allocator adoption",
+      "sha256": "6807c0b79746ee82835fc7917c57e79d2979acce20901e51b86f83e6359ca859"
+    },
+    "corridor_correction.json": {
+      "commit": "7dd5ea6311e81f8c67db7324ac67040a8ca60658",
+      "path": "results/uarch/dsrom_main_S58_corridor_correction_20261002/correction.json",
+      "sha256": "7703968da74c1d7a9d3e27adf29881f9b5742218bf9c1469929b0273c4f413b8"
+    },
+    "ot_rom_1024x72_m8.json": {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8.json",
+      "sha256": "d14325dd9aded6ea3109fd48b9a40614086618bdc598e0551a56579fa4c7b611"
+    },
+    "ot_rom_4096x72_m8.json": {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.json",
+      "sha256": "5a0d43ff6fadb327f5f91cd3bec44ea1a6e3b0312e0835ea883656c7495266f9"
+    },
+    "ot_rom_4096x72_m8.lef": {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+      "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c"
+    },
+    "ot_v41_field_w17w10.sv": {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "rtl/v41die/ot_v41_field_w17w10.sv",
+      "sha256": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811"
+    },
+    "ot_v41_fieldtop_w17w10.sv": {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "rtl/v41die/ot_v41_fieldtop_w17w10.sv",
+      "sha256": "e2d372c5388535c1cc08ae1648c367fcfc721ecb96579646b962edf3698d8ec8"
+    },
+    "ot_v41_pair_w17w10.sv": {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "rtl/v41die/ot_v41_pair_w17w10.sv",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "ot_v41_rom_adapt.sv": {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "rtl/v41die/ot_v41_rom_adapt.sv",
+      "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f"
+    },
+    "ot_v41_spine_w17w10.sv": {
+      "commit": "024e8c519c07aedc74b32511fccfe07d56e91a97",
+      "path": "rtl/v41die/ot_v41_spine_w17w10.sv",
+      "sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd"
+    }
+  },
+  "new_builds": 0,
+  "scope": "Static model only; no payload/config images read or emitted. Actual source consumers and actual existing macro views pinned. Allocator records provisional until Nash final record."
+}
