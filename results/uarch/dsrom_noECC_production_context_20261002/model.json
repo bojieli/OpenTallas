@@ -43905,7 +43905,8 @@
     }
   },
   "current_main_checkpoint_read": "c1f8fbd75",
-  "installed_PG_vias_clock_and_parent_IO_missing": true,
+  "installed_CTS_PDN_not_a_prebuild_requirement": true,
+  "installed_PG_CTS_and_extracted_SSFF_are_build_validation": true,
   "no_engine_RTL_or_cold_mapping": true,
   "old_negative_records_unchanged": true,
   "period_ps": 833.3333333333334,
@@ -43914,6 +43915,11 @@
     "*xp*_ASAP7*",
     "SDF*",
     "ICG*"
+  ],
+  "prebuild_model_gaps": [
+    "sourcePDNextension/via/exclusion construction",
+    "priced branchplacement/cuts/slew constraints",
+    "actualsourceparentIO endpoint constraints"
   ],
   "production_track_source_sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632",
   "retained_evidence_commit": "3a6b71c33cf1cc976858aa856a661100aefa8b91",
