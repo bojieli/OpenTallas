@@ -106,7 +106,7 @@ def test_build_column_shards_without_unrequested_scale_or_mutable_images(tmp_pat
  base='Qwen.rank';rows=[]
  for die in (0,1):
   for suffix in ('codes','scales'):
-   rows.append(dict(provider_ref=f'{base}{die}.extent.L0.down.{suffix}',base=64+len(rows)*64,bytes=4,codec={'data':suffix},role='immutable_checkpoint_W8'if suffix=='codes'else 'immutable_checkpoint_BF16_scales'))
+   rows.append(dict(provider_ref=f'{base}{die}.extent.L0.down.{suffix}',base=64+len(rows)*64,bytes=4,codec={'data':'signed_INT8_row_major'if suffix=='codes'else 'BF16_little_endian'},role='immutable_checkpoint_W8'if suffix=='codes'else 'immutable_checkpoint_BF16_scales'))
  rows.append(dict(provider_ref='Qwen.rank0.extent.KV_provider_state',base=512,bytes=4,codec={'data':'state'},role='software_KV_publication_and_reader_lease_state'))
  consumed=[rows[0],rows[1],rows[2],rows[4]]
  n=dict(provider_binding={'allocation':[{'extents':rows}]},provider_binding_pin='explicit-fixture',operations=[{'provider_binding':{'external_providers':[{'provider_ref':x['provider_ref']}for x in consumed]}}],source_program=dict(weight_descriptors={f'd{d}':dict(die=d,layer=0,name='down',checkpoint_sources=['w'],folded_norm=None,rows=2,K=2)for d in (0,1)},config={'vocab_size':0,'hidden_size':2}))
@@ -116,6 +116,7 @@ def test_build_column_shards_without_unrequested_scale_or_mutable_images(tmp_pat
   def _verified_file(self,name):pass
   def provenance(self):return {'explicit_fixture':True}
  monkeypatch.setattr(E,'CheckpointWeights',Reader)
+ monkeypatch.setattr(B,'validate_checkpoint_inventory',lambda *args:{})
  monkeypatch.setattr(R,'validate_admission',lambda *args:None)
  monkeypatch.setattr(R,'guard',lambda *args,**kwargs:None)
  monkeypatch.setattr(B,'matrix_rows',lambda *args:iter([(0,b'abcd',b'efgh')]))
@@ -126,3 +127,39 @@ def test_build_column_shards_without_unrequested_scale_or_mutable_images(tmp_pat
  assert backend.active is None
  # Explicit resumed lifecycle must also skip an unconsumed scale without a KeyError.
  again=B.build(tmp_path,out,n,admission={});assert again['images']==manifest['images']
+
+
+def test_all290_matrix_inventory_is_validated():
+ plan=B.matrix_inventory(B.native());assert len(plan)==290
+ assert sum(p['scale_ref']is None for p in plan.values())==72
+ assert all(p['code_ref']for p in plan.values())
+ assert plan['L0.down.d0']['scale_ref']=='Qwen.rank0.extent.L0.down.scales'
+ assert plan['L0.down.d1']['scale_ref']is None
+
+@pytest.mark.parametrize('mutation',['codec','family','missing_descriptor','scale_owner'])
+def test_unsupported_matrix_inventory_rejected_before_pages(tmp_path,mutation):
+ n=B.native()
+ if mutation=='codec':B.extents(n)['Qwen.rank1.extent.L0.down.codes']['codec']['data']='packed_INT4_unsupported'
+ elif mutation=='family':n['source_program']['weight_descriptors']['L0.down.d1']['name']='unsupported_projection'
+ elif mutation=='missing_descriptor':del n['source_program']['weight_descriptors']['L0.down.d1']
+ else:
+  for op in n['operations']:
+   if op['opcode']=='ALL_REDUCE'and any(x['provider_ref']=='Qwen.rank0.extent.L0.down.scales'for x in op['provider_binding']['external_providers']):
+    op['provider_binding']['external_providers'][0]['provider_ref']='Qwen.rank1.extent.L0.down.scales';break
+ with pytest.raises(ValueError):B.build(tmp_path,tmp_path/'images',n,admission={})
+ assert not(tmp_path/'images').exists()
+
+
+@pytest.mark.parametrize('dtype',['bfloat16','float16'])
+def test_actual_checkpoint_header_format_gate(tmp_path,dtype):
+ import torch
+ from safetensors.torch import save_file
+ path=tmp_path/'source.safetensors';save_file({'w':torch.ones((2,4),dtype=getattr(torch,dtype))},str(path))
+ class Reader:
+  index={'w':'source.safetensors'}
+  def _verified_file(self,name):return path
+ descriptor=dict(name='down',die=1,K=2,rows=2,folded_norm=None,checkpoint_sources=['w'])
+ n={'source_program':{'weight_descriptors':{'actual-header':descriptor}}}
+ if dtype=='bfloat16':assert B.validate_checkpoint_inventory(Reader(),n)['actual-header'][0]['shape']==[2,4]
+ else:
+  with pytest.raises(ValueError,match='unsupported checkpoint matrix format'):B.validate_checkpoint_inventory(Reader(),n)
