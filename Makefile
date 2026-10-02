@@ -82,7 +82,15 @@ check-prose-coverage:
 check-headline-bundle:
 	python3 tools/headline_bundle.py --check
 
+.PHONY: check-final-number-readiness require-final-number-readiness check-historical-final-number-readiness
+
 check-final-number-readiness:
+	python3 tools/current_final_number_readiness.py --check
+
+require-final-number-readiness:
+	python3 tools/current_final_number_readiness.py --check --require-final
+
+check-historical-final-number-readiness:
 	python3 tools/final_number_readiness.py --check
 
 check-figures: check-evidence-grades check-prose-figures check-prose-coverage check-headline-bundle check-final-number-readiness

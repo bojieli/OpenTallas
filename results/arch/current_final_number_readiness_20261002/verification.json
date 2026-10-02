@@ -1,0 +1,19 @@
+{
+  "current_make_check": "PASS",
+  "docs_edited": false,
+  "historical_tool_and_report_unchanged": true,
+  "new_jobs": 0,
+  "require_final_exit": 1,
+  "require_final_scope": "Expected refusal: current targets incomplete",
+  "source_sha256": {
+    "Makefile": "a307e7f224b40f278af6876e6bfc5f63b838b4a1fe21b0dd2ff548a119fa7f2f",
+    "results/arch/current_final_number_readiness_20261002/audit.json": "c9caac7dbb6dc1d73e37c6f75a493d07b6c04a83b152583ed54c807821947e74",
+    "results/arch/current_final_number_readiness_20261002/readiness.json": "64dde581d5be54c22d96d10c6d5d19ef499841c12a70823d4d8d0d40c0fcc01a",
+    "results/arch/current_final_number_readiness_20261002/target_bindings.json": "7f97800ddeecc12b680aa0338f538218f77afaea28619e205a227f737a74800d",
+    "tests/test_current_final_number_readiness.py": "23ff5f34e2aaad9e9a36045e0683db2b598b668116a96f17ecbc28d65485f20c",
+    "tools/current_final_number_readiness.py": "a9237ced03cbb6d93086d580d638979a377657f2376d60b6bdb9e1404b798d10"
+  },
+  "test_command": "python3 -m unittest discover -s tests -p test_current_final_number_readiness.py -v",
+  "tests": 17,
+  "verdict": "PASS_READINESS_POLICY_REGRESSION"
+}
