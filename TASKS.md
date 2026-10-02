@@ -8,6 +8,8 @@ Integration/publication is coordinated by Codex. Workers use isolated worktrees 
 
 ## Immediate closure schedule — current parent review (2026-10-02)
 
+Latest connected diagnostic: the exact intended program now has accepted descriptor → first read ownership association and a reply after 53 source cycles. Parent replays the raw attribution, checks 105 generated-header members, seven artifact pins and six live input pins; 88 focused tests pass. This is an experimental X_ROM0 prefix, not the PHW10/I66 whole program. Finite service upper bound and completion deadline remain missing. Hubble/Nash close those source bounds and current-program admission before expanding connected execution. Evidence: `results/uarch/native_software_parent_intake_20261002/D1_enrolled_source_parent_review.json`.
+
 All baseline closure lanes run concurrently. Optional fusion, batching tuning and a second Qwen ROM decode position remain deferred. New heavy jobs use localhost, PVE1 and the 128 GB VM; PVE2/PVE3 only finish existing jobs. Preserve live pinned jobs and avoid duplicate builds.
 
 | Target | First closure deliverable | Parallel owners / independent work |
