@@ -1,0 +1,88 @@
+{
+  "files": {
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz": {
+      "bytes": 69351,
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz": {
+      "bytes": 69301,
+      "sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib": {
+      "bytes": 1510915,
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib": {
+      "bytes": 1513373,
+      "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz": {
+      "bytes": 317193,
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz": {
+      "bytes": 444914,
+      "sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/config.mk": {
+      "bytes": 10149,
+      "sha256": "c5c868f35c7c04365a074aef2d81c72641441a8070a117bcb1a35b696942507c"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/inputs/setRC.tcl": {
+      "bytes": 1159,
+      "sha256": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/model.json": {
+      "bytes": 83586,
+      "sha256": "da936792a8c0bf39d7f3b16672834514a708de70269ba1e4e91e69026cf933d9"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/model_r2.json": {
+      "bytes": 84632,
+      "sha256": "fd73eb05d153d9a8a213cb0a49c7bc428a660b873d370fa467c375040f67a313"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/model_r3.json": {
+      "bytes": 85049,
+      "sha256": "55032d05aa6940cffabab19945b15c734ea10c879151d60b9bac7286cd87f37b"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/prepare_failure_r1.json": {
+      "bytes": 254,
+      "sha256": "40ba91663c7aada980d81162626165a8627ac3c89b3849e70d2098ec07abe354"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/source_manifest.json": {
+      "bytes": 2844,
+      "sha256": "e2fb1e9421187fe523615dbb1475003746c302f15a6fdbf3f607687776db28bd"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/static_tests.log": {
+      "bytes": 1014,
+      "sha256": "e5121c54e73b0e91d873ca25e901a6cea73faf34e409fffa4b657c6556c73659"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/static_tests_r2.log": {
+      "bytes": 1014,
+      "sha256": "cfe73ce31749a1c961a5b33beedc5ac795d4a24045991620a23fe912b26a017e"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/track_turn_regression.log": {
+      "bytes": 783,
+      "sha256": "c7f69dc667c463f13bae65fac745bebf04c39187c0e9f7ccc9d46e758f0717bb"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/unit_probe.log": {
+      "bytes": 2916,
+      "sha256": "94a32ec0ad653a6862d7d2ec94634c4aab3d8b9885a4598401a1fede4027da00"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/unit_probe.tcl": {
+      "bytes": 352,
+      "sha256": "4f3b7abac71c6ee89ee3b4ab6433b5c78a988b66f0bbd59667654408dc33d19a"
+    },
+    "results/uarch/topk_station_SSFF_cell_model_20261002/validation.json": {
+      "bytes": 1452,
+      "sha256": "c651bcc6927cb4d1476c0b1cd631640fe2e85db5b38200467c98e93867f7c6ad"
+    },
+    "tests/test_uarch_topk_station_SSFF_cell_model.py": {
+      "bytes": 5827,
+      "sha256": "6317ac88614f9fd690cd145d8db0516b1d5f68ef7f9c7c87aef63411a67c9755"
+    },
+    "tools/uarch_topk_station_SSFF_cell_model.py": {
+      "bytes": 13096,
+      "sha256": "39a9310350fe557e17f87306d372abf557df2e865a6552a147ba228edbf898a0"
+    }
+  }
+}
