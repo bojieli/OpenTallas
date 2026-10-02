@@ -1,0 +1,110 @@
+{
+  "ack_promotion": "Existing RX ACK is packet-delivery evidence only; result ACK must also follow owned VM publication",
+  "coordination": "No direct agent messaging capability was available. This file is the reviewable interface handoff for parent/Nash; no acknowledgment claimed.",
+  "current_callbacks": [
+    "registered source acceptance and indexed EID response",
+    "owner phase/key hit before spine accept",
+    "per-reserved-domain accepted capture with complete operation identity",
+    "all576 postNBA destination publication",
+    "causal ACK after final owned service delivery",
+    "busy-qualified source idle and operation retire after all debt"
+  ],
+  "header_mapping": {
+    "eid": "EID",
+    "generation": "generation",
+    "key": "key_word",
+    "phase": "phase",
+    "rank": "rank",
+    "stage": "stage",
+    "user": "user"
+  },
+  "model_path": "/home/ubuntu/dsrom-I66-standalone-calibration-20261002/results/uarch/dsrom_I66_stage_provider_20261002/model.json",
+  "model_sha256": "fcbe20a9fe2270fa02e22954a9126aa7737def706a447a5682cbdfba39e2f3ff",
+  "owner": "Nash stage-provider implementation; read-only interface review, no transport edits",
+  "physical_provider_selected": false,
+  "planned_software_ABI": {
+    "compact_kernel_flits": 1,
+    "compact_source_kernel_argument_bits": 208,
+    "forward_input": "320 aligned512b VM words via640 payload flits, chunked254/254/132",
+    "generation_user_widths_are_new_candidate_contract": true,
+    "header_bits": 236,
+    "header_fields": [
+      [
+        "magic",
+        32
+      ],
+      [
+        "kind",
+        3
+      ],
+      [
+        "stage",
+        6
+      ],
+      [
+        "rank",
+        2
+      ],
+      [
+        "eid",
+        9
+      ],
+      [
+        "phase",
+        10
+      ],
+      [
+        "key",
+        32
+      ],
+      [
+        "generation",
+        32
+      ],
+      [
+        "user",
+        32
+      ],
+      [
+        "offset",
+        19
+      ],
+      [
+        "count",
+        13
+      ],
+      [
+        "pc",
+        14
+      ],
+      [
+        "xversion",
+        32
+      ]
+    ],
+    "no_checkpoint_payload": true,
+    "original_descriptor_audit_bits": 2048,
+    "padded_header_flits": 1,
+    "return_output": "36 aligned512b VM words via72 payload flits, golden BF16-in-FP32 data unchanged",
+    "total_command_flits": 2
+  },
+  "source_contract": {
+    "ACK_TIMEOUT": 1024,
+    "ACK_after_last_service_delivery": true,
+    "FLIT_W": 256,
+    "MAX_FLITS": 256,
+    "RETRY_MAX": 2,
+    "SEQ_W": 8,
+    "VM_address_bits": 19,
+    "abort_input_tied_low_in_existing_endpoint": true,
+    "exclusive_VM_bridge_arbitration_present": false,
+    "existing_external_VM_write_bits": 512,
+    "external_VM_read_bits": 512,
+    "local_root_bits": 69,
+    "local_writer_bits": 63,
+    "physical_serialization_outside_wrapper": true,
+    "rx_packet_credit": 1,
+    "tx_packet_credit": 1
+  },
+  "xversion": "Nash input-reuse version must be qualified independently; this gate does not grant input cache reuse"
+}

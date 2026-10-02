@@ -1,0 +1,60 @@
+{
+  "actual_measured_scope": "PHW10_OLDER_CORE_NATIVE_CONE_ONLY",
+  "actual_missing": [
+    "Current PHW10 fullprogram compiled binary and reviewed source/parameter closure",
+    "canonical complete r0..3 prog.hex and separate field bundles with actual runtime argv",
+    "accepted current-core registered EID and owner-qualified provider journal",
+    "phase-specific successful reserved schedule for selected EID with delivery/ACK/source calendar qualification"
+  ],
+  "collector_schema": {
+    "core_samples": "adjacent preedge samples with complete identity and strict fields; S_ISSUE->registered adapter accept->EID VM read/response->key hit->phase accept",
+    "generation": "Provider command-ledger ownership generation, not a DUT getter. Core/adapter samples must correlate with the actual accepted sequence; sequence alone cannot qualify a generation.",
+    "no_input_reuse_credit": "No reuse/caching claim. Nash xversion and accepted input provenance need their own qualified binding before any saved service is credited.",
+    "provider_packets": "ordered ordinal/edge/identity/kind/id; capture+publish require bits; publish additionally row/address; ACK/source_idle/operation_retire cannot arise from prediction or PC/busy",
+    "qualification": "CURRENT_PHW10_FULLPROGRAM manifest pins full source files, callback sources, all four complete programs, all field bundles, and EID-specific plan/calendar/phase hashes",
+    "runtime": "actual rank_plusargs with exactly one DIR and OT_ROM_DIR; binary/compile-manifest/journal hashes"
+  },
+  "current_entry": "python3 tools/dsrom_I66_actual_service_join.py --enrollment CURRENT.json --plan QUALIFIED_PHASE_PLAN.json --trace ACTUAL_ENROLLED_JOURNAL.json --out RESULT.json",
+  "current_fullprogram_status": "BLOCKED_NO_ENROLLED_CURRENT_PHW10_BINARY_AND_ACCEPTED_JOURNAL",
+  "fulltoken": false,
+  "hardware_admission": false,
+  "local_reserved_final_publication_edge": 420,
+  "measured_events": 322308,
+  "measured_operation_edges": 412,
+  "measured_phase_edges": 407,
+  "not_transferred": [
+    "historical PHW6",
+    "D1 X_ROM0",
+    "EID0 to all384",
+    "local reservation to physical remote provider",
+    "calibration to full token"
+  ],
+  "owner_worktree": "/tmp/opentallas-I66-reserved-service-observer-20261002",
+  "prerequisites": [
+    "8af79b4d0c8b1010e6886cca1e45c26e51433742",
+    "95014f025091a238dd7ccbe96fc704ed25cbcb05",
+    "819d3dbf1d8410acbd5516e561031e253f51d343",
+    "5a373d0fd11fe9445660af9872fd410b94788e38",
+    "86dc31256bccff296b8289adb887c3cc025d2f83"
+  ],
+  "remote_finite_bound": "Requires phase-specific qualified plan plus actual input/capture/publication/ACK/source-retirement packets; retained cone has no transport ACK",
+  "replay": "python3 tools/dsrom_I66_actual_service_join.py --measured-cone --out /tmp/I66-phase-replay.json",
+  "resource": {
+    "builds": 0,
+    "hardware_ports": 0,
+    "process_limits": [],
+    "relinks": 0,
+    "runtimes": 0,
+    "source_changes": 0
+  },
+  "schema": "opentallas.I66.actual-service-join.v1",
+  "source_conditional_completion_edge": 422,
+  "validation": {
+    "byte_exact_replay": true,
+    "existing_tests": 64,
+    "new_build_or_runtime": false,
+    "new_tests": 47,
+    "protected_files_byte_identical": 49,
+    "total_PASS": 111
+  }
+}
