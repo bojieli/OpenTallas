@@ -1,0 +1,31 @@
+{
+  "artifact_sha256": {
+    "results/rtl/dsrom_return_wake_context_prepare_20261002/model.json": "33d99f92ae5f2bee5f51648d9c6711b53a2e1a4868d21539c3f26befdcbfcd9c",
+    "results/rtl/dsrom_return_wake_context_prepare_20261002/sourceplan.json": "90ad62a5f9dfe1815a92e56eb3a8e17805008a80fdde66cc0f98dd0fcc033640",
+    "results/rtl/dsrom_return_wake_context_prepare_20261002/static_tests_r1.log": "20f202345a99e6a324c57cebf53c25edb5e37ca0fe61ba033540a5689b9d6e92",
+    "results/rtl/dsrom_return_wake_context_prepare_20261002/static_tests_r2.log": "25aacc8af12a871119d502ffdb3c9bb2c0d43296e3cc2555f212317bd98cbdb3",
+    "results/rtl/dsrom_return_wake_context_prepare_20261002/static_tests_r3.log": "d6dd2b4d7fd94f3d1bfcc3b0fee7cfc00f5f21d2706625bdcb4f247465bbdcb9",
+    "tests/test_dsrom_return_wake_context.py": "145ff9282a90d43507b6e354b7316d645f325c8100ab10aec3b0e7b241c342b1",
+    "tools/model_dsrom_return_wake_context.py": "d69f93edb97ee95c6123db617a9b119208d97c07a4278598487f962143c44512"
+  },
+  "baseline_commit": "47f2a7625092fbd5d3fe5229a3437094e4e5823a",
+  "fleet_drain": {
+    "new_admissions": "Forbidden on both hosts; existing running tasks finish normally without kill or migration. No fleet mutations performed.",
+    "ot_pve2_owned_jobs": [],
+    "ot_pve3_owned_jobs": [],
+    "pending_chains": []
+  },
+  "joined_hardware_commit": "0c51556275864679b407ace696ae136208bce1b5",
+  "next_review": "Review sourceplan blockers and actual manufacturing/return/drain model before new source-bound execution GO. This preparation does not authorize launch.",
+  "preservation": "Tracked working/index diff empty before explicit new-file staging; joined implementation, runner, oracle, all prior outcomes unchanged.",
+  "scope": "Source-sized return and exact WAKE/RNE clock-context review only. Parent owns q/BF terminal outcome verification/commit. Full-field numerical, SS/FF physical, full-token and adoption claims remain false.",
+  "status": "ADDED_ONLY_CONTEXT_MODEL_PREPARATION_STATIC_PASS_NO_EXECUTION",
+  "validation": {
+    "HDL_compile": false,
+    "PNR": false,
+    "STA": false,
+    "command": "python3 -m unittest discover -s tests -p test_dsrom_return_wake_context.py -v",
+    "log": "results/rtl/dsrom_return_wake_context_prepare_20261002/static_tests_r3.log",
+    "tests": 8
+  }
+}
