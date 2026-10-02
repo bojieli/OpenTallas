@@ -1,0 +1,17 @@
+test_ME_field_mutant (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_absent_trace_blocked (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_archive_corruption (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_complete_retained_identity (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_fixture_complete_512_state (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_missing_owner (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_no_zero_fill (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_owner_substitution (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_pc_order (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_retained_pin_not_manifest_only (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_split_aware_decode (test_qwen_rom_program_identity_journal.GateTests) ... ok
+test_word_substitution (test_qwen_rom_program_identity_journal.GateTests) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.025s
+
+OK
