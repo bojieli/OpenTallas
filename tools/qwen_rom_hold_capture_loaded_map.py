@@ -11,6 +11,19 @@ from qwen_rom_macro_capture_sta import parse_slack
 MODEL='645ae1dd79eed8c20319574e4143b3c0c7b5551d'
 MODEL_PATH='results/uarch/qwen_rom_direct_capture_control_20261002/model-r2.json'
 BASE=ROOT/'results/uarch/qwen_rom_hold_capture_literal_gate_20261002'
+def consumer_endpoints(net):
+    bits=set(net['netnames']['consumer_q']['bits'])
+    # QN is inverted: follow only the explicit single-input inverter, not
+    # arbitrary combinational predecessors, to identify each actual endpoint.
+    inv={c['connections']['Y'][0]:c['connections']['A'][0]
+         for c in net['cells'].values() if c['type']=='INVx1_ASAP7_75t_R'}
+    qbits={inv.get(b,b) for b in bits}
+    endpoints=[name+'/D' for name,c in net['cells'].items()
+               if c['type']=='DFFHQNx1_ASAP7_75t_R' and c['connections']['QN'][0] in qbits]
+    if len(endpoints)!=512 or len(qbits)!=512:
+        raise ValueError('Actual512bit endpoint cells missing')
+    return endpoints
+
 def block(text,start):
     pos=text.index('{',start);depth=1;i=pos+1
     while depth:
@@ -150,9 +163,7 @@ write_json {workdir/'mapped.json'}
         area=sum(n*float(re.search(r'\barea\s*:\s*([\d.]+)',cells[t])[1]) for t,n in counts.items() if t in cells)
         record.update(mapped_cell_counts=counts,local_selector_net_names=local,unique_local_selector_bits=len(set(local_bits)),replicas_preserved=preserved,
           mapped_logic_area_um2_including_existing_endpoint=area,mapped_netlist_sha256=hashlib.sha256((workdir/'mapped.v').read_bytes()).hexdigest())
-        endpoint_bits=set(net['netnames']['consumer_q']['bits'])
-        endpoints=[name+'/D' for name,c in net['cells'].items() if c['type']=='DFFHQNx1_ASAP7_75t_R' and c['connections']['QN'][0] in endpoint_bits]
-        if len(endpoints)!=512:raise ValueError('Actual512bit endpoint cells missing')
+        endpoints=consumer_endpoints(net)
         record['consumer_endpoint_D_pins']=endpoints
         timings=[]
         for corner in ['ss','ff']:

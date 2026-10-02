@@ -28,3 +28,14 @@ def test_full_loaded_cone_retains_actual_macro_loop_and_existing_endpoint():
     assert 'ROM_HOLD_DIRECT_CAPTURE=1' in cone and 'CODE_BANKS=5' in cone
     assert 'always @(posedge clk) consumer_q <= wrom_q;' in cone
     assert 'input wire [2*CODE_BANKS*266-1:0] rom_rd' not in cone
+
+
+def test_consumer_endpoint_resolution_follows_only_actual_qn_inverters():
+    from qwen_rom_hold_capture_loaded_map import consumer_endpoints
+    net={'netnames':{'consumer_q':{'bits':list(range(512))}},'cells':{}}
+    for i in range(512):
+        net['cells'][f'inv{i}']={'type':'INVx1_ASAP7_75t_R','connections':{'A':[1024+i],'Y':[i]}}
+        net['cells'][f'ff{i}']={'type':'DFFHQNx1_ASAP7_75t_R','connections':{'QN':[1024+i]}}
+    assert set(consumer_endpoints(net))=={f'ff{i}/D' for i in range(512)}
+    del net['cells']['ff0']
+    with pytest.raises(ValueError):consumer_endpoints(net)
