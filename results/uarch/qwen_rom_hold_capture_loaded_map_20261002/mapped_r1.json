@@ -1,0 +1,24 @@
+{
+  "PnR": false,
+  "SS_capacitance_and_slew_limits_violated": true,
+  "SS_macro_direct_capture_slack_ps": 11.028789,
+  "SS_worst_setup_slack_ps": -922.471863,
+  "data_FFs_including_existing512bit_endpoint": 3072,
+  "failures": [
+    "Yosysmerged80local-selector registers to5 despite wirekeep attributes; fixed Maxwell80FF topology notqualified.",
+    "FFfull-libraryjoin refused conflicting delay_template_7x7 definitions; no waiver used.",
+    "Consumer endpoint instance wildcard didnot match generated cellnames; resolve actual mapped Qconnections instead.",
+    "All-groups STA containsmultiple paths; use explicit worst-path parsing with all diagnostics stillrejected."
+  ],
+  "hardware_adoption": false,
+  "local_selector_net_names": 80,
+  "metadata_FFs": 11,
+  "raw_macro_count": 10,
+  "source_RTL_to_remain_unchanged": true,
+  "source_commit": "657407e0f",
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_rom_tile_hold_capture_candidate.sv": "7d266efbf0a074b1d92c374bcd58fc32707ef573e767d5262d5a64ff2c9c7151"
+  },
+  "status": "FAIL_REPLICA_PRESERVATION_AND_FF_LIBRARY_TEMPLATE_JOIN",
+  "unique_local_selector_FF_Q_bits": 5
+}
