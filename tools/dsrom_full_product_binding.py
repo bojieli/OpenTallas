@@ -88,14 +88,18 @@ def prepare():
                 'coverage': 'all40 layers, all384 routed experts, shared experts, constants, nonexpert, head/embed, table homes separately',
                 'bindings': 'exact node ID x rank: provider, source_receipts, semantic_sha256, address_patches, owner_grain, calendar',
                 'semantic_sha256': 'digest of complete original node; protects shapes, rounding, predicates, actions and order',
-                'calendar': 'domain, accept_cycles, complete_cycles, issue_interval_cycles, completion_dependencies; all finite and source-receipted',
+                'calendar': 'domain, accept_cycles, complete_cycles, issue_interval_cycles, completion_dependencies, acceptance_dependencies; finite and source-receipted',
+                'resources': 'id -> global/rank scope, owner, domain, issue_interval_cycles, minimum_issue_cycles, optional capacity_bits_per_cycle, source_receipts; binding resource_claims give resource/order/release/demand_bits with resource_coverage_receipts',
+                'rendezvous': 'id -> all4 exact original collective rank node IDs; same start after prior readiness, never mutual peer-completion dependencies',
                 'ordered_grains': 'golden contiguous indivisible owners, area_um2_by_rank[4], q_pairs_by_rank[4], BF_pairs_by_rank[4], tensor_assignment evidence; footprint includes mandatory RNE/WAKE exactly once',
+                'owner_groups': 'actual ordered assignment; candidate_id DS4096-TP4-S58-PAIR1 / TP4; exactly58 layer groups, other head/table roles explicitly priced, no automatic replacement count',
                 'compiled_field': 'NP, NBF, physical_macros_per_pair=4, source_receipts for exact site/bank mapping; all unused q/BF compiled sites charged, not active-only allocation',
                 'capacity_ledger': '26x33mm minus unique source-receipted service/routing_clock_PG/return debits; per-group service replication; compiled_NP/R/NBF/RD/ROOTD/RST defines declared return (not active mask), resizing requires full allocator padded topology binding; no native-area discount without native binding',
                 'provider_ABI': 'explicit original HDC unit support; a 274-bit field cannot be called ME32/QE without a bound adapter',
                 'coverage_receipts': 'provider contracts and independent allocator verification, never a bare boolean'},
             'readiness': {'ISA_execution': False, 'RTL_build': False, 'physical_admission': False, 'full_token_rate': False},
-            'return_source': return_source_receipt(), 'jobs_launched': 0}
+            'return_source': return_source_receipt(),
+            'resource_compiler_sha256': hashlib.sha256((ROOT/'tools/dsrom_finite_resources.py').read_bytes()).hexdigest(), 'jobs_launched': 0}
 
 def pack_ordered(grains, capacity_um2):
     """Minimum contiguous groups for fixed ordered atoms and common rank capacity.
@@ -265,10 +269,33 @@ def verify_input_receipts(allocation):
     walk(allocation)
     return [{'commit': k[0], 'path': k[1], 'sha256': v} for k, v in sorted(checked.items())]
 
+def allocator_groups(allocation, capacity):
+    if allocation.get('candidate_id') != CANDIDATE or allocation.get('TP') != 4:
+        raise ValueError('single shared S58/TP4 candidate binding required')
+    atoms = allocation['ordered_grains']; ids = [a['id'] for a in atoms]
+    if len(set(ids)) != len(ids) or any(not a.get('tensor_assignment_receipts') for a in atoms):
+        raise ValueError('duplicate/unproved full-product owner atom')
+    assigned = allocation['owner_groups']
+    if sum(g['role']=='layer' for g in assigned) != 58:
+        raise ValueError('one shared candidate requires actual58 layer ownership groups, no independent count selection')
+    if [a for g in assigned for a in g['owners']] != ids:
+        raise ValueError('full ordered owner assignment missing/duplicated/reordered')
+    lookup = {a['id']:a for a in atoms}; result=[]
+    for g in assigned:
+        if not g['owners'] or not g.get('source_receipts'):
+            raise ValueError('empty or unsourced owner group')
+        area = [sum(Fraction(str(lookup[a]['area_um2_by_rank'][r])) for a in g['owners']) for r in range(4)]
+        if any(v<0 or v>capacity for v in area):
+            raise ValueError('actual owner group exceeds corrected field capacity')
+        result.append(dict(g,area_um2_by_rank=[float(x) for x in area]))
+    return result
+
 def compose(demand, allocation, *, fixture_only=False):
     if not fixture_only:
         if demand["source_pins"] != source_pins():
             raise ValueError("full product demand source currency")
+        if demand.get("resource_compiler_sha256") != hashlib.sha256((ROOT/"tools/dsrom_finite_resources.py").read_bytes()).hexdigest():
+            raise ValueError("shared resource compiler source currency")
         F.validate_program(demand["functional_program"])
         if digest(demand["functional_program"]) != demand["functional_program_sha256"]:
             raise ValueError("functional emitter identity")
@@ -280,7 +307,7 @@ def compose(demand, allocation, *, fixture_only=False):
     if not allocation.get('coverage_receipts'):
         raise ValueError('full tensor/format/constant coverage verification required')
     capacity = field_capacity(allocation['capacity_ledger'])
-    groups = pack_ordered(allocation['ordered_grains'], capacity)
+    groups = pack_ordered(allocation['ordered_grains'], capacity) if fixture_only else allocator_groups(allocation, capacity)
     padding = [] if fixture_only else validate_padding(allocation, groups, capacity)
     owner_group = {a: i for i, g in enumerate(groups) for a in g['owners']}
     bindings = allocation['bindings']
@@ -333,44 +360,51 @@ def compose(demand, allocation, *, fixture_only=False):
             if not required <= deps:
                 raise ValueError('missing ISA wait/END/scope completion fence: ' + nid)
             specs[nid] = {'binding': b, 'period': period, 'previous': previous,
-                          'dependencies': sorted(deps), 'owner_group': owner_group[b['owner_grain']]}
+                          'dependencies': sorted(deps), 'owner_group': owner_group[b['owner_grain']],
+                          'unit': node.get('instruction',{}).get('unit'),
+                          'collective_input_bits': (node['instruction'].get('coll_n',0)*(64 if node['instruction'].get('coll_op')==2 else 32)) if node['kind']=='instruction' else 0}
             scope_nodes.append(nid)
             previous = nid
-    # Topological timing over all ranks supports causal peer collectives; rank0
-    # is not evaluated as though the other three ranks were already free/ready.
-    completed = {}
-    prior_provider = {}
-    for nid, spec in specs.items():
-        key = (nid.rsplit('.R', 1)[1], spec['binding']['provider'])
-        spec['prior_provider'] = prior_provider.get(key)
-        prior_provider[key] = nid
-    pending, users = {}, {nid: [] for nid in specs}
-    for nid, spec in specs.items():
-        deps = set(spec['dependencies'])
-        deps.update(x for x in (spec['previous'], spec['prior_provider']) if x)
-        pending[nid] = len(deps)
-        for dep in deps:
-            users[dep].append(nid)
-    ready = deque(nid for nid in specs if pending[nid] == 0)
-    while ready:
-        nid = ready.popleft(); spec = specs[nid]
-        c = spec['binding']['calendar']; period = spec['period']; times = [Fraction(0)]
-        if spec['previous']:
-            times.append(completed[spec['previous']][1])
-        if spec['prior_provider']:
-            prior = specs[spec['prior_provider']]
-            times.append(completed[spec['prior_provider']][0] +
-                         prior['binding']['calendar']['issue_interval_cycles'] * prior['period'])
-        times.extend(completed[d][2] for d in spec['dependencies'])
-        start = max(times)
-        completed[nid] = (start, start + c['accept_cycles'] * period,
-                          start + c['complete_cycles'] * period)
-        for user in users[nid]:
-            pending[user] -= 1
-            if pending[user] == 0:
-                ready.append(user)
-    if len(completed) != len(specs):
-        raise ValueError('cyclic acceptance/completion dependencies')
+    resource_receipts=[]
+    if not fixture_only or allocation.get('resources'):
+        import dsrom_finite_resources
+        completed,resource_receipts=dsrom_finite_resources.price(specs,allocation.get('resources',{}),allocation.get('rendezvous',{}))
+    else:
+        # Topological timing over all ranks supports causal peer collectives; rank0
+        # is not evaluated as though the other three ranks were already free/ready.
+        completed = {}
+        prior_provider = {}
+        for nid, spec in specs.items():
+            key = (nid.rsplit('.R', 1)[1], spec['binding']['provider'])
+            spec['prior_provider'] = prior_provider.get(key)
+            prior_provider[key] = nid
+        pending, users = {}, {nid: [] for nid in specs}
+        for nid, spec in specs.items():
+            deps = set(spec['dependencies'])
+            deps.update(x for x in (spec['previous'], spec['prior_provider']) if x)
+            pending[nid] = len(deps)
+            for dep in deps:
+                users[dep].append(nid)
+        ready = deque(nid for nid in specs if pending[nid] == 0)
+        while ready:
+            nid = ready.popleft(); spec = specs[nid]
+            c = spec['binding']['calendar']; period = spec['period']; times = [Fraction(0)]
+            if spec['previous']:
+                times.append(completed[spec['previous']][1])
+            if spec['prior_provider']:
+                prior = specs[spec['prior_provider']]
+                times.append(completed[spec['prior_provider']][0] +
+                             prior['binding']['calendar']['issue_interval_cycles'] * prior['period'])
+            times.extend(completed[d][2] for d in spec['dependencies'])
+            start = max(times)
+            completed[nid] = (start, start + c['accept_cycles'] * period,
+                              start + c['complete_cycles'] * period)
+            for user in users[nid]:
+                pending[user] -= 1
+                if pending[user] == 0:
+                    ready.append(user)
+        if len(completed) != len(specs):
+            raise ValueError('cyclic acceptance/completion dependencies')
     for nid, spec in specs.items():
         start, accept, complete = completed[nid]
         events.append({'id': nid, 'owner_group': spec['owner_group'],
@@ -381,6 +415,8 @@ def compose(demand, allocation, *, fixture_only=False):
     return {'schema': 'opentallas.dsrom.full-product-composed.v1',
             'demand_sha256': digest(demand), 'allocation_sha256': digest(allocation),
             'verified_input_receipts': receipts, 'synthetic_fixture_only': fixture_only,
+            'resource_reservations': resource_receipts,
+            'resource_coverage_bound': bool(resource_receipts),
             'groups': groups, 'contiguous_ownership_groups': len(groups),
             'packing_scope': 'fixed ordered atoms/common field capacity; padding must pass, no topology or count adopted',
             'compiled_padding': padding,
