@@ -3,6 +3,11 @@
 import argparse,hashlib,json,subprocess,time
 from pathlib import Path
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def prior_path(prior,key):
+    if key.endswith('_prepared'):return prior/(key.removesuffix('_prepared')+'.lib')
+    if key.startswith('macro_'):return prior/(key.removesuffix('_lib')+'.lib')
+    if key.endswith('_mapped_verilog'):return prior/key.removesuffix('_mapped_verilog')/'mapped.v'
+    return None
 def run(prior,out):
     if out.exists():raise ValueError('Preserve every probe; no overwrite')
     root=Path(__file__).resolve().parents[1]
@@ -10,11 +15,8 @@ def run(prior,out):
     r=json.loads((prior/'record.json').read_text())
     if r['status']!='MEASURED_INTRINSIC_CAPTURE_ONLY_CONTEXT_OPEN':raise ValueError('Completed retained campaign required')
     for key,digest in r['inputs'].items():
-        if key.endswith('_prepared'):
-            p=prior/(key.removesuffix('_prepared')+'.lib')
-        elif key.startswith('macro_'):p=prior/(key+'.lib')
-        elif key.endswith('_mapped_verilog'):p=prior/key.removesuffix('_mapped_verilog')/'mapped.v'
-        else:continue
+        p=prior_path(prior,key)
+        if p is None:continue
         if sha(p)!=digest:raise ValueError('Retained campaign changed: '+key)
     out.mkdir(parents=True)
     prefix=(prior/'q/ss.tcl').read_text().split('report_checks',1)[0]
