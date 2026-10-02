@@ -1,0 +1,88 @@
+{
+  "schema": "DS_ACTUAL_COMPACT_CHECKPOINT_V3_VALIDATED_COMPONENT_MILESTONE",
+  "status": "PASS_COMPONENT_NOT_PRODUCTION_CAPTURE_OR_RESTORE",
+  "owned_worktree": "/tmp/ds-checkpoint-compact-v3-20261002",
+  "canonical_kepler_commit": "a2dcbf6809b70584eda6538922e06f7ad77926e7",
+  "source_entrypoint": "tools/ds_producer_checkpoint_resume_v3.py",
+  "source_sha256": "e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e",
+  "explicit_selection": "import ds_producer_checkpoint_resume_v3 as checkpoint; bind this SHA and V3 schema in launcher; no automatic fallback or V2 payload migration",
+  "apis": [
+    "project_checkpoint",
+    "capture_quiescent",
+    "verify_checkpoint",
+    "restore_quiescent",
+    "join_storage_projection"
+  ],
+  "new_implementation": [
+    "Exact compact calendar/R54 constructor and logger/closure role enrollment resolves missing ROLE_PINS lookup without exempting native capacity",
+    "Original ProductionSharedFactory retained; nonempty owner/extent/serial/provider backing and port counters saved and checked",
+    "Compact lifecycle live/fault checks; actual tag generation watermarks/capacities/last_tick saved and restored without events replay",
+    "Complete flat historical dictionary/event/index inventory, flush/fsync/SHA/stat closure and exact set refusal before restore",
+    "46-byte streaming actual sector records including validity; bounded target/rank table replaces per-sector JSON object metadata",
+    "Actual typed metadata, deep Python metadata footprint, noncontiguous array temporary and conservative 1MiB I/O workspace priced; existing-live/cold-restore memory remains separate"
+  ],
+  "tests": {
+    "successor_components": 56,
+    "compact_actual_and_refusal": 7,
+    "sector_codec_and_metadata": 4,
+    "total": 67,
+    "commands": [
+      "python3 -m pytest -q tests/test_ds_producer_checkpoint_resume_v3.py tests/test_ds_checkpoint_compact_runtime_v3.py",
+      "python3 -m pytest -q tests/test_ds_checkpoint_sector_codec_v3.py"
+    ]
+  },
+  "actual_component": {
+    "scope": "Small native FADD/FMUL prefix operands and actual addressed RF/state/shared provider; PC10 ProductionSharedFactory actual 32B write/read/reverse credits; not full PC10 collective arithmetic or trained prefix",
+    "stored_payload_bytes": 5502,
+    "typed_metadata_bytes": 4509,
+    "metadata_serialization_peak_envelope_bytes": 75393,
+    "checkpoint_disk_reservation_bytes": 38288,
+    "historical_journal_files": 5,
+    "historical_journal_bytes": 57255,
+    "events_replayed_as_data": false
+  },
+  "negative_controls": [
+    "live lifecycle debt",
+    "retained stream fault",
+    "mismatched watermark",
+    "altered sealed journal bytes",
+    "extra sealed-journal files",
+    "wrong enrolled source SHA",
+    "invalid sector extent",
+    "duplicate serialized sector",
+    "bad target/rank index",
+    "legacy 56 source/home/lease/partial/tamper/continuation component controls"
+  ],
+  "preserved_failure": "tests_original_components_attempt1.log:53 PASS/3 FAIL; controls initially continued old producer journal after sealing, correctly refused historical drift. Separate continuous component execution and captured producer now keep old sealed journal immutable; hash predicate unchanged.",
+  "production_admission": {
+    "reported_available_bytes": 849284476928,
+    "reported_continuation_journal_bytes": 819950818992,
+    "remaining_before_checkpoint_bytes": 29333657936,
+    "actual_live_payload_bytes": null,
+    "actual_production_metadata_peak_bytes": null,
+    "capacity_reservation_acquired": false,
+    "requirements": [
+      "Use current Kepler actual engine/provider/witness; project actual state at quiescent contiguous retired boundary",
+      "join_storage_projection must include positive incremental continuation journal/index/dictionary plus checkpoint/metadata/other new bytes against fresh free space",
+      "Freeze old journal after capture and retain it; continue in exact validated new run-scope root",
+      "Future source views, whole native graph, homes, dispatch, last_use, retention policy, checkpoint inputs and generation identities remain exact",
+      "Cold constructor uses actual source/checkpoint inputs; expected outputs and witness values are never serialized as stimulus"
+    ],
+    "hash_io": "Complete historical journal hashing is O(actual journal bytes) per verification pass; production duration unmeasured. Historical source/stat/SHA evidence cannot be reconstructed from reference outputs."
+  },
+  "unchanged": "V1/V2 helpers and tests, canonical provider/arithmetic/endpoint sources and physical port resources byte-identical; see canonical_source_enrollment.json",
+  "no_jobs": {
+    "production_prefix_launch": false,
+    "RTL_compile": false,
+    "pve2_new": false,
+    "pve3_new": false
+  },
+  "qualification": {
+    "actual_R45_payload_checkpoint_available": false,
+    "production_capture_restore": false,
+    "whole_token": false,
+    "hardware": false,
+    "physical": false,
+    "rate": false
+  }
+}

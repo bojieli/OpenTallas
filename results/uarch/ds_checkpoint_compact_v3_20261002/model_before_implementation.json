@@ -1,0 +1,29 @@
+{
+  "schema": "DS_COMPACT_CHECKPOINT_V3_MODEL_BEFORE_IMPLEMENTATION",
+  "source_base": "f38d69896d9e954f8b094b5ab93774d7281cafb6",
+  "source_sha256": {
+    "tools/h3_complete_native_calendar_successor_r1.py": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21",
+    "tools/ds_hbm_additive_endpoint_join_r54.py": "00bd0b2fa93de9afd11ca65722563fec2df939729a937413f4e66451418d36c2",
+    "tools/hbm_bound_event_journal_r30.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0",
+    "tools/h3_ds_checkpoint_provider_r30.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9"
+  },
+  "immutable_v1_v2_helpers": true,
+  "enrollment": "Exact dc04 additive calendar CompactJournalBudget/CompactDiskEvents and R54 verify_installed_provider constructor+logger+closure predicates; original provider files/physical port parameters unchanged",
+  "journal_roles": "Source compact reservation still refusal before source admission; no blanket capacity exemption. Source classes, installer aliases and journal source in full cold identity.",
+  "lifecycle_saved": [
+    "generations",
+    "last_tick",
+    "tag_capacity",
+    "write_capacity"
+  ],
+  "lifecycle_quiescence": "live empty, both validator and stream fault None, stream open; preserved generation watermarks match actual port; restore creates no historical events",
+  "journal_inventory": "All actual root files, dictionary/events/indexes, sorted byte sizes and hashes/stat stamps after flush+fsync; unknown/symlink/partial pairing fails. Original files retained, no replay as data.",
+  "sector_encoding": "46B/actual resident sector =uint16 target/rank table index +uint64 sector +uint32 validity +32actual bytes; metadata O(number of ports/target table), rather than JSON object per sector; no full sector metadata tree materialization",
+  "metadata_peak": "Exact typed metadata bytes plus deterministic counted deep Python tree footprint and maximum ndarray temporary; no process cap, report separately from already-live provider and restore duplication",
+  "journal_bytes": 819950818992,
+  "reported_free_bytes": 849284476928,
+  "reported_remaining_before_checkpoint": 29333657936,
+  "admission": "Must add actual live checkpoint projection/metadata/restored-scope receipt to journal bytes; no claimed production fit while actual retained state unavailable",
+  "hardware_qualified": false,
+  "prefix_numeric_duplicate": false
+}
