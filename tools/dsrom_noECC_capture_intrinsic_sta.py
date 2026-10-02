@@ -82,11 +82,11 @@ def prepare(work):
                 'if {[llength $caps] != 1088} {error "Missing capture endpoints"}',
                 'if {[llength $data] != 1096} {error "Missing full macro output pins"}',
                 'puts "CAPTURE_ENDPOINTS [llength $caps] MACRO_OUTPUTS [llength $data]"',
-                'set_multicycle_path -setup 2 -from $data -to $caps',
-                'set_multicycle_path -hold 1 -from $data -to $caps',
+                'set_multicycle_path -setup 2 -through $data -to $caps',
+                'set_multicycle_path -hold 1 -through $data -to $caps',
                 'report_units',
-                'report_checks -from $data -to $caps -path_delay max -group_count 1088 -endpoint_path_count 1 -format full_clock_expanded -digits 6 -fields {slew capacitance input_pin net}',
-                'report_checks -from $data -to $caps -path_delay min -group_count 1088 -endpoint_path_count 1 -format full_clock_expanded -digits 6 -fields {slew capacitance input_pin net}',
+                'report_checks -through $data -to $caps -path_delay max -group_count 1088 -endpoint_count 1 -format full_clock_expanded -digits 6 -fields {slew capacitance input_pin net}',
+                'report_checks -through $data -to $caps -path_delay min -group_count 1088 -endpoint_count 1 -format full_clock_expanded -digits 6 -fields {slew capacitance input_pin net}',
                 'exit']
             tcl=d/f'{corner}.tcl';tcl.write_text('\n'.join(lines)+'\n')
             record['runs'].append(dict(case=case,corner=corner,tcl=str(tcl),tcl_sha256=sha(tcl), status='PREPARED'))

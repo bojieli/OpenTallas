@@ -30,11 +30,12 @@ class CaptureTimingContracts(unittest.TestCase):
     def test_only_source_capture_gets_exception(self):
         for item in self.record['runs']:
             text=Path(item['tcl']).read_text()
-            self.assertIn('set_multicycle_path -setup 2 -from $data -to $caps',text)
-            self.assertIn('set_multicycle_path -hold 1 -from $data -to $caps',text)
+            self.assertIn('set_multicycle_path -setup 2 -through $data -to $caps',text)
+            self.assertIn('set_multicycle_path -hold 1 -through $data -to $caps',text)
             self.assertIn('!= 1088',text);self.assertIn('!= 1096',text)
             self.assertNotIn('set_input_delay',text);self.assertNotIn('set_output_delay',text)
             self.assertEqual(text.count('create_generated_clock'),8)
+            self.assertNotIn('-from $data',text)
     def test_geometry_and_no_physical_claim(self):
         self.assertEqual(self.record['PG_cut_model_sha256'],m.sha(m.BASE/'local_cuts.json'))
         for key in ('PnR_admitted','physical_closure','parent_IO_closed','cold_mapping','engine_RTL_changed'):
@@ -57,5 +58,9 @@ class CaptureTimingContracts(unittest.TestCase):
             self.assertIn('CAPTURE_ENDPOINTS 1088 MACRO_OUTPUTS 1096',result.stdout)
             self.assertNotIn('not found',result.stdout)
             self.assertNotIn('Error:',result.stdout)
+    def test_report_options_supported_by_actual_tool(self):
+        result=subprocess.run(['sta'],input='help report_checks\nexit\n',capture_output=True,text=True)
+        self.assertIn('-endpoint_count',result.stdout)
+        self.assertNotIn('-endpoint_path_count',(self.work/'q/ss.tcl').read_text())
 
 if __name__=='__main__':unittest.main()
