@@ -1,0 +1,47 @@
+{
+  "status": "EXPECTED_MUTATION_REFUSAL_FULL27_PENDING",
+  "source_commit": "68e0a801d9d852e337453fc9ef87b1b9b47b69bd",
+  "verified_receipt": {
+    "verdict": "EXPECTED_MUTATION_REFUSAL",
+    "witness": {
+      "cycles": 45,
+      "fault_cycle": 9,
+      "checking": 1,
+      "pc": 21,
+      "stopped_pc": 21,
+      "rec_active": 0,
+      "suffix_closed": 1,
+      "qe_idle": 1,
+      "win_idle": 1,
+      "qe_accepts": 1,
+      "terminals": 16,
+      "vm_stores": 16,
+      "sink_words": 0,
+      "written_words": 0,
+      "su_accepts": 0,
+      "suppress": 0,
+      "su_idle": 1,
+      "xs_we": 0,
+      "kv_we": 0
+    },
+    "fatal_time": 48000,
+    "fatal_line": 1366
+  },
+  "source_tool_args_binary_binding": true,
+  "archived_files_sha256": {
+    "frontend_command.process.json": "25bc154011720418e89e784f286cac76bef4e7e6e2172782543a28cc41bdc73f",
+    "runtime_0_receipt.json": "6a703bc9c2924461f1f60c08e16996402015930dd144f8f0f3290a588aff77db",
+    "CXX_command.log": "7ec6f5aecfeeee36c3b73e31cb3d171323a8bc34fb840ae45996f2e133b19c97",
+    "CXX_command_started.json": "91c921b166da44ac2b6bc80fdb0f1eeb73a0265924374528467efb03023341fa",
+    "CXX_command.process.json": "84c58b1891214ff1e4cab4795709645d1ee698bc1f6b5377a12ac27b89810f75",
+    "runtime_0.log": "f062b1e480cba27a2b358d7bc38ac93ec13c1fd8aa9259cd29431a29ae4ff475",
+    "frontend_command_started.json": "df09a02629ee38d3e3d8ce076b9607391e06e5a5d119d5cbb0da3fbd95c2ca73",
+    "artifact.json": "b2173f90713988b915d8633ef75e01f22f2302903f20d70261ab4169e3883268",
+    "snapshot_sha256.json": "14e5403dea3f3ce1513c4c4a6fe8ecb4f384fe865ed332321986c9fbc6491aa5",
+    "frontend_command.log": "d98d7fcda97da6c00f23a5d818853351bfdc836b435b123f877965534250b5a9",
+    "runtime_0.process.json": "a154b9f9788ec6b97e9f5ece24145f441acb598c48f5a079f96f04cb91bffabd"
+  },
+  "completed_objects_retained_at": "/tmp/DS-recovery-negative-successor-execution-20261002-r1/VM_frozen_store_drop/obj",
+  "historical_full27_verdict": "FAIL_UNCHANGED",
+  "full27_successor_PASS": false
+}

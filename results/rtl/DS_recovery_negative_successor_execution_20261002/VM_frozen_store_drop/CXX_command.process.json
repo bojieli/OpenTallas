@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/usr/bin/make",
+    "-C",
+    "/tmp/DS-recovery-negative-successor-execution-20261002-r1/VM_frozen_store_drop/obj",
+    "-f",
+    "Vtb.mk",
+    "-j",
+    "2",
+    "OPT_FAST=-O0",
+    "OPT_SLOW=-O0",
+    "OPT_GLOBAL=-O0"
+  ],
+  "returncode": 0,
+  "log_sha256": "7ec6f5aecfeeee36c3b73e31cb3d171323a8bc34fb840ae45996f2e133b19c97",
+  "memory_events_before": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  },
+  "memory_events_after": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  }
+}
