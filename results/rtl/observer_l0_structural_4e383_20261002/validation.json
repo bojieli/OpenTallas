@@ -1,0 +1,31 @@
+{
+  "status": "ADDITIVE_STRUCTURAL_CORRECTION_PREPARED_NOT_LINTED",
+  "prior_actual_verdict": "FAIL_RETAINED",
+  "prior_failure_commit": "277d7f2c167b279a23ab2a50f3b60cb473cc3a69",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "tests_passed": 144,
+  "new_structural_unavailable_tests": 67,
+  "preserved_tests": 77,
+  "compiler_invocations_this_task": 0,
+  "independent_GO": "PENDING",
+  "plan_sha256": "2a7afdfc934f95daa4d3f3ce0a503dbf37a86b815215be5fbfe12d0a1f17ecbb",
+  "original_inverse_sha256": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+  "ckv_unavailable_fields": 52,
+  "footprint": {
+    "copy": "rtl/test/v41_runtime/ot_v41_rt_die_sim_observe_l0_window.sv",
+    "original": "rtl/test/v41_runtime/ot_v41_rt_die.sv",
+    "original_sha256": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+    "copy_sha256": "2113dc2a1ab3a49e298e973027a5011d11d96ab881718ad0fc47c324d52a06d1",
+    "exact_inverse": true,
+    "default_observation": 0,
+    "ckv_hierarchy_references": 0,
+    "ckv_configuration_parameters": 0,
+    "ckv_padding": "reserved zeros with ckv_available0; typed API returns None/unavailable for each absent CKV field, never zero-qualified",
+    "packet_bits": 1020,
+    "simulation_register_bits": 1085
+  },
+  "preserved_files": 43,
+  "actual_lint_failure_overrides_static_fake": true,
+  "hardware_qualification": false,
+  "causal_service": "BOUND_MISSING"
+}
