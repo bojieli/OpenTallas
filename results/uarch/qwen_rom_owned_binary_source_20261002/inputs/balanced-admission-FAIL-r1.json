@@ -1,0 +1,63 @@
+{
+  "PnR_admission": false,
+  "additional_maps": 0,
+  "area_lower_bound_fit": false,
+  "area_lower_bound_terms_um2": {
+    "missing53_FFs": 20.09124,
+    "new_clock_buffers": 91378.70658,
+    "original_selected_mapped_cells": 65983.07303971479,
+    "restoring85_INVs": 3.7179
+  },
+  "area_lower_bound_um2": 157385.58875971477,
+  "cell_ceiling_um2": 125000,
+  "clock_cut_failures": {
+    "1:489.888": {
+      "clock_reserved_tracks": 64,
+      "meander_routes_qualified": false,
+      "monotone_geometric_crossings": 325,
+      "monotone_lower_bound_fits": false
+    }
+  },
+  "frozen_root_retention_commit": "5aba37e2c",
+  "initialized_binary_source_contract": {
+    "accepted_inputs": "Actual producer must own known0/1 start/ib/address/control and hold through accepted edge",
+    "address_word": "Unreset storage; qualify read only after accepted binary ib initialization and source transition/order proof",
+    "cur_wsrc_initialized_on_accepted_go": "SOURCE_OBSERVED",
+    "readiness": "Registered service/serial release plus owned KV tag/read/fill retirement; never constant high or inferred from cold calendar",
+    "release": "All90metadata pins receive valid low pulse and recovery/removal before owned parent_ready; all actual mutable control consumers must be qualified",
+    "reset_read_active_pend_to_zero": "SOURCE_OBSERVED",
+    "source_reachable_initialization_proven": false,
+    "stored_Z": "FAIL_RETAINED"
+  },
+  "latest_actual_graph": {
+    "KV_raw_capture_FFs": 512,
+    "address_FFs": 24,
+    "macro_low_address_links": 120,
+    "metadata_physical_replica_failure_retained": true
+  },
+  "no_failed_verdict_overwritten": true,
+  "old_added_clock_reset_reservations_discarded_for_lower_bound": true,
+  "provider_clock_slew_limit_ps": 80,
+  "provider_clock_slew_max_ps": {
+    "ff": 36.94730410126246,
+    "ss": 83.99128098588449
+  },
+  "provider_input_clock_slew_SS_FAIL": true,
+  "remaining_construction": "Use local subtree delay balancing rather than globally padding every leaf to a remote macro worst route; keep exact successor source and125000um2/96.768um selection. Reprice clock/root/reset/launch/startup and cuts before map.",
+  "schema": "QWEN_BALANCED_SUCCESSOR_ADMISSION_DECISION_V1",
+  "second_decode_position_runs": 0,
+  "selected_map_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+  "source_map_admission": false,
+  "source_origins": {
+    "euclid-current-classification.json": {
+      "commit": "61feff51da3236dd7ac436985b90027cd75c5a11",
+      "sha256": "aa92dfdc942b873c01981a10e8987bbad01ebc8b18bf85e99fb7940e9ff1e970",
+      "source_path": "results/uarch/qwen_rom_bank5_control_20261002/producer_graph_join_r1/classification_and_admission.json"
+    },
+    "parent-current-graph-review.json": {
+      "commit": "077a8f103377405ef9ba971796fe24517f75ae4c",
+      "sha256": "dfb1a4a3a233085344012f0450c7aca00744af1fec08bb5669fdb400f01ecf77",
+      "source_path": "results/uarch/native_software_parent_intake_20261002/Qwen_complete_producer_graph_parent_review.json"
+    }
+  }
+}
