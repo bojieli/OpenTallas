@@ -1,0 +1,47 @@
+{
+  "applicability": "Failure applies to historical macro data-reader wrapper and that mapped placement. Current ring explicitly uses behavioral ot_hdc_v41x_idx_kdata WB32, not macro _m XP2 WB128. No equivalence or scaled physical result asserted; NP2048 field width is independent of reader ROB depth. Decoder/cadence trace belongs to separate ROM field source, not this wrapper.",
+  "claims": {
+    "SS_FF_closure": false,
+    "current_indexer_qualification": false,
+    "current_reticle_failure": false
+  },
+  "current_binding": {
+    "NP2048_is_field_pair_count_not_reader_WB": true,
+    "RING_GA": 24,
+    "RING_WB": 32,
+    "binding_basis": "Current parent source defaults and explicit pooled ring instance; complete current compiled NP2048 parameter/source manifest not independently reproduced here",
+    "data_module": "ot_hdc_v41x_idx_kdata",
+    "not_historical_macro_module": true,
+    "snapshot_root": "/tmp/opentallas-bounded-validation-main-intake-20261001",
+    "source_sha256": {
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "829a1e1566c781466b20dc7c939026234ddbb30351a59601ce32e0c61f6a3ea3",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "6aa64b41e15f270e2e266d0a1938f09234606fc0d1ba392612d51bf2b610ae12"
+    }
+  },
+  "current_fullreticle_verdict": null,
+  "failure": {
+    "edge_spacing_violations": 5057,
+    "exit": 2,
+    "message": "bad optional access",
+    "padding_violations": 671,
+    "script": "detail_place.tcl:39",
+    "timeout": false
+  },
+  "heavy_checkpoints": "Read-only remote inventory: /tmp/abi3-physical-v33xnwvg and historical source results contain no mapped.v or failedODB. Failure log records /work/.../3_5_place_dp-failed.odb, but file preservation not verified; no cleanup performed. Keep source refs/raw logs, request parent exact retained workdir if separate.",
+  "historical_binding": {
+    "DW": 256,
+    "MACRO": 1,
+    "NPC": 32,
+    "WB": 128,
+    "XP": 2,
+    "macro_count_source": 128,
+    "macro_depth": 128,
+    "macro_width": 256,
+    "payload_bits_source": 4194304
+  },
+  "new_PR_or_retry": false,
+  "raw_terminal_sha256": "e2214d390f111dae48e00d5bb601ae4daf41d1e0704040b0cd5d39a9711284db",
+  "source_commit": "0ce523d1b6dff5649eb3f97886cb5f15d3b3bc86",
+  "status": "FAILED_DETAIL_PLACEMENT_AS_BUILT",
+  "top": "ot_w11_kdata_m_x2_phys"
+}

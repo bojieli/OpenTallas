@@ -1,0 +1,29 @@
+Actual retained GRT timing, not a new physical flow
+
+Local exact-tool replay of existing topk GRT DB succeeded (analysis PID901754;
+terminal0, 136.390321s). Worst slack -10228.627ps vs original -10228.6ps.
+Worst endpoint cnt[254][0] -> suf[0][9], corner WC/SS, 195 combinational output
+arcs. Data delay10966.015ps incl clk->Q110.0828ps: cell10851.912ps,
+wire114.1036ps. Source S_PICK pk0 descending 256-bin accumulation, lines195-201.
+All 10 endpoints/arc traces are in topk_endpoints.json; source is pinned0ea1948.
+No constraints/corner/bin changes, synthesis, placement, or routing command.
+Existing PVE2 DRT PID551255 container007d37d5fc46 untouched and remains live.
+Classify FAILED_TIMING_AS_BUILT_GRT; final DRT pending, zero closure/adoption.
+
+DIG4 means16 bins/8passes vs256bins/4passes. Conditional extra60cycles
+atN4,n128,P64 from original source equation, not free latency. Existing DIG4
+numerical record has different source SHA and NMAX2048; no physical transfer.
+Mapped GRT has0macros; candidate arrays not evidence of qualified SRAM mapping.
+Maxwell must compose source/clock/latency/ports before any successor PR.
+
+Indexer raw terminal preserved: DPL0312 5057spacing+671padding, bad optional
+access detail_place.tcl39, exit2, not timeout. Historical source0ce523d1 wrapper
+NPC32 WB128 macro1 XP2; current pooled ring defaultsWB32 GA24 with behavioral
+idx_kdata, source/compiled equivalence absent. Not DSNP2048/full-reticle verdict.
+Mapped.v/failedODB were not found in read-only terminal/source/temp inventories;
+retain recorded failure path as unverified, no cleanup/restart performed.
+
+Heavy GRT/runtime preserved under /tmp/opentallas-topk-existing-grt-extraction-
+20261002, with remote/copy DB SHA verified and exact binary/dependency/lib pins.
+Raw records, source copies, metrics/SDC, Tcl and parsed endpoint report committed.
+Historical topk timeout record is separate from current GRT/live DRT evidence.

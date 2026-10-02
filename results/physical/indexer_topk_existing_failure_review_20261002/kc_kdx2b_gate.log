@@ -1,0 +1,102 @@
+[remote_gate] worker ot-pve2 (floor 48 GB), job 124a67f8af: /tmp/claude-1000/w11s/jobs/harden_wc.sh kc_kdx2b --top ot_w11_kdata_m_x2_phys --source rtl/chip/physical/ot_w11_ring_phys.sv --source rtl/hdc/v41x/ot_hdc_v41x_idx_kdata_m.sv --source physical/asap7_me
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+_17261
+Violation in place1204224
+Violation in place1156669
+Violation in place1156650
+Violation in place1237772
+Violation in place1232077
+Violation in place976666
+Violation in place1204309
+Violation in place1202162
+Violation in place976509
+Violation in place976714
+Violation in u.dut.g_bank\[20\].g_beat\[2\].g_m.u_mem_17396
+Violation in place977022
+Violation in place1201811
+Violation in place1203432
+Violation in place1174732
+Violation in place1236685
+Violation in place1202180
+Violation in place1157297
+Violation in place1178950
+Violation in place1182515
+Violation in place1196474
+Violation in u.dut.g_bank\[20\].g_beat\[2\].g_m.u_mem_17285
+Violation in u.dut.g_bank\[20\].g_beat\[2\].g_m.u_mem_17487
+Violation in place1200085
+Violation in u.dut.g_bank\[18\].g_beat\[1\].g_m.u_mem_13909
+Violation in place1182779
+Violation in place1232346
+Violation in place1158105
+Violation in place1204975
+Violation in place1196701
+Violation in u.dut.g_bank\[20\].g_beat\[2\].g_m.u_mem_17395
+Violation in u.dut.g_bank\[20\].g_beat\[2\].g_m.u_mem_17434
+Violation in place1200043
+Violation in place1152355
+Violation in place1196736
+Violation in wire1294565
+Violation in place1203768
+Violation in place1203830
+Violation in u.dut.g_bank\[20\].g_beat\[2\].g_m.u_mem_17440
+Violation in place1181024
+Violation in place1156601
+Violation in place1208169
+Violation in wire1294531
+Violation in u.dut.g_bank\[20\].g_beat\[2\].g_m.u_mem_17307
+Violation in place1202117
+Violation in place1198945
+Violation in place1179627
+Violation in place1208154
+Violation in place979854
+Violation in place1210882
+Violation in place1202537
+Violation in u.dut.g_bank\[19\].g_beat\[2\].g_m.u_mem_15347
+Violation in place1177591
+Violation in place1167785
+Violation in place975194
+Violation in place1184374
+Violation in u.dut.g_bank\[19\].g_beat\[2\].g_m.u_mem_15352
+Violation in u.dut.g_bank\[19\].g_beat\[2\].g_m.u_mem_15351
+Violation in u.dut.g_bank\[19\].g_beat\[2\].g_m.u_mem_1499
+Violation in place981206
+Violation in place1172977
+Violation in place1196232
+Violation in place1196598
+Violation in place1202245
+Violation in u.dut.g_bank\[19\].g_beat\[2\].g_m.u_mem_15341
+Violation in place1202225
+Violation in place1168095
+Violation in place1204881
+Violation in place1177922
+Violation in u.dut.g_bank\[19\].g_beat\[2\].g_m.u_mem_15316
+Violation in u.dut.g_bank\[19\].g_beat\[2\].g_m.u_mem_15338
+Violation in place1152048
+Violation in u.dut.g_bank\[19\].g_beat\[2\].g_m.u_mem_1500
+Violation in place1210972
+Violation in place1204704
+Violation in place1202452
+[INFO DPL-0312] Found 5057 edge spacing violations and 671 padding violations.
+[WARNING DPL-0201] Placement check failure during legalization.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 5.394751e+10.
+write_db /work/results/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 39 bad optional access
+
+Elapsed time: 0:55.54[h:]min:sec. CPU time: user 52.31 sys 2.97 (99%). Peak memory: 2118428KB.
+Elapsed time: 21:23.00[h:]min:sec. CPU time: user 1364.03 sys 11.70 (107%). Peak memory: 4183436KB.
+Elapsed time: 1:22:52.38[h:]min:sec. CPU time: user 5597.46 sys 503.41 (122%). Peak memory: 4944176KB.
+Elapsed time: 0:19.02[h:]min:sec. CPU time: user 16.67 sys 2.08 (98%). Peak memory: 1170268KB.
+Elapsed time: 3:49.25[h:]min:sec. CPU time: user 223.90 sys 4.90 (99%). Peak memory: 3709360KB.
+Elapsed time: 18:09.07[h:]min:sec. CPU time: user 2129.99 sys 15.23 (196%). Peak memory: 5379180KB.
+Elapsed time: 0:22.24[h:]min:sec. CPU time: user 19.30 sys 2.78 (99%). Peak memory: 1999684KB.
+Elapsed time: 5:18:29.82[h:]min:sec. CPU time: user 40001.68 sys 6007.89 (240%). Peak memory: 21019780KB.
+Elapsed time: 40:43.91[h:]min:sec. CPU time: user 3831.80 sys 582.76 (180%). Peak memory: 7786796KB.
+Elapsed time: 3:48:28.43[h:]min:sec. CPU time: user 13699.59 sys 8.26 (99%). Peak memory: 10236428KB.
+make[1]: *** [Makefile:511: do-3_5_place_dp] Error 1
+make: *** [Makefile:511: /work/results/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_5_place_dp.odb] Error 2
+
+partial record written to /tmp/claude-1000/w11s/hard/kc_kdx2b/physical.json
+[remote_gate] worker ot-pve2 job 124a67f8af finished rc=1; 0 worktree files returned
