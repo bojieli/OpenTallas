@@ -8,6 +8,7 @@ import time
 import gzip
 import re
 import shutil
+import math
 from pathlib import Path
 from dsrom_noECC_complete_element import BASE,ROOT,sha,build
 from dsrom_secded_fullwidth_characterize import merged,block
@@ -17,34 +18,55 @@ def save(path,value):
 
 def inventory(path,cells,corner):
     net=json.loads(path.read_text())['modules']['ot_v41_rom_elem_w10']
-    clocks={};area=0;unmapped={};counts={};captures=0
+    cache={}
+    for typ in {c['type'] for c in net['cells'].values()} & cells.keys():
+        body=cells[typ];area=float(re.search(r'\barea\s*:\s*([\d.]+)',body)[1]);pins={}
+        for m in re.finditer(r'\bpin\s*\(([^)]+)\)',body):
+            pb=block(body,m.start())
+            cap=re.search(r'\bcapacitance\s*:\s*([\d.]+)',pb)
+            pins[m[1].strip(' "')]=dict(clock=bool(re.search(r'\bclock\s*:\s*true',pb)),cap=float(cap[1]) if cap else 0)
+        cache[typ]=(area,pins)
+    aliases={};gates={};counts={};unmapped={};clock={};state={};area=0;metadata=0;captures=0
+    for n,v in net['netnames'].items():
+        for bit in v['bits']:
+            if isinstance(bit,int):aliases.setdefault(bit,[]).append(n)
     for name,c in net['cells'].items():
-        typ=c['type'];counts[typ]=counts.get(typ,0)+1
-        if typ not in cells:
-            if typ!='ot_rom_4096x274_m8':unmapped[typ]=unmapped.get(typ,0)+1
+        typ=c['type']
+        if typ=='$scopeinfo':metadata+=1;continue
+        counts[typ]=counts.get(typ,0)+1
+        if 'ICG' in typ:gates[c['connections']['GCLK'][0]]=name
+        if typ=='ot_rom_4096x274_m8':
+            cap=8.6838 if corner=='ss' else 10.3732
+            bit=c['connections']['clk'][0]
+            z=clock.setdefault(bit,dict(sinks=0,pin_cap_fF=0,masters={}))
+            z['sinks']+=1;z['pin_cap_fF']+=cap;z['masters'][typ]=z['masters'].get(typ,0)+1
             continue
-        cell=cells[typ];area+=float(re.search(r'\barea\s*:\s*([\d.]+)',cell)[1])
-        for p,bits in c['connections'].items():
-            match=re.search(r'\bpin\s*\('+re.escape(p)+r'\)',cell)
-            if not match:continue
-            body=block(cell,match.start())
-            if not re.search(r'\bclock\s*:\s*true',body):continue
-            cap=float(re.search(r'\bcapacitance\s*:\s*([\d.]+)',body)[1])
-            for bit in bits:
-                item=clocks.setdefault(str(bit),dict(sinks=0,pin_cap_fF=0,masters={},names=[]))
-                item['sinks']+=1;item['pin_cap_fF']+=cap;item['masters'][typ]=item['masters'].get(typ,0)+1;item['names'].append(name)
-    for bit,item in clocks.items():
-        item['net_aliases']=[n for n,v in net['netnames'].items() if int(bit) in v['bits']]
-    for c in net['cells'].values():
-        if c['type'].startswith('DFF'):
-            qb=c['connections'].get('QN',c['connections'].get('Q',[]))
-            if any(set(qb)&set(v['bits']) for n,v in net['netnames'].items() if '.cap0' in n or '.cap1' in n):captures+=1
+        if typ not in cache:unmapped[typ]=unmapped.get(typ,0)+1;continue
+        ca,pins=cache[typ];area+=ca
+        for pin,bits in c['connections'].items():
+            if pins.get(pin,{}).get('clock'):
+                for bit in bits:
+                    z=clock.setdefault(bit,dict(sinks=0,pin_cap_fF=0,masters={}))
+                    z['sinks']+=1;z['pin_cap_fF']+=pins[pin]['cap'];z['masters'][typ]=z['masters'].get(typ,0)+1
+        if typ.startswith('DFF'):
+            src=c['attributes'].get('src','')
+            state[src]=state.get(src,0)+1
+            if re.search(r'ot_v41_rom_elem_w10\.sv:746\.',src):captures+=1
+    for bit,z in clock.items():
+        z['net_aliases']=aliases.get(bit,[]);z['source_ICG']=gates.get(bit,'root')
+        z['load_groups_lowerbound_before_wires']=math.ceil(z['pin_cap_fF']/46.08) if bit in gates else None
+    wake={n:v['bits'] for n,v in net['netnames'].items() if n.startswith('g_wake.g_leaf') and n.endswith('.wake')}
+    distinct=len({tuple(v) for v in wake.values()})
     return dict(corner=corner,cells=sum(counts.values()),master_counts=counts,stdcell_area_um2=area,
         raw_4096_macro_count=counts.get('ot_rom_4096x274_m8',0),unmapped_nonmacro_types=unmapped,
-        clock_nets=clocks,capture_flops_identified= captures,
-        scope='Mappedcell pin sums; no wires, CTS buffers/skew, clockgating/minpulse, or routed timing qualification.')
+        Yosys_scopeinfo_metadata_not_hardware=metadata,clock_nets={str(k):v for k,v in clock.items()},
+        source_FF_count_by_location=state,capture_flops_identified=captures,
+        capture_scope='Source746..749 captures two272bit activepayloads perMB in twoPPbanks;unusedtwohighbits optimized,274physicalmacroports unchanged',
+        wake_nets=wake,distinct_WAKE_FF_output_nets=distinct,
+        source_8leaf_WAKE_replica_retention_pass=distinct==8,
+        scope='Mappedcell pin sums; no wires, CTS/skew, clockgating/minpulse, or routed timing qualification.')
 
-def run(work,backend):
+def run(work,backend,reuse_q=None,only_case=None):
     if work.exists():raise ValueError('preserve existing attempt; no overwrite/retry')
     if subprocess.check_output(['git','status','--porcelain'],cwd=ROOT).strip():raise ValueError('clean pinned source required')
     model=build();manifest=json.loads((BASE/'physical_source_manifest.json').read_text())
@@ -78,7 +100,24 @@ def run(work,backend):
         subprocess.run(['docker','cp',str(work)+'/.',container+':'+str(jobroot)],check=True)
     record['library_sha256']=sha(lib);save(work/'record.json',record)
     for case,params in manifest['variants'].items():
+        if only_case and case!=only_case:continue
         d=work/case;d.mkdir();allparams=manifest['params_common']|params
+        if case=='q' and reuse_q:
+            prior=json.loads((reuse_q/'record.json').read_text())
+            if prior['status']=='RUNNING':raise ValueError('preserve live attempt; await terminal before reuse')
+            old=prior['runs'][0]
+            if prior['source_manifest_sha256']!=record['source_manifest_sha256'] or old['parameters']!=allparams or old['returncode']!=0:
+                raise ValueError('reuse source/params/mapping mismatch')
+            for n in ('mapped.v','mapped.json','map.ys','map.log'):
+                if n.startswith('mapped'):
+                    key='mapped_json_sha256' if n.endswith('.json') else 'mapped_verilog_sha256'
+                    if sha(reuse_q/'q'/n)!=old[key]:raise ValueError('reuse mapped artifact pin changed')
+                shutil.copyfile(reuse_q/'q'/n,d/n)
+            entry=dict(case='q',parameters=allparams,reused_from=str(reuse_q),source_commit=prior['source_commit'],
+                returncode=0,mapped_verilog_sha256=sha(d/'mapped.v'),mapped_json_sha256=sha(d/'mapped.json'),
+                synthesis_reexecuted=False,inventory={c:inventory(d/'mapped.json',cells,c) for c,cells in [('ss',sscells),('ff',ffcells)]})
+            record['runs'].append(entry);save(work/'record.json',record)
+            continue
         joblib=jobroot/'stock_ss.lib';jobdir=jobroot/case
         script='read_liberty -lib '+str(joblib)+'\n'
         script+='read_verilog -sv -DSYNTHESIS '+' '.join(str(jobroot/'source_files'/f.name) for f in files)+'\n'
@@ -102,7 +141,11 @@ def run(work,backend):
         if entry['inventory']['ss']['raw_4096_macro_count']!=4 or entry['inventory']['ss']['unmapped_nonmacro_types']:
             record['status']='MAPPED_INVENTORY_REJECTED_PRESERVED';save(work/'record.json',record);return 1
         save(work/'record.json',record)
-    record['status']='MAPPED_COMPLETE_ELEMENTS_CONTEXT_OPEN';save(work/'record.json',record);return 0
+    record['status']='MAPPED_COMPLETE_ELEMENTS_CONTEXT_OPEN'
+    record['WAKE_replica_retention_pass']=all(r['inventory']['ss']['source_8leaf_WAKE_replica_retention_pass'] for r in record['runs'])
+    record['physical_G0_admitted']=False
+    record['selected_case']=only_case
+    save(work/'record.json',record);return 0
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--work',type=Path,required=True);p.add_argument('--backend',choices=['local','pinned-orfs'],default='local');a=p.parse_args();raise SystemExit(run(a.work,a.backend))
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--work',type=Path,required=True);p.add_argument('--backend',choices=['local','pinned-orfs'],default='local');p.add_argument('--reuse-q',type=Path);p.add_argument('--only-case',choices=['q','bfcolumn']);a=p.parse_args();raise SystemExit(run(a.work,a.backend,a.reuse_q,a.only_case))
