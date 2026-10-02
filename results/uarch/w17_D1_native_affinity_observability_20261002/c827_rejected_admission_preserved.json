@@ -1,0 +1,13 @@
+{
+  "candidate": "c8275f7c47fef2ded1e340e2fcfd59eb7ce13881",
+  "status": "PARENT_REJECTED_ADMISSION_CANDIDATE_NO_RUNTIME",
+  "authority": "parent user message 2026-10-02",
+  "reasons": [
+    "requires cpu.max quota though local user CPU controller not delegated",
+    "CPUs0-1 overlap fresh HBM DS CPU0"
+  ],
+  "old_plan_sha256": "000d1266f9df5b4503abb89bc61a24e95fde8cc16b92871a9ac5b83f000118e5",
+  "compiler_invocations": 0,
+  "simulations": 0,
+  "old_candidate_unchanged": true
+}
