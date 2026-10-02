@@ -1,0 +1,8 @@
+{
+  "verdict": "FAIL_SOURCE_PREPARATION_INTERFACE_CHECK",
+  "HDL_compiled": false,
+  "HDL_executed": false,
+  "log": "static_tests_r2.log",
+  "package": "gate_r2",
+  "diagnosis": "Adding profile guard changed initial-block insertion anchor; fault task declarations were omitted. Static ownership/interface test correctly failed; no compile admission. Restore unique task insertion before guarded initial. No oracle/data expectation change."
+}
