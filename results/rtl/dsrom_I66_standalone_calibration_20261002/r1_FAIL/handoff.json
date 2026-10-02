@@ -1,0 +1,86 @@
+{
+  "actual_edge_summary": "runtime_r1_FAIL/accepted_edge_summary.json",
+  "actual_journal_bytes": 47449068,
+  "actual_journal_raw_sha256": "503ac6f7f2a79ae8ee86f71e69f717bbd9444a9cc86037aaed2cf033ed013e5f",
+  "build_seconds": 15.073999999999998,
+  "calibration": {
+    "categories": {
+      "phase_retire": {
+        "extra": 1,
+        "missing": 1
+      },
+      "spine_idle": {
+        "extra": 1,
+        "missing": 1
+      }
+    },
+    "expected_events": 322308,
+    "extra_events": 2,
+    "first_extra": [
+      [
+        [
+          "spine_idle",
+          11,
+          -1,
+          -1
+        ],
+        1
+      ],
+      [
+        [
+          "phase_retire",
+          422,
+          -1,
+          -1
+        ],
+        1
+      ]
+    ],
+    "first_missing": [
+      [
+        [
+          "phase_retire",
+          421,
+          -1,
+          -1
+        ],
+        1
+      ],
+      [
+        [
+          "spine_idle",
+          420,
+          -1,
+          -1
+        ],
+        1
+      ]
+    ],
+    "missing_events": 2,
+    "nonzero_oracle_mismatches": 0,
+    "observed_events": 322308,
+    "result": "FAIL"
+  },
+  "entrypoint": "tools/dsrom_PAR2_runtime_consumer_runner.py",
+  "existing_pve2_pve3_jobs": [],
+  "functional_runtime": "PASS",
+  "next_gate": "Additive observer completion-arm repair and source-derived retirement model, independent startup/old-rowcounter mutants; preserve original FAIL. Fullcore/coll_busy/physical PAR2 interdie/provider completion remains separate, not qualified by consumer cone.",
+  "no_oom": true,
+  "peak_aggregate_bytes": 780439552,
+  "prediction_unchanged": true,
+  "prerequisite_chain": [
+    "106fdd686fea3a75c4f3e3c2a652bfc61e3930ce",
+    "136c9c7ab87b9407243fa62103fc37c40532bf9c",
+    "90aad2b9d3a58d2561cc3b9ddf93307c2c3e4222",
+    "6d1f53210d5c7dfaf7713cb03ff7a59036117fe8",
+    "ae941556952df29d03eed068f0bdfc78036391f3",
+    "3bc652fe5851e77de2086788ed2a1008d4a244b1"
+  ],
+  "result": "FAIL",
+  "runtime_seconds": 6.026,
+  "scope": "Current r5 L0.I66 native adapter/EID/ROM_BST17 spine+fullfield+exacttileROMmemoryprocess CONE; nonzero synthetic1 weights/input; actualpostNBA destination visibility. Otherwritersinactive/fullcore scheduler/collbusy/physicalPAR2interdie/hardprovider/SSFF/fulltoken unqualified.",
+  "source_commit": "3bc652fe5851e77de2086788ed2a1008d4a244b1",
+  "source_no_changes": true,
+  "tests": "16 PASS prior launch",
+  "unit": "dsrom-PAR2-runtime-consumer-20261002-r1.service"
+}

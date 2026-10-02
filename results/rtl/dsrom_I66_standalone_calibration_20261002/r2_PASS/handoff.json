@@ -1,0 +1,56 @@
+{
+  "HDL_compiles": 0,
+  "actual_completion_edges": {
+    "adapter_idle": 422,
+    "all_source_root_writer_drained": 462,
+    "spine_idle": 421
+  },
+  "actual_journal_raw_bytes": 47449073,
+  "actual_journal_raw_sha256": "ecd00737272a6802df8642a5b020e3f262ca9bda61b83a4e498630ccd4b9246f",
+  "all_five_retained_archive_identity_checks": true,
+  "calibration": {
+    "categories": {},
+    "expected_events": 322308,
+    "extra_events": 0,
+    "first_extra": [],
+    "first_missing": [],
+    "missing_events": 0,
+    "nonzero_oracle_mismatches": 0,
+    "observed_events": 322308,
+    "result": "PASS"
+  },
+  "caps": {
+    "CPU_enforcement": "taskset/CPUAffinity inherited by all descendants; compiler-j2 and all Verilator contexts threads1",
+    "affinity": [
+      30,
+      31
+    ],
+    "cgroup_path": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dsrom-PAR2-runtime-consumer-calibration-20261002-r2.service",
+    "cpuset_file_present": false,
+    "memory.max": "8589934592",
+    "memory.swap.max": "0",
+    "systemd_properties": "RuntimeMaxUSec=5min\nAllowedCPUs=30-31\nMemoryMax=8589934592\nMemorySwapMax=0\nCPUAffinity=30-31\n"
+  },
+  "checked_events": 322308,
+  "entrypoint": "tools/dsrom_PAR2_runtime_consumer_calibration_runner.py",
+  "execution_source_commit": "0accd56ebc27fa2d27ccbe3e6f27c9e4898d7edf",
+  "host_link_seconds": 9.417,
+  "no_full_core_or_physical_admission": true,
+  "noncompletion_events_vs_r1": "all identical excluding ordinal",
+  "original_FAIL_preserved": true,
+  "owned_pve2_pve3_jobs": [],
+  "peak_memory_bytes": 616964096,
+  "prerequisites": [
+    "2a277d7a93610cea36811ed542c3ae8c5c62ec4b",
+    "0accd56ebc27fa2d27ccbe3e6f27c9e4898d7edf"
+  ],
+  "prior_FAIL_commit": "2a277d7a93610cea36811ed542c3ae8c5c62ec4b",
+  "remaining_boundary": "Core scheduler/coll_busy/general writer arbitration and physical PAR2 interdie/provider clocks not in this cone. Maxwell owns physical admission; Hubble owns D1 attribution. No frequency/fulltoken credit.",
+  "restart_or_duplicate_long_build": false,
+  "result": "PASS_CURRENT_I66_NATIVE_CONSUMER_CONE_ONLY",
+  "runtime_seconds": 5.412,
+  "scope": "Current r5 L0.I66 native adapter/EID/ROM_BST17 spine+fullfield+exacttileROMmemoryprocess CONE; nonzero synthetic1 weights/input; actualpostNBA destination visibility. Otherwritersinactive/fullcore scheduler/collbusy/physicalPAR2interdie/hardprovider/SSFF/fulltoken unqualified.",
+  "source_changes": "C++ passive completion-arm predicates only; engine/SV/payload and noncompletion timing predictions byte-identical",
+  "tests": "26 PASS; fresh additive preparation byte-identical; three actual-journal bad-completion mutants FAIL",
+  "unit": "dsrom-PAR2-runtime-consumer-calibration-20261002-r2.service"
+}
