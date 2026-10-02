@@ -1,0 +1,39 @@
+{
+  "PnR_allowed": false,
+  "RTL_variant_implementation_admitted": true,
+  "adoption": false,
+  "candidate_RTL_present": false,
+  "current_jobs": [],
+  "formal_equivalence_launched": false,
+  "fourstate_simulation_launched": false,
+  "full_geometry": {
+    "ROM_banks": 5,
+    "captured_bits": 2560,
+    "columns": 2,
+    "consumer_output_bits": 512,
+    "macro_output_bits": 2660
+  },
+  "future_candidate_interface": "qwen_optin_capture_logic with ROM_HOLD_DIRECT_CAPTURE=0 by default, full same ports as original_logic_cone.sv; source extraction from the actual reviewed variant, not a substitute memory model.",
+  "future_command": "iverilog -g2012 -s tb_qwen_rom_hold_capture_equivalence -o OUTPUT/bench.vvp OUTPUT/original_logic_cone.sv PRICED_LITERAL_CANDIDATE.sv OUTPUT/fourstate_bench.sv; vvp OUTPUT/bench.vvp",
+  "future_negative_controls": [
+    "Default accidentallyenabled: source/default-elaboration gate rejects.",
+    "Wrong metadata or same-edge response: comparison must reject.",
+    "CEidle output doesnot hold: source contract/proof must reject."
+  ],
+  "model_commit": "645ae1dd79eed8c20319574e4143b3c0c7b5551d",
+  "model_path": "results/uarch/qwen_rom_direct_capture_control_20261002/model-r2.json",
+  "model_sha256": "205a489f2b16f66293c5af90e9d61427f3bc476f8354633b8ad036606de1793b",
+  "prepared_original_cone_sha256": "b34727134008e1b77070f7bfeb07d4fc6734102fa41673004232dfe7057c6e47",
+  "reason": "Committed Maxwell full-cone/control policy accepted for fixed source development only",
+  "schema": "opentallas.qwen-rom-hold-capture-literal-gate-readiness.v1",
+  "scope": "Literal current control/capture source with shared full-width CE-hold four-state response fixture. Tests only masked consumer/request interfaces, not raw unselected captures. Actual ROM array/weights/timing and connected engine are outside this gate.",
+  "second_position": false,
+  "source_ref": "bf7efd5506e919a31aebcf091d1b7d6d38dbdffa",
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/test/qwen_rom_capture/tb_qwen_rom_hold_capture_equivalence.sv": "7e4ac158072c9c8a20c689409a86889231a4cea736eac6a83e1ef7ad6c1ade45",
+    "tools/qwen_rom_hold_capture_gate_prepare.py": "80127d1582694bc0ae82c545443e1d04d87b725a89aa79d725edac9c0b6fca55"
+  },
+  "status": "READY_LITERAL_VARIANT_DEVELOPMENT",
+  "verbatim_original_logic_sha256": "a253c4c226199bf046496ddbd97aa567c7fcbff636e16dff11fca8d51ede33b3"
+}
