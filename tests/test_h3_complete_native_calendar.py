@@ -12,6 +12,142 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def group_execution_fixture(self, *, failure=None, capture_journals=False):
+        import ast,hashlib,sys,tempfile
+        import numpy as np
+        from collections import Counter
+        base=ROOT/'results/uarch/h3_complete_native_calendar_20261002/group128_execution_join_r1'
+        pins=json.loads((base/'source_pins.json').read_text());raws={}
+        for name,pin in pins.items():
+            if pin.get('archive_is_projection'):continue
+            raw=gzip.decompress((base/'source_inputs'/pin['archive']).read_bytes())
+            self.assertEqual(hashlib.sha256(raw).hexdigest(),pin['sha256']);raws[name]=raw
+        vm_tree=ast.parse(raws['tools/h3_qwen_bounded_native.py']);nodes=[]
+        nodes.extend(n for n in vm_tree.body if isinstance(n,ast.Assign) and any(isinstance(x,ast.Name) and x.id=='COMMON_NATIVE' for x in n.targets))
+        nodes.append(next(n for n in vm_tree.body if isinstance(n,ast.ClassDef) and n.name=='NativePrimitiveVM'))
+        nodes.append(next(n for n in ast.parse(raws['tools/h3_qwen_complete_native.py']).body if isinstance(n,ast.FunctionDef) and n.name=='poszero'))
+        ns=dict(np=np,F=np.float32,Counter=Counter)
+        exec(compile(ast.Module(body=nodes,type_ignores=[]),'pinned-generic-primitive-VM','exec'),ns)
+        VM=ns['NativePrimitiveVM'];inventory_raw=(ROOT/c.OUT/'portable_input_closure_r1/r34_portable_r4/source_inventory.json.gz').read_bytes()
+        def pinned(path,commit):
+            self.assertEqual(commit,'ba0c1ba0625b58add3216d77a91e010a1daece6f')
+            self.assertTrue(path.endswith('r34_portable_r4/source_inventory.json.gz'));return inventory_raw
+        ns.update(gzip=gzip,json=json,hashlib=hashlib,pinned=pinned,NativePrimitiveVM=VM)
+        tree=ast.parse(raws['tools/h4_c0_group_operand_tiles.py'])
+        nodes=[n for n in tree.body if isinstance(n,(ast.FunctionDef,ast.ClassDef,ast.Assign))]
+        exec(compile(ast.Module(body=nodes,type_ignores=[]),'Sagan-2d05-current-group-plan','exec'),ns)
+        plan=ns['GroupOperandTiles']();pc=next(iter(plan.parents));data=np.random.default_rng(29).standard_normal((8,8,1024)).astype(np.float32)
+        data[:,0,0]=[1e20,1,-1e20,1,1,1,1,1]
+        if failure=='tile_source':
+            original_tile=plan.tile
+            def bad_tile(*args):
+                tile=original_tile(*args);tile['source_spans'][0]['source_rank']+=1;return tile
+            plan.tile=bad_tile
+        class Source:
+            def __init__(self):self.live={};self.acquired=0;self.released=0
+            def acquire(self,span,owner):
+                self.acquired+=1;key=(owner['tile'],span['source_rank']);self.live[key]=span
+                group,j=divmod(span['source_rank'],8);raw=data[j,group,span['local_word_first']:span['local_word_first']+128].tobytes()
+                return dict(lease=key,state='visible',version=span['source_version'],rank=span['source_rank'],generation=owner['generation']+(failure=='source_generation'),
+                    first=span['local_word_first'],words=128,data=raw,payload_sha256=hashlib.sha256(raw).hexdigest())
+            def release(self,record,owner):self.live.pop(record['lease']);self.released+=1
+        class Output:
+            def __init__(self):self.data=np.empty(8192,np.uint32);self.spans=0
+            def write_span(self,tile,owner,raw):
+                first=tile['output_flat_word_first'];self.data[first:first+128]=np.frombuffer(raw,np.uint32);self.spans+=1
+                return dict(version=tile['destination_version'],rank=owner['rank'],generation=owner['generation'],first=first,bytes=512,
+                    payload_sha256=hashlib.sha256(raw).hexdigest(),pending_obligations=int(failure=='output_debt'))
+        snapshots=ROOT/c.OUT/'ordered_operand_journal_r1/source_inputs'
+        saved=sys.modules.get('hbm_provider_microvm_r21');spec=importlib.util.spec_from_file_location('hbm_provider_microvm_r21',snapshots/'hbm_provider_microvm_r21.py')
+        P=importlib.util.module_from_spec(spec);sys.modules[spec.name]=P;spec.loader.exec_module(P)
+        try:
+            spec=importlib.util.spec_from_file_location('group_disk_journal',snapshots/'hbm_bound_event_journal_r30.py');J=importlib.util.module_from_spec(spec);spec.loader.exec_module(J)
+            source=Source();output=Output();memories={}
+            with tempfile.TemporaryDirectory() as tmp:
+                budget=J.JournalBudget(Path(tmp)/'actual',536870912)
+                class Memory:
+                    def __init__(self,owner):
+                        self.owner=owner;self.base=16777216+owner['SM']*65536;self.extent=dict(base=self.base,bytes=65536,rank=0,SM=owner['SM'])
+                        if failure=='shared_capacity':self.extent['bytes']=524288
+                        self.p=J.BoundSectorProvider({('DeepSeek',0):[dict(base=self.base,bytes=65536)]},journal_budget=budget,tags=1,allocation_identity=owner)
+                        self.serial=0
+                    def transact(self,offset,*,write,payload,length):
+                        out=[]
+                        for first in range(0,length,32):
+                            identity=P.Identity('DeepSeek',0,1,pc,self.serial,(self.base+offset+first)//32);self.serial+=1
+                            tx=self.p.submit(identity,write=write,payload=payload[first:first+32] if write else b'');out.append(self.p.wait(tx));self.p.finish(tx)
+                        return b''.join(out)
+                def factory(owner):
+                    if owner['SM'] not in memories:memories[owner['SM']]=Memory(owner)
+                    memory=memories[owner['SM']]
+                    if memory.p.live:raise ValueError('tile owner reused before reverse drain')
+                    memory.owner=owner;memory.p.allocation_identity=owner
+                    return memory
+                try:
+                    calls=[]
+                    result=c.execute_ds_group128_tiles(plan,pc,0,1,source,factory,dict(bounded_native=raws['tools/h3_qwen_bounded_native.py'],arithmetic_helpers=raws['tools/h3_qwen_complete_native.py']),output,movement_observer=calls.append if capture_journals else None)
+                    if capture_journals:result['control_movement_calls']=calls
+                    summaries=[m.p.events.summary() for m in memories.values()]
+                    if capture_journals:result['control_disk_journal_events']=[dict(SM=sm,journal_id=m.p.events.id,events=list(m.p.events)) for sm,m in memories.items()]
+                except ValueError as error:
+                    return dict(error=str(error),source_live=len(source.live),source_released=source.released,output_spans=output.spans)
+                finally:budget.db.close()
+                result['control_source_leases']=dict(acquired=source.acquired,released=source.released,live=len(source.live))
+                result['control_disk_journals']=[{k:v for k,v in x.items() if k!='path'} for x in summaries]
+                result['control_output_bits']=output.data.tolist()
+                # Numerical oracle is a TEST only, not a calendar cost source.
+                expected=((data[0]+data[1])+(data[2]+data[3]))+((data[4]+data[5])+(data[6]+data[7]))
+                bits=expected.view(np.uint32);expected=(bits+np.uint32(32767)+((bits>>16)&np.uint32(1)))&np.uint32(0xffff0000)
+                np.testing.assert_array_equal(output.data,expected.reshape(-1))
+                return result
+        finally:
+            if saved is None:sys.modules.pop('hbm_provider_microvm_r21',None)
+            else:sys.modules['hbm_provider_microvm_r21']=saved
+
+    def test_executable_all64_group_tiles_use_real_finite_shared_journals(self):
+        result=self.group_execution_fixture()
+        self.assertNotIn('error',result);self.assertEqual(result['tiles_executed'],64)
+        self.assertEqual(result['actual_shared_movements'],dict(sector32=18432,scratch64=9216,write512=576,read512=576))
+        self.assertEqual(result['control_source_leases'],dict(acquired=512,released=512,live=0))
+        self.assertEqual(result['executed_primitive_scalars']['CONST'],4)
+        self.assertEqual(result['peak_RF_vectors'],16)
+        self.assertFalse(result['full_program_executed']);self.assertIsNone(result['whole_token_latency'])
+
+    def test_actual_group_journal_binds_selected_interval_and_rejects_unknown_waits(self):
+        base=ROOT/c.OUT/'group128_execution_join_r1'
+        control=json.loads(gzip.decompress((base/'actual_group128_execution.json.gz').read_bytes()))
+        inventory=json.loads(gzip.decompress((ROOT/c.OUT/'portable_input_closure_r1/r34_portable_r4/source_inventory.json.gz').read_bytes()))
+        program=dict(templates=inventory['native_templates'],instructions=[dict(pc=r['pc'],rank_bindings=r['actual_rank_template_bindings']) for r in inventory['corrected_PC_bindings']])
+        row=json.loads(gzip.decompress((base/'source_inputs/selected_group_call.json.gz').read_bytes()))['calls'][0]
+        bounds=dict(backend_bound_edges=1,consumer_bound_edges=1,reverse_bound_edges=1)
+        result=c.bind_executed_group_shared64(control,program,row,'reviewed-r34-interval',bounds)
+        commands=result['calls'][row['call_id']]['commands']
+        self.assertEqual(len(commands),9216);self.assertEqual({x['SM'] for x in commands},set(range(32)))
+        self.assertEqual(result['production_calls_closed'],0)
+        with self.assertRaises(ValueError):c.bind_executed_group_shared64(control,program,row,'reviewed-r34-interval',dict(bounds,reverse_bound_edges=None))
+        bad=dict(row,rank=95)
+        with self.assertRaisesRegex(ValueError,'owner'):c.bind_executed_group_shared64(control,program,bad,'reviewed-r34-interval',bounds)
+        small=dict(control,control_movement_calls=[copy.deepcopy(control['control_movement_calls'][0])])
+        small['control_movement_calls'][0]['source_reference']['attrs']['name']='unresolved'
+        with self.assertRaisesRegex(ValueError,'opcode attrs'):c.bind_executed_group_shared64(small,program,row,'reviewed-r34-interval',bounds)
+
+    def test_group_execution_rejects_unresolved_source_contributor_mapping(self):
+        result=self.group_execution_fixture(failure='tile_source')
+        self.assertIn('span mapping mismatch',result['error']);self.assertEqual(result['source_live'],0)
+
+    def test_group_execution_rejects_arithmetic_callback_or_changed_source(self):
+        with self.assertRaisesRegex(ValueError,'closure'):
+            c.load_group_native_primitive_factory({'golden':lambda:None})
+        with self.assertRaisesRegex(ValueError,'pin mismatch'):
+            c.load_group_native_primitive_factory(dict(bounded_native=b'changed',arithmetic_helpers=b'changed'))
+
+    def test_executable_group_failure_retains_source_lease_and_no_successful_commit(self):
+        for failure in ('source_generation','output_debt'):
+            result=self.group_execution_fixture(failure=failure)
+            self.assertIn('error',result);self.assertGreater(result['source_live'],0);self.assertEqual(result['source_released'],0)
+        result=self.group_execution_fixture(failure='shared_capacity')
+        self.assertIn('error',result);self.assertEqual(result['source_live'],0)
+
     def actual_operand_journal_fixture(self):
         import sys,tempfile
         snapshots=ROOT/'results/uarch/h3_complete_native_calendar_20261002/ordered_operand_journal_r1/source_inputs'

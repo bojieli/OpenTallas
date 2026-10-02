@@ -1437,6 +1437,189 @@ def verify_ds_operand_journal(program, template, reference, binding, events, *, 
         installed_home_directory_source_pin=None,whole_program_movement_complete=False,hardware_admitted=False)
 
 
+def load_group_native_primitive_factory(sources):
+    """Only exact retained generic VM instructions, no arithmetic callback."""
+    import numpy as np
+    expected={'bounded_native':'282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b',
+              'arithmetic_helpers':'9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76'}
+    if set(sources)!=set(expected):raise ValueError('exact generic primitive source closure required')
+    for name,digest in expected.items():
+        if not isinstance(sources[name],bytes) or hashlib.sha256(sources[name]).hexdigest()!=digest:
+            raise ValueError('generic primitive source pin mismatch: '+name)
+    tree=ast.parse(sources['bounded_native']);nodes=[]
+    nodes.extend(n for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(x,ast.Name) and x.id=='COMMON_NATIVE' for x in n.targets))
+    nodes.append(next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='NativePrimitiveVM'))
+    nodes.append(next(n for n in ast.parse(sources['arithmetic_helpers']).body if isinstance(n,ast.FunctionDef) and n.name=='poszero'))
+    ns=dict(np=np,F=np.float32,Counter=Counter)
+    exec(compile(ast.Module(body=nodes,type_ignores=[]),'pinned-source-generic-group-primitive-VM','exec'),ns)
+    return ns['NativePrimitiveVM']
+
+
+def execute_ds_group128_tiles(plan, PC, rank, generation, source, shared_factory, primitive_sources, output, *, movement_observer=None):
+    """Execute all64 current-source tiles with actual journalled shared calls.
+
+    Source/output hooks move bytes and leases only; arithmetic is the retained
+    generic primitive VM. Failure retains the owner's leases and journal debt.
+    This is an executable kernel join, not a full-program execution receipt.
+    """
+    import numpy as np
+    if type(generation)is not int or generation<1:raise ValueError('positive source generation required')
+    primitive_factory=load_group_native_primitive_factory(primitive_sources)
+    parent=plan.parents[PC];tid=parent['new_template'];program=plan.templates[tid]
+    if hashlib.sha256(json.dumps(program,sort_keys=True,separators=(',',':')).encode()).hexdigest()!=tid:
+        raise ValueError('actual retained group template identity mismatch')
+    if (plan.inventory['source_native_sha256'],plan.inventory['source_dispatch_sha256'])!=('c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264','bcf7d800aa64aeff92b8a1954cab328911c400025179d6a9ab9f211a934c253c'):
+        raise ValueError('current native/dispatch source identity required')
+    uses=Counter(v for node in program['code'] for v in node['src']);uses.update(program['outputs'].values())
+    scalar_counts=Counter();step_counts=Counter();movement_counts=Counter();proof_hash=hashlib.sha256();output_hash=hashlib.sha256();peak_RF=0
+    published=[];constants={};sector_ticks=0;provider_parameters=None;constant_vm=primitive_factory()
+    for node in program['code']:
+        if node['op']=='CONST':
+            constants[node['dst']]=constant_vm.primitive('CONST',[],attrs=node['attrs'],shape=())
+            scalar_counts['CONST']+=1;step_counts['CONST']+=1
+    for group in range(8):
+        for first in range(0,1024,128):
+            tile=plan.tile(PC,rank,group,first)
+            expected_output=group*1024+first
+            if (tile['source_PC'],tile['destination_rank'],tile['parent_template'],tile['output_flat_word_first'],tile['SM'],tile['destination_version'])!=(PC,rank,tid,expected_output,expected_output//256%32,parent['writes'][0]['version']):
+                raise ValueError('source tile output/owner mapping mismatch')
+            expected_version=parent['provider_bindings'][tid]['parts']['version']
+            if len(tile['source_spans'])!=8:raise ValueError('all eight source contributor spans required')
+            for j,span in enumerate(tile['source_spans']):
+                if (span['contributor'],span['source_rank'],span['source_version'],span['local_word_first'],span['LOAD_flat_word_first'],span['words'],span['bytes'])!=(j,8*group+j,expected_version,first,(j*8+group)*1024+first,128,512):
+                    raise ValueError('source contributor LOAD span mapping mismatch')
+            owner=dict(PC=PC,rank=rank,SM=tile['SM'],generation=generation,tile=tile['tile_ordinal'],template=tid)
+            memory=shared_factory(owner)
+            extent=memory.extent
+            if extent.get('bytes')!=65536 or extent.get('rank')!=rank or extent.get('SM')!=tile['SM'] or extent.get('base',-1)<0:
+                raise ValueError('actual finite64KiB owner shared allocation required')
+            parameters=dict(phase_costs=dict(memory.p.costs),read_ticks=memory.p.read_ticks,write_ticks=memory.p.write_ticks,tag_capacity=memory.p.tags)
+            if provider_parameters is not None and parameters!=provider_parameters:raise ValueError('mixed provider cost/capacity inputs require explicit model join')
+            provider_parameters=parameters
+            leases=[];vectors=[]
+            def transfer(index,operand,value,logical_offset,shared_offset,*,raw=None):
+                nonlocal sector_ticks
+                node=program['code'][index]
+                reference=dict(template=tid,code_index=index,opcode=node['op'],attrs=node['attrs'],result_shape=node['shape'],
+                    operand=operand,value=value,logical_byte_offset=logical_offset,payload_bytes=512)
+                start=len(memory.p.events)
+                returned=memory.transact(shared_offset,write=raw is not None,payload=raw,length=512)
+                stop=len(memory.p.events)
+                if stop<=start:raise ValueError('actual provider returned no journal events')
+                sector_ticks+=memory.p.events[stop-1]['tick']-memory.p.events[start]['tick']
+                if memory.p.live or memory.p.queue or memory.p.calendar or memory.p.resident:raise ValueError('actual shared reverse debt not drained')
+                binding=dict(PC=PC,rank=rank,SM=tile['SM'],generation=generation,version=value,lease='tile:'+str(tile['tile_ordinal']),
+                    lease_state='active',native_SSA_value=value,logical_base=extent['base']+shared_offset,allocation_bytes=512,
+                    operand_base_offset=logical_offset,shared_tile_offset=shared_offset,shared_capacity_bytes=65536,provider_tag_capacity=memory.p.tags)
+                proof=verify_ds_operand_journal({'templates':{tid:program},'instructions':[dict(pc=PC,rank_bindings=parent['actual_rank_template_bindings'])]},
+                    tid,reference,binding,memory.p.events[start:stop])
+                if movement_observer is not None:
+                    movement_observer(dict(owner=owner,source_reference=reference,binding=binding,journal_id=memory.p.events.id,journal_start=start,journal_end=stop,proof=proof))
+                proof_hash.update(json.dumps(proof,sort_keys=True,separators=(',',':')).encode())
+                movement_counts['sector32']+=proof['sector32_transactions'];movement_counts['scratch64']+=proof['scratch64_transactions']
+                movement_counts['write512' if raw is not None else 'read512']+=1
+                if raw is None and len(returned)!=512:raise ValueError('actual shared returned tile length')
+                return returned
+            for span in tile['source_spans']:
+                record=source.acquire(span,owner)
+                expected=dict(version=span['source_version'],rank=span['source_rank'],generation=generation,first=first,words=128)
+                if any(record.get(k)!=v for k,v in expected.items()) or record.get('state')!='visible' or not record.get('lease'):
+                    raise ValueError('actual source span/version/generation/lease mismatch')
+                raw=record.get('data')
+                if not isinstance(raw,bytes) or len(raw)!=512:raise ValueError('actual source512B F32 bytes required')
+                if record.get('payload_sha256')!=hashlib.sha256(raw).hexdigest():raise ValueError('actual source span payload changed')
+                leases.append(record);j=span['contributor'];offset=j*512;logical=span['LOAD_flat_word_first']*4
+                transfer(0,'dst',program['code'][0]['dst'],logical,offset,raw=raw)
+                raw=transfer(1+2*j,'src:0',program['code'][0]['dst'],logical,offset)
+                vectors.append(np.frombuffer(raw,dtype=np.float32).copy())
+            values={};remaining=uses.copy();vm=primitive_factory()
+            for index,node in enumerate(program['code']):
+                op=node['op'];args=[values[v] for v in node['src']]
+                if op=='LOAD':value=vectors
+                elif op=='CONST':value=constants[node['dst']]
+                elif op=='SLICE':
+                    attrs=node['attrs']
+                    if attrs['axis']!=0 or attrs['step']!=1 or attrs['stop']!=attrs['start']+1:raise ValueError('original contributor SLICE source required')
+                    value=args[0][attrs['start']].reshape(1,128)
+                else:
+                    shape=() if node['shape']==[] else (128,)
+                    value=vm.primitive(op,args,attrs=node['attrs'],shape=shape)
+                values[node['dst']]=value
+                words=1024 if op=='LOAD' else max(1,int(np.size(value)))
+                if op!='CONST':
+                    scalar_counts[op]+=words;step_counts[op]+=8 if op=='LOAD' else 1
+                peak_RF=max(peak_RF,sum(8 if isinstance(v,list) else max(1,(v.nbytes+511)//512) for v in values.values()))
+                if peak_RF>32:raise ValueError('actual tile RF32 live capacity exceeded')
+                for v in node['src']:
+                    remaining[v]-=1
+                    if not remaining[v]:del values[v]
+            if vm.fault:raise ValueError('primitive numerical fault prevents output publication')
+            raw=values[program['outputs']['out']].tobytes();logical=tile['output_flat_word_first']*4;final=len(program['code'])-1
+            transfer(final,'dst',program['code'][final]['dst'],logical,8192,raw=raw)
+            raw=transfer(final,'src:0',program['code'][final]['src'][0],logical,8192)
+            receipt=output.write_span(tile,owner,raw)
+            if (receipt.get('version'),receipt.get('rank'),receipt.get('generation'),receipt.get('first'),receipt.get('bytes'))!=(tile['destination_version'],rank,generation,tile['output_flat_word_first'],512):
+                raise ValueError('actual output span/version/owner mismatch')
+            if receipt.get('payload_sha256')!=hashlib.sha256(raw).hexdigest() or receipt.get('pending_obligations')!=0:
+                raise ValueError('output receipt changed payload or retained reverse debt')
+            # Full RF mirrored/physical visibility stays UNKNOWN; this hook must
+            # supply its own complete parent provider journal for that join.
+            published.append(receipt);output_hash.update(raw)
+            for record in leases:source.release(record,owner)
+    return dict(schema='H4_DS_EXECUTED_GROUP128_JOURNAL_KERNEL_V1',PC=PC,rank=rank,generation=generation,
+        source_native_sha256=plan.inventory['source_native_sha256'],source_dispatch_sha256=plan.inventory['source_dispatch_sha256'],
+        tiles_executed=64,source_spans=512,output_spans=64,shared_capacity_per_SM=65536,reserved_shared_bytes=8704,
+        peak_RF_vectors=peak_RF,executed_primitive_scalars=dict(scalar_counts),executed_steps=dict(step_counts),
+        actual_shared_movements=dict(movement_counts),actual_movement_proof_chain_sha256=proof_hash.hexdigest(),output_sha256=output_hash.hexdigest(),
+        output_span_receipts=published,explicit_provisional_sector_parameters=provider_parameters,
+        actual_serial_sector_service_software_ticks=sector_ticks,scratch64_endpoint_cost=None,
+        primitive_endpoint_costs=None,actual_RF_mirror_journal=None,physical_address_translation=None,
+        native_C0_provider_RF_I64_cost_added=0,full_program_executed=False,production_unknown_shared_calls=193316,
+        whole_token_latency=None,hardware_admitted=False)
+
+
+def bind_executed_group_shared64(control, program, inventory_call, existing_interval_id, external_bounds):
+    """Export actual executed source spans into the selected-interval ABI.
+
+    Positive bounds are explicit provisional model inputs, not the software
+    sector timestamps converted into hardware edges. Existing charges stay put.
+    """
+    required={'backend_bound_edges','consumer_bound_edges','reverse_bound_edges'}
+    if set(external_bounds)!=required:raise ValueError('complete explicit external wait bounds required')
+    for name,value in external_bounds.items():positive(value,name)
+    if not existing_interval_id:raise ValueError('retained interval identity required')
+    if (inventory_call['PC'],inventory_call['rank'])!=(control['PC'],control['rank']):raise ValueError('selected call differs from executed source owner')
+    template=inventory_call['template']
+    if hashlib.sha256(json.dumps(program['templates'][template],sort_keys=True,separators=(',',':')).encode()).hexdigest()!=template:
+        raise ValueError('retained selected template source identity mismatch')
+    journals={r['journal_id']:r['events'] for r in control['control_disk_journal_events']};commands=[]
+    chain=hashlib.sha256()
+    for call in control['control_movement_calls']:
+        ref=call['source_reference'];binding=call['binding'];owner=call['owner']
+        if ref['template']!=inventory_call['template'] or (owner['PC'],owner['rank'],owner['generation'])!=(control['PC'],control['rank'],control['generation']):
+            raise ValueError('executed source template/generation differs from selected call')
+        proof=call['proof'];events=journals[call['journal_id']][call['journal_start']:call['journal_end']]
+        actual=verify_ds_operand_journal(program,ref['template'],ref,binding,events)
+        if actual!=proof or proof['sector32_transactions']!=16 or not proof['matching_reverse_drained']:
+            raise ValueError('actual executed source journal span changed')
+        chain.update(json.dumps(proof,sort_keys=True,separators=(',',':')).encode())
+        for beat in range(8):
+            commands.append(dict(kind='shared_write64' if ref['operand']=='dst' else 'shared_read64',
+                die=owner['rank'],SM=owner['SM'],generation=owner['generation'],lease=binding['lease'],
+                provider_reference='journal:'+str(call['journal_id'])+':'+str(call['journal_start'])+':'+proof['journal_sha256'],
+                existing_interval_id=existing_interval_id,group=beat,scratch_byte_address=binding['shared_tile_offset']+beat*64,
+                source_operand=dict(code_index=ref['code_index'],operand=ref['operand'],typed_offset=ref['logical_byte_offset']+beat*64,typed_bytes=64),
+                actual_journal_span=[call['journal_id'],call['journal_start'],call['journal_end']],
+                native_group=owner['tile']//8,**external_bounds))
+    if chain.hexdigest()!=control['actual_movement_proof_chain_sha256'] or len(commands)!=control['actual_shared_movements']['scratch64']:
+        raise ValueError('complete executed shared movement proof/count mismatch')
+    return dict(source_native_sha256=control['source_native_sha256'],source_dispatch_sha256=control['source_dispatch_sha256'],
+        calls={inventory_call['call_id']:dict(template=inventory_call['template'],commands=commands)},
+        origin='executed64-tile directed software kernel; source/output provider controls, not a released-checkpoint token',
+        cost_bound_scope='explicit provisional endpoint-model edges; measured endpoint costs UNKNOWN',
+        existing_RF_I64_RMW_C0_provider_charges_added=0,production_calls_closed=0,whole_program_executed=False,hardware_admitted=False)
+
+
 def reprice_h4_intervals(execution, *, costs=None):
     """Recompose retained execution, without arithmetic/provider rerun or r22.
 
