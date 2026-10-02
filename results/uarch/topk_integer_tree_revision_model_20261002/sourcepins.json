@@ -1,0 +1,16 @@
+{
+  "inputs_sha256": {
+    "inputs/analysis_admission_and_pins.json": "0194f9677346fb675292847867afe2019c557972bb5ff06a2b5f939b312743c2",
+    "inputs/liberty_cell_area_extract.json": "1ee1aa76136d8c215e2979fa1237f6ca732db0f8add6999ac2e82dc0511d9b69",
+    "inputs/rtl/chip/ot_coll_topk_merge.sv": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6",
+    "inputs/rtl/test/tb_w15_topk_merge.sv": "95415aebf0ed571c5b836b4fccb4398da00c1f3a52763607525688879eb816cc",
+    "inputs/tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+    "inputs/tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "inputs/tools/w15_topk_merge.py": "21b424a9bff14ecb6858335ce43d6319240112dabbcceaef08544d69961180f2",
+    "inputs/topk_baseline_scope.json": "2d5019a43c79a46a163b6c2d3dfac2e4c1db741fe705342e78599b395b4dc07e",
+    "inputs/topk_endpoints.json": "0e85567cc60dd61a9b9d428ae75e3059eef1f79055444bc591685ee8ce1bce0c"
+  },
+  "no_RTL_or_build_at_model_stage": true,
+  "previous_actual_GRT_commit": "eb5d8b916054586f11a5d2e980180c6b327090e6",
+  "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23"
+}

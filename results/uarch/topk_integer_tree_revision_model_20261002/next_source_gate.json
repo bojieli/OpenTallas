@@ -1,0 +1,38 @@
+{
+  "base_source": "inputs/rtl/chip/ot_coll_topk_merge.sv",
+  "checkpoint_status": "STRUCTURAL_COMPARISON_ONLY_NOT_CALLER_G0",
+  "future_execution_policy": {
+    "PVE2_PVE3": "NO_NEW_JOBS",
+    "allowed_hosts": [
+      "local",
+      "ot-pve1",
+      "ot-agidock128"
+    ],
+    "build_admission": "fresh measured CPU/RAM/disk and real source inventory; no arbitrary elapsed/file/AS caps; preserve incremental objects/first failures",
+    "current_old_DRT": "leave untouched",
+    "no_build_before_model_admission": true
+  },
+  "implementation": "one added source copy ot_coll_topk_merge_integer_tree_prepare.sv with INT_TREE_PIPE=0 default; baseline branch byte-equivalent source behavior; no independent divergent arithmetic implementations",
+  "known_caller_correction": "ROM NMAX2048/LDW4 for runtime512 and2048; current rows do not grant caller port/storage or service composition credit",
+  "model_admission_inputs": [
+    "source-pinned complete full-instance area and reserved outline/channel slot",
+    "hist/adder/leaf-compare/choose/filter clock stage bounds SS60ps FF25ps in context",
+    "Dewey actual caller/clock/group/stage ownership critical-path composition"
+  ],
+  "next_action": "Correct actual compiled caller, bind full reserved slot and program dependencies, price balanced combinational versus staged DIG8 and DIG4 before choosing admitted implementation",
+  "physical_gate": [
+    "full required-shape selector, full storage/ports and context, source-bound SS/FF",
+    "all hist/choose/filter paths included, baseline833ps60/25 unchanged",
+    "if nonclosing/slower reject rather than silently adding unpriced stages"
+  ],
+  "publication": "added-only model milestone now; implementation after admission; no alteration of historical records",
+  "required_contracts": [
+    "CB modular suffix every bin, including wrap witnesses",
+    "highest-bin choose with old pbin/pgt hold on no-match",
+    "signed-zero/NaN/Inf and stable lower-global-ID tie policy unchanged",
+    "rank-major filter/compaction/word padding/backpressure/reset/busy/done/fault unchanged",
+    "hist drain valid pipeline and no prefix/rr change before last accepted count",
+    "full public boundary equivalence baseline and golden at actual N4 and N96 NMAX512/2048 P/PF; no smaller proxy"
+  ],
+  "state": "NOT_ADMITTED_DO_NOT_LAUNCH"
+}
