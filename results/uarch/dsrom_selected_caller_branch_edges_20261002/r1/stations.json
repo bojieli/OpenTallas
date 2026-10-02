@@ -1,0 +1,1922 @@
+[
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      15120,
+      275184,
+      15390
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      34020,
+      275184,
+      34290
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      53190,
+      275184,
+      53460
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      72090,
+      275184,
+      72360
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      90720,
+      275184,
+      90990
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      16470,
+      275184,
+      16740
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.RESETN",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      34830,
+      275184,
+      35100
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.RESETN",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      53190,
+      274806,
+      53460
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.RESETN",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      71820,
+      275184,
+      72090
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.RESETN",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      89910,
+      275184,
+      90180
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.RESETN",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      15120,
+      274806,
+      15390
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_bank.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      34020,
+      274806,
+      34290
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_bank.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      52650,
+      275184,
+      52920
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_bank.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      71550,
+      275184,
+      71820
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_bank.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      275292,
+      90450,
+      275670,
+      90720
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_bank.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      3240,
+      275184,
+      3510
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      10260,
+      275184,
+      10530
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      17010,
+      275184,
+      17280
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      23760,
+      275184,
+      24030
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      30780,
+      275184,
+      31050
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      4320,
+      275184,
+      4590
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.RESETN",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      11070,
+      275184,
+      11340
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.RESETN",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      275292,
+      17280,
+      275670,
+      17550
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.RESETN",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      275292,
+      24030,
+      275670,
+      24300
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.RESETN",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      29970,
+      275184,
+      30240
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.RESETN",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      2970,
+      275184,
+      3240
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_bank.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      9720,
+      275184,
+      9990
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_bank.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      17010,
+      274806,
+      17280
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_bank.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      23760,
+      274806,
+      24030
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_bank.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      30780,
+      274806,
+      31050
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_bank.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      236844,
+      270,
+      237222,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      194940,
+      270,
+      195318,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      152982,
+      270,
+      153360,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      26730,
+      137808,
+      27000
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      68580,
+      137808,
+      68850
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      237114,
+      1620,
+      237492,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.RESETN",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      195588,
+      1620,
+      195966,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.RESETN",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      154062,
+      1620,
+      154440,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.RESETN",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      26460,
+      137808,
+      26730
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.RESETN",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      68040,
+      137808,
+      68310
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.RESETN",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      236952,
+      0,
+      237330,
+      270
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_bank.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      195048,
+      0,
+      195426,
+      270
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_bank.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      153360,
+      270,
+      153738,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_bank.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      26190,
+      137808,
+      26460
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_bank.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      68310,
+      137808,
+      68580
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_bank.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      248832,
+      270,
+      249210,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      218862,
+      270,
+      219240,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      188892,
+      270,
+      189270,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      158922,
+      270,
+      159300,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      8910,
+      137808,
+      9180
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      249102,
+      1620,
+      249480,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.RESETN",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      219510,
+      1620,
+      219888,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.RESETN",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      189972,
+      1620,
+      190350,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.RESETN",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      160380,
+      1620,
+      160758,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.RESETN",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      8370,
+      137808,
+      8640
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.RESETN",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      248886,
+      0,
+      249264,
+      270
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_bank.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      218970,
+      0,
+      219348,
+      270
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_bank.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      189270,
+      270,
+      189648,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_bank.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      159300,
+      270,
+      159678,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_bank.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      8640,
+      137808,
+      8910
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "bfcolumn",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_bank.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      15120,
+      275184,
+      15390
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      34020,
+      275184,
+      34290
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      53190,
+      275184,
+      53460
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      72090,
+      275184,
+      72360
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      90720,
+      275184,
+      90990
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      16470,
+      275184,
+      16740
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.RESETN",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      34830,
+      275184,
+      35100
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.RESETN",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      53190,
+      274806,
+      53460
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.RESETN",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      71820,
+      275184,
+      72090
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.RESETN",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      89910,
+      275184,
+      90180
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b1_valid.RESETN",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      15120,
+      274806,
+      15390
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_bank.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      34020,
+      274806,
+      34290
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_bank.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      52650,
+      275184,
+      52920
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_bank.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      71550,
+      275184,
+      71820
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_bank.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      275292,
+      90450,
+      275670,
+      90720
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b1_bank.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      3240,
+      275184,
+      3510
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      10260,
+      275184,
+      10530
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      17010,
+      275184,
+      17280
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      23760,
+      275184,
+      24030
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      30780,
+      275184,
+      31050
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      4320,
+      275184,
+      4590
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.RESETN",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      11070,
+      275184,
+      11340
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.RESETN",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      275292,
+      17280,
+      275670,
+      17550
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.RESETN",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      275292,
+      24030,
+      275670,
+      24300
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.RESETN",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      29970,
+      275184,
+      30240
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s1b0_valid.RESETN",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      2970,
+      275184,
+      3240
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_bank.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274806,
+      9720,
+      275184,
+      9990
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_bank.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      17010,
+      274806,
+      17280
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_bank.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      23760,
+      274806,
+      24030
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_bank.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      274428,
+      30780,
+      274806,
+      31050
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s1b0_bank.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      236844,
+      270,
+      237222,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      194940,
+      270,
+      195318,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      152982,
+      270,
+      153360,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      26730,
+      137808,
+      27000
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      68580,
+      137808,
+      68850
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      237114,
+      1620,
+      237492,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.RESETN",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      195588,
+      1620,
+      195966,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.RESETN",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      154062,
+      1620,
+      154440,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.RESETN",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      26460,
+      137808,
+      26730
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.RESETN",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      68040,
+      137808,
+      68310
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b1_valid.RESETN",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      236952,
+      0,
+      237330,
+      270
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_bank.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      195048,
+      0,
+      195426,
+      270
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_bank.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      153360,
+      270,
+      153738,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_bank.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      26190,
+      137808,
+      26460
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_bank.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      68310,
+      137808,
+      68580
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b1_bank.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      248832,
+      270,
+      249210,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      218862,
+      270,
+      219240,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      188892,
+      270,
+      189270,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      158922,
+      270,
+      159300,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      8910,
+      137808,
+      9180
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.CLK",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      249102,
+      1620,
+      249480,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.RESETN",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      219510,
+      1620,
+      219888,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.RESETN",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      189972,
+      1620,
+      190350,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.RESETN",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      160380,
+      1620,
+      160758,
+      1890
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.RESETN",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      8370,
+      137808,
+      8640
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "parent rst_n; physical ingress UNBOUND",
+    "orientation": "R0",
+    "sink": "enable_s0b0_valid.RESETN",
+    "stage": 4
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      248886,
+      0,
+      249264,
+      270
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_bank.CLK",
+    "stage": 0
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      218970,
+      0,
+      219348,
+      270
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_bank.CLK",
+    "stage": 1
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      189270,
+      270,
+      189648,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_bank.CLK",
+    "stage": 2
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      159300,
+      270,
+      159678,
+      540
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_bank.CLK",
+    "stage": 3
+  },
+  {
+    "PG_pin_via_access_proven": false,
+    "bbox_DBU": [
+      137430,
+      8640,
+      137808,
+      8910
+    ],
+    "body_clear_of_archived_primitives_macro_bodies_and_WAKE_ICG": true,
+    "case": "q",
+    "master": "BUFx4_ASAP7_75t_R",
+    "net_owner": "\\g_wake.g_leaf[0].u_cg.u_icg",
+    "orientation": "R0",
+    "sink": "enable_s0b0_bank.CLK",
+    "stage": 4
+  }
+]

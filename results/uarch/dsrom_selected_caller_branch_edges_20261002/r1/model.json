@@ -1,0 +1,2772 @@
+{
+  "accepted_I66": {
+    "activation": {
+      "actual_AQ_producer_edges": [
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138
+      ],
+      "actual_accepted_edges": [
+        82,
+        90,
+        98,
+        106,
+        114,
+        122,
+        130,
+        138,
+        140,
+        142,
+        144,
+        146,
+        148,
+        150,
+        152,
+        154,
+        156,
+        158,
+        160,
+        162,
+        164,
+        166,
+        168,
+        170,
+        172,
+        174,
+        176,
+        178,
+        180,
+        182,
+        184,
+        186,
+        188,
+        190,
+        192,
+        194,
+        196,
+        198,
+        200,
+        202,
+        204,
+        206,
+        208,
+        210,
+        212,
+        214,
+        216,
+        218,
+        220,
+        222,
+        224,
+        226,
+        228,
+        230,
+        232,
+        234,
+        236,
+        238,
+        240,
+        242,
+        244,
+        246,
+        248,
+        250,
+        252,
+        256,
+        260,
+        264,
+        268,
+        272,
+        276,
+        280,
+        284,
+        288,
+        292,
+        296,
+        300,
+        304,
+        308,
+        312
+      ],
+      "additional_physical_transport_edges_unqualified": true,
+      "lead_includes_existing_BST17_and_native_stalls_not_free_wire_slack": true,
+      "paired_source_lead_edges": [
+        23,
+        30,
+        37,
+        44,
+        51,
+        58,
+        65,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        132,
+        135,
+        138,
+        141,
+        144,
+        147,
+        150,
+        153,
+        156,
+        159,
+        162,
+        165,
+        168,
+        171,
+        174
+      ],
+      "payload_with_valid_bits": 549,
+      "source_BST17_unchanged": true,
+      "zero_latency_not_assumed": true
+    },
+    "actual_phase": {
+      "key_word": 2149580800,
+      "phase": 10,
+      "rank": 0,
+      "reset_era": 0,
+      "stage": 0
+    },
+    "cfg": {
+      "GO_edge": 60,
+      "ROM_ECC_required": false,
+      "accepted_words_per_shard": 51200,
+      "bits_per_local_edge_per_shard": 98304,
+      "capture_edges": [
+        35,
+        59
+      ],
+      "envelope_is_not_hidden_latency_proof": true,
+      "hard_cfg72_CLKQ_source_bound": false,
+      "hard_cfg72_capture_and_II1_not_qualified": true,
+      "hard_macro_two_edge_multicycle_with_II1_requires_bank_overwrite_hold_proof": true,
+      "local_ports_per_shard": 2048,
+      "one_edge_CLKQ_plus_mux_wire_capture_setup_ceiling_ps": 748.3333333333334,
+      "read_edges": [
+        34,
+        58
+      ],
+      "source_generic_capture_edges": 1,
+      "two_edge_capture_if_needed_earliest_GO": 61,
+      "two_edge_capture_to_first_activation_envelope_edges": 21,
+      "weight274_CLKQ_not_transferred_to_configuration72": true
+    },
+    "no_global_ROM_ECC_seats": true,
+    "no_new_ACK": true,
+    "physical_cfg_activation_root_added_edges": null,
+    "roots": {
+      "VM_sink_physical_home": null,
+      "fullwidth_port_contract": {
+        "all576_preserved": true,
+        "last_VM_visible": 420,
+        "maximum_additional_queue_edges": 0,
+        "maximum_queued_roots": 128,
+        "ports": 128,
+        "writer_bits_per_edge": 8064
+      },
+      "lower_bound_delta_rule": "For an additional registered physical hop H, each delivered root and its nativeVM+1 are delayedH unless actual upstream overlap is proved; no new ACK or golden K reassociation",
+      "minimum_no_serialize_common_ports": 128,
+      "native_root_to_VM_edges": 1,
+      "original_common_writer_peak_ports": 128,
+      "peak_root_bits_per_shard": 4416,
+      "per_shard_actual_root_bits_by_edge": {
+        "0": {
+          "414": 4416,
+          "415": 4416,
+          "416": 4416,
+          "417": 4416,
+          "418": 2208,
+          "419": 2208
+        },
+        "1": {
+          "414": 4416,
+          "415": 4416,
+          "416": 4416,
+          "417": 4416
+        }
+      },
+      "physical_root_transport_qualified": false,
+      "single_shared_port_counterfactual": {
+        "all576_preserved": true,
+        "last_VM_visible": 990,
+        "maximum_additional_queue_edges": 570,
+        "maximum_queued_roots": 571,
+        "ports": 1,
+        "writer_bits_per_edge": 63
+      },
+      "writer_peak_bits_all_ports": 8064
+    },
+    "runtime": {
+      "adapter_idle": 422,
+      "drain462_is_not_kernel_latency": true,
+      "last_VM_visibility": 420,
+      "last_root": 419,
+      "native_op_origin": 10,
+      "observed_stable_debt_drain": 462,
+      "overall": "PASS",
+      "spine_idle": 421
+    },
+    "source_commit": "5a373d0fd11fe9445660af9872fd410b94788e38",
+    "source_handoff_scope": "actual I66 only; no other1148calls/fulltoken or physicalclock credit"
+  },
+  "area": {
+    "PG_actual_row_pin_union_proven": false,
+    "committed_enable8d6_revision_delta_mm2": 0.0009555148800000024,
+    "containment_credit": 0,
+    "enable_revision_delta_charged_once": true,
+    "fit": false,
+    "full_existing_reset_new_BUF_cells": 502442,
+    "original_reset_and_new_clone_nodes_not_doublecounted": true,
+    "positive_additional_branch_floor_mm2": 0.02466422784,
+    "positive_full_existing_reset_floor_mm2": 0.10255846103999999,
+    "prior_screen_mm2": 754.9337664632458,
+    "remaining_mm2": 102.93536427323421,
+    "screen_mm2": 755.0646357267658,
+    "source_correct_BST_additional_floor_mm2": 0.0026910597599999996,
+    "unchanged_frames": {
+      "BF": [
+        1002.89,
+        157.68
+      ],
+      "q": [
+        510.84,
+        151.2
+      ]
+    }
+  },
+  "branch_construction": {
+    "bfcolumn": {
+      "CLK_origin_LEF_GCLK_M1_bbox_DBU": [
+        278783,
+        495,
+        278838,
+        513
+      ],
+      "SETN1_ties": [
+        {
+          "bbox_DBU": [
+            274158,
+            107190,
+            274320,
+            107460
+          ],
+          "instance": "enable_s1b1_SETN1",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "orientation": "R0",
+          "pin_OBS_template": "TIEHIx1_ASAP7_75t_R",
+          "role": "source_bound_SETN1_tie"
+        },
+        {
+          "bbox_DBU": [
+            274158,
+            35370,
+            274320,
+            35640
+          ],
+          "instance": "enable_s1b0_SETN1",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "orientation": "R0",
+          "pin_OBS_template": "TIEHIx1_ASAP7_75t_R",
+          "role": "source_bound_SETN1_tie"
+        },
+        {
+          "bbox_DBU": [
+            135918,
+            107190,
+            136080,
+            107460
+          ],
+          "instance": "enable_s0b1_SETN1",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "orientation": "R0",
+          "pin_OBS_template": "TIEHIx1_ASAP7_75t_R",
+          "role": "source_bound_SETN1_tie"
+        },
+        {
+          "bbox_DBU": [
+            135918,
+            35370,
+            136080,
+            35640
+          ],
+          "instance": "enable_s0b0_SETN1",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "orientation": "R0",
+          "pin_OBS_template": "TIEHIx1_ASAP7_75t_R",
+          "role": "source_bound_SETN1_tie"
+        }
+      ],
+      "actual_source_ICG": {
+        "actual_instance": "\\g_wake.g_leaf[0].u_cg.u_icg",
+        "bbox_DBU": [
+          277884,
+          270,
+          278856,
+          540
+        ],
+        "included_in_mapped_area": true,
+        "leaf": 0,
+        "master": "ICGx1_ASAP7_75t_R",
+        "role": "sourceICG"
+      },
+      "added_sampling_edges": 0,
+      "balanced_new_branch_BUF_depth": 5,
+      "clock_BUF": 40,
+      "clock_FF_replicas": 8,
+      "clock_reset_full_source_union": {
+        "ff": {
+          "SETN_constant1_extra_pin_count": 4,
+          "composed_leaf0_pin_cap_fF": 5279.879981999672,
+          "composed_reset_pin_cap_fF": 3548.3867399999986,
+          "constant_tie_provider": "four actual TIEHIx1_ASAP7_75t_R/H, oneper strip; source platform policy, Liberty H constant1 and LEF slot priced",
+          "constant_tie_provider_required": true,
+          "existing_leaf0_net_id": "450021",
+          "existing_leaf0_pin_cap_fF": 5275.779333999672,
+          "existing_leaf0_sinks": 10108,
+          "existing_reset_pin_cap_fF": 3545.1751039999986,
+          "existing_source_ICG": "g_wake.g_leaf[0].u_cg.u_icg",
+          "extra_clock_pin_cap_fF": 4.100648,
+          "extra_reset_pin_cap_fF": 3.211636,
+          "new_leaf0_sinks": 10116
+        },
+        "ss": {
+          "SETN_constant1_extra_pin_count": 4,
+          "composed_leaf0_pin_cap_fF": 4517.671111999611,
+          "composed_reset_pin_cap_fF": 3111.2342860000063,
+          "constant_tie_provider": "four actual TIEHIx1_ASAP7_75t_R/H, oneper strip; source platform policy, Liberty H constant1 and LEF slot priced",
+          "constant_tie_provider_required": true,
+          "existing_leaf0_net_id": "450021",
+          "existing_leaf0_pin_cap_fF": 4514.148631999611,
+          "existing_leaf0_sinks": 10108,
+          "existing_reset_pin_cap_fF": 3108.4181860000062,
+          "existing_source_ICG": "g_wake.g_leaf[0].u_cg.u_icg",
+          "extra_clock_pin_cap_fF": 3.52248,
+          "extra_reset_pin_cap_fF": 2.8161,
+          "new_leaf0_sinks": 10116
+        }
+      },
+      "clock_skew_to_existing_siblings_ps_unqualified": true,
+      "committed_enable_um2": 40.06584,
+      "existing_RST_full_source_pin_cap_fF": 3545.1751039999986,
+      "existing_WAKE8_recharged": false,
+      "existing_source_clock_cut_tracks": 18,
+      "extra_reset_cut_track_guard_reservation": 3,
+      "full_existing_reset_positive_BUF": 694,
+      "full_existing_reset_positive_BUF_levels": [
+        616,
+        69,
+        8,
+        1
+      ],
+      "full_existing_reset_scope": "original reset pins only; clone20 stationBUF priced separately, globalpair tree inherited once",
+      "matching_existing_launch_capture_branch_required": true,
+      "nets": [
+        {
+          "BUF_bbox_DBU": [
+            [
+              274806,
+              15120,
+              275184,
+              15390
+            ],
+            [
+              274806,
+              34020,
+              275184,
+              34290
+            ],
+            [
+              274806,
+              53190,
+              275184,
+              53460
+            ],
+            [
+              274806,
+              72090,
+              275184,
+              72360
+            ],
+            [
+              274806,
+              90720,
+              275184,
+              90990
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 113.4375,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            272259,
+            107372,
+            272277,
+            107426
+          ],
+          "instance": "enable_s1b1_valid",
+          "maximum_segment_um": 19.271,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              274797,
+              504.0
+            ],
+            [
+              274797,
+              107399.0
+            ],
+            [
+              272268.0,
+              107399.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            18.5665,
+            18.9,
+            19.17,
+            18.9,
+            18.63,
+            19.271
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              274806,
+              16470,
+              275184,
+              16740
+            ],
+            [
+              274806,
+              34830,
+              275184,
+              35100
+            ],
+            [
+              274428,
+              53190,
+              274806,
+              53460
+            ],
+            [
+              274806,
+              71820,
+              275184,
+              72090
+            ],
+            [
+              274806,
+              89910,
+              275184,
+              90180
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 110.9635,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            273204,
+            107292,
+            273222,
+            107357
+          ],
+          "instance": "enable_s1b1_valid",
+          "maximum_segment_um": 19.0615,
+          "pin": "RESETN",
+          "polyline_DBU": [
+            [
+              278640,
+              1788
+            ],
+            [
+              274797,
+              1788
+            ],
+            [
+              274797,
+              107324.5
+            ],
+            [
+              273213.0,
+              107324.5
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            18.462,
+            18.36,
+            18.738,
+            19.008,
+            18.09,
+            19.0615
+          ],
+          "source_net": "rst_n",
+          "source_owner": "parent rst_n; physical ingress UNBOUND"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              274428,
+              15120,
+              274806,
+              15390
+            ],
+            [
+              274428,
+              34020,
+              274806,
+              34290
+            ],
+            [
+              274806,
+              52650,
+              275184,
+              52920
+            ],
+            [
+              274806,
+              71550,
+              275184,
+              71820
+            ],
+            [
+              275292,
+              90450,
+              275670,
+              90720
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 113.0285,
+          "endpoint_orientation": "MX",
+          "endpoint_pin_bbox_DBU": [
+            272259,
+            106954,
+            272277,
+            107026
+          ],
+          "instance": "enable_s1b1_bank",
+          "maximum_segment_um": 19.618,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              274797,
+              504.0
+            ],
+            [
+              274797,
+              106990.0
+            ],
+            [
+              272268.0,
+              106990.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            18.9445,
+            18.9,
+            19.008,
+            18.9,
+            19.386,
+            19.618
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              274806,
+              3240,
+              275184,
+              3510
+            ],
+            [
+              274806,
+              10260,
+              275184,
+              10530
+            ],
+            [
+              274806,
+              17010,
+              275184,
+              17280
+            ],
+            [
+              274806,
+              23760,
+              275184,
+              24030
+            ],
+            [
+              274806,
+              30780,
+              275184,
+              31050
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 41.6175,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            272259,
+            35552,
+            272277,
+            35606
+          ],
+          "instance": "enable_s1b0_valid",
+          "maximum_segment_um": 7.391,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              274797,
+              504.0
+            ],
+            [
+              274797,
+              35579.0
+            ],
+            [
+              272268.0,
+              35579.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            6.6865,
+            7.02,
+            6.75,
+            6.75,
+            7.02,
+            7.391
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              274806,
+              4320,
+              275184,
+              4590
+            ],
+            [
+              274806,
+              11070,
+              275184,
+              11340
+            ],
+            [
+              275292,
+              17280,
+              275670,
+              17550
+            ],
+            [
+              275292,
+              24030,
+              275670,
+              24300
+            ],
+            [
+              274806,
+              29970,
+              275184,
+              30240
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 39.1435,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            273204,
+            35472,
+            273222,
+            35537
+          ],
+          "instance": "enable_s1b0_valid",
+          "maximum_segment_um": 7.1815,
+          "pin": "RESETN",
+          "polyline_DBU": [
+            [
+              278640,
+              1788
+            ],
+            [
+              274797,
+              1788
+            ],
+            [
+              274797,
+              35504.5
+            ],
+            [
+              273213.0,
+              35504.5
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            6.312,
+            6.75,
+            6.696,
+            6.75,
+            6.426,
+            7.1815
+          ],
+          "source_net": "rst_n",
+          "source_owner": "parent rst_n; physical ingress UNBOUND"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              274806,
+              2970,
+              275184,
+              3240
+            ],
+            [
+              274806,
+              9720,
+              275184,
+              9990
+            ],
+            [
+              274428,
+              17010,
+              274806,
+              17280
+            ],
+            [
+              274428,
+              23760,
+              274806,
+              24030
+            ],
+            [
+              274428,
+              30780,
+              274806,
+              31050
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 41.2085,
+          "endpoint_orientation": "MX",
+          "endpoint_pin_bbox_DBU": [
+            272259,
+            35134,
+            272277,
+            35206
+          ],
+          "instance": "enable_s1b0_bank",
+          "maximum_segment_um": 7.668,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              274797,
+              504.0
+            ],
+            [
+              274797,
+              35170.0
+            ],
+            [
+              272268.0,
+              35170.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            6.4165,
+            6.75,
+            7.668,
+            6.75,
+            7.02,
+            6.604
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              236844,
+              270,
+              237222,
+              540
+            ],
+            [
+              194940,
+              270,
+              195318,
+              540
+            ],
+            [
+              152982,
+              270,
+              153360,
+              540
+            ],
+            [
+              137430,
+              26730,
+              137808,
+              27000
+            ],
+            [
+              137430,
+              68580,
+              137808,
+              68850
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 251.6775,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            134019,
+            107372,
+            134037,
+            107426
+          ],
+          "instance": "enable_s0b1_valid",
+          "maximum_segment_um": 42.275,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              137421,
+              504.0
+            ],
+            [
+              137421,
+              107399.0
+            ],
+            [
+              134028.0,
+              107399.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            41.8765,
+            41.904,
+            41.958,
+            42.012,
+            41.85,
+            42.275
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              237114,
+              1620,
+              237492,
+              1890
+            ],
+            [
+              195588,
+              1620,
+              195966,
+              1890
+            ],
+            [
+              154062,
+              1620,
+              154440,
+              1890
+            ],
+            [
+              137430,
+              26460,
+              137808,
+              26730
+            ],
+            [
+              137430,
+              68040,
+              137808,
+              68310
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 249.2035,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            134964,
+            107292,
+            134982,
+            107357
+          ],
+          "instance": "enable_s0b1_valid",
+          "maximum_segment_um": 41.7955,
+          "pin": "RESETN",
+          "polyline_DBU": [
+            [
+              278640,
+              1788
+            ],
+            [
+              137421,
+              1788
+            ],
+            [
+              137421,
+              107324.5
+            ],
+            [
+              134973.0,
+              107324.5
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            41.37,
+            41.526,
+            41.526,
+            41.472,
+            41.58,
+            41.7955
+          ],
+          "source_net": "rst_n",
+          "source_owner": "parent rst_n; physical ingress UNBOUND"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              236952,
+              0,
+              237330,
+              270
+            ],
+            [
+              195048,
+              0,
+              195426,
+              270
+            ],
+            [
+              153360,
+              270,
+              153738,
+              540
+            ],
+            [
+              137430,
+              26190,
+              137808,
+              26460
+            ],
+            [
+              137430,
+              68310,
+              137808,
+              68580
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 251.2685,
+          "endpoint_orientation": "MX",
+          "endpoint_pin_bbox_DBU": [
+            134019,
+            106954,
+            134037,
+            107026
+          ],
+          "instance": "enable_s0b1_bank",
+          "maximum_segment_um": 42.136,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              137421,
+              504.0
+            ],
+            [
+              137421,
+              106990.0
+            ],
+            [
+              134028.0,
+              106990.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            42.0385,
+            41.904,
+            41.958,
+            41.85,
+            42.12,
+            42.136
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              248832,
+              270,
+              249210,
+              540
+            ],
+            [
+              218862,
+              270,
+              219240,
+              540
+            ],
+            [
+              188892,
+              270,
+              189270,
+              540
+            ],
+            [
+              158922,
+              270,
+              159300,
+              540
+            ],
+            [
+              137430,
+              8910,
+              137808,
+              9180
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 179.8575,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            134019,
+            35552,
+            134037,
+            35606
+          ],
+          "instance": "enable_s0b0_valid",
+          "maximum_segment_um": 30.132,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              137421,
+              504.0
+            ],
+            [
+              137421,
+              35579.0
+            ],
+            [
+              134028.0,
+              35579.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            29.8885,
+            29.97,
+            29.97,
+            29.97,
+            30.132,
+            30.125
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              249102,
+              1620,
+              249480,
+              1890
+            ],
+            [
+              219510,
+              1620,
+              219888,
+              1890
+            ],
+            [
+              189972,
+              1620,
+              190350,
+              1890
+            ],
+            [
+              160380,
+              1620,
+              160758,
+              1890
+            ],
+            [
+              137430,
+              8370,
+              137808,
+              8640
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 177.3835,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            134964,
+            35472,
+            134982,
+            35537
+          ],
+          "instance": "enable_s0b0_valid",
+          "maximum_segment_um": 29.7,
+          "pin": "RESETN",
+          "polyline_DBU": [
+            [
+              278640,
+              1788
+            ],
+            [
+              137421,
+              1788
+            ],
+            [
+              137421,
+              35504.5
+            ],
+            [
+              134973.0,
+              35504.5
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            29.382,
+            29.592,
+            29.538,
+            29.592,
+            29.7,
+            29.6455
+          ],
+          "source_net": "rst_n",
+          "source_owner": "parent rst_n; physical ingress UNBOUND"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              248886,
+              0,
+              249264,
+              270
+            ],
+            [
+              218970,
+              0,
+              219348,
+              270
+            ],
+            [
+              189270,
+              270,
+              189648,
+              540
+            ],
+            [
+              159300,
+              270,
+              159678,
+              540
+            ],
+            [
+              137430,
+              8640,
+              137808,
+              8910
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 179.4485,
+          "endpoint_orientation": "MX",
+          "endpoint_pin_bbox_DBU": [
+            134019,
+            35134,
+            134037,
+            35206
+          ],
+          "instance": "enable_s0b0_bank",
+          "maximum_segment_um": 30.24,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              137421,
+              504.0
+            ],
+            [
+              137421,
+              35170.0
+            ],
+            [
+              134028.0,
+              35170.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            30.1045,
+            29.916,
+            29.97,
+            29.97,
+            30.24,
+            29.986
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        }
+      ],
+      "proposed_reset_M4_guard_DBU": [
+        274320,
+        1728,
+        278640,
+        1848
+      ],
+      "proposed_reset_ingress_DBU": [
+        278640,
+        1788
+      ],
+      "required_hold_wire_geometry": {
+        "BUF_pin_VIA12_23_stubs_must_be_added_to_max_and_min_load": true,
+        "additional_cell_debit": 0,
+        "already_charged_in_current_enable40p06584": true,
+        "default_arrays_are_source_construction_not_installed_PDN": true,
+        "hold_BUF_count_unchanged": 2,
+        "horizontal_pattern_not_legal_under_full_source_default_array": true,
+        "lengths_um": [
+          18.432,
+          5.4
+        ],
+        "minimum_M5via_column_clearance_DBU": 417,
+        "physical_wire_qualified": false,
+        "pitch_DBU": 36,
+        "selected_same_length_preferred_M3_polylines_DBU": [
+          [
+            [
+              279009,
+              72009
+            ],
+            [
+              279009,
+              75609
+            ],
+            [
+              279117,
+              75609
+            ],
+            [
+              279117,
+              72009
+            ],
+            [
+              279225,
+              72009
+            ],
+            [
+              279225,
+              75609
+            ],
+            [
+              279333,
+              75609
+            ],
+            [
+              279333,
+              72009
+            ],
+            [
+              279441,
+              72009
+            ],
+            [
+              279441,
+              75609
+            ]
+          ],
+          [
+            [
+              279801,
+              75801
+            ],
+            [
+              279801,
+              81201
+            ]
+          ]
+        ],
+        "source_M2_PGrail_pitch_DBU": 270,
+        "source_M3_track_phase_DBU": 9,
+        "source_M5_PGpair_pitch_DBU": 2700,
+        "source_M5_PGpair_spacing_DBU": 192,
+        "source_RC_unchanged": true,
+        "source_default_PGvia_required_clearance_DBU": 41,
+        "source_driver_placement_and_other_fanout_still_bound_by_owner": true,
+        "source_first_horizontal_pattern_max_phase_clearance_DBU": 27,
+        "width_DBU": 18
+      },
+      "reset_BUF": 20,
+      "reset_FF_replicas": 4,
+      "reset_anchor_not_GCLK": true,
+      "reset_physical_ingress_unknown": true,
+      "root_driver_total_existing_plus_extra_load_unqualified": true,
+      "same_net_clock_cut_not_eight_new_external_clocks": true,
+      "source_CLK_pin_sum_fF": 4.100648,
+      "source_PG_projection_PASS": true,
+      "source_PG_terminal_projection_count": 6844,
+      "source_RESETN_pin_sum_fF": 3.211636,
+      "tracks_not_routed_availability": true
+    },
+    "q": {
+      "CLK_origin_LEF_GCLK_M1_bbox_DBU": [
+        278783,
+        495,
+        278838,
+        513
+      ],
+      "SETN1_ties": [
+        {
+          "bbox_DBU": [
+            274158,
+            107190,
+            274320,
+            107460
+          ],
+          "instance": "enable_s1b1_SETN1",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "orientation": "R0",
+          "pin_OBS_template": "TIEHIx1_ASAP7_75t_R",
+          "role": "source_bound_SETN1_tie"
+        },
+        {
+          "bbox_DBU": [
+            274158,
+            35370,
+            274320,
+            35640
+          ],
+          "instance": "enable_s1b0_SETN1",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "orientation": "R0",
+          "pin_OBS_template": "TIEHIx1_ASAP7_75t_R",
+          "role": "source_bound_SETN1_tie"
+        },
+        {
+          "bbox_DBU": [
+            135918,
+            107190,
+            136080,
+            107460
+          ],
+          "instance": "enable_s0b1_SETN1",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "orientation": "R0",
+          "pin_OBS_template": "TIEHIx1_ASAP7_75t_R",
+          "role": "source_bound_SETN1_tie"
+        },
+        {
+          "bbox_DBU": [
+            135918,
+            35370,
+            136080,
+            35640
+          ],
+          "instance": "enable_s0b0_SETN1",
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "orientation": "R0",
+          "pin_OBS_template": "TIEHIx1_ASAP7_75t_R",
+          "role": "source_bound_SETN1_tie"
+        }
+      ],
+      "actual_source_ICG": {
+        "actual_instance": "\\g_wake.g_leaf[0].u_cg.u_icg",
+        "bbox_DBU": [
+          277884,
+          270,
+          278856,
+          540
+        ],
+        "included_in_mapped_area": true,
+        "leaf": 0,
+        "master": "ICGx1_ASAP7_75t_R",
+        "role": "sourceICG"
+      },
+      "added_sampling_edges": 0,
+      "balanced_new_branch_BUF_depth": 5,
+      "clock_BUF": 40,
+      "clock_FF_replicas": 8,
+      "clock_reset_full_source_union": {
+        "ff": {
+          "SETN_constant1_extra_pin_count": 4,
+          "composed_leaf0_pin_cap_fF": 3432.618598000218,
+          "composed_reset_pin_cap_fF": 753.7979119999994,
+          "constant_tie_provider": "four actual TIEHIx1_ASAP7_75t_R/H, oneper strip; source platform policy, Liberty H constant1 and LEF slot priced",
+          "constant_tie_provider_required": true,
+          "existing_leaf0_net_id": "153389",
+          "existing_leaf0_pin_cap_fF": 3428.5179500002178,
+          "existing_leaf0_sinks": 6569,
+          "existing_reset_pin_cap_fF": 750.5862759999994,
+          "existing_source_ICG": "g_wake.g_leaf[0].u_cg.u_icg",
+          "extra_clock_pin_cap_fF": 4.100648,
+          "extra_reset_pin_cap_fF": 3.211636,
+          "new_leaf0_sinks": 6577
+        },
+        "ss": {
+          "SETN_constant1_extra_pin_count": 4,
+          "composed_leaf0_pin_cap_fF": 2937.107821999562,
+          "composed_reset_pin_cap_fF": 660.8901090000016,
+          "constant_tie_provider": "four actual TIEHIx1_ASAP7_75t_R/H, oneper strip; source platform policy, Liberty H constant1 and LEF slot priced",
+          "constant_tie_provider_required": true,
+          "existing_leaf0_net_id": "153389",
+          "existing_leaf0_pin_cap_fF": 2933.585341999562,
+          "existing_leaf0_sinks": 6569,
+          "existing_reset_pin_cap_fF": 658.0740090000016,
+          "existing_source_ICG": "g_wake.g_leaf[0].u_cg.u_icg",
+          "extra_clock_pin_cap_fF": 3.52248,
+          "extra_reset_pin_cap_fF": 2.8161,
+          "new_leaf0_sinks": 6577
+        }
+      },
+      "clock_skew_to_existing_siblings_ps_unqualified": true,
+      "committed_enable_um2": 40.06584,
+      "existing_RST_full_source_pin_cap_fF": 750.5862759999994,
+      "existing_WAKE8_recharged": false,
+      "existing_source_clock_cut_tracks": 18,
+      "extra_reset_cut_track_guard_reservation": 3,
+      "full_existing_reset_positive_BUF": 149,
+      "full_existing_reset_positive_BUF_levels": [
+        131,
+        15,
+        2,
+        1
+      ],
+      "full_existing_reset_scope": "original reset pins only; clone20 stationBUF priced separately, globalpair tree inherited once",
+      "matching_existing_launch_capture_branch_required": true,
+      "nets": [
+        {
+          "BUF_bbox_DBU": [
+            [
+              274806,
+              15120,
+              275184,
+              15390
+            ],
+            [
+              274806,
+              34020,
+              275184,
+              34290
+            ],
+            [
+              274806,
+              53190,
+              275184,
+              53460
+            ],
+            [
+              274806,
+              72090,
+              275184,
+              72360
+            ],
+            [
+              274806,
+              90720,
+              275184,
+              90990
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 113.4375,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            272259,
+            107372,
+            272277,
+            107426
+          ],
+          "instance": "enable_s1b1_valid",
+          "maximum_segment_um": 19.271,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              274797,
+              504.0
+            ],
+            [
+              274797,
+              107399.0
+            ],
+            [
+              272268.0,
+              107399.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            18.5665,
+            18.9,
+            19.17,
+            18.9,
+            18.63,
+            19.271
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              274806,
+              16470,
+              275184,
+              16740
+            ],
+            [
+              274806,
+              34830,
+              275184,
+              35100
+            ],
+            [
+              274428,
+              53190,
+              274806,
+              53460
+            ],
+            [
+              274806,
+              71820,
+              275184,
+              72090
+            ],
+            [
+              274806,
+              89910,
+              275184,
+              90180
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 110.9635,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            273204,
+            107292,
+            273222,
+            107357
+          ],
+          "instance": "enable_s1b1_valid",
+          "maximum_segment_um": 19.0615,
+          "pin": "RESETN",
+          "polyline_DBU": [
+            [
+              278640,
+              1788
+            ],
+            [
+              274797,
+              1788
+            ],
+            [
+              274797,
+              107324.5
+            ],
+            [
+              273213.0,
+              107324.5
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            18.462,
+            18.36,
+            18.738,
+            19.008,
+            18.09,
+            19.0615
+          ],
+          "source_net": "rst_n",
+          "source_owner": "parent rst_n; physical ingress UNBOUND"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              274428,
+              15120,
+              274806,
+              15390
+            ],
+            [
+              274428,
+              34020,
+              274806,
+              34290
+            ],
+            [
+              274806,
+              52650,
+              275184,
+              52920
+            ],
+            [
+              274806,
+              71550,
+              275184,
+              71820
+            ],
+            [
+              275292,
+              90450,
+              275670,
+              90720
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 113.0285,
+          "endpoint_orientation": "MX",
+          "endpoint_pin_bbox_DBU": [
+            272259,
+            106954,
+            272277,
+            107026
+          ],
+          "instance": "enable_s1b1_bank",
+          "maximum_segment_um": 19.618,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              274797,
+              504.0
+            ],
+            [
+              274797,
+              106990.0
+            ],
+            [
+              272268.0,
+              106990.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            18.9445,
+            18.9,
+            19.008,
+            18.9,
+            19.386,
+            19.618
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              274806,
+              3240,
+              275184,
+              3510
+            ],
+            [
+              274806,
+              10260,
+              275184,
+              10530
+            ],
+            [
+              274806,
+              17010,
+              275184,
+              17280
+            ],
+            [
+              274806,
+              23760,
+              275184,
+              24030
+            ],
+            [
+              274806,
+              30780,
+              275184,
+              31050
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 41.6175,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            272259,
+            35552,
+            272277,
+            35606
+          ],
+          "instance": "enable_s1b0_valid",
+          "maximum_segment_um": 7.391,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              274797,
+              504.0
+            ],
+            [
+              274797,
+              35579.0
+            ],
+            [
+              272268.0,
+              35579.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            6.6865,
+            7.02,
+            6.75,
+            6.75,
+            7.02,
+            7.391
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              274806,
+              4320,
+              275184,
+              4590
+            ],
+            [
+              274806,
+              11070,
+              275184,
+              11340
+            ],
+            [
+              275292,
+              17280,
+              275670,
+              17550
+            ],
+            [
+              275292,
+              24030,
+              275670,
+              24300
+            ],
+            [
+              274806,
+              29970,
+              275184,
+              30240
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 39.1435,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            273204,
+            35472,
+            273222,
+            35537
+          ],
+          "instance": "enable_s1b0_valid",
+          "maximum_segment_um": 7.1815,
+          "pin": "RESETN",
+          "polyline_DBU": [
+            [
+              278640,
+              1788
+            ],
+            [
+              274797,
+              1788
+            ],
+            [
+              274797,
+              35504.5
+            ],
+            [
+              273213.0,
+              35504.5
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            6.312,
+            6.75,
+            6.696,
+            6.75,
+            6.426,
+            7.1815
+          ],
+          "source_net": "rst_n",
+          "source_owner": "parent rst_n; physical ingress UNBOUND"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              274806,
+              2970,
+              275184,
+              3240
+            ],
+            [
+              274806,
+              9720,
+              275184,
+              9990
+            ],
+            [
+              274428,
+              17010,
+              274806,
+              17280
+            ],
+            [
+              274428,
+              23760,
+              274806,
+              24030
+            ],
+            [
+              274428,
+              30780,
+              274806,
+              31050
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 41.2085,
+          "endpoint_orientation": "MX",
+          "endpoint_pin_bbox_DBU": [
+            272259,
+            35134,
+            272277,
+            35206
+          ],
+          "instance": "enable_s1b0_bank",
+          "maximum_segment_um": 7.668,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              274797,
+              504.0
+            ],
+            [
+              274797,
+              35170.0
+            ],
+            [
+              272268.0,
+              35170.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            6.4165,
+            6.75,
+            7.668,
+            6.75,
+            7.02,
+            6.604
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              236844,
+              270,
+              237222,
+              540
+            ],
+            [
+              194940,
+              270,
+              195318,
+              540
+            ],
+            [
+              152982,
+              270,
+              153360,
+              540
+            ],
+            [
+              137430,
+              26730,
+              137808,
+              27000
+            ],
+            [
+              137430,
+              68580,
+              137808,
+              68850
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 251.6775,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            134019,
+            107372,
+            134037,
+            107426
+          ],
+          "instance": "enable_s0b1_valid",
+          "maximum_segment_um": 42.275,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              137421,
+              504.0
+            ],
+            [
+              137421,
+              107399.0
+            ],
+            [
+              134028.0,
+              107399.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            41.8765,
+            41.904,
+            41.958,
+            42.012,
+            41.85,
+            42.275
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              237114,
+              1620,
+              237492,
+              1890
+            ],
+            [
+              195588,
+              1620,
+              195966,
+              1890
+            ],
+            [
+              154062,
+              1620,
+              154440,
+              1890
+            ],
+            [
+              137430,
+              26460,
+              137808,
+              26730
+            ],
+            [
+              137430,
+              68040,
+              137808,
+              68310
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 249.2035,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            134964,
+            107292,
+            134982,
+            107357
+          ],
+          "instance": "enable_s0b1_valid",
+          "maximum_segment_um": 41.7955,
+          "pin": "RESETN",
+          "polyline_DBU": [
+            [
+              278640,
+              1788
+            ],
+            [
+              137421,
+              1788
+            ],
+            [
+              137421,
+              107324.5
+            ],
+            [
+              134973.0,
+              107324.5
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            41.37,
+            41.526,
+            41.526,
+            41.472,
+            41.58,
+            41.7955
+          ],
+          "source_net": "rst_n",
+          "source_owner": "parent rst_n; physical ingress UNBOUND"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              236952,
+              0,
+              237330,
+              270
+            ],
+            [
+              195048,
+              0,
+              195426,
+              270
+            ],
+            [
+              153360,
+              270,
+              153738,
+              540
+            ],
+            [
+              137430,
+              26190,
+              137808,
+              26460
+            ],
+            [
+              137430,
+              68310,
+              137808,
+              68580
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 251.2685,
+          "endpoint_orientation": "MX",
+          "endpoint_pin_bbox_DBU": [
+            134019,
+            106954,
+            134037,
+            107026
+          ],
+          "instance": "enable_s0b1_bank",
+          "maximum_segment_um": 42.136,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              137421,
+              504.0
+            ],
+            [
+              137421,
+              106990.0
+            ],
+            [
+              134028.0,
+              106990.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            42.0385,
+            41.904,
+            41.958,
+            41.85,
+            42.12,
+            42.136
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              248832,
+              270,
+              249210,
+              540
+            ],
+            [
+              218862,
+              270,
+              219240,
+              540
+            ],
+            [
+              188892,
+              270,
+              189270,
+              540
+            ],
+            [
+              158922,
+              270,
+              159300,
+              540
+            ],
+            [
+              137430,
+              8910,
+              137808,
+              9180
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 179.8575,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            134019,
+            35552,
+            134037,
+            35606
+          ],
+          "instance": "enable_s0b0_valid",
+          "maximum_segment_um": 30.132,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              137421,
+              504.0
+            ],
+            [
+              137421,
+              35579.0
+            ],
+            [
+              134028.0,
+              35579.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            29.8885,
+            29.97,
+            29.97,
+            29.97,
+            30.132,
+            30.125
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              249102,
+              1620,
+              249480,
+              1890
+            ],
+            [
+              219510,
+              1620,
+              219888,
+              1890
+            ],
+            [
+              189972,
+              1620,
+              190350,
+              1890
+            ],
+            [
+              160380,
+              1620,
+              160758,
+              1890
+            ],
+            [
+              137430,
+              8370,
+              137808,
+              8640
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 177.3835,
+          "endpoint_orientation": "R0",
+          "endpoint_pin_bbox_DBU": [
+            134964,
+            35472,
+            134982,
+            35537
+          ],
+          "instance": "enable_s0b0_valid",
+          "maximum_segment_um": 29.7,
+          "pin": "RESETN",
+          "polyline_DBU": [
+            [
+              278640,
+              1788
+            ],
+            [
+              137421,
+              1788
+            ],
+            [
+              137421,
+              35504.5
+            ],
+            [
+              134973.0,
+              35504.5
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            29.382,
+            29.592,
+            29.538,
+            29.592,
+            29.7,
+            29.6455
+          ],
+          "source_net": "rst_n",
+          "source_owner": "parent rst_n; physical ingress UNBOUND"
+        },
+        {
+          "BUF_bbox_DBU": [
+            [
+              248886,
+              0,
+              249264,
+              270
+            ],
+            [
+              218970,
+              0,
+              219348,
+              270
+            ],
+            [
+              189270,
+              270,
+              189648,
+              540
+            ],
+            [
+              159300,
+              270,
+              159678,
+              540
+            ],
+            [
+              137430,
+              8640,
+              137808,
+              8910
+            ]
+          ],
+          "BUF_cells": 5,
+          "L1_wire_um": 179.4485,
+          "endpoint_orientation": "MX",
+          "endpoint_pin_bbox_DBU": [
+            134019,
+            35134,
+            134037,
+            35206
+          ],
+          "instance": "enable_s0b0_bank",
+          "maximum_segment_um": 30.24,
+          "pin": "CLK",
+          "polyline_DBU": [
+            [
+              278810.5,
+              504.0
+            ],
+            [
+              137421,
+              504.0
+            ],
+            [
+              137421,
+              35170.0
+            ],
+            [
+              134028.0,
+              35170.0
+            ]
+          ],
+          "route_polyline_between_stations_not_extracted": true,
+          "segment_L1_um": [
+            30.1045,
+            29.916,
+            29.97,
+            29.97,
+            30.24,
+            29.986
+          ],
+          "source_net": "leaf_clk[0]",
+          "source_owner": "\\g_wake.g_leaf[0].u_cg.u_icg"
+        }
+      ],
+      "proposed_reset_M4_guard_DBU": [
+        274320,
+        1728,
+        278640,
+        1848
+      ],
+      "proposed_reset_ingress_DBU": [
+        278640,
+        1788
+      ],
+      "required_hold_wire_geometry": {
+        "BUF_pin_VIA12_23_stubs_must_be_added_to_max_and_min_load": true,
+        "additional_cell_debit": 0,
+        "already_charged_in_current_enable40p06584": true,
+        "default_arrays_are_source_construction_not_installed_PDN": true,
+        "hold_BUF_count_unchanged": 2,
+        "horizontal_pattern_not_legal_under_full_source_default_array": true,
+        "lengths_um": [
+          18.432,
+          5.4
+        ],
+        "minimum_M5via_column_clearance_DBU": 417,
+        "physical_wire_qualified": false,
+        "pitch_DBU": 36,
+        "selected_same_length_preferred_M3_polylines_DBU": [
+          [
+            [
+              279009,
+              72009
+            ],
+            [
+              279009,
+              75609
+            ],
+            [
+              279117,
+              75609
+            ],
+            [
+              279117,
+              72009
+            ],
+            [
+              279225,
+              72009
+            ],
+            [
+              279225,
+              75609
+            ],
+            [
+              279333,
+              75609
+            ],
+            [
+              279333,
+              72009
+            ],
+            [
+              279441,
+              72009
+            ],
+            [
+              279441,
+              75609
+            ]
+          ],
+          [
+            [
+              279801,
+              75801
+            ],
+            [
+              279801,
+              81201
+            ]
+          ]
+        ],
+        "source_M2_PGrail_pitch_DBU": 270,
+        "source_M3_track_phase_DBU": 9,
+        "source_M5_PGpair_pitch_DBU": 2700,
+        "source_M5_PGpair_spacing_DBU": 192,
+        "source_RC_unchanged": true,
+        "source_default_PGvia_required_clearance_DBU": 41,
+        "source_driver_placement_and_other_fanout_still_bound_by_owner": true,
+        "source_first_horizontal_pattern_max_phase_clearance_DBU": 27,
+        "width_DBU": 18
+      },
+      "reset_BUF": 20,
+      "reset_FF_replicas": 4,
+      "reset_anchor_not_GCLK": true,
+      "reset_physical_ingress_unknown": true,
+      "root_driver_total_existing_plus_extra_load_unqualified": true,
+      "same_net_clock_cut_not_eight_new_external_clocks": true,
+      "source_CLK_pin_sum_fF": 4.100648,
+      "source_PG_projection_PASS": true,
+      "source_PG_terminal_projection_count": 6844,
+      "source_RESETN_pin_sum_fF": 3.211636,
+      "tracks_not_routed_availability": true
+    }
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "clock_contract": {
+    "FF_hold_uncertainty_ps": 25,
+    "FFhold_or_recovery_removal_qualified": false,
+    "SS_min_high_low_pulse_ps": 284.741,
+    "SS_setup_uncertainty_ps": 60,
+    "buffer_output_plus_wire_slew_upper_ps": 304.27109198151004,
+    "existing_plus_new_source_clocks_need_equal_launch_capture_latency": true,
+    "installed_CTS_not_required_for_prebuild": true,
+    "pin_cap_fF": 23.04,
+    "skew_budget_ps": 25,
+    "wire_cap_fF": 11.52,
+    "wire_segment_max_um": 64.546855301863
+  },
+  "full_context_build_admitted": false,
+  "generator_sha256": "ee55a14b62ac88f56ccb75f33ba118dd69c701477abe1ea96cd46c2724eeeb38",
+  "input_origins": {
+    "I66.json": {
+      "commit": "5a373d0fd11fe9445660af9872fd410b94788e38",
+      "copy_sha256": "ab2f0a8439ed3da966584f99a0f881b4cea330c8dd18e5d3734891ce18a09de7",
+      "original_sha256": "ab2f0a8439ed3da966584f99a0f881b4cea330c8dd18e5d3734891ce18a09de7",
+      "path": "results/uarch/dsrom_I66_PAR2_calendar_join_20261002/model.json"
+    },
+    "accepted_flow.json": {
+      "commit": "819d3dbf1d8410acbd5516e561031e253f51d343",
+      "copy_sha256": "630b995309b8e8782f5b71bad07f55858e3115ded69914c6bdbeda17693a8e79",
+      "derived": true,
+      "original_sha256": "ecd00737272a6802df8642a5b020e3f262ca9bda61b83a4e498630ccd4b9246f",
+      "path": "results/rtl/dsrom_I66_standalone_calibration_20261002/r2_PASS/actual.jsonl.gz"
+    },
+    "delay.sv": {
+      "commit": "b32857642896e6f15333682feafaf9c0b3011061",
+      "copy_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "original_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "path": "rtl/hdc/ot_hdc_delay.sv"
+    },
+    "enable8d6.json.gz": {
+      "commit": "8d6baed75d4beb596c02b10de6242b3fa43a6237",
+      "copy_sha256": "bf3e2c15c74891b918a6c7bc5a3cca92af2e11a7f3c1d035f02b493f81f81bf7",
+      "original_sha256": "921e4cb4f9de2563de5b158ffcf6312eab1cd8f3d194655c8a5a34283efb136b",
+      "path": "results/uarch/dsrom_noECC_enable_distribution_20261002/model.json"
+    },
+    "grid.json": {
+      "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+      "copy_sha256": "ea321506ed39369ed31d1e754f43e26d80fd7b1da2eacc0a149bf557639ab018",
+      "original_sha256": "ea321506ed39369ed31d1e754f43e26d80fd7b1da2eacc0a149bf557639ab018",
+      "path": "results/uarch/dsrom_PAR2_shard_physical_binding_20261002/inputs/grid.json"
+    },
+    "local_cuts.json.gz": {
+      "commit": "fa3e2f5d770e95d686f5ea2a03615acdf2976836",
+      "copy_sha256": "8c69b3e938f36a2265afd5d4dc34bb46aaeeb83fabba5a8f85c742448fa0ecc9",
+      "original_sha256": "08a370a4758f9d31aa525535d1b89605d4f7b0dbfdd25af469d497f15843075a",
+      "path": "results/uarch/dsrom_noECC_production_context_20261002/local_cuts.json"
+    },
+    "spine.sv": {
+      "commit": "b32857642896e6f15333682feafaf9c0b3011061",
+      "copy_sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+      "original_sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+      "path": "rtl/v41die/ot_v41_spine_w17w10.sv"
+    },
+    "tech.lef": {
+      "commit": "c9631e04f2fb26f4255b75b2d790a612aacce1c1",
+      "copy_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+      "original_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+      "path": "results/uarch/w10_connected_escape_prerequisite/image_reference_tech.lef"
+    }
+  },
+  "local_construction_is_model_only": true,
+  "new_jobs": 0,
+  "remaining": [
+    "legal actual VIA12/23 pin escapes and macrofield VDD/VSS array occupancy at proposed stations; source body clear is insufficient",
+    "existing plus clone leaf_clk0 route-depth/driver-cap/skew union, not just eight same-depth paths",
+    "rst_n source ingress and reset recovery/removal with exact full clock/reset loading",
+    "hard4096x72 configurationROM measuredCLKQ/II and source-bound held loader capture",
+    "actualactivation crossing and complete128port root/writer commonVM home service/link lanes"
+  ],
+  "same_BST_source_model": {
+    "HB1p2p3_minload_and_slew_domains_must_be_enforced": true,
+    "actual_full_source_cone_required": true,
+    "additional_register_edges": 0,
+    "all3264_added_bits_require_reset_not_genericHQ": true,
+    "bitwise_fourstate_induction_cases": 192,
+    "final_GO_input_domain_ps": 160,
+    "hold_reservation_is_not_FFclosure": true,
+    "literal_RESET1_source_gate": true,
+    "new_copies": 2,
+    "no_new_capture_edge_or_variant_selected": true,
+    "period_ps": 833.3333333333334,
+    "positive_source_circuit_additions_vs_b328_generic_floor": {
+      "QN_restoring_INV_mm2": 0.00028553472,
+      "SETN1_local_TIEHI_mm2": 0.00028553472,
+      "replica_CLK_RESET_pin_tree_floor_mm2": 0.00012124728,
+      "reset_ASR_vs_generic_FF_mm2": 0.0005710694399999997,
+      "three_HB_per_copy_hold_reservation_mm2": 0.0014276736000000002
+    },
+    "proof_scope": "same clock/reset/data and initialized commonreset; source transition proof only, no implemented RTL or skew/extraction proof",
+    "recursive_BUF_input_domains_ps": [
+      160,
+      160,
+      160,
+      160
+    ],
+    "recursive_LUT_RC_screen_PASS": false,
+    "recursive_source_correct_GO_upper_ps": 906.9870355703761,
+    "replica_CLK_RESET_pin_floor": {
+      "CLK": {
+        "BUF_cells": 81,
+        "BUF_levels_leaf_to_root": [
+          72,
+          8,
+          1
+        ],
+        "placement_and_parent_union_unknown": true,
+        "total_extra_pin_fF": 1642.2881280000001,
+        "wire_cap_reservation_fF": 5.76
+      },
+      "RESETN": {
+        "BUF_cells": 513,
+        "BUF_levels_leaf_to_root": [
+          455,
+          51,
+          6,
+          1
+        ],
+        "placement_and_parent_union_unknown": true,
+        "total_extra_pin_fF": 2620.6949759999998,
+        "wire_cap_reservation_fF": 5.76
+      }
+    },
+    "reviewed_generic_GO_upper_ps": 771.8862302388309,
+    "screen_failure_not_actual_STA_or_architectural_impossibility": true,
+    "source_ASR_CQ_ps": 151.05,
+    "source_BST": 17,
+    "source_INV_delay_ps": 70.5385,
+    "source_INV_output_slew_ps": 95.4819,
+    "source_QN_must_restore": true,
+    "source_width": 1632,
+    "stale_or_gated_clock_copy_not_equivalent": true,
+    "tail_AND_and_HQ_destination_setup_retained_as_reviewed_floor_not_full_GOact_cone": true,
+    "total_additional_cell_floor_mm2": 0.0026910597599999996
+  },
+  "schema": "DS_SELECTED_CALLER_PHYSICAL_BRANCH_AND_I66_EDGES_V1",
+  "selected_enable_commit": "8d6baed75d4beb596c02b10de6242b3fa43a6237",
+  "source_caller_commit": "b32857642896e6f15333682feafaf9c0b3011061",
+  "station_cell_floor_delta_mm2_at50pct": 0.02466422784,
+  "station_count": 120
+}

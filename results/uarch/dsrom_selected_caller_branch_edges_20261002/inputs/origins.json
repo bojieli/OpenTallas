@@ -1,0 +1,51 @@
+{
+  "I66.json": {
+    "commit": "5a373d0fd11fe9445660af9872fd410b94788e38",
+    "copy_sha256": "ab2f0a8439ed3da966584f99a0f881b4cea330c8dd18e5d3734891ce18a09de7",
+    "original_sha256": "ab2f0a8439ed3da966584f99a0f881b4cea330c8dd18e5d3734891ce18a09de7",
+    "path": "results/uarch/dsrom_I66_PAR2_calendar_join_20261002/model.json"
+  },
+  "accepted_flow.json": {
+    "commit": "819d3dbf1d8410acbd5516e561031e253f51d343",
+    "copy_sha256": "630b995309b8e8782f5b71bad07f55858e3115ded69914c6bdbeda17693a8e79",
+    "derived": true,
+    "original_sha256": "ecd00737272a6802df8642a5b020e3f262ca9bda61b83a4e498630ccd4b9246f",
+    "path": "results/rtl/dsrom_I66_standalone_calibration_20261002/r2_PASS/actual.jsonl.gz"
+  },
+  "delay.sv": {
+    "commit": "b32857642896e6f15333682feafaf9c0b3011061",
+    "copy_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "original_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "path": "rtl/hdc/ot_hdc_delay.sv"
+  },
+  "enable8d6.json.gz": {
+    "commit": "8d6baed75d4beb596c02b10de6242b3fa43a6237",
+    "copy_sha256": "bf3e2c15c74891b918a6c7bc5a3cca92af2e11a7f3c1d035f02b493f81f81bf7",
+    "original_sha256": "921e4cb4f9de2563de5b158ffcf6312eab1cd8f3d194655c8a5a34283efb136b",
+    "path": "results/uarch/dsrom_noECC_enable_distribution_20261002/model.json"
+  },
+  "grid.json": {
+    "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+    "copy_sha256": "ea321506ed39369ed31d1e754f43e26d80fd7b1da2eacc0a149bf557639ab018",
+    "original_sha256": "ea321506ed39369ed31d1e754f43e26d80fd7b1da2eacc0a149bf557639ab018",
+    "path": "results/uarch/dsrom_PAR2_shard_physical_binding_20261002/inputs/grid.json"
+  },
+  "local_cuts.json.gz": {
+    "commit": "fa3e2f5d770e95d686f5ea2a03615acdf2976836",
+    "copy_sha256": "8c69b3e938f36a2265afd5d4dc34bb46aaeeb83fabba5a8f85c742448fa0ecc9",
+    "original_sha256": "08a370a4758f9d31aa525535d1b89605d4f7b0dbfdd25af469d497f15843075a",
+    "path": "results/uarch/dsrom_noECC_production_context_20261002/local_cuts.json"
+  },
+  "spine.sv": {
+    "commit": "b32857642896e6f15333682feafaf9c0b3011061",
+    "copy_sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+    "original_sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+    "path": "rtl/v41die/ot_v41_spine_w17w10.sv"
+  },
+  "tech.lef": {
+    "commit": "c9631e04f2fb26f4255b75b2d790a612aacce1c1",
+    "copy_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "original_sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "path": "results/uarch/w10_connected_escape_prerequisite/image_reference_tech.lef"
+  }
+}

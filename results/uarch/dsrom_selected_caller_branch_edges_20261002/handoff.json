@@ -1,0 +1,115 @@
+{
+  "Arch_enable_source": "8d6baed75d4beb596c02b10de6242b3fa43a6237",
+  "I66_source": "5a373d0fd11fe9445660af9872fd410b94788e38; reduced exact accepted journal819d committed input",
+  "SSFF_qualified": false,
+  "area": {
+    "PG_actual_row_pin_union_proven": false,
+    "committed_enable8d6_revision_delta_mm2": 0.0009555148800000024,
+    "containment_credit": 0,
+    "enable_revision_delta_charged_once": true,
+    "fit": false,
+    "full_existing_reset_new_BUF_cells": 502442,
+    "original_reset_and_new_clone_nodes_not_doublecounted": true,
+    "positive_additional_branch_floor_mm2": 0.02466422784,
+    "positive_full_existing_reset_floor_mm2": 0.10255846103999999,
+    "prior_screen_mm2": 754.9337664632458,
+    "remaining_mm2": 102.93536427323421,
+    "screen_mm2": 755.0646357267658,
+    "source_correct_BST_additional_floor_mm2": 0.0026910597599999996,
+    "unchanged_frames": {
+      "BF": [
+        1002.89,
+        157.68
+      ],
+      "q": [
+        510.84,
+        151.2
+      ]
+    }
+  },
+  "authoritative": "r1/model.json",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "combined_tests": 54,
+  "default_off_no_original_RTL_edits": true,
+  "model_source_screen_failure_preserved": true,
+  "new_jobs": 0,
+  "new_model_tests": 12,
+  "physical_build_admitted": false,
+  "regenerate": "python3 tools/dsrom_selected_caller_branch_edges.py --out FRESH_OUTPUT_DIR",
+  "remaining": [
+    "legal actual VIA12/23 pin escapes and macrofield VDD/VSS array occupancy at proposed stations; source body clear is insufficient",
+    "existing plus clone leaf_clk0 route-depth/driver-cap/skew union, not just eight same-depth paths",
+    "rst_n source ingress and reset recovery/removal with exact full clock/reset loading",
+    "hard4096x72 configurationROM measuredCLKQ/II and source-bound held loader capture",
+    "actualactivation crossing and complete128port root/writer commonVM home service/link lanes"
+  ],
+  "same_BST_source_model": {
+    "HB1p2p3_minload_and_slew_domains_must_be_enforced": true,
+    "actual_full_source_cone_required": true,
+    "additional_register_edges": 0,
+    "all3264_added_bits_require_reset_not_genericHQ": true,
+    "bitwise_fourstate_induction_cases": 192,
+    "final_GO_input_domain_ps": 160,
+    "hold_reservation_is_not_FFclosure": true,
+    "literal_RESET1_source_gate": true,
+    "new_copies": 2,
+    "no_new_capture_edge_or_variant_selected": true,
+    "period_ps": 833.3333333333334,
+    "positive_source_circuit_additions_vs_b328_generic_floor": {
+      "QN_restoring_INV_mm2": 0.00028553472,
+      "SETN1_local_TIEHI_mm2": 0.00028553472,
+      "replica_CLK_RESET_pin_tree_floor_mm2": 0.00012124728,
+      "reset_ASR_vs_generic_FF_mm2": 0.0005710694399999997,
+      "three_HB_per_copy_hold_reservation_mm2": 0.0014276736000000002
+    },
+    "proof_scope": "same clock/reset/data and initialized commonreset; source transition proof only, no implemented RTL or skew/extraction proof",
+    "recursive_BUF_input_domains_ps": [
+      160,
+      160,
+      160,
+      160
+    ],
+    "recursive_LUT_RC_screen_PASS": false,
+    "recursive_source_correct_GO_upper_ps": 906.9870355703761,
+    "replica_CLK_RESET_pin_floor": {
+      "CLK": {
+        "BUF_cells": 81,
+        "BUF_levels_leaf_to_root": [
+          72,
+          8,
+          1
+        ],
+        "placement_and_parent_union_unknown": true,
+        "total_extra_pin_fF": 1642.2881280000001,
+        "wire_cap_reservation_fF": 5.76
+      },
+      "RESETN": {
+        "BUF_cells": 513,
+        "BUF_levels_leaf_to_root": [
+          455,
+          51,
+          6,
+          1
+        ],
+        "placement_and_parent_union_unknown": true,
+        "total_extra_pin_fF": 2620.6949759999998,
+        "wire_cap_reservation_fF": 5.76
+      }
+    },
+    "reviewed_generic_GO_upper_ps": 771.8862302388309,
+    "screen_failure_not_actual_STA_or_architectural_impossibility": true,
+    "source_ASR_CQ_ps": 151.05,
+    "source_BST": 17,
+    "source_INV_delay_ps": 70.5385,
+    "source_INV_output_slew_ps": 95.4819,
+    "source_QN_must_restore": true,
+    "source_width": 1632,
+    "stale_or_gated_clock_copy_not_equivalent": true,
+    "tail_AND_and_HQ_destination_setup_retained_as_reviewed_floor_not_full_GOact_cone": true,
+    "total_additional_cell_floor_mm2": 0.0026910597599999996
+  },
+  "source_prerequisite": "b32857642896e6f15333682feafaf9c0b3011061 and its37cc source ancestry",
+  "station_coordinates": "r1/stations.json",
+  "station_count": 120,
+  "tests": "python3 -m pytest -q tests/test_dsrom_selected_caller_branch_edges.py tests/test_dsrom_selected_parent_caller.py tests/test_dsrom_selector_station_parent_binding.py tests/test_dsrom_q_PDN_clock_endpoint_model.py tests/test_dsrom_retained_WAKE_context_admission.py"
+}
