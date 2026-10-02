@@ -1,0 +1,236 @@
+{
+  "PVE2_PVE3_registry_holds": {
+    "ot-pve2": {
+      "admission_hold_owner": "user",
+      "disabled": true,
+      "draining": true
+    },
+    "ot-pve3": {
+      "admission_hold_owner": "user",
+      "disabled": true,
+      "draining": true
+    }
+  },
+  "coordinator_snapshot_sha256": {
+    "coordinator.status.v2.json": "26539649e099d6f9f7a09b232936daf18ffd5df0f4212185a07562ca6206cb5f",
+    "drain.status.v2.json": "41bee029fd76f6f00ca83edc7b9260be432aa3888b0b0e588e626481e0efced6"
+  },
+  "hosts": {
+    "155.103.253.226": {
+      "candidate_screens_at_probe_time": [
+        {
+          "admit": true,
+          "aggregate_peak_ram_gib": 8,
+          "conservative_aggregate_threads": 1,
+          "effective_ram_budget_gib": 96,
+          "live_free_after_peak_gib": 103.77600860595703,
+          "observed_compute_threads": 0,
+          "reasons": [],
+          "request_GiB": 8,
+          "request_threads": 1,
+          "request_workers": 1,
+          "reserved_headroom_gib": 24,
+          "reserved_threads": 0,
+          "slot_request_gib": 8,
+          "thread_cap": 48
+        },
+        {
+          "admit": true,
+          "aggregate_peak_ram_gib": 32,
+          "conservative_aggregate_threads": 8,
+          "effective_ram_budget_gib": 96,
+          "live_free_after_peak_gib": 79.77600860595703,
+          "observed_compute_threads": 0,
+          "reasons": [],
+          "request_GiB": 32,
+          "request_threads": 8,
+          "request_workers": 8,
+          "reserved_headroom_gib": 24,
+          "reserved_threads": 0,
+          "slot_request_gib": 32,
+          "thread_cap": 48
+        },
+        {
+          "admit": true,
+          "aggregate_peak_ram_gib": 64,
+          "conservative_aggregate_threads": 16,
+          "effective_ram_budget_gib": 96,
+          "live_free_after_peak_gib": 47.77600860595703,
+          "observed_compute_threads": 0,
+          "reasons": [],
+          "request_GiB": 64,
+          "request_threads": 16,
+          "request_workers": 16,
+          "reserved_headroom_gib": 24,
+          "reserved_threads": 0,
+          "slot_request_gib": 64,
+          "thread_cap": 48
+        },
+        {
+          "admit": false,
+          "aggregate_peak_ram_gib": 96,
+          "conservative_aggregate_threads": 32,
+          "effective_ram_budget_gib": 96,
+          "live_free_after_peak_gib": 15.776008605957031,
+          "observed_compute_threads": 0,
+          "reasons": [
+            "LIVE_RAM_RESERVE"
+          ],
+          "request_GiB": 94,
+          "request_threads": 32,
+          "request_workers": 32,
+          "reserved_headroom_gib": 24,
+          "reserved_threads": 0,
+          "slot_request_gib": 96,
+          "thread_cap": 48
+        }
+      ],
+      "live_slot_owners": [],
+      "locked_RAM_GiB": 0,
+      "pool": {
+        "allocated_ram_gb": 128,
+        "cpu": 64,
+        "disabled": false,
+        "disk_gb": 1024,
+        "max_aggregate_threads": 48,
+        "max_single_request_gib": 94,
+        "measured_mem_total_mib": 128721,
+        "name": "ot-exp128",
+        "physical_ram_gb": 125.7041015625,
+        "project": "proj_01M3EBR35E0NVT6ZXWFDASKVN5",
+        "project_name": "agidock",
+        "qualification_evidence": "/tmp/claude-1000/queue/agidock128-fleet-20261002/parent-tool-smoke.20261002T030021Z.json",
+        "qualification_evidence_sha256": "514a2d7de53eb84dec6f77cda0a6a18a84a95097d47c6ee14e2aa61d1100fe13",
+        "qualification_owner": "parent",
+        "qualification_status": "PASS",
+        "qualified": true,
+        "ram_gb": 96,
+        "readiness_publication": "/tmp/claude-1000/queue/agidock128-fleet-20261002/readiness.20261002T030021Z.json",
+        "registration_record": "/tmp/claude-1000/queue/agidock128-fleet-20261002/manifest.json",
+        "reserved_headroom_gib": 24,
+        "resource_evidence": "/tmp/claude-1000/queue/agidock128-fleet-20261002/ready-resources.txt",
+        "resource_evidence_owner": "parent",
+        "ssh_alias": "ot-agidock128",
+        "vm": "vm_01M3X8732YBTQESHXRY57MHFYN"
+      },
+      "probe_timestamp": 1790940373.0116644,
+      "reserved_threads": 0,
+      "screen_is_not_reservation": true
+    },
+    "ot-pve1": {
+      "candidate_screens_at_probe_time": [
+        {
+          "admit": false,
+          "aggregate_peak_ram_gib": 72,
+          "conservative_aggregate_threads": 85,
+          "effective_ram_budget_gib": 208,
+          "live_free_after_peak_gib": 127.2108039855957,
+          "observed_compute_threads": 56,
+          "reasons": [
+            "AGGREGATE_THREADS"
+          ],
+          "request_GiB": 8,
+          "request_threads": 1,
+          "request_workers": 1,
+          "reserved_headroom_gib": 24,
+          "reserved_threads": 28,
+          "slot_request_gib": 8,
+          "thread_cap": 28
+        },
+        {
+          "admit": false,
+          "aggregate_peak_ram_gib": 96,
+          "conservative_aggregate_threads": 92,
+          "effective_ram_budget_gib": 208,
+          "live_free_after_peak_gib": 103.2108039855957,
+          "observed_compute_threads": 56,
+          "reasons": [
+            "AGGREGATE_THREADS"
+          ],
+          "request_GiB": 32,
+          "request_threads": 8,
+          "request_workers": 8,
+          "reserved_headroom_gib": 24,
+          "reserved_threads": 28,
+          "slot_request_gib": 32,
+          "thread_cap": 28
+        },
+        {
+          "admit": false,
+          "aggregate_peak_ram_gib": 128,
+          "conservative_aggregate_threads": 100,
+          "effective_ram_budget_gib": 208,
+          "live_free_after_peak_gib": 71.2108039855957,
+          "observed_compute_threads": 56,
+          "reasons": [
+            "AGGREGATE_THREADS"
+          ],
+          "request_GiB": 64,
+          "request_threads": 16,
+          "request_workers": 16,
+          "reserved_headroom_gib": 24,
+          "reserved_threads": 28,
+          "slot_request_gib": 64,
+          "thread_cap": 28
+        },
+        {
+          "admit": false,
+          "aggregate_peak_ram_gib": 160,
+          "conservative_aggregate_threads": 116,
+          "effective_ram_budget_gib": 208,
+          "live_free_after_peak_gib": 39.2108039855957,
+          "observed_compute_threads": 56,
+          "reasons": [
+            "AGGREGATE_THREADS"
+          ],
+          "request_GiB": 94,
+          "request_threads": 32,
+          "request_workers": 32,
+          "reserved_headroom_gib": 24,
+          "reserved_threads": 28,
+          "slot_request_gib": 96,
+          "thread_cap": 28
+        }
+      ],
+      "live_slot_owners": [
+        {
+          "PID": 2491424,
+          "RAM_GiB": 64,
+          "cwd": "/tmp/claude-1000/wt/w11-su2",
+          "known": true,
+          "reserved_threads": 28,
+          "slots": [
+            "ot-pve1.4",
+            "ot-pve1.3",
+            "ot-pve1.7",
+            "ot-pve1.5",
+            "ot-pve1.2",
+            "ot-pve1.8",
+            "ot-pve1.6",
+            "ot-pve1.1"
+          ],
+          "start_ticks": 310210959
+        }
+      ],
+      "locked_RAM_GiB": 64,
+      "pool": {
+        "cpu": 28,
+        "disabled": false,
+        "max_aggregate_threads": 28,
+        "max_single_request_gib": 206,
+        "physical_ram_gb": 235.94449615478516,
+        "project": "pve",
+        "project_name": "pve",
+        "ram_gb": 208,
+        "reserved_headroom_gib": 24,
+        "vm": "ot-pve1"
+      },
+      "probe_timestamp": 1790940373.5282176,
+      "reserved_threads": 28,
+      "screen_is_not_reservation": true
+    }
+  },
+  "leases_acquired_or_released": 0,
+  "registry_changed": false,
+  "remote_experiments_started": 0
+}

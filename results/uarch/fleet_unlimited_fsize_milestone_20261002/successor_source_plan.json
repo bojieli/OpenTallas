@@ -1,0 +1,76 @@
+{
+  "D1_successor": "parent already corrected atdcf744c50; do not duplicate",
+  "Q_caps_preserved_except_removed_per_file": {
+    "aggregate_output_bytes": 4294967296,
+    "build_jobs": 1,
+    "cpus": [
+      0
+    ],
+    "disk_headroom_bytes": 8589934592,
+    "kill_grace_s": 5,
+    "memory_bytes": 34359738368,
+    "poll_s": 1,
+    "sequential_targets": true,
+    "swap_bytes": 0,
+    "whole_wall_s": 67890
+  },
+  "Q_fresh_GO_schema": "opentallas.H1.Qwen-runtime-unlimited.GO.v1",
+  "Q_new_caps": {
+    "aggregate_output_bytes": 4294967296,
+    "build_jobs": 1,
+    "cpus": [
+      0
+    ],
+    "disk_headroom_bytes": 8589934592,
+    "file_size_limit": "unlimited",
+    "kill_grace_s": 5,
+    "memory_bytes": 34359738368,
+    "poll_s": 1,
+    "sequential_targets": true,
+    "swap_bytes": 0,
+    "whole_wall_s": 67890
+  },
+  "Q_preparation_status": "source copies ready for owner model/qualified binary/root/tool/headroom regeneration; not launch authorized",
+  "actual_future_launches": 0,
+  "future_paths": {
+    "remote_gate_unlimited.base.py": {
+      "baseline": "/tmp/claude-1000/queue/fleet-admission-guard-20261002/remote_gate.base.py",
+      "baseline_sha256": "b5183675b40ea1ed89cfd621cc497524e811eda99748c3cacf222d427daf5319",
+      "future_sha256": "360997e468345754a23f95f2ec5afe78929ff2d6abba60a847da4be46b1587ac",
+      "live_original_changed": false
+    },
+    "remote_gate_unlimited_guarded.py": {
+      "baseline": "/tmp/claude-1000/queue/fleet-admission-guard-20261002/remote_gate_guarded.py",
+      "baseline_sha256": "4f69017dba2e612f2834d8ff0151d53eb7aafe00a9472bbe4ff48c9859681a7d",
+      "future_sha256": "c2439d17cbabcca16348819666ecde6e65791568191867fe1b920b17fdec2e92",
+      "live_original_changed": false
+    },
+    "tools/hbm_qwen_binary_reuse_unlimited_fsize_prepare.py": {
+      "baseline": "e9c5c76c60a665a73488f6e20d44ad512cf05daf:tools/hbm_qwen_binary_reuse_r11.py",
+      "baseline_sha256": "8124919da21c264688ecaaba5a057b0ccdae404b81fdc3d5325049adb548133b",
+      "future_sha256": "99ddfd0d9b53ad093c131a00b911e6a7b14f0941dc2faa48839df594f5fe87d7",
+      "historical_source_changed": false
+    },
+    "tools/prepare_hbm_qwen_runtime_unlimited_fsize_prepare.py": {
+      "baseline": "e9c5c76c60a665a73488f6e20d44ad512cf05daf:tools/prepare_hbm_qwen_runtime_r11.py",
+      "baseline_sha256": "eb573c4e5b5fcadf71952a5239f9084f89351b48c0c1fee2a1eeb53dbdc3cf41",
+      "future_sha256": "fda9ce7395a274c588af8ef2a19f54e47580e82677c078ebb5972adc5a89d749",
+      "historical_source_changed": false
+    },
+    "tools/run_hbm_qwen_runtime_unlimited_fsize_prepare.py": {
+      "baseline": "e9c5c76c60a665a73488f6e20d44ad512cf05daf:tools/run_hbm_qwen_runtime_r11.py",
+      "baseline_sha256": "dde5542a3ca60be332f63f609efad0cc714e6f707c924fa38668bdf4d88a8b68",
+      "future_sha256": "4cb4cec1c555e0a395dd5c879f7190d2337944bc57b2ba47e5870f32f5156237",
+      "historical_source_changed": false
+    }
+  },
+  "remote_future_guard": "same existing live admission/slot/thread ledgers, independent future code; checks pinned kernel-unlimited entry. Historical guards untouched; not dispatcher installation.",
+  "source_commit": "e9c5c76c60a665a73488f6e20d44ad512cf05daf",
+  "source_pins": {
+    "/tmp/claude-1000/queue/fleet-admission-guard-20261002/remote_gate.base.py": "b5183675b40ea1ed89cfd621cc497524e811eda99748c3cacf222d427daf5319",
+    "/tmp/claude-1000/queue/fleet-admission-guard-20261002/remote_gate_guarded.py": "4f69017dba2e612f2834d8ff0151d53eb7aafe00a9472bbe4ff48c9859681a7d",
+    "e9c5c76c60a665a73488f6e20d44ad512cf05daf:tools/hbm_qwen_binary_reuse_r11.py": "8124919da21c264688ecaaba5a057b0ccdae404b81fdc3d5325049adb548133b",
+    "e9c5c76c60a665a73488f6e20d44ad512cf05daf:tools/prepare_hbm_qwen_runtime_r11.py": "eb573c4e5b5fcadf71952a5239f9084f89351b48c0c1fee2a1eeb53dbdc3cf41",
+    "e9c5c76c60a665a73488f6e20d44ad512cf05daf:tools/run_hbm_qwen_runtime_r11.py": "dde5542a3ca60be332f63f609efad0cc714e6f707c924fa38668bdf4d88a8b68"
+  }
+}

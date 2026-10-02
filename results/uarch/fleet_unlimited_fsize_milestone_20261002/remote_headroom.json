@@ -1,0 +1,92 @@
+{
+  "PVE2_PVE3_new_work": 0,
+  "experiments_launched": 0,
+  "hosts": [
+    {
+      "error": "",
+      "host": "ot-pve1",
+      "returncode": 0,
+      "status": {
+        "CPUs": 28,
+        "boot_id": "296c347e-2abf-40a7-8599-3db2b655ab78",
+        "jobs": [
+          {
+            "FSIZE": "Max file size             unlimited            unlimited            bytes     ",
+            "PID": 1996654,
+            "RSS_bytes": 36355801088,
+            "affinity": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27
+            ],
+            "comm": "openroad",
+            "start_ticks": 52285887,
+            "state": "R",
+            "threads": 56
+          }
+        ],
+        "loadavg": [
+          5.390625,
+          5.10791015625,
+          5.0302734375
+        ],
+        "mem": {
+          "MemAvailable": 213900972032,
+          "MemTotal": 253343473664
+        },
+        "observed_epoch": 1790940373.5282176,
+        "probe_process_FSIZE": "Max file size             unlimited            unlimited            bytes     ",
+        "root_available_bytes": 43364446208
+      }
+    },
+    {
+      "error": "",
+      "host": "155.103.253.226",
+      "returncode": 0,
+      "status": {
+        "CPUs": 64,
+        "boot_id": "7873415f-cbde-49b4-8228-e44b66bf6895",
+        "jobs": [],
+        "loadavg": [
+          0.0849609375,
+          0.12158203125,
+          0.0927734375
+        ],
+        "mem": {
+          "MemAvailable": 120018575360,
+          "MemTotal": 134974394368
+        },
+        "observed_epoch": 1790940373.0116644,
+        "probe_process_FSIZE": "Max file size             unlimited            unlimited            bytes     ",
+        "root_available_bytes": 1044629655552
+      }
+    }
+  ],
+  "job_signals": 0,
+  "observed_UTC": "2026-10-02T11:26:13.570815+00:00"
+}

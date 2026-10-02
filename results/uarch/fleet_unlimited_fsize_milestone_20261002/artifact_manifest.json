@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.fleet-unlimited-FSIZE.milestone.v1",
+  "files_sha256": {
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/Hubble_VM48_fresh_tools_resources.json": "289ef464f1a06a5fceab1d3998c4628e3535bdf148c1943a947d12f7849e4088",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/Hubble_VM48_header_comparison.json": "603cae4327226eb0c7960c062a099fe1a9bc856084020e8068348195fdea68ff",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/policy_tests.log": "e4446b45b1de9eb03688bc978d37ddddb8c3c4c02c055de66da23e108edb8daf",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/source_retention.json": "4a54e3ac0e3c8adb7484deff2e5a940a8b8e4e364dd5b3e950ded707e1c4bc9b",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/static_tests_r2.log": "77ff842a4fb0cee7ecc10488cd084cc64fddee54d4800f02aa70a2eb6fadd7b1",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/Hubble_VM48_admission_model.json": "5fa645e7e0847b92aaa8a73993f606e4538a337d84d1338b86f9a7a75d72b46d",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/successor_source_plan.json": "da1b5c82fccd94ab21190dd504bec73efe72c510e0764d2ba463710663ac5470",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/vm_tool_probe.py": "9c61584ec12a719ee5b9fec54fb3e78d1b23d0e265ce4f9cee006ec67eabf2c6",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/successor_source_plan_final.json": "3abda924e3b252691674534a9679805dcdff2979349e244c54cae83c0d754dbe",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/remote_headroom.json": "2a66f1ae5897cae50659c5e9b531a190f84325c6951145a195bf9a1cd2e5d1d2",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/local_live_ownership.json": "0f5dd7a019d6049f9891e6fbbd1edb3a5a73520e5b4bdfc4798f5bcf67c01bb4",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/fleet_admission_screens.json": "59ab3adab4126487f82abf5dd1fe802bab97c226587f641e27dac96a1ef70604",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/handoff.txt": "0582fa4eda595c0d9f43761ec00f8d24a2545ae91662d1e14dfb6bc24470bca4",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/retained_drain.status.v2.json": "41bee029fd76f6f00ca83edc7b9260be432aa3888b0b0e588e626481e0efced6",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/static_tests_r3.log": "aab4d4b177281e7ba5dac9726c74804fff203756c7362c8dd9221d33626d7547",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/retained_coordinator.status.v2.json": "26539649e099d6f9f7a09b232936daf18ffd5df0f4212185a07562ca6206cb5f",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/remote_probe.py": "8463778523652a5f0b5c71e0434addc27432f42bbad873bb000ef2fdb01b8290",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/static_tests_r1.log": "8c2f81d412c46e0f00398a5bb548d713d38e0482400caee8b494cc0eb58fa360",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/Hubble_VM48_container_lease_probe.json": "cc1120a83db239566043d815ca952b130850675dea482cd37ae3d2f51bf3bdbd",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/launchers/remote_gate_unlimited.base.py": "360997e468345754a23f95f2ec5afe78929ff2d6abba60a847da4be46b1587ac",
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/launchers/remote_gate_unlimited_guarded.py": "c2439d17cbabcca16348819666ecde6e65791568191867fe1b920b17fdec2e92",
+    "tests/test_fleet_unlimited_fsize_successors.py": "4612add20e8b869676507e28a3ee49129bf86ce2f12da7c7622dfb1406ee23c7",
+    "tools/experiment_unlimited_fsize_exec.py": "c03e5072f8d7d6c4a7c648a7366406ee023f8d833b7ad8245bfaf101e76f9069",
+    "tools/hbm_qwen_binary_reuse_unlimited_fsize_prepare.py": "99ddfd0d9b53ad093c131a00b911e6a7b14f0941dc2faa48839df594f5fe87d7",
+    "tools/prepare_hbm_qwen_runtime_unlimited_fsize_prepare.py": "ca29570399c47a3879a80d1314859fefc11470276e71b0c39c44cb449edeec2e",
+    "tools/run_hbm_qwen_runtime_unlimited_fsize_prepare.py": "4cb4cec1c555e0a395dd5c879f7190d2337944bc57b2ba47e5870f32f5156237",
+    "results/uarch/hbm_qwen_runtime_unlimited_fsize_prepare_20261002/model.json": "418acd9825e9143100531194d3945af8ad50e50677062396843511cc70577a42",
+    "results/uarch/hbm_qwen_runtime_unlimited_fsize_prepare_20261002/resource_snapshot.json": "ecb03db560da2865378ba486e9bf426fe646b1f82d4d4f6c005d62c0be4bfeb1"
+  },
+  "launch_authorized": false,
+  "experiment_launches": 0,
+  "historical_live_sources_changed": false,
+  "tests": {
+    "successor": 9,
+    "policy": 5
+  }
+}

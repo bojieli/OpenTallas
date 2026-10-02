@@ -1,0 +1,125 @@
+{
+  "VM_resources": {
+    "data": {
+      "CPUs": 64,
+      "boot_id": "7873415f-cbde-49b4-8228-e44b66bf6895",
+      "jobs": [],
+      "loadavg": [
+        0.0791015625,
+        0.107421875,
+        0.0888671875
+      ],
+      "mem": {
+        "MemAvailable": 120048218112,
+        "MemTotal": 134974394368
+      },
+      "observed_epoch": 1790940935.2509203,
+      "probe_process_FSIZE": "Max file size             unlimited            unlimited            bytes     ",
+      "root_available_bytes": 1044629573632
+    },
+    "error": "",
+    "returncode": 0
+  },
+  "VM_tools": {
+    "data": {
+      "cc1plus": {
+        "path": "/usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus",
+        "sha256": "bbc9134550f57727ce9751e2629844f4ec532d10ec6ac9973124e24a9e16d388"
+      },
+      "compiler": {
+        "path": "/usr/bin/g++",
+        "resolved": "/usr/bin/x86_64-linux-gnu-g++-15",
+        "sha256": "fd8730a05275b1f8a149b7df3e38ef67cf7a21ec817a706206955cd2929b900b",
+        "version": "g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0"
+      },
+      "host_machine": "x86_64",
+      "libgcc_s.so": {
+        "path": "/usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so",
+        "resolved": "/usr/lib/gcc/x86_64-linux-gnu/15/libgcc_s.so",
+        "sha256": "69a56a9993b7729b29b274e65016031c81f2397f176ed5ad44d59bd50425e0bd"
+      },
+      "libstdc++.so": {
+        "path": "/usr/lib/gcc/x86_64-linux-gnu/15/libstdc++.so",
+        "resolved": "/usr/lib/gcc/x86_64-linux-gnu/15/libstdc++.so",
+        "sha256": "1745d9ff248ae1c537f3dceee5cb6354a1fa5f7c202c2745bee9d38e57820bcf"
+      },
+      "linker": {
+        "path": "/usr/bin/ld",
+        "resolved": "/usr/bin/x86_64-linux-gnu-ld.bfd",
+        "sha256": "25a16b3e77ce7c7c4b13063d64c2a1f1a3b77a8a13e0d25b445bc77d11a50d17",
+        "version": "GNU ld (GNU Binutils for Ubuntu) 2.46"
+      },
+      "make": {
+        "path": "/usr/bin/make",
+        "resolved": "/usr/bin/make",
+        "sha256": "59588d6a017dc48b12d525ddfd14dea52f214d81e89645de3d782eb3c684b698",
+        "version": "GNU Make 4.4.1"
+      },
+      "prlimit": {
+        "path": "/usr/bin/prlimit",
+        "resolved": "/usr/bin/prlimit",
+        "sha256": "0b3cca3c0ea2ebfaad78e7b66bd00be58f4cac8795ea2188cde1ea3a813d8a90",
+        "version": "prlimit from util-linux 2.41.3"
+      }
+    },
+    "error": "",
+    "returncode": 0
+  },
+  "fingerprint_equal": {
+    "cc1plus": false,
+    "compiler": false,
+    "host_machine": true,
+    "libgcc_s.so": false,
+    "libstdc++.so": false,
+    "linker": false,
+    "make": false,
+    "prlimit": false
+  },
+  "launches": 0,
+  "local_tools": {
+    "data": {
+      "cc1plus": {
+        "path": "/usr/lib/gcc/x86_64-linux-gnu/11/cc1plus",
+        "sha256": "283421000e15a9152de4affe89ac2e528f3e0bcf2038b245171a17d8a912ace9"
+      },
+      "compiler": {
+        "path": "/usr/bin/g++",
+        "resolved": "/usr/bin/x86_64-linux-gnu-g++-11",
+        "sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+        "version": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+      },
+      "host_machine": "x86_64",
+      "libgcc_s.so": {
+        "path": "/usr/lib/gcc/x86_64-linux-gnu/11/libgcc_s.so",
+        "resolved": "/usr/lib/gcc/x86_64-linux-gnu/11/libgcc_s.so",
+        "sha256": "69a56a9993b7729b29b274e65016031c81f2397f176ed5ad44d59bd50425e0bd"
+      },
+      "libstdc++.so": {
+        "path": "/usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so",
+        "resolved": "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30",
+        "sha256": "ff0825e113603c3866680d5d52216bc6d8eedf3a59f52a0aef67ff01994db128"
+      },
+      "linker": {
+        "path": "/usr/bin/ld",
+        "resolved": "/usr/bin/x86_64-linux-gnu-ld.bfd",
+        "sha256": "58937fc20c21e147883b4fdaa0fc7438a8e8f2bb886cfcaa4896100ca91139e7",
+        "version": "GNU ld (GNU Binutils for Ubuntu) 2.38"
+      },
+      "make": {
+        "path": "/usr/bin/make",
+        "resolved": "/usr/bin/make",
+        "sha256": "92f646030615cd98490a68a94c0aefd87b552be3158b941c02e43b0bfdb576db",
+        "version": "GNU Make 4.3"
+      },
+      "prlimit": {
+        "path": "/usr/bin/prlimit",
+        "resolved": "/usr/bin/prlimit",
+        "sha256": "740e7bb73625b7aa99821cd6641015dfd0430de801a86881837a2cb688182d94",
+        "version": "prlimit from util-linux 2.37.2"
+      }
+    },
+    "error": "",
+    "returncode": 0
+  },
+  "observed_UTC": "2026-10-02T11:35:35.297597+00:00"
+}

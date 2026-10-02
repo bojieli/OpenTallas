@@ -1,0 +1,968 @@
+{
+  "schema_version": 2,
+  "time_utc": "2026-10-02T11:27:23.748219+00:00",
+  "monitor_pid": 3372358,
+  "hosts": {
+    "ot-pve2": {
+      "schema_version": 2,
+      "boot_id": "fb9336dd-a01d-4c05-9ae1-04f6e10f8beb",
+      "processes": [
+        {
+          "pid": 480153,
+          "ppid": 480124,
+          "start_ticks": 39197063,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup",
+            "project_container_root"
+          ]
+        },
+        {
+          "pid": 480286,
+          "ppid": 480153,
+          "start_ticks": 39197179,
+          "comm": "make",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 551203,
+          "ppid": 480286,
+          "start_ticks": 46663024,
+          "comm": "make",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 551221,
+          "ppid": 551203,
+          "start_ticks": 46663084,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/flow.sh"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 551223,
+          "ppid": 551221,
+          "start_ticks": 46663085,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/flow.sh"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 551254,
+          "ppid": 551223,
+          "start_ticks": 46663113,
+          "comm": "python3",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/run_command.py",
+            "/work/logs/asap7/opentallas_ot_coll_topk_merge_asap7_w15topk_4_128_64_8/base/5_2_route.tmp.log",
+            "/OpenROAD-flow-scripts/flow/scripts/detail_route.tcl",
+            "/work/logs/asap7/opentallas_ot_coll_topk_merge_asap7_w15topk_4_128_64_8/base/5_2_route.json"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 551255,
+          "ppid": 551254,
+          "start_ticks": 46663120,
+          "comm": "openroad",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/detail_route.tcl",
+            "/work/logs/asap7/opentallas_ot_coll_topk_merge_asap7_w15topk_4_128_64_8/base/5_2_route.json"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 598051,
+          "ppid": 598050,
+          "start_ticks": 48814062,
+          "comm": "docker",
+          "cwd": "/home/ubuntu",
+          "exe": "/usr/bin/docker",
+          "cgroups": [
+            "/user.slice/user-1000.slice/session-84623.scope"
+          ],
+          "labels": [
+            "/tmp/claude-1000/w11s/jobs/harden_wc.sh"
+          ],
+          "ownership": [
+            "project_argument"
+          ]
+        },
+        {
+          "pid": 598098,
+          "ppid": 598074,
+          "start_ticks": 48814126,
+          "comm": "python3",
+          "cwd": "/tmp/claude-1000/wt/w11-kc2",
+          "exe": "/usr/bin/python3.10",
+          "cgroups": [
+            "/system.slice/docker-16507405db2b229d18ddc473a2c922d23055fde343f8b650d99081e628761e2f.scope"
+          ],
+          "labels": [
+            "/tmp/claude-1000/w11s/hard/kc_kdx2b/physical.json"
+          ],
+          "ownership": [
+            "project_cwd",
+            "project_argument",
+            "project_container_cgroup",
+            "project_container_root"
+          ]
+        },
+        {
+          "pid": 603232,
+          "ppid": 598098,
+          "start_ticks": 49062261,
+          "comm": "docker",
+          "cwd": "/tmp/claude-1000/wt/w11-kc2",
+          "exe": "/usr/bin/docker",
+          "cgroups": [
+            "/system.slice/docker-16507405db2b229d18ddc473a2c922d23055fde343f8b650d99081e628761e2f.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_cwd",
+            "project_argument",
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 603274,
+          "ppid": 603251,
+          "start_ticks": 49062357,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup",
+            "project_container_root"
+          ]
+        },
+        {
+          "pid": 603355,
+          "ppid": 603274,
+          "start_ticks": 49062402,
+          "comm": "make",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 1857684,
+          "ppid": 1857683,
+          "start_ticks": 12580055,
+          "comm": "tail",
+          "cwd": "/home/ubuntu",
+          "exe": "/usr/bin/tail",
+          "cgroups": [
+            "/user.slice/user-1000.slice/session-20602.scope"
+          ],
+          "labels": [
+            "/tmp/codex_v41x_array_sw/o1rest_full_ch109.log"
+          ],
+          "ownership": [
+            "project_argument"
+          ]
+        },
+        {
+          "pid": 2861852,
+          "ppid": 603355,
+          "start_ticks": 51987512,
+          "comm": "make",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 2861870,
+          "ppid": 2861852,
+          "start_ticks": 51987562,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/flow.sh"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 2861872,
+          "ppid": 2861870,
+          "start_ticks": 51987564,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/flow.sh"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 2861903,
+          "ppid": 2861872,
+          "start_ticks": 51987591,
+          "comm": "python3",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/run_command.py",
+            "/work/logs/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_5_place_dp.tmp.log",
+            "/OpenROAD-flow-scripts/flow/scripts/detail_place.tcl",
+            "/work/logs/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_5_place_dp.json"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 2861904,
+          "ppid": 2861903,
+          "start_ticks": 51987598,
+          "comm": "openroad",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/detail_place.tcl",
+            "/work/logs/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_5_place_dp.json"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        }
+      ],
+      "containers": [
+        {
+          "id": "11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745",
+          "name": "/intelligent_franklin",
+          "pid": 603274,
+          "mounts": [
+            {
+              "source": "/home/ubuntu/w11tmp/abi3-physical-ta257klj/orfs",
+              "destination": "/work"
+            },
+            {
+              "source": "/tmp/claude-1000/wt/w11-kc2",
+              "destination": "/src"
+            }
+          ]
+        },
+        {
+          "id": "16507405db2b229d18ddc473a2c922d23055fde343f8b650d99081e628761e2f",
+          "name": "/otjob-124a67f8af",
+          "pid": 598098,
+          "mounts": [
+            {
+              "source": "/home/ubuntu",
+              "destination": "/home/ubuntu"
+            },
+            {
+              "source": "/tmp",
+              "destination": "/tmp"
+            },
+            {
+              "source": "/var/run/docker.sock",
+              "destination": "/var/run/docker.sock"
+            }
+          ]
+        },
+        {
+          "id": "007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739",
+          "name": "/magical_pasteur",
+          "pid": 480153,
+          "mounts": [
+            {
+              "source": "/home/ubuntu/w15bwt7",
+              "destination": "/src"
+            },
+            {
+              "source": "/home/ubuntu/w15work/keep/topk_4_128_64_8/orfs",
+              "destination": "/work"
+            }
+          ]
+        }
+      ],
+      "owned_cgroups": [
+        "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope",
+        "/system.slice/docker-04cd7ff148a44971379184c2cf40dfb035b73dee7307f046f22892c4894883a8.scope",
+        "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope",
+        "/system.slice/docker-16507405db2b229d18ddc473a2c922d23055fde343f8b650d99081e628761e2f.scope",
+        "/system.slice/docker-5aeefc947a38ae76603db14968342c81fb54a98df923e0899fe7b61d8a757e37.scope",
+        "/system.slice/docker-70fe88dd599633811718a92d857202b4ba26abf5ed708f12c9fdd0274e0a03b9.scope",
+        "/system.slice/docker-86d698cf9b7db8f39c46ce0c3f71b19ee048a2969b7eadd34067e89512b83f58.scope",
+        "/system.slice/docker-91e4bd037a9c802b365ec33466459ea17577572e05732a31bc3a62a18c0606d6.scope",
+        "/system.slice/docker-bc037388bb5c2d96f884354a8a41e215a712f81d40b96eb6fe7cb6784db3aee3.scope",
+        "/system.slice/docker-bdd2a76ffad6b7da18e2645205c5edee439c2e9e84ff8474fce193b13a4ae618.scope"
+      ],
+      "roots": [
+        "/home/ubuntu/OpenTallas",
+        "/home/ubuntu/w11ckv_phys",
+        "/home/ubuntu/w11ckv_phys/ids5",
+        "/home/ubuntu/w11ckv_wt",
+        "/home/ubuntu/w11kc-wt2",
+        "/home/ubuntu/w11kcwork",
+        "/home/ubuntu/w11kcwork2",
+        "/home/ubuntu/w11tmp",
+        "/home/ubuntu/w11tmp/abi3-physical-0crlu_ha/orfs",
+        "/home/ubuntu/w11tmp/abi3-physical-0crlu_ha/orfs/logs",
+        "/home/ubuntu/w11tmp/abi3-physical-0crlu_ha/orfs/reports",
+        "/home/ubuntu/w11tmp/abi3-physical-ta257klj/orfs",
+        "/home/ubuntu/w11tmp/abi3-physical-ta257klj/orfs/logs",
+        "/home/ubuntu/w11tmp/abi3-physical-ta257klj/orfs/reports",
+        "/home/ubuntu/w12",
+        "/home/ubuntu/w12bwork",
+        "/home/ubuntu/w12bwork/keep_i560/orfs",
+        "/home/ubuntu/w12bwork/keep_i560/orfs/logs",
+        "/home/ubuntu/w12bwork/keep_i560/orfs/reports",
+        "/home/ubuntu/w12bwork/src",
+        "/home/ubuntu/w12bwork/src/results/physical_hdc/asap7/qwen_o4_w12/tile_i560",
+        "/home/ubuntu/w12work",
+        "/home/ubuntu/w13work",
+        "/home/ubuntu/w13wt",
+        "/home/ubuntu/w15bwork",
+        "/home/ubuntu/w15bwt7",
+        "/home/ubuntu/w15work",
+        "/home/ubuntu/w15work/keep/topk_4_128_64_8/orfs",
+        "/home/ubuntu/w15work/keep/topk_4_128_64_8/orfs/logs",
+        "/home/ubuntu/w15work/keep/topk_4_128_64_8/orfs/reports",
+        "/home/ubuntu/w17work",
+        "/home/ubuntu/w19work",
+        "/tmp/abi3-physical-gtm6uhhk/orfs",
+        "/tmp/abi3-physical-gtm6uhhk/orfs/logs",
+        "/tmp/abi3-physical-gtm6uhhk/orfs/reports",
+        "/tmp/claude-1000/w11s",
+        "/tmp/claude-1000/w11s/hard/kc_kdx2b",
+        "/tmp/claude-1000/w11st",
+        "/tmp/claude-1000/w12",
+        "/tmp/claude-1000/w13",
+        "/tmp/claude-1000/w15",
+        "/tmp/claude-1000/w17",
+        "/tmp/claude-1000/w19",
+        "/tmp/claude-1000/wt",
+        "/tmp/claude-1000/wt/w11-ckv",
+        "/tmp/claude-1000/wt/w11-kc2"
+      ],
+      "uncertainties": [],
+      "pve3_future_variant_guard_sha256": null,
+      "reachable": true,
+      "current_processes": [
+        {
+          "pid": 480153,
+          "ppid": 480124,
+          "start_ticks": 39197063,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup",
+            "project_container_root"
+          ]
+        },
+        {
+          "pid": 480286,
+          "ppid": 480153,
+          "start_ticks": 39197179,
+          "comm": "make",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 551203,
+          "ppid": 480286,
+          "start_ticks": 46663024,
+          "comm": "make",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 551221,
+          "ppid": 551203,
+          "start_ticks": 46663084,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/flow.sh"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 551223,
+          "ppid": 551221,
+          "start_ticks": 46663085,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/flow.sh"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 551254,
+          "ppid": 551223,
+          "start_ticks": 46663113,
+          "comm": "python3",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/run_command.py",
+            "/work/logs/asap7/opentallas_ot_coll_topk_merge_asap7_w15topk_4_128_64_8/base/5_2_route.tmp.log",
+            "/OpenROAD-flow-scripts/flow/scripts/detail_route.tcl",
+            "/work/logs/asap7/opentallas_ot_coll_topk_merge_asap7_w15topk_4_128_64_8/base/5_2_route.json"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 551255,
+          "ppid": 551254,
+          "start_ticks": 46663120,
+          "comm": "openroad",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-007d37d5fc46ed7fc5a1fb018d36adcd6bae0e19c60f5a120f38182717a98739.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/detail_route.tcl",
+            "/work/logs/asap7/opentallas_ot_coll_topk_merge_asap7_w15topk_4_128_64_8/base/5_2_route.json"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 598051,
+          "ppid": 598050,
+          "start_ticks": 48814062,
+          "comm": "docker",
+          "cwd": "/home/ubuntu",
+          "exe": "/usr/bin/docker",
+          "cgroups": [
+            "/user.slice/user-1000.slice/session-84623.scope"
+          ],
+          "labels": [
+            "/tmp/claude-1000/w11s/jobs/harden_wc.sh"
+          ],
+          "ownership": [
+            "project_argument"
+          ]
+        },
+        {
+          "pid": 598098,
+          "ppid": 598074,
+          "start_ticks": 48814126,
+          "comm": "python3",
+          "cwd": "/tmp/claude-1000/wt/w11-kc2",
+          "exe": "/usr/bin/python3.10",
+          "cgroups": [
+            "/system.slice/docker-16507405db2b229d18ddc473a2c922d23055fde343f8b650d99081e628761e2f.scope"
+          ],
+          "labels": [
+            "/tmp/claude-1000/w11s/hard/kc_kdx2b/physical.json"
+          ],
+          "ownership": [
+            "project_cwd",
+            "project_argument",
+            "project_container_cgroup",
+            "project_container_root"
+          ]
+        },
+        {
+          "pid": 603232,
+          "ppid": 598098,
+          "start_ticks": 49062261,
+          "comm": "docker",
+          "cwd": "/tmp/claude-1000/wt/w11-kc2",
+          "exe": "/usr/bin/docker",
+          "cgroups": [
+            "/system.slice/docker-16507405db2b229d18ddc473a2c922d23055fde343f8b650d99081e628761e2f.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_cwd",
+            "project_argument",
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 603274,
+          "ppid": 603251,
+          "start_ticks": 49062357,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup",
+            "project_container_root"
+          ]
+        },
+        {
+          "pid": 603355,
+          "ppid": 603274,
+          "start_ticks": 49062402,
+          "comm": "make",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 1857684,
+          "ppid": 1857683,
+          "start_ticks": 12580055,
+          "comm": "tail",
+          "cwd": "/home/ubuntu",
+          "exe": "/usr/bin/tail",
+          "cgroups": [
+            "/user.slice/user-1000.slice/session-20602.scope"
+          ],
+          "labels": [
+            "/tmp/codex_v41x_array_sw/o1rest_full_ch109.log"
+          ],
+          "ownership": [
+            "project_argument"
+          ]
+        },
+        {
+          "pid": 2861852,
+          "ppid": 603355,
+          "start_ticks": 51987512,
+          "comm": "make",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 2861870,
+          "ppid": 2861852,
+          "start_ticks": 51987562,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/flow.sh"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 2861872,
+          "ppid": 2861870,
+          "start_ticks": 51987564,
+          "comm": "bash",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/flow.sh"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 2861903,
+          "ppid": 2861872,
+          "start_ticks": 51987591,
+          "comm": "python3",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/run_command.py",
+            "/work/logs/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_5_place_dp.tmp.log",
+            "/OpenROAD-flow-scripts/flow/scripts/detail_place.tcl",
+            "/work/logs/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_5_place_dp.json"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        },
+        {
+          "pid": 2861904,
+          "ppid": 2861903,
+          "start_ticks": 51987598,
+          "comm": "openroad",
+          "cwd": "",
+          "exe": "",
+          "cgroups": [
+            "/system.slice/docker-11c7ac9b31a7977a3c68bf9c1734fb9d7f27a600fc6ce6bad5ba240198cb0745.scope"
+          ],
+          "labels": [
+            "/OpenROAD-flow-scripts/flow/scripts/detail_place.tcl",
+            "/work/logs/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_5_place_dp.json"
+          ],
+          "ownership": [
+            "project_container_cgroup"
+          ]
+        }
+      ],
+      "baseline_processes_exited": [
+        {
+          "pid": 499184,
+          "ppid": 499183,
+          "start_ticks": 45892080,
+          "comm": "docker",
+          "labels": [
+            "otjob-3a743404b6",
+            "tools/run_abi3_physical.py"
+          ]
+        },
+        {
+          "pid": 499232,
+          "ppid": 499208,
+          "start_ticks": 45892541,
+          "comm": "python3",
+          "labels": [
+            "tools/run_abi3_physical.py"
+          ]
+        },
+        {
+          "pid": 578581,
+          "ppid": 578580,
+          "start_ticks": 47524542,
+          "comm": "openroad",
+          "labels": [
+            "/work/logs/asap7/opentallas_ot_qwen_rom_tile_asap7_w12_tile_i560/base/5_2_route.json"
+          ]
+        },
+        {
+          "pid": 1158855,
+          "ppid": 1158854,
+          "start_ticks": 49311062,
+          "comm": "openroad",
+          "labels": [
+            "/work/logs/asap7/opentallas_ot_chip_v41x_ckv_sel_ids_asap7_w11ckv_ids5/base/5_2_route.json"
+          ]
+        },
+        {
+          "pid": 2475445,
+          "ppid": 2475444,
+          "start_ticks": 41307016,
+          "comm": "openroad",
+          "labels": [
+            "/work/logs/asap7/opentallas_ot_w11_kdata_m_x1_phys_asap7_w11kc_kdx1b/base/3_3_place_gp.json"
+          ]
+        },
+        {
+          "pid": 2563050,
+          "ppid": 1,
+          "start_ticks": 41838158,
+          "comm": "docker",
+          "labels": [
+            "w12b_i560",
+            "jobs/tile_wc_chain.sh"
+          ]
+        },
+        {
+          "pid": 2563164,
+          "ppid": 2563135,
+          "start_ticks": 41838770,
+          "comm": "bash",
+          "labels": [
+            "jobs/tile_wc_chain.sh"
+          ]
+        },
+        {
+          "pid": 2563179,
+          "ppid": 2563178,
+          "start_ticks": 41838847,
+          "comm": "python3",
+          "labels": [
+            "tools/run_abi3_physical.py"
+          ]
+        },
+        {
+          "pid": 2824996,
+          "ppid": 2824995,
+          "start_ticks": 49720044,
+          "comm": "openroad",
+          "labels": [
+            "/work/logs/asap7/opentallas_ot_w11_kdata_m_x2_phys_asap7_w11kc_kdx2b/base/3_1_place_gp_skip_io.json"
+          ]
+        }
+      ],
+      "admission_held": true,
+      "pending_chains_held_verified": true,
+      "active_project_jobs_absent": false,
+      "results_retained_verified": false,
+      "drained": false,
+      "completion": "PROCESS_OBSERVATION_ONLY; NO ENGINEERING VERDICT",
+      "host_free_notification_allowed": false
+    },
+    "ot-pve3": {
+      "schema_version": 2,
+      "boot_id": "f7058576-de73-406b-8cf4-b9b3c218e380",
+      "processes": [],
+      "containers": [],
+      "owned_cgroups": [
+        "/system.slice/docker-24e1fca7aa86ac30b104cc234cc7cde2ca5cba805bed922587e13ca864e2e629.scope",
+        "/system.slice/docker-5772ca3bd3df5eb04aa23a16fe031045c0361c8423656d3fda170aa2ebddff2f.scope",
+        "/system.slice/docker-88842473948b3e27a5b1f549f5cd7169fa00e1d3fac989536241a2a3e234f158.scope",
+        "/system.slice/docker-adfbced9bf764e861064c84e680393205481cabd311aebdef7ce55b3d3705915.scope"
+      ],
+      "roots": [
+        "/home/ubuntu/OpenTallas",
+        "/home/ubuntu/w11ckv_phys",
+        "/home/ubuntu/w11ckv_phys/merge_m5b",
+        "/home/ubuntu/w11ckv_phys/merge_m5b/work/orfs",
+        "/home/ubuntu/w11ckv_phys/merge_m5b/work/orfs/logs",
+        "/home/ubuntu/w11ckv_phys/merge_m5b/work/orfs/reports",
+        "/home/ubuntu/w11ckv_wt",
+        "/home/ubuntu/w11kc-wt2",
+        "/home/ubuntu/w11kcwork",
+        "/home/ubuntu/w11kcwork2",
+        "/home/ubuntu/w11tmp",
+        "/home/ubuntu/w11tmp/abi3-physical-pggl5fgw/orfs",
+        "/home/ubuntu/w11tmp/abi3-physical-pggl5fgw/orfs/logs",
+        "/home/ubuntu/w11tmp/abi3-physical-pggl5fgw/orfs/reports",
+        "/home/ubuntu/w12",
+        "/home/ubuntu/w12bwork",
+        "/home/ubuntu/w12work",
+        "/home/ubuntu/w13work",
+        "/home/ubuntu/w13wt",
+        "/home/ubuntu/w15bwork",
+        "/home/ubuntu/w15work",
+        "/home/ubuntu/w17work",
+        "/home/ubuntu/w19work",
+        "/tmp/claude-1000/w11s",
+        "/tmp/claude-1000/w11s/hard/kc_portn3",
+        "/tmp/claude-1000/w11st",
+        "/tmp/claude-1000/w11st/attn_d8",
+        "/tmp/claude-1000/w12",
+        "/tmp/claude-1000/w13",
+        "/tmp/claude-1000/w15",
+        "/tmp/claude-1000/w17",
+        "/tmp/claude-1000/w19",
+        "/tmp/claude-1000/wt"
+      ],
+      "uncertainties": [],
+      "pve3_future_variant_guard_sha256": "20ce0ec6af480559318730c668b66851f8958dddd3b239b2ba55f87b1023e45e",
+      "reachable": true,
+      "current_processes": [],
+      "baseline_processes_exited": [
+        {
+          "pid": 1761036,
+          "ppid": 1761035,
+          "start_ticks": 40083992,
+          "comm": "docker",
+          "labels": [
+            "otjob-dea7d958df",
+            "/tmp/claude-1000/w11s/jobs/harden_wc.sh"
+          ]
+        },
+        {
+          "pid": 1761139,
+          "ppid": 1761116,
+          "start_ticks": 40084367,
+          "comm": "python3",
+          "labels": [
+            "tools/run_abi3_physical.py"
+          ]
+        },
+        {
+          "pid": 3564900,
+          "ppid": 3564885,
+          "start_ticks": 42889330,
+          "comm": "docker",
+          "labels": [
+            "otjob-0a78a977fb",
+            "/tmp/claude-1000/w11s/jobs/st_sim.sh"
+          ]
+        },
+        {
+          "pid": 3988136,
+          "ppid": 3988135,
+          "start_ticks": 45686566,
+          "comm": "openroad",
+          "labels": [
+            "/work/logs/asap7/opentallas_ot_w11_ring_port_nphys_asap7_w11kc_portn3/base/5_1_grt.json"
+          ]
+        },
+        {
+          "pid": 3992571,
+          "ppid": 3992569,
+          "start_ticks": 45838054,
+          "comm": "python3",
+          "labels": [
+            "tools/run_abi3_physical.py"
+          ]
+        },
+        {
+          "pid": 4000495,
+          "ppid": 3565148,
+          "start_ticks": 46297591,
+          "comm": "python3",
+          "labels": [
+            "/tmp/claude-1000/w11st/attn_d8/at_eng3.py"
+          ]
+        },
+        {
+          "pid": 4000528,
+          "ppid": 4000525,
+          "start_ticks": 46297692,
+          "comm": "verilator_bin",
+          "labels": []
+        },
+        {
+          "pid": 4005428,
+          "ppid": 4005427,
+          "start_ticks": 46682591,
+          "comm": "openroad",
+          "labels": [
+            "/work/logs/asap7/opentallas_ot_v41_ckv_merge_phys_asap7_w11ckv_merge_m5b/base/5_1_grt.json"
+          ]
+        }
+      ],
+      "admission_held": true,
+      "pending_chains_held_verified": true,
+      "active_project_jobs_absent": true,
+      "results_retained_verified": false,
+      "drained": false,
+      "completion": "PROCESS_OBSERVATION_ONLY; NO ENGINEERING VERDICT",
+      "host_free_notification_allowed": false
+    }
+  },
+  "host_free_notification_allowed": false
+}

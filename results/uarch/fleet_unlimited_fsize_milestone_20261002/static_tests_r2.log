@@ -1,0 +1,29 @@
+abi3 (unittest.loader._FailedTest) ... ERROR
+test_GCC11_container_tools_match_but_libc_not_reuse_qualified (test_fleet_unlimited_fsize_successors.Successors) ... ok
+test_VM48_resource_screen_is_not_lease_or_launch (test_fleet_unlimited_fsize_successors.Successors) ... ok
+test_future_Q_caps_remove_only_perfile_with_fresh_schema (test_fleet_unlimited_fsize_successors.Successors) ... ok
+test_future_Q_limit_validation_retains_memswap_affinity_wall (test_fleet_unlimited_fsize_successors.Successors) ... ok
+test_future_copy_provenance_and_source_bytes_bound (test_fleet_unlimited_fsize_successors.Successors) ... ok
+test_kernel_entry_rejects_finite_inheritance_and_exec_overrides (test_fleet_unlimited_fsize_successors.Successors) ... ok
+test_old_GO_schema_and_unreviewed_resource_refused (test_fleet_unlimited_fsize_successors.Successors) ... ok
+test_remote_future_guard_retains_holds_and_live_ledger (test_fleet_unlimited_fsize_successors.Successors) ... ok
+test_remote_receipt_and_retirement_no_unqualified_free_host (test_fleet_unlimited_fsize_successors.Successors) ... ok
+
+======================================================================
+ERROR: abi3 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: abi3
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/unittest/loader.py", line 470, in _find_test_path
+    package = self._get_module_from_name(name)
+  File "/usr/lib/python3.10/unittest/loader.py", line 377, in _get_module_from_name
+    __import__(name)
+  File "/tmp/opentallas-H3-scalar-contract-model-20261002/tests/abi3/__init__.py", line 31, in <module>
+    from runtime.abi3.capability import Capability
+ModuleNotFoundError: No module named 'runtime.abi3'
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.009s
+
+FAILED (errors=1)

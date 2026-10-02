@@ -1,0 +1,86 @@
+{
+  "schema": "opentallas.Hubble.VM48.resource-screen.v1",
+  "observed_UTC": "2026-10-02T11:35:35.297597+00:00",
+  "host": "155.103.253.226",
+  "screens_GiB_at_probe_time": {
+    "64": {
+      "admit": true,
+      "reasons": [],
+      "slot_request_gib": 64,
+      "aggregate_peak_ram_gib": 64,
+      "effective_ram_budget_gib": 96,
+      "live_free_after_peak_gib": 47.80361557006836,
+      "reserved_headroom_gib": 24,
+      "reserved_threads": 0,
+      "observed_compute_threads": 0,
+      "request_threads": 48,
+      "conservative_aggregate_threads": 48,
+      "thread_cap": 48
+    },
+    "80": {
+      "admit": true,
+      "reasons": [],
+      "slot_request_gib": 80,
+      "aggregate_peak_ram_gib": 80,
+      "effective_ram_budget_gib": 96,
+      "live_free_after_peak_gib": 31.80361557006836,
+      "reserved_headroom_gib": 24,
+      "reserved_threads": 0,
+      "observed_compute_threads": 0,
+      "request_threads": 48,
+      "conservative_aggregate_threads": 48,
+      "thread_cap": 48
+    },
+    "88": {
+      "admit": false,
+      "reasons": [
+        "LIVE_RAM_RESERVE"
+      ],
+      "slot_request_gib": 88,
+      "aggregate_peak_ram_gib": 88,
+      "effective_ram_budget_gib": 96,
+      "live_free_after_peak_gib": 23.80361557006836,
+      "reserved_headroom_gib": 24,
+      "reserved_threads": 0,
+      "observed_compute_threads": 0,
+      "request_threads": 48,
+      "conservative_aggregate_threads": 48,
+      "thread_cap": 48
+    },
+    "94": {
+      "admit": false,
+      "reasons": [
+        "LIVE_RAM_RESERVE"
+      ],
+      "slot_request_gib": 96,
+      "aggregate_peak_ram_gib": 96,
+      "effective_ram_budget_gib": 96,
+      "live_free_after_peak_gib": 15.80361557006836,
+      "reserved_headroom_gib": 24,
+      "reserved_threads": 0,
+      "observed_compute_threads": 0,
+      "request_threads": 48,
+      "conservative_aggregate_threads": 48,
+      "thread_cap": 48
+    }
+  },
+  "screen_is_not_reservation": true,
+  "leases_acquired": 0,
+  "launch_authorized": false,
+  "required_before_launch": [
+    "Hubble frozen source/model and native remaining-object inventory",
+    "exact compiler/header/libc/PCH compatibility or explicitly reviewed container environment successor",
+    "aggregate RAM price and pids budget for 48 make workers plus compiler/linker children",
+    "fresh admission under shared fleet lock with 48 aggregate thread reservation",
+    "owner aggregate output reservation/disk safeguards and unlimited FSIZE in container and descendants",
+    "parent fresh source-bound GO"
+  ],
+  "retained_original_pids_cap": 48,
+  "pids_cap_48_cannot_be_assumed_sufficient_for_48_CXX_workers": true,
+  "physical_CPUs": 64,
+  "aggregate_fleet_thread_cap": 48,
+  "free_disk_bytes": 1044629573632,
+  "memory_model_note": "48 workers each with original 3GiB address-space bound sums to 144GiB virtual limit, not an RSS prediction or approved aggregate reservation. Peak physical-memory price requires Hubble source model.",
+  "PVE2_PVE3": "USER_HOLD_NO_NEW_WORK",
+  "D1_r2": "Parent unit observed failed/MainPID0; engineering diagnosis and terminal archive remain parent-owned; sources/objects/PCH retained."
+}

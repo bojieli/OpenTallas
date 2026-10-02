@@ -1,0 +1,78 @@
+{
+  "disk_available_bytes": 1354115526656,
+  "jobs_signalled_or_restarted": 0,
+  "load": [
+    9.84765625,
+    17.1943359375,
+    14.01611328125
+  ],
+  "memory": {
+    "MemAvailable_bytes": 140195426304,
+    "MemTotal_bytes": 202405810176
+  },
+  "native_CPU_nonexclusive": true,
+  "native_source_required_until_owner_terminal_review": true,
+  "new_jobs_launched": 0,
+  "observed_UTC": "2026-10-02T11:34:03.306661+00:00",
+  "units": [
+    {
+      "ActiveState": "failed",
+      "CPUAffinity": "8-23",
+      "ControlGroup": "",
+      "LimitFSIZE": "infinity",
+      "LimitFSIZESoft": "infinity",
+      "MainPID": "0",
+      "MemoryCurrent": "[not set]",
+      "MemoryMax": "68719476736",
+      "MemorySwapMax": "0",
+      "RuntimeMaxUSec": "16min",
+      "SubState": "failed",
+      "TasksMax": "48",
+      "processes": [],
+      "unit": "w17-D1-native-r2-owned-20261002-r1.service"
+    },
+    {
+      "ActiveState": "active",
+      "CPUAffinity": "0",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/hbm-qwen-connected-runtime-parent-20261002-r11-r1.service",
+      "LimitFSIZE": "3221225472",
+      "LimitFSIZESoft": "3221225472",
+      "MainPID": "515879",
+      "MemoryCurrent": "2899750912",
+      "MemoryMax": "34359738368",
+      "MemorySwapMax": "0",
+      "RuntimeMaxUSec": "18h 51min 30s",
+      "SubState": "running",
+      "TasksMax": "231233",
+      "kernel": {
+        "cpu.max": "UNAVAILABLE",
+        "memory.current": "2899750912",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+        "memory.max": "34359738368",
+        "memory.peak": "2899750912",
+        "memory.swap.max": "0",
+        "pids.current": "2",
+        "pids.max": "231233"
+      },
+      "processes": [
+        {
+          "FSIZE": "Max file size             3221225472           3221225472           bytes     ",
+          "PID": 515879,
+          "affinity": [
+            0
+          ],
+          "comm": "python3"
+        },
+        {
+          "FSIZE": "Max file size             3221225472           3221225472           bytes     ",
+          "PID": 516231,
+          "affinity": [
+            0
+          ],
+          "comm": "Vconnected"
+        }
+      ],
+      "unit": "hbm-qwen-connected-runtime-parent-20261002-r11-r1.service"
+    }
+  ]
+}

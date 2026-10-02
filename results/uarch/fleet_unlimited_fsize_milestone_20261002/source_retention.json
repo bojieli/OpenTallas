@@ -1,0 +1,91 @@
+{
+  "builds_removed": 0,
+  "retirement_rule": "Only retire terminal owner-approved roots after clean source/ref or explicit unique patch plus committed evidence and no active/successor dependency. HEAD refs prove committed retention, not ignored build/data completeness.",
+  "roots": [
+    {
+      "HEAD": "210d3bd1744436ff55ff5a882b53e39351efbe95",
+      "committed_source_retained_in_refs": true,
+      "exists": true,
+      "path": "/home/ubuntu/dsrom-reticle-return-model-20261002",
+      "reason": "required live/successor source or model-owner dependency; no deletion authorized in this audit",
+      "refs_containing_HEAD": [
+        "refs/heads/codex/dsrom-reticle-return-20261002"
+      ],
+      "required_successor_root": false,
+      "retirement_allowed": false,
+      "status": ""
+    },
+    {
+      "HEAD": "93efabc2d9fd6f3402a6f586798b45fd97adbabc",
+      "committed_source_retained_in_refs": true,
+      "exists": true,
+      "path": "/tmp/opentallas-D2-allphase-model-20261002",
+      "reason": "required live/successor source or model-owner dependency; no deletion authorized in this audit",
+      "refs_containing_HEAD": [
+        "refs/heads/prepare/dsrom-D2-allphase-model-20261002"
+      ],
+      "required_successor_root": false,
+      "retirement_allowed": false,
+      "status": ""
+    },
+    {
+      "HEAD": "7aec18270f729aea0d5646c2db16b13ee38cfcc8",
+      "committed_source_retained_in_refs": true,
+      "exists": true,
+      "path": "/tmp/opentallas-dsrom-actual-element-prepare-20261001",
+      "reason": "required live/successor source or model-owner dependency; no deletion authorized in this audit",
+      "refs_containing_HEAD": [
+        "refs/heads/prepare/dsrom-D2-allphase-model-20261002",
+        "refs/heads/prepare/dsrom-actual-element-20261001"
+      ],
+      "required_successor_root": true,
+      "retirement_allowed": false,
+      "status": ""
+    },
+    {
+      "HEAD": "e5f6766c2a0da50d75b45cbe6a5c36d7612d7eee",
+      "committed_source_retained_in_refs": true,
+      "exists": true,
+      "path": "/tmp/opentallas-D1-parent-native-20261002",
+      "reason": "required live/successor source or model-owner dependency; no deletion authorized in this audit",
+      "refs_containing_HEAD": [
+        "refs/heads/main",
+        "refs/heads/model/current-final-readiness",
+        "refs/remotes/origin/main"
+      ],
+      "required_successor_root": true,
+      "retirement_allowed": false,
+      "status": ""
+    },
+    {
+      "HEAD": "dcf744c5061dd06879451ce10d35511986971115",
+      "committed_source_retained_in_refs": true,
+      "exists": true,
+      "path": "/tmp/opentallas-D1-native-r2-execution-20261002",
+      "reason": "required live/successor source or model-owner dependency; no deletion authorized in this audit",
+      "refs_containing_HEAD": [
+        "refs/heads/main",
+        "refs/heads/model/current-final-readiness",
+        "refs/remotes/origin/main"
+      ],
+      "required_successor_root": true,
+      "retirement_allowed": false,
+      "status": ""
+    },
+    {
+      "HEAD": "992c14a70f812028f9de5e46eb79d5688db9482b",
+      "committed_source_retained_in_refs": true,
+      "exists": true,
+      "path": "/home/ubuntu/OpenTallas-hbm-qwen-runtime-r11",
+      "reason": "required live/successor source or model-owner dependency; no deletion authorized in this audit",
+      "refs_containing_HEAD": [
+        "refs/heads/codex/hbm-qwen-runtime-r11"
+      ],
+      "required_successor_root": true,
+      "retirement_allowed": false,
+      "status": ""
+    }
+  ],
+  "scope": "selected current owner/D1/Q roots; not all repository worktrees",
+  "unique_uncommitted_source_discarded": 0
+}
