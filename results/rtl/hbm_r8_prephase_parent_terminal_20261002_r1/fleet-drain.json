@@ -1,0 +1,54 @@
+{
+  "utc": "2026-10-02T08:04:58.218596+00:00",
+  "services": {
+    "hbm-ds-runtime-calibration-parent-20261002-r1.service": {
+      "RuntimeMaxUSec": "1h 58min 30s",
+      "MainPID": "0",
+      "Result": "exit-code",
+      "ExecMainExitTimestamp": "Fri 2026-10-02 08:03:31 UTC",
+      "ExecMainStatus": "1",
+      "ControlGroup": "",
+      "CPUUsageNSec": "28167000",
+      "MemoryMax": "34359738368",
+      "MemorySwapMax": "0",
+      "LimitFSIZE": "1073741824",
+      "ActiveState": "failed",
+      "InvocationID": "30fe01b7117449089abd91f66bcbc260",
+      "named_cgroup_exists": false,
+      "live_counter_capture": "Unavailable: service already terminal before first monitor read; no root fallback"
+    },
+    "hbm-qwen-runtime-calibration-parent-20261002-r1.service": {
+      "RuntimeMaxUSec": "35min 30s",
+      "MainPID": "0",
+      "Result": "exit-code",
+      "ExecMainExitTimestamp": "Fri 2026-10-02 08:03:31 UTC",
+      "ExecMainStatus": "1",
+      "ControlGroup": "",
+      "CPUUsageNSec": "30186000",
+      "MemoryMax": "34359738368",
+      "MemorySwapMax": "0",
+      "LimitFSIZE": "1073741824",
+      "ActiveState": "failed",
+      "InvocationID": "100b5187f4814ac6b3dd9ee8cf336e05",
+      "named_cgroup_exists": false,
+      "live_counter_capture": "Unavailable: service already terminal before first monitor read; no root fallback"
+    }
+  },
+  "remaining_owned_processes": [],
+  "drained": true,
+  "resources": {
+    "mem_available_GiB": 158.16762924194336,
+    "root_available_GiB": 452.6942710876465,
+    "load": [
+      2.4599609375,
+      2.46484375,
+      3.26513671875
+    ]
+  },
+  "GO_commit": "6abacfbb0",
+  "source_commit": "10e6bcde1",
+  "affinity_capture": "No live children available at first read; no live affinity verification claimed",
+  "duplicate_launches": 0,
+  "job_changes": 0,
+  "root_cgroup_reads": 0
+}
