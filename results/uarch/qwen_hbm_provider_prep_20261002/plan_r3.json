@@ -1,0 +1,271 @@
+{
+  "RTL_compiled": false,
+  "RTL_executed": false,
+  "classification_evidence": [
+    "Header explicitly says simulation only; no ACT/PRE/REF/column command pins or command valid/ready interface.",
+    "schedule() writes b_open,b_act,b_actok,last_col and future h_tcol immediately in one host simulation edge.",
+    "ACT lookahead is computed retrospectively from arrival+REQ; no independent acceptance-time ACT emitter or command reservation arbiter exists.",
+    "REF is demand-driven by max(arr+REQ,last_col), not a current-time autonomous refresh service; no refresh output.",
+    "WR writes mem at head pop using modulo MEM_WORDS; no CWL-delayed backing commit or WRdone/WRvisible/epoch output.",
+    "Read response is real registered valid/ready with a retained return queue and due timestamp; r_data is captured at RD pop."
+  ],
+  "compile_GO": false,
+  "existing_service_binding": {
+    "NC3_CTAGW14_SIDW2_PTAGW16": "fits only restricted client tags; not common36 namespace or epoch ABI",
+    "WR_completion": "PC service expects externally supplied p_wr_done_v/tag pulse without ready. Source has neither. Existing mixed-service test fabricates due=cycle+24+(seq%3); it is not a WR-visible provider.",
+    "read_port_mismatch": "PC service has one response input; NPC32 source has32 held ports; requires separately finite locked arbiter/landing adapter.",
+    "selected_probe": "Direct finite TB clients with immutable unique tag/beat ledger; no service-module shim or fabricated WRdone. Four WR slots remain live through termination, explicitly not drain/retirement."
+  },
+  "finite_experiment": {
+    "actual_source_pins_must_be_verified_before_GO": true,
+    "bounds": {
+      "compile_memory_budget_GiB": 4,
+      "cores": 1,
+      "max_controller_edges": 8000,
+      "simulation_memory": "bounded queues +4096x256 backing +64 ledger entries; no checkpoint load"
+    },
+    "cases": [
+      {
+        "WR_cap": 4,
+        "case": 0,
+        "front_READ_transaction_cap": 4,
+        "name": "metadata_ports",
+        "read_beats": 132,
+        "requests": 12,
+        "scope": "Actual-address subset plus controlled LEN32 weight reads; WR producer delay is a TB stimulus, not actual RMW arithmetic.",
+        "write_requests": 4
+      },
+      {
+        "case": 1,
+        "front_READ_transaction_cap": 34,
+        "name": "blocked_PC_backdated_ACT_refresh",
+        "read_beats": 34,
+        "requests": 34,
+        "scope": "Source-only QD64/RQD32 pressure isolation; deliberately exceeds common36 four-per-die admission, gives no whole-system capacity credit."
+      },
+      {
+        "case": 2,
+        "name": "fullAW_alias",
+        "read_beats": 2,
+        "requests": 4,
+        "scope": "Synthetic distinct fullAW34 addresses0 and2^32 collide modulo4096; expected source identity/storage failure, no encoded payload.",
+        "write_requests": 2
+      }
+    ],
+    "geometry": {
+      "AW": 34,
+      "BEATW": 5,
+      "LENW": 6,
+      "MEM_WORDS": 4096,
+      "NPC": 32,
+      "QD": 64,
+      "RQD": 32,
+      "TAGW": 16
+    },
+    "journal_audit_command": [
+      "python3",
+      "tools/qwen_hbm_provider_prep_r3.py",
+      "--audit-journal",
+      "<new-output>/case1.tsv",
+      "--output",
+      "<new-output>/case1_audit.json"
+    ],
+    "mutations": [
+      "observer journal ACT logical time before observation -> must flag emitted-command causality",
+      "journal RD due minus1ps -> must flag exact source tail equation",
+      "logical reservation projection RD moved before ACT+tRCD or REF+tRFC -> independent inequality checker must reject",
+      "journal READ_TAKE before due -> must flag early response",
+      "wrong tag/duplicate tag-beat -> must flag identity/uniqueness",
+      "source-observer anchor mismatch or byte restoration mismatch -> refuse preparation",
+      "source BACKING_STORE at WR pop -> expected baseline FAIL_AS_WR_VISIBLE_PROVIDER, never mask as PASS"
+    ],
+    "post_GO_commands": [
+      [
+        "verilator",
+        "--binary",
+        "--timing",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_actual_controller",
+        "-Mdir",
+        "<new-output>/obj",
+        "-I<new-output>",
+        "<new-output>/controller_observed.sv",
+        "<new-output>/tb_actual_controller.sv"
+      ],
+      [
+        "<new-output>/obj/Vtb_actual_controller",
+        "+CASE=0",
+        "+QHP_JOURNAL=<new-output>/case0.tsv",
+        "+QHP_CLIENT_JOURNAL=<new-output>/case0_client.tsv"
+      ],
+      [
+        "<new-output>/obj/Vtb_actual_controller",
+        "+CASE=1",
+        "+QHP_JOURNAL=<new-output>/case1.tsv",
+        "+QHP_CLIENT_JOURNAL=<new-output>/case1_client.tsv"
+      ],
+      [
+        "<new-output>/obj/Vtb_actual_controller",
+        "+CASE=2",
+        "+QHP_JOURNAL=<new-output>/case2.tsv",
+        "+QHP_CLIENT_JOURNAL=<new-output>/case2_client.tsv"
+      ]
+    ],
+    "preparation_files": {
+      "bench": "tools/fixtures/qwen_hbm_provider_r3/tb_actual_controller.sv",
+      "generated_observed_source": "Passively generated by observed_source(pin4535bytes); must restore exact source SHA before compiling",
+      "stimulus_header": "tools/fixtures/qwen_hbm_provider_r3/stimulus_r3.svh"
+    },
+    "review_before_GO": "Review observer core restoration and bench bounds first. Then create a clean worktree pinned to preparation commit, check measured CPU/memory/disk headroom, and run only listed source-model cases. No engine, checkpoint, or whole-program build.",
+    "stimulus": {
+      "WR_rows": [
+        {
+          "kind": "K",
+          "mask": 131074,
+          "ordinal": 0,
+          "partial": true,
+          "sector": 5618364,
+          "stack": 0
+        },
+        {
+          "kind": "K",
+          "mask": 131074,
+          "ordinal": 1,
+          "partial": true,
+          "sector": 5618365,
+          "stack": 0
+        },
+        {
+          "kind": "K",
+          "mask": 131074,
+          "ordinal": 2,
+          "partial": true,
+          "sector": 5618366,
+          "stack": 0
+        },
+        {
+          "kind": "K",
+          "mask": 131074,
+          "ordinal": 3,
+          "partial": true,
+          "sector": 5618367,
+          "stack": 0
+        }
+      ],
+      "blocked_PC_probe": {
+        "MAX_OUT": 34,
+        "PC": 0,
+        "queued_new_bank_sector": 1,
+        "reads_same_sector": 32,
+        "release_ready_model_cycle": 4100
+      },
+      "clocks": {
+        "controller_CLK_PS": 1000,
+        "scope": "source CLK_PS preset, explicitly instantiated; no universal/target clock claim"
+      },
+      "next_matrix": 17,
+      "payload": "Synthetic zero/marker only, never checkpoint bytes",
+      "position": 1,
+      "read": 12,
+      "weight_LEN32_requests": 4,
+      "weight_policy": "Controlled prefetch stimulus from next matrix address range; not recorded concurrent opcode issue",
+      "weight_start_sector": 4962680,
+      "writer": 10
+    },
+    "termination": "Only after exact accepted/read counts and source queues/held read outputs empty; report SOURCE_TRACE_COMPLETE_NOT_WR_PROVIDER_DONE. WR-visible/consumer/CDC drain remains absent."
+  },
+  "hardware_build_ready": false,
+  "hardware_rate_credit": 0,
+  "hook_feasibility": {
+    "CDC": "existing ot_async_fifo can carry finite ready/valid records, but no actual source WR-visible producer is connected; no CDC provider claim",
+    "WR_visible": "absent; BACKING_STORE is earlier source array assignment, not a visibility/ACK contract. A delayed commit plus finite held completion is a future source change, never an observer-generated completion.",
+    "acceptance": "direct req_v&&req_rdy port monitor plus per-beat q-array hook",
+    "bank": "instrument schedule() calculations; no external bank commands exist",
+    "column": "internal WR/RD pop and h_tcol observation, no public command pin",
+    "epochs": "absent source fields; external unique-tag ledger is only a no-reuse experiment identity, not epoch proof",
+    "read_completion": "public registered rsp_v&&rsp_rdy; finite tag/beat ledger and immutable-held check"
+  },
+  "observer": {
+    "core_byte_restore_sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "fields": [
+      "kind",
+      "sim_ps",
+      "observe_ps",
+      "logical_ps",
+      "pc",
+      "bank",
+      "row",
+      "sector",
+      "tag",
+      "beat",
+      "arrival_ps",
+      "q_n",
+      "r_n"
+    ],
+    "hooks": [
+      "journal_definition",
+      "accept",
+      "beat_enqueue",
+      "schedule_entry",
+      "refresh_PREall",
+      "refresh_reservation",
+      "PRE_reservation",
+      "ACT_reservation",
+      "column_reservation",
+      "WR_pop",
+      "backing_store",
+      "return_enqueue",
+      "read_handshake",
+      "reorder_identity"
+    ],
+    "limits": "Function hooks observe calculated reservations, not physical commands. Timestamps retain model-cycle vs simulation-wall distinction. READ_TAKE has no address in source queue; join unique acceptance tag/beat ledger.",
+    "observed_preview_sha256": "f00eb14954a8d53b7a65eebb2443f5489544e3718b8538faa9199049134c8976",
+    "passive_only": true,
+    "path_policy": "Materialize only in a new clean pinned experiment worktree/output directory. Pinned RTL is never edited.",
+    "semantic_source_restore_byte_identical": true
+  },
+  "remaining_source_changes_after_experiment": [
+    "actual legal command interface/scheduler policy and timer ports",
+    "producer epoch through every accepted beat/reorder/return",
+    "precolumn pending-WR reservation and delayed fullAW backing commit",
+    "held WR-visible completion plus finite CDC/consumer/drain binding",
+    "18..35 hardware scan/shift and finite32PC return arbiter lowering"
+  ],
+  "schema": "Qwen_actual_source_finite_provider_preparation_r3",
+  "source_classification": "SIMULATION_ARCHITECTURAL_CALENDAR_ABSTRACTION",
+  "source_equation_counterexample": {
+    "REQ_ps": 10000,
+    "arrival_ps": 34000,
+    "inactive_bank_ACT_logical_ps": 44000,
+    "next_ref_ps": 3900000,
+    "previous_column_ps": 100000,
+    "schedule_call_ps": 4100000,
+    "source_refresh_loop_runs": false
+  },
+  "source_pins": {
+    "results/physical_abi3/asap7/gpu/w13_calendar_bounded_review_20261001/qwen_reproduced_program.json": {
+      "commit": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "sha256": "a569e93819e60ca357ae47f33a2d4de48e0cc8816515af68af5bca0c0d76a7b3"
+    },
+    "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv": {
+      "commit": "bb51403bff27fc648be92a8b183199f7f8f2ba5e",
+      "sha256": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf"
+    },
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": {
+      "commit": "4535be1001d69bc43669e0fdf0401896be4034a6",
+      "sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+    },
+    "rtl/test/tb_hdc_qwen_hbm_mixed_service.sv": {
+      "commit": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+      "sha256": "029a07509ec68ae704d19b853a29c4e2e1419c8208da38b8907976b96ecbe2f8"
+    },
+    "tools/qwen_hbm_controller_calendar_r2.py": {
+      "commit": "71bda6e916d183e0d86e6206b0550edc55285043",
+      "sha256": "2111028214842c439fec168d2df04c9913b261c0e68428a53715065ccdf46d86"
+    }
+  },
+  "source_projection_validation": "audit_reservation_projection reuses only the independent timing-inequality checker. All experiment times will be captured from original source hooks; no r2 fixture times/behavior/latency are transferred.",
+  "status": "PREPARED_NOT_COMPILED_PARENT_GO_REQUIRED",
+  "token_cycles": null
+}
