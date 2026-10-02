@@ -1,0 +1,32 @@
+{
+  "applied_replacement_credit_mm2": 0,
+  "conditional_countdown_FF_only_mm2_per_stack": 11.183768601999999,
+  "conditional_countdown_overflow_mm2_per_stack": 1.167935002,
+  "failed_corridor": {
+    "all_stack_shared_bundle_bits": 4640,
+    "direct_macro_escape_tracks": 211.5072,
+    "owned_allstack_bundle_bits": 6792,
+    "owned_local_bundle_bits": 1698,
+    "pins_per_edge": 793,
+    "raw_return_bits": 15072,
+    "verdict": "FAIL_RETAINED_DIRECT_CORRIDOR_AND_PIN_ESCAPE",
+    "vertical_capacity": 2696
+  },
+  "fit": false,
+  "impossible_free_all_bank_timer_and_compare_mm2_per_stack": 11.1207141124,
+  "impossible_free_timer_overflow_mm2_per_stack": 1.1048805124000012,
+  "inherited_occupancy": 10.0,
+  "provider_FF_bits": 20940,
+  "provider_area_system_mm2": 0.013178608,
+  "r9_reader_FF_bits": 5928,
+  "r9_reader_area_system_mm2": 0.0034572096,
+  "r9_retained_plus_additive_mm2_per_stack": 11.3323399684,
+  "retained_r8_mm2_per_stack": 11.3319078172,
+  "routing_signal_escrow": 0.5,
+  "slot_mm2_per_stack": 10.015833599999999,
+  "status": "FAIL_PRESERVED",
+  "timer_decrement_zero_detect_reload_mux_cost": "REQUIRED:256PC replicated countdown datapaths; row match19bits, deadline max logic, refresh due priority and scan invalidation; no decrement/mux/clock cost waived",
+  "verdict": "FAIL_EVEN_FREE_ALL_PRICED_TIMER_BANK_STATE_CANNOT_CLOSE_SLOT",
+  "via_PDN": "A_via_escape and PDN_grid_service_area must come from actual platform/cut/enclosure/net/pin geometry. Required_area >= known_additive +60352*A_via_escape +extra_PDN_area. Both are nonnegative, so current slot already fails without assigning either zero cost.",
+  "via_count_per_stack": 60352
+}
