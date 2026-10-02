@@ -22,7 +22,7 @@
     "screen_mm2": 734.0705829880858,
     "separate_exception_hold_reference_bits": 231216
   },
-  "authoritative_model": "results/uarch/dsrom_PAR2_clean_terminal_20261002/model-r3.json",
+  "authoritative_model": "results/uarch/dsrom_PAR2_clean_terminal_20261002/model-r5.json",
   "buffer_and_fence": {
     "actual_readnonce16_echo_RTL_unimplemented": true,
     "full_reply_demand_bits": 11520,
@@ -41,6 +41,7 @@
     "stale_duplicate_mismatch_cannot_qualify": true,
     "wrap_requires_all_accepted_reads_correction_capture_delivery_debts_drained": true
   },
+  "detector_only_export": "source syn[8:0],overall and clean=(syn==0&&!overall),11 outputs; hold K data bits in parallel. No fix comparators or corrected-data XOR on normal qualification path.",
   "encoding_contract": {
     "current_physical_FP4_encoder_placement_proven": false,
     "default_off": true,
@@ -50,6 +51,7 @@
     "sidecar": "sourceK256 protected256+check9+overall=266; physical274word unused8not free parity",
     "synthetic_oracle_only": true
   },
+  "imported_finite_helper_original_commit": "0e12358804625d6846129ba757058618c82d3831",
   "measured_fullcorrector_held_lower_bound_cycles": [
     4,
     3
@@ -60,15 +62,20 @@
   "old_sources_and_failures_unchanged": true,
   "own_next_job": "Archimedes source-exact syndrome/overall clean-terminal cone characterization with declared loads/driver slew; do not wait for fulltoken.",
   "parent_interfaces": "Parent owns mainaccept/arithmeticdeadline and cfg/activation/root accepted edges. Nash parity-only exact exp0.w1/w3/w2 addresses/profile; Epicurus LAT8 cadence.",
+  "preparation_failure_uncompressed_sha256": "f302a6e326a5f96b11e72a09f085a06af8115891dfb57cad55442d617af3831d",
+  "preserved_preparation_failure": "tests-r4.log.gz: exact failed preparation output, __pycache__ input-directory error; fixed regular-file census",
   "registered_hold_closed": false,
+  "reproduction_selfcontained": true,
   "schema": "opentallas.dsrom.PAR2.clean-terminal-handoff.v1",
+  "sourcecurrency_review_main": "0e7b717237536514e2f66a4a6f622c0b089fe190",
   "user_decision": "Clean check before consume; held correction only on nonclean word. No speculative irreversible effects, no free detection or assumed zero errors.",
   "validation": {
     "all_single_and_double_bit_error_cases_both_K": true,
     "byte_replay": true,
+    "isolated_only_tool_and_own_inputs_byte_replay": true,
     "new_tests": 8,
     "synthetic_encoder_oracle_not_physical_FP4_proof": true,
-    "test_command": "python3 -m pytest -q tests/test_dsrom_PAR2_clean_terminal_model.py tests/test_dsrom_PAR2_minimal_context_admission.py tests/test_dsrom_par2_local_ECC_calendar.py tests/test_qwen_rom_direct_capture_control_model.py -o addopts=''",
-    "tests": 36
+    "test_command": "python3 -m pytest -q tests/test_dsrom_PAR2_clean_terminal_model.py tests/test_qwen_rom_direct_capture_control_model.py -o addopts=''",
+    "tests": 15
   }
 }

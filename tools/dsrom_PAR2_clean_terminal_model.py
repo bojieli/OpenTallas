@@ -36,6 +36,9 @@ def build():
         v=r['results'][str(k)];arrival=max(v['ss']['data_arrival_ps']);ms,_=masks(k)
         dec.append(dict(K=k,N=k+10,replicas=rep,clean_predicate='syn==0 && overall==0',
             source_data_on_clean='cw[K-1:0], identical to original corrected data and good flags',
+            detector_only_output_bits=11,detector_only_outputs='syn[8:0],overall,clean',
+            raw_data_bits_held_in_parallel=k,
+            detector_only_characterization_admitted=True,correction_fix_comparators_off_normal_terminal_path=True,
             syndrome_XOR2_nodes=sum(m.bit_count() for m in ms),overall_XOR2_nodes=k+9,
             balanced_reduction_depth_is_structural_not_measured=True,
             clean_detector_service_cycles_provisional=2,clean_detector_II_held_provisional=2,
@@ -44,10 +47,10 @@ def build():
             full_corrector_lower_bound_is_NOT_proven_pipeline=True,existing_combinational_state_bits=0,
             measured_corrector_cell_area_mm2=rep*v['area_um2']/1e6,
             detector_area_no_subtraction_credit=True,registered_hold_closed=False))
-    spec=importlib.util.spec_from_file_location('finite',ROOT/'tools/dsrom_par2_local_ECC_calendar.py');mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
-    p=json.loads((ROOT/'results/uarch/dsrom_par2_local_ECC_calendar_20261002/provisional_parameters.json').read_text())
+    spec=importlib.util.spec_from_file_location('finite',OUT/'inputs/finite_calendar_source.py');mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+    p=json.loads((OUT/'inputs/provisional_parameters.json').read_text())
     p.update(delivery_cycles=c['endpoint_entry']['modeled_reply_pipeline_cycles'],raw_decode_cycles=2,decoder_II=2,weight_ECC_cycles=2)
-    witness=json.loads((ROOT/'results/uarch/dsrom_par2_local_ECC_calendar_20261002/witness_word_rows.json').read_text())
+    witness=json.loads((OUT/'inputs/witness_word_rows.json').read_text())
     counts=[len(v) for v in witness['unique_rows_by_pidx_MB_parity'].values()]
     clean=mod.calendar(counts,p)
     error=dict(p,raw_decode_cycles=dec[0]['full_corrector_held_intervals_lower_bound_no_wire_setup_or_clockq'],decoder_II=dec[0]['full_corrector_held_intervals_lower_bound_no_wire_setup_or_clockq'],weight_ECC_cycles=dec[1]['full_corrector_held_intervals_lower_bound_no_wire_setup_or_clockq'])
@@ -59,9 +62,9 @@ def build():
     detector_proxy=sum(d['measured_corrector_cell_area_mm2'] for d in dec)
     coeff=c['area']['no_containment_overlay_FF50_mm2']/c['area']['prospective_fullwidth_reference_register_bits']
     return dict(schema='opentallas.dsrom.PAR2.clean-terminal.v1',candidate=c['candidate'],
-        input_sha256={str(x.relative_to(ROOT)):hashlib.sha256(x.read_bytes()).hexdigest() for x in sorted((OUT/'inputs').iterdir())},
+        input_sha256={str(x.relative_to(ROOT)):hashlib.sha256(x.read_bytes()).hexdigest() for x in sorted((OUT/'inputs').iterdir()) if x.is_file()},
         decoder_source_sha256=r['model']['decoder_source_sha256'],generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        finite_calendar_source_sha256=hashlib.sha256((ROOT/'tools/dsrom_par2_local_ECC_calendar.py').read_bytes()).hexdigest(),
+        finite_calendar_source_sha256=hashlib.sha256((OUT/'inputs/finite_calendar_source.py').read_bytes()).hexdigest(),
         decoder_entries=dec,raw_macro_SS_CLKQ_ps=clkq,target_period_ps=period,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
         direct_rawmacro_plus_fullK256_held_lower_bound_intervals=math.ceil((clkq+dec[0]['existing_full_corrector_arrival_ps']+unc)/period),
         macro_arrival_combination='Conservative use of full reported decoder arrival; source20ps is transition not assumed removable arrival. Actual launch arrival/slew/capture setup/wire/skew still required.',
