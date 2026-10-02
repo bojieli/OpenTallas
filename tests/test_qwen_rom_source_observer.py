@@ -3,6 +3,7 @@ import gzip,json,pathlib,sys,tempfile,unittest,subprocess,os,time
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parents[1]/'tools'))
 import qwen_rom_source_observer_prepare as P
 import qwen_rom_source_observer_replay as R
+import qwen_rom_source_release_export as E
 from qwen_rom_program_identity import decoded,sha
 from qwen_rom_kv_launch_readiness import FIELDS
 from qwen_rom_program_kv_journal import me_fields
@@ -62,6 +63,23 @@ class ObserverTests(unittest.TestCase):
  def test_busy_completion_rejected(self):
   raw='\n'.join(l[:-1]+'0' if l.startswith('B ') else l for l in self.raw().splitlines())
   with self.assertRaisesRegex(ValueError,'source drain'):R.replay(self.bundle,raw)
+ def test_release_export_preserves_unknown_provider(self):
+  result=E.export(R.replay(self.bundle,self.raw()))
+  self.assertEqual(len(result['releases']),144)
+  life=result['releases']['L0/die0']['source_lifetimes']
+  self.assertEqual(sum(p['write_count'] for p in life['producer_completions']),512)
+  self.assertEqual(len(life['descriptor_events']),10)
+  self.assertTrue(all('ib379' in x for x in life['KV_consumer_accepts']))
+  self.assertIsNone(result['calendar_overlap_credit_s'])
+  self.assertIsNone(result['releases']['L0/die0']['next_layer_prefetch_release'])
+  self.assertFalse(result['source_provenance_independently_qualified'])
+ def test_release_completion_mutant_rejected(self):
+  r=R.replay(self.bundle,self.raw())
+  r['states']['L0/die0']['source_lifetimes']['producer_completions'][0]['last_write_edge']+=1
+  with self.assertRaisesRegex(ValueError,'completion differs'):E.export(r)
+ def test_release_missing_rank_rejected(self):
+  r=R.replay(self.bundle,self.raw());del r['states']['L35/die3']
+  with self.assertRaisesRegex(ValueError,'all144'):E.export(r)
  def test_native_defaultoff_and_formatter(self):
   with tempfile.TemporaryDirectory() as td:
    p=pathlib.Path(td);hpp=P.ROOT/'rtl/test/qwen_rom_runtime/observer/qwen_rom_observer.hpp'

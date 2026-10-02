@@ -15,7 +15,7 @@ def replay(bundle,raw):
   for rank in range(4):
    key=f'L{layer}/die{rank}';f=bundle['stages'][key]['files'];owner=Owner(0,rank,layer,0)
    g=DispatchJournal(decoded(f['program.hex']),decoded(f['segments.hex']),owner,0,0)
-   gates[(layer,rank)]=g;controls[(layer,rank)]=[];lifetimes[(layer,rank)]={'producer_accepts':[],'KV_consumer_accepts':[],'first_committed_write_edge':None,'last_committed_write_edge':None,'snapshot_edge':None};snapshots[(layer,rank)]={};tickets[(layer,rank)]=0
+   gates[(layer,rank)]=g;controls[(layer,rank)]=[];lifetimes[(layer,rank)]={'producer_accepts':[],'KV_consumer_accepts':[],'descriptor_events':[],'committed_writes':[],'first_committed_write_edge':None,'last_committed_write_edge':None,'snapshot_edge':None};snapshots[(layer,rank)]={};tickets[(layer,rank)]=0
    addresses={}
    for pc,aa in g.stage.producer.expected.items():
     for a in aa:
@@ -42,6 +42,7 @@ def replay(bundle,raw):
     if not controls[key] or not controls[key][-1]['me_idle'] or not controls[key][-1]['su_idle']:raise ValueError('source drain not observed at completion')
     e=dict(common,kind='segment_done',descriptor_index=seg,core_done=1)
    g.event(e)
+   lifetimes[key]['descriptor_events'].append({'kind':kind,'edge':edge,'segment':seg,'program_base':base,'descriptor_word':desc})
   elif kind=='I':
    if len(a)<8:raise ValueError('accepted issue record width')
    seg,base,corepc,unit=map(int,a[4:8]);pc=base+corepc
@@ -57,7 +58,7 @@ def replay(bundle,raw):
    else:raise ValueError('actual issue unit')
    g.event(e)
    if unit==2 and pc in g.stage.producer.expected:lifetimes[key]['producer_accepts'].append({'pc':pc,'ticket':ticket,'edge':edge})
-   if unit==1 and e['fields']['wsrc']:lifetimes[key]['KV_consumer_accepts'].append({'pc':pc,'ticket':ticket,'edge':edge,'fields':e['fields']})
+   if unit==1 and e['fields']['wsrc']:lifetimes[key]['KV_consumer_accepts'].append({'pc':pc,'ticket':ticket,'edge':edge,'fields':e['fields'],'ib379':e['ib379']})
   elif kind=='W':
    if len(a)!=6:raise ValueError('lane record width')
    address=int(a[4]);value=int(a[5],16)
@@ -66,6 +67,7 @@ def replay(bundle,raw):
    if pc not in g.stage.issue_ticket:raise ValueError('actual lane write before accepted producer')
    if lifetimes[key]['first_committed_write_edge'] is None:lifetimes[key]['first_committed_write_edge']=edge
    lifetimes[key]['last_committed_write_edge']=edge
+   lifetimes[key]['committed_writes'].append({'pc':pc,'ticket':g.stage.issue_ticket[pc],'edge':edge,'address':address,'fp32_hex':f'{value:08x}','fp8':producer_byte(value)})
    g.event(dict(common,kind='kv_lane_write',pc=pc,word_sha256=sha(f'{g.stage.words[pc]:0256x}'.encode()),ticket=g.stage.issue_ticket[pc],accepted_lane_write=1,address=address,fp32_bits=value))
   elif kind=='K':
    if len(a)!=6:raise ValueError('snapshot record width')
@@ -86,6 +88,7 @@ def replay(bundle,raw):
   drains=[e['edge'] for e in controls[(l,r)] if e['edge']>last and e['me_idle']]
   if not drains:raise ValueError('source ME idle after last KV consumer absent')
   life['first_source_ME_idle_after_last_KV_consumer']=min(drains);life['HBM_or_window_owner_reader_drain']=None
+  life['producer_completions']=[{'pc':pc,'ticket':g.stage.issue_ticket[pc],'accepted_edge':next(e['edge'] for e in life['producer_accepts'] if e['pc']==pc),'first_write_edge':min(w['edge'] for w in life['committed_writes'] if w['pc']==pc),'last_write_edge':max(w['edge'] for w in life['committed_writes'] if w['pc']==pc),'write_count':len(aa)} for pc,aa in sorted(g.stage.producer.expected.items())]
   state['source_lifetimes']=life;states[f'L{l}/die{r}']=state
  return {'status':'PASS_HISTORICAL_DISPATCH_PRODUCER_SNAPSHOT_CONSISTENCY','states':states,
   'source_provenance_independently_qualified':False,'runtime_source_owner_instantiated':False,
