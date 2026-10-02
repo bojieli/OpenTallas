@@ -15,7 +15,7 @@ def manifest():
 
 def bind(module,kind):
     pins=manifest()['files']
-    module.ROOT=ROOT;module.OWNER=ARCHIVE/'owner'
+    module.ROOT=ARCHIVE/'failed_root';module.OWNER=ARCHIVE/'owner'
     if kind=='d1':
         module.MODEL=module.OWNER/'tools/w17_window_epoch9_timing_model.py'
         module.PRED=module.OWNER/'results/uarch/w17_window_epoch9_reproducible_prediction_20261001/run1/prediction.json'
