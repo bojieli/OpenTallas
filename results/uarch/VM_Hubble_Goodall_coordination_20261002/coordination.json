@@ -1,0 +1,83 @@
+{
+  "UTC": "2026-10-02T12:28:42.188690+00:00",
+  "owners": {
+    "D1_disjoint_or_migration_plan": "Hubble",
+    "Qwen_checkpoint_discovery_download_conversion": "Goodall",
+    "local_D1": "parent"
+  },
+  "fresh_lease_observation": {
+    "UTC": "2026-10-02T12:24:06.624173+00:00",
+    "status": {
+      "observed_at": 1790943846.4015613,
+      "total_gib": 125.7047004699707,
+      "free_gib": 111.74179077148438,
+      "load": 0.08447265625,
+      "cpus": 64,
+      "compute_threads": 0
+    },
+    "disk_bytes": 1038578286592,
+    "slot_owners": {},
+    "reserved_threads": 0,
+    "leases": []
+  },
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "checkpoint_inventory": [
+    {
+      "path": "config.json",
+      "sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+      "size_bytes": 728
+    },
+    {
+      "path": "model-00001-of-00005.safetensors",
+      "sha256": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f",
+      "size_bytes": 3996250744
+    },
+    {
+      "path": "model-00002-of-00005.safetensors",
+      "sha256": "5991236cea6fe21f3d43cab0f0e84448734fbbe0789816202989f2ddc9d18282",
+      "size_bytes": 3993160032
+    },
+    {
+      "path": "model-00003-of-00005.safetensors",
+      "sha256": "c5185c4794be2d8a9784d5753c9922db38df478ce11f9ed0b415b7304d896836",
+      "size_bytes": 3959604768
+    },
+    {
+      "path": "model-00004-of-00005.safetensors",
+      "sha256": "b5ee7de71fbf17db3d5704e0c8f2bc7d005ca9e1d7ca2aeb19827b0cfcaa917a",
+      "size_bytes": 3187841392
+    },
+    {
+      "path": "model-00005-of-00005.safetensors",
+      "sha256": "20c2d6366ab85c90786ccdd829cd2b9e7d30ef3b2ebbb998280e7e4014b542ff",
+      "size_bytes": 1244659840
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "sha256": "f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc",
+      "size_bytes": 32878
+    }
+  ],
+  "checkpoint_bytes": 16381550382,
+  "image_bytes": 9428966912,
+  "new_downloads_or_compiles": 0,
+  "whole_D1_build_duplication": "FORBIDDEN; disjoint TU ownership/ACK or reviewed migration required, live local make untouched",
+  "source_GO_required_before_converter_or_compile": true,
+  "resource_options": "At snapshot aggregate additional RAM slots<=80GiB preserves24GiB reserve. Hubble old80GiB +minimum additional8GiB rounded slot fails. Owner must reprice actual RAM/thread demands for concurrency, not copy arbitrary72GiB or any pilot cap. No new lease acquired without owner-priced model.",
+  "PVE1": "Parent reports199GiBavailable but41GBdiskfree and activeOpenROAD; do not stage combined25.81GBcheckpoint/images there against32GiBdiskreserve.",
+  "PVE2_PVE3": "No new tasks",
+  "compatibility_correction": {
+    "old_uninstalled_template_commit": "9bd52373e6bfea2ae97b637247ae83c3addacf9a",
+    "invalid_setting": "Docker --ulimit as=-1:-1 is unsupported in Hubble source receipt",
+    "authority": "9f7e2548:results/uarch/w17_D1_native_r2_terminal_incremental_model_20261002/transport_and_launch_path.json",
+    "new_template": "additive native_transport_r3 copies omit Docker as and use supported in-container prlimit unlimited AS/CPU/FSIZE before nonmutating inherited checks",
+    "installed": false,
+    "launched": false
+  },
+  "owner_messages": {
+    "parent": 197,
+    "Goodall": 198,
+    "Hubble": 199
+  },
+  "owner_acknowledgements": false
+}

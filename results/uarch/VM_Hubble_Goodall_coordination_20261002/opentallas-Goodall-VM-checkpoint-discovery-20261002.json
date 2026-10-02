@@ -1,0 +1,27 @@
+{
+  "UTC": "2026-10-02T12:27:13.591214+00:00",
+  "source_commit": "a49df1cba",
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "scope": "bounded known-cache discovery only; no download/conversion",
+  "remote_result": {
+    "roots": {
+      "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B": {
+        "exists": false
+      },
+      "/home/ubuntu/checkpoints": {
+        "exists": false
+      },
+      "/data/checkpoints": {
+        "exists": false
+      },
+      "/mnt/checkpoints": {
+        "exists": false
+      }
+    },
+    "candidate_files": [],
+    "transfer_or_conversion_processes": []
+  },
+  "experiment_launches": 0,
+  "checkpoint_bytes_read": 0,
+  "downloads": 0
+}
