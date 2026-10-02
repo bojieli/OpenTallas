@@ -5,7 +5,13 @@ import numpy as np
 import pytest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 import qwen_trained_byte_provider as B
-from h3_qwen_complete_native import HBMByteTileProvider,TiledMachine
+# Original ABI class is extracted from immutable41eef, so main's restored source
+# is never imported or rewritten. The relocated implementation gets its own join.
+import ast,subprocess
+archived=subprocess.check_output(['git','show','41eef76fa:tools/h3_qwen_complete_native.py'],cwd=B.ROOT,text=True)
+node=next(n for n in ast.parse(archived).body if isinstance(n,ast.ClassDef)and n.name=='HBMByteTileProvider')
+namespace={'np':np,'F':np.float32};exec(compile(ast.Module(body=[node],type_ignores=[]),'archived41eef-HBMByteTileProvider','exec'),namespace)
+HBMByteTileProvider=namespace['HBMByteTileProvider']
 
 def test_full_source_coverage():
  n=B.native();assert len(n['operations'])==1737;assert len(n['source_program']['weight_descriptors'])==290;assert len(B.refs(n))==732;assert not B.refs(n)-B.extents(n).keys()
