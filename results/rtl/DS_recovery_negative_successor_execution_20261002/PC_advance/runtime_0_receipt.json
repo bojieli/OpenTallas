@@ -1,0 +1,34 @@
+{
+  "verdict": "EXPECTED_MUTATION_REFUSAL",
+  "witness": {
+    "cycles": 10,
+    "fault_cycle": 8,
+    "checking": 1,
+    "pc": 21,
+    "stopped_pc": 20,
+    "rec_active": 0,
+    "suffix_closed": 1,
+    "qe_idle": 1,
+    "win_idle": 1,
+    "qe_accepts": 0,
+    "terminals": 0,
+    "vm_stores": 0,
+    "sink_words": 0,
+    "written_words": 0,
+    "su_accepts": 0,
+    "suppress": 0,
+    "su_idle": 1,
+    "xs_we": 0,
+    "kv_we": 0
+  },
+  "fatal_time": 13000,
+  "fatal_line": 1299,
+  "stage": "PC_advance/runtime_0",
+  "args": [
+    "+CUT=GO"
+  ],
+  "returncode": 1,
+  "log_sha256": "0004efe01be6f985bdca970eec76e2e5f4db43e6ac61cf48dc9b8649c46a65a8",
+  "binary_sha256": "8e7dd7b2593b66f21551ebc27ea2d3b950c76714e5f1877df223a4abc5b7cbd4",
+  "snapshot_digest": "97895091d87ec3b18019c9c9682b55f9d0b4c7be62d6c5e20b2df062d7a828aa"
+}
