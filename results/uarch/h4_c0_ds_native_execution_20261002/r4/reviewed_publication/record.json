@@ -1,0 +1,501 @@
+{
+  "PID": 1701339,
+  "RF_mirrored_readback_and_reverse_drained": true,
+  "actual_journal_reserved_bytes": 127384720,
+  "declared_journal_reservation_bytes": 536870912,
+  "full_token_qualified": false,
+  "hardware_qualified": false,
+  "home_archive_sha256": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424",
+  "input_record_sha256": "a0833faf63a77af59ea0c1184dcf76d59c1e0f3a000e34f7af6f646ccd6d0b3a",
+  "journal_sqlite_bytes": 14200832,
+  "journal_uncompressed_sha256": "31c34bc9d4b145b85a4b5a6f735726a24f02d955e9dfe4de29037189caf75f6d",
+  "native_arithmetic_reexecuted": false,
+  "native_artifact_sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+  "output_npz_sha256": "dd9206ae93451c1c68ba75cae32814544eca3831eab907abed699c2f101bf989",
+  "parent_comparison_sha256": "d620d990f06cd3db3842cc66e27b9069377e41cfcd2018d1b1e8c832215bfaa4",
+  "phase_counts": {
+    "consumer_accept": 7696,
+    "request_accept": 7696,
+    "reverse_credit_accept": 7696,
+    "software_backing_visible": 5128,
+    "software_owned_issue": 7696,
+    "software_read_capture": 2568,
+    "software_service_phases_reserved": 7696,
+    "validated_reverse_grant": 7696,
+    "write_residence_reserved": 5128
+  },
+  "primitive_intermediate_movement_qualified": false,
+  "production_group_calls_closed": 0,
+  "publication_calls_completed": 4,
+  "rank0_PC0_only": true,
+  "receipts": [
+    {
+      "end": 37,
+      "field": "pre",
+      "journal_id": 0,
+      "publication": {
+        "events": [
+          {
+            "event": "software_backing_visible",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                4
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_pre.50"
+            },
+            "sequence": 27,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 8880,
+              "serial": 4,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 4,
+            "source_tick": 447
+          },
+          {
+            "event": "consumer_accept",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                4
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_pre.50"
+            },
+            "sequence": 28,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 8880,
+              "serial": 4,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 4,
+            "source_tick": 447
+          },
+          {
+            "event": "validated_reverse_grant",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                4
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_pre.50"
+            },
+            "sequence": 30,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 8880,
+              "serial": 4,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 4,
+            "source_tick": 472
+          }
+        ],
+        "identity": {
+          "PC": 0,
+          "generation": 1,
+          "home_indices": [
+            4
+          ],
+          "rank": 0,
+          "version": "DeepSeek.0.attn_pre.50"
+        },
+        "payload_sha256": {
+          "data": "75d66f1b2a9133db7c6215b5d39eca9bca99dc9b8dc5348d310f4074a508083d"
+        },
+        "pending_obligations": 0,
+        "physical_qualified": false
+      },
+      "sector_transactions": 5,
+      "start": 0
+    },
+    {
+      "end": 74,
+      "field": "post",
+      "journal_id": 0,
+      "publication": {
+        "events": [
+          {
+            "event": "software_backing_visible",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                3
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_post.51"
+            },
+            "sequence": 64,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 8864,
+              "serial": 4,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 9,
+            "source_tick": 1027
+          },
+          {
+            "event": "consumer_accept",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                3
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_post.51"
+            },
+            "sequence": 65,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 8864,
+              "serial": 4,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 9,
+            "source_tick": 1027
+          },
+          {
+            "event": "validated_reverse_grant",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                3
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_post.51"
+            },
+            "sequence": 67,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 8864,
+              "serial": 4,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 9,
+            "source_tick": 1052
+          }
+        ],
+        "identity": {
+          "PC": 0,
+          "generation": 1,
+          "home_indices": [
+            3
+          ],
+          "rank": 0,
+          "version": "DeepSeek.0.attn_post.51"
+        },
+        "payload_sha256": {
+          "data": "15d0e08888fb92de9cfc0ec6daa713eed1c2146f432e9fee4fe3f73f136722c0"
+        },
+        "pending_obligations": 0,
+        "physical_qualified": false
+      },
+      "sector_transactions": 5,
+      "start": 37
+    },
+    {
+      "end": 120,
+      "field": "comb",
+      "journal_id": 0,
+      "publication": {
+        "events": [
+          {
+            "event": "software_backing_visible",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                2
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_comb.52"
+            },
+            "sequence": 103,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 8849,
+              "serial": 4,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 14,
+            "source_tick": 1647
+          },
+          {
+            "event": "consumer_accept",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                2
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_comb.52"
+            },
+            "sequence": 104,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 8849,
+              "serial": 4,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 14,
+            "source_tick": 1647
+          },
+          {
+            "event": "validated_reverse_grant",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                2
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_comb.52"
+            },
+            "sequence": 106,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 8849,
+              "serial": 4,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 14,
+            "source_tick": 1672
+          }
+        ],
+        "identity": {
+          "PC": 0,
+          "generation": 1,
+          "home_indices": [
+            2
+          ],
+          "rank": 0,
+          "version": "DeepSeek.0.attn_comb.52"
+        },
+        "payload_sha256": {
+          "data": "fe64dc59d832714c84030f69988630fda9140088240552e6285d4105f2b04743"
+        },
+        "pending_obligations": 0,
+        "physical_qualified": false
+      },
+      "sector_transactions": 6,
+      "start": 74
+    },
+    {
+      "end": 59000,
+      "field": "res",
+      "journal_id": 0,
+      "publication": {
+        "events": [
+          {
+            "event": "software_backing_visible",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                5,
+                3054,
+                4634,
+                5891,
+                7148,
+                8322,
+                9416,
+                10509,
+                11602,
+                12695,
+                13508,
+                14321,
+                15131,
+                15941,
+                16751,
+                17561,
+                18371,
+                19163,
+                19955,
+                20747
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_res.53"
+            },
+            "sequence": 41077,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 320255,
+              "serial": 5120,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 5136,
+            "source_tick": 657223
+          },
+          {
+            "event": "consumer_accept",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                5,
+                3054,
+                4634,
+                5891,
+                7148,
+                8322,
+                9416,
+                10509,
+                11602,
+                12695,
+                13508,
+                14321,
+                15131,
+                15941,
+                16751,
+                17561,
+                18371,
+                19163,
+                19955,
+                20747
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_res.53"
+            },
+            "sequence": 41078,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 320255,
+              "serial": 5120,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 5136,
+            "source_tick": 657223
+          },
+          {
+            "event": "validated_reverse_grant",
+            "identity": {
+              "PC": 0,
+              "generation": 1,
+              "home_indices": [
+                5,
+                3054,
+                4634,
+                5891,
+                7148,
+                8322,
+                9416,
+                10509,
+                11602,
+                12695,
+                13508,
+                14321,
+                15131,
+                15941,
+                16751,
+                17561,
+                18371,
+                19163,
+                19955,
+                20747
+              ],
+              "rank": 0,
+              "version": "DeepSeek.0.attn_res.53"
+            },
+            "sequence": 41080,
+            "source_fragment_identity": {
+              "epoch": 1,
+              "pc": 0,
+              "rank": 0,
+              "sector": 320255,
+              "serial": 5120,
+              "target": "DeepSeek"
+            },
+            "source_tag": 0,
+            "source_tag_generation": 5136,
+            "source_tick": 657248
+          }
+        ],
+        "identity": {
+          "PC": 0,
+          "generation": 1,
+          "home_indices": [
+            5,
+            3054,
+            4634,
+            5891,
+            7148,
+            8322,
+            9416,
+            10509,
+            11602,
+            12695,
+            13508,
+            14321,
+            15131,
+            15941,
+            16751,
+            17561,
+            18371,
+            19163,
+            19955,
+            20747
+          ],
+          "rank": 0,
+          "version": "DeepSeek.0.attn_res.53"
+        },
+        "payload_sha256": {
+          "data": "05a98a7bbdd2902cca51139c839c039e49000f9ecc3970af06a7458cca55a931"
+        },
+        "pending_obligations": 0,
+        "physical_qualified": false
+      },
+      "sector_transactions": 7680,
+      "start": 120
+    }
+  ],
+  "resource_caps_injected": false,
+  "source_lease_released": true,
+  "status": "PASS_REVIEWED_REAL_PC0_OUTPUTS_RF_PUBLICATION",
+  "total_events": 59000
+}

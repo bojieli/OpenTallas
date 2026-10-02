@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+  File "/tmp/opentallas-C0-production-execution-20261002/tools/h4_c0_ds_checkpoint_first_producer.py", line 80, in execute
+    receipt=provider.publish(identity,{'data':value},write['native_result_binding'])
+  File "/tmp/opentallas-C0-production-execution-20261002/tools/h3_ds_checkpoint_provider_r30.py", line 273, in publish
+    self.seq+=len(source);self.trace.extend(events)
+TypeError: object of type 'Slice' has no len()
