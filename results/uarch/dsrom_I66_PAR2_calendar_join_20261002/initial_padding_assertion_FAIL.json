@@ -1,0 +1,8 @@
+{
+  "failure": "Initial ownership join assumed no padded rows; conserved plans include rows>=576. No runtime/model prediction altered.",
+  "plan_row_capacity": 288,
+  "required_rows": 576,
+  "extra_plan_rows": 0,
+  "max_plan_row": 287,
+  "next": "bind configured row suppression before accepting ownership join"
+}
