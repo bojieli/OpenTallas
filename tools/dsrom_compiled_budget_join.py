@@ -26,8 +26,8 @@ def config(np,phw,nseg=8):
         'gross_macro_bits':macros*4096*274,'macro_body_mm2':float(F(macros)*F('7881.3648')/10**6),
         'physical_address_recipe':{'bundle':'pair//5','lane':'pair%5','logical_index':'phase*25+cfg_word','parity':'logical_index&1','depthchunk':'(logical_index>>1)//4096','row':'(logical_index>>1)%4096','physical_leaf':'bundle*(2*depthchunks)+2*depthchunk+parity','payload_bits_before_SECDED':'[48*lane,48*(lane+1))'},
         'proposal_only':True,'same_depth_and_master':True,'full_macro_or_cfg_timing_admission':False,
-        'source_loader_cycle_model':{'cfg_words_per_phase':25,'existing_combinational_cm_last_accept_after_cfg_go_cycles':26,
-            'PP_macro2cycle_plus_consumer_register_last_accept_cycles':28,'additional_cycles_per_actual_cfg_event':2,
+        'source_loader_cycle_model':{'cfg_words_per_phase':25,'source_declared_cfg_load_cycles_per_phase':27,
+            'conditional_PP2_load_cycles_per_phase_with_two_extra_cycles':29,'additional_cycles_per_actual_cfg_event':2,
             'cycle_credit_qualified':False,'required_proof':['two-cycle macro read valid matches broadcast cfg_word index','each independent48bit output lane matches original per-pair cm contents','per-pair enable/gating and held data during backpressure','240payload+9SECDED exact bit map and decoder latency','final cfg word visible before matrix issue and consumer busy fence'],
             'conditions':'noECCadditionalcycles priced yet; no busy/return-drain overlap credit; actual broadcast controller/endpoint calendar must bind everycfg event'},
         'excluded_positive_costs':['mask-ROM collar and48bit lane decode','depthchunk+PP bank mux/control/capture','PHW10 dispatch key decoder and fanout','ECC encoder/decode/BIST fault propagation','halo/pin/corridor/PDN/CTS/hold exclusions'],
@@ -39,8 +39,14 @@ def frozen(commit,path):
 
 def build(model_path=None):
     if model_path is None:
-        model,model_receipt=frozen('24d509c13','results/uarch/dsrom_fixed4096_owner_compiler_20261002/attempt8/model.json')
+        closure,model_receipt=frozen('24d509c13','results/uarch/dsrom_fixed4096_owner_compiler_20261002/closure_r2/closure.json')
+        handoff,handoff_receipt=frozen('24d509c13','results/uarch/dsrom_fixed4096_owner_compiler_20261002/handoff.json')
+        sites=R.validate_site_ids(closure['compiled_field'],724)
+        if sites['physical4096_macros']!=16384 or sites['padding_pairs']!=721:raise ValueError('closure compiled hardware ledger')
+        model={'candidate_id':closure['candidate'],'stage_stats':[dict(s,compiled_NP=4096,pair_cfg_bits_if_required_PHW=s['compiled_pair_cfg_bits']) for s in closure['compiled_control_declarations']],
+               'allocation_failures':[closure['first_allocation_failure']], 'current_source_PHW6_verdict':'FAIL_SOURCE_PHASE_CAPACITY'}
     else:
+        closure=None;handoff=None;handoff_receipt=None
         raw=model_path.read_bytes();model=json.loads(raw);model_receipt={'path':str(model_path),'sha256':hashlib.sha256(raw).hexdigest(),'draft_snapshot':True}
     arch,arch_receipt=frozen('c1037db16','results/uarch/dsrom_cfg_phase_capacity_20261002/model.json')
     shared,shared_receipt=frozen('c1b460ae','results/uarch/dsrom_shared_complete_pair_candidate_r20_20261002/shared_candidate.json')
@@ -58,6 +64,8 @@ def build(model_path=None):
     if abs(master['area']['macro_area_um2']-7881.3648)>1e-7:raise ValueError('macro area source currency')
     frame=F(np-nbf)*R.Q_FRAME+F(nbf)*R.BF_FRAME
     ret=B.return_dimensions({'compiled_NP':np,'R':128,'NBF':nbf,'RD':64,'ROOTD':128,'RST':1})
+    if closure is not None:
+        if abs(float(frame/10**6)-closure['compiled_field']['source_envelope_area_mm2'])>1e-7 or ret['declared_lower_bits']!=closure['compiled_field']['return_declared_bits']:raise ValueError('authoritative hardware dimensions mismatch')
     cfg=config(np,phw)
     actual_cfg=arch['storage_cases']['compiled_declared']
     if actual_cfg['cfg_bits']!=cfg['declared_bits_all_compiled_pairs']:raise ValueError('compiled configuration bits mismatch')
@@ -69,7 +77,7 @@ def build(model_path=None):
     priced=frame/10**6+F(str(ret['conservative_FF_50pct_um2']))/10**6+cfg_cost+rne+wake
     perstage=[{'stage':s['stage'],'phase_count':s['phase_count'],'required_PHW':s['required_PHW'],
         'full_compiled_cfg':config(np,s['required_PHW']),
-        'active_only_cfg_bits_from_owner':s['pair_cfg_bits_if_required_PHW']} for s in stats]
+        'owner_compiled_cfg_bits':s['pair_cfg_bits_if_required_PHW']} for s in stats]
     return {'schema':'opentallas.dsrom.one-S58-compiled-whole-budget.v1','candidate':B.CANDIDATE,'stage_count':58,'TP':4,
         'input_receipts':[model_receipt,arch_receipt,shared_receipt,corrected_receipt,retained_receipt,
                          {'commit':B.PIN,'path':path,'sha256':hashlib.sha256(blob).hexdigest()}],
@@ -77,6 +85,10 @@ def build(model_path=None):
             'physical_q_frames':np-nbf,'physical_BF_frames':nbf,'catalog_full_compiled_frame_mm2':float(frame/10**6),
             'main4096_macros_per_die':4*np,'active3375_not_physical_declaration':True,'dualcompute_abstract_bound':False},
         'return':ret,'configuration_provider':cfg,'per_stage_config_requirements':perstage,
+        'authoritative_closure':None if closure is None else {k:closure[k] for k in ['capacity_verdict','unallocated_matrices','declaration_counts_by_format','placed_counts_by_format','draft_active_only_charges_rejected','overlap_and_rowtree_gate','actual_instruction_descriptors','actual_runtime_actions','all_descriptor_node_rank_provider_and_calendar_bindings_complete','minimum_stage_claim','physical_admission','full_token_admission']},
+        'dedicated_provider_layout':None if closure is None else closure['dedicated_provider_layout'],
+        'head_and_table_roles_not_qualified_or_folded_into_layer_area':True,
+        'handoff_receipt':handoff_receipt,'source_ledger_validation':None if closure is None else sites,
         'same_template_maxPHW_proposal':True,'reticle_mm':[26,33],
         'exact_once_area_ledger_mm2':{'reticle':858,'inherited_service_routes_clockPG_debit':float(inherited_debit),
             'already_inside_inherited_named_service_proxy_do_not_add_again':shared['area_and_service_reserve']['source_named_service_proxy_mm2'],
@@ -97,7 +109,8 @@ def build(model_path=None):
             'actual_cfg_delta_formula':'sum_over_nonoverlapped_actualcfg_events(2cycles + ECCdecodecycles + source_lease/drain/CDC stalls), 1.2GHz modelonly; storage phasecount is not token eventcount',
             'source_cfg_after_last_GO_busy':'retain source consumer drain; no ideal overlap between q/BF phases or shared ports',
             'no_actual_whole_token_cycles':True},
-        'allocator_observed_failure_count':len(model['allocation_failures']),'allocator_first_failure':model['allocation_failures'][0] if model['allocation_failures'] else None,'source_PHW6_verdict':model['current_source_PHW6_verdict'],
+        'allocator_observed_failure_count':len(model['allocation_failures']) if closure is None else None,
+        'failure_count_scope':'closure supplies first failure and unallocated matrix census; do not infer total failure records from first-failure list','allocator_first_failure':model['allocation_failures'][0] if model['allocation_failures'] else None,'source_PHW6_verdict':model['current_source_PHW6_verdict'],
         'conditional_S58_original_FAIL_preserved':True,'new_count_selected':False,'RTL_PR':False,'full_token_or_physical_admission':False}
 
 def main():

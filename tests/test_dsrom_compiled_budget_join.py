@@ -51,3 +51,19 @@ def test_loader_latency_not_claimed_or_phase_count_multiplied():
     assert l['additional_cycles_per_actual_cfg_event']==2 and not l['cycle_credit_qualified']
     assert x['critical_path_latency']['no_actual_whole_token_cycles']
     assert x['configuration_provider']['baseline_overlap_credit']==0
+
+
+def test_authoritative_closure_not_active_only_draft_stats():
+    x=J.build();a=x['authoritative_closure']
+    assert x['input_receipts'][0]['path'].endswith('closure_r2/closure.json')
+    assert a['capacity_verdict']=='FAIL_CANDIDATE_PLACEMENT'
+    assert len(a['unallocated_matrices'])==12202
+    assert sum(a['declaration_counts_by_format'].values())==46509
+    assert sum(a['placed_counts_by_format'].values())==34307
+    assert a['actual_instruction_descriptors']==4778
+    assert not a['all_descriptor_node_rank_provider_and_calendar_bindings_complete']
+    assert x['source_ledger_validation']['physical4096_macros']==16384
+    assert x['source_ledger_validation']['padding_pairs']==721
+    assert x['per_stage_config_requirements'][0]['owner_compiled_cfg_bits']==5033164800
+    assert x['configuration_provider']['source_loader_cycle_model']['source_declared_cfg_load_cycles_per_phase']==27
+    assert not a['minimum_stage_claim']
