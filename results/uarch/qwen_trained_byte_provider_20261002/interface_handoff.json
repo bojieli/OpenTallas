@@ -1,6 +1,12 @@
 {
   "Dewey_calendar": "retain r17 physical extents/sector ownership; raw request has provider_ref, base, bytes, producer_dependency, visible lease and byte_ranges; response copied payloads+matched lease+visible ACK/reverse release",
   "Popper_interface": "TiledMachine(native, HBMByteTileProvider(TrainedByteBackend(images,native)))",
+  "Popper_relocation_join": {
+    "binding": "exact module SHA in actual GO source_sha256, no fallback",
+    "provider": "raw producer/backend independent; adapter tests so far bind archived41eef76fa only",
+    "runner": "--bounded-module <new relative module path>; original h3_qwen_complete_native.py refused",
+    "status": "pending exact new module path/commit"
+  },
   "Popper_source_commit": "41eef76fa",
   "cost_split": "offline full-row quantization and source hashing separate from runtime bytes; verification capture reads add software counters and cannot be hardware-rate evidence",
   "execution": "1737 PCs,36 layers,TP2,complete vocab head; independent post-check only after native token retires",
@@ -8,7 +14,8 @@
   "no_existing_owner_files_edited": true,
   "remaining_blockers": [
     "local locked checkpoint files unavailable",
-    "fresh measured fleet resource admission, with D1 local96GiB reservation respected"
+    "fresh measured fleet resource admission, with D1 local96GiB reservation respected",
+    "Popper additive relocation commit and new module source pin"
   ],
   "runtime_policy": {
     "FSIZE": "unlimited",

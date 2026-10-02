@@ -4,7 +4,7 @@ import argparse,hashlib,json,os,re,resource,subprocess,time
 from pathlib import Path
 import numpy as np
 from qwen_trained_byte_provider import ROOT,ARTIFACT,native,canonical,sha,TrainedByteBackend
-from h3_qwen_complete_native import HBMByteTileProvider,TiledMachine
+import importlib.util
 
 def validate_admission(a,go_commit):
  if a.get('schema')!='opentallas.Qwen.trained-native.admission.v1'or a.get('admitted')is not True:raise ValueError('fresh trained-native resource GO required')
@@ -31,10 +31,13 @@ def guard(a,directory,remaining_bytes=0,known_output_bytes=None):
  used=known_output_bytes if known_output_bytes is not None else (sum(p.stat().st_size for p in directory.rglob('*')if p.is_file())if directory.exists()else 0)
  if used>a['aggregate_output_bytes']:raise ValueError('admitted aggregate fleet output exhausted; preserve progress')
 
-def run(images,out,admission,go_commit,token=9707):
+def run(images,out,admission,go_commit,bounded_module,token=9707):
  validate_admission(admission,go_commit);n=native()
+ modulepath=ROOT/bounded_module
+ if Path(bounded_module).name=='h3_qwen_complete_native.py' or sha(modulepath)!=admission['source_sha256'].get(str(bounded_module)):raise ValueError('explicit relocated bounded interface pin required')
+ spec=importlib.util.spec_from_file_location('trained_qwen_bounded_interface',modulepath);interface=importlib.util.module_from_spec(spec);spec.loader.exec_module(interface)
  if n['source_program']['config']['num_hidden_layers']!=36 or len(n['operations'])!=1737:raise ValueError('full native program required')
- out=Path(out);out.mkdir(parents=True,exist_ok=False);backend=TrainedByteBackend(images,n);machine=TiledMachine(n,HBMByteTileProvider(backend));start=time.monotonic();outputs=[];names={v['version']:v['name']for v in n['operands']}
+ out=Path(out);out.mkdir(parents=True,exist_ok=False);backend=TrainedByteBackend(images,n);machine=interface.TiledMachine(n,interface.HBMByteTileProvider(backend));start=time.monotonic();outputs=[];names={v['version']:v['name']for v in n['operands']}
  (out/'admission.json').write_bytes(canonical(admission));(out/'image_manifest_identity.json').write_bytes(canonical(dict(path=str(Path(images).resolve()),sha256=sha(Path(images)/'manifest.json'))))
  try:
   def observe(op,store):
@@ -77,4 +80,4 @@ def compare_after_execution(n,snapshot,out,token,next_token):
   (out/'post_execution_comparisons.json').write_bytes(canonical(reference.comparisons));(out/'reference_source_provenance.json').write_bytes(canonical(weights.provenance()))
 
 if __name__=='__main__':
- ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--images',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--admission',type=Path,required=True);ap.add_argument('--token',type=int,default=9707);ap.add_argument('--go-commit',required=True);a=ap.parse_args();run(a.images,a.out,json.loads(a.admission.read_text()),a.go_commit,a.token)
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--images',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--admission',type=Path,required=True);ap.add_argument('--token',type=int,default=9707);ap.add_argument('--go-commit',required=True);ap.add_argument('--bounded-module',type=Path,required=True);a=ap.parse_args();run(a.images,a.out,json.loads(a.admission.read_text()),a.go_commit,a.bounded_module,a.token)

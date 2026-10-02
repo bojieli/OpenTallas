@@ -147,7 +147,7 @@ class TrainedByteBackend:
   result=bytearray();end=start+count
   starts=self.indices[id(image)];idx=bisect.bisect_right(starts,start)-1
   while start<end:
-   p=image['segments'][idx];path=self.directory/p['file'];stat=path.stat();identity=(stat.st_dev,stat.st_ino,stat.st_size,stat.st_mtime_ns)
+   p=image['segments'][idx];path=self.directory/p['file'];stat=path.stat();identity=(stat.st_dev,stat.st_ino,stat.st_size,stat.st_mtime_ns,stat.st_ctime_ns)
    if path.is_symlink()or stat.st_size!=p['bytes']:raise ValueError('immutable byte page replaced')
    if path.name not in self.verified:
     if sha(path)!=p['sha256']:raise ValueError('immutable byte page hash')
@@ -158,7 +158,7 @@ class TrainedByteBackend:
     if len(self.handles)>=8:os.close(self.handles.popitem(last=False)[1])
     self.handles[path.name]=os.open(path,os.O_RDONLY|os.O_NOFOLLOW)
    self.handles.move_to_end(path.name);fd=self.handles[path.name];fs=os.fstat(fd)
-   if (fs.st_dev,fs.st_ino,fs.st_size,fs.st_mtime_ns)!=identity:raise ValueError('immutable open page identity')
+   if (fs.st_dev,fs.st_ino,fs.st_size,fs.st_mtime_ns,fs.st_ctime_ns)!=identity:raise ValueError('immutable open page identity')
    data=os.pread(fd,take,start-p['start'])
    if len(data)!=take:raise ValueError('short immutable byte read')
    result.extend(data);start+=take;idx+=1
