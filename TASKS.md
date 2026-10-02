@@ -6,6 +6,18 @@ This file is a current dependency queue, not an append-only integration diary. `
 
 Integration/publication is coordinated by Codex. Workers use isolated worktrees and submit bounded reviewed changes; the main publisher owns main. Existing W streams remain provenance labels, not an instruction to restart historical agents. The prior tracker and plan are retained in the [source-pinned history snapshot](results/maintenance/research_plan_rewrite_20261002/history_manifest.json); all historical pass/failure records remain authoritative at their original scope.
 
+## Immediate parallel completion schedule
+
+Single-user completion takes precedence over batching studies and optional fusion tuning. The following paths proceed concurrently; a target waits only for its own prerequisites.
+
+| Track | Immediate critical work | Parallel owners and next gate |
+|---|---|---|
+| Qwen ROM | Finish actual direct-capture HDL equivalence, then characterize the complete loaded capture/control cone. Qualify the full arithmetic tile and its die slot at SS/FF. Reuse the captured complete TP4 token. | Euclid: literal proof and four-state checks. Maxwell: control/clock/route/slot costs. Physical mapping starts after the actual proof, independently of DeepSeek and HBM. No second decode-position campaign. |
+| DeepSeek ROM | Complete existing disjoint native compilation, link and execute the connected diagnostic successor. Bind accepted LAT8 source reads, captures and qualified visibility to PAR2 placement and the full program. | Hubble: compilation/join/runtime. Epicurus: accepted cadence and existing top-k worst-path extraction. Nash: source/address/terminal adapter. Archimedes: clean-only ECC checker characterization. Maxwell: finite service calendar and physical fit. Peirce/Kepler: checkpoint-backed numerical path. |
+| HBM for Qwen and DeepSeek | Complete trained-provider conversion and complete-program numerical execution while building the native dispatch/version/completion bridge. Correct scratch-port and mirrored-RF acknowledgment costs before full connected-program RTL. | Goodall/Popper: Qwen trained images, mutable KV and full numerical driver. Peirce/Kepler: DeepSeek trained provider and full numerical driver. Sagan: software microsequencer/command coverage. Dewey: actual-port, finite-resource calendar. Hardware integration follows its own priced interfaces, not completion of the ROM tracks. |
+
+New CPU/memory-heavy work uses PVE1, the large VM or measured local headroom. Preserve the two live D1 compilation shards. PVE2 remains drain-only; PVE3 is verified idle and available for owner reclamation, with no new assignments. No arbitrary wall, file-size, CPU-time or address-space limits on long builds; use actual capacity reservations and incremental evidence. Review and publish coherent milestones, not every intermediate edit.
+
 ## P0: invalidate or close the critical assumptions first
 
 | ID/status | Owner | Task and next action | Acceptance / depends on |
@@ -115,3 +127,5 @@ ECC adoption decision (user, 2026-10-02): correction is an exceptional path and 
 HBM connected-program audit checkpoint (2026-10-02): all 3,950 native PCs have software family bindings, but the H1 RTL bench demonstrates only a limited matrix/RF/dependent-vector path. Parent validation checks 53 immutable source pins, 15 packet hashes and the 2,213-PC DeepSeek binding replay. Actual scratch transfer width is 64 bytes, distinct from the 128-byte matrix ingest port; the composed model and native dispatch/version/completion bridge must reflect it. Full native RTL token execution and physical adoption remain incomplete. See results/uarch/native_software_parent_intake_20261002/H4_binding_audit_review.json.
 
 PAR2 full-corrector evidence checkpoint (2026-10-02): independent parent STA replay reproduces raw K256 SS arrival 2,794.959717 ps and main K272 SS arrival 1,898.452515 ps. All 19 focused tests pass. These are combinational, pin-loaded measurements without routed wires or registered SS/FF closure. They do not characterize the clean-only checker and do not qualify a single-cycle decoder. Failed tool runs and physical limits are retained. See results/uarch/native_software_parent_intake_20261002/DS_secded_parent_STA_review.json.
+
+Qwen converter continuation checkpoint (2026-10-02): all 290 matrix codecs and checkpoint header shapes/dtypes are preflighted before page production. Parent runs 36 tests and independently confirms matrix_rows/bfbytes AST equality against the actual failed-run source. Historical 64-page reuse requires a source-bound qualification report and fresh admission, exclusive copies and before/after file identities; original artifacts are preserved. Actual copy, completed trained images and numerical token execution remain pending. See results/uarch/native_software_parent_intake_20261002/Qwen_codec_continuation_review.json.
