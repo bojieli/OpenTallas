@@ -5,6 +5,7 @@ import re
 import sys
 import tempfile
 import unittest
+import subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
@@ -47,5 +48,14 @@ class CaptureTimingContracts(unittest.TestCase):
                 defined=set(re.findall(r'\b(?:lu_table_template|power_lut_template)\s*\(([^)]+)\)',s))
                 used=set(re.findall(r'\b(?:cell_rise|cell_fall|rise_transition|fall_transition|rise_constraint|fall_constraint)\s*\(([^)]+)\)',s))
                 self.assertFalse(used-defined)
+    def test_actual_STA_resolves_full_scope_before_measurement(self):
+        for case in ('q','bfcolumn'):
+            text=(self.work/case/'ss.tcl').read_text().split('set_multicycle_path',1)[0]+'\nexit\n'
+            p=self.work/case/'interface_only.tcl';p.write_text(text)
+            result=subprocess.run(['sta','-exit',str(p)],capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stdout[-2000:])
+            self.assertIn('CAPTURE_ENDPOINTS 1088 MACRO_OUTPUTS 1096',result.stdout)
+            self.assertNotIn('not found',result.stdout)
+            self.assertNotIn('Error:',result.stdout)
 
 if __name__=='__main__':unittest.main()

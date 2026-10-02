@@ -73,10 +73,12 @@ def prepare(work):
                     'foreach p [get_pins -of_objects $byname($gatename)] {if {[string match */GCLK [get_full_name $p]]} {lappend gp $p}}',
                     'if {[llength $gp] != 1} {error "Missing unique actual source gated clock"}',
                     f'create_generated_clock -name leaf{i} -source [get_ports clk] -divide_by 1 $gp']
+            capnames=' '.join('{'+x['name'].removeprefix('\\')+'}' for x in cap)
+            lines += [f'set capnames {{{capnames}}}', 'set caps {}',
+                'foreach name $capnames {if {![info exists byname($name)]} {error "Missing actual source capture cell"}; foreach p [get_pins -of_objects $byname($name)] {if {[string match */D [get_full_name $p]]} {lappend caps $p}}}']
             lines += ['set_clock_uncertainty -setup 60 [all_clocks]',
                 'set_clock_uncertainty -hold 25 [all_clocks]',
                 f'set_clock_transition {320 if corner=="ss" else 5} [all_clocks]',
-                f'set caps [get_pins -regexp {{{regex_names([x["name"] for x in cap],"D")}}}]',
                 'if {[llength $caps] != 1088} {error "Missing capture endpoints"}',
                 'if {[llength $data] != 1096} {error "Missing full macro output pins"}',
                 'puts "CAPTURE_ENDPOINTS [llength $caps] MACRO_OUTPUTS [llength $data]"',
