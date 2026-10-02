@@ -6,6 +6,7 @@ Functional fixtures qualify only adapter invariants. Calendar is an analytical
 reservation candidate, not measured r14 service or physical admission.
 """
 import argparse
+import copy
 from dataclasses import dataclass
 from fractions import Fraction
 import hashlib
@@ -278,6 +279,40 @@ def compose(compute_cycles, delivery_cycles, existing_kv_cycles, overlap_cycles=
                 token_cycles=total, delta_from_old_max=total-max(compute_cycles, existing_kv_cycles))
 
 
+def idle_refresh(bank, now, bus):
+    """Source PC IDLE refresh obligations, including channels with empty queues.
+
+    Reserve actual PREALL/REF commands on one stack bus, preserve bank recovery
+    and refresh blocking. This is a conservative analytical candidate scheduler.
+    It avoids treating idle time as unserviced refresh debt.
+    """
+    from qwen_hbm_controller_calendar_r2 import edge
+    def command(time):
+        time=edge(time,bank.period)
+        while time in bus: time+=bank.period
+        bus.add(time)
+        return time
+    for p in sorted(range(32),key=lambda p:bank.next_ref[p]):
+        while bank.next_ref[p] <= now:
+            due=bank.next_ref[p]
+            opened=[b for b in bank.b[p] if b.open]
+            at=max(due,bank.last_col[p]+bank.t['BURST_PS'])
+            if bank.last_ref[p] is not None: at=max(at,bank.last_ref[p]+bank.t['RFC_PS'])
+            if opened:
+                pre=command(max([at]+[b.preok for b in opened]))
+                bank.log('PREall',pre,p)
+                at=pre+bank.t['RP_PS']
+            refresh=command(at)
+            bank.log('REF',refresh,p)
+            bank.last_ref[p]=refresh
+            for b in bank.b[p]:
+                b.open=False;b.actok=max(b.actok,refresh+bank.t['RFC_PS'])
+            bank.next_ref[p]+=bank.t['REFI_PS']
+    # Only reservations near the next issue can collide; old bus timestamps
+    # need no stored lifetime. No unbounded hardware calendar is implied.
+    bus.intersection_update(t for t in bus if t>=now-bank.period)
+
+
 def calendar(sectors, start=0):
     """Finite conservative one-sector-at-a-time reservation per stack.
 
@@ -285,7 +320,7 @@ def calendar(sectors, start=0):
     scanning/lookup and explicit candidate CDC/fill guards. Sequential service
     deliberately leaves capacity unused. Candidate guards are NOT RTL bounds.
     """
-    from qwen_hbm_controller_calendar_r2 import BankCalendar, crossed, edge
+    from qwen_hbm_controller_calendar_r2 import BankCalendar, crossed, edge, bankmap
     from qwen_hbm_controller_events_r1 import Beat, source_timing
     timing = source_timing()
     # r14_pc source ceil-cycle constraints, all priced at its1GHz candidate.
@@ -295,17 +330,39 @@ def calendar(sectors, start=0):
                   WTRS_PS=5000, RTW_PS=10000, WR_PS=21000, RTP_PS=6000,
                   REFI_PS=3900000, RFC_PS=350000, RL_PS=25000)
     bank = BankCalendar(timing, 1000)
-    now = Fraction(start); max_tag = 0
-    reads = writes = 0
+    now = Fraction(start); max_tag = 0; bus=set()
+    reads = writes = 0; previous=None
     for serial, item in enumerate(sectors):
         sector, write = item if isinstance(item, tuple) else (item, False)
+        if write and previous == (sector,False): now += 27*Fraction(10000,9)
+        previous=(sector,write)
         if write: writes += 1
         else: reads += 1
         # Source preflight maximum35CORE edges for16entry freeze/scan;
         # serialization uses one sector, so there is no head swapping.
         accepted = crossed(now+42*Fraction(2500,3), 1000)
         req = Beat(sector, serial%4096, 0, 0, write=write, accepted_ps=accepted)
-        column = bank.plan(req, accepted+35000)
+        scheduled=accepted+35000
+        pc=bankmap(sector)['pc']
+        while True:
+            idle_refresh(bank,scheduled,bus)
+            if scheduled+50000 >= bank.next_ref[pc]:
+                scheduled=max(scheduled,bank.next_ref[pc]+1000)
+                idle_refresh(bank,scheduled,bus)
+            # Tentative reservation copies only the touched PC. No accepted
+            # command or source event is moved after issue.
+            trial=copy.copy(bank); trial.events=[]
+            trial.b=list(bank.b);trial.b[pc]=[copy.copy(b) for b in bank.b[pc]]
+            for name in ('last_act','last_col','last_rd','last_wr','last_wr_bg','last_ref','next_ref'):
+                setattr(trial,name,list(getattr(bank,name)))
+            for name in ('last_act_bg','faw','last_col_bg'):
+                values=list(getattr(bank,name));values[pc]=list(values[pc]);setattr(trial,name,values)
+            column=trial.plan(req,scheduled)
+            collision=next((e['ps'] for e in trial.events if e['ps'] in bus),None)
+            if collision is None: break
+            scheduled=max(scheduled+1000,collision+1000)
+        new_events=trial.events;events=bank.events;events.extend(new_events);trial.events=events;bank=trial
+        for event in new_events: bus.add(event['ps'])
         due = column+(8000 if write else timing['RL_PS'])
         # Seven arb + acceptance +12 lookup +held acceptance + credit edge.
         now = crossed(due+22000+42*Fraction(2500,3), Fraction(2500,3))
@@ -444,6 +501,10 @@ def report(full_calendar=False, progress_dir=None):
         assembly_area_lower_bound_mm2=4*1024*787*.2916/1e6,
         actual_bridge_payload_bits_per_rank=4*(5*(455+467+404)+3*(2*26+7)),
         writer_pending_descriptor_bits_per_rank=136*(34+2+32+256+3),
+        quarantine_bits_per_stack=16*(192+32+32+12+3),
+        allocation_receipt_additional_bits=12,
+        allocation_receipt_required=True,
+        RMW_merge_serial_edges=27,
         source_address_map_rows_per_tile=54, historical_dimension_rows=44,
         macros_still_fit=True,
         writer_mode='Conservative candidate drains K tail to backing via partial-sector RMW on layer hop; V full sectors; zero overlap credited. This drain is newly priced, not production-measured.',
@@ -471,7 +532,7 @@ def report(full_calendar=False, progress_dir=None):
         guard_scope='source DRAM timing with explicit source preflight35CORE scan maximum and candidate22 return/owner edges plus source42FAST+3destination CDC in four directions; no claimed RTL upper bound',
         layers=rows,writer_layers=writer_rows,per_token_delivery_cycles=delivery,
         write_delivery_cycles=sum(int(r['cycles_1p2GHz']) for r in writer_rows) if writer_rows else None,
-        cold_layer_bank_state=True,
+        cold_layer_bank_state=True,background_idle_refresh=True,shared_stack_command_bus=True,
         compute_cycles=model_point['cycles'] if model_point else None,
         composition=composition,
         analytical_token_latency_seconds=composition['token_cycles']/1.2e9 if composition else None,
@@ -482,7 +543,7 @@ def report(full_calendar=False, progress_dir=None):
         Maxwell='compose finite service once, bind actual dispatch/release trace and all write/RMW costs; qualify scheduling guard then overlap',
         Kepler='TP4 wrapper and retained tag quarantine/reverse credit identity required; r14 read credits currently accept unvalidated identity'),
       blockers=['existing TP2 raw-state provider now translated by global head identity; actual ROM TP4 producer/stage owner state still unconnected',
-        'r14 tag freed on owned acceptance before consumer reverse credit; adapter must retain identity and quarantine tag',
+        'r14 tag freed on owned acceptance before reverse credit and lacks caller-visible allocation receipt; provider successor must retain identity/quarantine and expose allocation tag',
         'r14 read reverse credit validation missing; no inherited runtime PASS',
         'calendar conservative scan/return reservations not measured service; full-program releases and runtime arithmetic identity unresolved',
         'complete service area, finite port arbitration, hub routing-layer capacity and current slot placement unresolved',
