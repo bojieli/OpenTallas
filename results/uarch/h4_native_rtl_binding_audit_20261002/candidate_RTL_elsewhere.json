@@ -1,0 +1,42 @@
+[
+  {
+    "H1_reachable": false,
+    "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+    "contract_compatible": "UNPROVEN; IEEE divider/sqrt is not automatic match for approximate native contract",
+    "lines": 787,
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b"
+  },
+  {
+    "H1_reachable": false,
+    "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+    "contract_compatible": "UNPROVEN; IEEE divider/sqrt is not automatic match for approximate native contract",
+    "lines": 158,
+    "path": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25"
+  },
+  {
+    "H1_reachable": false,
+    "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+    "contract_compatible": "UNPROVEN; IEEE divider/sqrt is not automatic match for approximate native contract",
+    "lines": 404,
+    "path": "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv",
+    "sha256": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9"
+  },
+  {
+    "H1_reachable": false,
+    "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+    "contract_compatible": "UNPROVEN; IEEE divider/sqrt is not automatic match for approximate native contract",
+    "lines": 197,
+    "path": "rtl/abi3/ot_a3_fp32_sqrt_rne.sv",
+    "sha256": "09f03bc02617c6b6d20f75992f25c47f0b3b0401d0004c86141ed0f1c5e94e55"
+  },
+  {
+    "H1_reachable": false,
+    "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+    "contract_compatible": "UNPROVEN; IEEE divider/sqrt is not automatic match for approximate native contract",
+    "lines": 276,
+    "path": "rtl/ot_fp32_rsqrt_rne.sv",
+    "sha256": "74d8b025beb655e48cbdeb1907b66bb61a90b6bb07e0b88db620acd2c0487b5c"
+  }
+]
