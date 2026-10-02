@@ -1,0 +1,21 @@
+{
+  "PVE2_PVE3_new_jobs": 0,
+  "actual_HDL_executed": false,
+  "authoritative_package": "package_r3",
+  "balanced_selector_actualimplementation_dependency_open": true,
+  "focused_static_tests_PASS": 12,
+  "independent_static_scope": [
+    "Actual sourceGW4 tk_wi=wr_k/4 loaderphase/wordsequence for512/2048",
+    "99edge inputorder and go-last gap",
+    "99+28 formedwrite address/dataorder, busy release afteractualsinkwriteedge",
+    "Unsafe99-onlyrelease and recomputed-delayedaddress negativecontrols",
+    "Asyncpresentclear suppresses pendingoldwrites without modifyingpayload data",
+    "Defaultoff genericpackedwidths and sourcebf16_rne/callerfaultacceptance anchors"
+  ],
+  "jobs_launched": 0,
+  "no_new_physical_admission": true,
+  "not_equivalence_or_full_arithmetic_qualification": true,
+  "prepared_source_and_manifest_reproduced": true,
+  "source_sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+  "test_log": "static_tests_r2.log"
+}
