@@ -1,0 +1,136 @@
+{
+  "RTL_build_admitted": false,
+  "activation": {
+    "AQ_capture_edges": [
+      54,
+      133
+    ],
+    "VM_read_edges": [
+      40,
+      119
+    ],
+    "accepted_broadcast_edges": [
+      62,
+      292
+    ],
+    "conservative_full_packet_bits": 1681,
+    "first_CE": 65,
+    "native_pair_accept_to_first_CE_edges": 3,
+    "packet_basis": "1632 full source bus plus49 identity bits; interface proposal, not accepted network ABI",
+    "requirement": "Bind each producer-ready receipt to pair acceptance and preserve native have/s_ok; any later pair receipt propagates through actual source schedule.",
+    "those_three_edges_are_not_free_wire_slack": true,
+    "upstream_packet_ready_edges": null
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cfg": {
+    "aggregate_payload_bits_per_shard": 2457600,
+    "capture_edges": [
+      15,
+      39
+    ],
+    "command_accept_edge": 13,
+    "go_edge": 40,
+    "hard_ROM_clkq_capture_and_fanout_cost": null,
+    "independent_ports_per_shard": 2048,
+    "local_parallel_ports_not_shared_link_bandwidth": true,
+    "payload_bits_per_word": 48,
+    "read_edges": [
+      14,
+      38
+    ],
+    "remote_command_identity_bits": 37,
+    "requirement": "All local configuration visible before GO; command crossing must shift or precede cfg origin; no invented prefetch lead.",
+    "words_per_pair": 25
+  },
+  "fulltoken_rate": false,
+  "generator_sha256": "a596970a179653da31d4bed086d98ce51bd4730cfd344c6bcee4efbbf2ae2834",
+  "iteration_requirement": "Six verification positions plus drafter and commit/rollback; cannot multiply this synthetic phase into a token rate.",
+  "measured_physical_provider_values_available": false,
+  "new_ACK_wire": false,
+  "new_global_seat_pool": false,
+  "new_jobs": 0,
+  "no_ROM_ECC": true,
+  "origins": {
+    "VM_write_prediction.jsonl": {
+      "commit": "136c9c7ab87b9407243fa62103fc37c40532bf9c",
+      "path": "results/rtl/dsrom_PAR2_wholephase_source_trace_20261002/preparation_r2/VM_write_prediction.jsonl",
+      "sha256": "c5a195c591ce33ee29260d81c080ef4c5e878dcca4f9657228712d15fecf046f"
+    },
+    "prediction.json": {
+      "commit": "136c9c7ab87b9407243fa62103fc37c40532bf9c",
+      "path": "results/rtl/dsrom_PAR2_wholephase_source_trace_20261002/preparation_r2/prediction.json",
+      "sha256": "97f3b0ba779974c5f38b26728239ed380e976f17739149c040986ce598753a72"
+    },
+    "root_prediction.jsonl": {
+      "commit": "136c9c7ab87b9407243fa62103fc37c40532bf9c",
+      "path": "results/rtl/dsrom_PAR2_wholephase_source_trace_20261002/preparation_r2/root_prediction.jsonl",
+      "sha256": "b7817d79108c3dca5fec1161ccb68bd32ef547551cfb68772292c99a370c649e"
+    },
+    "upstream_prediction.jsonl": {
+      "commit": "136c9c7ab87b9407243fa62103fc37c40532bf9c",
+      "path": "results/rtl/dsrom_PAR2_wholephase_source_trace_20261002/preparation_r2/upstream_prediction.jsonl",
+      "sha256": "13809efb96df153560ed6f0ecde5cd142f356100059cd4b447b9c1c169572e0e"
+    }
+  },
+  "physical_fit": false,
+  "provider_contract": {
+    "mutable_control_SRAM_HBM_link_protection_retained": true,
+    "required_fields": [
+      "source_receipt",
+      "resource_domain",
+      "bits_per_edge",
+      "latency_edges",
+      "owned_queue_capacity",
+      "registered_delivery",
+      "owner_visibility_edge"
+    ],
+    "shared_resource_across_event_classes": true
+  },
+  "root": {
+    "native_local_root_to_VM_write_edges": 1,
+    "peak_proposed_payload_bits_per_edge": 6912,
+    "physical_CDC_edges": null,
+    "physical_shared_domain_bandwidth": null,
+    "proposed_packet_bits": 108,
+    "registered_delivery_requires_next_edge_sample": true,
+    "requirement": "Hold exact ordered identity/data until destination visibility. Original source has no new ACK; crossing receiver storage/credits require separately priced implementation.",
+    "shard1_burst_rows_by_edge": {
+      "394": 64,
+      "395": 64,
+      "396": 64,
+      "397": 64
+    },
+    "shard1_crossing_rows": 256,
+    "total_rows": 576
+  },
+  "schema": "opentallas.dsrom.PAR2.wire-deadline-plan.v1",
+  "source_edges": {
+    "field_GO": 40,
+    "first_CE": 65,
+    "first_VM_read": 40,
+    "first_activation": 62,
+    "last_CE": 296,
+    "last_VM_write": 400,
+    "last_activation": 292,
+    "last_root": 399,
+    "op_accept": 10,
+    "reset_high_idle": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "reset_low": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "spine_idle_preedge": 400
+  },
+  "source_prediction_not_measured": true,
+  "whole_iteration_delta": null,
+  "wholephase_exposed_delta": null
+}
