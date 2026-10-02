@@ -1,0 +1,36 @@
+abi3 (unittest.loader._FailedTest) ... ERROR
+test_actual_calendar_and_values (test_dsrom_LAT8_actual_events.ActualEvents) ... ok
+test_byte_exact_reproduction (test_dsrom_LAT8_actual_events.ActualEvents) ... ok
+test_fixture_units_proven_not_comment_frequency (test_dsrom_LAT8_actual_events.ActualEvents) ... FAIL
+test_missing_duplicate_wrong_cycle_samples_refused (test_dsrom_LAT8_actual_events.ActualEvents) ... ok
+test_no_invented_return_write_drain_deadline (test_dsrom_LAT8_actual_events.ActualEvents) ... ok
+test_package_tampering_refused (test_dsrom_LAT8_actual_events.ActualEvents) ... ok
+test_public_cycle_context_refused (test_dsrom_LAT8_actual_events.ActualEvents) ... ok
+test_terminal_and_malformed_controls (test_dsrom_LAT8_actual_events.ActualEvents) ... ok
+
+======================================================================
+ERROR: abi3 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: abi3
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/unittest/loader.py", line 470, in _find_test_path
+    package = self._get_module_from_name(name)
+  File "/usr/lib/python3.10/unittest/loader.py", line 377, in _get_module_from_name
+    __import__(name)
+  File "/tmp/opentallas-H3-scalar-contract-model-20261002/tests/abi3/__init__.py", line 31, in <module>
+    from runtime.abi3.capability import Capability
+ModuleNotFoundError: No module named 'runtime.abi3'
+
+
+======================================================================
+FAIL: test_fixture_units_proven_not_comment_frequency (test_dsrom_LAT8_actual_events.ActualEvents)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-H3-scalar-contract-model-20261002/tests/test_dsrom_LAT8_actual_events.py", line 44, in test_fixture_units_proven_not_comment_frequency
+    self.assertIn('0x65900',cpp);self.assertIn('0x65518',cpp)
+AssertionError: '0x65900' not found in ''
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.106s
+
+FAILED (failures=1, errors=1)

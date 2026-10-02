@@ -1,0 +1,33 @@
+Maxwell / DS PAR2 service composition handoff
+
+Existing PASS only; no HDL rerun, no new build, no fleet experiment launch.
+Run: f1cc093eac64752cad14dfcb36af056f77f395a5 immutable parent archive.
+Prepared source: 7aec18270f729aea0d5646c2db16b13ee38cfcc8.
+
+Read events.jsonl for sparse accepted configuration/FIFO/issue/public events.
+Read edge_samples.jsonl for all 1029 pre-rising edge/loader observations.
+Read input_issue_relationships.json for emitted position/slice FIFO-order binding.
+Read offered_word_join.json for the exact r3 word/need_q correspondence; the
+selected fixture K512 program differs from offered first_fp4 K5120. Matching
+words are NOT proof of accepting the full offered program. Config +27 safe GO
+is observed. Captured beat register + BST2 produces emit=advance+3 cycles.
+
+consumer_contract.json marks original consumer deadlines UNKNOWN. Public pair
+partials are NOT root-return events: root inputs tied0, write ports unconnected.
+Spine remains RUN, adapter WAIT; source rows_left=514 remains pending. Pair
+quiet at final PASS proves selected element quiet only, not full drain/retire.
+Parent owns new PAR2 config/root edges; Nash owns parity. No duplicate ownership.
+
+Timing discrepancy preserved: literal timescale1ns/1ps, #416/#1/#415/#1 means
+833ns tick, not comment833ps. Generated C++ delay literals and precision pinned.
+Fixture timestamps source-derived only. No physical/setup/hold/token/adoption
+credit. Original production5 FAIL and all historical PASS sources unchanged.
+
+Reproduce without compilation:
+python3 tools/extract_dsrom_LAT8_actual_events.py
+python3 tests/test_dsrom_LAT8_actual_events.py -v
+
+extractor_first_review_FAIL.log preserves the extraction-test first review:
+incidental sparse ABI3 discovery import error and an empty generated-clock
+inspection caused by zero-padded hex literals. Fixed inspection matches actual
+65900ULL/65518ULL; targeted 10 tests PASS. This was no HDL execution or change.

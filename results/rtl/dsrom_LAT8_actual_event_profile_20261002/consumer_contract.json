@@ -1,0 +1,52 @@
+{
+  "composition_owner": "Maxwell; parent owns PAR2 config/root static edges, Nash parity; this record supplies selected-pair observed cadence only",
+  "deadline_reason": "spine uses completion/count barrier; no original downstream deadline observed or specified in these pinned source paths",
+  "original_consumer_deadline_cycles": null,
+  "retirement_drain": {
+    "adapter_final_state": "WAIT (5)",
+    "complete_observed": false,
+    "element_tail_rule": "go_e or walk_busy reloads DRAIN127; else decrement; registered wake=go|go_e|walk_busy|(drain!=0)",
+    "idle_rule": "S_RUN exits iff rows_left==0 && !sm_run && !ld_run",
+    "last_leaf_to_root_retire_bound": null,
+    "observed_drain_counter": null,
+    "observed_gate_off_cycle": 317,
+    "source_rows_left_initial": 514,
+    "source_rows_left_rule": "nrow*(np+1)=257*2; subtract countones(r_v); r_v tied0 so remains514",
+    "spine_final_state": "RUN (3)",
+    "terminal_pair_quiet": true
+  },
+  "root_returns": {
+    "connection": "bench r_v/r_row/r_pos/r_fp32/r_bf16/r_e tied zero",
+    "observed_events": [],
+    "pair_partials_are_root_returns": false
+  },
+  "source_locations": {
+    "bench": "inputs/tb_dsrom_upstream_pair_cadence.sv:99-125,171-230",
+    "loader": "inputs/ot_v41_pair_w17w10.sv:113-140",
+    "tail": "inputs/ot_v41_rom_elem_w10.sv:174-203",
+    "write_and_retire": "inputs/ot_v41_spine_w17w10.sv:250-271,308-315"
+  },
+  "writes": {
+    "address_constants": {
+      "obase": 4096,
+      "ops": 257
+    },
+    "conditional_unobserved_addresses": [
+      {
+        "address": 4352,
+        "position": 0,
+        "row": 256
+      },
+      {
+        "address": 4609,
+        "position": 1,
+        "row": 256
+      }
+    ],
+    "connection": "bench leaves w_we/w_addr/w_data unconnected",
+    "consumer_ACK_contract": null,
+    "observed_events": [],
+    "source_contract": "on each r_v[kr], w_we[kr]<=1; w_addr=obase+r_row+r_pos*ops; w_data chosen from fp32/bf16 per format",
+    "source_implied_zero_write_enables": "r_v=0 throughout fixture, except initialization also clears w_we"
+  }
+}
