@@ -1,0 +1,55 @@
+{
+  "cumulative_distinct_focused_tests": 1141,
+  "cumulative_not_one_aggregate_suite": true,
+  "full_token_qualification": false,
+  "hardware_admission": false,
+  "intake_prior": "879c3a50359b7ed160dd4d1b6052ea8f13fecbf2",
+  "new_distinct_focused_tests": 55,
+  "no_main_or_original_edits": true,
+  "recorded_utc": "2026-10-02T00:32:12.065242+00:00",
+  "reviews": {
+    "DSROM_decoder": {
+      "fresh_package": "/tmp/opentallas-parent-rowfix-sources-20261002",
+      "full_arithmetic_and_physical_qualified": false,
+      "independent_static_tests": 10,
+      "intake": "c75ef4570",
+      "intake_static_run": "9 pass; preservation test missing sparse owner parent_GO path, no pin mismatch; complete owner tree all10PASS",
+      "mapping": "cfg_a-(NSEG+1); documented2*NSEG+1..3*NSEG mapsNSEG..2*NSEG-1",
+      "next": "dedicated source-pinned runner review then bounded full q/BF run",
+      "original72DIFF_and_scores_preserved": true,
+      "owner": "c6db3c1853b4e48a0cc5b0746334def4dff0e8ce",
+      "source_and_bench_diff_reviewed": true,
+      "tested_in_clean_owner_tree": true
+    },
+    "DSROM_future_observer": {
+      "actual_hierarchy_elaboration_qualified": false,
+      "artifact_hashes_verified": 16,
+      "causal_deadline": "BOUND_MISSING",
+      "fake_harness_only": true,
+      "independent_tests": 37,
+      "intake": "879c3a503",
+      "inverse_restores_original_source": true,
+      "no_live_changes": true,
+      "owner": "2c867b19139de1086b522cb15213dec80435af33"
+    },
+    "HBM_actual_controller": {
+      "expected": "Verilator4.038 rejects--binary",
+      "intake": "20fa7bfb3",
+      "manifest_hashes_verified": true,
+      "next": "verified installedtool and separate corrected invocation preparation",
+      "owner": "4933ebbf4db13ee23679fbe5df79cfa2e3504d44",
+      "retry_performed": false,
+      "status": "FAIL_COMPILER_OPTION_BEFORE_ELABORATION"
+    },
+    "HBM_unique_net_sourceplan": {
+      "DS_dependency_nodes": 97,
+      "actual_safe_cut_route_clock_hold_location_qualified": false,
+      "independent_tests": 8,
+      "intake": "2f3937007",
+      "model_and_gzip_byte_reproduction": true,
+      "next": "source-matched cell/CTS and route/PDN metadata before admission",
+      "owner": "bea8ebe483064423af36384ddcc9a64c20b6ff32"
+    }
+  },
+  "schema": "opentallas.parent.first_principles.parallel_review.v1"
+}
