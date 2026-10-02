@@ -275,6 +275,185 @@ def audit_ds_bounded_dispatch(dispatch, *, costs=None):
         'physical_admission':False,'clock_admission':False,'automatic_scalar_fallback':False}
 
 
+def compile_ssa_finite_sm_services(program, *, rank, provider_bindings, workspace=None, costs=None):
+    """Ordered native stage issue templates and bounded last-use allocation.
+
+    Input is actual source SSA, never a macro callback or opcode histogram.
+    Blocks are lossless128-lane repetitions. Source block256%32 selects the
+    issuing SM; all services serialize, with no assumed32SM speedup. Operand
+    transport deliberately reloads a whole source before each result batch,
+    a positive conservative bound until actual indexed provider traffic exists.
+    This compiler does not execute payloads or supply RTL implementations.
+    """
+    if type(rank) is not int or not 0<=rank<96: raise ValueError('DS rank extent')
+    if set(provider_bindings)!=set(program['providers']): raise ValueError('exact native provider LOAD bindings required')
+    cap=33554432; workspace=dict(workspace or {'AW':27,'base':None,'bytes':cap,'occupied_extents':[]})
+    if workspace.get('AW')!=27 or workspace.get('bytes')!=cap: raise ValueError('AW27/32MiB provider workspace required')
+    base=workspace.get('base')
+    if base is not None:
+        if type(base) is not int or base<0 or base%512 or base+cap>1<<27: raise ValueError('workspace aperture/alignment')
+        if 'occupied_extents' not in workspace: raise ValueError('actual occupied provider extents required')
+        for e in workspace['occupied_extents']:
+            if type(e['base']) is not int or type(e['bytes']) is not int or e['base']<0 or e['bytes']<=0 or e['base']+e['bytes']>1<<27:
+                raise ValueError('occupied provider extent aperture')
+            if base<e['base']+e['bytes'] and e['base']<base+cap: raise ValueError('workspace/provider live alias')
+    costs=dict(costs or {'native_batch':32,'RF_read_vector':3,'RF_mirrored_write_ACK':3,
+        'HBM_sector_read':108,'HBM_sector_write':128,'RMW_merge':32,'route_fragment512':64,'admit':2,'consume':2,'retire':2})
+    if set(costs)!={'native_batch','RF_read_vector','RF_mirrored_write_ACK','HBM_sector_read',
+                   'HBM_sector_write','RMW_merge','route_fragment512','admit','consume','retire'}:
+        raise ValueError('complete explicit SM/provider costs required')
+    for key,value in costs.items():positive(value,key)
+    code=program['code']; last={}; width={}; sizes={}; live={}; free=[(0,cap)]; stages=[]; released=[]
+    tick=0; peak=0; generations=Counter(); counts=Counter(); batches=Counter()
+    for index,node in enumerate(code):
+        for ref in node['src']:last[ref]=index
+    for ref in program['outputs'].values():last[ref]=len(code)
+    def release(name,index):
+        h=live.pop(name);free.append((h['offset'],h['reserved_bytes']));free.sort();merged=[]
+        for address,size in free:
+            if merged and merged[-1][0]+merged[-1][1]==address:merged[-1]=(merged[-1][0],merged[-1][1]+size)
+            else:merged.append((address,size))
+        free[:]=merged
+        released.append({'symbol':name,'after_stage':index,'after_tick':tick,'generation':h['generation'],
+                         'guard':'last source use and every accepted write/consumer/reverse grant retired'})
+    for index,node in enumerate(code):
+        for name in list(live):
+            if last.get(name,-1)<index:release(name,index-1)
+        op=node['op'];dst=node['dst'];args=node['src'];attrs=node.get('attrs',{})
+        if dst in sizes or any(ref not in live for ref in args):raise ValueError('native SSA alias or premature source reuse')
+        if any(type(d) is not int or d<0 for d in node['shape']):raise ValueError('native result shape extent')
+        n=max(1,math.prod(node['shape']))
+        w=(8 if attrs.get('dtype')=='I64' else 4) if op in ('LOAD','CONST') else 8 if op in ('F2I','IOTA') else (
+            4 if op in ('I2F','FADD','FMUL','DIV','SQRT','LDEXP','BITCAST_U','BITCAST_F') or op.startswith('FCMP')
+            else max((width[r] for r in args),default=4))
+        length=max(512,ceil(n*w,512)*512)
+        chosen=next((j for j,(_,size) in enumerate(free) if size>=length),None)
+        if chosen is None:
+            return {'status':'CONSTRAINED_NATIVE_WORKSPACE_SUCCESSOR_REQUIRED','failed_stage':index,'opcode':op,
+                'requested_definition_bytes':length,'live_definitions':live,'live_bytes':sum(h['reserved_bytes'] for h in live.values()),
+                'largest_free_span_bytes':max((size for _,size in free),default=0),'workspace_bytes':cap,
+                'source_order_stages_completed':len(stages),'stages':stages,'hardware_or_clock_admission':False,
+                'successor':'refine this exact stage/shape under source rounding and last-use order; do not wrap addresses or stop other templates'}
+        address,room=free[chosen];free[chosen:chosen+1]=[(address+length,room-length)] if room>length else []
+        generations[address]+=1
+        home={'offset':address,'base':None if base is None else base+address,'reserved_bytes':length,
+              'typed_bytes':n*w,'generation':generations[address],'release_after_stage':last.get(dst,index)}
+        source_homes={ref:dict(live[ref]) for ref in args}
+        live[dst]=home;width[dst]=w;sizes[dst]=n*w;peak=max(peak,sum(h['reserved_bytes'] for h in live.values()))
+        repeats=ceil(n,128);frame_vectors=3+sum(ceil(min(128,n)*width[r],512) for r in args)+ceil(min(128,n)*w,512)
+        if frame_vectors>32:raise ValueError('finite RF32 primitive frame exhausted')
+        reads=sum(ceil(sizes[r],512) for r in args)
+        external=None
+        if op=='LOAD':
+            name=attrs['name'];external=provider_bindings.get(name)
+            if external is None or not external.get('kind'):raise ValueError('missing actual source provider reference')
+            if external['kind']=='versioned_operand' and not external.get('version'):
+                raise ValueError('versioned provider source identity required')
+            spec=program['providers'][name]
+            if spec['shape']!=node['shape'] or spec['dtype']!=attrs['dtype']:
+                raise ValueError('exact native provider shape/dtype required')
+            reads+=ceil(n*w,512)
+        phases=[{'phase':'admit','units':1,'cost':'admit'},
+            {'phase':'provider_read_capture_and_reverse_grant','units':reads*16,'cost':'HBM_sector_read'},
+            {'phase':'provider_route','units':reads,'cost':'route_fragment512'},
+            {'phase':'RF_operand_reads_2R','units':sum(ceil(min(128,n)*width[r],512) for r in args),'cost':'RF_read_vector'},
+            {'phase':'consume','units':1,'cost':'consume'},
+            {'phase':'native_issue','units':1,'cost':'native_batch'},
+            {'phase':'RF_two_mirror_visible_ACK','units':ceil(min(128,n)*w,512),'cost':'RF_mirrored_write_ACK'},
+            {'phase':'possible_partial_destination_sector_read','units':1,'cost':'HBM_sector_read'},
+            {'phase':'possible_partial_destination_RMW_merge','units':1,'cost':'RMW_merge'},
+            {'phase':'workspace_commit_visible_and_reverse_grant','units':ceil(min(128,n)*w,32),'cost':'HBM_sector_write'},
+            {'phase':'retire','units':1,'cost':'retire'}]
+        cursor=0
+        for phase in phases:
+            phase['start']=cursor;cursor+=phase['units']*costs[phase['cost']];phase['end']=cursor
+        stages.append({'stage':index,'op':op,'src':list(args),'dst':dst,'shape':node['shape'],'attrs':attrs,
+            'scalar_elements':n,'semantic_bits':w*8,'source_homes':source_homes,'destination_home':dict(home),
+            'external_provider_binding':external,'start':tick,'end':tick+cursor*repeats,
+            'repetitions':repeats,'batch_stride':cursor,'last_batch_lanes':n-(repeats-1)*128,
+            'phases':phases,'SM_recipe':'((batch_index*128)//256)%32','RF_frame_vectors_upper':frame_vectors,
+            'resources_per_batch':{'RF_read_ports':2,'RF_write_ports':1,'RF_mirrors':2,'provider_tag':1,
+                'request_queue':1,'write_residence':1,'rank_route_credit':1,'SM_issue_credit':1},
+            'native_implementation_binding':'UNKNOWN_PENDING_H4_OWNER; software estimate only',
+            'rounding_and_movement_contract':{'op':op,'attrs':attrs,'source_stage_order':index},'payload_executed':False})
+        counts[op]+=n;batches[op]+=repeats;tick+=cursor*repeats
+    outputs={name:dict(live[ref],symbol=ref) for name,ref in program['outputs'].items()}
+    for name in list(live):release(name,len(code))
+    return {'status':'PASS_ORDERED_NATIVE_STAGE_FINITE_SM_SOFTWARE_RESERVATION','rank':rank,'stages':stages,
+        'primitive_scalars':dict(counts),'primitive_batches128':dict(batches),'outputs':outputs,'release_events':released,
+        'workspace_peak_bytes':peak,'workspace':workspace,'RF_vectors_per_SM':32,'SMs':32,'software_ticks':tick,
+        'explicit_provisional_costs':costs,'hardware_cost_calibration':'UNKNOWN_NO_CPU_PRIMITIVE_AS_RTL_CREDIT',
+        'concrete_software_address_binding':base is not None,'physical_workspace_admission':False,
+        'hardware_or_clock_admission':False,'payload_executed':False,
+        'RMW_scope':'one possible partial sector read+merge conservatively charged per batch; contiguous I64, no second r22 sidecar charge',
+        'transport_scope':'whole operand reload per result128batch conservative upper; exact indexed traffic remains provider-bound',
+        'constrained_extent_successor_demand':[] if base is not None else [{'rank':rank,'bytes':cap,'alignment':512,
+            'AW':27,'maximum_base':(1<<27)-cap,'base':None,'release_guard':'source last use + actual backing/consumer/reverse grant drain'}]}
+
+
+def verify_ssa_finite_sm_services(calendar, program):
+    if len(calendar['stages'])!=len(program['code']):raise ValueError('native stage coverage incomplete')
+    if calendar['hardware_or_clock_admission'] or calendar['hardware_cost_calibration']!='UNKNOWN_NO_CPU_PRIMITIVE_AS_RTL_CREDIT':
+        raise ValueError('CPU/software primitive cannot qualify RTL cost')
+    definitions={};groups=defaultdict(list);counts=Counter();batches=Counter();tick=0;last={};width={};sizes={};generations=Counter()
+    for index,node in enumerate(program['code']):
+        for ref in node['src']:last[ref]=index
+    for ref in program['outputs'].values():last[ref]=len(program['code'])
+    for index,(stage,node) in enumerate(zip(calendar['stages'],program['code'])):
+        if any(stage[k]!=node[k] for k in ('op','src','dst','shape','attrs') if k in node):
+            raise ValueError('native instruction/source mismatch')
+        n=max(1,math.prod(node['shape']));repeats=ceil(n,128);cursor=0
+        op=node['op'];at=node.get('attrs',{});args=node['src']
+        w=(8 if at.get('dtype')=='I64' else 4) if op in ('LOAD','CONST') else 8 if op in ('F2I','IOTA') else (
+            4 if op in ('I2F','FADD','FMUL','DIV','SQRT','LDEXP','BITCAST_U','BITCAST_F') or op.startswith('FCMP')
+            else max((width[r] for r in args),default=4))
+        reads=sum(ceil(sizes[r],512) for r in args)+(ceil(n*w,512) if op=='LOAD' else 0)
+        expected_units=[1,reads*16,reads,sum(ceil(min(128,n)*width[r],512) for r in args),1,1,
+                        ceil(min(128,n)*w,512),1,1,ceil(min(128,n)*w,32),1]
+        expected_phases=['admit','provider_read_capture_and_reverse_grant','provider_route','RF_operand_reads_2R',
+            'consume','native_issue','RF_two_mirror_visible_ACK','possible_partial_destination_sector_read',
+            'possible_partial_destination_RMW_merge','workspace_commit_visible_and_reverse_grant','retire']
+        if [p['units'] for p in stage['phases']]!=expected_units or [p['phase'] for p in stage['phases']]!=expected_phases:
+            raise ValueError('native provider read/write/native repetition obligations mismatch')
+        expected_costs=['admit','HBM_sector_read','route_fragment512','RF_read_vector','consume','native_batch',
+            'RF_mirrored_write_ACK','HBM_sector_read','RMW_merge','HBM_sector_write','retire']
+        if [p['cost'] for p in stage['phases']]!=expected_costs:raise ValueError('native service cost reference mismatch')
+        if stage['start']!=tick or stage['stage']!=index or stage['repetitions']!=repeats or stage['scalar_elements']!=n:
+            raise ValueError('native issue/repetition/source order mismatch')
+        for ref in node['src']:
+            if ref not in definitions or stage['source_homes'][ref]!=definitions[ref] or last[ref]<index:
+                raise ValueError('native source lease/generation mismatch')
+        for phase in stage['phases']:
+            cost=positive(calendar['explicit_provisional_costs'][phase['cost']],phase['cost'])
+            if type(phase['units']) is not int or phase['units']<0 or phase['start']!=cursor:
+                raise ValueError('native service phase order/capacity')
+            cursor+=phase['units']*cost
+            if phase['end']!=cursor:raise ValueError('native service phase cost mismatch')
+        if stage['batch_stride']!=cursor or stage['end']!=tick+cursor*repeats:
+            raise ValueError('native repeated interval cost mismatch')
+        if stage['RF_frame_vectors_upper']>32 or stage['resources_per_batch']!=dict(RF_read_ports=2,RF_write_ports=1,
+            RF_mirrors=2,provider_tag=1,request_queue=1,write_residence=1,rank_route_credit=1,SM_issue_credit=1):
+            raise ValueError('finite SM/provider capacity mismatch')
+        home=stage['destination_home'];address=home['offset'];size=home['reserved_bytes']
+        generations[address]+=1
+        if home['generation']!=generations[address]:raise ValueError('native write reuse generation mismatch')
+        if stage['semantic_bits']!=w*8 or home['typed_bytes']!=n*w:
+            raise ValueError('native semantic word width/storage mismatch')
+        if address<0 or address%512 or size%512 or size<=0 or address+size>calendar['workspace']['bytes']:
+            raise ValueError('native workspace extent overrun')
+        if home['release_after_stage']!=last.get(node['dst'],index):raise ValueError('premature source write reuse')
+        for birth,retire,lo,hi in groups['workspace']:
+            if retire>=index and address<hi and lo<address+size:raise ValueError('native live workspace alias')
+        groups['workspace'].append((index,home['release_after_stage'],address,address+size))
+        definitions[node['dst']]=home;width[node['dst']]=w;sizes[node['dst']]=n*w
+        tick=stage['end'];counts[node['op']]+=n;batches[node['op']]+=repeats
+    if dict(counts)!=calendar['primitive_scalars'] or dict(batches)!=calendar['primitive_batches128'] or tick!=calendar['software_ticks']:
+        raise ValueError('native stage primitive count/total cost mismatch')
+    return {'status':'PASS_ORDERED_SOURCE_STAGE_PORT_CREDIT_LIFETIME_AND_COST_PROOF','source_stages':len(calendar['stages']),
+        'primitive_batches128':sum(batches.values()),'native_RTL_cost_credit':False,'physical_workspace_admission':False,
+        'payload_executed':False,'transport_scope':calendar['transport_scope']}
+
+
 class AddressedTileByteBackend:
     """Immutable byte requests use R21 real finite ownership and backing.
 
@@ -2075,7 +2254,38 @@ def main():
     ap.add_argument('--target', choices=('Qwen', 'DeepSeek'), action='append')
     ap.add_argument('--bounded-provider-join', type=Path)
     ap.add_argument('--bounded-layers', type=int, default=36)
+    ap.add_argument('--ds-native-stage-calendar', type=Path)
+    ap.add_argument('--ds-stage-bindings', type=Path)
+    ap.add_argument('--ds-stage-workspace', type=Path)
+    ap.add_argument('--ds-stage-rank', type=int, default=0)
     args = ap.parse_args()
+    if args.ds_native_stage_calendar:
+        if args.ds_stage_bindings is None:raise ValueError('native source provider bindings required')
+        program=read_json(args.ds_native_stage_calendar);bindings=read_json(args.ds_stage_bindings)
+        workspace=read_json(args.ds_stage_workspace) if args.ds_stage_workspace else None
+        result=compile_ssa_finite_sm_services(program,rank=args.ds_stage_rank,provider_bindings=bindings,workspace=workspace)
+        proof=verify_ssa_finite_sm_services(result,program) if result['status'].startswith('PASS') else {'status':result['status']}
+        manifest={'schema':'H3_ORDERED_NATIVE_SM_STAGE_CALENDAR_V1',
+            'source_sha256':{str(p.relative_to(ROOT)) if p.is_absolute() and p.is_relative_to(ROOT) else str(p):hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in [args.ds_native_stage_calendar,args.ds_stage_bindings,Path(__file__)]},
+            'status':result['status'],'proof':proof,'CPU_primitive_as_RTL_credit':False,'hardware_clock_admission':False,
+            'scope':'ordered native stage/relative workspace/finite issue template; no payload or hardware execution'}
+        if args.ds_stage_workspace:
+            path=args.ds_stage_workspace
+            name=str(path.relative_to(ROOT)) if path.is_absolute() and path.is_relative_to(ROOT) else str(path)
+            manifest['source_sha256'][name]=hashlib.sha256(path.read_bytes()).hexdigest()
+        raw=gzip.compress(encode(result),mtime=0);manifest['calendar_sha256']=hashlib.sha256(raw).hexdigest()
+        if args.verify:
+            if (args.out/'native_stage_calendar.json.gz').read_bytes()!=raw or read_json(args.out/'manifest.json')!=manifest or read_json(args.out/'proof.json')!=proof:
+                raise ValueError('native stage/source-pin calendar replay mismatch')
+        else:
+            args.out.mkdir(parents=True,exist_ok=False)
+            (args.out/'native_stage_calendar.json.gz').write_bytes(raw)
+            (args.out/'manifest.json').write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n')
+            (args.out/'proof.json').write_text(json.dumps(proof,indent=2,sort_keys=True)+'\n')
+        print(json.dumps({'status':'PASS_SOURCE_PINNED_NATIVE_SM_STAGE_REPLAY' if args.verify else result['status'],
+                          'proof':proof,'hardware_clock_admission':False}))
+        return
     if args.bounded_provider_join:
         return run_bounded_provider_join(args.bounded_provider_join,args.out,layers=args.bounded_layers,verify=args.verify)
     providers = read_json(args.qwen_providers) if args.qwen_providers else None

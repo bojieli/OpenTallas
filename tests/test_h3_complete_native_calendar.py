@@ -12,6 +12,49 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_ordered_native_SM_services_reject_alias_missing_read_and_RTL_credit(self):
+        p={'providers':{'input':{'shape':[256],'dtype':'F32'}},'code':[
+            {'op':'LOAD','dst':'x','src':[],'shape':[256],'attrs':{'name':'input','dtype':'F32'}},
+            {'op':'FADD','dst':'y','src':['x','x'],'shape':[256],'attrs':{}},
+            {'op':'FMUL','dst':'z','src':['y','x'],'shape':[256],'attrs':{}}], 'outputs':{'out':'z'}}
+        binding={'input':{'kind':'versioned_operand','version':'source.x'}}
+        r=c.compile_ssa_finite_sm_services(p,rank=0,provider_bindings=binding)
+        self.assertEqual(c.verify_ssa_finite_sm_services(r,p)['source_stages'],3)
+        self.assertEqual(r['stages'][1]['repetitions'],2)
+        self.assertFalse(r['hardware_or_clock_admission']);self.assertEqual(len(r['constrained_extent_successor_demand']),1)
+        bad=copy.deepcopy(r);bad['stages'][1]['destination_home']['offset']=0
+        bad['stages'][1]['destination_home']['generation']=2
+        with self.assertRaisesRegex(ValueError,'workspace alias'):c.verify_ssa_finite_sm_services(bad,p)
+        bad=copy.deepcopy(r);bad['stages'][1]['phases'][1]['units']=0
+        with self.assertRaisesRegex(ValueError,'obligations mismatch'):c.verify_ssa_finite_sm_services(bad,p)
+        bad=copy.deepcopy(r);bad['hardware_or_clock_admission']=True
+        with self.assertRaisesRegex(ValueError,'cannot qualify RTL'):c.verify_ssa_finite_sm_services(bad,p)
+        with self.assertRaisesRegex(ValueError,'provider live alias'):
+            c.compile_ssa_finite_sm_services(p,rank=0,provider_bindings=binding,
+                workspace={'AW':27,'base':0,'bytes':33554432,'occupied_extents':[{'base':0,'bytes':512}]})
+
+    def test_native_workspace_exhaustion_returns_precise_successor(self):
+        p={'providers':{'input':{'shape':[4194305],'dtype':'I64'}},'code':[
+            {'op':'LOAD','dst':'x','src':[],'shape':[4194305],'attrs':{'name':'input','dtype':'I64'}}],
+           'outputs':{'out':'x'}}
+        r=c.compile_ssa_finite_sm_services(p,rank=0,provider_bindings={'input':{'kind':'versioned_operand','version':'x'}})
+        self.assertEqual(r['status'],'CONSTRAINED_NATIVE_WORKSPACE_SUCCESSOR_REQUIRED')
+        self.assertEqual(r['requested_definition_bytes'],33554944)
+        self.assertEqual(r['largest_free_span_bytes'],33554432)
+        self.assertEqual(r['source_order_stages_completed'],0)
+
+    def test_actual_PC127_ordered_SM_issue_and_workspace_lifetimes(self):
+        base=ROOT/c.OUT/'ds_finite_sm_services_fd722'
+        program=c.read_json(base/'PC127_rank0_template.json.gz')
+        bindings=c.read_json(base/'PC127_rank0_provider_bindings.json')
+        r=c.compile_ssa_finite_sm_services(program,rank=0,provider_bindings=bindings)
+        proof=c.verify_ssa_finite_sm_services(r,program)
+        self.assertEqual(proof['source_stages'],3999)
+        self.assertEqual(sum(r['primitive_scalars'].values()),152178060)
+        self.assertEqual(proof['primitive_batches128'],1189792)
+        self.assertLessEqual(r['workspace_peak_bytes'],33554432)
+        self.assertFalse(r['payload_executed']);self.assertFalse(proof['native_RTL_cost_credit'])
+
     def bounded_fixture(self, layers=1):
         base=ROOT / c.OUT / 'bounded_provider_milestone'
         N,K=c.load_bounded_provider_sources(base)
