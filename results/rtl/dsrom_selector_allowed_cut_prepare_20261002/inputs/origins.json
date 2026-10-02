@@ -1,0 +1,32 @@
+{
+  "asap7sc7p5t_INVBUF_RVT_TT_201020.v": {
+    "role": "Installed functional cell source only; no TT or SSFF timing credit; primitive backend compatibility unverified",
+    "sha256": "8804a647af1e2161c13fffcaef9ec50786494534872ec50adaae593967a3b459",
+    "source": "/tmp/opentallas-topk-existing-grt-extraction-20261002/runtime/OpenROAD-flow-scripts/flow/platforms/asap7/verilog/stdcell/asap7sc7p5t_INVBUF_RVT_TT_201020.v"
+  },
+  "asap7sc7p5t_SEQ_RVT_TT_220101.v": {
+    "role": "Installed functional cell source only; no TT or SSFF timing credit; primitive backend compatibility unverified",
+    "sha256": "6e63ff4b5587097a76bf395c6f2383035368d5c8d95dbf551ba324d3a9537fde",
+    "source": "/tmp/opentallas-topk-existing-grt-extraction-20261002/runtime/OpenROAD-flow-scripts/flow/platforms/asap7/verilog/stdcell/asap7sc7p5t_SEQ_RVT_TT_220101.v"
+  },
+  "asap7sc7p5t_SIMPLE_RVT_TT_201020.v": {
+    "role": "Installed functional cell source only; no TT or SSFF timing credit; primitive backend compatibility unverified",
+    "sha256": "849946d9b648ef58f39a97027de5e7f24051f6ef4fded598dec861e3257ea4b6",
+    "source": "/tmp/opentallas-topk-existing-grt-extraction-20261002/runtime/OpenROAD-flow-scripts/flow/platforms/asap7/verilog/stdcell/asap7sc7p5t_SIMPLE_RVT_TT_201020.v"
+  },
+  "capture_timing_FAIL.json": {
+    "commit": "e899350628dcef8ebfa55e7f398cb74d37839337",
+    "path": "results/uarch/dsrom_I66_capture_timing_20261002/model.json",
+    "sha256": "623083079d641b135cc38993366a86c48acf1de36ea53c1cd57a43f5f632e973"
+  },
+  "capture_timing_handoff.json": {
+    "commit": "e899350628dcef8ebfa55e7f398cb74d37839337",
+    "path": "results/uarch/dsrom_I66_capture_timing_20261002/handoff.json",
+    "sha256": "f29349a19c23d34e876bb6c0ca719aedcc29062ca9609c16b2cc3d8dd193bc3a"
+  },
+  "current_parent_spatial.json": {
+    "commit": "fa7b2986f38ff39b861c52a9b4797759e1794578",
+    "path": "results/uarch/dsrom_I66_current_spatial_envelope_20261002/model.json",
+    "sha256": "eebb56659db011baaf90c27e4d720d590082ec6ce44fc2e0866c1ca187a3f448"
+  }
+}
