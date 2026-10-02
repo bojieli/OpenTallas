@@ -1,0 +1,227 @@
+{
+  "schema": "opentallas.window.actual_QDQ8_connected_precompile_handoff.v1",
+  "verdict": "MODEL_AND_FIXTURE_PREPARED_NO_COMPILE_PENDING_PARENT_REVIEW_GO",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "model_sha256": "15abcb790be63779ce554e82236a8889d9a5dc6798c8e18e017275e3daf08390",
+  "file_manifest_sha256": "2a4dc638101e9663fbebebee0ebf242dead5fb03225e31d35f1abcac2fc97eac",
+  "tool_sha256": "56663858ff833bac48e6ad724848e6075d08bcaae68c2df92da76e55cd08ab89",
+  "fixture_sha256": {
+    "rtl/test/w17_window_qdq8_connected/tb.sv": "4ed65a029a19555080d62c3ec0f02f1a622b1986875e3c04be06202265a19edb",
+    "rtl/test/w17_window_qdq8_connected/transport_body.svh": "f0c3c91d866907ee1d418d8c7dec05052a70896335e1204515127fe6e836ec51"
+  },
+  "test_sha256": "82f56eb0dec579e333125a29ae90ba5535fe399682833551867c75815f374bea",
+  "prepared_path": "/tmp/window-qdq8-connected-prepared-20261002-r2",
+  "prior_actual_arithmetic_PASS_commit": "c03f2942070f834d7772bbc403fa8d88e0a64a58",
+  "prior_single_run_evidence": "results/rtl/w17_window_qdq8_arithmetic_single_run_20261002",
+  "prior_source_model_FAIL_records_untouched": true,
+  "all_originals_byteidentical": true,
+  "no_new_RTL_compile_or_runtime": true,
+  "tests": "6 PASS: before-fixturepredictionidentity, oneactualQE+32WRintents,naturalwrap/ownerisolation,perPC/returnconservation,scale-last/visibility,unchangedtransport/directQEcapture/noepochforce",
+  "negative": "Original matcher failure and corrected matcher explanation retained in results/uarch/w17_window_qdq8_connected_model_checks_20261002. No model/bench changed to match an RTL result; no runtime has occurred.",
+  "first_READ_columns": {
+    "retain0": {
+      "kind": "column",
+      "cycle": 938,
+      "pc": 0,
+      "tcol_ps": 937375,
+      "address": 262144,
+      "tag": 65568,
+      "we": false
+    },
+    "retain1": {
+      "kind": "column",
+      "cycle": 939,
+      "pc": 0,
+      "tcol_ps": 938375,
+      "address": 262144,
+      "tag": 65568,
+      "we": false
+    }
+  },
+  "conditional_first_pair_cost": {
+    "retain0": {
+      "QE_accept_to_QK_stage": 21061,
+      "QE_accept_to_QK_lifecycle_done": 21192,
+      "QE_accept_to_PV_lifecycle_done": 41580,
+      "QK_refill_counter": 20454,
+      "PV_refill_counter": 20255,
+      "clock_model_ps": 1000,
+      "full_token_rate": null
+    },
+    "retain1": {
+      "QE_accept_to_QK_stage": 21061,
+      "QE_accept_to_QK_lifecycle_done": 21192,
+      "QE_accept_to_PV_lifecycle_done": 21326,
+      "QK_refill_counter": 20453,
+      "PV_refill_counter": 0,
+      "clock_model_ps": 1000,
+      "full_token_rate": null
+    }
+  },
+  "model_cases": {
+    "retain0": {
+      "pairs": 3,
+      "descriptors": 6,
+      "cold_rows": 768,
+      "read_requests": 13056,
+      "last_write_ack": 905,
+      "last_WRcolumn_ps": 904000,
+      "final_scale_visible_ps": 911274,
+      "starts": [
+        906,
+        21493,
+        41881,
+        61780,
+        81708,
+        101641
+      ],
+      "staged_samples": [
+        21361,
+        41749,
+        61648,
+        81576,
+        101509,
+        121844
+      ],
+      "lifecycle_done_samples": [
+        21492,
+        41880,
+        61779,
+        81707,
+        101640,
+        121975
+      ],
+      "refill_counters": [
+        20454,
+        20255,
+        19766,
+        19795,
+        19800,
+        20202
+      ],
+      "final_epoch": 256,
+      "epoch_wrap_request": {
+        "kind": "request",
+        "cycle": 81447,
+        "pc": 11,
+        "address": 264303,
+        "tag": 65536,
+        "we": false,
+        "strobe": 0,
+        "row": 127,
+        "sector": 0,
+        "epoch": 0,
+        "op": 3
+      },
+      "first_postwrap_request": {
+        "kind": "request",
+        "cycle": 81710,
+        "pc": 0,
+        "address": 262144,
+        "tag": 65568,
+        "we": false,
+        "strobe": 0,
+        "row": 0,
+        "sector": 0,
+        "epoch": 1,
+        "op": 4
+      }
+    },
+    "retain1": {
+      "pairs": 5,
+      "descriptors": 10,
+      "cold_rows": 640,
+      "read_requests": 10880,
+      "last_write_ack": 905,
+      "last_WRcolumn_ps": 904000,
+      "final_scale_visible_ps": 911274,
+      "starts": [
+        906,
+        21493,
+        21627,
+        41982,
+        42116,
+        62208,
+        62342,
+        82388,
+        82522,
+        102586
+      ],
+      "staged_samples": [
+        21361,
+        21495,
+        41850,
+        41984,
+        62076,
+        62210,
+        82256,
+        82390,
+        102454,
+        102588
+      ],
+      "lifecycle_done_samples": [
+        21492,
+        21626,
+        41981,
+        42115,
+        62207,
+        62341,
+        82387,
+        82521,
+        102585,
+        102719
+      ],
+      "refill_counters": [
+        20453,
+        0,
+        20221,
+        0,
+        19958,
+        0,
+        19912,
+        0,
+        19930,
+        0
+      ],
+      "final_epoch": 128,
+      "epoch_wrap_request": {
+        "kind": "request",
+        "cycle": 81976,
+        "pc": 11,
+        "address": 264303,
+        "tag": 65536,
+        "we": false,
+        "strobe": 0,
+        "row": 127,
+        "sector": 0,
+        "epoch": 0,
+        "op": 6
+      },
+      "first_postwrap_request": {
+        "kind": "request",
+        "cycle": 82525,
+        "pc": 0,
+        "address": 262144,
+        "tag": 65568,
+        "we": false,
+        "strobe": 0,
+        "row": 0,
+        "sector": 0,
+        "epoch": 1,
+        "op": 8
+      }
+    }
+  },
+  "source_census": {
+    "snapshot_files": 26,
+    "source_bytes": 233996,
+    "full_QE_dormant_blockdot": 16,
+    "chunk_adders": 96,
+    "backend_capacity_sectors": 264320,
+    "generated_compile_footprint_unknown": true,
+    "cost_reference": "Previous QE-only measured18.78s compile/956096512 aggregate peak and165788101 generatedbytes; transport-only17s prior compile. Combined compile size/time not inferred as measured sum. Strict aggregate caps/no fallback apply."
+  },
+  "future_budget": "Two parameter elaborations (retain0/1) share total150s compile budget;two5s runtimes total10s;20s supervisionreserve;one180s cgrouphardstop,2CPU,4GiBaggregate,swap0,file256MiB. Requires separately reviewed runner and explicit parent GO; no execution authorized by this preparation.",
+  "scope": "First QK/PV pair connects actual512 QE code/scale/BF16/provenance to32sourcewrites and real128x17owner-mux/KARB/backend/lifecycle. Remaining drained pairs are explicit descriptorstress for naturalepochwrap, not actualcoreprogram/fulltoken/across-token cache or physicalrecovery proof. Engine consumption remains32beat stub; no QK/PV numericalattention claim.",
+  "next_cheapest_gate": "Parent independently review source composition/predictions/oracle+snapshot. Then prepare/review GO-bound shared-budget runner before any connected compile/run."
+}
