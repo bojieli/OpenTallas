@@ -1,0 +1,262 @@
+{
+  "RTL_PR_or_mapping_reemit_jobs": 0,
+  "VMread_contract": "Exactly one accepted indexed VM request; stalls do not count as acceptance. Match response lease/generation; check all32 EID bits range0..383 BEFORE multiply/CAM; wide key overflow checked. Cancellation quarantines that actual read, never rereads.",
+  "area_and_finite_timing_unpriced_not_zero": true,
+  "calendar_cost_equation": "GO_accept >= max(XN_visible, selected_EID_checked, phase_key_match, cfg_all_words_act_visible) + registered_endpoint_accept_delay; completion additionally requires positive code/scale/ECC/root/consumer costs.",
+  "cfg_ECC_interface": {
+    "consumer_delivery": [
+      "c_a[4:0]",
+      "c_d[47:0]",
+      "c_v_aligned_to_good_terminal"
+    ],
+    "decoder_terminal": [
+      "decoded_payload48",
+      "good_or_corrected",
+      "uncorrectable_cfgfault",
+      "word_identity"
+    ],
+    "fault_rule": "No act/go authorization from poison, stale, duplicate, mismatched, missing or reset-era returns; cfgfault must be separately surfaced and held through owner drain.",
+    "final_fence": "All25 words delivered to element with actual last-word/act visibility before go_e; no timer or generic c_v as causal hard-provider completion.",
+    "macro_command": [
+      "clk",
+      "onehot_slice_ce_in[7]",
+      "addr_in[11:0]"
+    ],
+    "macro_return": [
+      "rd_out[7][71:0]",
+      "selected_slice_identity",
+      "capture_valid"
+    ],
+    "ports_generation_ready_and_fault_plumbing_not_implemented": true,
+    "request_identity": [
+      "pair",
+      "phase",
+      "word_index",
+      "logical_address",
+      "reset_or_lease_generation"
+    ]
+  },
+  "cfg_calendar": {
+    "SECDED7_mapping_proposal_not_qualified": true,
+    "accepted_per_phase_word_deliveries": 102400,
+    "act_fence": "Actual word25/class-valid visibility under matching owner before ARM; source c_v/27cycles is not ACK.",
+    "all_padding_and_default_words_charged": true,
+    "compiled_pairs": 4096,
+    "macro_bits": 72,
+    "no_fixed_physical_II_or_latency_credit": true,
+    "payload_bits": 48,
+    "receipt_fields": [
+      "command_edge",
+      "capture_accepted",
+      "capture_edge",
+      "ECC_good_or_corrected",
+      "uncorrectable",
+      "ECC_terminal_edge",
+      "consumer_delivery_accepted",
+      "delivery_edge"
+    ],
+    "registered_GO": "ARM reserves endpoint credit at edgeE; registered s_go accepted at a later edge>=E+1 under the SAME ready-held owner. Cancellation before acceptance kills GO; after acceptance retains poison lease through result/cfg/VM drain.",
+    "request_key": [
+      "owner",
+      "pair",
+      "phase",
+      "word_index",
+      "logical_address"
+    ],
+    "words_per_pair": 25
+  },
+  "default": false,
+  "extra_area_and_route_terms": [
+    "unsigned32_range_compare",
+    "wide_key_overflow_guard",
+    "producer-version/owner lease",
+    "cfg/ECC terminal fence and poison/drain bookkeeping",
+    "registered_GO credit/cancel guard"
+  ],
+  "finite_BF16_encoding_identity_count": 65536,
+  "full_token_or_physical_admission": false,
+  "generator_sha256": "4fa42a8d3b4c63e27a0a72081990d1d23f1111b0c5a1bfbf918e79c89a0d324a",
+  "head_input_certificate_only": true,
+  "head_provider_argmax_and_order_still_unbound": true,
+  "includes_nonfinite_encoding_bit_identity_but_not_numerical_stability_qualification": true,
+  "native_VM_provider_accept_and_response_tags_unimplemented": true,
+  "native_m_ok_and_original_words_unchanged": true,
+  "opt_in_parameter": "MODEL_NATIVE_ENTRY_GUARD",
+  "original_seven_native_FAIL_receipts_unchanged": true,
+  "owner_interface": [
+    "node_id",
+    "rank",
+    "stage",
+    "phase",
+    "matrix_journal_ordinal",
+    "source_key",
+    "reset_generation",
+    "lease_id",
+    "producer_XN_version",
+    "producer_visibility_receipt",
+    "selector_VM_address",
+    "accepted_VM_request_id",
+    "selected_unsigned32_EID"
+  ],
+  "owner_tag_hardware_widths_not_fabricated": true,
+  "positive_calendar_terms": [
+    "XN_producer_visible",
+    "accepted_EID_VMread_response",
+    "range_and_wide_key_check",
+    "matching_CAM_phase",
+    "cfg_macro_capture_ECC_delivery_all25word_fence",
+    "registered_GO_accept",
+    "code_scale_ECC_field",
+    "root_consumer_visible_and_drain"
+  ],
+  "producer_certificates": [
+    {
+      "all_reduction_arithmetic_order_qualification_transferred": false,
+      "consumer": "L2.I24",
+      "consumer_word_sha256": "8419146f921c712931f227b3155e8b0696ba6e066fd6aa577fb3b86ac32bcfa4",
+      "dedicated_head_unbound": false,
+      "input_rounding_obligation": "BF16 identity only, contingent on this producer version visible at all accepted reads",
+      "original_me_round": 0,
+      "output_s_fmt": 1,
+      "producer": "L2.I6",
+      "producer_VM_base": 46464,
+      "producer_elements": 5120,
+      "producer_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+    },
+    {
+      "all_reduction_arithmetic_order_qualification_transferred": false,
+      "consumer": "L2.I25",
+      "consumer_word_sha256": "85f5587568dfacc3e0d1adc06c5fdf0cff0e7735054e3b5faed2bc2032ca0924",
+      "dedicated_head_unbound": false,
+      "input_rounding_obligation": "BF16 identity only, contingent on this producer version visible at all accepted reads",
+      "original_me_round": 0,
+      "output_s_fmt": 1,
+      "producer": "L2.I6",
+      "producer_VM_base": 46464,
+      "producer_elements": 5120,
+      "producer_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+    },
+    {
+      "all_reduction_arithmetic_order_qualification_transferred": false,
+      "consumer": "L8.I24",
+      "consumer_word_sha256": "8419146f921c712931f227b3155e8b0696ba6e066fd6aa577fb3b86ac32bcfa4",
+      "dedicated_head_unbound": false,
+      "input_rounding_obligation": "BF16 identity only, contingent on this producer version visible at all accepted reads",
+      "original_me_round": 0,
+      "output_s_fmt": 1,
+      "producer": "L8.I6",
+      "producer_VM_base": 46464,
+      "producer_elements": 5120,
+      "producer_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+    },
+    {
+      "all_reduction_arithmetic_order_qualification_transferred": false,
+      "consumer": "L8.I25",
+      "consumer_word_sha256": "85f5587568dfacc3e0d1adc06c5fdf0cff0e7735054e3b5faed2bc2032ca0924",
+      "dedicated_head_unbound": false,
+      "input_rounding_obligation": "BF16 identity only, contingent on this producer version visible at all accepted reads",
+      "original_me_round": 0,
+      "output_s_fmt": 1,
+      "producer": "L8.I6",
+      "producer_VM_base": 46464,
+      "producer_elements": 5120,
+      "producer_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+    },
+    {
+      "all_reduction_arithmetic_order_qualification_transferred": false,
+      "consumer": "L14.I34",
+      "consumer_word_sha256": "8419146f921c712931f227b3155e8b0696ba6e066fd6aa577fb3b86ac32bcfa4",
+      "dedicated_head_unbound": false,
+      "input_rounding_obligation": "BF16 identity only, contingent on this producer version visible at all accepted reads",
+      "original_me_round": 0,
+      "output_s_fmt": 1,
+      "producer": "L14.I16",
+      "producer_VM_base": 46464,
+      "producer_elements": 5120,
+      "producer_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+    },
+    {
+      "all_reduction_arithmetic_order_qualification_transferred": false,
+      "consumer": "L14.I35",
+      "consumer_word_sha256": "85f5587568dfacc3e0d1adc06c5fdf0cff0e7735054e3b5faed2bc2032ca0924",
+      "dedicated_head_unbound": false,
+      "input_rounding_obligation": "BF16 identity only, contingent on this producer version visible at all accepted reads",
+      "original_me_round": 0,
+      "output_s_fmt": 1,
+      "producer": "L14.I16",
+      "producer_VM_base": 46464,
+      "producer_elements": 5120,
+      "producer_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+    },
+    {
+      "all_reduction_arithmetic_order_qualification_transferred": false,
+      "consumer": "Lhead.I5",
+      "consumer_word_sha256": "538880fc83d0f30a93a0ab7926f5c39c028734371c249c47a014bb969a85b473",
+      "dedicated_head_unbound": true,
+      "input_rounding_obligation": "BF16 identity only, contingent on this producer version visible at all accepted reads",
+      "original_me_round": 0,
+      "output_s_fmt": 1,
+      "producer": "Lhead.I4",
+      "producer_VM_base": 46464,
+      "producer_elements": 5120,
+      "producer_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+    }
+  ],
+  "program_source": "results/uarch/dsrom_full_product_binding_20261002/demand-r7.json.gz",
+  "program_source_sha256": "05bb31089f9dd8c140642dfb88b031c453ed9514e8efb108b2257fff430d0355",
+  "reduction_order_and_full_bitexactness_admission": false,
+  "schema": "opentallas.dsrom.native-entry-default-off-spec.v1",
+  "six_compressor_input_round_obligations_conditionally_resolved": true,
+  "source_manifest": [
+    {
+      "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+      "path": "tools/hdc_program_v41.py",
+      "sha256": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+      "snapshot": "program_semantics.py"
+    },
+    {
+      "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+      "path": "tools/hdc_golden.py",
+      "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "snapshot": "golden_bits.py"
+    },
+    {
+      "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+      "path": "rtl/v41die/ot_v41_rom_adapt.sv",
+      "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f",
+      "snapshot": "native_adapter.sv"
+    },
+    {
+      "commit": "f6073fffddebb24b0c6dc8bbea17440c6c10dbf4",
+      "path": "results/uarch/dsrom_full_product_binding_20261002/inputs/provider_first_622/cfg_interface.json",
+      "sha256": "4a610084dc95fc45fc7f87bd4fc1962f496f93b316e22fc78b324310831e3eb1",
+      "snapshot": "cfg_interface.json"
+    }
+  ],
+  "source_pins": [
+    {
+      "sha256": "0739008444487cda99481091d5ca1f031123365ad367981fb43aa290995a2660",
+      "snapshot": "manifest.json"
+    },
+    {
+      "sha256": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+      "snapshot": "program_semantics.py"
+    },
+    {
+      "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "snapshot": "golden_bits.py"
+    },
+    {
+      "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f",
+      "snapshot": "native_adapter.sv"
+    },
+    {
+      "sha256": "4a610084dc95fc45fc7f87bd4fc1962f496f93b316e22fc78b324310831e3eb1",
+      "snapshot": "cfg_interface.json"
+    },
+    {
+      "sha256": "6efb31a2fcf4913dc450db52ce8f202a3e82da8cbec4fbec69528ee5bbdbdb7a",
+      "snapshot": "phase_producers.json"
+    }
+  ]
+}

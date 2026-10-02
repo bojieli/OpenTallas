@@ -1,0 +1,26 @@
+[
+  {
+    "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+    "path": "tools/hdc_program_v41.py",
+    "sha256": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+    "snapshot": "program_semantics.py"
+  },
+  {
+    "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+    "path": "tools/hdc_golden.py",
+    "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "snapshot": "golden_bits.py"
+  },
+  {
+    "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+    "path": "rtl/v41die/ot_v41_rom_adapt.sv",
+    "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f",
+    "snapshot": "native_adapter.sv"
+  },
+  {
+    "commit": "f6073fffddebb24b0c6dc8bbea17440c6c10dbf4",
+    "path": "results/uarch/dsrom_full_product_binding_20261002/inputs/provider_first_622/cfg_interface.json",
+    "sha256": "4a610084dc95fc45fc7f87bd4fc1962f496f93b316e22fc78b324310831e3eb1",
+    "snapshot": "cfg_interface.json"
+  }
+]

@@ -1,0 +1,533 @@
+{
+  "proofs": [
+    {
+      "consumer": {
+        "id": "L2.I24",
+        "instruction": {
+          "_macs": 655360,
+          "_reads": [
+            "XN"
+          ],
+          "_tag": "L2.compressor.kv_projection",
+          "_writes": [
+            "CP_KVL"
+          ],
+          "me_js": 1,
+          "me_k": 1280,
+          "me_ks": 8,
+          "me_nout": 128,
+          "me_obase": 30428,
+          "me_oen": 1,
+          "me_ojs": 1,
+          "me_ots": 8,
+          "me_round": 0,
+          "me_split": 2,
+          "me_tiles": 1,
+          "me_ts": 10240,
+          "me_wbase": 0,
+          "me_wsrc": 0,
+          "me_xbase": 46464,
+          "me_xcs": 1280,
+          "me_xks": 1,
+          "unit": 1,
+          "wait": 0
+        },
+        "instruction_index": 24,
+        "kind": "instruction",
+        "scope": 2,
+        "template_word_sha256": "8419146f921c712931f227b3155e8b0696ba6e066fd6aa577fb3b86ac32bcfa4"
+      },
+      "intervening_XN_writers": [],
+      "producer": {
+        "id": "L2.I6",
+        "instruction": {
+          "_reads": [
+            "RS",
+            "X"
+          ],
+          "_tag": "L2.attn_norm",
+          "_writes": [
+            "XN"
+          ],
+          "a_base": 41344,
+          "a_si": 1,
+          "b_base": 51616,
+          "c_base": 0,
+          "c_si": 1,
+          "c_src": 1,
+          "dst": 1,
+          "e1": 1,
+          "m1": 1,
+          "o_base": 46464,
+          "o_si": 1,
+          "pred": 0,
+          "rnd": 1,
+          "su_chase": 0,
+          "su_nin": 5120,
+          "su_nout": 1,
+          "su_vec": 1,
+          "unit": 2,
+          "wait": 2
+        },
+        "instruction_index": 6,
+        "kind": "instruction",
+        "scope": 2,
+        "template_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+      }
+    },
+    {
+      "consumer": {
+        "id": "L2.I25",
+        "instruction": {
+          "_macs": 655360,
+          "_reads": [
+            "XN"
+          ],
+          "_tag": "L2.compressor.gate_projection",
+          "_writes": [
+            "CP_SCL"
+          ],
+          "me_js": 1,
+          "me_k": 1280,
+          "me_ks": 8,
+          "me_nout": 128,
+          "me_obase": 30436,
+          "me_oen": 1,
+          "me_ojs": 1,
+          "me_ots": 8,
+          "me_round": 0,
+          "me_split": 2,
+          "me_tiles": 1,
+          "me_ts": 10240,
+          "me_wbase": 0,
+          "me_wsrc": 0,
+          "me_xbase": 46464,
+          "me_xcs": 1280,
+          "me_xks": 1,
+          "unit": 1,
+          "wait": 0
+        },
+        "instruction_index": 25,
+        "kind": "instruction",
+        "scope": 2,
+        "template_word_sha256": "85f5587568dfacc3e0d1adc06c5fdf0cff0e7735054e3b5faed2bc2032ca0924"
+      },
+      "intervening_XN_writers": [],
+      "producer": {
+        "id": "L2.I6",
+        "instruction": {
+          "_reads": [
+            "RS",
+            "X"
+          ],
+          "_tag": "L2.attn_norm",
+          "_writes": [
+            "XN"
+          ],
+          "a_base": 41344,
+          "a_si": 1,
+          "b_base": 51616,
+          "c_base": 0,
+          "c_si": 1,
+          "c_src": 1,
+          "dst": 1,
+          "e1": 1,
+          "m1": 1,
+          "o_base": 46464,
+          "o_si": 1,
+          "pred": 0,
+          "rnd": 1,
+          "su_chase": 0,
+          "su_nin": 5120,
+          "su_nout": 1,
+          "su_vec": 1,
+          "unit": 2,
+          "wait": 2
+        },
+        "instruction_index": 6,
+        "kind": "instruction",
+        "scope": 2,
+        "template_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+      }
+    },
+    {
+      "consumer": {
+        "id": "L8.I24",
+        "instruction": {
+          "_macs": 655360,
+          "_reads": [
+            "XN"
+          ],
+          "_tag": "L8.compressor.kv_projection",
+          "_writes": [
+            "CP_KVL"
+          ],
+          "me_js": 1,
+          "me_k": 1280,
+          "me_ks": 8,
+          "me_nout": 128,
+          "me_obase": 30428,
+          "me_oen": 1,
+          "me_ojs": 1,
+          "me_ots": 8,
+          "me_round": 0,
+          "me_split": 2,
+          "me_tiles": 1,
+          "me_ts": 10240,
+          "me_wbase": 0,
+          "me_wsrc": 0,
+          "me_xbase": 46464,
+          "me_xcs": 1280,
+          "me_xks": 1,
+          "unit": 1,
+          "wait": 0
+        },
+        "instruction_index": 24,
+        "kind": "instruction",
+        "scope": 8,
+        "template_word_sha256": "8419146f921c712931f227b3155e8b0696ba6e066fd6aa577fb3b86ac32bcfa4"
+      },
+      "intervening_XN_writers": [],
+      "producer": {
+        "id": "L8.I6",
+        "instruction": {
+          "_reads": [
+            "RS",
+            "X"
+          ],
+          "_tag": "L8.attn_norm",
+          "_writes": [
+            "XN"
+          ],
+          "a_base": 41344,
+          "a_si": 1,
+          "b_base": 51616,
+          "c_base": 0,
+          "c_si": 1,
+          "c_src": 1,
+          "dst": 1,
+          "e1": 1,
+          "m1": 1,
+          "o_base": 46464,
+          "o_si": 1,
+          "pred": 0,
+          "rnd": 1,
+          "su_chase": 0,
+          "su_nin": 5120,
+          "su_nout": 1,
+          "su_vec": 1,
+          "unit": 2,
+          "wait": 2
+        },
+        "instruction_index": 6,
+        "kind": "instruction",
+        "scope": 8,
+        "template_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+      }
+    },
+    {
+      "consumer": {
+        "id": "L8.I25",
+        "instruction": {
+          "_macs": 655360,
+          "_reads": [
+            "XN"
+          ],
+          "_tag": "L8.compressor.gate_projection",
+          "_writes": [
+            "CP_SCL"
+          ],
+          "me_js": 1,
+          "me_k": 1280,
+          "me_ks": 8,
+          "me_nout": 128,
+          "me_obase": 30436,
+          "me_oen": 1,
+          "me_ojs": 1,
+          "me_ots": 8,
+          "me_round": 0,
+          "me_split": 2,
+          "me_tiles": 1,
+          "me_ts": 10240,
+          "me_wbase": 0,
+          "me_wsrc": 0,
+          "me_xbase": 46464,
+          "me_xcs": 1280,
+          "me_xks": 1,
+          "unit": 1,
+          "wait": 0
+        },
+        "instruction_index": 25,
+        "kind": "instruction",
+        "scope": 8,
+        "template_word_sha256": "85f5587568dfacc3e0d1adc06c5fdf0cff0e7735054e3b5faed2bc2032ca0924"
+      },
+      "intervening_XN_writers": [],
+      "producer": {
+        "id": "L8.I6",
+        "instruction": {
+          "_reads": [
+            "RS",
+            "X"
+          ],
+          "_tag": "L8.attn_norm",
+          "_writes": [
+            "XN"
+          ],
+          "a_base": 41344,
+          "a_si": 1,
+          "b_base": 51616,
+          "c_base": 0,
+          "c_si": 1,
+          "c_src": 1,
+          "dst": 1,
+          "e1": 1,
+          "m1": 1,
+          "o_base": 46464,
+          "o_si": 1,
+          "pred": 0,
+          "rnd": 1,
+          "su_chase": 0,
+          "su_nin": 5120,
+          "su_nout": 1,
+          "su_vec": 1,
+          "unit": 2,
+          "wait": 2
+        },
+        "instruction_index": 6,
+        "kind": "instruction",
+        "scope": 8,
+        "template_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+      }
+    },
+    {
+      "consumer": {
+        "id": "L14.I34",
+        "instruction": {
+          "_macs": 655360,
+          "_reads": [
+            "XN"
+          ],
+          "_tag": "L14.compressor.kv_projection",
+          "_writes": [
+            "CP_KVL"
+          ],
+          "me_js": 1,
+          "me_k": 1280,
+          "me_ks": 8,
+          "me_nout": 128,
+          "me_obase": 30428,
+          "me_oen": 1,
+          "me_ojs": 1,
+          "me_ots": 8,
+          "me_round": 0,
+          "me_split": 2,
+          "me_tiles": 1,
+          "me_ts": 10240,
+          "me_wbase": 0,
+          "me_wsrc": 0,
+          "me_xbase": 46464,
+          "me_xcs": 1280,
+          "me_xks": 1,
+          "unit": 1,
+          "wait": 0
+        },
+        "instruction_index": 34,
+        "kind": "instruction",
+        "scope": 14,
+        "template_word_sha256": "8419146f921c712931f227b3155e8b0696ba6e066fd6aa577fb3b86ac32bcfa4"
+      },
+      "intervening_XN_writers": [],
+      "producer": {
+        "id": "L14.I16",
+        "instruction": {
+          "_reads": [
+            "RS",
+            "X"
+          ],
+          "_tag": "L14.attn_norm",
+          "_writes": [
+            "XN"
+          ],
+          "a_base": 41344,
+          "a_si": 1,
+          "b_base": 51616,
+          "c_base": 0,
+          "c_si": 1,
+          "c_src": 1,
+          "dst": 1,
+          "e1": 1,
+          "m1": 1,
+          "o_base": 46464,
+          "o_si": 1,
+          "pred": 0,
+          "rnd": 1,
+          "su_chase": 0,
+          "su_nin": 5120,
+          "su_nout": 1,
+          "su_vec": 1,
+          "unit": 2,
+          "wait": 2
+        },
+        "instruction_index": 16,
+        "kind": "instruction",
+        "scope": 14,
+        "template_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+      }
+    },
+    {
+      "consumer": {
+        "id": "L14.I35",
+        "instruction": {
+          "_macs": 655360,
+          "_reads": [
+            "XN"
+          ],
+          "_tag": "L14.compressor.gate_projection",
+          "_writes": [
+            "CP_SCL"
+          ],
+          "me_js": 1,
+          "me_k": 1280,
+          "me_ks": 8,
+          "me_nout": 128,
+          "me_obase": 30436,
+          "me_oen": 1,
+          "me_ojs": 1,
+          "me_ots": 8,
+          "me_round": 0,
+          "me_split": 2,
+          "me_tiles": 1,
+          "me_ts": 10240,
+          "me_wbase": 0,
+          "me_wsrc": 0,
+          "me_xbase": 46464,
+          "me_xcs": 1280,
+          "me_xks": 1,
+          "unit": 1,
+          "wait": 0
+        },
+        "instruction_index": 35,
+        "kind": "instruction",
+        "scope": 14,
+        "template_word_sha256": "85f5587568dfacc3e0d1adc06c5fdf0cff0e7735054e3b5faed2bc2032ca0924"
+      },
+      "intervening_XN_writers": [],
+      "producer": {
+        "id": "L14.I16",
+        "instruction": {
+          "_reads": [
+            "RS",
+            "X"
+          ],
+          "_tag": "L14.attn_norm",
+          "_writes": [
+            "XN"
+          ],
+          "a_base": 41344,
+          "a_si": 1,
+          "b_base": 51616,
+          "c_base": 0,
+          "c_si": 1,
+          "c_src": 1,
+          "dst": 1,
+          "e1": 1,
+          "m1": 1,
+          "o_base": 46464,
+          "o_si": 1,
+          "pred": 0,
+          "rnd": 1,
+          "su_chase": 0,
+          "su_nin": 5120,
+          "su_nout": 1,
+          "su_vec": 1,
+          "unit": 2,
+          "wait": 2
+        },
+        "instruction_index": 16,
+        "kind": "instruction",
+        "scope": 14,
+        "template_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+      }
+    },
+    {
+      "consumer": {
+        "id": "Lhead.I5",
+        "instruction": {
+          "_macs": 165478400,
+          "_reads": [
+            "XN"
+          ],
+          "_tag": "head",
+          "_writes": [
+            "LOGITS"
+          ],
+          "me_amax": 1,
+          "me_js": 1,
+          "me_k": 5120,
+          "me_ks": 8,
+          "me_nout": 32320,
+          "me_obase": 30428,
+          "me_oen": 1,
+          "me_ojs": 1,
+          "me_ots": 8,
+          "me_round": 0,
+          "me_split": 0,
+          "me_tiles": 64,
+          "me_ts": 40960,
+          "me_wbase": 0,
+          "me_wsrc": 0,
+          "me_xbase": 46464,
+          "me_xcs": 5120,
+          "me_xks": 1,
+          "unit": 1,
+          "wait": 2
+        },
+        "instruction_index": 5,
+        "kind": "instruction",
+        "scope": "head",
+        "template_word_sha256": "538880fc83d0f30a93a0ab7926f5c39c028734371c249c47a014bb969a85b473"
+      },
+      "intervening_XN_writers": [],
+      "producer": {
+        "id": "Lhead.I4",
+        "instruction": {
+          "_reads": [
+            "RS",
+            "X"
+          ],
+          "_tag": "head",
+          "_writes": [
+            "XN"
+          ],
+          "a_base": 41344,
+          "a_si": 1,
+          "b_base": 51616,
+          "c_base": 0,
+          "c_si": 1,
+          "c_src": 1,
+          "dst": 1,
+          "e1": 1,
+          "m1": 1,
+          "o_base": 46464,
+          "o_si": 1,
+          "pred": 0,
+          "rnd": 1,
+          "su_chase": 0,
+          "su_nin": 5120,
+          "su_nout": 1,
+          "su_vec": 1,
+          "unit": 2,
+          "wait": 2
+        },
+        "instruction_index": 4,
+        "kind": "instruction",
+        "scope": "head",
+        "template_word_sha256": "9221023d4556e8137e4a3254ddc192ffd714f266694e020f88a2d8f2a3525829"
+      }
+    }
+  ],
+  "source": "results/uarch/dsrom_full_product_binding_20261002/demand-r7.json.gz",
+  "source_functional_sha256": "e923be14667cdaa6b7f0a5bc1589f16193556293b3a195b635267863bc0eb033",
+  "source_sha256": "05bb31089f9dd8c140642dfb88b031c453ed9514e8efb108b2257fff430d0355"
+}
