@@ -70,6 +70,38 @@ class Caps(unittest.TestCase):
     def test_mocked_phase_timeout_archived_without_retry(self):self.fake_run_failure('PHASE_TIMEOUT')
     def test_mocked_output_cap_archived_without_retry(self):self.fake_run_failure('OUTPUT_CAP')
     def test_mocked_nonzero_exit_archived_without_retry(self):self.fake_run_failure('EXIT')
+    def test_mocked_success_all_eight_phase_receipts(self):
+        import contextlib
+        class Proc:
+            pid=99999999
+            returncode=0
+            def poll(self):return 0
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp)/'run';gopath=Path(tmp)/'GO.json';proposalpath=P.OUT/P.PROPOSAL
+            go=dict(schema=R.GO_SCHEMA,admitted=True,source_commit='source',proposal_sha256=R.G.sha(proposalpath),runner_caps=R.CAPS,unit='test.service',admission_record_path='results/GO.json')
+            gopath.write_text(json.dumps(go));proposal=json.loads(proposalpath.read_text())
+            def mock_process(cmd,**kwargs):
+                if cmd[0].endswith('/Vconnected'):
+                    kwargs['stdout'].write(b'CONNECTED_RF_FENCE_PASS\nRESET_RF_FENCE_PASS\n')
+                if '--out' in cmd:
+                    dst=Path(cmd[cmd.index('--out')+1]);q=0 if dst.parent.name=='DS' else 1
+                    dst.write_text(json.dumps({'verdict':'PASS_DIRECTED_CONNECTED_TRACE_ONLY','cases':[{'qwen':q}for _ in range(4)]}))
+                return Proc()
+            with contextlib.ExitStack() as stack:
+                stack.enter_context(patch.object(R.G,'git',side_effect=['source','admitted','']))
+                stack.enter_context(patch.object(R.subprocess,'check_output',return_value=gopath.read_bytes()))
+                stack.enter_context(patch.object(R.P,'prepare',return_value=proposal))
+                stack.enter_context(patch.object(R,'validate_cgroup',return_value={'mocked':True}))
+                stack.enter_context(patch.object(R.resource,'setrlimit'))
+                popen=stack.enter_context(patch.object(R.subprocess,'Popen',side_effect=mock_process))
+                R.execute(proposalpath,gopath,'go',out)
+                self.assertEqual(popen.call_count,8)
+            verdict=json.loads((out/'verdict.json').read_text());self.assertEqual(verdict['verdict'],'PASS_DIRECTED_NATIVE_DS_QWEN_CONNECTED_ONLY')
+            self.assertEqual(len(verdict['phases']),8)
+            for target in ('DS','Qwen'):
+                for phase in ('frontend','CXX','simulation','trace'):
+                    for path in (f'{target}-{phase}-start.json',f'{target}-{phase}-end.json',f'progress-{target}-{phase}.json'):
+                        self.assertTrue((out/path).exists(),path)
     def test_original_verified_runner_unchanged(self):
         self.assertEqual((P.ROOT/'tools/full_sm_rf_verilator_gate.py').read_bytes(),P.blob('b764cc45e57a632a8ea32284dad8ca30ebf8091a','tools/full_sm_rf_verilator_gate.py'))
 if __name__=='__main__':unittest.main(verbosity=2)

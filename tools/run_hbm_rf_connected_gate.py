@@ -122,7 +122,7 @@ def execute(proposal_path,go_path,go_commit,out):
                 v=json.loads((target_dir/'trace_verdict.json').read_text())
                 q=0 if target=='DS' else 1
                 if v['verdict']!='PASS_DIRECTED_CONNECTED_TRACE_ONLY' or len(v['cases'])!=4 or any(c['qwen']!=q for c in v['cases']):raise RuntimeError('actual trace target/verdict mismatch')
-            G.write_new(out/'progress-'+target+'-'+name+'.json',G.json_bytes(receipt))
+            G.write_new(out/f'progress-{target}-{name}.json',G.json_bytes(receipt))
         if G.directory_bytes(out)>CAPS['aggregate_output_bytes']:raise RuntimeError('OUTPUT_CAP final')
         receipt.update(verdict='PASS_DIRECTED_NATIVE_DS_QWEN_CONNECTED_ONLY',connected_measurement=True)
     except Exception as exc:receipt['failure']=str(exc)

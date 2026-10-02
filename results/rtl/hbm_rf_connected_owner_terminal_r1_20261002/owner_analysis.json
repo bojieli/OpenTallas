@@ -1,0 +1,38 @@
+{
+  "DS_frontend_exit_code": 0,
+  "DS_frontend_wall_s": 258.60486893728375,
+  "GO_commit": "858f084a5caaed97f24046e58187d8eee7514adb",
+  "Qwen_not_started": true,
+  "actual_hard_affinity_verified": [
+    24,
+    25,
+    26,
+    27
+  ],
+  "actual_verdict": "FAIL_INCOMPLETE",
+  "connected_measurement": false,
+  "cpu_quota_claim": false,
+  "failure": "unsupported operand type(s) for +: 'PosixPath' and 'str'",
+  "memory_peak_note": "Cgroup removed after terminal; observer samples are lower bounds, not final peak. Parent external monitor retains terminal memory.",
+  "no_CXX_build": true,
+  "no_actual_simulation": true,
+  "no_retry": true,
+  "output_preserved": "/tmp/hbm-native-connected-parent-20261002-r1",
+  "physical_credit": false,
+  "receipt_sha256": {
+    "DS-frontend-end.json": "27438bb7e56904dbd3603064ecadee566dc4c71e085394c9df71c24e51ec3635",
+    "DS-frontend-start.json": "7f5cfc94841631f34c6977bb3312e22e64a0892bdbadd53fcb6dfcd47b05e0af",
+    "DS/frontend.log": "a15fc3b355f7ca52e917fa71431836f257f684f2a4273d73eccb5a78b0eb1363",
+    "GO.json": "ea6fc30e83dffc391496395b608c2c1ccad29cea7f2689872fde142fd1b95413",
+    "proposal.json": "83c1328c2bb5e4a93bac17fd2c7b6e3e617578b589b9d23ef4270a7a86eac499",
+    "run_start.json": "44b62ce9a399b58bf235a1764f73d70d4060a2471cff2415aef5b7459926930f",
+    "verdict.json": "e7ad9c82efc398a2ecfbd5b8807b48dc19005255e90032fd5081743abd41b6bc"
+  },
+  "resource_observer_records": "/tmp/claude-1000/queue/hbm-native-connected-owner-observe-20261002-r1",
+  "run_wall_s": 258.85295821307227,
+  "source_commit": "a207908e2b7a7872f608163ddeeb997cd40907ba",
+  "source_pins_independently_verified": true,
+  "token_credit": false,
+  "tool_pins_independently_verified": true,
+  "verdict": "FAIL_RUNNER_PROGRESS_RECEIPT_PATH_AFTER_DS_FRONTEND"
+}

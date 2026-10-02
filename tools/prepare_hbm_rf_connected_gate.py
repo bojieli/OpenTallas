@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 MAXWELL='01d277491e6b0b504947658a7c0a750b694ef142'
 OUT=ROOT/'results/uarch/hbm_rf_visibility_fence_20261002'
-PROPOSAL='prepared_gate_runner_r2.json'
+PROPOSAL='prepared_gate_runner_r3.json'
 V=Path('/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator')
 RUNNER_CAPS=dict(cpus=[24,25,26,27],memory_bytes=32*1024**3,swap_bytes=0,whole_wall_s=2220,per_file_bytes=1024**3,aggregate_output_bytes=8*1024**3,disk_headroom_bytes=12*1024**3,poll_s=1,kill_grace_s=5,sequential_targets=True,build_jobs=4)
 def sha(b):return hashlib.sha256(b).hexdigest()
@@ -43,7 +43,7 @@ def prepare():
         gate_tool_sha256={p:sha((ROOT/p).read_bytes()) for p in ['tools/check_hbm_rf_connected_trace.py','tools/prepare_hbm_rf_connected_gate.py','tools/test_hbm_rf_connected_preparation.py','tools/run_hbm_rf_connected_gate.py','tools/full_sm_rf_verilator_gate.py','tools/test_hbm_rf_connected_runner.py']},
         review_pins={p.relative_to(ROOT).as_posix():sha(p.read_bytes()) for p in sorted(OUT.glob('model*.json'))},
         runner_caps=RUNNER_CAPS,verified_toolchain=toolchain,
-        runner=dict(path='tools/run_hbm_rf_connected_gate.py',GO_schema='opentallas.hbm-RF-connected.GO.v1',argv=['<pinned-python>','tools/run_hbm_rf_connected_gate.py','--proposal','results/uarch/hbm_rf_visibility_fence_20261002/prepared_gate_runner_r2.json','--go','<committed-parent-GO.json>','--go-commit','<parent-GO-SHA>','--out','<fresh-output>'],parent_launch_affinity='taskset --cpu-list 24-27; runner verifies exactly four cores, never cpu.max',requires_named_service=True,external_monitor_required='Parent monitors named service terminal result/memory.events and preserves OOM/SIGKILL/whole-timeout if runner cannot write final verdict',permission_or_configuration_changes=False),
+        runner=dict(path='tools/run_hbm_rf_connected_gate.py',GO_schema='opentallas.hbm-RF-connected.GO.v1',argv=['<pinned-python>','tools/run_hbm_rf_connected_gate.py','--proposal','results/uarch/hbm_rf_visibility_fence_20261002/prepared_gate_runner_r3.json','--go','<committed-parent-GO.json>','--go-commit','<parent-GO-SHA>','--out','<fresh-output>'],parent_launch_affinity='taskset --cpu-list 24-27; runner verifies exactly four cores, never cpu.max',requires_named_service=True,external_monitor_required='Parent monitors named service terminal result/memory.events and preserves OOM/SIGKILL/whole-timeout if runner cannot write final verdict',permission_or_configuration_changes=False),
         compiler=dict(verilator=subprocess.check_output([str(V),'--version'],text=True).strip(),verilator_wrapper_sha256=sha(V.read_bytes()),verilator_binary_sha256=sha((V.parent/'verilator_bin').read_bytes()),gxx=subprocess.check_output(['/usr/bin/g++','--version'],text=True).splitlines()[0],gxx_sha256=sha(Path('/usr/bin/g++').read_bytes())),
         caps=dict(proposed_local_CPUs=[24,25,26,27],memory_GiB=32,swap_GiB=0,build_jobs=4,sequential_targets=True,whole_timeout_s=2220,FSIZE_bytes=1073741824,output_cap_GiB=8,disk_min_free_GiB=12,fresh_parent_admission_required=True,no_PVE2_PVE3=True),
         commands=commands,launch=False,GO=False,
