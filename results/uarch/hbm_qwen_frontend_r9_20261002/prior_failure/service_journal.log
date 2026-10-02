@@ -1,0 +1,6 @@
+2026-10-02T08:23:30+0000 ubuntu systemd[1537]: Started /usr/bin/taskset --cpu-list 8-23 /usr/bin/python3 -B /home/ubuntu/OpenTallas-hbm-rf-service/tools/run_hbm_runtime_calibration_r8.py --proposal /home/ubuntu/OpenTallas-hbm-rf-service/results/uarch/hbm_runtime_calibration_r8_20261002/Qwen_prepared_gate.json --go /home/ubuntu/OpenTallas/results/rtl/hbm_qwen_runtime_calibration_parent_20261002_r2/GO.json --go-commit 6d09d349b --out /tmp/hbm-qwen-runtime-calibration-parent-20261002-r2.
+2026-10-02T08:27:03+0000 ubuntu systemd[1537]: hbm-qwen-runtime-calibration-parent-20261002-r2.service: A process of this unit has been killed by the OOM killer.
+2026-10-02T08:27:03+0000 ubuntu taskset[53175]: TERMINATED_SIGNAL_15
+2026-10-02T08:27:03+0000 ubuntu systemd[1537]: hbm-qwen-runtime-calibration-parent-20261002-r2.service: Main process exited, code=exited, status=1/FAILURE
+2026-10-02T08:27:04+0000 ubuntu systemd[1537]: hbm-qwen-runtime-calibration-parent-20261002-r2.service: Failed with result 'oom-kill'.
+2026-10-02T08:27:04+0000 ubuntu systemd[1537]: hbm-qwen-runtime-calibration-parent-20261002-r2.service: Consumed 3min 33.601s CPU time.
