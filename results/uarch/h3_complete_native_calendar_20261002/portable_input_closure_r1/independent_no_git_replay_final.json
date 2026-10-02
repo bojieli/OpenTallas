@@ -1,0 +1,76 @@
+{
+  "TP96_two_model_records_byteidentical": true,
+  "all_input_hashes_checked": true,
+  "canonical_native_duplicated_in_commit": false,
+  "historical_Git_calls_during_calendar_execution": 0,
+  "historical_Git_calls_during_staging": 0,
+  "inputs": 72,
+  "provider_V1_six_model_records_byteidentical": true,
+  "r33_all_four_model_records_byteidentical": true,
+  "r34_scope": {
+    "C0_replacement_count": 1,
+    "I64_RMW_recharged": false,
+    "PCs": 2213,
+    "RF_mirror_cost_recharged": false,
+    "actual_parent_movement_journals": null,
+    "changed_PCs": 40,
+    "changed_rank_calls": 3840,
+    "clock_or_ns_conversion": null,
+    "critical_rank_software_tick_delta": 321498880,
+    "full_service_software_ticks": null,
+    "hardware_admitted": false,
+    "known_partial_software_ticks": 432334666417,
+    "literal_TP96_64B_geometry_replaced": false,
+    "native_replacement_count": 1,
+    "physical_endpoint_latencies": null,
+    "provider_cost_recharged": false,
+    "schema": "H4_R34_ONCE_NATIVE_C0_GROUP_REPRICE_V1",
+    "shared_unknown_calls": 193316,
+    "source_dispatch_sha256": "bcf7d800aa64aeff92b8a1954cab328911c400025179d6a9ab9f211a934c253c",
+    "source_initial_windows_provenance": "seeded reference state, not decoded prefix",
+    "source_native_sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+    "status": "PASS_SOURCE_RESOLVED_GROUP_COST_REPLACEMENT_ACTUAL_MOVEMENT_UNKNOWN",
+    "wide_product_rate": null
+  },
+  "runs": {
+    "TP96": {
+      "generate_and_byteexact_replay_seconds": 2.422,
+      "outputs_sha256": {
+        "full_PC_collective_component.json.gz": "1108a9183fabe403c80e19658ba40908b733199135c290d3d4127d7eecf50536",
+        "manifest.json": "8706202b060bd1c4bd8ceb610bce413e30f81416575adf40b64acf962ae15b97",
+        "summary.json": "e9aad91f62956a9a42e83a811b558e3f250b3e338b830d6c665df83a33fcc6c2"
+      }
+    },
+    "provider_V1": {
+      "generate_and_byteexact_replay_seconds": 8.589,
+      "outputs_sha256": {
+        "Kepler_state_home_join.json.gz": "b1cc7ae1f052d7754b043de9ca2053a52e5f4e413bd612e737d402e8ae0ced23",
+        "MTP_source_contract_audit.json": "1cc24d118fa487398552d7bcc2e8fe9df85837f13d8d06a3a3d84d212adf15ad",
+        "V1_native_component_successor.json.gz": "c4407012d640966413431c48e9c8d6eac86a583ec32d157a6999ea562107f10c",
+        "V1_physical_capacity_join.json": "ad355bc51b06694f399cc53b7a40adc2753a77e98288b13ef653c07487b0e5dd",
+        "manifest.json": "a2495283f8521e47df670504ce69e927937292bfcbf3eb27616d406c38a8fb6c",
+        "parent_receipt_join.json": "037844313d84652eec91928f7e181effc7e7a21b5e56675663ddaf797d407014",
+        "summary.json": "ce06333dbba0b4a1b3daa9ae5ab6ec062dcd7d41fcb8ff8a9e2a016dcfe25259"
+      }
+    },
+    "r33": {
+      "generate_and_byteexact_replay_seconds": 9.576,
+      "outputs_sha256": {
+        "all_PC_native_component_successor.json.gz": "a81785c3557c42da8f198baeb0a986ddc5669a9bd2a037e86129aabf7706840b",
+        "initial_LOAD_boundary_reservations.json.gz": "e4e04bf6a9d7d19e06b7c5a93cfa6e42e91485a5358b93b1f45483dca12ed401",
+        "manifest.json": "810f5d290f7ed37696a93b55e31490638fed1a34dff6b68fbe8534e85a0f10ae",
+        "once_reprice_receipt.json": "835d77172c8120aee14fc04090569d4dc21c514c0725eaca1db0f9a1abed9c15",
+        "summary.json": "970c4b68a88c879ae780d3c842c9225109fdc19b8323ce83ce7050a097e4a279"
+      }
+    },
+    "r34": {
+      "generate_and_byteexact_replay_seconds": 2.7,
+      "outputs_sha256": {
+        "all_PC_native_component_successor.json.gz": "fcf36bb6e876b6610ddd751c2d63c382cfdaa1c0a83859b61f16f247428b43df",
+        "manifest.json": "9bec1c2048e514a446f6c6db15e822703da6bacc336558bfb4f26b1238eefae1",
+        "source_inventory.json.gz": "6efba7608c4ada0ac2fccf01669d1785d2ab01cb4e22fde253bd3fcba6926d69",
+        "summary.json": "2d7bd6a79995dec78f8e9753a8f9ff30cf7abc4e22be73f10f7d1a837f671d15"
+      }
+    }
+  }
+}

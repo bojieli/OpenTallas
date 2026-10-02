@@ -12,6 +12,92 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_portable_pin_lookup_has_no_historical_git_or_current_model_dependency(self):
+        import tempfile,hashlib
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);archive=root/'archive';(archive/'blobs').mkdir(parents=True)
+            raw=b'original immutable analytical model';sha=hashlib.sha256(raw).hexdigest();commit='f'*40
+            (archive/'blobs'/(sha+'.gz')).write_bytes(gzip.compress(raw,mtime=0))
+            index={'inputs':[dict(path='tools/model.py',commit=commit,sha256=sha,storage='hash_blob_gzip')]}
+            (archive/'index.json').write_text(json.dumps(index))
+            (root/'tools').mkdir();(root/'tools/model.py').write_bytes(b'current additive successor differs')
+            with patch.object(c,'ROOT',root),patch.object(c,'PORTABLE_INPUTS',archive),patch.object(c.subprocess,'check_output',side_effect=AssertionError('historical Git forbidden')):
+                self.assertEqual(c.source_bytes('tools/model.py',commit[:8]),raw)
+                with self.assertRaisesRegex(ValueError,'missing'):c.source_bytes('tools/absent.py',commit)
+                (archive/'blobs'/(sha+'.gz')).write_bytes(gzip.compress(b'altered',mtime=0))
+                with self.assertRaisesRegex(ValueError,'hash mismatch'):c.source_bytes('tools/model.py',commit)
+
+    def test_portable_canonical_archive_is_required_and_not_duplicated(self):
+        import tempfile,hashlib
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);archive=root/'inputs';archive.mkdir();raw=b'canonical native producer bytes';sha=hashlib.sha256(raw).hexdigest()
+            row=dict(path='canonical.json.gz',commit='a'*40,sha256=sha,storage='canonical_tracked_path')
+            (archive/'index.json').write_text(json.dumps({'inputs':[row]}))
+            with patch.object(c,'ROOT',root):
+                with self.assertRaisesRegex(ValueError,'canonical committed'):c.portable_calendar_blob(row['path'],row['commit'],archive)
+                (root/'canonical.json.gz').write_bytes(raw)
+                self.assertEqual(c.portable_calendar_blob(row['path'],row['commit'][:7],archive),raw)
+                (root/'canonical.json.gz').write_bytes(b'wrong')
+                with self.assertRaisesRegex(ValueError,'hash mismatch'):c.portable_calendar_blob(row['path'],row['commit'],archive)
+                with self.assertRaisesRegex(ValueError,'escape'):c.portable_calendar_blob('../canonical.json.gz',row['commit'],archive)
+
+    def r34_fixture(self):
+        import ast,hashlib,subprocess
+        before=dict(family='all_reduce',providers={'parts':{'shape':[8,1024],'dtype':'F32'}},outputs={'out':'v34'},
+            shape_parameters={},resources={'materialized_tensor_workspace_bytes':65536,'peak_interpreter_live_words':16384},
+            code=[dict(op='LOAD',dst='v0',src=[],shape=[8,1024],attrs={'name':'parts','dtype':'F32'}),
+                dict(op='SLICE',dst='v1',src=['v0'],shape=[1024],attrs={'axis':0,'start':0}),
+                dict(op='FADD',dst='v34',src=['v1','v1'],shape=[1024],attrs={'round':'FP32_RNE'})])
+        original=dict(templates={'old':before},instructions=[dict(pc=0,family='all_reduce',dependencies=[],
+            source_op={'groups':8,'per_group':8,'elems':8192},rank_bindings=[{'rank':r,'template':'old'} for r in (0,1)],
+            reads=[{'version':'parts'}],writes=[{'version':'out'}],provider_bindings={'old':{'parts':{'version':'parts'}}})])
+        raw=subprocess.check_output(['git','show','0b4ab421b:tools/ds_hbm_group_provider_r34.py'],cwd=ROOT)
+        ns={'copy':copy,'math':__import__('math'),'Counter':__import__('collections').Counter}
+        node=next(n for n in ast.parse(raw).body if isinstance(n,ast.FunctionDef) and n.name=='lower_template')
+        exec(compile(ast.Module(body=[node],type_ignores=[]),'pinned-test-metadata','exec'),ns)
+        after=ns['lower_template'](before);key=hashlib.sha256(json.dumps(after,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+        inventory=c.compile_ds_r34_group_source(original,raw,[dict(PC=0,old_template='old',new_template=key)])
+        source=inventory['corrected_PC_bindings'][0];c0=sum(source['old_batches128'].values())*22
+        previous=dict(r33_reprice_applied=True,Qwen_full_program={'PCs':1737},DeepSeek=dict(PCs=1,
+            known_native_only_successor_software_ticks=10000000,unknown_shared_template_calls=7,
+            PC_intervals=[dict(pc=0,family='all_reduce',dependencies=[],start=0,end=10000000,
+                rank_groups=[dict(ranks=[0,1],C0_retained_ticks=c0,shared_retained_ticks=800,RF_additional_cost_after_existing_ledger=None)])]))
+        return previous,inventory,{'typed_cost_bounds':{}},32,22
+
+    def test_r34_actual_source_groups_preserve_rounding_and_replace_native_C0_once(self):
+        args=self.r34_fixture();result,summary=c.reprice_ds_r34_groups(*args)
+        self.assertEqual(summary['changed_rank_calls'],2)
+        self.assertEqual(summary['shared_unknown_calls'],9)
+        self.assertGreater(summary['critical_rank_software_tick_delta'],0)
+        self.assertEqual(result['Qwen_full_program'],args[0]['Qwen_full_program'])
+        row=result['DeepSeek']['PC_intervals'][0]['rank_groups'][0]
+        self.assertEqual(row['shared_retained_ticks'],800)
+        self.assertIsNone(row['r34_additional_RF_debit']);self.assertIsNone(row['r34_additional_provider_transfer_cost'])
+        self.assertIsNone(summary['full_service_software_ticks'])
+        bad=list(args);bad[0]=result
+        with self.assertRaisesRegex(ValueError,'already applied'):c.reprice_ds_r34_groups(*bad)
+        bad=copy.deepcopy(args);bad[0]['DeepSeek']['PC_intervals'][0]['rank_groups'][0]['C0_retained_ticks']+=1
+        with self.assertRaisesRegex(ValueError,'C0 source ledger'):c.reprice_ds_r34_groups(*bad)
+        bad=copy.deepcopy(args);bad[0]['r33_reprice_applied']=False
+        with self.assertRaisesRegex(ValueError,'current'):c.reprice_ds_r34_groups(*bad)
+
+    def test_r34_rejects_source_hash_and_rank_coverage_forgery(self):
+        args=self.r34_fixture();bad=copy.deepcopy(args)
+        bad[1]['corrected_PC_bindings'][0]['ranks']=[0]
+        with self.assertRaisesRegex(ValueError,'rank coverage'):c.reprice_ds_r34_groups(*bad)
+        bad=copy.deepcopy(args);bad[1]['corrected_PC_bindings'][0]['dependencies']=[9]
+        with self.assertRaisesRegex(ValueError,'dependency'):c.reprice_ds_r34_groups(*bad)
+        # Inventory itself records actual ordered opcodes/attrs, not exporter strings.
+        t=next(iter(args[1]['native_templates'].values()))
+        self.assertEqual(t['code'][0]['shape'],[8,8,1024])
+        self.assertEqual(t['code'][2]['attrs'],{'round':'FP32_RNE'})
+        self.assertEqual(t['code'][-1]['shape'],[8192])
+        row=args[1]['corrected_PC_bindings'][0]
+        self.assertEqual(set(row['provider_bindings']),{row['new_template']})
+        self.assertIn('source rank=8*group+contributor',row['provider_bindings'][row['new_template']]['parts']['view'])
+
     def r33_pair(self):
         import hashlib,subprocess,math
         from collections import Counter

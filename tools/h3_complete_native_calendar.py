@@ -53,6 +53,87 @@ def read_json(path):
     return json.loads(Path(path).read_text())
 
 
+PORTABLE_INPUTS = None
+
+
+def portable_calendar_blob(path, commit, archive):
+    """Strict hash-addressed input lookup; never probes historical Git refs."""
+    relative=Path(path)
+    if relative.is_absolute():relative=relative.relative_to(ROOT)
+    if '..' in relative.parts:raise ValueError('portable input path escape')
+    index=read_json(Path(archive)/'index.json')
+    rows=[r for r in index['inputs'] if r['path']==relative.as_posix() and
+        (r['commit'].startswith(commit) or commit.startswith(r['commit']))]
+    if len(rows)!=1:raise ValueError('missing or ambiguous portable calendar source pin '+commit+':'+str(relative))
+    row=rows[0]
+    if row['storage']=='canonical_tracked_path':
+        local=ROOT/row['path']
+        if not local.is_file():raise ValueError('canonical committed archive required: '+row['path'])
+        raw=local.read_bytes()
+    elif row['storage']=='hash_blob_gzip':
+        raw=gzip.decompress((Path(archive)/'blobs'/(row['sha256']+'.gz')).read_bytes())
+    else:raise ValueError('unknown portable storage kind')
+    if hashlib.sha256(raw).hexdigest()!=row['sha256']:raise ValueError('portable source byte hash mismatch '+row['path'])
+    return raw
+
+
+def pinned_calendar_blob(path, commit):
+    if PORTABLE_INPUTS is not None:return portable_calendar_blob(path,commit,PORTABLE_INPUTS)
+    return subprocess.check_output(['git','show',commit+':'+path],cwd=ROOT)
+
+
+def export_calendar_portable_inputs(output):
+    """Archive exact existing input pins; models and historical verdicts immutable."""
+    output=Path(output)
+    if output.exists():raise ValueError('fresh portable input closure required')
+    roots=[('a67150839',OUT+'/provider_v1_mtp_join_r4/final_physical/manifest.json'),
+        ('2e76d4f96',OUT+'/ds_r33_calendar_adapter_r1/provider_final/manifest.json'),
+        ('4e8f517fc',OUT+'/ds_r33_once_reprice_r1/model/manifest.json')]
+    requested={}
+    for commit,path in roots:
+        manifest_raw=subprocess.check_output(['git','show',commit+':'+path],cwd=ROOT)
+        requested[(commit,path)]=hashlib.sha256(manifest_raw).hexdigest()
+        manifest=json.loads(manifest_raw)
+        for source,record in manifest['source_pins'].items():
+            requested[(record.get('commit',commit),source)]=record['sha256']
+    physical=json.loads(pinned_calendar_blob('results/uarch/h4_v1_g0_model_20261002/physical_join_r1/final/model.json','620c078de78cc55ddb5562b1d5d7171d8ef944ca'))
+    for record in physical['source_pins']:
+        requested[(record['commit'],record['path'])]=record['sha256']
+    # Source/binary receipts have an explicit literal TP96 producer closure.
+    folder=ROOT/OUT/'tp96_literal_collective_join_r1/inputs'
+    record=read_json(folder/'normal_record.json');binary=read_json(folder/'binary_sources.json');preflight=read_json(folder/'preflight.json')
+    for path,sha in {**record['source_sha256'],**binary['pins'],**preflight['source_sha256']}.items():
+        requested[(record['source_commit'],path)]=sha
+    path='results/uarch/h3_versioned_lowering_20261002/DeepSeek.json.gz';commit='781046c9775880183bd7f45a06ab101e98c66cac'
+    requested[(commit,path)]=hashlib.sha256(subprocess.check_output(['git','show',commit+':'+path],cwd=ROOT)).hexdigest()
+    # The producer originals needed by the later source adapter remain archived,
+    # even if two manifests refer to one identical blob under different commits.
+    for path in ('tools/ds_hbm_group_provider_r34.py','results/uarch/ds_hbm_source_inputs_views_r34_20261002/prepared_join.json'):
+        raw=pinned_calendar_blob(path,'0b4ab421b');requested[('0b4ab421b',path)]=hashlib.sha256(raw).hexdigest()
+    rows=[];blobs={}
+    canonical='results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz'
+    for (commit,path),want in sorted(requested.items()):
+        raw=pinned_calendar_blob(path,commit)
+        if hashlib.sha256(raw).hexdigest()!=want:raise ValueError('input pin archive export mismatch '+path)
+        storage='canonical_tracked_path' if path==canonical else 'hash_blob_gzip'
+        if len(raw)>1048576 and storage!='canonical_tracked_path':
+            # Reuse immutable bulk already tracked by an intake prerequisite.
+            for ref in ('HEAD','main'):
+                found=subprocess.run(['git','show',ref+':'+path],cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL)
+                if found.returncode==0 and hashlib.sha256(found.stdout).hexdigest()==want:
+                    storage='canonical_tracked_path';break
+        if storage=='hash_blob_gzip':blobs[want]=gzip.compress(raw,mtime=0)
+        rows.append(dict(commit=commit,path=path,sha256=want,bytes=len(raw),storage=storage))
+    output.mkdir(parents=True);(output/'blobs').mkdir()
+    for sha,raw in blobs.items():(output/'blobs'/(sha+'.gz')).write_bytes(raw)
+    index=dict(schema='H4_CALENDAR_PORTABLE_EXACT_INPUT_CLOSURE_V1',inputs=rows,
+        roots=[dict(commit=c,path=p) for c,p in roots],unique_archived_blobs=len(blobs),
+        archived_bytes=sum(map(len,blobs.values())),canonical_native_duplicated=False,
+        historical_models_altered=False,hardware_admitted=False)
+    (output/'index.json').write_text(json.dumps(index,sort_keys=True,indent=2)+'\n')
+    return index
+
+
 def source_bytes(path, commit=None):
     """Read an immutable canonical blob without duplicating a producer artifact."""
     path=Path(path)
@@ -60,7 +141,8 @@ def source_bytes(path, commit=None):
     if not re.fullmatch('[0-9a-f]{7,40}',commit):raise ValueError('immutable source commit required')
     relative=path.relative_to(ROOT) if path.is_absolute() else path
     if relative.is_absolute() or '..' in relative.parts:raise ValueError('source blob path escape')
-    raw=subprocess.check_output(['git','show',commit+':'+relative.as_posix()],cwd=ROOT)
+    if PORTABLE_INPUTS is not None:return portable_calendar_blob(relative,commit,PORTABLE_INPUTS)
+    raw=pinned_calendar_blob(relative.as_posix(),commit)
     local=ROOT/relative
     if local.exists() and local.read_bytes()!=raw:raise ValueError('canonical source bytes differ from pinned commit')
     return raw
@@ -477,6 +559,108 @@ def compose_v1_native_component_successor(ds, qwen_fixture, qwen, model):
         'area':model['area'],'routing':model['routing'],'resource_contract':model['resource_contract'],
         'measured_opcode_costs':None,'complete_iteration_service_software_ticks':None,
         'hardware_admitted':False,'clock_or_ns_conversion':None}
+
+
+def compile_ds_r34_group_source(original, source, witness):
+    """Execute only the pinned metadata lowerer; resolve every corrected code node."""
+    import copy
+    functions=[n for n in ast.parse(source).body if isinstance(n,ast.FunctionDef) and n.name in ('canonical','lower_template','lower_native')]
+    if len(functions)!=3:raise ValueError('exact r34 metadata lowerer closure required')
+    ns=dict(copy=copy,math=math,Counter=Counter,json=json,hashlib=hashlib)
+    exec(compile(ast.Module(body=functions,type_ignores=[]),'source-pinned-r34-group-lowerer','exec'),ns)
+    digest=lambda x:hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    rows=[];templates={};seen=set()
+    for row in witness:
+        pc=row['PC']
+        if pc in seen:raise ValueError('duplicate r34 PC')
+        seen.add(pc);op=original['instructions'][pc];old=row['old_template']
+        if op['family']!='all_reduce' or (op['source_op']['groups'],op['source_op']['per_group'],op['source_op']['elems'])!=(8,8,8192):
+            raise ValueError('actual source eight independent groups required')
+        if any(b.get('template')!=old for b in op['rank_bindings']):raise ValueError('old actual rank/template binding required')
+        before=original['templates'][old];after=ns['lower_template'](before)
+        if digest(after)!=row['new_template']:raise ValueError('source-derived r34 template hash mismatch')
+        # Resolve shape changes against every original instruction and preserve
+        # operation, operand, attributes and rounding/tree order byte-data.
+        for a,b in zip(before['code'],after['code']):
+            if any(a[k]!=b[k] for k in a if k!='shape'):raise ValueError('r34 changed arithmetic or operand order')
+        def counts(program):
+            scalars=Counter();batches=Counter()
+            for n in program['code']:
+                size=max(1,math.prod(n['shape']));scalars[n['op']]+=size;batches[n['op']]+=ceil(size,128)
+            return dict(scalars),dict(batches)
+        old_count,old_batch=counts(before);new_count,new_batch=counts(after)
+        templates[row['new_template']]=after
+        owned,_=ns['lower_native']({'templates':{old:before},'instructions':[op]})
+        corrected_op=owned['instructions'][0]
+        if any(b.get('template')!=row['new_template'] for b in corrected_op['rank_bindings']):
+            raise ValueError('source-derived r34 rank/template remap mismatch')
+        rows.append(dict(pc=pc,dependencies=op['dependencies'],old_template=old,new_template=row['new_template'],
+            ranks=[b['rank'] for b in op['rank_bindings'] if not b.get('empty_owned_extent')],
+            original_provider_bindings=op['provider_bindings'],provider_bindings=corrected_op['provider_bindings'],
+            actual_rank_template_bindings=corrected_op['rank_bindings'],reads=op['reads'],writes=op['writes'],
+            old_native_scalars=old_count,new_native_scalars=new_count,old_batches128=old_batch,new_batches128=new_batch,
+            input_words=65536,output_words=8192,materialized_workspace_bytes=after['resources']['materialized_tensor_workspace_bytes'],
+            hardware_addressed_shared_journal=None))
+    expected={o['pc'] for o in original['instructions'] if o['family']=='all_reduce'}
+    if seen!=expected:raise ValueError('all actual all-reduce PCs required')
+    return dict(schema='H4_R34_RESOLVED_EIGHT_GROUP_SOURCE_INVENTORY_V1',PCs=len(original['instructions']),
+        corrected_PC_bindings=rows,native_templates=templates,source_provider_code_sha256=hashlib.sha256(source).hexdigest(),
+        group_order='contributor j, group g, word; source rank=8*g+j',tree_order='((0+1)+(2+3))+((4+5)+(6+7)) separately per group',
+        numerical_or_provider_execution=False,hardware_admitted=False)
+
+
+def reprice_ds_r34_groups(previous, inventory, v1_model, scalar_ticks, c0_ticks):
+    """Replace source-dependent native and C0 obligations once; no RF/provider add."""
+    import copy
+    positive(scalar_ticks,'retained primitive scalar ticks');positive(c0_ticks,'retained C0 command ticks')
+    if previous.get('r34_reprice_applied'):raise ValueError('r34 replacement already applied')
+    if not previous.get('r33_reprice_applied'):raise ValueError('current once-only r33 baseline required')
+    changes={r['pc']:r for r in inventory['corrected_PC_bindings']};out=copy.deepcopy(previous)
+    profiles=v1_model['typed_cost_bounds'];cursor=0;added=0;calls=0;proof=[]
+    for row in out['DeepSeek']['PC_intervals']:
+        duration=row['end']-row['start'];delta=0
+        if row['pc'] in changes:
+            source=changes[row['pc']]
+            if row['family']!='all_reduce' or row['dependencies']!=source['dependencies']:raise ValueError('r34 source PC dependency mismatch')
+            ranks=[r for group in row['rank_groups'] for r in group['ranks']]
+            if len(set(ranks))!=len(ranks) or set(ranks)!=set(source['ranks']):raise ValueError('r34 actual rank coverage mismatch')
+            def price(counts):
+                return sum(n*(profiles[op]['upper']['native_only_replacement_ticks'] if op in profiles else scalar_ticks) for op,n in counts.items())
+            native_delta=price(source['new_native_scalars'])-price(source['old_native_scalars'])
+            c0_old=sum(source['old_batches128'].values())*c0_ticks
+            c0_new=sum(source['new_batches128'].values())*c0_ticks
+            delta=native_delta+c0_new-c0_old
+            for group in row['rank_groups']:
+                if group['C0_retained_ticks']!=c0_old:raise ValueError('existing C0 source ledger mismatch')
+                if profiles:
+                    old_v1=sum(n*profiles[op]['upper']['native_only_replacement_ticks'] for op,n in source['old_native_scalars'].items() if op in profiles)
+                    old_removed=sum(n*scalar_ticks for op,n in source['old_native_scalars'].items() if op in profiles)
+                    if (group.get('native_new_ticks'),group.get('native_old_ticks'))!=(old_v1,old_removed):
+                        raise ValueError('existing V1 source profile ledger mismatch')
+                group['r34_native_only_delta_ticks']=native_delta
+                group['r34_C0_once_replacement_delta_ticks']=c0_new-c0_old
+                group['r34_actual_shared_movement']=None
+                group['r34_additional_RF_debit']=None
+                group['r34_additional_provider_transfer_cost']=None
+            proof.append(dict(pc=row['pc'],ranks=len(ranks),native_only_delta_ticks=native_delta,
+                C0_old_ticks=c0_old,C0_new_ticks=c0_new,critical_rank_delta_ticks=delta,
+                input_byte_increase_per_call=(65536-8192)*4,output_byte_increase_per_call=(8192-1024)*4,
+                source_input_fragment_ranks=list(range(64)),actual_shared64_transactions=None,
+                prior_single_group_shared_reservation_retained_as_partial=True))
+            calls+=len(ranks)
+        row['start']=cursor;row['end']=cursor+duration+delta
+        if row['end']<=row['start']:raise ValueError('nonpositive r34 successor interval')
+        cursor=row['end'];added+=delta
+    if cursor!=previous['DeepSeek']['known_native_only_successor_software_ticks']+added:raise ValueError('r34 interval sum mismatch')
+    if len(proof)!=len(changes):raise ValueError('r34 complete PC ledger coverage required')
+    out['r34_reprice_applied']=True;out['DeepSeek']['known_native_only_successor_software_ticks']=cursor
+    out['DeepSeek']['unknown_shared_template_calls']+=calls
+    return out,dict(schema='H4_R34_ONCE_NATIVE_C0_GROUP_REPRICE_V1',PCs=out['DeepSeek']['PCs'],
+        changed_PCs=len(proof),changed_rank_calls=calls,critical_rank_software_tick_delta=added,
+        known_partial_software_ticks=cursor,shared_unknown_calls=out['DeepSeek']['unknown_shared_template_calls'],
+        records=proof,RF_mirror_cost_recharged=False,I64_RMW_recharged=False,provider_cost_recharged=False,
+        C0_replacement_count=1,native_replacement_count=1,full_service_software_ticks=None,
+        physical_endpoint_latencies=None,hardware_admitted=False,clock_or_ns_conversion=None)
 
 
 def compose_ds_r33_once_reprice(adapter, catalog, overlay, provider, parent, parent_catalog, previous, scalar_ticks):
@@ -3785,6 +3969,11 @@ def main():
     ap.add_argument('--provider-v1-join',action='store_true')
     ap.add_argument('--ds-r33-calendar-source-join',action='store_true')
     ap.add_argument('--ds-r33-once-reprice',action='store_true')
+    ap.add_argument('--portable-inputs',type=Path)
+    ap.add_argument('--ds-r34-group-reprice',action='store_true')
+    ap.add_argument('--r34-source-commit',default='0b4ab421b')
+    ap.add_argument('--r33-cost-baseline',type=Path)
+    ap.add_argument('--export-portable-inputs',action='store_true')
     ap.add_argument('--r33-parent-commit',default='ce132ffea40cf31f1af9d8c7af696d5e57125213')
     ap.add_argument('--r33-boundary-cycles',type=Path)
     ap.add_argument('--r33-source-commit',default='433ccff91c9ed6f0e61761bdbffa11f4878d6339')
@@ -3797,11 +3986,68 @@ def main():
     ap.add_argument('--parent-state-receipts',type=Path)
     ap.add_argument('--c0-source-commit')
     args = ap.parse_args()
+    global PORTABLE_INPUTS
+    PORTABLE_INPUTS=args.portable_inputs
+    if args.export_portable_inputs:
+        index=export_calendar_portable_inputs(args.out)
+        print(json.dumps({k:v for k,v in index.items() if k!='inputs'},sort_keys=True));return
+    if args.ds_r34_group_reprice:
+        if args.r33_cost_baseline is None:raise ValueError('current r33 once-repriced baseline required')
+        pins={}
+        def blob(path,commit):
+            raw=pinned_calendar_blob(path,commit);pins[path]=dict(commit=commit,sha256=hashlib.sha256(raw).hexdigest());return raw
+        raw=blob('results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz','91e3b8cc2791fa3fe1322df3d72b3f76dbd184f6')
+        original=json.loads(gzip.decompress(raw))
+        # Eight-group correction is independent of the40 r33 window changes;
+        # retain the current r33 interval ledger and require exact producer input.
+        record=json.loads(blob('results/uarch/ds_hbm_source_inputs_views_r34_20261002/prepared_join.json',args.r34_source_commit))
+        baseline_manifest=read_json(args.r33_cost_baseline/'manifest.json')
+        receipt=read_json(args.r33_cost_baseline/'once_reprice_receipt.json')
+        if (record['native_input_sha256']!=receipt['native_sha256'] or
+            record['dispatch_input_sha256']!=receipt['dispatch_sha256']):raise ValueError('r34 producer/current r33 source mismatch')
+        previous=read_json(args.r33_cost_baseline/'all_PC_native_component_successor.json.gz')
+        expected=baseline_manifest['output_sha256']['all_PC_native_component_successor.json.gz']
+        immutable_baseline=json.loads(blob(OUT+'/ds_r33_once_reprice_r1/model/manifest.json','4e8f517fc'))
+        if expected!=immutable_baseline['output_sha256']['all_PC_native_component_successor.json.gz']:
+            raise ValueError('r34 requires exact reviewed r33 baseline cost pin')
+        if hashlib.sha256((args.r33_cost_baseline/'all_PC_native_component_successor.json.gz').read_bytes()).hexdigest()!=expected:
+            raise ValueError('current r33 cost baseline bytes mismatch')
+        inventory=compile_ds_r34_group_source(original,blob('tools/ds_hbm_group_provider_r34.py',args.r34_source_commit),record['group_PCs'])
+        model=json.loads(blob('results/uarch/h4_v1_g0_model_20261002/intake/run/model.json','f7fa8e290d419f6de3356385c0b55ded768c2090'))
+        scalar=32;c0=22
+        successor,summary=reprice_ds_r34_groups(previous,inventory,model,scalar,c0)
+        successor['DeepSeek']['source_program_sha256']=record['native_output_sha256']
+        successor['current_r34_dispatch_sha256']=record['dispatch_output_sha256']
+        successor['current_r34_C0_source_catalog_binding']=None
+        inventory.update(source_native_sha256=record['native_output_sha256'],source_dispatch_sha256=record['dispatch_output_sha256'])
+        summary.update(source_native_sha256=record['native_output_sha256'],source_dispatch_sha256=record['dispatch_output_sha256'],
+            status='PASS_SOURCE_RESOLVED_GROUP_COST_REPLACEMENT_ACTUAL_MOVEMENT_UNKNOWN',
+            materialized_native_workspace_bytes_per_call=record['materialized_group_workspace_bytes_conservative'],
+            software_scratch_capacity_per_rank=record['software_scratch_capacity_per_rank'],
+            physical_shared_scratch_bytes_per_SM=65536,bounded_group_operand_span_schedule=None,
+            actual_parent_movement_journals=None,source_initial_windows_provenance='seeded reference state, not decoded prefix',
+            literal_TP96_64B_geometry_replaced=False,wide_product_rate=None)
+        artifacts={'summary.json':summary,'source_inventory.json.gz':inventory,'all_PC_native_component_successor.json.gz':successor}
+        raws={n:((gzip.compress((json.dumps(v,sort_keys=True,indent=2)+'\n').encode(),mtime=0)) if n.endswith('.gz')
+            else (json.dumps(v,sort_keys=True,indent=2)+'\n').encode()) for n,v in artifacts.items()}
+        manifest=dict(schema='H4_R34_SOURCE_COST_SUCCESSOR_MANIFEST_V1',source_pins=pins,
+            r33_baseline_component_sha256=expected,r33_baseline_receipt_sha256=hashlib.sha256((args.r33_cost_baseline/'once_reprice_receipt.json').read_bytes()).hexdigest(),
+            explicit_provisional_costs=dict(native_nonV1_scalar=scalar,C0_command=c0,V1='retained upper typed profiles'),
+            tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            output_sha256={n:hashlib.sha256(v).hexdigest() for n,v in raws.items()},
+            full_program_dynamic_movement=False,hardware_admitted=False)
+        raws['manifest.json']=(json.dumps(manifest,sort_keys=True,indent=2)+'\n').encode()
+        if not args.verify:args.out.mkdir(parents=True,exist_ok=False)
+        for name,raw in raws.items():
+            if args.verify:
+                if (args.out/name).read_bytes()!=raw:raise ValueError('r34 source-cost replay mismatch '+name)
+            else:(args.out/name).write_bytes(raw)
+        print(json.dumps({k:v for k,v in summary.items() if k!='records'},sort_keys=True));print('PASS_R34_GROUP_REPLAY' if args.verify else 'PASS_R34_GROUP_REPRICE');return
     if args.ds_r33_once_reprice:
         if args.r33_boundary_cycles is None:raise ValueError('explicit provisional boundary cycle table required')
         pins={}
         def pinned_record(path,commit):
-            raw=subprocess.check_output(['git','show',commit+':'+path],cwd=ROOT)
+            raw=pinned_calendar_blob(path,commit)
             pins[path]=dict(commit=commit,sha256=hashlib.sha256(raw).hexdigest())
             return json.loads(gzip.decompress(raw) if path.endswith('.gz') else raw)
         base=OUT+'/ds_r33_calendar_adapter_r1/provider_final/'
@@ -3848,7 +4094,7 @@ def main():
     if args.ds_r33_calendar_source_join:
         pins={}
         def pinned(path,commit=args.r33_source_commit):
-            raw=subprocess.check_output(['git','show',commit+':'+path],cwd=ROOT)
+            raw=pinned_calendar_blob(path,commit)
             pins[path]={'commit':commit,'sha256':hashlib.sha256(raw).hexdigest()};return raw
         def decoded(path,commit=args.r33_source_commit):
             raw=pinned(path,commit);return json.loads(gzip.decompress(raw) if path.endswith('.gz') else raw)
@@ -3889,7 +4135,7 @@ def main():
             if binding['source_binding']!=actual or binding['shape']!=spec['shape'] or binding['dtype']!=spec['dtype']:
                 raise ValueError('r33 actual coefficient provider/template binding')
             path=folder+'rope_images/'+Path(binding['path']).name
-            image=pinned(path) if path not in pins else subprocess.check_output(['git','show',args.r33_source_commit+':'+path],cwd=ROOT)
+            image=pinned(path) if path not in pins else pinned_calendar_blob(path,args.r33_source_commit)
             if hashlib.sha256(image).hexdigest()!=binding['sha256']:raise ValueError('r33 immutable coefficient image pin')
         adapter['source_owned_RoPE_bindings']=len(rope)
         prior=decoded(OUT+'/provider_v1_mtp_join_r4/final_physical/summary.json','a67150839')
@@ -3928,7 +4174,7 @@ def main():
         if binary['compiled_at_source']!=record['source_commit'] or binary['binary_sha256']!=record['cases']['normal']['binary_sha256']:
             raise ValueError('TP96 source/binary receipt identity')
         for path,digest in {**preflight['source_sha256'],**record['source_sha256'],**binary['pins']}.items():
-            retained=subprocess.check_output(['git','show',record['source_commit']+':'+path],cwd=ROOT)
+            retained=pinned_calendar_blob(path,record['source_commit'])
             if hashlib.sha256(retained).hexdigest()!=digest:
                 raise ValueError('TP96 retained producer source mismatch '+path)
         costs=read_json(args.tp96_endpoint_cycles)
