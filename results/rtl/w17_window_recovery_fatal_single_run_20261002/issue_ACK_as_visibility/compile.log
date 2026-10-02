@@ -1,0 +1,366 @@
+%Warning-PINMISSING: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/kv_rope_reqmux_recovery.sv:88:3: Instance has missing pin: 'rst_n'
+   88 | ) u_impl (
+      |   ^~~~~~
+                     /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/kv_rope_reqmux_recovery.sv:243:22: ... Location of port declaration
+  243 |     input  wire clk, rst_n,
+      |                      ^~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/kv_rope_reqmux_recovery.sv:159:3: Instance has missing pin: 'rst_n'
+  159 | ) u_impl (
+      |   ^~~~~~
+                     /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/kv_rope_reqmux_recovery.sv:409:22: ... Location of port declaration
+  409 |     input  wire clk, rst_n,
+      |                      ^~~~~
+%Warning-PINMISSING: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/tb.sv:399:3: Instance has missing pin: 'rst_n'
+  399 | ) mux (
+      |   ^~~
+                     /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/kv_rope_reqmux_recovery.sv:13:22: ... Location of port declaration
+   13 |     input  wire clk, rst_n,
+      |                      ^~~~~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_window_row_codec.sv:66:51: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'element_index' generates 9 bits.
+                                                                                                                                                     : ... note: In instance 'tb.src.g_recovery.u_impl.u_codec'
+   66 |         scale = row[4096+8*integer'(element_index >> 5) +: 8];
+      |                                                   ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1015:34: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1015 |         pc_of = (NPC > 1) ? (((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : 0;
+      |                                  ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1015:45: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1015 |         pc_of = (NPC > 1) ? (((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : 0;
+      |                                             ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1015:64: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1015 |         pc_of = (NPC > 1) ? (((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : 0;
+      |                                                                ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1018:20: Operator SHIFTR expects 64 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1018 |         row_of = s >> ROW_SHIFT;
+      |                    ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1023:21: Operator SHIFTR expects 64 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1023 |             row = s >> ROW_SHIFT;
+      |                     ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1024:29: Operator SHIFTR expects 64 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1024 |             bank_of = ((((s >> (2 + LPC + 5)) ^ (row >> 2)) & 7) << 2) | ((s ^ row) & 3);
+      |                             ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1024:78: Operator XOR expects 64 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1024 |             bank_of = ((((s >> (2 + LPC + 5)) ^ (row >> 2)) & 7) << 2) | ((s ^ row) & 3);
+      |                                                                              ^
+%Warning-WIDTHTRUNC: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1024:21: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's OR generates 64 bits.
+                                                                                                                                  : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1024 |             bank_of = ((((s >> (2 + LPC + 5)) ^ (row >> 2)) & 7) << 2) | ((s ^ row) & 3);
+      |                     ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1056:29: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1056 |             tmin = max2(arr + REQ_PS, tnow);
+      |                             ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1060:49: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1060 |                 tact = b_open[p][bk] ? max2(arr + REQ_PS, b_preok[p][bk]) + RP_PS : arr + REQ_PS;
+      |                                                 ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1060:75: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1060 |                 tact = b_open[p][bk] ? max2(arr + REQ_PS, b_preok[p][bk]) + RP_PS : arr + REQ_PS;
+      |                                                                           ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1060:89: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1060 |                 tact = b_open[p][bk] ? max2(arr + REQ_PS, b_preok[p][bk]) + RP_PS : arr + REQ_PS;
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1062:47: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDS_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1062 |                 tact = max2(tact, last_act[p] + RRDS_PS);
+      |                                               ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1063:54: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1063 |                 tact = max2(tact, last_act_bg[p][bg] + RRDL_PS);
+      |                                                      ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1064:45: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'FAW_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1064 |                 tact = max2(tact, faw[p][0] + FAW_PS);
+      |                                             ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1066:42: Operator COND expects 64 bits on the Conditional True, but Conditional True's VARREF 'RCDWR_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1066 |             tcol = max2(tmin, tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                          ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1066:42: Operator COND expects 64 bits on the Conditional False, but Conditional False's VARREF 'RCDRD_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1066 |             tcol = max2(tmin, tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                          ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1067:43: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1067 |             tcol = max2(tcol, last_col[p] + BURST_PS);
+      |                                           ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1068:50: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'TCCDL_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1068 |             tcol = max2(tcol, last_col_bg[p][bg] + TCCDL_PS);
+      |                                                  ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1081:24: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'REQ_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1081 |             tmin = arr + REQ_PS;
+      |                        ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1110:66: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1110 |                 if (b_open[p][b2]) tr = max2(tr, b_preok[p][b2]) + RP_PS;
+      |                                                                  ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1112:58: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RFCPB_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1112 |                 b_actok[p][b2] = max2(b_actok[p][b2], tr + RFCPB_PS);
+      |                                                          ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1114:53: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NB' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1114 |                 next_ref[p] = next_ref[p] + REFI_PS / NB;
+      |                                                     ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1123:43: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1123 |                 tr = max2(tr, last_col[p] + BURST_PS);
+      |                                           ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1124:39: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1124 |                 if (any_open) tr = tr + RP_PS;
+      |                                       ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1127:62: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RFC_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1127 |                     b_actok[p][b2] = max2(b_actok[p][b2], tr + RFC_PS);
+      |                                                              ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1138:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1138 |                     tact = max2(tmin, b_preok[p][bk]) + RP_PS;       
+      |                                                       ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1141:47: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDS_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1141 |                 tact = max2(tact, last_act[p] + RRDS_PS);
+      |                                               ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1142:54: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RRDL_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1142 |                 tact = max2(tact, last_act_bg[p][bg] + RRDL_PS);
+      |                                                      ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1143:45: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'FAW_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1143 |                 tact = max2(tact, faw[p][0] + FAW_PS);
+      |                                             ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1147:39: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RAS_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1147 |                 b_actok[p][bk] = tact + RAS_PS + RP_PS;
+      |                                       ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1147:48: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RP_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1147 |                 b_actok[p][bk] = tact + RAS_PS + RP_PS;
+      |                                                ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1148:39: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RAS_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1148 |                 b_preok[p][bk] = tact + RAS_PS;
+      |                                       ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1152:54: Operator COND expects 64 bits on the Conditional True, but Conditional True's VARREF 'RCDWR_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1152 |             tcol = max2(max2(tmin, tnow), tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                                      ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1152:54: Operator COND expects 64 bits on the Conditional False, but Conditional False's VARREF 'RCDRD_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1152 |             tcol = max2(max2(tmin, tnow), tact + (we ? RCDWR_PS : RCDRD_PS));
+      |                                                      ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1153:43: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1153 |             tcol = max2(tcol, last_col[p] + BURST_PS);
+      |                                           ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1154:50: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'TCCDL_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1154 |             tcol = max2(tcol, last_col_bg[p][bg] + TCCDL_PS);
+      |                                                  ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1157:74: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1157 |                                   ((last_wr_bg_valid[p] && last_wr_bg[p] == bg) ? WTRL_PS : WTRS_PS));
+      |                                                                          ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1156:46: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CWL_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1156 |                 tcol = max2(tcol, last_wr[p] + CWL_PS + BURST_PS +
+      |                                              ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1156:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1156 |                 tcol = max2(tcol, last_wr[p] + CWL_PS + BURST_PS +
+      |                                                       ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1157:81: Operator COND expects 64 bits on the Conditional True, but Conditional True's VARREF 'WTRL_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1157 |                                   ((last_wr_bg_valid[p] && last_wr_bg[p] == bg) ? WTRL_PS : WTRS_PS));
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1157:81: Operator COND expects 64 bits on the Conditional False, but Conditional False's VARREF 'WTRS_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1157 |                                   ((last_wr_bg_valid[p] && last_wr_bg[p] == bg) ? WTRL_PS : WTRS_PS));
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1158:69: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RTW_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1158 |             if (we && last_rd[p] >= 0) tcol = max2(tcol, last_rd[p] + RTW_PS);
+      |                                                                     ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1162:60: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CWL_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1162 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + CWL_PS + BURST_PS + WR_PS);
+      |                                                            ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1162:69: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1162 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + CWL_PS + BURST_PS + WR_PS);
+      |                                                                     ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1162:80: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'WR_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1162 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + CWL_PS + BURST_PS + WR_PS);
+      |                                                                                ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1165:60: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RTP_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1165 |                 b_preok[p][bk] = max2(b_preok[p][bk], tcol + RTP_PS);
+      |                                                            ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1188:54: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NB' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1188 |                 next_ref[p] = (REFPB != 0) ? REFI_PS / NB + (longint'(REFI_PS) * p) / (NPC * NB)
+      |                                                      ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1189:80: Operator DIVS expects 64 bits on the RHS, but RHS's VARREF 'NPC' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1189 |                                            : REFI_PS + (longint'(REFI_PS) * p) / NPC;
+      |                                                                                ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1219:50: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1219 |                         if (req_addr[j*AW +: AW] >= MEM_WORDS)
+      |                                                  ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1232:56: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1232 |                         p = pc_of(req_addr[j*AW +: AW] + i);
+      |                                                        ^
+%Warning-WIDTHTRUNC: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1232:29: Operator FUNCREF 'pc_of' expects 30 bits on the Function Argument, but Function Argument's ADD generates 32 bits.
+                                                                                                                                  : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1232 |                         p = pc_of(req_addr[j*AW +: AW] + i);
+      |                             ^~~~~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1235:62: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1235 |                                      j, req_addr[j*AW +: AW] + i, p);
+      |                                                              ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1240:64: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1240 |                         q_addr[p][slot] = req_addr[j*AW +: AW] + i;
+      |                                                                ^
+%Warning-WIDTHTRUNC: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1240:41: Operator ASSIGN expects 30 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                                  : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1240 |                         q_addr[p][slot] = req_addr[j*AW +: AW] + i;
+      |                                         ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1324:68: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CWL_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1324 |                                         rec_visible_at = h_tcol[p] + CWL_PS + BURST_PS;
+      |                                                                    ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1324:77: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1324 |                                         rec_visible_at = h_tcol[p] + CWL_PS + BURST_PS;
+      |                                                                             ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1323:51: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CWL_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1323 |                                     if (h_tcol[p] + CWL_PS + BURST_PS > rec_visible_at)
+      |                                                   ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1323:60: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1323 |                                     if (h_tcol[p] + CWL_PS + BURST_PS > rec_visible_at)
+      |                                                            ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1329:61: Operator MODDIV expects 32 bits on the LHS, but LHS's ARRAYSEL generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1329 |                                         mem[q_addr[p][slot] % MEM_WORDS][8*byte_i +: 8] =
+      |                                                             ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1335:55: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'CL_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1335 |                                 r_t[p][k] = h_tcol[p] + CL_PS + BURST_PS + RSP_PS;
+      |                                                       ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1335:63: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'BURST_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1335 |                                 r_t[p][k] = h_tcol[p] + CL_PS + BURST_PS + RSP_PS;
+      |                                                               ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1335:74: Operator ADD expects 64 bits on the RHS, but RHS's VARREF 'RSP_PS' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1335 |                                 r_t[p][k] = h_tcol[p] + CL_PS + BURST_PS + RSP_PS;
+      |                                                                          ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1337:109: Operator MODDIV expects 32 bits on the LHS, but LHS's ARRAYSEL generates 30 bits.
+                                                                                                                                    : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1337 |                                 r_data[p][k] = (MEM_MODE != 0) ? pat(q_addr[p][slot]) : mem[q_addr[p][slot] % MEM_WORDS];
+      |                                                                                                             ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1361:37: Operator NEQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 4 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1361 |                     if(rec_reads[z] != qr+rr || rec_writes[z] != qw)
+      |                                     ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1361:63: Operator NEQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1361 |                     if(rec_reads[z] != qr+rr || rec_writes[z] != qw)
+      |                                                               ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1363:26: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 4 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1363 |                     nr=nr+rec_reads[z]; nw=nw+rec_writes[z];
+      |                          ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv:1363:46: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 2 bits.
+                                                                                                                                   : ... note: In instance 'tb.back.g_recovery.u_impl'
+ 1363 |                     nr=nr+rec_reads[z]; nw=nw+rec_writes[z];
+      |                                              ^
+%Warning-WIDTHTRUNC: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/hbm_karb_recovery.sv:544:114: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'PIPE_OUT' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.arb.g_recovery.u_impl'
+  544 |     initial if (SELECT_STACK != 2 || NPC != 32 || TAGW != 16 || AW != 30 || LENW != 4 || BEATW != 4 || DW != 256 || PIPE_OUT || PIPE_RSP)
+      |                                                                                                                  ^~
+%Warning-WIDTHTRUNC: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/hbm_karb_recovery.sv:544:126: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'PIPE_RSP' generates 32 bits.
+                                                                                                                                   : ... note: In instance 'tb.arb.g_recovery.u_impl'
+  544 |     initial if (SELECT_STACK != 2 || NPC != 32 || TAGW != 16 || AW != 30 || LENW != 4 || BEATW != 4 || DW != 256 || PIPE_OUT || PIPE_RSP)
+      |                                                                                                                              ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/hbm_karb_recovery.sv:550:38: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.arb.g_recovery.u_impl'
+  550 |         pc_of = (NPC > 1) ? LPC'(((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : '0;
+      |                                      ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/hbm_karb_recovery.sv:550:49: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.arb.g_recovery.u_impl'
+  550 |         pc_of = (NPC > 1) ? LPC'(((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : '0;
+      |                                                 ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/hbm_karb_recovery.sv:550:68: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 's' generates 30 bits.
+                                                                                                                                   : ... note: In instance 'tb.arb.g_recovery.u_impl'
+  550 |         pc_of = (NPC > 1) ? LPC'(((s >> 2) ^ (s >> (2 + LPC)) ^ (s >> (2 + 2 * LPC))) & (NPC - 1)) : '0;
+      |                                                                    ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/window_prefetch_recovery.sv:846:64: Operator EQ expects 16 bits on the RHS, but RHS's VARREF 'refill_epoch' generates 9 bits.
+                                                                                                                                          : ... note: In instance 'tb.src.g_recovery.u_impl'
+  846 |     wire reply_epoch_ok = (s_tag[WIN_STACK*TAGW +: TAGW] >> 5) == refill_epoch;
+      |                                                                ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/window_prefetch_recovery.sv:848:83: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'refill_pending' generates 5 bits.
+                                                                                                                                          : ... note: In instance 'tb.src.g_recovery.u_impl'
+  848 |     wire pipe_issue = state == FR_PIPE && !fault && !rec_freeze && refill_pending < REFILL_CREDITS &&
+      |                                                                                   ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/tb.sv:622:43: Operator NEQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 4 bits.
+                                                                                                                    : ... note: In instance 'tb'
+  622 |   if(back.g_recovery.u_impl.rec_reads[pc] != oq+orq || back.g_recovery.u_impl.rec_writes[pc] != ow)
+      |                                           ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/tb.sv:622:94: Operator NEQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                                                                                    : ... note: In instance 'tb'
+  622 |   if(back.g_recovery.u_impl.rec_reads[pc] != oq+orq || back.g_recovery.u_impl.rec_writes[pc] != ow)
+      |                                                                                              ^~
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/tb.sv:629:17: Operator SUB expects 64 bits on the LHS, but LHS's VARREF 'other_writes' generates 32 bits.
+                                                                                                                    : ... note: In instance 'tb'
+  629 |     other_writes-back.g_recovery.u_impl.st_wr[31] != other_qw_total)
+      |                 ^
+%Warning-WIDTHEXPAND: /tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/tb.sv:629:51: Operator NEQ expects 64 bits on the RHS, but RHS's VARREF 'other_qw_total' generates 32 bits.
+                                                                                                                    : ... note: In instance 'tb'
+  629 |     other_writes-back.g_recovery.u_impl.st_wr[31] != other_qw_total)
+      |                                                   ^~
+make: Entering directory '/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb___024root__3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb__main.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 1.315 MB sources in 20 modules, into 6.240 MB in 10 C++ files needing 0.014 MB
+- Verilator: Walltime 15.846 s (elab=0.043, cvt=0.520, bld=15.168); cpu 0.743 s on 2 threads; allocated 93.188 MB

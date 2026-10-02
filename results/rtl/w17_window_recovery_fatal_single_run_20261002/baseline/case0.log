@@ -1,0 +1,5 @@
+PREPARED_RECOVERY_CASE_PASS case=READ_HELD cycles=239 reads=25 replies=25 writes=0 observerop=1
+- /tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources/tb.sv:684: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 242ns; walltime 0.002 s; speed 145.511 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 15 MB
