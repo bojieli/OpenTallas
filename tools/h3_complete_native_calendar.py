@@ -307,6 +307,319 @@ def resolve_ds_forward_parent_home(interface, residence, *, pc, version, rank, S
     return matches[0]
 
 
+def load_v1_cost_api(commit):
+    """Import analytical cost/lease functions only from the immutable producer."""
+    raw=source_bytes('tools/h4_v1_g0_model.py',commit)
+    names={'positive','contract','latency_key','command_cost','reconcile_cost'}
+    tree=ast.parse(raw);body=[]
+    for node in tree.body:
+        if isinstance(node,ast.FunctionDef) and node.name in names:body.append(node)
+        elif isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id in ('DEFAULT','V1','ALIASES') for t in node.targets):body.append(node)
+    ns={'math':math};exec(compile(ast.Module(body=body,type_ignores=[]),'pinned_V1_cost_API','exec'),ns)
+    return types.SimpleNamespace(**{name:ns[name] for name in names})
+
+
+def bind_kepler_state_directory(native, directory, producer_source, native_sha256):
+    """Replay the actual finite state allocator; no permanent native copy."""
+    names={'output_spec','compile_directory'};tree=ast.parse(producer_source);body=[]
+    for node in tree.body:
+        if isinstance(node,ast.FunctionDef) and node.name in names:body.append(node)
+        elif isinstance(node,ast.Assign):body.append(node)
+    ns={'math':math};exec(compile(ast.Module(body=body,type_ignores=[]),'pinned_Kepler_state_allocator','exec'),ns)
+    expected=json.loads(json.dumps(ns['compile_directory'](native,native_sha256)))
+    if directory!=expected:raise ValueError('Kepler state directory differs from retained source allocator')
+    by_rank=defaultdict(list)
+    for row in directory['rows']:by_rank[row['rank']].append(row)
+    for rows in by_rank.values():
+        rows.sort(key=lambda row:row['base'])
+        for a,b in zip(rows,rows[1:]):
+            if a['base']+a['reservation_bytes']>b['base']:raise ValueError('Kepler live state fragment alias')
+    keys=[]
+    for row in directory['rows']:
+        if 'index_keys.L' not in row['version']:continue
+        consumers=[]
+        for op in native['instructions']:
+            for tid,providers in op['provider_bindings'].items():
+                for field,binding in providers.items():
+                    if binding.get('version')!=row['version']:continue
+                    spec=native['templates'][tid]['providers'][field]
+                    consumers.append({'pc':op['pc'],'template':tid,'field':field,'shape':spec['shape'],
+                        'dtype':spec['dtype'],'requested_bytes':max(1,math.prod(spec['shape']))*{'F32':4,'U32':4,'I64':8}[spec['dtype']],
+                        'view_contract':binding['native_address_view'],
+                        'status':'UNKNOWN_RETAINED_HISTORY_APPEND_OR_CODE_SCALE_VIEW_REQUIRED'})
+        keys.append({'produced_fragment':row,'source_consumer_views':consumers,
+            'produced_fragment_address_bound':True,'produced_fragment_visible_receipt':None,
+            'complete_index_history_home_bound':False})
+    return {'schema':'H4_DS_SOURCE_RESOLVED_KEPLER_STATE_HOME_JOIN_V1',
+        'source_native_sha256':native_sha256,'state_fragment_homes':len(directory['rows']),
+        'missing_write_versions_bound':len({(r['PC'],r['version']) for r in directory['rows']}),
+        'extent':directory['extent'],'index_key_bindings':keys,
+        'full_history_substitution_admitted':False,'hardware_full_native_claim':False,
+        'status':'PASS_EXACT_PRODUCED_FRAGMENT_HOMES_HISTORY_VIEWS_UNKNOWN'}
+
+
+def reconcile_v1_ordered_phases(program, template, record, api):
+    """Replace exactly one native term and reconcile serialized RF once.
+
+    An explicit source-scoped RF ledger is mandatory; absent is not zero.
+    C0 and provider/RMW phases are retained byte-data identical. This is an
+    analytical reservation, not evidence that H1 implements a V1 owner lock.
+    """
+    specs=native_value_specs(program,template);ref=record['native_instruction_ref']
+    role,value,_,offset,payload=resolve_ds_movement_reference(program,template,ref,specs)
+    if role[1]!='dst':raise ValueError('V1 destination source reference required')
+    node=program['templates'][template]['code'][role[0]];elements=payload//specs[value]['width']
+    input_bits=[specs[s]['width']*8 for s in node['src']]
+    cost=api.command_cost(node['op'],input_bits,specs[value]['width']*8,elements=elements)
+    identity=record['owner']
+    if (set(identity)!={'PC','rank','SM','tag','generation'} or type(identity['PC'])!=int or identity['PC']<0 or
+        any(type(identity[k])!=int or not 0<=identity[k]<limit for k,limit in
+            [('rank',96),('SM',32),('tag',1<<64),('generation',1<<64)])):
+        raise ValueError('V1 finite owner identity required')
+    ledger=record.get('RF_ledger')
+    if ledger is None:raise ValueError('UNKNOWN source-scoped existing RF ledger required')
+    phases=record['baseline_phases'];native=[p for p in phases if p['kind']=='native']
+    if len(native)!=1 or native[0]['opcode']!=node['op']:raise ValueError('V1 replaces exactly one matching native phase')
+    if record.get('native_replacement_applied'):raise ValueError('V1 native replacement already applied')
+    if native[0]['ticks']!=ledger['native_ticks_per_command']:raise ValueError('V1 native baseline ledger mismatch')
+    for phase in phases:positive(phase['ticks'],'retained phase ticks')
+    reads=sum(p.get('transactions',0) for p in phases if p['kind']=='RF_read_pair')
+    writes=sum(p.get('transactions',0) for p in phases if p['kind']=='RF_write_vector_ACK')
+    if (reads,writes)!=(ledger['RF_read_pair_transactions'],ledger['RF_write_vectors']):
+        raise ValueError('V1 RF ledger does not resolve baseline phases')
+    if ledger['I64_RMW_already_charged'] and not any(p['kind']=='provider_RMW' for p in phases):
+        raise ValueError('V1 claimed existing I64 RMW has no baseline phase')
+    kinds=[p['kind'] for p in phases];ni=kinds.index('native')
+    if any(p['kind']=='RF_read_pair' for p in phases[ni+1:]) or any(p['kind']=='RF_write_vector_ACK' for p in phases[:ni]):
+        raise ValueError('V1 serialized operand/ACK phase order')
+    if not any(p['kind']=='C0_accept' for p in phases[:ni]) or not any(p['kind']=='C0_reverse_retire' for p in phases[ni+1:]):
+        raise ValueError('V1 retains C0 owner accept/reverse phases')
+    delta=api.reconcile_cost(cost,ledger);new=[]
+    for phase in phases:
+        if phase['kind']!='native':new.append(dict(phase));continue
+        for i in range(delta['additional_RF_read_pairs']):
+            new.append({'kind':'RF_read_pair','transactions':1,'ticks':cost['components']['RF_read']//cost['RF_read_pair_transactions'],'owner':identity,
+                'provisional':True,'source':'V1 read_accept/capture/return; single owner credit'})
+        new.append(dict(phase,ticks=delta['native_only_replacement_ticks'],replacement='V1_native_only_once'))
+        for i in range(delta['additional_RF_write_vectors']):
+            new.append({'kind':'RF_write_vector_ACK','transactions':1,'ticks':cost['components']['RF_write_visible']//cost['RF_write_vectors'],'owner':identity,
+                'provisional':True,'source':'V1 write_accept/both_mirror_ACK; release after ACK'})
+    if [p for p in new if p['kind'].startswith('C0_')]!=[p for p in phases if p['kind'].startswith('C0_')]:
+        raise ValueError('V1 changed retained C0 charge')
+    return {'schema':'H4_V1_ORDERED_PHASE_NATIVE_REPLACEMENT_V1','owner':identity,
+        'native_instruction_ref':ref,'native_replacement_applied':True,'ordered_phases':new,
+        'software_ticks_before':sum(p['ticks'] for p in phases),'software_ticks_after':sum(p['ticks'] for p in new),
+        'reconciliation':delta,'serialized_RF_cost':cost,'hardware_admitted':False,
+        'C0_atomic_owner_lock_in_actual_H1':'UNKNOWN','clock_or_ns_conversion':None}
+
+
+def compose_v1_native_component_successor(ds, qwen_fixture, qwen, model):
+    """All-PC analytical native-only replacement; unknown RF debit stays unknown.
+
+    Retains DS's conservative scalar service unit and Qwen's exported command
+    unit. No conversion of scalar service bounds to achieved SIMD throughput.
+    Whole serialized V1 cost must never be added on top of RF/C0/provider terms.
+    """
+    if ds.get('V1_native_replacement_applied') or qwen_fixture.get('V1_native_replacement_applied'):
+        raise ValueError('V1 native component already replaced')
+    profiles=model['typed_cost_bounds']
+    def demand(counts, baseline):
+        selected={op:n for op,n in counts.items() if op in profiles};removed=added=reads=writes=0
+        for op,n in selected.items():
+            if type(n)!=int or n<0:raise ValueError('V1 source command count')
+            p=profiles[op]['upper'];positive(p['native_only_replacement_ticks'],'V1 native replacement')
+            removed+=n*baseline;added+=n*p['native_only_replacement_ticks']
+            reads+=n*p['RF_read_pair_transactions'];writes+=n*p['RF_write_vectors']
+        return {'native_old_ticks':removed,'native_new_ticks':added,'native_delta_ticks':added-removed,
+            'RF_required_read_pairs_upper':reads,'RF_required_write_vectors_upper':writes,
+            'RF_additional_cost_after_existing_ledger':None,'C0_additional_ticks':0,'I64_RMW_additional_ticks':0}
+    tick=0;rows=[];base=ds['retained_baseline_provisional_costs']['primitive_scalar'];positive(base,'DS native baseline')
+    for pc in ds['PC_intervals']:
+        groups=defaultdict(list);records={};durations=[]
+        for rank in pc['ranks']:
+            d=demand(rank['native_scalar_command_upper_by_opcode'],base)
+            if d['native_old_ticks']>rank['baseline_provider_and_native_ticks_charged_once']:raise ValueError('DS native removal exceeds charged baseline')
+            d.update(C0_retained_ticks=rank['C0_ticks'],shared_retained_ticks=rank['shared_known_ticks'],
+                provider_nonV1_retained_ticks=rank['baseline_provider_and_native_ticks_charged_once']-d['native_old_ticks'])
+            duration=rank['end']-rank['start']+d['native_delta_ticks']
+            if duration<0:raise ValueError('negative DS successor interval')
+            key=json.dumps(d,sort_keys=True,separators=(',',':'));groups[key].append(rank['rank']);records[key]=d;durations.append(duration)
+        end=tick+max(durations)+pc['additional_atomic_admission_ticks']
+        rows.append({'pc':pc['pc'],'family':pc['family'],'dependencies':pc['dependencies'],'start':tick,'end':end,
+            'rank_groups':[dict(records[k],ranks=ranks) for k,ranks in groups.items()],
+            'atomic_collective_participants':pc['atomic_collective_participants'],
+            'actual_RF_reconciliation_complete':False});tick=end
+    qrows=[];shift=0
+    for old in qwen_fixture['ordered_PC_intervals']:
+        d=demand(old['native_commands'],32)
+        if sum(old['native_commands'].values())!=old['cost_units']['native_batch']:raise ValueError('Qwen fixture native source count mismatch')
+        row=dict(pc=old['pc'],position=old['position'],family=old['opcode'],start=old['start']+shift,
+            end=old['end']+shift+d['native_delta_ticks'],C0_retained_ticks=old['C0_service_ticks'],
+            provider_retained_ticks=old['provider_service_ticks'],**d)
+        qrows.append(row);shift+=d['native_delta_ticks']
+    qfull=[]
+    for op in qwen['operations']:
+        counts=op['calendar_export']['physical_primitives']['native_primitive_commands']
+        qfull.append({'pc':op['pc'],'family':op['opcode'],'dependencies':op['dependencies'],
+            'source_native_command_counts':counts,**demand(counts,32),
+            'C0_existing_charge_unchanged':True,'complete_provider_RF_calendar':None})
+    return {'schema':'H4_V1_BOTH_PROGRAM_NATIVE_COMPONENT_SUCCESSOR_V1','V1_native_replacement_applied':True,
+        'DeepSeek':{'PCs':len(rows),'families':len({r['family'] for r in rows}),'PC_intervals':rows,
+            'known_native_only_successor_software_ticks':tick,'baseline_known_service_software_ticks':ds['known_service_software_ticks'],
+            'count_scope':'retained scalar-command conservative upper per rank; no128lane speedup claimed',
+            'unknown_shared_template_calls':ds['unknown_shared_template_calls']},
+        'Qwen_fixture':{'PC_intervals':qrows,'baseline_software_ticks':qwen_fixture['software_ticks'],
+            'native_only_successor_software_ticks':qwen_fixture['software_ticks']+shift,'scope':'two reduced36layer CPU fixtures'},
+        'Qwen_full_program':{'PCs':len(qfull),'families':len({r['family'] for r in qfull}),'PC_native_component_demands':qfull,
+            'complete_service_software_ticks':None},
+        'RF_join':'UNKNOWN until source-scoped existing pair/read/write/ACK ledger; no zero debit assumed',
+        'C0_and_provider_costs_retained_once':True,'additional_RMW_codec_or_r22_cost':0,
+        'area':model['area'],'routing':model['routing'],'resource_contract':model['resource_contract'],
+        'measured_opcode_costs':None,'complete_iteration_service_software_ticks':None,
+        'hardware_admitted':False,'clock_or_ns_conversion':None}
+
+
+def join_v1_physical_capacity(model):
+    """Retain the reviewed slot failure and finite owner contract, without credit.
+
+    Exact rank/SM identities are checked independently of analytical geometry.
+    This does not price absent operand routes or install an H1 owner gateway.
+    """
+    if model['schema']!='opentallas.H4.V1.physical-join.v1' or model['hardware_admitted'] or model['RTL_allowed']:
+        raise ValueError('V1 physical model scope changed')
+    rf=model['RF_contract']
+    expected={'command_credit':1,'RF_transaction_credit':1,'read_vectors_per_accept':2,
+        'write_vectors_per_accept':1,'physical_write_mirrors':2,'RF_vector_count':512,
+        'response_payload_B':1024,'write_mirror_payload_B':1024}
+    if any(rf.get(k)!=v for k,v in expected.items()):raise ValueError('V1 finite RF mirror/credit contract')
+    joined={}
+    for name,ranks in [('Qwen',2),('DeepSeek',96)]:
+        m=model['models'][name];mapping=m['rank_to_die_SM']
+        identities=[(r['rank'],r['SM']) for r in mapping]
+        if len(mapping)!=ranks*32 or set(identities)!={(r,s) for r in range(ranks) for s in range(32)}:
+            raise ValueError('V1 finite rank/SM map incomplete or duplicate')
+        if any(r['die']!=r['rank'] or r['instance']!='die%d/sm%d'%(r['rank'],r['SM']) for r in mapping):
+            raise ValueError('V1 physical instance identity')
+        if m['calendar']['RF_read_II']!=3 or m['calendar']['RF_write_II']!=2:
+            raise ValueError('V1 source RF serialized service phases')
+        joined[name]={'replicas':len(mapping),'rank_SM_mapping_sha256':hashlib.sha256(
+            json.dumps(mapping,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
+            'slot':m['slot'],'routing':m['routing'],'calendar':m['calendar'],
+            'G0_verdict':m['G0_verdict'],'opcode_hardware_coverage':m['opcode_hardware_coverage']}
+    return {'schema':'H4_CALENDAR_V1_PHYSICAL_CAPACITY_JOIN_V1','models':joined,'RF_contract':rf,
+        'source_pins':model['source_pins'],'blockers':model['blockers'],
+        'additional_C0_or_RF_cost_applied':False,'dynamic_RF_ledger':None,
+        'hardware_admitted':False,'clock_or_ns_conversion':None}
+
+
+def validate_kepler_state_publication(receipt, binding):
+    """Consume actual r30 terminal receipts without treating them as full journals."""
+    identity=receipt['identity'];expected={'PC':binding['PC'],'version':binding['version'],'rank':binding['rank']}
+    if any(identity.get(k)!=v for k,v in expected.items()):raise ValueError('Kepler parent publication source identity mismatch')
+    if type(identity.get('generation'))!=int or not 0<identity['generation']<1<<64:raise ValueError('Kepler publication generation')
+    if receipt.get('pending_obligations')!=0:raise ValueError('Kepler publication has outstanding debt')
+    if not re.fullmatch('[0-9a-f]{64}',receipt.get('payload_sha256',{}).get('data','')):raise ValueError('Kepler publication payload pin')
+    events=receipt['events']
+    if [e['event'] for e in events]!=['software_backing_visible','consumer_accept','validated_reverse_grant']:
+        raise ValueError('Kepler publication actual visibility/consume/reverse order')
+    last_sequence=-1;last_tick=-1;owner=None
+    for event in events:
+        if event['identity']!=identity or type(event['sequence'])!=int or event['sequence']<=last_sequence or event['source_tick']<last_tick:
+            raise ValueError('Kepler publication owner or event order')
+        fragment=event['source_fragment_identity']
+        if (type(event['source_tag'])!=int or not 0<=event['source_tag']<4 or
+            type(event['source_tag_generation'])!=int or not 0<=event['source_tag_generation']<1<<64):
+            raise ValueError('Kepler finite tag/generation extent')
+        if any(fragment.get(k)!=v for k,v in {'target':'DeepSeek','rank':binding['rank'],'pc':binding['PC'],'epoch':identity['generation'],
+            'sector':(binding['base']+binding['bytes']-1)//32}.items()):raise ValueError('Kepler terminal sector/source mismatch')
+        token=(fragment,event['source_tag'],event['source_tag_generation'])
+        if owner is not None and token!=owner:raise ValueError('Kepler reverse tag/generation mismatch')
+        owner=token;last_sequence=event['sequence'];last_tick=event['source_tick']
+    return {'status':'PASS_SOURCE_BOUND_TERMINAL_PUBLICATION','binding':binding,'receipt':receipt,
+        'whole_fragment_sector_journal_bound':False,'RF_phase_cost_debit':None,
+        'parent_forward_refill_ACK_reverse_complete':False,'hardware_admitted':False}
+
+
+def audit_ds_mtp_source_contract(native, acceptance, isa_source, golden_source, uarch_source):
+    """Source/causal audit composed with provider/V1 gates, not an MTP executor."""
+    tree=ast.parse(isa_source);run=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='run_mtp')
+    text=ast.get_source_segment(isa_source,run)
+    if not all(s in text for s in ('compile_layer','compile_head','tokens[1:]','pos0 + j','hists[j]')):
+        raise ValueError('MTP verify source contract changed; audit required')
+    draft=next(n for n in ast.parse(golden_source).body if isinstance(n,ast.Assign) and
+        any(isinstance(t,ast.Name) and t.id=='DRAFTS' for t in n.targets))
+    drafts=ast.literal_eval(draft.value)
+    if len(drafts)!=5:raise ValueError('six-position MTP reference contract required')
+    hbm=next(n.value for n in ast.parse(uarch_source).body if isinstance(n,ast.Assign) and
+        any(isinstance(t,ast.Name) and t.id=='HBM_W19' for t in n.targets))
+    if not isinstance(hbm,ast.Call) or not isinstance(hbm.func,ast.Name) or hbm.func.id!='dict':raise ValueError('HBM_W19 source model contract')
+    fields={k.arg:ast.literal_eval(k.value) for k in hbm.keywords if k.arg in ('ar_us','mtp_pass_us','drafter_us')}
+    cohorts={name:acceptance['results'][group]['walk']['tau'] for name,group in [('overall','overall')]}
+    cohorts['chat']=acceptance['results']['per_class']['chat']['walk']['tau']
+    cohorts['reasoning']=acceptance['results']['per_class']['reasoning']['walk']['tau']
+    return {'schema':'H4_DS_MTP_CAUSAL_PROVIDER_NATIVE_SOURCE_AUDIT_V1','status':'MTP_NATIVE_ITERATION_CONTRACT_INCOMPLETE',
+        'AR_native_program':{'PCs':len(native['instructions']),'family_count':len(native['coverage']['families']) if isinstance(native['coverage']['families'],dict) else native['coverage']['families'],
+            'scope':'single-reference-position native program; no MTP accepted-token credit'},
+        'source_verify_program':{'path':'tools/w19_hbm_tp96_isa.py:run_mtp','positions':6,
+            'order':'layer-major; j=0..5, pos=pos0+j, history=hist0+tokens[1:1+j]',
+            'ownership':'distinct PR[j] rank buffers; causal shared State compressed/index stores and per-rank window appends',
+            'head':'compile_head per position, source greedy target prefix acceptance',
+            'actual_primitive_microprograms_and_version_home_calendar':None,
+            'scope':'ISA/source execution uses high-level numerical families; does not replace H3 primitive recipes'},
+        'reference_drafts':{'fixed_token_ids':drafts,'actual_drafter_executed_by_reference':False,
+            'native_draft_program_and_provider_versions':None},
+        'causal_KV_successor_contract':{
+            'identity':['iteration','position_j','logical_position','version','rank','SM','generation'],
+            'visibility':'position j may read retained committed history plus earlier verified-position state; later positions never visible',
+            'states':['window rows','compressed KV rows','index-key/code/scale rows','compressor open slots','State.n row counts','token history','draft hidden/cache state'],
+            'accepted_commit':'publish processed anchor and accepted draft-input KV/index/window versions after visible ACKs; emit accepted drafts plus target bonus',
+            'bonus_token':'next pending input; no fabricated KV for the unprocessed bonus',
+            'rejected_suffix':'restore all speculative state counters/views and reclaim suffix leases only after consumer/return/reverse debt drains',
+            'implemented_native_commit_or_rollback_program':None},
+        'acceptance':{'overall_walk_tau':cohorts['overall'],'pooled_prompts':acceptance['results']['overall']['prompts'],
+            'chat_walk_tau':cohorts['chat'],'reasoning_walk_tau':cohorts['reasoning'],
+            'headline_rounded_assumption':acceptance['headline']['tau'],
+            'bonus_included':True,'scope':'36-prompt pooled short-context own greedy continuations; not reasoning-only',
+            'arithmetic_transfer_to_exact_chunk8_1M':'UNPROVEN; different GEMM summation order and own short-context continuations',
+            'caveats':acceptance['caveats'],'budget_record_owner':'parent additive cohort/iteration budget record',
+            'headline_requirement':'primary third-party V4.1 gamma5 agentic per-request committed-token/verify receipts with matching costs',
+            'headline_agentic_median_rate':None,'local_chat_role':'sensitivity only; not the DS headline',
+            'local_pooled_role':'sensitivity/acceptance experiment only; not third-party agentic median'},
+        'modeled_reference_us':{'AR_baseline':fields['ar_us'],'six_position_verify':fields['mtp_pass_us'],
+            'draft':fields['drafter_us'],'qualification':'modeled historical contributions; not calibrated complete native iteration'},
+        'missing_complete_iteration_costs':{k:None for k in ['source_native_draft','six_position_native_verify_and_cross_position_provider_movement',
+            'accepted_prefix_and_bonus_commit','rejected_suffix_rollback_and_lease_drain','acceptance_control_and_target_compare',
+            'causal_index_KV_append_refill_and_code_scale_visibility','clock_domain_CDC_and_calibrated_endpoint_stalls']},
+        'software_ticks_to_us_conversion':None,'full_iteration_calibrated_us':None,'accepted_token_rate_qualified':False,
+        'composition':'must close the same provider/home/ACK/reverse and V1/C0 gates; AR full run is a separate gate'}
+
+
+def agentic_request_rate_summary(receipts):
+    """Median request rates, with full matching iteration costs and gamma5 proof."""
+    import statistics
+    if not receipts:return {'status':'PENDING_PRIMARY_AGENTIC_RECEIPTS','median_request_tokens_s':None,
+        'pooled_tokens_per_verify':None,'pooled_tokens_s':None,'qualified_headline':False}
+    rates=[];tokens=cycles=cost=0;ids=set()
+    for row in receipts:
+        if row['request_id'] in ids:raise ValueError('duplicate third-party request')
+        ids.add(row['request_id'])
+        if row.get('workload_class')!='agentic' or row.get('gamma')!=5 or row.get('model')!='DeepSeek-V4.1-Flash':
+            raise ValueError('actual V4.1 gamma5 agentic request required')
+        if row.get('acceptance_mode')!='actual' or row.get('includes_committed_bonus') is not True:
+            raise ValueError('actual committed-token counters required; synthetic acceptance rejected')
+        if not re.fullmatch('[0-9a-f]{64}',row.get('source_receipt_sha256','')):raise ValueError('primary request receipt pin required')
+        n=positive(row['committed_tokens'],'request committed tokens');v=positive(row['verify_iterations'],'request verify iterations')
+        costs=row['complete_iteration_costs_us']
+        if len(costs)!=v or any(type(c) not in (int,float) or not math.isfinite(c) or c<=0 for c in costs):
+            raise ValueError('matching complete per-iteration costs required')
+        if n>6*v:raise ValueError('gamma5 committed-token count extent')
+        duration=sum(costs);rates.append(n*1e6/duration);tokens+=n;cycles+=v;cost+=duration
+    return {'status':'PASS_REQUEST_RATE_AGGREGATION_SOURCE_TRANSFER_GATE_SEPARATE','requests':len(rates),
+        'median_request_tokens_s':statistics.median(rates),'per_request_tokens_s':rates,
+        'pooled_tokens_per_verify':tokens/cycles,'pooled_tokens_s':tokens*1e6/cost,
+        'qualified_headline':False,'transfer_to_exact_1M_native_contract':None}
+
+
 def resolve_ds_forward_leaf_reference(catalog, N, S, ref, *, expected_rank):
     """Existing importer hook: resolve actual source leaf/iteration, not strings."""
     if not isinstance(ref,dict):raise ValueError('structured source forward leaf reference required')
@@ -3038,8 +3351,80 @@ def main():
     ap.add_argument('--ds-shared-bridge-commit')
     ap.add_argument('--ds-native-source-commit')
     ap.add_argument('--ds-forward-leaves',action='store_true')
+    ap.add_argument('--provider-v1-join',action='store_true')
+    ap.add_argument('--v1-source-commit',default='f7fa8e290d419f6de3356385c0b55ded768c2090')
+    ap.add_argument('--v1-physical-source-commit',default='620c078de78cc55ddb5562b1d5d7171d8ef944ca')
+    ap.add_argument('--kepler-source-commit',default='f240f42fbeb67e402e922b4a4aae30b8a8873ce1')
+    ap.add_argument('--mtp-source-commit',default='5b71cd17cebe109a1dab6141aa2812bd6f02b2a8')
+    ap.add_argument('--parent-state-receipts',type=Path)
     ap.add_argument('--c0-source-commit')
     args = ap.parse_args()
+    if args.provider_v1_join:
+        pins={}
+        def blob(path,commit=None):
+            raw=source_bytes(path,commit);pins[path]={'commit':commit,'sha256':hashlib.sha256(raw).hexdigest()};return raw
+        def value(path,commit=None):
+            raw=blob(path,commit);return json.loads(gzip.decompress(raw) if path.endswith('.gz') else raw)
+        native_raw=blob('results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz','91e3b8cc2791fa3fe1322df3d72b3f76dbd184f6')
+        native=json.loads(gzip.decompress(native_raw));native_sha=hashlib.sha256(native_raw).hexdigest()
+        folder=OUT+'/ds_forward_leaf_join_r3/review/'
+        ds=value(folder+'full_program_costs.json.gz','781046c9775880183bd7f45a06ab101e98c66cac')
+        qfix=value(OUT+'/h4_actual_config_e844/run_r3/repriced_intervals.json.gz','6e28f1a8b48ea0182aed59a09d65540a1b0b96b3')
+        qwen=value(OUT+'/bounded_provider_milestone/Qwen_tiled.json.gz','781046c9775880183bd7f45a06ab101e98c66cac')
+        model=value('results/uarch/h4_v1_g0_model_20261002/intake/run/model.json',args.v1_source_commit)
+        blob('tools/h4_v1_g0_model.py',args.v1_source_commit);api=load_v1_cost_api(args.v1_source_commit)
+        for op,bounds in model['typed_cost_bounds'].items():
+            for key,cost in bounds.items():
+                if api.command_cost(op,cost['input_bits'],cost['output_bits'],elements=cost['elements'],lanes=cost['lanes'])!=cost:
+                    raise ValueError('V1 model command phases/source cost replay mismatch')
+        successor=compose_v1_native_component_successor(ds,qfix,qwen,model)
+        physical=value('results/uarch/h4_v1_g0_model_20261002/physical_join_r1/final/model.json',args.v1_physical_source_commit)
+        blob('tools/h4_v1_physical_join.py',args.v1_physical_source_commit)
+        for pin in physical['source_pins']:
+            if hashlib.sha256(blob(pin['path'],pin['commit'])).hexdigest()!=pin['sha256']:
+                raise ValueError('V1 physical input source pin mismatch')
+        physical_join=join_v1_physical_capacity(physical)
+        directory=value('results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/finite_state_homes.json',args.kepler_source_commit)
+        source=blob('tools/ds_hbm_finite_state_homes_r30.py',args.kepler_source_commit)
+        homes=bind_kepler_state_directory(native,directory,source,native_sha)
+        terminal=[]
+        if args.parent_state_receipts:
+            supplied=read_json(args.parent_state_receipts);pins[str(args.parent_state_receipts)]={'sha256':hashlib.sha256(args.parent_state_receipts.read_bytes()).hexdigest()}
+            for receipt in supplied['receipts']:
+                identity=receipt['identity'];bindings=[r for r in directory['rows'] if all(identity[k]==r[k] for k in ('PC','version','rank'))]
+                if len(bindings)!=1:raise ValueError('parent receipt state directory identity missing')
+                terminal.append(validate_kepler_state_publication(receipt,bindings[0]))
+        receipt_scope={'schema':'H4_KEPLER_PARENT_PUBLICATION_RECEIPT_JOIN_V1','source_bound_terminal_receipts':terminal,
+            'actual_parent_receipts_supplied':bool(args.parent_state_receipts),'full_parent_movement_cost_closed':False,
+            'full_fragment_sector_journals':None,'refill_writeback_ACK_reverse_cost':None,'hardware_admitted':False}
+        acceptance=value('results/speculative/v41_flash_dspark_onpolicy_greedy.json',args.mtp_source_commit)
+        isa=blob('tools/w19_hbm_tp96_isa.py',args.mtp_source_commit).decode()
+        golden=blob('tools/w19_v41_mtp_golden.py',args.mtp_source_commit).decode()
+        uarch=blob('tools/uarch_model.py',args.mtp_source_commit).decode()
+        blob('tools/build_dspark_draft_graph.py',args.mtp_source_commit)
+        mtp=audit_ds_mtp_source_contract(native,acceptance,isa,golden,uarch)
+        mtp['primary_agentic_request_rate']=agentic_request_rate_summary([])
+        pins['tools/h3_complete_native_calendar.py']={'sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+        summary={'schema':'H4_PROVIDER_V1_MTP_COMPOSED_JOIN_V1','status':'PASS_COMPONENT_JOIN_PARENT_MOVEMENT_AND_MTP_GATES_OPEN',
+            'DS_PCs':successor['DeepSeek']['PCs'],'Qwen_PCs':successor['Qwen_full_program']['PCs'],
+            'DS_native_only_successor_software_ticks':successor['DeepSeek']['known_native_only_successor_software_ticks'],
+            'Qwen_reduced_fixture_native_only_successor_software_ticks':successor['Qwen_fixture']['native_only_successor_software_ticks'],
+            'C0_provider_and_shared_charges_retained':True,'RF_additional_debit':None,'new_r22_charge':0,
+            'index_key_produced_fragment_bindings':len(homes['index_key_bindings']),'index_key_full_history_binding':None,
+            'shared_unknown_calls':ds['unknown_shared_template_calls'],'native_state_homes':homes['state_fragment_homes'],
+            'complete_MTP_iteration_calibrated_us':None,'headline_agentic_median_rate':None,'hardware_admitted':False}
+        artifacts={'manifest.json':{'schema':'H4_PROVIDER_V1_MTP_SOURCE_MANIFEST_V1','source_pins':pins,'hardware_admitted':False},
+            'summary.json':summary,'V1_native_component_successor.json.gz':successor,'Kepler_state_home_join.json.gz':homes,
+            'parent_receipt_join.json':receipt_scope,'MTP_source_contract_audit.json':mtp,
+            'V1_physical_capacity_join.json':physical_join}
+        if not args.verify:args.out.mkdir(parents=True,exist_ok=False)
+        for name,item in artifacts.items():
+            raw=(json.dumps(item,sort_keys=True,indent=2)+'\n').encode();raw=gzip.compress(raw,mtime=0) if name.endswith('.gz') else raw
+            if args.verify:
+                if (args.out/name).read_bytes()!=raw:raise ValueError('provider/V1/MTP source replay mismatch '+name)
+            else:(args.out/name).write_bytes(raw)
+        print(json.dumps(summary,sort_keys=True));print('PASS_PROVIDER_V1_MTP_SOURCE_REPLAY' if args.verify else 'PASS_PROVIDER_V1_MTP_COMPOSITION')
+        return
     if args.ds_full_program_cost:
         dispatch=read_json(args.ds_full_program_cost)
         if args.ds_full_native_source is None:raise ValueError('actual source native artifact required')

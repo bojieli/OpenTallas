@@ -12,6 +12,153 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_V1_physical_join_retains_finite_owner_mirrors_and_slot_failure(self):
+        import subprocess
+        raw=subprocess.check_output(['git','show','620c078de78cc55ddb5562b1d5d7171d8ef944ca:results/uarch/h4_v1_g0_model_20261002/physical_join_r1/final/model.json'],cwd=ROOT)
+        model=json.loads(raw);joined=c.join_v1_physical_capacity(model)
+        self.assertEqual(joined['models']['DeepSeek']['replicas'],3072)
+        self.assertEqual(joined['models']['Qwen']['replicas'],64)
+        self.assertEqual(joined['RF_contract']['physical_write_mirrors'],2)
+        self.assertEqual(joined['RF_contract']['RF_transaction_credit'],1)
+        self.assertFalse(joined['additional_C0_or_RF_cost_applied'])
+        self.assertIsNone(joined['dynamic_RF_ledger'])
+        for name in ('Qwen','DeepSeek'):
+            self.assertFalse(joined['models'][name]['slot']['physical_slot_admitted'])
+            self.assertFalse(joined['models'][name]['routing']['shared_channel_fits'])
+        bad=copy.deepcopy(model);bad['models']['DeepSeek']['rank_to_die_SM'][-1]=bad['models']['DeepSeek']['rank_to_die_SM'][0]
+        with self.assertRaisesRegex(ValueError,'incomplete or duplicate'):c.join_v1_physical_capacity(bad)
+        bad=copy.deepcopy(model);bad['RF_contract']['physical_write_mirrors']=1
+        with self.assertRaisesRegex(ValueError,'mirror/credit'):c.join_v1_physical_capacity(bad)
+        bad=copy.deepcopy(model);bad['models']['Qwen']['calendar']['RF_read_II']=0
+        with self.assertRaisesRegex(ValueError,'serialized service'):c.join_v1_physical_capacity(bad)
+
+    def test_MTP_contract_keeps_AR_and_local_acceptance_separate_from_agentic_headline(self):
+        acceptance={'results':{'overall':{'prompts':36,'walk':{'tau':3.648676}},
+            'per_class':{'chat':{'walk':{'tau':2.457711}},'reasoning':{'walk':{'tau':3.607}}}},
+            'headline':{'tau':3.649},'caveats':['different GEMM order; short context']}
+        isa='def run_mtp():\n    return compile_layer, compile_head, tokens[1:], pos0 + j, hists[j]\n'
+        record=c.audit_ds_mtp_source_contract({'instructions':[{}],'coverage':{'families':{'x':1}}},acceptance,
+            isa,'DRAFTS = [1,2,3,4,5]','HBM_W19 = dict(ar_us=442.14,mtp_pass_us=715.82,drafter_us=49.9,unrelated=source_runtime())')
+        self.assertEqual(record['AR_native_program']['PCs'],1)
+        self.assertEqual(record['acceptance']['pooled_prompts'],36)
+        self.assertIsNone(record['acceptance']['headline_agentic_median_rate'])
+        self.assertIn('sensitivity only',record['acceptance']['local_chat_role'])
+        self.assertFalse(record['accepted_token_rate_qualified'])
+        self.assertIn('unprocessed bonus',record['causal_KV_successor_contract']['bonus_token'])
+        self.assertTrue(all(v is None for v in record['missing_complete_iteration_costs'].values()))
+
+    def test_agentic_median_request_rate_is_not_pooled_token_ratio(self):
+        rows=[]
+        for i,(n,v,cost) in enumerate([(10,2,500),(10,5,1000),(100,20,5000)]):
+            rows.append({'request_id':str(i),'workload_class':'agentic','gamma':5,'model':'DeepSeek-V4.1-Flash',
+                'acceptance_mode':'actual','includes_committed_bonus':True,'source_receipt_sha256':'a'*64,
+                'committed_tokens':n,'verify_iterations':v,'complete_iteration_costs_us':[cost]*v})
+        result=c.agentic_request_rate_summary(rows)
+        self.assertEqual(result['median_request_tokens_s'],2000)
+        self.assertAlmostEqual(result['pooled_tokens_s'],120*1e6/106000)
+        self.assertNotEqual(result['median_request_tokens_s'],result['pooled_tokens_s'])
+        self.assertFalse(result['qualified_headline'])
+        self.assertIsNone(c.agentic_request_rate_summary([])['median_request_tokens_s'])
+        bad=copy.deepcopy(rows);bad[0]['acceptance_mode']='synthetic'
+        with self.assertRaisesRegex(ValueError,'synthetic acceptance rejected'):c.agentic_request_rate_summary(bad)
+        bad=copy.deepcopy(rows);bad[0]['complete_iteration_costs_us']=[500]
+        with self.assertRaisesRegex(ValueError,'matching complete'):c.agentic_request_rate_summary(bad)
+        bad=copy.deepcopy(rows);bad[0]['gamma']=3
+        with self.assertRaisesRegex(ValueError,'gamma5'):c.agentic_request_rate_summary(bad)
+
+    def test_V1_native_replacement_serial_RF_keeps_C0_and_rejects_second_charge(self):
+        api=c.load_v1_cost_api('f7fa8e290d419f6de3356385c0b55ded768c2090')
+        code=[{'op':'LOAD','src':[],'dst':'mask','shape':[128],'attrs':{'dtype':'U32'}},
+            {'op':'LOAD','src':[],'dst':'a','shape':[128],'attrs':{'dtype':'I64'}},
+            {'op':'LOAD','src':[],'dst':'b','shape':[128],'attrs':{'dtype':'I64'}},
+            {'op':'SELECT','src':['mask','a','b'],'dst':'out','shape':[128],'attrs':{}}]
+        program={'templates':{'t':{'code':code}}}
+        ref={'template':'t','code_index':3,'opcode':'SELECT','attrs':{},'result_shape':[128],
+            'operand':'dst','value':'out','logical_byte_offset':0,'payload_bytes':1024}
+        phases=[{'kind':'C0_accept','ticks':2},{'kind':'RF_read_pair','ticks':3,'transactions':1},
+            {'kind':'native','opcode':'SELECT','ticks':32},{'kind':'RF_write_vector_ACK','ticks':2,'transactions':1},
+            {'kind':'provider_RMW','ticks':2},{'kind':'C0_complete','ticks':2},{'kind':'C0_reverse_retire','ticks':2}]
+        r={'owner':{'PC':0,'rank':0,'SM':0,'tag':1,'generation':1},'native_instruction_ref':ref,
+            'baseline_phases':phases,'RF_ledger':{'RF_read_pair_transactions':1,'RF_write_vectors':1,
+                'native_ticks_per_command':32,'I64_RMW_already_charged':True,'C0_already_charged':True}}
+        joined=c.reconcile_v1_ordered_phases(program,'t',r,api)
+        self.assertEqual(joined['reconciliation']['native_only_replacement_ticks'],4)
+        self.assertEqual(joined['reconciliation']['additional_RF_read_pairs'],2)
+        self.assertEqual(joined['reconciliation']['additional_RF_write_vectors'],1)
+        self.assertEqual(joined['software_ticks_after'],25)
+        self.assertEqual([x for x in joined['ordered_phases'] if x['kind'].startswith('C0_')],
+                         [x for x in phases if x['kind'].startswith('C0_')])
+        self.assertEqual(joined['reconciliation']['additional_I64_RMW_charge'],0)
+        for mutation,error in [('again','already applied'),('missing','UNKNOWN'),('RF','baseline phases'),('opcode','opcode attrs')]:
+            bad=copy.deepcopy(r)
+            if mutation=='again':bad['native_replacement_applied']=True
+            elif mutation=='missing':bad.pop('RF_ledger')
+            elif mutation=='RF':bad['RF_ledger']['RF_read_pair_transactions']=2
+            else:bad['native_instruction_ref']['opcode']='FADD'
+            with self.assertRaisesRegex(ValueError,error):c.reconcile_v1_ordered_phases(program,'t',bad,api)
+
+    def test_Kepler_source_allocator_resolves_fragment_not_history_tensor(self):
+        raw=c.source_bytes('tools/ds_hbm_finite_state_homes_r30.py','f240f42fbeb67e402e922b4a4aae30b8a8873ce1')
+        producer={'code':[{'op':'LOAD','dst':'v0','src':[],'shape':[128],'attrs':{'dtype':'F32'}}],
+            'outputs':{'new_ik':'v0'},'providers':{}}
+        consumer={'code':[],'outputs':{},'providers':{'keys':{'shape':[8,128],'dtype':'F32'}}}
+        native={'templates':{'t':producer,'c':consumer},'instructions':[
+            {'pc':0,'writes':[{'version':'index_keys.L2','home_indices':[], 'native_result_binding':{'result':'new_ik'}}],
+             'rank_bindings':[{'rank':63,'template':'t'}],'provider_bindings':{}},
+            {'pc':1,'writes':[],'rank_bindings':[], 'provider_bindings':{'c':{'keys':{'version':'index_keys.L2','native_address_view':'full history'}}}}]}
+        row={'PC':0,'version':'index_keys.L2','rank':63,'base':33554432,'bytes':512,'reservation_bytes':512,
+             'shape':[128],'dtype':'F32','source_template':'t','source_result':'new_ik','home_class':'HBM_NATIVE_STATE',
+             'semantic_scope':'exact produced output fragment only; full-history append/aux consumption remains source-bound separately'}
+        directory={'source_native_sha256':'source','rows':[row],'per_rank_reserved_bytes':{'63':512},
+            'extent':{'AW':27,'base':33554432,'bytes':33554432,'address_class':'native software service plane; GPU physical AW34 translation NOT supplied'},
+            'capacity_charged_bytes_all96_ranks':33554432*96,'source_operator_or_rounding_changes':0,'actual_initial_context_supplied':False,'hardware_qualified':False}
+        result=c.bind_kepler_state_directory(native,directory,raw,'source')
+        key=result['index_key_bindings'][0];self.assertTrue(key['produced_fragment_address_bound'])
+        self.assertFalse(key['complete_index_history_home_bound'])
+        self.assertEqual(key['source_consumer_views'][0]['requested_bytes'],4096)
+        bad=copy.deepcopy(directory);bad['rows'][0]['base']+=512
+        with self.assertRaisesRegex(ValueError,'retained source allocator'):c.bind_kepler_state_directory(native,bad,raw,'source')
+
+    def test_Kepler_state_terminal_receipt_is_source_bound_but_not_full_journal(self):
+        binding={'PC':121,'version':'index_keys.L2','rank':63,'base':33554432,'bytes':512}
+        owner={'PC':121,'version':'index_keys.L2','rank':63,'generation':1,'home_indices':[0]}
+        fragment={'target':'DeepSeek','rank':63,'epoch':1,'pc':121,'serial':16,'sector':(33554432+511)//32}
+        events=[{'event':e,'identity':owner,'sequence':i+1,'source_tick':10+i,
+            'source_fragment_identity':fragment,'source_tag':1,'source_tag_generation':2}
+            for i,e in enumerate(['software_backing_visible','consumer_accept','validated_reverse_grant'])]
+        receipt={'identity':owner,'payload_sha256':{'data':'a'*64},'events':events,'pending_obligations':0}
+        result=c.validate_kepler_state_publication(receipt,binding)
+        self.assertFalse(result['whole_fragment_sector_journal_bound']);self.assertIsNone(result['RF_phase_cost_debit'])
+        for mutation,error in [('generation','tag/generation'),('debt','outstanding debt'),('sector','sector/source'),('event','order')]:
+            bad=copy.deepcopy(receipt)
+            if mutation=='generation':bad['events'][-1]['source_tag_generation']=3
+            elif mutation=='debt':bad['pending_obligations']=1
+            elif mutation=='sector':bad['events'][-1]['source_fragment_identity']['sector']+=1
+            else:bad['events'][0]['event']='consumer_accept'
+            with self.assertRaisesRegex(ValueError,error):c.validate_kepler_state_publication(bad,binding)
+
+    def test_V1_all_PC_component_replacement_keeps_source_units_C0_shared_and_provider(self):
+        api=c.load_v1_cost_api('f7fa8e290d419f6de3356385c0b55ded768c2090')
+        profile=api.command_cost('I2F',[64],32)
+        model={'typed_cost_bounds':{'I2F':{'upper':profile}},'area':{},'routing':{},'resource_contract':{}}
+        ds={'retained_baseline_provisional_costs':{'primitive_scalar':32},'known_service_software_ticks':88,
+            'unknown_shared_template_calls':1,'PC_intervals':[{'pc':0,'family':'x','dependencies':[],
+            'additional_atomic_admission_ticks':0,'atomic_collective_participants':[],
+            'ranks':[{'rank':0,'start':0,'end':88,'C0_ticks':22,'shared_known_ticks':8,
+            'baseline_provider_and_native_ticks_charged_once':58,'native_scalar_command_upper_by_opcode':{'I2F':1}}]}]}
+        qfix={'software_ticks':88,'ordered_PC_intervals':[{'pc':0,'opcode':'x','position':0,'start':0,'end':88,
+            'native_commands':{'I2F':1},'cost_units':{'native_batch':1},'C0_service_ticks':22,'provider_service_ticks':26}]}
+        q={'operations':[{'pc':0,'opcode':'x','dependencies':[],
+            'calendar_export':{'physical_primitives':{'native_primitive_commands':{'I2F':1}}}}]}
+        result=c.compose_v1_native_component_successor(ds,qfix,q,model)
+        row=result['DeepSeek']['PC_intervals'][0]['rank_groups'][0]
+        self.assertEqual(row['C0_retained_ticks'],22);self.assertEqual(row['shared_retained_ticks'],8)
+        self.assertEqual(row['provider_nonV1_retained_ticks'],26)
+        self.assertEqual(result['DeepSeek']['known_native_only_successor_software_ticks'],66)
+        self.assertIsNone(row['RF_additional_cost_after_existing_ledger'])
+        bad=copy.deepcopy(ds);bad['V1_native_replacement_applied']=True
+        with self.assertRaisesRegex(ValueError,'already replaced'):c.compose_v1_native_component_successor(bad,qfix,q,model)
+
     def test_forward_leaf_source_counts_dynamic_refs_and_G0_interface(self):
         N,S=c.load_ds_forward_builders();native={'templates':{},'instructions':[]};dispatch={'templates':{},'PC_dispatch':[],
             'source_program_sha256':'a'*64}
