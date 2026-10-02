@@ -40,6 +40,16 @@
     "index_candidates": 42861,
     "w19_oreduce": 12790
   },
+  "product_comparison_scope": {
+    "literal_endpoint_bytes_per_cycle": 64,
+    "literal_index_consumer_cycles_lower_bound": 6144,
+    "literal_index_records_per_endpoint": 6144,
+    "older_record_path": "results/rtl/w15_hbm_nvls.json",
+    "older_record_product_bytes_statement": "the bench moves one record a switch cycle on each package downlink, and its frame carries a whole record, so timing does not depend on record width; the _prod configs time a product gather of B bytes a rank as ceil(B / slot_bytes) records, slot_bytes = 0.9 TB/s port x clock period (750.4 B at 1.2 GHz, 870.5 B at 1.034 GHz). Use cycles = fixed_cycles + cycles_per_word x ceil(B_per_rank / slot_bytes) for a product gather; the 64 B-word slope (~90 cycles a word a rank at P=48) is the BENCH width, not the product port",
+    "older_record_sha256": "c26c3e51a1058eb9b9a4918bc9ce22a2167268ea158050bbee5ab891595caef2",
+    "reason": "Older product scales the record width to assumed750.4B port slots at1.2GHz, whereas actual TP96 bench moves64B payload records at nominal0.9GHz and has a serial per-word all-endpoint credit handshake. The old1471-cycle index result is not the same geometry. Neither result proves the physical0.9TB/s port or full native provider/RF ACK.",
+    "scope_match_to_older_product": false
+  },
   "remaining_cases": [
     "stalled",
     "bad_order",
