@@ -1,0 +1,29 @@
+{
+  "clock_conversion": "Native core edges only; SS/FF physical clock/capture margins and interstage conversions must be independently joined",
+  "compile_cost": "Current exact hook compile/context and total disk cost unmeasured. Earlier 54.2GB/625s frontend is different frozen source context; no transfer/admission.",
+  "core_and_program_enrollment_required": true,
+  "live_jobs": [],
+  "logging": "Sparse actual accepted targeted VM reads plus observed read-aligned X tags; event/data streams have no bounded total size until enrolled runtime workload is known",
+  "maximum_ports": 1024,
+  "no_compile_or_runtime_GO": true,
+  "no_new_wrapper_or_engine_edits": true,
+  "observer_hardware_ports": 0,
+  "observer_hardware_state_bits": 0,
+  "parameter_binding": {
+    "PHW": 10,
+    "SUN": 256,
+    "VM_AW": 19,
+    "X_ROM": 1
+  },
+  "read_packet_bits_per_port": 54,
+  "scope": "SIMULATION_ONLY_PASSIVE_CURRENT_PHW10_SOURCE_PLAN_NOT_COMPILED",
+  "source_admission": "Same compiled vec/lane/adapt SHA and callback closure; actual rank programs and source node map must match. No current binary identified in checked retained inventories.",
+  "source_read_tag": {
+    "front_owner": "latched command accepted via su_go && su_ready; v_acc/seq/cp bind each offered copy",
+    "read_alignment": "preedge read R -> preedge X tag R+2; actual mr_v -> m_v -> x_v source recurrence",
+    "sequence": "8 bits; acceptance/done lifetimes disambiguate wrap",
+    "signal": "u_su.u_vec.cwx[WR-1 -: 8]",
+    "valid": "u_su.u_vec.vx"
+  },
+  "two_edge_raw_read_buffer_bits": 110592
+}

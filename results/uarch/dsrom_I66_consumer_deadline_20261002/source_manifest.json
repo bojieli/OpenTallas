@@ -1,0 +1,43 @@
+{
+  "canonical_allocator": "622dbc897fd5ecb5a5b691e1ae39bea0ad751524",
+  "current_core_sha256": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+  "inputs": [
+    {
+      "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/demand-r5.json.gz",
+      "sha256": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
+      "source_git_blob": "c1ef44efe3fcb3eb010bc424f1a581a5f9f30531",
+      "source_git_commit": "f8ba4ffe0d627077d1d641acf1b84db90d2aab0d",
+      "source_git_path": "results/uarch/dsrom_I66_stage_provider_20261002/inputs/demand-r5.json.gz"
+    },
+    {
+      "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/selected_six_calls.json",
+      "sha256": "4a096afec0e2763176da456510285ab1ad10389592d410a3a88f6fd3704751b0",
+      "source_git_blob": "f4105ad997fbb50518d9b67bfa404bed82f2bb9a",
+      "source_git_commit": "f8ba4ffe0d627077d1d641acf1b84db90d2aab0d",
+      "source_git_path": "results/uarch/dsrom_I66_stage_provider_20261002/inputs/selected_six_calls.json"
+    },
+    {
+      "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/vec.sv.txt",
+      "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13",
+      "source_git_blob": "a37fcf356fd1ede491bb2c2619cba47ac1991b58",
+      "source_git_commit": "f8ba4ffe0d627077d1d641acf1b84db90d2aab0d",
+      "source_git_path": "rtl/hdc/v41x/ot_hdc_v41x_vec.sv"
+    },
+    {
+      "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/vec_lane.sv.txt",
+      "sha256": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72",
+      "source_git_blob": "b523a7d68a192f8bd0eead6a513ddff9caf44d17",
+      "source_git_commit": "f8ba4ffe0d627077d1d641acf1b84db90d2aab0d",
+      "source_git_path": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv"
+    },
+    {
+      "path": "results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/su_adapt.sv.txt",
+      "sha256": "420723862866ec2e7687dfdaf30ee35fd2631409a466163ee46b03831b412a62",
+      "source_git_blob": "b02845bdcac01b4f64fe58355be074c6534ba86e",
+      "source_git_commit": "f8ba4ffe0d627077d1d641acf1b84db90d2aab0d",
+      "source_git_path": "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv"
+    }
+  ],
+  "payload_read": false,
+  "predecessor": "cf747691f7adfe6980cef7a001233d6ffa2b2711"
+}

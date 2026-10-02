@@ -1,0 +1,95 @@
+{
+  "Maxwell_scope": "Needs selected domain capacity/delivery/ACK/clock qualification; model does not substitute room or TT timing for consumer deadlines",
+  "Nash_scope": "Existing all384 capture-bank compiler and transport implementation unchanged; consume its source phase calendar rather than duplicate compiler",
+  "PVE2_PVE3_jobs": [],
+  "actual_trace_command": "python3 tools/dsrom_I66_consumer_deadline.py --enrollment CURRENT_PHW10.json --slots REVIEWED_ROWS.json --service REVIEWED_SERVICE.json --out ACTUAL_DEADLINE_JOIN.json",
+  "deadline_requirement": "Per-row earliest baseline accepted VM read; postNBA publication must precede that edge strictly",
+  "entry": "tools/dsrom_I66_consumer_deadline.py",
+  "finite_service": "Globally shared reserved capacity, fixed delivery and ACK latency, derived no-ready storage/credits, all576 row visibility, source idle then old ACK-visible owner reuse; conditional on independently qualified phase calendars/provider guarantees",
+  "initial_schema_test_failure": "initial_schema_test_FAIL.log retained: test fixture aliased ordinal records across traces; corrected standalone test snapshot, implementation unchanged for that failure",
+  "limits": [
+    "Only current L0 twelve W1/W3 nodes xTP4 coverage gate; not all layers/all384 execution or whole token",
+    "Pure packet-schema test doubles never admitted as actual runtime receipts",
+    "Old cone supplies publication/capture calibration but lacks current core/consumer read ownership",
+    "Delivery/ACK guarantees remain conditional; no actual selected-provider calibration or physical admission",
+    "No claimed SS/FF clock conversion or no-loss completion until current composed journal and physical reservations qualify"
+  ],
+  "new_builds_or_runtime_jobs": [],
+  "original_failures_preserved": true,
+  "pinned_live_sources_changed": false,
+  "predecessor": "cf747691f7adfe6980cef7a001233d6ffa2b2711",
+  "required_enrollment": [
+    "Current source/binary/compiler/runtime identities and exact PHW10/X_ROM1/SUN256 parameters",
+    "All four complete actual prog.hex hashes/argv +DIR plus separate +OT_ROM_DIR",
+    "Qualified compiled callback closure with actual accepted owner/phase association",
+    "Node-to-actual-PC map and exact consumer word hashes",
+    "Baseline current-program vector contexts with actual acceptance/done, gen/user/Xversion and observed X tags at read+2",
+    "Per-row producer accept/postNBA publication/accepted VM read/source healthy idle",
+    "Reviewed finite-service file hash plus actual source-calendar and phase-file preimages; actual phase-specific II schedule, not copied EID0 origin"
+  ],
+  "review_authority": "Qualified manifests remain independently reviewed inputs, not self-certifying measurements",
+  "scope": "Software source-contract and current-program deadline/finite-service validation gate; no actual current accepted journal available",
+  "source_consumer_pairs": [
+    {
+      "consumer": "L0.I70",
+      "operand": "a",
+      "producer": "L0.I66"
+    },
+    {
+      "consumer": "L0.I70",
+      "operand": "c",
+      "producer": "L0.I67"
+    },
+    {
+      "consumer": "L0.I80",
+      "operand": "a",
+      "producer": "L0.I68"
+    },
+    {
+      "consumer": "L0.I80",
+      "operand": "c",
+      "producer": "L0.I69"
+    },
+    {
+      "consumer": "L0.I85",
+      "operand": "a",
+      "producer": "L0.I72"
+    },
+    {
+      "consumer": "L0.I85",
+      "operand": "c",
+      "producer": "L0.I73"
+    },
+    {
+      "consumer": "L0.I90",
+      "operand": "a",
+      "producer": "L0.I82"
+    },
+    {
+      "consumer": "L0.I90",
+      "operand": "c",
+      "producer": "L0.I83"
+    },
+    {
+      "consumer": "L0.I95",
+      "operand": "a",
+      "producer": "L0.I87"
+    },
+    {
+      "consumer": "L0.I95",
+      "operand": "c",
+      "producer": "L0.I88"
+    },
+    {
+      "consumer": "L0.I98",
+      "operand": "a",
+      "producer": "L0.I92"
+    },
+    {
+      "consumer": "L0.I98",
+      "operand": "c",
+      "producer": "L0.I93"
+    }
+  ],
+  "worktree": "/tmp/opentallas-I66-reserved-service-observer-20261002"
+}

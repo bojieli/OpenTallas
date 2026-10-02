@@ -1,0 +1,51 @@
+...........................................F                             [100%]
+=================================== FAILURES ===================================
+__________ test_two_ranks_cannot_reserve_the_same_shared_domain_twice __________
+
+    def test_two_ranks_cannot_reserve_the_same_shared_domain_twice():
+        trace,_=sample();service=service_sample(trace)
+        second=copy.deepcopy(trace);second['vector_contexts'][0]['rank']=1
+        for e in second['events']:e['identity']['rank']=1
+        trace['events']+=second['events'];trace['events'].sort(key=lambda e:e['edge'])
+        for i,e in enumerate(trace['events']):e['ordinal']=i
+        trace['vector_contexts']+=second['vector_contexts']
+        other=copy.deepcopy(service['calendars'][0]);other['identity']['rank']=1
+        service['calendars'].append(other)
+        service['domains']['shared']['bits_per_edge']=20000
+        # Each input individually fits ten edges, their union does not.
+>       D.reserved_service_join(second,dict(calendars=[other],domains=service['domains']))
+
+tests/test_dsrom_I66_consumer_deadline.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_I66_consumer_deadline.py:255: in reserved_service_join
+    result=calibrate(trace,slots)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+trace = {'events': [{'edge': 10, 'identity': {'expert': 0, 'generation': 1, 'key_word': 2149580800, 'node': 'L0.I66', ...}, 'k...'native_core_clk', 'vector_contexts': [{'accept_edge': 490, 'done_edge': 600, 'generation': 1, 'node': 'L0.I70', ...}]}
+candidate_slots = [{'identity': {'expert': 0, 'generation': 1, 'key_word': 2149580800, 'node': 'L0.I66', ...}, 'postNBA_edge': 416, 'row...: {'expert': 0, 'generation': 1, 'key_word': 2149580800, 'node': 'L0.I66', ...}, 'postNBA_edge': 416, 'row': 102}, ...]
+
+    def calibrate(trace,candidate_slots):
+        """Per-row deadlines from actual accepted reads, not consumer issue edges.
+    
+        Normalized context records must come from qualified source hooks. seq is
+        eight-bit source state; repeated seq uses require disjoint accepted/done
+        lifetimes. A caller cannot label a read with whatever core PC is current.
+        All supplied operations need full576 publication/read coverage. A partial
+        prefix returns no PASS. Candidate slots are guarantees, not observed debt.
+        """
+        trace=copy.deepcopy(trace);candidate_slots=copy.deepcopy(candidate_slots)
+        model=source_model()
+        if trace['timebase']!='native_core_clk':raise ValueError('no common qualified clock/edge timebase')
+        if trace['role']!='BASELINE_CURRENT_PROGRAM':raise ValueError('candidate-delayed reads cannot establish a no-loss baseline deadline')
+        contexts=trace['vector_contexts']
+        for c in contexts:
+            for k,w in [('seq',8),('rank',2),('generation',32),('user',32),('xversion',32)]:J.uint(c[k],w)
+            if J.uint(c['accept_edge'])>=J.uint(c['done_edge']):raise ValueError('invalid actual vector lifetime')
+        operations={};last=-1
+        for ordinal,e in enumerate(trace['events']):
+>           if J.uint(e['ordinal'])!=ordinal or J.uint(e['edge'])<last:raise ValueError('unordered accepted journal')
+E           ValueError: unordered accepted journal
+
+tools/dsrom_I66_consumer_deadline.py:138: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_dsrom_I66_consumer_deadline.py::test_two_ranks_cannot_reserve_the_same_shared_domain_twice
