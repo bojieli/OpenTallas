@@ -109,6 +109,8 @@ def run(work,reuse_k256=None):
     libs={}; cells={}
     for corner in ('ss','ff'):
         s,c=merged(corner); (work/f'{corner}.lib').write_text(s); libs[corner]=work/f'{corner}.lib';cells[corner]=c
+        for kind in ('ao','invbuf','oa','simple','seq'):
+            (work/f'{kind}_{corner}.lib').write_bytes(gzip.decompress((OUT/'inputs'/f'{kind}_{corner}.lib.gz').read_bytes()))
     record={'model':model(),'tool_versions':{},'results':{},'status':'STARTED','wire_parasitics':False,'clock_skew':False,'FF_registered_hold_closed':False}
     for exe,args in [('yosys',['yosys','-V']),('sta',['sta','-version'])]:
         record['tool_versions'][exe]={'version':subprocess.check_output(args,text=True).strip(),'binary_sha256':sha(Path(shutil.which(exe)))}
@@ -141,10 +143,9 @@ write_json {d/'mapped.json'}
         r.update(ports=widths,cell_counts=counts,area_um2=sum(count*float(re.search(r'\barea\s*:\s*([\d.]+)',cells['ss'][name])[1]) for name,count in counts.items()),state_bits=0,netlist_sha256=sha(d/'mapped.v'))
         for corner in ('ss','ff'):
             missing=set(counts)-set(cells[corner]); assert not missing, missing
-            prefix=libs[corner].read_text().split('cell (',1)[0]
-            used=d/f'{corner}_used.lib';used.write_text(prefix+'\n'.join(cells[corner][name] for name in sorted(counts))+'\n}\n')
             cap=dcap(cells[corner]);tcl=d/f'{corner}.tcl'
-            tcl.write_text(f'''read_liberty {used}
+            reads='\n'.join(f'read_liberty {work/f"{kind}_{corner}.lib"}' for kind in ('ao','invbuf','oa','simple','seq'))
+            tcl.write_text(reads+f'''
 read_verilog {d/'mapped.v'}
 link_design {top}
 create_clock -name virtual -period 833.333333
@@ -157,8 +158,8 @@ set_output_delay -min 0 -clock virtual [all_outputs]
 set_input_transition 20 [all_inputs]
 set_load {cap} [all_outputs]
 report_units
-report_checks -path_delay max -group_path_count 3 -format full_clock_expanded -digits 6 -fields {{slew cap input net fanout}}
-report_checks -path_delay min -group_path_count 3 -format full_clock_expanded -digits 6 -fields {{slew cap input net fanout}}
+report_checks -path_delay max -group_count 3 -format full_clock_expanded -digits 6 -fields {{slew capacitance input_pin net}}
+report_checks -path_delay min -group_count 3 -format full_clock_expanded -digits 6 -fields {{slew capacitance input_pin net}}
 report_check_types -max_slew -max_capacitance
 exit
 ''')
