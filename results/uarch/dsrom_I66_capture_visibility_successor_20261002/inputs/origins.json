@@ -1,0 +1,27 @@
+{
+  "common_proposal.json": {
+    "commit": "83612e4a29f3eaefca81d87f5e025d889b0c4142",
+    "path": "results/uarch/dsrom_I66_common_gather_proposal_20261002/model.json",
+    "sha256": "4690caf8c44415c12d01eebb2d6511221f774d6ddc2f7fbe9103c5ab6c69b15e"
+  },
+  "credit_join.py": {
+    "commit": "ecb757ec4050d8a72266c9d03565f796767fcf34",
+    "path": "tools/dsrom_I66_credit_visibility_join.py",
+    "sha256": "e0144f00100d7d6a23a8e98c4d4dfefc4a8f1c025d8075106b7412d8e2c53e4e"
+  },
+  "credit_review.json": {
+    "commit": "ecb757ec4050d8a72266c9d03565f796767fcf34",
+    "path": "results/uarch/dsrom_I66_credit_visibility_join_20261002/review.json",
+    "sha256": "410158d3fd77bf42315e455a60c73c004b97c8bde304639d72d2185a744f29c8"
+  },
+  "native_tile.sv": {
+    "path": "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/tile.sv.txt",
+    "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+    "source": "parent-intaken exact native tile source archive"
+  },
+  "selected_provider.json": {
+    "commit": "fff6dc9c0b609955b2db2ac8565eb6ab0baadaf2",
+    "path": "results/uarch/dsrom_I66_selected_stage_provider_20261002/r1/model.json",
+    "sha256": "4280d2cc6b96e14537875f1446c39ff215f9c32843686dd51ceb298d5c771f88"
+  }
+}
