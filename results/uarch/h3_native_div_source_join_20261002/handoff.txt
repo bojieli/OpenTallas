@@ -1,0 +1,57 @@
+Epicurus H3 native scalar DIV source join and G0 delta FOR MODEL ADMISSION.
+Authoritative model_final.json + current tools/test source; previous model/logs
+retained as preparation iterations. No HDL prepared, compilation or P&R launched.
+Source base main99da9b345cb7c9048b642f93517fb63729ff873a, read by immutable gitshow.
+12 original exact arithmetic tests reviewed parent;9 new sourcejoin tests PASS.
+
+This goes beyond arithmetic: proposed exact conventional GPU DIV joins the actual
+whole-SM RF/SIMD service lease. It reuses source ot_hdc_fdiv DEPTH31 unchanged.
+Compiler opcode stays DIV; denominator45a00000 is source @F5120. Qwen norm mean
+still MUL39800000. No reciprocal change or reorder of Peirce's chunk8 tree.
+
+Read a=completed tree RF vector, b=dst vector. Source must name final collector
+slot/version and destination slot/version; example7/6 is ONLY a test stimulus,
+not a claim compiler emits them. Both selected lanes0. At OPERATE&&rv capture old
+destination rsp_b into existing result_q4096, launch DIV. At vo capture quotient
+into lane0 only. Other127 lanes remain byte-identical. Successful mirrored write
+ACK precedes DONE/retirement. Fault enters held failed completion, suppresses
+successful write/publication. Reset flushes valid/control and cancels old lease.
+Software next epsilonADD may issue only after successful version retirement.
+
+No added RF port or4096bit vector register. New declared state is2634 divider
+bits+1 opcode bit; old27address/state/fault/result register reused. Read1024B/
+accept; write512Blogical/1024Bphysical mirrored. Scalar core99data/control pin
+incidences, opcode boundary+1. Root route41tracks unchanged; localRF12339tracks
+still need distributed physical ownership, not a shared narrow corridor claim.
+
+Price delta2954.2616um2 cells per enabled endpoint: retained same DIV/vline TT
+body1616.37,4128muxbits*.2=825.6,opcodeDFF.2916,extra control/buffer proxy512.
+No clock/PG/via or signoff credit. Historical DIV outline4039.61 plus new50%proxy
+is6715.3932um2; body TT price is not SS/FF area/timing signoff.
+Existing proposed service slot164427.408um2 cells has only421.4176um2 headroom;
+newtotal166960.252 FAILS its old slot. Source-proposed rectangle needs+6.48um
+height: DS top1614.79 vs outline1641.60, Qwen top1653.67 vs2501.28. Geometric
+screen passes expanded candidate, but Maxwell actual corridor/slot admission is
+still required. Qwen RSTD haszeroDIVcalls; its delta is conditional only if an
+endpoint is enabled. One collector endpoint/rank is sufficient for this scalar
+call if source routing/lease admits it; don't silently replicate32times or infer
+NS8 means8dividers. Current source baseline has32SMs; NS8 source hook remains
+unbound. Replica choice belongs composed Maxwell model.
+
+Success accept->retire37edges; earliest reaccept38. Fault no-stall retire35;
+read/write/done stall terms extend service. Mean service30.8333ns conditional
+at1.2GHz, NO GPU clock qualification. Read normalizer/quotient/subnormal-round/
+capture/write-macro/ACK paths need actual SS60ps/FF25ps closure. No silent stages,
+CDC or uncertainty changes. Wholekernel/ready/broadcast/fence time remains null
+until Maxwell source joins supplied, not zero or ideal overlap.
+
+NEXT mandatory handoff: Peirce concrete collector scalar ABI+version slots;
+Maxwell current NS8 whole-SM source hooks, chosen replica/slot and99pin physical
+escape+RFlease/readiness/latency admission. Shared command validation API in
+new tool rejects wrongopcode/constant/aperture/lane/version/incomplete tree or
+unretired priorcommand. Lease tests reject earlyACK/retire, faults-as-success,
+reset stale completion; RMW test checks all127 otherlanes. No source replacement.
+Only after source-bound model admission prepare defaultoff added service copy;
+fresh reviewed caps/GO before any HDL execution, functional then SSFF in context.
+D2 original cadence failures/selectedpair receipts untouched; D2 remains active
+calendar/compiled ownership join, no live owner builds and no newPVE2/PVE3 work.
