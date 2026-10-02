@@ -1,0 +1,33 @@
+{
+  "base": "760a4b3d036c8c0a987060a015c4558dfeb79921",
+  "source_sha256": {
+    "results/uarch/qwen_rom_owned_ready_context_20261002/model-r1.json": "e51ed457721bfc3a441b91f88bc281ac309e947b3dd5c7dbbc0d25f9611ba03b",
+    "results/uarch/qwen_rom_owned_ready_context_20261002/register-allocation-r1.json": "270751bb75c117cad53c9fbafd35dd51d04ddc6c2a332c79c913e38fa41aa05d",
+    "results/uarch/qwen_rom_local_parent_composition_20261002/model-r1.json": "e59477a8b4ba4966f0e9e770af8817cade33185ee77f525cd72d929b90ba7cea",
+    "results/uarch/qwen_rom_current_reset_construction_20261002/inputs/launch_join_cells_r1.json": "b7cbf219c7950790ae28b27041063ac336be497ea4f1f6d2982ad03d7376788f",
+    "results/uarch/qwen_rom_current_reset_construction_20261002/inputs/setRC.tcl": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/seq_ss.lib.gz": "55207b0273d8a452871483f607cfc82fba493c08c1299430eee814fd1d743386",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/seq_ff.lib.gz": "fe9c3d9a1e7711897835f42643ba2b6bb56bcb43cea489cbf16bee4f8bce7b5b",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/invbuf_ss.lib.gz": "874764b0c9695f283f39abef87d761d70fef34be9b492ed339271661f647c49c",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/invbuf_ff.lib.gz": "397d365ba61d6723a190c243259927dfd94e7f2a6e633717c91f3ef99bfa1d97",
+    "rtl/physical/ot_qwen_rom_reset_parent_provider.sv": "b761cf522e05f2421d752dba6a234e117b796f40f4737593abae63763cda66ec",
+    "tools/qwen_rom_owned_ready_context.py": "e30f854d66280659e5839a48ef45294ef98695e312bef2fd3058e1e61182b615",
+    "tools/qwen_rom_current_reset_construction.py": "997c6903e07872b52f65f5a77119a4df437d07717b78d892bbcb53a3e676bea3",
+    "tools/uarch_model_qwen_launch_producer.py": "e32d3b9da41e275eadcdf34c99968af87926eab4fa80d293b5d1bd5fedf4dceb",
+    "tests/test_qwen_rom_launch_producer_context.py": "28a8b0923df457ecabc9fcb6792ddfbf233c434ed189f3c535f001c8cb0d4b59"
+  },
+  "artifact_sha256": {
+    "results/uarch/qwen_rom_launch_producer_context_20261002/ampere_handoff.json": "65ee09b7b0a147a6c9fed2fc6f76d7e08f5add1fea649dbe87c5a8a7277c0ad8",
+    "results/uarch/qwen_rom_launch_producer_context_20261002/focused_tests.log": "618c358f1c1b30f19456feeaa6e7bf1d3a92d3654539b95923f677d14b9259c0",
+    "results/uarch/qwen_rom_launch_producer_context_20261002/model-r1.json": "cf13b26f94f6e99a54c3b00ad2a426f47961a6f6f99d76bc3194ba947f769073",
+    "results/uarch/qwen_rom_launch_producer_context_20261002/model-r2.json": "430504d4763494109f0ead87d22a73489de4ecc0159f14094098d426ca0e02d4",
+    "results/uarch/qwen_rom_issue_lockstep_20261002/collector_failure_r1/base.log.gz": "b8ea03bf83ecd6dd6fd5b0aba9d86e7e6865153eda92f52a86afc5995be88d75",
+    "results/uarch/qwen_rom_issue_lockstep_20261002/collector_failure_r1/base.ys.gz": "b79e1195bdec6edf865171f219dc2bb013cd10d2aafbcbf6d15e5e34dd3e8063",
+    "results/uarch/qwen_rom_issue_lockstep_20261002/collector_failure_r1/classification.json": "34e43a63486533f9a976f09d59f43a41212f873dc7e763e737827119a74434b2",
+    "results/uarch/qwen_rom_issue_lockstep_20261002/collector_failure_r1/literal.sv.gz": "10f4bc1c443538e3ef07d0a6bd0a28fe7e5fc6321340c9ba47a27a589826404e",
+    "results/uarch/qwen_rom_issue_lockstep_20261002/collector_failure_r1/terminal.json.gz": "3e399a5e32815aded0430d6c5cb7156ee6369802eddd8de97ca6c4aa90b744d4"
+  },
+  "focused_tests": "14 passed in0.91s",
+  "model_cold_replay": true,
+  "live_induction_NOT_terminal": true
+}

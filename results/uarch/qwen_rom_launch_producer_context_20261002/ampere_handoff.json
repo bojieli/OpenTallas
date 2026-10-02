@@ -1,0 +1,32 @@
+{
+  "base": "760a4b3d036c8c0a987060a015c4558dfeb79921",
+  "status": "FAIL_NOMINAL_PRODUCER_PIN_CONTEXT_MODEL_NOT_ADOPTED",
+  "standalone_intake": "this pricing commit only; all imported model/source dependencies already present on760a4b3d0",
+  "addressee": "Ampere via parent relay",
+  "model": "model-r2.json",
+  "selected_slots_unchanged": {
+    "tile_cell_ceiling_um2": 125000,
+    "corridor_um": 96.768
+  },
+  "mandatory_next_gate": "Compose actual joined-ready/held-valid source clock phases, complete hub-to-provider routes, reset recovery/removal and parent IO. The2um-local wire screen fails nominal same-phase SS setup; do not transfer isolated timing or adjust833.333/60/25.",
+  "FF_INVs_already_in_1201_inventory": true,
+  "readiness_exports_and_parent_instance_still_absent": true,
+  "normal_sameepoch_owned_traffic_must_not_revoke_queued_launch": true,
+  "local_control_proof": {
+    "prep_commit": "3e2143074",
+    "base12": "PASS",
+    "induction": "LIVE",
+    "supervisor_PID": 1995254,
+    "solver_PID": 1998275,
+    "output": "/tmp/qrom-issue-lockstep-760a-r2",
+    "induction_terminal_credit": false,
+    "minimal_prep_dependency": "tools/qwen_rom_literal_launch_pipeline_gate.py from1fc446e4c, plus3e2143074; full prior packet not required for control proof driver"
+  },
+  "no_second_position": true,
+  "no_new_map": true,
+  "no_PnR": true,
+  "DS_PID1950286_untouched": true,
+  "physical_source_admission": false,
+  "baseline_changed": false,
+  "peer_delivery": "committed for parent relay; no peer transport exposed"
+}

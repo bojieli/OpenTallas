@@ -1,0 +1,561 @@
+{
+  "schema": "QWEN_PRICED_LAUNCH_PRODUCER_PIN_CONTEXT_V1",
+  "status": "FAIL_NOMINAL_SOURCE_PRODUCER_SETUP_CONTEXT",
+  "source_sha256": {
+    "results/uarch/qwen_rom_owned_ready_context_20261002/model-r1.json": "e51ed457721bfc3a441b91f88bc281ac309e947b3dd5c7dbbc0d25f9611ba03b",
+    "results/uarch/qwen_rom_owned_ready_context_20261002/register-allocation-r1.json": "270751bb75c117cad53c9fbafd35dd51d04ddc6c2a332c79c913e38fa41aa05d",
+    "results/uarch/qwen_rom_local_parent_composition_20261002/model-r1.json": "e59477a8b4ba4966f0e9e770af8817cade33185ee77f525cd72d929b90ba7cea",
+    "results/uarch/qwen_rom_current_reset_construction_20261002/inputs/launch_join_cells_r1.json": "b7cbf219c7950790ae28b27041063ac336be497ea4f1f6d2982ad03d7376788f",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/seq_ss.lib.gz": "55207b0273d8a452871483f607cfc82fba493c08c1299430eee814fd1d743386",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/seq_ff.lib.gz": "fe9c3d9a1e7711897835f42643ba2b6bb56bcb43cea489cbf16bee4f8bce7b5b",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/invbuf_ss.lib.gz": "874764b0c9695f283f39abef87d761d70fef34be9b492ed339271661f647c49c",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/invbuf_ff.lib.gz": "397d365ba61d6723a190c243259927dfd94e7f2a6e633717c91f3ef99bfa1d97",
+    "rtl/physical/ot_qwen_rom_reset_parent_provider.sv": "b761cf522e05f2421d752dba6a234e117b796f40f4737593abae63763cda66ec",
+    "tools/qwen_rom_owned_ready_context.py": "e30f854d66280659e5839a48ef45294ef98695e312bef2fd3058e1e61182b615",
+    "tools/qwen_rom_current_reset_construction.py": "997c6903e07872b52f65f5a77119a4df437d07717b78d892bbcb53a3e676bea3"
+  },
+  "producer_instances": {
+    "joined_ready[0]": "B",
+    "held_valid[0]": "A"
+  },
+  "corners": {
+    "ss": {
+      "joined_ready[0]": {
+        "source_allocation": {
+          "instance": "joined_ready[0]",
+          "domain": "stream",
+          "cell": "DFFASRHQNx1_ASAP7_75t_R",
+          "restoring_cell": "INVx1_ASAP7_75t_R",
+          "purpose": "preedge readiness; cannot launch on sampling edge"
+        },
+        "actual_provider_AND_pin": "B",
+        "QN_cap_fF": 0.910346,
+        "INV_cap_fF": 0.8427129999999999,
+        "local_wire_RC_ps": 7.553284532719998e-05,
+        "transitions": {
+          "rise": {
+            "QN_transition": "fall",
+            "QN_clkq_minmax_ps": [
+              82.81797385083334,
+              106.28137160555556
+            ],
+            "QN_slew_minmax_ps": [
+              37.64455494305555,
+              37.73968478333333
+            ],
+            "INV_delay_minmax_ps": [
+              20.681732756313266,
+              20.706805408936162
+            ],
+            "INV_slew_minmax_ps": [
+              23.93755124807131,
+              23.966864439045274
+            ],
+            "arrival_minmax_after_producer_clock_ps": [
+              103.49978213999192,
+              126.98825254733704
+            ],
+            "constraints": [
+              {
+                "provider_clock_slew_ps": 5,
+                "required_input_minmax_ps": [
+                  -607.4739660475034,
+                  99.9513106321615
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  710.9737481874953,
+                  -27.036941915175547
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -710.9737481874953,
+                  -27.036941915175547
+                ]
+              },
+              {
+                "provider_clock_slew_ps": 80,
+                "required_input_minmax_ps": [
+                  -607.4739660475034,
+                  99.9513106321615
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  710.9737481874953,
+                  -27.036941915175547
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -710.9737481874953,
+                  -27.036941915175547
+                ]
+              }
+            ]
+          },
+          "fall": {
+            "QN_transition": "rise",
+            "QN_clkq_minmax_ps": [
+              77.5606350788889,
+              100.96311669166668
+            ],
+            "QN_slew_minmax_ps": [
+              33.01698453916667,
+              33.05059828
+            ],
+            "INV_delay_minmax_ps": [
+              17.194785708622675,
+              17.203053322523033
+            ],
+            "INV_slew_minmax_ps": [
+              17.26092216271485,
+              17.26967741714676
+            ],
+            "arrival_minmax_after_producer_clock_ps": [
+              94.75549632035688,
+              118.16624554703503
+            ],
+            "constraints": [
+              {
+                "provider_clock_slew_ps": 5,
+                "required_input_minmax_ps": [
+                  -539.0046690363029,
+                  157.2953135447342
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  633.7601653566597,
+                  39.12906799769917
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -633.7601653566597,
+                  39.12906799769917
+                ]
+              },
+              {
+                "provider_clock_slew_ps": 80,
+                "required_input_minmax_ps": [
+                  -539.0046690363029,
+                  157.2953135447342
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  633.7601653566597,
+                  39.12906799769917
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -633.7601653566597,
+                  39.12906799769917
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "held_valid[0]": {
+        "source_allocation": {
+          "instance": "held_valid[0]",
+          "domain": "stream",
+          "cell": "DFFASRHQNx1_ASAP7_75t_R",
+          "restoring_cell": "INVx1_ASAP7_75t_R",
+          "purpose": "request owned through IREG acceptance/explicit abort"
+        },
+        "actual_provider_AND_pin": "A",
+        "QN_cap_fF": 0.910346,
+        "INV_cap_fF": 0.880248,
+        "local_wire_RC_ps": 7.75273351152e-05,
+        "transitions": {
+          "rise": {
+            "QN_transition": "fall",
+            "QN_clkq_minmax_ps": [
+              82.81797385083334,
+              106.28137160555556
+            ],
+            "QN_slew_minmax_ps": [
+              37.64455494305555,
+              37.73968478333333
+            ],
+            "INV_delay_minmax_ps": [
+              21.017558108667313,
+              21.043086942827102
+            ],
+            "INV_slew_minmax_ps": [
+              24.36333367413326,
+              24.39240284257613
+            ],
+            "arrival_minmax_after_producer_clock_ps": [
+              103.83560948683576,
+              127.32453607571777
+            ],
+            "constraints": [
+              {
+                "provider_clock_slew_ps": 5,
+                "required_input_minmax_ps": [
+                  -607.4739660475034,
+                  99.9513106321615
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  711.3095755343392,
+                  -27.37322544355628
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -711.3095755343392,
+                  -27.37322544355628
+                ]
+              },
+              {
+                "provider_clock_slew_ps": 80,
+                "required_input_minmax_ps": [
+                  -607.4739660475034,
+                  99.9513106321615
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  711.3095755343392,
+                  -27.37322544355628
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -711.3095755343392,
+                  -27.37322544355628
+                ]
+              }
+            ]
+          },
+          "fall": {
+            "QN_transition": "rise",
+            "QN_clkq_minmax_ps": [
+              77.5606350788889,
+              100.96311669166668
+            ],
+            "QN_slew_minmax_ps": [
+              33.01698453916667,
+              33.05059828
+            ],
+            "INV_delay_minmax_ps": [
+              17.455546469640414,
+              17.463956786136123
+            ],
+            "INV_slew_minmax_ps": [
+              17.585572785012502,
+              17.594343477645005
+            ],
+            "arrival_minmax_after_producer_clock_ps": [
+              95.01625907586441,
+              118.42715100513792
+            ],
+            "constraints": [
+              {
+                "provider_clock_slew_ps": 5,
+                "required_input_minmax_ps": [
+                  -539.0046690363029,
+                  157.2953135447342
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  634.0209281121672,
+                  38.868162539596284
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -634.0209281121672,
+                  38.868162539596284
+                ]
+              },
+              {
+                "provider_clock_slew_ps": 80,
+                "required_input_minmax_ps": [
+                  -539.0046690363029,
+                  157.2953135447342
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  634.0209281121672,
+                  38.868162539596284
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -634.0209281121672,
+                  38.868162539596284
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ff": {
+      "joined_ready[0]": {
+        "source_allocation": {
+          "instance": "joined_ready[0]",
+          "domain": "stream",
+          "cell": "DFFASRHQNx1_ASAP7_75t_R",
+          "restoring_cell": "INVx1_ASAP7_75t_R",
+          "purpose": "preedge readiness; cannot launch on sampling edge"
+        },
+        "actual_provider_AND_pin": "B",
+        "QN_cap_fF": 1.015296,
+        "INV_cap_fF": 0.944027,
+        "local_wire_RC_ps": 8.64930542424e-05,
+        "transitions": {
+          "rise": {
+            "QN_transition": "fall",
+            "QN_clkq_minmax_ps": [
+              38.12942544,
+              52.1231112
+            ],
+            "QN_slew_minmax_ps": [
+              16.304478773333333,
+              16.374054026666666
+            ],
+            "INV_delay_minmax_ps": [
+              8.731098173336877,
+              8.747057689158833
+            ],
+            "INV_slew_minmax_ps": [
+              10.385619596616912,
+              10.404022508707884
+            ],
+            "arrival_minmax_after_producer_clock_ps": [
+              46.86061010639112,
+              60.87025538221308
+            ],
+            "constraints": [
+              {
+                "provider_clock_slew_ps": 5,
+                "required_input_minmax_ps": [
+                  -259.777095930995,
+                  469.0791482680311
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  306.6377060373861,
+                  408.208892885818
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -306.6377060373861,
+                  408.208892885818
+                ]
+              },
+              {
+                "provider_clock_slew_ps": 80,
+                "required_input_minmax_ps": [
+                  -259.777095930995,
+                  469.0791482680311
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  306.6377060373861,
+                  408.208892885818
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -306.6377060373861,
+                  408.208892885818
+                ]
+              }
+            ]
+          },
+          "fall": {
+            "QN_transition": "rise",
+            "QN_clkq_minmax_ps": [
+              38.392449920000004,
+              51.694332800000005
+            ],
+            "QN_slew_minmax_ps": [
+              15.453886346666668,
+              15.4816352
+            ],
+            "INV_delay_minmax_ps": [
+              7.493396354139355,
+              7.498242543295502
+            ],
+            "INV_slew_minmax_ps": [
+              8.70640218598246,
+              8.712644537751437
+            ],
+            "arrival_minmax_after_producer_clock_ps": [
+              45.88593276719361,
+              59.19266183634976
+            ],
+            "constraints": [
+              {
+                "provider_clock_slew_ps": 5,
+                "required_input_minmax_ps": [
+                  -235.14350419294712,
+                  479.97330182221816
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  281.02943696014074,
+                  420.7806399858684
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -281.02943696014074,
+                  420.7806399858684
+                ]
+              },
+              {
+                "provider_clock_slew_ps": 80,
+                "required_input_minmax_ps": [
+                  -235.14350419294712,
+                  479.97330182221816
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  281.02943696014074,
+                  420.7806399858684
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -281.02943696014074,
+                  420.7806399858684
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "held_valid[0]": {
+        "source_allocation": {
+          "instance": "held_valid[0]",
+          "domain": "stream",
+          "cell": "DFFASRHQNx1_ASAP7_75t_R",
+          "restoring_cell": "INVx1_ASAP7_75t_R",
+          "purpose": "request owned through IREG acceptance/explicit abort"
+        },
+        "actual_provider_AND_pin": "A",
+        "QN_cap_fF": 1.015296,
+        "INV_cap_fF": 0.9849019999999999,
+        "local_wire_RC_ps": 8.86650209424e-05,
+        "transitions": {
+          "rise": {
+            "QN_transition": "fall",
+            "QN_clkq_minmax_ps": [
+              38.12942544,
+              52.1231112
+            ],
+            "QN_slew_minmax_ps": [
+              16.304478773333333,
+              16.374054026666666
+            ],
+            "INV_delay_minmax_ps": [
+              8.879058696723702,
+              8.895298224965275
+            ],
+            "INV_slew_minmax_ps": [
+              10.598177235986864,
+              10.61659325761376
+            ],
+            "arrival_minmax_after_producer_clock_ps": [
+              47.00857280174465,
+              61.01849808998622
+            ],
+            "constraints": [
+              {
+                "provider_clock_slew_ps": 5,
+                "required_input_minmax_ps": [
+                  -259.777095930995,
+                  469.0791482680311
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  306.7856687327397,
+                  408.06065017804485
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -306.7856687327397,
+                  408.06065017804485
+                ]
+              },
+              {
+                "provider_clock_slew_ps": 80,
+                "required_input_minmax_ps": [
+                  -259.777095930995,
+                  469.0791482680311
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  306.7856687327397,
+                  408.06065017804485
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -306.7856687327397,
+                  408.06065017804485
+                ]
+              }
+            ]
+          },
+          "fall": {
+            "QN_transition": "rise",
+            "QN_clkq_minmax_ps": [
+              38.392449920000004,
+              51.694332800000005
+            ],
+            "QN_slew_minmax_ps": [
+              15.453886346666668,
+              15.4816352
+            ],
+            "INV_delay_minmax_ps": [
+              7.62987187839115,
+              7.6348271619907475
+            ],
+            "INV_slew_minmax_ps": [
+              8.89414361764872,
+              8.900452156719744
+            ],
+            "arrival_minmax_after_producer_clock_ps": [
+              46.0224104634121,
+              59.3292486270117
+            ],
+            "constraints": [
+              {
+                "provider_clock_slew_ps": 5,
+                "required_input_minmax_ps": [
+                  -235.14350419294712,
+                  479.97330182221816
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  281.16591465635923,
+                  420.6440531952065
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -281.16591465635923,
+                  420.6440531952065
+                ]
+              },
+              {
+                "provider_clock_slew_ps": 80,
+                "required_input_minmax_ps": [
+                  -235.14350419294712,
+                  479.97330182221816
+                ],
+                "nominal_same_phase_hold_setup_slack_ps": [
+                  281.16591465635923,
+                  420.6440531952065
+                ],
+                "allowed_producer_clock_minus_provider_clock_ps": [
+                  -281.16591465635923,
+                  420.6440531952065
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "worst_SS_setup_slack_ps": -27.37322544355628,
+  "worst_FF_hold_violation_ps": 0.0,
+  "boundary": "registered held-valid and joined-ready -> existing AND3 A/B -> existing finite provider/tile launch route",
+  "explicit_local_QN_to_INV_wire_um": 2.0,
+  "explicit_local_INV_to_AND_wire_um": 2.0,
+  "RC": {
+    "R_ohm_per_um": 0.0265684,
+    "C_fF_per_um": 0.16579,
+    "source": "already selected setRC.tcl; finite local wires only"
+  },
+  "clock_period_ps": 833.3333333333334,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "source_clock_phase_vs_provider_unbound": true,
+  "actual_hub_to_provider_route_um": null,
+  "actual_source_instance_connected": false,
+  "scope": "nominal same-phase candidate cell/finite local-wire screen; full source clock/route missing and no routed timing credit",
+  "model_charge": {
+    "already_in_owned_ready_1201_FFs": true,
+    "FF_and_INV_cells_added": 0,
+    "new_cycles": 0,
+    "existing_steady_launch_stage_cycles": 1,
+    "MACs_per_cycle_unchanged": true,
+    "payload_bits_per_issue": 507,
+    "control_boundary_bits": 2,
+    "control_route_tracks_already_allocated": false,
+    "full_parent_cost_complete": false
+  },
+  "physical_source_admission": false,
+  "default_enabled": false,
+  "RTL_changed": false,
+  "new_map": false,
+  "new_token": false,
+  "next_gate": "Ampere must compose actual producer clock phase/route and reset with existing parent and collector graph; retain failed nominal phase and do not relax833.333/60/25 or assume zero hub route"
+}
