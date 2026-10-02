@@ -1,0 +1,78 @@
+{
+  "status": "BLOCKED_ACTUAL_PRODUCER_PROVIDER_POLICY_AND_PHYSICAL_SLOT",
+  "predecessor": "22ec26bd2db8446546f4848cc8c2dd79e8cf5209",
+  "inspected_parent": "ce132ffea40cf31f1af9d8c7af696d5e57125213",
+  "additive_only": true,
+  "all28_originals_unchanged": true,
+  "all16_parent_production_pins_unchanged": true,
+  "test_count": 37,
+  "all_tests_PASS": true,
+  "qualification": "Protocol fixtures and dependency/source joins only; no numerical token or hardware qualification",
+  "implemented": "Producer-bound LEN1 write allocation; literal base+beat owned identity; full404bit reverse ACK; actual declared read state; reader drain/grant/retirement debts",
+  "actual_blockers": {
+    "Euclid": {
+      "required": [
+        "Actual selected stage image bytes/SHA and TP4 parameters",
+        "Accepted SU issue PC/ticket and domain/cycle, every KV lane address24/value32",
+        "Accepted K/V descriptor coordinates and consumer acquire/drain",
+        "Actual initial persistent prefix, open-tail and window state provider"
+      ],
+      "blocker": "Current wrapper hard-wires kv_ok and drained; capture contains no KV payload/program images. No actual persistent producer receipt supplied."
+    },
+    "Kepler": {
+      "required": [
+        "Handshake allocation tag/base/LEN receipt",
+        "WR command/backing receipts with exact producer-bound payload",
+        "Owned returns with literal rewritten identity; actual404bit reverse credit and consumed grant",
+        "Per-beat reader drain and tag quarantine until retirement"
+      ],
+      "observation": "Use existing hierarchical av/ar/allocated_tag and return/credit/grant signals or a retained source journal; no new engine RTL before full service model admission.",
+      "blocker": "Actual r14 early-free/unvalidated-read-credit path unchanged; allocation receipt not exported. Current write data port only supports heterogeneous LEN1. Unsafe source traces must fail, not be repaired by fabricated ACKs."
+    },
+    "Ampere": {
+      "required": [
+        "Per-domain physical reset release/readiness receipt with held-tag/credit drain",
+        "Actual controller/tail/assembly macro instances, pin/OBS/halo/PG/clock reservations",
+        "Chosen service slot outline and routed boundary capacities",
+        "SS60ps/FF25ps contextual timing and complete control/mux/CDC area"
+      ],
+      "blocker": "Reset composition retains prior cold r8 contract; current_slot_fit and channel_capacity are null. Tail addition and causal obligations not yet joined."
+    },
+    "Russell": {
+      "required": [
+        "Bind supplied producer/state/descriptor receipts to one explicitly selected persistent policy",
+        "Timed finite calendar across shared ports/channels, assembly, return, ACK and drain",
+        "Replace existing KV/HBM read charge once, explicitly price writes/CDC/tail/mux/control and single-user latency"
+      ],
+      "blocker": "Cannot select or qualify actual production policy without source-owned payload/state/descriptor and safe provider receipts. Cold reference is not production."
+    }
+  },
+  "production_policy_selected": false,
+  "physical_service_slot_admitted": false,
+  "parent_cold_calendar_replay_PASS": true,
+  "cold_calendar_is_production": false,
+  "no_hardware_launched": true,
+  "no_new_numerical_positions": true,
+  "docs_changed": false,
+  "dependency_receipt": "dependency_receipt_r2.json",
+  "peer_delivery": "COMMITTED_FOR_PARENT_RELAY_NO_PEER_MESSAGE_TRANSPORT_EXPOSED",
+  "artifact_sha256": {
+    "results/uarch/qwen_rom_kv_causal_join_20261002/ampere_contract_receipt_r1.json": "53e1376ad32e38320d9c2c91e9c761de43e71a50b72c5c8e307459dfaf41f0e4",
+    "results/uarch/qwen_rom_kv_causal_join_20261002/dependency_receipt_r1.json": "cfc2f77648fdddc9b3f51100dfa1e0ee76c12c4ace31ea2d3fac9e9a8ff4ade0",
+    "results/uarch/qwen_rom_kv_causal_join_20261002/dependency_receipt_r2.json": "1b1e849521659e80f65dddc03230796ababe654989eb856f3d070aadd90e9a14",
+    "results/uarch/qwen_rom_kv_causal_join_20261002/euclid_contract_receipt_r1.json": "325a51ede7d04279164a496357055496918232527c9a203d24cd4a5add84a56e",
+    "results/uarch/qwen_rom_kv_causal_join_20261002/identity_production_causal_tests_r1.log": "33959b9139314146f5478a89539f604dc3731f757895f98172128b4522dc9341",
+    "results/uarch/qwen_rom_kv_causal_join_20261002/identity_production_causal_tests_r2.log": "78abf2f82d267f2fefbab47429f3e2460d069382fc5f2a16e9d5db457577ee82",
+    "results/uarch/qwen_rom_kv_causal_join_20261002/kepler_contract_receipt_r1.json": "9b20291df5b508b6c12c9fd38228a85dbcea47344ea3a639343f49e6531e0cfe",
+    "results/uarch/qwen_rom_kv_causal_join_20261002/persistent_source_tests_r1.log": "c903395eaf73794005e464f4346081c291c359b13f5f06b6f33c489db8b5f50b",
+    "results/uarch/qwen_rom_kv_causal_join_20261002/persistent_source_tests_r2.log": "765bcfb89a0bfe16659fc6b7df3092dc6cb5a61065a8ba8334b7301a759c5332",
+    "tools/qwen_rom_kv_causal_join.py": "05c8b9050c9e29be956d9e2465940ad186dcf4d9aa0147f0ebee9ed5640e650d",
+    "tests/test_qwen_rom_kv_causal_join.py": "d0b643058d35cde07c3c6bd7873878e659fa613c310095ddd7110e701301c9cd"
+  },
+  "replay": [
+    "python3 -m unittest discover -s tests -p 'test_qwen_rom_kv*.py' -v",
+    "python3 -m unittest discover -s tests -p 'test_qwen_rom_persistent_kv*.py' -v",
+    "python3 tools/qwen_rom_kv_causal_join.py --parent-ref ce132ffea40cf31f1af9d8c7af696d5e57125213 --result /tmp/qwen_kv_causal_parent_replay_fresh.json"
+  ],
+  "output_must_be_fresh": true
+}
