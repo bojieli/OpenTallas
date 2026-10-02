@@ -1,0 +1,58 @@
+{
+  "verdict": "FAIL_RETAINED",
+  "reason": "Reviewed gate blocks WIDTH/PIN/IMPLICIT/UNDRIVEN warnings attributed to copied wrapper; three WIDTH warnings matched. Compiler itself returned zero, no %Error or cap breach.",
+  "steps_executed": [
+    "version",
+    "WINDOW_actual_L0/baseline"
+  ],
+  "steps_not_run": [
+    "WINDOW wrong_signal_path",
+    "WINDOW wrong_parameter",
+    "CKV baseline",
+    "CKV wrong_signal_path",
+    "CKV wrong_parameter"
+  ],
+  "blocking_warning_headers": [
+    "%Warning-WIDTHCONCAT: rtl/test/v41_runtime/ot_v41_rt_die_sim_observe_l0_window.sv:111:50: Replication of more that --replication-limit 8192 is suspect: 16960",
+    "%Warning-WIDTHEXPAND: rtl/test/v41_runtime/ot_v41_rt_die_sim_observe_l0_window.sv:141:28: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's REPLICATE generates 31 bits.",
+    "%Warning-WIDTHEXPAND: rtl/test/v41_runtime/ot_v41_rt_die_sim_observe_l0_window.sv:151:22: Operator ASSIGNW expects 64 bits on the Assign RHS, but Assign RHS's REPLICATE generates 60 bits."
+  ],
+  "warning_origin": {
+    "original_source": "rtl/test/v41_runtime/ot_v41_rt_die.sv",
+    "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+    "original_sha256": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+    "matching_original_lines": [
+      {
+        "copy_line": 111,
+        "original_line": 107,
+        "line": "        .att_packed_kv_m(4'd0), .att_packed_kv_w('0), .att_packed_kv_fault(1'b0),"
+      },
+      {
+        "copy_line": 141,
+        "original_line": 137,
+        "line": "    wire [31:0] dbg_faults = {11'd0, dut.u_tile.qrom_rom_fault, dut.u_tile.rope_read_fault, dut.u_tile.idx_user_fault, dut.u_tile.kb_ring_fault,"
+      },
+      {
+        "copy_line": 151,
+        "original_line": 147,
+        "line": "    assign dbg_state = {dbg_fsticky, 4'(dut.u_tile.u_core.st), dut.u_tile.u_core.d_unit, dut.u_tile.u_core.idles,"
+      }
+    ],
+    "scope": "Warning locations are byte-identical inherited original lines. No waiver or source correction applied; reviewed gate verdict stays FAIL."
+  },
+  "frontend_report": [
+    "- Verilator: Built from 70.797 MB sources in 216 modules, into 1016.281 MB in 1090 C++ files needing 0.000 MB",
+    "- Verilator: Walltime 303.400 s (elab=5.567, cvt=279.193, bld=0.000); cpu 257.067 s on 1 threads; allocated 33288.250 MB"
+  ],
+  "compiler_log_total_bytes": 532298,
+  "runner_pid": 2843345,
+  "owned_frontend_pid": 2844307,
+  "owned_processes_reaped": true,
+  "no_retry": true,
+  "no_cap_change": true,
+  "no_later_mode_or_mutant_invocation": true,
+  "no_source_change": true,
+  "causal_deadlines": "BOUND_MISSING",
+  "hardware_admission": false,
+  "live_selected": false
+}
