@@ -1,0 +1,189 @@
+{
+  "C": null,
+  "Nash_successor": "6f2c3b8f143fb6cecc5534b6cb9abbbd29166efb",
+  "RTL_GO": false,
+  "actual_consumer_deadline": null,
+  "consumer": "actual source xs_rd_re/src0/address/old data -> observed vx/cwx Xtag atR+2; accepted consumer owner, not current PC",
+  "consumer_source_nodes": [
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I70",
+          "consumer_template_word_sha256": "baaa22bd143df024f0ace0115169314634e66e2f7968f4d36d3536768e5313d1",
+          "instruction_predicate": 0,
+          "operand": "a",
+          "wait_mask": 2
+        }
+      ],
+      "producer": "L0.I66"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I70",
+          "consumer_template_word_sha256": "baaa22bd143df024f0ace0115169314634e66e2f7968f4d36d3536768e5313d1",
+          "instruction_predicate": 0,
+          "operand": "c",
+          "wait_mask": 2
+        }
+      ],
+      "producer": "L0.I67"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I80",
+          "consumer_template_word_sha256": "48889746e2262e0507f170b89794709af45abd78a7fe05fd6ad50b7bff967a2a",
+          "instruction_predicate": 0,
+          "operand": "a",
+          "wait_mask": 0
+        }
+      ],
+      "producer": "L0.I68"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I80",
+          "consumer_template_word_sha256": "48889746e2262e0507f170b89794709af45abd78a7fe05fd6ad50b7bff967a2a",
+          "instruction_predicate": 0,
+          "operand": "c",
+          "wait_mask": 0
+        }
+      ],
+      "producer": "L0.I69"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I85",
+          "consumer_template_word_sha256": "c5c8411fd0683b8a78f8fa66ea11987540e7ae94dab5483b11accf10b8492079",
+          "instruction_predicate": 0,
+          "operand": "a",
+          "wait_mask": 0
+        }
+      ],
+      "producer": "L0.I72"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I85",
+          "consumer_template_word_sha256": "c5c8411fd0683b8a78f8fa66ea11987540e7ae94dab5483b11accf10b8492079",
+          "instruction_predicate": 0,
+          "operand": "c",
+          "wait_mask": 0
+        }
+      ],
+      "producer": "L0.I73"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I90",
+          "consumer_template_word_sha256": "273703be0d968eecf73bcb77181d546c4b7ee34260e82de4586c17c63df9013c",
+          "instruction_predicate": 0,
+          "operand": "a",
+          "wait_mask": 0
+        }
+      ],
+      "producer": "L0.I82"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I90",
+          "consumer_template_word_sha256": "273703be0d968eecf73bcb77181d546c4b7ee34260e82de4586c17c63df9013c",
+          "instruction_predicate": 0,
+          "operand": "c",
+          "wait_mask": 0
+        }
+      ],
+      "producer": "L0.I83"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I95",
+          "consumer_template_word_sha256": "784ff0c88fab7999a87aa125408a76278fa4f719319cd46cd35564a7dcf4b9d7",
+          "instruction_predicate": 0,
+          "operand": "a",
+          "wait_mask": 0
+        }
+      ],
+      "producer": "L0.I87"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I95",
+          "consumer_template_word_sha256": "784ff0c88fab7999a87aa125408a76278fa4f719319cd46cd35564a7dcf4b9d7",
+          "instruction_predicate": 0,
+          "operand": "c",
+          "wait_mask": 0
+        }
+      ],
+      "producer": "L0.I88"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I98",
+          "consumer_template_word_sha256": "9e57ff42bb75fbc825e3e085de1b3da27613354af2aa50f89250fbcf7018f6af",
+          "instruction_predicate": 0,
+          "operand": "a",
+          "wait_mask": 0
+        }
+      ],
+      "producer": "L0.I92"
+    },
+    {
+      "consumers": [
+        {
+          "consumer_node": "L0.I98",
+          "consumer_template_word_sha256": "9e57ff42bb75fbc825e3e085de1b3da27613354af2aa50f89250fbcf7018f6af",
+          "instruction_predicate": 0,
+          "operand": "c",
+          "wait_mask": 0
+        }
+      ],
+      "producer": "L0.I93"
+    }
+  ],
+  "current_enrollment": "current PHW10 binary/source/program/field + compiled intercepted-ingress callback closure and accepted journal must qualify separately",
+  "exclusion": "every source edge from phase lease through last associated consumer read/Xtag; any other writer to a leased address rejected, including equal bits",
+  "generation_rearm": "separate source/route/packetACK owner fences still required; not proved by this address-lease checker",
+  "implemented_copied_ingress": false,
+  "ingress_default_off": true,
+  "lease_origin": "actual acquired owner epoch, not borrowed cone retirement422",
+  "mux_owner_and_exclusion_cost": null,
+  "necessary_native_ROM_exclusion": "slot0 substitution does not silence native slots1..127; prove no writes into the lease or explicitly price suppression/interception",
+  "new_jobs": false,
+  "phase_address_lease": "held until all576 associated consumers observed and tags matched; no timed release or promise",
+  "port0_is_intercepted_ingress_not_native_root_id": true,
+  "proposed_write": "dut.u_tile.rom_we[0], rom_waddr[0+:AW30], rom_wdata[0+:32]",
+  "scalar_source_credit": "actual visible then positive captured feedback; does not free phase address lease",
+  "scope": "PROPOSED_SLOT0_PHASE_EXCLUSION_CHECK_NOT_ACTUAL_ADMISSION",
+  "scope_clock": "native_core_clk only; no inferred physical3:4CDC conversion",
+  "source_sha256": {
+    "core.sv.txt": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+    "runtime_spine.sv.txt": "a55235b091ceaa0c2b84c2a6097800426e3fc5476a245523f8f5b385ddf119a3",
+    "tile.sv.txt": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+  },
+  "stations": null,
+  "unchanged_formatter": "row + pos*ops + obase; source fmt/pw62/pw63/rsplit, supplied BF16, error0 and VM19 bounds",
+  "writer_families": [
+    "ww_h",
+    "rom",
+    "vw_me",
+    "vw_su",
+    "vw_rd",
+    "xs_vm",
+    "xs_res",
+    "vw_xe",
+    "ww_q",
+    "ww_x",
+    "xa",
+    "xb"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "Nash_source_sha256": {
+    "results/uarch/dsrom_I66_capture_visibility_successor_20261002/model.json": "82b3e3406a2e903ebb0d2dc647d667ed2b5209f0d24da5e21fe2be7592834dfa",
+    "tools/dsrom_I66_capture_visibility_successor.py": "5dce05b04f0a9f64a8822feff48f3eb04dc8b1da44aaa29bbfb84a6f192e6739"
+  },
+  "Nash_successor": "6f2c3b8f143fb6cecc5534b6cb9abbbd29166efb",
+  "actual_consumer_deadline": null,
+  "endpoints": "preedge native writer/consumer samples, sameedge postNBA VM, observedR+2 X tags, positive visibility-credit feedback; phase held until all consumer tags and credits fenced",
+  "focused_combined_tests": 62,
+  "necessary_condition": "native slots1..127 cannot write the leased frame; prove silence or price their suppression/interception; slot0 mux alone does not establish this",
+  "new_jobs": false,
+  "new_tests": 17,
+  "one_candidate": "defaultoff intercepted scalarROM slot0, no VM512 lease",
+  "prerequisite": "ca730feb2ebfa8d3a729d7fb9360bdb61db17105",
+  "scope": "phase exclusion and observed-consumer association software checker; no actual journal or ingress implementation qualified"
+}
