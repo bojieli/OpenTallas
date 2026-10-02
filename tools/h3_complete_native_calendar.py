@@ -56,6 +56,366 @@ def read_json(path):
 PORTABLE_INPUTS = None
 
 
+def compact_uint(value):
+    """Unsigned64 LEB128, with overflow rejected rather than truncated."""
+    if type(value) is not int or not 0<=value<2**64:raise ValueError('compact unsigned64 width')
+    out=bytearray()
+    while value>=128:out.append((value&127)|128);value>>=7
+    out.append(value);return bytes(out)
+
+
+def compact_read_uint(stream):
+    value=0
+    for shift in range(0,70,7):
+        byte=stream.read(1)
+        if not byte:raise ValueError('truncated compact journal integer')
+        value|=(byte[0]&127)<<shift
+        if byte[0]<128:
+            if value>=2**64 or shift and byte[0]==0:raise ValueError('noncanonical compact journal integer')
+            return value
+    raise ValueError('compact journal integer overflow')
+
+
+class CompactLifecycle:
+    """Online actual sector lifecycle; held identities occupy finite tags."""
+    def __init__(self):
+        self.live={};self.generations={};self.fault=None;self.last_tick=0;self.tag_capacity=None;self.write_capacity=None
+    def accept(self,event):
+        if self.fault:raise ValueError('compact lifecycle previously faulted; evidence retained')
+        if not {'identity','tag','generation','tick'}<=event.keys():return
+        phase=event['event'];tag=event['tag'];generation=event['generation'];identity=event['identity']
+        if event['tick']<self.last_tick:raise ValueError('compact lifecycle time regressed')
+        self.last_tick=event['tick']
+        if phase=='request_accept':
+            if tag in self.live or generation<=self.generations.get(tag,0):raise ValueError('compact premature tag reuse/stale generation')
+            if self.tag_capacity is not None and (not 0<=tag<self.tag_capacity or len(self.live)>=self.tag_capacity):raise ValueError('compact finite tag capacity exhausted')
+            self.generations[tag]=generation;self.live[tag]=[identity,generation,'accepted',False,event.get('payload_sha256')];return
+        state=self.live.get(tag)
+        if state is None or state[:2]!=[identity,generation]:raise ValueError('compact stale identity/tag/generation')
+        if phase=='cancel_accept':
+            if state[2] not in ('accepted','write_reserved','issued','phases'):raise ValueError('compact cancellation after held completion')
+            return
+        if phase in ('reverse_quarantine','uninitialized_read_fault'):
+            state[2]='quarantine';raise ValueError('compact actual provider fault retained')
+        before=state[2]
+        transitions={'write_residence_reserved':('accepted','write_reserved'),
+            'software_owned_issue':('write_reserved' if state[3] else 'accepted','issued'),
+            'software_service_phases_reserved':('issued','phases'),
+            'software_backing_visible':('phases','held'), 'software_read_capture':('phases','held'),
+            'cancelled_before_issue':('accepted','held'), 'consumer_accept':('held','consumed'),
+            'reverse_credit_accept':('consumed','reverse'), 'validated_reverse_grant':('reverse','released')}
+        if phase not in transitions or before!=transitions[phase][0]:raise ValueError('compact lifecycle phase order '+phase)
+        if phase=='software_backing_visible' and not state[3] or phase=='software_read_capture' and state[3]:raise ValueError('compact read/write visibility mismatch')
+        if phase=='write_residence_reserved':
+            resident=1+sum(s[3] and s[2] in ('write_reserved','issued','phases') for s in self.live.values())
+            if self.write_capacity is not None and resident>self.write_capacity or event.get('resident')!=resident:raise ValueError('compact finite write residence mismatch')
+            state[3]=True
+        if phase=='software_backing_visible' and state[4] is not None and event.get('payload_sha256')!=state[4]:raise ValueError('compact write admission/visibility payload checksum changed')
+        state[2]=transitions[phase][1]
+        if phase=='validated_reverse_grant':del self.live[tag]
+
+
+class CompactJournalBudget:
+    """Opt-in lossless streamed journals: dictionaries/indexes, no JSON event DB.
+
+    Capacity is the explicit source-sized disk reservation. Exhaustion retains
+    complete prior events and live owners; it never deletes or skips an event.
+    Event files stream immediately, while a sparse128-event index stays on disk.
+    """
+    def __init__(self,root,bytes):
+        import sqlite3
+        self.root=Path(root)
+        if self.root.exists() and any(self.root.iterdir()):raise ValueError('fresh compact journal root required')
+        self.root.mkdir(parents=True,exist_ok=True);self.cap=positive(bytes,'source-sized compact disk capacity');self.used=0;self.next_journal=0
+        self.reserve(131072);self.path=self.root/'dictionary.sqlite';self.db=sqlite3.connect(self.path)
+        self.db.execute('pragma journal_mode=OFF');self.db.execute('pragma cache_size=-128')
+        self.db.execute('create table dictionary(id integer primary key,value blob not null unique)')
+        self.dictionary_count=0;self.cache={};self.cache_order=[]
+    def reserve(self,n):
+        if type(n) is not int or n<0 or self.used+n>self.cap:raise BufferError('source-sized compact journal disk exhausted; no event discarded')
+        self.used+=n
+    def dictionary(self,value):
+        raw=json.dumps(value,sort_keys=True,separators=(',',':')).encode()
+        key=hashlib.sha256(raw).digest()
+        if key in self.cache:return self.cache[key]
+        row=self.db.execute('select id from dictionary where value=?',(raw,)).fetchone()
+        if row is None:
+            # This small static dictionary alone pays conservative SQLite pages.
+            self.reserve(8*(len(raw)+64));self.dictionary_count+=1
+            identifier=self.dictionary_count;self.db.execute('insert into dictionary values(?,?)',(identifier,raw))
+        else:identifier=row[0]
+        self.cache[key]=identifier;self.cache_order.append(key)
+        if len(self.cache_order)>256:del self.cache[self.cache_order.pop(0)]
+        return identifier
+    def value(self,identifier):
+        row=self.db.execute('select value from dictionary where id=?',(identifier,)).fetchone()
+        if row is None:raise ValueError('unbound compact source/version dictionary ID')
+        return json.loads(row[0])
+
+
+class CompactEventSpan:
+    """Re-iterable source range, also compatible with r36 SizedSlice."""
+    def __init__(self,journal,start,end):self.j=journal;self.start=start;self.end=end
+    def __len__(self):return self.end-self.start
+    def __iter__(self):return self.j.read_span(self.start,self.end)
+
+
+class CompactDiskEvents:
+    """DiskEvents-compatible reversible typed record stream with online proof."""
+    def __init__(self,budget):
+        self.budget=budget;self.id=budget.next_journal;budget.next_journal+=1
+        self.path=budget.root/('%08d.events'%self.id);self.index_path=budget.root/('%08d.index'%self.id)
+        budget.reserve(8192);self.file=self.path.open('w+b');self.index=self.index_path.open('w+b')
+        self.file.write(b'H3CJ1\0');self.count=0;self.closed=False;self.digest=hashlib.sha256();self.counts=Counter();self.validator=CompactLifecycle();self.fault=None
+    @staticmethod
+    def split(event):
+        import copy
+        value=copy.deepcopy(event);integers=[];paths=[]
+        metadata=value.get('allocation_identity');checksum=value.get('payload_sha256')
+        if metadata is not None:value.pop('allocation_identity')
+        if isinstance(checksum,str) and re.fullmatch('[0-9a-f]{64}',checksum):value.pop('payload_sha256')
+        else:checksum=None # Other original JSON payload-hash structures stay exact.
+        def visit(obj,path):
+            if isinstance(obj,dict):
+                for key in sorted(obj):
+                    item=obj[key]
+                    if type(item) is int:paths.append(path+[key]);integers.append(item);obj[key]=None
+                    elif isinstance(item,(dict,list)):visit(item,path+[key])
+            else:
+                for i,item in enumerate(obj):
+                    if type(item) is int:paths.append(path+[i]);integers.append(item);obj[i]=None
+                    elif isinstance(item,(dict,list)):visit(item,path+[i])
+        # Fixed provider costs are source metadata, dictionary encoded once.
+        costs=value.get('phase_costs')
+        if costs is not None:value.pop('phase_costs')
+        visit(value,[])
+        if costs is not None:value['phase_costs']=costs
+        descriptor=dict(value=value,paths=paths,metadata=metadata is not None,checksum=checksum is not None)
+        if any(n<0 for n in integers):
+            descriptor['negative']=[n<0 for n in integers]
+            integers=[-n-1 if n<0 else n for n in integers]
+        return descriptor,metadata,checksum,integers
+    def append(self,event):
+        if self.closed or self.fault:raise ValueError('closed/faulted compact journal; no retry')
+        descriptor,metadata,checksum,integers=self.split(event)
+        # Validate widths before writing a frame; no partial or lossy conversion.
+        encoded_integers=b''.join(compact_uint(n) for n in integers)
+        descriptor_id=self.budget.dictionary(descriptor)
+        frame=compact_uint(descriptor_id)
+        if metadata is not None:frame+=compact_uint(self.budget.dictionary(metadata))
+        if checksum is not None:frame+=bytes.fromhex(checksum)
+        frame+=encoded_integers;encoded=compact_uint(len(frame))+frame
+        index_bytes=16 if self.count%128==0 else 0
+        self.budget.reserve(len(encoded)+index_bytes)
+        import struct
+        self.file.seek(0,2)
+        if index_bytes:self.index.seek(0,2);self.index.write(struct.pack('<QQ',self.count,self.file.tell()))
+        self.file.write(encoded);self.count+=1;self.counts[event['event']]+=1
+        raw=json.dumps(event,sort_keys=True,separators=(',',':')).encode();self.digest.update(len(raw).to_bytes(8,'little')+raw)
+        # An actual malformed lifecycle event is stored BEFORE the fault verdict.
+        try:self.validator.accept(event)
+        except ValueError as exc:self.fault=str(exc);self.validator.fault=str(exc);self.flush();raise
+        if self.count%128==0:self.flush()
+    def flush(self):
+        if not self.file.closed:self.file.flush()
+        if not self.index.closed:self.index.flush()
+        self.budget.db.commit()
+        if self.budget.path.stat().st_size>self.budget.used:raise BufferError('compact dictionary page accounting underestimated')
+    def __len__(self):return self.count
+    def read_span(self,start,end):
+        import io,struct
+        if not 0<=start<=end<=self.count:raise IndexError('compact journal source span')
+        if start==end:return
+        self.flush()
+        with self.path.open('rb') as stream,self.index_path.open('rb') as index:
+            if stream.read(6)!=b'H3CJ1\0':raise ValueError('compact journal header')
+            index.seek((start//128)*16);block=index.read(16)
+            if len(block)!=16:raise ValueError('truncated compact journal index')
+            ordinal,offset=struct.unpack('<QQ',block);stream.seek(offset)
+            for seq in range(ordinal,end):
+                size=compact_read_uint(stream)
+                if size>self.path.stat().st_size-stream.tell():raise ValueError('truncated compact event frame')
+                raw=stream.read(size)
+                if len(raw)!=size:raise ValueError('truncated compact event frame')
+                frame=io.BytesIO(raw);descriptor=self.budget.value(compact_read_uint(frame));value=descriptor['value']
+                if descriptor['metadata']:value['allocation_identity']=self.budget.value(compact_read_uint(frame))
+                if descriptor['checksum']:
+                    checksum=frame.read(32)
+                    if len(checksum)!=32:raise ValueError('truncated compact payload checksum')
+                    value['payload_sha256']=checksum.hex()
+                for i,path in enumerate(descriptor['paths']):
+                    obj=value
+                    for key in path[:-1]:obj=obj[key]
+                    n=compact_read_uint(frame)
+                    obj[path[-1]]=-n-1 if descriptor.get('negative',[False]*len(descriptor['paths']))[i] else n
+                if frame.read(1):raise ValueError('trailing compact event fields')
+                if seq>=start:yield value
+    def __iter__(self):return self.read_span(0,self.count)
+    def __getitem__(self,index):
+        if isinstance(index,slice):
+            start,end,step=index.indices(self.count)
+            if step!=1:raise ValueError('compact sequential source span only')
+            return CompactEventSpan(self,start,end)
+        index=index+self.count if index<0 else index
+        if not 0<=index<self.count:raise IndexError(index)
+        return next(self.read_span(index,index+1))
+    def summary(self):
+        self.flush()
+        return dict(path=str(self.path),journal_id=self.id,events=self.count,event_counts=dict(self.counts),
+            framed_event_SHA256=self.digest.hexdigest(),event_bytes=self.path.stat().st_size,index_bytes=self.index_path.stat().st_size,
+            aggregate_reserved_bytes=self.budget.used,aggregate_cap_bytes=self.budget.cap,in_memory_event_list=False,
+            live_lifecycle_tags=len(self.validator.live),fault=self.fault,hardware_qualified=False)
+    def close(self):
+        if self.validator.live or self.fault:raise ValueError('compact close before actual lifecycle drain; evidence retained')
+        self.flush();self.closed=True;self.file.close();self.index.close()
+
+
+def compact_sector_provider_class(original):
+    """Opt-in actual r30/r21 provider with compact events and payload checksums."""
+    source=Path(original.__init__.__code__.co_filename)
+    base=original.__bases__[0];base_source=Path(base.__init__.__code__.co_filename)
+    if hashlib.sha256(source.read_bytes()).hexdigest()!='1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0' or hashlib.sha256(base_source.read_bytes()).hexdigest()!='3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2':raise ValueError('exact r30/r21 compact provider source required')
+    class CompactProvider(original):
+        def __init__(self,extents,*,journal_budget,allocation_identity=None,**kw):
+            base.__init__(self,extents,**kw);self.allocation_identity=allocation_identity
+            self.events=CompactDiskEvents(journal_budget);self.backing=original.__init__.__globals__['CompactSectors']()
+            self.events.validator.tag_capacity=self.tags;self.events.validator.write_capacity=self.write_cap
+        def log(self,event,t,**kw):
+            payload=t.payload if t.write and event in ('request_accept','software_backing_visible') else t.returned if event=='software_read_capture' else None
+            if payload is not None:kw['payload_sha256']=hashlib.sha256(payload).hexdigest()
+            return original.log(self,event,t,**kw)
+    return CompactProvider
+
+
+def install_compact_provider_journals(modules):
+    """Explicit per-process opt-in for the original provider/driver imports.
+
+    Returned receipt records every changed alias and each immutable file hash.
+    No source file or existing provider instance is changed. Installation must
+    precede provider construction; callers archive ALL event/index/dictionary
+    files, never just budget.path (which names the metadata dictionary).
+    """
+    original=None
+    for module in modules:
+        candidate=getattr(module,'BoundSectorProvider',None)
+        if candidate is not None and hasattr(candidate.__init__,'__code__'):
+            source=Path(candidate.__init__.__code__.co_filename)
+            if source.is_file() and hashlib.sha256(source.read_bytes()).hexdigest()=='1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0':original=candidate;break
+    if original is None:raise ValueError('actual r30 provider module required for compact installation')
+    compact=compact_sector_provider_class(original);namespace=original.__init__.__globals__
+    replacements={original:compact,namespace['DiskEvents']:CompactDiskEvents}
+    # The canonical JournalBudget is imported by provider modules separately.
+    from inspect import getmodule
+    owner=getmodule(namespace['DiskEvents'])
+    if owner is None:raise ValueError('actual journal module must be loaded')
+    replacements[owner.JournalBudget]=CompactJournalBudget
+    changed=[];pins={}
+    for module in modules:
+        path=Path(module.__file__)
+        pins[module.__name__]=dict(path=str(path),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+        for name,value in list(vars(module).items()):
+            if isinstance(value,type) and value in replacements:
+                setattr(module,name,replacements[value]);changed.append(module.__name__+':'+name)
+    return dict(schema='H4_ACTUAL_PROVIDER_COMPACT_JOURNAL_INSTALL_V1',changed_aliases=sorted(changed),source_pins=pins,
+        immutable_files_modified=False,existing_instances_modified=False,all_event_files_required=True,
+        payload_checksums='actual write payload at request/visibility and actual read return at capture',
+        hardware_qualified=False)
+
+
+def compact_source_frame_upper(event):
+    """Deterministic maximum encoded size, no measured compression ratio."""
+    descriptor,metadata,checksum,integers=CompactDiskEvents.split(event)
+    # Every unsigned field and both dictionary IDs have an explicit u64 limit.
+    frame=10+10*len(integers)+(10 if metadata is not None else 0)+(32 if checksum is not None else 0)
+    return dict(frame_bytes_upper=frame+len(compact_uint(frame)),integer_fields=len(integers),
+        dictionary_id_bits=64,integer_bits=64,payload_checksum_bytes=32 if checksum is not None else 0,
+        descriptor=descriptor,metadata=metadata)
+
+
+def open_compact_journal_reader(root,journal_id):
+    """Read-only source-span adapter for archived provider journals."""
+    import sqlite3,struct
+    if type(journal_id) is not int or not 0<=journal_id<2**64:raise ValueError('compact journal identity')
+    root=Path(root);budget=CompactJournalBudget.__new__(CompactJournalBudget)
+    budget.path=root/'dictionary.sqlite';budget.db=sqlite3.connect('file:'+str(budget.path.resolve())+'?mode=ro',uri=True)
+    reader=CompactDiskEvents.__new__(CompactDiskEvents);reader.budget=budget;reader.id=journal_id
+    reader.path=root/('%08d.events'%journal_id);reader.index_path=root/('%08d.index'%journal_id)
+    index_size=reader.index_path.stat().st_size
+    if index_size%16:raise ValueError('truncated compact source index')
+    reader.count=0
+    if index_size:
+        with reader.index_path.open('rb') as index,reader.path.open('rb') as stream:
+            index.seek(-16,2);ordinal,offset=struct.unpack('<QQ',index.read(16));stream.seek(offset);reader.count=ordinal
+            end=reader.path.stat().st_size
+            while stream.tell()<end:
+                size=compact_read_uint(stream)
+                if size>end-stream.tell():raise ValueError('truncated compact source frame')
+                stream.seek(size,1);reader.count+=1
+    reader.flush=lambda:None
+    return reader
+
+
+def size_compact_pc0_journals(packet, phase_events, native_pc0, homes):
+    """Source-sized all96 PC0 scratch + actual home-derived RF publication.
+
+    Retains the producer's explicit sector upper (including unresolved padding),
+    and bounds every typed field by its encoder width. No arbitrary host limit.
+    Source/checkpoint receipt records outside this provider-phase schema remain
+    separately enumerated admission debt, never silently included at zero.
+    """
+    if packet['PC']!=0 or packet['rank_calls']!=96 or native_pc0['pc']!=0:raise ValueError('actual PC0 full96 source required')
+    owners=native_pc0['rank_bindings']
+    if [r['rank'] for r in owners]!=list(range(96)) or len({r['template'] for r in owners})!=1 or any(r.get('empty_owned_extent') or r.get('buffer_programs') for r in owners):raise ValueError('actual96rank PC0 common native source scope')
+    phase_names={k:[e['event'] for e in events] for k,events in phase_events.items()}
+    calibration=dict(total_events=1,wall_seconds=1,journal_sqlite_bytes=1,actual_journal_reserved_bytes=1)
+    counts=project_pc0_provider_journal(packet,phase_names,calibration)
+    frames={kind:[compact_source_frame_upper(e) for e in events] for kind,events in phase_events.items()}
+    read=counts['read_sector_byte_floor_per_rank'];write=counts['write_sector_byte_floor_per_rank'];padding=counts['unresolved_instruction_padding_sectors_per_rank']
+    per_transaction={kind:sum(row['frame_bytes_upper'] for row in rows) for kind,rows in frames.items()}
+    scratch_bytes=96*(read*per_transaction['read']+write*per_transaction['write']+padding*max(per_transaction.values()))
+    publication=[];publication_bytes=0;publication_events=0;metadata_values=[]
+    for rank in range(96):
+        rread=0;rwrite=0;versions=[]
+        for writer in native_pc0['writes']:
+            indices=[i for i in writer['home_indices'] if rank in homes[i]['rank_group']]
+            if not indices:raise ValueError('actual PC0 writer rank home absent')
+            for i in indices:
+                home=homes[i]
+                if home['version']!=writer['version'] or home['home']['class']!='RF':raise ValueError('actual PC0 source RF writer home')
+                words=positive(home['word_count'],'actual PC0 writer words');sectors=(words+7)//8
+                # Original Storage.write issues an actual read/RMW for a partial
+                # sector, for EACH of the two mirrors, then copy0 readback.
+                rwrite+=2*sectors;rread+=sectors+2*(words%8!=0)
+            versions.append(writer['version'])
+        publication.append(dict(rank=rank,read_sector32=rread,write_sector32=rwrite))
+        publication_bytes+=rread*per_transaction['read']+rwrite*per_transaction['write']
+        publication_events+=rread*len(frames['read'])+rwrite*len(frames['write'])
+        metadata_values.extend([dict(address_class='scratch',native_owner=[0,versions,rank,0,1]),dict(address_class='RF',rank=rank)])
+    # Actual fixed source metadata + all source descriptor variants are retained
+    # once. Conservatively allow separate skeletons for scratch and RF ownership.
+    dictionary_bytes=131072+sum(8*(len(json.dumps(v,sort_keys=True,separators=(',',':')).encode())+64) for v in metadata_values)
+    for rows in frames.values():
+        for row in rows:dictionary_bytes+=2*8*(len(json.dumps(row['descriptor'],sort_keys=True,separators=(',',':')).encode())+64)
+    events=counts['provider_events_upper_all_ranks']+publication_events
+    journals=192
+    index_bytes=16*((events+127)//128+journals)
+    # Per-file4096-byte allocation padding is explicitly covered for both files.
+    overhead=dictionary_bytes+journals*8192+index_bytes+65536*5
+    bound=scratch_bytes+publication_bytes+overhead
+    return dict(schema='H4_PC0_FULL96_COMPACT_PHASE_DISK_SOURCE_BOUND_V1',PC=0,ranks=96,
+        source_scratch_transactions_upper=counts['sector_transactions_upper_all_ranks'],
+        source_scratch_events_upper=counts['provider_events_upper_all_ranks'],
+        source_publication_per_rank=publication,source_publication_events=publication_events,
+        provider_phase_events_upper=events,phase_record_frames=frames,transaction_bytes_upper=per_transaction,
+        scratch_event_stream_bytes_upper=scratch_bytes,publication_event_stream_bytes_upper=publication_bytes,
+        source_dictionary_bytes_upper=dictionary_bytes,sparse_index_bytes_upper=index_bytes,
+        event_and_index_file_padding_bytes=journals*8192,preacceptance_headroom_bytes=65536*5,
+        provider_phase_disk_reservation_bytes=bound,unresolved_scratch_padding_sectors_per_rank=padding,
+        required_additional_receipt_dictionary_record_sizes='actual source/native completion/expected-output receipt shapes require separate bound before complete production GO',
+        whole_journal_admission_complete=False,full96_prefix_completed=False,group_staging_bytes=41472,
+        sampled_ratio_used=False,events_discarded=0,hardware_qualified=False,whole_token_latency=None)
+
+
 def portable_calendar_blob(path, commit, archive):
     """Strict hash-addressed input lookup; never probes historical Git refs."""
     relative=Path(path)

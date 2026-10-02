@@ -12,6 +12,118 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_compact_typed_journal_roundtrip_digest_index_and_online_drain(self):
+        import tempfile,hashlib,sys
+        sys.path.insert(0,'/home/ubuntu/OpenTallas/tools')
+        import hbm_bound_event_journal_r30 as original
+        from hbm_provider_microvm_r21 import Identity
+        with tempfile.TemporaryDirectory() as tmp:
+            budget=c.CompactJournalBudget(Path(tmp)/'journal',1<<24)
+            provider=c.compact_sector_provider_class(original.BoundSectorProvider)(
+                {('DeepSeek',95):[dict(base=0,bytes=32)]},journal_budget=budget,tags=1,
+                allocation_identity=dict(address_class='scratch',native_owner=[0,['DeepSeek.0.attn_pre.50'],95,0,1]))
+            expected=[];digest=hashlib.sha256()
+            for serial in range(40):
+                write=serial%2==0;payload=bytes([serial])*32 if write else b''
+                begin=len(provider.events)
+                t=provider.submit(Identity('DeepSeek',95,1,0,serial,0),write=write,payload=payload)
+                returned=provider.wait(t)
+                if not write:self.assertEqual(returned,bytes([serial-1])*32)
+                provider.finish(t)
+                chunk=list(provider.events[begin:]);expected.extend(chunk)
+                for event in chunk:
+                    raw=json.dumps(event,sort_keys=True,separators=(',',':')).encode();digest.update(len(raw).to_bytes(8,'little')+raw)
+            self.assertEqual(list(provider.events),expected)
+            span=provider.events[127:139]
+            self.assertEqual(list(span),expected[127:139]);self.assertEqual(list(span),expected[127:139])
+            self.assertEqual(len(span),12)
+            from h3_ds_query_provider_r36 import SizedSlice
+            self.assertEqual(len(SizedSlice(span)),12);self.assertEqual(list(SizedSlice(span)),expected[127:139])
+            self.assertEqual(provider.events[-1],expected[-1])
+            self.assertEqual(provider.events.digest.hexdigest(),digest.hexdigest())
+            self.assertEqual(provider.events.validator.live,{})
+            self.assertLess(provider.events.path.stat().st_size,300*160)
+            self.assertTrue(any('payload_sha256' in event for event in expected))
+            provider.events.close();self.assertEqual(list(provider.events[:7]),expected[:7]);budget.db.close()
+
+    def test_compact_actual_source_RF_publish_and_write_checksum_fault(self):
+        import tempfile,sys,hashlib
+        import numpy as np
+        sys.path.insert(0,'/home/ubuntu/OpenTallas/tools')
+        import hbm_bound_event_journal_r30 as original
+        from h3_ds_checkpoint_provider_r30 import Provider,RF_BYTES
+        from h3_ds_query_provider_r36 import SizedRF
+        from hbm_provider_microvm_r21 import Identity
+        actual=c.compact_sector_provider_class(original.BoundSectorProvider)
+        with tempfile.TemporaryDirectory() as tmp:
+            budget=c.CompactJournalBudget(Path(tmp)/'journal',1<<24)
+            writer=Provider.__new__(Provider)
+            writer.__dict__.update(generation=1,published={},views={},locations={},rf=SizedRF({}),seq=0,trace=[],journal_budget=budget,
+                homes=[dict(version='source-v',rank_group=[0],SM=0,partition='linear',word_count=16,home=dict(slot_first=0,vectors=1,**{'class':'RF'}))])
+            writer.rf[0]=actual({('DeepSeek',0):[dict(base=0,bytes=RF_BYTES)]},journal_budget=budget,allocation_identity=dict(address_class='RF',rank=0))
+            values=np.arange(16,dtype=np.float32);identity=dict(PC=0,rank=0,generation=1,version='source-v',home_indices=[0])
+            receipt=writer.publish(identity,{'data':values},{'result':'out'})
+            self.assertEqual(receipt['payload_sha256']['data'],hashlib.sha256(values.tobytes()).hexdigest())
+            self.assertEqual(receipt['pending_obligations'],0);np.testing.assert_array_equal(writer.published['source-v',0],values)
+            self.assertEqual(writer.rf[0].events.counts['software_backing_visible'],4)
+            writer.rf[0].events.close();budget.db.close()
+        with tempfile.TemporaryDirectory() as tmp:
+            budget=c.CompactJournalBudget(Path(tmp)/'journal',1<<20)
+            provider=actual({('DeepSeek',0):[dict(base=0,bytes=32)]},journal_budget=budget,tags=1)
+            tx=provider.submit(Identity('DeepSeek',0,1,0,0,0),write=True,payload=bytes(32))
+            tx.payload=bytes([1])*32
+            with self.assertRaisesRegex(ValueError,'payload checksum changed'):provider.wait(tx)
+            self.assertEqual(provider.events[-1]['event'],'software_backing_visible')
+            self.assertTrue(provider.events.validator.live)
+            provider.events.file.close();provider.events.index.close();budget.db.close()
+
+    def test_compact_source_receipt_shapes_null_signed_and_archived_span_reader(self):
+        import tempfile
+        event=dict(event='actual_native_metadata',allocation_identity=None,phase_costs=None,
+                   record=dict(shape=[-1,2],generation=2**63,source_versions=['DeepSeek.-1.h.0'],payload_sha256={'data':'a'*64}))
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)/'journal';budget=c.CompactJournalBudget(root,1<<20);journal=c.CompactDiskEvents(budget)
+            journal.append(event);journal.close()
+            self.assertEqual(list(journal),[event])
+            reader=c.open_compact_journal_reader(root,journal.id)
+            self.assertEqual(list(reader[:1]),[event]);reader.budget.db.close()
+            self.assertTrue(journal.file.closed)
+            budget.db.close()
+
+    def test_source_sized_compact_pc0_is_full96_and_never_sample_ratio(self):
+        base=ROOT/c.OUT/'compact_provider_journal_r1'
+        source=json.loads(gzip.decompress((base/'source_projection.json.gz').read_bytes()))
+        homes={int(k):v for k,v in source['homes'].items()}
+        model=c.size_compact_pc0_journals(source['packet'],source['phase_events'],source['native_PC0'],homes)
+        self.assertEqual(model['ranks'],96);self.assertFalse(model['sampled_ratio_used'])
+        self.assertEqual(model['provider_phase_disk_reservation_bytes'],140850600720)
+        self.assertEqual(model['source_publication_events'],5664000)
+        self.assertTrue(all((r['read_sector32'],r['write_sector32'])==(2568,5128) for r in model['source_publication_per_rank']))
+        bad=copy.deepcopy(source['native_PC0']);bad['rank_bindings'].pop()
+        with self.assertRaisesRegex(ValueError,'actual96rank'):c.size_compact_pc0_journals(source['packet'],source['phase_events'],bad,homes)
+        badhomes=copy.deepcopy(homes);first=source['native_PC0']['writes'][0]['home_indices'][0];badhomes[first]['version']='wrong'
+        with self.assertRaisesRegex(ValueError,'writer home'):c.size_compact_pc0_journals(source['packet'],source['phase_events'],source['native_PC0'],badhomes)
+
+    def test_compact_fault_records_stale_reverse_and_refuses_premature_reuse(self):
+        import tempfile
+        event=dict(event='request_accept',identity=dict(target='DeepSeek',rank=0,epoch=1,pc=0,serial=1,sector=0),tag=0,generation=1,tick=0,hardware=False)
+        with tempfile.TemporaryDirectory() as tmp:
+            budget=c.CompactJournalBudget(Path(tmp)/'journal',1<<20);journal=c.CompactDiskEvents(budget)
+            journal.append(event)
+            with self.assertRaisesRegex(ValueError,'before actual lifecycle drain'):journal.close()
+            with self.assertRaisesRegex(ValueError,'premature tag reuse'):journal.append(dict(event,generation=2))
+            self.assertEqual(len(journal),2);self.assertEqual(journal[-1]['generation'],2)
+            self.assertEqual(len(journal.validator.live),1)
+            with self.assertRaisesRegex(ValueError,'faulted'):journal.append(event)
+            journal.file.close();journal.index.close();budget.db.close()
+        validator=c.CompactLifecycle();validator.accept(event)
+        with self.assertRaisesRegex(ValueError,'stale identity'):validator.accept(dict(event,event='validated_reverse_grant',generation=2))
+        for value in (-1,2**64):
+            with self.assertRaisesRegex(ValueError,'width'):c.compact_uint(value)
+        import io
+        for encoded in (b'\x80',b'\x80\x00',b'\xff'*10+b'\x01'):
+            with self.assertRaises(ValueError):c.compact_read_uint(io.BytesIO(encoded))
+
     def test_pc0_projection_preserves_phase_padding_and96rank_scope(self):
         base=ROOT/c.OUT/'provider_shared_driver_join_r2'
         inputs=json.loads((base/'pc0_projection_inputs.json').read_text())

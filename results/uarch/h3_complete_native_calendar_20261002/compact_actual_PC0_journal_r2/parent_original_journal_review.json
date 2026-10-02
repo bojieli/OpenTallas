@@ -1,0 +1,23 @@
+{
+  "all_request_capture_consumer_reverse_phases_closed": true,
+  "event_counts": {
+    "C0_actual_native_numeric_call": 480,
+    "consumer_accept": 738816,
+    "request_accept": 738816,
+    "reverse_credit_accept": 738816,
+    "software_backing_visible": 492288,
+    "software_owned_issue": 738816,
+    "software_read_capture": 246528,
+    "software_service_phases_reserved": 738816,
+    "validated_reverse_grant": 738816,
+    "write_residence_reserved": 492288
+  },
+  "events": 5664480,
+  "golden_comparisons": 384,
+  "journal_sha256": "6b4f32a19ab71908e90d51d9e6d292d73932c8d8d28d974fefc92f5b859940de",
+  "native_calls": 96,
+  "ranks": 96,
+  "scope": "software PC0 actual native publication and golden comparison; source acquisition separately reviewed, no primitive scratch transport or hardware/full-token credit",
+  "status": "PASS_PARENT_RAW_PC0_JOURNAL_CHECK",
+  "transactions": 738816
+}
