@@ -1,0 +1,28 @@
+{
+  "G0_admitted": false,
+  "first_10_test_log_preserved": true,
+  "fixed_geometry": {
+    "DIG": 8,
+    "LDW": 4,
+    "N": 4,
+    "NMAX": 2048,
+    "P": 64,
+    "PF": 64
+  },
+  "fresh_CLI_byte_exact": true,
+  "jobs_launched": 0,
+  "mandatory_next_owner_binding": [
+    "actual selector PDN rowphase/straps and clock/reset paths; q-element PDN cannot be substituted",
+    "VIA23/34/45 cut/LEF58/EOL/corner legality and actual selector boundary pin positions",
+    "station FF cells including enable/reset/clock tree footprints and full SSsetup/FFhold; 20segment wirebound leaves only11.007618ps logic screen slack",
+    "busy release follows actual formed VM writes and source accepted command calendar"
+  ],
+  "no_PVE2_PVE3_jobs": true,
+  "physical_owner": "f71b3c75150bcafd8b7bcee5ad1535bedb849ba4",
+  "source_parent": "077a44ffa671542871dd7d047099525542fd6cb0",
+  "status": "CONSTRUCTIVE_TRACK_AND_MINIMUM_METAL_TURN_SCREEN_ONLY",
+  "tests_passed": {
+    "source_context_regression": 12,
+    "track_turn": 11
+  }
+}
