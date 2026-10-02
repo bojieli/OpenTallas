@@ -58,6 +58,7 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
 - HBM comparators take only what a real GPU generation or its software stack has (register and TMEM-style epilogues, fused all-reduce plus norm, in-switch reduction, collective overlap), never ROM-specific novelties.
 - Stage files by explicit path, never `git add -A`.
 - Run long jobs in pinned clean worktrees, not in the main checkout.
+- Costly-build resource policy (user reaffirmed 2026-10-02): never impose arbitrary wall-time or CPU-time deadlines, individual-file size caps, or guessed per-process address-space limits on large builds or simulations. Schedule against measured CPU, RAM and disk headroom and the actual build inventory; use capacity reservations, free-space monitoring and incremental outputs. Any protective bound must be justified by actual host capacity, not copied from a small pilot. Preserve completed objects and immutable failure evidence. Do not restart a progressing pinned job solely to change its settings.
 - After editing any doc under `docs/`, regenerate the prose-figure census and sync its two untriaged-count annotations, then run `make check-figures`.
 
 ## Fleet and retirement policy (user reaffirmed 2026-10-01)

@@ -1,0 +1,18 @@
+{
+  "schema": "parent-Qwen-trained-provider-review-v1",
+  "owner_commit": "dd85ddf41",
+  "independent_tests_passed": 18,
+  "actual_native_descriptor_count": 290,
+  "actual_external_extents": 732,
+  "image_bytes": 9428966912,
+  "source_artifact_sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+  "source_files": {
+    "tools/qwen_trained_byte_provider.py": "48c3453cfd84edaeb9a609fb9915834ac475ffe25023609fe9b754f28e7849ff",
+    "tools/qwen_trained_native_run.py": "807f2bfb643e313872ec0431d999a74f6a70755e502d7b9562daf3ed40a84711",
+    "tests/test_qwen_trained_byte_provider.py": "b6b5662d541fecf3461dc402a53d5e63796c68bea926121efd32e3dab9b01689"
+  },
+  "production_launched_by_parent": false,
+  "checkpoint_numerical_execution": false,
+  "physical_qualified": false,
+  "next": "Retrieve locked checkpoint files, hash verify, resumable image conversion under measured fleet capacity; actual bounded module join required for trained token"
+}

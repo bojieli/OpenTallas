@@ -1,0 +1,20 @@
+{
+  "schema": "parent-QROM-macro-capture-review-v1",
+  "owner_commits": [
+    "d0e5dd095",
+    "f6676797e"
+  ],
+  "independent_focused_tests": 3,
+  "raw_report_hash_and_slack_checks": "PASS_LOCAL_AND_PVE1",
+  "capture": "ungated RVT flop, ideal interconnect",
+  "ROM_SS_margin_ps": 7.895628,
+  "physical_closure": false,
+  "adoption": false,
+  "source_model7294_review_pending": true,
+  "next": [
+    "actual enabled capture logic",
+    "actual pin wires and skew",
+    "finite KV RF services",
+    "in-context PG/OBS/placement/routing"
+  ]
+}
