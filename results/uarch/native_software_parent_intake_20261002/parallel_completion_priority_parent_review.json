@@ -1,0 +1,52 @@
+{
+  "D1": {
+    "individual_KV_contributor_observed": false,
+    "observed_dbg_fs": "0x000000",
+    "observed_fault_r": "0x40",
+    "observed_violations": "0x00"
+  },
+  "DS_ROM_physical": {
+    "physical_qualified": false,
+    "q_pair_local_residual_um2": 399.37536,
+    "remaining": [
+      "finite clock branch wire capacitance/slew/buffering",
+      "numeric parent IO constraints",
+      "selector placement and transport segmentation"
+    ],
+    "two_edge_capture_budget_after_SS_clkq_and_uncertainty_ps": 767.5732667,
+    "whole_die_screen_mm2": 750.373214693
+  },
+  "all_targets_qualified": false,
+  "date": "2026-10-02",
+  "fleet": {
+    "drain_only": [
+      "ot-pve2",
+      "ot-pve3"
+    ],
+    "new_heavy_work": [
+      "localhost",
+      "ot-pve1",
+      "ot-agidock128"
+    ]
+  },
+  "focused_tests": {
+    "count": 105,
+    "exit_code": 0,
+    "files": [
+      "test_w17_D1_actual_mask_receipt.py",
+      "test_dsrom_noECC_production_context.py",
+      "test_dsrom_noECC_local_context_cuts.py",
+      "test_ds_hbm_checkpoint_payloads_r35.py",
+      "test_DS_recovery_negative_successor.py"
+    ]
+  },
+  "priorities": [
+    "DS ROM connected fault attribution and complete contextual physical admission in parallel",
+    "Qwen ROM complete current tile clock/reset/KV context; retain position-zero exact token",
+    "HBM full released-checkpoint native execution and complete provider bindings in parallel with connected RF/shared/L2 source qualification",
+    "same-configuration whole-token calibration and verified agentic acceptance after prerequisite evidence"
+  ],
+  "schema": "opentallas.parallel-priority-intake.v1",
+  "scope": "source models, entering-state materialization, diagnostic masks and recovery simulation; no full-token or physical adoption",
+  "source_intake_commit": "d2ae88a25"
+}
