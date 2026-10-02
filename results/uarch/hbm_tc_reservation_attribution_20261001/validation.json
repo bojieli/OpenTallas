@@ -1,0 +1,44 @@
+{
+  "BD_source_match": "PASS recovered104um LEF SHA equals retained000ba0898-source record",
+  "artifacts_sha256": {
+    "results/uarch/hbm_tc_reservation_attribution_20261001/model.json": "78f25b2315a2b0307cea1f2a782e35f52fef1a7e31e7f404bba4054b53b4beb9",
+    "tools/hbm_tc_reservation_attribution.py": "e5c9fd049a7b20cfb6f9775aadf04b0642e34b913bedd179b0d60c101730833d",
+    "tools/test_hbm_tc_reservation_attribution.py": "f236367506b450a672e3da454b9e6797dc28bacebff60d5afecf7101cad90020"
+  },
+  "compact_geometry": "PASS complete macro inventory, distinct names, snapped origins, no hard/halo overlaps and full halos inside unchanged slots",
+  "failure_unchanged": {
+    "DRC": 0,
+    "FF_hold_wns_ps": -0.9053036098549683,
+    "SS_setup_violation_count": 1170,
+    "SS_setup_wns_ps": -102.65510663742816,
+    "cell_area_um2": 37566.1,
+    "complete_LEF_ETMs": true,
+    "core_area_um2": 46586,
+    "die_area_um2": 48400,
+    "engineering_verdict": "FAIL",
+    "fault_budget_excess_ps": 64.7,
+    "hold_uncertainty_ps": 25,
+    "output_over_budget": [
+      "fault",
+      "ov"
+    ],
+    "ov_budget_excess_ps": 24.3,
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60
+  },
+  "git_diff_check": "PASS",
+  "new_attribution_tests_PASS": 7,
+  "no_RTL_PnR_checkpoint_payloads_live_job_changes": true,
+  "no_admission": true,
+  "no_die_adoption": true,
+  "no_original_edits": true,
+  "parent_git": "abd91bff16eb9b927d0140f94bcb6c4d13d7b90c",
+  "predecessor_declared_boxes": "PASS exact for both models",
+  "prior_tests_PASS": 19,
+  "qualification_limit": "PASS establishes analytical evidence only. Compact witness is geometric, not a global minimum or routed/PDN/glue/timing fit. Existing failed-source TC remains FAIL; no admission follows.",
+  "reproduction": "PASS byte-identical",
+  "reproduction_command": "python3 tools/hbm_tc_reservation_attribution.py --check results/uarch/hbm_tc_reservation_attribution_20261001/model.json",
+  "schema": "opentallas.hbm-tc-reservation-attribution-validation.v1",
+  "test_command": "python3 -m unittest discover -s tools -p 'test_hbm_tc*.py' -v",
+  "tests_PASS": 26
+}
