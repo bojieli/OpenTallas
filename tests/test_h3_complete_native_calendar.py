@@ -12,6 +12,123 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def bounded_fixture(self, layers=1):
+        base=ROOT / c.OUT / 'bounded_provider_milestone'
+        N,K=c.load_bounded_provider_sources(base)
+        config=dict(hidden_size=8,head_dim=4,num_attention_heads=2,num_key_value_heads=2,
+            intermediate_size=16,vocab_size=16,num_hidden_layers=layers,rms_norm_eps=1e-6,rope_theta=1000000)
+        return N,K,N.compile_tiled(N.compile_program(config,context=32,groups=16))
+
+    def test_bounded_actual_all_PC_counts_and_mutant_kernel_rejected(self):
+        base=ROOT / c.OUT / 'bounded_provider_milestone'
+        native=c.read_json(base/'Qwen_tiled.json.gz')
+        graph=c.read_json(base/'sources/results/uarch/h3_versioned_lowering_20261002/Qwen.json.gz')
+        proof=c.audit_bounded_export(native,graph)
+        self.assertEqual((proof['PCs'],proof['classes']),(1737,21))
+        self.assertEqual(proof['workspace']['temporary_HBM_bytes'],0)
+        self.assertFalse(proof['fullshape_ordered_runtime_trace_executed'])
+        native['tile_kernel_ABI']['add']['native_counts_per_invocation']['FADD']+=1
+        with self.assertRaisesRegex(ValueError,'kernel primitive count mismatch'):c.audit_bounded_export(native,graph)
+
+    def test_separate_entrypoint_preserves_baseline_and_U32_SELECT_width(self):
+        import numpy as np
+        import hashlib
+        N,K,native=self.bounded_fixture()
+        self.assertEqual(Path(N.__file__).name,'bounded_entrypoint.py.source')
+        baseline=ROOT/c.OUT/'bounded_provider_milestone/baseline.py.source'
+        self.assertEqual(hashlib.sha256(baseline.read_bytes()).hexdigest(),
+            '9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76')
+        vm=N.NativePrimitiveVM();out=vm.run_qwen([{'op':'SELECT','dst':'out','src':['condition','left','right']}],
+            {'condition':np.array([1,0],np.uint32),'left':np.array([0xffffffff,1],np.int64),
+             'right':np.array([2,0x80000000],np.int64)})
+        self.assertEqual(out.dtype,np.uint32)
+        np.testing.assert_array_equal(out,[0xffffffff,0x80000000])
+
+    def test_bounded_provider_execution_all_snapshot_bits_and_counts(self):
+        import numpy as np
+        N,K,native=self.bounded_fixture(); expected=N.TiledMachine(native); snapshots={}
+        def record(op,store):
+            snapshots[op['pc']]={v:store.debug_snapshot(v) for v in op['writes']}
+        expected_results=[expected.run(3,0,record),expected.run(5,1,record)]
+        # Collect separate references for both token positions.
+        expected=N.TiledMachine(native); records=[]
+        for token,pos in [(3,0),(5,1)]:
+            snapshots={}; expected.run(token,pos,record); records.append(copy.deepcopy(snapshots))
+        backend=c.AddressedTileByteBackend(K,native);c.seed_bounded_fixture(N,backend,native,[0,1])
+        observed=[]
+        def compare(op,store):
+            position=len(observed)//len(native['operations'])
+            for v in op['writes']:
+                actual=store.debug_snapshot(v); ref=records[position][op['pc']][v]
+                if isinstance(ref,dict):self.assertEqual(actual,ref)
+                elif isinstance(ref,tuple):self.assertEqual(actual,ref)
+                else:
+                    a,b=np.asarray(actual),np.asarray(ref)
+                    np.testing.assert_array_equal(a.view(np.uint32) if a.dtype.kind=='f' else a,
+                        b.view(np.uint32) if b.dtype.kind=='f' else b)
+            observed.append(op['pc'])
+        result=c.execute_bounded_provider_program(N,K,native,backend,positions=[(3,0),(5,1)],observer=compare)
+        self.assertEqual([x['next_token'] for x in result['executions']],[x['next_token'] for x in expected_results])
+        self.assertEqual(len(observed),114)
+        self.assertTrue(result['all_provider_owners_drained']);self.assertTrue(result['source_transport']['all_owners_drained'])
+        self.assertGreater(result['source_transport']['events']['software_backing_visible'],0)
+        self.assertFalse(result['r22_augmentation_applied']);self.assertFalse(result['existing_calendar_cost_mutated'])
+        self.assertEqual(result['R20_sidecar_PC_uses'],{})
+        for a,b in zip(result['ordered_PC_intervals'],result['ordered_PC_intervals'][1:]):
+            self.assertLessEqual(a['end'],b['start'])
+        bad=copy.deepcopy(result);bad['ordered_PC_intervals'][1]['start']=0
+        with self.assertRaisesRegex(ValueError,'overlap/cost'):c.verify_bounded_provider_execution(bad,native)
+        bad=copy.deepcopy(result);bad['ordered_PC_intervals'][0]['all_provider_grants_before_PC_retire']=False
+        with self.assertRaisesRegex(ValueError,'premature write reuse'):c.verify_bounded_provider_execution(bad,native)
+
+    def test_raw_backend_missing_checkpoint_lease_and_extent_rejected(self):
+        N,K,native=self.bounded_fixture();backend=c.AddressedTileByteBackend(K,native)
+        ref='Qwen.rank0.extent.embedding';e=backend.extents[ref]
+        request=dict(provider_ref=ref,lease='PC0.'+ref,lease_state='visible',
+            byte_ranges=[dict(address=e['base'],bytes=1)])
+        with self.assertRaisesRegex(ValueError,'checkpoint bytes missing'):backend.read_tile_bytes(request)
+        backend.seed(ref,0,b'\x87');response=backend.read_tile_bytes(request)
+        self.assertEqual(response['payloads'],[b'\x87']);self.assertTrue(response['reverse_grant_ACK'])
+        bad=copy.deepcopy(request);bad['lease']='PC1.'+ref
+        with self.assertRaisesRegex(ValueError,'lease/ref mismatch'):backend.read_tile_bytes(bad)
+        bad=copy.deepcopy(request);bad['byte_ranges'][0]['address']=e['base']+e['bytes']
+        with self.assertRaisesRegex(ValueError,'logical extent'):backend.read_tile_bytes(bad)
+        p=backend.provider;identity=K.Identity('Qwen',0,0,0,100,e['base']//32);ticket=p.submit(identity)
+        with self.assertRaises(K.Backpressure):p.submit(K.Identity('Qwen',0,0,0,101,e['base']//32))
+        p.wait(ticket);p.consume(ticket)
+        with self.assertRaises(K.OwnershipFault):p.reverse(ticket,identity,ticket.tag,ticket.generation+1)
+
+    def test_real_PC14_codec_intervals_and_retained_reader_reuse_rejected(self):
+        import numpy as np
+        N,K,native=self.bounded_fixture()
+        homes=c.read_json(ROOT/c.OUT/'workspace_r20_33b741b4e/temporary_provider_homes.json.gz')
+        home=next(h for h in homes if h['pc']==14 and h.get('semantic_bits')==64)
+        extents={('Qwen',home['rank']):[dict(base=home['base'],bytes=home['reserved_bytes']),
+            dict(base=home['highword_base'],bytes=home['highword_reserved_bytes'])]}
+        provider=K.SectorProvider(extents,tags=1,queue=1,write_residence=1)
+        storage=K.Storage(provider,'Qwen',home['rank'],home['base'],home['reserved_bytes']);storage.pc=14
+        tensor=K.tensor_from_native_binding(home,(4,))
+        values=np.array([-(1<<63),-1,(1<<32)+7,(1<<63)-1],np.int64)
+        storage.write(tensor,0,values);lease=storage.acquire_split64(tensor,np.arange(4))
+        with self.assertRaises(K.Backpressure):storage.write(tensor,0,values)
+        np.testing.assert_array_equal(storage.read(tensor,np.arange(4),lease),values)
+        storage.release_split64(lease);storage.write(tensor,0,values[::-1])
+        with self.assertRaises(K.OwnershipFault):storage.read(tensor,np.arange(4),lease)
+        self.assertFalse(provider.live);self.assertFalse(storage.codec_leases)
+
+    def test_DS_bounded_all_PC_finite_reservations_and_extent_gap(self):
+        dispatch=c.read_json(ROOT/c.OUT/'bounded_provider_milestone/ds/forward_dispatch_milestone.json.gz')
+        proof=c.audit_ds_bounded_dispatch(dispatch)
+        self.assertEqual((proof['PCs'],proof['families']),(2213,30))
+        self.assertFalse(proof['physical_admission']);self.assertFalse(proof['ordered_full_native_trace'])
+        top=proof['PC_intervals'][127]['ranks'][0]
+        self.assertEqual(top['workspace_peak_upper'],6790664)
+        self.assertEqual(top['cost_units']['primitive_scalar'],152178060)
+        self.assertEqual(top['cost_units']['fragment512_read']+top['cost_units']['fragment512_write'],6432848)
+        self.assertEqual(len(proof['constrained_extent_successor_demand']),96)
+        dispatch['PC_dispatch'][0]['projected_executed_primitive_scalars']['LOAD']+=1
+        with self.assertRaisesRegex(ValueError,'count mismatch'):c.audit_ds_bounded_dispatch(dispatch)
+
     def test_final_ds_gather_buffers_and_exported_count_controls(self):
         def template(n):
             return {'code':[{'op':'IOTA','dst':'v0','src':[],'shape':[n],'attrs':{}}],

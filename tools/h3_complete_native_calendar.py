@@ -15,6 +15,7 @@ import hashlib
 import heapq
 import json
 import sys
+import types
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -108,6 +109,562 @@ def load_workspace_provider(path, native_sha256):
         index[key] = home
     return {'join': join, 'homes': index, 'input_path': str(path),
             'sources': verify_portable_producer(path, {})}
+
+
+def load_pinned_module(path, digest):
+    raw = Path(path).read_bytes()
+    if hashlib.sha256(raw).hexdigest() != digest:
+        raise ValueError('executable provider source pin mismatch')
+    name = 'h3_provider_' + digest[:16]
+    module = types.ModuleType(name); module.__file__ = str(path)
+    sys.modules[name] = module
+    old = list(sys.path)
+    try:
+        sys.path.insert(0, str(ROOT / 'tools'))
+        exec(compile(raw, str(path), 'exec'), module.__dict__)
+    finally:
+        sys.path[:] = old
+    if hasattr(module, 'ROOT'):
+        module.ROOT = ROOT
+    return module
+
+
+def audit_bounded_export(native, graph):
+    """Count/binding audit of executable tile IR, not a fabricated macro trace."""
+    if native['schema'] != 'opentallas.H3.qwen-bounded-tiled-native.v1':
+        raise ValueError('bounded native schema required')
+    if native['feasibility']['temporary_HBM_bytes'] != 0:
+        raise ValueError('bounded native unexpectedly materializes HBM temporaries')
+    provider=native['provider_binding']
+    homes,reuse,releases,provider_ops=bind_provider_homes(provider,graph,{})
+    check_homes(homes,graph)
+    references={h['provider_ref']:h for h in provider['version_homes']}
+    for operand in native['operands']:
+        for h in operand['homes']:
+            if 'home' in h and (h.get('provider_ref') not in references or h!=references[h['provider_ref']]):
+                raise ValueError('bounded retained concrete home mismatch')
+    abi = native['tile_kernel_ABI']; rows = []; totals = Counter()
+    for name, kernel in abi.items():
+        observed = Counter()
+        for step in kernel['steps']:
+            observed.update(step['native_steps'])
+            if math.prod(step['write']['shape_max']) > 128 or step['write']['RF_vectors_max'] > 32:
+                raise ValueError('bounded kernel RF/tile overcapacity')
+            if not step['round_point']:
+                raise ValueError('bounded arithmetic contract missing')
+        if dict(observed) != kernel['native_counts_per_invocation']:
+            raise ValueError('bounded kernel primitive count mismatch ' + name)
+    if len(native['operations']) != len(graph['operations']):
+        raise ValueError('bounded PC coverage mismatch')
+    for op, source in zip(native['operations'], graph['operations']):
+        if any(op[k] != source[k] for k in ('pc', 'opcode', 'reads', 'writes', 'dependencies')):
+            raise ValueError('bounded source PC/version/dependency mismatch')
+        export = op['calendar_export']; physical = export['physical_primitives']; counts = Counter()
+        for name, repetitions in physical['kernel_invocations'].items():
+            positive(repetitions, 'bounded kernel repetition')
+            counts.update({k: v * repetitions for k, v in abi[name]['native_counts_per_invocation'].items()})
+        if dict(counts) != physical['native_primitive_commands']:
+            raise ValueError('bounded all-PC primitive count mismatch')
+        if export['RF_workspace_vectors'] > 32 or export['shared_reserved_bytes'] > 65536 or export['temporary_HBM_bytes'] != 0:
+            raise ValueError('bounded workspace capacity exhausted')
+        totals.update(counts)
+        rows.append({'pc': op['pc'], 'opcode': op['opcode'], 'primitive_commands': dict(counts),
+            'kernel_invocations': physical['kernel_invocations'], 'providers': op['provider_binding']})
+    return {'status': 'PASS_BOUNDED_ALL_PC_SOURCE_BINDINGS_AND_PRIMITIVE_COUNTS', 'PCs': len(rows),
+        'classes': len({r['opcode'] for r in rows}), 'PCs_detail': rows, 'primitive_commands': dict(totals),
+        'workspace': native['feasibility'], 'fullshape_ordered_runtime_trace_executed': False,
+        'retained_source_home_proof':{'status':'PASS_CONCRETE_HOME_APERTURE_LIFETIME_AND_REUSE',
+            'data_homes':len(provider['version_homes']),'control_homes':len(provider['control_homes']),
+            'versions':len(native['operands']),'reuse_home_count':len(reuse),
+            'RF_workspace_slots':list(range(32)),'RF_source_slots':'32..511, disjoint from native workspace'},
+        'fullshape_companion_scope': 'conservative service reservation, not actual ordered instruction trace',
+        'physical_or_clock_admission': False}
+
+
+def load_bounded_provider_sources(directory):
+    """Load the committed portable closure, including compiler imports."""
+    base = Path(directory); pins = read_json(base / 'producer_pins.json')['files']
+    for name, pin in pins.items():
+        if hashlib.sha256((base / name).read_bytes()).hexdigest() != pin['sha256']:
+            raise ValueError('bounded producer closure pin mismatch ' + name)
+    for name in ('qwen_hbm_complete_program', 'h3_versioned_lowering', 'h3_distributed_norm_endpoint'):
+        path = 'sources/tools/' + name + '.py'
+        sys.modules[name] = load_pinned_module(base / path, pins[path]['sha256'])
+    if 'bounded_entrypoint.py.source' not in pins or 'baseline.py.source' not in pins:
+        raise ValueError('separate bounded entrypoint with preserved baseline required')
+    sys.modules['h3_qwen_complete_native']=load_pinned_module(base/'baseline.py.source',pins['baseline.py.source']['sha256'])
+    return (load_pinned_module(base / 'bounded_entrypoint.py.source', pins['bounded_entrypoint.py.source']['sha256']),
+            load_pinned_module(base / 'provider.py.source', pins['provider.py.source']['sha256']))
+
+
+def audit_ds_bounded_dispatch(dispatch, *, costs=None):
+    """Finite conservative service reservations, with physical inadmission.
+
+    This is deliberately an intermediate reservation of the pinned forward
+    instruction executor, not an invented opcode-sorted native timeline.
+    Every rank holds its32 SM services; execution is serialized within a rank
+    and across PCs, so no bandwidth/parallel speedup is assumed. All costs are
+    positive estimates. Actual workspace addresses and checkpoint descriptors
+    remain required for addressed whole-program execution.
+    """
+    if dispatch['schema']!='H3_DS_FORWARD_BOUNDED_POLYNOMIAL_DISPATCH_V2':
+        raise ValueError('DS bounded forward schema required')
+    if dispatch['automatic_scalar_fallback_templates']!=0: raise ValueError('DS recursive fallback rejected')
+    costs=dict(costs or {'primitive_scalar':32,'fragment512_read':16*108,'fragment512_write':16*128,
+        'route512':64,'admit':2,'retire':2,'visibility_fence':4,'collective_rendezvous':2})
+    required={'primitive_scalar','fragment512_read','fragment512_write','route512','admit','retire',
+              'visibility_fence','collective_rendezvous'}
+    if set(costs)!=required: raise ValueError('complete DS cost table required')
+    for key,value in costs.items(): positive(value,key)
+    cap=dispatch['workspace']['rank_cap_bytes']; templates=dispatch['templates']; count=Counter(); rows=[]
+    demands={}; done=set(); tick=0; successor=[]
+    for key,t in templates.items():
+        p=t['plan']
+        if t['reference_scalar_fallback_admitted'] or not t['no_recomputed_dependency_scalars']:
+            raise ValueError('DS recursive fallback rejected')
+        demand=p.get('workspace_upper_bytes',p.get('typed_live_workspace_upper_bytes_per_SM',0))
+        if t['execution_path'].startswith('forward_'):
+            demand+=p.get('quantized_input_provider_bytes_per_rank',p.get('retained_query_bytes',0))
+        if demand<=0 or demand>cap: raise ValueError('DS finite workspace exhausted '+key)
+        demands[key]=demand
+    for op in dispatch['PC_dispatch']:
+        if op['pc']!=len(rows) or not set(op['dependencies'])<=done: raise ValueError('DS bounded dependency deadlock')
+        totals=Counter(); transfers=Counter(); ranks=defaultdict(lambda:{'work':Counter(),'read':0,'write':0,'templates':[]})
+        for call in op['calls']:
+            rank=call['rank']; key=call['template']; t=templates[key]
+            if not 0<=rank<96 or 'block256%32' not in call['SM_partition']: raise ValueError('DS concrete32SM source binding required')
+            totals.update(t['executed_primitive_scalar_projection'])
+            transfer=t['provider_transfer_projection']
+            transfers.update({k:v for k,v in transfer.items() if type(v) is int})
+            ranks[rank]['work'].update(t['executed_primitive_scalar_projection'])
+            ranks[rank]['read']+=transfer['read_512B_fragments_upper']
+            ranks[rank]['write']+=transfer['write_512B_fragments_upper']
+            ranks[rank]['templates'].append(key)
+        if dict(totals)!=op['projected_executed_primitive_scalars'] or dict(transfers)!=op['provider_transfer_projection']:
+            raise ValueError('DS all-PC primitive/transport count mismatch')
+        rank_rows=[]
+        for rank,record in sorted(ranks.items()):
+            units={'primitive_scalar':sum(record['work'].values()),'fragment512_read':record['read'],
+                'fragment512_write':record['write'],'route512':record['read']+record['write'],
+                'admit':len(record['templates']),'retire':len(record['templates']),
+                'visibility_fence':len(record['templates']),'collective_rendezvous':int(op['family']=='all_gather')}
+            duration=sum(units[k]*costs[k] for k in costs)
+            rank_rows.append({'rank':rank,'start':tick,'end':tick+duration,
+                'cost_units':units,'workspace_peak_upper':max(demands[k] for k in record['templates']),
+                'resources':{'SM_issue_leases_each_of_32':1,'source_fragment_credit':1,'write_residence':1,
+                    'RF_vectors_per_SM':32,'rank_workspace_bytes':cap},'ordered_executor_templates':record['templates']})
+        if not rank_rows: raise ValueError('DS PC has no admitted services')
+        end=max(r['end'] for r in rank_rows)
+        rows.append({'pc':op['pc'],'family':op['family'],'start':tick,'end':end,'dependencies':op['dependencies'],
+            'ranks':rank_rows,'atomic_collective_participants':sorted(ranks) if op['family']=='all_gather' else [],
+            'global_collective_credit':int(op['family']=='all_gather'),'writes_visible_before_retire':True,
+            'scope':'conservative finite reservation; actual instruction order remains pinned forward executor'})
+        count.update(totals); tick=end; done.add(op['pc'])
+    for rank in range(96):
+        successor.append({'rank':rank,'requested_bytes':cap,'alignment_bytes':512,'address_bits':27,
+            'maximum_base_inclusive':(1<<27)-cap,'physical_base':dispatch['workspace']['base'],
+            'must_be_disjoint_from':'all retained source homes, immutable checkpoint, persistent provider and every live lease',
+            'release_guard':'accepted fragment return, consumer capture, matched reverse grant, source last use',
+            'status':'UNBOUND_PHYSICAL_BASE_AND_PROVIDER_LEASE'})
+    return {'status':'PASS_ALL_PC_BOUNDED_FINITE_SERVICE_RESERVATION_INTERMEDIATE','PCs':len(rows),
+        'families':len({r['family'] for r in rows}),'primitive_scalars':dict(count),'estimated_service_ticks':tick,
+        'explicit_provisional_costs':costs,'source_program_sha256':dispatch['source_program_sha256'],
+        'PC_intervals':rows,'constrained_extent_successor_demand':successor,
+        'ordered_full_native_trace':False,'full_token_numerical_execution':False,
+        'checkpoint_scope':'producer fragment projection excludes physical checkpoint fetch; concrete provider range/route binding is required',
+        'physical_admission':False,'clock_admission':False,'automatic_scalar_fallback':False}
+
+
+class AddressedTileByteBackend:
+    """Immutable byte requests use R21 real finite ownership and backing.
+
+    Padding is explicitly loader initialized but never a valid logical byte
+    range. No response ACK is invented: each ticket drains its reverse grant.
+    """
+    def __init__(self, K, native):
+        self.K = K; self.pc = 0; self.serial = 0; self.loaded = set()
+        self.epoch = 0
+        self.extents = {e['provider_ref']: dict(e, rank=a['rank'])
+            for a in native['provider_binding']['allocation'] for e in a['extents']}
+        extents = defaultdict(list)
+        for e in self.extents.values():
+            extents['Qwen', e['rank']].append({'base': e['base'], 'bytes': ceil(e['bytes'], 32) * 32})
+        for rank in range(2):
+            for sm in range(32):
+                for mirror in range(2):
+                    extents[f'Qwen_RF_SM{sm}_copy{mirror}', rank].append({'base': 0, 'bytes': 512*512})
+        self.events = Counter(); self.digest = hashlib.sha256()
+        owner = self
+        class Journal(K.SectorProvider):
+            def log(self, event, ticket, **kw):
+                super().log(event, ticket, **kw)
+                record = self.events.pop(); owner.events[event] += 1
+                owner.digest.update(encode(record) + b'\n')
+        self.provider = Journal(dict(extents), tags=1, queue=1, write_residence=1)
+
+    def transaction(self, target, rank, sector, payload=None):
+        self.serial += 1
+        identity = self.K.Identity(target, rank, self.epoch, self.pc, self.serial, sector)
+        p = self.provider
+        # Explicit RF service estimate, distinct from HBM64/80. All request,
+        # owner lookup, CDC and reverse phases remain positive and recorded.
+        read, write = (3, 3) if target.startswith('Qwen_RF_') else (64, 80)
+        p.read_ticks, p.write_ticks = read, write
+        p.costs['read_service'], p.costs['write_service'] = read, write
+        t = p.submit(identity, payload is not None, payload or b'')
+        value = p.wait(t); p.finish(t)
+        return value
+
+    def write_changes(self, target, rank, changes):
+        parts = defaultdict(dict)
+        for address, byte in changes.items(): parts[address//32][address%32] = int(byte)
+        for sector, updates in sorted(parts.items()):
+            if len(updates) == 32: data = bytearray(updates[i] for i in range(32))
+            else:
+                if (target, rank, sector) not in self.provider.backing:
+                    self.provider.seed(target, rank, sector*32, bytes(32))
+                data = bytearray(self.transaction(target, rank, sector))
+                for offset, byte in updates.items(): data[offset] = byte
+            self.transaction(target, rank, sector, bytes(data))
+
+    def read_addresses(self, target, rank, addresses):
+        captures = {}
+        for sector in sorted({int(a)//32 for a in addresses}):
+            captures[sector] = self.transaction(target, rank, sector)
+        return bytes(captures[int(a)//32][int(a)%32] for a in addresses)
+
+    def seed(self, ref, offset, payload):
+        e = self.extents[ref]; address = e['base'] + offset
+        if offset < 0 or offset + len(payload) > e['bytes']:
+            raise ValueError('immutable loader logical extent')
+        # Initialize only touched sector padding; retain an independent logical
+        # loaded-byte set so missing checkpoint bytes never turn into zeros.
+        for sector in range(address // 32, (address + len(payload) + 31) // 32):
+            if ('Qwen', e['rank'], sector) not in self.provider.backing:
+                self.provider.seed('Qwen', e['rank'], sector * 32, bytes(32))
+        self.provider.seed('Qwen', e['rank'], address, payload)
+        self.loaded.update((e['rank'], address + i) for i in range(len(payload)))
+
+    def read_tile_bytes(self, request):
+        e = self.extents.get(request.get('provider_ref'))
+        if e is None or request.get('lease_state') != 'visible' or request.get('lease') != f'PC{self.pc}.{e["provider_ref"]}':
+            raise ValueError('immutable provider lease/ref mismatch')
+        payloads = []; captures = {}
+        for r in request['byte_ranges']:
+            address, size = r['address'], r['bytes']
+            if size <= 0 or not e['base'] <= address or address + size > e['base'] + e['bytes']:
+                raise ValueError('immutable request logical extent')
+            if any((e['rank'], address + i) not in self.loaded for i in range(size)):
+                raise ValueError('immutable checkpoint bytes missing')
+            for sector in range(address // 32, (address + size + 31) // 32):
+                if sector not in captures:
+                    captures[sector] = self.transaction('Qwen', e['rank'], sector)
+            payloads.append(bytes(captures[(address+i)//32][(address+i)%32] for i in range(size)))
+        return {'provider_ref': request['provider_ref'], 'lease': request['lease'], 'state': 'visible',
+                'reverse_grant_ACK': not self.provider.live, 'payloads': payloads}
+
+    def proof(self):
+        return {'events': dict(self.events), 'journal_sha256': self.digest.hexdigest(),
+                'provisional_ticks': self.provider.now, 'all_owners_drained': not self.provider.live,
+                'loader_bytes': len(self.loaded), 'hardware_or_clock_admission': False}
+
+
+def seed_bounded_fixture(N, backend, native, positions):
+    """Explicit small raw immutable image loader; excluded from execution costs."""
+    import numpy as np
+    p = native['source_program']; c = p['config']; raw = N.TileFixtureWeights(p)
+    def put(rank, name, offset, data): backend.seed(f'Qwen.rank{rank}.extent.{name}', offset, data)
+    for key, d in p['weight_descriptors'].items():
+        prefix = 'head' if d['layer'] is None else f'L{d["layer"]}.{d["name"]}'
+        for start in range(0, d['rows'], 128):
+            n = min(128, d['rows'] - start)
+            for col in range(0, d['K'], 32):
+                k = min(32, d['K'] - col); codes = raw.matrix_tile(key, start, n, col, k)
+                for row in range(n): put(d['die'], prefix+'.codes', (start+row)*d['K']+col, codes[row].tobytes())
+            put(d['die'], prefix+'.scales', 2*start,
+                (raw.scale_tile(key, start, n).view(np.uint32)>>16).astype('<u2').tobytes())
+    h = c['hidden_size']; hd = c['head_dim']
+    for rank in range(2):
+        for token in range(c['vocab_size']):
+            for start in range(0, h, 128):
+                codes, scale = raw.embedding_tile(token, start, min(128, h-start))
+                put(rank, 'embedding', token*h+start, codes.tobytes())
+            put(rank, 'embedding', c['vocab_size']*h+2*token,
+                np.array([int(scale.view(np.uint32))>>16], '<u2').tobytes())
+        for layer in range(c['num_hidden_layers']):
+            put(rank, f'L{layer}.qk_norm', 0, np.full(2*hd, 0x3f80, '<u2').tobytes())
+        put(rank, 'final_norm', 0, np.full(h, 0x3f80, '<u2').tobytes())
+        for position in positions:
+            for start in range(0, hd//2, 128):
+                n = min(128, hd//2-start)
+                co, si = raw.rope_tile(position, c['rope_theta'], start, n)
+                put(rank, 'rope_table', 4*(position*hd+start), co.astype('<f4').tobytes())
+                put(rank, 'rope_table', 4*(position*hd+hd//2+start), si.astype('<f4').tobytes())
+
+
+def execute_bounded_provider_program(N, K, native, backend, *, positions, sidecars=None, observer=None,
+                                     latency=None):
+    """All-PC tiled execution with R21 addressed microVM arithmetic/transport.
+
+    N and K must be source-pinned producer modules. Immutable bytes come only
+    from the caller backend. A finite16KiB RF shadow holds primitive operands;
+    optional R20 sidecars use their real low/high addresses, not new extents.
+    The shadow and event journals are software models, not physical RF hardware.
+    No materialized fullshape calendar or r22 cost augmentation executes here.
+    """
+    import numpy as np
+    latency = dict(latency or {'native_batch':32, 'shared_beat128':8, 'NoC_page512':64,
+                               'PC_admit':2, 'PC_retire':2, 'visibility_fence':4, 'collective_rendezvous':2})
+    required = {'native_batch','shared_beat128','NoC_page512','PC_admit','PC_retire','visibility_fence','collective_rendezvous'}
+    if set(latency)!=required: raise ValueError('complete explicit latency table required')
+    for key,value in latency.items(): positive(value,key)
+    if not hasattr(backend, 'read_tile_bytes'):
+        raise ValueError('actual raw provider byte backend required')
+    sidecars = sidecars or []
+    bypc = defaultdict(list)
+    for h in sidecars:
+        if h.get('semantic_bits') == 64 and h['class_'] == 'HBM_native_workspace':
+            bypc[h['pc']].append(h)
+    frame_extents = {('Qwen_RF_shadow', 0): [{'base': 0, 'bytes': 16384}]}
+    for homes in bypc.values():
+        for h in homes:
+            es = frame_extents.setdefault(('Qwen', h['rank']), [])
+            for base, size in [(h['base'], h['reserved_bytes']), (h['highword_base'], h['highword_reserved_bytes'])]:
+                e = {'base': base, 'bytes': size}
+                if e not in es: es.append(e)
+    # Different PCs reuse arenas: union their address ranges before provider
+    # construction. Per-definition ownership still uses immutable generations.
+    for key, es in frame_extents.items():
+        merged = []
+        for e in sorted(es, key=lambda e: e['base']):
+            end = e['base'] + e['bytes']
+            if merged and e['base'] <= merged[-1]['base'] + merged[-1]['bytes']:
+                merged[-1]['bytes'] = max(end, merged[-1]['base'] + merged[-1]['bytes']) - merged[-1]['base']
+            else: merged.append(dict(e))
+        frame_extents[key] = merged
+    journal_counts = Counter(); journal_hash = hashlib.sha256()
+    class JournalProvider(K.SectorProvider):
+        def log(self, event, ticket, **kw):
+            super().log(event, ticket, **kw)
+            record = self.events.pop(); journal_counts[event] += 1
+            journal_hash.update(encode(record) + b'\n')
+    provider = JournalProvider(frame_extents, tags=1, queue=1, write_residence=1)
+    frame = K.Storage(provider, 'Qwen_RF_shadow', 0, 0, 16384)
+    codec = {rank: K.Storage(provider, 'Qwen', rank, es[0]['base'], es[0]['bytes'])
+             for (target, rank), es in frame_extents.items() if target == 'Qwen'}
+    pc = [-1]; physical_batches = Counter(); primitive_journal = hashlib.sha256(); step_number = [0]
+    pc_rows = []; tick = [0]; position_now = [0]
+    sidecar_uses = Counter()
+    class Router:
+        def __init__(self): self.provider = provider; self.tile = 128; self._epoch = 0; self._pc = 0
+        @property
+        def epoch(self): return self._epoch
+        @epoch.setter
+        def epoch(self, value):
+            self._epoch = value; frame.epoch = value
+            for s in codec.values(): s.epoch = value
+        @property
+        def pc(self): return self._pc
+        @pc.setter
+        def pc(self, value):
+            self._pc = value; frame.pc = value
+            for s in codec.values(): s.pc = value
+        def read(self, t, indexes): return (frame if t.target == frame.target else codec[t.rank]).read(t, indexes)
+        def write(self, t, start, data): return (frame if t.target == frame.target else codec[t.rank]).write(t, start, data)
+        def allocate(self, shape, dtype):
+            if dtype == 'I64' and available:
+                h = available.pop(0); sidecar_uses[pc[0]] += 1
+                return K.tensor_from_native_binding(h, shape)
+            return frame.allocate(shape, dtype)
+        def free(self, t):
+            if t.target == frame.target: frame.free(t)
+    router = Router(); available = []
+    class AddressedVM(N.NativePrimitiveVM):
+        def primitive(self, op, args, attrs=None, shape=None):
+            at = dict(attrs or {}); values = [np.asarray(v) for v in args]
+            if any(v.size > 128 for v in values): raise ValueError('native operand needs outer tile')
+            if at.get('dtype') in ('U32', 'I64'):
+                values = [v.astype(np.uint32 if at['dtype'] == 'U32' else np.int64) for v in values]
+            if op == 'COPY': operation = 'PACKET_COMMIT'
+            else: operation = op
+            if operation not in K.MicroVM.SUPPORTED:
+                raise ValueError('provider microVM unsupported primitive ' + op)
+            if shape is None: shape = list(np.broadcast_shapes(*(v.shape for v in values))) if values else []
+            if math.prod(shape) > 128: raise ValueError('native result needs outer tile')
+            if provider.live or frame.allocations: raise ValueError('primitive frame reused before reverse grant')
+            available[:] = sorted(bypc.get(pc[0], []), key=lambda h: (h['rank'], h['symbol']))
+            router.pc = pc[0]; router.epoch += 1; inputs = {}; code = []
+            for j, value in enumerate(values):
+                dtype = ('F32' if value.dtype.kind == 'f' else 'I8' if value.dtype == np.int8 else
+                         'U8' if value.dtype == np.uint8 else 'I64' if value.dtype == np.int64 else 'U32')
+                t = router.allocate(tuple(value.shape), dtype); router.write(t, 0, value.reshape(-1))
+                inputs[str(j)] = t
+                code.append({'op': 'LOAD', 'dst': 'a' + str(j), 'src': [], 'shape': list(value.shape),
+                             'attrs': {'name': str(j), 'dtype': dtype}})
+            code.append({'op': operation, 'dst': 'out', 'src': ['a' + str(j) for j in range(len(values))],
+                         'shape': list(shape), 'attrs': at})
+            vm = K.MicroVM(router)
+            result_tensor = vm.run({'code': code, 'outputs': {'out': 'out'}, 'source_pc': pc[0]}, inputs)['out']
+            result = router.read(result_tensor, np.arange(result_tensor.count)).reshape(shape)
+            for entry in vm.journal:
+                physical_batches[entry['op']] += 1; primitive_journal.update(encode(entry) + b'\n')
+                if entry['staging_payload_bytes'] > 1536: raise ValueError('provider staging capacity exhausted')
+            for t in list(inputs.values()) + list(vm.registers.values()): router.free(t)
+            if provider.live or provider.queue or provider.resident or frame.allocations:
+                raise ValueError('primitive ownership not drained')
+            self.counts[op] += 1; self.word_counts[op] += result.size
+            self.fault |= vm.fault; step_number[0] += 1
+            self.peak_vectors = max(self.peak_vectors, ceil(frame.peak_live_bytes, 512))
+            return result
+    class TransportWords(N.TileWords):
+        def location(self, key, mirror=0):
+            kind, rank, sm, page = key
+            return (f'Qwen_RF_SM{sm}_copy{mirror}', rank, page*512) if kind == 'RF' else ('Qwen', rank, page)
+        def write(self, version, start, values):
+            super().write(version, start, values)
+            touched = {self.key(version,start+i,rank)[0]
+                for rank in {h['rank'] for h in self.values[version]['homes']} for i in range(np.size(values))}
+            for key in sorted(touched):
+                for mirror, data in enumerate(self.pages[key]):
+                    target, rank, base = self.location(key, mirror)
+                    raw = data.astype('<u4').tobytes()
+                    backend.write_changes(target, rank, {base+i:b for i,b in enumerate(raw)})
+        def read_indices(self, version, indices):
+            if version not in self.published: raise ValueError('unpublished source')
+            ids = np.asarray(indices,np.int64).reshape(-1)
+            shape, kind = self.shapes[version]; total = 2 if kind == 'winner' else math.prod(shape)
+            if len(ids)>128 or np.any(ids<0) or np.any(ids>=total): raise ValueError('source read aperture')
+            result = np.empty(len(ids),np.uint32); rank = self.rank(version)
+            for i, word in enumerate(ids):
+                key,lane = self.key(version,int(word),rank)
+                if self.owners.get(key)!=version or key not in self.pages: raise ValueError('source provider lease identity')
+                if self.cache is None or self.cache[0]!=key:
+                    copies = []
+                    for mirror in range(len(self.pages[key])):
+                        target,r,base = self.location(key,mirror)
+                        copies.append(np.frombuffer(backend.read_addresses(target,r,range(base,base+512)), '<u4').copy())
+                    if len(copies)==2 and not np.array_equal(*copies): raise ValueError('RF mirror disagreement')
+                    self.cache = (key,copies[0])
+                    self.counters['RF_read' if key[0]=='RF' else 'HBM_read_sectors32'] += 1 if key[0]=='RF' else 16
+                    self.counters['source_read_payload_bits'] += 4096
+                    if (key[1],key[2])!=(self.worker_rank,self.worker_SM): self.counters['NoC_source_read_bits'] += 4096
+                result[i] = self.cache[1][lane]
+            self.counters['source_word_reads'] += len(ids)
+            return result if kind in ('U32','winner') else result.view(np.float32)
+    class TransportKV(N.BoundKVStorage):
+        def state_write(self, rank, offset, data):
+            super().state_write(rank,offset,data)
+            base = self.state[rank]['base']+offset
+            backend.write_changes('Qwen',rank,{base+i:b for i,b in enumerate(data)})
+        def state_read(self, rank, offset, count):
+            e=self.state[rank]
+            if offset<0 or offset+count>e['bytes']: raise ValueError('KV state byte aperture')
+            # State has an explicit cold zero initialization, unlike checkpoint bytes.
+            self.counters['state_read_sectors32'] += len(set((e['base']+offset+i)//32 for i in range(count)))
+            return backend.read_addresses('Qwen',rank,range(e['base']+offset,e['base']+offset+count))
+        def commit(self, tag):
+            state=self.pending[int(tag)]; rank=state['key'][1]
+            backend.write_changes('Qwen',rank,state['payload'])
+            return super().commit(tag) # publication follows all actual backing grants
+        def read(self, lease, addresses):
+            super().read(lease,addresses) # validate source producer generation and two-reader lease
+            rank=self.leases[int(lease)]['key'][1]
+            raw=backend.read_addresses('Qwen',rank,np.asarray(addresses).reshape(-1))
+            return np.frombuffer(raw,np.uint8).copy().reshape(np.shape(addresses))
+    for e in backend.extents.values():
+        if e['name']=='KV_provider_state':
+            backend.provider.seed('Qwen',e['rank'],e['base'],bytes(ceil(e['bytes'],32)*32))
+    machine = N.TiledMachine(native, N.HBMByteTileProvider(backend)); machine.vm = AddressedVM()
+    machine.store = TransportWords(native); machine.memory = TransportKV(native['source_program'])
+    original_execute = machine.execute
+    def execute(op):
+        pc[0] = op['pc']; backend.pc = op['pc']
+        before = Counter(machine.vm.counts); batches = Counter(physical_batches)
+        begin_provider = provider.now + backend.provider.now
+        before_transfer = Counter(machine.store.counters); before_tiles = Counter(machine.counters)
+        original_execute(op)
+        counts = Counter(machine.vm.counts)-before
+        source = native['source_program']['instructions'][op['pc']]
+        expected = N.physical_tile_export(source,native['source_program'],position_now[0])['native_primitive_commands']
+        if dict(counts)!=expected: raise ValueError('executed PC native primitive count mismatch '+str(op['pc']))
+        transfers = Counter(machine.store.counters)-before_transfer; tiles = Counter(machine.counters)-before_tiles
+        cost_units = {'native_batch':sum((Counter(physical_batches)-batches).values()),
+            'shared_beat128':tiles['shared_read_beats128']+tiles['shared_write_beats128'],
+            'NoC_page512':(transfers['NoC_source_read_bits']+transfers['NoC_source_write_bits'])//4096,
+            'PC_admit':1,'PC_retire':1,'visibility_fence':int(op['opcode']=='KV_FENCE'),
+            'collective_rendezvous':int(op['opcode'] in ('ALL_REDUCE','ARGMAX_REDUCE'))}
+        extra = sum(latency[k]*v for k,v in cost_units.items())
+        elapsed = provider.now + backend.provider.now - begin_provider + extra
+        if provider.live or backend.provider.live: raise ValueError('PC retires with retained provider ownership')
+        start = begin_provider+tick[0]
+        pc_rows.append({'pc':op['pc'],'position':position_now[0],'opcode':op['opcode'],'start':start,
+            'end':start+elapsed,'dependencies':op['dependencies'],'native_commands':dict(counts),
+            'provider_service_ticks':provider.now+backend.provider.now-begin_provider,
+            'cost_units':cost_units,'reads':op['reads'],'writes':op['writes'],
+            'all_provider_grants_before_PC_retire':True,'temporary_HBM_bytes':0})
+        tick[0] += extra
+    machine.execute = execute
+    results = []; observer_ticks = [0]
+    def observe(op, store):
+        before = backend.provider.now+provider.now
+        if observer: observer(op,store)
+        observer_ticks[0] += backend.provider.now+provider.now-before
+    for token, position in positions:
+        backend.pc=0; position_now[0]=position
+        backend.epoch = position
+        results.append(machine.run(token, position, observe if observer else None))
+        # Per-PC intervals price only their own transport; cold initialized
+        # input publication is reported separately by the total provider ledger.
+    result = {'status': 'PASS_ALL_PC_BOUNDED_PROVIDER_MICROVM_EXECUTION', 'executions': results,
+        'provider_events': dict(journal_counts), 'provider_journal_sha256': journal_hash.hexdigest(),
+        'primitive_journal_sha256': primitive_journal.hexdigest(), 'provider_native_batches': dict(physical_batches),
+        'primitive_calls': step_number[0], 'RF_shadow_peak_bytes': frame.peak_live_bytes,
+        'R20_sidecar_PC_uses': dict(sidecar_uses), 'all_provider_owners_drained': not provider.live,
+        'codec_leases_drained': all(not s.codec_leases and not s.codec_locks for s in codec.values()),
+        'provider_ticks': provider.now, 'cost_scope': 'positive provisional provider ticks, separate from existing calendar',
+        'source_transport': backend.proof(),
+        'native_service_ticks': sum(physical_batches.values())*latency['native_batch'],
+        'explicit_provisional_latency':latency,'ordered_PC_intervals':pc_rows,
+        'ordered_PC_ticks':tick[0]+provider.now+backend.provider.now,
+        'post_commit_test_observer_service_ticks':observer_ticks[0],
+        'initial_source_publication_ticks':provider.now+backend.provider.now-sum(r['provider_service_ticks'] for r in pc_rows)-observer_ticks[0],
+        'calibration':'UNKNOWN_UNCALIBRATED; all software service estimates explicit and positive',
+        'r22_augmentation_applied': False, 'existing_calendar_cost_mutated': False,
+        'provider_sector_admission_ticks': 2, 'parent_sector_cost_admission_separately_accounted': True,
+        'physical_or_clock_admission': False,
+        'sidecar_scope': 'Optional addressed R20 staging experiment; not the zero-temporary-HBM bounded layout' if sidecars else
+                         'I64 occupies two32bit words in finite RF shadow; zero additional temporary HBM'}
+    result['interval_proof']=verify_bounded_provider_execution(result,native)
+    return result
+
+
+def verify_bounded_provider_execution(result, native):
+    rows=result['ordered_PC_intervals'];n=len(native['operations']);done=set();previous=0;position=None
+    if len(rows)!=n*len(result['executions']): raise ValueError('bounded executable PC coverage incomplete')
+    latency=result['explicit_provisional_latency']
+    for key,value in latency.items():positive(value,key)
+    for index,row in enumerate(rows):
+        if row['position']!=position: done=set();position=row['position']
+        op=native['operations'][index%n]
+        if row['pc']!=op['pc'] or row['dependencies']!=op['dependencies'] or not set(row['dependencies'])<=done:
+            raise ValueError('bounded executable dependency deadlock')
+        if row['reads']!=op['reads'] or row['writes']!=op['writes']:raise ValueError('bounded operand version alias')
+        duration=row['provider_service_ticks']+sum(latency[k]*v for k,v in row['cost_units'].items())
+        if row['start']<previous or row['end']-row['start']!=duration or duration<=0:
+            raise ValueError('bounded executable interval overlap/cost mismatch')
+        if not row['all_provider_grants_before_PC_retire'] or row['temporary_HBM_bytes']!=0:
+            raise ValueError('bounded premature write reuse')
+        done.add(row['pc']);previous=row['end']
+    for events in (result['provider_events'],result['source_transport']['events']):
+        if events['request_accept']!=events['validated_reverse_grant'] or events.get('reverse_quarantine',0):
+            raise ValueError('bounded provider credit not drained')
+    if not result['all_provider_owners_drained'] or not result['source_transport']['all_owners_drained']:
+        raise ValueError('bounded retained provider ownership')
+    if result['RF_shadow_peak_bytes']>16384 or any(e['RF_workspace_peak_vectors']>32 or e['shared_tile_peak_bytes']>17408 for e in result['executions']):
+        raise ValueError('bounded finite capacity exhausted')
+    return {'status':'PASS_ORDERED_PC_DEPENDENCY_COST_AND_FINITE_PROVIDER_PROOF',
+        'PC_intervals':len(rows),'source_and_scratch_tags_each':1,'queues_each':1,'write_residence_each':1,
+        'physical_or_clock_admission':False}
 
 
 def execute_primitive_vm(target, program, payloads, *, snapshot, source_sha256,
@@ -1420,6 +1977,93 @@ def encode(obj):
     return json.dumps(obj, sort_keys=True, separators=(',', ':')).encode()
 
 
+def run_bounded_provider_join(directory, out, *, layers=36, verify=False):
+    """Portable executable milestone; no old large-calendar regeneration."""
+    import numpy as np
+    base=Path(directory); out=Path(out); N,K=load_bounded_provider_sources(base)
+    original=read_json(base/'Qwen_tiled.json.gz')
+    graph=read_json(base/'sources/results/uarch/h3_versioned_lowering_20261002/Qwen.json.gz')
+    full=audit_bounded_export(original,graph)
+    ds=read_json(base/'ds/forward_dispatch_milestone.json.gz'); dsproof=audit_ds_bounded_dispatch(ds)
+    dsprogram=ROOT/OUT/'final_ds_bed325f89/program_final.json.gz'
+    if hashlib.sha256(dsprogram.read_bytes()).hexdigest()!=ds['source_program_sha256']:
+        raise ValueError('DS bounded source program pin mismatch')
+    config=dict(hidden_size=8,head_dim=4,num_attention_heads=2,num_key_value_heads=2,
+        intermediate_size=16,vocab_size=16,num_hidden_layers=layers,rms_norm_eps=1e-6,rope_theta=1000000)
+    native=N.compile_tiled(N.compile_program(config,context=32,groups=16)); positions=[(3,0),(5,1)]
+    def bits(value):
+        if isinstance(value,dict): return {k:bits(v) for k,v in value.items()}
+        if isinstance(value,tuple): return [bits(v) for v in value]
+        a=np.asarray(value)
+        return {'shape':list(a.shape),'dtype':a.dtype.str,'bits':a.tobytes().hex()}
+    expected=N.TiledMachine(native); references={}; reference_results=[]; pos=[0]
+    def record(op,store):
+        references[pos[0],op['pc']]={v:bits(store.debug_snapshot(v)) for v in op['writes']}
+    for token,position in positions:
+        pos[0]=position; reference_results.append(expected.run(token,position,record))
+    backend=AddressedTileByteBackend(K,native);seed_bounded_fixture(N,backend,native,[p for _,p in positions])
+    snapshots=[]; seen=[0]
+    def compare(op,store):
+        position=positions[seen[0]//len(native['operations'])][1]
+        observed={v:bits(store.debug_snapshot(v)) for v in op['writes']}
+        if observed!=references[position,op['pc']]: raise ValueError('post-commit output bits mismatch PC'+str(op['pc']))
+        snapshots.append({'pc':op['pc'],'position':position,'sha256':hashlib.sha256(encode(observed)).hexdigest()})
+        seen[0]+=1
+    execution=execute_bounded_provider_program(N,K,native,backend,positions=positions,observer=compare)
+    if [e['next_token'] for e in execution['executions']]!=[e['next_token'] for e in reference_results]:
+        raise ValueError('bounded provider token mismatch')
+    execution['post_commit_all_output_bits']='PASS_EXACT_PINNED_NATIVE_EXECUTOR_REFERENCE'
+    execution['post_commit_output_snapshots']=snapshots
+    execution['reference_scope']='test-only native primitive executor, no golden callback or numerical CPU time in costs'
+    old=ROOT/OUT/'workspace_r20_33b741b4e/calendar_r1/manifest.json'
+    oldmanifest=read_json(old)
+    existing={'manifest_sha256':hashlib.sha256(old.read_bytes()).hexdigest(),
+        'I64_highword_read_sector':oldmanifest['endpoint_cycles']['values']['I64_highword_read_sector'],
+        'I64_highword_write_sector':oldmanifest['endpoint_cycles']['values']['I64_highword_write_sector'],
+        'I64_split_join':oldmanifest['endpoint_cycles']['values']['I64_split_join'],
+        'I64_RMW_merge':oldmanifest['endpoint_cycles']['values']['I64_RMW_merge'],
+        'r22_augmentation_applied':False,'existing_calendar_mutated':False,
+        'bounded_Qwen_additional_temporary_HBM_bytes':0,
+        'old_2801511424_byte_workspace_scope':'retained baseline only; not inherited by bounded export',
+        'R21_read_sector_ticks':108,'R21_write_sector_ticks':128,
+        'difference_to_parent_sector_cost':'2 admission ticks, explicit in R21 service; no additive second codec charge',
+        'R20_intervals':'retained baseline allocation proof; bounded RF I64 uses two32bit words, optional realPC14 codec tested separately',
+        'source_interval_join':'same actual graph versions and PC dependencies; old macro times do not qualify the new instruction counts'}
+    outputs={'Qwen_all_PC_bindings.json.gz':full,'Qwen_provider_execution.json.gz':execution,
+             'DS_bounded_reservation.json.gz':dsproof,'cost_reconciliation.json':existing}
+    if not verify: out.mkdir(parents=True,exist_ok=False)
+    hashes={}
+    for name,value in outputs.items():
+        raw=encode(value); data=gzip.compress(raw,mtime=0) if name.endswith('.gz') else raw+b'\n'
+        path=out/name
+        if verify:
+            if path.read_bytes()!=data: raise ValueError('bounded join replay mismatch '+name)
+        else: path.write_bytes(data)
+        hashes[name]=hashlib.sha256(data).hexdigest()
+    pins=read_json(base/'producer_pins.json')['files']
+    manifest={'schema':'H3_BOUNDED_PROVIDER_JOIN_MILESTONE_V1','source_pins':pins,
+        'consumer_source_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        'output_sha256':hashes,'Qwen_fullshape_PCs':full['PCs'],'Qwen_families':full['classes'],
+        'Qwen_executed_fixture_PCs_per_token':len(native['operations']),'Qwen_fixture_layers':layers,
+        'Qwen_executed_tokens':len(positions),'Qwen_fixture_next_tokens':[e['next_token'] for e in execution['executions']],
+        'DS_bounded_PCs':dsproof['PCs'],'DS_families':dsproof['families'],
+        'DS_scope':dsproof['status'],'full_token_checkpoint_quality':False,'hardware_clock_admission':False,
+        'existing_cost_reconciliation':existing,
+        'remaining_gaps':['DS rank workspace physical bases/leases and checkpoint routes unbound',
+            'DS ordered wholeprogram addressed microVM execution pending; bounded dispatch service reservation intermediate',
+            'Qwen fullshape checkpoint token execution not demonstrated by reduced36layer raw fixtures',
+            'Measured RF/HBM/NoC/shared/native/collective costs separate calibration gate',
+            'KeplerR21 lacks IOTA; DS complete generic addressed microVM requires bounded IOTA binding'],
+        'replay':f'python tools/h3_complete_native_calendar.py --bounded-provider-join {directory} --bounded-layers {layers} --out {out} --verify'}
+    path=out/'manifest.json'; raw=encode(manifest)+b'\n'
+    if verify:
+        if path.read_bytes()!=raw: raise ValueError('bounded join manifest replay mismatch')
+    else: path.write_bytes(raw)
+    print(json.dumps({k:manifest[k] for k in ('Qwen_fullshape_PCs','Qwen_executed_fixture_PCs_per_token',
+        'Qwen_fixture_next_tokens','DS_bounded_PCs','DS_families','hardware_clock_admission')}))
+    print('PASS_BOUNDED_SOURCE_PINNED_PROVIDER_JOIN_REPLAY' if verify else 'PASS_BOUNDED_PROVIDER_JOIN_MILESTONE')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--out', type=Path, default=ROOT / OUT)
@@ -1429,7 +2073,11 @@ def main():
     ap.add_argument('--qwen-providers', type=Path)
     ap.add_argument('--qwen-workspace', type=Path)
     ap.add_argument('--target', choices=('Qwen', 'DeepSeek'), action='append')
+    ap.add_argument('--bounded-provider-join', type=Path)
+    ap.add_argument('--bounded-layers', type=int, default=36)
     args = ap.parse_args()
+    if args.bounded_provider_join:
+        return run_bounded_provider_join(args.bounded_provider_join,args.out,layers=args.bounded_layers,verify=args.verify)
     providers = read_json(args.qwen_providers) if args.qwen_providers else None
     native = {}
     producer_sources = {}

@@ -1,0 +1,202 @@
+{
+  "DS": {
+    "PCs": 2213,
+    "checkpoint_transport_join": false,
+    "families": 30,
+    "full_token_numerical_execution": false,
+    "physical_base_unbound_ranks": 96,
+    "scope": "PASS_ALL_PC_BOUNDED_FINITE_SERVICE_RESERVATION_INTERMEDIATE",
+    "topk_PC127_rank0": {
+      "cost_units": {
+        "admit": 1,
+        "collective_rendezvous": 0,
+        "fragment512_read": 4054172,
+        "fragment512_write": 2378676,
+        "primitive_scalar": 152178060,
+        "retire": 1,
+        "route512": 6432848,
+        "visibility_fence": 1
+      },
+      "end": 41735384804,
+      "ordered_executor_templates": [
+        "7b7fc026294cd82667b919531738f73d9fcf810922fc9041c707f12eb78d2f9b"
+      ],
+      "rank": 0,
+      "resources": {
+        "RF_vectors_per_SM": 32,
+        "SM_issue_leases_each_of_32": 1,
+        "rank_workspace_bytes": 33554432,
+        "source_fragment_credit": 1,
+        "write_residence": 1
+      },
+      "start": 24576846940,
+      "workspace_peak_upper": 6790664
+    },
+    "workspace_bytes_per_rank": 33554432
+  },
+  "Qwen": {
+    "RF_workspace_peak_vectors": 16,
+    "VM_transport_requests": 537200,
+    "actual_provider_native_batches": {
+      "AND": 2918,
+      "BITCAST_F": 5196,
+      "BITCAST_U": 5196,
+      "F2I": 288,
+      "FADD": 20100,
+      "FCMP_EQ": 318,
+      "FCMP_GT": 318,
+      "FCMP_LT": 2,
+      "FCMP_NE": 316,
+      "FMAX": 360,
+      "FMIN": 288,
+      "FMUL": 17418,
+      "FP8_PACK": 288,
+      "FP8_UNPACK": 288,
+      "I2F": 4066,
+      "IADD": 2024,
+      "ISUB": 722,
+      "OR": 30,
+      "PACKET_COMMIT": 1010,
+      "SELECT": 288,
+      "SHL": 288,
+      "SHR": 1302,
+      "XOR": 3318
+    },
+    "all_PC_output_bits": "PASS_EXACT_PINNED_NATIVE_EXECUTOR_REFERENCE",
+    "classes": 21,
+    "executed_fixture_PCs": 3474,
+    "fixture_layers": 36,
+    "fixture_tokens": 2,
+    "full_checkpoint_quality": false,
+    "fullshape_PCs": 1737,
+    "fullshape_ordered_runtime_trace_executed": false,
+    "native_primitive_commands_fullshape": {
+      "AND": 1389183,
+      "BITCAST_F": 871492,
+      "BITCAST_U": 871492,
+      "COPY": 83305,
+      "F2I": 77184,
+      "FADD": 111514647,
+      "FCMP_EQ": 156543,
+      "FCMP_GT": 156543,
+      "FCMP_LT": 1,
+      "FCMP_NE": 156542,
+      "FMAX": 9513216,
+      "FMIN": 77184,
+      "FMUL": 78914887,
+      "FP8_PACK": 576,
+      "FP8_UNPACK": 4718592,
+      "I2F": 59129888,
+      "IADD": 1296000,
+      "ISUB": 6121,
+      "OR": 151935,
+      "SELECT": 4608,
+      "SHL": 77184,
+      "SHR": 610921,
+      "XOR": 178779
+    },
+    "next_tokens": [
+      7,
+      5
+    ],
+    "primitive_calls": 66342,
+    "retained_source_home_proof": {
+      "RF_source_slots": "32..511, disjoint from native workspace",
+      "RF_workspace_slots": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "control_homes": 144,
+      "data_homes": 31232,
+      "reuse_home_count": 30896,
+      "status": "PASS_CONCRETE_HOME_APERTURE_LIFETIME_AND_REUSE",
+      "versions": 2027
+    },
+    "shared_peak_bytes": 256,
+    "source_transport_requests": 480698,
+    "temporary_HBM_bytes": 0
+  },
+  "final_replay": "PASS_BOUNDED_SOURCE_PINNED_PROVIDER_JOIN_REPLAY",
+  "hardware_clock_or_physical_admission": false,
+  "provisional_costs": {
+    "HBM_service_read_write": [
+      64,
+      80
+    ],
+    "R21_sector_phase_ticks": {
+      "admission": 2,
+      "consume": 2,
+      "forward_CDC": 4,
+      "held_accept": 1,
+      "owner_lookup": 12,
+      "retire": 2,
+      "reverse_CDC": 4,
+      "reverse_grant": 4,
+      "write_visibility": 4
+    },
+    "RF_shadow_scope": "software sector-backed primitive transport test arena; 64/80 conservative service estimates, not a physical RF latency claim",
+    "RF_shadow_sector_service_read_write": [
+      64,
+      80
+    ],
+    "RF_source_service_read_write": [
+      3,
+      3
+    ],
+    "augmentation_applied": false,
+    "measurement_status": "all uncalibrated abstract software ticks; test observer transfers reported separately",
+    "native_and_other_services": {
+      "NoC_page512": 64,
+      "PC_admit": 2,
+      "PC_retire": 2,
+      "collective_rendezvous": 2,
+      "native_batch": 32,
+      "shared_beat128": 8,
+      "visibility_fence": 4
+    },
+    "parent_I64_RMW_merge": 32,
+    "parent_I64_read_write": [
+      106,
+      126
+    ],
+    "parent_I64_split_join": 32
+  },
+  "regeneration_bounds": {
+    "measured_final_seconds": 71.72,
+    "measured_max_RSS_KiB": 1440748,
+    "old_large_calendar_regenerated": false,
+    "suggested_RAM_GiB": 4,
+    "suggested_time_minutes": 3
+  },
+  "tests": "27 PASS"
+}
