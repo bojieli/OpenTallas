@@ -1,0 +1,195 @@
+FFF.................                                                     [100%]
+=================================== FAILURES ===================================
+____________ test_all576_ordered_rows_fake_interface_contract_only _____________
+
+    def test_all576_ordered_rows_fake_interface_contract_only():
+>       p=sample();r=O.validate_packets(p,1,complete=True)
+
+tests/test_dsrom_I66_accepted_observer.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+packets = [{'edge': 10, 'identity': {'expert': 0, 'generation': 1, 'key_word': 2149580800, 'node': 'L0.I66', ...}, 'kind': 'leas...identity': {'expert': 0, 'generation': 1, 'key_word': 2149580800, 'node': 'L0.I66', ...}, 'kind': 'capture', ...}, ...]
+credits = 1, complete = True
+
+    def validate_packets(packets,credits,complete=False):
+        """Check observed ownership/hold transitions without inventing progress.
+    
+        A reserved sink seat is held until observed home visibility. Request ACK
+        never returns that seat. Reply offers are sampled every source edge while
+        held; omitted samples do not prove stability. Two shard interfaces may
+        return out of order, but delivery rows remain0..575. No field ready exists.
+        """
+        packets=copy.deepcopy(packets);J.uint(credits,10)
+        if not 1<=credits<=576:raise ValueError('reviewed finite sink capacity required')
+        operations={};held={};last_edge=-1;active_owners={};peak=0;seen_requests=set();seen_replies=set();seen_captures=set()
+        model=D.source_model()
+        for ordinal,p in enumerate(packets):
+            edge=J.uint(p['edge']);kind=p['kind']
+            if J.uint(p['ordinal'])!=ordinal or edge<last_edge:raise ValueError('unordered source journal')
+            # No absent edge or disappearing interface can count as a stable hold.
+            for h in held.values():
+                if edge>h['edge']+1:raise ValueError('missing held reply source-edge sample')
+            last_edge=edge;D.operation_id(p['identity'],model)
+            key=json.dumps(p['identity'],sort_keys=True);owner=(p['identity']['owner_stage'],p['identity']['rank'])
+            if kind=='lease_accept':
+                if key in operations or owner in active_owners:raise ValueError('spent identity/undrained owner')
+                J.uint(p['producer_pc'],14)
+                operations[key]=dict(identity=p['identity'],pc=p['producer_pc'],captured={},seats={},
+                    requested={},ACKs=set(),returned={},delivered={},visible=set(),next_request=0,
+                    next_delivery=0,source_idle=None,retired=False,accept=edge)
+                active_owners[owner]=key;continue
+            if key not in operations:raise ValueError('packet lacks accepted source owner')
+            op=operations[key]
+            if op['retired']:raise ValueError('callback after retired owner')
+            if kind=='source_idle':
+                if op['source_idle'] is not None or len(op['captured'])!=576 or J.uint(p['busy_seen'],1)!=1 or J.uint(p['fault'],1):
+                    raise ValueError('unqualified source terminal')
+                op['source_idle']=edge;continue
+            if kind=='lease_retire':
+                if op['source_idle'] is None or op['seats'] or len(op['visible'])!=576 or held or len(op['ACKs'])!=576:
+                    raise ValueError('source/seat/return/publication/requestACK debt remains')
+                if edge<=max(op['delivered'].values()):raise ValueError('rearm before old retirement visible')
+                if any(J.uint(p[k],1)!=1 for k in ['wire_fenced','delivery_fenced','provenance_fenced']):
+                    raise ValueError('missing causal wire/home fence')
+                op['retired']=True;del active_owners[owner];continue
+            row,root=row_route(p)
+            if kind=='capture':
+                if J.uint(p['root'],7)!=root or row in op['captured'] or edge<=op['accept']:
+                    raise ValueError('duplicate/foreign root capture')
+                if J.uint(p['raw_valid'],1)!=1 or J.uint(p['fault'],1):raise ValueError('faulted raw capture')
+                capture_port=(owner,root,edge)
+>               if capture_port in seen_captures:raise ValueError('two captures on one root edge')
+E               ValueError: two captures on one root edge
+
+tools/dsrom_I66_accepted_observer.py:73: ValueError
+___ test_partial_prefix_cannot_return_complete_and_ACK_does_not_release_seat ___
+
+    def test_partial_prefix_cannot_return_complete_and_ACK_does_not_release_seat():
+        p=sample(1);p=p[:next(i for i,e in enumerate(p) if e['kind']=='reply_sample')]
+>       r=O.validate_packets(p,1)
+
+tests/test_dsrom_I66_accepted_observer.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+packets = [{'edge': 10, 'identity': {'expert': 0, 'generation': 1, 'key_word': 2149580800, 'node': 'L0.I66', ...}, 'kind': 'leas...identity': {'expert': 0, 'generation': 1, 'key_word': 2149580800, 'node': 'L0.I66', ...}, 'kind': 'capture', ...}, ...]
+credits = 1, complete = False
+
+    def validate_packets(packets,credits,complete=False):
+        """Check observed ownership/hold transitions without inventing progress.
+    
+        A reserved sink seat is held until observed home visibility. Request ACK
+        never returns that seat. Reply offers are sampled every source edge while
+        held; omitted samples do not prove stability. Two shard interfaces may
+        return out of order, but delivery rows remain0..575. No field ready exists.
+        """
+        packets=copy.deepcopy(packets);J.uint(credits,10)
+        if not 1<=credits<=576:raise ValueError('reviewed finite sink capacity required')
+        operations={};held={};last_edge=-1;active_owners={};peak=0;seen_requests=set();seen_replies=set();seen_captures=set()
+        model=D.source_model()
+        for ordinal,p in enumerate(packets):
+            edge=J.uint(p['edge']);kind=p['kind']
+            if J.uint(p['ordinal'])!=ordinal or edge<last_edge:raise ValueError('unordered source journal')
+            # No absent edge or disappearing interface can count as a stable hold.
+            for h in held.values():
+                if edge>h['edge']+1:raise ValueError('missing held reply source-edge sample')
+            last_edge=edge;D.operation_id(p['identity'],model)
+            key=json.dumps(p['identity'],sort_keys=True);owner=(p['identity']['owner_stage'],p['identity']['rank'])
+            if kind=='lease_accept':
+                if key in operations or owner in active_owners:raise ValueError('spent identity/undrained owner')
+                J.uint(p['producer_pc'],14)
+                operations[key]=dict(identity=p['identity'],pc=p['producer_pc'],captured={},seats={},
+                    requested={},ACKs=set(),returned={},delivered={},visible=set(),next_request=0,
+                    next_delivery=0,source_idle=None,retired=False,accept=edge)
+                active_owners[owner]=key;continue
+            if key not in operations:raise ValueError('packet lacks accepted source owner')
+            op=operations[key]
+            if op['retired']:raise ValueError('callback after retired owner')
+            if kind=='source_idle':
+                if op['source_idle'] is not None or len(op['captured'])!=576 or J.uint(p['busy_seen'],1)!=1 or J.uint(p['fault'],1):
+                    raise ValueError('unqualified source terminal')
+                op['source_idle']=edge;continue
+            if kind=='lease_retire':
+                if op['source_idle'] is None or op['seats'] or len(op['visible'])!=576 or held or len(op['ACKs'])!=576:
+                    raise ValueError('source/seat/return/publication/requestACK debt remains')
+                if edge<=max(op['delivered'].values()):raise ValueError('rearm before old retirement visible')
+                if any(J.uint(p[k],1)!=1 for k in ['wire_fenced','delivery_fenced','provenance_fenced']):
+                    raise ValueError('missing causal wire/home fence')
+                op['retired']=True;del active_owners[owner];continue
+            row,root=row_route(p)
+            if kind=='capture':
+                if J.uint(p['root'],7)!=root or row in op['captured'] or edge<=op['accept']:
+                    raise ValueError('duplicate/foreign root capture')
+                if J.uint(p['raw_valid'],1)!=1 or J.uint(p['fault'],1):raise ValueError('faulted raw capture')
+                capture_port=(owner,root,edge)
+>               if capture_port in seen_captures:raise ValueError('two captures on one root edge')
+E               ValueError: two captures on one root edge
+
+tools/dsrom_I66_accepted_observer.py:73: ValueError
+____________ test_held_reply_keeps_data_identity_and_reserved_sink _____________
+
+    def test_held_reply_keeps_data_identity_and_reserved_sink():
+>       r=O.validate_packets(held_reply(),1)
+
+tests/test_dsrom_I66_accepted_observer.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+packets = [{'edge': 10, 'identity': {'expert': 0, 'generation': 1, 'key_word': 2149580800, 'node': 'L0.I66', ...}, 'kind': 'leas...identity': {'expert': 0, 'generation': 1, 'key_word': 2149580800, 'node': 'L0.I66', ...}, 'kind': 'capture', ...}, ...]
+credits = 1, complete = False
+
+    def validate_packets(packets,credits,complete=False):
+        """Check observed ownership/hold transitions without inventing progress.
+    
+        A reserved sink seat is held until observed home visibility. Request ACK
+        never returns that seat. Reply offers are sampled every source edge while
+        held; omitted samples do not prove stability. Two shard interfaces may
+        return out of order, but delivery rows remain0..575. No field ready exists.
+        """
+        packets=copy.deepcopy(packets);J.uint(credits,10)
+        if not 1<=credits<=576:raise ValueError('reviewed finite sink capacity required')
+        operations={};held={};last_edge=-1;active_owners={};peak=0;seen_requests=set();seen_replies=set();seen_captures=set()
+        model=D.source_model()
+        for ordinal,p in enumerate(packets):
+            edge=J.uint(p['edge']);kind=p['kind']
+            if J.uint(p['ordinal'])!=ordinal or edge<last_edge:raise ValueError('unordered source journal')
+            # No absent edge or disappearing interface can count as a stable hold.
+            for h in held.values():
+                if edge>h['edge']+1:raise ValueError('missing held reply source-edge sample')
+            last_edge=edge;D.operation_id(p['identity'],model)
+            key=json.dumps(p['identity'],sort_keys=True);owner=(p['identity']['owner_stage'],p['identity']['rank'])
+            if kind=='lease_accept':
+                if key in operations or owner in active_owners:raise ValueError('spent identity/undrained owner')
+                J.uint(p['producer_pc'],14)
+                operations[key]=dict(identity=p['identity'],pc=p['producer_pc'],captured={},seats={},
+                    requested={},ACKs=set(),returned={},delivered={},visible=set(),next_request=0,
+                    next_delivery=0,source_idle=None,retired=False,accept=edge)
+                active_owners[owner]=key;continue
+            if key not in operations:raise ValueError('packet lacks accepted source owner')
+            op=operations[key]
+            if op['retired']:raise ValueError('callback after retired owner')
+            if kind=='source_idle':
+                if op['source_idle'] is not None or len(op['captured'])!=576 or J.uint(p['busy_seen'],1)!=1 or J.uint(p['fault'],1):
+                    raise ValueError('unqualified source terminal')
+                op['source_idle']=edge;continue
+            if kind=='lease_retire':
+                if op['source_idle'] is None or op['seats'] or len(op['visible'])!=576 or held or len(op['ACKs'])!=576:
+                    raise ValueError('source/seat/return/publication/requestACK debt remains')
+                if edge<=max(op['delivered'].values()):raise ValueError('rearm before old retirement visible')
+                if any(J.uint(p[k],1)!=1 for k in ['wire_fenced','delivery_fenced','provenance_fenced']):
+                    raise ValueError('missing causal wire/home fence')
+                op['retired']=True;del active_owners[owner];continue
+            row,root=row_route(p)
+            if kind=='capture':
+                if J.uint(p['root'],7)!=root or row in op['captured'] or edge<=op['accept']:
+                    raise ValueError('duplicate/foreign root capture')
+                if J.uint(p['raw_valid'],1)!=1 or J.uint(p['fault'],1):raise ValueError('faulted raw capture')
+                capture_port=(owner,root,edge)
+>               if capture_port in seen_captures:raise ValueError('two captures on one root edge')
+E               ValueError: two captures on one root edge
+
+tools/dsrom_I66_accepted_observer.py:73: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_dsrom_I66_accepted_observer.py::test_all576_ordered_rows_fake_interface_contract_only
+FAILED tests/test_dsrom_I66_accepted_observer.py::test_partial_prefix_cannot_return_complete_and_ACK_does_not_release_seat
+FAILED tests/test_dsrom_I66_accepted_observer.py::test_held_reply_keeps_data_identity_and_reserved_sink
+3 failed, 17 passed in 2.49s
+

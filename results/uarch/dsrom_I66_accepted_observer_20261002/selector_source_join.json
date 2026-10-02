@@ -1,0 +1,54 @@
+{
+  "MTP": {
+    "accepted_token_rate": null,
+    "any_rate_estimate_scope": "SENSITIVITY_ONLY",
+    "matched_third_party_agentic_median_acceptance": null,
+    "qualified_3000plus": false
+  },
+  "actual_source_pin_clock_route_and_consumer_accept_join_pending": true,
+  "compiled_accepted_selector_trace": false,
+  "exact_source_records": [
+    {
+      "path": "results/uarch/dsrom_I66_accepted_observer_20261002/inputs/Epic_terminal_handoff.json",
+      "sha256": "79175a7c8eae416a930f9d3dc79714ead891cb4a974a20efa725241ee82d660a",
+      "source_commit": "6a73e370e2dcc789dc094b511fb86c0883ed9ee5",
+      "source_path": "results/uarch/dsrom_selector_allowed_terminal_model_20261002/handoff.json"
+    },
+    {
+      "path": "results/uarch/dsrom_I66_accepted_observer_20261002/inputs/Epic_terminal_model.json",
+      "sha256": "526b640282104e8b95a2b35dfbad6be3d12b8656b29bb10333835fe28a2830f3",
+      "source_commit": "6a73e370e2dcc789dc094b511fb86c0883ed9ee5",
+      "source_path": "results/uarch/dsrom_selector_allowed_terminal_model_20261002/model.json"
+    },
+    {
+      "path": "results/uarch/dsrom_I66_accepted_observer_20261002/inputs/Epic_fence_handoff.json",
+      "sha256": "bdd6f066be9a3e0e0974b3799ac31df6cf16ccc3d25a9ea97c53b1fc70d0ad38",
+      "source_commit": "462a5888c072dfc127e525f6fb002b5b8236a6d2",
+      "source_path": "results/uarch/dsrom_balanced_selector_fence_proof_20261002/handoff.json"
+    },
+    {
+      "path": "results/uarch/dsrom_I66_accepted_observer_20261002/inputs/physical_shard_parent_review.json",
+      "sha256": "4b49f23fbcc9a8b04c7e6e575764aa594f9bff9c310ea4b5123a0b8cd92ca76c",
+      "source_commit": "03a8cf4fe0f47f516d8daecec4d92a6e14692e12",
+      "source_path": "results/uarch/native_software_parent_intake_20261002/DSROM_capture_home_shard_parent_review.json"
+    }
+  ],
+  "no_cycle_increment_transferred_to_capture_read": true,
+  "no_new_capture_latency_price": true,
+  "old_left_collision_review_preserved": "inputs/prior_left_edge_collision_review.json",
+  "owner_scope": "Read-only Epic/Maxwell/Nash/Arch source join; no duplicate physical/capture implementation",
+  "required_join": [
+    "Accepted producer/select origin and actual selected expert/phase/key per current program",
+    "Actual selector output acceptance/publication/fence before producer GO; source proof indices cannot supply origin",
+    "Named launch/capture/home pins and route/domain/CDC contract, including held token identity",
+    "Baseline current consumer VM reads and source X tags; no candidate-delayed baseline",
+    "Reviewed per-phase delivery/ACK/visibility calendar with globally shared reservations"
+  ],
+  "selector_candidate": "DS4096-TP4-S58-PAR2-NP2048 full balanced selector",
+  "selector_physical_admission": false,
+  "source_proof_timestamps_are_normalized_not_production_edges": true,
+  "source_reported_ninecall_increment_cycles": 3312,
+  "source_reported_service_increment_cycles": 142,
+  "source_reported_transport_increment_cycles": 226,
+  "terminal_additional_state_or_cycles": 0
+}

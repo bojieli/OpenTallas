@@ -1,0 +1,20 @@
+{
+  "actual_current_runtime": false,
+  "focused_tests_PASS": 192,
+  "initial_failure_reason": "Fake trace assigned two rows to one root on one edge; validator correctly rejected. Corrected test-only capture edges; old FAIL retained.",
+  "initial_fake_capture_failure_preserved": true,
+  "new_jobs": [],
+  "new_observer_tests_PASS": 42,
+  "protected_files_byte_identical": 91,
+  "source_plan_regeneration_byte_exact": true,
+  "tests_cover": [
+    "Two physical shards/all576 ordered visibility",
+    "Sinkseat grant before accepted request; ACK never releases data seat",
+    "Held/OoO/stale reply and frozen accepted PC",
+    "Same-edge credit/rearm boundaries; missing hold samples",
+    "False valid/ready/grant/idle callbacks",
+    "Actual source-aligned read tag and vector-owner association API",
+    "PHW6/X_ROM0/bool geometry rejected before any binary read"
+  ],
+  "typed_physical_hold_qualified": false
+}

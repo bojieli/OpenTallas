@@ -1,0 +1,96 @@
+{
+  "callback_journal": {
+    "diagnostic_prefix": "No completion/consumer deadline/finite-service claim",
+    "frozen_PC": "Accepted producer owner PC, not latest core PC",
+    "hold": "Sample every native source edge until actual ready acceptance; absent samples rejected",
+    "order": "ordinal + native source edge; preedge request/read/hold and postNBA publication distinct",
+    "publication": "Match packet and baseline journal in identity/row/address/data/edge"
+  },
+  "clock": "Native one-clock source; planned1.2GHz/0.9GHz CDC implementation and edge conversion unavailable",
+  "compile_GO": false,
+  "consumer_deadline": null,
+  "current_enrollment": "PHW10/X_ROM1/SUN256 compiled closure, exact four programs, +DIR and separate +OT_ROM_DIR; no PHW6/D1_X_ROM0 fallback",
+  "finite_service_bound": null,
+  "hardware_GO": false,
+  "hold_timing": "Observed stable hold paths only; no typed SS/FF physical timing qualification",
+  "hooks": [
+    {
+      "available_in_existing_source": "Core/adapter accept exists; full proposed wire context/lease not installed",
+      "event": "lease_accept",
+      "source": "Actual source-owned accepted command/context plus registered owner association"
+    },
+    {
+      "available_in_existing_source": true,
+      "event": "capture",
+      "source": "Actual per-shard root/writer valid, root, row, raw data and fault; no ready"
+    },
+    {
+      "available_in_existing_source": true,
+      "event": "source_idle",
+      "source": "Adapter/spine idle after observed accepted busy, healthy fault state"
+    },
+    {
+      "available_in_existing_source": false,
+      "event": "sinkseat_reserve/read_request_accept/request_ACK/reply_sample/ordered_delivery",
+      "source": "Proposed capture/transport/gather owner; source edge plus frozen context and physical_shard"
+    },
+    {
+      "available_in_existing_source": "Local source exists; proposed remote formatter/bridge unavailable",
+      "event": "home_postNBA",
+      "source": "Accepted real destination writer/address/data and VM snapshot after NBA"
+    },
+    {
+      "available_in_existing_source": true,
+      "event": "consumer_VM_read",
+      "source": "xs_rd_re/src/addr and old VM read data, source vector ownership"
+    },
+    {
+      "available_in_existing_source": true,
+      "event": "read_X_tag",
+      "source": "u_su.u_vec.vx and cwx[WR-1 -:8], two edges after accepted VM read"
+    }
+  ],
+  "new_jobs": [],
+  "no_cross_die_combinational_readtree": true,
+  "physical_homes": null,
+  "physical_shards": 2,
+  "predecessor": "45f4aa4bd7a4ac4672002fd34e7acdeb825d3fbf",
+  "proposed_wire": {
+    "context": [
+      "stage6",
+      "rank2",
+      "EID9",
+      "phase10",
+      "key32",
+      "generation32",
+      "user32",
+      "Xversion32",
+      "producerPC14"
+    ],
+    "global_context_bits": 169,
+    "hardware_ABI_selected": false,
+    "physical_shard_route_bits": 1,
+    "record_bits": 69,
+    "request_bits": 187,
+    "response_bits": 240,
+    "token_valid_distinct_raw_valid": true
+  },
+  "register_positions": null,
+  "root_mapping": "root=(row%256)//2; shard=root//64; local_root=root%64",
+  "rows": 576,
+  "runtime_GO": false,
+  "schema": "opentallas.I66.passive-accepted-observer.v1",
+  "scope": "SIMULATION_ONLY",
+  "software_only_state": {
+    "accepted_request_and_return_packet_bits_per_C": 427,
+    "log_edges_are_64bit_host_observation": true,
+    "logical_seat_capacity": "Reviewed finite C, not selected here",
+    "no_new_hardware_ports_or_state": true,
+    "total_log_or_compile_cost_not_measured": true
+  },
+  "source_core_sha256": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+  "source_seats": [
+    320,
+    256
+  ]
+}

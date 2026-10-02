@@ -1,0 +1,93 @@
+{
+  "actual_consumer_deadline": null,
+  "arrival_tracks_after_union": null,
+  "clock_reset_ingress_sites": null,
+  "common_home_shard": null,
+  "common_reserved_box_DBU": [
+    11136312,
+    15567120,
+    11294586,
+    15991290
+  ],
+  "feedback_repair_geometry_check": {
+    "assumption": "Keep prior raw left edge and common reserved box; screen only, no candidate packing selected",
+    "common_reserved_left_DBU": 11136312,
+    "new_raw_right_DBU": 11184156,
+    "original_model_unchanged": true,
+    "overlap_x_um": 47.844,
+    "prior_raw_width_um": 152.766,
+    "repair_raw_width_um": 204.93,
+    "shared_y_extent": true
+  },
+  "gather_VM_SU_regions": [
+    {
+      "bbox_DBU": [
+        10974880,
+        18203200,
+        11605600,
+        19618000
+      ],
+      "name": "HUB_VM"
+    },
+    {
+      "bbox_DBU": [
+        10974880,
+        19618000,
+        11605600,
+        21819040
+      ],
+      "name": "HUB_GATHER"
+    },
+    {
+      "bbox_DBU": [
+        11605600,
+        16000000,
+        13806208,
+        21819040
+      ],
+      "name": "HUB_SU_VECTOR"
+    }
+  ],
+  "native_clock_vs_planned_CDC": "Pinned source singleclk; adopted3:4 domain crossing has no implemented/qualified token CDC here",
+  "new_jobs": [],
+  "no_register_cuts_selected": true,
+  "ownership": {
+    "Hubble": "Current program accepted trace identity and consumer deadlines, no physical place/routing",
+    "Maxwell_Arch": "Single physical reservation revision, named pin paths/clock/reset/PG and allowed routes; no Hubble packing",
+    "capture_owner": "Private protocol/cell model; unchanged"
+  },
+  "physical_pin_or_route_ownership": false,
+  "physical_shard_capture_reservations": [
+    {
+      "bbox_DBU": [
+        10979226,
+        15567120,
+        11131992,
+        15739920
+      ],
+      "physical_home_selected_for_model": true,
+      "placed_on_distinct_shard_die": true,
+      "record_bits": 22080,
+      "seats": 320,
+      "shard": 0
+    },
+    {
+      "bbox_DBU": [
+        10979226,
+        15567120,
+        11131992,
+        15705360
+      ],
+      "physical_home_selected_for_model": true,
+      "placed_on_distinct_shard_die": true,
+      "record_bits": 17664,
+      "seats": 256,
+      "shard": 1
+    }
+  ],
+  "root_pins": null,
+  "source_commit": "1f8e7e65dfc28474028b40bcc2005210b77f314e",
+  "source_files_byte_identical": true,
+  "source_model_sha256": "c952055e1d46c3d86095965ee0bc92162256649f398d723ef70b5e7b13c0a0a0",
+  "upstream_clock_budget_fF": null
+}
