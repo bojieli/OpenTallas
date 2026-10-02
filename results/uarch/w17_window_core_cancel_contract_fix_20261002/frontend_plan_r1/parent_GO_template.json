@@ -1,0 +1,33 @@
+{
+  "status": "PENDING_NOT_AUTHORIZATION",
+  "requested_status": "PARENT_ACTUAL_CORE_SU_QE_FRONTEND_PROFILE_SINGLE_GO",
+  "plan_sha256": "ad9e93e93d3b98c5c5c7b536ea96badc4d074663ce834d8c935554195aaf90d8",
+  "runner_sha256": "c58bfb1c3ee3b56dbcd6b0717e7c46002d220d400c057489073adf4a56dfe73c",
+  "source_digest": "ef38f82f59c285d1e2cd6ab51ac1494079458a214b521b9c8370b1a88db4c2b2",
+  "command_digest": "6e529c45758a5a1fc0d7d07ff3eaa63491e4aa9aab725011ba5416debb95b783",
+  "caps": {
+    "MemoryMax": 34359738368,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 1073741824,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 600,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "frontend_seconds": 540,
+    "supervision_reserve_seconds": 60,
+    "whole_seconds": 600,
+    "aggregate_output_bytes": 8589934592,
+    "sample_interval_seconds": 0.25,
+    "compile_workers_max": 2,
+    "CXX_compiles": 0,
+    "simulations": 0,
+    "automatic_retries": 0
+  }
+}

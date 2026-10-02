@@ -1,0 +1,65 @@
+{
+  "compiler": {
+    "wrapper": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "wrapper_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+    "binary": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+    "binary_sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+    "version": "Verilator 5.050 2026-07-01 rev v5.050",
+    "environment_overrides_absent": [
+      "VERILATOR_ROOT",
+      "VERILATOR_BIN",
+      "VERILATOR_TEST_FLAGS",
+      "VERILATOR_RUNNING",
+      "MAKEFLAGS",
+      "MFLAGS",
+      "CC",
+      "CXX",
+      "CXXFLAGS",
+      "CPPFLAGS",
+      "LDFLAGS",
+      "LD_PRELOAD",
+      "LD_LIBRARY_PATH",
+      "PERL5OPT",
+      "PERL5LIB"
+    ]
+  },
+  "wrapper_option_roles": [
+    {
+      "line": 30,
+      "text": "# Guard against unbounded recursive re-entry. Hierarchical / --build flows"
+    },
+    {
+      "line": 364,
+      "text": "    verilator --binary -j 0 [options] [source_files.v]... [opt_c_files.cpp/c/cc/a/o/so]"
+    },
+    {
+      "line": 365,
+      "text": "    verilator --cc [options] [source_files.v]... [opt_c_files.cpp/c/cc/a/o/so]"
+    },
+    {
+      "line": 407,
+      "text": "    --binary                    Build model binary"
+    },
+    {
+      "line": 408,
+      "text": "    --build                     Build model executable/library after Verilation"
+    },
+    {
+      "line": 411,
+      "text": "    --cc                        Create C++ output"
+    },
+    {
+      "line": 459,
+      "text": "    --exe                       Link to create executable"
+    },
+    {
+      "line": 506,
+      "text": "    --main                      Generate C++ main() file"
+    }
+  ],
+  "frontend": "Explicit --cc --main --exe --timing; --build/--binary absent. Require generated Vtb.mk+CPP and reject object/library/executable before CXX. No completed frontend observation yet.",
+  "CXX": "Explicit make -C obj -f Vtb.mk -j2 OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0 after generated-file inventory receipt. Roles documented by pinned installed wrapper; actual stage completion remains unmeasured.",
+  "no_scope_parameter_change": true,
+  "compiler_invocations": 0,
+  "runtime_qualification": false
+}
