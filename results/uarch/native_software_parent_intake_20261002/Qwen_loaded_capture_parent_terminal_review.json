@@ -1,0 +1,47 @@
+{
+  "status": "PASS_INDEPENDENT_REPLAY_OF_BLOCKED_LOADED_CHARACTERIZATION",
+  "owner_commit": "f28f30496",
+  "archive_hashes_verified": 37,
+  "source_pins_verified": 3,
+  "tests_pass": 8,
+  "selector_replicas_preserved": 80,
+  "consumer_endpoint_bits": 512,
+  "six_STA_reports_reproduced": true,
+  "timings": [
+    {
+      "corner": "ss",
+      "scope": "all",
+      "slack_ps": -33.478386
+    },
+    {
+      "corner": "ss",
+      "scope": "macro",
+      "slack_ps": 11.028789
+    },
+    {
+      "corner": "ss",
+      "scope": "merge",
+      "slack_ps": 459.284515
+    },
+    {
+      "corner": "ff",
+      "scope": "all",
+      "slack_ps": -50.049297
+    },
+    {
+      "corner": "ff",
+      "scope": "macro",
+      "slack_ps": 453.370972
+    },
+    {
+      "corner": "ff",
+      "scope": "merge",
+      "slack_ps": 24.022469
+    }
+  ],
+  "ideal_clock_and_wire": true,
+  "library_limits_exceeded": true,
+  "physical_closure": false,
+  "adoption": false,
+  "next": "priced contextual control distribution and reset/input/clock context, not automatic timing tuning"
+}
