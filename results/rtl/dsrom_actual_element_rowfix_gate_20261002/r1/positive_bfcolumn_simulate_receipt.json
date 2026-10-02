@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "./obj_bfcolumn/Vtb_bfcolumn"
+  ],
+  "case": "bfcolumn",
+  "comparison_samples_minimum": 91494,
+  "coverage": {
+    "BF": 1,
+    "cycles": 30498,
+    "gated": 1726,
+    "issues": 1216,
+    "loads": 200,
+    "opened": 28768,
+    "partials": 88
+  },
+  "elapsed_seconds": 0.6374698150902987,
+  "explicit_DIFF": false,
+  "log": "positive_bfcolumn_simulate.log",
+  "log_sha256": "99e10f816f5ea54770d261dae32f654d58a6ace0d8fdd2d50a2c74bb2e65ed9c",
+  "metrics": {
+    "cgroup.procs": "2677424",
+    "cpu.max": null,
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "4294967296",
+    "memory.peak": "2533793792",
+    "memory.swap.max": "0"
+  },
+  "pass_marker": "PASS actual-element BF=1 cycles=30498 partials=88 issues=1216 gated=1726 opened=28768 loads=200",
+  "phase": "simulate",
+  "remaining_seconds_at_start": 59.840092844795436,
+  "returncode": 0,
+  "variant": "positive"
+}
