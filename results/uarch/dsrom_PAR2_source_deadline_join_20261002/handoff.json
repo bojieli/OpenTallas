@@ -1,0 +1,69 @@
+{
+  "authoritative_model": "results/uarch/dsrom_PAR2_source_deadline_join_20261002/model-r3.json",
+  "byte_replay": true,
+  "checker_area_ledger": {
+    "adapter5fc_and_Maxwell_state_overlays_require_disjoint_union_before_combining": true,
+    "additional_isolated_checkers_cell_mm2": 0.05513502816,
+    "isolated_capture_status_bits_extra": 11312,
+    "mapped_checkers_do_not_recharge_fullcorrector_or_replace_inherited_area_floor": true,
+    "prior_Maxwell_fullcorrector_copy_as_detector_proxy_is_superseded_not_additive": true,
+    "retained_fullcorrector_floor_mm2": 1.3275684864
+  },
+  "checker_costs": [
+    {
+      "FF_min_ps": 11.66715,
+      "K": 256,
+      "SS_clean_delay_ps": 525.730774,
+      "capture_fed_residual_for_FF_CLKQ_wire_setup_skew_ps": 247.60255933333337,
+      "mapped_area_per_cone_um2": 80.07336000000001,
+      "replicas": 412,
+      "replicated_cell_area_mm2": 0.032990224320000004,
+      "source_has_no_registers": true
+    },
+    {
+      "FF_min_ps": 29.469517,
+      "K": 272,
+      "SS_clean_delay_ps": 555.61792,
+      "capture_fed_residual_for_FF_CLKQ_wire_setup_skew_ps": 217.71541333333334,
+      "mapped_area_per_cone_um2": 86.50314,
+      "replicas": 256,
+      "replicated_cell_area_mm2": 0.02214480384,
+      "source_has_no_registers": true
+    }
+  ],
+  "detector_timing_window": {
+    "capture_fed_detector_budget_before_FF_CLKQ_wire_setup_skew_ps": 773.3333333333334,
+    "checker_measurement_source_commit": "68524a625ec0ea5963410637cdaafe58f9123d64",
+    "detector_mapped_delay_not_supplied": false,
+    "direct_macro_to_original_lane_detector_budget_before_wire_setup_skew_ps": 1696.0372998,
+    "formula": "Direct: Qmacro+Ddetect+wire+Tsetup+relative_skew+60 <=3T. Captured: Qcapture+Ddetect+wire+Tsetup+relative_skew+60 <=T.",
+    "hold_uncertainty_ps": 25,
+    "keep_provisional_held_II": 2,
+    "keep_provisional_service_cycles": 2,
+    "not_a_pipeline_or_registered_hold_proof": true,
+    "rawmacro_SS_CLKQ_ps": 743.9627002,
+    "registered_capture_and_hold_closed": false,
+    "setup_uncertainty_ps": 60,
+    "target_period_ps": 833.3333333333334
+  },
+  "model_scope": "Exact original PP1 relative acceptance/capture/arithmetic edges; callbacks consume observed accepted source issue, not offered indices. Exact parity offered-prefix inequalities remain conditional; no absolute calendar.",
+  "new_callback_tests": 10,
+  "next": "Parent supplies actual source_issue gclk-edge + fullidentity/lane-valid receipts. Arch supplies enabled checker/capture/terminal FFhold/wire and finite credit release. Apply observed post-NBA terminals to n+3 source deadline; preservecfg/input/root parent ownership. Keep2cycle/II2provisional.",
+  "no_RTL_jobs": true,
+  "no_token_loss": false,
+  "physical_GO": false,
+  "preparatory_r2_not_adopted": "r2 visibility convention superseded: registered terminal must become visible before consumer sampling edge. Source r3 handles post-NBA explicitly.",
+  "schema": "opentallas.dsrom.PAR2.source-deadline-handoff.v1",
+  "source_relative_edges": {
+    "accepted_input": "Observed source_issue at posedge gclk with PP1 and actual source metadata lane-valid; parent-supplied source receipt and full owner identity.",
+    "accepted_relative_edge": 0,
+    "adapter_must_block_untested_lane_consume": true,
+    "current_no_added_cycle_gate": "Both matched K272 terminals and paired K256/gather authorization post-NBA visible no later than n+2 for sampling at n+3; otherwise hold/aligned-retime/reprice. A separately proved preedge combinational terminal may use its actual stable-before-edge receipt. No implicit replay.",
+    "first_irreversible_lane_sample_relative_edge": 3,
+    "parent_cfg_input_root_extractor_untouched": true,
+    "raw_capture_relative_edge": 2,
+    "registered_terminal_visibility_is_post_NBA": true,
+    "source_has_no_ECC_qualification_gate": true
+  },
+  "tests": 25
+}

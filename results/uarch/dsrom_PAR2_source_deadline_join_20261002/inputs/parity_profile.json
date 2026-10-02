@@ -1,0 +1,1944 @@
+{
+  "RTL_builds": 0,
+  "actual_timing_boundary": "Parent/Maxwell supply acceptedmain sequence and arithmetic-requirededges; Archimedes sourceK256/K272 capture/gather positive stage/ports/physicalcuts. This stream supplies exactrequest/address/nonce/decoder obligations only.",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "checkbit_contract": {
+    "current_physical_FP4_image_inline_sidecar_check_placement_proven": false,
+    "decoder_causal_order": "matching enabled rawcapture -> K256 terminal -> exact16-bit gather to originalmainwordidentity -> twoK272 terminals -> original-source arithmetic visibility/poison drain",
+    "inline2_meaning": "K272 check[1:0]",
+    "main_inline2_bits": [
+      272,
+      274
+    ],
+    "main_payload_bits": [
+      0,
+      272
+    ],
+    "no_payload_checkpoint_read_or_old_exactness_transfer": true,
+    "protectedsidecar": "source256-bit data encoded to266bits in raw274 carrier, unused high8 are padding, not protected payload",
+    "reconstruction": "cw282 = main_raw274 | (decoded_sidecar_extra8 <<274)",
+    "sidecar8_meaning": "low7=K272 check[8:2], high1=overallParity",
+    "sidecar_order": "source ECClinearbase + priorruns(n*w*16) + pairedwordordinal*16 + MB*8; 16-bit aligned pair, no protected256-word straddle",
+    "source_systematic_encoder": "tools/mem_compiler/ecc.py encode(data,K), sourceK272=>282bits, sourceK256=>266bits",
+    "status": "MINIMAL_DEFAULTOFF_ENCODING_BINDING_SPEC_NOT_CURRENT_PROVIDER_IMAGE_PROOF"
+  },
+  "dependencies": {
+    "results/uarch/dsrom_owner_cfg_interface_20261002/export_r1/FP4_ECC_provider_directory.jsonl.gz": "e86e6b1cf6743a2a8ee192862db1e60d7f06c561f4c4c88293403f82bcd32072",
+    "results/uarch/dsrom_owner_cfg_interface_20261002/export_r1/phase_directory.jsonl.gz": "964cc4c64f9c795cd20e194392f22d93e4b1fffeaefd93db971666096d64a192",
+    "results/uarch/dsrom_owner_provider_first_20261002/r1/assignments.jsonl.gz": "c91855b5b33c21c56dac3ea9ebc69a201ff582a3a6ad67a19024e89cd113881f",
+    "results/uarch/dsrom_owner_provider_first_20261002/readback_r1/model.json": "6e84455f28b6a1ac30ff31a31793c331c57217e81a29187d0d08bf3dbd71f497",
+    "tools/dsrom_full_owner_compiler.py": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b",
+    "tools/dsrom_native_weight_address_join.py": "98ba0264485e089930f354e8137bf9e797f60e9dc722656215cae940a8959b79",
+    "tools/dsrom_owner_cfg_interface_export.py": "ba64180725768c98ef22481a692f66d6fb0a0346a46b82e0a9d8b69383055358",
+    "tools/dsrom_parallel_transport_contract.py": "da1626e5a8feff6ac5c38fb1b7c3874eb14424227e6953224524f4c6395d75ea"
+  },
+  "generator_sha256": "26592f8b8783b468a74b582355755333e81cf2a14e0be80def892066415ad0f7",
+  "minimum_next_gate": "Feed parent sourceacceptedmain/deadline events for the matching stage/phase/key/EID into these exactprofiles; match Archimedes enabledcaptures + decoder terminals; bound prefetched reservations/wordreuse cache and retained +2controller BEFORE no-loss or layout change.",
+  "no_token_loss_proven": false,
+  "ownership": {
+    "ReadOwnership_is_semantic_defaultoff_model_NOT_production_RTL": true,
+    "accepted_rawread_identity": "fullcontext + sidecarlocalpair11,MB1,PP1,row12 + fresh readnonce16",
+    "coalescing": "identical protectedleaf/row/context only. Distinct rows never share one physicalread. Reissued identicalrow gets NEWnonce.",
+    "duplicate_stale_or_wrongowner": "must not retire matchinglivejob/qualify arithmetic; sourcefaultfreeze before newadmission; allowmatchingacceptedreturns/poison to drain without externalready",
+    "finite": "128paired requestseats;412rawcaptureseats one perphysicalleaf; nextbatch onlyafter matchedterminals AND orderedownerretire. Prefetch reservations occupy seats until rawmain+decoder+deliverydone.",
+    "instance_scoped": [
+      "logicalstage",
+      "TP_rank",
+      "physicalshard"
+    ],
+    "phase_key_generation_op_context": "phase10,key32,generation10,opseq13; width10 provisional matches physicalconstruction, actualproducer generationplumbing MUSTbind/reprice",
+    "source_main_coordinate": "localpair11,mainrow12,PP1,twoMBs,sourcephasewordordinal; retain original ordered rows/K",
+    "sourcefield_issue_ECC_ready_or_qualifiedword_interface_currently_exists": false,
+    "wrap": "nonce16 cannot wrap until allacceptedrawread/pairedmain/source/owner debts + delivery/causalvisibility/provenance fences. No reset everytoken assumption."
+  },
+  "parent_offered_r3_pins": {
+    "L1_engram_wkv.json": "c4dd18775bd34b73eb8865994d71f533e21f8af7a208fb69da04f77cd2a2dfb5",
+    "first_bf16.json": "7ea2bb02efd9b26226396847631efc3fbbe296007038286963a3df2161be7389",
+    "first_fp4.json": "d961f0bbb9a0dfb61f413a52bc93434a3ce7c9e603a90342478d5e43881b3205",
+    "first_fp8.json": "0c56515989d5e63a69e2b2d18f4059038ab8a0aecefb49b35738f8eaecb26a26",
+    "max_issue_bf16.json": "1298d8311ea3bb3513a632eb7f713407f1ba0f53cc54cdf4b435bed231af9555",
+    "max_issue_fp4.json": "43be73da289a30552f24d302edc45cc15f7f4c04124e34f768cc82d1ba388aeb",
+    "max_issue_fp8.json": "be8616be5fa43cad0a3faf19726d58a0598bf24cd2cc61adeca0743454fc33cc",
+    "model.json": "7a30a1508c8f384032b0ae233f6c5f52dba6569a2668d3485c785dc80061d973"
+  },
+  "parent_physical_context": {
+    "SS_clkq_ps": 743.9627002267231,
+    "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+    "common_controller_plus2cycles_retained": true,
+    "enabledcapture_ECC_gather_stage_counts_and_SSFF_closure_UNBOUND": true,
+    "read_ports_per_leaf": 1,
+    "remaining_before_downstream_setup_wire_ps": 29.370633106610285
+  },
+  "physical_GO": false,
+  "price": {
+    "FF50_proxy_mm2_per_bit": 7.5816e-07,
+    "Peirce_producer_cancel19plus10_or278bits_NOT_recharged": true,
+    "bank_compare_delta_gate_bit_equivalents": 843776,
+    "captured_main_is_TWO274_words_548bits_not544_payload": true,
+    "common_controller_plus2cycles_not_decoder_credit": true,
+    "comparison_width_proxy_NOT_synthesized_area_or_timing": true,
+    "existing_identity_bits": 93,
+    "generation_bits": 10,
+    "incremental_allowance_mm2": 0.64745196048,
+    "no_new_macro_body_or_halo_charge": true,
+    "physical_GO": false,
+    "prefetch_decodedword_cache_beyond_existing_seats_UNPRICED": true,
+    "prior_732_screen_mm2": 732.9650770579258,
+    "proposed_identity_bits_with_nonce": 109,
+    "revised_screen_before_new_rounding_route_SSFF_mm2": 733.6125290184058,
+    "source_generation_width_NOT_bound_to_actual_core_yet": true,
+    "state_delta_bits": 10202,
+    "state_delta_by_component": {
+      "capture_readnonce16": 6592,
+      "finite128seat_credit_counter9": 9,
+      "pairedseat_readnonce16": 2048,
+      "readnonce_counter16_and_wrap1": 17,
+      "terminal_and_rawvalid_status10_replacing_old2": 1024,
+      "two_inline_checkbits_per_mainword_missing_from544_payload": 512
+    }
+  },
+  "rate_adopted": false,
+  "representative_cases": [
+    {
+      "actual_parent_main_accept_edges_received": false,
+      "alias": "exp0.w1",
+      "exact_leaf_distinct_rows": [
+        {
+          "first_word_rows": 64,
+          "leaf": [
+            25,
+            0,
+            0
+          ],
+          "unique_rows": 320
+        },
+        {
+          "first_word_rows": 0,
+          "leaf": [
+            25,
+            0,
+            1
+          ],
+          "unique_rows": 320
+        }
+      ],
+      "first_word_perleaf_min_read_rounds": 64,
+      "first_word_requests": 64,
+      "full_phase_perleaf_min_read_rounds_IDEAL_reuse": 320,
+      "ideal_reuse_NOT_existing412capture_service": true,
+      "layer": 0,
+      "matrix_journal_ordinal": 10,
+      "no_loss_verdict": "UNQUALIFIED_PARENT_ACCEPT_DEADLINE_AND_CAPTURE_DECODER_CALENDAR_REQUIRED",
+      "parent_offered_cadence": {
+        "capture_decoder_gather_latency_NOT_zero": true,
+        "groups": [
+          {
+            "accepted_edges": null,
+            "block": 0,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 16,
+            "paired_requests": 1024,
+            "q": 0,
+            "source_offered_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 1,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 16,
+            "paired_requests": 1024,
+            "q": 0,
+            "source_offered_indices": [
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 2,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 16,
+            "paired_requests": 1024,
+            "q": 0,
+            "source_offered_indices": [
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 3,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 16,
+            "paired_requests": 1024,
+            "q": 0,
+            "source_offered_indices": [
+              48,
+              49,
+              50,
+              51,
+              52,
+              53,
+              54,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 4,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 16,
+            "paired_requests": 1024,
+            "q": 0,
+            "source_offered_indices": [
+              64,
+              65,
+              66,
+              67,
+              68,
+              69,
+              70,
+              71,
+              72,
+              73,
+              74,
+              75,
+              76,
+              77,
+              78,
+              79
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 5,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 16,
+            "paired_requests": 1024,
+            "q": 0,
+            "source_offered_indices": [
+              80,
+              81,
+              82,
+              83,
+              84,
+              85,
+              86,
+              87,
+              88,
+              89,
+              90,
+              91,
+              92,
+              93,
+              94,
+              95
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 6,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 16,
+            "paired_requests": 1024,
+            "q": 0,
+            "source_offered_indices": [
+              96,
+              97,
+              98,
+              99,
+              100,
+              101,
+              102,
+              103,
+              104,
+              105,
+              106,
+              107,
+              108,
+              109,
+              110,
+              111
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 7,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 16,
+            "paired_requests": 1024,
+            "q": 0,
+            "source_offered_indices": [
+              112,
+              113,
+              114,
+              115,
+              116,
+              117,
+              118,
+              119,
+              120,
+              121,
+              122,
+              123,
+              124,
+              125,
+              126,
+              127
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 0,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 8,
+            "paired_requests": 256,
+            "q": 1,
+            "source_offered_indices": [
+              128,
+              129,
+              130,
+              131,
+              132,
+              133,
+              134,
+              135
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 1,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 8,
+            "paired_requests": 256,
+            "q": 1,
+            "source_offered_indices": [
+              136,
+              137,
+              138,
+              139,
+              140,
+              141,
+              142,
+              143
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 2,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 8,
+            "paired_requests": 256,
+            "q": 1,
+            "source_offered_indices": [
+              144,
+              145,
+              146,
+              147,
+              148,
+              149,
+              150,
+              151
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 3,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 8,
+            "paired_requests": 256,
+            "q": 1,
+            "source_offered_indices": [
+              152,
+              153,
+              154,
+              155,
+              156,
+              157,
+              158,
+              159
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 4,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 8,
+            "paired_requests": 256,
+            "q": 1,
+            "source_offered_indices": [
+              160,
+              161,
+              162,
+              163,
+              164,
+              165,
+              166,
+              167
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 5,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 8,
+            "paired_requests": 256,
+            "q": 1,
+            "source_offered_indices": [
+              168,
+              169,
+              170,
+              171,
+              172,
+              173,
+              174,
+              175
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 6,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 8,
+            "paired_requests": 256,
+            "q": 1,
+            "source_offered_indices": [
+              176,
+              177,
+              178,
+              179,
+              180,
+              181,
+              182,
+              183
+            ]
+          },
+          {
+            "accepted_edges": null,
+            "block": 7,
+            "consumer_deadlines": null,
+            "distinct_protected_words": 64,
+            "max_sameleaf_distinct_rows": 64,
+            "offered_interval_words": 8,
+            "paired_requests": 256,
+            "q": 1,
+            "source_offered_indices": [
+              184,
+              185,
+              186,
+              187,
+              188,
+              189,
+              190,
+              191
+            ]
+          }
+        ],
+        "no_loss_verdict": "UNQUALIFIED_ACCEPTANCE_DEADLINES_AND_POSITIVE_DECODER_STAGES_REQUIRED",
+        "offered_indices_NOT_cycles_or_acceptances": true,
+        "parent_sha256": "d961f0bbb9a0dfb61f413a52bc93434a3ce7c9e603a90342478d5e43881b3205",
+        "prefetched_phase_words_can_overlap_cfg_input_ONLY_after_exact_owner_known": true
+      },
+      "phase": 10,
+      "required_main_codeword_terminals": 20480,
+      "required_paired_main_reads": 10240,
+      "retained_first64_witness_byte_values_exact": true,
+      "rows_per_rank": 576,
+      "source_K": 5120,
+      "source_key_word": 2149580800,
+      "source_pp_bases": [
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2061
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2092
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2122
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2154
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2188
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2218
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2250
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2284
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2314
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2346
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2380
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2409
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2442
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2476
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2505
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2538
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2572
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2601
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2637
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2668
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2697
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2733
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2764
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2793
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2829
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2860
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2889
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2925
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2956
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 2986
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3020
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3050
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3082
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3116
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3146
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3178
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3212
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3242
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3274
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3308
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3338
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3370
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3404
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3433
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3466
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3500
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3529
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3562
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3596
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3625
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3661
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3692
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3721
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3757
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3788
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3817
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3853
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3884
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 3913
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3949
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3980
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 4010
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 4044
+        },
+        {
+          "base": 120,
+          "configuration_word16": 7681,
+          "pair": 4074
+        }
+      ],
+      "stage": 0,
+      "sustained_condition": "For every parent-provided consumer deadline D and phase-knowledge release A, required distinct rows on each physicalleaf withdeadline<=D <= max(0,D-A-capture/decoder/gather cycles). Source oneleafport II>=1, commoncontroller+2 retained; no zero latency.",
+      "unique_protected_word_reads_with_IDEAL_unlimited_word_reuse": 640
+    },
+    {
+      "actual_parent_main_accept_edges_received": false,
+      "alias": "exp0.w3",
+      "exact_leaf_distinct_rows": [
+        {
+          "first_word_rows": 64,
+          "leaf": [
+            25,
+            0,
+            0
+          ],
+          "unique_rows": 320
+        },
+        {
+          "first_word_rows": 0,
+          "leaf": [
+            25,
+            0,
+            1
+          ],
+          "unique_rows": 320
+        }
+      ],
+      "first_word_perleaf_min_read_rounds": 64,
+      "first_word_requests": 64,
+      "full_phase_perleaf_min_read_rounds_IDEAL_reuse": 320,
+      "ideal_reuse_NOT_existing412capture_service": true,
+      "layer": 0,
+      "matrix_journal_ordinal": 11,
+      "no_loss_verdict": "UNQUALIFIED_PARENT_ACCEPT_DEADLINE_AND_CAPTURE_DECODER_CALENDAR_REQUIRED",
+      "phase": 11,
+      "required_main_codeword_terminals": 20480,
+      "required_paired_main_reads": 10240,
+      "rows_per_rank": 576,
+      "source_K": 5120,
+      "source_key_word": 2151677952,
+      "source_pp_bases": [
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2062
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2094
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2124
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2156
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2190
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2220
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2252
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2286
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2316
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2348
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2382
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2412
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2445
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2478
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2508
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2541
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2573
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2604
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2638
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2669
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2700
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2734
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2765
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2796
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2830
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2861
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2892
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2926
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2957
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 2988
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3022
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3052
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3084
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3118
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3148
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3180
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3214
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3244
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3276
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3310
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3340
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3372
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3406
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3436
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3469
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3502
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3532
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3565
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3597
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3628
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3662
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3693
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3724
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3758
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3789
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3820
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3854
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3885
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3916
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3950
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 3981
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 4012
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 4046
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8193,
+          "pair": 4076
+        }
+      ],
+      "stage": 0,
+      "sustained_condition": "For every parent-provided consumer deadline D and phase-knowledge release A, required distinct rows on each physicalleaf withdeadline<=D <= max(0,D-A-capture/decoder/gather cycles). Source oneleafport II>=1, commoncontroller+2 retained; no zero latency.",
+      "unique_protected_word_reads_with_IDEAL_unlimited_word_reuse": 640
+    },
+    {
+      "actual_parent_main_accept_edges_received": false,
+      "alias": "exp0.w2",
+      "exact_leaf_distinct_rows": [
+        {
+          "first_word_rows": 64,
+          "leaf": [
+            25,
+            0,
+            0
+          ],
+          "unique_rows": 400
+        },
+        {
+          "first_word_rows": 64,
+          "leaf": [
+            25,
+            0,
+            1
+          ],
+          "unique_rows": 400
+        }
+      ],
+      "first_word_perleaf_min_read_rounds": 64,
+      "first_word_requests": 128,
+      "full_phase_perleaf_min_read_rounds_IDEAL_reuse": 400,
+      "ideal_reuse_NOT_existing412capture_service": true,
+      "layer": 0,
+      "matrix_journal_ordinal": 12,
+      "no_loss_verdict": "UNQUALIFIED_PARENT_ACCEPT_DEADLINE_AND_CAPTURE_DECODER_CALENDAR_REQUIRED",
+      "phase": 12,
+      "required_main_codeword_terminals": 25600,
+      "required_paired_main_reads": 12800,
+      "rows_per_rank": 1280,
+      "source_K": 2304,
+      "source_key_word": 2153775104,
+      "source_pp_bases": [
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2063
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2065
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2095
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2096
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2125
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2126
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2157
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2158
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2191
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2192
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2221
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2222
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2253
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2254
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2287
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2288
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2317
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2318
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2349
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2350
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2383
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2384
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2413
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2414
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2446
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2447
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2479
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2480
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2509
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2510
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2542
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2543
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2575
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2576
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2605
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2606
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2639
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2640
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2671
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2672
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2701
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2702
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2735
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2736
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2767
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2768
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2797
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2798
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2831
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2832
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2863
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2864
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2893
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2894
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2927
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2928
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2959
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2960
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2989
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 2990
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3023
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3024
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3053
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3054
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3085
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3086
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3119
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3120
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3149
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3150
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3181
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3182
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3215
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3216
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3245
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3246
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3277
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3278
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3311
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3312
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3341
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3342
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3373
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3374
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3407
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3408
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3437
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3438
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3470
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3471
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3503
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3504
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3533
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3534
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3566
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3567
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3599
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3600
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3629
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3630
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3663
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3664
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3695
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3696
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3725
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3726
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3759
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3760
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3791
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3792
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3821
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3822
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3855
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3856
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3887
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3888
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3917
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3918
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3951
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3952
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3983
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 3984
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 4013
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 4014
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 4047
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 4048
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 4077
+        },
+        {
+          "base": 128,
+          "configuration_word16": 8192,
+          "pair": 4078
+        }
+      ],
+      "stage": 0,
+      "sustained_condition": "For every parent-provided consumer deadline D and phase-knowledge release A, required distinct rows on each physicalleaf withdeadline<=D <= max(0,D-A-capture/decoder/gather cycles). Source oneleafport II>=1, commoncontroller+2 retained; no zero latency.",
+      "unique_protected_word_reads_with_IDEAL_unlimited_word_reuse": 800
+    }
+  ],
+  "result": "PASS_SOURCE_REQUEST_ADDRESS_AND_CHECKBIT_CONTRACT_ONLY_TIMING_PROVIDER_UNQUALIFIED",
+  "schema": "opentallas.dsrom.PAR2.parity-request-adapter.v1",
+  "source_pins": [
+    {
+      "archive": "ecc.py",
+      "commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+      "path": "tools/mem_compiler/ecc.py",
+      "sha256": "ed2d874e102f9b08ee951faf583d12c142e77cfd5e3e1a2511af1430e3f10cdf"
+    },
+    {
+      "archive": "decoder.sv",
+      "commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+      "path": "rtl/dft/ot_rom_secded_dec.sv",
+      "sha256": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795"
+    },
+    {
+      "archive": "physical_read_context.json",
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "results/uarch/dsrom_PAR2_physical_read_context_20261002/model.json",
+      "sha256": "04bcf609976e634b3808eadf5ba5b5c5403ecef7576a99f4dc5fdc48e8bfc44a"
+    },
+    {
+      "archive": "padding_binding.json",
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "results/uarch/dsrom_PAR2_padding_parity_binding_20261002/model.json",
+      "sha256": "06ad57655d8720f3518a2d449eaf1bdf7a4529d6096e65f556c6866ef314418c"
+    },
+    {
+      "archive": "physical_batch_witness.json",
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "results/uarch/dsrom_PAR2_shard_physical_binding_20261002/local_parity_model.json",
+      "sha256": "587592aa88dd92ae988c72924932b28f650674af077e00970dcf9fe84b05fc50"
+    },
+    {
+      "archive": "element_source.sv",
+      "commit": "a7d981d65c4961052dd58af32e7a5a9c0212dbe2",
+      "path": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    }
+  ],
+  "source_request_type": "REQUIRED pairedmain->sidecar request. Actualacceptcycle, consumerdeadline and executedphase/EID remain parent sourcecallbacks. First-word simultaneity NOT inferred from ordinal0."
+}

@@ -1,0 +1,120 @@
+{
+  "RTL_builds": 0,
+  "accepted_events_from_parent": false,
+  "actual_macro_capture_and_common_plus2_must_be_composed_separately_without_doublecount": true,
+  "area_floors": {
+    "adapter_increment_separate": true,
+    "main_mm2": 0.5279219712,
+    "new_pipeline_storage_UNPRICED": true,
+    "no_negative_area_credit": true,
+    "raw_mm2": 0.7996465152,
+    "retained": true
+  },
+  "before_wire_setup_and_launch_CLKq": true,
+  "bounds_full_corrector_quarantine_only": {
+    "delays_ps": {
+      "256": 2794.959717,
+      "272": 1898.452515
+    },
+    "gather_cycles_lower_bound": 1,
+    "main_cycles": 3,
+    "period_ps": 833.333333,
+    "raw_cycles": 4,
+    "uncertainty_ps": 60
+  },
+  "capture_to_qualified_delivery_optimistic_min_cycles": 8,
+  "detector_price": [
+    {
+      "K": 256,
+      "XOR2_per_detector": 1305,
+      "balanced_XOR_depth_lower_bound": 9,
+      "clean_or_corrected_data_mux_bits": 105472,
+      "final_clean_INV_per_detector": 1,
+      "final_nonzero_OR2_per_detector": 9,
+      "mapped_detector_area_mm2": null,
+      "mapped_detector_delay_ps": null,
+      "replicas": 412,
+      "syndrome_can_be_shared_with_existing_corrector_ONLY_after_source_cut_proof": true,
+      "syndrome_data_terms_by_check": [
+        132,
+        131,
+        131,
+        129,
+        127,
+        127,
+        127,
+        127,
+        9
+      ],
+      "total_replicated_XOR2": 537660
+    },
+    {
+      "K": 272,
+      "XOR2_per_detector": 1379,
+      "balanced_XOR_depth_lower_bound": 9,
+      "clean_or_corrected_data_mux_bits": 69632,
+      "final_clean_INV_per_detector": 1,
+      "final_nonzero_OR2_per_detector": 9,
+      "mapped_detector_area_mm2": null,
+      "mapped_detector_delay_ps": null,
+      "replicas": 256,
+      "syndrome_can_be_shared_with_existing_corrector_ONLY_after_source_cut_proof": true,
+      "syndrome_data_terms_by_check": [
+        140,
+        139,
+        139,
+        137,
+        137,
+        127,
+        127,
+        127,
+        25
+      ],
+      "total_replicated_XOR2": 353024
+    }
+  ],
+  "finite_quarantine": {
+    "additional_explicit_dirty_flags_conservative_bits": 668,
+    "already_priced_status_reuse_requires_bit_allocation_proof": true,
+    "dualpath_data_mux_bits": 175104,
+    "flag_FF50_allowance_mm2": 0.0005064508799999999,
+    "main_buffer": "128pairedseats, TWO274rawwords each=548; preserve both inline checkbits and mainowner until clean or rare correction/fault + ordereddelivery fence.",
+    "mux_routing_fanout_area_UNQUALIFIED": true,
+    "rare_credit_backpressure": "Any dirty detection holds same accepted credit. Blocknewreads when leafoccupied/128seatsfull, drain acceptedgood/poison terminals independentexternalready. II1 of clean path not yet proven.",
+    "raw_buffer": "412existing274-bit rawcaptures with fullowner/nonce, held through raw clean/correction terminal; do not overwrite leaf while occupied."
+  },
+  "generator_sha256": "9d368c9b882500d37b162951802cee84a5cf53458140154b45ab282ad69bec63",
+  "held_existing_fullcone": {
+    "main_min_seat_decode_occupancy_cycles": 3,
+    "multicycle_timing_constraints_and_FF_hold_UNQUALIFIED": true,
+    "raw_II1_UNPROVEN": true,
+    "raw_min_capture_occupancy_cycles": 4,
+    "rawleaf_oneoccupiedcapture": true
+  },
+  "measured_record_sha256": "a4f56e1ed4a151f33220acd9d1cfb7319cc7986d2cb776dec1e5fbbd6922a6bb",
+  "no_token_loss_proven": false,
+  "physical_GO": false,
+  "pipeline_alternative": "II1 requires explicit new cuts/registers, syndrome/data/owner/fault alignment, priced state/fanout, SS setup and FF hold in context; ceil(delay/budget) is NOT proof of any pipeline.",
+  "prefix_prefetch": {
+    "cache_beyond_onecapture_per_leaf_UNPRICED": true,
+    "condition": "ONLY if192offeredpositions accepted1/cycle; busy leaf320distinctprotectedrows, idealreuse.",
+    "deadline_requirement": "Raw prefix must reach exactowned cleanK256 terminal + gather + cleanK272 terminals before each irreversible consumer deadline. Detector service/capture/controllerlatencies positive, current valuesUNBOUND.",
+    "normal_fullcorrector_delay_NOT_charged": true,
+    "offered_w1_conditional_rawlead_slots_per_busy_leaf": 128,
+    "rare_burst_no_loss_NOT_promised": true
+  },
+  "prior_address_model_commit": "5fc7ff1a6361aa4ac99088aa36bfdf625879f6fc",
+  "prior_model_UNTIMED_functional_semantics_not_accepted_service": true,
+  "provider_check_encoding_proven": false,
+  "result": "PASS_CLEAN_AUTHORIZATION_AND_FINITE_QUARANTINE_CONTRACT_DETECTOR_TIMING_UNQUALIFIED",
+  "schema": "opentallas.dsrom.PAR2.explicit-terminal-timing.v1",
+  "source_commit": "612f450ae84d75743d7aee74d042ba807028ea9b",
+  "terminal_service": "rawcapture -> explicit K256 terminal >=capture+4 -> gather >=1 -> explicit K272 terminal >=max(maincapture,gatherready)+3 -> qualified delivery/fence",
+  "user_clean_path_decision": {
+    "clean_authorization": "syndrome==0 AND overall==0 only; direct unchanged systematicdata; no irreversible consume before exact owner-bound clean terminal.",
+    "detector_SSFF_in_context_UNQUALIFIED": true,
+    "normal_path_cycles": null,
+    "otherwise": "quarantine accepted codeword+identity; held fullcorrector bounds4raw/3main; correctedgood delivery or poison terminal; accepted debts/credits never erased by freeze.",
+    "raw_dependency": "K256 clean terminal before extra16 gather before two K272 clean terminals; main code data may be buffered/computed in parallel but result must not commit unchecked."
+  }
+}
