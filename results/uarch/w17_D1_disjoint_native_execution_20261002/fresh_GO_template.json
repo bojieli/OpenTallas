@@ -1,0 +1,13 @@
+{
+  "authorized": false,
+  "phase": "FREEZE_DRAIN_NATIVE_DISPATCH",
+  "source_head": "REPLACE_WITH_COMMITTED_CONTROLLER_SOURCE_SHA",
+  "packet_SHA256": "REPLACE_WITH_REVIEWED_FRESH_OWNER_PACKET_SHA256",
+  "remote_ready": false,
+  "fleet_lease_verified": false,
+  "runtime_authorized": false,
+  "wall_limit": null,
+  "per_process_AS": null,
+  "per_file_limit": null,
+  "review": "Confirm generated/recipe/input/target/tool/PCH pins; exact original owner identities; bothnode capacity and lease before first signal. Source worker launch requires actual old owner quiescence."
+}

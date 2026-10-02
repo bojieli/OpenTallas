@@ -1,0 +1,7 @@
+{
+  "pytest": "pytest -q tests/test_w17_D1_compile_ownership_handoff.py tests/test_w17_D1_disjoint_native_shard.py tests/test_w17_D1_dispatch_drain.py tests/test_w17_D1_disjoint_native_shard_r2.py",
+  "result": "60 PASS",
+  "coverage": "Real GNUmake queued-object overwrite negative; freeze/drain without later target; exact3829 partition replay; header/partialELF rejection; owner identity/reuse/source/GO/resource restrictions negative controls; native worker exact command/bindings",
+  "production_signals": 0,
+  "shard_compilers_launched": 0
+}

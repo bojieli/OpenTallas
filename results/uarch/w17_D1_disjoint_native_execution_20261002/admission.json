@@ -1,0 +1,33 @@
+{
+  "UTC_epoch": 1790944482.9603183,
+  "host": "155.103.253.226",
+  "request_GiB": 80,
+  "request_threads": 48,
+  "owners": {},
+  "existing_thread_leases": [],
+  "fresh_remote_status": {
+    "observed_at": 1790944482.957064,
+    "total_gib": 125.7047004699707,
+    "free_gib": 111.66144943237305,
+    "load": 0.38671875,
+    "cpus": 64,
+    "compute_threads": 0
+  },
+  "pricing": {
+    "admit": true,
+    "reasons": [],
+    "slot_request_gib": 80,
+    "aggregate_peak_ram_gib": 80,
+    "effective_ram_budget_gib": 96,
+    "live_free_after_peak_gib": 31.661449432373047,
+    "reserved_headroom_gib": 24,
+    "reserved_threads": 0,
+    "observed_compute_threads": 0,
+    "request_threads": 48,
+    "conservative_aggregate_threads": 48,
+    "thread_cap": 48
+  },
+  "decision": "ELIGIBLE_NOT_RESERVED",
+  "production_signals": 0,
+  "local_continuation_preserved": true
+}
