@@ -1,0 +1,10 @@
+{
+  "status": "FAIL_PRESERVED",
+  "passed": 66,
+  "failed": 1,
+  "expected_exception": "ValueError journal evidence role source mismatch",
+  "actual_exception": "KeyError: 'h3_complete_native_calendar_successor_r1.py' at V2.scope_role_proof ROLE_PINS[path.name]",
+  "scope": "native shared bytes and reverse succeeded, checkpoint compact role enrollment refused",
+  "test_source_sha256": "772efbeb79c70c07da95a622f73b22b5e794772c28f0a9acd851125d2ee85411",
+  "production_run": false
+}
