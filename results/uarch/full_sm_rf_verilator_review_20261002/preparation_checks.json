@@ -1,0 +1,35 @@
+{
+  "SS_FF": false,
+  "actual_compile_launched": false,
+  "actual_simulation_launched": false,
+  "arithmetic_exact_PASS": false,
+  "build_GO": false,
+  "hardware_model_unchanged": true,
+  "new_jobs": 0,
+  "prior_Icarus_verdict_preserved": true,
+  "prior_failed_run_sha256": {
+    "/tmp/claude-1000/queue/hbm-full128-parent-20261002-r1/terminal.json": "1028feec2f1240271b186803e6e90f5e5931d948476b36b67f67910f0343daa1",
+    "/tmp/full-sm-rf-parent-exact-2e75bab2e-r1/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/full-sm-rf-parent-exact-2e75bab2e-r1/source_commit.txt": "baafe348fc3190aa011068c7a90adf27660eb39cd3babd40f7be105ebddbaa3e",
+    "/tmp/full-sm-rf-parent-exact-2e75bab2e-r1/source_sha256.txt": "1b98d84e5350321a1792acf26b02e4c67c3011c1e524ff311d547a655ef569c5",
+    "/tmp/full-sm-rf-parent-exact-2e75bab2e-r1/verdict.txt": "a8bbc63e0d575fe89a9af4dd96b537dd0def0f551e1a88cb774992f7ddde4004"
+  },
+  "proposal_sha256": "2612a484661bec171e90907c3c1ab21e61d60019aa19e4c3c1c8f7987153ee79",
+  "retry": false,
+  "schema": "opentallas.full-sm-service.verilator-preparation-check.v1",
+  "source_pins_match_unchanged_2e75": true,
+  "source_sha256": {
+    "tools/full_sm_rf_verilator_gate.py": "91e1da08977a0ffb87166ee47977ed977e0790be7a8e45df4ed4dc4d0ac5ef0a",
+    "tools/test_full_sm_rf_verilator_gate.py": "7f1d4e9435013b4af93eaec8c533d68bed1d3cc3c055745c45caeb7f541ecb9d"
+  },
+  "tests": {
+    "command": [
+      "python3",
+      "tools/test_full_sm_rf_verilator_gate.py"
+    ],
+    "exit_code": 0,
+    "stderr": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.072s\n\nOK\n",
+    "stdout": ""
+  },
+  "verdict": "PASS_PREPARATION_ONLY"
+}
