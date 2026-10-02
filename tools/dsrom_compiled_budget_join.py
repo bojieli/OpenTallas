@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """One S58 compiled array/return/config budget; proposals remain unqualified."""
-import argparse,hashlib,json,math,subprocess
+import argparse,hashlib,json,math
 from fractions import Fraction as F
 from pathlib import Path
 import dsrom_full_product_binding as B
@@ -33,9 +33,19 @@ def config(np,phw,nseg=8):
         'excluded_positive_costs':['mask-ROM collar and48bit lane decode','depthchunk+PP bank mux/control/capture','PHW10 dispatch key decoder and fanout','ECC encoder/decode/BIST fault propagation','halo/pin/corridor/PDN/CTS/hold exclusions'],
         'baseline_overlap_credit':0,'why_no_old_cfg_subtraction':'Pair wrapper cm is outside u_e element; no mapped instance ledger proves an existing cfg provider inside q/BF catalogue frame. Do not subtract PHW6 bits merely because source declared them.'}
 
+METADATA_ROOT=Path(__file__).resolve().parents[1]/'results/uarch/dsrom_full_product_binding_20261002/inputs/pinned_budget_metadata'
+METADATA_MANIFEST_SHA256='907468438e48a34bf76b90d63895027d33211b4b55ed942a07e88c3ac2d47f31'
+
 def frozen(commit,path):
-    raw=subprocess.check_output(['git','show',commit+':'+path],cwd=B.ROOT)
-    return json.loads(raw),{'commit':subprocess.check_output(['git','rev-parse',commit],cwd=B.ROOT).decode().strip(),'path':path,'sha256':hashlib.sha256(raw).hexdigest()}
+    manifest=(METADATA_ROOT/'manifest.json').read_bytes()
+    if hashlib.sha256(manifest).hexdigest()!=METADATA_MANIFEST_SHA256:raise ValueError('pinned metadata manifest currency')
+    matches=[r for r in json.loads(manifest)['inputs'] if r['commit'].startswith(commit) and r['path']==path]
+    if len(matches)!=1:raise ValueError('missing or ambiguous pinned metadata input')
+    r=matches[0]
+    if r['snapshot']!=r['sha256']+'.json':raise ValueError('pinned snapshot path')
+    raw=(METADATA_ROOT/r['snapshot']).read_bytes()
+    if hashlib.sha256(raw).hexdigest()!=r['sha256']:raise ValueError('pinned metadata bytes changed')
+    return json.loads(raw),{k:r[k] for k in ('commit','path','sha256')}
 
 def build(model_path=None):
     if model_path is None:
@@ -52,15 +62,14 @@ def build(model_path=None):
     shared,shared_receipt=frozen('c1b460ae','results/uarch/dsrom_shared_complete_pair_candidate_r20_20261002/shared_candidate.json')
     corrected,corrected_receipt=frozen('c9b4730bd','results/uarch/dsrom_service_hub_arch_handoff_20261002/inventory_service_join.json')
     retained_path='results/uarch/dsrom_current4096_field_receipts_20261002/receipt-r4.json'
-    retained_raw=(B.ROOT/retained_path).read_bytes()
-    retained_receipt={'commit':'63f9fe2d6a7c9ada57c8cbfb0cf365b3ef349c24','path':retained_path,'sha256':hashlib.sha256(retained_raw).hexdigest()}
-    retained=json.loads(retained_raw)['current_service_capacity_negative']
+    retained_record,retained_receipt=frozen('63f9fe2d6',retained_path)
+    retained=retained_record['current_service_capacity_negative']
     if retained['service_join_source']!=corrected_receipt['commit']:raise ValueError('corrected service receipt currency')
     np=4096;nbf=724
     if model['candidate_id']!=B.CANDIDATE or any(s['compiled_NP']!=np for s in model['stage_stats']):raise ValueError('one shared compiled candidate')
     stats=model['stage_stats'];phw=max(s['required_PHW'] for s in stats)
     path='physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.json'
-    blob=subprocess.check_output(['git','show',B.PIN+':'+path],cwd=B.ROOT);master=json.loads(blob)
+    master,master_receipt=frozen(B.PIN,path)
     if abs(master['area']['macro_area_um2']-7881.3648)>1e-7:raise ValueError('macro area source currency')
     frame=F(np-nbf)*R.Q_FRAME+F(nbf)*R.BF_FRAME
     ret=B.return_dimensions({'compiled_NP':np,'R':128,'NBF':nbf,'RD':64,'ROOTD':128,'RST':1})
@@ -80,7 +89,7 @@ def build(model_path=None):
         'owner_compiled_cfg_bits':s['pair_cfg_bits_if_required_PHW']} for s in stats]
     return {'schema':'opentallas.dsrom.one-S58-compiled-whole-budget.v1','candidate':B.CANDIDATE,'stage_count':58,'TP':4,
         'input_receipts':[model_receipt,arch_receipt,shared_receipt,corrected_receipt,retained_receipt,
-                         {'commit':B.PIN,'path':path,'sha256':hashlib.sha256(blob).hexdigest()}],
+                         master_receipt],
         'physical_array':{'compiled_NP':np,'NBF':nbf,'source_BF_predicate':'pair=floor(i*NP/NBF),i0..NBF-1',
             'physical_q_frames':np-nbf,'physical_BF_frames':nbf,'catalog_full_compiled_frame_mm2':float(frame/10**6),
             'main4096_macros_per_die':4*np,'active3375_not_physical_declaration':True,'dualcompute_abstract_bound':False},

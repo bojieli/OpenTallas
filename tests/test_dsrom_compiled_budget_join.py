@@ -67,3 +67,26 @@ def test_authoritative_closure_not_active_only_draft_stats():
     assert x['per_stage_config_requirements'][0]['owner_compiled_cfg_bits']==5033164800
     assert x['configuration_provider']['source_loader_cycle_model']['source_declared_cfg_load_cycles_per_phase']==27
     assert not a['minimum_stage_claim']
+
+
+def test_budget_replay_needs_no_historical_git_or_current_receipt_path(monkeypatch,tmp_path):
+    import subprocess
+    def refused(*args,**kwargs):raise AssertionError('historical git lookup forbidden')
+    monkeypatch.setattr(subprocess,'check_output',refused)
+    monkeypatch.setattr(J.B,'ROOT',tmp_path)
+    x=J.build()
+    assert x['exact_once_area_ledger_mm2']['conservative_no_containment_credit_die_total']==pytest.approx(924.2886185238459)
+    assert x['input_receipts'][4]['sha256']=='f8a2f1333f31dcded2bf068ce4a21a9741f9cf2e88e58baba0b71386802a4223'
+
+def test_changed_metadata_refused(monkeypatch,tmp_path):
+    import shutil
+    for f in J.METADATA_ROOT.iterdir():shutil.copyfile(f,tmp_path/f.name)
+    monkeypatch.setattr(J,'METADATA_ROOT',tmp_path)
+    manifest=__import__('json').loads((tmp_path/'manifest.json').read_text())
+    (tmp_path/manifest['inputs'][0]['snapshot']).write_text('{}')
+    with pytest.raises(ValueError,match='bytes changed'):J.build()
+
+def test_changed_metadata_manifest_refused(monkeypatch,tmp_path):
+    monkeypatch.setattr(J,'METADATA_ROOT',tmp_path)
+    (tmp_path/'manifest.json').write_text('{}')
+    with pytest.raises(ValueError,match='manifest currency'):J.build()
