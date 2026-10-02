@@ -1,0 +1,74 @@
+{
+  "Qwen_parallel_ready_commit": "645ae1dd79eed8c20319574e4143b3c0c7b5551d",
+  "admission": {
+    "existing_detector_cone_characterization": true,
+    "fulltile_PR": false,
+    "new_RTL": false,
+    "new_job": false,
+    "no_token_loss": false,
+    "normal_latency_calibrated": false,
+    "own_gate": "Exact syndrome/overall complete loaded clean terminal cones + raw macro launch/capture and retained data; measure detector delay before selecting normal cycles/II. Input stable until terminal; FFhold and source encoder/accepted identity/deadline remain required."
+  },
+  "area": {
+    "FF50_is_policy_not_mapped_clockPG_or_fit": true,
+    "added_FF50_policy_mm2": 0.2391539904,
+    "detector_proxy_is_conservative_duplicate_logic_not_measured_clean_cone": true,
+    "extra_clean_detector_full_corrector_cell_proxy_mm2": 0.10867716215999998,
+    "extra_inline_bits": 512,
+    "extra_nonce_reference_bits": 83712,
+    "no_capture_reuse_credit": true,
+    "no_decoder_allowance_floor_reduction": true,
+    "prior_screen_mm2": 733.7227518355257,
+    "screen_mm2": 734.0705829880858,
+    "separate_exception_hold_reference_bits": 231216
+  },
+  "authoritative_model": "results/uarch/dsrom_PAR2_clean_terminal_20261002/model-r3.json",
+  "buffer_and_fence": {
+    "actual_readnonce16_echo_RTL_unimplemented": true,
+    "full_reply_demand_bits": 11520,
+    "gather_data_bits": 16,
+    "gather_full_packet_bits": 90,
+    "gather_slots_proposed": 128,
+    "independent_lanes_proposed": 128,
+    "new_header_bits": 74,
+    "new_native_owner_ledger": false,
+    "old_proposed_header_bits": 58,
+    "read_credit_per_leaf": 1,
+    "readnonce_bits": 16,
+    "release_credit_only_after_authenticated_delivery": true,
+    "response_slots_proposed": 128,
+    "source24_external_owner_lease_generation_nonce_reused": true,
+    "stale_duplicate_mismatch_cannot_qualify": true,
+    "wrap_requires_all_accepted_reads_correction_capture_delivery_debts_drained": true
+  },
+  "encoding_contract": {
+    "current_physical_FP4_encoder_placement_proven": false,
+    "default_off": true,
+    "main": "data272 + inline check[1:0] + sidecar check[8:2],overall =282 systematic bits",
+    "paired_two274_raw_capture_bits": 548,
+    "previous544_omits_inline_bits": 4,
+    "sidecar": "sourceK256 protected256+check9+overall=266; physical274word unused8not free parity",
+    "synthetic_oracle_only": true
+  },
+  "measured_fullcorrector_held_lower_bound_cycles": [
+    4,
+    3
+  ],
+  "measured_fullcorrector_no_pipeline_admission": true,
+  "new_jobs": 0,
+  "normal_detector_provisional_cycles": 2,
+  "old_sources_and_failures_unchanged": true,
+  "own_next_job": "Archimedes source-exact syndrome/overall clean-terminal cone characterization with declared loads/driver slew; do not wait for fulltoken.",
+  "parent_interfaces": "Parent owns mainaccept/arithmeticdeadline and cfg/activation/root accepted edges. Nash parity-only exact exp0.w1/w3/w2 addresses/profile; Epicurus LAT8 cadence.",
+  "registered_hold_closed": false,
+  "schema": "opentallas.dsrom.PAR2.clean-terminal-handoff.v1",
+  "user_decision": "Clean check before consume; held correction only on nonclean word. No speculative irreversible effects, no free detection or assumed zero errors.",
+  "validation": {
+    "all_single_and_double_bit_error_cases_both_K": true,
+    "byte_replay": true,
+    "new_tests": 8,
+    "synthetic_encoder_oracle_not_physical_FP4_proof": true,
+    "test_command": "python3 -m pytest -q tests/test_dsrom_PAR2_clean_terminal_model.py tests/test_dsrom_PAR2_minimal_context_admission.py tests/test_dsrom_par2_local_ECC_calendar.py tests/test_qwen_rom_direct_capture_control_model.py -o addopts=''",
+    "tests": 36
+  }
+}
