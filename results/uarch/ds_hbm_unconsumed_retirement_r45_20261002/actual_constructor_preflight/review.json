@@ -1,0 +1,39 @@
+{
+  "PC10_launch_performed": false,
+  "actual_unconsumed_output_plan_prefix": {
+    "1": [
+      "DeepSeek.1.attn_x.55"
+    ],
+    "5": [
+      "DeepSeek.5.win_new.61"
+    ],
+    "8": [
+      "DeepSeek.8.o.65"
+    ]
+  },
+  "elapsed_seconds": 79.038338966,
+  "exit_code": 0,
+  "expected_outputs": 1568,
+  "external_output_path": "/tmp/kepler-ds-r45-provider-engine-preflight-20261002",
+  "full_native_consumer_census_completed": true,
+  "full_token_GO": false,
+  "generated_artifact_sha256": {
+    "actual_manifest.json.gz": "5f13f73a32a188130da3b15656a94bc5abbaa2d1ce25efad577231bfe55b091f",
+    "bound_homes.json.gz": "0aeda6f6eca216f73608eef2e1afd41c3e14ce6ee308e57dd970420ae1bc8b9a",
+    "bound_native.json.gz": "1bca266785a062b9396f6704116982b5944a1f915b8acdad945000b3d7ba612d",
+    "runtime_internal_manifest.json.gz": "fdd072b867f0647aaa36d0debcb2d7ee7af20a56e39b6b5f8643b1a29d19e99f"
+  },
+  "hardware_qualified": false,
+  "journal_event_rows": 0,
+  "max_rss_KiB": 12576516,
+  "native_PCs_executed": 0,
+  "next": "parent focused review and execution GO; constructor PASS is not numerical or physical qualification",
+  "numeric_source_unchanged": true,
+  "numerical_runtime_launch_performed": false,
+  "pid": 2044324,
+  "projection_bytes": 469193275936,
+  "retirement_path_not_executed": true,
+  "source_clean_at_start_and_end": true,
+  "source_commit": "9762474b590a55a9dc9d1dd354dab72142d5592e",
+  "status": "PASS_ACTUAL_PROVIDER_WITNESS_ENGINE_CONSTRUCTORS"
+}
