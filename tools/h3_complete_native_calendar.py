@@ -479,6 +479,95 @@ def compose_v1_native_component_successor(ds, qwen_fixture, qwen, model):
         'hardware_admitted':False,'clock_or_ns_conversion':None}
 
 
+def reconcile_tp96_literal_collectives(record, preflight, fixture, log, operations, costs):
+    """Join literal transport receipts, retaining source and clock distinctions.
+
+    The constructive repeated-word calendar is a provisional endpoint-only
+    reservation. Arithmetic, codecs, source refill and physical clocks remain
+    separately owned; no conversion or summation with native software ticks.
+    """
+    required={'admit','reduce_word_route','gather_word_route','consumer_record','visible_ACK','reverse'}
+    if set(costs)!=required:raise ValueError('explicit TP96 endpoint cycle table required')
+    for k,v in costs.items():positive(v,k)
+    normal=record['cases']['normal']
+    if (record['schema']!='w15_tp96_exact_v1' or not normal['passed'] or normal['rc']!=0 or
+        normal['parameters']!={'STALL':0,'BAD_ORDER':0,'BAD_TAG':0} or normal['endpoints']!=96):
+        raise ValueError('TP96 normal receipt scope')
+    if hashlib.sha256(log.encode()).hexdigest()!=normal['log_sha256']:
+        raise ValueError('TP96 normal log pin mismatch')
+    pattern=r'OP op=(\d+) die=(\d+) mode=(\d+) words=(\d+) issue=(-?\d+) first_tx=(-?\d+) last_tx=(-?\d+) first_vm=(-?\d+) last_vm=(-?\d+) done=(-?\d+) writes=(\d+) expect=(\d+)'
+    rows=[tuple(map(int,m)) for m in re.findall(pattern,log)]
+    if len(rows)!=288 or {(r[0],r[1]) for r in rows}!={(o,r) for o in range(3) for r in range(96)}:
+        raise ValueError('TP96 actual endpoint rows incomplete')
+    credits=[tuple(map(int,m)) for m in re.findall(r'CREDIT die=(\d+) waiting=(\d+) consumer_stall=(\d+) landing_peak=(\d+) accepted=(\d+)',log)]
+    if len(credits)!=96 or {r[0] for r in credits}!=set(range(96)) or any(r[3]>128 or r[4]!=7136 for r in credits):
+        raise ValueError('TP96 finite landing/consumer records')
+    if 'W15DONE' not in log or 'faults=0' not in log or any(x in log for x in ['%Error','%Fatal','W15TIMEOUT']):
+        raise ValueError('TP96 normal round did not retire')
+    comparisons=[]
+    for index,desc in enumerate(fixture['ops']):
+        prior=next(p for p in preflight['cases'] if p['name']==desc['name'])
+        observed=[r for r in rows if r[0]==index];copies=96 if desc['mode'] else 1
+        if any(r[2]!=desc['mode'] or r[3]!=desc['words'] or r[10]!=r[11] or r[11]!=desc['words']*copies for r in observed):
+            raise ValueError('TP96 literal descriptor/endpoint span mismatch')
+        cycles=max(r[9]-r[4] for r in observed)
+        if cycles!=normal['cycles'][desc['name']]:raise ValueError('TP96 cycle extraction mismatch')
+        bound=prior['composed_serial_cycles_upper_bound']
+        comparisons.append({'name':desc['name'],'words_per_rank':desc['words'],'payload_bytes_per_rank':desc['bytes'],
+            'physical_bytes_per_rank':desc['words']*64,'normal_cycles':cycles,'prior_preflight_cycles':bound,
+            'bound_verdict':'FAIL_NORMAL_EXCEEDS_PREFLIGHT' if cycles>bound else 'NORMAL_WITHIN_PREFLIGHT_NOT_STALL_PROOF',
+            'normal_minus_preflight_cycles':cycles-bound,'consumer_floor_cycles':desc['words']*copies})
+    if [o['pc'] for o in operations]!=list(range(len(operations))):raise ValueError('source PC coverage/order')
+    cursor=0;calendar=[];bindings=[]
+    for op in operations:
+        pc=op['pc'];family=op['opcode']
+        if any(d>=pc or d<0 for d in op['dependencies']):raise ValueError('TP96 source dependency/deadlock')
+        if family not in ('all_reduce','all_gather','topk_merge','kv_gather'):
+            calendar.append({'pc':pc,'native_dependency_refs':op['dependencies'],'endpoint_reservation':None,
+                'native_provider_cost_owner':'existing native/V1 calendar; unchanged'})
+            continue
+        source=op['source']['op'];payload=positive(source['bytes'],'source collective payload')
+        if op['participants']!=list(range(96)) or source['kind']!=family:raise ValueError('TP96 source participant binding')
+        reduce=family=='all_reduce';copies=1 if reduce else 96
+        # Gather payload is global; round up each rank to whole literal64B words.
+        per_rank=payload if reduce else ceil(payload,96);words=ceil(per_rank,64)
+        phases=[{'phase':'atomic_all_endpoint_admit','cycles':costs['admit']},
+            {'phase':'literal64B_route','cycles':costs['reduce_word_route' if reduce else 'gather_word_route']},
+            {'phase':'all_endpoint_consume','cycles':copies*costs['consumer_record']},
+            {'phase':'visible_ACK','cycles':costs['visible_ACK']},
+            {'phase':'reverse_and_release','cycles':costs['reverse']}]
+        duration=words*sum(p['cycles'] for p in phases);end=cursor+duration
+        demand={'pc':pc,'family':family,'source_op':source,'payload_bytes_global':payload,
+            'payload_bytes_per_rank_upper':per_rank,'literal_words_per_rank':words,'physical_bytes_per_rank':words*64,
+            'consumer_records_per_endpoint':words*copies,'consumer_floor_cycles':words*copies,
+            'word_phase_order':phases,'word_repetitions':words,'start_endpoint_cycles':cursor,'end_endpoint_cycles':end,
+            'global_collective_credit':1,'rank_service_credit_each':1,'landing_records_reserved_each':copies,
+            'landing_capacity_each':128,'endpoint_count':96,'release_before_next_word':True,
+            'source_versions':{'reads':op['reads'],'writes':op['writes']},
+            'provider_home_binding':'canonical native instruction /instructions/'+str(pc)+' read/write home_indices; payload ports/ACK still UNKNOWN',
+            'parent_refill_ACK_reverse_cost':None,
+            'native_arithmetic_codec_cost_owner':'existing native calendar; no replacement or extra charge',
+            'production_endpoint_cycles':None,'measured_full_PC_cycles':None,'provisional':True}
+        if source.get('tag')=='expert_intermediate_gather':
+            demand['normal_fixture_shape_match']=per_rank==288
+            demand['fixture_gap']='normal fixture six slots/288B/five words; actual source seven slots/336B/six words' if per_rank==336 else 'source shape requires independent binding'
+        if family=='topk_merge':demand['transport_gap']='raw gather only; selection and source I64/value wire codec not qualified by opaque fixture'
+        if family=='kv_gather':demand['transport_gap']='conservative all96 raw gather demand; actual heads-only ownership/refill mapping UNKNOWN'
+        bindings.append(demand);calendar.append({'pc':pc,'native_dependency_refs':op['dependencies'],'endpoint_reservation':len(bindings)-1})
+        cursor=end
+    return {'schema':'H4_TP96_LITERAL_COLLECTIVE_FULL_PC_COMPONENT_V1','PCs':len(operations),
+        'collective_PCs':len(bindings),'case_reconciliation':comparisons,'ordered_PC_join':calendar,
+        'endpoint_reservations':bindings,'endpoint_only_provisional_cycles':cursor,'explicit_endpoint_costs':costs,
+        'finite_resource_proof':{'rank_count':96,'landing_capacity_each':128,'maximum_word_reservation_each':96,
+            'global_collective_capacity':1,'atomic_all_endpoint_admission':True,'word_release_after_all_consumers':True,
+            'no_overlap_assumed':True,'proof_scope':'constructive repeated-word software reservations; production runtime UNKNOWN'},
+        'normal_scope':'actual96 endpoint functional rounds and harness credit admission only',
+        'stalled_case_status':'NOT_JOINED_PENDING_INDEPENDENT_RECEIPT','serial_test_clock_ns':1.111111,
+        'prior_preflight_serial_clock_ns':preflight['clocks']['serial_ns'],
+        'native_software_ticks_changed':False,'physical_timings_changed':False,'headline_delta':None,
+        'complete_program_latency':None,'hardware_admitted':False}
+
+
 def join_v1_physical_capacity(model):
     """Retain the reviewed slot failure and finite owner contract, without credit.
 
@@ -3352,6 +3441,8 @@ def main():
     ap.add_argument('--ds-native-source-commit')
     ap.add_argument('--ds-forward-leaves',action='store_true')
     ap.add_argument('--provider-v1-join',action='store_true')
+    ap.add_argument('--tp96-collective-inputs',type=Path)
+    ap.add_argument('--tp96-endpoint-cycles',type=Path)
     ap.add_argument('--v1-source-commit',default='f7fa8e290d419f6de3356385c0b55ded768c2090')
     ap.add_argument('--v1-physical-source-commit',default='620c078de78cc55ddb5562b1d5d7171d8ef944ca')
     ap.add_argument('--kepler-source-commit',default='f240f42fbeb67e402e922b4a4aae30b8a8873ce1')
@@ -3359,6 +3450,63 @@ def main():
     ap.add_argument('--parent-state-receipts',type=Path)
     ap.add_argument('--c0-source-commit')
     args = ap.parse_args()
+    if args.tp96_collective_inputs:
+        folder=args.tp96_collective_inputs
+        if args.tp96_endpoint_cycles is None:raise ValueError('explicit provisional TP96 endpoint cycle inputs required')
+        blobs={p.name:p.read_bytes() for p in folder.iterdir() if p.is_file()}
+        record=json.loads(blobs['normal_record.json']);preflight=json.loads(blobs['preflight.json'])
+        fixture=json.loads(blobs['fixture_manifest.json']);binary=json.loads(blobs['binary_sources.json'])
+        if hashlib.sha256(blobs['preflight.json']).hexdigest()!=record['preflight_sha256']:
+            raise ValueError('TP96 preflight bytes pin mismatch')
+        if binary['compiled_at_source']!=record['source_commit'] or binary['binary_sha256']!=record['cases']['normal']['binary_sha256']:
+            raise ValueError('TP96 source/binary receipt identity')
+        for path,digest in {**preflight['source_sha256'],**record['source_sha256'],**binary['pins']}.items():
+            retained=subprocess.check_output(['git','show',record['source_commit']+':'+path],cwd=ROOT)
+            if hashlib.sha256(retained).hexdigest()!=digest:
+                raise ValueError('TP96 retained producer source mismatch '+path)
+        costs=read_json(args.tp96_endpoint_cycles)
+        versioned_path='results/uarch/h3_versioned_lowering_20261002/DeepSeek.json.gz'
+        versioned_raw=source_bytes(versioned_path,'781046c9775880183bd7f45a06ab101e98c66cac')
+        versioned=json.loads(gzip.decompress(versioned_raw))
+        joined=reconcile_tp96_literal_collectives(record,preflight,fixture,blobs['normal.log'].decode(),versioned['operations'],costs['cycles'])
+        native_path='results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz'
+        native_raw=source_bytes(native_path,'91e3b8cc2791fa3fe1322df3d72b3f76dbd184f6')
+        native=json.loads(gzip.decompress(native_raw))
+        for op,actual in zip(versioned['operations'],native['instructions']):
+            if op['pc']!=actual['pc'] or op['opcode']!=actual['family'] or op['reads']!=[r['version'] for r in actual['reads']] or op['writes']!=[r['version'] for r in actual['writes']]:
+                raise ValueError('TP96 native/versioned source PC identity mismatch')
+        legacy=json.loads(blobs['legacy_w15_hbm_nvls.json']);prod=legacy['configs']['hbm_p48_ss_prod']
+        joined['legacy_product_slot_geometry']={'record_bytes':prod['record_bytes'],'slot_bytes':prod['slot_bytes'],
+            'clock_hz':prod['clock_hz'],'fit':prod['fit'],'reading_guide':legacy['reading_guide']['product_bytes'],
+            'index64B_consumer_floor_cycles':64*96,
+            'index_product_slot_count':ceil(4096,prod['slot_bytes']),
+            'index_product_fit_cycles':prod['fit']['all_gather']['fixed_cycles']+prod['fit']['all_gather']['cycles_per_word']*ceil(4096,prod['slot_bytes']),
+            'literal_geometry_equivalent':False,'implementable_wideport_and_credits':None,'headline_delta':None}
+        prior_path=OUT+'/provider_v1_mtp_join_r4/final_physical/summary.json'
+        prior_raw=source_bytes(prior_path,'a67150839')
+        joined['retained_native_provider_calendar']={'source_commit':'a67150839','summary_path':prior_path,
+            'summary_sha256':hashlib.sha256(prior_raw).hexdigest(),'summary':json.loads(prior_raw),
+            'native_V1_replacement_applied_again':False,'I64_RMW_added_again':False,
+            'shared64_or_RF_mirror_cost_changed':False,'endpoint_cycles_added_to_native_ticks':False}
+        manifest={'schema':'H4_TP96_LITERAL_SOURCE_MANIFEST_V1','producer_commit':record['source_commit'],
+            'snapshots_sha256':{k:hashlib.sha256(v).hexdigest() for k,v in blobs.items()},
+            'cycle_input_sha256':hashlib.sha256(args.tp96_endpoint_cycles.read_bytes()).hexdigest(),
+            'calendar_tool_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            'canonical_native_source':{'path':native_path,'commit':'91e3b8cc2791fa3fe1322df3d72b3f76dbd184f6','sha256':hashlib.sha256(native_raw).hexdigest()},
+            'canonical_versioned_source':{'path':versioned_path,'commit':'781046c9775880183bd7f45a06ab101e98c66cac','sha256':hashlib.sha256(versioned_raw).hexdigest()},
+            'producer_source_sha256':record['source_sha256'],'fixture_images_validation_owner':'parent independent normal receipt archive; no fixture regeneration',
+            'physical_timings_changed':False,'headline_delta':None}
+        summary={k:v for k,v in joined.items() if k not in ('ordered_PC_join','endpoint_reservations')}
+        artifacts={'manifest.json':manifest,'summary.json':summary,'full_PC_collective_component.json.gz':joined}
+        if not args.verify:args.out.mkdir(parents=True,exist_ok=False)
+        for name,item in artifacts.items():
+            raw=(json.dumps(item,sort_keys=True,indent=2)+'\n').encode();raw=gzip.compress(raw,mtime=0) if name.endswith('.gz') else raw
+            if args.verify:
+                if (args.out/name).read_bytes()!=raw:raise ValueError('TP96 source replay mismatch '+name)
+            else:(args.out/name).write_bytes(raw)
+        print(json.dumps({'PCs':joined['PCs'],'collective_PCs':joined['collective_PCs'],'case_reconciliation':joined['case_reconciliation']},sort_keys=True))
+        print('PASS_TP96_LITERAL_SOURCE_REPLAY' if args.verify else 'PASS_TP96_LITERAL_COMPONENT_COMPOSITION')
+        return
     if args.provider_v1_join:
         pins={}
         def blob(path,commit=None):

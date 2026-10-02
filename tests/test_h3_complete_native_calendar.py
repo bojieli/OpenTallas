@@ -12,6 +12,56 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def tp96_inputs(self):
+        folder=ROOT/c.OUT/'tp96_literal_collective_join_r1/inputs'
+        return (json.loads((folder/'normal_record.json').read_bytes()),
+            json.loads((folder/'preflight.json').read_bytes()),
+            json.loads((folder/'fixture_manifest.json').read_bytes()),
+            (folder/'normal.log').read_text(),
+            c.read_json(ROOT/c.LOWERING/'DeepSeek.json.gz')['operations'],
+            c.read_json(folder.parent/'endpoint_cycles.json')['cycles'])
+
+    def test_TP96_full_PC_literal_word_calendar_preserves_failed_bound_and_shape_gap(self):
+        result=c.reconcile_tp96_literal_collectives(*self.tp96_inputs())
+        self.assertEqual(result['PCs'],2213);self.assertEqual(result['collective_PCs'],270)
+        cases={r['name']:r for r in result['case_reconciliation']}
+        self.assertEqual(cases['expert_intermediate']['bound_verdict'],'FAIL_NORMAL_EXCEEDS_PREFLIGHT')
+        self.assertEqual(cases['expert_intermediate']['normal_minus_preflight_cycles'],3234)
+        self.assertEqual(cases['index_candidates']['consumer_floor_cycles'],6144)
+        self.assertEqual(cases['index_candidates']['normal_cycles'],42861)
+        rows={r['pc']:r for r in result['endpoint_reservations']}
+        self.assertEqual(rows[42]['literal_words_per_rank'],6)
+        self.assertEqual(rows[42]['payload_bytes_per_rank_upper'],336)
+        self.assertFalse(rows[42]['normal_fixture_shape_match'])
+        self.assertEqual(rows[127]['literal_words_per_rank'],64)
+        self.assertEqual(rows[127]['consumer_records_per_endpoint'],6144)
+        previous=0
+        for r in result['endpoint_reservations']:
+            self.assertEqual(r['start_endpoint_cycles'],previous)
+            self.assertLessEqual(r['landing_records_reserved_each'],r['landing_capacity_each'])
+            self.assertEqual(r['end_endpoint_cycles']-previous,r['word_repetitions']*sum(p['cycles'] for p in r['word_phase_order']))
+            previous=r['end_endpoint_cycles']
+        self.assertFalse(result['native_software_ticks_changed'])
+        self.assertFalse(result['physical_timings_changed'])
+        self.assertIsNone(result['complete_program_latency']);self.assertIsNone(result['headline_delta'])
+
+    def test_TP96_rejects_missing_endpoints_spans_and_landing_exhaustion(self):
+        args=list(self.tp96_inputs());original=args[3]
+        import hashlib
+        for changed,reason in [('\n'.join(original.splitlines()[2:]),'incomplete'),
+            (original.replace('landing_peak=1','landing_peak=129',1),'landing/consumer'),
+            (original.replace('words=512','words=511',1),'descriptor/endpoint')]:
+            bad=copy.deepcopy(args);bad[3]=changed;bad[0]['cases']['normal']['log_sha256']=hashlib.sha256(changed.encode()).hexdigest()
+            with self.assertRaisesRegex(ValueError,reason):c.reconcile_tp96_literal_collectives(*bad)
+
+    def test_TP96_rejects_implicit_zero_latency_and_source_deadlock(self):
+        args=list(self.tp96_inputs());bad=copy.deepcopy(args);bad[-1]['gather_word_route']=0
+        with self.assertRaises(ValueError):c.reconcile_tp96_literal_collectives(*bad)
+        bad=copy.deepcopy(args);bad[4][42]['dependencies']=[42]
+        with self.assertRaisesRegex(ValueError,'dependency/deadlock'):c.reconcile_tp96_literal_collectives(*bad)
+        bad=copy.deepcopy(args);bad[0]['cases']['normal']['cycles']['expert_intermediate']=5001
+        with self.assertRaisesRegex(ValueError,'cycle extraction'):c.reconcile_tp96_literal_collectives(*bad)
+
     def test_V1_physical_join_retains_finite_owner_mirrors_and_slot_failure(self):
         import subprocess
         raw=subprocess.check_output(['git','show','620c078de78cc55ddb5562b1d5d7171d8ef944ca:results/uarch/h4_v1_g0_model_20261002/physical_join_r1/final/model.json'],cwd=ROOT)
