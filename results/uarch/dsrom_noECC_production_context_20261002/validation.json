@@ -1,0 +1,19 @@
+{
+  "tests_PASS": 36,
+  "byteidentical_replay": true,
+  "all_q_BF_Verilog_instances_match_original_JSON_master_census": true,
+  "q_physical_masters": 59,
+  "BF_physical_masters": 62,
+  "all_physical_master_PIN_OBS_and_site_geometry_source_extracted": true,
+  "LEF_Liberty_area_match": true,
+  "actual_emitted_Verilog_names_bound_for_8WAKE_each": true,
+  "no_library_master_or_macro_substitution": true,
+  "cold_mapping_runs": 0,
+  "engine_RTL_changes": 0,
+  "PnR_runs": 0,
+  "physical_G0_admitted": false,
+  "SS_FF_closed": false,
+  "main_checkpoint_read": "c1f8fbd75e5db67dfa470fff6b885d9f5ad72a91",
+  "raw_master_source": "Pinned image af971398; actualasap7 RVT cells andtechnology LEF",
+  "dontuse_scope": "Existing mappedinstances are legitimatephysicalmasters; platformdontuse controls NEW choices. Read retainednetlist, skipsynthesis; keep8WAKE protected. Any remapping requires separatelypinned/priced evidence."
+}
