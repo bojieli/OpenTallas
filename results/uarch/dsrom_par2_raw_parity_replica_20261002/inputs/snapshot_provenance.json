@@ -1,0 +1,26 @@
+[
+  {
+    "sha256": "bf5129decda3f1a0a0055f611c6d120a1dd2c6e4f118f4e08502e47346d1c283",
+    "snapshot": "parallel_capacity_model_r5.json",
+    "source_commit": "1679182779f2b5fd748f7152dc930cc45a0b5c07",
+    "source_path": "results/uarch/dsrom_parallel_owner_capacity_calendar_20261002/model-r5.json"
+  },
+  {
+    "sha256": "e86e6b1cf6743a2a8ee192862db1e60d7f06c561f4c4c88293403f82bcd32072",
+    "snapshot": "canonical_ECC_directory.jsonl.gz",
+    "source_commit": "1679182779f2b5fd748f7152dc930cc45a0b5c07",
+    "source_path": "results/uarch/dsrom_parallel_owner_capacity_calendar_20261002/inputs/cfg_ECC_directory.jsonl.gz"
+  },
+  {
+    "sha256": "6e84455f28b6a1ac30ff31a31793c331c57217e81a29187d0d08bf3dbd71f497",
+    "snapshot": "compiled_readback_622.json",
+    "source_commit": "1679182779f2b5fd748f7152dc930cc45a0b5c07",
+    "source_path": "results/uarch/dsrom_parallel_owner_capacity_calendar_20261002/inputs/readback.json"
+  },
+  {
+    "sha256": "97797846d768e2dd5e156efeeac993e7810acb8494a9d4cbe70e514c6389f57d",
+    "snapshot": "element_envelope_4096.json",
+    "source_commit": "1679182779f2b5fd748f7152dc930cc45a0b5c07",
+    "source_path": "results/uarch/dsrom_current4096_field_receipts_20261002/inputs/per_element_envelope.json"
+  }
+]

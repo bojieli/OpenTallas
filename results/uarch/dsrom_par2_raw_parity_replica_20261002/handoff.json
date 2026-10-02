@@ -1,0 +1,123 @@
+{
+  "PVE2_PVE3_jobs_owned": 0,
+  "authoritative_model": "results/uarch/dsrom_par2_raw_parity_replica_20261002/model-r1.json",
+  "body_additive_mm2": 0,
+  "build_admitted": false,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "exact_phase_demand": {
+    "all_leaf_read_simultaneity_not_qualified": true,
+    "decoder_gather_schedule": "At most4distinct leaf banks touched per frozen FP4 phase. Up to4parallel corrected256bit gather grants plus412:4 bank selection are a proposal, not new read ports inside macros; arbitrate per-bank rows and retain finite outstanding debt.",
+    "leaf_banks_available_storage_only": 412,
+    "max_prefetch_buffer_bits": {
+      "alias": "exp0.w2",
+      "expert": 0,
+      "layer": 0,
+      "matrix_journal_ordinal": 12,
+      "phase": 12,
+      "prefetch_buffer_required_data_bits": 204800,
+      "stage": 0
+    },
+    "max_prefetch_leaf_cycles": {
+      "alias": "exp0.w2",
+      "expert": 0,
+      "layer": 0,
+      "matrix_journal_ordinal": 12,
+      "phase": 12,
+      "prefetch_single_read_port_per_leaf_cycles": 400,
+      "stage": 0
+    },
+    "max_run_start_conflict": {
+      "alias": "exp0.w1",
+      "expert": 0,
+      "layer": 0,
+      "matrix_journal_ordinal": 10,
+      "phase": 10,
+      "simultaneous_run_start_bank_conflict_lower_bound": 64,
+      "stage": 0
+    },
+    "max_unique_reads": {
+      "alias": "exp0.w2",
+      "expert": 0,
+      "layer": 0,
+      "matrix_journal_ordinal": 12,
+      "phase": 12,
+      "stage": 0,
+      "unique_raw256_reads": 800
+    },
+    "minimum_crossbar_operation_screen": {
+      "actual_decoder_code_map_and_logic_area_unbound": true,
+      "actual_track_capacity_and_macro_OBS_PG_union_missing": true,
+      "address_per_bank_bits": 12,
+      "counts_are_prospective_structure_not_synthesized_cells": true,
+      "decoded_data256_grant_boundary_bits": 1024,
+      "parity_lane_delivery_boundary_bits": 2048,
+      "per_bank_control_proposed_credit": 1,
+      "raw266_selector_mux2_upper": 437304,
+      "raw_decode_lanes_proposed": 4,
+      "shared_grants_per_die": 4
+    },
+    "prefetch_buffer": "128 finite per-active-pair queues, each maximum frozen per-pair parity demand; explicit FF50proxy. No SRAM or existing-register reuse credit. Assign run pair to queue on accepted phase lease; refill/grants/tags/overflow/fault drain needed.",
+    "profiles_path": "results/uarch/dsrom_par2_raw_parity_replica_20261002/inputs/demand_profiles.json.gz",
+    "raw_word_bits": 256,
+    "read_ports_per_leaf_proposed": 1,
+    "requested_stream_bits_per_cycle_upper": 2048,
+    "reuse": "One accepted corrected raw256 word may supply up to16paired-codeword side16 fields, only within authenticated immutable phase/generation lease. Count unique words, not one remote transaction per16bit request.",
+    "selected_six_expert_fullphase_prefetch_leaf_work_bounds": {
+      "actual_EIDs_required": true,
+      "fresh_prefetch_before_each_phase_policy_is_not_mandatory_architecture_lower_bound": true,
+      "maximum": 249600,
+      "minimum_over_six_distinct_selected_EIDs_all40_layers": 203872,
+      "no_intertoken_cache_or_overlap_credit": true,
+      "triples": 720,
+      "units": "single-port leaf read iterations, not fulltoken cycles"
+    },
+    "transport": "Nominal2048bits/cycle is consumer demand, not raw-bank/gather throughput."
+  },
+  "explicit_new_storage_FF50_proxies_mm2": 0.30207718800000005,
+  "hardware_fit_rate_and_single_token_no_loss_qualified": false,
+  "main_RTL_uarch_model_docs_checkpoint_payload_and_livejobs_untouched": true,
+  "mirror_source": "124e870c5",
+  "mode_source": "1d8380224",
+  "model_sha256": "51bbe59986965396e8e11f45470d16c3ff0c5e72f41eb119263afd3a3270e146",
+  "next_gate": "Kepler/Euclid/Peirce accepted read/decode/grant and original consumer deadline receipts; source glyphs/pins/OBS/PG union and capture SS/FF; evaluate exposed costs before RTL.",
+  "original_924budget_S58_failure_and_HBM_TC_SS_FF_failure_unchanged": true,
+  "prerequisite_current_map": "622dbc897; frozen metadata snapshots; allocator/reemitter not rerun",
+  "remaining_for_unpriced_logic_and_physical_exclusions_mm2": 162.8150248907142,
+  "replica_body_mm2": 3.2471222976,
+  "required_calendar_interface": {
+    "VM_reqseq_bits": 10,
+    "events": [
+      "accepted descriptor/VM visibility",
+      "both-shard owner/config readiness",
+      "accepted local immutable raw read",
+      "matched raw SECDED terminal",
+      "matched main-codeword SECDED terminal before compute",
+      "golden ordered root delivery",
+      "debt drain including canceled transfers"
+    ],
+    "identity": "stage6/rank2/shard1/phase10/opseq13/era1; canonicalpidx/MB/parity/row+actual accepted local-mirror alias",
+    "mode_native_default_off": true,
+    "required_parameters": [
+      "source-domain timebase",
+      "original consumer dependency deadline",
+      "readII",
+      "macro latency",
+      "raw SECDED latency",
+      "delivery latency",
+      "paired weight ECC latency",
+      "shared grants per die",
+      "read debt credits per leaf"
+    ],
+    "resource_scope": "all412banks share up to4 prospective rawdecode/gather lanes per die; die/rank independence requires actual provider instances; no ideal overlap or reverse credit erasure",
+    "root64burst_capture_bits": 6912,
+    "root_packet_bits": 108
+  },
+  "reuse": "103 exact Q_ONLY padding aliases on shard1, remaining281; original all4096 weight sites and103canonical ECC sites retained",
+  "selfcontained_model_replay_command": "python3 tools/dsrom_par2_raw_parity_replica.py --output /tmp/par2-replay.json",
+  "selfcontained_new_test_command": "python3 -m pytest -q tests/test_dsrom_par2_raw_parity_replica.py",
+  "status": "PASS_SOURCE_BOUND_DEMAND_AND_FINITE_MODEL_ONLY",
+  "test_command": "python3 -m pytest --override-ini addopts=\"\" -q tests/test_dsrom_par2_raw_parity_replica.py tests/test_dsrom_parallel_owner_capacity_calendar.py tests/test_dsrom_native_entry_adapter_spec.py tests/test_dsrom_reticle_fixed_debit_reconciliation.py",
+  "tested": "69 focused tests PASS (10 new); model byte replay and frozen622 full-journal profile byte replay PASS",
+  "variant": "DS4096-TP4-S58-PAR2-NP2048-LOCAL-RAW-ECC-IN-PADDING",
+  "weight_macro_instance_increment": 0
+}
