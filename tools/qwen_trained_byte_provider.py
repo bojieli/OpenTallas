@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
 ARTIFACT='results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Qwen_tiled.json.gz'
-PINS=['tools/qwen_trained_byte_provider.py','tools/qwen_hbm_complete_executor.py','tools/qwen3_deployment_quality.py','tools/h3_qwen_complete_native.py','compiler/models/qwen3-8b/checkpoint_source.json']
+PINS=['tools/qwen_trained_page_continuation.py','tools/qwen_trained_byte_provider.py','tools/qwen_hbm_complete_executor.py','tools/qwen3_deployment_quality.py','tools/h3_qwen_complete_native.py','compiler/models/qwen3-8b/checkpoint_source.json']
 def sha(path):
  h=hashlib.sha256()
  with Path(path).open('rb')as f:
@@ -22,6 +22,47 @@ def immutable_refs(n):
  """Checkpoint producer owns requested immutable bytes; native memory owns KV/state."""
  ex=extents(n)
  return {r for r in refs(n) if ex[r].get('role')not in MUTABLE_ROLES}
+def matrix_inventory(n):
+ """Validate every matrix format and consumer projection before producing any bytes."""
+ ex=extents(n);wanted=immutable_refs(n);descriptors=n['source_program']['weight_descriptors'];plan={}
+ families={}
+ for key,d in descriptors.items():
+  name=d['name'];die=d['die']
+  if name not in {'qkv','o','gu','down','head'}or die not in (0,1)or d['rows']<=0 or d['K']<=0 or not d['checkpoint_sources']:raise ValueError('unsupported matrix descriptor format '+key)
+  if (name=='head')!=(d['layer']is None):raise ValueError('matrix layer/format mismatch '+key)
+  cr=f"Qwen.rank{die}.extent."+('head'if d['layer']is None else f"L{d['layer']}.{name}")+'.codes';sr=cr[:-5]+'scales'
+  for ref,count,codec in [(cr,d['rows']*d['K'],'signed_INT8_row_major'),(sr,d['rows']*2,'BF16_little_endian')]:
+   if ref not in ex or ex[ref]['bytes']!=count or ex[ref]['codec'].get('data')!=codec:raise ValueError('unsupported matrix extent format '+ref)
+  if cr not in wanted:raise ValueError('missing requested matrix code '+key)
+  scale_used=not(name in {'o','down'}and die==1)
+  if (sr in wanted)!=scale_used:raise ValueError('matrix scale consumer ownership mismatch '+key)
+  plan[key]=dict(code_ref=cr,scale_ref=sr if scale_used else None,declared_scale_ref=sr,rows=d['rows'],K=d['K'])
+  families[name]=families.get(name,0)+1
+ if n['source_program']['config'].get('num_hidden_layers')==36 and families!={'qkv':72,'o':72,'gu':72,'down':72,'head':2}:raise ValueError('incomplete290 matrix descriptor inventory')
+ covered={r for item in plan.values()for r in (item['code_ref'],item['scale_ref'])if r is not None}
+ if covered!={r for r in wanted if r.endswith(('.codes','.scales'))}:raise ValueError('matrix consumer inventory has unsupported/orphan extent')
+ return plan
+
+def validate_checkpoint_inventory(reader,n):
+ """All descriptor source shapes/dtypes checked from headers before the first page."""
+ from safetensors import safe_open
+ result={}
+ for key,d in n['source_program']['weight_descriptors'].items():
+  rows=0;headers=[];column=d['name']in ('o','down')
+  for source in d['checkpoint_sources']:
+   with safe_open(str(reader._verified_file(reader.index[source])),framework='pt',device='cpu')as handle:
+    tensor=handle.get_slice(source);shape=tensor.get_shape();dtype=tensor.get_dtype()
+   if dtype!='BF16'or len(shape)!=2 or shape[0]<=0 or shape[1]<=0 or (column and shape[1]%2)or (not column and shape[0]%2)or d['K']!=(shape[1]//2 if column else shape[1]):raise ValueError('unsupported checkpoint matrix format '+key+':'+source)
+   rows+=shape[0]if column else shape[0]//2;headers.append(dict(source=source,shape=shape,dtype=dtype))
+   if d['folded_norm']:
+    norm=d['folded_norm']
+    with safe_open(str(reader._verified_file(reader.index[norm])),framework='pt',device='cpu')as handle:
+     tensor=handle.get_slice(norm)
+     if tensor.get_dtype()!='BF16'or tensor.get_shape()!=[shape[1]]:raise ValueError('unsupported checkpoint folded norm '+key)
+  if rows!=d['rows']:raise ValueError('checkpoint descriptor row inventory '+key)
+  result[key]=headers
+ return result
+
 def bfbytes(value):
  import torch
  if value.dtype!=torch.bfloat16:raise ValueError('BF16 producer type')
@@ -53,12 +94,14 @@ def build(snapshot,out,n=None,admission=None,go_commit=None):
  from qwen3_deployment_quality import quantize_w8,rope_tables_g
  n=native()if n is None else n
  if admission is None:raise ValueError('fresh resource admission required for full checkpoint production')
+ inventory=matrix_inventory(n)
  from qwen_trained_native_run import validate_admission,guard
  validate_admission(admission,go_commit);guard(admission,Path(out),sum(extents(n)[r]['bytes']for r in immutable_refs(n)))
  out=Path(out);out.mkdir(parents=True,exist_ok=True);p=n['source_program'];reader=CheckpointWeights(p,snapshot,row_batch=128);ex=extents(n);wanted=immutable_refs(n)
  lock=ROOT/'compiler/models/qwen3-8b/checkpoint_source.json';identity=dict(native_sha256=hashlib.sha256(canonical(n)).hexdigest(),checkpoint_lock_sha256=sha(lock),checkpoint_revision=reader.checkpoint_revision,snapshot=str(Path(snapshot).resolve()),source_sha256={f:sha(ROOT/f)for f in PINS})
  # Source shards are all independently hashed before accepting continuation pages.
  for source in sorted({s for d in p['weight_descriptors'].values()for s in d['checkpoint_sources']}|{'model.embed_tokens.weight','model.norm.weight'}|{f'model.layers.{l}.self_attn.{k}_norm.weight'for l in range(36)for k in ('q','k')}|{d['folded_norm']for d in p['weight_descriptors'].values()if d['folded_norm']}):reader._verified_file(reader.index[source])
+ validate_checkpoint_inventory(reader,n)
  identity['runtime_package_versions']={k:version(k)for k in ('numpy','torch','safetensors')};identity['checkpoint_files_sha256']=reader.file_pins.copy();identitypath=out/'producer_identity.json'
  if identitypath.exists():
   if identitypath.read_bytes()!=canonical(identity):raise ValueError('producer continuation identity changed')
@@ -94,8 +137,7 @@ def build(snapshot,out,n=None,admission=None,go_commit=None):
    if Path(record['file']).name!=record['file']or path.is_symlink()or not path.is_file()or path.stat().st_size!=record['bytes']or sha(path)!=record['sha256']:raise ValueError('completed extent continuation drift')
   return records
  for key,d in p['weight_descriptors'].items():
-  cr=f"Qwen.rank{d['die']}.extent."+ ('head'if d['layer']is None else f"L{d['layer']}.{d['name']}")+'.codes';sr=cr[:-5]+'scales'
-  if cr not in wanted:raise ValueError('descriptor immutable code extent missing')
+  cr=inventory[key]['code_ref'];sr=inventory[key]['declared_scale_ref']
   # Column-sharded rank1 scales are declared but unconsumed: post-all-reduce uses rank0 scale.
   prior_codes=completed_extent(cr);prior_scales=completed_extent(sr)if sr in wanted else []
   if prior_codes is not None and prior_scales is not None:
