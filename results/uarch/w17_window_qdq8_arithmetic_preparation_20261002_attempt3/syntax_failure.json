@@ -1,0 +1,8 @@
+{
+  "verdict": "FAIL_MODEL_GENERATOR_SYNTAX_NO_RTL_COMPILE",
+  "error": "SyntaxError unmatched closing parenthesis line191 in interface coordination metadata",
+  "command": "python3 tools/w17_window_qdq8_arithmetic_model.py --out /tmp/window-qdq8-arithmetic-prepared-20261002-r3",
+  "RTL_compile_or_run": false,
+  "failed_generator_sha256": "07dbb5852d5f3995a4bb9c88f230887f419df939265d0c645da12c2f85a0d459",
+  "no_geometry_or_stimulus_change": true
+}

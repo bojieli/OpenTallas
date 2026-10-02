@@ -1,0 +1,197 @@
+#!/usr/bin/env python3
+"""Pinned QDQ8 arithmetic/edge model and preparation only; no RTL execution."""
+from fractions import Fraction as F
+from pathlib import Path
+import argparse
+import hashlib
+import json
+import re
+import subprocess
+
+ROOT=Path(__file__).resolve().parents[1]
+PIN='4e38326d6f361bc85e660f48c59c355e2bb95274'
+QE='rtl/hdc/v41/ot_hdc_v41_qe.sv'
+AQ='rtl/hdc/v41/ot_hdc_actquant.sv'
+SOURCES=[QE,AQ,'rtl/hdc/v41/ot_hdc_fp4qdq.sv','rtl/hdc/v41/ot_hdc_blockdot.sv',
+ 'rtl/hdc/v41/ot_hdc_chunk8_stack.sv','rtl/hdc/ot_hdc_delay.sv','rtl/hdc/ot_hdc_fpu.sv',
+ 'rtl/hdc/ot_hdc_fp32_mul_pipe.sv','rtl/proto/ot_fp32_add_rne_pipe.sv',
+ 'rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv','rtl/chip/ot_chip_v41x_window_block_guard.sv']
+CONTRACT_SOURCES=['rtl/chip/ckvsel/ot_chip_v41x_die.sv','rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv',
+ 'rtl/test/v41_runtime/ot_v41_rt_die.sv','rtl/chip/ot_chip_v41x_tile.sv',
+ 'results/rtl/hdc_v41x_fullshape_1m_s20260930_program_bind_rope_hbm.json']
+BENCH='rtl/test/w17_window_qdq8_arithmetic/tb.sv'
+
+
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def p2(e):return F(1<<e) if e>=0 else F(1,1<<-e)
+def rne(v):
+    n,d=v.numerator,v.denominator;q,r=divmod(n,d)
+    return q+int(2*r>d or (2*r==d and q&1))
+def log2floor(v):
+    e=v.numerator.bit_length()-v.denominator.bit_length()
+    return e-1 if v<p2(e) else e
+
+def ieee_value(bits,m=23):
+    field=(bits>>m)&255;frac=bits&((1<<m)-1)
+    if field==255:raise ValueError('nonfinite operand')
+    val=F(frac,1<<m)*p2(-126) if field==0 else F((1<<m)+frac,1<<m)*p2(field-127)
+    return -val if bits>>(m+8) else val
+
+def ieee_round(v,m=23,negative_zero=False):
+    neg=v<0 or (v==0 and negative_zero);v=abs(v);sign=int(neg)<<(m+8)
+    if v==0:return sign
+    exponent=max(log2floor(v),-126);n=rne(v/p2(exponent-m))
+    if n>=(1<<(m+1)):n>>=1;exponent+=1
+    if exponent>127:return sign|(255<<m)
+    if exponent==-126 and n<(1<<m):return sign|n
+    return sign|((exponent+127)<<m)|(n-(1<<m))
+
+def fp8_value(code):
+    if code&127==127:raise ValueError('E4M3 poison')
+    field=(code>>3)&15;mant=code&7
+    v=F(mant,8)*p2(-6) if field==0 else F(8+mant,8)*p2(field-7)
+    return -v if code&128 else v
+
+
+def oracle(words):
+    """Independent exact rational multiply and table-nearest E4M3 RNE.
+
+    No RTL significand/grid shift transcription, NumPy or producer output injection.
+    Nonfinite data is invalid; data bits are not assigned an arithmetic golden.
+    """
+    assert len(words)==32
+    if any((x>>23)&255==255 for x in words):return dict(fault=1,valid=0)
+    values=[ieee_value(x) for x in words]
+    floor=ieee_value(0x38d1b717);amax=max([floor]+[abs(x) for x in values])
+    product=ieee_round(amax*ieee_value(0x3b124925))
+    exponent=((product>>23)&255)-127+int(bool(product&0x7fffff))
+    codes=[];ys=[]
+    for v in values:
+        scaled=abs(v)/p2(exponent)
+        assert scaled<=448
+        # Lowest distance, then even encoding LSB: exact ties-to-even.
+        positive=min(range(127),key=lambda c:(abs(fp8_value(c)-scaled),c&1))
+        code=positive|(128 if v<0 else 0)
+        codes.append(code)
+        y=fp8_value(code)*p2(exponent)
+        ys.append(ieee_round(y,7,negative_zero=bool(code&128))<<16)
+    return dict(fault=0,valid=int(-127<=exponent<=127),exponent=exponent,
+                scale=exponent+127,codes=codes,bf16_widened=ys,scale_product_fp32=product)
+
+
+def vectors():
+    # A maximum 448 anchor keeps e=0 without forcing producer outputs.
+    values=[ieee_round(fp8_value(c)) if c!=128 else 0xb5800000 for c in range(256) if c&127!=127]
+    rows=[]
+    for b in range(9):
+        chunk=values[b*31:(b+1)*31];chunk+= [0]*(31-len(chunk))
+        rows.append(chunk+[ieee_round(F(448))])
+    # Exact ties and adjacent FP32 words; even lower/upper bin, both signs.
+    ties=[]
+    for c in (0,1,7,8,55,56,119,120):
+        mid=ieee_round((fp8_value(c)+fp8_value(c+1))/2)
+        ties.extend([mid-1,mid,mid+1,mid|0x80000000])
+    rows.append(ties[:31]+[ieee_round(F(448))])
+    rows.extend([
+        [0x80000000 if i&1 else 0 for i in range(32)],
+        [0x80000001 if i&1 else 1 for i in range(32)],
+        [ieee_round(F(i-16,16)) for i in range(32)],
+        [ieee_round(F(i-16)*p2(-30)) for i in range(32)],
+        [ieee_round(F(i-16)*p2(80)) for i in range(32)],
+        [0x38d1b716+(i%3) for i in range(32)]])
+    assert len(rows)==16
+    bf16=[]
+    for b in range(16):
+        # Mixed BF16 encodings, including subnormals, signed zeros, range extremes.
+        table=[0,0x8000,1,0x8001,0x0080,0x8080,0x3f80,0xbf80,0x3f88,0xbf88,
+               0x3f98,0xbf98,0x43e0,0xc3e0,0x6001,0xe001]
+        bf16.append([table[(i+b)%len(table)]<<16 for i in range(32)])
+    invalid=[[0x7fc00001 if b&1 else 0xff800000]+[0]*31 for b in range(16)]
+    return {'fp32_rounding':rows,'bf16_input':bf16,'nonfinite_flags':invalid}
+
+
+def edge_calendar(qe,aq):
+    # Explicit serial register ownership from source, input sampling -> post-NBA output.
+    assigns=['s0_v <= v','s1_v <= s0_v','s2a_v <= s1_v','s2_v <= s2a_v',
+             "vl <= {vl[3:0], s2_v}", 's8_v <= s7_v','s9_v <= s8_v','s10_v <= s9_v','vo <= s10_v']
+    assert all(a in aq for a in assigns) and "wire s7_v = vl[4]" in aq
+    assert 'x_v <= xr_re' in qe and 'w_we[wp] <=' in qe and 'kvb_v <= aq_vo && mode == QDQ8' in qe
+    assert 'got_n == ld_n' in qe and '!pend' in qe
+    chain=['S0','S1','S2a','S2b']+['scale_mul'+str(i) for i in range(1,6)]+['S8','S9','S10','S11']
+    # Accept edge0; read emitted +1, sync memory/x_v +2; S0 samples +3.
+    first_aq_input=3;aq_post=first_aq_input+len(chain)-1
+    sideband_post=aq_post+1;capture_sample=sideband_post+1
+    # Last quantiser output is sampled to got_n on sideband post edge.
+    last_got=sideband_post+15
+    drain=last_got+1;idle_state=drain+1;idle_post=idle_state+1;idle_sample=idle_post+1
+    issue=idle_sample;accepts=[];c=issue+1
+    while len(accepts)<16:
+        if c%5!=0:accepts.append(c)
+        c+=1
+    return dict(origin='edge0 is go&&ready acceptance, fixture samples pre-NBA; post fields are after NBA',
+        aq_register_chain=chain,aq_register_count=len(chain),
+        read_emit=list(range(1,17)),read_sample=list(range(2,18)),aq_input=list(range(3,19)),
+        aq_output_post=list(range(aq_post,aq_post+16)),qe_output_post=list(range(sideband_post,sideband_post+16)),
+        capture_sample=list(range(capture_sample,capture_sample+16)),
+        global_fault_sample=list(range(capture_sample+1,capture_sample+17)),
+        load_to_drain_post=drain,idle_state_post=idle_state,ready_sample=idle_state+1,
+        idle_sample=idle_sample,issue_sample=issue,block_accept=accepts,
+        healthy_terminal_sample=accepts[-1]+1,invalid_terminal_sample=idle_sample,
+        ready_policy='blk_ready at upcoming edge c iff c%5!=0; held output stable on each stall')
+
+
+def main():
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',required=True);a=ap.parse_args()
+    out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=False)
+    pins={}
+    for p in SOURCES+CONTRACT_SOURCES:
+        raw=subprocess.check_output(['git','show',PIN+':'+p],cwd=ROOT)
+        assert raw==(ROOT/p).read_bytes();pins[p]=sha(ROOT/p)
+    prior=json.loads((ROOT/'results/uarch/w17_window_epoch9_producer_lifecycle_20261001/model.json').read_text())
+    inst=prior['producer_instructions'][0]
+    assert inst['pc']==20 and inst['fields']['qe_nb']==16 and inst['fields']['qe_mode']==1
+    calendar=edge_calendar((ROOT/QE).read_text(),(ROOT/AQ).read_text())
+    stimulus=vectors();cases={}
+    for name,row in stimulus.items():
+        sub=out/name;sub.mkdir();gold=[oracle(b) for b in row]
+        (sub/'block_cycles.mem').write_text(''.join(f'{n:08x}\n' for n in calendar['block_accept']))
+        def mem(p,ints,width):p.write_text(''.join(f'{v:0{width}x}\n' for v in ints))
+        def pack(v,w):return sum(n<<(w*i) for i,n in enumerate(v))
+        mem(sub/'input.mem',[pack(b,32) for b in row],256)
+        mem(sub/'codes.mem',[pack(g.get('codes',[0]*32),8) for g in gold],64)
+        mem(sub/'scale.mem',[g.get('scale',0) for g in gold],2)
+        mem(sub/'bf16.mem',[pack(g.get('bf16_widened',[0]*32),32) for g in gold],256)
+        (sub/'oracle.json').write_text(json.dumps(gold,indent=2)+'\n')
+        cases[name]=dict(elements=512,blocks=16,format='BF16 widened to FP32' if name=='bf16_input' else 'FP32',
+            valid_blocks=sum(g['valid'] for g in gold),fault_blocks=sum(g['fault'] for g in gold),
+            covered_codes=sorted({c for g in gold for c in g.get('codes',[])}),
+            synthetic_input=True,expected_producer_blocks=0 if name=='nonfinite_flags' else 16,
+            files_sha256={p.name:sha(p) for p in sub.iterdir()})
+    assert len(cases['fp32_rounding']['covered_codes'])==254
+    snapshot=out/'sources';snapshot.mkdir()
+    for p in SOURCES:(snapshot/Path(p).name).write_bytes((ROOT/p).read_bytes())
+    (snapshot/'tb.sv').write_bytes((ROOT/BENCH).read_bytes())
+    # Prebuild source-size bound only: no claim this guarantees generated compile size.
+    command=['/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator','--binary','--timing','--build','-j','2','-Wno-fatal','-Wno-WIDTH','--top-module','tb','-I'+str(out),'--Mdir',str(out/'obj')]+[str(snapshot/Path(p).name) for p in SOURCES]+[str(snapshot/'tb.sv')]
+    r=dict(schema='opentallas.window.qdq8_arithmetic_preparation.v1',verdict='MODELED_PREPARED_NO_COMPILE_PENDING_PARENT_GO',
+      source_commit=PIN,source_sha256=pins,fixture_sha256={BENCH:sha(ROOT/BENCH)},generator_sha256=sha(Path(__file__)),
+      actual_PC20=inst,parameters=dict(AW=30,NW=21,BL=16,IL=8,NBMAX=192,CHUNK8=1,QLB=272,MP=1,mode=1,fp4=0,nb=16,xbase=54720,obase=55232,SEPARATE_ROWS=1,KVT_SH=13,POS_W=21),
+      SUN_contract='Runtime SUN256 is downstream SU width; QDQ8 always 32-element block, full512 dimensions16blocks. No SUN width substitution in QE.',
+      oracle_contract='Exact Fraction arithmetic: input IEEE bits, amax floor0x38d1b717, exact multiply by binary32 INV4480x3b124925 then binary32 RNE, exponent from rounded product; enumerate finite E4M3 nearest by exact distance/even encoding LSB; dequantise with exact power2 then BF16 RNE. Negative finite -> signed zero, input negativezero -> positivezero. Nonfinite invalid payload not compared; flags/timing/no capture checked.',
+      clock_contract='Fixture #0.5ns halfperiod, edge identities only. No physical frequency or domain qualification.',
+      edge_calendar=calendar,cases=cases,
+      boundary=dict(vector_read_bits_per_active_cycle=1024,vm_write_bits=1024,code_scale_payload_bits=264,sideband_bits_with_source_valid_fault=296,block_boundary_bits_with_addresses_rows_index_valid=371,user_bits_at_tile=10,blockpayload_bytes_per_row=528,vm_write_bytes_per_row=2048),
+      storage=dict(QE_quant_buffer_bits=192*(256+10),window_block_storage_bits=16*(256+8),window_control_bits=2+5+4+30+30+21+21+1,replicas=1,source_BL16_blockdot_replicas=16,chunk_tree_levels_per_lane=5,chunk_adders_per_lane=6,total_dormant_FP32_adders=96,aq_pipeline_bits_excluding_scale_mul=sum([1026,251,65,34,5,10,9216,13,1133,365,780]),scale_mul_pipeline_bits=sum([65,151,78,43,35]),aq_replicas=1,FP4_replicas_inactive=1),
+      cost=dict(new_hardware_bits=0,new_hardware_ports=0,new_added_latency_cycles=0,conditional_PC20_accept_to_first_capture_cycles=calendar['capture_sample'][0],conditional_last_capture_cycle=calendar['capture_sample'][-1],conditional_QE_idle_sample_cycle=calendar['idle_sample'],conditional_healthy_fixture_end_cycle=calendar['healthy_terminal_sample'],
+          no_whole_layer_token_or_rate_transfer=True,qualification='Existing source only. Model costs QDQ8/load/capture/drain, not QE LINQ arithmetic or physical fanout closure.'),
+      fanout=dict(quantizer_input_elements=32,amax_tree_comparisons=31,scale_exponent_element_fanout=32,code_scale_atomic_capture_sinks=1,producer_code_mux=16,producer_scale_mux=16,guard_replica=1),
+      preparation=dict(compile_command=command,runtime_commands=[dict(case=n,command=[str(out/'obj/Vtb'),'+CASE='+str(i)],cwd=str(out/n)) for i,n in enumerate(stimulus)],snapshot_sha256={p.name:sha(p) for p in snapshot.iterdir()},
+         source_bytes=sum(p.stat().st_size for p in snapshot.iterdir()),generated_file_limit_bytes=268435456,required_aggregate_memory_max_bytes=4294967296,required_swap_max_bytes=0,required_CPU_count=2,required_whole_service_seconds=180,no_compile_here=True,preflight='Exact cap verification must precede compile; no fallback. Existing BL16/CHUNK8 full QE generates inactive LINQ and FP4 circuitry; size/runtime unknown before build. Hard caps terminate rather than reduce BL or geometry.'),
+      invariants=['No expected code/scale injected into cap ports; direct original QE sideband only','All512 BF16 output words and masks/addresses checked on valid finite block','QDQ8 faults gate cap_v and are sampled at source-derived edges; no fault row publication','No weight request in mode1; no index read; synchronous vector response only','Exact src55232+32*b and KVT127 mapping, absolute1048575 modulo128; independent user37 latched provenance','Held block codes/scale/address stable until accepted; all16captured before issue; EMPTY only after16drained','No arithmetic claim for nonfinite invalid outputs, full token, payload checkpoint, recovery or across-token retention'],
+      interface_coordination=dict(Archimedes='01a0f9aa-9568-73d2-a794-26b33a55fb4d',Peirce='01a0f95d-badc-74d3-bde3-f3eb28f089b8',note_commit='97a61233b',note_path='results/uarch/w17_qdq8_recovery_interface_handoff_20261002/note.json',scope='QDQ8 mode1/window512; QDQ4E L20 disjoint; downstream accepted intent/visibility recovery remains Peirce. Host step_user latched by die; tile forwards. WIN_STACK2 downstream aperture distinct from VM54720/55232. No HBM in this fixture; producerEMPTY not provider drain.'))
+    (out/'model.json').write_text(json.dumps(r,indent=2)+'\n')
+    (out/'calendar.svh').write_text('\n'.join([f'localparam integer {k.upper()} = {calendar[k]};' for k in ('idle_sample','issue_sample','healthy_terminal_sample','invalid_terminal_sample')])+f'\nlocalparam integer FIRST_CAPTURE = {calendar["capture_sample"][0]};\n')
+    (out/'preparation_sha256.json').write_text(json.dumps({str(p.relative_to(out)):sha(p) for p in out.rglob('*') if p.is_file()},indent=2)+'\n')
+    print(r['verdict'])
+
+if __name__=='__main__':main()
