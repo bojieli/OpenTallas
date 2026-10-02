@@ -87,7 +87,8 @@ def build():
         assembly_payload_bits=4 * 16 * c['assembly']['payload_bits_per_slot'],
         conditional_owner_pipeline_bits=4 * lanes * 12 * 465,
         conditional_return_pipeline_bits=4 * lanes * 7 * 471,
-        conditional_command_output_bits=4 * lanes * 339)
+        conditional_command_output_bits=4 * lanes * 339,
+        conditional_reverse_credit_echo_output_bits=4 * lanes * 465)
     unit = Fraction(2916, 10000) / Fraction(1, 2) / 1000000
     priced = {k:dict(bits=v, FF50_proxy_mm2=float(v * unit)) for k,v in terms.items()}
     return dict(schema='opentallas.qwen-rom-transport-concurrency.v1',
@@ -104,6 +105,7 @@ def build():
             equal_stack_split_proven=False, credits_per_stack=512,
             source_owner_floor_cycles=393216, source_return_arb_floor_cycles=229376,
             source_rowhit_command_floor_cycles=32768,
+            shared_owned_data_and_credit_echo_floor_cycles=65536,
             queue_capacity_admits_target_throughput=False,
             lower_bounds_not_additive='max of independent throughput bounds; exact dependency calendar needed for startup/drain and shared stalls'),
         conditional_successor_interface=dict(id='Q2-conditional-balanced-throughput-interface-NOT-SELECTED',
@@ -112,7 +114,11 @@ def build():
             rowconflict_PRE_ACT_RD_command_lanes_per_stack=scenarios['row_conflict']['command_lanes_per_stack'],
             fixed_four_stacks=True, PCs_per_stack=32,
             payload_bits_per_cycle=4 * lanes * 256,
-            owned_boundary_bits_per_cycle=4 * lanes * 465,
+            owned_data_boundary_bits_per_cycle=4 * lanes * 465,
+            reverse_credit_echo_boundary_bits_per_cycle=4 * lanes * 465,
+            owned_boundary_bits_per_cycle=2 * 4 * lanes * 465,
+            reverse_credit_input_bits_per_cycle=4 * lanes * (192 + 12 + 5 + 1),
+            reverse_credit_rule='Source grant_valid credit echo shares owned output with returned data. Sustain eight data plus eight credit echoes/stack/cycle using separately priced outputs or sixteen shared lanes; no free echo/retirement bandwidth.',
             command_boundary_bits_per_cycle=4 * lanes * 339,
             balanced_fill_lanes_per_stack=4, addressed_fill_bits_per_cycle=16 * 1048,
             unchanged_source_cannot_supply_interface=True,
