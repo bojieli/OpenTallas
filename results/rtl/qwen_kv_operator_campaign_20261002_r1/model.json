@@ -27,7 +27,7 @@
     "reservation_bytes": 34359738368,
     "maximum_checkpoint_file_cache_bytes": 16381516776,
     "prior_max_sampled_memory_current_bytes": 2762838016,
-    "justification": "full checkpoint filecache + measured prior library/heap + finite quantizer/tree and observation structures; prospective 32GiB fleetcapacity protection, not completion guarantee"
+    "justification": "full checkpoint filecache + measured prior library/heap + finite quantizer/tree and observation structures; 32GiB scheduling estimate only, no hard memory/swap cap or forced OOM stop"
   },
   "resource": {
     "host": "155.103.253.226",
@@ -44,14 +44,16 @@
     "worker_threads": 8,
     "kernel_affinity_required": true,
     "CPU_quota_claim": false,
-    "memory_swap": 0,
     "fleet_reserved_headroom_bytes": 25769803776,
     "wall_limit": null,
     "CPU_time_limit": null,
     "FSIZE": "unlimited",
     "AS": "unlimited",
     "disk_floor_bytes": 25769803776,
-    "priced_incremental_output_bytes": 8388608
+    "priced_incremental_output_bytes": 8388608,
+    "memory_limit": null,
+    "swap_limit": null,
+    "OOM_forced_stop": false
   },
   "runtime_change": {
     "original_torch": "2.14.0+cpu",
