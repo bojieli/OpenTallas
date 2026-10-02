@@ -1,0 +1,45 @@
+{
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "prior_measurement": "a91078135ddaeedbb76be3535ab91b849fbf9ad4",
+  "scope": "Mandatory propagation of existing WAKE retention intent, full unchanged q/BF mapping only",
+  "exact_flow": [
+    "proc",
+    "flatten",
+    "select -set local_wake ot_v41_rom_elem_w10/w:g_wake.g_leaf*.wake %ci1 ot_v41_rom_elem_w10/t:$adff %i",
+    "select -assert-count 8 @local_wake",
+    "setattr -set keep 1 -set dont_touch 1 @local_wake",
+    "select -clear",
+    "synth -top ot_v41_rom_elem_w10 -flatten",
+    "unchanged dfflibmap/abc/clean/check"
+  ],
+  "model_debit_missing7FF_um2": 2.65356,
+  "added_latency_cycles": 0,
+  "MACs_memory_and_boundary_bits_unchanged": true,
+  "q_priced_outline_um": [
+    510.84,
+    151.2
+  ],
+  "q_frame_growth_um2_once_per_pair": 3310.2432,
+  "BF_priced_outline_um": [
+    1002.89,
+    157.68
+  ],
+  "required_final": {
+    "real_WAKEDFF": 8,
+    "distinct_FF_outputs": 8,
+    "distinct_WAKE_outputs": 8,
+    "real_cell_keep_and_dont_touch": true,
+    "physical4096x274macros": 4
+  },
+  "physical_PnR_admitted": false,
+  "context_prerequisites": [
+    "actual generated clocks/skew and eight local WAKE placement",
+    "SS60 FF25 enabled capture and macro clock-to-Q",
+    "translated whole pin/OBS/halo/PG/via union",
+    "actual parent IO origins and Maxwell counts/frame replacement"
+  ],
+  "engine_RTL_changed": false,
+  "arithmetic_order_changed": false,
+  "parameters_changed": false,
+  "preflight": "Full literal q proc/flatten/opt_merge retains8 $adff cells, common D CLK ARST; no mapping duplicated in preflight"
+}
