@@ -1,0 +1,54 @@
+{
+  "FF_hold_uncertainty_ps": 25,
+  "SS_setup_uncertainty_ps": 60,
+  "fixed_clocks_GHz": 1.2,
+  "host_headroom": {
+    "df_Pm": "Filesystem     1048576-blocks    Used Available Capacity Mounted on\n/dev/md0p1            3842213 2450497   1196470      68% /\n",
+    "free_m": "               total        used        free      shared  buff/cache   available\nMem:          193029       30861        4729          15      157438      160507\nSwap:           8191        2642        5549\n",
+    "uptime": " 15:19:15 up 36 days, 13:33, 13 users,  load average: 3.68, 6.32, 15.38\n"
+  },
+  "library_sha256": "e22e3587aeaf84011f572d073fe2cbacd0c0721bad858dcbc18657f87a92a2d5",
+  "model_sha256": "3f9542e8534c440fdcf673c89bf1c42e77fa539c652bdabb758229e34d97c766",
+  "physical_PR": false,
+  "pid": 1135951,
+  "reuse": "Current21-file manifest has no mapped receipt in the retained source/model artifacts; earlierfullcorrector/checker and historicalelement maps are different cones/sources, not reused as this element.",
+  "runner_sha256": "8108814a10e744eec6fc6c7c10ff527bf28741f675f391a6f5a4aca5d17f8fb9",
+  "runs": [
+    {
+      "case": "q",
+      "finished_UTC": "2026-10-02T15:19:34Z",
+      "log": "/tmp/dsrom-noECC-complete-map-d6f55c74b-r1/q/map.log",
+      "log_sha256": "dcb8fdd3af31146ad6359bf439e09ff8eefd01973afd69ff0a8fd10f4ee8db29",
+      "parameters": {
+        "BF16": 0,
+        "BP": 0,
+        "CG": 1,
+        "CUT": 379,
+        "EARLY": 1,
+        "FAST": 1,
+        "FIX_SECOND_ROW_INDEX": 1,
+        "GRADUAL_RNE": 1,
+        "MTP": 1,
+        "NB": 2,
+        "NCH": 16,
+        "NCHB": 8,
+        "NSEG": 8,
+        "PP": 1,
+        "WAKE_REG": 1,
+        "XF": 4
+      },
+      "returncode": 1,
+      "script_sha256": "6be094bdeee60e37d3e18835e181d568f961ceed1bf90e7ecdf9e23730cf6ff0",
+      "started_UTC": "2026-10-02T15:19:33Z",
+      "yosys_PID": 1136685
+    }
+  ],
+  "source_changes": false,
+  "source_commit": "d6f55c74bfc05bee630c25e21a90fce3ec7b1b62",
+  "source_manifest_sha256": "79509ce471bec4e1a51e90299605cdc7e04a68f857f9b6cafed38e507add8840",
+  "status": "FIRST_MAPPING_FAILURE_PRESERVED",
+  "synthesis_mapping_only": true,
+  "versions": {
+    "yosys": "Yosys 0.9 (git sha1 1979e0b)"
+  }
+}

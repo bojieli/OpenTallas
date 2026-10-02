@@ -1,0 +1,112 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Executing script file `/tmp/dsrom-noECC-complete-map-d6f55c74b-r1/q/map.ys' --
+
+1. Executing Liberty frontend.
+Imported 202 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_prefix.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_prefix.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_ksadd'.
+Generating RTLIL representation for module `\ot_v41_inc'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_cg.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_cg.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_cg'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_delay.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_fp32_mul_pipe.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_fp32_mul_pipe.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_pipe'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_fpu.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_fpu.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fadd'.
+Generating RTLIL representation for module `\ot_hdc_fmul'.
+Generating RTLIL representation for module `\ot_hdc_bmul'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_fp32_add_rne_pipe.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_fp32_add_rne_pipe.sv' to AST representation.
+Generating RTLIL representation for module `\ot_fp32_add_rne_pipe'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bf16_lanes.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bf16_lanes.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_bf16_lanes'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bf16_lanes2.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bf16_lanes2.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_bf16_lanes2'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bmul2.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bmul2.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_bmul2'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bterm.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bterm.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_csa'.
+Generating RTLIL representation for module `\ot_v41_bterm'.
+Warning: Replacing memory \p1_sh with list of registers. See /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bterm.sv:151
+Warning: Replacing memory \p1_p with list of registers. See /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bterm.sv:150
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bterm2_w10.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bterm2_w10.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_bterm2_w10'.
+Warning: Replacing memory \p1_sh with list of registers. See /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bterm2_w10.sv:76
+Warning: Replacing memory \p1_p with list of registers. See /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bterm2_w10.sv:75
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_chain.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_chain.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_chain'.
+Warning: Replacing memory \ps with list of registers. See /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_chain.sv:97, /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_chain.sv:95
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_chain2.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_chain2.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_chain2'.
+Warning: Replacing memory \ps with list of registers. See /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_chain2.sv:101, /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_chain2.sv:99
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_fadd.sv
+Parsing SystemVerilog input from `/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_fadd.sv' to AST representation.
+Generating RTLIL representation for module `\ot_v41_fadd'.
+Generating RTLIL representation for module `\ot_v41_cut'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: /home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_rom_elem_w10.sv
+/home/ubuntu/w17-physical-context-minimal-prerequisites/results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_rom_elem_w10.sv:189: ERROR: syntax error, unexpected TOK_GENVAR, expecting TOK_ID or '{'
