@@ -1,0 +1,151 @@
+{
+  "QDQ8": {
+    "GO": "4a037f218",
+    "cases": [
+      {
+        "case": "fp32_rounding",
+        "checks": {
+          "VM": {
+            "actual_count": 16,
+            "exact": true,
+            "expected_count": 16
+          },
+          "blocks": {
+            "actual_count": 16,
+            "exact": true,
+            "expected_count": 16
+          },
+          "capture": {
+            "actual_count": 16,
+            "exact": true,
+            "expected_count": 16
+          },
+          "reads": {
+            "actual_count": 16,
+            "exact": true,
+            "expected_count": 16
+          },
+          "terminal": {
+            "actual_count": 1,
+            "exact": true,
+            "expected_count": 1
+          }
+        },
+        "log_sha256": "d994fee50fd9c5913bbbcb7bb228d2f50ff2a186a0e8af0e6fd581c56797f902"
+      },
+      {
+        "case": "bf16_input",
+        "checks": {
+          "VM": {
+            "actual_count": 16,
+            "exact": true,
+            "expected_count": 16
+          },
+          "blocks": {
+            "actual_count": 16,
+            "exact": true,
+            "expected_count": 16
+          },
+          "capture": {
+            "actual_count": 16,
+            "exact": true,
+            "expected_count": 16
+          },
+          "reads": {
+            "actual_count": 16,
+            "exact": true,
+            "expected_count": 16
+          },
+          "terminal": {
+            "actual_count": 1,
+            "exact": true,
+            "expected_count": 1
+          }
+        },
+        "log_sha256": "b055bbea38cf5cc053d05da709ba1490a25fe1f1c88a443517cc268d3c922e6d"
+      },
+      {
+        "case": "nonfinite_flags",
+        "checks": {
+          "blocks": {
+            "actual_count": 0,
+            "exact": true,
+            "expected_count": 0
+          },
+          "capture": {
+            "actual_count": 0,
+            "exact": true,
+            "expected_count": 0
+          },
+          "invalid_VM_edges": {
+            "actual_count": 16,
+            "exact": true,
+            "expected_count": 16
+          },
+          "reads": {
+            "actual_count": 16,
+            "exact": true,
+            "expected_count": 16
+          },
+          "terminal": {
+            "actual_count": 1,
+            "exact": true,
+            "expected_count": 1
+          }
+        },
+        "log_sha256": "01f7723a5836bb6e10eed78a293e5a46bc34d0920c1d66c2f59148fd41f0726b"
+      }
+    ],
+    "compile_seconds": 18.781896443106234,
+    "memory_peak_bytes": 956096512,
+    "prepared": "5ef51faed",
+    "record_sha256": "755fa4b6243118f219f74619bc919e42d6e89dd48da7d9696a096ae5ff2aaf28",
+    "scope": "ActualQEcodes/scales\u2192blocks/guard exactrationalRNEandBF16oracle,sourcemodeledcalendar,nonfinitefailclosed. HBMvisibility,recovery,fulltoken notinfixture.",
+    "status": "PASS_BOUNDED_QDQ8_ARITHMETIC_TO_BLOCKS_GUARD"
+  },
+  "all_terminal_logs_sha256_checked": true,
+  "failed_original_records_preserved": true,
+  "next": "Compose actualproducer with WINDOW/mux/KARB/backend/visiblecalendar andQKPVlifetime; recoveryleverandL20remainseparateprerequisites",
+  "physical_or_full_token_admission": false,
+  "recorded_utc": "2026-10-02T00:45:50.985821+00:00",
+  "rowfix": {
+    "GO": "868be934d",
+    "build_seconds": 155.08317171549425,
+    "cases": [
+      {
+        "case": "q",
+        "coverage": {
+          "BF": 0,
+          "cycles": 27644,
+          "gated": 1530,
+          "issues": 1216,
+          "loads": 175,
+          "opened": 26110,
+          "partials": 80
+        },
+        "log_sha256": "3d3d94a32fcd7ff39749d81fe311aba5b610198ac1bfaee8136c0f91813ad0c1"
+      },
+      {
+        "case": "bfcolumn",
+        "coverage": {
+          "BF": 1,
+          "cycles": 30498,
+          "gated": 1726,
+          "issues": 1216,
+          "loads": 200,
+          "opened": 28768,
+          "partials": 88
+        },
+        "log_sha256": "99e10f816f5ea54770d261dae32f654d58a6ace0d8fdd2d50a2c74bb2e65ed9c"
+      }
+    ],
+    "comparison_scope": "Reference/candidate helper differential + independentconfigurationoracle. Not fullgolden arithmetic oracle or physicalsignoff.",
+    "memory_peak_bytes": 2533793792,
+    "prepared": "492ff8d33",
+    "record_sha256": "37dd205a85ff596fea821b41474f93462722180c00a19f37c50a6bfe0e0e9016",
+    "simulation_seconds": 0.797376970294863,
+    "status": "PASS_BOUNDED_DIFFERENTIAL"
+  },
+  "schema": "opentallas.parent.actual_ROM_prerequisite_terminal_review.v1",
+  "worker_evidence_commits_pending": true
+}
