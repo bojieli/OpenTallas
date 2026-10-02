@@ -1,0 +1,8 @@
+Breakpoint 1 at 0x11251
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000000000011251 <Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2(Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2(Vtb_D1_scope_core___024root*)::_Z59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2P27Vtb_D1_scope_core___024root.Frame*) [clone .actor]+2333>
+        silent
+        set $frame = *(unsigned long long*)($rbp-0x48)
+        set $root = *(unsigned long long*)($frame+0x40)
+        printf "D1_ACTUAL_FATAL_MASK fault_r=0x%02x dbg_fs=0x%06x violations=0x%02x\n", *(unsigned char*)($root+0x28021), *(unsigned int*)($root+0x5f0fc), *(unsigned char*)($root+0x27fe2)
+        continue
