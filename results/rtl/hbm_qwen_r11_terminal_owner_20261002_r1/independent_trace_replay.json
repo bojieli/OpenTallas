@@ -1,0 +1,74 @@
+{
+  "result": {
+    "SSFF": false,
+    "cases": [
+      {
+        "RF_fence_to_next_issue_cycles": 120,
+        "RF_last_retire_to_next_issue_cycles": 122,
+        "RF_last_visible_to_next_issue_cycles": 124,
+        "actual_last_ACK_hold_cycles": 2,
+        "case": 1,
+        "dependent_alias_operations": 4,
+        "host_write_count": 2,
+        "producer_first_to_next_issue_cycles": 141,
+        "producer_last_to_next_issue_cycles": 126,
+        "qwen": 1,
+        "rows": 16,
+        "scratch": false,
+        "vectors": 2
+      },
+      {
+        "RF_fence_to_next_issue_cycles": 176,
+        "RF_last_retire_to_next_issue_cycles": 178,
+        "RF_last_visible_to_next_issue_cycles": 180,
+        "actual_last_ACK_hold_cycles": 2,
+        "case": 2,
+        "dependent_alias_operations": 4,
+        "host_write_count": 2,
+        "producer_first_to_next_issue_cycles": 197,
+        "producer_last_to_next_issue_cycles": 182,
+        "qwen": 1,
+        "rows": 16,
+        "scratch": true,
+        "vectors": 2
+      },
+      {
+        "RF_fence_to_next_issue_cycles": 19504,
+        "RF_last_retire_to_next_issue_cycles": 19506,
+        "RF_last_visible_to_next_issue_cycles": 19508,
+        "actual_last_ACK_hold_cycles": 2,
+        "case": 3,
+        "dependent_alias_operations": 1024,
+        "host_write_count": 512,
+        "producer_first_to_next_issue_cycles": 24965,
+        "producer_last_to_next_issue_cycles": 19510,
+        "qwen": 1,
+        "rows": 4096,
+        "scratch": false,
+        "vectors": 512
+      },
+      {
+        "RF_fence_to_next_issue_cycles": 19504,
+        "RF_last_retire_to_next_issue_cycles": 19506,
+        "RF_last_visible_to_next_issue_cycles": 19748,
+        "actual_last_ACK_hold_cycles": 242,
+        "case": 4,
+        "dependent_alias_operations": 1024,
+        "host_write_count": 512,
+        "producer_first_to_next_issue_cycles": 25205,
+        "producer_last_to_next_issue_cycles": 19750,
+        "qwen": 1,
+        "rows": 4096,
+        "scratch": false,
+        "vectors": 512
+      }
+    ],
+    "clock_period_ns": 10,
+    "exhaustive_arithmetic": false,
+    "full_token_credit": false,
+    "physical_credit": false,
+    "schema": "opentallas.connected-RF-fence.trace-check.v1",
+    "verdict": "PASS_DIRECTED_CONNECTED_TRACE_ONLY"
+  },
+  "success": true
+}
