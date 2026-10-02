@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 import numpy as np
 
-SCHEMA = 'DS_ACTUAL_PRODUCER_QUIESCENT_RESUME_V1'
+SCHEMA = 'DS_ACTUAL_PRODUCER_QUIESCENT_RESUME_V2'
 STATE = ('published', 'locations', 'backing', 'seq', 'query_visible', 'routes',
          'route_consumers', 'engram_owners', 'field_locations',
          'fullgraph_source_sha', 'fullgraph_source_failed')
@@ -24,6 +24,9 @@ PROVIDER_FIELDS=set(STATE)|{'journal_budget','retired_journals','manifest','nati
 ENGINE_FIELDS={'provider','native','dispatch','generation','revision','homes','retired','last_use',
     'allocations','journal','native_calls','expected_outputs','groups','unconsumed_plan',
     'unconsumed_retired','pc10_endpoint_scope','_verified_checkpoint_resume'}
+RUN_SCOPE_FIELDS=('prefix_stop','journal_root','journal_capacity_bytes')
+ROLE_PINS={'h3_ds_checkpoint_provider_r30.py':'4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9',
+    'hbm_bound_event_journal_r30.py':'1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0'}
 
 
 def canonical(value):
@@ -37,9 +40,89 @@ def sha(path):
     return h.hexdigest()
 
 
+def run_scope(p):
+    cap=p.manifest['journal_capacity_bytes'];root=str(Path(p.manifest['journal_root']).resolve())
+    if type(cap)is not int or cap<131072 or p.journal_budget.cap!=cap or str(p.journal_budget.root.resolve())!=root:
+        raise ValueError('actual journal evidence scope mismatch')
+    return dict(prefix_stop=p.manifest.get('prefix_stop'),journal_root=root,journal_capacity_bytes=cap)
+
+
+def scope_role_proof(p,engine):
+    """Narrow evidence-budget role, never a blanket resource exemption."""
+    from h3_ds_checkpoint_provider_r30 import Provider as Base
+    from hbm_bound_event_journal_r30 import JournalBudget
+    if type(p.journal_budget)is not JournalBudget:raise ValueError('unreviewed journal budget role')
+    pins={}
+    for obj in (Base,JournalBudget):
+        path=Path(inspect.getsourcefile(obj));digest=sha(path)
+        if digest!=ROLE_PINS[path.name]:raise ValueError('journal evidence role source mismatch')
+        pins[path.name]=digest
+    for obj in (p,engine):
+        for cls in type(obj).__mro__:
+            if cls is object:continue
+            body=inspect.getsource(cls)
+            if 'prefix_stop' in body or (cls is not Base and any(k in body for k in ('journal_capacity_bytes','journal_root'))):
+                raise ValueError('unreviewed run-scope use in data class')
+    return dict(schema='SOURCE_JOURNAL_EVIDENCE_ROLE_V1',source_sha256=pins,
+        native_ports_unchanged=True,capacity_role='SQLite metadata admission guard; not tags/queues/backing extent',
+        stop_role='external execution bound; no use in provider/engine data classes')
+
+
+def data_identity(value):
+    # Used ONLY by an explicit validated transition; normal enrollment stays
+    # strict. Every other identity field, including full future-use, is exact.
+    return {k:v for k,v in value.items() if k!='manifest_sha256'}
+
+
 def unwrap(provider):
     # Comparators contain expected outputs. They are never traversed or saved.
     return provider.provider if type(provider).__name__ == 'Observed' else provider
+
+
+def shared_factory(p,engine):
+    shared=getattr(getattr(engine,'groups',None),'shared',None)
+    if shared is None:return None
+    from h4_hbm_w19_pc10_endpoints import ProductionSharedFactory
+    if type(shared) is not ProductionSharedFactory or set(vars(shared))!={'budget','memories','sources'}:
+        raise ValueError('exact PC10 shared factory schema required')
+    if shared.budget is not p.journal_budget:raise ValueError('shared journal ownership mismatch')
+    return shared
+
+
+def validate_shared(p,engine):
+    shared=shared_factory(p,engine)
+    if shared is None:return
+    from h4_hbm_w19_pc10_endpoints import RF_BYTES, SHARED_BYTES, inputs
+    if shared.sources!=inputs():raise ValueError('shared immutable source contract mismatch')
+    if len(shared.memories)>96*32:raise ValueError('shared capacity')
+    for key,memory in shared.memories.items():
+        if set(vars(memory))!={'extent','p','serial','owner'}:raise ValueError('unknown shared memory state')
+        owner=memory.owner;rank,sm=key
+        if (type(rank)is not int or not 0<=rank<96 or type(sm)is not int or not 0<=sm<32
+            or owner.get('rank')!=rank or owner.get('SM')!=sm or owner.get('PC')!=10
+            or type(owner.get('generation'))is not int or owner['generation']!=p.generation
+            or set(owner)-{'PC','rank','SM','generation','tile','template'}):
+            raise ValueError('shared source owner identity mismatch')
+        if 10 not in engine.retired:raise ValueError('unretired shared source owner')
+        if 'tile' in owner and (type(owner['tile'])is not int or owner['tile']<0):raise ValueError('shared tile identity')
+        if 'template' in owner and not isinstance(owner['template'],str):raise ValueError('shared template identity')
+        extent=dict(base=RF_BYTES+sm*SHARED_BYTES,bytes=SHARED_BYTES,rank=rank,SM=sm)
+        port=memory.p
+        if set(vars(port))!=set(PORT_STATE)|{'live','queue','events','calendar','resident','faults'}:
+            raise ValueError('unknown shared provider state')
+        if memory.extent!=extent or port.extents!={('DeepSeek',rank):[dict(base=extent['base'],bytes=SHARED_BYTES)]}:
+            raise ValueError('shared exact finite extent mismatch')
+        if port.allocation_identity!=dict(owner,die=rank,address_class='shared'):
+            raise ValueError('shared allocation identity mismatch')
+        if any(getattr(port,f) for f in ('live','queue','calendar','resident','faults')) or port.events.closed:
+            raise ValueError('live shared reverse/provider debt')
+        if type(memory.serial)is not int or not 0<=memory.serial<=2**40 or memory.serial!=port.accept_sequence:
+            raise ValueError('shared serial/accepted sequence mismatch')
+        if port.tags!=1 or len(port.generations)!=1:raise ValueError('shared source tag geometry')
+        for (target,r,sector),data in port.backing.items():
+            if target!='DeepSeek' or r!=rank or not extent['base']<=sector*32<extent['base']+SHARED_BYTES or len(data)!=32:
+                raise ValueError('shared backing address mismatch')
+            if any(v is not None and (type(v)is not int or not 0<=v<256) for v in data):raise ValueError('shared byte validity')
 
 
 def quiescent(provider, engine):
@@ -67,9 +150,7 @@ def quiescent(provider, engine):
         raise ValueError('live/partial paired history')
     for obj in (getattr(p, 'C0_source_views', None), getattr(engine, 'groups', None)):
         if obj is not None and obj.failed: raise ValueError('failed bridge/group')
-    groups=getattr(engine,'groups',None)
-    if groups is not None and getattr(getattr(groups,'shared',None),'memories',{}):
-        raise ValueError('shared source owners require separate schema before checkpoint')
+    validate_shared(p,engine)
     retired = engine.retired
     if not retired or any(type(pc) is not int for pc in retired) or retired != set(range(max(retired)+1)):
         raise ValueError('complete retired prefix required')
@@ -79,8 +160,11 @@ def quiescent(provider, engine):
 def identity(p, engine):
     manifest = dict(p.manifest)
     manifest.pop('journal_root', None)  # sole permitted coldconstructor relocation
+    data_manifest=dict(p.manifest)
+    for name in RUN_SCOPE_FIELDS:data_manifest.pop(name,None)
     source = {}
-    for obj in (p, engine):
+    shared=shared_factory(p,engine)
+    for obj in (p, engine) if shared is None else (p,engine,shared):
         for cls in type(obj).__mro__:
             try: path = inspect.getsourcefile(cls)
             except TypeError: path = None
@@ -92,6 +176,7 @@ def identity(p, engine):
     # Source-image identities are exact immutable input records, not expected output.
     images = {name:p.manifest.get(name,[]) for name in ('initial_versions','history_images','view_bindings')}
     return dict(manifest_sha256=hashlib.sha256(canonical(manifest)).hexdigest(),
+        manifest_data_sha256=hashlib.sha256(canonical(data_manifest)).hexdigest(),
         native_sha256=hashlib.sha256(canonical(p.native)).hexdigest(),
         homes_sha256=hashlib.sha256(canonical(p.homes)).hexdigest(),
         last_use_sha256=hashlib.sha256(canonical(engine.last_use)).hexdigest(),
@@ -101,7 +186,8 @@ def identity(p, engine):
         retention_policy_sha256=hashlib.sha256(canonical({'unconsumed_plan':getattr(engine,'unconsumed_plan',{}),
             'pc10_endpoint_scope':getattr(engine,'pc10_endpoint_scope',{})})).hexdigest(),
         revision=p.revision, generation=p.generation, source_sha256=source,
-        immutable_inputs_sha256=hashlib.sha256(canonical(images)).hexdigest())
+        immutable_inputs_sha256=hashlib.sha256(canonical(images)).hexdigest(),
+        shared_sources_sha256={} if shared is None else {k:hashlib.sha256(v).hexdigest() for k,v in sorted(shared.sources.items())})
 
 
 def verify_inputs(p):
@@ -209,13 +295,15 @@ def read_tree(v, payload):
 
 def inventory(p, engine):
     p = quiescent(p, engine)
-    ports = list(p.rf.values()) + list(p.state.values())
+    shared=shared_factory(p,engine)
+    ports = list(p.rf.values()) + list(p.state.values()) + ([] if shared is None else [m.p for m in shared.memories.values()])
     arrays = [a for k,a in p.published.items() if k not in getattr(p,'source_images',{})]
     return dict(retired_PCs=sorted(engine.retired), produced_locations=len(p.locations),
         produced_and_initial_cached_array_bytes=sum(a.nbytes for a in arrays),
         raw_sectors=sum(len(x.backing) for x in ports),
         raw_sector_payload_bytes=32*sum(len(x.backing) for x in ports),
         future_source_windows=len(getattr(p,'source_images',{})),
+        retained_shared_homes=0 if shared is None else len(shared.memories),
         external_source_inputs=verify_inputs(p),
         metadata_bytes='priced exactly by serialized closure before publication',
         same_home_restore=True, hardware_qualified=False)
@@ -283,6 +371,44 @@ def validate_backing(p):
                 covered.update(chosen.tolist());raw=words[chosen].tobytes()
                 for copy in range(2):check(p.rf[rank],(h['SM']*2+copy)*RF_SM+h['home']['slot_first']*512,raw)
             if covered!=set(range(len(words))):raise ValueError('partial owned home')
+    validate_query_fields(p)
+
+
+def validate_query_fields(p):
+    """Read addressed field backing directly; no new requests or credits."""
+    visible=getattr(p,'query_visible',{})
+    if not visible:return
+    from ds_hbm_history_codec_r36 import decode
+    manifest={ (b['version'],b['rank'],b['field']):b for b in p.manifest['query_field_homes']['rows'] }
+    if p.query_homes!=manifest:raise ValueError('query field manifest home mismatch')
+    for (version,rank),identity in visible.items():
+        if identity['version']!=version or identity['rank']!=rank or identity['generation']!=p.generation:
+            raise ValueError('query visible source identity mismatch')
+        if (version,rank) not in p.locations or (version,rank) not in p.published or p.locations[version,rank]['pc']!=identity['PC']:
+            raise ValueError('query visible parent publication missing')
+        if identity['home_indices']!=p.locations[version,rank].get('indices'):
+            raise ValueError('query visible parent home identity mismatch')
+        op=p.native['instructions'][identity['PC']]
+        if op['pc']!=identity['PC'] or op['family']!='index_q':raise ValueError('query visible source opcode mismatch')
+        arrays={};intervals=[]
+        for field in ('query_codes','query_exp'):
+            b=manifest[version,rank,field];dtype=np.dtype({'U32':'<u4','I64':'<i8'}[b['dtype']])
+            size=int(np.prod(b['shape']))*dtype.itemsize
+            if (b['PC'],b['generation'])!=(identity['PC'],p.generation) or size!=b['bytes'] or size>b['reservation_bytes'] or b['base']%32 or not 33554432<=b['base'] or b['base']+b['reservation_bytes']>67108864:
+                raise ValueError('query exact field extent/identity mismatch')
+            lo,hi=b['base'],b['base']+b['reservation_bytes']
+            if any(lo<end and start<hi for start,end in intervals):raise ValueError('query field alias')
+            intervals.append((lo,hi));raw=bytearray()
+            for address in range(lo,lo+size,32):
+                data=p.state[rank].backing.get(('DeepSeek',rank,address//32));n=min(32,lo+size-address)
+                if data is None or len(data)!=32 or any(v is None for v in data[:n]):raise ValueError('query field backing missing')
+                raw.extend(data[:n])
+            arrays[field]=np.frombuffer(raw,dtype=dtype).reshape(b['shape'])
+        exp=arrays['query_exp']
+        if exp.dtype==np.uint32:exp=exp.view(np.int32).astype(np.int64)
+        actual=decode(arrays['query_codes'],exp,'FP4E8');parent=p.published[version,rank]
+        if parent.dtype!=np.float32 or parent.shape!=(32,128) or not np.array_equal(actual.view(np.uint32),parent.view(np.uint32)):
+            raise ValueError('query codec/actual parent bit identity mismatch')
 
 
 def snapshot_state(p,engine):
@@ -295,6 +421,10 @@ def snapshot_state(p,engine):
     if hasattr(p,'history'):extra['history']={'visible':p.history.visible,'sequence':p.history.sequence}
     if hasattr(engine,'groups'):extra['group_completed']=engine.groups.completed
     if hasattr(engine,'unconsumed_retired'):extra['unconsumed_retired']=engine.unconsumed_retired
+    shared=shared_factory(p,engine)
+    if shared is not None:
+        extra['shared']={key:dict(extent=m.extent,owner=m.owner,serial=m.serial,
+            port={f:getattr(m.p,f) for f in PORT_STATE}) for key,m in shared.memories.items()}
     return dict(provider=state,ports=ports,immutable_published_keys=[k for k in p.published if k in source_images],
                 source_image_keys=list(source_images),retired=engine.retired,extra=extra)
 
@@ -319,6 +449,7 @@ def save(provider, engine, path, *, enabled=False):
     try:
         snapshot=snapshot_state(p,engine)
         closure={'schema':SCHEMA,'identity':identity(p,engine),'inventory':model,'state':writer.tree(snapshot),
+                 'run_scope':run_scope(p),'scope_role_proof':scope_role_proof(p,engine),
                  'opened_checkpoint_shards':checkpoint_shards(p)}
         writer.close(); closure['payload_sha256']=sha(root/'payload.bin')
         closure['payload_bytes']=(root/'payload.bin').stat().st_size
@@ -336,7 +467,7 @@ def save(provider, engine, path, *, enabled=False):
         raise
 
 
-def restore(path, factory, *, expected_seal, enabled=False):
+def restore(path, factory, *, expected_seal, enabled=False, run_scope_transition=None):
     if enabled is not True: raise ValueError('default-off restore')
     root=Path(path); seal=json.loads((root/'COMPLETE.json').read_bytes())
     if seal != expected_seal or seal['schema'] != SCHEMA: raise ValueError('trusted source checkpoint seal')
@@ -352,7 +483,16 @@ def restore(path, factory, *, expected_seal, enabled=False):
     provider,engine=factory(); p=unwrap(provider)
     if p.views or p.memories or p.locations or engine.retired or p.rf or p.state:
         raise ValueError('restore requires exact cold empty producer')
-    if identity(p,engine)!=closure['identity']: raise ValueError('cold source/manifest/home/retention mismatch')
+    shared=shared_factory(p,engine)
+    if shared is not None and shared.memories:raise ValueError('restore requires cold empty shared factory')
+    current=identity(p,engine)
+    if run_scope_transition is None:
+        if current!=closure['identity']:raise ValueError('cold source/manifest/home/retention mismatch')
+    else:
+        validate_scope_transition(run_scope_transition,old_identity=closure['identity'],new_identity=current,
+            old_scope=closure['run_scope'],next_pc=max(saved['retired'])+1,
+            new_scope=run_scope(p),role_proof=scope_role_proof(p,engine))
+        if run_scope(p)['prefix_stop']>=len(p.native['instructions']):raise ValueError('scope outside complete native program')
     verify_inputs(p)
     lock_shards(p,closure['opened_checkpoint_shards'])
     from hbm_bound_event_journal_r30 import BoundSectorProvider, CompactSectors
@@ -380,6 +520,15 @@ def restore(path, factory, *, expected_seal, enabled=False):
     for key in saved['immutable_published_keys']: p.published[key]=p.source_images[key].check()
     engine.retired.clear();engine.retired.update(saved['retired'])
     extra=saved['extra']
+    if 'shared' in extra:
+        if shared is None:raise ValueError('cold shared factory missing')
+        for key,s in extra['shared'].items():
+            memory=shared(s['owner'])
+            if key!=(s['owner']['rank'],s['owner']['SM']) or memory.extent!=s['extent']:
+                raise ValueError('restored shared finite home mismatch')
+            memory.serial=s['serial']
+            for field,value in s['port'].items():setattr(memory.p,field,value)
+            memory.p.backing=CompactSectors(memory.p.backing)
     if 'history' in extra:
         p.history.visible=extra['history']['visible'];p.history.sequence=extra['history']['sequence']
     if 'group_completed' in extra:
@@ -398,6 +547,8 @@ def execute_remaining(engine, *, stop_after):
         raise ValueError('verified contiguous prefix required')
     if not getattr(engine,'_verified_checkpoint_resume',False):
         raise ValueError('resume loop requires successful verified restore')
+    bound=unwrap(engine.provider).manifest.get('prefix_stop')
+    if bound is not None and (type(stop_after)is not int or stop_after>bound):raise ValueError('execution exceeds enrolled run scope')
     for op in engine.native['instructions']:
         if op['pc']>stop_after: break
         if op['pc'] not in engine.retired: engine.execute_operation(op)
@@ -468,7 +619,9 @@ def capture_quiescent(engine, provider, witness, *, boundary_pc, destination, so
             'initialization_provenance':witness.initialization_provenance,
             'observation_journal':witness.events.summary(),
             'source_contract':source_contract,'boundary_pc':boundary_pc,
-            'projection':projection,'producer_seal':seal}
+            'projection':projection,'producer_seal':seal,
+            'run_scope':run_scope(unwrap(provider)),
+            'scope_role_proof':scope_role_proof(unwrap(provider),engine)}
     with (root/'actual_observations.json').open('xb') as f:
         f.write(canonical(actual));f.flush();os.fsync(f.fileno())
     receipt={'producer_seal':seal,'actual_observations_sha256':sha(root/'actual_observations.json')}
@@ -479,23 +632,72 @@ def capture_quiescent(engine, provider, witness, *, boundary_pc, destination, so
 
 
 def verify_checkpoint(checkpoint_dir, *, source_contract, next_pc, constructor_contract):
+    if type(next_pc)is not int:raise ValueError('typed next PC required')
     root=Path(checkpoint_dir);receipt=json.loads((root/'RUNNER_COMPLETE.json').read_bytes())
     if receipt!=constructor_contract.get('checkpoint_receipt'):raise ValueError('trusted external checkpoint receipt')
     if sha(root/'actual_observations.json')!=receipt['actual_observations_sha256']:raise ValueError('actual observation drift')
     actual=json.loads((root/'actual_observations.json').read_bytes())
-    if actual['source_contract']!=source_contract or constructor_contract.get('identity')!=source_contract.get('identity'):
+    if actual['source_contract']!=source_contract:
         raise ValueError('source/constructor contract')
+    transition=constructor_contract.get('run_scope_transition')
+    if transition is None:
+        if constructor_contract.get('identity')!=source_contract.get('identity'):raise ValueError('source/constructor contract')
+    else:
+        if transition['checkpoint_receipt']!=receipt:raise ValueError('transition producer receipt')
+        validate_scope_transition(transition,old_identity=source_contract['identity'],
+            new_identity=constructor_contract['identity'],old_scope=actual['run_scope'],next_pc=next_pc,
+            new_scope=constructor_contract['run_scope'],role_proof=actual['scope_role_proof'])
     if next_pc!=actual['boundary_pc']+1:raise ValueError('exact contiguous next PC')
     for name,key in [('state.json','state_sha256'),('payload.bin','payload_sha256')]:
         if (root/name).is_symlink() or sha(root/name)!=receipt['producer_seal'][key]:raise ValueError('actual payload drift')
-    return {'checkpoint_dir':str(root),'receipt':receipt,'actual':actual,'source_contract':source_contract,'next_pc':next_pc}
+    result={'checkpoint_dir':str(root),'receipt':receipt,'actual':actual,'source_contract':source_contract,'next_pc':next_pc}
+    if transition is not None:result['run_scope_transition']=transition
+    return result
+
+
+def validate_scope_transition(t, *, old_identity,new_identity,old_scope,new_scope,next_pc,role_proof):
+    keys={'schema','old_identity','new_identity','old_run_scope','new_run_scope','next_pc','checkpoint_receipt','role_proof','seal_sha256'}
+    if set(t)!=keys or t['schema']!='DS_EXPLICIT_RUN_SCOPE_TRANSITION_V1':raise ValueError('exact run-scope transition schema')
+    unsigned={k:v for k,v in t.items() if k!='seal_sha256'}
+    if hashlib.sha256(canonical(unsigned)).hexdigest()!=t['seal_sha256']:raise ValueError('run-scope transition seal')
+    if (t['old_identity'],t['new_identity'],t['old_run_scope'],t['new_run_scope'],t['next_pc'],t['role_proof'])!=(old_identity,new_identity,old_scope,new_scope,next_pc,role_proof):
+        raise ValueError('run-scope exact old/new binding')
+    if data_identity(old_identity)!=data_identity(new_identity):raise ValueError('run-scope data identity changed')
+    old,new=old_scope['prefix_stop'],new_scope['prefix_stop']
+    if type(old)is not int or type(new)is not int or not next_pc<=new or new<old or old<next_pc-1:
+        raise ValueError('run-scope extension boundary')
+    if old_scope['journal_root']==new_scope['journal_root']:raise ValueError('fresh continuation journal required')
+    if type(new_scope['journal_capacity_bytes'])is not int or new_scope['journal_capacity_bytes']<131072:
+        raise ValueError('positive evidence capacity')
+
+
+def plan_run_scope_transition(checkpoint_dir, *, source_contract,checkpoint_receipt,provider,engine,next_pc):
+    """Seal authorized continuation policy, without weakening source identity."""
+    verified=verify_checkpoint(checkpoint_dir,source_contract=source_contract,next_pc=next_pc,
+        constructor_contract={'identity':source_contract['identity'],'checkpoint_receipt':checkpoint_receipt})
+    p=unwrap(provider);role=scope_role_proof(p,engine)
+    if p.views or p.memories or p.locations or engine.retired or p.rf or p.state:
+        raise ValueError('continuation scope requires exact cold constructor')
+    if role!=verified['actual']['scope_role_proof']:raise ValueError('continuation role proof changed')
+    scope=run_scope(p)
+    if type(scope['prefix_stop'])is not int or scope['prefix_stop']>=len(p.native['instructions']):
+        raise ValueError('scope outside complete native program')
+    t=dict(schema='DS_EXPLICIT_RUN_SCOPE_TRANSITION_V1',old_identity=source_contract['identity'],new_identity=identity(p,engine),
+        old_run_scope=verified['actual']['run_scope'],new_run_scope=scope,next_pc=next_pc,
+        checkpoint_receipt=checkpoint_receipt,role_proof=role)
+    t['seal_sha256']=hashlib.sha256(canonical(t)).hexdigest()
+    validate_scope_transition(t,old_identity=t['old_identity'],new_identity=t['new_identity'],
+        old_scope=t['old_run_scope'],new_scope=scope,next_pc=next_pc,role_proof=role)
+    return t
 
 
 def restore_quiescent(verified_manifest, engine, provider, witness):
     v=verified_manifest
     # Reverify on use; callers cannot turn a stale verified object into authority.
-    fresh=verify_checkpoint(v['checkpoint_dir'],source_contract=v['source_contract'],next_pc=v['next_pc'],
-        constructor_contract={'identity':identity(unwrap(provider),engine),'checkpoint_receipt':v['receipt']})
+    contract={'identity':identity(unwrap(provider),engine),'checkpoint_receipt':v['receipt']}
+    if 'run_scope_transition' in v:
+        contract.update(run_scope_transition=v['run_scope_transition'],run_scope=run_scope(unwrap(provider)))
+    fresh=verify_checkpoint(v['checkpoint_dir'],source_contract=v['source_contract'],next_pc=v['next_pc'],constructor_contract=contract)
     if fresh!=v:raise ValueError('stale verified manifest')
     actual=v['actual']
     p=unwrap(provider)
@@ -506,10 +708,22 @@ def restore_quiescent(verified_manifest, engine, provider, witness):
         raise ValueError('exact fresh witness provenance')
     seen={tuple(k) for k in actual['seen']}
     if not seen<=set(witness.expected):raise ValueError('actual witness source identities')
-    restore(v['checkpoint_dir'],lambda:(provider,engine),expected_seal=v['receipt']['producer_seal'],enabled=True)
+    restore(v['checkpoint_dir'],lambda:(provider,engine),expected_seal=v['receipt']['producer_seal'],enabled=True,
+        run_scope_transition=v.get('run_scope_transition'))
     if engine.retired!=set(range(v['next_pc'])):raise ValueError('restored retired prefix')
     witness.seen=seen
     engine._verified_checkpoint_resume=True
+    # Even the unchanged legacy root-only relocation gets an exact sealed
+    # output receipt. Stop/capacity changes still require the explicit plan.
+    scope_receipt=dict(schema='DS_RESTORED_RUN_SCOPE_RECEIPT_V1',
+        producer_checkpoint_receipt=v['receipt'],old_run_scope=actual['run_scope'],
+        new_run_scope=run_scope(p),old_identity=v['source_contract']['identity'],
+        new_identity=identity(p,engine),retired=sorted(engine.retired),
+        explicit_transition=v.get('run_scope_transition'),role_proof=scope_role_proof(p,engine))
+    scope_receipt['seal_sha256']=hashlib.sha256(canonical(scope_receipt)).hexdigest()
+    with (p.journal_budget.root/'checkpoint_restore_scope.json').open('xb') as f:
+        f.write(canonical(scope_receipt));f.flush();os.fsync(f.fileno())
+    fd=os.open(p.journal_budget.root,os.O_RDONLY);os.fsync(fd);os.close(fd)
     return {'retired':sorted(engine.retired),'next_pc':v['next_pc'],
             'prior_actual_observation_journal':actual['observation_journal'],
-            'same_home_restored':True,'hardware_qualified':False}
+            'same_home_restored':True,'hardware_qualified':False,'run_scope_receipt':scope_receipt}
