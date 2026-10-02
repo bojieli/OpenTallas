@@ -1,0 +1,62 @@
+{
+  "time_utc": "2026-10-02T09:55:31.693164+00:00",
+  "before": {
+    "available_bytes": 440419504128,
+    "free_bytes": 645150507008
+  },
+  "after": {
+    "available_bytes": 463855955968,
+    "free_bytes": 668586958848
+  },
+  "candidate_bytes_removed": 23434231808,
+  "filesystem_available_delta_bytes": 23436451840,
+  "retired": [
+    {
+      "path": "/tmp/opentallas-v41-user-namespace",
+      "preserved_ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-user-namespace",
+      "head": "e3ef0a2b7bdf97af71dd1a47a4714251e8edc018",
+      "removed_allocated_bytes": 3905433600,
+      "removed": true
+    },
+    {
+      "path": "/tmp/opentallas-v41-user-preflight",
+      "preserved_ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-user-preflight",
+      "head": "b1aeb454618c8f7fb2d5cc0dc4e2a9b40b4da65e",
+      "removed_allocated_bytes": 3910410240,
+      "removed": true
+    },
+    {
+      "path": "/tmp/opentallas-v41-shard-read",
+      "preserved_ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-shard-read",
+      "head": "f29cfe20b22fd9c54acad15747c5823be0a971c5",
+      "removed_allocated_bytes": 3894784000,
+      "removed": true
+    },
+    {
+      "path": "/tmp/opentallas-v41-shard-read-fast",
+      "preserved_ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-shard-read-fast",
+      "head": "3ff5bf3eda92fa3ae818467411baac5bd8bf8a6d",
+      "removed_allocated_bytes": 3905871872,
+      "removed": true
+    },
+    {
+      "path": "/tmp/opentallas-v41-shard-quarter-collect",
+      "preserved_ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-shard-quarter-collect",
+      "head": "c00a0141bf94b6e99c97ab766b93e6b044402740",
+      "removed_allocated_bytes": 3905585152,
+      "removed": true
+    },
+    {
+      "path": "/tmp/opentallas-v41-single-token-schedule",
+      "preserved_ref": "refs/retired/local-disk-batch2-20261002/opentallas-v41-single-token-schedule",
+      "head": "668912b0683a4b6b8ce98bf2476f8d5e9d725357",
+      "removed_allocated_bytes": 3912146944,
+      "removed": true
+    }
+  ],
+  "unique_sources_and_evidence_preserved": true,
+  "existing_jobs_signalled": 0,
+  "current_checkpoints_removed": 0,
+  "guard_and_drain_monitors_untouched": true,
+  "external_activity_can_affect_df_delta": true
+}
