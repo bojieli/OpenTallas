@@ -23,12 +23,13 @@ import argparse
 import hashlib
 import re
 from pathlib import Path
+from qwen_rom_arithmetic_contract_w12 import DEFAULTS as ARITH_DEFAULTS
 
 ROOT = Path(__file__).resolve().parents[1]
 CORE = ROOT / "rtl/hdc/ot_hdc_core_vector_weight.sv"
 VSTREAM = ROOT / "rtl/hdc/ot_hdc_vstream.sv"
 REMOVE = ("int8_wrom_q", "kv_raddr", "kv_q", "vx_re", "vx_addr", "vx_q", "me_oaddr", "me_omask", "me_odata")
-SPINE_PARAMS = ("SMIN", "SMAX", "TCUT", "BD", "XVM", "NWS", "TWS", "ORD", "SCALE_LOCAL", "MEM_EXTRA")
+SPINE_PARAMS = ("SMIN", "SMAX", "TCUT", "BD", "XVM", "NWS", "TWS", "ORD", "SCALE_LOCAL", "MEM_EXTRA", "ACC_LAT", "TREE_LAT", "MUL_LAT", "FAST_ISSUE", "KV_PREP")
 
 
 def emit(text: str) -> str:
@@ -53,7 +54,7 @@ def emit(text: str) -> str:
     text = sub1(r"(\.wrom_re\(su_wrom_re\), \.wrom_addr\(su_wrom_addr\), )\.wrom_q\(wrom_q\),",
                 r"\1.wrom_q(wrom_q[W*16-1:0]),", text)
     text = sub1(r"(    parameter integer EMB_ADDR_BASE = 0)( //[^\n]*)\n\) \(",
-                r"\1,\2\n" + ",\n".join(f"    parameter integer {p} = 0" for p in SPINE_PARAMS) + "\n) (", text)
+                r"\1,\2\n" + ",\n".join(f"    parameter integer {p} = {ARITH_DEFAULTS.get(p, 0)}" for p in SPINE_PARAMS) + "\n) (", text)
     for name in REMOVE:
         text = sub1(rf"\n    (input|output)\s+wire\s+\[[^\]]*\]\s+{name},[^\n]*", "", text)
     ports = ("\n    // W12 array spine: the vector memory's x chunk port and the tile fabric"

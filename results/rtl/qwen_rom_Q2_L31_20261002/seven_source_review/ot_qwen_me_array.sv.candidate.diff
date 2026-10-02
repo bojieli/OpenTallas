@@ -1,0 +1,160 @@
+--- captured-runtime
+
++++ rtl/hdc/ot_qwen_me_array_w12.sv
+
+@@ -2,10 +2,10 @@
+
+ // ---------------------------------------------------------------------------
+ // Qwen3-8B O4 ROM die matrix engine as a replicated array (docs/MICROARCH_MODEL.md,
+ // Qwen section; W12).  GT lane groups are built from GT/TG identical tile
+-// elements (ot_hdc_matvec_part PART 1: TG groups, their strap i_gbase = t*TG,
++// elements (ot_qwen_w12_matvec_part PART 1: TG groups, their strap i_gbase = t*TG,
+ // the first log2(TG) split-tree levels), upper split-tree nodes
+-// (ot_qwen_me_node, one pair-adder word per node) for levels log2(TG)+1..TCUT,
+-// and one spine top (ot_hdc_matvec_part PART 2: the issue loop that drives the
++// (ot_qwen_me_node_w12, one pair-adder word per node) for levels log2(TG)+1..TCUT,
++// and one spine top (ot_qwen_w12_matvec_part PART 2: the issue loop that drives the
+ // x chunk stream, tree levels TCUT+1.., the GT >> SMIN result-port groups with
+ // the INT8 post-scale, results, argmax and per-slot maxima).
+ //
+@@ -19,7 +19,7 @@
+
+ // Every tile's issue loop starts BD cycles after the top's and runs in
+ // lockstep with it; the top's tags wait XD = BD + (TCUT - log2 TG) * NWS + TWS
+ // extra cycles for the tree.  Values are those of the monolithic engine
+-// (ot_hdc_matvec with the same GT and SMIN); only the latency grows.
++// (ot_qwen_w12_matvec with the same GT and SMIN); only the latency grows.
+ //
+ // x network.  Group g reads chunk c = g mod S.  A tile's TG groups are TG
+ // consecutive chunks starting at TG*t mod S, so the vector memory drives
+@@ -27,7 +27,7 @@
+
+ // (replicated at the source for S < 2^SMAX), and tile t listens to line
+ // t mod NXL.  Ops with split > SMAX or < SMIN fault.
+ // ---------------------------------------------------------------------------
+-module ot_qwen_me_array #(
++module ot_qwen_me_array_w12 #(
+     parameter integer W  = 16,
+     parameter integer IL = 8,
+     parameter integer AW = 24,
+@@ -43,10 +43,15 @@
+
+     parameter integer NWS = 0,
+     parameter integer TWS = 0,
+     parameter integer ORD = 0,
+-    parameter integer MEM_EXTRA = 0,      // tile memory capture stage (ot_qwen_rom_tile_logic)
+-    parameter integer SCALE_LOCAL = 0,    // port-local scale ROM (ot_hdc_matvec_part SCALE_LOCAL)
++    parameter integer MEM_EXTRA = 0,      // tile memory capture stage (ot_qwen_rom_tile_logic_w12)
++    parameter integer SCALE_LOCAL = 0,    // port-local scale ROM (ot_qwen_w12_matvec_part SCALE_LOCAL)
+     parameter integer CODE_BANKS = 2,
+-    parameter integer KV_LOCAL = 0        // 1: tiles hold KV slices (ot_qwen_rom_tile); 0: global KV port
++    parameter integer KV_LOCAL = 0,       // 1: tiles hold KV slices (ot_qwen_rom_tile_w12); 0: global KV port
++    parameter integer ACC_LAT = 5,        // lane accumulator FP32 add latency (ot_qwen_w12_matvec_part ACC_LAT)
++    parameter integer FAST_ISSUE = 0,     // 1.2 GHz issue loop (ot_qwen_w12_matvec_part FAST_ISSUE)
++    parameter integer KV_PREP = 0,        // KV-op offset pipeline cycles (ot_qwen_w12_matvec_part KV_PREP)
++    parameter integer MUL_LAT = 5,        // lane BF16 product latency (ot_qwen_w12_matvec_part MUL_LAT)
++    parameter integer TREE_LAT = 3        // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
+ ) (
+     input  wire              clk,
+     input  wire              rst_n,
+@@ -117,8 +122,9 @@
+
+     wire [NPG*AW-1:0]   sp_scale_addr, sp_o_addr;
+     wire [NPG*W-1:0]    sp_o_mask;
+     wire [NPG*W*32-1:0] sp_o_data;
+-    ot_qwen_me_spine #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
+-        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .MEM_EXTRA(MEM_EXTRA)) u_spine (
++    ot_qwen_me_spine_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
++        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .MEM_EXTRA(MEM_EXTRA),
++        .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_spine (
+         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
+         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
+@@ -187,8 +193,9 @@
+
+                 assign na = {W*32{1'b0}}; assign nb = {W*32{1'b0}}; assign nva = 1'b0;
+             end
+             wire [TG*W*32-1:0] kvq = t_kv_q[t*TG*W*32 +: TG*W*32];
+-            ot_qwen_rom_tile_logic #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
+-                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA)) u_t (
++            ot_qwen_rom_tile_logic_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
++                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA),
++                .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+                 .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
+                 .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),
+                 .t_out(lw[LT][t*W*32 +: W*32]), .t_vout(lvv[LT][t]),
+@@ -203,9 +210,9 @@
+
+     assign fab_fault = |tile_fault;     // lanes, tile tree levels and hosted nodes
+ endmodule
+ 
+-// The spine part of the array: the engine top (ot_hdc_matvec_part PART 2), the
++// The spine part of the array: the engine top (ot_qwen_w12_matvec_part PART 2), the
+ // instruction broadcast and the x network, facing the tile fabric.
+-module ot_qwen_me_spine #(
++module ot_qwen_me_spine_w12 #(
+     parameter integer W  = 16,
+     parameter integer IL = 8,
+     parameter integer AW = 24,
+@@ -221,8 +228,13 @@
+
+     parameter integer NWS = 0,
+     parameter integer TWS = 0,
+     parameter integer ORD = 0,
+-    parameter integer MEM_EXTRA = 0,      // tile memory capture stage (ot_qwen_rom_tile_logic)
+-    parameter integer SCALE_LOCAL = 0
++    parameter integer MEM_EXTRA = 0,      // tile memory capture stage (ot_qwen_rom_tile_logic_w12)
++    parameter integer SCALE_LOCAL = 0,
++    parameter integer ACC_LAT = 5,        // lane accumulator FP32 add latency (ot_qwen_w12_matvec_part ACC_LAT)
++    parameter integer FAST_ISSUE = 0,     // 1.2 GHz issue loop (ot_qwen_w12_matvec_part FAST_ISSUE)
++    parameter integer KV_PREP = 0,        // KV-op offset pipeline cycles (ot_qwen_w12_matvec_part KV_PREP)
++    parameter integer MUL_LAT = 5,        // lane BF16 product latency (ot_qwen_w12_matvec_part MUL_LAT)
++    parameter integer TREE_LAT = 3        // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
+ ) (
+     input  wire              clk,
+     input  wire              rst_n,
+@@ -293,9 +305,9 @@
+
+     reg                 fault_in;
+     wire                top_fault;
+     reg                 range_fault;
+-    ot_hdc_matvec_part #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1),
++    ot_qwen_w12_matvec_part #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1),
+         .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .PART(2), .GT(GT), .SMIN(SMIN), .TCUT(TCUT),
+-        .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN)) u_top (
++        .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_top (
+         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
+         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
+@@ -377,11 +389,12 @@
+
+ endmodule
+ 
+ 
+-// One upper split-tree node: the pair sum of two tree words (ot_hdc_qadd, then
+-// the level's output register: TL = 4 cycles), after WS wire stages.
+-module ot_qwen_me_node #(
++// One upper split-tree node: the pair sum of two tree words (ot_qwen_w12_tadd, then
++// the level's output register: TL = TREE_LAT + 1 cycles), after WS wire stages.
++module ot_qwen_me_node_w12 #(
+     parameter integer W = 16,
+-    parameter integer WS = 0
++    parameter integer WS = 0,
++    parameter integer TREE_LAT = 3
+ ) (
+     input  wire            clk,
+     input  wire            rst_n,
+@@ -401,10 +414,10 @@
+
+     generate
+         for (p = 0; p < W; p = p + 1) begin : g_add
+             wire [31:0] s;
+-            ot_hdc_qadd u_add (clk, rst_n, vd, ad[32*p +: 32], bd[32*p +: 32], s, pf[p]);
++            ot_qwen_w12_tadd #(.LAT(TREE_LAT)) u_add (clk, rst_n, vd, ad[32*p +: 32], bd[32*p +: 32], s, pf[p]);
+             always @(posedge clk) y[32*p +: 32] <= s;
+         end
+     endgenerate
+-    ot_hdc_delay #(.W(1), .D(4), .RESET(1)) u_vy (.clk(clk), .rst_n(rst_n), .d(vd), .q(vy));
++    ot_hdc_delay #(.W(1), .D(TREE_LAT + 1), .RESET(1)) u_vy (.clk(clk), .rst_n(rst_n), .d(vd), .q(vy));
+     assign fault = |pf;
+ endmodule

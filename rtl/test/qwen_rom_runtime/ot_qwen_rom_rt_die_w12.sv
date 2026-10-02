@@ -26,6 +26,11 @@ module ot_qwen_rom_rt_die_w12 #(
     parameter integer ORD = 0,
     parameter integer SCALE_LOCAL = 0,
     parameter integer MEM_EXTRA = 0,
+    parameter integer ACC_LAT = 5,
+    parameter integer TREE_LAT = 3,
+    parameter integer MUL_LAT = 5,
+    parameter integer FAST_ISSUE = 0,
+    parameter integer KV_PREP = 0,
     parameter integer ENABLE_AR256 = 0,
     parameter integer D = 2
 ) (
@@ -129,7 +134,9 @@ module ot_qwen_rom_rt_die_w12 #(
         .SU_VEC(1),.SW(SW),.LV(LV),.KV_FP8(1),
         .INT8_WEIGHT(1),.INT8_SCALE_WCS_BASE(1),.INT8_EMBED(0),.QWEN_FULLSHAPE(QWEN_FULLSHAPE),
         .ME_STALL(0),.ME_IDLE_GATE(ME_IDLE_GATE),
-        .SMIN(SMIN),.SMAX(SMAX),.TCUT(TCUT),.BD(BD),.XVM(XVM),.NWS(NWS),.TWS(TWS),.ORD(ORD),.SCALE_LOCAL(SCALE_LOCAL),.MEM_EXTRA(MEM_EXTRA)) core (
+        .SMIN(SMIN),.SMAX(SMAX),.TCUT(TCUT),.BD(BD),.XVM(XVM),.NWS(NWS),.TWS(TWS),.ORD(ORD),.SCALE_LOCAL(SCALE_LOCAL),.MEM_EXTRA(MEM_EXTRA),
+        .ACC_LAT(ACC_LAT),.TREE_LAT(TREE_LAT),.MUL_LAT(MUL_LAT),
+        .FAST_ISSUE(FAST_ISSUE),.KV_PREP(KV_PREP)) core (
         .clk(clk),.rst_n(rst_n),.start(core_start),.token(core_tok[NW-1:0]),.pos(core_pos[NW-1:0]),
         .done(core_done),.next_token(core_ntok_c),.next_val(core_nval),
         .cycles(core_cycles),.fault(core_fault),

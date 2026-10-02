@@ -50,7 +50,10 @@ COLL_RTL = [ROOT / f"rtl/rom/{n}.sv" for n in ("ot_rom_pkg_link", "ot_rom_pkg_ct
 SOURCES = sorted(set([*DIE_RTL, *TILE_RTL, *COLL_RTL, C.ISA_SVH, ROOT / "rtl/hdc/ot_hdc_core_vector_weight.sv",
                       RR / "qwen_rom_rt_w12.cpp", RT / "qwen_rt_matvec.hpp", RT / "qwen_rt_memory.hpp",
                       Path(__file__), ROOT / "tools/qwen_rom_rt_core_emit_w12.py",
-                      ROOT / "tools/qwen_rom_rt_token.py"]))
+                      ROOT / "tools/qwen_rom_rt_token.py", ROOT / "tools/qwen_rom_arithmetic_contract_w12.py"]))
+
+
+from qwen_rom_arithmetic_contract_w12 import flags as arithmetic_flags
 
 
 def sha(p: Path) -> str:
@@ -98,7 +101,12 @@ def main() -> None:
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--build-only", action="store_true")
     ap.add_argument("--result", type=Path)
+    ap.add_argument("--physical-arithmetic-successor", action="store_true",
+                    help="reserved opt-in arithmetic chain; blocked until G0 sizing and model/source gates pass")
     args = ap.parse_args()
+    if args.physical_arithmetic_successor:
+        ap.error("Candidate build blocked: run tools/qwen_rom_arithmetic_contract_w12.py for source-pinned preparation; G0 physical sizing and connected gates remain open")
+    arithmetic = arithmetic_flags(args.physical_arithmetic_successor)
     G, NW = args.groups, args.count_width
     out = args.workdir.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -130,12 +138,12 @@ def main() -> None:
     models = [
         ("die", "ot_qwen_rom_rt_die_w12", [str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
-          f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", f"-GMEM_EXTRA={args.mem_extra}", f"-GENABLE_AR256={int(args.enable_ar256)}", *spine]),
+          f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", f"-GMEM_EXTRA={args.mem_extra}", f"-GENABLE_AR256={int(args.enable_ar256)}", *spine, *arithmetic]),
         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
         ("tile", "ot_qwen_rom_tile_logic_w12", [*map(str, TILE_RTL)],
          [f"-GGT={G}", f"-GNW={NW}", f"-GSMIN={args.smin}", f"-GCODE_BANKS={args.code_banks}", "-GIREG=1", f"-GMEM_EXTRA={args.mem_extra}",
-          f"-GNREG={1 if args.nws > 0 else 0}", "-GKV_LOCAL=0"]),
+          f"-GNREG={1 if args.nws > 0 else 0}", "-GKV_LOCAL=0", *arithmetic]),
     ]
     bp = out / "build_params.json"
     prior = json.loads(bp.read_text()) if bp.exists() else {}

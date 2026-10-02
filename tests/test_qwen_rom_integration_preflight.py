@@ -21,7 +21,8 @@ def test_real_connected_companion_missing_whole_arithmetic_chain():
   row=r['arithmetic_chain'][name]
   assert row['tile_declared'] and row['spine_declared']
   assert row['tile_forwarded_to_engine'] and row['spine_forwarded_to_engine']
-  assert not row['driver_tile_flag'] and not row['die_declared'] and not row['generated_core_declared_and_forwarded']
+  assert row['die_declared'] and row['generated_core_declared_and_forwarded']
+  assert not row['driver_tile_flag']  # Static direct-flag gate stays blocked; opt-in execution is refused.
  assert r['status']=='blocked' and not r['build_ready'] and not r['adoption']
  assert r['kv_connection']['driver_forces_global'] and r['kv_connection']['host_reads_global_kv']
  assert not r['kv_connection']['local_macro_fill_connected']
