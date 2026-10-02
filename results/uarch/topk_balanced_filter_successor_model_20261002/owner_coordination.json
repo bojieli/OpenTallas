@@ -1,0 +1,97 @@
+{
+  "Archimedes": {
+    "request": "Reserve/reconcile ONE full N4/NMAX2048/LDW4 selector using the proposed replacement plus moved controller; bind unknown contained allocations and translated channel/clock/PG. Candidate524288bits already included once; no free-area claim.",
+    "review": {
+      "additional_height_um": 646.8429786585366,
+      "additional_proxy_area_mm2": 1.37482594056,
+      "already_included_candidate_memory_bits": 524288,
+      "containment_rule": "replace whole existing selector rectangle once, not add candidate storage twice; move/reconcile affected adjacent controller and attention/hub route reservations",
+      "existing": {
+        "area_mm2": 0.3075936768,
+        "bbox_DBU": [
+          1000000,
+          20620888,
+          3125440,
+          20765608
+        ],
+        "name": "X_SEL_TOPK_STORE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      "known_service_overlay": {
+        "TP4_group_area_delta_mm2_if_four_services": 5.49930376224,
+        "known_service_only_no_overlap": true,
+        "ownership_scope": "source retained service rectangles only; unknown outside-service allocations are NOT assumed free. Owner must bind containment/exclusions, channels and clock/PG.",
+        "positive_area_overlaps": [],
+        "revised_rectangles": [
+          {
+            "area_mm2": 1.6824196173600001,
+            "bbox_DBU": [
+              1000000,
+              20620888,
+              3125440,
+              21412451
+            ],
+            "name": "PROPOSED_COMPLETE_TOPK_SELECTOR",
+            "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+          },
+          {
+            "area_mm2": 0.08263710720000002,
+            "bbox_DBU": [
+              1000000,
+              21412451,
+              3125440,
+              21451331
+            ],
+            "name": "PROSPECTIVE_COMMON_CONTROLLER_CUT",
+            "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+          }
+        ],
+        "selector_budget_delta_mm2_per_die": 1.37482594056,
+        "whole_system_area_delta_mm2": null
+      },
+      "owner_accepted": false,
+      "proposed_bbox_DBU": [
+        1000000,
+        20620888,
+        3125440,
+        21412451
+      ],
+      "proposed_proxy_height_um": 791.5629786585366,
+      "proposed_same_width_um": 2125.44,
+      "translated_routing_clock_PG_fit": false
+    }
+  },
+  "Maxwell": {
+    "request": "Bind actual serial source calls/deadlines/root writes to source calendar: eight512 index merges plus L20 candidate2048, no TP4 multiplication of latency. Review row-order quota feedback and revised drain latency. Keep offered-only profile distinct from accepted events.",
+    "review": {
+      "HBM_conditional_same_provider": {
+        "added_cycles_per_position": 1575,
+        "added_ns_at_policy_1p2GHz": 1312.5,
+        "calls": 9,
+        "cost_relative_to_existing_DIG4_cycles": -981,
+        "full_token_latency_credit": false
+      },
+      "ROM": {
+        "added_cycles_per_position": 1278,
+        "added_ns_at_policy_1p2GHz": 1065.0,
+        "calls": 9,
+        "cost_relative_to_existing_DIG4_cycles": -510,
+        "full_token_latency_credit": false
+      }
+    }
+  },
+  "Nash_and_Maxwell_no_ROM_ECC": {
+    "policy": "ROM ECC requirement removed by user: no mandatory parity sidecar gather or checker-wait. Source capture/consumer true credits and arithmetic/order retained; old receipts unchanged.",
+    "reference": "no_ROM_ECC_calendar_handoff.json"
+  },
+  "delivery_acknowledged": false,
+  "from": "Epicurus",
+  "launch_policy": "No RTL before reviewed source-bound G0, no PVE2/PVE3 new work or restarts, old route untouched",
+  "preferred_delivery": "registered agent tool IDs; shared artifact path supplied for parent routing",
+  "recipients": [
+    "Archimedes",
+    "Maxwell",
+    "Nash"
+  ],
+  "tool_availability": "This session enabled tools contain no agent send-message tool; old bus name endpoint status is not registered-tool delivery proof."
+}
