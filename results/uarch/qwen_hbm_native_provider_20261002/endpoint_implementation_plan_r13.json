@@ -1,0 +1,238 @@
+{
+  "DS": "Separate292resident geometry envelope fromr11 only; DS ownership/service area remainsOPEN. NoQwen272/288transfer.",
+  "accepted_identity_bits": 192,
+  "admitted_job": {
+    "command": "python3 tools/qwen_hbm_native_provider_r13.py --output /tmp/qwen-native-provider-r13/journal.json",
+    "connected_RTL": false,
+    "kind": "PURE_SOURCE_BOUND_MODEL_EXPERIMENT",
+    "memory_GiB": 2,
+    "remote_required": false,
+    "source_pin": "new commit containing this record",
+    "swap_GiB": 0,
+    "threads": 1,
+    "whole_job_timeout_seconds": 120
+  },
+  "composed_dependency": "max(actual producer result and owned RMW retire, causal perPC bank service/currentrefresh/scans/headprefetch and WR reservation, WR column+CWL6250+burst1024/backing visibility, heldACK and destination availability), then actual addressed store+registered sector retire+reversecredit. Reader=max(writer/fence/prior publication, actual read return/held arb/CDC/map lookup and actual consumer register/IRS). No serial sum of independent paths.",
+  "known_failed_records": [
+    "r10 one32PC fixture did not isolate4stackbank/backing identity (preserved comparison)",
+    "initialization_failure_r13.json",
+    "4933 infrastructure",
+    "952 actual noncausalACT/earlyWR/AWalias",
+    "b33395215BFunderflow"
+  ],
+  "model_resources": {
+    "Qwen_need_mm2_per_stack": 16.582108825564255,
+    "Qwen_service_slot_mm2_per_stack": 16.6015872,
+    "context_macro_inventory": "r11;32perstack128x256;676perdie composed placements",
+    "context_width_proof": "232bits inclacceptedowner192+literalLEN6+expectedmask32+cancel/valid2 fits already paid128x256 macro;24unusedbits remain. Mutable32seenbits remain separately priced FF; no macro/PHY replacement credit.",
+    "immutable_context_endpoint_bits": 232,
+    "owner_map_added_mm2_per_stack": 0.69093226712,
+    "state_budget_policy": "Use r11 explicitly priced immutable owner context incldie/stack; no timer narrowing/replacement credit. Port/CDC/control logic must be reconciled to this inventory before RTL admission. Added consumer data-storage must be charged against4owned sectors/reader slots in retained inventory, never free SRAM."
+  },
+  "model_status": "Source-addressed4stack32PC/core1GHz MODEL; connected source runtime NOT READY",
+  "parent_intake": [
+    "8752b1a92",
+    "56506fb5b"
+  ],
+  "physical_job": "None admitted here: SS/FF/nativePHY abstract andactual endpoint implementation remainOPEN; parent model-ready physical jobs may usefleet independently.",
+  "ports": [
+    {
+      "direction": "finite_client_to_owner_provider",
+      "fields": {
+        "IRS_serial": 32,
+        "IRS_slot": 5,
+        "byte_mask": 32,
+        "caller_tag": 16,
+        "client": 6,
+        "data": 256,
+        "die": 1,
+        "producer_epoch": 64,
+        "sector": 34,
+        "stack": 2,
+        "transport_epoch": 32
+      },
+      "name": "producer_result_commit",
+      "rule": "Accepted owner only; valid/ready held stable. Sector/RMW result is actual registered producer output; no event generated from latency bound. Fullsector/data golden merge checked in bounded bench."
+    },
+    {
+      "direction": "finite_consumer_to_owner_provider",
+      "fields": {
+        "IRS_serial": 32,
+        "IRS_slot": 5,
+        "caller_tag": 16,
+        "client": 6,
+        "die": 1,
+        "producer_epoch": 64,
+        "sector": 34,
+        "stack": 2,
+        "transport_epoch": 32
+      },
+      "name": "RMW_owned_retire",
+      "rule": "Actual result register capture followed by registered retire; required before corresponding WR may reserve/pop."
+    },
+    {
+      "direction": "command_provider_to_completion_store",
+      "fields": {
+        "IRS_serial": 32,
+        "IRS_slot": 5,
+        "caller_tag": 16,
+        "client": 6,
+        "die": 1,
+        "physical_owner_slot": 7,
+        "physical_tag": 16,
+        "producer_epoch": 64,
+        "sector": 34,
+        "stack": 2,
+        "transport_epoch": 32
+      },
+      "name": "WRvisible",
+      "rule": "Only after causal WR acceptance plus CWL/burst and physical backing update; immutable held valid/ready perPC, never p_wr_done pulse. Full address and accepted epochs recovered from quarantined physical tag context."
+    },
+    {
+      "direction": "completion_store_to_writer_credit",
+      "fields": {
+        "IRS_serial": 32,
+        "IRS_slot": 5,
+        "caller_tag": 16,
+        "cancelled": 1,
+        "client": 6,
+        "die": 1,
+        "ordinal": 9,
+        "producer_epoch": 64,
+        "sector": 34,
+        "stack": 2,
+        "transport_epoch": 32
+      },
+      "name": "sector_store_retire",
+      "rule": "Actual completion bitmap SRAM/FF write, then registered retire; separate from whole opcode IRS. Reverse CDC acknowledgement frees one of4 sector owners only after this addressed terminal."
+    },
+    {
+      "direction": "finite_client_to_generic_IRS",
+      "fields": {
+        "event": 32,
+        "serial": 32,
+        "slot": 5
+      },
+      "name": "opcode_complete_IRS",
+      "rule": "Existing generic IRS complete ports; correlate slot/serial to retained opcode identity. Writer quorum272 true sector retires; KV_FENCE sees published writer. Read quorum288; SCORES/EXP/PV result-commit independently required. No whole-opcode retirement substituted for sector credits."
+    },
+    {
+      "direction": "directory_to_reader_provider",
+      "fields": {
+        "die": 1,
+        "layer": 5,
+        "lease_id": 16,
+        "position": 14,
+        "producer_epoch": 64,
+        "quorum": 9,
+        "transport_epoch": 32
+      },
+      "name": "reader_lease_acquire",
+      "rule": "Prior-position and current writer/fence actual publication; generation snapshot immutable; reject stale reuse."
+    },
+    {
+      "direction": "finite_consumer_to_lease_provider",
+      "fields": {
+        "IRS_serial": 32,
+        "IRS_slot": 5,
+        "caller_tag": 16,
+        "cancelled": 1,
+        "client": 6,
+        "die": 1,
+        "lease_id": 16,
+        "ordinal": 9,
+        "producer_epoch": 64,
+        "sector": 34,
+        "stack": 2,
+        "transport_epoch": 32
+      },
+      "name": "reader_owned_retire",
+      "rule": "Read return physically captured with bank/beat tag owner and actual consumer result committed; retire then reverse CDC;4 reader owners held until terminal."
+    },
+    {
+      "direction": "reader_provider_to_directory",
+      "fields": {
+        "IRS_serial": 32,
+        "IRS_slot": 5,
+        "cancelled": 1,
+        "lease_id": 16,
+        "producer_epoch": 64,
+        "transport_epoch": 32
+      },
+      "name": "lease_release",
+      "rule": "All288 actual reader reverse credits plus actual12/13/14/15 IRS/result observations. Cancellation uses actual discarded producer identities; committed WR must drain backing/ACK/store path."
+    }
+  ],
+  "proposed_first_connected_job": {
+    "acceptance": "Independent bank timing audit and full-address owner/epoch correlation; mutants must fail. Real source records required. Only finitestage provider proof, no hardware timing/PPL/arithmetic/fullprogram qualification.",
+    "command": "OT_GATE_MIN_GB=4 /tmp/claude-1000/remote_gate.sh python3 tools/run_hbm_finite_stage_r14.py --source-commit <reviewed_r14_SHA> --output <external_receipt_dir> --cases ownership,full_stage,cancellation,mutants --cpu-affinity 1 --memory-gib 4 --swap-gib 0 --compile-seconds 120 --sim-seconds 30 --whole-seconds 150 --cycles-per-case 500000 --attempts 1",
+    "cycle_bound_basis": {
+      "includes_prior_priming_in_model": false,
+      "policy": "New proposed limit covers position0 priming and bounded explicit stalls; must re-derive from implementedfiniteclient before admission. Old8000cycleGO does not transfer. HaltFAIL on limit; no retries.",
+      "proposed_full_stage_limit_CORE_cycles": 500000,
+      "serialized_position1_model_end_CORE_cycles": 133827
+    },
+    "journals": [
+      "actual req handshake and full acceptedidentity",
+      "ACT/PRE/RD/WR/REF emitted edge+PC/bank/row/sector",
+      "physicaltag allocation/quarantine/actual return",
+      "actual delayed backing update",
+      "actual heldWRvisible handshake",
+      "actual registered RMW producer result/retire",
+      "actual addressed sector bitmap write/retire/reversecredit",
+      "actual prior/writer/fencepublication and IRS strobes",
+      "actual288reader owned returns/retire/credit andscores/exp/pv results+IRS",
+      "actual lease release/cancel drains"
+    ],
+    "mutants": [
+      "backdatedACT",
+      "currentREF omitted",
+      "earlyWR backing/visibility",
+      "truncateAW/channelalias",
+      "beat4wrap",
+      "epochstampatreceive",
+      "WRpopbeforecapacity",
+      "earlytagreuse",
+      "wholeopcodeIRQassectorcredit",
+      "leaseACKfrombound",
+      "heldreturnmutation",
+      "cancelcreditbeforephysicaldrain"
+    ],
+    "reason": "Command is precise execution contract for planned runner, not an executable claim; newRTL source does not yet exist.",
+    "resources": {
+      "affinity_CPUs": 1,
+      "aggregate_cgroup_memory_GiB": 4,
+      "all_sims_seconds": 30,
+      "attempts": 1,
+      "compile_seconds": 120,
+      "cycles_per_case": 500000,
+      "swap_GiB": 0,
+      "whole_cgroup_seconds": 150
+    },
+    "runner_exists": false,
+    "source": "fresh clean r14 endpoint commit; exactsource/hash manifest and immutable tools required",
+    "status": "CONDITIONAL_ON_ENDPOINT_SOURCE_AND_MODEL_REVIEW_NOT_ADMITTED",
+    "worker": "ot-agidock128 /155.103.253.226"
+  },
+  "schema": "Conventional_HBM_actual_endpoint_implementation_plan_r13",
+  "scope": "Exact L0 writer10/fence11/read12/scores13/exp14/pv15 metadata stage;272writer/256RMW/288reader. Not fullprogram, payload/checkpoint, DS runtime or arithmetic qualification.",
+  "source_model_commit": "ba5ca57274dba17a5ae1751e8d6632f532017e27",
+  "source_plan": {
+    "PHY": "NativeAW31/LEN6/BEAT5 literalcount1..32; physical1GHz core separate fromFAST833.333 andSER1111.111. Stack selectors remain outside local address. Full burst bounds checked BEFORE narrowing; no2^32alias. Held perPC2bit slot/valid/ready WRvisible interface, zero PHY replacement credit. Existing abstract unchanged until new opt-in view reviewed.",
+    "add_only_paths": [
+      "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv",
+      "rtl/model_ready_hbm_r14/ot_hbm_physical_tag_owner.sv",
+      "rtl/model_ready_hbm_r14/ot_hbm_sector_completion_store.sv",
+      "rtl/model_ready_hbm_r14/ot_hbm_reader_lease.sv",
+      "rtl/test/model_ready_hbm_r14/tb_hbm_finite_stage.sv",
+      "tools/run_hbm_finite_stage_r14.py"
+    ],
+    "command_provider": "New opt-in conventional GPU FRFCFS queues with accepted epochs preserved through every swap;32PC/stack; source bank inverse, causal ACT/PRE/RD/WR/current REF; serialized18..35edge scans and headprefetch. Reserve WR and return contexts BEFORE pop. Do not wrap existing noncausal architecture model and label it legal.",
+    "completion_store": "4 addressed sector owners;actual272bit publication scoreboard;bit write is physical registered consumer store, next-cycle addressed retirement, reverse CDC then credit. Separate whole-opcode IRS69bit correlation. Cancellation never fabricates normal quorum.",
+    "existing_files_modified": false,
+    "finite_client": "Clocked finite RTL producer/consumer, stalled ready/valid; generates only declared legal test payload patterns, not checkpoint data. Computes byte-mask RMW preserving untouched bytes and exposes real producer-register write/retire strobes. Priming position0 publication must be produced by actual WRvisible/store/IRS sequence, never initialized quorum. Main program engine not yet integrated.",
+    "lease_provider": "4 owned reader slots,288completion ledger plus generation-bound prior/current publication; actual reader return->result register->retire->reversecredit; actual scores/exp/pv IRS events independently observed before release.",
+    "tag_provider": "4096 global physical tags/stack;128immutable contexts/PC using32real128x256 SRAMs/stack.12bit internal tag carried on16bit PHY wire; keep original callerTAG16 and both epochs. No reuse before all real beats/WRvisible terminal captured; duplicate/stale/tag-epoch/PC/beat mutants must fail."
+  },
+  "source_runtime_blocker": "Existing controller has no command acceptance/WRvisible endpoint; Qwen prototype releases on mem_w_ready; actualengine RMW/result-retire and lease ports absent. Existing genericIRS cannot manufacture272sectorretire events. No hardwarecompile currently admitted."
+}
