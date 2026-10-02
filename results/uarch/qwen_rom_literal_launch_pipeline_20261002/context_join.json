@@ -1,0 +1,46 @@
+{
+  "base": "28d01b35ac5c82595e5c8a96200cd1f6ecb4269f",
+  "status": "PASS_LITERAL_PIPELINE_SCOPE_PHYSICAL_ADMISSION_FAIL",
+  "proof": "base reset + temporal induction for literal 379bit broadcast and tile IREG; all binary fields arbitrary on each edge; invalid payload unreset",
+  "historical_collector_failure": "system Yosys0.9 lacks dffunmap; final uses pinned Yosys0.68",
+  "historical_reset_mutant_misses": "induction-after-start did not test reset phase; preserved PASS receipts are FAIL_HARNESS_MUTANT_COVERAGE; final separate base proof detects mutation",
+  "owned_ready_model_status": "BLOCKED_SOURCE_EXPORT_AND_PHYSICAL_ADMISSION",
+  "steady_source_stage_priced": 1,
+  "root_provider_instantiated": false,
+  "scope_excludes": [
+    "actual ready source exports and CDC",
+    "all1536 active/pend transition induction",
+    "actual x-owner/XVM/read/tag qualification",
+    "physical context/installed CTS/current routing",
+    "complete engine/datapath"
+  ],
+  "current_physical_failures": {
+    "worst_collector_clock_tracks": 387,
+    "worst_collector_reset_tracks": 410,
+    "reserved_each": 64,
+    "SS_reset_phase_violations": 49,
+    "FF_reset_phase_violations": 77,
+    "legal_sites_PG_pin_routes_proven": false
+  },
+  "current_14_owner_screen": {
+    "owners_per_stack": 14,
+    "additional_known_reservation_mm2_per_rank": 11.48153258304,
+    "single_fill_lane_unchanged": true,
+    "conditional_lower_bound_s": 0.00196224,
+    "conditional_rate_ceiling": 509.62165688193085,
+    "adopted_rate": null
+  },
+  "parallel_32PC_proposal": "separate unadopted screen; does not replace reviewed14owner or single-fill lowerbound",
+  "model_join_required": "clarify normal sameepoch owned traffic vs unexpected/re-epoch debt in ready protocol; normal traffic must not silently invalidate queued launch",
+  "next_owner_work": {
+    "Euclid": "bind actual producer/consumer trace and local predicates to current epoch/held launch, then full tile active/pend induction",
+    "Ampere": "price/legalize source-sized local reset release and collectors; join producer IO and clock/reset/PG with selected125000um2/96.768um corridor",
+    "Russell": "finite actual service and PC demand/calendar, baseline debit reconciliation"
+  },
+  "no_new_engine": true,
+  "no_new_map": true,
+  "no_new_token": true,
+  "pinned_jobs_touched": false,
+  "stored_Z_FAIL_preserved": true,
+  "full_survival_FAIL_preserved": true
+}

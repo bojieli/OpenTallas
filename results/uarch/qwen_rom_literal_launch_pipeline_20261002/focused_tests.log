@@ -1,0 +1,8 @@
+..............................................................           [100%]
+=============================== warnings summary ===============================
+tests/test_qwen_rom_kv_causal_join.py:83
+  /tmp/opentallas-qrom-source-context-next-20261002/tests/test_qwen_rom_kv_causal_join.py:83: DeprecationWarning: invalid escape sequence '\+'
+    with self.assertRaisesRegex(ValueError,'base\+beat'): c.apply(wrong)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+62 passed, 1 warning in 3.93s

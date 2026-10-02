@@ -1,0 +1,480 @@
+
+-- Running command `read_verilog -formal -sv /tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv /tmp/opentallas-qrom-source-context-next-20261002/rtl/hdc/ot_hdc_delay.sv; prep -top proof -flatten; async2sync; dffunmap; opt; sat -seq 4 -prove-asserts -set-def-inputs -set rst_n 1 -set-at 1 rst_n 0 -verify -dump_vcd /tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/counterexample.vcd' --
+
+1. Executing Verilog-2005 frontend: /tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv
+Parsing formal SystemVerilog input from `/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv' to AST representation.
+Generating RTLIL representation for module `\source_boundary'.
+Generating RTLIL representation for module `\proof'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /tmp/opentallas-qrom-source-context-next-20261002/rtl/hdc/ot_hdc_delay.sv
+Parsing formal SystemVerilog input from `/tmp/opentallas-qrom-source-context-next-20261002/rtl/hdc/ot_hdc_delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     \source_boundary
+Used module:         \ot_hdc_delay
+Parameter \W = 1
+Parameter \D = 0
+Parameter \RESET = 1
+
+3.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 1
+Parameter \D = 0
+Parameter \RESET = 1
+Generating RTLIL representation for module `$paramod$e79aff1b8f388e993ed62bf483ad881f82372906\ot_hdc_delay'.
+Parameter \W = 379
+Parameter \D = 0
+
+3.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 379
+Parameter \D = 0
+Generating RTLIL representation for module `$paramod$b4ad5dedd87102a58431aca49e3d92cab1266120\ot_hdc_delay'.
+
+3.1.4. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     \source_boundary
+Used module:         $paramod$e79aff1b8f388e993ed62bf483ad881f82372906\ot_hdc_delay
+Used module:         $paramod$b4ad5dedd87102a58431aca49e3d92cab1266120\ot_hdc_delay
+
+3.1.5. Analyzing design hierarchy..
+Top module:  \proof
+Used module:     \source_boundary
+Used module:         $paramod$e79aff1b8f388e993ed62bf483ad881f82372906\ot_hdc_delay
+Used module:         $paramod$b4ad5dedd87102a58431aca49e3d92cab1266120\ot_hdc_delay
+Removing unused module `\ot_hdc_delay'.
+Removed 1 unused modules.
+Module proof directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:36$2 in module source_boundary.
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 6 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:46$22'.
+  Set init value: \seen_reset = 1'0
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\source_boundary.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:36$2'.
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~4 debug messages>
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:46$22'.
+Creating decoders for process `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:53$14'.
+     1/3: $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$20_EN
+     2/3: $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$18_EN
+     3/3: $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:54$16_EN
+Creating decoders for process `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$10'.
+     1/1: $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$12_EN
+Creating decoders for process `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:47$6'.
+     1/1: $0\seen_reset[0:0]
+Creating decoders for process `\source_boundary.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:40$4'.
+Creating decoders for process `\source_boundary.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:36$2'.
+     1/1: $0\go_q[0:0]
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\proof.\seen_reset' using process `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:47$6'.
+  created $dff cell `$procdff$38' with positive edge clock.
+Creating register for signal `\proof.\ref_go' using process `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:47$6'.
+  created $dff cell `$procdff$39' with positive edge clock.
+Creating register for signal `\proof.\ref_ib' using process `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:47$6'.
+  created $dff cell `$procdff$40' with positive edge clock.
+Creating register for signal `\proof.\ref_x' using process `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:47$6'.
+  created $dff cell `$procdff$41' with positive edge clock.
+Creating register for signal `\source_boundary.\ib_q' using process `\source_boundary.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:40$4'.
+  created $dff cell `$procdff$42' with positive edge clock.
+Creating register for signal `\source_boundary.\xl_q' using process `\source_boundary.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:40$4'.
+  created $dff cell `$procdff$43' with positive edge clock.
+Creating register for signal `\source_boundary.\go_q' using process `\source_boundary.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:36$2'.
+  created $adff cell `$procdff$48' with positive edge clock and positive level reset.
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:46$22'.
+Found and cleaned up 2 empty switches in `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:53$14'.
+Removing empty process `proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:53$14'.
+Found and cleaned up 1 empty switch in `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$10'.
+Removing empty process `proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$10'.
+Found and cleaned up 1 empty switch in `\proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:47$6'.
+Removing empty process `proof.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:47$6'.
+Removing empty process `source_boundary.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:40$4'.
+Removing empty process `source_boundary.$proc$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:36$2'.
+Cleaned up 4 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$e79aff1b8f388e993ed62bf483ad881f82372906\ot_hdc_delay.
+Optimizing module $paramod$b4ad5dedd87102a58431aca49e3d92cab1266120\ot_hdc_delay.
+Optimizing module proof.
+<suppressed ~2 debug messages>
+Optimizing module source_boundary.
+<suppressed ~3 debug messages>
+
+3.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$e79aff1b8f388e993ed62bf483ad881f82372906\ot_hdc_delay.
+Deleting now unused module $paramod$b4ad5dedd87102a58431aca49e3d92cab1266120\ot_hdc_delay.
+Deleting now unused module source_boundary.
+<suppressed ~3 debug messages>
+
+3.4. Executing FUTURE pass.
+
+3.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 4 unused cells and 26 unused wires.
+<suppressed ~5 debug messages>
+
+3.7. Executing CHECK pass (checking for obvious problems).
+Checking module proof...
+Found and reported 0 problems.
+
+3.8. Executing OPT pass (performing simple optimizations).
+
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 30 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~12 debug messages>
+
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 30 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 29 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 28 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+3.8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+3.8.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+3.8.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.8.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~9 debug messages>
+
+3.8.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+3.8.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 28 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+3.8.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+3.8.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+3.8.14. Finished fast OPT passes. (There is nothing left to do.)
+
+3.9. Executing WREDUCE pass (reducing word size of cells).
+
+3.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+3.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.12. Executing OPT pass (performing simple optimizations).
+
+3.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+3.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 28 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+3.12.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+3.12.4. Finished fast OPT passes.
+
+3.13. Executing SORT pass.
+
+3.14. Printing statistics.
+
+=== proof ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       71 wires
+     4841 wire bits
+       58 public wires
+     4450 public wire bits
+        6 ports
+      511 port bits
+       28 cells
+        1   $adff
+        4   $check
+        6   $dff
+        3   $eq
+        4   $logic_and
+        1   $logic_not
+        5   $mux
+        1   $not
+        3   $scopeinfo
+
+3.15. Executing CHECK pass (checking for obvious problems).
+Checking module proof...
+Found and reported 0 problems.
+
+4. Executing ASYNC2SYNC pass.
+Replacing proof.$flatten\dut.$procdff$48 ($adff): ARST=\rst_n, D=\dut.tgo, Q=\dut.go_q
+
+5. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+<suppressed ~1 debug messages>
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 37 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Computing hashes of 36 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~13 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 36 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$38 ($dff) from module proof (D = 1'1, Q = \seen_reset).
+Adding SRST signal on $flatten\dut.$procdff$48 ($dff) from module proof (D = \dut.tgo, Q = $auto$async2sync.cc:253:execute$54, rval = 1'0).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 9 unused cells and 10 unused wires.
+<suppressed ~10 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+<suppressed ~1 debug messages>
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~9 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 26 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+Removed 1 unused cells and 4 unused wires.
+<suppressed ~5 debug messages>
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+6.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \proof..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~9 debug messages>
+
+6.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \proof.
+Performed a total of 0 changes.
+
+6.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\proof'.
+Computing hashes of 25 cells of `\proof'.
+Finding duplicate cells in `\proof'.
+Removed a total of 0 cells.
+
+6.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \proof..
+
+6.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module proof.
+
+6.23. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint: \rst_n = 1'1
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \ready
+Import def constraint for this timestep: \xl
+Import def constraint for this timestep: \ib
+Imported 25 cells to SAT database.
+Import set-constraint from init attribute: \seen_reset = 1'0
+Final init constraint equation: \seen_reset = 1'0
+Import proof for assert: $eq$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$19_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$18_EN.
+Import proof for assert: $logic_not$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$13_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$12_EN.
+Import proof for assert: $eq$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:54$17_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:54$16_EN.
+Import proof for assert: 1'1 when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$18_EN.
+
+Setting up time step 2:
+Import set-constraint: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \ready
+Import def constraint for this timestep: \xl
+Import def constraint for this timestep: \ib
+Imported 25 cells to SAT database.
+Import proof for assert: $eq$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$19_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$18_EN.
+Import proof for assert: $logic_not$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$13_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$12_EN.
+Import proof for assert: $eq$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:54$17_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:54$16_EN.
+Import proof for assert: 1'1 when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$18_EN.
+
+Setting up time step 3:
+Import set-constraint: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \ready
+Import def constraint for this timestep: \xl
+Import def constraint for this timestep: \ib
+Imported 25 cells to SAT database.
+Import proof for assert: $eq$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$19_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$18_EN.
+Import proof for assert: $logic_not$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$13_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$12_EN.
+Import proof for assert: $eq$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:54$17_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:54$16_EN.
+Import proof for assert: 1'1 when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$18_EN.
+
+Setting up time step 4:
+Import set-constraint: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \ready
+Import def constraint for this timestep: \xl
+Import def constraint for this timestep: \ib
+Imported 25 cells to SAT database.
+Import proof for assert: $eq$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$19_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$18_EN.
+Import proof for assert: $logic_not$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$13_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:52$12_EN.
+Import proof for assert: $eq$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:54$17_Y when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:54$16_EN.
+Import proof for assert: 1'1 when $assert$/tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/literal.sv:55$18_EN.
+
+Solving problem with 49126 variables and 127337 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                                     Dec       Hex                                                                                                                                                                                                                                                                                                                                                                                            Bin
+  ---- --------------------------------------- ----------- ---------                                                                                      ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:253:execute$54                0         0                                                                                                                                                                                                                                                                                                                                                                                              0
+  init \dut.ib_q                                        --        --    1111111111111111110011111111111111111111111111110111111110111111111111110111111110111111111111111111110111111111111111111111110111111111110111111111111111111111111111111111111111111111111111111111101111111111110111111111111101101011111101111011111111101111111111101111101111111111111111111111111111101111101111110111111111111101111101101111111111111111111111111110111111111111111
+  init \ref_go                                           1         1                                                                                                                                                                                                                                                                                                                                                                                              1
+  init \ref_ib                                          --        --    0000000000000000001100000000000000000000000000001000000001000000000000001000000001000000000000000000001000000000000000000000001000000000001000000000000000000000000000000000000000000000000000000000010000000000001000000000000010010100000010000100000000010000000000010000010000000000000000000000000000010000010000001000000000000010000010010000000000000000000000000001000000000000000
+  init \seen_reset                                       0         0                                                                                                                                                                                                                                                                                                                                                                                              0
+  ---- --------------------------------------- ----------- ---------                                                                                      ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     1 \rst_n                                            0         0                                                                                                                                                                                                                                                                                                                                                                                              0
+  ---- --------------------------------------- ----------- ---------                                                                                      ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     2 \rst_n                                            1         1                                                                                                                                                                                                                                                                                                                                                                                              1
+  ---- --------------------------------------- ----------- ---------                                                                                      ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     3 \rst_n                                            1         1                                                                                                                                                                                                                                                                                                                                                                                              1
+  ---- --------------------------------------- ----------- ---------                                                                                      ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     4 \rst_n                                            1         1                                                                                                                                                                                                                                                                                                                                                                                              1
+Dumping SAT model to VCD file /tmp/opentallas-qrom-source-context-next-20261002/results/uarch/qwen_rom_literal_launch_pipeline_20261002/payload_bit/counterexample.vcd
+
+ERROR: Called with -verify and proof did fail!

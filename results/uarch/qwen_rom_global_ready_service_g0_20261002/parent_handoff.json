@@ -1,0 +1,26 @@
+{
+  "base": "42c3abce351060ab3d5729812b1f326119461b46",
+  "minimal_dependency": "single additive commit on integrated main; no old unpublished chain",
+  "service_owner": "Russell/Kepler",
+  "physical_owner": "Euclid/Ampere",
+  "ledger_owner": "Maxwell/parent",
+  "next_action": "Price this fixed source-backed candidate and actual PC demand/calendar; do not map or build until whole cost and selected physical slot pass",
+  "baseline_changed": false,
+  "RTL_changed": false,
+  "actual_ready_provider_missing": true,
+  "actual_acceptance_trace_missing": true,
+  "original_full_survival_FAIL_preserved": true,
+  "stored_Z_FAIL_preserved": true,
+  "position0_fulltoken_preserved": true,
+  "second_position": false,
+  "new_job": null,
+  "required_model_inputs": [
+    "32PC actors/stack, existing context banks, 465bit shared output and 339bit shared command",
+    "5 output mux stages; 2 data/grant slots per sector",
+    "two54row leased windows in128row existing tile SRAM; 1048track single fill boundary",
+    "156739 extra clock/reset sinks per stack; physical area only partial lower bound",
+    "+55 propagation, serial domain, source calibrated DDR/PHY and first layer fill",
+    "baseline component ledger: do not subtract throughput KV bound from token cycles"
+  ],
+  "remaining_physical": "85 retained local cells/inversions; selected125000um2/96.768um corridor; source-matched producer/IO and Ampere local clock/reset subtree; then full loaded SS/FF, no current timing adoption"
+}
