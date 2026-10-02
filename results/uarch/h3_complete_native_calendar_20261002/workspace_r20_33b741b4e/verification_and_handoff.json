@@ -1,0 +1,50 @@
+{
+  "all_sources_and_failures_unchanged": true,
+  "artifacts": [
+    {
+      "fresh_byteidentical": true,
+      "path": "output/join.json",
+      "sha256": "ee7ba8f1d817271fac12164781c5359be41c8a39a5d5febca131237a22070488"
+    },
+    {
+      "fresh_byteidentical": true,
+      "path": "output/temporary_provider_homes.json.gz",
+      "sha256": "b83c6bd2c6c45877d9be744b2cac43269960ce1a740aa2df91a76a9ba5bd172c"
+    }
+  ],
+  "commands": [
+    "python3 tools/qwen_native_workspace_provider_r20.py --output /tmp/FRESH_OUTPUT",
+    "python3 -m pytest -q tests/test_qwen_native_workspace_provider_r20.py"
+  ],
+  "consumer_actions": [
+    "Join temporary_provider_homes by PC/rank/symbol; source4byte lowword bases retained",
+    "For explicit64bit symbols use charged upper32 sidecar+lower32 source home, retaining source64bit arithmetic; split/join adapter remains unimplemented",
+    "Dewey regenerate final calendar against75a3997b native SHA; older calendar arena relocation is a review candidate, not equivalence or final calendar admission",
+    "Retain physical owner until actual consumer/reverse validated grant; no PC-bound ACK; reserve requests before WRpop and enforce RAW"
+  ],
+  "correct_r18_portable_input": {
+    "commit": "aeb45b69448727aec32f448c444fb7c467340a4f",
+    "private_r15_cost_file_or_git_required": false,
+    "r17_binding_sha256": "01cb064303e809b2389dad4da6932bb1ffa9d7e40f93cd0918b1eba43ca56da1",
+    "snapshot": "results/uarch/qwen_hbm_provider_portable_r18_20261002/source_metadata.tar.gz",
+    "tool": "tools/qwen_hbm_provider_portable_r18.py"
+  },
+  "hardware_or_rate_or_physical_admission": false,
+  "input_manifest": "input_manifest.json",
+  "integration_owners": {
+    "Dewey": "01a0fc12-35e2-71f0-873e-d6aa6ab2d24e",
+    "Kepler": "01a0f9c6-fde3-7111-8b3c-a4a505b9a010",
+    "Popper": "01a0fc12-35b5-7621-9d9d-7837163c53b0"
+  },
+  "isolated_reproduction_directory": "/tmp/qwen-native-workspace-r20-isolated-rkdbk86w",
+  "jobs": [],
+  "portable_dependency_files": [
+    "tools/qwen_native_workspace_provider_r20.py",
+    "input_manifest.json",
+    "native_workspace_metadata.json.gz",
+    "calendar_workspace_metadata.json.gz"
+  ],
+  "private_calendar_directory_or_Git_required_for_join": false,
+  "status": "PASS_PORTABLE_FINAL_NATIVE_WORKSPACE_RESERVATION_ONLY",
+  "tests": 8
+}

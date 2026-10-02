@@ -51,6 +51,65 @@ def read_json(path):
     return json.loads(Path(path).read_text())
 
 
+def verify_portable_producer(path, native):
+    """Validate archived producer bytes without consulting another checkout."""
+    pin_path = path.parent / 'producer_pins.json'
+    if not pin_path.exists():
+        return {}
+    pins = read_json(pin_path)
+    if pins.get('schema') != 'H3_PORTABLE_PRODUCER_PINS_V1':
+        return {}  # Retained historical snapshot receipt, not this closure ABI.
+    sources = {}; producer = {}
+    for relative, pin in pins['files'].items():
+        archived = (path.parent / relative).resolve()
+        if not archived.is_relative_to(path.parent.resolve()):
+            raise ValueError('producer archive path escape')
+        raw = archived.read_bytes(); digest = hashlib.sha256(raw).hexdigest()
+        if digest != pin['sha256']:
+            raise ValueError('portable producer source pin mismatch: ' + relative)
+        sources[str(archived)] = digest; producer[pin['path']] = digest
+    if str(path.resolve()) not in sources:
+        raise ValueError('portable producer lacks native input pin')
+    for name, digest in native.get('source_sha256', {}).items():
+        if producer.get(name) != digest:
+            raise ValueError('portable producer source closure incomplete: ' + name)
+    return sources
+
+
+def split_i64_words(value):
+    """Software R20 codec: preserve signed source bits in two LE words."""
+    import numpy as np
+    bits = np.asarray(value, dtype=np.int64).view(np.uint64)
+    return (bits & np.uint64(0xffffffff)).astype('<u4'), (bits >> np.uint64(32)).astype('<u4')
+
+
+def join_i64_words(low, high, low_identity, high_identity):
+    import numpy as np
+    if low_identity != high_identity or not low_identity:
+        raise ValueError('I64 codec owner/definition/iteration mismatch')
+    low = np.asarray(low, dtype='<u4'); high = np.asarray(high, dtype='<u4')
+    if low.shape != high.shape:
+        raise ValueError('I64 codec missing highword extent')
+    return (low.astype(np.uint64) | (high.astype(np.uint64) << np.uint64(32))).view(np.int64)
+
+
+def load_workspace_provider(path, native_sha256):
+    join = read_json(path)
+    if join['source_native_sha256'] != native_sha256:
+        raise ValueError('workspace final native source mismatch')
+    homes_path = path.parent / 'temporary_provider_homes.json.gz'
+    if hashlib.sha256(homes_path.read_bytes()).hexdigest() != join['temporary_provider_homes_sha256']:
+        raise ValueError('workspace home pin mismatch')
+    homes = read_json(homes_path); index = {}
+    for home in homes:
+        key = home['pc'], home['rank'], home['symbol']
+        if key in index:
+            raise ValueError('duplicate workspace home')
+        index[key] = home
+    return {'join': join, 'homes': index, 'input_path': str(path),
+            'sources': verify_portable_producer(path, {})}
+
+
 def execute_primitive_vm(target, program, payloads, *, snapshot, source_sha256,
                          scratch_bytes, instruction_limit, weights=None, storage=None, div=None):
     """Execute producer instructions, with explicit finite software admission.
@@ -560,16 +619,35 @@ def normalize_bundle(data):
     if data.get('schema') == 'opentallas.H3.qwen-complete-native-software.v1':
         return {**data, 'target': 'Qwen'}
     if data.get('schema') == 'H3_DEEPSEEK_COMPLETE_NATIVE_V1':
-        operations = []
+        operations = []; sequences = {}
         for op in data['instructions']:
             groups = defaultdict(list)
             for binding in op['rank_bindings']:
                 if not binding.get('empty_owned_extent'):
-                    groups[binding['template']].append(binding['rank'])
-            programs = [{'rank_group': ranks, 'instructions': data['templates'][key]['code'],
-                'providers': op['provider_bindings'][key], 'outputs': data['templates'][key]['outputs'],
-                'source_template': key, 'resources': data['templates'][key]['resources']}
-                for key, ranks in groups.items()]
+                    # Final DS exports one actual recipe per gathered buffer.
+                    # The primary recipe is an extent preview, not an additional
+                    # executable buffer when explicit buffer_programs are present.
+                    keys = tuple(b['template'] for b in binding.get('buffer_programs', [])) or (binding['template'],)
+                    groups[keys].append(binding['rank'])
+            programs = []
+            for keys, ranks in groups.items():
+                if keys not in sequences:
+                    code = []; counts = Counter(); outputs = {}
+                    for index, key in enumerate(keys):
+                        template = data['templates'][key]
+                        prefix = f'buffer{index}_' if len(keys) > 1 else ''
+                        for instruction in template['code']:
+                            code.append({**instruction, 'dst': prefix + instruction['dst'],
+                                'src': [prefix + v for v in instruction['src']]})
+                        outputs.update({prefix + name: prefix + symbol for name, symbol in template['outputs'].items()})
+                        counts.update(template['resources'].get('instruction_batches128_by_opcode', {}))
+                    sequences[keys] = {'instructions': code, 'outputs': outputs,
+                        'expected_primitive_batches': dict(counts),
+                        'source_template': hashlib.sha256(encode(keys)).hexdigest()}
+                programs.append({**sequences[keys], 'rank_group': ranks,
+                    'source_templates': list(keys),
+                    'providers': {key: op['provider_bindings'][key] for key in keys},
+                    'resources': {key: data['templates'][key]['resources'] for key in keys}})
             operations.append({**op, 'opcode': op['family'], 'programs': programs,
                 'reads': [v['version'] for v in op['reads']], 'writes': [v['version'] for v in op['writes']]})
         return {**data, 'target': 'DeepSeek', 'operations': operations}
@@ -605,7 +683,7 @@ def validate_bundle(native, graph):
             raise ValueError('native bundle instructions missing')
 
 
-def bind_recipe(native, plan, macro, rank, table):
+def bind_recipe(native, plan, macro, rank, table, workspace=None):
     """Instruction-dependent ordered nested calendar; loops remain lossless RLE.
 
     Every primitive serially consumes at most two RF read ports, one write port,
@@ -628,6 +706,9 @@ def bind_recipe(native, plan, macro, rank, table):
             if macro['opcode'] == 'ARGMAX_REDUCE':
                 env[f'input{i}'] = Shape((2,))
     exported_allocations = plan.get('temporary_storage', {}).get('allocations')
+    workspace_homes = ({symbol: workspace['homes'][plan['pc'], rank, symbol]
+                        for symbol in exported_allocations} if workspace and exported_allocations else {})
+    highword_symbols = {symbol for symbol, home in workspace_homes.items() if home.get('semantic_bits') == 64}
     element_bytes = 4 if exported_allocations else 8
     def register(name, shape):
         if name:
@@ -697,6 +778,23 @@ def bind_recipe(native, plan, macro, rank, table):
         stages['scratch_write'] = write_sectors * (costs['HBM_write_sector'] + ownership +
             costs['visibility_fence'] + costs['forward_CDC'] + costs['consume'] + costs['reverse_CDC'] +
             costs['validated_reverse_grant'] + costs['retire'])
+        high_reads = []
+        for text, arg in zip(src, args):
+            names = {n.id for n in ast.walk(ast.parse(text, mode='eval')) if isinstance(n, ast.Name)}
+            touched = sorted(names & highword_symbols)
+            if touched:
+                high_reads.append({'symbols': touched, 'sectors32': max(1, ceil(math.prod(as_shape(arg).shape) * 4, 32))})
+        high_write = max(1, ceil(math.prod(result.shape) * 4, 32)) if name in highword_symbols else 0
+        if high_reads:
+            stages['I64_highword_read'] = sum(r['sectors32'] for r in high_reads) * costs['I64_highword_read_sector']
+            stages['I64_join'] = costs['I64_split_join'] * sum(max(1, ceil(r['sectors32'], 16)) for r in high_reads)
+        if high_write:
+            stages['I64_split'] = costs['I64_split_join'] * max(1, ceil(high_write, 16))
+            # Conservative sector RMW for every upper-word write, including
+            # partial words/scatters. Adjacent packed owners are never clobbered.
+            stages['I64_RMW_read'] = high_write * costs['I64_highword_read_sector']
+            stages['I64_RMW_merge'] = costs['I64_RMW_merge'] * max(1, ceil(high_write, 16))
+            stages['I64_highword_write_visible'] = high_write * costs['I64_highword_write_sector']
         if op.startswith('LOAD') or op in ('WRITE_BYTES', 'READ_BYTES', 'PACKET_COMMIT'):
             stages['provider_visibility'] = max(1, ceil(math.prod(result.shape) * element_bytes, 32)) * (
                 costs['HBM_write_sector' if op in ('WRITE_BYTES', 'PACKET_COMMIT') else 'HBM_read_sector'] +
@@ -712,6 +810,8 @@ def bind_recipe(native, plan, macro, rank, table):
             'stage_cycles': stages, 'duration': sum(stages.values()),
             'version_identity': ['event.target', 'event.pc', 'event.rank', path, index, 'loop_iteration_tuple'],
             'read_symbols': src, 'write_symbol': dst,
+            'I64_highword_reads': high_reads, 'I64_highword_write_sectors32': high_write,
+            'I64_conservative_RMW_sectors32': high_write,
             'storage_credit': {'sector_credit': 1, 'read_ports': 2, 'write_ports': 1,
                                'lanes': 128, 'double_buffer_versions': 2}}
     def walk(nodes, local_env, path=()):
@@ -814,6 +914,7 @@ def bind_recipe(native, plan, macro, rank, table):
     result = {'schema': 'H3_ORDERED_PRIMITIVE_CALENDAR_V1', 'duration': duration,
         'primitive_tree': tree, 'finite_scratch_bytes': cursor, 'scratch_homes': arena,
         'producer_temporary_homes': producer_homes,
+        'workspace_provider_homes': workspace_homes,
         'producer_counts_full_context': plan.get('calendar_counts_full_context'),
         'producer_native_finite_export': plan.get('calendar_export', {}).get('schema'),
         'source_arithmetic': macro['golden_contract'], 'source_recipe_sha256': hashlib.sha256(encode(nodes)).hexdigest(),
@@ -822,6 +923,14 @@ def bind_recipe(native, plan, macro, rank, table):
         'scratch_layout': ('producer finite RF/refill/spill allocations consumed exactly; no independently sized double buffers' if exported_allocations else
             '8 bytes per logical element: F32/U32 lowword plus padded highword; I64 retains both32bit words; two RF staging vectors per128 logical values'),
         'no_tensor_value_evaluation': True}
+    if 'programs' in plan and program.get('expected_primitive_batches'):
+        expected = program['expected_primitive_batches']
+        observed = verify_native_program(result)
+        if observed != expected:
+            raise ValueError('DS producer primitive count mismatch at PC' + str(plan['pc']))
+        result['producer_vector_count_gate'] = 'PASS_EXACT_EXPORTED_NATIVE_COUNTS'
+        result['producer_expected_primitive_batches'] = expected
+        result['producer_source_templates'] = program['source_templates']
     if plan.get('calendar_counts_full_context'):
         expected = {op: counts['native_vector_beats'] for op, counts in
                     plan['calendar_counts_full_context']['by_primitive'].items()}
@@ -899,7 +1008,72 @@ def validate_native_lowering(native, graph, homes, ranks):
     return plans
 
 
-def compile_target(target, graph, layout, table, native=None, providers=None):
+def bind_workspace_intervals(workspace, events, pcs, native_plans):
+    """Bind R20 addresses to actual admission/retirement fence intervals.
+
+    An entire PC holds the finite workspace lease. All native primitive traffic,
+    including upper-word transactions, occurs inside the ordered nested program.
+    No source mismatch, review arena, or physical ACK is silently adopted.
+    """
+    byid = {e['id']: e for e in events}
+    allocations = {r['rank']: r for r in workspace['join']['rank_allocation']}
+    intervals = []; rank_leases = defaultdict(list); seen = set()
+    for pc in pcs:
+        plan = native_plans[pc['pc']]
+        for rank in pc['participants']:
+            start = byid[pc['admit']]['start']; end = byid[pc['retire']]['end']
+            rank_leases[rank].append((start, end, pc['pc']))
+            regions = []; slots = []
+            for symbol, allocation in plan['temporary_storage']['allocations'].items():
+                key = pc['pc'], rank, symbol; seen.add(key)
+                home = workspace['homes'][key]; source = allocation['home']
+                if (home['version'] != allocation['version'] or home['lease'] != allocation['lease'] or
+                        home['bytes'] != allocation['bytes'] or home['release_after'] != f"PC{pc['pc']}.retire"):
+                    raise ValueError('workspace version/lease/retire binding mismatch')
+                if home['class_'] == 'RF_workspace':
+                    if source['class_'] != 'RF' or home['slots'] != source['vector_slots']:
+                        raise ValueError('workspace RF source mismatch')
+                    slots.extend(home['slots'])
+                else:
+                    expected = source['base_by_rank'][str(rank)] + source['byte_offset']
+                    if source['class_'] != 'spill' or home['base'] != expected:
+                        raise ValueError('workspace physical base source mismatch')
+                    regions.append((home['base'], home['end_exclusive']))
+                    extent = next(e for e in allocations[rank]['extents'] if e['name'] == 'native_workspace')
+                    if not extent['base'] <= home['base'] < home['end_exclusive'] <= extent['base'] + extent['bytes']:
+                        raise ValueError('workspace finite extent exhausted')
+                if home.get('semantic_bits') == 64:
+                    extent = next(e for e in allocations[rank]['extents'] if e['name'] == 'native_I64_highword_codec_sidecar')
+                    lo = home['highword_base']; hi = lo + home['highword_reserved_bytes']
+                    if not extent['base'] <= lo < hi <= extent['base'] + extent['bytes']:
+                        raise ValueError('workspace I64 sidecar extent exhausted')
+                    regions.append((lo, hi))
+                intervals.append({'pc': pc['pc'], 'rank': rank, 'symbol': symbol,
+                    'home': home, 'start': start, 'end': end, 'admit_event': pc['admit'],
+                    'retire_event': pc['retire'], 'release_guard': home['release_guard'],
+                    'I64_software_codec_implemented': home.get('semantic_bits') == 64,
+                    'physical_codec_admitted': False,
+                    'iteration_identity': ['session64', 'PC', 'rank', 'symbol', 'definition', 'loop_iteration_tuple'],
+                    'write_visibility': 'priced provisional causal fence; actual physical event is unqualified'})
+            regions.sort()
+            if any(a[1] > b[0] for a, b in zip(regions, regions[1:])) or len(slots) != len(set(slots)):
+                raise ValueError('workspace alias within live PC lease')
+    if seen != set(workspace['homes']):
+        raise ValueError('workspace provider coverage mismatch')
+    for leases in rank_leases.values():
+        leases.sort()
+        if any(a[1] > b[0] for a, b in zip(leases, leases[1:])):
+            raise ValueError('premature workspace lease reuse')
+    return intervals, {'status': 'PASS_CONCRETE_SOFTWARE_WORKSPACE_INTERVALS',
+        'temporary_home_count': len(intervals), 'rank_PC_leases': sum(map(len, rank_leases.values())),
+        'final_native_source_match': True,
+        'older_calendar_source_mismatch_preserved': not workspace['join']['final_native_calendar_source_match'],
+        'review_candidate_arena_adopted': False, 'physical_or_clock_admission': False,
+        'I64_software_codec': 'LE lower/upper32; equal owner/definition/iteration; two visible writes before publication',
+        'I64_physical_codec_implemented': False}
+
+
+def compile_target(target, graph, layout, table, native=None, providers=None, workspace=None):
     ranks = 2 if target == 'Qwen' else 96
     homes = version_homes(graph, layout, ranks); check_homes(homes, graph)
     values = {v['id']: v for v in graph['operands']}
@@ -1030,9 +1204,9 @@ def compile_target(target, graph, layout, table, native=None, providers=None):
                     template = next((p for p in plan['programs'] if rank in p['rank_group']), None)
                     cache_key = template['source_template'] if template else 'empty_extent'
                 else:
-                    cache_key = f'Qwen.pc{pc}'
+                    cache_key = f'Qwen.pc{pc}' + (f'.rank{rank}' if workspace else '')
                 if cache_key not in recipe_cache:
-                    recipe = bind_recipe(native, plan, op, rank, table)
+                    recipe = bind_recipe(native, plan, op, rank, table, workspace)
                     counts = verify_native_program(recipe)
                     key = hashlib.sha256(cache_key.encode()).hexdigest()[:24]
                     programs[key] = recipe
@@ -1053,6 +1227,7 @@ def compile_target(target, graph, layout, table, native=None, providers=None):
                     native_program_ref=key, native_source_PC=pc, pc=pc, rank=rank,
                     operand_versions={'reads': op['reads'], 'writes': op['writes']},
                     concrete_provider_operation=provider_ops.get(pc),
+                    native_provider_bindings_ref=str(pc) if target == 'DeepSeek' else None,
                     policy='exclusive finite rank lease; ordered primitive calendar below; no internal ideal overlap'))
         elif pc in native_plans:
             plan = native_plans[pc]; chains = {}
@@ -1199,6 +1374,9 @@ def compile_target(target, graph, layout, table, native=None, providers=None):
             if h['home']['class'] == 'persistent':
                 key = f'r{rank}:' + h['home']['object']
                 persistent_caps[key] = max(persistent_caps.get(key, 0), h['home']['bytes'])
+    workspace_intervals = []; workspace_proof = None
+    if workspace:
+        workspace_intervals, workspace_proof = bind_workspace_intervals(workspace, cal.events, pcs, native_plans)
     return {'schema': 'H3_COMPLETE_NATIVE_SOFTWARE_CALENDAR_V1', 'target': target,
         'status': ('PASS_COMPLETE_NATIVE_SOFTWARE_CALENDAR' if len(native_plans) == len(pcs) else
                    'PASS_MACRO_RESERVATION_INTERMEDIATE'), 'PC_count': len(pcs), 'PCs': pcs,
@@ -1208,6 +1386,12 @@ def compile_target(target, graph, layout, table, native=None, providers=None):
         'events': cal.events, 'resources': caps, 'proof': proof,
         'native_primitive_batch_counts': dict(sorted(primitive_counts.items())),
         'native_programs': programs,
+        'native_provider_bindings_by_PC': {str(pc): plan['provider_bindings'] for pc, plan in native_plans.items()
+                                           if 'provider_bindings' in plan},
+        'native_primitive_count_gate': ('PASS_ALL_PC_EXPORTED_COUNTS' if native_plans and
+            all(p.get('producer_vector_count_gate') == 'PASS_EXACT_EXPORTED_NATIVE_COUNTS'
+                for p in programs.values() if p['primitive_tree']) else 'NOT_ALL_EXPORTED_COUNT_CHECKS_AVAILABLE'),
+        'workspace_provider_intervals': workspace_intervals, 'workspace_provider_proof': workspace_proof,
         'version_home_archive': ('Qwen_provider_binding.json.gz' if providers else DISTRIBUTED + '/' + target + '.json.gz'),
         'provider_binding_coverage': providers['coverage'] if providers else None,
         'provider_resource_contract': providers['resource_contract'] if providers else None,
@@ -1243,18 +1427,37 @@ def main():
     ap.add_argument('--verify', action='store_true')
     ap.add_argument('--native-lowering', type=Path, action='append', default=[])
     ap.add_argument('--qwen-providers', type=Path)
+    ap.add_argument('--qwen-workspace', type=Path)
     ap.add_argument('--target', choices=('Qwen', 'DeepSeek'), action='append')
     args = ap.parse_args()
     providers = read_json(args.qwen_providers) if args.qwen_providers else None
     native = {}
+    producer_sources = {}
+    native_hashes = {}
     for path in args.native_lowering:
-        data = normalize_bundle(read_json(path))
+        original = read_json(path)
+        producer_sources.update(verify_portable_producer(path, original))
+        data = normalize_bundle(original)
         if data['target'] in native:
             raise ValueError('duplicate target lowering')
         native[data['target']] = data
+        native_hashes[data['target']] = hashlib.sha256(path.read_bytes()).hexdigest()
+    workspace = load_workspace_provider(args.qwen_workspace, native_hashes['Qwen']) if args.qwen_workspace else None
     graphs, layouts = load_inputs(); default = cycle_table(graphs, layouts)
     table = read_json(args.cycles) if args.cycles else default
     required = set(default['values'])
+    if workspace:
+        provider_cost = workspace['join']['service_cost']
+        for key, source in [('I64_highword_read_sector', 'highword_sidecar_extra_full_sector_read_ticks'),
+                            ('I64_highword_write_sector', 'highword_sidecar_extra_full_sector_write_ticks'),
+                            ('I64_split_join', 'codec_split_join_ticks_per128word_tile')]:
+            if not args.cycles:
+                table['values'][key] = positive(provider_cost[source], key)
+            required.add(key)
+        if not args.cycles:
+            table['values']['I64_RMW_merge'] = 32
+        required.add('I64_RMW_merge')
+        table['workspace_cost_scope'] = 'R20 positive provisional inputs, unmeasured; sidecar sectors and split/join priced explicitly'
     for data in native.values():
         for primitive in bundle_primitives(data):
             key = 'native:' + primitive
@@ -1263,6 +1466,10 @@ def main():
             required.add(key)
     validate_cycles(table, required)
     sources = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in PINS}
+    sources.update(producer_sources)
+    if workspace:
+        sources.update(workspace['sources'])
+        sources[str(args.qwen_workspace.resolve())] = hashlib.sha256(args.qwen_workspace.read_bytes()).hexdigest()
     if args.qwen_providers:
         sources[str(args.qwen_providers.resolve())] = hashlib.sha256(args.qwen_providers.read_bytes()).hexdigest()
     for path in args.native_lowering:
@@ -1283,7 +1490,8 @@ def main():
     if len(targets) != len(set(targets)):
         raise ValueError('duplicate target')
     for target in targets:
-        result = compile_target(target, graphs[target], layouts[target], table, native.get(target), providers if target == 'Qwen' else None)
+        result = compile_target(target, graphs[target], layouts[target], table, native.get(target), providers if target == 'Qwen' else None,
+                                workspace if target == 'Qwen' else None)
         raw = encode(result); path = args.out / (target + '.json.gz')
         if args.verify:
             if gzip.decompress(path.read_bytes()) != raw:
@@ -1293,7 +1501,8 @@ def main():
         digests[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
         summaries[target] = {k: result[k] for k in ('status', 'PC_count', 'proof', 'cycles',
             'source_backed_extent_admission', 'constrained_extent_successors',
-            'native_lowering_PC_count', 'native_operator_lowering_complete')}
+            'native_lowering_PC_count', 'native_operator_lowering_complete', 'native_primitive_count_gate',
+            'workspace_provider_proof')}
     sources = {str(Path(k).relative_to(ROOT)) if Path(k).is_absolute() and Path(k).is_relative_to(ROOT) else k: v
                for k, v in sources.items()}
     manifest = {'schema': 'H3_COMPLETE_CALENDAR_REPLAY_V1', 'source_sha256': sources,
@@ -1303,6 +1512,7 @@ def main():
             ''.join(' --native-lowering ' + str(p) for p in args.native_lowering) +
             (' --cycles ' + str(args.cycles) if args.cycles else '') +
             (' --qwen-providers ' + str(args.qwen_providers) if args.qwen_providers else '') +
+            (' --qwen-workspace ' + str(args.qwen_workspace) if args.qwen_workspace else '') +
             ''.join(' --target ' + t for t in (args.target or []))}
     path = args.out / 'manifest.json'
     if args.verify:

@@ -12,6 +12,81 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_final_ds_gather_buffers_and_exported_count_controls(self):
+        def template(n):
+            return {'code':[{'op':'IOTA','dst':'v0','src':[],'shape':[n],'attrs':{}}],
+                'outputs':{'out':'v0'},'resources':{'instruction_batches128_by_opcode':{'IOTA':(n+127)//128}}}
+        raw={'schema':'H3_DEEPSEEK_COMPLETE_NATIVE_V1','templates':{'preview':template(512),'a':template(129),'b':template(1)},
+            'instructions':[{'pc':0,'family':'all_gather','reads':[],'writes':[],
+                'provider_bindings':{'preview':{},'a':{},'b':{}},
+                'rank_bindings':[{'rank':0,'template':'preview','buffer_programs':[{'template':'a'},{'template':'b'}]}]}]}
+        native=c.normalize_bundle(raw);plan=native['operations'][0]
+        self.assertEqual([n['dst'] for n in plan['programs'][0]['instructions']],['buffer0_v0','buffer1_v0'])
+        self.assertEqual(plan['programs'][0]['source_templates'],['a','b'])
+        table={'values':{k:2 for k in ['admit','RF_read','RF_write_ACK','consume','retire','HBM_read_sector',
+            'HBM_write_sector','forward_CDC','reverse_CDC','visibility_fence','owner_lookup','owner_held_accept',
+            'validated_reverse_grant','native:IOTA']}}
+        program=c.bind_recipe(native,plan,{'reads':[],'opcode':'all_gather','golden_contract':'source ordered'},0,table)
+        self.assertEqual(c.verify_native_program(program),{'IOTA':3})
+        self.assertEqual(program['producer_vector_count_gate'],'PASS_EXACT_EXPORTED_NATIVE_COUNTS')
+        plan['programs'][0]['expected_primitive_batches']['IOTA']=4
+        with self.assertRaisesRegex(ValueError,'DS producer primitive count mismatch'):
+            c.bind_recipe(native,plan,{'reads':[],'opcode':'all_gather','golden_contract':'source ordered'},0,table)
+
+    def test_final_ds_portable_closure_and_iota_execution(self):
+        import hashlib
+        import numpy as np
+        base=ROOT / 'results/uarch/h3_complete_native_calendar_20261002/final_ds_bed325f89'
+        coverage=c.read_json(base/'coverage.json')
+        sources=c.verify_portable_producer(base/'program_final.json.gz',coverage)
+        self.assertEqual(len(sources),18)
+        bad=copy.deepcopy(coverage);bad['source_sha256']['tools/h3_deepseek_complete_native.py']='0'*64
+        with self.assertRaisesRegex(ValueError,'closure incomplete'):
+            c.verify_portable_producer(base/'program_final.json.gz',bad)
+        snapshot=base/'h3_deepseek_complete_native.py.source'
+        program={'code':[{'op':'IOTA','dst':'v0','src':[],'shape':[129],'attrs':{}}],
+                 'outputs':{'out':'v0'}}
+        result=c.execute_primitive_vm('DeepSeek',program,{},snapshot=snapshot,
+            source_sha256=hashlib.sha256(snapshot.read_bytes()).hexdigest(),scratch_bytes=129*8,instruction_limit=1)
+        np.testing.assert_array_equal(result['outputs']['out'],np.arange(129,dtype=np.int64))
+        self.assertEqual(result['events'][0]['batches128'],2)
+
+    def test_r20_codec_counts_and_workspace_retire_intervals(self):
+        import numpy as np
+        values=np.array([-(1<<63),-1,0,(1<<32)+7,(1<<63)-1],np.int64)
+        low,high=c.split_i64_words(values);identity=('session',3,0,'v','def',2)
+        np.testing.assert_array_equal(c.join_i64_words(low,high,identity,identity),values)
+        with self.assertRaisesRegex(ValueError,'mismatch'):c.join_i64_words(low,high,identity,identity[:-1])
+        with self.assertRaisesRegex(ValueError,'extent'):c.join_i64_words(low,high[:1],identity,identity)
+        alloc={'bytes':4,'version':'PC0.tmp.out','lease':'PC0.workspace','release_after':'PC0.retire',
+            'home':{'class_':'spill','byte_offset':0,'base_by_rank':{'0':4096}}}
+        home={'pc':0,'rank':0,'symbol':'out','bytes':4,'version':alloc['version'],'lease':alloc['lease'],
+            'release_after':alloc['release_after'],'release_guard':'consumer+visible+reverse grant',
+            'class_':'HBM_native_workspace','base':4096,'end_exclusive':4608,'semantic_bits':64,
+            'highword_base':4608,'highword_reserved_bytes':512}
+        workspace={'homes':{(0,0,'out'):home},'join':{'final_native_calendar_source_match':False,
+            'rank_allocation':[{'rank':0,'extents':[{'name':'native_workspace','base':4096,'bytes':512},
+                {'name':'native_I64_highword_codec_sidecar','base':4608,'bytes':512}]}]}}
+        plan={'pc':0,'temporary_storage':{'allocations':{'out':alloc},'spill_bytes':512},
+            'recipe':[{'op':'FTOI','dst':'out','src':['f32(7)']}]}
+        events=[{'id':'a','start':0,'end':1},{'id':'r','start':10,'end':11}]
+        pcs=[{'pc':0,'participants':[0],'admit':'a','retire':'r'}]
+        intervals,proof=c.bind_workspace_intervals(workspace,events,pcs,{0:plan})
+        self.assertEqual((intervals[0]['start'],intervals[0]['end']),(0,11))
+        self.assertEqual(proof['status'],'PASS_CONCRETE_SOFTWARE_WORKSPACE_INTERVALS')
+        table={'values':{k:2 for k in ['admit','RF_read','RF_write_ACK','consume','retire','HBM_read_sector',
+            'HBM_write_sector','forward_CDC','reverse_CDC','visibility_fence','owner_lookup','owner_held_accept',
+            'validated_reverse_grant','native:FTOI','I64_highword_read_sector','I64_highword_write_sector','I64_split_join','I64_RMW_merge']}}
+        program=c.bind_recipe({'source_program':{},'operands':[]},plan,
+            {'reads':[],'opcode':'test','golden_contract':'source I64'},0,table,workspace)
+        node=program['primitive_tree'][0]
+        self.assertEqual(node['I64_highword_write_sectors32'],1)
+        self.assertEqual(node['stage_cycles']['I64_highword_write_visible'],2)
+        self.assertEqual(node['stage_cycles']['I64_split'],2)
+        home['highword_base']=4096
+        with self.assertRaisesRegex(ValueError,'sidecar extent exhausted'):
+            c.bind_workspace_intervals(workspace,events,pcs,{0:plan})
+
     def test_source_pinned_primitive_vms_and_finite_negative_controls(self):
         import hashlib
         import numpy as np
