@@ -19,7 +19,7 @@ class PreflightTests(unittest.TestCase):
   (self.orig/'tools/arithmetic.py').write_text('immutable');(self.archive/'capture.npy').write_bytes(b'captured');(self.archive/'native/terminal.json').write_text('{}');(self.archive/'native/post_execution_comparisons.json').write_text('[]')
   original={'tools/arithmetic.py':C.sha(self.orig/'tools/arithmetic.py')};(self.archive/'GO.json').write_text(json.dumps(dict(source_commit='870c5fe581b768df28dd2998b2d0aecc24510c23',source_sha256=original)))
   self.p=dict(original_source_root=str(self.orig),original_source_commit='870c5fe581b768df28dd2998b2d0aecc24510c23',additive_source_root=str(self.add),additive_source_commit='additive',additive_source_sha256={str((self.add/'tools'/n).resolve()):C.sha(self.add/'tools'/n)for n in HELPERS},original_source_sha256=original,capture_file_sha256={str(self.archive/'capture.npy'):C.sha(self.archive/'capture.npy')},native_terminal_sha256=C.sha(self.archive/'native/terminal.json'),comparison_sha256=C.sha(self.archive/'native/post_execution_comparisons.json'),resource_model=dict(proposed_memory_reservation_bytes=34359738368))
-  self.a=dict(additive_source_commit='additive',admission_record_path='GO.json',admitted=True,native_decode=False,production_SCORES_PV_arithmetic=False,native_archive=str(self.archive),extra_file_sha256={},memory_bytes=34359738368,FSIZE='unlimited',AS='unlimited',wall_limit=None,output_parent=str(self.base),disk_reserve_bytes=0,priced_incremental_output_bytes=0,minimum_memavailable_bytes=0,cpus=list(range(8)),unit='unit')
+  self.a=dict(additive_source_commit='additive',admission_record_path='GO.json',admitted=True,native_decode=False,production_SCORES_PV_arithmetic=False,native_archive=str(self.archive),extra_file_sha256={},memory_reservation_bytes=34359738368,FSIZE='unlimited',AS='unlimited',wall_limit=None,output_parent=str(self.base),disk_reserve_bytes=0,priced_incremental_output_bytes=0,minimum_memavailable_bytes=0,cpus=list(range(8)),unit='unit')
  def run_case(self,p=None,a=None,runtime=False,affinity=None,limits=None):
   p=p or self.p;a=a or self.a
   def command(args,**kwargs):
@@ -41,7 +41,7 @@ class PreflightTests(unittest.TestCase):
   (self.archive/'capture.npy').write_bytes(b'changed')
   with self.assertRaisesRegex(ValueError,'capture pin'):self.run_case()
  def test_GO_change_refused(self):
-  a=copy.deepcopy(self.a);a['memory_bytes']=1
+  a=copy.deepcopy(self.a);a['memory_reservation_bytes']=1
   with self.assertRaisesRegex(ValueError,'exact GO'):self.run_case(a=a)
  def test_real_affinity_required(self):
   with self.assertRaisesRegex(ValueError,'kernel affinity'):self.run_case(runtime=True,affinity=[1,2])
@@ -50,3 +50,13 @@ class PreflightTests(unittest.TestCase):
  def test_original_SOURCE_cannot_drift(self):
   p=copy.deepcopy(self.p);p['original_source_commit']='changed'
   with self.assertRaisesRegex(ValueError,'historical frame'):self.run_case(p)
+
+ def test_runtime_has_no_memory_or_swap_cap_requirement(self):
+  read=Path.read_text
+  def read_metadata(path,*args,**kwargs):
+   if path.name in ('memory.max','memory.swap.max'):raise AssertionError('memory/swap cap must not be required')
+   return read(path,*args,**kwargs)
+  with patch.object(Path,'read_text',read_metadata):self.assertEqual(self.run_case(runtime=True)['status'],'PASS_SOURCE_RESOURCE_PREFLIGHT')
+ def test_scheduling_reservation_must_match_model(self):
+  p=copy.deepcopy(self.p);p['resource_model']['proposed_memory_reservation_bytes']=1
+  with self.assertRaisesRegex(ValueError,'scheduling reservation'):self.run_case(p=p)

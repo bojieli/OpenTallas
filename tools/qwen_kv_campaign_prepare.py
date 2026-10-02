@@ -59,6 +59,7 @@ def prepare(source_root, additive_root, archive, checkpoint, checkpoint_metadata
         resource_model=dict(previous_complete_run_max_sampled_memory_current_bytes=2762838016,
             maximum_checkpoint_file_cache_bytes=sum(row['size_bytes']for row in lock['expected_files']if row['path'].endswith('.safetensors')),
             proposed_memory_reservation_bytes=32*1024**3,
+            memory_limit=None,swap_limit=None,OOM_forced_stop=False,
             reservation_basis='full16.38GB checkpoint cache plus measured2.76GB heap/charge and bounded QKV/tile/observation inventory; fresh hostreserve required',
             CPU_workers='fleetadmitted; priorunattributed28thread placement prevents assuming disjoint8worker slot',
             wall_limit=None,CPU_time_limit=None,FSIZE='unlimited',AS='unlimited',disk_guard='fresh fleetcapacityreserve plus pricedimages/receipts; no oldpilot quota'),

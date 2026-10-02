@@ -1,6 +1,6 @@
 """Source-bound, fail-closed released-checkpoint KV campaign. No token/decode.
 
-Run only under reviewed committed GO and actual affinity/memory cgroup.
+Run only under reviewed committed GO and actual kernel affinity and measured host headroom.
 No elapsed-time, CPU-time, FSIZE or address-space cap is installed here.
 """
 import argparse
@@ -46,16 +46,12 @@ def preflight(proposal, admission, go_commit, runtime=True):
     require(sha(archive/'native/terminal.json')==proposal['native_terminal_sha256'],'native terminal pin')
     require(sha(archive/'native/post_execution_comparisons.json')==proposal['comparison_sha256'],'independent comparison pin')
     for name,want in admission['extra_file_sha256'].items():require(sha(name)==want,'validator/index helper pin')
-    require(admission['memory_bytes']==proposal['resource_model']['proposed_memory_reservation_bytes'],'priced RAM cap')
+    require(admission['memory_reservation_bytes']==proposal['resource_model']['proposed_memory_reservation_bytes'],'priced RAM scheduling reservation')
     require(admission['FSIZE']==admission['AS']=='unlimited' and admission['wall_limit'] is None,'uncapped costly-job policy')
     if runtime:
         require(set(os.sched_getaffinity(0))==set(admission['cpus']),'exact enforced kernel affinity')
         for kind in (resource.RLIMIT_CPU,resource.RLIMIT_FSIZE,resource.RLIMIT_AS):
             require(resource.getrlimit(kind)==(resource.RLIM_INFINITY,resource.RLIM_INFINITY),'unexpected process cap')
-        cg=next(x.split('::',1)[1]for x in Path('/proc/self/cgroup').read_text().splitlines()if x.startswith('0::'))
-        cgroup=Path('/sys/fs/cgroup')/cg.lstrip('/')
-        require((cgroup/'memory.max').read_text().strip()==str(admission['memory_bytes']),'actual memory cgroup')
-        require((cgroup/'memory.swap.max').read_text().strip()=='0','actual zero-swap cgroup')
         unit=subprocess.check_output(['systemctl','--user','show',admission['unit'],'-p','RuntimeMaxUSec','--value'],text=True).strip()
         require(unit=='infinity','actual unlimited service runtime')
     available_RAM=int(next(row.split()[1]for row in Path('/proc/meminfo').read_text().splitlines()if row.startswith('MemAvailable:')))*1024

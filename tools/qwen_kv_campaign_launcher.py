@@ -18,7 +18,8 @@ def main(proposal, admission, go_commit):
         with (root/name).open('x')as f:json.dump(value,f,indent=2);f.write('\n')
     save('service_start.json',dict(pid=os.getpid(),source_commit=go['additive_source_commit'],GO_commit=go_commit,
         cpus=sorted(os.sched_getaffinity(0)),cgroup=Path('/proc/self/cgroup').read_text(),time=time.time(),
-        wall_limit=None,FSIZE='unlimited',AS='unlimited',native_decode=False))
+        wall_limit=None,FSIZE='unlimited',AS='unlimited',memory_limit=None,swap_limit=None,
+        memory_reservation_bytes=go['memory_reservation_bytes'],native_decode=False))
     command=[sys.executable,'-B','-u',str(Path(go['additive_source_root'])/'tools/qwen_kv_campaign_run.py'),
         '--proposal',str(proposal),'--admission',str(admission),'--go-commit',go_commit]
     with (root/'actual_operator.log').open('xb')as log:
@@ -32,7 +33,7 @@ def main(proposal, admission, go_commit):
             st=os.statvfs(go['output_parent']);free=st.f_bavail*st.f_frsize
             cg=next(line.split('::',1)[1]for line in Path('/proc/self/cgroup').read_text().splitlines()if line.startswith('0::'));p=Path('/sys/fs/cgroup')/cg.lstrip('/')
             counters={}
-            for name in ('memory.current','memory.peak','memory.events'):
+            for name in ('memory.current','memory.peak','memory.events','memory.max','memory.swap.max'):
                 try:counters[name]=(p/name).read_text().strip()
                 except OSError:counters[name]='unavailable'
             with(root/'resources.jsonl').open('a')as f:f.write(json.dumps(dict(elapsed_s=time.monotonic()-start,disk_available_bytes=free,counters=counters))+'\n')
