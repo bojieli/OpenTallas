@@ -1,0 +1,12 @@
+{
+  "status": "FAIL_RETAINED_TEST_HARNESS",
+  "base_commit": "618c1dfebcd2f28027cd3f53119ca93554a1cdb3",
+  "scope": "new uncommitted resource-model harness only, no compiler",
+  "initial_attempt": "test command named a nonexistent API test file; collection stopped",
+  "second_attempt": {
+    "passed": 170,
+    "failed": 1,
+    "reason": "temporary metadata fixture had no Git repository; forged manifest not rejected before Git lookup"
+  },
+  "correction": "validate entire archived manifest before source Git lookup; final result recorded separately in validation.json"
+}

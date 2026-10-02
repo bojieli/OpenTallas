@@ -1,0 +1,40 @@
+{
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_sha256": {
+    "rtl/test/v41_runtime/ot_v41_rt_die.sv": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+    "rtl/w17_runtime/chip/ot_chip_v41x_die.sv": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+    "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+    "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13",
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72",
+    "rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv": "7a2cb51b8c5784c9c74c40012dae318034da05da6f9bbb5598699a94925c86cc"
+  },
+  "scope": "Selected source-derived instance groups only; not a complete elaborated AST census",
+  "binding_chain": [
+    "original wrapper SUN256 SUM64",
+    "actual L0 die -> tile -> core .SUN/.SUM",
+    "core u_su .N(SUN) .M(SUM), MLAT/ALAT omitted default3",
+    "vec generate l<N, KIND l==0?2:l<M?1:0"
+  ],
+  "counts": {
+    "vector_lanes": 256,
+    "full_lanes": 1,
+    "sfu_only_lanes": 63,
+    "light_lanes": 192,
+    "base_qmul_instances": 1280,
+    "base_qadd_instances": 512,
+    "additional_sfu_den_adds": 64,
+    "additional_sfu_exp_blocks": 64
+  },
+  "ckv_difference": {
+    "exact_same_binding_frontend_measurement": false,
+    "selected_slot_dma_instances": 64,
+    "source": "rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+    "rss_and_wall_delta_unavailable": true
+  },
+  "observer": {
+    "packet_bits": 1020,
+    "register_bits_per_rank": 1085,
+    "complete_ast_cost_unavailable": true
+  }
+}
