@@ -31,5 +31,5 @@ def main():
     a=p.parse_args()
     if a.out.exists():raise ValueError('fresh manifest output')
     base=json.loads(a.base.read_bytes());patch=json.loads(gzip.decompress(a.patch.read_bytes()));payloads=json.loads(a.payloads.read_bytes())
-    out=compose(base,patch,payloads,a.out.parent/'journal');a.out.write_text(json.dumps(out,sort_keys=True,indent=2)+'\n')
+    out=compose(base,patch,payloads,a.out.with_name(a.out.stem+'.journal'));a.out.write_text(json.dumps(out,sort_keys=True,indent=2)+'\n')
 if __name__=='__main__':main()

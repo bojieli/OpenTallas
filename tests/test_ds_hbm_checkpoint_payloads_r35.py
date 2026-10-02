@@ -84,3 +84,14 @@ def test_full_entering_state_inventory_does_not_relabel_scratch():
     import ds_hbm_entering_state_r35 as E
     p=E.preflight();assert p['historical_payload_bytes']==6710876160
     assert p['window_payload_bytes']==10403840 and p['source_chunk_rows']==65536
+
+def test_actual_source_open_group_identity_and_refusal(tmp_path):
+    import ds_hbm_open_state_bindings_r35 as O
+    path=tmp_path/'open.npy';a=np.arange(1024,dtype=np.float32).reshape(1,2,512);np.save(path,a,allow_pickle=False)
+    required=dict(kind='explicit_auxiliary_provider',layer=2,position=1048575)
+    n=dict(instructions=[dict(pc=121,provider_bindings={'t':{'open_group':required}})],templates={'t':{'providers':{'open_group':dict(shape=[1,2,512],dtype='F32')}}})
+    records=[dict(layer=2,kind=3,path=str(path),file_sha256=P.sha(path),logical_positions=[1048574])]
+    b=O.bindings(n,records);assert b['121/t/open_group']['source_binding']==required
+    assert np.array_equal(np.load(b['121/t/open_group']['path']),a)
+    records[0]['logical_positions']=[1048573]
+    with pytest.raises(ValueError):O.bindings(n,records)
