@@ -9,12 +9,42 @@ def rtl_bf_sites(np,nbf):
     if not 0<nbf<=np:raise ValueError('source NBF')
     return {i*np//nbf for i in range(nbf)}
 
+def source_formats(kind):
+    # Source capability is separate from qualified physical area/clock proof.
+    normalized={'BF_DUAL':'dual','Q_ONLY':'q'}.get(kind,kind)
+    if normalized=='dual':return {'fp4','fp8','bf16'}
+    if normalized=='q':return {'fp4','fp8','raw'}
+    if normalized=='BF':return {'bf16'}
+    raise ValueError('source site class')
+
+def validate_site_ids(compiled,nbf):
+    np=compiled['compiled_NP'];all_sites=set(range(np))
+    names=['BF_DUAL_site_IDs','Q_ONLY_site_IDs','weight_active_site_IDs','padding_site_IDs']
+    sets={}
+    for name in names:
+        values=compiled[name]
+        if len(values)!=len(set(values)) or any(not isinstance(v,int) or isinstance(v,bool) for v in values):
+            raise ValueError('duplicate or noninteger explicit site ID')
+        sets[name]=set(values)
+    bf=sets['BF_DUAL_site_IDs'];q=sets['Q_ONLY_site_IDs']
+    active=sets['weight_active_site_IDs'];padding=sets['padding_site_IDs']
+    if bf!=rtl_bf_sites(np,nbf) or q!=all_sites-bf:
+        raise ValueError('explicit site classes disagree with source BF predicate')
+    if active & padding or active | padding != all_sites:
+        raise ValueError('active and padding must cover compiled array exactly once')
+    return {'source_compatible':True,'BF_DUAL_pairs':len(bf),'Q_ONLY_pairs':len(q),
+            'padding_pairs':len(padding),'physical4096_macros':4*np,
+            'physical_frame_um2':float(len(q)*Q_FRAME+len(bf)*BF_FRAME),
+            'padding_is_occupancy_not_third_physical_class':True,
+            'shared_storage_capacity_must_still_bind_word_intervals':True,
+            'physical_or_SSFF_qualification_transferred':False}
+
 def validate(sites,np,nbf):
     if len(sites)!=np or {s['pair'] for s in sites}!=set(range(np)):
         raise ValueError('every compiled physical pair must be declared exactly once')
     bfmask=rtl_bf_sites(np,nbf);frames=Fraction(0);resident={};bf_work=set();q_work=set();proof_gaps=[]
     for s in sites:
-        p=s['pair'];kind=s['physical_class']
+        p=s['pair'];kind={'BF_DUAL':'dual','Q_ONLY':'q'}.get(s['physical_class'],s['physical_class'])
         if kind not in ('q','BF','dual'):raise ValueError('source-matched physical class')
         if (kind in ('BF','dual')) != (p in bfmask):
             raise ValueError('physical class disagrees with source is_bf mask')
