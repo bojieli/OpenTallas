@@ -1,0 +1,50 @@
+{
+  "verdict": "RUNNER_PREPARED_PENDING_PARENT_REVIEW_AND_FRESH_GO",
+  "reviewed_fixture_commit": "3b3920dd402342a28d25f386d0da1297bdb3f2ed",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "runner": "tools/w17_window_qdq8_connected_startup_run.py",
+  "runner_sha256": "b5a0e9926d677d48252236bff6e6b9de6db9d5dc7c887b6a07b6b2a3f8d8a3ba",
+  "plan": "results/rtl/w17_window_qdq8_connected_startup_runner_preflight_20261002/plan/plan.json",
+  "plan_sha256": "34029db0ca7647a16a9a200c5940a77e257b1a50234222440efdda3070119800",
+  "model_sha256": "f2f8fce475c579e6069d88f995bdea155bb6eaf7f307e65edce77cbe7e098071",
+  "manifest_sha256": "171894dad92e85230c7b30dd12a5bba38ef4a83e181bf9a07b23012a5c04afda",
+  "commands_sha256": "c2eefd6e8127163325a58d42c454627ce24bc7dcb9e00430bee5281b21cb11ee",
+  "GO_template": "results/rtl/w17_window_qdq8_connected_startup_runner_preflight_20261002/parent_GO_template.json",
+  "template_authorization": false,
+  "run_count": 0,
+  "compile_count": 0,
+  "service_count": 0,
+  "tests": "18 static tests PASS; startup ACK0..31 negatives and original mutant, caps failclosed, oldGO refusal, fixture/geometry/timing/command pins, complete trace comparator mutants.",
+  "unchanged": "Failed fixtures/runners/outcome/oracles/predictions; only startup predicate source repair. Full512QE16blockdot96adder and backend geometry unchanged. No timing fit.",
+  "next_gate": "Parent independent runner/plan/startup-negative review then separate committed fresh GO with requested status. Resolve go_commit using full git rev-parse SHA; fresh service/out, same prepared clean snapshot.",
+  "prepared": "/tmp/window-qdq8-connected-startup-prepared-20261002-r2",
+  "expected_unit": "w17-qdq8-connected-startup-single-run-20261002-r1.service",
+  "expected_out": "/tmp/window-qdq8-connected-startup-single-run-20261002-r1",
+  "caps": {
+    "memory_max": "4294967296",
+    "swap_max": "0",
+    "affinity": [
+      30,
+      31
+    ],
+    "file_limit": [
+      268435456,
+      268435456
+    ],
+    "runtime_usec": "3min",
+    "kill_mode": "control-group",
+    "kill_signal": "9"
+  },
+  "budget": {
+    "whole_service_seconds": 180,
+    "compile_total_seconds": 150,
+    "compile_count": 2,
+    "case_seconds": 5,
+    "cases": 2,
+    "total_case_seconds": 10,
+    "supervision_reserve_seconds": 20
+  },
+  "physical_WR_provider_qualified": false,
+  "producer_freeze_cancel_qualified": false,
+  "no_HBM_drain_recovery_fulltoken_admission": true
+}
