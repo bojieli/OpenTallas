@@ -1,0 +1,18 @@
+test_actual_WAKE_inversion_retained_at_eight_named_local_sites (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_artifact_and_source_receipts (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_every_source_instance_present_once_with_unchanged_master (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_exact_clock_domain_counts_include_ICGs_and_eight_clones (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_full_body_union_disjoint_on_every_row (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_interval_complement_merges_overlapping_blocks (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_no_missing_cells_or_master_area_substitution (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_no_qualification_clock_or_area_credit (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_real_macro_clock_pin_and_corners_in_full_union (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_reset_SETN_separate_from_RESETN_and_only_four_clone_resets (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_sites_orientations_and_no_outline_borrowing (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_source_scalar_fanouts_preserved_no_zero_wire_claim (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+test_unique_endpoints_literal_pin_rectangles_inside_real_bodies (test_dsrom_noECC_full_clock_reset_union.FullUnion) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 17.894s
+
+OK

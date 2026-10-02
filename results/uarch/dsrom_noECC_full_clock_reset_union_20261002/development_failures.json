@@ -1,0 +1,18 @@
+{
+  "scope": "Development input/schema and floating-point accumulation failures; no STA/P&R result or physical limitation",
+  "preserved_observations": [
+    {
+      "cause": "Enable-only LEF subset does not contain ICGx1_ASAP7_75t_R",
+      "repair": "Join exact complete-source physical-master census"
+    },
+    {
+      "cause": "Four bank metadata FF have no RESETN pin",
+      "repair": "Bind four actual ASR valid clones to RESETN; preserve four HQN bank clones with no invented reset port"
+    },
+    {
+      "cause": "Naive source-area sum differed by 2.966335159726441e-7 um2 at BF; first 11-test run had one failure",
+      "repair": "Use math.fsum of the unchanged literal source master areas"
+    }
+  ],
+  "prior_committed_physical_FAIL_records_unchanged": true
+}

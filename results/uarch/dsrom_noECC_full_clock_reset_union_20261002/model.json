@@ -1,0 +1,2051 @@
+{
+  "FF_hold_uncertainty_ps": 25,
+  "PG_OBS_pin_via_extraction_or_skew_credit": false,
+  "SS_setup_uncertainty_ps": 60,
+  "added_capture_edges": 0,
+  "area_credit_um2": 0,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cases": {
+    "bfcolumn": {
+      "PG_bottom_strip_assumed_free": false,
+      "actual_WAKE_QN_INV_ICG_paths": [
+        {
+          "ENA_net": "\\g_wake.g_leaf[0].wake",
+          "ICG_instance": "\\g_wake.g_leaf[0].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 0,
+          "retained_INV_input_net": "_094902_",
+          "retained_INV_instance": "_371966_",
+          "source_INV_bbox_DBU": [
+            277884,
+            540,
+            278046,
+            810
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[1].wake",
+          "ICG_instance": "\\g_wake.g_leaf[1].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 1,
+          "retained_INV_input_net": "_094903_",
+          "retained_INV_instance": "_371967_",
+          "source_INV_bbox_DBU": [
+            280368,
+            540,
+            280530,
+            810
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[2].wake",
+          "ICG_instance": "\\g_wake.g_leaf[2].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 2,
+          "retained_INV_input_net": "_094904_",
+          "retained_INV_instance": "_371968_",
+          "source_INV_bbox_DBU": [
+            282852,
+            540,
+            283014,
+            810
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[3].wake",
+          "ICG_instance": "\\g_wake.g_leaf[3].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 3,
+          "retained_INV_input_net": "_094905_",
+          "retained_INV_instance": "_371969_",
+          "source_INV_bbox_DBU": [
+            285336,
+            540,
+            285498,
+            810
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[4].wake",
+          "ICG_instance": "\\g_wake.g_leaf[4].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 4,
+          "retained_INV_input_net": "_094906_",
+          "retained_INV_instance": "_371970_",
+          "source_INV_bbox_DBU": [
+            136296,
+            4590,
+            136458,
+            4860
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[5].wake",
+          "ICG_instance": "\\g_wake.g_leaf[5].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 5,
+          "retained_INV_input_net": "_094907_",
+          "retained_INV_instance": "_371971_",
+          "source_INV_bbox_DBU": [
+            136296,
+            76140,
+            136458,
+            76410
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[6].wake",
+          "ICG_instance": "\\g_wake.g_leaf[6].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 6,
+          "retained_INV_input_net": "_094908_",
+          "retained_INV_instance": "_371972_",
+          "source_INV_bbox_DBU": [
+            274536,
+            4590,
+            274698,
+            4860
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[7].wake",
+          "ICG_instance": "\\g_wake.g_leaf[7].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 7,
+          "retained_INV_input_net": "_094909_",
+          "retained_INV_instance": "_371973_",
+          "source_INV_bbox_DBU": [
+            274536,
+            76140,
+            274698,
+            76410
+          ]
+        }
+      ],
+      "body_placement_preview_status": "COMPLETE_BODY_PREVIEW",
+      "clock_domains": {
+        "clk": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 1288.8398679999887,
+            "ss": 1102.9377899999984
+          },
+          "endpoint_body_envelope_DBU": [
+            133920,
+            0,
+            1001808,
+            76410
+          ],
+          "masters": {
+            "DFFASRHQNx1_ASAP7_75t_R": 19,
+            "DFFHQNx1_ASAP7_75t_R": 2414,
+            "ICGx1_ASAP7_75t_R": 8
+          },
+          "named_endpoint_count": 2441
+        },
+        "leaf_clk[0]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 5279.879981999672,
+            "ss": 4517.671111999611
+          },
+          "endpoint_body_envelope_DBU": [
+            133920,
+            1890,
+            1001592,
+            138780
+          ],
+          "masters": {
+            "DFFASRHQNx1_ASAP7_75t_R": 41,
+            "DFFHQNx1_ASAP7_75t_R": 10075
+          },
+          "named_endpoint_count": 10116
+        },
+        "leaf_clk[1]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 3215.6887340001576,
+            "ss": 2751.4582859996044
+          },
+          "endpoint_body_envelope_DBU": [
+            276480,
+            9180,
+            1001808,
+            14310
+          ],
+          "masters": {
+            "DFFASRHQNx1_ASAP7_75t_R": 22,
+            "DFFHQNx1_ASAP7_75t_R": 6139
+          },
+          "named_endpoint_count": 6161
+        },
+        "leaf_clk[2]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 2746.2464980000545,
+            "ss": 2350.5006779997184
+          },
+          "endpoint_body_envelope_DBU": [
+            276480,
+            14040,
+            1001592,
+            18630
+          ],
+          "masters": {
+            "DFFASRHQNx1_ASAP7_75t_R": 224,
+            "DFFHQNx1_ASAP7_75t_R": 5045
+          },
+          "named_endpoint_count": 5269
+        },
+        "leaf_clk[3]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 35111.33858403072,
+            "ss": 30055.95266802048
+          },
+          "endpoint_body_envelope_DBU": [
+            276480,
+            18360,
+            1001808,
+            73710
+          ],
+          "masters": {
+            "DFFASRHQNx1_ASAP7_75t_R": 4102,
+            "DFFHQNx1_ASAP7_75t_R": 63308
+          },
+          "named_endpoint_count": 67410
+        },
+        "leaf_clk[4]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 10.3732,
+            "ss": 8.6838
+          },
+          "endpoint_body_envelope_DBU": [
+            8640,
+            4320,
+            133920,
+            67230
+          ],
+          "masters": {
+            "ot_rom_4096x274_m8": 1
+          },
+          "named_endpoint_count": 1
+        },
+        "leaf_clk[5]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 10.3732,
+            "ss": 8.6838
+          },
+          "endpoint_body_envelope_DBU": [
+            8640,
+            75870,
+            133920,
+            138780
+          ],
+          "masters": {
+            "ot_rom_4096x274_m8": 1
+          },
+          "named_endpoint_count": 1
+        },
+        "leaf_clk[6]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 10.3732,
+            "ss": 8.6838
+          },
+          "endpoint_body_envelope_DBU": [
+            146880,
+            4320,
+            272160,
+            67230
+          ],
+          "masters": {
+            "ot_rom_4096x274_m8": 1
+          },
+          "named_endpoint_count": 1
+        },
+        "leaf_clk[7]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 10.3732,
+            "ss": 8.6838
+          },
+          "endpoint_body_envelope_DBU": [
+            146880,
+            75870,
+            272160,
+            138780
+          ],
+          "masters": {
+            "ot_rom_4096x274_m8": 1
+          },
+          "named_endpoint_count": 1
+        }
+      },
+      "complete_macro_count": 4,
+      "compute_x_min_DBU": 276480,
+      "constructed_added_cell_area_um2": 27.48330000000015,
+      "constructed_added_cell_count": 235,
+      "dynamic_body_whitespace_ratio": 1,
+      "endpoint_artifact_sha256": "6daaf4fc31bccfcc8f8c07f99228a9772f44d655266e60293def4c6145daeddc",
+      "existing_strip_clock_buffer_count": 73,
+      "fixed_cell_count": 3537,
+      "full_clock_reserve_embedding_credit_um2": 0,
+      "macro_leaf_clock_consumers": [
+        {
+          "bbox_DBU": [
+            8640,
+            4320,
+            133920,
+            67230
+          ],
+          "instance": "\\g_mac[0].g_pp.u_rom0",
+          "net": "leaf_clk[4]"
+        },
+        {
+          "bbox_DBU": [
+            8640,
+            75870,
+            133920,
+            138780
+          ],
+          "instance": "\\g_mac[0].g_pp.u_rom1",
+          "net": "leaf_clk[5]"
+        },
+        {
+          "bbox_DBU": [
+            146880,
+            4320,
+            272160,
+            67230
+          ],
+          "instance": "\\g_mac[1].g_pp.u_rom0",
+          "net": "leaf_clk[6]"
+        },
+        {
+          "bbox_DBU": [
+            146880,
+            75870,
+            272160,
+            138780
+          ],
+          "instance": "\\g_mac[1].g_pp.u_rom1",
+          "net": "leaf_clk[7]"
+        }
+      ],
+      "outline_DBU": [
+        0,
+        0,
+        1002890,
+        157680
+      ],
+      "pin_specific_async_release_contracts": [
+        {
+          "corners": {
+            "ff": {
+              "input_reset_and_clock_slew_envelope_ps": 320,
+              "literal_pin_sha256": "0ae6547af83f7bb8e48f6b331ac80ca9607cc5a6324bdcc404296d38e8eef35a",
+              "policy_recovery_plus_setup_and_unproven_skew_ps": 75.27271,
+              "policy_removal_plus_hold_and_unproven_skew_ps": 117.5064,
+              "source_recovery_upper_ps": -9.72729,
+              "source_removal_upper_ps": 67.5064
+            },
+            "ss": {
+              "input_reset_and_clock_slew_envelope_ps": 320,
+              "literal_pin_sha256": "953cc785478c8e66356cc0d46b6678e9f9eaed731712b7e6fba1408590f8e2c6",
+              "policy_recovery_plus_setup_and_unproven_skew_ps": 66.8308,
+              "policy_removal_plus_hold_and_unproven_skew_ps": 157.064,
+              "source_recovery_upper_ps": -18.1692,
+              "source_removal_upper_ps": 107.064
+            }
+          },
+          "count": 4400,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "relative_skew_25ps_is_requirement_not_measured": true
+        },
+        {
+          "corners": {
+            "ff": {
+              "input_reset_and_clock_slew_envelope_ps": 320,
+              "literal_pin_sha256": "9eb64d86a9b8058cbc728af8fcf13f627a7d075a97e6f03c22ba23a5fdb5fb46",
+              "policy_recovery_plus_setup_and_unproven_skew_ps": 116.6686,
+              "policy_removal_plus_hold_and_unproven_skew_ps": 94.4543,
+              "source_recovery_upper_ps": 31.6686,
+              "source_removal_upper_ps": 44.4543
+            },
+            "ss": {
+              "input_reset_and_clock_slew_envelope_ps": 320,
+              "literal_pin_sha256": "3186b8b1275051a4f0b63dd6837ccd1c31606130a5a4d7d8906cde2b072f3289",
+              "policy_recovery_plus_setup_and_unproven_skew_ps": 131.1076,
+              "policy_removal_plus_hold_and_unproven_skew_ps": 150.341,
+              "source_recovery_upper_ps": 46.1076,
+              "source_removal_upper_ps": 100.341
+            }
+          },
+          "count": 8,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "SETN",
+          "relative_skew_25ps_is_requirement_not_measured": true
+        }
+      ],
+      "placement_artifact_sha256": "95b844a24c2db3512abd465acae5838746d990cabbd3bebafca48a99e89c4054",
+      "reset_net_groups": {
+        "rst_n": {
+          "SS_FF_pin_cap_fF": {
+            "ff": 3542.1152799999986,
+            "ss": 3105.921280000006
+          },
+          "actual_release_waveform_and_tree_not_qualified": true,
+          "leaf_fanin_budget_scope": "Maxwell reset tree pin allowance only; wire/native access added separately before admission",
+          "named_endpoint_count": 4408,
+          "pin_only_leaf_lower_bound_at_5p76_fF": 615
+        }
+      },
+      "retained_scalar_QN_fanouts": [
+        {
+          "QN_net": "_081203_",
+          "receivers": [
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.683716,
+                "ss": 0.578766
+              },
+              "bbox_DBU": [
+                272484,
+                67500,
+                272646,
+                67770
+              ],
+              "endpoint_Manhattan_lower_bound_um": 3.165,
+              "instance": "_364837_",
+              "master": "INVx1_ASAP7_75t_R",
+              "net": "_081203_",
+              "orientation": "MX",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    272502,
+                    67626,
+                    272562,
+                    67644
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272502,
+                    67527,
+                    272539,
+                    67545
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272502,
+                    67725,
+                    272539,
+                    67743
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272502,
+                    67527,
+                    272520,
+                    67743
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.485004,
+                "ss": 0.41434
+              },
+              "bbox_DBU": [
+                273456,
+                67500,
+                273726,
+                67770
+              ],
+              "endpoint_Manhattan_lower_bound_um": 2.052,
+              "instance": "_506176_",
+              "master": "AOI21xp33_ASAP7_75t_R",
+              "net": "_081203_",
+              "orientation": "MX",
+              "pin": "B",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273636,
+                    67570,
+                    273654,
+                    67700
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.518972,
+                "ss": 0.431816
+              },
+              "bbox_DBU": [
+                272916,
+                67770,
+                273240,
+                68040
+              ],
+              "endpoint_Manhattan_lower_bound_um": 2.898,
+              "instance": "_591895_",
+              "master": "NAND4xp25_ASAP7_75t_R",
+              "net": "_081203_",
+              "orientation": "R0",
+              "pin": "C",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273042,
+                    67804,
+                    273060,
+                    67970
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.518972,
+                "ss": 0.431816
+              },
+              "bbox_DBU": [
+                273564,
+                67770,
+                273888,
+                68040
+              ],
+              "endpoint_Manhattan_lower_bound_um": 2.25,
+              "instance": "_608336_",
+              "master": "NAND4xp25_ASAP7_75t_R",
+              "net": "_081203_",
+              "orientation": "R0",
+              "pin": "C",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273690,
+                    67804,
+                    273708,
+                    67970
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            }
+          ],
+          "source_instance": "_740188_",
+          "wire_geometry_RC_clock_minmax_and_hold_not_qualified": true
+        },
+        {
+          "QN_net": "_094880_",
+          "receivers": [
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.683716,
+                "ss": 0.578766
+              },
+              "bbox_DBU": [
+                273132,
+                67500,
+                273294,
+                67770
+              ],
+              "endpoint_Manhattan_lower_bound_um": 2.733,
+              "instance": "_371955_",
+              "master": "INVx1_ASAP7_75t_R",
+              "net": "_094880_",
+              "orientation": "MX",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273150,
+                    67626,
+                    273210,
+                    67644
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273150,
+                    67527,
+                    273187,
+                    67545
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273150,
+                    67725,
+                    273187,
+                    67743
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273150,
+                    67527,
+                    273168,
+                    67743
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            }
+          ],
+          "source_instance": "_741311_",
+          "wire_geometry_RC_clock_minmax_and_hold_not_qualified": true
+        },
+        {
+          "QN_net": "_081202_",
+          "receivers": [
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.683716,
+                "ss": 0.578766
+              },
+              "bbox_DBU": [
+                272160,
+                67500,
+                272322,
+                67770
+              ],
+              "endpoint_Manhattan_lower_bound_um": 4.569,
+              "instance": "_364836_",
+              "master": "INVx1_ASAP7_75t_R",
+              "net": "_081202_",
+              "orientation": "MX",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    272178,
+                    67626,
+                    272238,
+                    67644
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272178,
+                    67527,
+                    272215,
+                    67545
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272178,
+                    67725,
+                    272215,
+                    67743
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272178,
+                    67527,
+                    272196,
+                    67743
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.533113,
+                "ss": 0.446074
+              },
+              "bbox_DBU": [
+                272160,
+                67770,
+                272538,
+                68040
+              ],
+              "endpoint_Manhattan_lower_bound_um": 4.176,
+              "instance": "_506191_",
+              "master": "AOI221xp5_ASAP7_75t_R",
+              "net": "_081202_",
+              "orientation": "R0",
+              "pin": "C",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    272340,
+                    67840,
+                    272358,
+                    67934
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.369231,
+                "ss": 0.318063
+              },
+              "bbox_DBU": [
+                273618,
+                107190,
+                273834,
+                107460
+              ],
+              "endpoint_Manhattan_lower_bound_um": 40.641,
+              "instance": "_677790_",
+              "master": "NOR2xp33_ASAP7_75t_R",
+              "net": "_081202_",
+              "orientation": "R0",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273636,
+                    107316,
+                    273696,
+                    107334
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    107415,
+                    273673,
+                    107433
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    107217,
+                    273673,
+                    107235
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    107217,
+                    273654,
+                    107433
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.369231,
+                "ss": 0.318063
+              },
+              "bbox_DBU": [
+                273618,
+                35370,
+                273834,
+                35640
+              ],
+              "endpoint_Manhattan_lower_bound_um": 35.241,
+              "instance": "_678354_",
+              "master": "NOR2xp33_ASAP7_75t_R",
+              "net": "_081202_",
+              "orientation": "R0",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273636,
+                    35496,
+                    273696,
+                    35514
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    35595,
+                    273673,
+                    35613
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    35397,
+                    273673,
+                    35415
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    35397,
+                    273654,
+                    35613
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            }
+          ],
+          "source_instance": "_740189_",
+          "wire_geometry_RC_clock_minmax_and_hold_not_qualified": true
+        },
+        {
+          "QN_net": "_094874_",
+          "receivers": [
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.683716,
+                "ss": 0.578766
+              },
+              "bbox_DBU": [
+                272808,
+                67500,
+                272970,
+                67770
+              ],
+              "endpoint_Manhattan_lower_bound_um": 4.137,
+              "instance": "_371949_",
+              "master": "INVx1_ASAP7_75t_R",
+              "net": "_094874_",
+              "orientation": "MX",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    272826,
+                    67626,
+                    272886,
+                    67644
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272826,
+                    67527,
+                    272863,
+                    67545
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272826,
+                    67725,
+                    272863,
+                    67743
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272826,
+                    67527,
+                    272844,
+                    67743
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.392001,
+                "ss": 0.329129
+              },
+              "bbox_DBU": [
+                273618,
+                107190,
+                273834,
+                107460
+              ],
+              "endpoint_Manhattan_lower_bound_um": 39.763,
+              "instance": "_677790_",
+              "master": "NOR2xp33_ASAP7_75t_R",
+              "net": "_094874_",
+              "orientation": "R0",
+              "pin": "B",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273725,
+                    107379,
+                    273762,
+                    107397
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273744,
+                    107253,
+                    273762,
+                    107397
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273725,
+                    107253,
+                    273762,
+                    107271
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            }
+          ],
+          "source_instance": "_740763_",
+          "wire_geometry_RC_clock_minmax_and_hold_not_qualified": true
+        }
+      ],
+      "retained_source_cell_count": 447266,
+      "retained_source_stdcell_area_um2": 53283.22236000001,
+      "retained_source_stdcell_count": 447262,
+      "row_packed_cell_count": 443960,
+      "row_pitch_DBU": 270,
+      "site_pitch_DBU": 54,
+      "source_ICG_connections": [
+        {
+          "instance": "\\g_wake.g_leaf[0].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[0].wake",
+            "GCLK": "leaf_clk[0]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[1].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[1].wake",
+            "GCLK": "leaf_clk[1]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[2].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[2].wake",
+            "GCLK": "leaf_clk[2]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[3].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[3].wake",
+            "GCLK": "leaf_clk[3]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[4].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[4].wake",
+            "GCLK": "leaf_clk[4]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[5].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[5].wake",
+            "GCLK": "leaf_clk[5]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[6].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[6].wake",
+            "GCLK": "leaf_clk[6]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[7].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[7].wake",
+            "GCLK": "leaf_clk[7]",
+            "SE": "1'h0"
+          }
+        }
+      ],
+      "source_mapped_sha256": "409a9efd6f47c941444385d497c998624411580f048fac987eba1c7a2ee2c375",
+      "source_scalar_neighbor_extra_area_um2": 0,
+      "source_scalar_neighbor_relocation_count": 8,
+      "unplaced_area_um2": 0,
+      "unplaced_cell_count": 0,
+      "unplaced_clock_reset_endpoints": [],
+      "unplaced_master_counts": {}
+    },
+    "q": {
+      "PG_bottom_strip_assumed_free": false,
+      "actual_WAKE_QN_INV_ICG_paths": [
+        {
+          "ENA_net": "\\g_wake.g_leaf[0].wake",
+          "ICG_instance": "\\g_wake.g_leaf[0].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 0,
+          "retained_INV_input_net": "_029407_",
+          "retained_INV_instance": "_138850_",
+          "source_INV_bbox_DBU": [
+            277884,
+            540,
+            278046,
+            810
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[1].wake",
+          "ICG_instance": "\\g_wake.g_leaf[1].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 1,
+          "retained_INV_input_net": "_029408_",
+          "retained_INV_instance": "_138851_",
+          "source_INV_bbox_DBU": [
+            280368,
+            540,
+            280530,
+            810
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[2].wake",
+          "ICG_instance": "\\g_wake.g_leaf[2].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 2,
+          "retained_INV_input_net": "_029409_",
+          "retained_INV_instance": "_138852_",
+          "source_INV_bbox_DBU": [
+            282852,
+            540,
+            283014,
+            810
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[3].wake",
+          "ICG_instance": "\\g_wake.g_leaf[3].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 3,
+          "retained_INV_input_net": "_029410_",
+          "retained_INV_instance": "_138853_",
+          "source_INV_bbox_DBU": [
+            285336,
+            540,
+            285498,
+            810
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[4].wake",
+          "ICG_instance": "\\g_wake.g_leaf[4].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 4,
+          "retained_INV_input_net": "_029411_",
+          "retained_INV_instance": "_138854_",
+          "source_INV_bbox_DBU": [
+            136296,
+            4590,
+            136458,
+            4860
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[5].wake",
+          "ICG_instance": "\\g_wake.g_leaf[5].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 5,
+          "retained_INV_input_net": "_029412_",
+          "retained_INV_instance": "_138855_",
+          "source_INV_bbox_DBU": [
+            136296,
+            76140,
+            136458,
+            76410
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[6].wake",
+          "ICG_instance": "\\g_wake.g_leaf[6].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 6,
+          "retained_INV_input_net": "_029413_",
+          "retained_INV_instance": "_138856_",
+          "source_INV_bbox_DBU": [
+            274536,
+            4590,
+            274698,
+            4860
+          ]
+        },
+        {
+          "ENA_net": "\\g_wake.g_leaf[7].wake",
+          "ICG_instance": "\\g_wake.g_leaf[7].u_cg.u_icg",
+          "enable_setup_hold_pulse_width_and_wires_not_qualified": true,
+          "leaf": 7,
+          "retained_INV_input_net": "_029414_",
+          "retained_INV_instance": "_138857_",
+          "source_INV_bbox_DBU": [
+            274536,
+            76140,
+            274698,
+            76410
+          ]
+        }
+      ],
+      "body_placement_preview_status": "COMPLETE_BODY_PREVIEW",
+      "clock_domains": {
+        "clk": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 611.8117560000121,
+            "ss": 523.6609600000048
+          },
+          "endpoint_body_envelope_DBU": [
+            133920,
+            0,
+            509058,
+            76410
+          ],
+          "masters": {
+            "DFFASRHQNx1_ASAP7_75t_R": 18,
+            "DFFHQNx1_ASAP7_75t_R": 1118,
+            "ICGx1_ASAP7_75t_R": 8
+          },
+          "named_endpoint_count": 1144
+        },
+        "leaf_clk[0]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 3432.618598000218,
+            "ss": 2937.1078219995616
+          },
+          "endpoint_body_envelope_DBU": [
+            133920,
+            2700,
+            509760,
+            138780
+          ],
+          "masters": {
+            "DFFASRHQNx1_ASAP7_75t_R": 34,
+            "DFFHQNx1_ASAP7_75t_R": 6543
+          },
+          "named_endpoint_count": 6577
+        },
+        "leaf_clk[1]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 3215.688734000159,
+            "ss": 2751.458285999602
+          },
+          "endpoint_body_envelope_DBU": [
+            276480,
+            16470,
+            509328,
+            32130
+          ],
+          "masters": {
+            "DFFASRHQNx1_ASAP7_75t_R": 22,
+            "DFFHQNx1_ASAP7_75t_R": 6139
+          },
+          "named_endpoint_count": 6161
+        },
+        "leaf_clk[2]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 2746.2464980000423,
+            "ss": 2350.5006779997034
+          },
+          "endpoint_body_envelope_DBU": [
+            276480,
+            31860,
+            509760,
+            45360
+          ],
+          "masters": {
+            "DFFASRHQNx1_ASAP7_75t_R": 224,
+            "DFFHQNx1_ASAP7_75t_R": 5045
+          },
+          "named_endpoint_count": 5269
+        },
+        "leaf_clk[3]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 5111.087883999937,
+            "ss": 4375.306739999448
+          },
+          "endpoint_body_envelope_DBU": [
+            276480,
+            45090,
+            509760,
+            70470
+          ],
+          "masters": {
+            "DFFASRHQNx1_ASAP7_75t_R": 632,
+            "DFFHQNx1_ASAP7_75t_R": 9182
+          },
+          "named_endpoint_count": 9814
+        },
+        "leaf_clk[4]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 10.3732,
+            "ss": 8.6838
+          },
+          "endpoint_body_envelope_DBU": [
+            8640,
+            4320,
+            133920,
+            67230
+          ],
+          "masters": {
+            "ot_rom_4096x274_m8": 1
+          },
+          "named_endpoint_count": 1
+        },
+        "leaf_clk[5]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 10.3732,
+            "ss": 8.6838
+          },
+          "endpoint_body_envelope_DBU": [
+            8640,
+            75870,
+            133920,
+            138780
+          ],
+          "masters": {
+            "ot_rom_4096x274_m8": 1
+          },
+          "named_endpoint_count": 1
+        },
+        "leaf_clk[6]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 10.3732,
+            "ss": 8.6838
+          },
+          "endpoint_body_envelope_DBU": [
+            146880,
+            4320,
+            272160,
+            67230
+          ],
+          "masters": {
+            "ot_rom_4096x274_m8": 1
+          },
+          "named_endpoint_count": 1
+        },
+        "leaf_clk[7]": {
+          "SS_FF_total_pin_cap_fF": {
+            "ff": 10.3732,
+            "ss": 8.6838
+          },
+          "endpoint_body_envelope_DBU": [
+            146880,
+            75870,
+            272160,
+            138780
+          ],
+          "masters": {
+            "ot_rom_4096x274_m8": 1
+          },
+          "named_endpoint_count": 1
+        }
+      },
+      "complete_macro_count": 4,
+      "compute_x_min_DBU": 276480,
+      "constructed_added_cell_area_um2": 27.48330000000015,
+      "constructed_added_cell_count": 235,
+      "dynamic_body_whitespace_ratio": 1,
+      "endpoint_artifact_sha256": "54d654665039db5fce9be329ad86e3663627285868e9bfaf9e381006a5aa1d13",
+      "existing_strip_clock_buffer_count": 73,
+      "fixed_cell_count": 3536,
+      "full_clock_reserve_embedding_credit_um2": 0,
+      "macro_leaf_clock_consumers": [
+        {
+          "bbox_DBU": [
+            8640,
+            4320,
+            133920,
+            67230
+          ],
+          "instance": "\\g_mac[0].g_pp.u_rom0",
+          "net": "leaf_clk[4]"
+        },
+        {
+          "bbox_DBU": [
+            8640,
+            75870,
+            133920,
+            138780
+          ],
+          "instance": "\\g_mac[0].g_pp.u_rom1",
+          "net": "leaf_clk[5]"
+        },
+        {
+          "bbox_DBU": [
+            146880,
+            4320,
+            272160,
+            67230
+          ],
+          "instance": "\\g_mac[1].g_pp.u_rom0",
+          "net": "leaf_clk[6]"
+        },
+        {
+          "bbox_DBU": [
+            146880,
+            75870,
+            272160,
+            138780
+          ],
+          "instance": "\\g_mac[1].g_pp.u_rom1",
+          "net": "leaf_clk[7]"
+        }
+      ],
+      "outline_DBU": [
+        0,
+        0,
+        510840,
+        151200
+      ],
+      "pin_specific_async_release_contracts": [
+        {
+          "corners": {
+            "ff": {
+              "input_reset_and_clock_slew_envelope_ps": 320,
+              "literal_pin_sha256": "0ae6547af83f7bb8e48f6b331ac80ca9607cc5a6324bdcc404296d38e8eef35a",
+              "policy_recovery_plus_setup_and_unproven_skew_ps": 75.27271,
+              "policy_removal_plus_hold_and_unproven_skew_ps": 117.5064,
+              "source_recovery_upper_ps": -9.72729,
+              "source_removal_upper_ps": 67.5064
+            },
+            "ss": {
+              "input_reset_and_clock_slew_envelope_ps": 320,
+              "literal_pin_sha256": "953cc785478c8e66356cc0d46b6678e9f9eaed731712b7e6fba1408590f8e2c6",
+              "policy_recovery_plus_setup_and_unproven_skew_ps": 66.8308,
+              "policy_removal_plus_hold_and_unproven_skew_ps": 157.064,
+              "source_recovery_upper_ps": -18.1692,
+              "source_removal_upper_ps": 107.064
+            }
+          },
+          "count": 922,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "RESETN",
+          "relative_skew_25ps_is_requirement_not_measured": true
+        },
+        {
+          "corners": {
+            "ff": {
+              "input_reset_and_clock_slew_envelope_ps": 320,
+              "literal_pin_sha256": "9eb64d86a9b8058cbc728af8fcf13f627a7d075a97e6f03c22ba23a5fdb5fb46",
+              "policy_recovery_plus_setup_and_unproven_skew_ps": 116.6686,
+              "policy_removal_plus_hold_and_unproven_skew_ps": 94.4543,
+              "source_recovery_upper_ps": 31.6686,
+              "source_removal_upper_ps": 44.4543
+            },
+            "ss": {
+              "input_reset_and_clock_slew_envelope_ps": 320,
+              "literal_pin_sha256": "3186b8b1275051a4f0b63dd6837ccd1c31606130a5a4d7d8906cde2b072f3289",
+              "policy_recovery_plus_setup_and_unproven_skew_ps": 131.1076,
+              "policy_removal_plus_hold_and_unproven_skew_ps": 150.341,
+              "source_recovery_upper_ps": 46.1076,
+              "source_removal_upper_ps": 100.341
+            }
+          },
+          "count": 8,
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "pin": "SETN",
+          "relative_skew_25ps_is_requirement_not_measured": true
+        }
+      ],
+      "placement_artifact_sha256": "0bb5ad46a5976365725fc756975ecb62db3859497752983e652ddaadb35b78b2",
+      "reset_net_groups": {
+        "rst_n": {
+          "SS_FF_pin_cap_fF": {
+            "ff": 749.5977779999995,
+            "ss": 657.3223300000017
+          },
+          "actual_release_waveform_and_tree_not_qualified": true,
+          "leaf_fanin_budget_scope": "Maxwell reset tree pin allowance only; wire/native access added separately before admission",
+          "named_endpoint_count": 930,
+          "pin_only_leaf_lower_bound_at_5p76_fF": 131
+        }
+      },
+      "retained_scalar_QN_fanouts": [
+        {
+          "QN_net": "_027000_",
+          "receivers": [
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.683716,
+                "ss": 0.578766
+              },
+              "bbox_DBU": [
+                272484,
+                67500,
+                272646,
+                67770
+              ],
+              "endpoint_Manhattan_lower_bound_um": 3.165,
+              "instance": "_137705_",
+              "master": "INVx1_ASAP7_75t_R",
+              "net": "_027000_",
+              "orientation": "MX",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    272502,
+                    67626,
+                    272562,
+                    67644
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272502,
+                    67527,
+                    272539,
+                    67545
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272502,
+                    67725,
+                    272539,
+                    67743
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272502,
+                    67527,
+                    272520,
+                    67743
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.485004,
+                "ss": 0.41434
+              },
+              "bbox_DBU": [
+                272160,
+                67770,
+                272430,
+                68040
+              ],
+              "endpoint_Manhattan_lower_bound_um": 3.618,
+              "instance": "_193126_",
+              "master": "AOI21xp33_ASAP7_75t_R",
+              "net": "_027000_",
+              "orientation": "R0",
+              "pin": "B",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    272340,
+                    67840,
+                    272358,
+                    67970
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.645417,
+                "ss": 0.510343
+              },
+              "bbox_DBU": [
+                272700,
+                67770,
+                273024,
+                68040
+              ],
+              "endpoint_Manhattan_lower_bound_um": 3.078,
+              "instance": "_219178_",
+              "master": "AND3x1_ASAP7_75t_R",
+              "net": "_027000_",
+              "orientation": "R0",
+              "pin": "C",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    272880,
+                    67840,
+                    272898,
+                    67970
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            }
+          ],
+          "source_instance": "_276688_",
+          "wire_geometry_RC_clock_minmax_and_hold_not_qualified": true
+        },
+        {
+          "QN_net": "_029385_",
+          "receivers": [
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.683716,
+                "ss": 0.578766
+              },
+              "bbox_DBU": [
+                273132,
+                67500,
+                273294,
+                67770
+              ],
+              "endpoint_Manhattan_lower_bound_um": 2.733,
+              "instance": "_138835_",
+              "master": "INVx1_ASAP7_75t_R",
+              "net": "_029385_",
+              "orientation": "MX",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273150,
+                    67626,
+                    273210,
+                    67644
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273150,
+                    67527,
+                    273187,
+                    67545
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273150,
+                    67725,
+                    273187,
+                    67743
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273150,
+                    67527,
+                    273168,
+                    67743
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            }
+          ],
+          "source_instance": "_277809_",
+          "wire_geometry_RC_clock_minmax_and_hold_not_qualified": true
+        },
+        {
+          "QN_net": "_026999_",
+          "receivers": [
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.683716,
+                "ss": 0.578766
+              },
+              "bbox_DBU": [
+                272160,
+                67500,
+                272322,
+                67770
+              ],
+              "endpoint_Manhattan_lower_bound_um": 4.569,
+              "instance": "_137704_",
+              "master": "INVx1_ASAP7_75t_R",
+              "net": "_026999_",
+              "orientation": "MX",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    272178,
+                    67626,
+                    272238,
+                    67644
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272178,
+                    67527,
+                    272215,
+                    67545
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272178,
+                    67725,
+                    272215,
+                    67743
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272178,
+                    67527,
+                    272196,
+                    67743
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.485004,
+                "ss": 0.41434
+              },
+              "bbox_DBU": [
+                273456,
+                67500,
+                273726,
+                67770
+              ],
+              "endpoint_Manhattan_lower_bound_um": 3.132,
+              "instance": "_193118_",
+              "master": "AOI21xp33_ASAP7_75t_R",
+              "net": "_026999_",
+              "orientation": "MX",
+              "pin": "B",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273636,
+                    67570,
+                    273654,
+                    67700
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.369231,
+                "ss": 0.318063
+              },
+              "bbox_DBU": [
+                273618,
+                107190,
+                273834,
+                107460
+              ],
+              "endpoint_Manhattan_lower_bound_um": 40.641,
+              "instance": "_232078_",
+              "master": "NOR2xp33_ASAP7_75t_R",
+              "net": "_026999_",
+              "orientation": "R0",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273636,
+                    107316,
+                    273696,
+                    107334
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    107415,
+                    273673,
+                    107433
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    107217,
+                    273673,
+                    107235
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    107217,
+                    273654,
+                    107433
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.369231,
+                "ss": 0.318063
+              },
+              "bbox_DBU": [
+                273618,
+                35370,
+                273834,
+                35640
+              ],
+              "endpoint_Manhattan_lower_bound_um": 35.241,
+              "instance": "_232621_",
+              "master": "NOR2xp33_ASAP7_75t_R",
+              "net": "_026999_",
+              "orientation": "R0",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273636,
+                    35496,
+                    273696,
+                    35514
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    35595,
+                    273673,
+                    35613
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    35397,
+                    273673,
+                    35415
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273636,
+                    35397,
+                    273654,
+                    35613
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            }
+          ],
+          "source_instance": "_276689_",
+          "wire_geometry_RC_clock_minmax_and_hold_not_qualified": true
+        },
+        {
+          "QN_net": "_029379_",
+          "receivers": [
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.683716,
+                "ss": 0.578766
+              },
+              "bbox_DBU": [
+                272808,
+                67500,
+                272970,
+                67770
+              ],
+              "endpoint_Manhattan_lower_bound_um": 4.137,
+              "instance": "_138829_",
+              "master": "INVx1_ASAP7_75t_R",
+              "net": "_029379_",
+              "orientation": "MX",
+              "pin": "A",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    272826,
+                    67626,
+                    272886,
+                    67644
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272826,
+                    67527,
+                    272863,
+                    67545
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272826,
+                    67725,
+                    272863,
+                    67743
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    272826,
+                    67527,
+                    272844,
+                    67743
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            },
+            {
+              "SS_FF_max_pin_cap_fF": {
+                "ff": 0.392001,
+                "ss": 0.329129
+              },
+              "bbox_DBU": [
+                273618,
+                107190,
+                273834,
+                107460
+              ],
+              "endpoint_Manhattan_lower_bound_um": 39.763,
+              "instance": "_232078_",
+              "master": "NOR2xp33_ASAP7_75t_R",
+              "net": "_029379_",
+              "orientation": "R0",
+              "pin": "B",
+              "source_kind": "retained_scalar_QN_receiver",
+              "translated_pin_rectangles": [
+                {
+                  "bbox_DBU": [
+                    273725,
+                    107379,
+                    273762,
+                    107397
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273744,
+                    107253,
+                    273762,
+                    107397
+                  ],
+                  "layer": "M1"
+                },
+                {
+                  "bbox_DBU": [
+                    273725,
+                    107253,
+                    273762,
+                    107271
+                  ],
+                  "layer": "M1"
+                }
+              ]
+            }
+          ],
+          "source_instance": "_277261_",
+          "wire_geometry_RC_clock_minmax_and_hold_not_qualified": true
+        }
+      ],
+      "retained_source_cell_count": 150637,
+      "retained_source_stdcell_area_um2": 18052.897680000002,
+      "retained_source_stdcell_count": 150633,
+      "row_packed_cell_count": 147332,
+      "row_pitch_DBU": 270,
+      "site_pitch_DBU": 54,
+      "source_ICG_connections": [
+        {
+          "instance": "\\g_wake.g_leaf[0].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[0].wake",
+            "GCLK": "leaf_clk[0]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[1].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[1].wake",
+            "GCLK": "leaf_clk[1]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[2].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[2].wake",
+            "GCLK": "leaf_clk[2]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[3].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[3].wake",
+            "GCLK": "leaf_clk[3]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[4].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[4].wake",
+            "GCLK": "leaf_clk[4]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[5].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[5].wake",
+            "GCLK": "leaf_clk[5]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[6].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[6].wake",
+            "GCLK": "leaf_clk[6]",
+            "SE": "1'h0"
+          }
+        },
+        {
+          "instance": "\\g_wake.g_leaf[7].u_cg.u_icg",
+          "master": "ICGx1_ASAP7_75t_R",
+          "ports": {
+            "CLK": "clk",
+            "ENA": "\\g_wake.g_leaf[7].wake",
+            "GCLK": "leaf_clk[7]",
+            "SE": "1'h0"
+          }
+        }
+      ],
+      "source_mapped_sha256": "f1afe6a242d9cbed866222787c6d0659a466e1b93c2fa0b8363526b4fc70f61c",
+      "source_scalar_neighbor_extra_area_um2": 0,
+      "source_scalar_neighbor_relocation_count": 7,
+      "unplaced_area_um2": 0,
+      "unplaced_cell_count": 0,
+      "unplaced_clock_reset_endpoints": [],
+      "unplaced_master_counts": {}
+    }
+  },
+  "clock_period_ps": 833.3333333333334,
+  "construction_scope": "All retained source bodies and exact clock/reset endpoints; deterministic row preview, not timing-driven placement. Higher-layer PG over rows is permitted only after explicit endpoint native-access exclusion tests.",
+  "next_native_construction": [
+    "Disjoint root-to-eight-ICG paths and full leaf consumer forest including macro CLK pins",
+    "Root/leaf minimum and maximum propagated clock paths, matched scalar QN/D wires and arithmetic capture hold",
+    "All endpoint native pin/OBS/PG/via escape plus reset tree and source parent release waveform"
+  ],
+  "physical_build_admitted": false,
+  "prior_native_access_FAIL_records_untouched": true,
+  "schema": "opentallas.dsrom.full-clock-reset-source-union.v1",
+  "source_input_sha256": {
+    "results/uarch/dsrom_noECC_WAKE_cell_retention_20261002/terminal/bfcolumn/retained_mapped.v.gz": "409a9efd6f47c941444385d497c998624411580f048fac987eba1c7a2ee2c375",
+    "results/uarch/dsrom_noECC_WAKE_cell_retention_20261002/terminal/q/retained_mapped.v.gz": "f1afe6a242d9cbed866222787c6d0659a466e1b93c2fa0b8363526b4fc70f61c",
+    "results/uarch/dsrom_noECC_enable_distribution_20261002/inputs/macro.lef": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+    "results/uarch/dsrom_noECC_enable_distribution_20261002/model.json": "921e4cb4f9de2563de5b158ffcf6312eab1cd8f3d194655c8a5a34283efb136b",
+    "results/uarch/dsrom_noECC_hold_station_geometry_20261002/model.json": "983b53453dc7f6c0275b97854d1117ed6be40a734274e557ccc18bd34fcfb1c9",
+    "results/uarch/dsrom_noECC_native_clock_access_20261002/model.json": "04dc4615ec15e1cc2af1042e94dd25bab012dadd0f6319d8e3776dfb7790d274",
+    "results/uarch/dsrom_noECC_production_context_20261002/local_cuts.json": "08a370a4758f9d31aa525535d1b89605d4f7b0dbfdd25af469d497f15843075a",
+    "results/uarch/dsrom_noECC_production_context_20261002/model.json": "b0f2da1a8af476b8dc880fba05c892575d8e1d9877088fe94929d27ad4319d35",
+    "results/uarch/dsrom_noECC_strip_clock_construction_20261002/model.json": "757fabd207dd3f29dc5caea72a15facc6f3ef493655730f0fc64be20f8b89e9e"
+  }
+}

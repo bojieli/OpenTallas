@@ -1,0 +1,44 @@
+{
+  "actual_jobs": {
+    "PVE2_PVE3_new_jobs": [],
+    "P_and_R_or_STA_launched": false,
+    "owner_live_hardware_jobs": []
+  },
+  "area_or_skew_or_latency_credit": 0,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "cold_all_byteidentical": true,
+  "cold_generated_artifacts": 5,
+  "cold_tests": 13,
+  "focused_tests": {
+    "all_PASS": true,
+    "native_access_regression": 12,
+    "new_full_union": 13,
+    "strip_clock_regression": 10,
+    "total": 35
+  },
+  "inherited_inputs_main_byteidentical": 48,
+  "inherited_source_matches_main": "501f2b4f5",
+  "model_sha256": "ff86d9c31526ec913fd2430ac82d92660ec052cc9b02856002c612e5d4337f95",
+  "old_physical_FAIL_records_unchanged": true,
+  "physical_build_admitted": false,
+  "positive_scope": [
+    "Every retained q150637/BF447266 source instance has one unchanged master and proposed body site; all body rectangles disjoint, four actual4096 macros retained",
+    "All root and leaf clock/reset endpoint identities and translated literal pins plus eight metadata clones and73 constructed strip clock buffer inputs",
+    "Eight actual retained WAKE polarity INV cells locally placed; seven q/eight BF direct scalar QN receiver cells in bank gap, no added gates",
+    "Reset SETN and RESETN source recovery/removal constraints separated; only four valid clones resettable"
+  ],
+  "remaining_specific_construction": [
+    "Root clk forest must bind q1144/BF2441 named CLK endpoints including8ICGs; the full GCLK forest must serve all four arithmetic/capture leaf domains plus4 M4 macro CLK pins",
+    "Route actual newly placed source scalar QN fanouts: original producer local2.052..3.618um first consumers; retained downstream control destinations35.241..40.641um remain real wire/clock hold obligations",
+    "Reset forest serves q930/BF4408 asynchronous pins; pin-only5.76fF allowance floors131/615 leaves, not full wire/tree size",
+    "SETN release on8WAKE pins requires SS recovery131.1076ps and FF removal94.4543ps under320ps source slew/60setup25hold+unproven25skew; RESETN requires66.8308/117.5064ps",
+    "All endpoint native PG/OBS/via contact exclusions and max/min propagated clock timing; full forest cells must have named shared union with Maxwell before embedding credit"
+  ],
+  "reviewed_predecessor_commit": "0af86e820f7e711bfa47f45743c5ab61008afb01",
+  "schema": "opentallas.dsrom.full-clock-reset-source-union-review-handoff.v1",
+  "source_dependencies": 50,
+  "standalone_replay_commands": [
+    "python3 tools/dsrom_noECC_full_clock_reset_union.py",
+    "python3 -m unittest discover -s tests -p test_dsrom_noECC_full_clock_reset_union.py -v"
+  ]
+}
