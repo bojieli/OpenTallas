@@ -1,0 +1,147 @@
+{
+  "GO_commit": "8bbdc06837899494a4b9d78e593086c8018f7680",
+  "claims": {
+    "adoption": false,
+    "fullfield": false,
+    "fulltoken": false,
+    "physical": false
+  },
+  "config_contract": {
+    "cfg_go_cycle": 13,
+    "conclusion": "ca25 is an inactive held port address, not a legal valid write; c_v0 is source-derived, not logged independently",
+    "cw": 25,
+    "element_last_write_edge": 39,
+    "fault_cycle_port": {
+      "c_a": 25,
+      "c_v": 0,
+      "cycle": 119,
+      "ld_k": 25,
+      "ld_run": 0
+    },
+    "first_inactive_registered_port": {
+      "c_a": 25,
+      "c_v": 0,
+      "cycle": 39,
+      "ld_k": 25,
+      "ld_run": 0
+    },
+    "go_edge": 40,
+    "last_valid_registered_port": {
+      "c_a": 24,
+      "c_v": 1,
+      "cycle": 38,
+      "ld_k": 25,
+      "ld_run": 0
+    },
+    "legal_valid_write_addresses": [
+      0,
+      24
+    ],
+    "nseg": 8
+  },
+  "evidence_commit": "97b880aba6085f565ab553b092c7cc8c853a5c83",
+  "fault_ownership": {
+    "confidence": "high: actual trace plus existing source inequality; selected composition only",
+    "emitted": 12,
+    "hazard": 1,
+    "incoming_position": 1,
+    "issue": 0,
+    "overflow": "4+1>4+0 on enabled edge119",
+    "pairfault": 1,
+    "pops": 7,
+    "pushes": 12,
+    "slot": 0,
+    "spinefault": 0,
+    "walker_position": 0
+  },
+  "model": {
+    "added_schedule_cycles": 48,
+    "analytical_added_schedule_ns": 39.984,
+    "arrival_slices_per_cycle": "1/5",
+    "consumer_same_slot_interval_cycles": 8,
+    "excess_slices_per_cycle": "3/40",
+    "extra_state_for_image_only_admission": 0,
+    "finite_fifo_cannot_cover_unbounded_stream": true,
+    "fixture_period_ps": 833,
+    "maximum_same_slot_service_per_cycle": "1/8",
+    "mtp_positions": 2,
+    "note": "This is schedule cost, not end-to-end token latency or SS/FF credit; VM readiness and final drain remain composed separately.",
+    "position_schedule_words_before": 40,
+    "producer_interval_cycles": 5,
+    "proposed_latency_bound_schedule_words": 64,
+    "schedule_duration_increase_percent": 60,
+    "schedule_rate_decrease_percent": 37.5,
+    "scope": "one selected full-row FP4/MTP2 pair, not fullfield throughput or physical qualification"
+  },
+  "observed": {
+    "emitted_cycles": [
+      62,
+      67,
+      72,
+      77,
+      82,
+      87,
+      92,
+      97,
+      102,
+      107,
+      112,
+      117
+    ],
+    "final_occupancy": 5,
+    "first_overflow": 119,
+    "last_edge": {
+      "adapt": 5,
+      "adv": 1,
+      "b": 0,
+      "cfg": 0,
+      "cnt": 4,
+      "cycle": 119,
+      "gate": 1,
+      "go": 0,
+      "have0": 0,
+      "have1": 512,
+      "hazard": 1,
+      "issue": 0,
+      "npush": 1,
+      "pop": 0,
+      "pos": 1,
+      "smi": 20,
+      "smpos": 1,
+      "sok": 1,
+      "spine": 3,
+      "sv": 0,
+      "u": 0,
+      "xs": 0
+    },
+    "pop_cycles": [
+      65,
+      73,
+      81,
+      89,
+      97,
+      105,
+      113
+    ]
+  },
+  "peak_memory_bytes": 653078528,
+  "proposal": {
+    "admission": "Bind image generator recurrence floor to actual LAT8 and reject production5/FAST1 composition before launch. Use source-existing FAST8 schedule as control; model all round demands before any broader adoption.",
+    "alternative": "Actual upstream credits/throttle requires separate source/model/gating proof; larger FIFO alone does not repair sustained excess.",
+    "diagnostic": "New additive bench captures pre/post c_v and ld_run/ld_k; validate address bounds only on valid write, exact inactive25 derivation otherwise. Make recognized first-fault and unrelated-fault paths mutually exclusive; retain all unrelated fatal checks.",
+    "execution_authorized": false,
+    "hardware_or_expectations_changed": false,
+    "qualification": "Production overflow is a mandatory composition/admission failure, even if a future negative diagnostic recognizes it cleanly."
+  },
+  "status": "FAIL_UNQUALIFIED_UNCHANGED",
+  "terminal_defects": {
+    "actual_fatal": "OTHER_FAULT at line200; no STATIC_WITNESS_NOT_REPRODUCED in actual log",
+    "bench": "sequential OTHER_FAULT check after $finish; generated C++ calls VL_FINISH_MT then checks sticky ffault and calls VL_STOP_MT",
+    "parser": "unconditionally requires ca<25 despite inactive c_v",
+    "policy": "retain fatal rejection and all old receipts; no retroactive PASS"
+  },
+  "used_seconds": {
+    "build": 18.911928037181497,
+    "simulate": 0.11918957671150565
+  }
+}
