@@ -1,0 +1,127 @@
+{
+  "AQ_input_accept": {
+    "count": 80,
+    "first_edge": 46,
+    "last_edge": 125
+  },
+  "AQ_output_capture": {
+    "count": 80,
+    "first_edge": 59,
+    "last_edge": 138
+  },
+  "EID_VM_read_accept": {
+    "count": 1,
+    "first_edge": 11,
+    "last_edge": 11
+  },
+  "VM_read_accept": {
+    "count": 80,
+    "first_edge": 45,
+    "last_edge": 124
+  },
+  "VM_write_accept": {
+    "count": 576,
+    "first_edge": 415,
+    "last_edge": 420
+  },
+  "activation_field_accept": {
+    "count": 80,
+    "first_edge": 82,
+    "last_edge": 312
+  },
+  "active_pair_go_accept": {
+    "count": 160,
+    "first_edge": 60,
+    "last_edge": 60
+  },
+  "all_source_root_writer_drained": {
+    "count": 1,
+    "first_edge": 462,
+    "last_edge": 462
+  },
+  "bank_capture": {
+    "count": 23040,
+    "first_edge": 87,
+    "last_edge": 318
+  },
+  "cfg_ROM_read_accept": {
+    "count": 102400,
+    "first_edge": 34,
+    "last_edge": 58
+  },
+  "cfg_element_write_accept": {
+    "count": 102400,
+    "first_edge": 35,
+    "last_edge": 59
+  },
+  "field_cfg_accept": {
+    "count": 1,
+    "first_edge": 33,
+    "last_edge": 33
+  },
+  "field_go_accept": {
+    "count": 1,
+    "first_edge": 60,
+    "last_edge": 60
+  },
+  "final_destination_visible": {
+    "count": 576,
+    "first_edge": 415,
+    "last_edge": 420
+  },
+  "lane_consumer_sample": {
+    "count": 23040,
+    "first_edge": 88,
+    "last_edge": 319
+  },
+  "macro_read_accept": {
+    "count": 46080,
+    "first_edge": 85,
+    "last_edge": 316
+  },
+  "main_CE_accept": {
+    "count": 23040,
+    "first_edge": 85,
+    "last_edge": 316
+  },
+  "op_accept": {
+    "count": 1,
+    "first_edge": 10,
+    "last_edge": 10
+  },
+  "pair_partial": {
+    "count": 576,
+    "first_edge": 394,
+    "last_edge": 395
+  },
+  "phase_accept": {
+    "count": 1,
+    "first_edge": 15,
+    "last_edge": 15
+  },
+  "phase_retire": {
+    "count": 1,
+    "first_edge": 422,
+    "last_edge": 422
+  },
+  "root_row_accept": {
+    "count": 576,
+    "first_edge": 414,
+    "last_edge": 419
+  },
+  "spine_idle": {
+    "count": 1,
+    "first_edge": 11,
+    "last_edge": 11
+  },
+  "stream_ROM_advance": {
+    "count": 192,
+    "first_edge": 64,
+    "last_edge": 297
+  },
+  "stream_have_stall": {
+    "count": 61,
+    "first_edge": 45,
+    "last_edge": 119
+  }
+}

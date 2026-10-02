@@ -1,0 +1,42 @@
+{
+  "base_main": "6549b5c8806bb0aafd988856aa55034c43794e48",
+  "current_scoped_result": "r1FAIL exact original calibration; r2PASS322308events reproduced independently",
+  "external_binaries": {
+    "r1": "/tmp/dsrom-PAR2-runtime-consumer-20261002-r1/gate",
+    "r2": "/tmp/dsrom-PAR2-runtime-consumer-calibration-20261002-r2/gate"
+  },
+  "first_test_observation": {
+    "numerical_fields_changed": false,
+    "repair": "normalize comparator return through JSON for exact stored calibration equality",
+    "result": "FAIL Python tuple vs JSON-list equality only",
+    "runtime_retry": false
+  },
+  "fullcore_scheduler_collbusy_physical_provider_fulltoken_credit": false,
+  "generator_scope": "Byte-exact retirement successor from archived sealed premeasurement upstream/root/CE/config/VM calendars, source NBA contract and passive observer. Does not regenerate full40layer allocator ancestry; no unbound compiler claim. All replay/verifier reads resolve to added archival paths.",
+  "historical_commits_attribution_only": [
+    "2a277d7a93610cea36811ed542c3ae8c5c62ec4b",
+    "0accd56ebc27fa2d27ccbe3e6f27c9e4898d7edf",
+    "3f9a13d00eedd4b963a3d6d9b23f248fa2e97508"
+  ],
+  "new_builds_or_simulations": 0,
+  "process_policy_successor": {
+    "CPU_affinity": "optional explicit allocation only",
+    "entrypoint": "tools/dsrom_I66_headroom_launch.py",
+    "execution": "requires explicit --execute and reviewed future build receipt; historical capped binary not relaunched",
+    "host_future_headroom.cpp": "removes guessed6GiB preallocation rejection; no build/run/newqualification",
+    "imposed_limits": [],
+    "memory_swap_time_file_AS_CPU_time_limits": false,
+    "prior_caps_receipts": "historical unchanged; no rerun solely to change caps"
+  },
+  "remaining_separate_work": "Full PAR2 source-ownership calendar join and physical admission with Maxwell/Epicurus; no qualification transfer from single I66 native consumer cone.",
+  "replay_commands": [
+    "python3 -m pytest -q tests/test_dsrom_I66_standalone_calibration.py",
+    "python3 tools/dsrom_I66_standalone_calibration.py --verify",
+    "python3 tools/dsrom_I66_standalone_calibration.py --generate /tmp/FRESH-I66-PREDICTION"
+  ],
+  "required_historical_commits": [],
+  "runtime_archive": "Originalr1FAIL+currentr2PASS record/journal/logs/terminal/manifests copied byte-identically. raw journals retained gzip, binary externally retained only.",
+  "schema": "opentallas.dsrom.I66.standalone-calibration-intake.v1",
+  "source_archive": "source_snapshot includes all recorded original RTL/helper hashes and simulation wrapper/host. Historical_tools are audit bytes only, not imported. No old core/uarch source edited or selected.",
+  "tests": "11 PASS in5.98s on fresh sparse main6549-derived tree; no historical compiler/uarch imports"
+}
