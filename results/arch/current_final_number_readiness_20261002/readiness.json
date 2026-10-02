@@ -18,6 +18,7 @@
     "status": "pass",
     "token": 50994
   },
+  "certificate_validation_scope": "Review-receipt schema/hash/scope checks; generic certificates are not automatic raw timing, route or functional proof. Add source-extracted artifact adapters as campaigns become available.",
   "claim_boundary": "Current G0-G5 all four targets required. Numerical, directed, software, inventory, TT and outline evidence never substitute for contextual physical/token service gates.",
   "clock_policy": {
     "TT_credit": false,
@@ -69,6 +70,12 @@
       "service macro halo/pins/clockPG/hold costs not proven by inherited debit"
     ]
   },
+  "deepseek_current_bound_budget": {
+    "blockers": [
+      "explicit current physical budget binding missing"
+    ],
+    "status": "blocked"
+  },
   "historical_report_is_current_authority": false,
   "objective": "Minimum single-user AR latency; speculative modes conditional on claimed performance.",
   "schema": "opentallas.current-final-number-readiness.v1",
@@ -109,7 +116,7 @@
     "results/uarch/dsrom_full_product_binding_20261002/compiled_whole_budget-r6.json": "821b5c4a8bb2f64c8ecdc4b0f508e8f0b8e704393aba7e6e2e2f5e0d91c14e0d",
     "results/uarch/h3_qwen_complete_native_20261002/parent_review.json": "bacdcd9750d25a9fba7acf685286ca1e58105306e66aba01dbac4c929a986def",
     "results/uarch/qwen_native_workspace_provider_r20_20261002/output/join.json": "ee7ba8f1d817271fac12164781c5359be41c8a39a5d5febca131237a22070488",
-    "tools/current_final_number_readiness.py": "a9237ced03cbb6d93086d580d638979a377657f2376d60b6bdb9e1404b798d10",
+    "tools/current_final_number_readiness.py": "2ecdf940482e27a01a5ce8fc30481fe60bc9cdcd99abd7496dd78fb0010bcffd",
     "tools/final_number_readiness.py": "41be794bf458d8e5e2a56a7ea543beca8f0bbbd0adc591713961ee84717bbe3f"
   },
   "targets": {
@@ -421,7 +428,7 @@
             "macro SS clock-to-q not bound",
             "outline must fit 26x33mm without stitching",
             "complete area missing or exceeds legal outline",
-            "retained complete S58 budget exceeds858mm2 or is invalid; source-matched successor required"
+            "explicit current physical budget binding missing"
           ],
           "required_checks": [
             "complete_element_SM_hub",

@@ -164,6 +164,38 @@ def captured_qwen(root, used):
             'remaining_gates': t.get('remaining_gates'),
             'qualification': 'Receipt consistency of independently reviewed captured numeric PASS; no payload replay or successor transfer.'}
 
+def current_budget(root, binding, used):
+    """Explicit current budget binding; historical reservation never overrides it."""
+    ref = binding.get('physical_budget', {})
+    errors = []
+    if not isinstance(ref, dict) or not ref.get('path') or not ref.get('sha256'):
+        return {'status': 'blocked', 'blockers': ['explicit current physical budget binding missing']}
+    row = read(root, ref['path'], used)
+    if used[ref['path']] != ref['sha256']:
+        errors.append('current physical budget receipt mismatch')
+    if row.get('schema') != 'opentallas.current-physical-budget.v1' or row.get('target') != 'deepseek_rom':
+        errors.append('current physical budget target/schema mismatch')
+    if binding.get('identity_bound') is not True or row.get('identity') != binding.get('identity'):
+        errors.append('current physical budget configuration/source identity mismatch')
+    if row.get('source_sha256') != binding.get('identity', {}).get('source_sha256'):
+        errors.append('current physical budget source manifest mismatch')
+    for path,expected in row.get('source_sha256', {}).items():
+        p=root/path
+        used[path]=digest(p) if p.is_file() else 'missing'
+        if used[path]!=expected:
+            errors.append('current physical budget source bytes mismatch: '+path)
+    if row.get('reviewed_complete_inventory') is not True or row.get('unpriced_claim_determining_terms') != []:
+        errors.append('current physical inventory incomplete or determining costs unpriced')
+    outline=row.get('outline_mm', [])
+    valid=(isinstance(outline,list) and len(outline)==2 and all(number(x) and x>0 for x in outline))
+    area=row.get('complete_area_mm2')
+    if (not valid or sorted(outline)[0]>26 or sorted(outline)[1]>33 or
+        not number(area) or area<=0 or area>math.prod(outline)):
+        errors.append('current physical budget does not fit legal26x33 outline')
+    return {'status':'blocked' if errors else 'pass','blockers':errors,
+            'artifact':ref['path'],'complete_area_mm2':area,'outline_mm':outline,
+            'scope':'Budget review only; source-extracted contextual physical adapters and G3 still required.'}
+
 def build(root=ROOT):
     used = {}
     bindings = read(root, BASE+'/target_bindings.json', used)
@@ -205,11 +237,14 @@ def build(root=ROOT):
           'qualification': 'Conservative source-pinned reservation FAIL, not a fundamental minimum or impossibility proof; not legal placement or SS/FF closure.',
           'unpriced_positive_terms': ledger.get('unpriced_nonzero_terms'),
           'physical_credit': False}
-    # A negative authoritative screen cannot be overridden by a generic pass certificate.
-    if not ds['budget_consistent'] or area > 858:
-        targets['deepseek_rom']['gates']['G3']['status'] = 'blocked'
-        targets['deepseek_rom']['gates']['G3']['blockers'].append('retained complete S58 budget exceeds858mm2 or is invalid; source-matched successor required')
-        targets['deepseek_rom']['ready'] = False
+    # Historical FAIL remains visible; an explicitly source-bound successor
+    # budget can replace its binding without mutating or erasing that record.
+    selected_budget=current_budget(root, bindings.get('targets', {}).get('deepseek_rom', {}), used)
+    ds_gate=targets['deepseek_rom']['gates']['G3']
+    if selected_budget['status'] != 'pass':
+        ds_gate['status']='blocked'
+        ds_gate['blockers'].extend(selected_budget['blockers'])
+    targets['deepseek_rom']['ready']=all(v['status']=='pass' for v in targets['deepseek_rom']['gates'].values())
     return {'schema': 'opentallas.current-final-number-readiness.v1', 'source_sha256': used,
             'historical_report_is_current_authority': False,
             'objective': 'Minimum single-user AR latency; speculative modes conditional on claimed performance.',
@@ -217,6 +252,8 @@ def build(root=ROOT):
                              'setup_corner': 'SS', 'setup_uncertainty_ps': 60,
                              'hold_corner': 'FF', 'hold_uncertainty_ps': 25, 'TT_credit': False},
             'captured_qwen_TP4_numeric': q, 'deepseek_S58_physical_screen': ds,
+            'deepseek_current_bound_budget': selected_budget,
+            'certificate_validation_scope': 'Review-receipt schema/hash/scope checks; generic certificates are not automatic raw timing, route or functional proof. Add source-extracted artifact adapters as campaigns become available.',
             'current_scoped_observations': current_observations,
             'targets': targets, 'terminal_ready': all(t['ready'] for t in targets.values()),
             'claim_boundary': 'Current G0-G5 all four targets required. Numerical, directed, software, inventory, TT and outline evidence never substitute for contextual physical/token service gates.'}

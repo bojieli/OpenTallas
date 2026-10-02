@@ -108,6 +108,42 @@ class CurrentReadinessTest(unittest.TestCase):
         for gate in m.REQUIREMENTS:
             self.assertTrue(self.errors(self.certificate(gate)))
 
+    def budget(self):
+        row=dict(schema='opentallas.current-physical-budget.v1',target='deepseek_rom',
+                 identity=self.identity,source_sha256=self.identity['source_sha256'],
+                 reviewed_complete_inventory=True,unpriced_claim_determining_terms=[],
+                 outline_mm=[26,33],complete_area_mm2=800)
+        p=self.root/'successor_budget.json'
+        p.write_text(json.dumps(row))
+        self.binding['physical_budget']=dict(path=p.name,sha256=m.digest(p))
+        return p
+
+    def test_explicit_successor_budget_not_vetoed_by_historical_FAIL(self):
+        self.budget()
+        c=self.certificate(target='deepseek_rom')
+        (self.root/'G3.json').write_text(json.dumps(c))
+        self.binding['certificates']={'G3':'G3.json'}
+        base=self.root/m.BASE;base.mkdir(parents=True)
+        (base/'target_bindings.json').write_text(json.dumps({'targets':{'deepseek_rom':self.binding}}))
+        old=Path('results/uarch/dsrom_full_product_binding_20261002/compiled_whole_budget-r6.json')
+        (self.root/old).parent.mkdir(parents=True)
+        shutil.copy2(m.ROOT/old,self.root/old)
+        report=m.build(self.root)
+        self.assertLess(report['deepseek_S58_physical_screen']['margin_mm2'],0)
+        self.assertEqual(report['deepseek_current_bound_budget']['status'],'pass')
+        self.assertEqual(report['targets']['deepseek_rom']['gates']['G3']['status'],'pass')
+        self.assertFalse(report['terminal_ready'])
+
+    def test_budget_tamper_identity_and_unpriced_cost_refused(self):
+        p=self.budget()
+        row=json.loads(p.read_text());row['complete_area_mm2']=700;p.write_text(json.dumps(row))
+        self.assertEqual(m.current_budget(self.root,self.binding,{})['status'],'blocked')
+        self.binding['physical_budget']['sha256']=m.digest(p)
+        row['identity']['parameters']={'other':True};p.write_text(json.dumps(row));self.binding['physical_budget']['sha256']=m.digest(p)
+        self.assertEqual(m.current_budget(self.root,self.binding,{})['status'],'blocked')
+        p=self.budget();row=json.loads(p.read_text());row['unpriced_claim_determining_terms']=['actualPG'];p.write_text(json.dumps(row));self.binding['physical_budget']['sha256']=m.digest(p)
+        self.assertEqual(m.current_budget(self.root,self.binding,{})['status'],'blocked')
+
     def test_missing_inputs_fail_closed(self):
         report=m.build(self.root)
         self.assertFalse(report['terminal_ready'])

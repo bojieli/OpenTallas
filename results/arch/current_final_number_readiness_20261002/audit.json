@@ -23,5 +23,7 @@
   "historical_report_preserved": true,
   "historical_tool_preserved": true,
   "new_jobs": 0,
-  "schema": "opentallas.readiness-policy-audit.v1"
+  "review_certificate_boundary": "Generic certificate checks review receipts; raw source-extracted corner/route adapters required when available. No automatic proof implied.",
+  "schema": "opentallas.readiness-policy-audit.v1",
+  "successor_budget_policy": "Explicit current physical budget path+SHA, complete matching configuration/source identity and inventory review; oldS58 conservativeFAIL retained as reference, not unconditional veto of source-bound successor."
 }
