@@ -1,0 +1,234 @@
+{
+  "UTC": "2026-10-02T12:20:20.232642+00:00",
+  "scope": "selected native/frontend/relink paths plus owner future dispatcher templates, not exhaustive fleet installation certification",
+  "intake_HEAD_at_audit": "3a91e8e14aee4ec795cc3cb811a5b342428a8a6a",
+  "historical_source_findings": {
+    "tools/run_w17_owned_progress_compile_phase.py": {
+      "sha256": "9fa165b1842cd2df9c884e2b81fb51efa7c78011660aa1e3358d6d5eaa1099ca",
+      "HEAD_bytes_match": true,
+      "source_commit": "3a91e8e14aee4ec795cc3cb811a5b342428a8a6a",
+      "matches": [
+        {
+          "line": 12,
+          "text": "    if phase['kind']=='frontend':argv+=['--ulimit',f'as={64<<30}:{64<<30}']"
+        },
+        {
+          "line": 59,
+          "text": "                if time.monotonic()-start>phase['wall_seconds']:raise TimeoutError('phase wall cap')"
+        },
+        {
+          "line": 65,
+          "text": "        terminal=process.wait(timeout=5)"
+        },
+        {
+          "line": 73,
+          "text": "            subprocess.run(['docker','kill',name],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=10)"
+        },
+        {
+          "line": 77,
+          "text": "        process.wait(timeout=10)"
+        }
+      ],
+      "status": "NO_AUTOMATIC_FUTURE_REUSE; source-bound owner review required; historical source not edited"
+    },
+    "tools/run_w17_manifest_bound_native_relink.py": {
+      "sha256": "7d8fde2a62ee030ee09cc960c8fe0b9b5af5d7d4ed6059ce785df5a8a4653eb1",
+      "HEAD_bytes_match": true,
+      "source_commit": "3a91e8e14aee4ec795cc3cb811a5b342428a8a6a",
+      "matches": [
+        {
+          "line": 60,
+          "text": "                if time.monotonic()-start>60:raise TimeoutError('relink60s cap')"
+        },
+        {
+          "line": 66,
+          "text": "        terminal=process.wait(timeout=5)"
+        },
+        {
+          "line": 73,
+          "text": "        try:subprocess.run(['docker','kill',name],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=5)"
+        },
+        {
+          "line": 77,
+          "text": "            process.wait(timeout=5)"
+        }
+      ],
+      "status": "NO_AUTOMATIC_FUTURE_REUSE; source-bound owner review required; historical source not edited"
+    },
+    "tools/run_w17_rlimit_bound_native_relink.py": {
+      "sha256": "1edec361dc49180b53d087a8b52601ff4e6f9cdb8d32372b3594f5ef2600d913",
+      "HEAD_bytes_match": true,
+      "source_commit": "3a91e8e14aee4ec795cc3cb811a5b342428a8a6a",
+      "matches": [
+        {
+          "line": 56,
+          "text": "                if time.monotonic()-start>60:raise TimeoutError('relink60s cap')"
+        },
+        {
+          "line": 62,
+          "text": "        terminal=process.wait(timeout=5)"
+        },
+        {
+          "line": 69,
+          "text": "        try:subprocess.run(['docker','kill',name],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=5)"
+        },
+        {
+          "line": 73,
+          "text": "            process.wait(timeout=5)"
+        }
+      ],
+      "status": "NO_AUTOMATIC_FUTURE_REUSE; source-bound owner review required; historical source not edited"
+    },
+    "tools/w17_window_core_cancel_guard_frontend_run.py": {
+      "sha256": "00490de8433db9718fc9c11eeb9220fc322e79b102066b128d89009c37ff9f56",
+      "HEAD_bytes_match": true,
+      "source_commit": "3a91e8e14aee4ec795cc3cb811a5b342428a8a6a",
+      "matches": [
+        {
+          "line": 12,
+          "text": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':600,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "line": 95,
+          "text": " fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "line": 99,
+          "text": "  if k=='RuntimeMaxSec':"
+        },
+        {
+          "line": 100,
+          "text": "   if got.get('RuntimeMaxUSec') not in ('10min','600000000'):raise ValueError('actual whole cap')"
+        },
+        {
+          "line": 104,
+          "text": " if sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('actual affinity/FSIZE')"
+        },
+        {
+          "line": 142,
+          "text": "  relative=subprocess.check_output(['systemctl','--user','show',unit,'--property=ControlGroup','--value'],text=True,stderr=subprocess.DEVNULL,timeout=2).strip()"
+        },
+        {
+          "line": 160,
+          "text": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=600','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        },
+        {
+          "line": 173,
+          "text": "    if time.monotonic()-started>CAPS['RuntimeMaxSec']+30:"
+        },
+        {
+          "line": 174,
+          "text": "     subprocess.run(['systemctl','--user','stop',a.unit],timeout=10,check=False);child.terminate();child.wait(timeout=10);raise ValueError('outside monitor terminal deadline; owned unit stopped, no retry')"
+        }
+      ],
+      "status": "NO_AUTOMATIC_FUTURE_REUSE; source-bound owner review required; historical source not edited"
+    },
+    "tools/w17_window_core_cancel_frontend_run.py": {
+      "sha256": "8701658515538dfb428ae2e995b6fa4cf336982dced870bdb577aaceb161c95b",
+      "HEAD_bytes_match": true,
+      "source_commit": "3a91e8e14aee4ec795cc3cb811a5b342428a8a6a",
+      "matches": [
+        {
+          "line": 12,
+          "text": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':600,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "line": 95,
+          "text": " fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "line": 99,
+          "text": "  if k=='RuntimeMaxSec':"
+        },
+        {
+          "line": 100,
+          "text": "   if got.get('RuntimeMaxUSec') not in ('10min','600000000'):raise ValueError('actual whole cap')"
+        },
+        {
+          "line": 104,
+          "text": " if sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('actual affinity/FSIZE')"
+        },
+        {
+          "line": 141,
+          "text": "  relative=subprocess.check_output(['systemctl','--user','show',unit,'--property=ControlGroup','--value'],text=True,stderr=subprocess.DEVNULL,timeout=2).strip()"
+        },
+        {
+          "line": 159,
+          "text": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=600','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        },
+        {
+          "line": 172,
+          "text": "    if time.monotonic()-started>CAPS['RuntimeMaxSec']+30:"
+        },
+        {
+          "line": 173,
+          "text": "     subprocess.run(['systemctl','--user','stop',a.unit],timeout=10,check=False);child.terminate();child.wait(timeout=10);raise ValueError('outside monitor terminal deadline; owned unit stopped, no retry')"
+        }
+      ],
+      "status": "NO_AUTOMATIC_FUTURE_REUSE; source-bound owner review required; historical source not edited"
+    },
+    "tools/qwen_verilator_frontend_probe.py": {
+      "sha256": "971883abfaae1e13534a098dc52920ab754411373098e921a7430cb3a372aac4",
+      "HEAD_bytes_match": true,
+      "source_commit": "3a91e8e14aee4ec795cc3cb811a5b342428a8a6a",
+      "matches": [],
+      "status": "NO_AUTOMATIC_FUTURE_REUSE; source-bound owner review required; historical source not edited"
+    },
+    "tools/qwen_hbm_native_provider_r13.py": {
+      "sha256": "f10e3e449dac7b78573e6a09af8b090f1e98417355cfe4310ee64b46d91da5d6",
+      "HEAD_bytes_match": true,
+      "source_commit": "3a91e8e14aee4ec795cc3cb811a5b342428a8a6a",
+      "matches": [],
+      "status": "NO_AUTOMATIC_FUTURE_REUSE; source-bound owner review required; historical source not edited"
+    },
+    "tools/hbm_ds_frontend_reuse.py": {
+      "sha256": "d583877c4ba99056f279ae5e71f346d23f8506e64f2c12ecd84a6890d1d210a6",
+      "HEAD_bytes_match": true,
+      "source_commit": "3a91e8e14aee4ec795cc3cb811a5b342428a8a6a",
+      "matches": [
+        {
+          "line": 71,
+          "text": "  if time.monotonic()-started>=limit_s:raise TimeoutError('reuse copy budget exceeded')"
+        },
+        {
+          "line": 78,
+          "text": "    if time.monotonic()-started>=limit_s:raise TimeoutError('reuse copy budget exceeded')"
+        },
+        {
+          "line": 86,
+          "text": "  if time.monotonic()-started>=limit_s:raise TimeoutError('reuse post-copy verification budget exceeded')"
+        }
+      ],
+      "status": "NO_AUTOMATIC_FUTURE_REUSE; source-bound owner review required; historical source not edited"
+    },
+    "tools/model_observer_frontend_resources.py": {
+      "sha256": "f596459fcc7bea5f383f0dbeca3087253f196b65161c7045046b95ea571110da",
+      "HEAD_bytes_match": true,
+      "source_commit": "3a91e8e14aee4ec795cc3cb811a5b342428a8a6a",
+      "matches": [],
+      "status": "NO_AUTOMATIC_FUTURE_REUSE; source-bound owner review required; historical source not edited"
+    }
+  },
+  "classification": {
+    "native_compile_and_relink_deadlines": "prohibited for future expensive build reuse",
+    "frontend_64GiB_AS_and_1GiB_FSIZElimits": "not transferable into future expensive builds without replacement; pinned records untouched",
+    "copy_verification_deadlines": "inventory/setup path, not compiler deadline; owner must price costly migration and avoid guessed progress cutoffs",
+    "status_probe_25s_or_systemctl_2s_timeouts": "control-plane observations; not elapsed compiler caps, retained",
+    "live_D1_966eca710": "progressing pinned job; no restart or flag change",
+    "Q_runtime_simulation_caps": "outside this native build change; no runtime alteration",
+    "new_native_entry": "explicit argv and inherited FSIZE/AS/CPU-time checks; arbitrary shell scripts require source review",
+    "remote_transport": "not standalone kernel-memory/disk enforcement: source-bound inner launcher must enforce modeled fleet-capacity guards and progress retention before any GO"
+  },
+  "future_job_requirements": [
+    "pinned clean source and actual source/object inventory",
+    "fresh measured fleet headroom with owned reservation",
+    "capacity-justified aggregate guards/monitoring",
+    "no elapsed or CPU-time/per-file/guessed AS limits",
+    "retain all incremental objects, checkpoints, failures and receipts",
+    "no duplicate expensive campaign/shard",
+    "user-held PVE2/PVE3 excluded"
+  ],
+  "old_records_changed": false,
+  "new_jobs_launched": 0,
+  "dispatchers_installed": 0
+}

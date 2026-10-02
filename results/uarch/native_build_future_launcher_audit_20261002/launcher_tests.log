@@ -1,0 +1,10 @@
+test_entry_has_no_limit_or_job_mutation_during_preflight (__main__.FutureLaunchers) ... ok
+test_kernel_entry_rejects_downstream_wrappers (__main__.FutureLaunchers) ... ok
+test_kernel_entry_rejects_each_inherited_finite_limit (__main__.FutureLaunchers) ... ok
+test_native_guard_retains_shared_reservations_and_user_holds (__main__.FutureLaunchers) ... ok
+test_native_transport_unlimited_and_preserves_existing_root (__main__.FutureLaunchers) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.004s
+
+OK

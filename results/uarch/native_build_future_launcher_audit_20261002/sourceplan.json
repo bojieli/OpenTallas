@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.native_build.future_policy_audit.v2",
+  "historical_parents": {
+    "tools/native_build_completion_policy.py": {
+      "commit": "e6aeb2c0a18c90650cf5281b919d9e2b622c2a8d",
+      "sha256": "357711b909f6fd878e0ea443c9caeb2d5cdd7d1b6d9179d78270f062d2e9e0d2",
+      "preserved_byte_identical": true
+    },
+    "tools/experiment_unlimited_fsize_exec.py": {
+      "commit": "b34500b98cc70c910e7ca7bc2f433bcd1a44f0f5",
+      "sha256": "c03e5072f8d7d6c4a7c648a7366406ee023f8d833b7ad8245bfaf101e76f9069",
+      "preserved_byte_identical": true
+    },
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/launchers/remote_gate_unlimited.base.py": {
+      "commit": "b34500b98cc70c910e7ca7bc2f433bcd1a44f0f5",
+      "sha256": "360997e468345754a23f95f2ec5afe78929ff2d6abba60a847da4be46b1587ac",
+      "preserved_byte_identical": true
+    },
+    "results/uarch/fleet_unlimited_fsize_milestone_20261002/launchers/remote_gate_unlimited_guarded.py": {
+      "commit": "b34500b98cc70c910e7ca7bc2f433bcd1a44f0f5",
+      "sha256": "c2439d17cbabcca16348819666ecde6e65791568191867fe1b920b17fdec2e92",
+      "preserved_byte_identical": true
+    }
+  },
+  "scope": "additive native-only future transport and validation templates, not installation or experiment GO",
+  "mandatory_model_fields": {
+    "scope": "native_build",
+    "elapsed_time_limit": null,
+    "cpu_time_limit": null,
+    "file_size_limit": "unlimited",
+    "per_process_address_space_limit": null,
+    "retain_incremental_objects": true,
+    "admission_evidence": "pin real host snapshot and source/object/PCH inventory; document actual fleet capacity reservation basis"
+  },
+  "no_default_capacity_caps": "memory/threads/pids/disk chosen by actual fleet admission and measured inventory; no small pilot or old CXX_AS carryover",
+  "execution_guards": "source-pinned inner launcher enforces justified aggregate memory/swap/pids/affinity/disk and preserves progress; transport alone does not provide kernel memory enforcement",
+  "source_bootstrap": "reuse only matching HEAD and clean source root; no checkout-force/clean/removal. Preserve all outputs; refuse foreign existing directory.",
+  "control_plane_timeouts": "observation/transport only; not arbitrary compiler wall deadlines",
+  "opaque_shell_payload": "requires owner source review; argv checks do not claim to parse arbitrary scripts",
+  "live_D1": "no restart, flags/objects/source unchanged; parent owns progressing pinned source966eca710",
+  "PVE2_PVE3": "user holds retained; no new tasks",
+  "new_jobs": 0,
+  "installed_dispatchers": 0,
+  "tests": {
+    "native_R2": 6,
+    "future_launchers": 5
+  }
+}
