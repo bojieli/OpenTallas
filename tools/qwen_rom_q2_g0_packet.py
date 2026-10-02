@@ -95,7 +95,9 @@ def create(provider_root, output):
                               execution_admitted=False, engine_build_admitted=False, place_route_admitted=False,
                               second_position_queued=False, full_token_repeat_queued=False,
                               live_handle=None, heavy_jobs_launched=0,
-                              requested_local_hardcaps=dict(cpu=2, memory_MiB=2048, disk_MiB=256, wall_seconds=60),
+                              requested_local_hardcaps=dict(cpu=2, memory_MiB=2048, aggregate_disk_MiB=256,
+                                                          wall_seconds=None,CPU_time_seconds=None,RLIMIT_FSIZE='unlimited',
+                                                          incremental_objects_retained=True),
                               resource_boundary='Review caps only, not measured simulator requirements; no PVE2/PVE3 tasks. Any subsequent physical execution needs composed G0 and parent admission.'),
         adoption=False, actual_provider_join=False)
     if any((ROOT / p).read_bytes() != raw for p, raw in sources.items()):

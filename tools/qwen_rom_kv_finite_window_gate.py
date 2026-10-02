@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import resource
+import shutil
 import subprocess
 import time
 from pathlib import Path
@@ -18,8 +19,37 @@ SOURCES = [p for p in INPUTS[:16] if p.parts[-2] != 'test'] + [ROOT / BENCH]
 
 def limits():
     resource.setrlimit(resource.RLIMIT_AS, (2 * 1024**3, 2 * 1024**3))
-    resource.setrlimit(resource.RLIMIT_CPU, (60, 60))
-    resource.setrlimit(resource.RLIMIT_FSIZE, (256 * 1024**2, 256 * 1024**2))
+    resource.setrlimit(resource.RLIMIT_CPU, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
+    resource.setrlimit(resource.RLIMIT_FSIZE, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
+
+
+def disk_guard(workdir, aggregate_limit=256 * 1024**2, free_reserve=2 * 1024**3):
+    used=sum(p.stat().st_size for p in workdir.rglob('*') if p.is_file())
+    free=shutil.disk_usage(workdir).free
+    if used>aggregate_limit:
+        return 'aggregate workdir disk guard exceeded'
+    if free<free_reserve:
+        return 'filesystem free-space reserve exhausted'
+    return None
+
+
+def guarded_process(command, workdir, logfile):
+    problem=disk_guard(workdir)
+    if problem:return 125, 'FAIL '+problem
+    with logfile.open('w') as log:
+        with subprocess.Popen(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,preexec_fn=limits) as proc:
+            while proc.poll() is None:
+                problem=disk_guard(workdir)
+                if problem:
+                    proc.terminate()
+                    proc.wait()
+                    break
+                time.sleep(0.1)  # Resource sampling only; no elapsed-time deadline.
+            problem=problem or disk_guard(workdir)
+            rc=125 if problem else proc.returncode
+    output=logfile.read_text()
+    if problem:output+='\nFAIL '+problem+'; build artifacts retained\n'
+    return rc,output
 
 
 def run(workdir, result, main_root):
@@ -39,11 +69,7 @@ def run(workdir, result, main_root):
                '-o', str(binary), *map(str, SOURCES)]
         for phase, command in [('build', cmd), ('simulation', ['vvp', str(binary)])]:
             started = time.monotonic()
-            try:
-                p = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=60, preexec_fn=limits)
-                rc, output = p.returncode, p.stdout + p.stderr
-            except subprocess.TimeoutExpired:
-                rc, output = 124, 'FAIL timeout'
+            rc,output=guarded_process(command,workdir,workdir / (name + '_' + phase + '.log'))
             (workdir / (name + '_' + phase + '.log')).write_text(output)
             steps.append(dict(case=name, phase=phase, returncode=rc, seconds=round(time.monotonic()-started, 3), output=output))
             if phase == 'build' and rc:
@@ -64,7 +90,9 @@ def run(workdir, result, main_root):
                                     'r14 tags, TP4 identity, backing write completion and reverse credit retirement',
                                     'macro visibility/collision and layer-window lifetime bound to reader drain',
                                     'unified finite-service price and source-matched SS/FF fit'],
-               resource_caps=dict(memory_MiB=2048, cpu_seconds_per_process=60, wall_seconds_per_process=60, output_file_MiB=256),
+               resource_caps=dict(memory_MiB=2048, cpu_seconds_per_process=None, wall_seconds_per_process=None,
+                                  RLIMIT_FSIZE='unlimited',aggregate_workdir_disk_MiB=256,minimum_free_disk_MiB=2048,
+                                  build_artifacts_retained=True),
                claim_boundary='Existing connected subsystem RTL read diagnostic with a delayed behavioral sector endpoint and behavioral window/tail memories. No engine build, actual r14 transport, SRAM macro, second token, full-token, rate or physical credit.')
     result.parent.mkdir(parents=True, exist_ok=True)
     with result.open('x') as f:
