@@ -1,0 +1,882 @@
+[
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 0,
+    "norm_gain_sha256": "0e3b667c2518a2b144d2e2797fb2aa1462eee1f99771bedb5f892be51c7bbea8",
+    "norm_gain_tensor": "layers.0.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L00.npy",
+    "payload_sha256": "814e9deddcade4549843abfaf11e134333ddd111b1390932565aa2c7c220799e",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      0
+    ],
+    "sha256": "6676969415259b27a29a34c49ff6f13c0be08e44ccf793c18a862ab7f7a9fb79",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 1,
+    "norm_gain_sha256": "91fea6c3da4074822e075d216ecef298e17a1d50270ffe879e01d1ba29a622fd",
+    "norm_gain_tensor": "layers.1.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L01.npy",
+    "payload_sha256": "6f077ee9115498c0bbb4acf8daf53e318a1ddc4384b7a42b33e8fad89ddd4a8d",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      1
+    ],
+    "sha256": "ffe068fbf66c20ee2ef795760e93fa7661c43c9feb315736cdcdab67b721eca5",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 2,
+    "norm_gain_sha256": "be9328f0152773bd42659d51a64dee40d0be72b0112ea8e58f342bdc7cd9ee63",
+    "norm_gain_tensor": "layers.2.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L02.npy",
+    "payload_sha256": "15fdc92506f3ee24ff6c5a72c8c64cfecb42f7e9a768607a86f52ac89bbc9613",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      2
+    ],
+    "sha256": "c084abfb28284af93f09ec386c5048fccc021ebe94acd8ed1fe7ccd438564990",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 3,
+    "norm_gain_sha256": "90cce6a0b79cdbb31e86d5e1810a241c7e1b65efd2015d861200b4a69023d3b3",
+    "norm_gain_tensor": "layers.3.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L03.npy",
+    "payload_sha256": "e5941d462512403cba2812a409c5d22182cad6a925daf8e16881004034a75d2c",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      3
+    ],
+    "sha256": "f1d22b6fc0b7a50bcae2ba00e56d3152f8649f8ba5a68d4b4e41a3e59f3f8d96",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 4,
+    "norm_gain_sha256": "2bf683de5fbf145154717bcafd94cfab40c59b471bec6fe04208dad2a91be1fa",
+    "norm_gain_tensor": "layers.4.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L04.npy",
+    "payload_sha256": "32a64c7f38185e2006227ebe08cbffef01955cdc80f4b3a7751d1743779a11df",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      4
+    ],
+    "sha256": "9e46bec7715fa6a090d1b4b031fce6f618c023097b7ab5bf105a99a2e078d4d3",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 5,
+    "norm_gain_sha256": "c3abe71ff4ea940fd564c2dd380976255380297b08d7f2205b71162b1d9e69ea",
+    "norm_gain_tensor": "layers.5.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L05.npy",
+    "payload_sha256": "91250bbb030bfb6f3fa28dbcb2592b12d5e598b7312414fa1b65e62013ba9fa6",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      5
+    ],
+    "sha256": "a790f131c97c4295f5e43fae430f42d6f053ab986730c8cfe355fed1d2fd749e",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 6,
+    "norm_gain_sha256": "3aee9c7c73900f1543fe4f34a29a8fa7e91abf861c9338f87a6d406c7d0354fa",
+    "norm_gain_tensor": "layers.6.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L06.npy",
+    "payload_sha256": "903a431ca18b5e2406ff84b0a61169db1ec13c98d52208aeb9527bbacd0ac959",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      6
+    ],
+    "sha256": "440b18498f6833b7c2f2086506250157d5400d3318933231cee500939b1d72ce",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 7,
+    "norm_gain_sha256": "461a1bc632bde5e536ac4b388ebeda4cd481b9c8da6f73e47d700fef781f3fe8",
+    "norm_gain_tensor": "layers.7.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L07.npy",
+    "payload_sha256": "0e18aaa8c78287591e0def6fa9711c105cb551777921b8ff6bf0e0313dd217f3",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      7
+    ],
+    "sha256": "3efa8db25cfa88f17f8665031b2917aad756ef00161ffebbe81e3e3f2d370eba",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 8,
+    "norm_gain_sha256": "01c8718b5fbcc934aef19b7c0037027d89569809b804bc653eef5c1c62e8c538",
+    "norm_gain_tensor": "layers.8.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L08.npy",
+    "payload_sha256": "5916af6abcb5691ba47e65c2f59f6e3dccbf616e13e8486fe3485fd41bb67dde",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      8
+    ],
+    "sha256": "e07ce0c3760c2e987add0bf2ae37edea1e0bc587371b2dd32e73742c58944e12",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 9,
+    "norm_gain_sha256": "1c982e39fa841efa8a8d6cc30f6926c43ee81bb0d84efbcb785dc013f8989ee5",
+    "norm_gain_tensor": "layers.9.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L09.npy",
+    "payload_sha256": "afdf74f39a0c72e72dd6f0dd19bf9bbe72fde6cfcf360d643a11a2675db5ff34",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      9
+    ],
+    "sha256": "15ef0e6d64932b151c2ba840800641962ff5cc0b2fd104e3c3f14e11e78ef64d",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 10,
+    "norm_gain_sha256": "c7c0a60ba4f8636b395fcd9612a668a3f287b65b02c7b1b10fae843192f4d307",
+    "norm_gain_tensor": "layers.10.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L10.npy",
+    "payload_sha256": "ddaf218d6d0cc23cebc50e8d9b7a951aa59f0c518a8f3402f60489c92133f653",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      10
+    ],
+    "sha256": "a14304ad8fa784847f479d987d85582364f80f1c49c4d6fe34763f7ddd988c48",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 11,
+    "norm_gain_sha256": "494914266f343f53359e90092bee82aaf2c37d20e9199682e2c60c83c6856037",
+    "norm_gain_tensor": "layers.11.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L11.npy",
+    "payload_sha256": "886aa926aa278df63d0c55e371a4fd1ffadaac915684b6605532817253e865e5",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      11
+    ],
+    "sha256": "e2b12aef8859e0acee5c9d471c0bf69998d8f67ff5eefe47e09caccebf81ca82",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 12,
+    "norm_gain_sha256": "3ba06e80edf1a4970aca8be53d65df5636cb5ceffef722dc503e960272e555b3",
+    "norm_gain_tensor": "layers.12.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L12.npy",
+    "payload_sha256": "da5383282ae6ee480403713810daae3dbbb54b2ead36b55cbba0b8566f9e11cc",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      12
+    ],
+    "sha256": "1f6c3c691f03b76f8ac24256bf887d7ccc638787a49fc79674bacba5c96507e6",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 13,
+    "norm_gain_sha256": "1e7f67db4a503705794c0152966c1650dce3201b2844cc62c28c105485a05a3f",
+    "norm_gain_tensor": "layers.13.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L13.npy",
+    "payload_sha256": "6089111cdaa30d125d75ebdd952e450b82a8825a76233a60c90247b7fe769001",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      13
+    ],
+    "sha256": "4104198f96dae3c4b4fc70014ce483ed35c7cd530c8dbb039461c7e2222b07a4",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 14,
+    "norm_gain_sha256": "55a42ff38faccfed86fcdfee0f475a66c5c1cd30c40f00def6ba1a6f69424b18",
+    "norm_gain_tensor": "layers.14.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L14.npy",
+    "payload_sha256": "3da459bec0fd8510da6be9e03fa108100193a68a08428b5026ad4e89351a6b51",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      14
+    ],
+    "sha256": "104c473cfd5675749adbd7bd1ed4f05e2a2e17501345df1769a16b87cd907ca2",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 15,
+    "norm_gain_sha256": "2f434331b119298f79d4e9035f064acdf183fad2ba6f6bdc926efb3f40674d20",
+    "norm_gain_tensor": "layers.15.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L15.npy",
+    "payload_sha256": "ff5a100c07b1ebfecf184d6cf8ae516264d5a79b6c403a3123c6bfd57dad9714",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      15
+    ],
+    "sha256": "8e09cc2fa4624b18dcd6ae04479f62d5f7cdfc0d06ffbd48589505161079adbd",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 16,
+    "norm_gain_sha256": "610bcf89250166ea07e1f84c61c3b11afeb0e9939cf02627969e5f858cc6d825",
+    "norm_gain_tensor": "layers.16.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L16.npy",
+    "payload_sha256": "ee0c4811ceb6e132a9f5f0d90692a14bae7460ef88ad1091c47c455f37f916b3",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      16
+    ],
+    "sha256": "2c03f6b75f9317d21312a19aa6358c1fdef3046f7b99ddd79f2d0be972da4884",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 17,
+    "norm_gain_sha256": "202fccf4db84f3a7fef3a9420fb4fe6239bcd79628b0cf1894af7227fd8a8498",
+    "norm_gain_tensor": "layers.17.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L17.npy",
+    "payload_sha256": "be81173aae6216a9bbb23e79ef675c7c4e9f1a5164ee1637e068837e7b80f996",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      17
+    ],
+    "sha256": "95d3ecefc7b6e4cfafe197c4c0df4688bbc7085af0031828913de6c630ef428d",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 18,
+    "norm_gain_sha256": "2b15b119aa1cee3663e66f59a73fbe9836a640adfd8398df0f34c62ef24b7a2d",
+    "norm_gain_tensor": "layers.18.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L18.npy",
+    "payload_sha256": "9ea28bd227c2ad4e76bb6ad4b6c51a27a756cf8e68e92eb4cd7af090a634a249",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      18
+    ],
+    "sha256": "ef8fe4070f2fc1b3b8c96619307b6c0e71e66c99de17886758cf0d59a122b5c0",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 19,
+    "norm_gain_sha256": "9f41e9854f921c6a2e1a7ec3d9f18043d68f936f416679a65d95f0a9e1c7a755",
+    "norm_gain_tensor": "layers.19.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L19.npy",
+    "payload_sha256": "eacc829448367c9c6d5512d65e3ba27090108ae364d0c24c45b67ef59343c6b2",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      19
+    ],
+    "sha256": "154bb62a0d1283c367423bb8af2260e630d4cd0a1652e549401dd4126462e727",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 20,
+    "norm_gain_sha256": "183a6d5ed84f146064b3326031c1942a37d0cac9abf691ae62bd3d2e58ebc221",
+    "norm_gain_tensor": "layers.20.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L20.npy",
+    "payload_sha256": "372b70d6951b762adafa4c847a1ad0863397324ffb5430d5b52797087ed8851e",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      20
+    ],
+    "sha256": "0cc638977035ca9fd063c5ce0565ec66a285af09a134aa312cca99e21bb5f493",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 21,
+    "norm_gain_sha256": "09a250903e4ebf296ab9b09c7bb3b66e9e99bba9e731667420dc5beb132778d9",
+    "norm_gain_tensor": "layers.21.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L21.npy",
+    "payload_sha256": "8db84df6cdb8c57118daa8dc0f434e1d07489f6908935bae57b886d641145103",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      21
+    ],
+    "sha256": "285cbe730217177e1521a206497af427123fe025cac984745de0cb0df516b8f4",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 22,
+    "norm_gain_sha256": "7b61df0a55803e8cbcb0e28f01b930aa47242eca5a219b45419fa0773e13a00e",
+    "norm_gain_tensor": "layers.22.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L22.npy",
+    "payload_sha256": "fb4cd15ffe2b0e49e05b17eb5a8f3aaaa22250952bac41a20f94ca36a0fbe232",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      22
+    ],
+    "sha256": "d87083bfbbed4f0e356456095a3863d4334481e2187aa1c5ee5ff751c9a3518f",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 23,
+    "norm_gain_sha256": "3daffb1059107599b17f291e036fc8e7693c74bc0632796f2127c6473d405b33",
+    "norm_gain_tensor": "layers.23.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L23.npy",
+    "payload_sha256": "5f5865a7ddeae0170c51294c9307d4781a452f111d29253e4cab320f1738edac",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      23
+    ],
+    "sha256": "85c3745fbb6ff1d54d800ec48dedfb8709f69eb6ca253aa0df545093c3ad9b8f",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 24,
+    "norm_gain_sha256": "800db2ee6ebbb096513264d6b49729ba200ab979173ff133a94a5e643e4e8361",
+    "norm_gain_tensor": "layers.24.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L24.npy",
+    "payload_sha256": "e86d3c93c05364df3cae101e5c1e53ac7eab4fda5335c433eab978aba8afbdac",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      24
+    ],
+    "sha256": "4af76b1d9c88e7008349b3da192fcb9ca130eb463985c326471de50a951fa899",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 25,
+    "norm_gain_sha256": "9e5504ae92e9952f71ac6fb20a39de30bca78fd388f0928a0cf108cc1b4c3a04",
+    "norm_gain_tensor": "layers.25.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L25.npy",
+    "payload_sha256": "ab83f841f26a875fc93794f1f8249092dccd2d1a26d5dc7feb9b0a5fba5553bf",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      25
+    ],
+    "sha256": "fe3cbc3786451b034e1e8853d80abbe598842dbcb9d59c1480adc0a9d20bf011",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 26,
+    "norm_gain_sha256": "175d8dcee3f47b304a08d692fadbe23b23fb0be39dccd4441dade9a77da1906a",
+    "norm_gain_tensor": "layers.26.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L26.npy",
+    "payload_sha256": "5056da624706df8b24565b2501a8ffc2f6d5d18cb9a7fdfc34c29efc63ea1436",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      26
+    ],
+    "sha256": "91e8705d67afb22b42594b99b978aa888b6086d3b1b3c7b917d7d87baad1a8c1",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 27,
+    "norm_gain_sha256": "c7f22fe3a82efc1c10b297f99a3bab7eee695963bd5ca06ab42e9e14bda4ac58",
+    "norm_gain_tensor": "layers.27.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L27.npy",
+    "payload_sha256": "5986bb661b6f36ad854a98d5ae80943381bb816e32306f87f444c04f4fcf3cc3",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      27
+    ],
+    "sha256": "e56210d81c49528c31d3493bddd637a2886ffbf7a9e6fc0f00bec009f4677ba3",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 28,
+    "norm_gain_sha256": "fc09353b6fd5e53f80345c23a10ec95002c6e28ad0489a8af73e212accc88bcc",
+    "norm_gain_tensor": "layers.28.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L28.npy",
+    "payload_sha256": "72bb6863d5ea6ca113bf3a18472e462221a9d202d64cbff0919c8a90767a8f12",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      28
+    ],
+    "sha256": "3c511746d0a2760a7c84d47fbb023b881798b0de34d4685dd8c731eeaeee3fb7",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 29,
+    "norm_gain_sha256": "8a755a1207378faf154618b1453c09302729c2213ef604a2672e7060e8e8986a",
+    "norm_gain_tensor": "layers.29.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L29.npy",
+    "payload_sha256": "feecafea740019276480506d221edbc6ecd78dbc0380947cbb4851a40d74f2d9",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      29
+    ],
+    "sha256": "c890f50a3501beec4596315d3a50a3886365735518fc06833e59ef128184af21",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 30,
+    "norm_gain_sha256": "911636a70999dccd55b3895aa3e92146b40186c5813cf3e8749929fe0fc2dde3",
+    "norm_gain_tensor": "layers.30.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L30.npy",
+    "payload_sha256": "9c988087370d38a9cb24aa3d2ead42a1596e4e775122899363a6dcbeb534832f",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      30
+    ],
+    "sha256": "2a2305a033e9e13859314d147e9d2aa6e333882ec38032446be99d1b7293405b",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 31,
+    "norm_gain_sha256": "894295aee0f064541e2746d595b5e061978c7ea3fbc1165703010a858db32a37",
+    "norm_gain_tensor": "layers.31.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L31.npy",
+    "payload_sha256": "1bf9ce2d1533599a2726eab52f8f76eefe836e102200c4654c700f7526f34a85",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      31
+    ],
+    "sha256": "0ba1051a98e32ddebe342af99cb0cb3a1c52e8343952e9913009904586282b86",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 32,
+    "norm_gain_sha256": "d4f952395af2e1ef1b0ff84393ca2072e4b8b5abd275a954824436dd7f72723e",
+    "norm_gain_tensor": "layers.32.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L32.npy",
+    "payload_sha256": "afd4e3a0c35a65d2f47faab687aa1684ffd5329cd86703109dcecaf1d2e172a5",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      32
+    ],
+    "sha256": "696abc8839395af4d9b2ba667bea72e01b0f0efdda31ca04e507297e1419d35b",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 33,
+    "norm_gain_sha256": "a31930048be324654c3340be9a74d7e8090ed847b0b75ff36b5419431a933932",
+    "norm_gain_tensor": "layers.33.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L33.npy",
+    "payload_sha256": "2e4fc9f7492c86e0734af2ab7905244ca6f27ed7685140b7029d5077478c94ce",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      33
+    ],
+    "sha256": "798b1ba1f951f89d34ea4a3f9f09481452f23f349f17cd777a01618ce069ed97",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 34,
+    "norm_gain_sha256": "779528c175a716ed0e3a463c35ecb95c0f27985585feb061312220072a60572e",
+    "norm_gain_tensor": "layers.34.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L34.npy",
+    "payload_sha256": "66bfbb16e3c3b59d0e3796e4cf5d0b88b326deac8f2dda2465334756c8491e72",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      34
+    ],
+    "sha256": "d7d46cf64c45d8471b0d972c0256a056704f10870c4cae9443ef6efde3514a3d",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 35,
+    "norm_gain_sha256": "03e6c58fea2655317d2b60e17cce6036114bc2418d09abe0a9d4ed6356025bf8",
+    "norm_gain_tensor": "layers.35.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L35.npy",
+    "payload_sha256": "d3428b3aa3f83f9a675beff5f2e7a752213b00351dfaaf41dab57cdd9a6a01f8",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      35
+    ],
+    "sha256": "c25d37ae2e99b9e9306af805c0edaf669b99a45bf367d63ee5a03b4535ad9698",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 36,
+    "norm_gain_sha256": "42413aa7a97d59d7b4ac67c6a7e25cd56b69a3c16a0aa06bbc5edf17e23fd1ae",
+    "norm_gain_tensor": "layers.36.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L36.npy",
+    "payload_sha256": "5c7c5deb8c78c90b6c9f02c57ed130c8de2c88c83fc5047ea0f98ebf6a862a77",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      36
+    ],
+    "sha256": "b497853185041905bda7973efbe8c162ce1227f0bd1f9d8f7ef60ed8e1b7acb4",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 37,
+    "norm_gain_sha256": "7785c3a90d4cca819ce9850450bf91946904cf112fb393c539bca7cb9f6faa7e",
+    "norm_gain_tensor": "layers.37.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L37.npy",
+    "payload_sha256": "5f0f96aa879fe2699fb230f072dc2cfbc861524fb7d069cdcf76fb0d3f06a25e",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      37
+    ],
+    "sha256": "022e1f738be9d5e2c17c37c48ab3d8708cbc266f3852feb0e401f6f02c667cb7",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 38,
+    "norm_gain_sha256": "73322f031f24ab87085aac26be0b3bddbecaa40d2f561d3108c0f1189b6249ef",
+    "norm_gain_tensor": "layers.38.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L38.npy",
+    "payload_sha256": "092c69d14fc2903f8e86a204e6ac73a46584363bbb664673332e03c1951f45e1",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      38
+    ],
+    "sha256": "aa7f358cddefcbed165cd81664a0ad742659302bc1b60edaa3430870cbdf138f",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  },
+  {
+    "dtype": "F32",
+    "expected_whole_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+    "layer": 39,
+    "norm_gain_sha256": "8aa7ac828fbb3aaeee1731d0be8a2465f8534e2552bf884323e32f4bfbfd66ba",
+    "norm_gain_tensor": "layers.39.attn.kv_norm.weight",
+    "path": "GENERATED_EXTERNAL/window_L39.npy",
+    "payload_sha256": "13942bb7f87c2adca17a51e5a4dbd76b3ec33b4760fc23473d8adef5d40b5e58",
+    "provenance": "exact source reference entering-state initializer; not decoded prefix history",
+    "seed": [
+      20260930,
+      1048576,
+      0,
+      39
+    ],
+    "sha256": "a361a33b91ad8c821f37e6bcf6d7c63978f63d3dc0adf8bf2c7739129a2882d2",
+    "shape": [
+      127,
+      512
+    ],
+    "whole_reference_state_digest_verified": false
+  }
+]
