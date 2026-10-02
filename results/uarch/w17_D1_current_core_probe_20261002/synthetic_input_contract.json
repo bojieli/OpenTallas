@@ -1,0 +1,47 @@
+{
+  "decoded_full_shape_fields": [
+    {
+      "CTL": 0,
+      "ME_HG": 1,
+      "ME_JS": 0,
+      "ME_K": 512,
+      "ME_KS": 1,
+      "ME_MMODE": 1,
+      "ME_NOUT": 128,
+      "ME_OBASE": 1024,
+      "ME_TILES": 4,
+      "ME_TS": 512,
+      "ME_WBASE": 0,
+      "ME_WSRC": 1,
+      "ME_XBASE": 0,
+      "ME_XCS": 4096,
+      "UNIT": 1,
+      "WAIT": 2
+    },
+    {
+      "CTL": 0,
+      "ME_HG": 0,
+      "ME_JS": 0,
+      "ME_K": 0,
+      "ME_KS": 0,
+      "ME_MMODE": 0,
+      "ME_NOUT": 0,
+      "ME_OBASE": 0,
+      "ME_TILES": 0,
+      "ME_TS": 0,
+      "ME_WBASE": 0,
+      "ME_WSRC": 0,
+      "ME_XBASE": 0,
+      "ME_XCS": 0,
+      "UNIT": 0,
+      "WAIT": 31
+    }
+  ],
+  "external_payload_loaded": false,
+  "only_input_file": "prog.hex",
+  "original_program_replay": false,
+  "program_bytes_sha256": "dc93faea61a95d04d0a157d09e9c962d7f863bb9559ab92532aed61d7856d1c6",
+  "program_origin_commit": "f49292daac3dbce3ce8109a8a23af040dbef4105",
+  "sequence": "Same reset; prime 128 actual rows then ME attention instruction; no fake SU writes or forced admission; start no cycle12300 delay",
+  "zero_synthetic_state": "Verilator randReset0, no golden injection; numerical outputs unqualified"
+}
