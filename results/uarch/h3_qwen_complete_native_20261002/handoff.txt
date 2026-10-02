@@ -1,0 +1,96 @@
+Qwen complete native SOFTWARE lowering -- parent publishes main
+
+Branch: codex/qwen-complete-native-20261002
+Worktree: /home/ubuntu/OpenTallas-qwen-native
+Parent at isolation: f5b776a5991ba5522b88882b0baab5ca0604289e
+Scope: tools/h3_qwen_complete_native.py, tests/test_h3_qwen_complete_native.py,
+       results/uarch/h3_qwen_complete_native_20261002/ only.
+No RTL jobs, physical jobs, source-pinned edits, docs edits, PR or QROM campaign.
+
+Complete source compile: actual H3 Qwen1737 PCs, all21 opcode classes,
+2027 immutable source versions. Native recipes implement arithmetic using
+ordered FMUL/FADD/INT/movement/conversion instructions and finite FOR loops.
+The VM executes recipes rather than dispatching source macro arithmetic or
+calling a high-level golden. Golden imports occur only in tests/post-execution
+oracles. Exact chunk8 tail/padded tree, contiguous/interleaved K orders,
+BF16 integer RNE, E4M3 conversion, separately rounded exp/reciprocal/SiLU,
+head norms, RoPE table producer, residual/collective scale order and stable
+argmax including first NaN are implemented.
+
+Provider join is pinned to 570536f48:
+results/uarch/qwen_hbm_provider_bindings_r17_20261002/Qwen_provider_binding.json.gz
+Native operands.homes equal r17 version_homes/control_homes records exactly:
+31232 data homes +144 controls, all2027 versions, zero unbound versions.
+operations[].provider_binding is the actual r17 operation record.
+Every primitive exposes version_home_refs and external_provider_refs.
+Immutable load provider_ref names/base/codec join actual allocation.extents.
+KV state/visibility and reverse-release dependencies join actual provider
+references; no old SM0-only spill refusal is treated as active allocation.
+Executor scatters/reconstructs source payload words through real32SM homes
+(block256/chunk32 partition) and gates home reuse on release dependencies.
+Control tickets/fences resolve actual provider state references. Software
+acknowledgements do not stand in for measured hardware visibility.
+
+Dewey schema: opentallas.H3.native-finite-transactions.v1, in each
+operations[].calendar_export. Consume concrete_provider_operation,
+provider_resource_contract, operand_provider_homes, reuse_dependencies,
+capacities, leases, ordered steps, shape/index expressions, read_ports,
+write_port, count_expression and concrete_counts_full_context.
+count_transactions(operation, source_instruction, source_program,
+                   operands_by_version, position)
+recounts exact primitive invocations/vector demand for any context extent.
+Tests compare primitive totals with actual interpreter execution.
+All C_<primitive>, RF_READ, RF_WRITE_ACK, SPILL_REFILL, SPILL_WRITE, HBM,
+NoC, CDC, PUBLISH and CREDIT_WAIT costs are named unknowns. No missing cost
+is zero. PC retirement is serial; no free overlap, fusion, clock/timing or
+rate qualification. r17 stage credits/physical tags/QD/ACK captures are
+exported separately from logical KV leases (36 per rank).
+
+Native temporary storage is finite and explicit: reserved RF workspace
+vectors0..31, refill operands0..2, concrete symbol allocations plus software
+HBM overflow extent following r17's allocation/state extents. This baseline
+materializes large weight/conversion arrays and conservatively reserves about
+2.8GB additional workspace per rank; this is an additional SOFTWARE extent,
+not part of r17's charged32MiB SOURCE-version spill, not free RF, and not an
+admitted hardware layout. Every temp has a byte/word bound, base/offset or
+RF slot list, instance version and PC workspace lease. Costs remain explicit.
+Provider owner can tile that workspace only while preserving recipe arithmetic
+and producing a separate priced finite schedule; no such saving is credited.
+
+Epicurus scalar contract checked from66bd7367c, corrected e03c40e40:
+Qwen norm mean FMUL(sum, F32(1/N)); for4096 immediate0x39800000; no DIV.
+rsqrt: seed0x5f3759df-(bits(v)>>1), 10MUL+3ADD+3sign-XOR.
+reciprocal: seed0x7ef311c7-bits(d), positive-finite saturation, 6MUL+3ADD.
+Committed rational Newton witness seeds/results and operation counts match.
+
+Replay:
+  python -m pytest -q -ra tests/test_h3_qwen_complete_native.py
+  python tools/h3_qwen_complete_native.py --verify
+  python tools/h3_qwen_complete_native.py --exercise
+Compiler replay checks implementation/test/input hashes and byte-exact native
+IR, including pinned provider-binding artifact. Exercise runs36 layers twice
+with reduced deterministic weights, using actual r17 maximum-shape source
+homes for all1737 PCs, source publication/reuse/release and persistent KV.
+It returns output hashes for every PC; counts are cumulative per machine.
+This is reduced-payload numerical evidence, not trained checkpoint fullshape
+numerical completion. Tests independently compare every PC/family against
+source oracle and compare layer/head against shipped Torch golden, validate
+norm4096, matrix empty splits, rounding/cancellation, exceptional BF16/reciprocal,
+KV token16 and last-context boundaries and exactly-once lease retirement.
+Pre-provider-join passing replay artifacts and the initial failed verdict are
+retained under separate names; no failed verdict was overwritten.
+
+Qualification gaps: measured native/provider transaction latencies, connected
+PHY/reset/reverse ownership and actual hardware codecs, SS/FF/routing/slot
+admission, full trained-checkpoint numerical run and parent finite-calendar
+integration. This is software implementation/execution, not a requirements-only
+audit. Qwen r11 case3 partial log/provenance supplies no qualification here.
+Parent owns combined DS2213/30 and Qwen1737/21 coverage publication and main.
+
+Interface owners supplied by parent:
+Peirce DS 01a0f95d-badc-74d3-bde3-f3eb28f089b8
+Popper Qwen 01a0fc12-35b5-7621-9d9d-7837163c53b0
+Dewey 01a0fc12-35e2-71f0-873e-d6aa6ab2d24e
+Kepler 01a0f9c6-fde3-7111-8b3c-a4a505b9a010
+No inter-agent messaging tool is exposed in this session; concrete interface
+coordination uses the committed r17/scalar contracts and this handoff.
