@@ -33,6 +33,21 @@ def build():
  retained['conservative_carrier_padding_512FF_not_payload_change']=512*coef
  before=a['with_existing_clearances_screen_mm2'];after=before-sum(removed.values())+retained['conservative_carrier_padding_512FF_not_payload_change']
  if abs(after-(a['before_parity_added_logic_mm2']+sum(retained.values())))>1e-8:raise ValueError('area union mismatch')
+ topk=read('topk.json');inventory=read('service_inventory.json')
+ def find(x):
+  if isinstance(x,dict):
+   if x.get('name')=='X_SEL_TOPK_STORE':return x
+   for v in x.values():
+    y=find(v)
+    if y:return y
+  elif isinstance(x,list):
+   for v in x:
+    y=find(v)
+    if y:return y
+ existing=find(inventory)
+ if existing is None or existing['gross_mm2']!=topk['slot_binding']['reservation']['area_mm2']:raise ValueError('topk debit containment identity')
+ states={x['kind']:x for x in topk['slot_binding']['comparisons'] if x['runtime_n']==2048 and x['kind'] in ('DIG8_balanced_comb','DIG8_staged')}
+ staged=states['DIG8_staged'];missing=staged['retained_state_required_core_mm2_at_source_50pct']-existing['gross_mm2']
  t=h['source_legal_local_CE_capacity_witness'];oldhold=t['minimum_slot_reuse_interval_under_retained_checker_and_explicit_ACK']
  conditional_noECC_hold=2+1+1+1;peak=t['independent_pairs']*min(t['consecutive_source_CE_edges'],conditional_noECC_hold)
  return dict(schema='opentallas.ROM.noECC.same-candidate.v1',candidate=candidate,ROM_ECC_required=False,
@@ -61,11 +76,21 @@ def build():
          'conditional_extra_state_bits':max(0,peak-128)*(548+16+109+10+2),'conditional_extra_FF50_proxy_mm2':max(0,peak-128)*(548+16+109+10+2)*coef,
          'extra_slots_not_selected_or_added_to_screen':True,'actual_source_perbank_lease_release_must_determine_capacity':True,
          'not_authorized_to_remove_ACK_or_invent_ready_stalls':True},
+  full_topk_slot={'source_commit':read('origins.json')['topk.json']['commit'],'shape':'N4/NMAX2048/P64/PF64/LDW4','already_inherited_store_mm2':existing['gross_mm2'],
+      'state_models_before_logic':states,'conservative_one_slot_state_reserve_mm2':staged['retained_state_required_core_mm2_at_source_50pct'],
+      'additional_state_only_debit_once_mm2':missing,'same_candidate_screen_with_topk_state_only_mm2':after+missing,
+      'remaining_before_filter_logic_and_actual_context_mm2':858-after-missing,
+      'original_selector_bbox_DBU':topk['slot_binding']['reservation']['bbox_DBU'],
+      'state_only_required_height_um_at_same_width':staged['state_only_required_height_um_at_reserved_width_source_50pct'],
+      'balanced_filter_quota_prefix_compaction_logic_state_stages_unpriced':True,
+      'full_slot_G0':topk['G0'],'adjacent_common_controller_and_corridor_displacement_not_free':True,
+      'staged_state_envelope_is_reservation_not_variant_adoption':True,'no_additional_replica_selection':True},
   Qwen={'ROM_ECC_requirement_removed':True,'ECC_debit_in_own_loaded_control_model':0,'own_control_area_credit':0,
         'loaded_control_failure_preserved':q['failure_commit'],'SSFF_failure_still_requires_bank_control_reset_arrival_repair':True,
         'sameedge_capture_observable_arithmetic_unchanged':True},
   coordination={'Nash':'same owner/phase/address map; omit ROM ECC addresses/dependencies only. Retain payload/scale/cfg/HE/CROM and original ordering; bind accepted maincapture/delivery/ownerACK, not offered phases.',
                 'Archimedes':'same NP2048 geometry; remove ECC-only cones/router/roles, retain charged padding macro/OBS/halo and common main capture/control; source clock/macro CLKQ/setup/hold/corridors still mandatory.',
+                'Epicurus':'price ONE full selector balanced filter quota/prefix/compaction alongside DIG8 service; original store debit already included, only missing state/logic added once.',
                 'parent':'compose noECC cfg/input/root/normalmain dependency edges and actual accepted ownership; SRAM/HBM/link protection unchanged.'},
   admitted={'model_reprice':True,'RTL':False,'physical_job':False,'hardware_fit':False,'fulltoken_latency_measured':False,'no_single_token_loss_proven':False},
   historical_ECC_records_immutable=True,original_RTL_uarch_docs_untouched=True,new_fleet_jobs=0)

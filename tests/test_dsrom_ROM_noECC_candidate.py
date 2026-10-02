@@ -27,5 +27,9 @@ class NoECC(unittest.TestCase):
   q=self.r['Qwen'];self.assertTrue(q['SSFF_failure_still_requires_bank_control_reset_arrival_repair']);self.assertEqual(q['own_control_area_credit'],0);self.assertEqual(q['loaded_control_failure_preserved'],'f28f30496d5489a76b90c3bc45fc479e4fcc5881')
  def test_no_admission(self):
   a=self.r['admitted'];self.assertTrue(a['model_reprice']);self.assertTrue(all(not v for k,v in a.items() if k!='model_reprice'));self.assertEqual(self.r['new_fleet_jobs'],0)
- def test_byte_model(self):self.assertEqual(self.r,json.loads((m.OUT/'model-r2.json').read_text()))
+ def test_topk_store_counted_once(self):
+  x=self.r['full_topk_slot'];self.assertAlmostEqual(x['already_inherited_store_mm2'],.3075936768);self.assertAlmostEqual(x['additional_state_only_debit_once_mm2'],.0617719608);self.assertAlmostEqual(x['same_candidate_screen_with_topk_state_only_mm2'],727.2228976728057)
+ def test_complete_filter_gate(self):
+  x=self.r['full_topk_slot'];self.assertTrue(x['balanced_filter_quota_prefix_compaction_logic_state_stages_unpriced']);self.assertFalse(x['full_slot_G0']['engine_RTL_admitted']);self.assertTrue(x['adjacent_common_controller_and_corridor_displacement_not_free'])
+ def test_byte_model(self):self.assertEqual(self.r,json.loads((m.OUT/'model-r3.json').read_text()))
 if __name__=='__main__':unittest.main()
