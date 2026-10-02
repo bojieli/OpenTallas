@@ -1,0 +1,40 @@
+{
+  "retain0": {
+    "checks": {
+      "actual_QE_capture": true,
+      "block": true,
+      "column": true,
+      "descriptor": true,
+      "lifecycle_done": true,
+      "logical_publish": true,
+      "natural_wrap": true,
+      "per_PC": true,
+      "reply": true,
+      "request": true,
+      "stage": true,
+      "terminal": true,
+      "write_ack": true
+    },
+    "runtime_sha256": "dbed5b9ffbf5a511dbbe9f318938d0a7299f87967d65a06c3b3605634dd08e74",
+    "verdict": "PASS"
+  },
+  "retain1": {
+    "checks": {
+      "actual_QE_capture": true,
+      "block": true,
+      "column": true,
+      "descriptor": true,
+      "lifecycle_done": true,
+      "logical_publish": true,
+      "natural_wrap": true,
+      "per_PC": true,
+      "reply": true,
+      "request": true,
+      "stage": true,
+      "terminal": true,
+      "write_ack": true
+    },
+    "runtime_sha256": "cf385584b8fcbd9305908aff83bb2cbb03e9b620586a40d5f8f04335c13d76cb",
+    "verdict": "PASS"
+  }
+}
