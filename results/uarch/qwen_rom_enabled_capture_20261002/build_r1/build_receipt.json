@@ -1,0 +1,11 @@
+{
+  "returncode": 1,
+  "command": [
+    "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+    "-s",
+    "/tmp/qwen-enabled-capture-map-r1/synth.ys"
+  ],
+  "phase": "full_geometry_cone_mapping",
+  "wall_limit": null,
+  "FSIZE": "unlimited"
+}

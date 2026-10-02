@@ -1,0 +1,288 @@
+[
+  {
+    "body_DBU": [
+      4320,
+      4320,
+      126144,
+      67230
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_pair[0].g_bank[0].g_cap.cap[255:0]",
+    "enabled_capture_source_line": 184,
+    "instance": "g_col[0].g_bank[0].u_rom",
+    "master": "ROM",
+    "orientation": "R0",
+    "origin_DBU": [
+      4320,
+      4320
+    ],
+    "slot_DBU": [
+      0,
+      0,
+      131760,
+      73440
+    ]
+  },
+  {
+    "body_DBU": [
+      136080,
+      4320,
+      257904,
+      67230
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_pair[1].g_bank[0].g_cap.cap[255:0]",
+    "enabled_capture_source_line": 184,
+    "instance": "g_col[1].g_bank[0].u_rom",
+    "master": "ROM",
+    "orientation": "R0",
+    "origin_DBU": [
+      136080,
+      4320
+    ],
+    "slot_DBU": [
+      131760,
+      0,
+      263520,
+      73440
+    ]
+  },
+  {
+    "body_DBU": [
+      4320,
+      77760,
+      126144,
+      140670
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_pair[0].g_bank[1].g_cap.cap[255:0]",
+    "enabled_capture_source_line": 184,
+    "instance": "g_col[0].g_bank[1].u_rom",
+    "master": "ROM",
+    "orientation": "R0",
+    "origin_DBU": [
+      4320,
+      77760
+    ],
+    "slot_DBU": [
+      0,
+      73440,
+      131760,
+      146880
+    ]
+  },
+  {
+    "body_DBU": [
+      136080,
+      77760,
+      257904,
+      140670
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_pair[1].g_bank[1].g_cap.cap[255:0]",
+    "enabled_capture_source_line": 184,
+    "instance": "g_col[1].g_bank[1].u_rom",
+    "master": "ROM",
+    "orientation": "R0",
+    "origin_DBU": [
+      136080,
+      77760
+    ],
+    "slot_DBU": [
+      131760,
+      73440,
+      263520,
+      146880
+    ]
+  },
+  {
+    "body_DBU": [
+      4320,
+      151200,
+      126144,
+      214110
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_pair[0].g_bank[2].g_cap.cap[255:0]",
+    "enabled_capture_source_line": 184,
+    "instance": "g_col[0].g_bank[2].u_rom",
+    "master": "ROM",
+    "orientation": "R0",
+    "origin_DBU": [
+      4320,
+      151200
+    ],
+    "slot_DBU": [
+      0,
+      146880,
+      131760,
+      220320
+    ]
+  },
+  {
+    "body_DBU": [
+      136080,
+      151200,
+      257904,
+      214110
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_pair[1].g_bank[2].g_cap.cap[255:0]",
+    "enabled_capture_source_line": 184,
+    "instance": "g_col[1].g_bank[2].u_rom",
+    "master": "ROM",
+    "orientation": "R0",
+    "origin_DBU": [
+      136080,
+      151200
+    ],
+    "slot_DBU": [
+      131760,
+      146880,
+      263520,
+      220320
+    ]
+  },
+  {
+    "body_DBU": [
+      4320,
+      224640,
+      126144,
+      287550
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_pair[0].g_bank[3].g_cap.cap[255:0]",
+    "enabled_capture_source_line": 184,
+    "instance": "g_col[0].g_bank[3].u_rom",
+    "master": "ROM",
+    "orientation": "R0",
+    "origin_DBU": [
+      4320,
+      224640
+    ],
+    "slot_DBU": [
+      0,
+      220320,
+      131760,
+      293760
+    ]
+  },
+  {
+    "body_DBU": [
+      136080,
+      224640,
+      257904,
+      287550
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_pair[1].g_bank[3].g_cap.cap[255:0]",
+    "enabled_capture_source_line": 184,
+    "instance": "g_col[1].g_bank[3].u_rom",
+    "master": "ROM",
+    "orientation": "R0",
+    "origin_DBU": [
+      136080,
+      224640
+    ],
+    "slot_DBU": [
+      131760,
+      220320,
+      263520,
+      293760
+    ]
+  },
+  {
+    "body_DBU": [
+      4320,
+      298080,
+      126144,
+      360990
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_pair[0].g_bank[4].g_cap.cap[255:0]",
+    "enabled_capture_source_line": 184,
+    "instance": "g_col[0].g_bank[4].u_rom",
+    "master": "ROM",
+    "orientation": "R0",
+    "origin_DBU": [
+      4320,
+      298080
+    ],
+    "slot_DBU": [
+      0,
+      293760,
+      131760,
+      367200
+    ]
+  },
+  {
+    "body_DBU": [
+      136080,
+      298080,
+      257904,
+      360990
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_pair[1].g_bank[4].g_cap.cap[255:0]",
+    "enabled_capture_source_line": 184,
+    "instance": "g_col[1].g_bank[4].u_rom",
+    "master": "ROM",
+    "orientation": "R0",
+    "origin_DBU": [
+      136080,
+      298080
+    ],
+    "slot_DBU": [
+      131760,
+      293760,
+      263520,
+      367200
+    ]
+  },
+  {
+    "body_DBU": [
+      4320,
+      371520,
+      99144,
+      412560
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_kv_local.g_kvcap.cap",
+    "instance": "g_kv[0].u_kv",
+    "master": "SRAM",
+    "orientation": "R0",
+    "origin_DBU": [
+      4320,
+      371520
+    ],
+    "slot_DBU": [
+      0,
+      367200,
+      131760,
+      416880
+    ]
+  },
+  {
+    "body_DBU": [
+      136080,
+      371520,
+      230904,
+      412560
+    ],
+    "capture_bits": 256,
+    "capture_hierarchy": "u_logic.g_kv_local.g_kvcap.cap",
+    "instance": "g_kv[1].u_kv",
+    "master": "SRAM",
+    "orientation": "R0",
+    "origin_DBU": [
+      136080,
+      371520
+    ],
+    "slot_DBU": [
+      131760,
+      367200,
+      263520,
+      416880
+    ]
+  }
+]
