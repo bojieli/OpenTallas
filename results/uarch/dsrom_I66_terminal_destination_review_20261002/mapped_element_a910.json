@@ -1,0 +1,782 @@
+{
+  "ROM_ECC_required": false,
+  "SRAM_HBM_link_mutable_control_protection_retained": true,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "capture_constraints": {
+    "accepted_issue_edge": 0,
+    "actual_source_clock_edges": "Macro bank clocks leaves4+2MB/5+2MB -> capturegclk=leaf0 -> laneleaf1. Preserve generated/gated edge relation; actual crossleaf skew and enable/minpulse required.",
+    "added_ECC_cycles": 0,
+    "capture_postNBA_edge": 2,
+    "capture_to_lane_is_one_cycle_with_real_hold_enable_mux_and_shared_clock_skew": true,
+    "constrain_macro_addr_CE_setup_hold_and_clock_minpulse": true,
+    "consume_preedge": 3,
+    "forbid_multicycle_to_arithmetic_or_valid_metadata": true,
+    "hold_remains_launch_edge": true,
+    "hold_uncertainty_ps": 25,
+    "no_false_path_to_payload_or_clockgate_control": true,
+    "period_ps": 833.3333333333334,
+    "root_to_WAKED_and_WAKEQ_to_ICGENA_setup_hold_required": true,
+    "setup_uncertainty_ps": 60,
+    "source_LAT8_RNE_stages_unchanged": true,
+    "source_sdc_is_broad_and_must_be_endpoint_narrowed": true,
+    "two_cycle_setup_only_macro_read_to_selected_cap0_cap1": true
+  },
+  "configuration_ROM_ECC_required": false,
+  "current_parent_source_join": {
+    "commit": "4c6720068bef9950993182216c0a897865f2706b",
+    "native_local_retirement": "bank-selected i2_v/lane sample at accept+3",
+    "no_new_ACK_wire_or_global_request_pool": true,
+    "parent_CFG_VM_root_origins_not_assumed_free": true
+  },
+  "current_selector": {
+    "actual_provider_operator_count_still_owned_by_Maxwell_Epicurus": true,
+    "commit": "4d3b551e7",
+    "composed_ROM": {
+      "added_cycles_per_position": 1278,
+      "added_ns_at_policy_1p2GHz": 1065.0,
+      "calls": 9,
+      "cost_relative_to_existing_DIG4_cycles": -510,
+      "full_token_latency_credit": false
+    },
+    "old1p5088_proxy_is_historical_only": true,
+    "slot": {
+      "additional_height_um": 646.8429786585366,
+      "additional_proxy_area_mm2": 1.37482594056,
+      "already_included_candidate_memory_bits": 524288,
+      "containment_rule": "replace whole existing selector rectangle once, not add candidate storage twice; move/reconcile affected adjacent controller and attention/hub route reservations",
+      "existing": {
+        "area_mm2": 0.3075936768,
+        "bbox_DBU": [
+          1000000,
+          20620888,
+          3125440,
+          20765608
+        ],
+        "name": "X_SEL_TOPK_STORE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      "known_service_overlay": {
+        "TP4_group_area_delta_mm2_if_four_services": 5.49930376224,
+        "known_service_only_no_overlap": true,
+        "ownership_scope": "source retained service rectangles only; unknown outside-service allocations are NOT assumed free. Owner must bind containment/exclusions, channels and clock/PG.",
+        "positive_area_overlaps": [],
+        "revised_rectangles": [
+          {
+            "area_mm2": 1.6824196173600001,
+            "bbox_DBU": [
+              1000000,
+              20620888,
+              3125440,
+              21412451
+            ],
+            "name": "PROPOSED_COMPLETE_TOPK_SELECTOR",
+            "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+          },
+          {
+            "area_mm2": 0.08263710720000002,
+            "bbox_DBU": [
+              1000000,
+              21412451,
+              3125440,
+              21451331
+            ],
+            "name": "PROSPECTIVE_COMMON_CONTROLLER_CUT",
+            "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+          }
+        ],
+        "selector_budget_delta_mm2_per_die": 1.37482594056,
+        "whole_system_area_delta_mm2": null
+      },
+      "owner_accepted": false,
+      "proposed_bbox_DBU": [
+        1000000,
+        20620888,
+        3125440,
+        21412451
+      ],
+      "proposed_proxy_height_um": 791.5629786585366,
+      "proposed_same_width_um": 2125.44,
+      "translated_routing_clock_PG_fit": false
+    }
+  },
+  "elements": {
+    "bfcolumn": {
+      "FF_cells": 91374,
+      "ICG_cells": 8,
+      "SSFF_setup_hold_closed": false,
+      "WAKE": {
+        "declared_local_regs": 8,
+        "distinct_mapped_output_nets": 1,
+        "mandatory_synthesis_attribute_propagation_not_new_engine_logic": true,
+        "modeled_7missing_WAKE_FF_cell_um2": 2.6535599999999997,
+        "no_new_q_resynthesis_in_this_record": true,
+        "required_local_replica_retention_PASS": false,
+        "source_keep_dont_touch_nets_preserved": true
+      },
+      "actual_FF_provenance": {
+        "": 16963,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_hdc_delay.sv:35.17-35.70": 1586,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bf16_lanes2.sv:100.9-100.106": 32,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bf16_lanes2.sv:50.5-50.83": 1,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bf16_lanes2.sv:51.5-51.99": 780,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bf16_lanes2.sv:66.9-66.98": 5,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bf16_lanes2.sv:92.13-92.86": 240,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bmul2_rne_prepare.sv:100.5-107.8": 1056,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bmul2_rne_prepare.sv:109.5-112.8": 1056,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bmul2_rne_prepare.sv:46.5-52.8": 800,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bmul2_rne_prepare.sv:61.5-64.8": 1184,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bmul2_rne_prepare.sv:79.5-83.8": 928,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:107.5-110.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:111.5-114.8": 367,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:123.5-126.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:127.5-130.8": 211,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:138.5-141.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:142.5-148.8": 215,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:163.5-166.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:167.5-170.8": 231,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:183.5-186.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:187.5-191.8": 219,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:202.5-205.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:206.5-210.8": 151,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:220.5-223.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:224.5-234.8": 247,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:243.5-246.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:247.5-252.8": 132,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:40.5-43.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:44.5-47.8": 1336,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:58.5-61.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:62.5-79.8": 1711,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:92.5-95.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_bterm2_w10.sv:96.5-99.8": 1175,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_chain2.sv:45.5-46.48": 3,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_chain2.sv:47.5-50.8": 1249,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_chain2.sv:79.5-84.12": 6,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_chain2.sv:85.5-85.55": 12,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_chain2.sv:88.5-97.8": 342,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_chain2.sv:98.5-103.8": 996,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_fadd.sv:189.5-204.8": 2385,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_fadd.sv:221.9-221.88": 16,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_fadd.sv:222.9-222.45": 42306,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:146.9-148.57": 1,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:149.9-149.94": 1,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:150.9-152.59": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:153.9-157.12": 1612,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:179.5-182.55": 8,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:191.13-193.71": 1,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:230.5-261.8": 19,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:394.5-394.114": 72,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:395.5-404.8": 104,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:409.5-418.8": 54,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:423.5-431.8": 210,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:435.5-446.8": 144,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:452.5-452.116": 4,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:453.5-453.44": 1024,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:472.5-472.114": 1,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:473.5-473.120": 532,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:548.5-617.8": 84,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:619.5-622.8": 88,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:626.5-640.8": 272,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:642.5-655.8": 32,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:685.5-694.8": 1098,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:699.9-702.12": 549,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:746.9-749.12": 1088,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:914.5-915.70": 8,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:992.5-995.8": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_rom_elem_w10.sv:996.5-999.8": 104,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_segtree2.sv:102.5-102.85": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_segtree2.sv:103.5-107.8": 333,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_segtree2.sv:129.5-132.8": 128,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_segtree2.sv:133.5-134.65": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_segtree2.sv:139.5-157.8": 474,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_segtree2.sv:158.5-172.8": 5270,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_segtree2.sv:68.5-68.84": 2,
+        "/tmp/dsrom-noECC-complete-map-BF-r3/source_files/ot_v41_segtree2.sv:69.5-69.76": 86
+      },
+      "area": {
+        "current_reservation_margin_before_CTS_wire_um2": 8959.929480592255,
+        "deterministic_positive_only_height_DBU": 157680,
+        "extra_clock_wire_slew_hold_PG_vias_not_zero_or_free": true,
+        "extra_reservation_over_already_priced_frame_um2": 0.0,
+        "maxwell_must_replace_named_frame_once": true,
+        "measured_cell_area_at_source50pct_um2": 106667.48411940775,
+        "modeled_capacitance_only_clock_buffer_cell_um2": 25.92324,
+        "modeled_clock_and_8local_WAKE_core_um2": 106724.63771940774,
+        "no_shrink_or_area_credit": true,
+        "previous_allocated_cell_and_capture_um2": 115627.4136,
+        "previous_outline_DBU": [
+          0,
+          0,
+          1002890,
+          157680
+        ],
+        "proposed_outline_DBU": [
+          0,
+          0,
+          1002890,
+          157680
+        ]
+      },
+      "capture_FF": 1088,
+      "clock_profiles": {
+        "ff": {
+          "all_mapped_clock_pin_cap_fF": 47675.8637540306,
+          "branches": {
+            "g_wake.g_leaf[0].u_cg.u_icg": {
+              "actual_pin_cap_fF": 5275.779333999673,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 16.877014,
+                "cell_count": 29,
+                "end_buffers": 29,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 29.202986
+              },
+              "sinks": 10108,
+              "source_unbuffered_ICG_cap_ratio": 114.49173901909013
+            },
+            "g_wake.g_leaf[1].u_cg.u_icg": {
+              "actual_pin_cap_fF": 3215.6887340001613,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 10.475387999999999,
+                "cell_count": 18,
+                "end_buffers": 18,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.604612
+              },
+              "sinks": 6161,
+              "source_unbuffered_ICG_cap_ratio": 69.78491176215628
+            },
+            "g_wake.g_leaf[2].u_cg.u_icg": {
+              "actual_pin_cap_fF": 2746.2464980000545,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.72949,
+                "cell_count": 15,
+                "end_buffers": 15,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.35051
+              },
+              "sinks": 5269,
+              "source_unbuffered_ICG_cap_ratio": 59.597363237848406
+            },
+            "g_wake.g_leaf[3].u_cg.u_icg": {
+              "actual_pin_cap_fF": 35111.33858403072,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 0.581966,
+                "cell_count": 192,
+                "end_buffers": 191,
+                "parent_buffers": 1,
+                "wire_budget_at_ICG_fF": 45.498034
+              },
+              "sinks": 67410,
+              "source_unbuffered_ICG_cap_ratio": 761.9648130214999
+            },
+            "g_wake.g_leaf[4].u_cg.u_icg": {
+              "actual_pin_cap_fF": 10.3732,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 10.3732,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.7068
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.22511284722222225
+            },
+            "g_wake.g_leaf[5].u_cg.u_icg": {
+              "actual_pin_cap_fF": 10.3732,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 10.3732,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.7068
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.22511284722222225
+            },
+            "g_wake.g_leaf[6].u_cg.u_icg": {
+              "actual_pin_cap_fF": 10.3732,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 10.3732,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.7068
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.22511284722222225
+            },
+            "g_wake.g_leaf[7].u_cg.u_icg": {
+              "actual_pin_cap_fF": 10.3732,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 10.3732,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.7068
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.22511284722222225
+            }
+          },
+          "buffer_cell_area_um2": 25.92324,
+          "buffer_cells_capacitance_only": 254,
+          "buffer_construction_not_STA_CTS_or_route": true,
+          "root_clock_pin_cap_fF": 1285.3178039999896
+        },
+        "ss": {
+          "all_mapped_clock_pin_cap_fF": 40806.6953800195,
+          "branches": {
+            "g_wake.g_leaf[0].u_cg.u_icg": {
+              "actual_pin_cap_fF": 4514.14863199961,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 12.784625,
+                "cell_count": 25,
+                "end_buffers": 25,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 33.295375
+              },
+              "sinks": 10108,
+              "source_unbuffered_ICG_cap_ratio": 97.96329496526933
+            },
+            "g_wake.g_leaf[1].u_cg.u_icg": {
+              "actual_pin_cap_fF": 2751.4582859996044,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 7.670775,
+                "cell_count": 15,
+                "end_buffers": 15,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 38.409225
+              },
+              "sinks": 6161,
+              "source_unbuffered_ICG_cap_ratio": 59.71046627603308
+            },
+            "g_wake.g_leaf[2].u_cg.u_icg": {
+              "actual_pin_cap_fF": 2350.5006779997184,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 6.6480049999999995,
+                "cell_count": 13,
+                "end_buffers": 13,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 39.431995
+              },
+              "sinks": 5269,
+              "source_unbuffered_ICG_cap_ratio": 51.00912929686889
+            },
+            "g_wake.g_leaf[3].u_cg.u_icg": {
+              "actual_pin_cap_fF": 30055.952668020567,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 0.511385,
+                "cell_count": 165,
+                "end_buffers": 164,
+                "parent_buffers": 1,
+                "wire_budget_at_ICG_fF": 45.568615
+              },
+              "sinks": 67410,
+              "source_unbuffered_ICG_cap_ratio": 652.2559172747519
+            },
+            "g_wake.g_leaf[4].u_cg.u_icg": {
+              "actual_pin_cap_fF": 8.6838,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.6838,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.3962
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.18845052083333333
+            },
+            "g_wake.g_leaf[5].u_cg.u_icg": {
+              "actual_pin_cap_fF": 8.6838,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.6838,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.3962
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.18845052083333333
+            },
+            "g_wake.g_leaf[6].u_cg.u_icg": {
+              "actual_pin_cap_fF": 8.6838,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.6838,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.3962
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.18845052083333333
+            },
+            "g_wake.g_leaf[7].u_cg.u_icg": {
+              "actual_pin_cap_fF": 8.6838,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.6838,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.3962
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.18845052083333333
+            }
+          },
+          "buffer_cell_area_um2": 22.24908,
+          "buffer_cells_capacitance_only": 218,
+          "buffer_construction_not_STA_CTS_or_route": true,
+          "root_clock_pin_cap_fF": 1099.8999159999992
+        }
+      },
+      "hardware_cells": 447785,
+      "mapped_json_sha256": "23ca45db90381043e4a88b71cc7a3b12c59a4c0e87bfd498c8ef5d6f5419c8aa",
+      "mapped_stdcell_area_um2": 53333.74205970387,
+      "physical_G0": false,
+      "physical_macro_width_bits": 274,
+      "physical_macros": 4,
+      "source_capture_enable_block": "literal element.sv746..749; SS/FF actual mapped source provenance retained",
+      "source_class": "BF16_column_pair",
+      "source_full_carrier_capture_bits": 1096,
+      "unused_high2_per_bank_optimized_FF_only": 8
+    },
+    "q": {
+      "FF_cells": 28942,
+      "ICG_cells": 8,
+      "SSFF_setup_hold_closed": false,
+      "WAKE": {
+        "declared_local_regs": 8,
+        "distinct_mapped_output_nets": 1,
+        "mandatory_synthesis_attribute_propagation_not_new_engine_logic": true,
+        "modeled_7missing_WAKE_FF_cell_um2": 2.6535599999999997,
+        "no_new_q_resynthesis_in_this_record": true,
+        "required_local_replica_retention_PASS": false,
+        "source_keep_dont_touch_nets_preserved": true
+      },
+      "actual_FF_provenance": {
+        "": 5620,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_hdc_delay.sv:35.17-35.70": 988,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:107.5-110.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:111.5-114.8": 367,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:123.5-126.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:127.5-130.8": 211,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:138.5-141.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:142.5-148.8": 215,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:163.5-166.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:167.5-170.8": 231,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:183.5-186.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:187.5-191.8": 219,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:202.5-205.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:206.5-210.8": 151,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:220.5-223.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:224.5-234.8": 247,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:243.5-246.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:247.5-252.8": 132,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:40.5-43.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:44.5-47.8": 1336,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:58.5-61.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:62.5-79.8": 1711,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:92.5-95.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_bterm2_w10.sv:96.5-99.8": 1175,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_chain2.sv:45.5-46.48": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_chain2.sv:47.5-50.8": 149,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_chain2.sv:79.5-84.12": 4,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_chain2.sv:85.5-85.55": 6,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_chain2.sv:88.5-97.8": 80,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_chain2.sv:98.5-103.8": 164,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_fadd.sv:189.5-204.8": 276,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_fadd.sv:221.9-221.88": 14,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_fadd.sv:222.9-222.45": 4920,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:146.9-148.57": 1,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:149.9-149.94": 1,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:150.9-152.59": 1,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:153.9-157.12": 546,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:179.5-182.55": 8,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:191.13-193.71": 1,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:230.5-261.8": 19,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:472.5-472.114": 1,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:473.5-473.120": 532,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:548.5-617.8": 58,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:619.5-622.8": 88,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:626.5-640.8": 272,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:642.5-655.8": 29,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:685.5-694.8": 1098,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:699.9-702.12": 549,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:746.9-749.12": 1088,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:914.5-915.70": 8,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:992.5-995.8": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_rom_elem_w10.sv:996.5-999.8": 104,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_segtree2.sv:102.5-102.85": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_segtree2.sv:103.5-107.8": 332,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_segtree2.sv:129.5-132.8": 128,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_segtree2.sv:133.5-134.65": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_segtree2.sv:139.5-157.8": 474,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_segtree2.sv:158.5-172.8": 5270,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_segtree2.sv:68.5-68.84": 2,
+        "/tmp/dsrom-noECC-complete-map-d8b469237-r2/source_files/ot_v41_segtree2.sv:69.5-69.76": 86
+      },
+      "area": {
+        "current_reservation_margin_before_CTS_wire_um2": -1185.004080040686,
+        "deterministic_positive_only_height_DBU": 151200,
+        "extra_clock_wire_slew_hold_PG_vias_not_zero_or_free": true,
+        "extra_reservation_over_already_priced_frame_um2": 3310.2432,
+        "maxwell_must_replace_named_frame_once": true,
+        "measured_cell_area_at_source50pct_um2": 36188.66808004068,
+        "modeled_capacitance_only_clock_buffer_cell_um2": 8.1648,
+        "modeled_clock_and_8local_WAKE_core_um2": 36210.30480004068,
+        "no_shrink_or_area_credit": true,
+        "previous_allocated_cell_and_capture_um2": 35003.664,
+        "previous_outline_DBU": [
+          0,
+          0,
+          510840,
+          144720
+        ],
+        "proposed_outline_DBU": [
+          0,
+          0,
+          510840,
+          151200
+        ]
+      },
+      "capture_FF": 1088,
+      "clock_profiles": {
+        "ff": {
+          "all_mapped_clock_pin_cap_fF": 15151.323558000367,
+          "branches": {
+            "g_wake.g_leaf[0].u_cg.u_icg": {
+              "actual_pin_cap_fF": 3428.5179500002173,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 11.057354,
+                "cell_count": 19,
+                "end_buffers": 19,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.022645999999995
+              },
+              "sinks": 6569,
+              "source_unbuffered_ICG_cap_ratio": 74.40360134549083
+            },
+            "g_wake.g_leaf[1].u_cg.u_icg": {
+              "actual_pin_cap_fF": 3215.6887340001595,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 10.475387999999999,
+                "cell_count": 18,
+                "end_buffers": 18,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.604612
+              },
+              "sinks": 6161,
+              "source_unbuffered_ICG_cap_ratio": 69.78491176215624
+            },
+            "g_wake.g_leaf[2].u_cg.u_icg": {
+              "actual_pin_cap_fF": 2746.246498000042,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.72949,
+                "cell_count": 15,
+                "end_buffers": 15,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.35051
+              },
+              "sinks": 5269,
+              "source_unbuffered_ICG_cap_ratio": 59.59736323784813
+            },
+            "g_wake.g_leaf[3].u_cg.u_icg": {
+              "actual_pin_cap_fF": 5111.087883999938,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 16.295048,
+                "cell_count": 28,
+                "end_buffers": 28,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 29.784951999999997
+              },
+              "sinks": 9814,
+              "source_unbuffered_ICG_cap_ratio": 110.91770581597088
+            },
+            "g_wake.g_leaf[4].u_cg.u_icg": {
+              "actual_pin_cap_fF": 10.3732,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 10.3732,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.7068
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.22511284722222225
+            },
+            "g_wake.g_leaf[5].u_cg.u_icg": {
+              "actual_pin_cap_fF": 10.3732,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 10.3732,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.7068
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.22511284722222225
+            },
+            "g_wake.g_leaf[6].u_cg.u_icg": {
+              "actual_pin_cap_fF": 10.3732,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 10.3732,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.7068
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.22511284722222225
+            },
+            "g_wake.g_leaf[7].u_cg.u_icg": {
+              "actual_pin_cap_fF": 10.3732,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 10.3732,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 35.7068
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.22511284722222225
+            }
+          },
+          "buffer_cell_area_um2": 8.1648,
+          "buffer_cells_capacitance_only": 80,
+          "buffer_construction_not_STA_CTS_or_route": true,
+          "root_clock_pin_cap_fF": 608.2896920000121
+        },
+        "ss": {
+          "all_mapped_clock_pin_cap_fF": 12966.209331998323,
+          "branches": {
+            "g_wake.g_leaf[0].u_cg.u_icg": {
+              "actual_pin_cap_fF": 2933.585341999562,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.18216,
+                "cell_count": 16,
+                "end_buffers": 16,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.89784
+              },
+              "sinks": 6569,
+              "source_unbuffered_ICG_cap_ratio": 63.662876345476604
+            },
+            "g_wake.g_leaf[1].u_cg.u_icg": {
+              "actual_pin_cap_fF": 2751.4582859996017,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 7.670775,
+                "cell_count": 15,
+                "end_buffers": 15,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 38.409225
+              },
+              "sinks": 6161,
+              "source_unbuffered_ICG_cap_ratio": 59.710466276033024
+            },
+            "g_wake.g_leaf[2].u_cg.u_icg": {
+              "actual_pin_cap_fF": 2350.500677999704,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 6.6480049999999995,
+                "cell_count": 13,
+                "end_buffers": 13,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 39.431995
+              },
+              "sinks": 5269,
+              "source_unbuffered_ICG_cap_ratio": 51.00912929686857
+            },
+            "g_wake.g_leaf[3].u_cg.u_icg": {
+              "actual_pin_cap_fF": 4375.306739999448,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 12.27324,
+                "cell_count": 24,
+                "end_buffers": 24,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 33.80676
+              },
+              "sinks": 9814,
+              "source_unbuffered_ICG_cap_ratio": 94.9502330729047
+            },
+            "g_wake.g_leaf[4].u_cg.u_icg": {
+              "actual_pin_cap_fF": 8.6838,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.6838,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.3962
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.18845052083333333
+            },
+            "g_wake.g_leaf[5].u_cg.u_icg": {
+              "actual_pin_cap_fF": 8.6838,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.6838,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.3962
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.18845052083333333
+            },
+            "g_wake.g_leaf[6].u_cg.u_icg": {
+              "actual_pin_cap_fF": 8.6838,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.6838,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.3962
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.18845052083333333
+            },
+            "g_wake.g_leaf[7].u_cg.u_icg": {
+              "actual_pin_cap_fF": 8.6838,
+              "capacitance_only_BUF4_construction": {
+                "ICG_load_fF": 8.6838,
+                "cell_count": 0,
+                "end_buffers": 0,
+                "parent_buffers": 0,
+                "wire_budget_at_ICG_fF": 37.3962
+              },
+              "sinks": 1,
+              "source_unbuffered_ICG_cap_ratio": 0.18845052083333333
+            }
+          },
+          "buffer_cell_area_um2": 6.94008,
+          "buffer_cells_capacitance_only": 68,
+          "buffer_construction_not_STA_CTS_or_route": true,
+          "root_clock_pin_cap_fF": 520.623086000005
+        }
+      },
+      "hardware_cells": 150714,
+      "mapped_json_sha256": "c6b8bedd4517e1f40b0094baae479721aa50b232d2f7febb62fe3c3105e36ebd",
+      "mapped_stdcell_area_um2": 18094.33404002034,
+      "physical_G0": false,
+      "physical_macro_width_bits": 274,
+      "physical_macros": 4,
+      "source_capture_enable_block": "literal element.sv746..749; SS/FF actual mapped source provenance retained",
+      "source_class": "q_pair",
+      "source_full_carrier_capture_bits": 1096,
+      "unused_high2_per_bank_optimized_FF_only": 8
+    }
+  },
+  "failed_records_unchanged": true,
+  "full_token_or_parent_die_closure": false,
+  "generator_sha256": "bf1594afc9065641b066651e7e965fa9949952ba988ce2179b0143a95410a916",
+  "input_hashes_sha256": "121b572373e71eddeb37e7388bc566896f56c34237eff4e3961d7727cc782fbc",
+  "literal_source_files": 21,
+  "macro_depth": 4096,
+  "no_NP_depth_stage_TP_sweep": true,
+  "physical_admission": {
+    "PnR": false,
+    "next": "Propagate existing localWAKE keep/dont_touch intent to realFFcells in synthesis contract; model complete mapped branch buffering/placement and actual parent IO. Reuse current maps for all inventory/timing preparation; no duplicate q/BF synthesis under unchanged flow.",
+    "reason": "Actualmaps show localWAKE replicas merged; clocktrees notinstalled or timed, q cellreservation too small. Preserve literal arithmetic/ports and qualify actual keeper/buffer/capture context beforeP&R."
+  },
+  "physical_macros_per_logical_slot": 2,
+  "schema": "opentallas.dsrom.noECC.mapped-complete-element-join.v1",
+  "source_manifest_sha256": "79509ce471bec4e1a51e90299605cdc7e04a68f857f9b6cafed38e507add8840"
+}
