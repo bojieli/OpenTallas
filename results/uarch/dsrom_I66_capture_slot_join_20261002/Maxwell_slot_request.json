@@ -1,0 +1,35 @@
+{
+  "actual_callback_journal_sha256": "ecd00737272a6802df8642a5b020e3f262ca9bda61b83a4e498630ccd4b9246f",
+  "bank_depth_histogram": {
+    "4": 96,
+    "6": 32
+  },
+  "information_capture_floor_bits": 19009,
+  "local_word_data_bits": 32,
+  "no_launch": true,
+  "no_ready_rows_required": 576,
+  "occupancy_bits": 576,
+  "peak_total_no_ready_writes": 128,
+  "phase": "PHW10 EID0 phase10 native cone only",
+  "physical_cost_missing": [
+    "128-bank write-port routes/control/padding placement",
+    "mux/demux/readbank address/fanout",
+    "exclusive512bit VM bridge arbitration",
+    "actual forward/reverse slots/clock/SSFF delivery and ACK guarantees",
+    "capture banking for every other selected expert phase"
+  ],
+  "proposal_scalar_reads_per_edge": 1,
+  "proposed_VM_return_bits_per_edge": 512,
+  "proposed_rows_per_return_edge": 16,
+  "required_provider_ownership": "Reserve all576 capture slots plus input/output VM leases before source go; packet ACK releases packet only. Next owner credit acceptance follows all publication and packet ACK debt.",
+  "root_bits_per_shard": 4416,
+  "source_min_read_edges": [
+    423,
+    998
+  ],
+  "source_writer_bits_per_shard": 4032,
+  "sticky_fault_bits": 1,
+  "uniform_128_by_6_padding_bits": 25345,
+  "uniform_extra_row_slots": 192,
+  "write_ports_per_shard": 64
+}

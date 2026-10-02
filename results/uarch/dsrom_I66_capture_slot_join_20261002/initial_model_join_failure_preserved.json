@@ -1,0 +1,7 @@
+{
+  "cause": "Preparation assumed representative result was a list; peer schema has a packet dictionary",
+  "correction": "Use dictionary result unchanged; preserve this record",
+  "exception": "KeyError: 0",
+  "scope": "Offline model preparation only; no execution/qualification",
+  "status": "MODEL_CONSTRUCTION_FAIL"
+}

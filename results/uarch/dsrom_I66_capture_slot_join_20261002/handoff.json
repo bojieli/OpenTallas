@@ -1,0 +1,26 @@
+{
+  "Maxwell_disjoint": "Capacity/port/padding and explicit slot request only; no physical build",
+  "Nash_disjoint": "Read-only conditional model snapshot; no edits to stage provider",
+  "actual_576_rows": true,
+  "actual_measured_capture_peak": 128,
+  "actual_program_enrollment": "Still requires current PHW10 compiled source/binary/program/accepted journal",
+  "banks128": {
+    "depth4": 96,
+    "depth6": 32
+  },
+  "coordination": "Reviewable files for parent/owners; direct messaging unavailable, no acknowledgment claimed",
+  "entry": "tools/dsrom_I66_capture_slot_join.py",
+  "new_live_jobs": [],
+  "next_artifact": "Actual current PHW10 source/binary/program-enrolled core/owner/capture/publication/ACK journal; this observer gate is ready to consume it. No new fullbuild or frozen runtime duplication.",
+  "no_frozen_run_repeated": true,
+  "predecessor": "fb96099a84b29578c4d6c72f84f460aed43c50c2",
+  "scope": "Source-owned observer/calibration, no transport implementation or RTL change",
+  "validation": {
+    "actual_capture_replay_byte_exact": true,
+    "conditional_peer_join_replayed_portably": true,
+    "new_tests_PASS": 22,
+    "previous_model_construction_failure_preserved": true,
+    "protected_files_byte_identical": 60,
+    "total_focused_tests_PASS": 133
+  }
+}
