@@ -53,7 +53,57 @@ def proc(args,where,log):
     start=time.monotonic()
     with log.open('x') as f: p=subprocess.run(args,cwd=where,stdout=f,stderr=subprocess.STDOUT)
     return {'returncode':p.returncode,'elapsed_s':time.monotonic()-start}
-def run(work):
+def input_pins(cell):
+    return {m[1].strip(' "') for m in re.finditer(r'\bpin\s*\(([^)]+)\)',cell) if re.search(r'\bdirection\s*:\s*input\s*;',block(cell,m.start()))}
+def timing_only(work,reuse):
+    """Reuse both completed mappings; load corner families unmodified/separately.
+    Liberty templates are scoped to each library, so FF collisions need no
+    merged namespace here. No synthesis, retiming or new engine source.
+    """
+    if work.exists():raise ValueError('preserve first run; no overwrite/retry')
+    work.mkdir(parents=True)
+    record=json.loads((reuse/'record.json').read_text())
+    record['prior_failed_report']=dict(path=str(reuse/'record.json'),sha256=sha(reuse/'record.json'))
+    record['timing_runner_sha256']=sha(Path(__file__))
+    record['source_commit']=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    record['timing_libraries_unmodified_separate_families']=True
+    for corner in ('ss','ff'):
+        for kind in ('ao','invbuf','oa','simple','seq'):
+            p=work/f'{kind}_{corner}.lib';p.write_bytes(gzip.decompress((OUT/'inputs'/f'{kind}_{corner}.lib.gz').read_bytes()))
+    for k in (256,272):
+        d=work/f'K{k}';d.mkdir();old=reuse/f'K{k}'
+        if sha(old/'mapped.v')!=record['results'][str(k)]['netlist_sha256']:raise ValueError('mapped netlist changed')
+        shutil.copyfile(old/'mapped.v',d/'mapped.v');r=record['results'][str(k)]
+        r['prior_failed_timing']={c:r[c] for c in ('ss','ff')}
+        for corner in ('ss','ff'):
+            cap=dcap(merged(corner)[1]);tcl=d/f'{corner}.tcl'
+            reads='\n'.join(f'read_liberty {work/f"{kind}_{corner}.lib"}' for kind in ('ao','invbuf','oa','simple','seq'))
+            tcl.write_text(reads+f'''
+read_verilog {d/'mapped.v'}
+link_design ot_rom_secded_dec
+create_clock -name virtual -period 833.333333
+set_clock_uncertainty -setup 60 [get_clocks virtual]
+set_clock_uncertainty -hold 25 [get_clocks virtual]
+set_input_delay -max 0 -clock virtual [all_inputs]
+set_input_delay -min 0 -clock virtual [all_inputs]
+set_output_delay -max 0 -clock virtual [all_outputs]
+set_output_delay -min 0 -clock virtual [all_outputs]
+set_input_transition 20 [all_inputs]
+set_load {cap} [all_outputs]
+report_units
+report_checks -path_delay max -group_count 3 -format full_clock_expanded -digits 6 -fields {{slew capacitance input_pin net}}
+report_checks -path_delay min -group_count 3 -format full_clock_expanded -digits 6 -fields {{slew capacitance input_pin net}}
+report_check_types -max_slew -max_capacitance
+exit
+''')
+            pr=proc(['sta','-exit',str(tcl)],d,d/f'{corner}.log');s=(d/f'{corner}.log').read_text()
+            r[corner]={'process':pr,'output_load_fF':cap,'data_arrival_ps':[float(x) for x in re.findall(r'([-\d.]+)\s+data arrival time',s)],'virtual_slack_ps':[float(x) for x in re.findall(r'([-\d.]+)\s+slack',s)],'report_sha256':sha(d/f'{corner}.log'),'report_errors':bool(re.search(r'^Error:',s,re.M)),'missing_timing_templates':'table template' in s and 'not found' in s,'raw_warnings':[line for line in s.splitlines() if line.startswith('Warning:')]}
+    good=all(r[c]['process']['returncode']==0 and not r[c]['report_errors'] and not r[c]['missing_timing_templates'] and len(r[c]['data_arrival_ps'])>=2 for r in record['results'].values() for c in ('ss','ff'))
+    record['status']='CHARACTERIZED_COMBINATIONAL_ONLY' if good else 'FAIL_TIMING_REPORT'
+    record['resources_timing_children']=dict(zip(('user_s','system_s','maxrss_KiB'),resource.getrusage(resource.RUSAGE_CHILDREN)[:3]))
+    (work/'record.json').write_text(json.dumps(record,indent=2,sort_keys=True)+'\n')
+    return record
+def run(work,reuse_k256=None):
     if work.exists(): raise ValueError('preserve first run; no overwrite/retry')
     work.mkdir(parents=True)
     libs={}; cells={}
@@ -74,13 +124,18 @@ stat -liberty {libs['ss']}
 write_verilog -noattr -noexpr {d/'mapped.v'}
 write_json {d/'mapped.json'}
 ''')
-        r={'mapping':proc(['yosys','-s',str(script)],d,d/'synth.log')};record['results'][str(k)]=r
+        if k==256 and reuse_k256:
+            for name in ('mapped.json','mapped.v','synth.log','synth.ys'):shutil.copyfile(reuse_k256/name,d/name)
+            r={'mapping':{'returncode':0,'reused_unchanged_completed_netlist':str(reuse_k256),'mapped_json_sha256':sha(reuse_k256/'mapped.json'),'original_source_commit':'347beb640'}}
+        else:r={'mapping':proc(['yosys','-s',str(script)],d,d/'synth.log')}
+        record['results'][str(k)]=r
         if r['mapping']['returncode']:record['status']='FAIL_MAPPING';break
         net=json.loads((d/'mapped.json').read_text())['modules'][top]
         widths={name:len(port['bits']) for name,port in net['ports'].items()}
         if widths!={'cw':k+10,'data':k,'corrected':1,'uncorrectable':1}: raise ValueError('full port loss')
         if any(not isinstance(b,int) for port in net['ports'].values() for b in port['bits']): raise ValueError('constant port stub')
-        sinks={b for cell in net['cells'].values() for name,bits in cell['connections'].items() if cell['port_directions'][name]=='input' for b in bits}
+        directions={name:input_pins(cells['ss'][name]) for name in {c['type'] for c in net['cells'].values()}}
+        sinks={b for cell in net['cells'].values() for name,bits in cell['connections'].items() if name in directions[cell['type']] for b in bits}
         if not set(net['ports']['cw']['bits'])<=sinks: raise ValueError('dropped dynamic codeword bit')
         counts=dict(collections.Counter(c['type'] for c in net['cells'].values()))
         r.update(ports=widths,cell_counts=counts,area_um2=sum(count*float(re.search(r'\barea\s*:\s*([\d.]+)',cells['ss'][name])[1]) for name,count in counts.items()),state_bits=0,netlist_sha256=sha(d/'mapped.v'))
@@ -117,7 +172,7 @@ exit
     (work/'record.json').write_text(json.dumps(record,indent=2,sort_keys=True)+'\n')
     return record
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--prepare',action='store_true');ap.add_argument('--workdir',type=Path);a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--prepare',action='store_true');ap.add_argument('--workdir',type=Path);ap.add_argument('--reuse-k256',type=Path);ap.add_argument('--timing-only-reuse',type=Path);a=ap.parse_args()
     if a.prepare:(OUT/'model.json').write_text(json.dumps(model(),indent=2,sort_keys=True)+'\n')
-    elif a.workdir:print(json.dumps(run(a.workdir.resolve()),indent=2))
+    elif a.workdir:print(json.dumps(timing_only(a.workdir.resolve(),a.timing_only_reuse) if a.timing_only_reuse else run(a.workdir.resolve(),a.reuse_k256),indent=2))
     else:ap.error('--prepare or --workdir required')

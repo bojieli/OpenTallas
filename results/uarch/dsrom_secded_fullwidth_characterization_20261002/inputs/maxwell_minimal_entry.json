@@ -1,0 +1,227 @@
+{
+  "area": {
+    "conservative_screen_with_all_pipeline_overlay_mm2": 733.7227518355257,
+    "current_physical_construction_screen_mm2": 732.9650770579258,
+    "each_positive_stage_fullwidth_charged": true,
+    "existing_decoder_arbitration_capture_allowance_not_removed": true,
+    "new_macro_instances": 0,
+    "no_containment_overlay_FF50_mm2": 0.7576747775999999,
+    "overlay_is_conservative_may_double_charge_existing240400_state_until_disjoint_map": true,
+    "physical_fit_proven": false,
+    "prospective_fullwidth_reference_register_bits": 999360,
+    "remaining_for_extra_clock_control_PG_or_endpoint_exclusions_mm2": 124.27724816447422
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "capture_header_bit_contract": {
+    "MB": 1,
+    "corrected_uncorrectable": 2,
+    "era": 1,
+    "external_owner_nonce_and_full_generation_retained_by_existing24_ledger": true,
+    "no_second_native_owner_ledger": true,
+    "opseq": 13,
+    "parity": 1,
+    "phase": 10,
+    "physical_row": 12,
+    "provider_index": 7,
+    "rank": 2,
+    "shard": 1,
+    "stage": 6,
+    "total": 58,
+    "valid": 1,
+    "word_kind": 1
+  },
+  "capture_header_entries": [
+    {
+      "II": 1,
+      "bits": 332,
+      "block": "enabled_raw_capture",
+      "cycles": 2,
+      "replicas": 412
+    },
+    {
+      "II": 1,
+      "bits": 316,
+      "block": "protected_sidecar_decode_output",
+      "cycles": 2,
+      "replicas": 412
+    },
+    {
+      "II": 1,
+      "bits": 74,
+      "block": "gather_reply_capture",
+      "cycles": 22,
+      "replicas": 128
+    },
+    {
+      "II": 1,
+      "bits": 340,
+      "block": "main_codeword_assembly",
+      "cycles": 1,
+      "replicas": 256
+    },
+    {
+      "II": 1,
+      "bits": 332,
+      "block": "main_corrected_output",
+      "cycles": 2,
+      "replicas": 256
+    }
+  ],
+  "capture_own_gate": "Accepted CE/address identity latched at actual macro launch; macro output holds when idle, valid/header cannot advance without accepted read. Enable/control, FFsetup/hold and pin collar measured independently of full-token calendar.",
+  "composed_latency": {
+    "actual_Nash_request_profile_replaces_counterfactual_rounds_and_credit_release": true,
+    "first_good_parity_to_arithmetic_cycle_budget": 29,
+    "leaf_debt_held_cycles_budget": 26,
+    "no_first_batch64_vs_wholephase400_conflation": true,
+    "no_token_loss_proven": false,
+    "one_leaf_read_debt_credit": 1,
+    "original_source_deadline_unbound": true,
+    "per_dependency_path_cycles": {
+      "gather_reply": 22,
+      "main_assembly": 1,
+      "main_decode": 2,
+      "raw_capture": 2,
+      "sidecar_decode": 2
+    },
+    "serialized64round_budget_cycles": 1667,
+    "source_first128seat_batch_conflict_rounds": 64,
+    "status": "EXPLICIT_POSITIVE_PROVISIONAL_NO_MEASURED_SOURCE_ACCEPTANCE_OR_DEADLINE"
+  },
+  "decoder_entries": [
+    {
+      "K": 256,
+      "N": 266,
+      "R": 9,
+      "area_existing_construction_allowance_mm2": 0.7996465152,
+      "area_per_replica_construction_um2": 1940.8895999999997,
+      "assigned_II_cycles": 1,
+      "assigned_stream_latency_cycles": 2,
+      "characterize_existing_cone_admitted": true,
+      "comparator_width": 9,
+      "correction_XOR_bits": 256,
+      "correction_comparators": 256,
+      "covered_bits": [
+        132,
+        131,
+        131,
+        129,
+        127,
+        127,
+        127,
+        127,
+        9
+      ],
+      "input_bits": 266,
+      "latency_and_II_status": "POSITIVE_MODEL_BUDGET_NOT_MEASURED_OR_RETIMER_IMPLEMENTED",
+      "new_RTL_or_hardening_admitted": false,
+      "other_projects_are_not_characterization_gates": true,
+      "output_bits": 258,
+      "overall_XOR2_nodes": 265,
+      "own_minimum_characterization_gate": "Freeze existing module SHA/K/N/R; all output and corrected/uncorrectable cones active; source SS/FF libraries and60ps/25ps uncertainty; report delay, area, fanout and chosen output loads. No parent calendar needed.",
+      "own_minimum_hardening_gate": "Measured cone delay and actual pipeline cuts/capture FF validate the assigned positive latency/II, enabled valid/header alignment and SS setup/FF hold in declared slot. Refuse until these own interfaces exist.",
+      "packing": "cw={overall,check[8:0],data[K-1:0]}",
+      "replicas_per_shard1_die": 412,
+      "source_is_combinational": true,
+      "syndrome_XOR2_nodes": 1040
+    },
+    {
+      "K": 272,
+      "N": 282,
+      "R": 9,
+      "area_existing_construction_allowance_mm2": 0.5279219712,
+      "area_per_replica_construction_um2": 2062.1951999999997,
+      "assigned_II_cycles": 1,
+      "assigned_stream_latency_cycles": 2,
+      "characterize_existing_cone_admitted": true,
+      "comparator_width": 9,
+      "correction_XOR_bits": 272,
+      "correction_comparators": 272,
+      "covered_bits": [
+        140,
+        139,
+        139,
+        137,
+        137,
+        127,
+        127,
+        127,
+        25
+      ],
+      "input_bits": 282,
+      "latency_and_II_status": "POSITIVE_MODEL_BUDGET_NOT_MEASURED_OR_RETIMER_IMPLEMENTED",
+      "new_RTL_or_hardening_admitted": false,
+      "other_projects_are_not_characterization_gates": true,
+      "output_bits": 274,
+      "overall_XOR2_nodes": 281,
+      "own_minimum_characterization_gate": "Freeze existing module SHA/K/N/R; all output and corrected/uncorrectable cones active; source SS/FF libraries and60ps/25ps uncertainty; report delay, area, fanout and chosen output loads. No parent calendar needed.",
+      "own_minimum_hardening_gate": "Measured cone delay and actual pipeline cuts/capture FF validate the assigned positive latency/II, enabled valid/header alignment and SS setup/FF hold in declared slot. Refuse until these own interfaces exist.",
+      "packing": "cw={overall,check[8:0],data[K-1:0]}",
+      "replicas_per_shard1_die": 256,
+      "source_is_combinational": true,
+      "syndrome_XOR2_nodes": 1098
+    }
+  ],
+  "endpoint_entry": {
+    "actual_per_call_endpoint_pins_lengths_tracks_and_link_resources_required_for_tile": true,
+    "data_bits_per_lane": 16,
+    "estimated_stage_count_is_conservative_policy_not_routed_lower_bound": true,
+    "full_reply_bits_per_stream_cycle": 9472,
+    "leaf_raw_return_bits": 112888,
+    "max_source_pin_to_consumer_center_Manhattan_um": 20451.884,
+    "modeled_reply_pipeline_cycles": 22,
+    "own_minimum_characterization_gate": "Freeze retained endpoint coordinates and each declared data/header lane; characterize loaded paths and directional cuts. Report OBS/PG exclusions and FF/clock cost; bandwidth is not inferred from bus width.",
+    "own_minimum_hardening_gate": "Accepted-transfer queue/credit and header alignment, actual endpoints/directional available tracks, slot/CTS/SSFF and measured pipeline/II bound before full tile.",
+    "peak_data_bits_per_stream_cycle": 2048,
+    "per_segment_flop_setup_skew_ps": 189.5,
+    "private_leaf_address_enable_bits": 5356,
+    "proposed_header_bits_per_lane": 58,
+    "replica_reply_lanes": 128,
+    "representative_cut_bits": 528,
+    "representative_cut_with_proposed_headers_bits": 2442,
+    "routing_track_capacity_measured": false,
+    "wire_fit_ps_per_um": 0.5997
+  },
+  "existing_decoder_characterization_admitted": true,
+  "fulltile_or_die_PR_admitted": false,
+  "fulltoken_calibration_is_rate_gate_not_existing_decoder_characterization_gate": true,
+  "generator_sha256": "f099dffa7e2cee357cd0a1cb92f4da4fffebea1fe2232a4cd0d87e0d3faaa869",
+  "independent_work": {
+    "Archimedes": "Characterize existing completeK256/K272cones now at pinned source/SSFF/declaredloads; update these entries with measured cost. No wait for full-token calendars.",
+    "Epicurus": "Actual LAT8 mainword/control arrival and finite batch cadence.",
+    "Nash": "Actual accepted local-parity request/profile, ordered capture and owner terminal/generation; no allocator or ownership redesign.",
+    "parent": "Actual cfg/activation/root accepted edges, source-call deadlines and exposed dependence."
+  },
+  "new_RTL_or_remote_job_launched": false,
+  "old_failed_TC_and_S58_records_unchanged": true,
+  "own_fulltile_or_die_PR_gates": [
+    "Native CE/address/ready/backpressure or prelaunch credit admission for nonstallable field",
+    "Exact mainword272 plus2inline/8sidecar check order adapter and authenticated good/corrected/poison terminal",
+    "Accepted cfg72/ECC input fence, activation beats, root108 capture and ordered retire",
+    "Source-matched decoder/capture/header placement, per-edge endpoint lanes/cuts/OBS/PG/CTS and clock domains",
+    "Measured SSsetup/FFhold and latency/II for complete connected local path"
+  ],
+  "schema": "opentallas.dsrom.PAR2.minimal-positive-context.v1",
+  "source_pins": {
+    "results/uarch/dsrom_PAR2_minimal_context_admission_20261002/inputs/context.json": "04bcf609976e634b3808eadf5ba5b5c5403ecef7576a99f4dc5fdc48e8bfc44a",
+    "results/uarch/dsrom_PAR2_minimal_context_admission_20261002/inputs/decoder.sv": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795",
+    "results/uarch/dsrom_PAR2_minimal_context_admission_20261002/inputs/physical.json": "06ad57655d8720f3518a2d449eaf1bdf7a4529d6096e65f556c6866ef314418c",
+    "results/uarch/dsrom_PAR2_minimal_context_admission_20261002/inputs/wire_fit.json": "9384848736437edbfee139fa12b62e539dd4ef4f8cd48087da8442579ff614e0"
+  },
+  "source_stream_join_contract": {
+    "completion": "rows_left == 0 && !sm_run && !ld_run",
+    "config_source_last_capture_edge": 26,
+    "config_source_safe_GO_edge": 27,
+    "current_parent_generator": "/tmp/opentallas-dsrom-source-stream-events-20261002/tools/dsrom_source_stream_events.py",
+    "no_acceptance_or_prefetch_overlap_credit_from_static_offered_words": true,
+    "offered_cadence_cycles": 8,
+    "offered_indices_are_not_accepted_cycles": true,
+    "offered_word_bits": 48,
+    "pending_parent_frozen_event_record": true
+  },
+  "target": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "serial_GHz": 0.9,
+    "stream_GHz": 1.2
+  }
+}
