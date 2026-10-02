@@ -1,0 +1,19 @@
+{
+  "clock": "relative stream ticks;1.2GHz target not qualified",
+  "decoder_II": 1,
+  "decoder_lanes": 412,
+  "decoder_topology": "leaf_local",
+  "delivery_II": 1,
+  "delivery_cycles": 1,
+  "delivery_lanes": 128,
+  "delivery_queue_slots": 128,
+  "first_main_codeword_capture_cycles": 2,
+  "latency_status": "PROVISIONAL_ANALYTICAL_NOT_MEASURED",
+  "macro_capture_cycles": 2,
+  "raw_decode_cycles": 2,
+  "read_II": 1,
+  "read_credits_per_leaf": 1,
+  "response_slots": 128,
+  "scope": "Explicit positive service example, not a selected/calibrated hardware schedule; cfg and operand fences precede tick0 and remain separately priced; first main capture is represented for causality and NOT double-added to existing field capture cost",
+  "weight_ECC_cycles": 2
+}
