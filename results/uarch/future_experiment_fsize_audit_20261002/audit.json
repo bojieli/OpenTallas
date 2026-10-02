@@ -1,0 +1,1016 @@
+{
+  "D1_native_r2_baseline_has_finite_wrappers": true,
+  "audited_scope": [
+    "tracked tools/scripts/.github launcher source at frozen main commit",
+    "local known live process and experiment user-unit limits"
+  ],
+  "coordination": [
+    "parent owns new D1 successor; remove compiler/PCH and outer archive FSIZE wrappers, not just service property",
+    "Q runtime owner retain live r11; future successor remove source setrlimit and finite validators",
+    "DSROM future successors remove finite artifact cap while retaining aggregate model budget",
+    "PVE1/new128VM fleet successor owners verify service and nested child/container both unlimited; no new PVE2/3"
+  ],
+  "historical_pinned_files_modified": 0,
+  "live_jobs_restarted": 0,
+  "live_processes": [
+    {
+      "PID": 515879,
+      "comm": "python3",
+      "limit_line": "Max file size             3221225472           3221225472           bytes     ",
+      "live": true
+    },
+    {
+      "PID": 516231,
+      "comm": "Vconnected",
+      "limit_line": "Max file size             3221225472           3221225472           bytes     ",
+      "live": true
+    },
+    {
+      "PID": 2069324,
+      "comm": "openroad",
+      "limit_line": "Max file size             unlimited            unlimited            bytes     ",
+      "live": true
+    },
+    {
+      "PID": 3512826,
+      "comm": "Vtb_w15_tp96_ex",
+      "limit_line": "Max file size             unlimited            unlimited            bytes     ",
+      "live": true
+    }
+  ],
+  "live_units": {
+    "hbm-qwen-connected-runtime-parent-20261002-r11-r1.service": {
+      "ActiveState": "active",
+      "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/hbm-qwen-connected-runtime-parent-20261002-r11-r1.service",
+      "LimitFSIZE": "3221225472",
+      "LimitFSIZESoft": "3221225472",
+      "MainPID": "515879",
+      "MemoryMax": "34359738368",
+      "MemorySwapMax": "0"
+    }
+  },
+  "matched_lines": 121,
+  "matched_source_files": 56,
+  "observed_UTC": "2026-10-02T11:19:26.454425+00:00",
+  "policy": {
+    "aggregate_disk_headroom_monitor_retained": true,
+    "finite_prlimit_fsize_or_shell_or_container_override_allowed": false,
+    "fresh_successor_source_model_GO": "new pins bind policy, limits and preserved aggregate resources before launch",
+    "future_kernel_RLIMIT_FSIZE": [
+      "unlimited",
+      "unlimited"
+    ],
+    "future_systemd_LimitFSIZE": "infinity",
+    "individual_build_artifact_byte_ceiling": null,
+    "memory_swap_CPU_pids_wall_wholekill_preserved": true,
+    "sampled_total_disk_monitor_is_not_hard_storage_quota": true,
+    "stdout_log_stream_budget": "separate explicit bounded logging possible; must not become process-wide artifact FSIZE"
+  },
+  "prior_D1_failure_commit": "2d6e6be11b8b6e02333be8027ed18310c9a78c4e",
+  "remote_scope": "No remote host units or external remote_gate dispatcher executable examined; fleet owners must apply/recheck same policy in fresh successor. No remote admission or execution.",
+  "schema": "FUTURE_EXPERIMENT_FSIZE_AUDIT_V1",
+  "source_commit": "2d6e6be11b8b6e02333be8027ed18310c9a78c4e",
+  "sources": {
+    "tools/check_w17_owned_progress_native_helper.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 12,
+          "source": "    resource.setrlimit(resource.RLIMIT_FSIZE,(1<<20,1<<20))"
+        }
+      ],
+      "sha256": "f570a639d6fe5a52d8105e9a6442b644a000534abfbffcade0d8be6d1e47082e",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/dsrom_l20_scale_capped_runner.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 17,
+          "source": " resource.setrlimit(resource.RLIMIT_FSIZE,(LIMITS['individual_file_bytes'],)*2)"
+        }
+      ],
+      "sha256": "874a0124c015a7a59ab3caea1e81062b5b2c06a9a3f367ae72d58a99b12a688e",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/full_sm_rf_verilator_gate.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 124,
+          "source": "      '--property=RuntimeMaxUSec,LimitFSIZE,OOMPolicy']).splitlines() if '=' in x)"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 129,
+          "source": "    if int(info.get('LimitFSIZE','0'))!=CAPS['per_file_bytes'] or info.get('OOMPolicy')!='stop':"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 164,
+          "source": "    resource.setrlimit(resource.RLIMIT_FSIZE,(CAPS['per_file_bytes'],CAPS['per_file_bytes']))"
+        }
+      ],
+      "sha256": "91e1da08977a0ffb87166ee47977ed977e0790be7a8e45df4ed4dc4d0ac5ef0a",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/qwen_rom_kv_finite_window_gate.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 22,
+          "source": "    resource.setrlimit(resource.RLIMIT_FSIZE, (256 * 1024**2, 256 * 1024**2))"
+        }
+      ],
+      "sha256": "528c5c1cbd4ddf8d55aa2d3c205e96f9a00f2948fac53d0a0015b42a29294a0e",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_dsrom_bmul_rne_primitive.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 136,
+          "source": "    resource.setrlimit(resource.RLIMIT_FSIZE,(8388608,8388608));resource.setrlimit(resource.RLIMIT_CORE,(0,0))"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 207,
+          "source": "    resource.setrlimit(resource.RLIMIT_FSIZE,(8388608,8388608));resource.setrlimit(resource.RLIMIT_CORE,(0,0))"
+        }
+      ],
+      "sha256": "d2433d68cd98a712d1e24872b9376142868d68df18bb395ffd2b27344c913976",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_dsrom_bmul_rne_primitive_r2.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 137,
+          "source": "    resource.setrlimit(resource.RLIMIT_FSIZE,(8388608,8388608));resource.setrlimit(resource.RLIMIT_CORE,(0,0))"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 208,
+          "source": "    resource.setrlimit(resource.RLIMIT_FSIZE,(8388608,8388608));resource.setrlimit(resource.RLIMIT_CORE,(0,0))"
+        }
+      ],
+      "sha256": "76112674c63527e167132b96e8fbe23ceea725e20b8ab2d58769c4aa6f941506",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_dsrom_cadence_admission.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 175,
+          "source": "  resource.setrlimit(resource.RLIMIT_FSIZE,(p['caps']['per_file_hard_bytes'],)*2);resource.setrlimit(resource.RLIMIT_CORE,(0,0))"
+        }
+      ],
+      "sha256": "4024c169a585e3e468b008f85f483dd899fdfa636d11930b99cf58e70a13731e",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_dsrom_upstream_pair_cadence.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 196,
+          "source": "  resource.setrlimit(resource.RLIMIT_FSIZE,(p['caps']['per_file_hard_bytes'],)*2);resource.setrlimit(resource.RLIMIT_CORE,(0,0))"
+        }
+      ],
+      "sha256": "40afc1e5cf5b24c1aee76797fb2a587b59ebabbfa1674c765d618ddf59980144",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_dsrom_upstream_pair_cadence_r2.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 196,
+          "source": "  resource.setrlimit(resource.RLIMIT_FSIZE,(p['caps']['per_file_hard_bytes'],)*2);resource.setrlimit(resource.RLIMIT_CORE,(0,0))"
+        }
+      ],
+      "sha256": "f53f7fd465f71bc1227a49111a65cdafffe0cf306d44c25f0293fbcb0314d71a",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_dsrom_upstream_pair_cadence_r3.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 232,
+          "source": "  resource.setrlimit(resource.RLIMIT_FSIZE,(p['caps']['per_file_hard_bytes'],)*2);resource.setrlimit(resource.RLIMIT_CORE,(0,0))"
+        }
+      ],
+      "sha256": "fd6c3d7ab783b337704b3964c688472c38ea716c02ee9d70343818d0e7d2c148",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_hbm_qwen_cxx_r10.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 47,
+          "source": "    if int(info.get('LimitFSIZE','0'))!=CAPS['per_file_bytes'] or info.get('OOMPolicy')!='stop':raise ValueError('FSIZE/OOM policy mismatch')"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 55,
+          "source": "    info=dict(x.split('=',1) for x in G.query(['systemctl','--user','show',go['unit'],'--property=RuntimeMaxUSec,LimitFSIZE,OOMPolicy']).splitlines() if '=' in x)"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 116,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(CAPS['per_file_bytes'],CAPS['per_file_bytes']))"
+        }
+      ],
+      "sha256": "824f928041998f15eaf6154a20c3bcc4c3d1ad1b671176b60f5ab30abbc063a1",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_hbm_qwen_frontend_r9.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 47,
+          "source": "    if int(info.get('LimitFSIZE','0'))!=CAPS['per_file_bytes'] or info.get('OOMPolicy')!='stop':raise ValueError('FSIZE/OOM policy mismatch')"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 55,
+          "source": "    info=dict(x.split('=',1) for x in G.query(['systemctl','--user','show',go['unit'],'--property=RuntimeMaxUSec,LimitFSIZE,OOMPolicy']).splitlines() if '=' in x)"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 116,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(CAPS['per_file_bytes'],CAPS['per_file_bytes']))"
+        }
+      ],
+      "sha256": "15592d4b1a11c055b64c1fdc61702e9ca00b7db024070726e90ce4df6a6f3ea2",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_hbm_qwen_runtime_r11.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 47,
+          "source": "    if int(info.get('LimitFSIZE','0'))!=CAPS['per_file_bytes'] or info.get('OOMPolicy')!='stop':raise ValueError('FSIZE/OOM policy mismatch')"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 55,
+          "source": "    info=dict(x.split('=',1) for x in G.query(['systemctl','--user','show',go['unit'],'--property=RuntimeMaxUSec,LimitFSIZE,OOMPolicy']).splitlines() if '=' in x)"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 118,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(CAPS['per_file_bytes'],CAPS['per_file_bytes']))"
+        }
+      ],
+      "sha256": "dde5542a3ca60be332f63f609efad0cc714e6f707c924fa38668bdf4d88a8b68",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_hbm_rf_connected_calibration_r6.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 49,
+          "source": "    if int(info.get('LimitFSIZE','0'))!=CAPS['per_file_bytes'] or info.get('OOMPolicy')!='stop':raise ValueError('FSIZE/OOM policy mismatch')"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 57,
+          "source": "    info=dict(x.split('=',1) for x in G.query(['systemctl','--user','show',go['unit'],'--property=RuntimeMaxUSec,LimitFSIZE,OOMPolicy']).splitlines() if '=' in x)"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 114,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(CAPS['per_file_bytes'],CAPS['per_file_bytes']))"
+        }
+      ],
+      "sha256": "e66e5009f6e17a7f4895656a8d7b41ccd1ae0be0fdd9dc336cd9feb6de66ed89",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_hbm_rf_connected_campaign_r4.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 27,
+          "source": "    if int(info.get('LimitFSIZE','0'))!=CAPS['per_file_bytes'] or info.get('OOMPolicy')!='stop':raise ValueError('FSIZE/OOM policy mismatch')"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 35,
+          "source": "    info=dict(x.split('=',1) for x in G.query(['systemctl','--user','show',go['unit'],'--property=RuntimeMaxUSec,LimitFSIZE,OOMPolicy']).splitlines() if '=' in x)"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 91,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(CAPS['per_file_bytes'],CAPS['per_file_bytes']))"
+        }
+      ],
+      "sha256": "6ddf6cb10a292b24e609354a4b580238383bf4b1e6b03c1b8c18b1385005a41a",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_hbm_rf_connected_gate.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 27,
+          "source": "    if int(info.get('LimitFSIZE','0'))!=CAPS['per_file_bytes'] or info.get('OOMPolicy')!='stop':raise ValueError('FSIZE/OOM policy mismatch')"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 35,
+          "source": "    info=dict(x.split('=',1) for x in G.query(['systemctl','--user','show',go['unit'],'--property=RuntimeMaxUSec,LimitFSIZE,OOMPolicy']).splitlines() if '=' in x)"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 91,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(CAPS['per_file_bytes'],CAPS['per_file_bytes']))"
+        }
+      ],
+      "sha256": "945c2b9666b5abf563d3315a12f26c2743d582792fcc5296ca018ddd9e8491e9",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_hbm_rf_connected_reuse_r5.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 33,
+          "source": "    if int(info.get('LimitFSIZE','0'))!=CAPS['per_file_bytes'] or info.get('OOMPolicy')!='stop':raise ValueError('FSIZE/OOM policy mismatch')"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 41,
+          "source": "    info=dict(x.split('=',1) for x in G.query(['systemctl','--user','show',go['unit'],'--property=RuntimeMaxUSec,LimitFSIZE,OOMPolicy']).splitlines() if '=' in x)"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 98,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(CAPS['per_file_bytes'],CAPS['per_file_bytes']))"
+        }
+      ],
+      "sha256": "280901316c2fa117d451ae1c1fff8758f2f3ee33aafe021b036168c2cefc5d51",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_hbm_rf_connected_thin_archive_r7.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 49,
+          "source": "    if int(info.get('LimitFSIZE','0'))!=CAPS['per_file_bytes'] or info.get('OOMPolicy')!='stop':raise ValueError('FSIZE/OOM policy mismatch')"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 57,
+          "source": "    info=dict(x.split('=',1) for x in G.query(['systemctl','--user','show',go['unit'],'--property=RuntimeMaxUSec,LimitFSIZE,OOMPolicy']).splitlines() if '=' in x)"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 114,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(CAPS['per_file_bytes'],CAPS['per_file_bytes']))"
+        }
+      ],
+      "sha256": "ab3d7fb7dab0f0b7487700e1b956ccd10b60695ba522f03e157f6dd4f8f868ec",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_hbm_runtime_calibration_r8.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 50,
+          "source": "    if int(info.get('LimitFSIZE','0'))!=CAPS['per_file_bytes'] or info.get('OOMPolicy')!='stop':raise ValueError('FSIZE/OOM policy mismatch')"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 58,
+          "source": "    info=dict(x.split('=',1) for x in G.query(['systemctl','--user','show',go['unit'],'--property=RuntimeMaxUSec,LimitFSIZE,OOMPolicy']).splitlines() if '=' in x)"
+        },
+        {
+          "kind": "python_limit_mutation",
+          "line": 116,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(CAPS['per_file_bytes'],CAPS['per_file_bytes']))"
+        }
+      ],
+      "sha256": "436881cbd0e02fb52b2548f608685f32cb1f96bdc22e3a146c45e5cb19dc2b7b",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_observer_capped_lint.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 34,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(log_max,log_max))"
+        }
+      ],
+      "sha256": "4da28987e9d5f22b0ff1504eae93e2dcc732fb5e18b8562d5391f6d1060a81d9",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_observer_explicit_width_lint.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 38,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(log_max,log_max))"
+        }
+      ],
+      "sha256": "5edd069d8371580daf17e9c08f7785a13ab687031ea35a6fee21a3a18121c103",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_observer_resource_priced_lint.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 36,
+          "source": "        resource.setrlimit(resource.RLIMIT_FSIZE,(log_max,log_max))"
+        }
+      ],
+      "sha256": "fdd3aa71949eb22567a31786059248db83974411f67c257b80297eade661e4a3",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_w17_D1_parent_frontend.py": {
+      "findings": [
+        {
+          "kind": "wrapper_limit_or_plan",
+          "line": 62,
+          "source": "    argv = ['/usr/bin/prlimit', '--as=' + str(caps['frontend_AS_bytes']), '--fsize=' + str(caps['file_bytes']), '--'] + argv"
+        }
+      ],
+      "sha256": "be56e46c17ef0bf2ec8fd404b58d19e10dbf5345c01357b278941333062f2440",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_w17_D1_parent_native.py": {
+      "findings": [
+        {
+          "kind": "wrapper_limit_or_plan",
+          "line": 76,
+          "source": "        argv = ['/usr/bin/prlimit', '--fsize=' + str(caps['archive_file_bytes'])] + ("
+        }
+      ],
+      "sha256": "e43193acf1d7bf8c23efddfc0745a2e358d66354560fbf187dbf629d244405a8",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_w17_D1_parent_native_r2.py": {
+      "findings": [
+        {
+          "kind": "wrapper_limit_or_plan",
+          "line": 78,
+          "source": "        argv = ['/usr/bin/prlimit', '--fsize=' + str(caps['archive_file_bytes'])] + ("
+        }
+      ],
+      "sha256": "2608594747cc95ac141a3bd09db26fb96e06b9c9e1d688adff0681c0b1b2ef43",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/run_w17_D1_scope_parent_frontend.py": {
+      "findings": [
+        {
+          "kind": "wrapper_limit_or_plan",
+          "line": 63,
+          "source": "    argv = ['/usr/bin/prlimit', '--as=' + str(caps['frontend_AS_bytes']), '--fsize=' + str(caps['file_bytes']), '--'] + argv"
+        }
+      ],
+      "sha256": "e66227d8b3f7340c752176fce1bebf4b4e76c0bdec9d439074d134da2f8cbf5e",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_D1_frozen_caps.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 6,
+          "source": "CAPS={'MemoryMax':12884901888,'MemorySwapMax':0,'CPUAffinity':[0,1],'LimitFSIZE':268435456,'LimitCORE':0,'RuntimeMaxSec':900,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 21,
+          "source": "    fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 31,
+          "source": "    if resource.getrlimit(resource.RLIMIT_FSIZE)!=(CAPS['LimitFSIZE'],CAPS['LimitFSIZE']):raise ValueError('actual FSIZE')"
+        }
+      ],
+      "sha256": "f2591231a1b3632a655017a698cfe41365f690132072096d73853bed2f736fde",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_D1_native_affinity_observability.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 40,
+          "source": "    if sorted(os.sched_getaffinity(0))!=[1,2] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(268435456,268435456):raise ValueError('affinity/filesize')"
+        }
+      ],
+      "sha256": "4f777d56340004694e3a71094b20e91082df1747e6bba500eca142187fb9d755",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_D1_native_observability.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 40,
+          "source": "    if sorted(os.sched_getaffinity(0))!=[0,1] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(268435456,268435456):raise ValueError('affinity/filesize')"
+        }
+      ],
+      "sha256": "08552cb584672e2000af9ffe152accd80cfdd5e42bb97bcc656519081228778f",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_bounded_idx_replay.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 88,
+          "source": "    resource.setrlimit(resource.RLIMIT_FSIZE, (32*1024**2, 32*1024**2))"
+        }
+      ],
+      "sha256": "30f47d0ed5b72c65c47088314c5af4cdeaccbe0c973f7c82b1e3a22b9299b096",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_existing_port_relink_plan.py": {
+      "findings": [
+        {
+          "kind": "wrapper_limit_or_plan",
+          "line": 19,
+          "source": "    return dict(source_commit='4e38326d6f361bc85e660f48c59c355e2bb95274',scope='NATIVE_RELINK_ONLY_EXISTING_PUBLIC_DEBUG_PORTS',image=IMAGE,compiler_argv=argv,input_sha256=pins,input_bytes=sum(x['bytes'] for x in inputs.values()),caps=dict(aggregate_memory_GiB=4,AS_GiB=4,CPU=2,wall_seconds=60,log_MiB=2,owned_container_stop_seconds=5,output_GiB=2,disk_live_reserve_GiB=16,live_RAM_reserve_GiB=24),future_container_argv=['docker','run','--rm','--init','--name','FRESH_OWNED_RELINK_NAME','--network','none','--read-only','--cpus','2','--cpuset-cpus','TWO_ADMITTED_HOST_CPUS','--memory','4g','--memory-swap','4g','--ulimit',f'as={4<<30}:{4<<30}','--ulimit',f'fsize={2<<30}:{2<<30}','--pids-limit','64','--tmpfs','/tmp:rw,size=256m','--user','HOST_UID:HOST_GID','--volume','VERIFIED_INPUT_BUNDLE:/inputs:ro','--volume','FRESH_OUTPUT:/output:rw',IMAGE]+argv,runtime_allowed=False,full_frontend_runs=0,owner_cancellation_selected=False,qualified_provider_counts_available=False,execution_allowed=False,supervisor_PID=None,output_handle=None,prerequisites=['fresh independent GO binds planSHA,input manifest,image and native-relink-only scope','verified transport of only enrolled inputs into fresh isolated source-bound bundle','fresh host measured admission and job/thread coordination','bounded supervisor stops named container on first failure/cap without retry','actual execution receipt binds compiler/tool,image,source and input hashes; outputbinary SHA after relink only'])"
+        }
+      ],
+      "sha256": "4bb79d423c147c801f28a01858bfc8d285fce9e86892267d6fb525a3590dc20a",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_relink_rlimit_entry.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 17,
+          "source": "    for which, limit in ((resource.RLIMIT_AS, AS_BYTES), (resource.RLIMIT_FSIZE, FILE_BYTES)):"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 25,
+          "source": "                RLIMIT_FSIZE=list(resource.getrlimit(resource.RLIMIT_FSIZE)))"
+        }
+      ],
+      "sha256": "56ec7d8869e87392b0be3492b4d8e6c4655747de4d677f52b56f96340fac8501",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_acceptance_edge_first_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 16,
+          "source": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':720,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 137,
+          "source": " fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 146,
+          "source": " if sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('actual affinity/FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 238,
+          "source": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=720','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "93c34c77f78d55e45b1203cf16c673a454a829bc077c2215fb190d2e3cf5ddd0",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_acceptance_edge_remaining_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 16,
+          "source": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':2250,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 156,
+          "source": " fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 165,
+          "source": " if sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('actual affinity/FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 257,
+          "source": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=2250','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "3d73a4ea4f9325c76fea0dc5df895ca8eb78066435bd0880f384e4d967a82b1c",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_acceptance_edge_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 16,
+          "source": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':4500,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 126,
+          "source": " fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 135,
+          "source": " if sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('actual affinity/FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 227,
+          "source": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=4500','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "91fd06bfab6830072d0602840bbafd5a41f3aea377c7db91e65c6c92623d3556",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_frontend_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 12,
+          "source": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':600,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 95,
+          "source": " fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 104,
+          "source": " if sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('actual affinity/FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 159,
+          "source": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=600','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "8701658515538dfb428ae2e995b6fa4cf336982dced870bdb577aaceb161c95b",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_guard_frontend_reuse.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 22,
+          "source": " for k in ('MemoryMax','MemorySwapMax','LimitFSIZE','LimitCORE','KillMode','KillSignal','OOMPolicy'):"
+        }
+      ],
+      "sha256": "53e35eedc13d50c3232d76984ebed21c6ca0e787a0f6f971f798fcb7f52301f1",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_guard_frontend_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 12,
+          "source": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':600,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 95,
+          "source": " fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 104,
+          "source": " if sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('actual affinity/FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 160,
+          "source": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=600','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "00490de8433db9718fc9c11eeb9220fc322e79b102066b128d89009c37ff9f56",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_guard_reuse_phase_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 15,
+          "source": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':2400,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 116,
+          "source": " fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 125,
+          "source": " if sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('actual affinity/FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 223,
+          "source": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=2400','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "c81b507a08cb93d476e5234844306906aac0c7160020fbf2ef75383e8a26728b",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_join_binding_run.py": {
+      "findings": [
+        {
+          "kind": "systemd_limit_property",
+          "line": 150,
+          "source": " props=['MemoryMax=4294967296','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=268435456','LimitCORE=0','RuntimeMaxSec=180','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "c01ee88a0077f23d2129c73cb1440347615ef23a86dd27a31476c586a2cc1e5c",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_join_run.py": {
+      "findings": [
+        {
+          "kind": "systemd_limit_property",
+          "line": 141,
+          "source": " props=['MemoryMax=4294967296','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=268435456','LimitCORE=0','RuntimeMaxSec=180','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "53616f232e0aec678bd6c8235ddca40dcf4b5dbb35c46fa356881e91106b7ef6",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_resource_phase_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 12,
+          "source": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':2400,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 106,
+          "source": " fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 115,
+          "source": " if sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('actual affinity/FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 206,
+          "source": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=2400','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "5cd70ed1087383a0864689b24e5a7c1d891cb83cccc5f4a00cfed96a4a0dce25",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_resource_proposal.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 29,
+          "source": "  'proposed_caps':{'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'compile_jobs_max':2,'RuntimeMaxSec':2400,'LimitFSIZE':1073741824,'LimitCORE':0,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop','aggregate_generated_output_bytes':8589934592},"
+        }
+      ],
+      "sha256": "df33321b5dfb3e4b02067709cc40a60105716eba3b7a3ecb79caf3e036d823e1",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_cancel_retained_binary_campaign.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 16,
+          "source": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':3600,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 147,
+          "source": " fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 156,
+          "source": " if sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('actual affinity/FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 252,
+          "source": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=3600','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "6ceec5921b0207032616cd5924299ddfb2cbb17bebc4c58b2b6d74961fea2563",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_full27_terminal_review.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 74,
+          "source": "for name,value in {'MemoryMax':'34359738368','MemorySwapMax':'0','LimitFSIZE':'1073741824','RuntimeMaxUSec':'1h','KillMode':'control-group','KillSignal':'9','OOMPolicy':'stop'}.items():assert cap[name]==value"
+        }
+      ],
+      "sha256": "69aacb84cd3a5de26f1a80ebffc8e4fb0bc88639e6f0e4a35bd1f64b8fc79496",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_remaining_archive_replay.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 109,
+          "source": "  need(caps['MemoryMax']=='34359738368' and caps['MemorySwapMax']=='0' and caps['LimitFSIZE']=='1073741824' and caps['CPUAffinity'] in ('30-31','30 31'),'actual resource caps')"
+        }
+      ],
+      "sha256": "2d7139a89f14ead1021cf3d0abd4897cbad2e95beadea7d330d08cdec772b554",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_core_runtime_diagnostic.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 11,
+          "source": "CAPS={'MemoryMax':34359738368,'MemorySwapMax':0,'CPUAffinity':[30,31],'LimitFSIZE':1073741824,'LimitCORE':0,'RuntimeMaxSec':60,'KillMode':'control-group','KillSignal':9,'OOMPolicy':'stop'}"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 49,
+          "source": " raw=subprocess.check_output(['systemctl','--user','show',unit]+['--property='+k for k in ['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']],text=True);got=dict(l.split('=',1) for l in raw.splitlines() if '=' in l)"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 57,
+          "source": " if got['ControlGroup']!=rel or (cg/'memory.max').read_text().strip()!=str(CAPS['MemoryMax']) or (cg/'memory.swap.max').read_text().strip()!='0' or sorted(os.sched_getaffinity(0))!=[30,31] or resource.getrlimit(resource.RLIMIT_FSIZE)!=(1073741824,1073741824):raise ValueError('kernel caps')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 97,
+          "source": "  props=['MemoryMax=34359738368','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=1073741824','LimitCORE=0','RuntimeMaxSec=60','KillMode=control-group','KillSignal=9','OOMPolicy=stop','Nice=10']"
+        }
+      ],
+      "sha256": "b4bb39a6f9fa7c42518b37c7052059bf6774f39daf12473324e470eaee4ef161",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_epoch9_candidate_gate.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 57,
+          "source": "    resource.setrlimit(resource.RLIMIT_FSIZE,(16*1024**2,16*1024**2))"
+        }
+      ],
+      "sha256": "c2f6bec9145ca95da4c510780141a138223d25b7bcee38c46f7156f587605b70",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_epoch9_connected_gate.py": {
+      "findings": [
+        {
+          "kind": "python_limit_mutation",
+          "line": 28,
+          "source": "    resource.setrlimit(resource.RLIMIT_FSIZE,(256*1024**2,256*1024**2))"
+        }
+      ],
+      "sha256": "992a92e3b96d0a9db82600c1a7da1f129179e3355f37a0ccc745c5b5efb88b12",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_epoch9_producer_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 92,
+          "source": "    props=subprocess.check_output(['systemctl','--user','show',unit,'--property=RuntimeMaxUSec','--property=KillMode','--property=KillSignal','--property=MemoryMax','--property=MemorySwapMax','--property=CPUAffinity','--property=LimitFSIZE'],text=True)"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 94,
+          "source": "        actual_affinity=sorted(os.sched_getaffinity(0)),file_limit=list(resource.getrlimit(resource.RLIMIT_FSIZE)),service_properties=props)"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 144,
+          "source": "        '--property=LimitFSIZE=268435456','--property=LimitCORE=0','--property=Nice=10',"
+        }
+      ],
+      "sha256": "c3fd6fbfba77f5cbcac215dc046a907dc4bdca563b099b4d06e29b17ac5cc065",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_qdq8_arithmetic_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 112,
+          "source": "        '--property=CPUAffinity','--property=LimitFSIZE'],text=True)"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 115,
+          "source": "      affinity=sorted(os.sched_getaffinity(0)),file_limit=list(resource.getrlimit(resource.RLIMIT_FSIZE)),"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 215,
+          "source": "      '--property=LimitFSIZE=268435456','--property=LimitCORE=0','--property=Nice=10',"
+        }
+      ],
+      "sha256": "c28097cefc890358bc2898747c592f59ea8a711eac86fb2c3b0d08f8ff88a73c",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_qdq8_connected_run.py": {
+      "findings": [
+        {
+          "kind": "systemd_limit_property",
+          "line": 174,
+          "source": "      '--property=OOMPolicy=kill','--property=LimitFSIZE=268435456','--property=LimitCORE=0','--property=Nice=10',"
+        }
+      ],
+      "sha256": "6849f7f69ccdd7385314b4c08fa4ba961abdff827d69c3824a2074c9588c1665",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_qdq8_connected_startup_run.py": {
+      "findings": [
+        {
+          "kind": "systemd_limit_property",
+          "line": 212,
+          "source": "      '--property=OOMPolicy=kill','--property=LimitFSIZE=268435456','--property=LimitCORE=0','--property=Nice=10',"
+        }
+      ],
+      "sha256": "b5a0e9926d677d48252236bff6e6b9de6db9d5dc7c887b6a07b6b2a3f8d8a3ba",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_recovery_fatal_gate_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 28,
+          "source": "      'LimitFSIZE':268435456,'LimitCORE':0,'RuntimeMaxSec':180,"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 195,
+          "source": "    fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 205,
+          "source": "    if resource.getrlimit(resource.RLIMIT_FSIZE)!=(CAPS['LimitFSIZE'],CAPS['LimitFSIZE']):raise ValueError('actual FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 438,
+          "source": "    props=['MemoryMax=4294967296','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=268435456','LimitCORE=0',"
+        }
+      ],
+      "sha256": "fbec4adaea4c8083c22d79a2805276f93b3271a065ba33a976d372d147a39953",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_recovery_gate_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 23,
+          "source": "      'LimitFSIZE':268435456,'LimitCORE':0,'RuntimeMaxSec':180,"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 180,
+          "source": "    fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 190,
+          "source": "    if resource.getrlimit(resource.RLIMIT_FSIZE)!=(CAPS['LimitFSIZE'],CAPS['LimitFSIZE']):raise ValueError('actual FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 300,
+          "source": "    props=['MemoryMax=4294967296','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=268435456','LimitCORE=0',"
+        }
+      ],
+      "sha256": "9af0b927f1b543c303fb35545174ea7582372110a25faff1a6e060ffdbe10577",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    },
+    "tools/w17_window_recovery_phase_gate_run.py": {
+      "findings": [
+        {
+          "kind": "declaration_or_validation",
+          "line": 26,
+          "source": "      'LimitFSIZE':268435456,'LimitCORE':0,'RuntimeMaxSec':180,"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 187,
+          "source": "    fields=['ControlGroup','MemoryMax','MemorySwapMax','CPUAffinity','LimitFSIZE','LimitCORE','RuntimeMaxUSec','KillMode','KillSignal','OOMPolicy']"
+        },
+        {
+          "kind": "declaration_or_validation",
+          "line": 197,
+          "source": "    if resource.getrlimit(resource.RLIMIT_FSIZE)!=(CAPS['LimitFSIZE'],CAPS['LimitFSIZE']):raise ValueError('actual FSIZE')"
+        },
+        {
+          "kind": "systemd_limit_property",
+          "line": 394,
+          "source": "    props=['MemoryMax=4294967296','MemorySwapMax=0','CPUAffinity=30 31','LimitFSIZE=268435456','LimitCORE=0',"
+        }
+      ],
+      "sha256": "faf6af77b35a9ea2183d68ca1fa97b9297958a5ac16136c89ec69c880bab436b",
+      "successor_action": "add fresh source/model/GO with unlimited FSIZE; do not edit pinned historical runner"
+    }
+  }
+}

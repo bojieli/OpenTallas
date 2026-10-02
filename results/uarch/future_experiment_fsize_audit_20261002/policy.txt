@@ -1,0 +1,40 @@
+FUTURE EXPERIMENT LAUNCH POLICY — user directed,2026-10-02
+Authoritative code helper: tools/experiment_unlimited_fsize_policy.py.
+Source audit frozen at2d6e6be11b8b6e02333be8027ed18310c9a78c4e.
+
+1. Every future service uses LimitFSIZE=infinity. Before compiler/simulator exec,
+   verify both systemd LimitFSIZE/LimitFSIZESoft and kernel soft/hardRLIMIT_FSIZE
+   are unlimited. Inherit unlimited through nested wrappers/container/remotejob.
+   Remove finite Pythonsetrlimit,prlimit--fsize,shellulimit-f,Dockerfsize and model
+   per-artifact ceilings. No cap for PCH,object,archive,binary or trace files.
+2. Preserve each job's aggregate memory/swap,CPU/pids,wall/wholecgroupkill limits
+   and aggregate disk budget/liveheadroom reservation. Account all build/output
+   directories,including copy/PCH/link/archives. Disk polling is sampled, with
+   possible overshoot; it is not a hard quota or per-file cap. Logs may use a
+   separately explicit bounded stream; never set process FSIZE to limit a log.
+3. Existing live jobs finish unchanged. Preserve old source/model/GO/failures;
+   successor owner adds new runner/model/pins/GO under the new policy. No restart
+   or retuning of historical jobs; no global service/delegation/config edits.
+4. Before remote admission verify installed/nested child limits too, not only
+   dispatcherproperties. PVE2/PVE3 remain held for newwork. NewPVE1/128VM jobs
+   still require source/model/GO,actualCPUlease and aggregateheadroom.
+
+Audit:56 sourcefiles/121directFSIZE references (includes declarations/validators,
+not56newactivejobs). Additional model artifact-cap token inventory is separate.
+Local live Qr11 PIDs515879/516231 have3GiBsoft/hardFSIZE; historical/live runner
+unchanged. OpenROAD2069324 andVtb3512826 alreadyunlimitedsoft/hard.
+No remote host units or external remote_gate dispatcher examined; this package
+is tracked launcher-source + local known-live audit, not remote-wide attestation.
+
+Immediate D1 owner action: pinned native r2 draft has finite compiler/PCH wrapper
+AND outer archiveprlimit--fsize; remove both in fresh successor plusserviceFSIZE,
+regeneratecaps/model/tests/GO. MerelyraisingPCHcaporremovingservicecap insufficient.
+Q owner action: future r11successor must remove finite setrlimit/validators; don't
+change its live3GiBjob. DSROM owner: future copies remove finite per_file_hard
+while retaining exact geometry/golden/pins and aggregate output/disk safeguards.
+H3/D2 historical preparation pinned runners unchanged. This helper is available
+for future imports; no historicalrunner is silently made compliant.
+
+5policytestsPASS: nonFSIZElimits preserved, service+kernelsoft/hardchecked,
+finiteprlimit/container/systemdbypassrejected, large5GiBartifactallowedwithin
+12GiBaggregate, aggregate/headroomrefusals, no processlimitmutation. No HDLbuilt.

@@ -1,0 +1,143 @@
+{
+  "files": {
+    "tools/dsrom_l20_scale_capped_runner.py": {
+      "lines": [
+        11,
+        17
+      ],
+      "sha256": "874a0124c015a7a59ab3caea1e81062b5b2c06a9a3f367ae72d58a99b12a688e"
+    },
+    "tools/full_sm_rf_verilator_gate.py": {
+      "lines": [
+        29,
+        129,
+        164
+      ],
+      "sha256": "91e1da08977a0ffb87166ee47977ed977e0790be7a8e45df4ed4dc4d0ac5ef0a"
+    },
+    "tools/model_hbm_qwen_cxx_r10.py": {
+      "lines": [
+        29,
+        30
+      ],
+      "sha256": "c7bbd1460b791930794b18debbe671f4b5ac3bc829668a5688eb5d87d274ad5e"
+    },
+    "tools/prepare_hbm_rf_connected_gate.py": {
+      "lines": [
+        11
+      ],
+      "sha256": "43cb20d0a5c6502345eb5c4d970148217b1fe402cb6bee573bf8cef9ed5a1470"
+    },
+    "tools/run_dsrom_cadence_admission.py": {
+      "lines": [
+        175
+      ],
+      "sha256": "4024c169a585e3e468b008f85f483dd899fdfa636d11930b99cf58e70a13731e"
+    },
+    "tools/run_dsrom_upstream_pair_cadence.py": {
+      "lines": [
+        196
+      ],
+      "sha256": "40afc1e5cf5b24c1aee76797fb2a587b59ebabbfa1674c765d618ddf59980144"
+    },
+    "tools/run_dsrom_upstream_pair_cadence_r2.py": {
+      "lines": [
+        196
+      ],
+      "sha256": "f53f7fd465f71bc1227a49111a65cdafffe0cf306d44c25f0293fbcb0314d71a"
+    },
+    "tools/run_dsrom_upstream_pair_cadence_r3.py": {
+      "lines": [
+        232
+      ],
+      "sha256": "fd6c3d7ab783b337704b3964c688472c38ea716c02ee9d70343818d0e7d2c148"
+    },
+    "tools/run_hbm_qwen_cxx_r10.py": {
+      "lines": [
+        47,
+        116
+      ],
+      "sha256": "824f928041998f15eaf6154a20c3bcc4c3d1ad1b671176b60f5ab30abbc063a1"
+    },
+    "tools/run_hbm_qwen_frontend_r9.py": {
+      "lines": [
+        47,
+        116
+      ],
+      "sha256": "15592d4b1a11c055b64c1fdc61702e9ca00b7db024070726e90ce4df6a6f3ea2"
+    },
+    "tools/run_hbm_qwen_runtime_r11.py": {
+      "lines": [
+        47,
+        118
+      ],
+      "sha256": "dde5542a3ca60be332f63f609efad0cc714e6f707c924fa38668bdf4d88a8b68"
+    },
+    "tools/run_hbm_rf_connected_calibration_r6.py": {
+      "lines": [
+        49,
+        114
+      ],
+      "sha256": "e66e5009f6e17a7f4895656a8d7b41ccd1ae0be0fdd9dc336cd9feb6de66ed89"
+    },
+    "tools/run_hbm_rf_connected_campaign_r4.py": {
+      "lines": [
+        27,
+        91
+      ],
+      "sha256": "6ddf6cb10a292b24e609354a4b580238383bf4b1e6b03c1b8c18b1385005a41a"
+    },
+    "tools/run_hbm_rf_connected_gate.py": {
+      "lines": [
+        27,
+        91
+      ],
+      "sha256": "945c2b9666b5abf563d3315a12f26c2743d582792fcc5296ca018ddd9e8491e9"
+    },
+    "tools/run_hbm_rf_connected_reuse_r5.py": {
+      "lines": [
+        33,
+        98
+      ],
+      "sha256": "280901316c2fa117d451ae1c1fff8758f2f3ee33aafe021b036168c2cefc5d51"
+    },
+    "tools/run_hbm_rf_connected_thin_archive_r7.py": {
+      "lines": [
+        49,
+        114
+      ],
+      "sha256": "ab3d7fb7dab0f0b7487700e1b956ccd10b60695ba522f03e157f6dd4f8f868ec"
+    },
+    "tools/run_hbm_runtime_calibration_r8.py": {
+      "lines": [
+        50,
+        116
+      ],
+      "sha256": "436881cbd0e02fb52b2548f608685f32cb1f96bdc22e3a146c45e5cb19dc2b7b"
+    },
+    "tools/run_w17_D1_parent_native.py": {
+      "lines": [
+        66,
+        76
+      ],
+      "sha256": "e43193acf1d7bf8c23efddfc0745a2e358d66354560fbf187dbf629d244405a8"
+    },
+    "tools/run_w17_D1_parent_native_r2.py": {
+      "lines": [
+        65,
+        67,
+        78
+      ],
+      "sha256": "2608594747cc95ac141a3bd09db26fb96e06b9c9e1d688adff0681c0b1b2ef43"
+    },
+    "tools/w17_owner_progress_resource_r2.py": {
+      "lines": [
+        64
+      ],
+      "sha256": "ccc37e8dfad82c0cfe866c2e613760086a4631449da8ce91a35b2d4adbeeeac7"
+    }
+  },
+  "matched_lines": 36,
+  "scope": "additional literal artifact-cap fields in model/plans/launchers; token census, not proof every hit is applied. New owner successor must remove artifact ceilings and regenerate model pins.",
+  "source_commit": "2d6e6be11b8b6e02333be8027ed18310c9a78c4e"
+}
