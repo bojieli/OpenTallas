@@ -1,0 +1,21 @@
+{
+  "R49": "dd28d3f625bac35e811ab98f4375cf6a9f7c8375",
+  "cause": "R49 adds52164DBU width; old4320DBU moat leaves47844DBU intrusion into priorcontrol rectangle",
+  "originals_not_modified": true,
+  "per_shard_overlap_bbox_DBU": {
+    "0": [
+      11136312,
+      15567120,
+      11184156,
+      15739920
+    ],
+    "1": [
+      11136312,
+      15567120,
+      11184156,
+      15705360
+    ]
+  },
+  "source_home_commit": "115766782",
+  "verdict": "FAIL_OLD_CONTROL_RECTANGLE_OVERLAP"
+}

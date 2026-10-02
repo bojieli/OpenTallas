@@ -1,0 +1,49 @@
+{
+  "artifacts": [
+    {
+      "byte_identical": true,
+      "bytes": 1042974,
+      "cold_sha256": "67422d0104f488858cfd497b3515bd081c2824389514e43d17b0ea7ab72f3449",
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/model.json",
+      "sha256": "67422d0104f488858cfd497b3515bd081c2824389514e43d17b0ea7ab72f3449"
+    },
+    {
+      "byte_identical": true,
+      "bytes": 1538541,
+      "cold_sha256": "cd5aebfd7effea93ab83f8264cd339797550a7a4e886726c47e992eb6c501ff0",
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/shard0_cells.jsonl.gz",
+      "sha256": "cd5aebfd7effea93ab83f8264cd339797550a7a4e886726c47e992eb6c501ff0"
+    },
+    {
+      "byte_identical": true,
+      "bytes": 1231173,
+      "cold_sha256": "3312bd57a32a36f9a5e9735582ad51ecec48aac34ea4738c51d4e0a8a93b42c4",
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/shard1_cells.jsonl.gz",
+      "sha256": "3312bd57a32a36f9a5e9735582ad51ecec48aac34ea4738c51d4e0a8a93b42c4"
+    },
+    {
+      "byte_identical": true,
+      "bytes": 1254696,
+      "cold_sha256": "c196bb327cc1c4436ae61164d5a6aa2f45729848f62ee427dae23318e54fa90a",
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/shard0_clock_nets.jsonl.gz",
+      "sha256": "c196bb327cc1c4436ae61164d5a6aa2f45729848f62ee427dae23318e54fa90a"
+    },
+    {
+      "byte_identical": true,
+      "bytes": 1002578,
+      "cold_sha256": "4da10810342a87e223655e89320f3e74a86e2ab89339d97438c2c778625cab73",
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/shard1_clock_nets.jsonl.gz",
+      "sha256": "4da10810342a87e223655e89320f3e74a86e2ab89339d97438c2c778625cab73"
+    },
+    {
+      "byte_identical": true,
+      "bytes": 601056,
+      "cold_sha256": "ab576968dddf57dacdd632b3e561dd2dca101c37b1e94239711cc802404c7b04",
+      "path": "results/uarch/dsrom_R49_raw_physical_union_20261002/selector_core_clock_cells.jsonl.gz",
+      "sha256": "ab576968dddf57dacdd632b3e561dd2dca101c37b1e94239711cc802404c7b04"
+    }
+  ],
+  "cold_workspace": "/tmp/dsrom-R49-selector-clock-final-cold-rg5oemke",
+  "command": "python3 tools/dsrom_R49_raw_physical_union.py",
+  "tool_and_sources_only": true
+}
