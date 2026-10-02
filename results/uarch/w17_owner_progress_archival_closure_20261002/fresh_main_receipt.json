@@ -1,0 +1,42 @@
+{
+  "verdict": "PASS_FRESH_MAIN_DERIVED_STANDALONE_SOURCE_INPUT_CLOSURE",
+  "base_commit": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "worktree": "/tmp/w17-owner-progress-archival-minimal",
+  "tested_head": "80e8fbd3db422392711a7e4adf902d0212d1ee35",
+  "intake_chain": [
+    "f69cd549c59ee35f56d6c71282f62c98398bd33f",
+    "8f9bf400ecb8122b1bb613bcf6448e877480cf14",
+    "ca8e33cd8a0572018ae86fc5931ff6acecf59951",
+    "11d9567c87f568d15a4301304c81affa329dc486"
+  ],
+  "not_intaken": [
+    "4fe9e984c6a573cb82e1f97da96bc544abe01c66",
+    "e1bf59c24216c1cbc9df8f3588592518d90a70aa",
+    "323193c2c794bbeb48da9b06d03a5304f6109568",
+    "a13e7aeaf5b82c48fbbc2f70987e7a63c8ad7820"
+  ],
+  "git_tree_original_input_paths_absent": [
+    "results/rtl/w17_owner_progress_watchdog_20261002/attempt2_resource_FAIL/active_stage.json",
+    "rtl/test/w17_owner_progress_watchdog",
+    "results/uarch/w17_PC24_terminal_admission_20261002/record.json"
+  ],
+  "commands": [
+    "PYTHONPATH=tools python3 -m pytest -p w17_owner_progress_archival_pytest -q tests/test_w17_D1_PC24_inputs.py tests/test_w17_owner_progress_resource_r2.py tests/test_w17_owner_progress_archival_closure.py",
+    "PYTHONPATH=tools python3 tools/w17_owner_progress_archival_replay.py"
+  ],
+  "tests_PASS": 16,
+  "historical_records_all_fields_identical": true,
+  "clean_tested_tree": true,
+  "source_inputs": "282 exact-byte archival inputs,6126659bytes; only files actually read for numerical calendar/profile/source-cone reanalysis. No generated CXX files, simulator binary or payload checkpoint.",
+  "runtime_mapping": "Adapter ROOT maps to failed_root archive; D1 exact git-show requests map to two pinned original-source bytes; r2 measured source filenames map to profile_sources; model helpers/journals use archived owner tree. pytest plugin is explicit/opt-in. Old tools and records unchanged.",
+  "ca8_limit": "ca8 alone still required original ROOT inputs; closed by11d. Prior full-prerequisite checkout PASS did not establish standalone closure.",
+  "review_setup_refusals_preserved": "Initial prerequisite checkout test started before checkout completed, cherry-pick refused local changes; subsequent attempt reported pending cherry-pick sequence. Both were setup-only, no compiler or valid model test. Fresh standalone check above uses separate tree and4commitchain.",
+  "new_compiles": 0,
+  "new_simulations": 0,
+  "no_old_fail_rewrite": true,
+  "artifact_hashes": {
+    "fresh_main_tests.log": "ecf57d762b443151696ef4727347520d0d5715719bac1e0cd93caddf627ffa61",
+    "fresh_main_replay.json": "6e0c9fbd64b65f0e7a878bc3fa860d4ccd97e5a62c6779d5b49b79f6ca81359f",
+    "fresh_main_intake.log": "d42db7d6d2cea1fa42a433a93b94f55de1c928ece01388a23b5bcca206ebdf02"
+  }
+}
