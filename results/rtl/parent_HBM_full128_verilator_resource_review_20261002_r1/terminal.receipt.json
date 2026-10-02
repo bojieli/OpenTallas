@@ -1,0 +1,99 @@
+{
+  "observation": {
+    "time_utc": "2026-10-02T04:46:45.501224+00:00",
+    "monitor_pid": 3578906,
+    "service": "hbm-full128-verilator-parent-20261002-r1.service",
+    "parent_go": "0fc076647",
+    "expected_parent_pid": 3568191,
+    "properties": {
+      "RuntimeMaxUSec": "infinity",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStartTimestamp": "n/a",
+      "ExecMainExitTimestamp": "n/a",
+      "ExecMainCode": "0",
+      "ExecMainStatus": "0",
+      "ControlGroup": "",
+      "MemoryCurrent": "[not set]",
+      "CPUUsageNSec": "[not set]",
+      "AllowedCPUs": "",
+      "MemoryMax": "infinity",
+      "MemorySwapMax": "infinity",
+      "CPUAffinity": "",
+      "LoadState": "not-found",
+      "ActiveState": "inactive",
+      "SubState": "dead",
+      "InvocationID": ""
+    },
+    "pinned_named_cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/hbm-full128-verilator-parent-20261002-r1.service",
+    "cgroup": {},
+    "last_named_cgroup_counters": {
+      "memory.current": "913690624",
+      "memory.peak": "3976130560",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+      "memory.events.local": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+      "memory.max": "8589934592",
+      "memory.swap.current": "0",
+      "memory.swap.max": "0",
+      "memory.swap.events": "high 0\nmax 0\nfail 0",
+      "cpu.stat": "usage_usec 534963591\nuser_usec 471382550\nsystem_usec 63581041\ncore_sched.force_idle_usec 0",
+      "cpu.max": "UNAVAILABLE",
+      "cpuset.cpus.effective": "UNAVAILABLE",
+      "cgroup.events": "populated 1\nfrozen 0"
+    },
+    "observed_memory_peak_bytes": 3976130560,
+    "cpu_usage_nsec": 534963591000,
+    "live_tracked_processes": [],
+    "effective_pid_affinities": {},
+    "service_terminal": true,
+    "terminal_first_observed": "2026-10-02T04:46:45.501224+00:00",
+    "drained": true,
+    "empty_or_root_cgroup_reads": 0,
+    "job_changes": 0,
+    "engineering_verdict": "NOT_INFERRED_FROM_SERVICE_EXIT"
+  },
+  "output_files": [
+    {
+      "path": "/tmp/full-sm-rf-verilator-parent-20261002-r1/storage_compile.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/full-sm-rf-verilator-parent-20261002-r1/actual_sim.log",
+      "size": 379,
+      "sha256": "c1033d386839370e77b9136496867d3e4c46b46c23f1071ed0b11f49958bf383"
+    },
+    {
+      "path": "/tmp/full-sm-rf-verilator-parent-20261002-r1/storage_sim.log",
+      "size": 92,
+      "sha256": "d2f6afa565c892e2588c43cdab50ca2152920e64a18210ae4d950923b0088015"
+    },
+    {
+      "path": "/tmp/full-sm-rf-verilator-parent-20261002-r1/verdict.json",
+      "size": 6003,
+      "sha256": "882ec4cc931c3bea6bac98da4c33d236beca12e2ae21f631e4b11f581fc17d22"
+    },
+    {
+      "path": "/tmp/full-sm-rf-verilator-parent-20261002-r1/proposal.json",
+      "size": 20652,
+      "sha256": "2612a484661bec171e90907c3c1ab21e61d60019aa19e4c3c1c8f7987153ee79"
+    },
+    {
+      "path": "/tmp/full-sm-rf-verilator-parent-20261002-r1/verilate.log",
+      "size": 3520,
+      "sha256": "822aac6b9d10c6bf273a6ac7c502225868bd4d8aa5c21aa09e8f2c923da8085d"
+    },
+    {
+      "path": "/tmp/full-sm-rf-verilator-parent-20261002-r1/cxx_build.log",
+      "size": 701712,
+      "sha256": "6986ddeaefda77b1b3c3d42f628acc2c6c9ddb4393375c5ce4243b147c12bed3"
+    },
+    {
+      "path": "/tmp/full-sm-rf-verilator-parent-20261002-r1/GO.json",
+      "size": 865,
+      "sha256": "b5a4d45ad7159ede878807fe569e3c65615859d2892bdd0f228869ea34c8a00b"
+    }
+  ],
+  "journal_path": "/tmp/claude-1000/queue/hbm-full128-monitor-20261002-r1/terminal.journal.jsonl",
+  "result_collection": "Logs/JSON inventory retained; engineering outcome must follow actual job result"
+}

@@ -1,0 +1,38 @@
+{
+  "execution_allowed": true,
+  "execution_tree_HEAD": "9f18c92851b818a677a4de02c47004bf429cb523",
+  "fresh_local_resource_and_thread_admission_required": true,
+  "host_CPU_ids": [
+    26,
+    27
+  ],
+  "image_binding": {
+    "expected_OCI_manifest": "sha256:760104a7f8f31f970fb3c1ff5bf91cfa0cb79ace21ada4454b157421df715555",
+    "expected_config": "sha256:d7d4a8ff33fe73c006535591233e4af478ce5ea2b55ebea30c3dbbf133f6bae2",
+    "expected_local_store": "overlay2",
+    "identity_review_commit": "249a15df4e9e2cb25b48c66b402a77968990924f",
+    "immutable_original_plan_sha256": "04f0cb920d4e77ee0d6caae09253ed981c302ff6b2bdee70a80b6c3ac8e1013f",
+    "loaded_local_ID": "sha256:d7d4a8ff33fe73c006535591233e4af478ce5ea2b55ebea30c3dbbf133f6bae2",
+    "ordered_uncompressed_diffIDs": [
+      "sha256:ea16cace89338c84eb6bcb91a7efdfcae6838fff359efe951858227436486c34",
+      "sha256:c05fd5e01a0f09eb98ac845bd8a102221042cb085a2c6910b41dafbaac6e515b",
+      "sha256:1aa7bc847c2b89bfa2edc4ff5d2d9a9f4c7051f6a04bf0bf8fc5be48387dcde5"
+    ],
+    "raw_config_bytes": 2341,
+    "retagging_allowed": false
+  },
+  "old_GO_reuse": false,
+  "plan_sha256": "74caf6c563e6f7480a7774855f88d63af8d1b064212b3eec2442066dfc59fc7c",
+  "preferred_host": "local",
+  "runtime_allowed": false,
+  "schema": "w17.existing_public_ports.rlimit_relink_GO.v1",
+  "scope": "NATIVE_RELINK_ONLY",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "tool_sha256": {
+    "tools/check_w17_pinned_image_identity.py": "27f2a13c8023193b1164e1a77db5b078d8397fb599026fc54ef38887f95b0a5f",
+    "tools/run_w17_rlimit_bound_native_relink.py": "1edec361dc49180b53d087a8b52601ff4e6f9cdb8d32372b3594f5ef2600d913",
+    "tools/w17_manifest_bound_relink_plan.py": "d496f80afb3278001c22829fb28a695f3a5b29c387f1b8ee100a13d076dd3f02",
+    "tools/w17_relink_rlimit_entry.py": "56ec7d8869e87392b0be3492b4d8e6c4655747de4d677f52b56f96340fac8501",
+    "tools/w17_rlimit_bound_relink_plan.py": "ac3e6dc0abecc2d18d1e216a57fbc617624f0d833f2071445c16f54a93a91eb5"
+  }
+}
