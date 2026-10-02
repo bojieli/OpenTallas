@@ -286,13 +286,17 @@ def calendar(sectors, start=0):
                   REFI_PS=3900000, RFC_PS=350000, RL_PS=25000)
     bank = BankCalendar(timing, 1000)
     now = Fraction(start); max_tag = 0
-    for serial, sector in enumerate(sectors):
+    reads = writes = 0
+    for serial, item in enumerate(sectors):
+        sector, write = item if isinstance(item, tuple) else (item, False)
+        if write: writes += 1
+        else: reads += 1
         # Source preflight maximum35CORE edges for16entry freeze/scan;
         # serialization uses one sector, so there is no head swapping.
         accepted = crossed(now+42*Fraction(2500,3), 1000)
-        req = Beat(sector, serial%4096, 0, 0, accepted_ps=accepted)
+        req = Beat(sector, serial%4096, 0, 0, write=write, accepted_ps=accepted)
         column = bank.plan(req, accepted+35000)
-        due = column+timing['RL_PS']
+        due = column+(8000 if write else timing['RL_PS'])
         # Seven arb + acceptance +12 lookup +held acceptance + credit edge.
         now = crossed(due+22000+42*Fraction(2500,3), Fraction(2500,3))
         now += 2*Fraction(2500,3) # registered fill + macro visibility
@@ -300,7 +304,7 @@ def calendar(sectors, start=0):
         max_tag = max(max_tag, 1)
     from qwen_hbm_controller_calendar_r2 import audit_bank_events
     audit = audit_bank_events(bank.events,timing)
-    return dict(command_audit=audit,end_ps=str(now), cycles_1p2GHz=-(-now//Fraction(2500,3)),
+    return dict(read_sectors=reads,write_sectors=writes,command_audit=audit,end_ps=str(now), cycles_1p2GHz=-(-now//Fraction(2500,3)),
                 max_live_sectors=max_tag, banks=32, pseudo_channels=32,
                 dram_events=len(bank.events), timing_source_sha256=hashlib.sha256(
                     subprocess.check_output(['git','show',
@@ -318,14 +322,39 @@ def report(full_calendar=False):
     read = int(reconciliation['byte_ledger']['existing_fp8_kv_read_bytes_per_TP4_die'])
     assert read == 36*4194304
     # 128B striping gives equal131072-sector layer /4 stack extents.
-    rows = []
+    rows = []; writer_rows = []
+    model_point = None
     if full_calendar:
+        import uarch_model as U
+        model_point = U.qwen_tp_point(4,6144,'ucie_measured',clock_hz=1.2e9,ctx=8192,su_width=64)
+        homes = Homes()
         for layer in range(36):
-            # Per-kind offsets follow Homes; stack-local logical contiguous
-            # K then V intervals,512KiB each per stack per layer.
+            owner = Owner(0,0,layer,0)
+            # Explicit conservative layer-hop K drain, source raw byte layout.
+            masks = {}
+            for kind in ('K','V'):
+                for head in range(2):
+                    for dim in range(128):
+                        key, offset = homes.byte(owner,kind,head,8191,dim)
+                        masks[key] = masks.get(key,0) | (1<<offset)
+            stacks = []
+            for stack in range(4):
+                transactions = []
+                for key, mask in sorted(masks.items()):
+                    if key[2] == stack:
+                        if mask != 0xffffffff: transactions.append((key[3],False))
+                        transactions.append((key[3],True))
+                stacks.append(calendar(transactions))
+            writer_rows.append(dict(layer=layer,stacks=stacks,
+                cycles_1p2GHz=max(int(x['cycles_1p2GHz']) for x in stacks)))
+            # Symmetric128B striping, identical read demands on four stacks.
             sectors = list(range(layer*16384, (layer+1)*16384))
             sectors += list(range(36*16384+layer*16384,36*16384+(layer+1)*16384))
             rows.append(dict(layer=layer, **calendar(sectors)))
+    delivery = (sum(int(r['cycles_1p2GHz']) for r in rows)+
+                sum(int(r['cycles_1p2GHz']) for r in writer_rows)) if rows else None
+    composition = compose(model_point['cycles'],delivery,
+        read/(4*900000000000)*1.2e9) if model_point else None
     return dict(schema='opentallas.qwen-rom-persistent-kv-g0.v1',
       status='CANDIDATE_FUNCTIONAL_CONTRACT_G0_BLOCKED',adoption=False,physical_build_ready=False,
       base=BASE,source_sha256=pins,
@@ -375,8 +404,14 @@ def report(full_calendar=False):
         model_entrypoint='tools.qwen_rom_persistent_kv_g0.compose; no default model or rate modified'),
       analytical_calendar=dict(mode='cold full8K layer reservations, one live sector/stack; four stacks parallel, layers sequential; not production-prefetch proof',
         guard_scope='source DRAM timing with explicit source preflight35CORE scan maximum and candidate22 return/owner edges plus source42FAST+3destination CDC in three directions; no claimed RTL upper bound',
-        layers=rows,per_token_delivery_cycles=sum(int(r['cycles_1p2GHz']) for r in rows) if rows else None,
-        write_delivery_cycles=None,compute_cycles=None,per_user_token_latency=None),
+        layers=rows,writer_layers=writer_rows,per_token_delivery_cycles=delivery,
+        write_delivery_cycles=sum(int(r['cycles_1p2GHz']) for r in writer_rows) if writer_rows else None,
+        cold_layer_bank_state=True,
+        compute_cycles=model_point['cycles'] if model_point else None,
+        composition=composition,
+        analytical_token_latency_seconds=composition['token_cycles']/1.2e9 if composition else None,
+        per_user_token_latency=None,
+        model_scope='qwen_tp_point TP4/G6144/SU64 ucie_measured at assumed1.2GHz; arithmetic/wire/runtime identity not admitted; conservative analytical comparison only'),
       actual_payload_provider='Delivery.read_sector callback must read actual producer-owned persistent state; missing bytes raise. No synthetic final qualification.',
       handoff=dict(Euclid='consume Homes.tile and masked fill tuples only after owner ACK/reader lease/visibility contract; keep tilecontrol/resettiming untouched',
         Maxwell='compose finite service once, bind actual dispatch/release trace and all write/RMW costs; qualify scheduling guard then overlap',
@@ -384,7 +419,7 @@ def report(full_calendar=False):
       blockers=['actual ROM FP8 state provider and emitted-stage owner binding not connected',
         'r14 tag freed on owned acceptance before consumer reverse credit; adapter must retain identity and quarantine tag',
         'r14 read reverse credit validation missing; no inherited runtime PASS',
-        'calendar conservative scan/return reservations not measured service; write/drain and full-program releases unresolved',
+        'calendar conservative scan/return reservations not measured service; full-program releases and runtime arithmetic identity unresolved',
         'complete service area, finite port arbitration, hub routing-layer capacity and current slot placement unresolved',
         'contextual SS60ps/FF25ps at source-matched1GHz service and1.2GHz fill unresolved'],
       heavy_jobs_launched=0,RTL_PnR_launched=0)
