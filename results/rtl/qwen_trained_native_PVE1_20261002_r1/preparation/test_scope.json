@@ -1,0 +1,10 @@
+{
+  "passed": 42,
+  "initial_result": "41PASS1FAIL missingselectedversionedartifact",
+  "targeted_rerun": "1PASS exactmissingartifact restoredfrom870c5",
+  "arithmetic_mutated": false,
+  "reduced_fixtures_only": true,
+  "full_checkpoint_execution": false,
+  "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+  "checkout_error": "checkout-index --all materialized excluded historical files; only owncheckout command stopped and reproduced skippedindexfiles removed. Originalconverter untouched and remainedactive. Explicit selected index stdin plus manifestdependencies restored clean checkout."
+}
