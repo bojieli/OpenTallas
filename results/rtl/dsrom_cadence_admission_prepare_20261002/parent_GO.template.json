@@ -1,0 +1,46 @@
+{
+  "GO": "PENDING_REVIEW_NOT_AUTHORIZATION",
+  "L0_phase_ledger_sha256": "a02959a8e9a7d355ed2458df8790ae68c7609503bbd2314f8414e3d54062d1fb",
+  "L20_phase_ledger_sha256": "REQUIRED_PENDING_OWNER_INPUT",
+  "Maxwell_composed_calendar_sha256": "REQUIRED_PENDING_OWNER_JOIN",
+  "compile_authorized": false,
+  "generated_package_sha256": "0578175de330ac29d35d6f4bd130694915b2515371196d82c321630f198da93b",
+  "limits": {
+    "affinity_log_hard_bytes": 16777216,
+    "automatic_retries": 0,
+    "build_log_hard_bytes": 16777216,
+    "build_summed_seconds": 600,
+    "cpu_affinity": [
+      0,
+      1
+    ],
+    "cpu_bound_policy": "KERNEL_INHERITED_TASK_AFFINITY_CPUS_0_1",
+    "cpu_quota_enforced": false,
+    "cpu_quota_property_advisory_only": true,
+    "cpu_quota_property_percent": 200,
+    "disk_is_hard_aggregate_quota": false,
+    "disk_poll_seconds": 0.1,
+    "fallback": false,
+    "launcher_log_hard_bytes": 1048576,
+    "memory_max_bytes": 4294967296,
+    "memory_swap_max_bytes": 0,
+    "output_bound": "stored stream bytes hard bounded; inherited RLIMIT_FSIZE128MiB/core0. Combined generated/output disk and file counts sampled at0.1s, may overshoot before whole kill; not hard aggregate disk quota.",
+    "per_file_hard_bytes": 134217728,
+    "sampled_aggregate_disk_bytes": 2147483648,
+    "sampled_aggregate_files": 4096,
+    "simulate_log_hard_bytes": 8388608,
+    "simulate_summed_seconds": 60,
+    "task_affinity_verification": "Check every enumerated live cgroup thread including descendants before each launch, after each phase and every0.1s. Main affinity exactly0/1; each live task nonempty subset0/1. Explicit direct-child inherited affinity verification. Vanished short-lived tasks recorded; not falsely claimed sampled. Kernel restriction comes from inherited per-task scheduler masks, not cgroupCPUQuota. No automatic fallback.",
+    "whole_cgroup_seconds": 660,
+    "whole_kill": "cgroup.kill=1, in finally even if receipt fails; independent phase and whole timers; service RuntimeMaxSec660 and KillSignalSIGKILL/KillModecontrolgroup"
+  },
+  "model_sha256": "8420368d752e206e012d12d5431f5a86c437794975491262298ad6c197a0edcd",
+  "prepared_commit": "REPLACE_WITH_REVIEWED_FULL_SOURCE_COMMIT",
+  "profiles": [
+    "existing_fast8"
+  ],
+  "runner_commit": "REQUIRED_NOT_PREPARED_YET",
+  "runner_sha256": "REQUIRED",
+  "sourceplan_sha256": "bf6e1db8ce516c592737161c9e1dc95b40748e1e7925d784c67ea5132b7d973d",
+  "stale_SMIN5_admission": "MUST_REFUSE_BEFORE_CLAIM_SERVICE_COMPILER"
+}
