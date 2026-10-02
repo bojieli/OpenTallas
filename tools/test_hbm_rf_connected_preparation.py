@@ -30,7 +30,7 @@ def synthetic(q=0):
 
 class Prepared(unittest.TestCase):
     def test_original_pins_and_manifest_regeneration(self):
-        self.assertEqual(P.prepare(),json.loads((P.OUT/'prepared_gate.json').read_text()))
+        self.assertEqual(P.prepare(),json.loads((P.OUT/P.PROPOSAL).read_text()))
     def test_native_matrix_connections_unchanged(self):
         parent=P.blob('e6cac61a773b81075e924d911c9e354b08ab4c7a','rtl/test/hbm_connected_service/tb_connected_matrix_service.sv').decode()
         new=(R/'rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv').read_text()
