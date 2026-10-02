@@ -1,0 +1,42 @@
+{
+  "inputs": {
+    "decoder.sv": {
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "rtl/dft/ot_rom_secded_dec.sv",
+      "sha256": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795"
+    },
+    "demand_profiles.json.gz": {
+      "commit": "13cc65fb416b9d0cbe5f94c50379c9a54e24222f",
+      "path": "results/uarch/dsrom_par2_raw_parity_replica_20261002/inputs/demand_profiles.json.gz",
+      "sha256": "bb79da126bbf3c6407aeab39b4f97b9f2070d0248d2d27e0d4b5c3dbe0a637d1"
+    },
+    "ecc.py": {
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "tools/mem_compiler/ecc.py",
+      "sha256": "ed2d874e102f9b08ee951faf583d12c142e77cfd5e3e1a2511af1430e3f10cdf"
+    },
+    "finite_model.json": {
+      "commit": "13cc65fb416b9d0cbe5f94c50379c9a54e24222f",
+      "path": "results/uarch/dsrom_par2_raw_parity_replica_20261002/model-r1.json",
+      "sha256": "51bbe59986965396e8e11f45470d16c3ff0c5e72f41eb119263afd3a3270e146"
+    },
+    "legacy_payload_packer.py": {
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "tools/rtl_v41_rom_array.py",
+      "sha256": "66f7c8aa94336c1e2aa46858a94d965a539a4f6ddc706866cd46dd024b8084c1"
+    },
+    "mirror.jsonl.gz": {
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "results/uarch/dsrom_parallel_owner_binding_20261002/source_contract_r3/local_ECC_mirror_option.jsonl.gz",
+      "sha256": "d83c4504abd5c659c414fe4e39a602eebd8982762980bae1f3152d9907ff4163"
+    },
+    "native_address_source.py": {
+      "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+      "path": "tools/dsrom_native_weight_address_join.py",
+      "sha256": "98ba0264485e089930f354e8137bf9e797f60e9dc722656215cae940a8959b79"
+    }
+  },
+  "no_checkpoint_payload_reads": true,
+  "review_scope": "Source ordering + finite service prototype; no new engine RTL, physical mapping or admitted numerical path.",
+  "source_main_pin": "fd7220c1e55397dec90222e1f99a8bd95ae02e03"
+}
