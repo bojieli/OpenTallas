@@ -1,0 +1,49 @@
+{
+  "admission_semantics": "Operation accepted only after ALL finite slots and required capture/storage/credits are reserved; provider must implement guaranteed slots/latency and causal retirement; copied observer does not implement provider",
+  "base": "ce84b2af18beb5574890bd409c6ed206fcdbba54",
+  "callback_schema": "local preedge core/registered ROM/EID/key/phase/root/write and falling-edge postNBA VM snapshots; network callbacks require actual separate provider",
+  "entry": "python3 tools/dsrom_I66_reserved_service.py --plan PHASE_RESERVATION.json --out SERVICE.json",
+  "example": "python3 tools/dsrom_I66_reserved_service.py --out /tmp/I66-reserved.json",
+  "finite_example": {
+    "K": 5120,
+    "owner_accept": 22,
+    "result_rows": 576,
+    "retire_by": 435,
+    "service_edges": 413,
+    "source_input_reads": 80
+  },
+  "minimum_reservation_requirements": {
+    "local_cfg0": {
+      "capture_and_ACK_held_bits": 98304,
+      "capture_and_ACK_held_credits": 1
+    },
+    "local_cfg1": {
+      "capture_and_ACK_held_bits": 98304,
+      "capture_and_ACK_held_credits": 1
+    },
+    "local_root": {
+      "capture_and_ACK_held_bits": 6912,
+      "capture_and_ACK_held_credits": 64
+    },
+    "shared": {
+      "capture_and_ACK_held_bits": 163840,
+      "capture_and_ACK_held_credits": 192
+    }
+  },
+  "no_RTL_engine_edits": true,
+  "no_jobs": true,
+  "no_old_failure_overwrite": true,
+  "observer_generate": "python3 tools/dsrom_I66_observer_copy.py",
+  "pinned_originals_byteidentical": true,
+  "prerequisites": [
+    "95014f025091a238dd7ccbe96fc704ed25cbcb05",
+    "86dc31256bccff296b8289adb887c3cc025d2f83"
+  ],
+  "proof_limit": "source phase calendar correctness and real reserved provider execution are hypotheses; EID0 demand is not source-service transfer to all384; no selected physical service/finite universal deadline/fulltoken claim",
+  "scope": "CONDITIONAL_FINITE_RESERVATION_THEOREM_AND_DEFAULT_OFF_SOURCE_OBSERVER",
+  "test_command": "python3 -m pytest -q tests/test_dsrom_I66_reserved_service.py tests/test_dsrom_I66_stage_dispatch.py tests/test_dsrom_I66_provider_clock_contract.py",
+  "tests": {
+    "new": 25,
+    "total": 64
+  }
+}

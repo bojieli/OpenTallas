@@ -1,0 +1,6 @@
+{
+  "result": "21PASS_1FAIL_TEST_FIXTURE_ALIASING",
+  "failure": "stale mutation changed shared identity in every event AND source calendar; therefore no stale identity was presented",
+  "correction": "copy the mutated event identity before changing generation; model/source guard unchanged",
+  "no_runtime": true
+}

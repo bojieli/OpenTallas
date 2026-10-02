@@ -1,0 +1,47 @@
+{
+  "callbacks_are_local_source_observations": true,
+  "compile_launch_admitted": false,
+  "copy_SHA256": "19542ad17b61172ff72edc9cc11f33f8ab31e5888be3f9cb49b56ca1d8038ec4",
+  "default_parameter": "SIM_OBSERVE_I66=0",
+  "engine_assignments": 0,
+  "future_resource_admission": "fresh measured headroom/inventory reservation; no guessed wall/CPU/AS/FS limits; do not reuse incompatible old binary/objects",
+  "generation": "tools/dsrom_I66_observer_copy.py",
+  "host_eval_or_logging_cost_measured": false,
+  "log_upper_rows_per_native_edge": 524,
+  "measured_context_reference": {
+    "current_PHW10_compile_identity_equivalent": false,
+    "front_peak_bytes": 54214520832,
+    "front_seconds": 625.0172644322738,
+    "generated_bytes": 4181161051,
+    "historical_limits_not_copied": true,
+    "source": "6b94aa3088dfeaa8284e66615fbd8b948f8c65c2"
+  },
+  "new_hardware_ports": 0,
+  "new_hardware_state_bits": 0,
+  "observer_source_bytes": 7743,
+  "owner_stage_dispatch_hook_available": false,
+  "packet_ACK_hook_available": false,
+  "postNBA_semantics": "snapshot at falling edge after preceding posedge write; source clk unchanged; actual phase/edge parser and class binding still require qualification",
+  "runtime_launch_admitted": false,
+  "scope": "SIMULATION_ONLY_SOURCE_COPY_PRECOMPILE_MODEL",
+  "simulation_sequence_is_not_DUT_generation": true,
+  "simulation_state_bits": 10400,
+  "source_dependencies": "current enrolled core8f0f, tile/spine/wrapper95014f; selected field r7 flags; actual full source closure must be enrolled before future compiler",
+  "source_inverse_SHA256": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+  "source_shape": {
+    "BST": 17,
+    "NBF": 724,
+    "PHW": 10,
+    "R": 128,
+    "ROM_FBW": 1632,
+    "SUN": 256,
+    "logical_NP": 4096
+  },
+  "stored_state": {
+    "CDMA_write_snapshot": 2112,
+    "counters": 128,
+    "loop_indices": 96,
+    "root_write_snapshot": 8064
+  },
+  "synthesis_excluded": true
+}

@@ -1,0 +1,18 @@
+{
+  "dispatcher": "86dc31256bccff296b8289adb887c3cc025d2f83",
+  "enrollment": "95014f025091a238dd7ccbe96fc704ed25cbcb05",
+  "joined_metadata_sha256": {
+    "results/rtl/w17_D1_scope_parent_frontend_20261002_r2/terminal/verdict.json.gz": "45ed6a144a02a9fef65659959106a9128cf46c463001cc043df66044aecbd590",
+    "results/uarch/dsrom_PAR2_wire_deadline_plan_20261002/model-r1.json": "a449765f92b0c02816cb50740af7a5b13f0f000f657fd94030dd3f6c4e53859b",
+    "results/uarch/dsrom_selected_parent_caller_20261002/r7/model.json": "9353f8dd2fb56e8814d97af1d163ccba824947b8b8ae23bf49d7eb2d4c9584de"
+  },
+  "main_source_commit": "ce84b2af18beb5574890bd409c6ed206fcdbba54",
+  "old_BST2_wire_plan_calendar_used": false,
+  "proposed_boundary_ABI_bits": {
+    "activation": 1681,
+    "result": 108
+  },
+  "selected_caller": "r7 NP2048/NBF362/R64/PHW10 per shard; flag1 FIX_SECOND_ROW_INDEX/GRADUAL_RNE/WAKE_REG",
+  "source_EID0_BST17_calendar": "per-phase demand test only; no current frontend/runtime qualification or all384 transfer",
+  "source_calendar_is_proof_prerequisite": true
+}
