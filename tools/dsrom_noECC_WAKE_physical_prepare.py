@@ -27,6 +27,17 @@ def annotation_only(original,after):
             changed.append(k)
     return len(changed)==8
 
+def restore_signed_labels(original,after):
+    count=0
+    for name,m in original['modules'].items():
+        for k,v in m.get('netnames',{}).items():
+            b=after['modules'][name]['netnames'][k]
+            if v==b:continue
+            if 'signed' not in v or 'signed' in b or k in m.get('ports',{}):raise ValueError('unexpected net/port serialization change')
+            if {k:x for k,x in v.items() if k!='signed'}!=b:raise ValueError('net bits/attributes changed')
+            b['signed']=v['signed'];count+=1
+    return count
+
 def run(work,out):
     prior=json.loads((work/'record.json').read_text())
     if prior['status']=='RUNNING':raise ValueError('do not consume a live producer')
@@ -51,6 +62,8 @@ def run(work,out):
         with (d/'retention.log').open('w') as f:subprocess.run(['docker','exec',CONTAINER,'yosys','-Q','-T','-s',str(d/'retention.ys')],stdout=f,stderr=subprocess.STDOUT,check=True)
         subprocess.run(['docker','cp',CONTAINER+':'+str(d)+'/.',str(d)],check=True)
         original=json.loads(src.read_text());after=json.loads((d/'mapped.json').read_text())
+        labels=restore_signed_labels(original,after)
+        write(d/'mapped.json',after)
         if not annotation_only(original,after):raise ValueError('Only keep/dont_touch on exactly8 source-owned real FF cells may change')
         actual=wake_cells(d/'mapped.json')
         if not actual['passed']:raise ValueError('eight actual retained FFcells and outputs required')
@@ -65,7 +78,7 @@ def run(work,out):
         icg={k:c for k,c in n['cells'].items() if c['type'].startswith('ICG')}
         macros={k:c for k,c in n['cells'].items() if c['type']=='ot_rom_4096x274_m8'}
         if len(macros)!=4 or len(icg)!=8 or len(cap)!=1088:raise ValueError('full geometry/capture/clock instance census changed')
-        record['cases'][case]={'unchanged_hardware_graph':True,'raw_mapping_sha256':digest(src),'retained_mapping_sha256':digest(d/'mapped.json'),'actual_WAKEDFF':actual,'actual_top_ports':n['ports'],'actual_macro_cells':macros,'actual_ICG_cells':icg,'actual_capture_FF_cells':cap,'SS_FF_pin_loads':profiles,'mapped_area_um2':r['inventory']['ss']['stdcell_area_um2'],'physical_geometry_contract':e,'capture_constraints':reserve['capture_constraints'],'parent_IO_requirements':reserve['boundary_constraints_source'],'physical_G0_admitted':False,'remaining_context':{'actual_CTS_clock_skew_and_minpulse':'Not installed; all root/leaf gating checks required','actual_PG_vias_and_pin_escape':'Source translated pin/OBS/halo and PDN template retained; actual installed union/spacing required','real_parent_IO_cells_arrival_slew_load':'Parent CFG/VM/root driving and receiving endpoints required; no zero IO','Maxwell_counts':'Replace q outline once +3310.2432um2/pair using actual complete-element count; BF fixed157.68um'}}
+        record['cases'][case]={'unchanged_hardware_graph':True,'restored_original_internal_signed_labels':labels,'raw_mapping_sha256':digest(src),'retained_mapping_sha256':digest(d/'mapped.json'),'actual_WAKEDFF':actual,'actual_top_ports':n['ports'],'actual_macro_cells':macros,'actual_ICG_cells':icg,'actual_capture_FF_cells':cap,'SS_FF_pin_loads':profiles,'mapped_area_um2':r['inventory']['ss']['stdcell_area_um2'],'physical_geometry_contract':e,'capture_constraints':reserve['capture_constraints'],'parent_IO_requirements':reserve['boundary_constraints_source'],'physical_G0_admitted':False,'remaining_context':{'actual_CTS_clock_skew_and_minpulse':'Not installed; all root/leaf gating checks required','actual_PG_vias_and_pin_escape':'Source translated pin/OBS/halo and PDN template retained; actual installed union/spacing required','real_parent_IO_cells_arrival_slew_load':'Parent CFG/VM/root driving and receiving endpoints required; no zero IO','Maxwell_counts':'Replace q outline once +3310.2432um2/pair using actual complete-element count; BF fixed157.68um'}}
         write(out/'record.json',record)
     record.update(status='EIGHT_ACTUAL_WAKE_CELLS_RETAINED_CONTEXT_OPEN',physical_PnR_admitted=False,candidate=reserve['candidate'],geometry_source_sha256=digest(source),fixed_period_ps=833.3333333333334,SS_setup_ps=60,FF_hold_ps=25,added_cycles=0,ROM_macro_width=274,old_negative_evidence_unchanged=True)
     write(out/'record.json',record)
