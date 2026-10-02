@@ -1,0 +1,99 @@
+{
+  "area": {
+    "conservative_screen_with_all_pipeline_overlay_mm2": 733.7227518355257,
+    "current_physical_construction_screen_mm2": 732.9650770579258,
+    "each_positive_stage_fullwidth_charged": true,
+    "existing_decoder_arbitration_capture_allowance_not_removed": true,
+    "new_macro_instances": 0,
+    "no_containment_overlay_FF50_mm2": 0.7576747775999999,
+    "overlay_is_conservative_may_double_charge_existing240400_state_until_disjoint_map": true,
+    "physical_fit_proven": false,
+    "prospective_fullwidth_reference_register_bits": 999360,
+    "remaining_for_extra_clock_control_PG_or_endpoint_exclusions_mm2": 124.27724816447422
+  },
+  "authoritative_model": "results/uarch/dsrom_PAR2_minimal_context_admission_20261002/model-r2.json",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "composed_latency": {
+    "actual_Nash_request_profile_replaces_counterfactual_rounds_and_credit_release": true,
+    "first_good_parity_to_arithmetic_cycle_budget": 29,
+    "leaf_debt_held_cycles_budget": 26,
+    "no_first_batch64_vs_wholephase400_conflation": true,
+    "no_token_loss_proven": false,
+    "one_leaf_read_debt_credit": 1,
+    "original_source_deadline_unbound": true,
+    "per_dependency_path_cycles": {
+      "gather_reply": 22,
+      "main_assembly": 1,
+      "main_decode": 2,
+      "raw_capture": 2,
+      "sidecar_decode": 2
+    },
+    "serialized64round_budget_cycles": 1667,
+    "source_first128seat_batch_conflict_rounds": 64,
+    "status": "EXPLICIT_POSITIVE_PROVISIONAL_NO_MEASURED_SOURCE_ACCEPTANCE_OR_DEADLINE"
+  },
+  "existing_cone_jobs": {
+    "K256": {
+      "K": 256,
+      "N": 266,
+      "R": 9,
+      "outputs": "data[255:0],corrected,uncorrectable",
+      "replicas": 412,
+      "source": "results/uarch/dsrom_PAR2_minimal_context_admission_20261002/inputs/decoder.sv"
+    },
+    "K272": {
+      "K": 272,
+      "N": 282,
+      "R": 9,
+      "outputs": "data[271:0],corrected,uncorrectable",
+      "replicas": 256,
+      "source": "results/uarch/dsrom_PAR2_minimal_context_admission_20261002/inputs/decoder.sv"
+    }
+  },
+  "minimum_gate": "Pinned existing combinational source and complete live outputs; declared source input/output loads, SS/FF libraries,60ps setup/25ps hold uncertainty. Report area/delay/fanout. No full-token calendar prerequisite.",
+  "next_independent_job": "Archimedes existing complete K256/K272 mapped-cone characterization; dispatcher chooses fresh allowed-host headroom. No job launched by Maxwell.",
+  "parallel_work": {
+    "Archimedes": "Characterize existing completeK256/K272cones now at pinned source/SSFF/declaredloads; update these entries with measured cost. No wait for full-token calendars.",
+    "Epicurus": "Actual LAT8 mainword/control arrival and finite batch cadence.",
+    "Nash": "Actual accepted local-parity request/profile, ordered capture and owner terminal/generation; no allocator or ownership redesign.",
+    "parent": "Actual cfg/activation/root accepted edges, source-call deadlines and exposed dependence."
+  },
+  "parent_source_stream_join": {
+    "completion": "rows_left == 0 && !sm_run && !ld_run",
+    "config_source_last_capture_edge": 26,
+    "config_source_safe_GO_edge": 27,
+    "current_parent_generator": "/tmp/opentallas-dsrom-source-stream-events-20261002/tools/dsrom_source_stream_events.py",
+    "no_acceptance_or_prefetch_overlap_credit_from_static_offered_words": true,
+    "offered_cadence_cycles": 8,
+    "offered_indices_are_not_accepted_cycles": true,
+    "offered_word_bits": 48,
+    "pending_parent_frozen_event_record": true
+  },
+  "predecessor": "0e12358804625d6846129ba757058618c82d3831",
+  "preservation": {
+    "all_prior_failures_unchanged": true,
+    "new_PVE2_or_PVE3_tasks": 0,
+    "original_uarch_RTL_docs_unchanged": true,
+    "owned_live_fleet_jobs": 0
+  },
+  "remaining_own_fulltile_gates": [
+    "Native CE/address/ready/backpressure or prelaunch credit admission for nonstallable field",
+    "Exact mainword272 plus2inline/8sidecar check order adapter and authenticated good/corrected/poison terminal",
+    "Accepted cfg72/ECC input fence, activation beats, root108 capture and ordered retire",
+    "Source-matched decoder/capture/header placement, per-edge endpoint lanes/cuts/OBS/PG/CTS and clock domains",
+    "Measured SSsetup/FFhold and latency/II for complete connected local path"
+  ],
+  "schema": "opentallas.dsrom.PAR2.minimal-context-handoff.v1",
+  "status": "READY_EXISTING_COMPLETE_DECODER_CHARACTERIZATION_ONLY",
+  "validation": {
+    "focused_tests": 31,
+    "fulltile_PR": false,
+    "fulltoken_rate": false,
+    "generator": "python3 tools/dsrom_PAR2_minimal_context_admission.py --output /tmp/fresh-PAR2-context.json",
+    "measured_costs": false,
+    "no_token_loss": false,
+    "physical_fit": false,
+    "pytest_entrypoint": "python3 -m pytest -q tests/test_dsrom_PAR2_minimal_context_admission.py tests/test_dsrom_par2_local_ECC_calendar.py tests/test_dsrom_par2_raw_parity_replica.py",
+    "replay": "Compare fresh output byte for byte against authoritative_model"
+  }
+}
