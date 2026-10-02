@@ -479,6 +479,158 @@ def compose_v1_native_component_successor(ds, qwen_fixture, qwen, model):
         'hardware_admitted':False,'clock_or_ns_conversion':None}
 
 
+def compose_ds_r33_once_reprice(adapter, catalog, overlay, provider, parent, parent_catalog, previous, scalar_ticks):
+    """Reprice only resolved LOAD scalar obligations; retain every other ledger.
+
+    This is the known analytical subledger, not a complete physical calendar.
+    In particular removing source LOAD issue obligations cannot remove the old
+    conservative provider/shared reservation or supply absent runtime receipts.
+    """
+    import copy
+    positive(scalar_ticks, 'retained scalar LOAD cost')
+    if previous.get('r33_reprice_applied'):raise ValueError('r33 cost already replaced once')
+    digest=lambda v:hashlib.sha256(json.dumps(v,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    ctx=adapter['source_context']
+    if (parent.get('schema')!='H4_C0_R33_SOURCE_ADAPTER_V1' or parent.get('hardware_qualified') or
+        parent['inputs']['native']!=ctx['native_sha256'] or
+        parent['source_catalog_sha256']!=digest(parent_catalog) or
+        parent_catalog['source_program_sha256']!=ctx['native_sha256'] or
+        provider['source_context']!=ctx):raise ValueError('current parent source/catalog identity required')
+    changes={row['pc']:row for row in adapter['changed_window_PCs']}
+    delta={k:v for k,v in adapter['primitive_scalar_delta'].items() if v}
+    if parent['actual_scalar_count_delta']!=delta:raise ValueError('parent scalar source delta mismatch')
+    if len(parent_catalog['PC_bindings'])!=len(catalog['PC_bindings']):raise ValueError('parent all-PC coverage mismatch')
+    for current,other in zip(catalog['PC_bindings'],parent_catalog['PC_bindings']):
+        for key in ('pc','family','dependencies','bindings','native_scalars','native_batches128'):
+            if current[key]!=other[key]:raise ValueError('current parent all-PC source count/binding mismatch')
+    if previous['DeepSeek']['PCs']!=len(catalog['PC_bindings']):raise ValueError('baseline all-PC coverage mismatch')
+    out=copy.deepcopy(previous);cursor=0;total_delta=0;witnesses=[]
+    for row,source in zip(out['DeepSeek']['PC_intervals'],catalog['PC_bindings']):
+        if (row['pc'],row['family'],row['dependencies'])!=(source['pc'],source['family'],source['dependencies']):
+            raise ValueError('baseline PC/dependency mismatch')
+        duration=row['end']-row['start'];correction=0
+        if row['pc'] in changes:
+            change=changes[row['pc']];calls=source['bindings'];ranks=[c['rank'] for c in calls]
+            if len(set(ranks))!=len(ranks) or change['source_calls']!=len(ranks):raise ValueError('one window call per rank required')
+            if change['LOAD_scalar_delta']!=-512*len(ranks):raise ValueError('actual per-rank LOAD source delta required')
+            grouped=[r for g in row['rank_groups'] for r in g['ranks']]
+            if len(grouped)!=len(set(grouped)) or set(grouped)!=set(ranks):raise ValueError('exact baseline rank coverage required')
+            for group in row['rank_groups']:
+                if group['provider_nonV1_retained_ticks']<512*scalar_ticks:raise ValueError('source LOAD subtraction exceeds retained nonV1 ledger')
+                # Preserve original provider/RF/V1/C0 fields for independent audit.
+                group['source_LOAD_native_scalar_correction_ticks']=-512*scalar_ticks
+            correction=-512*scalar_ticks
+            for call in calls:
+                tid=call['template'];code=overlay['native_templates'][tid]['code']
+                loads=[(i,n) for i,n in enumerate(code) if n['op']=='LOAD' and n['attrs'].get('name')=='window']
+                if len(loads)!=1 or loads[0][1]['shape']!=[127,512]:raise ValueError('resolved127-row source LOAD required')
+                leaf=parent_catalog['templates'][tid]['calls'][0]['leaf']
+                if parent_catalog['leaves'][leaf]['code_sha256']!=digest(code):raise ValueError('parent native code digest mismatch')
+            witnesses.append(dict(pc=row['pc'],rank_calls=len(ranks),native_LOAD_scalar_delta=change['LOAD_scalar_delta'],
+                critical_rank_software_tick_delta=correction,all_rank_scalar_obligation_tick_delta=correction*len(ranks)))
+        row['start']=cursor;row['end']=cursor+duration+correction
+        if row['end']<=row['start']:raise ValueError('nonpositive successor interval')
+        cursor=row['end'];total_delta+=correction
+    baseline=previous['DeepSeek']['known_native_only_successor_software_ticks']
+    if cursor!=baseline+total_delta:raise ValueError('once reprice interval reconciliation failed')
+    out['r33_reprice_applied']=True
+    out['DeepSeek']['known_native_only_successor_software_ticks']=cursor
+    out['DeepSeek']['source_program_sha256']=ctx['native_sha256']
+    out['current_parent_catalog_sha256']=digest(parent_catalog)
+    out['r33_reprice_scope']='Only32-tick provisional native LOAD scalar obligations; conservative provider/shared reservations retained'
+    receipt=dict(schema='H4_R33_DEWEY_ONCE_REPRICE_V1',native_sha256=ctx['native_sha256'],
+        dispatch_sha256=parent['inputs']['dispatch'],catalog_sha256=digest(parent_catalog),
+        actual_scalar_count_delta=delta,RF_highword_RMW_recharged=False,C0_control_recharged=False,reprice_count=1,
+        baseline_known_subledger_software_ticks=baseline,current_known_subledger_software_ticks=cursor,
+        critical_path_software_tick_delta=total_delta,provisional_LOAD_scalar_ticks=scalar_ticks,
+        actual_shared_movement_repriced=False,provider_reservations_retained=True,
+        complete_service_software_ticks=None,hardware_qualified=False,clock_or_ns_conversion=None,
+        changed_PC_witnesses=witnesses)
+    return out,receipt
+
+
+def reserve_ds_r33_initial_loads(adapter, catalog, overlay, provider, costs):
+    """Construct source-resolved finite initial-window LOAD boundary reservations.
+
+    Per-fragment phases are ordered and positive, compressed without overlap.
+    They reserve a compiler mapping, not installed RF connections or execution.
+    Arithmetic and output commit are deliberately outside this boundary ledger.
+    """
+    names={'owner_accept','HBM32_read_return','scratch64_write_ACK','scratch64_read_return',
+        'RF512_both_mirror_ACK','consumer_capture','validated_reverse'}
+    if set(costs)!=names:raise ValueError('explicit complete boundary phase costs required')
+    for name,value in costs.items():positive(value,name)
+    ctx=adapter['source_context']
+    if provider['source_context']!=ctx:raise ValueError('current window provider source context required')
+    phase_units=[('owner_accept',1),('HBM32_read_return',16),('scratch64_write_ACK',8),
+        ('scratch64_read_return',8),('RF512_both_mirror_ACK',1),('consumer_capture',1),('validated_reverse',1)]
+    phases=[];stride=0
+    for name,units in phase_units:
+        phases.append(dict(phase=name,units=units,start_offset=stride,end_offset=stride+units*costs[name],
+            provisional_ticks_per_unit=costs[name]))
+        stride+=units*costs[name]
+    # One global fragment reservation; all32 SM resources are conservatively
+    # held by the enclosing batch. Source block256%32 maps each actual fragment.
+    capacities={'global.provider_fragment':1}
+    for rank in sorted({b['rank'] for b in provider['bindings']}):
+        capacities[f'r{rank}.provider_credit']=1
+        for sm in range(32):
+            for name in ('scratch_fragment512','RF_mirror0','RF_mirror1'):
+                capacities[f'r{rank}.s{sm}.{name}']=1
+    cal=Calendar(capacities);last=[];bound=[];totals=Counter();seen=set()
+    pc_index={r['pc']:r for r in catalog['PC_bindings']}
+    resolved_templates=set()
+    for item in sorted(provider['bindings'],key=lambda b:(b['pc'],b['rank'])):
+        pc,rank,tid=item['pc'],item['rank'],item['current_template'];key=(pc,rank)
+        if key in seen:raise ValueError('duplicate window call')
+        seen.add(key);source=pc_index[pc]
+        matches=[b for b in source['bindings'] if b['rank']==rank and b['template']==tid]
+        if len(matches)!=1:raise ValueError('actual current parent rank/template binding required')
+        home=item['input'];size=127*512*4;base=home['base']
+        actual_homes=[h for row in adapter['changed_window_PCs'] if row['pc']==pc for h in row['window_homes'] if h['rank']==rank]
+        if actual_homes!=[home]:raise ValueError('immutable initial provider home mismatch')
+        if home['bytes']!=size or base%512 or home['rank']!=rank or home['generation']!=1:
+            raise ValueError('exact aligned127-row initial home/generation required')
+        if base<33554432 or base+size>67108864:raise ValueError('finite32MiB initial window extent exhausted')
+        code=overlay['native_templates'][tid]['code']
+        found=[(i,n) for i,n in enumerate(code) if n['op']=='LOAD' and n['attrs'].get('name')=='window']
+        if len(found)!=1:raise ValueError('actual source LOAD missing')
+        i,node=found[0]
+        ref=dict(source_context=ctx,pc=pc,rank=rank,parent_template=tid,call_index=0,invocation_index=0,
+            template=tid,code_index=i,opcode='LOAD',attrs=node['attrs'],result_shape=node['shape'],
+            operand='dst',value=node['dst'],logical_byte_offset=0,payload_bytes=size)
+        # Code/source digest and scalar span are invariant across calls of this
+        # immutable template. Resolve once; check every PC/rank/home above.
+        if tid not in resolved_templates:
+            resolve_ds_r33_window_reference(adapter,catalog,overlay,ref)
+            resolved_templates.add(tid)
+        resources={'global.provider_fragment':1,f'r{rank}.provider_credit':1}
+        for sm in range(32):
+            for name in ('scratch_fragment512','RF_mirror0','RF_mirror1'):resources[f'r{rank}.s{sm}.{name}']=1
+        repeats=size//512
+        event=cal.add(f'PC{pc}.r{rank}.initial_window_LOAD',last,stride*repeats,resources,
+            repeats=repeats,stride=stride,source_ref=ref,home_ref=home['home_ref'],version=home['version'],
+            source_byte_base=base,payload_bytes=512,fragment_byte_stride=512,
+            SM_formula='floor(fragment_index/2)%32; source block256%32; conservative compiler mapping',
+            scratch_reserved_bytes_per_SM=512,RF_reserved_vectors_per_SM=1,RF_write_mirror_mask=3,
+            phases_ref='initial_window_LOAD512',lease_release_phase='validated_reverse')
+        last=[event];bound.append(dict(pc=pc,rank=rank,event=event,actual_provider_receipt=None,
+            output_generation_lease=item['output_generation_or_lease'],output_commit_calendar=None))
+        for phase,units in phase_units:totals[phase]+=units*repeats
+    if len(seen)!=provider['rank_window_pairs']:raise ValueError('complete window call coverage required')
+    proof=verify_calendar(cal.events,capacities)
+    return dict(schema='H4_R33_INITIAL_LOAD_FINITE_BOUNDARY_RESERVATION_V1',
+        status='PROVISIONAL_SOURCE_BOUND_INPUT_RESERVATION_ONLY',source_context=ctx,
+        phase_templates={'initial_window_LOAD512':phases},explicit_provisional_costs=costs,
+        events=cal.events,capacities=capacities,proof=proof,bindings=bound,phase_unit_totals=dict(totals),
+        boundary_serial_reservation_software_ticks=max(cal.ends.values(),default=0),
+        shared_transaction_bytes=64,RF_logical_vector_bytes=512,RF_physical_mirrors=2,
+        scratch_reuse_after_matching_reverse=True,all_PC_runtime_calendar=None,
+        added_to_existing_cost_ledger=False,installed_physical_RF_map=None,
+        actual_payload_or_provider_execution=False,actual_output_commit_or_visibility=None,
+        full_service_software_ticks=None,hardware_admitted=False,clock_or_ns_conversion=None)
+
+
 def derive_ds_r33_source_pair(native, dispatch, contract_source, prepare_source, position):
     """Execute only the producer's metadata lowering and dispatch count adapter."""
     import copy
@@ -3632,6 +3784,9 @@ def main():
     ap.add_argument('--ds-forward-leaves',action='store_true')
     ap.add_argument('--provider-v1-join',action='store_true')
     ap.add_argument('--ds-r33-calendar-source-join',action='store_true')
+    ap.add_argument('--ds-r33-once-reprice',action='store_true')
+    ap.add_argument('--r33-parent-commit',default='ce132ffea40cf31f1af9d8c7af696d5e57125213')
+    ap.add_argument('--r33-boundary-cycles',type=Path)
     ap.add_argument('--r33-source-commit',default='433ccff91c9ed6f0e61761bdbffa11f4878d6339')
     ap.add_argument('--tp96-collective-inputs',type=Path)
     ap.add_argument('--tp96-endpoint-cycles',type=Path)
@@ -3642,6 +3797,54 @@ def main():
     ap.add_argument('--parent-state-receipts',type=Path)
     ap.add_argument('--c0-source-commit')
     args = ap.parse_args()
+    if args.ds_r33_once_reprice:
+        if args.r33_boundary_cycles is None:raise ValueError('explicit provisional boundary cycle table required')
+        pins={}
+        def pinned_record(path,commit):
+            raw=subprocess.check_output(['git','show',commit+':'+path],cwd=ROOT)
+            pins[path]=dict(commit=commit,sha256=hashlib.sha256(raw).hexdigest())
+            return json.loads(gzip.decompress(raw) if path.endswith('.gz') else raw)
+        base=OUT+'/ds_r33_calendar_adapter_r1/provider_final/'
+        records={n:pinned_record(base+n,'2e76d4f96') for n in (
+            'source_count_adapter.json.gz','r33_current_catalog.json.gz','r33_source_overlay.json.gz','r33_window_provider_join.json.gz')}
+        parent_base='results/uarch/h4_c0_r33_source_adapter_20261002/r1/model/'
+        parent=pinned_record(parent_base+'source_adapter.json',args.r33_parent_commit)
+        parent_catalog=pinned_record(parent_base+'source_catalog.json.gz',args.r33_parent_commit)
+        old=pinned_record(OUT+'/provider_v1_mtp_join_r4/final_physical/V1_native_component_successor.json.gz','a67150839')
+        scalar=pinned_record(OUT+'/ds_forward_leaf_join_r3/review/summary.json','781046c9')['retained_baseline_provisional_costs']['primitive_scalar']
+        a,cat,o,provider=[records[n] for n in ('source_count_adapter.json.gz','r33_current_catalog.json.gz','r33_source_overlay.json.gz','r33_window_provider_join.json.gz')]
+        successor,receipt=compose_ds_r33_once_reprice(a,cat,o,provider,parent,parent_catalog,old,scalar)
+        boundary=reserve_ds_r33_initial_loads(a,cat,o,provider,read_json(args.r33_boundary_cycles))
+        reset=pinned_record('results/uarch/native_software_parent_intake_20261002/Qwen_reset_source_parent_review.json',args.r33_parent_commit)
+        summary=dict(schema='H4_R33_ONCE_ONLY_CALENDAR_AND_INPUT_RESERVATION_V1',DS_PCs=2213,Qwen_PCs=1737,
+            changed_PCs=len(receipt['changed_PC_witnesses']),window_rank_calls=len(boundary['bindings']),
+            current_known_subledger_software_ticks=receipt['current_known_subledger_software_ticks'],
+            critical_path_software_tick_delta=receipt['critical_path_software_tick_delta'],
+            shared_unknown_calls=successor['DeepSeek']['unknown_shared_template_calls'],
+            boundary_phase_unit_totals=boundary['phase_unit_totals'],
+            boundary_costs_added_to_known_subledger=False,C0_V1_I64_and_mirrors_recharged=False,
+            current_C0_catalog_sha256=receipt['catalog_sha256'],complete_service_software_ticks=None,
+            reset_context=dict(model='Qwen_ROM',source_tile_reset_bits=reset['complete_tile_async_reset_bits'],
+                source_tile_clock_bits=reset['complete_tile_clock_bits'],HBM_runtime_cost_added=False,
+                physical_reset_or_CTS_proven=reset['root_protocol_physically_proven']),
+            hardware_admitted=False,status='PASS_ONCE_ONLY_SOURCE_COST_REPRICE_FINITE_INPUT_RESERVATION_PARTIAL')
+        artifacts={'summary.json':summary,'once_reprice_receipt.json':receipt,
+            'all_PC_native_component_successor.json.gz':successor,'initial_LOAD_boundary_reservations.json.gz':boundary}
+        raw_records={n:((gzip.compress((json.dumps(v,sort_keys=True,indent=2)+'\n').encode(),mtime=0)) if n.endswith('.gz')
+            else (json.dumps(v,sort_keys=True,indent=2)+'\n').encode()) for n,v in artifacts.items()}
+        manifest=dict(schema='H4_R33_ONCE_ONLY_CALENDAR_MANIFEST_V1',source_pins=pins,
+            tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            cycle_input_sha256=hashlib.sha256(args.r33_boundary_cycles.read_bytes()).hexdigest(),
+            output_sha256={n:hashlib.sha256(raw).hexdigest() for n,raw in raw_records.items()},
+            source_bulk_duplicated=False,hardware_admitted=False)
+        raw_records['manifest.json']=(json.dumps(manifest,sort_keys=True,indent=2)+'\n').encode()
+        if not args.verify:args.out.mkdir(parents=True,exist_ok=False)
+        for name,raw in raw_records.items():
+            if args.verify:
+                if (args.out/name).read_bytes()!=raw:raise ValueError('once reprice replay mismatch '+name)
+            else:(args.out/name).write_bytes(raw)
+        print(json.dumps(summary,sort_keys=True));print('PASS_R33_ONCE_REPRICE_REPLAY' if args.verify else 'PASS_R33_ONCE_REPRICE')
+        return
     if args.ds_r33_calendar_source_join:
         pins={}
         def pinned(path,commit=args.r33_source_commit):

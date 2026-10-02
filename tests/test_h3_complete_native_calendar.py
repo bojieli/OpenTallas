@@ -46,6 +46,95 @@ class FiniteCalendarTests(unittest.TestCase):
             'bytes':127*2048,'reservation_bytes':127*2048,'base':33554432,'generation':1,'source_payload_required':True} for r in range(2)]}
         return [native,dispatch,current,current_dispatch,witness,catalog,homes]
 
+    def r33_current_cost_fixture(self):
+        import hashlib
+        args=self.r33_pair()
+        args[5]['PC_bindings'][0].update(family='q_norm_kv_row',dependencies=[])
+        a,cat,overlay=c.adapt_ds_r33_calendar(*args)
+        produced={'rows':[{'PC':0,'rank':r,'version':'output_window','source_template':'old','shape':[128,512],
+            'bytes':128*2048,'reservation_bytes':128*2048,'base':33554432+262144,'dtype':'F32'} for r in range(2)]}
+        provider=c.bind_ds_r33_window_provider_homes(a,produced,args[-1])
+        digest=lambda v:hashlib.sha256(json.dumps(v,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+        parent=dict(schema='H4_C0_R33_SOURCE_ADAPTER_V1',hardware_qualified=False,
+            inputs=dict(native=a['source_context']['native_sha256'],dispatch='d'*64),
+            source_catalog_sha256=digest(cat),actual_scalar_count_delta={'LOAD':-1024})
+        group=dict(ranks=[0,1],provider_nonV1_retained_ticks=60000,C0_retained_ticks=64,
+            shared_retained_ticks=0,RF_additional_cost_after_existing_ledger=None,native_new_ticks=100)
+        previous=dict(V1_native_replacement_applied=True,Qwen_full_program={'PCs':1737},
+            DeepSeek=dict(PCs=1,unknown_shared_template_calls=2,known_native_only_successor_software_ticks=100000,
+                PC_intervals=[dict(pc=0,family='q_norm_kv_row',dependencies=[],start=0,end=100000,rank_groups=[group])]))
+        return a,cat,overlay,provider,parent,cat,previous,32
+
+    def test_r33_reprice_critical_rank_once_preserves_unknown_and_other_charges(self):
+        args=self.r33_current_cost_fixture();successor,receipt=c.compose_ds_r33_once_reprice(*args)
+        self.assertEqual(receipt['actual_scalar_count_delta'],{'LOAD':-1024})
+        self.assertEqual(receipt['critical_path_software_tick_delta'],-16384)
+        self.assertEqual(successor['DeepSeek']['known_native_only_successor_software_ticks'],83616)
+        old=args[-2]['DeepSeek']['PC_intervals'][0]['rank_groups'][0]
+        new=successor['DeepSeek']['PC_intervals'][0]['rank_groups'][0]
+        for k,v in old.items():self.assertEqual(new[k],v)
+        self.assertEqual(successor['Qwen_full_program'],args[-2]['Qwen_full_program'])
+        self.assertIsNone(receipt['complete_service_software_ticks'])
+        self.assertEqual(successor['DeepSeek']['unknown_shared_template_calls'],2)
+        again=list(args);again[-2]=successor
+        with self.assertRaisesRegex(ValueError,'once'):c.compose_ds_r33_once_reprice(*again)
+
+    def test_r33_receipt_matches_actual_parent_once_admission_method(self):
+        import ast,hashlib,subprocess,types
+        args=self.r33_current_cost_fixture();_,receipt=c.compose_ds_r33_once_reprice(*args)
+        raw=subprocess.check_output(['git','show','ce132ffea:tools/h4_c0_r33_source_adapter.py'],cwd=ROOT)
+        cls=next(n for n in ast.parse(raw).body if isinstance(n,ast.ClassDef) and n.name=='R33SourceJoin')
+        fn=copy.deepcopy(next(n for n in cls.body if isinstance(n,ast.FunctionDef) and n.name=='accept_Dewey_reprice'))
+        ns={'json':json,'pinned':lambda path,commit:json.dumps(receipt).encode()}
+        exec(compile(ast.Module(body=[fn],type_ignores=[]),'source-pinned-parent-once-admission','exec'),ns)
+        owner=types.SimpleNamespace(r33_inputs=dict(native=receipt['native_sha256'],dispatch=receipt['dispatch_sha256']),
+            catalog_digest=receipt['catalog_sha256'],count_delta=receipt['actual_scalar_count_delta'],calendar_admitted=False)
+        ns['accept_Dewey_reprice'](owner,'source-pin','receipt.json')
+        self.assertTrue(owner.calendar_admitted)
+        with self.assertRaisesRegex(ValueError,'already admitted once'):ns['accept_Dewey_reprice'](owner,'source-pin','receipt.json')
+        owner.calendar_admitted=False;receipt['RF_highword_RMW_recharged']=True
+        with self.assertRaisesRegex(ValueError,'exact source-bound'):ns['accept_Dewey_reprice'](owner,'source-pin','receipt.json')
+
+    def test_r33_reprice_rejects_current_catalog_code_rank_and_count_forgery(self):
+        args=self.r33_current_cost_fixture()
+        bad=copy.deepcopy(args);bad[4]['source_catalog_sha256']='0'*64
+        with self.assertRaisesRegex(ValueError,'identity'):c.compose_ds_r33_once_reprice(*bad)
+        bad=copy.deepcopy(args);bad[4]['actual_scalar_count_delta']['LOAD']=-512
+        with self.assertRaisesRegex(ValueError,'delta'):c.compose_ds_r33_once_reprice(*bad)
+        bad=copy.deepcopy(args);tid=next(iter(bad[2]['native_templates']));bad[2]['native_templates'][tid]['code'][0]['attrs']['name']='forged'
+        with self.assertRaisesRegex(ValueError,'source LOAD'):c.compose_ds_r33_once_reprice(*bad)
+        bad=copy.deepcopy(args);bad[-2]['DeepSeek']['PC_intervals'][0]['rank_groups'][0]['ranks']=[0,0]
+        with self.assertRaisesRegex(ValueError,'rank coverage'):c.compose_ds_r33_once_reprice(*bad)
+
+    def test_r33_initial_boundary_exact64B_mirrors_and_finite_credit_positive(self):
+        a,cat,o,p,*_=self.r33_current_cost_fixture()
+        costs={k:2 for k in ('owner_accept','HBM32_read_return','scratch64_write_ACK',
+            'scratch64_read_return','RF512_both_mirror_ACK','consumer_capture','validated_reverse')}
+        result=c.reserve_ds_r33_initial_loads(a,cat,o,p,costs)
+        self.assertEqual(len(result['events']),2)
+        self.assertEqual(result['phase_unit_totals']['HBM32_read_return'],2*508*16)
+        self.assertEqual(result['phase_unit_totals']['scratch64_write_ACK'],2*508*8)
+        self.assertEqual(result['phase_unit_totals']['RF512_both_mirror_ACK'],2*508)
+        self.assertEqual(result['events'][0]['RF_write_mirror_mask'],3)
+        self.assertEqual(result['events'][0]['end'],result['events'][1]['start'])
+        self.assertIsNone(result['all_PC_runtime_calendar'])
+        self.assertFalse(result['added_to_existing_cost_ledger'])
+        overlap=copy.deepcopy(result['events']);overlap[1]['start']=0;overlap[1]['end']=overlap[0]['end']
+        with self.assertRaisesRegex(ValueError,'premature|overlapping'):c.verify_calendar(overlap,result['capacities'])
+        costs['HBM32_read_return']=0
+        with self.assertRaisesRegex(ValueError,'positive'):c.reserve_ds_r33_initial_loads(a,cat,o,p,costs)
+
+    def test_r33_boundary_rejects_alias_home_old_source_and_duplicate_calls(self):
+        a,cat,o,p,*_=self.r33_current_cost_fixture()
+        costs={k:1 for k in ('owner_accept','HBM32_read_return','scratch64_write_ACK',
+            'scratch64_read_return','RF512_both_mirror_ACK','consumer_capture','validated_reverse')}
+        bad=copy.deepcopy(p);bad['bindings'][0]['input']['base']+=512
+        with self.assertRaisesRegex(ValueError,'immutable'):c.reserve_ds_r33_initial_loads(a,cat,o,bad,costs)
+        bad=copy.deepcopy(p);bad['source_context']['native_sha256']='old'
+        with self.assertRaisesRegex(ValueError,'context'):c.reserve_ds_r33_initial_loads(a,cat,o,bad,costs)
+        bad=copy.deepcopy(p);bad['bindings'].append(bad['bindings'][0])
+        with self.assertRaisesRegex(ValueError,'duplicate'):c.reserve_ds_r33_initial_loads(a,cat,o,bad,costs)
+
     def test_r33_adapter_changes_only_source_LOAD_count_and_keeps128row_cost_fit(self):
         args=self.r33_pair();adapter,catalog,overlay=c.adapt_ds_r33_calendar(*args)
         self.assertEqual(adapter['primitive_scalar_delta']['LOAD'],-1024)
