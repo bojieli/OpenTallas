@@ -1,0 +1,31 @@
+{
+  "PC_counts": {
+    "1": 192,
+    "2": 96,
+    "3": 96,
+    "4": 192,
+    "5": 288,
+    "6": 64,
+    "7": 64,
+    "8": 128,
+    "9": 64
+  },
+  "actual_prefix_comparison_complete": false,
+  "arithmetic_source_pins_current": [
+    "tools/h4_c0_ds_prefix_golden.py",
+    "tools/hdc_golden.py",
+    "tools/hdc_golden_v41.py",
+    "tools/rtl_v41_fullshape_layer_campaign.py"
+  ],
+  "artifact_pins_verified": 460,
+  "expected_values": 7816960,
+  "full_token_qualified": false,
+  "hardware_qualified": false,
+  "independent_golden_arithmetic_reviewed": true,
+  "output_identities_verified": 1184,
+  "payload_shape_dtype_and_sha_verified": true,
+  "reference_sha256": "91c803a93df18e011cd7ee6c5e0a84c8fc091136718ca329e5f2928349b3f342",
+  "schema": "opentallas.parent.ds-independent-prefix-reference-review.v1",
+  "scope": "Golden reference and native writer metadata identity only; actual PC1-9 comparison, physical movement and full-token qualification remain open",
+  "writer_home_indices_verified": true
+}
