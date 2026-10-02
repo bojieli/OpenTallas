@@ -53,6 +53,34 @@ def path_loads(output):
                  delay_ps=float(m[4]),pin=m[5]) for m in re.finditer(
         r'^\s+(\d+)\s+([\d.]+)\s+([\d.]+)\s+([-\d.]+)\s+[-\d.]+\s+[\^v]\s+(\S+)',output,re.M)]
 
+def merge_scoped(libraries):
+    """Namespace library-local templates; never choose between definitions."""
+    prefix=None;templates=[];cells={};renames={}
+    for idx,path in enumerate(libraries):
+        raw=path.read_text();header=raw[:re.search(r'\bcell\s*\(',raw).start()]
+        names=[m[2].strip().strip('"') for m in re.finditer(r'\b(lu_table_template|power_lut_template)\s*\(([^)]+)\)',header)]
+        for name in names:
+            new='source'+str(idx)+'_'+name
+            raw=re.sub(r'\b'+re.escape(name)+r'\b',new,raw);renames[path.name+':'+name]=new
+        header=raw[:re.search(r'\bcell\s*\(',raw).start()]
+        if prefix is None:prefix=header
+        else:
+            templates += [block(header,m.start()) for m in re.finditer(r'\b(lu_table_template|power_lut_template)\s*\(([^)]+)\)',header)]
+        for m in re.finditer(r'\bcell\s*\(([^)]+)\)',raw):
+            name=m[1].strip().strip('"');definition=block(raw,m.start())
+            if name in cells:raise ValueError('Duplicate cell in scoped libraries: '+name)
+            cells[name]=definition
+    return prefix+'\n'.join(templates+list(cells.values()))+'\n}\n',cells,renames
+
+
+def worst_slack(output):
+    if re.search(r'^(?:Warning|Error):',output,re.M) or 'time 1ps' not in output:
+        raise ValueError('STA diagnostics/units notqualified')
+    values=re.findall(r'([-\d.]+)\s+slack\s+\((MET|VIOLATED)\)',output)
+    if not values:raise ValueError('Missing STA path/slack')
+    return min(float(v[0]) for v in values)
+
+
 def loaded_cone():
     raw=(ROOT/CANDIDATE).read_bytes();cone,_=candidate_logic(raw)
     text=cone.decode().replace('qwen_optin_capture_logic','qwen_loaded_capture').replace('ROM_HOLD_DIRECT_CAPTURE=0','ROM_HOLD_DIRECT_CAPTURE=1')
@@ -75,7 +103,7 @@ def run(workdir,result,libraries,sta):
     ready=prepare(workdir,MODEL,MODEL_PATH)
     if not ready['RTL_variant_implementation_admitted']:raise ValueError('Model/source price differs')
     cone,macros=loaded_cone();(workdir/'full_loaded_cone.sv').write_text(cone)
-    merged,cells=merge(libraries['ss']);lib=workdir/'mapped_ss.lib';lib.write_text(merged)
+    merged,cells,renames=merge_scoped(libraries['ss']);lib=workdir/'mapped_ss.lib';lib.write_text(merged)
     macro={c:ROOT/f'physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_{c}.lib' for c in ['ss','ff']}
     ys=workdir/'synth.ys';ys.write_text(f'''read_liberty -lib {lib}
 read_liberty -lib {macro['ss']}
@@ -89,9 +117,22 @@ stat -liberty {lib}
 write_verilog -noattr -noexpr {workdir/'mapped.v'}
 write_json {workdir/'mapped.json'}
 ''')
+    # Mark actual80 Q-driving FFcells after proc but BEFORE identical-register
+    # merging. Source wirekeep alone didnot preserve these cells in r1.
+    proc_ys=workdir/'proc.ys'
+    proc_ys.write_text(ys.read_text().split('synth -top')[0]+f"proc\nwrite_json {workdir/'proc.json'}\n")
+    prc,pout=guarded_process([YOSYS,'-s',str(proc_ys)],workdir,workdir/'proc.log')
+    if prc:raise ValueError('Pre-synthesis process lowering failed')
+    pn=json.loads((workdir/'proc.json').read_text())['modules']['qwen_loaded_capture']
+    qbits={n['bits'][0] for name,n in pn['netnames'].items() if '.g_direct.g_mask[' in name and name.endswith('.local_sel')}
+    selected=[name for name,c in pn['cells'].items() if c['type']=='$adff' and len(c['connections']['Q'])==1 and c['connections']['Q'][0] in qbits]
+    if len(qbits)!=80 or len(selected)!=80:raise ValueError('Priced80-register source lowering differs')
+    keep=''.join('setattr -set keep 1 c:'+name+'\n' for name in selected)
+    ys.write_text(ys.read_text().replace('synth -top qwen_loaded_capture','proc\n'+keep+'synth -top qwen_loaded_capture'))
     rc,output=guarded_process([YOSYS,'-s',str(ys)],workdir,workdir/'synth.log')
     record=dict(schema='opentallas.qwen-rom-hold-capture-loaded-map.v1',status='FAIL_MAPPING',mapping_returncode=rc,
         source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in [CANDIDATE,'rtl/hdc/ot_qwen_w12_matvec.sv','tools/qwen_rom_hold_capture_loaded_map.py']},
+        synthesis_preservation_Q_cells=selected,scoped_template_renames_SS=renames,
         model_commit=MODEL,model_path=MODEL_PATH,literal_gate_sha256=hashlib.sha256((BASE/'literal_r1.json').read_bytes()).hexdigest(),
         tool_sha256={name:hashlib.sha256(Path(exe).resolve().read_bytes()).hexdigest() for name,exe in [('yosys',YOSYS),('sta',sta)]},
         library_sha256={c:{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in libs} for c,libs in libraries.items()},
@@ -109,11 +150,15 @@ write_json {workdir/'mapped.json'}
         area=sum(n*float(re.search(r'\barea\s*:\s*([\d.]+)',cells[t])[1]) for t,n in counts.items() if t in cells)
         record.update(mapped_cell_counts=counts,local_selector_net_names=local,unique_local_selector_bits=len(set(local_bits)),replicas_preserved=preserved,
           mapped_logic_area_um2_including_existing_endpoint=area,mapped_netlist_sha256=hashlib.sha256((workdir/'mapped.v').read_bytes()).hexdigest())
+        endpoint_bits=set(net['netnames']['consumer_q']['bits'])
+        endpoints=[name+'/D' for name,c in net['cells'].items() if c['type']=='DFFHQNx1_ASAP7_75t_R' and c['connections']['QN'][0] in endpoint_bits]
+        if len(endpoints)!=512:raise ValueError('Actual512bit endpoint cells missing')
+        record['consumer_endpoint_D_pins']=endpoints
         timings=[]
         for corner in ['ss','ff']:
-            merged_t,cells_t=merge(libraries[corner]);used=workdir/('used_'+corner+'.lib');used.write_text(timing_subset(merged_t,cells_t,counts))
+            merged_t,cells_t,namespace=merge_scoped(libraries[corner]);used=workdir/('used_'+corner+'.lib');used.write_text(timing_subset(merged_t,cells_t,counts))
             delay='max' if corner=='ss' else 'min'
-            for scope,restrict in [('all',''),('macro','-from [get_cells -hierarchical *u_rom] '),('merge','-to [get_pins -hierarchical *consumer_q*/D] ')]:
+            for scope,restrict in [('all',''),('macro','-from [get_cells -hierarchical *u_rom] '),('merge','-to [get_pins {'+' '.join(endpoints)+'}] ')]:
                 tcl=workdir/(corner+'_'+scope+'.tcl');tcl.write_text(f'''read_liberty {macro[corner]}
 read_liberty {used}
 read_verilog {workdir/'mapped.v'}
@@ -128,7 +173,7 @@ report_units
 report_checks {restrict}-path_delay {delay} -format full_clock_expanded -digits 6 -fields {{slew cap input net fanout}}
 '''+('report_check_types -max_capacitance -max_slew -max_fanout\n' if scope=='all' else '')+'exit\n')
                 trc,out=guarded_process([sta,'-exit',str(tcl)],workdir,workdir/(corner+'_'+scope+'.log'))
-                try:slack=parse_slack(out) if trc==0 else None
+                try:slack=worst_slack(out) if trc==0 else None
                 except ValueError:slack=None
                 timings.append(dict(corner=corner,scope=scope,returncode=trc,slack_ps=slack,path_pin_loads=path_loads(out),report_sha256=hashlib.sha256(out.encode()).hexdigest(),library_limit_violations_present='(VIOLATED)' in out.split('max slew')[-1] if 'max slew' in out else None))
         record['timings']=timings
