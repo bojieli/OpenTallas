@@ -1,0 +1,36 @@
+.F....                                                                   [100%]
+=================================== FAILURES ===================================
+_______ test_all1737_PCs_retire_with_raw_immutable_bytes_and_mutable_KV ________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6724/test_all1737_PCs_retire_with_r0')
+
+    def test_all1737_PCs_retire_with_raw_immutable_bytes_and_mutable_KV(tmp_path):
+        n=fixture_native();backend=fixture_backend(tmp_path,n);machine=D.bind_runtime(n,backend)
+        scope=D.storage_scope(n);seen=[];old=backend.read_tile_bytes
+        def raw_read(request):
+            assert request['provider_ref'] in scope['immutable_checkpoint_refs']
+            assert request['provider_ref'] not in scope['mutable_runtime_refs']
+            seen.append(request['provider_ref']);return old(request)
+        backend.read_tile_bytes=raw_read
+        pcs=[];kvpcs=[];last=[0]
+        def observer(op,store):
+            pcs.append(op['pc'])
+            if op['opcode'] in ('KV_WRITE','KV_FENCE','KV_READ'):
+                assert backend.transactions==last[0];kvpcs.append(op['pc'])
+            last[0]=backend.transactions
+        try:
+            actual=machine.run(3,0,observer=observer)
+            assert len(pcs)==1737 and pcs==[o['pc']for o in n['operations']]
+            assert len(kvpcs)==216 and actual['PCs']==1737
+            assert isinstance(machine.memory,D.N.BoundKVStorage)
+            assert not backend.active and not machine.memory.pending and not machine.memory.leases
+            assert len(machine.memory.published)==72
+            assert all(machine.memory.bit(layer,rank,0) for layer in range(36)for rank in (0,1))
+            assert all((machine.memory.record(layer,rank)>>88)&3==3 for layer in range(36)for rank in (0,1))
+            assert seen and not set(seen)&set(scope['mutable_runtime_refs'])
+>           assert actual['peak_workspace_vectors']<=32
+E           KeyError: 'peak_workspace_vectors'
+
+tests/test_qwen_bounded_trained_driver.py:94: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_qwen_bounded_trained_driver.py::test_all1737_PCs_retire_with_raw_immutable_bytes_and_mutable_KV
