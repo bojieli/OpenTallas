@@ -1,0 +1,18 @@
+F......                                                                  [100%]
+=================================== FAILURES ===================================
+_______________________ test_exact_receipt_reproduction ________________________
+
+receipt = {'RTL_PnR': False, 'base_commit': '4c8b7f2d8e246bd09250051fc8f7cb3e3340f574', 'coordinated_binding_task': {'RNE_WAKE_c...F16_physical_macros_per_layer_die': 4096, 'busiest_BF16_column_pairs': 1024, 'busiest_complete_slots': 9546, ...}, ...}
+
+    def test_exact_receipt_reproduction(receipt):
+>       assert receipt==json.loads((R.OUT/'receipt-r2.json').read_text())
+E       AssertionError: assert {'RTL_PnR': F...46, ...}, ...} == {'RTL_PnR': F...46, ...}, ...}
+E         
+E         Omitting 17 identical items, use -vv to show
+E         Differing items:
+E         {'header_census': {'Engram_table_metadata_separated_from_layer_field': {'scale_bytes': 6144182800, 'table_role_not_lay...BF16_stored_extent_bytes': 198263808, 'backbone_BF16_tensor_count': 231, 'backbone_nonexpert_tensor_count': 1255, ...}} != {'header_census': {'Engram_table_metadata_separated_from_layer_field': {'scale_bytes': 6144182800, 'table_role_not_lay...BF16_stored_extent_bytes': 198263808, 'backbone_BF16_tensor_count': 231, 'backbone_nonexpert_tensor_count': 1255, ...}}
+E         Use -v to get more diff
+
+tests/test_dsrom_current4096_field_receipts.py:13: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dsrom_current4096_field_receipts.py::test_exact_receipt_reproduction

@@ -1,0 +1,18 @@
+{
+  "artifacts": {
+    "inputs/inventory.json": "bf0ed18a47a53bdbae6123450a7208b89b1aae27e78da17f7680312b7ec79b86",
+    "inputs/per_element_envelope.json": "97797846d768e2dd5e156efeeac993e7810acb8494a9d4cbe70e514c6389f57d",
+    "inputs/snapshot_receipt.json": "aac40683cbb2a11e1d02c36d0115b2c853348e87498c99f16505c882615844d8",
+    "receipt-r2.json": "5ca5c81de560a191855b3894079166f7aa4cad092043cbafe12d08d10b2b61f0",
+    "receipt-r3.json": "df2c714a6af37f0f83f2ec63838f827b08746b08aa3efd5d9e67d7b5147a06d3",
+    "receipt-r4.json": "f8a2f1333f31dcded2bf068ce4a21a9741f9cf2e88e58baba0b71386802a4223",
+    "receipt.json": "de9d94ca7f126e072be3d1cfe3a286d981445981a029e78144ab32d1ff7cdc9a",
+    "tests-r4.log": "06955fb47f16312e5d13266c774a2aa4648c46e423cbe6564a92e25b68e39131",
+    "tests_failure_r2.log": "87182e5ea31c05c69e26f30e84e698c66138a70e28fef8c2ebb1711e5e739af7"
+  },
+  "current": "receipt-r4.json",
+  "earlier_records_preserved": true,
+  "no_RTL_PnR": true,
+  "tests_PASS": 8,
+  "verdict": "FAIL_S58_CORRECTED_SERVICE_CAPACITY_SCREEN"
+}
