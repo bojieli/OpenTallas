@@ -12,6 +12,81 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def test_H4_reprice_64B_transactions_and_dispatch_preserves_provider_charge(self):
+        e={'explicit_provisional_latency':{'shared_beat128':8,'native_batch':32},
+            'ordered_PC_ticks':90,'ordered_PC_intervals':[{'pc':0,'start':0,'end':90,
+            'provider_service_ticks':10,'cost_units':{'shared_beat128':2,'native_batch':2},
+            'all_provider_grants_before_PC_retire':True}]}
+        r=c.reprice_h4_intervals(e)
+        self.assertEqual(r['scratch64_transactions'],4)
+        self.assertEqual(r['ordered_PC_intervals'][0]['provider_service_ticks'],10)
+        self.assertEqual(r['software_ticks'],150)
+        self.assertFalse(r['hardware_clock_admission']);self.assertFalse(r['r22_augmentation_applied'])
+        bad=copy.deepcopy(e);bad['ordered_PC_intervals'][0]['end']=89
+        with self.assertRaisesRegex(ValueError,'cost mismatch'):c.reprice_h4_intervals(bad)
+        bad=copy.deepcopy(r['explicit_provisional_costs']);bad['C0_decode']=0
+        with self.assertRaisesRegex(ValueError,'positive explicit'):c.reprice_h4_intervals(e,costs=bad)
+
+    def test_C0_scoreboard_credit_ACK_reverse_alias_and_generation(self):
+        s=c.C0VersionScoreboard(entries=3)
+        a=(0,0,'a',1);b=(0,0,'b',1);d=(0,0,'d',1)
+        s.publish(a,('RF',0,512));s.publish(b,('RF',512,512),visible=False)
+        s.publish(d,('RF',1024,512),visible=False)
+        s.accept('add',[a],b)
+        with self.assertRaisesRegex(ValueError,'credit exhausted'):s.accept('mul',[a],d)
+        with self.assertRaisesRegex(ValueError,'retained lease'):s.release(a)
+        with self.assertRaisesRegex(ValueError,'transition order'):s.transition('add','consumer_accept')
+        s.transition('add','complete');s.transition('add','mirrored_visible_ACK')
+        s.accept('mul',[b],d)
+        for phase in ['consumer_accept','reverse_grant','retire']:s.transition('add',phase)
+        s.release(a)
+        with self.assertRaisesRegex(ValueError,'live home alias'):s.publish((0,0,'x',2),('RF',512,512))
+        with self.assertRaisesRegex(ValueError,'stale home generation'):s.publish(a,('RF',0,512))
+        s.publish((0,0,'next',2),('RF',0,512))
+        with self.assertRaisesRegex(ValueError,'scoreboard exhausted'):s.publish((0,1,'other',1),('RF',0,512))
+        for phase in ['complete','mirrored_visible_ACK','consumer_accept','reverse_grant','retire']:s.transition('mul',phase)
+        s.release(b);s.release(d);s.release((0,0,'next',2))
+        self.assertFalse(s.live);self.assertFalse(s.commands);self.assertFalse(s.RF_owner)
+
+    def test_H4_source_pinned_unified_configuration_and_32SM_RF_footprint(self):
+        d=ROOT/'results/uarch/h3_complete_native_calendar_20261002/h4_actual_config_e844/inputs'
+        r=c.compose_h4_uarch((d/'uarch_model.py.source').read_text(),c.read_json(d/'uarch_parameters.json'),
+                            c.read_json(d/'hardware_inventory.json'))
+        ds=r['designs']['DeepSeek'];q=r['designs']['Qwen']
+        self.assertEqual(ds['reconciled_model_element']['stack_levels'],4)
+        self.assertFalse(ds['reconciled_model_element']['group_slot'])
+        self.assertEqual(ds['formula_drain_cycles_actual_config']-ds['formula_drain_cycles_before'],7)
+        self.assertEqual(q['RF']['physical_bytes_per_rank'],16777216)
+        self.assertEqual(ds['ports_bytes_per_accepted_transaction']['scratch'],64)
+        self.assertEqual(ds['ports_bytes_per_accepted_transaction']['matrix_ingest'],128)
+        self.assertGreater(ds['matvec_issue_comparison'][0]['actual_row_slot_cycles'],
+                           ds['matvec_issue_comparison'][0]['previous_group_slot_cycles'])
+        self.assertIsNone(ds['routing']['channel_capacity_tracks']);self.assertFalse(ds['hardware_admission'])
+        pins=c.read_json(d/'family_coverage.json')
+        self.assertEqual(pins['DeepSeek']['unique_PCs'],2213);self.assertEqual(pins['Qwen']['unique_PCs'],1737)
+
+    def test_H4_DS_actual_stage_C0_completion_after_native_visible_commit(self):
+        d=ROOT/'results/uarch/h3_complete_native_calendar_20261002/h4_actual_config_e844/inputs'
+        calendar=c.read_json(d/'DS_PC127_calendar.json.gz');program=c.read_json(d/'DS_PC127_template.json.gz')
+        costs=c.reprice_h4_intervals(c.read_json(d/'Qwen_provider_execution.json.gz'))['explicit_provisional_costs']
+        r=c.reprice_h4_native_stages(calendar,program,costs)
+        self.assertEqual(r['C0_commands'],1189792);self.assertEqual(r['C0_added_software_ticks'],26175424)
+        self.assertIsNone(r['scratch64_transaction_count']);self.assertFalse(r['payload_executed'])
+        for row in r['stages']:
+            names=[p['phase'] for p in row['phases']]
+            self.assertEqual(names[:4],['C0_fetch','C0_decode','C0_home_scoreboard','C0_accept'])
+            self.assertEqual(names[-3:-1],['C0_complete','C0_reverse_retire'])
+            self.assertEqual(row['phases'][-1]['end'],row['batch_stride'])
+
+    def test_C0_global_HBM_alias_and_declared_future_consumer_are_not_free(self):
+        s=c.C0VersionScoreboard();a=(0,0,'a',1);b=(0,0,'b',1)
+        s.publish(a,('HBM',4096,512),future_readers=['add'])
+        with self.assertRaisesRegex(ValueError,'live home alias'):s.publish((0,1,'other',2),('HBM',4096,512))
+        with self.assertRaisesRegex(ValueError,'future consumer'):s.release(a)
+        s.publish(b,('RF',0,512),visible=False);s.accept('add',[a,a],b)
+        for phase in ['complete','mirrored_visible_ACK','consumer_accept','reverse_grant','retire']:s.transition('add',phase)
+        s.release(a);s.release(b);self.assertFalse(s.live)
+
     def test_ordered_native_SM_services_reject_alias_missing_read_and_RTL_credit(self):
         p={'providers':{'input':{'shape':[256],'dtype':'F32'}},'code':[
             {'op':'LOAD','dst':'x','src':[],'shape':[256],'attrs':{'name':'input','dtype':'F32'}},

@@ -52,6 +52,227 @@ def read_json(path):
     return json.loads(Path(path).read_text())
 
 
+def reprice_h4_intervals(execution, *, costs=None):
+    """Recompose retained execution, without arithmetic/provider rerun or r22.
+
+    Producer128B shared transfers each require two actual64B transactions.
+    C0 is an explicit provisional software service demand, never an RTL bridge.
+    """
+    costs = dict(costs or {'scratch64_transaction':8, 'C0_fetch':2,
+        'C0_decode':2, 'C0_home_scoreboard':12, 'C0_accept':2,
+        'C0_complete':2, 'C0_reverse_retire':2})
+    required = {'scratch64_transaction','C0_fetch','C0_decode','C0_home_scoreboard',
+                'C0_accept','C0_complete','C0_reverse_retire'}
+    if set(costs) != required: raise ValueError('complete H4 cost table required')
+    for key,value in costs.items(): positive(value,key)
+    old_costs = execution['explicit_provisional_latency']
+    rows=[]; shift=0; total_shared=total_commands=0
+    for row in execution['ordered_PC_intervals']:
+        units=row['cost_units']; commands=units['native_batch']
+        if type(commands) is not int or commands<0: raise ValueError('native command repetitions')
+        old_shared=units['shared_beat128']; shared64=2*old_shared
+        if type(old_shared) is not int or old_shared<0: raise ValueError('shared repetitions')
+        before=row['provider_service_ticks']+sum(units[k]*old_costs[k] for k in old_costs)
+        if row['end']-row['start'] != before: raise ValueError('retained interval cost mismatch')
+        if not row['all_provider_grants_before_PC_retire']: raise ValueError('unretired provider ownership')
+        extra_shared=shared64*costs['scratch64_transaction']-old_shared*old_costs['shared_beat128']
+        dispatch=commands*sum(v for k,v in costs.items() if k!='scratch64_transaction')
+        changed=dict(row);changed.update(start=row['start']+shift,
+            end=row['end']+shift+extra_shared+dispatch,
+            scratch64_transactions=shared64, C0_command_repetitions=commands,
+            C0_service_ticks=dispatch, scratch_reprice_delta=extra_shared,
+            RF_service_credit='existing serialized provider/ACK charge retained once',
+            native_RTL_bridge=False)
+        rows.append(changed);shift+=extra_shared+dispatch
+        total_shared+=shared64;total_commands+=commands
+    return {'schema':'H4_REPRICED_RETAINED_SOFTWARE_INTERVALS_V1',
+        'ordered_PC_intervals':rows, 'software_ticks':execution['ordered_PC_ticks']+shift,
+        'baseline_software_ticks':execution['ordered_PC_ticks'], 'delta_software_ticks':shift,
+        'scratch64_transactions':total_shared,'C0_commands':total_commands,
+        'explicit_provisional_costs':costs,'hardware_clock_admission':False,
+        'arithmetic_or_provider_rerun':False,'r22_augmentation_applied':False,
+        'qualification':'CPU/native execution retained as software evidence only; all51 H1 family bridges absent',
+        'traffic_scope':'existing reduced36layer fixtures; not fullshape checkpoint execution'}
+
+
+class C0VersionScoreboard:
+    """Finite software C0 ABI control; Sagan owns its actual command bridge.
+
+    Immutable identity includes rank/SM/version/generation. Complete, visible,
+    consumer accept, reverse grant and retirement are distinct transitions.
+    One RF transaction credit stays held from accept through mirrored ACK.
+    """
+    def __init__(self, entries=512):
+        self.capacity=positive(entries,'scoreboard entries');self.live={};self.commands={}
+        self.last_generation={};self.RF_owner={}
+
+    def publish(self, identity, home, *, visible=True, future_readers=()):
+        if len(identity)!=4: raise ValueError('rank SM version generation identity')
+        rank,sm,version,generation=identity
+        if type(rank)!=int or rank<0 or type(sm)!=int or not 0<=sm<32 or not version:
+            raise ValueError('rank SM version identity')
+        positive(generation,'version generation')
+        if len(home)!=3 or home[0] not in ('RF','scratch','HBM'):
+            raise ValueError('concrete storage base extent required')
+        kind,base,size=home;positive(size,'home bytes')
+        if type(base)!=int or base<0: raise ValueError('concrete home base required')
+        cap={'RF':262144,'scratch':65536,'HBM':1<<27}[kind]
+        if base+size>cap: raise ValueError('home physical extent')
+        if len(self.live)>=self.capacity: raise ValueError('finite scoreboard exhausted')
+        if identity in self.live: raise ValueError('duplicate version identity')
+        key=(rank,None if kind=='HBM' else sm,kind,base)
+        if generation<=self.last_generation.get(key,0): raise ValueError('stale home generation')
+        for ident,e in self.live.items():
+            k,b,n=e['home']
+            same_scope=ident[0]==rank and (kind=='HBM' or ident[1]==sm)
+            if same_scope and k==kind and base<b+n and b<base+size:
+                raise ValueError('premature write reuse live home alias')
+        self.live[identity]={'home':home,'visible':visible,'readers':set(),
+                             'future_readers':set(future_readers),'producer':None}
+        self.last_generation[key]=generation
+
+    def accept(self, command, sources, destination):
+        if command in self.commands: raise ValueError('duplicate command')
+        identities=list(sources)+[destination]
+        if any(i not in self.live for i in identities): raise ValueError('unbound version/home')
+        owner=destination[:2]
+        if any(i[:2]!=owner for i in identities): raise ValueError('cross SM requires priced provider route')
+        if owner in self.RF_owner: raise ValueError('RF transaction credit exhausted through ACK')
+        if any(not self.live[i]['visible'] for i in sources): raise ValueError('premature read visibility')
+        if self.live[destination]['visible'] or self.live[destination]['producer'] is not None:
+            raise ValueError('destination already produced')
+        self.RF_owner[owner]=command;self.live[destination]['producer']=command
+        for i in sources:self.live[i]['readers'].add(command)
+        self.commands[command]={'sources':list(sources),'destination':destination,'phase':'accepted'}
+
+    def transition(self, command, phase):
+        c=self.commands[command];expected={'accepted':'complete','complete':'mirrored_visible_ACK',
+            'mirrored_visible_ACK':'consumer_accept','consumer_accept':'reverse_grant','reverse_grant':'retire'}
+        if expected.get(c['phase'])!=phase: raise ValueError('C0 transition order')
+        c['phase']=phase
+        if phase=='mirrored_visible_ACK':
+            self.live[c['destination']]['visible']=True;del self.RF_owner[c['destination'][:2]]
+        if phase=='retire':
+            for i in set(c['sources']):
+                self.live[i]['readers'].remove(command);self.live[i]['future_readers'].discard(command)
+            self.live[c['destination']]['producer']=None;del self.commands[command]
+
+    def release(self, identity):
+        e=self.live[identity]
+        if e['readers'] or e['future_readers'] or e['producer'] is not None:
+            raise ValueError('retained lease before reverse retirement or declared future consumer')
+        del self.live[identity]
+
+
+def reprice_h4_native_stages(calendar, program, costs):
+    """Add ordered C0 service to the proved native trace, with no new payload run."""
+    original_proof=verify_ssa_finite_sm_services(calendar,program)
+    keys=['C0_fetch','C0_decode','C0_home_scoreboard','C0_accept','C0_complete','C0_reverse_retire']
+    dispatch=[(k,positive(costs[k],k)) for k in keys]
+    rows=[];now=0;delta=0
+    for old in calendar['stages']:
+        phases=[];cursor=0
+        for key,value in dispatch[:4]:
+            phases.append({'phase':key,'units':1,'start':cursor,'end':cursor+value,
+                           'provisional_service_ticks':value})
+            cursor+=value
+        prefix=cursor
+        for phase in old['phases']:
+            if phase is old['phases'][-1]:
+                for key,value in dispatch[4:]:
+                    phases.append({'phase':key,'units':1,'start':phase['start']+cursor,
+                        'end':phase['start']+cursor+value,'provisional_service_ticks':value})
+                    cursor+=value
+            p=dict(phase);p['start']+=cursor;p['end']+=cursor;phases.append(p)
+        stride=old['batch_stride']+cursor
+        row=dict(old);row.update(start=now,end=now+stride*old['repetitions'],batch_stride=stride,
+            phases=phases,C0_command_repetitions=old['repetitions'],native_RTL_bridge=False,
+            C0_RF_credit_scope='accept through existing two-mirror visible ACK; conservative batch ownership retained',
+            C0_issue_prefix_ticks=prefix)
+        now=row['end'];rows.append(row);delta+=cursor*old['repetitions']
+    if now!=calendar['software_ticks']+delta:raise ValueError('C0 ordered stage composition')
+    return {'schema':'H4_C0_REPRICED_ORDERED_DS_STAGE_SERVICES_V1','stages':rows,
+        'software_ticks':now,'baseline_software_ticks':calendar['software_ticks'],
+        'C0_added_software_ticks':delta,'C0_commands':sum(r['repetitions'] for r in rows),
+        'baseline_native_port_and_lifetime_proof':original_proof,'workspace':calendar['workspace'],
+        'workspace_peak_bytes':calendar['workspace_peak_bytes'],
+        'constrained_extent_successor_demand':calendar['constrained_extent_successor_demand'],
+        'scope':'PC127 rank0 native source-ordered conservative services only; no all2213 payload run',
+        'scratch64_transaction_count':None,
+        'scratch_count_unknown_reason':'DS relative32MiB workspace is not H1 local64KiB scratch; actual shared movement bridge not bound',
+        'payload_executed':False,'hardware_clock_admission':False,
+        'physical_workspace_admission':False,'r22_augmentation_applied':False}
+
+
+def compose_h4_uarch(model_source, parameters, inventory):
+    """Source-pinned unified model algorithms with actual H1 configurations.
+
+    Pure unit-sum model excludes opportunistic physical record substitution.
+    No executable opcode implementation is inferred from modeled area/rate.
+    """
+    names={'sm_area','sm_op_cycles','mma_drain_cycles'}
+    parsed=ast.parse(model_source);selected=[n for n in parsed.body if isinstance(n,ast.FunctionDef) and n.name in names]
+    if {n.name for n in selected}!=names: raise ValueError('unified model functions missing')
+    namespace=dict(parameters,math=math,gpu_hardened_columns=lambda:{})
+    exec(compile(ast.Module(body=selected,type_ignores=[]),'pinned_unified_model','exec'),namespace)
+    result={}
+    for target,key,ranks in [('Qwen','qwen',2),('DeepSeek','v41',96)]:
+        old=dict(inventory['unified_model']['SM_ELEM'][key]);actual=dict(old)
+        config=inventory['bindings']['Qwen_matrix' if key=='qwen' else 'DS_matrix']['config']
+        actual['stack_levels']=config['LEV'];actual['group_slot']=False
+        area=namespace['sm_area'](actual,64);rf_macros=4*16*2
+        rf_area=rf_macros*parameters['SRAM_128X256_UM2']*parameters['GPU_MACRO_PACK']/1e6
+        # ASSUMED finite C0 implementation:512 entries of200 bits and512bit command.
+        control_bits=512*200+512; mux_bits=512*31
+        control_area=(control_bits*parameters['DFF_UM2']+mux_bits*.2)/parameters['GPU_LOGIC_UTIL']/1e6
+        per_sm=area['total_mm2']+rf_area+control_area
+        result[target]={'actual_H1_config':config,'previous_model_element':old,'reconciled_model_element':actual,
+            'ranks':ranks,'SMs_per_rank':32,'total_SM_replicas':ranks*32,
+            'clock_policy':{'streaming_target_Hz':1200000000,'serial_chain_target_Hz':900000000,
+                'setup_uncertainty_ps':60,'hold_uncertainty_ps':25,'SS_FF_qualification':False,
+                'software_tick_to_hardware_clock_conversion':None},
+            'RF':{'logical_bytes_per_SM':262144,'physical_mirrored_bytes_per_SM':524288,
+                'logical_bytes_per_rank':8388608,'physical_bytes_per_rank':16777216,
+                'logical_vectors':512,'workspace_reserved_vectors':32,'retained_source_vectors':480,
+                'read_ports':2,'write_ports':1,'physical_write_copies':2,
+                'transaction_credit':1,'credit_held_until':'mirrored_visible_ACK',
+                'macros_per_SM':rf_macros,'footprint_mm2_per_SM':rf_area},
+            'ports_bytes_per_accepted_transaction':{'RF_read_A':512,'RF_read_B':512,
+                'RF_write_A':512,'RF_write_B':512,'scratch':64,'matrix_ingest':128},
+            'boundary_bits_per_transaction':{'RF_operands':8192,'RF_mirrored_write':8192,
+                'scratch':512,'matrix_ingest':1024,'C0_command':512},
+            'port_peak_Bpc_is_not_achieved_rate':True,
+            'finite_credits_per_SM':{'C0_command':1,'RF_transaction':1,'scratch_transaction':1,
+                'scoreboard_entries':512,'provider_tag':1,'reverse_grant':1},
+            'compute':{'matrix_macs_per_issue_clk':2048 if key=='qwen' else 512,
+                'mode_rates_macs_per_issue_clk':{'INT8':2048} if key=='qwen' else {'BF16':512,'FP8':1024,'FP4':2048},
+                'mode_rate_basis':'lane/column analytical peak, mutually exclusive formats; H1 DS exercises BF16 only',
+                'unified_area_helper_sum_of_mode_lanes_not_an_issue_rate':area['macs_per_clk'],
+                'native_hardware_bound_families':0,
+                'actual_H1_opcode_exercised':['FADD'],'general_native_issue_rate':'UNKNOWN_POSITIVE_PROVISIONAL_REQUIRED',
+                'communication_intensity_H1_macs_per_ingest_byte':(2048 if key=='qwen' else 512)/128},
+            'area':{'matrix_and_SIMT_unit_sum':area,'RF_added_mm2_per_SM':rf_area,
+                'C0_ASSUMED_mm2_per_SM':control_area,'modeled_lower_mm2_per_SM':per_sm,
+                'modeled_lower_mm2_per_rank':32*per_sm,
+                'excluded':'unimplemented generic SFU/reduction/movement/collective units; measured slot-fit UNKNOWN'},
+            'routing':{'local_payload_tracks_lower':8192+8192+512+1024+512,
+                'replicas':32,'command_mux_2to1_bit_equivalents':mux_bits,'command_demux_destinations':32,
+                'broadcast_fanout':32,'channel_capacity_tracks':None,'slot_fit':None,
+                'admission':'BLOCKED until actual floorplan channel/escape and complete endpoint areas'},
+            'formula_drain_cycles_before':namespace['mma_drain_cycles'](old),
+            'formula_drain_cycles_actual_config':namespace['mma_drain_cycles'](actual),
+            'matvec_issue_comparison':[{'rows_per_rank':rows,'K':5120,'format':'fp8',
+                'previous_group_slot_cycles':namespace['sm_op_cycles'](rows,5120,'fp8',1,True),
+                'actual_row_slot_cycles':namespace['sm_op_cycles'](rows,5120,'fp8',1,False)}
+                for rows in (32,64,256)] if key=='v41' else [],
+            'hardware_admission':False}
+    return {'schema':'H4_SOURCE_PINNED_ACTUAL_CONFIG_UNIFIED_COMPOSITION_V1','designs':result,
+        'status':'MODELED_SOFTWARE_SERVICE_DEMAND_HARDWARE_UNQUALIFIED',
+        'area_basis':'unified sm_area pure unit-sum; RF macro footprints + explicitly assumed C0 DFF/mux; lower bound',
+        'measured_costs':'UNKNOWN; positive provisional calendar separate',
+        'C0_bridge_owner':'Sagan','composed_model_owner':'Dewey'}
+
+
 def verify_portable_producer(path, native):
     """Validate archived producer bytes without consulting another checkout."""
     pin_path = path.parent / 'producer_pins.json'
@@ -592,9 +813,9 @@ def execute_bounded_provider_program(N, K, native, backend, *, positions, sideca
     No materialized fullshape calendar or r22 cost augmentation executes here.
     """
     import numpy as np
-    latency = dict(latency or {'native_batch':32, 'shared_beat128':8, 'NoC_page512':64,
+    latency = dict(latency or {'native_batch':32, 'scratch64_transaction':8, 'NoC_page512':64,
                                'PC_admit':2, 'PC_retire':2, 'visibility_fence':4, 'collective_rendezvous':2})
-    required = {'native_batch','shared_beat128','NoC_page512','PC_admit','PC_retire','visibility_fence','collective_rendezvous'}
+    required = {'native_batch','scratch64_transaction','NoC_page512','PC_admit','PC_retire','visibility_fence','collective_rendezvous'}
     if set(latency)!=required: raise ValueError('complete explicit latency table required')
     for key,value in latency.items(): positive(value,key)
     if not hasattr(backend, 'read_tile_bytes'):
@@ -768,7 +989,7 @@ def execute_bounded_provider_program(N, K, native, backend, *, positions, sideca
         if dict(counts)!=expected: raise ValueError('executed PC native primitive count mismatch '+str(op['pc']))
         transfers = Counter(machine.store.counters)-before_transfer; tiles = Counter(machine.counters)-before_tiles
         cost_units = {'native_batch':sum((Counter(physical_batches)-batches).values()),
-            'shared_beat128':tiles['shared_read_beats128']+tiles['shared_write_beats128'],
+            'scratch64_transaction':2*(tiles['shared_read_beats128']+tiles['shared_write_beats128']),
             'NoC_page512':(transfers['NoC_source_read_bits']+transfers['NoC_source_write_bits'])//4096,
             'PC_admit':1,'PC_retire':1,'visibility_fence':int(op['opcode']=='KV_FENCE'),
             'collective_rendezvous':int(op['opcode'] in ('ALL_REDUCE','ARGMAX_REDUCE'))}
@@ -2258,7 +2479,45 @@ def main():
     ap.add_argument('--ds-stage-bindings', type=Path)
     ap.add_argument('--ds-stage-workspace', type=Path)
     ap.add_argument('--ds-stage-rank', type=int, default=0)
+    ap.add_argument('--h4-cost-join', type=Path)
     args = ap.parse_args()
+    if args.h4_cost_join:
+        folder=args.h4_cost_join
+        pins=read_json(folder/'inputs.json')
+        for name,digest in pins['sha256'].items():
+            if hashlib.sha256((folder/name).read_bytes()).hexdigest()!=digest:
+                raise ValueError('H4 source pin mismatch: '+name)
+        model=compose_h4_uarch((folder/'uarch_model.py.source').read_text(),
+            read_json(folder/'uarch_parameters.json'),read_json(folder/'hardware_inventory.json'))
+        execution=read_json(folder/'Qwen_provider_execution.json.gz')
+        repriced=reprice_h4_intervals(execution)
+        ds=reprice_h4_native_stages(read_json(folder/'DS_PC127_calendar.json.gz'),
+            read_json(folder/'DS_PC127_template.json.gz'),repriced['explicit_provisional_costs'])
+        summary={'schema':'H4_FINITE_MODEL_COST_JOIN_V1','source_sha256':pins['sha256'],
+            'consumer_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            'Qwen_fixture_PC_intervals':len(repriced['ordered_PC_intervals']),
+            'Qwen_software_ticks_before':repriced['baseline_software_ticks'],
+            'Qwen_software_ticks_after':repriced['software_ticks'],
+            'scratch64_transactions':repriced['scratch64_transactions'],
+            'C0_command_repetitions':repriced['C0_commands'],
+            'DS_PC127_C0_commands':ds['C0_commands'],'DS_PC127_added_software_ticks':ds['C0_added_software_ticks'],
+            'DS_PC127_source_stages':len(ds['stages']),
+            'H1_bridge_family_coverage':read_json(folder/'family_coverage.json'),
+            'hardware_clock_admission':False,'no_provider_or_arithmetic_repeat':True,
+            'RF_ACK_service_charged_once':True,'r22_augmentation_applied':False}
+        artifacts={'model.json':model,'summary.json':summary,'repriced_intervals.json.gz':repriced,
+                   'DS_PC127_repriced_stages.json.gz':ds}
+        if args.verify:
+            for name,value in artifacts.items():
+                if read_json(args.out/name)!=value:raise ValueError('H4 cost replay mismatch: '+name)
+        else:
+            args.out.mkdir(parents=True,exist_ok=False)
+            for name,value in artifacts.items():
+                raw=(json.dumps(value,sort_keys=True,indent=2)+'\n').encode()
+                (args.out/name).write_bytes(gzip.compress(raw,mtime=0) if name.endswith('.gz') else raw)
+        print(json.dumps(summary,sort_keys=True))
+        print('PASS_H4_SOURCE_PINNED_COST_REPLAY' if args.verify else 'PASS_H4_FINITE_MODEL_COST_JOIN')
+        return
     if args.ds_native_stage_calendar:
         if args.ds_stage_bindings is None:raise ValueError('native source provider bindings required')
         program=read_json(args.ds_native_stage_calendar);bindings=read_json(args.ds_stage_bindings)
