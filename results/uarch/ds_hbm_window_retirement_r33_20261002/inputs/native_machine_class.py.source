@@ -1,0 +1,66 @@
+import numpy as np
+class Machine:
+    def __init__(self,program,memory,div=None):
+        self.program=program;self.memory=memory;self.div=div;self.events=[];self.fault=False;self.error_events=[]
+    def run(self):
+        r={};last={}
+        for pc,i in enumerate(self.program['code']):
+            for x in i['src']:last[x]=pc
+        for x in self.program['outputs'].values():last[x]=len(self.program['code'])
+        for pc,i in enumerate(self.program['code']):
+            op=i['op'];at=i['attrs'];a=[r[x] for x in i['src']]
+            if op=='IOTA':v=np.arange(i['shape'][0],dtype=np.int64)
+            elif op=='LOAD':
+                if at['name'] not in self.memory:raise ValueError('unbound native provider '+at['name'])
+                v=np.asarray(self.memory[at['name']],dtype={'F32':np.float32,'U32':np.uint32,'I64':np.int64}[at['dtype']])
+            elif op=='CONST':
+                v=np.asarray(at['bits'],np.uint32).view(np.float32) if at['dtype']=='F32' else np.asarray(at['value'],dtype={'U32':np.uint32,'I64':np.int64}[at['dtype']])
+            elif op=='RESHAPE':v=a[0].reshape(i['shape'])
+            elif op=='SLICE':
+                sl=[slice(None)]*a[0].ndim;sl[at['axis']]=slice(at['start'],at['stop'],at['step']);v=a[0][tuple(sl)]
+            elif op=='TRANSPOSE':v=a[0].transpose(at['axes'])
+            elif op=='CONCAT':v=np.concatenate(a,axis=at['axis'])
+            elif op=='BROADCAST':v=np.broadcast_to(a[0],i['shape'])
+            elif op=='TAKE':
+                if np.any(a[1]<0) or np.any(a[1]>=a[0].shape[at['axis']]):raise ValueError('native address range')
+                v=np.take(a[0],a[1].astype(np.int64),axis=at['axis'])
+            elif op=='SCATTER':
+                v=a[0].copy();idx=int(a[1]);
+                if not 0<=idx<v.shape[at['axis']]:raise ValueError('native scatter range')
+                sl=[slice(None)]*v.ndim;sl[at['axis']]=idx;v[tuple(sl)]=a[2]
+            elif op in ('FADD','FMUL','DIV','SQRT'):
+                with np.errstate(all='ignore'):
+                    if op=='DIV':
+                        if self.div is None:raise ValueError('Epicurus exact DIV provider required')
+                        v,errors=self.div(a[0],a[1]);self.fault|=bool(np.any(errors))
+                        if np.any(errors):self.error_events.append({'pc':pc,'op':op,'errors':np.asarray(errors,np.uint32).tolist()})
+                    else:v=a[0]+a[1] if op=='FADD' else a[0]*a[1] if op=='FMUL' else np.sqrt(a[0])
+                v=np.asarray(v,np.float32);self.fault|=bool(np.any(~np.isfinite(v)));v=(np.where(v==0,np.float32(0),v) if at.get('canonical_zero',True) else v).astype(np.float32)
+            elif op in ('FMAX','FMIN'):v=np.maximum(*a) if op=='FMAX' else np.minimum(*a)
+            elif op.startswith('FCMP'):v=np.asarray(a[0]>a[1] if op=='FCMP_GT' else a[0]<a[1] if op=='FCMP_LT' else a[0]==a[1],np.uint32)
+            elif op=='SELECT':v=np.where(a[0]!=0,a[1],a[2])
+            elif op=='BITCAST_U':v=a[0].astype(np.float32,copy=False).view(np.uint32)
+            elif op=='BITCAST_F':v=a[0].astype(np.uint32,copy=False).view(np.float32)
+            elif op in ('SHR','SHL','AND','OR','XOR','IADD','ISUB','IMUL','IMOD'):
+                wide=any(x.dtype==np.int64 for x in a);dtype=np.int64 if wide else np.uint32
+                x,y=[z.astype(dtype) for z in a]
+                if op in ('SHR','SHL') and np.any((y<0)|(y>=64 if wide else y>=32)):raise ValueError('native shift range')
+                with np.errstate(all='ignore'):
+                    v={'SHR':lambda:x>>y,'SHL':lambda:x<<y,'AND':lambda:x&y,'OR':lambda:x|y,'XOR':lambda:x^y,'IADD':lambda:x+y,'ISUB':lambda:x-y,'IMUL':lambda:x*y,'IMOD':lambda:x%y}[op]().astype(dtype)
+            elif op=='I2F':v=a[0].astype(np.float32)
+            elif op=='F2I':v=a[0].astype(np.int64)
+            elif op=='LDEXP':
+                with np.errstate(all='ignore'):v=np.ldexp(a[0].astype(np.float32),a[1].astype(np.uint32).view(np.int32) if a[1].dtype==np.uint32 else a[1].astype(np.int32)).astype(np.float32)
+                self.fault|=bool(np.any(~np.isfinite(v)))
+            elif op=='ASSERT':
+                if not np.all(a[0]):raise ValueError('native assertion '+at.get('reason',''))
+                v=a[0].copy()
+            elif op=='PACKET_COMMIT':
+                if self.fault:raise ValueError('fault prevents successful publication')
+                v=a[0].copy()
+            else:raise ValueError('native instruction unimplemented '+op)
+            if list(v.shape)!=i['shape']:raise ValueError('native shape '+op+str(v.shape)+str(i['shape']))
+            r[i['dst']]=v.copy();self.events.append({'pc':pc,'op':op,'batches128':(v.size+127)//128,'bytes':v.nbytes,'fault':self.fault})
+            for x in list(r):
+                if last.get(x,-1)<=pc and x not in self.program['outputs'].values():del r[x]
+        return {k:r[v].copy() for k,v in self.program['outputs'].items()}
