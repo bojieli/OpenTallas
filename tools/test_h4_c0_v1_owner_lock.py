@@ -11,7 +11,7 @@ def controls():
     command=dict(model='DeepSeek',family='CONTROL_SELECT',source_PC=0,program_sha256='c'*64,template_id='CONTROL_ONLY',ordered_step_index=0,
         owner_tag=4,generation=7,rank=0,SM=0,opcode='SELECT',source_bittypes=[32,64,64],destination_bittype=64,
         source_version_home_refs=[home('predicate',[32]),home('a',[33,34]),home('b',[35,36])],destination_version_home_ref=home('dst',[37,38]),
-        predicate={'source':0},active_lanes=128,source_attrs_rounding={'CONTROL_ONLY':True})
+        predicate={'source':0},active_lanes=128,response_stall_bound=10,source_attrs_rounding={'CONTROL_ONLY':True})
     return AtomicV1Owners(PhysicalBindings(inventory,protocol_control=True),enabled=True,software_model=True),command
 
 def compute(lock,token):
@@ -110,6 +110,16 @@ class OwnerTests(unittest.TestCase):
         lock,c=controls()
         with self.assertRaisesRegex(AdmissionError,'installed connection inventory path'):
             PhysicalBindings(lock.bindings.inventory)
+    def test_composed_owner_ticket_and_no_RF_highword_double_charge(self):
+        lock,c=controls();t=lock.accept(c);state=lock.owner(t)
+        self.assertEqual(state['C0_ticket'],(7,0,4,0,0))
+        compute(lock,t);write(lock,t)
+        self.assertEqual(state['serialized'].time,13+state['cost']['native_only_replacement_ticks'])
+    def test_composed_response_bound_failure_retains_owner(self):
+        lock,c=controls();t=lock.accept(c);lock.read_accept(t,0)
+        with self.assertRaises(ValueError):lock.read_return(t,0,stalls=11)
+        self.assertEqual(lock.owner(t)['read_pending'],0)
+        self.assertFalse(lock.contender_allowed(t[0]))
     def test_default_off(self):
         lock,c=controls()
         with self.assertRaises(AdmissionError):AtomicV1Owners(lock.bindings)
