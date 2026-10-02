@@ -1,0 +1,25 @@
+{
+  "admission": "REJECTED_AREA_CLOCK_CUT_AND_PROVIDER_SLEW",
+  "area_lower_bound_um2": 157385.58875971477,
+  "area_terms_independently_summed": true,
+  "artifact_hashes_verified": 33,
+  "clock_tracks_demanded": 325,
+  "clock_tracks_reserved": 64,
+  "cold_construct_replay": "all allocation JSON fields equal",
+  "focused_tests_passed": 40,
+  "next_gate": "Source-bound local subtree balancing with exact reset/launch/startup/PG and owned binary initialization; full tile and replicated field repricing before map.",
+  "owner_commits": [
+    "075d39861",
+    "5aba37e2c",
+    "bf2a44db6"
+  ],
+  "physical_mapping_or_PnR_qualification": false,
+  "provider_FFs_additionally_counted": 2,
+  "provider_SS_clock_slew_ps": 83.99128098588449,
+  "provider_limit_ps": 80,
+  "schema": "opentallas.parent.qwen-clock-construction-review.v1",
+  "selected_tile_ceiling_um2": 125000,
+  "source_clock_endpoints": 102352,
+  "source_reset_endpoints": 56683,
+  "stored_Z": "FAIL_RETAINED"
+}

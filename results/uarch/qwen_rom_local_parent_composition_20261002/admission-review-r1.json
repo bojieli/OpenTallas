@@ -1,0 +1,93 @@
+{
+  "PnR_admission": false,
+  "additional_maps": 0,
+  "clock_endpoints": 102352,
+  "clock_reset_PG_sites_legally_placed": false,
+  "collector_clock_and_reset_reserved_each": 64,
+  "collector_cut_demand": {
+    "0:130.464": {
+      "all_meander_cut_proof": false,
+      "clock": 20,
+      "clock_reserved": 64,
+      "reset": 56,
+      "reset_reserved": 64
+    },
+    "0:227.232": {
+      "all_meander_cut_proof": false,
+      "clock": 20,
+      "clock_reserved": 64,
+      "reset": 69,
+      "reset_reserved": 64
+    },
+    "1:393.12": {
+      "all_meander_cut_proof": false,
+      "clock": 11,
+      "clock_reserved": 64,
+      "reset": 96,
+      "reset_reserved": 64
+    },
+    "1:489.888": {
+      "all_meander_cut_proof": false,
+      "clock": 387,
+      "clock_reserved": 64,
+      "reset": 410,
+      "reset_reserved": 64
+    }
+  },
+  "complete_cell_area_um2": 94491.74069971479,
+  "full_meander_cut_proof": false,
+  "historical_global157385_lower_bound": "FAIL_RETAINED",
+  "initialized_binary_source_proof": false,
+  "local_clock_skew_nominal_ps": {
+    "ff": 10.749849441180686,
+    "ss": 14.454978923247836
+  },
+  "macro_plus_cell_area_um2": 178914.37301971478,
+  "new_stdcell_pin_access_wire_legalization_proven": false,
+  "nominal_clock_power_scope": "Clock network pin/wire capacitance-only estimate at source Liberty VDD and nominal installed RC; excludes internal cell/macro power and data/service/serial activity. No extracted power, IR/EM or thermal qualification.",
+  "nominal_coordinates_are_model_anchors_not_legal_sites": true,
+  "old_negatives_overwritten": false,
+  "post_one_context_map_criteria": [
+    "Verify85explicit FFsurvival and85restoring inversion realization/absorption, actual census/load equality, source address/CE/KV transition-order and full data graph joins.",
+    "Close actual macro capture/data, control and boundary setup atSS and hold atFF under unchanged uncertainties; then physical route/PG validation."
+  ],
+  "pre_context_build_criteria": [
+    "Legal, distinct clock/reset/provider sites and actual pin landings plus source-matched85FF/85restoring INV allocation; reprice all wires, macro PG/OBS access and R90 field directions on those sites.",
+    "Every actual successor reset deassertion interval must fit removal/recovery and minimum-pulse bounds at SS/FF;49SS/77FFnominal failures currently block readiness.",
+    "Clock/reset collector routing demand must fit64/64selected tracks with1048fill and184spare unchanged; current387clock/410reset check fails and meanders remain unqualified.",
+    "Price continuous source clock-slew range and high/low clock pulses; retain20ps skew,80ps provider input/output bounds,320ps distribution bounds,SS60setup/FF25hold policy.",
+    "Bind actual owned binary/init GO/ib/address/read/tag source and domain-ready retirement. Prove source GO/ready launch timing against50..99psrequirement or price source-owned staging in the once-only calendar.",
+    "Bind finite1536tile field spine and legal rotated PG/cuts, actual selected KV/service/serial readiness and control/CDC costs; cold KV calendar is reference only."
+  ],
+  "proof_dependencies": {
+    "euclid-source-graph-admission.json": {
+      "commit": "61feff51da3236dd7ac436985b90027cd75c5a11",
+      "sha256": "aa92dfdc942b873c01981a10e8987bbad01ebc8b18bf85e99fb7940e9ff1e970",
+      "source_path": "results/uarch/qwen_rom_bank5_control_20261002/producer_graph_join_r1/classification_and_admission.json"
+    },
+    "parent-clock-review.json": {
+      "commit": "bccb938ab2ee4a094167146dd2d6b34b5ed42b96",
+      "sha256": "45c866adb3cf128f5e31126657969b3cb64c8a7780ff347c4aa42bc25071d909",
+      "source_path": "results/uarch/native_software_parent_intake_20261002/Qwen_clock_construction_parent_review.json"
+    }
+  },
+  "provider_FFs_separate": 2,
+  "reset_endpoints": 56683,
+  "reset_release_bound_failures": {
+    "ff": 77,
+    "ss": 49
+  },
+  "schema": "QWEN_LOCAL_SUBTREE_PRE_CONTEXT_ADMISSION_V1",
+  "second_decode_position_runs": 0,
+  "selected_map_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+  "source_arrival_requirement_ps": [
+    50,
+    99
+  ],
+  "source_arrivals_observed": false,
+  "source_map_admission": false,
+  "startup_admitted": false,
+  "startup_demand_edges": 6,
+  "status": "REJECTED_RESET_PHASE_COLLECTOR_CAPACITY_LEGAL_SITES_AND_SOURCE_INIT",
+  "stored_Z": "FAIL_RETAINED"
+}
