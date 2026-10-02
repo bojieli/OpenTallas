@@ -1,0 +1,29 @@
+{
+  "status": "PREPARED_OFFLINE_ARCHIVE_AWAITING_TERMINAL",
+  "source_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "active_source_frozen_commit": "d9329a9fff3240df6fef37fd5e3f548f08bcc9d1",
+  "remaining_plan_sha256": "379dae76d3d4aab890c2b0242c63955ac3bd8477ff79ebbec5de860548237d7c",
+  "remaining_GO_commit": "fef50c307a3367e7883985b4a0c9969391daafab",
+  "tool": "tools/w17_window_core_remaining_archive_replay.py",
+  "no_simulation_or_build": true,
+  "no_watcher_or_service": true,
+  "archive_materialized_content_cap_bytes": 134217728,
+  "sources": "Canonical166 actual captured first sources, reverse ONLY exact first mutation to pinned base; every actual compiled snapshot checked before export. Replay derives every declared phase mutation from archived canonical text and compares all snapshot hashes.",
+  "models_expectations": "Archive all canonical pinned models/generators, exact first/remaining/baseline plans, GO contents, actual runners and their hashed dependencies.",
+  "logs": "Retain first and remaining terminal records/resource/cap/journal logs and all phase evidence; baseline23 original-bench receipts/logs retained separately.",
+  "portability": "Exported replay.py uses only Python standard library and relative archive files. No original /tmp worktrees, Git, installed compiler, binaries, checkpoint or external tool required for --verify.",
+  "first_dependency": "Fresh remaining GO exact reviewed-first status and record/service/closure hashes verified against archived first run.",
+  "success_and_failure": "Terminal PASS requires all3 exact fatal closures. Terminal FAIL stays FAIL; incomplete phases receive no qualification. No changed expectation or retry.",
+  "binary_scope": "No binary replay or deleted generated-content rehash claim; generated inventory and binary pre-reclamation hash provenance only.",
+  "publication": "Parent review/intake then export and commit terminal archive and replay receipt as added main evidence. Preparation alone is not runtime PASS.",
+  "scope": {
+    "historical_baseline23": "Original bench only",
+    "first_control": "Exact qualified acceptance-edge dependency",
+    "remaining_controls": "Wait terminal before verdict",
+    "newbench_full27": false,
+    "physical_provider": false,
+    "fulltoken": false,
+    "adoption": false
+  },
+  "tests": 10
+}
