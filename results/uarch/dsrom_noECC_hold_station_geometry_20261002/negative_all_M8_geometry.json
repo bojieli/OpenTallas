@@ -1,0 +1,2007 @@
+{
+  "cases": {
+    "bfcolumn": {
+      "hold_wire_nominal_upper_failure": [
+        {
+          "M2_wire_um": 0.018,
+          "M3_segments_DBU": [
+            [
+              [
+                272565,
+                71703
+              ],
+              [
+                272565,
+                71721
+              ]
+            ],
+            [
+              [
+                272565,
+                71721
+              ],
+              [
+                276165,
+                71721
+              ]
+            ],
+            [
+              [
+                276165,
+                71721
+              ],
+              [
+                276165,
+                71829
+              ]
+            ],
+            [
+              [
+                272565,
+                71829
+              ],
+              [
+                276165,
+                71829
+              ]
+            ],
+            [
+              [
+                272565,
+                71829
+              ],
+              [
+                272565,
+                71937
+              ]
+            ],
+            [
+              [
+                272565,
+                71937
+              ],
+              [
+                276165,
+                71937
+              ]
+            ],
+            [
+              [
+                276165,
+                71937
+              ],
+              [
+                276165,
+                72045
+              ]
+            ],
+            [
+              [
+                272565,
+                72045
+              ],
+              [
+                276165,
+                72045
+              ]
+            ],
+            [
+              [
+                272565,
+                72045
+              ],
+              [
+                272565,
+                72153
+              ]
+            ],
+            [
+              [
+                272241,
+                72153
+              ],
+              [
+                276165,
+                72153
+              ]
+            ],
+            [
+              [
+                272241,
+                71973
+              ],
+              [
+                272241,
+                72153
+              ]
+            ]
+          ],
+          "M3_wire_um": 18.954,
+          "frozen_nominal_wire_um": 18.432,
+          "frozen_nominal_wire_upper_violated": true,
+          "native_via_landing_union_legalized": false,
+          "net": "H1",
+          "role": "valid",
+          "sink": {
+            "M2_minarea_extension_DBU": 9,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 0,
+            "VIA12_point_DBU": [
+              272241,
+              71973
+            ],
+            "VIA23_point_DBU": [
+              272241,
+              71973
+            ],
+            "instance": "D_valid_HB2",
+            "literal_pin": {
+              "bbox_DBU": [
+                272232,
+                71883,
+                272250,
+                72027
+              ],
+              "layer": "M1"
+            },
+            "pin": "A"
+          },
+          "source": {
+            "M2_minarea_extension_DBU": 6,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 3,
+            "VIA12_point_DBU": [
+              272562,
+              71703
+            ],
+            "VIA23_point_DBU": [
+              272565,
+              71703
+            ],
+            "instance": "D_valid_HB1",
+            "literal_pin": {
+              "bbox_DBU": [
+                272553,
+                71577,
+                272571,
+                71793
+              ],
+              "layer": "M1"
+            },
+            "pin": "Y"
+          },
+          "total_wire_um": 18.972
+        },
+        {
+          "M2_wire_um": 0.027,
+          "M3_segments_DBU": [
+            [
+              [
+                272565,
+                71973
+              ],
+              [
+                274365,
+                71973
+              ]
+            ],
+            [
+              [
+                274365,
+                71973
+              ],
+              [
+                274365,
+                72081
+              ]
+            ],
+            [
+              [
+                272565,
+                72081
+              ],
+              [
+                274365,
+                72081
+              ]
+            ],
+            [
+              [
+                272565,
+                72081
+              ],
+              [
+                272565,
+                72189
+              ]
+            ],
+            [
+              [
+                272565,
+                72189
+              ],
+              [
+                274365,
+                72189
+              ]
+            ],
+            [
+              [
+                272745,
+                72189
+              ],
+              [
+                272745,
+                72243
+              ]
+            ]
+          ],
+          "M3_wire_um": 5.67,
+          "frozen_nominal_wire_um": 5.4,
+          "frozen_nominal_wire_upper_violated": true,
+          "native_via_landing_union_legalized": false,
+          "net": "H2",
+          "role": "valid",
+          "sink": {
+            "M2_minarea_extension_DBU": 0,
+            "M2_minimum_landing_union_length_DBU": 46,
+            "M2_stub_DBU": 18,
+            "VIA12_point_DBU": [
+              272727,
+              72243
+            ],
+            "VIA23_point_DBU": [
+              272745,
+              72243
+            ],
+            "instance": "D_valid_root",
+            "literal_pin": {
+              "bbox_DBU": [
+                272718,
+                72117,
+                272736,
+                72333
+              ],
+              "layer": "M1"
+            },
+            "pin": "A"
+          },
+          "source": {
+            "M2_minarea_extension_DBU": 6,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 3,
+            "VIA12_point_DBU": [
+              272562,
+              71973
+            ],
+            "VIA23_point_DBU": [
+              272565,
+              71973
+            ],
+            "instance": "D_valid_HB2",
+            "literal_pin": {
+              "bbox_DBU": [
+                272553,
+                71847,
+                272571,
+                72063
+              ],
+              "layer": "M1"
+            },
+            "pin": "Y"
+          },
+          "total_wire_um": 5.697
+        },
+        {
+          "M2_wire_um": 0.018,
+          "M3_segments_DBU": [
+            [
+              [
+                272565,
+                72783
+              ],
+              [
+                272565,
+                72801
+              ]
+            ],
+            [
+              [
+                272565,
+                72801
+              ],
+              [
+                276165,
+                72801
+              ]
+            ],
+            [
+              [
+                276165,
+                72801
+              ],
+              [
+                276165,
+                72909
+              ]
+            ],
+            [
+              [
+                272565,
+                72909
+              ],
+              [
+                276165,
+                72909
+              ]
+            ],
+            [
+              [
+                272565,
+                72909
+              ],
+              [
+                272565,
+                73017
+              ]
+            ],
+            [
+              [
+                272565,
+                73017
+              ],
+              [
+                276165,
+                73017
+              ]
+            ],
+            [
+              [
+                276165,
+                73017
+              ],
+              [
+                276165,
+                73125
+              ]
+            ],
+            [
+              [
+                272565,
+                73125
+              ],
+              [
+                276165,
+                73125
+              ]
+            ],
+            [
+              [
+                272565,
+                73125
+              ],
+              [
+                272565,
+                73233
+              ]
+            ],
+            [
+              [
+                272241,
+                73233
+              ],
+              [
+                276165,
+                73233
+              ]
+            ],
+            [
+              [
+                272241,
+                73053
+              ],
+              [
+                272241,
+                73233
+              ]
+            ]
+          ],
+          "M3_wire_um": 18.954,
+          "frozen_nominal_wire_um": 18.432,
+          "frozen_nominal_wire_upper_violated": true,
+          "native_via_landing_union_legalized": false,
+          "net": "H1",
+          "role": "bank",
+          "sink": {
+            "M2_minarea_extension_DBU": 9,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 0,
+            "VIA12_point_DBU": [
+              272241,
+              73053
+            ],
+            "VIA23_point_DBU": [
+              272241,
+              73053
+            ],
+            "instance": "D_bank_HB2",
+            "literal_pin": {
+              "bbox_DBU": [
+                272232,
+                72963,
+                272250,
+                73107
+              ],
+              "layer": "M1"
+            },
+            "pin": "A"
+          },
+          "source": {
+            "M2_minarea_extension_DBU": 6,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 3,
+            "VIA12_point_DBU": [
+              272562,
+              72783
+            ],
+            "VIA23_point_DBU": [
+              272565,
+              72783
+            ],
+            "instance": "D_bank_HB1",
+            "literal_pin": {
+              "bbox_DBU": [
+                272553,
+                72657,
+                272571,
+                72873
+              ],
+              "layer": "M1"
+            },
+            "pin": "Y"
+          },
+          "total_wire_um": 18.972
+        },
+        {
+          "M2_wire_um": 0.027,
+          "M3_segments_DBU": [
+            [
+              [
+                272565,
+                73053
+              ],
+              [
+                274365,
+                73053
+              ]
+            ],
+            [
+              [
+                274365,
+                73053
+              ],
+              [
+                274365,
+                73161
+              ]
+            ],
+            [
+              [
+                272565,
+                73161
+              ],
+              [
+                274365,
+                73161
+              ]
+            ],
+            [
+              [
+                272565,
+                73161
+              ],
+              [
+                272565,
+                73269
+              ]
+            ],
+            [
+              [
+                272565,
+                73269
+              ],
+              [
+                274365,
+                73269
+              ]
+            ],
+            [
+              [
+                272745,
+                73269
+              ],
+              [
+                272745,
+                73323
+              ]
+            ]
+          ],
+          "M3_wire_um": 5.67,
+          "frozen_nominal_wire_um": 5.4,
+          "frozen_nominal_wire_upper_violated": true,
+          "native_via_landing_union_legalized": false,
+          "net": "H2",
+          "role": "bank",
+          "sink": {
+            "M2_minarea_extension_DBU": 0,
+            "M2_minimum_landing_union_length_DBU": 46,
+            "M2_stub_DBU": 18,
+            "VIA12_point_DBU": [
+              272727,
+              73323
+            ],
+            "VIA23_point_DBU": [
+              272745,
+              73323
+            ],
+            "instance": "D_bank_root",
+            "literal_pin": {
+              "bbox_DBU": [
+                272718,
+                73197,
+                272736,
+                73413
+              ],
+              "layer": "M1"
+            },
+            "pin": "A"
+          },
+          "source": {
+            "M2_minarea_extension_DBU": 6,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 3,
+            "VIA12_point_DBU": [
+              272562,
+              73053
+            ],
+            "VIA23_point_DBU": [
+              272565,
+              73053
+            ],
+            "instance": "D_bank_HB2",
+            "literal_pin": {
+              "bbox_DBU": [
+                272553,
+                72927,
+                272571,
+                73143
+              ],
+              "layer": "M1"
+            },
+            "pin": "Y"
+          },
+          "total_wire_um": 5.697
+        }
+      ],
+      "paths": [
+        {
+          "M8_segments": [
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  134356,
+                  72276
+                ],
+                [
+                  274356,
+                  72276
+                ]
+              ]
+            },
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  134356,
+                  35556
+                ],
+                [
+                  134356,
+                  107396
+                ]
+              ]
+            },
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  272596,
+                  35556
+                ],
+                [
+                  272596,
+                  107396
+                ]
+              ]
+            }
+          ],
+          "actual_pin_via_stack_legalized": false,
+          "hold_wires": {
+            "HB1": "D_valid_HB1",
+            "HB2": "D_valid_HB2",
+            "cell_and_wire_minimum_load_gated": true,
+            "first_horizontal_pass_um": 3.6,
+            "first_length_um": 18.432,
+            "first_meander_passes": 5,
+            "first_vertical_pitch_um": 0.108,
+            "layer": "M3",
+            "minimum_wire_length_is_a_required_physical_constraint": true,
+            "native_M3_meander_reserved": false,
+            "root": "D_valid_root",
+            "second_length_um": 5.4,
+            "source_track_pitch_um": 0.036
+          },
+          "maximum_path_bound_um": 200,
+          "maximum_pin_to_pin_L1_upper_um": 177.452,
+          "role": "valid",
+          "root_M8_access_DBU": [
+            274356,
+            72276
+          ],
+          "root_instance": "D_valid_root",
+          "root_pin_point_DBU": [
+            274293,
+            72225
+          ],
+          "sinks": [
+            {
+              "M8_access_DBU": [
+                272596,
+                107396
+              ],
+              "access_L1_DBU": 264,
+              "instance": "enable_s1b1_valid",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  272394,
+                  107217,
+                  272412,
+                  107433
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                272403,
+                107325
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                272596,
+                35556
+              ],
+              "access_L1_DBU": 244,
+              "instance": "enable_s1b0_valid",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  272394,
+                  35397,
+                  272412,
+                  35613
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                272403,
+                35505
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                134356,
+                107396
+              ],
+              "access_L1_DBU": 264,
+              "instance": "enable_s0b1_valid",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  134154,
+                  107217,
+                  134172,
+                  107433
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                134163,
+                107325
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                134356,
+                35556
+              ],
+              "access_L1_DBU": 244,
+              "instance": "enable_s0b0_valid",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  134154,
+                  35397,
+                  134172,
+                  35613
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                134163,
+                35505
+              ]
+            }
+          ],
+          "total_L1_wire_um": 284.81,
+          "total_bound_um": 400,
+          "wire_bounds_screen": true
+        },
+        {
+          "M8_segments": [
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  134516,
+                  73316
+                ],
+                [
+                  274356,
+                  73316
+                ]
+              ]
+            },
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  134516,
+                  35236
+                ],
+                [
+                  134516,
+                  107076
+                ]
+              ]
+            },
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  272756,
+                  35236
+                ],
+                [
+                  272756,
+                  107076
+                ]
+              ]
+            }
+          ],
+          "actual_pin_via_stack_legalized": false,
+          "hold_wires": {
+            "HB1": "D_bank_HB1",
+            "HB2": "D_bank_HB2",
+            "cell_and_wire_minimum_load_gated": true,
+            "first_horizontal_pass_um": 3.6,
+            "first_length_um": 18.432,
+            "first_meander_passes": 5,
+            "first_vertical_pitch_um": 0.108,
+            "layer": "M3",
+            "minimum_wire_length_is_a_required_physical_constraint": true,
+            "native_M3_meander_reserved": false,
+            "root": "D_bank_root",
+            "second_length_um": 5.4,
+            "source_track_pitch_um": 0.036
+          },
+          "maximum_path_bound_um": 200,
+          "maximum_pin_to_pin_L1_upper_um": 178.982,
+          "role": "bank",
+          "root_M8_access_DBU": [
+            274356,
+            73316
+          ],
+          "root_instance": "D_bank_root",
+          "root_pin_point_DBU": [
+            274293,
+            73305
+          ],
+          "sinks": [
+            {
+              "M8_access_DBU": [
+                272756,
+                107076
+              ],
+              "access_L1_DBU": 374,
+              "instance": "enable_s1b1_bank",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  272394,
+                  106947,
+                  272412,
+                  107163
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                272403,
+                107055
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                272756,
+                35236
+              ],
+              "access_L1_DBU": 354,
+              "instance": "enable_s1b0_bank",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  272394,
+                  35127,
+                  272412,
+                  35343
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                272403,
+                35235
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                134516,
+                107076
+              ],
+              "access_L1_DBU": 374,
+              "instance": "enable_s0b1_bank",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  134154,
+                  106947,
+                  134172,
+                  107163
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                134163,
+                107055
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                134516,
+                35236
+              ],
+              "access_L1_DBU": 354,
+              "instance": "enable_s0b0_bank",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  134154,
+                  35127,
+                  134172,
+                  35343
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                134163,
+                35235
+              ]
+            }
+          ],
+          "total_L1_wire_um": 285.05,
+          "total_bound_um": 400,
+          "wire_bounds_screen": true
+        }
+      ],
+      "shorts": [
+        [
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                134356,
+                72276
+              ],
+              [
+                274356,
+                72276
+              ]
+            ]
+          },
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                134516,
+                35236
+              ],
+              [
+                134516,
+                107076
+              ]
+            ]
+          }
+        ],
+        [
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                134356,
+                72276
+              ],
+              [
+                274356,
+                72276
+              ]
+            ]
+          },
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                272756,
+                35236
+              ],
+              [
+                272756,
+                107076
+              ]
+            ]
+          }
+        ],
+        [
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                272596,
+                35556
+              ],
+              [
+                272596,
+                107396
+              ]
+            ]
+          },
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                134516,
+                73316
+              ],
+              [
+                274356,
+                73316
+              ]
+            ]
+          }
+        ]
+      ]
+    },
+    "q": {
+      "hold_wire_nominal_upper_failure": [
+        {
+          "M2_wire_um": 0.018,
+          "M3_segments_DBU": [
+            [
+              [
+                272565,
+                71703
+              ],
+              [
+                272565,
+                71721
+              ]
+            ],
+            [
+              [
+                272565,
+                71721
+              ],
+              [
+                276165,
+                71721
+              ]
+            ],
+            [
+              [
+                276165,
+                71721
+              ],
+              [
+                276165,
+                71829
+              ]
+            ],
+            [
+              [
+                272565,
+                71829
+              ],
+              [
+                276165,
+                71829
+              ]
+            ],
+            [
+              [
+                272565,
+                71829
+              ],
+              [
+                272565,
+                71937
+              ]
+            ],
+            [
+              [
+                272565,
+                71937
+              ],
+              [
+                276165,
+                71937
+              ]
+            ],
+            [
+              [
+                276165,
+                71937
+              ],
+              [
+                276165,
+                72045
+              ]
+            ],
+            [
+              [
+                272565,
+                72045
+              ],
+              [
+                276165,
+                72045
+              ]
+            ],
+            [
+              [
+                272565,
+                72045
+              ],
+              [
+                272565,
+                72153
+              ]
+            ],
+            [
+              [
+                272241,
+                72153
+              ],
+              [
+                276165,
+                72153
+              ]
+            ],
+            [
+              [
+                272241,
+                71973
+              ],
+              [
+                272241,
+                72153
+              ]
+            ]
+          ],
+          "M3_wire_um": 18.954,
+          "frozen_nominal_wire_um": 18.432,
+          "frozen_nominal_wire_upper_violated": true,
+          "native_via_landing_union_legalized": false,
+          "net": "H1",
+          "role": "valid",
+          "sink": {
+            "M2_minarea_extension_DBU": 9,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 0,
+            "VIA12_point_DBU": [
+              272241,
+              71973
+            ],
+            "VIA23_point_DBU": [
+              272241,
+              71973
+            ],
+            "instance": "D_valid_HB2",
+            "literal_pin": {
+              "bbox_DBU": [
+                272232,
+                71883,
+                272250,
+                72027
+              ],
+              "layer": "M1"
+            },
+            "pin": "A"
+          },
+          "source": {
+            "M2_minarea_extension_DBU": 6,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 3,
+            "VIA12_point_DBU": [
+              272562,
+              71703
+            ],
+            "VIA23_point_DBU": [
+              272565,
+              71703
+            ],
+            "instance": "D_valid_HB1",
+            "literal_pin": {
+              "bbox_DBU": [
+                272553,
+                71577,
+                272571,
+                71793
+              ],
+              "layer": "M1"
+            },
+            "pin": "Y"
+          },
+          "total_wire_um": 18.972
+        },
+        {
+          "M2_wire_um": 0.027,
+          "M3_segments_DBU": [
+            [
+              [
+                272565,
+                71973
+              ],
+              [
+                274365,
+                71973
+              ]
+            ],
+            [
+              [
+                274365,
+                71973
+              ],
+              [
+                274365,
+                72081
+              ]
+            ],
+            [
+              [
+                272565,
+                72081
+              ],
+              [
+                274365,
+                72081
+              ]
+            ],
+            [
+              [
+                272565,
+                72081
+              ],
+              [
+                272565,
+                72189
+              ]
+            ],
+            [
+              [
+                272565,
+                72189
+              ],
+              [
+                274365,
+                72189
+              ]
+            ],
+            [
+              [
+                272745,
+                72189
+              ],
+              [
+                272745,
+                72243
+              ]
+            ]
+          ],
+          "M3_wire_um": 5.67,
+          "frozen_nominal_wire_um": 5.4,
+          "frozen_nominal_wire_upper_violated": true,
+          "native_via_landing_union_legalized": false,
+          "net": "H2",
+          "role": "valid",
+          "sink": {
+            "M2_minarea_extension_DBU": 0,
+            "M2_minimum_landing_union_length_DBU": 46,
+            "M2_stub_DBU": 18,
+            "VIA12_point_DBU": [
+              272727,
+              72243
+            ],
+            "VIA23_point_DBU": [
+              272745,
+              72243
+            ],
+            "instance": "D_valid_root",
+            "literal_pin": {
+              "bbox_DBU": [
+                272718,
+                72117,
+                272736,
+                72333
+              ],
+              "layer": "M1"
+            },
+            "pin": "A"
+          },
+          "source": {
+            "M2_minarea_extension_DBU": 6,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 3,
+            "VIA12_point_DBU": [
+              272562,
+              71973
+            ],
+            "VIA23_point_DBU": [
+              272565,
+              71973
+            ],
+            "instance": "D_valid_HB2",
+            "literal_pin": {
+              "bbox_DBU": [
+                272553,
+                71847,
+                272571,
+                72063
+              ],
+              "layer": "M1"
+            },
+            "pin": "Y"
+          },
+          "total_wire_um": 5.697
+        },
+        {
+          "M2_wire_um": 0.018,
+          "M3_segments_DBU": [
+            [
+              [
+                272565,
+                72783
+              ],
+              [
+                272565,
+                72801
+              ]
+            ],
+            [
+              [
+                272565,
+                72801
+              ],
+              [
+                276165,
+                72801
+              ]
+            ],
+            [
+              [
+                276165,
+                72801
+              ],
+              [
+                276165,
+                72909
+              ]
+            ],
+            [
+              [
+                272565,
+                72909
+              ],
+              [
+                276165,
+                72909
+              ]
+            ],
+            [
+              [
+                272565,
+                72909
+              ],
+              [
+                272565,
+                73017
+              ]
+            ],
+            [
+              [
+                272565,
+                73017
+              ],
+              [
+                276165,
+                73017
+              ]
+            ],
+            [
+              [
+                276165,
+                73017
+              ],
+              [
+                276165,
+                73125
+              ]
+            ],
+            [
+              [
+                272565,
+                73125
+              ],
+              [
+                276165,
+                73125
+              ]
+            ],
+            [
+              [
+                272565,
+                73125
+              ],
+              [
+                272565,
+                73233
+              ]
+            ],
+            [
+              [
+                272241,
+                73233
+              ],
+              [
+                276165,
+                73233
+              ]
+            ],
+            [
+              [
+                272241,
+                73053
+              ],
+              [
+                272241,
+                73233
+              ]
+            ]
+          ],
+          "M3_wire_um": 18.954,
+          "frozen_nominal_wire_um": 18.432,
+          "frozen_nominal_wire_upper_violated": true,
+          "native_via_landing_union_legalized": false,
+          "net": "H1",
+          "role": "bank",
+          "sink": {
+            "M2_minarea_extension_DBU": 9,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 0,
+            "VIA12_point_DBU": [
+              272241,
+              73053
+            ],
+            "VIA23_point_DBU": [
+              272241,
+              73053
+            ],
+            "instance": "D_bank_HB2",
+            "literal_pin": {
+              "bbox_DBU": [
+                272232,
+                72963,
+                272250,
+                73107
+              ],
+              "layer": "M1"
+            },
+            "pin": "A"
+          },
+          "source": {
+            "M2_minarea_extension_DBU": 6,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 3,
+            "VIA12_point_DBU": [
+              272562,
+              72783
+            ],
+            "VIA23_point_DBU": [
+              272565,
+              72783
+            ],
+            "instance": "D_bank_HB1",
+            "literal_pin": {
+              "bbox_DBU": [
+                272553,
+                72657,
+                272571,
+                72873
+              ],
+              "layer": "M1"
+            },
+            "pin": "Y"
+          },
+          "total_wire_um": 18.972
+        },
+        {
+          "M2_wire_um": 0.027,
+          "M3_segments_DBU": [
+            [
+              [
+                272565,
+                73053
+              ],
+              [
+                274365,
+                73053
+              ]
+            ],
+            [
+              [
+                274365,
+                73053
+              ],
+              [
+                274365,
+                73161
+              ]
+            ],
+            [
+              [
+                272565,
+                73161
+              ],
+              [
+                274365,
+                73161
+              ]
+            ],
+            [
+              [
+                272565,
+                73161
+              ],
+              [
+                272565,
+                73269
+              ]
+            ],
+            [
+              [
+                272565,
+                73269
+              ],
+              [
+                274365,
+                73269
+              ]
+            ],
+            [
+              [
+                272745,
+                73269
+              ],
+              [
+                272745,
+                73323
+              ]
+            ]
+          ],
+          "M3_wire_um": 5.67,
+          "frozen_nominal_wire_um": 5.4,
+          "frozen_nominal_wire_upper_violated": true,
+          "native_via_landing_union_legalized": false,
+          "net": "H2",
+          "role": "bank",
+          "sink": {
+            "M2_minarea_extension_DBU": 0,
+            "M2_minimum_landing_union_length_DBU": 46,
+            "M2_stub_DBU": 18,
+            "VIA12_point_DBU": [
+              272727,
+              73323
+            ],
+            "VIA23_point_DBU": [
+              272745,
+              73323
+            ],
+            "instance": "D_bank_root",
+            "literal_pin": {
+              "bbox_DBU": [
+                272718,
+                73197,
+                272736,
+                73413
+              ],
+              "layer": "M1"
+            },
+            "pin": "A"
+          },
+          "source": {
+            "M2_minarea_extension_DBU": 6,
+            "M2_minimum_landing_union_length_DBU": 37,
+            "M2_stub_DBU": 3,
+            "VIA12_point_DBU": [
+              272562,
+              73053
+            ],
+            "VIA23_point_DBU": [
+              272565,
+              73053
+            ],
+            "instance": "D_bank_HB2",
+            "literal_pin": {
+              "bbox_DBU": [
+                272553,
+                72927,
+                272571,
+                73143
+              ],
+              "layer": "M1"
+            },
+            "pin": "Y"
+          },
+          "total_wire_um": 5.697
+        }
+      ],
+      "paths": [
+        {
+          "M8_segments": [
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  134356,
+                  72276
+                ],
+                [
+                  274356,
+                  72276
+                ]
+              ]
+            },
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  134356,
+                  35556
+                ],
+                [
+                  134356,
+                  107396
+                ]
+              ]
+            },
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  272596,
+                  35556
+                ],
+                [
+                  272596,
+                  107396
+                ]
+              ]
+            }
+          ],
+          "actual_pin_via_stack_legalized": false,
+          "hold_wires": {
+            "HB1": "D_valid_HB1",
+            "HB2": "D_valid_HB2",
+            "cell_and_wire_minimum_load_gated": true,
+            "first_horizontal_pass_um": 3.6,
+            "first_length_um": 18.432,
+            "first_meander_passes": 5,
+            "first_vertical_pitch_um": 0.108,
+            "layer": "M3",
+            "minimum_wire_length_is_a_required_physical_constraint": true,
+            "native_M3_meander_reserved": false,
+            "root": "D_valid_root",
+            "second_length_um": 5.4,
+            "source_track_pitch_um": 0.036
+          },
+          "maximum_path_bound_um": 200,
+          "maximum_pin_to_pin_L1_upper_um": 177.452,
+          "role": "valid",
+          "root_M8_access_DBU": [
+            274356,
+            72276
+          ],
+          "root_instance": "D_valid_root",
+          "root_pin_point_DBU": [
+            274293,
+            72225
+          ],
+          "sinks": [
+            {
+              "M8_access_DBU": [
+                272596,
+                107396
+              ],
+              "access_L1_DBU": 264,
+              "instance": "enable_s1b1_valid",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  272394,
+                  107217,
+                  272412,
+                  107433
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                272403,
+                107325
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                272596,
+                35556
+              ],
+              "access_L1_DBU": 244,
+              "instance": "enable_s1b0_valid",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  272394,
+                  35397,
+                  272412,
+                  35613
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                272403,
+                35505
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                134356,
+                107396
+              ],
+              "access_L1_DBU": 264,
+              "instance": "enable_s0b1_valid",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  134154,
+                  107217,
+                  134172,
+                  107433
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                134163,
+                107325
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                134356,
+                35556
+              ],
+              "access_L1_DBU": 244,
+              "instance": "enable_s0b0_valid",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  134154,
+                  35397,
+                  134172,
+                  35613
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                134163,
+                35505
+              ]
+            }
+          ],
+          "total_L1_wire_um": 284.81,
+          "total_bound_um": 400,
+          "wire_bounds_screen": true
+        },
+        {
+          "M8_segments": [
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  134516,
+                  73316
+                ],
+                [
+                  274356,
+                  73316
+                ]
+              ]
+            },
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  134516,
+                  35236
+                ],
+                [
+                  134516,
+                  107076
+                ]
+              ]
+            },
+            {
+              "layer": "M8",
+              "points_DBU": [
+                [
+                  272756,
+                  35236
+                ],
+                [
+                  272756,
+                  107076
+                ]
+              ]
+            }
+          ],
+          "actual_pin_via_stack_legalized": false,
+          "hold_wires": {
+            "HB1": "D_bank_HB1",
+            "HB2": "D_bank_HB2",
+            "cell_and_wire_minimum_load_gated": true,
+            "first_horizontal_pass_um": 3.6,
+            "first_length_um": 18.432,
+            "first_meander_passes": 5,
+            "first_vertical_pitch_um": 0.108,
+            "layer": "M3",
+            "minimum_wire_length_is_a_required_physical_constraint": true,
+            "native_M3_meander_reserved": false,
+            "root": "D_bank_root",
+            "second_length_um": 5.4,
+            "source_track_pitch_um": 0.036
+          },
+          "maximum_path_bound_um": 200,
+          "maximum_pin_to_pin_L1_upper_um": 178.982,
+          "role": "bank",
+          "root_M8_access_DBU": [
+            274356,
+            73316
+          ],
+          "root_instance": "D_bank_root",
+          "root_pin_point_DBU": [
+            274293,
+            73305
+          ],
+          "sinks": [
+            {
+              "M8_access_DBU": [
+                272756,
+                107076
+              ],
+              "access_L1_DBU": 374,
+              "instance": "enable_s1b1_bank",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  272394,
+                  106947,
+                  272412,
+                  107163
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                272403,
+                107055
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                272756,
+                35236
+              ],
+              "access_L1_DBU": 354,
+              "instance": "enable_s1b0_bank",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  272394,
+                  35127,
+                  272412,
+                  35343
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                272403,
+                35235
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                134516,
+                107076
+              ],
+              "access_L1_DBU": 374,
+              "instance": "enable_s0b1_bank",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  134154,
+                  106947,
+                  134172,
+                  107163
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                134163,
+                107055
+              ]
+            },
+            {
+              "M8_access_DBU": [
+                134516,
+                35236
+              ],
+              "access_L1_DBU": 354,
+              "instance": "enable_s0b0_bank",
+              "literal_pin_rectangle": {
+                "bbox_DBU": [
+                  134154,
+                  35127,
+                  134172,
+                  35343
+                ],
+                "layer": "M1"
+              },
+              "pin": "D",
+              "pin_point_DBU": [
+                134163,
+                35235
+              ]
+            }
+          ],
+          "total_L1_wire_um": 285.05,
+          "total_bound_um": 400,
+          "wire_bounds_screen": true
+        }
+      ],
+      "shorts": [
+        [
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                134356,
+                72276
+              ],
+              [
+                274356,
+                72276
+              ]
+            ]
+          },
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                134516,
+                35236
+              ],
+              [
+                134516,
+                107076
+              ]
+            ]
+          }
+        ],
+        [
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                134356,
+                72276
+              ],
+              [
+                274356,
+                72276
+              ]
+            ]
+          },
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                272756,
+                35236
+              ],
+              [
+                272756,
+                107076
+              ]
+            ]
+          }
+        ],
+        [
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                272596,
+                35556
+              ],
+              [
+                272596,
+                107396
+              ]
+            ]
+          },
+          {
+            "layer": "M8",
+            "points_DBU": [
+              [
+                134516,
+                73316
+              ],
+              [
+                274356,
+                73316
+              ]
+            ]
+          }
+        ]
+      ]
+    }
+  },
+  "source_model_sha256": "3a90c67c131c7c06d9635e440e5b92ab6b0c6f7f38d1d7160208e24eabeedb50",
+  "source_tool_sha256": "d5ef54bad70a6b85869c0e385a9e7dc29455eb8bdb477a26e5e5bc6017cff1cc",
+  "state": "FAIL_SAME_LAYER_D_NET_SHORTS"
+}
