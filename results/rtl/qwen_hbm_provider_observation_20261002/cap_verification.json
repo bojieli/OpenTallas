@@ -1,0 +1,34 @@
+{
+  "caps": {
+    "affinity": [
+      31
+    ],
+    "cgroup": "/sys/fs/cgroup/system.slice/qwen-provider-r4-20261002.service",
+    "files": {
+      "cgroup.events": "populated 1\nfrozen 0\n",
+      "cpu.max": "100000 100000\n",
+      "cpu.stat": "usage_usec 24611\nuser_usec 14766\nsystem_usec 9844\ncore_sched.force_idle_usec 0\nnr_periods 0\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0\n",
+      "cpuset.cpus": "31\n",
+      "cpuset.cpus.effective": "31\n",
+      "memory.current": "6512640\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory.max": "4294967296\n",
+      "memory.peak": "6512640\n",
+      "memory.swap.max": "0\n"
+    },
+    "monotonic": 3105682.820256127,
+    "systemd_properties": "TimeoutStopUSec=0\nRuntimeMaxUSec=2min 30s\nCPUQuotaPerSecUSec=1s\nAllowedCPUs=31\nMemoryMax=4294967296\nMemorySwapMax=0\nCPUAffinity=31\nKillMode=control-group\nKillSignal=9\n",
+    "utc": "2026-10-02T00:27:06Z"
+  },
+  "limits": {
+    "CPUs": 1,
+    "aggregate_memory_bytes": 4294967296,
+    "aggregate_sim_seconds": 30,
+    "compile_seconds": 120,
+    "cycles_per_case": 8000,
+    "swap_bytes": 0,
+    "whole_cgroup_seconds": 150
+  },
+  "status": "PASS_BEFORE_COMPILE",
+  "worktree_clean": true
+}
