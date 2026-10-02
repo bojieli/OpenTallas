@@ -17,6 +17,11 @@ def canonical(x):return (json.dumps(x,sort_keys=True,indent=2)+'\n').encode()
 def native():return json.load(gzip.open(ROOT/ARTIFACT,'rt'))
 def extents(n):return {e['provider_ref']:e for a in n['provider_binding']['allocation']for e in a['extents']}
 def refs(n):return {r['provider_ref']for o in n['operations']for r in o['provider_binding']['external_providers']}
+MUTABLE_ROLES={'persistent_FP8_K','persistent_FP8_V','software_KV_publication_and_reader_lease_state'}
+def immutable_refs(n):
+ """Checkpoint producer owns requested immutable bytes; native memory owns KV/state."""
+ ex=extents(n)
+ return {r for r in refs(n) if ex[r].get('role')not in MUTABLE_ROLES}
 def bfbytes(value):
  import torch
  if value.dtype!=torch.bfloat16:raise ValueError('BF16 producer type')
@@ -49,8 +54,8 @@ def build(snapshot,out,n=None,admission=None,go_commit=None):
  n=native()if n is None else n
  if admission is None:raise ValueError('fresh resource admission required for full checkpoint production')
  from qwen_trained_native_run import validate_admission,guard
- validate_admission(admission,go_commit);guard(admission,Path(out),sum(extents(n)[r]['bytes']for r in refs(n)))
- out=Path(out);out.mkdir(parents=True,exist_ok=True);p=n['source_program'];reader=CheckpointWeights(p,snapshot,row_batch=128);ex=extents(n);wanted=refs(n)
+ validate_admission(admission,go_commit);guard(admission,Path(out),sum(extents(n)[r]['bytes']for r in immutable_refs(n)))
+ out=Path(out);out.mkdir(parents=True,exist_ok=True);p=n['source_program'];reader=CheckpointWeights(p,snapshot,row_batch=128);ex=extents(n);wanted=immutable_refs(n)
  lock=ROOT/'compiler/models/qwen3-8b/checkpoint_source.json';identity=dict(native_sha256=hashlib.sha256(canonical(n)).hexdigest(),checkpoint_lock_sha256=sha(lock),checkpoint_revision=reader.checkpoint_revision,snapshot=str(Path(snapshot).resolve()),source_sha256={f:sha(ROOT/f)for f in PINS})
  # Source shards are all independently hashed before accepting continuation pages.
  for source in sorted({s for d in p['weight_descriptors'].values()for s in d['checkpoint_sources']}|{'model.embed_tokens.weight','model.norm.weight'}|{f'model.layers.{l}.self_attn.{k}_norm.weight'for l in range(36)for k in ('q','k')}|{d['folded_norm']for d in p['weight_descriptors'].values()if d['folded_norm']}):reader._verified_file(reader.index[source])
@@ -90,12 +95,16 @@ def build(snapshot,out,n=None,admission=None,go_commit=None):
   return records
  for key,d in p['weight_descriptors'].items():
   cr=f"Qwen.rank{d['die']}.extent."+ ('head'if d['layer']is None else f"L{d['layer']}.{d['name']}")+'.codes';sr=cr[:-5]+'scales'
-  if cr not in wanted or sr not in wanted:raise ValueError('descriptor immutable extent missing')
-  prior_codes=completed_extent(cr);prior_scales=completed_extent(sr)
+  if cr not in wanted:raise ValueError('descriptor immutable code extent missing')
+  # Column-sharded rank1 scales are declared but unconsumed: post-all-reduce uses rank0 scale.
+  prior_codes=completed_extent(cr);prior_scales=completed_extent(sr)if sr in wanted else []
   if prior_codes is not None and prior_scales is not None:
-   segments[cr]=prior_codes;segments[sr]=prior_scales;offsets[cr]=ex[cr]['bytes'];offsets[sr]=ex[sr]['bytes'];reused+=len(prior_codes)+len(prior_scales)
+   segments[cr]=prior_codes;offsets[cr]=ex[cr]['bytes'];reused+=len(prior_codes)
+   if sr in wanted:segments[sr]=prior_scales;offsets[sr]=ex[sr]['bytes'];reused+=len(prior_scales)
    print(json.dumps(dict(event='SOURCE_QUALIFIED_COMPLETE_DESCRIPTOR_REUSED',descriptor=key)),flush=True);continue
-  for row,codes,scales in matrix_rows(reader,d):emit(cr,codes);emit(sr,scales)
+  for row,codes,scales in matrix_rows(reader,d):
+   emit(cr,codes)
+   if sr in wanted:emit(sr,scales)
  # Embedding row codecs are identical for both rank replicas, but their bytes are distinct extents.
  embedding=[r for r in wanted if r.endswith('.embedding')];scale_parts=[];c=p['config'];h=c['hidden_size']
  for row in range(0,c['vocab_size'],128):
@@ -133,7 +142,7 @@ class TrainedByteBackend:
    if sha(ROOT/f)!=h:raise ValueError('immutable producer recipe changed')
   if m['identity']['checkpoint_lock_sha256']!=sha(ROOT/'compiler/models/qwen3-8b/checkpoint_source.json'):raise ValueError('checkpoint lock changed')
   ex=extents(n)
-  if set(m['images'])!=refs(n):raise ValueError('incomplete external provider source coverage')
+  if set(m['images'])!=immutable_refs(n):raise ValueError('incomplete external provider source coverage')
   self.verified={};self.indices={};self.handles=OrderedDict();self.active=None;self.transactions=0;self.bytes_read=0;self.range_counts=0
   for r,image in m['images'].items():
    if any(image[k]!=ex[r][k]for k in ('base','bytes','codec')):raise ValueError('r17 extent/codec identity changed')

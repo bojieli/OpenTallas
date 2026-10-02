@@ -88,3 +88,41 @@ def test_actual_inventory_guards(tmp_path):
  a['aggregate_output_bytes']=4;R.guard(a,tmp_path)
  a['disk_headroom_bytes']=10**30
  with pytest.raises(ValueError,match='headroom'):R.guard(a,tmp_path)
+
+
+def test_requested_images_exclude_runtime_mutable_KV_state():
+ n=B.native();ex=B.extents(n);wanted=B.immutable_refs(n)
+ runtime_refs={r['provider_ref']for o in n['operations']if o['opcode']in ('KV_WRITE','KV_READ','KV_FENCE')for r in o['provider_binding']['external_providers']}
+ assert wanted==B.refs(n)-runtime_refs
+ assert len(wanted)==586 and len(runtime_refs)==146
+ assert sum(ex[r]['bytes']for r in wanted)==8824912128
+ assert 'Qwen.rank1.extent.L0.down.scales'not in wanted
+ assert 'Qwen.rank0.extent.L0.down.scales'in wanted
+ assert 'Qwen.rank1.extent.L0.down.codes'in wanted
+
+def test_build_column_shards_without_unrequested_scale_or_mutable_images(tmp_path,monkeypatch):
+ # Tiny explicit codec fixture tests real build/manifest/backend lifecycle, not trained numerics.
+ import collections,qwen_hbm_complete_executor as E,qwen_trained_native_run as R
+ base='Qwen.rank';rows=[]
+ for die in (0,1):
+  for suffix in ('codes','scales'):
+   rows.append(dict(provider_ref=f'{base}{die}.extent.L0.down.{suffix}',base=64+len(rows)*64,bytes=4,codec={'data':suffix},role='immutable_checkpoint_W8'if suffix=='codes'else 'immutable_checkpoint_BF16_scales'))
+ rows.append(dict(provider_ref='Qwen.rank0.extent.KV_provider_state',base=512,bytes=4,codec={'data':'state'},role='software_KV_publication_and_reader_lease_state'))
+ consumed=[rows[0],rows[1],rows[2],rows[4]]
+ n=dict(provider_binding={'allocation':[{'extents':rows}]},provider_binding_pin='explicit-fixture',operations=[{'provider_binding':{'external_providers':[{'provider_ref':x['provider_ref']}for x in consumed]}}],source_program=dict(weight_descriptors={f'd{d}':dict(die=d,layer=0,name='down',checkpoint_sources=['w'],folded_norm=None,rows=2,K=2)for d in (0,1)},config={'vocab_size':0,'hidden_size':2}))
+ class Reader:
+  checkpoint_revision='fixture';file_pins={};index=collections.defaultdict(lambda:'fixture')
+  def __init__(self,*args,**kwargs):pass
+  def _verified_file(self,name):pass
+  def provenance(self):return {'explicit_fixture':True}
+ monkeypatch.setattr(E,'CheckpointWeights',Reader)
+ monkeypatch.setattr(R,'validate_admission',lambda *args:None)
+ monkeypatch.setattr(R,'guard',lambda *args,**kwargs:None)
+ monkeypatch.setattr(B,'matrix_rows',lambda *args:iter([(0,b'abcd',b'efgh')]))
+ out=tmp_path/'images';manifest=B.build(tmp_path,out,n,admission={})
+ assert set(manifest['images'])=={x['provider_ref']for x in consumed[:-1]}
+ assert not list(out.glob('Qwen_rank1_extent_L0_down_scales*'))
+ backend=B.TrainedByteBackend(out,n)
+ assert backend.active is None
+ # Explicit resumed lifecycle must also skip an unconsumed scale without a KeyError.
+ again=B.build(tmp_path,out,n,admission={});assert again['images']==manifest['images']
