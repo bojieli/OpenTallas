@@ -3,6 +3,9 @@
 
 All current-tree inputs are checked before an original-root pure prepare replay.
 The recorded worker and failed-output paths are explicit external prerequisites.
+A clean additive descendant may replay historical preparation only when every
+historical tracked file remains identical. This is archival evidence, not a new
+execution at the historical commit; production execution guards are unchanged.
 No compiler, make build, simulation, service or configuration mutation is invoked.
 """
 import json
@@ -40,6 +43,28 @@ def assert_root_guard(module, manifest):
         raise ValueError('production ROOT relocation guard failed')
 
 
+def historical_worker_state(root, admitted_commit, expected_head=None):
+    """Allow only a clean additive descendant, with the historical tree intact."""
+    head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
+    dirty = subprocess.check_output(['git', 'status', '--porcelain'], cwd=root, text=True)
+    if dirty:
+        raise ValueError('recorded worker must remain clean for archival replay')
+    if expected_head is not None and head != expected_head:
+        raise ValueError('recorded worker changed during archival replay')
+    ancestor = subprocess.run(['git', 'merge-base', '--is-ancestor', admitted_commit, head],
+                              cwd=root, capture_output=True)
+    if ancestor.returncode != 0:
+        raise ValueError('recorded worker is not a descendant of admitted source')
+    changes = subprocess.check_output(
+        ['git', 'diff', '--no-renames', '--name-status', admitted_commit, head],
+        cwd=root, text=True).splitlines()
+    if any(not line.startswith('A\t') for line in changes):
+        raise ValueError('historical tracked file changed or removed')
+    return dict(observed_worker_commit=head, historical_source_commit=admitted_commit,
+                replay_mode='exact_admitted_HEAD' if head == admitted_commit else 'verified_additive_descendant',
+                historical_tracked_tree_unchanged=True, successor_added_paths=len(changes))
+
+
 def validate_archive(proposal_path=PROPOSAL, go_path=GO):
     stored = json.loads(proposal_path.read_text())
     go = json.loads(go_path.read_text())
@@ -66,10 +91,7 @@ def validate_archive(proposal_path=PROPOSAL, go_path=GO):
     # Do not invoke historical preparers in main: their git history belongs to
     # the recorded worker. Both actual verify_inputs guards above remain intact;
     # main derives pinned r6 data without consulting private source commits.
-    head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=original_root, text=True).strip()
-    dirty = subprocess.check_output(['git', 'status', '--porcelain'], cwd=original_root, text=True)
-    if head != go['source_commit'] or dirty:
-        raise ValueError('recorded worker must remain clean at admitted source commit')
+    state = historical_worker_state(original_root, go['source_commit'])
     env = os.environ.copy()
     env['PYTHONDONTWRITEBYTECODE'] = '1'
     code = ('import json,sys;sys.path.insert(0,"tools");'
@@ -82,9 +104,13 @@ def validate_archive(proposal_path=PROPOSAL, go_path=GO):
     # Recheck current and worker bytes after replay; no ROOT/global patches.
     check_pins(ROOT, pins)
     check_pins(original_root, pins)
-    return dict(schema='opentallas.H1.r6.archival-validation.v1',
+    after = historical_worker_state(original_root, go['source_commit'], state['observed_worker_commit'])
+    if after != state:
+        raise ValueError('recorded historical state changed during replay')
+    return dict(schema='opentallas.H1.r6.historical-archival-validation.v2',
                 proposal_sha256=inventory.digest(proposal_path),
-                source_commit=head, recorded_source_root=str(original_root),
+                source_commit=go['source_commit'], recorded_source_root=str(original_root),
+                historical_worker_state=state,
                 current_tree_pins=len(pins), unchanged_ROOT_guards=True,
                 both_production_helper_relocations_refused=True,
                 exact_original_root_replay=True, launches=0,
