@@ -1,0 +1,305 @@
+{
+  "baseline": {
+    "allocation_verdict": "FAIL_CANDIDATE_PLACEMENT_HISTORY_ONLY",
+    "allocator": "24d509c135d4b9fa13a9bad504aad8a6cf69fc7a",
+    "commit": "9fb6ee7012a3215156ddc87b2e8fc241be4a8b10",
+    "r7_byteidentical": true,
+    "receipt": "results/uarch/dsrom_full_product_binding_20261002/compiled_whole_budget-r6.json",
+    "receipt_sha256": "821b5c4a8bb2f64c8ecdc4b0f508e8f0b8e704393aba7e6e2e2f5e0d91c14e0d",
+    "self_contained_replay_commit": "7b370cfa2cc6c85e9222ef9ddd1fffcc5ed6a1dc"
+  },
+  "build_admitted": false,
+  "candidate": "DS4096-TP4-S58-PAIR1",
+  "corrected_owner_inputs": [
+    {
+      "commit": "622dbc897fd5ecb5a5b691e1ae39bea0ad751524",
+      "path": "results/uarch/dsrom_owner_provider_first_20261002/handoff.json",
+      "sha256": "419aeea6a732703e9b6ff3fca07b16e196f61ef1d496ba0cabf995a1ff95efbd"
+    },
+    {
+      "commit": "622dbc897fd5ecb5a5b691e1ae39bea0ad751524",
+      "path": "results/uarch/dsrom_owner_provider_first_20261002/readback_r1/model.json",
+      "sha256": "6e84455f28b6a1ac30ff31a31793c331c57217e81a29187d0d08bf3dbd71f497"
+    },
+    {
+      "commit": "622dbc897fd5ecb5a5b691e1ae39bea0ad751524",
+      "path": "results/uarch/dsrom_owner_provider_first_20261002/phase_debit.json",
+      "sha256": "4df799a2bb28d0de993e1f37ffbf0ef3f511c73211361034c26a0a4d795f9ce7"
+    },
+    {
+      "commit": "622dbc897fd5ecb5a5b691e1ae39bea0ad751524",
+      "path": "results/uarch/dsrom_owner_provider_first_20261002/route_handoff/model.json",
+      "sha256": "947844a192407cb53eb8adc2692f73ed34a5875cca8ab02dd2a4e533df9c3d6d"
+    },
+    {
+      "commit": "622dbc897fd5ecb5a5b691e1ae39bea0ad751524",
+      "path": "results/uarch/dsrom_owner_provider_first_20261002/artifact_sha256.json",
+      "sha256": "e3ba0f71894085ae512c0ac0130679c212af7e16b618c5d909c79d29aaf8c185"
+    }
+  ],
+  "exact_replay_pass": true,
+  "input_manifest": "results/uarch/dsrom_full_product_binding_20261002/inputs/pinned_budget_metadata/manifest.json",
+  "input_manifest_sha256": "907468438e48a34bf76b90d63895027d33211b4b55ed942a07e88c3ac2d47f31",
+  "input_receipts": [
+    {
+      "commit": "24d509c135d4b9fa13a9bad504aad8a6cf69fc7a",
+      "path": "results/uarch/dsrom_fixed4096_owner_compiler_20261002/closure_r2/closure.json",
+      "sha256": "229aa835e9d8d9cafe0bb80418eb9c51e885b14e56f0dd369cb6901b553ed560",
+      "snapshot": "229aa835e9d8d9cafe0bb80418eb9c51e885b14e56f0dd369cb6901b553ed560.json"
+    },
+    {
+      "commit": "24d509c135d4b9fa13a9bad504aad8a6cf69fc7a",
+      "path": "results/uarch/dsrom_fixed4096_owner_compiler_20261002/handoff.json",
+      "sha256": "38df2b82d4e805d486c1454bab1bf1f6c7cce6289ff310bf98264337f0117b98",
+      "snapshot": "38df2b82d4e805d486c1454bab1bf1f6c7cce6289ff310bf98264337f0117b98.json"
+    },
+    {
+      "commit": "c1037db16959ba8973e8a68052cfb7e62b93cdad",
+      "path": "results/uarch/dsrom_cfg_phase_capacity_20261002/model.json",
+      "sha256": "f00ae7314c96791da03f7179f7679ddbba5d7b06d12fe5406d2861c5ce7aaf50",
+      "snapshot": "f00ae7314c96791da03f7179f7679ddbba5d7b06d12fe5406d2861c5ce7aaf50.json"
+    },
+    {
+      "commit": "c1b460ae0665909cd41b393ea037ebf58ce9f057",
+      "path": "results/uarch/dsrom_shared_complete_pair_candidate_r20_20261002/shared_candidate.json",
+      "sha256": "82551ea5d075eff9c3fbad608e3d3a261d29ecdc51aaaf9322d4a7fa1e3aa606",
+      "snapshot": "82551ea5d075eff9c3fbad608e3d3a261d29ecdc51aaaf9322d4a7fa1e3aa606.json"
+    },
+    {
+      "commit": "c9b4730bd57e523857a91f7dc9f61eea7f4f68d5",
+      "path": "results/uarch/dsrom_service_hub_arch_handoff_20261002/inventory_service_join.json",
+      "sha256": "848a7efb93614485844833877bcd3f2d7821f1ee3c549b70ba56f6ba028d2342",
+      "snapshot": "848a7efb93614485844833877bcd3f2d7821f1ee3c549b70ba56f6ba028d2342.json"
+    },
+    {
+      "commit": "63f9fe2d6a7c9ada57c8cbfb0cf365b3ef349c24",
+      "path": "results/uarch/dsrom_current4096_field_receipts_20261002/receipt-r4.json",
+      "sha256": "f8a2f1333f31dcded2bf068ce4a21a9741f9cf2e88e58baba0b71386802a4223",
+      "snapshot": "f8a2f1333f31dcded2bf068ce4a21a9741f9cf2e88e58baba0b71386802a4223.json"
+    },
+    {
+      "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+      "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.json",
+      "sha256": "056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093",
+      "snapshot": "056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093.json"
+    }
+  ],
+  "ledger": {
+    "RNE_BF724_upper_proxy": 12.987328389120002,
+    "WAKE_full_compiled_upper_proxy": 1.63214534656,
+    "actual_fixed_service_rectangles": [
+      {
+        "area_mm2": 2.3381710387199997,
+        "bbox_DBU": [
+          1000000,
+          16000000,
+          3125440,
+          17100088
+        ],
+        "name": "BANKED_COLLECTOR_MACROS_AND_CLEAR20909TRACK_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 7.483249152000001,
+        "bbox_DBU": [
+          1000000,
+          17100088,
+          3125440,
+          20620888
+        ],
+        "name": "ACTUAL_POOLED_INDEXER_AND4RING_READERS",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.3075936768,
+        "bbox_DBU": [
+          1000000,
+          20620888,
+          3125440,
+          20765608
+        ],
+        "name": "X_SEL_TOPK_STORE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.08263710720000002,
+        "bbox_DBU": [
+          1000000,
+          20765608,
+          3125440,
+          20804488
+        ],
+        "name": "PROSPECTIVE_COMMON_CONTROLLER_CUT",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 45.6762053376,
+        "bbox_DBU": [
+          3125440,
+          16000000,
+          10974880,
+          21819040
+        ],
+        "name": "ATTENTION64TILES_STATIONARY_STAGE_PVMERGE_WINDOW_RAW_QE_SERVICE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 18.270788198400005,
+        "bbox_DBU": [
+          1000000,
+          21819040,
+          10974880,
+          23650720
+        ],
+        "name": "index_HBM_all128responses_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 14.931198374400003,
+        "bbox_DBU": [
+          1000000,
+          23650720,
+          10974880,
+          25147600
+        ],
+        "name": "index_quarter_join_to_batch_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 7.260914649600001,
+        "bbox_DBU": [
+          1000000,
+          25147600,
+          10974880,
+          25875520
+        ],
+        "name": "mergedKV_to_stage_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.10772870400000001,
+        "bbox_DBU": [
+          1000000,
+          25875520,
+          10974880,
+          25886320
+        ],
+        "name": "directproducer_registered_boundary_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 1.389602304,
+        "bbox_DBU": [
+          10974880,
+          16000000,
+          11605600,
+          18203200
+        ],
+        "name": "HUB_COLLECTIVE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.892342656,
+        "bbox_DBU": [
+          10974880,
+          18203200,
+          11605600,
+          19618000
+        ],
+        "name": "HUB_VM",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 1.3882399488000001,
+        "bbox_DBU": [
+          10974880,
+          19618000,
+          11605600,
+          21819040
+        ],
+        "name": "HUB_GATHER",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 12.80542597632,
+        "bbox_DBU": [
+          11605600,
+          16000000,
+          13806208,
+          21819040
+        ],
+        "name": "HUB_SU_VECTOR",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 18.3132171648,
+        "bbox_DBU": [
+          13806208,
+          16000000,
+          16953328,
+          21819040
+        ],
+        "name": "HUB_HC",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      }
+    ],
+    "already_inside_inherited_named_service_proxy_do_not_add_again": 90.44685198583997,
+    "composed_priced_field_terms": 458.81144120512,
+    "config_prospective_body_plus_local_mux": 69.19074349056,
+    "conservative_no_containment_credit_die_total": 924.2886185238459,
+    "conservative_no_containment_credit_reticle_margin": -66.28861852384591,
+    "counterfactual_unknown_native_residual_disjoint_total": 506.0194543837759,
+    "declared_return_FF50_proxy": 52.897587425279994,
+    "earlier_unidentified_native_residual_proxy_47_208": {
+      "excluded_from_named_component_sum_until_containment_reconciled": "No provider identity proves disjointness from new cfg/ECC/raw/dispatch/control terms; conservative counterfactual adding it is recorded separately.",
+      "mm2": 47.208013178655904,
+      "not_silently_removed": true
+    },
+    "fit_verdict": "NOT_QUALIFIED_mix_of_source_macro_body_and_conservative_frame_return_RNE_WAKE_proxies_not_minimum_or_impossibility",
+    "full_compiled_q_BF_catalog_frames": 322.1036365536,
+    "inherited_service_routes_clockPG_debit": 418.26916414007,
+    "remaining_against_corrected_inherited_field_allowance": -19.08060534519,
+    "reticle": 858,
+    "service_clock_PG_actual_shapes_bound": false,
+    "unpriced_nonzero_terms": [
+      "qFP4 separateECC provider/decoder",
+      "actualHE/CROM/shared dispatch provider",
+      "cfgmux/capture/PHW fanout decode area and routes",
+      "currentRNEWAKE dualcompute outline growth",
+      "service macro halo/pins/clockPG/hold costs not proven by inherited debit"
+    ]
+  },
+  "new_count_selected": false,
+  "next_join": {
+    "NBF": 724,
+    "compiled_NP": 4096,
+    "compiled_sites_all58_charged": true,
+    "conditional_perstage_profile_bits_per_rank": 269313638400,
+    "no_freed_page_credit": true,
+    "nonpadded_source_bits_per_rank": 228601036800,
+    "old_failures_unchanged": true,
+    "padding": 721,
+    "physical4096_macros_per_die": 16384,
+    "required": [
+      "Consume corrected route/phase/readback and all46509 owner bindings rather than old failed allocation.",
+      "Join actual4778 descriptor/calendar and actual cfg events; source27cycles loader counted once per executed field call; PP/ECC adapter extra costs separate.",
+      "Bind HE HCP8->HROM768, CROM256->64, clock crossing, finite ownership and raw ECC decode.",
+      "Reconcile existing service rectangles and residual47.208 containment before replacement or subtraction credit.",
+      "Only after this join, price one coordinated power-of-two NP successor against actual indivisible owners and full single-user calendar; fixed4096 depth/TP4, no independent sweep."
+    ],
+    "storage_symbolic_pass_not_calendar_or_physical_pass": true,
+    "uniform_PHW10_bits_per_rank": 291923558400
+  },
+  "physical_or_rate_qualified": false,
+  "replay_command": "python3 tools/dsrom_compiled_budget_join.py --out /tmp/dsrom-r6-exact-replay-UNIQUE.json",
+  "schema": "opentallas.dsrom.r6-to-provider-first-handoff.v1",
+  "test_command": "python3 -m pytest -q tests/test_dsrom_compiled_budget_join.py",
+  "tests_pass": 10,
+  "tools_sha256": {
+    "tests/test_dsrom_compiled_budget_join.py": "bb0682bb48c5010c7e6b4fb474a04b9e2a777cc1561f1dbbf26fa5f46b6f91ad",
+    "tools/dsrom_compiled_budget_join.py": "91ff797cd109ccd9a2a9c2ff2736deba9d2bba5ce8833b38157fa1963a0136f5",
+    "tools/dsrom_finite_resources.py": "8f5b0a278f4aecd53cf9024e4a7ffa6de2d0efdc50d379e0ce4027734dd345b6",
+    "tools/dsrom_full_product_binding.py": "288406b86e7bf4487db80100250a6bc6f9143c257950676663fe5d0f6baceec3",
+    "tools/dsrom_resident_site_binding.py": "5452d6c4a0e9963426c74e6428a02e1a1af1d2a0793e633e095daeea43511fee"
+  }
+}
