@@ -1,0 +1,71 @@
+{
+  "SS_FF_qualified": false,
+  "authoritative_model": "construction_r4/model.json",
+  "base_commit": "760a4b3d036c8c0a987060a015c4558dfeb79921",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "conditional_clock_screen": {
+    "ff": {
+      "max_slew_ps": 44.403757852212046,
+      "upstream_differential_skew_budget_ps": 23.028068341755784,
+      "worst_relative_skew_ps": 1.9719316582442161
+    },
+    "ss": {
+      "max_slew_ps": 60.93687900152114,
+      "upstream_differential_skew_budget_ps": 21.805836168920052,
+      "worst_relative_skew_ps": 3.1941638310799476
+    }
+  },
+  "construction": {
+    "body_overlap_count": 0,
+    "clock_sinks": 10,
+    "corrected_hold_wire_um": [
+      5.697,
+      18.972
+    ],
+    "new_clock_buffers": 62,
+    "original_FF_new_instances": 0,
+    "per_case_D_route_conflicts": 5,
+    "per_case_PG_intersections": 10,
+    "per_case_distinct_clock_net_guard_conflicts": 240,
+    "source_gap_and_strip_containment": true
+  },
+  "cost": {
+    "WAKE_cloneFF_holdBUF_body_recharge": 0,
+    "constructed_clock_body_um2": 6.9984,
+    "do_not_blindly_add_to_prior_floor": true,
+    "earlier_clock_pin_floor_containment_verified": false,
+    "full_token_added_latency": null,
+    "no_added_capture_cycles": true,
+    "no_containment_reservation_mm2_per_shard": 0.0286654464
+  },
+  "full_token_qualified": false,
+  "next_exact_construction": [
+    "M7 turn x=228176 DBU intersects source VSS stripe [228040,0,228328,151200]. With 60 DBU wire guard, the first native M7 track to its right is 228432 DBU. This fixes only that PG conflict and needs new RC composition, not a tuning sweep.",
+    "240 distinct clock-net guard intersections are enumerated in construction_r4/model.json. Clock A and Y accesses need distinct tracks plus legal native lifts; equal stage depth and positive LUT skew do not cure these shorts.",
+    "Five M8 intersections with valid/bank held D distribution require disjoint horizontal track assignment preserving corrected 18.972/5.697 um hold routes.",
+    "Bind source ICG leaf0 to the two proposed roots with differential input skew plus via/coupling contributions <=21.80583616892005 ps at SS. Neither common root input waveform nor omitted via RC is measured.",
+    "Bind actual reset terminal arrival for all five ASR RESETN pins to [117.5064,766.5025333333334] ps relative to the preceding sink rise. Full reset distribution and ungated/gated release semantics remain unimplemented.",
+    "Selector allowed BUF terminal remains 226 station +142 service cycles; legal selector station clock/PG and 684-wire transport share the parent map only after a disjoint rectangle/layer union. No area-only fit transfer. Source ACK_TIMEOUT1024 FAIL remains;4096 is a priced proposal, not adopted."
+  ],
+  "owned_active_jobs": [],
+  "physical_build_admitted": false,
+  "physical_fit": false,
+  "pve2_pve3_jobs": [],
+  "replay_command": "python3 tools/dsrom_matched_leaf_clock_reset.py --out /tmp/FRESH-DS-CLOCK.json",
+  "reset": {
+    "actual_parent_provider_arrival_and_slew": null,
+    "no_reset_added_to_bankHQ": true,
+    "release_terminal_interval_relative_previous_sink_rise_ps": [
+      117.5064,
+      766.5025333333334
+    ],
+    "sink_count": 5
+  },
+  "scope": "Additive analytical literal-pin construction; no new RTL, STA, PnR, runtime, main edit or admission. Original predecessor placements are proposed, not retained DEF coordinates.",
+  "test_command": "python3 -m pytest -q tests/test_dsrom_matched_leaf_clock_reset.py tests/test_dsrom_noECC_hold_station_geometry.py tests/test_model_dsrom_selector_allowed_terminal.py",
+  "tests": {
+    "focused_pass": 33,
+    "new_pass": 12
+  },
+  "verdict": "REJECT_CLOCK_ROUTE_GEOMETRY"
+}
