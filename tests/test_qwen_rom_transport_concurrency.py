@@ -54,10 +54,16 @@ class Transport(unittest.TestCase):
         self.assertIsNone(r['reference']['actual_context8K_available_prefetch_cycles'])
     def test_proxy_ledger_and_exclusions(self):
         r=q.build()
-        self.assertEqual(sum(v['bits'] for v in r['area_structural_price'].values()),884672)
-        self.assertAlmostEqual(r['area_FF50_proxy_sum_mm2'],0.5159407104)
+        self.assertEqual(sum(v['bits'] for v in r['area_structural_price'].values()),899552)
+        self.assertAlmostEqual(r['area_FF50_proxy_sum_mm2'],0.5246187264)
         self.assertEqual(r['conditional_successor_interface']['payload_bits_per_cycle'],8192)
         self.assertIsNone(r['mux_demux']['cell_area_mm2'])
+    def test_reverse_echo_is_separate_throughput_demand(self):
+        r=q.build()
+        self.assertEqual(r['finite_candidate']['shared_owned_data_and_credit_echo_floor_cycles'],65536)
+        p=r['conditional_successor_interface']
+        self.assertEqual(p['owned_boundary_bits_per_cycle'],64*465)
+        self.assertEqual(p['reverse_credit_input_bits_per_cycle'],32*210)
     def test_source_tamper_refused(self):
         with tempfile.TemporaryDirectory() as d:
             dest=Path(d)
