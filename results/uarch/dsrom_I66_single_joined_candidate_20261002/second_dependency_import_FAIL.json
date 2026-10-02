@@ -1,0 +1,6 @@
+{
+  "status": "TEST_COLLECTION_FAIL_PRESERVED",
+  "reason": "After ef6/b991/e899 materialization, isolated tree also lacked published04bb stage_provider imported by banks",
+  "correction": "materialize04bb unchanged; existing provider/enrollment prerequisites already present",
+  "compiler_or_runtime_started": false
+}

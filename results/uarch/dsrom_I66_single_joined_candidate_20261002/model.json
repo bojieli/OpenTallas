@@ -1,0 +1,295 @@
+{
+  "RTL_GO": false,
+  "accepted_consumer_endpoints": {
+    "actual_consumer_deadline": null,
+    "actual_current_journal": null,
+    "core_sha256": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+    "enrollment": "CURRENT_PHW10/X_ROM1/SUN256; exact source/binary, four program SHAs, +DIR and separate +OT_ROM_DIR",
+    "producer_owner": "actual accepted producer PC and registered phase/EID/key, frozen generation/user/Xversion",
+    "publication": "same-identity writer/address/data postNBA strictly BEFORE read edge",
+    "read": "xs_rd_re[port] && xs_rd_src[2*port+:2]==0; resolved VM address and old read data",
+    "static_consumers": [
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I70",
+            "consumer_template_word_sha256": "baaa22bd143df024f0ace0115169314634e66e2f7968f4d36d3536768e5313d1",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 2
+          }
+        ],
+        "producer": "L0.I66"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I70",
+            "consumer_template_word_sha256": "baaa22bd143df024f0ace0115169314634e66e2f7968f4d36d3536768e5313d1",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 2
+          }
+        ],
+        "producer": "L0.I67"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I80",
+            "consumer_template_word_sha256": "48889746e2262e0507f170b89794709af45abd78a7fe05fd6ad50b7bff967a2a",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I68"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I80",
+            "consumer_template_word_sha256": "48889746e2262e0507f170b89794709af45abd78a7fe05fd6ad50b7bff967a2a",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I69"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I85",
+            "consumer_template_word_sha256": "c5c8411fd0683b8a78f8fa66ea11987540e7ae94dab5483b11accf10b8492079",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I72"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I85",
+            "consumer_template_word_sha256": "c5c8411fd0683b8a78f8fa66ea11987540e7ae94dab5483b11accf10b8492079",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I73"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I90",
+            "consumer_template_word_sha256": "273703be0d968eecf73bcb77181d546c4b7ee34260e82de4586c17c63df9013c",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I82"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I90",
+            "consumer_template_word_sha256": "273703be0d968eecf73bcb77181d546c4b7ee34260e82de4586c17c63df9013c",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I83"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I95",
+            "consumer_template_word_sha256": "784ff0c88fab7999a87aa125408a76278fa4f719319cd46cd35564a7dcf4b9d7",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I87"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I95",
+            "consumer_template_word_sha256": "784ff0c88fab7999a87aa125408a76278fa4f719319cd46cd35564a7dcf4b9d7",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I88"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I98",
+            "consumer_template_word_sha256": "9e57ff42bb75fbc825e3e085de1b3da27613354af2aa50f89250fbcf7018f6af",
+            "instruction_predicate": 0,
+            "operand": "a",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I92"
+      },
+      {
+        "consumer": [
+          {
+            "consumer_node": "L0.I98",
+            "consumer_template_word_sha256": "9e57ff42bb75fbc825e3e085de1b3da27613354af2aa50f89250fbcf7018f6af",
+            "instruction_predicate": 0,
+            "operand": "c",
+            "wait_mask": 0
+          }
+        ],
+        "producer": "L0.I93"
+      }
+    ],
+    "tag": "accepted VM read atR matched actual vx/cwx source X tag atR+2",
+    "vector_owner": "dut.u_tile.u_core.g_su_x.u_su.u_vec accepted vector sequence/context, not latest PC"
+  },
+  "actual_deadline_entry": "dsrom_I66_consumer_deadline.enrolled_join: exact current source/binary/program/field and compiled callbacks, actual source-aligned X tags, reviewed shared service slots",
+  "arbitration": {
+    "credit_release": "actual home visibility plus positive captured feedback/CDC; no separately reserved downstream shortcut",
+    "delivery": "only lowest unretired row may consume one accepted formatter/home-write grant",
+    "grant_limit": "at most one scalar request per qualified gather edge; local bank grants may require greater II",
+    "rearm": "all576 home-visible, healthy source idle, every wire debt and credit-return fence, then explicit old-context drain",
+    "returns": "route-bound return may arrive out of order only into its previously reserved row/context seat",
+    "sink_hold": "refused consumer holds its seat, identity and debt; does not backpressure no-ready field capture",
+    "source_read_request": "next source-ordered row chooses physical shard; issue only after gather seat and complete return route reserved",
+    "wire_ACK": "fresh matching sequence/CRC-qualified last packet-delivery ACK is a separate packet debt"
+  },
+  "calendar_entry": "dsrom_I66_visibility_anchored_calendar.replay with source-qualified offered slots, positive reply/visibility/credit-return providers",
+  "capacity_and_register_gate": {
+    "C": null,
+    "VM512": "exclusive full-block lease, assembly and writer arbitration must be priced; existing xa/xb ports are not free",
+    "arbitrary_sink_hold_has_no_finite_successful_bound": true,
+    "calendar": null,
+    "capacity_rule": "maximum accepted reservations minus source-observed returned credits; return at edgeT cannot fund issue atT",
+    "native_one_clock_is_not_planned_3_to_4_CDC": true,
+    "needed": "source-owned rational clocks and request/read/reply/visibility/credit-return latencies plus finite accepted sink grants",
+    "stations": null
+  },
+  "common_control_owner_proposed": {
+    "adopted": false,
+    "physical_shard": 0,
+    "reason": "one phase lease and larger320-seat shard"
+  },
+  "extra_frozen_context_cost": {
+    "bits": 46,
+    "clock_reset_PG_remote_copies_unpriced": true,
+    "feedback_BUF_lower_bound": 92,
+    "outside_R49_baseline": true
+  },
+  "finite_actual_service": "BOUND_MISSING",
+  "gather_owner_proposed": "one owner in HUB_GATHER region; actual endpoint pin/clock/route and exclusive VM lease unbound",
+  "new_jobs": false,
+  "ordered_shard_runs": [
+    [
+      0,
+      127,
+      0
+    ],
+    [
+      128,
+      255,
+      1
+    ],
+    [
+      256,
+      383,
+      0
+    ],
+    [
+      384,
+      511,
+      1
+    ],
+    [
+      512,
+      575,
+      0
+    ]
+  ],
+  "per_shard_controls": "Each die owns its local bank read/selector and captured credit endpoint; shard1 endpoint state must be separately priced",
+  "physical_shard_seats": [
+    320,
+    256
+  ],
+  "scope": "ONE_VISIBILITY_ANCHORED_SOURCE_MODEL_CANDIDATE_NOT_ACTUAL_DEADLINE",
+  "source_pins": {
+    "results/uarch/dsrom_I66_R49_service_join_20261002/inputs/home.json": "05beef441966843bb925370d33b514015fbd0ea236442bf8e82a67d8923b270c",
+    "results/uarch/dsrom_I66_R49_service_join_20261002/inputs/provider.json": "4280d2cc6b96e14537875f1446c39ff215f9c32843686dd51ceb298d5c771f88",
+    "results/uarch/dsrom_I66_consumer_deadline_20261002/source_model.json": "01b11a0a5a129927afd1601b191236b78d73b6b91985041d18b9470ce4daf5a7"
+  },
+  "state_accounting": {
+    "core_gross": 698354,
+    "core_increment_already_in_gross": 127140,
+    "disjoint_transport": 476180,
+    "new_shard_endpoint_gather_CDC_VM_state": null,
+    "union": 1174534
+  },
+  "typed_timing": "feedback and forward hold repairs are distinct typed lower bounds; no SS/FF routed qualification or station selection",
+  "wire_identity_gap": {
+    "RTL_encoder_implemented": false,
+    "candidate_user_bits": 32,
+    "command_flits_at256": 1,
+    "encoding_fields_MSB_to_LSB": [
+      [
+        "generation",
+        32
+      ],
+      [
+        "operation_sequence",
+        32
+      ],
+      [
+        "owner_stage",
+        6
+      ],
+      [
+        "packet_kind",
+        3
+      ],
+      [
+        "packet_ordinal",
+        3
+      ],
+      [
+        "payload_bits",
+        18
+      ],
+      [
+        "rank",
+        2
+      ],
+      [
+        "user_low",
+        16
+      ],
+      [
+        "user_high",
+        16
+      ]
+    ],
+    "extra_command_staging_bits_per_disjoint_copy": 16,
+    "header_bits": 128,
+    "header_flit_count_unchanged": true,
+    "new_command_bits": 237,
+    "new_copy_count_and_overlap_with_frozen_context_unselected": true,
+    "no_truncation": true,
+    "old_command_bits": 221,
+    "replay_comparator_encode_CRC_cost_priced": false,
+    "required_gate": "source-qualified command/header encode/decode, CRC, replay identity and reset/wrap ownership",
+    "reserved16_reassigned_to_user_high16": true
+  }
+}
