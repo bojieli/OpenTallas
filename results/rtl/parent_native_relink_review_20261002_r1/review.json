@@ -1,0 +1,19 @@
+{
+  "scope": "NATIVE_RELINK_ONLY",
+  "plan_sha256": "76f2fb3d977ca2c8a7e0a18bc08e3f1dafbd6358a6f5c6cf061c7d0582858514",
+  "independent_tests": "20 passed in 0.05s",
+  "approved_local_CPU_ids": [
+    26,
+    27
+  ],
+  "aggregate_memory_GiB": 4,
+  "wall_seconds": 60,
+  "log_MiB": 2,
+  "source_bundle": "/tmp/w17-manifest-bound-relink-inputs-20261002-r1",
+  "input_artifacts": 154,
+  "runtime_allowed": false,
+  "existing_live_PID1968071_untouched": true,
+  "image_manifest_config_relation_verified": true,
+  "old_failed_image_import_receipt_preserved": true,
+  "compiler_identity_recording_required": true
+}
