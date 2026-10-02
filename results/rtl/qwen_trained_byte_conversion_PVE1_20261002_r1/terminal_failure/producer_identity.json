@@ -1,0 +1,25 @@
+{
+  "checkpoint_files_sha256": {
+    "model-00001-of-00005.safetensors": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f",
+    "model-00002-of-00005.safetensors": "5991236cea6fe21f3d43cab0f0e84448734fbbe0789816202989f2ddc9d18282",
+    "model-00003-of-00005.safetensors": "c5185c4794be2d8a9784d5753c9922db38df478ce11f9ed0b415b7304d896836",
+    "model-00004-of-00005.safetensors": "b5ee7de71fbf17db3d5704e0c8f2bc7d005ca9e1d7ca2aeb19827b0cfcaa917a",
+    "model-00005-of-00005.safetensors": "20c2d6366ab85c90786ccdd829cd2b9e7d30ef3b2ebbb998280e7e4014b542ff"
+  },
+  "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "native_sha256": "ab3fe8d6469d6a1552e2eeaa9efe945c025cc35a567f0d8161e3c2a02fc59354",
+  "runtime_package_versions": {
+    "numpy": "1.26.4",
+    "safetensors": "0.8.0",
+    "torch": "2.14.0+cpu"
+  },
+  "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+  "source_sha256": {
+    "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "tools/h3_qwen_complete_native.py": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+    "tools/qwen_trained_byte_provider.py": "48c3453cfd84edaeb9a609fb9915834ac475ffe25023609fe9b754f28e7849ff"
+  }
+}
