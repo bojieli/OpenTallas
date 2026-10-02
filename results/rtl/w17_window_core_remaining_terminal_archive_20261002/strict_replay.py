@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Additional per-process checks over the portable archived evidence, never executes RTL."""
-import argparse,json,hashlib,importlib.util
+import argparse,json,hashlib,importlib.util,sys
+sys.dont_write_bytecode=True
 from pathlib import Path
 
 def verify(archive):

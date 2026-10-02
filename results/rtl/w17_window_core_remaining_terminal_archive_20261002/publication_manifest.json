@@ -13,10 +13,6 @@
       "sha256": "49b0d34be009e3598750d2e129f50b6ce325c8b81c2c512d489f12ddc7bff672",
       "bytes": 4387
     },
-    "archive/__pycache__/replay.cpython-310.pyc": {
-      "sha256": "302c8a53bfd1e10ee69a9fbacb329fe1ea7c3c3bd88d4c4da84467f90cbd2a93",
-      "bytes": 14210
-    },
     "archive/canonical_sources/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
       "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
       "bytes": 6668
@@ -1209,18 +1205,22 @@
       "sha256": "d2d34d5a41e98a7ff035b7fbdf023b83b95be35b9d26c7b98e3faa5086e5f258",
       "bytes": 3273
     },
+    "publication_metadata_correction.json": {
+      "sha256": "80a819680fcf3d3ff674908c24ca61f2ca91db12c2f789d0080f877d8da67286",
+      "bytes": 701
+    },
     "relocation_receipt.json": {
       "sha256": "95c4a5622e63681f7e42e68361b024da92dfddf2f18e66c46971ddeeacab7897",
       "bytes": 446
     },
     "strict_replay.py": {
-      "sha256": "e59dfecc91b1c18af77fe697ff844b4e5c41b7b418daef515593c0417daff929",
-      "bytes": 2818
+      "sha256": "0023388347751cdcab3730577975c572ced4ff4310aba77e202c3d4ca58b5809",
+      "bytes": 2851
     },
     "strict_review.json": {
       "sha256": "f422cd81d66af793d157423d6268859c074e6747ce2a393ffd9fe49817646ac1",
       "bytes": 5715
     }
   },
-  "bytes": 55836484
+  "bytes": 55823008
 }
