@@ -166,8 +166,10 @@ def persistent_kv_context():
         adoption=False)
 
 
-def build():
-    from uarch_model import qwen_rom_reset_context_price
+def build(*, model_extension):
+    if model_extension != 'qwen-reset':
+        raise ValueError('Explicit qwen-reset model extension selection required')
+    from uarch_model_qwen_reset import qwen_rom_reset_context_price
     tile = census(load(OUT / 'tile_proc.json.gz'))
     die = census(load(OUT / 'die_proc.json.gz'))
     inputs = load(OUT / 'inputs/reset_producer_price_inputs_r1.json')
@@ -191,11 +193,12 @@ def build():
         scope['register_inventory'] = dict(path=str(inventory.relative_to(ROOT)),
             register_cell_count=len(registers),
             sha256=hashlib.sha256(inventory.read_bytes()).hexdigest())
-    sourcepins = load(OUT / 'sourcepins.json')
+    sourcepins = load(OUT / 'sourcepins-r2.json')
     for path, digest in sourcepins['sha256'].items():
         if hashlib.sha256((ROOT / path).read_bytes()).hexdigest() != digest:
             raise ValueError('Source pin changed: ' + path)
     return dict(schema='opentallas.qwen-rom-reset-context-g0.v1',
+        selected_model_extension='tools/uarch_model_qwen_reset.py',
         status='SOURCE_COMPOSED_PHYSICAL_PARENT_DEPENDENCIES_OPEN',
         sourcepins=sourcepins, tile=tile, die_bench_hardware=die, price=price,
         protocol=dict(assertion='Asynchronous low assertion, no ROM ECC added; reset valid/control, not ROM payload.',
@@ -244,7 +247,8 @@ def build():
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--model-extension', choices=['qwen-reset'], required=True)
     ap.add_argument('--output', type=Path, required=True)
     args = ap.parse_args()
     with args.output.open('x') as f:
-        json.dump(build(), f, indent=2, sort_keys=True); f.write('\n')
+        json.dump(build(model_extension=args.model_extension), f, indent=2, sort_keys=True); f.write('\n')

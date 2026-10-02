@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 from qwen_rom_reset_context_g0 import OUT, build, census, load, startup
-from uarch_model import qwen_rom_reset_context_price
+from uarch_model_qwen_reset import baseline, qwen_rom_reset_context_price
 
 
 class CensusTests(unittest.TestCase):
@@ -35,7 +35,7 @@ class CensusTests(unittest.TestCase):
 class ContextTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.model = load(OUT / 'model-r4.json')
+        cls.model = load(OUT / 'model-r5.json')
 
     def test_complete_source_census_is_more_than_extracted_cone(self):
         price = self.model['price']
@@ -115,6 +115,16 @@ class ContextTests(unittest.TestCase):
         self.assertFalse(p['hardware_qualification'])
         self.assertFalse(p['r33_lowered_window_join_complete'])
         self.assertFalse(p['provider_additive_manifest']['hardware_qualified'])
+
+    def test_extension_is_explicit_and_does_not_modify_baseline(self):
+        self.assertFalse(hasattr(baseline, 'qwen_rom_reset_context_price'))
+        self.assertEqual(self.model['selected_model_extension'], 'tools/uarch_model_qwen_reset.py')
+        with self.assertRaisesRegex(ValueError, 'Explicit qwen-reset'):
+            build(model_extension=None)
+        price = qwen_rom_reset_context_price(self.model['tile']['totals'],
+            self.model['die_bench_hardware']['totals'],
+            load(OUT / 'inputs/reset_producer_price_inputs_r1.json'))
+        self.assertEqual(price, self.model['price'])
 
 
 if __name__ == '__main__':
