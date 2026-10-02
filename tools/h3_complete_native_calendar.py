@@ -1343,6 +1343,100 @@ def resolve_ds_movement_reference(program, template_id, ref, specs=None):
     return (index,operand),symbol,size,offset,payload
 
 
+def verify_ds_operand_journal(program, template, reference, binding, events, *, translation=None):
+    """Resolve one actual bounded operand call and all its sector/reverse debt.
+
+    Sagan owns capture/continuation. This validates its received source span and
+    Kepler's backing-address namespace; it does not generate movement receipts.
+    A translated address is software mapping evidence, never an installed port.
+    """
+    _,symbol,size,offset,length=resolve_ds_movement_reference(program,template,reference)
+    if length>512:raise ValueError('explicit bounded512B operand tile required')
+    required={'PC','rank','SM','generation','lease','version','native_SSA_value',
+        'logical_base','allocation_bytes','operand_base_offset','shared_tile_offset','shared_capacity_bytes'}
+    if not required<=binding.keys():raise ValueError('concrete owner/allocation/lease binding required')
+    if binding['native_SSA_value']!=symbol or not binding['version'] or not binding['lease']:
+        raise ValueError('source SSA/version/lease identity mismatch')
+    for k in ('PC','rank','SM','generation','logical_base','allocation_bytes','operand_base_offset','shared_tile_offset','shared_capacity_bytes'):
+        if type(binding[k]) is not int or binding[k]<0:raise ValueError('integer owner/address/capacity required')
+    if not 0<=binding['rank']<96 or not 0<=binding['SM']<32 or binding['generation']<1:
+        raise ValueError('finite32SM/rank/generation identity')
+    if 'instructions' in program:
+        operations=[o for o in program['instructions'] if o['pc']==binding['PC']]
+        if len(operations)!=1 or not any(r.get('rank')==binding['rank'] and r.get('template')==template for r in operations[0]['rank_bindings']):
+            raise ValueError('actual source PC/rank/template binding mismatch')
+    if binding.get('lease_state')!='active':raise ValueError('active source operand lease required')
+    if binding['shared_capacity_bytes']!=65536 or binding['shared_tile_offset']+length>65536:
+        raise ValueError('physical64KiB shared tile extent exceeded')
+    # Home describes this explicitly tiled operand window, not a whole array.
+    window_start=binding['operand_base_offset'];relative=offset-window_start
+    if relative<0 or relative+length>binding['allocation_bytes']:
+        raise ValueError('source operand tile outside concrete allocation window')
+    address=binding['logical_base']+relative
+    if address%32:raise ValueError('actual software sector alignment required')
+    capacity=positive(binding.get('provider_tag_capacity'),'provider_tag_capacity')
+    expected=set(range(address//32,(address+length+31)//32))
+    direction='write' if reference['operand']=='dst' else 'read'
+    transactions={};live={};tag_generations={};covered=set();last_tick=-1;peak=0;phase_counts=Counter();digest=hashlib.sha256()
+    for ordinal,e in enumerate(events):
+        digest.update(json.dumps(e,sort_keys=True,separators=(',',':')).encode()+b'\n')
+        identity=e.get('identity',{});name=e.get('event');tick=e.get('tick')
+        if e.get('hardware') is not False or type(tick) is not int or tick<last_tick:
+            raise ValueError('ordered software journal tick/scope required')
+        last_tick=tick
+        if (identity.get('target'),identity.get('rank'),identity.get('pc'),identity.get('epoch'))!=('DeepSeek',binding['rank'],binding['PC'],binding['generation']):
+            raise ValueError('sector journal owner/generation differs from source lease')
+        sector=identity.get('sector');tag=e.get('tag');generation=e.get('generation')
+        if sector not in expected or type(tag)is not int or not 0<=tag<capacity or type(generation)is not int or generation<1:
+            raise ValueError('accepted sector/span/tag identity required')
+        key=(json.dumps(identity,sort_keys=True),tag,generation)
+        if name=='request_accept':
+            if key in transactions or tag in live:raise ValueError('live tag reused before matching reverse')
+            if generation<=tag_generations.get(tag,0):raise ValueError('recycled tag generation did not advance')
+            tag_generations[tag]=generation
+            transactions[key]=dict(phase=1,sector=sector,first_tick=tick);live[tag]=key;peak=max(peak,len(live))
+        else:
+            if key not in transactions or live.get(tag)!=key:raise ValueError('event without matching live acceptance')
+            row=transactions[key];phase=row['phase']
+            if name in ('write_residence_reserved','software_owned_issue','software_service_phases_reserved'):
+                if phase!=1:raise ValueError('issue/reservation after returned backing')
+            elif name in ('software_backing_visible','software_read_capture'):
+                if phase!=1 or name!=('software_backing_visible' if direction=='write' else 'software_read_capture'):
+                    raise ValueError('backing visibility/capture direction or order')
+                row['phase']=2
+            elif name in ('consumer_accept','reverse_credit_accept','validated_reverse_grant'):
+                sequence=('consumer_accept','reverse_credit_accept','validated_reverse_grant')
+                if phase not in (2,3,4) or name!=sequence[phase-2]:raise ValueError('premature/stale consumer/reverse grant')
+                row['phase']+=1
+                if name=='validated_reverse_grant':
+                    if sector in covered:raise ValueError('duplicate completed sector in operand call')
+                    covered.add(sector);del live[tag]
+            else:raise ValueError('failed/unknown movement journal event: '+str(name))
+        phase_counts[name]+=1
+    if live or not transactions or covered!=expected:raise ValueError('partial operand span or reverse debt retained')
+    if peak>capacity:
+        raise ValueError('finite provider tag capacity exceeded or absent')
+    mapped=None
+    if translation is not None:
+        if any(translation.get(k)!=binding[k] for k in ('rank','SM','generation','version','lease')):
+            raise ValueError('physical translation owner/version/lease mismatch')
+        for k in ('logical_base','physical_base','bytes','AW'):
+            if type(translation.get(k))is not int or translation[k]<0:raise ValueError('explicit physical mapping required')
+        if not 1<=translation['AW']<=64:raise ValueError('physical address width')
+        start=translation['logical_base'];end=start+translation['bytes']
+        if address<start or address+length>end:raise ValueError('physical translation does not cover source span')
+        mapped=translation['physical_base']+address-start
+        if mapped+length>1<<translation['AW']:raise ValueError('physical translated extent exceeds AW')
+    return dict(schema='H4_DS_ACTUAL_OPERAND_JOURNAL_ADMISSION_V1',source_reference=reference,
+        source_SSA_bytes=size,owner={k:binding[k] for k in ('PC','rank','SM','generation','version','lease')},
+        logical_byte_address=address,physical_byte_address=mapped,physical_translation_bound=translation is not None,
+        payload_bytes=length,sector32_transactions=len(transactions),scratch64_transactions=(binding['shared_tile_offset']%64+length+63)//64,
+        phase_counts=dict(phase_counts),peak_live_provider_tags=peak,matching_reverse_drained=True,
+        journal_sha256=digest.hexdigest(),additional_provider_RF_C0_I64_charge=0,
+        cost_replacement=None,actual_lease_acquisition_and_release_journal=None,
+        installed_home_directory_source_pin=None,whole_program_movement_complete=False,hardware_admitted=False)
+
+
 def reprice_h4_intervals(execution, *, costs=None):
     """Recompose retained execution, without arithmetic/provider rerun or r22.
 

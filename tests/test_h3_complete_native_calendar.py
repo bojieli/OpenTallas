@@ -12,6 +12,75 @@ c = importlib.util.module_from_spec(spec); spec.loader.exec_module(c)
 
 
 class FiniteCalendarTests(unittest.TestCase):
+    def actual_operand_journal_fixture(self):
+        import sys,tempfile
+        snapshots=ROOT/'results/uarch/h3_complete_native_calendar_20261002/ordered_operand_journal_r1/source_inputs'
+        import hashlib
+        pins=json.loads((snapshots.parent/'journal_path_and_join_handoff.json').read_text())['source_pins']
+        for name in ('hbm_provider_microvm_r21.py','hbm_bound_event_journal_r30.py'):
+            self.assertEqual(hashlib.sha256((snapshots/name).read_bytes()).hexdigest(),pins[name]['sha256'])
+        saved=sys.modules.get('hbm_provider_microvm_r21')
+        spec=importlib.util.spec_from_file_location('hbm_provider_microvm_r21',snapshots/'hbm_provider_microvm_r21.py')
+        provider=importlib.util.module_from_spec(spec);sys.modules[spec.name]=provider;spec.loader.exec_module(provider)
+        try:
+            spec=importlib.util.spec_from_file_location('test_disk_journal',snapshots/'hbm_bound_event_journal_r30.py')
+            journal=importlib.util.module_from_spec(spec);spec.loader.exec_module(journal)
+            with tempfile.TemporaryDirectory() as tmp:
+                budget=journal.JournalBudget(Path(tmp)/'actual',1048576)
+                backend=journal.BoundSectorProvider({('DeepSeek',0):[dict(base=67108864,bytes=512)]},journal_budget=budget,tags=1)
+                for serial in range(16):
+                    identity=provider.Identity('DeepSeek',0,1,18,serial,67108864//32+serial)
+                    tx=backend.submit(identity,write=True,payload=bytes(range(32)))
+                    backend.wait(tx);backend.finish(tx)
+                events=list(backend.events);summary=backend.events.summary();budget.db.close()
+        finally:
+            if saved is None:sys.modules.pop('hbm_provider_microvm_r21',None)
+            else:sys.modules['hbm_provider_microvm_r21']=saved
+        node=dict(op='LOAD',dst='v0',src=[],shape=[128],attrs={'name':'x','dtype':'F32'})
+        program=dict(templates={'template':{'code':[node],'providers':{'x':dict(shape=[128],dtype='F32')}}},
+            instructions=[dict(pc=18,rank_bindings=[dict(rank=0,template='template')])])
+        ref=dict(template='template',code_index=0,opcode='LOAD',attrs=node['attrs'],result_shape=[128],
+            operand='dst',value='v0',logical_byte_offset=0,payload_bytes=512)
+        binding=dict(PC=18,rank=0,SM=0,generation=1,lease='actual-control-lease',lease_state='active',
+            version='native.v0',native_SSA_value='v0',logical_base=67108864,allocation_bytes=512,
+            operand_base_offset=0,shared_tile_offset=0,shared_capacity_bytes=65536,provider_tag_capacity=1)
+        translation=dict(rank=0,SM=0,generation=1,version='native.v0',lease='actual-control-lease',
+            logical_base=67108864,physical_base=1048576,bytes=512,AW=34)
+        return program,ref,binding,events,translation,summary
+
+    def test_actual_disk_operand_journal_source_span_and_explicit_translation(self):
+        program,ref,binding,events,translation,_=self.actual_operand_journal_fixture()
+        result=c.verify_ds_operand_journal(program,'template',ref,binding,iter(events),translation=translation)
+        self.assertEqual((result['sector32_transactions'],result['scratch64_transactions'],result['physical_byte_address']),(16,8,1048576))
+        self.assertTrue(result['matching_reverse_drained']);self.assertEqual(result['additional_provider_RF_C0_I64_charge'],0)
+        self.assertIsNone(result['actual_lease_acquisition_and_release_journal'])
+        unknown=c.verify_ds_operand_journal(program,'template',ref,binding,iter(events))
+        self.assertIsNone(unknown['physical_byte_address']);self.assertFalse(unknown['whole_program_movement_complete'])
+
+    def test_actual_journal_rejects_partial_or_stale_reverse_source_span(self):
+        program,ref,binding,events,translation,_=self.actual_operand_journal_fixture()
+        for rows in (events[:-1],events[1:]):
+            with self.assertRaises(ValueError):c.verify_ds_operand_journal(program,'template',ref,binding,rows)
+        wrong=copy.deepcopy(events);wrong[-1]['generation']+=1
+        with self.assertRaisesRegex(ValueError,'matching live'):c.verify_ds_operand_journal(program,'template',ref,binding,wrong)
+        wrong=copy.deepcopy(events)
+        for event in wrong:
+            if event['tag']==0 and event['generation']==2:event['generation']=1
+        with self.assertRaisesRegex(ValueError,'did not advance'):c.verify_ds_operand_journal(program,'template',ref,binding,wrong)
+        wrong=copy.deepcopy(ref);wrong['logical_byte_offset']=4
+        with self.assertRaisesRegex(ValueError,'typed span'):c.verify_ds_operand_journal(program,'template',wrong,binding,events)
+        wrong=copy.deepcopy(ref);wrong['attrs']['name']='unresolved'
+        with self.assertRaisesRegex(ValueError,'opcode attrs'):c.verify_ds_operand_journal(program,'template',wrong,binding,events)
+
+    def test_actual_journal_rejects_capacity_lease_and_physical_translation_gaps(self):
+        program,ref,binding,events,translation,_=self.actual_operand_journal_fixture()
+        for field,value in [('shared_tile_offset',65535),('allocation_bytes',256),('lease_state','released'),('PC',19),('provider_tag_capacity',0)]:
+            wrong=dict(binding);wrong[field]=value
+            with self.assertRaises(ValueError):c.verify_ds_operand_journal(program,'template',ref,wrong,events)
+        for field,value in [('lease','stale'),('bytes',256),('AW',10),('physical_base',None)]:
+            wrong=dict(translation);wrong[field]=value
+            with self.assertRaises(ValueError):c.verify_ds_operand_journal(program,'template',ref,binding,events,translation=wrong)
+
     def test_portable_pin_lookup_has_no_historical_git_or_current_model_dependency(self):
         import tempfile,hashlib
         from unittest.mock import patch
