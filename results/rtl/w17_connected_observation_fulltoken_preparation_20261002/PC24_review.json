@@ -1,0 +1,48 @@
+{
+  "scope": "PINNED_SOURCE_AND_CONDITIONAL_REPLAY_ONLY",
+  "owner_commit": "d2cabe7ce7c79cb3c9ec9aea13d67606f2b5e035",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "validated_launch_pins": 145,
+  "source_checks": 16,
+  "reference_only_not_launch_inputs": [
+    "rtl/chip/ckvsel/ot_chip_v41x_die.sv"
+  ],
+  "integer_replay_cases": 26,
+  "reads_per_conditional_case": 2176,
+  "conditional_elapsed_cycles": [
+    123964,
+    125727
+  ],
+  "conditional_end_cycles": [
+    136671,
+    138146
+  ],
+  "watchdog_unit": "Harness ticks; backend uses its reset-relative cyc*1000ps, not elapsed wall seconds. Reset origins differ; exact backend start unobserved.",
+  "watchdog_boundary_controls": 4,
+  "last_any_rank_PC_change_interval": [
+    12201,
+    12400
+  ],
+  "conditional_watchdog_trigger_if_no_further_PC_change": [
+    112202,
+    112401
+  ],
+  "last_archived_sample": [
+    20400,
+    [
+      24,
+      24,
+      24,
+      24
+    ]
+  ],
+  "live_refill_start": null,
+  "live_bank_state": null,
+  "live_sector_count": null,
+  "interpretation": "Conditional cold scenarios exceed PC watchdog; false timeout is possible, not demonstrated. PC-only observations do not prove healthy refill, deadlock or a causal blocker.",
+  "terminal_policy": "Actual timeout remains failed/incomplete; no numeric/token PASS. Preserve original verdict and raw exit.",
+  "next_owner_action": "Keep sole live run unchanged. At real terminal harvest existing diagnostic and exit. Any successor needs service-sized watchdog and source-qualified progress units; no second watcher or launch.",
+  "runtime_or_watchdog_modified": false,
+  "RTL_gate_run": false,
+  "adoption_or_SS_FF_credit": false
+}
