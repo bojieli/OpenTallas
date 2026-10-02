@@ -1,0 +1,308 @@
+{
+  "schema": "opentallas.qwen-rom-current-R0-Q2-kv-rate-risk.v1",
+  "status": "FAIL_3K_RATE_CURRENT_OFFCHIP_TRANSPORT_G0_BLOCKED",
+  "parent": "7e53adf605ec3647a4dc59a5e45373887f4778ea",
+  "source_sha256": {
+    "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+    "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+    "tools/hdc_qwen_fullshape_isa_w12.py": "add181198a349f401629e39393e47aa20b969df38ec42afbdb8347921ea18707",
+    "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+    "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv": "44aea25c27b18063f4ec1af1500571952735700fc2a91175f387f1c8af5cdde9",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+    "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+    "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": "5822854cb06592f0a30c3f996f4cd6fff3e317ac83ec40564fd96ca359c286ec",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
+    "tools/hdc_timing.py": "f7135f8007a3fc5ad24274c7a5b0ed8c16d24205210620afba8f6061a0edae36",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/kv/ot_hdc_kv_stream.sv": "293895050e77e758692f6eeef29c02934935d092f4000ef8da92d23365bcbd1a",
+    "configs/models/qwen3-8b.json": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b",
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json": "97386fab0eb91806e169e44bfde35501bea0d0677f12e95957b24f9be8e65444"
+  },
+  "parent_physical_context_sha256": {
+    "results/uarch/qwen_rom_physical_context_current_20261002/model-r1.json": "43998197cf6e1025c0ea91e41f7bfa1a771dcff0423a312e892d5eae87f7b6a7",
+    "results/uarch/qwen_rom_physical_context_current_20261002/parent-IO-next-receipt-r1.json": "fec36669311e63aa5fcef52460f1e615587684310468a84bd87ca9f4ee211896"
+  },
+  "extension_source_sha256": {
+    "tools/uarch_model_qwen_kv_rate_risk.py": "3b190905af9ad00430bba363c6e48a7be106662c3d878a3ad3c97aa70ca07d36",
+    "tests/test_qwen_rom_kv_rate_risk.py": "4036a003c1f8e78d2ac771fdb440a7f38088629e7dbaa3115e94a16e42c4a091",
+    "tools/qwen_rom_kv_causal_join.py": "05c8b9050c9e29be956d9e2465940ad186dcf4d9aa0147f0ebee9ed5640e650d",
+    "tools/qwen_rom_kv_production_join.py": "2cf13c419d3056af10be64f9c687318ea6d5506cf1d0755f1be890130a999eaa"
+  },
+  "unified_model_extension": "tools/uarch_model_qwen_kv_rate_risk.py (opt-in)",
+  "selected_context": 8192,
+  "tp": 4,
+  "logical_bytes": {
+    "read_rank_token": 150994944,
+    "read_all4_ranks_token": 603979776,
+    "read_rank_layer": 4194304,
+    "write_rank_token": 18432,
+    "write_all4_ranks_token": 73728,
+    "existing_read_charge_replaced_once": true,
+    "incremental_full_reload_bytes": 0,
+    "conditional_source_K_tail_bypass": 294912,
+    "conditional_current_V_forward": 9216,
+    "conditional_offchip_read_rank": 150690816,
+    "conditional_offchip_read_stacks": [
+      37675008,
+      37675008,
+      37675008,
+      37665792
+    ],
+    "selected_position": 8191,
+    "conditional_selected_closing_K_V_write_rank": 156672,
+    "conditional_selected_closing_K_V_write_stacks": [
+      36864,
+      36864,
+      36864,
+      46080
+    ],
+    "write_scope": "18KiB/rank logical/average update; atposition8191 closed K tile+V requires156672B/rank.128 K sectors are128 LEN1 writes, not a128-sector hardware burst. Actual write policy/visibility requires producer receipts."
+  },
+  "actual_storage": {
+    "tile_count_per_rank": 1536,
+    "KV_macros_per_tile": 2,
+    "KV_macros_per_rank": 3072,
+    "raw_capacity_bytes_per_rank": 12582912,
+    "full36_useful_KV_bytes_per_rank": 150994944,
+    "current_one_window_max_rows": 54,
+    "current_row_depth": 128,
+    "all36_literal_rows": 1944,
+    "fully_resident_current_macro_replica_banks_per_tile": 16,
+    "fully_resident_current_macro_count_per_rank": 49152,
+    "extra_current_macros_required": 46080,
+    "extra_macro_area_mm2": 179.32386816,
+    "useful_capacity_only_min_current_macros": 36864,
+    "useful_capacity_only_additional_current_macro_area_mm2": 131.50416998400001,
+    "conclusion": "Current12MiB tile KV cannot retain144MiB/rank. Literal current-map replication fails current area envelope. No alternative macro/design study adopted."
+  },
+  "actual_ports": {
+    "tile_read_bytes_per_stream_edge": 64,
+    "tile_read_ports": 1536,
+    "aggregate_tile_read_bytes_per_edge": 98304,
+    "conditional_enabled_tile_KV_read_payload_rank_token": 764411904,
+    "enabled_read_scope": "Analytical ME KV busy edges times all1536 unconditional tile read CEs. Includes repeated/padded lane reads; this is raw macro activity, not distinct offchip bytes or transport bandwidth.",
+    "tile_write_bytes_per_stream_edge": 64,
+    "shared_fill_lanes": 1,
+    "shared_fill_payload_bytes_per_edge": 64,
+    "physical_tile_write_ports": 1536,
+    "shared_fill_scope": "One addressed fill lane in committedr8 delivery candidate.1536 local tile write ports exist independently; no actual selected provider-to-tile parallel fill topology has been bound.",
+    "current_connected_production_fill_lanes": null,
+    "source_inventory_scope": "r14 module with ENABLE1; four enabled stack copies/rank are priced candidate replication, not a connected ROM runtime receipt.",
+    "actual_enabled_ROM_service_replicas_verified": false,
+    "shared_fill_wire_bits": 1048,
+    "stacks_per_rank": 4,
+    "PCs_per_stack": 32,
+    "owner_instances_per_stack": 1,
+    "shared_command_buses_per_stack": 1,
+    "command_bits_per_stack": 339,
+    "column_payload_bytes_per_command": 32,
+    "column_payload_ceiling_Bps_per_stack": 32000000000,
+    "column_payload_ceiling_Bps_per_rank": 128000000000,
+    "owner_payload_bytes_per_completed_return": 32,
+    "owner_FSM": {
+      "lookup_edges": 12,
+      "min_accept_interval_edges": 14,
+      "accepted": [
+        0,
+        14,
+        28,
+        42,
+        56
+      ],
+      "consumed": [
+        13,
+        27,
+        41,
+        55,
+        69
+      ],
+      "assumptions": "No allocation conflicts, grant blocking, stalls, refresh or missing PHY data."
+    },
+    "owner_payload_ceiling_Bps_per_stack": 2285714285.714286,
+    "owner_payload_ceiling_Bps_per_rank": 9142857142.857143,
+    "shared_fill_ceiling_Bps": 76800000000,
+    "service_candidate_Hz": 1000000000,
+    "stream_target_Hz": 1200000000,
+    "serial_target_Hz": 900000000,
+    "actual_sustained_HBM_bandwidth": null,
+    "source_closed_bandwidth": null,
+    "historical_model_aggregate_HBM_Bps": 3600000000000.0,
+    "old_aggregate_bound_is_selected_bandwidth": false,
+    "current_serial_bridge_outstanding": 1,
+    "candidate_burst_sectors": 32,
+    "candidate_outstanding_per_stack": 16,
+    "candidate_response_bytes_per_stack": 16384,
+    "candidate_assembly_slots_per_stack": 1024,
+    "warning": "32PCs are not32 output owners. Macro1R1W read/write ports are not independent global fill lanes. Ceilings are not sustained HBM bandwidth."
+  },
+  "token_lower_bounds": {
+    "full_read_owner_ceiling_s": 0.016515072,
+    "full_read_column_command_ceiling_s": 0.001179648,
+    "optimistic_tail_bypass_owner_ceiling_s": 0.016482816,
+    "selected_closing_read_plus_write_owner_slot_ceiling_s": 0.016498944,
+    "selected_layer_owner_slot_lower_s": 0.000458304,
+    "full_read_single_fill_s": 0.00196608,
+    "tail_bypass_masked_fill_beats": 2354688,
+    "tail_bypass_masked_fill_s": 0.00196224,
+    "conditional_compute_s": 0.00010703666666666666,
+    "compute_scope": "Existing uniform1.2GHz qwen_tp_point reference with explicit+55; serial0.9GHz, actual current program/arithmetic and physical paths still require joined pricing. Extra compute cannot remove the transport lower bound.",
+    "perfect_all_compute_overlap_s": 0.016498944,
+    "conditional_max_token_rate": 60.60993964219771,
+    "overlap_credited_to_admitted_rate": 0,
+    "applies_to": "Existing die-local HBM/next-layer prefetch policy with source-sized two K-tail tiles and new V-row forwarding. Actual binding and sustainable policy remain missing."
+  },
+  "three_k_requirement": {
+    "target_token_s": 0.0003333333333333333,
+    "read_Bps_per_rank": 452984832000,
+    "shared_64B_fill_lanes_min": 6,
+    "owned_32B_output_lanes_per_stack_min": 4,
+    "shared_column_command_ports_per_stack_min": 4,
+    "equivalent_source_owner_instances_per_stack_min": 50,
+    "maximum_offchip_bytes_per_rank_at_current_owner_ceiling": 3047619.0476190476,
+    "conclusion": "No3k+ claim with current fill/owner transport. Counts are infeasibility witnesses, not proposed optional replicas."
+  },
+  "overlap": {
+    "analytical_current_layer_stages": {
+      "layer": 18,
+      "cycles": 3338,
+      "stages": [
+        {
+          "stage": "QKV projection, then q/k norm, RoPE",
+          "cycles": 451,
+          "engine_busy": 64,
+          "exposed": 387
+        },
+        {
+          "stage": "attention: scores, softmax, P\u00b7V, 1/Z",
+          "cycles": 1624,
+          "engine_busy": 216,
+          "exposed": 1408
+        },
+        {
+          "stage": "O projection, residual, FFN norm",
+          "cycles": 258,
+          "engine_busy": 48,
+          "exposed": 210
+        },
+        {
+          "stage": "gate/up projection, fused SiLU\u00b7up",
+          "cycles": 651,
+          "engine_busy": 256,
+          "exposed": 395
+        },
+        {
+          "stage": "down projection, residual, next norm",
+          "cycles": 354,
+          "engine_busy": 144,
+          "exposed": 210
+        }
+      ]
+    },
+    "conditional_layer_compute_s": 2.7816666666666666e-06,
+    "candidate_next_layer": "May overlap current matrix/attention only with a separately owned spare window, safe port arbitration, actual accepted descriptor release and reader drain. Source-selected window selector/lease trace absent.",
+    "current_attention": "Current K must be visible for scores; V must be visible for PV. Streaming overlap needs exact supplied-prefix/consumer cadence, not whole-layer bandwidth.",
+    "writes": "Open-tail and V writes may run behind compute only with accepted backing/credit/retirement and bounded write-port ownership.",
+    "initial_prefetch": "No prior layer exists to hide first-layer prefetch; cross-token retention/early release require actual state.",
+    "conditional_compute_overlap_reference_s": 0.00010703666666666666,
+    "proved_overlap_s": 0
+  },
+  "area": {
+    "authority": "Owner supplied Maxwell747.65mm2 baseline/815mm2 envelope; exact Maxwell component receipt pending.",
+    "baseline_mm2": 747.65,
+    "envelope_mm2": 815.0,
+    "other_services_budget_mm2": 67.35,
+    "service_plus_tail_macro_mm2": 4.569720064,
+    "assembly_logic_lower_bound_mm2": 0.9399877632,
+    "remaining_after_these_known_debits_mm2": 61.84029217279999,
+    "four_PHY_abstract_footprint_mm2": 40.00784006016,
+    "conditional_remaining_if_PHY_not_already_in_baseline_mm2": 21.83245211263999,
+    "inherited_unqualified_service_reservation_mm2": 66.4063488,
+    "inherited_reservation_is_fit_or_replacement_credit": false,
+    "resident_literal_macro_increment_mm2": 179.32386816,
+    "useful_capacity_only_macro_increment_mm2": 131.50416998400001,
+    "literal_resident_overflow_before_other_services_mm2": 111.97386815999994,
+    "debits_already_in_Maxwell_baseline": null,
+    "complete_slot_fit": null,
+    "exclusions": "Controller/CAM/quarantine, mask/mux/demux, PHY, CTS/hold/PGOBS, routing, SRAM/control protection. Named baseline component join prevents duplicate charges."
+  },
+  "physical_PHY": {
+    "scope": "a placement and connection abstract for licensed IP; no PHY design, no GDS, no signal-integrity or bump-map analysis; footprint and timing are assumed",
+    "footprint": {
+      "area_basis": {
+        "grade": "assumed",
+        "note": "as hbm2e",
+        "source": "configs/hardware/technology.json hbm.hbm3e.phy_area_mm2_per_stack",
+        "value_mm2": 10.0
+      },
+      "area_mm2": 10.00196001504,
+      "depth_grade": "derived from two assumed values: area / beachfront",
+      "height_um": 833.49,
+      "width_basis": {
+        "grade": "assumed",
+        "source": "configs/hardware/technology.json hbm.hbm3e.stack_beachfront_mm",
+        "value_mm": 12.0
+      },
+      "width_um": 12000.096
+    },
+    "source_interface": {
+      "address_basis": "ceil(log2(stack capacity 2.25e+10 B / 32 B))",
+      "address_bits": 31,
+      "beat_bits": 4,
+      "grade": "defined here (the repository's own controller interface), not DFI 5.x",
+      "len_bits": 5,
+      "protocol": "rtl/hdc/kv/ot_hdc_hbm_model.sv request/response ports",
+      "pseudo_channels": 32,
+      "sector_bits": 256,
+      "tag_bits": 16
+    },
+    "native_r14": {
+      "address_bits": 34,
+      "len_bits": 6,
+      "beat_bits": 5
+    },
+    "protocol_shim_source_join": false,
+    "SS_min_period_ps": 1000.0,
+    "adopted_streaming_1p2GHz": false,
+    "bandwidth_scope": "Published DQ/nominal stack bandwidth does not qualify the abstract protocol, clock, provider-owner bottleneck or filled tile ports."
+  },
+  "corridor": {
+    "owner_supplied_width_um": 96.768,
+    "fill_tracks_one_lane": 1048,
+    "six_fill_lanes_tracks_before_control_clock_reset": 6288,
+    "capacity_36layer_proof": false,
+    "delivery_rate_proof": false,
+    "route_pitch_layers_reserve_and_parent_receipt": null
+  },
+  "production_calendar": {
+    "selected": false,
+    "fully_finite_actual_trace_present": false,
+    "checker": "FinitePrefetchReplay",
+    "source_two_window_row_capacity_screen": true,
+    "source_selected_second_window_read_selector": false,
+    "required": [
+      "Actual phase/source policy receipt and stage program pins",
+      "Actual per-stack allocate/command/raw_return/lookup/owned_consumed ticks",
+      "Fill data/mask and macro visibility, copy-reader credit/grant/tag retirement",
+      "Window owner acquisition and actual attention drain; no overlap without timeline",
+      "CausalJoin actual payload/state equality and bank/refresh/turnaround command audit",
+      "Complete slot/port/CDC latency and source-selected clock admission"
+    ],
+    "gate": "No resource replay or ceiling result qualifies missing producer/provider/policy inputs."
+  },
+  "physical_build_ready": false,
+  "production_policy_selected": false,
+  "adopted_rate": null,
+  "preserved_full_numerical_run": true,
+  "new_numerical_positions": 0,
+  "new_RTL_PnR": false
+}
