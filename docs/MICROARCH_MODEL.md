@@ -1,5 +1,7 @@
 # Microarchitecture analytical model
 
+ROM reliability policy (owner decision, 2026-10-02): weight ROM for Qwen3-8B and DeepSeek-V4.1 no longer requires ECC. The selected successor must omit ROM SECDED check/correction and ECC-only parity sidecars, mirrors, exception queues and held-check debt. Preserve all previous ECC pass/failure evidence as history. Keep the exact released-checkpoint payload, golden rounding/reduction order, real macro read/capture timing and finite producer/consumer flow control. This decision does not remove SRAM, HBM, link or control-state protection. Do not replace ECC with mandatory parity/CRC hardware without separately pricing it. Claims assume fault-free ROM reads; commercial reliability and yield qualification remain outside this research artifact. Legacy ECC-based area/latency/rate rows are historical until the coordinated no-ECC model, macro inventory and physical contracts are regenerated.
+
 Tool: `tools/uarch_model.py`. Records: `results/uarch/v41_rom.json`, `results/uarch/qwen_rom.json`, `results/uarch/hbm_gpu.json`, `results/uarch/economics.json`, `results/uarch/economics_levers.json`. Tests: `tests/test_uarch_model.py`, `tests/test_uarch_economics.py`. The binding method is in [AGENTS.md](../AGENTS.md) rule 1.
 
 It covers all four designs: DeepSeek-V4.1 ROM (first), Qwen3-8B ROM, and the two GPU-organised HBM comparators.

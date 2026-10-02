@@ -12,6 +12,8 @@ Research scope excludes production DFT/ATE development, foundry qualification, m
 
 No current product-rate headline is adopted by this revision. Historical figures retain their original evidence scope. N5 storage-density and cost projections remain separate from ASAP7 physical evidence; unimplemented memory density, repair/ECC, package, PHY and cooling assumptions require disclosed bounds and sensitivity analysis.
 
+ROM reliability policy (owner decision, 2026-10-02): weight ROM for Qwen3-8B and DeepSeek-V4.1 no longer requires ECC. The selected successor must omit ROM SECDED check/correction and ECC-only parity sidecars, mirrors, exception queues and held-check debt. Preserve all previous ECC pass/failure evidence as history. Keep the exact released-checkpoint payload, golden rounding/reduction order, real macro read/capture timing and finite producer/consumer flow control. This decision does not remove SRAM, HBM, link or control-state protection. Do not replace ECC with mandatory parity/CRC hardware without separately pricing it. Claims assume fault-free ROM reads; commercial reliability and yield qualification remain outside this research artifact. Legacy ECC-based area/latency/rate rows are historical until the coordinated no-ECC model, macro inventory and physical contracts are regenerated.
+
 ## Evidence required for the paper
 
 | Gate | Required evidence | Passing scope |
