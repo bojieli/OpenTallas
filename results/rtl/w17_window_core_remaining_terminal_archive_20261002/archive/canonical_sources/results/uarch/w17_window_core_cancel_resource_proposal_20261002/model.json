@@ -1,0 +1,184 @@
+{
+  "schema": "opentallas.actual_core_cancel_resource_admission.v1",
+  "status": "PROPOSED_NOT_GO_NO_EXECUTION",
+  "failed_run": {
+    "unit": "w17-recovery-core-parent-20261002-r1.service",
+    "GO": "ecb58ee972836244ccbde1c3c4fb95a20da431e7",
+    "source_package": "594b74fefa7ca3de51b01cc9c5eb5dbc35962f11",
+    "parent_evidence": "7555418c6",
+    "result": "OOM_KILL_STATUS9_RUNTIME_UNMEASURED",
+    "wall_seconds": 25.459498,
+    "CPUUsageNSec_retained": 26201046000,
+    "journal_CPU_seconds": 26.091,
+    "CPU_difference": "Journal final log and later property read are distinct retained observations; no exact equality claim.",
+    "phase": "Verilator front end; retained journal names perl+verilator_bin; no successful C++ compile/binary/runtime receipt",
+    "memory_cap_bytes": 4294967296,
+    "peak_RSS_bytes": null,
+    "cgroup_peak_events": "Failed cgroup was removed; memory.peak/events unavailable, preserved absence receipt. Do not invent resident peak or exact allocation demand.",
+    "record_absent": "Worker received SIGKILL under OOMPolicy=stop; Python finally cannot emit terminal record. Outside-cgroup launcher receipt is authoritative terminal evidence.",
+    "classification": "Resource admission refusal, not arithmetic/protocol/architecture rejection."
+  },
+  "source_workload": {
+    "original_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+    "primitive_geometry": {
+      "AW": 30,
+      "NW": 21,
+      "BL": 16,
+      "IL": 8,
+      "NBMAX": 192,
+      "CHUNK8": 1,
+      "MP": 1,
+      "SUN": 256,
+      "SUM": 64
+    },
+    "QE_dormant_blockdot_instances": 16,
+    "QE_tree_adders": 96,
+    "parameter_shrink": false,
+    "alternate_helpers": false,
+    "prefix_substitution": false,
+    "clock_or_uncertainty_change": false,
+    "full_die_build": false,
+    "source_pins": {
+      "rtl/test/w17_window_core_cancel_prepared_r8/fastpp_core_cancel.sv": "c008f165fb0462d8b7b473328567b2572dfababa77024cf41a2d5167f60d68cf",
+      "rtl/test/w17_window_core_cancel_join_r7/actual_fastpp_core_selected_cone.sv": "635c87e94003f8d38b0e2c7aefb7037ed2ad9a78b0dd11444370ef34429ca255",
+      "rtl/test/w17_window_core_cancel_join_r7/tb.sv": "9fd2f17a2b2e46fe9c5b82d9571531accf67263c66cee9337b81c61e0f596252"
+    },
+    "target_preparation_sha256": "4bc9c1e70639d1f12ba1cabd9aa66a0ec8ffc77bd5a768b3ce229b654ceaf317",
+    "extracted_regions_sha256": {
+      "prefix": "084ce8f9912254059f9cac9783a2f41faccf8155a0733e021df21a0c83c936a2",
+      "actual_SU": "0256e450209a05a1d174a41b517c96e46cd5cb12eac33380890109fc3bb484c0",
+      "actual_QE_producer": "1ac83ae19a409f7fc1e132197820eb5085182683a0e7340a809135e8b53e43a7",
+      "fault": "45ac1b8d1d3c81c8cc49248b9a121c924a4bde961870404eb982d75563be0fb6"
+    },
+    "source_identical_meaning": "Same pinned QE/SU primitives and full active geometry/options. End-to-end fixture bytes intentionally differ from OOM run for reviewed WQR binding/edge43 and explicit complete port forwarding/sink. This is not a byte-identical replay of the defective old fixture.",
+    "corrections": [
+      "WQR actor replaces wrong XU WXR actor",
+      "source-edge SUaccept43 replaces44",
+      "forward every ANSI multidcl name; explicitly tie excluded fault ports",
+      "actual masked VM sink+written bitmap/frozen-commit control"
+    ]
+  },
+  "proposed_caps": {
+    "MemoryMax": 34359738368,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "compile_jobs_max": 2,
+    "RuntimeMaxSec": 2400,
+    "LimitFSIZE": 1073741824,
+    "LimitCORE": 0,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop",
+    "aggregate_generated_output_bytes": 8589934592
+  },
+  "frontend_first_gate": {
+    "memory_bytes": 34359738368,
+    "frontend_seconds": 540,
+    "supervision_reserve_seconds": 60,
+    "whole_seconds": 600,
+    "CXX_compiles": 0,
+    "simulations": 0,
+    "aggregate_output_bytes": 8589934592,
+    "single_file_bytes": 1073741824,
+    "later_campaign_requires_fresh_review_GO": true,
+    "profiling": "Outside-worker cgroup samples memory.current/peak/events/cpu.stat/pids with requested250ms interval; actual interval recorded, cumulative peak is not per-phase peak. Frontend generated-file byte/hash closure before anyCXX."
+  },
+  "memory_basis": {
+    "reservation_factor_over_failed_cap": 8,
+    "reservation_bytes": 34359738368,
+    "margin_over_failed_cap_bytes": 30064771072,
+    "measured_fit": false,
+    "completion_upper_bound_proved": false,
+    "rule": "32GiB is a conservative finite reservation after observed OOM under4GiB, not a memory prediction. Further refusal remains immutable; no automatic increase or retry."
+  },
+  "time_budget": {
+    "compile_phases": 5,
+    "baseline_positive_cases": 23,
+    "negative_controls": [
+      "physical_QE_gate",
+      "PC_advance",
+      "VM_frozen_store_drop",
+      "scalar_suppression"
+    ],
+    "compile_shared_seconds": 2250,
+    "planning_allowance_seconds_per_phase": 450,
+    "frontend_seconds_per_phase": 300,
+    "CXX_seconds_per_phase": "remaining450 minus consumedfrontend, also bounded by remaining2250shared",
+    "runtime_shared_seconds": 26,
+    "positive_case_timeout_seconds": 0.9,
+    "negative_case_timeout_seconds": 1,
+    "declared_case_timeout_sum_seconds": 24.7,
+    "supervision_reserve_seconds": 124,
+    "whole_seconds": 2400,
+    "basis": "Failed front end ran25.459498s beforeOOM. No completed phase measurement supports linear extrapolation.450s/phase is a conservative reservation, with aggregate2250s stop and no budget reset.",
+    "automatic_retries": 0,
+    "stop_first_failure": true
+  },
+  "output_budget": {
+    "aggregate_bytes": 8589934592,
+    "single_file_bytes": 1073741824,
+    "compiled_output_measured": false,
+    "basis": "Old run died before C++ output; joined-output peak unknown.8GiB is a finite reserved allowance, not claimed necessity/fit. New1GiB per-file cap supersedes256MiB unqualified draft; neither bound is measured.",
+    "reclamation": "Only successful newly owned phase obj after all semantic receipts and fsynced source/binary/generated hash closure. Failed/new current obj and all original failures remain untouched.",
+    "retained_evidence_allowance_bytes": 67108864
+  },
+  "host_admission": {
+    "preferred": "local",
+    "alternative": "ot-agidock128 or ot-pve1 after separately reviewed target/tool transfer and available capacity",
+    "forbidden_new": [
+      "ot-pve2",
+      "ot-pve3"
+    ],
+    "no_migration": true,
+    "fleet_memory_budget_bytes": 103079215104,
+    "single_job_limit_bytes": 100931731456,
+    "minimum_live_reserve_bytes": 25769803776,
+    "minimum_MemAvailable_before_this_job_bytes": 60129542144,
+    "minimum_disk_free_bytes": 17179869184,
+    "max_fleet_threads": 48,
+    "new_job_CPUs": 2,
+    "checks": "Fresh available-memory/disk/cpuset/tool hashes/user-systemd delegation; coordinate aggregate leases beforelaunch. Fleet metadata alone is not enforcement.",
+    "current_execution_authorized": false
+  },
+  "terminal_observability_required": {
+    "launcher_outside_worker_cgroup": true,
+    "periodic_memory_peak_events_cpu_samples": "Outside-cgroup monitor retains resource telemetry even if worker killed; no provider/PHY attachment.",
+    "preflight_and_cap_refusals": "Owned immutable failure receipt beforebuild, including plan/source/cap stage; do not hide missing worker record.",
+    "outer_terminal": "Always save systemd terminal/journal plus whether worker record exists; classify OOM as resource refusal, no runtime qualification."
+  },
+  "unified_component": {
+    "provider_bits": 259,
+    "adapter_concrete_bits": 10,
+    "selected_concrete_bits": 269,
+    "reserved_bits": 278,
+    "DFF_proxy_adapter_um2": 2.916,
+    "MACs_added": 0,
+    "new_payload_ports": 0,
+    "healthy_added_register_stages": 0,
+    "bench_VM_bitmap_not_design_hardware": true,
+    "routing_slot_SS_FF": false
+  },
+  "evidence_sha256": {
+    "active_stage.json": "98c2e2fb3c729c8a60d5ad0d2b2a1c06f9b31fd78d410338fdb683e689313a17",
+    "caps_before_compile.json": "102756829f7e1b9c0c46192488ae1d0df0d2d3b01211bc1bc3468b2d55218a90",
+    "cgroup_metadata.json": "211fd4b0751aeebaeb9bda165f6ca8bba512afb4dddf6f71435f316aee8b2f0b",
+    "compile.log": "81c3120b721665bb8a5be776ea728885d24756203b94fb0d4c1334a7d3973bd7",
+    "generator_draft1.py": "afc8be8cf705ede61f1de1319da666debaf032eb0842e8face12dfa4698a1338",
+    "journal.txt": "9d958917d9170f700b368579e9c52a4d7834613f5b659862a8f353b4faf555d9",
+    "launch.json": "2f02e195dfb668cca6c7575779f6cd50b294214b16c94f4f6682c3e2a345ba1e",
+    "model_draft1.json": "0d6bc2c2eccde5ffb19ceeb9e5f906a9b066d99131b20d3fe8e7400b7b0dccb0",
+    "service.log": "03b9688ee4293c069844a67e5f28a87bfbabf543b3a45124b63e26f606612ad4",
+    "service_receipt.json": "994f3db47c60c796fcdc219e86f1e94b457acf4c2ef4b99379283a7001568926",
+    "unit_properties.txt": "489fa0b9f0da5d9d3f99d35c75170146a0332a22aa446eee51c39b72eeb51acc"
+  },
+  "generator_sha256": "df33321b5dfb3e4b02067709cc40a60105716eba3b7a3ecb79caf3e036d823e1",
+  "fullprogram_primary": true,
+  "runtime_PASS": false,
+  "physical_causal_provider": false,
+  "producer_cancel_qualified": false,
+  "fulltoken": false,
+  "adoption": false
+}
