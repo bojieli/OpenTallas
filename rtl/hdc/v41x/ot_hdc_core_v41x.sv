@@ -73,6 +73,10 @@ module ot_hdc_core_v41x #(
     parameter integer ME0_HBM = 0,       // selected re-specified ME weight op uses an HBM window
     parameter integer NSLOT = 1,           // position slots (1: the one-position core)
     parameter integer MP    = 1,           // lane multiplier of the ME, QE and HE
+    // MTP accept: 0 = ot_hdc_accept; 1 = the protected full-width DS MTP accept leaf through its caller
+    // (rtl/hdc/ot_hdc_mtp_accept_caller.sv); ACC_GAMMA = the drafts verified per step (the leaf's start_g)
+    parameter integer ACC_GUARD = 0,
+    parameter integer ACC_GAMMA = 5,
     // re-specified units (1) or the as-built unit (0), per unit: the bring-up switches
     parameter integer X_HE  = 1,
     parameter integer X_ME  = 0,           // ME weight ops -> the BF16/FP32 weight engine
@@ -471,6 +475,7 @@ module ot_hdc_core_v41x #(
     // speculative-step registers (ot_hdc_accept): slot tokens, verify targets, ACCEPT
     wire [NSLOT*NW-1:0] stok, ttok;
     wire          acc_done, acc_any;
+    wire          acc_hold, acc_fault;          // ACC_GUARD: caller holds a request / leaf fault
     wire [SLW-1:0] acc_a;
     wire [SLW:0]  acc_ne;
     wire [NW-1:0] acc_bonus;
@@ -479,7 +484,18 @@ module ot_hdc_core_v41x #(
     reg  [SLW-1:0] c_slot_r;
     reg  [NW-1:0] amax_tok;
     generate
-        if (NSLOT > 1) begin : g_acc
+        if (NSLOT > 1 && ACC_GUARD) begin : g_accg
+            ot_hdc_mtp_accept_caller #(.NSLOT(NSLOT), .NW(NW), .SLW(SLW)) u_call (.clk(clk), .rst_n(rst_n),
+                .start_v(start && st == S_IDLE), .iter(entry != 0), .start_pos(pos), .start_tok(token),
+                .gamma(3'(ACC_GAMMA)),
+                .tokx_v(tokx_v), .tokx_slot(c_slot_r), .tokx_tok(xu_sel_first[NW-1:0]),
+                .amax_v(amax_v), .amax_slot(c_slot_r), .amax_tok(amax_tok),
+                .acc_v(acc_v), .acc_g(c_slot_r), .stok(stok), .ttok(ttok), .acc_done(acc_done),
+                .acc_any(acc_any), .acc_a(acc_a), .n_emit(acc_ne), .bonus(acc_bonus), .hold(acc_hold),
+                .fault(acc_fault));
+            assign acc_n = acc_any ? acc_ne : 4'd0;
+        end else if (NSLOT > 1) begin : g_acc
+            assign acc_hold = 1'b0; assign acc_fault = 1'b0;
             ot_hdc_accept #(.NSLOT(NSLOT), .NW(NW)) u_acc (.clk(clk), .rst_n(rst_n),
                 .start_v(start && st == S_IDLE), .start_tok(token),
                 .tokx_v(tokx_v), .tokx_slot(c_slot_r), .tokx_tok(xu_sel_first[NW-1:0]),
@@ -488,6 +504,7 @@ module ot_hdc_core_v41x #(
                 .acc_any(acc_any), .acc_a(acc_a), .n_emit(acc_ne), .bonus(acc_bonus));
             assign acc_n = acc_any ? acc_ne : 4'd0;
         end else begin : g_noacc
+            assign acc_hold = 1'b0; assign acc_fault = 1'b0;
             assign stok = tok_r; assign ttok = 0; assign acc_done = 1'b0; assign acc_any = 1'b0;
             assign acc_a = 0; assign acc_ne = 0; assign acc_bonus = 0; assign acc_n = 4'd0;
         end
@@ -515,7 +532,7 @@ module ot_hdc_core_v41x #(
                     st <= S_DYN;
                 end
                 //: one DYN bank a cycle
-                S_DYN: begin
+                S_DYN: if (!acc_hold) begin
                     ds <= ds + 1'b1;
                     if (ds + 1 >= NSLOT) begin ds <= 0; st <= S_FETCH; end
                 end
@@ -1200,7 +1217,7 @@ module ot_hdc_core_v41x #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) fault <= 1'b0;
         else if (start && st == S_IDLE) fault <= 1'b0;
-        else if (me_fault || su_fault || qe_fault || xu_fault || he_fault ||
+        else if (me_fault || su_fault || qe_fault || xu_fault || he_fault || acc_fault ||
                  (FULL_SHAPE && KV_HBM && (win_fault || win_capture_fault)) ||
                  (FULL_SHAPE && (coll_fault || rope_pf_fault ||
                   (st == S_ISSUE && d_unit == 3'd0 &&
