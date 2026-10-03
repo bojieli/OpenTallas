@@ -15,8 +15,8 @@ is results/uarch/dsrom_parallel_owner_binding_20261002/r1/native_shard_choices.j
 Modes (dataflow levels 1-5 only; no algebraic reordering, no spatial vector redistribution):
   owner        as designed: one hub (VM/SU) per rank on shard 0; a crossing field step pays activation out +
                remote rows back = 2 x L1.
-  owner_edge   owner, with the remote shard's broadcast/return tree rooted at the shared-edge PHY instead of its
-               (idle, replicated) hub: L1 = owner VM->PHY + link + the edge root's extra tree reach.
+  owner_edge   proposed remote shared-edge root; retain the actual routed endpoint floor until a replacement
+               route is measured (no credit for an inferred shorter tree).
   owner_board  owner, with the two shards in different packages (TP pair kept in package): L1 over the board.
   mirror_hub   the replicated hubs both run the (bit-identical) serial chain; field halves are all-gathered
                over UCIe: +L1 a crossing step; attention/indexer stay on shard 0 (KV home), so wo_a pays 2 x L1.
@@ -122,6 +122,8 @@ def default_cfg(mode, **kw):
                board_hop_s=baseline.A.BASELINE["board_hop_s"], edge_root_extra_stages=None, field_term=True,
                split="rows", credit_overlap=False)
     cfg.update(kw)
+    if cfg["vm_ucie_stages"] < VM_TO_UCIE_STAGES or cfg["vm_serdes_stages"] < VM_TO_SERDES_STAGES:
+        raise ValueError("cannot remove source-bound hub-to-edge stages")
     if cfg["edge_root_extra_stages"] is None:   # shared long edge: the remote tree reaches half the short side
         cfg["edge_root_extra_stages"] = math.ceil(min(DIE_INTERIM_MM) / 2 * 1e3 / baseline.SS_REACH_UM[1.2e9])
     return cfg
@@ -134,7 +136,7 @@ def one_way_s(cfg, clock):
     if m == "owner_board":
         return 2 * cfg["vm_serdes_stages"] / clock + cfg["board_hop_s"]
     if m == "owner_edge":
-        return (cfg["vm_ucie_stages"] + cfg["edge_root_extra_stages"]) / clock + cfg["link_core_s"]
+        return (cfg["vm_ucie_stages"] + max(cfg["vm_ucie_stages"], cfg["edge_root_extra_stages"])) / clock + cfg["link_core_s"]
     return 2 * cfg["vm_ucie_stages"] / clock + cfg["link_core_s"]
 
 
@@ -193,13 +195,19 @@ def apply(g, P, clock, cfg, keys, S=None):
         elif nd["kind"] == "hop" and nd.get("hop_kind") in ("stage", "substage", "head") and nd.get("stage") is not None:
             pay = nd["payload"]
             a = base.hop(nd["hop_kind"], pay, nd["stage"])
+            # _cons_adjust has already paid the ordinary mapping's endpoint
+            # wires. Replace that FULL path; do not leave it under PAR2's L1.
+            a = dict(a, latency_s=a["latency_s"] + nd["_hub_edge_s"])
             if m == "layer_split" and nd["hop_kind"] != "head" and nd["stage"] % 2 == 1:
                 # in-package hop between the two dies of a layer-split pair: VM -> UCIe PHY -> next die's VM
                 b = dict(latency_s=one_way_s(dict(cfg, mode="owner"), clock), bytes_s=pay / cfg["ucie_bytes_s"])
             else:
                 b = new.hop(nd["hop_kind"], pay, nd["stage"])
+                b = dict(b, latency_s=b["latency_s"] + baseline.hub_edge_hop_wire_s(
+                    b, clock, nd["_hub_edge_die"],
+                    "UCIe fan-out" in b["link"] and new.dp > 1))
                 if m.startswith("mirror"):    # both dies of the next rank need the vector: UCIe forward or split
-                    b = dict(b, latency_s=b["latency_s"] + min(L1, pay / new.link_bw))
+                    b = dict(b, latency_s=b["latency_s"] + L1)
             nd["depth"] += b["latency_s"] - a["latency_s"]
             nd["issue"] += b["bytes_s"] - a["bytes_s"]
             nd["_par2_s"] = (b["latency_s"] - a["latency_s"]) + (b["bytes_s"] - a["bytes_s"])

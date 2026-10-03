@@ -4,7 +4,7 @@ tools/uarch_model_par2_boundary.py.  Model only: no RTL, no P&R, no pinned file 
 
 Basis: the S58 selection's own cons_v41_rom settings (tools/dsrom_4096_partition_token_options.py: head 8,
 table 36, 1.2 GHz SS, 0.9 GHz serial domain, elem_stages 8, SS wires, VMC_FUSED, PRODUCT_HUB, DIE_SHRUNK_INTERIM).
-Writes results/uarch/dsrom_par2_boundary_20261003/model.json (refuses to overwrite with different bytes).
+Writes the corrected hub-edge model; the historical PAR2 record is preserved.
 """
 import argparse
 import copy
@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import uarch_model as u  # noqa: E402
 import uarch_model_par2_boundary as X  # noqa: E402
 
-OUT = ROOT / "results/uarch/dsrom_par2_boundary_20261003"
+OUT = ROOT / "results/uarch/dsrom_hub_edge_wires_20261003"
 CAP = ROOT / "results/uarch/dsrom_4096_comparable_capacity_20261002/partition_token_options.json"
 CTXS = (1048576, 200000)
 PINNED = {1048576: (2563.7, 3809.4), 200000: (2680.6, 4176.7)}   # dsrom_utilisation_redesign option 0 (S58)
@@ -90,11 +90,16 @@ def price(S, ctx, par2):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(OUT / "model.json"))
+    ap.add_argument("--variants", nargs="+", choices=[r[0] for r in VARIANTS],
+                    default=["base_S58", "owner_fc4", "layer_split_S116_fc4"],
+                    help="Mappings to compose; select all names explicitly for the historical sensitivity sweep")
     a = ap.parse_args()
     clock = u.PRODUCT_CLOCK_HZ
     census = X.call_census()
     results = []
     for vid, S, cfg, note in VARIANTS:
+        if vid not in a.variants:
+            continue
         full = X.default_cfg(**cfg) if cfg else None
         for ctx in CTXS:
             r = price(S, ctx, full)
@@ -102,10 +107,12 @@ def main():
                      one_way_ns=round(X.one_way_s(full, clock) * 1e9, 2) if full else None)
             results.append(r)
             print(json.dumps({k: r[k] for k in ("id", "ctx", "ar_tok_s", "mtp_tok_s", "ar_token_us")}), flush=True)
+    if "base_S58" not in a.variants:
+        raise SystemExit("base_S58 is required for consistent comparisons")
     for ctx, (ar, mtp) in PINNED.items():
         b = next(r for r in results if r["id"] == "base_S58" and r["ctx"] == ctx)
-        if (b["ar_tok_s"], b["mtp_tok_s"]) != (ar, mtp):
-            raise SystemExit(f"baseline does not reproduce at {ctx}: {b['ar_tok_s']} {b['mtp_tok_s']}")
+        b["historical_without_endpoint_wires"] = dict(ar_tok_s=ar, mtp_tok_s=mtp)
+        b["ar_wire_correction_us"] = round(b["ar_token_us"] - 1e6 / ar, 3)
     base = {r["ctx"]: r for r in results if r["id"] == "base_S58"}
     for r in results:
         b = base[r["ctx"]]
@@ -115,8 +122,9 @@ def main():
         "tools/uarch_model.py", "tools/uarch_model_par2_boundary.py", "tools/dsrom_par2_boundary.py",
         "tools/decode_critical_path.py", "tools/arch_budget_v41.py", "configs/hardware/technology.json",
         str(X.CHOICES.relative_to(ROOT)), str(CAP.relative_to(ROOT)))}
-    rec = dict(schema="opentallas.dsrom.par2-boundary.v1", candidate="DS4096-TP4-S58-PAR2-NP2048",
-               model_extension=X.MODEL_EXTENSION, default_off=True, baseline_reproduced=True,
+    rec = dict(schema="opentallas.dsrom.hub-edge-wires.v2", candidate="DS4096-TP4-S58-PAR2-NP2048",
+               model_extension=X.MODEL_EXTENSION, default_off=True,
+               wire_source=u.HUB_EDGE_WIRE_SOURCE, endpoint_wires_in_all_mappings=True,
                source_sha256=src, clock_hz=clock,
                link=dict(X.tech_links(), vm_to_ucie_stages=X.VM_TO_UCIE_STAGES,
                          vm_to_serdes_stages=X.VM_TO_SERDES_STAGES, ss_reach_um=u.SS_REACH_UM[1.2e9],

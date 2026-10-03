@@ -23,7 +23,10 @@ def test_census_matches_source_binding():
 
 def test_default_off_reproduces_baseline():
     r = T.price(58, 1048576, None)
-    assert (r["ar_tok_s"], r["mtp_tok_s"]) == T.PINNED[1048576]
+    # Historical rates omitted physical endpoint wires. Default-off now uses
+    # the corrected common baseline, rather than reproducing that omission.
+    assert r["ar_tok_s"] < T.PINNED[1048576][0]
+    assert r["mtp_tok_s"] < T.PINNED[1048576][1]
     assert "par2_passes" not in r
     assert u._cons_adjust.__name__ == "_cons_adjust"
 

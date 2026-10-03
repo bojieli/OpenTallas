@@ -3380,9 +3380,35 @@ SERIAL_TAG = ("ADOPTED + W15 SS wire reach (504 um) + W11 MEASURED serial build 
 # 30 (was 36), farthest cluster -> VM 33 (40), collective -> SerDes 45 (48), -> UCIe 34 (37); HBM window 25, index
 # keys 39, top-k 38, selected KV 24 (not separately priced in the graph).  The field broadcast/return regions take
 # the die's linear scale.  Die area, cost and power stay on the 815 mm2 ledger until the p12 floorplan lands.
-DIE_OLD = dict(expert_wire=W18B_EXPERT_WIRE, coll_stages=W15_V41_COLL_STAGES_SS, field_scale=1.0)
+DIE_OLD = dict(expert_wire=W18B_EXPERT_WIRE, coll_stages=W15_V41_COLL_STAGES_SS, field_scale=1.0,
+               ucie_stages=37, serdes_stages=48)
 DIE_SHRUNK_INTERIM = dict(expert_wire=30 + 33, coll_stages=45, field_scale=0.9062, mm2=669.255, pair_slots=5968,
-                          bf16_slots=1160, src="claude/w18-die-assembly 996f7982 shrink_p5_interim/shrunk_die.json")
+                          bf16_slots=1160, ucie_stages=34, serdes_stages=45,
+                          src="claude/w18-die-assembly 996f7982 shrink_p5_interim/shrunk_die.json")
+
+# Routed endpoint lengths, converted at the SS 504 um/stage reach. This is a
+# geometry/stage constraint, not a new SS/FF closure or a measured 83 ns link.
+HUB_EDGE_WIRE_SOURCE = dict(
+    revision="996f7982ce92a534e54722867ef8bba56b2cf417",
+    path="results/physical_abi3/asap7/chip/v41_w18/shrink_p5_interim/shrunk_die.json",
+    sha256="87e4170066f87d0532672a06bbc67621543017c326f8d1f4a3e119f79848c94c")
+UCIE_LEGACY_ONDIE_S = 1.5e-9  # technology.json's 10 ns hop includes this proxy
+
+
+def hub_edge_hop_wire_s(hop, clock, die=None, ucie_fanout=False):
+    """Replace the embedded routing proxy with BOTH routed endpoint paths.
+
+    Board paths pay SerDes endpoints; package paths pay UCIe endpoints. Board
+    transit/serialization stays in ArrayFabric. No intermediate hub is assumed.
+    Field trees and measured collective wires are separately priced already.
+    """
+    dv = die or DIE_OLD
+    package = hop["link"] == "UCIe"
+    stages = dv["ucie_stages" if package else "serdes_stages"]
+    if clock <= 0 or stages <= 0:
+        raise ValueError("positive endpoint wire stages and clock required")
+    proxy = UCIE_LEGACY_ONDIE_S if package or ucie_fanout else 0.0
+    return 2 * stages / clock - proxy
 SHRINK_TAG = SERIAL_TAG + " + W18b shrunk-die interim crossings (669 mm2)"
 # W11-stream (claude/w11-stream 540ef71c; record tool formulas at the shipped shape, idx_tail closed 1,249 MHz SS,
 # chunk and tile routes PENDING): indexer key -> score 48 -> 100 (+52; chunk 39 -> 83, the tail's +8 is already in
@@ -3922,6 +3948,19 @@ def _cons_adjust(g, P, clock, bf16, fc, lat, slow=None, chain_stages=None, elem_
     (slow = (hz, cdc_cycles)): their issue and depth stretch by clock / hz, and each crossing into the domain adds
     cdc_cycles of the slow clock (ASSUMED synchroniser); returns the pass time."""
     cyc = 1.0 / clock
+    # Every placement pays hub -> edge -> hub, including stage/head/substage,
+    # Engram and token-return hops. This is independent of the optional field
+    # SS retiming switch: disabling it cannot erase physical endpoint wires.
+    fabric = A.D.ArrayFabric(A.links_for(A.BASELINE), 2, "mesh", 4)
+    for nd in g.nodes.values():
+        if nd["kind"] == "hop":
+            hop = fabric.hop(nd["hop_kind"], nd["payload"], nd.get("stage"))
+            fan = ("UCIe fan-out" in hop["link"] and fabric.dp > 1)
+            wire = hub_edge_hop_wire_s(hop, clock, die, fan)
+            nd["depth"] += wire
+            nd["_hub_edge_s"] = wire
+            nd["_hub_edge_link"] = hop["link"]
+            nd["_hub_edge_die"] = die or DIE_OLD
     # the reducers' adder-tree levels, from the graph's as-priced depth (decode_critical_path: red_tail + FADD x levels)
     levels = {name: max(0, round((nd["depth"] * clock - A.D.K["red_tail"]) / A.D.FADD)) for name, nd in g.nodes.items()
               if nd["kind"] == "reduce"} if serial else {}
@@ -4122,7 +4161,9 @@ def cons_v41_rom(S, n_head=4, n_table=72, table_leak_scale=1.0, label=None, bf16
                 ar_tokens_s_b1=round(1 / T1, 1), mtp_tokens_s_b1=round(V41_TAU / step1, 1),
                 ar_saturated_tokens_s=round(sat, 1), mtp_saturated_tokens_s=round(sat_m, 1),
                 stage_hops=sum(1 for n in g1.nodes.values() if n["kind"] == "hop" and n.get("hop_kind") in ("stage", "substage")),
-                pipeline_hops_us=round(r1["breakdown_us"].get("pipeline_hops", 0.0), 3),
+                pipeline_hops_us=round(sum(sum(g1.contrib[n].values()) for n in g1.path(
+                    next(n for n in g1.nodes if n.endswith("token.return")))
+                    if g1.nodes[n]["kind"] == "hop") * 1e6, 3),
                 cooling=_cons_cooling(die_static, die_static_ungated, cats, pair_s, pp, dyn_scale, sat, S, tot),
                 field_concurrency=field_concurrency, added_latency=dict(lat), slow_domain=slow_domain,
                 chain_stages=chain_stages, elem_stages=elem_stages, field_starts=fstarts, ss_wire=ss_wire, serial=serial,
