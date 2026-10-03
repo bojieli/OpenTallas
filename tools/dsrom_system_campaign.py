@@ -41,6 +41,11 @@ CONFIGS = {
     "sys_b5_u2": dict(body=3, hp=2, pkg=[0, 0, 1, 1, 2], users=2, stall=5, plen=2, ngen=1),
     # deeper decode: positions 0..3, two generated tokens fed back through the host queue
     "sys_b5_p3g2": dict(body=3, hp=2, pkg=[0, 0, 1, 1, 2], users=1, stall=5, plen=3, ngen=2),
+    # five body dies (8 layers each, the last carries the whole lm_head) in packages {0,1} {2,3} {4}:
+    # links 0->1, 2->3 UCIe; 1->2, 3->4, 4->0 board
+    "sys_d5": dict(body=5, hp=0, pkg=[0, 0, 1, 1, 2], users=1, stall=5, plen=2, ngen=1),
+    "sys_d5_u2": dict(body=5, hp=0, pkg=[0, 0, 1, 1, 2], users=2, stall=5, plen=2, ngen=1),
+    "sys_d5_p3g2": dict(body=5, hp=0, pkg=[0, 0, 1, 1, 2], users=1, stall=5, plen=3, ngen=2),
 }
 
 
@@ -63,6 +68,7 @@ def build(obj: Path, svh: str, c: dict) -> Path:
            "-Wno-MODDUP", "-Wno-VARHIDDEN", "-Wno-UNOPTFLAT", "-Wno-PINMISSING",
            "--top-module", "tb_dsrom_system", f"-GUSERS={c['users']}", f"-GSTALL={c['stall']}",
            *[f"-G{g}" for g in os.environ.get("OT_SYS_GPARAMS", "").split()],
+           *(["-GMBAW_P=18"] if c["hp"] > 0 else []),
            "-Mdir", str(obj), f"-I{obj}", f"-I{core.SVH.parent}", str(core.VLT),
            f"+define+HDC_SW={I.SU_LANES}",
            *[f"+define+HDC_X_{x}={2 if x == 'IDX' else 1}" for x in ("HE", "ME", "ATT", "IDX", "SEL", "EG", "SU")],
@@ -100,6 +106,15 @@ def prepare(name, scratch: Path):
     recs, states = A.run_pipeline(plan, progs, base, gold)
     if not all(r["logits_bit_exact_every_step"] and r["argmax_and_value_every_step"] for r in recs):
         raise RuntimeError(f"ISA pipeline not bit-exact with the golden: {recs}")
+    if c["hp"] > 0:
+        # The weight-tile bank image (mbank) of hdc_images_v41x covers only the ME ops of the
+        # single-core program, whose lm_head is whole.  Split lm_head parts read
+        # lay.mat[("head", parts, k)], so the bank must cover the union of every stage
+        # program's ME ops (found 2026-10-03: sys_b5 head parts read unwritten bank lines).
+        mb, me_xs = ximg.mbank_image(lay, [f for prog in progs for f in prog], 8)
+        ximg.write_words(roms / "mbank.hex", mb, 32)
+        ik = min(a for n_, a in lay.kv.map.items() if n_.startswith("IK")) // I.W_LANES
+        (roms / "cfg.hex").write_text(f"{ik:06x}\n{me_xs:06x}\n")
     img = scratch / f"cfg_{name}"
     steps = A.write_config(img, plan, progs, gold, states)
     sectors, first = P.qe_hbm_image(lay)

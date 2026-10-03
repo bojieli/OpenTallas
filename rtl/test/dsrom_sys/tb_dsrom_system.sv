@@ -95,13 +95,15 @@ module tb_dsrom_system #(
     parameter integer ERR_U_REV = 0,
     parameter integer CPL_STALL = 30,    // host completion-queue back-pressure, percent
     parameter integer WDOG = 3000000,
-    parameter integer STUCK = 200000
+    parameter integer STUCK = 200000,
+    parameter integer MBAW_P = 17
 ) (input wire clk);
     `include "v41_array_cfg.svh"
     localparam integer INSTR_BITS = 1536;
     localparam integer W = 16, G = 4, BL = 16, QLB = 272, AW = 24, NW = 16, PAW = 14, HNL = 3;
     localparam integer SW = `HDC_SW, HS = 8, HHW = 8, HBAW = 16;       // stream-unit lanes, HE K chunks (as tb_hdc_core_v41)
-    localparam integer MG = 8, MBAW = 17, ML = 2, SUN = 16, SUM = 8;
+    // MBAW: weight-bank line address bits; split lm_head parts need 18 (their tiles extend the bank)
+    localparam integer MG = 8, MBAW = MBAW_P, ML = 2, SUN = 16, SUM = 8;
     localparam integer XSQ = 4, XSW = 16;
     localparam integer NPC = 8, LWIN = 10, LAW = 12, SPW = BL * QLB / 256;
     localparam integer HMEM = 1 << 20, IKH_WORDS = 1 << 18;
