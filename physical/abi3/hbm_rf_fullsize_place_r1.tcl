@@ -135,7 +135,7 @@ dict set wanted {provider.g_identity.g_page[3].g_bank[15].u_operand_b} {724.14 7
 set seen 0
 foreach inst [$block getInsts] {
  if {![[$inst getMaster] isBlock]} {continue}
- set name [string map {\\ {}} [$inst getName]]
+ set name [string map {\\ {} / .} [$inst getName]]
  if {![dict exists $wanted $name]} {error "unexpected RF macro before placement $name"}
  $inst setPlacementStatus UNPLACED
  incr seen
@@ -144,7 +144,7 @@ if {$seen != 128} {error "full RF128 pre-placement census failed $seen"}
 set n 0
 foreach inst [$block getInsts] {
  if {[[$inst getMaster] getType] ne "BLOCK"} { continue }
- set name [string map {\\ {}} [$inst getName]]
+ set name [string map {\\ {} / .} [$inst getName]]
  if {![dict exists $wanted $name]} {error "unexpected RF macro $name"}
  if {[[$inst getMaster] getName] ne "ot_sram_1r1w_128x256_m1_r2c2"} {error "unexpected RF master"}
  lassign [dict get $wanted $name] x y
