@@ -102,7 +102,7 @@ end''', '\n'.join(instances), 'endmodule', ''])
     (OUT/'ot_gpu_qwen_hbm_integrated.sv').write_text('\n'.join(lines))
     deps = [W4+n for n in ('ot_gpu_rf_service.sv','ot_gpu_full_sm_service.sv','ot_gpu_scratch_service.sv','ot_gpu_fadd.sv','ot_hdc_fp32_add_lat.sv','ot_hdc_fp32_mul_lat.sv','ot_hdc_fastfp.sv','ot_hdc_prefix.sv','ot_sram_1r1w_128x256_m1_r2c2.v','ot_sram_1r1w_1024x256_m2_r2c2.v')]
     deps += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT/'rtl/experimental/hbm_c0_connected_20261003/r5').glob('*.sv'))]
-    deps += ['rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv', 'rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv', 'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_w2_authority.sv', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_sector_authority.sv',
+    deps += ['rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_fmax_leaf_r2.sv', 'rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv', 'rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv', 'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_protected_completion_reset_quarantine.sv', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_w2_authority.sv', 'rtl/model/qwen_payload_sector_authority_20261003/ot_gpu_qwen_payload_sector_authority.sv',
              'rtl/experimental/w2_nc6_reset_quarantine_20261003/ot_w2_nc6_coded_secondary_reset_quarantine.sv',
              'rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv']
     deps += ['rtl/model/qwen_hbm_integrated_20261003/ot_gpu_qwen_hbm_integrated.sv']
