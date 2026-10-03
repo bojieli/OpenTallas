@@ -6,6 +6,8 @@ This appendix answers finding 6 and recommendation 6 of `docs/ARCHITECTURE_ATLAS
 
 **Corrected numbers (2026-10-03).** A bound row means the printed atlas value matches its record, not that the value is current. The Qwen3-8B DFlash and autoregressive rows below (18,720 and 10,874 tok/s) are the superseded TP-2 two-reticle design; the adopted target is TP-4 AR. The corrected Qwen3-8B, DeepSeek-V4.1 HBM and DeepSeek-V4.1 ROM figures, with their source records and evidence classes, are in `docs/HEADLINE_BUNDLE_SCOPE.md`, section "Corrected numbers — published 2026-10-03".
 
+**GPU fairness and area basis.** The corrected eight-scan DeepSeek tier-2 projection is 282.4 tok/s AR / 547.8 MTP, conditional on candidate gather and the existing 1.94× speculative multiplier; the literal native full-score AR sensitivity is 281.844 tok/s. The routed-wire S58 model at 1M gives 8.979× AR / 6.920× MTP against the conditional GPU case (8.996× AR against full-score), not a qualified product rate. All six mapping/context comparisons are source-bound in `HEADLINE_BUNDLE_SCOPE.md`, section "Corrected DeepSeek GPU scan and routed-wire comparison". Historical iso-area rows exclude HBM DRAM and HBM base-die silicon; they do not establish total-silicon equality.
+
 ## B.1 Coverage
 
 - Headlines enumerated: 204 (409 printed occurrences in the atlas).

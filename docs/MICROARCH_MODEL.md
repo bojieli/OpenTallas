@@ -401,6 +401,8 @@ The sweep cells above retain the independently stored [`fabric.json`](../results
 
 ### GPU tiers
 
+The current source correction and all six mapping/context ratios are bound in [the headline scope](HEADLINE_BUNDLE_SCOPE.md#corrected-deepseek-gpu-scan-and-routed-wire-comparison). Eight scans replace the historical 38-layer charge. Candidate gather for the last four scans is conditional; current native emission scores full context before masking. Historical ROM/HBM and economics records below retain their original geometry, clocks and policy and are not current product rates. Existing iso-area rows exclude HBM DRAM and base-die silicon; the total-silicon successor is a separate study.
+
 Tier 1 is measured. Tier 2 is a projection calibrated on B200 measurements. Tier 3 is the idealised HBM machine with OpenTallas control.
 
 | Tier | Design | tok/s AR | with speculation |
@@ -410,7 +412,7 @@ Tier 1 is measured. Tier 2 is a projection calibrated on B200 measurements. Tier
 | 1 | Qwen3-8B, 1× B200, SGLang FA4, BF16 (DFlash paper, Table 3) | 230 | **1,175** Math500 (τ 8.01, 5.1×) / 955 HumanEval (τ 6.50, 4.2×) |
 | 1 | DeepSeek-R1 (V4.1-class anchor), 8× B200, TensorRT-LLM min-latency | — | 368 (3 MTP layers, relaxed acceptance) |
 | 2 | Qwen3-8B, 1× B200, FP8, 8K (per-byte cost fitted to the B200 BF16 230; H200 fixed cost) | 331 | 853 (reasoning mix) / 1,390–1,690 (math/code τ 6.5–8.0) |
-| 2 | DeepSeek-V4.1-Flash, 8× B200 (+ NCCL-class 8 µs all-reduce, ASSUMED) | 278 | 539 |
+| 2 | DeepSeek-V4.1-Flash, 8× B200, conditional candidate gather (+ NCCL-class 8 µs all-reduce, ASSUMED) | 282.4 | 547.8 (existing 1.94× sensitivity) |
 | 3 | Qwen HBM, idealised | 881 | 2,671 (τ 3.66) / 4,749 (τ 6.50) / 5,852 (τ 8.01) |
 | 3 | V4.1 HBM, selected analytical group-slot comparator | 2,801.8 | 5,539.4 |
 
@@ -418,13 +420,13 @@ Tier 1 is measured. Tier 2 is a projection calibrated on B200 measurements. Tier
 - DFlash τ is 6.5–8.0 on math and code with thinking disabled (paper).
 - It is 3.66 on this lab's reasoning mix of 264 turns.
 
-**Tier 2 matches tier 1 in order of magnitude.** V4.1 on 8× B200 projects 539 with MTP against DeepSeek-R1's measured 368, a larger model with lossy acceptance.
+**Tier 2 matches tier 1 in order of magnitude.** V4.1 on 8× B200 projects 547.8 with MTP (conditional candidate-gather scan and the existing 1.94× sensitivity) against DeepSeek-R1's measured 368, a larger model with lossy acceptance.
 
 **Against the best measured GPU result,** Qwen ROM AR (9,968) is 8.5× B200 DFlash on Math500 (1,175) and 43× B200 AR (230).
 
 Against GPUs (tier 2), the ROM designs are:
 - **Qwen:** about 30× in AR; 6–12× against GPU DFlash, depending on τ.
-- **V4.1:** about 15× in AR and 11× with MTP.
+- **V4.1:** the routed-wire `base_S58` composition at 1M is 2,535.5 tok/s AR and 3,791.0 MTP: 8.979× and 6.920× the corrected conditional tier-2 GPU rates. The full-score GPU AR denominator is 281.844 tok/s, giving 8.996×. These are unqualified model comparisons; the older “15× / 11×” claims used a different ROM composition and the superseded scan charge.
 
 Against the idealised HBM control (tier 3), the V4.1 ROM advantage is 1.4× in AR and about 1.07× with MTP, and it is structural (small TP groups on direct links).
 
@@ -469,7 +471,9 @@ User positioning (2026-09-29): the paper claims single-user speed against GPUs (
 | V4.1 ROM, MTP m = 1 (ungated) | 5,857 | 12,637 | 16 | 50,708 | 3,169 | 1,591 | 866 |
 | V4.1 HBM tier 3, AR | 2,801.8 | 3,781 | 32 | 21,792 | 681 | 913 | 811 |
 | V4.1 HBM tier 3, MTP | 5,539.4 | 2,312 | 4 | 12,079 | 3,020 | 1,677 | 811 |
-| V4.1 8× B200, AR (tier 2) | 278 | 19,852 | 839 | 13,018 | 15.5 | 423 | 839 |
+| V4.1 8× B200, AR (tier 2, conditional candidate gather; corrected scan record) | 282.4 | 19,520.08 | 839 | 60,108.8 | 71.6 | 91.7 | 839 |
+
+The corrected B200 row uses `dsrom_gpu_index_scan_correction_20261003/model.json#after.economics.v41` (batch 1 and batch 839); unchanged decode power is 689 W per GPU. The other rows retain `economics.json`, so their original cross-design cost ratios are historical until recomposed.
 
 The DS HBM cells above use `economics.json#v41_hbm.ar` and `.mtp`, including their own saturation batch and energy fields. They are ledger model results, not measured service/PHY performance. Per-batch rows (per-user rate, aggregate, per-user latency, energy, system power) are in the record. Measured anchors, at 689 W:
 - B200 AR at 1 to 32 users: 2,996 to 121 mJ/token.
@@ -523,7 +527,11 @@ The DS HBM cells above use `economics.json#v41_hbm.ar` and `.mtp`, including the
 
 Each system is costed at its best mode for each point: its fastest single-user mode at B = 1, and its largest aggregate within capacity when saturated. The ≥ 100 tok/s/user column is an ASSUMED illustrative interactivity floor.
 
-### What the economics show
+### Historical economics conclusions (superseded GPU scan denominator)
+
+The conclusions below describe the frozen `economics.json` and `economics_levers.json` comparison, not the corrected B200 row above. In particular, the old 13,018 tok/s saturation, 423 mJ/token and 13.7× / 11× ratios must not be cited as current results. The corrected conditional GPU aggregate is 60,108.8 tok/s and 91.7 mJ/token at batch 839; no current ROM total-silicon cost advantage is established here.
+
+### What the historical economics showed
 
 1. **Single-user speed is where ROM wins.**
    - At batch 1 the Qwen ROM package is 30× a B200 in tok/s, 24× in energy per token and 14–27× in $ per tok/s.
