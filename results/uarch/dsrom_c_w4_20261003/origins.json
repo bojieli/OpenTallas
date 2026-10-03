@@ -1,0 +1,37 @@
+{
+  "fixed": {
+    "commit": "63d628705ff1c0b5e45831084443df06b8a73212",
+    "path": "results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/model-r4.json",
+    "sha256": "0777a3dc8dd5fc3d128d7593907ecf0003ab4c9c1294bf8b8f9059585d91fd08"
+  },
+  "shard": {
+    "commit": "af83b42b1633c76d1fc62e0ffd189d5a04744e42",
+    "path": "results/uarch/dsrom_PAR2_shard_physical_binding_20261002/model.json",
+    "sha256": "1f7cb420e693e1d058913d6162a788e2def420cd1fc7f417e93604acc5ce8e88"
+  },
+  "noecc": {
+    "commit": "ee26e1a233d738549794ce84ba1f2bfad5f21c7d",
+    "path": "results/uarch/dsrom_ROM_noECC_candidate_20261002/model-r6.json",
+    "sha256": "4726181fcb20ee7754a4c14ade08a78ab393dc9ccfaccbf52a1ecb2694b331a1"
+  },
+  "map": {
+    "commit": "6692b887784e83d2f9b8482322e777c0f5f518de",
+    "path": "results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/model.json",
+    "sha256": "86d2594ea5c6154ebd087e4b84e017a7cda0433c2acbf24ee71addb970600028"
+  },
+  "wake": {
+    "commit": "3a0a78acfeb455b5457cd5311f452d243f8cc6da",
+    "path": "results/uarch/dsrom_retained_WAKE_context_admission_20261002/model-r2.json",
+    "sha256": "2dcc66cbb21142c4c076ca9e473f01668e709c8f9ea35c596c0c83b0274339e5"
+  },
+  "pg": {
+    "commit": "f0b0d9b47d2a3ba2bdb46d8f52fb1ff08fd10a6a",
+    "path": "results/uarch/topk_finite_track_turn_model_20261002/inputs/model-r2.json",
+    "sha256": "c0f2139335aa5a17c48f6d849b4cd82c9db603713ed060dab55ea726642df696"
+  },
+  "caller": {
+    "commit": "0b02d153d34a0efc183638a9b9c53a027213a241",
+    "path": "results/uarch/dsrom_selected_parent_caller_20261002/r7/model.json",
+    "sha256": "9353f8dd2fb56e8814d97af1d163ccba824947b8b8ae23bf49d7eb2d4c9584de"
+  }
+}
