@@ -10,7 +10,7 @@
    - Wait for `exit` to contain `corner_rc`.
    - Copy `physical.json` and `corner_sta.json` to `routes/`.
    - In `corner_sta`, use `worst_reg_to_reg_slack_ps`. Its `worst_register_d_slack` also matches combinational pins named D.
-3. **DS ROM screens.**
+3. **DS ROM screens** (finished ones are committed in `screens/ds`; summary script `jobs/ds_sum.py`; still running on agidock: ds01_core_1g2/0g9, ds10_topk_merge, ds09_sel, ds05_vec_n16_full, ds08_idx_ring_port; on pve1: ds02_spine_k6144/k512, ds04_su_adapt, ds11_coll_dma, ds05_vec_bbdp_n64).
    - Locations: `ot-agidock128:~/rcl-20261003/runs/ds/*.json` and `ot-pve1:~/rcl-20261003/runs/ds/*.json`.
    - Launcher: `~/rcl-20261003/jobs/ds_jobs.sh` on both hosts.
    - Copy them to `screens/ds/`.

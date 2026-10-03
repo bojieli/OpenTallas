@@ -36,7 +36,13 @@ The repaired screen is therefore about 150 ps pessimistic. A screen miss inside 
 | same, ENABLE_AR256=1 | 1.2 | screen | repaired -143 ps (within calibration): needs a route |
 | Qwen `ot_rom_oneshot_die` (collective credit/pop loop), DEPTH=32 | 1.2 | screen `screens/qwen/oneshot_die_d32_833.json` | **FAIL, real loop**: repaired -1,208 ps, 490 MHz. The path is `rp` → 32:1 flop-FIFO head mux → `head_mode` → `pop` → fans out to every `rp`/`cnt`/`cr` (`rtl/rom/ot_rom_oneshot_allreduce.sv:122-162`). Routed SS run is in flight on ot-pve1. |
 | Qwen ME spine (FAST_ISSUE 0/1), core sequencer (spine and SU black-boxed), vstream SW=64 | 1.2 / 0.9 | screens running on ot-pve1 | pending |
-| DS ROM (18 blocks) | | helper screens running; see STATUS.md | pending |
+| DS `ot_w15_rom_oneshot_die_px` pop/credit (rp → FIFO head mux → pop → cnt), DEPTH 32 | 1.2 | screen `screens/ds/ds11_*` | **FAIL, real loop**: 474 MHz (-1,277 ps). This is the same defect as Qwen's one-shot, and it is worse at the runtime's 512-deep flop FIFO |
+| DS `ot_hdc_v41x_idx_kctl_ring` issue/drain (d_hi → run) | 1.2 | screen | **FAIL, real loop**: 671 MHz (-658 ps) |
+| DS q-element x-need walker (n_c → walk2 → n_q), `ot_v41_rom_elem_q_w10` | 1.2 | screen | **FAIL, real loop**: 635 MHz (-743 ps). The earlier TT 0.92 ns route was also not closed. The ICG enable `r_go → ENA` is -82 ps, within calibration |
+| DS `ot_chip_v41x_hbm_karb` round robin | 1.2 | screen | -916 ps / 572 MHz, but the path starts at an input port, so it needs an in-context check |
+| DS rom_adapt (per-op setup: 30×30 stride multiply, 64-entry key lookup) | 1.2 | screen | -1,055 ps. A one-shot setup per op, not per cycle; fixed with +1-2 setup states per op |
+| DS sinkhorn_seq control, accept (NSLOT 8), sel_ctl control, refill FSM, pkg_ctrl_x (u64) | 0.9 / 1.2 | screen | pass or within calibration (sinkhorn and sel worst paths are pipelinable datapath) |
+| DS core sequencer, spine, su_adapt, coll_dma, vec, topk_merge | | still running | pending |
 | HBM `ot_gpu_issue` (SM issue: `item = wb+si < items_q` → row_ok → adv → cursor) | 1.2 | screen `screens/hbm/issue_*` | **FAIL, real loop**: Qwen 813 MHz (-397 ps), DS 752 MHz; it stays about 810 MHz at 1.024 and 1.111 ns too |
 | HBM `ot_gpu_bulk_copy` (consume: cons_p → 1024:1 `full[cons_p]` → take) | 1.2 | screen | **FAIL, real loop**: Qwen 682 MHz, DS 590 MHz |
 | HBM `ot_gpu_rf_visibility_fence_w6` (SECDED decode → update → re-encode in one cycle) | 1.2 | screen | **FAIL, real loop**: 429 MHz |
@@ -83,7 +89,11 @@ The repaired screen is therefore about 150 ps pessimistic. A screen miss inside 
   - Four per-token control loops miss 1.2 GHz by far more than the 150 ps screen pessimism: SM issue at about 810 MHz, bulk-copy consume at 590-680 MHz, the SECDED fence at 429 MHz and KV lifecycle at 458 MHz.
   - Each has a standard look-ahead or register-split fix with no per-iteration cycle cost. As built, though, the SM would run at about 0.6 GHz unless they are fixed.
   - A routed confirmation of `ot_gpu_issue` and `ot_gpu_bulk_copy` is the next step.
-- **DS ROM:** pending. See STATUS.md.
+- **DS ROM: AT RISK (fixable).** Three per-cycle loops miss 1.2 GHz by 650-1,280 ps: the collective pop, the index kctl drain and the q-element x-need walker.
+  - **Collective pop:** registered FIFO head (look-ahead), +1 cycle per collective.
+  - **kctl ring:** register the drain-head compare and issue from a precomputed next-run flag (+1 cycle of issue latency per index-scan burst, not per key).
+  - **x-need walker:** split the walker into a 2-stage next-need precompute, which costs +1 cycle of latency per ROM sweep. Per-element rate is kept only if the walker gets look-ahead. A naive two-cycle walker halves the q-element field rate, a disaster-class cost, and must not be used.
+  - Routed confirmation of the pop and walker loops is next. The core sequencer and spine are pending.
 - **Screen notes:**
   - The HBM screens used a tool copy (`jobs/risk_clock_loops_screen_hbm.py`) that adds SRAM macro LEF/lib, enlarges the floorplan for high-pin-count blocks and cuts the FP black boxes, plus RTL copies with the w6 SECDED package functions inlined (a Yosys import crash).
   - Its "all fmax" print is wrong (slack in seconds); only the register-to-register figures are quoted.
