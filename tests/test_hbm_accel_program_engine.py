@@ -7,6 +7,13 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
+from hbm_accel_program_backend import module
+SMEngine20=module(Path(__file__).resolve().parents[1]/
+    "results/rtl/hbm_accel_ha5_20261003/backend_join/sm_engine20_original.py",
+    "tools.gpu_sys.ds_hbm_sm_engine20")
+SMEngine20=module(Path(__file__).resolve().parents[1]/
+    "results/rtl/hbm_accel_ha5_20261003/backend_join/sm_engine20_guarded.py",
+    "ha5_sm_engine_guarded_test_pinned").SMEngine20Guarded
 from hbm_accel_program_engine import RTLColumnEngine,decode_completion,program_adapter,slot6_overlap
 
 
@@ -45,7 +52,7 @@ class BoundaryPins:
 def engine(pins):
     return RTLColumnEngine(pins,{'layer':20},lambda c:[('layer',c['toks'][0],c['pos'])],
                            ndie=2,nsm=2,position_extent=1048576,
-                           source_sha256='source-pin',enable=True)
+                           source_sha256='source-pin',enable=True,sm_engine_factory=SMEngine20)
 
 
 def command():
@@ -64,7 +71,7 @@ def test_actual_callback_client_holds_token17_pos20_job_generation_through_backp
     assert eng.run(command())==([],[])
     assert len(pins.loads)==4 and len(pins.acks)==2
     assert eng.launches==1 and eng.receipts[0]['pos']==1048575
-    assert eng.receipts[0]['doorbell_cycles'][0]<eng.receipts[0]['doorbell_cycles'][1]
+    assert eng.receipts[0]['elapsed_edges']==pins.cycle
     assert all(o[2:]==(128799,1048575,0x12345678,9) for o in pins.offers)
     assert not pins.active
     assert all(p['cpl_rdy']==0 and p['db_v']==0 for p in pins.inputs.values())
