@@ -43,7 +43,7 @@ def generate():
  s=s.replace('.w_v(w_req_v),','.clk(clk),.rst_n(rst_n),.w_v(w_req_v),')
  emit('ot_chip_v41x_kv_rope_reqmux_c8.sv',s)
  s=original('rtl/chip/ot_chip_v41x_ckv_die_service.sv').replace('module ot_chip_v41x_ckv_die_service #(','module ot_chip_v41x_ckv_die_service_c8 #(\n    parameter integer C8_PUBLICATION=0,')
- s=extra_ports(s,'    input wire [46:0] position_identity,\n    output reg own_visible_v,\n    output reg [46:0] own_visible_identity,\n    output reg [POS_W-1:0] own_visible_gid,\n    output wire own_pending')
+ s=extra_ports(s,'    input wire [46:0] position_identity,\n    output reg own_visible_v,\n    output reg [46:0] own_visible_identity,\n    output reg [POS_W-1:0] own_visible_gid,\n    output wire own_pending,\n    output wire reuse_ready')
  s=s.replace('reg wr_act;','reg wr_act;\n    reg wr_pending;reg [46:0] own_identity;\n    assign own_pending=wr_act || wr_pending;')
  s=s.replace("wr_act && wr_stack == 2'(st)","wr_act && wr_stack == 2'(st) && (!C8_PUBLICATION || !wr_pending)")
  s=s.replace('step <= 0; go <= 0;', 'wr_pending<=0;own_visible_v<=0;own_visible_identity<=0;own_visible_gid<=0;own_identity<=0;\n            step <= 0; go <= 0;',1)
@@ -66,6 +66,10 @@ def generate():
                 end
             end"""
  assert old in s;s=s.replace(old,new)
+ # Positive local reuse: fetch output and merger/ID reader must actually
+ # finish before another context can replace the table or overwrite nw_gid.
+ s=s.replace('assign own_pending=wr_act || wr_pending;',
+             "assign own_pending=wr_act || wr_pending;\n    assign reuse_ready=rst_n && !fault && f_ready && !f_ov && !f_job && !rel_on && !rd_act && !rq_v && tail==0 && !own_pending && !enc_busy && !enc_go && !nw_have && nw_got==0 && !new_sel_pulse && !sel_v && !nw_we;")
  s=s.replace('wire rel_ok = step && m_jready && !rel_on;', 'wire rel_ok = step && m_jready && !rel_on && (!C8_PUBLICATION || (rows_ready && !own_pending));')
  # The original unconditional collector count assignment is later in the
  # same always block than selection clear. It otherwise overrides npresent=0
@@ -89,10 +93,10 @@ def generate():
  s=original('rtl/chip/window_owner_safe/ot_chip_v41x_die_owner_safe.sv').replace('module ot_chip_v41x_die_owner_safe #(', 'module ot_chip_v41x_die_owner_safe_c8 #(\n    parameter integer C8_PUBLICATION=0,')
  s=extra_ports(s, '    input wire [46:0] c8_position_identity,\n    output wire c8_write_quiet,c8_write_quarantine,c8_write_fault,\n    output wire [127:0] c8_visible_v,\n    output wire [128*47-1:0] c8_visible_identity,\n    output wire [128*K_HAW-1:0] c8_visible_addr,\n    output wire [255:0] c8_visible_writer,\n    output wire c8_own_pending, c8_own_visible_v,\n    output wire [46:0] c8_own_visible_identity,\n    output wire [20:0] c8_own_visible_gid')
  s=s.replace('ot_chip_v41x_ckv_die_service #(', 'ot_chip_v41x_ckv_die_service_c8 #(.C8_PUBLICATION(C8_PUBLICATION),')
- s=s.replace('.sel_v(ckv_sel_v),', '.position_identity(c8_position_identity),.own_pending(c8_own_pending),.own_visible_v(c8_own_visible_v),.own_visible_identity(c8_own_visible_identity),.own_visible_gid(c8_own_visible_gid),\n                .sel_v(ckv_sel_v),')
- s=s.replace('end else begin : g_no_ckv', "end else begin : g_no_ckv\n            assign c8_own_pending=0;assign c8_own_visible_v=0;assign c8_own_visible_identity=0;assign c8_own_visible_gid=0;")
+ s=s.replace('.sel_v(ckv_sel_v),', '.position_identity(c8_position_identity),.own_pending(c8_own_pending),.reuse_ready(c8_ckv_reuse_ready),.own_visible_v(c8_own_visible_v),.own_visible_identity(c8_own_visible_identity),.own_visible_gid(c8_own_visible_gid),\n                .sel_v(ckv_sel_v),')
+ s=s.replace('end else begin : g_no_ckv', "end else begin : g_no_ckv\n            assign c8_ckv_reuse_ready=1;assign c8_own_pending=0;assign c8_own_visible_v=0;assign c8_own_visible_identity=0;assign c8_own_visible_gid=0;")
  s=s.replace('ot_chip_v41x_kv_rope_reqmux #(', 'ot_chip_v41x_kv_rope_reqmux_c8 #(.C8_PUBLICATION(C8_PUBLICATION),')
- s=s.replace('wire [127:0] kh_v,', 'wire [3:0] c8_jquiet,c8_jquarantine,c8_jfault;\n    assign c8_write_quiet=(&c8_jquiet) && !kb_busy && !c8_own_pending && !win_service_busy && window_prime_ready && !win_blk_v && !(|(kh_v & kh_we)) && !(|(pm_v & pm_we));\n    assign c8_write_quarantine=|c8_jquarantine;assign c8_write_fault=|c8_jfault;\n    wire [127:0] kh_v,')
+ s=s.replace('wire [127:0] kh_v,', 'wire c8_ckv_reuse_ready;\n    wire [3:0] c8_jquiet,c8_jquarantine,c8_jfault;\n    assign c8_write_quiet=(&c8_jquiet) && !kb_busy && !c8_own_pending && c8_ckv_reuse_ready && !win_service_busy && window_prime_ready && !win_blk_v && !(|(kh_v & kh_we)) && !(|(pm_v & pm_we));\n    assign c8_write_quarantine=|c8_jquarantine;assign c8_write_fault=|c8_jfault;\n    wire [127:0] kh_v,')
  anchor='wire [31:0] h_v, h_rdy, h_we, h_wr_done, r_v, r_rdy;'
  assert s.count(anchor)==1
  journal="""

@@ -28,7 +28,7 @@ def test_actual_parent_native_callback_and_dynamic_partition_contract():
  assert '.accepted_write(h_v & h_rdy & h_we)' in s
  assert '.backend_wr_done(h_wr_done)' in s
  assert '.backend_done_tag(c8_done_tag)' in s
- assert '&& !kb_busy && !c8_own_pending && !win_service_busy && window_prime_ready' in s
+ assert '&& !kb_busy && !c8_own_pending && c8_ckv_reuse_ready && !win_service_busy && window_prime_ready' in s
  r=json.loads((ROOT/'results/uarch/dsrom_c8_publication_20261003/model.json').read_text())
  assert r['selected_partition']['stages']==82
  assert not r['selected_partition']['physical_fit_qualified']
@@ -93,3 +93,14 @@ def test_selected_reuse_clear_wins_and_legacy_default_is_preserved():
  assert 'read_row(766,first_row)' in b
  assert '(!service.f_ready || !(&quiet))' in b
  assert 'second selection retained stale present count' in b
+
+
+def test_context_retirement_requires_actual_local_fetch_and_table_reuse_ready():
+ s=(D/'ot_chip_v41x_ckv_die_service_c8.sv').read_text()
+ assert 'assign reuse_ready=rst_n && !fault && f_ready && !f_ov && !f_job' in s
+ for required in ('!rel_on','!rd_act','!rq_v','tail==0','!own_pending','!enc_busy','!nw_have','nw_got==0'):
+  assert required in s.split('assign reuse_ready=',1)[1].split(';',1)[0]
+ parent=(D/'ot_chip_v41x_die_owner_safe_c8.sv').read_text()
+ assert '.reuse_ready(c8_ckv_reuse_ready)' in parent
+ assert '&& c8_ckv_reuse_ready && !win_service_busy' in parent
+ assert 'assign c8_ckv_reuse_ready=1;' in parent  # CKV disabled branch only

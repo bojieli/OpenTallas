@@ -106,7 +106,8 @@ module ot_chip_v41x_ckv_die_service_c8 #(
     output reg own_visible_v,
     output reg [46:0] own_visible_identity,
     output reg [POS_W-1:0] own_visible_gid,
-    output wire own_pending
+    output wire own_pending,
+    output wire reuse_ready
 );
     localparam integer NWORD = K / 16;
     // ---------------- ids: VM read -> table ----------------
@@ -203,6 +204,7 @@ module ot_chip_v41x_ckv_die_service_c8 #(
     reg wr_act;
     reg wr_pending;reg [46:0] own_identity;
     assign own_pending=wr_act || wr_pending;
+    assign reuse_ready=rst_n && !fault && f_ready && !f_ov && !f_job && !rel_on && !rd_act && !rq_v && tail==0 && !own_pending && !enc_busy && !enc_go && !nw_have && nw_got==0 && !new_sel_pulse && !sel_v && !nw_we;
     reg [3:0] wr_k;
     wire [1:0] wr_stack = nw_gid[7:6];
     wire [POS_W-1:0] nw_local = ((nw_gid >> 8) << 4) | POS_W'(nw_gid[3:0]);

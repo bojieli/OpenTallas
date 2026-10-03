@@ -447,8 +447,9 @@ module ot_chip_v41x_die_owner_safe_c8 #(
     wire wq_v, wq_rdy; wire [(FULL_SHAPE ? 30 : 24)-1:0] wq_addr; wire [5:0] wq_len; wire [LWIN-1:0] wq_tag;
     wire [NPC_W-1:0] wq_room, wr_v, wr_rdy; wire [NPC_W*LWIN-1:0] wr_tag;
     wire [NPC_W*5-1:0] wr_beat; wire [NPC_W*256-1:0] wr_data;
+    wire c8_ckv_reuse_ready;
     wire [3:0] c8_jquiet,c8_jquarantine,c8_jfault;
-    assign c8_write_quiet=(&c8_jquiet) && !kb_busy && !c8_own_pending && !win_service_busy && window_prime_ready && !win_blk_v && !(|(kh_v & kh_we)) && !(|(pm_v & pm_we));
+    assign c8_write_quiet=(&c8_jquiet) && !kb_busy && !c8_own_pending && c8_ckv_reuse_ready && !win_service_busy && window_prime_ready && !win_blk_v && !(|(kh_v & kh_we)) && !(|(pm_v & pm_we));
     assign c8_write_quarantine=|c8_jquarantine;assign c8_write_fault=|c8_jfault;
     wire [127:0] kh_v, kh_rdy, kh_we, kh_wr_done, kr_v, kr_rdy;
     wire [128*K_HAW-1:0] kh_addr; wire [128*4-1:0] kh_len, kr_beat; wire [128*16-1:0] kh_tag, kr_tag;
@@ -717,7 +718,7 @@ module ot_chip_v41x_die_owner_safe_c8 #(
             ot_chip_v41x_ckv_die_service_c8 #(.C8_PUBLICATION(C8_PUBLICATION),.DIE_ID(RANK), .K(512), .POS_W(21), .AW(AW), .VWA(VWA), .HAW(K_HAW),
                 .TAGW(16), .CKV_BASE(CKV_BASE), .CKV_SECTORS(K_MEM - CKV_BASE), .NSLOT(CKV_NSLOT)) u_ckv (
                 .clk(clk), .rst_n(rn),
-                .position_identity(c8_position_identity),.own_pending(c8_own_pending),.own_visible_v(c8_own_visible_v),.own_visible_identity(c8_own_visible_identity),.own_visible_gid(c8_own_visible_gid),
+                .position_identity(c8_position_identity),.own_pending(c8_own_pending),.reuse_ready(c8_ckv_reuse_ready),.own_visible_v(c8_own_visible_v),.own_visible_identity(c8_own_visible_identity),.own_visible_gid(c8_own_visible_gid),
                 .sel_v(ckv_sel_v), .sel_vmword(VWA'(ckv_sel_ibase >> 4)),
                 .nw_we(ckv_nw_we), .nw_addr(ckv_nw_addr), .nw_data(ckv_nw_data),
                 .vm_re(svc_vm_re), .vm_raddr(svc_vm_raddr), .vm_rq(xb_rq), .vm_busy(),
@@ -736,7 +737,7 @@ module ot_chip_v41x_die_owner_safe_c8 #(
             assign ckv_fault = svc_fault || (ckv_sel_v && ckv_sel_ibase[3:0] != 0);
             assign ckv_fault_code = svc_fc;
         end else begin : g_no_ckv
-            assign c8_own_pending=0;assign c8_own_visible_v=0;assign c8_own_visible_identity=0;assign c8_own_visible_gid=0;
+            assign c8_ckv_reuse_ready=1;assign c8_own_pending=0;assign c8_own_visible_v=0;assign c8_own_visible_identity=0;assign c8_own_visible_gid=0;
             assign svc_kv_v = 1'b0; assign svc_kv_m = 4'd0; assign svc_kv_w = '0; assign svc_job_ready = 1'b0;
             assign svc_job_done = 1'b0; assign svc_vm_re = 1'b0; assign svc_vm_raddr = '0;
             assign c_v = 4'b0; assign c_addr = '0; assign c_len = '0; assign c_tag = '0; assign c_we = 4'b0;
