@@ -1,0 +1,116 @@
+{
+  "schema": "GOODALL_NEARHBM_HANDOVER4_RF_MAPPING_PROGRESS_V1",
+  "source_branch": "claude/qwen-nearhbm-attn-20261003",
+  "execution_source_epyc": "84c4edbd18e5b2a6bc265fff5426802e371ece98",
+  "execution_source_agidock": "58144881b6088347006298a4eb684a2e648b11ee",
+  "observed_utc": "2026-10-03T11:59:29.901756+00:00",
+  "jobs": {
+    "epyc/hub_r7": {
+      "source": "84c4edbd18e5b2a6bc265fff5426802e371ece98",
+      "source_clean": true,
+      "processes": [
+        " 287312  287308       40:24 90060 python3 tools/run_abi3_physical_persistent.py --persistent-workdir /srv/opentallas-scratch/claude/nearhbm/run/hub_r7.work --launch-receipt /srv/opentallas-scratch/claude/nearhbm/run/hub_r7.receipt.json --top ot_qwen_nearhbm_attn_hub --source rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub.sv --source rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_delay.sv --param HD=128 --view asap7 --clock-port clk --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr --orfs-var ADDER_MAP_FILE= --force --purpose signoff_target --orfs-var SYNTH_MEMORY_MAX_BITS=262144 --die-area 0 0 451.44 451.44 --core-area 2.16 2.16 449.28 449.28 --place-density 0.76 --nickname-tag nhb_hub_hd128_84c4edbd_n20 --output results/physical_abi3/asap7/nearhbm/hub_hd128_r7/physical.json",
+        "1587173  287312       09:36 32176 docker run --rm -v /srv/opentallas-scratch/claude/nearhbm/wt:/src:ro -v /srv/opentallas-scratch/claude/nearhbm/run/hub_r7.work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=20 /work/results/asap7/opentallas_ot_qwen_nearhbm_attn_hub_asap7_nhb_hub_hd128_84c4edbd_n20/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_qwen_nearhbm_attn_hub_asap7_nhb_hub_hd128_84c4edbd_n20/base/1_2_yosys.v"
+      ],
+      "latest_log": "/srv/opentallas-scratch/claude/nearhbm/run/hub_r7.work/orfs/logs/asap7/opentallas_ot_qwen_nearhbm_attn_hub_asap7_nhb_hub_hd128_84c4edbd_n20/base/1_2_yosys.log",
+      "terminal_present": false
+    },
+    "epyc/row_engine_r6": {
+      "source": "84c4edbd18e5b2a6bc265fff5426802e371ece98",
+      "source_clean": true,
+      "processes": [
+        " 287311  287309       40:24 26480 python3 tools/run_abi3_physical_persistent.py --persistent-workdir /srv/opentallas-scratch/claude/nearhbm/run/row_engine_r6.work --launch-receipt /srv/opentallas-scratch/claude/nearhbm/run/row_engine_r6.receipt.json --top ot_qwen_nearhbm_row_engine --source rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack.sv --source rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_delay.sv --param HD=128 --param S=0 --param R=6 --param E=0 --param DQ=32 --view asap7 --clock-port clk --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr --orfs-var ADDER_MAP_FILE= --force --purpose signoff_target --die-area 0 0 328.32 1998 --core-area 2.16 2.16 326.16 1995.84 --place-density 0.65 --nickname-tag nhb_row_engine_hd128_r6_84c4edbd_n20 --output results/physical_abi3/asap7/nearhbm/row_engine_hd128_r6_r6/physical.json",
+        " 656996  287311       17:20 31816 docker run --rm -v /srv/opentallas-scratch/claude/nearhbm/wt:/src:ro -v /srv/opentallas-scratch/claude/nearhbm/run/row_engine_r6.work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=20 finish metadata-generate"
+      ],
+      "latest_log": "/srv/opentallas-scratch/claude/nearhbm/run/row_engine_r6.work/orfs/logs/asap7/opentallas_ot_qwen_nearhbm_row_engine_asap7_nhb_row_engine_hd128_r6_84c4edbd_n20/base/2_1_floorplan.tmp.log",
+      "terminal_present": false
+    },
+    "agidock/row_engine_r4": {
+      "source": "58144881b6088347006298a4eb684a2e648b11ee",
+      "source_clean": true,
+      "processes": [
+        "  18780 4076819    03:17:57 31012 docker run --rm -v /home/ubuntu/nhbp/wt4:/src:ro -v /home/ubuntu/nhbp/run/row_engine_r4.work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base finish metadata-generate",
+        "4076819 4076815    03:58:53 72852 python3 tools/run_abi3_physical_persistent.py --persistent-workdir /home/ubuntu/nhbp/run/row_engine_r4.work --launch-receipt /home/ubuntu/nhbp/run/row_engine_r4.receipt.json --top ot_qwen_nearhbm_row_engine --source rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack.sv --source rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_delay.sv --param HD=128 --param S=0 --param R=6 --param E=0 --param DQ=32 --view asap7 --clock-port clk --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr --hold-margin-ns 0.01 --orfs-var ADDER_MAP_FILE= --force --die-area 0 0 328.32 1998 --core-area 2.16 2.16 326.16 1995.84 --place-density 0.65 --nickname-tag nhb_row_engine_hd128_r6_58144881 --purpose signoff_target --output results/physical_abi3/asap7/nearhbm/row_engine_hd128_r6_r4/physical.json"
+      ],
+      "latest_log": "/home/ubuntu/nhbp/run/row_engine_r4.work/orfs/logs/asap7/opentallas_ot_qwen_nearhbm_row_engine_asap7_nhb_row_engine_hd128_r6_58144881/base/3_3_place_gp.tmp.log",
+      "terminal_present": false
+    }
+  },
+  "ss_setup": "PENDING: no terminal routed SS receipt",
+  "ff_hold": "PENDING: no terminal routed FF receipt",
+  "drc": "PENDING: no terminal route receipt",
+  "further_closure_launched": false,
+  "hierarchy_evidence": {
+    "partition_cases": 400,
+    "partition_failures": 0,
+    "producer_pairs": 16777216,
+    "producer_mismatches": 0,
+    "retained_hd128_r8_cases": 20,
+    "retained_hd128_r8_exact_cases": 20,
+    "retained_hd128_r8_cycles": {
+      "q_in": 78,
+      "K_stream": 739,
+      "K_to_V_gap": 22,
+      "V_stream": 789,
+      "drain": 102,
+      "return_hub": 98,
+      "total": 1752
+    },
+    "retained_hd128_fp_units": "dpi",
+    "current_hub_source_mismatches": [
+      "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub.sv"
+    ],
+    "current_hierarchy_performance_qualified": false,
+    "handover_cycles_per_layer": 1824,
+    "handover_cycles_current_source_reproduced": false,
+    "limitation": "HD128 measured gate uses DPI arithmetic, earlier hub source; real-vs-DPI only HD16 debug. Retained performance does not qualify current hub or routed hardware."
+  },
+  "RF": {
+    "source": "a76916ad639c37e62b4ddbdef661240b509cae21",
+    "unit": "ActiveState=active\nSubState=running\nMainPID=105320\nExecMainStatus=0",
+    "latest_stage_log": "/home/ubuntu/hbm-rf-fullsize-ssff-20261003-r3/work/orfs/logs/asap7/opentallas_ot_gpu_rf_w6_physical_context_asap7/base/3_3_place_gp.tmp.log",
+    "synthesis_area_um2": 541290,
+    "synthesis_stdcell_area_um2": 43168.2,
+    "synthesis_macro_area_um2": 498122,
+    "macro_count": 128,
+    "unique_page_bank_copy_coordinates": 128,
+    "physical_storage_bits": 4194304,
+    "macro_alignment_pins_checked": 104832,
+    "macro_alignment_offtrack": 0,
+    "containers": [
+      {
+        "id": "7bcca0115a1a",
+        "init_pid": 299560,
+        "cgroup": "/system.slice/docker-7bcca0115a1a7f34e4b500af0239cc5df96d197790328c1381bec6c310afc8c8.scope",
+        "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "state": {
+          "Status": "running",
+          "Running": true,
+          "Paused": false,
+          "Restarting": false,
+          "OOMKilled": false,
+          "Dead": false,
+          "Pid": 299560,
+          "ExitCode": 0,
+          "Error": "",
+          "StartedAt": "2026-10-03T11:12:18.574537146Z",
+          "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "memory.current": "4769357824",
+        "memory.peak": "5599236096",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      }
+    ],
+    "terminal_present": false,
+    "qualification": "FULL_RF_SYNTHESIS_AND_ALIGNED_MACRO_INVENTORY_ONLY; routing SS/FF pending"
+  },
+  "source_lease": {
+    "seats": 4293,
+    "raw_bits_per_seat": 123,
+    "raw_bits": 528039,
+    "scope": "UNBOUND owner source/layout request sent to Nash/Hubble",
+    "codec_and_debt": "NOT INCLUDED",
+    "W2_per_die": 128,
+    "do_not_multiply_unbound_seats_by_W2_count": true
+  }
+}

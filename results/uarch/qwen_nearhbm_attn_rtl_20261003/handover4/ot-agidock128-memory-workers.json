@@ -1,0 +1,34 @@
+{
+  "observed_utc": "2026-10-03T12:01:59.494523+00:00",
+  "containers": [
+    {
+      "id": "0829d47a1302",
+      "image": "sha256:826792fc9de69198095940cb440a2aca6e1fc08adaad42251eccf0d9fa26fb4b",
+      "mounts": [
+        "/home/ubuntu/nhbp/run/row_engine_r4.work/orfs",
+        "/home/ubuntu/nhbp/wt4"
+      ],
+      "init_pid": 18821,
+      "cgroup": "/system.slice/docker-0829d47a13027700911025ef553fe02c1158e0e09fa1f55771e1289ac5ce74df.scope",
+      "memory": {
+        "memory.current": "32962519040",
+        "memory.peak": "33281798144",
+        "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+      },
+      "workers": [
+        {
+          "pid": 84295,
+          "argv": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_qwen_nearhbm_row_engine_asap7_nhb_row_engine_hd128_r6_58144881/base/3_3_place_gp.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 64 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_qwen_nearhbm_row_engine_asap7_nhb_row_engine_hd128_r6_58144881/base/3_3_place_gp.json ",
+          "stat": "84295 (python3) S 84228 18821 18821 0 -1 4194304 1550 0 0 0 2 1 0 0 20 0 1 0 11322107 17379328 2756 18446744073709551615 1 1 0 0 0 0 0 16781312 2 0 0 0 17 1 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
+          "status": "Name:\tpython3\nUmask:\t0022\nState:\tS (sleeping)\nTgid:\t84295\nNgid:\t0\nPid:\t84295\nPPid:\t84228\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t0 \nNStgid:\t84295\t1596\nNSpid:\t84295\t1596\nNSpgid:\t18821\t1\nNSsid:\t18821\t1\nKthread:\t0\nVmPeak:\t   16972 kB\nVmSize:\t   16972 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   11360 kB\nVmRSS:\t   11360 kB\nRssAnon:\t    5412 kB\nRssFile:\t    5948 kB\nRssShmem:\t       0 kB\nVmData:\t    6932 kB\nVmStk:\t     172 kB\nVmExe:\t    2760 kB\nVmLib:\t    2676 kB\nVmPTE:\t      80 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t3/478153\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000181001000\nSigCgt:\t0000000000000002\nCapInh:\t0000000000000000\nCapPrm:\t00000000a80425fb\nCapEff:\t00000000a80425fb\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff,ffffffff\nCpus_allowed_list:\t0-63\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t87\nnonvoluntary_ctxt_switches:\t13\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n"
+        },
+        {
+          "pid": 84296,
+          "argv": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 64 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_qwen_nearhbm_row_engine_asap7_nhb_row_engine_hd128_r6_58144881/base/3_3_place_gp.json ",
+          "stat": "84296 (openroad) R 84295 18821 18821 0 -1 4194560 15537667 1305 0 0 1847402 3569721 1 0 20 0 128 0 11322110 29483098112 5273604 18446744073709551615 1 1 0 0 0 0 0 4096 1258 0 0 0 17 22 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
+          "status": "Name:\topenroad\nUmask:\t0022\nState:\tR (running)\nTgid:\t84296\nNgid:\t0\nPid:\t84296\nPPid:\t84295\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t0 \nNStgid:\t84296\t1597\nNSpid:\t84296\t1597\nNSpgid:\t18821\t1\nNSsid:\t18821\t1\nKthread:\t0\nVmPeak:\t28857116 kB\nVmSize:\t28792088 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t21401092 kB\nVmRSS:\t21112596 kB\nRssAnon:\t21039220 kB\nRssFile:\t   73376 kB\nRssShmem:\t       0 kB\nVmData:\t23597360 kB\nVmStk:\t    1396 kB\nVmExe:\t   58212 kB\nVmLib:\t   65192 kB\nVmPTE:\t   42560 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t128\nSigQ:\t3/478153\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000080001000\nSigCgt:\t00000001000004ea\nCapInh:\t0000000000000000\nCapPrm:\t00000000a80425fb\nCapEff:\t00000000a80425fb\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff,ffffffff\nCpus_allowed_list:\t0-63\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t12003\nnonvoluntary_ctxt_switches:\t16678\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n"
+        }
+      ]
+    }
+  ]
+}

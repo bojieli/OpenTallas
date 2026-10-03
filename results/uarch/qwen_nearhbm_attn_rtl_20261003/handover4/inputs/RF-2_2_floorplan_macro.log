@@ -1,0 +1,178 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_gpu_rf_w6_physical_context_asap7/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_ot_gpu_rf_w6_physical_context_asap7/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+Placement density is 0.3639999932050705, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.3199999928474426
+rtl_macro_placer -max_num_level 2 -halo_width 4 -halo_height 4 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_gpu_rf_w6_physical_context_asap7/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.3639999932050705
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+Die Area: (0.00, 0.00) (825.12, 1462.32),  Floorplan Area: (0.00, 0.00) (825.12, 1462.32)
+	Number of std cell instances: 423426
+	Area of std cell instances: 45509.46
+	Number of macros: 128
+	Macros to be placed: 128
+	Area of macros: 498121.85
+	Base halo (L, B, R, T): (4.00, 4.00, 4.00, 4.00)
+	Area of macros with halos: 540778.56
+	Area of std cell instances + Area of macros: 543631.31
+	Floorplan area: 1206589.48
+	Design Utilization: 0.45
+	Floorplan Utilization: 0.06
+	Manufacturing Grid: 1
+
+[INFO MPL-0500] Runtime: 1323.71s
+Took 1324 seconds: rtl_macro_placer -max_num_level 2 -halo_width 4 -halo_height 4 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_gpu_rf_w6_physical_context_asap7/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.3639999932050705
+source /work/hooks/post_macro_place_hbm_rf_fullsize_place_r1.tcl
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[0\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 4.320) placed (4.050, 4.320)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[0\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 203.040) placed (4.050, 203.040)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[10\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 4.320) placed (518.400, 4.320)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[10\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 203.040) placed (518.400, 203.040)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[11\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 401.760) placed (518.400, 401.760)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[11\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 600.480) placed (518.400, 600.480)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[12\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 4.320) placed (621.270, 4.320)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[12\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 203.040) placed (621.270, 203.040)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[13\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 401.760) placed (621.270, 401.760)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[13\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 600.480) placed (621.270, 600.480)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[14\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 4.320) placed (724.140, 4.320)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[14\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 203.040) placed (724.140, 203.040)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[15\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 401.760) placed (724.140, 401.760)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[15\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 600.480) placed (724.140, 600.480)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[1\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 401.760) placed (4.050, 401.760)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[1\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 600.480) placed (4.050, 600.480)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[2\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 4.320) placed (106.920, 4.320)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[2\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 203.040) placed (106.920, 203.040)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[3\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 401.760) placed (106.920, 401.760)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[3\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 600.480) placed (106.920, 600.480)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[4\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 4.320) placed (209.790, 4.320)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[4\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 203.040) placed (209.790, 203.040)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[5\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 401.760) placed (209.790, 401.760)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[5\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 600.480) placed (209.790, 600.480)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[6\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 4.320) placed (312.660, 4.320)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[6\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 203.040) placed (312.660, 203.040)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[7\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 401.760) placed (312.660, 401.760)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[7\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 600.480) placed (312.660, 600.480)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[8\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 4.320) placed (415.530, 4.320)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[8\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 203.040) placed (415.530, 203.040)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[9\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 401.760) placed (415.530, 401.760)
+OT_MTS_PLACE provider/g_identity.g_page\[0\].g_bank\[9\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 600.480) placed (415.530, 600.480)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[0\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 54.000) placed (4.050, 54.000)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[0\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 252.720) placed (4.050, 252.720)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[10\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 54.000) placed (518.400, 54.000)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[10\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 252.720) placed (518.400, 252.720)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[11\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 451.440) placed (518.400, 451.440)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[11\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 650.160) placed (518.400, 650.160)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[12\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 54.000) placed (621.270, 54.000)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[12\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 252.720) placed (621.270, 252.720)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[13\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 451.440) placed (621.270, 451.440)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[13\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 650.160) placed (621.270, 650.160)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[14\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 54.000) placed (724.140, 54.000)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[14\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 252.720) placed (724.140, 252.720)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[15\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 451.440) placed (724.140, 451.440)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[15\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 650.160) placed (724.140, 650.160)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[1\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 451.440) placed (4.050, 451.440)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[1\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 650.160) placed (4.050, 650.160)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[2\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 54.000) placed (106.920, 54.000)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[2\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 252.720) placed (106.920, 252.720)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[3\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 451.440) placed (106.920, 451.440)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[3\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 650.160) placed (106.920, 650.160)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[4\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 54.000) placed (209.790, 54.000)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[4\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 252.720) placed (209.790, 252.720)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[5\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 451.440) placed (209.790, 451.440)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[5\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 650.160) placed (209.790, 650.160)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[6\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 54.000) placed (312.660, 54.000)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[6\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 252.720) placed (312.660, 252.720)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[7\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 451.440) placed (312.660, 451.440)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[7\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 650.160) placed (312.660, 650.160)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[8\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 54.000) placed (415.530, 54.000)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[8\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 252.720) placed (415.530, 252.720)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[9\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 451.440) placed (415.530, 451.440)
+OT_MTS_PLACE provider/g_identity.g_page\[1\].g_bank\[9\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 650.160) placed (415.530, 650.160)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[0\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 103.680) placed (4.050, 103.680)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[0\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 302.400) placed (4.050, 302.400)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[10\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 103.680) placed (518.400, 103.680)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[10\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 302.400) placed (518.400, 302.400)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[11\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 501.120) placed (518.400, 501.120)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[11\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 699.840) placed (518.400, 699.840)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[12\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 103.680) placed (621.270, 103.680)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[12\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 302.400) placed (621.270, 302.400)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[13\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 501.120) placed (621.270, 501.120)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[13\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 699.840) placed (621.270, 699.840)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[14\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 103.680) placed (724.140, 103.680)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[14\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 302.400) placed (724.140, 302.400)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[15\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 501.120) placed (724.140, 501.120)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[15\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 699.840) placed (724.140, 699.840)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[1\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 501.120) placed (4.050, 501.120)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[1\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 699.840) placed (4.050, 699.840)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[2\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 103.680) placed (106.920, 103.680)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[2\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 302.400) placed (106.920, 302.400)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[3\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 501.120) placed (106.920, 501.120)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[3\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 699.840) placed (106.920, 699.840)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[4\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 103.680) placed (209.790, 103.680)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[4\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 302.400) placed (209.790, 302.400)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[5\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 501.120) placed (209.790, 501.120)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[5\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 699.840) placed (209.790, 699.840)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[6\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 103.680) placed (312.660, 103.680)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[6\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 302.400) placed (312.660, 302.400)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[7\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 501.120) placed (312.660, 501.120)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[7\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 699.840) placed (312.660, 699.840)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[8\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 103.680) placed (415.530, 103.680)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[8\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 302.400) placed (415.530, 302.400)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[9\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 501.120) placed (415.530, 501.120)
+OT_MTS_PLACE provider/g_identity.g_page\[2\].g_bank\[9\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 699.840) placed (415.530, 699.840)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[0\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 153.360) placed (4.050, 153.360)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[0\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 352.080) placed (4.050, 352.080)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[10\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 153.360) placed (518.400, 153.360)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[10\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 352.080) placed (518.400, 352.080)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[11\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 550.800) placed (518.400, 550.800)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[11\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (518.400, 749.520) placed (518.400, 749.520)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[12\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 153.360) placed (621.270, 153.360)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[12\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 352.080) placed (621.270, 352.080)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[13\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 550.800) placed (621.270, 550.800)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[13\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (621.270, 749.520) placed (621.270, 749.520)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[14\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 153.360) placed (724.140, 153.360)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[14\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 352.080) placed (724.140, 352.080)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[15\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 550.800) placed (724.140, 550.800)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[15\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (724.140, 749.520) placed (724.140, 749.520)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[1\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 550.800) placed (4.050, 550.800)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[1\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (4.050, 749.520) placed (4.050, 749.520)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[2\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 153.360) placed (106.920, 153.360)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[2\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 352.080) placed (106.920, 352.080)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[3\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 550.800) placed (106.920, 550.800)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[3\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (106.920, 749.520) placed (106.920, 749.520)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[4\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 153.360) placed (209.790, 153.360)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[4\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 352.080) placed (209.790, 352.080)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[5\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 550.800) placed (209.790, 550.800)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[5\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (209.790, 749.520) placed (209.790, 749.520)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[6\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 153.360) placed (312.660, 153.360)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[6\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 352.080) placed (312.660, 352.080)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[7\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 550.800) placed (312.660, 550.800)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[7\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (312.660, 749.520) placed (312.660, 749.520)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[8\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 153.360) placed (415.530, 153.360)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[8\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 352.080) placed (415.530, 352.080)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[9\].u_operand_a ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 550.800) placed (415.530, 550.800)
+OT_MTS_PLACE provider/g_identity.g_page\[3\].g_bank\[9\].u_operand_b ot_sram_1r1w_128x256_m1_r2c2 R0 requested (415.530, 749.520) placed (415.530, 749.520)
+OT_MACRO_TRACK_ASSERT PASS label=RF128_FIXED macros=128 pins_checked=104832 offtrack=0 max_offset_nm=0.0 no_track_grid=0
+RF128_COMPLETE_CENSUS 128
+Took 114 seconds: source /work/hooks/post_macro_place_hbm_rf_fullsize_place_r1.tcl
+Design area 543631 um^2 45% utilization.
+write_db /work/results/asap7/opentallas_ot_gpu_rf_w6_physical_context_asap7/base/2_2_floorplan_macro.odb
+Elapsed time: 24:12.17[h:]min:sec. CPU time: user 869.89 sys 28.42 (61%). Peak memory: 2930856KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb         1452           2862 dc1c69bf98823ca26f76

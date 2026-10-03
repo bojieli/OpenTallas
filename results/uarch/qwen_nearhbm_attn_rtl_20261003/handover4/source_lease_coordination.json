@@ -1,0 +1,37 @@
+{
+  "observed_utc": "2026-10-03T11:59:05.521219+00:00",
+  "recipients": [
+    "Nash",
+    "Hubble",
+    "Claude-parent"
+  ],
+  "request": "Bind actual source/layout and replication scope of the new source lease inventory. Keep separate from each full219 W2 controller; include codec, debt, ports and sourceclock cost before composition.",
+  "source_lease": {
+    "seats": 4293,
+    "raw_bits_per_seat": 123,
+    "raw_bits": 528039,
+    "source_row_layout": "UNKNOWN: awaiting owner source pin",
+    "replication_scope": "UNKNOWN: do not multiply by 128 or 1280",
+    "codec_debt_included": false
+  },
+  "W2": {
+    "controllers_per_die": 128,
+    "full_codewords_per_controller": 219,
+    "protected_bits_per_controller": 15768,
+    "live_synthesis_pid_reported_by_parent": 304073,
+    "duplicate_synthesis": false
+  },
+  "RF": {
+    "unit": "hbm-rf-fullsize-ssff-20261003-r3.service",
+    "source": "a76916ad639c37e62b4ddbdef661240b509cae21",
+    "stage": "3_3_place_gp",
+    "full_macro_count": 128,
+    "added_lease_state_in_RF": false
+  },
+  "needed_from_owner": [
+    "source fields totaling 123 bits",
+    "whether 4293 is SM/die/stack/full-machine aggregate",
+    "positive lifetime bounds and codec/debt row layout",
+    "matched replaced storage debit, if any"
+  ]
+}
