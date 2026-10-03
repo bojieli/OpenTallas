@@ -7,6 +7,8 @@ module tb_txcount;
  reg [6:0] wr=127,fr=127;reg [31:0] wj=32'hfe123456,fj=32'hfe123456;
  reg [3:0] wg=15,fg=15;
  wire br,mr,cv,fault;wire[6:0] rank;wire[31:0] job;wire[3:0] gen;
+ wire offbr,offmr,offcv,offfault;
+ ot_hbm_txcount_sm off_dut(.clk(clk),.por_n(por_n),.rst_n(rst_n),.begin_valid(bv),.begin_ready(offbr),.manifest_ready(offmr),.complete_valid(offcv),.fault(offfault));
  integer checks=0,i,last_edge,cyc=0,lat;
  always @(posedge clk)cyc<=cyc+1;
  ot_hbm_txcount_sm #(.ENABLE(1)) dut(.clk(clk),.por_n(por_n),.rst_n(rst_n),
@@ -30,7 +32,7 @@ module tb_txcount;
  @(negedge clk);wa=0;fa=0;#0.01;
  end endtask
  initial begin
- setup(2);event_pair(0);ck(!cv,"missing transaction holds");
+ setup(2);ck(!offbr&&!offmr&&!offcv&&!offfault,"default-off inert");event_pair(0);ck(!cv,"missing transaction holds");
  repeat(10)begin tick;ck(!cv,"no timer arrival");end
  event_pair(1);ck(cv&&!fault,"both exact counts complete");
  for(i=0;i<8;i=i+1)begin tick;ck(cv&&!br,"completion backpressure holds debt");end
@@ -48,6 +50,9 @@ module tb_txcount;
  setup(1);event_pair(0);@(negedge clk);wa=1;wo=own(0);cr=1;#0.01;ck(!cv,"duplicate masks simultaneous release");tick;ck(fault&&!br,"duplicate cannot free");
  setup(2);event_pair(0);@(negedge clk);rst_n=0;tick;ck(fault&&!cv,"runtime reset retains debt");@(negedge clk);rst_n=1;tick;ck(!br,"reset cannot readmit");
  setup(1);@(negedge clk);dut.on.state_code=dut.on.state_code^72'd3;#0.01;ck(fault&&!cv,"mutable state UE quarantine");
+ clear;@(negedge clk);count=2;bv=1;tick;@(negedge clk);bv=0;mv=1;mo=own(0);tick;
+ @(negedge clk);mo=own(0);tick;ck(fault&&!cv,"duplicate manifest rejected");
+ clear;@(negedge clk);count=1;bv=1;tick;@(negedge clk);bv=0;mv=1;mo=own(0)^(55'd1<<9);tick;ck(fault&&!cv,"foreign manifest generation");
  setup(32);for(i=0;i<32;i=i+1)begin event_pair(i);if(i<31)ck(!cv,"count capacity no overflow");end
  ck(cv&&!fault,"full 32 transaction count");
  $display("PASS_HA1_COUNTER checks=%0d max_count=32 no_timers=1 protocol_only=1",checks);$finish;

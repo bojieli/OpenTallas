@@ -39,8 +39,8 @@ module tb_txcount_actual_w4_w6;
  .w4_accept(wa),.w4_index(5'd0),.w4_owner55({ack_owner,ack_slot}),.w4_rank(7'd127),.w4_job(32'hfe123456),.w4_gen(4'd15),
  .w6_accept(fa),.w6_index(5'd0),.w6_owner55(visible_identity),.w6_rank(7'd127),.w6_job(32'hfe123456),.w6_gen(4'd15),
  .source_fault(source_fault),.complete_valid(complete_valid),.complete_ready(complete_ready),.complete_rank(),.complete_job(),.complete_gen(),.fault(cfault));
- integer cyc=0,checks=0,ack_edge=0,visible_edge=0;
- always @(posedge clk)begin cyc=cyc+1;if(wa)ack_edge=cyc;if(fa)visible_edge=cyc;end
+ integer cyc=0,checks=0,ack_edge=0,visible_edge=0,complete_edge=0;
+ always @(posedge clk)begin cyc=cyc+1;if(wa)ack_edge=cyc;if(fa)visible_edge=cyc;if(complete_valid&&complete_ready)complete_edge=cyc;end
  task tick;begin @(posedge clk);#0.1;end endtask
  task ck(input bit ok,input string message);begin checks=checks+1;if(!ok)$fatal(1,"actual W4/W6 %s",message);end endtask
  initial begin
@@ -56,10 +56,11 @@ module tb_txcount_actual_w4_w6;
  while(!visible_valid)tick;
  ck(ack_edge>0&&!complete_valid&&!cfault,"real common ACK alone cannot complete");
  repeat(5)begin tick;ck(visible_valid&&!complete_valid,"visibility backpressure not counted");end
- @(negedge clk);visible_ready=1;tick;@(negedge clk);visible_ready=0;
+ @(negedge clk);visible_ready=1;complete_ready=1;tick;@(negedge clk);visible_ready=0;
  ck(complete_valid&&!cfault&&!wfault,"actual matched visibility and ACK complete");
- $display("HA1_LOCAL_MEASURE ack_to_counter_complete=%0d visible_to_counter_complete=%0d wire_CDC_refresh_included=0",cyc-ack_edge,cyc-visible_edge);
- repeat(5)begin tick;ck(complete_valid&&!retire_valid&&!drain_req_valid,"scheduler completion retains W6 consumer debt");end
+ tick;ck(complete_edge>visible_edge&&!complete_valid,"scheduler consumes on positive next edge");
+ $display("HA1_LOCAL_MEASURE ack_to_counter_complete=%0d visible_to_counter_complete=%0d wire_CDC_refresh_included=0",complete_edge-ack_edge,complete_edge-visible_edge);
+ repeat(5)begin tick;ck(!complete_valid&&br&&!retire_valid&&!drain_req_valid,"scheduler completion retains W6 consumer debt");end
  // Read the actual two operand mirrors after publication.
  @(negedge clk);rd_valid=1;while(!rd_ready)tick;tick;@(negedge clk);rd_valid=0;
  while(!rsp_valid)tick;
