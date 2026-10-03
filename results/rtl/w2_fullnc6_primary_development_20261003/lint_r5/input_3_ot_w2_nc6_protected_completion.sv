@@ -1,41 +1,4 @@
-#!/usr/bin/env python3
-"""Actual default-off coded primary source generator; runtime admission is separate."""
-from pathlib import Path
-import json
-import w2_nc6_count_utility_closure as m
-import w2_nc6_secondary_source as s
-ROOT=Path(__file__).resolve().parents[1]
-PRIMARY=[i for i in range(219) if i not in s.mapping()]
-RTL=ROOT/'rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv'
-
-def enrollment_model():
-    return dict(schema='w2.primary-enrollment.wip.v1',antecedent='10cb7849246f7ca06fe3309e577b10c099fdac29',
-        NC=6,MAX_OUT=16,total_words=219,primary_words=182,secondary_words=37,physical_bits=15768,
-        persistent_phase_state='only coded scheduler and coded correction contexts',
-        table_mutators=9,count_mutators=6,backend_requests_per_edge=1,backend_read_captures_per_edge=1,backend_write_captures_per_edge=1,
-        request_record_bits=335,read_query_bits=297,read_delivery_bits=300,write_query_bits=41,
-        client_tag_bits=32,generation_bits=4,client_bits=3,scoped_identity_bits=39,address_bits=34,sector_bytes=32,
-        prospective_lookup_edges={'CHECK':1,'MATCH':1,'PREP':1,'journal':4,'offer':1},
-        prospective_correction_edges={'CAPTURE':4,'REPAIR':4},correction_II_min=9,
-        source_count_epoch_calendar_after_request_accept={'table_commit':4,'count_load':5,'count_commit':9,'epoch_reopen':10,'next_same_client_capture':11,'next_backend_accept':19},
-        same_client_request_II_min=19,
-        prospective_different_client_request_II=10,
-        different_client_overlap='capture at accepted+2 when old issue journal phase>=1, CHECK+3 MATCH+4 PREP+5 after old issue commit+4, reservation commit+9 backend accept+10; no same-edge free slot reuse',
-        difference_vs_10cb_conditional_II18='actual secondary reopen checks CURRENT idle worker/cache, so reopening is a separate edge after count commit; not fitted to runtime',
-        correction_boundary_bits=8*(72+72+10),delta_vs_target_only_boundary=8*72,
-        correction_held_original='coded context72; no added72-bit pipeline register',
-        query_read_mux={'normal':3,'rows_per_selected_bank':16,'utility':2,'utility_words':219,'address_capture_before_read':True},
-        extra_boundary_buffer_min_x4=(8*72+7)//8,
-        price='base219 coded FF/write-router/codec/control budget10cb; added original snapshot boundary576bits and minimum72BUFx4 must be composed with actual decode/load/route before physical admission',
-        loaded_clock='prospective833.333ps SS setup60ps FF hold25ps; no closure claim',
-        readiness={'functional_build':False,'primary_in_progress':False,'physical_build':False,'system_provider':False},
-        remaining=['Russell single full NC6 runtime with actual helper and frozen source','exceptional source fault/held/reset gate enrollment','final synthesis/load/cell/route accounting before physical admission'])
-
-def source():
-    old=(ROOT/'rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv').read_text()
-    ports=old[old.index(' input wire clk'):old.index('\n);')]
-    ports=ports.replace('output reg fault','output wire fault,repair_busy,\n input wire reverse_fenced')
-    text='''`timescale 1ps/1ps
+`timescale 1ps/1ps
 // WIP actual primary enrollment. No runtime/build/bridge admission.
 // All current-word status is wired from the actual frozen sealed decoders.
 module ot_w2_nc6_protected_completion #(
@@ -43,7 +6,32 @@ module ot_w2_nc6_protected_completion #(
  parameter integer CTAGW=32, GENW=4, SIDW=3, PTAGW=35,
  parameter logic [6:0] PC_ID=0
 )(
-@@PORTS@@
+ input wire clk,rst_n,admission_stop,rearm_v,provider_fenced,reset_fenced,
+ output wire rearm_rdy,idle,
+ input wire [NC-1:0] c_req_v,c_req_we,
+ output reg [NC-1:0] c_req_rdy,
+ input wire [NC*AW-1:0] c_req_addr,
+ input wire [NC*CTAGW-1:0] c_req_tag,
+ input wire [NC*GENW-1:0] c_req_gen,
+ input wire [NC*256-1:0] c_req_data,
+ output reg [NC-1:0] c_rsp_v,c_wr_done_v,
+ input wire [NC-1:0] c_rsp_rdy,c_wr_done_rdy,
+ output reg [NC*CTAGW-1:0] c_rsp_tag,c_wr_done_tag,
+ output reg [NC*GENW-1:0] c_rsp_gen,c_wr_done_gen,
+ output reg [NC*256-1:0] c_rsp_data,
+ output reg p_req_v,p_req_we,
+ input wire p_req_rdy,
+ output reg [AW-1:0] p_req_addr,
+ output reg [PTAGW-1:0] p_req_tag,
+ output reg [GENW-1:0] p_req_gen,
+ output reg [255:0] p_req_data,
+ input wire p_rsp_v,p_wr_done_v,
+ output reg p_rsp_rdy,p_wr_done_ready,
+ input wire [PTAGW-1:0] p_rsp_tag,p_wr_done_tag,
+ input wire [GENW-1:0] p_rsp_gen,p_wr_done_gen,
+ input wire [255:0] p_rsp_data,
+ output wire fault,repair_busy,
+ input wire reverse_fenced
 );
  localparam integer NW=182;
  (* keep="true" *) logic [71:0] cw[0:NW-1];
@@ -101,22 +89,820 @@ module ot_w2_nc6_protected_completion #(
 
  function automatic integer global_index(input integer x);
  begin case(x)
-@@GMAP@@
+0:global_index=0;
+1:global_index=1;
+2:global_index=2;
+3:global_index=3;
+4:global_index=4;
+5:global_index=5;
+6:global_index=6;
+7:global_index=7;
+8:global_index=8;
+9:global_index=9;
+10:global_index=10;
+11:global_index=11;
+12:global_index=12;
+13:global_index=13;
+14:global_index=14;
+15:global_index=15;
+16:global_index=16;
+17:global_index=17;
+18:global_index=18;
+19:global_index=19;
+20:global_index=20;
+21:global_index=21;
+22:global_index=22;
+23:global_index=23;
+24:global_index=24;
+25:global_index=25;
+26:global_index=26;
+27:global_index=27;
+28:global_index=28;
+29:global_index=29;
+30:global_index=30;
+31:global_index=31;
+32:global_index=32;
+33:global_index=33;
+34:global_index=34;
+35:global_index=35;
+36:global_index=36;
+37:global_index=37;
+38:global_index=38;
+39:global_index=39;
+40:global_index=40;
+41:global_index=41;
+42:global_index=42;
+43:global_index=43;
+44:global_index=44;
+45:global_index=45;
+46:global_index=46;
+47:global_index=47;
+48:global_index=48;
+49:global_index=49;
+50:global_index=50;
+51:global_index=51;
+52:global_index=52;
+53:global_index=53;
+54:global_index=54;
+55:global_index=55;
+56:global_index=56;
+57:global_index=57;
+58:global_index=58;
+59:global_index=59;
+60:global_index=60;
+61:global_index=61;
+62:global_index=62;
+63:global_index=63;
+64:global_index=64;
+65:global_index=65;
+66:global_index=66;
+67:global_index=67;
+68:global_index=68;
+69:global_index=69;
+70:global_index=70;
+71:global_index=71;
+72:global_index=72;
+73:global_index=73;
+74:global_index=74;
+75:global_index=75;
+76:global_index=76;
+77:global_index=77;
+78:global_index=78;
+79:global_index=79;
+80:global_index=80;
+81:global_index=81;
+82:global_index=82;
+83:global_index=83;
+84:global_index=84;
+85:global_index=85;
+86:global_index=86;
+87:global_index=87;
+88:global_index=88;
+89:global_index=89;
+90:global_index=90;
+91:global_index=91;
+92:global_index=92;
+93:global_index=93;
+94:global_index=94;
+95:global_index=95;
+96:global_index=96;
+97:global_index=97;
+98:global_index=98;
+99:global_index=99;
+100:global_index=100;
+101:global_index=101;
+102:global_index=102;
+103:global_index=103;
+104:global_index=104;
+105:global_index=105;
+106:global_index=106;
+107:global_index=107;
+108:global_index=108;
+109:global_index=109;
+110:global_index=110;
+111:global_index=111;
+112:global_index=112;
+113:global_index=113;
+114:global_index=114;
+115:global_index=115;
+116:global_index=116;
+117:global_index=117;
+118:global_index=118;
+119:global_index=119;
+120:global_index=120;
+121:global_index=121;
+122:global_index=122;
+123:global_index=123;
+124:global_index=124;
+125:global_index=131;
+126:global_index=133;
+127:global_index=134;
+128:global_index=135;
+129:global_index=136;
+130:global_index=137;
+131:global_index=138;
+132:global_index=139;
+133:global_index=140;
+134:global_index=141;
+135:global_index=142;
+136:global_index=143;
+137:global_index=144;
+138:global_index=145;
+139:global_index=146;
+140:global_index=147;
+141:global_index=148;
+142:global_index=149;
+143:global_index=150;
+144:global_index=151;
+145:global_index=152;
+146:global_index=153;
+147:global_index=154;
+148:global_index=155;
+149:global_index=156;
+150:global_index=157;
+151:global_index=158;
+152:global_index=159;
+153:global_index=160;
+154:global_index=161;
+155:global_index=162;
+156:global_index=163;
+157:global_index=164;
+158:global_index=165;
+159:global_index=166;
+160:global_index=167;
+161:global_index=168;
+162:global_index=169;
+163:global_index=170;
+164:global_index=171;
+165:global_index=172;
+166:global_index=173;
+167:global_index=174;
+168:global_index=175;
+169:global_index=176;
+170:global_index=177;
+171:global_index=178;
+172:global_index=179;
+173:global_index=180;
+174:global_index=181;
+175:global_index=182;
+176:global_index=183;
+177:global_index=184;
+178:global_index=185;
+179:global_index=186;
+180:global_index=187;
+181:global_index=188;
  default:global_index=-1;endcase end
  endfunction
  function automatic integer local_index(input integer x);
  begin case(x)
-@@LMAP@@
+0:local_index=0;
+1:local_index=1;
+2:local_index=2;
+3:local_index=3;
+4:local_index=4;
+5:local_index=5;
+6:local_index=6;
+7:local_index=7;
+8:local_index=8;
+9:local_index=9;
+10:local_index=10;
+11:local_index=11;
+12:local_index=12;
+13:local_index=13;
+14:local_index=14;
+15:local_index=15;
+16:local_index=16;
+17:local_index=17;
+18:local_index=18;
+19:local_index=19;
+20:local_index=20;
+21:local_index=21;
+22:local_index=22;
+23:local_index=23;
+24:local_index=24;
+25:local_index=25;
+26:local_index=26;
+27:local_index=27;
+28:local_index=28;
+29:local_index=29;
+30:local_index=30;
+31:local_index=31;
+32:local_index=32;
+33:local_index=33;
+34:local_index=34;
+35:local_index=35;
+36:local_index=36;
+37:local_index=37;
+38:local_index=38;
+39:local_index=39;
+40:local_index=40;
+41:local_index=41;
+42:local_index=42;
+43:local_index=43;
+44:local_index=44;
+45:local_index=45;
+46:local_index=46;
+47:local_index=47;
+48:local_index=48;
+49:local_index=49;
+50:local_index=50;
+51:local_index=51;
+52:local_index=52;
+53:local_index=53;
+54:local_index=54;
+55:local_index=55;
+56:local_index=56;
+57:local_index=57;
+58:local_index=58;
+59:local_index=59;
+60:local_index=60;
+61:local_index=61;
+62:local_index=62;
+63:local_index=63;
+64:local_index=64;
+65:local_index=65;
+66:local_index=66;
+67:local_index=67;
+68:local_index=68;
+69:local_index=69;
+70:local_index=70;
+71:local_index=71;
+72:local_index=72;
+73:local_index=73;
+74:local_index=74;
+75:local_index=75;
+76:local_index=76;
+77:local_index=77;
+78:local_index=78;
+79:local_index=79;
+80:local_index=80;
+81:local_index=81;
+82:local_index=82;
+83:local_index=83;
+84:local_index=84;
+85:local_index=85;
+86:local_index=86;
+87:local_index=87;
+88:local_index=88;
+89:local_index=89;
+90:local_index=90;
+91:local_index=91;
+92:local_index=92;
+93:local_index=93;
+94:local_index=94;
+95:local_index=95;
+96:local_index=96;
+97:local_index=97;
+98:local_index=98;
+99:local_index=99;
+100:local_index=100;
+101:local_index=101;
+102:local_index=102;
+103:local_index=103;
+104:local_index=104;
+105:local_index=105;
+106:local_index=106;
+107:local_index=107;
+108:local_index=108;
+109:local_index=109;
+110:local_index=110;
+111:local_index=111;
+112:local_index=112;
+113:local_index=113;
+114:local_index=114;
+115:local_index=115;
+116:local_index=116;
+117:local_index=117;
+118:local_index=118;
+119:local_index=119;
+120:local_index=120;
+121:local_index=121;
+122:local_index=122;
+123:local_index=123;
+124:local_index=124;
+131:local_index=125;
+133:local_index=126;
+134:local_index=127;
+135:local_index=128;
+136:local_index=129;
+137:local_index=130;
+138:local_index=131;
+139:local_index=132;
+140:local_index=133;
+141:local_index=134;
+142:local_index=135;
+143:local_index=136;
+144:local_index=137;
+145:local_index=138;
+146:local_index=139;
+147:local_index=140;
+148:local_index=141;
+149:local_index=142;
+150:local_index=143;
+151:local_index=144;
+152:local_index=145;
+153:local_index=146;
+154:local_index=147;
+155:local_index=148;
+156:local_index=149;
+157:local_index=150;
+158:local_index=151;
+159:local_index=152;
+160:local_index=153;
+161:local_index=154;
+162:local_index=155;
+163:local_index=156;
+164:local_index=157;
+165:local_index=158;
+166:local_index=159;
+167:local_index=160;
+168:local_index=161;
+169:local_index=162;
+170:local_index=163;
+171:local_index=164;
+172:local_index=165;
+173:local_index=166;
+174:local_index=167;
+175:local_index=168;
+176:local_index=169;
+177:local_index=170;
+178:local_index=171;
+179:local_index=172;
+180:local_index=173;
+181:local_index=174;
+182:local_index=175;
+183:local_index=176;
+184:local_index=177;
+185:local_index=178;
+186:local_index=179;
+187:local_index=180;
+188:local_index=181;
  default:local_index=-1;endcase end
  endfunction
  function automatic integer payload_bits(input integer x);
  begin case(x)
-@@PB@@
+0:payload_bits=44;
+1:payload_bits=44;
+2:payload_bits=44;
+3:payload_bits=44;
+4:payload_bits=44;
+5:payload_bits=44;
+6:payload_bits=44;
+7:payload_bits=44;
+8:payload_bits=44;
+9:payload_bits=44;
+10:payload_bits=44;
+11:payload_bits=44;
+12:payload_bits=44;
+13:payload_bits=44;
+14:payload_bits=44;
+15:payload_bits=44;
+16:payload_bits=44;
+17:payload_bits=44;
+18:payload_bits=44;
+19:payload_bits=44;
+20:payload_bits=44;
+21:payload_bits=44;
+22:payload_bits=44;
+23:payload_bits=44;
+24:payload_bits=44;
+25:payload_bits=44;
+26:payload_bits=44;
+27:payload_bits=44;
+28:payload_bits=44;
+29:payload_bits=44;
+30:payload_bits=44;
+31:payload_bits=44;
+32:payload_bits=44;
+33:payload_bits=44;
+34:payload_bits=44;
+35:payload_bits=44;
+36:payload_bits=44;
+37:payload_bits=44;
+38:payload_bits=44;
+39:payload_bits=44;
+40:payload_bits=44;
+41:payload_bits=44;
+42:payload_bits=44;
+43:payload_bits=44;
+44:payload_bits=44;
+45:payload_bits=44;
+46:payload_bits=44;
+47:payload_bits=44;
+48:payload_bits=44;
+49:payload_bits=44;
+50:payload_bits=44;
+51:payload_bits=44;
+52:payload_bits=44;
+53:payload_bits=44;
+54:payload_bits=44;
+55:payload_bits=44;
+56:payload_bits=44;
+57:payload_bits=44;
+58:payload_bits=44;
+59:payload_bits=44;
+60:payload_bits=44;
+61:payload_bits=44;
+62:payload_bits=44;
+63:payload_bits=44;
+64:payload_bits=44;
+65:payload_bits=44;
+66:payload_bits=44;
+67:payload_bits=44;
+68:payload_bits=44;
+69:payload_bits=44;
+70:payload_bits=44;
+71:payload_bits=44;
+72:payload_bits=44;
+73:payload_bits=44;
+74:payload_bits=44;
+75:payload_bits=44;
+76:payload_bits=44;
+77:payload_bits=44;
+78:payload_bits=44;
+79:payload_bits=44;
+80:payload_bits=44;
+81:payload_bits=44;
+82:payload_bits=44;
+83:payload_bits=44;
+84:payload_bits=44;
+85:payload_bits=44;
+86:payload_bits=44;
+87:payload_bits=44;
+88:payload_bits=44;
+89:payload_bits=44;
+90:payload_bits=44;
+91:payload_bits=44;
+92:payload_bits=44;
+93:payload_bits=44;
+94:payload_bits=44;
+95:payload_bits=44;
+96:payload_bits=44;
+97:payload_bits=44;
+98:payload_bits=44;
+99:payload_bits=44;
+100:payload_bits=44;
+101:payload_bits=44;
+102:payload_bits=44;
+103:payload_bits=27;
+104:payload_bits=44;
+105:payload_bits=44;
+106:payload_bits=44;
+107:payload_bits=44;
+108:payload_bits=44;
+109:payload_bits=44;
+110:payload_bits=33;
+111:payload_bits=41;
+112:payload_bits=44;
+113:payload_bits=44;
+114:payload_bits=44;
+115:payload_bits=44;
+116:payload_bits=44;
+117:payload_bits=44;
+118:payload_bits=36;
+119:payload_bits=5;
+120:payload_bits=5;
+121:payload_bits=5;
+122:payload_bits=5;
+123:payload_bits=5;
+124:payload_bits=5;
+125:payload_bits=9;
+126:payload_bits=9;
+127:payload_bits=9;
+128:payload_bits=9;
+129:payload_bits=9;
+130:payload_bits=9;
+131:payload_bits=3;
+132:payload_bits=1;
+133:payload_bits=44;
+134:payload_bits=21;
+135:payload_bits=44;
+136:payload_bits=21;
+137:payload_bits=44;
+138:payload_bits=21;
+139:payload_bits=44;
+140:payload_bits=21;
+141:payload_bits=44;
+142:payload_bits=21;
+143:payload_bits=44;
+144:payload_bits=21;
+145:payload_bits=44;
+146:payload_bits=44;
+147:payload_bits=8;
+148:payload_bits=44;
+149:payload_bits=44;
+150:payload_bits=8;
+151:payload_bits=44;
+152:payload_bits=44;
+153:payload_bits=8;
+154:payload_bits=44;
+155:payload_bits=44;
+156:payload_bits=8;
+157:payload_bits=44;
+158:payload_bits=44;
+159:payload_bits=8;
+160:payload_bits=44;
+161:payload_bits=44;
+162:payload_bits=8;
+163:payload_bits=44;
+164:payload_bits=44;
+165:payload_bits=8;
+166:payload_bits=44;
+167:payload_bits=44;
+168:payload_bits=8;
+169:payload_bits=44;
+170:payload_bits=43;
+171:payload_bits=44;
+172:payload_bits=43;
+173:payload_bits=44;
+174:payload_bits=43;
+175:payload_bits=44;
+176:payload_bits=43;
+177:payload_bits=44;
+178:payload_bits=43;
+179:payload_bits=44;
+180:payload_bits=43;
+181:payload_bits=44;
+182:payload_bits=43;
+183:payload_bits=44;
+184:payload_bits=43;
+185:payload_bits=44;
+186:payload_bits=43;
+187:payload_bits=44;
+188:payload_bits=35;
+189:payload_bits=44;
+190:payload_bits=44;
+191:payload_bits=10;
+192:payload_bits=44;
+193:payload_bits=44;
+194:payload_bits=10;
+195:payload_bits=44;
+196:payload_bits=44;
+197:payload_bits=10;
+198:payload_bits=44;
+199:payload_bits=44;
+200:payload_bits=10;
+201:payload_bits=44;
+202:payload_bits=44;
+203:payload_bits=10;
+204:payload_bits=44;
+205:payload_bits=44;
+206:payload_bits=10;
+207:payload_bits=5;
+208:payload_bits=5;
+209:payload_bits=5;
+210:payload_bits=5;
+211:payload_bits=5;
+212:payload_bits=5;
+213:payload_bits=8;
+214:payload_bits=8;
+215:payload_bits=8;
+216:payload_bits=8;
+217:payload_bits=8;
+218:payload_bits=8;
  default:payload_bits=0;endcase end
  endfunction
  function automatic integer kind(input integer x);
  begin case(x)
-@@KIND@@
+0:kind=0;
+1:kind=0;
+2:kind=0;
+3:kind=0;
+4:kind=0;
+5:kind=0;
+6:kind=0;
+7:kind=0;
+8:kind=0;
+9:kind=0;
+10:kind=0;
+11:kind=0;
+12:kind=0;
+13:kind=0;
+14:kind=0;
+15:kind=0;
+16:kind=0;
+17:kind=0;
+18:kind=0;
+19:kind=0;
+20:kind=0;
+21:kind=0;
+22:kind=0;
+23:kind=0;
+24:kind=0;
+25:kind=0;
+26:kind=0;
+27:kind=0;
+28:kind=0;
+29:kind=0;
+30:kind=0;
+31:kind=0;
+32:kind=0;
+33:kind=0;
+34:kind=0;
+35:kind=0;
+36:kind=0;
+37:kind=0;
+38:kind=0;
+39:kind=0;
+40:kind=0;
+41:kind=0;
+42:kind=0;
+43:kind=0;
+44:kind=0;
+45:kind=0;
+46:kind=0;
+47:kind=0;
+48:kind=0;
+49:kind=0;
+50:kind=0;
+51:kind=0;
+52:kind=0;
+53:kind=0;
+54:kind=0;
+55:kind=0;
+56:kind=0;
+57:kind=0;
+58:kind=0;
+59:kind=0;
+60:kind=0;
+61:kind=0;
+62:kind=0;
+63:kind=0;
+64:kind=0;
+65:kind=0;
+66:kind=0;
+67:kind=0;
+68:kind=0;
+69:kind=0;
+70:kind=0;
+71:kind=0;
+72:kind=0;
+73:kind=0;
+74:kind=0;
+75:kind=0;
+76:kind=0;
+77:kind=0;
+78:kind=0;
+79:kind=0;
+80:kind=0;
+81:kind=0;
+82:kind=0;
+83:kind=0;
+84:kind=0;
+85:kind=0;
+86:kind=0;
+87:kind=0;
+88:kind=0;
+89:kind=0;
+90:kind=0;
+91:kind=0;
+92:kind=0;
+93:kind=0;
+94:kind=0;
+95:kind=0;
+96:kind=1;
+97:kind=1;
+98:kind=1;
+99:kind=1;
+100:kind=1;
+101:kind=1;
+102:kind=1;
+103:kind=1;
+104:kind=1;
+105:kind=1;
+106:kind=1;
+107:kind=1;
+108:kind=1;
+109:kind=1;
+110:kind=1;
+111:kind=1;
+112:kind=2;
+113:kind=2;
+114:kind=2;
+115:kind=2;
+116:kind=2;
+117:kind=2;
+118:kind=2;
+119:kind=3;
+120:kind=3;
+121:kind=3;
+122:kind=3;
+123:kind=3;
+124:kind=3;
+125:kind=4;
+126:kind=4;
+127:kind=4;
+128:kind=4;
+129:kind=4;
+130:kind=4;
+131:kind=4;
+132:kind=4;
+133:kind=5;
+134:kind=5;
+135:kind=5;
+136:kind=5;
+137:kind=5;
+138:kind=5;
+139:kind=5;
+140:kind=5;
+141:kind=5;
+142:kind=5;
+143:kind=5;
+144:kind=5;
+145:kind=6;
+146:kind=6;
+147:kind=6;
+148:kind=6;
+149:kind=6;
+150:kind=6;
+151:kind=6;
+152:kind=6;
+153:kind=6;
+154:kind=6;
+155:kind=6;
+156:kind=6;
+157:kind=6;
+158:kind=6;
+159:kind=6;
+160:kind=6;
+161:kind=6;
+162:kind=6;
+163:kind=6;
+164:kind=6;
+165:kind=6;
+166:kind=6;
+167:kind=6;
+168:kind=6;
+169:kind=7;
+170:kind=7;
+171:kind=7;
+172:kind=7;
+173:kind=7;
+174:kind=7;
+175:kind=7;
+176:kind=7;
+177:kind=7;
+178:kind=7;
+179:kind=7;
+180:kind=7;
+181:kind=7;
+182:kind=7;
+183:kind=7;
+184:kind=7;
+185:kind=7;
+186:kind=7;
+187:kind=4;
+188:kind=4;
+189:kind=7;
+190:kind=7;
+191:kind=7;
+192:kind=7;
+193:kind=7;
+194:kind=7;
+195:kind=7;
+196:kind=7;
+197:kind=7;
+198:kind=7;
+199:kind=7;
+200:kind=7;
+201:kind=7;
+202:kind=7;
+203:kind=7;
+204:kind=7;
+205:kind=7;
+206:kind=7;
+207:kind=4;
+208:kind=4;
+209:kind=4;
+210:kind=4;
+211:kind=4;
+212:kind=4;
+213:kind=4;
+214:kind=4;
+215:kind=4;
+216:kind=4;
+217:kind=4;
+218:kind=4;
  default:kind=0;endcase end
  endfunction
  function automatic [71:0] seal(input [43:0] p,input integer wi);
@@ -183,7 +969,43 @@ module ot_w2_nc6_protected_completion #(
  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
  assign raw[G]=cw[l];assign invalid[G]=uncorrectable||!seal_ok||!padding_ok;
  end
-@@SECONDARY_ASSIGN@@
+assign raw[125]=secondary_raw[0+:72];assign fixed_word[125]=secondary_fixed[0+:72];assign P[125]=secondary_payload[0+:44];assign clean[125]=secondary_clean[0];assign ce[125]=secondary_ce[0];assign invalid[125]=secondary_bad[0];
+assign raw[126]=secondary_raw[72+:72];assign fixed_word[126]=secondary_fixed[72+:72];assign P[126]=secondary_payload[44+:44];assign clean[126]=secondary_clean[1];assign ce[126]=secondary_ce[1];assign invalid[126]=secondary_bad[1];
+assign raw[127]=secondary_raw[144+:72];assign fixed_word[127]=secondary_fixed[144+:72];assign P[127]=secondary_payload[88+:44];assign clean[127]=secondary_clean[2];assign ce[127]=secondary_ce[2];assign invalid[127]=secondary_bad[2];
+assign raw[128]=secondary_raw[216+:72];assign fixed_word[128]=secondary_fixed[216+:72];assign P[128]=secondary_payload[132+:44];assign clean[128]=secondary_clean[3];assign ce[128]=secondary_ce[3];assign invalid[128]=secondary_bad[3];
+assign raw[129]=secondary_raw[288+:72];assign fixed_word[129]=secondary_fixed[288+:72];assign P[129]=secondary_payload[176+:44];assign clean[129]=secondary_clean[4];assign ce[129]=secondary_ce[4];assign invalid[129]=secondary_bad[4];
+assign raw[130]=secondary_raw[360+:72];assign fixed_word[130]=secondary_fixed[360+:72];assign P[130]=secondary_payload[220+:44];assign clean[130]=secondary_clean[5];assign ce[130]=secondary_ce[5];assign invalid[130]=secondary_bad[5];
+assign raw[189]=secondary_raw[432+:72];assign fixed_word[189]=secondary_fixed[432+:72];assign P[189]=secondary_payload[264+:44];assign clean[189]=secondary_clean[6];assign ce[189]=secondary_ce[6];assign invalid[189]=secondary_bad[6];
+assign raw[190]=secondary_raw[504+:72];assign fixed_word[190]=secondary_fixed[504+:72];assign P[190]=secondary_payload[308+:44];assign clean[190]=secondary_clean[7];assign ce[190]=secondary_ce[7];assign invalid[190]=secondary_bad[7];
+assign raw[191]=secondary_raw[576+:72];assign fixed_word[191]=secondary_fixed[576+:72];assign P[191]=secondary_payload[352+:44];assign clean[191]=secondary_clean[8];assign ce[191]=secondary_ce[8];assign invalid[191]=secondary_bad[8];
+assign raw[192]=secondary_raw[648+:72];assign fixed_word[192]=secondary_fixed[648+:72];assign P[192]=secondary_payload[396+:44];assign clean[192]=secondary_clean[9];assign ce[192]=secondary_ce[9];assign invalid[192]=secondary_bad[9];
+assign raw[193]=secondary_raw[720+:72];assign fixed_word[193]=secondary_fixed[720+:72];assign P[193]=secondary_payload[440+:44];assign clean[193]=secondary_clean[10];assign ce[193]=secondary_ce[10];assign invalid[193]=secondary_bad[10];
+assign raw[194]=secondary_raw[792+:72];assign fixed_word[194]=secondary_fixed[792+:72];assign P[194]=secondary_payload[484+:44];assign clean[194]=secondary_clean[11];assign ce[194]=secondary_ce[11];assign invalid[194]=secondary_bad[11];
+assign raw[195]=secondary_raw[864+:72];assign fixed_word[195]=secondary_fixed[864+:72];assign P[195]=secondary_payload[528+:44];assign clean[195]=secondary_clean[12];assign ce[195]=secondary_ce[12];assign invalid[195]=secondary_bad[12];
+assign raw[196]=secondary_raw[936+:72];assign fixed_word[196]=secondary_fixed[936+:72];assign P[196]=secondary_payload[572+:44];assign clean[196]=secondary_clean[13];assign ce[196]=secondary_ce[13];assign invalid[196]=secondary_bad[13];
+assign raw[197]=secondary_raw[1008+:72];assign fixed_word[197]=secondary_fixed[1008+:72];assign P[197]=secondary_payload[616+:44];assign clean[197]=secondary_clean[14];assign ce[197]=secondary_ce[14];assign invalid[197]=secondary_bad[14];
+assign raw[198]=secondary_raw[1080+:72];assign fixed_word[198]=secondary_fixed[1080+:72];assign P[198]=secondary_payload[660+:44];assign clean[198]=secondary_clean[15];assign ce[198]=secondary_ce[15];assign invalid[198]=secondary_bad[15];
+assign raw[199]=secondary_raw[1152+:72];assign fixed_word[199]=secondary_fixed[1152+:72];assign P[199]=secondary_payload[704+:44];assign clean[199]=secondary_clean[16];assign ce[199]=secondary_ce[16];assign invalid[199]=secondary_bad[16];
+assign raw[200]=secondary_raw[1224+:72];assign fixed_word[200]=secondary_fixed[1224+:72];assign P[200]=secondary_payload[748+:44];assign clean[200]=secondary_clean[17];assign ce[200]=secondary_ce[17];assign invalid[200]=secondary_bad[17];
+assign raw[201]=secondary_raw[1296+:72];assign fixed_word[201]=secondary_fixed[1296+:72];assign P[201]=secondary_payload[792+:44];assign clean[201]=secondary_clean[18];assign ce[201]=secondary_ce[18];assign invalid[201]=secondary_bad[18];
+assign raw[202]=secondary_raw[1368+:72];assign fixed_word[202]=secondary_fixed[1368+:72];assign P[202]=secondary_payload[836+:44];assign clean[202]=secondary_clean[19];assign ce[202]=secondary_ce[19];assign invalid[202]=secondary_bad[19];
+assign raw[203]=secondary_raw[1440+:72];assign fixed_word[203]=secondary_fixed[1440+:72];assign P[203]=secondary_payload[880+:44];assign clean[203]=secondary_clean[20];assign ce[203]=secondary_ce[20];assign invalid[203]=secondary_bad[20];
+assign raw[204]=secondary_raw[1512+:72];assign fixed_word[204]=secondary_fixed[1512+:72];assign P[204]=secondary_payload[924+:44];assign clean[204]=secondary_clean[21];assign ce[204]=secondary_ce[21];assign invalid[204]=secondary_bad[21];
+assign raw[205]=secondary_raw[1584+:72];assign fixed_word[205]=secondary_fixed[1584+:72];assign P[205]=secondary_payload[968+:44];assign clean[205]=secondary_clean[22];assign ce[205]=secondary_ce[22];assign invalid[205]=secondary_bad[22];
+assign raw[206]=secondary_raw[1656+:72];assign fixed_word[206]=secondary_fixed[1656+:72];assign P[206]=secondary_payload[1012+:44];assign clean[206]=secondary_clean[23];assign ce[206]=secondary_ce[23];assign invalid[206]=secondary_bad[23];
+assign raw[207]=secondary_raw[1728+:72];assign fixed_word[207]=secondary_fixed[1728+:72];assign P[207]=secondary_payload[1056+:44];assign clean[207]=secondary_clean[24];assign ce[207]=secondary_ce[24];assign invalid[207]=secondary_bad[24];
+assign raw[208]=secondary_raw[1800+:72];assign fixed_word[208]=secondary_fixed[1800+:72];assign P[208]=secondary_payload[1100+:44];assign clean[208]=secondary_clean[25];assign ce[208]=secondary_ce[25];assign invalid[208]=secondary_bad[25];
+assign raw[209]=secondary_raw[1872+:72];assign fixed_word[209]=secondary_fixed[1872+:72];assign P[209]=secondary_payload[1144+:44];assign clean[209]=secondary_clean[26];assign ce[209]=secondary_ce[26];assign invalid[209]=secondary_bad[26];
+assign raw[210]=secondary_raw[1944+:72];assign fixed_word[210]=secondary_fixed[1944+:72];assign P[210]=secondary_payload[1188+:44];assign clean[210]=secondary_clean[27];assign ce[210]=secondary_ce[27];assign invalid[210]=secondary_bad[27];
+assign raw[211]=secondary_raw[2016+:72];assign fixed_word[211]=secondary_fixed[2016+:72];assign P[211]=secondary_payload[1232+:44];assign clean[211]=secondary_clean[28];assign ce[211]=secondary_ce[28];assign invalid[211]=secondary_bad[28];
+assign raw[212]=secondary_raw[2088+:72];assign fixed_word[212]=secondary_fixed[2088+:72];assign P[212]=secondary_payload[1276+:44];assign clean[212]=secondary_clean[29];assign ce[212]=secondary_ce[29];assign invalid[212]=secondary_bad[29];
+assign raw[213]=secondary_raw[2160+:72];assign fixed_word[213]=secondary_fixed[2160+:72];assign P[213]=secondary_payload[1320+:44];assign clean[213]=secondary_clean[30];assign ce[213]=secondary_ce[30];assign invalid[213]=secondary_bad[30];
+assign raw[214]=secondary_raw[2232+:72];assign fixed_word[214]=secondary_fixed[2232+:72];assign P[214]=secondary_payload[1364+:44];assign clean[214]=secondary_clean[31];assign ce[214]=secondary_ce[31];assign invalid[214]=secondary_bad[31];
+assign raw[215]=secondary_raw[2304+:72];assign fixed_word[215]=secondary_fixed[2304+:72];assign P[215]=secondary_payload[1408+:44];assign clean[215]=secondary_clean[32];assign ce[215]=secondary_ce[32];assign invalid[215]=secondary_bad[32];
+assign raw[216]=secondary_raw[2376+:72];assign fixed_word[216]=secondary_fixed[2376+:72];assign P[216]=secondary_payload[1452+:44];assign clean[216]=secondary_clean[33];assign ce[216]=secondary_ce[33];assign invalid[216]=secondary_bad[33];
+assign raw[217]=secondary_raw[2448+:72];assign fixed_word[217]=secondary_fixed[2448+:72];assign P[217]=secondary_payload[1496+:44];assign clean[217]=secondary_clean[34];assign ce[217]=secondary_ce[34];assign invalid[217]=secondary_bad[34];
+assign raw[218]=secondary_raw[2520+:72];assign fixed_word[218]=secondary_fixed[2520+:72];assign P[218]=secondary_payload[1540+:44];assign clean[218]=secondary_clean[35];assign ce[218]=secondary_ce[35];assign invalid[218]=secondary_bad[35];
+assign raw[132]=secondary_raw[2592+:72];assign fixed_word[132]=secondary_fixed[2592+:72];assign P[132]=secondary_payload[1584+:44];assign clean[132]=secondary_clean[36];assign ce[132]=secondary_ce[36];assign invalid[132]=secondary_bad[36];
  for(genvar r=0;r<96;r=r+1)begin:table_view
  assign table_state[2*r+:2]=P[r][1:0];assign table_clean[r]=clean[r];assign table_bad[r]=invalid[r];
  end endgenerate
@@ -247,7 +1069,7 @@ module ot_w2_nc6_protected_completion #(
  always_comb begin
  scrub_v=0;scrub_index=0;scrub_original=0;scrub_repaired=0;primary_retire_offer=0;secondary_retire_offer=0;
  retire_a=0;
- if(OPT_EXACT&&rst_n&&!any_core_bad&&!correction_error&&!core_bad)begin
+ if(OPT_EXACT&&rst_n&&!any_core_bad&&!correction_error)begin
  for(retire_e=0;retire_e<8;retire_e=retire_e+1)if(repair_scrub_v[retire_e])begin
  retire_a=integer'(repair_index[10*retire_e+:10]);
  if(retire_a<219&&ce[retire_a]&&!invalid[retire_a]&&raw[retire_a]==repair_original[72*retire_e+:72]&&fixed_word[retire_a]==repair_candidate[72*retire_e+:72])begin
@@ -573,17 +1395,3 @@ module ot_w2_nc6_protected_completion #(
  else if(OPT_EXACT)begin for(integer x=0;x<NW;x=x+1)if(WE[x])cw[x]<=encoded[x];end
  end
 endmodule
-'''
-    maps='\n'.join(f'{l}:global_index={g};' for l,g in enumerate(PRIMARY))
-    inverse='\n'.join(f'{g}:local_index={l};' for l,g in enumerate(PRIMARY))
-    pb='\n'.join(f"{x['index']}:payload_bits={x['payload_bits']};" for x in m.ROWS)
-    kinds='\n'.join(f"{x['index']}:kind={x['kind']};" for x in m.ROWS)
-    sec=[]
-    for l,g in enumerate(s.mapping()):
-        sec.append(f'assign raw[{g}]=secondary_raw[{72*l}+:72];assign fixed_word[{g}]=secondary_fixed[{72*l}+:72];assign P[{g}]=secondary_payload[{44*l}+:44];assign clean[{g}]=secondary_clean[{l}];assign ce[{g}]=secondary_ce[{l}];assign invalid[{g}]=secondary_bad[{l}];')
-    return text.replace('@@PORTS@@',ports).replace('@@GMAP@@',maps).replace('@@LMAP@@',inverse).replace('@@PB@@',pb).replace('@@KIND@@',kinds).replace('@@SECONDARY_ASSIGN@@','\n'.join(sec))
-
-if __name__=='__main__':
-    # Record prospective resources/edges before writing the actual source.
-    (RTL.parent/'enrollment_model.json').write_text(json.dumps(enrollment_model(),sort_keys=True,indent=2)+'\n')
-    RTL.write_text(source())

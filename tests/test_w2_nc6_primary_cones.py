@@ -72,3 +72,10 @@ def test_prepare_does_not_write_fault_feedback():
  assert 'core_bad' not in task
  assert 'plan_bad=1' in task
  assert 'any_plan_bad' not in text
+
+def test_fault_prevents_correction_retirement_ack():
+ c=cone(p.source(),' // Retirement eligibility does not consume')
+ assert '&&!core_bad' in c
+ # Independent semantic fault cone must stay free of retirement inputs.
+ fault=cone(p.source(),' // Semantic fault is independent')
+ assert 'repair_retire_ready' not in fault and 'scrub_ready' not in fault
