@@ -1,0 +1,14 @@
+{
+  "status": "PASS_FOCUSED_MODEL_TESTS_ONLY",
+  "tests_passed": 11,
+  "exit_code": 0,
+  "command": "python3 -m pytest -q tests/test_dsrom_c_w3_kv_shoreline.py",
+  "physical_jobs_launched": 0,
+  "actual_W2_map_enrolled": false,
+  "delta_adopted_vs_C": {
+    "tok_s": 0,
+    "mm2": 0,
+    "kW": 0,
+    "dies": 0
+  }
+}
