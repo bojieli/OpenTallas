@@ -1,0 +1,62 @@
+{
+  "originals_unchanged": true,
+  "files": [
+    {
+      "path": "tools/uarch_model.py",
+      "sha256": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9",
+      "equals_4a18e3cc0": true
+    },
+    {
+      "path": "tools/dsrom_full_owner_compiler.py",
+      "sha256": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b",
+      "equals_4a18e3cc0": true
+    },
+    {
+      "path": "tools/dsrom_owner_provider_first.py",
+      "sha256": "4b28ee9c0e5060641c60010965150c404fbc035289c5b1c841ba90148c1e504d",
+      "equals_4a18e3cc0": true
+    },
+    {
+      "path": "tools/dsrom_full_owner_closure.py",
+      "sha256": "e655bdc7a0d863c4b3a2daa011d8b138f31554eedf8d0d6970329704e40c99ed",
+      "equals_4a18e3cc0": true
+    },
+    {
+      "path": "tools/v41_rom_ksplit_bankmap.py",
+      "sha256": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e",
+      "equals_4a18e3cc0": true
+    },
+    {
+      "path": "tools/rtl_v41_fullshape_layer_campaign.py",
+      "sha256": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8",
+      "equals_4a18e3cc0": true
+    },
+    {
+      "path": "tools/hdc_replay_v41.py",
+      "sha256": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
+      "equals_4a18e3cc0": true
+    },
+    {
+      "path": "tools/dsrom_return_storage_hbm.py",
+      "sha256": "c6ac731b0d7f8d2c0468fba31b1eb395a893e077d08e8e8a4a7073efe050f4e2",
+      "equals_4a18e3cc0": true
+    },
+    {
+      "path": "results/uarch/dsrom_fixed4096_owner_compiler_20261002/inputs/tensor_headers.jsonl.gz",
+      "sha256": "f50af13ea93a402a6ab74c6f1302521aad99f922d8dc10fd1410978d2d62f960",
+      "equals_4a18e3cc0": true
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_ret.sv",
+      "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+      "equals_4a18e3cc0": true
+    },
+    {
+      "path": "rtl/v41die/ot_v41_retn_w17w10.sv",
+      "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+      "equals_4a18e3cc0": true
+    }
+  ],
+  "new_tools_only": true,
+  "docs_modified": false
+}

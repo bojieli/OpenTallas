@@ -1,0 +1,46 @@
+{
+  "owner": "W2",
+  "status": "MODEL_UNVALIDATED_NOT_ADOPTED",
+  "branch": "codex/dsrom-c-w2-20261003",
+  "worktree": "/home/ubuntu/dsrom-c-w2-20261003",
+  "record": "results/uarch/dsrom_s73_pair1_20261003/baseline_s82_successor_r1/model.json",
+  "stages": 82,
+  "field_pairs_per_die": 2388,
+  "BF_pairs": 512,
+  "q_only_pairs": 1876,
+  "layer_dies": 328,
+  "total_dies": 372,
+  "weight_padding_pairs": 0,
+  "return": {
+    "NP": 4096,
+    "R": 128,
+    "RD": 64,
+    "ROOTD": 128,
+    "RD4": "REJECTED_046bf5026",
+    "FF50_reserve_mm2": 52.89758742528,
+    "area_credit": 0
+  },
+  "S73_screen_mm2": 897.558280550523,
+  "S69_screen_mm2": 919.1786831993913,
+  "S82_screen_mm2": 856.5356341582075,
+  "Maxwell_W4": {
+    "pin": "d1b6dd52a",
+    "increment": "58.14742729288 telescopes; complete64.55495794136 traced; all halo/frame/whitespace costs retained",
+    "complement_credit": 0,
+    "requested_join": "Use inventory.json per-die counts/BF mask/config PHW and retained return; actual rectangles and graph/PG/clock/IO/halo containment still required"
+  },
+  "Chandra_W3": {
+    "pin": "7c5b6a79b",
+    "requested_join": "Use actual stage_map.json, provider homes, canonical indexer multicast endpoints, auxiliary payload spans; 420 not transferred. 456 stacks only if exactly8 scan homes, still unqualified."
+  },
+  "Rawls_W1": {
+    "pin": "046bf5026",
+    "requested_join": "RD4 rejected. Existing full-depth NP4096 return wired by region projection; inactive return inputs get no area credit; no weight padding."
+  },
+  "shipped_keys": 96085,
+  "source_bytes": 510286023000,
+  "complete_symbolic_source_coverage": true,
+  "physical_exactonce_qualified": false,
+  "rate_and_power_repriced": false,
+  "peer_acknowledgments": "NOT_RECORDED"
+}

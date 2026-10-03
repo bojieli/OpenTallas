@@ -1,0 +1,7 @@
+{
+  "status": "FAIL_PRESERVED",
+  "command": "python3 tools/dsrom_s73_pair1_records.py",
+  "failure": "Telescoping assertion: initial 0.0761399676 mm2 capture proxy missing from new ledger",
+  "resolution": "Restore initial proxy debit; then price replacement enclosure delta. No historical cost removed.",
+  "historical_records_changed": false
+}

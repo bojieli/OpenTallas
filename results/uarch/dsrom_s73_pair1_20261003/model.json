@@ -1,0 +1,130 @@
+{
+  "RTL_PnR_inference": false,
+  "S69": "Sensitivity only: W4 does not trace >=50mm2 as fixed per die",
+  "W3_commit": "7c5b6a79b",
+  "W4_commit": "d1b6dd52a",
+  "actual_decoder_mapping": {
+    "W1_RD": 4,
+    "W1_RD_measured": false,
+    "adopted": false,
+    "all_numbers": "MODEL_UNVALIDATED",
+    "auxiliary_tensor_count": 2667,
+    "blocking": [
+      "Auxiliary shipped weights need priced physical owners",
+      "Ragged region assignment must join W1 generator",
+      "W3 service home and per-die KV demand join",
+      "W4 disjoint replacement ledger and rectangles",
+      "Actual descriptor PHW/address and golden exactness gates",
+      "Loaded SS/FF timing and routing-layer check"
+    ],
+    "counts": {
+      "declarations": 46551,
+      "placed": 46551
+    },
+    "decoder_matrix_capacity_PASS": true,
+    "decoder_tensor_count": 93415,
+    "entire_shipped_checkpoint_exactonce_PASS": false,
+    "failures": [],
+    "no_RTL_PnR_inference": true,
+    "row_and_ordered_K_coverage_PASS": true,
+    "schema": "opentallas.dsrom.S73.PAIR1.metadata-map.v1",
+    "shipped_tensor_count": 96085,
+    "word_overlap_PASS": true
+  },
+  "adopted": false,
+  "delta_vs_C_adopted": {
+    "dies": 0,
+    "kW": 0,
+    "mm2": 0,
+    "tok_s": 0
+  },
+  "gates": {
+    "W1_RD": "PROVISIONAL",
+    "W3": "BLOCKED",
+    "W4": "ATTRIBUTION_ONLY",
+    "complete_physical_weight_map": "UNVALIDATED",
+    "complete_symbolic_provider_directory": "PASS",
+    "decoder_capacity": "PASS",
+    "reticle": "BLOCKED",
+    "source_directory": "PASS_96085_KEYS"
+  },
+  "label": "MODEL_UNVALIDATED",
+  "original_records_changed": false,
+  "provisional_S": 73,
+  "provisional_pairs": 2682,
+  "rate": "Inherited2490/2600 rates are not transferred to this packing or new PHW and split-delivery contract",
+  "schema": "opentallas.dsrom.S73.PAIR1.successor.v1",
+  "six_historical_pins_match": true,
+  "source_pins": [
+    {
+      "commit": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+      "path": "results/uarch/dsrom_return_storage_hbm_20261003/model.json",
+      "sha256": "620e7b8be078e4b90e5986340cb7c719351beba39029d4e66b7b193a9ea2b5d2"
+    },
+    {
+      "commit": "246b5da68fe1bd86e95be19db99cb80e42207a0d",
+      "path": "results/uarch/dsrom_return_scaling_source_audit_20261002/model.json",
+      "sha256": "7ff6988499658d022f2bdbe85ef62657937f52a0331f0c8321dadad50c860f56"
+    },
+    {
+      "commit": "93efabc2d9fd6f3402a6f586798b45fd97adbabc",
+      "path": "results/rtl/dsrom_return_lifetime_audit_20261002/model.json",
+      "sha256": "9b01034e5282a97d14689b0a3ea0171c6b7f70191312fdcd67daa1040bec6d92"
+    },
+    {
+      "commit": "246b5da68fe1bd86e95be19db99cb80e42207a0d",
+      "path": "results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/model-r4.json",
+      "sha256": "0777a3dc8dd5fc3d128d7593907ecf0003ab4c9c1294bf8b8f9059585d91fd08"
+    },
+    {
+      "commit": "246b5da68fe1bd86e95be19db99cb80e42207a0d",
+      "path": "results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/inputs/compiled_budget.json",
+      "sha256": "821b5c4a8bb2f64c8ecdc4b0f508e8f0b8e704393aba7e6e2e2f5e0d91c14e0d"
+    },
+    {
+      "commit": "246b5da68fe1bd86e95be19db99cb80e42207a0d",
+      "path": "results/uarch/dsrom_4096_comparable_capacity_20261002/partition_token_options.json",
+      "sha256": "47c1fe8a2922c6351f3bacb19770c45fbbd197415e0da81ef211e9a0932c5154"
+    },
+    {
+      "commit": "e697d6eaef01ef7b60bd9ff330a3adc99c2adabc",
+      "path": "results/uarch/dsrom_4096_comparable_capacity_20261002/model.json",
+      "sha256": "f48a5866432fa45a6f70aa822cae7607b100919ef1a397ff6e7a72e2eda02087"
+    },
+    {
+      "commit": "d1b6dd52a4595336ea789ebea8a6bdaf0016c51e",
+      "path": "results/uarch/dsrom_c_w4_20261003/model.json",
+      "sha256": "5306c2adc96cb9b1104a83980acbc8081eb1bf96817e34cafea4f36eee6e080c"
+    },
+    {
+      "commit": "d1b6dd52a4595336ea789ebea8a6bdaf0016c51e",
+      "path": "results/uarch/dsrom_c_w4_20261003/inputs/caller.json",
+      "sha256": "9353f8dd2fb56e8814d97af1d163ccba824947b8b8ae23bf49d7eb2d4c9584de"
+    },
+    {
+      "commit": "7c5b6a79bb0b95d653748dfb879aabbbaf51c04e",
+      "path": "results/uarch/dsrom_c_w3_kv_shoreline_20261003/model.json",
+      "sha256": "9036d2689da5beb3ab4bef37f8e1438fc2cb20105f17b5e8ab4d7a81e8889754"
+    },
+    {
+      "commit": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+      "path": "results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/model-r4.json",
+      "sha256": "0777a3dc8dd5fc3d128d7593907ecf0003ab4c9c1294bf8b8f9059585d91fd08"
+    },
+    {
+      "commit": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+      "path": "results/uarch/dsrom_capture_home_20261002/model.json",
+      "sha256": "c952055e1d46c3d86095965ee0bc92162256649f398d723ef70b5e7b13c0a0a0"
+    },
+    {
+      "commit": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+      "path": "results/uarch/dsrom_capture_clock_selected_union_20261002/model.json",
+      "sha256": "5fc207fa190513f8394e26b9177c1a032fd148dd0ddd6cf3abbe231753715ae0"
+    },
+    {
+      "commit": "4a18e3cc0b4c04f75a2e76e4535d9560cdc730c6",
+      "path": "results/uarch/dsrom_reticle_fixed_debit_reconciliation_20261002/inputs/compiled_budget.json",
+      "sha256": "821b5c4a8bb2f64c8ecdc4b0f508e8f0b8e704393aba7e6e2e2f5e0d91c14e0d"
+    }
+  ]
+}
