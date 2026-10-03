@@ -4,8 +4,8 @@
   "host": "ot-epyc1tb",
   "unit": "qwen-fulldie-b3-k16-banded-i5-20261003-r2.service",
   "out": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5",
-  "supervisor_PID_observed": 2810404,
-  "supervisor_PID_scope": "r1 Docker privilege preflight only; r2 unit invocation 9ef48230e703454eb0c017e4ea09985a",
+  "supervisor_PID_observed": 2813708,
+  "supervisor_PID_scope": "r2 actual runner; terminal MainPID0, exit1",
   "result": "FAIL_INCOMPLETE_BEFORE_OPENROAD",
   "blocker": "Mandatory macro track gate rejects ten inherited signal-empty abstracts; no invented interfaces or gate bypass",
   "old_b2_retired": false,
@@ -34,5 +34,6 @@
     "verdict.json": "11a2f1582a7e18b8206a04ffe99d3003add5fcff722c20305621a7bde6bc08cf",
     "terminal.journal": "035686745b505d235a268c484bcbfb368a10dba1f846e620e49d5606b0dc0a88",
     "start.json": "af58c01d2b06311493343c588bf74bb2e62ea2d0813f1061c56600234504553c"
-  }
+  },
+  "supervisor_start_ticks": "2710004"
 }
