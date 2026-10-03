@@ -47,7 +47,7 @@ class ConnectedEnrollmentTests(unittest.TestCase):
         from tools.gpu_sys import canonical_qwen_simulator as sim
         from tools.gpu_sys import canonical_qwen_transport as transport
         class Pins:
-            edges=0;stopped=False
+            edges=0;stopped=False;edge_open=False
             def __init__(self,*args):self.hooks=[]
             def add_edge_hook(self,hook):self.hooks.append(hook)
         class Server:
@@ -57,16 +57,37 @@ class ConnectedEnrollmentTests(unittest.TestCase):
         process=types.SimpleNamespace(pid=123,stdin=io.StringIO(),stdout=io.StringIO(),wait=lambda:0)
         module=types.ModuleType('test_only_actual_factory')
         module.build=lambda pins:dict(authority=object(),native_handlers={},w2_ports={})
+        def fake_build(pins):
+            payload=types.SimpleNamespace(before_edge=lambda:None,after_edge=lambda:None)
+            pins.hooks.append(payload)
+            return dict(handlers={},payload=payload)
         with TemporaryDirectory() as td:
             root=Path(td);binary=root/'driver';binary.write_bytes(b'model-test-only')
             with patch.dict(sys.modules,{module.__name__:module}), \
                  patch.object(runner.subprocess,'check_output',side_effect=['','test-commit']), \
                  patch.object(runner.subprocess,'Popen',return_value=process), \
                  patch.object(sim,'EnclosingPins',Pins), \
-                 patch.object(sim,'build',return_value={'handlers':{}}), \
+                 patch.object(sim,'build',side_effect=lambda pins,*args,**kw: fake_build(pins)), \
                  patch.object(transport,'UnixDeliveryServer',Server):
                 record=runner.connected_runtime(binary,module.__name__+':build',root/'socket',root/'out')
             self.assertEqual(record['status'],'CONNECTED_SESSION_CLOSED_NOT_TOKEN_VERDICT')
             self.assertFalse(record['physical_or_fulltoken_admission'])
             self.assertEqual(record['backend_accepts'],0)
             self.assertEqual(record,json.loads((root/'out/record.json').read_text()))
+
+
+class SoleClockHookTests(unittest.TestCase):
+    def test_observer_sees_payload_drives_on_the_existing_one_hook(self):
+        from types import SimpleNamespace
+        events=[]
+        payload=SimpleNamespace(before_edge=lambda:events.append('payload-before'),
+            after_edge=lambda:events.append('payload-after'))
+        observer=SimpleNamespace(before_edge=lambda:events.append('observer-before'),
+            after_edge=lambda:events.append('observer-after'))
+        pins=SimpleNamespace(edge_open=False,stopped=False,hooks=[payload])
+        runner.observe_registered_payload(pins,payload,observer)
+        self.assertEqual(len(pins.hooks),1)
+        pins.hooks[0].before_edge();events.append('ONE-ACTUAL-EDGE');pins.hooks[0].after_edge()
+        self.assertEqual(events,['payload-before','observer-before','ONE-ACTUAL-EDGE',
+            'payload-after','observer-after'])
+        with self.assertRaises(ValueError):runner.observe_registered_payload(pins,payload,observer)
