@@ -10,7 +10,7 @@ import numpy as np
 
 from tools.h4_qwen_released_provider_delivery import PROGRAM_SHA, UnixRTLTransport
 from tools.gpu_sys.canonical_qwen_transport import (
-    DeliverySession, KINDS, SimulatorPipes, TransportError, UnixDeliveryServer, W2PrimaryPort, decode, encode)
+    DeliverySession, KINDS, KV_KINDS, ALL_KINDS, SimulatorPipes, TransportError, UnixDeliveryServer, W2PrimaryPort, decode, encode)
 
 
 def request(sequence=0, pc=40, **fields):
@@ -75,6 +75,30 @@ class TransportTest(unittest.TestCase):
             self.assertEqual(errors, [])
             self.assertEqual([m["kind"] for m in observed], list(KINDS))
             self.assertEqual(server.session.sequence, 6)
+
+    def test_full_token_requires_complete_kv_lifecycle(self):
+        handlers = {k: reply for k in KINDS}
+        with self.assertRaisesRegex(TransportError, "kv_state_read"):
+            DeliverySession(handlers, require_kv=True)
+        handlers["kv_begin"] = reply
+        with self.assertRaisesRegex(TransportError, "kv_reader_release"):
+            DeliverySession(handlers)
+
+    def test_kv_and_rf_share_sequence_and_retained_fault_debt(self):
+        observed = []
+        def actual_handler(req):
+            observed.append(req["sequence"])
+            return reply(req)
+        session = DeliverySession({k: actual_handler for k in ALL_KINDS}, require_kv=True)
+        for seq, kind in enumerate(ALL_KINDS):
+            req = request(seq, payload=b"actual port fixture")
+            self.assertEqual(session.transact(dict(kind=kind, request=req))["payload"], req["payload"])
+        self.assertEqual(observed, list(range(16)))
+        stale = dict(kind="kv_reader_release", request=request(15))
+        with self.assertRaisesRegex(TransportError, "out-of-order"):
+            session.transact(stale)
+        self.assertIs(session.pending, stale)
+        self.assertTrue(session.stopped)
 
     def test_missing_actual_handler_refused(self):
         with self.assertRaisesRegex(TransportError, "missing simulator handlers"):

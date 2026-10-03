@@ -1,7 +1,7 @@
 """Persistent canonical Qwen delivery server, opt-in and without a simulator launcher.
 
 Run from the repository root with ``python3 -m tools.gpu_sys.canonical_qwen_transport``.
-Claude's simulator supplies the six handlers; each must wait for its actual
+The simulator supplies the sixteen handlers for a complete token; each must wait for its actual
 owner/ACK/consumer/reverse acceptance before returning. This adapter never
 creates successful acknowledgements, evaluates arithmetic, or replaces memory.
 The pipe mode attaches inherited control pipes of an already-running simulator.
@@ -19,6 +19,10 @@ from tools.h4_qwen_released_provider_delivery import PROGRAM_SHA, wire_decode, w
 
 KINDS = ("source_page_write", "source_page_read", "source_publish", "source_retire",
          "immutable_source_transfer", "native_primitive")
+KV_KINDS = ("kv_state_read", "kv_state_write", "kv_begin", "kv_stage_write",
+            "kv_commit", "kv_publish", "kv_acquire", "kv_payload_read",
+            "kv_consumer_done", "kv_reader_release")
+ALL_KINDS = KINDS + KV_KINDS
 IDENTITY = ("program_sha256", "source_PC", "sequence")
 
 
@@ -153,7 +157,7 @@ class SimulatorPipes:
         self.reader = os.fdopen(os.dup(read_fd), "rb")
         self.writer = os.fdopen(os.dup(write_fd), "wb", buffering=0)
         self.stopped = False
-        self.handlers = {kind: self._handler(kind) for kind in KINDS}
+        self.handlers = {kind: self._handler(kind) for kind in ALL_KINDS}
 
     def _handler(self, kind):
         def transact(request):
@@ -181,11 +185,14 @@ class SimulatorPipes:
 
 class DeliverySession:
     """One synchronous caller with retained failure debt, no implicit rearm."""
-    def __init__(self, handlers):
-        missing = [kind for kind in KINDS if not callable(handlers.get(kind))]
+    def __init__(self, handlers, *, require_kv=False):
+        # Six-handler sessions exist only for component fixtures. A complete
+        # token and any backend enrolling KV must provide its entire lifecycle.
+        kinds = ALL_KINDS if require_kv or any(k in handlers for k in KV_KINDS) else KINDS
+        missing = [kind for kind in kinds if not callable(handlers.get(kind))]
         if missing:
             raise TransportError("missing simulator handlers: " + ", ".join(missing))
-        self.handlers = handlers
+        self.handlers = {kind: handlers[kind] for kind in kinds}
         self.sequence = 0
         self.stopped = False
         self.pending = None
@@ -253,8 +260,8 @@ class DeliverySession:
 
 class UnixDeliveryServer:
     """One existing simulator/canonical caller pair, no listener reconnect loop."""
-    def __init__(self, path: Path, handlers):
-        self.session = DeliverySession(handlers)
+    def __init__(self, path: Path, handlers, *, require_kv=False):
+        self.session = DeliverySession(handlers, require_kv=require_kv)
         self.path = Path(path)
         self.listener = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.inode = None
@@ -306,7 +313,7 @@ def main():
         handlers = pipes.handlers
     server = None
     try:
-        server = UnixDeliveryServer(a.socket, handlers)
+        server = UnixDeliveryServer(a.socket, handlers, require_kv=True)
         print(f"Canonical1737 delivery socket ready: {a.socket}", flush=True)
         server.serve_once()
     finally:

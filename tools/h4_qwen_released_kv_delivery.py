@@ -9,7 +9,10 @@ from collections.abc import Mapping
 from functools import wraps
 from types import MethodType
 import numpy as np
-from h4_qwen_released_provider_delivery import require, sha
+if __package__:
+    from .h4_qwen_released_provider_delivery import require, sha
+else:
+    from h4_qwen_released_provider_delivery import require, sha
 
 
 def hold_fault(method):

@@ -347,7 +347,10 @@ class ReleasedProviderDelivery:
 
     def attach(self):
         require(not self.attached, 'attach live provider once')
-        from h4_qwen_released_kv_delivery import KVStorageDelivery
+        if __package__:
+            from .h4_qwen_released_kv_delivery import KVStorageDelivery
+        else:
+            from h4_qwen_released_kv_delivery import KVStorageDelivery
         kv_client = KVStorageDelivery(self)
         for name in ('write', 'read_indices', 'publish', 'retire'):
             require(name not in self.store.__dict__, 'no predecessor instance hook')
@@ -376,7 +379,10 @@ class ReleasedProviderDelivery:
         # owner's job. Never advertise a software VM as the integrated run.
         require(self.transport.native_dispatch_program_sha256 == PROGRAM_SHA,
                 'full canonical native RTL dispatcher must be connected')
-        from h4_qwen_released_kv_delivery import KVStorageDelivery
+        if __package__:
+            from .h4_qwen_released_kv_delivery import KVStorageDelivery
+        else:
+            from h4_qwen_released_kv_delivery import KVStorageDelivery
         require(type(getattr(self,'kv_client',None)) is KVStorageDelivery
                 and self.kv_client.installed_on(self.machine.memory,self.transport),
                 'actual KV byte/control client installed, not a transport marker')
