@@ -17,7 +17,17 @@
     "arithmetic_changed": false
   },
   "integration": {
+    "SUN256": "explicit enrolled full-goal profile; core/tile default SUN16 remains unchanged",
+    "caller_enrollment": "not installed: original core/tile retain clk; facade exposes named source-sized bundles for selected successor",
+    "facade": "rtl/model_ready_ds_seven_class_20261003/ot_ds_seven_class_port_swap.sv",
     "kind": "default-off additive boundary bank; original singleclock callers unchanged",
+    "next_caller_changes": [
+      "freeze SU output until staging acceptance without replaying arithmetic",
+      "replace fixed-latency VM read assumptions with tagged response wait at field/index/selector/collective adapters",
+      "register ordered field/ME writes until backend visible ACK",
+      "connect owner generation/phase and real allcopies reset reconciliation; prevent cold_n under debt"
+    ],
+    "positive_receipt_requirement": "consumer retirement means visible write/dependent acceptance plus allcopies lifetime contract; diagnostic bench supplies directed receipts only",
     "retained_fixed_latency_reads": "must freeze caller until tagged reply; no direct combinational read replacement",
     "selector": "current XU remains fast; this inventory records actual memory edge, not new serial scalar enrollment"
   },

@@ -50,6 +50,17 @@ module tb;
  if(!pending[i])$fatal(1,"unfenced reconciliation");
  allcopies_fenced[i]=1;sn(i);reconcile_v[i]=0;allcopies_fenced[i]=0;
  if(pending[i]||quarantined[i])$fatal(1,"positive reconciliation refused");cases=cases+1;
+ // Accepted but not delivered reset: FIFO flush must not erase source debt.
+ send(i,i+200);sn(i);abort_s[i]=1;dn(i);abort_d[i]=1;sn(i);
+ fast_rst_n=0;slow_rst_n=0;repeat(6)@(negedge slow_clk);
+ if(!pending[i]||!quarantined[i])$fatal(1,"undelivered reset debt lost");
+ fast_rst_n=1;slow_rst_n=1;abort_s[i]=0;abort_d[i]=0;
+ repeat(12)dn(i);if(out_v[i]||in_ready[i])$fatal(1,"stale replay or new admission");
+ // Even a positive fence with the WRONG owner is insufficient.
+ reconcile_owner[i*228+:228]=i+201;reconcile_v[i]=1;allcopies_fenced[i]=1;sn(i);
+ if(!pending[i])$fatal(1,"wrong reconciliation identity");
+ reconcile_owner[i*228+:228]=i+200;sn(i);reconcile_v[i]=0;allcopies_fenced[i]=0;
+ if(pending[i]||quarantined[i])$fatal(1,"positive reset reconciliation refused");cases=cases+1;
  end
  // Wrong identity never returns credit.
  send(0,999);receive(0,999);receipt(0,1000);repeat(12)sn(0);
