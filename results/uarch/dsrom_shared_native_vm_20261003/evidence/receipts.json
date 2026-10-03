@@ -53,5 +53,47 @@
     "terminal": "TRANSPOSE_PASS words=266 writes=1064 stalls=132 holds=103 cycles=407\n/srv/opentallas/jobs/dsrom-shared-native-20261003/transpose-r2/sources/0_tb_transpose.sv:86: $finish called at 4120000 (1ps)\n",
     "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit",
     "source_commit": "d62b12a27f04bebbace202f7211ec6a79eca9bd2"
+  },
+  "ds-collective-epyc-r1": {
+    "archive": "ds-collective-epyc-r1.tgz",
+    "sha256": "98904927cdd9f0f9864566b4ceff7124155665fb68b79e314e08f8499f4e6f1d",
+    "pid": 288672,
+    "status": "TERMINAL",
+    "terminal": "/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/0_tb_coll_parent.sv:22: syntax error\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/0_tb_coll_parent.sv:22: error: Invalid module item.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/7_ot_ds_owned_ratio_boundary.sv:5: warning: timescale for ot_ds_owned_ratio_boundary inherited from another file.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/6_ot_coll_topk_merge.sv:1: ...: The inherited timescale is here.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/8_ratio_fifo.sv:45: warning: timescale for ot_ratio_cdc_fifo inherited from another file.\n/srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r1/sources/6_ot_coll_topk_merge.sv:1: ...: The inherited timescale is here.\n",
+    "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit",
+    "source_commit": "3315423f0fdcf3d76391af2e14f09a77024a4c0c"
+  },
+  "ds-collective-epyc-r2": {
+    "archive": "ds-collective-epyc-r2.tgz",
+    "sha256": "a369197dc559e5190e133aca1361b10b89d39c551a4c471d341011ccdf5371ed",
+    "pid": 388755,
+    "status": "TERMINAL",
+    "terminal": "PASS DMA_GATHER_NATIVE words=266 writes=1064 reads=266 visible_retirement=1 held=5933\nFATAL: /srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r2/sources/0_tb_coll_parent.sv:95: full retainedK8192 queue not reserved count0\n       Time: 56757000  Scope: tb\n",
+    "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit",
+    "source_commit": "5ebf6cd569f98bd67bdd96dedf829f05dd5f456f"
+  },
+  "ds-collective-epyc-r3": {
+    "archive": "ds-collective-epyc-r3.tgz",
+    "sha256": "531ac71e313b26ac35279aba21b1d91246c7d2f0081ce7700b74315f7e5f2559",
+    "terminal": "[48675000] %Fatal: 0_tb_coll_parent.sv:90: Assertion failed in tb: gather counts read266 sent266 writes1064\n%Error: /srv/opentallas/jobs/dsrom-shared-native-20261003/collective-r3/sources/0_tb_coll_parent.sv:90: Verilog $stop\nAborting...\n",
+    "scope": "causal native gather counts exact; fixture did not force output stall, rejected before full topk. No full collective PASS."
+  },
+  "ds-ID-agidock128-r1": {
+    "archive": "ds-ID-agidock128-r1.tgz",
+    "sha256": "e3be6d06a6267d35a9c2ee996bfd92582dd350a83756f43b1f48802171d25e69",
+    "terminal": "FATAL: /home/ubuntu/otjobs/dsrom-shared-native/ID-r1/sources/0_tb_id_parent.sv:54: indirect ID exact native result addr457 accepted1 delivered1\n       Time: 357000  Scope: tb\n",
+    "scope": "one real native ID request/reply and expected HBM457; fixture hold counter assertion failure, no caller PASS"
+  },
+  "ds-ID-agidock128-r2": {
+    "archive": "ds-ID-agidock128-r2.tgz",
+    "sha256": "19c230e1df4f861e632447056d4ba9f04ad1827046adeca1fa44f5fa002b1fe1",
+    "terminal": "ID_BOUNDARY fault0 requests1 replies1 hbm457 len17 rom221 held9\nPASS ID_NATIVE held_request=1 matching_reply=1 macros=256 expertID=3 rom=221 hbm=457 requests=1\nPASS ID_NATIVE_WRONG_COOKIE debt_held=1 no_publication=1 no_unchecked_retirement=1\n/home/ubuntu/otjobs/dsrom-shared-native/ID-r2/sources/0_tb_id_parent.sv:61: $finish called at 537000 (1ps)\n",
+    "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit"
+  },
+  "ds-collective-agidock128-r5": {
+    "archive": "ds-collective-agidock128-r5.tgz",
+    "sha256": "75a27e7f574a7f0825b52eece9db78e15f2ef52da6f136068594ecc81c144af4",
+    "terminal": "PASS DMA_GATHER_NATIVE words=266 writes=1064 reads=266 visible_retirement=1 held=3831\nPASS DMA_TOPK_NATIVE K=8192 NMAX=2048 queue=128 output_words=512 read_words=256 exact_order=1 visible_retirement=1\n- /home/ubuntu/otjobs/dsrom-shared-native/collective-r5/sources/0_tb_coll_parent.sv:101: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 105us; walltime 2.323 s; speed 45.319 us/s\n- Verilator: cpu 2.323 s on 1 threads; allocated 11 MB\n",
+    "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit"
   }
 }

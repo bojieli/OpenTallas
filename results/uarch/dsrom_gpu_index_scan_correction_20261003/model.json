@@ -1,0 +1,1860 @@
+{
+  "after": {
+    "contexts": {
+      "1048576": {
+        "full_score_seconds": 0.003548064648297803,
+        "mtp_seconds": 0.004054018659287126,
+        "seconds": 0.0035413781458497155
+      },
+      "200000": {
+        "full_score_seconds": 0.0035391319507572716,
+        "mtp_seconds": 0.004050583006386921,
+        "seconds": 0.0035379424929495107
+      },
+      "3072": {
+        "full_score_seconds": 0.0035370589505059544,
+        "mtp_seconds": 0.004049699463943365,
+        "seconds": 0.0035370589505059544
+      },
+      "8192": {
+        "full_score_seconds": 0.003537112847165072,
+        "mtp_seconds": 0.0040497533606024825,
+        "seconds": 0.003537112847165072
+      }
+    },
+    "economics": {
+      "anchors": [
+        {
+          "aggregate_tokens_s": 230.0,
+          "batch": 1,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 1 (DFlash paper Table 3)",
+          "energy_mJ_per_token_at_689W": 2995.7,
+          "line_fit_tokens_s": 223.5,
+          "per_user_tokens_s": 230.0,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 861.0,
+          "batch": 4,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 4 (DFlash paper Table 3)",
+          "energy_mJ_per_token_at_689W": 800.2,
+          "line_fit_tokens_s": 871.6,
+          "per_user_tokens_s": 215.2,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 1666.0,
+          "batch": 8,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 8 (DFlash paper Table 3)",
+          "energy_mJ_per_token_at_689W": 413.6,
+          "line_fit_tokens_s": 1686.7,
+          "per_user_tokens_s": 208.2,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 3133.0,
+          "batch": 16,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 16 (DFlash paper Table 3)",
+          "energy_mJ_per_token_at_689W": 219.9,
+          "line_fit_tokens_s": 3167.9,
+          "per_user_tokens_s": 195.8,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 5694.0,
+          "batch": 32,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 32 (DFlash paper Table 3)",
+          "energy_mJ_per_token_at_689W": 121.0,
+          "line_fit_tokens_s": 5647.7,
+          "per_user_tokens_s": 177.9,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 1175.0,
+          "batch": 1,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, Math500 (tau 8.01, 5.1x)",
+          "energy_mJ_per_token_at_689W": 586.4,
+          "per_user_tokens_s": 1175.0,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 955.0,
+          "batch": 1,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, HumanEval (tau 6.50, 4.2x)",
+          "energy_mJ_per_token_at_689W": 721.5,
+          "per_user_tokens_s": 955.0,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 368.0,
+          "batch": 1,
+          "design": "DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance)",
+          "energy_mJ_per_token_at_689W": 14978.3,
+          "per_user_tokens_s": 368.0,
+          "tier": 1
+        }
+      ],
+      "power": {
+        "decode_w": 689.0,
+        "source": "technology.json power.gpu_reference_power (measured decode 689 W; NVL72 TDP)",
+        "tdp_w": 1200.0
+      },
+      "qwen": {
+        "calibration": {
+          "fitted_tokens_s": {
+            "1": 223.5,
+            "16": 3167.9,
+            "32": 5647.7,
+            "4": 871.6,
+            "8": 1686.7
+          },
+          "kv_8k_fp8_us": 115.08,
+          "measured_tokens_s": {
+            "1": 230.0,
+            "16": 3133.0,
+            "32": 5694.0,
+            "4": 861.0,
+            "8": 1666.0
+          },
+          "paper_line_fixed_ms": 4.4353,
+          "paper_line_per_user_us": 38.46,
+          "per_user_increment_8k_us": 115.08,
+          "rule": "step(B) = tier-2 step(1) + (B - 1) x max(the paper's fitted per-user increment, one 8K FP8 user's KV at the fitted B200 bytes rate); the paper's increment includes its own (shorter-context) KV, so the max is GPU-favourable"
+        },
+        "capacity_basis": "180 GB x 0.90 less FP8 weights over 604 MB per user",
+        "capacity_users": 255,
+        "design": "Qwen3-8B on 1x B200, FP8, 8K (tier 2)",
+        "dflash_b1": {
+          "math_code": [
+            1390.3,
+            1688.2
+          ],
+          "reasoning_mix": 853.3
+        },
+        "rows": [
+          {
+            "aggregate_tokens_s": 331.0,
+            "batch": 1,
+            "energy_mJ_per_token": 2081.44,
+            "per_user_ms_per_token": 3.021,
+            "per_user_tokens_s": 331.0
+          },
+          {
+            "aggregate_tokens_s": 637.7,
+            "batch": 2,
+            "energy_mJ_per_token": 1080.37,
+            "per_user_ms_per_token": 3.136,
+            "per_user_tokens_s": 318.9
+          },
+          {
+            "aggregate_tokens_s": 1188.3,
+            "batch": 4,
+            "energy_mJ_per_token": 579.83,
+            "per_user_ms_per_token": 3.3662,
+            "per_user_tokens_s": 297.1
+          },
+          {
+            "aggregate_tokens_s": 2090.7,
+            "batch": 8,
+            "energy_mJ_per_token": 329.56,
+            "per_user_ms_per_token": 3.8265,
+            "per_user_tokens_s": 261.3
+          },
+          {
+            "aggregate_tokens_s": 3370.5,
+            "batch": 16,
+            "energy_mJ_per_token": 204.42,
+            "per_user_ms_per_token": 4.7471,
+            "per_user_tokens_s": 210.7
+          },
+          {
+            "aggregate_tokens_s": 4857.1,
+            "batch": 32,
+            "energy_mJ_per_token": 141.85,
+            "per_user_ms_per_token": 6.5883,
+            "per_user_tokens_s": 151.8
+          },
+          {
+            "aggregate_tokens_s": 6231.3,
+            "batch": 64,
+            "energy_mJ_per_token": 110.57,
+            "per_user_ms_per_token": 10.2707,
+            "per_user_tokens_s": 97.4
+          },
+          {
+            "aggregate_tokens_s": 7258.1,
+            "batch": 128,
+            "energy_mJ_per_token": 94.93,
+            "per_user_ms_per_token": 17.6355,
+            "per_user_tokens_s": 56.7
+          },
+          {
+            "aggregate_tokens_s": 7907.0,
+            "batch": 255,
+            "energy_mJ_per_token": 87.14,
+            "per_user_ms_per_token": 32.2501,
+            "per_user_tokens_s": 31.0
+          }
+        ],
+        "rows_at_tdp": [
+          {
+            "aggregate_tokens_s": 331.0,
+            "batch": 1,
+            "energy_mJ_per_token": 3625.16,
+            "per_user_ms_per_token": 3.021,
+            "per_user_tokens_s": 331.0
+          },
+          {
+            "aggregate_tokens_s": 637.7,
+            "batch": 2,
+            "energy_mJ_per_token": 1881.62,
+            "per_user_ms_per_token": 3.136,
+            "per_user_tokens_s": 318.9
+          },
+          {
+            "aggregate_tokens_s": 1188.3,
+            "batch": 4,
+            "energy_mJ_per_token": 1009.86,
+            "per_user_ms_per_token": 3.3662,
+            "per_user_tokens_s": 297.1
+          },
+          {
+            "aggregate_tokens_s": 2090.7,
+            "batch": 8,
+            "energy_mJ_per_token": 573.97,
+            "per_user_ms_per_token": 3.8265,
+            "per_user_tokens_s": 261.3
+          },
+          {
+            "aggregate_tokens_s": 3370.5,
+            "batch": 16,
+            "energy_mJ_per_token": 356.03,
+            "per_user_ms_per_token": 4.7471,
+            "per_user_tokens_s": 210.7
+          },
+          {
+            "aggregate_tokens_s": 4857.1,
+            "batch": 32,
+            "energy_mJ_per_token": 247.06,
+            "per_user_ms_per_token": 6.5883,
+            "per_user_tokens_s": 151.8
+          },
+          {
+            "aggregate_tokens_s": 6231.3,
+            "batch": 64,
+            "energy_mJ_per_token": 192.58,
+            "per_user_ms_per_token": 10.2707,
+            "per_user_tokens_s": 97.4
+          },
+          {
+            "aggregate_tokens_s": 7258.1,
+            "batch": 128,
+            "energy_mJ_per_token": 165.33,
+            "per_user_ms_per_token": 17.6355,
+            "per_user_tokens_s": 56.7
+          },
+          {
+            "aggregate_tokens_s": 7907.0,
+            "batch": 255,
+            "energy_mJ_per_token": 151.77,
+            "per_user_ms_per_token": 32.2501,
+            "per_user_tokens_s": 31.0
+          }
+        ],
+        "sat_batch": 255,
+        "saturated_tokens_s": 7907.0,
+        "system": {
+          "dies": 2,
+          "gpus": 1,
+          "packages": 1,
+          "stacks": 8
+        },
+        "tokens_s_b1": 331.0
+      },
+      "v41": {
+        "capacity_basis": "8 x 180 GB x 0.90 less the 510.3 GB checkpoint over each user's CKV + index keys (KV-owner layers 2, 8, 14, 20) and 40 windows",
+        "capacity_users": 839,
+        "design": "DeepSeek-V4.1-Flash on 8x B200, 1M (tier 2)",
+        "index_scan": {
+          "bytes": 182714368,
+          "candidate_gather": true,
+          "context": 1048576,
+          "entries": 2686976,
+          "key_bytes": 68,
+          "per_layer": [
+            {
+              "KV_source_layer": 2,
+              "bytes": 35651584,
+              "candidate_cap": 0,
+              "compression_ratio": 2,
+              "entries": 524288,
+              "full_source_entries": 524288,
+              "layer": 2
+            },
+            {
+              "KV_source_layer": 8,
+              "bytes": 35651584,
+              "candidate_cap": 0,
+              "compression_ratio": 2,
+              "entries": 524288,
+              "full_source_entries": 524288,
+              "layer": 8
+            },
+            {
+              "KV_source_layer": 14,
+              "bytes": 35651584,
+              "candidate_cap": 0,
+              "compression_ratio": 2,
+              "entries": 524288,
+              "full_source_entries": 524288,
+              "layer": 14
+            },
+            {
+              "KV_source_layer": 20,
+              "bytes": 71303168,
+              "candidate_cap": 0,
+              "compression_ratio": 1,
+              "entries": 1048576,
+              "full_source_entries": 1048576,
+              "layer": 20
+            },
+            {
+              "KV_source_layer": 20,
+              "bytes": 1114112,
+              "candidate_cap": 16384,
+              "compression_ratio": 1,
+              "entries": 16384,
+              "full_source_entries": 1048576,
+              "layer": 24
+            },
+            {
+              "KV_source_layer": 20,
+              "bytes": 1114112,
+              "candidate_cap": 16384,
+              "compression_ratio": 1,
+              "entries": 16384,
+              "full_source_entries": 1048576,
+              "layer": 28
+            },
+            {
+              "KV_source_layer": 20,
+              "bytes": 1114112,
+              "candidate_cap": 16384,
+              "compression_ratio": 1,
+              "entries": 16384,
+              "full_source_entries": 1048576,
+              "layer": 32
+            },
+            {
+              "KV_source_layer": 20,
+              "bytes": 1114112,
+              "candidate_cap": 16384,
+              "compression_ratio": 1,
+              "entries": 16384,
+              "full_source_entries": 1048576,
+              "layer": 36
+            }
+          ],
+          "scanning_layers": [
+            2,
+            8,
+            14,
+            20,
+            24,
+            28,
+            32,
+            36
+          ],
+          "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+        },
+        "mtp_b1": 547.8,
+        "per_user_state_bytes": 935936000.0,
+        "rows": [
+          {
+            "aggregate_tokens_s": 282.4,
+            "batch": 1,
+            "energy_mJ_per_token": 19520.08,
+            "per_user_ms_per_token": 3.5414,
+            "per_user_tokens_s": 282.4
+          },
+          {
+            "aggregate_tokens_s": 547.7,
+            "batch": 2,
+            "energy_mJ_per_token": 10063.57,
+            "per_user_ms_per_token": 3.6515,
+            "per_user_tokens_s": 273.9
+          },
+          {
+            "aggregate_tokens_s": 1034.4,
+            "batch": 4,
+            "energy_mJ_per_token": 5328.52,
+            "per_user_ms_per_token": 3.8668,
+            "per_user_tokens_s": 258.6
+          },
+          {
+            "aggregate_tokens_s": 1869.8,
+            "batch": 8,
+            "energy_mJ_per_token": 2947.88,
+            "per_user_ms_per_token": 4.2785,
+            "per_user_tokens_s": 233.7
+          },
+          {
+            "aggregate_tokens_s": 3180.2,
+            "batch": 16,
+            "energy_mJ_per_token": 1733.2,
+            "per_user_ms_per_token": 5.0311,
+            "per_user_tokens_s": 198.8
+          },
+          {
+            "aggregate_tokens_s": 5086.3,
+            "batch": 32,
+            "energy_mJ_per_token": 1083.69,
+            "per_user_ms_per_token": 6.2914,
+            "per_user_tokens_s": 158.9
+          },
+          {
+            "aggregate_tokens_s": 7925.3,
+            "batch": 64,
+            "energy_mJ_per_token": 695.49,
+            "per_user_ms_per_token": 8.0754,
+            "per_user_tokens_s": 123.8
+          },
+          {
+            "aggregate_tokens_s": 12867.0,
+            "batch": 128,
+            "energy_mJ_per_token": 428.38,
+            "per_user_ms_per_token": 9.9479,
+            "per_user_tokens_s": 100.5
+          },
+          {
+            "aggregate_tokens_s": 22656.8,
+            "batch": 256,
+            "energy_mJ_per_token": 243.28,
+            "per_user_ms_per_token": 11.2991,
+            "per_user_tokens_s": 88.5
+          },
+          {
+            "aggregate_tokens_s": 40852.4,
+            "batch": 512,
+            "energy_mJ_per_token": 134.92,
+            "per_user_ms_per_token": 12.5329,
+            "per_user_tokens_s": 79.8
+          },
+          {
+            "aggregate_tokens_s": 60108.8,
+            "batch": 839,
+            "energy_mJ_per_token": 91.7,
+            "per_user_ms_per_token": 13.958,
+            "per_user_tokens_s": 71.6
+          }
+        ],
+        "sat_batch": 839,
+        "saturated_tokens_s": 60108.8,
+        "system": {
+          "dies": 16,
+          "gpus": 8,
+          "packages": 8,
+          "stacks": 64
+        },
+        "tokens_s_b1": 282.4
+      }
+    },
+    "tier2": [
+      {
+        "design": "Qwen3-8B on 1x B200, FP8 weights, 8K, calibrated",
+        "effective_bandwidth_TBps": 5.25,
+        "spec_tokens_s_math_code": [
+          1390.3,
+          1688.2
+        ],
+        "spec_tokens_s_reasoning_mix": 853.3,
+        "terms_us": {
+          "bytes": 1557,
+          "fixed": 1464
+        },
+        "tier": 2,
+        "tokens_s": 331.0
+      },
+      {
+        "check": "DeepSeek-R1 on 8x B200 measures 368 tok/s/user with MTP (tier 1)",
+        "design": "DeepSeek-V4.1-Flash on 8x B200, calibrated",
+        "index_scan": {
+          "bytes": 182714368,
+          "candidate_gather": true,
+          "context": 1048576,
+          "entries": 2686976,
+          "key_bytes": 68,
+          "per_layer": [
+            {
+              "KV_source_layer": 2,
+              "bytes": 35651584,
+              "candidate_cap": 0,
+              "compression_ratio": 2,
+              "entries": 524288,
+              "full_source_entries": 524288,
+              "layer": 2
+            },
+            {
+              "KV_source_layer": 8,
+              "bytes": 35651584,
+              "candidate_cap": 0,
+              "compression_ratio": 2,
+              "entries": 524288,
+              "full_source_entries": 524288,
+              "layer": 8
+            },
+            {
+              "KV_source_layer": 14,
+              "bytes": 35651584,
+              "candidate_cap": 0,
+              "compression_ratio": 2,
+              "entries": 524288,
+              "full_source_entries": 524288,
+              "layer": 14
+            },
+            {
+              "KV_source_layer": 20,
+              "bytes": 71303168,
+              "candidate_cap": 0,
+              "compression_ratio": 1,
+              "entries": 1048576,
+              "full_source_entries": 1048576,
+              "layer": 20
+            },
+            {
+              "KV_source_layer": 20,
+              "bytes": 1114112,
+              "candidate_cap": 16384,
+              "compression_ratio": 1,
+              "entries": 16384,
+              "full_source_entries": 1048576,
+              "layer": 24
+            },
+            {
+              "KV_source_layer": 20,
+              "bytes": 1114112,
+              "candidate_cap": 16384,
+              "compression_ratio": 1,
+              "entries": 16384,
+              "full_source_entries": 1048576,
+              "layer": 28
+            },
+            {
+              "KV_source_layer": 20,
+              "bytes": 1114112,
+              "candidate_cap": 16384,
+              "compression_ratio": 1,
+              "entries": 16384,
+              "full_source_entries": 1048576,
+              "layer": 32
+            },
+            {
+              "KV_source_layer": 20,
+              "bytes": 1114112,
+              "candidate_cap": 16384,
+              "compression_ratio": 1,
+              "entries": 16384,
+              "full_source_entries": 1048576,
+              "layer": 36
+            }
+          ],
+          "scanning_layers": [
+            2,
+            8,
+            14,
+            20,
+            24,
+            28,
+            32,
+            36
+          ],
+          "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+        },
+        "spec_tokens_s": 547.8,
+        "terms_us": {
+          "bytes": 315,
+          "collectives": 1600,
+          "fixed": 1627
+        },
+        "tier": 2,
+        "tokens_s": 282.4
+      }
+    ]
+  },
+  "assumptions": {
+    "candidate_gather": "last4 scans limited to2048 blocks x8; conditional software optimization, not current native execution",
+    "canonical": "same 8 scans, source ratios/KV sharing and candidate cap as ROM analytical budget",
+    "literal_source": "golden and current TP96 native n compute full late4 scores before masking; full-score sensitivity retained",
+    "qualification": "tier2 calibrated projection only; no new acceptance, hardware clock, native execution or physical credit",
+    "unchanged": "weight/fixed/collective fit, packing68B/key, TP8, power, storage capacity; comparison MTP keeps existing1.94x tier2 multiplier"
+  },
+  "before": {
+    "contexts": {
+      "1048576": {
+        "mtp_seconds": 0.004114197181319916,
+        "seconds": 0.003601556667882506
+      },
+      "200000": {
+        "mtp_seconds": 0.004061975257236808,
+        "seconds": 0.003549334743799398
+      },
+      "3072": {
+        "mtp_seconds": 0.004049856178844491,
+        "seconds": 0.0035372156654070812
+      },
+      "8192": {
+        "mtp_seconds": 0.004050171267005487,
+        "seconds": 0.0035375307535680774
+      }
+    },
+    "economics": {
+      "anchors": [
+        {
+          "aggregate_tokens_s": 230.0,
+          "batch": 1,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 1 (DFlash paper Table 3)",
+          "energy_mJ_per_token_at_689W": 2995.7,
+          "line_fit_tokens_s": 223.5,
+          "per_user_tokens_s": 230.0,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 861.0,
+          "batch": 4,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 4 (DFlash paper Table 3)",
+          "energy_mJ_per_token_at_689W": 800.2,
+          "line_fit_tokens_s": 871.6,
+          "per_user_tokens_s": 215.2,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 1666.0,
+          "batch": 8,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 8 (DFlash paper Table 3)",
+          "energy_mJ_per_token_at_689W": 413.6,
+          "line_fit_tokens_s": 1686.7,
+          "per_user_tokens_s": 208.2,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 3133.0,
+          "batch": 16,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 16 (DFlash paper Table 3)",
+          "energy_mJ_per_token_at_689W": 219.9,
+          "line_fit_tokens_s": 3167.9,
+          "per_user_tokens_s": 195.8,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 5694.0,
+          "batch": 32,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, BF16, AR, concurrency 32 (DFlash paper Table 3)",
+          "energy_mJ_per_token_at_689W": 121.0,
+          "line_fit_tokens_s": 5647.7,
+          "per_user_tokens_s": 177.9,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 1175.0,
+          "batch": 1,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, Math500 (tau 8.01, 5.1x)",
+          "energy_mJ_per_token_at_689W": 586.4,
+          "per_user_tokens_s": 1175.0,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 955.0,
+          "batch": 1,
+          "design": "Qwen3-8B, 1x B200, SGLang FA4, DFlash b16, HumanEval (tau 6.50, 4.2x)",
+          "energy_mJ_per_token_at_689W": 721.5,
+          "per_user_tokens_s": 955.0,
+          "tier": 1
+        },
+        {
+          "aggregate_tokens_s": 368.0,
+          "batch": 1,
+          "design": "DeepSeek-R1 (V4.1-class anchor), 8x B200, TensorRT-LLM min-latency, 3 MTP layers (relaxed acceptance)",
+          "energy_mJ_per_token_at_689W": 14978.3,
+          "per_user_tokens_s": 368.0,
+          "tier": 1
+        }
+      ],
+      "power": {
+        "decode_w": 689.0,
+        "source": "technology.json power.gpu_reference_power (measured decode 689 W; NVL72 TDP)",
+        "tdp_w": 1200.0
+      },
+      "qwen": {
+        "calibration": {
+          "fitted_tokens_s": {
+            "1": 223.5,
+            "16": 3167.9,
+            "32": 5647.7,
+            "4": 871.6,
+            "8": 1686.7
+          },
+          "kv_8k_fp8_us": 115.08,
+          "measured_tokens_s": {
+            "1": 230.0,
+            "16": 3133.0,
+            "32": 5694.0,
+            "4": 861.0,
+            "8": 1666.0
+          },
+          "paper_line_fixed_ms": 4.4353,
+          "paper_line_per_user_us": 38.46,
+          "per_user_increment_8k_us": 115.08,
+          "rule": "step(B) = tier-2 step(1) + (B - 1) x max(the paper's fitted per-user increment, one 8K FP8 user's KV at the fitted B200 bytes rate); the paper's increment includes its own (shorter-context) KV, so the max is GPU-favourable"
+        },
+        "capacity_basis": "180 GB x 0.90 less FP8 weights over 604 MB per user",
+        "capacity_users": 255,
+        "design": "Qwen3-8B on 1x B200, FP8, 8K (tier 2)",
+        "dflash_b1": {
+          "math_code": [
+            1390.3,
+            1688.2
+          ],
+          "reasoning_mix": 853.3
+        },
+        "rows": [
+          {
+            "aggregate_tokens_s": 331.0,
+            "batch": 1,
+            "energy_mJ_per_token": 2081.44,
+            "per_user_ms_per_token": 3.021,
+            "per_user_tokens_s": 331.0
+          },
+          {
+            "aggregate_tokens_s": 637.7,
+            "batch": 2,
+            "energy_mJ_per_token": 1080.37,
+            "per_user_ms_per_token": 3.136,
+            "per_user_tokens_s": 318.9
+          },
+          {
+            "aggregate_tokens_s": 1188.3,
+            "batch": 4,
+            "energy_mJ_per_token": 579.83,
+            "per_user_ms_per_token": 3.3662,
+            "per_user_tokens_s": 297.1
+          },
+          {
+            "aggregate_tokens_s": 2090.7,
+            "batch": 8,
+            "energy_mJ_per_token": 329.56,
+            "per_user_ms_per_token": 3.8265,
+            "per_user_tokens_s": 261.3
+          },
+          {
+            "aggregate_tokens_s": 3370.5,
+            "batch": 16,
+            "energy_mJ_per_token": 204.42,
+            "per_user_ms_per_token": 4.7471,
+            "per_user_tokens_s": 210.7
+          },
+          {
+            "aggregate_tokens_s": 4857.1,
+            "batch": 32,
+            "energy_mJ_per_token": 141.85,
+            "per_user_ms_per_token": 6.5883,
+            "per_user_tokens_s": 151.8
+          },
+          {
+            "aggregate_tokens_s": 6231.3,
+            "batch": 64,
+            "energy_mJ_per_token": 110.57,
+            "per_user_ms_per_token": 10.2707,
+            "per_user_tokens_s": 97.4
+          },
+          {
+            "aggregate_tokens_s": 7258.1,
+            "batch": 128,
+            "energy_mJ_per_token": 94.93,
+            "per_user_ms_per_token": 17.6355,
+            "per_user_tokens_s": 56.7
+          },
+          {
+            "aggregate_tokens_s": 7907.0,
+            "batch": 255,
+            "energy_mJ_per_token": 87.14,
+            "per_user_ms_per_token": 32.2501,
+            "per_user_tokens_s": 31.0
+          }
+        ],
+        "rows_at_tdp": [
+          {
+            "aggregate_tokens_s": 331.0,
+            "batch": 1,
+            "energy_mJ_per_token": 3625.16,
+            "per_user_ms_per_token": 3.021,
+            "per_user_tokens_s": 331.0
+          },
+          {
+            "aggregate_tokens_s": 637.7,
+            "batch": 2,
+            "energy_mJ_per_token": 1881.62,
+            "per_user_ms_per_token": 3.136,
+            "per_user_tokens_s": 318.9
+          },
+          {
+            "aggregate_tokens_s": 1188.3,
+            "batch": 4,
+            "energy_mJ_per_token": 1009.86,
+            "per_user_ms_per_token": 3.3662,
+            "per_user_tokens_s": 297.1
+          },
+          {
+            "aggregate_tokens_s": 2090.7,
+            "batch": 8,
+            "energy_mJ_per_token": 573.97,
+            "per_user_ms_per_token": 3.8265,
+            "per_user_tokens_s": 261.3
+          },
+          {
+            "aggregate_tokens_s": 3370.5,
+            "batch": 16,
+            "energy_mJ_per_token": 356.03,
+            "per_user_ms_per_token": 4.7471,
+            "per_user_tokens_s": 210.7
+          },
+          {
+            "aggregate_tokens_s": 4857.1,
+            "batch": 32,
+            "energy_mJ_per_token": 247.06,
+            "per_user_ms_per_token": 6.5883,
+            "per_user_tokens_s": 151.8
+          },
+          {
+            "aggregate_tokens_s": 6231.3,
+            "batch": 64,
+            "energy_mJ_per_token": 192.58,
+            "per_user_ms_per_token": 10.2707,
+            "per_user_tokens_s": 97.4
+          },
+          {
+            "aggregate_tokens_s": 7258.1,
+            "batch": 128,
+            "energy_mJ_per_token": 165.33,
+            "per_user_ms_per_token": 17.6355,
+            "per_user_tokens_s": 56.7
+          },
+          {
+            "aggregate_tokens_s": 7907.0,
+            "batch": 255,
+            "energy_mJ_per_token": 151.77,
+            "per_user_ms_per_token": 32.2501,
+            "per_user_tokens_s": 31.0
+          }
+        ],
+        "sat_batch": 255,
+        "saturated_tokens_s": 7907.0,
+        "system": {
+          "dies": 2,
+          "gpus": 1,
+          "packages": 1,
+          "stacks": 8
+        },
+        "tokens_s_b1": 331.0
+      },
+      "v41": {
+        "capacity_basis": "8 x 180 GB x 0.90 less the 510.3 GB checkpoint over each user's CKV + index keys (KV-owner layers 2, 8, 14, 20) and 40 windows",
+        "capacity_users": 839,
+        "design": "DeepSeek-V4.1-Flash on 8x B200, 1M (tier 2)",
+        "mtp_b1": 538.7,
+        "per_user_state_bytes": 935936000.0,
+        "rows": [
+          {
+            "aggregate_tokens_s": 277.7,
+            "batch": 1,
+            "energy_mJ_per_token": 19851.78,
+            "per_user_ms_per_token": 3.6016,
+            "per_user_tokens_s": 277.7
+          },
+          {
+            "aggregate_tokens_s": 530.2,
+            "batch": 2,
+            "energy_mJ_per_token": 10395.27,
+            "per_user_ms_per_token": 3.7719,
+            "per_user_tokens_s": 265.1
+          },
+          {
+            "aggregate_tokens_s": 973.8,
+            "batch": 4,
+            "energy_mJ_per_token": 5660.22,
+            "per_user_ms_per_token": 4.1076,
+            "per_user_tokens_s": 243.5
+          },
+          {
+            "aggregate_tokens_s": 1680.7,
+            "batch": 8,
+            "energy_mJ_per_token": 3279.59,
+            "per_user_ms_per_token": 4.7599,
+            "per_user_tokens_s": 210.1
+          },
+          {
+            "aggregate_tokens_s": 2669.4,
+            "batch": 16,
+            "energy_mJ_per_token": 2064.9,
+            "per_user_ms_per_token": 5.9939,
+            "per_user_tokens_s": 166.8
+          },
+          {
+            "aggregate_tokens_s": 3894.3,
+            "batch": 32,
+            "energy_mJ_per_token": 1415.39,
+            "per_user_ms_per_token": 8.2171,
+            "per_user_tokens_s": 121.7
+          },
+          {
+            "aggregate_tokens_s": 5366.1,
+            "batch": 64,
+            "energy_mJ_per_token": 1027.2,
+            "per_user_ms_per_token": 11.9268,
+            "per_user_tokens_s": 83.8
+          },
+          {
+            "aggregate_tokens_s": 7251.8,
+            "batch": 128,
+            "energy_mJ_per_token": 760.09,
+            "per_user_ms_per_token": 17.6508,
+            "per_user_tokens_s": 56.7
+          },
+          {
+            "aggregate_tokens_s": 9586.3,
+            "batch": 256,
+            "energy_mJ_per_token": 574.99,
+            "per_user_ms_per_token": 26.7048,
+            "per_user_tokens_s": 37.4
+          },
+          {
+            "aggregate_tokens_s": 11812.4,
+            "batch": 512,
+            "energy_mJ_per_token": 466.63,
+            "per_user_ms_per_token": 43.3443,
+            "per_user_tokens_s": 23.1
+          },
+          {
+            "aggregate_tokens_s": 13018.3,
+            "batch": 839,
+            "energy_mJ_per_token": 423.4,
+            "per_user_ms_per_token": 64.4478,
+            "per_user_tokens_s": 15.5
+          }
+        ],
+        "sat_batch": 839,
+        "saturated_tokens_s": 13018.3,
+        "system": {
+          "dies": 16,
+          "gpus": 8,
+          "packages": 8,
+          "stacks": 64
+        },
+        "tokens_s_b1": 277.7
+      }
+    },
+    "tier2": [
+      {
+        "design": "Qwen3-8B on 1x B200, FP8 weights, 8K, calibrated",
+        "effective_bandwidth_TBps": 5.25,
+        "spec_tokens_s_math_code": [
+          1390.3,
+          1688.2
+        ],
+        "spec_tokens_s_reasoning_mix": 853.3,
+        "terms_us": {
+          "bytes": 1557,
+          "fixed": 1464
+        },
+        "tier": 2,
+        "tokens_s": 331.0
+      },
+      {
+        "check": "DeepSeek-R1 on 8x B200 measures 368 tok/s/user with MTP (tier 1)",
+        "design": "DeepSeek-V4.1-Flash on 8x B200, calibrated",
+        "spec_tokens_s": 538.7,
+        "terms_us": {
+          "bytes": 375,
+          "collectives": 1600,
+          "fixed": 1627
+        },
+        "tier": 2,
+        "tokens_s": 277.7
+      }
+    ]
+  },
+  "comparative_ratios": [
+    {
+      "GPU_AR_tok_s": 282.37594484845977,
+      "GPU_full_score_AR_tok_s": 281.84379348323137,
+      "ROM_AR_tok_s": 2535.5,
+      "ROM_MTP_tok_s": 3791.0,
+      "ROM_over_GPU_AR": 8.979164288801954,
+      "ROM_over_GPU_AR_before": 9.131746931416094,
+      "ROM_over_GPU_AR_full_score": 8.99611791575908,
+      "ROM_over_GPU_MTP": 6.920291005626944,
+      "ROM_over_GPU_MTP_before": 7.037887282444629,
+      "ctx": 1048576,
+      "mapping": "base_S58"
+    },
+    {
+      "GPU_AR_tok_s": 282.6501566921514,
+      "GPU_full_score_AR_tok_s": 282.55516152372587,
+      "ROM_AR_tok_s": 2649.7,
+      "ROM_MTP_tok_s": 4154.5,
+      "ROM_over_GPU_AR": 9.374486223568319,
+      "ROM_over_GPU_AR_before": 9.404672270645264,
+      "ROM_over_GPU_AR_full_score": 9.377637929921542,
+      "ROM_over_GPU_MTP": 7.5764856118344035,
+      "ROM_over_GPU_MTP_before": 7.600882058306494,
+      "ctx": 200000,
+      "mapping": "base_S58"
+    },
+    {
+      "GPU_AR_tok_s": 282.37594484845977,
+      "GPU_full_score_AR_tok_s": 281.84379348323137,
+      "ROM_AR_tok_s": 2323.2,
+      "ROM_MTP_tok_s": 3523.1,
+      "ROM_over_GPU_AR": 8.227329708438058,
+      "ROM_over_GPU_AR_before": 8.367136450824637,
+      "ROM_over_GPU_AR_full_score": 8.242863790925455,
+      "ROM_over_GPU_MTP": 6.431252240022234,
+      "ROM_over_GPU_MTP_before": 6.540538297225184,
+      "ctx": 1048576,
+      "mapping": "owner_fc4"
+    },
+    {
+      "GPU_AR_tok_s": 282.6501566921514,
+      "GPU_full_score_AR_tok_s": 282.55516152372587,
+      "ROM_AR_tok_s": 2418.8,
+      "ROM_MTP_tok_s": 3834.9,
+      "ROM_over_GPU_AR": 8.557575301946278,
+      "ROM_over_GPU_AR_before": 8.585130878301984,
+      "ROM_over_GPU_AR_full_score": 8.56045236249169,
+      "ROM_over_GPU_MTP": 6.993636941346433,
+      "ROM_over_GPU_MTP_before": 7.0161566025754185,
+      "ctx": 200000,
+      "mapping": "owner_fc4"
+    },
+    {
+      "GPU_AR_tok_s": 282.37594484845977,
+      "GPU_full_score_AR_tok_s": 281.84379348323137,
+      "ROM_AR_tok_s": 2205.7,
+      "ROM_MTP_tok_s": 2727.3,
+      "ROM_over_GPU_AR": 7.811217776300717,
+      "ROM_over_GPU_AR_before": 7.943953542348443,
+      "ROM_over_GPU_AR_full_score": 7.825966194750464,
+      "ROM_over_GPU_MTP": 4.978557019162851,
+      "ROM_over_GPU_MTP_before": 5.06315747438967,
+      "ctx": 1048576,
+      "mapping": "layer_split_S116_fc4"
+    },
+    {
+      "GPU_AR_tok_s": 282.6501566921514,
+      "GPU_full_score_AR_tok_s": 282.55516152372587,
+      "ROM_AR_tok_s": 2291.7,
+      "ROM_MTP_tok_s": 2910.5,
+      "ROM_over_GPU_AR": 8.107902811092393,
+      "ROM_over_GPU_AR_before": 8.134010432365079,
+      "ROM_over_GPU_AR_full_score": 8.110628691550438,
+      "ROM_over_GPU_MTP": 5.307825580272964,
+      "ROM_over_GPU_MTP_before": 5.3249168926949215,
+      "ctx": 200000,
+      "mapping": "layer_split_S116_fc4"
+    }
+  ],
+  "contexts": {
+    "1048576": {
+      "after_AR_tok_s": 282.37594484845977,
+      "after_full_score_AR_tok_s": 281.84379348323137,
+      "before_AR_tok_s": 277.65771643069513,
+      "full_score_scan": {
+        "bytes": 463470592,
+        "candidate_gather": false,
+        "context": 1048576,
+        "entries": 6815744,
+        "key_bytes": 68,
+        "per_layer": [
+          {
+            "KV_source_layer": 2,
+            "bytes": 35651584,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 524288,
+            "full_source_entries": 524288,
+            "layer": 2
+          },
+          {
+            "KV_source_layer": 8,
+            "bytes": 35651584,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 524288,
+            "full_source_entries": 524288,
+            "layer": 8
+          },
+          {
+            "KV_source_layer": 14,
+            "bytes": 35651584,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 524288,
+            "full_source_entries": 524288,
+            "layer": 14
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 71303168,
+            "candidate_cap": 0,
+            "compression_ratio": 1,
+            "entries": 1048576,
+            "full_source_entries": 1048576,
+            "layer": 20
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 71303168,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 1048576,
+            "full_source_entries": 1048576,
+            "layer": 24
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 71303168,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 1048576,
+            "full_source_entries": 1048576,
+            "layer": 28
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 71303168,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 1048576,
+            "full_source_entries": 1048576,
+            "layer": 32
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 71303168,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 1048576,
+            "full_source_entries": 1048576,
+            "layer": 36
+          }
+        ],
+        "scanning_layers": [
+          2,
+          8,
+          14,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+      },
+      "gpu_rate_gain_pct": 1.6992967018593097,
+      "index_scan": {
+        "bytes": 182714368,
+        "candidate_gather": true,
+        "context": 1048576,
+        "entries": 2686976,
+        "key_bytes": 68,
+        "per_layer": [
+          {
+            "KV_source_layer": 2,
+            "bytes": 35651584,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 524288,
+            "full_source_entries": 524288,
+            "layer": 2
+          },
+          {
+            "KV_source_layer": 8,
+            "bytes": 35651584,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 524288,
+            "full_source_entries": 524288,
+            "layer": 8
+          },
+          {
+            "KV_source_layer": 14,
+            "bytes": 35651584,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 524288,
+            "full_source_entries": 524288,
+            "layer": 14
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 71303168,
+            "candidate_cap": 0,
+            "compression_ratio": 1,
+            "entries": 1048576,
+            "full_source_entries": 1048576,
+            "layer": 20
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 1114112,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 16384,
+            "full_source_entries": 1048576,
+            "layer": 24
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 1114112,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 16384,
+            "full_source_entries": 1048576,
+            "layer": 28
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 1114112,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 16384,
+            "full_source_entries": 1048576,
+            "layer": 32
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 1114112,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 16384,
+            "full_source_entries": 1048576,
+            "layer": 36
+          }
+        ],
+        "scanning_layers": [
+          2,
+          8,
+          14,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+      },
+      "old_index_bytes": 2709520384,
+      "old_over_canonical_bytes": 14.829268292682928,
+      "token_latency_delta_us": -60.1785220327904
+    },
+    "200000": {
+      "after_AR_tok_s": 282.6501566921514,
+      "after_full_score_AR_tok_s": 282.55516152372587,
+      "before_AR_tok_s": 281.7429383765439,
+      "full_score_scan": {
+        "bytes": 88400000,
+        "candidate_gather": false,
+        "context": 200000,
+        "entries": 1300000,
+        "key_bytes": 68,
+        "per_layer": [
+          {
+            "KV_source_layer": 2,
+            "bytes": 6800000,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 100000,
+            "full_source_entries": 100000,
+            "layer": 2
+          },
+          {
+            "KV_source_layer": 8,
+            "bytes": 6800000,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 100000,
+            "full_source_entries": 100000,
+            "layer": 8
+          },
+          {
+            "KV_source_layer": 14,
+            "bytes": 6800000,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 100000,
+            "full_source_entries": 100000,
+            "layer": 14
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 13600000,
+            "candidate_cap": 0,
+            "compression_ratio": 1,
+            "entries": 200000,
+            "full_source_entries": 200000,
+            "layer": 20
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 13600000,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 200000,
+            "full_source_entries": 200000,
+            "layer": 24
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 13600000,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 200000,
+            "full_source_entries": 200000,
+            "layer": 28
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 13600000,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 200000,
+            "full_source_entries": 200000,
+            "layer": 32
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 13600000,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 200000,
+            "full_source_entries": 200000,
+            "layer": 36
+          }
+        ],
+        "scanning_layers": [
+          2,
+          8,
+          14,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+      },
+      "gpu_rate_gain_pct": 0.3220021487796876,
+      "index_scan": {
+        "bytes": 38456448,
+        "candidate_gather": true,
+        "context": 200000,
+        "entries": 565536,
+        "key_bytes": 68,
+        "per_layer": [
+          {
+            "KV_source_layer": 2,
+            "bytes": 6800000,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 100000,
+            "full_source_entries": 100000,
+            "layer": 2
+          },
+          {
+            "KV_source_layer": 8,
+            "bytes": 6800000,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 100000,
+            "full_source_entries": 100000,
+            "layer": 8
+          },
+          {
+            "KV_source_layer": 14,
+            "bytes": 6800000,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 100000,
+            "full_source_entries": 100000,
+            "layer": 14
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 13600000,
+            "candidate_cap": 0,
+            "compression_ratio": 1,
+            "entries": 200000,
+            "full_source_entries": 200000,
+            "layer": 20
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 1114112,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 16384,
+            "full_source_entries": 200000,
+            "layer": 24
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 1114112,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 16384,
+            "full_source_entries": 200000,
+            "layer": 28
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 1114112,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 16384,
+            "full_source_entries": 200000,
+            "layer": 32
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 1114112,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 16384,
+            "full_source_entries": 200000,
+            "layer": 36
+          }
+        ],
+        "scanning_layers": [
+          2,
+          8,
+          14,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+      },
+      "old_index_bytes": 516800000,
+      "old_over_canonical_bytes": 13.438578622757879,
+      "token_latency_delta_us": -11.392250849887128
+    },
+    "3072": {
+      "after_AR_tok_s": 282.72076151203424,
+      "after_full_score_AR_tok_s": 282.72076151203424,
+      "before_AR_tok_s": 282.7082356837054,
+      "full_score_scan": {
+        "bytes": 1357824,
+        "candidate_gather": false,
+        "context": 3072,
+        "entries": 19968,
+        "key_bytes": 68,
+        "per_layer": [
+          {
+            "KV_source_layer": 2,
+            "bytes": 104448,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 1536,
+            "full_source_entries": 1536,
+            "layer": 2
+          },
+          {
+            "KV_source_layer": 8,
+            "bytes": 104448,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 1536,
+            "full_source_entries": 1536,
+            "layer": 8
+          },
+          {
+            "KV_source_layer": 14,
+            "bytes": 104448,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 1536,
+            "full_source_entries": 1536,
+            "layer": 14
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 208896,
+            "candidate_cap": 0,
+            "compression_ratio": 1,
+            "entries": 3072,
+            "full_source_entries": 3072,
+            "layer": 20
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 208896,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 3072,
+            "full_source_entries": 3072,
+            "layer": 24
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 208896,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 3072,
+            "full_source_entries": 3072,
+            "layer": 28
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 208896,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 3072,
+            "full_source_entries": 3072,
+            "layer": 32
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 208896,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 3072,
+            "full_source_entries": 3072,
+            "layer": 36
+          }
+        ],
+        "scanning_layers": [
+          2,
+          8,
+          14,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+      },
+      "gpu_rate_gain_pct": 0.0044306556186812784,
+      "index_scan": {
+        "bytes": 1357824,
+        "candidate_gather": true,
+        "context": 3072,
+        "entries": 19968,
+        "key_bytes": 68,
+        "per_layer": [
+          {
+            "KV_source_layer": 2,
+            "bytes": 104448,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 1536,
+            "full_source_entries": 1536,
+            "layer": 2
+          },
+          {
+            "KV_source_layer": 8,
+            "bytes": 104448,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 1536,
+            "full_source_entries": 1536,
+            "layer": 8
+          },
+          {
+            "KV_source_layer": 14,
+            "bytes": 104448,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 1536,
+            "full_source_entries": 1536,
+            "layer": 14
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 208896,
+            "candidate_cap": 0,
+            "compression_ratio": 1,
+            "entries": 3072,
+            "full_source_entries": 3072,
+            "layer": 20
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 208896,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 3072,
+            "full_source_entries": 3072,
+            "layer": 24
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 208896,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 3072,
+            "full_source_entries": 3072,
+            "layer": 28
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 208896,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 3072,
+            "full_source_entries": 3072,
+            "layer": 32
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 208896,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 3072,
+            "full_source_entries": 3072,
+            "layer": 36
+          }
+        ],
+        "scanning_layers": [
+          2,
+          8,
+          14,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+      },
+      "old_index_bytes": 7938048,
+      "old_over_canonical_bytes": 5.846153846153846,
+      "token_latency_delta_us": -0.15671490112686634
+    },
+    "8192": {
+      "after_AR_tok_s": 282.71645356225514,
+      "after_full_score_AR_tok_s": 282.71645356225514,
+      "before_AR_tok_s": 282.6830548374357,
+      "full_score_scan": {
+        "bytes": 3620864,
+        "candidate_gather": false,
+        "context": 8192,
+        "entries": 53248,
+        "key_bytes": 68,
+        "per_layer": [
+          {
+            "KV_source_layer": 2,
+            "bytes": 278528,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 4096,
+            "full_source_entries": 4096,
+            "layer": 2
+          },
+          {
+            "KV_source_layer": 8,
+            "bytes": 278528,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 4096,
+            "full_source_entries": 4096,
+            "layer": 8
+          },
+          {
+            "KV_source_layer": 14,
+            "bytes": 278528,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 4096,
+            "full_source_entries": 4096,
+            "layer": 14
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 557056,
+            "candidate_cap": 0,
+            "compression_ratio": 1,
+            "entries": 8192,
+            "full_source_entries": 8192,
+            "layer": 20
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 557056,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 8192,
+            "full_source_entries": 8192,
+            "layer": 24
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 557056,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 8192,
+            "full_source_entries": 8192,
+            "layer": 28
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 557056,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 8192,
+            "full_source_entries": 8192,
+            "layer": 32
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 557056,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 8192,
+            "full_source_entries": 8192,
+            "layer": 36
+          }
+        ],
+        "scanning_layers": [
+          2,
+          8,
+          14,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+      },
+      "gpu_rate_gain_pct": 0.011814901617879237,
+      "index_scan": {
+        "bytes": 3620864,
+        "candidate_gather": true,
+        "context": 8192,
+        "entries": 53248,
+        "key_bytes": 68,
+        "per_layer": [
+          {
+            "KV_source_layer": 2,
+            "bytes": 278528,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 4096,
+            "full_source_entries": 4096,
+            "layer": 2
+          },
+          {
+            "KV_source_layer": 8,
+            "bytes": 278528,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 4096,
+            "full_source_entries": 4096,
+            "layer": 8
+          },
+          {
+            "KV_source_layer": 14,
+            "bytes": 278528,
+            "candidate_cap": 0,
+            "compression_ratio": 2,
+            "entries": 4096,
+            "full_source_entries": 4096,
+            "layer": 14
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 557056,
+            "candidate_cap": 0,
+            "compression_ratio": 1,
+            "entries": 8192,
+            "full_source_entries": 8192,
+            "layer": 20
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 557056,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 8192,
+            "full_source_entries": 8192,
+            "layer": 24
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 557056,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 8192,
+            "full_source_entries": 8192,
+            "layer": 28
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 557056,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 8192,
+            "full_source_entries": 8192,
+            "layer": 32
+          },
+          {
+            "KV_source_layer": 20,
+            "bytes": 557056,
+            "candidate_cap": 16384,
+            "compression_ratio": 1,
+            "entries": 8192,
+            "full_source_entries": 8192,
+            "layer": 36
+          }
+        ],
+        "scanning_layers": [
+          2,
+          8,
+          14,
+          20,
+          24,
+          28,
+          32,
+          36
+        ],
+        "scope": "tier-2 analytical read budget; candidate gather conditional; no native execution/clock claim"
+      },
+      "old_index_bytes": 21168128,
+      "old_over_canonical_bytes": 5.846153846153846,
+      "token_latency_delta_us": -0.41790640300555515
+    }
+  },
+  "previous_source_revision": "b8d265e1130503d6dbbe72206618f801154f6022",
+  "schema": "opentallas.dsrom.gpu-index-source-correction.v1",
+  "source_sha256": {
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/uarch/dsrom_gpu_index_scan_correction_20261003/before.json": "8446e6a211848fce21d083d577d0528960505bdd76bd9ffbd608e0b5c2292ced",
+    "results/uarch/dsrom_hub_edge_wires_20261003/model.json": "63d6b9b34626bca1cb52f38a448979f02bec9fc178b008b9c4a4d8d516f64231",
+    "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+    "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+    "tools/dsrom_gpu_index_scan_correction.py": "f85099026589f875e6c5409e612e460809a9a291ad4949c5bfafaf25639c87fe",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/uarch_model.py": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9"
+  },
+  "unchanged_ROM_function_pins": {
+    "_cons_adjust": "ea46607e8b06b2187ca6f4849a552fc7281c7cccea9184cbd2b0a32f02bbf0b2",
+    "_v41_graph": "efb3fc102e525bb8b4506709b1b34443172a5eb09888e5f73ea29a2cf3ca1c16",
+    "cons_v41_rom": "8f4f6f50e5cb89fe6e7f63ea4cecb4de9e877aae7e61120f2887cbaff8ad53c9",
+    "hub_edge_hop_wire_s": "e71c2b559f2392bf18ff9152e026c7ac0b036f09319642192d7f5363f9646da4"
+  },
+  "unchanged_wire_result_sha256": "63d6b9b34626bca1cb52f38a448979f02bec9fc178b008b9c4a4d8d516f64231"
+}

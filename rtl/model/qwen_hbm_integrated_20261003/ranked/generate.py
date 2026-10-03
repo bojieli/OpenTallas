@@ -23,7 +23,11 @@ def main():
     if hashlib.sha256(source.read_bytes()).hexdigest()!=expected:raise ValueError('priced source changed')
     # Preserve all source-selected leaves/ports/clock. Reuse generator machinery
     # in a sibling output directory and bind each transform to exact old source.
+    issuer_model=json.loads((BASE/'issuer/model.json').read_text())
+    if issuer_model['tuple_bits']!=239 or issuer_model['inventory']['coded_FF_bits']!=32400:
+        raise ValueError('priced issuer dimensions differ')
     text=source.read_text()
+    text=replace_once(text, "BLOCKS = (", "BLOCKS = (\n ('issuer', 'rtl/model/qwen_hbm_integrated_20261003/issuer/ot_gpu_qwen_full_issuer.sv', 'ot_gpu_qwen_full_issuer', 1, '.ENABLE(ENABLE)'),")
     text=replace_once(text,'ROOT = Path(__file__).resolve().parents[3]','ROOT = Path(__file__).resolve().parents[4]')
     text=replace_once(text,"128, '.OPT_EXACT(ENABLE),.OPT_RESET_QUARANTINE(ENABLE),.PC_ID(7\\'(i))'", "256, '.OPT_EXACT(ENABLE),.OPT_RESET_QUARANTINE(ENABLE),.PC_ID(7\\'(i%128))'")
     text=replace_once(text,'    joined_kv()','    # Reuse unchanged joined controller source; never generate a second controller.')
@@ -80,8 +84,14 @@ wire [1535:0] raw_w2_req_rdy""")
     deps=(OUT/'sources.f').read_text().splitlines()
     guard='rtl/model/qwen_hbm_integrated_20261003/ranked/ot_gpu_qwen_rank_boundary.sv'
     deps.insert(len(deps)-1,guard)
+    issuer='rtl/model/qwen_hbm_integrated_20261003/issuer/ot_gpu_qwen_full_issuer.sv'
+    deps.insert(len(deps)-1,issuer)
     (OUT/'sources.f').write_text('\n'.join(deps)+'\n')
     book=json.loads((OUT/'ports.json').read_text())
+    book['source_sha256'][issuer]=hashlib.sha256((ROOT/issuer).read_bytes()).hexdigest()
+    book['issuer_model_sha256']=hashlib.sha256((BASE/'issuer/model.json').read_bytes()).hexdigest()
+    book['inventory']['full_source_issuer_count']=1
+    book['unresolved']+=issuer_model['pending']
     book['source_sha256'][guard]=hashlib.sha256((ROOT/guard).read_bytes()).hexdigest()
     p=str(top.relative_to(ROOT));book['source_sha256'][p]=hashlib.sha256(top.read_bytes()).hexdigest()
     book['derivation_inputs_sha256'][str(source.relative_to(ROOT))]=expected

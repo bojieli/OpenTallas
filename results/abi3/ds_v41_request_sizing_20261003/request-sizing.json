@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.ds-v41.request-sizing.v1",
+  "status": "REQUEST_SPECIALIZATION_IMPLEMENTED_FULL_DEPLOYMENT_PENDING",
+  "context_tokens": 262144,
+  "decode": {
+    "query_rows": 1,
+    "bf16_score_bytes": 524288,
+    "persistent_candidate_mask_bytes_per_state": 262144
+  },
+  "bounded_prefill": {
+    "query_rows": 32,
+    "bf16_score_bytes": 16777216,
+    "persistent_candidate_mask_bytes_per_state": 8388608
+  },
+  "generic_prefill": {
+    "query_rows": 262144,
+    "bf16_score_bytes": 137438953472,
+    "persistent_candidate_mask_bytes_per_state": 68719476736
+  },
+  "preserved": [
+    "generic frontend and backend sources",
+    "historical capacity/failure records",
+    "KV capacity and initialization",
+    "kernel numerical contracts/order/predicates"
+  ],
+  "validation": {
+    "focused_tests_pass": 9,
+    "full_released_graph_plan": false,
+    "automatic_chunk_execution": false,
+    "persistent_mask_runtime_addressing": false
+  },
+  "remaining": [
+    "released graph neutral admission and complete HBM/SRAM allocation replay",
+    "persistent mask row addressing across decode and chunked prefill",
+    "production build CLI integration and bounded prefill execution driver"
+  ],
+  "source_sha256": {
+    "compiler/frontends/v3/deepseek_v41_request.py": "7d072b8e5d4eca83be50f748bd0031cb00ec4061978d8369a429d289ce5272b3",
+    "compiler/backends/hbm_sram/request_plan.py": "876d479dbb2ed3eb003b9d44672b71446c6deb1534df6b70183caec399e7c9f0",
+    "tests/compiler/test_deepseek_v41_request.py": "a2e2e4cd17cfe49868c5d0c0e7dfeaf52f67a97a6a82801beb6b92839532b996"
+  }
+}

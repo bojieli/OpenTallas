@@ -238,21 +238,27 @@
       "name": "ME",
       "bits": 2236,
       "units": "four words+16lane masks",
-      "scalar_lanes": 64
+      "scalar_lanes": 64,
+      "max_batches": 4,
+      "service_slow_edges_max": 26
     },
     {
       "id": 6,
       "name": "field_row",
       "bits": 8064,
       "units": "128 elements",
-      "scalar_lanes": 128
+      "scalar_lanes": 128,
+      "max_batches": 128,
+      "service_slow_edges_max": 770
     },
     {
       "id": 7,
       "name": "collective",
       "bits": 2112,
       "units": "four words",
-      "scalar_lanes": 64
+      "scalar_lanes": 64,
+      "max_batches": 4,
+      "service_slow_edges_max": 26
     }
   ],
   "calendar": {
@@ -311,6 +317,40 @@
     "II": "native service + forward2destination cycles + real consumer capture/visibleACK + reverse2destination cycles + actual source reissue edges; D4 is not4transaction credits",
     "reset": "namespace and accepted debt reset only by cold initialisation; warm transport reset quarantines, no positive owner fence inferred"
   },
+  "collective_implementation": {
+    "parameters": {
+      "WA": 15,
+      "FW": 512,
+      "N": 4,
+      "GW": 4,
+      "TOPK": 1,
+      "TK_NMAX": 2048,
+      "TK_DIG": 8,
+      "VM_ALWAYS_READY": 1,
+      "VM_RESPONSE_WAIT": 1,
+      "VISIBLE_COMPLETION": 1,
+      "TOPK_OUTPUT_QUEUE": 1
+    },
+    "topk_queue_records": 128,
+    "record_bits": 2112,
+    "queue_bits": 270336,
+    "additional_read_cookie_bits": 15,
+    "additional_finish_and_write_debt_bits": 2,
+    "queue_pointer_and_count_bits": 23,
+    "queue_FF_cell_floor_um2": 78829.97760000001,
+    "queue_50pct_reservation_mm2": 0.15765995520000003,
+    "native_service_sum_slow_edges_without_external_stall": {
+      "gather266_reads266_packets": 9576,
+      "topk256_reads128_packets": 5888
+    },
+    "sum_scope": "native dispatch/ACK service only; caller/topk passes and all forward/reverse receipt/reissue/consumer stall edges remain additive, not token latency or measured cycles",
+    "clock_reset_site_cost": "unmapped, not free; no parent physical admission",
+    "read_capture": "existing two512bit skids reused; no additional numerical stage",
+    "read_identity": "word-address cookie captured only on actual request acceptance",
+    "collective_causality": "gather output word i requires own e_valid/e_ready word i; retained topk n/words-per-rank is settled by real native read delivery before first gathered load. No impossible response before producer.",
+    "retirement": "finish observed then queue empty, no held write, matching visible receipt cleared local debt, native pending false, all issued reads replied and skids consumed; at least one further caller edge after receipt",
+    "finite_service": "each collective packet at most4 distinct word batches;26slow edges inclusive before output stall. Full operation sums actual packet count and reverse receipts; consumer stalls never assumed bounded absent actual caller contract"
+  },
   "caller_cost": {
     "ME_activation_wait_bits": 130,
     "ME_result_credit": "existing tile OCRED1; return only actual visible receipt or source-known empty/amax-only group; scalar arithmetic unchanged",
@@ -319,6 +359,23 @@
     "collective_reply_capture_bits": 529,
     "transpose": "retain original output register, make it elastic; no extra capture stage",
     "topk_output_queue": "retained N4/NMAX2048 allows K8192:128*2112bits plus occupancy/pointers. Actual K512 uses8 records; no capacity shrinking."
+  },
+  "ID_implementation": {
+    "default_VM_RESPONSE_WAIT": 0,
+    "selected_VM_RESPONSE_WAIT": 1,
+    "FULL_SHAPE": 1,
+    "AW": 30,
+    "NW": 21,
+    "LIST_BITS": 160,
+    "capture_bits": 32,
+    "pending_received_fault_bits": 3,
+    "address_cookie": "actual vi_addr held until matching reply; context low30 at owner bit59",
+    "service_slow_edges_bound_without_external_stall": 10,
+    "single_credit_II": "actual held request + forward2 + native10 + caller matching capture + reverse2 + reissue; no average rate claim",
+    "arithmetic": "retained96bit expert-ID*stride, full descriptor bounds; no address truncation or arithmetic changes",
+    "fault": "wrong-cookie reply remains accepted debt; no HBM publication or unchecked retirement",
+    "current_DSROM_activity": false,
+    "reason": "actual tile W_HBM0 disables this producer; reserved seven-class source binding only"
   },
   "source_roles": {
     "expert_ID": "tile xi_re belongs to ot_hdc_qstream under W_HBM1; W_HBM0 ties it off. Keep reserved diagnostic endpoint, no unconditional DSROM activity or HBM->ROM performance transfer",
@@ -343,6 +400,8 @@
     "Qwen_HBM": "not adopted; different source ports"
   },
   "source_sha256": {
+    "rtl/model_ready_ds_shared_native_20261003/ot_hdc_qstream_related_ID.sv": "5e5983972aca74f289a7bbca3cf42ea710977fdccfd71858ec0fef8690ade42f",
+    "rtl/hdc/hbm/ot_hdc_qstream.sv": "e222d06c2fabfb86197852ccb63873bb65f5cd73b281971fa743fb3bf183d3ee",
     "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv": "a0d6c5b0058d3ef997b4f862cd7f02a53b87876efd6b40cceb19874980624984",
     "results/uarch/dsrom_seven_class_swap_20261003/inputs/native_sram.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
     "rtl/model_ready_ds_seven_class_20261003/ot_ds_owned_ratio_boundary.sv": "9a567e896e7fe2b203938c091ebc1b0714cd3cc8fe25c5242141d46786c0a3f8",
