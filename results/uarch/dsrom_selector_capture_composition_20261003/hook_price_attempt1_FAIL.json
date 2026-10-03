@@ -1,0 +1,6 @@
+{
+  "cause": "C.TIE does not exist; TIEHI area belongs to pinned LEF, not Liberty facts",
+  "model_or_RTL_runtime": false,
+  "repair": "explicit actual TIEHIx1 master and pinned LEF SIZE area; no expectation/cell/source change",
+  "verdict": "MODEL_SYMBOL_LOOKUP_FAIL"
+}

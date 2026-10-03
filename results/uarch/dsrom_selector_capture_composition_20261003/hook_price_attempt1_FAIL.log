@@ -1,0 +1,159 @@
+FFF..........FFFF                                                        [100%]
+=================================== FAILURES ===================================
+__________________ test_exact_source_wait_masks_not_ME_fences __________________
+
+    def test_exact_source_wait_masks_not_ME_fences():
+>       m=M.model();assert len(m['admission_proof'])==12
+
+tests/test_dsrom_selector_capture_composition.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_selector_capture_composition.py:148: in model
+    constructive_deadline=constructive_fences(p,json.loads((OUT/'inputs/instruction_slice.json').read_text()),(OUT/'inputs/rom_adapt.sv').read_text()),
+tools/dsrom_selector_capture_composition.py:93: in constructive_fences
+    hook_allowedcell_floor=idle_hook_floor(),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def idle_hook_floor():
+        facts,_=O.T.C.facts();C=O.T.C
+        # Gross construction: active and qualified-retirement ASR bits. Existing
+        # active containment is NOT presumed; detailed bank/credit logic is extra.
+>       cells={C.ASR:2,C.TIE:2,C.NAND:8,C.INV:6,C.BUF:4}
+E       AttributeError: module 'dsrom_I66_capture_cells' has no attribute 'TIE'
+
+tools/dsrom_selector_capture_composition.py:56: AttributeError
+_________ test_bank_vs_VM_address_lifetime_and_four_frame_lower_bound __________
+
+    def test_bank_vs_VM_address_lifetime_and_four_frame_lower_bound():
+>       m=M.model()['lifetimes'];assert m['dispatch_only_VM_version_lease_lower_bound']==4
+
+tests/test_dsrom_selector_capture_composition.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_selector_capture_composition.py:148: in model
+    constructive_deadline=constructive_fences(p,json.loads((OUT/'inputs/instruction_slice.json').read_text()),(OUT/'inputs/rom_adapt.sv').read_text()),
+tools/dsrom_selector_capture_composition.py:93: in constructive_fences
+    hook_allowedcell_floor=idle_hook_floor(),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def idle_hook_floor():
+        facts,_=O.T.C.facts();C=O.T.C
+        # Gross construction: active and qualified-retirement ASR bits. Existing
+        # active containment is NOT presumed; detailed bank/credit logic is extra.
+>       cells={C.ASR:2,C.TIE:2,C.NAND:8,C.INV:6,C.BUF:4}
+E       AttributeError: module 'dsrom_I66_capture_cells' has no attribute 'TIE'
+
+tools/dsrom_selector_capture_composition.py:56: AttributeError
+________________ test_c9_single_selected_clock_not_phase_credit ________________
+
+    def test_c9_single_selected_clock_not_phase_credit():
+>       m=M.model();assert m['selected_clock_commit'].startswith('c9d19ed59')
+
+tests/test_dsrom_selector_capture_composition.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_selector_capture_composition.py:148: in model
+    constructive_deadline=constructive_fences(p,json.loads((OUT/'inputs/instruction_slice.json').read_text()),(OUT/'inputs/rom_adapt.sv').read_text()),
+tools/dsrom_selector_capture_composition.py:93: in constructive_fences
+    hook_allowedcell_floor=idle_hook_floor(),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def idle_hook_floor():
+        facts,_=O.T.C.facts();C=O.T.C
+        # Gross construction: active and qualified-retirement ASR bits. Existing
+        # active containment is NOT presumed; detailed bank/credit logic is extra.
+>       cells={C.ASR:2,C.TIE:2,C.NAND:8,C.INV:6,C.BUF:4}
+E       AttributeError: module 'dsrom_I66_capture_cells' has no attribute 'TIE'
+
+tools/dsrom_selector_capture_composition.py:56: AttributeError
+_________ test_QE_source_role_and_conditional_lower_bound_not_deadline _________
+
+    def test_QE_source_role_and_conditional_lower_bound_not_deadline():
+>       m=M.model()
+
+tests/test_dsrom_selector_capture_composition.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_selector_capture_composition.py:148: in model
+    constructive_deadline=constructive_fences(p,json.loads((OUT/'inputs/instruction_slice.json').read_text()),(OUT/'inputs/rom_adapt.sv').read_text()),
+tools/dsrom_selector_capture_composition.py:93: in constructive_fences
+    hook_allowedcell_floor=idle_hook_floor(),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def idle_hook_floor():
+        facts,_=O.T.C.facts();C=O.T.C
+        # Gross construction: active and qualified-retirement ASR bits. Existing
+        # active containment is NOT presumed; detailed bank/credit logic is extra.
+>       cells={C.ASR:2,C.TIE:2,C.NAND:8,C.INV:6,C.BUF:4}
+E       AttributeError: module 'dsrom_I66_capture_cells' has no attribute 'TIE'
+
+tools/dsrom_selector_capture_composition.py:56: AttributeError
+________ test_all12_constructive_laterGU0_fences_and_relative_deadline _________
+
+    def test_all12_constructive_laterGU0_fences_and_relative_deadline():
+>       m=M.model()['constructive_deadline']
+
+tests/test_dsrom_selector_capture_composition.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_selector_capture_composition.py:148: in model
+    constructive_deadline=constructive_fences(p,json.loads((OUT/'inputs/instruction_slice.json').read_text()),(OUT/'inputs/rom_adapt.sv').read_text()),
+tools/dsrom_selector_capture_composition.py:93: in constructive_fences
+    hook_allowedcell_floor=idle_hook_floor(),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def idle_hook_floor():
+        facts,_=O.T.C.facts();C=O.T.C
+        # Gross construction: active and qualified-retirement ASR bits. Existing
+        # active containment is NOT presumed; detailed bank/credit logic is extra.
+>       cells={C.ASR:2,C.TIE:2,C.NAND:8,C.INV:6,C.BUF:4}
+E       AttributeError: module 'dsrom_I66_capture_cells' has no attribute 'TIE'
+
+tools/dsrom_selector_capture_composition.py:56: AttributeError
+___________ test_source_adapter_ready_can_not_substitute_retirement ____________
+
+    def test_source_adapter_ready_can_not_substitute_retirement():
+        import json
+>       proof=M.model()['admission_proof'];nodes=json.loads((M.OUT/'inputs/instruction_slice.json').read_text())
+
+tests/test_dsrom_selector_capture_composition.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_selector_capture_composition.py:148: in model
+    constructive_deadline=constructive_fences(p,json.loads((OUT/'inputs/instruction_slice.json').read_text()),(OUT/'inputs/rom_adapt.sv').read_text()),
+tools/dsrom_selector_capture_composition.py:93: in constructive_fences
+    hook_allowedcell_floor=idle_hook_floor(),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def idle_hook_floor():
+        facts,_=O.T.C.facts();C=O.T.C
+        # Gross construction: active and qualified-retirement ASR bits. Existing
+        # active containment is NOT presumed; detailed bank/credit logic is extra.
+>       cells={C.ASR:2,C.TIE:2,C.NAND:8,C.INV:6,C.BUF:4}
+E       AttributeError: module 'dsrom_I66_capture_cells' has no attribute 'TIE'
+
+tools/dsrom_selector_capture_composition.py:56: AttributeError
+_____________ test_hook_gross_allowedcell_and_clock_cost_not_free ______________
+
+    def test_hook_gross_allowedcell_and_clock_cost_not_free():
+>       m=M.model()['constructive_deadline']['hook_allowedcell_floor']
+
+tests/test_dsrom_selector_capture_composition.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/dsrom_selector_capture_composition.py:148: in model
+    constructive_deadline=constructive_fences(p,json.loads((OUT/'inputs/instruction_slice.json').read_text()),(OUT/'inputs/rom_adapt.sv').read_text()),
+tools/dsrom_selector_capture_composition.py:93: in constructive_fences
+    hook_allowedcell_floor=idle_hook_floor(),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def idle_hook_floor():
+        facts,_=O.T.C.facts();C=O.T.C
+        # Gross construction: active and qualified-retirement ASR bits. Existing
+        # active containment is NOT presumed; detailed bank/credit logic is extra.
+>       cells={C.ASR:2,C.TIE:2,C.NAND:8,C.INV:6,C.BUF:4}
+E       AttributeError: module 'dsrom_I66_capture_cells' has no attribute 'TIE'
+
+tools/dsrom_selector_capture_composition.py:56: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_dsrom_selector_capture_composition.py::test_exact_source_wait_masks_not_ME_fences
+FAILED tests/test_dsrom_selector_capture_composition.py::test_bank_vs_VM_address_lifetime_and_four_frame_lower_bound
+FAILED tests/test_dsrom_selector_capture_composition.py::test_c9_single_selected_clock_not_phase_credit
+FAILED tests/test_dsrom_selector_capture_composition.py::test_QE_source_role_and_conditional_lower_bound_not_deadline
+FAILED tests/test_dsrom_selector_capture_composition.py::test_all12_constructive_laterGU0_fences_and_relative_deadline
+FAILED tests/test_dsrom_selector_capture_composition.py::test_source_adapter_ready_can_not_substitute_retirement
+FAILED tests/test_dsrom_selector_capture_composition.py::test_hook_gross_allowedcell_and_clock_cost_not_free
+7 failed, 10 passed in 0.45s

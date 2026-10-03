@@ -1,0 +1,90 @@
+{
+  "C_or_stations": null,
+  "VM_address_version_lease_held_until_actual_reads_Xtags": true,
+  "actual_enrolled_absolute_consumer_deadline": null,
+  "actual_maximum_after_readtag_tail": null,
+  "build_admitted": false,
+  "c9_cost_charged_once": true,
+  "codec169_user32_PC_Xversion_association_required": true,
+  "deadline": "F = qualified effectiveidle sampled preedge by adapter WAIT; successorGU0accepted >=F+1; adjacentordinarySUfrontadmission >=F+7; allVMvisibilityV<F",
+  "exact_later_GU0_first_consumer_pairs": [
+    [
+      69,
+      70
+    ],
+    [
+      79,
+      80
+    ],
+    [
+      84,
+      85
+    ],
+    [
+      89,
+      90
+    ],
+    [
+      94,
+      95
+    ],
+    [
+      97,
+      98
+    ]
+  ],
+  "hook_allowedcell_gross_floor": {
+    "SSFF_new_CLK_pin_fF": {
+      "FF": 1.006304,
+      "SS": 0.867964
+    },
+    "SSFF_new_RESETN_pin_fF": {
+      "FF": 1.605818,
+      "SS": 1.40805
+    },
+    "body_um2": 2.2161600000000004,
+    "cell_counts": {
+      "BUFx4_ASAP7_75t_R": 4,
+      "DFFASRHQNx1_ASAP7_75t_R": 2,
+      "INVx1_ASAP7_75t_R": 6,
+      "NAND2x1_ASAP7_75t_R": 8,
+      "TIEHIx1_ASAP7_75t_R": 2
+    },
+    "control_logic": "INV(retire), NAND(active,notretire), NAND(nativeidle,enable), INV(effectiveidle)",
+    "feedback_per_ASR_twoBUF_lowerbound": true,
+    "gross_control_bits": 2,
+    "hold_closed": false,
+    "identity_compare_counters_credit_ledger_CDC_drivers_routes_clock_reset_PG_extra": true,
+    "not_a_complete_state_area_or_contextual_timing_price": true,
+    "phase_active_existing_containment_credit": 0,
+    "reserve50pct_mm2": 4.4323200000000005e-06
+  },
+  "minimum_concurrent_version_leases": 4,
+  "native_core_clk_only": true,
+  "new_RTL": false,
+  "new_jobs": false,
+  "new_sweep": false,
+  "next": "Hubble bind current copied-ingress accepted source/descriptor+completewriter/VMvisible/actualSUreadtag journal to F; physicalowners bind c9 phase/reset and typed routes, positive request/reply/credit CDS; derive ONE C/stationcalendar and sourcecost beforecontextbuild",
+  "no_new_SU_admission_guard_selected": true,
+  "no_rate_or_fulltoken_credit": true,
+  "not_implemented_native_guarantee": true,
+  "outside_model_receipts_archived": true,
+  "physical_admitted": false,
+  "positive_CDC_actual_service_calendar": null,
+  "prerequisites": [
+    "7eed5623b684ec13592bccf8ed7416d348690032",
+    "6f2c3b8f143fb6cecc5534b6cb9abbbd29166efb"
+  ],
+  "prior_e899_and1024FAIL_unchanged": true,
+  "repro": [
+    "python -m pytest -q tests/test_dsrom_selector_capture_composition.py",
+    "python tools/dsrom_selector_capture_composition.py --out results/uarch/dsrom_selector_capture_composition_20261003/model.json --verify"
+  ],
+  "selected_clock_commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+  "selected_hook": "defaultoff adapter s_idle = native_spine_idle && (!phase_active || qualified publication+returnedcredit+packet retirement)",
+  "source_bank_lease_not_waiting_for_consumer": true,
+  "source_program_scope": "retained current logical L0 I66..I98; exact33instruction source extraction, actual patched runtime enrollment stillrequired",
+  "sourcepins": 49,
+  "tests": 17,
+  "verdict": "CONSTRUCTIVE_SOURCE_RELATIVE_CONSUMER_DEADLINE_C9_COST_BOUND_ABSOLUTE_SERVICE_PENDING"
+}

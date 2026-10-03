@@ -1,0 +1,37 @@
+{
+  "consumer_source.json": {
+    "commit": "6f2c3b8f143fb6cecc5534b6cb9abbbd29166efb or byteidentical parent-intaken prerequisite",
+    "path": "results/uarch/dsrom_I66_capture_visibility_successor_20261002/inputs/common_proposal.json",
+    "sha256": "4690caf8c44415c12d01eebb2d6511221f774d6ddc2f7fbe9103c5ab6c69b15e"
+  },
+  "core.sv": {
+    "commit": "6f2c3b8f143fb6cecc5534b6cb9abbbd29166efb or byteidentical parent-intaken prerequisite",
+    "path": "results/uarch/dsrom_I66_provider_clock_contract_20261002/inputs/core.sv.txt",
+    "sha256": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6"
+  },
+  "instruction_extraction.json": {
+    "path": "/tmp/opentallas-I66-reserved-service-observer-20261002/results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/demand-r5.json.gz",
+    "sha256": "1c1aa11209bcbc379d47f3060ce9375dc1295f179fcb848dc2905191079a19ad",
+    "source": "parent-intaken pinned source/retained logical descriptors; actual runtime enrollment remains required"
+  },
+  "instruction_slice.json": {
+    "path": "/tmp/opentallas-I66-reserved-service-observer-20261002/results/uarch/dsrom_I66_consumer_deadline_20261002/inputs/demand-r5.json.gz",
+    "sha256": "af0bf64f78ce0a399a283346081eacbb7087d5c737b81d1d22c85f7f9550d98a",
+    "source": "parent-intaken pinned source/retained logical descriptors; actual runtime enrollment remains required"
+  },
+  "phase_exclusion.json": {
+    "commit": "8693ffffd6c60cab72eb40cd8e189b811c01c4c9",
+    "path": "results/uarch/dsrom_I66_slot0_phase_lease_20261002/model.json",
+    "sha256": "90eb9f0026dc8e3c1b310c0eee7f09880f63aec7e0168eefc6a418aa0584976c"
+  },
+  "rom_adapt.sv": {
+    "path": "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/v41die/ot_v41_rom_adapt.sv",
+    "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f",
+    "source": "parent-intaken pinned source/retained logical descriptors; actual runtime enrollment remains required"
+  },
+  "selected_clock.json": {
+    "commit": "c9d19ed598077e4a4941c8548273f15deefb8c1a",
+    "path": "results/uarch/dsrom_capture_clock_selected_union_20261002/model.json",
+    "sha256": "5fc207fa190513f8394e26b9177c1a032fd148dd0ddd6cf3abbe231753715ae0"
+  }
+}
