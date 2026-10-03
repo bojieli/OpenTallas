@@ -69,7 +69,7 @@ class KVControllerPort:
                 p.set('rsp_ready', 0)
                 return result
 
-    def _source(self, request):
+    def _source(self, request, needs_stage=True):
         if request.get('program_sha256') != PROGRAM_SHA:
             raise TransportError('canonical KV source program pin')
         key = request.get('key')
@@ -87,7 +87,7 @@ class KVControllerPort:
         for name, width in (('stage_base', 10), ('stage_SM', 5), ('K_base', 34), ('V_base', 34)):
             self._uint(source.get(name), width, name)
         if (source['stage_base'] > 1008 or source['K_base'] % 32 or source['V_base'] % 32
-            or source.get('stage_lease_retained') is not True
+            or (needs_stage and source.get('stage_lease_retained') is not True)
             or max(source['K_base'], source['V_base']) + 4194304 > 1 << 34
             or abs(source['K_base']-source['V_base']) < 4194304):
             raise TransportError('actual held 1024B stage / aligned K,V apertures')
@@ -100,7 +100,7 @@ class KVControllerPort:
                 raise TransportError('KV controller pending/faulted; no reuse')
             self.pending = (kind, request)
             try:
-                source = self._source(request)
+                source = self._source(request, needs_stage=op < 4)
                 if op == 4:
                     self._uint(request.get('producer_tag'), 64, 'producer tag')
                 if op == 5 and request.get('stage') not in ('SCORES', 'PV'):

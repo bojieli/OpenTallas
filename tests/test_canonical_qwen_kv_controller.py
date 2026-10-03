@@ -325,6 +325,17 @@ end""".replace('ASSIGNS',assigns).replace('READS',reads)
             finally:
                 process.stdin.write('3 0 0\n'); process.stdin.flush(); process.wait()
 
+    def test_reader_does_not_require_retired_writer_stage_lease(self):
+        class Ports:
+            def parameter(self,k): return 1
+        class Source:
+            def kv_controller_source(self,request):
+                return dict(stage_base=100,stage_SM=3,K_base=0x100000,V_base=0x1000000,stage_lease_retained=False)
+        control=KVControllerPort(Ports(),Source())
+        request=dict(program_sha256=PROGRAM_SHA,source_PC=40,sequence=10,key=[0,0,0])
+        self.assertEqual(control._source(request,needs_stage=False)['stage_SM'],3)
+        with self.assertRaises(TransportError): control._source(request,needs_stage=True)
+
     def test_model_preserves_unknown_external_service(self):
         m=model()
         self.assertEqual(m['stage_physical_bytes'],1024)
