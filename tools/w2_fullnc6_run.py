@@ -76,9 +76,15 @@ def connected_runtime(binary, bindings, socket_path, out, *, portbook=None):
     import sys
     if str(ROOT) not in sys.path:sys.path.insert(0,str(ROOT))
     from tools.gpu_sys.canonical_qwen_ranked_simulator import RankedEnclosingPins as EnclosingPins, build
+    scratch_installed=False
     if portbook is not None:
         from tools.gpu_sys.canonical_qwen_installed_services import InstalledServicePins as EnclosingPins
         book = json.loads(portbook.read_text())
+        scratch_installed=book['top']=='ot_gpu_qwen_hbm_integrated_scratch'
+        if scratch_installed:
+            from tools.gpu_sys.canonical_qwen_installed_services import installed_scratch_pins_class
+            from tools.gpu_sys.canonical_qwen_scratch_simulator import build
+            EnclosingPins=installed_scratch_pins_class()
         if book['inventory'].get('source_owner_count') != 64:
             raise ValueError('connected installed sourcebook requires actual64 range owners')
         for path, digest in book['source_sha256'].items():
@@ -116,9 +122,17 @@ def connected_runtime(binary, bindings, socket_path, out, *, portbook=None):
             record['driver_pid']=process.pid;save()
             pins=EnclosingPins(process.stdout,process.stdin,**({} if portbook is None else {'portbook':portbook}))
             bound=factory(pins)
-            runtime=build(pins,bound['authority'],bound['native_handlers'],bound['w2_ports'],enabled=True)
+            options={'enabled':True}
+            if scratch_installed:options['matrix_services']=bound['matrix_services']
+            runtime=build(pins,bound['authority'],bound['native_handlers'],bound['w2_ports'],**options)
             observer=ConnectedReceiptObserver(pins)
-            observe_registered_payload(pins,runtime['payload'],observer)
+            actual_hook=runtime['payload']
+            if scratch_installed:
+                from tools.gpu_sys.canonical_qwen_scratch_simulator import SharedEdgeServices
+                if len(pins.hooks)!=1 or not isinstance(pins.hooks[0],SharedEdgeServices) or pins.hooks[0].payload is not runtime['payload']:
+                    raise ValueError('actual scratch/MATRIX services require the one enrolled shared edge')
+                actual_hook=pins.hooks[0]
+            observe_registered_payload(pins,actual_hook,observer)
             server=UnixDeliveryServer(socket_path,runtime['handlers'],require_kv=True)
             record['status']='CONNECTED_READY';save()
             print('CONNECTED_READY',process.pid,socket_path,flush=True)

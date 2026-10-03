@@ -71,9 +71,12 @@ def test_scratch_uses_only_installed_protected_client(rank,sm):
         n=name.removeprefix('scratch_client_')
         return dict(bits=64*widths[n],direction='input' if n in inputs else 'output')
     sentinel=object()
-    root=SimpleNamespace(_pin=pin,component=lambda block,i: calls.append((block,i)) or sentinel)
+    from tools.gpu_sys.canonical_qwen_scratch_simulator import ScratchEnclosingPins, ALIASES
+    root=ScratchEnclosingPins.__new__(ScratchEnclosingPins)
+    root._pin=pin
+    root.component=lambda block,i,**kw: calls.append((block,i,kw)) or sentinel
     assert scratch_component(root,rank,sm) is sentinel
-    assert calls==[('scratch_client',rank*32+sm)]
+    assert calls==[('scratch',rank*32+sm,{'aliases':ALIASES})]
 
 
 def test_missing_scratch_mux_refuses_before_any_component_or_edge():

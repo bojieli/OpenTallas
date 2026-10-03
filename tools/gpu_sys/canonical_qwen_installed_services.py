@@ -38,6 +38,26 @@ class SourceOwnerPins(RankedComponentPins):
         raise TransportError('unknown source-owner parameter')
 
 
+def installed_scratch_pins_class():
+    # Import only when the actual owner source is installed, no fallback mux.
+    from tools.gpu_sys.canonical_qwen_scratch_simulator import ScratchEnclosingPins
+
+    class InstalledScratchPins(ScratchEnclosingPins):
+        def __init__(self, reader, writer, *, portbook):
+            super().__init__(reader, writer, portbook=portbook)
+            if self.book['inventory'].get('source_owner_count') != 64:
+                raise TransportError('actual64 range owners required with scratch')
+
+        def component(self, block, index=0, *, rank=None, aliases=None):
+            if block == 'source_owner':
+                if rank is not None or aliases or type(index) is not int or not 0 <= index < 64:
+                    raise TransportError('source-owner exact SM index0..63')
+                return SourceOwnerPins(self, index)
+            return super().component(block, index, rank=rank, aliases=aliases)
+
+    return InstalledScratchPins
+
+
 def scratch_component(pins, execution_rank, execution_SM):
     """Actual protected client mux, never the raw contender or SM outputs.
 
@@ -52,4 +72,5 @@ def scratch_component(pins, execution_rank, execution_SM):
         p = pins._pin('scratch_client_' + name)
         if p['bits'] != width * 64 or p['direction'] != ('input' if name in INPUTS else 'output'):
             raise TransportError('installed protected scratch client port width/direction')
-    return pins.component('scratch_client', index)
+    from tools.gpu_sys.canonical_qwen_scratch_simulator import scratch_component as owner_component
+    return owner_component(pins, execution_rank, execution_SM)
