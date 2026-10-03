@@ -46,8 +46,12 @@ class W2PrimaryPort:
         self.ports, self.authority = ports, authority
         self.pending = None
         self.stopped = False
-        required = dict(NC=6, MAX_OUT=16, AW=34, CTAGW=32, GENW=4, PTAGW=35, OPT_EXACT=1)
-        if any(ports.parameter(k) != v for k, v in required.items()):
+        required = dict(NC=6, MAX_OUT=16, AW=34, CTAGW=32, GENW=4, PTAGW=35, OPT_EXACT=1, OPT_RESET_QUARANTINE=1)
+        try:
+            matches = all(ports.parameter(k) == v for k, v in required.items())
+        except LookupError as exc:
+            raise TransportError("W2 reset-safe parameter interface missing") from exc
+        if not matches:
             raise TransportError("W2 actual NC6 widths/opt-in differ")
         if not 0 <= ports.parameter("PC_ID") < 128:
             raise TransportError("W2 physical PC identity out of range")

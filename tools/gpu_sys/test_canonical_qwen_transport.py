@@ -202,7 +202,7 @@ class W2PortFixture:
         self.inputs = {}
         self.history = []
         self.wrong_generation = False
-        self.params = dict(NC=6, MAX_OUT=16, AW=34, CTAGW=32, GENW=4, PTAGW=35, OPT_EXACT=1, PC_ID=7)
+        self.params = dict(NC=6, MAX_OUT=16, AW=34, CTAGW=32, GENW=4, PTAGW=35, OPT_EXACT=1, OPT_RESET_QUARANTINE=1, PC_ID=7)
 
     def parameter(self, name):
         return self.params[name]
@@ -271,6 +271,15 @@ class W2AdapterTest(unittest.TestCase):
         port = W2PortFixture()
         port.params["OPT_EXACT"] = 0
         with self.assertRaisesRegex(TransportError, "widths/opt-in differ"):
+            W2PrimaryPort(port, port)
+
+    def test_reset_quarantine_required_for_canonical_service(self):
+        port = W2PortFixture()
+        port.params["OPT_RESET_QUARANTINE"] = 0
+        with self.assertRaisesRegex(TransportError, "widths/opt-in differ"):
+            W2PrimaryPort(port, port)
+        del port.params["OPT_RESET_QUARANTINE"]
+        with self.assertRaisesRegex(TransportError, "reset-safe parameter interface missing"):
             W2PrimaryPort(port, port)
 
     def test_stale_generation_retains_pending_and_blocks_retry(self):
