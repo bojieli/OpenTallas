@@ -36,9 +36,22 @@ OPS = {
     # collective
     "COLL": 0x48,
 }
+# --- additions for the DeepSeek-V4.1 lowering (tools/gpu_sys/v41_hbm.py); ordinary GPU instructions:
+#   FMAX / FMIN   FMNMX: d = a > b ? a : b  /  a < b ? a : b  (FP compare; operands are finite, NaN never reaches
+#                 them because the FP pipes fail closed)
+#   IMULHI        mul.hi.u32 (IMAD.HI): d = (a * b) >> 32, unsigned 32 x 32 -> high word
+#   CVTE2M1       cvt.rn.satfinite.e2m1 (Blackwell): FP32 -> E2M1 grid {0, .5, 1, 1.5, 2, 3, 4, 6} with sign,
+#                 round to nearest even code, saturating at 6, returned as FP32 bits, canonical +0
+#   CVTE4M3B      cvt.rn.satfinite.e4m3 producing the CODE: d = E4M3 byte (in bits 7:0) of CVTE4M3(a)
+#   TCXB / TCXE / TCBMMA   the block-scaled (MX FP8/FP4) tensor core rtl/gpu/ot_gpu_sm_bd.sv: x-store code and
+#                 exponent writes and the k32 block-dot MMA (semantics: machine.py, bd_tcxb / bd_tcxe / bd_tcbmma)
+OPS.update({"FMAX": 0x13, "FMIN": 0x14, "IMULHI": 0x15, "CVTE2M1": 0x16, "CVTE4M3B": 0x17,
+            "TCXB": 0x43, "TCBMMA": 0x44, "TCXE": 0x45})
 NAMES = {v: k for k, v in OPS.items()}
 BINARY = {"FADD", "FMUL", "XOR", "AND", "OR", "SHR", "SHL", "IADD", "ISUB", "UGT", "ULT", "FCMPGT", "FDIV", "IMUL"}
 UNARY = {"F2I", "CVTBF16", "CVTE4M3", "FSQRT"}
+BINARY |= {"FMAX", "FMIN", "IMULHI"}
+UNARY |= {"CVTE2M1", "CVTE4M3B"}
 ESZ = {4: 0, 2: 1, 1: 2}          # LDG/STG element size code (F32, BF16 upper half, E4M3 byte)
 NUR = 16                           # uniform registers; UR0 token, UR1 position, UR2 SM id, UR3 die id, UR15 stride
 
@@ -187,4 +200,30 @@ def lane_op(op, a, b):
         return cvt_e4m3(a)
     if op == "FSQRT":
         return fsqrt(a)
+    if op in ("FMAX", "FMIN"):
+        with np.errstate(all="ignore"):
+            pick_a = (ffrom(a) > ffrom(b)) if op == "FMAX" else (ffrom(a) < ffrom(b))
+        return np.where(pick_a, a, b).astype(U)
+    if op == "IMULHI":
+        return ((a.astype(np.uint64) * b.astype(np.uint64)) >> np.uint64(32)).astype(U)
+    if op == "CVTE2M1":
+        return cvt_e2m1(a)
+    if op == "CVTE4M3B":
+        return e4m3_encode(cvt_e4m3(a)).astype(U)
     raise ValueError(op)
+
+
+E2M1_GRID = np.array([0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0])
+
+
+def cvt_e2m1(a):
+    """cvt.rn.satfinite.e2m1: |x| to the nearest E2M1 value, ties to the even code (codes 0..7 = the grid above),
+    saturating at 6; sign kept; returned as FP32 bits, canonical +0."""
+    x = ffrom(a).astype(np.float64)
+    m = np.minimum(np.abs(x), 6.0)
+    i = np.clip(np.searchsorted(E2M1_GRID, m), 1, 7)          # E2M1_GRID[i-1] < m <= E2M1_GRID[i]
+    lo, hi = E2M1_GRID[i - 1], E2M1_GRID[i]
+    up = (m - lo > hi - m) | ((m - lo == hi - m) & (i % 2 == 0))
+    r = np.where(up, hi, lo)
+    r = np.where(m == 0, 0.0, r)
+    return fbits(_z(np.where(x < 0, -r, r).astype(F)))

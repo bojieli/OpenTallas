@@ -37,6 +37,7 @@ module ot_gpu_simt_sm #(
     parameter integer TC_LEV     = 3,
     parameter integer BC_DEPTH   = 64,          // bulk-copy staging lines
     parameter integer BC_MAXOUT  = 32,
+    parameter integer FPW        = 32,          // physical FP32 lanes: an NL-lane op issues over NL/FPW cycles
     parameter integer FLAT       = 5,           // FP pipe depth (5: qualified pipes; 7: W11 SS re-pipelined copies)
     parameter integer HAS_DIV    = 0            // 1: div.rn / sqrt.rn unit (rtl/abi3 correctly-rounded divider and square root per lane)
 ) (
@@ -294,20 +295,30 @@ end else begin : g_on
     wire tc_done = tc_active && !tc_busy && !tc_start && (tc_got == tc_rows) && bc_idle;
 
     // ------------------------------------------------------------------ FP pipes
-    wire [VW-1:0] add_y, mul_y;
-    wire [NL-1:0] add_f, mul_f;
+    // FPW physical lanes of the qualified add and multiply pipes; an NL-lane FADD/FMUL is fed one FPW-lane
+    // quarter per cycle (as a SIMD datapath narrower than the warp executes it over several cycles) and each
+    // quarter writes its slice of the destination when it leaves the pipe; the last quarter clears the scoreboard.
+    localparam integer NQ = NL / FPW;
+    localparam integer QB = (NQ > 1) ? $clog2(NQ) : 1;
+    wire [FPW*32-1:0] add_y, mul_y;
+    wire [FPW-1:0] add_f, mul_f;
     reg  add_v, mul_v;
-    reg  [VW-1:0] fp_a, fp_b;
+    reg  [FPW*32-1:0] fp_a, fp_b;
+    reg  [VW-1:0] fq_a, fq_b;          // the op's full operands
+    reg  [QB:0]   fq_left;             // quarters still to feed
+    reg  [QB-1:0] fq_q;
+    reg           fq_mul;
+    reg  [RB-1:0] fq_d;
     genvar gl;
-    for (gl = 0; gl < NL; gl = gl + 1) begin : g_fp
+    for (gl = 0; gl < FPW; gl = gl + 1) begin : g_fp
         ot_gpu_simt_fplane #(.FLAT(FLAT)) u_fp (.clk(clk), .rst_n(rst_n), .add_v(add_v), .mul_v(mul_v),
             .a(fp_a[gl*32 +: 32]), .b(fp_b[gl*32 +: 32]), .add_y(add_y[gl*32 +: 32]), .add_f(add_f[gl]),
             .mul_y(mul_y[gl*32 +: 32]), .mul_f(mul_f[gl]));
     end
-    // writeback tags of the FP pipes: FLAT + 1 cycles from issue (operand register + LAT stages)
+    // writeback tags: {dest, quarter, last}; the tag sits at index k after k+1 edges, its valid bit at k-1
     reg [FLAT:0] addq_v, mulq_v;
-    reg [RB-1:0] addq_d [0:FLAT];
-    reg [RB-1:0] mulq_d [0:FLAT];
+    reg [RB+QB:0] addq_d [0:FLAT];
+    reg [RB+QB:0] mulq_d [0:FLAT];
 
     // ------------------------------------------------------------------ div.rn / sqrt.rn unit (blocking)
     reg            dv_go, dv_sqrt;
@@ -359,7 +370,8 @@ end else begin : g_on
                     (op >= O_LDG && op <= O_STSX) || (op >= O_TCX && op <= O_TCWAIT) || op == O_COLL) ||
                   ((op == O_FDIV || op == O_FSQRT) && HAS_DIV == 0);   // no divide/sqrt unit in this build
     wire tc_needs_idle = (op == O_TCX || op == O_TCMMA);
-    wire can_issue = running && !faulted && (bst == B_IDLE) && !hazard && !tc_start && !bc_dv &&
+    wire fp_op = (op == O_FADD || op == O_FMUL);
+    wire can_issue = running && !faulted && (bst == B_IDLE) && !hazard && !tc_start && !bc_dv && !(fp_op && fq_left > 1) &&
                      !(tc_needs_idle && tc_active);
     assign busy = running;
     assign coll_req_v = (bst == B_COLL_REQ);
@@ -368,13 +380,13 @@ end else begin : g_on
     assign coll_data = c_data;
     assign coll_rsp_rdy = (bst == B_COLL_RSP);
 
-    wire drained = (pend == {NV{1'b0}}) && !alu_wv && !tc_active && !tc_start && !bc_dv;
+    wire drained = (pend == {NV{1'b0}}) && (fq_left == 0) && !alu_wv && !tc_active && !tc_start && !bc_dv;
     integer i, q;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             running <= 1'b0; faulted <= 1'b0; bar_q <= 1'b0; pc <= 0; pend <= {NV{1'b0}}; bst <= B_IDLE;
             sm_done <= 1'b0; res_v <= 1'b0; res_data <= 32'd0; add_v <= 1'b0; mul_v <= 1'b0;
-            addq_v <= 0; mulq_v <= 0; alu_wv <= 1'b0; tc_start <= 1'b0; bc_dv <= 1'b0; tc_xw <= 1'b0;
+            addq_v <= 0; mulq_v <= 0; alu_wv <= 1'b0; fq_left <= 0; fq_q <= 0; tc_start <= 1'b0; bc_dv <= 1'b0; tc_xw <= 1'b0;
             tc_active <= 1'b0; tc_got <= 0; l_out <= 0; l_next <= 0; l_issue_done <= 1'b0; l_tagp <= 0;
             dv_go <= 1'b0; dv_sqrt <= 1'b0; dv_done <= {NL{1'b0}}; dv_err <= 1'b0;
             st_instr <= 0; st_cycles <= 0; st_stall_mem <= 0; st_tc_rows <= 0;
@@ -392,8 +404,23 @@ end else begin : g_on
             addq_v <= {addq_v[FLAT-1:0], add_v};
             mulq_v <= {mulq_v[FLAT-1:0], mul_v};
             for (q = FLAT; q > 0; q = q - 1) begin addq_d[q] <= addq_d[q-1]; mulq_d[q] <= mulq_d[q-1]; end
-            if (addq_v[FLAT-1]) begin vr[addq_d[FLAT-1]] <= add_y; pend[addq_d[FLAT-1]] <= 1'b0; if (|add_f) faulted <= 1'b1; end
-            if (mulq_v[FLAT-1]) begin vr[mulq_d[FLAT-1]] <= mul_y; pend[mulq_d[FLAT-1]] <= 1'b0; if (|mul_f) faulted <= 1'b1; end
+            if (addq_v[FLAT-1]) begin
+                vr[addq_d[FLAT][RB+QB:QB+1]][addq_d[FLAT][QB:1]*FPW*32 +: FPW*32] <= add_y;
+                if (addq_d[FLAT][0]) pend[addq_d[FLAT][RB+QB:QB+1]] <= 1'b0;
+                if (|add_f) faulted <= 1'b1;
+            end
+            if (mulq_v[FLAT-1]) begin
+                vr[mulq_d[FLAT][RB+QB:QB+1]][mulq_d[FLAT][QB:1]*FPW*32 +: FPW*32] <= mul_y;
+                if (mulq_d[FLAT][0]) pend[mulq_d[FLAT][RB+QB:QB+1]] <= 1'b0;
+                if (|mul_f) faulted <= 1'b1;
+            end
+            // ---- FP feeder: one quarter per cycle
+            if (fq_left != 0) begin
+                fp_a <= fq_a[fq_q*FPW*32 +: FPW*32]; fp_b <= fq_b[fq_q*FPW*32 +: FPW*32];
+                if (fq_mul) begin mul_v <= 1'b1; mulq_d[0] <= {fq_d, fq_q, fq_left == 1}; end
+                else begin add_v <= 1'b1; addq_d[0] <= {fq_d, fq_q, fq_left == 1}; end
+                fq_q <= fq_q + 1'b1; fq_left <= fq_left - 1'b1;
+            end
             if (alu_wv) begin vr[alu_wd] <= alu_wy; pend[alu_wd] <= 1'b0; end
             // ---- tensor core result rows -> shared memory
             if (tc_start) begin tc_start <= 1'b0; end
@@ -473,9 +500,7 @@ end else begin : g_on
                 pc <= pc + 1'b1;
                 if (bad_op) faulted <= 1'b1;
                 if (op == O_FADD || op == O_FMUL) begin
-                    fp_a <= va; fp_b <= vb;
-                    if (op == O_FADD) begin add_v <= 1'b1; addq_d[0] <= rd; end
-                    else begin mul_v <= 1'b1; mulq_d[0] <= rd; end
+                    fq_a <= va; fq_b <= vb; fq_mul <= (op == O_FMUL); fq_d <= rd; fq_q <= 0; fq_left <= NQ;
                     pend[rd] <= 1'b1;
                 end else if (c_alu) begin
                     alu_wv <= 1'b1; alu_wd <= rd; alu_wy <= alu_y; pend[rd] <= 1'b1;

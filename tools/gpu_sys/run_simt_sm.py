@@ -36,7 +36,7 @@ SM_SRC = ["rtl/gpu_sys/ot_gpu_simt_sm.sv", "rtl/gpu_sys/ot_gpu_simt_lane.sv", "r
           "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_prefix.sv",
            "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv", "rtl/abi3/ot_a3_fp32_sqrt_rne.sv"]
 TB = "rtl/test/gpu_sys/tb_gpu_simt_sm.sv"
-MEMB = 65536
+MEMB = 131072
 NL = 128
 
 
@@ -105,9 +105,18 @@ def gen_case(rng, kind):
             else:
                 P("SHFL", d, a, int(rng.integers(0, 41)))
         # dependent chains through the FP pipes and the ALU (hazards, WAW)
+        P("MOVI", 219, 0, 0, 0x3F400000)                     # 0.75: keeps the multiply chain finite
+        for r in range(200, 210):
+            P("FADD", r, int(rng.integers(0, 32)), int(rng.integers(0, 32)))
         for _ in range(200):
             d = int(rng.integers(200, 210))
-            P(["FADD", "FMUL", "XOR", "CVTBF16"][int(rng.integers(0, 4))], d, int(rng.integers(200, 210)), int(rng.integers(0, 40)))
+            c = int(rng.integers(0, 3))
+            if c == 0:
+                P("FADD", d, int(rng.integers(200, 210)), int(rng.integers(0, 32)))
+            elif c == 1:
+                P("FMUL", d, int(rng.integers(200, 210)), 219)
+            else:
+                P("CVTBF16", d, int(rng.integers(200, 210)))
         # uniform ops and a counted loop
         P("UMOVI", 9, 0, 0, 5)
         P("UMOVI", 10, 0, 0, 0)
@@ -166,12 +175,16 @@ def gen_case(rng, kind):
         L = 16
         wcur = 32768
         P("UMOVI", 8, 0, 0, 0)
+        # activations: normal-range values (the BF16 product lanes fail closed on an inexact subnormal product)
+        mem[16384:16384 + 2048] = (rng.standard_normal(512).astype(np.float32)).view(np.uint8)
+        for r in range(3):
+            P("LDG", r, 6, 127, 16384 + r * 512)
         for opn in range(4):
             split = int(rng.choice([16, 32, 64, 128]))
             K = int(rng.choice([128, 192, 256])) if split <= 64 else 128
             if K % split:
                 K = 128
-            rows = int(rng.integers(1, 70))
+            rows = int(rng.integers(1, 40))
             c = K // split
             gn = -(-split // L)
             if gn * c > 16:
@@ -233,15 +246,16 @@ def run_case(exe, work, idx, kind, rng, maxlat):
     d.mkdir(parents=True, exist_ok=True)
     (d / "prog.hex").write_text("\n".join(f"{w:016x}" for w in words) + "\n")
     (d / "mem.hex").write_text("\n".join(f"{b:02x}" for b in mem) + "\n")
-    (d / "cfg.hex").write_text("\n".join(f"{v:08x}" for v in (token, pos, len(words), 2_000_000, 0, 0, 0, 0)) + "\n")
+    (d / "cfg.hex").write_text("\n".join(f"{v:08x}" for v in (token, pos, len(words), int(os.environ.get('SIMT_MAXCYC', 2_000_000)), 0, 0, 0, 0)) + "\n")
     sm, pmem, fperr = run_python(words, mem.copy(), token, pos)
-    subprocess.run([str(exe), f"+DIR={d}", f"+SEED={idx + 1}", f"+MAXLAT={maxlat}"], check=True, cwd=d,
-                   stdout=subprocess.DEVNULL)
+    with (d / "sim.log").open("w") as f:
+        subprocess.run([str(exe), f"+DIR={d}", f"+SEED={idx + 1}", f"+MAXLAT={maxlat}"], check=True, cwd=d, stdout=f)
     vr, ur, smem, rmem, meta = {}, {}, {}, np.zeros(MEMB, dtype=np.uint8), {}
     for line in (d / "rtl_out.txt").read_text().splitlines():
         t = line.split()
         if t[0] == "#":
-            meta = dict(zip(t[1::2], (int(x) for x in t[2::2])))
+            meta = dict(fault=int(t[2]), result_seen=int(t[4]), result=int(t[5]),
+                        **dict(zip(t[6::2], (int(x) for x in t[7::2]))))
         elif t[0] == "v":
             vr[int(t[1])] = int(t[2], 16)
         elif t[0] == "u":

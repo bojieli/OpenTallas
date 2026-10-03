@@ -9,14 +9,14 @@
 // memory.  Plusargs: +DIR=<case dir>  +SEED=<n>  +MAXLAT=<cycles>
 // ---------------------------------------------------------------------------
 module tb_gpu_simt_sm;
-    localparam integer NL = 128, NV = 256, MEMB = 65536;
+    localparam integer NL = 128, NV = 256, MEMB = 131072;
     reg clk = 0, rst_n = 0;
     always #0.4165 clk = ~clk;
     reg [7:0] mem [0:MEMB-1];
     reg [63:0] prog [0:8191];
     reg [31:0] cfg [0:7];
     string dir;
-    integer seed, maxlat, nprog, i, j, fd, cyc;
+    integer seed, maxlat, nprog, i, j, fd, cyc, ii, jj;
 
     reg im_we; reg [12:0] im_addr; reg [63:0] im_data;
     reg launch_v;
@@ -118,7 +118,7 @@ module tb_gpu_simt_sm;
         if (!$value$plusargs("SEED=%d", seed)) seed = 1;
         if (!$value$plusargs("MAXLAT=%d", maxlat)) maxlat = 40;
         void'($urandom(seed));
-        for (i = 0; i < MEMB; i = i + 1) mem[i] = 0;
+        for (ii = 0; ii < MEMB; ii = ii + 1) mem[ii] = 0;
         $readmemh({dir, "/mem.hex"}, mem);
         $readmemh({dir, "/prog.hex"}, prog);
         $readmemh({dir, "/cfg.hex"}, cfg);
@@ -126,8 +126,8 @@ module tb_gpu_simt_sm;
         im_we = 0; launch_v = 0; cyc = 0; result_seen = 0;
         repeat (5) @(posedge clk);
         rst_n = 1;
-        for (i = 0; i < nprog; i = i + 1) begin
-            @(negedge clk); im_we = 1; im_addr = i; im_data = prog[i];
+        for (ii = 0; ii < nprog; ii = ii + 1) begin
+            @(negedge clk); im_we = 1; im_addr = ii; im_data = prog[ii];
         end
         @(negedge clk); im_we = 0; launch_v = 1;
         @(negedge clk); launch_v = 0;
@@ -137,17 +137,22 @@ module tb_gpu_simt_sm;
         fd = $fopen({dir, "/rtl_out.txt"}, "w");
         $fdisplay(fd, "# fault %0d result %0d %0d instr %0d cycles %0d stall_mem %0d tc_rows %0d", sm_fault, result_seen,
                   result_q, st_instr, st_cycles, st_stall_mem, st_tc_rows);
-        for (i = 0; i < NV; i = i + 1) $fdisplay(fd, "v %0d %h", i, dut.g_on.vr[i]);
-        for (i = 0; i < 16; i = i + 1) $fdisplay(fd, "u %0d %h", i, dut.g_on.ur[i]);
-        for (i = 0; i < MEMB; i = i + 32) begin
-            $fwrite(fd, "m %0d ", i);
-            for (j = 31; j >= 0; j = j - 1) $fwrite(fd, "%h", mem[i + j]);
+        for (ii = 0; ii < NV; ii = ii + 1) $fdisplay(fd, "v %0d %h", ii, dut.g_on.vr[ii]);
+        for (ii = 0; ii < 16; ii = ii + 1) $fdisplay(fd, "u %0d %h", ii, dut.g_on.ur[ii]);
+        for (ii = 0; ii < MEMB; ii = ii + 32) begin
+            $fwrite(fd, "m %0d ", ii);
+            for (jj = 31; jj >= 0; jj = jj - 1) $fwrite(fd, "%h", mem[ii + jj]);
             $fwrite(fd, "\n");
         end
-        for (i = 0; i < 8192; i = i + 1) $fdisplay(fd, "s %0d %h", i, dut.g_on.smem[i]);
+        for (ii = 0; ii < 8192; ii = ii + 1) $fdisplay(fd, "s %0d %h", ii, dut.g_on.smem[ii]);
         $fclose(fd);
         $display("TB_GPU_SIMT_SM DONE fault=%0d cycles=%0d", sm_fault, cyc);
         $finish;
     end
-    always @(posedge clk) cyc <= cyc + 1;
+    always @(posedge clk) begin
+        cyc <= cyc + 1;
+        if (cyc % 20000 == 0 && cyc > 0)
+            $display("cyc %0d pc %0d bst %0d running %0d fault %0d instr %0d pend %0d tc_active %0d", cyc, dut.g_on.pc,
+                     dut.g_on.bst, dut.g_on.running, sm_fault, st_instr, $countones(dut.g_on.pend), dut.g_on.tc_active);
+    end
 endmodule

@@ -202,6 +202,21 @@ class Machine:
                 sm.xstore[imm] = vr[a][:sm.L] & U(0xFFFF0000)
             elif op == "TCMMA":
                 sm.tcmma(int(ur[d & 15]), int(ur[a & 15]), b, imm >> 16, imm & 0xFFFF)
+            elif op == "BRA":
+                pc = imm
+            elif op == "BNZ":
+                if int(ur[a & 15]) != 0:
+                    pc = imm
+            elif op in ("FMAX", "FMIN", "IMULHI"):            # additions (isa.py): lane-wise binary
+                vr[d] = lane_op(op, vr[a], vr[b])
+            elif op in ("CVTE2M1", "CVTE4M3B"):
+                vr[d] = lane_op(op, vr[a], vr[a])
+            elif op == "TCXB":
+                bd_tcxb(sm, vr[a], vr[b], imm)
+            elif op == "TCXE":
+                bd_tcxe(sm, vr[a], imm)
+            elif op == "TCBMMA":
+                bd_tcbmma(sm, int(ur[d & 15]), int(ur[a & 15]), b, imm)
             elif op in ("TCWAIT", "MEMBAR", "NOP"):
                 pass
             elif op == "BAR":
@@ -216,3 +231,111 @@ class Machine:
                 return
             else:
                 raise ValueError(op)
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Block-scaled tensor core (additions for tools/gpu_sys/v41_hbm.py): the exact SM element rtl/gpu/ot_gpu_sm_bd.sv
+# (SUB 4 x LBS 2 = 8 bd-lanes, NC = 1, IL = 8; ot_gpu_bd_col: a k32 FP8/FP4 x FP8 block dot formed exactly, rounded
+# once to FP32, scaled by 2^(we + xe); per lane the terms of one golden chunk accumulate sequentially from +0; the
+# lanes, then the groups, a pairwise tree) -- hdc_golden_v41.linear_q's FP32 accumulator under R-ARITH chunk8.
+#
+#   TCXB a, b, imm   x-store word w = imm[7:0]: bd-lane j < 4 codes byte i = vr[a][32j + i] & 0xFF, bd-lanes 4..7
+#                    from vr[b] the same way (E4M3 codes, as CVTE4M3B leaves them)
+#   TCXE a, imm      x-store word w = imm[7:0]: bd-lane j exponent = vr[a][j][9:0], two's complement
+#   TCBMMA uw, us, g, imm   rows = imm[11:0], fp4 = imm[12], c = imm[23:16] (k-steps per chunk), g = groups.
+#                    Weight lines at UR[uw], 288 B (9 sectors) each, in the ot_gpu_issue row-slot order (rb, gg, t,
+#                    s; slot s = row rb + s; IL = 8): sector j (j < 8) = bd-lane j's 32 codes (E4M3 bytes, or E2M1 in
+#                    the low nibble), sector 8 = the 8 exponents as int16 little-endian (sign-extended 10-bit).
+#                    Lane j of group gg holds chunk gg*LA + j (LA = 8 FP4, 4 FP8; lanes past the op's chunks carry
+#                    zero codes) and meets x-store word gg*c + t.  Row r's FP32 result -> SMEM word (UR[us] >> 2) + r;
+#                    TCWAIT completes it.
+# ---------------------------------------------------------------------------------------------------------------------
+_E4M3_VAL = None
+_E2M1_VAL = np.array([0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, -0.0, -0.5, -1.0, -1.5, -2.0, -3.0, -4.0, -6.0])
+BD_LINE = 288
+
+
+def _e4m3_table():
+    global _E4M3_VAL
+    if _E4M3_VAL is None:
+        c = np.arange(256)
+        s, e, m = c >> 7, (c >> 3) & 15, c & 7
+        v = np.where(e == 0, m / 8.0 * 2.0 ** -6, (1 + m / 8.0) * np.exp2(e.astype(np.float64) - 7))
+        v = np.where((e == 15) & (m == 7), np.nan, v)
+        _E4M3_VAL = np.where(s == 1, -v, v)
+    return _E4M3_VAL
+
+
+def _bdx(sm):
+    if not hasattr(sm, "bdxq"):
+        sm.bdxq, sm.bdxe = {}, {}
+    return sm.bdxq, sm.bdxe
+
+
+def bd_tcxb(sm, va, vb, imm):
+    q, _ = _bdx(sm)
+    q[imm & 0xFF] = np.concatenate([va, vb]).astype(np.uint32).reshape(8, 32) & 0xFF
+
+
+def bd_tcxe(sm, va, imm):
+    _, e = _bdx(sm)
+    x = (np.asarray(va[:8], dtype=np.int64) & 0x3FF)
+    e[imm & 0xFF] = np.where(x >= 512, x - 1024, x)
+
+
+_BD_ORDER = {}
+
+
+def bd_issue(rows, g, c):
+    """(row, gg, t) of every line in the row-slot issue order."""
+    key = (rows, g, c)
+    if key not in _BD_ORDER:
+        out = []
+        for rb in range(0, rows, 8):
+            for gg in range(g):
+                for t in range(c):
+                    for s_ in range(8):
+                        if rb + s_ < rows:
+                            out.append((rb + s_, gg, t))
+        _BD_ORDER[key] = np.array(out, dtype=np.int64).reshape(-1, 3)
+    return _BD_ORDER[key]
+
+
+def bd_tcbmma(sm, wbase, sbase, g, imm):
+    rows, fp4, c = imm & 0xFFF, (imm >> 12) & 1, (imm >> 16) & 0xFF
+    xq, xe = _bdx(sm)
+    order = bd_issue(rows, g, c)
+    n = len(order)
+    raw = sm.die.mem[wbase:wbase + n * BD_LINE].reshape(n, BD_LINE)
+    codes = raw[:, :256].reshape(n, 8, 32)
+    wv = _E2M1_VAL[codes & 15] if fp4 else _e4m3_table()[codes]
+    we = raw[:, 256:272].copy().view(np.int16).astype(np.int64) & 0x3FF
+    we = np.where(we >= 512, we - 1024, we)
+    e4 = _e4m3_table()
+    xtab = np.zeros((g * c, 8, 32))
+    etab = np.zeros((g * c, 8), dtype=np.int64)
+    for a_ in range(g * c):
+        if a_ in xq:
+            xtab[a_] = e4[xq[a_]]
+        if a_ in xe:
+            etab[a_] = xe[a_]
+    xa = order[:, 1] * c + order[:, 2]
+    with np.errstate(all="ignore"):
+        dot = np.einsum("nji,nji->nj", wv, xtab[xa])          # exact: < 42 significant bits
+        term = np.ldexp(dot.astype(np.float32), we + etab[xa]).astype(np.float32).view(U)
+    acc = np.zeros((rows, g * 8), dtype=U)
+    cols = order[:, 1:2] * 8 + np.arange(8)[None, :]
+    for t in range(c):                                         # each lane's chunk: sequential over t from +0
+        m = order[:, 2] == t
+        r_ = np.repeat(order[m, 0], 8)
+        c_ = cols[m].reshape(-1)
+        acc[r_, c_] = fadd(acc[r_, c_], term[m].reshape(-1))
+    width = 1
+    while width < g * 8:
+        width *= 2
+    parts = np.zeros((rows, width), dtype=U)
+    parts[:, :g * 8] = acc
+    while parts.shape[1] > 1:
+        parts = fadd(parts[:, 0::2], parts[:, 1::2])
+    sm.smem[(sbase >> 2):(sbase >> 2) + rows] = parts[:, 0]
+    sm.stats["bd_lines"] = sm.stats.get("bd_lines", 0) + n
