@@ -1,0 +1,258 @@
+{
+  "TIEHI_body_um2": 0.04374,
+  "facts": {
+    "BUFx4_ASAP7_75t_R": {
+      "FF": {
+        "area_um2": 0.10206,
+        "pins": {
+          "A": {
+            "cap_fF": 0.581966,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "A",
+            "max_cap_fF": 184.32
+          }
+        },
+        "size_um": [
+          0.378,
+          0.27
+        ]
+      },
+      "SS": {
+        "area_um2": 0.10206,
+        "pins": {
+          "A": {
+            "cap_fF": 0.511385,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "A",
+            "max_cap_fF": 184.32
+          }
+        },
+        "size_um": [
+          0.378,
+          0.27
+        ]
+      }
+    },
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "FF": {
+        "area_um2": 0.37908,
+        "pins": {
+          "CLK": {
+            "cap_fF": 0.503152,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "D": {
+            "cap_fF": 0.623429,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "QN": {
+            "cap_fF": null,
+            "function": "IQN",
+            "max_cap_fF": 46.08
+          },
+          "RESETN": {
+            "cap_fF": 0.802909,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "SETN": {
+            "cap_fF": 1.16446,
+            "function": null,
+            "max_cap_fF": null
+          }
+        },
+        "size_um": [
+          1.404,
+          0.27
+        ]
+      },
+      "SS": {
+        "area_um2": 0.37908,
+        "pins": {
+          "CLK": {
+            "cap_fF": 0.433982,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "D": {
+            "cap_fF": 0.527811,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "QN": {
+            "cap_fF": null,
+            "function": "IQN",
+            "max_cap_fF": 46.08
+          },
+          "RESETN": {
+            "cap_fF": 0.704025,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "SETN": {
+            "cap_fF": 1.02641,
+            "function": null,
+            "max_cap_fF": null
+          }
+        },
+        "size_um": [
+          1.404,
+          0.27
+        ]
+      }
+    },
+    "DFFHQNx1_ASAP7_75t_R": {
+      "FF": {
+        "area_um2": 0.2916,
+        "pins": {
+          "CLK": {
+            "cap_fF": 0.52201,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "D": {
+            "cap_fF": 0.62135,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "QN": {
+            "cap_fF": null,
+            "function": "IQN",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          1.08,
+          0.27
+        ]
+      },
+      "SS": {
+        "area_um2": 0.2916,
+        "pins": {
+          "CLK": {
+            "cap_fF": 0.446638,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "D": {
+            "cap_fF": 0.524726,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "QN": {
+            "cap_fF": null,
+            "function": "IQN",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          1.08,
+          0.27
+        ]
+      }
+    },
+    "INVx1_ASAP7_75t_R": {
+      "FF": {
+        "area_um2": 0.04374,
+        "pins": {
+          "A": {
+            "cap_fF": 0.683716,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "!A",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          0.162,
+          0.27
+        ]
+      },
+      "SS": {
+        "area_um2": 0.04374,
+        "pins": {
+          "A": {
+            "cap_fF": 0.578766,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "!A",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          0.162,
+          0.27
+        ]
+      }
+    },
+    "NAND2x1_ASAP7_75t_R": {
+      "FF": {
+        "area_um2": 0.08748,
+        "pins": {
+          "A": {
+            "cap_fF": 1.07898,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "B": {
+            "cap_fF": 1.08055,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "(!A) + (!B)",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          0.324,
+          0.27
+        ]
+      },
+      "SS": {
+        "area_um2": 0.08748,
+        "pins": {
+          "A": {
+            "cap_fF": 0.924899,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "B": {
+            "cap_fF": 0.924444,
+            "function": null,
+            "max_cap_fF": null
+          },
+          "Y": {
+            "cap_fF": null,
+            "function": "(!A) + (!B)",
+            "max_cap_fF": 46.08
+          }
+        },
+        "size_um": [
+          0.324,
+          0.27
+        ]
+      }
+    }
+  },
+  "origin": "results/uarch/dsrom_I66_capture_cells_20261002/model.json",
+  "origin_model_sha256": "373f405ed8807e92d75dc4d903bb5ac3619e14ac50c467cc15fdaf74fddc3d19",
+  "physical_scope": "Allowed ASAP7 R-cell bodies only. No contextual paths/routes/power qualification."
+}

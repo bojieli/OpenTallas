@@ -1,0 +1,268 @@
+{
+  "actual_runtime": {
+    "candidate_NSLOT8_installed": false,
+    "core_default_NSLOT": 1,
+    "no_undersized_instance_claim": true,
+    "source_default_scalar_K": 512,
+    "tile_core_NSLOT_override": null,
+    "whole_MTP_actual_selected_fullshape_K_override": null
+  },
+  "clock": {
+    "CDC_cost_if_domains_differ": null,
+    "FF_hold_uncertainty_ps": 25,
+    "FF_unbuffered_clock_fF": 1014.3544320000001,
+    "SS_setup_uncertainty_ps": 60,
+    "SS_unbuffered_clock_fF": 874.907712,
+    "accept_to_done_min_edges": 3,
+    "actual_XU_ME_core_clock_bindings": null,
+    "delta_ns": 2.2222222222222223,
+    "delta_vs_old_leaf_edges": 2,
+    "kernel_GHz": 0.9,
+    "loaded_codec_selector_paths_or_closure_proven": false,
+    "producer_finish_to_first_leaf_query_min_edges": 1,
+    "producer_wait_fence_and_backpressure_edges": null,
+    "protected_sinks": 2016,
+    "sameclock_kernel_only": true,
+    "source_last_input_to_result_min_edges": 1026
+  },
+  "default_enable": false,
+  "enrollment": {
+    "RTL_build_launched": false,
+    "connected_actual_producer": "FAIL until scalarNW21 repair, protectedproducer stages, actual origin/slot/gen echo and heldCTL wiring",
+    "minimal_defaultoff_kernel": "model-sized separate component handoff; must replace callerledger with this r1",
+    "missing_whole_drafter_blocks_kernel_component": false,
+    "nativecalendar_or_acceptance_work_duplicated": false,
+    "physical": "PENDING_ARCHIMEDES_NAMED_RECTANGLE_CHANNEL_CLOCK_RESET_AND_LOADED_CUTS",
+    "rate_claim": null
+  },
+  "kernel": {
+    "MACs_per_cycle": 0,
+    "NSLOT": 8,
+    "NW": 21,
+    "class": "A current greedy prefix+bonus",
+    "whole_MTP_qualification": false
+  },
+  "kernel_composition": {
+    "add_only_conservative_cell_counts": {
+      "BUFx4_ASAP7_75t_R": 186,
+      "DFFASRHQNx1_ASAP7_75t_R": 72,
+      "INVx1_ASAP7_75t_R": 1144,
+      "NAND2x1_ASAP7_75t_R": 4414
+    },
+    "added_protected_bits": 72,
+    "cell_counts_total": {
+      "BUFx4_ASAP7_75t_R": 5547,
+      "DFFASRHQNx1_ASAP7_75t_R": 2016,
+      "INVx1_ASAP7_75t_R": 31122,
+      "NAND2x1_ASAP7_75t_R": 108457
+    },
+    "gross_50pct_mm2": 0.024528954599999996,
+    "gross_cell_body_um2": 12264.477299999999,
+    "matched_old_accept_select_and_selector_net_debit": null,
+    "new_protected": 2016,
+    "new_raw": 716,
+    "once_only": "replace old caller73raw/3words by102raw/4words, keep leaf614raw once; do not add old whole kernel again",
+    "previous_protected": 1944,
+    "previous_raw": 687,
+    "raw_delta": 29
+  },
+  "peer_dependencies": {
+    "Archimedes": [
+      "one concrete core/context and replica count",
+      "disjoint rectangle and legal tracks for636 leaf and2x52 producer cuts afterPG/via/clock",
+      "0.9GHz sinktree/load/reset/skew with60/25 uncertainties",
+      "actualproducer clocks and pricedCDC or explicitsameclockenrollment",
+      "checkedprefix/codec cuts before launch"
+    ],
+    "Claude": [
+      "acceptance and complete drafter remain separatelyowned, no rate inference from leaf tests"
+    ],
+    "Dewey_Popper": [
+      "actualpositiveallcopies fence incllaunchstamp/return/result/reverse/reset endpoints",
+      "nativecaller origin/lane identity and reuse mapping, no invented calendar"
+    ],
+    "implementation_owner": [
+      "defaultoff kernel parameter withNSLOT8NW21 fullwidth fixture",
+      "source scalarIW21 throughin/out/writeback comparator bank notjustwire",
+      "registered origin/token freshness and heldready interfaces",
+      "originalsource pins unchanged; separate newRTL source successor aftermodelenrollment"
+    ]
+  },
+  "physical_slot": {
+    "PG_clock_via_exclusions": null,
+    "ROM_and_HBM_replica_count": "caller/source selection pending; no free fullfleet replication",
+    "actual_legal_channel_tracks": null,
+    "actual_reserved_rectangle": null,
+    "component_rectangle_request": "ceil(cell_area_at50pct/128um) height rounded to0.27um rows, minimum width128um; unreserved request only",
+    "fit_qualified": false,
+    "minimum_50pct_cell_area_mm2": 0.024528954599999996,
+    "minimum_signal_corridor_um_at_48nm_pitch": 30.528000000000002,
+    "replicas_per_enrolled_core": 1,
+    "requested_height_um": 191.70000000000002,
+    "requested_owner_slot": "MTP_ACCEPT_SERIAL_SPINE_PER_ACTUAL_CORE",
+    "requested_width_um": 128
+  },
+  "ports": {
+    "begin_finish_discriminator_per_kind": 1,
+    "cut_fields": "token21,originallease25,slot3,valid1,ready1; prelaunch begin separately serialized on these fields with named control not counted as free",
+    "held_core_CTL": "S_ISSUE holds decoded command and does not advancePC until exact acceptance; source identity must match heldCTL slot",
+    "leaf_nominal_ingress_II_edges": 2,
+    "leaf_union_signals": 636,
+    "output_occupancy": 1,
+    "producer_adapter_signals_per_kind_total": 52,
+    "producer_to_holder_cut_instances": 2,
+    "producer_to_holder_cut_per_kind": 51,
+    "result_ACK": "S_ACC consumes stable prefix; S_RST restoration must sample before matchingresulttake; localACK notrollback",
+    "source_adapter_same_kind_occupancy": 1,
+    "whole_draft_II": null
+  },
+  "scalar_repair": {
+    "ORDER": 1,
+    "VW": 32,
+    "all_added_checked_stages_must_be_priced": true,
+    "input_bytes_per_edge": 4,
+    "input_scores_per_edge": 1,
+    "new_IW": 21,
+    "no_new_selector_replica": true,
+    "old_IW": 16,
+    "prospective_width_added_edges": 0,
+    "protection_of_all_mutable_selector_records": "required, absent from original; exact codeword packing/checked pipeline must be priced before connected build",
+    "raw_FF_width_delta": 7690,
+    "raw_after": 69226,
+    "raw_after_by_register": {
+      "controller_and_output": 41,
+      "emission_bank": 11776,
+      "input_stage": 65,
+      "insertion_store": 28160,
+      "key_stage": 55,
+      "registered_pass": 28105,
+      "wave_and_threshold": 1024
+    },
+    "raw_before": 61536,
+    "raw_before_by_register": {
+      "controller_and_output": 36,
+      "emission_bank": 9216,
+      "input_stage": 60,
+      "insertion_store": 25600,
+      "key_stage": 50,
+      "registered_pass": 25550,
+      "wave_and_threshold": 1024
+    },
+    "runtime_draft_k": 1,
+    "scope": "unmapped conservative width-only screen; NOT complete protected scalar selector or physical admission",
+    "source_default_K": 512,
+    "source_input_clock_and_loaded_SS_FF": null,
+    "source_latency_after_last_input_edges": 1026,
+    "source_vm_write_bytes_per_edge": 4,
+    "width_only_50pct_mm2": 0.03135116988,
+    "width_only_body_um2": 15675.58494,
+    "width_only_cell_counts": {
+      "BUFx4_ASAP7_75t_R": 17584,
+      "DFFASRHQNx1_ASAP7_75t_R": 7690,
+      "INVx1_ASAP7_75t_R": 51175,
+      "NAND2x1_ASAP7_75t_R": 99765
+    },
+    "zero_added_edges_is_proven": false
+  },
+  "schema": "DS_MTP_ACTUAL_TOKX_KERNEL_ENROLLMENT_R1",
+  "source_holders": {
+    "begin": "accepted XU/ME command captures full origin before launch; TOKX destination slot is draft row+1, AMAX verify destination exact lane/slot",
+    "existing_core_c_slot_r_reused_as_origin": false,
+    "finish": "terminal full token plus original echoed lease/slot; wrong/duplicate terminal refuses without mutating debt and drives leaf caller_bad",
+    "no_hidden_latest_lease_at_return": true,
+    "one_holder_per_kind": true,
+    "origin": {
+      "generation": 4,
+      "occupied": 1,
+      "position": 21,
+      "slot": 3
+    },
+    "protected_bits": 288,
+    "protected_words": 4,
+    "raw_bits": 102,
+    "replicas_each": 2,
+    "source_generation_echo_installed": false,
+    "source_multi_lane_ME_stamp_mapping": null,
+    "take": "held matching leaf input handshake only; source holder free is not KV release",
+    "value": {
+      "fresh": 1,
+      "token": 21
+    }
+  },
+  "source_pins": [
+    {
+      "archive": "inputs/tools/hdc_program_v41.py",
+      "path": "tools/hdc_program_v41.py",
+      "sha256": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f"
+    },
+    {
+      "archive": "inputs/tools/hdc_isa_v41.py",
+      "path": "tools/hdc_isa_v41.py",
+      "sha256": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3"
+    },
+    {
+      "archive": "inputs/rtl/w17_runtime/hdc/v41x/ot_hdc_core_v41x.sv",
+      "path": "rtl/w17_runtime/hdc/v41x/ot_hdc_core_v41x.sv",
+      "sha256": "c5e1b8c9ff458bc0995f58b299e8930bb192c4761434fb1c7eb8fe0f803b6a30"
+    },
+    {
+      "archive": "inputs/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+      "sha256": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0"
+    },
+    {
+      "archive": "inputs/rtl/hdc/v41/ot_hdc_v41_xu.sv",
+      "path": "rtl/hdc/v41/ot_hdc_v41_xu.sv",
+      "sha256": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566"
+    },
+    {
+      "archive": "inputs/rtl/hdc/v41/ot_hdc_select.sv",
+      "path": "rtl/hdc/v41/ot_hdc_select.sv",
+      "sha256": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e"
+    },
+    {
+      "archive": "inputs/rtl/hdc/ot_hdc_accept.sv",
+      "path": "rtl/hdc/ot_hdc_accept.sv",
+      "sha256": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e"
+    },
+    {
+      "archive": "inputs/rtl/test/tb_hdc_core_v41_mtp.sv",
+      "path": "rtl/test/tb_hdc_core_v41_mtp.sv",
+      "sha256": "a1b937307416db03fade119dda96125dcdee7e1d3bc32c33b84b2c730f901437"
+    },
+    {
+      "archive": "inputs/rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+      "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+      "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+    },
+    {
+      "archive": "inputs/rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "path": "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+    },
+    {
+      "archive": "inputs/tools/ds_mtp_accept_leaf_model.py",
+      "path": "tools/ds_mtp_accept_leaf_model.py",
+      "sha256": "64e561298a7970012db2750452a5ef0cc19236c9d467d7e5348800d404545350"
+    },
+    {
+      "archive": "inputs/results/uarch/ds_mtp_accept_leaf_20261003/model.json",
+      "path": "results/uarch/ds_mtp_accept_leaf_20261003/model.json",
+      "sha256": "ac6cf3d932890cfe357afbf84644b5422ca050acf26487b73342f45cd68c22b7"
+    }
+  ],
+  "source_selected_producer": {
+    "actual_branch": "S_SEL scalar ot_hdc_select IW16 for both X_SEL0 and X_SEL1",
+    "actual_count_dynamic": false,
+    "actual_scores": "FP32",
+    "draft_keywords": {
+      "xu_dst": "V_['DTOK'] + i",
+      "xu_k": "1",
+      "xu_n": "0 if off else nv",
+      "xu_op": "I.XU_SEL",
+      "xu_src": "V_['LG']"
+    },
+    "earlier_468c_IW20_draft_mapping": "SUPERSEDED: IW20 branch is dynamic-count BF16 only",
+    "required_repair": "full scalar NW21 input/index/comparator/emission/output/writeback/sel_first, unchanged K/VW/ORDER; no truncated16 zeroextension"
+  }
+}
