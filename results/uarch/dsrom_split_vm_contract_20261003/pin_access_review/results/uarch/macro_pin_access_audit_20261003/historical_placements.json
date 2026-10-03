@@ -1,0 +1,285 @@
+[
+ {
+  "run": "a6/a8_su (TT elem, util 0.745/0.719)",
+  "record": "results/physical_abi3/asap7/chip/v41_w10_elem/elem_physical_a6.json",
+  "hook": "physical/abi3/v41_w10_elem_q_place.tcl",
+  "macro": "ot_rom_8192x274_m8",
+  "instances": [
+   {
+    "inst": "u_rom",
+    "orient": "R0",
+    "origin_um": [
+     14.148,
+     6.48
+    ],
+    "pins": 289,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   }
+  ],
+  "offtrack_total": 0
+ },
+ {
+  "run": "p2/p5/p8 (TT pair, util 0.754/0.792/0.775)",
+  "record": "results/physical_abi3/asap7/chip/v41_w10_elem/pair_physical_p2.json",
+  "hook": "physical/abi3/v41_w10_elem_pair_q_lw210_place.tcl",
+  "macro": "ot_rom_8192x274_m8",
+  "instances": [
+   {
+    "inst": "mac0.u_rom",
+    "orient": "R0",
+    "origin_um": [
+     14.148,
+     6.48
+    ],
+    "pins": 289,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   },
+   {
+    "inst": "mac1.u_rom",
+    "orient": "MY",
+    "origin_um": [
+     373.896,
+     6.48
+    ],
+    "pins": 289,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   }
+  ],
+  "offtrack_total": 0
+ },
+ {
+  "run": "p12q4/q5/q6/q8/q9, frontpar_r1 (SS, ~0.83)",
+  "record": "results/physical_abi3/asap7/chip/v41_w10_elem/ss_route_failures/p12q9.json",
+  "hook": "git 5504edec0:physical/abi3/v41_w10_elem_pair_q_pp_lw239_tile511x127_place.tcl (= physical/abi3/w10_wake_q_place.tcl)",
+  "macro": "ot_rom_4096x274_m8",
+  "instances": [
+   {
+    "inst": "mac0.rom0",
+    "orient": "R0",
+    "origin_um": [
+     5.4,
+     0.0
+    ],
+    "pins": 288,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   },
+   {
+    "inst": "mac0.rom1",
+    "orient": "MX",
+    "origin_um": [
+     5.4,
+     62.64
+    ],
+    "pins": 288,
+    "offtrack_pins": 288,
+    "max_offset_nm": 6.0
+   },
+   {
+    "inst": "mac1.rom0",
+    "orient": "MY",
+    "origin_um": [
+     380.16,
+     0.0
+    ],
+    "pins": 288,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   },
+   {
+    "inst": "mac1.rom1",
+    "orient": "R180",
+    "origin_um": [
+     380.16,
+     62.64
+    ],
+    "pins": 288,
+    "offtrack_pins": 288,
+    "max_offset_nm": 6.0
+   }
+  ],
+  "offtrack_total": 576
+ },
+ {
+  "run": "dsrom_qframe A_r1/B_r1 (SS, 0.60/0.48)",
+  "record": "claude/dsrom-qframe-20261003:results/rtl/dsrom_qframe_20261003/verdict_A_r1.json",
+  "hook": "pre-b128da830 frame A hook",
+  "macro": "ot_rom_4096x274_m8",
+  "instances": [
+   {
+    "inst": "mac0.rom0",
+    "orient": "R0",
+    "origin_um": [
+     10.8,
+     25.92
+    ],
+    "pins": 288,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   },
+   {
+    "inst": "mac0.rom1",
+    "orient": "MX",
+    "origin_um": [
+     10.8,
+     88.56
+    ],
+    "pins": 288,
+    "offtrack_pins": 288,
+    "max_offset_nm": 6.0
+   },
+   {
+    "inst": "mac1.rom0",
+    "orient": "MY",
+    "origin_um": [
+     385.56,
+     25.92
+    ],
+    "pins": 288,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   },
+   {
+    "inst": "mac1.rom1",
+    "orient": "R180",
+    "origin_um": [
+     385.56,
+     88.56
+    ],
+    "pins": 288,
+    "offtrack_pins": 288,
+    "max_offset_nm": 6.0
+   }
+  ],
+  "offtrack_total": 576
+ },
+ {
+  "run": "dsrom_qframe A_r2 (running, snap fix)",
+  "record": "claude/dsrom-qframe-20261003 launch_A_r2.json",
+  "hook": "physical/abi3/dsrom_qframe_A_trk_place.tcl @b128da830",
+  "macro": "ot_rom_4096x274_m8",
+  "instances": [
+   {
+    "inst": "mac0.rom0",
+    "orient": "R0",
+    "origin_um": [
+     10.8,
+     25.92
+    ],
+    "pins": 288,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   },
+   {
+    "inst": "mac0.rom1",
+    "orient": "MX",
+    "origin_um": [
+     10.8,
+     89.37
+    ],
+    "pins": 288,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   },
+   {
+    "inst": "mac1.rom0",
+    "orient": "MY",
+    "origin_um": [
+     385.56,
+     25.92
+    ],
+    "pins": 288,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   },
+   {
+    "inst": "mac1.rom1",
+    "orient": "R180",
+    "origin_um": [
+     385.56,
+     89.37
+    ],
+    "pins": 288,
+    "offtrack_pins": 0,
+    "max_offset_nm": 0.0
+   }
+  ],
+  "offtrack_total": 0
+ },
+ {
+  "run": "v41x_window_bank4_phy hold100 (DRT-0255 x12)",
+  "record": "results/physical_abi3/asap7/chip/v41x_window_bank4_phy/route_diagnostic.json",
+  "hook": "physical/v41x_window_bank4_macro_place.tcl (unsnapped setLocation)",
+  "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+  "instances": [
+   {
+    "inst": "g_bank[0]",
+    "orient": "R0",
+    "origin_um": [
+     35.0,
+     50.0
+    ],
+    "pins": 821,
+    "offtrack_pins": 821,
+    "max_offset_nm": 16.0
+   },
+   {
+    "inst": "g_bank[1]",
+    "orient": "R0",
+    "origin_um": [
+     225.0,
+     50.0
+    ],
+    "pins": 821,
+    "offtrack_pins": 821,
+    "max_offset_nm": 16.0
+   },
+   {
+    "inst": "g_bank[2]",
+    "orient": "R0",
+    "origin_um": [
+     35.0,
+     145.0
+    ],
+    "pins": 821,
+    "offtrack_pins": 821,
+    "max_offset_nm": 8.0
+   },
+   {
+    "inst": "g_bank[3]",
+    "orient": "R0",
+    "origin_um": [
+     225.0,
+     145.0
+    ],
+    "pins": 821,
+    "offtrack_pins": 821,
+    "max_offset_nm": 8.0
+   }
+  ],
+  "offtrack_total": 3284
+ },
+ {
+  "run": "v41x_attn_sram_bank_phy (DRT-0255 x5)",
+  "record": "results/physical_abi3/asap7/chip/v41x_attn_sram_bank_phy/route_diagnostic.json",
+  "hook": "physical/v41x_attn_bank_post_macro_place.tcl (unsnapped setLocation)",
+  "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+  "instances": [
+   {
+    "inst": "u_mem",
+    "orient": "R0",
+    "origin_um": [
+     44.0,
+     44.0
+    ],
+    "pins": 821,
+    "offtrack_pins": 821,
+    "max_offset_nm": 16.0
+   }
+  ],
+  "offtrack_total": 821
+ }
+]
