@@ -48,6 +48,45 @@ class VMContract(unittest.TestCase):
         with self.assertRaises(ValueError):
             m.ordered_edge({}, [], [('w', 1, 1), ('w', 2, 2)])
 
+    def test_duplicate_read_identity_refused_before_lookup(self):
+        for reads in [[('r', 1), ('r', 2)], [('r', 1), ('r', 1)]]:
+            with self.subTest(reads=reads), self.assertRaisesRegex(ValueError, 'Read transaction identity reused'):
+                m.ordered_edge({}, reads, [])
+
+    def test_same_address_fanout_keeps_distinct_requests(self):
+        replies, _, _ = m.ordered_edge({1: 123}, [('r0', 1), ('r1', 1)], [])
+        self.assertEqual(replies, {'r0': 123, 'r1': 123})
+
+    def test_finite_iterator_requests_not_consumed_by_validation(self):
+        replies, image, _ = m.ordered_edge({1: 123, 2: 456}, iter([('r0', 1), ('r1', 2)]), iter([('w', 2, 789)]))
+        self.assertEqual(replies, {'r0': 123, 'r1': 456})
+        self.assertEqual(image[2], 789)
+
+    def test_noninteger_addresses_refused_both_directions(self):
+        for address in [True, False, 1.0, '1', None]:
+            with self.subTest(address=address), self.assertRaises(ValueError):
+                m.ordered_edge({1: 123}, [('r', address)], [])
+            with self.subTest(address=address), self.assertRaises(ValueError):
+                m.ordered_edge({}, [], [('w', address, 123)])
+
+    def test_read_write_address_boundaries(self):
+        last = (1 << 19) - 1
+        replies, image, _ = m.ordered_edge({0: 1, last: 2}, [('r0', 0), ('r1', last)], [('w', last, 3)])
+        self.assertEqual(replies, {'r0': 1, 'r1': 2})
+        self.assertEqual(image[last], 3)
+        for address in [-1, 1 << 19]:
+            with self.subTest(address=address), self.assertRaises(ValueError):
+                m.ordered_edge({}, [('r', address)], [])
+            with self.subTest(address=address), self.assertRaises(ValueError):
+                m.ordered_edge({}, [], [('w', address, 123)])
+
+    def test_invalid_identity_refused_both_directions(self):
+        for identity in [True, 1.0, [], None, '', -1]:
+            with self.subTest(identity=identity), self.assertRaises(ValueError):
+                m.ordered_edge({1: 123}, [(identity, 1)], [])
+            with self.subTest(identity=identity), self.assertRaises(ValueError):
+                m.ordered_edge({}, [], [(identity, 1, 123)])
+
     def test_idle_requires_actual_drain_and_epoch(self):
         self.assertTrue(m.idle_join(True, 0, 0, 0, True, True))
         for p, w, j in [(1, 0, 0), (0, 1, 0), (0, 0, 1)]:

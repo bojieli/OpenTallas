@@ -65,18 +65,27 @@ def ordered_edge(memory, reads, writes):
 
     Losing writes retire as superseded; they do not get a visible-write ACK.
     Addresses here are already expanded according to the source expressions.
-    Bounds must be checked before entry; no added modulo or arbitrary clamp.
+    Expanded addresses must be integers within VM_AW19; booleans are not
+    addresses. Request identities are opaque nonnegative integers or nonempty
+    test labels, unique within each direction. Same-address fanout uses distinct
+    read identities; this reference never collapses accepted requests.
     """
+    reads = tuple(reads)
+    writes = tuple(writes)
     limit = 1 << 19
     for _, address in reads:
-        if not 0 <= address < limit:
+        if type(address) is not int or not 0 <= address < limit:
             raise ValueError('Read outside retained VM extent')
     for _, address, _ in writes:
-        if not 0 <= address < limit:
+        if type(address) is not int or not 0 <= address < limit:
             raise ValueError('Write outside retained VM extent')
-    ids = [w[0] for w in writes]
-    if len(ids) != len(set(ids)):
-        raise ValueError('Transaction identity reused')
+    for direction, requests in [('Read', reads), ('Write', writes)]:
+        ids = [request[0] for request in requests]
+        if any(not ((type(rid) is int and rid >= 0) or
+                    (type(rid) is str and rid != '')) for rid in ids):
+            raise ValueError(direction + ' identity must be a nonnegative integer or nonempty label')
+        if len(ids) != len(set(ids)):
+            raise ValueError(direction + ' transaction identity reused')
     reply = {rid: memory[address] for rid, address in reads}
     winners = {address: wid for wid, address, _ in writes}
     after = dict(memory)
