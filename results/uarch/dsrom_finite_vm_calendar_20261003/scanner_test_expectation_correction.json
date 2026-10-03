@@ -1,0 +1,5 @@
+{
+  "original_test": "read_old_and_source_winner expected ACK8, observed9 after selected scanner replacement",
+  "cause": "Skipped superseded source entry consumes a scanner edge; final winner is entry1, issue6, macrovisible8, ACK9. Test expectation corrected; no timing constraint changed.",
+  "evidence_class": "MODEL_TEST_EXPECTATION_FAILURE_NOT_PHYSICAL"
+}

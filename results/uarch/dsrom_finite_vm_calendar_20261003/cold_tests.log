@@ -1,0 +1,19 @@
+test_4096_selected_no_small_backend (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_HBM_inventory_not_gateway_only (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_capacity_refusal_before_acceptance (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_consumer_stall_does_not_remove_reply_seats (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_credits_not_acceptance_or_idle_and_stale_reset (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_duplicate_reads_are_not_dropped (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_four_banks_no_free_arbitrary_read_ports (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_mask_packets_preserve_unwritten_lanes (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_model_replay (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_random_alias_and_bank_calendar_matches_source (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_raw_width_epoch_address_contract (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_read_old_and_source_winner (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_top_address_native_read_no_out_of_bounds_window (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+test_worst_same_bank_full_frame_has_positive_bound (test_dsrom_finite_vm_calendar.FiniteVM) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.087s
+
+OK

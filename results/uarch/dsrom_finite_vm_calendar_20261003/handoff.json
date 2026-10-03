@@ -1,0 +1,28 @@
+{
+  "worktree": "/home/ubuntu/w17-dsrom-ratio-fifo-gap-20261003",
+  "branch": "model/dsrom-ratio-fifo-gap-20261003",
+  "model_sha256": "4ef815871fe99fb323bef8f61f6738fdc591889bba27557ccd773da6c6f567d8",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "artifact": "results/uarch/dsrom_finite_vm_calendar_20261003/model.json",
+  "replay": "python3 tools/dsrom_finite_vm_calendar.py",
+  "tests": "python3 -m unittest discover -s tests -p test_dsrom_finite_vm_calendar.py -v",
+  "scope": "Prospective component-sized finite VM calendar, full2MiB native backend; not an observed simultaneous source demand, not selected whole-token schedule or physical qualification",
+  "mandatory_repair": "Retained wrapper all-one native masks suppress scalar preservation. Add16lane cmd+local masks (1088FF), native32bit-lane expansion, source tags and visibleACK after macro write",
+  "worst_frame": {
+    "fill_edges": 177641,
+    "backend_edges": 2120,
+    "total_ns": 199734.44444444444,
+    "caveat": "All-enabled1520/593 demand diagnostic, conditional admitted-frame bound, not runtime activation-frequency or token multiplication"
+  },
+  "admission": {
+    "RTL_GO": false,
+    "SSFF_closure": false,
+    "component_model_for_review": true,
+    "parent_PnR": false,
+    "whole_token": false
+  },
+  "next_action": "Parent/Maxwell review selected sequential resolver and masked backend component model, bind compiler exclusion proofs to actual frame occupancy/lease. Claude joins selected CDC ingress and receipt widths; no shared FIFO edits.",
+  "HBM": "Amperec8daf inventory pinned; gateway-only clock omitted104matrix-memory+64compute DS /21matrix-memory+64compute Qwen endpoints perSM. Named fullSM root/reset/PG union remains open; PHY LEN/BEAT and staging corrections ownedPopper.",
+  "no_new_jobs": true,
+  "solver": "Existing2629663 untouched, no poll/restart"
+}
