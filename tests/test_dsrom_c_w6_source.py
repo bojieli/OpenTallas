@@ -18,3 +18,14 @@ def test_actual_source_selected_events_default_off():
  assert '.core_start(c_start)' in out and '.core_done(c_done)' in out
  assert out.count('W6_TRACE')==3
  with pytest.raises(AssertionError):m.instrument(out)
+
+def test_actual_campaign_source_selection_is_optin_and_preserves_parameters(monkeypatch):
+ import types
+ spec=importlib.util.spec_from_file_location('campaign',ROOT/'tools/dsrom_w6_system_campaign.py')
+ c=importlib.util.module_from_spec(spec);spec.loader.exec_module(c)
+ p=types.SimpleNamespace(TB=Path('original.sv'))
+ monkeypatch.setenv('OT_SYS_GPARAMS','LINK_RT=1')
+ c.select(p,False);assert p.TB==Path('original.sv')
+ c.select(p,True);assert p.TB==ROOT/'rtl/test/dsrom_sys/w6/tb_dsrom_system.sv'
+ assert c.os.environ['OT_SYS_GPARAMS']=='LINK_RT=1 W6_TRACE=1'
+ with pytest.raises(ValueError):c.select(p,True)
