@@ -4,7 +4,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 VERILATOR="${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}"
-run_dir="${RUN_DIR:-$(mktemp -d)}"
+run_dir="${RUN_DIR:-$(mktemp -d)}"; mkdir -p "$run_dir"
 "$VERILATOR" --binary --timing -Wno-fatal -Wno-WIDTH -j 2 --top-module tb_hbm_stream_bw \
   --Mdir "$run_dir/obj" "$@" \
   rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv \
