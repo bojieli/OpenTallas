@@ -1,0 +1,103 @@
+{
+  "cache_retirement": "Separate receipt ab0676a9a results/fleet/W6_guestcache_owner_review_20261003/r1; no cache/retirement predicate used here.",
+  "frozen_RTL_unchanged": true,
+  "frozen_component": {
+    "KVclient5": true,
+    "NC6": true,
+    "RFslot9": true,
+    "defaultoff": true,
+    "owner46": true,
+    "protected_state_bits_per_SM": 144,
+    "raw_state_bits_per_SM": 71
+  },
+  "helper_pins": {
+    "tools/hbm_w6_frozen_interface.py": "36694ff894a38e98e86cf41b053c99be03d4884f56fe0025fe953bae671e1dfc",
+    "tools/test_hbm_w6_frozen_interface.py": "5c4899014020b6281f4e17a0b8d67309cd0f841565ce3adf68117b53a3c61d92"
+  },
+  "interface_tool": "tools/hbm_w6_frozen_interface.py",
+  "no_fullsystem_or_MTP_job": true,
+  "no_peer_file_edits": true,
+  "peer": {
+    "HEAD": "bfbcf472b62f442c371cbf9c107c5916f6e84864",
+    "launch_admission": false,
+    "pins": [
+      {
+        "bytes": 11578,
+        "path": "rtl/experimental/hbm_c0_connected_20261003/ot_gpu_c0_connected_bridge.sv",
+        "sha256": "6e58cedb394a968ead2414d8e82575b890c8fbe43cfb15afcfed2df7632e82a1"
+      },
+      {
+        "bytes": 3272,
+        "path": "rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_pc40_fmin_consumer.sv",
+        "sha256": "ef9e8f5defbf1dbc99d618ee5c8cd5d1e45d5e77821434d6f10db0b5c233767b"
+      },
+      {
+        "bytes": 16355,
+        "path": "rtl/test/hbm_c0_connected_20261003/r2/tb.sv",
+        "sha256": "e03dd28a767b625dd0a184d2990fd94a4611a1b9ea6bcf3af2af95ae544d4c0e"
+      },
+      {
+        "bytes": 6673,
+        "path": "tools/h4_hbm_c0_pc40_exact_gate_r2.py",
+        "sha256": "50ac4e6e5929dc15d4cc862e07782d06a77840e7f44adb348b908c37078731cd"
+      },
+      {
+        "bytes": 2718,
+        "path": "tests/test_h4_hbm_c0_pc40_exact_gate_r2.py",
+        "sha256": "2f57a1b5f5a006ce1abafe9c850be005c00aa7e9fc785f21fc80f36f6017e3d4"
+      },
+      {
+        "bytes": 19162,
+        "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/r2/model.json",
+        "sha256": "66c5fe01f51ed78c283ef58761e2e121c6af7a8ee8c04ec8d76f4fa65c6ff242"
+      },
+      {
+        "bytes": 2365,
+        "path": "rtl/gpu/ot_gpu_rf_service.sv",
+        "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+      }
+    ],
+    "r2_uncommitted_snapshot": true,
+    "root": "/home/ubuntu/OpenTallas-hbm-bridge-f0-r3",
+    "scope": "PC40/tile0 RF NEG/FMAX -> W6 visibility -> actual RF19 FMIN result -> consumer -> fixture reverse/drain; HBMcommands0, no full-system/MTP credit"
+  },
+  "peer_check_argv": [
+    "python3",
+    "tools/hbm_w6_frozen_interface.py",
+    "--peer-root",
+    "/home/ubuntu/OpenTallas"
+  ],
+  "physical_credit": false,
+  "read_only_findings": [
+    "W6 interface remains exact55bits; separate internal SIMD retirement input is tied off on selected host-only PC40 path, so no internal SIMD composition coverage.",
+    "W6 req accepts caller-supplied owner46+slot19. Controller retains that identity separately from native64tag/gen; no source PC40 cast to physicalPC claimed.",
+    "RF primitive common bare ACK is retagged from retained controller identity. Conditional validity requires actual exclusive writer, one outstanding, shared reset, no old ACK accepted at request, and stale/reset negatives. This is not an identity-bearing RF ACK port.",
+    "req_ready explicitly excludes local/remote ACK and local response while IDLE; sequential write phases drain prior ACK. Actual reset/rearm provenance remains a connected directed-test requirement.",
+    "FMIN consumer holds identity/result in protected state after RF19 capture; result_ready precedes consumer_valid. W6 consumer must use the actual held c_identity, not a synthesized progress flag.",
+    "Bench all18 drain levels are initialized to1 and response copies request identity/scope. This is honest local fixture evidence and cannot attest installed all-copy source debt.",
+    "Selected local path has no remote RF write; absent_remote constant fr/vis/retire is bypass for an absent endpoint, not positive remote/mirrored-SM proof. Primitive two RF copies remain distinct.",
+    "Peer source and model remain WIP; snapshot hashes are review evidence only, not clean GO source admission."
+  ],
+  "required_next_connected_negatives": [
+    "Hold FMIN result_ready low: payload/identity remain stable; no W6 consumer, reverse, native done or workspace release.",
+    "Issue stale/duplicate local ACK at idle/request and between writes; assert source pending/write acceptance provenance and prevent stale ACK becoming final FMAX completion.",
+    "Reset while RF ACK pending and while FMIN result is held: retain old55bit identity and workspace, clear actual RF ACK under common reset, quarantine W6; reject old normal drain response and same-cycle old ACK/new request.",
+    "Inject wrong55bit consumer and premature child/parent/CDC reverse; require fault and no retire. Match every field, not a ledger synthetic key.",
+    "Hold each actual forward/return/drain handshake; lower each9 source debt level independently; no retire/rearm until current scoped levels and matching reverseCDC are drained.",
+    "For KV5/internal SIMD/full multi-frame join, obtain actual caller retention and separately source/model-enrolled bench. Do not infer those paths from selected host C0."
+  ],
+  "schema": "W6_FROZEN_INTERFACE_AND_CONNECTED_CORRECTNESS_R1",
+  "source_parent": "ab0676a9a62391929337b883ab6864d63e99c4d9",
+  "verification": {
+    "archived_trace_recheck_accepts": 157,
+    "archived_trace_recheck_checks": 611,
+    "frozen_interface_tests": 7,
+    "new_RTL_compiles": 0,
+    "new_numerical_runs": 0,
+    "peer_model_tests": 12,
+    "peer_pure_regeneration": "PASS",
+    "source_mutant_subtests": 6,
+    "trace_mutant_tests": 11
+  },
+  "wholeprogram_credit": false
+}
