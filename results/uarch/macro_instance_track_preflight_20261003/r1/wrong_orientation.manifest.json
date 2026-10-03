@@ -1,0 +1,40 @@
+{
+  "frozen_checker_sha256": "21f4957b432b14b142598ee334b9cdb9ef18f09efbbcaa0d2cbd629582ff8a84",
+  "instances": [
+    {
+      "lef": {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+        "sha256": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+      },
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "name": "rf_mirror",
+      "orientation": "R0",
+      "x_nm": 0,
+      "y_nm": 1080
+    },
+    {
+      "lef": {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef",
+        "sha256": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4"
+      },
+      "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "name": "scratch_mirror",
+      "orientation": "MX",
+      "x_nm": 0,
+      "y_nm": 1890
+    }
+  ],
+  "row_site": {
+    "row_count": 10000,
+    "row_pitch_nm": 270,
+    "site_count": 10000,
+    "site_pitch_nm": 54,
+    "x_origin_nm": 0,
+    "y_origin_nm": 0
+  },
+  "schema": "OT_STRICT_MACRO_INSTANCE_TRACKS_V1",
+  "tracks": {
+    "path": "results/uarch/dsrom_noECC_production_context_20261002/inputs/make_tracks.tcl",
+    "sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632"
+  }
+}
