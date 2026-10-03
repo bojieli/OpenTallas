@@ -21,7 +21,8 @@ module tb_hdc_core_2clk #(
     parameter integer G = 4,
     parameter integer SW = 8,
     parameter integer ME_CDC = 0,
-    parameter integer CDC_DEPTH = 4
+    parameter integer CDC_DEPTH = 4,
+    parameter integer SAFE_CHASE = 1
 ) (input wire sclk, input wire fclk, input wire [63:0] tick);
     localparam integer INSTR_BITS = 1024;
     localparam integer W = 16, AW = 24, NW = 16, PAW = 12;
@@ -72,7 +73,7 @@ module tb_hdc_core_2clk #(
     ot_hdc_core_vector_weight #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW)) dut (
         .clk(sclk),
 `else
-    ot_hdc_core_vector_weight_2clk #(.ME_CDC(ME_CDC), .ME_CDC_DEPTH(CDC_DEPTH),
+    ot_hdc_core_vector_weight_2clk #(.ME_CDC(ME_CDC), .ME_CDC_DEPTH(CDC_DEPTH), .ME_CDC_SAFE_CHASE(SAFE_CHASE),
                                      .W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW)) dut (
         .clk(sclk), .fclk(fclk), .f_wrom_re(f_wrom_re), .f_wrom_addr(f_wrom_addr), .f_wrom_q(f_wrom_q),
 `endif
@@ -104,6 +105,29 @@ module tb_hdc_core_2clk #(
 
     integer l, q;
     integer collisions = 0;
+    // +TRACE=file: every engine-side read and every vector-memory / KV write, in time order (debug of ordering)
+    integer tf = 0;
+    reg [8*512-1:0] tpath;
+    initial if ($value$plusargs("TRACE=%s", tpath)) tf = $fopen(tpath, "w");
+    always @(posedge fclk) if (tf != 0) begin
+        for (q = 0; q < G; q = q + 1) if (vx_re[q]) $fdisplay(tf, "RX %0d %0d %h", tick, vx_addr[q*AW +: 12], vm[vx_addr[q*AW +: 12]]);
+        if (kv_re) for (q = 0; q < G; q = q + 1) $fdisplay(tf, "RK %0d %0d %h", tick, kv_raddr[q*AW +: 10], kv[kv_raddr[q*AW +: 10]]);
+    end
+    always @(posedge sclk) if (tf != 0) begin
+        for (q = 0; q < G; q = q + 1) if (vw_me_we[q]) for (l = 0; l < W; l = l + 1) if (vw_me_mask[q*W + l])
+            $fdisplay(tf, "WM %0d %0d %h", tick, {vw_me_addr[q*AW +: 8], 4'b0} + l, vw_me_data[32*(q*W + l) +: 32]);
+        for (q = 0; q < SW; q = q + 1) if (vw_su_we[q]) $fdisplay(tf, "WS %0d %0d %h", tick, vw_su_addr[q*AW +: 12], vw_su_data[32*q +: 32]);
+        if (vw_rd_we) $fdisplay(tf, "WR %0d %0d %h", tick, vw_rd_addr[11:0], vw_rd_data);
+        if (vw_mx_we) for (l = 0; l < W; l = l + 1) if (vw_mx_mask[l]) $fdisplay(tf, "WX %0d %0d %h", tick, {vw_mx_addr[7:0], 4'b0} + l, vw_mx_data[32*l +: 32]);
+        for (q = 0; q < SW; q = q + 1) if (kv_we[q]) $fdisplay(tf, "WK %0d %0d %h", tick, kv_waddr[q*AW +: 24], kv_wdata[32*q +: 32]);
+        for (q = 0; q < SW; q = q + 1) begin
+            if (va_re[q]) $fdisplay(tf, "RA %0d %0d %h", tick, va_addr[q*AW +: 12], vm[va_addr[q*AW +: 12]]);
+            if (vb_re[q]) $fdisplay(tf, "RB %0d %0d %h", tick, vb_addr[q*AW +: 12], vm[vb_addr[q*AW +: 12]]);
+            if (vc_re[q]) $fdisplay(tf, "RC %0d %0d %h", tick, vc_addr[q*AW +: 12], vm[vc_addr[q*AW +: 12]]);
+        end
+        if (dut.me_go) $fdisplay(tf, "GO_ME %0d pc=%0d", tick, dut.pc);
+        if (dut.su_go) $fdisplay(tf, "GO_SU %0d pc=%0d", tick, dut.pc);
+    end
     // ---- fast-domain read ports (engine) ----
     always @(posedge fclk) begin
         if (f_wrom_re) f_wrom_q <= wrom[f_wrom_addr[16:0]];
