@@ -31,7 +31,7 @@ def execute(work,source):
       reserve_memory_bytes=32*2**30,reserve_disk_bytes=8*2**30,threads=8,
       policy='no imposed memory/swap/CPU-time/wall/FSIZE/AS caps; host headroom reservations',
       manifest_sha256=sha(work/'manifest.json'),inventory_sha256={str(p.relative_to(work)):sha(p) for p in work.rglob('*') if p.is_file()},
-      compiler_image=subprocess.check_output(['docker','image','inspect','openroad/orfs:asap7lock','--format','{{.Id}}'],text=True).strip())
+      compiler_image=subprocess.check_output(['sudo','-n','docker','image','inspect','openroad/orfs:asap7lock','--format','{{.Id}}'],text=True).strip())
     (work/'start.json').write_text(json.dumps(start,indent=2)+'\n')
     phases=[];verdict='FAIL_INCOMPLETE';failure=None
     try:
@@ -45,7 +45,7 @@ def execute(work,source):
             (work/(name+'-start.json')).write_text(json.dumps(receipt,indent=2)+'\n')
             # Named container ensures ownership verification. No Docker --memory
             # /--cpus, no shell ulimit overrides or elapsed-time deadline.
-            cmd=['docker','run','--rm','--name','qfd_b3_'+name,'-v',str(directory)+':/work','-w','/work',
+            cmd=['sudo','-n','docker','run','--rm','--name','qfd_b3_'+name,'-v',str(directory)+':/work','-w','/work',
               'openroad/orfs:asap7lock','bash','-lc','source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; exec /usr/bin/time -v openroad -threads 8 -no_init -exit /work/run.tcl']
             logpath=work/(name+'.log')
             with logpath.open('w') as log:
