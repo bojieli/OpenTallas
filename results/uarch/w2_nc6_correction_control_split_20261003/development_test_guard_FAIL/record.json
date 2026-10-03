@@ -1,0 +1,6 @@
+{
+  "classification": "TEST_GUARD_FAILURE_NOT_RTL_FAILURE",
+  "source_sha256": "e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45",
+  "actual": "all14 helper functional/mutant tests PASS; II9 and256 readiness masks PASS; static test mistook comment/array-read for dependency/assignment",
+  "correction": "strip comments and stop array expression at closing bracket"
+}
