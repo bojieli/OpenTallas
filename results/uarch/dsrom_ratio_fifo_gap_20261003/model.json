@@ -1,0 +1,467 @@
+{
+  "HBM_bridge_ownership_unchanged": true,
+  "actual_reset_witness_record": {
+    "bench_sha256": "bd1f38a66e3b43693b0784bbfbdea8f49dad083e01420e85679bf2683c980f08",
+    "first_failure_preserved": true,
+    "output": "/tmp/dsrom-ratio-fifo-reset-witness-09984-20261003",
+    "physical_build_admitted": false,
+    "runs": [
+      {
+        "argv": [
+          "iverilog",
+          "-g2012",
+          "-o",
+          "/tmp/dsrom-ratio-fifo-reset-witness-09984-20261003/tb",
+          "rtl/chip/ot_chip_v41_ratio_fifo.sv",
+          "results/rtl/dsrom_ratio_fifo_reset_witness_20261003/tb_retained_ratio_fifo_reset.sv"
+        ],
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "maxrss_children_KiB": 14080,
+        "name": "compile",
+        "wall_seconds": 3.159342144615948
+      },
+      {
+        "argv": [
+          "vvp",
+          "-n",
+          "/tmp/dsrom-ratio-fifo-reset-witness-09984-20261003/tb"
+        ],
+        "exit_code": 0,
+        "log_sha256": "0f36a35adbe431e0bd6dd018772eae3956ff832dc7fd630fb8c75215ccb0f149",
+        "maxrss_children_KiB": 14336,
+        "name": "simulate",
+        "wall_seconds": 0.007706201635301113
+      }
+    ],
+    "scope": "Diagnostic reproduction of retained source reset-contract gaps, actual W64 related dual clocks. Expected negative witnesses; no repaired RTL, no parent reset waiver or physical qualification.",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb",
+    "source_rtl_sha256": "56fec932b1f673eb10169dab58d4b1510af94f9d1ec4bdf75d17f1378f690284",
+    "successor_RTL_admitted": false
+  },
+  "actual_retained_dual_clock_bench": {
+    "engine_RTL_written": false,
+    "output": "/tmp/dsrom-ratio-fifo-09984-retained-replay-20261003",
+    "physical_build_admitted": false,
+    "runs": [
+      {
+        "argv": [
+          "iverilog",
+          "-g2012",
+          "-o",
+          "/tmp/dsrom-ratio-fifo-09984-retained-replay-20261003/tb",
+          "rtl/chip/ot_chip_v41_ratio_fifo.sv",
+          "rtl/test/tb_chip_v41_ratio_fifo.sv"
+        ],
+        "child_system_seconds": 0.003927,
+        "child_user_seconds": 0.007708,
+        "cumulative_child_maxrss_KiB": 14336,
+        "exit_code": 0,
+        "log": "compile.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "name": "compile",
+        "terminal": null,
+        "wall_seconds": 0.06793786538764834
+      },
+      {
+        "argv": [
+          "vvp",
+          "-n",
+          "/tmp/dsrom-ratio-fifo-09984-retained-replay-20261003/tb",
+          "+sparse"
+        ],
+        "child_system_seconds": 0.0030139999999999993,
+        "child_user_seconds": 0.427021,
+        "cumulative_child_maxrss_KiB": 14592,
+        "exit_code": 0,
+        "log": "sparse.log",
+        "log_sha256": "5a5625e73480c5298466bb1094b49d5bf4edb99e7c215ba46050943304297709",
+        "name": "sparse",
+        "terminal": "PASS",
+        "wall_seconds": 0.7037483872845769
+      },
+      {
+        "argv": [
+          "vvp",
+          "-n",
+          "/tmp/dsrom-ratio-fifo-09984-retained-replay-20261003/tb"
+        ],
+        "child_system_seconds": 0.002008000000000001,
+        "child_user_seconds": 0.10037199999999996,
+        "cumulative_child_maxrss_KiB": 14592,
+        "exit_code": 0,
+        "log": "random_stall.log",
+        "log_sha256": "6d4d917c35259fa12a691df6447f01981a3e15c91031c2616bd232e9649849c4",
+        "name": "random_stall",
+        "terminal": "PASS",
+        "wall_seconds": 0.2050122981891036
+      }
+    ],
+    "scope": "Unchanged retained actual RTL and actual3:4 dual-clock bench only, W32 bench; no new successor RTL or physical/parent credit",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb",
+    "versions": {
+      "iverilog": "Icarus Verilog version 11.0 (stable) ()",
+      "vvp": "Icarus Verilog runtime version 11.0 (stable) ()"
+    }
+  },
+  "admission": {
+    "model_preparation_admitted": true,
+    "physical_build_admitted": false,
+    "reason": "Current parent FIFO instance map, port adapters, finite service/epoch/reset, disjoint area/routes and loaded related-clock SS60/FF25 parent context are not bound. Existing source timing failure immutable; fixed4/5 is not a worst-case service guarantee.",
+    "source_audit_complete": true,
+    "successor_engine_RTL_admitted": false
+  },
+  "caller_census": {
+    "argv": [
+      "git",
+      "grep",
+      "-n",
+      "ot_chip_v41_ratio_fifo",
+      "09984efcab74873e6e03352607ab3d2c6442eccb",
+      "--",
+      "rtl"
+    ],
+    "scope": "All committed RTL references at frozen main; only definition/comments and actual two-direction testbench instantiations",
+    "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb",
+    "stdout": "09984efcab74873e6e03352607ab3d2c6442eccb:rtl/chip/ot_chip_v41_ratio_fifo.sv:1:// ot_chip_v41_ratio_fifo -- synchronous-ratio clock-domain crossing of the V4.1 ROM die (W18).\n09984efcab74873e6e03352607ab3d2c6442eccb:rtl/chip/ot_chip_v41_ratio_fifo.sv:19:module ot_chip_v41_ratio_fifo #(\n09984efcab74873e6e03352607ab3d2c6442eccb:rtl/test/tb_chip_v41_ratio_fifo.sv:22:    ot_chip_v41_ratio_fifo #(.W(W)) u_fs (.wclk(fclk), .wrst_n(rst_n), .w_v(a_wv), .w_rdy(a_wr), .w_d(a_wd),\n09984efcab74873e6e03352607ab3d2c6442eccb:rtl/test/tb_chip_v41_ratio_fifo.sv:26:    ot_chip_v41_ratio_fifo #(.W(W)) u_sf (.wclk(sclk), .wrst_n(rst_n), .w_v(b_wv), .w_rdy(b_wr), .w_d(b_wd),\n"
+  },
+  "current_RTL_callers": [
+    "rtl/test/tb_chip_v41_ratio_fifo.sv"
+  ],
+  "exact_phase_event_model": {
+    "fast_to_slow": [
+      {
+        "consumer_accept_destination_cycles": "3",
+        "consumer_accept_ticks": 12,
+        "data_capture_destination_cycles": "2",
+        "data_capture_ticks": 8,
+        "write_tick": 0
+      },
+      {
+        "consumer_accept_destination_cycles": "13/4",
+        "consumer_accept_ticks": 13,
+        "data_capture_destination_cycles": "9/4",
+        "data_capture_ticks": 9,
+        "write_tick": 3
+      },
+      {
+        "consumer_accept_destination_cycles": "7/2",
+        "consumer_accept_ticks": 14,
+        "data_capture_destination_cycles": "5/2",
+        "data_capture_ticks": 10,
+        "write_tick": 6
+      },
+      {
+        "consumer_accept_destination_cycles": "15/4",
+        "consumer_accept_ticks": 15,
+        "data_capture_destination_cycles": "11/4",
+        "data_capture_ticks": 11,
+        "write_tick": 9
+      }
+    ],
+    "slow_to_fast": [
+      {
+        "consumer_accept_destination_cycles": "4",
+        "consumer_accept_ticks": 12,
+        "data_capture_destination_cycles": "3",
+        "data_capture_ticks": 9,
+        "write_tick": 0
+      },
+      {
+        "consumer_accept_destination_cycles": "11/3",
+        "consumer_accept_ticks": 11,
+        "data_capture_destination_cycles": "8/3",
+        "data_capture_ticks": 8,
+        "write_tick": 4
+      },
+      {
+        "consumer_accept_destination_cycles": "13/3",
+        "consumer_accept_ticks": 13,
+        "data_capture_destination_cycles": "10/3",
+        "data_capture_ticks": 10,
+        "write_tick": 8
+      }
+    ]
+  },
+  "existing_model": {
+    "archived_sparse": {
+      "errors": "0",
+      "f2s_lat_ps": "3336/3753/4170",
+      "f2s_lat_slow_cycles": "3.00/3.38/3.75",
+      "mode": "sparse",
+      "s2f_lat_fast_cycles": "3.67/4.00/4.34",
+      "s2f_lat_ps": "3058/3335/3614",
+      "sat_f2s_words_per_ns": "0.086",
+      "sat_s2f_words_per_ns": "0.128",
+      "words": "4000"
+    },
+    "archived_stalled": {
+      "errors": "0",
+      "f2s_lat_ps": "3336/4758/16680",
+      "f2s_lat_slow_cycles": "3.00/4.28/15.01",
+      "mode": "random_stall",
+      "s2f_lat_fast_cycles": "3.67/4.22/9.01",
+      "s2f_lat_ps": "3058/3515/7506",
+      "sat_f2s_words_per_ns": "0.899",
+      "sat_s2f_words_per_ns": "0.886",
+      "words": "4000"
+    },
+    "composed_model_rule": "Current _cons_adjust charges one CDC latency per destination node with any dependency in the other domain (except hop), not one latency per individual dependency; multiple producers still require joint readiness/calendar and finite service.",
+    "current_graph_event_to_parent_FIFO_binding": null,
+    "fast_to_slow_ns": "40/9",
+    "fast_to_slow_slow_cycles": 4,
+    "scope": "Sparse write-to-consumer availability allowance; NOT all queued/stalled service or physical timing proof",
+    "slow_to_fast_fast_cycles": 5,
+    "slow_to_fast_ns": "25/6"
+  },
+  "historical_port_ledger": [
+    {
+      "actual_current_parent_fifo_instance": null,
+      "actual_pack_unpack_provider": null,
+      "declared_direction": "slow",
+      "fast_bits": 1024,
+      "historical_slow_bits": 1365,
+      "name": "SU -> attention p-words",
+      "required_slow_bits_ceil": 1366
+    },
+    {
+      "actual_current_parent_fifo_instance": null,
+      "actual_pack_unpack_provider": null,
+      "declared_direction": "fast",
+      "fast_bits": 512,
+      "historical_slow_bits": 683,
+      "name": "attention scores and PV -> VM",
+      "required_slow_bits_ceil": 683
+    },
+    {
+      "actual_current_parent_fifo_instance": null,
+      "actual_pack_unpack_provider": null,
+      "declared_direction": "slow",
+      "fast_bits": 549,
+      "historical_slow_bits": 732,
+      "name": "VM x-gather -> field x broadcast",
+      "required_slow_bits_ceil": 732
+    },
+    {
+      "actual_current_parent_fifo_instance": null,
+      "actual_pack_unpack_provider": null,
+      "declared_direction": "fast",
+      "fast_bits": 4096,
+      "historical_slow_bits": 5461,
+      "name": "field results -> VM",
+      "required_slow_bits_ceil": 5462
+    },
+    {
+      "actual_current_parent_fifo_instance": null,
+      "actual_pack_unpack_provider": null,
+      "declared_direction": "fast",
+      "fast_bits": 512,
+      "historical_slow_bits": 2731,
+      "name": "collective DMA <-> VM",
+      "required_slow_bits_ceil": 683
+    },
+    {
+      "actual_current_parent_fifo_instance": null,
+      "actual_pack_unpack_provider": null,
+      "declared_direction": "slow",
+      "fast_bits": 256,
+      "historical_slow_bits": 341,
+      "name": "VM -> indexer query",
+      "required_slow_bits_ceil": 342
+    },
+    {
+      "actual_current_parent_fifo_instance": null,
+      "actual_pack_unpack_provider": null,
+      "declared_direction": "fast",
+      "fast_bits": 32,
+      "historical_slow_bits": 43,
+      "name": "index scores -> select",
+      "required_slow_bits_ceil": 43
+    }
+  ],
+  "live_global_solver_unchanged": true,
+  "minimal_successor": {
+    "area_and_route_admission": "No actual parent replica/slot/channel/clock/PG provider yet. Standalone291.819um2 is only W64 historical context, cannot linearly qualify widened product. Price actual mux/demux, reset/epoch barrier, any width-converter reservoirs, loads and all replicas before mapping.",
+    "default_off": true,
+    "engine_RTL_written": false,
+    "fallback_state_lower_bound_bits": 65,
+    "planned_capture_cycles_added": 0,
+    "registered_fallback_added_cycles": {
+      "fast_to_slow_slow": 1,
+      "slow_to_fast_fast": 1
+    },
+    "registered_fallback_per_critical_crossing_added_ns": {
+      "fast_to_slow": "10/9",
+      "slow_to_fast": "5/6"
+    },
+    "removed_state_area_credit": 0,
+    "repair_priority": [
+      "Bind actual parent directions/W/replicas and bounded producer-consumer service. Keep equal-width FIFO as such; explicit pack/unpack and credits if same bit-rate required.",
+      "Gate acceptance and all array captures during coordinated reset. Assert flush across both domains, synchronize release locally and require both-domain epoch-ready barrier. Freeze/retire prior epoch source tags/transactions before ready; one-sided pointer reset can replay stale payload.",
+      "Phase transcription shows8VCOticks minimum accepted-write to selected data capture, but that is not a mapped timing exception proof. Before changing data hardware, prove each selected slot stable from acceptance through read capture, and prove credit-controlled reuse. Only then investigate exact enable/protocol-sensitization timing constraints for the selected mem->r_d arc with both setup and hold obligations; NO blanket false path or blanket multicycle exception authorized.",
+      "If protocol-specific timing proof/actual parent constraints cannot close, model one explicit registered read-mux stage with finite holding/backpressure and credit lifecycle before RTL. It would add W data+valid state per replica and one destination latency cycle, but throughput requires a skid/credit proof; not admitted or assumed necessary."
+    ]
+  },
+  "new_jobs": [],
+  "new_source_RTL_files": [],
+  "parent_FIFO_instantiation_found": false,
+  "phase_bounds": {
+    "fast_to_slow": {
+      "max_consumer_ticks": 15,
+      "max_data_capture_ticks": 11,
+      "min_data_capture_ticks": 8
+    },
+    "slow_to_fast": {
+      "max_consumer_ticks": 13,
+      "max_data_capture_ticks": 10,
+      "min_data_capture_ticks": 8
+    }
+  },
+  "phase_unit_ps": "2500/9 (one3.6GHzVCO tick)",
+  "ports": {
+    "DEPTH": 4,
+    "MACs_per_cycle": 0,
+    "W": 64,
+    "accepted_bytes_per_source_cycle": 8,
+    "boundary_external_signal_bits": 136,
+    "clock_ports": [
+      "wclk",
+      "rclk"
+    ],
+    "control_ports": [
+      "w_v",
+      "w_rdy",
+      "r_v",
+      "r_rdy"
+    ],
+    "crossing_track_floor_unshielded_one_wire_per_signal": 262,
+    "declared_state_bits": 339,
+    "delivered_bytes_per_destination_cycle": 8,
+    "fanout": {
+      "each_memory_bit_output_mux": 1,
+      "publication_pointer_receiver_per_bit": 1,
+      "read_pointer_select_logical_output_bits": 64
+    },
+    "input_payload_bits": 64,
+    "mapped_sequential_cells": 336,
+    "mapped_state_scope": "Declared339 bits vs mapped336 cells: synthesis optimization not yet role-audited; do not equate declared state to retained cell count.",
+    "max_common_ready_state_seats": 5,
+    "maximum_sustained_payload_bits_s": 57600000000,
+    "output_payload_bits": 64,
+    "rate_matching": "FIFO W identical at both ends. It cannot implement 4/3 pack/unpack, and depth4 cannot sustain producer1.2Gwords/s against consumer0.9Gwords/s without throttling. Separate finite width-conversion hardware is required for unthrottled equal-bit-rate ports.",
+    "replica_count_in_actual_parent": null,
+    "reset_ports": [
+      "wrst_n",
+      "rrst_n"
+    ],
+    "state_breakdown": {
+      "mem": 256,
+      "output": 64,
+      "pointers": 18,
+      "valid": 1
+    },
+    "structural_cross_domain_bits": {
+      "data_array_to_mux": 256,
+      "forward_pointer": 3,
+      "reverse_credit_pointer": 3
+    }
+  },
+  "qualified_service_contract": {
+    "conditional_conservative_retirement_bound_destination_cycles": "L_sparse + 5*(B+1); L_sparse=4 fast-to-slow or5 slow-to-fast. Only if every rolling B+1 destination-edge window provides r_rdy, both clocks continuous/phase-bound, and no reset/epoch abort; source-model bound not executed service proof.",
+    "needed_for_finite_upper_bound": [
+      "maximum ready-low duration B in destination cycles",
+      "producer maximum burst and sustained word/bit rate",
+      "consumer finite acceptance calendar and drain/epoch barrier",
+      "payload packing and tag/reset semantics at each actual parent port"
+    ],
+    "no_stall_sparse_only": true,
+    "rate_limit_words_s": 900000000,
+    "unbounded_downstream_stall_implies_unbounded_retirement": true
+  },
+  "reset_witnesses": {
+    "reader_only_reset_after_retirement": {
+      "consumer_replay": [
+        "old_epoch"
+      ],
+      "new_write_count": 0,
+      "previously_retired": "old_epoch",
+      "stale_epoch_replay": true
+    },
+    "write_during_write_reset": {
+      "mem_slot0_after": 123,
+      "unpublished_write": true,
+      "w_rdy": true,
+      "w_v": 1,
+      "wp_after": 0,
+      "write_fire": true,
+      "wrst_n": 0
+    }
+  },
+  "retained_physical": {
+    "FF_hold_ps": 9.635626,
+    "ODB_hash": "4a87bd9d8cba6c7de70d7cf265a3f40ad2e4ba09179f0ece97822dd2d0d08504",
+    "SPEF_hash": "20a32dc5480fe49d1610012357d028eb900c770f68d427270174b703f376d9ee",
+    "SS_reported_pointer_path_ps": 32.04237,
+    "SS_setup_ps": -75.591148,
+    "failed_path": "mem[0][63] -> r_d[63]",
+    "full_2clock_final_SDC_hash_verified": true,
+    "record_scope": "Standalone W64/DEPTH4 related-clock failure, not actual parent closure. physical.json top corner label TT disagrees with corner_sta SS/FF: use exact retained SS/FF logs/SDC; do not transfer TT label or aggregate fmax.",
+    "setup_path": {
+      "capture_clock_arrival_ps": 1182.03,
+      "capture_edge_ps": 1111.11,
+      "data_arrival_ps": 1193.76,
+      "data_required_ps": 1118.17,
+      "launch_clock_arrival_ps": 951.33,
+      "launch_edge_ps": 833.33
+    },
+    "source_matches_current": true,
+    "source_period_ps": {
+      "fast": 833.333,
+      "slow": 1111.111
+    },
+    "standalone_cell_area_um2": 291.819,
+    "standalone_core_area_um2": 2082.1,
+    "uncertainty_ps": {
+      "hold": 25,
+      "setup": 60
+    }
+  },
+  "schema": "DSROM_RATIO_FIFO_FROZEN_SOURCE_GAP_V1",
+  "source_events": {
+    "capture": "take reads selected mem into r_d and advances rp/rp_pub at rclk",
+    "consumer": "previous r_v && r_rdy at rclk",
+    "credit": "rp_w samples rp_pub at wclk; w_rdy from modular wp-rp_w",
+    "physical_stability": "Consumed slot can be reclaimed after local r_d capture: writer may reuse mem while downstream holds output, but must not overwrite before capture.",
+    "publish": "wp_pub samples previous wp one write edge after write",
+    "visibility": "wp_r samples wp_pub at rclk; take uses previous wp_r",
+    "write_accept": "w_v && w_rdy at wclk"
+  },
+  "source_hash": "56fec932b1f673eb10169dab58d4b1510af94f9d1ec4bdf75d17f1378f690284",
+  "source_main": "09984efcab74873e6e03352607ab3d2c6442eccb",
+  "stream_event_checks": {
+    "fast_to_slow": {
+      "actual_simulation": "Integer source-event transcription, not HDL execution",
+      "max_service_words_per_second": 900000000,
+      "ordered_once": true,
+      "overwrite_before_capture": [],
+      "stalled_output_changes": [],
+      "terminal_tick": 9564,
+      "words": 2048
+    },
+    "slow_to_fast": {
+      "actual_simulation": "Integer source-event transcription, not HDL execution",
+      "max_service_words_per_second": 900000000,
+      "ordered_once": true,
+      "overwrite_before_capture": [],
+      "stalled_output_changes": [],
+      "terminal_tick": 8613,
+      "words": 2048
+    }
+  },
+  "target_applicability": {
+    "DeepSeek_HBM": "Popper bridge ownership retained; methodology exchange only, no ROM FIFO implementation/latency transfer",
+    "DeepSeek_ROM": "Direct retained FIFO/source-model gap; no current parent instance binding or physical admission",
+    "Qwen_HBM": "Popper bridge ownership retained; methodology exchange only, no DS physical qualification transfer",
+    "Qwen_ROM": "CDC method reusable after its own clock/port/service/source binding; no DS timing or width transfer"
+  }
+}

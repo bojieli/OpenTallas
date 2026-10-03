@@ -1,0 +1,78 @@
+{
+  "C0_V1_I64_RF_mirror_provider_cost_recharged": false,
+  "H1_untagged_ACK_identity": "retained sole accepted context; endpoint connection not installed",
+  "HBM_command_inventory_bound": false,
+  "Popper_completed_commands": 9504,
+  "Popper_live_owners": 0,
+  "SRAM_ledger": {
+    "all_parents_retired": true,
+    "events": {
+      "SRAM_accept": 46080,
+      "SRAM_capture": 27648,
+      "child_ACK": 10080,
+      "child_issue": 10080,
+      "child_reverse": 10080,
+      "consumer": 352,
+      "parent_grant": 352,
+      "reverse": 352,
+      "visibility_fence": 352
+    },
+    "external_consumer_reverse_CDC_HBM_wait_upper": null,
+    "hardware_qualified": false,
+    "live_parent_debt": 0,
+    "observation_origins": [
+      "directed_verifier_control"
+    ],
+    "physical_credit_debt": 0,
+    "retired_parents": 352,
+    "schema": "HBM_CAUSAL_SRAM_GRANT_REPLAY_R1",
+    "source_parents": 352,
+    "unobserved_parents": 0,
+    "whole_token_latency": null
+  },
+  "all_selected_commands_replayed": true,
+  "cost_added": 0,
+  "events": {
+    "admitted": 352,
+    "child_issued": 10080,
+    "child_reverse": 10080,
+    "completion_backpressured": 10080,
+    "completion_captured": 10080,
+    "completion_consumed": 10080,
+    "consumer": 352,
+    "parent_reverse": 352,
+    "source_merge": 288,
+    "submitted": 352,
+    "visibility": 352
+  },
+  "fixture_lease_and_payloads": true,
+  "hardware_qualified": false,
+  "held_completions": 0,
+  "installed_owner_bridge": false,
+  "live_SM_owners": 0,
+  "missing": [
+    "current whole-program emitted contender/home/lease directory",
+    "installed atomic owner gate and HBM transport tag mapping",
+    "actual entering checkpoint lease and payload binding",
+    "bounded consumer/reverse/CDC/backend service and contextual SS/FF"
+  ],
+  "pending_parents": 0,
+  "production_checkpoint_used": false,
+  "production_physical_calls_closed": 0,
+  "program_physical_service_scope": "DS retained all96 PC0 partial RMW; PC10 rank0 directed shared journal; not complete2213/1737 PC service",
+  "schema": "HBM_POPPER_OWNER_COMPLETION_BINDING_R3",
+  "sequential_control_peak_owned_SMs": 1,
+  "software_control_edge_ordinals_not_hardware_cycles": true,
+  "source_offsets_are_not_backpressure_upper": true,
+  "source_sha256": {
+    "results/uarch/h4_hbm_selected_cache_rmw_20261002/selected_r4/commands.json.gz": "9f8c0fbf277c3405f09444efa7a592496b6c92761cc9c8c9fa22da9af41f5464",
+    "tools/h3_complete_native_calendar_grants_r1.py": "4bbd9ce96f4cf0afef069d6b0a94379d04a0e054e337477d125ed6cf999d6dbd",
+    "tools/h4_hbm_atomic_source_g0.py": "3d76eacbd22a39745af395db77215fd19468dd26b233465dee5e49c6b822121b",
+    "tools/h4_hbm_selected_cache_rmw.py": "04f271fa5a647e7132a2bd36f6c764cb5fe440e18cec7c096c9c860be3e50ade"
+  },
+  "tested_RF_RMW_parents": 288,
+  "tested_child_commands": 10080,
+  "tested_parent_commands": 352,
+  "tested_shared64_children": 9216,
+  "whole_token_latency": null
+}

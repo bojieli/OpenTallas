@@ -1,0 +1,123 @@
+{
+  "R14_as_is_cannot_be_canonical_full_bridge_table": true,
+  "W2_required_on_proposed_route": true,
+  "build_allowed": false,
+  "cost_inputs": {
+    "RF16sector_mask_bits_per32SM": 512,
+    "RF_existing_macro_area_recharge": false,
+    "RF_parent_capture_owner_and_slot_bits_perSM": 55,
+    "SS_macro_area_slot_route_clock_pins_and_added_capture_latency": null,
+    "W10_old_raw_request": 339,
+    "W10_old_raw_return": 303,
+    "additional_fields": {
+      "RF_slot": 9,
+      "parent_reference": 32,
+      "producer_generation": 4,
+      "requester_SM": 5
+    },
+    "full_context_sidecar_raw96bits_per_die": 1572864,
+    "if_four_stacks_additional_macros_per_die": 128,
+    "if_full_source_context_replication_additional_128x256_macros_per_stack": 32,
+    "mux_and_control_costs": [
+      "four stack 36-to32 forward and32-to36 reverse crossbars, wider protected words",
+      "source metadata write32-bank fanout; same-index RAM read/capture join",
+      "backend16 comparison vs source12 and duplicate/inflight/retire protections",
+      "16sector RF assembler lane steering and parent context selector",
+      "RF host/SIMD retained55-bit identity mux",
+      "tag allocation/reverse updates with atomic same-edge accounting"
+    ],
+    "old_protected_request": 432,
+    "old_protected_return": 360,
+    "one_complete_RF_frame_per32SM_data_bits": 131072,
+    "physical_PHY_sustained_bandwidth": null,
+    "pipeline_two_seats_38stages_144lanes_increment_bits": 1575936,
+    "proposed_command_full_backend_token_bits": 343,
+    "proposed_owned_bits": 561,
+    "proposed_protected_request": 504,
+    "proposed_protected_return": 432,
+    "proposed_provider_request_bits": 547,
+    "proposed_raw_request": 389,
+    "proposed_raw_return": 353,
+    "protected_delta_each_direction": 72,
+    "scope": "incremental cost INPUTS, not area/route/clock admission",
+    "sidecar_plus_backend_generation_bits": 96,
+    "sidecar_same_existing_context_index_no_second_CAM": true,
+    "sidecar_source_metadata_bits": 92,
+    "source_command_bits": 339,
+    "source_owned_bits": 465,
+    "source_provider_request_bits": 455,
+    "whole_service_calendar_upper": null
+  },
+  "current_route": "finite pattern client -> R14 CDC -> R14 provider -> backing fixture -> finite pattern RF256 -> reverse; W2/W4 full GPU/W6 native unconnected",
+  "findings": [
+    {
+      "finding": "Finite stage routes clock bridge directly to R14, not Qwen PC service; finite client RF256 pattern register is not GPU RF4096/native caller.",
+      "id": "CONNECTOR_ABSENT",
+      "severity": "BLOCKER",
+      "source": "rtl/test/model_ready_hbm_r14/tb_hbm_finite_stage.sv"
+    },
+    {
+      "finding": "Low7 system-sector port selection differs from local-sector hash; overwrite would corrupt address. Explicit translated PC sideband/guard required.",
+      "id": "ADDRESS_ROUTE_MISMATCH",
+      "severity": "BLOCKER",
+      "source": "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv"
+    },
+    {
+      "finding": "Native owner/generation64 and PC/rank/SM/home are software identity; actual hardware tag32/client allocation, parent/child reference directory and installed rank/SM emitter are missing.",
+      "id": "NO_NATIVE_HW_TAG_ALLOCATION",
+      "severity": "BLOCKER",
+      "source": "tools/h4_c0_v1_owner_lock_addressed.py"
+    },
+    {
+      "finding": "Legacy192-bit identity is not full clienttag32+producergen4+SM+RFslot. Tag retires at owned acceptance, ahead of RF/consumer/reverse. Upper wire4 bits discarded in command and matcher.",
+      "id": "R14_NOT_FULL_OWNER",
+      "severity": "BLOCKER",
+      "source": "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv"
+    },
+    {
+      "finding": "Read reverse credit grants unconditionally. Full accepted identity/direction/beat/generation/live state must match before release; old-copy quiescence must govern reset/wrap.",
+      "id": "READ_REVERSE_UNVALIDATED",
+      "severity": "BLOCKER",
+      "source": "rtl/model_ready_hbm_w1_euclid_20261003/ot_hbm_causal_command_provider.sv"
+    },
+    {
+      "finding": "Both copies write full4096bits with no byte enable. 64B C0 software fragment or32B KV sector cannot be zero-filled as a full vector; complete preserved frame assembly/typed conversion required.",
+      "id": "RF_FRAME_NOT_SECTOR",
+      "severity": "BLOCKER",
+      "source": "rtl/gpu/ot_gpu_rf_service.sv"
+    },
+    {
+      "finding": "Archived WIP W10 339/303-bit words omit producergen4 and explicit SM/slot/parent reference. W5 epoch32 is not hardware producergen4. Additional7th client directory still lacks producer binding.",
+      "id": "WIP_MISSING_FIELDS",
+      "severity": "BLOCKER",
+      "source": "tools/h4_hbm_w5_w10_composed_model.py"
+    }
+  ],
+  "hardware_admitted": false,
+  "no_duplicate_R14_CAM_required_for_metadata_sidecar": true,
+  "numerical_payload_run": false,
+  "peer_commit": "1e537382aa298925da2daca5fd3064757defc0f1",
+  "peer_snapshot_uncommitted": true,
+  "proposed_one_baseline_route": "accepted native descriptor -> W5 parent/child allocation -> explicit address translator -> W2 perPC exact logical ownership -> R14 physical mapper -> W2 restored held completion -> parent RF frame assembly -> W4 full55 commonACK -> W6 consumer/reverse -> W2/R14 quarantine release",
+  "small_fixture_is_not_final_qualification": true,
+  "source_and_artifact_pins": 47,
+  "source_checks": "PASS_BOUNDED_INVENTORY_ONLY",
+  "source_commit": "e76aa2050eed5ec944940d51fdc9085a35978749",
+  "tests": {
+    "address_examples": 13,
+    "checks": [
+      "source/peer exact translation",
+      "reversible stripe map",
+      "low7 mismatch witness",
+      "full tag32/gen4 packing",
+      "legacy client/caller rejection",
+      "distinct source/backend generations",
+      "stale backend-token distinction",
+      "partial RF frame refusal"
+    ],
+    "negative_namespace_cases": 3,
+    "source_anchors": 9,
+    "stripe_bytes": 1024
+  },
+  "verdict": "FAIL_SOURCE_CONNECTOR_G0"
+}
