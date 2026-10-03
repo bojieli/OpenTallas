@@ -184,6 +184,9 @@ def post(g, P, clock, cfg, led):
     ovh = {op: statistics.median(v) for op, v in fixed.items()}
     led["fixed_part_ns"] = {k: round(v * 1e9, 1) for k, v in ovh.items()}
     acts = cfg.get("coll", {})
+    if cfg.get("measured_coll"):
+        _post_measured(colls, acts, P, clock, cfg["measured_coll"], led)
+        acts = {}
     for n, nd in colls.items():
         act = next((a for suf, a in acts.items() if n.endswith(suf)), None)
         if act is None:
@@ -224,6 +227,63 @@ def post(g, P, clock, cfg, led):
                 nd["depth"] += add
                 nd["_map_s"] = nd.get("_map_s", 0.0) + add
                 led["dispatch"] += 1
+
+
+def measured_collective_s(fits, op, payload, span, clock):
+    """RTL-measured collective latency (issue -> last VM commit on the slowest die) at `payload` bytes over `span`
+    dies: piecewise-linear over the measured points (words a rank for an all-gather, words of the vector for an
+    all-reduce, 64 B words), the linear fit beyond them.  `fits` = results/rtl/dsrom_c5hc_collective_gate_20261003
+    measurements configs[...]['fit']."""
+    f = fits["all_reduce" if op == "all_reduce" else "all_gather"]
+    w = math.ceil(payload / 64) if op == "all_reduce" else math.ceil(payload / max(1, span) / 64)
+    w = max(1, w)
+    pts = sorted(f["points"])
+    xs = [p[0] for p in pts]
+    if xs[0] <= w <= xs[-1]:
+        for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+            if x0 <= w <= x1:
+                cyc = y0 if x1 == x0 else y0 + (y1 - y0) * (w - x0) / (x1 - x0)
+                break
+    else:
+        cyc = f["fixed_cycles"] + f["cycles_per_word"] * w
+    return cyc / clock
+
+
+def _post_measured(colls, acts, P, clock, mc, led):
+    """Opt-in (cfg['measured_coll']): every collective's link / engine term is replaced by the RTL measurement of the
+    mapping's own topology.  The graph's collective depth is the W15 TP-4 fit (uarch_model.w15_collective_s, at the
+    graph's per-position payload) + 2 x (coll_stages - 17) SS wire stages + the remaining terms (VM-H write, CDC,
+    latency inventory); a PAR2 fabric delta (_par2_s) is removed too.  The remaining terms are kept, and the measured
+    latency at the mapping's payload x P and span is added (the bench has the SS wire stages, link layers, engine and
+    VM commit).  A replaced collective pays the remaining terms once per new collective."""
+    d0 = baseline.PRESETS["proposal"]
+    w15 = mc.get("w15", d0["collective_w15"])
+    stages = 2 * (mc["coll_stages"] - 17) / clock
+    led["measured_rest_ns"] = rest_ns = {}
+    for n, nd in colls.items():
+        base_w15 = baseline.w15_collective_s(w15, nd["op"], nd["payload"], nd.get("span") or 4)
+        rest = nd["depth"] - nd.get("_par2_s", 0.0) - base_w15 - stages
+        rest_ns.setdefault(nd["op"], set()).add(round(rest * 1e9, 1))
+        act = next((a for suf, a in acts.items() if n.endswith(suf)), None)
+        span0 = mc.get("span", nd["span"])
+        if act is None:
+            items = [(nd["op"], nd["payload"], span0)]
+        elif act[0] == "remove":
+            items = []
+        elif act[0] == "respan":
+            items = [(nd["op"], nd["payload"] * act[1], act[2])]
+        elif act[0] == "replace":
+            items = list(act[1])
+        else:
+            raise ValueError(f"measured_coll does not price {act[0]}")
+        mclk = mc.get("clock_hz", clock)          # the bench's core clock
+        new = sum(rest + measured_collective_s(mc["fits"], op, pay * P, span, mclk) for op, pay, span in items)
+        nd["_map_s"] = new - nd["depth"]
+        nd["_meas_s"] = new
+        nd["depth"] = new
+        nd["issue"] = 0.0
+        led["collectives"] += 1
+    led["measured_rest_ns"] = {k: sorted(v) for k, v in rest_ns.items()}
 
 
 def path_breakdown(g):

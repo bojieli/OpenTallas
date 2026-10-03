@@ -1,0 +1,8133 @@
+{
+ "clock_hz": 1199040767.386091,
+ "configs": {
+  "c1_bp": {
+   "board_link": {
+    "X_DEC": 82,
+    "X_DLY": 56.349,
+    "X_ENC": 6,
+    "X_T": 0.674,
+    "codeword_ns": 1.3492,
+    "payload_GBps": 189.7
+   },
+   "calibration": {
+    "all_passed": true,
+    "arrival_cycles": {
+     "board": [
+      238,
+      244
+     ]
+    },
+    "free_running_latency_range": {
+     "0": [
+      249,
+      255
+     ],
+     "1": [
+      251,
+      259
+     ],
+     "10": [
+      776,
+      789
+     ],
+     "11": [
+      812,
+      829
+     ],
+     "12": [
+      834,
+      858
+     ],
+     "13": [
+      1305,
+      1344
+     ],
+     "14": [
+      2208,
+      2254
+     ],
+     "15": [
+      2212,
+      2243
+     ],
+     "16": [
+      3711,
+      3760
+     ],
+     "17": [
+      3752,
+      3817
+     ],
+     "18": [
+      5698,
+      5792
+     ],
+     "19": [
+      6588,
+      6688
+     ],
+     "2": [
+      253,
+      265
+     ],
+     "20": [
+      11998,
+      12179
+     ],
+     "21": [
+      12039,
+      12199
+     ],
+     "22": [
+      273,
+      283
+     ],
+     "23": [
+      277,
+      290
+     ],
+     "24": [
+      321,
+      333
+     ],
+     "25": [
+      1291,
+      1313
+     ],
+     "26": [
+      2317,
+      2351
+     ],
+     "27": [
+      14491,
+      14684
+     ],
+     "3": [
+      256,
+      268
+     ],
+     "4": [
+      274,
+      281
+     ],
+     "5": [
+      278,
+      292
+     ],
+     "6": [
+      299,
+      313
+     ],
+     "7": [
+      299,
+      317
+     ],
+     "8": [
+      302,
+      329
+     ],
+     "9": [
+      767,
+      788
+     ]
+    },
+    "runs": 12
+   },
+   "collectives": [
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 255,
+     "issue_to_last_commit_ns": 212.7,
+     "mode": "all_gather",
+     "op": 0,
+     "payload_bytes": 256,
+     "per_die_issue_to_last_commit": [
+      253,
+      253,
+      253,
+      255
+     ],
+     "words": 1,
+     "words_per_rank": 1
+    },
+    {
+     "issue_to_first_commit_cycles": 254,
+     "issue_to_last_commit_cycles": 257,
+     "issue_to_last_commit_ns": 214.3,
+     "mode": "all_gather",
+     "op": 1,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      256,
+      257,
+      256,
+      253
+     ],
+     "words": 2,
+     "words_per_rank": 2
+    },
+    {
+     "issue_to_first_commit_cycles": 255,
+     "issue_to_last_commit_cycles": 264,
+     "issue_to_last_commit_ns": 220.2,
+     "mode": "all_gather",
+     "op": 2,
+     "payload_bytes": 1024,
+     "per_die_issue_to_last_commit": [
+      257,
+      262,
+      257,
+      260
+     ],
+     "words": 4,
+     "words_per_rank": 4
+    },
+    {
+     "issue_to_first_commit_cycles": 255,
+     "issue_to_last_commit_cycles": 267,
+     "issue_to_last_commit_ns": 222.7,
+     "mode": "all_gather",
+     "op": 3,
+     "payload_bytes": 1536,
+     "per_die_issue_to_last_commit": [
+      266,
+      258,
+      265,
+      265
+     ],
+     "words": 6,
+     "words_per_rank": 6
+    },
+    {
+     "issue_to_first_commit_cycles": 255,
+     "issue_to_last_commit_cycles": 278,
+     "issue_to_last_commit_ns": 231.9,
+     "mode": "all_gather",
+     "op": 4,
+     "payload_bytes": 3840,
+     "per_die_issue_to_last_commit": [
+      271,
+      272,
+      277,
+      269
+     ],
+     "words": 15,
+     "words_per_rank": 15
+    },
+    {
+     "issue_to_first_commit_cycles": 255,
+     "issue_to_last_commit_cycles": 290,
+     "issue_to_last_commit_ns": 241.9,
+     "mode": "all_gather",
+     "op": 5,
+     "payload_bytes": 4864,
+     "per_die_issue_to_last_commit": [
+      287,
+      288,
+      275,
+      290
+     ],
+     "words": 19,
+     "words_per_rank": 19
+    },
+    {
+     "issue_to_first_commit_cycles": 260,
+     "issue_to_last_commit_cycles": 311,
+     "issue_to_last_commit_ns": 259.4,
+     "mode": "all_gather",
+     "op": 6,
+     "payload_bytes": 7936,
+     "per_die_issue_to_last_commit": [
+      304,
+      290,
+      310,
+      297
+     ],
+     "words": 31,
+     "words_per_rank": 31
+    },
+    {
+     "issue_to_first_commit_cycles": 266,
+     "issue_to_last_commit_cycles": 316,
+     "issue_to_last_commit_ns": 263.5,
+     "mode": "all_gather",
+     "op": 7,
+     "payload_bytes": 8192,
+     "per_die_issue_to_last_commit": [
+      299,
+      316,
+      300,
+      299
+     ],
+     "words": 32,
+     "words_per_rank": 32
+    },
+    {
+     "issue_to_first_commit_cycles": 258,
+     "issue_to_last_commit_cycles": 313,
+     "issue_to_last_commit_ns": 261.0,
+     "mode": "all_gather",
+     "op": 8,
+     "payload_bytes": 9216,
+     "per_die_issue_to_last_commit": [
+      307,
+      301,
+      298,
+      313
+     ],
+     "words": 36,
+     "words_per_rank": 36
+    },
+    {
+     "issue_to_first_commit_cycles": 263,
+     "issue_to_last_commit_cycles": 786,
+     "issue_to_last_commit_ns": 655.5,
+     "mode": "all_gather",
+     "op": 9,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      771,
+      780,
+      781,
+      776
+     ],
+     "words": 80,
+     "words_per_rank": 80
+    },
+    {
+     "issue_to_first_commit_cycles": 259,
+     "issue_to_last_commit_cycles": 788,
+     "issue_to_last_commit_ns": 657.2,
+     "mode": "all_gather",
+     "op": 10,
+     "payload_bytes": 22016,
+     "per_die_issue_to_last_commit": [
+      786,
+      782,
+      787,
+      780
+     ],
+     "words": 86,
+     "words_per_rank": 86
+    },
+    {
+     "issue_to_first_commit_cycles": 255,
+     "issue_to_last_commit_cycles": 821,
+     "issue_to_last_commit_ns": 684.7,
+     "mode": "all_gather",
+     "op": 11,
+     "payload_bytes": 28160,
+     "per_die_issue_to_last_commit": [
+      821,
+      810,
+      811,
+      806
+     ],
+     "words": 110,
+     "words_per_rank": 110
+    },
+    {
+     "issue_to_first_commit_cycles": 260,
+     "issue_to_last_commit_cycles": 867,
+     "issue_to_last_commit_ns": 723.1,
+     "mode": "all_gather",
+     "op": 12,
+     "payload_bytes": 32768,
+     "per_die_issue_to_last_commit": [
+      847,
+      844,
+      860,
+      860
+     ],
+     "words": 128,
+     "words_per_rank": 128
+    },
+    {
+     "issue_to_first_commit_cycles": 266,
+     "issue_to_last_commit_cycles": 1341,
+     "issue_to_last_commit_ns": 1118.4,
+     "mode": "all_gather",
+     "op": 13,
+     "payload_bytes": 46592,
+     "per_die_issue_to_last_commit": [
+      1329,
+      1337,
+      1316,
+      1331
+     ],
+     "words": 182,
+     "words_per_rank": 182
+    },
+    {
+     "issue_to_first_commit_cycles": 261,
+     "issue_to_last_commit_cycles": 2262,
+     "issue_to_last_commit_ns": 1886.5,
+     "mode": "all_gather",
+     "op": 14,
+     "payload_bytes": 67584,
+     "per_die_issue_to_last_commit": [
+      2252,
+      2254,
+      2261,
+      2254
+     ],
+     "words": 264,
+     "words_per_rank": 264
+    },
+    {
+     "issue_to_first_commit_cycles": 256,
+     "issue_to_last_commit_cycles": 2258,
+     "issue_to_last_commit_ns": 1883.2,
+     "mode": "all_gather",
+     "op": 15,
+     "payload_bytes": 68096,
+     "per_die_issue_to_last_commit": [
+      2256,
+      2257,
+      2252,
+      2251
+     ],
+     "words": 266,
+     "words_per_rank": 266
+    },
+    {
+     "issue_to_first_commit_cycles": 256,
+     "issue_to_last_commit_cycles": 3780,
+     "issue_to_last_commit_ns": 3152.5,
+     "mode": "all_gather",
+     "op": 16,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      3775,
+      3778,
+      3776,
+      3775
+     ],
+     "words": 480,
+     "words_per_rank": 480
+    },
+    {
+     "issue_to_first_commit_cycles": 256,
+     "issue_to_last_commit_cycles": 3845,
+     "issue_to_last_commit_ns": 3206.7,
+     "mode": "all_gather",
+     "op": 17,
+     "payload_bytes": 131072,
+     "per_die_issue_to_last_commit": [
+      3842,
+      3823,
+      3836,
+      3828
+     ],
+     "words": 512,
+     "words_per_rank": 512
+    },
+    {
+     "issue_to_first_commit_cycles": 262,
+     "issue_to_last_commit_cycles": 5831,
+     "issue_to_last_commit_ns": 4863.1,
+     "mode": "all_gather",
+     "op": 18,
+     "payload_bytes": 196608,
+     "per_die_issue_to_last_commit": [
+      5811,
+      5825,
+      5821,
+      5831
+     ],
+     "words": 768,
+     "words_per_rank": 768
+    },
+    {
+     "issue_to_first_commit_cycles": 258,
+     "issue_to_last_commit_cycles": 6741,
+     "issue_to_last_commit_ns": 5622.0,
+     "mode": "all_gather",
+     "op": 19,
+     "payload_bytes": 215040,
+     "per_die_issue_to_last_commit": [
+      6738,
+      6728,
+      6724,
+      6724
+     ],
+     "words": 840,
+     "words_per_rank": 840
+    },
+    {
+     "issue_to_first_commit_cycles": 255,
+     "issue_to_last_commit_cycles": 12267,
+     "issue_to_last_commit_ns": 10230.7,
+     "mode": "all_gather",
+     "op": 20,
+     "payload_bytes": 405504,
+     "per_die_issue_to_last_commit": [
+      12242,
+      12265,
+      12266,
+      12254
+     ],
+     "words": 1584,
+     "words_per_rank": 1584
+    },
+    {
+     "issue_to_first_commit_cycles": 263,
+     "issue_to_last_commit_cycles": 12288,
+     "issue_to_last_commit_ns": 10248.2,
+     "mode": "all_gather",
+     "op": 21,
+     "payload_bytes": 408576,
+     "per_die_issue_to_last_commit": [
+      12288,
+      12256,
+      12255,
+      12282
+     ],
+     "words": 1596,
+     "words_per_rank": 1596
+    },
+    {
+     "issue_to_first_commit_cycles": 284,
+     "issue_to_last_commit_cycles": 289,
+     "issue_to_last_commit_ns": 241.0,
+     "mode": "all_reduce",
+     "op": 22,
+     "payload_bytes": 64,
+     "per_die_issue_to_last_commit": [
+      262,
+      289,
+      288,
+      271
+     ],
+     "words": 1,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 271,
+     "issue_to_last_commit_cycles": 284,
+     "issue_to_last_commit_ns": 236.9,
+     "mode": "all_reduce",
+     "op": 23,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      281,
+      275,
+      279,
+      275
+     ],
+     "words": 8,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 268,
+     "issue_to_last_commit_cycles": 331,
+     "issue_to_last_commit_ns": 276.1,
+     "mode": "all_reduce",
+     "op": 24,
+     "payload_bytes": 2560,
+     "per_die_issue_to_last_commit": [
+      320,
+      323,
+      320,
+      331
+     ],
+     "words": 40,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 269,
+     "issue_to_last_commit_cycles": 1318,
+     "issue_to_last_commit_ns": 1099.2,
+     "mode": "all_reduce",
+     "op": 25,
+     "payload_bytes": 10240,
+     "per_die_issue_to_last_commit": [
+      1314,
+      1316,
+      1312,
+      1303
+     ],
+     "words": 160,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 269,
+     "issue_to_last_commit_cycles": 2351,
+     "issue_to_last_commit_ns": 1960.7,
+     "mode": "all_reduce",
+     "op": 26,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      2347,
+      2341,
+      2343,
+      2351
+     ],
+     "words": 320,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 271,
+     "issue_to_last_commit_cycles": 14787,
+     "issue_to_last_commit_ns": 12332.4,
+     "mode": "all_reduce",
+     "op": 27,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      14767,
+      14776,
+      14787,
+      14767
+     ],
+     "words": 1920,
+     "words_per_rank": null
+    }
+   ],
+   "config": {
+    "DEPTH": 64,
+    "PD": 1,
+    "WSTALL": 30,
+    "lanes": 18
+   },
+   "deterministic": {
+    "all_passed": true,
+    "corners": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.349,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.349,
+      "X_JS": 0.0
+     }
+    ],
+    "distinct_timings": 10,
+    "faults": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "mismatches": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "runs": 10,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     2000,
+     2001
+    ]
+   },
+   "deterministic_timing": false,
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 7.6348,
+     "fixed_cycles": 121.0,
+     "max_abs_residual_cycles": 231.25,
+     "points": [
+      [
+       1,
+       255
+      ],
+      [
+       2,
+       257
+      ],
+      [
+       4,
+       264
+      ],
+      [
+       6,
+       267
+      ],
+      [
+       15,
+       278
+      ],
+      [
+       19,
+       290
+      ],
+      [
+       31,
+       311
+      ],
+      [
+       32,
+       316
+      ],
+      [
+       36,
+       313
+      ],
+      [
+       80,
+       786
+      ],
+      [
+       86,
+       788
+      ],
+      [
+       110,
+       821
+      ],
+      [
+       128,
+       867
+      ],
+      [
+       182,
+       1341
+      ],
+      [
+       264,
+       2262
+      ],
+      [
+       266,
+       2258
+      ],
+      [
+       480,
+       3780
+      ],
+      [
+       512,
+       3845
+      ],
+      [
+       768,
+       5831
+      ],
+      [
+       840,
+       6741
+      ],
+      [
+       1584,
+       12267
+      ],
+      [
+       1596,
+       12288
+      ]
+     ],
+     "words": "per rank"
+    },
+    "all_reduce": {
+     "cycles_per_word": 7.6223,
+     "fixed_cycles": 115.5,
+     "max_abs_residual_cycles": 203.63,
+     "points": [
+      [
+       1,
+       289
+      ],
+      [
+       8,
+       284
+      ],
+      [
+       40,
+       331
+      ],
+      [
+       160,
+       1318
+      ],
+      [
+       320,
+       2351
+      ],
+      [
+       1920,
+       14787
+      ]
+     ],
+     "words": "whole vector"
+    }
+   },
+   "fixture": {
+    "desc_sha256": "82fb7b1518a071c935b4655d9a4ed363a071a4150745d8317325d6e9ed496d1f",
+    "expected_sha256": "558e475a4d4c16583becf98cc2d0fa41b775a00d135fb198658309ec834d4b62",
+    "ops": [
+     [
+      "all_gather",
+      1
+     ],
+     [
+      "all_gather",
+      2
+     ],
+     [
+      "all_gather",
+      4
+     ],
+     [
+      "all_gather",
+      6
+     ],
+     [
+      "all_gather",
+      15
+     ],
+     [
+      "all_gather",
+      19
+     ],
+     [
+      "all_gather",
+      31
+     ],
+     [
+      "all_gather",
+      32
+     ],
+     [
+      "all_gather",
+      36
+     ],
+     [
+      "all_gather",
+      80
+     ],
+     [
+      "all_gather",
+      86
+     ],
+     [
+      "all_gather",
+      110
+     ],
+     [
+      "all_gather",
+      128
+     ],
+     [
+      "all_gather",
+      182
+     ],
+     [
+      "all_gather",
+      264
+     ],
+     [
+      "all_gather",
+      266
+     ],
+     [
+      "all_gather",
+      480
+     ],
+     [
+      "all_gather",
+      512
+     ],
+     [
+      "all_gather",
+      768
+     ],
+     [
+      "all_gather",
+      840
+     ],
+     [
+      "all_gather",
+      1584
+     ],
+     [
+      "all_gather",
+      1596
+     ],
+     [
+      "all_reduce",
+      1
+     ],
+     [
+      "all_reduce",
+      8
+     ],
+     [
+      "all_reduce",
+      40
+     ],
+     [
+      "all_reduce",
+      160
+     ],
+     [
+      "all_reduce",
+      320
+     ],
+     [
+      "all_reduce",
+      1920
+     ]
+    ],
+    "part_sha256": "6dcfa5363de172143f5cb122f2ee3c6dfc823d99e0808e10bb20bb1b3938dff4",
+    "wo_b": {
+     "chunk": 8,
+     "chunks": 32,
+     "chunks_per_rank": 8,
+     "k_blocks": 256,
+     "ranks": 4,
+     "seed": 20261003,
+     "shape": [
+      5120,
+      8192
+     ],
+     "to_bf16_equals_golden_linear_q": true,
+     "tree_of_rank_partials_equals_golden_csum": true
+    }
+   },
+   "links": [
+    {
+     "age_max": 200,
+     "age_min": 194,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 196,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 197,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 4,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 197,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 196,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 196,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 6,
+     "wire": 45
+    }
+   ],
+   "name": "c1_bp",
+   "parameters": {
+    "ADD_LAT": 7,
+    "DEPTH": 64,
+    "MAXW": 2048,
+    "PD": 1,
+    "T_CORE": 0.834,
+    "U_WIRE": 34,
+    "X_DEC": 82,
+    "X_ENC": 6,
+    "X_T": 0.674,
+    "X_WIRE": 45
+   },
+   "release_delay_cycles": {
+    "U_DREL": 3,
+    "X_DREL": 247
+   },
+   "release_guard_cycles": 3
+  },
+  "c1_modelbw": {
+   "board_link": {
+    "X_DEC": 102,
+    "X_DLY": 56.079,
+    "X_ENC": 7,
+    "X_T": 0.54,
+    "codeword_ns": 1.0791,
+    "payload_GBps": 237.2
+   },
+   "calibration": {
+    "all_passed": true,
+    "arrival_cycles": {
+     "board": [
+      236,
+      242
+     ]
+    },
+    "free_running_latency_range": {
+     "0": [
+      246,
+      249
+     ],
+     "1": [
+      247,
+      252
+     ],
+     "10": [
+      330,
+      337
+     ],
+     "11": [
+      354,
+      361
+     ],
+     "12": [
+      372,
+      379
+     ],
+     "13": [
+      427,
+      433
+     ],
+     "14": [
+      509,
+      515
+     ],
+     "15": [
+      511,
+      517
+     ],
+     "16": [
+      725,
+      731
+     ],
+     "17": [
+      757,
+      763
+     ],
+     "18": [
+      1013,
+      1018
+     ],
+     "19": [
+      1085,
+      1091
+     ],
+     "2": [
+      249,
+      255
+     ],
+     "20": [
+      1829,
+      1835
+     ],
+     "21": [
+      1841,
+      1848
+     ],
+     "22": [
+      259,
+      264
+     ],
+     "23": [
+      265,
+      272
+     ],
+     "24": [
+      297,
+      304
+     ],
+     "25": [
+      417,
+      424
+     ],
+     "26": [
+      577,
+      584
+     ],
+     "27": [
+      2177,
+      2184
+     ],
+     "3": [
+      250,
+      257
+     ],
+     "4": [
+      259,
+      266
+     ],
+     "5": [
+      263,
+      270
+     ],
+     "6": [
+      275,
+      282
+     ],
+     "7": [
+      276,
+      283
+     ],
+     "8": [
+      280,
+      287
+     ],
+     "9": [
+      324,
+      331
+     ]
+    },
+    "runs": 12
+   },
+   "collectives": [
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 251,
+     "issue_to_last_commit_ns": 209.3,
+     "mode": "all_gather",
+     "op": 0,
+     "payload_bytes": 256,
+     "per_die_issue_to_last_commit": [
+      251,
+      251,
+      251,
+      251
+     ],
+     "words": 1,
+     "words_per_rank": 1
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 252,
+     "issue_to_last_commit_ns": 210.2,
+     "mode": "all_gather",
+     "op": 1,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      252,
+      252,
+      252,
+      252
+     ],
+     "words": 2,
+     "words_per_rank": 2
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 254,
+     "issue_to_last_commit_ns": 211.8,
+     "mode": "all_gather",
+     "op": 2,
+     "payload_bytes": 1024,
+     "per_die_issue_to_last_commit": [
+      254,
+      254,
+      254,
+      254
+     ],
+     "words": 4,
+     "words_per_rank": 4
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 256,
+     "issue_to_last_commit_ns": 213.5,
+     "mode": "all_gather",
+     "op": 3,
+     "payload_bytes": 1536,
+     "per_die_issue_to_last_commit": [
+      256,
+      256,
+      256,
+      256
+     ],
+     "words": 6,
+     "words_per_rank": 6
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 265,
+     "issue_to_last_commit_ns": 221.0,
+     "mode": "all_gather",
+     "op": 4,
+     "payload_bytes": 3840,
+     "per_die_issue_to_last_commit": [
+      265,
+      265,
+      265,
+      265
+     ],
+     "words": 15,
+     "words_per_rank": 15
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 269,
+     "issue_to_last_commit_ns": 224.3,
+     "mode": "all_gather",
+     "op": 5,
+     "payload_bytes": 4864,
+     "per_die_issue_to_last_commit": [
+      269,
+      269,
+      269,
+      269
+     ],
+     "words": 19,
+     "words_per_rank": 19
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 281,
+     "issue_to_last_commit_ns": 234.4,
+     "mode": "all_gather",
+     "op": 6,
+     "payload_bytes": 7936,
+     "per_die_issue_to_last_commit": [
+      281,
+      281,
+      281,
+      281
+     ],
+     "words": 31,
+     "words_per_rank": 31
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 282,
+     "issue_to_last_commit_ns": 235.2,
+     "mode": "all_gather",
+     "op": 7,
+     "payload_bytes": 8192,
+     "per_die_issue_to_last_commit": [
+      282,
+      282,
+      282,
+      282
+     ],
+     "words": 32,
+     "words_per_rank": 32
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 286,
+     "issue_to_last_commit_ns": 238.5,
+     "mode": "all_gather",
+     "op": 8,
+     "payload_bytes": 9216,
+     "per_die_issue_to_last_commit": [
+      286,
+      286,
+      286,
+      286
+     ],
+     "words": 36,
+     "words_per_rank": 36
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 330,
+     "issue_to_last_commit_ns": 275.2,
+     "mode": "all_gather",
+     "op": 9,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      330,
+      330,
+      330,
+      330
+     ],
+     "words": 80,
+     "words_per_rank": 80
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 336,
+     "issue_to_last_commit_ns": 280.2,
+     "mode": "all_gather",
+     "op": 10,
+     "payload_bytes": 22016,
+     "per_die_issue_to_last_commit": [
+      336,
+      336,
+      336,
+      336
+     ],
+     "words": 86,
+     "words_per_rank": 86
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 360,
+     "issue_to_last_commit_ns": 300.2,
+     "mode": "all_gather",
+     "op": 11,
+     "payload_bytes": 28160,
+     "per_die_issue_to_last_commit": [
+      360,
+      360,
+      360,
+      360
+     ],
+     "words": 110,
+     "words_per_rank": 110
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 378,
+     "issue_to_last_commit_ns": 315.3,
+     "mode": "all_gather",
+     "op": 12,
+     "payload_bytes": 32768,
+     "per_die_issue_to_last_commit": [
+      378,
+      378,
+      378,
+      378
+     ],
+     "words": 128,
+     "words_per_rank": 128
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 432,
+     "issue_to_last_commit_ns": 360.3,
+     "mode": "all_gather",
+     "op": 13,
+     "payload_bytes": 46592,
+     "per_die_issue_to_last_commit": [
+      432,
+      432,
+      432,
+      432
+     ],
+     "words": 182,
+     "words_per_rank": 182
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 514,
+     "issue_to_last_commit_ns": 428.7,
+     "mode": "all_gather",
+     "op": 14,
+     "payload_bytes": 67584,
+     "per_die_issue_to_last_commit": [
+      514,
+      514,
+      514,
+      514
+     ],
+     "words": 264,
+     "words_per_rank": 264
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 516,
+     "issue_to_last_commit_ns": 430.3,
+     "mode": "all_gather",
+     "op": 15,
+     "payload_bytes": 68096,
+     "per_die_issue_to_last_commit": [
+      516,
+      516,
+      516,
+      516
+     ],
+     "words": 266,
+     "words_per_rank": 266
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 730,
+     "issue_to_last_commit_ns": 608.8,
+     "mode": "all_gather",
+     "op": 16,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      730,
+      730,
+      730,
+      730
+     ],
+     "words": 480,
+     "words_per_rank": 480
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 762,
+     "issue_to_last_commit_ns": 635.5,
+     "mode": "all_gather",
+     "op": 17,
+     "payload_bytes": 131072,
+     "per_die_issue_to_last_commit": [
+      762,
+      762,
+      762,
+      762
+     ],
+     "words": 512,
+     "words_per_rank": 512
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 1018,
+     "issue_to_last_commit_ns": 849.0,
+     "mode": "all_gather",
+     "op": 18,
+     "payload_bytes": 196608,
+     "per_die_issue_to_last_commit": [
+      1018,
+      1018,
+      1018,
+      1018
+     ],
+     "words": 768,
+     "words_per_rank": 768
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 1090,
+     "issue_to_last_commit_ns": 909.1,
+     "mode": "all_gather",
+     "op": 19,
+     "payload_bytes": 215040,
+     "per_die_issue_to_last_commit": [
+      1090,
+      1090,
+      1090,
+      1090
+     ],
+     "words": 840,
+     "words_per_rank": 840
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 1834,
+     "issue_to_last_commit_ns": 1529.6,
+     "mode": "all_gather",
+     "op": 20,
+     "payload_bytes": 405504,
+     "per_die_issue_to_last_commit": [
+      1834,
+      1834,
+      1834,
+      1834
+     ],
+     "words": 1584,
+     "words_per_rank": 1584
+    },
+    {
+     "issue_to_first_commit_cycles": 251,
+     "issue_to_last_commit_cycles": 1846,
+     "issue_to_last_commit_ns": 1539.6,
+     "mode": "all_gather",
+     "op": 21,
+     "payload_bytes": 408576,
+     "per_die_issue_to_last_commit": [
+      1846,
+      1846,
+      1846,
+      1846
+     ],
+     "words": 1596,
+     "words_per_rank": 1596
+    },
+    {
+     "issue_to_first_commit_cycles": 264,
+     "issue_to_last_commit_cycles": 264,
+     "issue_to_last_commit_ns": 220.2,
+     "mode": "all_reduce",
+     "op": 22,
+     "payload_bytes": 64,
+     "per_die_issue_to_last_commit": [
+      264,
+      264,
+      264,
+      264
+     ],
+     "words": 1,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 264,
+     "issue_to_last_commit_cycles": 271,
+     "issue_to_last_commit_ns": 226.0,
+     "mode": "all_reduce",
+     "op": 23,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      271,
+      271,
+      271,
+      271
+     ],
+     "words": 8,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 264,
+     "issue_to_last_commit_cycles": 303,
+     "issue_to_last_commit_ns": 252.7,
+     "mode": "all_reduce",
+     "op": 24,
+     "payload_bytes": 2560,
+     "per_die_issue_to_last_commit": [
+      303,
+      303,
+      303,
+      303
+     ],
+     "words": 40,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 264,
+     "issue_to_last_commit_cycles": 423,
+     "issue_to_last_commit_ns": 352.8,
+     "mode": "all_reduce",
+     "op": 25,
+     "payload_bytes": 10240,
+     "per_die_issue_to_last_commit": [
+      423,
+      423,
+      423,
+      423
+     ],
+     "words": 160,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 264,
+     "issue_to_last_commit_cycles": 583,
+     "issue_to_last_commit_ns": 486.2,
+     "mode": "all_reduce",
+     "op": 26,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      583,
+      583,
+      583,
+      583
+     ],
+     "words": 320,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 264,
+     "issue_to_last_commit_cycles": 2183,
+     "issue_to_last_commit_ns": 1820.6,
+     "mode": "all_reduce",
+     "op": 27,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      2183,
+      2183,
+      2183,
+      2183
+     ],
+     "words": 1920,
+     "words_per_rank": null
+    }
+   ],
+   "config": {
+    "DEPTH": 1024,
+    "PD": 1,
+    "bw_frac": 1.0
+   },
+   "deterministic": {
+    "all_passed": true,
+    "corners": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.079,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.079,
+      "X_JS": 0.0
+     }
+    ],
+    "distinct_timings": 1,
+    "faults": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "mismatches": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "runs": 10,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     2000,
+     2001
+    ]
+   },
+   "deterministic_timing": true,
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.0,
+     "fixed_cycles": 250.0,
+     "max_abs_residual_cycles": 0.0,
+     "points": [
+      [
+       1,
+       251
+      ],
+      [
+       2,
+       252
+      ],
+      [
+       4,
+       254
+      ],
+      [
+       6,
+       256
+      ],
+      [
+       15,
+       265
+      ],
+      [
+       19,
+       269
+      ],
+      [
+       31,
+       281
+      ],
+      [
+       32,
+       282
+      ],
+      [
+       36,
+       286
+      ],
+      [
+       80,
+       330
+      ],
+      [
+       86,
+       336
+      ],
+      [
+       110,
+       360
+      ],
+      [
+       128,
+       378
+      ],
+      [
+       182,
+       432
+      ],
+      [
+       264,
+       514
+      ],
+      [
+       266,
+       516
+      ],
+      [
+       480,
+       730
+      ],
+      [
+       512,
+       762
+      ],
+      [
+       768,
+       1018
+      ],
+      [
+       840,
+       1090
+      ],
+      [
+       1584,
+       1834
+      ],
+      [
+       1596,
+       1846
+      ]
+     ],
+     "words": "per rank"
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.0,
+     "fixed_cycles": 263.0,
+     "max_abs_residual_cycles": 0.0,
+     "points": [
+      [
+       1,
+       264
+      ],
+      [
+       8,
+       271
+      ],
+      [
+       40,
+       303
+      ],
+      [
+       160,
+       423
+      ],
+      [
+       320,
+       583
+      ],
+      [
+       1920,
+       2183
+      ]
+     ],
+     "words": "whole vector"
+    }
+   },
+   "fixture": {
+    "desc_sha256": "82fb7b1518a071c935b4655d9a4ed363a071a4150745d8317325d6e9ed496d1f",
+    "expected_sha256": "558e475a4d4c16583becf98cc2d0fa41b775a00d135fb198658309ec834d4b62",
+    "ops": [
+     [
+      "all_gather",
+      1
+     ],
+     [
+      "all_gather",
+      2
+     ],
+     [
+      "all_gather",
+      4
+     ],
+     [
+      "all_gather",
+      6
+     ],
+     [
+      "all_gather",
+      15
+     ],
+     [
+      "all_gather",
+      19
+     ],
+     [
+      "all_gather",
+      31
+     ],
+     [
+      "all_gather",
+      32
+     ],
+     [
+      "all_gather",
+      36
+     ],
+     [
+      "all_gather",
+      80
+     ],
+     [
+      "all_gather",
+      86
+     ],
+     [
+      "all_gather",
+      110
+     ],
+     [
+      "all_gather",
+      128
+     ],
+     [
+      "all_gather",
+      182
+     ],
+     [
+      "all_gather",
+      264
+     ],
+     [
+      "all_gather",
+      266
+     ],
+     [
+      "all_gather",
+      480
+     ],
+     [
+      "all_gather",
+      512
+     ],
+     [
+      "all_gather",
+      768
+     ],
+     [
+      "all_gather",
+      840
+     ],
+     [
+      "all_gather",
+      1584
+     ],
+     [
+      "all_gather",
+      1596
+     ],
+     [
+      "all_reduce",
+      1
+     ],
+     [
+      "all_reduce",
+      8
+     ],
+     [
+      "all_reduce",
+      40
+     ],
+     [
+      "all_reduce",
+      160
+     ],
+     [
+      "all_reduce",
+      320
+     ],
+     [
+      "all_reduce",
+      1920
+     ]
+    ],
+    "part_sha256": "6dcfa5363de172143f5cb122f2ee3c6dfc823d99e0808e10bb20bb1b3938dff4",
+    "wo_b": {
+     "chunk": 8,
+     "chunks": 32,
+     "chunks_per_rank": 8,
+     "k_blocks": 256,
+     "ranks": 4,
+     "seed": 20261003,
+     "shape": [
+      5120,
+      8192
+     ],
+     "to_bf16_equals_golden_linear_q": true,
+     "tree_of_rank_partials_equals_golden_csum": true
+    }
+   },
+   "links": [
+    {
+     "age_max": 198,
+     "age_min": 192,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 194,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 193,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 4,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 194,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 193,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 194,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 193,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 193,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 193,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 193,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 198,
+     "age_min": 193,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 6,
+     "wire": 45
+    }
+   ],
+   "name": "c1_modelbw",
+   "parameters": {
+    "ADD_LAT": 7,
+    "DEPTH": 1024,
+    "MAXW": 2048,
+    "PD": 1,
+    "T_CORE": 0.834,
+    "U_WIRE": 34,
+    "X_DEC": 102,
+    "X_ENC": 7,
+    "X_T": 0.54,
+    "X_WIRE": 45
+   },
+   "release_delay_cycles": {
+    "U_DREL": 3,
+    "X_DREL": 245
+   },
+   "release_guard_cycles": 3
+  },
+  "c1_phys": {
+   "board_link": {
+    "X_DEC": 82,
+    "X_DLY": 56.349,
+    "X_ENC": 6,
+    "X_T": 0.674,
+    "codeword_ns": 1.3492,
+    "payload_GBps": 189.7
+   },
+   "calibration": {
+    "all_passed": true,
+    "arrival_cycles": {
+     "board": [
+      238,
+      244
+     ]
+    },
+    "free_running_latency_range": {
+     "0": [
+      248,
+      252
+     ],
+     "1": [
+      250,
+      255
+     ],
+     "10": [
+      333,
+      339
+     ],
+     "11": [
+      357,
+      363
+     ],
+     "12": [
+      375,
+      381
+     ],
+     "13": [
+      429,
+      435
+     ],
+     "14": [
+      511,
+      517
+     ],
+     "15": [
+      513,
+      519
+     ],
+     "16": [
+      727,
+      734
+     ],
+     "17": [
+      759,
+      765
+     ],
+     "18": [
+      1015,
+      1022
+     ],
+     "19": [
+      1087,
+      1093
+     ],
+     "2": [
+      252,
+      257
+     ],
+     "20": [
+      1831,
+      1837
+     ],
+     "21": [
+      1843,
+      1849
+     ],
+     "22": [
+      261,
+      267
+     ],
+     "23": [
+      268,
+      274
+     ],
+     "24": [
+      300,
+      307
+     ],
+     "25": [
+      421,
+      425
+     ],
+     "26": [
+      581,
+      586
+     ],
+     "27": [
+      2181,
+      2185
+     ],
+     "3": [
+      254,
+      259
+     ],
+     "4": [
+      262,
+      269
+     ],
+     "5": [
+      266,
+      272
+     ],
+     "6": [
+      279,
+      285
+     ],
+     "7": [
+      280,
+      284
+     ],
+     "8": [
+      283,
+      290
+     ],
+     "9": [
+      327,
+      333
+     ]
+    },
+    "runs": 12
+   },
+   "collectives": [
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 253,
+     "issue_to_last_commit_ns": 211.0,
+     "mode": "all_gather",
+     "op": 0,
+     "payload_bytes": 256,
+     "per_die_issue_to_last_commit": [
+      253,
+      253,
+      253,
+      253
+     ],
+     "words": 1,
+     "words_per_rank": 1
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 254,
+     "issue_to_last_commit_ns": 211.8,
+     "mode": "all_gather",
+     "op": 1,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      254,
+      254,
+      254,
+      254
+     ],
+     "words": 2,
+     "words_per_rank": 2
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 256,
+     "issue_to_last_commit_ns": 213.5,
+     "mode": "all_gather",
+     "op": 2,
+     "payload_bytes": 1024,
+     "per_die_issue_to_last_commit": [
+      256,
+      256,
+      256,
+      256
+     ],
+     "words": 4,
+     "words_per_rank": 4
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 258,
+     "issue_to_last_commit_ns": 215.2,
+     "mode": "all_gather",
+     "op": 3,
+     "payload_bytes": 1536,
+     "per_die_issue_to_last_commit": [
+      258,
+      258,
+      258,
+      258
+     ],
+     "words": 6,
+     "words_per_rank": 6
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 267,
+     "issue_to_last_commit_ns": 222.7,
+     "mode": "all_gather",
+     "op": 4,
+     "payload_bytes": 3840,
+     "per_die_issue_to_last_commit": [
+      267,
+      267,
+      267,
+      267
+     ],
+     "words": 15,
+     "words_per_rank": 15
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 271,
+     "issue_to_last_commit_ns": 226.0,
+     "mode": "all_gather",
+     "op": 5,
+     "payload_bytes": 4864,
+     "per_die_issue_to_last_commit": [
+      271,
+      271,
+      271,
+      271
+     ],
+     "words": 19,
+     "words_per_rank": 19
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 283,
+     "issue_to_last_commit_ns": 236.0,
+     "mode": "all_gather",
+     "op": 6,
+     "payload_bytes": 7936,
+     "per_die_issue_to_last_commit": [
+      283,
+      283,
+      283,
+      283
+     ],
+     "words": 31,
+     "words_per_rank": 31
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 284,
+     "issue_to_last_commit_ns": 236.9,
+     "mode": "all_gather",
+     "op": 7,
+     "payload_bytes": 8192,
+     "per_die_issue_to_last_commit": [
+      284,
+      284,
+      284,
+      284
+     ],
+     "words": 32,
+     "words_per_rank": 32
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 288,
+     "issue_to_last_commit_ns": 240.2,
+     "mode": "all_gather",
+     "op": 8,
+     "payload_bytes": 9216,
+     "per_die_issue_to_last_commit": [
+      288,
+      288,
+      288,
+      288
+     ],
+     "words": 36,
+     "words_per_rank": 36
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 332,
+     "issue_to_last_commit_ns": 276.9,
+     "mode": "all_gather",
+     "op": 9,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      332,
+      332,
+      332,
+      332
+     ],
+     "words": 80,
+     "words_per_rank": 80
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 338,
+     "issue_to_last_commit_ns": 281.9,
+     "mode": "all_gather",
+     "op": 10,
+     "payload_bytes": 22016,
+     "per_die_issue_to_last_commit": [
+      338,
+      338,
+      338,
+      338
+     ],
+     "words": 86,
+     "words_per_rank": 86
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 362,
+     "issue_to_last_commit_ns": 301.9,
+     "mode": "all_gather",
+     "op": 11,
+     "payload_bytes": 28160,
+     "per_die_issue_to_last_commit": [
+      362,
+      362,
+      362,
+      362
+     ],
+     "words": 110,
+     "words_per_rank": 110
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 380,
+     "issue_to_last_commit_ns": 316.9,
+     "mode": "all_gather",
+     "op": 12,
+     "payload_bytes": 32768,
+     "per_die_issue_to_last_commit": [
+      380,
+      380,
+      380,
+      380
+     ],
+     "words": 128,
+     "words_per_rank": 128
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 434,
+     "issue_to_last_commit_ns": 362.0,
+     "mode": "all_gather",
+     "op": 13,
+     "payload_bytes": 46592,
+     "per_die_issue_to_last_commit": [
+      434,
+      434,
+      434,
+      434
+     ],
+     "words": 182,
+     "words_per_rank": 182
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 516,
+     "issue_to_last_commit_ns": 430.3,
+     "mode": "all_gather",
+     "op": 14,
+     "payload_bytes": 67584,
+     "per_die_issue_to_last_commit": [
+      516,
+      516,
+      516,
+      516
+     ],
+     "words": 264,
+     "words_per_rank": 264
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 518,
+     "issue_to_last_commit_ns": 432.0,
+     "mode": "all_gather",
+     "op": 15,
+     "payload_bytes": 68096,
+     "per_die_issue_to_last_commit": [
+      518,
+      518,
+      518,
+      518
+     ],
+     "words": 266,
+     "words_per_rank": 266
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 732,
+     "issue_to_last_commit_ns": 610.5,
+     "mode": "all_gather",
+     "op": 16,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      732,
+      732,
+      732,
+      732
+     ],
+     "words": 480,
+     "words_per_rank": 480
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 764,
+     "issue_to_last_commit_ns": 637.2,
+     "mode": "all_gather",
+     "op": 17,
+     "payload_bytes": 131072,
+     "per_die_issue_to_last_commit": [
+      764,
+      764,
+      764,
+      764
+     ],
+     "words": 512,
+     "words_per_rank": 512
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 1020,
+     "issue_to_last_commit_ns": 850.7,
+     "mode": "all_gather",
+     "op": 18,
+     "payload_bytes": 196608,
+     "per_die_issue_to_last_commit": [
+      1020,
+      1020,
+      1020,
+      1020
+     ],
+     "words": 768,
+     "words_per_rank": 768
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 1092,
+     "issue_to_last_commit_ns": 910.7,
+     "mode": "all_gather",
+     "op": 19,
+     "payload_bytes": 215040,
+     "per_die_issue_to_last_commit": [
+      1092,
+      1092,
+      1092,
+      1092
+     ],
+     "words": 840,
+     "words_per_rank": 840
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 1836,
+     "issue_to_last_commit_ns": 1531.2,
+     "mode": "all_gather",
+     "op": 20,
+     "payload_bytes": 405504,
+     "per_die_issue_to_last_commit": [
+      1836,
+      1836,
+      1836,
+      1836
+     ],
+     "words": 1584,
+     "words_per_rank": 1584
+    },
+    {
+     "issue_to_first_commit_cycles": 253,
+     "issue_to_last_commit_cycles": 1848,
+     "issue_to_last_commit_ns": 1541.2,
+     "mode": "all_gather",
+     "op": 21,
+     "payload_bytes": 408576,
+     "per_die_issue_to_last_commit": [
+      1848,
+      1848,
+      1848,
+      1848
+     ],
+     "words": 1596,
+     "words_per_rank": 1596
+    },
+    {
+     "issue_to_first_commit_cycles": 266,
+     "issue_to_last_commit_cycles": 266,
+     "issue_to_last_commit_ns": 221.8,
+     "mode": "all_reduce",
+     "op": 22,
+     "payload_bytes": 64,
+     "per_die_issue_to_last_commit": [
+      266,
+      266,
+      266,
+      266
+     ],
+     "words": 1,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 266,
+     "issue_to_last_commit_cycles": 273,
+     "issue_to_last_commit_ns": 227.7,
+     "mode": "all_reduce",
+     "op": 23,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      273,
+      273,
+      273,
+      273
+     ],
+     "words": 8,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 266,
+     "issue_to_last_commit_cycles": 305,
+     "issue_to_last_commit_ns": 254.4,
+     "mode": "all_reduce",
+     "op": 24,
+     "payload_bytes": 2560,
+     "per_die_issue_to_last_commit": [
+      305,
+      305,
+      305,
+      305
+     ],
+     "words": 40,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 266,
+     "issue_to_last_commit_cycles": 425,
+     "issue_to_last_commit_ns": 354.5,
+     "mode": "all_reduce",
+     "op": 25,
+     "payload_bytes": 10240,
+     "per_die_issue_to_last_commit": [
+      425,
+      425,
+      425,
+      425
+     ],
+     "words": 160,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 266,
+     "issue_to_last_commit_cycles": 585,
+     "issue_to_last_commit_ns": 487.9,
+     "mode": "all_reduce",
+     "op": 26,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      585,
+      585,
+      585,
+      585
+     ],
+     "words": 320,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 266,
+     "issue_to_last_commit_cycles": 2185,
+     "issue_to_last_commit_ns": 1822.3,
+     "mode": "all_reduce",
+     "op": 27,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      2185,
+      2185,
+      2185,
+      2185
+     ],
+     "words": 1920,
+     "words_per_rank": null
+    }
+   ],
+   "config": {
+    "DEPTH": 1024,
+    "PD": 1,
+    "lanes": 18
+   },
+   "deterministic": {
+    "all_passed": true,
+    "corners": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 56.349,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 59.349,
+      "X_JS": 0.0
+     }
+    ],
+    "distinct_timings": 1,
+    "faults": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "mismatches": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "runs": 10,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     2000,
+     2001
+    ]
+   },
+   "deterministic_timing": true,
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 1.0,
+     "fixed_cycles": 252.0,
+     "max_abs_residual_cycles": 0.0,
+     "points": [
+      [
+       1,
+       253
+      ],
+      [
+       2,
+       254
+      ],
+      [
+       4,
+       256
+      ],
+      [
+       6,
+       258
+      ],
+      [
+       15,
+       267
+      ],
+      [
+       19,
+       271
+      ],
+      [
+       31,
+       283
+      ],
+      [
+       32,
+       284
+      ],
+      [
+       36,
+       288
+      ],
+      [
+       80,
+       332
+      ],
+      [
+       86,
+       338
+      ],
+      [
+       110,
+       362
+      ],
+      [
+       128,
+       380
+      ],
+      [
+       182,
+       434
+      ],
+      [
+       264,
+       516
+      ],
+      [
+       266,
+       518
+      ],
+      [
+       480,
+       732
+      ],
+      [
+       512,
+       764
+      ],
+      [
+       768,
+       1020
+      ],
+      [
+       840,
+       1092
+      ],
+      [
+       1584,
+       1836
+      ],
+      [
+       1596,
+       1848
+      ]
+     ],
+     "words": "per rank"
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.0,
+     "fixed_cycles": 265.0,
+     "max_abs_residual_cycles": 0.0,
+     "points": [
+      [
+       1,
+       266
+      ],
+      [
+       8,
+       273
+      ],
+      [
+       40,
+       305
+      ],
+      [
+       160,
+       425
+      ],
+      [
+       320,
+       585
+      ],
+      [
+       1920,
+       2185
+      ]
+     ],
+     "words": "whole vector"
+    }
+   },
+   "fixture": {
+    "desc_sha256": "82fb7b1518a071c935b4655d9a4ed363a071a4150745d8317325d6e9ed496d1f",
+    "expected_sha256": "558e475a4d4c16583becf98cc2d0fa41b775a00d135fb198658309ec834d4b62",
+    "ops": [
+     [
+      "all_gather",
+      1
+     ],
+     [
+      "all_gather",
+      2
+     ],
+     [
+      "all_gather",
+      4
+     ],
+     [
+      "all_gather",
+      6
+     ],
+     [
+      "all_gather",
+      15
+     ],
+     [
+      "all_gather",
+      19
+     ],
+     [
+      "all_gather",
+      31
+     ],
+     [
+      "all_gather",
+      32
+     ],
+     [
+      "all_gather",
+      36
+     ],
+     [
+      "all_gather",
+      80
+     ],
+     [
+      "all_gather",
+      86
+     ],
+     [
+      "all_gather",
+      110
+     ],
+     [
+      "all_gather",
+      128
+     ],
+     [
+      "all_gather",
+      182
+     ],
+     [
+      "all_gather",
+      264
+     ],
+     [
+      "all_gather",
+      266
+     ],
+     [
+      "all_gather",
+      480
+     ],
+     [
+      "all_gather",
+      512
+     ],
+     [
+      "all_gather",
+      768
+     ],
+     [
+      "all_gather",
+      840
+     ],
+     [
+      "all_gather",
+      1584
+     ],
+     [
+      "all_gather",
+      1596
+     ],
+     [
+      "all_reduce",
+      1
+     ],
+     [
+      "all_reduce",
+      8
+     ],
+     [
+      "all_reduce",
+      40
+     ],
+     [
+      "all_reduce",
+      160
+     ],
+     [
+      "all_reduce",
+      320
+     ],
+     [
+      "all_reduce",
+      1920
+     ]
+    ],
+    "part_sha256": "6dcfa5363de172143f5cb122f2ee3c6dfc823d99e0808e10bb20bb1b3938dff4",
+    "wo_b": {
+     "chunk": 8,
+     "chunks": 32,
+     "chunks_per_rank": 8,
+     "k_blocks": 256,
+     "ranks": 4,
+     "seed": 20261003,
+     "shape": [
+      5120,
+      8192
+     ],
+     "to_bf16_equals_golden_linear_q": true,
+     "tree_of_rank_partials_equals_golden_csum": true
+    }
+   },
+   "links": [
+    {
+     "age_max": 200,
+     "age_min": 194,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 196,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 196,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 197,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 4,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 196,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 196,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 195,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 196,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 200,
+     "age_min": 196,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 6,
+     "wire": 45
+    }
+   ],
+   "name": "c1_phys",
+   "parameters": {
+    "ADD_LAT": 7,
+    "DEPTH": 1024,
+    "MAXW": 2048,
+    "PD": 1,
+    "T_CORE": 0.834,
+    "U_WIRE": 34,
+    "X_DEC": 82,
+    "X_ENC": 6,
+    "X_T": 0.674,
+    "X_WIRE": 45
+   },
+   "release_delay_cycles": {
+    "U_DREL": 3,
+    "X_DREL": 247
+   },
+   "release_guard_cycles": 3
+  },
+  "c5hc_bp": {
+   "board_link": {
+    "X_DEC": 41,
+    "X_DLY": 57.698,
+    "X_ENC": 3,
+    "X_T": 1.35,
+    "codeword_ns": 2.6984,
+    "payload_GBps": 94.9
+   },
+   "calibration": {
+    "all_passed": true,
+    "arrival_cycles": {
+     "board": [
+      247,
+      255
+     ],
+     "ucie": [
+      82,
+      86
+     ]
+    },
+    "free_running_latency_range": {
+     "0": [
+      347,
+      353
+     ],
+     "1": [
+      352,
+      359
+     ],
+     "10": [
+      482,
+      513
+     ],
+     "11": [
+      525,
+      559
+     ],
+     "12": [
+      553,
+      585
+     ],
+     "13": [
+      1122,
+      1165
+     ],
+     "14": [
+      1225,
+      1259
+     ],
+     "15": [
+      1736,
+      1780
+     ],
+     "16": [
+      1726,
+      1776
+     ],
+     "17": [
+      2531,
+      2594
+     ],
+     "18": [
+      2585,
+      2639
+     ],
+     "19": [
+      3945,
+      4023
+     ],
+     "2": [
+      355,
+      366
+     ],
+     "20": [
+      4543,
+      4654
+     ],
+     "21": [
+      8582,
+      8708
+     ],
+     "22": [
+      8592,
+      8722
+     ],
+     "23": [
+      16167,
+      16358
+     ],
+     "24": [
+      388,
+      453
+     ],
+     "25": [
+      391,
+      457
+     ],
+     "26": [
+      434,
+      497
+     ],
+     "27": [
+      1439,
+      1512
+     ],
+     "28": [
+      2504,
+      2584
+     ],
+     "29": [
+      15175,
+      15375
+     ],
+     "3": [
+      362,
+      373
+     ],
+     "4": [
+      375,
+      387
+     ],
+     "5": [
+      380,
+      392
+     ],
+     "6": [
+      403,
+      413
+     ],
+     "7": [
+      409,
+      423
+     ],
+     "8": [
+      446,
+      474
+     ],
+     "9": [
+      477,
+      503
+     ]
+    },
+    "runs": 12
+   },
+   "collectives": [
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 356,
+     "issue_to_last_commit_ns": 296.9,
+     "mode": "all_gather",
+     "op": 0,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      356,
+      355,
+      354,
+      355,
+      355,
+      354,
+      354,
+      355
+     ],
+     "words": 1,
+     "words_per_rank": 1
+    },
+    {
+     "issue_to_first_commit_cycles": 354,
+     "issue_to_last_commit_cycles": 361,
+     "issue_to_last_commit_ns": 301.1,
+     "mode": "all_gather",
+     "op": 1,
+     "payload_bytes": 1024,
+     "per_die_issue_to_last_commit": [
+      355,
+      360,
+      359,
+      357,
+      357,
+      358,
+      358,
+      357
+     ],
+     "words": 2,
+     "words_per_rank": 2
+    },
+    {
+     "issue_to_first_commit_cycles": 354,
+     "issue_to_last_commit_cycles": 372,
+     "issue_to_last_commit_ns": 310.2,
+     "mode": "all_gather",
+     "op": 2,
+     "payload_bytes": 1536,
+     "per_die_issue_to_last_commit": [
+      372,
+      362,
+      361,
+      360,
+      363,
+      363,
+      361,
+      360
+     ],
+     "words": 3,
+     "words_per_rank": 3
+    },
+    {
+     "issue_to_first_commit_cycles": 356,
+     "issue_to_last_commit_cycles": 374,
+     "issue_to_last_commit_ns": 311.9,
+     "mode": "all_gather",
+     "op": 3,
+     "payload_bytes": 2048,
+     "per_die_issue_to_last_commit": [
+      356,
+      362,
+      365,
+      372,
+      365,
+      370,
+      367,
+      374
+     ],
+     "words": 4,
+     "words_per_rank": 4
+    },
+    {
+     "issue_to_first_commit_cycles": 354,
+     "issue_to_last_commit_cycles": 389,
+     "issue_to_last_commit_ns": 324.4,
+     "mode": "all_gather",
+     "op": 4,
+     "payload_bytes": 4096,
+     "per_die_issue_to_last_commit": [
+      389,
+      374,
+      381,
+      370,
+      382,
+      375,
+      382,
+      367
+     ],
+     "words": 8,
+     "words_per_rank": 8
+    },
+    {
+     "issue_to_first_commit_cycles": 358,
+     "issue_to_last_commit_cycles": 412,
+     "issue_to_last_commit_ns": 343.6,
+     "mode": "all_gather",
+     "op": 5,
+     "payload_bytes": 5120,
+     "per_die_issue_to_last_commit": [
+      374,
+      386,
+      382,
+      397,
+      376,
+      405,
+      382,
+      388
+     ],
+     "words": 10,
+     "words_per_rank": 10
+    },
+    {
+     "issue_to_first_commit_cycles": 357,
+     "issue_to_last_commit_cycles": 435,
+     "issue_to_last_commit_ns": 362.8,
+     "mode": "all_gather",
+     "op": 6,
+     "payload_bytes": 8192,
+     "per_die_issue_to_last_commit": [
+      421,
+      404,
+      415,
+      398,
+      413,
+      388,
+      429,
+      398
+     ],
+     "words": 16,
+     "words_per_rank": 16
+    },
+    {
+     "issue_to_first_commit_cycles": 365,
+     "issue_to_last_commit_cycles": 434,
+     "issue_to_last_commit_ns": 362.0,
+     "mode": "all_gather",
+     "op": 7,
+     "payload_bytes": 9216,
+     "per_die_issue_to_last_commit": [
+      396,
+      430,
+      395,
+      420,
+      403,
+      413,
+      386,
+      421
+     ],
+     "words": 18,
+     "words_per_rank": 18
+    },
+    {
+     "issue_to_first_commit_cycles": 360,
+     "issue_to_last_commit_cycles": 471,
+     "issue_to_last_commit_ns": 392.8,
+     "mode": "all_gather",
+     "op": 8,
+     "payload_bytes": 16384,
+     "per_die_issue_to_last_commit": [
+      448,
+      433,
+      463,
+      432,
+      456,
+      439,
+      464,
+      450
+     ],
+     "words": 32,
+     "words_per_rank": 32
+    },
+    {
+     "issue_to_first_commit_cycles": 358,
+     "issue_to_last_commit_cycles": 498,
+     "issue_to_last_commit_ns": 415.3,
+     "mode": "all_gather",
+     "op": 9,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      467,
+      493,
+      460,
+      489,
+      457,
+      480,
+      439,
+      474
+     ],
+     "words": 40,
+     "words_per_rank": 40
+    },
+    {
+     "issue_to_first_commit_cycles": 365,
+     "issue_to_last_commit_cycles": 514,
+     "issue_to_last_commit_ns": 428.7,
+     "mode": "all_gather",
+     "op": 10,
+     "payload_bytes": 22016,
+     "per_die_issue_to_last_commit": [
+      502,
+      450,
+      500,
+      459,
+      494,
+      456,
+      499,
+      463
+     ],
+     "words": 43,
+     "words_per_rank": 43
+    },
+    {
+     "issue_to_first_commit_cycles": 361,
+     "issue_to_last_commit_cycles": 553,
+     "issue_to_last_commit_ns": 461.2,
+     "mode": "all_gather",
+     "op": 11,
+     "payload_bytes": 28160,
+     "per_die_issue_to_last_commit": [
+      489,
+      522,
+      469,
+      533,
+      495,
+      553,
+      493,
+      522
+     ],
+     "words": 55,
+     "words_per_rank": 55
+    },
+    {
+     "issue_to_first_commit_cycles": 365,
+     "issue_to_last_commit_cycles": 607,
+     "issue_to_last_commit_ns": 506.2,
+     "mode": "all_gather",
+     "op": 12,
+     "payload_bytes": 32768,
+     "per_die_issue_to_last_commit": [
+      566,
+      535,
+      607,
+      523,
+      552,
+      515,
+      583,
+      525
+     ],
+     "words": 64,
+     "words_per_rank": 64
+    },
+    {
+     "issue_to_first_commit_cycles": 365,
+     "issue_to_last_commit_cycles": 1190,
+     "issue_to_last_commit_ns": 992.5,
+     "mode": "all_gather",
+     "op": 13,
+     "payload_bytes": 46592,
+     "per_die_issue_to_last_commit": [
+      1100,
+      1166,
+      1074,
+      1169,
+      1130,
+      1175,
+      1108,
+      1184
+     ],
+     "words": 91,
+     "words_per_rank": 91
+    },
+    {
+     "issue_to_first_commit_cycles": 366,
+     "issue_to_last_commit_cycles": 1293,
+     "issue_to_last_commit_ns": 1078.4,
+     "mode": "all_gather",
+     "op": 14,
+     "payload_bytes": 65536,
+     "per_die_issue_to_last_commit": [
+      1286,
+      1211,
+      1293,
+      1200,
+      1275,
+      1191,
+      1270,
+      1203
+     ],
+     "words": 128,
+     "words_per_rank": 128
+    },
+    {
+     "issue_to_first_commit_cycles": 361,
+     "issue_to_last_commit_cycles": 1806,
+     "issue_to_last_commit_ns": 1506.2,
+     "mode": "all_gather",
+     "op": 15,
+     "payload_bytes": 67584,
+     "per_die_issue_to_last_commit": [
+      1722,
+      1797,
+      1721,
+      1800,
+      1727,
+      1802,
+      1726,
+      1794
+     ],
+     "words": 132,
+     "words_per_rank": 132
+    },
+    {
+     "issue_to_first_commit_cycles": 354,
+     "issue_to_last_commit_cycles": 1803,
+     "issue_to_last_commit_ns": 1503.7,
+     "mode": "all_gather",
+     "op": 16,
+     "payload_bytes": 68096,
+     "per_die_issue_to_last_commit": [
+      1798,
+      1720,
+      1802,
+      1728,
+      1802,
+      1725,
+      1797,
+      1722
+     ],
+     "words": 133,
+     "words_per_rank": 133
+    },
+    {
+     "issue_to_first_commit_cycles": 358,
+     "issue_to_last_commit_cycles": 2631,
+     "issue_to_last_commit_ns": 2194.3,
+     "mode": "all_gather",
+     "op": 17,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      2555,
+      2618,
+      2534,
+      2626,
+      2524,
+      2612,
+      2550,
+      2618
+     ],
+     "words": 240,
+     "words_per_rank": 240
+    },
+    {
+     "issue_to_first_commit_cycles": 375,
+     "issue_to_last_commit_cycles": 2699,
+     "issue_to_last_commit_ns": 2251.0,
+     "mode": "all_gather",
+     "op": 18,
+     "payload_bytes": 131072,
+     "per_die_issue_to_last_commit": [
+      2647,
+      2598,
+      2690,
+      2598,
+      2688,
+      2598,
+      2674,
+      2601
+     ],
+     "words": 256,
+     "words_per_rank": 256
+    },
+    {
+     "issue_to_first_commit_cycles": 357,
+     "issue_to_last_commit_cycles": 4095,
+     "issue_to_last_commit_ns": 3415.2,
+     "mode": "all_gather",
+     "op": 19,
+     "payload_bytes": 196608,
+     "per_die_issue_to_last_commit": [
+      4002,
+      4091,
+      3977,
+      4059,
+      3999,
+      4076,
+      3976,
+      4073
+     ],
+     "words": 384,
+     "words_per_rank": 384
+    },
+    {
+     "issue_to_first_commit_cycles": 358,
+     "issue_to_last_commit_cycles": 4719,
+     "issue_to_last_commit_ns": 3935.6,
+     "mode": "all_gather",
+     "op": 20,
+     "payload_bytes": 215040,
+     "per_die_issue_to_last_commit": [
+      4705,
+      4589,
+      4712,
+      4610,
+      4680,
+      4597,
+      4719,
+      4609
+     ],
+     "words": 420,
+     "words_per_rank": 420
+    },
+    {
+     "issue_to_first_commit_cycles": 364,
+     "issue_to_last_commit_cycles": 8860,
+     "issue_to_last_commit_ns": 7389.2,
+     "mode": "all_gather",
+     "op": 21,
+     "payload_bytes": 405504,
+     "per_die_issue_to_last_commit": [
+      8727,
+      8838,
+      8734,
+      8850,
+      8750,
+      8854,
+      8728,
+      8835
+     ],
+     "words": 792,
+     "words_per_rank": 792
+    },
+    {
+     "issue_to_first_commit_cycles": 365,
+     "issue_to_last_commit_cycles": 8877,
+     "issue_to_last_commit_ns": 7403.4,
+     "mode": "all_gather",
+     "op": 22,
+     "payload_bytes": 408576,
+     "per_die_issue_to_last_commit": [
+      8865,
+      8765,
+      8862,
+      8739,
+      8862,
+      8745,
+      8858,
+      8756
+     ],
+     "words": 798,
+     "words_per_rank": 798
+    },
+    {
+     "issue_to_first_commit_cycles": 358,
+     "issue_to_last_commit_cycles": 16631,
+     "issue_to_last_commit_ns": 13870.3,
+     "mode": "all_gather",
+     "op": 23,
+     "payload_bytes": 786432,
+     "per_die_issue_to_last_commit": [
+      16528,
+      16616,
+      16510,
+      16627,
+      16510,
+      16626,
+      16527,
+      16620
+     ],
+     "words": 1536,
+     "words_per_rank": 1536
+    },
+    {
+     "issue_to_first_commit_cycles": 386,
+     "issue_to_last_commit_cycles": 437,
+     "issue_to_last_commit_ns": 364.5,
+     "mode": "all_reduce",
+     "op": 24,
+     "payload_bytes": 64,
+     "per_die_issue_to_last_commit": [
+      420,
+      330,
+      430,
+      334,
+      437,
+      335,
+      420,
+      332
+     ],
+     "words": 1,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 379,
+     "issue_to_last_commit_cycles": 439,
+     "issue_to_last_commit_ns": 366.1,
+     "mode": "all_reduce",
+     "op": 25,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      345,
+      434,
+      344,
+      435,
+      340,
+      430,
+      344,
+      434
+     ],
+     "words": 8,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 378,
+     "issue_to_last_commit_cycles": 477,
+     "issue_to_last_commit_ns": 397.8,
+     "mode": "all_reduce",
+     "op": 26,
+     "payload_bytes": 2560,
+     "per_die_issue_to_last_commit": [
+      477,
+      387,
+      471,
+      392,
+      475,
+      386,
+      467,
+      388
+     ],
+     "words": 40,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 380,
+     "issue_to_last_commit_cycles": 1506,
+     "issue_to_last_commit_ns": 1256.0,
+     "mode": "all_reduce",
+     "op": 27,
+     "payload_bytes": 10240,
+     "per_die_issue_to_last_commit": [
+      1424,
+      1497,
+      1426,
+      1492,
+      1415,
+      1505,
+      1432,
+      1504
+     ],
+     "words": 160,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 385,
+     "issue_to_last_commit_cycles": 2591,
+     "issue_to_last_commit_ns": 2160.9,
+     "mode": "all_reduce",
+     "op": 28,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      2578,
+      2514,
+      2574,
+      2518,
+      2581,
+      2510,
+      2580,
+      2506
+     ],
+     "words": 320,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 380,
+     "issue_to_last_commit_cycles": 15569,
+     "issue_to_last_commit_ns": 12984.5,
+     "mode": "all_reduce",
+     "op": 29,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      15492,
+      15565,
+      15483,
+      15542,
+      15496,
+      15558,
+      15480,
+      15553
+     ],
+     "words": 1920,
+     "words_per_rank": null
+    }
+   ],
+   "config": {
+    "DEPTH": 64,
+    "PD": 2,
+    "WSTALL": 30,
+    "lanes": 9
+   },
+   "deterministic": {
+    "all_passed": true,
+    "corners": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 57.698,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 60.698,
+      "X_JS": 0.0
+     }
+    ],
+    "distinct_timings": 10,
+    "faults": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "mismatches": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "runs": 10,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     2000,
+     2001
+    ]
+   },
+   "deterministic_timing": false,
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 10.7292,
+     "fixed_cycles": 188.49,
+     "max_abs_residual_cycles": 268.83,
+     "points": [
+      [
+       1,
+       356
+      ],
+      [
+       2,
+       361
+      ],
+      [
+       3,
+       372
+      ],
+      [
+       4,
+       374
+      ],
+      [
+       8,
+       389
+      ],
+      [
+       10,
+       412
+      ],
+      [
+       16,
+       435
+      ],
+      [
+       18,
+       434
+      ],
+      [
+       32,
+       471
+      ],
+      [
+       40,
+       498
+      ],
+      [
+       43,
+       514
+      ],
+      [
+       55,
+       553
+      ],
+      [
+       64,
+       607
+      ],
+      [
+       91,
+       1190
+      ],
+      [
+       128,
+       1293
+      ],
+      [
+       132,
+       1806
+      ],
+      [
+       133,
+       1803
+      ],
+      [
+       240,
+       2631
+      ],
+      [
+       256,
+       2699
+      ],
+      [
+       384,
+       4095
+      ],
+      [
+       420,
+       4719
+      ],
+      [
+       792,
+       8860
+      ],
+      [
+       798,
+       8877
+      ],
+      [
+       1536,
+       16631
+      ]
+     ],
+     "words": "per rank"
+    },
+    "all_reduce": {
+     "cycles_per_word": 7.9555,
+     "fixed_cycles": 256.0,
+     "max_abs_residual_cycles": 210.76,
+     "points": [
+      [
+       1,
+       437
+      ],
+      [
+       8,
+       439
+      ],
+      [
+       40,
+       477
+      ],
+      [
+       160,
+       1506
+      ],
+      [
+       320,
+       2591
+      ],
+      [
+       1920,
+       15569
+      ]
+     ],
+     "words": "whole vector"
+    }
+   },
+   "fixture": {
+    "desc_sha256": "2ee98cea7c3ab7bad15d74aae6b10a3825398d9e1c39ed896f5fff530b239c2b",
+    "expected_sha256": "a885d3ba58cb72d79ec77e05d95e90129bb3cf97cf139204463c7d8d7de92441",
+    "ops": [
+     [
+      "all_gather",
+      1
+     ],
+     [
+      "all_gather",
+      2
+     ],
+     [
+      "all_gather",
+      3
+     ],
+     [
+      "all_gather",
+      4
+     ],
+     [
+      "all_gather",
+      8
+     ],
+     [
+      "all_gather",
+      10
+     ],
+     [
+      "all_gather",
+      16
+     ],
+     [
+      "all_gather",
+      18
+     ],
+     [
+      "all_gather",
+      32
+     ],
+     [
+      "all_gather",
+      40
+     ],
+     [
+      "all_gather",
+      43
+     ],
+     [
+      "all_gather",
+      55
+     ],
+     [
+      "all_gather",
+      64
+     ],
+     [
+      "all_gather",
+      91
+     ],
+     [
+      "all_gather",
+      128
+     ],
+     [
+      "all_gather",
+      132
+     ],
+     [
+      "all_gather",
+      133
+     ],
+     [
+      "all_gather",
+      240
+     ],
+     [
+      "all_gather",
+      256
+     ],
+     [
+      "all_gather",
+      384
+     ],
+     [
+      "all_gather",
+      420
+     ],
+     [
+      "all_gather",
+      792
+     ],
+     [
+      "all_gather",
+      798
+     ],
+     [
+      "all_gather",
+      1536
+     ],
+     [
+      "all_reduce",
+      1
+     ],
+     [
+      "all_reduce",
+      8
+     ],
+     [
+      "all_reduce",
+      40
+     ],
+     [
+      "all_reduce",
+      160
+     ],
+     [
+      "all_reduce",
+      320
+     ],
+     [
+      "all_reduce",
+      1920
+     ]
+    ],
+    "part_sha256": "3776b29dcea2e69fcbe220cdcb5d3d66171cfc1dabb00a15a3a0d256012dcd32",
+    "wo_b": {
+     "chunk": 8,
+     "chunks": 32,
+     "chunks_per_rank": 4,
+     "k_blocks": 256,
+     "ranks": 8,
+     "seed": 20261003,
+     "shape": [
+      5120,
+      8192
+     ],
+     "to_bf16_equals_golden_linear_q": true,
+     "tree_of_rank_partials_equals_golden_csum": true
+    }
+   },
+   "links": [
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 50,
+     "cls": "ucie",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 4,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 50,
+     "cls": "ucie",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 4,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 48,
+     "cls": "ucie",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 6,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 50,
+     "cls": "ucie",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 4,
+     "wire": 34
+    },
+    {
+     "age_max": 211,
+     "age_min": 203,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 9,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 204,
+     "cls": "board",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 8,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 204,
+     "cls": "board",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 8,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 204,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 8,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 203,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 9,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 207,
+     "cls": "board",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 204,
+     "cls": "board",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 8,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 7,
+     "wire": 45
+    }
+   ],
+   "name": "c5hc_bp",
+   "parameters": {
+    "ADD_LAT": 7,
+    "DEPTH": 64,
+    "MAXW": 2048,
+    "PD": 2,
+    "T_CORE": 0.834,
+    "U_WIRE": 34,
+    "X_DEC": 41,
+    "X_ENC": 3,
+    "X_T": 1.35,
+    "X_WIRE": 45
+   },
+   "release_delay_cycles": {
+    "U_DREL": 89,
+    "X_DREL": 258
+   },
+   "release_guard_cycles": 3
+  },
+  "c5hc_modelbw": {
+   "board_link": {
+    "X_DEC": 51,
+    "X_DLY": 57.158,
+    "X_ENC": 4,
+    "X_T": 1.08,
+    "codeword_ns": 2.1582,
+    "payload_GBps": 118.6
+   },
+   "calibration": {
+    "all_passed": true,
+    "arrival_cycles": {
+     "board": [
+      243,
+      250
+     ],
+     "ucie": [
+      82,
+      86
+     ]
+    },
+    "free_running_latency_range": {
+     "0": [
+      342,
+      345
+     ],
+     "1": [
+      345,
+      350
+     ],
+     "10": [
+      428,
+      435
+     ],
+     "11": [
+      453,
+      457
+     ],
+     "12": [
+      471,
+      476
+     ],
+     "13": [
+      524,
+      530
+     ],
+     "14": [
+      596,
+      606
+     ],
+     "15": [
+      604,
+      612
+     ],
+     "16": [
+      607,
+      615
+     ],
+     "17": [
+      822,
+      829
+     ],
+     "18": [
+      853,
+      862
+     ],
+     "19": [
+      1108,
+      1117
+     ],
+     "2": [
+      348,
+      353
+     ],
+     "20": [
+      1180,
+      1189
+     ],
+     "21": [
+      1924,
+      1934
+     ],
+     "22": [
+      1936,
+      1946
+     ],
+     "23": [
+      3412,
+      3422
+     ],
+     "24": [
+      363,
+      372
+     ],
+     "25": [
+      371,
+      382
+     ],
+     "26": [
+      404,
+      413
+     ],
+     "27": [
+      523,
+      533
+     ],
+     "28": [
+      683,
+      693
+     ],
+     "29": [
+      2283,
+      2293
+     ],
+     "3": [
+      348,
+      356
+     ],
+     "4": [
+      356,
+      363
+     ],
+     "5": [
+      360,
+      368
+     ],
+     "6": [
+      375,
+      380
+     ],
+     "7": [
+      377,
+      384
+     ],
+     "8": [
+      406,
+      412
+     ],
+     "9": [
+      421,
+      427
+     ]
+    },
+    "runs": 12
+   },
+   "collectives": [
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 349,
+     "issue_to_last_commit_ns": 291.1,
+     "mode": "all_gather",
+     "op": 0,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      349,
+      349,
+      349,
+      349,
+      349,
+      349,
+      349,
+      349
+     ],
+     "words": 1,
+     "words_per_rank": 1
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 351,
+     "issue_to_last_commit_ns": 292.7,
+     "mode": "all_gather",
+     "op": 1,
+     "payload_bytes": 1024,
+     "per_die_issue_to_last_commit": [
+      351,
+      351,
+      351,
+      351,
+      351,
+      351,
+      351,
+      351
+     ],
+     "words": 2,
+     "words_per_rank": 2
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 353,
+     "issue_to_last_commit_ns": 294.4,
+     "mode": "all_gather",
+     "op": 2,
+     "payload_bytes": 1536,
+     "per_die_issue_to_last_commit": [
+      353,
+      353,
+      353,
+      353,
+      353,
+      353,
+      353,
+      353
+     ],
+     "words": 3,
+     "words_per_rank": 3
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 355,
+     "issue_to_last_commit_ns": 296.1,
+     "mode": "all_gather",
+     "op": 3,
+     "payload_bytes": 2048,
+     "per_die_issue_to_last_commit": [
+      355,
+      355,
+      355,
+      355,
+      355,
+      355,
+      355,
+      355
+     ],
+     "words": 4,
+     "words_per_rank": 4
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 363,
+     "issue_to_last_commit_ns": 302.7,
+     "mode": "all_gather",
+     "op": 4,
+     "payload_bytes": 4096,
+     "per_die_issue_to_last_commit": [
+      363,
+      363,
+      363,
+      363,
+      363,
+      363,
+      363,
+      363
+     ],
+     "words": 8,
+     "words_per_rank": 8
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 367,
+     "issue_to_last_commit_ns": 306.1,
+     "mode": "all_gather",
+     "op": 5,
+     "payload_bytes": 5120,
+     "per_die_issue_to_last_commit": [
+      367,
+      367,
+      367,
+      367,
+      367,
+      367,
+      367,
+      367
+     ],
+     "words": 10,
+     "words_per_rank": 10
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 379,
+     "issue_to_last_commit_ns": 316.1,
+     "mode": "all_gather",
+     "op": 6,
+     "payload_bytes": 8192,
+     "per_die_issue_to_last_commit": [
+      379,
+      379,
+      379,
+      379,
+      379,
+      379,
+      379,
+      379
+     ],
+     "words": 16,
+     "words_per_rank": 16
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 383,
+     "issue_to_last_commit_ns": 319.4,
+     "mode": "all_gather",
+     "op": 7,
+     "payload_bytes": 9216,
+     "per_die_issue_to_last_commit": [
+      383,
+      383,
+      383,
+      383,
+      383,
+      383,
+      383,
+      383
+     ],
+     "words": 18,
+     "words_per_rank": 18
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 411,
+     "issue_to_last_commit_ns": 342.8,
+     "mode": "all_gather",
+     "op": 8,
+     "payload_bytes": 16384,
+     "per_die_issue_to_last_commit": [
+      411,
+      411,
+      411,
+      411,
+      411,
+      411,
+      411,
+      411
+     ],
+     "words": 32,
+     "words_per_rank": 32
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 427,
+     "issue_to_last_commit_ns": 356.1,
+     "mode": "all_gather",
+     "op": 9,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      427,
+      427,
+      427,
+      427,
+      427,
+      427,
+      427,
+      427
+     ],
+     "words": 40,
+     "words_per_rank": 40
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 433,
+     "issue_to_last_commit_ns": 361.1,
+     "mode": "all_gather",
+     "op": 10,
+     "payload_bytes": 22016,
+     "per_die_issue_to_last_commit": [
+      433,
+      433,
+      433,
+      433,
+      433,
+      433,
+      433,
+      433
+     ],
+     "words": 43,
+     "words_per_rank": 43
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 457,
+     "issue_to_last_commit_ns": 381.1,
+     "mode": "all_gather",
+     "op": 11,
+     "payload_bytes": 28160,
+     "per_die_issue_to_last_commit": [
+      457,
+      457,
+      457,
+      457,
+      457,
+      457,
+      457,
+      457
+     ],
+     "words": 55,
+     "words_per_rank": 55
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 475,
+     "issue_to_last_commit_ns": 396.2,
+     "mode": "all_gather",
+     "op": 12,
+     "payload_bytes": 32768,
+     "per_die_issue_to_last_commit": [
+      475,
+      475,
+      475,
+      475,
+      475,
+      475,
+      475,
+      475
+     ],
+     "words": 64,
+     "words_per_rank": 64
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 529,
+     "issue_to_last_commit_ns": 441.2,
+     "mode": "all_gather",
+     "op": 13,
+     "payload_bytes": 46592,
+     "per_die_issue_to_last_commit": [
+      529,
+      529,
+      529,
+      529,
+      529,
+      529,
+      529,
+      529
+     ],
+     "words": 91,
+     "words_per_rank": 91
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 603,
+     "issue_to_last_commit_ns": 502.9,
+     "mode": "all_gather",
+     "op": 14,
+     "payload_bytes": 65536,
+     "per_die_issue_to_last_commit": [
+      603,
+      603,
+      603,
+      603,
+      603,
+      603,
+      603,
+      603
+     ],
+     "words": 128,
+     "words_per_rank": 128
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 611,
+     "issue_to_last_commit_ns": 509.6,
+     "mode": "all_gather",
+     "op": 15,
+     "payload_bytes": 67584,
+     "per_die_issue_to_last_commit": [
+      611,
+      611,
+      611,
+      611,
+      611,
+      611,
+      611,
+      611
+     ],
+     "words": 132,
+     "words_per_rank": 132
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 613,
+     "issue_to_last_commit_ns": 511.2,
+     "mode": "all_gather",
+     "op": 16,
+     "payload_bytes": 68096,
+     "per_die_issue_to_last_commit": [
+      613,
+      613,
+      613,
+      613,
+      613,
+      613,
+      613,
+      613
+     ],
+     "words": 133,
+     "words_per_rank": 133
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 827,
+     "issue_to_last_commit_ns": 689.7,
+     "mode": "all_gather",
+     "op": 17,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      827,
+      827,
+      827,
+      827,
+      827,
+      827,
+      827,
+      827
+     ],
+     "words": 240,
+     "words_per_rank": 240
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 859,
+     "issue_to_last_commit_ns": 716.4,
+     "mode": "all_gather",
+     "op": 18,
+     "payload_bytes": 131072,
+     "per_die_issue_to_last_commit": [
+      859,
+      859,
+      859,
+      859,
+      859,
+      859,
+      859,
+      859
+     ],
+     "words": 256,
+     "words_per_rank": 256
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 1115,
+     "issue_to_last_commit_ns": 929.9,
+     "mode": "all_gather",
+     "op": 19,
+     "payload_bytes": 196608,
+     "per_die_issue_to_last_commit": [
+      1115,
+      1115,
+      1115,
+      1115,
+      1115,
+      1115,
+      1115,
+      1115
+     ],
+     "words": 384,
+     "words_per_rank": 384
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 1187,
+     "issue_to_last_commit_ns": 990.0,
+     "mode": "all_gather",
+     "op": 20,
+     "payload_bytes": 215040,
+     "per_die_issue_to_last_commit": [
+      1187,
+      1187,
+      1187,
+      1187,
+      1187,
+      1187,
+      1187,
+      1187
+     ],
+     "words": 420,
+     "words_per_rank": 420
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 1931,
+     "issue_to_last_commit_ns": 1610.5,
+     "mode": "all_gather",
+     "op": 21,
+     "payload_bytes": 405504,
+     "per_die_issue_to_last_commit": [
+      1931,
+      1931,
+      1931,
+      1931,
+      1931,
+      1931,
+      1931,
+      1931
+     ],
+     "words": 792,
+     "words_per_rank": 792
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 1943,
+     "issue_to_last_commit_ns": 1620.5,
+     "mode": "all_gather",
+     "op": 22,
+     "payload_bytes": 408576,
+     "per_die_issue_to_last_commit": [
+      1943,
+      1943,
+      1943,
+      1943,
+      1943,
+      1943,
+      1943,
+      1943
+     ],
+     "words": 798,
+     "words_per_rank": 798
+    },
+    {
+     "issue_to_first_commit_cycles": 348,
+     "issue_to_last_commit_cycles": 3419,
+     "issue_to_last_commit_ns": 2851.4,
+     "mode": "all_gather",
+     "op": 23,
+     "payload_bytes": 786432,
+     "per_die_issue_to_last_commit": [
+      3419,
+      3419,
+      3419,
+      3419,
+      3419,
+      3419,
+      3419,
+      3419
+     ],
+     "words": 1536,
+     "words_per_rank": 1536
+    },
+    {
+     "issue_to_first_commit_cycles": 370,
+     "issue_to_last_commit_cycles": 370,
+     "issue_to_last_commit_ns": 308.6,
+     "mode": "all_reduce",
+     "op": 24,
+     "payload_bytes": 64,
+     "per_die_issue_to_last_commit": [
+      370,
+      370,
+      370,
+      370,
+      370,
+      370,
+      370,
+      370
+     ],
+     "words": 1,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 370,
+     "issue_to_last_commit_cycles": 377,
+     "issue_to_last_commit_ns": 314.4,
+     "mode": "all_reduce",
+     "op": 25,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      377,
+      377,
+      377,
+      377,
+      377,
+      377,
+      377,
+      377
+     ],
+     "words": 8,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 370,
+     "issue_to_last_commit_cycles": 409,
+     "issue_to_last_commit_ns": 341.1,
+     "mode": "all_reduce",
+     "op": 26,
+     "payload_bytes": 2560,
+     "per_die_issue_to_last_commit": [
+      409,
+      409,
+      409,
+      409,
+      409,
+      409,
+      409,
+      409
+     ],
+     "words": 40,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 370,
+     "issue_to_last_commit_cycles": 529,
+     "issue_to_last_commit_ns": 441.2,
+     "mode": "all_reduce",
+     "op": 27,
+     "payload_bytes": 10240,
+     "per_die_issue_to_last_commit": [
+      529,
+      529,
+      529,
+      529,
+      529,
+      529,
+      529,
+      529
+     ],
+     "words": 160,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 370,
+     "issue_to_last_commit_cycles": 689,
+     "issue_to_last_commit_ns": 574.6,
+     "mode": "all_reduce",
+     "op": 28,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      689,
+      689,
+      689,
+      689,
+      689,
+      689,
+      689,
+      689
+     ],
+     "words": 320,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 370,
+     "issue_to_last_commit_cycles": 2289,
+     "issue_to_last_commit_ns": 1909.0,
+     "mode": "all_reduce",
+     "op": 29,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      2289,
+      2289,
+      2289,
+      2289,
+      2289,
+      2289,
+      2289,
+      2289
+     ],
+     "words": 1920,
+     "words_per_rank": null
+    }
+   ],
+   "config": {
+    "DEPTH": 1024,
+    "PD": 2,
+    "bw_frac": 0.5
+   },
+   "deterministic": {
+    "all_passed": true,
+    "corners": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 57.158,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 60.158,
+      "X_JS": 0.0
+     }
+    ],
+    "distinct_timings": 1,
+    "faults": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "mismatches": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "runs": 10,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     2000,
+     2001
+    ]
+   },
+   "deterministic_timing": true,
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 2.0,
+     "fixed_cycles": 347.0,
+     "max_abs_residual_cycles": 0.0,
+     "points": [
+      [
+       1,
+       349
+      ],
+      [
+       2,
+       351
+      ],
+      [
+       3,
+       353
+      ],
+      [
+       4,
+       355
+      ],
+      [
+       8,
+       363
+      ],
+      [
+       10,
+       367
+      ],
+      [
+       16,
+       379
+      ],
+      [
+       18,
+       383
+      ],
+      [
+       32,
+       411
+      ],
+      [
+       40,
+       427
+      ],
+      [
+       43,
+       433
+      ],
+      [
+       55,
+       457
+      ],
+      [
+       64,
+       475
+      ],
+      [
+       91,
+       529
+      ],
+      [
+       128,
+       603
+      ],
+      [
+       132,
+       611
+      ],
+      [
+       133,
+       613
+      ],
+      [
+       240,
+       827
+      ],
+      [
+       256,
+       859
+      ],
+      [
+       384,
+       1115
+      ],
+      [
+       420,
+       1187
+      ],
+      [
+       792,
+       1931
+      ],
+      [
+       798,
+       1943
+      ],
+      [
+       1536,
+       3419
+      ]
+     ],
+     "words": "per rank"
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.0,
+     "fixed_cycles": 369.0,
+     "max_abs_residual_cycles": 0.0,
+     "points": [
+      [
+       1,
+       370
+      ],
+      [
+       8,
+       377
+      ],
+      [
+       40,
+       409
+      ],
+      [
+       160,
+       529
+      ],
+      [
+       320,
+       689
+      ],
+      [
+       1920,
+       2289
+      ]
+     ],
+     "words": "whole vector"
+    }
+   },
+   "fixture": {
+    "desc_sha256": "2ee98cea7c3ab7bad15d74aae6b10a3825398d9e1c39ed896f5fff530b239c2b",
+    "expected_sha256": "a885d3ba58cb72d79ec77e05d95e90129bb3cf97cf139204463c7d8d7de92441",
+    "ops": [
+     [
+      "all_gather",
+      1
+     ],
+     [
+      "all_gather",
+      2
+     ],
+     [
+      "all_gather",
+      3
+     ],
+     [
+      "all_gather",
+      4
+     ],
+     [
+      "all_gather",
+      8
+     ],
+     [
+      "all_gather",
+      10
+     ],
+     [
+      "all_gather",
+      16
+     ],
+     [
+      "all_gather",
+      18
+     ],
+     [
+      "all_gather",
+      32
+     ],
+     [
+      "all_gather",
+      40
+     ],
+     [
+      "all_gather",
+      43
+     ],
+     [
+      "all_gather",
+      55
+     ],
+     [
+      "all_gather",
+      64
+     ],
+     [
+      "all_gather",
+      91
+     ],
+     [
+      "all_gather",
+      128
+     ],
+     [
+      "all_gather",
+      132
+     ],
+     [
+      "all_gather",
+      133
+     ],
+     [
+      "all_gather",
+      240
+     ],
+     [
+      "all_gather",
+      256
+     ],
+     [
+      "all_gather",
+      384
+     ],
+     [
+      "all_gather",
+      420
+     ],
+     [
+      "all_gather",
+      792
+     ],
+     [
+      "all_gather",
+      798
+     ],
+     [
+      "all_gather",
+      1536
+     ],
+     [
+      "all_reduce",
+      1
+     ],
+     [
+      "all_reduce",
+      8
+     ],
+     [
+      "all_reduce",
+      40
+     ],
+     [
+      "all_reduce",
+      160
+     ],
+     [
+      "all_reduce",
+      320
+     ],
+     [
+      "all_reduce",
+      1920
+     ]
+    ],
+    "part_sha256": "3776b29dcea2e69fcbe220cdcb5d3d66171cfc1dabb00a15a3a0d256012dcd32",
+    "wo_b": {
+     "chunk": 8,
+     "chunks": 32,
+     "chunks_per_rank": 4,
+     "k_blocks": 256,
+     "ranks": 8,
+     "seed": 20261003,
+     "shape": [
+      5120,
+      8192
+     ],
+     "to_bf16_equals_golden_linear_q": true,
+     "tree_of_rank_partials_equals_golden_csum": true
+    }
+   },
+   "links": [
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 50,
+     "cls": "ucie",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 4,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 50,
+     "cls": "ucie",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 4,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 48,
+     "cls": "ucie",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 6,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 50,
+     "cls": "ucie",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 4,
+     "wire": 34
+    },
+    {
+     "age_max": 206,
+     "age_min": 200,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 202,
+     "cls": "board",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 203,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 4,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 202,
+     "cls": "board",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 202,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 202,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 200,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 204,
+     "cls": "board",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 3,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 203,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 4,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 202,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 202,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 200,
+     "cls": "board",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 202,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 206,
+     "age_min": 201,
+     "cls": "board",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 6,
+     "wire": 45
+    }
+   ],
+   "name": "c5hc_modelbw",
+   "parameters": {
+    "ADD_LAT": 7,
+    "DEPTH": 1024,
+    "MAXW": 2048,
+    "PD": 2,
+    "T_CORE": 0.834,
+    "U_WIRE": 34,
+    "X_DEC": 51,
+    "X_ENC": 4,
+    "X_T": 1.08,
+    "X_WIRE": 45
+   },
+   "release_delay_cycles": {
+    "U_DREL": 89,
+    "X_DREL": 253
+   },
+   "release_guard_cycles": 3
+  },
+  "c5hc_phys": {
+   "board_link": {
+    "X_DEC": 41,
+    "X_DLY": 57.698,
+    "X_ENC": 3,
+    "X_T": 1.35,
+    "codeword_ns": 2.6984,
+    "payload_GBps": 94.9
+   },
+   "calibration": {
+    "all_passed": true,
+    "arrival_cycles": {
+     "board": [
+      247,
+      255
+     ],
+     "ucie": [
+      82,
+      86
+     ]
+    },
+    "free_running_latency_range": {
+     "0": [
+      346,
+      350
+     ],
+     "1": [
+      348,
+      354
+     ],
+     "10": [
+      431,
+      439
+     ],
+     "11": [
+      455,
+      464
+     ],
+     "12": [
+      473,
+      483
+     ],
+     "13": [
+      526,
+      538
+     ],
+     "14": [
+      600,
+      611
+     ],
+     "15": [
+      609,
+      621
+     ],
+     "16": [
+      610,
+      621
+     ],
+     "17": [
+      823,
+      835
+     ],
+     "18": [
+      857,
+      868
+     ],
+     "19": [
+      1113,
+      1124
+     ],
+     "2": [
+      350,
+      357
+     ],
+     "20": [
+      1185,
+      1196
+     ],
+     "21": [
+      1928,
+      1941
+     ],
+     "22": [
+      1940,
+      1954
+     ],
+     "23": [
+      3416,
+      3431
+     ],
+     "24": [
+      366,
+      380
+     ],
+     "25": [
+      374,
+      388
+     ],
+     "26": [
+      406,
+      419
+     ],
+     "27": [
+      527,
+      539
+     ],
+     "28": [
+      686,
+      699
+     ],
+     "29": [
+      2287,
+      2300
+     ],
+     "3": [
+      352,
+      359
+     ],
+     "4": [
+      359,
+      368
+     ],
+     "5": [
+      364,
+      372
+     ],
+     "6": [
+      376,
+      383
+     ],
+     "7": [
+      381,
+      389
+     ],
+     "8": [
+      408,
+      416
+     ],
+     "9": [
+      424,
+      433
+     ]
+    },
+    "runs": 12
+   },
+   "collectives": [
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 354,
+     "issue_to_last_commit_ns": 295.2,
+     "mode": "all_gather",
+     "op": 0,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      354,
+      354,
+      354,
+      354,
+      354,
+      354,
+      354,
+      354
+     ],
+     "words": 1,
+     "words_per_rank": 1
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 356,
+     "issue_to_last_commit_ns": 296.9,
+     "mode": "all_gather",
+     "op": 1,
+     "payload_bytes": 1024,
+     "per_die_issue_to_last_commit": [
+      356,
+      356,
+      356,
+      356,
+      356,
+      356,
+      356,
+      356
+     ],
+     "words": 2,
+     "words_per_rank": 2
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 358,
+     "issue_to_last_commit_ns": 298.6,
+     "mode": "all_gather",
+     "op": 2,
+     "payload_bytes": 1536,
+     "per_die_issue_to_last_commit": [
+      358,
+      358,
+      358,
+      358,
+      358,
+      358,
+      358,
+      358
+     ],
+     "words": 3,
+     "words_per_rank": 3
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 360,
+     "issue_to_last_commit_ns": 300.2,
+     "mode": "all_gather",
+     "op": 3,
+     "payload_bytes": 2048,
+     "per_die_issue_to_last_commit": [
+      360,
+      360,
+      360,
+      360,
+      360,
+      360,
+      360,
+      360
+     ],
+     "words": 4,
+     "words_per_rank": 4
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 368,
+     "issue_to_last_commit_ns": 306.9,
+     "mode": "all_gather",
+     "op": 4,
+     "payload_bytes": 4096,
+     "per_die_issue_to_last_commit": [
+      368,
+      368,
+      368,
+      368,
+      368,
+      368,
+      368,
+      368
+     ],
+     "words": 8,
+     "words_per_rank": 8
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 372,
+     "issue_to_last_commit_ns": 310.2,
+     "mode": "all_gather",
+     "op": 5,
+     "payload_bytes": 5120,
+     "per_die_issue_to_last_commit": [
+      372,
+      372,
+      372,
+      372,
+      372,
+      372,
+      372,
+      372
+     ],
+     "words": 10,
+     "words_per_rank": 10
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 384,
+     "issue_to_last_commit_ns": 320.3,
+     "mode": "all_gather",
+     "op": 6,
+     "payload_bytes": 8192,
+     "per_die_issue_to_last_commit": [
+      384,
+      384,
+      384,
+      384,
+      384,
+      384,
+      384,
+      384
+     ],
+     "words": 16,
+     "words_per_rank": 16
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 388,
+     "issue_to_last_commit_ns": 323.6,
+     "mode": "all_gather",
+     "op": 7,
+     "payload_bytes": 9216,
+     "per_die_issue_to_last_commit": [
+      388,
+      388,
+      388,
+      388,
+      388,
+      388,
+      388,
+      388
+     ],
+     "words": 18,
+     "words_per_rank": 18
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 416,
+     "issue_to_last_commit_ns": 346.9,
+     "mode": "all_gather",
+     "op": 8,
+     "payload_bytes": 16384,
+     "per_die_issue_to_last_commit": [
+      416,
+      416,
+      416,
+      416,
+      416,
+      416,
+      416,
+      416
+     ],
+     "words": 32,
+     "words_per_rank": 32
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 432,
+     "issue_to_last_commit_ns": 360.3,
+     "mode": "all_gather",
+     "op": 9,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      432,
+      432,
+      432,
+      432,
+      432,
+      432,
+      432,
+      432
+     ],
+     "words": 40,
+     "words_per_rank": 40
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 438,
+     "issue_to_last_commit_ns": 365.3,
+     "mode": "all_gather",
+     "op": 10,
+     "payload_bytes": 22016,
+     "per_die_issue_to_last_commit": [
+      438,
+      438,
+      438,
+      438,
+      438,
+      438,
+      438,
+      438
+     ],
+     "words": 43,
+     "words_per_rank": 43
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 462,
+     "issue_to_last_commit_ns": 385.3,
+     "mode": "all_gather",
+     "op": 11,
+     "payload_bytes": 28160,
+     "per_die_issue_to_last_commit": [
+      462,
+      462,
+      462,
+      462,
+      462,
+      462,
+      462,
+      462
+     ],
+     "words": 55,
+     "words_per_rank": 55
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 480,
+     "issue_to_last_commit_ns": 400.3,
+     "mode": "all_gather",
+     "op": 12,
+     "payload_bytes": 32768,
+     "per_die_issue_to_last_commit": [
+      480,
+      480,
+      480,
+      480,
+      480,
+      480,
+      480,
+      480
+     ],
+     "words": 64,
+     "words_per_rank": 64
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 534,
+     "issue_to_last_commit_ns": 445.4,
+     "mode": "all_gather",
+     "op": 13,
+     "payload_bytes": 46592,
+     "per_die_issue_to_last_commit": [
+      534,
+      534,
+      534,
+      534,
+      534,
+      534,
+      534,
+      534
+     ],
+     "words": 91,
+     "words_per_rank": 91
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 608,
+     "issue_to_last_commit_ns": 507.1,
+     "mode": "all_gather",
+     "op": 14,
+     "payload_bytes": 65536,
+     "per_die_issue_to_last_commit": [
+      608,
+      608,
+      608,
+      608,
+      608,
+      608,
+      608,
+      608
+     ],
+     "words": 128,
+     "words_per_rank": 128
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 616,
+     "issue_to_last_commit_ns": 513.7,
+     "mode": "all_gather",
+     "op": 15,
+     "payload_bytes": 67584,
+     "per_die_issue_to_last_commit": [
+      616,
+      616,
+      616,
+      616,
+      616,
+      616,
+      616,
+      616
+     ],
+     "words": 132,
+     "words_per_rank": 132
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 618,
+     "issue_to_last_commit_ns": 515.4,
+     "mode": "all_gather",
+     "op": 16,
+     "payload_bytes": 68096,
+     "per_die_issue_to_last_commit": [
+      618,
+      618,
+      618,
+      618,
+      618,
+      618,
+      618,
+      618
+     ],
+     "words": 133,
+     "words_per_rank": 133
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 832,
+     "issue_to_last_commit_ns": 693.9,
+     "mode": "all_gather",
+     "op": 17,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      832,
+      832,
+      832,
+      832,
+      832,
+      832,
+      832,
+      832
+     ],
+     "words": 240,
+     "words_per_rank": 240
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 864,
+     "issue_to_last_commit_ns": 720.6,
+     "mode": "all_gather",
+     "op": 18,
+     "payload_bytes": 131072,
+     "per_die_issue_to_last_commit": [
+      864,
+      864,
+      864,
+      864,
+      864,
+      864,
+      864,
+      864
+     ],
+     "words": 256,
+     "words_per_rank": 256
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 1120,
+     "issue_to_last_commit_ns": 934.1,
+     "mode": "all_gather",
+     "op": 19,
+     "payload_bytes": 196608,
+     "per_die_issue_to_last_commit": [
+      1120,
+      1120,
+      1120,
+      1120,
+      1120,
+      1120,
+      1120,
+      1120
+     ],
+     "words": 384,
+     "words_per_rank": 384
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 1192,
+     "issue_to_last_commit_ns": 994.1,
+     "mode": "all_gather",
+     "op": 20,
+     "payload_bytes": 215040,
+     "per_die_issue_to_last_commit": [
+      1192,
+      1192,
+      1192,
+      1192,
+      1192,
+      1192,
+      1192,
+      1192
+     ],
+     "words": 420,
+     "words_per_rank": 420
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 1936,
+     "issue_to_last_commit_ns": 1614.6,
+     "mode": "all_gather",
+     "op": 21,
+     "payload_bytes": 405504,
+     "per_die_issue_to_last_commit": [
+      1936,
+      1936,
+      1936,
+      1936,
+      1936,
+      1936,
+      1936,
+      1936
+     ],
+     "words": 792,
+     "words_per_rank": 792
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 1948,
+     "issue_to_last_commit_ns": 1624.6,
+     "mode": "all_gather",
+     "op": 22,
+     "payload_bytes": 408576,
+     "per_die_issue_to_last_commit": [
+      1948,
+      1948,
+      1948,
+      1948,
+      1948,
+      1948,
+      1948,
+      1948
+     ],
+     "words": 798,
+     "words_per_rank": 798
+    },
+    {
+     "issue_to_first_commit_cycles": 353,
+     "issue_to_last_commit_cycles": 3424,
+     "issue_to_last_commit_ns": 2855.6,
+     "mode": "all_gather",
+     "op": 23,
+     "payload_bytes": 786432,
+     "per_die_issue_to_last_commit": [
+      3424,
+      3424,
+      3424,
+      3424,
+      3424,
+      3424,
+      3424,
+      3424
+     ],
+     "words": 1536,
+     "words_per_rank": 1536
+    },
+    {
+     "issue_to_first_commit_cycles": 375,
+     "issue_to_last_commit_cycles": 375,
+     "issue_to_last_commit_ns": 312.8,
+     "mode": "all_reduce",
+     "op": 24,
+     "payload_bytes": 64,
+     "per_die_issue_to_last_commit": [
+      375,
+      375,
+      375,
+      375,
+      375,
+      375,
+      375,
+      375
+     ],
+     "words": 1,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 375,
+     "issue_to_last_commit_cycles": 382,
+     "issue_to_last_commit_ns": 318.6,
+     "mode": "all_reduce",
+     "op": 25,
+     "payload_bytes": 512,
+     "per_die_issue_to_last_commit": [
+      382,
+      382,
+      382,
+      382,
+      382,
+      382,
+      382,
+      382
+     ],
+     "words": 8,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 375,
+     "issue_to_last_commit_cycles": 414,
+     "issue_to_last_commit_ns": 345.3,
+     "mode": "all_reduce",
+     "op": 26,
+     "payload_bytes": 2560,
+     "per_die_issue_to_last_commit": [
+      414,
+      414,
+      414,
+      414,
+      414,
+      414,
+      414,
+      414
+     ],
+     "words": 40,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 375,
+     "issue_to_last_commit_cycles": 534,
+     "issue_to_last_commit_ns": 445.4,
+     "mode": "all_reduce",
+     "op": 27,
+     "payload_bytes": 10240,
+     "per_die_issue_to_last_commit": [
+      534,
+      534,
+      534,
+      534,
+      534,
+      534,
+      534,
+      534
+     ],
+     "words": 160,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 375,
+     "issue_to_last_commit_cycles": 694,
+     "issue_to_last_commit_ns": 578.8,
+     "mode": "all_reduce",
+     "op": 28,
+     "payload_bytes": 20480,
+     "per_die_issue_to_last_commit": [
+      694,
+      694,
+      694,
+      694,
+      694,
+      694,
+      694,
+      694
+     ],
+     "words": 320,
+     "words_per_rank": null
+    },
+    {
+     "issue_to_first_commit_cycles": 375,
+     "issue_to_last_commit_cycles": 2294,
+     "issue_to_last_commit_ns": 1913.2,
+     "mode": "all_reduce",
+     "op": 29,
+     "payload_bytes": 122880,
+     "per_die_issue_to_last_commit": [
+      2294,
+      2294,
+      2294,
+      2294,
+      2294,
+      2294,
+      2294,
+      2294
+     ],
+     "words": 1920,
+     "words_per_rank": null
+    }
+   ],
+   "config": {
+    "DEPTH": 1024,
+    "PD": 2,
+    "lanes": 9
+   },
+   "deterministic": {
+    "all_passed": true,
+    "corners": [
+     {
+      "U_DLY": 2.0,
+      "U_JS": 0.0,
+      "X_DLY": 57.698,
+      "X_JS": 0.0
+     },
+     {
+      "U_DLY": 2.5,
+      "U_JS": 0.0,
+      "X_DLY": 60.698,
+      "X_JS": 0.0
+     }
+    ],
+    "distinct_timings": 1,
+    "faults": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "mismatches": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "runs": 10,
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     2000,
+     2001
+    ]
+   },
+   "deterministic_timing": true,
+   "fit": {
+    "all_gather": {
+     "cycles_per_word": 2.0,
+     "fixed_cycles": 352.0,
+     "max_abs_residual_cycles": 0.0,
+     "points": [
+      [
+       1,
+       354
+      ],
+      [
+       2,
+       356
+      ],
+      [
+       3,
+       358
+      ],
+      [
+       4,
+       360
+      ],
+      [
+       8,
+       368
+      ],
+      [
+       10,
+       372
+      ],
+      [
+       16,
+       384
+      ],
+      [
+       18,
+       388
+      ],
+      [
+       32,
+       416
+      ],
+      [
+       40,
+       432
+      ],
+      [
+       43,
+       438
+      ],
+      [
+       55,
+       462
+      ],
+      [
+       64,
+       480
+      ],
+      [
+       91,
+       534
+      ],
+      [
+       128,
+       608
+      ],
+      [
+       132,
+       616
+      ],
+      [
+       133,
+       618
+      ],
+      [
+       240,
+       832
+      ],
+      [
+       256,
+       864
+      ],
+      [
+       384,
+       1120
+      ],
+      [
+       420,
+       1192
+      ],
+      [
+       792,
+       1936
+      ],
+      [
+       798,
+       1948
+      ],
+      [
+       1536,
+       3424
+      ]
+     ],
+     "words": "per rank"
+    },
+    "all_reduce": {
+     "cycles_per_word": 1.0,
+     "fixed_cycles": 374.0,
+     "max_abs_residual_cycles": 0.0,
+     "points": [
+      [
+       1,
+       375
+      ],
+      [
+       8,
+       382
+      ],
+      [
+       40,
+       414
+      ],
+      [
+       160,
+       534
+      ],
+      [
+       320,
+       694
+      ],
+      [
+       1920,
+       2294
+      ]
+     ],
+     "words": "whole vector"
+    }
+   },
+   "fixture": {
+    "desc_sha256": "2ee98cea7c3ab7bad15d74aae6b10a3825398d9e1c39ed896f5fff530b239c2b",
+    "expected_sha256": "a885d3ba58cb72d79ec77e05d95e90129bb3cf97cf139204463c7d8d7de92441",
+    "ops": [
+     [
+      "all_gather",
+      1
+     ],
+     [
+      "all_gather",
+      2
+     ],
+     [
+      "all_gather",
+      3
+     ],
+     [
+      "all_gather",
+      4
+     ],
+     [
+      "all_gather",
+      8
+     ],
+     [
+      "all_gather",
+      10
+     ],
+     [
+      "all_gather",
+      16
+     ],
+     [
+      "all_gather",
+      18
+     ],
+     [
+      "all_gather",
+      32
+     ],
+     [
+      "all_gather",
+      40
+     ],
+     [
+      "all_gather",
+      43
+     ],
+     [
+      "all_gather",
+      55
+     ],
+     [
+      "all_gather",
+      64
+     ],
+     [
+      "all_gather",
+      91
+     ],
+     [
+      "all_gather",
+      128
+     ],
+     [
+      "all_gather",
+      132
+     ],
+     [
+      "all_gather",
+      133
+     ],
+     [
+      "all_gather",
+      240
+     ],
+     [
+      "all_gather",
+      256
+     ],
+     [
+      "all_gather",
+      384
+     ],
+     [
+      "all_gather",
+      420
+     ],
+     [
+      "all_gather",
+      792
+     ],
+     [
+      "all_gather",
+      798
+     ],
+     [
+      "all_gather",
+      1536
+     ],
+     [
+      "all_reduce",
+      1
+     ],
+     [
+      "all_reduce",
+      8
+     ],
+     [
+      "all_reduce",
+      40
+     ],
+     [
+      "all_reduce",
+      160
+     ],
+     [
+      "all_reduce",
+      320
+     ],
+     [
+      "all_reduce",
+      1920
+     ]
+    ],
+    "part_sha256": "3776b29dcea2e69fcbe220cdcb5d3d66171cfc1dabb00a15a3a0d256012dcd32",
+    "wo_b": {
+     "chunk": 8,
+     "chunks": 32,
+     "chunks_per_rank": 4,
+     "k_blocks": 256,
+     "ranks": 8,
+     "seed": 20261003,
+     "shape": [
+      5120,
+      8192
+     ],
+     "to_bf16_equals_golden_linear_q": true,
+     "tree_of_rank_partials_equals_golden_csum": true
+    }
+   },
+   "links": [
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 50,
+     "cls": "ucie",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 4,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 50,
+     "cls": "ucie",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 4,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 49,
+     "cls": "ucie",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 5,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 48,
+     "cls": "ucie",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 6,
+     "wire": 34
+    },
+    {
+     "age_max": 53,
+     "age_min": 50,
+     "cls": "ucie",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 4,
+     "wire": 34
+    },
+    {
+     "age_max": 211,
+     "age_min": 203,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 9,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 0,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 204,
+     "cls": "board",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 1,
+     "wait_max": 8,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 204,
+     "cls": "board",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 8,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 2,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 8,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 3,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 203,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 9,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 207,
+     "cls": "board",
+     "dst": 6,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 4,
+     "wait_max": 5,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 7,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 5,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 0,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 2,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 204,
+     "cls": "board",
+     "dst": 4,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 6,
+     "wait_max": 8,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 206,
+     "cls": "board",
+     "dst": 1,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 6,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 3,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 7,
+     "wire": 45
+    },
+    {
+     "age_max": 211,
+     "age_min": 205,
+     "cls": "board",
+     "dst": 5,
+     "faults": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "src": 7,
+     "wait_max": 7,
+     "wire": 45
+    }
+   ],
+   "name": "c5hc_phys",
+   "parameters": {
+    "ADD_LAT": 7,
+    "DEPTH": 1024,
+    "MAXW": 2048,
+    "PD": 2,
+    "T_CORE": 0.834,
+    "U_WIRE": 34,
+    "X_DEC": 41,
+    "X_ENC": 3,
+    "X_T": 1.35,
+    "X_WIRE": 45
+   },
+   "release_delay_cycles": {
+    "U_DREL": 89,
+    "X_DREL": 258
+   },
+   "release_guard_cycles": 3
+  }
+ },
+ "git": {
+  "dirty": [
+   " M tools/uarch_model_parallelism.py"
+  ],
+  "head": "bd840b303f8fc4ece57888707f74b4a177f3ae5a"
+ },
+ "measured_on": "ot-agidock128 (Verilator 5.050; per-config campaign files merged)",
+ "schema": "opentallas.dsrom.c5hc_collective_gate.measurements.v1",
+ "source_sha256": {
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/link/ot_link_chan_model.sv": "78591c5d4f60a1559f088263c163eb363a5193d226091a0fe3d70e7dc8ee7446",
+  "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+  "rtl/link/ot_link_crc32_pipe.sv": "c117c3008b950b371cccded0581a647606f55e49b608129cbab3b3aec844d8bb",
+  "rtl/link/ot_w15_link_rx.sv": "5f089b28bd4b2966b3a98e0f7fb3b3cdd755268eda844caf899b8df7a596efaa",
+  "rtl/link/ot_w15_link_tx.sv": "ccee74339f743012aed3de51fe0a085f1d9b04e54d6343f5ced37fc49cdc9bc0",
+  "rtl/rom/collectives/ot_rom_hcoll_die.sv": "aadd81b559fd11427a557a238183af033f3daa00d9546048735b7892ee16c7d0",
+  "rtl/test/tb_dsrom_hcoll.sv": "68fad6c397f72ad259a53a5773e696aea4a6bf3647f605c3bb1ad92d26ff36bb",
+  "tools/dsrom_c5hc_collective_gate.py": "01850638b460989c66501f75ff8b5cb90cc7f0e58534babca8bce3bf328bd91f",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/w15_collectives.py": "314f6aee76d233bbb074ed5fde77e08079f0250e3ef8ac6e15e41cc09849ad2a"
+ },
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "verilator_flags": [
+  "--binary",
+  "--timing",
+  "-CFLAGS",
+  "-O1",
+  "-Wno-fatal",
+  "-Wno-WIDTH",
+  "-Wno-TIMESCALEMOD",
+  "-Wno-lint",
+  "-Wno-style",
+  "-Wno-MULTIDRIVEN"
+ ]
+}

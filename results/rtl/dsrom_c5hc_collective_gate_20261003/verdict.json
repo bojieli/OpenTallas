@@ -1,0 +1,1553 @@
+{
+ "basis": {
+  "C1": "c1_phys",
+  "C5hc": "c5hc_phys"
+ },
+ "decision_rule": {
+  "ADOPT": "re-priced C5hc AR tok/s at 1M context >= 1.05 x re-priced C1 AR at 1M, AND re-priced C5hc AR at 200K >= 1.01 x re-priced C1 AR at 200K, AND every collective exactness check passes (all-reduce bit-exact vs tools/hdc_golden_v41.csum chunk8 order for the wo_b 8-way K split; all-gather bit-transparent, rank order; no link/engine fault; deterministic timing across seeds)",
+  "REJECT": "otherwise: keep C1, record the failed verdict (never overwritten), stop after phase 1"
+ },
+ "exactness": {
+  "all_passed": true,
+  "failures": []
+ },
+ "git": {
+  "dirty": [
+   " M tools/uarch_model_parallelism.py"
+  ],
+  "head": "bd840b303f8fc4ece57888707f74b4a177f3ae5a"
+ },
+ "priced": {
+  "C1": {
+   "measured": {
+    "1048576": {
+     "ar_tok_s": 2356.8,
+     "ar_token_us": 424.3,
+     "collectives": {
+      "attn.a_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        237.1,
+        240.5,
+        250.5
+       ],
+       "on_path": 40,
+       "path_us": 9.528
+      },
+      "attn.cand.merge": {
+       "calls": 1,
+       "depth_ns": [
+        438.1
+       ],
+       "on_path": 0,
+       "path_us": 0.0
+      },
+      "attn.idx.topk_merge": {
+       "calls": 8,
+       "depth_ns": [
+        278.8
+       ],
+       "on_path": 8,
+       "path_us": 2.231
+      },
+      "attn.out_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        502.3
+       ],
+       "on_path": 40,
+       "path_us": 20.093
+      },
+      "attn.rows_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        444.8,
+        925.2,
+        929.3
+       ],
+       "on_path": 8,
+       "path_us": 7.418
+      },
+      "ffn.combine_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        502.3
+       ],
+       "on_path": 40,
+       "path_us": 20.093
+      },
+      "ffn.router_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        233.8
+       ],
+       "on_path": 40,
+       "path_us": 9.351
+      },
+      "head.argmax_merge": {
+       "calls": 1,
+       "depth_ns": [
+        229.6
+       ],
+       "on_path": 1,
+       "path_us": 0.23
+      }
+     },
+     "kept_non_link_terms_ns": {
+      "all_gather": [
+       14.4,
+       15.3,
+       18.6
+      ],
+      "all_reduce": [
+       14.4
+      ]
+     },
+     "mtp_tok_s": 3203.4,
+     "path_us": {
+      "cp_merge": 2.231,
+      "ep_combine_dispatch": 0.0,
+      "field": 115.95,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 31.28,
+      "serial_chain": 161.969,
+      "stage_hops": 24.624,
+      "tp_collectives": 66.714
+     }
+    },
+    "200000": {
+     "ar_tok_s": 2455.3,
+     "ar_token_us": 407.28,
+     "collectives": {
+      "attn.a_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        237.1,
+        240.5,
+        250.5
+       ],
+       "on_path": 40,
+       "path_us": 9.528
+      },
+      "attn.cand.merge": {
+       "calls": 1,
+       "depth_ns": [
+        438.1
+       ],
+       "on_path": 0,
+       "path_us": 0.0
+      },
+      "attn.idx.topk_merge": {
+       "calls": 8,
+       "depth_ns": [
+        278.8
+       ],
+       "on_path": 8,
+       "path_us": 2.231
+      },
+      "attn.out_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        502.3
+       ],
+       "on_path": 40,
+       "path_us": 20.093
+      },
+      "attn.rows_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        444.8,
+        925.2,
+        929.3
+       ],
+       "on_path": 8,
+       "path_us": 7.418
+      },
+      "ffn.combine_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        502.3
+       ],
+       "on_path": 40,
+       "path_us": 20.093
+      },
+      "ffn.router_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        233.8
+       ],
+       "on_path": 40,
+       "path_us": 9.351
+      },
+      "head.argmax_merge": {
+       "calls": 1,
+       "depth_ns": [
+        229.6
+       ],
+       "on_path": 1,
+       "path_us": 0.23
+      }
+     },
+     "kept_non_link_terms_ns": {
+      "all_gather": [
+       14.4,
+       15.3,
+       18.6
+      ],
+      "all_reduce": [
+       14.4
+      ]
+     },
+     "mtp_tok_s": 3459.2,
+     "path_us": {
+      "cp_merge": 2.231,
+      "ep_combine_dispatch": 0.0,
+      "field": 115.95,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 31.28,
+      "serial_chain": 154.978,
+      "stage_hops": 24.624,
+      "tp_collectives": 66.714
+     }
+    }
+   },
+   "model": {
+    "1048576": {
+     "ar_tok_s": 2347.4,
+     "ar_token_us": 426.0,
+     "collectives": {
+      "attn.a_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        222.4,
+        226.6,
+        239.4
+       ],
+       "on_path": 40,
+       "path_us": 8.95
+      },
+      "attn.cand.merge": {
+       "calls": 1,
+       "depth_ns": [
+        479.7
+       ],
+       "on_path": 0,
+       "path_us": 0.0
+      },
+      "attn.idx.topk_merge": {
+       "calls": 8,
+       "depth_ns": [
+        275.6
+       ],
+       "on_path": 8,
+       "path_us": 2.205
+      },
+      "attn.out_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        522.1
+       ],
+       "on_path": 40,
+       "path_us": 20.884
+      },
+      "attn.rows_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        488.3,
+        1103.2,
+        1107.3
+       ],
+       "on_path": 8,
+       "path_us": 8.842
+      },
+      "ffn.combine_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        522.1
+       ],
+       "on_path": 40,
+       "path_us": 20.884
+      },
+      "ffn.router_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        217.0
+       ],
+       "on_path": 40,
+       "path_us": 8.68
+      },
+      "head.argmax_merge": {
+       "calls": 1,
+       "depth_ns": [
+        211.6
+       ],
+       "on_path": 1,
+       "path_us": 0.212
+      }
+     },
+     "mtp_tok_s": 3539.3,
+     "path_us": {
+      "cp_merge": 2.205,
+      "ep_combine_dispatch": 0.0,
+      "field": 115.95,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 31.28,
+      "serial_chain": 161.969,
+      "stage_hops": 24.624,
+      "tp_collectives": 68.451
+     }
+    },
+    "200000": {
+     "ar_tok_s": 2445.0,
+     "ar_token_us": 409.0,
+     "collectives": {
+      "attn.a_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        222.4,
+        226.6,
+        239.4
+       ],
+       "on_path": 40,
+       "path_us": 8.95
+      },
+      "attn.cand.merge": {
+       "calls": 1,
+       "depth_ns": [
+        479.7
+       ],
+       "on_path": 0,
+       "path_us": 0.0
+      },
+      "attn.idx.topk_merge": {
+       "calls": 8,
+       "depth_ns": [
+        275.6
+       ],
+       "on_path": 8,
+       "path_us": 2.205
+      },
+      "attn.out_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        522.1
+       ],
+       "on_path": 40,
+       "path_us": 20.884
+      },
+      "attn.rows_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        488.3,
+        1103.2,
+        1107.3
+       ],
+       "on_path": 8,
+       "path_us": 8.842
+      },
+      "ffn.combine_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        522.1
+       ],
+       "on_path": 40,
+       "path_us": 20.884
+      },
+      "ffn.router_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        217.0
+       ],
+       "on_path": 40,
+       "path_us": 8.68
+      },
+      "head.argmax_merge": {
+       "calls": 1,
+       "depth_ns": [
+        211.6
+       ],
+       "on_path": 1,
+       "path_us": 0.212
+      }
+     },
+     "mtp_tok_s": 3854.2,
+     "path_us": {
+      "cp_merge": 2.205,
+      "ep_combine_dispatch": 0.0,
+      "field": 115.95,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 31.28,
+      "serial_chain": 154.978,
+      "stage_hops": 24.624,
+      "tp_collectives": 68.451
+     }
+    }
+   }
+  },
+  "C5hc": {
+   "measured": {
+    "1048576": {
+     "ar_tok_s": 2462.4,
+     "ar_token_us": 406.11,
+     "collectives": {
+      "attn.a_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        321.4,
+        324.7,
+        334.7
+       ],
+       "on_path": 40,
+       "path_us": 12.898
+      },
+      "attn.cand.merge": {
+       "calls": 1,
+       "depth_ns": [
+        735.0
+       ],
+       "on_path": 0,
+       "path_us": 0.0
+      },
+      "attn.idx.topk_merge": {
+       "calls": 8,
+       "depth_ns": [
+        415.6
+       ],
+       "on_path": 8,
+       "path_us": 3.325
+      },
+      "attn.out_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        593.2
+       ],
+       "on_path": 40,
+       "path_us": 23.73
+      },
+      "attn.rows_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        528.2,
+        1008.6,
+        1012.7
+       ],
+       "on_path": 8,
+       "path_us": 8.085
+      },
+      "ffn.combine_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        904.6
+       ],
+       "on_path": 40,
+       "path_us": 36.184
+      },
+      "ffn.router_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        317.2
+       ],
+       "on_path": 40,
+       "path_us": 12.687
+      },
+      "head.argmax_merge": {
+       "calls": 1,
+       "depth_ns": [
+        313.8
+       ],
+       "on_path": 1,
+       "path_us": 0.314
+      }
+     },
+     "kept_non_link_terms_ns": {
+      "all_gather": [
+       14.4,
+       15.3,
+       18.6
+      ],
+      "all_reduce": [
+       14.4
+      ]
+     },
+     "mtp_tok_s": 3485.7,
+     "path_us": {
+      "cp_merge": 3.325,
+      "ep_combine_dispatch": 0.0,
+      "field": 110.172,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 153.976,
+      "stage_hops": 23.2,
+      "tp_collectives": 93.897
+     }
+    },
+    "200000": {
+     "ar_tok_s": 2525.3,
+     "ar_token_us": 395.99,
+     "collectives": {
+      "attn.a_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        321.4,
+        324.7,
+        334.7
+       ],
+       "on_path": 40,
+       "path_us": 12.898
+      },
+      "attn.cand.merge": {
+       "calls": 1,
+       "depth_ns": [
+        735.0
+       ],
+       "on_path": 0,
+       "path_us": 0.0
+      },
+      "attn.idx.topk_merge": {
+       "calls": 8,
+       "depth_ns": [
+        415.6
+       ],
+       "on_path": 8,
+       "path_us": 3.325
+      },
+      "attn.out_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        593.2
+       ],
+       "on_path": 40,
+       "path_us": 23.73
+      },
+      "attn.rows_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        528.2,
+        1008.6,
+        1012.7
+       ],
+       "on_path": 8,
+       "path_us": 8.085
+      },
+      "ffn.combine_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        904.6
+       ],
+       "on_path": 40,
+       "path_us": 36.184
+      },
+      "ffn.router_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        317.2
+       ],
+       "on_path": 40,
+       "path_us": 12.687
+      },
+      "head.argmax_merge": {
+       "calls": 1,
+       "depth_ns": [
+        313.8
+       ],
+       "on_path": 1,
+       "path_us": 0.314
+      }
+     },
+     "kept_non_link_terms_ns": {
+      "all_gather": [
+       14.4,
+       15.3,
+       18.6
+      ],
+      "all_reduce": [
+       14.4
+      ]
+     },
+     "mtp_tok_s": 3632.4,
+     "path_us": {
+      "cp_merge": 3.325,
+      "ep_combine_dispatch": 0.0,
+      "field": 110.172,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 153.889,
+      "stage_hops": 23.2,
+      "tp_collectives": 93.897
+     }
+    }
+   },
+   "model": {
+    "1048576": {
+     "ar_tok_s": 2606.6,
+     "ar_token_us": 383.64,
+     "collectives": {
+      "attn.a_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        232.8,
+        237.2,
+        250.4
+       ],
+       "on_path": 40,
+       "path_us": 9.369
+      },
+      "attn.cand.merge": {
+       "calls": 1,
+       "depth_ns": [
+        574.4
+       ],
+       "on_path": 0,
+       "path_us": 0.0
+      },
+      "attn.idx.topk_merge": {
+       "calls": 8,
+       "depth_ns": [
+        306.8
+       ],
+       "on_path": 8,
+       "path_us": 2.454
+      },
+      "attn.out_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        551.8
+       ],
+       "on_path": 40,
+       "path_us": 22.074
+      },
+      "attn.rows_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        506.3,
+        1138.8,
+        1142.9
+       ],
+       "on_path": 8,
+       "path_us": 9.127
+      },
+      "ffn.combine_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        560.9
+       ],
+       "on_path": 40,
+       "path_us": 22.436
+      },
+      "ffn.router_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        227.2
+       ],
+       "on_path": 40,
+       "path_us": 9.088
+      },
+      "head.argmax_merge": {
+       "calls": 1,
+       "depth_ns": [
+        221.5
+       ],
+       "on_path": 1,
+       "path_us": 0.222
+      }
+     },
+     "mtp_tok_s": 3968.6,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 110.172,
+      "kv_scan": 21.53,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 153.976,
+      "stage_hops": 23.2,
+      "tp_collectives": 72.314
+     }
+    },
+    "200000": {
+     "ar_tok_s": 2677.1,
+     "ar_token_us": 373.54,
+     "collectives": {
+      "attn.a_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        232.8,
+        237.2,
+        250.4
+       ],
+       "on_path": 40,
+       "path_us": 9.369
+      },
+      "attn.cand.merge": {
+       "calls": 1,
+       "depth_ns": [
+        574.4
+       ],
+       "on_path": 0,
+       "path_us": 0.0
+      },
+      "attn.idx.topk_merge": {
+       "calls": 8,
+       "depth_ns": [
+        306.8
+       ],
+       "on_path": 8,
+       "path_us": 2.454
+      },
+      "attn.out_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        551.8
+       ],
+       "on_path": 40,
+       "path_us": 22.074
+      },
+      "attn.rows_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        506.3,
+        1138.8,
+        1142.9
+       ],
+       "on_path": 8,
+       "path_us": 9.127
+      },
+      "ffn.combine_allreduce": {
+       "calls": 40,
+       "depth_ns": [
+        560.9
+       ],
+       "on_path": 40,
+       "path_us": 22.436
+      },
+      "ffn.router_allgather": {
+       "calls": 40,
+       "depth_ns": [
+        227.2
+       ],
+       "on_path": 40,
+       "path_us": 9.088
+      },
+      "head.argmax_merge": {
+       "calls": 1,
+       "depth_ns": [
+        221.5
+       ],
+       "on_path": 1,
+       "path_us": 0.222
+      }
+     },
+     "mtp_tok_s": 4159.9,
+     "path_us": {
+      "cp_merge": 2.454,
+      "ep_combine_dispatch": 0.0,
+      "field": 110.172,
+      "kv_scan": 11.512,
+      "other": 0.0,
+      "par2_crossings": 0.0,
+      "serial_chain": 153.889,
+      "stage_hops": 23.2,
+      "tp_collectives": 72.314
+     }
+    }
+   }
+  }
+ },
+ "rate": {
+  "c5hc_vs_c1_ar_1m_pct": 4.48,
+  "c5hc_vs_c1_ar_200k_pct": 2.85,
+  "rate_ok": false,
+  "thresholds": {
+   "ar_1m_pct": 5.0,
+   "ar_200k_pct": 1.0
+  }
+ },
+ "schema": "opentallas.dsrom.c5hc_collective_gate.verdict.v1",
+ "sensitivity_model_link_bw": {
+  "basis": {
+   "C1": "c1_modelbw",
+   "C5hc": "c5hc_modelbw"
+  },
+  "priced": {
+   "C1": {
+    "measured": {
+     "1048576": {
+      "ar_tok_s": 2358.5,
+      "ar_token_us": 424.0,
+      "collectives": {
+       "attn.a_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         235.5,
+         238.8,
+         248.8
+        ],
+        "on_path": 40,
+        "path_us": 9.462
+       },
+       "attn.cand.merge": {
+        "calls": 1,
+        "depth_ns": [
+         436.4
+        ],
+        "on_path": 0,
+        "path_us": 0.0
+       },
+       "attn.idx.topk_merge": {
+        "calls": 8,
+        "depth_ns": [
+         277.2
+        ],
+        "on_path": 8,
+        "path_us": 2.217
+       },
+       "attn.out_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         500.7
+        ],
+        "on_path": 40,
+        "path_us": 20.027
+       },
+       "attn.rows_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         443.1,
+         923.5,
+         927.7
+        ],
+        "on_path": 8,
+        "path_us": 7.405
+       },
+       "ffn.combine_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         500.7
+        ],
+        "on_path": 40,
+        "path_us": 20.027
+       },
+       "ffn.router_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         232.1
+        ],
+        "on_path": 40,
+        "path_us": 9.285
+       },
+       "head.argmax_merge": {
+        "calls": 1,
+        "depth_ns": [
+         227.9
+        ],
+        "on_path": 1,
+        "path_us": 0.228
+       }
+      },
+      "kept_non_link_terms_ns": {
+       "all_gather": [
+        14.4,
+        15.3,
+        18.6
+       ],
+       "all_reduce": [
+        14.4
+       ]
+      },
+      "mtp_tok_s": 3204.1,
+      "path_us": {
+       "cp_merge": 2.217,
+       "ep_combine_dispatch": 0.0,
+       "field": 115.95,
+       "kv_scan": 21.53,
+       "other": 0.0,
+       "par2_crossings": 31.28,
+       "serial_chain": 161.969,
+       "stage_hops": 24.624,
+       "tp_collectives": 66.432
+      }
+     },
+     "200000": {
+      "ar_tok_s": 2457.0,
+      "ar_token_us": 407.0,
+      "collectives": {
+       "attn.a_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         235.5,
+         238.8,
+         248.8
+        ],
+        "on_path": 40,
+        "path_us": 9.462
+       },
+       "attn.cand.merge": {
+        "calls": 1,
+        "depth_ns": [
+         436.4
+        ],
+        "on_path": 0,
+        "path_us": 0.0
+       },
+       "attn.idx.topk_merge": {
+        "calls": 8,
+        "depth_ns": [
+         277.2
+        ],
+        "on_path": 8,
+        "path_us": 2.217
+       },
+       "attn.out_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         500.7
+        ],
+        "on_path": 40,
+        "path_us": 20.027
+       },
+       "attn.rows_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         443.1,
+         923.5,
+         927.7
+        ],
+        "on_path": 8,
+        "path_us": 7.405
+       },
+       "ffn.combine_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         500.7
+        ],
+        "on_path": 40,
+        "path_us": 20.027
+       },
+       "ffn.router_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         232.1
+        ],
+        "on_path": 40,
+        "path_us": 9.285
+       },
+       "head.argmax_merge": {
+        "calls": 1,
+        "depth_ns": [
+         227.9
+        ],
+        "on_path": 1,
+        "path_us": 0.228
+       }
+      },
+      "kept_non_link_terms_ns": {
+       "all_gather": [
+        14.4,
+        15.3,
+        18.6
+       ],
+       "all_reduce": [
+        14.4
+       ]
+      },
+      "mtp_tok_s": 3460.0,
+      "path_us": {
+       "cp_merge": 2.217,
+       "ep_combine_dispatch": 0.0,
+       "field": 115.95,
+       "kv_scan": 11.512,
+       "other": 0.0,
+       "par2_crossings": 31.28,
+       "serial_chain": 154.978,
+       "stage_hops": 24.624,
+       "tp_collectives": 66.432
+      }
+     }
+    },
+    "model": {
+     "1048576": {
+      "ar_tok_s": 2347.4,
+      "ar_token_us": 426.0,
+      "collectives": {
+       "attn.a_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         222.4,
+         226.6,
+         239.4
+        ],
+        "on_path": 40,
+        "path_us": 8.95
+       },
+       "attn.cand.merge": {
+        "calls": 1,
+        "depth_ns": [
+         479.7
+        ],
+        "on_path": 0,
+        "path_us": 0.0
+       },
+       "attn.idx.topk_merge": {
+        "calls": 8,
+        "depth_ns": [
+         275.6
+        ],
+        "on_path": 8,
+        "path_us": 2.205
+       },
+       "attn.out_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         522.1
+        ],
+        "on_path": 40,
+        "path_us": 20.884
+       },
+       "attn.rows_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         488.3,
+         1103.2,
+         1107.3
+        ],
+        "on_path": 8,
+        "path_us": 8.842
+       },
+       "ffn.combine_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         522.1
+        ],
+        "on_path": 40,
+        "path_us": 20.884
+       },
+       "ffn.router_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         217.0
+        ],
+        "on_path": 40,
+        "path_us": 8.68
+       },
+       "head.argmax_merge": {
+        "calls": 1,
+        "depth_ns": [
+         211.6
+        ],
+        "on_path": 1,
+        "path_us": 0.212
+       }
+      },
+      "mtp_tok_s": 3539.3,
+      "path_us": {
+       "cp_merge": 2.205,
+       "ep_combine_dispatch": 0.0,
+       "field": 115.95,
+       "kv_scan": 21.53,
+       "other": 0.0,
+       "par2_crossings": 31.28,
+       "serial_chain": 161.969,
+       "stage_hops": 24.624,
+       "tp_collectives": 68.451
+      }
+     },
+     "200000": {
+      "ar_tok_s": 2445.0,
+      "ar_token_us": 409.0,
+      "collectives": {
+       "attn.a_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         222.4,
+         226.6,
+         239.4
+        ],
+        "on_path": 40,
+        "path_us": 8.95
+       },
+       "attn.cand.merge": {
+        "calls": 1,
+        "depth_ns": [
+         479.7
+        ],
+        "on_path": 0,
+        "path_us": 0.0
+       },
+       "attn.idx.topk_merge": {
+        "calls": 8,
+        "depth_ns": [
+         275.6
+        ],
+        "on_path": 8,
+        "path_us": 2.205
+       },
+       "attn.out_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         522.1
+        ],
+        "on_path": 40,
+        "path_us": 20.884
+       },
+       "attn.rows_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         488.3,
+         1103.2,
+         1107.3
+        ],
+        "on_path": 8,
+        "path_us": 8.842
+       },
+       "ffn.combine_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         522.1
+        ],
+        "on_path": 40,
+        "path_us": 20.884
+       },
+       "ffn.router_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         217.0
+        ],
+        "on_path": 40,
+        "path_us": 8.68
+       },
+       "head.argmax_merge": {
+        "calls": 1,
+        "depth_ns": [
+         211.6
+        ],
+        "on_path": 1,
+        "path_us": 0.212
+       }
+      },
+      "mtp_tok_s": 3854.2,
+      "path_us": {
+       "cp_merge": 2.205,
+       "ep_combine_dispatch": 0.0,
+       "field": 115.95,
+       "kv_scan": 11.512,
+       "other": 0.0,
+       "par2_crossings": 31.28,
+       "serial_chain": 154.978,
+       "stage_hops": 24.624,
+       "tp_collectives": 68.451
+      }
+     }
+    }
+   },
+   "C5hc": {
+    "measured": {
+     "1048576": {
+      "ar_tok_s": 2467.9,
+      "ar_token_us": 405.2,
+      "collectives": {
+       "attn.a_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         317.2,
+         320.5,
+         330.5
+        ],
+        "on_path": 40,
+        "path_us": 12.731
+       },
+       "attn.cand.merge": {
+        "calls": 1,
+        "depth_ns": [
+         730.9
+        ],
+        "on_path": 0,
+        "path_us": 0.0
+       },
+       "attn.idx.topk_merge": {
+        "calls": 8,
+        "depth_ns": [
+         411.4
+        ],
+        "on_path": 8,
+        "path_us": 3.291
+       },
+       "attn.out_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         589.1
+        ],
+        "on_path": 40,
+        "path_us": 23.563
+       },
+       "attn.rows_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         524.0,
+         1004.4,
+         1008.6
+        ],
+        "on_path": 8,
+        "path_us": 8.052
+       },
+       "ffn.combine_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         896.2
+        ],
+        "on_path": 40,
+        "path_us": 35.85
+       },
+       "ffn.router_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         313.0
+        ],
+        "on_path": 40,
+        "path_us": 12.521
+       },
+       "head.argmax_merge": {
+        "calls": 1,
+        "depth_ns": [
+         309.7
+        ],
+        "on_path": 1,
+        "path_us": 0.31
+       }
+      },
+      "kept_non_link_terms_ns": {
+       "all_gather": [
+        14.4,
+        15.3,
+        18.6
+       ],
+       "all_reduce": [
+        14.4
+       ]
+      },
+      "mtp_tok_s": 3489.0,
+      "path_us": {
+       "cp_merge": 3.291,
+       "ep_combine_dispatch": 0.0,
+       "field": 110.172,
+       "kv_scan": 21.53,
+       "other": 0.0,
+       "par2_crossings": 0.0,
+       "serial_chain": 153.976,
+       "stage_hops": 23.2,
+       "tp_collectives": 93.026
+      }
+     },
+     "200000": {
+      "ar_tok_s": 2531.1,
+      "ar_token_us": 395.09,
+      "collectives": {
+       "attn.a_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         317.2,
+         320.5,
+         330.5
+        ],
+        "on_path": 40,
+        "path_us": 12.731
+       },
+       "attn.cand.merge": {
+        "calls": 1,
+        "depth_ns": [
+         730.9
+        ],
+        "on_path": 0,
+        "path_us": 0.0
+       },
+       "attn.idx.topk_merge": {
+        "calls": 8,
+        "depth_ns": [
+         411.4
+        ],
+        "on_path": 8,
+        "path_us": 3.291
+       },
+       "attn.out_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         589.1
+        ],
+        "on_path": 40,
+        "path_us": 23.563
+       },
+       "attn.rows_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         524.0,
+         1004.4,
+         1008.6
+        ],
+        "on_path": 8,
+        "path_us": 8.052
+       },
+       "ffn.combine_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         896.2
+        ],
+        "on_path": 40,
+        "path_us": 35.85
+       },
+       "ffn.router_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         313.0
+        ],
+        "on_path": 40,
+        "path_us": 12.521
+       },
+       "head.argmax_merge": {
+        "calls": 1,
+        "depth_ns": [
+         309.7
+        ],
+        "on_path": 1,
+        "path_us": 0.31
+       }
+      },
+      "kept_non_link_terms_ns": {
+       "all_gather": [
+        14.4,
+        15.3,
+        18.6
+       ],
+       "all_reduce": [
+        14.4
+       ]
+      },
+      "mtp_tok_s": 3636.0,
+      "path_us": {
+       "cp_merge": 3.291,
+       "ep_combine_dispatch": 0.0,
+       "field": 110.172,
+       "kv_scan": 11.512,
+       "other": 0.0,
+       "par2_crossings": 0.0,
+       "serial_chain": 153.889,
+       "stage_hops": 23.2,
+       "tp_collectives": 93.026
+      }
+     }
+    },
+    "model": {
+     "1048576": {
+      "ar_tok_s": 2606.6,
+      "ar_token_us": 383.64,
+      "collectives": {
+       "attn.a_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         232.8,
+         237.2,
+         250.4
+        ],
+        "on_path": 40,
+        "path_us": 9.369
+       },
+       "attn.cand.merge": {
+        "calls": 1,
+        "depth_ns": [
+         574.4
+        ],
+        "on_path": 0,
+        "path_us": 0.0
+       },
+       "attn.idx.topk_merge": {
+        "calls": 8,
+        "depth_ns": [
+         306.8
+        ],
+        "on_path": 8,
+        "path_us": 2.454
+       },
+       "attn.out_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         551.8
+        ],
+        "on_path": 40,
+        "path_us": 22.074
+       },
+       "attn.rows_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         506.3,
+         1138.8,
+         1142.9
+        ],
+        "on_path": 8,
+        "path_us": 9.127
+       },
+       "ffn.combine_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         560.9
+        ],
+        "on_path": 40,
+        "path_us": 22.436
+       },
+       "ffn.router_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         227.2
+        ],
+        "on_path": 40,
+        "path_us": 9.088
+       },
+       "head.argmax_merge": {
+        "calls": 1,
+        "depth_ns": [
+         221.5
+        ],
+        "on_path": 1,
+        "path_us": 0.222
+       }
+      },
+      "mtp_tok_s": 3968.6,
+      "path_us": {
+       "cp_merge": 2.454,
+       "ep_combine_dispatch": 0.0,
+       "field": 110.172,
+       "kv_scan": 21.53,
+       "other": 0.0,
+       "par2_crossings": 0.0,
+       "serial_chain": 153.976,
+       "stage_hops": 23.2,
+       "tp_collectives": 72.314
+      }
+     },
+     "200000": {
+      "ar_tok_s": 2677.1,
+      "ar_token_us": 373.54,
+      "collectives": {
+       "attn.a_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         232.8,
+         237.2,
+         250.4
+        ],
+        "on_path": 40,
+        "path_us": 9.369
+       },
+       "attn.cand.merge": {
+        "calls": 1,
+        "depth_ns": [
+         574.4
+        ],
+        "on_path": 0,
+        "path_us": 0.0
+       },
+       "attn.idx.topk_merge": {
+        "calls": 8,
+        "depth_ns": [
+         306.8
+        ],
+        "on_path": 8,
+        "path_us": 2.454
+       },
+       "attn.out_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         551.8
+        ],
+        "on_path": 40,
+        "path_us": 22.074
+       },
+       "attn.rows_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         506.3,
+         1138.8,
+         1142.9
+        ],
+        "on_path": 8,
+        "path_us": 9.127
+       },
+       "ffn.combine_allreduce": {
+        "calls": 40,
+        "depth_ns": [
+         560.9
+        ],
+        "on_path": 40,
+        "path_us": 22.436
+       },
+       "ffn.router_allgather": {
+        "calls": 40,
+        "depth_ns": [
+         227.2
+        ],
+        "on_path": 40,
+        "path_us": 9.088
+       },
+       "head.argmax_merge": {
+        "calls": 1,
+        "depth_ns": [
+         221.5
+        ],
+        "on_path": 1,
+        "path_us": 0.222
+       }
+      },
+      "mtp_tok_s": 4159.9,
+      "path_us": {
+       "cp_merge": 2.454,
+       "ep_combine_dispatch": 0.0,
+       "field": 110.172,
+       "kv_scan": 11.512,
+       "other": 0.0,
+       "par2_crossings": 0.0,
+       "serial_chain": 153.889,
+       "stage_hops": 23.2,
+       "tp_collectives": 72.314
+      }
+     }
+    }
+   }
+  },
+  "verdict": {
+   "c5hc_vs_c1_ar_1m_pct": 4.64,
+   "c5hc_vs_c1_ar_200k_pct": 3.02,
+   "rate_ok": false,
+   "thresholds": {
+    "ar_1m_pct": 5.0,
+    "ar_200k_pct": 1.0
+   }
+  }
+ },
+ "source_sha256": {
+  "results/rtl/dsrom_c5hc_collective_gate_20261003/decision_rule.json": "4be79c121a85ac0ead34e40f5be9cd38b9a8c6957b36bee89d39ac9fbe948978",
+  "results/rtl/dsrom_c5hc_collective_gate_20261003/measurements.json": "ffb5509415b17d0d1f8d74c445d6cf4d23eba6aa0f94d26382b4744a4597b030",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/link/ot_link_chan_model.sv": "78591c5d4f60a1559f088263c163eb363a5193d226091a0fe3d70e7dc8ee7446",
+  "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+  "rtl/link/ot_link_crc32_pipe.sv": "c117c3008b950b371cccded0581a647606f55e49b608129cbab3b3aec844d8bb",
+  "rtl/link/ot_w15_link_rx.sv": "5f089b28bd4b2966b3a98e0f7fb3b3cdd755268eda844caf899b8df7a596efaa",
+  "rtl/link/ot_w15_link_tx.sv": "ccee74339f743012aed3de51fe0a085f1d9b04e54d6343f5ced37fc49cdc9bc0",
+  "rtl/rom/collectives/ot_rom_hcoll_die.sv": "aadd81b559fd11427a557a238183af033f3daa00d9546048735b7892ee16c7d0",
+  "rtl/test/tb_dsrom_hcoll.sv": "68fad6c397f72ad259a53a5773e696aea4a6bf3647f605c3bb1ad92d26ff36bb",
+  "tools/dsrom_c5hc_collective_gate.py": "01850638b460989c66501f75ff8b5cb90cc7f0e58534babca8bce3bf328bd91f",
+  "tools/dsrom_parallelism.py": "73a7a577c3054e679b9f4836619ba910a72cd9957c45be9745b370471d4c7434",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "tools/uarch_model_par2_boundary.py": "b898f4a34bfa061c92690a7566644eea33a7b411aae7e798c855443c27d2f274",
+  "tools/uarch_model_parallelism.py": "a0fa852d2f53661574397defd114403073e5a33f7a3730a795b01e4726bf1936",
+  "tools/w15_collectives.py": "314f6aee76d233bbb074ed5fde77e08079f0250e3ef8ac6e15e41cc09849ad2a"
+ },
+ "verdict": "REJECT"
+}
