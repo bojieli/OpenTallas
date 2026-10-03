@@ -1,0 +1,20 @@
+{
+  "time_utc": "2026-10-03T04:29:46.130427+00:00",
+  "holder_pid": 3077032,
+  "holder_absent": true,
+  "holder_release_receipt": {
+    "time_utc": "2026-10-03T04:28:45.631508+00:00",
+    "lease_released": true,
+    "pid": 3077032
+  },
+  "locks": [
+    {
+      "path": "/tmp/claude-1000/agd_slots/ot-pve1.1",
+      "unlocked_at_check": true
+    },
+    {
+      "path": "/tmp/claude-1000/queue/fleet-admission-guard-20261002/thread-leases/ot-pve1.3077032",
+      "unlocked_at_check": true
+    }
+  ]
+}
