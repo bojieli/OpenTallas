@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.qwen-rom-verify-layer-measured.v1",
+ "status": "INTERIM_L0_PASS",
+ "runtime": "TP4 W12 companion runtime (Verilator 5.050), ot-epyc1tb, source a0c4818dd; die ot_qwen_rom_rt_die_w12_vp VPOS=1 ENABLE_ARP=1 ENABLE_AR256=1, coll LAT 339 DEPTH 1024, SW64, G 6144",
+ "tokens": {
+  "2": [
+   0,
+   50994
+  ],
+  "4": [
+   0,
+   50994,
+   279,
+   13
+  ]
+ },
+ "positions": "0..p-1 (block from position 0; position j sees block positions <= j)",
+ "L0_cycles": {
+  "1": 3931,
+  "2": 5487,
+  "4": 8715
+ },
+ "L0_increment_per_extra_position": {
+  "p2": 1556,
+  "p4_avg": 1594.7
+ },
+ "me_busy_edges": {
+  "1": 2033,
+  "2": 2509,
+  "4": 3577
+ },
+ "su_writes": {
+  "1": 30236,
+  "2": 60480,
+  "4": 120992
+ },
+ "bit_exact": "every position's X after L0, all 4 dies, equals the AR golden (p sequential decodes on the ISA golden, oracle_p2/p4.json; position 0 equals the retained TP4 terminal L00); p=1 equals the retained terminal and its 3,931 cycles",
+ "model_increment_per_extra_position": {
+  "source": "qwen_rom_speculation_recheck_20261003 pricing.json (branch claude/qwen-rom-speculation-recheck-20261003)",
+  "me_issue": 512,
+  "su_serial": 473,
+  "allreduce_widened": 512,
+  "attention": "in-core at context <= 4 (not the near-HBM 1,512 term)",
+  "widened_ar_without_attention_su_serial": 1497,
+  "widened_ar_with_su_overlap": 1028
+ },
+ "pending": [
+  "L1 cycles and X (running, chain.sh)",
+  "per-position head argmax (head oracle 36 layers on PVE1, then head1/head4 runs)"
+ ],
+ "claim_boundary": "Measured runtime cycles of one layer at p = 1, 2, 4 verify positions at the start of a sequence (context <= 4) with the in-core attention path; no near-HBM attention, no SS/FF closure of the VPOS/ARP additions, physical wire stages as parameters."
+}
