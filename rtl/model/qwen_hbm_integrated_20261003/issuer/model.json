@@ -45,10 +45,11 @@
     "Claude real whole-engine producer/terminal/reverse outputs",
     "actual all-copy cold session quiescence/COMMON reset source binding",
     "actual RFowner55 allocator binding",
-    "composed nativecalendar physical timing"
+    "composed nativecalendar physical timing",
+    "Nash actual publication_ready and retire_ready from retained seven-row allocator"
   ],
   "perSM_protected_bits": 504,
-  "perSM_raw_bits": 300,
+  "perSM_raw_bits": 301,
   "ports": {
     "backend_go_owner_bits": 55,
     "backend_go_tuple_bits_per_SM": 239,
@@ -59,7 +60,8 @@
       "backend_go_ready actual engine",
       "not busy/fault"
     ],
-    "retirement": "allfour actual source event handshakes; matching saved whole tuple/owner; no PC40fragment substitute",
+    "publication": "publish_valid/tuple239/owner55 only after both matching producer_result and actual RF commonACK; publication_ready actual allocator",
+    "retirement": "matching whole terminal+reverse plus publication accepted by actual allocator; RFACK and fullproducer both precede publication; retire_ready actual row sink",
     "return_interfaces": [
       "producer_result_valid/tuple239",
       "rf_ack_valid/owner55",
