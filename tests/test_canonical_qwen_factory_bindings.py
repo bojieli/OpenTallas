@@ -79,6 +79,7 @@ def TC_header(root):
         source_sha256=digest,consume_tap='u_sm.w_valid && u_sm.w_ready')
     for name,(direction,width) in FIELDS.items():
         root.book['pins']['tc_'+name]=dict(direction=direction,leaf_bits=width,bits=64*width,count=64)
+    root.get=lambda name:1 if name=='tc_enabled' else pytest.fail('unexpected runtime sampling '+name)
 
 
 def test_adaptation_all64_real_component_indices_one_clock_and_no_native_defaults():
@@ -152,3 +153,26 @@ def test_captured_clock_reference_forwards_same_owner_after_constructor():
     root.reader=io.StringIO('OK\nOK\nOK\n')
     captured[0]()
     assert root.edges==1 and writer.getvalue()=='HELLO\nEVAL\nEDGE\nEVAL\n'
+
+
+def test_TC_disabled_actual_status_refuses_before_RF_or_native():
+    root,writer=pins();TC_header(root)
+    root.get=lambda name:0 if name=='tc_enabled' else pytest.fail('unexpected sample')
+    with patch.object(F,'build_RF_authority') as RF:
+        with pytest.raises(ValueError,match='compiled TC opt-in'):
+            F.compose(root,physical_provider=provider(),placement=None,w2_ports=ports(),
+                      native_factory=lambda *args:pytest.fail('disabled actualTC'),enabled=True)
+        RF.assert_not_called()
+    assert root.edges==0 and writer.getvalue()=='HELLO\n'
+
+
+def test_actual_consumption_observation_settles_current_offers_before_sampling():
+    from tools.gpu_sys.canonical_qwen_matrix_tc_factory import SharedConsumption
+    from tools.gpu_sys.canonical_qwen_matrix_tc_pins import TCPins
+    events=[]
+    tc=TCPins.__new__(TCPins)
+    tc.root=SimpleNamespace(settle=lambda:events.append('settle current offers'))
+    tc.get=lambda name:events.append('sample actual '+name) or 0
+    observed=SharedConsumption(object(),tc)
+    observed.before_edge()
+    assert events==['settle current offers','sample actual consume_valid']
