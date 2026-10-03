@@ -1,0 +1,267 @@
+{
+  "benches": {
+    "hbm_in_order_stream": {
+      "idle10": {
+        "phase1_cycles": 1070,
+        "phase1_sectors_per_cycle": 15.31,
+        "phase2_cycles": 1069,
+        "phase2_sectors_per_cycle": 15.33,
+        "sectors": 16384
+      },
+      "idle5000": {
+        "phase1_cycles": 1070,
+        "phase1_sectors_per_cycle": 15.31,
+        "phase2_cycles": 3676,
+        "phase2_sectors_per_cycle": 4.46,
+        "sectors": 16384
+      }
+    },
+    "kv_service_lka512": {
+      "cases": [
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 464,
+          "kv_ok_after_start": 733,
+          "name": "L0_P255",
+          "pass": true,
+          "su_drain_wait_cycles": 668
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 132,
+          "kv_ok_after_start": 494,
+          "name": "L1_P0",
+          "pass": true,
+          "su_drain_wait_cycles": 429
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 496,
+          "kv_ok_after_start": 759,
+          "name": "L0_P256_tile_open",
+          "pass": true,
+          "su_drain_wait_cycles": 694
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 2230,
+          "kv_ok_after_start": 2240,
+          "name": "L1_P2047",
+          "pass": true,
+          "su_drain_wait_cycles": 1258
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 6383,
+          "kv_ok_after_start": 6393,
+          "name": "L0_P4095",
+          "pass": true,
+          "su_drain_wait_cycles": 2971
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 11266,
+          "kv_ok_after_start": 11276,
+          "name": "L1_P8191",
+          "pass": true,
+          "su_drain_wait_cycles": 5373
+        },
+        {
+          "detail": "faulted as required (code 8)",
+          "name": "NEG_wrong_position",
+          "pass": true
+        },
+        {
+          "detail": "faulted as required (code 8)",
+          "name": "NEG_not_e4m3",
+          "pass": true
+        }
+      ],
+      "seconds": 420.9,
+      "stats": [
+        "STATS L0_P255 hbm_rd=4088 hit=3581 conflict=515 act=643 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4088 wr_sectors=136 wr_lat_max=167",
+        "STATS L1_P0 hbm_rd=4216 hit=3613 conflict=675 act=875 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4216 wr_sectors=272 wr_lat_max=167",
+        "STATS L0_P256_tile_open hbm_rd=8440 hit=7361 conflict=1287 act=1487 refresh=0 rd_lat_max_ps=220088 rsp_tile_stall=4 fill_sectors=8440 wr_sectors=408 wr_lat_max=170",
+        "STATS L1_P2047 hbm_rd=41200 hit=39225 conflict=2263 act=2519 refresh=0 rd_lat_max_ps=220088 rsp_tile_stall=4 fill_sectors=41200 wr_sectors=544 wr_lat_max=170",
+        "STATS L0_P4095 hbm_rd=106728 hit=102669 conflict=3667 act=4739 refresh=40 rd_lat_max_ps=471024 rsp_tile_stall=22 fill_sectors=106728 wr_sectors=680 wr_lat_max=464",
+        "STATS L1_P8191 hbm_rd=237792 hit=229481 conflict=5487 act=9127 refresh=117 rd_lat_max_ps=471024 rsp_tile_stall=106 fill_sectors=237792 wr_sectors=816 wr_lat_max=464",
+        "STATS NEG_wrong_position hbm_rd=4088 hit=3581 conflict=418 act=546 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4088 wr_sectors=39 wr_lat_max=167",
+        "STATS NEG_not_e4m3 hbm_rd=4088 hit=3581 conflict=488 act=616 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4088 wr_sectors=125 wr_lat_max=167"
+      ],
+      "status": "pass"
+    },
+    "kv_service_lka64": {
+      "cases": [
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 464,
+          "kv_ok_after_start": 733,
+          "name": "L0_P255",
+          "pass": true,
+          "su_drain_wait_cycles": 668
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 132,
+          "kv_ok_after_start": 494,
+          "name": "L1_P0",
+          "pass": true,
+          "su_drain_wait_cycles": 429
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 496,
+          "kv_ok_after_start": 759,
+          "name": "L0_P256_tile_open",
+          "pass": true,
+          "su_drain_wait_cycles": 694
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 2230,
+          "kv_ok_after_start": 2240,
+          "name": "L1_P2047",
+          "pass": true,
+          "su_drain_wait_cycles": 1258
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 11045,
+          "kv_ok_after_start": 11055,
+          "name": "L0_P4095",
+          "pass": true,
+          "su_drain_wait_cycles": 6278
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 21140,
+          "kv_ok_after_start": 21150,
+          "name": "L1_P8191",
+          "pass": true,
+          "su_drain_wait_cycles": 10293
+        },
+        {
+          "detail": "faulted as required (code 8)",
+          "name": "NEG_wrong_position",
+          "pass": true
+        },
+        {
+          "detail": "faulted as required (code 8)",
+          "name": "NEG_not_e4m3",
+          "pass": true
+        }
+      ],
+      "seconds": 472.1,
+      "stats": [
+        "STATS L0_P255 hbm_rd=4088 hit=3581 conflict=515 act=643 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4088 wr_sectors=136 wr_lat_max=167",
+        "STATS L1_P0 hbm_rd=4216 hit=3613 conflict=675 act=875 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4216 wr_sectors=272 wr_lat_max=167",
+        "STATS L0_P256_tile_open hbm_rd=8440 hit=7361 conflict=1287 act=1487 refresh=0 rd_lat_max_ps=220088 rsp_tile_stall=4 fill_sectors=8440 wr_sectors=408 wr_lat_max=170",
+        "STATS L1_P2047 hbm_rd=41200 hit=39225 conflict=2263 act=2519 refresh=0 rd_lat_max_ps=220088 rsp_tile_stall=4 fill_sectors=41200 wr_sectors=544 wr_lat_max=170",
+        "STATS L0_P4095 hbm_rd=106728 hit=102534 conflict=3390 act=4874 refresh=72 rd_lat_max_ps=471024 rsp_tile_stall=15 fill_sectors=106728 wr_sectors=680 wr_lat_max=463",
+        "STATS L1_P8191 hbm_rd=237792 hit=229063 conflict=3721 act=9545 refresh=217 rd_lat_max_ps=471024 rsp_tile_stall=43 fill_sectors=237792 wr_sectors=816 wr_lat_max=491",
+        "STATS NEG_wrong_position hbm_rd=4088 hit=3581 conflict=418 act=546 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4088 wr_sectors=39 wr_lat_max=167",
+        "STATS NEG_not_e4m3 hbm_rd=4088 hit=3581 conflict=488 act=616 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4088 wr_sectors=125 wr_lat_max=167"
+      ],
+      "status": "pass"
+    },
+    "kv_service_lka8": {
+      "cases": [
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 464,
+          "kv_ok_after_start": 733,
+          "name": "L0_P255",
+          "pass": true,
+          "su_drain_wait_cycles": 668
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 132,
+          "kv_ok_after_start": 494,
+          "name": "L1_P0",
+          "pass": true,
+          "su_drain_wait_cycles": 429
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 496,
+          "kv_ok_after_start": 759,
+          "name": "L0_P256_tile_open",
+          "pass": true,
+          "su_drain_wait_cycles": 694
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 2230,
+          "kv_ok_after_start": 2240,
+          "name": "L1_P2047",
+          "pass": true,
+          "su_drain_wait_cycles": 1258
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 14225,
+          "kv_ok_after_start": 14235,
+          "name": "L0_P4095",
+          "pass": true,
+          "su_drain_wait_cycles": 6932
+        },
+        {
+          "detail": "all 12582912 slice bytes and 512 token HBM codes exact",
+          "fill_cycles": 28197,
+          "kv_ok_after_start": 28207,
+          "name": "L1_P8191",
+          "pass": true,
+          "su_drain_wait_cycles": 14392
+        },
+        {
+          "detail": "faulted as required (code 8)",
+          "name": "NEG_wrong_position",
+          "pass": true
+        },
+        {
+          "detail": "faulted as required (code 8)",
+          "name": "NEG_not_e4m3",
+          "pass": true
+        }
+      ],
+      "seconds": 470.5,
+      "stats": [
+        "STATS L0_P255 hbm_rd=4088 hit=3581 conflict=515 act=643 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4088 wr_sectors=136 wr_lat_max=167",
+        "STATS L1_P0 hbm_rd=4216 hit=3613 conflict=675 act=875 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4216 wr_sectors=272 wr_lat_max=167",
+        "STATS L0_P256_tile_open hbm_rd=8440 hit=7361 conflict=1287 act=1487 refresh=0 rd_lat_max_ps=220088 rsp_tile_stall=4 fill_sectors=8440 wr_sectors=408 wr_lat_max=170",
+        "STATS L1_P2047 hbm_rd=41200 hit=39225 conflict=2263 act=2519 refresh=0 rd_lat_max_ps=220088 rsp_tile_stall=4 fill_sectors=41200 wr_sectors=544 wr_lat_max=170",
+        "STATS L0_P4095 hbm_rd=106728 hit=102452 conflict=3196 act=4956 refresh=94 rd_lat_max_ps=468524 rsp_tile_stall=4 fill_sectors=106728 wr_sectors=680 wr_lat_max=459",
+        "STATS L1_P8191 hbm_rd=237792 hit=228778 conflict=3394 act=9830 refresh=287 rd_lat_max_ps=468524 rsp_tile_stall=5 fill_sectors=237792 wr_sectors=816 wr_lat_max=481",
+        "STATS NEG_wrong_position hbm_rd=4088 hit=3581 conflict=418 act=546 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4088 wr_sectors=39 wr_lat_max=167",
+        "STATS NEG_not_e4m3 hbm_rd=4088 hit=3581 conflict=488 act=616 refresh=0 rd_lat_max_ps=194143 rsp_tile_stall=4 fill_sectors=4088 wr_sectors=125 wr_lat_max=167"
+      ],
+      "status": "pass"
+    },
+    "rom_services": {
+      "lines": [
+        "PASS SCALE_BANK reads=20000 mismatched_words=0 out_of_range_fault=1",
+        "PASS EMBED_ROM tokens=8 code_words=512 scale_reads=8 mismatches=0",
+        "ROM_SERVICES_STANDALONE PASS"
+      ],
+      "status": "pass"
+    }
+  },
+  "schema": "opentallas.qwen-rom-realmem-standalone.v1",
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+    "rtl/hdc/kv/ot_qwen_hbm_model_ack.sv": "16aa903f03e848d843afd7354d3b580a3ed0c76531a16824124c745a06ba81bc",
+    "rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv": "0bdcebf1e23adc59cbe634f574307ef75cf91ae54a435ed6570813ce8d6d4d87",
+    "rtl/hdc/ot_qwen_rt_embed_rom.sv": "54deba0a76c99ef5046d10d8a1af4cff550c7c7550fd293411510a607afeae33",
+    "rtl/hdc/ot_qwen_rt_rom_bank.sv": "16471ef538de4a01492f5dbeac8782cc0f177d6a3bd222797dc2eaa71a0c8aec",
+    "rtl/test/qwen_rom_runtime/realmem/tb_hbm_refresh_stream.cpp": "ad3def04fca32183022a8d73ae87fbc9ac05542953ab76bf4519bfa48b42b92c",
+    "rtl/test/qwen_rom_runtime/realmem/tb_hbm_refresh_stream.sv": "e53a6cbd1720da6f8fa4b5afe4cf87a9d3b482c2fab2b7bcfa2af378a9d1ff1a",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_rt_kv_service.cpp": "b928abaab29f37d779a01298e36dcf410933301a36cc179425a34eb6d49c08b1",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_rt_kv_service.sv": "97d7a33e215e32d9f976d8d4f20b33a22ea343427193057943b9d2a5bdb510a9",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_rt_rom_services.cpp": "0526fe33ffdf2c2b2c2dbb4e78da8ecbca299ffa239a6e426ea1cce114f84938",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_rt_rom_services.sv": "d47ce7f3e30844dbde810d344bd80a9a581c6963f3cf03c4eb9373858673ab6f",
+    "tools/run_qwen_rt_realmem_standalone.py": "828de55ad84a2c4fe066d15b3894667559bd39d09151f7dd959df534590b0c1f"
+  },
+  "source_stable": true,
+  "status": "pass"
+}
