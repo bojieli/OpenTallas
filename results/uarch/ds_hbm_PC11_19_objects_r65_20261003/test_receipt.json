@@ -1,0 +1,22 @@
+{
+  "tests_PASS": 4,
+  "exit_code": 0,
+  "test_argv": [
+    "/home/ubuntu/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_ds_hbm_PC11_19_objects_r65.py"
+  ],
+  "source_model_argv": [
+    "/home/ubuntu/bin/python",
+    "tools/ds_hbm_PC11_19_objects_r65.py"
+  ],
+  "model_exit_code": 0,
+  "prepared_source_commit": "44b85b171",
+  "actual_provider_constructors": 0,
+  "native_payload_execution": false,
+  "header_measurement_scope": "zero-length NumPy arrays for header size only; no producer payload arrays or sector backing allocated",
+  "interpreter": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+  "numpy_version": "2.2.6"
+}
