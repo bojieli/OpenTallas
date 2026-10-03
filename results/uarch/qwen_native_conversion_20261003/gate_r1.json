@@ -1,0 +1,41 @@
+{
+  "SS_FF_timing": "UNKNOWN; not measured",
+  "checkpoint_or_inference_run": false,
+  "command": "python3 tools/gpu_sys/test_canonical_qwen_native_conversion.py",
+  "component_source_correctness": "PASS",
+  "contextual_hardware_admission": false,
+  "default_off": true,
+  "full_signed_F2I_result_bits": 64,
+  "global_opcode_bits": 6,
+  "integer_rational_oracle_vectors": 3859,
+  "original_source_pins": {
+    "results/uarch/c0_pc40_payload_lease_20261003/inputs/h3_qwen_bounded_native.py": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b",
+    "results/uarch/c0_pc40_payload_lease_20261003/inputs/h3_qwen_complete_native.py": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76",
+    "results/uarch/w2_nc6_mutable_protection_20261003/inputs/results/uarch/w2_pc_exact_completion_20261003/inputs/cell_prices.json": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d",
+    "rtl/abi3/ot_a3_format_pkg.sv": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536",
+    "rtl/gpu_sys/ot_gpu_simt_lane.sv": "97d0ea8512443174bc48789435697676f051e64159966eaa842217688f2a9c4e",
+    "tools/uarch_model.py": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9"
+  },
+  "physical_area_and_route_fit": "UNKNOWN; model partial structural price only",
+  "protected_controller_owner": "Pauli",
+  "publication_policy": "Pauli must reject active lane faults; no CPU fallback",
+  "refusals": [
+    "all global opcodes outside21..25",
+    "F2I non-F32 operand",
+    "LDEXP floating exponent",
+    "FP8_UNPACK floating code",
+    "shared ABI migration without explicit rebinding"
+  ],
+  "schema": "qwen-native-conversion-component-gate-r1",
+  "simulation": "Icarus Verilog -g2012 / vvp; stateless conversion component only",
+  "source_pins": {
+    "results/uarch/qwen_native_conversion_20261003/inputs/canonical_qwen_native_opcode_abi.py": "e733a7486b0e5163950cf1b660190bb015689e375bf7b2bce2ab6b9866fe78a3",
+    "results/uarch/qwen_native_conversion_20261003/model_r1.json": "ae8061f1d5c2ac46e5fc4a7d68dfdcd5c7ac074dabca50c0baf7e2ae61541e42",
+    "rtl/gpu/native/ot_gpu_native_conversion.sv": "f18d8a1740e00c5a906430c9bdc3ac6619746f80ef576d05f283bce14e5ee343",
+    "rtl/gpu/native/ot_gpu_native_conversion_abi.svh": "a74ece7b467b4f560217ffac12926faa2add39435895c322c6bcd36158e29ae4",
+    "tools/gpu_sys/canonical_qwen_native_conversion.py": "56ac26489d19362a566ade37c6e89dc0f09fca9252ca458dbe4e9bf460fac681",
+    "tools/gpu_sys/test_canonical_qwen_native_conversion.py": "3898ea146b34bfe2323e118993ce39c338fda3c5fe87f8e7c3e61ab0e3f005fc"
+  },
+  "source_retained_nonfinite_LDEXP": "faulted source bits retained; no successful publication allowed",
+  "tests": 2
+}
