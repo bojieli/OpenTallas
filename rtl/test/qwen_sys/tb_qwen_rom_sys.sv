@@ -251,7 +251,7 @@ module tb_qwen_rom_sys #(
         cfg[0]  = {13'h1014, 32'hFFFF_FFFF};      // FAULT_MASK
         cfg[1]  = {13'h0010, SQ};                 // SQ_BASE lo
         cfg[2]  = {13'h0014, 32'd0};
-        cfg[3]  = {13'h0018, 32'd2};              // SQ_LOG2: 4 entries
+        cfg[3]  = {13'h0018, 32'd3};              // SQ_LOG2: 8 entries (a ring of 2^n holds 2^n - 1)
         cfg[4]  = {13'h0024, CQ};
         cfg[5]  = {13'h0028, 32'd0};
         cfg[6]  = {13'h002C, CQ_LOG};             // 16 entries
