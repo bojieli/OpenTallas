@@ -101,7 +101,9 @@ def compile_plan(kind):
                     dest=list(range(96)), golden_program_gate='PENDING')
     return dict(kind=kind, sources=list(range(96)), dest=list(range(96)),
                 order='rank-major, score/ID words kept separate', candidates_per_rank=512,
-                candidate_buffer_bytes=96*512*8, topk='reuse ot_coll_topk_merge N=96,NMAX=512')
+                candidate_buffer_bytes=96*512*8, input_beats_64B=6144,
+                select_cycles_estimate=8*(96*512//64+7)+96*512//64+9,
+                select_area_mm2=None, select_status='ESTIMATE until existing RTL measured at N96', topk='reuse ot_coll_topk_merge N=96,NMAX=512')
 
 if __name__ == '__main__':
     ap=argparse.ArgumentParser(); ap.add_argument('--out',type=Path,required=True)
